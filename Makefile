@@ -44,7 +44,7 @@ O_FILES := $(INIT_O_FILES) $(EXTAB_O_FILES) $(EXTABINDEX_O_FILES) $(TEXT_O_FILES
 # Tools
 #-------------------------------------------------------------------------------
 
-MWCC_VERSION := GC/1.3.2
+MWCC_VERSION := GC/1.2.5
 
 # Programs
 ifeq ($(WINDOWS),1)
@@ -74,7 +74,7 @@ INCLUDES := -i . -I- -i include
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard
-CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -Os -nodefaults -msgstyle gcc $(INCLUDES)
+CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES)
 
 # for postprocess.py
 PROCFLAGS := -fprologue-fixup=old_stack
