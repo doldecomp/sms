@@ -1,29 +1,16 @@
-MEMORY {
-    text : origin = 0x80003100
-}
-
-SECTIONS {
-    GROUP:{
-        .init ALIGN(0x20):{}
-        /* TODO: should be extab and extabindex */
-        extab_ ALIGN(0x20):{}
-        extabindex_ ALIGN(0x20):{}
-        .text ALIGN(0x20):{}
-        .ctors ALIGN(0x20):{}
-        .dtors ALIGN(0x20):{}
-        .rodata ALIGN(0x20):{}
-        .data ALIGN(0x20):{}
-        .bss ALIGN(0x20):{}
-        .sdata ALIGN(0x20):{}
-        .sbss ALIGN(0x20):{}
-        .sdata2 ALIGN(0x20):{}
-        .sbss2 ALIGN(0x20):{}
-        .stack ALIGN(0x100):{}
-    } > text
-    _stack_addr = (_f_sbss2 + SIZEOF(.sbss2) + 65536 + 0x7) & ~0x7;
-    _stack_end = _f_sbss2 + SIZEOF(.sbss2);
-    _db_stack_addr = (_stack_addr + 0x2000);
-    _db_stack_end = _stack_addr;
-    __ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f;
-    __ArenaHi = 0x81700000;
+_SDA_BASE_ = 0x80410AC0;
+_SDA2_BASE_ = 0x80413460;
+SECTIONS
+{
+    .text0 BIND(0x80003100) : { *(.text0) }
+    .text1 BIND(0x80005600) : { *(.text1) }
+    .data0 BIND(0x80005540) : { *(.data0) }
+    .data1 BIND(0x800055A0) : { *(.data1) }
+    .data2 BIND(0x8036FBA0) : { *(.data2) }
+    .data3 BIND(0x8036FF80) : { *(.data3) }
+    .data4 BIND(0x8036FFA0) : { *(.data4) }
+    .data5 BIND(0x803A8380) : { *(.data5) }
+    .data6 BIND(0x80408AC0) : { *(.data6) }
+    .data7 BIND(0x8040B460) : { *(.data7) }
+    .bss BIND(0x803E6000) : { *(.bss) }
 }

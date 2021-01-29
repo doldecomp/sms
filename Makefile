@@ -20,7 +20,44 @@ TARGET := sms_jp_r0
 BUILD_DIR := build/$(TARGET)
 
 SRC_DIRS := src
-ASM_DIRS := asm
+ASM_DIRS := asm                      \
+            asm/JSystem              \
+			asm/Runtime.PPCEABI.H    \
+			asm/MSL_C.PPCEABI.bare.H \
+			asm/TRK_MINNOW_DOLPHIN   \
+			asm/base                 \
+			asm/db                   \
+			asm/os                   \
+			asm/mtx                  \
+			asm/dvd                  \
+			asm/vi                   \
+			asm/pad                  \
+			asm/ai                   \
+			asm/ar                   \
+			asm/dsp                  \
+			asm/card                 \
+			asm/gx                   \
+			asm/OdemuExi2            \
+			asm/amcstubs             \
+			asm/odenotstub           \
+			asm/gd                   \
+			asm/si                   \
+			asm/exi                  \
+			asm/thp                  \
+			asm/THPPlayer            \
+			asm/MarioUtil            \
+			asm/M3DUtil              \
+			asm/System               \
+			asm/Strategic            \
+			asm/Player               \
+			asm/NPC                  \
+			asm/MSound               \
+			asm/MoveBG               \
+			asm/Map                  \
+			asm/GC2D                 \
+			asm/Enemy                \
+			asm/Camera               \
+			asm/Animal               \
 
 # Inputs
 S_FILES := $(wildcard asm/*.s)
