@@ -1,0 +1,995 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global __dt__Q26JDrama7TCameraFv
+__dt__Q26JDrama7TCameraFv:
+/* 80040D18 0003DC58  7C 08 02 A6 */	mflr r0
+/* 80040D1C 0003DC5C  90 01 00 04 */	stw r0, 4(r1)
+/* 80040D20 0003DC60  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80040D24 0003DC64  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80040D28 0003DC68  3B E4 00 00 */	addi r31, r4, 0
+/* 80040D2C 0003DC6C  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 80040D30 0003DC70  7C 7E 1B 79 */	or. r30, r3, r3
+/* 80040D34 0003DC74  41 82 00 64 */	beq lbl_80040D98
+/* 80040D38 0003DC78  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
+/* 80040D3C 0003DC7C  38 63 A3 8C */	addi r3, r3, __vt__Q26JDrama7TCamera@l
+/* 80040D40 0003DC80  90 7E 00 00 */	stw r3, 0(r30)
+/* 80040D44 0003DC84  38 03 00 24 */	addi r0, r3, 0x24
+/* 80040D48 0003DC88  38 7E 00 20 */	addi r3, r30, 0x20
+/* 80040D4C 0003DC8C  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 80040D50 0003DC90  38 80 00 00 */	li r4, 0
+/* 80040D54 0003DC94  48 04 0B 4D */	bl __dt__Q26JStage7TCameraFv
+/* 80040D58 0003DC98  28 1E 00 00 */	cmplwi r30, 0
+/* 80040D5C 0003DC9C  41 82 00 2C */	beq lbl_80040D88
+/* 80040D60 0003DCA0  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
+/* 80040D64 0003DCA4  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
+/* 80040D68 0003DCA8  90 1E 00 00 */	stw r0, 0(r30)
+/* 80040D6C 0003DCAC  41 82 00 1C */	beq lbl_80040D88
+/* 80040D70 0003DCB0  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TViewObj@ha
+/* 80040D74 0003DCB4  38 03 A0 C0 */	addi r0, r3, __vt__Q26JDrama8TViewObj@l
+/* 80040D78 0003DCB8  90 1E 00 00 */	stw r0, 0(r30)
+/* 80040D7C 0003DCBC  38 7E 00 00 */	addi r3, r30, 0
+/* 80040D80 0003DCC0  38 80 00 00 */	li r4, 0
+/* 80040D84 0003DCC4  48 00 3A 79 */	bl __dt__Q26JDrama8TNameRefFv
+lbl_80040D88:
+/* 80040D88 0003DCC8  7F E0 07 35 */	extsh. r0, r31
+/* 80040D8C 0003DCCC  40 81 00 0C */	ble lbl_80040D98
+/* 80040D90 0003DCD0  7F C3 F3 78 */	mr r3, r30
+/* 80040D94 0003DCD4  4B FC BD 1D */	bl __dl__FPv
+lbl_80040D98:
+/* 80040D98 0003DCD8  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80040D9C 0003DCDC  7F C3 F3 78 */	mr r3, r30
+/* 80040DA0 0003DCE0  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80040DA4 0003DCE4  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 80040DA8 0003DCE8  7C 08 03 A6 */	mtlr r0
+/* 80040DAC 0003DCEC  38 21 00 18 */	addi r1, r1, 0x18
+/* 80040DB0 0003DCF0  4E 80 00 20 */	blr 
+
+.global JSGGetFlag__Q26JDrama7TCameraCFv
+JSGGetFlag__Q26JDrama7TCameraCFv:
+/* 80040DB4 0003DCF4  A0 63 00 24 */	lhz r3, 0x24(r3)
+/* 80040DB8 0003DCF8  4E 80 00 20 */	blr 
+
+.global JSGSetFlag__Q26JDrama7TCameraFUl
+JSGSetFlag__Q26JDrama7TCameraFUl:
+/* 80040DBC 0003DCFC  B0 83 00 24 */	sth r4, 0x24(r3)
+/* 80040DC0 0003DD00  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionNear__Q26JDrama7TCameraCFv
+JSGGetProjectionNear__Q26JDrama7TCameraCFv:
+/* 80040DC4 0003DD04  C0 23 00 28 */	lfs f1, 0x28(r3)
+/* 80040DC8 0003DD08  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionNear__Q26JDrama7TCameraFf
+JSGSetProjectionNear__Q26JDrama7TCameraFf:
+/* 80040DCC 0003DD0C  D0 23 00 28 */	stfs f1, 0x28(r3)
+/* 80040DD0 0003DD10  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionFar__Q26JDrama7TCameraCFv
+JSGGetProjectionFar__Q26JDrama7TCameraCFv:
+/* 80040DD4 0003DD14  C0 23 00 2C */	lfs f1, 0x2c(r3)
+/* 80040DD8 0003DD18  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionFar__Q26JDrama7TCameraFf
+JSGSetProjectionFar__Q26JDrama7TCameraFf:
+/* 80040DDC 0003DD1C  D0 23 00 2C */	stfs f1, 0x2c(r3)
+/* 80040DE0 0003DD20  4E 80 00 20 */	blr 
+
+.global load__Q26JDrama12TPolarCameraFR20JSUMemoryInputStream
+load__Q26JDrama12TPolarCameraFR20JSUMemoryInputStream:
+/* 80040DE4 0003DD24  7C 08 02 A6 */	mflr r0
+/* 80040DE8 0003DD28  90 01 00 04 */	stw r0, 4(r1)
+/* 80040DEC 0003DD2C  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 80040DF0 0003DD30  93 E1 00 2C */	stw r31, 0x2c(r1)
+/* 80040DF4 0003DD34  3B E4 00 00 */	addi r31, r4, 0
+/* 80040DF8 0003DD38  93 C1 00 28 */	stw r30, 0x28(r1)
+/* 80040DFC 0003DD3C  3B C3 00 00 */	addi r30, r3, 0
+/* 80040E00 0003DD40  48 00 4C 2D */	bl load__Q26JDrama10TPlacementFR20JSUMemoryInputStream
+/* 80040E04 0003DD44  38 7F 00 00 */	addi r3, r31, 0
+/* 80040E08 0003DD48  38 81 00 24 */	addi r4, r1, 0x24
+/* 80040E0C 0003DD4C  38 A0 00 04 */	li r5, 4
+/* 80040E10 0003DD50  4B FC D7 81 */	bl read__14JSUInputStreamFPvl
+/* 80040E14 0003DD54  C0 01 00 24 */	lfs f0, 0x24(r1)
+/* 80040E18 0003DD58  38 7F 00 00 */	addi r3, r31, 0
+/* 80040E1C 0003DD5C  38 81 00 20 */	addi r4, r1, 0x20
+/* 80040E20 0003DD60  D0 1E 00 3C */	stfs f0, 0x3c(r30)
+/* 80040E24 0003DD64  38 A0 00 04 */	li r5, 4
+/* 80040E28 0003DD68  4B FC D7 69 */	bl read__14JSUInputStreamFPvl
+/* 80040E2C 0003DD6C  C0 01 00 20 */	lfs f0, 0x20(r1)
+/* 80040E30 0003DD70  D0 1E 00 38 */	stfs f0, 0x38(r30)
+/* 80040E34 0003DD74  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 80040E38 0003DD78  83 E1 00 2C */	lwz r31, 0x2c(r1)
+/* 80040E3C 0003DD7C  83 C1 00 28 */	lwz r30, 0x28(r1)
+/* 80040E40 0003DD80  7C 08 03 A6 */	mtlr r0
+/* 80040E44 0003DD84  38 21 00 30 */	addi r1, r1, 0x30
+/* 80040E48 0003DD88  4E 80 00 20 */	blr 
+
+.global perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics
+perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
+/* 80040E4C 0003DD8C  7C 08 02 A6 */	mflr r0
+/* 80040E50 0003DD90  90 01 00 04 */	stw r0, 4(r1)
+/* 80040E54 0003DD94  94 21 FE 60 */	stwu r1, -0x1a0(r1)
+/* 80040E58 0003DD98  DB E1 01 98 */	stfd f31, 0x198(r1)
+/* 80040E5C 0003DD9C  DB C1 01 90 */	stfd f30, 0x190(r1)
+/* 80040E60 0003DDA0  DB A1 01 88 */	stfd f29, 0x188(r1)
+/* 80040E64 0003DDA4  DB 81 01 80 */	stfd f28, 0x180(r1)
+/* 80040E68 0003DDA8  DB 61 01 78 */	stfd f27, 0x178(r1)
+/* 80040E6C 0003DDAC  DB 41 01 70 */	stfd f26, 0x170(r1)
+/* 80040E70 0003DDB0  DB 21 01 68 */	stfd f25, 0x168(r1)
+/* 80040E74 0003DDB4  DB 01 01 60 */	stfd f24, 0x160(r1)
+/* 80040E78 0003DDB8  DA E1 01 58 */	stfd f23, 0x158(r1)
+/* 80040E7C 0003DDBC  DA C1 01 50 */	stfd f22, 0x150(r1)
+/* 80040E80 0003DDC0  DA A1 01 48 */	stfd f21, 0x148(r1)
+/* 80040E84 0003DDC4  93 E1 01 44 */	stw r31, 0x144(r1)
+/* 80040E88 0003DDC8  93 C1 01 40 */	stw r30, 0x140(r1)
+/* 80040E8C 0003DDCC  3B C5 00 00 */	addi r30, r5, 0
+/* 80040E90 0003DDD0  93 A1 01 3C */	stw r29, 0x13c(r1)
+/* 80040E94 0003DDD4  3B A4 00 00 */	addi r29, r4, 0
+/* 80040E98 0003DDD8  73 A0 00 14 */	andi. r0, r29, 0x14
+/* 80040E9C 0003DDDC  93 81 01 38 */	stw r28, 0x138(r1)
+/* 80040EA0 0003DDE0  3B 83 00 00 */	addi r28, r3, 0
+/* 80040EA4 0003DDE4  41 82 03 9C */	beq lbl_80041240
+/* 80040EA8 0003DDE8  3B FE 00 74 */	addi r31, r30, 0x74
+/* 80040EAC 0003DDEC  C0 3C 00 30 */	lfs f1, 0x30(r28)
+/* 80040EB0 0003DDF0  C0 5C 00 34 */	lfs f2, 0x34(r28)
+/* 80040EB4 0003DDF4  7F E3 FB 78 */	mr r3, r31
+/* 80040EB8 0003DDF8  C0 7C 00 28 */	lfs f3, 0x28(r28)
+/* 80040EBC 0003DDFC  C0 9C 00 2C */	lfs f4, 0x2c(r28)
+/* 80040EC0 0003DE00  48 05 3E 65 */	bl C_MTXPerspective
+/* 80040EC4 0003DE04  C0 1C 00 28 */	lfs f0, 0x28(r28)
+/* 80040EC8 0003DE08  D0 1E 00 E8 */	stfs f0, 0xe8(r30)
+/* 80040ECC 0003DE0C  C0 1C 00 2C */	lfs f0, 0x2c(r28)
+/* 80040ED0 0003DE10  D0 1E 00 EC */	stfs f0, 0xec(r30)
+/* 80040ED4 0003DE14  C0 1C 00 40 */	lfs f0, 0x40(r28)
+/* 80040ED8 0003DE18  C3 E2 83 98 */	lfs f31, $$2877-_SDA2_BASE_(r2)
+/* 80040EDC 0003DE1C  FC 00 00 50 */	fneg f0, f0
+/* 80040EE0 0003DE20  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 80040EE4 0003DE24  C0 5C 00 44 */	lfs f2, 0x44(r28)
+/* 80040EE8 0003DE28  FF C0 F8 90 */	fmr f30, f31
+/* 80040EEC 0003DE2C  C3 A2 83 9C */	lfs f29, $$2878-_SDA2_BASE_(r2)
+/* 80040EF0 0003DE30  EE E1 00 32 */	fmuls f23, f1, f0
+/* 80040EF4 0003DE34  FF 80 10 50 */	fneg f28, f2
+/* 80040EF8 0003DE38  FC 20 B8 90 */	fmr f1, f23
+/* 80040EFC 0003DE3C  48 04 62 09 */	bl sinf
+/* 80040F00 0003DE40  FE C0 08 90 */	fmr f22, f1
+/* 80040F04 0003DE44  FC 20 B8 90 */	fmr f1, f23
+/* 80040F08 0003DE48  48 04 60 69 */	bl cosf
+/* 80040F0C 0003DE4C  FC 00 B0 50 */	fneg f0, f22
+/* 80040F10 0003DE50  D0 21 00 D4 */	stfs f1, 0xd4(r1)
+/* 80040F14 0003DE54  38 61 00 A4 */	addi r3, r1, 0xa4
+/* 80040F18 0003DE58  D0 01 00 D8 */	stfs f0, 0xd8(r1)
+/* 80040F1C 0003DE5C  D2 C1 00 E4 */	stfs f22, 0xe4(r1)
+/* 80040F20 0003DE60  D0 21 00 E8 */	stfs f1, 0xe8(r1)
+/* 80040F24 0003DE64  C0 22 83 9C */	lfs f1, $$2878-_SDA2_BASE_(r2)
+/* 80040F28 0003DE68  D0 21 00 FC */	stfs f1, 0xfc(r1)
+/* 80040F2C 0003DE6C  C0 02 83 98 */	lfs f0, $$2877-_SDA2_BASE_(r2)
+/* 80040F30 0003DE70  D0 01 00 F8 */	stfs f0, 0xf8(r1)
+/* 80040F34 0003DE74  D0 01 00 EC */	stfs f0, 0xec(r1)
+/* 80040F38 0003DE78  D0 01 00 F4 */	stfs f0, 0xf4(r1)
+/* 80040F3C 0003DE7C  D0 01 00 DC */	stfs f0, 0xdc(r1)
+/* 80040F40 0003DE80  D0 01 00 E0 */	stfs f0, 0xe0(r1)
+/* 80040F44 0003DE84  D0 01 00 F0 */	stfs f0, 0xf0(r1)
+/* 80040F48 0003DE88  D0 01 01 00 */	stfs f0, 0x100(r1)
+/* 80040F4C 0003DE8C  C0 41 00 E4 */	lfs f2, 0xe4(r1)
+/* 80040F50 0003DE90  C0 61 00 F0 */	lfs f3, 0xf0(r1)
+/* 80040F54 0003DE94  ED 5E 00 B2 */	fmuls f10, f30, f2
+/* 80040F58 0003DE98  C1 61 00 D4 */	lfs f11, 0xd4(r1)
+/* 80040F5C 0003DE9C  C0 81 00 E8 */	lfs f4, 0xe8(r1)
+/* 80040F60 0003DEA0  EC DD 00 B2 */	fmuls f6, f29, f2
+/* 80040F64 0003DEA4  C1 21 00 EC */	lfs f9, 0xec(r1)
+/* 80040F68 0003DEA8  EC FE 01 32 */	fmuls f7, f30, f4
+/* 80040F6C 0003DEAC  C3 21 00 D8 */	lfs f25, 0xd8(r1)
+/* 80040F70 0003DEB0  EF 5E 02 72 */	fmuls f26, f30, f9
+/* 80040F74 0003DEB4  C0 A1 00 F4 */	lfs f5, 0xf4(r1)
+/* 80040F78 0003DEB8  ED BE 52 FA */	fmadds f13, f30, f11, f10
+/* 80040F7C 0003DEBC  EE FD 52 FA */	fmadds f23, f29, f11, f10
+/* 80040F80 0003DEC0  C0 41 00 E0 */	lfs f2, 0xe0(r1)
+/* 80040F84 0003DEC4  ED 7E 32 FA */	fmadds f11, f30, f11, f6
+/* 80040F88 0003DEC8  C0 C1 00 F8 */	lfs f6, 0xf8(r1)
+/* 80040F8C 0003DECC  ED 9E 00 F2 */	fmuls f12, f30, f3
+/* 80040F90 0003DED0  ED 1D 00 F2 */	fmuls f8, f29, f3
+/* 80040F94 0003DED4  EC 7D 01 32 */	fmuls f3, f29, f4
+/* 80040F98 0003DED8  C0 81 00 DC */	lfs f4, 0xdc(r1)
+/* 80040F9C 0003DEDC  EF 61 69 7A */	fmadds f27, f1, f5, f13
+/* 80040FA0 0003DEE0  ED BE 60 BA */	fmadds f13, f30, f2, f12
+/* 80040FA4 0003DEE4  ED 5E 1E 7A */	fmadds f10, f30, f25, f3
+/* 80040FA8 0003DEE8  ED 3D 02 72 */	fmuls f9, f29, f9
+/* 80040FAC 0003DEEC  C0 61 01 00 */	lfs f3, 0x100(r1)
+/* 80040FB0 0003DEF0  ED 9D 60 BA */	fmadds f12, f29, f2, f12
+/* 80040FB4 0003DEF4  EC 5E 40 BA */	fmadds f2, f30, f2, f8
+/* 80040FB8 0003DEF8  EF 1E 3E 7A */	fmadds f24, f30, f25, f7
+/* 80040FBC 0003DEFC  EE DD 3E 7A */	fmadds f22, f29, f25, f7
+/* 80040FC0 0003DF00  C0 E1 00 FC */	lfs f7, 0xfc(r1)
+/* 80040FC4 0003DF04  ED 1F 10 FA */	fmadds f8, f31, f3, f2
+/* 80040FC8 0003DF08  D3 61 00 08 */	stfs f27, 8(r1)
+/* 80040FCC 0003DF0C  EF 61 C1 BA */	fmadds f27, f1, f6, f24
+/* 80040FD0 0003DF10  EF 01 68 FA */	fmadds f24, f1, f3, f13
+/* 80040FD4 0003DF14  EF 3E D1 3A */	fmadds f25, f30, f4, f26
+/* 80040FD8 0003DF18  EC 5F B1 BA */	fmadds f2, f31, f6, f22
+/* 80040FDC 0003DF1C  D3 61 00 0C */	stfs f27, 0xc(r1)
+/* 80040FE0 0003DF20  ED BD D1 3A */	fmadds f13, f29, f4, f26
+/* 80040FE4 0003DF24  EC 21 C9 FA */	fmadds f1, f1, f7, f25
+/* 80040FE8 0003DF28  ED 9F 60 FA */	fmadds f12, f31, f3, f12
+/* 80040FEC 0003DF2C  ED 3E 49 3A */	fmadds f9, f30, f4, f9
+/* 80040FF0 0003DF30  D0 21 00 10 */	stfs f1, 0x10(r1)
+/* 80040FF4 0003DF34  EC 9C C0 2A */	fadds f4, f28, f24
+/* 80040FF8 0003DF38  EC 3F B9 7A */	fmadds f1, f31, f5, f23
+/* 80040FFC 0003DF3C  EC 7F 69 FA */	fmadds f3, f31, f7, f13
+/* 80041000 0003DF40  D0 81 00 14 */	stfs f4, 0x14(r1)
+/* 80041004 0003DF44  EC 80 60 2A */	fadds f4, f0, f12
+/* 80041008 0003DF48  EC BF 59 7A */	fmadds f5, f31, f5, f11
+/* 8004100C 0003DF4C  EC DF 51 BA */	fmadds f6, f31, f6, f10
+/* 80041010 0003DF50  EC FF 49 FA */	fmadds f7, f31, f7, f9
+/* 80041014 0003DF54  ED 00 40 2A */	fadds f8, f0, f8
+/* 80041018 0003DF58  48 00 02 75 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 8004101C 0003DF5C  C0 1C 00 3C */	lfs f0, 0x3c(r28)
+/* 80041020 0003DF60  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 80041024 0003DF64  FC 00 00 50 */	fneg f0, f0
+/* 80041028 0003DF68  EE C1 00 32 */	fmuls f22, f1, f0
+/* 8004102C 0003DF6C  FC 20 B0 90 */	fmr f1, f22
+/* 80041030 0003DF70  48 04 60 D5 */	bl sinf
+/* 80041034 0003DF74  FF E0 08 90 */	fmr f31, f1
+/* 80041038 0003DF78  FC 20 B0 90 */	fmr f1, f22
+/* 8004103C 0003DF7C  48 04 5F 35 */	bl cosf
+/* 80041040 0003DF80  C1 42 83 98 */	lfs f10, $$2877-_SDA2_BASE_(r2)
+/* 80041044 0003DF84  FC 00 08 90 */	fmr f0, f1
+/* 80041048 0003DF88  C0 41 00 C8 */	lfs f2, 0xc8(r1)
+/* 8004104C 0003DF8C  FE A0 F8 50 */	fneg f21, f31
+/* 80041050 0003DF90  C1 21 00 A8 */	lfs f9, 0xa8(r1)
+/* 80041054 0003DF94  EC E2 02 B2 */	fmuls f7, f2, f10
+/* 80041058 0003DF98  C1 01 00 C4 */	lfs f8, 0xc4(r1)
+/* 8004105C 0003DF9C  EC 22 00 32 */	fmuls f1, f2, f0
+/* 80041060 0003DFA0  EC 82 05 72 */	fmuls f4, f2, f21
+/* 80041064 0003DFA4  C0 42 83 9C */	lfs f2, $$2878-_SDA2_BASE_(r2)
+/* 80041068 0003DFA8  C1 81 00 B8 */	lfs f12, 0xb8(r1)
+/* 8004106C 0003DFAC  EE E8 0A BA */	fmadds f23, f8, f10, f1
+/* 80041070 0003DFB0  C0 61 00 CC */	lfs f3, 0xcc(r1)
+/* 80041074 0003DFB4  EF 08 22 BA */	fmadds f24, f8, f10, f4
+/* 80041078 0003DFB8  C0 A1 00 B4 */	lfs f5, 0xb4(r1)
+/* 8004107C 0003DFBC  ED 68 38 BA */	fmadds f11, f8, f2, f7
+/* 80041080 0003DFC0  EF C8 3A BA */	fmadds f30, f8, f10, f7
+/* 80041084 0003DFC4  C0 C1 00 A4 */	lfs f6, 0xa4(r1)
+/* 80041088 0003DFC8  EF A9 02 B2 */	fmuls f29, f9, f10
+/* 8004108C 0003DFCC  C0 21 00 D0 */	lfs f1, 0xd0(r1)
+/* 80041090 0003DFD0  EF 89 00 32 */	fmuls f28, f9, f0
+/* 80041094 0003DFD4  EF 69 05 72 */	fmuls f27, f9, f21
+/* 80041098 0003DFD8  C0 E1 00 BC */	lfs f7, 0xbc(r1)
+/* 8004109C 0003DFDC  EF 46 EA BA */	fmadds f26, f6, f10, f29
+/* 800410A0 0003DFE0  C1 21 00 AC */	lfs f9, 0xac(r1)
+/* 800410A4 0003DFE4  EF 2C 02 B2 */	fmuls f25, f12, f10
+/* 800410A8 0003DFE8  EE C3 5A BA */	fmadds f22, f3, f10, f11
+/* 800410AC 0003DFEC  C1 01 00 C0 */	lfs f8, 0xc0(r1)
+/* 800410B0 0003DFF0  ED 65 CA BA */	fmadds f11, f5, f10, f25
+/* 800410B4 0003DFF4  C0 81 00 B0 */	lfs f4, 0xb0(r1)
+/* 800410B8 0003DFF8  ED AC 00 32 */	fmuls f13, f12, f0
+/* 800410BC 0003DFFC  ED 8C 05 72 */	fmuls f12, f12, f21
+/* 800410C0 0003E000  D2 C1 00 08 */	stfs f22, 8(r1)
+/* 800410C4 0003E004  EE E3 BF FA */	fmadds f23, f3, f31, f23
+/* 800410C8 0003E008  38 61 00 D4 */	addi r3, r1, 0xd4
+/* 800410CC 0003E00C  EF 49 D2 BA */	fmadds f26, f9, f10, f26
+/* 800410D0 0003E010  ED 67 5A BA */	fmadds f11, f7, f10, f11
+/* 800410D4 0003E014  EF C3 F2 BA */	fmadds f30, f3, f10, f30
+/* 800410D8 0003E018  EF 03 C0 3A */	fmadds f24, f3, f0, f24
+/* 800410DC 0003E01C  D2 E1 00 0C */	stfs f23, 0xc(r1)
+/* 800410E0 0003E020  EC 66 DA BA */	fmadds f3, f6, f10, f27
+/* 800410E4 0003E024  EF A6 E8 BA */	fmadds f29, f6, f2, f29
+/* 800410E8 0003E028  EF 86 E2 BA */	fmadds f28, f6, f10, f28
+/* 800410EC 0003E02C  EF 25 C8 BA */	fmadds f25, f5, f2, f25
+/* 800410F0 0003E030  D3 01 00 10 */	stfs f24, 0x10(r1)
+/* 800410F4 0003E034  EC C5 6A BA */	fmadds f6, f5, f10, f13
+/* 800410F8 0003E038  ED 85 62 BA */	fmadds f12, f5, f10, f12
+/* 800410FC 0003E03C  EC A1 F0 2A */	fadds f5, f1, f30
+/* 80041100 0003E040  EC 29 EA BA */	fmadds f1, f9, f10, f29
+/* 80041104 0003E044  EC 49 E7 FA */	fmadds f2, f9, f31, f28
+/* 80041108 0003E048  D0 A1 00 14 */	stfs f5, 0x14(r1)
+/* 8004110C 0003E04C  EC 69 18 3A */	fmadds f3, f9, f0, f3
+/* 80041110 0003E050  EC 84 D0 2A */	fadds f4, f4, f26
+/* 80041114 0003E054  EC A7 CA BA */	fmadds f5, f7, f10, f25
+/* 80041118 0003E058  EC C7 37 FA */	fmadds f6, f7, f31, f6
+/* 8004111C 0003E05C  EC E7 60 3A */	fmadds f7, f7, f0, f12
+/* 80041120 0003E060  ED 08 58 2A */	fadds f8, f8, f11
+/* 80041124 0003E064  48 00 01 69 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 80041128 0003E068  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 8004112C 0003E06C  C0 1C 00 38 */	lfs f0, 0x38(r28)
+/* 80041130 0003E070  EE C1 00 32 */	fmuls f22, f1, f0
+/* 80041134 0003E074  FC 20 B0 90 */	fmr f1, f22
+/* 80041138 0003E078  48 04 5F CD */	bl sinf
+/* 8004113C 0003E07C  FF E0 08 90 */	fmr f31, f1
+/* 80041140 0003E080  FC 20 B0 90 */	fmr f1, f22
+/* 80041144 0003E084  48 04 5E 2D */	bl cosf
+/* 80041148 0003E088  C0 41 00 F8 */	lfs f2, 0xf8(r1)
+/* 8004114C 0003E08C  FC 80 F8 50 */	fneg f4, f31
+/* 80041150 0003E090  C0 C2 83 98 */	lfs f6, $$2877-_SDA2_BASE_(r2)
+/* 80041154 0003E094  38 61 00 A4 */	addi r3, r1, 0xa4
+/* 80041158 0003E098  C1 81 00 E8 */	lfs f12, 0xe8(r1)
+/* 8004115C 0003E09C  EC 62 07 F2 */	fmuls f3, f2, f31
+/* 80041160 0003E0A0  C1 01 00 F4 */	lfs f8, 0xf4(r1)
+/* 80041164 0003E0A4  EC 02 00 72 */	fmuls f0, f2, f1
+/* 80041168 0003E0A8  C1 21 00 D8 */	lfs f9, 0xd8(r1)
+/* 8004116C 0003E0AC  EC E2 01 B2 */	fmuls f7, f2, f6
+/* 80041170 0003E0B0  EF 28 18 7A */	fmadds f25, f8, f1, f3
+/* 80041174 0003E0B4  C0 41 00 FC */	lfs f2, 0xfc(r1)
+/* 80041178 0003E0B8  EF 48 01 3A */	fmadds f26, f8, f4, f0
+/* 8004117C 0003E0BC  C2 C1 00 E4 */	lfs f22, 0xe4(r1)
+/* 80041180 0003E0C0  EF 68 39 BA */	fmadds f27, f8, f6, f7
+/* 80041184 0003E0C4  EC AC 01 B2 */	fmuls f5, f12, f6
+/* 80041188 0003E0C8  C0 61 00 D4 */	lfs f3, 0xd4(r1)
+/* 8004118C 0003E0CC  ED 4C 07 F2 */	fmuls f10, f12, f31
+/* 80041190 0003E0D0  C0 01 01 00 */	lfs f0, 0x100(r1)
+/* 80041194 0003E0D4  EF C9 07 F2 */	fmuls f30, f9, f31
+/* 80041198 0003E0D8  ED 76 29 BA */	fmadds f11, f22, f6, f5
+/* 8004119C 0003E0DC  C0 E2 83 9C */	lfs f7, $$2878-_SDA2_BASE_(r2)
+/* 800411A0 0003E0E0  EC AC 00 72 */	fmuls f5, f12, f1
+/* 800411A4 0003E0E4  C1 01 00 F0 */	lfs f8, 0xf0(r1)
+/* 800411A8 0003E0E8  EF E2 D9 BA */	fmadds f31, f2, f6, f27
+/* 800411AC 0003E0EC  EF 89 01 B2 */	fmuls f28, f9, f6
+/* 800411B0 0003E0F0  C2 E1 00 DC */	lfs f23, 0xdc(r1)
+/* 800411B4 0003E0F4  EF A9 00 72 */	fmuls f29, f9, f1
+/* 800411B8 0003E0F8  C1 21 00 EC */	lfs f9, 0xec(r1)
+/* 800411BC 0003E0FC  ED B6 50 7A */	fmadds f13, f22, f1, f10
+/* 800411C0 0003E100  ED 96 29 3A */	fmadds f12, f22, f4, f5
+/* 800411C4 0003E104  C2 C1 00 E0 */	lfs f22, 0xe0(r1)
+/* 800411C8 0003E108  EF 22 C9 BA */	fmadds f25, f2, f6, f25
+/* 800411CC 0003E10C  EC A3 E1 BA */	fmadds f5, f3, f6, f28
+/* 800411D0 0003E110  EC 23 F0 7A */	fmadds f1, f3, f1, f30
+/* 800411D4 0003E114  EF 82 D1 BA */	fmadds f28, f2, f6, f26
+/* 800411D8 0003E118  D3 21 00 08 */	stfs f25, 8(r1)
+/* 800411DC 0003E11C  ED 49 59 BA */	fmadds f10, f9, f6, f11
+/* 800411E0 0003E120  EC 63 E9 3A */	fmadds f3, f3, f4, f29
+/* 800411E4 0003E124  EC 97 29 BA */	fmadds f4, f23, f6, f5
+/* 800411E8 0003E128  EC 42 D9 FA */	fmadds f2, f2, f7, f27
+/* 800411EC 0003E12C  D3 81 00 0C */	stfs f28, 0xc(r1)
+/* 800411F0 0003E130  EC 00 F8 2A */	fadds f0, f0, f31
+/* 800411F4 0003E134  EC 37 09 BA */	fmadds f1, f23, f6, f1
+/* 800411F8 0003E138  D0 41 00 10 */	stfs f2, 0x10(r1)
+/* 800411FC 0003E13C  EC 57 19 BA */	fmadds f2, f23, f6, f3
+/* 80041200 0003E140  EC 77 29 FA */	fmadds f3, f23, f7, f5
+/* 80041204 0003E144  D0 01 00 14 */	stfs f0, 0x14(r1)
+/* 80041208 0003E148  EC A9 69 BA */	fmadds f5, f9, f6, f13
+/* 8004120C 0003E14C  EC 96 20 2A */	fadds f4, f22, f4
+/* 80041210 0003E150  EC C9 61 BA */	fmadds f6, f9, f6, f12
+/* 80041214 0003E154  EC E9 59 FA */	fmadds f7, f9, f7, f11
+/* 80041218 0003E158  ED 08 50 2A */	fadds f8, f8, f10
+/* 8004121C 0003E15C  48 00 00 71 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 80041220 0003E160  38 9E 00 B4 */	addi r4, r30, 0xb4
+/* 80041224 0003E164  38 61 00 A4 */	addi r3, r1, 0xa4
+/* 80041228 0003E168  48 05 30 B5 */	bl PSMTXCopy
+/* 8004122C 0003E16C  57 A0 06 F7 */	rlwinm. r0, r29, 0, 0x1b, 0x1b
+/* 80041230 0003E170  41 82 00 10 */	beq lbl_80041240
+/* 80041234 0003E174  38 7F 00 00 */	addi r3, r31, 0
+/* 80041238 0003E178  38 80 00 00 */	li r4, 0
+/* 8004123C 0003E17C  48 06 C3 19 */	bl GXSetProjection
+lbl_80041240:
+/* 80041240 0003E180  80 01 01 A4 */	lwz r0, 0x1a4(r1)
+/* 80041244 0003E184  CB E1 01 98 */	lfd f31, 0x198(r1)
+/* 80041248 0003E188  CB C1 01 90 */	lfd f30, 0x190(r1)
+/* 8004124C 0003E18C  7C 08 03 A6 */	mtlr r0
+/* 80041250 0003E190  CB A1 01 88 */	lfd f29, 0x188(r1)
+/* 80041254 0003E194  CB 81 01 80 */	lfd f28, 0x180(r1)
+/* 80041258 0003E198  CB 61 01 78 */	lfd f27, 0x178(r1)
+/* 8004125C 0003E19C  CB 41 01 70 */	lfd f26, 0x170(r1)
+/* 80041260 0003E1A0  CB 21 01 68 */	lfd f25, 0x168(r1)
+/* 80041264 0003E1A4  CB 01 01 60 */	lfd f24, 0x160(r1)
+/* 80041268 0003E1A8  CA E1 01 58 */	lfd f23, 0x158(r1)
+/* 8004126C 0003E1AC  CA C1 01 50 */	lfd f22, 0x150(r1)
+/* 80041270 0003E1B0  CA A1 01 48 */	lfd f21, 0x148(r1)
+/* 80041274 0003E1B4  83 E1 01 44 */	lwz r31, 0x144(r1)
+/* 80041278 0003E1B8  83 C1 01 40 */	lwz r30, 0x140(r1)
+/* 8004127C 0003E1BC  83 A1 01 3C */	lwz r29, 0x13c(r1)
+/* 80041280 0003E1C0  83 81 01 38 */	lwz r28, 0x138(r1)
+/* 80041284 0003E1C4  38 21 01 A0 */	addi r1, r1, 0x1a0
+/* 80041288 0003E1C8  4E 80 00 20 */	blr 
+
+.global set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff:
+/* 8004128C 0003E1CC  94 21 FF A0 */	stwu r1, -0x60(r1)
+/* 80041290 0003E1D0  D0 23 00 00 */	stfs f1, 0(r3)
+/* 80041294 0003E1D4  C1 21 00 68 */	lfs f9, 0x68(r1)
+/* 80041298 0003E1D8  D0 43 00 04 */	stfs f2, 4(r3)
+/* 8004129C 0003E1DC  C0 41 00 6C */	lfs f2, 0x6c(r1)
+/* 800412A0 0003E1E0  D0 63 00 08 */	stfs f3, 8(r3)
+/* 800412A4 0003E1E4  C0 21 00 70 */	lfs f1, 0x70(r1)
+/* 800412A8 0003E1E8  D0 83 00 0C */	stfs f4, 0xc(r3)
+/* 800412AC 0003E1EC  C0 01 00 74 */	lfs f0, 0x74(r1)
+/* 800412B0 0003E1F0  38 21 00 60 */	addi r1, r1, 0x60
+/* 800412B4 0003E1F4  D0 A3 00 10 */	stfs f5, 0x10(r3)
+/* 800412B8 0003E1F8  D0 C3 00 14 */	stfs f6, 0x14(r3)
+/* 800412BC 0003E1FC  D0 E3 00 18 */	stfs f7, 0x18(r3)
+/* 800412C0 0003E200  D1 03 00 1C */	stfs f8, 0x1c(r3)
+/* 800412C4 0003E204  D1 23 00 20 */	stfs f9, 0x20(r3)
+/* 800412C8 0003E208  D0 43 00 24 */	stfs f2, 0x24(r3)
+/* 800412CC 0003E20C  D0 23 00 28 */	stfs f1, 0x28(r3)
+/* 800412D0 0003E210  D0 03 00 2C */	stfs f0, 0x2c(r3)
+/* 800412D4 0003E214  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
+JSGGetProjectionType__Q26JDrama12TPolarCameraCFv:
+/* 800412D8 0003E218  38 60 00 01 */	li r3, 1
+/* 800412DC 0003E21C  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
+JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection:
+/* 800412E0 0003E220  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
+JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv:
+/* 800412E4 0003E224  C0 23 00 30 */	lfs f1, 0x30(r3)
+/* 800412E8 0003E228  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
+JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf:
+/* 800412EC 0003E22C  D0 23 00 30 */	stfs f1, 0x30(r3)
+/* 800412F0 0003E230  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
+JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv:
+/* 800412F4 0003E234  C0 23 00 34 */	lfs f1, 0x34(r3)
+/* 800412F8 0003E238  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
+JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf:
+/* 800412FC 0003E23C  D0 23 00 34 */	stfs f1, 0x34(r3)
+/* 80041300 0003E240  4E 80 00 20 */	blr 
+
+.global perform__Q26JDrama13TLookAtCameraFUlPQ26JDrama9TGraphics
+perform__Q26JDrama13TLookAtCameraFUlPQ26JDrama9TGraphics:
+/* 80041304 0003E244  7C 08 02 A6 */	mflr r0
+/* 80041308 0003E248  90 01 00 04 */	stw r0, 4(r1)
+/* 8004130C 0003E24C  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 80041310 0003E250  93 E1 00 2C */	stw r31, 0x2c(r1)
+/* 80041314 0003E254  93 C1 00 28 */	stw r30, 0x28(r1)
+/* 80041318 0003E258  3B C5 00 00 */	addi r30, r5, 0
+/* 8004131C 0003E25C  93 A1 00 24 */	stw r29, 0x24(r1)
+/* 80041320 0003E260  3B A4 00 00 */	addi r29, r4, 0
+/* 80041324 0003E264  73 A0 00 14 */	andi. r0, r29, 0x14
+/* 80041328 0003E268  93 81 00 20 */	stw r28, 0x20(r1)
+/* 8004132C 0003E26C  3B 83 00 00 */	addi r28, r3, 0
+/* 80041330 0003E270  41 82 00 58 */	beq lbl_80041388
+/* 80041334 0003E274  3B FE 00 74 */	addi r31, r30, 0x74
+/* 80041338 0003E278  C0 3C 00 48 */	lfs f1, 0x48(r28)
+/* 8004133C 0003E27C  C0 5C 00 4C */	lfs f2, 0x4c(r28)
+/* 80041340 0003E280  7F E3 FB 78 */	mr r3, r31
+/* 80041344 0003E284  C0 7C 00 28 */	lfs f3, 0x28(r28)
+/* 80041348 0003E288  C0 9C 00 2C */	lfs f4, 0x2c(r28)
+/* 8004134C 0003E28C  48 05 39 D9 */	bl C_MTXPerspective
+/* 80041350 0003E290  C0 1C 00 28 */	lfs f0, 0x28(r28)
+/* 80041354 0003E294  38 7E 00 B4 */	addi r3, r30, 0xb4
+/* 80041358 0003E298  38 9C 00 10 */	addi r4, r28, 0x10
+/* 8004135C 0003E29C  D0 1E 00 E8 */	stfs f0, 0xe8(r30)
+/* 80041360 0003E2A0  38 BC 00 30 */	addi r5, r28, 0x30
+/* 80041364 0003E2A4  38 DC 00 3C */	addi r6, r28, 0x3c
+/* 80041368 0003E2A8  C0 1C 00 2C */	lfs f0, 0x2c(r28)
+/* 8004136C 0003E2AC  D0 1E 00 EC */	stfs f0, 0xec(r30)
+/* 80041370 0003E2B0  48 05 35 0D */	bl C_MTXLookAt
+/* 80041374 0003E2B4  57 A0 06 F7 */	rlwinm. r0, r29, 0, 0x1b, 0x1b
+/* 80041378 0003E2B8  41 82 00 10 */	beq lbl_80041388
+/* 8004137C 0003E2BC  38 7F 00 00 */	addi r3, r31, 0
+/* 80041380 0003E2C0  38 80 00 00 */	li r4, 0
+/* 80041384 0003E2C4  48 06 C1 D1 */	bl GXSetProjection
+lbl_80041388:
+/* 80041388 0003E2C8  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 8004138C 0003E2CC  83 E1 00 2C */	lwz r31, 0x2c(r1)
+/* 80041390 0003E2D0  83 C1 00 28 */	lwz r30, 0x28(r1)
+/* 80041394 0003E2D4  7C 08 03 A6 */	mtlr r0
+/* 80041398 0003E2D8  83 A1 00 24 */	lwz r29, 0x24(r1)
+/* 8004139C 0003E2DC  83 81 00 20 */	lwz r28, 0x20(r1)
+/* 800413A0 0003E2E0  38 21 00 30 */	addi r1, r1, 0x30
+/* 800413A4 0003E2E4  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
+JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv:
+/* 800413A8 0003E2E8  38 60 00 01 */	li r3, 1
+/* 800413AC 0003E2EC  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
+JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection:
+/* 800413B0 0003E2F0  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
+JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv:
+/* 800413B4 0003E2F4  C0 23 00 48 */	lfs f1, 0x48(r3)
+/* 800413B8 0003E2F8  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
+JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf:
+/* 800413BC 0003E2FC  D0 23 00 48 */	stfs f1, 0x48(r3)
+/* 800413C0 0003E300  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
+JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv:
+/* 800413C4 0003E304  C0 23 00 4C */	lfs f1, 0x4c(r3)
+/* 800413C8 0003E308  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf:
+/* 800413CC 0003E30C  D0 23 00 4C */	stfs f1, 0x4c(r3)
+/* 800413D0 0003E310  4E 80 00 20 */	blr 
+
+.global JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
+JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 800413D4 0003E314  80 A3 00 10 */	lwz r5, 0x10(r3)
+/* 800413D8 0003E318  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 800413DC 0003E31C  90 A4 00 00 */	stw r5, 0(r4)
+/* 800413E0 0003E320  90 04 00 04 */	stw r0, 4(r4)
+/* 800413E4 0003E324  80 03 00 18 */	lwz r0, 0x18(r3)
+/* 800413E8 0003E328  90 04 00 08 */	stw r0, 8(r4)
+/* 800413EC 0003E32C  4E 80 00 20 */	blr 
+
+.global JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
+JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 800413F0 0003E330  C0 04 00 00 */	lfs f0, 0(r4)
+/* 800413F4 0003E334  D0 03 00 10 */	stfs f0, 0x10(r3)
+/* 800413F8 0003E338  C0 04 00 04 */	lfs f0, 4(r4)
+/* 800413FC 0003E33C  D0 03 00 14 */	stfs f0, 0x14(r3)
+/* 80041400 0003E340  C0 04 00 08 */	lfs f0, 8(r4)
+/* 80041404 0003E344  D0 03 00 18 */	stfs f0, 0x18(r3)
+/* 80041408 0003E348  4E 80 00 20 */	blr 
+
+.global JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
+JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 8004140C 0003E34C  80 A3 00 30 */	lwz r5, 0x30(r3)
+/* 80041410 0003E350  80 03 00 34 */	lwz r0, 0x34(r3)
+/* 80041414 0003E354  90 A4 00 00 */	stw r5, 0(r4)
+/* 80041418 0003E358  90 04 00 04 */	stw r0, 4(r4)
+/* 8004141C 0003E35C  80 03 00 38 */	lwz r0, 0x38(r3)
+/* 80041420 0003E360  90 04 00 08 */	stw r0, 8(r4)
+/* 80041424 0003E364  4E 80 00 20 */	blr 
+
+.global JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
+JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 80041428 0003E368  C0 04 00 00 */	lfs f0, 0(r4)
+/* 8004142C 0003E36C  D0 03 00 30 */	stfs f0, 0x30(r3)
+/* 80041430 0003E370  C0 04 00 04 */	lfs f0, 4(r4)
+/* 80041434 0003E374  D0 03 00 34 */	stfs f0, 0x34(r3)
+/* 80041438 0003E378  C0 04 00 08 */	lfs f0, 8(r4)
+/* 8004143C 0003E37C  D0 03 00 38 */	stfs f0, 0x38(r3)
+/* 80041440 0003E380  4E 80 00 20 */	blr 
+
+.global JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
+JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 80041444 0003E384  80 A3 00 3C */	lwz r5, 0x3c(r3)
+/* 80041448 0003E388  80 03 00 40 */	lwz r0, 0x40(r3)
+/* 8004144C 0003E38C  90 A4 00 00 */	stw r5, 0(r4)
+/* 80041450 0003E390  90 04 00 04 */	stw r0, 4(r4)
+/* 80041454 0003E394  80 03 00 44 */	lwz r0, 0x44(r3)
+/* 80041458 0003E398  90 04 00 08 */	stw r0, 8(r4)
+/* 8004145C 0003E39C  4E 80 00 20 */	blr 
+
+.global JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 80041460 0003E3A0  C0 04 00 00 */	lfs f0, 0(r4)
+/* 80041464 0003E3A4  D0 03 00 3C */	stfs f0, 0x3c(r3)
+/* 80041468 0003E3A8  C0 04 00 04 */	lfs f0, 4(r4)
+/* 8004146C 0003E3AC  D0 03 00 40 */	stfs f0, 0x40(r3)
+/* 80041470 0003E3B0  C0 04 00 08 */	lfs f0, 8(r4)
+/* 80041474 0003E3B4  D0 03 00 44 */	stfs f0, 0x44(r3)
+/* 80041478 0003E3B8  4E 80 00 20 */	blr 
+
+.global load__Q26JDrama10TOrthoProjFR20JSUMemoryInputStream
+load__Q26JDrama10TOrthoProjFR20JSUMemoryInputStream:
+/* 8004147C 0003E3BC  7C 08 02 A6 */	mflr r0
+/* 80041480 0003E3C0  90 01 00 04 */	stw r0, 4(r1)
+/* 80041484 0003E3C4  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 80041488 0003E3C8  93 E1 00 2C */	stw r31, 0x2c(r1)
+/* 8004148C 0003E3CC  3B E4 00 00 */	addi r31, r4, 0
+/* 80041490 0003E3D0  93 C1 00 28 */	stw r30, 0x28(r1)
+/* 80041494 0003E3D4  3B C3 00 00 */	addi r30, r3, 0
+/* 80041498 0003E3D8  48 00 45 95 */	bl load__Q26JDrama10TPlacementFR20JSUMemoryInputStream
+/* 8004149C 0003E3DC  38 7F 00 00 */	addi r3, r31, 0
+/* 800414A0 0003E3E0  38 9E 00 30 */	addi r4, r30, 0x30
+/* 800414A4 0003E3E4  38 A0 00 04 */	li r5, 4
+/* 800414A8 0003E3E8  4B FC D0 E9 */	bl read__14JSUInputStreamFPvl
+/* 800414AC 0003E3EC  38 7F 00 00 */	addi r3, r31, 0
+/* 800414B0 0003E3F0  38 9E 00 34 */	addi r4, r30, 0x34
+/* 800414B4 0003E3F4  38 A0 00 04 */	li r5, 4
+/* 800414B8 0003E3F8  4B FC D0 D9 */	bl read__14JSUInputStreamFPvl
+/* 800414BC 0003E3FC  38 7F 00 00 */	addi r3, r31, 0
+/* 800414C0 0003E400  38 9E 00 38 */	addi r4, r30, 0x38
+/* 800414C4 0003E404  38 A0 00 04 */	li r5, 4
+/* 800414C8 0003E408  4B FC D0 C9 */	bl read__14JSUInputStreamFPvl
+/* 800414CC 0003E40C  38 7F 00 00 */	addi r3, r31, 0
+/* 800414D0 0003E410  38 9E 00 3C */	addi r4, r30, 0x3c
+/* 800414D4 0003E414  38 A0 00 04 */	li r5, 4
+/* 800414D8 0003E418  4B FC D0 B9 */	bl read__14JSUInputStreamFPvl
+/* 800414DC 0003E41C  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 800414E0 0003E420  83 E1 00 2C */	lwz r31, 0x2c(r1)
+/* 800414E4 0003E424  83 C1 00 28 */	lwz r30, 0x28(r1)
+/* 800414E8 0003E428  7C 08 03 A6 */	mtlr r0
+/* 800414EC 0003E42C  38 21 00 30 */	addi r1, r1, 0x30
+/* 800414F0 0003E430  4E 80 00 20 */	blr 
+
+.global perform__Q26JDrama10TOrthoProjFUlPQ26JDrama9TGraphics
+perform__Q26JDrama10TOrthoProjFUlPQ26JDrama9TGraphics:
+/* 800414F4 0003E434  7C 08 02 A6 */	mflr r0
+/* 800414F8 0003E438  90 01 00 04 */	stw r0, 4(r1)
+/* 800414FC 0003E43C  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 80041500 0003E440  93 E1 00 2C */	stw r31, 0x2c(r1)
+/* 80041504 0003E444  93 C1 00 28 */	stw r30, 0x28(r1)
+/* 80041508 0003E448  3B C5 00 00 */	addi r30, r5, 0
+/* 8004150C 0003E44C  93 A1 00 24 */	stw r29, 0x24(r1)
+/* 80041510 0003E450  3B A4 00 00 */	addi r29, r4, 0
+/* 80041514 0003E454  73 A0 00 14 */	andi. r0, r29, 0x14
+/* 80041518 0003E458  93 81 00 20 */	stw r28, 0x20(r1)
+/* 8004151C 0003E45C  3B 83 00 00 */	addi r28, r3, 0
+/* 80041520 0003E460  41 82 00 60 */	beq lbl_80041580
+/* 80041524 0003E464  3B FE 00 74 */	addi r31, r30, 0x74
+/* 80041528 0003E468  C0 3C 00 34 */	lfs f1, 0x34(r28)
+/* 8004152C 0003E46C  C0 5C 00 3C */	lfs f2, 0x3c(r28)
+/* 80041530 0003E470  7F E3 FB 78 */	mr r3, r31
+/* 80041534 0003E474  C0 7C 00 30 */	lfs f3, 0x30(r28)
+/* 80041538 0003E478  C0 9C 00 38 */	lfs f4, 0x38(r28)
+/* 8004153C 0003E47C  C0 BC 00 28 */	lfs f5, 0x28(r28)
+/* 80041540 0003E480  C0 DC 00 2C */	lfs f6, 0x2c(r28)
+/* 80041544 0003E484  48 05 38 B1 */	bl C_MTXOrtho
+/* 80041548 0003E488  C0 1C 00 28 */	lfs f0, 0x28(r28)
+/* 8004154C 0003E48C  38 7E 00 B4 */	addi r3, r30, 0xb4
+/* 80041550 0003E490  D0 1E 00 E8 */	stfs f0, 0xe8(r30)
+/* 80041554 0003E494  C0 1C 00 2C */	lfs f0, 0x2c(r28)
+/* 80041558 0003E498  D0 1E 00 EC */	stfs f0, 0xec(r30)
+/* 8004155C 0003E49C  C0 3C 00 10 */	lfs f1, 0x10(r28)
+/* 80041560 0003E4A0  C0 5C 00 14 */	lfs f2, 0x14(r28)
+/* 80041564 0003E4A4  C0 7C 00 18 */	lfs f3, 0x18(r28)
+/* 80041568 0003E4A8  48 05 31 89 */	bl PSMTXTrans
+/* 8004156C 0003E4AC  57 A0 06 F7 */	rlwinm. r0, r29, 0, 0x1b, 0x1b
+/* 80041570 0003E4B0  41 82 00 10 */	beq lbl_80041580
+/* 80041574 0003E4B4  38 7F 00 00 */	addi r3, r31, 0
+/* 80041578 0003E4B8  38 80 00 01 */	li r4, 1
+/* 8004157C 0003E4BC  48 06 BF D9 */	bl GXSetProjection
+lbl_80041580:
+/* 80041580 0003E4C0  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 80041584 0003E4C4  83 E1 00 2C */	lwz r31, 0x2c(r1)
+/* 80041588 0003E4C8  83 C1 00 28 */	lwz r30, 0x28(r1)
+/* 8004158C 0003E4CC  7C 08 03 A6 */	mtlr r0
+/* 80041590 0003E4D0  83 A1 00 24 */	lwz r29, 0x24(r1)
+/* 80041594 0003E4D4  83 81 00 20 */	lwz r28, 0x20(r1)
+/* 80041598 0003E4D8  38 21 00 30 */	addi r1, r1, 0x30
+/* 8004159C 0003E4DC  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
+JSGGetProjectionType__Q26JDrama10TOrthoProjCFv:
+/* 800415A0 0003E4E0  38 60 00 01 */	li r3, 1
+/* 800415A4 0003E4E4  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
+JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection:
+/* 800415A8 0003E4E8  4E 80 00 20 */	blr 
+
+.global JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
+JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf:
+/* 800415AC 0003E4EC  C0 03 00 30 */	lfs f0, 0x30(r3)
+/* 800415B0 0003E4F0  D0 04 00 00 */	stfs f0, 0(r4)
+/* 800415B4 0003E4F4  C0 03 00 34 */	lfs f0, 0x34(r3)
+/* 800415B8 0003E4F8  D0 04 00 04 */	stfs f0, 4(r4)
+/* 800415BC 0003E4FC  C0 03 00 38 */	lfs f0, 0x38(r3)
+/* 800415C0 0003E500  D0 04 00 08 */	stfs f0, 8(r4)
+/* 800415C4 0003E504  C0 03 00 3C */	lfs f0, 0x3c(r3)
+/* 800415C8 0003E508  D0 04 00 0C */	stfs f0, 0xc(r4)
+/* 800415CC 0003E50C  4E 80 00 20 */	blr 
+
+.global JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
+JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf:
+/* 800415D0 0003E510  C0 04 00 00 */	lfs f0, 0(r4)
+/* 800415D4 0003E514  D0 03 00 30 */	stfs f0, 0x30(r3)
+/* 800415D8 0003E518  C0 04 00 04 */	lfs f0, 4(r4)
+/* 800415DC 0003E51C  D0 03 00 34 */	stfs f0, 0x34(r3)
+/* 800415E0 0003E520  C0 04 00 08 */	lfs f0, 8(r4)
+/* 800415E4 0003E524  D0 03 00 38 */	stfs f0, 0x38(r3)
+/* 800415E8 0003E528  C0 04 00 0C */	lfs f0, 0xc(r4)
+/* 800415EC 0003E52C  D0 03 00 3C */	stfs f0, 0x3c(r3)
+/* 800415F0 0003E530  4E 80 00 20 */	blr 
+
+.global __dt__Q26JDrama10TOrthoProjFv
+__dt__Q26JDrama10TOrthoProjFv:
+/* 800415F4 0003E534  7C 08 02 A6 */	mflr r0
+/* 800415F8 0003E538  90 01 00 04 */	stw r0, 4(r1)
+/* 800415FC 0003E53C  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80041600 0003E540  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80041604 0003E544  3B E4 00 00 */	addi r31, r4, 0
+/* 80041608 0003E548  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 8004160C 0003E54C  7C 7E 1B 79 */	or. r30, r3, r3
+/* 80041610 0003E550  41 82 00 7C */	beq lbl_8004168C
+/* 80041614 0003E554  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TOrthoProj@ha
+/* 80041618 0003E558  38 63 A0 E8 */	addi r3, r3, __vt__Q26JDrama10TOrthoProj@l
+/* 8004161C 0003E55C  90 7E 00 00 */	stw r3, 0(r30)
+/* 80041620 0003E560  38 03 00 24 */	addi r0, r3, 0x24
+/* 80041624 0003E564  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 80041628 0003E568  41 82 00 54 */	beq lbl_8004167C
+/* 8004162C 0003E56C  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
+/* 80041630 0003E570  38 63 A3 8C */	addi r3, r3, __vt__Q26JDrama7TCamera@l
+/* 80041634 0003E574  90 7E 00 00 */	stw r3, 0(r30)
+/* 80041638 0003E578  38 03 00 24 */	addi r0, r3, 0x24
+/* 8004163C 0003E57C  38 7E 00 20 */	addi r3, r30, 0x20
+/* 80041640 0003E580  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 80041644 0003E584  38 80 00 00 */	li r4, 0
+/* 80041648 0003E588  48 04 02 59 */	bl __dt__Q26JStage7TCameraFv
+/* 8004164C 0003E58C  28 1E 00 00 */	cmplwi r30, 0
+/* 80041650 0003E590  41 82 00 2C */	beq lbl_8004167C
+/* 80041654 0003E594  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
+/* 80041658 0003E598  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
+/* 8004165C 0003E59C  90 1E 00 00 */	stw r0, 0(r30)
+/* 80041660 0003E5A0  41 82 00 1C */	beq lbl_8004167C
+/* 80041664 0003E5A4  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TViewObj@ha
+/* 80041668 0003E5A8  38 03 A0 C0 */	addi r0, r3, __vt__Q26JDrama8TViewObj@l
+/* 8004166C 0003E5AC  90 1E 00 00 */	stw r0, 0(r30)
+/* 80041670 0003E5B0  38 7E 00 00 */	addi r3, r30, 0
+/* 80041674 0003E5B4  38 80 00 00 */	li r4, 0
+/* 80041678 0003E5B8  48 00 31 85 */	bl __dt__Q26JDrama8TNameRefFv
+lbl_8004167C:
+/* 8004167C 0003E5BC  7F E0 07 35 */	extsh. r0, r31
+/* 80041680 0003E5C0  40 81 00 0C */	ble lbl_8004168C
+/* 80041684 0003E5C4  7F C3 F3 78 */	mr r3, r30
+/* 80041688 0003E5C8  4B FC B4 29 */	bl __dl__FPv
+lbl_8004168C:
+/* 8004168C 0003E5CC  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80041690 0003E5D0  7F C3 F3 78 */	mr r3, r30
+/* 80041694 0003E5D4  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80041698 0003E5D8  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 8004169C 0003E5DC  7C 08 03 A6 */	mtlr r0
+/* 800416A0 0003E5E0  38 21 00 18 */	addi r1, r1, 0x18
+/* 800416A4 0003E5E4  4E 80 00 20 */	blr 
+
+.global getType__Q26JDrama7TCameraCFv
+getType__Q26JDrama7TCameraCFv:
+/* 800416A8 0003E5E8  38 60 00 02 */	li r3, 2
+/* 800416AC 0003E5EC  4E 80 00 20 */	blr 
+
+.global __dt__Q26JDrama13TLookAtCameraFv
+__dt__Q26JDrama13TLookAtCameraFv:
+/* 800416B0 0003E5F0  7C 08 02 A6 */	mflr r0
+/* 800416B4 0003E5F4  90 01 00 04 */	stw r0, 4(r1)
+/* 800416B8 0003E5F8  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 800416BC 0003E5FC  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 800416C0 0003E600  3B E4 00 00 */	addi r31, r4, 0
+/* 800416C4 0003E604  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 800416C8 0003E608  7C 7E 1B 79 */	or. r30, r3, r3
+/* 800416CC 0003E60C  41 82 00 7C */	beq lbl_80041748
+/* 800416D0 0003E610  3C 60 80 3B */	lis r3, __vt__Q26JDrama13TLookAtCamera@ha
+/* 800416D4 0003E614  38 63 A1 BC */	addi r3, r3, __vt__Q26JDrama13TLookAtCamera@l
+/* 800416D8 0003E618  90 7E 00 00 */	stw r3, 0(r30)
+/* 800416DC 0003E61C  38 03 00 24 */	addi r0, r3, 0x24
+/* 800416E0 0003E620  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 800416E4 0003E624  41 82 00 54 */	beq lbl_80041738
+/* 800416E8 0003E628  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
+/* 800416EC 0003E62C  38 63 A3 8C */	addi r3, r3, __vt__Q26JDrama7TCamera@l
+/* 800416F0 0003E630  90 7E 00 00 */	stw r3, 0(r30)
+/* 800416F4 0003E634  38 03 00 24 */	addi r0, r3, 0x24
+/* 800416F8 0003E638  38 7E 00 20 */	addi r3, r30, 0x20
+/* 800416FC 0003E63C  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 80041700 0003E640  38 80 00 00 */	li r4, 0
+/* 80041704 0003E644  48 04 01 9D */	bl __dt__Q26JStage7TCameraFv
+/* 80041708 0003E648  28 1E 00 00 */	cmplwi r30, 0
+/* 8004170C 0003E64C  41 82 00 2C */	beq lbl_80041738
+/* 80041710 0003E650  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
+/* 80041714 0003E654  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
+/* 80041718 0003E658  90 1E 00 00 */	stw r0, 0(r30)
+/* 8004171C 0003E65C  41 82 00 1C */	beq lbl_80041738
+/* 80041720 0003E660  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TViewObj@ha
+/* 80041724 0003E664  38 03 A0 C0 */	addi r0, r3, __vt__Q26JDrama8TViewObj@l
+/* 80041728 0003E668  90 1E 00 00 */	stw r0, 0(r30)
+/* 8004172C 0003E66C  38 7E 00 00 */	addi r3, r30, 0
+/* 80041730 0003E670  38 80 00 00 */	li r4, 0
+/* 80041734 0003E674  48 00 30 C9 */	bl __dt__Q26JDrama8TNameRefFv
+lbl_80041738:
+/* 80041738 0003E678  7F E0 07 35 */	extsh. r0, r31
+/* 8004173C 0003E67C  40 81 00 0C */	ble lbl_80041748
+/* 80041740 0003E680  7F C3 F3 78 */	mr r3, r30
+/* 80041744 0003E684  4B FC B3 6D */	bl __dl__FPv
+lbl_80041748:
+/* 80041748 0003E688  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 8004174C 0003E68C  7F C3 F3 78 */	mr r3, r30
+/* 80041750 0003E690  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80041754 0003E694  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 80041758 0003E698  7C 08 03 A6 */	mtlr r0
+/* 8004175C 0003E69C  38 21 00 18 */	addi r1, r1, 0x18
+/* 80041760 0003E6A0  4E 80 00 20 */	blr 
+
+.global __dt__Q26JDrama12TPolarCameraFv
+__dt__Q26JDrama12TPolarCameraFv:
+/* 80041764 0003E6A4  7C 08 02 A6 */	mflr r0
+/* 80041768 0003E6A8  90 01 00 04 */	stw r0, 4(r1)
+/* 8004176C 0003E6AC  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80041770 0003E6B0  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80041774 0003E6B4  3B E4 00 00 */	addi r31, r4, 0
+/* 80041778 0003E6B8  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 8004177C 0003E6BC  7C 7E 1B 79 */	or. r30, r3, r3
+/* 80041780 0003E6C0  41 82 00 7C */	beq lbl_800417FC
+/* 80041784 0003E6C4  3C 60 80 3B */	lis r3, __vt__Q26JDrama12TPolarCamera@ha
+/* 80041788 0003E6C8  38 63 A2 B0 */	addi r3, r3, __vt__Q26JDrama12TPolarCamera@l
+/* 8004178C 0003E6CC  90 7E 00 00 */	stw r3, 0(r30)
+/* 80041790 0003E6D0  38 03 00 24 */	addi r0, r3, 0x24
+/* 80041794 0003E6D4  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 80041798 0003E6D8  41 82 00 54 */	beq lbl_800417EC
+/* 8004179C 0003E6DC  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
+/* 800417A0 0003E6E0  38 63 A3 8C */	addi r3, r3, __vt__Q26JDrama7TCamera@l
+/* 800417A4 0003E6E4  90 7E 00 00 */	stw r3, 0(r30)
+/* 800417A8 0003E6E8  38 03 00 24 */	addi r0, r3, 0x24
+/* 800417AC 0003E6EC  38 7E 00 20 */	addi r3, r30, 0x20
+/* 800417B0 0003E6F0  90 1E 00 20 */	stw r0, 0x20(r30)
+/* 800417B4 0003E6F4  38 80 00 00 */	li r4, 0
+/* 800417B8 0003E6F8  48 04 00 E9 */	bl __dt__Q26JStage7TCameraFv
+/* 800417BC 0003E6FC  28 1E 00 00 */	cmplwi r30, 0
+/* 800417C0 0003E700  41 82 00 2C */	beq lbl_800417EC
+/* 800417C4 0003E704  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
+/* 800417C8 0003E708  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
+/* 800417CC 0003E70C  90 1E 00 00 */	stw r0, 0(r30)
+/* 800417D0 0003E710  41 82 00 1C */	beq lbl_800417EC
+/* 800417D4 0003E714  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TViewObj@ha
+/* 800417D8 0003E718  38 03 A0 C0 */	addi r0, r3, __vt__Q26JDrama8TViewObj@l
+/* 800417DC 0003E71C  90 1E 00 00 */	stw r0, 0(r30)
+/* 800417E0 0003E720  38 7E 00 00 */	addi r3, r30, 0
+/* 800417E4 0003E724  38 80 00 00 */	li r4, 0
+/* 800417E8 0003E728  48 00 30 15 */	bl __dt__Q26JDrama8TNameRefFv
+lbl_800417EC:
+/* 800417EC 0003E72C  7F E0 07 35 */	extsh. r0, r31
+/* 800417F0 0003E730  40 81 00 0C */	ble lbl_800417FC
+/* 800417F4 0003E734  7F C3 F3 78 */	mr r3, r30
+/* 800417F8 0003E738  4B FC B2 B9 */	bl __dl__FPv
+lbl_800417FC:
+/* 800417FC 0003E73C  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80041800 0003E740  7F C3 F3 78 */	mr r3, r30
+/* 80041804 0003E744  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80041808 0003E748  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 8004180C 0003E74C  7C 08 03 A6 */	mtlr r0
+/* 80041810 0003E750  38 21 00 18 */	addi r1, r1, 0x18
+/* 80041814 0003E754  4E 80 00 20 */	blr 
+
+.global $$232$$2__dt__Q26JDrama7TCameraFv
+$$232$$2__dt__Q26JDrama7TCameraFv:
+/* 80041818 0003E758  38 63 FF E0 */	addi r3, r3, -32
+/* 8004181C 0003E75C  4B FF F4 FC */	b __dt__Q26JDrama7TCameraFv
+
+.global $$232$$2JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
+$$232$$2JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf:
+/* 80041820 0003E760  38 63 FF E0 */	addi r3, r3, -32
+/* 80041824 0003E764  4B FF FA D8 */	b JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
+
+.global $$232$$2JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
+$$232$$2JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv:
+/* 80041828 0003E768  38 63 FF E0 */	addi r3, r3, -32
+/* 8004182C 0003E76C  4B FF FA C8 */	b JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
+
+.global $$232$$2JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
+$$232$$2JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf:
+/* 80041830 0003E770  38 63 FF E0 */	addi r3, r3, -32
+/* 80041834 0003E774  4B FF FA B8 */	b JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
+
+.global $$232$$2JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
+$$232$$2JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv:
+/* 80041838 0003E778  38 63 FF E0 */	addi r3, r3, -32
+/* 8004183C 0003E77C  4B FF FA A8 */	b JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
+
+.global $$232$$2JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
+$$232$$2JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection:
+/* 80041840 0003E780  38 63 FF E0 */	addi r3, r3, -32
+/* 80041844 0003E784  4B FF FA 9C */	b JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
+
+.global $$232$$2JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
+$$232$$2JSGGetProjectionType__Q26JDrama12TPolarCameraCFv:
+/* 80041848 0003E788  38 63 FF E0 */	addi r3, r3, -32
+/* 8004184C 0003E78C  4B FF FA 8C */	b JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
+
+.global $$232$$2__dt__Q26JDrama12TPolarCameraFv
+$$232$$2__dt__Q26JDrama12TPolarCameraFv:
+/* 80041850 0003E790  38 63 FF E0 */	addi r3, r3, -32
+/* 80041854 0003E794  4B FF FF 10 */	b __dt__Q26JDrama12TPolarCameraFv
+
+.global $$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+$$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 80041858 0003E798  38 63 FF E0 */	addi r3, r3, -32
+/* 8004185C 0003E79C  4B FF FC 04 */	b JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+
+.global $$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
+$$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 80041860 0003E7A0  38 63 FF E0 */	addi r3, r3, -32
+/* 80041864 0003E7A4  4B FF FB E0 */	b JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
+
+.global $$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
+$$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 80041868 0003E7A8  38 63 FF E0 */	addi r3, r3, -32
+/* 8004186C 0003E7AC  4B FF FB BC */	b JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
+
+.global $$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
+$$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 80041870 0003E7B0  38 63 FF E0 */	addi r3, r3, -32
+/* 80041874 0003E7B4  4B FF FB 98 */	b JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
+
+.global $$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
+$$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+/* 80041878 0003E7B8  38 63 FF E0 */	addi r3, r3, -32
+/* 8004187C 0003E7BC  4B FF FB 74 */	b JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
+
+.global $$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
+$$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+/* 80041880 0003E7C0  38 63 FF E0 */	addi r3, r3, -32
+/* 80041884 0003E7C4  4B FF FB 50 */	b JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
+
+.global $$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+$$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf:
+/* 80041888 0003E7C8  38 63 FF E0 */	addi r3, r3, -32
+/* 8004188C 0003E7CC  4B FF FB 40 */	b JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+
+.global $$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
+$$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv:
+/* 80041890 0003E7D0  38 63 FF E0 */	addi r3, r3, -32
+/* 80041894 0003E7D4  4B FF FB 30 */	b JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
+
+.global $$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
+$$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf:
+/* 80041898 0003E7D8  38 63 FF E0 */	addi r3, r3, -32
+/* 8004189C 0003E7DC  4B FF FB 20 */	b JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
+
+.global $$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
+$$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv:
+/* 800418A0 0003E7E0  38 63 FF E0 */	addi r3, r3, -32
+/* 800418A4 0003E7E4  4B FF FB 10 */	b JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
+
+.global $$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
+$$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection:
+/* 800418A8 0003E7E8  38 63 FF E0 */	addi r3, r3, -32
+/* 800418AC 0003E7EC  4B FF FB 04 */	b JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
+
+.global $$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
+$$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv:
+/* 800418B0 0003E7F0  38 63 FF E0 */	addi r3, r3, -32
+/* 800418B4 0003E7F4  4B FF FA F4 */	b JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
+
+.global $$232$$2__dt__Q26JDrama13TLookAtCameraFv
+$$232$$2__dt__Q26JDrama13TLookAtCameraFv:
+/* 800418B8 0003E7F8  38 63 FF E0 */	addi r3, r3, -32
+/* 800418BC 0003E7FC  4B FF FD F4 */	b __dt__Q26JDrama13TLookAtCameraFv
+
+.global $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+$$232$$2JSGSetFlag__Q26JDrama7TCameraFUl:
+/* 800418C0 0003E800  38 63 FF E0 */	addi r3, r3, -32
+/* 800418C4 0003E804  4B FF F4 F8 */	b JSGSetFlag__Q26JDrama7TCameraFUl
+
+.global $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
+$$232$$2JSGGetFlag__Q26JDrama7TCameraCFv:
+/* 800418C8 0003E808  38 63 FF E0 */	addi r3, r3, -32
+/* 800418CC 0003E80C  4B FF F4 E8 */	b JSGGetFlag__Q26JDrama7TCameraCFv
+
+.global $$232$$2JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
+$$232$$2JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf:
+/* 800418D0 0003E810  38 63 FF E0 */	addi r3, r3, -32
+/* 800418D4 0003E814  4B FF FC FC */	b JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
+
+.global $$232$$2JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
+$$232$$2JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf:
+/* 800418D8 0003E818  38 63 FF E0 */	addi r3, r3, -32
+/* 800418DC 0003E81C  4B FF FC D0 */	b JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
+
+.global $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
+$$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf:
+/* 800418E0 0003E820  38 63 FF E0 */	addi r3, r3, -32
+/* 800418E4 0003E824  4B FF F4 F8 */	b JSGSetProjectionFar__Q26JDrama7TCameraFf
+
+.global $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
+$$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv:
+/* 800418E8 0003E828  38 63 FF E0 */	addi r3, r3, -32
+/* 800418EC 0003E82C  4B FF F4 E8 */	b JSGGetProjectionFar__Q26JDrama7TCameraCFv
+
+.global $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
+$$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf:
+/* 800418F0 0003E830  38 63 FF E0 */	addi r3, r3, -32
+/* 800418F4 0003E834  4B FF F4 D8 */	b JSGSetProjectionNear__Q26JDrama7TCameraFf
+
+.global $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
+$$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv:
+/* 800418F8 0003E838  38 63 FF E0 */	addi r3, r3, -32
+/* 800418FC 0003E83C  4B FF F4 C8 */	b JSGGetProjectionNear__Q26JDrama7TCameraCFv
+
+.global $$232$$2JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
+$$232$$2JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection:
+/* 80041900 0003E840  38 63 FF E0 */	addi r3, r3, -32
+/* 80041904 0003E844  4B FF FC A4 */	b JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
+
+.global $$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
+$$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv:
+/* 80041908 0003E848  38 63 FF E0 */	addi r3, r3, -32
+/* 8004190C 0003E84C  4B FF FC 94 */	b JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
+
+.global $$232$$2__dt__Q26JDrama10TOrthoProjFv
+$$232$$2__dt__Q26JDrama10TOrthoProjFv:
+/* 80041910 0003E850  38 63 FF E0 */	addi r3, r3, -32
+/* 80041914 0003E854  4B FF FC E0 */	b __dt__Q26JDrama10TOrthoProjFv

@@ -1,0 +1,85 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global PPCMfmsr
+PPCMfmsr:
+/* 8008C3A0 000892E0  7C 60 00 A6 */	mfmsr r3
+/* 8008C3A4 000892E4  4E 80 00 20 */	blr 
+
+.global PPCMtmsr
+PPCMtmsr:
+/* 8008C3A8 000892E8  7C 60 01 24 */	mtmsr r3
+/* 8008C3AC 000892EC  4E 80 00 20 */	blr 
+
+.global PPCMfhid0
+PPCMfhid0:
+/* 8008C3B0 000892F0  7C 70 FA A6 */	mfspr r3, 0x3f0
+/* 8008C3B4 000892F4  4E 80 00 20 */	blr 
+
+.global PPCMthid0
+PPCMthid0:
+/* 8008C3B8 000892F8  7C 70 FB A6 */	mtspr 0x3f0, r3
+/* 8008C3BC 000892FC  4E 80 00 20 */	blr 
+
+.global PPCMfl2cr
+PPCMfl2cr:
+/* 8008C3C0 00089300  7C 79 FA A6 */	mfspr r3, 0x3f9
+/* 8008C3C4 00089304  4E 80 00 20 */	blr 
+
+.global PPCMtl2cr
+PPCMtl2cr:
+/* 8008C3C8 00089308  7C 79 FB A6 */	mtspr 0x3f9, r3
+/* 8008C3CC 0008930C  4E 80 00 20 */	blr 
+
+.global PPCMtdec
+PPCMtdec:
+/* 8008C3D0 00089310  7C 76 03 A6 */	mtspr 0x16, r3
+/* 8008C3D4 00089314  4E 80 00 20 */	blr 
+
+.global PPCSync
+PPCSync:
+/* 8008C3D8 00089318  44 00 00 02 */	sc 
+/* 8008C3DC 0008931C  4E 80 00 20 */	blr 
+
+.global PPCHalt
+PPCHalt:
+/* 8008C3E0 00089320  7C 00 04 AC */	sync 0
+lbl_8008C3E4:
+/* 8008C3E4 00089324  60 00 00 00 */	nop 
+/* 8008C3E8 00089328  38 60 00 00 */	li r3, 0
+/* 8008C3EC 0008932C  60 00 00 00 */	nop 
+/* 8008C3F0 00089330  4B FF FF F4 */	b lbl_8008C3E4
+
+.global PPCMfhid2
+PPCMfhid2:
+/* 8008C3F4 00089334  7C 78 E2 A6 */	mfspr r3, 0x398
+/* 8008C3F8 00089338  4E 80 00 20 */	blr 
+
+.global PPCMthid2
+PPCMthid2:
+/* 8008C3FC 0008933C  7C 78 E3 A6 */	mtspr 0x398, r3
+/* 8008C400 00089340  4E 80 00 20 */	blr 
+
+.global PPCMtwpar
+PPCMtwpar:
+/* 8008C404 00089344  7C 79 E3 A6 */	mtspr 0x399, r3
+/* 8008C408 00089348  4E 80 00 20 */	blr 
+
+.global PPCDisableSpeculation
+PPCDisableSpeculation:
+/* 8008C40C 0008934C  7C 08 02 A6 */	mflr r0
+/* 8008C410 00089350  90 01 00 04 */	stw r0, 4(r1)
+/* 8008C414 00089354  94 21 FF F8 */	stwu r1, -8(r1)
+/* 8008C418 00089358  4B FF FF 99 */	bl PPCMfhid0
+/* 8008C41C 0008935C  60 63 02 00 */	ori r3, r3, 0x200
+/* 8008C420 00089360  4B FF FF 99 */	bl PPCMthid0
+/* 8008C424 00089364  80 01 00 0C */	lwz r0, 0xc(r1)
+/* 8008C428 00089368  38 21 00 08 */	addi r1, r1, 8
+/* 8008C42C 0008936C  7C 08 03 A6 */	mtlr r0
+/* 8008C430 00089370  4E 80 00 20 */	blr 
+
+.global PPCSetFpNonIEEEMode
+PPCSetFpNonIEEEMode:
+/* 8008C434 00089374  FF A0 00 4C */	mtfsb1 0x1d
+/* 8008C438 00089378  4E 80 00 20 */	blr 

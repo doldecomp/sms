@@ -1,0 +1,643 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global __ct__Q28JASystem14TBasicWaveBankFv
+__ct__Q28JASystem14TBasicWaveBankFv:
+/* 800592D8 00056218  3C 80 80 3B */	lis r4, __vt__Q28JASystem9TWaveBank@ha
+/* 800592DC 0005621C  38 04 AE 6C */	addi r0, r4, __vt__Q28JASystem9TWaveBank@l
+/* 800592E0 00056220  3C 80 80 3B */	lis r4, __vt__Q28JASystem14TBasicWaveBank@ha
+/* 800592E4 00056224  90 03 00 00 */	stw r0, 0(r3)
+/* 800592E8 00056228  38 04 AE 58 */	addi r0, r4, __vt__Q28JASystem14TBasicWaveBank@l
+/* 800592EC 0005622C  90 03 00 00 */	stw r0, 0(r3)
+/* 800592F0 00056230  38 00 00 00 */	li r0, 0
+/* 800592F4 00056234  90 03 00 04 */	stw r0, 4(r3)
+/* 800592F8 00056238  90 03 00 08 */	stw r0, 8(r3)
+/* 800592FC 0005623C  90 03 00 0C */	stw r0, 0xc(r3)
+/* 80059300 00056240  90 03 00 10 */	stw r0, 0x10(r3)
+/* 80059304 00056244  4E 80 00 20 */	blr 
+
+.global __dt__Q28JASystem9TWaveBankFv
+__dt__Q28JASystem9TWaveBankFv:
+/* 80059308 00056248  7C 08 02 A6 */	mflr r0
+/* 8005930C 0005624C  90 01 00 04 */	stw r0, 4(r1)
+/* 80059310 00056250  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059314 00056254  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80059318 00056258  7C 7F 1B 79 */	or. r31, r3, r3
+/* 8005931C 0005625C  41 82 00 20 */	beq lbl_8005933C
+/* 80059320 00056260  3C 60 80 3B */	lis r3, __vt__Q28JASystem9TWaveBank@ha
+/* 80059324 00056264  38 63 AE 6C */	addi r3, r3, __vt__Q28JASystem9TWaveBank@l
+/* 80059328 00056268  7C 80 07 35 */	extsh. r0, r4
+/* 8005932C 0005626C  90 7F 00 00 */	stw r3, 0(r31)
+/* 80059330 00056270  40 81 00 0C */	ble lbl_8005933C
+/* 80059334 00056274  7F E3 FB 78 */	mr r3, r31
+/* 80059338 00056278  4B FB 37 79 */	bl __dl__FPv
+lbl_8005933C:
+/* 8005933C 0005627C  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059340 00056280  7F E3 FB 78 */	mr r3, r31
+/* 80059344 00056284  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80059348 00056288  38 21 00 18 */	addi r1, r1, 0x18
+/* 8005934C 0005628C  7C 08 03 A6 */	mtlr r0
+/* 80059350 00056290  4E 80 00 20 */	blr 
+
+.global __dt__Q28JASystem14TBasicWaveBankFv
+__dt__Q28JASystem14TBasicWaveBankFv:
+/* 80059354 00056294  7C 08 02 A6 */	mflr r0
+/* 80059358 00056298  90 01 00 04 */	stw r0, 4(r1)
+/* 8005935C 0005629C  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059360 000562A0  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80059364 000562A4  3B E4 00 00 */	addi r31, r4, 0
+/* 80059368 000562A8  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 8005936C 000562AC  7C 7E 1B 79 */	or. r30, r3, r3
+/* 80059370 000562B0  41 82 00 4C */	beq lbl_800593BC
+/* 80059374 000562B4  3C 60 80 3B */	lis r3, __vt__Q28JASystem14TBasicWaveBank@ha
+/* 80059378 000562B8  38 03 AE 58 */	addi r0, r3, __vt__Q28JASystem14TBasicWaveBank@l
+/* 8005937C 000562BC  90 1E 00 00 */	stw r0, 0(r30)
+/* 80059380 000562C0  80 7E 00 04 */	lwz r3, 4(r30)
+/* 80059384 000562C4  4B FB 37 91 */	bl __dla__FPv
+/* 80059388 000562C8  3C 80 80 06 */	lis r4, __dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv@ha
+/* 8005938C 000562CC  80 7E 00 0C */	lwz r3, 0xc(r30)
+/* 80059390 000562D0  38 84 96 AC */	addi r4, r4, __dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv@l
+/* 80059394 000562D4  48 02 93 AD */	bl __destroy_new_array
+/* 80059398 000562D8  28 1E 00 00 */	cmplwi r30, 0
+/* 8005939C 000562DC  41 82 00 10 */	beq lbl_800593AC
+/* 800593A0 000562E0  3C 60 80 3B */	lis r3, __vt__Q28JASystem9TWaveBank@ha
+/* 800593A4 000562E4  38 03 AE 6C */	addi r0, r3, __vt__Q28JASystem9TWaveBank@l
+/* 800593A8 000562E8  90 1E 00 00 */	stw r0, 0(r30)
+lbl_800593AC:
+/* 800593AC 000562EC  7F E0 07 35 */	extsh. r0, r31
+/* 800593B0 000562F0  40 81 00 0C */	ble lbl_800593BC
+/* 800593B4 000562F4  7F C3 F3 78 */	mr r3, r30
+/* 800593B8 000562F8  4B FB 36 F9 */	bl __dl__FPv
+lbl_800593BC:
+/* 800593BC 000562FC  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 800593C0 00056300  7F C3 F3 78 */	mr r3, r30
+/* 800593C4 00056304  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 800593C8 00056308  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 800593CC 0005630C  7C 08 03 A6 */	mtlr r0
+/* 800593D0 00056310  38 21 00 18 */	addi r1, r1, 0x18
+/* 800593D4 00056314  4E 80 00 20 */	blr 
+
+.global getWaveGroup__Q28JASystem14TBasicWaveBankFi
+getWaveGroup__Q28JASystem14TBasicWaveBankFi:
+/* 800593D8 00056318  80 03 00 10 */	lwz r0, 0x10(r3)
+/* 800593DC 0005631C  7C 04 00 40 */	cmplw r4, r0
+/* 800593E0 00056320  41 80 00 0C */	blt lbl_800593EC
+/* 800593E4 00056324  38 60 00 00 */	li r3, 0
+/* 800593E8 00056328  4E 80 00 20 */	blr 
+lbl_800593EC:
+/* 800593EC 0005632C  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 800593F0 00056330  54 80 30 32 */	slwi r0, r4, 6
+/* 800593F4 00056334  7C 63 02 14 */	add r3, r3, r0
+/* 800593F8 00056338  4E 80 00 20 */	blr 
+
+.global setGroupCount__Q28JASystem14TBasicWaveBankFUl
+setGroupCount__Q28JASystem14TBasicWaveBankFUl:
+/* 800593FC 0005633C  7C 08 02 A6 */	mflr r0
+/* 80059400 00056340  3C A0 80 06 */	lis r5, __dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv@ha
+/* 80059404 00056344  90 01 00 04 */	stw r0, 4(r1)
+/* 80059408 00056348  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 8005940C 0005634C  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 80059410 00056350  3B E5 96 AC */	addi r31, r5, __dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv@l
+/* 80059414 00056354  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 80059418 00056358  3B C4 00 00 */	addi r30, r4, 0
+/* 8005941C 0005635C  38 9F 00 00 */	addi r4, r31, 0
+/* 80059420 00056360  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80059424 00056364  3B A3 00 00 */	addi r29, r3, 0
+/* 80059428 00056368  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 8005942C 0005636C  48 02 93 15 */	bl __destroy_new_array
+/* 80059430 00056370  93 DD 00 10 */	stw r30, 0x10(r29)
+/* 80059434 00056374  48 00 1D 3D */	bl getCurrentHeap__Q28JASystem9TWaveBankFv
+/* 80059438 00056378  57 C5 30 32 */	slwi r5, r30, 6
+/* 8005943C 0005637C  38 83 00 00 */	addi r4, r3, 0
+/* 80059440 00056380  38 65 00 08 */	addi r3, r5, 8
+/* 80059444 00056384  38 A0 00 00 */	li r5, 0
+/* 80059448 00056388  4B FB 35 FD */	bl __nwa__FUlP7JKRHeapi
+/* 8005944C 0005638C  3C 80 80 06 */	lis r4, __ct__Q38JASystem14TBasicWaveBank10TWaveGroupFv@ha
+/* 80059450 00056390  38 84 96 0C */	addi r4, r4, __ct__Q38JASystem14TBasicWaveBank10TWaveGroupFv@l
+/* 80059454 00056394  38 BF 00 00 */	addi r5, r31, 0
+/* 80059458 00056398  38 FE 00 00 */	addi r7, r30, 0
+/* 8005945C 0005639C  38 C0 00 40 */	li r6, 0x40
+/* 80059460 000563A0  48 02 95 8D */	bl __construct_new_array
+/* 80059464 000563A4  90 7D 00 0C */	stw r3, 0xc(r29)
+/* 80059468 000563A8  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 8005946C 000563AC  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80059470 000563B0  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80059474 000563B4  7C 08 03 A6 */	mtlr r0
+/* 80059478 000563B8  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 8005947C 000563BC  38 21 00 20 */	addi r1, r1, 0x20
+/* 80059480 000563C0  4E 80 00 20 */	blr 
+
+.global setWaveTableSize__Q28JASystem14TBasicWaveBankFUl
+setWaveTableSize__Q28JASystem14TBasicWaveBankFUl:
+/* 80059484 000563C4  7C 08 02 A6 */	mflr r0
+/* 80059488 000563C8  90 01 00 04 */	stw r0, 4(r1)
+/* 8005948C 000563CC  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059490 000563D0  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80059494 000563D4  7C 9F 23 78 */	mr r31, r4
+/* 80059498 000563D8  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 8005949C 000563DC  7C 7E 1B 78 */	mr r30, r3
+/* 800594A0 000563E0  80 63 00 04 */	lwz r3, 4(r3)
+/* 800594A4 000563E4  4B FB 36 71 */	bl __dla__FPv
+/* 800594A8 000563E8  48 00 1C C9 */	bl getCurrentHeap__Q28JASystem9TWaveBankFv
+/* 800594AC 000563EC  38 83 00 00 */	addi r4, r3, 0
+/* 800594B0 000563F0  57 E3 10 3A */	slwi r3, r31, 2
+/* 800594B4 000563F4  38 A0 00 00 */	li r5, 0
+/* 800594B8 000563F8  4B FB 35 8D */	bl __nwa__FUlP7JKRHeapi
+/* 800594BC 000563FC  90 7E 00 04 */	stw r3, 4(r30)
+/* 800594C0 00056400  57 E4 10 3A */	slwi r4, r31, 2
+/* 800594C4 00056404  80 7E 00 04 */	lwz r3, 4(r30)
+/* 800594C8 00056408  48 00 7D 59 */	bl bzero__Q28JASystem4CalcFPvUl
+/* 800594CC 0005640C  93 FE 00 08 */	stw r31, 8(r30)
+/* 800594D0 00056410  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 800594D4 00056414  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 800594D8 00056418  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 800594DC 0005641C  7C 08 03 A6 */	mtlr r0
+/* 800594E0 00056420  38 21 00 18 */	addi r1, r1, 0x18
+/* 800594E4 00056424  4E 80 00 20 */	blr 
+
+.global incWaveTable__Q28JASystem14TBasicWaveBankFPCQ38JASystem14TBasicWaveBank10TWaveGroup
+incWaveTable__Q28JASystem14TBasicWaveBankFPCQ38JASystem14TBasicWaveBank10TWaveGroup:
+/* 800594E8 00056428  38 A0 00 00 */	li r5, 0
+/* 800594EC 0005642C  38 C5 00 00 */	addi r6, r5, 0
+/* 800594F0 00056430  39 20 00 00 */	li r9, 0
+/* 800594F4 00056434  48 00 00 44 */	b lbl_80059538
+lbl_800594F8:
+/* 800594F8 00056438  80 04 00 34 */	lwz r0, 0x34(r4)
+/* 800594FC 0005643C  80 E3 00 04 */	lwz r7, 4(r3)
+/* 80059500 00056440  7D 00 2A 14 */	add r8, r0, r5
+/* 80059504 00056444  80 08 00 34 */	lwz r0, 0x34(r8)
+/* 80059508 00056448  54 00 10 3A */	slwi r0, r0, 2
+/* 8005950C 0005644C  90 C8 00 3C */	stw r6, 0x3c(r8)
+/* 80059510 00056450  7D 47 02 14 */	add r10, r7, r0
+/* 80059514 00056454  80 0A 00 00 */	lwz r0, 0(r10)
+/* 80059518 00056458  90 08 00 38 */	stw r0, 0x38(r8)
+/* 8005951C 0005645C  80 EA 00 00 */	lwz r7, 0(r10)
+/* 80059520 00056460  28 07 00 00 */	cmplwi r7, 0
+/* 80059524 00056464  41 82 00 08 */	beq lbl_8005952C
+/* 80059528 00056468  91 07 00 3C */	stw r8, 0x3c(r7)
+lbl_8005952C:
+/* 8005952C 0005646C  91 0A 00 00 */	stw r8, 0(r10)
+/* 80059530 00056470  39 29 00 01 */	addi r9, r9, 1
+/* 80059534 00056474  38 A5 00 40 */	addi r5, r5, 0x40
+lbl_80059538:
+/* 80059538 00056478  80 04 00 38 */	lwz r0, 0x38(r4)
+/* 8005953C 0005647C  7C 09 00 40 */	cmplw r9, r0
+/* 80059540 00056480  41 80 FF B8 */	blt lbl_800594F8
+/* 80059544 00056484  4E 80 00 20 */	blr 
+
+.global decWaveTable__Q28JASystem14TBasicWaveBankFPCQ38JASystem14TBasicWaveBank10TWaveGroup
+decWaveTable__Q28JASystem14TBasicWaveBankFPCQ38JASystem14TBasicWaveBank10TWaveGroup:
+/* 80059548 00056488  39 00 00 00 */	li r8, 0
+/* 8005954C 0005648C  38 A0 00 00 */	li r5, 0
+/* 80059550 00056490  48 00 00 78 */	b lbl_800595C8
+lbl_80059554:
+/* 80059554 00056494  80 04 00 34 */	lwz r0, 0x34(r4)
+/* 80059558 00056498  80 C3 00 04 */	lwz r6, 4(r3)
+/* 8005955C 0005649C  7C E0 2A 14 */	add r7, r0, r5
+/* 80059560 000564A0  80 07 00 34 */	lwz r0, 0x34(r7)
+/* 80059564 000564A4  54 00 10 3A */	slwi r0, r0, 2
+/* 80059568 000564A8  7C C6 02 14 */	add r6, r6, r0
+/* 8005956C 000564AC  81 26 00 00 */	lwz r9, 0(r6)
+/* 80059570 000564B0  48 00 00 48 */	b lbl_800595B8
+lbl_80059574:
+/* 80059574 000564B4  7C 09 38 40 */	cmplw r9, r7
+/* 80059578 000564B8  40 82 00 3C */	bne lbl_800595B4
+/* 8005957C 000564BC  80 E9 00 3C */	lwz r7, 0x3c(r9)
+/* 80059580 000564C0  28 07 00 00 */	cmplwi r7, 0
+/* 80059584 000564C4  40 82 00 10 */	bne lbl_80059594
+/* 80059588 000564C8  80 09 00 38 */	lwz r0, 0x38(r9)
+/* 8005958C 000564CC  90 06 00 00 */	stw r0, 0(r6)
+/* 80059590 000564D0  48 00 00 0C */	b lbl_8005959C
+lbl_80059594:
+/* 80059594 000564D4  80 09 00 38 */	lwz r0, 0x38(r9)
+/* 80059598 000564D8  90 07 00 38 */	stw r0, 0x38(r7)
+lbl_8005959C:
+/* 8005959C 000564DC  80 C9 00 38 */	lwz r6, 0x38(r9)
+/* 800595A0 000564E0  28 06 00 00 */	cmplwi r6, 0
+/* 800595A4 000564E4  41 82 00 1C */	beq lbl_800595C0
+/* 800595A8 000564E8  80 09 00 3C */	lwz r0, 0x3c(r9)
+/* 800595AC 000564EC  90 06 00 3C */	stw r0, 0x3c(r6)
+/* 800595B0 000564F0  48 00 00 10 */	b lbl_800595C0
+lbl_800595B4:
+/* 800595B4 000564F4  81 29 00 38 */	lwz r9, 0x38(r9)
+lbl_800595B8:
+/* 800595B8 000564F8  28 09 00 00 */	cmplwi r9, 0
+/* 800595BC 000564FC  40 82 FF B8 */	bne lbl_80059574
+lbl_800595C0:
+/* 800595C0 00056500  39 08 00 01 */	addi r8, r8, 1
+/* 800595C4 00056504  38 A5 00 40 */	addi r5, r5, 0x40
+lbl_800595C8:
+/* 800595C8 00056508  80 04 00 38 */	lwz r0, 0x38(r4)
+/* 800595CC 0005650C  7C 08 00 40 */	cmplw r8, r0
+/* 800595D0 00056510  41 80 FF 84 */	blt lbl_80059554
+/* 800595D4 00056514  4E 80 00 20 */	blr 
+
+.global getWaveHandle__Q28JASystem14TBasicWaveBankCFUl
+getWaveHandle__Q28JASystem14TBasicWaveBankCFUl:
+/* 800595D8 00056518  80 03 00 08 */	lwz r0, 8(r3)
+/* 800595DC 0005651C  7C 04 00 40 */	cmplw r4, r0
+/* 800595E0 00056520  41 80 00 0C */	blt lbl_800595EC
+/* 800595E4 00056524  38 60 00 00 */	li r3, 0
+/* 800595E8 00056528  4E 80 00 20 */	blr 
+lbl_800595EC:
+/* 800595EC 0005652C  80 63 00 04 */	lwz r3, 4(r3)
+/* 800595F0 00056530  54 80 10 3A */	slwi r0, r4, 2
+/* 800595F4 00056534  7C 03 00 2E */	lwzx r0, r3, r0
+/* 800595F8 00056538  28 00 00 00 */	cmplwi r0, 0
+/* 800595FC 0005653C  7C 03 03 78 */	mr r3, r0
+/* 80059600 00056540  4C 82 00 20 */	bnelr 
+/* 80059604 00056544  38 60 00 00 */	li r3, 0
+/* 80059608 00056548  4E 80 00 20 */	blr 
+
+.global __ct__Q38JASystem14TBasicWaveBank10TWaveGroupFv
+__ct__Q38JASystem14TBasicWaveBank10TWaveGroupFv:
+/* 8005960C 0005654C  7C 08 02 A6 */	mflr r0
+/* 80059610 00056550  3C 80 80 3B */	lis r4, __vt__Q38JASystem13WaveArcLoader7TObject@ha
+/* 80059614 00056554  90 01 00 04 */	stw r0, 4(r1)
+/* 80059618 00056558  38 04 AE 44 */	addi r0, r4, __vt__Q38JASystem13WaveArcLoader7TObject@l
+/* 8005961C 0005655C  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059620 00056560  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80059624 00056564  3B E3 00 00 */	addi r31, r3, 0
+/* 80059628 00056568  3C 60 80 3B */	lis r3, __vt__Q38JASystem14TBasicWaveBank10TWaveGroup@ha
+/* 8005962C 0005656C  90 1F 00 00 */	stw r0, 0(r31)
+/* 80059630 00056570  38 03 AE 30 */	addi r0, r3, __vt__Q38JASystem14TBasicWaveBank10TWaveGroup@l
+/* 80059634 00056574  38 7F 00 04 */	addi r3, r31, 4
+/* 80059638 00056578  90 1F 00 00 */	stw r0, 0(r31)
+/* 8005963C 0005657C  48 00 A0 AD */	bl __ct__Q38JASystem6Kernel5THeapFv
+/* 80059640 00056580  38 00 00 00 */	li r0, 0
+/* 80059644 00056584  90 1F 00 30 */	stw r0, 0x30(r31)
+/* 80059648 00056588  7F E3 FB 78 */	mr r3, r31
+/* 8005964C 0005658C  90 1F 00 34 */	stw r0, 0x34(r31)
+/* 80059650 00056590  90 1F 00 38 */	stw r0, 0x38(r31)
+/* 80059654 00056594  90 1F 00 3C */	stw r0, 0x3c(r31)
+/* 80059658 00056598  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 8005965C 0005659C  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80059660 000565A0  38 21 00 18 */	addi r1, r1, 0x18
+/* 80059664 000565A4  7C 08 03 A6 */	mtlr r0
+/* 80059668 000565A8  4E 80 00 20 */	blr 
+
+.global __dt__Q38JASystem6Kernel5THeapFv
+__dt__Q38JASystem6Kernel5THeapFv:
+/* 8005966C 000565AC  7C 08 02 A6 */	mflr r0
+/* 80059670 000565B0  90 01 00 04 */	stw r0, 4(r1)
+/* 80059674 000565B4  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059678 000565B8  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 8005967C 000565BC  7C 7F 1B 79 */	or. r31, r3, r3
+/* 80059680 000565C0  41 82 00 14 */	beq lbl_80059694
+/* 80059684 000565C4  7C 80 07 35 */	extsh. r0, r4
+/* 80059688 000565C8  40 81 00 0C */	ble lbl_80059694
+/* 8005968C 000565CC  7F E3 FB 78 */	mr r3, r31
+/* 80059690 000565D0  4B FB 34 21 */	bl __dl__FPv
+lbl_80059694:
+/* 80059694 000565D4  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059698 000565D8  7F E3 FB 78 */	mr r3, r31
+/* 8005969C 000565DC  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 800596A0 000565E0  38 21 00 18 */	addi r1, r1, 0x18
+/* 800596A4 000565E4  7C 08 03 A6 */	mtlr r0
+/* 800596A8 000565E8  4E 80 00 20 */	blr 
+
+.global __dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv
+__dt__Q38JASystem14TBasicWaveBank10TWaveGroupFv:
+/* 800596AC 000565EC  7C 08 02 A6 */	mflr r0
+/* 800596B0 000565F0  90 01 00 04 */	stw r0, 4(r1)
+/* 800596B4 000565F4  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 800596B8 000565F8  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 800596BC 000565FC  3B E4 00 00 */	addi r31, r4, 0
+/* 800596C0 00056600  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 800596C4 00056604  7C 7E 1B 79 */	or. r30, r3, r3
+/* 800596C8 00056608  41 82 00 38 */	beq lbl_80059700
+/* 800596CC 0005660C  3C 60 80 3B */	lis r3, __vt__Q38JASystem14TBasicWaveBank10TWaveGroup@ha
+/* 800596D0 00056610  38 03 AE 30 */	addi r0, r3, __vt__Q38JASystem14TBasicWaveBank10TWaveGroup@l
+/* 800596D4 00056614  90 1E 00 00 */	stw r0, 0(r30)
+/* 800596D8 00056618  3C 60 80 06 */	lis r3, __dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv@ha
+/* 800596DC 0005661C  38 83 97 1C */	addi r4, r3, __dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv@l
+/* 800596E0 00056620  80 7E 00 34 */	lwz r3, 0x34(r30)
+/* 800596E4 00056624  48 02 90 5D */	bl __destroy_new_array
+/* 800596E8 00056628  80 7E 00 3C */	lwz r3, 0x3c(r30)
+/* 800596EC 0005662C  4B FB 34 29 */	bl __dla__FPv
+/* 800596F0 00056630  7F E0 07 35 */	extsh. r0, r31
+/* 800596F4 00056634  40 81 00 0C */	ble lbl_80059700
+/* 800596F8 00056638  7F C3 F3 78 */	mr r3, r30
+/* 800596FC 0005663C  4B FB 33 B5 */	bl __dl__FPv
+lbl_80059700:
+/* 80059700 00056640  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059704 00056644  7F C3 F3 78 */	mr r3, r30
+/* 80059708 00056648  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 8005970C 0005664C  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 80059710 00056650  7C 08 03 A6 */	mtlr r0
+/* 80059714 00056654  38 21 00 18 */	addi r1, r1, 0x18
+/* 80059718 00056658  4E 80 00 20 */	blr 
+
+.global __dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv
+__dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv:
+/* 8005971C 0005665C  7C 08 02 A6 */	mflr r0
+/* 80059720 00056660  90 01 00 04 */	stw r0, 4(r1)
+/* 80059724 00056664  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059728 00056668  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 8005972C 0005666C  7C 7F 1B 79 */	or. r31, r3, r3
+/* 80059730 00056670  41 82 00 34 */	beq lbl_80059764
+/* 80059734 00056674  41 82 00 20 */	beq lbl_80059754
+/* 80059738 00056678  3C 60 80 3B */	lis r3, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@ha
+/* 8005973C 0005667C  38 03 AE 1C */	addi r0, r3, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@l
+/* 80059740 00056680  90 1F 00 00 */	stw r0, 0(r31)
+/* 80059744 00056684  41 82 00 10 */	beq lbl_80059754
+/* 80059748 00056688  3C 60 80 3B */	lis r3, __vt__Q28JASystem11TWaveHandle@ha
+/* 8005974C 0005668C  38 03 AE 08 */	addi r0, r3, __vt__Q28JASystem11TWaveHandle@l
+/* 80059750 00056690  90 1F 00 00 */	stw r0, 0(r31)
+lbl_80059754:
+/* 80059754 00056694  7C 80 07 35 */	extsh. r0, r4
+/* 80059758 00056698  40 81 00 0C */	ble lbl_80059764
+/* 8005975C 0005669C  7F E3 FB 78 */	mr r3, r31
+/* 80059760 000566A0  4B FB 33 51 */	bl __dl__FPv
+lbl_80059764:
+/* 80059764 000566A4  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059768 000566A8  7F E3 FB 78 */	mr r3, r31
+/* 8005976C 000566AC  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80059770 000566B0  38 21 00 18 */	addi r1, r1, 0x18
+/* 80059774 000566B4  7C 08 03 A6 */	mtlr r0
+/* 80059778 000566B8  4E 80 00 20 */	blr 
+
+.global setWaveArcFileName__Q38JASystem14TBasicWaveBank10TWaveGroupFPCc
+setWaveArcFileName__Q38JASystem14TBasicWaveBank10TWaveGroupFPCc:
+/* 8005977C 000566BC  7C 08 02 A6 */	mflr r0
+/* 80059780 000566C0  90 01 00 04 */	stw r0, 4(r1)
+/* 80059784 000566C4  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80059788 000566C8  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 8005978C 000566CC  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 80059790 000566D0  7C 9E 23 78 */	mr r30, r4
+/* 80059794 000566D4  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80059798 000566D8  7C 7D 1B 78 */	mr r29, r3
+/* 8005979C 000566DC  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 800597A0 000566E0  4B FB 33 75 */	bl __dla__FPv
+/* 800597A4 000566E4  7F C3 F3 78 */	mr r3, r30
+/* 800597A8 000566E8  48 02 C6 FD */	bl strlen
+/* 800597AC 000566EC  7C 7F 1B 78 */	mr r31, r3
+/* 800597B0 000566F0  48 00 19 C1 */	bl getCurrentHeap__Q28JASystem9TWaveBankFv
+/* 800597B4 000566F4  38 83 00 00 */	addi r4, r3, 0
+/* 800597B8 000566F8  38 7F 00 01 */	addi r3, r31, 1
+/* 800597BC 000566FC  38 A0 00 00 */	li r5, 0
+/* 800597C0 00056700  4B FB 32 85 */	bl __nwa__FUlP7JKRHeapi
+/* 800597C4 00056704  90 7D 00 3C */	stw r3, 0x3c(r29)
+/* 800597C8 00056708  7F C4 F3 78 */	mr r4, r30
+/* 800597CC 0005670C  80 7D 00 3C */	lwz r3, 0x3c(r29)
+/* 800597D0 00056710  48 02 C6 21 */	bl strcpy
+/* 800597D4 00056714  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 800597D8 00056718  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 800597DC 0005671C  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 800597E0 00056720  7C 08 03 A6 */	mtlr r0
+/* 800597E4 00056724  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 800597E8 00056728  38 21 00 20 */	addi r1, r1, 0x20
+/* 800597EC 0005672C  4E 80 00 20 */	blr 
+
+.global setWaveCount__Q38JASystem14TBasicWaveBank10TWaveGroupFUl
+setWaveCount__Q38JASystem14TBasicWaveBank10TWaveGroupFUl:
+/* 800597F0 00056730  7C 08 02 A6 */	mflr r0
+/* 800597F4 00056734  3C A0 80 06 */	lis r5, __dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv@ha
+/* 800597F8 00056738  90 01 00 04 */	stw r0, 4(r1)
+/* 800597FC 0005673C  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80059800 00056740  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 80059804 00056744  3B E3 00 00 */	addi r31, r3, 0
+/* 80059808 00056748  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 8005980C 0005674C  3B C5 97 1C */	addi r30, r5, __dt__Q38JASystem14TBasicWaveBank9TWaveInfoFv@l
+/* 80059810 00056750  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80059814 00056754  3B A4 00 00 */	addi r29, r4, 0
+/* 80059818 00056758  38 9E 00 00 */	addi r4, r30, 0
+/* 8005981C 0005675C  80 63 00 34 */	lwz r3, 0x34(r3)
+/* 80059820 00056760  48 02 8F 21 */	bl __destroy_new_array
+/* 80059824 00056764  93 BF 00 38 */	stw r29, 0x38(r31)
+/* 80059828 00056768  48 00 19 49 */	bl getCurrentHeap__Q28JASystem9TWaveBankFv
+/* 8005982C 0005676C  57 A5 30 32 */	slwi r5, r29, 6
+/* 80059830 00056770  38 83 00 00 */	addi r4, r3, 0
+/* 80059834 00056774  38 65 00 08 */	addi r3, r5, 8
+/* 80059838 00056778  38 A0 00 00 */	li r5, 0
+/* 8005983C 0005677C  4B FB 32 09 */	bl __nwa__FUlP7JKRHeapi
+/* 80059840 00056780  3C 80 80 06 */	lis r4, __ct__Q38JASystem14TBasicWaveBank9TWaveInfoFv@ha
+/* 80059844 00056784  38 84 99 90 */	addi r4, r4, __ct__Q38JASystem14TBasicWaveBank9TWaveInfoFv@l
+/* 80059848 00056788  38 BE 00 00 */	addi r5, r30, 0
+/* 8005984C 0005678C  38 FD 00 00 */	addi r7, r29, 0
+/* 80059850 00056790  38 C0 00 40 */	li r6, 0x40
+/* 80059854 00056794  48 02 91 99 */	bl __construct_new_array
+/* 80059858 00056798  28 1D 00 00 */	cmplwi r29, 0
+/* 8005985C 0005679C  90 7F 00 34 */	stw r3, 0x34(r31)
+/* 80059860 000567A0  38 7D 00 00 */	addi r3, r29, 0
+/* 80059864 000567A4  39 1F 00 04 */	addi r8, r31, 4
+/* 80059868 000567A8  38 DF 00 30 */	addi r6, r31, 0x30
+/* 8005986C 000567AC  38 80 00 00 */	li r4, 0
+/* 80059870 000567B0  40 81 01 04 */	ble lbl_80059974
+/* 80059874 000567B4  54 60 E8 FF */	rlwinm. r0, r3, 0x1d, 3, 0x1f
+/* 80059878 000567B8  7C 09 03 A6 */	mtctr r0
+/* 8005987C 000567BC  41 82 00 D4 */	beq lbl_80059950
+lbl_80059880:
+/* 80059880 000567C0  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059884 000567C4  38 E4 00 30 */	addi r7, r4, 0x30
+/* 80059888 000567C8  38 04 00 28 */	addi r0, r4, 0x28
+/* 8005988C 000567CC  7D 05 39 2E */	stwx r8, r5, r7
+/* 80059890 000567D0  38 E4 00 70 */	addi r7, r4, 0x70
+/* 80059894 000567D4  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059898 000567D8  7C C5 01 2E */	stwx r6, r5, r0
+/* 8005989C 000567DC  38 04 00 68 */	addi r0, r4, 0x68
+/* 800598A0 000567E0  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598A4 000567E4  7D 05 39 2E */	stwx r8, r5, r7
+/* 800598A8 000567E8  38 E4 00 B0 */	addi r7, r4, 0xb0
+/* 800598AC 000567EC  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598B0 000567F0  7C C5 01 2E */	stwx r6, r5, r0
+/* 800598B4 000567F4  38 04 00 A8 */	addi r0, r4, 0xa8
+/* 800598B8 000567F8  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598BC 000567FC  7D 05 39 2E */	stwx r8, r5, r7
+/* 800598C0 00056800  38 E4 00 F0 */	addi r7, r4, 0xf0
+/* 800598C4 00056804  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598C8 00056808  7C C5 01 2E */	stwx r6, r5, r0
+/* 800598CC 0005680C  38 04 00 E8 */	addi r0, r4, 0xe8
+/* 800598D0 00056810  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598D4 00056814  7D 05 39 2E */	stwx r8, r5, r7
+/* 800598D8 00056818  38 E4 01 30 */	addi r7, r4, 0x130
+/* 800598DC 0005681C  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598E0 00056820  7C C5 01 2E */	stwx r6, r5, r0
+/* 800598E4 00056824  38 04 01 28 */	addi r0, r4, 0x128
+/* 800598E8 00056828  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598EC 0005682C  7D 05 39 2E */	stwx r8, r5, r7
+/* 800598F0 00056830  38 E4 01 70 */	addi r7, r4, 0x170
+/* 800598F4 00056834  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 800598F8 00056838  7C C5 01 2E */	stwx r6, r5, r0
+/* 800598FC 0005683C  38 04 01 68 */	addi r0, r4, 0x168
+/* 80059900 00056840  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059904 00056844  7D 05 39 2E */	stwx r8, r5, r7
+/* 80059908 00056848  38 E4 01 B0 */	addi r7, r4, 0x1b0
+/* 8005990C 0005684C  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059910 00056850  7C C5 01 2E */	stwx r6, r5, r0
+/* 80059914 00056854  38 04 01 A8 */	addi r0, r4, 0x1a8
+/* 80059918 00056858  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 8005991C 0005685C  7D 05 39 2E */	stwx r8, r5, r7
+/* 80059920 00056860  38 E4 01 F0 */	addi r7, r4, 0x1f0
+/* 80059924 00056864  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059928 00056868  7C C5 01 2E */	stwx r6, r5, r0
+/* 8005992C 0005686C  38 04 01 E8 */	addi r0, r4, 0x1e8
+/* 80059930 00056870  38 84 02 00 */	addi r4, r4, 0x200
+/* 80059934 00056874  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059938 00056878  7D 05 39 2E */	stwx r8, r5, r7
+/* 8005993C 0005687C  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059940 00056880  7C C5 01 2E */	stwx r6, r5, r0
+/* 80059944 00056884  42 00 FF 3C */	bdnz lbl_80059880
+/* 80059948 00056888  70 63 00 07 */	andi. r3, r3, 7
+/* 8005994C 0005688C  41 82 00 28 */	beq lbl_80059974
+lbl_80059950:
+/* 80059950 00056890  7C 69 03 A6 */	mtctr r3
+lbl_80059954:
+/* 80059954 00056894  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 80059958 00056898  38 E4 00 30 */	addi r7, r4, 0x30
+/* 8005995C 0005689C  38 04 00 28 */	addi r0, r4, 0x28
+/* 80059960 000568A0  7D 05 39 2E */	stwx r8, r5, r7
+/* 80059964 000568A4  38 84 00 40 */	addi r4, r4, 0x40
+/* 80059968 000568A8  80 BF 00 34 */	lwz r5, 0x34(r31)
+/* 8005996C 000568AC  7C C5 01 2E */	stwx r6, r5, r0
+/* 80059970 000568B0  42 00 FF E4 */	bdnz lbl_80059954
+lbl_80059974:
+/* 80059974 000568B4  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 80059978 000568B8  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 8005997C 000568BC  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80059980 000568C0  7C 08 03 A6 */	mtlr r0
+/* 80059984 000568C4  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80059988 000568C8  38 21 00 20 */	addi r1, r1, 0x20
+/* 8005998C 000568CC  4E 80 00 20 */	blr 
+
+.global __ct__Q38JASystem14TBasicWaveBank9TWaveInfoFv
+__ct__Q38JASystem14TBasicWaveBank9TWaveInfoFv:
+/* 80059990 000568D0  3C 80 80 3B */	lis r4, __vt__Q28JASystem11TWaveHandle@ha
+/* 80059994 000568D4  38 04 AE 08 */	addi r0, r4, __vt__Q28JASystem11TWaveHandle@l
+/* 80059998 000568D8  3C 80 80 3B */	lis r4, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@ha
+/* 8005999C 000568DC  90 03 00 00 */	stw r0, 0(r3)
+/* 800599A0 000568E0  38 04 AE 1C */	addi r0, r4, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@l
+/* 800599A4 000568E4  90 03 00 00 */	stw r0, 0(r3)
+/* 800599A8 000568E8  38 00 00 00 */	li r0, 0
+/* 800599AC 000568EC  90 03 00 30 */	stw r0, 0x30(r3)
+/* 800599B0 000568F0  90 03 00 34 */	stw r0, 0x34(r3)
+/* 800599B4 000568F4  90 03 00 38 */	stw r0, 0x38(r3)
+/* 800599B8 000568F8  90 03 00 3C */	stw r0, 0x3c(r3)
+/* 800599BC 000568FC  4E 80 00 20 */	blr 
+
+.global __dt__Q38JASystem14TBasicWaveBank11TWaveHandleFv
+__dt__Q38JASystem14TBasicWaveBank11TWaveHandleFv:
+/* 800599C0 00056900  7C 08 02 A6 */	mflr r0
+/* 800599C4 00056904  90 01 00 04 */	stw r0, 4(r1)
+/* 800599C8 00056908  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 800599CC 0005690C  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 800599D0 00056910  7C 7F 1B 79 */	or. r31, r3, r3
+/* 800599D4 00056914  41 82 00 30 */	beq lbl_80059A04
+/* 800599D8 00056918  3C 60 80 3B */	lis r3, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@ha
+/* 800599DC 0005691C  38 03 AE 1C */	addi r0, r3, __vt__Q38JASystem14TBasicWaveBank11TWaveHandle@l
+/* 800599E0 00056920  90 1F 00 00 */	stw r0, 0(r31)
+/* 800599E4 00056924  41 82 00 10 */	beq lbl_800599F4
+/* 800599E8 00056928  3C 60 80 3B */	lis r3, __vt__Q28JASystem11TWaveHandle@ha
+/* 800599EC 0005692C  38 03 AE 08 */	addi r0, r3, __vt__Q28JASystem11TWaveHandle@l
+/* 800599F0 00056930  90 1F 00 00 */	stw r0, 0(r31)
+lbl_800599F4:
+/* 800599F4 00056934  7C 80 07 35 */	extsh. r0, r4
+/* 800599F8 00056938  40 81 00 0C */	ble lbl_80059A04
+/* 800599FC 0005693C  7F E3 FB 78 */	mr r3, r31
+/* 80059A00 00056940  4B FB 30 B1 */	bl __dl__FPv
+lbl_80059A04:
+/* 80059A04 00056944  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059A08 00056948  7F E3 FB 78 */	mr r3, r31
+/* 80059A0C 0005694C  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80059A10 00056950  38 21 00 18 */	addi r1, r1, 0x18
+/* 80059A14 00056954  7C 08 03 A6 */	mtlr r0
+/* 80059A18 00056958  4E 80 00 20 */	blr 
+
+.global __dt__Q28JASystem11TWaveHandleFv
+__dt__Q28JASystem11TWaveHandleFv:
+/* 80059A1C 0005695C  7C 08 02 A6 */	mflr r0
+/* 80059A20 00056960  90 01 00 04 */	stw r0, 4(r1)
+/* 80059A24 00056964  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 80059A28 00056968  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80059A2C 0005696C  7C 7F 1B 79 */	or. r31, r3, r3
+/* 80059A30 00056970  41 82 00 20 */	beq lbl_80059A50
+/* 80059A34 00056974  3C 60 80 3B */	lis r3, __vt__Q28JASystem11TWaveHandle@ha
+/* 80059A38 00056978  38 63 AE 08 */	addi r3, r3, __vt__Q28JASystem11TWaveHandle@l
+/* 80059A3C 0005697C  7C 80 07 35 */	extsh. r0, r4
+/* 80059A40 00056980  90 7F 00 00 */	stw r3, 0(r31)
+/* 80059A44 00056984  40 81 00 0C */	ble lbl_80059A50
+/* 80059A48 00056988  7F E3 FB 78 */	mr r3, r31
+/* 80059A4C 0005698C  4B FB 30 65 */	bl __dl__FPv
+lbl_80059A50:
+/* 80059A50 00056990  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 80059A54 00056994  7F E3 FB 78 */	mr r3, r31
+/* 80059A58 00056998  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 80059A5C 0005699C  38 21 00 18 */	addi r1, r1, 0x18
+/* 80059A60 000569A0  7C 08 03 A6 */	mtlr r0
+/* 80059A64 000569A4  4E 80 00 20 */	blr 
+
+.global setWaveInfo__Q38JASystem14TBasicWaveBank10TWaveGroupFiUlRCQ28JASystem9TWaveInfo
+setWaveInfo__Q38JASystem14TBasicWaveBank10TWaveGroupFiUlRCQ28JASystem9TWaveInfo:
+/* 80059A68 000569A8  80 03 00 34 */	lwz r0, 0x34(r3)
+/* 80059A6C 000569AC  54 88 30 32 */	slwi r8, r4, 6
+/* 80059A70 000569B0  38 83 00 30 */	addi r4, r3, 0x30
+/* 80059A74 000569B4  7C E0 42 14 */	add r7, r0, r8
+/* 80059A78 000569B8  90 A7 00 34 */	stw r5, 0x34(r7)
+/* 80059A7C 000569BC  80 E3 00 34 */	lwz r7, 0x34(r3)
+/* 80059A80 000569C0  80 A6 00 00 */	lwz r5, 0(r6)
+/* 80059A84 000569C4  80 06 00 04 */	lwz r0, 4(r6)
+/* 80059A88 000569C8  7C E7 42 14 */	add r7, r7, r8
+/* 80059A8C 000569CC  90 A7 00 04 */	stw r5, 4(r7)
+/* 80059A90 000569D0  90 07 00 08 */	stw r0, 8(r7)
+/* 80059A94 000569D4  80 A6 00 08 */	lwz r5, 8(r6)
+/* 80059A98 000569D8  80 06 00 0C */	lwz r0, 0xc(r6)
+/* 80059A9C 000569DC  90 A7 00 0C */	stw r5, 0xc(r7)
+/* 80059AA0 000569E0  90 07 00 10 */	stw r0, 0x10(r7)
+/* 80059AA4 000569E4  80 A6 00 10 */	lwz r5, 0x10(r6)
+/* 80059AA8 000569E8  80 06 00 14 */	lwz r0, 0x14(r6)
+/* 80059AAC 000569EC  90 A7 00 14 */	stw r5, 0x14(r7)
+/* 80059AB0 000569F0  90 07 00 18 */	stw r0, 0x18(r7)
+/* 80059AB4 000569F4  80 A6 00 18 */	lwz r5, 0x18(r6)
+/* 80059AB8 000569F8  80 06 00 1C */	lwz r0, 0x1c(r6)
+/* 80059ABC 000569FC  90 A7 00 1C */	stw r5, 0x1c(r7)
+/* 80059AC0 00056A00  90 07 00 20 */	stw r0, 0x20(r7)
+/* 80059AC4 00056A04  80 A6 00 20 */	lwz r5, 0x20(r6)
+/* 80059AC8 00056A08  80 06 00 24 */	lwz r0, 0x24(r6)
+/* 80059ACC 00056A0C  90 A7 00 24 */	stw r5, 0x24(r7)
+/* 80059AD0 00056A10  90 07 00 28 */	stw r0, 0x28(r7)
+/* 80059AD4 00056A14  80 06 00 28 */	lwz r0, 0x28(r6)
+/* 80059AD8 00056A18  90 07 00 2C */	stw r0, 0x2c(r7)
+/* 80059ADC 00056A1C  80 03 00 34 */	lwz r0, 0x34(r3)
+/* 80059AE0 00056A20  7C 60 42 14 */	add r3, r0, r8
+/* 80059AE4 00056A24  90 83 00 28 */	stw r4, 0x28(r3)
+/* 80059AE8 00056A28  4E 80 00 20 */	blr 
+
+.global getWaveInfo__Q38JASystem14TBasicWaveBank11TWaveHandleCFv
+getWaveInfo__Q38JASystem14TBasicWaveBank11TWaveHandleCFv:
+/* 80059AEC 00056A2C  38 63 00 04 */	addi r3, r3, 4
+/* 80059AF0 00056A30  4E 80 00 20 */	blr 
+
+.global getWavePtr__Q38JASystem14TBasicWaveBank11TWaveHandleCFv
+getWavePtr__Q38JASystem14TBasicWaveBank11TWaveHandleCFv:
+/* 80059AF4 00056A34  80 83 00 30 */	lwz r4, 0x30(r3)
+/* 80059AF8 00056A38  80 84 00 08 */	lwz r4, 8(r4)
+/* 80059AFC 00056A3C  28 04 00 00 */	cmplwi r4, 0
+/* 80059B00 00056A40  40 82 00 0C */	bne lbl_80059B0C
+/* 80059B04 00056A44  38 60 00 00 */	li r3, 0
+/* 80059B08 00056A48  4E 80 00 20 */	blr 
+lbl_80059B0C:
+/* 80059B0C 00056A4C  80 03 00 0C */	lwz r0, 0xc(r3)
+/* 80059B10 00056A50  7C 64 02 14 */	add r3, r4, r0
+/* 80059B14 00056A54  4E 80 00 20 */	blr 
+
+.global getLoadFlagPtr__Q38JASystem14TBasicWaveBank10TWaveGroupFv
+getLoadFlagPtr__Q38JASystem14TBasicWaveBank10TWaveGroupFv:
+/* 80059B18 00056A58  38 63 00 30 */	addi r3, r3, 0x30
+/* 80059B1C 00056A5C  4E 80 00 20 */	blr 
+
+.global getWaveArcFileName__Q38JASystem14TBasicWaveBank10TWaveGroupCFv
+getWaveArcFileName__Q38JASystem14TBasicWaveBank10TWaveGroupCFv:
+/* 80059B20 00056A60  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 80059B24 00056A64  4E 80 00 20 */	blr 
+
+.global getHeap__Q38JASystem14TBasicWaveBank10TWaveGroupFv
+getHeap__Q38JASystem14TBasicWaveBank10TWaveGroupFv:
+/* 80059B28 00056A68  38 63 00 04 */	addi r3, r3, 4
+/* 80059B2C 00056A6C  4E 80 00 20 */	blr 
+
+.global getType__Q28JASystem14TBasicWaveBankCFv
+getType__Q28JASystem14TBasicWaveBankCFv:
+/* 80059B30 00056A70  3C 60 42 53 */	lis r3, 0x42534943@ha
+/* 80059B34 00056A74  38 63 49 43 */	addi r3, r3, 0x42534943@l
+/* 80059B38 00056A78  4E 80 00 20 */	blr 

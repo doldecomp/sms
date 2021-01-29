@@ -6,12 +6,51 @@
 
 from capstone import *
 from capstone.ppc import *
+import re
 import sys
+
+substitutions = (
+    ('<',  '$$0'),
+    ('>',  '$$1'),
+    ('@',  '$$2'),
+    ('\\', '$$3'),
+    (',',  '$$4'),
+    ('-',  '$$5')
+)
+
+def format(symbol):
+    for sub in substitutions:
+        symbol = symbol.replace(sub[0], sub[1])
+
+    return symbol
+
+def decodeformat(symbol):
+    for sub in substitutions:
+        symbol = symbol.replace(sub[1], sub[0])
+
+    return symbol
 
 r13_addr = None
 r2_addr = None
 
-with open(sys.argv[1], 'rb') as dolfile:
+labels = set()
+labelNames = {}
+
+argshift = 1
+
+if sys.argv[argshift] == '-m':
+    with open(sys.argv[argshift + 1], 'r') as mapfile:
+        for line in mapfile:
+            match = re.match('  [0-9a-f]{8} [0-9a-f]{6} ([0-9a-f]{8}) [ 0-9][0-9] ([^ 0-9][^ ]*)', line)
+            if match:
+                addr = int(match.group(1), 16)
+                name = format(match.group(2))
+                labels.add(addr)
+                labelNames[addr] = name
+
+    argshift += 2
+
+with open(sys.argv[argshift], 'rb') as dolfile:
     filecontent = bytearray(dolfile.read())
 
 def read_u8(offset):
@@ -65,9 +104,6 @@ print('BSS section:')
 print('\t.bss:\t0x%08X\t0x%08X\t0x%08X' % (0, bssAddress, bssAddress + bssSize))
 print('Entry Point: 0x%08X' % entryPoint)
 print('*/')
-
-labels = set()
-labelNames = {}
 
 # Add entry point
 labels.add(entryPoint)

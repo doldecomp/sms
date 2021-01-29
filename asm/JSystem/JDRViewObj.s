@@ -1,0 +1,35 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global testPerform__Q26JDrama8TViewObjFUlPQ26JDrama9TGraphics
+testPerform__Q26JDrama8TViewObjFUlPQ26JDrama9TGraphics:
+/* 80046F6C 00043EAC  7C 08 02 A6 */	mflr r0
+/* 80046F70 00043EB0  90 01 00 04 */	stw r0, 4(r1)
+/* 80046F74 00043EB4  54 80 04 E7 */	rlwinm. r0, r4, 0, 0x13, 0x13
+/* 80046F78 00043EB8  94 21 FF F8 */	stwu r1, -8(r1)
+/* 80046F7C 00043EBC  41 82 00 14 */	beq lbl_80046F90
+/* 80046F80 00043EC0  A0 03 00 0C */	lhz r0, 0xc(r3)
+/* 80046F84 00043EC4  54 00 04 E7 */	rlwinm. r0, r0, 0, 0x13, 0x13
+/* 80046F88 00043EC8  41 82 00 08 */	beq lbl_80046F90
+/* 80046F8C 00043ECC  54 84 00 3C */	rlwinm r4, r4, 0, 0, 0x1e
+lbl_80046F90:
+/* 80046F90 00043ED0  54 80 04 A5 */	rlwinm. r0, r4, 0, 0x12, 0x12
+/* 80046F94 00043ED4  41 82 00 14 */	beq lbl_80046FA8
+/* 80046F98 00043ED8  A0 03 00 0C */	lhz r0, 0xc(r3)
+/* 80046F9C 00043EDC  54 00 04 A5 */	rlwinm. r0, r0, 0, 0x12, 0x12
+/* 80046FA0 00043EE0  41 82 00 08 */	beq lbl_80046FA8
+/* 80046FA4 00043EE4  54 84 00 3C */	rlwinm r4, r4, 0, 0, 0x1e
+lbl_80046FA8:
+/* 80046FA8 00043EE8  A0 03 00 0C */	lhz r0, 0xc(r3)
+/* 80046FAC 00043EEC  7C 84 00 79 */	andc. r4, r4, r0
+/* 80046FB0 00043EF0  41 82 00 14 */	beq lbl_80046FC4
+/* 80046FB4 00043EF4  81 83 00 00 */	lwz r12, 0(r3)
+/* 80046FB8 00043EF8  81 8C 00 20 */	lwz r12, 0x20(r12)
+/* 80046FBC 00043EFC  7D 88 03 A6 */	mtlr r12
+/* 80046FC0 00043F00  4E 80 00 21 */	blrl 
+lbl_80046FC4:
+/* 80046FC4 00043F04  80 01 00 0C */	lwz r0, 0xc(r1)
+/* 80046FC8 00043F08  38 21 00 08 */	addi r1, r1, 8
+/* 80046FCC 00043F0C  7C 08 03 A6 */	mtlr r0
+/* 80046FD0 00043F10  4E 80 00 20 */	blr 

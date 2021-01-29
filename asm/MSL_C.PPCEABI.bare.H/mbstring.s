@@ -1,0 +1,23 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global wcstombs
+wcstombs:
+/* 80083B88 00080AC8  28 05 00 00 */	cmplwi r5, 0
+/* 80083B8C 00080ACC  7C A9 03 A6 */	mtctr r5
+/* 80083B90 00080AD0  38 C0 00 00 */	li r6, 0
+/* 80083B94 00080AD4  40 81 00 28 */	ble lbl_80083BBC
+lbl_80083B98:
+/* 80083B98 00080AD8  A0 04 00 00 */	lhz r0, 0(r4)
+/* 80083B9C 00080ADC  38 84 00 02 */	addi r4, r4, 2
+/* 80083BA0 00080AE0  7C 05 07 74 */	extsb r5, r0
+/* 80083BA4 00080AE4  7C A0 07 75 */	extsb. r0, r5
+/* 80083BA8 00080AE8  98 A3 00 00 */	stb r5, 0(r3)
+/* 80083BAC 00080AEC  38 63 00 01 */	addi r3, r3, 1
+/* 80083BB0 00080AF0  41 82 00 0C */	beq lbl_80083BBC
+/* 80083BB4 00080AF4  38 C6 00 01 */	addi r6, r6, 1
+/* 80083BB8 00080AF8  42 00 FF E0 */	bdnz lbl_80083B98
+lbl_80083BBC:
+/* 80083BBC 00080AFC  7C C3 33 78 */	mr r3, r6
+/* 80083BC0 00080B00  4E 80 00 20 */	blr 

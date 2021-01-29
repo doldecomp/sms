@@ -1,0 +1,152 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global __ct__Q38JASystem6TTrack11TOuterParamFv
+__ct__Q38JASystem6TTrack11TOuterParamFv:
+/* 80064530 00061470  38 00 00 00 */	li r0, 0
+/* 80064534 00061474  B0 03 00 00 */	sth r0, 0(r3)
+/* 80064538 00061478  B0 03 00 02 */	sth r0, 2(r3)
+/* 8006453C 0006147C  C0 02 87 00 */	lfs f0, $$2127-_SDA2_BASE_(r2)
+/* 80064540 00061480  D0 03 00 04 */	stfs f0, 4(r3)
+/* 80064544 00061484  D0 03 00 08 */	stfs f0, 8(r3)
+/* 80064548 00061488  D0 03 00 0C */	stfs f0, 0xc(r3)
+/* 8006454C 0006148C  D0 03 00 10 */	stfs f0, 0x10(r3)
+/* 80064550 00061490  D0 03 00 14 */	stfs f0, 0x14(r3)
+/* 80064554 00061494  D0 03 00 18 */	stfs f0, 0x18(r3)
+/* 80064558 00061498  B0 03 00 1C */	sth r0, 0x1c(r3)
+/* 8006455C 0006149C  B0 03 00 1E */	sth r0, 0x1e(r3)
+/* 80064560 000614A0  B0 03 00 20 */	sth r0, 0x20(r3)
+/* 80064564 000614A4  B0 03 00 22 */	sth r0, 0x22(r3)
+/* 80064568 000614A8  B0 03 00 24 */	sth r0, 0x24(r3)
+/* 8006456C 000614AC  B0 03 00 26 */	sth r0, 0x26(r3)
+/* 80064570 000614B0  B0 03 00 28 */	sth r0, 0x28(r3)
+/* 80064574 000614B4  B0 03 00 2A */	sth r0, 0x2a(r3)
+/* 80064578 000614B8  4E 80 00 20 */	blr 
+
+.global initExtBuffer__Q38JASystem6TTrack11TOuterParamFv
+initExtBuffer__Q38JASystem6TTrack11TOuterParamFv:
+/* 8006457C 000614BC  38 00 00 00 */	li r0, 0
+/* 80064580 000614C0  B0 03 00 00 */	sth r0, 0(r3)
+/* 80064584 000614C4  B0 03 00 02 */	sth r0, 2(r3)
+/* 80064588 000614C8  4E 80 00 20 */	blr 
+
+.global setOuterSwitch__Q38JASystem6TTrack11TOuterParamFUs
+setOuterSwitch__Q38JASystem6TTrack11TOuterParamFUs:
+/* 8006458C 000614CC  B0 83 00 00 */	sth r4, 0(r3)
+/* 80064590 000614D0  4E 80 00 20 */	blr 
+
+.global checkOuterSwitch__Q38JASystem6TTrack11TOuterParamFUs
+checkOuterSwitch__Q38JASystem6TTrack11TOuterParamFUs:
+/* 80064594 000614D4  A0 63 00 00 */	lhz r3, 0(r3)
+/* 80064598 000614D8  54 80 04 3E */	clrlwi r0, r4, 0x10
+/* 8006459C 000614DC  7C 60 00 38 */	and r0, r3, r0
+/* 800645A0 000614E0  7C 60 00 D0 */	neg r3, r0
+/* 800645A4 000614E4  30 03 FF FF */	addic r0, r3, -1
+/* 800645A8 000614E8  7C 00 19 10 */	subfe r0, r0, r3
+/* 800645AC 000614EC  54 03 06 3E */	clrlwi r3, r0, 0x18
+/* 800645B0 000614F0  4E 80 00 20 */	blr 
+
+.global setOuterUpdate__Q38JASystem6TTrack11TOuterParamFUs
+setOuterUpdate__Q38JASystem6TTrack11TOuterParamFUs:
+/* 800645B4 000614F4  B0 83 00 02 */	sth r4, 2(r3)
+/* 800645B8 000614F8  4E 80 00 20 */	blr 
+
+.global getOuterUpdate__Q38JASystem6TTrack11TOuterParamFv
+getOuterUpdate__Q38JASystem6TTrack11TOuterParamFv:
+/* 800645BC 000614FC  A0 63 00 02 */	lhz r3, 2(r3)
+/* 800645C0 00061500  4E 80 00 20 */	blr 
+
+.global getIntFirFilter__Q38JASystem6TTrack11TOuterParamFUc
+getIntFirFilter__Q38JASystem6TTrack11TOuterParamFUc:
+/* 800645C4 00061504  54 80 0D FC */	rlwinm r0, r4, 1, 0x17, 0x1e
+/* 800645C8 00061508  7C 63 02 14 */	add r3, r3, r0
+/* 800645CC 0006150C  A8 63 00 1C */	lha r3, 0x1c(r3)
+/* 800645D0 00061510  4E 80 00 20 */	blr 
+
+.global setParam__Q38JASystem6TTrack11TOuterParamFUcf
+setParam__Q38JASystem6TTrack11TOuterParamFUcf:
+/* 800645D4 00061514  54 80 06 3E */	clrlwi r0, r4, 0x18
+/* 800645D8 00061518  2C 00 00 08 */	cmpwi r0, 8
+/* 800645DC 0006151C  41 82 00 68 */	beq lbl_80064644
+/* 800645E0 00061520  40 80 00 2C */	bge lbl_8006460C
+/* 800645E4 00061524  2C 00 00 03 */	cmpwi r0, 3
+/* 800645E8 00061528  4D 82 00 20 */	beqlr 
+/* 800645EC 0006152C  40 80 00 14 */	bge lbl_80064600
+/* 800645F0 00061530  2C 00 00 01 */	cmpwi r0, 1
+/* 800645F4 00061534  41 82 00 30 */	beq lbl_80064624
+/* 800645F8 00061538  40 80 00 34 */	bge lbl_8006462C
+/* 800645FC 0006153C  4E 80 00 20 */	blr 
+lbl_80064600:
+/* 80064600 00061540  2C 00 00 05 */	cmpwi r0, 5
+/* 80064604 00061544  4C 80 00 20 */	bgelr 
+/* 80064608 00061548  48 00 00 2C */	b lbl_80064634
+lbl_8006460C:
+/* 8006460C 0006154C  2C 00 00 40 */	cmpwi r0, 0x40
+/* 80064610 00061550  41 82 00 3C */	beq lbl_8006464C
+/* 80064614 00061554  4C 80 00 20 */	bgelr 
+/* 80064618 00061558  2C 00 00 10 */	cmpwi r0, 0x10
+/* 8006461C 0006155C  41 82 00 20 */	beq lbl_8006463C
+/* 80064620 00061560  4E 80 00 20 */	blr 
+lbl_80064624:
+/* 80064624 00061564  38 A3 00 04 */	addi r5, r3, 4
+/* 80064628 00061568  48 00 00 30 */	b lbl_80064658
+lbl_8006462C:
+/* 8006462C 0006156C  38 A3 00 08 */	addi r5, r3, 8
+/* 80064630 00061570  48 00 00 28 */	b lbl_80064658
+lbl_80064634:
+/* 80064634 00061574  38 A3 00 0C */	addi r5, r3, 0xc
+/* 80064638 00061578  48 00 00 20 */	b lbl_80064658
+lbl_8006463C:
+/* 8006463C 0006157C  38 A3 00 10 */	addi r5, r3, 0x10
+/* 80064640 00061580  48 00 00 18 */	b lbl_80064658
+lbl_80064644:
+/* 80064644 00061584  38 A3 00 14 */	addi r5, r3, 0x14
+/* 80064648 00061588  48 00 00 10 */	b lbl_80064658
+lbl_8006464C:
+/* 8006464C 0006158C  38 A3 00 18 */	addi r5, r3, 0x18
+/* 80064650 00061590  48 00 00 08 */	b lbl_80064658
+/* 80064654 00061594  4E 80 00 20 */	blr 
+lbl_80064658:
+/* 80064658 00061598  D0 25 00 00 */	stfs f1, 0(r5)
+/* 8006465C 0006159C  54 80 06 3E */	clrlwi r0, r4, 0x18
+/* 80064660 000615A0  A0 83 00 02 */	lhz r4, 2(r3)
+/* 80064664 000615A4  7C 80 03 78 */	or r0, r4, r0
+/* 80064668 000615A8  B0 03 00 02 */	sth r0, 2(r3)
+/* 8006466C 000615AC  4E 80 00 20 */	blr 
+
+.global onSwitch__Q38JASystem6TTrack11TOuterParamFUs
+onSwitch__Q38JASystem6TTrack11TOuterParamFUs:
+/* 80064670 000615B0  A0 03 00 00 */	lhz r0, 0(r3)
+/* 80064674 000615B4  7C 00 23 78 */	or r0, r0, r4
+/* 80064678 000615B8  B0 03 00 00 */	sth r0, 0(r3)
+/* 8006467C 000615BC  A0 03 00 02 */	lhz r0, 2(r3)
+/* 80064680 000615C0  7C 00 23 78 */	or r0, r0, r4
+/* 80064684 000615C4  B0 03 00 02 */	sth r0, 2(r3)
+/* 80064688 000615C8  4E 80 00 20 */	blr 
+
+.global setFirFilter__Q38JASystem6TTrack11TOuterParamFPs
+setFirFilter__Q38JASystem6TTrack11TOuterParamFPs:
+/* 8006468C 000615CC  A0 03 00 02 */	lhz r0, 2(r3)
+/* 80064690 000615D0  60 00 00 80 */	ori r0, r0, 0x80
+/* 80064694 000615D4  B0 03 00 02 */	sth r0, 2(r3)
+/* 80064698 000615D8  A0 03 00 00 */	lhz r0, 0(r3)
+/* 8006469C 000615DC  60 00 00 80 */	ori r0, r0, 0x80
+/* 800646A0 000615E0  B0 03 00 00 */	sth r0, 0(r3)
+/* 800646A4 000615E4  A8 04 00 00 */	lha r0, 0(r4)
+/* 800646A8 000615E8  B0 03 00 1C */	sth r0, 0x1c(r3)
+/* 800646AC 000615EC  A8 04 00 02 */	lha r0, 2(r4)
+/* 800646B0 000615F0  B0 03 00 1E */	sth r0, 0x1e(r3)
+/* 800646B4 000615F4  A8 04 00 04 */	lha r0, 4(r4)
+/* 800646B8 000615F8  B0 03 00 20 */	sth r0, 0x20(r3)
+/* 800646BC 000615FC  A8 04 00 06 */	lha r0, 6(r4)
+/* 800646C0 00061600  B0 03 00 22 */	sth r0, 0x22(r3)
+/* 800646C4 00061604  A8 04 00 08 */	lha r0, 8(r4)
+/* 800646C8 00061608  B0 03 00 24 */	sth r0, 0x24(r3)
+/* 800646CC 0006160C  A8 04 00 0A */	lha r0, 0xa(r4)
+/* 800646D0 00061610  B0 03 00 26 */	sth r0, 0x26(r3)
+/* 800646D4 00061614  A8 04 00 0C */	lha r0, 0xc(r4)
+/* 800646D8 00061618  B0 03 00 28 */	sth r0, 0x28(r3)
+/* 800646DC 0006161C  A8 04 00 0E */	lha r0, 0xe(r4)
+/* 800646E0 00061620  B0 03 00 2A */	sth r0, 0x2a(r3)
+/* 800646E4 00061624  4E 80 00 20 */	blr 

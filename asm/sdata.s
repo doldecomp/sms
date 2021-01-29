@@ -1,1971 +1,2139 @@
 .include "macros.inc"
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global lbl_80408AC0
-lbl_80408AC0:
+.global rootPath$1763
+rootPath$1763:
 	.incbin "baserom.dol", 0x3E3000, 0x8
-.global lbl_80408AC8
-lbl_80408AC8:
+.global sMessageBuffer__12JUTException
+sMessageBuffer__12JUTException:
 	.incbin "baserom.dol", 0x3E3008, 0x8
-.global lbl_80408AD0
-lbl_80408AD0:
+.global mStickMode__10JUTGamePad
+mStickMode__10JUTGamePad:
 	.incbin "baserom.dol", 0x3E3010, 0x4
-.global lbl_80408AD4
-lbl_80408AD4:
+.global sResetPattern__Q210JUTGamePad13C3ButtonReset
+sResetPattern__Q210JUTGamePad13C3ButtonReset:
 	.incbin "baserom.dol", 0x3E3014, 0x4
-.global lbl_80408AD8
-lbl_80408AD8:
+.global Unit01
+Unit01:
 	.incbin "baserom.dol", 0x3E3018, 0x8
-.global lbl_80408AE0
-lbl_80408AE0:
+.global J3DUnit01
+J3DUnit01:
 	.incbin "baserom.dol", 0x3E3020, 0x8
-.global lbl_80408AE8
-lbl_80408AE8:
+.global errorRetry__12JKRDvdRipper
+errorRetry__12JKRDvdRipper:
 	.incbin "baserom.dol", 0x3E3028, 0x4
-.global lbl_80408AEC
-lbl_80408AEC:
+.global szpBufferSize__12JKRDvdRipper
+szpBufferSize__12JKRDvdRipper:
 	.incbin "baserom.dol", 0x3E302C, 0x4
-.global lbl_80408AF0
-lbl_80408AF0:
+.global errorRetry__16JKRDvdAramRipper
+errorRetry__16JKRDvdAramRipper:
 	.incbin "baserom.dol", 0x3E3030, 0x4
-.global lbl_80408AF4
-lbl_80408AF4:
+.global szpBufferSize__16JKRDvdAramRipper
+szpBufferSize__16JKRDvdAramRipper:
 	.incbin "baserom.dol", 0x3E3034, 0x4
-.global lbl_80408AF8
-lbl_80408AF8:
+.global GXTexMode0Ids
+GXTexMode0Ids:
 	.incbin "baserom.dol", 0x3E3038, 0x8
-.global lbl_80408B00
-lbl_80408B00:
+.global GXTexMode1Ids
+GXTexMode1Ids:
 	.incbin "baserom.dol", 0x3E3040, 0x8
-.global lbl_80408B08
-lbl_80408B08:
+.global GXTexImage0Ids
+GXTexImage0Ids:
 	.incbin "baserom.dol", 0x3E3048, 0x8
-.global lbl_80408B10
-lbl_80408B10:
+.global GXTexImage1Ids
+GXTexImage1Ids:
 	.incbin "baserom.dol", 0x3E3050, 0x8
-.global lbl_80408B18
-lbl_80408B18:
+.global GXTexImage2Ids
+GXTexImage2Ids:
 	.incbin "baserom.dol", 0x3E3058, 0x8
-.global lbl_80408B20
-lbl_80408B20:
+.global GXTexImage3Ids
+GXTexImage3Ids:
 	.incbin "baserom.dol", 0x3E3060, 0x8
-.global lbl_80408B28
-lbl_80408B28:
+.global GXTexTlutIds
+GXTexTlutIds:
 	.incbin "baserom.dol", 0x3E3068, 0x8
-.global lbl_80408B30
-lbl_80408B30:
+.global GX2HWFiltConv
+GX2HWFiltConv:
 	.incbin "baserom.dol", 0x3E3070, 0x8
-.global lbl_80408B38
-lbl_80408B38:
+.global j3dDefaultColInfo
+j3dDefaultColInfo:
 	.incbin "baserom.dol", 0x3E3078, 0x4
-.global lbl_80408B3C
-lbl_80408B3C:
+.global j3dDefaultAmbInfo
+j3dDefaultAmbInfo:
 	.incbin "baserom.dol", 0x3E307C, 0x4
-.global lbl_80408B40
-lbl_80408B40:
+.global j3dDefaultColorChanNum
+j3dDefaultColorChanNum:
 	.incbin "baserom.dol", 0x3E3080, 0x4
-.global lbl_80408B44
-lbl_80408B44:
+.global j3dDefaultTevOrderInfoNull
+j3dDefaultTevOrderInfoNull:
 	.incbin "baserom.dol", 0x3E3084, 0x4
-.global lbl_80408B48
-lbl_80408B48:
+.global j3dDefaultIndTexOrderNull
+j3dDefaultIndTexOrderNull:
 	.incbin "baserom.dol", 0x3E3088, 0x4
-.global lbl_80408B4C
-lbl_80408B4C:
+.global j3dDefaultTevColor
+j3dDefaultTevColor:
 	.incbin "baserom.dol", 0x3E308C, 0x4
 .global lbl_80408B50
 lbl_80408B50:
 	.incbin "baserom.dol", 0x3E3090, 0x4
-.global lbl_80408B54
-lbl_80408B54:
+.global j3dDefaultIndTexCoordScaleInfo
+j3dDefaultIndTexCoordScaleInfo:
 	.incbin "baserom.dol", 0x3E3094, 0x4
-.global lbl_80408B58
-lbl_80408B58:
+.global j3dDefaultTevKColor
+j3dDefaultTevKColor:
 	.incbin "baserom.dol", 0x3E3098, 0x4
-.global lbl_80408B5C
-lbl_80408B5C:
+.global j3dDefaultTevSwapMode
+j3dDefaultTevSwapMode:
 	.incbin "baserom.dol", 0x3E309C, 0x4
-.global lbl_80408B60
-lbl_80408B60:
+.global j3dDefaultTevSwapModeTable
+j3dDefaultTevSwapModeTable:
 	.incbin "baserom.dol", 0x3E30A0, 0x4
-.global lbl_80408B64
-lbl_80408B64:
+.global j3dDefaultBlendInfo
+j3dDefaultBlendInfo:
 	.incbin "baserom.dol", 0x3E30A4, 0x4
-.global lbl_80408B68
-lbl_80408B68:
+.global j3dDefaultColorChanInfo
+j3dDefaultColorChanInfo:
 	.incbin "baserom.dol", 0x3E30A8, 0x8
-.global lbl_80408B70
-lbl_80408B70:
+.global j3dDefaultTevSwapTableID
+j3dDefaultTevSwapTableID:
 	.incbin "baserom.dol", 0x3E30B0, 0x2
-.global lbl_80408B72
-lbl_80408B72:
+.global j3dDefaultAlphaCmpID
+j3dDefaultAlphaCmpID:
 	.incbin "baserom.dol", 0x3E30B2, 0x2
-.global lbl_80408B74
-lbl_80408B74:
+.global j3dDefaultZModeID
+j3dDefaultZModeID:
 	.incbin "baserom.dol", 0x3E30B4, 0x4
-.global lbl_80408B78
-lbl_80408B78:
+.global mVisible__Q212JUTAssertion9$$2unnamed$$2
+mVisible__Q212JUTAssertion9$$2unnamed$$2:
 	.incbin "baserom.dol", 0x3E30B8, 0x8
-.global lbl_80408B80
-lbl_80408B80:
+.global JRNTexImage1Ids
+JRNTexImage1Ids:
 	.incbin "baserom.dol", 0x3E30C0, 0x8
-.global lbl_80408B88
-lbl_80408B88:
+.global JRNTexImage2Ids
+JRNTexImage2Ids:
 	.incbin "baserom.dol", 0x3E30C8, 0x8
-.global lbl_80408B90
-lbl_80408B90:
+.global cEqualCSlope__7JALCalc
+cEqualCSlope__7JALCalc:
 	.incbin "baserom.dol", 0x3E30D0, 0x4
-.global lbl_80408B94
-lbl_80408B94:
+.global cPlusPSlope__7JALCalc
+cPlusPSlope__7JALCalc:
 	.incbin "baserom.dol", 0x3E30D4, 0x4
-.global lbl_80408B98
-lbl_80408B98:
+.global asnFileName__Q27JAInter8TAsnData
+asnFileName__Q27JAInter8TAsnData:
 	.incbin "baserom.dol", 0x3E30D8, 0x8
-.global lbl_80408BA0
-lbl_80408BA0:
+.global LOOP_BLOCKS__Q27JAInter9StreamLib
+LOOP_BLOCKS__Q27JAInter9StreamLib:
 	.incbin "baserom.dol", 0x3E30E0, 0x4
-.global lbl_80408BA4
-lbl_80408BA4:
+.global LOOP_SAMPLESIZE__Q27JAInter9StreamLib
+LOOP_SAMPLESIZE__Q27JAInter9StreamLib:
 	.incbin "baserom.dol", 0x3E30E4, 0x4
-.global lbl_80408BA8
-lbl_80408BA8:
+.global outputmode__Q27JAInter9StreamLib
+outputmode__Q27JAInter9StreamLib:
 	.incbin "baserom.dol", 0x3E30E8, 0x8
-.global lbl_80408BB0
-lbl_80408BB0:
+.global distanceParameterMoveTime__18JAIGlobalParameter
+distanceParameterMoveTime__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F0, 0x1
-.global lbl_80408BB1
-lbl_80408BB1:
+.global audioSystemThreadPriority__18JAIGlobalParameter
+audioSystemThreadPriority__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F1, 0x1
-.global lbl_80408BB2
-lbl_80408BB2:
+.global audioDvdThreadPriority__18JAIGlobalParameter
+audioDvdThreadPriority__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F2, 0x1
-.global lbl_80408BB3
-lbl_80408BB3:
+.global seqMuteVolumeSePlay__18JAIGlobalParameter
+seqMuteVolumeSePlay__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F3, 0x1
-.global lbl_80408BB4
-lbl_80408BB4:
+.global seDistanceFxParameter__18JAIGlobalParameter
+seDistanceFxParameter__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F4, 0x4
-.global lbl_80408BB8
-lbl_80408BB8:
+.global soundSceneMax__18JAIGlobalParameter
+soundSceneMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30F8, 0x4
-.global lbl_80408BBC
-lbl_80408BBC:
+.global seRegistMax__18JAIGlobalParameter
+seRegistMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E30FC, 0x4
-.global lbl_80408BC0
-lbl_80408BC0:
+.global seTrackMax__18JAIGlobalParameter
+seTrackMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3100, 0x4
-.global lbl_80408BC4
-lbl_80408BC4:
+.global seqTrackMax__18JAIGlobalParameter
+seqTrackMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3104, 0x4
-.global lbl_80408BC8
-lbl_80408BC8:
+.global seqPlayTrackMax__18JAIGlobalParameter
+seqPlayTrackMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3108, 0x4
-.global lbl_80408BCC
-lbl_80408BCC:
+.global seqControlBufferMax__18JAIGlobalParameter
+seqControlBufferMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E310C, 0x4
-.global lbl_80408BD0
-lbl_80408BD0:
+.global streamControlBufferMax__18JAIGlobalParameter
+streamControlBufferMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3110, 0x4
-.global lbl_80408BD4
-lbl_80408BD4:
+.global streamParameterBufferMax__18JAIGlobalParameter
+streamParameterBufferMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3114, 0x4
-.global lbl_80408BD8
-lbl_80408BD8:
+.global autoHeapMax__18JAIGlobalParameter
+autoHeapMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3118, 0x4
-.global lbl_80408BDC
-lbl_80408BDC:
+.global stayHeapMax__18JAIGlobalParameter
+stayHeapMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E311C, 0x4
-.global lbl_80408BE0
-lbl_80408BE0:
+.global autoHeapRoomSize__18JAIGlobalParameter
+autoHeapRoomSize__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3120, 0x4
-.global lbl_80408BE4
-lbl_80408BE4:
+.global stayHeapSize__18JAIGlobalParameter
+stayHeapSize__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3124, 0x4
-.global lbl_80408BE8
-lbl_80408BE8:
+.global seInfoFileName__18JAIGlobalParameter
+seInfoFileName__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3128, 0x4
-.global lbl_80408BEC
-lbl_80408BEC:
+.global seqInfoFileName__18JAIGlobalParameter
+seqInfoFileName__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E312C, 0x4
-.global lbl_80408BF0
-lbl_80408BF0:
+.global streamInfoFileName__18JAIGlobalParameter
+streamInfoFileName__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3130, 0x4
-.global lbl_80408BF4
-lbl_80408BF4:
+.global initDataFileName__18JAIGlobalParameter
+initDataFileName__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3134, 0x4
-.global lbl_80408BF8
-lbl_80408BF8:
+.global wavePath__18JAIGlobalParameter
+wavePath__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3138, 0x4
-.global lbl_80408BFC
-lbl_80408BFC:
+.global sequenceArchivesPath__18JAIGlobalParameter
+sequenceArchivesPath__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E313C, 0x4
-.global lbl_80408C00
-lbl_80408C00:
+.global streamPath__18JAIGlobalParameter
+streamPath__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3140, 0x4
-.global lbl_80408C04
-lbl_80408C04:
+.global sequenceArchivesFileName__18JAIGlobalParameter
+sequenceArchivesFileName__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3144, 0x4
-.global lbl_80408C08
-lbl_80408C08:
+.global inputGainDown__18JAIGlobalParameter
+inputGainDown__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3148, 0x4
-.global lbl_80408C0C
-lbl_80408C0C:
+.global outputGainUp__18JAIGlobalParameter
+outputGainUp__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E314C, 0x4
-.global lbl_80408C10
-lbl_80408C10:
+.global distanceMax__18JAIGlobalParameter
+distanceMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3150, 0x4
-.global lbl_80408C14
-lbl_80408C14:
+.global maxVolumeDistance__18JAIGlobalParameter
+maxVolumeDistance__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3154, 0x4
-.global lbl_80408C18
-lbl_80408C18:
+.global seDolbyCenterValue__18JAIGlobalParameter
+seDolbyCenterValue__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3158, 0x4
-.global lbl_80408C1C
-lbl_80408C1C:
+.global seDolbyFrontDistanceMax__18JAIGlobalParameter
+seDolbyFrontDistanceMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E315C, 0x4
-.global lbl_80408C20
-lbl_80408C20:
+.global seDolbyBehindDistanceMax__18JAIGlobalParameter
+seDolbyBehindDistanceMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3160, 0x4
-.global lbl_80408C24
-lbl_80408C24:
+.global dopplarMoveTime__18JAIGlobalParameter
+dopplarMoveTime__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3164, 0x4
-.global lbl_80408C28
-lbl_80408C28:
+.global dummyPositionMax__18JAIGlobalParameter
+dummyPositionMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3168, 0x4
-.global lbl_80408C2C
-lbl_80408C2C:
+.global seqMuteMoveSpeedSePlay__18JAIGlobalParameter
+seqMuteMoveSpeedSePlay__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E316C, 0x4
-.global lbl_80408C30
-lbl_80408C30:
+.global audioCameraMax__18JAIGlobalParameter
+audioCameraMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3170, 0x4
-.global lbl_80408C34
-lbl_80408C34:
+.global systemTrackMax__18JAIGlobalParameter
+systemTrackMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3174, 0x4
-.global lbl_80408C38
-lbl_80408C38:
+.global systemRootTrackMax__18JAIGlobalParameter
+systemRootTrackMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3178, 0x4
-.global lbl_80408C3C
-lbl_80408C3C:
+.global panDistanceMax__18JAIGlobalParameter
+panDistanceMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E317C, 0x4
-.global lbl_80408C40
-lbl_80408C40:
+.global panDistance2Max__18JAIGlobalParameter
+panDistance2Max__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3180, 0x4
-.global lbl_80408C44
-lbl_80408C44:
+.global panAngleParameter__18JAIGlobalParameter
+panAngleParameter__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3184, 0x4
-.global lbl_80408C48
-lbl_80408C48:
+.global panAngleParameter2__18JAIGlobalParameter
+panAngleParameter2__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3188, 0x4
-.global lbl_80408C4C
-lbl_80408C4C:
+.global dopplarParameter__18JAIGlobalParameter
+dopplarParameter__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E318C, 0x4
-.global lbl_80408C50
-lbl_80408C50:
+.global seDistanceWaitMax__18JAIGlobalParameter
+seDistanceWaitMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3190, 0x4
-.global lbl_80408C54
-lbl_80408C54:
+.global seDistancepitchMax__18JAIGlobalParameter
+seDistancepitchMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3194, 0x4
-.global lbl_80408C58
-lbl_80408C58:
+.global waitMax__Q38JASystem6Driver8DSPQueue
+waitMax__Q38JASystem6Driver8DSPQueue:
 	.incbin "baserom.dol", 0x3E3198, 0x8
-.global lbl_80408C60
-lbl_80408C60:
+.global MAX_MIXERLEVEL__Q28JASystem6Driver
+MAX_MIXERLEVEL__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3E31A0, 0x4
-.global lbl_80408C64
-lbl_80408C64:
+.global JAS_SYSTEM_OUTPUT_MODE__Q28JASystem6Driver
+JAS_SYSTEM_OUTPUT_MODE__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3E31A4, 0x4
-.global lbl_80408C68
-lbl_80408C68:
+.global JAS_UPDATE_INTERVAL__Q28JASystem6Driver
+JAS_UPDATE_INTERVAL__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3E31A8, 0x4
-.global lbl_80408C6C
-lbl_80408C6C:
+.global DSP_VOICE_WAITS_MAX__Q28JASystem6Driver
+DSP_VOICE_WAITS_MAX__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3E31AC, 0x4
-.global lbl_80408C70
-lbl_80408C70:
+.global smnFree__Q28JASystem11TDSPChannel
+smnFree__Q28JASystem11TDSPChannel:
 	.incbin "baserom.dol", 0x3E31B0, 0x4
-.global lbl_80408C74
-lbl_80408C74:
+.global DSP_LIMIT_RATIO__8JASystem
+DSP_LIMIT_RATIO__8JASystem:
 	.incbin "baserom.dol", 0x3E31B4, 0x4
-.global lbl_80408C78
-lbl_80408C78:
+.global JAS_DSP_PREFIX__Q28JASystem12DSPInterface
+JAS_DSP_PREFIX__Q28JASystem12DSPInterface:
 	.incbin "baserom.dol", 0x3E31B8, 0x4
-.global lbl_80408C7C
-lbl_80408C7C:
+.global COMP_BLOCKSAMPLES$234
+COMP_BLOCKSAMPLES$234:
 	.incbin "baserom.dol", 0x3E31BC, 0x8
-.global lbl_80408C84
-lbl_80408C84:
+.global COMP_BLOCKBYTES$235
+COMP_BLOCKBYTES$235:
 	.incbin "baserom.dol", 0x3E31C4, 0xC
-.global lbl_80408C90
-lbl_80408C90:
+.global maxCallbacksUser__Q28JASystem6Kernel
+maxCallbacksUser__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31D0, 0x8
-.global lbl_80408C98
-lbl_80408C98:
+.global dvdMsgsSize__Q28JASystem3Dvd
+dvdMsgsSize__Q28JASystem3Dvd:
 	.incbin "baserom.dol", 0x3E31D8, 0x4
-.global lbl_80408C9C
-lbl_80408C9C:
+.global dvdBufSize__Q28JASystem3Dvd
+dvdBufSize__Q28JASystem3Dvd:
 	.incbin "baserom.dol", 0x3E31DC, 0x4
-.global lbl_80408CA0
-lbl_80408CA0:
+.global maxDics__Q28JASystem3Dvd
+maxDics__Q28JASystem3Dvd:
 	.incbin "baserom.dol", 0x3E31E0, 0x8
-.global lbl_80408CA8
-lbl_80408CA8:
+.global playListMax__Q28JASystem10HardStream
+playListMax__Q28JASystem10HardStream:
 	.incbin "baserom.dol", 0x3E31E8, 0x8
-.global lbl_80408CB0
-lbl_80408CB0:
+.global gDacRate__Q28JASystem6Kernel
+gDacRate__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31F0, 0x4
-.global lbl_80408CB4
-lbl_80408CB4:
+.global gSubFrames__Q28JASystem6Kernel
+gSubFrames__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31F4, 0x4
-.global lbl_80408CB8
-lbl_80408CB8:
+.global gFrameSamples__Q28JASystem6Kernel
+gFrameSamples__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31F8, 0x4
-.global lbl_80408CBC
-lbl_80408CBC:
+.global gDacSize__Q28JASystem6Kernel
+gDacSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31FC, 0x4
-.global lbl_80408CC0
-lbl_80408CC0:
+.global audioDramSize__Q28JASystem6Kernel
+audioDramSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E3200, 0x4
-.global lbl_80408CC4
-lbl_80408CC4:
+.global audioAramSize__Q28JASystem6Kernel
+audioAramSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E3204, 0x4
-.global lbl_80408CC8
-lbl_80408CC8:
+.global vlMaxArcs__Q28JASystem5Vload
+vlMaxArcs__Q28JASystem5Vload:
 	.incbin "baserom.dol", 0x3E3208, 0x8
-.global lbl_80408CD0
-lbl_80408CD0:
+.global sV0__Q28JASystem6Player
+sV0__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3E3210, 0x4
-.global lbl_80408CD4
-lbl_80408CD4:
+.global sV1__Q28JASystem6Player
+sV1__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3E3214, 0x4
-.global lbl_80408CD8
-lbl_80408CD8:
+.global DSP_MIXERLEVEL
+DSP_MIXERLEVEL:
 	.incbin "baserom.dol", 0x3E3218, 0x8
-.global lbl_80408CE0
-lbl_80408CE0:
+.global fragmentID
+fragmentID:
 	.incbin "baserom.dol", 0x3E3220, 0x8
-.global lbl_80408CE8
-lbl_80408CE8:
+.global $$2wstringBase0
+$$2wstringBase0:
 	.incbin "baserom.dol", 0x3E3228, 0x8
-.global lbl_80408CF0
-lbl_80408CF0:
+.global next
+next:
 	.incbin "baserom.dol", 0x3E3230, 0x8
-.global lbl_80408CF8
-lbl_80408CF8:
+.global K1
+K1:
 	.incbin "baserom.dol", 0x3E3238, 0x4
-.global lbl_80408CFC
-lbl_80408CFC:
+.global K2
+K2:
 	.incbin "baserom.dol", 0x3E323C, 0x4
-.global lbl_80408D00
-lbl_80408D00:
+.global __OSCurrHeap
+__OSCurrHeap:
 	.incbin "baserom.dol", 0x3E3240, 0x8
-.global lbl_80408D08
-lbl_80408D08:
+.global __OSArenaLo
+__OSArenaLo:
 	.incbin "baserom.dol", 0x3E3248, 0x8
-.global lbl_80408D10
-lbl_80408D10:
+.global $$232
+$$232:
 	.incbin "baserom.dol", 0x3E3250, 0x8
-.global lbl_80408D18
-lbl_80408D18:
+.global fontEncode$80
+fontEncode$80:
 	.incbin "baserom.dol", 0x3E3258, 0x8
-.global lbl_80408D20
-lbl_80408D20:
+.global Unit01
+Unit01:
 	.incbin "baserom.dol", 0x3E3260, 0x8
-.global lbl_80408D28
-lbl_80408D28:
+.global FirstRead
+FirstRead:
 	.incbin "baserom.dol", 0x3E3268, 0x8
-.global lbl_80408D30
-lbl_80408D30:
+.global $$2116
+$$2116:
 	.incbin "baserom.dol", 0x3E3270, 0x8
-.global lbl_80408D38
-lbl_80408D38:
+.global autoInvalidation
+autoInvalidation:
 	.incbin "baserom.dol", 0x3E3278, 0x8
-.global lbl_80408D40
-lbl_80408D40:
+.global $$235
+$$235:
 	.incbin "baserom.dol", 0x3E3280, 0x4
-.global lbl_80408D44
-lbl_80408D44:
+.global $$240
+$$240:
 	.incbin "baserom.dol", 0x3E3284, 0x4
-.global lbl_80408D48
-lbl_80408D48:
+.global $$241
+$$241:
 	.incbin "baserom.dol", 0x3E3288, 0x8
-.global lbl_80408D50
-lbl_80408D50:
+.global ClampRegion
+ClampRegion:
 	.incbin "baserom.dol", 0x3E3290, 0x8
-.global lbl_80408D58
-lbl_80408D58:
+.global ResettingChan
+ResettingChan:
 	.incbin "baserom.dol", 0x3E3298, 0x4
-.global lbl_80408D5C
-lbl_80408D5C:
+.global XPatchBits
+XPatchBits:
 	.incbin "baserom.dol", 0x3E329C, 0x4
-.global lbl_80408D60
-lbl_80408D60:
+.global AnalogMode
+AnalogMode:
 	.incbin "baserom.dol", 0x3E32A0, 0x4
-.global lbl_80408D64
-lbl_80408D64:
+.global Spec
+Spec:
 	.incbin "baserom.dol", 0x3E32A4, 0x4
-.global lbl_80408D68
-lbl_80408D68:
+.global MakeStatus
+MakeStatus:
 	.incbin "baserom.dol", 0x3E32A8, 0x4
-.global lbl_80408D6C
-lbl_80408D6C:
+.global CmdReadOrigin
+CmdReadOrigin:
 	.incbin "baserom.dol", 0x3E32AC, 0x4
-.global lbl_80408D70
-lbl_80408D70:
+.global CmdCalibrate
+CmdCalibrate:
 	.incbin "baserom.dol", 0x3E32B0, 0x8
-.global lbl_80408D78
-lbl_80408D78:
+.global next
+next:
 	.incbin "baserom.dol", 0x3E32B8, 0x8
-.global lbl_80408D80
-lbl_80408D80:
+.global __CARDVendorID
+__CARDVendorID:
 	.incbin "baserom.dol", 0x3E32C0, 0x8
-.global lbl_80408D88
-lbl_80408D88:
+.global gx
+gx:
 	.incbin "baserom.dol", 0x3E32C8, 0x8
-.global lbl_80408D90
-lbl_80408D90:
+.global tbl1$215
+tbl1$215:
 	.incbin "baserom.dol", 0x3E32D0, 0x4
-.global lbl_80408D94
-lbl_80408D94:
+.global tbl2$216
+tbl2$216:
 	.incbin "baserom.dol", 0x3E32D4, 0x4
-.global lbl_80408D98
-lbl_80408D98:
+.global tbl3$217
+tbl3$217:
 	.incbin "baserom.dol", 0x3E32D8, 0x8
-.global lbl_80408DA0
-lbl_80408DA0:
+.global GX2HWFiltConv
+GX2HWFiltConv:
 	.incbin "baserom.dol", 0x3E32E0, 0x8
-.global lbl_80408DA8
-lbl_80408DA8:
+.global SendCount
+SendCount:
 	.incbin "baserom.dol", 0x3E32E8, 0x8
-.global lbl_80408DB0
-lbl_80408DB0:
+.global cm2hw$400
+cm2hw$400:
 	.incbin "baserom.dol", 0x3E32F0, 0x4
-.global lbl_80408DB4
-lbl_80408DB4:
+.global cm2hw$515
+cm2hw$515:
 	.incbin "baserom.dol", 0x3E32F4, 0xC
-.global lbl_80408DC0
-lbl_80408DC0:
+.global uv
+uv:
 	.incbin "baserom.dol", 0x3E3300, 0x8
-.global lbl_80408DC8
-lbl_80408DC8:
+.global className$1930
+className$1930:
 	.incbin "baserom.dol", 0x3E3308, 0x8
-.global lbl_80408DD0
-lbl_80408DD0:
+.global className$1944
+className$1944:
 	.incbin "baserom.dol", 0x3E3310, 0x8
-.global lbl_80408DD8
-lbl_80408DD8:
+.global mSquareShadowHeight__19TMBindShadowManager
+mSquareShadowHeight__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E3318, 0x4
-.global lbl_80408DDC
-lbl_80408DDC:
+.global mTreeScale__19TMBindShadowManager
+mTreeScale__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E331C, 0x4
-.global lbl_80408DE0
-lbl_80408DE0:
+.global mYScalePlus__19TMBindShadowManager
+mYScalePlus__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E3320, 0x8
-.global lbl_80408DE8
-lbl_80408DE8:
+.global ColorBlack
+ColorBlack:
 	.incbin "baserom.dol", 0x3E3328, 0x4
-.global lbl_80408DEC
-lbl_80408DEC:
+.global ColorWhite
+ColorWhite:
 	.incbin "baserom.dol", 0x3E332C, 0x4
-.global lbl_80408DF0
-lbl_80408DF0:
+.global mMotorCountLimit__9RumbleMgr
+mMotorCountLimit__9RumbleMgr:
 	.incbin "baserom.dol", 0x3E3330, 0x4
-.global lbl_80408DF4
-lbl_80408DF4:
+.global mMotorTimerPeriod__9RumbleMgr
+mMotorTimerPeriod__9RumbleMgr:
 	.incbin "baserom.dol", 0x3E3334, 0x4
-.global lbl_80408DF8
-lbl_80408DF8:
-	.incbin "baserom.dol", 0x3E3338, 0x104
-.global lbl_80408EFC
-lbl_80408EFC:
+.global mPowerThreshold__9RumbleMgr
+mPowerThreshold__9RumbleMgr:
+	.incbin "baserom.dol", 0x3E3338, 0x8
+.global rumblePoint_00
+rumblePoint_00:
+	.incbin "baserom.dol", 0x3E3340, 0x4
+.global rumblePoint_01
+rumblePoint_01:
+	.incbin "baserom.dol", 0x3E3344, 0x4
+.global rumblePoint_02
+rumblePoint_02:
+	.incbin "baserom.dol", 0x3E3348, 0x4
+.global rumbleFrame_02
+rumbleFrame_02:
+	.incbin "baserom.dol", 0x3E334C, 0x8
+.global rumblePower_02
+rumblePower_02:
+	.incbin "baserom.dol", 0x3E3354, 0x8
+.global rumblePoint_03
+rumblePoint_03:
+	.incbin "baserom.dol", 0x3E335C, 0x4
+.global rumbleFrame_03
+rumbleFrame_03:
+	.incbin "baserom.dol", 0x3E3360, 0x8
+.global rumblePower_03
+rumblePower_03:
+	.incbin "baserom.dol", 0x3E3368, 0x8
+.global rumblePoint_04
+rumblePoint_04:
+	.incbin "baserom.dol", 0x3E3370, 0x4
+.global rumblePoint_05
+rumblePoint_05:
+	.incbin "baserom.dol", 0x3E3374, 0x4
+.global rumblePoint_06
+rumblePoint_06:
+	.incbin "baserom.dol", 0x3E3378, 0x4
+.global rumblePoint_07
+rumblePoint_07:
+	.incbin "baserom.dol", 0x3E337C, 0x4
+.global rumblePoint_08
+rumblePoint_08:
+	.incbin "baserom.dol", 0x3E3380, 0x4
+.global rumblePoint_09
+rumblePoint_09:
+	.incbin "baserom.dol", 0x3E3384, 0x4
+.global rumblePoint_10
+rumblePoint_10:
+	.incbin "baserom.dol", 0x3E3388, 0x4
+.global rumbleFrame_10
+rumbleFrame_10:
+	.incbin "baserom.dol", 0x3E338C, 0x4
+.global rumblePower_10
+rumblePower_10:
+	.incbin "baserom.dol", 0x3E3390, 0x4
+.global rumblePoint_11
+rumblePoint_11:
+	.incbin "baserom.dol", 0x3E3394, 0x4
+.global rumbleFrame_11
+rumbleFrame_11:
+	.incbin "baserom.dol", 0x3E3398, 0x4
+.global rumblePower_11
+rumblePower_11:
+	.incbin "baserom.dol", 0x3E339C, 0x4
+.global rumblePoint_12
+rumblePoint_12:
+	.incbin "baserom.dol", 0x3E33A0, 0x4
+.global rumbleFrame_12
+rumbleFrame_12:
+	.incbin "baserom.dol", 0x3E33A4, 0x4
+.global rumblePower_12
+rumblePower_12:
+	.incbin "baserom.dol", 0x3E33A8, 0x4
+.global rumblePoint_13
+rumblePoint_13:
+	.incbin "baserom.dol", 0x3E33AC, 0x4
+.global rumbleFrame_13
+rumbleFrame_13:
+	.incbin "baserom.dol", 0x3E33B0, 0x4
+.global rumblePower_13
+rumblePower_13:
+	.incbin "baserom.dol", 0x3E33B4, 0x4
+.global rumblePoint_14
+rumblePoint_14:
+	.incbin "baserom.dol", 0x3E33B8, 0x4
+.global rumbleFrame_14
+rumbleFrame_14:
+	.incbin "baserom.dol", 0x3E33BC, 0x4
+.global rumblePower_14
+rumblePower_14:
+	.incbin "baserom.dol", 0x3E33C0, 0x4
+.global rumblePoint_15
+rumblePoint_15:
+	.incbin "baserom.dol", 0x3E33C4, 0x4
+.global rumbleFrame_15
+rumbleFrame_15:
+	.incbin "baserom.dol", 0x3E33C8, 0x4
+.global rumblePower_15
+rumblePower_15:
+	.incbin "baserom.dol", 0x3E33CC, 0x4
+.global rumblePoint_16
+rumblePoint_16:
+	.incbin "baserom.dol", 0x3E33D0, 0x4
+.global rumbleFrame_16
+rumbleFrame_16:
+	.incbin "baserom.dol", 0x3E33D4, 0x4
+.global rumblePower_16
+rumblePower_16:
+	.incbin "baserom.dol", 0x3E33D8, 0x4
+.global rumblePoint_17
+rumblePoint_17:
+	.incbin "baserom.dol", 0x3E33DC, 0x4
+.global rumbleFrame_17
+rumbleFrame_17:
+	.incbin "baserom.dol", 0x3E33E0, 0x4
+.global rumblePower_17
+rumblePower_17:
+	.incbin "baserom.dol", 0x3E33E4, 0x4
+.global rumblePoint_18
+rumblePoint_18:
+	.incbin "baserom.dol", 0x3E33E8, 0x4
+.global rumbleFrame_18
+rumbleFrame_18:
+	.incbin "baserom.dol", 0x3E33EC, 0x4
+.global rumblePower_18
+rumblePower_18:
+	.incbin "baserom.dol", 0x3E33F0, 0x4
+.global rumblePoint_19
+rumblePoint_19:
+	.incbin "baserom.dol", 0x3E33F4, 0x4
+.global rumblePoint_20
+rumblePoint_20:
+	.incbin "baserom.dol", 0x3E33F8, 0x4
+.global rumbleFrame_20
+rumbleFrame_20:
+	.incbin "baserom.dol", 0x3E33FC, 0x8
+.global rumblePower_20
+rumblePower_20:
+	.incbin "baserom.dol", 0x3E3404, 0x8
+.global rumblePoint_21
+rumblePoint_21:
+	.incbin "baserom.dol", 0x3E340C, 0x4
+.global rumbleFrame_21
+rumbleFrame_21:
+	.incbin "baserom.dol", 0x3E3410, 0x8
+.global rumblePower_21
+rumblePower_21:
+	.incbin "baserom.dol", 0x3E3418, 0x8
+.global rumblePoint_22
+rumblePoint_22:
+	.incbin "baserom.dol", 0x3E3420, 0x4
+.global rumbleFrame_22
+rumbleFrame_22:
+	.incbin "baserom.dol", 0x3E3424, 0x8
+.global rumblePower_22
+rumblePower_22:
+	.incbin "baserom.dol", 0x3E342C, 0x8
+.global rumblePoint_23
+rumblePoint_23:
+	.incbin "baserom.dol", 0x3E3434, 0x4
+.global rumblePoint_24
+rumblePoint_24:
+	.incbin "baserom.dol", 0x3E3438, 0x4
+.global channelNum
+channelNum:
 	.incbin "baserom.dol", 0x3E343C, 0x4
-.global lbl_80408F00
-lbl_80408F00:
+.global $$21211
+$$21211:
 	.incbin "baserom.dol", 0x3E3440, 0x8
-.global lbl_80408F08
-lbl_80408F08:
+.global sShineViewObjName$3431
+sShineViewObjName$3431:
 	.incbin "baserom.dol", 0x3E3448, 0x8
-.global lbl_80408F10
-lbl_80408F10:
+.global stages$3022
+stages$3022:
 	.incbin "baserom.dol", 0x3E3450, 0x8
-.global lbl_80408F18
-lbl_80408F18:
+.global cCameraBckNameShineGetInside
+cCameraBckNameShineGetInside:
 	.incbin "baserom.dol", 0x3E3458, 0x4
-.global lbl_80408F1C
-lbl_80408F1C:
+.global cCameraBckNameShineGetOutside
+cCameraBckNameShineGetOutside:
 	.incbin "baserom.dol", 0x3E345C, 0x4
-.global lbl_80408F20
-lbl_80408F20:
+.global cCameraBckNameGate
+cCameraBckNameGate:
 	.incbin "baserom.dol", 0x3E3460, 0x8
-.global lbl_80408F28
-lbl_80408F28:
+.global cSunVolumeName
+cSunVolumeName:
 	.incbin "baserom.dol", 0x3E3468, 0x4
-.global lbl_80408F2C
-lbl_80408F2C:
+.global cSunsetVolumeName
+cSunsetVolumeName:
 	.incbin "baserom.dol", 0x3E346C, 0x4
-.global lbl_80408F30
-lbl_80408F30:
+.global cTargetArrowBmdFileName
+cTargetArrowBmdFileName:
 	.incbin "baserom.dol", 0x3E3470, 0x8
-.global lbl_80408F38
-lbl_80408F38:
+.global mVelocityMinY__10TLiveActor
+mVelocityMinY__10TLiveActor:
 	.incbin "baserom.dol", 0x3E3478, 0x8
-.global lbl_80408F40
-lbl_80408F40:
+.global cNpcPartsNameRootJoint
+cNpcPartsNameRootJoint:
 	.incbin "baserom.dol", 0x3E3480, 0x8
-.global lbl_80408F48
-lbl_80408F48:
+.global cDummyPollutionTexName
+cDummyPollutionTexName:
 	.incbin "baserom.dol", 0x3E3488, 0x4
-.global lbl_80408F4C
-lbl_80408F4C:
+.global cRealPollutionTexName
+cRealPollutionTexName:
 	.incbin "baserom.dol", 0x3E348C, 0x4
-.global lbl_80408F50
-lbl_80408F50:
+.global cMonteMDummyStrawTexName
+cMonteMDummyStrawTexName:
 	.incbin "baserom.dol", 0x3E3490, 0x4
-.global lbl_80408F54
-lbl_80408F54:
+.global cMonteWDummyStrawTexName
+cMonteWDummyStrawTexName:
 	.incbin "baserom.dol", 0x3E3494, 0x4
-.global lbl_80408F58
-lbl_80408F58:
+.global cMonteMRealStrawTexName
+cMonteMRealStrawTexName:
 	.incbin "baserom.dol", 0x3E3498, 0x4
-.global lbl_80408F5C
-lbl_80408F5C:
+.global cMonteWRealStrawTexName
+cMonteWRealStrawTexName:
 	.incbin "baserom.dol", 0x3E349C, 0x4
-.global lbl_80408F60
-lbl_80408F60:
+.global cScreenTexViewObjName
+cScreenTexViewObjName:
 	.incbin "baserom.dol", 0x3E34A0, 0x4
-.global lbl_80408F64
-lbl_80408F64:
+.global cJellyFishDummyScreenTexName
+cJellyFishDummyScreenTexName:
 	.incbin "baserom.dol", 0x3E34A4, 0x4
-.global lbl_80408F68
-lbl_80408F68:
+.global cJellyFishDummyTexName
+cJellyFishDummyTexName:
 	.incbin "baserom.dol", 0x3E34A8, 0x4
-.global lbl_80408F6C
-lbl_80408F6C:
+.global cJellyFishRealTexName
+cJellyFishRealTexName:
 	.incbin "baserom.dol", 0x3E34AC, 0x4
-.global lbl_80408F70
-lbl_80408F70:
+.global cMonteMCommonVolumeName
+cMonteMCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B0, 0x4
-.global lbl_80408F74
-lbl_80408F74:
+.global cMonteWCommonVolumeName
+cMonteWCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B4, 0x4
-.global lbl_80408F78
-lbl_80408F78:
+.global cMareMCommonVolumeName
+cMareMCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B8, 0x4
-.global lbl_80408F7C
-lbl_80408F7C:
+.global cMareWCommonVolumeName
+cMareWCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34BC, 0x4
-.global lbl_80408F80
-lbl_80408F80:
+.global cMareCommonNormalBmtName
+cMareCommonNormalBmtName:
 	.incbin "baserom.dol", 0x3E34C0, 0x4
-.global lbl_80408F84
-lbl_80408F84:
+.global cMareCommonPollutionBmtName
+cMareCommonPollutionBmtName:
 	.incbin "baserom.dol", 0x3E34C4, 0x4
-.global lbl_80408F88
-lbl_80408F88:
+.global cManiyaParentViewObjName
+cManiyaParentViewObjName:
 	.incbin "baserom.dol", 0x3E34C8, 0x4
-.global lbl_80408F8C
-lbl_80408F8C:
+.global cManiyaChildViewObjName
+cManiyaChildViewObjName:
 	.incbin "baserom.dol", 0x3E34CC, 0x4
-.global lbl_80408F90
-lbl_80408F90:
+.global cNotUseFastCubeViewObjName0
+cNotUseFastCubeViewObjName0:
 	.incbin "baserom.dol", 0x3E34D0, 0x4
-.global lbl_80408F94
-lbl_80408F94:
+.global cNotUseFastCubeViewObjName1
+cNotUseFastCubeViewObjName1:
 	.incbin "baserom.dol", 0x3E34D4, 0x4
-.global lbl_80408F98
-lbl_80408F98:
+.global cEyeMaterialName
+cEyeMaterialName:
 	.incbin "baserom.dol", 0x3E34D8, 0x4
-.global lbl_80408F9C
-lbl_80408F9C:
-	.incbin "baserom.dol", 0x3E34DC, 0xC
-.global lbl_80408FA8
-lbl_80408FA8:
+.global cNeckJointName
+cNeckJointName:
+	.incbin "baserom.dol", 0x3E34DC, 0x4
+.global sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x3E34E0, 0x8
+.global cPeachPartsTextureName
+cPeachPartsTextureName:
 	.incbin "baserom.dol", 0x3E34E8, 0x4
-.global lbl_80408FAC
-lbl_80408FAC:
+.global cPeachHostTextureName
+cPeachHostTextureName:
 	.incbin "baserom.dol", 0x3E34EC, 0x4
-.global lbl_80408FB0
-lbl_80408FB0:
+.global monteMG_bastable
+monteMG_bastable:
 	.incbin "baserom.dol", 0x3E34F0, 0x8
-.global lbl_80408FB8
-lbl_80408FB8:
+.global mareMD_bastable
+mareMD_bastable:
 	.incbin "baserom.dol", 0x3E34F8, 0x8
-.global lbl_80408FC0
-lbl_80408FC0:
+.global smMainVolume__5MSBgm
+smMainVolume__5MSBgm:
 	.incbin "baserom.dol", 0x3E3500, 0x8
-.global lbl_80408FC8
-lbl_80408FC8:
+.global cPan_MaxAmp__8MSHandle
+cPan_MaxAmp__8MSHandle:
 	.incbin "baserom.dol", 0x3E3508, 0x4
-.global lbl_80408FCC
-lbl_80408FCC:
+.global cPan_CAdjust__8MSHandle
+cPan_CAdjust__8MSHandle:
 	.incbin "baserom.dol", 0x3E350C, 0x4
-.global lbl_80408FD0
-lbl_80408FD0:
+.global cPan_CShift__8MSHandle
+cPan_CShift__8MSHandle:
 	.incbin "baserom.dol", 0x3E3510, 0x4
-.global lbl_80408FD4
-lbl_80408FD4:
+.global cPan_HiSence_Dist__8MSHandle
+cPan_HiSence_Dist__8MSHandle:
 	.incbin "baserom.dol", 0x3E3514, 0x4
-.global lbl_80408FD8
-lbl_80408FD8:
+.global cMS_DistanceMax_Sence__8MSHandle
+cMS_DistanceMax_Sence__8MSHandle:
 	.incbin "baserom.dol", 0x3E3518, 0x4
-.global lbl_80408FDC
-lbl_80408FDC:
+.global cDol_0Rad__8MSHandle
+cDol_0Rad__8MSHandle:
 	.incbin "baserom.dol", 0x3E351C, 0x4
-.global lbl_80408FE0
-lbl_80408FE0:
+.global cDol_HalfRad__8MSHandle
+cDol_HalfRad__8MSHandle:
 	.incbin "baserom.dol", 0x3E3520, 0x4
-.global lbl_80408FE4
-lbl_80408FE4:
+.global cDol_FullRad__8MSHandle
+cDol_FullRad__8MSHandle:
 	.incbin "baserom.dol", 0x3E3524, 0x4
-.global lbl_80408FE8
-lbl_80408FE8:
+.global mWaitAppearTime__11TWoodBarrel
+mWaitAppearTime__11TWoodBarrel:
 	.incbin "baserom.dol", 0x3E3528, 0x4
-.global lbl_80408FEC
-lbl_80408FEC:
+.global mBreakTime__11TWoodBarrel
+mBreakTime__11TWoodBarrel:
 	.incbin "baserom.dol", 0x3E352C, 0x4
-.global lbl_80408FF0
-lbl_80408FF0:
-	.incbin "baserom.dol", 0x3E3530, 0x18
-.global lbl_80409008
-lbl_80409008:
+.global mOilBarrelFlushTime__11TWoodBarrel
+mOilBarrelFlushTime__11TWoodBarrel:
+	.incbin "baserom.dol", 0x3E3530, 0x8
+.global streetlamp_sink_data
+streetlamp_sink_data:
+	.incbin "baserom.dol", 0x3E3538, 0x8
+.global lamp_bianco_sink_data
+lamp_bianco_sink_data:
+	.incbin "baserom.dol", 0x3E3540, 0x8
+.global mNormalLivingTime__14TMapObjGeneral
+mNormalLivingTime__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E3548, 0x4
-.global lbl_8040900C
-lbl_8040900C:
+.global mNormalFlushTime__14TMapObjGeneral
+mNormalFlushTime__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E354C, 0x4
-.global lbl_80409010
-lbl_80409010:
+.global mNormalFlushInterval__14TMapObjGeneral
+mNormalFlushInterval__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E3550, 0x4
-.global lbl_80409014
-lbl_80409014:
+.global mNormalWaitToAppearTime__14TMapObjGeneral
+mNormalWaitToAppearTime__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E3554, 0x4
-.global lbl_80409018
-lbl_80409018:
+.global mNormalAppearingScaleUp__14TMapObjGeneral
+mNormalAppearingScaleUp__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E3558, 0x4
-.global lbl_8040901C
-lbl_8040901C:
+.global mNormalThrowSpeedRate__14TMapObjGeneral
+mNormalThrowSpeedRate__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E355C, 0x4
-.global lbl_80409020
-lbl_80409020:
+.global mWaveSpeed__14TMapObjLibWave
+mWaveSpeed__14TMapObjLibWave:
 	.incbin "baserom.dol", 0x3E3560, 0x8
-.global lbl_80409028
-lbl_80409028:
+.global mAppearedScaleSpeed__5TItem
+mAppearedScaleSpeed__5TItem:
 	.incbin "baserom.dol", 0x3E3568, 0x4
-.global lbl_8040902C
-lbl_8040902C:
+.global mCircleRateY__6TShine
+mCircleRateY__6TShine:
 	.incbin "baserom.dol", 0x3E356C, 0x4
-.global lbl_80409030
-lbl_80409030:
+.global mUpSpeed__6TShine
+mUpSpeed__6TShine:
 	.incbin "baserom.dol", 0x3E3570, 0x4
-.global lbl_80409034
-lbl_80409034:
+.global mSpeedDownRate__6TShine
+mSpeedDownRate__6TShine:
 	.incbin "baserom.dol", 0x3E3574, 0x4
-.global lbl_80409038
-lbl_80409038:
+.global mDownHeight__8TManhole
+mDownHeight__8TManhole:
 	.incbin "baserom.dol", 0x3E3578, 0x4
-.global lbl_8040903C
-lbl_8040903C:
+.global mDownSpeed__8TManhole
+mDownSpeed__8TManhole:
 	.incbin "baserom.dol", 0x3E357C, 0x4
-.global lbl_80409040
-lbl_80409040:
+.global mVibrationSpeed__8TManhole
+mVibrationSpeed__8TManhole:
 	.incbin "baserom.dol", 0x3E3580, 0x4
-.global lbl_80409044
-lbl_80409044:
+.global mVibrationEndHeight__8TManhole
+mVibrationEndHeight__8TManhole:
 	.incbin "baserom.dol", 0x3E3584, 0x4
-.global lbl_80409048
-lbl_80409048:
+.global mVibrationDecreaseRate__8TManhole
+mVibrationDecreaseRate__8TManhole:
 	.incbin "baserom.dol", 0x3E3588, 0x8
-.global lbl_80409050
-lbl_80409050:
+.global mSandScaleUp__10TSandBlock
+mSandScaleUp__10TSandBlock:
 	.incbin "baserom.dol", 0x3E3590, 0x4
-.global lbl_80409054
-lbl_80409054:
+.global mSandScaleDown__10TSandBlock
+mSandScaleDown__10TSandBlock:
 	.incbin "baserom.dol", 0x3E3594, 0x4
-.global lbl_80409058
-lbl_80409058:
+.global mSandScaleMin__10TSandBlock
+mSandScaleMin__10TSandBlock:
 	.incbin "baserom.dol", 0x3E3598, 0x4
-.global lbl_8040905C
-lbl_8040905C:
+.global mWaitTimeToFall__10TSandBlock
+mWaitTimeToFall__10TSandBlock:
 	.incbin "baserom.dol", 0x3E359C, 0x4
-.global lbl_80409060
-lbl_80409060:
+.global mSandWaitTime__10TSandBlock
+mSandWaitTime__10TSandBlock:
 	.incbin "baserom.dol", 0x3E35A0, 0x4
-.global lbl_80409064
-lbl_80409064:
+.global mMeltSpeedWater__9TIceBlock
+mMeltSpeedWater__9TIceBlock:
 	.incbin "baserom.dol", 0x3E35A4, 0x4
-.global lbl_80409068
-lbl_80409068:
+.global mMeltSpeedAuto__9TIceBlock
+mMeltSpeedAuto__9TIceBlock:
 	.incbin "baserom.dol", 0x3E35A8, 0x4
-.global lbl_8040906C
-lbl_8040906C:
+.global mAutoMeltScale__9TIceBlock
+mAutoMeltScale__9TIceBlock:
 	.incbin "baserom.dol", 0x3E35AC, 0x4
-.global lbl_80409070
-lbl_80409070:
+.global sRadius
+sRadius:
 	.incbin "baserom.dol", 0x3E35B0, 0x4
-.global lbl_80409074
-lbl_80409074:
+.global sSubZ
+sSubZ:
 	.incbin "baserom.dol", 0x3E35B4, 0x4
-.global lbl_80409078
-lbl_80409078:
+.global sSpeed
+sSpeed:
 	.incbin "baserom.dol", 0x3E35B8, 0x4
-.global lbl_8040907C
-lbl_8040907C:
+.global mTremblePower__17TMapObjRootPakkun
+mTremblePower__17TMapObjRootPakkun:
 	.incbin "baserom.dol", 0x3E35BC, 0x4
-.global lbl_80409080
-lbl_80409080:
+.global mTrembleAccel__17TMapObjRootPakkun
+mTrembleAccel__17TMapObjRootPakkun:
 	.incbin "baserom.dol", 0x3E35C0, 0x4
-.global lbl_80409084
-lbl_80409084:
+.global mTrembleBrake__17TMapObjRootPakkun
+mTrembleBrake__17TMapObjRootPakkun:
 	.incbin "baserom.dol", 0x3E35C4, 0x4
-.global lbl_80409088
-lbl_80409088:
+.global mTrembleTime__17TMapObjRootPakkun
+mTrembleTime__17TMapObjRootPakkun:
 	.incbin "baserom.dol", 0x3E35C8, 0x4
-.global lbl_8040908C
-lbl_8040908C:
+.global mRotAccel__24TBiancoWatermillVertical
+mRotAccel__24TBiancoWatermillVertical:
 	.incbin "baserom.dol", 0x3E35CC, 0x4
-.global lbl_80409090
-lbl_80409090:
+.global mRotSpeedDownRate__24TBiancoWatermillVertical
+mRotSpeedDownRate__24TBiancoWatermillVertical:
 	.incbin "baserom.dol", 0x3E35D0, 0x4
-.global lbl_80409094
-lbl_80409094:
+.global mRotSpeedMax__24TBiancoWatermillVertical
+mRotSpeedMax__24TBiancoWatermillVertical:
 	.incbin "baserom.dol", 0x3E35D4, 0x4
-.global lbl_80409098
-lbl_80409098:
+.global mBridgeRotRate__24TBiancoWatermillVertical
+mBridgeRotRate__24TBiancoWatermillVertical:
 	.incbin "baserom.dol", 0x3E35D8, 0x4
-.global lbl_8040909C
-lbl_8040909C:
+.global mRotWaterAccel__19TBiancoMiniWindmill
+mRotWaterAccel__19TBiancoMiniWindmill:
 	.incbin "baserom.dol", 0x3E35DC, 0x4
-.global lbl_804090A0
-lbl_804090A0:
+.global mFriction__19TBiancoMiniWindmill
+mFriction__19TBiancoMiniWindmill:
 	.incbin "baserom.dol", 0x3E35E0, 0x4
-.global lbl_804090A4
-lbl_804090A4:
+.global mRotSpeedMax__19TBiancoMiniWindmill
+mRotSpeedMax__19TBiancoMiniWindmill:
 	.incbin "baserom.dol", 0x3E35E4, 0x4
-.global lbl_804090A8
-lbl_804090A8:
+.global sMessengerPosZ
+sMessengerPosZ:
 	.incbin "baserom.dol", 0x3E35E8, 0x4
-.global lbl_804090AC
-lbl_804090AC:
+.global sMessengerPosY
+sMessengerPosY:
 	.incbin "baserom.dol", 0x3E35EC, 0x4
-.global lbl_804090B0
-lbl_804090B0:
+.global mAlphaDownSpeed__15TLeafBoatRotten
+mAlphaDownSpeed__15TLeafBoatRotten:
 	.incbin "baserom.dol", 0x3E35F0, 0x4
-.global lbl_804090B4
-lbl_804090B4:
+.global mCollisionRemoveAlpha__15TLeafBoatRotten
+mCollisionRemoveAlpha__15TLeafBoatRotten:
 	.incbin "baserom.dol", 0x3E35F4, 0x4
-.global lbl_804090B8
-lbl_804090B8:
+.global mRottenColor__15TLeafBoatRotten
+mRottenColor__15TLeafBoatRotten:
 	.incbin "baserom.dol", 0x3E35F8, 0x8
-.global lbl_804090C0
-lbl_804090C0:
+.global mWaitTime__10TCraneRotY
+mWaitTime__10TCraneRotY:
 	.incbin "baserom.dol", 0x3E3600, 0x4
-.global lbl_804090C4
-lbl_804090C4:
+.global mRotSpeed__12TCraneUpDown
+mRotSpeed__12TCraneUpDown:
 	.incbin "baserom.dol", 0x3E3604, 0x4
-.global lbl_804090C8
-lbl_804090C8:
+.global mWaitTime__12TCraneUpDown
+mWaitTime__12TCraneUpDown:
 	.incbin "baserom.dol", 0x3E3608, 0x4
-.global lbl_804090CC
-lbl_804090CC:
+.global mRotAccel__15TRiccoWatermill
+mRotAccel__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E360C, 0x4
-.global lbl_804090D0
-lbl_804090D0:
+.global mRotSpeedMaxUp__15TRiccoWatermill
+mRotSpeedMaxUp__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3610, 0x4
-.global lbl_804090D4
-lbl_804090D4:
+.global mRotSpeedMaxDown__15TRiccoWatermill
+mRotSpeedMaxDown__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3614, 0x4
-.global lbl_804090D8
-lbl_804090D8:
+.global mRotDown__15TRiccoWatermill
+mRotDown__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3618, 0x4
-.global lbl_804090DC
-lbl_804090DC:
+.global mSubmarineMoveRate__15TRiccoWatermill
+mSubmarineMoveRate__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E361C, 0x4
-.global lbl_804090E0
-lbl_804090E0:
+.global mSubmarineMaxTransY__15TRiccoWatermill
+mSubmarineMaxTransY__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3620, 0x4
-.global lbl_804090E4
-lbl_804090E4:
+.global mSubmarineBottomTransY__15TRiccoWatermill
+mSubmarineBottomTransY__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3624, 0x4
-.global lbl_804090E8
-lbl_804090E8:
+.global mWaitTime__15TRiccoWatermill
+mWaitTime__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3628, 0x4
-.global lbl_804090EC
-lbl_804090EC:
+.global mObjSpeedXZ__14TFruitLauncher
+mObjSpeedXZ__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E362C, 0x4
-.global lbl_804090F0
-lbl_804090F0:
+.global mObjSpeedY__14TFruitLauncher
+mObjSpeedY__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E3630, 0x4
-.global lbl_804090F4
-lbl_804090F4:
+.global mFruitLiveTime__14TFruitLauncher
+mFruitLiveTime__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E3634, 0x4
-.global lbl_804090F8
-lbl_804090F8:
+.global mWitherTime__9TSandBase
+mWitherTime__9TSandBase:
 	.incbin "baserom.dol", 0x3E3638, 0x4
-.global lbl_804090FC
-lbl_804090FC:
+.global mScaleMin__9TSandBase
+mScaleMin__9TSandBase:
 	.incbin "baserom.dol", 0x3E363C, 0x4
-.global lbl_80409100
-lbl_80409100:
+.global mFiringFrameSpeed__13TSandBombBase
+mFiringFrameSpeed__13TSandBombBase:
 	.incbin "baserom.dol", 0x3E3640, 0x4
-.global lbl_80409104
-lbl_80409104:
+.global mFiringFrameDownSpeed__13TSandBombBase
+mFiringFrameDownSpeed__13TSandBombBase:
 	.incbin "baserom.dol", 0x3E3644, 0x4
-.global lbl_80409108
-lbl_80409108:
+.global mExplodeFrameSpeed__13TSandBombBase
+mExplodeFrameSpeed__13TSandBombBase:
 	.incbin "baserom.dol", 0x3E3648, 0x4
-.global lbl_8040910C
-lbl_8040910C:
+.global mMarioJumpRate__13TSandBombBase
+mMarioJumpRate__13TSandBombBase:
 	.incbin "baserom.dol", 0x3E364C, 0x4
-.global lbl_80409110
-lbl_80409110:
+.global mExlodingRumbleTime__13TSandBombBase
+mExlodingRumbleTime__13TSandBombBase:
 	.incbin "baserom.dol", 0x3E3650, 0x4
-.global lbl_80409114
-lbl_80409114:
+.global mCollisionRate__11TSandCastle
+mCollisionRate__11TSandCastle:
 	.incbin "baserom.dol", 0x3E3654, 0x4
-.global lbl_80409118
-lbl_80409118:
+.global mGoTargetTime__11TLeanMirror
+mGoTargetTime__11TLeanMirror:
 	.incbin "baserom.dol", 0x3E3658, 0x4
-.global lbl_8040911C
-lbl_8040911C:
+.global mDemoWaitTime__11TLeanMirror
+mDemoWaitTime__11TLeanMirror:
 	.incbin "baserom.dol", 0x3E365C, 0x4
-.global lbl_80409120
-lbl_80409120:
+.global mDemoLightTime__11TLeanMirror
+mDemoLightTime__11TLeanMirror:
 	.incbin "baserom.dol", 0x3E3660, 0x4
-.global lbl_80409124
-lbl_80409124:
+.global mRotSpeed__17TMammaBlockRotate
+mRotSpeed__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E3664, 0x4
-.global lbl_80409128
-lbl_80409128:
+.global mRotReturnSpeed__17TMammaBlockRotate
+mRotReturnSpeed__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E3668, 0x4
-.global lbl_8040912C
-lbl_8040912C:
+.global mRotEnd__17TMammaBlockRotate
+mRotEnd__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E366C, 0x4
-.global lbl_80409130
-lbl_80409130:
+.global mMapGoSpeed__17TMammaBlockRotate
+mMapGoSpeed__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E3670, 0x4
-.global lbl_80409134
-lbl_80409134:
+.global mMapBackSpeed__17TMammaBlockRotate
+mMapBackSpeed__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E3674, 0x4
-.global lbl_80409138
-lbl_80409138:
+.global mWaitTime__17TMammaBlockRotate
+mWaitTime__17TMammaBlockRotate:
 	.incbin "baserom.dol", 0x3E3678, 0x8
-.global lbl_80409140
-lbl_80409140:
+.global mOpenRotMax__9TShellCup
+mOpenRotMax__9TShellCup:
 	.incbin "baserom.dol", 0x3E3680, 0x4
-.global lbl_80409144
-lbl_80409144:
+.global mShellDamageRot__9TShellCup
+mShellDamageRot__9TShellCup:
 	.incbin "baserom.dol", 0x3E3684, 0x4
-.global lbl_80409148
-lbl_80409148:
+.global mWaterOpenAccel__9TShellCup
+mWaterOpenAccel__9TShellCup:
 	.incbin "baserom.dol", 0x3E3688, 0x4
-.global lbl_8040914C
-lbl_8040914C:
+.global mCloseAccel__9TShellCup
+mCloseAccel__9TShellCup:
 	.incbin "baserom.dol", 0x3E368C, 0x4
-.global lbl_80409150
-lbl_80409150:
+.global mRotSpeed__13TMerrygoround
+mRotSpeed__13TMerrygoround:
 	.incbin "baserom.dol", 0x3E3690, 0x8
-.global lbl_80409158
-lbl_80409158:
+.global mWaterLeakSpeed__14TCogwheelScale
+mWaterLeakSpeed__14TCogwheelScale:
 	.incbin "baserom.dol", 0x3E3698, 0x4
-.global lbl_8040915C
-lbl_8040915C:
+.global sRadius
+sRadius:
 	.incbin "baserom.dol", 0x3E369C, 0x4
-.global lbl_80409160
-lbl_80409160:
+.global mRopeWidthX__9TCogwheel
+mRopeWidthX__9TCogwheel:
 	.incbin "baserom.dol", 0x3E36A0, 0x4
-.global lbl_80409164
-lbl_80409164:
+.global mRopeWidthZ__9TCogwheel
+mRopeWidthZ__9TCogwheel:
 	.incbin "baserom.dol", 0x3E36A4, 0x4
-.global lbl_80409168
-lbl_80409168:
+.global mTexPosRate__9TCogwheel
+mTexPosRate__9TCogwheel:
 	.incbin "baserom.dol", 0x3E36A8, 0x4
-.global lbl_8040916C
-lbl_8040916C:
+.global mMinSpeed__9TCogwheel
+mMinSpeed__9TCogwheel:
 	.incbin "baserom.dol", 0x3E36AC, 0x4
-.global lbl_80409170
-lbl_80409170:
+.global mGrowStartFrame
+mGrowStartFrame:
 	.incbin "baserom.dol", 0x3E36B0, 0x4
-.global lbl_80409174
-lbl_80409174:
+.global mGrowEndFrame
+mGrowEndFrame:
 	.incbin "baserom.dol", 0x3E36B4, 0x4
-.global lbl_80409178
-lbl_80409178:
+.global mFlutterSpeed__11TMapObjFlag
+mFlutterSpeed__11TMapObjFlag:
 	.incbin "baserom.dol", 0x3E36B8, 0x8
-.global lbl_80409180
-lbl_80409180:
+.global sAlphaCompLarge
+sAlphaCompLarge:
 	.incbin "baserom.dol", 0x3E36C0, 0x1
-.global lbl_80409181
-lbl_80409181:
+.global sAlphaCompSmall
+sAlphaCompSmall:
 	.incbin "baserom.dol", 0x3E36C1, 0x7
-.global lbl_80409188
-lbl_80409188:
+.global mHipDropDownRate__12TMapObjPlane
+mHipDropDownRate__12TMapObjPlane:
 	.incbin "baserom.dol", 0x3E36C8, 0x4
-.global lbl_8040918C
-lbl_8040918C:
+.global mWaterDownRate__12TMapObjPlane
+mWaterDownRate__12TMapObjPlane:
 	.incbin "baserom.dol", 0x3E36CC, 0x4
-.global lbl_80409190
-lbl_80409190:
+.global mTexScale__12TMapObjPlane
+mTexScale__12TMapObjPlane:
 	.incbin "baserom.dol", 0x3E36D0, 0x4
-.global lbl_80409194
-lbl_80409194:
+.global mAmbColor__12TMapObjPlane
+mAmbColor__12TMapObjPlane:
 	.incbin "baserom.dol", 0x3E36D4, 0x4
-.global lbl_80409198
-lbl_80409198:
+.global mMoveSpeedDefault__10TRideCloud
+mMoveSpeedDefault__10TRideCloud:
 	.incbin "baserom.dol", 0x3E36D8, 0x4
-.global lbl_8040919C
-lbl_8040919C:
+.global mCushionLen__10TRideCloud
+mCushionLen__10TRideCloud:
 	.incbin "baserom.dol", 0x3E36DC, 0x4
-.global lbl_804091A0
-lbl_804091A0:
+.global mCushionSpeed__10TRideCloud
+mCushionSpeed__10TRideCloud:
 	.incbin "baserom.dol", 0x3E36E0, 0x4
-.global lbl_804091A4
-lbl_804091A4:
+.global mScaleSpeed__10TRideCloud
+mScaleSpeed__10TRideCloud:
 	.incbin "baserom.dol", 0x3E36E4, 0x4
-.global lbl_804091A8
-lbl_804091A8:
+.global mFruitLivingTime__11TResetFruit
+mFruitLivingTime__11TResetFruit:
 	.incbin "baserom.dol", 0x3E36E8, 0x4
-.global lbl_804091AC
-lbl_804091AC:
+.global mScaleUpSpeed__11TResetFruit
+mScaleUpSpeed__11TResetFruit:
 	.incbin "baserom.dol", 0x3E36EC, 0x4
-.global lbl_804091B0
-lbl_804091B0:
+.global mBreakingScaleSpeed__11TResetFruit
+mBreakingScaleSpeed__11TResetFruit:
 	.incbin "baserom.dol", 0x3E36F0, 0x4
-.global lbl_804091B4
-lbl_804091B4:
+.global mFruitWaitTimeToAppear__11TResetFruit
+mFruitWaitTimeToAppear__11TResetFruit:
 	.incbin "baserom.dol", 0x3E36F4, 0xC
-.global lbl_804091C0
-lbl_804091C0:
+.global mWidth__19TMapObjGrassManager
+mWidth__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3700, 0x4
-.global lbl_804091C4
-lbl_804091C4:
+.global mSwingWidth__19TMapObjGrassManager
+mSwingWidth__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3704, 0x4
-.global lbl_804091C8
-lbl_804091C8:
+.global mSwingSpeed__19TMapObjGrassManager
+mSwingSpeed__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3708, 0x4
-.global lbl_804091CC
-lbl_804091CC:
+.global mDistNear__19TMapObjGrassManager
+mDistNear__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E370C, 0x4
-.global lbl_804091D0
-lbl_804091D0:
+.global mDistFar__19TMapObjGrassManager
+mDistFar__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3710, 0x4
-.global lbl_804091D4
-lbl_804091D4:
+.global sGrassAddTime
+sGrassAddTime:
 	.incbin "baserom.dol", 0x3E3714, 0xC
-.global lbl_804091E0
-lbl_804091E0:
+.global color_table
+color_table:
 	.incbin "baserom.dol", 0x3E3720, 0x8
-.global lbl_804091E8
-lbl_804091E8:
+.global mSpeed__20TRevolvingFenceInner
+mSpeed__20TRevolvingFenceInner:
 	.incbin "baserom.dol", 0x3E3728, 0x4
-.global lbl_804091EC
-lbl_804091EC:
+.global mWaterAccel__11TFenceWater
+mWaterAccel__11TFenceWater:
 	.incbin "baserom.dol", 0x3E372C, 0x4
-.global lbl_804091F0
-lbl_804091F0:
+.global mBackSpeed__11TFenceWater
+mBackSpeed__11TFenceWater:
 	.incbin "baserom.dol", 0x3E3730, 0x4
-.global lbl_804091F4
-lbl_804091F4:
+.global mTurnedWaitTime__11TFenceWater
+mTurnedWaitTime__11TFenceWater:
 	.incbin "baserom.dol", 0x3E3734, 0x4
-.global lbl_804091F8
-lbl_804091F8:
+.global mFallHeight__10TRailFence
+mFallHeight__10TRailFence:
 	.incbin "baserom.dol", 0x3E3738, 0x4
-.global lbl_804091FC
-lbl_804091FC:
+.global mWaitTime__10TRailFence
+mWaitTime__10TRailFence:
 	.incbin "baserom.dol", 0x3E373C, 0x4
-.global lbl_80409200
-lbl_80409200:
+.global sRumbleTime
+sRumbleTime:
 	.incbin "baserom.dol", 0x3E3740, 0x8
-.global lbl_80409208
-lbl_80409208:
+.global mMarioAccelY__19THangingBridgeBoard
+mMarioAccelY__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E3748, 0x4
-.global lbl_8040920C
-lbl_8040920C:
+.global mMarioHipDropAccelY__19THangingBridgeBoard
+mMarioHipDropAccelY__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E374C, 0x4
-.global lbl_80409210
-lbl_80409210:
+.global mReturnAccelRate__19THangingBridgeBoard
+mReturnAccelRate__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E3750, 0x4
-.global lbl_80409214
-lbl_80409214:
+.global mSpeedDownRate__19THangingBridgeBoard
+mSpeedDownRate__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E3754, 0x4
-.global lbl_80409218
-lbl_80409218:
+.global mRopeWidthX__19THangingBridgeBoard
+mRopeWidthX__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E3758, 0x4
-.global lbl_8040921C
-lbl_8040921C:
+.global mRopeWidthZ__19THangingBridgeBoard
+mRopeWidthZ__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E375C, 0x4
-.global lbl_80409220
-lbl_80409220:
+.global mTexPosRate__19THangingBridgeBoard
+mTexPosRate__19THangingBridgeBoard:
 	.incbin "baserom.dol", 0x3E3760, 0x4
-.global lbl_80409224
-lbl_80409224:
+.global mRopeWidthBetweenBoards__14THangingBridge
+mRopeWidthBetweenBoards__14THangingBridge:
 	.incbin "baserom.dol", 0x3E3764, 0x4
-.global lbl_80409228
-lbl_80409228:
+.global mRopeWidthBetweenBoardsY__14THangingBridge
+mRopeWidthBetweenBoardsY__14THangingBridge:
 	.incbin "baserom.dol", 0x3E3768, 0x4
-.global lbl_8040922C
-lbl_8040922C:
+.global mPointNumBetweenBoards__14THangingBridge
+mPointNumBetweenBoards__14THangingBridge:
 	.incbin "baserom.dol", 0x3E376C, 0x4
-.global lbl_80409230
-lbl_80409230:
+.global mBetweenBoardsTexPosRate__14THangingBridge
+mBetweenBoardsTexPosRate__14THangingBridge:
 	.incbin "baserom.dol", 0x3E3770, 0x4
-.global lbl_80409234
-lbl_80409234:
+.global mBoardWidth__11TSwingBoard
+mBoardWidth__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E3774, 0x4
-.global lbl_80409238
-lbl_80409238:
+.global mRopeWidthX__11TSwingBoard
+mRopeWidthX__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E3778, 0x4
-.global lbl_8040923C
-lbl_8040923C:
+.global mRopeWidthZ__11TSwingBoard
+mRopeWidthZ__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E377C, 0x4
-.global lbl_80409240
-lbl_80409240:
+.global mTexPosRate__11TSwingBoard
+mTexPosRate__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E3780, 0x4
-.global lbl_80409244
-lbl_80409244:
+.global mReturnAccelRate__11TSwingBoard
+mReturnAccelRate__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E3784, 0x4
-.global lbl_80409248
-lbl_80409248:
+.global mSpeedDownRate__11TSwingBoard
+mSpeedDownRate__11TSwingBoard:
 	.incbin "baserom.dol", 0x3E3788, 0x4
-.global lbl_8040924C
-lbl_8040924C:
+.global mScaleUpSpeed__6TFluff
+mScaleUpSpeed__6TFluff:
 	.incbin "baserom.dol", 0x3E378C, 0x4
-.global lbl_80409250
-lbl_80409250:
+.global mScaleDownSpeed__6TFluff
+mScaleDownSpeed__6TFluff:
 	.incbin "baserom.dol", 0x3E3790, 0x4
-.global lbl_80409254
-lbl_80409254:
+.global mWindMin__13TFluffManager
+mWindMin__13TFluffManager:
 	.incbin "baserom.dol", 0x3E3794, 0x4
-.global lbl_80409258
-lbl_80409258:
+.global mBananaTreeJumpPower__11TMapObjTree
+mBananaTreeJumpPower__11TMapObjTree:
 	.incbin "baserom.dol", 0x3E3798, 0x4
-.global lbl_8040925C
-lbl_8040925C:
+.global mScaleSpeedY__16TMapObjTreeScale
+mScaleSpeedY__16TMapObjTreeScale:
 	.incbin "baserom.dol", 0x3E379C, 0x4
-.global lbl_80409260
-lbl_80409260:
+.global mStatusChangeScaleY__16TMapObjTreeScale
+mStatusChangeScaleY__16TMapObjTreeScale:
 	.incbin "baserom.dol", 0x3E37A0, 0x4
-.global lbl_80409264
-lbl_80409264:
+.global mScaleSpeedXZ__16TMapObjTreeScale
+mScaleSpeedXZ__16TMapObjTreeScale:
 	.incbin "baserom.dol", 0x3E37A4, 0x4
-.global lbl_80409268
-lbl_80409268:
+.global mScaleMin__16TMapObjTreeScale
+mScaleMin__16TMapObjTreeScale:
 	.incbin "baserom.dol", 0x3E37A8, 0x4
-.global lbl_8040926C
-lbl_8040926C:
+.global sWaitTime
+sWaitTime:
 	.incbin "baserom.dol", 0x3E37AC, 0x4
-.global lbl_80409270
-lbl_80409270:
+.global mDownHeight__11TMapObjNail
+mDownHeight__11TMapObjNail:
 	.incbin "baserom.dol", 0x3E37B0, 0x8
-.global lbl_80409278
-lbl_80409278:
+.global $$22831
+$$22831:
 	.incbin "baserom.dol", 0x3E37B8, 0x4
-.global lbl_8040927C
-lbl_8040927C:
+.global $$22833
+$$22833:
 	.incbin "baserom.dol", 0x3E37BC, 0x4
-.global lbl_80409280
-lbl_80409280:
+.global mHitPointMax__13TLampTrapIron
+mHitPointMax__13TLampTrapIron:
 	.incbin "baserom.dol", 0x3E37C0, 0x4
-.global lbl_80409284
-lbl_80409284:
+.global mFireTimerMax__13TLampTrapIron
+mFireTimerMax__13TLampTrapIron:
 	.incbin "baserom.dol", 0x3E37C4, 0x4
-.global lbl_80409288
-lbl_80409288:
+.global mCleanedDegree__13TMapEventSink
+mCleanedDegree__13TMapEventSink:
 	.incbin "baserom.dol", 0x3E37C8, 0x8
-.global lbl_80409290
-lbl_80409290:
+.global table$2575
+table$2575:
 	.incbin "baserom.dol", 0x3E37D0, 0x8
-.global lbl_80409298
-lbl_80409298:
+.global mMoveTimerSpeed__8TMapWire
+mMoveTimerSpeed__8TMapWire:
 	.incbin "baserom.dol", 0x3E37D8, 0x4
-.global lbl_8040929C
-lbl_8040929C:
+.global mDownRateMax__8TMapWire
+mDownRateMax__8TMapWire:
 	.incbin "baserom.dol", 0x3E37DC, 0x4
-.global lbl_804092A0
-lbl_804092A0:
+.global mEndRate__8TMapWire
+mEndRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E0, 0x4
-.global lbl_804092A4
-lbl_804092A4:
+.global mStretchRate__8TMapWire
+mStretchRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E4, 0x4
-.global lbl_804092A8
-lbl_804092A8:
+.global mHeightRate__8TMapWire
+mHeightRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E8, 0x4
-.global lbl_804092AC
-lbl_804092AC:
+.global mReleaseHeight__8TMapWire
+mReleaseHeight__8TMapWire:
 	.incbin "baserom.dol", 0x3E37EC, 0x4
-.global lbl_804092B0
-lbl_804092B0:
+.global mFootLength__8TMapWire
+mFootLength__8TMapWire:
 	.incbin "baserom.dol", 0x3E37F0, 0x4
-.global lbl_804092B4
-lbl_804092B4:
+.global mDrawWidth__8TMapWire
+mDrawWidth__8TMapWire:
 	.incbin "baserom.dol", 0x3E37F4, 0x4
-.global lbl_804092B8
-lbl_804092B8:
+.global mDrawHeight__8TMapWire
+mDrawHeight__8TMapWire:
 	.incbin "baserom.dol", 0x3E37F8, 0x8
-.global lbl_804092C0
-lbl_804092C0:
+.global mCommonAttackRadius__13TMapWireActor
+mCommonAttackRadius__13TMapWireActor:
 	.incbin "baserom.dol", 0x3E3800, 0x4
-.global lbl_804092C4
-lbl_804092C4:
+.global mCommonAttackHeight__13TMapWireActor
+mCommonAttackHeight__13TMapWireActor:
 	.incbin "baserom.dol", 0x3E3804, 0x4
-.global lbl_804092C8
-lbl_804092C8:
+.global mAreaMinRate__15TPollutionLayer
+mAreaMinRate__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3808, 0x4
-.global lbl_804092CC
-lbl_804092CC:
+.global mSpreadArea__15TPollutionLayer
+mSpreadArea__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E380C, 0x4
-.global lbl_804092D0
-lbl_804092D0:
+.global mSpreadFrequency__15TPollutionLayer
+mSpreadFrequency__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3810, 0x4
-.global lbl_804092D4
-lbl_804092D4:
+.global mFireArea__15TPollutionLayer
+mFireArea__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3814, 0x4
-.global lbl_804092D8
-lbl_804092D8:
+.global mFireEffectWaitTime__15TPollutionLayer
+mFireEffectWaitTime__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3818, 0x4
-.global lbl_804092DC
-lbl_804092DC:
+.global mThunderArea__15TPollutionLayer
+mThunderArea__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E381C, 0x4
-.global lbl_804092E0
-lbl_804092E0:
+.global mGlassWallArea__15TPollutionLayer
+mGlassWallArea__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3820, 0x4
-.global lbl_804092E4
-lbl_804092E4:
+.global mGlassWallEffectTime__15TPollutionLayer
+mGlassWallEffectTime__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3824, 0x4
-.global lbl_804092E8
-lbl_804092E8:
+.global mFlushTime__17TPollutionManager
+mFlushTime__17TPollutionManager:
 	.incbin "baserom.dol", 0x3E3828, 0x4
-.global lbl_804092EC
-lbl_804092EC:
+.global mEdgeAlpha__17TPollutionManager
+mEdgeAlpha__17TPollutionManager:
 	.incbin "baserom.dol", 0x3E382C, 0x4
-.global lbl_804092F0
-lbl_804092F0:
+.global mInterval__19TPollutionLayerWave
+mInterval__19TPollutionLayerWave:
 	.incbin "baserom.dol", 0x3E3830, 0x4
-.global lbl_804092F4
-lbl_804092F4:
+.global mAlpha__19TPollutionLayerWave
+mAlpha__19TPollutionLayerWave:
 	.incbin "baserom.dol", 0x3E3834, 0x4
-.global lbl_804092F8
-lbl_804092F8:
+.global mEffectTime__15TPollutionLayer
+mEffectTime__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3838, 0x8
-.global lbl_80409300
-lbl_80409300:
+.global mAppearSpeed__13TMareWallRock
+mAppearSpeed__13TMareWallRock:
 	.incbin "baserom.dol", 0x3E3840, 0x4
-.global lbl_80409304
-lbl_80409304:
+.global mDepressSpeed__13TMareWallRock
+mDepressSpeed__13TMareWallRock:
 	.incbin "baserom.dol", 0x3E3844, 0x4
-.global lbl_80409308
-lbl_80409308:
+.global mCleanedDegree__13TMareWallRock
+mCleanedDegree__13TMareWallRock:
 	.incbin "baserom.dol", 0x3E3848, 0x4
-.global lbl_8040930C
-lbl_8040930C:
+.global mWaitTimeToAppear__13TMareWallRock
+mWaitTimeToAppear__13TMareWallRock:
 	.incbin "baserom.dol", 0x3E384C, 0x4
-.global lbl_80409310
-lbl_80409310:
+.global mWaitTimeToDepress__13TMareWallRock
+mWaitTimeToDepress__13TMareWallRock:
 	.incbin "baserom.dol", 0x3E3850, 0x4
-.global lbl_80409314
-lbl_80409314:
+.global mDepressSpeed__21TMareEventDepressWall
+mDepressSpeed__21TMareEventDepressWall:
 	.incbin "baserom.dol", 0x3E3854, 0x4
-.global lbl_80409318
-lbl_80409318:
+.global mRiseSpeed__21TMareEventDepressWall
+mRiseSpeed__21TMareEventDepressWall:
 	.incbin "baserom.dol", 0x3E3858, 0x4
-.global lbl_8040931C
-lbl_8040931C:
+.global mWaitTimeToWatch__21TMareEventDepressWall
+mWaitTimeToWatch__21TMareEventDepressWall:
 	.incbin "baserom.dol", 0x3E385C, 0x4
-.global lbl_80409320
-lbl_80409320:
+.global scDolpicNewsDolpic0
+scDolpicNewsDolpic0:
 	.incbin "baserom.dol", 0x3E3860, 0x8
-.global lbl_80409328
-lbl_80409328:
+.global scDolpicNewsDolpic1
+scDolpicNewsDolpic1:
 	.incbin "baserom.dol", 0x3E3868, 0x8
-.global lbl_80409330
-lbl_80409330:
+.global scDolpicNewsDolpic5_2
+scDolpicNewsDolpic5_2:
 	.incbin "baserom.dol", 0x3E3870, 0x8
-.global lbl_80409338
-lbl_80409338:
+.global scDolpicNewsDolpic5_3
+scDolpicNewsDolpic5_3:
 	.incbin "baserom.dol", 0x3E3878, 0x8
-.global lbl_80409340
-lbl_80409340:
+.global scDolpicNewsDolpic8_1
+scDolpicNewsDolpic8_1:
 	.incbin "baserom.dol", 0x3E3880, 0x8
-.global lbl_80409348
-lbl_80409348:
+.global fbuf
+fbuf:
 	.incbin "baserom.dol", 0x3E3888, 0x4
-.global lbl_8040934C
-lbl_8040934C:
+.global vtable_org
+vtable_org:
 	.incbin "baserom.dol", 0x3E388C, 0x8
-.global lbl_80409354
-lbl_80409354:
+.global dec_step
+dec_step:
 	.incbin "baserom.dol", 0x3E3894, 0x4
-.global lbl_80409358
-lbl_80409358:
+.global inc_step
+inc_step:
 	.incbin "baserom.dol", 0x3E3898, 0x4
-.global lbl_8040935C
-lbl_8040935C:
+.global fbuf2
+fbuf2:
 	.incbin "baserom.dol", 0x3E389C, 0x4
-.global lbl_80409360
-lbl_80409360:
+.global gmover_tex_buffer
+gmover_tex_buffer:
 	.incbin "baserom.dol", 0x3E38A0, 0x4
-.global lbl_80409364
-lbl_80409364:
+.global mag$259
+mag$259:
 	.incbin "baserom.dol", 0x3E38A4, 0x4
-.global lbl_80409368
-lbl_80409368:
+.global mIsCopyAnmMtx__13TEnemyManager
+mIsCopyAnmMtx__13TEnemyManager:
 	.incbin "baserom.dol", 0x3E38A8, 0x8
-.global lbl_80409370
-lbl_80409370:
+.global mBodyJntIndex__6TGesso
+mBodyJntIndex__6TGesso:
 	.incbin "baserom.dol", 0x3E38B0, 0x1
-.global lbl_80409371
-lbl_80409371:
+.global mMouthJntIndex__6TGesso
+mMouthJntIndex__6TGesso:
 	.incbin "baserom.dol", 0x3E38B1, 0x3
-.global lbl_80409374
-lbl_80409374:
+.global mBodyRotSpeed__6TGesso
+mBodyRotSpeed__6TGesso:
 	.incbin "baserom.dol", 0x3E38B4, 0x4
-.global lbl_80409378
-lbl_80409378:
+.global mPollRange__6TGesso
+mPollRange__6TGesso:
 	.incbin "baserom.dol", 0x3E38B8, 0x4
-.global lbl_8040937C
-lbl_8040937C:
+.global mThroughHoseiDistY__6TGesso
+mThroughHoseiDistY__6TGesso:
 	.incbin "baserom.dol", 0x3E38BC, 0x4
-.global lbl_80409380
-lbl_80409380:
+.global mCapGravityY__9THamuKuri
+mCapGravityY__9THamuKuri:
 	.incbin "baserom.dol", 0x3E38C0, 0x4
-.global lbl_80409384
-lbl_80409384:
+.global mCapSpeed__9THamuKuri
+mCapSpeed__9THamuKuri:
 	.incbin "baserom.dol", 0x3E38C4, 0x4
-.global lbl_80409388
-lbl_80409388:
+.global mVGenerateGravityY__9THamuKuri
+mVGenerateGravityY__9THamuKuri:
 	.incbin "baserom.dol", 0x3E38C8, 0x4
-.global lbl_8040938C
-lbl_8040938C:
+.global mLandAnmFrameNum__9THamuKuri
+mLandAnmFrameNum__9THamuKuri:
 	.incbin "baserom.dol", 0x3E38CC, 0x4
-.global lbl_80409390
-lbl_80409390:
+.global mSearchActSw__16THamuKuriManager
+mSearchActSw__16THamuKuriManager:
 	.incbin "baserom.dol", 0x3E38D0, 0x4
-.global lbl_80409394
-lbl_80409394:
+.global mFireHamNoseColorDiff
+mFireHamNoseColorDiff:
 	.incbin "baserom.dol", 0x3E38D4, 0x8
-.global lbl_8040939C
-lbl_8040939C:
+.global mFireHamOtherColorDiff
+mFireHamOtherColorDiff:
 	.incbin "baserom.dol", 0x3E38DC, 0xC
-.global lbl_804093A8
-lbl_804093A8:
+.global mannameTable$3222
+mannameTable$3222:
 	.incbin "baserom.dol", 0x3E38E8, 0x8
-.global lbl_804093B0
-lbl_804093B0:
+.global $$23326
+$$23326:
 	.incbin "baserom.dol", 0x3E38F0, 0x4
-.global lbl_804093B4
-lbl_804093B4:
+.global $$23328
+$$23328:
 	.incbin "baserom.dol", 0x3E38F4, 0x4
-.global lbl_804093B8
-lbl_804093B8:
+.global mBaseHoseiTransY__10TMameGesso
+mBaseHoseiTransY__10TMameGesso:
 	.incbin "baserom.dol", 0x3E38F8, 0x8
-.global lbl_804093C0
-lbl_804093C0:
+.global mExplosionSpeed__16TNameKuriManager
+mExplosionSpeed__16TNameKuriManager:
 	.incbin "baserom.dol", 0x3E3900, 0x4
-.global lbl_804093C4
-lbl_804093C4:
+.global mStopMinScaleFrame__16TNameKuriManager
+mStopMinScaleFrame__16TNameKuriManager:
 	.incbin "baserom.dol", 0x3E3904, 0x4
-.global lbl_804093C8
-lbl_804093C8:
+.global mRootExplosionScaleRate__14TPakkunManager
+mRootExplosionScaleRate__14TPakkunManager:
 	.incbin "baserom.dol", 0x3E3908, 0x4
-.global lbl_804093CC
-lbl_804093CC:
+.global mTestFlyAngX__14TPakkunManager
+mTestFlyAngX__14TPakkunManager:
 	.incbin "baserom.dol", 0x3E390C, 0x4
-.global lbl_804093D0
-lbl_804093D0:
+.global mIgnoreHitWaterY__14TPakkunManager
+mIgnoreHitWaterY__14TPakkunManager:
 	.incbin "baserom.dol", 0x3E3910, 0x8
-.global lbl_804093D8
-lbl_804093D8:
+.global mBlockWaitTime__18TSmallEnemyManager
+mBlockWaitTime__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E3918, 0x4
-.global lbl_804093DC
-lbl_804093DC:
+.global mBlockMoveSpeed__18TSmallEnemyManager
+mBlockMoveSpeed__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E391C, 0x4
-.global lbl_804093E0
-lbl_804093E0:
+.global mBlockWaitMoveY__18TSmallEnemyManager
+mBlockWaitMoveY__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E3920, 0x4
-.global lbl_804093E4
-lbl_804093E4:
+.global mChangeBlockTime__18TSmallEnemyManager
+mChangeBlockTime__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E3924, 0x4
-.global lbl_804093E8
-lbl_804093E8:
+.global mBlockXZScale__18TSmallEnemyManager
+mBlockXZScale__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E3928, 0x4
-.global lbl_804093EC
-lbl_804093EC:
+.global mBlockYScale__18TSmallEnemyManager
+mBlockYScale__18TSmallEnemyManager:
 	.incbin "baserom.dol", 0x3E392C, 0x4
-.global lbl_804093F0
-lbl_804093F0:
+.global mIsPolluter__11TSmallEnemy
+mIsPolluter__11TSmallEnemy:
 	.incbin "baserom.dol", 0x3E3930, 0x1
-.global lbl_804093F1
-lbl_804093F1:
+.global mIsAmpPolluter__11TSmallEnemy
+mIsAmpPolluter__11TSmallEnemy:
 	.incbin "baserom.dol", 0x3E3931, 0x7
-.global lbl_804093F8
-lbl_804093F8:
+.global idx$3335
+idx$3335:
 	.incbin "baserom.dol", 0x3E3938, 0x8
-.global lbl_80409400
-lbl_80409400:
+.global mReflectSw__13TElecNokonoko
+mReflectSw__13TElecNokonoko:
 	.incbin "baserom.dol", 0x3E3940, 0x8
-.global lbl_80409408
-lbl_80409408:
+.global mFlyAngMax__7TTelesa
+mFlyAngMax__7TTelesa:
 	.incbin "baserom.dol", 0x3E3948, 0x8
-.global lbl_80409410
-lbl_80409410:
+.global mTailJntIndex__11TFireWanwan
+mTailJntIndex__11TFireWanwan:
 	.incbin "baserom.dol", 0x3E3950, 0x8
-.global lbl_80409418
-lbl_80409418:
+.global $$23353
+$$23353:
 	.incbin "baserom.dol", 0x3E3958, 0x4
-.global lbl_8040941C
-lbl_8040941C:
+.global $$23355
+$$23355:
 	.incbin "baserom.dol", 0x3E395C, 0x4
-.global lbl_80409420
-lbl_80409420:
+.global mLandAngle__9TTobiPuku
+mLandAngle__9TTobiPuku:
 	.incbin "baserom.dol", 0x3E3960, 0x4
-.global lbl_80409424
-lbl_80409424:
+.global mBoundSw__9TTobiPuku
+mBoundSw__9TTobiPuku:
 	.incbin "baserom.dol", 0x3E3964, 0x4
-.global lbl_80409428
-lbl_80409428:
+.global mBoundVelocityY__9TTobiPuku
+mBoundVelocityY__9TTobiPuku:
 	.incbin "baserom.dol", 0x3E3968, 0x4
-.global lbl_8040942C
-lbl_8040942C:
+.global mReturnLaunchSw__9TTobiPuku
+mReturnLaunchSw__9TTobiPuku:
 	.incbin "baserom.dol", 0x3E396C, 0x4
-.global lbl_80409430
-lbl_80409430:
+.global $$23000
+$$23000:
 	.incbin "baserom.dol", 0x3E3970, 0x4
-.global lbl_80409434
-lbl_80409434:
+.global $$23001
+$$23001:
 	.incbin "baserom.dol", 0x3E3974, 0x4
-.global lbl_80409438
-lbl_80409438:
+.global $$23002
+$$23002:
 	.incbin "baserom.dol", 0x3E3978, 0x4
-.global lbl_8040943C
-lbl_8040943C:
+.global $$23003
+$$23003:
 	.incbin "baserom.dol", 0x3E397C, 0x4
-.global lbl_80409440
-lbl_80409440:
+.global $$23004
+$$23004:
 	.incbin "baserom.dol", 0x3E3980, 0x4
-.global lbl_80409444
-lbl_80409444:
+.global $$23005
+$$23005:
 	.incbin "baserom.dol", 0x3E3984, 0x4
-.global lbl_80409448
-lbl_80409448:
+.global $$23006
+$$23006:
 	.incbin "baserom.dol", 0x3E3988, 0x4
-.global lbl_8040944C
-lbl_8040944C:
+.global $$23007
+$$23007:
 	.incbin "baserom.dol", 0x3E398C, 0x4
-.global lbl_80409450
-lbl_80409450:
+.global $$23008
+$$23008:
 	.incbin "baserom.dol", 0x3E3990, 0x4
-.global lbl_80409454
-lbl_80409454:
+.global $$23009
+$$23009:
 	.incbin "baserom.dol", 0x3E3994, 0x4
-.global lbl_80409458
-lbl_80409458:
+.global $$23010
+$$23010:
 	.incbin "baserom.dol", 0x3E3998, 0x4
-.global lbl_8040945C
-lbl_8040945C:
+.global $$23011
+$$23011:
 	.incbin "baserom.dol", 0x3E399C, 0x4
-.global lbl_80409460
-lbl_80409460:
+.global $$23012
+$$23012:
 	.incbin "baserom.dol", 0x3E39A0, 0x4
-.global lbl_80409464
-lbl_80409464:
+.global loopIndirectFilenames$3531
+loopIndirectFilenames$3531:
 	.incbin "baserom.dol", 0x3E39A4, 0x4
-.global lbl_80409468
-lbl_80409468:
+.global mCheckOnPanelTimeRoll__9TChuuHana
+mCheckOnPanelTimeRoll__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39A8, 0x4
-.global lbl_8040946C
-lbl_8040946C:
+.global mCheckOnPanelTime__9TChuuHana
+mCheckOnPanelTime__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39AC, 0x4
-.global lbl_80409470
-lbl_80409470:
+.global mBodyJntIndex__9TChuuHana
+mBodyJntIndex__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B0, 0x1
-.global lbl_80409471
-lbl_80409471:
+.global mEyeJntIndex__9TChuuHana
+mEyeJntIndex__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B1, 0x1
-.global lbl_80409472
-lbl_80409472:
+.global mFootJntIndex__9TChuuHana
+mFootJntIndex__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B2, 0x1
-.global lbl_80409473
-lbl_80409473:
+.global mNewSw__9TChuuHana
+mNewSw__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B3, 0x1
-.global lbl_80409474
-lbl_80409474:
+.global mCompareHeight__9TChuuHana
+mCompareHeight__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B4, 0x4
-.global lbl_80409478
-lbl_80409478:
+.global mSmallMirrorR__9TChuuHana
+mSmallMirrorR__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39B8, 0x4
-.global lbl_8040947C
-lbl_8040947C:
+.global mMediumMirrorR__9TChuuHana
+mMediumMirrorR__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39BC, 0x4
-.global lbl_80409480
-lbl_80409480:
+.global mLargeMirrorR__9TChuuHana
+mLargeMirrorR__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39C0, 0x4
-.global lbl_80409484
-lbl_80409484:
+.global mAttackVersion__9TChuuHana
+mAttackVersion__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39C4, 0x1
-.global lbl_80409485
-lbl_80409485:
+.global mDamageSw__9TChuuHana
+mDamageSw__9TChuuHana:
 	.incbin "baserom.dol", 0x3E39C5, 0x3
-.global lbl_80409488
-lbl_80409488:
+.global mBoundVal__10TRollEnemy
+mBoundVal__10TRollEnemy:
 	.incbin "baserom.dol", 0x3E39C8, 0x4
-.global lbl_8040948C
-lbl_8040948C:
+.global mReachNodeDist__7TIgaiga
+mReachNodeDist__7TIgaiga:
 	.incbin "baserom.dol", 0x3E39CC, 0x4
-.global lbl_80409490
-lbl_80409490:
+.global anmlist$3317
+anmlist$3317:
 	.incbin "baserom.dol", 0x3E39D0, 0x8
-.global lbl_80409498
-lbl_80409498:
+.global graphlist$3323
+graphlist$3323:
 	.incbin "baserom.dol", 0x3E39D8, 0x8
-.global lbl_804094A0
-lbl_804094A0:
+.global mMouthJntIndex__8TPoiHana
+mMouthJntIndex__8TPoiHana:
 	.incbin "baserom.dol", 0x3E39E0, 0x1
-.global lbl_804094A1
-lbl_804094A1:
+.global mSleepVersion__8TPoiHana
+mSleepVersion__8TPoiHana:
 	.incbin "baserom.dol", 0x3E39E1, 0x7
-.global lbl_804094A8
-lbl_804094A8:
+.global mStopOnAirTimeMax__9TTamaNoko
+mStopOnAirTimeMax__9TTamaNoko:
 	.incbin "baserom.dol", 0x3E39E8, 0x4
-.global lbl_804094AC
-lbl_804094AC:
+.global mRollOnAirTimeMax__9TTamaNoko
+mRollOnAirTimeMax__9TTamaNoko:
 	.incbin "baserom.dol", 0x3E39EC, 0x4
-.global lbl_804094B0
-lbl_804094B0:
+.global mRollOnAirAngle__9TTamaNoko
+mRollOnAirAngle__9TTamaNoko:
 	.incbin "baserom.dol", 0x3E39F0, 0x4
-.global lbl_804094B4
-lbl_804094B4:
+.global mDropVelocityY__9TTamaNoko
+mDropVelocityY__9TTamaNoko:
 	.incbin "baserom.dol", 0x3E39F4, 0x4
-.global lbl_804094B8
-lbl_804094B8:
+.global mEnemyGenRate__11TBossTelesa
+mEnemyGenRate__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E39F8, 0x4
-.global lbl_804094BC
-lbl_804094BC:
+.global mItemGenRate__11TBossTelesa
+mItemGenRate__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E39FC, 0x4
-.global lbl_804094C0
-lbl_804094C0:
+.global mNormalAlpha__11TBossTelesa
+mNormalAlpha__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A00, 0x4
-.global lbl_804094C4
-lbl_804094C4:
+.global mBaseHoseiPosY__11TBossTelesa
+mBaseHoseiPosY__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A04, 0x4
-.global lbl_804094C8
-lbl_804094C8:
+.global mRouletteUpRate__11TBossTelesa
+mRouletteUpRate__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A08, 0x4
-.global lbl_804094CC
-lbl_804094CC:
+.global mTelesaGenerateInterval__11TBossTelesa
+mTelesaGenerateInterval__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A0C, 0x4
-.global lbl_804094D0
-lbl_804094D0:
+.global mCameraMoveLimit__11TBossTelesa
+mCameraMoveLimit__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A10, 0x4
-.global lbl_804094D4
-lbl_804094D4:
+.global mCameraMoveSp__11TBossTelesa
+mCameraMoveSp__11TBossTelesa:
 	.incbin "baserom.dol", 0x3E3A14, 0x4
-.global lbl_804094D8
-lbl_804094D8:
+.global mSerialBomb__8TBombHei
+mSerialBomb__8TBombHei:
 	.incbin "baserom.dol", 0x3E3A18, 0x8
-.global lbl_804094E0
-lbl_804094E0:
+.global mChorobeiJntIdx__7TCannon
+mChorobeiJntIdx__7TCannon:
 	.incbin "baserom.dol", 0x3E3A20, 0x1
-.global lbl_804094E1
-lbl_804094E1:
+.global mChorobeiHandJntIdx__7TCannon
+mChorobeiHandJntIdx__7TCannon:
 	.incbin "baserom.dol", 0x3E3A21, 0x3
-.global lbl_804094E4
-lbl_804094E4:
+.global mVelocityRate__7TCannon
+mVelocityRate__7TCannon:
 	.incbin "baserom.dol", 0x3E3A24, 0x4
-.global lbl_804094E8
-lbl_804094E8:
+.global mSearchRate__7TCannon
+mSearchRate__7TCannon:
 	.incbin "baserom.dol", 0x3E3A28, 0x8
-.global lbl_804094F0
-lbl_804094F0:
+.global mOpenRollSpeed__8TBossEel
+mOpenRollSpeed__8TBossEel:
 	.incbin "baserom.dol", 0x3E3A30, 0x4
-.global lbl_804094F4
-lbl_804094F4:
+.global mUseObjCollision__8TBossEel
+mUseObjCollision__8TBossEel:
 	.incbin "baserom.dol", 0x3E3A34, 0x4
-.global lbl_804094F8
-lbl_804094F8:
+.global mForcePow__8TBossEel
+mForcePow__8TBossEel:
 	.incbin "baserom.dol", 0x3E3A38, 0x8
-.global lbl_80409500
-lbl_80409500:
+.global mSerialBomb__7TKiller
+mSerialBomb__7TKiller:
 	.incbin "baserom.dol", 0x3E3A40, 0x1
-.global lbl_80409501
-lbl_80409501:
+.global mTrampleDie__7TKiller
+mTrampleDie__7TKiller:
 	.incbin "baserom.dol", 0x3E3A41, 0x3
-.global lbl_80409504
-lbl_80409504:
+.global mTestSp__9TFlyEnemy
+mTestSp__9TFlyEnemy:
 	.incbin "baserom.dol", 0x3E3A44, 0x4
-.global lbl_80409508
-lbl_80409508:
+.global mInvalidTime__9TFlyEnemy
+mInvalidTime__9TFlyEnemy:
 	.incbin "baserom.dol", 0x3E3A48, 0x4
-.global lbl_8040950C
-lbl_8040950C:
+.global mTestMarioSpMax__9TFlyEnemy
+mTestMarioSpMax__9TFlyEnemy:
 	.incbin "baserom.dol", 0x3E3A4C, 0x4
-.global lbl_80409510
-lbl_80409510:
+.global mHeadJntIndex__10THanaSambo
+mHeadJntIndex__10THanaSambo:
 	.incbin "baserom.dol", 0x3E3A50, 0x1
-.global lbl_80409511
-lbl_80409511:
+.global mPollenJntIndex__10THanaSambo
+mPollenJntIndex__10THanaSambo:
 	.incbin "baserom.dol", 0x3E3A51, 0x7
-.global lbl_80409518
-lbl_80409518:
+.global mRollSw__5TPopo
+mRollSw__5TPopo:
 	.incbin "baserom.dol", 0x3E3A58, 0x1
-.global lbl_80409519
-lbl_80409519:
+.global mTriggerSw__5TPopo
+mTriggerSw__5TPopo:
 	.incbin "baserom.dol", 0x3E3A59, 0x3
-.global lbl_8040951C
-lbl_8040951C:
+.global mTestAng_x__5TPopo
+mTestAng_x__5TPopo:
 	.incbin "baserom.dol", 0x3E3A5C, 0x4
-.global lbl_80409520
-lbl_80409520:
+.global mTestAng_y__5TPopo
+mTestAng_y__5TPopo:
 	.incbin "baserom.dol", 0x3E3A60, 0x4
-.global lbl_80409524
-lbl_80409524:
+.global mNozzleOffsetZ__5TPopo
+mNozzleOffsetZ__5TPopo:
 	.incbin "baserom.dol", 0x3E3A64, 0x4
-.global lbl_80409528
-lbl_80409528:
+.global mCenterJntIndex__5TPopo
+mCenterJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A68, 0x1
-.global lbl_80409529
-lbl_80409529:
+.global mMouthJntIndex__5TPopo
+mMouthJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A69, 0x1
-.global lbl_8040952A
-lbl_8040952A:
+.global mRLegJntIndex__5TPopo
+mRLegJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A6A, 0x1
-.global lbl_8040952B
-lbl_8040952B:
+.global mLLegJntIndex__5TPopo
+mLLegJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A6B, 0x1
-.global lbl_8040952C
-lbl_8040952C:
+.global mRHandJntIndex__5TPopo
+mRHandJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A6C, 0x1
-.global lbl_8040952D
-lbl_8040952D:
+.global mLHandJntIndex__5TPopo
+mLHandJntIndex__5TPopo:
 	.incbin "baserom.dol", 0x3E3A6D, 0x3
-.global lbl_80409530
-lbl_80409530:
+.global mTestBodyScale__5TPopo
+mTestBodyScale__5TPopo:
 	.incbin "baserom.dol", 0x3E3A70, 0x4
-.global lbl_80409534
-lbl_80409534:
+.global mBrkFlag__5TPopo
+mBrkFlag__5TPopo:
 	.incbin "baserom.dol", 0x3E3A74, 0x4
-.global lbl_80409538
-lbl_80409538:
+.global mColOffsetY__5TPopo
+mColOffsetY__5TPopo:
 	.incbin "baserom.dol", 0x3E3A78, 0x4
-.global lbl_8040953C
-lbl_8040953C:
+.global mColMinVal__5TPopo
+mColMinVal__5TPopo:
 	.incbin "baserom.dol", 0x3E3A7C, 0x4
-.global lbl_80409540
-lbl_80409540:
+.global mLevelShootSw__5TPopo
+mLevelShootSw__5TPopo:
 	.incbin "baserom.dol", 0x3E3A80, 0x8
-.global lbl_80409548
-lbl_80409548:
+.global sleepBossHanachan_bastable
+sleepBossHanachan_bastable:
 	.incbin "baserom.dol", 0x3E3A88, 0x8
-.global lbl_80409550
-lbl_80409550:
+.global $$22707
+$$22707:
 	.incbin "baserom.dol", 0x3E3A90, 0x4
-.global lbl_80409554
-lbl_80409554:
+.global $$22709
+$$22709:
 	.incbin "baserom.dol", 0x3E3A94, 0x4
-.global lbl_80409558
-lbl_80409558:
+.global cSandPillarModelName
+cSandPillarModelName:
 	.incbin "baserom.dol", 0x3E3A98, 0x4
-.global lbl_8040955C
-lbl_8040955C:
+.global cHitPoint1_RailName
+cHitPoint1_RailName:
 	.incbin "baserom.dol", 0x3E3A9C, 0x4
-.global lbl_80409560
-lbl_80409560:
+.global cHitPoint2_RailName
+cHitPoint2_RailName:
 	.incbin "baserom.dol", 0x3E3AA0, 0x4
-.global lbl_80409564
-lbl_80409564:
+.global cSandTextureName
+cSandTextureName:
 	.incbin "baserom.dol", 0x3E3AA4, 0x4
-.global lbl_80409568
-lbl_80409568:
+.global cDummyTextureName
+cDummyTextureName:
 	.incbin "baserom.dol", 0x3E3AA8, 0x8
-.global lbl_80409570
-lbl_80409570:
+.global cMapCollisionJointName
+cMapCollisionJointName:
 	.incbin "baserom.dol", 0x3E3AB0, 0x4
-.global lbl_80409574
-lbl_80409574:
+.global cBodyMapCollisionFileName
+cBodyMapCollisionFileName:
 	.incbin "baserom.dol", 0x3E3AB4, 0x4
-.global lbl_80409578
-lbl_80409578:
+.global cHeadMapCollisionFileName
+cHeadMapCollisionFileName:
 	.incbin "baserom.dol", 0x3E3AB8, 0x4
-.global lbl_8040957C
-lbl_8040957C:
+.global cLegJointName_L3
+cLegJointName_L3:
 	.incbin "baserom.dol", 0x3E3ABC, 0x4
-.global lbl_80409580
-lbl_80409580:
+.global cLegJointName_R3
+cLegJointName_R3:
 	.incbin "baserom.dol", 0x3E3AC0, 0x4
-.global lbl_80409584
-lbl_80409584:
+.global cNoseHallJointName_L
+cNoseHallJointName_L:
 	.incbin "baserom.dol", 0x3E3AC4, 0x4
-.global lbl_80409588
-lbl_80409588:
+.global cNoseHallJointName_R
+cNoseHallJointName_R:
 	.incbin "baserom.dol", 0x3E3AC8, 0x4
-.global lbl_8040958C
-lbl_8040958C:
+.global sFootJointName$2739
+sFootJointName$2739:
 	.incbin "baserom.dol", 0x3E3ACC, 0xC
-.global lbl_80409598
-lbl_80409598:
+.global $$23012
+$$23012:
 	.incbin "baserom.dol", 0x3E3AD8, 0x4
-.global lbl_8040959C
-lbl_8040959C:
+.global $$23014
+$$23014:
 	.incbin "baserom.dol", 0x3E3ADC, 0x4
-.global lbl_804095A0
-lbl_804095A0:
+.global mTestAng_y__7TRocket
+mTestAng_y__7TRocket:
 	.incbin "baserom.dol", 0x3E3AE0, 0x4
-.global lbl_804095A4
-lbl_804095A4:
+.global mNozzleOffsetZ__7TRocket
+mNozzleOffsetZ__7TRocket:
 	.incbin "baserom.dol", 0x3E3AE4, 0x4
-.global lbl_804095A8
-lbl_804095A8:
+.global mColOffsetY__7TRocket
+mColOffsetY__7TRocket:
 	.incbin "baserom.dol", 0x3E3AE8, 0x8
-.global lbl_804095B0
-lbl_804095B0:
+.global $$22833
+$$22833:
 	.incbin "baserom.dol", 0x3E3AF0, 0x4
-.global lbl_804095B4
-lbl_804095B4:
+.global $$22834
+$$22834:
 	.incbin "baserom.dol", 0x3E3AF4, 0x4
-.global lbl_804095B8
-lbl_804095B8:
+.global $$22835
+$$22835:
 	.incbin "baserom.dol", 0x3E3AF8, 0x4
-.global lbl_804095BC
-lbl_804095BC:
+.global $$22836
+$$22836:
 	.incbin "baserom.dol", 0x3E3AFC, 0x4
-.global lbl_804095C0
-lbl_804095C0:
+.global $$22867
+$$22867:
 	.incbin "baserom.dol", 0x3E3B00, 0x4
-.global lbl_804095C4
-lbl_804095C4:
+.global $$22868
+$$22868:
 	.incbin "baserom.dol", 0x3E3B04, 0x4
-.global lbl_804095C8
-lbl_804095C8:
+.global $$22869
+$$22869:
 	.incbin "baserom.dol", 0x3E3B08, 0x4
-.global lbl_804095CC
-lbl_804095CC:
+.global $$22870
+$$22870:
 	.incbin "baserom.dol", 0x3E3B0C, 0x4
-.global lbl_804095D0
-lbl_804095D0:
+.global koopajrsubmarine_bastable
+koopajrsubmarine_bastable:
 	.incbin "baserom.dol", 0x3E3B10, 0x4
-.global lbl_804095D4
-lbl_804095D4:
+.global $$22995
+$$22995:
 	.incbin "baserom.dol", 0x3E3B14, 0x4
-.global lbl_804095D8
-lbl_804095D8:
+.global $$22996
+$$22996:
 	.incbin "baserom.dol", 0x3E3B18, 0x4
-.global lbl_804095DC
-lbl_804095DC:
+.global $$22997
+$$22997:
 	.incbin "baserom.dol", 0x3E3B1C, 0x4
-.global lbl_804095E0
-lbl_804095E0:
+.global $$22998
+$$22998:
 	.incbin "baserom.dol", 0x3E3B20, 0x4
-.global lbl_804095E4
-lbl_804095E4:
+.global $$22999
+$$22999:
 	.incbin "baserom.dol", 0x3E3B24, 0x4
-.global lbl_804095E8
-lbl_804095E8:
+.global $$23000
+$$23000:
 	.incbin "baserom.dol", 0x3E3B28, 0x4
-.global lbl_804095EC
-lbl_804095EC:
+.global $$23001
+$$23001:
 	.incbin "baserom.dol", 0x3E3B2C, 0x4
-.global lbl_804095F0
-lbl_804095F0:
+.global $$23002
+$$23002:
 	.incbin "baserom.dol", 0x3E3B30, 0x4
-.global lbl_804095F4
-lbl_804095F4:
+.global $$23003
+$$23003:
 	.incbin "baserom.dol", 0x3E3B34, 0x4
-.global lbl_804095F8
-lbl_804095F8:
+.global $$23004
+$$23004:
 	.incbin "baserom.dol", 0x3E3B38, 0x4
-.global lbl_804095FC
-lbl_804095FC:
+.global $$23005
+$$23005:
 	.incbin "baserom.dol", 0x3E3B3C, 0x4
-.global lbl_80409600
-lbl_80409600:
+.global $$23006
+$$23006:
 	.incbin "baserom.dol", 0x3E3B40, 0x4
-.global lbl_80409604
-lbl_80409604:
+.global $$23016
+$$23016:
 	.incbin "baserom.dol", 0x3E3B44, 0x4
-.global lbl_80409608
-lbl_80409608:
+.global $$23017
+$$23017:
 	.incbin "baserom.dol", 0x3E3B48, 0x4
-.global lbl_8040960C
-lbl_8040960C:
+.global $$23018
+$$23018:
 	.incbin "baserom.dol", 0x3E3B4C, 0x4
-.global lbl_80409610
-lbl_80409610:
+.global $$23019
+$$23019:
 	.incbin "baserom.dol", 0x3E3B50, 0x4
-.global lbl_80409614
-lbl_80409614:
+.global $$23020
+$$23020:
 	.incbin "baserom.dol", 0x3E3B54, 0x4
-.global lbl_80409618
-lbl_80409618:
+.global $$23021
+$$23021:
 	.incbin "baserom.dol", 0x3E3B58, 0x4
-.global lbl_8040961C
-lbl_8040961C:
+.global $$23022
+$$23022:
 	.incbin "baserom.dol", 0x3E3B5C, 0x4
-.global lbl_80409620
-lbl_80409620:
+.global $$23023
+$$23023:
 	.incbin "baserom.dol", 0x3E3B60, 0x4
-.global lbl_80409624
-lbl_80409624:
+.global $$23024
+$$23024:
 	.incbin "baserom.dol", 0x3E3B64, 0x4
-.global lbl_80409628
-lbl_80409628:
+.global $$23025
+$$23025:
 	.incbin "baserom.dol", 0x3E3B68, 0x4
-.global lbl_8040962C
-lbl_8040962C:
+.global $$23026
+$$23026:
 	.incbin "baserom.dol", 0x3E3B6C, 0x4
-.global lbl_80409630
-lbl_80409630:
+.global $$23027
+$$23027:
 	.incbin "baserom.dol", 0x3E3B70, 0x4
-.global lbl_80409634
-lbl_80409634:
+.global onetimeFilenames$3171
+onetimeFilenames$3171:
 	.incbin "baserom.dol", 0x3E3B74, 0x4
-.global lbl_80409638
-lbl_80409638:
+.global $$22655
+$$22655:
 	.incbin "baserom.dol", 0x3E3B78, 0x4
-.global lbl_8040963C
-lbl_8040963C:
+.global $$22656
+$$22656:
 	.incbin "baserom.dol", 0x3E3B7C, 0x4
-.global lbl_80409640
-lbl_80409640:
+.global $$22657
+$$22657:
 	.incbin "baserom.dol", 0x3E3B80, 0x4
-.global lbl_80409644
-lbl_80409644:
+.global $$22658
+$$22658:
 	.incbin "baserom.dol", 0x3E3B84, 0x4
-.global lbl_80409648
-lbl_80409648:
+.global $$23092
+$$23092:
 	.incbin "baserom.dol", 0x3E3B88, 0x4
-.global lbl_8040964C
-lbl_8040964C:
+.global $$23093
+$$23093:
 	.incbin "baserom.dol", 0x3E3B8C, 0x4
-.global lbl_80409650
-lbl_80409650:
+.global $$23094
+$$23094:
 	.incbin "baserom.dol", 0x3E3B90, 0x4
-.global lbl_80409654
-lbl_80409654:
+.global $$23095
+$$23095:
 	.incbin "baserom.dol", 0x3E3B94, 0x4
-.global lbl_80409658
-lbl_80409658:
+.global $$23096
+$$23096:
 	.incbin "baserom.dol", 0x3E3B98, 0x8
-.global lbl_80409660
-lbl_80409660:
+.global $$22521
+$$22521:
 	.incbin "baserom.dol", 0x3E3BA0, 0x4
-.global lbl_80409664
-lbl_80409664:
+.global $$22522
+$$22522:
 	.incbin "baserom.dol", 0x3E3BA4, 0x4
-.global lbl_80409668
-lbl_80409668:
+.global $$22523
+$$22523:
 	.incbin "baserom.dol", 0x3E3BA8, 0x4
-.global lbl_8040966C
-lbl_8040966C:
+.global $$22524
+$$22524:
 	.incbin "baserom.dol", 0x3E3BAC, 0x4
-.global lbl_80409670
-lbl_80409670:
+.global $$22525
+$$22525:
 	.incbin "baserom.dol", 0x3E3BB0, 0x8
-.global lbl_80409678
-lbl_80409678:
+.global $$22921
+$$22921:
 	.incbin "baserom.dol", 0x3E3BB8, 0x4
-.global lbl_8040967C
-lbl_8040967C:
+.global $$22922
+$$22922:
 	.incbin "baserom.dol", 0x3E3BBC, 0x4
-.global lbl_80409680
-lbl_80409680:
+.global $$22923
+$$22923:
 	.incbin "baserom.dol", 0x3E3BC0, 0x4
-.global lbl_80409684
-lbl_80409684:
+.global $$22924
+$$22924:
 	.incbin "baserom.dol", 0x3E3BC4, 0x4
-.global lbl_80409688
-lbl_80409688:
+.global $$22925
+$$22925:
 	.incbin "baserom.dol", 0x3E3BC8, 0x4
-.global lbl_8040968C
-lbl_8040968C:
+.global $$22926
+$$22926:
 	.incbin "baserom.dol", 0x3E3BCC, 0x4
-.global lbl_80409690
-lbl_80409690:
+.global $$22927
+$$22927:
 	.incbin "baserom.dol", 0x3E3BD0, 0x4
-.global lbl_80409694
-lbl_80409694:
+.global $$22928
+$$22928:
 	.incbin "baserom.dol", 0x3E3BD4, 0x4
-.global lbl_80409698
-lbl_80409698:
+.global $$22929
+$$22929:
 	.incbin "baserom.dol", 0x3E3BD8, 0x4
-.global lbl_8040969C
-lbl_8040969C:
+.global $$22930
+$$22930:
 	.incbin "baserom.dol", 0x3E3BDC, 0x4
-.global lbl_804096A0
-lbl_804096A0:
+.global $$22931
+$$22931:
 	.incbin "baserom.dol", 0x3E3BE0, 0x4
-.global lbl_804096A4
-lbl_804096A4:
+.global $$22932
+$$22932:
 	.incbin "baserom.dol", 0x3E3BE4, 0x4
-.global lbl_804096A8
-lbl_804096A8:
+.global $$22933
+$$22933:
 	.incbin "baserom.dol", 0x3E3BE8, 0x4
-.global lbl_804096AC
-lbl_804096AC:
+.global $$22934
+$$22934:
 	.incbin "baserom.dol", 0x3E3BEC, 0x4
-.global lbl_804096B0
-lbl_804096B0:
+.global $$22935
+$$22935:
 	.incbin "baserom.dol", 0x3E3BF0, 0x4
-.global lbl_804096B4
-lbl_804096B4:
+.global $$22936
+$$22936:
 	.incbin "baserom.dol", 0x3E3BF4, 0x4
-.global lbl_804096B8
-lbl_804096B8:
+.global $$22937
+$$22937:
 	.incbin "baserom.dol", 0x3E3BF8, 0x4
-.global lbl_804096BC
-lbl_804096BC:
+.global $$22938
+$$22938:
 	.incbin "baserom.dol", 0x3E3BFC, 0x4
-.global lbl_804096C0
-lbl_804096C0:
+.global $$22939
+$$22939:
 	.incbin "baserom.dol", 0x3E3C00, 0x4
-.global lbl_804096C4
-lbl_804096C4:
+.global $$22940
+$$22940:
 	.incbin "baserom.dol", 0x3E3C04, 0x4
-.global lbl_804096C8
-lbl_804096C8:
+.global $$22941
+$$22941:
 	.incbin "baserom.dol", 0x3E3C08, 0x4
-.global lbl_804096CC
-lbl_804096CC:
+.global $$22942
+$$22942:
 	.incbin "baserom.dol", 0x3E3C0C, 0x4
-.global lbl_804096D0
-lbl_804096D0:
+.global $$22943
+$$22943:
 	.incbin "baserom.dol", 0x3E3C10, 0x4
-.global lbl_804096D4
-lbl_804096D4:
+.global $$22944
+$$22944:
 	.incbin "baserom.dol", 0x3E3C14, 0x4
-.global lbl_804096D8
-lbl_804096D8:
+.global $$22945
+$$22945:
 	.incbin "baserom.dol", 0x3E3C18, 0x4
-.global lbl_804096DC
-lbl_804096DC:
+.global $$22946
+$$22946:
 	.incbin "baserom.dol", 0x3E3C1C, 0x4
-.global lbl_804096E0
-lbl_804096E0:
+.global $$22947
+$$22947:
 	.incbin "baserom.dol", 0x3E3C20, 0x4
-.global lbl_804096E4
-lbl_804096E4:
+.global $$22948
+$$22948:
 	.incbin "baserom.dol", 0x3E3C24, 0x4
-.global lbl_804096E8
-lbl_804096E8:
+.global $$22949
+$$22949:
 	.incbin "baserom.dol", 0x3E3C28, 0x4
-.global lbl_804096EC
-lbl_804096EC:
+.global $$22950
+$$22950:
 	.incbin "baserom.dol", 0x3E3C2C, 0x4
-.global lbl_804096F0
-lbl_804096F0:
+.global $$22951
+$$22951:
 	.incbin "baserom.dol", 0x3E3C30, 0x4
-.global lbl_804096F4
-lbl_804096F4:
+.global $$22952
+$$22952:
 	.incbin "baserom.dol", 0x3E3C34, 0x4
-.global lbl_804096F8
-lbl_804096F8:
+.global $$22953
+$$22953:
 	.incbin "baserom.dol", 0x3E3C38, 0x4
-.global lbl_804096FC
-lbl_804096FC:
+.global $$22954
+$$22954:
 	.incbin "baserom.dol", 0x3E3C3C, 0x4
-.global lbl_80409700
-lbl_80409700:
+.global $$22955
+$$22955:
 	.incbin "baserom.dol", 0x3E3C40, 0x4
-.global lbl_80409704
-lbl_80409704:
+.global $$22956
+$$22956:
 	.incbin "baserom.dol", 0x3E3C44, 0x4
-.global lbl_80409708
-lbl_80409708:
+.global loopFilenames$3201
+loopFilenames$3201:
 	.incbin "baserom.dol", 0x3E3C48, 0x8
-.global lbl_80409710
-lbl_80409710:
+.global $$22842
+$$22842:
 	.incbin "baserom.dol", 0x3E3C50, 0x4
-.global lbl_80409714
-lbl_80409714:
+.global $$22843
+$$22843:
 	.incbin "baserom.dol", 0x3E3C54, 0x4
-.global lbl_80409718
-lbl_80409718:
+.global DebuTelesa_bastable
+DebuTelesa_bastable:
 	.incbin "baserom.dol", 0x3E3C58, 0x4
-.global lbl_8040971C
-lbl_8040971C:
+.global $$22830
+$$22830:
 	.incbin "baserom.dol", 0x3E3C5C, 0x4
-.global lbl_80409720
-lbl_80409720:
+.global $$22831
+$$22831:
 	.incbin "baserom.dol", 0x3E3C60, 0x4
-.global lbl_80409724
-lbl_80409724:
+.global $$22832
+$$22832:
 	.incbin "baserom.dol", 0x3E3C64, 0x4
-.global lbl_80409728
-lbl_80409728:
+.global $$22833
+$$22833:
 	.incbin "baserom.dol", 0x3E3C68, 0x8
-.global lbl_80409730
-lbl_80409730:
+.global $$22940
+$$22940:
 	.incbin "baserom.dol", 0x3E3C70, 0x4
-.global lbl_80409734
-lbl_80409734:
+.global $$22941
+$$22941:
 	.incbin "baserom.dol", 0x3E3C74, 0x4
-.global lbl_80409738
-lbl_80409738:
+.global $$22942
+$$22942:
 	.incbin "baserom.dol", 0x3E3C78, 0x4
-.global lbl_8040973C
-lbl_8040973C:
+.global $$22943
+$$22943:
 	.incbin "baserom.dol", 0x3E3C7C, 0x4
-.global lbl_80409740
-lbl_80409740:
+.global $$22946
+$$22946:
 	.incbin "baserom.dol", 0x3E3C80, 0x4
-.global lbl_80409744
-lbl_80409744:
+.global $$22947
+$$22947:
 	.incbin "baserom.dol", 0x3E3C84, 0x4
-.global lbl_80409748
-lbl_80409748:
+.global $$22948
+$$22948:
 	.incbin "baserom.dol", 0x3E3C88, 0x4
-.global lbl_8040974C
-lbl_8040974C:
+.global $$22949
+$$22949:
 	.incbin "baserom.dol", 0x3E3C8C, 0x4
-.global lbl_80409750
-lbl_80409750:
+.global $$22950
+$$22950:
 	.incbin "baserom.dol", 0x3E3C90, 0x4
-.global lbl_80409754
-lbl_80409754:
+.global $$22951
+$$22951:
 	.incbin "baserom.dol", 0x3E3C94, 0x4
-.global lbl_80409758
-lbl_80409758:
+.global $$22952
+$$22952:
 	.incbin "baserom.dol", 0x3E3C98, 0x4
-.global lbl_8040975C
-lbl_8040975C:
+.global $$22953
+$$22953:
 	.incbin "baserom.dol", 0x3E3C9C, 0x4
-.global lbl_80409760
-lbl_80409760:
+.global $$22954
+$$22954:
 	.incbin "baserom.dol", 0x3E3CA0, 0x4
-.global lbl_80409764
-lbl_80409764:
+.global $$22955
+$$22955:
 	.incbin "baserom.dol", 0x3E3CA4, 0x4
-.global lbl_80409768
-lbl_80409768:
+.global $$22956
+$$22956:
 	.incbin "baserom.dol", 0x3E3CA8, 0x8
-.global lbl_80409770
-lbl_80409770:
+.global cStartCamName
+cStartCamName:
 	.incbin "baserom.dol", 0x3E3CB0, 0x4
-.global lbl_80409774
-lbl_80409774:
+.global cStartAfterCamName
+cStartAfterCamName:
 	.incbin "baserom.dol", 0x3E3CB4, 0x4
-.global lbl_80409778
-lbl_80409778:
+.global cJetCoasterCam0BckName
+cJetCoasterCam0BckName:
 	.incbin "baserom.dol", 0x3E3CB8, 0x4
-.global lbl_8040977C
-lbl_8040977C:
+.global cJetCoasterCam1BckName
+cJetCoasterCam1BckName:
 	.incbin "baserom.dol", 0x3E3CBC, 0x4
-.global lbl_80409780
-lbl_80409780:
+.global cJetCoasterDemoBckName
+cJetCoasterDemoBckName:
 	.incbin "baserom.dol", 0x3E3CC0, 0x4
-.global lbl_80409784
-lbl_80409784:
+.global cStartCamBckFileName
+cStartCamBckFileName:
 	.incbin "baserom.dol", 0x3E3CC4, 0x4
-.global lbl_80409788
-lbl_80409788:
+.global bossGesoViewObjName
+bossGesoViewObjName:
 	.incbin "baserom.dol", 0x3E3CC8, 0x8
-.global lbl_80409790
-lbl_80409790:
+.global cSunWarpPointName
+cSunWarpPointName:
 	.incbin "baserom.dol", 0x3E3CD0, 0x8
-.global lbl_80409798
-lbl_80409798:
+.global cPositionJointName
+cPositionJointName:
 	.incbin "baserom.dol", 0x3E3CD8, 0x4
-.global lbl_8040979C
-lbl_8040979C:
+.global cLookatJointName
+cLookatJointName:
 	.incbin "baserom.dol", 0x3E3CDC, 0x4
-.global lbl_804097A0
-lbl_804097A0:
+.global cCameraBckVolumeName
+cCameraBckVolumeName:
 	.incbin "baserom.dol", 0x3E3CE0, 0x8
-.global lbl_804097A8
-lbl_804097A8:
+.global cLoadCamName
+cLoadCamName:
 	.incbin "baserom.dol", 0x3E3CE8, 0x18

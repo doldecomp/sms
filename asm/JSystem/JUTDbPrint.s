@@ -1,0 +1,31 @@
+.include "macros.inc"
+
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+
+.global __dt__13J2DOrthoGraphFv
+__dt__13J2DOrthoGraphFv:
+/* 80011760 0000E6A0  7C 08 02 A6 */	mflr r0
+/* 80011764 0000E6A4  90 01 00 04 */	stw r0, 4(r1)
+/* 80011768 0000E6A8  94 21 FF E8 */	stwu r1, -0x18(r1)
+/* 8001176C 0000E6AC  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 80011770 0000E6B0  7C 7F 1B 79 */	or. r31, r3, r3
+/* 80011774 0000E6B4  41 82 00 30 */	beq lbl_800117A4
+/* 80011778 0000E6B8  3C 60 80 3B */	lis r3, __vt__13J2DOrthoGraph@ha
+/* 8001177C 0000E6BC  38 03 9B B0 */	addi r0, r3, __vt__13J2DOrthoGraph@l
+/* 80011780 0000E6C0  90 1F 00 00 */	stw r0, 0(r31)
+/* 80011784 0000E6C4  41 82 00 10 */	beq lbl_80011794
+/* 80011788 0000E6C8  3C 60 80 3B */	lis r3, __vt__14J2DGrafContext@ha
+/* 8001178C 0000E6CC  38 03 9B 48 */	addi r0, r3, __vt__14J2DGrafContext@l
+/* 80011790 0000E6D0  90 1F 00 00 */	stw r0, 0(r31)
+lbl_80011794:
+/* 80011794 0000E6D4  7C 80 07 35 */	extsh. r0, r4
+/* 80011798 0000E6D8  40 81 00 0C */	ble lbl_800117A4
+/* 8001179C 0000E6DC  7F E3 FB 78 */	mr r3, r31
+/* 800117A0 0000E6E0  4B FF B3 11 */	bl __dl__FPv
+lbl_800117A4:
+/* 800117A4 0000E6E4  80 01 00 1C */	lwz r0, 0x1c(r1)
+/* 800117A8 0000E6E8  7F E3 FB 78 */	mr r3, r31
+/* 800117AC 0000E6EC  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 800117B0 0000E6F0  38 21 00 18 */	addi r1, r1, 0x18
+/* 800117B4 0000E6F4  7C 08 03 A6 */	mtlr r0
+/* 800117B8 0000E6F8  4E 80 00 20 */	blr 
