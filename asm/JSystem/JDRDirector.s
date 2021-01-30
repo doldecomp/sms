@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global searchF__Q26JDrama9TDirectorFUsPCc
 searchF__Q26JDrama9TDirectorFUsPCc:
 /* 80041AD4 0003EA14  7C 08 02 A6 */	mflr r0
@@ -212,3 +211,8 @@ $$212$$2JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject:
 $$212$$2__dt__Q26JDrama9TDirectorFv:
 /* 80041D8C 0003ECCC  38 63 FF F4 */	addi r3, r3, -12
 /* 80041D90 0003ECD0  4B FF FF 7C */	b __dt__Q26JDrama9TDirectorFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama9TDirector
+__vt__Q26JDrama9TDirector:
+	.incbin "baserom.dol", 0x3A7498, 0x70

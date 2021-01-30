@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global control__12TEffectModelFv
 control__12TEffectModelFv:
 /* 8024A078 00246FB8  4E 80 00 20 */	blr 
@@ -3191,3 +3190,253 @@ $$232$$2__dt__16TEffectColumSandFv:
 $$232$$2__dt__16TEffectExplosionFv:
 /* 8024CCD8 00249C18  38 63 FF E0 */	addi r3, r3, -32
 /* 8024CCDC 00249C1C  4B FF D3 A0 */	b __dt__16TEffectExplosionFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE50, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x391A38, 0xC
+.global $$22141
+$$22141:
+	.incbin "baserom.dol", 0x391A44, 0x14
+.global $$22197
+$$22197:
+	.incbin "baserom.dol", 0x391A58, 0x30
+.global $$22198
+$$22198:
+	.incbin "baserom.dol", 0x391A88, 0x38
+.global $$22199
+$$22199:
+	.incbin "baserom.dol", 0x391AC0, 0x34
+.global $$22200
+$$22200:
+	.incbin "baserom.dol", 0x391AF4, 0x24
+.global $$22673
+$$22673:
+	.incbin "baserom.dol", 0x391B18, 0x18
+.global $$22685
+$$22685:
+	.incbin "baserom.dol", 0x391B30, 0x10
+.global $$22698
+$$22698:
+	.incbin "baserom.dol", 0x391B40, 0x14
+.global $$22707
+$$22707:
+	.incbin "baserom.dol", 0x391B54, 0xC
+.global $$22861
+$$22861:
+	.incbin "baserom.dol", 0x391B60, 0x10
+.global $$22875
+$$22875:
+	.incbin "baserom.dol", 0x391B70, 0x28
+.global $$22876
+$$22876:
+	.incbin "baserom.dol", 0x391B98, 0x28
+.global $$22877
+$$22877:
+	.incbin "baserom.dol", 0x391BC0, 0x28
+.global $$22880
+$$22880:
+	.incbin "baserom.dol", 0x391BE8, 0x18
+.global $$22930
+$$22930:
+	.incbin "baserom.dol", 0x391C00, 0x10
+.global $$22956
+$$22956:
+	.incbin "baserom.dol", 0x391C10, 0x10
+.global $$22962
+$$22962:
+	.incbin "baserom.dol", 0x391C20, 0x2C
+.global $$22965
+$$22965:
+	.incbin "baserom.dol", 0x391C4C, 0x18
+.global $$23018
+$$23018:
+	.incbin "baserom.dol", 0x391C64, 0xC
+.global $$23045
+$$23045:
+	.incbin "baserom.dol", 0x391C70, 0x14
+.global $$23059
+$$23059:
+	.incbin "baserom.dol", 0x391C84, 0x30
+.global $$23060
+$$23060:
+	.incbin "baserom.dol", 0x391CB4, 0x30
+.global $$23061
+$$23061:
+	.incbin "baserom.dol", 0x391CE4, 0x30
+.global $$23064
+$$23064:
+	.incbin "baserom.dol", 0x391D14, 0x1C
+.global $$23119
+$$23119:
+	.incbin "baserom.dol", 0x391D30, 0x14
+.global $$23146
+$$23146:
+	.incbin "baserom.dol", 0x391D44, 0x10
+.global $$23156
+$$23156:
+	.incbin "baserom.dol", 0x391D54, 0x28
+.global $$23157
+$$23157:
+	.incbin "baserom.dol", 0x391D7C, 0x28
+.global $$23160
+$$23160:
+	.incbin "baserom.dol", 0x391DA4, 0x18
+.global $$23321
+$$23321:
+	.incbin "baserom.dol", 0x391DBC, 0x10
+.global $$23475
+$$23475:
+	.incbin "baserom.dol", 0x391DCC, 0x24
+.global $$23501
+$$23501:
+	.incbin "baserom.dol", 0x391DF0, 0x28
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global entry$2672
+entry$2672:
+	.incbin "baserom.dol", 0x3CF1D8, 0x18
+.global entry$2684
+entry$2684:
+	.incbin "baserom.dol", 0x3CF1F0, 0x18
+.global entry$2697
+entry$2697:
+	.incbin "baserom.dol", 0x3CF208, 0x18
+.global entry$2706
+entry$2706:
+	.incbin "baserom.dol", 0x3CF220, 0x18
+.global __vt__16TEffectExplosion
+__vt__16TEffectExplosion:
+	.incbin "baserom.dol", 0x3CF238, 0x114
+.global __vt__19TEffectModelManager
+__vt__19TEffectModelManager:
+	.incbin "baserom.dol", 0x3CF34C, 0x54
+.global __vt__23TEffectExplosionManager
+__vt__23TEffectExplosionManager:
+	.incbin "baserom.dol", 0x3CF3A0, 0x54
+.global __vt__16TEffectColumSand
+__vt__16TEffectColumSand:
+	.incbin "baserom.dol", 0x3CF3F4, 0x114
+.global __vt__23TEffectColumSandManager
+__vt__23TEffectColumSandManager:
+	.incbin "baserom.dol", 0x3CF508, 0x54
+.global __vt__21TEffectBombColumWater
+__vt__21TEffectBombColumWater:
+	.incbin "baserom.dol", 0x3CF55C, 0x114
+.global __vt__28TEffectBombColumWaterManager
+__vt__28TEffectBombColumWaterManager:
+	.incbin "baserom.dol", 0x3CF670, 0x54
+.global __vt__17TEffectColumWater
+__vt__17TEffectColumWater:
+	.incbin "baserom.dol", 0x3CF6C4, 0x114
+.global __vt__24TEffectColumWaterManager
+__vt__24TEffectColumWaterManager:
+	.incbin "baserom.dol", 0x3CF7D8, 0x54
+.global __vt__12TEffectModel
+__vt__12TEffectModel:
+	.incbin "baserom.dol", 0x3CF82C, 0x114
+.global __vt__17TEffectObjManager
+__vt__17TEffectObjManager:
+	.incbin "baserom.dol", 0x3CF940, 0x24
+.global __vt__14TEffectObjBase
+__vt__14TEffectObjBase:
+	.incbin "baserom.dol", 0x3CF964, 0xB4
+.global __vt__19TEffectBiancoFunsui
+__vt__19TEffectBiancoFunsui:
+	.incbin "baserom.dol", 0x3CFA18, 0xA4
+.global __vt__18TEffectPinnaFunsui
+__vt__18TEffectPinnaFunsui:
+	.incbin "baserom.dol", 0x3CFABC, 0xA4
+.global __vt__13TSimpleEffect
+__vt__13TSimpleEffect:
+	.incbin "baserom.dol", 0x3CFB60, 0xA8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22718
+$$22718:
+	.incbin "baserom.dol", 0x3E9950, 0x4
+.global $$22828
+$$22828:
+	.incbin "baserom.dol", 0x3E9954, 0x4
+.global $$22829
+$$22829:
+	.incbin "baserom.dol", 0x3E9958, 0x4
+.global $$22830
+$$22830:
+	.incbin "baserom.dol", 0x3E995C, 0xC
+.global $$22832
+$$22832:
+	.incbin "baserom.dol", 0x3E9968, 0x8
+.global $$23085
+$$23085:
+	.incbin "baserom.dol", 0x3E9970, 0x4
+.global $$23195
+$$23195:
+	.incbin "baserom.dol", 0x3E9974, 0x4
+.global $$23209
+$$23209:
+	.incbin "baserom.dol", 0x3E9978, 0x4
+.global $$23433
+$$23433:
+	.incbin "baserom.dol", 0x3E997C, 0x4
+.global $$23435
+$$23435:
+	.incbin "baserom.dol", 0x3E9980, 0x4
+.global $$23436
+$$23436:
+	.incbin "baserom.dol", 0x3E9984, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23585
+$$23585:
+	.skip 0xC
+.global $$23586
+$$23586:
+	.skip 0xC
+.global $$23587
+$$23587:
+	.skip 0xC
+.global $$23588
+$$23588:
+	.skip 0xC
+.global $$23589
+$$23589:
+	.skip 0xC
+.global $$23590
+$$23590:
+	.skip 0xC
+.global $$23591
+$$23591:
+	.skip 0xC
+.global $$23592
+$$23592:
+	.skip 0xC
+.global $$23593
+$$23593:
+	.skip 0xC
+.global $$23594
+$$23594:
+	.skip 0xC
+.global $$23595
+$$23595:
+	.skip 0xC
+.global $$23596
+$$23596:
+	.skip 0xC
+.global $$23597
+$$23597:
+	.skip 0xC
+.global $$23598
+$$23598:
+	.skip 0xC
+.global $$23599
+$$23599:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpEffectObjManager
+gpEffectObjManager:
+	.skip 0x8

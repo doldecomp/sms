@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__13TLampTrapIronFv
 __dt__13TLampTrapIronFv:
 /* 801D8CA4 001D5BE4  7C 08 02 A6 */	mflr r0
@@ -1260,3 +1259,145 @@ $$232$$2__dt__16TLampTrapIronHitFv:
 $$232$$2__dt__13TLampTrapIronFv:
 /* 801D9E10 001D6D50  38 63 FF E0 */	addi r3, r3, -32
 /* 801D9E14 001D6D54  4B FF EE 90 */	b __dt__13TLampTrapIronFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD9C, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x38E328, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x38E334, 0x14
+.global $$22327
+$$22327:
+	.incbin "baserom.dol", 0x38E348, 0x30
+.global $$22328
+$$22328:
+	.incbin "baserom.dol", 0x38E378, 0x38
+.global $$22329
+$$22329:
+	.incbin "baserom.dol", 0x38E3B0, 0x34
+.global $$22330
+$$22330:
+	.incbin "baserom.dol", 0x38E3E4, 0x24
+.global $$22768
+$$22768:
+	.incbin "baserom.dol", 0x38E408, 0xC
+.global $$22770
+$$22770:
+	.incbin "baserom.dol", 0x38E414, 0xC
+.global $$22972
+$$22972:
+	.incbin "baserom.dol", 0x38E420, 0xC
+.global $$22975
+$$22975:
+	.incbin "baserom.dol", 0x38E42C, 0x14
+.global $$23143
+$$23143:
+	.incbin "baserom.dol", 0x38E440, 0x14
+.global $$23146
+$$23146:
+	.incbin "baserom.dol", 0x38E454, 0x14
+.global $$23185
+$$23185:
+	.incbin "baserom.dol", 0x38E468, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13TLampTrapIron
+__vt__13TLampTrapIron:
+	.incbin "baserom.dol", 0x3CC770, 0x164
+.global __vt__16TLampTrapIronHit
+__vt__16TLampTrapIronHit:
+	.incbin "baserom.dol", 0x3CC8D4, 0xA4
+.global __vt__14TLampTrapSpike
+__vt__14TLampTrapSpike:
+	.incbin "baserom.dol", 0x3CC978, 0x164
+.global __vt__17TLampTrapSpikeHit
+__vt__17TLampTrapSpikeHit:
+	.incbin "baserom.dol", 0x3CCADC, 0xA4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mHitPointMax__13TLampTrapIron
+mHitPointMax__13TLampTrapIron:
+	.incbin "baserom.dol", 0x3E37C0, 0x4
+.global mFireTimerMax__13TLampTrapIron
+mFireTimerMax__13TLampTrapIron:
+	.incbin "baserom.dol", 0x3E37C4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22917
+$$22917:
+	.incbin "baserom.dol", 0x3E8A48, 0x4
+.global $$22973
+$$22973:
+	.incbin "baserom.dol", 0x3E8A4C, 0x4
+.global $$22974
+$$22974:
+	.incbin "baserom.dol", 0x3E8A50, 0x4
+.global $$23001
+$$23001:
+	.incbin "baserom.dol", 0x3E8A54, 0x4
+.global $$23144
+$$23144:
+	.incbin "baserom.dol", 0x3E8A58, 0x4
+.global $$23145
+$$23145:
+	.incbin "baserom.dol", 0x3E8A5C, 0x4
+.global $$23147
+$$23147:
+	.incbin "baserom.dol", 0x3E8A60, 0x4
+.global $$23148
+$$23148:
+	.incbin "baserom.dol", 0x3E8A64, 0x4
+.global $$23150
+$$23150:
+	.incbin "baserom.dol", 0x3E8A68, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23256
+$$23256:
+	.skip 0xC
+.global $$23257
+$$23257:
+	.skip 0xC
+.global $$23258
+$$23258:
+	.skip 0xC
+.global $$23259
+$$23259:
+	.skip 0xC
+.global $$23260
+$$23260:
+	.skip 0xC
+.global $$23261
+$$23261:
+	.skip 0xC
+.global $$23262
+$$23262:
+	.skip 0xC
+.global $$23263
+$$23263:
+	.skip 0xC
+.global $$23264
+$$23264:
+	.skip 0xC
+.global $$23265
+$$23265:
+	.skip 0xC
+.global $$23266
+$$23266:
+	.skip 0xC
+.global $$23267
+$$23267:
+	.skip 0xC
+.global $$23268
+$$23268:
+	.skip 0xC
+.global $$23269
+$$23269:
+	.skip 0xC
+.global $$23270
+$$23270:
+	.skip 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXCPInterruptHandler
 GXCPInterruptHandler:
 /* 800A5FD4 000A2F14  7C 08 02 A6 */	mflr r0
@@ -558,3 +557,29 @@ __GXWriteFifoIntReset:
 GXGetCPUFifo:
 /* 800A6788 000A36C8  80 6D 95 68 */	lwz r3, CPUFifo-_SDA_BASE_(r13)
 /* 800A678C 000A36CC  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global CPUFifo
+CPUFifo:
+	.skip 0x4
+.global GPFifo
+GPFifo:
+	.skip 0x4
+.global __GXCurrentThread
+__GXCurrentThread:
+	.skip 0x4
+.global CPGPLinked
+CPGPLinked:
+	.skip 0x4
+.global GXOverflowSuspendInProgress
+GXOverflowSuspendInProgress:
+	.skip 0x4
+.global BreakPointCB
+BreakPointCB:
+	.skip 0x4
+.global __GXOverflowCount
+__GXOverflowCount:
+	.skip 0x4
+.global __GXCurrentBP
+__GXCurrentBP:
+	.skip 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__20TScenarioArchiveNameFR20JSUMemoryInputStream
 load__20TScenarioArchiveNameFR20JSUMemoryInputStream:
 /* 800FBA14 000F8954  7C 08 02 A6 */	mflr r0
@@ -21,3 +20,8 @@ load__20TScenarioArchiveNameFR20JSUMemoryInputStream:
 /* 800FBA4C 000F898C  7C 08 03 A6 */	mtlr r0
 /* 800FBA50 000F8990  38 21 00 18 */	addi r1, r1, 0x18
 /* 800FBA54 000F8994  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__20TScenarioArchiveName
+__vt__20TScenarioArchiveName:
+	.incbin "baserom.dol", 0x3B10A8, 0x20

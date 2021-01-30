@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__18JSUFileInputStreamFP7JKRFile
 __ct__18JSUFileInputStreamFP7JKRFile:
 /* 8000F360 0000C2A0  3C A0 80 3B */	lis r5, __vt__10JSUIosBase@ha
@@ -201,3 +200,8 @@ getLength__18JSUFileInputStreamCFv:
 getPosition__18JSUFileInputStreamCFv:
 /* 8000F604 0000C544  80 63 00 0C */	lwz r3, 0xc(r3)
 /* 8000F608 0000C548  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18JSUFileInputStream
+__vt__18JSUFileInputStream:
+	.incbin "baserom.dol", 0x3A5818, 0x28

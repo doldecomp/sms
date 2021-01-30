@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setBuffer__20JSUMemoryInputStreamFPCvl
 setBuffer__20JSUMemoryInputStreamFPCvl:
 /* 8000F04C 0000BF8C  90 83 00 08 */	stw r4, 8(r3)
@@ -256,3 +255,11 @@ getLength__20JSUMemoryInputStreamCFv:
 getPosition__20JSUMemoryInputStreamCFv:
 /* 8000F358 0000C298  80 63 00 10 */	lwz r3, 0x10(r3)
 /* 8000F35C 0000C29C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__21JSUMemoryOutputStream
+__vt__21JSUMemoryOutputStream:
+	.incbin "baserom.dol", 0x3A57C8, 0x28
+.global __vt__20JSUMemoryInputStream
+__vt__20JSUMemoryInputStream:
+	.incbin "baserom.dol", 0x3A57F0, 0x28

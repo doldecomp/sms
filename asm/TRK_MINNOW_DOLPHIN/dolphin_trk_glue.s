@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKLoadContext
 TRKLoadContext:
 /* 8008C014 00088F54  80 03 00 00 */	lwz r0, 0(r3)
@@ -259,3 +258,8 @@ TRK_board_display:
 /* 8008C360 000892A0  80 01 00 04 */	lwz r0, 4(r1)
 /* 8008C364 000892A4  7C 08 03 A6 */	mtlr r0
 /* 8008C368 000892A8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global gDBCommTable
+gDBCommTable:
+	.incbin "baserom.dol", 0x3AC088, 0x20

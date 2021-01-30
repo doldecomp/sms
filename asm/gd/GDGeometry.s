@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GDSetVtxDescv
 GDSetVtxDescv:
 /* 800AF18C 000AC0CC  7C 08 02 A6 */	mflr r0
@@ -1483,3 +1482,19 @@ lbl_800B071C:
 /* 800B0778 000AD6B8  38 21 00 28 */	addi r1, r1, 0x28
 /* 800B077C 000AD6BC  7C 08 03 A6 */	mtlr r0
 /* 800B0780 000AD6C0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2121
+$$2121:
+	.incbin "baserom.dol", 0x3AEC48, 0x68
+.global $$2207
+$$2207:
+	.incbin "baserom.dol", 0x3AECB0, 0x48
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cm2hw$400
+cm2hw$400:
+	.incbin "baserom.dol", 0x3E32F0, 0x4
+.global cm2hw$515
+cm2hw$515:
+	.incbin "baserom.dol", 0x3E32F4, 0xC

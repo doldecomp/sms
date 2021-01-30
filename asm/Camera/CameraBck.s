@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setFrame__10TCameraBckFf
 setFrame__10TCameraBckFf:
 /* 803614DC 0035E41C  7C 08 02 A6 */	mflr r0
@@ -308,3 +307,69 @@ lbl_80361884:
 /* 803618FC 0035E83C  38 21 00 40 */	addi r1, r1, 0x40
 /* 80361900 0035E840  7C 08 03 A6 */	mtlr r0
 /* 80361904 0035E844  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3A3A98, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x3A3AA4, 0x14
+.global $$21593
+$$21593:
+	.incbin "baserom.dol", 0x3A3AB8, 0x30
+.global $$21594
+$$21594:
+	.incbin "baserom.dol", 0x3A3AE8, 0x38
+.global $$21595
+$$21595:
+	.incbin "baserom.dol", 0x3A3B20, 0x34
+.global $$21596
+$$21596:
+	.incbin "baserom.dol", 0x3A3B54, 0x24
+.global $$21681
+$$21681:
+	.incbin "baserom.dol", 0x3A3B78, 0x2C
+.global $$21682
+$$21682:
+	.incbin "baserom.dol", 0x3A3BA4, 0x30
+.global $$21683
+$$21683:
+	.incbin "baserom.dol", 0x3A3BD4, 0x24
+.global $$21684
+$$21684:
+	.incbin "baserom.dol", 0x3A3BF8, 0x10
+.global $$21685
+$$21685:
+	.incbin "baserom.dol", 0x3A3C08, 0x10
+.global $$21686
+$$21686:
+	.incbin "baserom.dol", 0x3A3C18, 0x14
+.global $$21687
+$$21687:
+	.incbin "baserom.dol", 0x3A3C2C, 0x30
+.global $$21688
+$$21688:
+	.incbin "baserom.dol", 0x3A3C5C, 0x34
+.global $$21689
+$$21689:
+	.incbin "baserom.dol", 0x3A3C90, 0x28
+.global $$21837
+$$21837:
+	.incbin "baserom.dol", 0x3A3CB8, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sAddBckFileNameTable
+sAddBckFileNameTable:
+	.incbin "baserom.dol", 0x3E1CE0, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cPositionJointName
+cPositionJointName:
+	.incbin "baserom.dol", 0x3E3CD8, 0x4
+.global cLookatJointName
+cLookatJointName:
+	.incbin "baserom.dol", 0x3E3CDC, 0x4
+.global cCameraBckVolumeName
+cCameraBckVolumeName:
+	.incbin "baserom.dol", 0x3E3CE0, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem11WaveBankMgrFi
 init__Q28JASystem11WaveBankMgrFi:
 /* 8005B184 000580C4  7C 08 02 A6 */	mflr r0
@@ -212,3 +211,11 @@ lbl_8005B434:
 /* 8005B440 00058380  7C 08 03 A6 */	mtlr r0
 /* 8005B444 00058384  38 21 00 18 */	addi r1, r1, 0x18
 /* 8005B448 00058388  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sTableSize__Q28JASystem11WaveBankMgr
+sTableSize__Q28JASystem11WaveBankMgr:
+	.skip 0x4
+.global sWaveBank__Q28JASystem11WaveBankMgr
+sWaveBank__Q28JASystem11WaveBankMgr:
+	.skip 0x4

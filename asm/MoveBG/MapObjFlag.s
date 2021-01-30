@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__18TMapObjFlagManagerFv
 __dt__18TMapObjFlagManagerFv:
 /* 801B2D50 001AFC90  7C 08 02 A6 */	mflr r0
@@ -1616,3 +1615,189 @@ lbl_801B4468:
 $$232$$2__dt__11TMapObjFlagFv:
 /* 801B447C 001B13BC  38 63 FF E0 */	addi r3, r3, -32
 /* 801B4480 001B13C0  4B FF FC 7C */	b __dt__11TMapObjFlagFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD40, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x38C078, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x38C084, 0x14
+.global $$22487
+$$22487:
+	.incbin "baserom.dol", 0x38C098, 0x18
+.global $$22488
+$$22488:
+	.incbin "baserom.dol", 0x38C0B0, 0xC
+.global $$22489
+$$22489:
+	.incbin "baserom.dol", 0x38C0BC, 0xC
+.global $$22490
+$$22490:
+	.incbin "baserom.dol", 0x38C0C8, 0xC
+.global $$22491
+$$22491:
+	.incbin "baserom.dol", 0x38C0D4, 0xC
+.global $$22492
+$$22492:
+	.incbin "baserom.dol", 0x38C0E0, 0x10
+.global $$22493
+$$22493:
+	.incbin "baserom.dol", 0x38C0F0, 0x10
+.global $$22494
+$$22494:
+	.incbin "baserom.dol", 0x38C100, 0x14
+.global $$22495
+$$22495:
+	.incbin "baserom.dol", 0x38C114, 0xC
+.global $$22496
+$$22496:
+	.incbin "baserom.dol", 0x38C120, 0x14
+.global $$22497
+$$22497:
+	.incbin "baserom.dol", 0x38C134, 0xC
+.global $$22498
+$$22498:
+	.incbin "baserom.dol", 0x38C140, 0x10
+.global $$22499
+$$22499:
+	.incbin "baserom.dol", 0x38C150, 0x10
+.global $$22500
+$$22500:
+	.incbin "baserom.dol", 0x38C160, 0x10
+.global $$22501
+$$22501:
+	.incbin "baserom.dol", 0x38C170, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18TMapObjFlagManager
+__vt__18TMapObjFlagManager:
+	.incbin "baserom.dol", 0x3C67F0, 0x24
+.global __vt__11TMapObjFlag
+__vt__11TMapObjFlag:
+	.incbin "baserom.dol", 0x3C6814, 0xAC
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mFlutterSpeed__11TMapObjFlag
+mFlutterSpeed__11TMapObjFlag:
+	.incbin "baserom.dol", 0x3E36B8, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22283
+$$22283:
+	.incbin "baserom.dol", 0x3E82B0, 0x4
+.global $$22392
+$$22392:
+	.incbin "baserom.dol", 0x3E82B4, 0x4
+.global $$22393
+$$22393:
+	.incbin "baserom.dol", 0x3E82B8, 0x4
+.global $$22394
+$$22394:
+	.incbin "baserom.dol", 0x3E82BC, 0x4
+.global $$22486
+$$22486:
+	.incbin "baserom.dol", 0x3E82C0, 0x8
+.global $$22553
+$$22553:
+	.incbin "baserom.dol", 0x3E82C8, 0x4
+.global $$22554
+$$22554:
+	.incbin "baserom.dol", 0x3E82CC, 0x4
+.global $$22555
+$$22555:
+	.incbin "baserom.dol", 0x3E82D0, 0x4
+.global $$22587
+$$22587:
+	.incbin "baserom.dol", 0x3E82D4, 0x4
+.global $$22588
+$$22588:
+	.incbin "baserom.dol", 0x3E82D8, 0x4
+.global $$22589
+$$22589:
+	.incbin "baserom.dol", 0x3E82DC, 0x4
+.global $$22590
+$$22590:
+	.incbin "baserom.dol", 0x3E82E0, 0x4
+.global $$22591
+$$22591:
+	.incbin "baserom.dol", 0x3E82E4, 0x4
+.global $$22592
+$$22592:
+	.incbin "baserom.dol", 0x3E82E8, 0x8
+.global $$22594
+$$22594:
+	.incbin "baserom.dol", 0x3E82F0, 0x8
+.global $$22631
+$$22631:
+	.incbin "baserom.dol", 0x3E82F8, 0x4
+.global $$22632
+$$22632:
+	.incbin "baserom.dol", 0x3E82FC, 0x4
+.global $$22674
+$$22674:
+	.incbin "baserom.dol", 0x3E8300, 0x4
+.global $$22675
+$$22675:
+	.incbin "baserom.dol", 0x3E8304, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22827
+$$22827:
+	.skip 0xC
+.global $$22828
+$$22828:
+	.skip 0xC
+.global $$22829
+$$22829:
+	.skip 0xC
+.global $$22830
+$$22830:
+	.skip 0xC
+.global $$22831
+$$22831:
+	.skip 0xC
+.global $$22832
+$$22832:
+	.skip 0xC
+.global $$22833
+$$22833:
+	.skip 0xC
+.global $$22834
+$$22834:
+	.skip 0xC
+.global $$22835
+$$22835:
+	.skip 0xC
+.global $$22836
+$$22836:
+	.skip 0xC
+.global $$22837
+$$22837:
+	.skip 0xC
+.global $$22838
+$$22838:
+	.skip 0xC
+.global $$22839
+$$22839:
+	.skip 0xC
+.global $$22840
+$$22840:
+	.skip 0xC
+.global $$22841
+$$22841:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMapObjFlagManager
+gpMapObjFlagManager:
+	.skip 0x4
+.global total_use_size$2278
+total_use_size$2278:
+	.skip 0x4
+.global init$2279
+init$2279:
+	.skip 0x8

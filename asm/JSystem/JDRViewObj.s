@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global testPerform__Q26JDrama8TViewObjFUlPQ26JDrama9TGraphics
 testPerform__Q26JDrama8TViewObjFUlPQ26JDrama9TGraphics:
 /* 80046F6C 00043EAC  7C 08 02 A6 */	mflr r0

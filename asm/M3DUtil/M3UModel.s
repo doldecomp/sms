@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setMtxCalc__8M3UModelFRC17M3UMtxCalcSetInfo
 setMtxCalc__8M3UModelFRC17M3UMtxCalcSetInfo:
 /* 800D2C0C 000CFB4C  4E 80 00 20 */	blr 
@@ -341,3 +340,16 @@ lbl_800D3068:
 lbl_800D3084:
 /* 800D3084 000CFFC4  38 60 00 00 */	li r3, 0
 /* 800D3088 000CFFC8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__8M3UModel
+__vt__8M3UModel:
+	.incbin "baserom.dol", 0x3B04E0, 0x24
+.global __vt__14M3UModelCommon
+__vt__14M3UModelCommon:
+	.incbin "baserom.dol", 0x3B0504, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21716
+$$21716:
+	.incbin "baserom.dol", 0x3E4BF0, 0x8

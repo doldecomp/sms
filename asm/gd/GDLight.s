@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GDSetLightAttn
 GDSetLightAttn:
 /* 800B0784 000AD6C4  7C 08 02 A6 */	mflr r0

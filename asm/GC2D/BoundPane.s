@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global update__10TBoundPaneFv
 update__10TBoundPaneFv:
 /* 80216174 002130B4  7C 08 02 A6 */	mflr r0
@@ -373,3 +372,23 @@ __ct__10TBoundPaneFP9J2DScreenUl:
 /* 802166D4 00213614  38 21 00 30 */	addi r1, r1, 0x30
 /* 802166D8 00213618  7C 08 03 A6 */	mtlr r0
 /* 802166DC 0021361C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21549
+$$21549:
+	.incbin "baserom.dol", 0x3E9240, 0x4
+.global $$21550
+$$21550:
+	.incbin "baserom.dol", 0x3E9244, 0x4
+.global $$21551
+$$21551:
+	.incbin "baserom.dol", 0x3E9248, 0x4
+.global $$21552
+$$21552:
+	.incbin "baserom.dol", 0x3E924C, 0x4
+.global $$21553
+$$21553:
+	.incbin "baserom.dol", 0x3E9250, 0x8
+.global $$21555
+$$21555:
+	.incbin "baserom.dol", 0x3E9258, 0x8

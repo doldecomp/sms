@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__15JSUOutputStreamFv
 __dt__15JSUOutputStreamFv:
 /* 8000E29C 0000B1DC  7C 08 02 A6 */	mflr r0
@@ -198,3 +197,14 @@ lbl_8000E51C:
 /* 8000E528 0000B468  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000E52C 0000B46C  7C 08 03 A6 */	mtlr r0
 /* 8000E530 0000B470  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__21JSURandomOutputStream
+__vt__21JSURandomOutputStream:
+	.incbin "baserom.dol", 0x3A5740, 0x28
+.global __vt__10JSUIosBase
+__vt__10JSUIosBase:
+	.incbin "baserom.dol", 0x3A5768, 0xC
+.global __vt__15JSUOutputStream
+__vt__15JSUOutputStream:
+	.incbin "baserom.dol", 0x3A5774, 0x14

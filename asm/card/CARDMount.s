@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global IsCard
 IsCard:
 /* 800A28FC 0009F83C  54 60 00 1F */	rlwinm. r0, r3, 0, 0, 0xf
@@ -769,3 +768,11 @@ lbl_800A3370:
 /* 800A3380 000A02C0  38 21 00 20 */	addi r1, r1, 0x20
 /* 800A3384 000A02C4  7C 08 03 A6 */	mtlr r0
 /* 800A3388 000A02C8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global SectorSizeTable
+SectorSizeTable:
+	.incbin "baserom.dol", 0x3AE500, 0x20
+.global LatencyTable
+LatencyTable:
+	.incbin "baserom.dol", 0x3AE520, 0x20

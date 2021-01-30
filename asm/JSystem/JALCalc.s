@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global linearTransform__7JALCalcFfffffb
 linearTransform__7JALCalcFfffffb:
 /* 80047200 00044140  EC 03 10 28 */	fsubs f0, f3, f2
@@ -305,3 +304,39 @@ lbl_800475FC:
 /* 80047610 00044550  83 C1 00 28 */	lwz r30, 0x28(r1)
 /* 80047614 00044554  38 21 00 40 */	addi r1, r1, 0x40
 /* 80047618 00044558  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cEqualCSlope__7JALCalc
+cEqualCSlope__7JALCalc:
+	.incbin "baserom.dol", 0x3E30D0, 0x4
+.global cPlusPSlope__7JALCalc
+cPlusPSlope__7JALCalc:
+	.incbin "baserom.dol", 0x3E30D4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2244
+$$2244:
+	.incbin "baserom.dol", 0x3E4110, 0x4
+.global $$2245
+$$2245:
+	.incbin "baserom.dol", 0x3E4114, 0x4
+.global $$2354
+$$2354:
+	.incbin "baserom.dol", 0x3E4118, 0x4
+.global $$2355
+$$2355:
+	.incbin "baserom.dol", 0x3E411C, 0x4
+.global $$2380
+$$2380:
+	.incbin "baserom.dol", 0x3E4120, 0x8
+.global $$2399
+$$2399:
+	.incbin "baserom.dol", 0x3E4128, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$357
+init$357:
+	.skip 0x4
+.global oRandom$356
+oRandom$356:
+	.skip 0x4

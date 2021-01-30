@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global updateMatAnm__6MActorFv
 updateMatAnm__6MActorFv:
 /* 800D308C 000CFFCC  7C 08 02 A6 */	mflr r0
@@ -3227,3 +3226,43 @@ __ct__13MActorAnmBaseFv:
 /* 800D5C28 000D2B68  38 21 00 18 */	addi r1, r1, 0x18
 /* 800D5C2C 000D2B6C  7C 08 03 A6 */	mtlr r0
 /* 800D5C30 000D2B70  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1
+__vt__33MActorAnmEach$$016J3DAnmClusterKey$$1:
+	.incbin "baserom.dol", 0x3B0510, 0x28
+.global __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1
+__vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1:
+	.incbin "baserom.dol", 0x3B0538, 0x28
+.global __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1
+__vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1:
+	.incbin "baserom.dol", 0x3B0560, 0x28
+.global __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1
+__vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1:
+	.incbin "baserom.dol", 0x3B0588, 0x28
+.global __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1
+__vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1:
+	.incbin "baserom.dol", 0x3B05B0, 0x28
+.global __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1
+__vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1:
+	.incbin "baserom.dol", 0x3B05D8, 0x28
+.global __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1
+__vt__33MActorAnmEach$$016J3DAnmTexPattern$$1:
+	.incbin "baserom.dol", 0x3B0600, 0x28
+.global __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1
+__vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1:
+	.incbin "baserom.dol", 0x3B0628, 0x28
+.global __vt__31MActorAnmEach$$014J3DAnmColorKey$$1
+__vt__31MActorAnmEach$$014J3DAnmColorKey$$1:
+	.incbin "baserom.dol", 0x3B0650, 0x28
+.global __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1
+__vt__35MActorAnmEach$$018J3DAnmTransformKey$$1:
+	.incbin "baserom.dol", 0x3B0678, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23554
+$$23554:
+	.incbin "baserom.dol", 0x3E4BF8, 0x8
+.global $$23556
+$$23556:
+	.incbin "baserom.dol", 0x3E4C00, 0x8

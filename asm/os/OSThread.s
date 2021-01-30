@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __OSThreadInit
 __OSThreadInit:
 /* 80092B50 0008FA90  7C 08 02 A6 */	mflr r0
@@ -1418,3 +1417,28 @@ lbl_80093DD0:
 OSGetThreadPriority:
 /* 80093DF0 00090D30  80 63 02 D4 */	lwz r3, 0x2d4(r3)
 /* 80093DF4 00090D34  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global RunQueue
+RunQueue:
+	.skip 0x100
+.global IdleThread
+IdleThread:
+	.skip 0x310
+.global DefaultThread
+DefaultThread:
+	.skip 0x310
+.global IdleContext
+IdleContext:
+	.skip 0x2C8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global RunQueueBits
+RunQueueBits:
+	.skip 0x4
+.global RunQueueHint
+RunQueueHint:
+	.skip 0x4
+.global Reschedule
+Reschedule:
+	.skip 0x8

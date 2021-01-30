@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TGCConsole2Fv
 __dt__11TGCConsole2Fv:
 /* 802022E0 001FF220  7C 08 02 A6 */	mflr r0
@@ -8157,8 +8156,8 @@ lbl_802097F0:
 /* 8020995C 0020689C  7C 08 03 A6 */	mtlr r0
 /* 80209960 002068A0  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__GCConsole2
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__GCConsole2:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 80209964 002068A4  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80209968 002068A8  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8020996C 002068AC  D0 63 00 08 */	stfs f3, 8(r3)
@@ -16847,3 +16846,327 @@ lbl_80211944:
 /* 8021194C 0020E88C  38 21 00 10 */	addi r1, r1, 0x10
 /* 80211950 0020E890  7C 08 03 A6 */	mtlr r0
 /* 80211954 0020E894  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE24, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x390388, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x390394, 0x14
+.global scNozzleSoundList
+scNozzleSoundList:
+	.incbin "baserom.dol", 0x3903A8, 0x30
+.global $$22426
+$$22426:
+	.incbin "baserom.dol", 0x3903D8, 0x30
+.global $$22427
+$$22427:
+	.incbin "baserom.dol", 0x390408, 0x38
+.global $$22428
+$$22428:
+	.incbin "baserom.dol", 0x390440, 0x34
+.global $$22429
+$$22429:
+	.incbin "baserom.dol", 0x390474, 0x24
+.global $$27074
+$$27074:
+	.incbin "baserom.dol", 0x390498, 0x34
+.global $$27075
+$$27075:
+	.incbin "baserom.dol", 0x3904CC, 0x1C
+.global $$210723
+$$210723:
+	.incbin "baserom.dol", 0x3904E8, 0x10
+.global $$211361
+$$211361:
+	.incbin "baserom.dol", 0x3904F8, 0x10
+.global $$211365
+$$211365:
+	.incbin "baserom.dol", 0x390508, 0xC
+.global $$211366
+$$211366:
+	.incbin "baserom.dol", 0x390514, 0x10
+.global $$211367
+$$211367:
+	.incbin "baserom.dol", 0x390524, 0xC
+.global $$211582
+$$211582:
+	.incbin "baserom.dol", 0x390530, 0x10
+.global $$211583
+$$211583:
+	.incbin "baserom.dol", 0x390540, 0x20
+.global $$211584
+$$211584:
+	.incbin "baserom.dol", 0x390560, 0x18
+.global $$211585
+$$211585:
+	.incbin "baserom.dol", 0x390578, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x3CDF18, 0xC
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x3CDF24, 0xC
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x3CDF30, 0x10
+.global scDolpicNewsDolpic5_1
+scDolpicNewsDolpic5_1:
+	.incbin "baserom.dol", 0x3CDF40, 0xC
+.global scDolpicNewsDolpic5_4
+scDolpicNewsDolpic5_4:
+	.incbin "baserom.dol", 0x3CDF4C, 0xC
+.global scDolpicNewsDolpic6
+scDolpicNewsDolpic6:
+	.incbin "baserom.dol", 0x3CDF58, 0xC
+.global scDolpicNewsDolpic7
+scDolpicNewsDolpic7:
+	.incbin "baserom.dol", 0x3CDF64, 0xC
+.global scDolpicNewsDolpic8_2
+scDolpicNewsDolpic8_2:
+	.incbin "baserom.dol", 0x3CDF70, 0xC
+.global scDolpicNewsDolpic8_3
+scDolpicNewsDolpic8_3:
+	.incbin "baserom.dol", 0x3CDF7C, 0xC
+.global scDolpicNewsDolpic8_4
+scDolpicNewsDolpic8_4:
+	.incbin "baserom.dol", 0x3CDF88, 0xC
+.global scDolpicNewsDolpic8_5
+scDolpicNewsDolpic8_5:
+	.incbin "baserom.dol", 0x3CDF94, 0xC
+.global scDolpicNewsDolpic8_6
+scDolpicNewsDolpic8_6:
+	.incbin "baserom.dol", 0x3CDFA0, 0x10
+.global scDolpicNewsDolpic8_7
+scDolpicNewsDolpic8_7:
+	.incbin "baserom.dol", 0x3CDFB0, 0xC
+.global scDolpicNewsDolpic9
+scDolpicNewsDolpic9:
+	.incbin "baserom.dol", 0x3CDFBC, 0xC
+.global scDolpicNewsDolpic10
+scDolpicNewsDolpic10:
+	.incbin "baserom.dol", 0x3CDFC8, 0xC
+.global MtxCalcTypeName
+MtxCalcTypeName:
+	.incbin "baserom.dol", 0x3CDFD4, 0x10
+.global __vt__11TGCConsole2
+__vt__11TGCConsole2:
+	.incbin "baserom.dol", 0x3CDFE4, 0x24
+.global $$27091
+$$27091:
+	.incbin "baserom.dol", 0x3CE008, 0x74
+.global $$27077
+$$27077:
+	.incbin "baserom.dol", 0x3CE07C, 0x2C
+.global $$27657
+$$27657:
+	.incbin "baserom.dol", 0x3CE0A8, 0x58
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global scDolpicNewsDolpic0
+scDolpicNewsDolpic0:
+	.incbin "baserom.dol", 0x3E3860, 0x8
+.global scDolpicNewsDolpic1
+scDolpicNewsDolpic1:
+	.incbin "baserom.dol", 0x3E3868, 0x8
+.global scDolpicNewsDolpic5_2
+scDolpicNewsDolpic5_2:
+	.incbin "baserom.dol", 0x3E3870, 0x8
+.global scDolpicNewsDolpic5_3
+scDolpicNewsDolpic5_3:
+	.incbin "baserom.dol", 0x3E3878, 0x8
+.global scDolpicNewsDolpic8_1
+scDolpicNewsDolpic8_1:
+	.incbin "baserom.dol", 0x3E3880, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23494
+$$23494:
+	.incbin "baserom.dol", 0x3E9108, 0x4
+.global $$23522
+$$23522:
+	.incbin "baserom.dol", 0x3E910C, 0x4
+.global $$23576
+$$23576:
+	.incbin "baserom.dol", 0x3E9110, 0x4
+.global height$localstatic0$drawWater__11TGCConsole2FR13J2DOrthoGraph
+height$localstatic0$drawWater__11TGCConsole2FR13J2DOrthoGraph:
+	.incbin "baserom.dol", 0x3E9114, 0x8
+.global topDiff$localstatic1$drawWater__11TGCConsole2FR13J2DOrthoGraph
+topDiff$localstatic1$drawWater__11TGCConsole2FR13J2DOrthoGraph:
+	.incbin "baserom.dol", 0x3E911C, 0x4
+.global $$23578
+$$23578:
+	.incbin "baserom.dol", 0x3E9120, 0x2
+.global lbl_80410882
+lbl_80410882:
+	.incbin "baserom.dol", 0x3E9122, 0x2
+.global $$27060
+$$27060:
+	.incbin "baserom.dol", 0x3E9124, 0x4
+.global $$27061
+$$27061:
+	.incbin "baserom.dol", 0x3E9128, 0x4
+.global $$27062
+$$27062:
+	.incbin "baserom.dol", 0x3E912C, 0x4
+.global $$27063
+$$27063:
+	.incbin "baserom.dol", 0x3E9130, 0x4
+.global $$27064
+$$27064:
+	.incbin "baserom.dol", 0x3E9134, 0x4
+.global $$27065
+$$27065:
+	.incbin "baserom.dol", 0x3E9138, 0x4
+.global $$27066
+$$27066:
+	.incbin "baserom.dol", 0x3E913C, 0x4
+.global $$27067
+$$27067:
+	.incbin "baserom.dol", 0x3E9140, 0x4
+.global $$27068
+$$27068:
+	.incbin "baserom.dol", 0x3E9144, 0x4
+.global $$27069
+$$27069:
+	.incbin "baserom.dol", 0x3E9148, 0x4
+.global $$27070
+$$27070:
+	.incbin "baserom.dol", 0x3E914C, 0x4
+.global $$27071
+$$27071:
+	.incbin "baserom.dol", 0x3E9150, 0x4
+.global $$27072
+$$27072:
+	.incbin "baserom.dol", 0x3E9154, 0x4
+.global $$27073
+$$27073:
+	.incbin "baserom.dol", 0x3E9158, 0x8
+.global $$27078
+$$27078:
+	.incbin "baserom.dol", 0x3E9160, 0x8
+.global $$27090
+$$27090:
+	.incbin "baserom.dol", 0x3E9168, 0x8
+.global $$27226
+$$27226:
+	.incbin "baserom.dol", 0x3E9170, 0x4
+.global $$27308
+$$27308:
+	.incbin "baserom.dol", 0x3E9174, 0x4
+.global $$27309
+$$27309:
+	.incbin "baserom.dol", 0x3E9178, 0x8
+.global $$28335
+$$28335:
+	.incbin "baserom.dol", 0x3E9180, 0x8
+.global $$28675
+$$28675:
+	.incbin "baserom.dol", 0x3E9188, 0x4
+.global $$28676
+$$28676:
+	.incbin "baserom.dol", 0x3E918C, 0x4
+.global $$29157
+$$29157:
+	.incbin "baserom.dol", 0x3E9190, 0x4
+.global $$29480
+$$29480:
+	.incbin "baserom.dol", 0x3E9194, 0x4
+.global $$211362
+$$211362:
+	.incbin "baserom.dol", 0x3E9198, 0x4
+.global $$211363
+$$211363:
+	.incbin "baserom.dol", 0x3E919C, 0x4
+.global $$211364
+$$211364:
+	.incbin "baserom.dol", 0x3E91A0, 0x4
+.global $$211581
+$$211581:
+	.incbin "baserom.dol", 0x3E91A4, 0x8
+.global $$211639
+$$211639:
+	.incbin "baserom.dol", 0x3E91AC, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$211646
+$$211646:
+	.skip 0xC
+.global $$211647
+$$211647:
+	.skip 0xC
+.global $$211648
+$$211648:
+	.skip 0xC
+.global $$211649
+$$211649:
+	.skip 0xC
+.global $$211650
+$$211650:
+	.skip 0xC
+.global $$211651
+$$211651:
+	.skip 0xC
+.global $$211652
+$$211652:
+	.skip 0xC
+.global $$211653
+$$211653:
+	.skip 0xC
+.global $$211654
+$$211654:
+	.skip 0xC
+.global $$211655
+$$211655:
+	.skip 0xC
+.global $$211656
+$$211656:
+	.skip 0xC
+.global $$211657
+$$211657:
+	.skip 0xC
+.global $$211658
+$$211658:
+	.skip 0xC
+.global $$211659
+$$211659:
+	.skip 0xC
+.global $$211660
+$$211660:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global cDownTopPoint__11TGCConsole2
+cDownTopPoint__11TGCConsole2:
+	.skip 0x8
+.global cDownMidPoint__11TGCConsole2
+cDownMidPoint__11TGCConsole2:
+	.skip 0x8
+.global cDownBotPoint__11TGCConsole2
+cDownBotPoint__11TGCConsole2:
+	.skip 0x8
+.global cUpTopPoint__11TGCConsole2
+cUpTopPoint__11TGCConsole2:
+	.skip 0x8
+.global cUpMidPoint__11TGCConsole2
+cUpMidPoint__11TGCConsole2:
+	.skip 0x8
+.global cUpBotPoint__11TGCConsole2
+cUpBotPoint__11TGCConsole2:
+	.skip 0x8
+.global cCoinTopPoint__11TGCConsole2
+cCoinTopPoint__11TGCConsole2:
+	.skip 0x8
+.global cCoinMidPoint__11TGCConsole2
+cCoinMidPoint__11TGCConsole2:
+	.skip 0x8
+.global cCoinBotPoint__11TGCConsole2
+cCoinBotPoint__11TGCConsole2:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global drawSyncCallback__8TTimeRecFUs
 drawSyncCallback__8TTimeRecFUs:
 /* 800FC824 000F9764  7C 08 02 A6 */	mflr r0
@@ -183,3 +182,16 @@ append__10TTimeArrayFUlUl:
 lbl_800FCA84:
 /* 800FCA84 000F99C4  7C 03 03 78 */	mr r3, r0
 /* 800FCA88 000F99C8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__8TTimeRec
+__vt__8TTimeRec:
+	.incbin "baserom.dol", 0x3B1168, 0xC
+.global __vt__17TDrawSyncCallback
+__vt__17TDrawSyncCallback:
+	.incbin "baserom.dol", 0x3B1174, 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global _instance__8TTimeRec
+_instance__8TTimeRec:
+	.skip 0x8

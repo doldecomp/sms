@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __flush_buffer
 __flush_buffer:
 /* 80083758 00080698  7C 08 02 A6 */	mflr r0

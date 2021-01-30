@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global polygonIsInGrid__17TMapCollisionDataFffffP12TBGCheckData
 polygonIsInGrid__17TMapCollisionDataFffffP12TBGCheckData:
 /* 801DCA60 001D99A0  7C 08 02 A6 */	mflr r0
@@ -510,3 +509,8 @@ lbl_801DD164:
 /* 801DD164 001DA0A4  CB E1 00 30 */	lfd f31, 0x30(r1)
 /* 801DD168 001DA0A8  38 21 00 38 */	addi r1, r1, 0x38
 /* 801DD16C 001DA0AC  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22050
+$$22050:
+	.incbin "baserom.dol", 0x3E8A88, 0x8

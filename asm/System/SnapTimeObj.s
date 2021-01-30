@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TSnapTimeObjFv
 __dt__12TSnapTimeObjFv:
 /* 800F8E74 000F5DB4  7C 08 02 A6 */	mflr r0
@@ -99,3 +98,8 @@ lbl_800F8FB0:
 /* 800F8FC0 000F5F00  83 A1 00 44 */	lwz r29, 0x44(r1)
 /* 800F8FC4 000F5F04  38 21 00 50 */	addi r1, r1, 0x50
 /* 800F8FC8 000F5F08  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TSnapTimeObj
+__vt__12TSnapTimeObj:
+	.incbin "baserom.dol", 0x3B0FA8, 0x28

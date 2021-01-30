@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14TMovieSubTitleFv
 __dt__14TMovieSubTitleFv:
 /* 802432BC 002401FC  7C 08 02 A6 */	mflr r0
@@ -342,3 +341,39 @@ __ct__14TMovieSubTitleFPC10TTHPRender:
 /* 8024376C 002406AC  38 21 00 20 */	addi r1, r1, 0x20
 /* 80243770 002406B0  7C 08 03 A6 */	mtlr r0
 /* 80243774 002406B4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x391590, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x39159C, 0x14
+.global $$21591
+$$21591:
+	.incbin "baserom.dol", 0x3915B0, 0x10
+.global $$21842
+$$21842:
+	.incbin "baserom.dol", 0x3915C0, 0xC
+.global $$21843
+$$21843:
+	.incbin "baserom.dol", 0x3915CC, 0xC
+.global $$21851
+$$21851:
+	.incbin "baserom.dol", 0x3915D8, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TMovieSubTitle
+__vt__14TMovieSubTitle:
+	.incbin "baserom.dol", 0x3CF068, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global cLongHeightMovieIdList__9$$2unnamed$$2
+cLongHeightMovieIdList__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x3E98A0, 0x8
+.global $$21592
+$$21592:
+	.incbin "baserom.dol", 0x3E98A8, 0x8
+.global $$21605
+$$21605:
+	.incbin "baserom.dol", 0x3E98B0, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13TPollutionObjFv
 __ct__13TPollutionObjFv:
 /* 801F0084 001ECFC4  7C 08 02 A6 */	mflr r0
@@ -585,3 +584,75 @@ lbl_801F089C:
 /* 801F08A4 001ED7E4  38 21 00 10 */	addi r1, r1, 0x10
 /* 801F08A8 001ED7E8  7C 08 03 A6 */	mtlr r0
 /* 801F08AC 001ED7EC  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDF0, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13TPollutionObj
+__vt__13TPollutionObj:
+	.incbin "baserom.dol", 0x3CD4E0, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22849
+$$22849:
+	.incbin "baserom.dol", 0x3E8D68, 0x4
+.global $$22850
+$$22850:
+	.incbin "baserom.dol", 0x3E8D6C, 0x4
+.global $$22851
+$$22851:
+	.incbin "baserom.dol", 0x3E8D70, 0x4
+.global $$22852
+$$22852:
+	.incbin "baserom.dol", 0x3E8D74, 0x4
+.global $$22854
+$$22854:
+	.incbin "baserom.dol", 0x3E8D78, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22734
+$$22734:
+	.skip 0xC
+.global $$22735
+$$22735:
+	.skip 0xC
+.global $$22736
+$$22736:
+	.skip 0xC
+.global $$22737
+$$22737:
+	.skip 0xC
+.global $$22738
+$$22738:
+	.skip 0xC
+.global $$22739
+$$22739:
+	.skip 0xC
+.global $$22740
+$$22740:
+	.skip 0xC
+.global $$22741
+$$22741:
+	.skip 0xC
+.global $$22742
+$$22742:
+	.skip 0xC
+.global $$22743
+$$22743:
+	.skip 0xC
+.global $$22744
+$$22744:
+	.skip 0xC
+.global $$22745
+$$22745:
+	.skip 0xC
+.global $$22746
+$$22746:
+	.skip 0xC
+.global $$22747
+$$22747:
+	.skip 0xC
+.global $$22748
+$$22748:
+	.skip 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1b
 SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1b:
 /* 800CEB9C 000CBADC  7C 08 02 A6 */	mflr r0
@@ -269,3 +268,14 @@ lbl_800CEF48:
 /* 800CEF58 000CBE98  7C 08 03 A6 */	mtlr r0
 /* 800CEF5C 000CBE9C  38 21 00 18 */	addi r1, r1, 0x18
 /* 800CEF60 000CBEA0  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21799
+$$21799:
+	.incbin "baserom.dol", 0x3E4B70, 0x4
+.global $$21800
+$$21800:
+	.incbin "baserom.dol", 0x3E4B74, 0x4
+.global $$21801
+$$21801:
+	.incbin "baserom.dol", 0x3E4B78, 0x8

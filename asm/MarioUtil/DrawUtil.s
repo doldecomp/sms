@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TSilhouetteFv
 __dt__11TSilhouetteFv:
 /* 800C0C80 000BDBC0  7C 08 02 A6 */	mflr r0
@@ -2781,3 +2780,118 @@ load__11TSilhouetteFR20JSUMemoryInputStream:
 /* 800C34E8 000C0428  38 21 00 28 */	addi r1, r1, 0x28
 /* 800C34EC 000C042C  7C 08 03 A6 */	mtlr r0
 /* 800C34F0 000C0430  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22036
+$$22036:
+	.incbin "baserom.dol", 0x36F2F0, 0xC
+.global $$22195
+$$22195:
+	.incbin "baserom.dol", 0x36F2FC, 0x10
+.global $$23559
+$$23559:
+	.incbin "baserom.dol", 0x36F30C, 0x24
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TSilhouette
+__vt__11TSilhouette:
+	.incbin "baserom.dol", 0x3AEFB0, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21997
+$$21997:
+	.incbin "baserom.dol", 0x3E4930, 0x4
+.global $$21999
+$$21999:
+	.incbin "baserom.dol", 0x3E4934, 0x4
+.global $$22009
+$$22009:
+	.incbin "baserom.dol", 0x3E4938, 0x8
+.global $$22402
+$$22402:
+	.incbin "baserom.dol", 0x3E4940, 0x8
+.global $$22452
+$$22452:
+	.incbin "baserom.dol", 0x3E4948, 0x4
+.global $$22453
+$$22453:
+	.incbin "baserom.dol", 0x3E494C, 0x4
+.global $$22472
+$$22472:
+	.incbin "baserom.dol", 0x3E4950, 0x4
+.global $$22473
+$$22473:
+	.incbin "baserom.dol", 0x3E4954, 0x4
+.global $$22948
+$$22948:
+	.incbin "baserom.dol", 0x3E4958, 0x4
+.global $$23041
+$$23041:
+	.incbin "baserom.dol", 0x3E495C, 0x4
+.global $$23042
+$$23042:
+	.incbin "baserom.dol", 0x3E4960, 0x4
+.global $$23043
+$$23043:
+	.incbin "baserom.dol", 0x3E4964, 0x4
+.global $$23044
+$$23044:
+	.incbin "baserom.dol", 0x3E4968, 0x4
+.global $$23357
+$$23357:
+	.incbin "baserom.dol", 0x3E496C, 0x4
+.global $$23505
+$$23505:
+	.incbin "baserom.dol", 0x3E4970, 0x4
+.global $$23506
+$$23506:
+	.incbin "baserom.dol", 0x3E4974, 0x4
+.global $$23507
+$$23507:
+	.incbin "baserom.dol", 0x3E4978, 0x4
+.global $$23555
+$$23555:
+	.incbin "baserom.dol", 0x3E497C, 0x4
+.global $$23556
+$$23556:
+	.incbin "baserom.dol", 0x3E4980, 0x4
+.global $$23557
+$$23557:
+	.incbin "baserom.dol", 0x3E4984, 0x4
+.global $$23558
+$$23558:
+	.incbin "baserom.dol", 0x3E4988, 0x4
+.global $$23560
+$$23560:
+	.incbin "baserom.dol", 0x3E498C, 0x4
+.global $$23561
+$$23561:
+	.incbin "baserom.dol", 0x3E4990, 0x4
+.global $$23565
+$$23565:
+	.incbin "baserom.dol", 0x3E4994, 0x4
+.global $$23566
+$$23566:
+	.incbin "baserom.dol", 0x3E4998, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sViewPlane
+sViewPlane:
+	.skip 0x60
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpSilhouetteManager
+gpSilhouetteManager:
+	.skip 0x4
+.global sKeepViewClipFovy
+sKeepViewClipFovy:
+	.skip 0x4
+.global sKeepViewClipAspect
+sKeepViewClipAspect:
+	.skip 0x4
+.global sKeepViewClipNear
+sKeepViewClipNear:
+	.skip 0x4
+.global sKeepViewClipFar
+sKeepViewClipFar:
+	.skip 0x8

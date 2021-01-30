@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global EXI2_Init
 EXI2_Init:
 /* 800AEFE0 000ABF20  4E 80 00 20 */	blr 

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem11TOscillatorFv
 init__Q28JASystem11TOscillatorFv:
 /* 8005FEB4 0005CDF4  38 80 00 00 */	li r4, 0
@@ -549,3 +548,48 @@ lbl_800605E8:
 /* 8006060C 0005D54C  CB 21 00 48 */	lfd f25, 0x48(r1)
 /* 80060610 0005D550  38 21 00 80 */	addi r1, r1, 0x80
 /* 80060614 0005D554  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global relTableSampleCell__Q28JASystem6Driver
+relTableSampleCell__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x36E288, 0x44
+.global relTableSqRoot__Q28JASystem6Driver
+relTableSqRoot__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x36E2CC, 0x44
+.global relTableSquare__Q28JASystem6Driver
+relTableSquare__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x36E310, 0x48
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global FORCE_STOP_TABLE__Q28JASystem6Driver
+FORCE_STOP_TABLE__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x3A8798, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2204
+$$2204:
+	.incbin "baserom.dol", 0x3E4378, 0x4
+.global $$2231
+$$2231:
+	.incbin "baserom.dol", 0x3E437C, 0x4
+.global $$2260
+$$2260:
+	.incbin "baserom.dol", 0x3E4380, 0x4
+.global $$2261
+$$2261:
+	.incbin "baserom.dol", 0x3E4384, 0x4
+.global $$2263
+$$2263:
+	.incbin "baserom.dol", 0x3E4388, 0x8
+.global $$2265
+$$2265:
+	.incbin "baserom.dol", 0x3E4390, 0x8
+.global $$2332
+$$2332:
+	.incbin "baserom.dol", 0x3E4398, 0x8
+.global $$2333
+$$2333:
+	.incbin "baserom.dol", 0x3E43A0, 0x8
+.global $$2334
+$$2334:
+	.incbin "baserom.dol", 0x3E43A8, 0x8

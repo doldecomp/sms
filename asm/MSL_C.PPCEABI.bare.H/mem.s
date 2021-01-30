@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global memcmp
 memcmp:
 /* 80083BC4 00080B04  38 C3 FF FF */	addi r6, r3, -1

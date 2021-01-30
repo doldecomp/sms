@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global sprintf
 sprintf:
 /* 80083FF0 00080F30  7C 08 02 A6 */	mflr r0
@@ -1976,3 +1975,32 @@ lbl_80085AA0:
 /* 80085AB0 000829F0  83 A1 00 2C */	lwz r29, 0x2c(r1)
 /* 80085AB4 000829F4  38 21 00 38 */	addi r1, r1, 0x38
 /* 80085AB8 000829F8  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2stringBase0
+$$2stringBase0:
+	.incbin "baserom.dol", 0x36E920, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21009
+$$21009:
+	.incbin "baserom.dol", 0x3ABCD8, 0x84
+.global $$21066
+$$21066:
+	.incbin "baserom.dol", 0x3ABD5C, 0x84
+.global $$21186
+$$21186:
+	.incbin "baserom.dol", 0x3ABDE0, 0xD0
+.global $$21185
+$$21185:
+	.incbin "baserom.dol", 0x3ABEB0, 0x48
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global $$2wstringBase0
+$$2wstringBase0:
+	.incbin "baserom.dol", 0x3E3228, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2919
+$$2919:
+	.incbin "baserom.dol", 0x3E4680, 0x8

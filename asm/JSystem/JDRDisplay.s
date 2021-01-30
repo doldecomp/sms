@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q26JDrama8TDisplayFUsPvPvRC16_GXRenderModeObj
 __ct__Q26JDrama8TDisplayFUsPvPvRC16_GXRenderModeObj:
 /* 80041D94 0003ECD4  7C 08 02 A6 */	mflr r0
@@ -189,3 +188,8 @@ lbl_80042034:
 /* 80042048 0003EF88  38 21 00 28 */	addi r1, r1, 0x28
 /* 8004204C 0003EF8C  7C 08 03 A6 */	mtlr r0
 /* 80042050 0003EF90  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama8TDisplay
+__vt__Q26JDrama8TDisplay:
+	.incbin "baserom.dol", 0x3A7508, 0x10

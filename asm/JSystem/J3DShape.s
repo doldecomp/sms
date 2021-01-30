@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global loadMtxIndx_PNGP__11J3DShapeMtxCFiUs
 loadMtxIndx_PNGP__11J3DShapeMtxCFiUs:
 /* 800295D8 00026518  7C 08 02 A6 */	mflr r0
@@ -898,3 +897,45 @@ __sinit_J3DShape_cpp:
 /* 8002A1C4 00027104  80 04 00 2C */	lwz r0, 0x2c(r4)
 /* 8002A1C8 00027108  90 04 00 5C */	stw r0, 0x5c(r4)
 /* 8002A1CC 0002710C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBC4, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2952
+$$2952:
+	.incbin "baserom.dol", 0x3A68A0, 0xC
+.global $$2953
+$$2953:
+	.incbin "baserom.dol", 0x3A68AC, 0xC
+.global $$2954
+$$2954:
+	.incbin "baserom.dol", 0x3A68B8, 0xC
+.global $$2955
+$$2955:
+	.incbin "baserom.dol", 0x3A68C4, 0xC
+.global mtxLoadPipeline__11J3DShapeMtx
+mtxLoadPipeline__11J3DShapeMtx:
+	.incbin "baserom.dol", 0x3A68D0, 0x30
+.global __vt__12J3DShapeDraw
+__vt__12J3DShapeDraw:
+	.incbin "baserom.dol", 0x3A6900, 0xC
+.global __vt__16J3DShapeMtxMulti
+__vt__16J3DShapeMtxMulti:
+	.incbin "baserom.dol", 0x3A690C, 0x20
+.global __vt__13J3DShapeMtxDL
+__vt__13J3DShapeMtxDL:
+	.incbin "baserom.dol", 0x3A692C, 0x20
+.global __vt__11J3DShapeMtx
+__vt__11J3DShapeMtx:
+	.incbin "baserom.dol", 0x3A694C, 0x34
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2994
+$$2994:
+	.incbin "baserom.dol", 0x3E3F48, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global currentPipeline__11J3DShapeMtx
+currentPipeline__11J3DShapeMtx:
+	.skip 0x8

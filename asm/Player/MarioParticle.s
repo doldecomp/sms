@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global askJumpIntoWaterEffectExist__6TMarioCFv
 askJumpIntoWaterEffectExist__6TMarioCFv:
 /* 801420AC 0013EFEC  80 63 04 24 */	lwz r3, 0x424(r3)
@@ -2466,3 +2465,202 @@ lbl_801442EC:
 /* 801442F4 00141234  38 21 00 10 */	addi r1, r1, 0x10
 /* 801442F8 00141238  7C 08 03 A6 */	mtlr r0
 /* 801442FC 0014123C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC8C, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x378640, 0xC
+.global $$22110
+$$22110:
+	.incbin "baserom.dol", 0x37864C, 0x14
+.global cDirtyFileName
+cDirtyFileName:
+	.incbin "baserom.dol", 0x378660, 0x24
+.global cDirtyTexName
+cDirtyTexName:
+	.incbin "baserom.dol", 0x378684, 0x10
+.global $$22565
+$$22565:
+	.incbin "baserom.dol", 0x378694, 0x30
+.global $$22566
+$$22566:
+	.incbin "baserom.dol", 0x3786C4, 0x38
+.global $$22567
+$$22567:
+	.incbin "baserom.dol", 0x3786FC, 0x34
+.global $$22568
+$$22568:
+	.incbin "baserom.dol", 0x378730, 0x24
+.global $$22659
+$$22659:
+	.incbin "baserom.dol", 0x378754, 0x28
+.global $$22660
+$$22660:
+	.incbin "baserom.dol", 0x37877C, 0x28
+.global $$22661
+$$22661:
+	.incbin "baserom.dol", 0x3787A4, 0x28
+.global cParticleIDs
+cParticleIDs:
+	.incbin "baserom.dol", 0x3787CC, 0xC
+.global warpInEffectIDs
+warpInEffectIDs:
+	.incbin "baserom.dol", 0x3787D8, 0x28
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global cParticleFileNames
+cParticleFileNames:
+	.incbin "baserom.dol", 0x3B3820, 0xC
+.global __vt__15TWarpInCallBack
+__vt__15TWarpInCallBack:
+	.incbin "baserom.dol", 0x3B382C, 0x10
+.global $$23223
+$$23223:
+	.incbin "baserom.dol", 0x3B383C, 0x28
+.global __vt__15TBubbleCallBack
+__vt__15TBubbleCallBack:
+	.incbin "baserom.dol", 0x3B3864, 0x10
+.global __vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
+__vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
+	.incbin "baserom.dol", 0x3B3874, 0x14
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22884
+$$22884:
+	.incbin "baserom.dol", 0x3E5C18, 0x4
+.global $$22899
+$$22899:
+	.incbin "baserom.dol", 0x3E5C1C, 0x4
+.global $$22900
+$$22900:
+	.incbin "baserom.dol", 0x3E5C20, 0x4
+.global $$22939
+$$22939:
+	.incbin "baserom.dol", 0x3E5C24, 0x4
+.global $$22957
+$$22957:
+	.incbin "baserom.dol", 0x3E5C28, 0x4
+.global $$23006
+$$23006:
+	.incbin "baserom.dol", 0x3E5C2C, 0x4
+.global $$23007
+$$23007:
+	.incbin "baserom.dol", 0x3E5C30, 0x4
+.global $$23064
+$$23064:
+	.incbin "baserom.dol", 0x3E5C34, 0x4
+.global $$23065
+$$23065:
+	.incbin "baserom.dol", 0x3E5C38, 0x4
+.global $$23066
+$$23066:
+	.incbin "baserom.dol", 0x3E5C3C, 0x4
+.global $$23067
+$$23067:
+	.incbin "baserom.dol", 0x3E5C40, 0x4
+.global $$23068
+$$23068:
+	.incbin "baserom.dol", 0x3E5C44, 0x4
+.global $$23069
+$$23069:
+	.incbin "baserom.dol", 0x3E5C48, 0x4
+.global $$23070
+$$23070:
+	.incbin "baserom.dol", 0x3E5C4C, 0x4
+.global $$23071
+$$23071:
+	.incbin "baserom.dol", 0x3E5C50, 0x4
+.global $$23079
+$$23079:
+	.incbin "baserom.dol", 0x3E5C54, 0x4
+.global $$23168
+$$23168:
+	.incbin "baserom.dol", 0x3E5C58, 0x4
+.global $$23267
+$$23267:
+	.incbin "baserom.dol", 0x3E5C5C, 0x4
+.global $$23268
+$$23268:
+	.incbin "baserom.dol", 0x3E5C60, 0x8
+.global $$23270
+$$23270:
+	.incbin "baserom.dol", 0x3E5C68, 0x8
+.global $$23272
+$$23272:
+	.incbin "baserom.dol", 0x3E5C70, 0x8
+.global $$23362
+$$23362:
+	.incbin "baserom.dol", 0x3E5C78, 0x4
+.global $$23484
+$$23484:
+	.incbin "baserom.dol", 0x3E5C7C, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global scale$2692
+scale$2692:
+	.skip 0xC
+.global scale$2743
+scale$2743:
+	.skip 0xC
+.global $$23608
+$$23608:
+	.skip 0xC
+.global $$23609
+$$23609:
+	.skip 0xC
+.global $$23610
+$$23610:
+	.skip 0xC
+.global $$23611
+$$23611:
+	.skip 0xC
+.global $$23612
+$$23612:
+	.skip 0xC
+.global $$23613
+$$23613:
+	.skip 0xC
+.global $$23614
+$$23614:
+	.skip 0xC
+.global $$23615
+$$23615:
+	.skip 0xC
+.global $$23616
+$$23616:
+	.skip 0xC
+.global $$23617
+$$23617:
+	.skip 0xC
+.global $$23618
+$$23618:
+	.skip 0xC
+.global $$23619
+$$23619:
+	.skip 0xC
+.global $$23620
+$$23620:
+	.skip 0xC
+.global $$23621
+$$23621:
+	.skip 0xC
+.global $$23622
+$$23622:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2693
+init$2693:
+	.skip 0x4
+.global bubbleCallBack
+bubbleCallBack:
+	.skip 0x4
+.global init$2744
+init$2744:
+	.skip 0x4
+.global warpInCallBack
+warpInCallBack:
+	.skip 0x4

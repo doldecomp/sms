@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__8SDLModelFv
 __dt__8SDLModelFv:
 /* 800D8818 000D5758  7C 08 02 A6 */	mflr r0
@@ -1312,3 +1311,11 @@ lbl_800D9A60:
 /* 800D9A68 000D69A8  38 21 00 88 */	addi r1, r1, 0x88
 /* 800D9A6C 000D69AC  7C 08 03 A6 */	mtlr r0
 /* 800D9A70 000D69B0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__8SDLModel
+__vt__8SDLModel:
+	.incbin "baserom.dol", 0x3B07B8, 0x20
+.global __vt__12SDLMatPacket
+__vt__12SDLMatPacket:
+	.incbin "baserom.dol", 0x3B07D8, 0x18

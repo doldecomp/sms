@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXSetTevOp
 GXSetTevOp:
 /* 800ABA08 000A8948  7C 08 02 A6 */	mflr r0
@@ -737,3 +736,8 @@ GXSetNumTevStages:
 /* 800AC434 000A9374  60 00 00 04 */	ori r0, r0, 4
 /* 800AC438 000A9378  90 03 04 F4 */	stw r0, 0x4f4(r3)
 /* 800AC43C 000A937C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global c2r$71
+c2r$71:
+	.incbin "baserom.dol", 0x3AEB10, 0x28

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_ResetTexCacheRegion__Fv
 SMS_ResetTexCacheRegion__Fv:
 /* 800F91FC 000F613C  7C 08 02 A6 */	mflr r0

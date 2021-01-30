@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GetVIWidthMax__6JDramaFv
 GetVIWidthMax__6JDramaFv:
 /* 80045E2C 00042D6C  7C 08 02 A6 */	mflr r0

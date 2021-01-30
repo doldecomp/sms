@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSGetTime
 OSGetTime:
 /* 80093DF8 00090D38  7C 6D 42 E6 */	mftbu r3
@@ -295,3 +294,11 @@ lbl_80094198:
 /* 80094210 00091150  38 21 00 38 */	addi r1, r1, 0x38
 /* 80094214 00091154  7C 08 03 A6 */	mtlr r0
 /* 80094218 00091158  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global YearDays
+YearDays:
+	.incbin "baserom.dol", 0x3AD910, 0x30
+.global LeapYearDays
+LeapYearDays:
+	.incbin "baserom.dol", 0x3AD940, 0x30

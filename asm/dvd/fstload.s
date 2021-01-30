@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global cb
 cb:
 /* 800993F8 00096338  7C 08 02 A6 */	mflr r0
@@ -158,3 +157,50 @@ lbl_800995F8:
 /* 8009962C 0009656C  38 21 00 60 */	addi r1, r1, 0x60
 /* 80099630 00096570  7C 08 03 A6 */	mtlr r0
 /* 80099634 00096574  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$236
+$$236:
+	.incbin "baserom.dol", 0x3ADEC0, 0x1C
+.global $$237
+$$237:
+	.incbin "baserom.dol", 0x3ADEDC, 0x18
+.global $$238
+$$238:
+	.incbin "baserom.dol", 0x3ADEF4, 0x14
+.global $$239
+$$239:
+	.incbin "baserom.dol", 0x3ADF08, 0x14
+.global $$242
+$$242:
+	.incbin "baserom.dol", 0x3ADF1C, 0x14
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global $$235
+$$235:
+	.incbin "baserom.dol", 0x3E3280, 0x4
+.global $$240
+$$240:
+	.incbin "baserom.dol", 0x3E3284, 0x4
+.global $$241
+$$241:
+	.incbin "baserom.dol", 0x3E3288, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global bb2Buf
+bb2Buf:
+	.skip 0x40
+.global block$16
+block$16:
+	.skip 0x30
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global status
+status:
+	.skip 0x4
+.global bb2
+bb2:
+	.skip 0x4
+.global idTmp
+idTmp:
+	.skip 0x8

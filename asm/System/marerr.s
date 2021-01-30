@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global MarErrInit__Fv
 MarErrInit__Fv:
 /* 800F04D0 000ED410  7C 08 02 A6 */	mflr r0
@@ -82,3 +81,11 @@ lbl_800F05BC:
 /* 800F05E0 000ED520  83 A1 00 24 */	lwz r29, 0x24(r1)
 /* 800F05E4 000ED524  38 21 00 30 */	addi r1, r1, 0x30
 /* 800F05E8 000ED528  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global cDispExceptionCommand__9$$2unnamed$$2
+cDispExceptionCommand__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x370D50, 0x18
+.global $$21503
+$$21503:
+	.incbin "baserom.dol", 0x370D68, 0x10

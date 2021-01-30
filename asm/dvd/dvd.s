@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global DVDInit
 DVDInit:
 /* 800968EC 0009382C  7C 08 02 A6 */	mflr r0
@@ -2879,3 +2878,101 @@ lbl_80099044:
 /* 8009905C 00095F9C  38 21 00 20 */	addi r1, r1, 0x20
 /* 80099060 00095FA0  7C 08 03 A6 */	mtlr r0
 /* 80099064 00095FA4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$213
+$$213:
+	.incbin "baserom.dol", 0x3ADD60, 0x18
+.global $$214
+$$214:
+	.incbin "baserom.dol", 0x3ADD78, 0xC
+.global $$215
+$$215:
+	.incbin "baserom.dol", 0x3ADD84, 0x1C
+.global $$216
+$$216:
+	.incbin "baserom.dol", 0x3ADDA0, 0xC
+.global $$2293
+$$2293:
+	.incbin "baserom.dol", 0x3ADDAC, 0x20
+.global $$2331
+$$2331:
+	.incbin "baserom.dol", 0x3ADDCC, 0x40
+.global $$2835
+$$2835:
+	.incbin "baserom.dol", 0x3ADE0C, 0x34
+.global $$2936
+$$2936:
+	.incbin "baserom.dol", 0x3ADE40, 0x38
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global autoInvalidation
+autoInvalidation:
+	.incbin "baserom.dol", 0x3E3278, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global tmpBuffer
+tmpBuffer:
+	.skip 0x80
+.global DummyCommandBlock
+DummyCommandBlock:
+	.skip 0x30
+.global ResetAlarm
+ResetAlarm:
+	.skip 0x28
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global executing
+executing:
+	.skip 0x4
+.global currID
+currID:
+	.skip 0x4
+.global bootInfo
+bootInfo:
+	.skip 0x4
+.global PauseFlag
+PauseFlag:
+	.skip 0x4
+.global PausingFlag
+PausingFlag:
+	.skip 0x4
+.global AutoFinishing
+AutoFinishing:
+	.skip 0x4
+.global FatalErrorFlag
+FatalErrorFlag:
+	.skip 0x4
+.global CurrCommand
+CurrCommand:
+	.skip 0x4
+.global Canceling
+Canceling:
+	.skip 0x4
+.global CancelCallback
+CancelCallback:
+	.skip 0x4
+.global ResumeFromHere
+ResumeFromHere:
+	.skip 0x4
+.global CancelLastError
+CancelLastError:
+	.skip 0x4
+.global LastError
+LastError:
+	.skip 0x4
+.global NumInternalRetry
+NumInternalRetry:
+	.skip 0x4
+.global ResetRequired
+ResetRequired:
+	.skip 0x4
+.global FirstTimeInBootrom
+FirstTimeInBootrom:
+	.skip 0x4
+.global DVDInitialized
+DVDInitialized:
+	.skip 0x4
+.global LastState
+LastState:
+	.skip 0x4

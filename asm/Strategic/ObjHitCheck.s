@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13TObjCheckListFv
 __ct__13TObjCheckListFv:
 /* 80114BF0 00111B30  38 00 00 00 */	li r0, 0
@@ -1153,3 +1152,13 @@ lbl_80115C18:
 lbl_80115C54:
 /* 80115C54 00112B94  38 60 00 01 */	li r3, 1
 /* 80115C58 00112B98  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22277
+$$22277:
+	.incbin "baserom.dol", 0x3E53E0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpObjHitCheck
+gpObjHitCheck:
+	.skip 0x8

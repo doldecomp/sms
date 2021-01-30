@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem8TIntrMgrFv
 init__Q28JASystem8TIntrMgrFv:
 /* 800682DC 0006521C  38 00 00 01 */	li r0, 1

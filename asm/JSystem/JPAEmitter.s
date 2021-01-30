@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global JPAGetEmitterInfoPtr__Fv
 JPAGetEmitterInfoPtr__Fv:
 /* 8006C570 000694B0  3C 60 80 3E */	lis r3, JPAEmitterInfoObj@ha
@@ -3240,3 +3239,57 @@ __sinit_JPAEmitter_cpp:
 /* 8006F3DC 0006C31C  38 21 00 10 */	addi r1, r1, 0x10
 /* 8006F3E0 0006C320  7C 08 03 A6 */	mtlr r0
 /* 8006F3E4 0006C324  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC04, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22833
+$$22833:
+	.incbin "baserom.dol", 0x3A9430, 0x1C
+.global $$23104
+$$23104:
+	.incbin "baserom.dol", 0x3A944C, 0x2C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21706
+$$21706:
+	.incbin "baserom.dol", 0x3E44B8, 0x4
+.global $$21707
+$$21707:
+	.incbin "baserom.dol", 0x3E44BC, 0x4
+.global $$22021
+$$22021:
+	.incbin "baserom.dol", 0x3E44C0, 0x4
+.global $$22022
+$$22022:
+	.incbin "baserom.dol", 0x3E44C4, 0x4
+.global $$22023
+$$22023:
+	.incbin "baserom.dol", 0x3E44C8, 0x4
+.global $$22024
+$$22024:
+	.incbin "baserom.dol", 0x3E44CC, 0x4
+.global $$22026
+$$22026:
+	.incbin "baserom.dol", 0x3E44D0, 0x8
+.global $$22032
+$$22032:
+	.incbin "baserom.dol", 0x3E44D8, 0x4
+.global $$22829
+$$22829:
+	.incbin "baserom.dol", 0x3E44DC, 0x4
+.global $$22830
+$$22830:
+	.incbin "baserom.dol", 0x3E44E0, 0x8
+.global $$22832
+$$22832:
+	.incbin "baserom.dol", 0x3E44E8, 0x8
+.global $$22840
+$$22840:
+	.incbin "baserom.dol", 0x3E44F0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global JPAEmitterInfoObj
+JPAEmitterInfoObj:
+	.skip 0x180

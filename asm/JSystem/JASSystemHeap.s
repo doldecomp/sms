@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global sysDramSetup__Q28JASystem6KernelFP12JKRSolidHeap
 sysDramSetup__Q28JASystem6KernelFP12JKRSolidHeap:
 /* 80063DD4 00060D14  7C 08 02 A6 */	mflr r0
@@ -128,3 +127,36 @@ __sinit_JASSystemHeap_cpp:
 /* 80063F7C 00060EBC  38 21 00 08 */	addi r1, r1, 8
 /* 80063F80 00060EC0  7C 08 03 A6 */	mtlr r0
 /* 80063F84 00060EC4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBF8, 0x4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global audioDramSize__Q28JASystem6Kernel
+audioDramSize__Q28JASystem6Kernel:
+	.incbin "baserom.dol", 0x3E3200, 0x4
+.global audioAramSize__Q28JASystem6Kernel
+audioAramSize__Q28JASystem6Kernel:
+	.incbin "baserom.dol", 0x3E3204, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$2241
+$$2241:
+	.skip 0xC
+.global audioAramHeap__Q28JASystem6Kernel
+audioAramHeap__Q28JASystem6Kernel:
+	.skip 0x14
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global JASDram
+JASDram:
+	.skip 0x4
+.global JASAramDmaBufferTop__Q28JASystem6Kernel
+JASAramDmaBufferTop__Q28JASystem6Kernel:
+	.skip 0x4
+.global audioAramTop__Q28JASystem6Kernel
+audioAramTop__Q28JASystem6Kernel:
+	.skip 0x4
+.global CARD_SECURITY_BUFFER__Q28JASystem6Kernel
+CARD_SECURITY_BUFFER__Q28JASystem6Kernel:
+	.skip 0x4

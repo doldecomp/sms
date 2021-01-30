@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10J2DTextBoxFPC7ResFONTPCc
 __ct__10J2DTextBoxFPC7ResFONTPCc:
 /* 800193B0 000162F0  7C 08 02 A6 */	mflr r0
@@ -897,3 +896,13 @@ lbl_8001A070:
 /* 8001A074 00016FB4  38 21 00 08 */	addi r1, r1, 8
 /* 8001A078 00016FB8  7C 08 03 A6 */	mtlr r0
 /* 8001A07C 00016FBC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10J2DTextBox
+__vt__10J2DTextBox:
+	.incbin "baserom.dol", 0x3A5D48, 0x30
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2397
+$$2397:
+	.incbin "baserom.dol", 0x3E3E88, 0x8

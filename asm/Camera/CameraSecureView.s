@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global execSecureView___15CPolarSubCameraFsP3Vec
 execSecureView___15CPolarSubCameraFsP3Vec:
 /* 80363414 00360354  7C 08 02 A6 */	mflr r0
@@ -221,3 +220,17 @@ lbl_803636E0:
 /* 80363728 00360668  38 21 00 68 */	addi r1, r1, 0x68
 /* 8036372C 0036066C  7C 08 03 A6 */	mtlr r0
 /* 80363730 00360670  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21839
+$$21839:
+	.incbin "baserom.dol", 0x3EC5D8, 0x4
+.global $$21840
+$$21840:
+	.incbin "baserom.dol", 0x3EC5DC, 0x4
+.global $$21841
+$$21841:
+	.incbin "baserom.dol", 0x3EC5E0, 0x8
+.global $$21843
+$$21843:
+	.incbin "baserom.dol", 0x3EC5E8, 0x8

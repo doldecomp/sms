@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global monteMESetAnmWhenNear__8TBaseNPCFv
 monteMESetAnmWhenNear__8TBaseNPCFv:
 /* 80166B4C 00163A8C  7C 08 02 A6 */	mflr r0
@@ -4634,3 +4633,175 @@ lbl_8016AA88:
 /* 8016AA90 001679D0  38 21 00 10 */	addi r1, r1, 0x10
 /* 8016AA94 001679D4  7C 08 03 A6 */	mtlr r0
 /* 8016AA98 001679D8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCC0, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x37B730, 0xC
+.global $$21937
+$$21937:
+	.incbin "baserom.dol", 0x37B73C, 0x14
+.global $$22255
+$$22255:
+	.incbin "baserom.dol", 0x37B750, 0x30
+.global $$22256
+$$22256:
+	.incbin "baserom.dol", 0x37B780, 0x38
+.global $$22257
+$$22257:
+	.incbin "baserom.dol", 0x37B7B8, 0x34
+.global $$22258
+$$22258:
+	.incbin "baserom.dol", 0x37B7EC, 0x24
+.global $$22440
+$$22440:
+	.incbin "baserom.dol", 0x37B810, 0x10
+.global sIndividualPeachBck$2896
+sIndividualPeachBck$2896:
+	.incbin "baserom.dol", 0x37B820, 0x18
+.global sIndividualPeachBtp$2897
+sIndividualPeachBtp$2897:
+	.incbin "baserom.dol", 0x37B838, 0x10
+.global sIndividualPeachBck$2904
+sIndividualPeachBck$2904:
+	.incbin "baserom.dol", 0x37B848, 0x10
+.global sIndividualPeachBtp$2905
+sIndividualPeachBtp$2905:
+	.incbin "baserom.dol", 0x37B858, 0x10
+.global sIndividualSunflowerBck$2906
+sIndividualSunflowerBck$2906:
+	.incbin "baserom.dol", 0x37B868, 0x18
+.global sIndividualSunflowerBtp$2907
+sIndividualSunflowerBtp$2907:
+	.incbin "baserom.dol", 0x37B880, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$23884
+$$23884:
+	.incbin "baserom.dol", 0x3B5250, 0x54
+.global $$23883
+$$23883:
+	.incbin "baserom.dol", 0x3B52A4, 0x50
+.global $$23880
+$$23880:
+	.incbin "baserom.dol", 0x3B52F4, 0x5C
+.global $$24719
+$$24719:
+	.incbin "baserom.dol", 0x3B5350, 0x58
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cNpcPartsNameRootJoint
+cNpcPartsNameRootJoint:
+	.incbin "baserom.dol", 0x3E3480, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23245
+$$23245:
+	.incbin "baserom.dol", 0x3E6290, 0x4
+.global $$23246
+$$23246:
+	.incbin "baserom.dol", 0x3E6294, 0x4
+.global $$23247
+$$23247:
+	.incbin "baserom.dol", 0x3E6298, 0x8
+.global $$23249
+$$23249:
+	.incbin "baserom.dol", 0x3E62A0, 0x8
+.global $$23361
+$$23361:
+	.incbin "baserom.dol", 0x3E62A8, 0x4
+.global $$23362
+$$23362:
+	.incbin "baserom.dol", 0x3E62AC, 0x4
+.global $$23363
+$$23363:
+	.incbin "baserom.dol", 0x3E62B0, 0x4
+.global $$23364
+$$23364:
+	.incbin "baserom.dol", 0x3E62B4, 0x4
+.global $$23365
+$$23365:
+	.incbin "baserom.dol", 0x3E62B8, 0x4
+.global $$23366
+$$23366:
+	.incbin "baserom.dol", 0x3E62BC, 0x4
+.global $$23472
+$$23472:
+	.incbin "baserom.dol", 0x3E62C0, 0x4
+.global $$23878
+$$23878:
+	.incbin "baserom.dol", 0x3E62C4, 0x4
+.global $$23879
+$$23879:
+	.incbin "baserom.dol", 0x3E62C8, 0x4
+.global $$24245
+$$24245:
+	.incbin "baserom.dol", 0x3E62CC, 0x4
+.global $$24246
+$$24246:
+	.incbin "baserom.dol", 0x3E62D0, 0x4
+.global $$24247
+$$24247:
+	.incbin "baserom.dol", 0x3E62D4, 0x4
+.global $$24248
+$$24248:
+	.incbin "baserom.dol", 0x3E62D8, 0x8
+.global $$24249
+$$24249:
+	.incbin "baserom.dol", 0x3E62E0, 0x8
+.global $$24250
+$$24250:
+	.incbin "baserom.dol", 0x3E62E8, 0x4
+.global $$24778
+$$24778:
+	.incbin "baserom.dol", 0x3E62EC, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22936
+$$22936:
+	.skip 0xC
+.global $$22937
+$$22937:
+	.skip 0xC
+.global $$22938
+$$22938:
+	.skip 0xC
+.global $$22939
+$$22939:
+	.skip 0xC
+.global $$22940
+$$22940:
+	.skip 0xC
+.global $$22941
+$$22941:
+	.skip 0xC
+.global $$22942
+$$22942:
+	.skip 0xC
+.global $$22943
+$$22943:
+	.skip 0xC
+.global $$22944
+$$22944:
+	.skip 0xC
+.global $$22945
+$$22945:
+	.skip 0xC
+.global $$22946
+$$22946:
+	.skip 0xC
+.global $$22947
+$$22947:
+	.skip 0xC
+.global $$22948
+$$22948:
+	.skip 0xC
+.global $$22949
+$$22949:
+	.skip 0xC
+.global $$22950
+$$22950:
+	.skip 0x10

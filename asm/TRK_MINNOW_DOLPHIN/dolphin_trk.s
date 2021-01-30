@@ -1,7 +1,18 @@
 .include "macros.inc"
 
-.section .text, "ax"  # 0x80005600 - 0x8036FBA0
+.section .init, "ax"  # 0x80003100 - 0x80005540
+.global __TRK_reset
+__TRK_reset:
+/* 800051CC 000021CC  7C 08 02 A6 */	mflr r0
+/* 800051D0 000021D0  90 01 00 04 */	stw r0, 4(r1)
+/* 800051D4 000021D4  94 21 FF F8 */	stwu r1, -8(r1)
+/* 800051D8 000021D8  48 08 69 99 */	bl __TRK_copy_vectors
+/* 800051DC 000021DC  38 21 00 08 */	addi r1, r1, 8
+/* 800051E0 000021E0  80 01 00 04 */	lwz r0, 4(r1)
+/* 800051E4 000021E4  7C 08 03 A6 */	mtlr r0
+/* 800051E8 000021E8  4E 80 00 20 */	blr 
 
+.section .text, "ax"  # 0x80005600 - 0x8036FBA0
 .global InitMetroTRK
 InitMetroTRK:
 /* 8008BA14 00088954  38 21 FF FC */	addi r1, r1, -4
@@ -87,8 +98,8 @@ TRK_copy_vector:
 /* 8008BB24 00088A64  7C 7E 1B 78 */	mr r30, r3
 /* 8008BB28 00088A68  7F C3 F3 78 */	mr r3, r30
 /* 8008BB2C 00088A6C  4B FF FF 9D */	bl TRKTargetTranslate
-/* 8008BB30 00088A70  3C 80 80 00 */	lis r4, gTRKInterruptVectorTable@ha
-/* 8008BB34 00088A74  38 04 32 98 */	addi r0, r4, gTRKInterruptVectorTable@l
+/* 8008BB30 00088A70  3C 80 80 00 */	lis r4, lbl_80003298@ha
+/* 8008BB34 00088A74  38 04 32 98 */	addi r0, r4, lbl_80003298@l
 /* 8008BB38 00088A78  7C 7F 1B 78 */	mr r31, r3
 /* 8008BB3C 00088A7C  7C 80 F2 14 */	add r4, r0, r30
 /* 8008BB40 00088A80  7F E3 FB 78 */	mr r3, r31
@@ -170,3 +181,13 @@ TRKInitializeTarget:
 /* 8008BC48 00088B88  80 01 00 04 */	lwz r0, 4(r1)
 /* 8008BC4C 00088B8C  7C 08 03 A6 */	mtlr r0
 /* 8008BC50 00088B90  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global TRK_ISR_OFFSETS
+TRK_ISR_OFFSETS:
+	.incbin "baserom.dol", 0x3AC048, 0x40
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global lc_base
+lc_base:
+	.skip 0x8

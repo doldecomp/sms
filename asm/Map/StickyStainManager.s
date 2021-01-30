@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__19TStickyStainManagerFv
 __dt__19TStickyStainManagerFv:
 /* 8020060C 001FD54C  7C 08 02 A6 */	mflr r0
@@ -39,3 +38,8 @@ lbl_80200664:
 .global perform__19TStickyStainManagerFUlPQ26JDrama9TGraphics
 perform__19TStickyStainManagerFUlPQ26JDrama9TGraphics:
 /* 80200680 001FD5C0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__19TStickyStainManager
+__vt__19TStickyStainManager:
+	.incbin "baserom.dol", 0x3CDE50, 0x28

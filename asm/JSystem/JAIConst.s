@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __sinit_JAIConst_cpp
 __sinit_JAIConst_cpp:
 /* 8004DAA4 0004A9E4  7C 08 02 A6 */	mflr r0
@@ -21,3 +20,36 @@ __sinit_JAIConst_cpp:
 /* 8004DADC 0004AA1C  38 21 00 08 */	addi r1, r1, 8
 /* 8004DAE0 0004AA20  7C 08 03 A6 */	mtlr r0
 /* 8004DAE4 0004AA24  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBE4, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global dummyZeroVec__8JAIConst
+dummyZeroVec__8JAIConst:
+	.incbin "baserom.dol", 0x3A7CA0, 0xC
+.global nullInfoData2__8JAIConst
+nullInfoData2__8JAIConst:
+	.incbin "baserom.dol", 0x3A7CAC, 0x20
+.global sCInfos_0__8JAIConst
+sCInfos_0__8JAIConst:
+	.incbin "baserom.dol", 0x3A7CCC, 0x24
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global nullActor__8JAIConst
+nullActor__8JAIConst:
+	.skip 0x58
+.global camMtx__8JAIConst
+camMtx__8JAIConst:
+	.skip 0x30
+.global camTrans__8JAIConst
+camTrans__8JAIConst:
+	.skip 0xC
+.global camPreTrans__8JAIConst
+camPreTrans__8JAIConst:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global random__8JAIConst
+random__8JAIConst:
+	.skip 0x8

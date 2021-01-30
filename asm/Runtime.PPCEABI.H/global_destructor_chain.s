@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __destroy_global_chain
 __destroy_global_chain:
 /* 800826E0 0007F620  7C 08 02 A6 */	mflr r0
@@ -33,3 +32,13 @@ __register_global_object:
 /* 80082734 0007F674  90 65 00 08 */	stw r3, 8(r5)
 /* 80082738 0007F678  90 AD 92 88 */	stw r5, __global_destructor_chain-_SDA_BASE_(r13)
 /* 8008273C 0007F67C  4E 80 00 20 */	blr 
+
+.section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
+.global __destroy_global_chain_reference
+__destroy_global_chain_reference:
+	.incbin "baserom.dol", 0x36CF88, 0x18
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __global_destructor_chain
+__global_destructor_chain:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global mtxEffectHide__9TMarioCapFv
 mtxEffectHide__9TMarioCapFv:
 /* 80120ADC 0011DA1C  38 C0 00 00 */	li r6, 0
@@ -896,3 +895,57 @@ lbl_80121718:
 /* 8012174C 0011E68C  38 21 01 80 */	addi r1, r1, 0x180
 /* 80121750 0011E690  7C 08 03 A6 */	mtlr r0
 /* 80121754 0011E694  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x377738, 0xC
+.global $$21763
+$$21763:
+	.incbin "baserom.dol", 0x377744, 0x14
+.global cDirtyFileName
+cDirtyFileName:
+	.incbin "baserom.dol", 0x377758, 0x24
+.global cDirtyTexName
+cDirtyTexName:
+	.incbin "baserom.dol", 0x37777C, 0x10
+.global $$22316
+$$22316:
+	.incbin "baserom.dol", 0x37778C, 0x10
+.global $$22479
+$$22479:
+	.incbin "baserom.dol", 0x37779C, 0x18
+.global $$22480
+$$22480:
+	.incbin "baserom.dol", 0x3777B4, 0x18
+.global $$22481
+$$22481:
+	.incbin "baserom.dol", 0x3777CC, 0x28
+.global $$22482
+$$22482:
+	.incbin "baserom.dol", 0x3777F4, 0x1C
+.global $$22483
+$$22483:
+	.incbin "baserom.dol", 0x377810, 0x10
+.global $$22484
+$$22484:
+	.incbin "baserom.dol", 0x377820, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9TMarioCap
+__vt__9TMarioCap:
+	.incbin "baserom.dol", 0x3B24D0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22278
+$$22278:
+	.incbin "baserom.dol", 0x3E5510, 0x4
+.global $$22279
+$$22279:
+	.incbin "baserom.dol", 0x3E5514, 0x4
+.global $$22280
+$$22280:
+	.incbin "baserom.dol", 0x3E5518, 0x4
+.global $$22485
+$$22485:
+	.incbin "baserom.dol", 0x3E551C, 0x4

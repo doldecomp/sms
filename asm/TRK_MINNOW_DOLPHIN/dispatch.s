@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKInitializeDispatcher
 TRKInitializeDispatcher:
 /* 80088A94 000859D4  3C 60 80 3F */	lis r3, gTRKDispatchTableSize@ha
@@ -46,3 +45,13 @@ lbl_80088B10:
 /* 80088B20 00085A60  80 01 00 04 */	lwz r0, 4(r1)
 /* 80088B24 00085A64  7C 08 03 A6 */	mtlr r0
 /* 80088B28 00085A68  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global gTRKDispatchTable
+gTRKDispatchTable:
+	.incbin "baserom.dol", 0x3ABF58, 0x88
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gTRKDispatchTableSize
+gTRKDispatchTableSize:
+	.skip 0x8

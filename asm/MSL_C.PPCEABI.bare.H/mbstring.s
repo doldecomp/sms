@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global wcstombs
 wcstombs:
 /* 80083B88 00080AC8  28 05 00 00 */	cmplwi r5, 0

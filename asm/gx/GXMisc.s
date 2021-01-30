@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXSetMisc
 GXSetMisc:
 /* 800A8198 000A50D8  2C 03 00 01 */	cmpwi r3, 1
@@ -488,3 +487,17 @@ __GXPEInit:
 /* 800A87FC 000A573C  38 21 00 08 */	addi r1, r1, 8
 /* 800A8800 000A5740  7C 08 03 A6 */	mtlr r0
 /* 800A8804 000A5744  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global TokenCB
+TokenCB:
+	.skip 0x4
+.global DrawDoneCB
+DrawDoneCB:
+	.skip 0x4
+.global DrawDone
+DrawDone:
+	.skip 0x4
+.global FinishQueue
+FinishQueue:
+	.skip 0xC

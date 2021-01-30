@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__20J3DAnmLoaderDataBaseFPCv
 load__20J3DAnmLoaderDataBaseFPCv:
 /* 80032808 0002F748  7C 08 02 A6 */	mflr r0
@@ -1872,3 +1871,31 @@ JSUConvertOffsetToPtr$$024J3DAnmTransformFullTable$$1__FPCvPCv:
 lbl_800341F4:
 /* 800341F4 00031134  7C 63 22 14 */	add r3, r3, r4
 /* 800341F8 00031138  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__19J3DAnmKeyLoader_v15
+__vt__19J3DAnmKeyLoader_v15:
+	.incbin "baserom.dol", 0x3A6AE8, 0x10
+.global __vt__20J3DAnmFullLoader_v15
+__vt__20J3DAnmFullLoader_v15:
+	.incbin "baserom.dol", 0x3A6AF8, 0x10
+.global __vt__12J3DAnmLoader
+__vt__12J3DAnmLoader:
+	.incbin "baserom.dol", 0x3A6B08, 0x10
+.global __vt__20J3DAnmVisibilityFull
+__vt__20J3DAnmVisibilityFull:
+	.incbin "baserom.dol", 0x3A6B18, 0xC
+.global __vt__16J3DAnmTexPattern
+__vt__16J3DAnmTexPattern:
+	.incbin "baserom.dol", 0x3A6B24, 0xC
+.global __vt__15J3DAnmTevRegKey
+__vt__15J3DAnmTevRegKey:
+	.incbin "baserom.dol", 0x3A6B30, 0xC
+.global __vt__19J3DAnmTextureSRTKey
+__vt__19J3DAnmTextureSRTKey:
+	.incbin "baserom.dol", 0x3A6B3C, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21126
+$$21126:
+	.incbin "baserom.dol", 0x3E3F98, 0x8

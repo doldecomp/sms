@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__13TSMSSmplCharaFv
 __dt__13TSMSSmplCharaFv:
 /* 8011D5C0 0011A500  7C 08 02 A6 */	mflr r0
@@ -79,3 +78,13 @@ load__13TSMSSmplCharaFR20JSUMemoryInputStream:
 /* 8011D6C0 0011A600  7C 08 03 A6 */	mtlr r0
 /* 8011D6C4 0011A604  38 21 00 18 */	addi r1, r1, 0x18
 /* 8011D6C8 0011A608  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13TSMSSmplChara
+__vt__13TSMSSmplChara:
+	.incbin "baserom.dol", 0x3B2378, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21540
+$$21540:
+	.incbin "baserom.dol", 0x3E5468, 0x8

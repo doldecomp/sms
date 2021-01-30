@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__9TJointObjFv
 __ct__9TJointObjFv:
 /* 801DAA24 001D7964  3C 80 80 3D */	lis r4, __vt__9TJointObj@ha
@@ -734,3 +733,58 @@ lbl_801DB3FC:
 /* 801DB404 001D8344  38 21 00 10 */	addi r1, r1, 0x10
 /* 801DB408 001D8348  7C 08 03 A6 */	mtlr r0
 /* 801DB40C 001D834C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDA8, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9TJointObj
+__vt__9TJointObj:
+	.incbin "baserom.dol", 0x3CCBE0, 0x28
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22519
+$$22519:
+	.skip 0xC
+.global $$22520
+$$22520:
+	.skip 0xC
+.global $$22521
+$$22521:
+	.skip 0xC
+.global $$22522
+$$22522:
+	.skip 0xC
+.global $$22523
+$$22523:
+	.skip 0xC
+.global $$22524
+$$22524:
+	.skip 0xC
+.global $$22525
+$$22525:
+	.skip 0xC
+.global $$22526
+$$22526:
+	.skip 0xC
+.global $$22527
+$$22527:
+	.skip 0xC
+.global $$22528
+$$22528:
+	.skip 0xC
+.global $$22529
+$$22529:
+	.skip 0xC
+.global $$22530
+$$22530:
+	.skip 0xC
+.global $$22531
+$$22531:
+	.skip 0xC
+.global $$22532
+$$22532:
+	.skip 0xC
+.global $$22533
+$$22533:
+	.skip 0x10

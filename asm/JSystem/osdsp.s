@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global DSPAddTask
 DSPAddTask:
 /* 800820A0 0007EFE0  7C 08 02 A6 */	mflr r0
@@ -75,3 +74,16 @@ lbl_80082180:
 /* 80082194 0007F0D4  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 80082198 0007F0D8  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 8008219C 0007F0DC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2347
+$$2347:
+	.incbin "baserom.dol", 0x36E470, 0x1C
+.global $$2351
+$$2351:
+	.incbin "baserom.dol", 0x36E48C, 0x24
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __DSP_tmp_task
+__DSP_tmp_task:
+	.skip 0x8

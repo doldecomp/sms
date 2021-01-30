@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10JKRArchiveFv
 __ct__10JKRArchiveFv:
 /* 8000566C 000025AC  7C 08 02 A6 */	mflr r0
@@ -582,3 +581,8 @@ lbl_80005DFC:
 /* 80005E10 00002D50  83 81 00 18 */	lwz r28, 0x18(r1)
 /* 80005E14 00002D54  38 21 00 28 */	addi r1, r1, 0x28
 /* 80005E18 00002D58  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sCurrentDirID__10JKRArchive
+sCurrentDirID__10JKRArchive:
+	.skip 0x8

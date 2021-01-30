@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__4TMapFv
 __dt__4TMapFv:
 /* 801DB410 001D8350  7C 08 02 A6 */	mflr r0
@@ -480,8 +479,8 @@ lbl_801DBA38:
 /* 801DBA50 001D8990  38 21 00 68 */	addi r1, r1, 0x68
 /* 801DBA54 001D8994  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__Map
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__Map:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801DBA58 001D8998  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801DBA5C 001D899C  D0 43 00 04 */	stfs f2, 4(r3)
 /* 801DBA60 001D89A0  D0 63 00 08 */	stfs f3, 8(r3)
@@ -1602,3 +1601,178 @@ lbl_801DCA4C:
 /* 801DCA54 001D9994  38 21 00 10 */	addi r1, r1, 0x10
 /* 801DCA58 001D9998  7C 08 03 A6 */	mtlr r0
 /* 801DCA5C 001D999C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDAC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x38E488, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x38E494, 0x14
+.global $$22375
+$$22375:
+	.incbin "baserom.dol", 0x38E4A8, 0x30
+.global $$22376
+$$22376:
+	.incbin "baserom.dol", 0x38E4D8, 0x38
+.global $$22377
+$$22377:
+	.incbin "baserom.dol", 0x38E510, 0x34
+.global $$22378
+$$22378:
+	.incbin "baserom.dol", 0x38E544, 0x24
+.global $$22514
+$$22514:
+	.incbin "baserom.dol", 0x38E568, 0xC
+.global $$22516
+$$22516:
+	.incbin "baserom.dol", 0x38E574, 0xC
+.global $$22972
+$$22972:
+	.incbin "baserom.dol", 0x38E580, 0x10
+.global $$23338
+$$23338:
+	.incbin "baserom.dol", 0x38E590, 0x1C
+.global $$23339
+$$23339:
+	.incbin "baserom.dol", 0x38E5AC, 0x10
+.global $$23340
+$$23340:
+	.incbin "baserom.dol", 0x38E5BC, 0x10
+.global $$23506
+$$23506:
+	.incbin "baserom.dol", 0x38E5CC, 0x18
+.global $$23507
+$$23507:
+	.incbin "baserom.dol", 0x38E5E4, 0xC
+.global $$23509
+$$23509:
+	.incbin "baserom.dol", 0x38E5F0, 0x14
+.global $$23510
+$$23510:
+	.incbin "baserom.dol", 0x38E604, 0xC
+.global $$23511
+$$23511:
+	.incbin "baserom.dol", 0x38E610, 0x14
+.global $$23512
+$$23512:
+	.incbin "baserom.dol", 0x38E624, 0x1C
+.global $$23566
+$$23566:
+	.incbin "baserom.dol", 0x38E640, 0x18
+.global $$23567
+$$23567:
+	.incbin "baserom.dol", 0x38E658, 0xC
+.global $$23701
+$$23701:
+	.incbin "baserom.dol", 0x38E664, 0x14
+.global $$23702
+$$23702:
+	.incbin "baserom.dol", 0x38E678, 0xC
+.global $$23703
+$$23703:
+	.incbin "baserom.dol", 0x38E684, 0x24
+.global $$23704
+$$23704:
+	.incbin "baserom.dol", 0x38E6A8, 0x24
+.global $$23705
+$$23705:
+	.incbin "baserom.dol", 0x38E6CC, 0x1C
+.global $$23799
+$$23799:
+	.incbin "baserom.dol", 0x38E6E8, 0x14
+.global $$23800
+$$23800:
+	.incbin "baserom.dol", 0x38E6FC, 0x28
+.global $$23801
+$$23801:
+	.incbin "baserom.dol", 0x38E724, 0x28
+.global $$23802
+$$23802:
+	.incbin "baserom.dol", 0x38E74C, 0x24
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__4TMap
+__vt__4TMap:
+	.incbin "baserom.dol", 0x3CCC08, 0x24
+.global $$23341
+$$23341:
+	.incbin "baserom.dol", 0x3CCC2C, 0x44
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23002
+$$23002:
+	.incbin "baserom.dol", 0x3E8A70, 0x4
+.global $$23209
+$$23209:
+	.incbin "baserom.dol", 0x3E8A74, 0x4
+.global $$23210
+$$23210:
+	.incbin "baserom.dol", 0x3E8A78, 0x4
+.global $$23211
+$$23211:
+	.incbin "baserom.dol", 0x3E8A7C, 0x4
+.global $$23508
+$$23508:
+	.incbin "baserom.dol", 0x3E8A80, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global pos$2895
+pos$2895:
+	.skip 0xC
+.global $$23812
+$$23812:
+	.skip 0xC
+.global $$23813
+$$23813:
+	.skip 0xC
+.global $$23814
+$$23814:
+	.skip 0xC
+.global $$23815
+$$23815:
+	.skip 0xC
+.global $$23816
+$$23816:
+	.skip 0xC
+.global $$23817
+$$23817:
+	.skip 0xC
+.global $$23818
+$$23818:
+	.skip 0xC
+.global $$23819
+$$23819:
+	.skip 0xC
+.global $$23820
+$$23820:
+	.skip 0xC
+.global $$23821
+$$23821:
+	.skip 0xC
+.global $$23822
+$$23822:
+	.skip 0xC
+.global $$23823
+$$23823:
+	.skip 0xC
+.global $$23824
+$$23824:
+	.skip 0xC
+.global $$23825
+$$23825:
+	.skip 0xC
+.global $$23826
+$$23826:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMap
+gpMap:
+	.skip 0x4
+.global init$2896
+init$2896:
+	.skip 0x4

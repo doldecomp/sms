@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global hasMapCollision__12TLiveManagerCFv
 hasMapCollision__12TLiveManagerCFv:
 /* 80114620 00111560  7C 08 02 A6 */	mflr r0
@@ -431,3 +430,27 @@ lbl_80114BD4:
 /* 80114BE4 00111B24  7C 08 03 A6 */	mtlr r0
 /* 80114BE8 00111B28  38 21 00 18 */	addi r1, r1, 0x18
 /* 80114BEC 00111B2C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22148
+$$22148:
+	.incbin "baserom.dol", 0x377108, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TLiveManager
+__vt__12TLiveManager:
+	.incbin "baserom.dol", 0x3B1E58, 0x40
+.global __vt__29TSpcTypedBinary$$010TLiveActor$$1
+__vt__29TSpcTypedBinary$$010TLiveActor$$1:
+	.incbin "baserom.dol", 0x3B1E98, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22101
+$$22101:
+	.incbin "baserom.dol", 0x3E53D0, 0x4
+.global $$22103
+$$22103:
+	.incbin "baserom.dol", 0x3E53D4, 0x4
+.global $$22104
+$$22104:
+	.incbin "baserom.dol", 0x3E53D8, 0x8

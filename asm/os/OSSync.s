@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SystemCallVector
 SystemCallVector:
 /* 80092ACC 0008FA0C  7D 30 FA A6 */	mfspr r9, 0x3f0
@@ -11,9 +10,7 @@ SystemCallVector:
 /* 80092ADC 0008FA1C  7C 00 04 AC */	sync 0
 /* 80092AE0 0008FA20  7D 30 FB A6 */	mtspr 0x3f0, r9
 /* 80092AE4 0008FA24  4C 00 00 64 */	rfi 
-
-.global __OSSystemCallVectorEnd
-__OSSystemCallVectorEnd:
+lbl_80092AE8:
 /* 80092AE8 0008FA28  60 00 00 00 */	nop 
 
 .global __OSInitSystemCall
@@ -24,9 +21,9 @@ __OSInitSystemCall:
 /* 80092AF8 0008FA38  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80092AFC 0008FA3C  3C A0 80 00 */	lis r5, 0x80000C00@ha
 /* 80092B00 0008FA40  3C 80 80 09 */	lis r4, SystemCallVector@ha
-/* 80092B04 0008FA44  3C 60 80 09 */	lis r3, __OSSystemCallVectorEnd@ha
+/* 80092B04 0008FA44  3C 60 80 09 */	lis r3, lbl_80092AE8@ha
 /* 80092B08 0008FA48  3B E5 0C 00 */	addi r31, r5, 0x80000C00@l
-/* 80092B0C 0008FA4C  38 03 2A E8 */	addi r0, r3, __OSSystemCallVectorEnd@l
+/* 80092B0C 0008FA4C  38 03 2A E8 */	addi r0, r3, lbl_80092AE8@l
 /* 80092B10 0008FA50  38 84 2A CC */	addi r4, r4, SystemCallVector@l
 /* 80092B14 0008FA54  7F E3 FB 78 */	mr r3, r31
 /* 80092B18 0008FA58  7C A4 00 50 */	subf r5, r4, r0

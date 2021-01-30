@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem11TChannelMgrFv
 init__Q28JASystem11TChannelMgrFv:
 /* 8005DC50 0005AB90  39 80 00 00 */	li r12, 0
@@ -682,3 +681,19 @@ lbl_8005E51C:
 /* 8005E520 0005B460  38 21 00 08 */	addi r1, r1, 8
 /* 8005E524 0005B464  7C 08 03 A6 */	mtlr r0
 /* 8005E528 0005B468  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global polys_table__Q28JASystem6Driver
+polys_table__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x36E260, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2136
+$$2136:
+	.incbin "baserom.dol", 0x3E4358, 0x4
+.global $$2137
+$$2137:
+	.incbin "baserom.dol", 0x3E435C, 0x4
+.global $$2138
+$$2138:
+	.incbin "baserom.dol", 0x3E4360, 0x8

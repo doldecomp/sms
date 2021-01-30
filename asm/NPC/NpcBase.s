@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__8TBaseNPCFv
 __dt__8TBaseNPCFv:
 /* 8016AA9C 001679DC  7C 08 02 A6 */	mflr r0
@@ -2699,3 +2698,128 @@ lbl_8016CF68:
 $$232$$2__dt__8TBaseNPCFv:
 /* 8016CF7C 00169EBC  38 63 FF E0 */	addi r3, r3, -32
 /* 8016CF80 00169EC0  4B FF DB 1C */	b __dt__8TBaseNPCFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCC4, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__8TBaseNPC
+__vt__8TBaseNPC:
+	.incbin "baserom.dol", 0x3B53A8, 0x114
+.global $$23445
+$$23445:
+	.incbin "baserom.dol", 0x3B54BC, 0x58
+.global $$23991
+$$23991:
+	.incbin "baserom.dol", 0x3B5514, 0x28
+.global $$23990
+$$23990:
+	.incbin "baserom.dol", 0x3B553C, 0x5C
+.global $$24128
+$$24128:
+	.incbin "baserom.dol", 0x3B5598, 0x5C
+.global $$24190
+$$24190:
+	.incbin "baserom.dol", 0x3B55F4, 0x5C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23364
+$$23364:
+	.incbin "baserom.dol", 0x3E62F0, 0x4
+.global $$23386
+$$23386:
+	.incbin "baserom.dol", 0x3E62F4, 0x4
+.global $$23390
+$$23390:
+	.incbin "baserom.dol", 0x3E62F8, 0x4
+.global $$23704
+$$23704:
+	.incbin "baserom.dol", 0x3E62FC, 0x4
+.global $$23705
+$$23705:
+	.incbin "baserom.dol", 0x3E6300, 0x4
+.global $$23706
+$$23706:
+	.incbin "baserom.dol", 0x3E6304, 0x4
+.global $$23707
+$$23707:
+	.incbin "baserom.dol", 0x3E6308, 0x8
+.global $$23709
+$$23709:
+	.incbin "baserom.dol", 0x3E6310, 0x8
+.global $$23710
+$$23710:
+	.incbin "baserom.dol", 0x3E6318, 0x8
+.global $$23935
+$$23935:
+	.incbin "baserom.dol", 0x3E6320, 0x4
+.global $$23936
+$$23936:
+	.incbin "baserom.dol", 0x3E6324, 0x4
+.global $$23989
+$$23989:
+	.incbin "baserom.dol", 0x3E6328, 0x4
+.global $$24213
+$$24213:
+	.incbin "baserom.dol", 0x3E632C, 0x4
+.global $$24359
+$$24359:
+	.incbin "baserom.dol", 0x3E6330, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$24339
+$$24339:
+	.skip 0xC
+.global $$24340
+$$24340:
+	.skip 0xC
+.global $$24341
+$$24341:
+	.skip 0xC
+.global $$24342
+$$24342:
+	.skip 0xC
+.global $$24343
+$$24343:
+	.skip 0xC
+.global $$24344
+$$24344:
+	.skip 0xC
+.global $$24345
+$$24345:
+	.skip 0xC
+.global $$24346
+$$24346:
+	.skip 0xC
+.global $$24347
+$$24347:
+	.skip 0xC
+.global $$24348
+$$24348:
+	.skip 0xC
+.global $$24349
+$$24349:
+	.skip 0xC
+.global $$24350
+$$24350:
+	.skip 0xC
+.global $$24351
+$$24351:
+	.skip 0xC
+.global $$24352
+$$24352:
+	.skip 0xC
+.global $$24353
+$$24353:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mPtrSaveNormal__8TBaseNPC
+mPtrSaveNormal__8TBaseNPC:
+	.skip 0x4
+.global mAngleYDiffWhenTaken__8TBaseNPC
+mAngleYDiffWhenTaken__8TBaseNPC:
+	.skip 0x4
+.global gpCurrentNpc
+gpCurrentNpc:
+	.skip 0x8

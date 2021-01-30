@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global InitializeUART
 InitializeUART:
 /* 800B5CEC 000B2C2C  7C 08 02 A6 */	mflr r0
@@ -191,3 +190,17 @@ lbl_800B5F50:
 /* 800B5F58 000B2E98  38 21 00 30 */	addi r1, r1, 0x30
 /* 800B5F5C 000B2E9C  7C 08 03 A6 */	mtlr r0
 /* 800B5F60 000B2EA0  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global Chan
+Chan:
+	.skip 0x4
+.global Dev
+Dev:
+	.skip 0x4
+.global Enabled
+Enabled:
+	.skip 0x4
+.global BarnacleEnabled
+BarnacleEnabled:
+	.skip 0x1C

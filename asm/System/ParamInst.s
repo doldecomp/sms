@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
 load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream:
 /* 800F82DC 000F521C  7C 08 02 A6 */	mflr r0

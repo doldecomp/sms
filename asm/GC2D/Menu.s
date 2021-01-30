@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__10TFlashPaneFv
 __dt__10TFlashPaneFv:
 /* 80200B90 001FDAD0  7C 08 02 A6 */	mflr r0
@@ -414,3 +413,19 @@ lbl_80201134:
 /* 80201144 001FE084  7C 08 03 A6 */	mtlr r0
 /* 80201148 001FE088  38 21 00 18 */	addi r1, r1, 0x18
 /* 8020114C 001FE08C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21772
+$$21772:
+	.incbin "baserom.dol", 0x3902F8, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TFlashPane
+__vt__10TFlashPane:
+	.incbin "baserom.dol", 0x3CDE78, 0x24
+.global __vt__10TMenuPlane
+__vt__10TMenuPlane:
+	.incbin "baserom.dol", 0x3CDE9C, 0x24
+.global __vt__9TMenuBase
+__vt__9TMenuBase:
+	.incbin "baserom.dol", 0x3CDEC0, 0x28

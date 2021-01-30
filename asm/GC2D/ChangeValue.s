@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global CLBCalcRatio$$0l$$1__Flll
 CLBCalcRatio$$0l$$1__Flll:
 /* 80200684 001FD5C4  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -28,3 +27,14 @@ CLBCalcRatio$$0l$$1__Flll:
 lbl_802006D8:
 /* 802006D8 001FD618  38 21 00 28 */	addi r1, r1, 0x28
 /* 802006DC 001FD61C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21680
+$$21680:
+	.incbin "baserom.dol", 0x3E90B0, 0x4
+.global $$21681
+$$21681:
+	.incbin "baserom.dol", 0x3E90B4, 0x4
+.global $$21683
+$$21683:
+	.incbin "baserom.dol", 0x3E90B8, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1
 __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1:
 /* 8004230C 0003F24C  7C 08 02 A6 */	mflr r0
@@ -245,3 +244,19 @@ lbl_8004264C:
 /* 8004265C 0003F59C  7C 08 03 A6 */	mtlr r0
 /* 80042660 0003F5A0  38 21 00 18 */	addi r1, r1, 0x18
 /* 80042664 0003F5A4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2881
+$$2881:
+	.incbin "baserom.dol", 0x36DF10, 0x10
+.global $$2882
+$$2882:
+	.incbin "baserom.dol", 0x36DF20, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1
+__vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1:
+	.incbin "baserom.dol", 0x3A7540, 0x2C
+.global __vt__Q26JDrama11TDStageDisp
+__vt__Q26JDrama11TDStageDisp:
+	.incbin "baserom.dol", 0x3A756C, 0x24

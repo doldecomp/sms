@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13J3DVertexDataFv
 __ct__13J3DVertexDataFv:
 /* 80037180 000340C0  38 00 00 00 */	li r0, 0
@@ -186,3 +185,8 @@ lbl_800373D0:
 /* 800373DC 0003431C  38 21 00 18 */	addi r1, r1, 0x18
 /* 800373E0 00034320  7C 08 03 A6 */	mtlr r0
 /* 800373E4 00034324  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15J3DVertexBuffer
+__vt__15J3DVertexBuffer:
+	.incbin "baserom.dol", 0x3A6BD8, 0x10

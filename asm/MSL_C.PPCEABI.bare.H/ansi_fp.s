@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __num2dec
 __num2dec:
 /* 800833A4 000802E4  7C 08 02 A6 */	mflr r0
@@ -285,3 +284,28 @@ lbl_80083738:
 /* 8008374C 0008068C  83 A1 00 54 */	lwz r29, 0x54(r1)
 /* 80083750 00080690  38 21 00 68 */	addi r1, r1, 0x68
 /* 80083754 00080694  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global bit_values
+bit_values:
+	.incbin "baserom.dol", 0x36E598, 0x48
+.global digit_values
+digit_values:
+	.incbin "baserom.dol", 0x36E5E0, 0x40
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2268
+$$2268:
+	.incbin "baserom.dol", 0x3E4658, 0x8
+.global $$2270
+$$2270:
+	.incbin "baserom.dol", 0x3E4660, 0x8
+.global $$2272
+$$2272:
+	.incbin "baserom.dol", 0x3E4668, 0x8
+.global $$2362
+$$2362:
+	.incbin "baserom.dol", 0x3E4670, 0x8
+.global $$2363
+$$2363:
+	.incbin "baserom.dol", 0x3E4678, 0x8

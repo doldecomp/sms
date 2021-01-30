@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global bind__7TSpiderFP10TLiveActor
 bind__7TSpiderFP10TLiveActor:
 /* 802816E8 0027E628  7C 08 02 A6 */	mflr r0
@@ -422,3 +421,19 @@ __ct__7TSpiderFv:
 /* 80281D08 0027EC48  38 21 00 18 */	addi r1, r1, 0x18
 /* 80281D0C 0027EC4C  7C 08 03 A6 */	mtlr r0
 /* 80281D10 0027EC50  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__7TSpider
+__vt__7TSpider:
+	.incbin "baserom.dol", 0x3D3DE0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22402
+$$22402:
+	.incbin "baserom.dol", 0x3EA2D8, 0x4
+.global $$22403
+$$22403:
+	.incbin "baserom.dol", 0x3EA2DC, 0x4
+.global $$22404
+$$22404:
+	.incbin "baserom.dol", 0x3EA2E0, 0x8

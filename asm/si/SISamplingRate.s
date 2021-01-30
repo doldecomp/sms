@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SISetSamplingRate
 SISetSamplingRate:
 /* 800B4318 000B1258  7C 08 02 A6 */	mflr r0
@@ -81,3 +80,19 @@ SIRefreshSamplingRate:
 /* 800B4414 000B1354  38 21 00 08 */	addi r1, r1, 8
 /* 800B4418 000B1358  7C 08 03 A6 */	mtlr r0
 /* 800B441C 000B135C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global XYNTSC
+XYNTSC:
+	.incbin "baserom.dol", 0x3AEDD8, 0x30
+.global XYPAL
+XYPAL:
+	.incbin "baserom.dol", 0x3AEE08, 0x30
+.global $$216
+$$216:
+	.incbin "baserom.dol", 0x3AEE38, 0x38
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global SamplingRate
+SamplingRate:
+	.skip 0x8

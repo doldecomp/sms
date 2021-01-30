@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global J3DLoadArrayBasePtr__F7_GXAttrPv
 J3DLoadArrayBasePtr__F7_GXAttrPv:
 /* 80037A58 00034998  2C 03 00 19 */	cmpwi r3, 0x19
@@ -1558,3 +1557,148 @@ lbl_80038FF8:
 /* 80039124 00036064  BA A1 00 1C */	lmw r21, 0x1c(r1)
 /* 80039128 00036068  38 21 00 48 */	addi r1, r1, 0x48
 /* 8003912C 0003606C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2813
+$$2813:
+	.incbin "baserom.dol", 0x36DCE0, 0x30
+.global $$2814
+$$2814:
+	.incbin "baserom.dol", 0x36DD10, 0x30
+.global $$2999
+$$2999:
+	.incbin "baserom.dol", 0x36DD40, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2804
+$$2804:
+	.incbin "baserom.dol", 0x3A6C60, 0x44
+.global j3dDefaultLightInfo
+j3dDefaultLightInfo:
+	.incbin "baserom.dol", 0x3A6CA4, 0x34
+.global j3dDefaultTexCoordInfo
+j3dDefaultTexCoordInfo:
+	.incbin "baserom.dol", 0x3A6CD8, 0x20
+.global j3dDefaultTexMtxInfo
+j3dDefaultTexMtxInfo:
+	.incbin "baserom.dol", 0x3A6CF8, 0x64
+.global j3dDefaultIndTexMtxInfo
+j3dDefaultIndTexMtxInfo:
+	.incbin "baserom.dol", 0x3A6D5C, 0x1C
+.global j3dDefaultTevStageInfo
+j3dDefaultTevStageInfo:
+	.incbin "baserom.dol", 0x3A6D78, 0x14
+.global j3dDefaultIndTevStageInfo
+j3dDefaultIndTevStageInfo:
+	.incbin "baserom.dol", 0x3A6D8C, 0xC
+.global j3dDefaultFogInfo
+j3dDefaultFogInfo:
+	.incbin "baserom.dol", 0x3A6D98, 0x2C
+.global j3dDefaultNBTScaleInfo
+j3dDefaultNBTScaleInfo:
+	.incbin "baserom.dol", 0x3A6DC4, 0x14
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global GXTexMode0Ids
+GXTexMode0Ids:
+	.incbin "baserom.dol", 0x3E3038, 0x8
+.global GXTexMode1Ids
+GXTexMode1Ids:
+	.incbin "baserom.dol", 0x3E3040, 0x8
+.global GXTexImage0Ids
+GXTexImage0Ids:
+	.incbin "baserom.dol", 0x3E3048, 0x8
+.global GXTexImage1Ids
+GXTexImage1Ids:
+	.incbin "baserom.dol", 0x3E3050, 0x8
+.global GXTexImage2Ids
+GXTexImage2Ids:
+	.incbin "baserom.dol", 0x3E3058, 0x8
+.global GXTexImage3Ids
+GXTexImage3Ids:
+	.incbin "baserom.dol", 0x3E3060, 0x8
+.global GXTexTlutIds
+GXTexTlutIds:
+	.incbin "baserom.dol", 0x3E3068, 0x8
+.global GX2HWFiltConv
+GX2HWFiltConv:
+	.incbin "baserom.dol", 0x3E3070, 0x8
+.global j3dDefaultColInfo
+j3dDefaultColInfo:
+	.incbin "baserom.dol", 0x3E3078, 0x4
+.global j3dDefaultAmbInfo
+j3dDefaultAmbInfo:
+	.incbin "baserom.dol", 0x3E307C, 0x4
+.global j3dDefaultColorChanNum
+j3dDefaultColorChanNum:
+	.incbin "baserom.dol", 0x3E3080, 0x4
+.global j3dDefaultTevOrderInfoNull
+j3dDefaultTevOrderInfoNull:
+	.incbin "baserom.dol", 0x3E3084, 0x4
+.global j3dDefaultIndTexOrderNull
+j3dDefaultIndTexOrderNull:
+	.incbin "baserom.dol", 0x3E3088, 0x4
+.global j3dDefaultTevColor
+j3dDefaultTevColor:
+	.incbin "baserom.dol", 0x3E308C, 0x4
+.global lbl_80408B50
+lbl_80408B50:
+	.incbin "baserom.dol", 0x3E3090, 0x4
+.global j3dDefaultIndTexCoordScaleInfo
+j3dDefaultIndTexCoordScaleInfo:
+	.incbin "baserom.dol", 0x3E3094, 0x4
+.global j3dDefaultTevKColor
+j3dDefaultTevKColor:
+	.incbin "baserom.dol", 0x3E3098, 0x4
+.global j3dDefaultTevSwapMode
+j3dDefaultTevSwapMode:
+	.incbin "baserom.dol", 0x3E309C, 0x4
+.global j3dDefaultTevSwapModeTable
+j3dDefaultTevSwapModeTable:
+	.incbin "baserom.dol", 0x3E30A0, 0x4
+.global j3dDefaultBlendInfo
+j3dDefaultBlendInfo:
+	.incbin "baserom.dol", 0x3E30A4, 0x4
+.global j3dDefaultColorChanInfo
+j3dDefaultColorChanInfo:
+	.incbin "baserom.dol", 0x3E30A8, 0x8
+.global j3dDefaultTevSwapTableID
+j3dDefaultTevSwapTableID:
+	.incbin "baserom.dol", 0x3E30B0, 0x2
+.global j3dDefaultAlphaCmpID
+j3dDefaultAlphaCmpID:
+	.incbin "baserom.dol", 0x3E30B2, 0x2
+.global j3dDefaultZModeID
+j3dDefaultZModeID:
+	.incbin "baserom.dol", 0x3E30B4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2926
+$$2926:
+	.incbin "baserom.dol", 0x3E3FD0, 0x4
+.global $$2927
+$$2927:
+	.incbin "baserom.dol", 0x3E3FD4, 0x4
+.global $$2978
+$$2978:
+	.incbin "baserom.dol", 0x3E3FD8, 0x4
+.global $$2979
+$$2979:
+	.incbin "baserom.dol", 0x3E3FDC, 0x4
+.global $$2981
+$$2981:
+	.incbin "baserom.dol", 0x3E3FE0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global j3dTexCoordTable
+j3dTexCoordTable:
+	.skip 0x2528
+.global j3dTevSwapTableTable
+j3dTevSwapTableTable:
+	.skip 0x400
+.global j3dAlphaCmpTable
+j3dAlphaCmpTable:
+	.skip 0x300
+.global j3dZModeTable
+j3dZModeTable:
+	.skip 0x60

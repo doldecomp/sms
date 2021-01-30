@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __copy_longs_rev_unaligned
 __copy_longs_rev_unaligned:
 /* 80083D10 00080C50  7D 83 2A 14 */	add r12, r3, r5

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMSSetupMovieRenderingInfo__FPQ26JDrama8TDisplay
 SMSSetupMovieRenderingInfo__FPQ26JDrama8TDisplay:
 /* 800F8904 000F5844  7C 08 02 A6 */	mflr r0
@@ -396,3 +395,26 @@ SMSGetRederRect_Game__Fv:
 /* 800F8E68 000F5DA8  7C 08 03 A6 */	mtlr r0
 /* 800F8E6C 000F5DAC  38 21 00 18 */	addi r1, r1, 0x18
 /* 800F8E70 000F5DB0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x3B0F40, 0xC
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x3B0F4C, 0xC
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x3B0F58, 0x10
+.global SMSAASamplePattern_non
+SMSAASamplePattern_non:
+	.incbin "baserom.dol", 0x3B0F68, 0x18
+.global SMSAASamplePattern_aa
+SMSAASamplePattern_aa:
+	.incbin "baserom.dol", 0x3B0F80, 0x18
+.global SMSVFilter_non
+SMSVFilter_non:
+	.incbin "baserom.dol", 0x3B0F98, 0x8
+.global SMSVFilter_flicker
+SMSVFilter_flicker:
+	.incbin "baserom.dol", 0x3B0FA0, 0x8

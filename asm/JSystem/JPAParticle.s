@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global incTimer__15JPABaseParticleFv
 incTimer__15JPABaseParticleFv:
 /* 8007326C 000701AC  80 83 00 10 */	lwz r4, 0x10(r3)
@@ -479,3 +478,22 @@ getHeight__11JPAParticleFv:
 /* 80073880 000707C0  EC 22 00 72 */	fmuls f1, f2, f1
 /* 80073884 000707C4  EC 21 00 32 */	fmuls f1, f1, f0
 /* 80073888 000707C8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11JPAParticle
+__vt__11JPAParticle:
+	.incbin "baserom.dol", 0x3A9570, 0x58
+.global __vt__15JPABaseParticle
+__vt__15JPABaseParticle:
+	.incbin "baserom.dol", 0x3A95C8, 0x58
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21675
+$$21675:
+	.incbin "baserom.dol", 0x3E4558, 0x4
+.global $$21689
+$$21689:
+	.incbin "baserom.dol", 0x3E455C, 0x4
+.global $$21820
+$$21820:
+	.incbin "baserom.dol", 0x3E4560, 0x8

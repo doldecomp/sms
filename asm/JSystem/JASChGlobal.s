@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getChannelHandle__Q28JASystem8ChGlobalFUl
 getChannelHandle__Q28JASystem8ChGlobalFUl:
 /* 8005E52C 0005B46C  28 03 01 00 */	cmplwi r3, 0x100
@@ -331,3 +330,14 @@ lbl_8005E968:
 /* 8005E998 0005B8D8  38 21 00 20 */	addi r1, r1, 0x20
 /* 8005E99C 0005B8DC  7C 08 03 A6 */	mtlr r0
 /* 8005E9A0 0005B8E0  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global GLOBAL_CHANNEL__Q28JASystem8ChGlobal
+GLOBAL_CHANNEL__Q28JASystem8ChGlobal:
+	.skip 0x4
+.global CHANNEL__Q28JASystem8ChGlobal
+CHANNEL__Q28JASystem8ChGlobal:
+	.skip 0x4
+.global OSCILLATOR__Q28JASystem8ChGlobal
+OSCILLATOR__Q28JASystem8ChGlobal:
+	.skip 0x8

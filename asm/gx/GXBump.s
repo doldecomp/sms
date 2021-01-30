@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXSetTevIndirect
 GXSetTevIndirect:
 /* 800AB338 000A8278  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -494,3 +493,8 @@ __GXFlushTextureState:
 /* 800AB9FC 000A893C  90 65 80 00 */	stw r3, -0x8000(r5)
 /* 800ABA00 000A8940  B0 04 00 02 */	sth r0, 2(r4)
 /* 800ABA04 000A8944  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$245
+$$245:
+	.incbin "baserom.dol", 0x3E4850, 0x8

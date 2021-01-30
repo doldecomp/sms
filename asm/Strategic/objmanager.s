@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global searchF__11TObjManagerFUsPCc
 searchF__11TObjManagerFUsPCc:
 /* 80115C5C 00112B9C  7C 08 02 A6 */	mflr r0
@@ -448,3 +447,42 @@ load__9TObjCharaFR20JSUMemoryInputStream:
 /* 80116254 00113194  7C 08 03 A6 */	mtlr r0
 /* 80116258 00113198  38 21 00 18 */	addi r1, r1, 0x18
 /* 8011625C 0011319C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x377118, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x377124, 0x14
+.global $$21598
+$$21598:
+	.incbin "baserom.dol", 0x377138, 0x30
+.global $$21599
+$$21599:
+	.incbin "baserom.dol", 0x377168, 0x38
+.global $$21600
+$$21600:
+	.incbin "baserom.dol", 0x3771A0, 0x34
+.global $$21601
+$$21601:
+	.incbin "baserom.dol", 0x3771D4, 0x24
+.global $$21735
+$$21735:
+	.incbin "baserom.dol", 0x3771F8, 0xC
+.global entry$1734
+entry$1734:
+	.incbin "baserom.dol", 0x377204, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TObjManager
+__vt__11TObjManager:
+	.incbin "baserom.dol", 0x3B1EA8, 0x30
+.global __vt__9TObjChara
+__vt__9TObjChara:
+	.incbin "baserom.dol", 0x3B1ED8, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21841
+$$21841:
+	.incbin "baserom.dol", 0x3E53E8, 0x8

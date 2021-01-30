@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__23TNerveAnimalGraphWanderFv
 __dt__23TNerveAnimalGraphWanderFv:
 /* 80367AF0 00364A30  7C 08 02 A6 */	mflr r0
@@ -412,3 +411,35 @@ lbl_803680D4:
 /* 803680DC 0036501C  38 21 00 08 */	addi r1, r1, 8
 /* 803680E0 00365020  7C 08 03 A6 */	mtlr r0
 /* 803680E4 00365024  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__23TNerveAnimalGraphWander
+__vt__23TNerveAnimalGraphWander:
+	.incbin "baserom.dol", 0x3E2910, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22158
+$$22158:
+	.incbin "baserom.dol", 0x3EC718, 0x4
+.global $$22159
+$$22159:
+	.incbin "baserom.dol", 0x3EC71C, 0x4
+.global $$22160
+$$22160:
+	.incbin "baserom.dol", 0x3EC720, 0x8
+.global $$22162
+$$22162:
+	.incbin "baserom.dol", 0x3EC728, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22001
+$$22001:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2002
+init$2002:
+	.skip 0x4
+.global instance$2000
+instance$2000:
+	.skip 0x4

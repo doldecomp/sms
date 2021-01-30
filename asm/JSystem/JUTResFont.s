@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global isLeadByte_1Byte__7JUTFontFi
 isLeadByte_1Byte__7JUTFontFi:
 /* 8003AE0C 00037D4C  38 60 00 00 */	li r3, 0
@@ -1289,3 +1288,33 @@ getLeading__10JUTResFontCFv:
 /* 8003BFF8 00038F38  80 63 00 4C */	lwz r3, 0x4c(r3)
 /* 8003BFFC 00038F3C  A0 63 00 10 */	lhz r3, 0x10(r3)
 /* 8003C000 00038F40  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2272
+$$2272:
+	.incbin "baserom.dol", 0x36DDC0, 0x20
+.global $$2289
+$$2289:
+	.incbin "baserom.dol", 0x36DDE0, 0x14
+.global halftofull$376
+halftofull$376:
+	.incbin "baserom.dol", 0x36DDF4, 0xC4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global saoAboutEncoding___10JUTResFont
+saoAboutEncoding___10JUTResFont:
+	.incbin "baserom.dol", 0x3A6F08, 0xC
+.global __vt__10JUTResFont
+__vt__10JUTResFont:
+	.incbin "baserom.dol", 0x3A6F14, 0x3C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2335
+$$2335:
+	.incbin "baserom.dol", 0x3E4018, 0x8
+.global $$2337
+$$2337:
+	.incbin "baserom.dol", 0x3E4020, 0x8
+.global $$2339
+$$2339:
+	.incbin "baserom.dol", 0x3E4028, 0x8

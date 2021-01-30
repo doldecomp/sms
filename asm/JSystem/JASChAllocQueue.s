@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q38JASystem6Driver8DSPQueueFUl
 init__Q38JASystem6Driver8DSPQueueFUl:
 /* 8005BDB8 00058CF8  7C 08 02 A6 */	mflr r0
@@ -251,3 +250,25 @@ lbl_8005C0FC:
 /* 8005C110 00059050  38 21 00 10 */	addi r1, r1, 0x10
 /* 8005C114 00059054  7C 08 03 A6 */	mtlr r0
 /* 8005C118 00059058  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global waitMax__Q38JASystem6Driver8DSPQueue
+waitMax__Q38JASystem6Driver8DSPQueue:
+	.incbin "baserom.dol", 0x3E3198, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global waitp__Q38JASystem6Driver8DSPQueue
+waitp__Q38JASystem6Driver8DSPQueue:
+	.skip 0x4
+.global waittime__Q38JASystem6Driver8DSPQueue
+waittime__Q38JASystem6Driver8DSPQueue:
+	.skip 0x4
+.global cur_waits__Q38JASystem6Driver8DSPQueue
+cur_waits__Q38JASystem6Driver8DSPQueue:
+	.skip 0x4
+.global cur_top__Q38JASystem6Driver8DSPQueue
+cur_top__Q38JASystem6Driver8DSPQueue:
+	.skip 0x4
+.global cur_tail__Q38JASystem6Driver8DSPQueue
+cur_tail__Q38JASystem6Driver8DSPQueue:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global receiveMessage__17TDemoBossHanachanFP9THitActorUl
 receiveMessage__17TDemoBossHanachanFP9THitActorUl:
 /* 802FC968 002F98A8  38 60 00 00 */	li r3, 0
@@ -147,3 +146,60 @@ __ct__27TDemoBossHanachanSaveParamsFPCc:
 $$232$$2__dt__17TDemoBossHanachanFv:
 /* 802FCB68 002F9AA8  38 63 FF E0 */	addi r3, r3, -32
 /* 802FCB6C 002F9AAC  4B E0 13 EC */	b __dt__17TDemoBossHanachanFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x39C918, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x39C924, 0x14
+.global $$21597
+$$21597:
+	.incbin "baserom.dol", 0x39C938, 0x30
+.global $$21598
+$$21598:
+	.incbin "baserom.dol", 0x39C968, 0x38
+.global $$21599
+$$21599:
+	.incbin "baserom.dol", 0x39C9A0, 0x34
+.global $$21600
+$$21600:
+	.incbin "baserom.dol", 0x39C9D4, 0x24
+.global $$22029
+$$22029:
+	.incbin "baserom.dol", 0x39C9F8, 0x10
+.global $$22031
+$$22031:
+	.incbin "baserom.dol", 0x39CA08, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__17TDemoBossHanachan
+__vt__17TDemoBossHanachan:
+	.incbin "baserom.dol", 0x3DC070, 0x114
+.global __vt__24TDemoBossHanachanManager
+__vt__24TDemoBossHanachanManager:
+	.incbin "baserom.dol", 0x3DC184, 0x54
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21955
+$$21955:
+	.incbin "baserom.dol", 0x3EB338, 0x4
+.global $$22009
+$$22009:
+	.incbin "baserom.dol", 0x3EB33C, 0x4
+.global $$22010
+$$22010:
+	.incbin "baserom.dol", 0x3EB340, 0x4
+.global $$22011
+$$22011:
+	.incbin "baserom.dol", 0x3EB344, 0x4
+.global $$22012
+$$22012:
+	.incbin "baserom.dol", 0x3EB348, 0x4
+.global $$22030
+$$22030:
+	.incbin "baserom.dol", 0x3EB34C, 0x4
+.global $$22032
+$$22032:
+	.incbin "baserom.dol", 0x3EB350, 0x8

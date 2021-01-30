@@ -1,13 +1,4 @@
-INIT_O_FILES :=                                                       \
-	$(BUILD_DIR)/asm/init.o
-
-EXTAB_O_FILES :=                                                      \
-    $(BUILD_DIR)/asm/extab.o
-
-EXTABINDEX_O_FILES :=                                                 \
-    $(BUILD_DIR)/asm/extabindex.o
-
-TEXT_O_FILES :=                                                       \
+O_FILES :=                                                            \
 	$(BUILD_DIR)/asm/main.o                                           \
     $(BUILD_DIR)/asm/JSystem/JKRArchivePri.o                          \
     $(BUILD_DIR)/asm/JSystem/JKRAramArchive.o                         \
@@ -80,6 +71,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/JSystem/JKRAramPiece.o                           \
     $(BUILD_DIR)/asm/JSystem/JKRAramStream.o                          \
     $(BUILD_DIR)/asm/JSystem/JUTAssert.o                              \
+    $(BUILD_DIR)/asm/JSystem/JUTVideo.o                               \
     $(BUILD_DIR)/asm/JSystem/JUTResFont.o                             \
     $(BUILD_DIR)/asm/JSystem/JUTRomFont.o                             \
     $(BUILD_DIR)/asm/JSystem/JRenderer.o                              \
@@ -112,12 +104,15 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/JSystem/JDRViewConnecter.o                       \
     $(BUILD_DIR)/asm/JSystem/JDRViewObj.o                             \
     $(BUILD_DIR)/asm/JSystem/JDRViewport.o                            \
+    $(BUILD_DIR)/asm/JSystem/JADHioNode.o                             \
     $(BUILD_DIR)/asm/JSystem/JALCalc.o                                \
     $(BUILD_DIR)/asm/JSystem/JALModSe.o                               \
     $(BUILD_DIR)/asm/JSystem/JAIAnimation.o                           \
+    $(BUILD_DIR)/asm/JSystem/JAIAsnData.o                             \
     $(BUILD_DIR)/asm/JSystem/JAIBasic.o                               \
     $(BUILD_DIR)/asm/JSystem/JAIConst.o                               \
     $(BUILD_DIR)/asm/JSystem/JAIData.o                                \
+    $(BUILD_DIR)/asm/JSystem/JAIDebug.o                               \
     $(BUILD_DIR)/asm/JSystem/JAIEntry.o                               \
     $(BUILD_DIR)/asm/JSystem/JAIEntrySe.o                             \
     $(BUILD_DIR)/asm/JSystem/JAIEntrySequence.o                       \
@@ -149,6 +144,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/JSystem/JASChannelMgr.o                          \
     $(BUILD_DIR)/asm/JSystem/JASChGlobal.o                            \
     $(BUILD_DIR)/asm/JSystem/JASDriverIF.o                            \
+    $(BUILD_DIR)/asm/JSystem/JASDriverTables.o                        \
     $(BUILD_DIR)/asm/JSystem/JASDSPBuf.o                              \
     $(BUILD_DIR)/asm/JSystem/JASDSPChannel.o                          \
     $(BUILD_DIR)/asm/JSystem/JASDSPInterface.o                        \
@@ -162,6 +158,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/JSystem/JASHeapCtrl.o                            \
     $(BUILD_DIR)/asm/JSystem/JASKernelDebug.o                         \
     $(BUILD_DIR)/asm/JSystem/JASProbe.o                               \
+    $(BUILD_DIR)/asm/JSystem/JASRate.o                                \
     $(BUILD_DIR)/asm/JSystem/JASSystemHeap.o                          \
     $(BUILD_DIR)/asm/JSystem/JASVload.o                               \
     $(BUILD_DIR)/asm/JSystem/JASNoteMgr.o                             \
@@ -210,12 +207,15 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/Runtime.PPCEABI.H/ExceptionPPC.o                 \
     $(BUILD_DIR)/asm/Runtime.PPCEABI.H/runtime.o                      \
     $(BUILD_DIR)/asm/Runtime.PPCEABI.H/__init_cpp_exceptions.o        \
+    $(BUILD_DIR)/asm/Runtime.PPCEABI.H/__mem.o                        \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/abort_exit.o                \
+    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/ansi_files.o                \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/ansi_fp.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/buffer_io.o                 \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/critical_regions.ppc_eabi.o \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/ctype.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/direct_io.o                 \
+    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/errno.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/mbstring.o                  \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/mem.o                       \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/mem_funcs.o                 \
@@ -232,10 +232,12 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/s_atan.o                    \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/s_frexp.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/w_atan2.o                   \
+    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/float.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/hyperbolicsf.o              \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/inverse_trig.o              \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/trigf.o                     \
-    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/exponentials.o              \
+    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/common_float_tables.o       \
+    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/exponentialsf.o             \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/mainloop.o                    \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/nubevent.o                    \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/nubinit.o                     \
@@ -251,6 +253,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/flush_cache.o                 \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/mem_TRK.o                     \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/targimpl.o                    \
+    $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/__exception.o                 \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/dolphin_trk.o                 \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.o                \
     $(BUILD_DIR)/asm/TRK_MINNOW_DOLPHIN/main_TRK.o                    \
@@ -262,7 +265,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/os/OSAlarm.o                                     \
     $(BUILD_DIR)/asm/os/OSAlloc.o                                     \
     $(BUILD_DIR)/asm/os/OSArena.o                                     \
-    $(BUILD_DIR)/asm/os/OSAudioThread.o                               \
+    $(BUILD_DIR)/asm/os/OSAudioSystem.o                               \
     $(BUILD_DIR)/asm/os/OSCache.o                                     \
     $(BUILD_DIR)/asm/os/OSContext.o                                   \
     $(BUILD_DIR)/asm/os/OSError.o                                     \
@@ -280,6 +283,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/os/OSSync.o                                      \
     $(BUILD_DIR)/asm/os/OSThread.o                                    \
     $(BUILD_DIR)/asm/os/OSTime.o                                      \
+    $(BUILD_DIR)/asm/os/__start.o                                     \
     $(BUILD_DIR)/asm/os/__ppc_eabi_init.o                             \
     $(BUILD_DIR)/asm/mtx/mtx.o                                        \
     $(BUILD_DIR)/asm/mtx/mtxvec.o                                     \
@@ -361,6 +365,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/MarioUtil/EffectUtil.o                           \
     $(BUILD_DIR)/asm/MarioUtil/ModelUtil.o                            \
     $(BUILD_DIR)/asm/MarioUtil/RumbleMgr.o                            \
+    $(BUILD_DIR)/asm/MarioUtil/RumbleData.o                           \
     $(BUILD_DIR)/asm/MarioUtil/RumbleType.o                           \
     $(BUILD_DIR)/asm/MarioUtil/PacketUtil.o                           \
     $(BUILD_DIR)/asm/MarioUtil/GDUtil.o                               \
@@ -718,6 +723,7 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/Camera/CameraDemo.o                              \
     $(BUILD_DIR)/asm/Camera/CameraWarp.o                              \
     $(BUILD_DIR)/asm/Camera/CameraMode.o                              \
+    $(BUILD_DIR)/asm/Camera/CamShakeDefine.o                          \
     $(BUILD_DIR)/asm/Camera/CameraSecureView.o                        \
     $(BUILD_DIR)/asm/Animal/boid.o                                    \
     $(BUILD_DIR)/asm/Animal/fishoid.o                                 \
@@ -728,30 +734,3 @@ TEXT_O_FILES :=                                                       \
     $(BUILD_DIR)/asm/Animal/Bird.o                                    \
     $(BUILD_DIR)/asm/Animal/BeeHive.o                                 \
     $(BUILD_DIR)/asm/Animal/Butterfly.o
-
-CTORS_O_FILES :=                                                      \
-    $(BUILD_DIR)/asm/ctors.o
-
-DTORS_O_FILES :=                                                      \
-    $(BUILD_DIR)/asm/dtors.o
-
-RODATA_O_FILES :=                                                     \
-    $(BUILD_DIR)/asm/rodata.o
-
-DATA_O_FILES :=                                                       \
-    $(BUILD_DIR)/asm/data.o
-
-BSS_O_FILES :=                                                        \
-    $(BUILD_DIR)/asm/bss.o
-
-SDATA_O_FILES :=                                                      \
-    $(BUILD_DIR)/asm/sdata.o
-
-SBSS_O_FILES :=                                                       \
-    $(BUILD_DIR)/asm/sbss.o
-
-SDATA2_O_FILES :=                                                     \
-    $(BUILD_DIR)/asm/sdata2.o
-
-SBSS2_O_FILES :=                                                      \
-    $(BUILD_DIR)/asm/sbss2.o

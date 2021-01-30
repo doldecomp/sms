@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ieee754_atan2
 __ieee754_atan2:
 /* 800865B0 000834F0  7C 08 02 A6 */	mflr r0
@@ -203,3 +202,38 @@ lbl_80086834:
 /* 8008683C 0008377C  38 21 00 28 */	addi r1, r1, 0x28
 /* 80086840 00083780  7C 08 03 A6 */	mtlr r0
 /* 80086844 00083784  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2182
+$$2182:
+	.incbin "baserom.dol", 0x3E4688, 0x8
+.global $$2183
+$$2183:
+	.incbin "baserom.dol", 0x3E4690, 0x8
+.global $$2184
+$$2184:
+	.incbin "baserom.dol", 0x3E4698, 0x8
+.global $$2185
+$$2185:
+	.incbin "baserom.dol", 0x3E46A0, 0x8
+.global $$2186
+$$2186:
+	.incbin "baserom.dol", 0x3E46A8, 0x8
+.global $$2187
+$$2187:
+	.incbin "baserom.dol", 0x3E46B0, 0x8
+.global $$2188
+$$2188:
+	.incbin "baserom.dol", 0x3E46B8, 0x8
+.global $$2189
+$$2189:
+	.incbin "baserom.dol", 0x3E46C0, 0x8
+.global $$2190
+$$2190:
+	.incbin "baserom.dol", 0x3E46C8, 0x8
+.global $$2191
+$$2191:
+	.incbin "baserom.dol", 0x3E46D0, 0x8
+.global $$2192
+$$2192:
+	.incbin "baserom.dol", 0x3E46D8, 0x8

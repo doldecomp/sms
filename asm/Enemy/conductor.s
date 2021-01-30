@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global perform__10TConductorFUlPQ26JDrama9TGraphics
 perform__10TConductorFUlPQ26JDrama9TGraphics:
 /* 80247C44 00244B84  7C 08 02 A6 */	mflr r0
@@ -2631,3 +2630,101 @@ lbl_8024A05C:
 /* 8024A06C 00246FAC  38 21 00 40 */	addi r1, r1, 0x40
 /* 8024A070 00246FB0  7C 08 03 A6 */	mtlr r0
 /* 8024A074 00246FB4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x391858, 0xC
+.global $$21700
+$$21700:
+	.incbin "baserom.dol", 0x391864, 0x14
+.global $$21782
+$$21782:
+	.incbin "baserom.dol", 0x391878, 0x30
+.global $$21783
+$$21783:
+	.incbin "baserom.dol", 0x3918A8, 0x38
+.global $$21784
+$$21784:
+	.incbin "baserom.dol", 0x3918E0, 0x34
+.global $$21785
+$$21785:
+	.incbin "baserom.dol", 0x391914, 0x24
+.global $$23643
+$$23643:
+	.incbin "baserom.dol", 0x391938, 0x1C
+.global $$23939
+$$23939:
+	.incbin "baserom.dol", 0x391954, 0x18
+.global $$23940
+$$23940:
+	.incbin "baserom.dol", 0x39196C, 0x1C
+.global $$23983
+$$23983:
+	.incbin "baserom.dol", 0x391988, 0x18
+.global $$24047
+$$24047:
+	.incbin "baserom.dol", 0x3919A0, 0x20
+.global $$24571
+$$24571:
+	.incbin "baserom.dol", 0x3919C0, 0x10
+.global $$24572
+$$24572:
+	.incbin "baserom.dol", 0x3919D0, 0x10
+.global $$24573
+$$24573:
+	.incbin "baserom.dol", 0x3919E0, 0x10
+.global $$24575
+$$24575:
+	.incbin "baserom.dol", 0x3919F0, 0x14
+.global $$24577
+$$24577:
+	.incbin "baserom.dol", 0x391A04, 0x14
+.global $$24579
+$$24579:
+	.incbin "baserom.dol", 0x391A18, 0x10
+.global $$24580
+$$24580:
+	.incbin "baserom.dol", 0x391A28, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TConductor
+__vt__10TConductor:
+	.incbin "baserom.dol", 0x3CF1B0, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23345
+$$23345:
+	.incbin "baserom.dol", 0x3E9920, 0x4
+.global $$23611
+$$23611:
+	.incbin "baserom.dol", 0x3E9924, 0x4
+.global $$23612
+$$23612:
+	.incbin "baserom.dol", 0x3E9928, 0x4
+.global $$23613
+$$23613:
+	.incbin "baserom.dol", 0x3E992C, 0x4
+.global $$23614
+$$23614:
+	.incbin "baserom.dol", 0x3E9930, 0x8
+.global $$23616
+$$23616:
+	.incbin "baserom.dol", 0x3E9938, 0x8
+.global $$24574
+$$24574:
+	.incbin "baserom.dol", 0x3E9940, 0x4
+.global $$24576
+$$24576:
+	.incbin "baserom.dol", 0x3E9944, 0x4
+.global $$24578
+$$24578:
+	.incbin "baserom.dol", 0x3E9948, 0x4
+.global $$24581
+$$24581:
+	.incbin "baserom.dol", 0x3E994C, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpConductor
+gpConductor:
+	.skip 0x8

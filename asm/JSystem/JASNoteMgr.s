@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q38JASystem6TTrack8TNoteMgrFv
 init__Q38JASystem6TTrack8TNoteMgrFv:
 /* 80064460 000613A0  38 00 00 00 */	li r0, 0

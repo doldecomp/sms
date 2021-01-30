@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __OSModuleInit
 __OSModuleInit:
 /* 80090A38 0008D978  3C 80 80 00 */	lis r4, 0x800030CC@ha

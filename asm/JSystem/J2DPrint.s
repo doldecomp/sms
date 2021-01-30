@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global J2DPrint_print_alpha_va
 J2DPrint_print_alpha_va:
 /* 80016C78 00013BB8  7C 08 02 A6 */	mflr r0
@@ -1907,3 +1906,53 @@ lbl_80018780:
 /* 80018794 000156D4  83 81 00 20 */	lwz r28, 0x20(r1)
 /* 80018798 000156D8  38 21 00 30 */	addi r1, r1, 0x30
 /* 8001879C 000156DC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2426
+$$2426:
+	.incbin "baserom.dol", 0x3A5C20, 0x60
+.global __vt__8J2DPrint
+__vt__8J2DPrint:
+	.incbin "baserom.dol", 0x3A5C80, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$252
+$$252:
+	.incbin "baserom.dol", 0x3E3E60, 0x8
+.global $$2196
+$$2196:
+	.incbin "baserom.dol", 0x3E3E68, 0x8
+.global $$2276
+$$2276:
+	.incbin "baserom.dol", 0x3E3E70, 0x4
+.global $$2403
+$$2403:
+	.incbin "baserom.dol", 0x3E3E74, 0x4
+.global $$2405
+$$2405:
+	.incbin "baserom.dol", 0x3E3E78, 0x8
+.global $$2425
+$$2425:
+	.incbin "baserom.dol", 0x3E3E80, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global mMutex__8J2DPrint
+mMutex__8J2DPrint:
+	.skip 0x18
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mStrBuff__8J2DPrint
+mStrBuff__8J2DPrint:
+	.skip 0x4
+.global mMutexInit__8J2DPrint
+mMutexInit__8J2DPrint:
+	.skip 0x1
+.global mHeapFlag__8J2DPrint
+mHeapFlag__8J2DPrint:
+	.skip 0x3
+.global mStrBuffSize__8J2DPrint
+mStrBuffSize__8J2DPrint:
+	.skip 0x4
+.global mBufferNotEnough__8J2DPrint
+mBufferNotEnough__8J2DPrint:
+	.skip 0x4

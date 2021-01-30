@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__15J3DShapeFactoryFRC13J3DShapeBlock
 __ct__15J3DShapeFactoryFRC13J3DShapeBlock:
 /* 80032380 0002F2C0  7C 08 02 A6 */	mflr r0

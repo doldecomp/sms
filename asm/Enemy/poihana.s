@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__20TNervePoihanaTrappedFv
 __dt__20TNervePoihanaTrappedFv:
 /* 802C8B84 002C5AC4  7C 08 02 A6 */	mflr r0
@@ -3669,3 +3668,291 @@ $$232$$2__dt__11TPoiHanaRedFv:
 $$232$$2__dt__13TSleepPoiHanaFv:
 /* 802CBE90 002C8DD0  38 63 FF E0 */	addi r3, r3, -32
 /* 802CBE94 002C8DD4  4B FF FA B8 */	b __dt__13TSleepPoiHanaFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CEB0, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x399370, 0xC
+.global $$22115
+$$22115:
+	.incbin "baserom.dol", 0x39937C, 0x14
+.global $$22354
+$$22354:
+	.incbin "baserom.dol", 0x399390, 0x30
+.global $$22355
+$$22355:
+	.incbin "baserom.dol", 0x3993C0, 0x38
+.global $$22356
+$$22356:
+	.incbin "baserom.dol", 0x3993F8, 0x34
+.global $$22357
+$$22357:
+	.incbin "baserom.dol", 0x39942C, 0x24
+.global $$22893
+$$22893:
+	.incbin "baserom.dol", 0x399450, 0x24
+.global $$22894
+$$22894:
+	.incbin "baserom.dol", 0x399474, 0x28
+.global $$22895
+$$22895:
+	.incbin "baserom.dol", 0x39949C, 0x28
+.global $$22896
+$$22896:
+	.incbin "baserom.dol", 0x3994C4, 0x24
+.global $$22897
+$$22897:
+	.incbin "baserom.dol", 0x3994E8, 0x2C
+.global $$22898
+$$22898:
+	.incbin "baserom.dol", 0x399514, 0x28
+.global $$22899
+$$22899:
+	.incbin "baserom.dol", 0x39953C, 0x28
+.global $$22900
+$$22900:
+	.incbin "baserom.dol", 0x399564, 0x24
+.global $$22901
+$$22901:
+	.incbin "baserom.dol", 0x399588, 0x28
+.global $$22902
+$$22902:
+	.incbin "baserom.dol", 0x3995B0, 0x2C
+.global $$24252
+$$24252:
+	.incbin "baserom.dol", 0x3995DC, 0xC
+.global $$24324
+$$24324:
+	.incbin "baserom.dol", 0x3995E8, 0x14
+.global $$24325
+$$24325:
+	.incbin "baserom.dol", 0x3995FC, 0xC
+.global $$24422
+$$24422:
+	.incbin "baserom.dol", 0x399608, 0xC
+.global $$24473
+$$24473:
+	.incbin "baserom.dol", 0x399614, 0x14
+.global $$24474
+$$24474:
+	.incbin "baserom.dol", 0x399628, 0x10
+.global $$24476
+$$24476:
+	.incbin "baserom.dol", 0x399638, 0x10
+.global $$24478
+$$24478:
+	.incbin "baserom.dol", 0x399648, 0x10
+.global $$24479
+$$24479:
+	.incbin "baserom.dol", 0x399658, 0x10
+.global $$24480
+$$24480:
+	.incbin "baserom.dol", 0x399668, 0x14
+.global $$24481
+$$24481:
+	.incbin "baserom.dol", 0x39967C, 0x14
+.global $$24482
+$$24482:
+	.incbin "baserom.dol", 0x399690, 0x14
+.global $$24484
+$$24484:
+	.incbin "baserom.dol", 0x3996A4, 0x14
+.global $$24485
+$$24485:
+	.incbin "baserom.dol", 0x3996B8, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global poihana_bastable
+poihana_bastable:
+	.incbin "baserom.dol", 0x3D87D8, 0x38
+.global __vt__20TNervePoihanaTrapped
+__vt__20TNervePoihanaTrapped:
+	.incbin "baserom.dol", 0x3D8810, 0x10
+.global __vt__18TNervePoihanaThrow
+__vt__18TNervePoihanaThrow:
+	.incbin "baserom.dol", 0x3D8820, 0x10
+.global __vt__19TNervePoihanaFreeze
+__vt__19TNervePoihanaFreeze:
+	.incbin "baserom.dol", 0x3D8830, 0x10
+.global __vt__18TNervePoihanaSleep
+__vt__18TNervePoihanaSleep:
+	.incbin "baserom.dol", 0x3D8840, 0x10
+.global __vt__13TSleepPoiHana
+__vt__13TSleepPoiHana:
+	.incbin "baserom.dol", 0x3D8850, 0x1B8
+.global __vt__11TPoiHanaRed
+__vt__11TPoiHanaRed:
+	.incbin "baserom.dol", 0x3D8A08, 0x1B8
+.global __vt__8TPoiHana
+__vt__8TPoiHana:
+	.incbin "baserom.dol", 0x3D8BC0, 0x1B8
+.global __vt__17TPoiHanaCollision
+__vt__17TPoiHanaCollision:
+	.incbin "baserom.dol", 0x3D8D78, 0xA4
+.global __vt__15TPoiHanaManager
+__vt__15TPoiHanaManager:
+	.incbin "baserom.dol", 0x3D8E1C, 0x5C
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mMouthJntIndex__8TPoiHana
+mMouthJntIndex__8TPoiHana:
+	.incbin "baserom.dol", 0x3E39E0, 0x1
+.global mSleepVersion__8TPoiHana
+mSleepVersion__8TPoiHana:
+	.incbin "baserom.dol", 0x3E39E1, 0x7
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23382
+$$23382:
+	.incbin "baserom.dol", 0x3EAC08, 0x4
+.global $$23383
+$$23383:
+	.incbin "baserom.dol", 0x3EAC0C, 0x4
+.global $$23384
+$$23384:
+	.incbin "baserom.dol", 0x3EAC10, 0x4
+.global $$23385
+$$23385:
+	.incbin "baserom.dol", 0x3EAC14, 0x4
+.global $$23386
+$$23386:
+	.incbin "baserom.dol", 0x3EAC18, 0x4
+.global $$23387
+$$23387:
+	.incbin "baserom.dol", 0x3EAC1C, 0x4
+.global $$23388
+$$23388:
+	.incbin "baserom.dol", 0x3EAC20, 0x8
+.global $$23390
+$$23390:
+	.incbin "baserom.dol", 0x3EAC28, 0x8
+.global $$23391
+$$23391:
+	.incbin "baserom.dol", 0x3EAC30, 0x8
+.global $$23453
+$$23453:
+	.incbin "baserom.dol", 0x3EAC38, 0x4
+.global $$23454
+$$23454:
+	.incbin "baserom.dol", 0x3EAC3C, 0x4
+.global $$23617
+$$23617:
+	.incbin "baserom.dol", 0x3EAC40, 0x4
+.global $$23735
+$$23735:
+	.incbin "baserom.dol", 0x3EAC44, 0x4
+.global $$23736
+$$23736:
+	.incbin "baserom.dol", 0x3EAC48, 0x4
+.global $$23869
+$$23869:
+	.incbin "baserom.dol", 0x3EAC4C, 0x4
+.global $$23961
+$$23961:
+	.incbin "baserom.dol", 0x3EAC50, 0x4
+.global $$23962
+$$23962:
+	.incbin "baserom.dol", 0x3EAC54, 0x4
+.global $$24415
+$$24415:
+	.incbin "baserom.dol", 0x3EAC58, 0x8
+.global $$24475
+$$24475:
+	.incbin "baserom.dol", 0x3EAC60, 0x4
+.global $$24477
+$$24477:
+	.incbin "baserom.dol", 0x3EAC64, 0x4
+.global $$24483
+$$24483:
+	.incbin "baserom.dol", 0x3EAC68, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23099
+$$23099:
+	.skip 0xC
+.global $$23136
+$$23136:
+	.skip 0xC
+.global $$23162
+$$23162:
+	.skip 0xC
+.global $$23182
+$$23182:
+	.skip 0xC
+.global $$24621
+$$24621:
+	.skip 0xC
+.global $$24622
+$$24622:
+	.skip 0xC
+.global $$24623
+$$24623:
+	.skip 0xC
+.global $$24624
+$$24624:
+	.skip 0xC
+.global $$24625
+$$24625:
+	.skip 0xC
+.global $$24626
+$$24626:
+	.skip 0xC
+.global $$24627
+$$24627:
+	.skip 0xC
+.global $$24628
+$$24628:
+	.skip 0xC
+.global $$24629
+$$24629:
+	.skip 0xC
+.global $$24630
+$$24630:
+	.skip 0xC
+.global $$24631
+$$24631:
+	.skip 0xC
+.global $$24632
+$$24632:
+	.skip 0xC
+.global $$24633
+$$24633:
+	.skip 0xC
+.global $$24634
+$$24634:
+	.skip 0xC
+.global $$24635
+$$24635:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mBodyJntIndex__8TPoiHana
+mBodyJntIndex__8TPoiHana:
+	.skip 0x1
+.global init$3100
+init$3100:
+	.skip 0x3
+.global instance$3098
+instance$3098:
+	.skip 0x4
+.global init$3137
+init$3137:
+	.skip 0x4
+.global instance$3135
+instance$3135:
+	.skip 0x4
+.global init$3163
+init$3163:
+	.skip 0x4
+.global instance$3161
+instance$3161:
+	.skip 0x4
+.global init$3183
+init$3183:
+	.skip 0x4
+.global instance$3181
+instance$3181:
+	.skip 0x4

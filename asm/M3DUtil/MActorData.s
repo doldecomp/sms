@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global createSampleModelData__13MActorAnmDataFP12J3DModelData
 createSampleModelData__13MActorAnmDataFP12J3DModelData:
 /* 800D7284 000D41C4  7C 08 02 A6 */	mflr r0
@@ -1566,3 +1565,35 @@ lbl_800D87EC:
 /* 800D880C 000D574C  38 21 02 38 */	addi r1, r1, 0x238
 /* 800D8810 000D5750  7C 08 03 A6 */	mtlr r0
 /* 800D8814 000D5754  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22019
+$$22019:
+	.incbin "baserom.dol", 0x3E4C48, 0x8
+.global $$22020
+$$22020:
+	.incbin "baserom.dol", 0x3E4C50, 0x4
+.global $$22021
+$$22021:
+	.incbin "baserom.dol", 0x3E4C54, 0x8
+.global $$22022
+$$22022:
+	.incbin "baserom.dol", 0x3E4C5C, 0x8
+.global $$22023
+$$22023:
+	.incbin "baserom.dol", 0x3E4C64, 0x8
+.global $$22024
+$$22024:
+	.incbin "baserom.dol", 0x3E4C6C, 0x8
+.global $$22025
+$$22025:
+	.incbin "baserom.dol", 0x3E4C74, 0x8
+.global $$22161
+$$22161:
+	.incbin "baserom.dol", 0x3E4C7C, 0x8
+.global $$22162
+$$22162:
+	.incbin "baserom.dol", 0x3E4C84, 0x4
+.global $$22163
+$$22163:
+	.incbin "baserom.dol", 0x3E4C88, 0x8

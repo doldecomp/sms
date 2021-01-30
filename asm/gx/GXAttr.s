@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __GXXfVtxSpecs
 __GXXfVtxSpecs:
 /* 800A6790 000A36D0  80 AD 82 C8 */	lwz r5, gx-_SDA_BASE_(r13)
@@ -1787,3 +1786,40 @@ GXSetNumTexGens:
 /* 800A818C 000A50CC  60 00 00 04 */	ori r0, r0, 4
 /* 800A8190 000A50D0  90 03 04 F4 */	stw r0, 0x4f4(r3)
 /* 800A8194 000A50D4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2128
+$$2128:
+	.incbin "baserom.dol", 0x3AE540, 0x68
+.global $$2189
+$$2189:
+	.incbin "baserom.dol", 0x3AE5A8, 0x68
+.global $$2256
+$$2256:
+	.incbin "baserom.dol", 0x3AE610, 0x68
+.global $$2302
+$$2302:
+	.incbin "baserom.dol", 0x3AE678, 0x44
+.global $$2329
+$$2329:
+	.incbin "baserom.dol", 0x3AE6BC, 0x44
+.global $$2393
+$$2393:
+	.incbin "baserom.dol", 0x3AE700, 0x44
+.global $$2499
+$$2499:
+	.incbin "baserom.dol", 0x3AE744, 0x1C
+.global $$2498
+$$2498:
+	.incbin "baserom.dol", 0x3AE760, 0x58
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global tbl1$215
+tbl1$215:
+	.incbin "baserom.dol", 0x3E32D0, 0x4
+.global tbl2$216
+tbl2$216:
+	.incbin "baserom.dol", 0x3E32D4, 0x4
+.global tbl3$217
+tbl3$217:
+	.incbin "baserom.dol", 0x3E32D8, 0x8

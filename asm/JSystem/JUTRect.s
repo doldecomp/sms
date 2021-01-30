@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global set__7JUTRectFiiii
 set__7JUTRectFiiii:
 /* 8001321C 0001015C  90 83 00 00 */	stw r4, 0(r3)

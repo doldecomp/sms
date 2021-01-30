@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__17TMapCollisionDataFv
 __ct__17TMapCollisionDataFv:
 /* 801DEED4 001DBE14  7C 08 02 A6 */	mflr r0
@@ -621,3 +620,86 @@ lbl_801DF7B4:
 /* 801DF7BC 001DC6FC  38 21 00 10 */	addi r1, r1, 0x10
 /* 801DF7C0 001DC700  7C 08 03 A6 */	mtlr r0
 /* 801DF7C4 001DC704  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDB4, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__16TBGCheckListWarp
+__vt__16TBGCheckListWarp:
+	.incbin "baserom.dol", 0x3CCC70, 0xC
+.global __vt__12TBGCheckList
+__vt__12TBGCheckList:
+	.incbin "baserom.dol", 0x3CCC7C, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22183
+$$22183:
+	.incbin "baserom.dol", 0x3E8AC8, 0x4
+.global $$22184
+$$22184:
+	.incbin "baserom.dol", 0x3E8ACC, 0x4
+.global $$22185
+$$22185:
+	.incbin "baserom.dol", 0x3E8AD0, 0x4
+.global $$22221
+$$22221:
+	.incbin "baserom.dol", 0x3E8AD4, 0x4
+.global $$22223
+$$22223:
+	.incbin "baserom.dol", 0x3E8AD8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global mIllegalCheckData__17TMapCollisionData
+mIllegalCheckData__17TMapCollisionData:
+	.skip 0x48
+.global $$22159
+$$22159:
+	.skip 0xC
+.global $$22160
+$$22160:
+	.skip 0xC
+.global $$22161
+$$22161:
+	.skip 0xC
+.global $$22162
+$$22162:
+	.skip 0xC
+.global $$22163
+$$22163:
+	.skip 0xC
+.global $$22164
+$$22164:
+	.skip 0xC
+.global $$22165
+$$22165:
+	.skip 0xC
+.global $$22166
+$$22166:
+	.skip 0xC
+.global $$22167
+$$22167:
+	.skip 0xC
+.global $$22168
+$$22168:
+	.skip 0xC
+.global $$22169
+$$22169:
+	.skip 0xC
+.global $$22170
+$$22170:
+	.skip 0xC
+.global $$22171
+$$22171:
+	.skip 0xC
+.global $$22172
+$$22172:
+	.skip 0xC
+.global $$22173
+$$22173:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMapCollisionData
+gpMapCollisionData:
+	.skip 0x8

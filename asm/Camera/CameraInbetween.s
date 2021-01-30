@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
 execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
 /* 80356428 00353368  7C 08 02 A6 */	mflr r0
@@ -444,3 +443,20 @@ __ct__16TCameraInbetweenFv:
 /* 80356A74 003539B4  90 03 00 40 */	stw r0, 0x40(r3)
 /* 80356A78 003539B8  D0 03 00 44 */	stfs f0, 0x44(r3)
 /* 80356A7C 003539BC  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21655
+$$21655:
+	.incbin "baserom.dol", 0x3EC220, 0x8
+.global $$21657
+$$21657:
+	.incbin "baserom.dol", 0x3EC228, 0x8
+.global $$21663
+$$21663:
+	.incbin "baserom.dol", 0x3EC230, 0x4
+.global $$21708
+$$21708:
+	.incbin "baserom.dol", 0x3EC234, 0x4
+.global $$21709
+$$21709:
+	.incbin "baserom.dol", 0x3EC238, 0x8

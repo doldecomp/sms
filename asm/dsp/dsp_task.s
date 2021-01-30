@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __DSP_exec_task
 __DSP_exec_task:
 /* 8009E7EC 0009B72C  7C 08 02 A6 */	mflr r0
@@ -334,3 +333,37 @@ lbl_8009EC28:
 /* 8009EC40 0009BB80  80 63 00 38 */	lwz r3, 0x38(r3)
 /* 8009EC44 0009BB84  90 03 00 3C */	stw r0, 0x3c(r3)
 /* 8009EC48 0009BB88  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2264
+$$2264:
+	.incbin "baserom.dol", 0x3AE240, 0x20
+.global $$2265
+$$2265:
+	.incbin "baserom.dol", 0x3AE260, 0x30
+.global $$2266
+$$2266:
+	.incbin "baserom.dol", 0x3AE290, 0x30
+.global $$2267
+$$2267:
+	.incbin "baserom.dol", 0x3AE2C0, 0x30
+.global $$2268
+$$2268:
+	.incbin "baserom.dol", 0x3AE2F0, 0x30
+.global $$2269
+$$2269:
+	.incbin "baserom.dol", 0x3AE320, 0x30
+.global $$2292
+$$2292:
+	.incbin "baserom.dol", 0x3AE350, 0x30
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __DSP_last_task
+__DSP_last_task:
+	.skip 0x4
+.global __DSP_first_task
+__DSP_first_task:
+	.skip 0x4
+.global __DSP_curr_task
+__DSP_curr_task:
+	.skip 0x8

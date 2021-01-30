@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_getShineIDofExStage__FUc
 SMS_getShineIDofExStage__FUc:
 /* 800FC504 000F9444  54 64 06 3E */	clrlwi r4, r3, 0x18
@@ -81,3 +80,11 @@ SMS_isExMap__Fv:
 /* 800FC5E0 000F9520  4C 80 00 20 */	bgelr 
 /* 800FC5E4 000F9524  38 60 00 01 */	li r3, 1
 /* 800FC5E8 000F9528  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global shineStageTable
+shineStageTable:
+	.incbin "baserom.dol", 0x3B10E8, 0x40
+.global exShineTable
+exShineTable:
+	.incbin "baserom.dol", 0x3B1128, 0x20

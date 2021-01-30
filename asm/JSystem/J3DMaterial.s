@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initialize__21J3DColorBlockLightOffFv
 initialize__21J3DColorBlockLightOffFv:
 /* 8001FD18 0001CC58  38 00 00 00 */	li r0, 0
@@ -8268,3 +8267,108 @@ lbl_80026A78:
 .global load__15J3DIndBlockNullFP11J3DTevBlock
 load__15J3DIndBlockNullFP11J3DTevBlock:
 /* 80026A90 000239D0  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2329
+$$2329:
+	.incbin "baserom.dol", 0x36DC28, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14J3DPEBlockFull
+__vt__14J3DPEBlockFull:
+	.incbin "baserom.dol", 0x3A6058, 0x64
+.global __vt__15J3DIndBlockFull
+__vt__15J3DIndBlockFull:
+	.incbin "baserom.dol", 0x3A60BC, 0x48
+.global __vt__13J3DTevBlock16
+__vt__13J3DTevBlock16:
+	.incbin "baserom.dol", 0x3A6104, 0x9C
+.global __vt__12J3DTevBlock4
+__vt__12J3DTevBlock4:
+	.incbin "baserom.dol", 0x3A61A0, 0x9C
+.global __vt__12J3DTevBlock2
+__vt__12J3DTevBlock2:
+	.incbin "baserom.dol", 0x3A623C, 0x9C
+.global __vt__12J3DTevBlock1
+__vt__12J3DTevBlock1:
+	.incbin "baserom.dol", 0x3A62D8, 0x9C
+.global __vt__19J3DTexGenBlockBasic
+__vt__19J3DTexGenBlockBasic:
+	.incbin "baserom.dol", 0x3A6374, 0x50
+.global __vt__20J3DColorBlockLightOn
+__vt__20J3DColorBlockLightOn:
+	.incbin "baserom.dol", 0x3A63C4, 0x64
+.global __vt__21J3DColorBlockLightOff
+__vt__21J3DColorBlockLightOff:
+	.incbin "baserom.dol", 0x3A6428, 0x64
+.global __vt__13J3DPEBlockXlu
+__vt__13J3DPEBlockXlu:
+	.incbin "baserom.dol", 0x3A648C, 0x64
+.global __vt__17J3DPEBlockTexEdge
+__vt__17J3DPEBlockTexEdge:
+	.incbin "baserom.dol", 0x3A64F0, 0x64
+.global __vt__13J3DPEBlockOpa
+__vt__13J3DPEBlockOpa:
+	.incbin "baserom.dol", 0x3A6554, 0x64
+.global __vt__10J3DPEBlock
+__vt__10J3DPEBlock:
+	.incbin "baserom.dol", 0x3A65B8, 0x64
+.global __vt__15J3DIndBlockNull
+__vt__15J3DIndBlockNull:
+	.incbin "baserom.dol", 0x3A661C, 0x48
+.global __vt__11J3DIndBlock
+__vt__11J3DIndBlock:
+	.incbin "baserom.dol", 0x3A6664, 0x48
+.global __vt__11J3DTevBlock
+__vt__11J3DTevBlock:
+	.incbin "baserom.dol", 0x3A66AC, 0x9C
+.global __vt__14J3DTexGenBlock
+__vt__14J3DTexGenBlock:
+	.incbin "baserom.dol", 0x3A6748, 0x50
+.global __vt__13J3DColorBlock
+__vt__13J3DColorBlock:
+	.incbin "baserom.dol", 0x3A6798, 0x68
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2330
+$$2330:
+	.incbin "baserom.dol", 0x3E3EF8, 0x4
+.global $$22217
+$$22217:
+	.incbin "baserom.dol", 0x3E3EFC, 0x4
+.global lbl_8040B660
+lbl_8040B660:
+	.incbin "baserom.dol", 0x3E3F00, 0x4
+.global $$22218
+$$22218:
+	.incbin "baserom.dol", 0x3E3F04, 0x4
+.global $$22219
+$$22219:
+	.incbin "baserom.dol", 0x3E3F08, 0x4
+.global $$22221
+$$22221:
+	.incbin "baserom.dol", 0x3E3F0C, 0x4
+.global lbl_8040B670
+lbl_8040B670:
+	.incbin "baserom.dol", 0x3E3F10, 0x4
+.global $$22222
+$$22222:
+	.incbin "baserom.dol", 0x3E3F14, 0x4
+.global $$22223
+$$22223:
+	.incbin "baserom.dol", 0x3E3F18, 0x4
+.global $$22225
+$$22225:
+	.incbin "baserom.dol", 0x3E3F1C, 0x4
+.global lbl_8040B680
+lbl_8040B680:
+	.incbin "baserom.dol", 0x3E3F20, 0x4
+.global $$22226
+$$22226:
+	.incbin "baserom.dol", 0x3E3F24, 0x4
+.global $$22227
+$$22227:
+	.incbin "baserom.dol", 0x3E3F28, 0x4
+.global $$22456
+$$22456:
+	.incbin "baserom.dol", 0x3E3F2C, 0x4

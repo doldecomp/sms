@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14TGXAlphaUpdateFv
 __dt__14TGXAlphaUpdateFv:
 /* 800E9EF4 000E6E34  7C 08 02 A6 */	mflr r0
@@ -280,3 +279,25 @@ lbl_800EA278:
 /* 800EA288 000E71C8  7C 08 03 A6 */	mtlr r0
 /* 800EA28C 000E71CC  38 21 00 18 */	addi r1, r1, 0x18
 /* 800EA290 000E71D0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TGXAlphaUpdate
+__vt__14TGXAlphaUpdate:
+	.incbin "baserom.dol", 0x3B0AF8, 0x24
+.global __vt__9TReInitGX
+__vt__9TReInitGX:
+	.incbin "baserom.dol", 0x3B0B1C, 0x24
+.global __vt__12TSMSDrawInit
+__vt__12TSMSDrawInit:
+	.incbin "baserom.dol", 0x3B0B40, 0x24
+.global __vt__17TJ3DSysSetViewMtx
+__vt__17TJ3DSysSetViewMtx:
+	.incbin "baserom.dol", 0x3B0B64, 0x24
+.global __vt__11TJ3DSysFlag
+__vt__11TJ3DSysFlag:
+	.incbin "baserom.dol", 0x3B0B88, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21731
+$$21731:
+	.incbin "baserom.dol", 0x3E4D38, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global checkEntriedStream__8JAIBasicFv
 checkEntriedStream__8JAIBasicFv:
 /* 80052C34 0004FB74  7C 08 02 A6 */	mflr r0
@@ -2170,3 +2169,213 @@ lbl_80054AC8:
 /* 80054AD4 00051A14  38 21 00 18 */	addi r1, r1, 0x18
 /* 80054AD8 00051A18  7C 08 03 A6 */	mtlr r0
 /* 80054ADC 00051A1C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBE8, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global filter_table__Q27JAInter9StreamLib
+filter_table__Q27JAInter9StreamLib:
+	.incbin "baserom.dol", 0x3A7CF0, 0x40
+.global table4__Q27JAInter9StreamLib
+table4__Q27JAInter9StreamLib:
+	.incbin "baserom.dol", 0x3A7D30, 0x20
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global LOOP_BLOCKS__Q27JAInter9StreamLib
+LOOP_BLOCKS__Q27JAInter9StreamLib:
+	.incbin "baserom.dol", 0x3E30E0, 0x4
+.global LOOP_SAMPLESIZE__Q27JAInter9StreamLib
+LOOP_SAMPLESIZE__Q27JAInter9StreamLib:
+	.incbin "baserom.dol", 0x3E30E4, 0x4
+.global outputmode__Q27JAInter9StreamLib
+outputmode__Q27JAInter9StreamLib:
+	.incbin "baserom.dol", 0x3E30E8, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2425
+$$2425:
+	.incbin "baserom.dol", 0x3E4218, 0x4
+.global $$2426
+$$2426:
+	.incbin "baserom.dol", 0x3E421C, 0x4
+.global $$2504
+$$2504:
+	.incbin "baserom.dol", 0x3E4220, 0x4
+.global $$2988
+$$2988:
+	.incbin "baserom.dol", 0x3E4224, 0x4
+.global $$2989
+$$2989:
+	.incbin "baserom.dol", 0x3E4228, 0x8
+.global $$2992
+$$2992:
+	.incbin "baserom.dol", 0x3E4230, 0x8
+.global $$2996
+$$2996:
+	.incbin "baserom.dol", 0x3E4238, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global finfo__Q27JAInter9StreamLib
+finfo__Q27JAInter9StreamLib:
+	.skip 0x3C
+.global header__Q27JAInter9StreamLib
+header__Q27JAInter9StreamLib:
+	.skip 0x20
+.global Filename__Q27JAInter9StreamLib
+Filename__Q27JAInter9StreamLib:
+	.skip 0x64
+.global $$2531
+$$2531:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global streamHeap__Q27JAInter9StreamLib
+streamHeap__Q27JAInter9StreamLib:
+	.skip 0x14
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global adpcm_remain__Q27JAInter9StreamLib
+adpcm_remain__Q27JAInter9StreamLib:
+	.skip 0x4
+.global adpcm_loadpoint__Q27JAInter9StreamLib
+adpcm_loadpoint__Q27JAInter9StreamLib:
+	.skip 0x4
+.global loadsize__Q27JAInter9StreamLib
+loadsize__Q27JAInter9StreamLib:
+	.skip 0x4
+.global adpcm_buffer__Q27JAInter9StreamLib
+adpcm_buffer__Q27JAInter9StreamLib:
+	.skip 0x4
+.global loop_buffer__Q27JAInter9StreamLib
+loop_buffer__Q27JAInter9StreamLib:
+	.skip 0x4
+.global store_buffer__Q27JAInter9StreamLib
+store_buffer__Q27JAInter9StreamLib:
+	.skip 0x4
+.global assign_ch__Q27JAInter9StreamLib
+assign_ch__Q27JAInter9StreamLib:
+	.skip 0x8
+.global playside__Q27JAInter9StreamLib
+playside__Q27JAInter9StreamLib:
+	.skip 0x4
+.global playback_samples__Q27JAInter9StreamLib
+playback_samples__Q27JAInter9StreamLib:
+	.skip 0x4
+.global loadup_samples__Q27JAInter9StreamLib
+loadup_samples__Q27JAInter9StreamLib:
+	.skip 0x4
+.global adpcmbuf_state__Q27JAInter9StreamLib
+adpcmbuf_state__Q27JAInter9StreamLib:
+	.skip 0x4
+.global movieframe__Q27JAInter9StreamLib
+movieframe__Q27JAInter9StreamLib:
+	.skip 0x4
+.global stopflag__Q27JAInter9StreamLib
+stopflag__Q27JAInter9StreamLib:
+	.skip 0x1
+.global stopflag2__Q27JAInter9StreamLib
+stopflag2__Q27JAInter9StreamLib:
+	.skip 0x1
+.global playflag__Q27JAInter9StreamLib
+playflag__Q27JAInter9StreamLib:
+	.skip 0x1
+.global playflag2__Q27JAInter9StreamLib
+playflag2__Q27JAInter9StreamLib:
+	.skip 0x1
+.global prepareflag__Q27JAInter9StreamLib
+prepareflag__Q27JAInter9StreamLib:
+	.skip 0x1
+.global dspch_deallockflag__Q27JAInter9StreamLib
+dspch_deallockflag__Q27JAInter9StreamLib:
+	.skip 0x3
+.global outvolume__Q27JAInter9StreamLib
+outvolume__Q27JAInter9StreamLib:
+	.skip 0x4
+.global outpitch__Q27JAInter9StreamLib
+outpitch__Q27JAInter9StreamLib:
+	.skip 0x4
+.global outpan__Q27JAInter9StreamLib
+outpan__Q27JAInter9StreamLib:
+	.skip 0x4
+.global stackvolume__Q27JAInter9StreamLib
+stackvolume__Q27JAInter9StreamLib:
+	.skip 0x4
+.global stackpitch__Q27JAInter9StreamLib
+stackpitch__Q27JAInter9StreamLib:
+	.skip 0x4
+.global stackpan__Q27JAInter9StreamLib
+stackpan__Q27JAInter9StreamLib:
+	.skip 0x4
+.global outflag_volume__Q27JAInter9StreamLib
+outflag_volume__Q27JAInter9StreamLib:
+	.skip 0x1
+.global outflag_pan__Q27JAInter9StreamLib
+outflag_pan__Q27JAInter9StreamLib:
+	.skip 0x1
+.global outflag_pitch__Q27JAInter9StreamLib
+outflag_pitch__Q27JAInter9StreamLib:
+	.skip 0x2
+.global loop_start_flag__Q27JAInter9StreamLib
+loop_start_flag__Q27JAInter9StreamLib:
+	.skip 0x4
+.global outpause__Q27JAInter9StreamLib
+outpause__Q27JAInter9StreamLib:
+	.skip 0x4
+.global playmode__Q27JAInter9StreamLib
+playmode__Q27JAInter9StreamLib:
+	.skip 0x4
+.global shift_sample__Q27JAInter9StreamLib
+shift_sample__Q27JAInter9StreamLib:
+	.skip 0x4
+.global extra_sample__Q27JAInter9StreamLib
+extra_sample__Q27JAInter9StreamLib:
+	.skip 0x4
+.global DvdLoadFlag__Q27JAInter9StreamLib
+DvdLoadFlag__Q27JAInter9StreamLib:
+	.skip 0x4
+.global startInitFlag__Q27JAInter9StreamLib
+startInitFlag__Q27JAInter9StreamLib:
+	.skip 0x4
+.global Mode__Q27JAInter9StreamLib
+Mode__Q27JAInter9StreamLib:
+	.skip 0x4
+.global Head__Q27JAInter9StreamLib
+Head__Q27JAInter9StreamLib:
+	.skip 0x4
+.global bufferMode__Q27JAInter9StreamLib
+bufferMode__Q27JAInter9StreamLib:
+	.skip 0x1
+.global allocFlag__Q27JAInter9StreamLib
+allocFlag__Q27JAInter9StreamLib:
+	.skip 0x3
+.global before$612
+before$612:
+	.skip 0x4
+.global init$613
+init$613:
+	.skip 0x2
+.global L1$629
+L1$629:
+	.skip 0x2
+.global L2$630
+L2$630:
+	.skip 0x2
+.global R1$631
+R1$631:
+	.skip 0x2
+.global R2$632
+R2$632:
+	.skip 0x4
+.global oldstat$823
+oldstat$823:
+	.skip 0x4
+.global init$824
+init$824:
+	.skip 0x4
+.global old_dspside$839
+old_dspside$839:
+	.skip 0x4
+.global init$840
+init$840:
+	.skip 0x4

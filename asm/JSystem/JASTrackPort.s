@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem10TTrackPortFv
 init__Q28JASystem10TTrackPortFv:
 /* 80068A34 00065974  38 00 00 02 */	li r0, 2

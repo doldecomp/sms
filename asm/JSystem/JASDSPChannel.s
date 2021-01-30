@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global forceStop__Q28JASystem11TDSPChannelFv
 forceStop__Q28JASystem11TDSPChannelFv:
 /* 8005EF38 0005BE78  7C 08 02 A6 */	mflr r0
@@ -615,3 +614,38 @@ lbl_8005F728:
 /* 8005F754 0005C694  83 81 00 40 */	lwz r28, 0x40(r1)
 /* 8005F758 0005C698  38 21 00 50 */	addi r1, r1, 0x50
 /* 8005F75C 0005C69C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global history__8JASystem
+history__8JASystem:
+	.incbin "baserom.dol", 0x3A8740, 0x28
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global smnFree__Q28JASystem11TDSPChannel
+smnFree__Q28JASystem11TDSPChannel:
+	.incbin "baserom.dol", 0x3E31B0, 0x4
+.global DSP_LIMIT_RATIO__8JASystem
+DSP_LIMIT_RATIO__8JASystem:
+	.incbin "baserom.dol", 0x3E31B4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2353
+$$2353:
+	.incbin "baserom.dol", 0x3E4370, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global DSPCH__Q28JASystem11TDSPChannel
+DSPCH__Q28JASystem11TDSPChannel:
+	.skip 0x4
+.global smnUse__Q28JASystem11TDSPChannel
+smnUse__Q28JASystem11TDSPChannel:
+	.skip 0x4
+.global first$144
+first$144:
+	.skip 0x4
+.global init$145
+init$145:
+	.skip 0x4
+.global old_time__8JASystem
+old_time__8JASystem:
+	.skip 0x8

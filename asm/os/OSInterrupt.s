@@ -1,16 +1,13 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSDisableInterrupts
 OSDisableInterrupts:
 /* 800901CC 0008D10C  7C 60 00 A6 */	mfmsr r3
 /* 800901D0 0008D110  54 64 04 5E */	rlwinm r4, r3, 0, 0x11, 0xf
 /* 800901D4 0008D114  7C 80 01 24 */	mtmsr r4
 /* 800901D8 0008D118  54 63 8F FE */	rlwinm r3, r3, 0x11, 0x1f, 0x1f
-
-.global __RAS_OSDisableInterrupts_end
-__RAS_OSDisableInterrupts_end:
+lbl_800901DC:
 /* 800901DC 0008D11C  4E 80 00 20 */	blr 
 
 .global OSEnableInterrupts
@@ -658,3 +655,25 @@ ExternalInterruptHandler:
 /* 80090A2C 0008D96C  90 04 01 C0 */	stw r0, 0x1c0(r4)
 /* 80090A30 0008D970  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80090A34 0008D974  4B FF FC 70 */	b __OSDispatchInterrupt
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global InterruptPrioTable
+InterruptPrioTable:
+	.incbin "baserom.dol", 0x3AD8D0, 0x30
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global InterruptHandlerTable
+InterruptHandlerTable:
+	.skip 0x4
+.global __OSLastInterruptSrr0
+__OSLastInterruptSrr0:
+	.skip 0x4
+.global __OSLastInterrupt
+__OSLastInterrupt:
+	.skip 0x8
+.global __OSLastInterruptTime
+__OSLastInterruptTime:
+	.skip 0x4
+.global lbl_80409DF4
+lbl_80409DF4:
+	.skip 0x4

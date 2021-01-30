@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global strtol
 strtol:
 /* 80085EC4 00082E04  7C 08 02 A6 */	mflr r0
@@ -361,3 +360,8 @@ lbl_80086374:
 /* 8008639C 000832DC  38 21 00 60 */	addi r1, r1, 0x60
 /* 800863A0 000832E0  7C 08 03 A6 */	mtlr r0
 /* 800863A4 000832E4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2410
+$$2410:
+	.incbin "baserom.dol", 0x3ABEF8, 0x48

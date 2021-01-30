@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem8TSeqCtrlFPvUl
 init__Q28JASystem8TSeqCtrlFPvUl:
 /* 80064950 00061890  90 83 00 00 */	stw r4, 0(r3)

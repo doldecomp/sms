@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q38JASystem6TTrack11TOuterParamFv
 __ct__Q38JASystem6TTrack11TOuterParamFv:
 /* 80064530 00061470  38 00 00 00 */	li r0, 0
@@ -150,3 +149,8 @@ setFirFilter__Q38JASystem6TTrack11TOuterParamFPs:
 /* 800646DC 0006161C  A8 04 00 0E */	lha r0, 0xe(r4)
 /* 800646E0 00061620  B0 03 00 2A */	sth r0, 0x2a(r3)
 /* 800646E4 00061624  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2127
+$$2127:
+	.incbin "baserom.dol", 0x3E4400, 0x8

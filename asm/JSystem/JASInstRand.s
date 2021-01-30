@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getY__Q28JASystem9TInstRandCFii
 getY__Q28JASystem9TInstRandCFii:
 /* 8005A940 00057880  7C 08 02 A6 */	mflr r0
@@ -45,3 +44,27 @@ lbl_8005A974:
 /* 8005A9D4 00057914  EC 21 00 B2 */	fmuls f1, f1, f2
 /* 8005A9D8 00057918  EC 21 00 2A */	fadds f1, f1, f0
 /* 8005A9DC 0005791C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem9TInstRand
+__vt__Q28JASystem9TInstRand:
+	.incbin "baserom.dol", 0x3A7EA8, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2345
+$$2345:
+	.incbin "baserom.dol", 0x3E4308, 0x4
+.global $$2346
+$$2346:
+	.incbin "baserom.dol", 0x3E430C, 0x4
+.global $$2347
+$$2347:
+	.incbin "baserom.dol", 0x3E4310, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$332
+init$332:
+	.skip 0x4
+.global oRandom$331
+oRandom$331:
+	.skip 0x4

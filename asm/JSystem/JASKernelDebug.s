@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global stackInit__Q28JASystem6KernelFPUxUl
 stackInit__Q28JASystem6KernelFPUxUl:
 /* 80063CFC 00060C3C  28 04 00 01 */	cmplwi r4, 1

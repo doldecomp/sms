@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __CARDCompareFileName
 __CARDCompareFileName:
 /* 800A3B7C 000A0ABC  38 A3 00 08 */	addi r5, r3, 8

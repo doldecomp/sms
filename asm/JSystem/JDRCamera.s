@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JDrama7TCameraFv
 __dt__Q26JDrama7TCameraFv:
 /* 80040D18 0003DC58  7C 08 02 A6 */	mflr r0
@@ -993,3 +992,28 @@ $$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv:
 $$232$$2__dt__Q26JDrama10TOrthoProjFv:
 /* 80041910 0003E850  38 63 FF E0 */	addi r3, r3, -32
 /* 80041914 0003E854  4B FF FC E0 */	b __dt__Q26JDrama10TOrthoProjFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama10TOrthoProj
+__vt__Q26JDrama10TOrthoProj:
+	.incbin "baserom.dol", 0x3A70E8, 0xD4
+.global __vt__Q26JDrama13TLookAtCamera
+__vt__Q26JDrama13TLookAtCamera:
+	.incbin "baserom.dol", 0x3A71BC, 0xF4
+.global __vt__Q26JDrama12TPolarCamera
+__vt__Q26JDrama12TPolarCamera:
+	.incbin "baserom.dol", 0x3A72B0, 0xDC
+.global __vt__Q26JDrama7TCamera
+__vt__Q26JDrama7TCamera:
+	.incbin "baserom.dol", 0x3A738C, 0xC4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2877
+$$2877:
+	.incbin "baserom.dol", 0x3E4098, 0x4
+.global $$2878
+$$2878:
+	.incbin "baserom.dol", 0x3E409C, 0x4
+.global $$2879
+$$2879:
+	.incbin "baserom.dol", 0x3E40A0, 0x8

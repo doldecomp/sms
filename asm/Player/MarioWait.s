@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global waitMain__6TMarioFv
 waitMain__6TMarioFv:
 /* 80144300 00141240  7C 08 02 A6 */	mflr r0
@@ -2173,3 +2172,82 @@ lbl_801460B4:
 /* 801460BC 00142FFC  38 21 00 10 */	addi r1, r1, 0x10
 /* 801460C0 00143000  7C 08 03 A6 */	mtlr r0
 /* 801460C4 00143004  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC90, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22963
+$$22963:
+	.incbin "baserom.dol", 0x3E5C80, 0x4
+.global $$22964
+$$22964:
+	.incbin "baserom.dol", 0x3E5C84, 0x4
+.global $$22965
+$$22965:
+	.incbin "baserom.dol", 0x3E5C88, 0x4
+.global $$23196
+$$23196:
+	.incbin "baserom.dol", 0x3E5C8C, 0x4
+.global $$23198
+$$23198:
+	.incbin "baserom.dol", 0x3E5C90, 0x8
+.global $$23340
+$$23340:
+	.incbin "baserom.dol", 0x3E5C98, 0x4
+.global $$23341
+$$23341:
+	.incbin "baserom.dol", 0x3E5C9C, 0x4
+.global $$23463
+$$23463:
+	.incbin "baserom.dol", 0x3E5CA0, 0x4
+.global $$23464
+$$23464:
+	.incbin "baserom.dol", 0x3E5CA4, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22827
+$$22827:
+	.skip 0xC
+.global $$22828
+$$22828:
+	.skip 0xC
+.global $$22829
+$$22829:
+	.skip 0xC
+.global $$22830
+$$22830:
+	.skip 0xC
+.global $$22831
+$$22831:
+	.skip 0xC
+.global $$22832
+$$22832:
+	.skip 0xC
+.global $$22833
+$$22833:
+	.skip 0xC
+.global $$22834
+$$22834:
+	.skip 0xC
+.global $$22835
+$$22835:
+	.skip 0xC
+.global $$22836
+$$22836:
+	.skip 0xC
+.global $$22837
+$$22837:
+	.skip 0xC
+.global $$22838
+$$22838:
+	.skip 0xC
+.global $$22839
+$$22839:
+	.skip 0xC
+.global $$22840
+$$22840:
+	.skip 0xC
+.global $$22841
+$$22841:
+	.skip 0x10

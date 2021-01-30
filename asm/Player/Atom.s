@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setUp__17TMapCollisionBaseFv
 setUp__17TMapCollisionBaseFv:
 /* 8011E7C8 0011B708  A0 03 00 5C */	lhz r0, 0x5c(r3)
@@ -18,3 +17,19 @@ __sinit_Atom_cpp:
 /* 8011E7E8 0011B728  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8011E7EC 0011B72C  D0 23 00 08 */	stfs f1, 8(r3)
 /* 8011E7F0 0011B730  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC5C, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21908
+$$21908:
+	.incbin "baserom.dol", 0x3E5480, 0x4
+.global $$22110
+$$22110:
+	.incbin "baserom.dol", 0x3E5484, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global cDeformedTerrainCenter
+cDeformedTerrainCenter:
+	.skip 0x10

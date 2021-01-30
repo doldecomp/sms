@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRK_main
 TRK_main:
 /* 8008BFCC 00088F0C  7C 08 02 A6 */	mflr r0
@@ -23,3 +22,8 @@ lbl_8008BFF8:
 /* 8008C008 00088F48  80 01 00 04 */	lwz r0, 4(r1)
 /* 8008C00C 00088F4C  7C 08 03 A6 */	mtlr r0
 /* 8008C010 00088F50  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global TRK_mainError
+TRK_mainError:
+	.skip 0x18

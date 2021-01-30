@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __OSInitAudioSystem
 __OSInitAudioSystem:
 /* 8008DCD4 0008AC14  7C 08 02 A6 */	mflr r0
@@ -191,3 +190,8 @@ lbl_8008DF48:
 /* 8008DF5C 0008AE9C  38 21 00 10 */	addi r1, r1, 0x10
 /* 8008DF60 0008AEA0  7C 08 03 A6 */	mtlr r0
 /* 8008DF64 0008AEA4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global DSPInitCode
+DSPInitCode:
+	.incbin "baserom.dol", 0x3AC618, 0x80

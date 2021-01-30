@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getOldMotionBlendFrame__16TMotionBlendCtrlCFv
 getOldMotionBlendFrame__16TMotionBlendCtrlCFv:
 /* 800DA704 000D7644  80 63 00 08 */	lwz r3, 8(r3)
@@ -203,3 +202,20 @@ lbl_800DA964:
 /* 800DA970 000D78B0  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800DA974 000D78B4  38 21 00 18 */	addi r1, r1, 0x18
 /* 800DA978 000D78B8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21661
+$$21661:
+	.incbin "baserom.dol", 0x3E4C90, 0x4
+.global $$21694
+$$21694:
+	.incbin "baserom.dol", 0x3E4C94, 0x4
+.global $$21702
+$$21702:
+	.incbin "baserom.dol", 0x3E4C98, 0x8
+.global $$21710
+$$21710:
+	.incbin "baserom.dol", 0x3E4CA0, 0x4
+.global $$21711
+$$21711:
+	.incbin "baserom.dol", 0x3E4CA4, 0x4

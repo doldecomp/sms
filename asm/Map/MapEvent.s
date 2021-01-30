@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global startControl__9TMapEventFv
 startControl__9TMapEventFv:
 /* 801E0D68 001DDCA8  38 00 00 02 */	li r0, 2
@@ -381,3 +380,58 @@ lbl_801E1274:
 /* 801E127C 001DE1BC  38 21 00 10 */	addi r1, r1, 0x10
 /* 801E1280 001DE1C0  7C 08 03 A6 */	mtlr r0
 /* 801E1284 001DE1C4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDBC, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9TMapEvent
+__vt__9TMapEvent:
+	.incbin "baserom.dol", 0x3CCD40, 0x40
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22700
+$$22700:
+	.skip 0xC
+.global $$22701
+$$22701:
+	.skip 0xC
+.global $$22702
+$$22702:
+	.skip 0xC
+.global $$22703
+$$22703:
+	.skip 0xC
+.global $$22704
+$$22704:
+	.skip 0xC
+.global $$22705
+$$22705:
+	.skip 0xC
+.global $$22706
+$$22706:
+	.skip 0xC
+.global $$22707
+$$22707:
+	.skip 0xC
+.global $$22708
+$$22708:
+	.skip 0xC
+.global $$22709
+$$22709:
+	.skip 0xC
+.global $$22710
+$$22710:
+	.skip 0xC
+.global $$22711
+$$22711:
+	.skip 0xC
+.global $$22712
+$$22712:
+	.skip 0xC
+.global $$22713
+$$22713:
+	.skip 0xC
+.global $$22714
+$$22714:
+	.skip 0x10

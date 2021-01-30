@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getY__Q28JASystem10TInstSenseCFii
 getY__Q28JASystem10TInstSenseCFii:
 /* 8005A9E0 00057920  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -92,3 +91,22 @@ setParams__Q28JASystem10TInstSenseFiiff:
 /* 8005AB0C 00057A4C  D0 23 00 0C */	stfs f1, 0xc(r3)
 /* 8005AB10 00057A50  D0 43 00 10 */	stfs f2, 0x10(r3)
 /* 8005AB14 00057A54  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem10TInstSense
+__vt__Q28JASystem10TInstSense:
+	.incbin "baserom.dol", 0x3A7EB8, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2252
+$$2252:
+	.incbin "baserom.dol", 0x3E4318, 0x4
+.global $$2253
+$$2253:
+	.incbin "baserom.dol", 0x3E431C, 0x4
+.global $$2255
+$$2255:
+	.incbin "baserom.dol", 0x3E4320, 0x8
+.global $$2257
+$$2257:
+	.incbin "baserom.dol", 0x3E4328, 0x8

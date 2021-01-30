@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __destroy_new_array
 __destroy_new_array:
 /* 80082740 0007F680  7C 08 02 A6 */	mflr r0
@@ -273,3 +272,41 @@ lbl_80082ADC:
 /* 80082AE8 0007FA28  38 21 00 48 */	addi r1, r1, 0x48
 /* 80082AEC 0007FA2C  7C 08 03 A6 */	mtlr r0
 /* 80082AF0 0007FA30  4E 80 00 20 */	blr 
+
+.section extab, "wa"  # 0x80005540 - 0x800055A0
+.global $$2152
+$$2152:
+	.incbin "baserom.dol", 0x36CAE0, 0x8
+.global $$2157
+$$2157:
+	.incbin "baserom.dol", 0x36CAE8, 0x8
+.global $$2174
+$$2174:
+	.incbin "baserom.dol", 0x36CAF0, 0x18
+.global $$2182
+$$2182:
+	.incbin "baserom.dol", 0x36CB08, 0x8
+.global $$2201
+$$2201:
+	.incbin "baserom.dol", 0x36CB10, 0x30
+
+
+.section extabindex, "wa"  # 0x800055A0 - 0x80005600
+.global $$2153
+$$2153:
+	.incbin "baserom.dol", 0x36CB40, 0xC
+.global $$2158
+$$2158:
+	.incbin "baserom.dol", 0x36CB4C, 0xC
+.global $$2175
+$$2175:
+	.incbin "baserom.dol", 0x36CB58, 0xC
+.global $$2183
+$$2183:
+	.incbin "baserom.dol", 0x36CB64, 0xC
+.global $$2202
+$$2202:
+	.incbin "baserom.dol", 0x36CB70, 0xC
+.global lbl_800055DC
+lbl_800055DC:
+	.incbin "baserom.dol", 0x36CB7C, 0x24

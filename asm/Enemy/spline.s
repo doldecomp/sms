@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global calcSpline__11TSplinePathFfPfPfPf
 calcSpline__11TSplinePathFfPfPfPf:
 /* 80281D14 0027EC54  80 63 00 00 */	lwz r3, 0(r3)
@@ -469,3 +468,23 @@ lbl_802823B0:
 /* 802823C8 0027F308  38 21 00 20 */	addi r1, r1, 0x20
 /* 802823CC 0027F30C  7C 08 03 A6 */	mtlr r0
 /* 802823D0 0027F310  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21601
+$$21601:
+	.incbin "baserom.dol", 0x3EA2E8, 0x4
+.global $$21602
+$$21602:
+	.incbin "baserom.dol", 0x3EA2EC, 0x4
+.global $$21603
+$$21603:
+	.incbin "baserom.dol", 0x3EA2F0, 0x4
+.global $$21630
+$$21630:
+	.incbin "baserom.dol", 0x3EA2F4, 0x4
+.global $$21672
+$$21672:
+	.incbin "baserom.dol", 0x3EA2F8, 0x8
+.global $$21683
+$$21683:
+	.incbin "baserom.dol", 0x3EA300, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TSharedPartsFv
 __dt__12TSharedPartsFv:
 /* 8011D9C4 0011A904  7C 08 02 A6 */	mflr r0
@@ -304,3 +303,8 @@ lbl_8011DDD0:
 /* 8011DDF4 0011AD34  38 21 00 50 */	addi r1, r1, 0x50
 /* 8011DDF8 0011AD38  7C 08 03 A6 */	mtlr r0
 /* 8011DDFC 0011AD3C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TSharedParts
+__vt__12TSharedParts:
+	.incbin "baserom.dol", 0x3B2458, 0x28

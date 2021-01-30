@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __DVDClearWaitingQueue
 __DVDClearWaitingQueue:
 /* 80099068 00095FA8  3C 60 80 3F */	lis r3, WaitingQueue@ha
@@ -151,3 +150,8 @@ lbl_8009924C:
 /* 80099254 00096194  38 21 00 18 */	addi r1, r1, 0x18
 /* 80099258 00096198  7C 08 03 A6 */	mtlr r0
 /* 8009925C 0009619C  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global WaitingQueue
+WaitingQueue:
+	.skip 0x20

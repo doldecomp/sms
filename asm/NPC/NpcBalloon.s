@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global updateBalloon__11TNpcBalloonFv
 updateBalloon__11TNpcBalloonFv:
 /* 8017B254 00178194  7C 08 02 A6 */	mflr r0

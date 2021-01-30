@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14TSplashManagerFv
 __dt__14TSplashManagerFv:
 /* 801460C8 00143008  7C 08 02 A6 */	mflr r0
@@ -750,3 +749,97 @@ lbl_80146B74:
 /* 80146B7C 00143ABC  38 21 00 10 */	addi r1, r1, 0x10
 /* 80146B80 00143AC0  7C 08 03 A6 */	mtlr r0
 /* 80146B84 00143AC4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC94, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22153
+$$22153:
+	.incbin "baserom.dol", 0x378800, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TSplashManager
+__vt__14TSplashManager:
+	.incbin "baserom.dol", 0x3B3888, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21978
+$$21978:
+	.incbin "baserom.dol", 0x3E5CA8, 0x4
+.global $$22014
+$$22014:
+	.incbin "baserom.dol", 0x3E5CAC, 0x4
+.global $$22096
+$$22096:
+	.incbin "baserom.dol", 0x3E5CB0, 0x8
+.global $$22098
+$$22098:
+	.incbin "baserom.dol", 0x3E5CB8, 0x8
+.global $$22154
+$$22154:
+	.incbin "baserom.dol", 0x3E5CC0, 0x4
+.global $$22155
+$$22155:
+	.incbin "baserom.dol", 0x3E5CC4, 0x4
+.global $$22156
+$$22156:
+	.incbin "baserom.dol", 0x3E5CC8, 0x4
+.global $$22157
+$$22157:
+	.incbin "baserom.dol", 0x3E5CCC, 0x4
+.global $$22158
+$$22158:
+	.incbin "baserom.dol", 0x3E5CD0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22161
+$$22161:
+	.skip 0xC
+.global $$22162
+$$22162:
+	.skip 0xC
+.global $$22163
+$$22163:
+	.skip 0xC
+.global $$22164
+$$22164:
+	.skip 0xC
+.global $$22165
+$$22165:
+	.skip 0xC
+.global $$22166
+$$22166:
+	.skip 0xC
+.global $$22167
+$$22167:
+	.skip 0xC
+.global $$22168
+$$22168:
+	.skip 0xC
+.global $$22169
+$$22169:
+	.skip 0xC
+.global $$22170
+$$22170:
+	.skip 0xC
+.global $$22171
+$$22171:
+	.skip 0xC
+.global $$22172
+$$22172:
+	.skip 0xC
+.global $$22173
+$$22173:
+	.skip 0xC
+.global $$22174
+$$22174:
+	.skip 0xC
+.global $$22175
+$$22175:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpSplashManager
+gpSplashManager:
+	.skip 0x8

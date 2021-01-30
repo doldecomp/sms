@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global ClampStick
 ClampStick:
 /* 8009B074 00097FB4  88 03 00 00 */	lbz r0, 0(r3)
@@ -167,3 +166,8 @@ lbl_8009B280:
 /* 8009B2A0 000981E0  38 21 00 20 */	addi r1, r1, 0x20
 /* 8009B2A4 000981E4  7C 08 03 A6 */	mtlr r0
 /* 8009B2A8 000981E8  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global ClampRegion
+ClampRegion:
+	.incbin "baserom.dol", 0x3E3290, 0x8

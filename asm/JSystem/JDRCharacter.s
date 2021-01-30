@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__Q26JDrama10TSmplCharaFR20JSUMemoryInputStream
 load__Q26JDrama10TSmplCharaFR20JSUMemoryInputStream:
 /* 80041918 0003E858  7C 08 02 A6 */	mflr r0
@@ -131,3 +130,11 @@ lbl_80041AB8:
 /* 80041AC8 0003EA08  7C 08 03 A6 */	mtlr r0
 /* 80041ACC 0003EA0C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80041AD0 0003EA10  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama10TCharacter
+__vt__Q26JDrama10TCharacter:
+	.incbin "baserom.dol", 0x3A7450, 0x24
+.global __vt__Q26JDrama10TSmplChara
+__vt__Q26JDrama10TSmplChara:
+	.incbin "baserom.dol", 0x3A7474, 0x24

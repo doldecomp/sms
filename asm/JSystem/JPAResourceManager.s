@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__18JPATextureResourceFUlP7JKRHeap
 __ct__18JPATextureResourceFUlP7JKRHeap:
 /* 80080DF4 0007DD34  7C 08 02 A6 */	mflr r0

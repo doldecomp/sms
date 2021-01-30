@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global ctrlMultiPlayerCamera___15CPolarSubCameraFv
 ctrlMultiPlayerCamera___15CPolarSubCameraFv:
 /* 8036012C 0035D06C  7C 08 02 A6 */	mflr r0
@@ -368,3 +367,26 @@ __ct__16TMultiPlayerDataFv:
 /* 80360638 0035D578  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8036063C 0035D57C  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80360640 0035D580  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21758
+$$21758:
+	.incbin "baserom.dol", 0x3EC510, 0x4
+.global $$21759
+$$21759:
+	.incbin "baserom.dol", 0x3EC514, 0x4
+.global $$21760
+$$21760:
+	.incbin "baserom.dol", 0x3EC518, 0x8
+.global $$21761
+$$21761:
+	.incbin "baserom.dol", 0x3EC520, 0x8
+.global $$21762
+$$21762:
+	.incbin "baserom.dol", 0x3EC528, 0x4
+.global $$21763
+$$21763:
+	.incbin "baserom.dol", 0x3EC52C, 0x4
+.global $$21765
+$$21765:
+	.incbin "baserom.dol", 0x3EC530, 0x8

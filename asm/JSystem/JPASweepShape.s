@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JPASweepShapeFPCUc
 __ct__13JPASweepShapeFPCUc:
 /* 800810F0 0007E030  7C 08 02 A6 */	mflr r0
@@ -115,3 +114,8 @@ lbl_80081280:
 /* 8008128C 0007E1CC  38 21 00 18 */	addi r1, r1, 0x18
 /* 80081290 0007E1D0  7C 08 03 A6 */	mtlr r0
 /* 80081294 0007E1D4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JPASweepShape
+__vt__13JPASweepShape:
+	.incbin "baserom.dol", 0x3A9CF0, 0x10

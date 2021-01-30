@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSGetConsoleType
 OSGetConsoleType:
 /* 8008C528 00089468  80 6D 92 C0 */	lwz r3, BootInfo-_SDA_BASE_(r13)
@@ -389,13 +388,13 @@ OSExceptionInit:
 /* 8008CA78 000899B8  BE 81 00 08 */	stmw r20, 8(r1)
 /* 8008CA7C 000899BC  3C 60 80 00 */	lis r3, 0x80000060@ha
 /* 8008CA80 000899C0  80 03 00 60 */	lwz r0, 0x80000060@l(r3)
-/* 8008CA84 000899C4  3C 80 80 09 */	lis r4, __OSEVSetNumber@ha
-/* 8008CA88 000899C8  3B C4 CD AC */	addi r30, r4, __OSEVSetNumber@l
+/* 8008CA84 000899C4  3C 80 80 09 */	lis r4, lbl_8008CDAC@ha
+/* 8008CA88 000899C8  3B C4 CD AC */	addi r30, r4, lbl_8008CDAC@l
 /* 8008CA8C 000899CC  3C A0 80 09 */	lis r5, OSExceptionVector@ha
 /* 8008CA90 000899D0  83 3E 00 00 */	lwz r25, 0(r30)
-/* 8008CA94 000899D4  3C 80 80 09 */	lis r4, __OSEVEnd@ha
+/* 8008CA94 000899D4  3C 80 80 09 */	lis r4, lbl_8008CDDC@ha
 /* 8008CA98 000899D8  38 A5 CD 44 */	addi r5, r5, OSExceptionVector@l
-/* 8008CA9C 000899DC  38 84 CD DC */	addi r4, r4, __OSEVEnd@l
+/* 8008CA9C 000899DC  38 84 CD DC */	addi r4, r4, lbl_8008CDDC@l
 /* 8008CAA0 000899E0  3C C0 80 3B */	lis r6, $$284@ha
 /* 8008CAA4 000899E4  28 00 00 00 */	cmplwi r0, 0
 /* 8008CAA8 000899E8  7C B8 2B 78 */	mr r24, r5
@@ -431,8 +430,8 @@ lbl_8008CB04:
 /* 8008CB1C 00089A5C  3B 40 00 00 */	li r26, 0
 /* 8008CB20 00089A60  48 00 00 04 */	b lbl_8008CB24
 lbl_8008CB24:
-/* 8008CB24 00089A64  3C 60 80 09 */	lis r3, __DBVECTOR@ha
-/* 8008CB28 00089A68  3A A3 CD 9C */	addi r21, r3, __DBVECTOR@l
+/* 8008CB24 00089A64  3C 60 80 09 */	lis r3, lbl_8008CD9C@ha
+/* 8008CB28 00089A68  3A A3 CD 9C */	addi r21, r3, lbl_8008CD9C@l
 /* 8008CB2C 00089A6C  3E C0 60 00 */	lis r22, 0x6000
 /* 8008CB30 00089A70  48 00 00 04 */	b lbl_8008CB34
 lbl_8008CB34:
@@ -619,16 +618,12 @@ OSExceptionVector:
 /* 8008CD90 00089CD0  7C 7B 02 A6 */	mfspr r3, 0x1b
 /* 8008CD94 00089CD4  90 64 01 9C */	stw r3, 0x19c(r4)
 /* 8008CD98 00089CD8  7C 65 1B 78 */	mr r5, r3
-
-.global __DBVECTOR
-__DBVECTOR:
+lbl_8008CD9C:
 /* 8008CD9C 00089CDC  60 00 00 00 */	nop 
 /* 8008CDA0 00089CE0  7C 60 00 A6 */	mfmsr r3
 /* 8008CDA4 00089CE4  60 63 00 30 */	ori r3, r3, 0x30
 /* 8008CDA8 00089CE8  7C 7B 03 A6 */	mtspr 0x1b, r3
-
-.global __OSEVSetNumber
-__OSEVSetNumber:
+lbl_8008CDAC:
 /* 8008CDAC 00089CEC  38 60 00 00 */	li r3, 0
 /* 8008CDB0 00089CF0  80 80 00 D4 */	lwz r4, 0xd4(0)
 /* 8008CDB4 00089CF4  54 A5 07 BD */	rlwinm. r5, r5, 0, 0x1e, 0x1e
@@ -642,9 +637,7 @@ lbl_8008CDCC:
 /* 8008CDD0 00089D10  80 A5 30 00 */	lwz r5, 0x3000(r5)
 /* 8008CDD4 00089D14  7C BA 03 A6 */	mtspr 0x1a, r5
 /* 8008CDD8 00089D18  4C 00 00 64 */	rfi 
-
-.global __OSEVEnd
-__OSEVEnd:
+lbl_8008CDDC:
 /* 8008CDDC 00089D1C  60 00 00 00 */	nop 
 
 .global OSDefaultExceptionHandler
@@ -696,3 +689,102 @@ __OSGetDIConfig:
 /* 8008CE78 00089DB8  80 03 00 24 */	lwz r0, 0x24(r3)
 /* 8008CE7C 00089DBC  54 03 06 3E */	clrlwi r3, r0, 0x18
 /* 8008CE80 00089DC0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$284
+$$284:
+	.incbin "baserom.dol", 0x3AC0C0, 0x20
+.global $$285
+$$285:
+	.incbin "baserom.dol", 0x3AC0E0, 0x18
+.global $$286
+$$286:
+	.incbin "baserom.dol", 0x3AC0F8, 0xC
+.global $$287
+$$287:
+	.incbin "baserom.dol", 0x3AC104, 0xC
+.global $$288
+$$288:
+	.incbin "baserom.dol", 0x3AC110, 0x10
+.global $$289
+$$289:
+	.incbin "baserom.dol", 0x3AC120, 0xC
+.global $$290
+$$290:
+	.incbin "baserom.dol", 0x3AC12C, 0x10
+.global $$291
+$$291:
+	.incbin "baserom.dol", 0x3AC13C, 0x10
+.global $$292
+$$292:
+	.incbin "baserom.dol", 0x3AC14C, 0x10
+.global $$293
+$$293:
+	.incbin "baserom.dol", 0x3AC15C, 0x10
+.global $$294
+$$294:
+	.incbin "baserom.dol", 0x3AC16C, 0x14
+.global $$295
+$$295:
+	.incbin "baserom.dol", 0x3AC180, 0x10
+.global $$296
+$$296:
+	.incbin "baserom.dol", 0x3AC190, 0x18
+.global __OSExceptionLocations
+__OSExceptionLocations:
+	.incbin "baserom.dol", 0x3AC1A8, 0x3C
+.global $$2130
+$$2130:
+	.incbin "baserom.dol", 0x3AC1E4, 0x1C
+.global $$2131
+$$2131:
+	.incbin "baserom.dol", 0x3AC200, 0x30
+.global $$2132
+$$2132:
+	.incbin "baserom.dol", 0x3AC230, 0x30
+.global $$2133
+$$2133:
+	.incbin "baserom.dol", 0x3AC260, 0x20
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global DriveInfo
+DriveInfo:
+	.skip 0x20
+.global DriveBlock
+DriveBlock:
+	.skip 0x30
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global BootInfo
+BootInfo:
+	.skip 0x4
+.global BI2DebugFlag
+BI2DebugFlag:
+	.skip 0x4
+.global BI2DebugFlagHolder
+BI2DebugFlagHolder:
+	.skip 0x4
+.global __OSIsGcam
+__OSIsGcam:
+	.skip 0x4
+.global AreWeInitialized
+AreWeInitialized:
+	.skip 0x4
+.global OSExceptionTable
+OSExceptionTable:
+	.skip 0x4
+.global __OSSavedRegionEnd
+__OSSavedRegionEnd:
+	.skip 0x4
+.global __OSSavedRegionStart
+__OSSavedRegionStart:
+	.skip 0x4
+.global __OSInIPL
+__OSInIPL:
+	.skip 0x8
+.global __OSStartTime
+__OSStartTime:
+	.skip 0x4
+.global lbl_80409DAC
+lbl_80409DAC:
+	.skip 0x4

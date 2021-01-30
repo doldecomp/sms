@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global C_MTXPerspective
 C_MTXPerspective:
 /* 80094D24 00091C64  7C 08 02 A6 */	mflr r0
@@ -97,3 +96,23 @@ C_MTXOrtho:
 /* 80094E80 00091DC0  D0 63 00 38 */	stfs f3, 0x38(r3)
 /* 80094E84 00091DC4  D1 23 00 3C */	stfs f9, 0x3c(r3)
 /* 80094E88 00091DC8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$297
+$$297:
+	.incbin "baserom.dol", 0x3E47B0, 0x4
+.global $$298
+$$298:
+	.incbin "baserom.dol", 0x3E47B4, 0x4
+.global $$299
+$$299:
+	.incbin "baserom.dol", 0x3E47B8, 0x4
+.global $$2100
+$$2100:
+	.incbin "baserom.dol", 0x3E47BC, 0x4
+.global $$2103
+$$2103:
+	.incbin "baserom.dol", 0x3E47C0, 0x4
+.global $$2104
+$$2104:
+	.incbin "baserom.dol", 0x3E47C4, 0x4

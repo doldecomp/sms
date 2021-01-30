@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TAlphaCatchFv
 __dt__11TAlphaCatchFv:
 /* 800F9238 000F6178  7C 08 02 A6 */	mflr r0
@@ -108,3 +107,11 @@ lbl_800F9380:
 /* 800F9390 000F62D0  7C 08 03 A6 */	mtlr r0
 /* 800F9394 000F62D4  38 21 00 18 */	addi r1, r1, 0x18
 /* 800F9398 000F62D8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TAlphaCatch
+__vt__11TAlphaCatch:
+	.incbin "baserom.dol", 0x3B0FF8, 0x24
+.global __vt__13TZBufferCatch
+__vt__13TZBufferCatch:
+	.incbin "baserom.dol", 0x3B101C, 0x24

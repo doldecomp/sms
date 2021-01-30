@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setViewport__Q26JDrama9TGraphicsFRCQ26JDrama5TRectff
 setViewport__Q26JDrama9TGraphicsFRCQ26JDrama5TRectff:
 /* 80043604 00040544  7C 08 02 A6 */	mflr r0
@@ -103,3 +102,8 @@ lbl_80043764:
 /* 8004377C 000406BC  83 A1 00 3C */	lwz r29, 0x3c(r1)
 /* 80043780 000406C0  38 21 00 58 */	addi r1, r1, 0x58
 /* 80043784 000406C4  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2473
+$$2473:
+	.incbin "baserom.dol", 0x3E40A8, 0x8

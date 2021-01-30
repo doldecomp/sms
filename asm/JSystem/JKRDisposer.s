@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__11JKRDisposerFv
 __ct__11JKRDisposerFv:
 /* 80008CB4 00005BF4  7C 08 02 A6 */	mflr r0
@@ -74,3 +73,8 @@ lbl_80008D94:
 /* 80008DA4 00005CE4  7C 08 03 A6 */	mtlr r0
 /* 80008DA8 00005CE8  38 21 00 18 */	addi r1, r1, 0x18
 /* 80008DAC 00005CEC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11JKRDisposer
+__vt__11JKRDisposer:
+	.incbin "baserom.dol", 0x3A54C8, 0x10

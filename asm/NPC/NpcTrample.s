@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global updateTrample__11TNpcTrampleFfPf
 updateTrample__11TNpcTrampleFfPf:
 /* 801798B0 001767F0  A8 A3 00 06 */	lha r5, 6(r3)
@@ -96,3 +95,16 @@ startTrample__11TNpcTrampleFv:
 /* 801799F8 00176938  EC 03 00 32 */	fmuls f0, f3, f0
 /* 801799FC 0017693C  D0 0D 99 E8 */	stfs f0, msAmpDecrease__11TNpcTrample-_SDA_BASE_(r13)
 /* 80179A00 00176940  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21981
+$$21981:
+	.incbin "baserom.dol", 0x3E6650, 0x8
+.global $$21990
+$$21990:
+	.incbin "baserom.dol", 0x3E6658, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global msAmpDecrease__11TNpcTrample
+msAmpDecrease__11TNpcTrample:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global tanf
 tanf:
 /* 80086EEC 00083E2C  7C 08 02 A6 */	mflr r0
@@ -280,3 +279,30 @@ __sinit_trigf_c:
 /* 800872CC 0008420C  C0 04 00 0C */	lfs f0, 0xc(r4)
 /* 800872D0 00084210  D0 03 00 0C */	stfs f0, 0xc(r3)
 /* 800872D4 00084214  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC10, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global tmp_float
+tmp_float:
+	.incbin "baserom.dol", 0x36EA80, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __four_over_pi_m1
+__four_over_pi_m1:
+	.incbin "baserom.dol", 0x3ABF48, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2106
+$$2106:
+	.incbin "baserom.dol", 0x3E4730, 0x4
+.global $$2107
+$$2107:
+	.incbin "baserom.dol", 0x3E4734, 0x4
+.global $$2108
+$$2108:
+	.incbin "baserom.dol", 0x3E4738, 0x8
+.global $$2110
+$$2110:
+	.incbin "baserom.dol", 0x3E4740, 0x8

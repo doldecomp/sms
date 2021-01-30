@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JASystem10TBasicBankFv
 __ct__Q28JASystem10TBasicBankFv:
 /* 80058B74 00055AB4  3C 80 80 3B */	lis r4, __vt__Q28JASystem5TBank@ha
@@ -126,3 +125,11 @@ getType__Q28JASystem10TBasicBankCFv:
 /* 80058CF8 00055C38  3C 60 42 53 */	lis r3, 0x42534943@ha
 /* 80058CFC 00055C3C  38 63 49 43 */	addi r3, r3, 0x42534943@l
 /* 80058D00 00055C40  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem10TBasicBank
+__vt__Q28JASystem10TBasicBank:
+	.incbin "baserom.dol", 0x3A7DB0, 0x14
+.global __vt__Q28JASystem5TBank
+__vt__Q28JASystem5TBank:
+	.incbin "baserom.dol", 0x3A7DC4, 0x14

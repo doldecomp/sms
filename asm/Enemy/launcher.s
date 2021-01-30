@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__22TCommonLauncherManagerFv
 __dt__22TCommonLauncherManagerFv:
 /* 802B5394 002B22D4  7C 08 02 A6 */	mflr r0
@@ -1654,3 +1653,157 @@ $$232$$2__dt__9TLauncherFv:
 $$232$$2__dt__15TCommonLauncherFv:
 /* 802B6A44 002B3984  38 63 FF E0 */	addi r3, r3, -32
 /* 802B6A48 002B3988  4B FF FC 6C */	b __dt__15TCommonLauncherFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CEA0, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21664
+$$21664:
+	.incbin "baserom.dol", 0x3984A0, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x3984AC, 0x14
+.global $$22200
+$$22200:
+	.incbin "baserom.dol", 0x3984C0, 0x30
+.global $$22201
+$$22201:
+	.incbin "baserom.dol", 0x3984F0, 0x38
+.global $$22202
+$$22202:
+	.incbin "baserom.dol", 0x398528, 0x34
+.global $$22203
+$$22203:
+	.incbin "baserom.dol", 0x39855C, 0x24
+.global $$22763
+$$22763:
+	.incbin "baserom.dol", 0x398580, 0x2C
+.global $$22764
+$$22764:
+	.incbin "baserom.dol", 0x3985AC, 0x2C
+.global $$22907
+$$22907:
+	.incbin "baserom.dol", 0x3985D8, 0x18
+.global entry$2906
+entry$2906:
+	.incbin "baserom.dol", 0x3985F0, 0x18
+.global $$23169
+$$23169:
+	.incbin "baserom.dol", 0x398608, 0xC
+.global $$23170
+$$23170:
+	.incbin "baserom.dol", 0x398614, 0x24
+.global $$23171
+$$23171:
+	.incbin "baserom.dol", 0x398638, 0x10
+.global $$23195
+$$23195:
+	.incbin "baserom.dol", 0x398648, 0x14
+.global $$23196
+$$23196:
+	.incbin "baserom.dol", 0x39865C, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global clauncher_bastable
+clauncher_bastable:
+	.incbin "baserom.dol", 0x3D73F8, 0x10
+.global __vt__22TCommonLauncherManager
+__vt__22TCommonLauncherManager:
+	.incbin "baserom.dol", 0x3D7408, 0x54
+.global __vt__31TNerveWaitForever$$010TLiveActor$$1
+__vt__31TNerveWaitForever$$010TLiveActor$$1:
+	.incbin "baserom.dol", 0x3D745C, 0x10
+.global __vt__15TCommonLauncher
+__vt__15TCommonLauncher:
+	.incbin "baserom.dol", 0x3D746C, 0x12C
+.global __vt__16TLauncherManager
+__vt__16TLauncherManager:
+	.incbin "baserom.dol", 0x3D7598, 0x54
+.global __vt__9TLauncher
+__vt__9TLauncher:
+	.incbin "baserom.dol", 0x3D75EC, 0x12C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23059
+$$23059:
+	.incbin "baserom.dol", 0x3EA928, 0x4
+.global $$23060
+$$23060:
+	.incbin "baserom.dol", 0x3EA92C, 0x4
+.global $$23061
+$$23061:
+	.incbin "baserom.dol", 0x3EA930, 0x4
+.global $$23062
+$$23062:
+	.incbin "baserom.dol", 0x3EA934, 0x4
+.global $$23166
+$$23166:
+	.incbin "baserom.dol", 0x3EA938, 0x4
+.global $$23167
+$$23167:
+	.incbin "baserom.dol", 0x3EA93C, 0x4
+.global $$23168
+$$23168:
+	.incbin "baserom.dol", 0x3EA940, 0x8
+.global $$23173
+$$23173:
+	.incbin "baserom.dol", 0x3EA948, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22768
+$$22768:
+	.skip 0xC
+.global $$23340
+$$23340:
+	.skip 0xC
+.global $$23341
+$$23341:
+	.skip 0xC
+.global $$23342
+$$23342:
+	.skip 0xC
+.global $$23343
+$$23343:
+	.skip 0xC
+.global $$23344
+$$23344:
+	.skip 0xC
+.global $$23345
+$$23345:
+	.skip 0xC
+.global $$23346
+$$23346:
+	.skip 0xC
+.global $$23347
+$$23347:
+	.skip 0xC
+.global $$23348
+$$23348:
+	.skip 0xC
+.global $$23349
+$$23349:
+	.skip 0xC
+.global $$23350
+$$23350:
+	.skip 0xC
+.global $$23351
+$$23351:
+	.skip 0xC
+.global $$23352
+$$23352:
+	.skip 0xC
+.global $$23353
+$$23353:
+	.skip 0xC
+.global $$23354
+$$23354:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$localstatic1$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv
+init$localstatic1$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv:
+	.skip 0x4
+.global instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv
+instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv:
+	.skip 0x4

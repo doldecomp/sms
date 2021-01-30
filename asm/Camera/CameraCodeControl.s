@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global controlByCameraCode___15CPolarSubCameraFPi
 controlByCameraCode___15CPolarSubCameraFPi:
 /* 80352D58 0034FC98  7C 08 02 A6 */	mflr r0
@@ -105,3 +104,8 @@ lbl_80352EAC:
 /* 80352EB4 0034FDF4  38 21 00 78 */	addi r1, r1, 0x78
 /* 80352EB8 0034FDF8  7C 08 03 A6 */	mtlr r0
 /* 80352EBC 0034FDFC  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21717
+$$21717:
+	.incbin "baserom.dol", 0x3EC198, 0x8

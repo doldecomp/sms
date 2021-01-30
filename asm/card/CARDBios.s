@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __CARDDefaultApiCallback
 __CARDDefaultApiCallback:
 /* 8009EC4C 0009BB8C  4E 80 00 20 */	blr 
@@ -1366,3 +1365,16 @@ lbl_8009FED8:
 /* 8009FEDC 0009CE1C  38 21 00 08 */	addi r1, r1, 8
 /* 8009FEE0 0009CE20  7C 08 03 A6 */	mtlr r0
 /* 8009FEE4 0009CE24  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global ResetFunctionInfo
+ResetFunctionInfo:
+	.incbin "baserom.dol", 0x3AE380, 0x20
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global __CARDBlock
+__CARDBlock:
+	.skip 0x220
+.global __CARDDiskNone
+__CARDDiskNone:
+	.skip 0x20

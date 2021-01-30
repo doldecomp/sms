@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global J3DCalcZValue__FPA4_f3Vec
 J3DCalcZValue__FPA4_f3Vec:
 /* 8001BAB0 000189F0  C0 63 00 20 */	lfs f3, 0x20(r3)
@@ -751,3 +750,30 @@ lbl_8001C4E4:
 /* 8001C590 000194D0  CB E1 00 28 */	lfd f31, 0x28(r1)
 /* 8001C594 000194D4  38 21 00 40 */	addi r1, r1, 0x40
 /* 8001C598 000194D8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global j3dDefaultTransformInfo
+j3dDefaultTransformInfo:
+	.incbin "baserom.dol", 0x3A5DB0, 0x20
+.global j3dDefaultMtx
+j3dDefaultMtx:
+	.incbin "baserom.dol", 0x3A5DD0, 0x30
+.global PSMulUnit01
+PSMulUnit01:
+	.incbin "baserom.dol", 0x3A5E00, 0x8
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global Unit01
+Unit01:
+	.incbin "baserom.dol", 0x3E3018, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2871
+$$2871:
+	.incbin "baserom.dol", 0x3E3EA8, 0x4
+.global $$2872
+$$2872:
+	.incbin "baserom.dol", 0x3E3EAC, 0x4
+.global $$2912
+$$2912:
+	.incbin "baserom.dol", 0x3E3EB0, 0x8

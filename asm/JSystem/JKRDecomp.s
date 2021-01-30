@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__9JKRDecompFl
 create__9JKRDecompFl:
 /* 8003648C 000333CC  7C 08 02 A6 */	mflr r0
@@ -500,3 +499,19 @@ lbl_80036B20:
 /* 80036B2C 00033A6C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80036B30 00033A70  7C 08 03 A6 */	mtlr r0
 /* 80036B34 00033A74  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sMessageBuffer__9JKRDecomp
+sMessageBuffer__9JKRDecomp:
+	.incbin "baserom.dol", 0x3A6B70, 0x10
+.global sMessageQueue__9JKRDecomp
+sMessageQueue__9JKRDecomp:
+	.incbin "baserom.dol", 0x3A6B80, 0x20
+.global __vt__9JKRDecomp
+__vt__9JKRDecomp:
+	.incbin "baserom.dol", 0x3A6BA0, 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sDecompObject__9JKRDecomp
+sDecompObject__9JKRDecomp:
+	.skip 0x8

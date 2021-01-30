@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global PopDecodedAudioBuffer
 PopDecodedAudioBuffer:
 /* 800BD9D4 000BA914  7C 08 02 A6 */	mflr r0
@@ -263,3 +262,28 @@ lbl_800BDD38:
 /* 800BDD40 000BAC80  38 21 00 18 */	addi r1, r1, 0x18
 /* 800BDD44 000BAC84  7C 08 03 A6 */	mtlr r0
 /* 800BDD48 000BAC88  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global AudioDecodeThread
+AudioDecodeThread:
+	.skip 0x310
+.global AudioDecodeThreadStack
+AudioDecodeThreadStack:
+	.skip 0x1000
+.global FreeAudioBufferQueue
+FreeAudioBufferQueue:
+	.skip 0x20
+.global DecodedAudioBufferQueue
+DecodedAudioBufferQueue:
+	.skip 0x20
+.global FreeAudioBufferMessage
+FreeAudioBufferMessage:
+	.skip 0xC
+.global DecodedAudioBufferMessage
+DecodedAudioBufferMessage:
+	.skip 0x14
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global AudioDecodeThreadCreated
+AudioDecodeThreadCreated:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__9JKRThreadFUlii
 __ct__9JKRThreadFUlii:
 /* 8000DFBC 0000AEFC  7C 08 02 A6 */	mflr r0
@@ -209,3 +208,21 @@ lbl_8000E280:
 /* 8000E290 0000B1D0  7C 08 03 A6 */	mtlr r0
 /* 8000E294 0000B1D4  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000E298 0000B1D8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBB8, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9JKRThread
+__vt__9JKRThread:
+	.incbin "baserom.dol", 0x3A5730, 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$225
+$$225:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sThreadList__9JKRThread
+sThreadList__9JKRThread:
+	.skip 0xC

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14JSUInputStreamFv
 __dt__14JSUInputStreamFv:
 /* 8000E534 0000B474  7C 08 02 A6 */	mflr r0
@@ -434,3 +433,11 @@ getAvailable__20JSURandomInputStreamCFv:
 /* 8000EB0C 0000BA4C  7C 08 03 A6 */	mtlr r0
 /* 8000EB10 0000BA50  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000EB14 0000BA54  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__20JSURandomInputStream
+__vt__20JSURandomInputStream:
+	.incbin "baserom.dol", 0x3A5788, 0x24
+.global __vt__14JSUInputStream
+__vt__14JSUInputStream:
+	.incbin "baserom.dol", 0x3A57AC, 0x1C

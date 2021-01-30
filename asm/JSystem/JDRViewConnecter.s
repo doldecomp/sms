@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc
 __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc:
 /* 80046E34 00043D74  7C 08 02 A6 */	mflr r0
@@ -88,3 +87,8 @@ lbl_80046F50:
 /* 80046F60 00043EA0  83 A1 00 1C */	lwz r29, 0x1c(r1)
 /* 80046F64 00043EA4  38 21 00 28 */	addi r1, r1, 0x28
 /* 80046F68 00043EA8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama14TViewConnecter
+__vt__Q26JDrama14TViewConnecter:
+	.incbin "baserom.dol", 0x3A7A00, 0x28

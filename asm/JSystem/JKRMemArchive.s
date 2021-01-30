@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JKRMemArchiveFv
 __ct__13JKRMemArchiveFv:
 /* 8000CBB0 00009AF0  7C 08 02 A6 */	mflr r0
@@ -601,3 +600,16 @@ lbl_8000D3C4:
 /* 8000D3CC 0000A30C  38 21 00 28 */	addi r1, r1, 0x28
 /* 8000D3D0 0000A310  7C 08 03 A6 */	mtlr r0
 /* 8000D3D4 0000A314  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21643
+$$21643:
+	.incbin "baserom.dol", 0x36D520, 0x14
+.global $$21644
+$$21644:
+	.incbin "baserom.dol", 0x36D534, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JKRMemArchive
+__vt__13JKRMemArchive:
+	.incbin "baserom.dol", 0x3A5648, 0x48

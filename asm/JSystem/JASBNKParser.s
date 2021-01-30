@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global createBasicBank__Q28JASystem9BNKParserFPv
 createBasicBank__Q28JASystem9BNKParserFPv:
 /* 80059B3C 00056A7C  7C 08 02 A6 */	mflr r0
@@ -720,3 +719,30 @@ JSUConvertOffsetToPtr$$0Q38JASystem9BNKParser5TInst$$1__FPCvUl:
 lbl_8005A514:
 /* 8005A514 00057454  7C 63 22 14 */	add r3, r3, r4
 /* 8005A518 00057458  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem11TInstEffect
+__vt__Q28JASystem11TInstEffect:
+	.incbin "baserom.dol", 0x3A7E80, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2531
+$$2531:
+	.incbin "baserom.dol", 0x3E42D8, 0x4
+.global $$2532
+$$2532:
+	.incbin "baserom.dol", 0x3E42DC, 0x4
+.global $$2533
+$$2533:
+	.incbin "baserom.dol", 0x3E42E0, 0x8
+.global $$2535
+$$2535:
+	.incbin "baserom.dol", 0x3E42E8, 0x8
+.global $$2568
+$$2568:
+	.incbin "baserom.dol", 0x3E42F0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sUsedHeapSize__Q28JASystem9BNKParser
+sUsedHeapSize__Q28JASystem9BNKParser:
+	.skip 0x8

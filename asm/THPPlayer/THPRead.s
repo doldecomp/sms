@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global PushReadedBuffer2
 PushReadedBuffer2:
 /* 800BFA60 000BC9A0  7C 08 02 A6 */	mflr r0
@@ -212,3 +211,34 @@ lbl_800BFD10:
 /* 800BFD18 000BCC58  38 21 00 18 */	addi r1, r1, 0x18
 /* 800BFD1C 000BCC5C  7C 08 03 A6 */	mtlr r0
 /* 800BFD20 000BCC60  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global FreeReadBufferQueue
+FreeReadBufferQueue:
+	.skip 0x20
+.global ReadedBufferQueue
+ReadedBufferQueue:
+	.skip 0x20
+.global ReadedBufferQueue2
+ReadedBufferQueue2:
+	.skip 0x20
+.global FreeReadBufferMessage
+FreeReadBufferMessage:
+	.skip 0x28
+.global ReadedBufferMessage
+ReadedBufferMessage:
+	.skip 0x28
+.global ReadedBufferMessage2
+ReadedBufferMessage2:
+	.skip 0x28
+.global ReadThread
+ReadThread:
+	.skip 0x310
+.global ReadThreadStack
+ReadThreadStack:
+	.skip 0x1000
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global ReadThreadCreated
+ReadThreadCreated:
+	.skip 0x8

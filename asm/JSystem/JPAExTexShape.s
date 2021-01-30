@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JPAExTexShapeFPCUc
 __ct__13JPAExTexShapeFPCUc:
 /* 8007FA94 0007C9D4  7C 08 02 A6 */	mflr r0
@@ -132,3 +131,11 @@ lbl_8007FC44:
 /* 8007FC50 0007CB90  38 21 00 18 */	addi r1, r1, 0x18
 /* 8007FC54 0007CB94  7C 08 03 A6 */	mtlr r0
 /* 8007FC58 0007CB98  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JPAExTexShape
+__vt__13JPAExTexShape:
+	.incbin "baserom.dol", 0x3A9BE8, 0xC
+.global __vt__12JPADataBlock
+__vt__12JPADataBlock:
+	.incbin "baserom.dol", 0x3A9BF4, 0xC

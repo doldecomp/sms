@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getJ3DModelDataFlag__9TMapModelCFv
 getJ3DModelDataFlag__9TMapModelCFv:
 /* 801E6134 001E3074  3C 60 10 02 */	lis r3, 0x1002
@@ -619,3 +618,104 @@ lbl_801E69D0:
 /* 801E69D8 001E3918  38 21 00 10 */	addi r1, r1, 0x10
 /* 801E69DC 001E391C  7C 08 03 A6 */	mtlr r0
 /* 801E69E0 001E3920  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDCC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22502
+$$22502:
+	.incbin "baserom.dol", 0x38EB10, 0x10
+.global $$22503
+$$22503:
+	.incbin "baserom.dol", 0x38EB20, 0x14
+.global $$22571
+$$22571:
+	.incbin "baserom.dol", 0x38EB34, 0xC
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global name_table$2428
+name_table$2428:
+	.incbin "baserom.dol", 0x3CD070, 0x14
+.global __vt__9TMapModel
+__vt__9TMapModel:
+	.incbin "baserom.dol", 0x3CD084, 0x34
+.global __vt__16TMapModelManager
+__vt__16TMapModelManager:
+	.incbin "baserom.dol", 0x3CD0B8, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22429
+$$22429:
+	.incbin "baserom.dol", 0x3E8B98, 0x4
+.global $$22430
+$$22430:
+	.incbin "baserom.dol", 0x3E8B9C, 0x8
+.global $$22431
+$$22431:
+	.incbin "baserom.dol", 0x3E8BA4, 0x8
+.global $$22432
+$$22432:
+	.incbin "baserom.dol", 0x3E8BAC, 0x8
+.global $$22505
+$$22505:
+	.incbin "baserom.dol", 0x3E8BB4, 0x4
+.global $$22506
+$$22506:
+	.incbin "baserom.dol", 0x3E8BB8, 0x4
+.global $$22618
+$$22618:
+	.incbin "baserom.dol", 0x3E8BBC, 0x4
+.global $$22619
+$$22619:
+	.incbin "baserom.dol", 0x3E8BC0, 0x4
+.global $$22620
+$$22620:
+	.incbin "baserom.dol", 0x3E8BC4, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22668
+$$22668:
+	.skip 0xC
+.global $$22669
+$$22669:
+	.skip 0xC
+.global $$22670
+$$22670:
+	.skip 0xC
+.global $$22671
+$$22671:
+	.skip 0xC
+.global $$22672
+$$22672:
+	.skip 0xC
+.global $$22673
+$$22673:
+	.skip 0xC
+.global $$22674
+$$22674:
+	.skip 0xC
+.global $$22675
+$$22675:
+	.skip 0xC
+.global $$22676
+$$22676:
+	.skip 0xC
+.global $$22677
+$$22677:
+	.skip 0xC
+.global $$22678
+$$22678:
+	.skip 0xC
+.global $$22679
+$$22679:
+	.skip 0xC
+.global $$22680
+$$22680:
+	.skip 0xC
+.global $$22681
+$$22681:
+	.skip 0xC
+.global $$22682
+$$22682:
+	.skip 0x10

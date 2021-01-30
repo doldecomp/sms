@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global makeColorTable__FP17JPAColorRegAnmKeyiiP7JKRHeap
 makeColorTable__FP17JPAColorRegAnmKeyiiP7JKRHeap:
 /* 800802B8 0007D1F8  7C 08 02 A6 */	mflr r0
@@ -571,3 +570,43 @@ lbl_80080ACC:
 /* 80080AD8 0007DA18  38 21 00 18 */	addi r1, r1, 0x18
 /* 80080ADC 0007DA1C  7C 08 03 A6 */	mtlr r0
 /* 80080AE0 0007DA20  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global stBlendMode__12JPABaseShape
+stBlendMode__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9C28, 0x10
+.global stBlendFactor__12JPABaseShape
+stBlendFactor__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9C38, 0x28
+.global stLogicOp__12JPABaseShape
+stLogicOp__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9C60, 0x40
+.global stCompare__12JPABaseShape
+stCompare__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9CA0, 0x20
+.global stAlphaOp__12JPABaseShape
+stAlphaOp__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9CC0, 0x10
+.global __vt__12JPABaseShape
+__vt__12JPABaseShape:
+	.incbin "baserom.dol", 0x3A9CD0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21505
+$$21505:
+	.incbin "baserom.dol", 0x3E45F8, 0x4
+.global $$21506
+$$21506:
+	.incbin "baserom.dol", 0x3E45FC, 0x4
+.global $$21508
+$$21508:
+	.incbin "baserom.dol", 0x3E4600, 0x8
+.global $$21512
+$$21512:
+	.incbin "baserom.dol", 0x3E4608, 0x8
+.global $$21570
+$$21570:
+	.incbin "baserom.dol", 0x3E4610, 0x4
+.global $$21571
+$$21571:
+	.incbin "baserom.dol", 0x3E4614, 0x4

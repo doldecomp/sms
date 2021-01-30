@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JASystem14TRegisterParamFv
 __ct__Q28JASystem14TRegisterParamFv:
 /* 8006480C 0006174C  38 00 00 00 */	li r0, 0

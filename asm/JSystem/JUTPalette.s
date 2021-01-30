@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global storeTLUT__10JUTPaletteF7_GXTlutP7ResTLUT
 storeTLUT__10JUTPaletteF7_GXTlutP7ResTLUT:
 /* 800130EC 0001002C  7C 08 02 A6 */	mflr r0
@@ -88,3 +87,11 @@ lbl_80013204:
 /* 80013210 00010150  38 21 00 18 */	addi r1, r1, 0x18
 /* 80013214 00010154  7C 08 03 A6 */	mtlr r0
 /* 80013218 00010158  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$283
+$$283:
+	.incbin "baserom.dol", 0x36DB60, 0x10
+.global $$284
+$$284:
+	.incbin "baserom.dol", 0x36DB70, 0x20

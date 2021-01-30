@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__9THitActorFPCc
 __ct__9THitActorFPCc:
 /* 8011D6CC 0011A60C  7C 08 02 A6 */	mflr r0
@@ -76,8 +75,8 @@ __ct__9THitActorFPCc:
 /* 8011D7E0 0011A720  38 21 00 28 */	addi r1, r1, 0x28
 /* 8011D7E4 0011A724  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__HitActor
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__HitActor:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8011D7E8 0011A728  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8011D7EC 0011A72C  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8011D7F0 0011A730  D0 63 00 08 */	stfs f3, 8(r3)
@@ -194,3 +193,19 @@ lbl_8011D958:
 $$232$$2__dt__9THitActorFv:
 /* 8011D960 0011A8A0  38 63 FF E0 */	addi r3, r3, -32
 /* 8011D964 0011A8A4  4B FE 76 54 */	b __dt__9THitActorFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9THitActor
+__vt__9THitActor:
+	.incbin "baserom.dol", 0x3B23A0, 0xA8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21618
+$$21618:
+	.incbin "baserom.dol", 0x3E5470, 0x4
+.global $$21619
+$$21619:
+	.incbin "baserom.dol", 0x3E5474, 0x4
+.global $$21660
+$$21660:
+	.incbin "baserom.dol", 0x3E5478, 0x8

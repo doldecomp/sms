@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global atan
 atan:
 /* 80086848 00083788  7C 08 02 A6 */	mflr r0
@@ -160,3 +159,31 @@ lbl_80086A6C:
 /* 80086A7C 000839BC  83 A1 00 14 */	lwz r29, 0x14(r1)
 /* 80086A80 000839C0  38 21 00 20 */	addi r1, r1, 0x20
 /* 80086A84 000839C4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global atanhi
+atanhi:
+	.incbin "baserom.dol", 0x36E930, 0x20
+.global atanlo
+atanlo:
+	.incbin "baserom.dol", 0x36E950, 0x20
+.global aT
+aT:
+	.incbin "baserom.dol", 0x36E970, 0x58
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2155
+$$2155:
+	.incbin "baserom.dol", 0x3E46E0, 0x8
+.global $$2156
+$$2156:
+	.incbin "baserom.dol", 0x3E46E8, 0x8
+.global $$2157
+$$2157:
+	.incbin "baserom.dol", 0x3E46F0, 0x8
+.global $$2158
+$$2158:
+	.incbin "baserom.dol", 0x3E46F8, 0x8
+.global $$2159
+$$2159:
+	.incbin "baserom.dol", 0x3E4700, 0x8

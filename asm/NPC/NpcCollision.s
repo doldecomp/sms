@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global bind__8TBaseNPCFv
 bind__8TBaseNPCFv:
 /* 8017BB40 00178A80  7C 08 02 A6 */	mflr r0
@@ -492,3 +491,29 @@ lbl_8017C224:
 /* 8017C230 00179170  7C 08 03 A6 */	mtlr r0
 /* 8017C234 00179174  38 21 00 18 */	addi r1, r1, 0x18
 /* 8017C238 00179178  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22319
+$$22319:
+	.incbin "baserom.dol", 0x3E66D8, 0x4
+.global $$22320
+$$22320:
+	.incbin "baserom.dol", 0x3E66DC, 0x4
+.global $$22321
+$$22321:
+	.incbin "baserom.dol", 0x3E66E0, 0x4
+.global $$22322
+$$22322:
+	.incbin "baserom.dol", 0x3E66E4, 0x4
+.global $$22347
+$$22347:
+	.incbin "baserom.dol", 0x3E66E8, 0x4
+.global $$22428
+$$22428:
+	.incbin "baserom.dol", 0x3E66EC, 0x4
+.global $$22429
+$$22429:
+	.incbin "baserom.dol", 0x3E66F0, 0x4
+.global $$22430
+$$22430:
+	.incbin "baserom.dol", 0x3E66F4, 0x4

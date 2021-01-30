@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global isTurnToMarioWhenApproach__8TBaseNPCCFv
 isTurnToMarioWhenApproach__8TBaseNPCCFv:
 /* 8017B2CC 0017820C  C0 22 A9 A0 */	lfs f1, $$22109-_SDA2_BASE_(r2)
@@ -630,9 +629,47 @@ lbl_8017BB14:
 /* 8017BB28 00178A68  38 21 01 30 */	addi r1, r1, 0x130
 /* 8017BB2C 00178A6C  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__NpcWalkTurn
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__NpcWalkTurn:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8017BB30 00178A70  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8017BB34 00178A74  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8017BB38 00178A78  D0 63 00 08 */	stfs f3, 8(r3)
 /* 8017BB3C 00178A7C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22109
+$$22109:
+	.incbin "baserom.dol", 0x3E66A0, 0x4
+.global $$22155
+$$22155:
+	.incbin "baserom.dol", 0x3E66A4, 0x4
+.global $$22156
+$$22156:
+	.incbin "baserom.dol", 0x3E66A8, 0x8
+.global $$22158
+$$22158:
+	.incbin "baserom.dol", 0x3E66B0, 0x8
+.global $$22214
+$$22214:
+	.incbin "baserom.dol", 0x3E66B8, 0x4
+.global $$22348
+$$22348:
+	.incbin "baserom.dol", 0x3E66BC, 0x4
+.global $$22349
+$$22349:
+	.incbin "baserom.dol", 0x3E66C0, 0x4
+.global $$22350
+$$22350:
+	.incbin "baserom.dol", 0x3E66C4, 0x4
+.global $$22351
+$$22351:
+	.incbin "baserom.dol", 0x3E66C8, 0x4
+.global $$22352
+$$22352:
+	.incbin "baserom.dol", 0x3E66CC, 0x4
+.global $$22353
+$$22353:
+	.incbin "baserom.dol", 0x3E66D0, 0x4
+.global $$22354
+$$22354:
+	.incbin "baserom.dol", 0x3E66D4, 0x4

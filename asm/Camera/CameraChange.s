@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global execCameraModeChangeProc___15CPolarSubCameraFi
 execCameraModeChangeProc___15CPolarSubCameraFi:
 /* 80351180 0034E0C0  7C 08 02 A6 */	mflr r0
@@ -2000,3 +1999,69 @@ lbl_80352D44:
 /* 80352D4C 0034FC8C  38 21 00 10 */	addi r1, r1, 0x10
 /* 80352D50 0034FC90  7C 08 03 A6 */	mtlr r0
 /* 80352D54 0034FC94  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CF40, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$23698
+$$23698:
+	.incbin "baserom.dol", 0x3E1630, 0xCC
+.global $$23874
+$$23874:
+	.incbin "baserom.dol", 0x3E16FC, 0x124
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23696
+$$23696:
+	.incbin "baserom.dol", 0x3EC190, 0x4
+.global $$23697
+$$23697:
+	.incbin "baserom.dol", 0x3EC194, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23186
+$$23186:
+	.skip 0xC
+.global $$23187
+$$23187:
+	.skip 0xC
+.global $$23188
+$$23188:
+	.skip 0xC
+.global $$23189
+$$23189:
+	.skip 0xC
+.global $$23190
+$$23190:
+	.skip 0xC
+.global $$23191
+$$23191:
+	.skip 0xC
+.global $$23192
+$$23192:
+	.skip 0xC
+.global $$23193
+$$23193:
+	.skip 0xC
+.global $$23194
+$$23194:
+	.skip 0xC
+.global $$23195
+$$23195:
+	.skip 0xC
+.global $$23196
+$$23196:
+	.skip 0xC
+.global $$23197
+$$23197:
+	.skip 0xC
+.global $$23198
+$$23198:
+	.skip 0xC
+.global $$23199
+$$23199:
+	.skip 0xC
+.global $$23200
+$$23200:
+	.skip 0x10

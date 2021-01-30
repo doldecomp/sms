@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TShineFaderFv
 __dt__11TShineFaderFv:
 /* 8023DB6C 0023AAAC  7C 08 02 A6 */	mflr r0
@@ -160,3 +159,8 @@ lbl_8023DD58:
 /* 8023DD70 0023ACB0  7C 00 33 D6 */	divw r0, r0, r6
 /* 8023DD74 0023ACB4  98 03 00 1B */	stb r0, 0x1b(r3)
 /* 8023DD78 0023ACB8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TShineFader
+__vt__11TShineFader:
+	.incbin "baserom.dol", 0x3CEE00, 0x30

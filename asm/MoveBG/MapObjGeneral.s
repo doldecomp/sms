@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__14TMapObjGeneralFPCc
 __ct__14TMapObjGeneralFPCc:
 /* 8018B3AC 001882EC  7C 08 02 A6 */	mflr r0
@@ -2550,3 +2549,110 @@ lbl_8018D724:
 /* 8018D72C 0018A66C  38 21 00 10 */	addi r1, r1, 0x10
 /* 8018D730 0018A670  7C 08 03 A6 */	mtlr r0
 /* 8018D734 0018A674  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD08, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$23438
+$$23438:
+	.incbin "baserom.dol", 0x3BD700, 0x28
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mNormalLivingTime__14TMapObjGeneral
+mNormalLivingTime__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E3548, 0x4
+.global mNormalFlushTime__14TMapObjGeneral
+mNormalFlushTime__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E354C, 0x4
+.global mNormalFlushInterval__14TMapObjGeneral
+mNormalFlushInterval__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E3550, 0x4
+.global mNormalWaitToAppearTime__14TMapObjGeneral
+mNormalWaitToAppearTime__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E3554, 0x4
+.global mNormalAppearingScaleUp__14TMapObjGeneral
+mNormalAppearingScaleUp__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E3558, 0x4
+.global mNormalThrowSpeedRate__14TMapObjGeneral
+mNormalThrowSpeedRate__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3E355C, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23049
+$$23049:
+	.incbin "baserom.dol", 0x3E7B88, 0x4
+.global $$23139
+$$23139:
+	.incbin "baserom.dol", 0x3E7B8C, 0x4
+.global $$23201
+$$23201:
+	.incbin "baserom.dol", 0x3E7B90, 0x4
+.global $$23333
+$$23333:
+	.incbin "baserom.dol", 0x3E7B94, 0x4
+.global $$23505
+$$23505:
+	.incbin "baserom.dol", 0x3E7B98, 0x8
+.global $$23508
+$$23508:
+	.incbin "baserom.dol", 0x3E7BA0, 0x8
+.global $$23655
+$$23655:
+	.incbin "baserom.dol", 0x3E7BA8, 0x8
+.global $$23676
+$$23676:
+	.incbin "baserom.dol", 0x3E7BB0, 0x4
+.global $$23727
+$$23727:
+	.incbin "baserom.dol", 0x3E7BB4, 0x4
+.global $$23738
+$$23738:
+	.incbin "baserom.dol", 0x3E7BB8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23033
+$$23033:
+	.skip 0xC
+.global $$23034
+$$23034:
+	.skip 0xC
+.global $$23035
+$$23035:
+	.skip 0xC
+.global $$23036
+$$23036:
+	.skip 0xC
+.global $$23037
+$$23037:
+	.skip 0xC
+.global $$23038
+$$23038:
+	.skip 0xC
+.global $$23039
+$$23039:
+	.skip 0xC
+.global $$23040
+$$23040:
+	.skip 0xC
+.global $$23041
+$$23041:
+	.skip 0xC
+.global $$23042
+$$23042:
+	.skip 0xC
+.global $$23043
+$$23043:
+	.skip 0xC
+.global $$23044
+$$23044:
+	.skip 0xC
+.global $$23045
+$$23045:
+	.skip 0xC
+.global $$23046
+$$23046:
+	.skip 0xC
+.global $$23047
+$$23047:
+	.skip 0x10

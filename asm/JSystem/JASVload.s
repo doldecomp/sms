@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initHeader__Q28JASystem5VloadFPc
 initHeader__Q28JASystem5VloadFPc:
 /* 80063F88 00060EC8  7C 08 02 A6 */	mflr r0
@@ -358,3 +357,27 @@ lbl_8006443C:
 /* 80064454 00061394  7C 08 03 A6 */	mtlr r0
 /* 80064458 00061398  38 21 00 10 */	addi r1, r1, 0x10
 /* 8006445C 0006139C  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global vlMaxArcs__Q28JASystem5Vload
+vlMaxArcs__Q28JASystem5Vload:
+	.incbin "baserom.dol", 0x3E3208, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2259
+$$2259:
+	.incbin "baserom.dol", 0x3E43F8, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global vlDirName__Q28JASystem5Vload
+vlDirName__Q28JASystem5Vload:
+	.skip 0x4
+.global vlArcName__Q28JASystem5Vload
+vlArcName__Q28JASystem5Vload:
+	.skip 0x4
+.global vlArc__Q28JASystem5Vload
+vlArc__Q28JASystem5Vload:
+	.skip 0x4
+.global vlCurrentArcs__Q28JASystem5Vload
+vlCurrentArcs__Q28JASystem5Vload:
+	.skip 0x4

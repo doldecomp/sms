@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global removeCheckListData__17TMapCollisionDataFUsl
 removeCheckListData__17TMapCollisionDataFUsl:
 /* 801E3C7C 001E0BBC  7C 08 02 A6 */	mflr r0
@@ -959,3 +958,17 @@ allocCheckData__17TMapCollisionDataFUl:
 /* 801E4960 001E18A0  90 03 00 34 */	stw r0, 0x34(r3)
 /* 801E4964 001E18A4  7C 66 2A 14 */	add r3, r6, r5
 /* 801E4968 001E18A8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22088
+$$22088:
+	.incbin "baserom.dol", 0x3E8B48, 0x4
+.global $$22089
+$$22089:
+	.incbin "baserom.dol", 0x3E8B4C, 0x4
+.global $$22091
+$$22091:
+	.incbin "baserom.dol", 0x3E8B50, 0x8
+.global $$22207
+$$22207:
+	.incbin "baserom.dol", 0x3E8B58, 0x8

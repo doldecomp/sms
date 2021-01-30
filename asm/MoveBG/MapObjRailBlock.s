@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__10TWoodBlockFv
 __dt__10TWoodBlockFv:
 /* 801C7078 001C3FB8  7C 08 02 A6 */	mflr r0
@@ -2527,3 +2526,61 @@ $$232$$2__dt__10TRollBlockFv:
 $$232$$2__dt__10TWoodBlockFv:
 /* 801C9408 001C6348  38 63 FF E0 */	addi r3, r3, -32
 /* 801C940C 001C634C  4B FF DC 6C */	b __dt__10TWoodBlockFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TWoodBlock
+__vt__10TWoodBlock:
+	.incbin "baserom.dol", 0x3C9428, 0x170
+.global __vt__10TRollBlock
+__vt__10TRollBlock:
+	.incbin "baserom.dol", 0x3C9598, 0x164
+.global __vt__10TRailBlock
+__vt__10TRailBlock:
+	.incbin "baserom.dol", 0x3C96FC, 0x170
+.global __vt__11TNormalLift
+__vt__11TNormalLift:
+	.incbin "baserom.dol", 0x3C986C, 0x170
+.global __vt__11TRailMapObj
+__vt__11TRailMapObj:
+	.incbin "baserom.dol", 0x3C99DC, 0x174
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22572
+$$22572:
+	.incbin "baserom.dol", 0x3E8678, 0x4
+.global $$22636
+$$22636:
+	.incbin "baserom.dol", 0x3E867C, 0x4
+.global $$22637
+$$22637:
+	.incbin "baserom.dol", 0x3E8680, 0x4
+.global $$22638
+$$22638:
+	.incbin "baserom.dol", 0x3E8684, 0x4
+.global $$22640
+$$22640:
+	.incbin "baserom.dol", 0x3E8688, 0x8
+.global $$22671
+$$22671:
+	.incbin "baserom.dol", 0x3E8690, 0x4
+.global $$22693
+$$22693:
+	.incbin "baserom.dol", 0x3E8694, 0x4
+.global $$22715
+$$22715:
+	.incbin "baserom.dol", 0x3E8698, 0x4
+.global $$22900
+$$22900:
+	.incbin "baserom.dol", 0x3E869C, 0x4
+.global $$22901
+$$22901:
+	.incbin "baserom.dol", 0x3E86A0, 0x4
+.global $$22902
+$$22902:
+	.incbin "baserom.dol", 0x3E86A4, 0x4
+.global $$22904
+$$22904:
+	.incbin "baserom.dol", 0x3E86A8, 0x8
+.global $$22940
+$$22940:
+	.incbin "baserom.dol", 0x3E86B0, 0x8

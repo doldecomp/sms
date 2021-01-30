@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSGetArenaHi
 OSGetArenaHi:
 /* 8008DCB4 0008ABF4  80 6D 93 08 */	lwz r3, __OSArenaHi-_SDA_BASE_(r13)
@@ -21,3 +20,13 @@ OSSetArenaHi:
 OSSetArenaLo:
 /* 8008DCCC 0008AC0C  90 6D 82 48 */	stw r3, __OSArenaLo-_SDA_BASE_(r13)
 /* 8008DCD0 0008AC10  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global __OSArenaLo
+__OSArenaLo:
+	.incbin "baserom.dol", 0x3E3248, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __OSArenaHi
+__OSArenaHi:
+	.skip 0x8

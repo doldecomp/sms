@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setIndividualDifference___8TBaseNPCFR20JSUMemoryInputStream
 setIndividualDifference___8TBaseNPCFR20JSUMemoryInputStream:
 /* 80175458 00172398  7C 08 02 A6 */	mflr r0
@@ -1118,3 +1117,158 @@ lbl_8017643C:
 /* 80176444 00173384  38 21 01 68 */	addi r1, r1, 0x168
 /* 80176448 00173388  7C 08 03 A6 */	mtlr r0
 /* 8017644C 0017338C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x37F350, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x37F35C, 0x14
+.global $$21962
+$$21962:
+	.incbin "baserom.dol", 0x37F370, 0x30
+.global $$21963
+$$21963:
+	.incbin "baserom.dol", 0x37F3A0, 0x38
+.global $$21964
+$$21964:
+	.incbin "baserom.dol", 0x37F3D8, 0x34
+.global $$21965
+$$21965:
+	.incbin "baserom.dol", 0x37F40C, 0x24
+.global $$22082
+$$22082:
+	.incbin "baserom.dol", 0x37F430, 0x10
+.global $$22105
+$$22105:
+	.incbin "baserom.dol", 0x37F440, 0x10
+.global $$22106
+$$22106:
+	.incbin "baserom.dol", 0x37F450, 0x10
+.global $$22107
+$$22107:
+	.incbin "baserom.dol", 0x37F460, 0xC
+.global $$22108
+$$22108:
+	.incbin "baserom.dol", 0x37F46C, 0xC
+.global $$22109
+$$22109:
+	.incbin "baserom.dol", 0x37F478, 0xC
+.global $$22110
+$$22110:
+	.incbin "baserom.dol", 0x37F484, 0xC
+.global $$22112
+$$22112:
+	.incbin "baserom.dol", 0x37F490, 0xC
+.global $$22114
+$$22114:
+	.incbin "baserom.dol", 0x37F49C, 0xC
+.global $$22115
+$$22115:
+	.incbin "baserom.dol", 0x37F4A8, 0xC
+.global $$22116
+$$22116:
+	.incbin "baserom.dol", 0x37F4B4, 0xC
+.global sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv
+sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F4C0, 0xE0
+.global sIndividualHoldArrowBck$localstatic0$initBaseActionFlag___8TBaseNPCFv
+sIndividualHoldArrowBck$localstatic0$initBaseActionFlag___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F5A0, 0x10
+.global sIndividualKinopioBck$localstatic1$initBaseActionFlag___8TBaseNPCFv
+sIndividualKinopioBck$localstatic1$initBaseActionFlag___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F5B0, 0x38
+.global sIndividualKinopioBtp$localstatic2$initBaseActionFlag___8TBaseNPCFv
+sIndividualKinopioBtp$localstatic2$initBaseActionFlag___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F5E8, 0x18
+.global sIndividualKinojiiBck$localstatic3$initBaseActionFlag___8TBaseNPCFv
+sIndividualKinojiiBck$localstatic3$initBaseActionFlag___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F600, 0x30
+.global sIndividualKinojiiBtp$localstatic4$initBaseActionFlag___8TBaseNPCFv
+sIndividualKinojiiBtp$localstatic4$initBaseActionFlag___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F630, 0x18
+.global sIndividualParentRaccoonDogAnmBck$localstatic0$initIndividualAnm___8TBaseNPCFv
+sIndividualParentRaccoonDogAnmBck$localstatic0$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F648, 0x10
+.global sIndividualChildRaccoonDogAnmBck$localstatic1$initIndividualAnm___8TBaseNPCFv
+sIndividualChildRaccoonDogAnmBck$localstatic1$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F658, 0x10
+.global sIndividualMareMA0Bck$localstatic2$initIndividualAnm___8TBaseNPCFv
+sIndividualMareMA0Bck$localstatic2$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F668, 0x10
+.global sIndividualMareMA0Btp$localstatic3$initIndividualAnm___8TBaseNPCFv
+sIndividualMareMA0Btp$localstatic3$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F678, 0x10
+.global sIndividualMareMA1Bck$localstatic4$initIndividualAnm___8TBaseNPCFv
+sIndividualMareMA1Bck$localstatic4$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F688, 0x10
+.global sIndividualMareMA1Btp$localstatic5$initIndividualAnm___8TBaseNPCFv
+sIndividualMareMA1Btp$localstatic5$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x37F698, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cManiyaParentViewObjName
+cManiyaParentViewObjName:
+	.incbin "baserom.dol", 0x3E34C8, 0x4
+.global cManiyaChildViewObjName
+cManiyaChildViewObjName:
+	.incbin "baserom.dol", 0x3E34CC, 0x4
+.global cNotUseFastCubeViewObjName0
+cNotUseFastCubeViewObjName0:
+	.incbin "baserom.dol", 0x3E34D0, 0x4
+.global cNotUseFastCubeViewObjName1
+cNotUseFastCubeViewObjName1:
+	.incbin "baserom.dol", 0x3E34D4, 0x4
+.global cEyeMaterialName
+cEyeMaterialName:
+	.incbin "baserom.dol", 0x3E34D8, 0x4
+.global cNeckJointName
+cNeckJointName:
+	.incbin "baserom.dol", 0x3E34DC, 0x4
+.global sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x3E34E0, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x3E65A0, 0x8
+.global sIndividualMareWA0Bck$localstatic6$initIndividualAnm___8TBaseNPCFv
+sIndividualMareWA0Bck$localstatic6$initIndividualAnm___8TBaseNPCFv:
+	.incbin "baserom.dol", 0x3E65A8, 0x8
+.global $$22532
+$$22532:
+	.incbin "baserom.dol", 0x3E65B0, 0x4
+.global $$22533
+$$22533:
+	.incbin "baserom.dol", 0x3E65B4, 0x4
+.global $$22534
+$$22534:
+	.incbin "baserom.dol", 0x3E65B8, 0x4
+.global $$22535
+$$22535:
+	.incbin "baserom.dol", 0x3E65BC, 0x4
+.global $$22537
+$$22537:
+	.incbin "baserom.dol", 0x3E65C0, 0x8
+.global $$22539
+$$22539:
+	.incbin "baserom.dol", 0x3E65C8, 0x8
+.global $$22754
+$$22754:
+	.incbin "baserom.dol", 0x3E65D0, 0x4
+.global $$22755
+$$22755:
+	.incbin "baserom.dol", 0x3E65D4, 0x4
+.global $$22756
+$$22756:
+	.incbin "baserom.dol", 0x3E65D8, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sCheckPollutedStartCounter$localstatic0$initSinkNpc___8TBaseNPCFv
+sCheckPollutedStartCounter$localstatic0$initSinkNpc___8TBaseNPCFv:
+	.skip 0x4
+.global init$localstatic1$initSinkNpc___8TBaseNPCFv
+init$localstatic1$initSinkNpc___8TBaseNPCFv:
+	.skip 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap
 __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap:
 /* 8006F3E8 0006C328  7C 08 02 A6 */	mflr r0
@@ -701,3 +700,11 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 /* 8006FD70 0006CCB0  7C 08 03 A6 */	mtlr r0
 /* 8006FD74 0006CCB4  38 21 00 28 */	addi r1, r1, 0x28
 /* 8006FD78 0006CCB8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21786
+$$21786:
+	.incbin "baserom.dol", 0x3E44F8, 0x4
+.global $$21787
+$$21787:
+	.incbin "baserom.dol", 0x3E44FC, 0x4

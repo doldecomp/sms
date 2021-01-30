@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TWireBinderFv
 __dt__11TWireBinderFv:
 /* 80326318 00323258  7C 08 02 A6 */	mflr r0
@@ -488,3 +487,31 @@ lbl_803269B0:
 /* 803269BC 003238FC  7C 08 03 A6 */	mtlr r0
 /* 803269C0 00323900  38 21 00 50 */	addi r1, r1, 0x50
 /* 803269C4 00323904  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TWireBinder
+__vt__11TWireBinder:
+	.incbin "baserom.dol", 0x3DE9D8, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21946
+$$21946:
+	.incbin "baserom.dol", 0x3EBAD8, 0x4
+.global $$21947
+$$21947:
+	.incbin "baserom.dol", 0x3EBADC, 0x4
+.global $$21966
+$$21966:
+	.incbin "baserom.dol", 0x3EBAE0, 0x4
+.global $$22039
+$$22039:
+	.incbin "baserom.dol", 0x3EBAE4, 0x4
+.global $$22040
+$$22040:
+	.incbin "baserom.dol", 0x3EBAE8, 0x4
+.global $$22119
+$$22119:
+	.incbin "baserom.dol", 0x3EBAEC, 0x4
+.global $$22152
+$$22152:
+	.incbin "baserom.dol", 0x3EBAF0, 0x8

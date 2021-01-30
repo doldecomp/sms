@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
 __ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1:
 /* 80039B38 00036A78  88 04 00 00 */	lbz r0, 0(r4)
@@ -466,3 +465,11 @@ lbl_8003A12C:
 /* 8003A13C 0003707C  83 A1 00 34 */	lwz r29, 0x34(r1)
 /* 8003A140 00037080  38 21 00 40 */	addi r1, r1, 0x40
 /* 8003A144 00037084  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2360
+$$2360:
+	.incbin "baserom.dol", 0x3E3FF8, 0x8
+.global $$2549
+$$2549:
+	.incbin "baserom.dol", 0x3E4000, 0x8

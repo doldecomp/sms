@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXSetDispCopySrc
 GXSetDispCopySrc:
 /* 800A8BE8 000A5B28  80 ED 82 C8 */	lwz r7, gx-_SDA_BASE_(r13)
@@ -945,3 +944,28 @@ GXClearBoundingBox:
 /* 800A9938 000A6878  90 85 80 00 */	stw r4, -0x8000(r5)
 /* 800A993C 000A687C  B0 03 00 02 */	sth r0, 2(r3)
 /* 800A9940 000A6880  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global GXNtsc480IntDf
+GXNtsc480IntDf:
+	.incbin "baserom.dol", 0x3AE7B8, 0x3C
+.global GXNtsc480Int
+GXNtsc480Int:
+	.incbin "baserom.dol", 0x3AE7F4, 0x3C
+.global GXMpal480IntDf
+GXMpal480IntDf:
+	.incbin "baserom.dol", 0x3AE830, 0x3C
+.global GXPal528IntDf
+GXPal528IntDf:
+	.incbin "baserom.dol", 0x3AE86C, 0x3C
+.global GXEurgb60Hz480IntDf
+GXEurgb60Hz480IntDf:
+	.incbin "baserom.dol", 0x3AE8A8, 0x40
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$283
+$$283:
+	.incbin "baserom.dol", 0x3E47F0, 0x8
+.global $$2138
+$$2138:
+	.incbin "baserom.dol", 0x3E47F8, 0x8

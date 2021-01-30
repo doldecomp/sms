@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__20TAreaCylinderManagerFv
 __dt__20TAreaCylinderManagerFv:
 /* 8031926C 003161AC  7C 08 02 A6 */	mflr r0
@@ -522,3 +521,25 @@ lbl_80319970:
 /* 80319980 003168C0  7C 08 03 A6 */	mtlr r0
 /* 80319984 003168C4  38 21 00 18 */	addi r1, r1, 0x18
 /* 80319988 003168C8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__20TAreaCylinderManager
+__vt__20TAreaCylinderManager:
+	.incbin "baserom.dol", 0x3DDE38, 0x24
+.global __vt__13TAreaCylinder
+__vt__13TAreaCylinder:
+	.incbin "baserom.dol", 0x3DDE5C, 0x24
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22137
+$$22137:
+	.incbin "baserom.dol", 0x3EB8C0, 0x4
+.global $$22138
+$$22138:
+	.incbin "baserom.dol", 0x3EB8C4, 0x4
+.global $$22140
+$$22140:
+	.incbin "baserom.dol", 0x3EB8C8, 0x8
+.global $$22149
+$$22149:
+	.incbin "baserom.dol", 0x3EB8D0, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JStage7TSystemFv
 __dt__Q26JStage7TSystemFv:
 /* 80081B5C 0007EA9C  7C 08 02 A6 */	mflr r0
@@ -64,3 +63,8 @@ JSGSetSystemData__Q26JStage7TSystemFUlUl:
 /* 80081BF4 0007EB34  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 80081BF8 0007EB38  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 80081BFC 0007EB3C  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JStage7TSystem
+__vt__Q26JStage7TSystem:
+	.incbin "baserom.dol", 0x3A9EC8, 0x58

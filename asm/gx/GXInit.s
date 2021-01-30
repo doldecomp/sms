@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __GXDefaultTexRegionCallback
 __GXDefaultTexRegionCallback:
 /* 800A4EE4 000A1E24  7C 08 02 A6 */	mflr r0
@@ -1140,3 +1139,53 @@ lbl_800A5EC0:
 /* 800A5FC8 000A2F08  38 21 00 78 */	addi r1, r1, 0x78
 /* 800A5FCC 000A2F0C  7C 08 03 A6 */	mtlr r0
 /* 800A5FD0 000A2F10  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global gx
+gx:
+	.incbin "baserom.dol", 0x3E32C8, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2121
+$$2121:
+	.incbin "baserom.dol", 0x3E47D0, 0x4
+.global $$2122
+$$2122:
+	.incbin "baserom.dol", 0x3E47D4, 0x4
+.global $$2123
+$$2123:
+	.incbin "baserom.dol", 0x3E47D8, 0x4
+.global $$2177
+$$2177:
+	.incbin "baserom.dol", 0x3E47DC, 0x4
+.global $$2178
+$$2178:
+	.incbin "baserom.dol", 0x3E47E0, 0x4
+.global $$2179
+$$2179:
+	.incbin "baserom.dol", 0x3E47E4, 0x4
+.global $$2181
+$$2181:
+	.incbin "baserom.dol", 0x3E47E8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gxData
+gxData:
+	.skip 0x4F8
+.global FifoObj
+FifoObj:
+	.skip 0x80
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __piReg
+__piReg:
+	.skip 0x4
+.global __cpReg
+__cpReg:
+	.skip 0x4
+.global __peReg
+__peReg:
+	.skip 0x4
+.global __memReg
+__memReg:
+	.skip 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSRegisterResetFunction
 OSRegisterResetFunction:
 /* 80091620 0008E560  80 AD 93 48 */	lwz r5, ResetFunctionQueue-_SDA_BASE_(r13)
@@ -313,3 +312,8 @@ lbl_800919EC:
 /* 800919FC 0008E93C  54 03 E8 FE */	srwi r3, r0, 3
 lbl_80091A00:
 /* 80091A00 0008E940  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global ResetFunctionQueue
+ResetFunctionQueue:
+	.skip 0x8

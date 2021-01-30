@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global ErrorCode2Num
 ErrorCode2Num:
 /* 80099260 000961A0  38 00 00 02 */	li r0, 2
@@ -124,3 +123,8 @@ lbl_800993D4:
 /* 800993EC 0009632C  38 21 00 18 */	addi r1, r1, 0x18
 /* 800993F0 00096330  7C 08 03 A6 */	mtlr r0
 /* 800993F4 00096334  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global ErrorTable
+ErrorTable:
+	.incbin "baserom.dol", 0x3ADE78, 0x48

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q38JASystem6Kernel8TPortCmdFv
 __ct__Q38JASystem6Kernel8TPortCmdFv:
 /* 80061778 0005E6B8  38 00 00 00 */	li r0, 0
@@ -147,3 +146,11 @@ lbl_8006192C:
 /* 80061938 0005E878  38 21 00 48 */	addi r1, r1, 0x48
 /* 8006193C 0005E87C  7C 08 03 A6 */	mtlr r0
 /* 80061940 0005E880  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global cmd_once
+cmd_once:
+	.skip 0x8
+.global cmd_stay
+cmd_stay:
+	.skip 0x8

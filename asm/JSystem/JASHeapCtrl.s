@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q38JASystem6Kernel5THeapFv
 __ct__Q38JASystem6Kernel5THeapFv:
 /* 800636E8 00060628  38 C0 00 00 */	li r6, 0
@@ -462,3 +461,8 @@ getRemain__Q38JASystem6Kernel10TSolidHeapFv:
 /* 80063CF0 00060C30  7C 65 20 50 */	subf r3, r5, r4
 /* 80063CF4 00060C34  7C 63 00 50 */	subf r3, r3, r0
 /* 80063CF8 00060C38  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global global_id__Q28JASystem6Kernel
+global_id__Q28JASystem6Kernel:
+	.skip 0x8

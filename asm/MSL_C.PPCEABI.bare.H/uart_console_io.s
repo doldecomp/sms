@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __close_console
 __close_console:
 /* 800863A8 000832E8  38 60 00 00 */	li r3, 0
@@ -118,3 +117,8 @@ lbl_8008650C:
 /* 8008651C 0008345C  83 A1 00 24 */	lwz r29, 0x24(r1)
 /* 80086520 00083460  38 21 00 30 */	addi r1, r1, 0x30
 /* 80086524 00083464  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global initialized$16
+initialized$16:
+	.skip 0x8

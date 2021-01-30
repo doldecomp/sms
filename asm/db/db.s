@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global DBInit
 DBInit:
 /* 8008C43C 0008937C  3C 80 80 00 */	lis r4, 0x80000040@ha
@@ -76,3 +75,16 @@ lbl_8008C500:
 /* 8008C51C 0008945C  91 41 00 24 */	stw r10, 0x24(r1)
 /* 8008C520 00089460  38 21 00 70 */	addi r1, r1, 0x70
 /* 8008C524 00089464  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$27
+$$27:
+	.incbin "baserom.dol", 0x3AC0A8, 0x18
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __DBInterface
+__DBInterface:
+	.skip 0x4
+.global DBVerbose
+DBVerbose:
+	.skip 0x4

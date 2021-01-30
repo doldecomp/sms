@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global registerEventWatcher__12TMarDirectorFP13TEventWatcher
 registerEventWatcher__12TMarDirectorFP13TEventWatcher:
 /* 800EA294 000E71D4  7C 08 02 A6 */	mflr r0
@@ -536,3 +535,80 @@ lbl_800EAA38:
 /* 800EAA40 000E7980  38 21 00 10 */	addi r1, r1, 0x10
 /* 800EAA44 000E7984  7C 08 03 A6 */	mtlr r0
 /* 800EAA48 000E7988  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC20, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3702B8, 0xC
+.global $$22396
+$$22396:
+	.incbin "baserom.dol", 0x3702C4, 0xC
+.global $$22397
+$$22397:
+	.incbin "baserom.dol", 0x3702D0, 0xC
+.global $$22399
+$$22399:
+	.incbin "baserom.dol", 0x3702DC, 0x1C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22398
+$$22398:
+	.incbin "baserom.dol", 0x3E4D40, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22269
+$$22269:
+	.skip 0xC
+.global $$22270
+$$22270:
+	.skip 0xC
+.global $$22271
+$$22271:
+	.skip 0xC
+.global $$22272
+$$22272:
+	.skip 0xC
+.global $$22273
+$$22273:
+	.skip 0xC
+.global $$22274
+$$22274:
+	.skip 0xC
+.global $$22275
+$$22275:
+	.skip 0xC
+.global $$22276
+$$22276:
+	.skip 0xC
+.global $$22277
+$$22277:
+	.skip 0xC
+.global $$22278
+$$22278:
+	.skip 0xC
+.global $$22279
+$$22279:
+	.skip 0xC
+.global $$22280
+$$22280:
+	.skip 0xC
+.global $$22281
+$$22281:
+	.skip 0xC
+.global $$22282
+$$22282:
+	.skip 0xC
+.global $$22283
+$$22283:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpSceneCmnDat
+gpSceneCmnDat:
+	.skip 0x4
+.global gpSceneCmnDatSize
+gpSceneCmnDatSize:
+	.skip 0x4

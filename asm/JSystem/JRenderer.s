@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global J3DGDLoadTexMtxImm__FPA4_fUl13_GXTexMtxType
 J3DGDLoadTexMtxImm__FPA4_fUl13_GXTexMtxType:
 /* 8003C878 000397B8  7C 08 02 A6 */	mflr r0
@@ -2794,3 +2793,45 @@ lbl_8003F17C:
 /* 8003F1F8 0003C138  38 21 00 28 */	addi r1, r1, 0x28
 /* 8003F1FC 0003C13C  7C 08 03 A6 */	mtlr r0
 /* 8003F200 0003C140  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2320
+$$2320:
+	.incbin "baserom.dol", 0x3A6FA8, 0x54
+.global c2r$795
+c2r$795:
+	.incbin "baserom.dol", 0x3A6FFC, 0x14
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global JRNTexImage1Ids
+JRNTexImage1Ids:
+	.incbin "baserom.dol", 0x3E30C0, 0x8
+.global JRNTexImage2Ids
+JRNTexImage2Ids:
+	.incbin "baserom.dol", 0x3E30C8, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2385
+$$2385:
+	.incbin "baserom.dol", 0x3E4040, 0x4
+.global $$2386
+$$2386:
+	.incbin "baserom.dol", 0x3E4044, 0x4
+.global $$2387
+$$2387:
+	.incbin "baserom.dol", 0x3E4048, 0x8
+.global $$2388
+$$2388:
+	.incbin "baserom.dol", 0x3E4050, 0x8
+.global $$2389
+$$2389:
+	.incbin "baserom.dol", 0x3E4058, 0x8
+.global $$2390
+$$2390:
+	.incbin "baserom.dol", 0x3E4060, 0x8
+.global $$2392
+$$2392:
+	.incbin "baserom.dol", 0x3E4068, 0x8
+.global $$2697
+$$2697:
+	.incbin "baserom.dol", 0x3E4070, 0x8

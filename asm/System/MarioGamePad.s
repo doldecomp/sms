@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global read__13TMarioGamePadFv
 read__13TMarioGamePadFv:
 /* 800FBA58 000F8998  7C 08 02 A6 */	mflr r0
@@ -743,3 +742,37 @@ __sinit_MarioGamePad_cpp:
 /* 800FC460 000F93A0  38 00 00 00 */	li r0, 0
 /* 800FC464 000F93A4  B0 0D 98 28 */	sth r0, mResetFlag__13TMarioGamePad-_SDA_BASE_(r13)
 /* 800FC468 000F93A8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC3C, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21806
+$$21806:
+	.incbin "baserom.dol", 0x3E4F48, 0x4
+.global $$21807
+$$21807:
+	.incbin "baserom.dol", 0x3E4F4C, 0x4
+.global $$22115
+$$22115:
+	.incbin "baserom.dol", 0x3E4F50, 0x4
+.global $$22116
+$$22116:
+	.incbin "baserom.dol", 0x3E4F54, 0x4
+.global $$22118
+$$22118:
+	.incbin "baserom.dol", 0x3E4F58, 0x8
+.global $$22121
+$$22121:
+	.incbin "baserom.dol", 0x3E4F60, 0x4
+.global $$22122
+$$22122:
+	.incbin "baserom.dol", 0x3E4F64, 0x4
+.global $$22128
+$$22128:
+	.incbin "baserom.dol", 0x3E4F68, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mResetFlag__13TMarioGamePad
+mResetFlag__13TMarioGamePad:
+	.skip 0x8

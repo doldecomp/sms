@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global addMoveCameraAndMario__15CPolarSubCameraFRC3Vec
 addMoveCameraAndMario__15CPolarSubCameraFRC3Vec:
 /* 80362988 0035F8C8  7C 08 02 A6 */	mflr r0
@@ -405,3 +404,11 @@ lbl_80362F78:
 /* 80362F88 0035FEC8  83 A1 00 1C */	lwz r29, 0x1c(r1)
 /* 80362F8C 0035FECC  38 21 00 28 */	addi r1, r1, 0x28
 /* 80362F90 0035FED0  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21767
+$$21767:
+	.incbin "baserom.dol", 0x3EC5D0, 0x4
+.global $$21768
+$$21768:
+	.incbin "baserom.dol", 0x3EC5D4, 0x4

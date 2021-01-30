@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__12JUTExceptionFP14JUTDirectPrint
 create__12JUTExceptionFP14JUTDirectPrint:
 /* 8000F60C 0000C54C  7C 08 02 A6 */	mflr r0
@@ -2033,3 +2032,218 @@ lbl_800111DC:
 /* 800111EC 0000E12C  7C 08 03 A6 */	mtlr r0
 /* 800111F0 0000E130  38 21 00 18 */	addi r1, r1, 0x18
 /* 800111F4 0000E134  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBBC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x36D790, 0x10
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x36D7A0, 0xC
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x36D7AC, 0xC
+.global $$21484
+$$21484:
+	.incbin "baserom.dol", 0x36D7B8, 0x10
+.global $$21485
+$$21485:
+	.incbin "baserom.dol", 0x36D7C8, 0x10
+.global $$21488
+$$21488:
+	.incbin "baserom.dol", 0x36D7D8, 0x14
+.global $$21489
+$$21489:
+	.incbin "baserom.dol", 0x36D7EC, 0xC
+.global $$21491
+$$21491:
+	.incbin "baserom.dol", 0x36D7F8, 0x10
+.global $$21492
+$$21492:
+	.incbin "baserom.dol", 0x36D808, 0xC
+.global $$21493
+$$21493:
+	.incbin "baserom.dol", 0x36D814, 0xC
+.global $$21495
+$$21495:
+	.incbin "baserom.dol", 0x36D820, 0x14
+.global $$21496
+$$21496:
+	.incbin "baserom.dol", 0x36D834, 0xC
+.global $$21497
+$$21497:
+	.incbin "baserom.dol", 0x36D840, 0x14
+.global $$21498
+$$21498:
+	.incbin "baserom.dol", 0x36D854, 0x14
+.global $$21499
+$$21499:
+	.incbin "baserom.dol", 0x36D868, 0xC
+.global $$21562
+$$21562:
+	.incbin "baserom.dol", 0x36D874, 0x14
+.global $$21563
+$$21563:
+	.incbin "baserom.dol", 0x36D888, 0x10
+.global $$21564
+$$21564:
+	.incbin "baserom.dol", 0x36D898, 0x10
+.global $$21566
+$$21566:
+	.incbin "baserom.dol", 0x36D8A8, 0x14
+.global $$21567
+$$21567:
+	.incbin "baserom.dol", 0x36D8BC, 0xC
+.global $$21628
+$$21628:
+	.incbin "baserom.dol", 0x36D8C8, 0x28
+.global $$21701
+$$21701:
+	.incbin "baserom.dol", 0x36D8F0, 0x28
+.global $$21702
+$$21702:
+	.incbin "baserom.dol", 0x36D918, 0x20
+.global $$21703
+$$21703:
+	.incbin "baserom.dol", 0x36D938, 0x14
+.global $$21704
+$$21704:
+	.incbin "baserom.dol", 0x36D94C, 0x18
+.global $$21709
+$$21709:
+	.incbin "baserom.dol", 0x36D964, 0x20
+.global $$21710
+$$21710:
+	.incbin "baserom.dol", 0x36D984, 0x1C
+.global $$21711
+$$21711:
+	.incbin "baserom.dol", 0x36D9A0, 0x1C
+.global $$21722
+$$21722:
+	.incbin "baserom.dol", 0x36D9BC, 0x28
+.global $$21723
+$$21723:
+	.incbin "baserom.dol", 0x36D9E4, 0x28
+.global $$21724
+$$21724:
+	.incbin "baserom.dol", 0x36DA0C, 0x1C
+.global $$21757
+$$21757:
+	.incbin "baserom.dol", 0x36DA28, 0x18
+.global $$21775
+$$21775:
+	.incbin "baserom.dol", 0x36DA40, 0x2C
+.global $$21776
+$$21776:
+	.incbin "baserom.dol", 0x36DA6C, 0x10
+.global $$21777
+$$21777:
+	.incbin "baserom.dol", 0x36DA7C, 0x14
+.global $$21778
+$$21778:
+	.incbin "baserom.dol", 0x36DA90, 0x28
+.global $$21795
+$$21795:
+	.incbin "baserom.dol", 0x36DAB8, 0x1C
+.global $$22006
+$$22006:
+	.incbin "baserom.dol", 0x36DAD4, 0x38
+.global $$22007
+$$22007:
+	.incbin "baserom.dol", 0x36DB0C, 0x24
+.global $$22193
+$$22193:
+	.incbin "baserom.dol", 0x36DB30, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sMessageQueue__12JUTException
+sMessageQueue__12JUTException:
+	.incbin "baserom.dol", 0x3A5840, 0x20
+.global sCpuExpName__12JUTException
+sCpuExpName__12JUTException:
+	.incbin "baserom.dol", 0x3A5860, 0x40
+.global __vt__12JUTException
+__vt__12JUTException:
+	.incbin "baserom.dol", 0x3A58A0, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global sMessageBuffer__12JUTException
+sMessageBuffer__12JUTException:
+	.incbin "baserom.dol", 0x3E3008, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21486
+$$21486:
+	.incbin "baserom.dol", 0x3E3D50, 0x4
+.global $$21487
+$$21487:
+	.incbin "baserom.dol", 0x3E3D54, 0x4
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3E3D58, 0x8
+.global $$21494
+$$21494:
+	.incbin "baserom.dol", 0x3E3D60, 0x8
+.global $$21565
+$$21565:
+	.incbin "baserom.dol", 0x3E3D68, 0x4
+.global $$21629
+$$21629:
+	.incbin "baserom.dol", 0x3E3D6C, 0x4
+.global $$21630
+$$21630:
+	.incbin "baserom.dol", 0x3E3D70, 0x4
+.global $$21756
+$$21756:
+	.incbin "baserom.dol", 0x3E3D74, 0x4
+.global $$22094
+$$22094:
+	.incbin "baserom.dol", 0x3E3D78, 0x8
+.global $$22216
+$$22216:
+	.incbin "baserom.dol", 0x3E3D80, 0x4
+.global $$22217
+$$22217:
+	.incbin "baserom.dol", 0x3E3D84, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global exCallbackObject
+exCallbackObject:
+	.skip 0x14
+.global $$21483
+$$21483:
+	.skip 0xC
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sMapFileList__12JUTException
+sMapFileList__12JUTException:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sErrorManager__12JUTException
+sErrorManager__12JUTException:
+	.skip 0x4
+.global sPreUserCallback__12JUTException
+sPreUserCallback__12JUTException:
+	.skip 0x4
+.global sPostUserCallback__12JUTException
+sPostUserCallback__12JUTException:
+	.skip 0x4
+.global sConsoleBuffer__12JUTException
+sConsoleBuffer__12JUTException:
+	.skip 0x4
+.global sConsoleBufferSize__12JUTException
+sConsoleBufferSize__12JUTException:
+	.skip 0x4
+.global sConsole__12JUTException
+sConsole__12JUTException:
+	.skip 0x4
+.global msr__12JUTException
+msr__12JUTException:
+	.skip 0x4
+.global fpscr__12JUTException
+fpscr__12JUTException:
+	.skip 0x4

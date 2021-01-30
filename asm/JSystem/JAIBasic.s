@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__8JAIBasicFv
 __ct__8JAIBasicFv:
 /* 8004B2A8 000481E8  3C 80 80 3B */	lis r4, __vt__8JAIBasic@ha
@@ -2953,3 +2952,55 @@ __sinit_JAIBasic_cpp:
 /* 8004DA98 0004A9D8  38 03 3E 4C */	addi r0, r3, camMtx__8JAIConst@l
 /* 8004DA9C 0004A9DC  90 05 00 08 */	stw r0, 8(r5)
 /* 8004DAA0 0004A9E0  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBE0, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2463
+$$2463:
+	.incbin "baserom.dol", 0x36E1E8, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2547
+$$2547:
+	.incbin "baserom.dol", 0x3A7C40, 0x24
+.global __vt__8JAIBasic
+__vt__8JAIBasic:
+	.incbin "baserom.dol", 0x3A7C64, 0x3C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2413
+$$2413:
+	.incbin "baserom.dol", 0x3E4160, 0x8
+.global $$2694
+$$2694:
+	.incbin "baserom.dol", 0x3E4168, 0x4
+.global $$2695
+$$2695:
+	.incbin "baserom.dol", 0x3E416C, 0x4
+.global $$2696
+$$2696:
+	.incbin "baserom.dol", 0x3E4170, 0x4
+.global $$21287
+$$21287:
+	.incbin "baserom.dol", 0x3E4174, 0x4
+.global $$21289
+$$21289:
+	.incbin "baserom.dol", 0x3E4178, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global JAInullCamera
+JAInullCamera:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global basic__8JAIBasic
+basic__8JAIBasic:
+	.skip 0x4
+.global _dinfo$1264
+_dinfo$1264:
+	.skip 0x4
+.global _info$1317
+_info$1317:
+	.skip 0x8

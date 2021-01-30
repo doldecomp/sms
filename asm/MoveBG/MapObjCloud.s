@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__10TRideCloudFv
 __dt__10TRideCloudFv:
 /* 801B74F4 001B4434  7C 08 02 A6 */	mflr r0
@@ -773,3 +772,95 @@ lbl_801B7F94:
 $$232$$2__dt__10TRideCloudFv:
 /* 801B7FA8 001B4EE8  38 63 FF E0 */	addi r3, r3, -32
 /* 801B7FAC 001B4EEC  4B FF F5 48 */	b __dt__10TRideCloudFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD50, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TRideCloud
+__vt__10TRideCloud:
+	.incbin "baserom.dol", 0x3C6D48, 0x170
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mMoveSpeedDefault__10TRideCloud
+mMoveSpeedDefault__10TRideCloud:
+	.incbin "baserom.dol", 0x3E36D8, 0x4
+.global mCushionLen__10TRideCloud
+mCushionLen__10TRideCloud:
+	.incbin "baserom.dol", 0x3E36DC, 0x4
+.global mCushionSpeed__10TRideCloud
+mCushionSpeed__10TRideCloud:
+	.incbin "baserom.dol", 0x3E36E0, 0x4
+.global mScaleSpeed__10TRideCloud
+mScaleSpeed__10TRideCloud:
+	.incbin "baserom.dol", 0x3E36E4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22842
+$$22842:
+	.incbin "baserom.dol", 0x3E83F0, 0x4
+.global $$22958
+$$22958:
+	.incbin "baserom.dol", 0x3E83F4, 0x4
+.global $$22959
+$$22959:
+	.incbin "baserom.dol", 0x3E83F8, 0x4
+.global $$22960
+$$22960:
+	.incbin "baserom.dol", 0x3E83FC, 0x4
+.global $$22961
+$$22961:
+	.incbin "baserom.dol", 0x3E8400, 0x4
+.global $$22962
+$$22962:
+	.incbin "baserom.dol", 0x3E8404, 0x4
+.global $$22964
+$$22964:
+	.incbin "baserom.dol", 0x3E8408, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23023
+$$23023:
+	.skip 0xC
+.global $$23024
+$$23024:
+	.skip 0xC
+.global $$23025
+$$23025:
+	.skip 0xC
+.global $$23026
+$$23026:
+	.skip 0xC
+.global $$23027
+$$23027:
+	.skip 0xC
+.global $$23028
+$$23028:
+	.skip 0xC
+.global $$23029
+$$23029:
+	.skip 0xC
+.global $$23030
+$$23030:
+	.skip 0xC
+.global $$23031
+$$23031:
+	.skip 0xC
+.global $$23032
+$$23032:
+	.skip 0xC
+.global $$23033
+$$23033:
+	.skip 0xC
+.global $$23034
+$$23034:
+	.skip 0xC
+.global $$23035
+$$23035:
+	.skip 0xC
+.global $$23036
+$$23036:
+	.skip 0xC
+.global $$23037
+$$23037:
+	.skip 0x10

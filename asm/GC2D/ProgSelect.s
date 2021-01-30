@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TProgSelectFv
 __dt__11TProgSelectFv:
 /* 8023DD7C 0023ACBC  7C 08 02 A6 */	mflr r0
@@ -380,3 +379,33 @@ lbl_8023E2DC:
 /* 8023E2F0 0023B230  83 A1 00 8C */	lwz r29, 0x8c(r1)
 /* 8023E2F4 0023B234  38 21 00 98 */	addi r1, r1, 0x98
 /* 8023E2F8 0023B238  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21685
+$$21685:
+	.incbin "baserom.dol", 0x391450, 0x74
+.global $$21686
+$$21686:
+	.incbin "baserom.dol", 0x3914C4, 0x74
+.global $$21734
+$$21734:
+	.incbin "baserom.dol", 0x391538, 0x28
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TProgSelect
+__vt__11TProgSelect:
+	.incbin "baserom.dol", 0x3CEE30, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21684
+$$21684:
+	.incbin "baserom.dol", 0x3E9748, 0x8
+.global $$21688
+$$21688:
+	.incbin "baserom.dol", 0x3E9750, 0x8
+.global $$21735
+$$21735:
+	.incbin "baserom.dol", 0x3E9758, 0x8
+.global $$21736
+$$21736:
+	.incbin "baserom.dol", 0x3E9760, 0x8

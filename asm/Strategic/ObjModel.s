@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13TMActorKeeperFP12TLiveManager
 __ct__13TMActorKeeperFP12TLiveManager:
 /* 80116260 001131A0  7C 08 02 A6 */	mflr r0
@@ -945,3 +944,13 @@ lbl_80116EFC:
 /* 80116F08 00113E48  38 21 00 20 */	addi r1, r1, 0x20
 /* 80116F0C 00113E4C  7C 08 03 A6 */	mtlr r0
 /* 80116F10 00113E50  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21948
+$$21948:
+	.incbin "baserom.dol", 0x377220, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21947
+$$21947:
+	.incbin "baserom.dol", 0x3E53F0, 0x8

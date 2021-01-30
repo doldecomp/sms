@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global updateOut__13M3UModelMarioFv
 updateOut__13M3UModelMarioFv:
 /* 80120898 0011D7D8  38 80 00 00 */	li r4, 0
@@ -168,3 +167,8 @@ lbl_80120ACC:
 /* 80120AD0 0011DA10  38 21 00 08 */	addi r1, r1, 8
 /* 80120AD4 0011DA14  7C 08 03 A6 */	mtlr r0
 /* 80120AD8 0011DA18  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13M3UModelMario
+__vt__13M3UModelMario:
+	.incbin "baserom.dol", 0x3B24A8, 0x28

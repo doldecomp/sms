@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKMessageIntoReply
 TRKMessageIntoReply:
 /* 80088B2C 00085A6C  7C 08 02 A6 */	mflr r0
@@ -1405,3 +1404,11 @@ lbl_80089DB0:
 /* 80089DC4 00086D04  80 01 00 04 */	lwz r0, 4(r1)
 /* 80089DC8 00086D08  7C 08 03 A6 */	mtlr r0
 /* 80089DCC 00086D0C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2175
+$$2175:
+	.incbin "baserom.dol", 0x3ABFE0, 0x1C
+.global $$2214
+$$2214:
+	.incbin "baserom.dol", 0x3ABFFC, 0x1C

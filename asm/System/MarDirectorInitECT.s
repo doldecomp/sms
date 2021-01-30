@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setupPerformList_console__12TMarDirectorFv
 setupPerformList_console__12TMarDirectorFv:
 /* 800EE2C0 000EB200  7C 08 02 A6 */	mflr r0
@@ -866,8 +865,8 @@ lbl_800EEF18:
 /* 800EEFD4 000EBF14  38 21 03 70 */	addi r1, r1, 0x370
 /* 800EEFD8 000EBF18  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__MarDirectorInitECT
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__MarDirectorInitECT:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 800EEFDC 000EBF1C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 800EEFE0 000EBF20  D0 43 00 04 */	stfs f2, 4(r3)
 /* 800EEFE4 000EBF24  D0 63 00 08 */	stfs f3, 8(r3)
@@ -1322,3 +1321,145 @@ lbl_800EF688:
 /* 800EF6A8 000EC5E8  CB 41 01 E8 */	lfd f26, 0x1e8(r1)
 /* 800EF6AC 000EC5EC  38 21 02 18 */	addi r1, r1, 0x218
 /* 800EF6B0 000EC5F0  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x370678, 0xC
+.global $$21701
+$$21701:
+	.incbin "baserom.dol", 0x370684, 0x14
+.global $$21784
+$$21784:
+	.incbin "baserom.dol", 0x370698, 0x30
+.global $$21785
+$$21785:
+	.incbin "baserom.dol", 0x3706C8, 0x38
+.global $$21786
+$$21786:
+	.incbin "baserom.dol", 0x370700, 0x34
+.global $$21787
+$$21787:
+	.incbin "baserom.dol", 0x370734, 0x24
+.global $$22386
+$$22386:
+	.incbin "baserom.dol", 0x370758, 0xC
+.global $$22387
+$$22387:
+	.incbin "baserom.dol", 0x370764, 0x14
+.global $$22388
+$$22388:
+	.incbin "baserom.dol", 0x370778, 0xC
+.global $$22730
+$$22730:
+	.incbin "baserom.dol", 0x370784, 0xC
+.global $$22732
+$$22732:
+	.incbin "baserom.dol", 0x370790, 0x14
+.global $$22733
+$$22733:
+	.incbin "baserom.dol", 0x3707A4, 0x14
+.global $$22734
+$$22734:
+	.incbin "baserom.dol", 0x3707B8, 0x10
+.global $$22735
+$$22735:
+	.incbin "baserom.dol", 0x3707C8, 0xC
+.global $$22736
+$$22736:
+	.incbin "baserom.dol", 0x3707D4, 0xC
+.global $$22737
+$$22737:
+	.incbin "baserom.dol", 0x3707E0, 0x10
+.global $$22743
+$$22743:
+	.incbin "baserom.dol", 0x3707F0, 0xC
+.global $$22744
+$$22744:
+	.incbin "baserom.dol", 0x3707FC, 0x18
+.global $$22745
+$$22745:
+	.incbin "baserom.dol", 0x370814, 0x10
+.global $$22746
+$$22746:
+	.incbin "baserom.dol", 0x370824, 0x14
+.global $$22747
+$$22747:
+	.incbin "baserom.dol", 0x370838, 0xC
+.global $$22748
+$$22748:
+	.incbin "baserom.dol", 0x370844, 0x10
+.global $$22749
+$$22749:
+	.incbin "baserom.dol", 0x370854, 0x10
+.global $$22750
+$$22750:
+	.incbin "baserom.dol", 0x370864, 0x10
+.global $$22751
+$$22751:
+	.incbin "baserom.dol", 0x370874, 0x10
+.global $$22810
+$$22810:
+	.incbin "baserom.dol", 0x370884, 0x10
+.global $$22811
+$$22811:
+	.incbin "baserom.dol", 0x370894, 0xC
+.global $$22971
+$$22971:
+	.incbin "baserom.dol", 0x3708A0, 0x10
+.global $$22972
+$$22972:
+	.incbin "baserom.dol", 0x3708B0, 0x10
+.global $$22973
+$$22973:
+	.incbin "baserom.dol", 0x3708C0, 0x10
+.global $$22974
+$$22974:
+	.incbin "baserom.dol", 0x3708D0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22389
+$$22389:
+	.incbin "baserom.dol", 0x3E4D98, 0x8
+.global $$22731
+$$22731:
+	.incbin "baserom.dol", 0x3E4DA0, 0x8
+.global $$22738
+$$22738:
+	.incbin "baserom.dol", 0x3E4DA8, 0x4
+.global $$22739
+$$22739:
+	.incbin "baserom.dol", 0x3E4DAC, 0x4
+.global $$22740
+$$22740:
+	.incbin "baserom.dol", 0x3E4DB0, 0x4
+.global $$22741
+$$22741:
+	.incbin "baserom.dol", 0x3E4DB4, 0x4
+.global $$22742
+$$22742:
+	.incbin "baserom.dol", 0x3E4DB8, 0x4
+.global $$22752
+$$22752:
+	.incbin "baserom.dol", 0x3E4DBC, 0x4
+.global $$22753
+$$22753:
+	.incbin "baserom.dol", 0x3E4DC0, 0x4
+.global $$22754
+$$22754:
+	.incbin "baserom.dol", 0x3E4DC4, 0x4
+.global $$22755
+$$22755:
+	.incbin "baserom.dol", 0x3E4DC8, 0x4
+.global $$22756
+$$22756:
+	.incbin "baserom.dol", 0x3E4DCC, 0x4
+.global $$22758
+$$22758:
+	.incbin "baserom.dol", 0x3E4DD0, 0x8
+.global $$22760
+$$22760:
+	.incbin "baserom.dol", 0x3E4DD8, 0x8
+.global $$22975
+$$22975:
+	.incbin "baserom.dol", 0x3E4DE0, 0x8

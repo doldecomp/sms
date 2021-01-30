@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global DSP_CreateMap__Fv
 DSP_CreateMap__Fv:
 /* 8005F760 0005C6A0  7C 08 02 A6 */	mflr r0
@@ -566,3 +565,30 @@ setBusConnect__Q38JASystem12DSPInterface9DSPBufferFUcUc:
 /* 8005FEA8 0005CDE8  38 04 00 10 */	addi r0, r4, 0x10
 /* 8005FEAC 0005CDEC  7C A3 03 2E */	sthx r5, r3, r0
 /* 8005FEB0 0005CDF0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global SEND_TABLE__Q28JASystem12DSPInterface
+SEND_TABLE__Q28JASystem12DSPInterface:
+	.incbin "baserom.dol", 0x3A8768, 0x18
+.global connect_table$341
+connect_table$341:
+	.incbin "baserom.dol", 0x3A8780, 0x18
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global JAS_DSP_PREFIX__Q28JASystem12DSPInterface
+JAS_DSP_PREFIX__Q28JASystem12DSPInterface:
+	.incbin "baserom.dol", 0x3E31B8, 0x4
+.global COMP_BLOCKSAMPLES$234
+COMP_BLOCKSAMPLES$234:
+	.incbin "baserom.dol", 0x3E31BC, 0x8
+.global COMP_BLOCKBYTES$235
+COMP_BLOCKBYTES$235:
+	.incbin "baserom.dol", 0x3E31C4, 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global CH_BUF__Q28JASystem12DSPInterface
+CH_BUF__Q28JASystem12DSPInterface:
+	.skip 0x4
+.global FX_BUF__Q28JASystem12DSPInterface
+FX_BUF__Q28JASystem12DSPInterface:
+	.skip 0x4

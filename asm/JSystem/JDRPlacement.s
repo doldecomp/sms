@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__Q26JDrama10TPlacementFR20JSUMemoryInputStream
 load__Q26JDrama10TPlacementFR20JSUMemoryInputStream:
 /* 80045A2C 0004296C  7C 08 02 A6 */	mflr r0
@@ -30,3 +29,8 @@ load__Q26JDrama10TPlacementFR20JSUMemoryInputStream:
 /* 80045A88 000429C8  7C 08 03 A6 */	mtlr r0
 /* 80045A8C 000429CC  38 21 00 28 */	addi r1, r1, 0x28
 /* 80045A90 000429D0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama10TPlacement
+__vt__Q26JDrama10TPlacement:
+	.incbin "baserom.dol", 0x3A78B0, 0x28

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TBoidLeaderFv
 __dt__11TBoidLeaderFv:
 /* 80363734 00360674  7C 08 02 A6 */	mflr r0
@@ -1343,3 +1342,82 @@ __ct__5TBoidFv:
 /* 80364ABC 003619FC  38 21 00 20 */	addi r1, r1, 0x20
 /* 80364AC0 00361A00  7C 08 03 A6 */	mtlr r0
 /* 80364AC4 00361A04  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TBoidLeader
+__vt__11TBoidLeader:
+	.incbin "baserom.dol", 0x3E2330, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22190
+$$22190:
+	.incbin "baserom.dol", 0x3EC5F0, 0x4
+.global $$22191
+$$22191:
+	.incbin "baserom.dol", 0x3EC5F4, 0x4
+.global $$22192
+$$22192:
+	.incbin "baserom.dol", 0x3EC5F8, 0x4
+.global $$22193
+$$22193:
+	.incbin "baserom.dol", 0x3EC5FC, 0x4
+.global $$22194
+$$22194:
+	.incbin "baserom.dol", 0x3EC600, 0x4
+.global $$22195
+$$22195:
+	.incbin "baserom.dol", 0x3EC604, 0x4
+.global $$22196
+$$22196:
+	.incbin "baserom.dol", 0x3EC608, 0x8
+.global $$22198
+$$22198:
+	.incbin "baserom.dol", 0x3EC610, 0x8
+.global $$22202
+$$22202:
+	.incbin "baserom.dol", 0x3EC618, 0x4
+.global $$22203
+$$22203:
+	.incbin "baserom.dol", 0x3EC61C, 0x4
+.global $$22289
+$$22289:
+	.incbin "baserom.dol", 0x3EC620, 0x4
+.global $$22290
+$$22290:
+	.incbin "baserom.dol", 0x3EC624, 0x4
+.global $$22526
+$$22526:
+	.incbin "baserom.dol", 0x3EC628, 0x4
+.global $$22527
+$$22527:
+	.incbin "baserom.dol", 0x3EC62C, 0x4
+.global $$22528
+$$22528:
+	.incbin "baserom.dol", 0x3EC630, 0x4
+.global $$22529
+$$22529:
+	.incbin "baserom.dol", 0x3EC634, 0x4
+.global $$22530
+$$22530:
+	.incbin "baserom.dol", 0x3EC638, 0x4
+.global $$22531
+$$22531:
+	.incbin "baserom.dol", 0x3EC63C, 0x4
+.global $$22532
+$$22532:
+	.incbin "baserom.dol", 0x3EC640, 0x4
+.global $$22533
+$$22533:
+	.incbin "baserom.dol", 0x3EC644, 0x4
+.global $$22577
+$$22577:
+	.incbin "baserom.dol", 0x3EC648, 0x4
+.global $$22578
+$$22578:
+	.incbin "baserom.dol", 0x3EC64C, 0x4
+.global $$22579
+$$22579:
+	.incbin "baserom.dol", 0x3EC650, 0x4
+.global $$22580
+$$22580:
+	.incbin "baserom.dol", 0x3EC654, 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13J2DOrthoGraphFRC7JUTRect
 __ct__13J2DOrthoGraphFRC7JUTRect:
 /* 80036B38 00033A78  7C 08 02 A6 */	mflr r0
@@ -424,3 +423,28 @@ J2DFillBox__F7JUTRectQ28JUtility6TColor:
 /* 80037174 000340B4  38 21 01 30 */	addi r1, r1, 0x130
 /* 80037178 000340B8  7C 08 03 A6 */	mtlr r0
 /* 8003717C 000340BC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13J2DOrthoGraph
+__vt__13J2DOrthoGraph:
+	.incbin "baserom.dol", 0x3A6BB0, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2123
+$$2123:
+	.incbin "baserom.dol", 0x3E3FB0, 0x4
+.global $$2124
+$$2124:
+	.incbin "baserom.dol", 0x3E3FB4, 0x4
+.global $$2130
+$$2130:
+	.incbin "baserom.dol", 0x3E3FB8, 0x8
+.global $$2132
+$$2132:
+	.incbin "baserom.dol", 0x3E3FC0, 0x8
+.global $$2164
+$$2164:
+	.incbin "baserom.dol", 0x3E3FC8, 0x4
+.global $$2165
+$$2165:
+	.incbin "baserom.dol", 0x3E3FCC, 0x4

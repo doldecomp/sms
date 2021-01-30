@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__14JKRCompArchiveFlQ210JKRArchive15EMountDirection
 __ct__14JKRCompArchiveFlQ210JKRArchive15EMountDirection:
 /* 80008184 000050C4  7C 08 02 A6 */	mflr r0
@@ -804,3 +803,28 @@ lbl_80008C98:
 /* 80008CA8 00005BE8  83 A1 00 1C */	lwz r29, 0x1c(r1)
 /* 80008CAC 00005BEC  38 21 00 28 */	addi r1, r1, 0x28
 /* 80008CB0 00005BF0  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x36D060, 0x10
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x36D070, 0xC
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x36D07C, 0xC
+.global $$21809
+$$21809:
+	.incbin "baserom.dol", 0x36D088, 0x14
+.global $$21810
+$$21810:
+	.incbin "baserom.dol", 0x36D09C, 0x20
+.global $$21811
+$$21811:
+	.incbin "baserom.dol", 0x36D0BC, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14JKRCompArchive
+__vt__14JKRCompArchive:
+	.incbin "baserom.dol", 0x3A5480, 0x48

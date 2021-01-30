@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global toupper
 toupper:
 /* 8008385C 0008079C  2C 03 FF FF */	cmpwi r3, -1
@@ -29,3 +28,14 @@ lbl_80083894:
 /* 800838A0 000807E0  7C 60 1A 14 */	add r3, r0, r3
 /* 800838A4 000807E4  88 63 00 00 */	lbz r3, 0(r3)
 /* 800838A8 000807E8  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global __ctype_map
+__ctype_map:
+	.incbin "baserom.dol", 0x36E620, 0x100
+.global __lower_map
+__lower_map:
+	.incbin "baserom.dol", 0x36E720, 0x100
+.global __upper_map
+__upper_map:
+	.incbin "baserom.dol", 0x36E820, 0x100

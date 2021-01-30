@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __TRK_get_MSR
 __TRK_get_MSR:
 /* 8008A438 00087378  7C 60 00 A6 */	mfmsr r3
@@ -1614,3 +1613,45 @@ TRKTargetSetInputPendingPtr:
 /* 8008BA08 00088948  38 84 AB 88 */	addi r4, r4, gTRKState@l
 /* 8008BA0C 0008894C  90 64 00 A0 */	stw r3, 0xa0(r4)
 /* 8008BA10 00088950  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global gTRKMemMap
+gTRKMemMap:
+	.incbin "baserom.dol", 0x36F210, 0x10
+.global $$2233
+$$2233:
+	.incbin "baserom.dol", 0x36F220, 0x14
+.global $$2238
+$$2238:
+	.incbin "baserom.dol", 0x36F234, 0x14
+.global $$2243
+$$2243:
+	.incbin "baserom.dol", 0x36F248, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global gTRKRestoreFlags
+gTRKRestoreFlags:
+	.incbin "baserom.dol", 0x3AC018, 0xC
+.global gTRKExceptionStatus
+gTRKExceptionStatus:
+	.incbin "baserom.dol", 0x3AC024, 0x10
+.global gTRKStepStatus
+gTRKStepStatus:
+	.incbin "baserom.dol", 0x3AC034, 0x14
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global TRK_saved_exceptionID
+TRK_saved_exceptionID:
+	.skip 0x4
+.global gTRKSaveState
+gTRKSaveState:
+	.skip 0x94
+.global TRKvalue128_temp
+TRKvalue128_temp:
+	.skip 0x10
+.global gTRKState
+gTRKState:
+	.skip 0xA8
+.global gTRKCPUState
+gTRKCPUState:
+	.skip 0x430

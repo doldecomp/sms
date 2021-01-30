@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global strstr
 strstr:
 /* 80085B78 00082AB8  28 04 00 00 */	cmplwi r4, 0
@@ -272,3 +271,11 @@ lbl_80085EAC:
 /* 80085EB8 00082DF8  40 82 FF F4 */	bne lbl_80085EAC
 /* 80085EBC 00082DFC  7C 83 23 78 */	mr r3, r4
 /* 80085EC0 00082E00  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global K1
+K1:
+	.incbin "baserom.dol", 0x3E3238, 0x4
+.global K2
+K2:
+	.incbin "baserom.dol", 0x3E323C, 0x4

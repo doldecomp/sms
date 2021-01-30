@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global calc__11J3DTexNoAnmCFPUs
 calc__11J3DTexNoAnmCFPUs:
 /* 80039858 00036798  7C 08 02 A6 */	mflr r0
@@ -208,3 +207,11 @@ lbl_80039B20:
 /* 80039B2C 00036A6C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80039B30 00036A70  7C 08 03 A6 */	mtlr r0
 /* 80039B34 00036A74  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14J3DMaterialAnm
+__vt__14J3DMaterialAnm:
+	.incbin "baserom.dol", 0x3A6E98, 0x10
+.global __vt__11J3DTexNoAnm
+__vt__11J3DTexNoAnm:
+	.incbin "baserom.dol", 0x3A6EA8, 0x10

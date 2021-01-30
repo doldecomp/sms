@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ptmf_test
 __ptmf_test:
 /* 80082AF4 0007FA34  80 A3 00 00 */	lwz r5, 0(r3)
@@ -30,3 +29,8 @@ __ptmf_scall:
 lbl_80082B44:
 /* 80082B44 0007FA84  7D 89 03 A6 */	mtctr r12
 /* 80082B48 0007FA88  4E 80 04 20 */	bctr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global __ptmf_null
+__ptmf_null:
+	.incbin "baserom.dol", 0x36E570, 0x10

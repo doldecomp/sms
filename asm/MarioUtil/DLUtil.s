@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global reset__10TDLTexQuadFv
 reset__10TDLTexQuadFv:
 /* 800C020C 000BD14C  38 00 00 00 */	li r0, 0
@@ -716,3 +715,16 @@ lbl_800C0C58:
 /* 800C0C74 000BDBB4  7C 08 03 A6 */	mtlr r0
 /* 800C0C78 000BDBB8  38 21 00 18 */	addi r1, r1, 0x18
 /* 800C0C7C 000BDBBC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15TDLColorTexQuad
+__vt__15TDLColorTexQuad:
+	.incbin "baserom.dol", 0x3AEF70, 0x20
+.global __vt__10TDLTexQuad
+__vt__10TDLTexQuad:
+	.incbin "baserom.dol", 0x3AEF90, 0x20
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global uv
+uv:
+	.incbin "baserom.dol", 0x3E3300, 0x8

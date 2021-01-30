@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__24TNerveTypicalGraphWanderFv
 __dt__24TNerveTypicalGraphWanderFv:
 /* 802823D4 0027F314  7C 08 02 A6 */	mflr r0
@@ -385,3 +384,67 @@ lbl_802828F0:
 $$232$$2__dt__13TTypicalEnemyFv:
 /* 8028290C 0027F84C  38 63 FF E0 */	addi r3, r3, -32
 /* 80282910 0027F850  4B FF FF 90 */	b __dt__13TTypicalEnemyFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x394FC0, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x394FCC, 0x14
+.global $$21604
+$$21604:
+	.incbin "baserom.dol", 0x394FE0, 0x30
+.global $$21605
+$$21605:
+	.incbin "baserom.dol", 0x395010, 0x38
+.global $$21606
+$$21606:
+	.incbin "baserom.dol", 0x395048, 0x34
+.global $$21607
+$$21607:
+	.incbin "baserom.dol", 0x39507C, 0x24
+.global $$22252
+$$22252:
+	.incbin "baserom.dol", 0x3950A0, 0x14
+.global $$22253
+$$22253:
+	.incbin "baserom.dol", 0x3950B4, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__24TNerveTypicalGraphWander
+__vt__24TNerveTypicalGraphWander:
+	.incbin "baserom.dol", 0x3D3DF0, 0x10
+.global __vt__15TTypicalManager
+__vt__15TTypicalManager:
+	.incbin "baserom.dol", 0x3D3E00, 0x54
+.global __vt__13TTypicalEnemy
+__vt__13TTypicalEnemy:
+	.incbin "baserom.dol", 0x3D3E54, 0x114
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22202
+$$22202:
+	.incbin "baserom.dol", 0x3EA308, 0x4
+.global $$22245
+$$22245:
+	.incbin "baserom.dol", 0x3EA30C, 0x8
+.global $$22254
+$$22254:
+	.incbin "baserom.dol", 0x3EA314, 0x4
+.global $$22280
+$$22280:
+	.incbin "baserom.dol", 0x3EA318, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22167
+$$22167:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2168
+init$2168:
+	.skip 0x4
+.global instance$2166
+instance$2166:
+	.skip 0x4

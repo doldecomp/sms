@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__19TMapEventSirenaSinkFv
 __dt__19TMapEventSirenaSinkFv:
 /* 801F21D8 001EF118  7C 08 02 A6 */	mflr r0
@@ -474,3 +473,113 @@ lbl_801F2874:
 /* 801F287C 001EF7BC  38 21 00 10 */	addi r1, r1, 0x10
 /* 801F2880 001EF7C0  7C 08 03 A6 */	mtlr r0
 /* 801F2884 001EF7C4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE00, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x38FAB0, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x38FABC, 0x14
+.global $$22253
+$$22253:
+	.incbin "baserom.dol", 0x38FAD0, 0x30
+.global $$22254
+$$22254:
+	.incbin "baserom.dol", 0x38FB00, 0x38
+.global $$22255
+$$22255:
+	.incbin "baserom.dol", 0x38FB38, 0x34
+.global $$22256
+$$22256:
+	.incbin "baserom.dol", 0x38FB6C, 0x24
+.global $$22585
+$$22585:
+	.incbin "baserom.dol", 0x38FB90, 0xC
+.global $$22587
+$$22587:
+	.incbin "baserom.dol", 0x38FB9C, 0xC
+.global $$22771
+$$22771:
+	.incbin "baserom.dol", 0x38FBA8, 0x24
+.global $$22772
+$$22772:
+	.incbin "baserom.dol", 0x38FBCC, 0x24
+.global $$22784
+$$22784:
+	.incbin "baserom.dol", 0x38FBF0, 0x14
+.global $$22810
+$$22810:
+	.incbin "baserom.dol", 0x38FC04, 0x1C
+.global $$22811
+$$22811:
+	.incbin "baserom.dol", 0x38FC20, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__19TMapEventSirenaSink
+__vt__19TMapEventSirenaSink:
+	.incbin "baserom.dol", 0x3CD648, 0x60
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22744
+$$22744:
+	.incbin "baserom.dol", 0x3E8DD0, 0x4
+.global $$22785
+$$22785:
+	.incbin "baserom.dol", 0x3E8DD4, 0x4
+.global $$22786
+$$22786:
+	.incbin "baserom.dol", 0x3E8DD8, 0x4
+.global $$22787
+$$22787:
+	.incbin "baserom.dol", 0x3E8DDC, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22812
+$$22812:
+	.skip 0xC
+.global $$22813
+$$22813:
+	.skip 0xC
+.global $$22814
+$$22814:
+	.skip 0xC
+.global $$22815
+$$22815:
+	.skip 0xC
+.global $$22816
+$$22816:
+	.skip 0xC
+.global $$22817
+$$22817:
+	.skip 0xC
+.global $$22818
+$$22818:
+	.skip 0xC
+.global $$22819
+$$22819:
+	.skip 0xC
+.global $$22820
+$$22820:
+	.skip 0xC
+.global $$22821
+$$22821:
+	.skip 0xC
+.global $$22822
+$$22822:
+	.skip 0xC
+.global $$22823
+$$22823:
+	.skip 0xC
+.global $$22824
+$$22824:
+	.skip 0xC
+.global $$22825
+$$22825:
+	.skip 0xC
+.global $$22826
+$$22826:
+	.skip 0x10

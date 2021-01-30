@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TPerformListFv
 __dt__12TPerformListFv:
 /* 800F8480 000F53C0  7C 08 02 A6 */	mflr r0
@@ -331,3 +330,8 @@ lbl_800F88BC:
 /* 800F88F8 000F5838  7C 08 03 A6 */	mtlr r0
 /* 800F88FC 000F583C  38 21 00 E8 */	addi r1, r1, 0xe8
 /* 800F8900 000F5840  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TPerformList
+__vt__12TPerformList:
+	.incbin "baserom.dol", 0x3B0F18, 0x28

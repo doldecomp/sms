@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global PPCMfmsr
 PPCMfmsr:
 /* 8008C3A0 000892E0  7C 60 00 A6 */	mfmsr r3

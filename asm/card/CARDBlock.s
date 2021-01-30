@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __CARDGetFatBlock
 __CARDGetFatBlock:
 /* 800A13C8 0009E308  80 63 00 88 */	lwz r3, 0x88(r3)

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __DSP_debug_printf
 __DSP_debug_printf:
 /* 8009E79C 0009B6DC  94 21 FF 90 */	stwu r1, -0x70(r1)

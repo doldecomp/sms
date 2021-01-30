@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem6KernelFv
 init__Q28JASystem6KernelFv:
 /* 80060618 0005D558  7C 08 02 A6 */	mflr r0
@@ -509,3 +508,56 @@ lbl_80060CD4:
 /* 80060CE0 0005DC20  7C 08 03 A6 */	mtlr r0
 /* 80060CE4 0005DC24  38 21 00 20 */	addi r1, r1, 0x20
 /* 80060CE8 0005DC28  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2197
+$$2197:
+	.incbin "baserom.dol", 0x36E358, 0xC
+.global $$2216
+$$2216:
+	.incbin "baserom.dol", 0x36E364, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2236
+$$2236:
+	.incbin "baserom.dol", 0x3E43B0, 0x8
+.global $$2237
+$$2237:
+	.incbin "baserom.dol", 0x3E43B8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global dac__Q28JASystem6Kernel
+dac__Q28JASystem6Kernel:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global JASUniversalDacCounter__Q28JASystem6Kernel
+JASUniversalDacCounter__Q28JASystem6Kernel:
+	.skip 0x4
+.global lastRspMadep__Q28JASystem6Kernel
+lastRspMadep__Q28JASystem6Kernel:
+	.skip 0x4
+.global useRspMadep__Q28JASystem6Kernel
+useRspMadep__Q28JASystem6Kernel:
+	.skip 0x4
+.global vframeWorkRunning__Q28JASystem6Kernel
+vframeWorkRunning__Q28JASystem6Kernel:
+	.skip 0x4
+.global dacCallbackFunc__Q28JASystem6Kernel
+dacCallbackFunc__Q28JASystem6Kernel:
+	.skip 0x4
+.global JASVframeCounter__Q28JASystem6Kernel
+JASVframeCounter__Q28JASystem6Kernel:
+	.skip 0x4
+.global extMixCallback__Q28JASystem6Kernel
+extMixCallback__Q28JASystem6Kernel:
+	.skip 0x4
+.global extMixMode__Q28JASystem6Kernel
+extMixMode__Q28JASystem6Kernel:
+	.skip 0x4
+.global dacp$140
+dacp$140:
+	.skip 0x4
+.global init$141
+init$141:
+	.skip 0x4

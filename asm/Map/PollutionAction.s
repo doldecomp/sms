@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global action__15TPollutionLayerFv
 action__15TPollutionLayerFv:
 /* 801EBAE4 001E8A24  7C 08 02 A6 */	mflr r0
@@ -838,3 +837,110 @@ lbl_801EC6C8:
 /* 801EC6D0 001E9610  38 21 00 10 */	addi r1, r1, 0x10
 /* 801EC6D4 001E9614  7C 08 03 A6 */	mtlr r0
 /* 801EC6D8 001E9618  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDE4, 0x4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mAreaMinRate__15TPollutionLayer
+mAreaMinRate__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3808, 0x4
+.global mSpreadArea__15TPollutionLayer
+mSpreadArea__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E380C, 0x4
+.global mSpreadFrequency__15TPollutionLayer
+mSpreadFrequency__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3810, 0x4
+.global mFireArea__15TPollutionLayer
+mFireArea__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3814, 0x4
+.global mFireEffectWaitTime__15TPollutionLayer
+mFireEffectWaitTime__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3818, 0x4
+.global mThunderArea__15TPollutionLayer
+mThunderArea__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E381C, 0x4
+.global mGlassWallArea__15TPollutionLayer
+mGlassWallArea__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3820, 0x4
+.global mGlassWallEffectTime__15TPollutionLayer
+mGlassWallEffectTime__15TPollutionLayer:
+	.incbin "baserom.dol", 0x3E3824, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22703
+$$22703:
+	.incbin "baserom.dol", 0x3E8D00, 0x4
+.global $$22704
+$$22704:
+	.incbin "baserom.dol", 0x3E8D04, 0x4
+.global $$22705
+$$22705:
+	.incbin "baserom.dol", 0x3E8D08, 0x4
+.global $$22706
+$$22706:
+	.incbin "baserom.dol", 0x3E8D0C, 0x4
+.global $$22707
+$$22707:
+	.incbin "baserom.dol", 0x3E8D10, 0x8
+.global $$22709
+$$22709:
+	.incbin "baserom.dol", 0x3E8D18, 0x8
+.global $$22737
+$$22737:
+	.incbin "baserom.dol", 0x3E8D20, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22615
+$$22615:
+	.skip 0xC
+.global $$22616
+$$22616:
+	.skip 0xC
+.global $$22617
+$$22617:
+	.skip 0xC
+.global $$22618
+$$22618:
+	.skip 0xC
+.global $$22619
+$$22619:
+	.skip 0xC
+.global $$22620
+$$22620:
+	.skip 0xC
+.global $$22621
+$$22621:
+	.skip 0xC
+.global $$22622
+$$22622:
+	.skip 0xC
+.global $$22623
+$$22623:
+	.skip 0xC
+.global $$22624
+$$22624:
+	.skip 0xC
+.global $$22625
+$$22625:
+	.skip 0xC
+.global $$22626
+$$22626:
+	.skip 0xC
+.global $$22627
+$$22627:
+	.skip 0xC
+.global $$22628
+$$22628:
+	.skip 0xC
+.global $$22629
+$$22629:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global counter$2576
+counter$2576:
+	.skip 0x4
+.global init$2577
+init$2577:
+	.skip 0x4

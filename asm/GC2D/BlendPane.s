@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global update__10TBlendPaneFv
 update__10TBlendPaneFv:
 /* 8023948C 002363CC  7C 08 02 A6 */	mflr r0
@@ -96,3 +95,16 @@ __ct__10TBlendPaneFP9J2DScreenUl:
 /* 802395D0 00236510  38 21 00 20 */	addi r1, r1, 0x20
 /* 802395D4 00236514  7C 08 03 A6 */	mtlr r0
 /* 802395D8 00236518  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TBlendPane
+__vt__10TBlendPane:
+	.incbin "baserom.dol", 0x3CECD0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21505
+$$21505:
+	.incbin "baserom.dol", 0x3E9668, 0x4
+.global $$21507
+$$21507:
+	.incbin "baserom.dol", 0x3E966C, 0x4

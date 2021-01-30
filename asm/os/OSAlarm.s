@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global OSInitAlarm
 OSInitAlarm:
 /* 8008CE84 00089DC4  7C 08 02 A6 */	mflr r0
@@ -480,3 +479,8 @@ DecrementerExceptionHandler:
 /* 8008D524 0008A464  90 04 01 C0 */	stw r0, 0x1c0(r4)
 /* 8008D528 0008A468  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8008D52C 0008A46C  4B FF FD 84 */	b DecrementerExceptionCallback
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global AlarmQueue
+AlarmQueue:
+	.skip 0x8

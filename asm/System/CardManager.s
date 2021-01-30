@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global cmdLoop__12TCardManagerFv
 cmdLoop__12TCardManagerFv:
 /* 801068D4 00103814  7C 08 02 A6 */	mflr r0
@@ -2251,3 +2250,45 @@ lbl_80108814:
 /* 80108814 00105754  54 E3 04 3E */	clrlwi r3, r7, 0x10
 /* 80108818 00105758  50 C3 80 1E */	rlwimi r3, r6, 0x10, 0, 0xf
 /* 8010881C 0010575C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global CardFileName
+CardFileName:
+	.incbin "baserom.dol", 0x375350, 0x20
+.global $$21632
+$$21632:
+	.incbin "baserom.dol", 0x375370, 0x1C
+.global $$21633
+$$21633:
+	.incbin "baserom.dol", 0x37538C, 0x18
+.global $$21634
+$$21634:
+	.incbin "baserom.dol", 0x3753A4, 0x1C
+.global $$21635
+$$21635:
+	.incbin "baserom.dol", 0x3753C0, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x3B17F0, 0xC
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x3B17FC, 0xC
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x3B1808, 0x10
+.global titles
+titles:
+	.incbin "baserom.dol", 0x3B1818, 0x1C
+.global comments
+comments:
+	.incbin "baserom.dol", 0x3B1834, 0x1C
+.global $$21818
+$$21818:
+	.incbin "baserom.dol", 0x3B1850, 0x38
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sDetach
+sDetach:
+	.skip 0x8

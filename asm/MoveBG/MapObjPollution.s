@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__23TMapObjRevivalPollutionFv
 __dt__23TMapObjRevivalPollutionFv:
 /* 801C0180 001BD0C0  7C 08 02 A6 */	mflr r0
@@ -597,3 +596,77 @@ lbl_801C09B4:
 $$232$$2__dt__13TPolluterBaseFv:
 /* 801C09C8 001BD908  38 63 FF E0 */	addi r3, r3, -32
 /* 801C09CC 001BD90C  4B FF FC 7C */	b __dt__13TPolluterBaseFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD60, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22600
+$$22600:
+	.incbin "baserom.dol", 0x38CBD0, 0x28
+.global $$22703
+$$22703:
+	.incbin "baserom.dol", 0x38CBF8, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__23TMapObjRevivalPollution
+__vt__23TMapObjRevivalPollution:
+	.incbin "baserom.dol", 0x3C8410, 0x24
+.global __vt__13TPolluterBase
+__vt__13TPolluterBase:
+	.incbin "baserom.dol", 0x3C8434, 0x164
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22649
+$$22649:
+	.incbin "baserom.dol", 0x3E8540, 0x4
+.global $$22704
+$$22704:
+	.incbin "baserom.dol", 0x3E8544, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22737
+$$22737:
+	.skip 0xC
+.global $$22738
+$$22738:
+	.skip 0xC
+.global $$22739
+$$22739:
+	.skip 0xC
+.global $$22740
+$$22740:
+	.skip 0xC
+.global $$22741
+$$22741:
+	.skip 0xC
+.global $$22742
+$$22742:
+	.skip 0xC
+.global $$22743
+$$22743:
+	.skip 0xC
+.global $$22744
+$$22744:
+	.skip 0xC
+.global $$22745
+$$22745:
+	.skip 0xC
+.global $$22746
+$$22746:
+	.skip 0xC
+.global $$22747
+$$22747:
+	.skip 0xC
+.global $$22748
+$$22748:
+	.skip 0xC
+.global $$22749
+$$22749:
+	.skip 0xC
+.global $$22750
+$$22750:
+	.skip 0xC
+.global $$22751
+$$22751:
+	.skip 0x10

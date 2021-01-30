@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q37JGadget26TList_pointer$$0P9THitActor$$18iteratorFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
 __ct__Q37JGadget26TList_pointer$$0P9THitActor$$18iteratorFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator:
 /* 801CEA7C 001CB9BC  80 04 00 00 */	lwz r0, 0(r4)
@@ -219,3 +218,61 @@ lbl_801CED7C:
 /* 801CED84 001CBCC4  38 21 00 10 */	addi r1, r1, 0x10
 /* 801CED88 001CBCC8  7C 08 03 A6 */	mtlr r0
 /* 801CED8C 001CBCCC  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD84, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22855
+$$22855:
+	.skip 0xC
+.global $$22856
+$$22856:
+	.skip 0xC
+.global $$22857
+$$22857:
+	.skip 0xC
+.global $$22858
+$$22858:
+	.skip 0xC
+.global $$22859
+$$22859:
+	.skip 0xC
+.global $$22860
+$$22860:
+	.skip 0xC
+.global $$22861
+$$22861:
+	.skip 0xC
+.global $$22862
+$$22862:
+	.skip 0xC
+.global $$22863
+$$22863:
+	.skip 0xC
+.global $$22864
+$$22864:
+	.skip 0xC
+.global $$22865
+$$22865:
+	.skip 0xC
+.global $$22866
+$$22866:
+	.skip 0xC
+.global $$22867
+$$22867:
+	.skip 0xC
+.global $$22868
+$$22868:
+	.skip 0xC
+.global $$22869
+$$22869:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mColorUpper__17TMapObjTumblePole
+mColorUpper__17TMapObjTumblePole:
+	.skip 0x4
+.global mColorLower__17TMapObjTumblePole
+mColorLower__17TMapObjTumblePole:
+	.skip 0x4

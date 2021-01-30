@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global perform__Q26JDrama12TDStageGroupFUlPQ26JDrama9TGraphics
 perform__Q26JDrama12TDStageGroupFUlPQ26JDrama9TGraphics:
 /* 80042668 0003F5A8  7C 08 02 A6 */	mflr r0
@@ -102,3 +101,8 @@ lbl_800427B4:
 /* 800427C4 0003F704  7C 08 03 A6 */	mtlr r0
 /* 800427C8 0003F708  38 21 00 18 */	addi r1, r1, 0x18
 /* 800427CC 0003F70C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama12TDStageGroup
+__vt__Q26JDrama12TDStageGroup:
+	.incbin "baserom.dol", 0x3A7590, 0x30

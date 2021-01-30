@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem3DvdFv
 init__Q28JASystem3DvdFv:
 /* 80061944 0005E884  7C 08 02 A6 */	mflr r0
@@ -1178,3 +1177,113 @@ aramDmaFinish__Q28JASystem3DvdFUl:
 /* 8006292C 0005F86C  38 03 FF FF */	addi r0, r3, -1
 /* 80062930 0005F870  90 0D 91 9C */	stw r0, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
 /* 80062934 0005F874  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global audioRootPath__Q28JASystem3Dvd
+audioRootPath__Q28JASystem3Dvd:
+	.incbin "baserom.dol", 0x3A87A8, 0x20
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global dvdMsgsSize__Q28JASystem3Dvd
+dvdMsgsSize__Q28JASystem3Dvd:
+	.incbin "baserom.dol", 0x3E31D8, 0x4
+.global dvdBufSize__Q28JASystem3Dvd
+dvdBufSize__Q28JASystem3Dvd:
+	.incbin "baserom.dol", 0x3E31DC, 0x4
+.global maxDics__Q28JASystem3Dvd
+maxDics__Q28JASystem3Dvd:
+	.incbin "baserom.dol", 0x3E31E0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global mq__Q28JASystem3Dvd
+mq__Q28JASystem3Dvd:
+	.skip 0x20
+.global finfo$314
+finfo$314:
+	.skip 0x3C
+.global req$315
+req$315:
+	.skip 0x80
+.global finfo$361
+finfo$361:
+	.skip 0x3C
+.global req$362
+req$362:
+	.skip 0x20
+.global finfo$369
+finfo$369:
+	.skip 0x3C
+.global req$370
+req$370:
+	.skip 0x20
+.global finfo$393
+finfo$393:
+	.skip 0x3C
+.global finfo$422
+finfo$422:
+	.skip 0x3C
+.global finfo$426
+finfo$426:
+	.skip 0x3C
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mqInit__Q28JASystem3Dvd
+mqInit__Q28JASystem3Dvd:
+	.skip 0x4
+.global buffersize__Q28JASystem3Dvd
+buffersize__Q28JASystem3Dvd:
+	.skip 0x4
+.global buffers__Q28JASystem3Dvd
+buffers__Q28JASystem3Dvd:
+	.skip 0x4
+.global nextBufferSize__Q28JASystem3Dvd
+nextBufferSize__Q28JASystem3Dvd:
+	.skip 0x4
+.global nextBufferTop__Q28JASystem3Dvd
+nextBufferTop__Q28JASystem3Dvd:
+	.skip 0x4
+.global nextBuffers__Q28JASystem3Dvd
+nextBuffers__Q28JASystem3Dvd:
+	.skip 0x4
+.global audioDvdBuffer__Q28JASystem3Dvd
+audioDvdBuffer__Q28JASystem3Dvd:
+	.skip 0x8
+.global bufferLoad__Q28JASystem3Dvd
+bufferLoad__Q28JASystem3Dvd:
+	.skip 0x4
+.global bufferFull__Q28JASystem3Dvd
+bufferFull__Q28JASystem3Dvd:
+	.skip 0x4
+.global callStackArray__Q28JASystem3Dvd
+callStackArray__Q28JASystem3Dvd:
+	.skip 0x4
+.global msgBuf__Q28JASystem3Dvd
+msgBuf__Q28JASystem3Dvd:
+	.skip 0x4
+.global curQ__Q28JASystem3Dvd
+curQ__Q28JASystem3Dvd:
+	.skip 0x4
+.global dvdtSleep__Q28JASystem3Dvd
+dvdtSleep__Q28JASystem3Dvd:
+	.skip 0x8
+.global dvdThreadPauseFlag__Q28JASystem3Dvd
+dvdThreadPauseFlag__Q28JASystem3Dvd:
+	.skip 0x4
+.global errorCallback__Q28JASystem3Dvd
+errorCallback__Q28JASystem3Dvd:
+	.skip 0x4
+.global dvdFileDics__Q28JASystem3Dvd
+dvdFileDics__Q28JASystem3Dvd:
+	.skip 0x4
+.global dvdFile__Q28JASystem3Dvd
+dvdFile__Q28JASystem3Dvd:
+	.skip 0x4
+.global dvdEntryNum__Q28JASystem3Dvd
+dvdEntryNum__Q28JASystem3Dvd:
+	.skip 0x4
+.global arq_index$316
+arq_index$316:
+	.skip 0x4
+.global init$317
+init$317:
+	.skip 0x4

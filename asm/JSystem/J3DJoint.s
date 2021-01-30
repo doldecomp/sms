@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global calc__13J3DMtxCalcAnmFUs
 calc__13J3DMtxCalcAnmFUs:
 /* 8001DABC 0001A9FC  7C 08 02 A6 */	mflr r0
@@ -2531,3 +2530,54 @@ $$280$$2calc__17J3DMtxCalcMayaAnmFUs:
 $$280$$2__dt__17J3DMtxCalcMayaAnmFv:
 /* 8001FD10 0001CC50  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FD14 0001CC54  4B FF F5 AC */	b __dt__17J3DMtxCalcMayaAnmFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2894
+$$2894:
+	.incbin "baserom.dol", 0x36DBF8, 0xC
+.global $$2914
+$$2914:
+	.incbin "baserom.dol", 0x36DC04, 0xC
+.global $$21249
+$$21249:
+	.incbin "baserom.dol", 0x36DC10, 0xC
+.global $$21251
+$$21251:
+	.incbin "baserom.dol", 0x36DC1C, 0xC
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__8J3DJoint
+__vt__8J3DJoint:
+	.incbin "baserom.dol", 0x3A5E18, 0x28
+.global __vt__17J3DMtxCalcMayaAnm
+__vt__17J3DMtxCalcMayaAnm:
+	.incbin "baserom.dol", 0x3A5E40, 0x54
+.global __vt__22J3DMtxCalcSoftimageAnm
+__vt__22J3DMtxCalcSoftimageAnm:
+	.incbin "baserom.dol", 0x3A5E94, 0x54
+.global __vt__18J3DMtxCalcBasicAnm
+__vt__18J3DMtxCalcBasicAnm:
+	.incbin "baserom.dol", 0x3A5EE8, 0x54
+.global __vt__14J3DMtxCalcMaya
+__vt__14J3DMtxCalcMaya:
+	.incbin "baserom.dol", 0x3A5F3C, 0x44
+.global __vt__19J3DMtxCalcSoftimage
+__vt__19J3DMtxCalcSoftimage:
+	.incbin "baserom.dol", 0x3A5F80, 0x44
+.global __vt__15J3DMtxCalcBasic
+__vt__15J3DMtxCalcBasic:
+	.incbin "baserom.dol", 0x3A5FC4, 0x44
+.global __vt__10J3DMtxCalc
+__vt__10J3DMtxCalc:
+	.incbin "baserom.dol", 0x3A6008, 0x20
+.global __vt__13J3DMtxCalcAnm
+__vt__13J3DMtxCalcAnm:
+	.incbin "baserom.dol", 0x3A6028, 0x30
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21077
+$$21077:
+	.incbin "baserom.dol", 0x3E3EF0, 0x4
+.global $$21258
+$$21258:
+	.incbin "baserom.dol", 0x3E3EF4, 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q25JMath13TRandom_fast_FUl
 __ct__Q25JMath13TRandom_fast_FUl:
 /* 80068B1C 00065A5C  90 83 00 00 */	stw r4, 0(r3)

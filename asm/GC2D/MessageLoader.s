@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getMessageEntry__14TMessageLoaderFUl
 getMessageEntry__14TMessageLoaderFUl:
 /* 80218728 00215668  A0 03 00 00 */	lhz r0, 0(r3)

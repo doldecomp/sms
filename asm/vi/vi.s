@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __VIRetraceHandler
 __VIRetraceHandler:
 /* 80099638 00096578  7C 08 02 A6 */	mflr r0
@@ -1860,3 +1859,99 @@ VIGetDTVStatus:
 /* 8009B068 00097FA8  38 21 00 10 */	addi r1, r1, 0x10
 /* 8009B06C 00097FAC  7C 08 03 A6 */	mtlr r0
 /* 8009B070 00097FB0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global timing
+timing:
+	.incbin "baserom.dol", 0x3ADF30, 0x130
+.global taps
+taps:
+	.incbin "baserom.dol", 0x3AE060, 0x34
+.global $$292
+$$292:
+	.incbin "baserom.dol", 0x3AE094, 0x58
+.global $$2336
+$$2336:
+	.incbin "baserom.dol", 0x3AE0EC, 0x2C
+.global $$2337
+$$2337:
+	.incbin "baserom.dol", 0x3AE118, 0x2C
+.global $$2338
+$$2338:
+	.incbin "baserom.dol", 0x3AE144, 0x2C
+.global $$2339
+$$2339:
+	.incbin "baserom.dol", 0x3AE170, 0x2C
+.global $$2340
+$$2340:
+	.incbin "baserom.dol", 0x3AE19C, 0x2C
+.global $$2341
+$$2341:
+	.incbin "baserom.dol", 0x3AE1C8, 0x30
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global regs
+regs:
+	.skip 0x78
+.global shdwRegs
+shdwRegs:
+	.skip 0x78
+.global HorVer
+HorVer:
+	.skip 0x58
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global retraceCount
+retraceCount:
+	.skip 0x4
+.global flushFlag
+flushFlag:
+	.skip 0x4
+.global retraceQueue
+retraceQueue:
+	.skip 0x8
+.global PreCB
+PreCB:
+	.skip 0x4
+.global PostCB
+PostCB:
+	.skip 0x4
+.global encoderType
+encoderType:
+	.skip 0x4
+.global displayOffsetH
+displayOffsetH:
+	.skip 0x2
+.global displayOffsetV
+displayOffsetV:
+	.skip 0x2
+.global changeMode
+changeMode:
+	.skip 0x8
+.global changed
+changed:
+	.skip 0x4
+.global lbl_80409F2C
+lbl_80409F2C:
+	.skip 0x4
+.global shdwChangeMode
+shdwChangeMode:
+	.skip 0x8
+.global shdwChanged
+shdwChanged:
+	.skip 0x4
+.global lbl_80409F3C
+lbl_80409F3C:
+	.skip 0x4
+.global CurrTiming
+CurrTiming:
+	.skip 0x4
+.global CurrTvMode
+CurrTvMode:
+	.skip 0x4
+.global FBSet
+FBSet:
+	.skip 0x4
+.global message$332
+message$332:
+	.skip 0x4

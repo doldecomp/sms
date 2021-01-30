@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKSetBufferUsed
 TRKSetBufferUsed:
 /* 80088080 00084FC0  90 83 00 04 */	stw r4, 4(r3)
@@ -637,3 +636,8 @@ lbl_800888A8:
 /* 800888BC 000857FC  80 01 00 04 */	lwz r0, 4(r1)
 /* 800888C0 00085800  7C 08 03 A6 */	mtlr r0
 /* 800888C4 00085804  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gTRKMsgBufs
+gTRKMsgBufs:
+	.skip 0x19B0

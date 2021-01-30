@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__25TPollutionRevivalTexStampFv
 __ct__25TPollutionRevivalTexStampFv:
 /* 801EC6DC 001E961C  38 00 00 00 */	li r0, 0
@@ -2840,3 +2839,105 @@ lbl_801EF000:
 /* 801EF008 001EBF48  38 21 00 10 */	addi r1, r1, 0x10
 /* 801EF00C 001EBF4C  7C 08 03 A6 */	mtlr r0
 /* 801EF010 001EBF50  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDE8, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__21TPollutionCounterBase
+__vt__21TPollutionCounterBase:
+	.incbin "baserom.dol", 0x3CD328, 0x14
+.global __vt__20TPollutionCounterObj
+__vt__20TPollutionCounterObj:
+	.incbin "baserom.dol", 0x3CD33C, 0x14
+.global __vt__22TPollutionCounterLayer
+__vt__22TPollutionCounterLayer:
+	.incbin "baserom.dol", 0x3CD350, 0x18
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22537
+$$22537:
+	.incbin "baserom.dol", 0x3E8D28, 0x4
+.global $$22547
+$$22547:
+	.incbin "baserom.dol", 0x3E8D2C, 0x4
+.global $$22582
+$$22582:
+	.incbin "baserom.dol", 0x3E8D30, 0x4
+.global $$22585
+$$22585:
+	.incbin "baserom.dol", 0x3E8D34, 0x4
+.global $$22606
+$$22606:
+	.incbin "baserom.dol", 0x3E8D38, 0x4
+.global $$22610
+$$22610:
+	.incbin "baserom.dol", 0x3E8D3C, 0x4
+.global $$22636
+$$22636:
+	.incbin "baserom.dol", 0x3E8D40, 0x4
+.global $$22639
+$$22639:
+	.incbin "baserom.dol", 0x3E8D44, 0x4
+.global $$22652
+$$22652:
+	.incbin "baserom.dol", 0x3E8D48, 0x4
+.global $$22670
+$$22670:
+	.incbin "baserom.dol", 0x3E8D4C, 0x4
+.global $$22863
+$$22863:
+	.incbin "baserom.dol", 0x3E8D50, 0x4
+.global $$22958
+$$22958:
+	.incbin "baserom.dol", 0x3E8D54, 0x4
+.global $$23357
+$$23357:
+	.incbin "baserom.dol", 0x3E8D58, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23519
+$$23519:
+	.skip 0xC
+.global $$23520
+$$23520:
+	.skip 0xC
+.global $$23521
+$$23521:
+	.skip 0xC
+.global $$23522
+$$23522:
+	.skip 0xC
+.global $$23523
+$$23523:
+	.skip 0xC
+.global $$23524
+$$23524:
+	.skip 0xC
+.global $$23525
+$$23525:
+	.skip 0xC
+.global $$23526
+$$23526:
+	.skip 0xC
+.global $$23527
+$$23527:
+	.skip 0xC
+.global $$23528
+$$23528:
+	.skip 0xC
+.global $$23529
+$$23529:
+	.skip 0xC
+.global $$23530
+$$23530:
+	.skip 0xC
+.global $$23531
+$$23531:
+	.skip 0xC
+.global $$23532
+$$23532:
+	.skip 0xC
+.global $$23533
+$$23533:
+	.skip 0x10

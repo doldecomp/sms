@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JKRFileLoaderFv
 __ct__13JKRFileLoaderFv:
 /* 8000BAD0 00008A10  7C 08 02 A6 */	mflr r0
@@ -480,3 +479,36 @@ lbl_8000C0F4:
 /* 8000C104 00009044  7C 08 03 A6 */	mtlr r0
 /* 8000C108 00009048  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000C10C 0000904C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBB4, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JKRFileLoader
+__vt__13JKRFileLoader:
+	.incbin "baserom.dol", 0x3A55B8, 0x40
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global rootPath$1763
+rootPath$1763:
+	.incbin "baserom.dol", 0x3E3000, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21783
+$$21783:
+	.incbin "baserom.dol", 0x3E3D30, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$21483
+$$21483:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sVolumeList__13JKRFileLoader
+sVolumeList__13JKRFileLoader:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sCurrentVolume__13JKRFileLoader
+sCurrentVolume__13JKRFileLoader:
+	.skip 0x8

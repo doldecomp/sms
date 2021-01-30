@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__7TBinderFv
 __dt__7TBinderFv:
 /* 8011D968 0011A8A8  7C 08 02 A6 */	mflr r0
@@ -31,3 +30,8 @@ __ct__7TBinderFv:
 /* 8011D9B8 0011A8F8  38 04 54 48 */	addi r0, r4, __vt__7TBinder@l
 /* 8011D9BC 0011A8FC  90 03 00 00 */	stw r0, 0(r3)
 /* 8011D9C0 0011A900  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__7TBinder
+__vt__7TBinder:
+	.incbin "baserom.dol", 0x3B2448, 0x10

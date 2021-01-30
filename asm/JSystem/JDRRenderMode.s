@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global IsEqualRenderModeVIParams__6JDramaFRC16_GXRenderModeObjRC16_GXRenderModeObj
 IsEqualRenderModeVIParams__6JDramaFRC16_GXRenderModeObjRC16_GXRenderModeObj:
 /* 80045A94 000429D4  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -272,3 +271,19 @@ CopyRenderModeVFilter__6JDramaFP16_GXRenderModeObjPCUc:
 /* 80045E20 00042D60  38 21 00 08 */	addi r1, r1, 8
 /* 80045E24 00042D64  7C 08 03 A6 */	mtlr r0
 /* 80045E28 00042D68  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$249
+$$249:
+	.incbin "baserom.dol", 0x36E098, 0x14
+.global $$250
+$$250:
+	.incbin "baserom.dol", 0x36E0AC, 0x18
+.global $$261
+$$261:
+	.incbin "baserom.dol", 0x36E0C4, 0x1C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$248
+$$248:
+	.incbin "baserom.dol", 0x3E40F0, 0x8

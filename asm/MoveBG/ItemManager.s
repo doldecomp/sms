@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TItemManagerFv
 __dt__12TItemManagerFv:
 /* 80197A98 001949D8  7C 08 02 A6 */	mflr r0
@@ -755,3 +754,100 @@ lbl_80198520:
 /* 80198528 00195468  38 21 00 10 */	addi r1, r1, 0x10
 /* 8019852C 0019546C  7C 08 03 A6 */	mtlr r0
 /* 80198530 00195470  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD18, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22650
+$$22650:
+	.incbin "baserom.dol", 0x38ABA8, 0xC
+.global $$22667
+$$22667:
+	.incbin "baserom.dol", 0x38ABB4, 0x10
+.global $$22703
+$$22703:
+	.incbin "baserom.dol", 0x38ABC4, 0xC
+.global $$22704
+$$22704:
+	.incbin "baserom.dol", 0x38ABD0, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TItemManager
+__vt__12TItemManager:
+	.incbin "baserom.dol", 0x3BEF20, 0x40
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22636
+$$22636:
+	.incbin "baserom.dol", 0x3E7CF8, 0x4
+.global $$22637
+$$22637:
+	.incbin "baserom.dol", 0x3E7CFC, 0x4
+.global $$22638
+$$22638:
+	.incbin "baserom.dol", 0x3E7D00, 0x4
+.global $$22665
+$$22665:
+	.incbin "baserom.dol", 0x3E7D04, 0x8
+.global $$22666
+$$22666:
+	.incbin "baserom.dol", 0x3E7D0C, 0x8
+.global $$22683
+$$22683:
+	.incbin "baserom.dol", 0x3E7D14, 0x4
+.global $$22684
+$$22684:
+	.incbin "baserom.dol", 0x3E7D18, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22778
+$$22778:
+	.skip 0xC
+.global $$22779
+$$22779:
+	.skip 0xC
+.global $$22780
+$$22780:
+	.skip 0xC
+.global $$22781
+$$22781:
+	.skip 0xC
+.global $$22782
+$$22782:
+	.skip 0xC
+.global $$22783
+$$22783:
+	.skip 0xC
+.global $$22784
+$$22784:
+	.skip 0xC
+.global $$22785
+$$22785:
+	.skip 0xC
+.global $$22786
+$$22786:
+	.skip 0xC
+.global $$22787
+$$22787:
+	.skip 0xC
+.global $$22788
+$$22788:
+	.skip 0xC
+.global $$22789
+$$22789:
+	.skip 0xC
+.global $$22790
+$$22790:
+	.skip 0xC
+.global $$22791
+$$22791:
+	.skip 0xC
+.global $$22792
+$$22792:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpItemManager
+gpItemManager:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q27JGadget19TSingleNodeLinkListFv
 __dt__Q27JGadget19TSingleNodeLinkListFv:
 /* 800408D4 0003D814  7C 08 02 A6 */	mflr r0

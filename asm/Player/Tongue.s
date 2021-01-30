@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TYoshiTongueFv
 __dt__12TYoshiTongueFv:
 /* 80146B88 00143AC8  7C 08 02 A6 */	mflr r0
@@ -1727,3 +1726,146 @@ lbl_80148428:
 $$232$$2__dt__12TYoshiTongueFv:
 /* 8014843C 0014537C  38 63 FF E0 */	addi r3, r3, -32
 /* 80148440 00145380  4B FF E7 48 */	b __dt__12TYoshiTongueFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC98, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x378818, 0xC
+.global $$21937
+$$21937:
+	.incbin "baserom.dol", 0x378824, 0x14
+.global cDirtyFileName
+cDirtyFileName:
+	.incbin "baserom.dol", 0x378838, 0x24
+.global cDirtyTexName
+cDirtyTexName:
+	.incbin "baserom.dol", 0x37885C, 0x10
+.global $$23054
+$$23054:
+	.incbin "baserom.dol", 0x37886C, 0xC
+.global $$23055
+$$23055:
+	.incbin "baserom.dol", 0x378878, 0x10
+.global $$23056
+$$23056:
+	.incbin "baserom.dol", 0x378888, 0x14
+.global $$23086
+$$23086:
+	.incbin "baserom.dol", 0x37889C, 0x1C
+.global $$23087
+$$23087:
+	.incbin "baserom.dol", 0x3788B8, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TYoshiTongue
+__vt__12TYoshiTongue:
+	.incbin "baserom.dol", 0x3B38B0, 0xC4
+.global $$22843
+$$22843:
+	.incbin "baserom.dol", 0x3B3974, 0x24
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22631
+$$22631:
+	.incbin "baserom.dol", 0x3E5CD8, 0x4
+.global $$22632
+$$22632:
+	.incbin "baserom.dol", 0x3E5CDC, 0x4
+.global $$22633
+$$22633:
+	.incbin "baserom.dol", 0x3E5CE0, 0x4
+.global $$22836
+$$22836:
+	.incbin "baserom.dol", 0x3E5CE4, 0x4
+.global $$22837
+$$22837:
+	.incbin "baserom.dol", 0x3E5CE8, 0x4
+.global $$22838
+$$22838:
+	.incbin "baserom.dol", 0x3E5CEC, 0x4
+.global $$22839
+$$22839:
+	.incbin "baserom.dol", 0x3E5CF0, 0x4
+.global $$22840
+$$22840:
+	.incbin "baserom.dol", 0x3E5CF4, 0x4
+.global $$22841
+$$22841:
+	.incbin "baserom.dol", 0x3E5CF8, 0x4
+.global $$22842
+$$22842:
+	.incbin "baserom.dol", 0x3E5CFC, 0x4
+.global $$22953
+$$22953:
+	.incbin "baserom.dol", 0x3E5D00, 0x4
+.global $$22954
+$$22954:
+	.incbin "baserom.dol", 0x3E5D04, 0x4
+.global $$23022
+$$23022:
+	.incbin "baserom.dol", 0x3E5D08, 0x4
+.global $$23088
+$$23088:
+	.incbin "baserom.dol", 0x3E5D0C, 0x4
+.global $$23089
+$$23089:
+	.incbin "baserom.dol", 0x3E5D10, 0x4
+.global $$23090
+$$23090:
+	.incbin "baserom.dol", 0x3E5D14, 0x4
+.global $$23091
+$$23091:
+	.incbin "baserom.dol", 0x3E5D18, 0x4
+.global $$23092
+$$23092:
+	.incbin "baserom.dol", 0x3E5D1C, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23097
+$$23097:
+	.skip 0xC
+.global $$23098
+$$23098:
+	.skip 0xC
+.global $$23099
+$$23099:
+	.skip 0xC
+.global $$23100
+$$23100:
+	.skip 0xC
+.global $$23101
+$$23101:
+	.skip 0xC
+.global $$23102
+$$23102:
+	.skip 0xC
+.global $$23103
+$$23103:
+	.skip 0xC
+.global $$23104
+$$23104:
+	.skip 0xC
+.global $$23105
+$$23105:
+	.skip 0xC
+.global $$23106
+$$23106:
+	.skip 0xC
+.global $$23107
+$$23107:
+	.skip 0xC
+.global $$23108
+$$23108:
+	.skip 0xC
+.global $$23109
+$$23109:
+	.skip 0xC
+.global $$23110
+$$23110:
+	.skip 0xC
+.global $$23111
+$$23111:
+	.skip 0x10

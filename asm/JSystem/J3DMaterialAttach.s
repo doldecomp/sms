@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global clear__16J3DMaterialTableFv
 clear__16J3DMaterialTableFv:
 /* 8006C4E0 00069420  38 00 00 00 */	li r0, 0
@@ -47,3 +46,8 @@ lbl_8006C558:
 /* 8006C564 000694A4  38 21 00 18 */	addi r1, r1, 0x18
 /* 8006C568 000694A8  7C 08 03 A6 */	mtlr r0
 /* 8006C56C 000694AC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__16J3DMaterialTable
+__vt__16J3DMaterialTable:
+	.incbin "baserom.dol", 0x3A9420, 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10JUTRomFontFP7JKRHeap
 __ct__10JUTRomFontFP7JKRHeap:
 /* 8003C004 00038F44  7C 08 02 A6 */	mflr r0
@@ -598,3 +597,41 @@ getFontType__10JUTRomFontCFv:
 /* 8003C86C 000397AC  80 6D 8E C0 */	lwz r3, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
 /* 8003C870 000397B0  80 63 00 00 */	lwz r3, 0(r3)
 /* 8003C874 000397B4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2258
+$$2258:
+	.incbin "baserom.dol", 0x36DEB8, 0x18
+.global $$2259
+$$2259:
+	.incbin "baserom.dol", 0x36DED0, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global saoAboutEncoding___10JUTRomFont
+saoAboutEncoding___10JUTRomFont:
+	.incbin "baserom.dol", 0x3A6F50, 0x18
+.global __vt__10JUTRomFont
+__vt__10JUTRomFont:
+	.incbin "baserom.dol", 0x3A6F68, 0x40
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2294
+$$2294:
+	.incbin "baserom.dol", 0x3E4030, 0x4
+.global $$2295
+$$2295:
+	.incbin "baserom.dol", 0x3E4034, 0x4
+.global $$2297
+$$2297:
+	.incbin "baserom.dol", 0x3E4038, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global spAboutEncoding___10JUTRomFont
+spAboutEncoding___10JUTRomFont:
+	.skip 0x4
+.global spFontHeader___10JUTRomFont
+spFontHeader___10JUTRomFont:
+	.skip 0x4
+.global suFontHeaderRefered___10JUTRomFont
+suFontHeaderRefered___10JUTRomFont:
+	.skip 0x8

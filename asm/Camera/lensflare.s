@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__10TLensFlareFv
 __dt__10TLensFlareFv:
 /* 8035CC00 00359B40  7C 08 02 A6 */	mflr r0
@@ -542,3 +541,69 @@ CLBEaseOutInbetween$$0f$$1__Ffff:
 /* 8035D3BC 0035A2FC  38 21 00 08 */	addi r1, r1, 8
 /* 8035D3C0 0035A300  7C 08 03 A6 */	mtlr r0
 /* 8035D3C4 0035A304  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21987
+$$21987:
+	.incbin "baserom.dol", 0x3A38F0, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TLensFlare
+__vt__10TLensFlare:
+	.incbin "baserom.dol", 0x3E1B10, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21949
+$$21949:
+	.incbin "baserom.dol", 0x3EC3C0, 0x4
+.global $$21950
+$$21950:
+	.incbin "baserom.dol", 0x3EC3C4, 0x4
+.global $$21951
+$$21951:
+	.incbin "baserom.dol", 0x3EC3C8, 0x4
+.global $$21952
+$$21952:
+	.incbin "baserom.dol", 0x3EC3CC, 0x4
+.global $$21953
+$$21953:
+	.incbin "baserom.dol", 0x3EC3D0, 0x4
+.global $$21954
+$$21954:
+	.incbin "baserom.dol", 0x3EC3D4, 0x4
+.global $$21955
+$$21955:
+	.incbin "baserom.dol", 0x3EC3D8, 0x4
+.global $$21956
+$$21956:
+	.incbin "baserom.dol", 0x3EC3DC, 0x4
+.global $$21958
+$$21958:
+	.incbin "baserom.dol", 0x3EC3E0, 0x8
+.global $$21978
+$$21978:
+	.incbin "baserom.dol", 0x3EC3E8, 0x4
+.global $$21979
+$$21979:
+	.incbin "baserom.dol", 0x3EC3EC, 0x4
+.global $$21980
+$$21980:
+	.incbin "baserom.dol", 0x3EC3F0, 0x4
+.global $$21981
+$$21981:
+	.incbin "baserom.dol", 0x3EC3F4, 0x4
+.global $$21982
+$$21982:
+	.incbin "baserom.dol", 0x3EC3F8, 0x4
+.global $$21983
+$$21983:
+	.incbin "baserom.dol", 0x3EC3FC, 0x4
+.global $$21984
+$$21984:
+	.incbin "baserom.dol", 0x3EC400, 0x4
+.global $$21985
+$$21985:
+	.incbin "baserom.dol", 0x3EC404, 0x4
+.global $$21986
+$$21986:
+	.incbin "baserom.dol", 0x3EC408, 0x8

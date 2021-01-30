@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TGateShadowFv
 __dt__11TGateShadowFv:
 /* 801AEECC 001ABE0C  7C 08 02 A6 */	mflr r0
@@ -248,3 +247,58 @@ lbl_801AF22C:
 /* 801AF234 001AC174  38 21 00 10 */	addi r1, r1, 0x10
 /* 801AF238 001AC178  7C 08 03 A6 */	mtlr r0
 /* 801AF23C 001AC17C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD38, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TGateShadow
+__vt__11TGateShadow:
+	.incbin "baserom.dol", 0x3C5AA0, 0x28
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22483
+$$22483:
+	.skip 0xC
+.global $$22484
+$$22484:
+	.skip 0xC
+.global $$22485
+$$22485:
+	.skip 0xC
+.global $$22486
+$$22486:
+	.skip 0xC
+.global $$22487
+$$22487:
+	.skip 0xC
+.global $$22488
+$$22488:
+	.skip 0xC
+.global $$22489
+$$22489:
+	.skip 0xC
+.global $$22490
+$$22490:
+	.skip 0xC
+.global $$22491
+$$22491:
+	.skip 0xC
+.global $$22492
+$$22492:
+	.skip 0xC
+.global $$22493
+$$22493:
+	.skip 0xC
+.global $$22494
+$$22494:
+	.skip 0xC
+.global $$22495
+$$22495:
+	.skip 0xC
+.global $$22496
+$$22496:
+	.skip 0xC
+.global $$22497
+$$22497:
+	.skip 0x10

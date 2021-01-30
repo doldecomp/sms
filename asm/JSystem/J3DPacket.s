@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global newDisplayList__17J3DDisplayListObjFUl
 newDisplayList__17J3DDisplayListObjFUl:
 /* 800373E8 00034328  7C 08 02 A6 */	mflr r0
@@ -500,3 +499,25 @@ isSame__12J3DMatPacketCFP12J3DMatPacket:
 /* 80037A4C 0003498C  4C 82 00 20 */	bnelr 
 /* 80037A50 00034990  38 60 00 01 */	li r3, 1
 /* 80037A54 00034994  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14J3DShapePacket
+__vt__14J3DShapePacket:
+	.incbin "baserom.dol", 0x3A6BE8, 0x18
+.global __vt__12J3DMatPacket
+__vt__12J3DMatPacket:
+	.incbin "baserom.dol", 0x3A6C00, 0x18
+.global __vt__13J3DDrawPacket
+__vt__13J3DDrawPacket:
+	.incbin "baserom.dol", 0x3A6C18, 0x18
+.global __vt__17J3DCallBackPacket
+__vt__17J3DCallBackPacket:
+	.incbin "baserom.dol", 0x3A6C30, 0x18
+.global __vt__9J3DPacket
+__vt__9J3DPacket:
+	.incbin "baserom.dol", 0x3A6C48, 0x18
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sInterruptFlag__13J3DDrawPacket
+sInterruptFlag__13J3DDrawPacket:
+	.skip 0x8

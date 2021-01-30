@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global perform__13TCamConnecterFUlPQ26JDrama9TGraphics
 perform__13TCamConnecterFUlPQ26JDrama9TGraphics:
 /* 80045EF4 00042E34  7C 08 02 A6 */	mflr r0
@@ -193,3 +192,19 @@ lbl_8004616C:
 /* 8004617C 000430BC  7C 08 03 A6 */	mtlr r0
 /* 80046180 000430C0  38 21 00 18 */	addi r1, r1, 0x18
 /* 80046184 000430C4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2293
+$$2293:
+	.incbin "baserom.dol", 0x36E0E0, 0xC
+.global $$2294
+$$2294:
+	.incbin "baserom.dol", 0x36E0EC, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama7TScreen
+__vt__Q26JDrama7TScreen:
+	.incbin "baserom.dol", 0x3A78D8, 0x24
+.global __vt__13TCamConnecter
+__vt__13TCamConnecter:
+	.incbin "baserom.dol", 0x3A78FC, 0x24

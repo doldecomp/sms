@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_IsMarioRoofing__Fv
 SMS_IsMarioRoofing__Fv:
 /* 80152934 0014F874  80 6D 98 B8 */	lwz r3, gpMarioOriginal-_SDA_BASE_(r13)
@@ -413,3 +412,46 @@ SMS_SetMarioAccessParams__Fv:
 /* 80152DB0 0014FCF0  90 6D 99 00 */	stw r3, gpMarioThrowPower-_SDA_BASE_(r13)
 /* 80152DB4 0014FCF4  90 0D 99 04 */	stw r0, gpMarioGroundPlane-_SDA_BASE_(r13)
 /* 80152DB8 0014FCF8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22019
+$$22019:
+	.incbin "baserom.dol", 0x3E5E98, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMarioAddress
+gpMarioAddress:
+	.skip 0x4
+.global gpMarioPos
+gpMarioPos:
+	.skip 0x4
+.global gpMarioAngleX
+gpMarioAngleX:
+	.skip 0x4
+.global gpMarioAngleY
+gpMarioAngleY:
+	.skip 0x4
+.global gpMarioAngleZ
+gpMarioAngleZ:
+	.skip 0x4
+.global gpMarioSpeedX
+gpMarioSpeedX:
+	.skip 0x4
+.global gpMarioSpeedY
+gpMarioSpeedY:
+	.skip 0x4
+.global gpMarioSpeedZ
+gpMarioSpeedZ:
+	.skip 0x4
+.global gpMarioLightID
+gpMarioLightID:
+	.skip 0x4
+.global gpMarioFlag
+gpMarioFlag:
+	.skip 0x4
+.global gpMarioThrowPower
+gpMarioThrowPower:
+	.skip 0x4
+.global gpMarioGroundPlane
+gpMarioGroundPlane:
+	.skip 0x4

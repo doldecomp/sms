@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__11JKRAramHeapFUlUl
 __ct__11JKRAramHeapFUlUl:
 /* 80006638 00003578  7C 08 02 A6 */	mflr r0
@@ -278,3 +277,21 @@ lbl_800069D0:
 /* 800069E0 00003920  7C 08 03 A6 */	mtlr r0
 /* 800069E4 00003924  38 21 00 18 */	addi r1, r1, 0x18
 /* 800069E8 00003928  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBA8, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11JKRAramHeap
+__vt__11JKRAramHeap:
+	.incbin "baserom.dol", 0x3A53E8, 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$256
+$$256:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sAramList__11JKRAramHeap
+sAramList__11JKRAramHeap:
+	.skip 0xC

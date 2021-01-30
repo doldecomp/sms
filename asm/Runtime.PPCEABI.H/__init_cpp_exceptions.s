@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GetR2__Fv
 GetR2__Fv:
 /* 8008321C 0008015C  7C 43 13 78 */	mr r3, r2
@@ -43,3 +42,21 @@ lbl_80083288:
 /* 8008328C 000801CC  38 21 00 08 */	addi r1, r1, 8
 /* 80083290 000801D0  7C 08 03 A6 */	mtlr r0
 /* 80083294 000801D4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+.global __init_cpp_exceptions_reference
+__init_cpp_exceptions_reference:
+	.incbin "baserom.dol", 0x36CBA0, 0x4
+
+.section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
+.global __destroy_global_chain_reference
+__destroy_global_chain_reference:
+	.incbin "baserom.dol", 0x36CF80, 0x4
+.global __fini_cpp_exceptions_reference
+__fini_cpp_exceptions_reference:
+	.incbin "baserom.dol", 0x36CF84, 0x4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global fragmentID
+fragmentID:
+	.incbin "baserom.dol", 0x3E3220, 0x8

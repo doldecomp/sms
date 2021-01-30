@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global reset__17TMarioInputReplayFv
 reset__17TMarioInputReplayFv:
 /* 801372E4 00134224  7C 08 02 A6 */	mflr r0

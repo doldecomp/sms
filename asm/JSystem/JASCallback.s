@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global resetCallback__Q28JASystem6KernelFv
 resetCallback__Q28JASystem6KernelFv:
 /* 80061484 0005E3C4  7C 08 02 A6 */	mflr r0
@@ -229,3 +228,16 @@ lbl_8006175C:
 /* 8006176C 0005E6AC  83 A1 00 0C */	lwz r29, 0xc(r1)
 /* 80061770 0005E6B0  38 21 00 18 */	addi r1, r1, 0x18
 /* 80061774 0005E6B4  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global maxCallbacksUser__Q28JASystem6Kernel
+maxCallbacksUser__Q28JASystem6Kernel:
+	.incbin "baserom.dol", 0x3E31D0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global callList__Q28JASystem6Kernel
+callList__Q28JASystem6Kernel:
+	.skip 0x4
+.global callbackInit__Q28JASystem6Kernel
+callbackInit__Q28JASystem6Kernel:
+	.skip 0x4

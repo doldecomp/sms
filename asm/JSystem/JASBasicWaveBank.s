@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JASystem14TBasicWaveBankFv
 __ct__Q28JASystem14TBasicWaveBankFv:
 /* 800592D8 00056218  3C 80 80 3B */	lis r4, __vt__Q28JASystem9TWaveBank@ha
@@ -641,3 +640,23 @@ getType__Q28JASystem14TBasicWaveBankCFv:
 /* 80059B30 00056A70  3C 60 42 53 */	lis r3, 0x42534943@ha
 /* 80059B34 00056A74  38 63 49 43 */	addi r3, r3, 0x42534943@l
 /* 80059B38 00056A78  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem11TWaveHandle
+__vt__Q28JASystem11TWaveHandle:
+	.incbin "baserom.dol", 0x3A7E08, 0x14
+.global __vt__Q38JASystem14TBasicWaveBank11TWaveHandle
+__vt__Q38JASystem14TBasicWaveBank11TWaveHandle:
+	.incbin "baserom.dol", 0x3A7E1C, 0x14
+.global __vt__Q38JASystem14TBasicWaveBank10TWaveGroup
+__vt__Q38JASystem14TBasicWaveBank10TWaveGroup:
+	.incbin "baserom.dol", 0x3A7E30, 0x14
+.global __vt__Q38JASystem13WaveArcLoader7TObject
+__vt__Q38JASystem13WaveArcLoader7TObject:
+	.incbin "baserom.dol", 0x3A7E44, 0x14
+.global __vt__Q28JASystem14TBasicWaveBank
+__vt__Q28JASystem14TBasicWaveBank:
+	.incbin "baserom.dol", 0x3A7E58, 0x14
+.global __vt__Q28JASystem9TWaveBank
+__vt__Q28JASystem9TWaveBank:
+	.incbin "baserom.dol", 0x3A7E6C, 0x14

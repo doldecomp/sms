@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14TScreenTextureFv
 __dt__14TScreenTextureFv:
 /* 800C855C 000C549C  7C 08 02 A6 */	mflr r0
@@ -960,3 +959,56 @@ lbl_800C9360:
 /* 800C9370 000C62B0  7C 08 03 A6 */	mtlr r0
 /* 800C9374 000C62B4  38 21 00 18 */	addi r1, r1, 0x18
 /* 800C9378 000C62B8  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21831
+$$21831:
+	.incbin "baserom.dol", 0x36F5B8, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TScreenTexture
+__vt__14TScreenTexture:
+	.incbin "baserom.dol", 0x3AFA18, 0x24
+.global __vt__12TAfterEffect
+__vt__12TAfterEffect:
+	.incbin "baserom.dol", 0x3AFA3C, 0x24
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21629
+$$21629:
+	.incbin "baserom.dol", 0x3E4AA0, 0x4
+.global $$21630
+$$21630:
+	.incbin "baserom.dol", 0x3E4AA4, 0x4
+.global $$21631
+$$21631:
+	.incbin "baserom.dol", 0x3E4AA8, 0x4
+.global $$21800
+$$21800:
+	.incbin "baserom.dol", 0x3E4AAC, 0x4
+.global $$21801
+$$21801:
+	.incbin "baserom.dol", 0x3E4AB0, 0x4
+.global $$21802
+$$21802:
+	.incbin "baserom.dol", 0x3E4AB4, 0x4
+.global $$21803
+$$21803:
+	.incbin "baserom.dol", 0x3E4AB8, 0x8
+.global $$21805
+$$21805:
+	.incbin "baserom.dol", 0x3E4AC0, 0x8
+.global $$21833
+$$21833:
+	.incbin "baserom.dol", 0x3E4AC8, 0x4
+.global $$21834
+$$21834:
+	.incbin "baserom.dol", 0x3E4ACC, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpAfterEffect
+gpAfterEffect:
+	.skip 0x4
+.global gpScreenTexture
+gpScreenTexture:
+	.skip 0x4

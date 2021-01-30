@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initialize__7JPADrawFP14JPABaseEmitterP18JPATextureResource
 initialize__7JPADrawFP14JPABaseEmitterP18JPATextureResource:
 /* 80073BCC 00070B0C  7C 08 02 A6 */	mflr r0
@@ -6977,3 +6976,83 @@ lbl_80079CC8:
 /* 80079CD4 00076C14  38 21 00 18 */	addi r1, r1, 0x18
 /* 80079CD8 00076C18  7C 08 03 A6 */	mtlr r0
 /* 80079CDC 00076C1C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC0C, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22383
+$$22383:
+	.incbin "baserom.dol", 0x3A9620, 0x2C
+.global $$22382
+$$22382:
+	.incbin "baserom.dol", 0x3A964C, 0x2C
+.global __vt__25JPADrawCalcEmitterVisitor
+__vt__25JPADrawCalcEmitterVisitor:
+	.incbin "baserom.dol", 0x3A9678, 0x10
+.global __vt__26JPADrawCalcParticleVisitor
+__vt__26JPADrawCalcParticleVisitor:
+	.incbin "baserom.dol", 0x3A9688, 0x10
+.global __vt__26JPADrawExecParticleVisitor
+__vt__26JPADrawExecParticleVisitor:
+	.incbin "baserom.dol", 0x3A9698, 0x10
+.global __vt__25JPADrawExecEmitterVisitor
+__vt__25JPADrawExecEmitterVisitor:
+	.incbin "baserom.dol", 0x3A96A8, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21659
+$$21659:
+	.incbin "baserom.dol", 0x3E4568, 0x4
+.global $$21860
+$$21860:
+	.incbin "baserom.dol", 0x3E456C, 0x4
+.global $$22021
+$$22021:
+	.incbin "baserom.dol", 0x3E4570, 0x4
+.global $$22022
+$$22022:
+	.incbin "baserom.dol", 0x3E4574, 0x4
+.global $$22023
+$$22023:
+	.incbin "baserom.dol", 0x3E4578, 0x4
+.global $$22024
+$$22024:
+	.incbin "baserom.dol", 0x3E457C, 0x4
+.global $$22026
+$$22026:
+	.incbin "baserom.dol", 0x3E4580, 0x8
+.global $$22087
+$$22087:
+	.incbin "baserom.dol", 0x3E4588, 0x8
+.global $$22759
+$$22759:
+	.incbin "baserom.dol", 0x3E4590, 0x4
+.global $$22760
+$$22760:
+	.incbin "baserom.dol", 0x3E4594, 0x4
+.global $$22761
+$$22761:
+	.incbin "baserom.dol", 0x3E4598, 0x4
+.global $$22762
+$$22762:
+	.incbin "baserom.dol", 0x3E459C, 0x4
+.global $$23307
+$$23307:
+	.incbin "baserom.dol", 0x3E45A0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$21657
+$$21657:
+	.skip 0xC
+.global $$21658
+$$21658:
+	.skip 0x14
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global vc__7JPADraw
+vc__7JPADraw:
+	.skip 0x1EC
+.global cb__7JPADraw
+cb__7JPADraw:
+	.skip 0xB0

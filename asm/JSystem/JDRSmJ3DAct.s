@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__Q26JDrama9TSmJ3DActFR20JSUMemoryInputStream
 load__Q26JDrama9TSmJ3DActFR20JSUMemoryInputStream:
 /* 80046188 000430C8  7C 08 02 A6 */	mflr r0
@@ -445,3 +444,30 @@ lbl_800467F8:
 $$232$$2__dt__Q26JDrama9TSmJ3DActFv:
 /* 80046810 00043750  38 63 FF E0 */	addi r3, r3, -32
 /* 80046814 00043754  4B FF FF 44 */	b __dt__Q26JDrama9TSmJ3DActFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21143
+$$21143:
+	.incbin "baserom.dol", 0x36E100, 0x10
+.global $$21144
+$$21144:
+	.incbin "baserom.dol", 0x36E110, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama9TSmJ3DAct
+__vt__Q26JDrama9TSmJ3DAct:
+	.incbin "baserom.dol", 0x3A7920, 0xA0
+.global __vt__12J3DFrameCtrl
+__vt__12J3DFrameCtrl:
+	.incbin "baserom.dol", 0x3A79C0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21562
+$$21562:
+	.incbin "baserom.dol", 0x3E40F8, 0x4
+.global $$21563
+$$21563:
+	.incbin "baserom.dol", 0x3E40FC, 0x4
+.global $$21564
+$$21564:
+	.incbin "baserom.dol", 0x3E4100, 0x8

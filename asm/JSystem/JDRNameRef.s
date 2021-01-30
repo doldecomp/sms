@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global calcKeyCode__Q26JDrama8TNameRefFPCc
 calcKeyCode__Q26JDrama8TNameRefFPCc:
 /* 8004468C 000415CC  38 80 00 00 */	li r4, 0
@@ -199,3 +198,8 @@ lbl_80044908:
 /* 80044914 00041854  7C 08 03 A6 */	mtlr r0
 /* 80044918 00041858  38 21 00 20 */	addi r1, r1, 0x20
 /* 8004491C 0004185C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama8TNameRef
+__vt__Q26JDrama8TNameRef:
+	.incbin "baserom.dol", 0x3A7860, 0x20

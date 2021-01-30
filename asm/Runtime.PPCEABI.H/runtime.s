@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __cvt_fp2unsigned
 __cvt_fp2unsigned:
 /* 80082BBC 0007FAFC  94 21 FF F0 */	stwu r1, -0x10(r1)
@@ -495,3 +494,8 @@ lbl_80083204:
 lbl_80083214:
 /* 80083214 00080154  38 21 00 10 */	addi r1, r1, 0x10
 /* 80083218 00080158  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global __constants
+__constants:
+	.incbin "baserom.dol", 0x36E580, 0x18

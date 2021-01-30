@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __CARDGetDirBlock
 __CARDGetDirBlock:
 /* 800A1730 0009E670  80 63 00 84 */	lwz r3, 0x84(r3)

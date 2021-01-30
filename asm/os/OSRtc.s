@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global WriteSramCallback
 WriteSramCallback:
 /* 80091DB0 0008ECF0  7C 08 02 A6 */	mflr r0
@@ -817,3 +816,8 @@ lbl_800928E4:
 /* 800928F4 0008F834  38 21 00 28 */	addi r1, r1, 0x28
 /* 800928F8 0008F838  7C 08 03 A6 */	mtlr r0
 /* 800928FC 0008F83C  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global Scb
+Scb:
+	.skip 0x58

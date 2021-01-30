@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10TBaseParamFP7TParamsUsPCc
 __ct__10TBaseParamFP7TParamsUsPCc:
 /* 800DABF4 000D7B34  3C E0 80 3B */	lis r7, __vt__10TBaseParam@ha
@@ -31,3 +30,8 @@ lbl_800DAC3C:
 .global load__10TBaseParamFR20JSUMemoryInputStream
 load__10TBaseParamFR20JSUMemoryInputStream:
 /* 800DAC44 000D7B84  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TBaseParam
+__vt__10TBaseParam:
+	.incbin "baserom.dol", 0x3B0828, 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global loadAfter__14TPollutionTestFv
 loadAfter__14TPollutionTestFv:
 /* 801F40C4 001F1004  7C 08 02 A6 */	mflr r0
@@ -259,3 +258,58 @@ lbl_801F4444:
 /* 801F444C 001F138C  38 21 00 10 */	addi r1, r1, 0x10
 /* 801F4450 001F1390  7C 08 03 A6 */	mtlr r0
 /* 801F4454 001F1394  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE08, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TPollutionTest
+__vt__14TPollutionTest:
+	.incbin "baserom.dol", 0x3CD8C8, 0x28
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22727
+$$22727:
+	.skip 0xC
+.global $$22728
+$$22728:
+	.skip 0xC
+.global $$22729
+$$22729:
+	.skip 0xC
+.global $$22730
+$$22730:
+	.skip 0xC
+.global $$22731
+$$22731:
+	.skip 0xC
+.global $$22732
+$$22732:
+	.skip 0xC
+.global $$22733
+$$22733:
+	.skip 0xC
+.global $$22734
+$$22734:
+	.skip 0xC
+.global $$22735
+$$22735:
+	.skip 0xC
+.global $$22736
+$$22736:
+	.skip 0xC
+.global $$22737
+$$22737:
+	.skip 0xC
+.global $$22738
+$$22738:
+	.skip 0xC
+.global $$22739
+$$22739:
+	.skip 0xC
+.global $$22740
+$$22740:
+	.skip 0xC
+.global $$22741
+$$22741:
+	.skip 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_ShowAllShapePacket__FP8J3DModel
 SMS_ShowAllShapePacket__FP8J3DModel:
 /* 800D0988 000CD8C8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -1223,3 +1222,34 @@ lbl_800D1B5C:
 /* 800D1B78 000CEAB8  7C 80 03 78 */	or r0, r4, r0
 /* 800D1B7C 000CEABC  90 05 80 00 */	stw r0, -0x8000(r5)
 /* 800D1B80 000CEAC0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22227
+$$22227:
+	.incbin "baserom.dol", 0x3B0430, 0x30
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global sFogOffColor$1583
+sFogOffColor$1583:
+	.incbin "baserom.dol", 0x3E4BA8, 0x4
+.global $$22226
+$$22226:
+	.incbin "baserom.dol", 0x3E4BAC, 0x4
+.global $$22278
+$$22278:
+	.incbin "baserom.dol", 0x3E4BB0, 0x8
+.global $$22279
+$$22279:
+	.incbin "baserom.dol", 0x3E4BB8, 0x8
+.global $$22280
+$$22280:
+	.incbin "baserom.dol", 0x3E4BC0, 0x8
+.global $$22281
+$$22281:
+	.incbin "baserom.dol", 0x3E4BC8, 0x8
+.global $$22282
+$$22282:
+	.incbin "baserom.dol", 0x3E4BD0, 0x8
+.global $$22284
+$$22284:
+	.incbin "baserom.dol", 0x3E4BD8, 0x8

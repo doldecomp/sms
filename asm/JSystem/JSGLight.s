@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JStage6TLightFv
 __dt__Q26JStage6TLightFv:
 /* 80081A30 0007E970  7C 08 02 A6 */	mflr r0
@@ -89,3 +88,13 @@ JSGGetDirection__Q26JStage6TLightCFP3Vec:
 .global JSGSetDirection__Q26JStage6TLightFRC3Vec
 JSGSetDirection__Q26JStage6TLightFRC3Vec:
 /* 80081AE0 0007EA20  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JStage6TLight
+__vt__Q26JStage6TLight:
+	.incbin "baserom.dol", 0x3A9E38, 0x60
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2118
+$$2118:
+	.incbin "baserom.dol", 0x3E4648, 0x8

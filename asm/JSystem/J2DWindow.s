@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__9J2DWindowFP7J2DPaneP20JSURandomInputStreamb
 __ct__9J2DWindowFP7J2DPaneP20JSURandomInputStreamb:
 /* 8001A080 00016FC0  7C 08 02 A6 */	mflr r0
@@ -1792,3 +1791,25 @@ lbl_8001BA9C:
 /* 8001BAA4 000189E4  38 21 00 80 */	addi r1, r1, 0x80
 /* 8001BAA8 000189E8  7C 08 03 A6 */	mtlr r0
 /* 8001BAAC 000189EC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__9J2DWindow
+__vt__9J2DWindow:
+	.incbin "baserom.dol", 0x3A5D78, 0x2C
+.global __vt__Q29J2DWindow7Texture
+__vt__Q29J2DWindow7Texture:
+	.incbin "baserom.dol", 0x3A5DA4, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21321
+$$21321:
+	.incbin "baserom.dol", 0x3E3E90, 0x4
+.global $$21322
+$$21322:
+	.incbin "baserom.dol", 0x3E3E94, 0x4
+.global $$21324
+$$21324:
+	.incbin "baserom.dol", 0x3E3E98, 0x8
+.global $$21329
+$$21329:
+	.incbin "baserom.dol", 0x3E3EA0, 0x8

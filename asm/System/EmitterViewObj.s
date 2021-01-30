@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__21TMarioParticleManagerFv
 __dt__21TMarioParticleManagerFv:
 /* 800DAC48 000D7B88  7C 08 02 A6 */	mflr r0
@@ -1817,3 +1816,74 @@ __sinit_EmitterViewObj_cpp:
 /* 800DC594 000D94D4  90 6D 97 A0 */	stw r3, emitterCallBackBindToMtxPtr-_SDA_BASE_(r13)
 /* 800DC598 000D94D8  90 0D 97 A4 */	stw r0, emitterCallBackBindToSRTMtxPtr-_SDA_BASE_(r13)
 /* 800DC59C 000D94DC  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC14, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21664
+$$21664:
+	.incbin "baserom.dol", 0x36F940, 0xC
+.global $$21711
+$$21711:
+	.incbin "baserom.dol", 0x36F94C, 0x14
+.global prmarray$2214
+prmarray$2214:
+	.incbin "baserom.dol", 0x36F960, 0x18
+.global envarray$2215
+envarray$2215:
+	.incbin "baserom.dol", 0x36F978, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x3B0838, 0xC
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x3B0844, 0xC
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x3B0850, 0x10
+.global __vt__21TMarioParticleManager
+__vt__21TMarioParticleManager:
+	.incbin "baserom.dol", 0x3B0860, 0x48
+.global __vt__36TMarioEmitterCallBackBindToSRTMtxPtr
+__vt__36TMarioEmitterCallBackBindToSRTMtxPtr:
+	.incbin "baserom.dol", 0x3B08A8, 0x14
+.global __vt__33TMarioEmitterCallBackBindToMtxPtr
+__vt__33TMarioEmitterCallBackBindToMtxPtr:
+	.incbin "baserom.dol", 0x3B08BC, 0x14
+.global __vt__33TMarioEmitterCallBackBindToPosPtr
+__vt__33TMarioEmitterCallBackBindToPosPtr:
+	.incbin "baserom.dol", 0x3B08D0, 0x14
+.global __vt__23TEmitterIndirectViewObj
+__vt__23TEmitterIndirectViewObj:
+	.incbin "baserom.dol", 0x3B08E4, 0x24
+.global __vt__15TEmitterViewObj
+__vt__15TEmitterViewObj:
+	.incbin "baserom.dol", 0x3B0908, 0x24
+.global __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1
+__vt__34JPACallBackBase$$0P14JPABaseEmitter$$1:
+	.incbin "baserom.dol", 0x3B092C, 0x14
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22802
+$$22802:
+	.incbin "baserom.dol", 0x3E4CA8, 0x4
+.global $$22803
+$$22803:
+	.incbin "baserom.dol", 0x3E4CAC, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMarioParticleManager
+gpMarioParticleManager:
+	.skip 0x4
+.global emitterCallBackBindToPosPtr
+emitterCallBackBindToPosPtr:
+	.skip 0x4
+.global emitterCallBackBindToMtxPtr
+emitterCallBackBindToMtxPtr:
+	.skip 0x4
+.global emitterCallBackBindToSRTMtxPtr
+emitterCallBackBindToSRTMtxPtr:
+	.skip 0x4

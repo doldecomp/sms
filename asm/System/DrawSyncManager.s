@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global pushBreakPoint__16TDrawSyncManagerFv
 pushBreakPoint__16TDrawSyncManagerFv:
 /* 800FCA8C 000F99CC  7C 08 02 A6 */	mflr r0
@@ -606,3 +605,16 @@ __ct__Q216TDrawSyncManager19TDrawSyncTokenRangeFUsUsP17TDrawSyncCallback:
 /* 800FD29C 000FA1DC  B0 A3 00 02 */	sth r5, 2(r3)
 /* 800FD2A0 000FA1E0  90 C3 00 04 */	stw r6, 4(r3)
 /* 800FD2A4 000FA1E4  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21665
+$$21665:
+	.incbin "baserom.dol", 0x3E4F78, 0x8
+.global $$21825
+$$21825:
+	.incbin "baserom.dol", 0x3E4F80, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global smInstance__16TDrawSyncManager
+smInstance__16TDrawSyncManager:
+	.skip 0x8

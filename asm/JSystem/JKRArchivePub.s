@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global check_mount_already__10JKRArchiveFl
 check_mount_already__10JKRArchiveFl:
 /* 800078D8 00004818  3C 80 80 40 */	lis r4, sVolumeList__13JKRFileLoader@ha
@@ -675,3 +674,8 @@ lbl_8000816C:
 /* 80008178 000050B8  7C 08 03 A6 */	mtlr r0
 /* 8000817C 000050BC  38 21 00 18 */	addi r1, r1, 0x18
 /* 80008180 000050C0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10JKRArchive
+__vt__10JKRArchive:
+	.incbin "baserom.dol", 0x3A5438, 0x48

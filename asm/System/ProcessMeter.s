@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13TProcessMeterFl
 __ct__13TProcessMeterFl:
 /* 800FC7E4 000F9724  38 00 00 28 */	li r0, 0x28
@@ -20,3 +19,8 @@ __ct__13TProcessMeterFl:
 /* 800FC818 000F9758  B0 03 00 1C */	sth r0, 0x1c(r3)
 /* 800FC81C 000F975C  B0 03 00 1E */	sth r0, 0x1e(r3)
 /* 800FC820 000F9760  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21902
+$$21902:
+	.incbin "baserom.dol", 0x3E4F70, 0x8

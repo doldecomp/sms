@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GDInitGDLObj
 GDInitGDLObj:
 /* 800AF018 000ABF58  90 83 00 00 */	stw r4, 0(r3)
@@ -113,3 +112,11 @@ lbl_800AF174:
 GDSetOverflowCallback:
 /* 800AF184 000AC0C4  90 6D 95 BC */	stw r3, overflowcb-_SDA_BASE_(r13)
 /* 800AF188 000AC0C8  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global __GDCurrentDL
+__GDCurrentDL:
+	.skip 0x4
+.global overflowcb
+overflowcb:
+	.skip 0x4

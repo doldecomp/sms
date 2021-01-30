@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10JUTNameTabFPC7ResNTAB
 __ct__10JUTNameTabFPC7ResNTAB:
 /* 80012FCC 0000FF0C  90 83 00 00 */	stw r4, 0(r3)

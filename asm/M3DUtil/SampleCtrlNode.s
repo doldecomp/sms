@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__15SampleCtrlShapeFP8J3DShape
 __ct__15SampleCtrlShapeFP8J3DShape:
 /* 800D9D6C 000D6CAC  3C A0 80 3B */	lis r5, __vt__15SampleCtrlShape@ha
@@ -444,3 +443,19 @@ lbl_800DA3C4:
 /* 800DA3D0 000D7310  38 21 00 18 */	addi r1, r1, 0x18
 /* 800DA3D4 000D7314  7C 08 03 A6 */	mtlr r0
 /* 800DA3D8 000D7318  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15SampleCtrlJoint
+__vt__15SampleCtrlJoint:
+	.incbin "baserom.dol", 0x3B07F0, 0xC
+.global __vt__18SampleCtrlMaterial
+__vt__18SampleCtrlMaterial:
+	.incbin "baserom.dol", 0x3B07FC, 0xC
+.global __vt__15SampleCtrlShape
+__vt__15SampleCtrlShape:
+	.incbin "baserom.dol", 0x3B0808, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global $$21211
+$$21211:
+	.incbin "baserom.dol", 0x3E3440, 0x8

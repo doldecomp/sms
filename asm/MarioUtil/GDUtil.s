@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global make__10TGDLStaticFv
 make__10TGDLStaticFv:
 /* 800D1B84 000CEAC4  7C 08 02 A6 */	mflr r0
@@ -223,3 +222,16 @@ TGDLStaticOverFlow__Fv:
 /* 800D1E90 000CEDD0  38 00 00 01 */	li r0, 1
 /* 800D1E94 000CEDD4  98 03 00 11 */	stb r0, 0x11(r3)
 /* 800D1E98 000CEDD8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TGDLStatic
+__vt__10TGDLStatic:
+	.incbin "baserom.dol", 0x3B0460, 0x10
+.global __vt__Q210TGDLStatic12TGDLSentinel
+__vt__Q210TGDLStatic12TGDLSentinel:
+	.incbin "baserom.dol", 0x3B0470, 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global currentTGDLStatic
+currentTGDLStatic:
+	.skip 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TTalkCursorFv
 __dt__11TTalkCursorFv:
 /* 800F8FCC 000F5F0C  7C 08 02 A6 */	mflr r0
@@ -162,3 +161,40 @@ lbl_800F91B4:
 /* 800F91F0 000F6130  38 21 00 30 */	addi r1, r1, 0x30
 /* 800F91F4 000F6134  7C 08 03 A6 */	mtlr r0
 /* 800F91F8 000F6138  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x371B70, 0xC
+.global $$21525
+$$21525:
+	.incbin "baserom.dol", 0x371B7C, 0x14
+.global $$21582
+$$21582:
+	.incbin "baserom.dol", 0x371B90, 0x30
+.global $$21583
+$$21583:
+	.incbin "baserom.dol", 0x371BC0, 0x38
+.global $$21584
+$$21584:
+	.incbin "baserom.dol", 0x371BF8, 0x34
+.global $$21585
+$$21585:
+	.incbin "baserom.dol", 0x371C2C, 0x24
+.global $$22003
+$$22003:
+	.incbin "baserom.dol", 0x371C50, 0x14
+.global $$22004
+$$22004:
+	.incbin "baserom.dol", 0x371C64, 0x20
+.global $$22005
+$$22005:
+	.incbin "baserom.dol", 0x371C84, 0xC
+.global $$22006
+$$22006:
+	.incbin "baserom.dol", 0x371C90, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TTalkCursor
+__vt__11TTalkCursor:
+	.incbin "baserom.dol", 0x3B0FD0, 0x28

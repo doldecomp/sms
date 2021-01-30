@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__7JAIDataFv
 init__7JAIDataFv:
 /* 8004DAE8 0004AA28  38 00 00 00 */	li r0, 0
@@ -1637,3 +1636,23 @@ lbl_8004F1E8:
 /* 8004F1F8 0004C138  83 A1 00 1C */	lwz r29, 0x1c(r1)
 /* 8004F1FC 0004C13C  38 21 00 28 */	addi r1, r1, 0x28
 /* 8004F200 0004C140  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2494
+$$2494:
+	.incbin "baserom.dol", 0x3E4180, 0x4
+.global $$2495
+$$2495:
+	.incbin "baserom.dol", 0x3E4184, 0x4
+.global $$2496
+$$2496:
+	.incbin "baserom.dol", 0x3E4188, 0x4
+.global $$2516
+$$2516:
+	.incbin "baserom.dol", 0x3E418C, 0x4
+.global $$2517
+$$2517:
+	.incbin "baserom.dol", 0x3E4190, 0x4
+.global $$2551
+$$2551:
+	.incbin "baserom.dol", 0x3E4194, 0x4

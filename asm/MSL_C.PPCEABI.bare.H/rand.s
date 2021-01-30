@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global srand
 srand:
 /* 80085ABC 000829FC  90 6D 82 30 */	stw r3, next-_SDA_BASE_(r13)
@@ -18,3 +17,8 @@ rand:
 /* 80085ADC 00082A1C  80 0D 82 30 */	lwz r0, next-_SDA_BASE_(r13)
 /* 80085AE0 00082A20  54 03 84 7E */	rlwinm r3, r0, 0x10, 0x11, 0x1f
 /* 80085AE4 00082A24  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global next
+next:
+	.incbin "baserom.dol", 0x3E3230, 0x8

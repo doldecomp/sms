@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKMessageSend
 TRKMessageSend:
 /* 80088058 00084F98  7C 08 02 A6 */	mflr r0

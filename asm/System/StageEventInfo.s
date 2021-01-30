@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__15TStageEventInfoFR20JSUMemoryInputStream
 load__15TStageEventInfoFR20JSUMemoryInputStream:
 /* 800FC46C 000F93AC  7C 08 02 A6 */	mflr r0
@@ -42,3 +41,8 @@ load__15TStageEventInfoFR20JSUMemoryInputStream:
 /* 800FC4F8 000F9438  7C 08 03 A6 */	mtlr r0
 /* 800FC4FC 000F943C  38 21 00 28 */	addi r1, r1, 0x28
 /* 800FC500 000F9440  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15TStageEventInfo
+__vt__15TStageEventInfo:
+	.incbin "baserom.dol", 0x3B10C8, 0x20

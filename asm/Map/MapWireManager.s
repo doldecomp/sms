@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__15TMapWireManagerFv
 __dt__15TMapWireManagerFv:
 /* 801EA44C 001E738C  7C 08 02 A6 */	mflr r0
@@ -1173,3 +1172,96 @@ lbl_801EB490:
 $$232$$2__dt__13TMapWireActorFv:
 /* 801EB4A4 001E83E4  38 63 FF E0 */	addi r3, r3, -32
 /* 801EB4A8 001E83E8  4B FF F4 64 */	b __dt__13TMapWireActorFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDDC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22537
+$$22537:
+	.incbin "baserom.dol", 0x38F7D0, 0x10
+.global $$22539
+$$22539:
+	.incbin "baserom.dol", 0x38F7E0, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15TMapWireManager
+__vt__15TMapWireManager:
+	.incbin "baserom.dol", 0x3CD250, 0x24
+.global __vt__13TMapWireActor
+__vt__13TMapWireActor:
+	.incbin "baserom.dol", 0x3CD274, 0xB4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mCommonAttackRadius__13TMapWireActor
+mCommonAttackRadius__13TMapWireActor:
+	.incbin "baserom.dol", 0x3E3800, 0x4
+.global mCommonAttackHeight__13TMapWireActor
+mCommonAttackHeight__13TMapWireActor:
+	.incbin "baserom.dol", 0x3E3804, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22393
+$$22393:
+	.incbin "baserom.dol", 0x3E8CF8, 0x4
+.global $$22538
+$$22538:
+	.incbin "baserom.dol", 0x3E8CFC, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22938
+$$22938:
+	.skip 0xC
+.global $$22939
+$$22939:
+	.skip 0xC
+.global $$22940
+$$22940:
+	.skip 0xC
+.global $$22941
+$$22941:
+	.skip 0xC
+.global $$22942
+$$22942:
+	.skip 0xC
+.global $$22943
+$$22943:
+	.skip 0xC
+.global $$22944
+$$22944:
+	.skip 0xC
+.global $$22945
+$$22945:
+	.skip 0xC
+.global $$22946
+$$22946:
+	.skip 0xC
+.global $$22947
+$$22947:
+	.skip 0xC
+.global $$22948
+$$22948:
+	.skip 0xC
+.global $$22949
+$$22949:
+	.skip 0xC
+.global $$22950
+$$22950:
+	.skip 0xC
+.global $$22951
+$$22951:
+	.skip 0xC
+.global $$22952
+$$22952:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMapWireManager
+gpMapWireManager:
+	.skip 0x4
+.global mUpperSurface__15TMapWireManager
+mUpperSurface__15TMapWireManager:
+	.skip 0x4
+.global mLowerSurface__15TMapWireManager
+mLowerSurface__15TMapWireManager:
+	.skip 0x8

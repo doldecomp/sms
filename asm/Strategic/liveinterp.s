@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv
 initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv:
 /* 80112AC4 0010FA04  7C 08 02 A6 */	mflr r0
@@ -1971,3 +1970,78 @@ lbl_80114610:
 /* 80114614 00111554  38 21 00 08 */	addi r1, r1, 8
 /* 80114618 00111558  7C 08 03 A6 */	mtlr r0
 /* 8011461C 0011155C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x376FD0, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x376FDC, 0x14
+.global $$21582
+$$21582:
+	.incbin "baserom.dol", 0x376FF0, 0x30
+.global $$21583
+$$21583:
+	.incbin "baserom.dol", 0x377020, 0x38
+.global $$21584
+$$21584:
+	.incbin "baserom.dol", 0x377058, 0x34
+.global $$21585
+$$21585:
+	.incbin "baserom.dol", 0x37708C, 0x24
+.global $$22725
+$$22725:
+	.incbin "baserom.dol", 0x3770B0, 0xC
+.global $$22734
+$$22734:
+	.incbin "baserom.dol", 0x3770BC, 0xC
+.global $$22777
+$$22777:
+	.incbin "baserom.dol", 0x3770C8, 0x20
+.global $$22778
+$$22778:
+	.incbin "baserom.dol", 0x3770E8, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$23444
+$$23444:
+	.incbin "baserom.dol", 0x3B1CA8, 0x1B0
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22726
+$$22726:
+	.incbin "baserom.dol", 0x3E5378, 0x8
+.global $$22727
+$$22727:
+	.incbin "baserom.dol", 0x3E5380, 0x8
+.global $$22728
+$$22728:
+	.incbin "baserom.dol", 0x3E5388, 0x8
+.global $$22729
+$$22729:
+	.incbin "baserom.dol", 0x3E5390, 0x8
+.global $$22730
+$$22730:
+	.incbin "baserom.dol", 0x3E5398, 0x8
+.global $$22731
+$$22731:
+	.incbin "baserom.dol", 0x3E53A0, 0x8
+.global $$22732
+$$22732:
+	.incbin "baserom.dol", 0x3E53A8, 0x8
+.global $$22733
+$$22733:
+	.incbin "baserom.dol", 0x3E53B0, 0x8
+.global $$22875
+$$22875:
+	.incbin "baserom.dol", 0x3E53B8, 0x4
+.global $$22876
+$$22876:
+	.incbin "baserom.dol", 0x3E53BC, 0x4
+.global $$22878
+$$22878:
+	.incbin "baserom.dol", 0x3E53C0, 0x8
+.global $$23178
+$$23178:
+	.incbin "baserom.dol", 0x3E53C8, 0x8

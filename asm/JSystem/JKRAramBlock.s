@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__12JKRAramBlockFUlUlUlUcb
 __ct__12JKRAramBlockFUlUlUlUcb:
 /* 8003A148 00037088  7C 08 02 A6 */	mflr r0
@@ -173,3 +172,8 @@ lbl_8003A37C:
 /* 8003A3A4 000372E4  38 21 00 38 */	addi r1, r1, 0x38
 /* 8003A3A8 000372E8  7C 08 03 A6 */	mtlr r0
 /* 8003A3AC 000372EC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12JKRAramBlock
+__vt__12JKRAramBlock:
+	.incbin "baserom.dol", 0x3A6EB8, 0x10

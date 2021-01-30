@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10JADPrm$$0Uc$$1FUcPCc
 __ct__10JADPrm$$0Uc$$1FUcPCc:
 /* 80180598 0017D4D8  98 83 00 00 */	stb r4, 0(r3)
@@ -215,3 +214,53 @@ lbl_80180888:
 /* 80180890 0017D7D0  38 21 00 10 */	addi r1, r1, 0x10
 /* 80180894 0017D7D4  7C 08 03 A6 */	mtlr r0
 /* 80180898 0017D7D8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCE4, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$21951
+$$21951:
+	.skip 0xC
+.global $$21952
+$$21952:
+	.skip 0xC
+.global $$21953
+$$21953:
+	.skip 0xC
+.global $$21954
+$$21954:
+	.skip 0xC
+.global $$21955
+$$21955:
+	.skip 0xC
+.global $$21956
+$$21956:
+	.skip 0xC
+.global $$21957
+$$21957:
+	.skip 0xC
+.global $$21958
+$$21958:
+	.skip 0xC
+.global $$21959
+$$21959:
+	.skip 0xC
+.global $$21960
+$$21960:
+	.skip 0xC
+.global $$21961
+$$21961:
+	.skip 0xC
+.global $$21962
+$$21962:
+	.skip 0xC
+.global $$21963
+$$21963:
+	.skip 0xC
+.global $$21964
+$$21964:
+	.skip 0xC
+.global $$21965
+$$21965:
+	.skip 0x10

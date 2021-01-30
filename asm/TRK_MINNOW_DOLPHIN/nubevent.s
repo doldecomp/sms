@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKInitializeEventQueue
 TRKInitializeEventQueue:
 /* 80087C68 00084BA8  7C 08 02 A6 */	mflr r0
@@ -175,3 +174,8 @@ TRKDestructEvent:
 /* 80087EB8 00084DF8  80 01 00 04 */	lwz r0, 4(r1)
 /* 80087EBC 00084DFC  7C 08 03 A6 */	mtlr r0
 /* 80087EC0 00084E00  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gTRKEventQueue
+gTRKEventQueue:
+	.skip 0x28

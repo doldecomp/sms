@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setKinoActionFlag___8TBaseNPCFv
 setKinoActionFlag___8TBaseNPCFv:
 /* 8017AA34 00177974  80 03 01 6C */	lwz r0, 0x16c(r3)
@@ -52,3 +51,14 @@ lbl_8017AAB0:
 /* 8017AAC4 00177A04  80 04 00 00 */	lwz r0, 0(r4)
 /* 8017AAC8 00177A08  90 03 01 70 */	stw r0, 0x170(r3)
 /* 8017AACC 00177A0C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global sBaseActionFlagTable$1938
+sBaseActionFlagTable$1938:
+	.incbin "baserom.dol", 0x383E70, 0x64
+.global sBaseActionFlagTable$1941
+sBaseActionFlagTable$1941:
+	.incbin "baserom.dol", 0x383ED4, 0x44
+.global sBaseActionFlagTable$1944
+sBaseActionFlagTable$1944:
+	.incbin "baserom.dol", 0x383F18, 0x40

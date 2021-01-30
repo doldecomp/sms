@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_GetSandRiseUpRatio__FPC10TLiveActor
 SMS_GetSandRiseUpRatio__FPC10TLiveActor:
 /* 800D1FB8 000CEEF8  7C 08 02 A6 */	mflr r0
@@ -74,3 +73,11 @@ lbl_800D208C:
 lbl_800D2094:
 /* 800D2094 000CEFD4  38 60 00 03 */	li r3, 3
 /* 800D2098 000CEFD8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21941
+$$21941:
+	.incbin "baserom.dol", 0x3E4BE0, 0x4
+.global $$21942
+$$21942:
+	.incbin "baserom.dol", 0x3E4BE4, 0x4

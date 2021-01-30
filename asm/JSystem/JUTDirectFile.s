@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JUTDirectFileFv
 __ct__13JUTDirectFileFv:
 /* 80040370 0003D2B0  38 80 00 00 */	li r4, 0

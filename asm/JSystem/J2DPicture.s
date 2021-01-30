@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JUtility6TColorFv
 __ct__Q28JUtility6TColorFv:
 /* 80014FE0 00011F20  38 00 FF FF */	li r0, -1
@@ -2040,3 +2039,28 @@ lbl_80016C58:
 /* 80016C6C 00013BAC  90 03 01 58 */	stw r0, 0x158(r3)
 /* 80016C70 00013BB0  38 21 00 28 */	addi r1, r1, 0x28
 /* 80016C74 00013BB4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10J2DPicture
+__vt__10J2DPicture:
+	.incbin "baserom.dol", 0x3A5BF0, 0x30
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2297
+$$2297:
+	.incbin "baserom.dol", 0x3E3E40, 0x4
+.global $$2725
+$$2725:
+	.incbin "baserom.dol", 0x3E3E44, 0x4
+.global $$2726
+$$2726:
+	.incbin "baserom.dol", 0x3E3E48, 0x8
+.global $$2728
+$$2728:
+	.incbin "baserom.dol", 0x3E3E50, 0x8
+.global $$2920
+$$2920:
+	.incbin "baserom.dol", 0x3E3E58, 0x4
+.global $$21014
+$$21014:
+	.incbin "baserom.dol", 0x3E3E5C, 0x4

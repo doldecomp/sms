@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__18TStagePositionInfoFR20JSUMemoryInputStream
 load__18TStagePositionInfoFR20JSUMemoryInputStream:
 /* 800FC71C 000F965C  7C 08 02 A6 */	mflr r0
@@ -54,3 +53,13 @@ load__18TStagePositionInfoFR20JSUMemoryInputStream:
 /* 800FC7D8 000F9718  7C 08 03 A6 */	mtlr r0
 /* 800FC7DC 000F971C  38 21 00 40 */	addi r1, r1, 0x40
 /* 800FC7E0 000F9720  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18TStagePositionInfo
+__vt__18TStagePositionInfo:
+	.incbin "baserom.dol", 0x3B1148, 0x20
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpPositionHolder
+gpPositionHolder:
+	.skip 0x8

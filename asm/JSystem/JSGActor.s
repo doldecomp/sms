@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JStage6TActorFv
 __dt__Q26JStage6TActorFv:
 /* 80081980 0007E8C0  7C 08 02 A6 */	mflr r0
@@ -91,3 +90,13 @@ JSGSetAnimationFrame__Q26JStage6TActorFf:
 JSGGetAnimationFrameMax__Q26JStage6TActorCFv:
 /* 80081A28 0007E968  C0 22 89 40 */	lfs f1, $$2126-_SDA2_BASE_(r2)
 /* 80081A2C 0007E96C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JStage6TActor
+__vt__Q26JStage6TActor:
+	.incbin "baserom.dol", 0x3A9DD0, 0x68
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2126
+$$2126:
+	.incbin "baserom.dol", 0x3E4640, 0x8

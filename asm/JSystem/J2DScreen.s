@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__9J2DScreenFv
 __dt__9J2DScreenFv:
 /* 800187A0 000156E0  7C 08 02 A6 */	mflr r0
@@ -835,3 +834,25 @@ lbl_80019394:
 /* 800193A4 000162E4  7C 08 03 A6 */	mtlr r0
 /* 800193A8 000162E8  38 21 00 18 */	addi r1, r1, 0x18
 /* 800193AC 000162EC  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2321
+$$2321:
+	.incbin "baserom.dol", 0x36DB90, 0x10
+.global $$2322
+$$2322:
+	.incbin "baserom.dol", 0x36DBA0, 0x1C
+.global $$2326
+$$2326:
+	.incbin "baserom.dol", 0x36DBBC, 0x2C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2323
+$$2323:
+	.incbin "baserom.dol", 0x3A5C90, 0x50
+.global __vt__12J2DSetScreen
+__vt__12J2DSetScreen:
+	.incbin "baserom.dol", 0x3A5CE0, 0x34
+.global __vt__9J2DScreen
+__vt__9J2DScreen:
+	.incbin "baserom.dol", 0x3A5D14, 0x34

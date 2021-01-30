@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__6J3DSysFv
 __ct__6J3DSysFv:
 /* 8002A1D0 00027110  7C 08 02 A6 */	mflr r0
@@ -740,3 +739,47 @@ __sinit_J3DSys_cpp:
 /* 8002AC88 00027BC8  38 21 00 08 */	addi r1, r1, 8
 /* 8002AC8C 00027BCC  7C 08 03 A6 */	mtlr r0
 /* 8002AC90 00027BD0  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBC8, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2838
+$$2838:
+	.incbin "baserom.dol", 0x36DC38, 0x10
+.global $$2839
+$$2839:
+	.incbin "baserom.dol", 0x36DC48, 0x10
+.global $$2877
+$$2877:
+	.incbin "baserom.dol", 0x36DC58, 0x18
+.global $$2885
+$$2885:
+	.incbin "baserom.dol", 0x36DC70, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global NullTexData
+NullTexData:
+	.incbin "baserom.dol", 0x3A6980, 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global j3dSys
+j3dSys:
+	.skip 0x1AC
+.global mCurrentMtx__6J3DSys
+mCurrentMtx__6J3DSys:
+	.skip 0x30
+.global mCurrentS__6J3DSys
+mCurrentS__6J3DSys:
+	.skip 0xC
+.global mParentS__6J3DSys
+mParentS__6J3DSys:
+	.skip 0xC
+.global sTexCoordScaleTable__6J3DSys
+sTexCoordScaleTable__6J3DSys:
+	.skip 0x40
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global j3dDefaultViewNo
+j3dDefaultViewNo:
+	.skip 0x8

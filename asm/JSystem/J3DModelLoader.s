@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__22J3DModelLoaderDataBaseFPCvUl
 load__22J3DModelLoaderDataBaseFPCvUl:
 /* 80030A64 0002D9A4  7C 08 02 A6 */	mflr r0
@@ -1856,3 +1855,17 @@ JSUConvertOffsetToPtr$$016J3DShapeInitData$$1__FPCvUl:
 lbl_80032378:
 /* 80032378 0002F2B8  7C 63 22 14 */	add r3, r3, r4
 /* 8003237C 0002F2BC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18J3DModelLoader_v21
+__vt__18J3DModelLoader_v21:
+	.incbin "baserom.dol", 0x3A6A60, 0x28
+.global __vt__18J3DModelLoader_v26
+__vt__18J3DModelLoader_v26:
+	.incbin "baserom.dol", 0x3A6A88, 0x28
+.global __vt__10J3DTexture
+__vt__10J3DTexture:
+	.incbin "baserom.dol", 0x3A6AB0, 0xC
+.global __vt__14J3DModelLoader
+__vt__14J3DModelLoader:
+	.incbin "baserom.dol", 0x3A6ABC, 0x2C

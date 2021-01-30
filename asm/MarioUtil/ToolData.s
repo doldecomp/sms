@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GetValue__Q24Koga8ToolDataCFiPCcRPCc
 GetValue__Q24Koga8ToolDataCFiPCcRPCc:
 /* 800D209C 000CEFDC  80 E3 00 04 */	lwz r7, 4(r3)
@@ -166,3 +165,8 @@ __ct__Q24Koga8ToolDataFv:
 /* 800D22A8 000CF1E8  38 00 00 00 */	li r0, 0
 /* 800D22AC 000CF1EC  90 03 00 04 */	stw r0, 4(r3)
 /* 800D22B0 000CF1F0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q24Koga8ToolData
+__vt__Q24Koga8ToolData:
+	.incbin "baserom.dol", 0x3B0480, 0x10

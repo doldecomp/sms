@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global verifySuffix__12MActorAnmBlkFPCc
 verifySuffix__12MActorAnmBlkFPCc:
 /* 800D5C34 000D2B74  7C 08 02 A6 */	mflr r0
@@ -1731,3 +1730,55 @@ verifySuffix__12MActorAnmBckFPCc:
 /* 800D7278 000D41B8  38 21 00 08 */	addi r1, r1, 8
 /* 800D727C 000D41BC  7C 08 03 A6 */	mtlr r0
 /* 800D7280 000D41C0  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12MActorAnmBlk
+__vt__12MActorAnmBlk:
+	.incbin "baserom.dol", 0x3B06A0, 0x28
+.global __vt__12MActorAnmBrk
+__vt__12MActorAnmBrk:
+	.incbin "baserom.dol", 0x3B06C8, 0x28
+.global __vt__12MActorAnmBpk
+__vt__12MActorAnmBpk:
+	.incbin "baserom.dol", 0x3B06F0, 0x28
+.global __vt__12MActorAnmBtk
+__vt__12MActorAnmBtk:
+	.incbin "baserom.dol", 0x3B0718, 0x28
+.global __vt__12MActorAnmBtp
+__vt__12MActorAnmBtp:
+	.incbin "baserom.dol", 0x3B0740, 0x28
+.global __vt__12MActorAnmBck
+__vt__12MActorAnmBck:
+	.incbin "baserom.dol", 0x3B0768, 0x28
+.global __vt__13MActorAnmBase
+__vt__13MActorAnmBase:
+	.incbin "baserom.dol", 0x3B0790, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21875
+$$21875:
+	.incbin "baserom.dol", 0x3E4C08, 0x8
+.global $$21908
+$$21908:
+	.incbin "baserom.dol", 0x3E4C10, 0x4
+.global $$21909
+$$21909:
+	.incbin "baserom.dol", 0x3E4C14, 0x4
+.global $$21911
+$$21911:
+	.incbin "baserom.dol", 0x3E4C18, 0x8
+.global $$22660
+$$22660:
+	.incbin "baserom.dol", 0x3E4C20, 0x8
+.global $$22663
+$$22663:
+	.incbin "baserom.dol", 0x3E4C28, 0x8
+.global $$22666
+$$22666:
+	.incbin "baserom.dol", 0x3E4C30, 0x8
+.global $$22669
+$$22669:
+	.incbin "baserom.dol", 0x3E4C38, 0x8
+.global $$22672
+$$22672:
+	.incbin "baserom.dol", 0x3E4C40, 0x8

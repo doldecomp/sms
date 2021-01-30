@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getFlushTime__14TMapObjGeneralCFv
 getFlushTime__14TMapObjGeneralCFv:
 /* 80189B7C 00186ABC  80 6D 85 4C */	lwz r3, mNormalFlushTime__14TMapObjGeneral-_SDA_BASE_(r13)
@@ -1715,3 +1714,6397 @@ lbl_8018B390:
 $$232$$2__dt__14TMapObjGeneralFv:
 /* 8018B3A4 001882E4  38 63 FF E0 */	addi r3, r3, -32
 /* 8018B3A8 001882E8  4B F7 96 3C */	b __dt__14TMapObjGeneralFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CD04, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3846B8, 0xC
+.global $$22111
+$$22111:
+	.incbin "baserom.dol", 0x3846C4, 0x14
+.global $$22189
+$$22189:
+	.incbin "baserom.dol", 0x3846D8, 0x30
+.global $$22190
+$$22190:
+	.incbin "baserom.dol", 0x384708, 0x38
+.global $$22191
+$$22191:
+	.incbin "baserom.dol", 0x384740, 0x34
+.global $$22192
+$$22192:
+	.incbin "baserom.dol", 0x384774, 0x24
+.global $$22688
+$$22688:
+	.incbin "baserom.dol", 0x384798, 0xC
+.global $$22690
+$$22690:
+	.incbin "baserom.dol", 0x3847A4, 0xC
+.global no_data_obj_hit_table
+no_data_obj_hit_table:
+	.incbin "baserom.dol", 0x3847B0, 0x10
+.global no_data_obj_hit_info
+no_data_obj_hit_info:
+	.incbin "baserom.dol", 0x3847C0, 0x10
+.global $$22771
+$$22771:
+	.incbin "baserom.dol", 0x3847D0, 0x1C
+.global $$22772
+$$22772:
+	.incbin "baserom.dol", 0x3847EC, 0x14
+.global $$22773
+$$22773:
+	.incbin "baserom.dol", 0x384800, 0x10
+.global $$22774
+$$22774:
+	.incbin "baserom.dol", 0x384810, 0x10
+.global billboard_dolphin_anim_data
+billboard_dolphin_anim_data:
+	.incbin "baserom.dol", 0x384820, 0x3C
+.global billboard_hit_data_table
+billboard_hit_data_table:
+	.incbin "baserom.dol", 0x38485C, 0x10
+.global billboard_obj_hit_info
+billboard_obj_hit_info:
+	.incbin "baserom.dol", 0x38486C, 0x10
+.global $$22775
+$$22775:
+	.incbin "baserom.dol", 0x38487C, 0x14
+.global $$22776
+$$22776:
+	.incbin "baserom.dol", 0x384890, 0x18
+.global $$22777
+$$22777:
+	.incbin "baserom.dol", 0x3848A8, 0x14
+.global billboard_sun_anim_data
+billboard_sun_anim_data:
+	.incbin "baserom.dol", 0x3848BC, 0x3C
+.global $$22778
+$$22778:
+	.incbin "baserom.dol", 0x3848F8, 0x10
+.global $$22779
+$$22779:
+	.incbin "baserom.dol", 0x384908, 0x18
+.global billboard_restaurant_anim_data
+billboard_restaurant_anim_data:
+	.incbin "baserom.dol", 0x384920, 0x3C
+.global $$22780
+$$22780:
+	.incbin "baserom.dol", 0x38495C, 0x18
+.global $$22781
+$$22781:
+	.incbin "baserom.dol", 0x384974, 0x14
+.global billboard_fish_anim_data
+billboard_fish_anim_data:
+	.incbin "baserom.dol", 0x384988, 0x3C
+.global $$22782
+$$22782:
+	.incbin "baserom.dol", 0x3849C4, 0x10
+.global HideObj_hit_data_table
+HideObj_hit_data_table:
+	.incbin "baserom.dol", 0x3849D4, 0x10
+.global HideObj_obj_hit_info
+HideObj_obj_hit_info:
+	.incbin "baserom.dol", 0x3849E4, 0x10
+.global WaterHitHideObj_hit_data_table
+WaterHitHideObj_hit_data_table:
+	.incbin "baserom.dol", 0x3849F4, 0x10
+.global WaterHitHideObj_obj_hit_info
+WaterHitHideObj_obj_hit_info:
+	.incbin "baserom.dol", 0x384A04, 0x10
+.global $$22784
+$$22784:
+	.incbin "baserom.dol", 0x384A14, 0x10
+.global FruitHitHideObj_hit_data_table
+FruitHitHideObj_hit_data_table:
+	.incbin "baserom.dol", 0x384A24, 0x10
+.global FruitHitHideObj_obj_hit_info
+FruitHitHideObj_obj_hit_info:
+	.incbin "baserom.dol", 0x384A34, 0x10
+.global $$22785
+$$22785:
+	.incbin "baserom.dol", 0x384A44, 0x10
+.global HipDropHideObj_hit_data_table
+HipDropHideObj_hit_data_table:
+	.incbin "baserom.dol", 0x384A54, 0x10
+.global HipDropHideObj_obj_hit_info
+HipDropHideObj_obj_hit_info:
+	.incbin "baserom.dol", 0x384A64, 0x10
+.global $$22786
+$$22786:
+	.incbin "baserom.dol", 0x384A74, 0x10
+.global $$22787
+$$22787:
+	.incbin "baserom.dol", 0x384A84, 0x18
+.global MonteChair_anim_data
+MonteChair_anim_data:
+	.incbin "baserom.dol", 0x384A9C, 0x14
+.global $$22788
+$$22788:
+	.incbin "baserom.dol", 0x384AB0, 0xC
+.global $$22789
+$$22789:
+	.incbin "baserom.dol", 0x384ABC, 0xC
+.global $$22790
+$$22790:
+	.incbin "baserom.dol", 0x384AC8, 0xC
+.global $$22791
+$$22791:
+	.incbin "baserom.dol", 0x384AD4, 0x20
+.global $$22792
+$$22792:
+	.incbin "baserom.dol", 0x384AF4, 0xC
+.global $$22793
+$$22793:
+	.incbin "baserom.dol", 0x384B00, 0x20
+.global $$22794
+$$22794:
+	.incbin "baserom.dol", 0x384B20, 0xC
+.global $$22795
+$$22795:
+	.incbin "baserom.dol", 0x384B2C, 0x20
+.global $$22796
+$$22796:
+	.incbin "baserom.dol", 0x384B4C, 0xC
+.global $$22797
+$$22797:
+	.incbin "baserom.dol", 0x384B58, 0x20
+.global door_anim_data
+door_anim_data:
+	.incbin "baserom.dol", 0x384B78, 0x64
+.global door_hit_data_table
+door_hit_data_table:
+	.incbin "baserom.dol", 0x384BDC, 0x10
+.global door_obj_hit_info
+door_obj_hit_info:
+	.incbin "baserom.dol", 0x384BEC, 0x10
+.global $$22799
+$$22799:
+	.incbin "baserom.dol", 0x384BFC, 0x10
+.global doorHotel_anim_data
+doorHotel_anim_data:
+	.incbin "baserom.dol", 0x384C0C, 0x64
+.global $$22800
+$$22800:
+	.incbin "baserom.dol", 0x384C70, 0xC
+.global $$22801
+$$22801:
+	.incbin "baserom.dol", 0x384C7C, 0xC
+.global manhole_anim_data
+manhole_anim_data:
+	.incbin "baserom.dol", 0x384C88, 0x14
+.global manhole_hit_data_table
+manhole_hit_data_table:
+	.incbin "baserom.dol", 0x384C9C, 0x10
+.global manhole_obj_hit_info
+manhole_obj_hit_info:
+	.incbin "baserom.dol", 0x384CAC, 0x10
+.global manhole_map_collision_data
+manhole_map_collision_data:
+	.incbin "baserom.dol", 0x384CBC, 0x10
+.global $$22803
+$$22803:
+	.incbin "baserom.dol", 0x384CCC, 0xC
+.global FruitBasket_anim_data
+FruitBasket_anim_data:
+	.incbin "baserom.dol", 0x384CD8, 0x28
+.global FruitBasket_hit_data_table
+FruitBasket_hit_data_table:
+	.incbin "baserom.dol", 0x384D00, 0x10
+.global FruitBasket_obj_hit_info
+FruitBasket_obj_hit_info:
+	.incbin "baserom.dol", 0x384D10, 0x10
+.global $$22806
+$$22806:
+	.incbin "baserom.dol", 0x384D20, 0xC
+.global BasketReverse_anim_data
+BasketReverse_anim_data:
+	.incbin "baserom.dol", 0x384D2C, 0x14
+.global BasketReverse_hit_data_table
+BasketReverse_hit_data_table:
+	.incbin "baserom.dol", 0x384D40, 0x10
+.global BasketReverse_obj_hit_info
+BasketReverse_obj_hit_info:
+	.incbin "baserom.dol", 0x384D50, 0x10
+.global $$22807
+$$22807:
+	.incbin "baserom.dol", 0x384D60, 0x10
+.global CoconutJuice_hit_data_table
+CoconutJuice_hit_data_table:
+	.incbin "baserom.dol", 0x384D70, 0x10
+.global CoconutJuice_obj_hit_info
+CoconutJuice_obj_hit_info:
+	.incbin "baserom.dol", 0x384D80, 0x10
+.global $$22808
+$$22808:
+	.incbin "baserom.dol", 0x384D90, 0x10
+.global Pile_hit_data_table
+Pile_hit_data_table:
+	.incbin "baserom.dol", 0x384DA0, 0x10
+.global Pile_obj_hit_info
+Pile_obj_hit_info:
+	.incbin "baserom.dol", 0x384DB0, 0x10
+.global $$22810
+$$22810:
+	.incbin "baserom.dol", 0x384DC0, 0x20
+.global ChangeStage_hit_data_table
+ChangeStage_hit_data_table:
+	.incbin "baserom.dol", 0x384DE0, 0x10
+.global ChangeStage_obj_hit_info
+ChangeStage_obj_hit_info:
+	.incbin "baserom.dol", 0x384DF0, 0x10
+.global $$22811
+$$22811:
+	.incbin "baserom.dol", 0x384E00, 0xC
+.global $$22812
+$$22812:
+	.incbin "baserom.dol", 0x384E0C, 0x18
+.global StartDemo_hit_data_table
+StartDemo_hit_data_table:
+	.incbin "baserom.dol", 0x384E24, 0x10
+.global StartDemo_obj_hit_info
+StartDemo_obj_hit_info:
+	.incbin "baserom.dol", 0x384E34, 0x10
+.global $$22813
+$$22813:
+	.incbin "baserom.dol", 0x384E44, 0xC
+.global $$22814
+$$22814:
+	.incbin "baserom.dol", 0x384E50, 0x18
+.global ChipShine_anim_data
+ChipShine_anim_data:
+	.incbin "baserom.dol", 0x384E68, 0x14
+.global ChipShine_hit_data_table
+ChipShine_hit_data_table:
+	.incbin "baserom.dol", 0x384E7C, 0x10
+.global ChipShine_obj_hit_info
+ChipShine_obj_hit_info:
+	.incbin "baserom.dol", 0x384E8C, 0x10
+.global $$22815
+$$22815:
+	.incbin "baserom.dol", 0x384E9C, 0xC
+.global $$22816
+$$22816:
+	.incbin "baserom.dol", 0x384EA8, 0x14
+.global KoopaJrSignM_anim_data
+KoopaJrSignM_anim_data:
+	.incbin "baserom.dol", 0x384EBC, 0x14
+.global KoopaJrSignM_hit_data_table
+KoopaJrSignM_hit_data_table:
+	.incbin "baserom.dol", 0x384ED0, 0x10
+.global KoopaJrSignM_obj_hit_info
+KoopaJrSignM_obj_hit_info:
+	.incbin "baserom.dol", 0x384EE0, 0x10
+.global $$22817
+$$22817:
+	.incbin "baserom.dol", 0x384EF0, 0x10
+.global $$22818
+$$22818:
+	.incbin "baserom.dol", 0x384F00, 0xC
+.global $$22819
+$$22819:
+	.incbin "baserom.dol", 0x384F0C, 0x10
+.global SignCircle_anim_data
+SignCircle_anim_data:
+	.incbin "baserom.dol", 0x384F1C, 0x14
+.global $$22820
+$$22820:
+	.incbin "baserom.dol", 0x384F30, 0xC
+.global $$22821
+$$22821:
+	.incbin "baserom.dol", 0x384F3C, 0x10
+.global SignCross_anim_data
+SignCross_anim_data:
+	.incbin "baserom.dol", 0x384F4C, 0x14
+.global $$22822
+$$22822:
+	.incbin "baserom.dol", 0x384F60, 0xC
+.global $$22823
+$$22823:
+	.incbin "baserom.dol", 0x384F6C, 0x10
+.global SignTriangle_anim_data
+SignTriangle_anim_data:
+	.incbin "baserom.dol", 0x384F7C, 0x14
+.global $$22824
+$$22824:
+	.incbin "baserom.dol", 0x384F90, 0x10
+.global ArrowBoardLR_hit_data_table
+ArrowBoardLR_hit_data_table:
+	.incbin "baserom.dol", 0x384FA0, 0x10
+.global ArrowBoardLR_obj_hit_info
+ArrowBoardLR_obj_hit_info:
+	.incbin "baserom.dol", 0x384FB0, 0x10
+.global $$22825
+$$22825:
+	.incbin "baserom.dol", 0x384FC0, 0x10
+.global ArrowBoardUp_hit_data_table
+ArrowBoardUp_hit_data_table:
+	.incbin "baserom.dol", 0x384FD0, 0x10
+.global ArrowBoardUp_obj_hit_info
+ArrowBoardUp_obj_hit_info:
+	.incbin "baserom.dol", 0x384FE0, 0x10
+.global $$22826
+$$22826:
+	.incbin "baserom.dol", 0x384FF0, 0x10
+.global ArrowBoardDown_hit_data_table
+ArrowBoardDown_hit_data_table:
+	.incbin "baserom.dol", 0x385000, 0x10
+.global ArrowBoardDown_obj_hit_info
+ArrowBoardDown_obj_hit_info:
+	.incbin "baserom.dol", 0x385010, 0x10
+.global $$22827
+$$22827:
+	.incbin "baserom.dol", 0x385020, 0x10
+.global $$22828
+$$22828:
+	.incbin "baserom.dol", 0x385030, 0x14
+.global $$22829
+$$22829:
+	.incbin "baserom.dol", 0x385044, 0x10
+.global $$22830
+$$22830:
+	.incbin "baserom.dol", 0x385054, 0xC
+.global $$22831
+$$22831:
+	.incbin "baserom.dol", 0x385060, 0x10
+.global GeneralHitObj_hit_data_table
+GeneralHitObj_hit_data_table:
+	.incbin "baserom.dol", 0x385070, 0x10
+.global GeneralHitObj_obj_hit_info
+GeneralHitObj_obj_hit_info:
+	.incbin "baserom.dol", 0x385080, 0x10
+.global $$22833
+$$22833:
+	.incbin "baserom.dol", 0x385090, 0x10
+.global item_hit_data_table
+item_hit_data_table:
+	.incbin "baserom.dol", 0x3850A0, 0x10
+.global item_obj_hit_info
+item_obj_hit_info:
+	.incbin "baserom.dol", 0x3850B0, 0x10
+.global $$22834
+$$22834:
+	.incbin "baserom.dol", 0x3850C0, 0x10
+.global $$22835
+$$22835:
+	.incbin "baserom.dol", 0x3850D0, 0x18
+.global $$22836
+$$22836:
+	.incbin "baserom.dol", 0x3850E8, 0x14
+.global $$22837
+$$22837:
+	.incbin "baserom.dol", 0x3850FC, 0x10
+.global WaterRecoverObj_hit_data_table
+WaterRecoverObj_hit_data_table:
+	.incbin "baserom.dol", 0x38510C, 0x10
+.global WaterRecoverObj_obj_hit_info
+WaterRecoverObj_obj_hit_info:
+	.incbin "baserom.dol", 0x38511C, 0x10
+.global $$22838
+$$22838:
+	.incbin "baserom.dol", 0x38512C, 0x10
+.global $$22839
+$$22839:
+	.incbin "baserom.dol", 0x38513C, 0x10
+.global $$22840
+$$22840:
+	.incbin "baserom.dol", 0x38514C, 0x14
+.global $$22841
+$$22841:
+	.incbin "baserom.dol", 0x385160, 0x14
+.global nozzle_item_hit_data_table
+nozzle_item_hit_data_table:
+	.incbin "baserom.dol", 0x385174, 0x10
+.global nozzle_item_obj_hit_info
+nozzle_item_obj_hit_info:
+	.incbin "baserom.dol", 0x385184, 0x10
+.global $$22842
+$$22842:
+	.incbin "baserom.dol", 0x385194, 0x14
+.global $$22843
+$$22843:
+	.incbin "baserom.dol", 0x3851A8, 0x14
+.global coin_hit_data_table
+coin_hit_data_table:
+	.incbin "baserom.dol", 0x3851BC, 0x10
+.global coin_obj_hit_info
+coin_obj_hit_info:
+	.incbin "baserom.dol", 0x3851CC, 0x10
+.global coin_sound_data
+coin_sound_data:
+	.incbin "baserom.dol", 0x3851DC, 0x28
+.global $$22845
+$$22845:
+	.incbin "baserom.dol", 0x385204, 0x10
+.global $$22846
+$$22846:
+	.incbin "baserom.dol", 0x385214, 0xC
+.global $$22847
+$$22847:
+	.incbin "baserom.dol", 0x385220, 0xC
+.global $$22849
+$$22849:
+	.incbin "baserom.dol", 0x38522C, 0x18
+.global $$22850
+$$22850:
+	.incbin "baserom.dol", 0x385244, 0x10
+.global mario_cap_anim_data
+mario_cap_anim_data:
+	.incbin "baserom.dol", 0x385254, 0x14
+.global mario_cap_hit_data_table
+mario_cap_hit_data_table:
+	.incbin "baserom.dol", 0x385268, 0x10
+.global mario_cap_obj_hit_info
+mario_cap_obj_hit_info:
+	.incbin "baserom.dol", 0x385278, 0x10
+.global $$22851
+$$22851:
+	.incbin "baserom.dol", 0x385288, 0xC
+.global $$22852
+$$22852:
+	.incbin "baserom.dol", 0x385294, 0xC
+.global coin_anim_data
+coin_anim_data:
+	.incbin "baserom.dol", 0x3852A0, 0x14
+.global $$22853
+$$22853:
+	.incbin "baserom.dol", 0x3852B4, 0xC
+.global $$22854
+$$22854:
+	.incbin "baserom.dol", 0x3852C0, 0x14
+.global $$22855
+$$22855:
+	.incbin "baserom.dol", 0x3852D4, 0x10
+.global $$22856
+$$22856:
+	.incbin "baserom.dol", 0x3852E4, 0x10
+.global $$22857
+$$22857:
+	.incbin "baserom.dol", 0x3852F4, 0x10
+.global $$22858
+$$22858:
+	.incbin "baserom.dol", 0x385304, 0x14
+.global $$22859
+$$22859:
+	.incbin "baserom.dol", 0x385318, 0x10
+.global eggYoshi_anim_data
+eggYoshi_anim_data:
+	.incbin "baserom.dol", 0x385328, 0x50
+.global eggYoshi_hit_data_table
+eggYoshi_hit_data_table:
+	.incbin "baserom.dol", 0x385378, 0xA0
+.global eggYoshi_obj_hit_info
+eggYoshi_obj_hit_info:
+	.incbin "baserom.dol", 0x385418, 0x10
+.global $$22860
+$$22860:
+	.incbin "baserom.dol", 0x385428, 0xC
+.global $$22861
+$$22861:
+	.incbin "baserom.dol", 0x385434, 0x10
+.global $$22862
+$$22862:
+	.incbin "baserom.dol", 0x385444, 0x10
+.global $$22863
+$$22863:
+	.incbin "baserom.dol", 0x385454, 0x14
+.global $$22864
+$$22864:
+	.incbin "baserom.dol", 0x385468, 0x10
+.global $$22865
+$$22865:
+	.incbin "baserom.dol", 0x385478, 0x14
+.global NozzleBox_anim_data
+NozzleBox_anim_data:
+	.incbin "baserom.dol", 0x38548C, 0x50
+.global NozzleBox_hit_data_table
+NozzleBox_hit_data_table:
+	.incbin "baserom.dol", 0x3854DC, 0x10
+.global NozzleBox_obj_hit_info
+NozzleBox_obj_hit_info:
+	.incbin "baserom.dol", 0x3854EC, 0x10
+.global $$22866
+$$22866:
+	.incbin "baserom.dol", 0x3854FC, 0xC
+.global $$22867
+$$22867:
+	.incbin "baserom.dol", 0x385508, 0x10
+.global mushroom1up_anim_data
+mushroom1up_anim_data:
+	.incbin "baserom.dol", 0x385518, 0x14
+.global mushroom1up_hit_data_table
+mushroom1up_hit_data_table:
+	.incbin "baserom.dol", 0x38552C, 0x10
+.global mushroom1up_obj_hit_info
+mushroom1up_obj_hit_info:
+	.incbin "baserom.dol", 0x38553C, 0x10
+.global $$22868
+$$22868:
+	.incbin "baserom.dol", 0x38554C, 0xC
+.global $$22869
+$$22869:
+	.incbin "baserom.dol", 0x385558, 0x10
+.global $$22870
+$$22870:
+	.incbin "baserom.dol", 0x385568, 0x10
+.global $$22871
+$$22871:
+	.incbin "baserom.dol", 0x385578, 0x10
+.global jumpbase_anim_data
+jumpbase_anim_data:
+	.incbin "baserom.dol", 0x385588, 0x14
+.global jumpbase_hit_data_table
+jumpbase_hit_data_table:
+	.incbin "baserom.dol", 0x38559C, 0x10
+.global jumpbase_obj_hit_info
+jumpbase_obj_hit_info:
+	.incbin "baserom.dol", 0x3855AC, 0x10
+.global $$22872
+$$22872:
+	.incbin "baserom.dol", 0x3855BC, 0xC
+.global fruit_hit_data_table
+fruit_hit_data_table:
+	.incbin "baserom.dol", 0x3855C8, 0x10
+.global fruit_obj_hit_info
+fruit_obj_hit_info:
+	.incbin "baserom.dol", 0x3855D8, 0x10
+.global coconut_hit_data_table
+coconut_hit_data_table:
+	.incbin "baserom.dol", 0x3855E8, 0x10
+.global coconut_obj_hit_info
+coconut_obj_hit_info:
+	.incbin "baserom.dol", 0x3855F8, 0x10
+.global fruit_sound_data
+fruit_sound_data:
+	.incbin "baserom.dol", 0x385608, 0x28
+.global $$22873
+$$22873:
+	.incbin "baserom.dol", 0x385630, 0x10
+.global $$22874
+$$22874:
+	.incbin "baserom.dol", 0x385640, 0xC
+.global papaya_hit_data_table
+papaya_hit_data_table:
+	.incbin "baserom.dol", 0x38564C, 0x10
+.global papaya_obj_hit_info
+papaya_obj_hit_info:
+	.incbin "baserom.dol", 0x38565C, 0x10
+.global $$22875
+$$22875:
+	.incbin "baserom.dol", 0x38566C, 0xC
+.global pine_hit_data_table
+pine_hit_data_table:
+	.incbin "baserom.dol", 0x385678, 0x10
+.global pine_obj_hit_info
+pine_obj_hit_info:
+	.incbin "baserom.dol", 0x385688, 0x10
+.global $$22876
+$$22876:
+	.incbin "baserom.dol", 0x385698, 0xC
+.global $$22877
+$$22877:
+	.incbin "baserom.dol", 0x3856A4, 0x10
+.global CoverPine_anim_data
+CoverPine_anim_data:
+	.incbin "baserom.dol", 0x3856B4, 0x8C
+.global cover_pine_hit_data_table
+cover_pine_hit_data_table:
+	.incbin "baserom.dol", 0x385740, 0x10
+.global cover_pine_obj_hit_info
+cover_pine_obj_hit_info:
+	.incbin "baserom.dol", 0x385750, 0x10
+.global $$22878
+$$22878:
+	.incbin "baserom.dol", 0x385760, 0x10
+.global durian_hit_data_table
+durian_hit_data_table:
+	.incbin "baserom.dol", 0x385770, 0x10
+.global durian_obj_hit_info
+durian_obj_hit_info:
+	.incbin "baserom.dol", 0x385780, 0x10
+.global durian_sound_data
+durian_sound_data:
+	.incbin "baserom.dol", 0x385790, 0x28
+.global $$22879
+$$22879:
+	.incbin "baserom.dol", 0x3857B8, 0xC
+.global banana_hit_data_table
+banana_hit_data_table:
+	.incbin "baserom.dol", 0x3857C4, 0x10
+.global banana_obj_hit_info
+banana_obj_hit_info:
+	.incbin "baserom.dol", 0x3857D4, 0x10
+.global $$22880
+$$22880:
+	.incbin "baserom.dol", 0x3857E4, 0xC
+.global $$22881
+$$22881:
+	.incbin "baserom.dol", 0x3857F0, 0xC
+.global $$22882
+$$22882:
+	.incbin "baserom.dol", 0x3857FC, 0x10
+.global $$22883
+$$22883:
+	.incbin "baserom.dol", 0x38580C, 0x10
+.global fence3x3_anim_data
+fence3x3_anim_data:
+	.incbin "baserom.dol", 0x38581C, 0x14
+.global $$22884
+$$22884:
+	.incbin "baserom.dol", 0x385830, 0xC
+.global $$22885
+$$22885:
+	.incbin "baserom.dol", 0x38583C, 0x18
+.global fence_revolve_outer_anim_data
+fence_revolve_outer_anim_data:
+	.incbin "baserom.dol", 0x385854, 0x14
+.global $$22886
+$$22886:
+	.incbin "baserom.dol", 0x385868, 0x10
+.global FenceInner_hit_data_table
+FenceInner_hit_data_table:
+	.incbin "baserom.dol", 0x385878, 0x10
+.global FenceInner_obj_hit_info
+FenceInner_obj_hit_info:
+	.incbin "baserom.dol", 0x385888, 0x10
+.global $$22887
+$$22887:
+	.incbin "baserom.dol", 0x385898, 0x14
+.global $$22888
+$$22888:
+	.incbin "baserom.dol", 0x3858AC, 0x10
+.global $$22889
+$$22889:
+	.incbin "baserom.dol", 0x3858BC, 0xC
+.global $$22890
+$$22890:
+	.incbin "baserom.dol", 0x3858C8, 0xC
+.global $$22891
+$$22891:
+	.incbin "baserom.dol", 0x3858D4, 0x14
+.global FenceWaterH_map_collision_data
+FenceWaterH_map_collision_data:
+	.incbin "baserom.dol", 0x3858E8, 0x10
+.global $$22892
+$$22892:
+	.incbin "baserom.dol", 0x3858F8, 0x14
+.global RailFence_anim_data
+RailFence_anim_data:
+	.incbin "baserom.dol", 0x38590C, 0x28
+.global $$22893
+$$22893:
+	.incbin "baserom.dol", 0x385934, 0x14
+.global RailFence_map_collision_data
+RailFence_map_collision_data:
+	.incbin "baserom.dol", 0x385948, 0x10
+.global $$22894
+$$22894:
+	.incbin "baserom.dol", 0x385958, 0xC
+.global $$22895
+$$22895:
+	.incbin "baserom.dol", 0x385964, 0x1C
+.global $$22896
+$$22896:
+	.incbin "baserom.dol", 0x385980, 0x1C
+.global $$22897
+$$22897:
+	.incbin "baserom.dol", 0x38599C, 0x18
+.global $$22898
+$$22898:
+	.incbin "baserom.dol", 0x3859B4, 0x14
+.global BambooRailFence_anim_data
+BambooRailFence_anim_data:
+	.incbin "baserom.dol", 0x3859C8, 0x28
+.global $$22899
+$$22899:
+	.incbin "baserom.dol", 0x3859F0, 0x10
+.global $$22900
+$$22900:
+	.incbin "baserom.dol", 0x385A00, 0x14
+.global $$22901
+$$22901:
+	.incbin "baserom.dol", 0x385A14, 0x14
+.global $$22902
+$$22902:
+	.incbin "baserom.dol", 0x385A28, 0x10
+.global $$22903
+$$22903:
+	.incbin "baserom.dol", 0x385A38, 0x20
+.global $$22904
+$$22904:
+	.incbin "baserom.dol", 0x385A58, 0xC
+.global $$22905
+$$22905:
+	.incbin "baserom.dol", 0x385A64, 0x20
+.global wood_barrel_anim_data
+wood_barrel_anim_data:
+	.incbin "baserom.dol", 0x385A84, 0x8C
+.global wood_barrel_hit_data_table
+wood_barrel_hit_data_table:
+	.incbin "baserom.dol", 0x385B10, 0x30
+.global wood_barrel_obj_hit_info
+wood_barrel_obj_hit_info:
+	.incbin "baserom.dol", 0x385B40, 0x10
+.global wood_barrel_map_collision_data
+wood_barrel_map_collision_data:
+	.incbin "baserom.dol", 0x385B50, 0x10
+.global wood_barrel_sound_data
+wood_barrel_sound_data:
+	.incbin "baserom.dol", 0x385B60, 0x28
+.global $$22907
+$$22907:
+	.incbin "baserom.dol", 0x385B88, 0x20
+.global $$22908
+$$22908:
+	.incbin "baserom.dol", 0x385BA8, 0x10
+.global $$22909
+$$22909:
+	.incbin "baserom.dol", 0x385BB8, 0xC
+.global $$22910
+$$22910:
+	.incbin "baserom.dol", 0x385BC4, 0x14
+.global $$22911
+$$22911:
+	.incbin "baserom.dol", 0x385BD8, 0x14
+.global barrel_float_hit_data_table
+barrel_float_hit_data_table:
+	.incbin "baserom.dol", 0x385BEC, 0x10
+.global barrel_float_obj_hit_info
+barrel_float_obj_hit_info:
+	.incbin "baserom.dol", 0x385BFC, 0x10
+.global $$22912
+$$22912:
+	.incbin "baserom.dol", 0x385C0C, 0x10
+.global $$22913
+$$22913:
+	.incbin "baserom.dol", 0x385C1C, 0x14
+.global $$22914
+$$22914:
+	.incbin "baserom.dol", 0x385C30, 0x1C
+.global $$22915
+$$22915:
+	.incbin "baserom.dol", 0x385C4C, 0x10
+.global drum_can_anim_data
+drum_can_anim_data:
+	.incbin "baserom.dol", 0x385C5C, 0x3C
+.global drum_can_hit_data_table
+drum_can_hit_data_table:
+	.incbin "baserom.dol", 0x385C98, 0x10
+.global drum_can_obj_hit_info
+drum_can_obj_hit_info:
+	.incbin "baserom.dol", 0x385CA8, 0x10
+.global $$22916
+$$22916:
+	.incbin "baserom.dol", 0x385CB8, 0xC
+.global $$22917
+$$22917:
+	.incbin "baserom.dol", 0x385CC4, 0x10
+.global drum_can_map_collision_data
+drum_can_map_collision_data:
+	.incbin "baserom.dol", 0x385CD4, 0x10
+.global $$22918
+$$22918:
+	.incbin "baserom.dol", 0x385CE4, 0x10
+.global $$22919
+$$22919:
+	.incbin "baserom.dol", 0x385CF4, 0x28
+.global barrel_oil_anim_data
+barrel_oil_anim_data:
+	.incbin "baserom.dol", 0x385D1C, 0x8C
+.global barrel_oil_hit_data_table
+barrel_oil_hit_data_table:
+	.incbin "baserom.dol", 0x385DA8, 0x10
+.global barrel_oil_obj_hit_info
+barrel_oil_obj_hit_info:
+	.incbin "baserom.dol", 0x385DB8, 0x10
+.global $$22920
+$$22920:
+	.incbin "baserom.dol", 0x385DC8, 0xC
+.global $$22921
+$$22921:
+	.incbin "baserom.dol", 0x385DD4, 0xC
+.global $$22922
+$$22922:
+	.incbin "baserom.dol", 0x385DE0, 0x10
+.global $$22923
+$$22923:
+	.incbin "baserom.dol", 0x385DF0, 0x14
+.global $$22924
+$$22924:
+	.incbin "baserom.dol", 0x385E04, 0x20
+.global $$22925
+$$22925:
+	.incbin "baserom.dol", 0x385E24, 0x18
+.global breakable_block_anim_data
+breakable_block_anim_data:
+	.incbin "baserom.dol", 0x385E3C, 0x3C
+.global breakable_block_hit_data_table
+breakable_block_hit_data_table:
+	.incbin "baserom.dol", 0x385E78, 0x10
+.global breakable_block_obj_hit_info
+breakable_block_obj_hit_info:
+	.incbin "baserom.dol", 0x385E88, 0x10
+.global $$22926
+$$22926:
+	.incbin "baserom.dol", 0x385E98, 0x10
+.global supermario_block_obj_hit_info
+supermario_block_obj_hit_info:
+	.incbin "baserom.dol", 0x385EA8, 0x10
+.global $$22927
+$$22927:
+	.incbin "baserom.dol", 0x385EB8, 0x14
+.global $$22928
+$$22928:
+	.incbin "baserom.dol", 0x385ECC, 0xC
+.global $$22929
+$$22929:
+	.incbin "baserom.dol", 0x385ED8, 0x10
+.global expand_block_hit_data_table
+expand_block_hit_data_table:
+	.incbin "baserom.dol", 0x385EE8, 0x10
+.global expand_block_obj_hit_info
+expand_block_obj_hit_info:
+	.incbin "baserom.dol", 0x385EF8, 0x10
+.global $$22930
+$$22930:
+	.incbin "baserom.dol", 0x385F08, 0x10
+.global spread_block_hit_data_table
+spread_block_hit_data_table:
+	.incbin "baserom.dol", 0x385F18, 0x10
+.global spread_block_obj_hit_info
+spread_block_obj_hit_info:
+	.incbin "baserom.dol", 0x385F28, 0x10
+.global $$22931
+$$22931:
+	.incbin "baserom.dol", 0x385F38, 0x10
+.global $$22932
+$$22932:
+	.incbin "baserom.dol", 0x385F48, 0x18
+.global water_roll_block_anim_data
+water_roll_block_anim_data:
+	.incbin "baserom.dol", 0x385F60, 0x14
+.global water_roll_block_obj_hit_info
+water_roll_block_obj_hit_info:
+	.incbin "baserom.dol", 0x385F74, 0x10
+.global $$22933
+$$22933:
+	.incbin "baserom.dol", 0x385F84, 0x14
+.global $$22934
+$$22934:
+	.incbin "baserom.dol", 0x385F98, 0x10
+.global $$22935
+$$22935:
+	.incbin "baserom.dol", 0x385FA8, 0xC
+.global sand_block_anim_data
+sand_block_anim_data:
+	.incbin "baserom.dol", 0x385FB4, 0x3C
+.global sand_block_hit_data_table
+sand_block_hit_data_table:
+	.incbin "baserom.dol", 0x385FF0, 0x10
+.global sand_block_obj_hit_info
+sand_block_obj_hit_info:
+	.incbin "baserom.dol", 0x386000, 0x10
+.global sand_block_map_collision_data
+sand_block_map_collision_data:
+	.incbin "baserom.dol", 0x386010, 0x10
+.global $$22936
+$$22936:
+	.incbin "baserom.dol", 0x386020, 0xC
+.global $$22937
+$$22937:
+	.incbin "baserom.dol", 0x38602C, 0x14
+.global $$22938
+$$22938:
+	.incbin "baserom.dol", 0x386040, 0x1C
+.global $$22939
+$$22939:
+	.incbin "baserom.dol", 0x38605C, 0x14
+.global $$22940
+$$22940:
+	.incbin "baserom.dol", 0x386070, 0x14
+.global $$22941
+$$22941:
+	.incbin "baserom.dol", 0x386084, 0x14
+.global $$22942
+$$22942:
+	.incbin "baserom.dol", 0x386098, 0xC
+.global skate_block_hit_data_table
+skate_block_hit_data_table:
+	.incbin "baserom.dol", 0x3860A4, 0x10
+.global skate_block_obj_hit_info
+skate_block_obj_hit_info:
+	.incbin "baserom.dol", 0x3860B4, 0x10
+.global $$22943
+$$22943:
+	.incbin "baserom.dol", 0x3860C4, 0xC
+.global $$22944
+$$22944:
+	.incbin "baserom.dol", 0x3860D0, 0x14
+.global $$22945
+$$22945:
+	.incbin "baserom.dol", 0x3860E4, 0x10
+.global MoveCoin_anim_data
+MoveCoin_anim_data:
+	.incbin "baserom.dol", 0x3860F4, 0x14
+.global $$22946
+$$22946:
+	.incbin "baserom.dol", 0x386108, 0xC
+.global $$22947
+$$22947:
+	.incbin "baserom.dol", 0x386114, 0x14
+.global cluster_block_anim_data
+cluster_block_anim_data:
+	.incbin "baserom.dol", 0x386128, 0x14
+.global $$22948
+$$22948:
+	.incbin "baserom.dol", 0x38613C, 0x10
+.global $$22949
+$$22949:
+	.incbin "baserom.dol", 0x38614C, 0xC
+.global ice_block_hit_data_table
+ice_block_hit_data_table:
+	.incbin "baserom.dol", 0x386158, 0x10
+.global ice_block_obj_hit_info
+ice_block_obj_hit_info:
+	.incbin "baserom.dol", 0x386168, 0x10
+.global $$22950
+$$22950:
+	.incbin "baserom.dol", 0x386178, 0xC
+.global $$22951
+$$22951:
+	.incbin "baserom.dol", 0x386184, 0x10
+.global $$22952
+$$22952:
+	.incbin "baserom.dol", 0x386194, 0x14
+.global $$22953
+$$22953:
+	.incbin "baserom.dol", 0x3861A8, 0x10
+.global BrickBlock_anim_data
+BrickBlock_anim_data:
+	.incbin "baserom.dol", 0x3861B8, 0x3C
+.global $$22954
+$$22954:
+	.incbin "baserom.dol", 0x3861F4, 0xC
+.global $$22955
+$$22955:
+	.incbin "baserom.dol", 0x386200, 0x14
+.global $$22956
+$$22956:
+	.incbin "baserom.dol", 0x386214, 0x1C
+.global $$22957
+$$22957:
+	.incbin "baserom.dol", 0x386230, 0x18
+.global WaterMelonBlock_anim_data
+WaterMelonBlock_anim_data:
+	.incbin "baserom.dol", 0x386248, 0x3C
+.global $$22958
+$$22958:
+	.incbin "baserom.dol", 0x386284, 0x10
+.global $$22959
+$$22959:
+	.incbin "baserom.dol", 0x386294, 0xC
+.global WoodBlockPole_hit_data_table
+WoodBlockPole_hit_data_table:
+	.incbin "baserom.dol", 0x3862A0, 0x10
+.global WoodBlockPole_obj_hit_info
+WoodBlockPole_obj_hit_info:
+	.incbin "baserom.dol", 0x3862B0, 0x10
+.global $$22960
+$$22960:
+	.incbin "baserom.dol", 0x3862C0, 0x10
+.global $$22961
+$$22961:
+	.incbin "baserom.dol", 0x3862D0, 0xC
+.global $$22962
+$$22962:
+	.incbin "baserom.dol", 0x3862DC, 0x10
+.global $$22963
+$$22963:
+	.incbin "baserom.dol", 0x3862EC, 0x14
+.global $$22964
+$$22964:
+	.incbin "baserom.dol", 0x386300, 0x10
+.global $$22965
+$$22965:
+	.incbin "baserom.dol", 0x386310, 0x24
+.global SuperHipDropBlock_anim_data
+SuperHipDropBlock_anim_data:
+	.incbin "baserom.dol", 0x386334, 0x3C
+.global $$22966
+$$22966:
+	.incbin "baserom.dol", 0x386370, 0xC
+.global $$22967
+$$22967:
+	.incbin "baserom.dol", 0x38637C, 0x14
+.global tree_sound_data
+tree_sound_data:
+	.incbin "baserom.dol", 0x386390, 0x28
+.global $$22968
+$$22968:
+	.incbin "baserom.dol", 0x3863B8, 0x10
+.global PalmNormal_anim_data
+PalmNormal_anim_data:
+	.incbin "baserom.dol", 0x3863C8, 0x14
+.global palmNormal_hit_data_table
+palmNormal_hit_data_table:
+	.incbin "baserom.dol", 0x3863DC, 0x10
+.global palmNormal_obj_hit_info
+palmNormal_obj_hit_info:
+	.incbin "baserom.dol", 0x3863EC, 0x10
+.global $$22969
+$$22969:
+	.incbin "baserom.dol", 0x3863FC, 0xC
+.global $$22970
+$$22970:
+	.incbin "baserom.dol", 0x386408, 0x10
+.global palmOugi_hit_data_table
+palmOugi_hit_data_table:
+	.incbin "baserom.dol", 0x386418, 0x10
+.global palmOugi_obj_hit_info
+palmOugi_obj_hit_info:
+	.incbin "baserom.dol", 0x386428, 0x10
+.global $$22971
+$$22971:
+	.incbin "baserom.dol", 0x386438, 0xC
+.global palmSago_hit_data_table
+palmSago_hit_data_table:
+	.incbin "baserom.dol", 0x386444, 0x10
+.global palmSago_obj_hit_info
+palmSago_obj_hit_info:
+	.incbin "baserom.dol", 0x386454, 0x10
+.global $$22972
+$$22972:
+	.incbin "baserom.dol", 0x386464, 0xC
+.global palmNatume_hit_data_table
+palmNatume_hit_data_table:
+	.incbin "baserom.dol", 0x386470, 0x10
+.global palmNatume_obj_hit_info
+palmNatume_obj_hit_info:
+	.incbin "baserom.dol", 0x386480, 0x10
+.global $$22973
+$$22973:
+	.incbin "baserom.dol", 0x386490, 0xC
+.global $$22974
+$$22974:
+	.incbin "baserom.dol", 0x38649C, 0x10
+.global PalmLeaf_anim_data
+PalmLeaf_anim_data:
+	.incbin "baserom.dol", 0x3864AC, 0x14
+.global palmLeaf_hit_data_table
+palmLeaf_hit_data_table:
+	.incbin "baserom.dol", 0x3864C0, 0x10
+.global palmLeaf_obj_hit_info
+palmLeaf_obj_hit_info:
+	.incbin "baserom.dol", 0x3864D0, 0x10
+.global $$22975
+$$22975:
+	.incbin "baserom.dol", 0x3864E0, 0xC
+.global $$22976
+$$22976:
+	.incbin "baserom.dol", 0x3864EC, 0x10
+.global BananaTree_anim_data
+BananaTree_anim_data:
+	.incbin "baserom.dol", 0x3864FC, 0x14
+.global BananaTree_hit_data_table
+BananaTree_hit_data_table:
+	.incbin "baserom.dol", 0x386510, 0x10
+.global BananaTree_obj_hit_info
+BananaTree_obj_hit_info:
+	.incbin "baserom.dol", 0x386520, 0x10
+.global $$22977
+$$22977:
+	.incbin "baserom.dol", 0x386530, 0xC
+.global FruitTree_hit_data_table
+FruitTree_hit_data_table:
+	.incbin "baserom.dol", 0x38653C, 0x10
+.global FruitTree_obj_hit_info
+FruitTree_obj_hit_info:
+	.incbin "baserom.dol", 0x38654C, 0x10
+.global $$22978
+$$22978:
+	.incbin "baserom.dol", 0x38655C, 0xC
+.global flower_hit_data_table
+flower_hit_data_table:
+	.incbin "baserom.dol", 0x386568, 0x10
+.global flower_obj_hit_info
+flower_obj_hit_info:
+	.incbin "baserom.dol", 0x386578, 0x10
+.global $$22979
+$$22979:
+	.incbin "baserom.dol", 0x386588, 0xC
+.global $$22980
+$$22980:
+	.incbin "baserom.dol", 0x386594, 0x14
+.global $$22982
+$$22982:
+	.incbin "baserom.dol", 0x3865A8, 0x14
+.global flowerOrange_anim_data
+flowerOrange_anim_data:
+	.incbin "baserom.dol", 0x3865BC, 0x28
+.global $$22983
+$$22983:
+	.incbin "baserom.dol", 0x3865E4, 0x10
+.global $$22984
+$$22984:
+	.incbin "baserom.dol", 0x3865F4, 0x10
+.global $$22985
+$$22985:
+	.incbin "baserom.dol", 0x386604, 0x10
+.global flowerPink_anim_data
+flowerPink_anim_data:
+	.incbin "baserom.dol", 0x386614, 0x28
+.global $$22986
+$$22986:
+	.incbin "baserom.dol", 0x38663C, 0xC
+.global $$22987
+$$22987:
+	.incbin "baserom.dol", 0x386648, 0x14
+.global $$22988
+$$22988:
+	.incbin "baserom.dol", 0x38665C, 0x14
+.global flowerPurple_anim_data
+flowerPurple_anim_data:
+	.incbin "baserom.dol", 0x386670, 0x28
+.global $$22989
+$$22989:
+	.incbin "baserom.dol", 0x386698, 0x10
+.global $$22990
+$$22990:
+	.incbin "baserom.dol", 0x3866A8, 0x10
+.global $$22991
+$$22991:
+	.incbin "baserom.dol", 0x3866B8, 0x10
+.global flowerRed_anim_data
+flowerRed_anim_data:
+	.incbin "baserom.dol", 0x3866C8, 0x28
+.global $$22992
+$$22992:
+	.incbin "baserom.dol", 0x3866F0, 0xC
+.global $$22993
+$$22993:
+	.incbin "baserom.dol", 0x3866FC, 0x14
+.global $$22994
+$$22994:
+	.incbin "baserom.dol", 0x386710, 0x14
+.global flowerYellow_anim_data
+flowerYellow_anim_data:
+	.incbin "baserom.dol", 0x386724, 0x28
+.global $$22995
+$$22995:
+	.incbin "baserom.dol", 0x38674C, 0x10
+.global $$22996
+$$22996:
+	.incbin "baserom.dol", 0x38675C, 0x14
+.global $$22997
+$$22997:
+	.incbin "baserom.dol", 0x386770, 0x18
+.global flowerSunflower_anim_data
+flowerSunflower_anim_data:
+	.incbin "baserom.dol", 0x386788, 0x28
+.global $$22998
+$$22998:
+	.incbin "baserom.dol", 0x3867B0, 0x10
+.global pole_sound_data
+pole_sound_data:
+	.incbin "baserom.dol", 0x3867C0, 0x28
+.global telegraph_pole_l_hit_data_table
+telegraph_pole_l_hit_data_table:
+	.incbin "baserom.dol", 0x3867E8, 0x10
+.global telegraph_pole_l_obj_hit_info
+telegraph_pole_l_obj_hit_info:
+	.incbin "baserom.dol", 0x3867F8, 0x10
+.global $$22999
+$$22999:
+	.incbin "baserom.dol", 0x386808, 0x14
+.global telegraph_pole_s_hit_data_table
+telegraph_pole_s_hit_data_table:
+	.incbin "baserom.dol", 0x38681C, 0x10
+.global telegraph_pole_s_obj_hit_info
+telegraph_pole_s_obj_hit_info:
+	.incbin "baserom.dol", 0x38682C, 0x10
+.global $$23000
+$$23000:
+	.incbin "baserom.dol", 0x38683C, 0x14
+.global $$23001
+$$23001:
+	.incbin "baserom.dol", 0x386850, 0x10
+.global $$23002
+$$23002:
+	.incbin "baserom.dol", 0x386860, 0x18
+.global $$23003
+$$23003:
+	.incbin "baserom.dol", 0x386878, 0x14
+.global dptlight_anim_data
+dptlight_anim_data:
+	.incbin "baserom.dol", 0x38688C, 0x8C
+.global streetlamp_hit_data_table
+streetlamp_hit_data_table:
+	.incbin "baserom.dol", 0x386918, 0x30
+.global streetlamp_obj_hit_info
+streetlamp_obj_hit_info:
+	.incbin "baserom.dol", 0x386948, 0x10
+.global $$23004
+$$23004:
+	.incbin "baserom.dol", 0x386958, 0xC
+.global $$23005
+$$23005:
+	.incbin "baserom.dol", 0x386964, 0x10
+.global streetlamp_map_collision_data
+streetlamp_map_collision_data:
+	.incbin "baserom.dol", 0x386974, 0x10
+.global PoleNormal_hit_data_table
+PoleNormal_hit_data_table:
+	.incbin "baserom.dol", 0x386984, 0x10
+.global PoleNormal_obj_hit_info
+PoleNormal_obj_hit_info:
+	.incbin "baserom.dol", 0x386994, 0x10
+.global $$23006
+$$23006:
+	.incbin "baserom.dol", 0x3869A4, 0xC
+.global $$23007
+$$23007:
+	.incbin "baserom.dol", 0x3869B0, 0x10
+.global football_anim_data
+football_anim_data:
+	.incbin "baserom.dol", 0x3869C0, 0x14
+.global football_hit_data_table
+football_hit_data_table:
+	.incbin "baserom.dol", 0x3869D4, 0x10
+.global football_obj_hit_info
+football_obj_hit_info:
+	.incbin "baserom.dol", 0x3869E4, 0x10
+.global football_sound_data
+football_sound_data:
+	.incbin "baserom.dol", 0x3869F4, 0x28
+.global $$23008
+$$23008:
+	.incbin "baserom.dol", 0x386A1C, 0xC
+.global $$23009
+$$23009:
+	.incbin "baserom.dol", 0x386A28, 0x18
+.global football_goal_anim_data
+football_goal_anim_data:
+	.incbin "baserom.dol", 0x386A40, 0x14
+.global football_goal_hit_data_table
+football_goal_hit_data_table:
+	.incbin "baserom.dol", 0x386A54, 0x10
+.global football_goal_obj_hit_info
+football_goal_obj_hit_info:
+	.incbin "baserom.dol", 0x386A64, 0x10
+.global $$23010
+$$23010:
+	.incbin "baserom.dol", 0x386A74, 0xC
+.global $$23011
+$$23011:
+	.incbin "baserom.dol", 0x386A80, 0x14
+.global football_goal_map_collision_data
+football_goal_map_collision_data:
+	.incbin "baserom.dol", 0x386A94, 0x10
+.global $$23012
+$$23012:
+	.incbin "baserom.dol", 0x386AA4, 0x10
+.global $$23013
+$$23013:
+	.incbin "baserom.dol", 0x386AB4, 0xC
+.global $$23014
+$$23014:
+	.incbin "baserom.dol", 0x386AC0, 0x10
+.global $$23015
+$$23015:
+	.incbin "baserom.dol", 0x386AD0, 0x10
+.global $$23016
+$$23016:
+	.incbin "baserom.dol", 0x386AE0, 0x14
+.global $$23017
+$$23017:
+	.incbin "baserom.dol", 0x386AF4, 0x24
+.global Watermelon_anim_data
+Watermelon_anim_data:
+	.incbin "baserom.dol", 0x386B18, 0xA0
+.global watermelon_hit_data_table
+watermelon_hit_data_table:
+	.incbin "baserom.dol", 0x386BB8, 0x10
+.global watermelon_obj_hit_info
+watermelon_obj_hit_info:
+	.incbin "baserom.dol", 0x386BC8, 0x10
+.global watermelon_sound_data
+watermelon_sound_data:
+	.incbin "baserom.dol", 0x386BD8, 0x28
+.global $$23018
+$$23018:
+	.incbin "baserom.dol", 0x386C00, 0xC
+.global WatermelonStatic_anim_data
+WatermelonStatic_anim_data:
+	.incbin "baserom.dol", 0x386C0C, 0x14
+.global $$23019
+$$23019:
+	.incbin "baserom.dol", 0x386C20, 0x14
+.global $$23020
+$$23020:
+	.incbin "baserom.dol", 0x386C34, 0xC
+.global $$23021
+$$23021:
+	.incbin "baserom.dol", 0x386C40, 0xC
+.global cloud_anim_data
+cloud_anim_data:
+	.incbin "baserom.dol", 0x386C4C, 0x14
+.global cloud_hit_data_table
+cloud_hit_data_table:
+	.incbin "baserom.dol", 0x386C60, 0x10
+.global cloud_obj_hit_info
+cloud_obj_hit_info:
+	.incbin "baserom.dol", 0x386C70, 0x10
+.global $$23023
+$$23023:
+	.incbin "baserom.dol", 0x386C80, 0x10
+.global normallift_anim_data
+normallift_anim_data:
+	.incbin "baserom.dol", 0x386C90, 0x14
+.global normallift_hit_data_table
+normallift_hit_data_table:
+	.incbin "baserom.dol", 0x386CA4, 0x10
+.global normallift_obj_hit_info
+normallift_obj_hit_info:
+	.incbin "baserom.dol", 0x386CB4, 0x10
+.global $$23024
+$$23024:
+	.incbin "baserom.dol", 0x386CC4, 0xC
+.global $$23025
+$$23025:
+	.incbin "baserom.dol", 0x386CD0, 0x10
+.global exrollcube_anim_data
+exrollcube_anim_data:
+	.incbin "baserom.dol", 0x386CE0, 0x14
+.global exrollcube_hit_data_table
+exrollcube_hit_data_table:
+	.incbin "baserom.dol", 0x386CF4, 0x10
+.global exrollcube_obj_hit_info
+exrollcube_obj_hit_info:
+	.incbin "baserom.dol", 0x386D04, 0x10
+.global $$23026
+$$23026:
+	.incbin "baserom.dol", 0x386D14, 0xC
+.global $$23027
+$$23027:
+	.incbin "baserom.dol", 0x386D20, 0xC
+.global $$23028
+$$23028:
+	.incbin "baserom.dol", 0x386D2C, 0x10
+.global exkickboard_anim_data
+exkickboard_anim_data:
+	.incbin "baserom.dol", 0x386D3C, 0x14
+.global exkickboard_hit_data_table
+exkickboard_hit_data_table:
+	.incbin "baserom.dol", 0x386D50, 0x10
+.global exkickboard_obj_hit_info
+exkickboard_obj_hit_info:
+	.incbin "baserom.dol", 0x386D60, 0x10
+.global $$23029
+$$23029:
+	.incbin "baserom.dol", 0x386D70, 0xC
+.global $$23030
+$$23030:
+	.incbin "baserom.dol", 0x386D7C, 0xC
+.global $$23031
+$$23031:
+	.incbin "baserom.dol", 0x386D88, 0x18
+.global railblockr_anim_data
+railblockr_anim_data:
+	.incbin "baserom.dol", 0x386DA0, 0x14
+.global $$23032
+$$23032:
+	.incbin "baserom.dol", 0x386DB4, 0x18
+.global railblocky_anim_data
+railblocky_anim_data:
+	.incbin "baserom.dol", 0x386DCC, 0x14
+.global $$23033
+$$23033:
+	.incbin "baserom.dol", 0x386DE0, 0x18
+.global railblockb_anim_data
+railblockb_anim_data:
+	.incbin "baserom.dol", 0x386DF8, 0x14
+.global railblock_hit_data_table
+railblock_hit_data_table:
+	.incbin "baserom.dol", 0x386E0C, 0x10
+.global railblock_obj_hit_info
+railblock_obj_hit_info:
+	.incbin "baserom.dol", 0x386E1C, 0x10
+.global $$23034
+$$23034:
+	.incbin "baserom.dol", 0x386E2C, 0x10
+.global $$23035
+$$23035:
+	.incbin "baserom.dol", 0x386E3C, 0xC
+.global $$23036
+$$23036:
+	.incbin "baserom.dol", 0x386E48, 0xC
+.global $$23037
+$$23037:
+	.incbin "baserom.dol", 0x386E54, 0xC
+.global $$23038
+$$23038:
+	.incbin "baserom.dol", 0x386E60, 0xC
+.global $$23039
+$$23039:
+	.incbin "baserom.dol", 0x386E6C, 0xC
+.global $$23040
+$$23040:
+	.incbin "baserom.dol", 0x386E78, 0xC
+.global $$23041
+$$23041:
+	.incbin "baserom.dol", 0x386E84, 0xC
+.global umaibou_anim_data
+umaibou_anim_data:
+	.incbin "baserom.dol", 0x386E90, 0x14
+.global umaibou_hit_data_table
+umaibou_hit_data_table:
+	.incbin "baserom.dol", 0x386EA4, 0x10
+.global umaibou_obj_hit_info
+umaibou_obj_hit_info:
+	.incbin "baserom.dol", 0x386EB4, 0x10
+.global $$23043
+$$23043:
+	.incbin "baserom.dol", 0x386EC4, 0x10
+.global kamaboko_anim_data
+kamaboko_anim_data:
+	.incbin "baserom.dol", 0x386ED4, 0x14
+.global kamaboko_hit_data_table
+kamaboko_hit_data_table:
+	.incbin "baserom.dol", 0x386EE8, 0x10
+.global kamaboko_obj_hit_info
+kamaboko_obj_hit_info:
+	.incbin "baserom.dol", 0x386EF8, 0x10
+.global $$23044
+$$23044:
+	.incbin "baserom.dol", 0x386F08, 0xC
+.global $$23045
+$$23045:
+	.incbin "baserom.dol", 0x386F14, 0x10
+.global getag_anim_data
+getag_anim_data:
+	.incbin "baserom.dol", 0x386F24, 0x14
+.global $$23046
+$$23046:
+	.incbin "baserom.dol", 0x386F38, 0x10
+.global getao_anim_data
+getao_anim_data:
+	.incbin "baserom.dol", 0x386F48, 0x14
+.global geta_hit_data_table
+geta_hit_data_table:
+	.incbin "baserom.dol", 0x386F5C, 0x10
+.global geta_obj_hit_info
+geta_obj_hit_info:
+	.incbin "baserom.dol", 0x386F6C, 0x10
+.global $$23050
+$$23050:
+	.incbin "baserom.dol", 0x386F7C, 0xC
+.global uirou_anim_data
+uirou_anim_data:
+	.incbin "baserom.dol", 0x386F88, 0x14
+.global uirou_hit_data_table
+uirou_hit_data_table:
+	.incbin "baserom.dol", 0x386F9C, 0x10
+.global uirou_obj_hit_info
+uirou_obj_hit_info:
+	.incbin "baserom.dol", 0x386FAC, 0x10
+.global $$23052
+$$23052:
+	.incbin "baserom.dol", 0x386FBC, 0x10
+.global hikidashi_anim_data
+hikidashi_anim_data:
+	.incbin "baserom.dol", 0x386FCC, 0x14
+.global hikidashi_hit_data_table
+hikidashi_hit_data_table:
+	.incbin "baserom.dol", 0x386FE0, 0x10
+.global hikidashi_obj_hit_info
+hikidashi_obj_hit_info:
+	.incbin "baserom.dol", 0x386FF0, 0x10
+.global $$23053
+$$23053:
+	.incbin "baserom.dol", 0x387000, 0xC
+.global $$23054
+$$23054:
+	.incbin "baserom.dol", 0x38700C, 0x10
+.global castella_anim_data
+castella_anim_data:
+	.incbin "baserom.dol", 0x38701C, 0x14
+.global castella_hit_data_table
+castella_hit_data_table:
+	.incbin "baserom.dol", 0x387030, 0x10
+.global castella_obj_hit_info
+castella_obj_hit_info:
+	.incbin "baserom.dol", 0x387040, 0x10
+.global $$23055
+$$23055:
+	.incbin "baserom.dol", 0x387050, 0xC
+.global $$23056
+$$23056:
+	.incbin "baserom.dol", 0x38705C, 0x10
+.global yoshiblock_anim_data
+yoshiblock_anim_data:
+	.incbin "baserom.dol", 0x38706C, 0x14
+.global yoshiblock_hit_data_table
+yoshiblock_hit_data_table:
+	.incbin "baserom.dol", 0x387080, 0x10
+.global yoshiblock_obj_hit_info
+yoshiblock_obj_hit_info:
+	.incbin "baserom.dol", 0x387090, 0x10
+.global $$23057
+$$23057:
+	.incbin "baserom.dol", 0x3870A0, 0xC
+.global $$23058
+$$23058:
+	.incbin "baserom.dol", 0x3870AC, 0x14
+.global $$23059
+$$23059:
+	.incbin "baserom.dol", 0x3870C0, 0x14
+.global $$23060
+$$23060:
+	.incbin "baserom.dol", 0x3870D4, 0x10
+.global $$23061
+$$23061:
+	.incbin "baserom.dol", 0x3870E4, 0x10
+.global $$23062
+$$23062:
+	.incbin "baserom.dol", 0x3870F4, 0x10
+.global $$23063
+$$23063:
+	.incbin "baserom.dol", 0x387104, 0xC
+.global $$23064
+$$23064:
+	.incbin "baserom.dol", 0x387110, 0x10
+.global $$23065
+$$23065:
+	.incbin "baserom.dol", 0x387120, 0x10
+.global normalvariant0_hit_data_table
+normalvariant0_hit_data_table:
+	.incbin "baserom.dol", 0x387130, 0x10
+.global normalvariant0_obj_hit_info
+normalvariant0_obj_hit_info:
+	.incbin "baserom.dol", 0x387140, 0x10
+.global $$23066
+$$23066:
+	.incbin "baserom.dol", 0x387150, 0x10
+.global normalvariant1_hit_data_table
+normalvariant1_hit_data_table:
+	.incbin "baserom.dol", 0x387160, 0x10
+.global normalvariant1_obj_hit_info
+normalvariant1_obj_hit_info:
+	.incbin "baserom.dol", 0x387170, 0x10
+.global $$23067
+$$23067:
+	.incbin "baserom.dol", 0x387180, 0x10
+.global normalvariant2_hit_data_table
+normalvariant2_hit_data_table:
+	.incbin "baserom.dol", 0x387190, 0x10
+.global normalvariant2_obj_hit_info
+normalvariant2_obj_hit_info:
+	.incbin "baserom.dol", 0x3871A0, 0x10
+.global $$23068
+$$23068:
+	.incbin "baserom.dol", 0x3871B0, 0x10
+.global normalvariant3_hit_data_table
+normalvariant3_hit_data_table:
+	.incbin "baserom.dol", 0x3871C0, 0x10
+.global normalvariant3_obj_hit_info
+normalvariant3_obj_hit_info:
+	.incbin "baserom.dol", 0x3871D0, 0x10
+.global $$23069
+$$23069:
+	.incbin "baserom.dol", 0x3871E0, 0x10
+.global normalvariant4_hit_data_table
+normalvariant4_hit_data_table:
+	.incbin "baserom.dol", 0x3871F0, 0x10
+.global normalvariant4_obj_hit_info
+normalvariant4_obj_hit_info:
+	.incbin "baserom.dol", 0x387200, 0x10
+.global $$23070
+$$23070:
+	.incbin "baserom.dol", 0x387210, 0x10
+.global railvariant0_hit_data_table
+railvariant0_hit_data_table:
+	.incbin "baserom.dol", 0x387220, 0x10
+.global railvariant0_obj_hit_info
+railvariant0_obj_hit_info:
+	.incbin "baserom.dol", 0x387230, 0x10
+.global $$23071
+$$23071:
+	.incbin "baserom.dol", 0x387240, 0x10
+.global railvariant1_hit_data_table
+railvariant1_hit_data_table:
+	.incbin "baserom.dol", 0x387250, 0x10
+.global railvariant1_obj_hit_info
+railvariant1_obj_hit_info:
+	.incbin "baserom.dol", 0x387260, 0x10
+.global $$23072
+$$23072:
+	.incbin "baserom.dol", 0x387270, 0x10
+.global railvariant2_hit_data_table
+railvariant2_hit_data_table:
+	.incbin "baserom.dol", 0x387280, 0x10
+.global railvariant2_obj_hit_info
+railvariant2_obj_hit_info:
+	.incbin "baserom.dol", 0x387290, 0x10
+.global $$23073
+$$23073:
+	.incbin "baserom.dol", 0x3872A0, 0x10
+.global railvariant3_hit_data_table
+railvariant3_hit_data_table:
+	.incbin "baserom.dol", 0x3872B0, 0x10
+.global railvariant3_obj_hit_info
+railvariant3_obj_hit_info:
+	.incbin "baserom.dol", 0x3872C0, 0x10
+.global $$23074
+$$23074:
+	.incbin "baserom.dol", 0x3872D0, 0x10
+.global railvariant4_hit_data_table
+railvariant4_hit_data_table:
+	.incbin "baserom.dol", 0x3872E0, 0x10
+.global railvariant4_obj_hit_info
+railvariant4_obj_hit_info:
+	.incbin "baserom.dol", 0x3872F0, 0x10
+.global $$23075
+$$23075:
+	.incbin "baserom.dol", 0x387300, 0x10
+.global rollvariant0_hit_data_table
+rollvariant0_hit_data_table:
+	.incbin "baserom.dol", 0x387310, 0x10
+.global rollvariant0_obj_hit_info
+rollvariant0_obj_hit_info:
+	.incbin "baserom.dol", 0x387320, 0x10
+.global $$23076
+$$23076:
+	.incbin "baserom.dol", 0x387330, 0x10
+.global rollvariant1_hit_data_table
+rollvariant1_hit_data_table:
+	.incbin "baserom.dol", 0x387340, 0x10
+.global rollvariant1_obj_hit_info
+rollvariant1_obj_hit_info:
+	.incbin "baserom.dol", 0x387350, 0x10
+.global $$23077
+$$23077:
+	.incbin "baserom.dol", 0x387360, 0x10
+.global rollvariant2_hit_data_table
+rollvariant2_hit_data_table:
+	.incbin "baserom.dol", 0x387370, 0x10
+.global rollvariant2_obj_hit_info
+rollvariant2_obj_hit_info:
+	.incbin "baserom.dol", 0x387380, 0x10
+.global $$23078
+$$23078:
+	.incbin "baserom.dol", 0x387390, 0x10
+.global rollvariant3_hit_data_table
+rollvariant3_hit_data_table:
+	.incbin "baserom.dol", 0x3873A0, 0x10
+.global rollvariant3_obj_hit_info
+rollvariant3_obj_hit_info:
+	.incbin "baserom.dol", 0x3873B0, 0x10
+.global $$23079
+$$23079:
+	.incbin "baserom.dol", 0x3873C0, 0x10
+.global rollvariant4_hit_data_table
+rollvariant4_hit_data_table:
+	.incbin "baserom.dol", 0x3873D0, 0x10
+.global rollvariant4_obj_hit_info
+rollvariant4_obj_hit_info:
+	.incbin "baserom.dol", 0x3873E0, 0x10
+.global $$23080
+$$23080:
+	.incbin "baserom.dol", 0x3873F0, 0x10
+.global $$23081
+$$23081:
+	.incbin "baserom.dol", 0x387400, 0x14
+.global lamptrapspike_anim_data
+lamptrapspike_anim_data:
+	.incbin "baserom.dol", 0x387414, 0x14
+.global $$23082
+$$23082:
+	.incbin "baserom.dol", 0x387428, 0x14
+.global lamptrapiron_anim_data
+lamptrapiron_anim_data:
+	.incbin "baserom.dol", 0x38743C, 0x14
+.global lamptrap_hit_data_table
+lamptrap_hit_data_table:
+	.incbin "baserom.dol", 0x387450, 0x10
+.global lamptrap_obj_hit_info
+lamptrap_obj_hit_info:
+	.incbin "baserom.dol", 0x387460, 0x10
+.global $$23083
+$$23083:
+	.incbin "baserom.dol", 0x387470, 0xC
+.global $$23084
+$$23084:
+	.incbin "baserom.dol", 0x38747C, 0x10
+.global $$23085
+$$23085:
+	.incbin "baserom.dol", 0x38748C, 0x10
+.global $$23086
+$$23086:
+	.incbin "baserom.dol", 0x38749C, 0xC
+.global $$23087
+$$23087:
+	.incbin "baserom.dol", 0x3874A8, 0xC
+.global $$23088
+$$23088:
+	.incbin "baserom.dol", 0x3874B4, 0x14
+.global $$23089
+$$23089:
+	.incbin "baserom.dol", 0x3874C8, 0x10
+.global WoodBox_anim_data
+WoodBox_anim_data:
+	.incbin "baserom.dol", 0x3874D8, 0x3C
+.global WoodBox_sound_data
+WoodBox_sound_data:
+	.incbin "baserom.dol", 0x387514, 0x28
+.global AirportPole_hit_data_table
+AirportPole_hit_data_table:
+	.incbin "baserom.dol", 0x38753C, 0x10
+.global AirportPole_obj_hit_info
+AirportPole_obj_hit_info:
+	.incbin "baserom.dol", 0x38754C, 0x10
+.global $$23092
+$$23092:
+	.incbin "baserom.dol", 0x38755C, 0xC
+.global $$23093
+$$23093:
+	.incbin "baserom.dol", 0x387568, 0xC
+.global $$23094
+$$23094:
+	.incbin "baserom.dol", 0x387574, 0xC
+.global ice_car_anim_data
+ice_car_anim_data:
+	.incbin "baserom.dol", 0x387580, 0x8C
+.global ice_car_hit_data_table
+ice_car_hit_data_table:
+	.incbin "baserom.dol", 0x38760C, 0x10
+.global ice_car_obj_hit_info
+ice_car_obj_hit_info:
+	.incbin "baserom.dol", 0x38761C, 0x10
+.global $$23097
+$$23097:
+	.incbin "baserom.dol", 0x38762C, 0x10
+.global AirportBuoy_hit_data_table
+AirportBuoy_hit_data_table:
+	.incbin "baserom.dol", 0x38763C, 0x10
+.global AirportBuoy_obj_hit_info
+AirportBuoy_obj_hit_info:
+	.incbin "baserom.dol", 0x38764C, 0x10
+.global $$23099
+$$23099:
+	.incbin "baserom.dol", 0x38765C, 0xC
+.global dptKing_map_collision_data
+dptKing_map_collision_data:
+	.incbin "baserom.dol", 0x387668, 0x10
+.global $$23101
+$$23101:
+	.incbin "baserom.dol", 0x387678, 0x14
+.global $$23102
+$$23102:
+	.incbin "baserom.dol", 0x38768C, 0x14
+.global monumentshine_anim_data
+monumentshine_anim_data:
+	.incbin "baserom.dol", 0x3876A0, 0x14
+.global monumentshine_hit_data_table
+monumentshine_hit_data_table:
+	.incbin "baserom.dol", 0x3876B4, 0x10
+.global monumentshine_obj_hit_info
+monumentshine_obj_hit_info:
+	.incbin "baserom.dol", 0x3876C4, 0x10
+.global $$23103
+$$23103:
+	.incbin "baserom.dol", 0x3876D4, 0x10
+.global $$23104
+$$23104:
+	.incbin "baserom.dol", 0x3876E4, 0x10
+.global belldolpic_anim_data
+belldolpic_anim_data:
+	.incbin "baserom.dol", 0x3876F4, 0x14
+.global belldolpic_hit_data_table
+belldolpic_hit_data_table:
+	.incbin "baserom.dol", 0x387708, 0x10
+.global belldolpic_obj_hit_info
+belldolpic_obj_hit_info:
+	.incbin "baserom.dol", 0x387718, 0x10
+.global $$23105
+$$23105:
+	.incbin "baserom.dol", 0x387728, 0xC
+.global $$23106
+$$23106:
+	.incbin "baserom.dol", 0x387734, 0x14
+.global $$23107
+$$23107:
+	.incbin "baserom.dol", 0x387748, 0x10
+.global DptWeathercock_anim_data
+DptWeathercock_anim_data:
+	.incbin "baserom.dol", 0x387758, 0x14
+.global DptWeathercock_hit_data_table
+DptWeathercock_hit_data_table:
+	.incbin "baserom.dol", 0x38776C, 0x10
+.global DptWeathercock_obj_hit_info
+DptWeathercock_obj_hit_info:
+	.incbin "baserom.dol", 0x38777C, 0x10
+.global $$23108
+$$23108:
+	.incbin "baserom.dol", 0x38778C, 0x10
+.global DptMonteFence_hit_data_table
+DptMonteFence_hit_data_table:
+	.incbin "baserom.dol", 0x38779C, 0x10
+.global DptMonteFence_obj_hit_info
+DptMonteFence_obj_hit_info:
+	.incbin "baserom.dol", 0x3877AC, 0x10
+.global $$23109
+$$23109:
+	.incbin "baserom.dol", 0x3877BC, 0x10
+.global $$23110
+$$23110:
+	.incbin "baserom.dol", 0x3877CC, 0x10
+.global MapSmoke_hit_data_table
+MapSmoke_hit_data_table:
+	.incbin "baserom.dol", 0x3877DC, 0x10
+.global MapSmoke_obj_hit_info
+MapSmoke_obj_hit_info:
+	.incbin "baserom.dol", 0x3877EC, 0x10
+.global $$23111
+$$23111:
+	.incbin "baserom.dol", 0x3877FC, 0xC
+.global $$23112
+$$23112:
+	.incbin "baserom.dol", 0x387808, 0x10
+.global $$23113
+$$23113:
+	.incbin "baserom.dol", 0x387818, 0xC
+.global MareGate_anim_data
+MareGate_anim_data:
+	.incbin "baserom.dol", 0x387824, 0x14
+.global $$23114
+$$23114:
+	.incbin "baserom.dol", 0x387838, 0xC
+.global $$23115
+$$23115:
+	.incbin "baserom.dol", 0x387844, 0x10
+.global $$23116
+$$23116:
+	.incbin "baserom.dol", 0x387854, 0xC
+.global NozzleDoor_anim_data
+NozzleDoor_anim_data:
+	.incbin "baserom.dol", 0x387860, 0x28
+.global NozzleDoor_hit_data_table
+NozzleDoor_hit_data_table:
+	.incbin "baserom.dol", 0x387888, 0x10
+.global NozzleDoor_obj_hit_info
+NozzleDoor_obj_hit_info:
+	.incbin "baserom.dol", 0x387898, 0x10
+.global $$23117
+$$23117:
+	.incbin "baserom.dol", 0x3878A8, 0xC
+.global $$23118
+$$23118:
+	.incbin "baserom.dol", 0x3878B4, 0x10
+.global $$23119
+$$23119:
+	.incbin "baserom.dol", 0x3878C4, 0xC
+.global DokanGate_anim_data
+DokanGate_anim_data:
+	.incbin "baserom.dol", 0x3878D0, 0x14
+.global $$23120
+$$23120:
+	.incbin "baserom.dol", 0x3878E4, 0xC
+.global Crane_hit_data_table
+Crane_hit_data_table:
+	.incbin "baserom.dol", 0x3878F0, 0x10
+.global Crane_obj_hit_info
+Crane_obj_hit_info:
+	.incbin "baserom.dol", 0x387900, 0x10
+.global $$23122
+$$23122:
+	.incbin "baserom.dol", 0x387910, 0x10
+.global $$23123
+$$23123:
+	.incbin "baserom.dol", 0x387920, 0x10
+.global CraneUpDown_hit_data_table
+CraneUpDown_hit_data_table:
+	.incbin "baserom.dol", 0x387930, 0x10
+.global CraneUpDown_obj_hit_info
+CraneUpDown_obj_hit_info:
+	.incbin "baserom.dol", 0x387940, 0x10
+.global $$23124
+$$23124:
+	.incbin "baserom.dol", 0x387950, 0xC
+.global crane_cargo_hit_data_table
+crane_cargo_hit_data_table:
+	.incbin "baserom.dol", 0x38795C, 0x10
+.global crane_cargo_obj_hit_info
+crane_cargo_obj_hit_info:
+	.incbin "baserom.dol", 0x38796C, 0x10
+.global $$23125
+$$23125:
+	.incbin "baserom.dol", 0x38797C, 0x14
+.global $$23127
+$$23127:
+	.incbin "baserom.dol", 0x387990, 0xC
+.global Submarine_hit_data_table
+Submarine_hit_data_table:
+	.incbin "baserom.dol", 0x38799C, 0x10
+.global Submarine_obj_hit_info
+Submarine_obj_hit_info:
+	.incbin "baserom.dol", 0x3879AC, 0x10
+.global $$23128
+$$23128:
+	.incbin "baserom.dol", 0x3879BC, 0xC
+.global submarine_map_collision_data
+submarine_map_collision_data:
+	.incbin "baserom.dol", 0x3879C8, 0x10
+.global ricco_ship_hit_data_table
+ricco_ship_hit_data_table:
+	.incbin "baserom.dol", 0x3879D8, 0x10
+.global ricco_ship_obj_hit_info
+ricco_ship_obj_hit_info:
+	.incbin "baserom.dol", 0x3879E8, 0x10
+.global $$23129
+$$23129:
+	.incbin "baserom.dol", 0x3879F8, 0xC
+.global ricco_pole_hit_data_table
+ricco_pole_hit_data_table:
+	.incbin "baserom.dol", 0x387A04, 0x10
+.global ricco_pole_obj_hit_info
+ricco_pole_obj_hit_info:
+	.incbin "baserom.dol", 0x387A14, 0x10
+.global $$23130
+$$23130:
+	.incbin "baserom.dol", 0x387A24, 0xC
+.global riccoLog_hit_data_table
+riccoLog_hit_data_table:
+	.incbin "baserom.dol", 0x387A30, 0x10
+.global riccoLog_obj_hit_info
+riccoLog_obj_hit_info:
+	.incbin "baserom.dol", 0x387A40, 0x10
+.global $$23131
+$$23131:
+	.incbin "baserom.dol", 0x387A50, 0xC
+.global $$23132
+$$23132:
+	.incbin "baserom.dol", 0x387A5C, 0x10
+.global gesoSurfboard_anim_data
+gesoSurfboard_anim_data:
+	.incbin "baserom.dol", 0x387A6C, 0x14
+.global gesoSurfboard_hit_data_table
+gesoSurfboard_hit_data_table:
+	.incbin "baserom.dol", 0x387A80, 0x10
+.global gesoSurfboard_obj_hit_info
+gesoSurfboard_obj_hit_info:
+	.incbin "baserom.dol", 0x387A90, 0x10
+.global $$23133
+$$23133:
+	.incbin "baserom.dol", 0x387AA0, 0x10
+.global $$23134
+$$23134:
+	.incbin "baserom.dol", 0x387AB0, 0x14
+.global riccoWatermill_hit_data_table
+riccoWatermill_hit_data_table:
+	.incbin "baserom.dol", 0x387AC4, 0x10
+.global riccoWatermill_obj_hit_info
+riccoWatermill_obj_hit_info:
+	.incbin "baserom.dol", 0x387AD4, 0x10
+.global $$23135
+$$23135:
+	.incbin "baserom.dol", 0x387AE4, 0x10
+.global riccoShipLog_hit_data_table
+riccoShipLog_hit_data_table:
+	.incbin "baserom.dol", 0x387AF4, 0x10
+.global riccoShipLog_obj_hit_info
+riccoShipLog_obj_hit_info:
+	.incbin "baserom.dol", 0x387B04, 0x10
+.global $$23136
+$$23136:
+	.incbin "baserom.dol", 0x387B14, 0x10
+.global riccoShipDol_hit_data_table
+riccoShipDol_hit_data_table:
+	.incbin "baserom.dol", 0x387B24, 0x10
+.global riccoShipDol_obj_hit_info
+riccoShipDol_obj_hit_info:
+	.incbin "baserom.dol", 0x387B34, 0x10
+.global $$23137
+$$23137:
+	.incbin "baserom.dol", 0x387B44, 0x10
+.global riccoYachtL_hit_data_table
+riccoYachtL_hit_data_table:
+	.incbin "baserom.dol", 0x387B54, 0x10
+.global riccoYachtL_obj_hit_info
+riccoYachtL_obj_hit_info:
+	.incbin "baserom.dol", 0x387B64, 0x10
+.global $$23138
+$$23138:
+	.incbin "baserom.dol", 0x387B74, 0xC
+.global riccoYachtS_hit_data_table
+riccoYachtS_hit_data_table:
+	.incbin "baserom.dol", 0x387B80, 0x10
+.global riccoYachtS_obj_hit_info
+riccoYachtS_obj_hit_info:
+	.incbin "baserom.dol", 0x387B90, 0x10
+.global $$23139
+$$23139:
+	.incbin "baserom.dol", 0x387BA0, 0xC
+.global riccoBoatL_hit_data_table
+riccoBoatL_hit_data_table:
+	.incbin "baserom.dol", 0x387BAC, 0x10
+.global riccoBoatL_obj_hit_info
+riccoBoatL_obj_hit_info:
+	.incbin "baserom.dol", 0x387BBC, 0x10
+.global $$23140
+$$23140:
+	.incbin "baserom.dol", 0x387BCC, 0xC
+.global riccoBoatS_hit_data_table
+riccoBoatS_hit_data_table:
+	.incbin "baserom.dol", 0x387BD8, 0x10
+.global riccoBoatS_obj_hit_info
+riccoBoatS_obj_hit_info:
+	.incbin "baserom.dol", 0x387BE8, 0x10
+.global $$23141
+$$23141:
+	.incbin "baserom.dol", 0x387BF8, 0xC
+.global $$23142
+$$23142:
+	.incbin "baserom.dol", 0x387C04, 0xC
+.global $$23143
+$$23143:
+	.incbin "baserom.dol", 0x387C10, 0x10
+.global $$23144
+$$23144:
+	.incbin "baserom.dol", 0x387C20, 0x10
+.global $$23145
+$$23145:
+	.incbin "baserom.dol", 0x387C30, 0x10
+.global $$23146
+$$23146:
+	.incbin "baserom.dol", 0x387C40, 0xC
+.global $$23147
+$$23147:
+	.incbin "baserom.dol", 0x387C4C, 0x14
+.global $$23148
+$$23148:
+	.incbin "baserom.dol", 0x387C60, 0x10
+.global $$23149
+$$23149:
+	.incbin "baserom.dol", 0x387C70, 0xC
+.global $$23150
+$$23150:
+	.incbin "baserom.dol", 0x387C7C, 0xC
+.global $$23151
+$$23151:
+	.incbin "baserom.dol", 0x387C88, 0xC
+.global $$23152
+$$23152:
+	.incbin "baserom.dol", 0x387C94, 0x14
+.global $$23153
+$$23153:
+	.incbin "baserom.dol", 0x387CA8, 0x10
+.global surfgeso_hit_data_table
+surfgeso_hit_data_table:
+	.incbin "baserom.dol", 0x387CB8, 0x10
+.global surfgeso_obj_hit_info
+surfgeso_obj_hit_info:
+	.incbin "baserom.dol", 0x387CC8, 0x10
+.global $$23154
+$$23154:
+	.incbin "baserom.dol", 0x387CD8, 0x10
+.global surfgeso_anim_data
+surfgeso_anim_data:
+	.incbin "baserom.dol", 0x387CE8, 0x14
+.global $$23155
+$$23155:
+	.incbin "baserom.dol", 0x387CFC, 0xC
+.global $$23156
+$$23156:
+	.incbin "baserom.dol", 0x387D08, 0x10
+.global $$23157
+$$23157:
+	.incbin "baserom.dol", 0x387D18, 0x10
+.global $$23158
+$$23158:
+	.incbin "baserom.dol", 0x387D28, 0x10
+.global windmill_anim_data
+windmill_anim_data:
+	.incbin "baserom.dol", 0x387D38, 0x14
+.global Windmill_hit_data_table
+Windmill_hit_data_table:
+	.incbin "baserom.dol", 0x387D4C, 0x10
+.global Windmill_obj_hit_info
+Windmill_obj_hit_info:
+	.incbin "baserom.dol", 0x387D5C, 0x10
+.global $$23159
+$$23159:
+	.incbin "baserom.dol", 0x387D6C, 0xC
+.global $$23160
+$$23160:
+	.incbin "baserom.dol", 0x387D78, 0x10
+.global MiniWindmill_hit_data_table
+MiniWindmill_hit_data_table:
+	.incbin "baserom.dol", 0x387D88, 0x10
+.global MiniWindmill_obj_hit_info
+MiniWindmill_obj_hit_info:
+	.incbin "baserom.dol", 0x387D98, 0x10
+.global $$23161
+$$23161:
+	.incbin "baserom.dol", 0x387DA8, 0x10
+.global $$23162
+$$23162:
+	.incbin "baserom.dol", 0x387DB8, 0x10
+.global $$23163
+$$23163:
+	.incbin "baserom.dol", 0x387DC8, 0x10
+.global $$23164
+$$23164:
+	.incbin "baserom.dol", 0x387DD8, 0x10
+.global lamp_bianco_anim_data
+lamp_bianco_anim_data:
+	.incbin "baserom.dol", 0x387DE8, 0x8C
+.global lamp_bianco_hit_data_table
+lamp_bianco_hit_data_table:
+	.incbin "baserom.dol", 0x387E74, 0x30
+.global lamp_bianco_obj_hit_info
+lamp_bianco_obj_hit_info:
+	.incbin "baserom.dol", 0x387EA4, 0x10
+.global $$23165
+$$23165:
+	.incbin "baserom.dol", 0x387EB4, 0xC
+.global lamp_bianco_map_collision_data
+lamp_bianco_map_collision_data:
+	.incbin "baserom.dol", 0x387EC0, 0x10
+.global $$23166
+$$23166:
+	.incbin "baserom.dol", 0x387ED0, 0xC
+.global WindmillBlock_hit_data_table
+WindmillBlock_hit_data_table:
+	.incbin "baserom.dol", 0x387EDC, 0x10
+.global WindmillBlock_obj_hit_info
+WindmillBlock_obj_hit_info:
+	.incbin "baserom.dol", 0x387EEC, 0x10
+.global $$23167
+$$23167:
+	.incbin "baserom.dol", 0x387EFC, 0x14
+.global PolluterPakkun_hit_data_table
+PolluterPakkun_hit_data_table:
+	.incbin "baserom.dol", 0x387F10, 0x10
+.global PolluterPakkun_obj_hit_info
+PolluterPakkun_obj_hit_info:
+	.incbin "baserom.dol", 0x387F20, 0x10
+.global $$23168
+$$23168:
+	.incbin "baserom.dol", 0x387F30, 0x10
+.global $$23169
+$$23169:
+	.incbin "baserom.dol", 0x387F40, 0xC
+.global $$23170
+$$23170:
+	.incbin "baserom.dol", 0x387F4C, 0xC
+.global $$23171
+$$23171:
+	.incbin "baserom.dol", 0x387F58, 0xC
+.global $$23172
+$$23172:
+	.incbin "baserom.dol", 0x387F64, 0xC
+.global $$23173
+$$23173:
+	.incbin "baserom.dol", 0x387F70, 0xC
+.global BiaBell_anim_data
+BiaBell_anim_data:
+	.incbin "baserom.dol", 0x387F7C, 0x64
+.global BiaBell_hit_data_table
+BiaBell_hit_data_table:
+	.incbin "baserom.dol", 0x387FE0, 0x10
+.global BiaBell_obj_hit_info
+BiaBell_obj_hit_info:
+	.incbin "baserom.dol", 0x387FF0, 0x10
+.global $$23175
+$$23175:
+	.incbin "baserom.dol", 0x388000, 0x28
+.global $$23176
+$$23176:
+	.incbin "baserom.dol", 0x388028, 0x14
+.global watermill00_anim_data
+watermill00_anim_data:
+	.incbin "baserom.dol", 0x38803C, 0x14
+.global BiaWatermill00_hit_data_table
+BiaWatermill00_hit_data_table:
+	.incbin "baserom.dol", 0x388050, 0x10
+.global BiaWatermill00_obj_hit_info
+BiaWatermill00_obj_hit_info:
+	.incbin "baserom.dol", 0x388060, 0x10
+.global $$23177
+$$23177:
+	.incbin "baserom.dol", 0x388070, 0x10
+.global BiaWatermill01_hit_data_table
+BiaWatermill01_hit_data_table:
+	.incbin "baserom.dol", 0x388080, 0x10
+.global BiaWatermill01_obj_hit_info
+BiaWatermill01_obj_hit_info:
+	.incbin "baserom.dol", 0x388090, 0x10
+.global $$23178
+$$23178:
+	.incbin "baserom.dol", 0x3880A0, 0x10
+.global BiaWatermillVertical_hit_data_table
+BiaWatermillVertical_hit_data_table:
+	.incbin "baserom.dol", 0x3880B0, 0x10
+.global BiaWatermillVertical_obj_hit_info
+BiaWatermillVertical_obj_hit_info:
+	.incbin "baserom.dol", 0x3880C0, 0x10
+.global $$23179
+$$23179:
+	.incbin "baserom.dol", 0x3880D0, 0x18
+.global BiaTurnBridge_hit_data_table
+BiaTurnBridge_hit_data_table:
+	.incbin "baserom.dol", 0x3880E8, 0x10
+.global BiaTurnBridge_obj_hit_info
+BiaTurnBridge_obj_hit_info:
+	.incbin "baserom.dol", 0x3880F8, 0x10
+.global $$23180
+$$23180:
+	.incbin "baserom.dol", 0x388108, 0x10
+.global LeafBoat_hit_data_table
+LeafBoat_hit_data_table:
+	.incbin "baserom.dol", 0x388118, 0x10
+.global LeafBoat_obj_hit_info
+LeafBoat_obj_hit_info:
+	.incbin "baserom.dol", 0x388128, 0x10
+.global $$23181
+$$23181:
+	.incbin "baserom.dol", 0x388138, 0xC
+.global $$23182
+$$23182:
+	.incbin "baserom.dol", 0x388144, 0x10
+.global LampSeesaw_anim_data
+LampSeesaw_anim_data:
+	.incbin "baserom.dol", 0x388154, 0x14
+.global LampSeesaw_hit_data_table
+LampSeesaw_hit_data_table:
+	.incbin "baserom.dol", 0x388168, 0x30
+.global LampSeesaw_obj_hit_info
+LampSeesaw_obj_hit_info:
+	.incbin "baserom.dol", 0x388198, 0x10
+.global $$23183
+$$23183:
+	.incbin "baserom.dol", 0x3881A8, 0xC
+.global $$23185
+$$23185:
+	.incbin "baserom.dol", 0x3881B4, 0xC
+.global $$23186
+$$23186:
+	.incbin "baserom.dol", 0x3881C0, 0x10
+.global $$23187
+$$23187:
+	.incbin "baserom.dol", 0x3881D0, 0xC
+.global SandBird_anim_data
+SandBird_anim_data:
+	.incbin "baserom.dol", 0x3881DC, 0x14
+.global $$23188
+$$23188:
+	.incbin "baserom.dol", 0x3881F0, 0xC
+.global SandBirdBlock_hit_data_table
+SandBirdBlock_hit_data_table:
+	.incbin "baserom.dol", 0x3881FC, 0x10
+.global SandBirdBlock_obj_hit_info
+SandBirdBlock_obj_hit_info:
+	.incbin "baserom.dol", 0x38820C, 0x10
+.global $$23189
+$$23189:
+	.incbin "baserom.dol", 0x38821C, 0x10
+.global SandBirdBlock_map_collision_data
+SandBirdBlock_map_collision_data:
+	.incbin "baserom.dol", 0x38822C, 0x10
+.global $$23190
+$$23190:
+	.incbin "baserom.dol", 0x38823C, 0x10
+.global $$23191
+$$23191:
+	.incbin "baserom.dol", 0x38824C, 0xC
+.global SkyIsland_anim_data
+SkyIsland_anim_data:
+	.incbin "baserom.dol", 0x388258, 0x14
+.global $$23192
+$$23192:
+	.incbin "baserom.dol", 0x38826C, 0xC
+.global $$23193
+$$23193:
+	.incbin "baserom.dol", 0x388278, 0x10
+.global $$23194
+$$23194:
+	.incbin "baserom.dol", 0x388288, 0x10
+.global $$23195
+$$23195:
+	.incbin "baserom.dol", 0x388298, 0x10
+.global $$23196
+$$23196:
+	.incbin "baserom.dol", 0x3882A8, 0x10
+.global $$23197
+$$23197:
+	.incbin "baserom.dol", 0x3882B8, 0x10
+.global SandLeaf_anim_data
+SandLeaf_anim_data:
+	.incbin "baserom.dol", 0x3882C8, 0x64
+.global sand_leaf_hit_data_table
+sand_leaf_hit_data_table:
+	.incbin "baserom.dol", 0x38832C, 0x10
+.global sand_leaf_obj_hit_info
+sand_leaf_obj_hit_info:
+	.incbin "baserom.dol", 0x38833C, 0x10
+.global $$23198
+$$23198:
+	.incbin "baserom.dol", 0x38834C, 0xC
+.global $$23199
+$$23199:
+	.incbin "baserom.dol", 0x388358, 0x14
+.global SandLeafBase00_anim_data
+SandLeafBase00_anim_data:
+	.incbin "baserom.dol", 0x38836C, 0x14
+.global $$23200
+$$23200:
+	.incbin "baserom.dol", 0x388380, 0x10
+.global SandLeafBase00_map_collision_data
+SandLeafBase00_map_collision_data:
+	.incbin "baserom.dol", 0x388390, 0x10
+.global $$23201
+$$23201:
+	.incbin "baserom.dol", 0x3883A0, 0x14
+.global SandLeafBase01_anim_data
+SandLeafBase01_anim_data:
+	.incbin "baserom.dol", 0x3883B4, 0x14
+.global $$23202
+$$23202:
+	.incbin "baserom.dol", 0x3883C8, 0x10
+.global SandLeafBase01_map_collision_data
+SandLeafBase01_map_collision_data:
+	.incbin "baserom.dol", 0x3883D8, 0x10
+.global $$23203
+$$23203:
+	.incbin "baserom.dol", 0x3883E8, 0x14
+.global SandLeafBase02_anim_data
+SandLeafBase02_anim_data:
+	.incbin "baserom.dol", 0x3883FC, 0x14
+.global $$23204
+$$23204:
+	.incbin "baserom.dol", 0x388410, 0x10
+.global SandLeafBase02_map_collision_data
+SandLeafBase02_map_collision_data:
+	.incbin "baserom.dol", 0x388420, 0x10
+.global $$23205
+$$23205:
+	.incbin "baserom.dol", 0x388430, 0x14
+.global SandLeafBase03_anim_data
+SandLeafBase03_anim_data:
+	.incbin "baserom.dol", 0x388444, 0x14
+.global $$23206
+$$23206:
+	.incbin "baserom.dol", 0x388458, 0x10
+.global SandLeafBase03_map_collision_data
+SandLeafBase03_map_collision_data:
+	.incbin "baserom.dol", 0x388468, 0x10
+.global $$23207
+$$23207:
+	.incbin "baserom.dol", 0x388478, 0x10
+.global $$23208
+$$23208:
+	.incbin "baserom.dol", 0x388488, 0x10
+.global $$23209
+$$23209:
+	.incbin "baserom.dol", 0x388498, 0x10
+.global $$23210
+$$23210:
+	.incbin "baserom.dol", 0x3884A8, 0x14
+.global $$23211
+$$23211:
+	.incbin "baserom.dol", 0x3884BC, 0xC
+.global SandBomb_anim_data
+SandBomb_anim_data:
+	.incbin "baserom.dol", 0x3884C8, 0x8C
+.global sand_bomb_hit_data_table
+sand_bomb_hit_data_table:
+	.incbin "baserom.dol", 0x388554, 0x10
+.global sand_bomb_obj_hit_info
+sand_bomb_obj_hit_info:
+	.incbin "baserom.dol", 0x388564, 0x10
+.global $$23212
+$$23212:
+	.incbin "baserom.dol", 0x388574, 0xC
+.global mirror_L_hit_data_table
+mirror_L_hit_data_table:
+	.incbin "baserom.dol", 0x388580, 0x10
+.global mirror_L_obj_hit_info
+mirror_L_obj_hit_info:
+	.incbin "baserom.dol", 0x388590, 0x10
+.global mirror_L_map_collision_data
+mirror_L_map_collision_data:
+	.incbin "baserom.dol", 0x3885A0, 0x10
+.global mirror_M_hit_data_table
+mirror_M_hit_data_table:
+	.incbin "baserom.dol", 0x3885B0, 0x10
+.global mirror_M_obj_hit_info
+mirror_M_obj_hit_info:
+	.incbin "baserom.dol", 0x3885C0, 0x10
+.global mirror_M_map_collision_data
+mirror_M_map_collision_data:
+	.incbin "baserom.dol", 0x3885D0, 0x10
+.global mirrorS_hit_data_table
+mirrorS_hit_data_table:
+	.incbin "baserom.dol", 0x3885E0, 0x10
+.global mirrorS_obj_hit_info
+mirrorS_obj_hit_info:
+	.incbin "baserom.dol", 0x3885F0, 0x10
+.global mirrorS_map_collision_data
+mirrorS_map_collision_data:
+	.incbin "baserom.dol", 0x388600, 0x10
+.global $$23216
+$$23216:
+	.incbin "baserom.dol", 0x388610, 0x10
+.global $$23217
+$$23217:
+	.incbin "baserom.dol", 0x388620, 0x10
+.global $$23218
+$$23218:
+	.incbin "baserom.dol", 0x388630, 0x10
+.global SandCastle_anim_data
+SandCastle_anim_data:
+	.incbin "baserom.dol", 0x388640, 0x50
+.global $$23219
+$$23219:
+	.incbin "baserom.dol", 0x388690, 0xC
+.global SandCastle_map_collision_data
+SandCastle_map_collision_data:
+	.incbin "baserom.dol", 0x38869C, 0x10
+.global $$23220
+$$23220:
+	.incbin "baserom.dol", 0x3886AC, 0x14
+.global MammaBlockRotate_map_collision_data
+MammaBlockRotate_map_collision_data:
+	.incbin "baserom.dol", 0x3886C0, 0x10
+.global $$23221
+$$23221:
+	.incbin "baserom.dol", 0x3886D0, 0x10
+.global $$23222
+$$23222:
+	.incbin "baserom.dol", 0x3886E0, 0x10
+.global $$23223
+$$23223:
+	.incbin "baserom.dol", 0x3886F0, 0x10
+.global MammaSurfboard_hit_data_table
+MammaSurfboard_hit_data_table:
+	.incbin "baserom.dol", 0x388700, 0x10
+.global MammaSurfboard_obj_hit_info
+MammaSurfboard_obj_hit_info:
+	.incbin "baserom.dol", 0x388710, 0x10
+.global $$23224
+$$23224:
+	.incbin "baserom.dol", 0x388720, 0x14
+.global $$23225
+$$23225:
+	.incbin "baserom.dol", 0x388734, 0x14
+.global $$23226
+$$23226:
+	.incbin "baserom.dol", 0x388748, 0x14
+.global $$23227
+$$23227:
+	.incbin "baserom.dol", 0x38875C, 0x14
+.global $$23228
+$$23228:
+	.incbin "baserom.dol", 0x388770, 0x14
+.global MammaYacht00_hit_data_table
+MammaYacht00_hit_data_table:
+	.incbin "baserom.dol", 0x388784, 0x10
+.global MammaYacht00_obj_hit_info
+MammaYacht00_obj_hit_info:
+	.incbin "baserom.dol", 0x388794, 0x10
+.global $$23229
+$$23229:
+	.incbin "baserom.dol", 0x3887A4, 0x10
+.global $$23230
+$$23230:
+	.incbin "baserom.dol", 0x3887B4, 0x10
+.global $$23231
+$$23231:
+	.incbin "baserom.dol", 0x3887C4, 0x10
+.global $$23232
+$$23232:
+	.incbin "baserom.dol", 0x3887D4, 0x14
+.global $$23233
+$$23233:
+	.incbin "baserom.dol", 0x3887E8, 0x10
+.global SandBombBase00_anim_data
+SandBombBase00_anim_data:
+	.incbin "baserom.dol", 0x3887F8, 0x28
+.global $$23234
+$$23234:
+	.incbin "baserom.dol", 0x388820, 0x10
+.global SandBombBase00_map_collision_data
+SandBombBase00_map_collision_data:
+	.incbin "baserom.dol", 0x388830, 0x10
+.global $$23235
+$$23235:
+	.incbin "baserom.dol", 0x388840, 0x1C
+.global SandBombBaseMushroom_anim_data
+SandBombBaseMushroom_anim_data:
+	.incbin "baserom.dol", 0x38885C, 0x28
+.global $$23236
+$$23236:
+	.incbin "baserom.dol", 0x388884, 0x18
+.global SandBombBaseMushroom_map_collision_data
+SandBombBaseMushroom_map_collision_data:
+	.incbin "baserom.dol", 0x38889C, 0x10
+.global $$23237
+$$23237:
+	.incbin "baserom.dol", 0x3888AC, 0x18
+.global SandBombBasePyramid_anim_data
+SandBombBasePyramid_anim_data:
+	.incbin "baserom.dol", 0x3888C4, 0x28
+.global $$23238
+$$23238:
+	.incbin "baserom.dol", 0x3888EC, 0x14
+.global SandBombBasePyramid_map_collision_data
+SandBombBasePyramid_map_collision_data:
+	.incbin "baserom.dol", 0x388900, 0x10
+.global $$23239
+$$23239:
+	.incbin "baserom.dol", 0x388910, 0x18
+.global SandBombBaseShit_anim_data
+SandBombBaseShit_anim_data:
+	.incbin "baserom.dol", 0x388928, 0x28
+.global $$23240
+$$23240:
+	.incbin "baserom.dol", 0x388950, 0x14
+.global SandBombBaseShit_map_collision_data
+SandBombBaseShit_map_collision_data:
+	.incbin "baserom.dol", 0x388964, 0x10
+.global $$23241
+$$23241:
+	.incbin "baserom.dol", 0x388974, 0x18
+.global SandBombBaseStar_anim_data
+SandBombBaseStar_anim_data:
+	.incbin "baserom.dol", 0x38898C, 0x28
+.global $$23242
+$$23242:
+	.incbin "baserom.dol", 0x3889B4, 0x14
+.global SandBombBaseStar_map_collision_data
+SandBombBaseStar_map_collision_data:
+	.incbin "baserom.dol", 0x3889C8, 0x10
+.global $$23243
+$$23243:
+	.incbin "baserom.dol", 0x3889D8, 0x18
+.global SandBombBaseTurtle_anim_data
+SandBombBaseTurtle_anim_data:
+	.incbin "baserom.dol", 0x3889F0, 0x28
+.global $$23244
+$$23244:
+	.incbin "baserom.dol", 0x388A18, 0x14
+.global SandBombBaseTurtle_map_collision_data
+SandBombBaseTurtle_map_collision_data:
+	.incbin "baserom.dol", 0x388A2C, 0x10
+.global $$23245
+$$23245:
+	.incbin "baserom.dol", 0x388A3C, 0x18
+.global SandBombBaseFoot_anim_data
+SandBombBaseFoot_anim_data:
+	.incbin "baserom.dol", 0x388A54, 0x28
+.global $$23246
+$$23246:
+	.incbin "baserom.dol", 0x388A7C, 0x14
+.global SandBombBaseFoot_map_collision_data
+SandBombBaseFoot_map_collision_data:
+	.incbin "baserom.dol", 0x388A90, 0x10
+.global $$23247
+$$23247:
+	.incbin "baserom.dol", 0x388AA0, 0x18
+.global SandBombBaseHand_anim_data
+SandBombBaseHand_anim_data:
+	.incbin "baserom.dol", 0x388AB8, 0x28
+.global $$23248
+$$23248:
+	.incbin "baserom.dol", 0x388AE0, 0x14
+.global SandBombBaseHand_map_collision_data
+SandBombBaseHand_map_collision_data:
+	.incbin "baserom.dol", 0x388AF4, 0x10
+.global $$23249
+$$23249:
+	.incbin "baserom.dol", 0x388B04, 0x18
+.global SandBombBaseStairs_anim_data
+SandBombBaseStairs_anim_data:
+	.incbin "baserom.dol", 0x388B1C, 0x28
+.global $$23250
+$$23250:
+	.incbin "baserom.dol", 0x388B44, 0x14
+.global SandBombBaseStairs_map_collision_data
+SandBombBaseStairs_map_collision_data:
+	.incbin "baserom.dol", 0x388B58, 0x10
+.global GoalWatermelon_hit_data_table
+GoalWatermelon_hit_data_table:
+	.incbin "baserom.dol", 0x388B68, 0x10
+.global GoalWatermelon_obj_hit_info
+GoalWatermelon_obj_hit_info:
+	.incbin "baserom.dol", 0x388B78, 0x10
+.global $$23253
+$$23253:
+	.incbin "baserom.dol", 0x388B88, 0x10
+.global $$23254
+$$23254:
+	.incbin "baserom.dol", 0x388B98, 0x14
+.global $$23255
+$$23255:
+	.incbin "baserom.dol", 0x388BAC, 0x10
+.global TeethOfJuicer_anim_data
+TeethOfJuicer_anim_data:
+	.incbin "baserom.dol", 0x388BBC, 0x14
+.global TeethOfJuicer_hit_data_table
+TeethOfJuicer_hit_data_table:
+	.incbin "baserom.dol", 0x388BD0, 0x10
+.global TeethOfJuicer_obj_hit_info
+TeethOfJuicer_obj_hit_info:
+	.incbin "baserom.dol", 0x388BE0, 0x10
+.global $$23256
+$$23256:
+	.incbin "baserom.dol", 0x388BF0, 0x10
+.global $$23257
+$$23257:
+	.incbin "baserom.dol", 0x388C00, 0x10
+.global $$23258
+$$23258:
+	.incbin "baserom.dol", 0x388C10, 0xC
+.global merrygoround_anim_data
+merrygoround_anim_data:
+	.incbin "baserom.dol", 0x388C1C, 0x14
+.global merry_hit_data_table
+merry_hit_data_table:
+	.incbin "baserom.dol", 0x388C30, 0x10
+.global merrygoround_obj_hit_info
+merrygoround_obj_hit_info:
+	.incbin "baserom.dol", 0x388C40, 0x10
+.global merry_egg_hit_data_table
+merry_egg_hit_data_table:
+	.incbin "baserom.dol", 0x388C50, 0x10
+.global merry_egg_obj_hit_info
+merry_egg_obj_hit_info:
+	.incbin "baserom.dol", 0x388C60, 0x10
+.global $$23260
+$$23260:
+	.incbin "baserom.dol", 0x388C70, 0xC
+.global merry_pole_hit_data_table
+merry_pole_hit_data_table:
+	.incbin "baserom.dol", 0x388C7C, 0x10
+.global merry_pole_obj_hit_info
+merry_pole_obj_hit_info:
+	.incbin "baserom.dol", 0x388C8C, 0x10
+.global $$23261
+$$23261:
+	.incbin "baserom.dol", 0x388C9C, 0xC
+.global $$23262
+$$23262:
+	.incbin "baserom.dol", 0x388CA8, 0x10
+.global $$23263
+$$23263:
+	.incbin "baserom.dol", 0x388CB8, 0xC
+.global FerrisWheel_anim_data
+FerrisWheel_anim_data:
+	.incbin "baserom.dol", 0x388CC4, 0x14
+.global FerrisWheel_hit_data_table
+FerrisWheel_hit_data_table:
+	.incbin "baserom.dol", 0x388CD8, 0x10
+.global FerrisWheel_obj_hit_info
+FerrisWheel_obj_hit_info:
+	.incbin "baserom.dol", 0x388CE8, 0x10
+.global $$23264
+$$23264:
+	.incbin "baserom.dol", 0x388CF8, 0xC
+.global $$23265
+$$23265:
+	.incbin "baserom.dol", 0x388D04, 0x10
+.global FerrisWheelGondola_hit_data_table
+FerrisWheelGondola_hit_data_table:
+	.incbin "baserom.dol", 0x388D14, 0x10
+.global FerrisWheelGondola_obj_hit_info
+FerrisWheelGondola_obj_hit_info:
+	.incbin "baserom.dol", 0x388D24, 0x10
+.global $$23266
+$$23266:
+	.incbin "baserom.dol", 0x388D34, 0x10
+.global $$23267
+$$23267:
+	.incbin "baserom.dol", 0x388D44, 0xC
+.global FerrisLOD_anim_data
+FerrisLOD_anim_data:
+	.incbin "baserom.dol", 0x388D50, 0x14
+.global $$23268
+$$23268:
+	.incbin "baserom.dol", 0x388D64, 0xC
+.global Viking_hit_data_table
+Viking_hit_data_table:
+	.incbin "baserom.dol", 0x388D70, 0x10
+.global Viking_obj_hit_info
+Viking_obj_hit_info:
+	.incbin "baserom.dol", 0x388D80, 0x10
+.global $$23270
+$$23270:
+	.incbin "baserom.dol", 0x388D90, 0xC
+.global $$23271
+$$23271:
+	.incbin "baserom.dol", 0x388D9C, 0x10
+.global $$23272
+$$23272:
+	.incbin "baserom.dol", 0x388DAC, 0xC
+.global $$23273
+$$23273:
+	.incbin "baserom.dol", 0x388DB8, 0x14
+.global $$23274
+$$23274:
+	.incbin "baserom.dol", 0x388DCC, 0x14
+.global balloon_koopajr_anim_data
+balloon_koopajr_anim_data:
+	.incbin "baserom.dol", 0x388DE0, 0x3C
+.global balloon_koopajr_hit_data_table
+balloon_koopajr_hit_data_table:
+	.incbin "baserom.dol", 0x388E1C, 0x10
+.global balloon_koopajr_obj_hit_info
+balloon_koopajr_obj_hit_info:
+	.incbin "baserom.dol", 0x388E2C, 0x10
+.global $$23275
+$$23275:
+	.incbin "baserom.dol", 0x388E3C, 0x10
+.global $$23276
+$$23276:
+	.incbin "baserom.dol", 0x388E4C, 0x10
+.global $$23277
+$$23277:
+	.incbin "baserom.dol", 0x388E5C, 0xC
+.global ShellCup_anim_data
+ShellCup_anim_data:
+	.incbin "baserom.dol", 0x388E68, 0x14
+.global $$23278
+$$23278:
+	.incbin "baserom.dol", 0x388E7C, 0x10
+.global ShellCup_hit_data_table
+ShellCup_hit_data_table:
+	.incbin "baserom.dol", 0x388E8C, 0x10
+.global ShellCup_obj_hit_info
+ShellCup_obj_hit_info:
+	.incbin "baserom.dol", 0x388E9C, 0x10
+.global $$23279
+$$23279:
+	.incbin "baserom.dol", 0x388EAC, 0xC
+.global $$23280
+$$23280:
+	.incbin "baserom.dol", 0x388EB8, 0x10
+.global $$23281
+$$23281:
+	.incbin "baserom.dol", 0x388EC8, 0xC
+.global Gateshell_anim_data
+Gateshell_anim_data:
+	.incbin "baserom.dol", 0x388ED4, 0x14
+.global $$23282
+$$23282:
+	.incbin "baserom.dol", 0x388EE8, 0xC
+.global $$23283
+$$23283:
+	.incbin "baserom.dol", 0x388EF4, 0x10
+.global PinnaHangingBridgeBoard_anim_data
+PinnaHangingBridgeBoard_anim_data:
+	.incbin "baserom.dol", 0x388F04, 0x14
+.global PinnaHangingBridgeBoard_hit_data_table
+PinnaHangingBridgeBoard_hit_data_table:
+	.incbin "baserom.dol", 0x388F18, 0x10
+.global PinnaHangingBridgeBoard_obj_hit_info
+PinnaHangingBridgeBoard_obj_hit_info:
+	.incbin "baserom.dol", 0x388F28, 0x10
+.global $$23284
+$$23284:
+	.incbin "baserom.dol", 0x388F38, 0xC
+.global $$23285
+$$23285:
+	.incbin "baserom.dol", 0x388F44, 0x18
+.global $$23286
+$$23286:
+	.incbin "baserom.dol", 0x388F5C, 0x10
+.global $$23287
+$$23287:
+	.incbin "baserom.dol", 0x388F6C, 0xC
+.global GateManta_anim_data
+GateManta_anim_data:
+	.incbin "baserom.dol", 0x388F78, 0x14
+.global $$23288
+$$23288:
+	.incbin "baserom.dol", 0x388F8C, 0xC
+.global $$23289
+$$23289:
+	.incbin "baserom.dol", 0x388F98, 0x10
+.global $$23290
+$$23290:
+	.incbin "baserom.dol", 0x388FA8, 0x14
+.global AmiKing_anim_data
+AmiKing_anim_data:
+	.incbin "baserom.dol", 0x388FBC, 0x14
+.global AmiKing_hit_data_table
+AmiKing_hit_data_table:
+	.incbin "baserom.dol", 0x388FD0, 0x10
+.global AmiKing_obj_hit_info
+AmiKing_obj_hit_info:
+	.incbin "baserom.dol", 0x388FE0, 0x10
+.global PinnaCoaster_hit_data_table
+PinnaCoaster_hit_data_table:
+	.incbin "baserom.dol", 0x388FF0, 0x10
+.global PinnaCoaster_obj_hit_info
+PinnaCoaster_obj_hit_info:
+	.incbin "baserom.dol", 0x389000, 0x10
+.global $$23293
+$$23293:
+	.incbin "baserom.dol", 0x389010, 0xC
+.global $$23294
+$$23294:
+	.incbin "baserom.dol", 0x38901C, 0xC
+.global roulette_anim_data
+roulette_anim_data:
+	.incbin "baserom.dol", 0x389028, 0x14
+.global slotdrum_hit_data_table
+slotdrum_hit_data_table:
+	.incbin "baserom.dol", 0x38903C, 0x10
+.global slotdrum_obj_hit_info
+slotdrum_obj_hit_info:
+	.incbin "baserom.dol", 0x38904C, 0x10
+.global $$23298
+$$23298:
+	.incbin "baserom.dol", 0x38905C, 0xC
+.global $$23299
+$$23299:
+	.incbin "baserom.dol", 0x389068, 0xC
+.global telesaslot_hit_data_table
+telesaslot_hit_data_table:
+	.incbin "baserom.dol", 0x389074, 0x10
+.global telesaslot_obj_hit_info
+telesaslot_obj_hit_info:
+	.incbin "baserom.dol", 0x389084, 0x10
+.global $$23300
+$$23300:
+	.incbin "baserom.dol", 0x389094, 0xC
+.global donchou_anim_data
+donchou_anim_data:
+	.incbin "baserom.dol", 0x3890A0, 0x14
+.global donchou_hit_data_table
+donchou_hit_data_table:
+	.incbin "baserom.dol", 0x3890B4, 0x10
+.global donchou_obj_hit_info
+donchou_obj_hit_info:
+	.incbin "baserom.dol", 0x3890C4, 0x10
+.global casino_panel_gate_hit_data_table
+casino_panel_gate_hit_data_table:
+	.incbin "baserom.dol", 0x3890D4, 0x10
+.global casino_panel_gate_obj_hit_info
+casino_panel_gate_obj_hit_info:
+	.incbin "baserom.dol", 0x3890E4, 0x10
+.global $$23304
+$$23304:
+	.incbin "baserom.dol", 0x3890F4, 0xC
+.global $$23305
+$$23305:
+	.incbin "baserom.dol", 0x389100, 0x10
+.global bosswall_anim_data
+bosswall_anim_data:
+	.incbin "baserom.dol", 0x389110, 0x14
+.global $$23306
+$$23306:
+	.incbin "baserom.dol", 0x389124, 0x10
+.global $$23307
+$$23307:
+	.incbin "baserom.dol", 0x389134, 0x14
+.global $$23308
+$$23308:
+	.incbin "baserom.dol", 0x389148, 0x10
+.global casinoroof_anim_data
+casinoroof_anim_data:
+	.incbin "baserom.dol", 0x389158, 0x14
+.global $$23309
+$$23309:
+	.incbin "baserom.dol", 0x38916C, 0x14
+.global $$23310
+$$23310:
+	.incbin "baserom.dol", 0x389180, 0x10
+.global $$23311
+$$23311:
+	.incbin "baserom.dol", 0x389190, 0xC
+.global GlassBreak_anim_data
+GlassBreak_anim_data:
+	.incbin "baserom.dol", 0x38919C, 0x8C
+.global GlassBreak_sound_data
+GlassBreak_sound_data:
+	.incbin "baserom.dol", 0x389228, 0x28
+.global $$23312
+$$23312:
+	.incbin "baserom.dol", 0x389250, 0xC
+.global $$23313
+$$23313:
+	.incbin "baserom.dol", 0x38925C, 0xC
+.global closet_anim_data
+closet_anim_data:
+	.incbin "baserom.dol", 0x389268, 0x14
+.global closet_hit_data_table
+closet_hit_data_table:
+	.incbin "baserom.dol", 0x38927C, 0x10
+.global closet_obj_hit_info
+closet_obj_hit_info:
+	.incbin "baserom.dol", 0x38928C, 0x10
+.global $$23315
+$$23315:
+	.incbin "baserom.dol", 0x38929C, 0x14
+.global $$23316
+$$23316:
+	.incbin "baserom.dol", 0x3892B0, 0x10
+.global $$23317
+$$23317:
+	.incbin "baserom.dol", 0x3892C0, 0x20
+.global ChestRevolve_anim_data
+ChestRevolve_anim_data:
+	.incbin "baserom.dol", 0x3892E0, 0x28
+.global $$23318
+$$23318:
+	.incbin "baserom.dol", 0x389308, 0x10
+.global ChestRevolve_map_collision_data
+ChestRevolve_map_collision_data:
+	.incbin "baserom.dol", 0x389318, 0x10
+.global $$23319
+$$23319:
+	.incbin "baserom.dol", 0x389328, 0x14
+.global $$23320
+$$23320:
+	.incbin "baserom.dol", 0x38933C, 0x10
+.global PosterTeresa_anim_data
+PosterTeresa_anim_data:
+	.incbin "baserom.dol", 0x38934C, 0x14
+.global $$23321
+$$23321:
+	.incbin "baserom.dol", 0x389360, 0x10
+.global $$23322
+$$23322:
+	.incbin "baserom.dol", 0x389370, 0x14
+.global $$23323
+$$23323:
+	.incbin "baserom.dol", 0x389384, 0x10
+.global PictureTeresa_anim_data
+PictureTeresa_anim_data:
+	.incbin "baserom.dol", 0x389394, 0x14
+.global PictureTeresa_hit_data_table
+PictureTeresa_hit_data_table:
+	.incbin "baserom.dol", 0x3893A8, 0x10
+.global PictureTeresa_obj_hit_info
+PictureTeresa_obj_hit_info:
+	.incbin "baserom.dol", 0x3893B8, 0x10
+.global $$23324
+$$23324:
+	.incbin "baserom.dol", 0x3893C8, 0x10
+.global $$23325
+$$23325:
+	.incbin "baserom.dol", 0x3893D8, 0x10
+.global $$23326
+$$23326:
+	.incbin "baserom.dol", 0x3893E8, 0xC
+.global PanelBreak_anim_data
+PanelBreak_anim_data:
+	.incbin "baserom.dol", 0x3893F4, 0x8C
+.global PanelBreak_sound_data
+PanelBreak_sound_data:
+	.incbin "baserom.dol", 0x389480, 0x28
+.global $$23327
+$$23327:
+	.incbin "baserom.dol", 0x3894A8, 0x14
+.global $$23328
+$$23328:
+	.incbin "baserom.dol", 0x3894BC, 0x10
+.global PanelRevolve_anim_data
+PanelRevolve_anim_data:
+	.incbin "baserom.dol", 0x3894CC, 0x28
+.global $$23329
+$$23329:
+	.incbin "baserom.dol", 0x3894F4, 0x10
+.global $$23330
+$$23330:
+	.incbin "baserom.dol", 0x389504, 0x14
+.global $$23331
+$$23331:
+	.incbin "baserom.dol", 0x389518, 0xC
+.global $$23332
+$$23332:
+	.incbin "baserom.dol", 0x389524, 0xC
+.global $$23333
+$$23333:
+	.incbin "baserom.dol", 0x389530, 0x14
+.global cogwheel_anim_data
+cogwheel_anim_data:
+	.incbin "baserom.dol", 0x389544, 0x14
+.global Cogwheel_hit_data_table
+Cogwheel_hit_data_table:
+	.incbin "baserom.dol", 0x389558, 0x10
+.global Cogwheel_obj_hit_info
+Cogwheel_obj_hit_info:
+	.incbin "baserom.dol", 0x389568, 0x10
+.global $$23334
+$$23334:
+	.incbin "baserom.dol", 0x389578, 0x10
+.global $$23335
+$$23335:
+	.incbin "baserom.dol", 0x389588, 0xC
+.global CogwheelPlate_hit_data_table
+CogwheelPlate_hit_data_table:
+	.incbin "baserom.dol", 0x389594, 0x10
+.global CogwheelPlate_obj_hit_info
+CogwheelPlate_obj_hit_info:
+	.incbin "baserom.dol", 0x3895A4, 0x10
+.global $$23336
+$$23336:
+	.incbin "baserom.dol", 0x3895B4, 0x10
+.global CogwheelPot_hit_data_table
+CogwheelPot_hit_data_table:
+	.incbin "baserom.dol", 0x3895C4, 0x10
+.global CogwheelPot_obj_hit_info
+CogwheelPot_obj_hit_info:
+	.incbin "baserom.dol", 0x3895D4, 0x10
+.global $$23337
+$$23337:
+	.incbin "baserom.dol", 0x3895E4, 0x10
+.global mare_float_house_hit_data_table
+mare_float_house_hit_data_table:
+	.incbin "baserom.dol", 0x3895F4, 0x10
+.global mare_float_house_obj_hit_info
+mare_float_house_obj_hit_info:
+	.incbin "baserom.dol", 0x389604, 0x10
+.global StopRock_hit_data_table
+StopRock_hit_data_table:
+	.incbin "baserom.dol", 0x389614, 0x10
+.global StopRock_obj_hit_info
+StopRock_obj_hit_info:
+	.incbin "baserom.dol", 0x389624, 0x10
+.global $$23339
+$$23339:
+	.incbin "baserom.dol", 0x389634, 0xC
+.global ElasticCode_hit_data_table
+ElasticCode_hit_data_table:
+	.incbin "baserom.dol", 0x389640, 0x10
+.global ElasticCode_obj_hit_info
+ElasticCode_obj_hit_info:
+	.incbin "baserom.dol", 0x389650, 0x10
+.global $$23340
+$$23340:
+	.incbin "baserom.dol", 0x389660, 0xC
+.global $$23341
+$$23341:
+	.incbin "baserom.dol", 0x38966C, 0xC
+.global $$23342
+$$23342:
+	.incbin "baserom.dol", 0x389678, 0xC
+.global $$23343
+$$23343:
+	.incbin "baserom.dol", 0x389684, 0x10
+.global GrowthTree_anim_data
+GrowthTree_anim_data:
+	.incbin "baserom.dol", 0x389694, 0x28
+.global GrowthTree_hit_data_table
+GrowthTree_hit_data_table:
+	.incbin "baserom.dol", 0x3896BC, 0x10
+.global GrowthTree_obj_hit_info
+GrowthTree_obj_hit_info:
+	.incbin "baserom.dol", 0x3896CC, 0x10
+.global $$23345
+$$23345:
+	.incbin "baserom.dol", 0x3896DC, 0x10
+.global $$23346
+$$23346:
+	.incbin "baserom.dol", 0x3896EC, 0x10
+.global $$23347
+$$23347:
+	.incbin "baserom.dol", 0x3896FC, 0xC
+.global $$23348
+$$23348:
+	.incbin "baserom.dol", 0x389708, 0x1C
+.global MuddyBoat_anim_data
+MuddyBoat_anim_data:
+	.incbin "baserom.dol", 0x389724, 0x3C
+.global MuddyBoat_hit_data_table
+MuddyBoat_hit_data_table:
+	.incbin "baserom.dol", 0x389760, 0x10
+.global MuddyBoat_obj_hit_info
+MuddyBoat_obj_hit_info:
+	.incbin "baserom.dol", 0x389770, 0x10
+.global $$23349
+$$23349:
+	.incbin "baserom.dol", 0x389780, 0xC
+.global $$23350
+$$23350:
+	.incbin "baserom.dol", 0x38978C, 0x14
+.global $$23351
+$$23351:
+	.incbin "baserom.dol", 0x3897A0, 0x10
+.global $$23352
+$$23352:
+	.incbin "baserom.dol", 0x3897B0, 0x24
+.global Puncher_anim_data
+Puncher_anim_data:
+	.incbin "baserom.dol", 0x3897D4, 0x28
+.global Puncher_hit_data_table
+Puncher_hit_data_table:
+	.incbin "baserom.dol", 0x3897FC, 0x10
+.global Puncher_obj_hit_info
+Puncher_obj_hit_info:
+	.incbin "baserom.dol", 0x38980C, 0x10
+.global $$23354
+$$23354:
+	.incbin "baserom.dol", 0x38981C, 0x14
+.global $$23355
+$$23355:
+	.incbin "baserom.dol", 0x389830, 0x10
+.global $$23356
+$$23356:
+	.incbin "baserom.dol", 0x389840, 0x24
+.global HatoPop_anim_data
+HatoPop_anim_data:
+	.incbin "baserom.dol", 0x389864, 0x28
+.global HatoPop_hit_data_table
+HatoPop_hit_data_table:
+	.incbin "baserom.dol", 0x38988C, 0x10
+.global HatoPop_obj_hit_info
+HatoPop_obj_hit_info:
+	.incbin "baserom.dol", 0x38989C, 0x10
+.global MareWaterJump_hit_data_table
+MareWaterJump_hit_data_table:
+	.incbin "baserom.dol", 0x3898AC, 0x10
+.global MareWaterJump_obj_hit_info
+MareWaterJump_obj_hit_info:
+	.incbin "baserom.dol", 0x3898BC, 0x10
+.global $$23358
+$$23358:
+	.incbin "baserom.dol", 0x3898CC, 0x14
+.global $$23359
+$$23359:
+	.incbin "baserom.dol", 0x3898E0, 0x10
+.global BumpyWall_hit_data_table
+BumpyWall_hit_data_table:
+	.incbin "baserom.dol", 0x3898F0, 0x10
+.global BumpyWall_obj_hit_info
+BumpyWall_obj_hit_info:
+	.incbin "baserom.dol", 0x389900, 0x10
+.global $$23360
+$$23360:
+	.incbin "baserom.dol", 0x389910, 0x14
+.global ExBottle_hit_data_table
+ExBottle_hit_data_table:
+	.incbin "baserom.dol", 0x389924, 0x10
+.global ExBottle_obj_hit_info
+ExBottle_obj_hit_info:
+	.incbin "baserom.dol", 0x389934, 0x10
+.global $$23361
+$$23361:
+	.incbin "baserom.dol", 0x389944, 0xC
+.global $$23362
+$$23362:
+	.incbin "baserom.dol", 0x389950, 0x10
+.global $$23363
+$$23363:
+	.incbin "baserom.dol", 0x389960, 0xC
+.global CoinFish_anim_data
+CoinFish_anim_data:
+	.incbin "baserom.dol", 0x38996C, 0x14
+.global $$23364
+$$23364:
+	.incbin "baserom.dol", 0x389980, 0xC
+.global $$23365
+$$23365:
+	.incbin "baserom.dol", 0x38998C, 0x10
+.global $$23366
+$$23366:
+	.incbin "baserom.dol", 0x38999C, 0xC
+.global MareFall_anim_data
+MareFall_anim_data:
+	.incbin "baserom.dol", 0x3899A8, 0x14
+.global $$23367
+$$23367:
+	.incbin "baserom.dol", 0x3899BC, 0xC
+.global $$23368
+$$23368:
+	.incbin "baserom.dol", 0x3899C8, 0xC
+.global $$23369
+$$23369:
+	.incbin "baserom.dol", 0x3899D4, 0xC
+.global MonteRoot_anim_data
+MonteRoot_anim_data:
+	.incbin "baserom.dol", 0x3899E0, 0x14
+.global MonteRoot_hit_data_table
+MonteRoot_hit_data_table:
+	.incbin "baserom.dol", 0x3899F4, 0x10
+.global MonteRoot_obj_hit_info
+MonteRoot_obj_hit_info:
+	.incbin "baserom.dol", 0x389A04, 0x10
+.global $$23370
+$$23370:
+	.incbin "baserom.dol", 0x389A14, 0xC
+.global $$23371
+$$23371:
+	.incbin "baserom.dol", 0x389A20, 0x10
+.global $$23372
+$$23372:
+	.incbin "baserom.dol", 0x389A30, 0x14
+.global JumpMushroom_anim_data
+JumpMushroom_anim_data:
+	.incbin "baserom.dol", 0x389A44, 0x28
+.global $$23373
+$$23373:
+	.incbin "baserom.dol", 0x389A6C, 0xC
+.global $$23374
+$$23374:
+	.incbin "baserom.dol", 0x389A78, 0x10
+.global $$23375
+$$23375:
+	.incbin "baserom.dol", 0x389A88, 0x10
+.global $$23376
+$$23376:
+	.incbin "baserom.dol", 0x389A98, 0x10
+.global MonteGoalFlag_anim_data
+MonteGoalFlag_anim_data:
+	.incbin "baserom.dol", 0x389AA8, 0x14
+.global MonteGoalFlag_hit_data_table
+MonteGoalFlag_hit_data_table:
+	.incbin "baserom.dol", 0x389ABC, 0x10
+.global MonteGoalFlag_obj_hit_info
+MonteGoalFlag_obj_hit_info:
+	.incbin "baserom.dol", 0x389ACC, 0x10
+.global $$23377
+$$23377:
+	.incbin "baserom.dol", 0x389ADC, 0x10
+.global $$23378
+$$23378:
+	.incbin "baserom.dol", 0x389AEC, 0xC
+.global HangingBridgeBoard_anim_data
+HangingBridgeBoard_anim_data:
+	.incbin "baserom.dol", 0x389AF8, 0x14
+.global HangingBridgeBoard_hit_data_table
+HangingBridgeBoard_hit_data_table:
+	.incbin "baserom.dol", 0x389B0C, 0x10
+.global HangingBridgeBoard_obj_hit_info
+HangingBridgeBoard_obj_hit_info:
+	.incbin "baserom.dol", 0x389B1C, 0x10
+.global $$23380
+$$23380:
+	.incbin "baserom.dol", 0x389B2C, 0x14
+.global $$23381
+$$23381:
+	.incbin "baserom.dol", 0x389B40, 0x10
+.global SwingBoard_hit_data_table
+SwingBoard_hit_data_table:
+	.incbin "baserom.dol", 0x389B50, 0x10
+.global SwingBoard_obj_hit_info
+SwingBoard_obj_hit_info:
+	.incbin "baserom.dol", 0x389B60, 0x10
+.global $$23382
+$$23382:
+	.incbin "baserom.dol", 0x389B70, 0xC
+.global $$23383
+$$23383:
+	.incbin "baserom.dol", 0x389B7C, 0xC
+.global Fluff_anim_data
+Fluff_anim_data:
+	.incbin "baserom.dol", 0x389B88, 0x14
+.global Fluff_hit_data_table
+Fluff_hit_data_table:
+	.incbin "baserom.dol", 0x389B9C, 0x10
+.global Fluff_obj_hit_info
+Fluff_obj_hit_info:
+	.incbin "baserom.dol", 0x389BAC, 0x10
+.global $$23385
+$$23385:
+	.incbin "baserom.dol", 0x389BBC, 0x10
+.global $$23386
+$$23386:
+	.incbin "baserom.dol", 0x389BCC, 0xC
+.global $$23387
+$$23387:
+	.incbin "baserom.dol", 0x389BD8, 0x10
+.global Bathtub_anim_data
+Bathtub_anim_data:
+	.incbin "baserom.dol", 0x389BE8, 0x28
+.global $$23390
+$$23390:
+	.incbin "baserom.dol", 0x389C10, 0x20
+.global $$23391
+$$23391:
+	.incbin "baserom.dol", 0x389C30, 0x10
+.global $$23392
+$$23392:
+	.incbin "baserom.dol", 0x389C40, 0x10
+.global $$23393
+$$23393:
+	.incbin "baserom.dol", 0x389C50, 0x10
+.global $$23394
+$$23394:
+	.incbin "baserom.dol", 0x389C60, 0x10
+.global $$23395
+$$23395:
+	.incbin "baserom.dol", 0x389C70, 0x10
+.global $$23396
+$$23396:
+	.incbin "baserom.dol", 0x389C80, 0x10
+.global BathtubStandBreaking_anim_data
+BathtubStandBreaking_anim_data:
+	.incbin "baserom.dol", 0x389C90, 0x64
+.global $$23397
+$$23397:
+	.incbin "baserom.dol", 0x389CF4, 0xC
+.global $$23398
+$$23398:
+	.incbin "baserom.dol", 0x389D00, 0x10
+.global ex1_turn_lift_anim_data
+ex1_turn_lift_anim_data:
+	.incbin "baserom.dol", 0x389D10, 0x14
+.global $$23399
+$$23399:
+	.incbin "baserom.dol", 0x389D24, 0x1C
+.global $$23400
+$$23400:
+	.incbin "baserom.dol", 0x389D40, 0xC
+.global $$23401
+$$23401:
+	.incbin "baserom.dol", 0x389D4C, 0x10
+.global $$23402
+$$23402:
+	.incbin "baserom.dol", 0x389D5C, 0x1C
+.global $$23403
+$$23403:
+	.incbin "baserom.dol", 0x389D78, 0xC
+.global $$23404
+$$23404:
+	.incbin "baserom.dol", 0x389D84, 0x10
+.global y_turn_lift_anim_data
+y_turn_lift_anim_data:
+	.incbin "baserom.dol", 0x389D94, 0x14
+.global $$23405
+$$23405:
+	.incbin "baserom.dol", 0x389DA8, 0x1C
+.global $$23406
+$$23406:
+	.incbin "baserom.dol", 0x389DC4, 0xC
+.global $$23407
+$$23407:
+	.incbin "baserom.dol", 0x389DD0, 0xC
+.global $$23408
+$$23408:
+	.incbin "baserom.dol", 0x389DDC, 0xC
+.global $$23409
+$$23409:
+	.incbin "baserom.dol", 0x389DE8, 0xC
+.global $$23410
+$$23410:
+	.incbin "baserom.dol", 0x389DF4, 0xC
+.global Nail_anim_data
+Nail_anim_data:
+	.incbin "baserom.dol", 0x389E00, 0x14
+.global Nail_hit_data_table
+Nail_hit_data_table:
+	.incbin "baserom.dol", 0x389E14, 0x10
+.global Nail_obj_hit_info
+Nail_obj_hit_info:
+	.incbin "baserom.dol", 0x389E24, 0x10
+.global $$23412
+$$23412:
+	.incbin "baserom.dol", 0x389E34, 0xC
+.global $$23413
+$$23413:
+	.incbin "baserom.dol", 0x389E40, 0x14
+.global PachinkoNail_anim_data
+PachinkoNail_anim_data:
+	.incbin "baserom.dol", 0x389E54, 0x14
+.global $$23414
+$$23414:
+	.incbin "baserom.dol", 0x389E68, 0x10
+.global $$23415
+$$23415:
+	.incbin "baserom.dol", 0x389E78, 0x14
+.global $$23416
+$$23416:
+	.incbin "baserom.dol", 0x389E8C, 0x10
+.global $$23417
+$$23417:
+	.incbin "baserom.dol", 0x389E9C, 0x14
+.global $$23418
+$$23418:
+	.incbin "baserom.dol", 0x389EB0, 0x18
+.global $$23419
+$$23419:
+	.incbin "baserom.dol", 0x389EC8, 0x18
+.global FileLoadBlockA_anim_data
+FileLoadBlockA_anim_data:
+	.incbin "baserom.dol", 0x389EE0, 0x3C
+.global FileLoadBlock_hit_data_table
+FileLoadBlock_hit_data_table:
+	.incbin "baserom.dol", 0x389F1C, 0x10
+.global FileLoadBlock_obj_hit_info
+FileLoadBlock_obj_hit_info:
+	.incbin "baserom.dol", 0x389F2C, 0x10
+.global $$23420
+$$23420:
+	.incbin "baserom.dol", 0x389F3C, 0x10
+.global $$23421
+$$23421:
+	.incbin "baserom.dol", 0x389F4C, 0x14
+.global $$23422
+$$23422:
+	.incbin "baserom.dol", 0x389F60, 0x18
+.global FileLoadBlockB_anim_data
+FileLoadBlockB_anim_data:
+	.incbin "baserom.dol", 0x389F78, 0x3C
+.global $$23423
+$$23423:
+	.incbin "baserom.dol", 0x389FB4, 0x10
+.global $$23424
+$$23424:
+	.incbin "baserom.dol", 0x389FC4, 0x14
+.global $$23425
+$$23425:
+	.incbin "baserom.dol", 0x389FD8, 0x18
+.global FileLoadBlockC_anim_data
+FileLoadBlockC_anim_data:
+	.incbin "baserom.dol", 0x389FF0, 0x3C
+.global $$23426
+$$23426:
+	.incbin "baserom.dol", 0x38A02C, 0x10
+.global $$23728
+$$23728:
+	.incbin "baserom.dol", 0x38A03C, 0x18
+.global $$23767
+$$23767:
+	.incbin "baserom.dol", 0x38A054, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21431
+$$21431:
+	.incbin "baserom.dol", 0x3B7618, 0xC
+.global $$21411
+$$21411:
+	.incbin "baserom.dol", 0x3B7624, 0xC
+.global $$21210
+$$21210:
+	.incbin "baserom.dol", 0x3B7630, 0x10
+.global MtxCalcTypeName
+MtxCalcTypeName:
+	.incbin "baserom.dol", 0x3B7640, 0x10
+.global mDefaultSound__14TMapObjGeneral
+mDefaultSound__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3B7650, 0x28
+.global normal_sound_data
+normal_sound_data:
+	.incbin "baserom.dol", 0x3B7678, 0x28
+.global end_data
+end_data:
+	.incbin "baserom.dol", 0x3B76A0, 0x3C
+.global no_data
+no_data:
+	.incbin "baserom.dol", 0x3B76DC, 0x3C
+.global billboard_dolphin_data
+billboard_dolphin_data:
+	.incbin "baserom.dol", 0x3B7718, 0x3C
+.global billboard_sun_data
+billboard_sun_data:
+	.incbin "baserom.dol", 0x3B7754, 0x3C
+.global billboard_restaurant_data
+billboard_restaurant_data:
+	.incbin "baserom.dol", 0x3B7790, 0x3C
+.global billboard_fish_data
+billboard_fish_data:
+	.incbin "baserom.dol", 0x3B77CC, 0x3C
+.global HideObj_data
+HideObj_data:
+	.incbin "baserom.dol", 0x3B7808, 0x3C
+.global WaterHitHideObj_data
+WaterHitHideObj_data:
+	.incbin "baserom.dol", 0x3B7844, 0x3C
+.global FruitHitHideObj_data
+FruitHitHideObj_data:
+	.incbin "baserom.dol", 0x3B7880, 0x3C
+.global HipDropHideObj_data
+HipDropHideObj_data:
+	.incbin "baserom.dol", 0x3B78BC, 0x3C
+.global MonteChair_data
+MonteChair_data:
+	.incbin "baserom.dol", 0x3B78F8, 0x3C
+.global door_data
+door_data:
+	.incbin "baserom.dol", 0x3B7934, 0x3C
+.global doorHotel_data
+doorHotel_data:
+	.incbin "baserom.dol", 0x3B7970, 0x3C
+.global manhole_data
+manhole_data:
+	.incbin "baserom.dol", 0x3B79AC, 0x3C
+.global FruitBasket_data
+FruitBasket_data:
+	.incbin "baserom.dol", 0x3B79E8, 0x3C
+.global BasketReverse_data
+BasketReverse_data:
+	.incbin "baserom.dol", 0x3B7A24, 0x3C
+.global CoconutJuice_data
+CoconutJuice_data:
+	.incbin "baserom.dol", 0x3B7A60, 0x3C
+.global Pile_data
+Pile_data:
+	.incbin "baserom.dol", 0x3B7A9C, 0x3C
+.global ChangeStage_data
+ChangeStage_data:
+	.incbin "baserom.dol", 0x3B7AD8, 0x3C
+.global ChangeStageMerrygoround_data
+ChangeStageMerrygoround_data:
+	.incbin "baserom.dol", 0x3B7B14, 0x3C
+.global StartDemo_data
+StartDemo_data:
+	.incbin "baserom.dol", 0x3B7B50, 0x3C
+.global ChipShine_data
+ChipShine_data:
+	.incbin "baserom.dol", 0x3B7B8C, 0x3C
+.global KoopaJrSignM_data
+KoopaJrSignM_data:
+	.incbin "baserom.dol", 0x3B7BC8, 0x3C
+.global StarSign_data
+StarSign_data:
+	.incbin "baserom.dol", 0x3B7C04, 0x3C
+.global SignCircle_data
+SignCircle_data:
+	.incbin "baserom.dol", 0x3B7C40, 0x3C
+.global SignCross_data
+SignCross_data:
+	.incbin "baserom.dol", 0x3B7C7C, 0x3C
+.global SignTriangle_data
+SignTriangle_data:
+	.incbin "baserom.dol", 0x3B7CB8, 0x3C
+.global ArrowBoardLR_data
+ArrowBoardLR_data:
+	.incbin "baserom.dol", 0x3B7CF4, 0x3C
+.global ArrowBoardUp_data
+ArrowBoardUp_data:
+	.incbin "baserom.dol", 0x3B7D30, 0x3C
+.global ArrowBoardDown_data
+ArrowBoardDown_data:
+	.incbin "baserom.dol", 0x3B7D6C, 0x3C
+.global WaterSprayCylinder_data
+WaterSprayCylinder_data:
+	.incbin "baserom.dol", 0x3B7DA8, 0x3C
+.global WaterSprayBox_data
+WaterSprayBox_data:
+	.incbin "baserom.dol", 0x3B7DE4, 0x3C
+.global ObjSwitch_data
+ObjSwitch_data:
+	.incbin "baserom.dol", 0x3B7E20, 0x3C
+.global RedCoinSwitch_data
+RedCoinSwitch_data:
+	.incbin "baserom.dol", 0x3B7E5C, 0x3C
+.global bucket_data
+bucket_data:
+	.incbin "baserom.dol", 0x3B7E98, 0x3C
+.global GeneralHitObj_data
+GeneralHitObj_data:
+	.incbin "baserom.dol", 0x3B7ED4, 0x3C
+.global bottle_large_data
+bottle_large_data:
+	.incbin "baserom.dol", 0x3B7F10, 0x3C
+.global bottle_short_data
+bottle_short_data:
+	.incbin "baserom.dol", 0x3B7F4C, 0x3C
+.global WaterRecoverObj_data
+WaterRecoverObj_data:
+	.incbin "baserom.dol", 0x3B7F88, 0x3C
+.global watergun_item_data
+watergun_item_data:
+	.incbin "baserom.dol", 0x3B7FC4, 0x3C
+.global nozzle_normal_physical_data
+nozzle_normal_physical_data:
+	.incbin "baserom.dol", 0x3B8000, 0x34
+.global nozzle_normal_physical_info
+nozzle_normal_physical_info:
+	.incbin "baserom.dol", 0x3B8034, 0xC
+.global nozzle_normal_item_data
+nozzle_normal_item_data:
+	.incbin "baserom.dol", 0x3B8040, 0x3C
+.global yoshi_whistle_item_data
+yoshi_whistle_item_data:
+	.incbin "baserom.dol", 0x3B807C, 0x3C
+.global nozzle_rocket_item_data
+nozzle_rocket_item_data:
+	.incbin "baserom.dol", 0x3B80B8, 0x3C
+.global nozzle_back_item_data
+nozzle_back_item_data:
+	.incbin "baserom.dol", 0x3B80F4, 0x3C
+.global coin_physical_data
+coin_physical_data:
+	.incbin "baserom.dol", 0x3B8130, 0x34
+.global coin_physical_info
+coin_physical_info:
+	.incbin "baserom.dol", 0x3B8164, 0xC
+.global coin_data
+coin_data:
+	.incbin "baserom.dol", 0x3B8170, 0x3C
+.global invisible_coin_data
+invisible_coin_data:
+	.incbin "baserom.dol", 0x3B81AC, 0x3C
+.global coin_red_data
+coin_red_data:
+	.incbin "baserom.dol", 0x3B81E8, 0x3C
+.global coin_blue_data
+coin_blue_data:
+	.incbin "baserom.dol", 0x3B8224, 0x3C
+.global shine_data
+shine_data:
+	.incbin "baserom.dol", 0x3B8260, 0x3C
+.global mario_cap_data
+mario_cap_data:
+	.incbin "baserom.dol", 0x3B829C, 0x3C
+.global joint_coin_data
+joint_coin_data:
+	.incbin "baserom.dol", 0x3B82D8, 0x3C
+.global eggYoshi_data
+eggYoshi_data:
+	.incbin "baserom.dol", 0x3B8314, 0x3C
+.global EggYoshi_physical_data
+EggYoshi_physical_data:
+	.incbin "baserom.dol", 0x3B8350, 0x34
+.global EggYoshi_physical_info
+EggYoshi_physical_info:
+	.incbin "baserom.dol", 0x3B8384, 0xC
+.global eggYoshiEvent_data
+eggYoshiEvent_data:
+	.incbin "baserom.dol", 0x3B8390, 0x3C
+.global NozzleBox_data
+NozzleBox_data:
+	.incbin "baserom.dol", 0x3B83CC, 0x3C
+.global mushroom1up_data
+mushroom1up_data:
+	.incbin "baserom.dol", 0x3B8408, 0x3C
+.global mushroom1upR_data
+mushroom1upR_data:
+	.incbin "baserom.dol", 0x3B8444, 0x3C
+.global mushroom1upX_data
+mushroom1upX_data:
+	.incbin "baserom.dol", 0x3B8480, 0x3C
+.global jumpbase_data
+jumpbase_data:
+	.incbin "baserom.dol", 0x3B84BC, 0x3C
+.global coconut_physical_data
+coconut_physical_data:
+	.incbin "baserom.dol", 0x3B84F8, 0x34
+.global coconut_physical_info
+coconut_physical_info:
+	.incbin "baserom.dol", 0x3B852C, 0xC
+.global coconut_data
+coconut_data:
+	.incbin "baserom.dol", 0x3B8538, 0x3C
+.global papaya_physical_data
+papaya_physical_data:
+	.incbin "baserom.dol", 0x3B8574, 0x34
+.global papaya_physical_info
+papaya_physical_info:
+	.incbin "baserom.dol", 0x3B85A8, 0xC
+.global papaya_data
+papaya_data:
+	.incbin "baserom.dol", 0x3B85B4, 0x3C
+.global pine_physical_data
+pine_physical_data:
+	.incbin "baserom.dol", 0x3B85F0, 0x34
+.global pine_physical_info
+pine_physical_info:
+	.incbin "baserom.dol", 0x3B8624, 0xC
+.global pine_data
+pine_data:
+	.incbin "baserom.dol", 0x3B8630, 0x3C
+.global CoverPine_data
+CoverPine_data:
+	.incbin "baserom.dol", 0x3B866C, 0x3C
+.global durian_physical_data
+durian_physical_data:
+	.incbin "baserom.dol", 0x3B86A8, 0x34
+.global durian_physical_info
+durian_physical_info:
+	.incbin "baserom.dol", 0x3B86DC, 0xC
+.global durian_data
+durian_data:
+	.incbin "baserom.dol", 0x3B86E8, 0x3C
+.global banana_physical_data
+banana_physical_data:
+	.incbin "baserom.dol", 0x3B8724, 0x34
+.global banana_physical_info
+banana_physical_info:
+	.incbin "baserom.dol", 0x3B8758, 0xC
+.global banana_data
+banana_data:
+	.incbin "baserom.dol", 0x3B8764, 0x3C
+.global red_pepper_physical_data
+red_pepper_physical_data:
+	.incbin "baserom.dol", 0x3B87A0, 0x34
+.global red_pepper_physical_info
+red_pepper_physical_info:
+	.incbin "baserom.dol", 0x3B87D4, 0xC
+.global RedPepper_data
+RedPepper_data:
+	.incbin "baserom.dol", 0x3B87E0, 0x3C
+.global fence_normal_data
+fence_normal_data:
+	.incbin "baserom.dol", 0x3B881C, 0x3C
+.global fence3x3_data
+fence3x3_data:
+	.incbin "baserom.dol", 0x3B8858, 0x3C
+.global fence_revolve_data
+fence_revolve_data:
+	.incbin "baserom.dol", 0x3B8894, 0x3C
+.global fence_revolve_inner_data
+fence_revolve_inner_data:
+	.incbin "baserom.dol", 0x3B88D0, 0x3C
+.global fenceInnerGreen_data
+fenceInnerGreen_data:
+	.incbin "baserom.dol", 0x3B890C, 0x3C
+.global FenceWaterV_data
+FenceWaterV_data:
+	.incbin "baserom.dol", 0x3B8948, 0x3C
+.global FenceWaterH_data
+FenceWaterH_data:
+	.incbin "baserom.dol", 0x3B8984, 0x3C
+.global RailFence_data
+RailFence_data:
+	.incbin "baserom.dol", 0x3B89C0, 0x3C
+.global bambooFenceRevolveInner_data
+bambooFenceRevolveInner_data:
+	.incbin "baserom.dol", 0x3B89FC, 0x3C
+.global bambooFenceRevolveOuter_data
+bambooFenceRevolveOuter_data:
+	.incbin "baserom.dol", 0x3B8A38, 0x3C
+.global bambooRailFence_data
+bambooRailFence_data:
+	.incbin "baserom.dol", 0x3B8A74, 0x3C
+.global wood_barrel_physical_data
+wood_barrel_physical_data:
+	.incbin "baserom.dol", 0x3B8AB0, 0x34
+.global wood_barrel_physical_info
+wood_barrel_physical_info:
+	.incbin "baserom.dol", 0x3B8AE4, 0xC
+.global wood_barrel_hold_data
+wood_barrel_hold_data:
+	.incbin "baserom.dol", 0x3B8AF0, 0x14
+.global wood_barrel_data
+wood_barrel_data:
+	.incbin "baserom.dol", 0x3B8B04, 0x3C
+.global wood_barrel_once_data
+wood_barrel_once_data:
+	.incbin "baserom.dol", 0x3B8B40, 0x3C
+.global barrel_float_data
+barrel_float_data:
+	.incbin "baserom.dol", 0x3B8B7C, 0x3C
+.global drum_can_data
+drum_can_data:
+	.incbin "baserom.dol", 0x3B8BB8, 0x3C
+.global barrel_oil_data
+barrel_oil_data:
+	.incbin "baserom.dol", 0x3B8BF4, 0x3C
+.global breakable_block_data
+breakable_block_data:
+	.incbin "baserom.dol", 0x3B8C30, 0x3C
+.global supermario_block_data
+supermario_block_data:
+	.incbin "baserom.dol", 0x3B8C6C, 0x3C
+.global move_block_data
+move_block_data:
+	.incbin "baserom.dol", 0x3B8CA8, 0x3C
+.global fall_slow_block_data
+fall_slow_block_data:
+	.incbin "baserom.dol", 0x3B8CE4, 0x3C
+.global expand_block_data
+expand_block_data:
+	.incbin "baserom.dol", 0x3B8D20, 0x3C
+.global spread_block_data
+spread_block_data:
+	.incbin "baserom.dol", 0x3B8D5C, 0x3C
+.global water_roll_block_data
+water_roll_block_data:
+	.incbin "baserom.dol", 0x3B8D98, 0x3C
+.global sand_block_data
+sand_block_data:
+	.incbin "baserom.dol", 0x3B8DD4, 0x3C
+.global water_power_lift_data
+water_power_lift_data:
+	.incbin "baserom.dol", 0x3B8E10, 0x3C
+.global water_power_inertial_lift_data
+water_power_inertial_lift_data:
+	.incbin "baserom.dol", 0x3B8E4C, 0x3C
+.global water_power_ship_data
+water_power_ship_data:
+	.incbin "baserom.dol", 0x3B8E88, 0x3C
+.global lean_direct_block_data
+lean_direct_block_data:
+	.incbin "baserom.dol", 0x3B8EC4, 0x3C
+.global lean_indirect_block_data
+lean_indirect_block_data:
+	.incbin "baserom.dol", 0x3B8F00, 0x3C
+.global lean_block_data
+lean_block_data:
+	.incbin "baserom.dol", 0x3B8F3C, 0x3C
+.global skate_block_data
+skate_block_data:
+	.incbin "baserom.dol", 0x3B8F78, 0x3C
+.global MoveCoin_data
+MoveCoin_data:
+	.incbin "baserom.dol", 0x3B8FB4, 0x3C
+.global cluster_block_data
+cluster_block_data:
+	.incbin "baserom.dol", 0x3B8FF0, 0x3C
+.global NormalBlock_data
+NormalBlock_data:
+	.incbin "baserom.dol", 0x3B902C, 0x3C
+.global IceBlock_data
+IceBlock_data:
+	.incbin "baserom.dol", 0x3B9068, 0x3C
+.global BrickBlock_data
+BrickBlock_data:
+	.incbin "baserom.dol", 0x3B90A4, 0x3C
+.global WaterMelonBlock_data
+WaterMelonBlock_data:
+	.incbin "baserom.dol", 0x3B90E0, 0x3C
+.global TelesaBlock_data
+TelesaBlock_data:
+	.incbin "baserom.dol", 0x3B911C, 0x3C
+.global WoodBlockPole_data
+WoodBlockPole_data:
+	.incbin "baserom.dol", 0x3B9158, 0x3C
+.global JuiceBlock_data
+JuiceBlock_data:
+	.incbin "baserom.dol", 0x3B9194, 0x3C
+.global SuperHipDropBlock_data
+SuperHipDropBlock_data:
+	.incbin "baserom.dol", 0x3B91D0, 0x3C
+.global palmNormal_data
+palmNormal_data:
+	.incbin "baserom.dol", 0x3B920C, 0x3C
+.global palmOugi_data
+palmOugi_data:
+	.incbin "baserom.dol", 0x3B9248, 0x3C
+.global palmSago_data
+palmSago_data:
+	.incbin "baserom.dol", 0x3B9284, 0x3C
+.global palmNatume_data
+palmNatume_data:
+	.incbin "baserom.dol", 0x3B92C0, 0x3C
+.global palmLeaf_data
+palmLeaf_data:
+	.incbin "baserom.dol", 0x3B92FC, 0x3C
+.global BananaTree_data
+BananaTree_data:
+	.incbin "baserom.dol", 0x3B9338, 0x3C
+.global FruitTree_data
+FruitTree_data:
+	.incbin "baserom.dol", 0x3B9374, 0x3C
+.global flower_data
+flower_data:
+	.incbin "baserom.dol", 0x3B93B0, 0x3C
+.global flowerOrange_data
+flowerOrange_data:
+	.incbin "baserom.dol", 0x3B93EC, 0x3C
+.global flowerPink_data
+flowerPink_data:
+	.incbin "baserom.dol", 0x3B9428, 0x3C
+.global flowerPurple_data
+flowerPurple_data:
+	.incbin "baserom.dol", 0x3B9464, 0x3C
+.global flowerRed_data
+flowerRed_data:
+	.incbin "baserom.dol", 0x3B94A0, 0x3C
+.global flowerYellow_data
+flowerYellow_data:
+	.incbin "baserom.dol", 0x3B94DC, 0x3C
+.global flowerSunflower_data
+flowerSunflower_data:
+	.incbin "baserom.dol", 0x3B9518, 0x3C
+.global telegraph_pole_l_data
+telegraph_pole_l_data:
+	.incbin "baserom.dol", 0x3B9554, 0x3C
+.global telegraph_pole_s_data
+telegraph_pole_s_data:
+	.incbin "baserom.dol", 0x3B9590, 0x3C
+.global streetlamp_data
+streetlamp_data:
+	.incbin "baserom.dol", 0x3B95CC, 0x3C
+.global PoleNormal_data
+PoleNormal_data:
+	.incbin "baserom.dol", 0x3B9608, 0x3C
+.global football_physical_data
+football_physical_data:
+	.incbin "baserom.dol", 0x3B9644, 0x34
+.global football_physical_info
+football_physical_info:
+	.incbin "baserom.dol", 0x3B9678, 0xC
+.global football_data
+football_data:
+	.incbin "baserom.dol", 0x3B9684, 0x3C
+.global football_goal_data
+football_goal_data:
+	.incbin "baserom.dol", 0x3B96C0, 0x3C
+.global baloonball_physical_data
+baloonball_physical_data:
+	.incbin "baserom.dol", 0x3B96FC, 0x34
+.global baloonball_physical_info
+baloonball_physical_info:
+	.incbin "baserom.dol", 0x3B9730, 0xC
+.global baloonball_data
+baloonball_data:
+	.incbin "baserom.dol", 0x3B973C, 0x3C
+.global coconutball_data
+coconutball_data:
+	.incbin "baserom.dol", 0x3B9778, 0x3C
+.global watermelon_physical_data
+watermelon_physical_data:
+	.incbin "baserom.dol", 0x3B97B4, 0x34
+.global watermelon_physical_info
+watermelon_physical_info:
+	.incbin "baserom.dol", 0x3B97E8, 0xC
+.global watermelon_data
+watermelon_data:
+	.incbin "baserom.dol", 0x3B97F4, 0x3C
+.global WatermelonStatic_data
+WatermelonStatic_data:
+	.incbin "baserom.dol", 0x3B9830, 0x3C
+.global cloud_data
+cloud_data:
+	.incbin "baserom.dol", 0x3B986C, 0x3C
+.global normallift_data
+normallift_data:
+	.incbin "baserom.dol", 0x3B98A8, 0x3C
+.global exrollcube_data
+exrollcube_data:
+	.incbin "baserom.dol", 0x3B98E4, 0x3C
+.global exkickboard_data
+exkickboard_data:
+	.incbin "baserom.dol", 0x3B9920, 0x3C
+.global railblockr_data
+railblockr_data:
+	.incbin "baserom.dol", 0x3B995C, 0x3C
+.global railblocky_data
+railblocky_data:
+	.incbin "baserom.dol", 0x3B9998, 0x3C
+.global railblockb_data
+railblockb_data:
+	.incbin "baserom.dol", 0x3B99D4, 0x3C
+.global rollblockr_data
+rollblockr_data:
+	.incbin "baserom.dol", 0x3B9A10, 0x3C
+.global rollblocky_data
+rollblocky_data:
+	.incbin "baserom.dol", 0x3B9A4C, 0x3C
+.global rollblockb_data
+rollblockb_data:
+	.incbin "baserom.dol", 0x3B9A88, 0x3C
+.global umaibou_data
+umaibou_data:
+	.incbin "baserom.dol", 0x3B9AC4, 0x3C
+.global kamaboko_data
+kamaboko_data:
+	.incbin "baserom.dol", 0x3B9B00, 0x3C
+.global getag_data
+getag_data:
+	.incbin "baserom.dol", 0x3B9B3C, 0x3C
+.global getao_data
+getao_data:
+	.incbin "baserom.dol", 0x3B9B78, 0x3C
+.global uirou_data
+uirou_data:
+	.incbin "baserom.dol", 0x3B9BB4, 0x3C
+.global hikidashi_data
+hikidashi_data:
+	.incbin "baserom.dol", 0x3B9BF0, 0x3C
+.global castella_data
+castella_data:
+	.incbin "baserom.dol", 0x3B9C2C, 0x3C
+.global yoshiblock_data
+yoshiblock_data:
+	.incbin "baserom.dol", 0x3B9C68, 0x3C
+.global WoodBlockTriangle_data
+WoodBlockTriangle_data:
+	.incbin "baserom.dol", 0x3B9CA4, 0x3C
+.global WoodBlockPyramid_data
+WoodBlockPyramid_data:
+	.incbin "baserom.dol", 0x3B9CE0, 0x3C
+.global WoodBlockLong_data
+WoodBlockLong_data:
+	.incbin "baserom.dol", 0x3B9D1C, 0x3C
+.global WoodBlockLarge_data
+WoodBlockLarge_data:
+	.incbin "baserom.dol", 0x3B9D58, 0x3C
+.global WoodBlockCone_data
+WoodBlockCone_data:
+	.incbin "baserom.dol", 0x3B9D94, 0x3C
+.global WoodBlockL_data
+WoodBlockL_data:
+	.incbin "baserom.dol", 0x3B9DD0, 0x3C
+.global WoodBlockBridge_data
+WoodBlockBridge_data:
+	.incbin "baserom.dol", 0x3B9E0C, 0x3C
+.global WoodBlockCube_data
+WoodBlockCube_data:
+	.incbin "baserom.dol", 0x3B9E48, 0x3C
+.global normalvariant0_data
+normalvariant0_data:
+	.incbin "baserom.dol", 0x3B9E84, 0x3C
+.global normalvariant1_data
+normalvariant1_data:
+	.incbin "baserom.dol", 0x3B9EC0, 0x3C
+.global normalvariant2_data
+normalvariant2_data:
+	.incbin "baserom.dol", 0x3B9EFC, 0x3C
+.global normalvariant3_data
+normalvariant3_data:
+	.incbin "baserom.dol", 0x3B9F38, 0x3C
+.global normalvariant4_data
+normalvariant4_data:
+	.incbin "baserom.dol", 0x3B9F74, 0x3C
+.global railvariant0_data
+railvariant0_data:
+	.incbin "baserom.dol", 0x3B9FB0, 0x3C
+.global railvariant1_data
+railvariant1_data:
+	.incbin "baserom.dol", 0x3B9FEC, 0x3C
+.global railvariant2_data
+railvariant2_data:
+	.incbin "baserom.dol", 0x3BA028, 0x3C
+.global railvariant3_data
+railvariant3_data:
+	.incbin "baserom.dol", 0x3BA064, 0x3C
+.global railvariant4_data
+railvariant4_data:
+	.incbin "baserom.dol", 0x3BA0A0, 0x3C
+.global rollvariant0_data
+rollvariant0_data:
+	.incbin "baserom.dol", 0x3BA0DC, 0x3C
+.global rollvariant1_data
+rollvariant1_data:
+	.incbin "baserom.dol", 0x3BA118, 0x3C
+.global rollvariant2_data
+rollvariant2_data:
+	.incbin "baserom.dol", 0x3BA154, 0x3C
+.global rollvariant3_data
+rollvariant3_data:
+	.incbin "baserom.dol", 0x3BA190, 0x3C
+.global rollvariant4_data
+rollvariant4_data:
+	.incbin "baserom.dol", 0x3BA1CC, 0x3C
+.global lamptrapspike_data
+lamptrapspike_data:
+	.incbin "baserom.dol", 0x3BA208, 0x3C
+.global lamptrapiron_data
+lamptrapiron_data:
+	.incbin "baserom.dol", 0x3BA244, 0x3C
+.global airplane_data
+airplane_data:
+	.incbin "baserom.dol", 0x3BA280, 0x3C
+.global WoodBox_data
+WoodBox_data:
+	.incbin "baserom.dol", 0x3BA2BC, 0x3C
+.global AirportPole_data
+AirportPole_data:
+	.incbin "baserom.dol", 0x3BA2F8, 0x3C
+.global ice_car_data
+ice_car_data:
+	.incbin "baserom.dol", 0x3BA334, 0x3C
+.global move_ice_car_data
+move_ice_car_data:
+	.incbin "baserom.dol", 0x3BA370, 0x3C
+.global AirportBuoy_data
+AirportBuoy_data:
+	.incbin "baserom.dol", 0x3BA3AC, 0x3C
+.global dptCannon_data
+dptCannon_data:
+	.incbin "baserom.dol", 0x3BA3E8, 0x3C
+.global dptKing_data
+dptKing_data:
+	.incbin "baserom.dol", 0x3BA424, 0x3C
+.global KoopaJrSubmarine_data
+KoopaJrSubmarine_data:
+	.incbin "baserom.dol", 0x3BA460, 0x3C
+.global monumentshine_data
+monumentshine_data:
+	.incbin "baserom.dol", 0x3BA49C, 0x3C
+.global belldolpic_data
+belldolpic_data:
+	.incbin "baserom.dol", 0x3BA4D8, 0x3C
+.global dptWeathercock_data
+dptWeathercock_data:
+	.incbin "baserom.dol", 0x3BA514, 0x3C
+.global dptMonteFence_data
+dptMonteFence_data:
+	.incbin "baserom.dol", 0x3BA550, 0x3C
+.global dptCoronaFence_data
+dptCoronaFence_data:
+	.incbin "baserom.dol", 0x3BA58C, 0x3C
+.global MapSmoke_data
+MapSmoke_data:
+	.incbin "baserom.dol", 0x3BA5C8, 0x3C
+.global MareGate_data
+MareGate_data:
+	.incbin "baserom.dol", 0x3BA604, 0x3C
+.global DemoCannon_data
+DemoCannon_data:
+	.incbin "baserom.dol", 0x3BA640, 0x3C
+.global NozzleDoor_data
+NozzleDoor_data:
+	.incbin "baserom.dol", 0x3BA67C, 0x3C
+.global DokanGate_data
+DokanGate_data:
+	.incbin "baserom.dol", 0x3BA6B8, 0x3C
+.global crane_data
+crane_data:
+	.incbin "baserom.dol", 0x3BA6F4, 0x3C
+.global crane90Scene2_data
+crane90Scene2_data:
+	.incbin "baserom.dol", 0x3BA730, 0x3C
+.global crane180Scene1_data
+crane180Scene1_data:
+	.incbin "baserom.dol", 0x3BA76C, 0x3C
+.global craneUpDown_data
+craneUpDown_data:
+	.incbin "baserom.dol", 0x3BA7A8, 0x3C
+.global craneCargoUpDown_data
+craneCargoUpDown_data:
+	.incbin "baserom.dol", 0x3BA7E4, 0x3C
+.global tank_data
+tank_data:
+	.incbin "baserom.dol", 0x3BA820, 0x3C
+.global container_data
+container_data:
+	.incbin "baserom.dol", 0x3BA85C, 0x3C
+.global submarine_data
+submarine_data:
+	.incbin "baserom.dol", 0x3BA898, 0x3C
+.global riccoShip_data
+riccoShip_data:
+	.incbin "baserom.dol", 0x3BA8D4, 0x3C
+.global riccoPole_data
+riccoPole_data:
+	.incbin "baserom.dol", 0x3BA910, 0x3C
+.global riccoLog_data
+riccoLog_data:
+	.incbin "baserom.dol", 0x3BA94C, 0x3C
+.global gesoSurfboard_data
+gesoSurfboard_data:
+	.incbin "baserom.dol", 0x3BA988, 0x3C
+.global gesoSurfboardStatic_data
+gesoSurfboardStatic_data:
+	.incbin "baserom.dol", 0x3BA9C4, 0x3C
+.global riccoWatermill_data
+riccoWatermill_data:
+	.incbin "baserom.dol", 0x3BAA00, 0x3C
+.global riccoShipLog_data
+riccoShipLog_data:
+	.incbin "baserom.dol", 0x3BAA3C, 0x3C
+.global riccoShipDol_data
+riccoShipDol_data:
+	.incbin "baserom.dol", 0x3BAA78, 0x3C
+.global riccoYachtL_data
+riccoYachtL_data:
+	.incbin "baserom.dol", 0x3BAAB4, 0x3C
+.global riccoYachtS_data
+riccoYachtS_data:
+	.incbin "baserom.dol", 0x3BAAF0, 0x3C
+.global riccoBoatL_data
+riccoBoatL_data:
+	.incbin "baserom.dol", 0x3BAB2C, 0x3C
+.global riccoBoatS_data
+riccoBoatS_data:
+	.incbin "baserom.dol", 0x3BAB68, 0x3C
+.global riccoBasket_data
+riccoBasket_data:
+	.incbin "baserom.dol", 0x3BABA4, 0x3C
+.global riccoGangway_data
+riccoGangway_data:
+	.incbin "baserom.dol", 0x3BABE0, 0x3C
+.global riccoShipFish_data
+riccoShipFish_data:
+	.incbin "baserom.dol", 0x3BAC1C, 0x3C
+.global riccoShipGeso_data
+riccoShipGeso_data:
+	.incbin "baserom.dol", 0x3BAC58, 0x3C
+.global riccoSwitch_data
+riccoSwitch_data:
+	.incbin "baserom.dol", 0x3BAC94, 0x3C
+.global riccoSwitchShine_data
+riccoSwitchShine_data:
+	.incbin "baserom.dol", 0x3BACD0, 0x3C
+.global riccoFenceMaze_data
+riccoFenceMaze_data:
+	.incbin "baserom.dol", 0x3BAD0C, 0x3C
+.global riccoStand_data
+riccoStand_data:
+	.incbin "baserom.dol", 0x3BAD48, 0x3C
+.global riccoGrille_data
+riccoGrille_data:
+	.incbin "baserom.dol", 0x3BAD84, 0x3C
+.global riccoArrow_data
+riccoArrow_data:
+	.incbin "baserom.dol", 0x3BADC0, 0x3C
+.global riccoStreetStall_data
+riccoStreetStall_data:
+	.incbin "baserom.dol", 0x3BADFC, 0x3C
+.global riccoHericopter_data
+riccoHericopter_data:
+	.incbin "baserom.dol", 0x3BAE38, 0x3C
+.global surfgeso_red_data
+surfgeso_red_data:
+	.incbin "baserom.dol", 0x3BAE74, 0x3C
+.global surfgeso_yellow_data
+surfgeso_yellow_data:
+	.incbin "baserom.dol", 0x3BAEB0, 0x3C
+.global surfgeso_green_data
+surfgeso_green_data:
+	.incbin "baserom.dol", 0x3BAEEC, 0x3C
+.global big_windmill_data
+big_windmill_data:
+	.incbin "baserom.dol", 0x3BAF28, 0x3C
+.global windmill_far_data
+windmill_far_data:
+	.incbin "baserom.dol", 0x3BAF64, 0x3C
+.global MiniWindmillL_data
+MiniWindmillL_data:
+	.incbin "baserom.dol", 0x3BAFA0, 0x3C
+.global MiniWindmillS_data
+MiniWindmillS_data:
+	.incbin "baserom.dol", 0x3BAFDC, 0x3C
+.global WindmillRoof_data
+WindmillRoof_data:
+	.incbin "baserom.dol", 0x3BB018, 0x3C
+.global lamp_bianco_data
+lamp_bianco_data:
+	.incbin "baserom.dol", 0x3BB054, 0x3C
+.global root_pakkun_data
+root_pakkun_data:
+	.incbin "baserom.dol", 0x3BB090, 0x3C
+.global windmill_block_data
+windmill_block_data:
+	.incbin "baserom.dol", 0x3BB0CC, 0x3C
+.global PolluterPakkun_data
+PolluterPakkun_data:
+	.incbin "baserom.dol", 0x3BB108, 0x3C
+.global BiaBell_data
+BiaBell_data:
+	.incbin "baserom.dol", 0x3BB144, 0x3C
+.global BiaWatermill00_data
+BiaWatermill00_data:
+	.incbin "baserom.dol", 0x3BB180, 0x3C
+.global BiaWatermill01_data
+BiaWatermill01_data:
+	.incbin "baserom.dol", 0x3BB1BC, 0x3C
+.global BiaWatermillVertical_data
+BiaWatermillVertical_data:
+	.incbin "baserom.dol", 0x3BB1F8, 0x3C
+.global BiaTurnBridge_data
+BiaTurnBridge_data:
+	.incbin "baserom.dol", 0x3BB234, 0x3C
+.global LeafBoat_data
+LeafBoat_data:
+	.incbin "baserom.dol", 0x3BB270, 0x3C
+.global LeafBoatRotten_data
+LeafBoatRotten_data:
+	.incbin "baserom.dol", 0x3BB2AC, 0x3C
+.global LampSeesaw_data
+LampSeesaw_data:
+	.incbin "baserom.dol", 0x3BB2E8, 0x3C
+.global BiancoDoor_data
+BiancoDoor_data:
+	.incbin "baserom.dol", 0x3BB324, 0x3C
+.global BiaBridge_data
+BiaBridge_data:
+	.incbin "baserom.dol", 0x3BB360, 0x3C
+.global SandBird_data
+SandBird_data:
+	.incbin "baserom.dol", 0x3BB39C, 0x3C
+.global SandBirdBlock_data
+SandBirdBlock_data:
+	.incbin "baserom.dol", 0x3BB3D8, 0x3C
+.global SkyIsland_data
+SkyIsland_data:
+	.incbin "baserom.dol", 0x3BB414, 0x3C
+.global SandLeaf_data
+SandLeaf_data:
+	.incbin "baserom.dol", 0x3BB450, 0x3C
+.global SandLeafBase00_data
+SandLeafBase00_data:
+	.incbin "baserom.dol", 0x3BB48C, 0x3C
+.global SandLeafBase01_data
+SandLeafBase01_data:
+	.incbin "baserom.dol", 0x3BB4C8, 0x3C
+.global SandLeafBase02_data
+SandLeafBase02_data:
+	.incbin "baserom.dol", 0x3BB504, 0x3C
+.global SandLeafBase03_data
+SandLeafBase03_data:
+	.incbin "baserom.dol", 0x3BB540, 0x3C
+.global SandBomb_data
+SandBomb_data:
+	.incbin "baserom.dol", 0x3BB57C, 0x3C
+.global MirrorL_data
+MirrorL_data:
+	.incbin "baserom.dol", 0x3BB5B8, 0x3C
+.global MirrorM_data
+MirrorM_data:
+	.incbin "baserom.dol", 0x3BB5F4, 0x3C
+.global MirrorS_data
+MirrorS_data:
+	.incbin "baserom.dol", 0x3BB630, 0x3C
+.global SandCastle_data
+SandCastle_data:
+	.incbin "baserom.dol", 0x3BB66C, 0x3C
+.global MammaBlockRotate_data
+MammaBlockRotate_data:
+	.incbin "baserom.dol", 0x3BB6A8, 0x3C
+.global SandEgg_data
+SandEgg_data:
+	.incbin "baserom.dol", 0x3BB6E4, 0x3C
+.global SandEggBroken_data
+SandEggBroken_data:
+	.incbin "baserom.dol", 0x3BB720, 0x3C
+.global ShiningStone_data
+ShiningStone_data:
+	.incbin "baserom.dol", 0x3BB75C, 0x3C
+.global MammaSurfboard00_data
+MammaSurfboard00_data:
+	.incbin "baserom.dol", 0x3BB798, 0x3C
+.global MammaSurfboard01_data
+MammaSurfboard01_data:
+	.incbin "baserom.dol", 0x3BB7D4, 0x3C
+.global MammaSurfboard02_data
+MammaSurfboard02_data:
+	.incbin "baserom.dol", 0x3BB810, 0x3C
+.global MammaSurfboard03_data
+MammaSurfboard03_data:
+	.incbin "baserom.dol", 0x3BB84C, 0x3C
+.global MammaSurfboardStand_data
+MammaSurfboardStand_data:
+	.incbin "baserom.dol", 0x3BB888, 0x3C
+.global MammaYacht00_data
+MammaYacht00_data:
+	.incbin "baserom.dol", 0x3BB8C4, 0x3C
+.global MammaYacht01_data
+MammaYacht01_data:
+	.incbin "baserom.dol", 0x3BB900, 0x3C
+.global MammaYacht02_data
+MammaYacht02_data:
+	.incbin "baserom.dol", 0x3BB93C, 0x3C
+.global SandBombBase00_data
+SandBombBase00_data:
+	.incbin "baserom.dol", 0x3BB978, 0x3C
+.global SandBombBaseMushroom_data
+SandBombBaseMushroom_data:
+	.incbin "baserom.dol", 0x3BB9B4, 0x3C
+.global SandBombBasePyramid_data
+SandBombBasePyramid_data:
+	.incbin "baserom.dol", 0x3BB9F0, 0x3C
+.global SandBombBaseShit_data
+SandBombBaseShit_data:
+	.incbin "baserom.dol", 0x3BBA2C, 0x3C
+.global SandBombBaseStar_data
+SandBombBaseStar_data:
+	.incbin "baserom.dol", 0x3BBA68, 0x3C
+.global SandBombBaseTurtle_data
+SandBombBaseTurtle_data:
+	.incbin "baserom.dol", 0x3BBAA4, 0x3C
+.global SandBombBaseFoot_data
+SandBombBaseFoot_data:
+	.incbin "baserom.dol", 0x3BBAE0, 0x3C
+.global SandBombBaseHand_data
+SandBombBaseHand_data:
+	.incbin "baserom.dol", 0x3BBB1C, 0x3C
+.global SandBombBaseStairs_data
+SandBombBaseStairs_data:
+	.incbin "baserom.dol", 0x3BBB58, 0x3C
+.global coral00_data
+coral00_data:
+	.incbin "baserom.dol", 0x3BBB94, 0x3C
+.global coral01_data
+coral01_data:
+	.incbin "baserom.dol", 0x3BBBD0, 0x3C
+.global GoalWatermelon_data
+GoalWatermelon_data:
+	.incbin "baserom.dol", 0x3BBC0C, 0x3C
+.global TeethOfJuicer_data
+TeethOfJuicer_data:
+	.incbin "baserom.dol", 0x3BBC48, 0x3C
+.global SandEggRepair_data
+SandEggRepair_data:
+	.incbin "baserom.dol", 0x3BBC84, 0x3C
+.global merrygoround_data
+merrygoround_data:
+	.incbin "baserom.dol", 0x3BBCC0, 0x3C
+.global merry_egg_data
+merry_egg_data:
+	.incbin "baserom.dol", 0x3BBCFC, 0x3C
+.global merry_pole_data
+merry_pole_data:
+	.incbin "baserom.dol", 0x3BBD38, 0x3C
+.global FerrisWheel_data
+FerrisWheel_data:
+	.incbin "baserom.dol", 0x3BBD74, 0x3C
+.global gondola_data
+gondola_data:
+	.incbin "baserom.dol", 0x3BBDB0, 0x3C
+.global FerrisLOD_data
+FerrisLOD_data:
+	.incbin "baserom.dol", 0x3BBDEC, 0x3C
+.global viking_data
+viking_data:
+	.incbin "baserom.dol", 0x3BBE28, 0x3C
+.global PinnaEntrance_data
+PinnaEntrance_data:
+	.incbin "baserom.dol", 0x3BBE64, 0x3C
+.global PinnaEntranceOpen_data
+PinnaEntranceOpen_data:
+	.incbin "baserom.dol", 0x3BBEA0, 0x3C
+.global SirenaGate_data
+SirenaGate_data:
+	.incbin "baserom.dol", 0x3BBEDC, 0x3C
+.global BalloonKoopaJr_data
+BalloonKoopaJr_data:
+	.incbin "baserom.dol", 0x3BBF18, 0x3C
+.global ShellCup_data
+ShellCup_data:
+	.incbin "baserom.dol", 0x3BBF54, 0x3C
+.global Gateshell_data
+Gateshell_data:
+	.incbin "baserom.dol", 0x3BBF90, 0x3C
+.global PinnaHangingBridgeBoard_data
+PinnaHangingBridgeBoard_data:
+	.incbin "baserom.dol", 0x3BBFCC, 0x3C
+.global GateManta_data
+GateManta_data:
+	.incbin "baserom.dol", 0x3BC008, 0x3C
+.global PinnaSunFlower_data
+PinnaSunFlower_data:
+	.incbin "baserom.dol", 0x3BC044, 0x3C
+.global AmiKing_data
+AmiKing_data:
+	.incbin "baserom.dol", 0x3BC080, 0x3C
+.global PinnaCoaster_data
+PinnaCoaster_data:
+	.incbin "baserom.dol", 0x3BC0BC, 0x3C
+.global casinoroulette_data
+casinoroulette_data:
+	.incbin "baserom.dol", 0x3BC0F8, 0x3C
+.global roulette00_data
+roulette00_data:
+	.incbin "baserom.dol", 0x3BC134, 0x3C
+.global roulette01_data
+roulette01_data:
+	.incbin "baserom.dol", 0x3BC170, 0x3C
+.global roulette02_data
+roulette02_data:
+	.incbin "baserom.dol", 0x3BC1AC, 0x3C
+.global slotdrum_data
+slotdrum_data:
+	.incbin "baserom.dol", 0x3BC1E8, 0x3C
+.global telesaslot_data
+telesaslot_data:
+	.incbin "baserom.dol", 0x3BC224, 0x3C
+.global donchou_data
+donchou_data:
+	.incbin "baserom.dol", 0x3BC260, 0x3C
+.global casino_panel_gate_data
+casino_panel_gate_data:
+	.incbin "baserom.dol", 0x3BC29C, 0x3C
+.global SakuCasino_data
+SakuCasino_data:
+	.incbin "baserom.dol", 0x3BC2D8, 0x3C
+.global SirenabossWall_data
+SirenabossWall_data:
+	.incbin "baserom.dol", 0x3BC314, 0x3C
+.global SirenaCasinoRoof_data
+SirenaCasinoRoof_data:
+	.incbin "baserom.dol", 0x3BC350, 0x3C
+.global GlassBreak_data
+GlassBreak_data:
+	.incbin "baserom.dol", 0x3BC38C, 0x3C
+.global Closet_data
+Closet_data:
+	.incbin "baserom.dol", 0x3BC3C8, 0x3C
+.global ChestRevolve_data
+ChestRevolve_data:
+	.incbin "baserom.dol", 0x3BC404, 0x3C
+.global PosterTeresa_data
+PosterTeresa_data:
+	.incbin "baserom.dol", 0x3BC440, 0x3C
+.global PictureTeresa_data
+PictureTeresa_data:
+	.incbin "baserom.dol", 0x3BC47C, 0x3C
+.global PanelBreak_data
+PanelBreak_data:
+	.incbin "baserom.dol", 0x3BC4B8, 0x3C
+.global PanelRevolve_data
+PanelRevolve_data:
+	.incbin "baserom.dol", 0x3BC4F4, 0x3C
+.global SirenaBlockBreak_data
+SirenaBlockBreak_data:
+	.incbin "baserom.dol", 0x3BC530, 0x3C
+.global SirenaShop_data
+SirenaShop_data:
+	.incbin "baserom.dol", 0x3BC56C, 0x3C
+.global StainHotel_data
+StainHotel_data:
+	.incbin "baserom.dol", 0x3BC5A8, 0x3C
+.global cogwheel_data
+cogwheel_data:
+	.incbin "baserom.dol", 0x3BC5E4, 0x3C
+.global CogwheelPlate_data
+CogwheelPlate_data:
+	.incbin "baserom.dol", 0x3BC620, 0x3C
+.global CogwheelPot_data
+CogwheelPot_data:
+	.incbin "baserom.dol", 0x3BC65C, 0x3C
+.global mare_float_house_data
+mare_float_house_data:
+	.incbin "baserom.dol", 0x3BC698, 0x3C
+.global StopRock_physical_data
+StopRock_physical_data:
+	.incbin "baserom.dol", 0x3BC6D4, 0x34
+.global StopRock_physical_info
+StopRock_physical_info:
+	.incbin "baserom.dol", 0x3BC708, 0xC
+.global StopRock_data
+StopRock_data:
+	.incbin "baserom.dol", 0x3BC714, 0x3C
+.global ElasticCode_data
+ElasticCode_data:
+	.incbin "baserom.dol", 0x3BC750, 0x3C
+.global GrowthTree_data
+GrowthTree_data:
+	.incbin "baserom.dol", 0x3BC78C, 0x3C
+.global WireBellPurple_data
+WireBellPurple_data:
+	.incbin "baserom.dol", 0x3BC7C8, 0x3C
+.global MuddyBoat_data
+MuddyBoat_data:
+	.incbin "baserom.dol", 0x3BC804, 0x3C
+.global Puncher_data
+Puncher_data:
+	.incbin "baserom.dol", 0x3BC840, 0x3C
+.global HatoPop_data
+HatoPop_data:
+	.incbin "baserom.dol", 0x3BC87C, 0x3C
+.global MareWaterJump_data
+MareWaterJump_data:
+	.incbin "baserom.dol", 0x3BC8B8, 0x3C
+.global BumpyWall_data
+BumpyWall_data:
+	.incbin "baserom.dol", 0x3BC8F4, 0x3C
+.global ExBottle_data
+ExBottle_data:
+	.incbin "baserom.dol", 0x3BC930, 0x3C
+.global CoinFish_data
+CoinFish_data:
+	.incbin "baserom.dol", 0x3BC96C, 0x3C
+.global MareFall_data
+MareFall_data:
+	.incbin "baserom.dol", 0x3BC9A8, 0x3C
+.global MareCork_data
+MareCork_data:
+	.incbin "baserom.dol", 0x3BC9E4, 0x3C
+.global MonteRoot_data
+MonteRoot_data:
+	.incbin "baserom.dol", 0x3BCA20, 0x3C
+.global JumpMushroom_data
+JumpMushroom_data:
+	.incbin "baserom.dol", 0x3BCA5C, 0x3C
+.global MonteGoalFlag_data
+MonteGoalFlag_data:
+	.incbin "baserom.dol", 0x3BCA98, 0x3C
+.global HangingBridgeBoard_data
+HangingBridgeBoard_data:
+	.incbin "baserom.dol", 0x3BCAD4, 0x3C
+.global HangingBridge_data
+HangingBridge_data:
+	.incbin "baserom.dol", 0x3BCB10, 0x3C
+.global SwingBoard_data
+SwingBoard_data:
+	.incbin "baserom.dol", 0x3BCB4C, 0x3C
+.global Fluff_data
+Fluff_data:
+	.incbin "baserom.dol", 0x3BCB88, 0x3C
+.global FluffManager_data
+FluffManager_data:
+	.incbin "baserom.dol", 0x3BCBC4, 0x3C
+.global Bathtub_data
+Bathtub_data:
+	.incbin "baserom.dol", 0x3BCC00, 0x3C
+.global BathtubStand_data
+BathtubStand_data:
+	.incbin "baserom.dol", 0x3BCC3C, 0x3C
+.global BathtubStandBreaking_animation
+BathtubStandBreaking_animation:
+	.incbin "baserom.dol", 0x3BCC78, 0xC
+.global BathtubStandBreaking_data
+BathtubStandBreaking_data:
+	.incbin "baserom.dol", 0x3BCC84, 0x3C
+.global ex1_turn_lift_move_data
+ex1_turn_lift_move_data:
+	.incbin "baserom.dol", 0x3BCCC0, 0xC
+.global ex1_turn_lift_data
+ex1_turn_lift_data:
+	.incbin "baserom.dol", 0x3BCCCC, 0x3C
+.global z_turn_disk_move_data
+z_turn_disk_move_data:
+	.incbin "baserom.dol", 0x3BCD08, 0xC
+.global z_turn_disk_data
+z_turn_disk_data:
+	.incbin "baserom.dol", 0x3BCD14, 0x3C
+.global y_turn_lift_move_data
+y_turn_lift_move_data:
+	.incbin "baserom.dol", 0x3BCD50, 0xC
+.global y_turn_lift_data
+y_turn_lift_data:
+	.incbin "baserom.dol", 0x3BCD5C, 0x3C
+.global EXskyTumiki_data
+EXskyTumiki_data:
+	.incbin "baserom.dol", 0x3BCD98, 0x3C
+.global EXskyWindow_data
+EXskyWindow_data:
+	.incbin "baserom.dol", 0x3BCDD4, 0x3C
+.global EXskySenro_data
+EXskySenro_data:
+	.incbin "baserom.dol", 0x3BCE10, 0x3C
+.global Nail_data
+Nail_data:
+	.incbin "baserom.dol", 0x3BCE4C, 0x3C
+.global PachinkoNail_data
+PachinkoNail_data:
+	.incbin "baserom.dol", 0x3BCE88, 0x3C
+.global FileLoadBlockA_data
+FileLoadBlockA_data:
+	.incbin "baserom.dol", 0x3BCEC4, 0x3C
+.global FileLoadBlockB_data
+FileLoadBlockB_data:
+	.incbin "baserom.dol", 0x3BCF00, 0x3C
+.global FileLoadBlockC_data
+FileLoadBlockC_data:
+	.incbin "baserom.dol", 0x3BCF3C, 0x3C
+.global sObjDataTable
+sObjDataTable:
+	.incbin "baserom.dol", 0x3BCF78, 0x5A0
+.global __vt__14TMapObjGeneral
+__vt__14TMapObjGeneral:
+	.incbin "baserom.dol", 0x3BD518, 0x1E8
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global streetlamp_sink_data
+streetlamp_sink_data:
+	.incbin "baserom.dol", 0x3E3538, 0x8
+.global lamp_bianco_sink_data
+lamp_bianco_sink_data:
+	.incbin "baserom.dol", 0x3E3540, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global no_data_anim_info
+no_data_anim_info:
+	.incbin "baserom.dol", 0x3E6A38, 0x8
+.global normal_sound_info
+normal_sound_info:
+	.incbin "baserom.dol", 0x3E6A40, 0x8
+.global $$22770
+$$22770:
+	.incbin "baserom.dol", 0x3E6A48, 0x8
+.global billboard_dolphin_anim_info
+billboard_dolphin_anim_info:
+	.incbin "baserom.dol", 0x3E6A50, 0x8
+.global billboard_sun_anim_info
+billboard_sun_anim_info:
+	.incbin "baserom.dol", 0x3E6A58, 0x8
+.global billboard_restaurant_anim_info
+billboard_restaurant_anim_info:
+	.incbin "baserom.dol", 0x3E6A60, 0x8
+.global billboard_fish_anim_info
+billboard_fish_anim_info:
+	.incbin "baserom.dol", 0x3E6A68, 0x8
+.global $$22783
+$$22783:
+	.incbin "baserom.dol", 0x3E6A70, 0x8
+.global MonteChair_anim_info
+MonteChair_anim_info:
+	.incbin "baserom.dol", 0x3E6A78, 0x8
+.global $$22798
+$$22798:
+	.incbin "baserom.dol", 0x3E6A80, 0x8
+.global doorHotel_anim_info
+doorHotel_anim_info:
+	.incbin "baserom.dol", 0x3E6A88, 0x8
+.global $$22802
+$$22802:
+	.incbin "baserom.dol", 0x3E6A90, 0x8
+.global manhole_anim_info
+manhole_anim_info:
+	.incbin "baserom.dol", 0x3E6A98, 0x8
+.global manhole_map_collision_info
+manhole_map_collision_info:
+	.incbin "baserom.dol", 0x3E6AA0, 0x8
+.global $$22804
+$$22804:
+	.incbin "baserom.dol", 0x3E6AA8, 0x8
+.global FruitBasket_anim_info
+FruitBasket_anim_info:
+	.incbin "baserom.dol", 0x3E6AB0, 0x8
+.global $$22805
+$$22805:
+	.incbin "baserom.dol", 0x3E6AB8, 0x8
+.global FruitBasket_map_collision_data
+FruitBasket_map_collision_data:
+	.incbin "baserom.dol", 0x3E6AC0, 0x8
+.global FruitBasket_map_collision_info
+FruitBasket_map_collision_info:
+	.incbin "baserom.dol", 0x3E6AC8, 0x8
+.global BasketReverse_anim_info
+BasketReverse_anim_info:
+	.incbin "baserom.dol", 0x3E6AD0, 0x8
+.global BasketReverse_map_collision_data
+BasketReverse_map_collision_data:
+	.incbin "baserom.dol", 0x3E6AD8, 0x8
+.global BasketReverse_map_collision_info
+BasketReverse_map_collision_info:
+	.incbin "baserom.dol", 0x3E6AE0, 0x8
+.global $$22809
+$$22809:
+	.incbin "baserom.dol", 0x3E6AE8, 0x8
+.global Pile_map_collision_data
+Pile_map_collision_data:
+	.incbin "baserom.dol", 0x3E6AF0, 0x8
+.global Pile_map_collision_info
+Pile_map_collision_info:
+	.incbin "baserom.dol", 0x3E6AF8, 0x8
+.global ChipShine_anim_info
+ChipShine_anim_info:
+	.incbin "baserom.dol", 0x3E6B00, 0x8
+.global KoopaJrSignM_anim_info
+KoopaJrSignM_anim_info:
+	.incbin "baserom.dol", 0x3E6B08, 0x8
+.global SignCircle_anim_info
+SignCircle_anim_info:
+	.incbin "baserom.dol", 0x3E6B10, 0x8
+.global SignCross_anim_info
+SignCross_anim_info:
+	.incbin "baserom.dol", 0x3E6B18, 0x8
+.global SignTriangle_anim_info
+SignTriangle_anim_info:
+	.incbin "baserom.dol", 0x3E6B20, 0x8
+.global ObjSwitch_map_collision_data
+ObjSwitch_map_collision_data:
+	.incbin "baserom.dol", 0x3E6B28, 0x8
+.global ObjSwitch_map_collision_info
+ObjSwitch_map_collision_info:
+	.incbin "baserom.dol", 0x3E6B30, 0x8
+.global RedCoinSwitch_map_collision_data
+RedCoinSwitch_map_collision_data:
+	.incbin "baserom.dol", 0x3E6B38, 0x8
+.global RedCoinSwitch_map_collision_info
+RedCoinSwitch_map_collision_info:
+	.incbin "baserom.dol", 0x3E6B40, 0x8
+.global $$22832
+$$22832:
+	.incbin "baserom.dol", 0x3E6B48, 0x8
+.global coin_sound_info
+coin_sound_info:
+	.incbin "baserom.dol", 0x3E6B50, 0x8
+.global $$22844
+$$22844:
+	.incbin "baserom.dol", 0x3E6B58, 0x8
+.global $$22848
+$$22848:
+	.incbin "baserom.dol", 0x3E6B60, 0x8
+.global mario_cap_anim_info
+mario_cap_anim_info:
+	.incbin "baserom.dol", 0x3E6B68, 0x8
+.global coin_anim_info
+coin_anim_info:
+	.incbin "baserom.dol", 0x3E6B70, 0x8
+.global eggYoshi_anim_info
+eggYoshi_anim_info:
+	.incbin "baserom.dol", 0x3E6B78, 0x8
+.global NozzleBox_anim_info
+NozzleBox_anim_info:
+	.incbin "baserom.dol", 0x3E6B80, 0x8
+.global mushroom1up_anim_info
+mushroom1up_anim_info:
+	.incbin "baserom.dol", 0x3E6B88, 0x8
+.global jumpbase_anim_info
+jumpbase_anim_info:
+	.incbin "baserom.dol", 0x3E6B90, 0x8
+.global jumpbase_map_collision_data
+jumpbase_map_collision_data:
+	.incbin "baserom.dol", 0x3E6B98, 0x8
+.global jumpbase_map_collision_info
+jumpbase_map_collision_info:
+	.incbin "baserom.dol", 0x3E6BA0, 0x8
+.global fruit_sound_info
+fruit_sound_info:
+	.incbin "baserom.dol", 0x3E6BA8, 0x8
+.global CoverPine_anim_info
+CoverPine_anim_info:
+	.incbin "baserom.dol", 0x3E6BB0, 0x8
+.global durian_sound_info
+durian_sound_info:
+	.incbin "baserom.dol", 0x3E6BB8, 0x8
+.global fence3x3_anim_info
+fence3x3_anim_info:
+	.incbin "baserom.dol", 0x3E6BC0, 0x8
+.global fence_revolve_outer_anim_info
+fence_revolve_outer_anim_info:
+	.incbin "baserom.dol", 0x3E6BC8, 0x8
+.global FenceWaterV_map_collision_data
+FenceWaterV_map_collision_data:
+	.incbin "baserom.dol", 0x3E6BD0, 0x8
+.global FenceWaterV_map_collision_info
+FenceWaterV_map_collision_info:
+	.incbin "baserom.dol", 0x3E6BD8, 0x8
+.global FenceWaterH_map_collision_info
+FenceWaterH_map_collision_info:
+	.incbin "baserom.dol", 0x3E6BE0, 0x8
+.global RailFence_anim_info
+RailFence_anim_info:
+	.incbin "baserom.dol", 0x3E6BE8, 0x8
+.global RailFence_map_collision_info
+RailFence_map_collision_info:
+	.incbin "baserom.dol", 0x3E6BF0, 0x8
+.global BambooRailFence_anim_info
+BambooRailFence_anim_info:
+	.incbin "baserom.dol", 0x3E6BF8, 0x8
+.global wood_barrel_anim_info
+wood_barrel_anim_info:
+	.incbin "baserom.dol", 0x3E6C00, 0x8
+.global $$22906
+$$22906:
+	.incbin "baserom.dol", 0x3E6C08, 0x8
+.global wood_barrel_map_collision_info
+wood_barrel_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C10, 0x8
+.global wood_barrel_sound_info
+wood_barrel_sound_info:
+	.incbin "baserom.dol", 0x3E6C18, 0x8
+.global wood_barrel_sink_data
+wood_barrel_sink_data:
+	.incbin "baserom.dol", 0x3E6C20, 0x8
+.global barrel_float_map_collision_data
+barrel_float_map_collision_data:
+	.incbin "baserom.dol", 0x3E6C28, 0x8
+.global barrel_float_map_collision_info
+barrel_float_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C30, 0x8
+.global drum_can_anim_info
+drum_can_anim_info:
+	.incbin "baserom.dol", 0x3E6C38, 0x8
+.global drum_can_map_collision_info
+drum_can_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C40, 0x8
+.global barrel_oil_anim_info
+barrel_oil_anim_info:
+	.incbin "baserom.dol", 0x3E6C48, 0x8
+.global warp_block_map_collision_data
+warp_block_map_collision_data:
+	.incbin "baserom.dol", 0x3E6C50, 0x8
+.global warp_block_map_collision_info
+warp_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C58, 0x8
+.global move_block_map_collision_data
+move_block_map_collision_data:
+	.incbin "baserom.dol", 0x3E6C60, 0x8
+.global move_block_map_collision_info
+move_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C68, 0x8
+.global move_block_center_map_collision_data
+move_block_center_map_collision_data:
+	.incbin "baserom.dol", 0x3E6C70, 0x8
+.global move_block_center_map_collision_info
+move_block_center_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C78, 0x8
+.global breakable_block_anim_info
+breakable_block_anim_info:
+	.incbin "baserom.dol", 0x3E6C80, 0x8
+.global breakable_block_map_collision_data
+breakable_block_map_collision_data:
+	.incbin "baserom.dol", 0x3E6C88, 0x8
+.global breakable_block_map_collision_info
+breakable_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E6C90, 0x8
+.global water_roll_block_anim_info
+water_roll_block_anim_info:
+	.incbin "baserom.dol", 0x3E6C98, 0x8
+.global water_roll_block_map_collision_data
+water_roll_block_map_collision_data:
+	.incbin "baserom.dol", 0x3E6CA0, 0x8
+.global water_roll_block_map_collision_info
+water_roll_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E6CA8, 0x8
+.global sand_block_anim_info
+sand_block_anim_info:
+	.incbin "baserom.dol", 0x3E6CB0, 0x8
+.global sand_block_map_collision_info
+sand_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E6CB8, 0x8
+.global MoveCoin_anim_info
+MoveCoin_anim_info:
+	.incbin "baserom.dol", 0x3E6CC0, 0x8
+.global cluster_block_anim_info
+cluster_block_anim_info:
+	.incbin "baserom.dol", 0x3E6CC8, 0x8
+.global NormalBlock_map_collision_data
+NormalBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6CD0, 0x8
+.global NormalBlock_map_collision_info
+NormalBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6CD8, 0x8
+.global IceBlock_map_collision_data
+IceBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6CE0, 0x8
+.global IceBlock_map_collision_info
+IceBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6CE8, 0x8
+.global BrickBlock_anim_info
+BrickBlock_anim_info:
+	.incbin "baserom.dol", 0x3E6CF0, 0x8
+.global BrickBlock_map_collision_data
+BrickBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6CF8, 0x8
+.global BrickBlock_map_collision_info
+BrickBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D00, 0x8
+.global WaterMelonBlock_anim_info
+WaterMelonBlock_anim_info:
+	.incbin "baserom.dol", 0x3E6D08, 0x8
+.global WaterMelonBlock_map_collision_data
+WaterMelonBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D10, 0x8
+.global WaterMelonBlock_map_collision_info
+WaterMelonBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D18, 0x8
+.global TelesaBlock_map_collision_data
+TelesaBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D20, 0x8
+.global TelesaBlock_map_collision_info
+TelesaBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D28, 0x8
+.global JuiceBlock_map_collision_data
+JuiceBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D30, 0x8
+.global JuiceBlock_map_collision_info
+JuiceBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D38, 0x8
+.global SuperHipDropBlock_anim_info
+SuperHipDropBlock_anim_info:
+	.incbin "baserom.dol", 0x3E6D40, 0x8
+.global SuperHipDropBlock_map_collision_data
+SuperHipDropBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D48, 0x8
+.global SuperHipDropBlock_map_collision_info
+SuperHipDropBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D50, 0x8
+.global PalmNormal_anim_info
+PalmNormal_anim_info:
+	.incbin "baserom.dol", 0x3E6D58, 0x8
+.global PalmNormalTree_map_collision_data
+PalmNormalTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D60, 0x8
+.global PalmNormalTree_map_collision_info
+PalmNormalTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D68, 0x8
+.global PalmOugiTree_map_collision_data
+PalmOugiTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D70, 0x8
+.global PalmOugiTree_map_collision_info
+PalmOugiTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D78, 0x8
+.global PalmSagoTree_map_collision_data
+PalmSagoTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D80, 0x8
+.global PalmSagoTree_map_collision_info
+PalmSagoTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D88, 0x8
+.global PalmNatumeTree_map_collision_data
+PalmNatumeTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6D90, 0x8
+.global PalmNatumeTree_map_collision_info
+PalmNatumeTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6D98, 0x8
+.global PalmLeaf_anim_info
+PalmLeaf_anim_info:
+	.incbin "baserom.dol", 0x3E6DA0, 0x8
+.global PalmLeafTree_map_collision_data
+PalmLeafTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6DA8, 0x8
+.global PalmLeafTree_map_collision_info
+PalmLeafTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6DB0, 0x8
+.global BananaTree_anim_info
+BananaTree_anim_info:
+	.incbin "baserom.dol", 0x3E6DB8, 0x8
+.global BananaTree_map_collision_data
+BananaTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6DC0, 0x8
+.global BananaTree_map_collision_info
+BananaTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6DC8, 0x8
+.global FruitTree_map_collision_data
+FruitTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E6DD0, 0x8
+.global FruitTree_map_collision_info
+FruitTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E6DD8, 0x8
+.global $$22981
+$$22981:
+	.incbin "baserom.dol", 0x3E6DE0, 0x8
+.global flowerOrange_anim_info
+flowerOrange_anim_info:
+	.incbin "baserom.dol", 0x3E6DE8, 0x8
+.global flowerPink_anim_info
+flowerPink_anim_info:
+	.incbin "baserom.dol", 0x3E6DF0, 0x8
+.global flowerPurple_anim_info
+flowerPurple_anim_info:
+	.incbin "baserom.dol", 0x3E6DF8, 0x8
+.global flowerRed_anim_info
+flowerRed_anim_info:
+	.incbin "baserom.dol", 0x3E6E00, 0x8
+.global flowerYellow_anim_info
+flowerYellow_anim_info:
+	.incbin "baserom.dol", 0x3E6E08, 0x8
+.global flowerSunflower_anim_info
+flowerSunflower_anim_info:
+	.incbin "baserom.dol", 0x3E6E10, 0x8
+.global pole_sound_info
+pole_sound_info:
+	.incbin "baserom.dol", 0x3E6E18, 0x8
+.global dptlight_anim_info
+dptlight_anim_info:
+	.incbin "baserom.dol", 0x3E6E20, 0x8
+.global streetlamp_map_collision_info
+streetlamp_map_collision_info:
+	.incbin "baserom.dol", 0x3E6E28, 0x8
+.global football_anim_info
+football_anim_info:
+	.incbin "baserom.dol", 0x3E6E30, 0x8
+.global football_sound_info
+football_sound_info:
+	.incbin "baserom.dol", 0x3E6E38, 0x8
+.global football_goal_anim_info
+football_goal_anim_info:
+	.incbin "baserom.dol", 0x3E6E40, 0x8
+.global football_goal_map_collision_info
+football_goal_map_collision_info:
+	.incbin "baserom.dol", 0x3E6E48, 0x8
+.global Watermelon_anim_info
+Watermelon_anim_info:
+	.incbin "baserom.dol", 0x3E6E50, 0x8
+.global watermelon_sound_info
+watermelon_sound_info:
+	.incbin "baserom.dol", 0x3E6E58, 0x8
+.global WatermelonStatic_anim_info
+WatermelonStatic_anim_info:
+	.incbin "baserom.dol", 0x3E6E60, 0x8
+.global cloud_anim_info
+cloud_anim_info:
+	.incbin "baserom.dol", 0x3E6E68, 0x8
+.global $$23022
+$$23022:
+	.incbin "baserom.dol", 0x3E6E70, 0x8
+.global cloud_map_collision_data
+cloud_map_collision_data:
+	.incbin "baserom.dol", 0x3E6E78, 0x8
+.global cloud_map_collision_info
+cloud_map_collision_info:
+	.incbin "baserom.dol", 0x3E6E80, 0x8
+.global normallift_anim_info
+normallift_anim_info:
+	.incbin "baserom.dol", 0x3E6E88, 0x8
+.global normallift_map_collision_data
+normallift_map_collision_data:
+	.incbin "baserom.dol", 0x3E6E90, 0x8
+.global normallift_map_collision_info
+normallift_map_collision_info:
+	.incbin "baserom.dol", 0x3E6E98, 0x8
+.global exrollcube_anim_info
+exrollcube_anim_info:
+	.incbin "baserom.dol", 0x3E6EA0, 0x8
+.global exrollcube_map_collision_data
+exrollcube_map_collision_data:
+	.incbin "baserom.dol", 0x3E6EA8, 0x8
+.global exrollcube_map_collision_info
+exrollcube_map_collision_info:
+	.incbin "baserom.dol", 0x3E6EB0, 0x8
+.global exkickboard_anim_info
+exkickboard_anim_info:
+	.incbin "baserom.dol", 0x3E6EB8, 0x8
+.global exkickboard_map_collision_data
+exkickboard_map_collision_data:
+	.incbin "baserom.dol", 0x3E6EC0, 0x8
+.global exkickboard_map_collision_info
+exkickboard_map_collision_info:
+	.incbin "baserom.dol", 0x3E6EC8, 0x8
+.global railblockr_anim_info
+railblockr_anim_info:
+	.incbin "baserom.dol", 0x3E6ED0, 0x8
+.global railblocky_anim_info
+railblocky_anim_info:
+	.incbin "baserom.dol", 0x3E6ED8, 0x8
+.global railblockb_anim_info
+railblockb_anim_info:
+	.incbin "baserom.dol", 0x3E6EE0, 0x8
+.global railblock_map_collision_data
+railblock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6EE8, 0x8
+.global railblock_map_collision_info
+railblock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6EF0, 0x8
+.global umaibou_anim_info
+umaibou_anim_info:
+	.incbin "baserom.dol", 0x3E6EF8, 0x8
+.global $$23042
+$$23042:
+	.incbin "baserom.dol", 0x3E6F00, 0x8
+.global umaibou_map_collision_data
+umaibou_map_collision_data:
+	.incbin "baserom.dol", 0x3E6F08, 0x8
+.global umaibou_map_collision_info
+umaibou_map_collision_info:
+	.incbin "baserom.dol", 0x3E6F10, 0x8
+.global kamaboko_anim_info
+kamaboko_anim_info:
+	.incbin "baserom.dol", 0x3E6F18, 0x8
+.global kamaboko_map_collision_data
+kamaboko_map_collision_data:
+	.incbin "baserom.dol", 0x3E6F20, 0x8
+.global kamaboko_map_collision_info
+kamaboko_map_collision_info:
+	.incbin "baserom.dol", 0x3E6F28, 0x8
+.global getag_anim_info
+getag_anim_info:
+	.incbin "baserom.dol", 0x3E6F30, 0x8
+.global getao_anim_info
+getao_anim_info:
+	.incbin "baserom.dol", 0x3E6F38, 0x8
+.global $$23047
+$$23047:
+	.incbin "baserom.dol", 0x3E6F40, 0x8
+.global geta_map_collision_data
+geta_map_collision_data:
+	.incbin "baserom.dol", 0x3E6F48, 0x8
+.global geta_map_collision_info
+geta_map_collision_info:
+	.incbin "baserom.dol", 0x3E6F50, 0x8
+.global $$23048
+$$23048:
+	.incbin "baserom.dol", 0x3E6F58, 0x8
+.global $$23049
+$$23049:
+	.incbin "baserom.dol", 0x3E6F60, 0x8
+.global uirou_anim_info
+uirou_anim_info:
+	.incbin "baserom.dol", 0x3E6F68, 0x8
+.global $$23051
+$$23051:
+	.incbin "baserom.dol", 0x3E6F70, 0x8
+.global uirou_map_collision_data
+uirou_map_collision_data:
+	.incbin "baserom.dol", 0x3E6F78, 0x8
+.global uirou_map_collision_info
+uirou_map_collision_info:
+	.incbin "baserom.dol", 0x3E6F80, 0x8
+.global hikidashi_anim_info
+hikidashi_anim_info:
+	.incbin "baserom.dol", 0x3E6F88, 0x8
+.global hikidashi_map_collision_data
+hikidashi_map_collision_data:
+	.incbin "baserom.dol", 0x3E6F90, 0x8
+.global hikidashi_map_collision_info
+hikidashi_map_collision_info:
+	.incbin "baserom.dol", 0x3E6F98, 0x8
+.global castella_anim_info
+castella_anim_info:
+	.incbin "baserom.dol", 0x3E6FA0, 0x8
+.global castella_map_collision_data
+castella_map_collision_data:
+	.incbin "baserom.dol", 0x3E6FA8, 0x8
+.global castella_map_collision_info
+castella_map_collision_info:
+	.incbin "baserom.dol", 0x3E6FB0, 0x8
+.global yoshiblock_anim_info
+yoshiblock_anim_info:
+	.incbin "baserom.dol", 0x3E6FB8, 0x8
+.global yoshiblock_map_collision_data
+yoshiblock_map_collision_data:
+	.incbin "baserom.dol", 0x3E6FC0, 0x8
+.global yoshiblock_map_collision_info
+yoshiblock_map_collision_info:
+	.incbin "baserom.dol", 0x3E6FC8, 0x8
+.global WoodBlockTriangle_map_collision_data
+WoodBlockTriangle_map_collision_data:
+	.incbin "baserom.dol", 0x3E6FD0, 0x8
+.global WoodBlockTriangle_map_collision_info
+WoodBlockTriangle_map_collision_info:
+	.incbin "baserom.dol", 0x3E6FD8, 0x8
+.global WoodBlockPyramid_map_collision_data
+WoodBlockPyramid_map_collision_data:
+	.incbin "baserom.dol", 0x3E6FE0, 0x8
+.global WoodBlockPyramid_map_collision_info
+WoodBlockPyramid_map_collision_info:
+	.incbin "baserom.dol", 0x3E6FE8, 0x8
+.global WoodBlockLong_map_collision_data
+WoodBlockLong_map_collision_data:
+	.incbin "baserom.dol", 0x3E6FF0, 0x8
+.global WoodBlockLong_map_collision_info
+WoodBlockLong_map_collision_info:
+	.incbin "baserom.dol", 0x3E6FF8, 0x8
+.global WoodBlockLarge_map_collision_data
+WoodBlockLarge_map_collision_data:
+	.incbin "baserom.dol", 0x3E7000, 0x8
+.global WoodBlockLarge_map_collision_info
+WoodBlockLarge_map_collision_info:
+	.incbin "baserom.dol", 0x3E7008, 0x8
+.global WoodBlockCone_map_collision_data
+WoodBlockCone_map_collision_data:
+	.incbin "baserom.dol", 0x3E7010, 0x8
+.global WoodBlockCone_map_collision_info
+WoodBlockCone_map_collision_info:
+	.incbin "baserom.dol", 0x3E7018, 0x8
+.global WoodBlockL_map_collision_data
+WoodBlockL_map_collision_data:
+	.incbin "baserom.dol", 0x3E7020, 0x8
+.global WoodBlockL_map_collision_info
+WoodBlockL_map_collision_info:
+	.incbin "baserom.dol", 0x3E7028, 0x8
+.global WoodBlockBridge_map_collision_data
+WoodBlockBridge_map_collision_data:
+	.incbin "baserom.dol", 0x3E7030, 0x8
+.global WoodBlockBridge_map_collision_info
+WoodBlockBridge_map_collision_info:
+	.incbin "baserom.dol", 0x3E7038, 0x8
+.global WoodBlockCube_map_collision_data
+WoodBlockCube_map_collision_data:
+	.incbin "baserom.dol", 0x3E7040, 0x8
+.global WoodBlockCube_map_collision_info
+WoodBlockCube_map_collision_info:
+	.incbin "baserom.dol", 0x3E7048, 0x8
+.global normalvariant0_map_collision_data
+normalvariant0_map_collision_data:
+	.incbin "baserom.dol", 0x3E7050, 0x8
+.global normalvariant0_map_collision_info
+normalvariant0_map_collision_info:
+	.incbin "baserom.dol", 0x3E7058, 0x8
+.global normalvariant1_map_collision_data
+normalvariant1_map_collision_data:
+	.incbin "baserom.dol", 0x3E7060, 0x8
+.global normalvariant1_map_collision_info
+normalvariant1_map_collision_info:
+	.incbin "baserom.dol", 0x3E7068, 0x8
+.global normalvariant2_map_collision_data
+normalvariant2_map_collision_data:
+	.incbin "baserom.dol", 0x3E7070, 0x8
+.global normalvariant2_map_collision_info
+normalvariant2_map_collision_info:
+	.incbin "baserom.dol", 0x3E7078, 0x8
+.global normalvariant3_map_collision_data
+normalvariant3_map_collision_data:
+	.incbin "baserom.dol", 0x3E7080, 0x8
+.global normalvariant3_map_collision_info
+normalvariant3_map_collision_info:
+	.incbin "baserom.dol", 0x3E7088, 0x8
+.global normalvariant4_map_collision_data
+normalvariant4_map_collision_data:
+	.incbin "baserom.dol", 0x3E7090, 0x8
+.global normalvariant4_map_collision_info
+normalvariant4_map_collision_info:
+	.incbin "baserom.dol", 0x3E7098, 0x8
+.global railvariant0_map_collision_data
+railvariant0_map_collision_data:
+	.incbin "baserom.dol", 0x3E70A0, 0x8
+.global railvariant0_map_collision_info
+railvariant0_map_collision_info:
+	.incbin "baserom.dol", 0x3E70A8, 0x8
+.global railvariant1_map_collision_data
+railvariant1_map_collision_data:
+	.incbin "baserom.dol", 0x3E70B0, 0x8
+.global railvariant1_map_collision_info
+railvariant1_map_collision_info:
+	.incbin "baserom.dol", 0x3E70B8, 0x8
+.global railvariant2_map_collision_data
+railvariant2_map_collision_data:
+	.incbin "baserom.dol", 0x3E70C0, 0x8
+.global railvariant2_map_collision_info
+railvariant2_map_collision_info:
+	.incbin "baserom.dol", 0x3E70C8, 0x8
+.global railvariant3_map_collision_data
+railvariant3_map_collision_data:
+	.incbin "baserom.dol", 0x3E70D0, 0x8
+.global railvariant3_map_collision_info
+railvariant3_map_collision_info:
+	.incbin "baserom.dol", 0x3E70D8, 0x8
+.global railvariant4_map_collision_data
+railvariant4_map_collision_data:
+	.incbin "baserom.dol", 0x3E70E0, 0x8
+.global railvariant4_map_collision_info
+railvariant4_map_collision_info:
+	.incbin "baserom.dol", 0x3E70E8, 0x8
+.global rollvariant0_map_collision_data
+rollvariant0_map_collision_data:
+	.incbin "baserom.dol", 0x3E70F0, 0x8
+.global rollvariant0_map_collision_info
+rollvariant0_map_collision_info:
+	.incbin "baserom.dol", 0x3E70F8, 0x8
+.global rollvariant1_map_collision_data
+rollvariant1_map_collision_data:
+	.incbin "baserom.dol", 0x3E7100, 0x8
+.global rollvariant1_map_collision_info
+rollvariant1_map_collision_info:
+	.incbin "baserom.dol", 0x3E7108, 0x8
+.global rollvariant2_map_collision_data
+rollvariant2_map_collision_data:
+	.incbin "baserom.dol", 0x3E7110, 0x8
+.global rollvariant2_map_collision_info
+rollvariant2_map_collision_info:
+	.incbin "baserom.dol", 0x3E7118, 0x8
+.global rollvariant3_map_collision_data
+rollvariant3_map_collision_data:
+	.incbin "baserom.dol", 0x3E7120, 0x8
+.global rollvariant3_map_collision_info
+rollvariant3_map_collision_info:
+	.incbin "baserom.dol", 0x3E7128, 0x8
+.global rollvariant4_map_collision_data
+rollvariant4_map_collision_data:
+	.incbin "baserom.dol", 0x3E7130, 0x8
+.global rollvariant4_map_collision_info
+rollvariant4_map_collision_info:
+	.incbin "baserom.dol", 0x3E7138, 0x8
+.global lamptrapspike_anim_info
+lamptrapspike_anim_info:
+	.incbin "baserom.dol", 0x3E7140, 0x8
+.global lamptrapiron_anim_info
+lamptrapiron_anim_info:
+	.incbin "baserom.dol", 0x3E7148, 0x8
+.global lamptrap_map_collision_data
+lamptrap_map_collision_data:
+	.incbin "baserom.dol", 0x3E7150, 0x8
+.global lamptrap_map_collision_info
+lamptrap_map_collision_info:
+	.incbin "baserom.dol", 0x3E7158, 0x8
+.global airplane_map_collision_data
+airplane_map_collision_data:
+	.incbin "baserom.dol", 0x3E7160, 0x8
+.global airplane_map_collision_info
+airplane_map_collision_info:
+	.incbin "baserom.dol", 0x3E7168, 0x8
+.global WoodBox_anim_info
+WoodBox_anim_info:
+	.incbin "baserom.dol", 0x3E7170, 0x8
+.global $$23090
+$$23090:
+	.incbin "baserom.dol", 0x3E7178, 0x8
+.global WoodBoxNozzle_map_collision_data
+WoodBoxNozzle_map_collision_data:
+	.incbin "baserom.dol", 0x3E7180, 0x8
+.global WoodBoxNozzle_map_collision_info
+WoodBoxNozzle_map_collision_info:
+	.incbin "baserom.dol", 0x3E7188, 0x8
+.global $$23091
+$$23091:
+	.incbin "baserom.dol", 0x3E7190, 0x8
+.global ice_car_anim_info
+ice_car_anim_info:
+	.incbin "baserom.dol", 0x3E7198, 0x8
+.global $$23095
+$$23095:
+	.incbin "baserom.dol", 0x3E71A0, 0x8
+.global ice_car_map_collision_data
+ice_car_map_collision_data:
+	.incbin "baserom.dol", 0x3E71A8, 0x8
+.global ice_car_map_collision_info
+ice_car_map_collision_info:
+	.incbin "baserom.dol", 0x3E71B0, 0x8
+.global $$23096
+$$23096:
+	.incbin "baserom.dol", 0x3E71B8, 0x8
+.global move_ice_car_map_collision_data
+move_ice_car_map_collision_data:
+	.incbin "baserom.dol", 0x3E71C0, 0x8
+.global move_ice_car_map_collision_info
+move_ice_car_map_collision_info:
+	.incbin "baserom.dol", 0x3E71C8, 0x8
+.global $$23098
+$$23098:
+	.incbin "baserom.dol", 0x3E71D0, 0x8
+.global AirportBuoy_map_collision_data
+AirportBuoy_map_collision_data:
+	.incbin "baserom.dol", 0x3E71D8, 0x8
+.global AirportBuoy_map_collision_info
+AirportBuoy_map_collision_info:
+	.incbin "baserom.dol", 0x3E71E0, 0x8
+.global $$23100
+$$23100:
+	.incbin "baserom.dol", 0x3E71E8, 0x8
+.global dptKing_map_collision_info
+dptKing_map_collision_info:
+	.incbin "baserom.dol", 0x3E71F0, 0x8
+.global KoopaJrSubmarine_map_collision_data
+KoopaJrSubmarine_map_collision_data:
+	.incbin "baserom.dol", 0x3E71F8, 0x8
+.global KoopaJrSubmarine_map_collision_info
+KoopaJrSubmarine_map_collision_info:
+	.incbin "baserom.dol", 0x3E7200, 0x8
+.global monumentshine_anim_info
+monumentshine_anim_info:
+	.incbin "baserom.dol", 0x3E7208, 0x8
+.global belldolpic_anim_info
+belldolpic_anim_info:
+	.incbin "baserom.dol", 0x3E7210, 0x8
+.global DptWeathercock_anim_info
+DptWeathercock_anim_info:
+	.incbin "baserom.dol", 0x3E7218, 0x8
+.global DptMonteFence_map_collision_data
+DptMonteFence_map_collision_data:
+	.incbin "baserom.dol", 0x3E7220, 0x8
+.global DptMonteFence_map_collision_info
+DptMonteFence_map_collision_info:
+	.incbin "baserom.dol", 0x3E7228, 0x8
+.global DptCoronaFence_map_collision_data
+DptCoronaFence_map_collision_data:
+	.incbin "baserom.dol", 0x3E7230, 0x8
+.global DptCoronaFence_map_collision_info
+DptCoronaFence_map_collision_info:
+	.incbin "baserom.dol", 0x3E7238, 0x8
+.global MareGate_anim_info
+MareGate_anim_info:
+	.incbin "baserom.dol", 0x3E7240, 0x8
+.global NozzleDoor_anim_info
+NozzleDoor_anim_info:
+	.incbin "baserom.dol", 0x3E7248, 0x8
+.global NozzleDoor_map_collision_data
+NozzleDoor_map_collision_data:
+	.incbin "baserom.dol", 0x3E7250, 0x8
+.global NozzleDoor_map_collision_info
+NozzleDoor_map_collision_info:
+	.incbin "baserom.dol", 0x3E7258, 0x8
+.global DokanGate_anim_info
+DokanGate_anim_info:
+	.incbin "baserom.dol", 0x3E7260, 0x8
+.global $$23121
+$$23121:
+	.incbin "baserom.dol", 0x3E7268, 0x8
+.global crane_map_collision_data
+crane_map_collision_data:
+	.incbin "baserom.dol", 0x3E7270, 0x8
+.global crane_map_collision_info
+crane_map_collision_info:
+	.incbin "baserom.dol", 0x3E7278, 0x8
+.global crane90Scene2_map_collision_data
+crane90Scene2_map_collision_data:
+	.incbin "baserom.dol", 0x3E7280, 0x8
+.global crane90Scene2_map_collision_info
+crane90Scene2_map_collision_info:
+	.incbin "baserom.dol", 0x3E7288, 0x8
+.global crane180Scene1_map_collision_data
+crane180Scene1_map_collision_data:
+	.incbin "baserom.dol", 0x3E7290, 0x8
+.global crane180Scene1_map_collision_info
+crane180Scene1_map_collision_info:
+	.incbin "baserom.dol", 0x3E7298, 0x8
+.global crane_updown_map_collision_data
+crane_updown_map_collision_data:
+	.incbin "baserom.dol", 0x3E72A0, 0x8
+.global crane_updown_map_collision_info
+crane_updown_map_collision_info:
+	.incbin "baserom.dol", 0x3E72A8, 0x8
+.global crane_cargo_map_collision_data
+crane_cargo_map_collision_data:
+	.incbin "baserom.dol", 0x3E72B0, 0x8
+.global crane_cargo_map_collision_info
+crane_cargo_map_collision_info:
+	.incbin "baserom.dol", 0x3E72B8, 0x8
+.global $$23126
+$$23126:
+	.incbin "baserom.dol", 0x3E72C0, 0x8
+.global tank_map_collision_data
+tank_map_collision_data:
+	.incbin "baserom.dol", 0x3E72C8, 0x8
+.global tank_map_collision_info
+tank_map_collision_info:
+	.incbin "baserom.dol", 0x3E72D0, 0x8
+.global container_map_collision_data
+container_map_collision_data:
+	.incbin "baserom.dol", 0x3E72D8, 0x8
+.global container_map_collision_info
+container_map_collision_info:
+	.incbin "baserom.dol", 0x3E72E0, 0x8
+.global submarine_map_collision_info
+submarine_map_collision_info:
+	.incbin "baserom.dol", 0x3E72E8, 0x8
+.global riccoShip_map_collision_data
+riccoShip_map_collision_data:
+	.incbin "baserom.dol", 0x3E72F0, 0x8
+.global riccoShip_map_collision_info
+riccoShip_map_collision_info:
+	.incbin "baserom.dol", 0x3E72F8, 0x8
+.global riccoLog_map_collision_data
+riccoLog_map_collision_data:
+	.incbin "baserom.dol", 0x3E7300, 0x8
+.global riccoLog_map_collision_info
+riccoLog_map_collision_info:
+	.incbin "baserom.dol", 0x3E7308, 0x8
+.global gesoSurfboard_anim_info
+gesoSurfboard_anim_info:
+	.incbin "baserom.dol", 0x3E7310, 0x8
+.global riccoShipLog_map_collision_data
+riccoShipLog_map_collision_data:
+	.incbin "baserom.dol", 0x3E7318, 0x8
+.global riccoShipLog_map_collision_info
+riccoShipLog_map_collision_info:
+	.incbin "baserom.dol", 0x3E7320, 0x8
+.global riccoShipDol_map_collision_data
+riccoShipDol_map_collision_data:
+	.incbin "baserom.dol", 0x3E7328, 0x8
+.global riccoShipDol_map_collision_info
+riccoShipDol_map_collision_info:
+	.incbin "baserom.dol", 0x3E7330, 0x8
+.global riccoYachtL_map_collision_data
+riccoYachtL_map_collision_data:
+	.incbin "baserom.dol", 0x3E7338, 0x8
+.global riccoYachtL_map_collision_info
+riccoYachtL_map_collision_info:
+	.incbin "baserom.dol", 0x3E7340, 0x8
+.global riccoYachtS_map_collision_data
+riccoYachtS_map_collision_data:
+	.incbin "baserom.dol", 0x3E7348, 0x8
+.global riccoYachtS_map_collision_info
+riccoYachtS_map_collision_info:
+	.incbin "baserom.dol", 0x3E7350, 0x8
+.global riccoBoatL_map_collision_data
+riccoBoatL_map_collision_data:
+	.incbin "baserom.dol", 0x3E7358, 0x8
+.global riccoBoatL_map_collision_info
+riccoBoatL_map_collision_info:
+	.incbin "baserom.dol", 0x3E7360, 0x8
+.global riccoBoatS_map_collision_data
+riccoBoatS_map_collision_data:
+	.incbin "baserom.dol", 0x3E7368, 0x8
+.global riccoBoatS_map_collision_info
+riccoBoatS_map_collision_info:
+	.incbin "baserom.dol", 0x3E7370, 0x8
+.global riccoBasket_map_collision_data
+riccoBasket_map_collision_data:
+	.incbin "baserom.dol", 0x3E7378, 0x8
+.global riccoBasket_map_collision_info
+riccoBasket_map_collision_info:
+	.incbin "baserom.dol", 0x3E7380, 0x8
+.global riccoGangway_map_collision_data
+riccoGangway_map_collision_data:
+	.incbin "baserom.dol", 0x3E7388, 0x8
+.global riccoGangway_map_collision_info
+riccoGangway_map_collision_info:
+	.incbin "baserom.dol", 0x3E7390, 0x8
+.global riccoShipFish_map_collision_data
+riccoShipFish_map_collision_data:
+	.incbin "baserom.dol", 0x3E7398, 0x8
+.global riccoShipFish_map_collision_info
+riccoShipFish_map_collision_info:
+	.incbin "baserom.dol", 0x3E73A0, 0x8
+.global riccoShipGeso_map_collision_data
+riccoShipGeso_map_collision_data:
+	.incbin "baserom.dol", 0x3E73A8, 0x8
+.global riccoShipGeso_map_collision_info
+riccoShipGeso_map_collision_info:
+	.incbin "baserom.dol", 0x3E73B0, 0x8
+.global riccoSwitch_map_collision_data
+riccoSwitch_map_collision_data:
+	.incbin "baserom.dol", 0x3E73B8, 0x8
+.global riccoSwitch_map_collision_info
+riccoSwitch_map_collision_info:
+	.incbin "baserom.dol", 0x3E73C0, 0x8
+.global riccoFenceMaze_map_collision_data
+riccoFenceMaze_map_collision_data:
+	.incbin "baserom.dol", 0x3E73C8, 0x8
+.global riccoFenceMaze_map_collision_info
+riccoFenceMaze_map_collision_info:
+	.incbin "baserom.dol", 0x3E73D0, 0x8
+.global riccoStand_map_collision_data
+riccoStand_map_collision_data:
+	.incbin "baserom.dol", 0x3E73D8, 0x8
+.global riccoStand_map_collision_info
+riccoStand_map_collision_info:
+	.incbin "baserom.dol", 0x3E73E0, 0x8
+.global riccoGrille_map_collision_data
+riccoGrille_map_collision_data:
+	.incbin "baserom.dol", 0x3E73E8, 0x8
+.global riccoGrille_map_collision_info
+riccoGrille_map_collision_info:
+	.incbin "baserom.dol", 0x3E73F0, 0x8
+.global riccoArrow_map_collision_data
+riccoArrow_map_collision_data:
+	.incbin "baserom.dol", 0x3E73F8, 0x8
+.global riccoArrow_map_collision_info
+riccoArrow_map_collision_info:
+	.incbin "baserom.dol", 0x3E7400, 0x8
+.global riccoStreetStall_map_collision_data
+riccoStreetStall_map_collision_data:
+	.incbin "baserom.dol", 0x3E7408, 0x8
+.global riccoStreetStall_map_collision_info
+riccoStreetStall_map_collision_info:
+	.incbin "baserom.dol", 0x3E7410, 0x8
+.global riccoHericopter_map_collision_data
+riccoHericopter_map_collision_data:
+	.incbin "baserom.dol", 0x3E7418, 0x8
+.global riccoHericopter_map_collision_info
+riccoHericopter_map_collision_info:
+	.incbin "baserom.dol", 0x3E7420, 0x8
+.global windmill_anim_info
+windmill_anim_info:
+	.incbin "baserom.dol", 0x3E7428, 0x8
+.global windmill_map_collision_data
+windmill_map_collision_data:
+	.incbin "baserom.dol", 0x3E7430, 0x8
+.global windmill_map_collision_info
+windmill_map_collision_info:
+	.incbin "baserom.dol", 0x3E7438, 0x8
+.global MiniWindmillL_map_collision_data
+MiniWindmillL_map_collision_data:
+	.incbin "baserom.dol", 0x3E7440, 0x8
+.global MiniWindmillL_map_collision_info
+MiniWindmillL_map_collision_info:
+	.incbin "baserom.dol", 0x3E7448, 0x8
+.global MiniWindmillS_map_collision_data
+MiniWindmillS_map_collision_data:
+	.incbin "baserom.dol", 0x3E7450, 0x8
+.global MiniWindmillS_map_collision_info
+MiniWindmillS_map_collision_info:
+	.incbin "baserom.dol", 0x3E7458, 0x8
+.global windmill_roof_map_collision_data
+windmill_roof_map_collision_data:
+	.incbin "baserom.dol", 0x3E7460, 0x8
+.global windmill_roof_map_collision_info
+windmill_roof_map_collision_info:
+	.incbin "baserom.dol", 0x3E7468, 0x8
+.global lamp_bianco_anim_info
+lamp_bianco_anim_info:
+	.incbin "baserom.dol", 0x3E7470, 0x8
+.global lamp_bianco_map_collision_info
+lamp_bianco_map_collision_info:
+	.incbin "baserom.dol", 0x3E7478, 0x8
+.global RootPakkun_map_collision_data
+RootPakkun_map_collision_data:
+	.incbin "baserom.dol", 0x3E7480, 0x8
+.global RootPakkun_map_collision_info
+RootPakkun_map_collision_info:
+	.incbin "baserom.dol", 0x3E7488, 0x8
+.global windmill_block_map_collision_data
+windmill_block_map_collision_data:
+	.incbin "baserom.dol", 0x3E7490, 0x8
+.global windmill_block_map_collision_info
+windmill_block_map_collision_info:
+	.incbin "baserom.dol", 0x3E7498, 0x8
+.global BiaBell_anim_info
+BiaBell_anim_info:
+	.incbin "baserom.dol", 0x3E74A0, 0x8
+.global $$23174
+$$23174:
+	.incbin "baserom.dol", 0x3E74A8, 0x8
+.global watermill00_anim_info
+watermill00_anim_info:
+	.incbin "baserom.dol", 0x3E74B0, 0x8
+.global BiaWatermill01_map_collision_data
+BiaWatermill01_map_collision_data:
+	.incbin "baserom.dol", 0x3E74B8, 0x8
+.global BiaWatermill01_map_collision_info
+BiaWatermill01_map_collision_info:
+	.incbin "baserom.dol", 0x3E74C0, 0x8
+.global BiaWatermillVertical_map_collision_data
+BiaWatermillVertical_map_collision_data:
+	.incbin "baserom.dol", 0x3E74C8, 0x8
+.global BiaWatermillVertical_map_collision_info
+BiaWatermillVertical_map_collision_info:
+	.incbin "baserom.dol", 0x3E74D0, 0x8
+.global BiaTurnBridge_map_collision_data
+BiaTurnBridge_map_collision_data:
+	.incbin "baserom.dol", 0x3E74D8, 0x8
+.global BiaTurnBridge_map_collision_info
+BiaTurnBridge_map_collision_info:
+	.incbin "baserom.dol", 0x3E74E0, 0x8
+.global LeafBoat_map_collision_data
+LeafBoat_map_collision_data:
+	.incbin "baserom.dol", 0x3E74E8, 0x8
+.global LeafBoat_map_collision_info
+LeafBoat_map_collision_info:
+	.incbin "baserom.dol", 0x3E74F0, 0x8
+.global LampSeesaw_anim_info
+LampSeesaw_anim_info:
+	.incbin "baserom.dol", 0x3E74F8, 0x8
+.global LampSeesaw_map_collision_data
+LampSeesaw_map_collision_data:
+	.incbin "baserom.dol", 0x3E7500, 0x8
+.global LampSeesaw_map_collision_info
+LampSeesaw_map_collision_info:
+	.incbin "baserom.dol", 0x3E7508, 0x8
+.global $$23184
+$$23184:
+	.incbin "baserom.dol", 0x3E7510, 0x8
+.global BiancoDoor_map_collision_data
+BiancoDoor_map_collision_data:
+	.incbin "baserom.dol", 0x3E7518, 0x8
+.global BiancoDoor_map_collision_info
+BiancoDoor_map_collision_info:
+	.incbin "baserom.dol", 0x3E7520, 0x8
+.global BiaBridge_map_collision_data
+BiaBridge_map_collision_data:
+	.incbin "baserom.dol", 0x3E7528, 0x8
+.global BiaBridge_map_collision_info
+BiaBridge_map_collision_info:
+	.incbin "baserom.dol", 0x3E7530, 0x8
+.global SandBird_anim_info
+SandBird_anim_info:
+	.incbin "baserom.dol", 0x3E7538, 0x8
+.global SandBirdBlock_map_collision_info
+SandBirdBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E7540, 0x8
+.global SkyIsland_anim_info
+SkyIsland_anim_info:
+	.incbin "baserom.dol", 0x3E7548, 0x8
+.global SkyIsland_map_collision_data
+SkyIsland_map_collision_data:
+	.incbin "baserom.dol", 0x3E7550, 0x8
+.global SkyIsland_map_collision_info
+SkyIsland_map_collision_info:
+	.incbin "baserom.dol", 0x3E7558, 0x8
+.global SandLeaf_anim_info
+SandLeaf_anim_info:
+	.incbin "baserom.dol", 0x3E7560, 0x8
+.global SandLeafBase00_anim_info
+SandLeafBase00_anim_info:
+	.incbin "baserom.dol", 0x3E7568, 0x8
+.global SandLeafBase00_map_collision_info
+SandLeafBase00_map_collision_info:
+	.incbin "baserom.dol", 0x3E7570, 0x8
+.global SandLeafBase01_anim_info
+SandLeafBase01_anim_info:
+	.incbin "baserom.dol", 0x3E7578, 0x8
+.global SandLeafBase01_map_collision_info
+SandLeafBase01_map_collision_info:
+	.incbin "baserom.dol", 0x3E7580, 0x8
+.global SandLeafBase02_anim_info
+SandLeafBase02_anim_info:
+	.incbin "baserom.dol", 0x3E7588, 0x8
+.global SandLeafBase02_map_collision_info
+SandLeafBase02_map_collision_info:
+	.incbin "baserom.dol", 0x3E7590, 0x8
+.global SandLeafBase03_anim_info
+SandLeafBase03_anim_info:
+	.incbin "baserom.dol", 0x3E7598, 0x8
+.global SandLeafBase03_map_collision_info
+SandLeafBase03_map_collision_info:
+	.incbin "baserom.dol", 0x3E75A0, 0x8
+.global SandBomb_anim_info
+SandBomb_anim_info:
+	.incbin "baserom.dol", 0x3E75A8, 0x8
+.global $$23213
+$$23213:
+	.incbin "baserom.dol", 0x3E75B0, 0x8
+.global mirror_L_map_collision_info
+mirror_L_map_collision_info:
+	.incbin "baserom.dol", 0x3E75B8, 0x8
+.global $$23214
+$$23214:
+	.incbin "baserom.dol", 0x3E75C0, 0x8
+.global mirror_M_map_collision_info
+mirror_M_map_collision_info:
+	.incbin "baserom.dol", 0x3E75C8, 0x8
+.global $$23215
+$$23215:
+	.incbin "baserom.dol", 0x3E75D0, 0x8
+.global mirrorS_map_collision_info
+mirrorS_map_collision_info:
+	.incbin "baserom.dol", 0x3E75D8, 0x8
+.global SandCastle_anim_info
+SandCastle_anim_info:
+	.incbin "baserom.dol", 0x3E75E0, 0x8
+.global SandCastle_map_collision_info
+SandCastle_map_collision_info:
+	.incbin "baserom.dol", 0x3E75E8, 0x8
+.global MammaBlockRotate_map_collision_info
+MammaBlockRotate_map_collision_info:
+	.incbin "baserom.dol", 0x3E75F0, 0x8
+.global SandEgg_map_collision_data
+SandEgg_map_collision_data:
+	.incbin "baserom.dol", 0x3E75F8, 0x8
+.global SandEgg_map_collision_info
+SandEgg_map_collision_info:
+	.incbin "baserom.dol", 0x3E7600, 0x8
+.global SandEggBroken_map_collision_data
+SandEggBroken_map_collision_data:
+	.incbin "baserom.dol", 0x3E7608, 0x8
+.global SandEggBroken_map_collision_info
+SandEggBroken_map_collision_info:
+	.incbin "baserom.dol", 0x3E7610, 0x8
+.global MammaSurfboardStand_map_collision_data
+MammaSurfboardStand_map_collision_data:
+	.incbin "baserom.dol", 0x3E7618, 0x8
+.global MammaSurfboardStand_map_collision_info
+MammaSurfboardStand_map_collision_info:
+	.incbin "baserom.dol", 0x3E7620, 0x8
+.global MammaYacht00_map_collision_data
+MammaYacht00_map_collision_data:
+	.incbin "baserom.dol", 0x3E7628, 0x8
+.global MammaYacht00_map_collision_info
+MammaYacht00_map_collision_info:
+	.incbin "baserom.dol", 0x3E7630, 0x8
+.global MammaYacht01_map_collision_data
+MammaYacht01_map_collision_data:
+	.incbin "baserom.dol", 0x3E7638, 0x8
+.global MammaYacht01_map_collision_info
+MammaYacht01_map_collision_info:
+	.incbin "baserom.dol", 0x3E7640, 0x8
+.global MammaYacht02_map_collision_data
+MammaYacht02_map_collision_data:
+	.incbin "baserom.dol", 0x3E7648, 0x8
+.global MammaYacht02_map_collision_info
+MammaYacht02_map_collision_info:
+	.incbin "baserom.dol", 0x3E7650, 0x8
+.global SandBombBase00_anim_info
+SandBombBase00_anim_info:
+	.incbin "baserom.dol", 0x3E7658, 0x8
+.global SandBombBase00_map_collision_info
+SandBombBase00_map_collision_info:
+	.incbin "baserom.dol", 0x3E7660, 0x8
+.global SandBombBaseMushroom_anim_info
+SandBombBaseMushroom_anim_info:
+	.incbin "baserom.dol", 0x3E7668, 0x8
+.global SandBombBaseMushroom_map_collision_info
+SandBombBaseMushroom_map_collision_info:
+	.incbin "baserom.dol", 0x3E7670, 0x8
+.global SandBombBasePyramid_anim_info
+SandBombBasePyramid_anim_info:
+	.incbin "baserom.dol", 0x3E7678, 0x8
+.global SandBombBasePyramid_map_collision_info
+SandBombBasePyramid_map_collision_info:
+	.incbin "baserom.dol", 0x3E7680, 0x8
+.global SandBombBaseShit_anim_info
+SandBombBaseShit_anim_info:
+	.incbin "baserom.dol", 0x3E7688, 0x8
+.global SandBombBaseShit_map_collision_info
+SandBombBaseShit_map_collision_info:
+	.incbin "baserom.dol", 0x3E7690, 0x8
+.global SandBombBaseStar_anim_info
+SandBombBaseStar_anim_info:
+	.incbin "baserom.dol", 0x3E7698, 0x8
+.global SandBombBaseStar_map_collision_info
+SandBombBaseStar_map_collision_info:
+	.incbin "baserom.dol", 0x3E76A0, 0x8
+.global SandBombBaseTurtle_anim_info
+SandBombBaseTurtle_anim_info:
+	.incbin "baserom.dol", 0x3E76A8, 0x8
+.global SandBombBaseTurtle_map_collision_info
+SandBombBaseTurtle_map_collision_info:
+	.incbin "baserom.dol", 0x3E76B0, 0x8
+.global SandBombBaseFoot_anim_info
+SandBombBaseFoot_anim_info:
+	.incbin "baserom.dol", 0x3E76B8, 0x8
+.global SandBombBaseFoot_map_collision_info
+SandBombBaseFoot_map_collision_info:
+	.incbin "baserom.dol", 0x3E76C0, 0x8
+.global SandBombBaseHand_anim_info
+SandBombBaseHand_anim_info:
+	.incbin "baserom.dol", 0x3E76C8, 0x8
+.global SandBombBaseHand_map_collision_info
+SandBombBaseHand_map_collision_info:
+	.incbin "baserom.dol", 0x3E76D0, 0x8
+.global SandBombBaseStairs_anim_info
+SandBombBaseStairs_anim_info:
+	.incbin "baserom.dol", 0x3E76D8, 0x8
+.global SandBombBaseStairs_map_collision_info
+SandBombBaseStairs_map_collision_info:
+	.incbin "baserom.dol", 0x3E76E0, 0x8
+.global $$23251
+$$23251:
+	.incbin "baserom.dol", 0x3E76E8, 0x8
+.global $$23252
+$$23252:
+	.incbin "baserom.dol", 0x3E76F0, 0x8
+.global TeethOfJuicer_anim_info
+TeethOfJuicer_anim_info:
+	.incbin "baserom.dol", 0x3E76F8, 0x8
+.global SandEggRepair_map_collision_data
+SandEggRepair_map_collision_data:
+	.incbin "baserom.dol", 0x3E7700, 0x8
+.global SandEggRepair_map_collision_info
+SandEggRepair_map_collision_info:
+	.incbin "baserom.dol", 0x3E7708, 0x8
+.global $$23259
+$$23259:
+	.incbin "baserom.dol", 0x3E7710, 0x8
+.global merrygoround_anim_info
+merrygoround_anim_info:
+	.incbin "baserom.dol", 0x3E7718, 0x8
+.global merrygoround_map_collision_data
+merrygoround_map_collision_data:
+	.incbin "baserom.dol", 0x3E7720, 0x8
+.global merrygoround_map_collision_info
+merrygoround_map_collision_info:
+	.incbin "baserom.dol", 0x3E7728, 0x8
+.global merry_egg_map_collision_data
+merry_egg_map_collision_data:
+	.incbin "baserom.dol", 0x3E7730, 0x8
+.global merry_egg_map_collision_info
+merry_egg_map_collision_info:
+	.incbin "baserom.dol", 0x3E7738, 0x8
+.global FerrisWheel_anim_info
+FerrisWheel_anim_info:
+	.incbin "baserom.dol", 0x3E7740, 0x8
+.global gondola_map_collision_data
+gondola_map_collision_data:
+	.incbin "baserom.dol", 0x3E7748, 0x8
+.global gondola_map_collision_info
+gondola_map_collision_info:
+	.incbin "baserom.dol", 0x3E7750, 0x8
+.global FerrisLOD_anim_info
+FerrisLOD_anim_info:
+	.incbin "baserom.dol", 0x3E7758, 0x8
+.global $$23269
+$$23269:
+	.incbin "baserom.dol", 0x3E7760, 0x8
+.global viking_map_collision_data
+viking_map_collision_data:
+	.incbin "baserom.dol", 0x3E7768, 0x8
+.global viking_map_collision_info
+viking_map_collision_info:
+	.incbin "baserom.dol", 0x3E7770, 0x8
+.global PinnaEntrance_map_collision_data
+PinnaEntrance_map_collision_data:
+	.incbin "baserom.dol", 0x3E7778, 0x8
+.global PinnaEntrance_map_collision_info
+PinnaEntrance_map_collision_info:
+	.incbin "baserom.dol", 0x3E7780, 0x8
+.global PinnaEntranceOpen_map_collision_data
+PinnaEntranceOpen_map_collision_data:
+	.incbin "baserom.dol", 0x3E7788, 0x8
+.global PinnaEntranceOpen_map_collision_info
+PinnaEntranceOpen_map_collision_info:
+	.incbin "baserom.dol", 0x3E7790, 0x8
+.global SirenaGate_map_collision_data
+SirenaGate_map_collision_data:
+	.incbin "baserom.dol", 0x3E7798, 0x8
+.global SirenaGate_map_collision_info
+SirenaGate_map_collision_info:
+	.incbin "baserom.dol", 0x3E77A0, 0x8
+.global balloon_koopajr_anim_info
+balloon_koopajr_anim_info:
+	.incbin "baserom.dol", 0x3E77A8, 0x8
+.global ShellCup_anim_info
+ShellCup_anim_info:
+	.incbin "baserom.dol", 0x3E77B0, 0x8
+.global ShellCup_map_collision_data
+ShellCup_map_collision_data:
+	.incbin "baserom.dol", 0x3E77B8, 0x8
+.global ShellCup_map_collision_info
+ShellCup_map_collision_info:
+	.incbin "baserom.dol", 0x3E77C0, 0x8
+.global Gateshell_anim_info
+Gateshell_anim_info:
+	.incbin "baserom.dol", 0x3E77C8, 0x8
+.global Gateshell_map_collision_data
+Gateshell_map_collision_data:
+	.incbin "baserom.dol", 0x3E77D0, 0x8
+.global Gateshell_map_collision_info
+Gateshell_map_collision_info:
+	.incbin "baserom.dol", 0x3E77D8, 0x8
+.global PinnaHangingBridgeBoard_anim_info
+PinnaHangingBridgeBoard_anim_info:
+	.incbin "baserom.dol", 0x3E77E0, 0x8
+.global PinnaHangingBridgeBoard_map_collision_data
+PinnaHangingBridgeBoard_map_collision_data:
+	.incbin "baserom.dol", 0x3E77E8, 0x8
+.global PinnaHangingBridgeBoard_map_collision_info
+PinnaHangingBridgeBoard_map_collision_info:
+	.incbin "baserom.dol", 0x3E77F0, 0x8
+.global GateManta_anim_info
+GateManta_anim_info:
+	.incbin "baserom.dol", 0x3E77F8, 0x8
+.global AmiKing_anim_info
+AmiKing_anim_info:
+	.incbin "baserom.dol", 0x3E7800, 0x8
+.global $$23291
+$$23291:
+	.incbin "baserom.dol", 0x3E7808, 0x8
+.global $$23292
+$$23292:
+	.incbin "baserom.dol", 0x3E7810, 0x8
+.global casinoroulette_map_collision_data
+casinoroulette_map_collision_data:
+	.incbin "baserom.dol", 0x3E7818, 0x8
+.global casinoroulette_map_collision_info
+casinoroulette_map_collision_info:
+	.incbin "baserom.dol", 0x3E7820, 0x8
+.global $$23295
+$$23295:
+	.incbin "baserom.dol", 0x3E7828, 0x8
+.global roulette_anim_info
+roulette_anim_info:
+	.incbin "baserom.dol", 0x3E7830, 0x8
+.global roulette00_map_collision_data
+roulette00_map_collision_data:
+	.incbin "baserom.dol", 0x3E7838, 0x8
+.global roulette00_map_collision_info
+roulette00_map_collision_info:
+	.incbin "baserom.dol", 0x3E7840, 0x8
+.global $$23296
+$$23296:
+	.incbin "baserom.dol", 0x3E7848, 0x8
+.global roulette01_map_collision_data
+roulette01_map_collision_data:
+	.incbin "baserom.dol", 0x3E7850, 0x8
+.global roulette01_map_collision_info
+roulette01_map_collision_info:
+	.incbin "baserom.dol", 0x3E7858, 0x8
+.global $$23297
+$$23297:
+	.incbin "baserom.dol", 0x3E7860, 0x8
+.global roulette02_map_collision_data
+roulette02_map_collision_data:
+	.incbin "baserom.dol", 0x3E7868, 0x8
+.global roulette02_map_collision_info
+roulette02_map_collision_info:
+	.incbin "baserom.dol", 0x3E7870, 0x8
+.global $$23301
+$$23301:
+	.incbin "baserom.dol", 0x3E7878, 0x8
+.global $$23302
+$$23302:
+	.incbin "baserom.dol", 0x3E7880, 0x8
+.global $$23303
+$$23303:
+	.incbin "baserom.dol", 0x3E7888, 0x8
+.global pazul_map_collision_data
+pazul_map_collision_data:
+	.incbin "baserom.dol", 0x3E7890, 0x8
+.global pazul_map_collision_info
+pazul_map_collision_info:
+	.incbin "baserom.dol", 0x3E7898, 0x8
+.global bosswall_anim_info
+bosswall_anim_info:
+	.incbin "baserom.dol", 0x3E78A0, 0x8
+.global casinoroof_anim_info
+casinoroof_anim_info:
+	.incbin "baserom.dol", 0x3E78A8, 0x8
+.global GlassBreak_anim_info
+GlassBreak_anim_info:
+	.incbin "baserom.dol", 0x3E78B0, 0x8
+.global GlassBreak_map_collision_data
+GlassBreak_map_collision_data:
+	.incbin "baserom.dol", 0x3E78B8, 0x8
+.global GlassBreak_map_collision_info
+GlassBreak_map_collision_info:
+	.incbin "baserom.dol", 0x3E78C0, 0x8
+.global GlassBreak_sound_info
+GlassBreak_sound_info:
+	.incbin "baserom.dol", 0x3E78C8, 0x8
+.global closet_anim_info
+closet_anim_info:
+	.incbin "baserom.dol", 0x3E78D0, 0x8
+.global $$23314
+$$23314:
+	.incbin "baserom.dol", 0x3E78D8, 0x8
+.global ChestRevolve_anim_info
+ChestRevolve_anim_info:
+	.incbin "baserom.dol", 0x3E78E0, 0x8
+.global ChestRevolve_map_collision_info
+ChestRevolve_map_collision_info:
+	.incbin "baserom.dol", 0x3E78E8, 0x8
+.global PosterTeresa_map_collision_data
+PosterTeresa_map_collision_data:
+	.incbin "baserom.dol", 0x3E78F0, 0x8
+.global PosterTeresa_map_collision_info
+PosterTeresa_map_collision_info:
+	.incbin "baserom.dol", 0x3E78F8, 0x8
+.global PictureTeresa_map_collision_data
+PictureTeresa_map_collision_data:
+	.incbin "baserom.dol", 0x3E7900, 0x8
+.global PictureTeresa_map_collision_info
+PictureTeresa_map_collision_info:
+	.incbin "baserom.dol", 0x3E7908, 0x8
+.global PanelBreak_anim_info
+PanelBreak_anim_info:
+	.incbin "baserom.dol", 0x3E7910, 0x8
+.global PanelBreak_map_collision_data
+PanelBreak_map_collision_data:
+	.incbin "baserom.dol", 0x3E7918, 0x8
+.global PanelBreak_map_collision_info
+PanelBreak_map_collision_info:
+	.incbin "baserom.dol", 0x3E7920, 0x8
+.global PanelBreak_sound_info
+PanelBreak_sound_info:
+	.incbin "baserom.dol", 0x3E7928, 0x8
+.global PanelRevolve_anim_info
+PanelRevolve_anim_info:
+	.incbin "baserom.dol", 0x3E7930, 0x8
+.global PanelRevolve_map_collision_data
+PanelRevolve_map_collision_data:
+	.incbin "baserom.dol", 0x3E7938, 0x8
+.global PanelRevolve_map_collision_info
+PanelRevolve_map_collision_info:
+	.incbin "baserom.dol", 0x3E7940, 0x8
+.global SirenaShop_map_collision_data
+SirenaShop_map_collision_data:
+	.incbin "baserom.dol", 0x3E7948, 0x8
+.global SirenaShop_map_collision_info
+SirenaShop_map_collision_info:
+	.incbin "baserom.dol", 0x3E7950, 0x8
+.global cogwheel_anim_info
+cogwheel_anim_info:
+	.incbin "baserom.dol", 0x3E7958, 0x8
+.global cogwheel_map_collision_data
+cogwheel_map_collision_data:
+	.incbin "baserom.dol", 0x3E7960, 0x8
+.global cogwheel_map_collision_info
+cogwheel_map_collision_info:
+	.incbin "baserom.dol", 0x3E7968, 0x8
+.global CogwheelPlate_map_collision_data
+CogwheelPlate_map_collision_data:
+	.incbin "baserom.dol", 0x3E7970, 0x8
+.global CogwheelPlate_map_collision_info
+CogwheelPlate_map_collision_info:
+	.incbin "baserom.dol", 0x3E7978, 0x8
+.global CogwheelPot_map_collision_data
+CogwheelPot_map_collision_data:
+	.incbin "baserom.dol", 0x3E7980, 0x8
+.global CogwheelPot_map_collision_info
+CogwheelPot_map_collision_info:
+	.incbin "baserom.dol", 0x3E7988, 0x8
+.global $$23338
+$$23338:
+	.incbin "baserom.dol", 0x3E7990, 0x8
+.global mare_float_house_map_collision_data
+mare_float_house_map_collision_data:
+	.incbin "baserom.dol", 0x3E7998, 0x8
+.global mare_float_house_map_collision_info
+mare_float_house_map_collision_info:
+	.incbin "baserom.dol", 0x3E79A0, 0x8
+.global StopRock_map_collision_data
+StopRock_map_collision_data:
+	.incbin "baserom.dol", 0x3E79A8, 0x8
+.global StopRock_map_collision_info
+StopRock_map_collision_info:
+	.incbin "baserom.dol", 0x3E79B0, 0x8
+.global GrowthTree_anim_info
+GrowthTree_anim_info:
+	.incbin "baserom.dol", 0x3E79B8, 0x8
+.global $$23344
+$$23344:
+	.incbin "baserom.dol", 0x3E79C0, 0x8
+.global GrowthTree_map_collision_data
+GrowthTree_map_collision_data:
+	.incbin "baserom.dol", 0x3E79C8, 0x8
+.global GrowthTree_map_collision_info
+GrowthTree_map_collision_info:
+	.incbin "baserom.dol", 0x3E79D0, 0x8
+.global MuddyBoat_anim_info
+MuddyBoat_anim_info:
+	.incbin "baserom.dol", 0x3E79D8, 0x8
+.global MuddyBoat_map_collision_data
+MuddyBoat_map_collision_data:
+	.incbin "baserom.dol", 0x3E79E0, 0x8
+.global MuddyBoat_map_collision_info
+MuddyBoat_map_collision_info:
+	.incbin "baserom.dol", 0x3E79E8, 0x8
+.global Puncher_anim_info
+Puncher_anim_info:
+	.incbin "baserom.dol", 0x3E79F0, 0x8
+.global $$23353
+$$23353:
+	.incbin "baserom.dol", 0x3E79F8, 0x8
+.global HatoPop_anim_info
+HatoPop_anim_info:
+	.incbin "baserom.dol", 0x3E7A00, 0x8
+.global $$23357
+$$23357:
+	.incbin "baserom.dol", 0x3E7A08, 0x8
+.global MareWaterJump_map_collision_data
+MareWaterJump_map_collision_data:
+	.incbin "baserom.dol", 0x3E7A10, 0x8
+.global MareWaterJump_map_collision_info
+MareWaterJump_map_collision_info:
+	.incbin "baserom.dol", 0x3E7A18, 0x8
+.global CoinFish_anim_info
+CoinFish_anim_info:
+	.incbin "baserom.dol", 0x3E7A20, 0x8
+.global MareFall_anim_info
+MareFall_anim_info:
+	.incbin "baserom.dol", 0x3E7A28, 0x8
+.global MareCork_map_collision_data
+MareCork_map_collision_data:
+	.incbin "baserom.dol", 0x3E7A30, 0x8
+.global MareCork_map_collision_info
+MareCork_map_collision_info:
+	.incbin "baserom.dol", 0x3E7A38, 0x8
+.global MonteRoot_anim_info
+MonteRoot_anim_info:
+	.incbin "baserom.dol", 0x3E7A40, 0x8
+.global JumpMushroom_anim_info
+JumpMushroom_anim_info:
+	.incbin "baserom.dol", 0x3E7A48, 0x8
+.global JumpMushroom_map_collision_data
+JumpMushroom_map_collision_data:
+	.incbin "baserom.dol", 0x3E7A50, 0x8
+.global JumpMushroom_map_collision_info
+JumpMushroom_map_collision_info:
+	.incbin "baserom.dol", 0x3E7A58, 0x8
+.global MonteGoalFlag_anim_info
+MonteGoalFlag_anim_info:
+	.incbin "baserom.dol", 0x3E7A60, 0x8
+.global HangingBridgeBoard_anim_info
+HangingBridgeBoard_anim_info:
+	.incbin "baserom.dol", 0x3E7A68, 0x8
+.global $$23379
+$$23379:
+	.incbin "baserom.dol", 0x3E7A70, 0x8
+.global HangingBridgeBoard_map_collision_data
+HangingBridgeBoard_map_collision_data:
+	.incbin "baserom.dol", 0x3E7A78, 0x8
+.global HangingBridgeBoard_map_collision_info
+HangingBridgeBoard_map_collision_info:
+	.incbin "baserom.dol", 0x3E7A80, 0x8
+.global SwingBoard_map_collision_data
+SwingBoard_map_collision_data:
+	.incbin "baserom.dol", 0x3E7A88, 0x8
+.global SwingBoard_map_collision_info
+SwingBoard_map_collision_info:
+	.incbin "baserom.dol", 0x3E7A90, 0x8
+.global Fluff_anim_info
+Fluff_anim_info:
+	.incbin "baserom.dol", 0x3E7A98, 0x8
+.global $$23384
+$$23384:
+	.incbin "baserom.dol", 0x3E7AA0, 0x8
+.global Bathtub_anim_info
+Bathtub_anim_info:
+	.incbin "baserom.dol", 0x3E7AA8, 0x8
+.global $$23388
+$$23388:
+	.incbin "baserom.dol", 0x3E7AB0, 0x8
+.global $$23389
+$$23389:
+	.incbin "baserom.dol", 0x3E7AB8, 0x8
+.global BathtubStandBreaking_anim_info
+BathtubStandBreaking_anim_info:
+	.incbin "baserom.dol", 0x3E7AC0, 0x8
+.global ex1_turn_lift_anim_info
+ex1_turn_lift_anim_info:
+	.incbin "baserom.dol", 0x3E7AC8, 0x8
+.global ex1_turn_lift_map_collision_data
+ex1_turn_lift_map_collision_data:
+	.incbin "baserom.dol", 0x3E7AD0, 0x8
+.global ex1_turn_lift_map_collision_info
+ex1_turn_lift_map_collision_info:
+	.incbin "baserom.dol", 0x3E7AD8, 0x8
+.global z_turn_disk_map_collision_data
+z_turn_disk_map_collision_data:
+	.incbin "baserom.dol", 0x3E7AE0, 0x8
+.global z_turn_disk_map_collision_info
+z_turn_disk_map_collision_info:
+	.incbin "baserom.dol", 0x3E7AE8, 0x8
+.global y_turn_lift_anim_info
+y_turn_lift_anim_info:
+	.incbin "baserom.dol", 0x3E7AF0, 0x8
+.global y_turn_lift_map_collision_data
+y_turn_lift_map_collision_data:
+	.incbin "baserom.dol", 0x3E7AF8, 0x8
+.global y_turn_lift_map_collision_info
+y_turn_lift_map_collision_info:
+	.incbin "baserom.dol", 0x3E7B00, 0x8
+.global Nail_anim_info
+Nail_anim_info:
+	.incbin "baserom.dol", 0x3E7B08, 0x8
+.global $$23411
+$$23411:
+	.incbin "baserom.dol", 0x3E7B10, 0x8
+.global Nail_map_collision_data
+Nail_map_collision_data:
+	.incbin "baserom.dol", 0x3E7B18, 0x8
+.global Nail_map_collision_info
+Nail_map_collision_info:
+	.incbin "baserom.dol", 0x3E7B20, 0x8
+.global PachinkoNail_anim_info
+PachinkoNail_anim_info:
+	.incbin "baserom.dol", 0x3E7B28, 0x8
+.global PachinkoNail_map_collision_data
+PachinkoNail_map_collision_data:
+	.incbin "baserom.dol", 0x3E7B30, 0x8
+.global PachinkoNail_map_collision_info
+PachinkoNail_map_collision_info:
+	.incbin "baserom.dol", 0x3E7B38, 0x8
+.global FileLoadBlock_map_collision_data
+FileLoadBlock_map_collision_data:
+	.incbin "baserom.dol", 0x3E7B40, 0x8
+.global FileLoadBlock_map_collision_info
+FileLoadBlock_map_collision_info:
+	.incbin "baserom.dol", 0x3E7B48, 0x8
+.global FileLoadBlockA_anim_info
+FileLoadBlockA_anim_info:
+	.incbin "baserom.dol", 0x3E7B50, 0x8
+.global FileLoadBlockB_anim_info
+FileLoadBlockB_anim_info:
+	.incbin "baserom.dol", 0x3E7B58, 0x8
+.global FileLoadBlockC_anim_info
+FileLoadBlockC_anim_info:
+	.incbin "baserom.dol", 0x3E7B60, 0x8
+.global $$23635
+$$23635:
+	.incbin "baserom.dol", 0x3E7B68, 0x4
+.global $$23910
+$$23910:
+	.incbin "baserom.dol", 0x3E7B6C, 0x8
+.global $$23969
+$$23969:
+	.incbin "baserom.dol", 0x3E7B74, 0x4
+.global $$24008
+$$24008:
+	.incbin "baserom.dol", 0x3E7B78, 0x8
+.global $$24389
+$$24389:
+	.incbin "baserom.dol", 0x3E7B80, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$24410
+$$24410:
+	.skip 0xC
+.global $$24411
+$$24411:
+	.skip 0xC
+.global $$24412
+$$24412:
+	.skip 0xC
+.global $$24413
+$$24413:
+	.skip 0xC
+.global $$24414
+$$24414:
+	.skip 0xC
+.global $$24415
+$$24415:
+	.skip 0xC
+.global $$24416
+$$24416:
+	.skip 0xC
+.global $$24417
+$$24417:
+	.skip 0xC
+.global $$24418
+$$24418:
+	.skip 0xC
+.global $$24419
+$$24419:
+	.skip 0xC
+.global $$24420
+$$24420:
+	.skip 0xC
+.global $$24421
+$$24421:
+	.skip 0xC
+.global $$24422
+$$24422:
+	.skip 0xC
+.global $$24423
+$$24423:
+	.skip 0xC
+.global $$24424
+$$24424:
+	.skip 0x10

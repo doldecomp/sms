@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global killHeightPan___15CPolarSubCameraFv
 killHeightPan___15CPolarSubCameraFv:
 /* 8035602C 00352F6C  A0 03 00 64 */	lhz r0, 0x64(r3)
@@ -289,3 +288,16 @@ lbl_8035640C:
 /* 8035641C 0035335C  83 A1 00 14 */	lwz r29, 0x14(r1)
 /* 80356420 00353360  38 21 00 20 */	addi r1, r1, 0x20
 /* 80356424 00353364  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$21767
+$$21767:
+	.incbin "baserom.dol", 0x3E1918, 0xE8
+.global $$21790
+$$21790:
+	.incbin "baserom.dol", 0x3E1A00, 0xE8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21704
+$$21704:
+	.incbin "baserom.dol", 0x3EC218, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JAIAnimeSoundFv
 __ct__13JAIAnimeSoundFv:
 /* 8004A864 000477A4  3C 80 80 3B */	lis r4, __vt__13JAIAnimeSound@ha
@@ -740,3 +739,31 @@ lbl_8004B284:
 /* 8004B29C 000481DC  7C 08 03 A6 */	mtlr r0
 /* 8004B2A0 000481E0  38 21 00 18 */	addi r1, r1, 0x18
 /* 8004B2A4 000481E4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JAIAnimeSound
+__vt__13JAIAnimeSound:
+	.incbin "baserom.dol", 0x3A7C30, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2461
+$$2461:
+	.incbin "baserom.dol", 0x3E4138, 0x4
+.global $$2622
+$$2622:
+	.incbin "baserom.dol", 0x3E413C, 0x4
+.global $$2623
+$$2623:
+	.incbin "baserom.dol", 0x3E4140, 0x4
+.global $$2624
+$$2624:
+	.incbin "baserom.dol", 0x3E4144, 0x4
+.global $$2626
+$$2626:
+	.incbin "baserom.dol", 0x3E4148, 0x8
+.global $$2628
+$$2628:
+	.incbin "baserom.dol", 0x3E4150, 0x8
+.global $$2643
+$$2643:
+	.incbin "baserom.dol", 0x3E4158, 0x8

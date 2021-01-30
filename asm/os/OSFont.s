@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GetFontCode
 GetFontCode:
 /* 8008F32C 0008C26C  7C 08 02 A6 */	mflr r0
@@ -1055,3 +1054,38 @@ lbl_800901B4:
 /* 800901C0 0008D100  38 21 00 18 */	addi r1, r1, 0x18
 /* 800901C4 0008D104  7C 08 03 A6 */	mtlr r0
 /* 800901C8 0008D108  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global HankakuToCode
+HankakuToCode:
+	.incbin "baserom.dol", 0x3ACDC0, 0x180
+.global Zenkaku2Code
+Zenkaku2Code:
+	.incbin "baserom.dol", 0x3ACF40, 0x990
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global fontEncode$80
+fontEncode$80:
+	.incbin "baserom.dol", 0x3E3258, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2153
+$$2153:
+	.incbin "baserom.dol", 0x3E4790, 0x4
+.global lbl_8040BEF4
+lbl_8040BEF4:
+	.incbin "baserom.dol", 0x3E4794, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global FontData
+FontData:
+	.skip 0x4
+.global SheetImage
+SheetImage:
+	.skip 0x4
+.global WidthTable
+WidthTable:
+	.skip 0x4
+.global CharsInSheet
+CharsInSheet:
+	.skip 0x4

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__10JKRStdHeapFUlP7JKRHeapb
 create__10JKRStdHeapFUlP7JKRHeapb:
 /* 8000DB88 0000AAC8  7C 08 02 A6 */	mflr r0
@@ -329,3 +328,22 @@ dump__10JKRStdHeapFv:
 /* 8000DFB0 0000AEF0  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000DFB4 0000AEF4  7C 08 03 A6 */	mtlr r0
 /* 8000DFB8 0000AEF8  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21545
+$$21545:
+	.incbin "baserom.dol", 0x36D6E8, 0x2C
+.global $$21558
+$$21558:
+	.incbin "baserom.dol", 0x36D714, 0x24
+.global $$21560
+$$21560:
+	.incbin "baserom.dol", 0x36D738, 0x30
+.global $$21562
+$$21562:
+	.incbin "baserom.dol", 0x36D768, 0x28
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10JKRStdHeap
+__vt__10JKRStdHeap:
+	.incbin "baserom.dol", 0x3A56E0, 0x50

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__Q26JDrama6TActorFR20JSUMemoryInputStream
 load__Q26JDrama6TActorFR20JSUMemoryInputStream:
 /* 80040948 0003D888  7C 08 02 A6 */	mflr r0
@@ -310,3 +309,16 @@ $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec:
 $$232$$2__dt__Q26JDrama6TActorFv:
 /* 80040D10 0003DC50  38 63 FF E0 */	addi r3, r3, -32
 /* 80040D14 0003DC54  4B FF FE 80 */	b __dt__Q26JDrama6TActorFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2533
+$$2533:
+	.incbin "baserom.dol", 0x36DEF0, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama6TActor
+__vt__Q26JDrama6TActor:
+	.incbin "baserom.dol", 0x3A7020, 0xA0
+.global __vt__Q26JDrama8TViewObj
+__vt__Q26JDrama8TViewObj:
+	.incbin "baserom.dol", 0x3A70C0, 0x28

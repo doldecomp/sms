@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__Q26JDrama6TLightFR20JSUMemoryInputStream
 load__Q26JDrama6TLightFR20JSUMemoryInputStream:
 /* 80043788 000406C8  7C 08 02 A6 */	mflr r0
@@ -507,8 +506,8 @@ lbl_80043E40:
 /* 80043E54 00040D94  38 21 00 18 */	addi r1, r1, 0x18
 /* 80043E58 00040D98  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__JDRLighting
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__JDRLighting:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 80043E5C 00040D9C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80043E60 00040DA0  D0 43 00 04 */	stfs f2, 4(r3)
 /* 80043E64 00040DA4  D0 63 00 08 */	stfs f3, 8(r3)
@@ -1146,3 +1145,39 @@ $$216$$2JSGGetColor__Q26JDrama9TAmbColorCFv:
 $$216$$2__dt__Q26JDrama9TAmbColorFv:
 /* 80044684 000415C4  38 63 FF F0 */	addi r3, r3, -16
 /* 80044688 000415C8  4B FF FB 80 */	b __dt__Q26JDrama9TAmbColorFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2632
+$$2632:
+	.incbin "baserom.dol", 0x36DF38, 0xC
+.global $$2753
+$$2753:
+	.incbin "baserom.dol", 0x36DF44, 0xC
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama9TLightMap
+__vt__Q26JDrama9TLightMap:
+	.incbin "baserom.dol", 0x3A7658, 0x24
+.global __vt__Q26JDrama7TAmbAry
+__vt__Q26JDrama7TAmbAry:
+	.incbin "baserom.dol", 0x3A767C, 0x24
+.global __vt__Q26JDrama9TAmbColor
+__vt__Q26JDrama9TAmbColor:
+	.incbin "baserom.dol", 0x3A76A0, 0x64
+.global __vt__Q26JDrama9TIdxLight
+__vt__Q26JDrama9TIdxLight:
+	.incbin "baserom.dol", 0x3A7704, 0x9C
+.global __vt__Q26JDrama9TLightAry
+__vt__Q26JDrama9TLightAry:
+	.incbin "baserom.dol", 0x3A77A0, 0x24
+.global __vt__Q26JDrama6TLight
+__vt__Q26JDrama6TLight:
+	.incbin "baserom.dol", 0x3A77C4, 0x9C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2633
+$$2633:
+	.incbin "baserom.dol", 0x3E40B0, 0x4
+.global $$2634
+$$2634:
+	.incbin "baserom.dol", 0x3E40B4, 0x4

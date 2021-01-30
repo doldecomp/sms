@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global isMarioClimb__16TCameraMarioDataCFUl
 isMarioClimb__16TCameraMarioDataCFUl:
 /* 803589D0 00355910  3C 60 18 10 */	lis r3, 0x18100340@ha
@@ -275,3 +274,19 @@ __ct__16TCameraMarioDataFv:
 /* 80358D54 00355C94  90 03 00 18 */	stw r0, 0x18(r3)
 /* 80358D58 00355C98  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 80358D5C 00355C9C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22149
+$$22149:
+	.incbin "baserom.dol", 0x3EC298, 0x4
+.global $$22190
+$$22190:
+	.incbin "baserom.dol", 0x3EC29C, 0x4
+.global $$22191
+$$22191:
+	.incbin "baserom.dol", 0x3EC2A0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpCameraMario
+gpCameraMario:
+	.skip 0x8

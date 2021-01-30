@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JStage7TObjectFv
 __dt__Q26JStage7TObjectFv:
 /* 80081AE4 0007EA24  7C 08 02 A6 */	mflr r0
@@ -59,3 +58,8 @@ JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl:
 .global JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
 JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl:
 /* 80081B58 0007EA98  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JStage7TObject
+__vt__Q26JStage7TObject:
+	.incbin "baserom.dol", 0x3A9E98, 0x30

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TTargetArrowFv
 __dt__12TTargetArrowFv:
 /* 80110F00 0010DE40  7C 08 02 A6 */	mflr r0
@@ -98,3 +97,47 @@ lbl_80111030:
 /* 80111038 0010DF78  38 21 00 18 */	addi r1, r1, 0x18
 /* 8011103C 0010DF7C  7C 08 03 A6 */	mtlr r0
 /* 80111040 0010DF80  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x376E40, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x376E4C, 0x14
+.global $$21582
+$$21582:
+	.incbin "baserom.dol", 0x376E60, 0x30
+.global $$21583
+$$21583:
+	.incbin "baserom.dol", 0x376E90, 0x38
+.global $$21584
+$$21584:
+	.incbin "baserom.dol", 0x376EC8, 0x34
+.global $$21585
+$$21585:
+	.incbin "baserom.dol", 0x376EFC, 0x24
+.global $$21681
+$$21681:
+	.incbin "baserom.dol", 0x376F20, 0x2C
+.global $$21708
+$$21708:
+	.incbin "baserom.dol", 0x376F4C, 0x18
+.global $$21709
+$$21709:
+	.incbin "baserom.dol", 0x376F64, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TTargetArrow
+__vt__12TTargetArrow:
+	.incbin "baserom.dol", 0x3B1B80, 0x28
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cTargetArrowBmdFileName
+cTargetArrowBmdFileName:
+	.incbin "baserom.dol", 0x3E3470, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpTargetArrow
+gpTargetArrow:
+	.skip 0x8

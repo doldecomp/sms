@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global storeBuffer__14JAIStreamEntryFPP8JAISoundP8JAIActorUlUlUcPv
 storeBuffer__14JAIStreamEntryFPP8JAISoundP8JAIActorUlUlUcPv:
 /* 8004F9CC 0004C90C  7C 08 02 A6 */	mflr r0

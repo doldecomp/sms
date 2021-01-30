@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __OSResetSWInterruptHandler
 __OSResetSWInterruptHandler:
 /* 80091A04 0008E944  7C 08 02 A6 */	mflr r0
@@ -261,3 +260,26 @@ OSGetResetSwitchState:
 /* 80091DA4 0008ECE4  38 21 00 08 */	addi r1, r1, 8
 /* 80091DA8 0008ECE8  7C 08 03 A6 */	mtlr r0
 /* 80091DAC 0008ECEC  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global ResetCallback
+ResetCallback:
+	.skip 0x4
+.global Down
+Down:
+	.skip 0x4
+.global LastState
+LastState:
+	.skip 0x8
+.global HoldUp
+HoldUp:
+	.skip 0x4
+.global lbl_80409E24
+lbl_80409E24:
+	.skip 0x4
+.global HoldDown
+HoldDown:
+	.skip 0x4
+.global lbl_80409E2C
+lbl_80409E2C:
+	.skip 0x4

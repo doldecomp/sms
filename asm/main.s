@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global main
 main:
 /* 80005600 00002540  7C 08 02 A6 */	mflr r0
@@ -34,3 +33,11 @@ __sinit_main_cpp:
 /* 80005660 000025A0  38 21 00 08 */	addi r1, r1, 8
 /* 80005664 000025A4  7C 08 03 A6 */	mtlr r0
 /* 80005668 000025A8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBA4, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gpApplication
+gpApplication:
+	.skip 0x50

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__15TStageEnemyInfoFv
 __dt__15TStageEnemyInfoFv:
 /* 802A1CE0 0029EC20  7C 08 02 A6 */	mflr r0
@@ -411,3 +410,22 @@ lbl_802A2260:
 /* 802A2270 0029F1B0  38 21 00 60 */	addi r1, r1, 0x60
 /* 802A2274 0029F1B4  7C 08 03 A6 */	mtlr r0
 /* 802A2278 0029F1B8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15TStageEnemyInfo
+__vt__15TStageEnemyInfo:
+	.incbin "baserom.dol", 0x3D5A78, 0x20
+.global __vt__20TStageEnemyInfoTable
+__vt__20TStageEnemyInfoTable:
+	.incbin "baserom.dol", 0x3D5A98, 0x20
+.global __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1
+__vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
+	.incbin "baserom.dol", 0x3D5AB8, 0x20
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21696
+$$21696:
+	.incbin "baserom.dol", 0x3EA6B8, 0x8
+.global $$21698
+$$21698:
+	.incbin "baserom.dol", 0x3EA6C0, 0x8

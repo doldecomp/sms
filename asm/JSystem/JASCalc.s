@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initSinfT__Q28JASystem4CalcFv
 initSinfT__Q28JASystem4CalcFv:
 /* 80060CEC 0005DC2C  7C 08 02 A6 */	mflr r0
@@ -550,3 +549,31 @@ lbl_80061474:
 /* 80061478 0005E3B8  38 21 00 08 */	addi r1, r1, 8
 /* 8006147C 0005E3BC  7C 08 03 A6 */	mtlr r0
 /* 80061480 0005E3C0  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2525
+$$2525:
+	.incbin "baserom.dol", 0x3E43C0, 0x4
+.global $$2526
+$$2526:
+	.incbin "baserom.dol", 0x3E43C4, 0x4
+.global $$2527
+$$2527:
+	.incbin "baserom.dol", 0x3E43C8, 0x4
+.global $$2528
+$$2528:
+	.incbin "baserom.dol", 0x3E43CC, 0x4
+.global $$2530
+$$2530:
+	.incbin "baserom.dol", 0x3E43D0, 0x8
+.global $$2532
+$$2532:
+	.incbin "baserom.dol", 0x3E43D8, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global JASC_SINTABLE__Q28JASystem4Calc
+JASC_SINTABLE__Q28JASystem4Calc:
+	.skip 0x4
+.global JASC_DOL2TABLE__Q28JASystem4Calc
+JASC_DOL2TABLE__Q28JASystem4Calc:
+	.skip 0x4

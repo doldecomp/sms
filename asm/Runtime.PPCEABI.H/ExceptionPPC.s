@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __unregister_fragment
 __unregister_fragment:
 /* 80082B4C 0007FA8C  2C 03 00 00 */	cmpwi r3, 0
@@ -40,3 +39,8 @@ lbl_80082BB4:
 /* 80082BB4 0007FAF4  38 60 FF FF */	li r3, -1
 lbl_80082BB8:
 /* 80082BB8 0007FAF8  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global fragmentinfo
+fragmentinfo:
+	.skip 0x10

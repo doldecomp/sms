@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global fireStreamingMovie__12TMarDirectorFUc
 fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED5C8 000EA508  7C 08 02 A6 */	mflr r0
@@ -927,3 +926,106 @@ lbl_800EE2AC:
 /* 800EE2B4 000EB1F4  38 21 00 10 */	addi r1, r1, 0x10
 /* 800EE2B8 000EB1F8  7C 08 03 A6 */	mtlr r0
 /* 800EE2BC 000EB1FC  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC28, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21491
+$$21491:
+	.incbin "baserom.dol", 0x370508, 0xC
+.global $$21938
+$$21938:
+	.incbin "baserom.dol", 0x370514, 0x14
+.global $$22268
+$$22268:
+	.incbin "baserom.dol", 0x370528, 0x30
+.global $$22269
+$$22269:
+	.incbin "baserom.dol", 0x370558, 0x38
+.global $$22270
+$$22270:
+	.incbin "baserom.dol", 0x370590, 0x34
+.global $$22271
+$$22271:
+	.incbin "baserom.dol", 0x3705C4, 0x24
+.global $$22452
+$$22452:
+	.incbin "baserom.dol", 0x3705E8, 0x2C
+.global $$22453
+$$22453:
+	.incbin "baserom.dol", 0x370614, 0x30
+.global $$22454
+$$22454:
+	.incbin "baserom.dol", 0x370644, 0x24
+.global $$23076
+$$23076:
+	.incbin "baserom.dol", 0x370668, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22830
+$$22830:
+	.incbin "baserom.dol", 0x3B0C68, 0x38
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cCameraBckNameShineGetInside
+cCameraBckNameShineGetInside:
+	.incbin "baserom.dol", 0x3E3458, 0x4
+.global cCameraBckNameShineGetOutside
+cCameraBckNameShineGetOutside:
+	.incbin "baserom.dol", 0x3E345C, 0x4
+.global cCameraBckNameGate
+cCameraBckNameGate:
+	.incbin "baserom.dol", 0x3E3460, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23071
+$$23071:
+	.incbin "baserom.dol", 0x3E4D90, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22764
+$$22764:
+	.skip 0xC
+.global $$22765
+$$22765:
+	.skip 0xC
+.global $$22766
+$$22766:
+	.skip 0xC
+.global $$22767
+$$22767:
+	.skip 0xC
+.global $$22768
+$$22768:
+	.skip 0xC
+.global $$22769
+$$22769:
+	.skip 0xC
+.global $$22770
+$$22770:
+	.skip 0xC
+.global $$22771
+$$22771:
+	.skip 0xC
+.global $$22772
+$$22772:
+	.skip 0xC
+.global $$22773
+$$22773:
+	.skip 0xC
+.global $$22774
+$$22774:
+	.skip 0xC
+.global $$22775
+$$22775:
+	.skip 0xC
+.global $$22776
+$$22776:
+	.skip 0xC
+.global $$22777
+$$22777:
+	.skip 0xC
+.global $$22778
+$$22778:
+	.skip 0x10

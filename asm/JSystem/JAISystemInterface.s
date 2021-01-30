@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global checkFileExsistence__18JAISystemInterfaceFPc
 checkFileExsistence__18JAISystemInterfaceFPc:
 /* 80057A00 00054940  7C 08 02 A6 */	mflr r0
@@ -671,3 +670,21 @@ lbl_800582F4:
 /* 80058300 00055240  38 21 00 18 */	addi r1, r1, 0x18
 /* 80058304 00055244  7C 08 03 A6 */	mtlr r0
 /* 80058308 00055248  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBEC, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2509
+$$2509:
+	.incbin "baserom.dol", 0x3E42A8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$2557
+$$2557:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global systemPortCmd__18JAISystemInterface
+systemPortCmd__18JAISystemInterface:
+	.skip 0x18

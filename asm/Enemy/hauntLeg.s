@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__19TNerveHauntLegHauntFv
 __dt__19TNerveHauntLegHauntFv:
 /* 80317C24 00314B64  7C 08 02 A6 */	mflr r0
@@ -1588,3 +1587,181 @@ $$232$$2__dt__14THauntedObjectFv:
 $$232$$2__dt__9THauntLegFv:
 /* 80319264 003161A4  38 63 FF E0 */	addi r3, r3, -32
 /* 80319268 003161A8  4B FF FB 64 */	b __dt__9THauntLegFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CF00, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x39E658, 0xC
+.global $$22122
+$$22122:
+	.incbin "baserom.dol", 0x39E664, 0x14
+.global $$22362
+$$22362:
+	.incbin "baserom.dol", 0x39E678, 0x30
+.global $$22363
+$$22363:
+	.incbin "baserom.dol", 0x39E6A8, 0x38
+.global $$22364
+$$22364:
+	.incbin "baserom.dol", 0x39E6E0, 0x34
+.global $$22365
+$$22365:
+	.incbin "baserom.dol", 0x39E714, 0x24
+.global tevColorData1$2781
+tevColorData1$2781:
+	.incbin "baserom.dol", 0x39E738, 0x40
+.global tevColorData2$2782
+tevColorData2$2782:
+	.incbin "baserom.dol", 0x39E778, 0x40
+.global $$22799
+$$22799:
+	.incbin "baserom.dol", 0x39E7B8, 0x10
+.global $$23267
+$$23267:
+	.incbin "baserom.dol", 0x39E7C8, 0x14
+.global $$23268
+$$23268:
+	.incbin "baserom.dol", 0x39E7DC, 0xC
+.global $$23365
+$$23365:
+	.incbin "baserom.dol", 0x39E7E8, 0x10
+.global $$23368
+$$23368:
+	.incbin "baserom.dol", 0x39E7F8, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global hauntleg_bastable
+hauntleg_bastable:
+	.incbin "baserom.dol", 0x3DDB58, 0xC
+.global entry$2798
+entry$2798:
+	.incbin "baserom.dol", 0x3DDB64, 0xC
+.global __vt__19TNerveHauntLegHaunt
+__vt__19TNerveHauntLegHaunt:
+	.incbin "baserom.dol", 0x3DDB70, 0x10
+.global __vt__9THauntLeg
+__vt__9THauntLeg:
+	.incbin "baserom.dol", 0x3DDB80, 0x1B8
+.global __vt__14THauntedObject
+__vt__14THauntedObject:
+	.incbin "baserom.dol", 0x3DDD38, 0xA4
+.global __vt__16THauntLegManager
+__vt__16THauntLegManager:
+	.incbin "baserom.dol", 0x3DDDDC, 0x5C
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22976
+$$22976:
+	.incbin "baserom.dol", 0x3EB870, 0x4
+.global $$22977
+$$22977:
+	.incbin "baserom.dol", 0x3EB874, 0x4
+.global $$22978
+$$22978:
+	.incbin "baserom.dol", 0x3EB878, 0x4
+.global $$22979
+$$22979:
+	.incbin "baserom.dol", 0x3EB87C, 0x4
+.global $$22980
+$$22980:
+	.incbin "baserom.dol", 0x3EB880, 0x4
+.global $$22981
+$$22981:
+	.incbin "baserom.dol", 0x3EB884, 0x4
+.global $$22982
+$$22982:
+	.incbin "baserom.dol", 0x3EB888, 0x4
+.global $$22983
+$$22983:
+	.incbin "baserom.dol", 0x3EB88C, 0x4
+.global $$23044
+$$23044:
+	.incbin "baserom.dol", 0x3EB890, 0x4
+.global $$23082
+$$23082:
+	.incbin "baserom.dol", 0x3EB894, 0x4
+.global $$23215
+$$23215:
+	.incbin "baserom.dol", 0x3EB898, 0x4
+.global $$23216
+$$23216:
+	.incbin "baserom.dol", 0x3EB89C, 0x4
+.global $$23269
+$$23269:
+	.incbin "baserom.dol", 0x3EB8A0, 0x4
+.global $$23350
+$$23350:
+	.incbin "baserom.dol", 0x3EB8A4, 0x8
+.global $$23351
+$$23351:
+	.incbin "baserom.dol", 0x3EB8AC, 0x4
+.global $$23352
+$$23352:
+	.incbin "baserom.dol", 0x3EB8B0, 0x8
+.global $$23354
+$$23354:
+	.incbin "baserom.dol", 0x3EB8B8, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22858
+$$22858:
+	.skip 0xC
+.global $$23486
+$$23486:
+	.skip 0xC
+.global $$23487
+$$23487:
+	.skip 0xC
+.global $$23488
+$$23488:
+	.skip 0xC
+.global $$23489
+$$23489:
+	.skip 0xC
+.global $$23490
+$$23490:
+	.skip 0xC
+.global $$23491
+$$23491:
+	.skip 0xC
+.global $$23492
+$$23492:
+	.skip 0xC
+.global $$23493
+$$23493:
+	.skip 0xC
+.global $$23494
+$$23494:
+	.skip 0xC
+.global $$23495
+$$23495:
+	.skip 0xC
+.global $$23496
+$$23496:
+	.skip 0xC
+.global $$23497
+$$23497:
+	.skip 0xC
+.global $$23498
+$$23498:
+	.skip 0xC
+.global $$23499
+$$23499:
+	.skip 0xC
+.global $$23500
+$$23500:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpCurHauntLeg
+gpCurHauntLeg:
+	.skip 0x4
+.global init$2859
+init$2859:
+	.skip 0x4
+.global instance$2857
+instance$2857:
+	.skip 0x8

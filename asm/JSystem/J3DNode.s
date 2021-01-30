@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__7J3DNodeFv
 __ct__7J3DNodeFv:
 /* 80029534 00026474  3C 80 80 3B */	lis r4, __vt__7J3DNode@ha
@@ -55,3 +54,8 @@ lbl_800295C4:
 /* 800295CC 0002650C  40 82 FF F4 */	bne lbl_800295C0
 /* 800295D0 00026510  90 83 00 14 */	stw r4, 0x14(r3)
 /* 800295D4 00026514  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__7J3DNode
+__vt__7J3DNode:
+	.incbin "baserom.dol", 0x3A6878, 0x28

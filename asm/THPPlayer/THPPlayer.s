@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global THPPlayerSetVolume
 THPPlayerSetVolume:
 /* 800BE52C 000BB46C  7C 08 02 A6 */	mflr r0
@@ -1551,3 +1550,62 @@ lbl_800BFA44:
 /* 800BFA54 000BC994  83 A1 00 14 */	lwz r29, 0x14(r1)
 /* 800BFA58 000BC998  38 21 00 20 */	addi r1, r1, 0x20
 /* 800BFA5C 000BC99C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global VolumeTable
+VolumeTable:
+	.incbin "baserom.dol", 0x3AEE70, 0x100
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2385
+$$2385:
+	.incbin "baserom.dol", 0x3E4918, 0x8
+.global $$2479
+$$2479:
+	.incbin "baserom.dol", 0x3E4920, 0x4
+.global $$2791
+$$2791:
+	.incbin "baserom.dol", 0x3E4924, 0x4
+.global $$2792
+$$2792:
+	.incbin "baserom.dol", 0x3E4928, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global ActivePlayer
+ActivePlayer:
+	.skip 0x1E0
+.global WorkBuffer
+WorkBuffer:
+	.skip 0x40
+.global PrepareReadyQueue
+PrepareReadyQueue:
+	.skip 0x20
+.global UsedTextureSetQueue
+UsedTextureSetQueue:
+	.skip 0x20
+.global UsedTextureSetMessage
+UsedTextureSetMessage:
+	.skip 0x20
+.global SoundBuffer
+SoundBuffer:
+	.skip 0x1180
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global Initialized
+Initialized:
+	.skip 0x4
+.global PrepareReadyMessage
+PrepareReadyMessage:
+	.skip 0x4
+.global OldVIPostCallback
+OldVIPostCallback:
+	.skip 0x4
+.global SoundBufferIndex
+SoundBufferIndex:
+	.skip 0x4
+.global LastAudioBuffer
+LastAudioBuffer:
+	.skip 0x4
+.global CurAudioBuffer
+CurAudioBuffer:
+	.skip 0x4

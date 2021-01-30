@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__7JUTFontFv
 __ct__7JUTFontFv:
 /* 800117BC 0000E6FC  7C 08 02 A6 */	mflr r0
@@ -162,3 +161,8 @@ setGX__7JUTFontFQ28JUtility6TColorQ28JUtility6TColor:
 /* 800119D0 0000E910  38 21 00 08 */	addi r1, r1, 8
 /* 800119D4 0000E914  7C 08 03 A6 */	mtlr r0
 /* 800119D8 0000E918  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__7JUTFont
+__vt__7JUTFont:
+	.incbin "baserom.dol", 0x3A5B68, 0x38

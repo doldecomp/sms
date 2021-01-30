@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global saveOption__12TFlagManagerFR21JSUMemoryOutputStream
 saveOption__12TFlagManagerFR21JSUMemoryOutputStream:
 /* 800E6A9C 000E39DC  7C 08 02 A6 */	mflr r0
@@ -2246,3 +2245,25 @@ lbl_800E8AC8:
 /* 800E8AD4 000E5A14  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
 /* 800E8AD8 000E5A18  7C 08 03 A6 */	mtlr r0
 /* 800E8ADC 000E5A1C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22031
+$$22031:
+	.incbin "baserom.dol", 0x3B0990, 0x2C
+.global $$22069
+$$22069:
+	.incbin "baserom.dol", 0x3B09BC, 0x2C
+.global $$22087
+$$22087:
+	.incbin "baserom.dol", 0x3B09E8, 0x28
+.global $$22135
+$$22135:
+	.incbin "baserom.dol", 0x3B0A10, 0x2C
+.global $$22168
+$$22168:
+	.incbin "baserom.dol", 0x3B0A3C, 0x2C
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global smInstance__12TFlagManager
+smInstance__12TFlagManager:
+	.skip 0x8

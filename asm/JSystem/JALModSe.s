@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__9JALSystemFv
 init__9JALSystemFv:
 /* 8004761C 0004455C  7C 08 02 A6 */	mflr r0
@@ -3764,3 +3763,218 @@ lbl_8004A848:
 /* 8004A858 00047798  7C 08 03 A6 */	mtlr r0
 /* 8004A85C 0004779C  38 21 00 18 */	addi r1, r1, 0x18
 /* 8004A860 000477A0  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBDC, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__31JALSeModData$$015JALSeModVolFunk$$1
+__vt__31JALSeModData$$015JALSeModVolFunk$$1:
+	.incbin "baserom.dol", 0x3A7A50, 0x10
+.global __vt__31JALSeModData$$015JALSeModPitFunk$$1
+__vt__31JALSeModData$$015JALSeModPitFunk$$1:
+	.incbin "baserom.dol", 0x3A7A60, 0x10
+.global __vt__31JALSeModData$$015JALSeModEffFunk$$1
+__vt__31JALSeModData$$015JALSeModEffFunk$$1:
+	.incbin "baserom.dol", 0x3A7A70, 0x10
+.global __vt__31JALSeModData$$015JALSeModVolDist$$1
+__vt__31JALSeModData$$015JALSeModVolDist$$1:
+	.incbin "baserom.dol", 0x3A7A80, 0x10
+.global __vt__31JALSeModData$$015JALSeModEffDist$$1
+__vt__31JALSeModData$$015JALSeModEffDist$$1:
+	.incbin "baserom.dol", 0x3A7A90, 0x10
+.global __vt__31JALSeModData$$015JALSeModPitDist$$1
+__vt__31JALSeModData$$015JALSeModPitDist$$1:
+	.incbin "baserom.dol", 0x3A7AA0, 0x10
+.global __vt__31JALSeModData$$015JALSeModVolFGrp$$1
+__vt__31JALSeModData$$015JALSeModVolFGrp$$1:
+	.incbin "baserom.dol", 0x3A7AB0, 0x10
+.global __vt__31JALSeModData$$015JALSeModPitFGrp$$1
+__vt__31JALSeModData$$015JALSeModPitFGrp$$1:
+	.incbin "baserom.dol", 0x3A7AC0, 0x10
+.global __vt__31JALSeModData$$015JALSeModEffFGrp$$1
+__vt__31JALSeModData$$015JALSeModEffFGrp$$1:
+	.incbin "baserom.dol", 0x3A7AD0, 0x10
+.global __vt__31JALSeModData$$015JALSeModVolDGrp$$1
+__vt__31JALSeModData$$015JALSeModVolDGrp$$1:
+	.incbin "baserom.dol", 0x3A7AE0, 0x10
+.global __vt__31JALSeModData$$015JALSeModEffDGrp$$1
+__vt__31JALSeModData$$015JALSeModEffDGrp$$1:
+	.incbin "baserom.dol", 0x3A7AF0, 0x10
+.global __vt__31JALSeModData$$015JALSeModPitDGrp$$1
+__vt__31JALSeModData$$015JALSeModPitDGrp$$1:
+	.incbin "baserom.dol", 0x3A7B00, 0x10
+.global __vt__15JALSeModPitDGrp
+__vt__15JALSeModPitDGrp:
+	.incbin "baserom.dol", 0x3A7B10, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModPitDGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModPitDGrp$$1:
+	.incbin "baserom.dol", 0x3A7B20, 0x10
+.global __vt__15JALSeModEffDGrp
+__vt__15JALSeModEffDGrp:
+	.incbin "baserom.dol", 0x3A7B30, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModEffDGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModEffDGrp$$1:
+	.incbin "baserom.dol", 0x3A7B40, 0x10
+.global __vt__15JALSeModVolDGrp
+__vt__15JALSeModVolDGrp:
+	.incbin "baserom.dol", 0x3A7B50, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModVolDGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModVolDGrp$$1:
+	.incbin "baserom.dol", 0x3A7B60, 0x10
+.global __vt__15JALSeModEffFGrp
+__vt__15JALSeModEffFGrp:
+	.incbin "baserom.dol", 0x3A7B70, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModEffFGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModEffFGrp$$1:
+	.incbin "baserom.dol", 0x3A7B80, 0x10
+.global __vt__15JALSeModPitFGrp
+__vt__15JALSeModPitFGrp:
+	.incbin "baserom.dol", 0x3A7B90, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModPitFGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModPitFGrp$$1:
+	.incbin "baserom.dol", 0x3A7BA0, 0x10
+.global __vt__15JALSeModVolFGrp
+__vt__15JALSeModVolFGrp:
+	.incbin "baserom.dol", 0x3A7BB0, 0x10
+.global __vt__34JALSeModDataGrp$$015JALSeModVolFGrp$$1
+__vt__34JALSeModDataGrp$$015JALSeModVolFGrp$$1:
+	.incbin "baserom.dol", 0x3A7BC0, 0x10
+.global __vt__15JALSeModPitDist
+__vt__15JALSeModPitDist:
+	.incbin "baserom.dol", 0x3A7BD0, 0x10
+.global __vt__15JALSeModEffDist
+__vt__15JALSeModEffDist:
+	.incbin "baserom.dol", 0x3A7BE0, 0x10
+.global __vt__15JALSeModVolDist
+__vt__15JALSeModVolDist:
+	.incbin "baserom.dol", 0x3A7BF0, 0x10
+.global __vt__15JALSeModEffFunk
+__vt__15JALSeModEffFunk:
+	.incbin "baserom.dol", 0x3A7C00, 0x10
+.global __vt__15JALSeModPitFunk
+__vt__15JALSeModPitFunk:
+	.incbin "baserom.dol", 0x3A7C10, 0x10
+.global __vt__15JALSeModVolFunk
+__vt__15JALSeModVolFunk:
+	.incbin "baserom.dol", 0x3A7C20, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2544
+$$2544:
+	.incbin "baserom.dol", 0x3E4130, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$21661
+$$21661:
+	.skip 0xC
+.global $$21662
+$$21662:
+	.skip 0xC
+.global $$21663
+$$21663:
+	.skip 0xC
+.global $$21664
+$$21664:
+	.skip 0xC
+.global $$21665
+$$21665:
+	.skip 0xC
+.global $$21666
+$$21666:
+	.skip 0xC
+.global $$21667
+$$21667:
+	.skip 0xC
+.global $$21668
+$$21668:
+	.skip 0xC
+.global $$21669
+$$21669:
+	.skip 0xC
+.global $$21670
+$$21670:
+	.skip 0xC
+.global $$21671
+$$21671:
+	.skip 0xC
+.global $$21672
+$$21672:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global spFManager__9JALSystem
+spFManager__9JALSystem:
+	.skip 0x4
+.global smList__26JALList$$015JALSeModEffDGrp$$1
+smList__26JALList$$015JALSeModEffDGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModPitDGrp$$1
+smList__26JALList$$015JALSeModPitDGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModVolDGrp$$1
+smList__26JALList$$015JALSeModVolDGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModEffFGrp$$1
+smList__26JALList$$015JALSeModEffFGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModPitFGrp$$1
+smList__26JALList$$015JALSeModPitFGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModVolFGrp$$1
+smList__26JALList$$015JALSeModVolFGrp$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModEffDist$$1
+smList__26JALList$$015JALSeModEffDist$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModPitDist$$1
+smList__26JALList$$015JALSeModPitDist$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModVolDist$$1
+smList__26JALList$$015JALSeModVolDist$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModEffFunk$$1
+smList__26JALList$$015JALSeModEffFunk$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModPitFunk$$1
+smList__26JALList$$015JALSeModPitFunk$$1:
+	.skip 0xC
+.global smList__26JALList$$015JALSeModVolFunk$$1
+smList__26JALList$$015JALSeModVolFunk$$1:
+	.skip 0xC
+.global __init__smList__26JALList$$015JALSeModEffDGrp$$1
+__init__smList__26JALList$$015JALSeModEffDGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModPitDGrp$$1
+__init__smList__26JALList$$015JALSeModPitDGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModVolDGrp$$1
+__init__smList__26JALList$$015JALSeModVolDGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModEffFGrp$$1
+__init__smList__26JALList$$015JALSeModEffFGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModPitFGrp$$1
+__init__smList__26JALList$$015JALSeModPitFGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModVolFGrp$$1
+__init__smList__26JALList$$015JALSeModVolFGrp$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModEffDist$$1
+__init__smList__26JALList$$015JALSeModEffDist$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModPitDist$$1
+__init__smList__26JALList$$015JALSeModPitDist$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModVolDist$$1
+__init__smList__26JALList$$015JALSeModVolDist$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModEffFunk$$1
+__init__smList__26JALList$$015JALSeModEffFunk$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModPitFunk$$1
+__init__smList__26JALList$$015JALSeModPitFunk$$1:
+	.skip 0x1
+.global __init__smList__26JALList$$015JALSeModVolFunk$$1
+__init__smList__26JALList$$015JALSeModVolFunk$$1:
+	.skip 0x1

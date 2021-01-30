@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__20TMapCollisionManagerFUsPCcPC10TLiveActor
 __ct__20TMapCollisionManagerFUsPCcPC10TLiveActor:
 /* 801E02D4 001DD214  7C 08 02 A6 */	mflr r0
@@ -238,3 +237,17 @@ lbl_801E05F8:
 /* 801E0604 001DD544  7C 08 03 A6 */	mtlr r0
 /* 801E0608 001DD548  38 21 00 18 */	addi r1, r1, 0x18
 /* 801E060C 001DD54C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21838
+$$21838:
+	.incbin "baserom.dol", 0x3E8AF0, 0x4
+.global $$21839
+$$21839:
+	.incbin "baserom.dol", 0x3E8AF4, 0x4
+.global $$21840
+$$21840:
+	.incbin "baserom.dol", 0x3E8AF8, 0x8
+.global $$21841
+$$21841:
+	.incbin "baserom.dol", 0x3E8B00, 0x8

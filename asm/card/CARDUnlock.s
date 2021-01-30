@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global bitrev
 bitrev:
 /* 8009FEE8 0009CE28  38 00 00 08 */	li r0, 8
@@ -1249,3 +1248,13 @@ lbl_800A1128:
 /* 800A113C 0009E07C  38 21 00 88 */	addi r1, r1, 0x88
 /* 800A1140 0009E080  7C 08 03 A6 */	mtlr r0
 /* 800A1144 0009E084  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global CardData
+CardData:
+	.incbin "baserom.dol", 0x3AE3A0, 0x160
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global next
+next:
+	.incbin "baserom.dol", 0x3E32B8, 0x8

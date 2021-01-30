@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem13WaveArcLoaderFv
 init__Q28JASystem13WaveArcLoaderFv:
 /* 8005AEB4 00057DF4  7C 08 02 A6 */	mflr r0
@@ -209,3 +208,19 @@ __sinit_JASWaveArcLoader_cpp:
 /* 8005B164 000580A4  38 21 00 08 */	addi r1, r1, 8
 /* 8005B168 000580A8  7C 08 03 A6 */	mtlr r0
 /* 8005B16C 000580AC  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBF0, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sCurrentDir__Q28JASystem13WaveArcLoader
+sCurrentDir__Q28JASystem13WaveArcLoader:
+	.incbin "baserom.dol", 0x3A7F10, 0x40
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$2257
+$$2257:
+	.skip 0xC
+.global sAramHeap__Q28JASystem13WaveArcLoader
+sAramHeap__Q28JASystem13WaveArcLoader:
+	.skip 0x2C

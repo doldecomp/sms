@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__18TLimitKoopaManagerFv
 __dt__18TLimitKoopaManagerFv:
 /* 8034BA04 00348944  7C 08 02 A6 */	mflr r0
@@ -3395,3 +3394,453 @@ $$232$$2__dt__15TLimitKoopaBodyFv:
 $$232$$2__dt__11TLimitKoopaFv:
 /* 8034EA10 0034B950  38 63 FF E0 */	addi r3, r3, -32
 /* 8034EA14 0034B954  4B FF FA 5C */	b __dt__11TLimitKoopaFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CF38, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3A21C8, 0xC
+.global $$22322
+$$22322:
+	.incbin "baserom.dol", 0x3A21D4, 0x14
+.global $$22561
+$$22561:
+	.incbin "baserom.dol", 0x3A21E8, 0x30
+.global $$22562
+$$22562:
+	.incbin "baserom.dol", 0x3A2218, 0x38
+.global $$22563
+$$22563:
+	.incbin "baserom.dol", 0x3A2250, 0x34
+.global $$22564
+$$22564:
+	.incbin "baserom.dol", 0x3A2284, 0x24
+.global $$22850
+$$22850:
+	.incbin "baserom.dol", 0x3A22A8, 0xC
+.global $$22852
+$$22852:
+	.incbin "baserom.dol", 0x3A22B4, 0xC
+.global $$23214
+$$23214:
+	.incbin "baserom.dol", 0x3A22C0, 0x10
+.global entry$3213
+entry$3213:
+	.incbin "baserom.dol", 0x3A22D0, 0x18
+.global $$23243
+$$23243:
+	.incbin "baserom.dol", 0x3A22E8, 0x24
+.global $$23244
+$$23244:
+	.incbin "baserom.dol", 0x3A230C, 0x24
+.global $$23245
+$$23245:
+	.incbin "baserom.dol", 0x3A2330, 0x24
+.global $$23246
+$$23246:
+	.incbin "baserom.dol", 0x3A2354, 0x24
+.global $$23247
+$$23247:
+	.incbin "baserom.dol", 0x3A2378, 0x24
+.global $$23345
+$$23345:
+	.incbin "baserom.dol", 0x3A239C, 0x18
+.global $$23346
+$$23346:
+	.incbin "baserom.dol", 0x3A23B4, 0x10
+.global $$23348
+$$23348:
+	.incbin "baserom.dol", 0x3A23C4, 0xC
+.global $$23349
+$$23349:
+	.incbin "baserom.dol", 0x3A23D0, 0x18
+.global $$23350
+$$23350:
+	.incbin "baserom.dol", 0x3A23E8, 0x10
+.global $$23351
+$$23351:
+	.incbin "baserom.dol", 0x3A23F8, 0xC
+.global $$23353
+$$23353:
+	.incbin "baserom.dol", 0x3A2404, 0xC
+.global $$23355
+$$23355:
+	.incbin "baserom.dol", 0x3A2410, 0xC
+.global $$23357
+$$23357:
+	.incbin "baserom.dol", 0x3A241C, 0x10
+.global $$23359
+$$23359:
+	.incbin "baserom.dol", 0x3A242C, 0x10
+.global $$23361
+$$23361:
+	.incbin "baserom.dol", 0x3A243C, 0xC
+.global $$23363
+$$23363:
+	.incbin "baserom.dol", 0x3A2448, 0xC
+.global $$23365
+$$23365:
+	.incbin "baserom.dol", 0x3A2454, 0xC
+.global $$23367
+$$23367:
+	.incbin "baserom.dol", 0x3A2460, 0xC
+.global $$23368
+$$23368:
+	.incbin "baserom.dol", 0x3A246C, 0xC
+.global $$23369
+$$23369:
+	.incbin "baserom.dol", 0x3A2478, 0x10
+.global $$23370
+$$23370:
+	.incbin "baserom.dol", 0x3A2488, 0xC
+.global $$23372
+$$23372:
+	.incbin "baserom.dol", 0x3A2494, 0x10
+.global $$23374
+$$23374:
+	.incbin "baserom.dol", 0x3A24A4, 0xC
+.global $$23375
+$$23375:
+	.incbin "baserom.dol", 0x3A24B0, 0xC
+.global $$23376
+$$23376:
+	.incbin "baserom.dol", 0x3A24BC, 0x14
+.global $$23377
+$$23377:
+	.incbin "baserom.dol", 0x3A24D0, 0x14
+.global $$23378
+$$23378:
+	.incbin "baserom.dol", 0x3A24E4, 0xC
+.global $$23380
+$$23380:
+	.incbin "baserom.dol", 0x3A24F0, 0xC
+.global $$23381
+$$23381:
+	.incbin "baserom.dol", 0x3A24FC, 0xC
+.global $$23383
+$$23383:
+	.incbin "baserom.dol", 0x3A2508, 0x10
+.global $$23384
+$$23384:
+	.incbin "baserom.dol", 0x3A2518, 0x10
+.global $$23386
+$$23386:
+	.incbin "baserom.dol", 0x3A2528, 0x10
+.global $$23388
+$$23388:
+	.incbin "baserom.dol", 0x3A2538, 0x14
+.global $$23390
+$$23390:
+	.incbin "baserom.dol", 0x3A254C, 0x14
+.global $$23392
+$$23392:
+	.incbin "baserom.dol", 0x3A2560, 0x14
+.global $$24758
+$$24758:
+	.incbin "baserom.dol", 0x3A2574, 0x10
+.global $$24759
+$$24759:
+	.incbin "baserom.dol", 0x3A2584, 0xC
+.global $$24761
+$$24761:
+	.incbin "baserom.dol", 0x3A2590, 0xC
+.global $$24762
+$$24762:
+	.incbin "baserom.dol", 0x3A259C, 0xC
+.global $$24763
+$$24763:
+	.incbin "baserom.dol", 0x3A25A8, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18TLimitKoopaManager
+__vt__18TLimitKoopaManager:
+	.incbin "baserom.dol", 0x3E0D90, 0x54
+.global __vt__20TNerveLimitKoopaTurn
+__vt__20TNerveLimitKoopaTurn:
+	.incbin "baserom.dol", 0x3E0DE4, 0x10
+.global __vt__11TLimitKoopa
+__vt__11TLimitKoopa:
+	.incbin "baserom.dol", 0x3E0DF4, 0x114
+.global __vt__15TLimitKoopaBody
+__vt__15TLimitKoopaBody:
+	.incbin "baserom.dol", 0x3E0F08, 0x100
+.global __vt__15TLimitKoopaHead
+__vt__15TLimitKoopaHead:
+	.incbin "baserom.dol", 0x3E1008, 0x100
+.global __vt__15TLimitKoopaHand
+__vt__15TLimitKoopaHand:
+	.incbin "baserom.dol", 0x3E1108, 0x100
+.global __vt__16TLimitKoopaFlame
+__vt__16TLimitKoopaFlame:
+	.incbin "baserom.dol", 0x3E1208, 0x100
+.global __vt__16TLimitKoopaParts
+__vt__16TLimitKoopaParts:
+	.incbin "baserom.dol", 0x3E1308, 0x100
+.global __vt__23TNerveLimitKoopaGetDown
+__vt__23TNerveLimitKoopaGetDown:
+	.incbin "baserom.dol", 0x3E1408, 0x10
+.global __vt__27TNerveLimitKoopaGetShowered
+__vt__27TNerveLimitKoopaGetShowered:
+	.incbin "baserom.dol", 0x3E1418, 0x10
+.global __vt__23TNerveLimitKoopaStagger
+__vt__23TNerveLimitKoopaStagger:
+	.incbin "baserom.dol", 0x3E1428, 0x10
+.global __vt__22TNerveLimitKoopaTumble
+__vt__22TNerveLimitKoopaTumble:
+	.incbin "baserom.dol", 0x3E1438, 0x10
+.global __vt__20TNerveLimitKoopaWait
+__vt__20TNerveLimitKoopaWait:
+	.incbin "baserom.dol", 0x3E1448, 0x10
+.global __vt__28TNerveLimitKoopaHipDropStart
+__vt__28TNerveLimitKoopaHipDropStart:
+	.incbin "baserom.dol", 0x3E1458, 0x10
+.global __vt__27TNerveLimitKoopaHipDropJump
+__vt__27TNerveLimitKoopaHipDropJump:
+	.incbin "baserom.dol", 0x3E1468, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global $$22940
+$$22940:
+	.incbin "baserom.dol", 0x3E3C70, 0x4
+.global $$22941
+$$22941:
+	.incbin "baserom.dol", 0x3E3C74, 0x4
+.global $$22942
+$$22942:
+	.incbin "baserom.dol", 0x3E3C78, 0x4
+.global $$22943
+$$22943:
+	.incbin "baserom.dol", 0x3E3C7C, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23347
+$$23347:
+	.incbin "baserom.dol", 0x3EC088, 0x4
+.global $$23352
+$$23352:
+	.incbin "baserom.dol", 0x3EC08C, 0x4
+.global $$23354
+$$23354:
+	.incbin "baserom.dol", 0x3EC090, 0x4
+.global $$23356
+$$23356:
+	.incbin "baserom.dol", 0x3EC094, 0x4
+.global $$23358
+$$23358:
+	.incbin "baserom.dol", 0x3EC098, 0x4
+.global $$23360
+$$23360:
+	.incbin "baserom.dol", 0x3EC09C, 0x4
+.global $$23362
+$$23362:
+	.incbin "baserom.dol", 0x3EC0A0, 0x4
+.global $$23364
+$$23364:
+	.incbin "baserom.dol", 0x3EC0A4, 0x4
+.global $$23366
+$$23366:
+	.incbin "baserom.dol", 0x3EC0A8, 0x4
+.global $$23371
+$$23371:
+	.incbin "baserom.dol", 0x3EC0AC, 0x4
+.global $$23373
+$$23373:
+	.incbin "baserom.dol", 0x3EC0B0, 0x4
+.global $$23379
+$$23379:
+	.incbin "baserom.dol", 0x3EC0B4, 0x4
+.global $$23382
+$$23382:
+	.incbin "baserom.dol", 0x3EC0B8, 0x4
+.global $$23385
+$$23385:
+	.incbin "baserom.dol", 0x3EC0BC, 0x4
+.global $$23387
+$$23387:
+	.incbin "baserom.dol", 0x3EC0C0, 0x4
+.global $$23389
+$$23389:
+	.incbin "baserom.dol", 0x3EC0C4, 0x4
+.global $$23391
+$$23391:
+	.incbin "baserom.dol", 0x3EC0C8, 0x4
+.global $$23393
+$$23393:
+	.incbin "baserom.dol", 0x3EC0CC, 0x4
+.global $$23414
+$$23414:
+	.incbin "baserom.dol", 0x3EC0D0, 0x8
+.global $$23430
+$$23430:
+	.incbin "baserom.dol", 0x3EC0D8, 0x8
+.global $$23722
+$$23722:
+	.incbin "baserom.dol", 0x3EC0E0, 0x4
+.global $$23855
+$$23855:
+	.incbin "baserom.dol", 0x3EC0E4, 0x4
+.global $$24055
+$$24055:
+	.incbin "baserom.dol", 0x3EC0E8, 0x4
+.global $$24225
+$$24225:
+	.incbin "baserom.dol", 0x3EC0EC, 0x4
+.global $$24318
+$$24318:
+	.incbin "baserom.dol", 0x3EC0F0, 0x4
+.global $$24319
+$$24319:
+	.incbin "baserom.dol", 0x3EC0F4, 0x4
+.global $$24320
+$$24320:
+	.incbin "baserom.dol", 0x3EC0F8, 0x4
+.global $$24348
+$$24348:
+	.incbin "baserom.dol", 0x3EC0FC, 0x4
+.global $$24349
+$$24349:
+	.incbin "baserom.dol", 0x3EC100, 0x4
+.global $$24595
+$$24595:
+	.incbin "baserom.dol", 0x3EC104, 0x4
+.global $$24596
+$$24596:
+	.incbin "baserom.dol", 0x3EC108, 0x4
+.global $$24597
+$$24597:
+	.incbin "baserom.dol", 0x3EC10C, 0x8
+.global $$24598
+$$24598:
+	.incbin "baserom.dol", 0x3EC114, 0x8
+.global $$24760
+$$24760:
+	.incbin "baserom.dol", 0x3EC11C, 0x4
+.global $$24782
+$$24782:
+	.incbin "baserom.dol", 0x3EC120, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22944
+$$22944:
+	.skip 0xC
+.global $$22948
+$$22948:
+	.skip 0xC
+.global $$22969
+$$22969:
+	.skip 0xC
+.global $$22975
+$$22975:
+	.skip 0xC
+.global $$22981
+$$22981:
+	.skip 0xC
+.global $$22985
+$$22985:
+	.skip 0xC
+.global $$22989
+$$22989:
+	.skip 0xC
+.global $$22993
+$$22993:
+	.skip 0xC
+.global $$22997
+$$22997:
+	.skip 0xC
+.global $$23001
+$$23001:
+	.skip 0xC
+.global $$23005
+$$23005:
+	.skip 0xC
+.global $$25479
+$$25479:
+	.skip 0xC
+.global $$25480
+$$25480:
+	.skip 0xC
+.global $$25481
+$$25481:
+	.skip 0xC
+.global $$25482
+$$25482:
+	.skip 0xC
+.global $$25483
+$$25483:
+	.skip 0xC
+.global $$25484
+$$25484:
+	.skip 0xC
+.global $$25485
+$$25485:
+	.skip 0xC
+.global $$25486
+$$25486:
+	.skip 0xC
+.global $$25487
+$$25487:
+	.skip 0xC
+.global $$25488
+$$25488:
+	.skip 0xC
+.global $$25489
+$$25489:
+	.skip 0xC
+.global $$25490
+$$25490:
+	.skip 0xC
+.global $$25491
+$$25491:
+	.skip 0xC
+.global $$25492
+$$25492:
+	.skip 0xC
+.global $$25493
+$$25493:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$localstatic1$theNerve__27TNerveLimitKoopaHipDropJumpFv
+init$localstatic1$theNerve__27TNerveLimitKoopaHipDropJumpFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__27TNerveLimitKoopaHipDropJumpFv
+nerve$localstatic0$theNerve__27TNerveLimitKoopaHipDropJumpFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__28TNerveLimitKoopaHipDropStartFv
+init$localstatic1$theNerve__28TNerveLimitKoopaHipDropStartFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__28TNerveLimitKoopaHipDropStartFv
+nerve$localstatic0$theNerve__28TNerveLimitKoopaHipDropStartFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__22TNerveLimitKoopaTumbleFv
+init$localstatic1$theNerve__22TNerveLimitKoopaTumbleFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__22TNerveLimitKoopaTumbleFv
+nerve$localstatic0$theNerve__22TNerveLimitKoopaTumbleFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__20TNerveLimitKoopaWaitFv
+init$localstatic1$theNerve__20TNerveLimitKoopaWaitFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__20TNerveLimitKoopaWaitFv
+nerve$localstatic0$theNerve__20TNerveLimitKoopaWaitFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__23TNerveLimitKoopaGetDownFv
+init$localstatic1$theNerve__23TNerveLimitKoopaGetDownFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__23TNerveLimitKoopaGetDownFv
+nerve$localstatic0$theNerve__23TNerveLimitKoopaGetDownFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__23TNerveLimitKoopaStaggerFv
+init$localstatic1$theNerve__23TNerveLimitKoopaStaggerFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__23TNerveLimitKoopaStaggerFv
+nerve$localstatic0$theNerve__23TNerveLimitKoopaStaggerFv:
+	.skip 0x4
+.global init$localstatic1$theNerve__27TNerveLimitKoopaGetShoweredFv
+init$localstatic1$theNerve__27TNerveLimitKoopaGetShoweredFv:
+	.skip 0x4
+.global nerve$localstatic0$theNerve__27TNerveLimitKoopaGetShoweredFv
+nerve$localstatic0$theNerve__27TNerveLimitKoopaGetShoweredFv:
+	.skip 0x4

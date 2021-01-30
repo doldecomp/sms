@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem8TrackMgrFii
 init__Q28JASystem8TrackMgrFii:
 /* 8006845C 0006539C  7C 08 02 A6 */	mflr r0
@@ -437,3 +436,40 @@ registerTrackCallback__Q28JASystem8TrackMgrFPFPQ28JASystem6TTrackUs_Us:
 /* 80068A28 00065968  38 21 00 08 */	addi r1, r1, 8
 /* 80068A2C 0006596C  7C 08 03 A6 */	mtlr r0
 /* 80068A30 00065970  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sTrackList__Q28JASystem8TrackMgr
+sTrackList__Q28JASystem8TrackMgr:
+	.skip 0x100
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sTrackPool__Q28JASystem8TrackMgr
+sTrackPool__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sSeqOuter__Q28JASystem8TrackMgr
+sSeqOuter__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sRootTrack__Q28JASystem8TrackMgr
+sRootTrack__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sFreeSeqpQueue__Q28JASystem8TrackMgr
+sFreeSeqpQueue__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sRootSeqCount__Q28JASystem8TrackMgr
+sRootSeqCount__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sTrackCount__Q28JASystem8TrackMgr
+sTrackCount__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global sTLists__Q28JASystem8TrackMgr
+sTLists__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global seqRemain__Q28JASystem8TrackMgr
+seqRemain__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global getP__Q28JASystem8TrackMgr
+getP__Q28JASystem8TrackMgr:
+	.skip 0x4
+.global backP__Q28JASystem8TrackMgr
+backP__Q28JASystem8TrackMgr:
+	.skip 0x4

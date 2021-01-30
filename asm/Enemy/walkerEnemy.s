@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__22TNerveWalkerTraceMarioFv
 __dt__22TNerveWalkerTraceMarioFv:
 /* 8028394C 0028088C  7C 08 02 A6 */	mflr r0
@@ -1693,8 +1692,8 @@ lbl_80285094:
 /* 802850A8 00281FE8  38 21 00 88 */	addi r1, r1, 0x88
 /* 802850AC 00281FEC  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__walkerEnemy
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__walkerEnemy:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 802850B0 00281FF0  D0 23 00 00 */	stfs f1, 0(r3)
 /* 802850B4 00281FF4  D0 43 00 04 */	stfs f2, 4(r3)
 /* 802850B8 00281FF8  D0 63 00 08 */	stfs f3, 8(r3)
@@ -2097,3 +2096,208 @@ lbl_8028565C:
 $$232$$2__dt__12TWalkerEnemyFv:
 /* 80285670 002825B0  38 63 FF E0 */	addi r3, r3, -32
 /* 80285674 002825B4  4B E7 AE 54 */	b __dt__12TWalkerEnemyFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE80, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3950C8, 0xC
+.global $$22177
+$$22177:
+	.incbin "baserom.dol", 0x3950D4, 0x14
+.global $$22370
+$$22370:
+	.incbin "baserom.dol", 0x3950E8, 0x30
+.global $$22371
+$$22371:
+	.incbin "baserom.dol", 0x395118, 0x38
+.global $$22372
+$$22372:
+	.incbin "baserom.dol", 0x395150, 0x34
+.global $$22373
+$$22373:
+	.incbin "baserom.dol", 0x395184, 0x24
+.global $$23371
+$$23371:
+	.incbin "baserom.dol", 0x3951A8, 0x10
+.global $$23373
+$$23373:
+	.incbin "baserom.dol", 0x3951B8, 0x10
+.global $$23375
+$$23375:
+	.incbin "baserom.dol", 0x3951C8, 0x14
+.global $$23377
+$$23377:
+	.incbin "baserom.dol", 0x3951DC, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__22TNerveWalkerTraceMario
+__vt__22TNerveWalkerTraceMario:
+	.incbin "baserom.dol", 0x3D3F88, 0x10
+.global __vt__18TNerveWalkerEscape
+__vt__18TNerveWalkerEscape:
+	.incbin "baserom.dol", 0x3D3F98, 0x10
+.global __vt__22TNerveWalkerPostAttack
+__vt__22TNerveWalkerPostAttack:
+	.incbin "baserom.dol", 0x3D3FA8, 0x10
+.global __vt__18TNerveWalkerAttack
+__vt__18TNerveWalkerAttack:
+	.incbin "baserom.dol", 0x3D3FB8, 0x10
+.global __vt__23TNerveWalkerGraphWander
+__vt__23TNerveWalkerGraphWander:
+	.incbin "baserom.dol", 0x3D3FC8, 0x10
+.global __vt__20TNerveWalkerGenerate
+__vt__20TNerveWalkerGenerate:
+	.incbin "baserom.dol", 0x3D3FD8, 0x10
+.global __vt__12TWalkerEnemy
+__vt__12TWalkerEnemy:
+	.incbin "baserom.dol", 0x3D3FE8, 0x1B8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22788
+$$22788:
+	.incbin "baserom.dol", 0x3EA338, 0x4
+.global $$22789
+$$22789:
+	.incbin "baserom.dol", 0x3EA33C, 0x4
+.global $$22836
+$$22836:
+	.incbin "baserom.dol", 0x3EA340, 0x4
+.global $$22873
+$$22873:
+	.incbin "baserom.dol", 0x3EA344, 0x4
+.global $$22972
+$$22972:
+	.incbin "baserom.dol", 0x3EA348, 0x4
+.global $$23214
+$$23214:
+	.incbin "baserom.dol", 0x3EA34C, 0x4
+.global $$23216
+$$23216:
+	.incbin "baserom.dol", 0x3EA350, 0x8
+.global $$23310
+$$23310:
+	.incbin "baserom.dol", 0x3EA358, 0x4
+.global $$23311
+$$23311:
+	.incbin "baserom.dol", 0x3EA35C, 0x4
+.global $$23337
+$$23337:
+	.incbin "baserom.dol", 0x3EA360, 0x4
+.global $$23372
+$$23372:
+	.incbin "baserom.dol", 0x3EA364, 0x4
+.global $$23374
+$$23374:
+	.incbin "baserom.dol", 0x3EA368, 0x4
+.global $$23376
+$$23376:
+	.incbin "baserom.dol", 0x3EA36C, 0x4
+.global $$23378
+$$23378:
+	.incbin "baserom.dol", 0x3EA370, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22615
+$$22615:
+	.skip 0xC
+.global $$22626
+$$22626:
+	.skip 0xC
+.global $$22638
+$$22638:
+	.skip 0xC
+.global $$22657
+$$22657:
+	.skip 0xC
+.global $$22668
+$$22668:
+	.skip 0xC
+.global $$22682
+$$22682:
+	.skip 0xC
+.global $$23421
+$$23421:
+	.skip 0xC
+.global $$23422
+$$23422:
+	.skip 0xC
+.global $$23423
+$$23423:
+	.skip 0xC
+.global $$23424
+$$23424:
+	.skip 0xC
+.global $$23425
+$$23425:
+	.skip 0xC
+.global $$23426
+$$23426:
+	.skip 0xC
+.global $$23427
+$$23427:
+	.skip 0xC
+.global $$23428
+$$23428:
+	.skip 0xC
+.global $$23429
+$$23429:
+	.skip 0xC
+.global $$23430
+$$23430:
+	.skip 0xC
+.global $$23431
+$$23431:
+	.skip 0xC
+.global $$23432
+$$23432:
+	.skip 0xC
+.global $$23433
+$$23433:
+	.skip 0xC
+.global $$23434
+$$23434:
+	.skip 0xC
+.global $$23435
+$$23435:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2616
+init$2616:
+	.skip 0x4
+.global instance$2614
+instance$2614:
+	.skip 0x4
+.global init$2627
+init$2627:
+	.skip 0x4
+.global instance$2625
+instance$2625:
+	.skip 0x4
+.global init$2639
+init$2639:
+	.skip 0x4
+.global instance$2637
+instance$2637:
+	.skip 0x4
+.global init$2658
+init$2658:
+	.skip 0x4
+.global instance$2656
+instance$2656:
+	.skip 0x4
+.global init$2669
+init$2669:
+	.skip 0x4
+.global instance$2667
+instance$2667:
+	.skip 0x4
+.global init$2683
+init$2683:
+	.skip 0x4
+.global instance$2681
+instance$2681:
+	.skip 0x4

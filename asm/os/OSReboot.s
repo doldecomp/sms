@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global Run
 Run:
 /* 80091414 0008E354  7C 08 02 A6 */	mflr r0
@@ -156,3 +155,19 @@ lbl_800915F4:
 /* 80091614 0008E554  38 21 03 40 */	addi r1, r1, 0x340
 /* 80091618 0008E558  7C 08 03 A6 */	mtlr r0
 /* 8009161C 0008E55C  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global Header
+Header:
+	.skip 0x20
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global SaveStart
+SaveStart:
+	.skip 0x4
+.global SaveEnd
+SaveEnd:
+	.skip 0x4
+.global Prepared
+Prepared:
+	.skip 0x8

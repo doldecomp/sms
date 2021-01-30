@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global storeBuffer__11JAISeqEntryFPP8JAISoundP8JAIActorUlUlUcPv
 storeBuffer__11JAISeqEntryFPP8JAISoundP8JAIActorUlUlUcPv:
 /* 8004F6E0 0004C620  7C 08 02 A6 */	mflr r0
@@ -205,3 +204,8 @@ lbl_8004F9B8:
 /* 8004F9C0 0004C900  38 21 00 60 */	addi r1, r1, 0x60
 /* 8004F9C4 0004C904  7C 08 03 A6 */	mtlr r0
 /* 8004F9C8 0004C908  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2443
+$$2443:
+	.incbin "baserom.dol", 0x3E4198, 0x8

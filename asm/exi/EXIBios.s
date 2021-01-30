@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SetExiInterruptMask
 SetExiInterruptMask:
 /* 800B4420 000B1360  7C 08 02 A6 */	mflr r0
@@ -1788,3 +1787,8 @@ lbl_800B5CD8:
 /* 800B5CE0 000B2C20  38 21 00 40 */	addi r1, r1, 0x40
 /* 800B5CE4 000B2C24  7C 08 03 A6 */	mtlr r0
 /* 800B5CE8 000B2C28  4E 80 00 20 */	blr 
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global Ecb
+Ecb:
+	.skip 0xC0

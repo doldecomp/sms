@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global JSUConvertOffsetToPtr$$0Us$$1__FPCvPCv
 JSUConvertOffsetToPtr$$0Us$$1__FPCvPCv:
 /* 8002EB3C 0002BA7C  28 04 00 00 */	cmplwi r4, 0

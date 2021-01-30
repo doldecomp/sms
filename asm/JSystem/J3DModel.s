@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global clear__12J3DModelDataFv
 clear__12J3DModelDataFv:
 /* 80026A94 000239D4  38 00 00 00 */	li r0, 0
@@ -3078,3 +3077,33 @@ lbl_80029508:
 /* 80029528 00026468  83 A1 00 94 */	lwz r29, 0x94(r1)
 /* 8002952C 0002646C  38 21 00 A0 */	addi r1, r1, 0xa0
 /* 80029530 00026470  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$2988
+$$2988:
+	.incbin "baserom.dol", 0x3A6800, 0x4C
+.global __vt__8J3DModel
+__vt__8J3DModel:
+	.incbin "baserom.dol", 0x3A684C, 0x1C
+.global __vt__12J3DModelData
+__vt__12J3DModelData:
+	.incbin "baserom.dol", 0x3A6868, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global J3DUnit01
+J3DUnit01:
+	.incbin "baserom.dol", 0x3E3020, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21460
+$$21460:
+	.incbin "baserom.dol", 0x3E3F30, 0x4
+.global $$22249
+$$22249:
+	.incbin "baserom.dol", 0x3E3F34, 0x4
+.global $$22250
+$$22250:
+	.incbin "baserom.dol", 0x3E3F38, 0x8
+.global $$22251
+$$22251:
+	.incbin "baserom.dol", 0x3E3F40, 0x8

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setStageBgmYoshiPercussion__5MSBgmFb
 setStageBgmYoshiPercussion__5MSBgmFb:
 /* 8017FA6C 0017C9AC  7C 08 02 A6 */	mflr r0
@@ -814,3 +813,66 @@ lbl_80180584:
 /* 8018058C 0017D4CC  38 21 00 10 */	addi r1, r1, 0x10
 /* 80180590 0017D4D0  7C 08 03 A6 */	mtlr r0
 /* 80180594 0017D4D4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCE0, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22331
+$$22331:
+	.incbin "baserom.dol", 0x3B6D28, 0xC0
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global smMainVolume__5MSBgm
+smMainVolume__5MSBgm:
+	.incbin "baserom.dol", 0x3E3500, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global smBgmInTrack__5MSBgm
+smBgmInTrack__5MSBgm:
+	.skip 0xC
+.global $$22048
+$$22048:
+	.skip 0xC
+.global $$22049
+$$22049:
+	.skip 0xC
+.global $$22050
+$$22050:
+	.skip 0xC
+.global $$22051
+$$22051:
+	.skip 0xC
+.global $$22052
+$$22052:
+	.skip 0xC
+.global $$22053
+$$22053:
+	.skip 0xC
+.global $$22054
+$$22054:
+	.skip 0xC
+.global $$22055
+$$22055:
+	.skip 0xC
+.global $$22056
+$$22056:
+	.skip 0xC
+.global $$22057
+$$22057:
+	.skip 0xC
+.global $$22058
+$$22058:
+	.skip 0xC
+.global $$22059
+$$22059:
+	.skip 0xC
+.global $$22060
+$$22060:
+	.skip 0xC
+.global $$22061
+$$22061:
+	.skip 0xC
+.global $$22062
+$$22062:
+	.skip 0xC

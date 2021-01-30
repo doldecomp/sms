@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__19TButterfloidManagerFv
 __dt__19TButterfloidManagerFv:
 /* 8036F2F4 0036C234  7C 08 02 A6 */	mflr r0
@@ -622,3 +621,111 @@ $$232$$2__dt__12TButterfloidFv:
 /* 8036FB94 0036CAD4  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 8036FB98 0036CAD8  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 8036FB9C 0036CADC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3A5200, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x3A520C, 0x14
+.global $$21585
+$$21585:
+	.incbin "baserom.dol", 0x3A5220, 0x30
+.global $$21586
+$$21586:
+	.incbin "baserom.dol", 0x3A5250, 0x38
+.global $$21587
+$$21587:
+	.incbin "baserom.dol", 0x3A5288, 0x34
+.global $$21588
+$$21588:
+	.incbin "baserom.dol", 0x3A52BC, 0x24
+.global $$22393
+$$22393:
+	.incbin "baserom.dol", 0x3A52E0, 0x10
+.global $$22394
+$$22394:
+	.incbin "baserom.dol", 0x3A52F0, 0x10
+.global $$22395
+$$22395:
+	.incbin "baserom.dol", 0x3A5300, 0x10
+.global cButterflyMdlNames__9$$2unnamed$$2
+cButterflyMdlNames__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x3A5310, 0xC
+.global entry$2459
+entry$2459:
+	.incbin "baserom.dol", 0x3A531C, 0x30
+.global $$22493
+$$22493:
+	.incbin "baserom.dol", 0x3A534C, 0x10
+.global $$22594
+$$22594:
+	.incbin "baserom.dol", 0x3A535C, 0x10
+.global $$22711
+$$22711:
+	.incbin "baserom.dol", 0x3A536C, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__19TButterfloidManager
+__vt__19TButterfloidManager:
+	.incbin "baserom.dol", 0x3E2DC8, 0x54
+.global __vt__12TButterfloid
+__vt__12TButterfloid:
+	.incbin "baserom.dol", 0x3E2E1C, 0x118
+.global __vt__10TButterfly
+__vt__10TButterfly:
+	.incbin "baserom.dol", 0x3E2F34, 0xCC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22489
+$$22489:
+	.incbin "baserom.dol", 0x3EC868, 0x4
+.global $$22490
+$$22490:
+	.incbin "baserom.dol", 0x3EC86C, 0x4
+.global $$22491
+$$22491:
+	.incbin "baserom.dol", 0x3EC870, 0x8
+.global $$22492
+$$22492:
+	.incbin "baserom.dol", 0x3EC878, 0x4
+.global $$22586
+$$22586:
+	.incbin "baserom.dol", 0x3EC87C, 0x4
+.global $$22587
+$$22587:
+	.incbin "baserom.dol", 0x3EC880, 0x4
+.global $$22588
+$$22588:
+	.incbin "baserom.dol", 0x3EC884, 0x4
+.global $$22589
+$$22589:
+	.incbin "baserom.dol", 0x3EC888, 0x4
+.global $$22590
+$$22590:
+	.incbin "baserom.dol", 0x3EC88C, 0x4
+.global $$22591
+$$22591:
+	.incbin "baserom.dol", 0x3EC890, 0x4
+.global $$22592
+$$22592:
+	.incbin "baserom.dol", 0x3EC894, 0x4
+.global $$22593
+$$22593:
+	.incbin "baserom.dol", 0x3EC898, 0x4
+.global $$22616
+$$22616:
+	.incbin "baserom.dol", 0x3EC89C, 0x4
+.global $$22710
+$$22710:
+	.incbin "baserom.dol", 0x3EC8A0, 0x4
+.global lbl_80414004
+lbl_80414004:
+	.incbin "baserom.dol", 0x3EC8A4, 0x1C
+
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22422
+$$22422:
+	.skip 0xC

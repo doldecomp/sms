@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global DecidePixelFmt__6JDramaFbb
 DecidePixelFmt__6JDramaFbb:
 /* 80042F08 0003FE48  54 60 06 3F */	clrlwi. r0, r3, 0x18

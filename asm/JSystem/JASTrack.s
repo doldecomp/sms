@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JASystem6TTrackFv
 __ct__Q28JASystem6TTrackFv:
 /* 80064BC4 00061B04  7C 08 02 A6 */	mflr r0
@@ -4041,3 +4040,79 @@ __sinit_JASTrack_cpp:
 /* 800682D0 00065210  38 21 00 08 */	addi r1, r1, 8
 /* 800682D4 00065214  7C 08 03 A6 */	mtlr r0
 /* 800682D8 00065218  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBFC, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sOscTable__Q28JASystem6TTrack
+sOscTable__Q28JASystem6TTrack:
+	.incbin "baserom.dol", 0x3A8DD8, 0x8
+.global $$2982
+$$2982:
+	.incbin "baserom.dol", 0x3A8DE0, 0x34
+.global $$21090
+$$21090:
+	.incbin "baserom.dol", 0x3A8E14, 0x44
+.global $$21324
+$$21324:
+	.incbin "baserom.dol", 0x3A8E58, 0x48
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2357
+$$2357:
+	.incbin "baserom.dol", 0x3E4420, 0x4
+.global $$2440
+$$2440:
+	.incbin "baserom.dol", 0x3E4424, 0x4
+.global $$2441
+$$2441:
+	.incbin "baserom.dol", 0x3E4428, 0x8
+.global $$2513
+$$2513:
+	.incbin "baserom.dol", 0x3E4430, 0x8
+.global $$2642
+$$2642:
+	.incbin "baserom.dol", 0x3E4438, 0x4
+.global $$2643
+$$2643:
+	.incbin "baserom.dol", 0x3E443C, 0x4
+.global $$2797
+$$2797:
+	.incbin "baserom.dol", 0x3E4440, 0x4
+.global $$2798
+$$2798:
+	.incbin "baserom.dol", 0x3E4444, 0x4
+.global $$2948
+$$2948:
+	.incbin "baserom.dol", 0x3E4448, 0x4
+.global $$2949
+$$2949:
+	.incbin "baserom.dol", 0x3E444C, 0x4
+.global $$2950
+$$2950:
+	.incbin "baserom.dol", 0x3E4450, 0x8
+.global $$2952
+$$2952:
+	.incbin "baserom.dol", 0x3E4458, 0x8
+.global $$2981
+$$2981:
+	.incbin "baserom.dol", 0x3E4460, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global oRandom__Q28JASystem6Player
+oRandom__Q28JASystem6Player:
+	.skip 0x88
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sParser__Q28JASystem6TTrack
+sParser__Q28JASystem6TTrack:
+	.skip 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sUpdateSyncMode__Q28JASystem6TTrack
+sUpdateSyncMode__Q28JASystem6TTrack:
+	.skip 0x4
+.global sCallBackFunc__Q28JASystem6TTrack
+sCallBackFunc__Q28JASystem6TTrack:
+	.skip 0x4

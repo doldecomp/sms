@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__12JPABaseFieldFv
 __ct__12JPABaseFieldFv:
 /* 8006FD7C 0006CCBC  7C 08 02 A6 */	mflr r0
@@ -2712,3 +2711,69 @@ __sinit_JPAField_cpp:
 /* 800722B8 0006F1F8  38 21 00 08 */	addi r1, r1, 8
 /* 800722BC 0006F1FC  7C 08 03 A6 */	mtlr r0
 /* 800722C0 0006F200  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC08, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22535
+$$22535:
+	.incbin "baserom.dol", 0x3A9478, 0x20
+.global __vt__12JPADragField
+__vt__12JPADragField:
+	.incbin "baserom.dol", 0x3A9498, 0x18
+.global __vt__14JPARandomField
+__vt__14JPARandomField:
+	.incbin "baserom.dol", 0x3A94B0, 0x18
+.global __vt__18JPAConvectionField
+__vt__18JPAConvectionField:
+	.incbin "baserom.dol", 0x3A94C8, 0x18
+.global __vt__14JPAVortexField
+__vt__14JPAVortexField:
+	.incbin "baserom.dol", 0x3A94E0, 0x18
+.global __vt__14JPANewtonField
+__vt__14JPANewtonField:
+	.incbin "baserom.dol", 0x3A94F8, 0x18
+.global __vt__14JPAMagnetField
+__vt__14JPAMagnetField:
+	.incbin "baserom.dol", 0x3A9510, 0x18
+.global __vt__11JPAAirField
+__vt__11JPAAirField:
+	.incbin "baserom.dol", 0x3A9528, 0x18
+.global __vt__15JPAGravityField
+__vt__15JPAGravityField:
+	.incbin "baserom.dol", 0x3A9540, 0x18
+.global __vt__12JPABaseField
+__vt__12JPABaseField:
+	.incbin "baserom.dol", 0x3A9558, 0x18
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21671
+$$21671:
+	.incbin "baserom.dol", 0x3E4500, 0x4
+.global $$21672
+$$21672:
+	.incbin "baserom.dol", 0x3E4504, 0x4
+.global $$21673
+$$21673:
+	.incbin "baserom.dol", 0x3E4508, 0x4
+.global $$21877
+$$21877:
+	.incbin "baserom.dol", 0x3E450C, 0x4
+.global $$21955
+$$21955:
+	.incbin "baserom.dol", 0x3E4510, 0x4
+.global $$21956
+$$21956:
+	.incbin "baserom.dol", 0x3E4514, 0x4
+.global $$21957
+$$21957:
+	.incbin "baserom.dol", 0x3E4518, 0x4
+.global $$22076
+$$22076:
+	.incbin "baserom.dol", 0x3E451C, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global FieldRand
+FieldRand:
+	.skip 0x8

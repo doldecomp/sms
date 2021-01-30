@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__16TNerveRocketWaitFv
 __dt__16TNerveRocketWaitFv:
 /* 8031C064 00318FA4  7C 08 02 A6 */	mflr r0
@@ -2004,3 +2003,207 @@ lbl_8031DC44:
 $$232$$2__dt__7TRocketFv:
 /* 8031DC58 0031AB98  38 63 FF E0 */	addi r3, r3, -32
 /* 8031DC5C 0031AB9C  4B FF FC 04 */	b __dt__7TRocketFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CF08, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x39EDB8, 0xC
+.global $$22391
+$$22391:
+	.incbin "baserom.dol", 0x39EDC4, 0x14
+.global $$22603
+$$22603:
+	.incbin "baserom.dol", 0x39EDD8, 0x30
+.global $$22604
+$$22604:
+	.incbin "baserom.dol", 0x39EE08, 0x38
+.global $$22605
+$$22605:
+	.incbin "baserom.dol", 0x39EE40, 0x34
+.global $$22606
+$$22606:
+	.incbin "baserom.dol", 0x39EE74, 0x24
+.global $$22822
+$$22822:
+	.incbin "baserom.dol", 0x39EE98, 0xC
+.global $$23627
+$$23627:
+	.incbin "baserom.dol", 0x39EEA4, 0xC
+.global $$23650
+$$23650:
+	.incbin "baserom.dol", 0x39EEB0, 0x14
+.global $$23651
+$$23651:
+	.incbin "baserom.dol", 0x39EEC4, 0x10
+.global $$23653
+$$23653:
+	.incbin "baserom.dol", 0x39EED4, 0x10
+.global $$23654
+$$23654:
+	.incbin "baserom.dol", 0x39EEE4, 0x10
+.global $$23655
+$$23655:
+	.incbin "baserom.dol", 0x39EEF4, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global rocket_bastable
+rocket_bastable:
+	.incbin "baserom.dol", 0x3DE220, 0x10
+.global entry$2821
+entry$2821:
+	.incbin "baserom.dol", 0x3DE230, 0x18
+.global __vt__16TNerveRocketWait
+__vt__16TNerveRocketWait:
+	.incbin "baserom.dol", 0x3DE248, 0x10
+.global __vt__15TNerveRocketFly
+__vt__15TNerveRocketFly:
+	.incbin "baserom.dol", 0x3DE258, 0x10
+.global __vt__27TNerveRocketPossessedNozzle
+__vt__27TNerveRocketPossessedNozzle:
+	.incbin "baserom.dol", 0x3DE268, 0x10
+.global __vt__7TRocket
+__vt__7TRocket:
+	.incbin "baserom.dol", 0x3DE278, 0x1A8
+.global __vt__14TRocketManager
+__vt__14TRocketManager:
+	.incbin "baserom.dol", 0x3DE420, 0x58
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mTestAng_y__7TRocket
+mTestAng_y__7TRocket:
+	.incbin "baserom.dol", 0x3E3AE0, 0x4
+.global mNozzleOffsetZ__7TRocket
+mNozzleOffsetZ__7TRocket:
+	.incbin "baserom.dol", 0x3E3AE4, 0x4
+.global mColOffsetY__7TRocket
+mColOffsetY__7TRocket:
+	.incbin "baserom.dol", 0x3E3AE8, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23024
+$$23024:
+	.incbin "baserom.dol", 0x3EB940, 0x4
+.global $$23025
+$$23025:
+	.incbin "baserom.dol", 0x3EB944, 0x4
+.global $$23026
+$$23026:
+	.incbin "baserom.dol", 0x3EB948, 0x4
+.global $$23027
+$$23027:
+	.incbin "baserom.dol", 0x3EB94C, 0x4
+.global $$23028
+$$23028:
+	.incbin "baserom.dol", 0x3EB950, 0x4
+.global $$23029
+$$23029:
+	.incbin "baserom.dol", 0x3EB954, 0x4
+.global $$23031
+$$23031:
+	.incbin "baserom.dol", 0x3EB958, 0x8
+.global $$23123
+$$23123:
+	.incbin "baserom.dol", 0x3EB960, 0x4
+.global $$23523
+$$23523:
+	.incbin "baserom.dol", 0x3EB964, 0x4
+.global $$23524
+$$23524:
+	.incbin "baserom.dol", 0x3EB968, 0x4
+.global $$23613
+$$23613:
+	.incbin "baserom.dol", 0x3EB96C, 0x8
+.global $$23614
+$$23614:
+	.incbin "baserom.dol", 0x3EB974, 0x4
+.global $$23615
+$$23615:
+	.incbin "baserom.dol", 0x3EB978, 0x4
+.global $$23652
+$$23652:
+	.incbin "baserom.dol", 0x3EB97C, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22896
+$$22896:
+	.skip 0xC
+.global $$22910
+$$22910:
+	.skip 0xC
+.global $$22932
+$$22932:
+	.skip 0xC
+.global $$23752
+$$23752:
+	.skip 0xC
+.global $$23753
+$$23753:
+	.skip 0xC
+.global $$23754
+$$23754:
+	.skip 0xC
+.global $$23755
+$$23755:
+	.skip 0xC
+.global $$23756
+$$23756:
+	.skip 0xC
+.global $$23757
+$$23757:
+	.skip 0xC
+.global $$23758
+$$23758:
+	.skip 0xC
+.global $$23759
+$$23759:
+	.skip 0xC
+.global $$23760
+$$23760:
+	.skip 0xC
+.global $$23761
+$$23761:
+	.skip 0xC
+.global $$23762
+$$23762:
+	.skip 0xC
+.global $$23763
+$$23763:
+	.skip 0xC
+.global $$23764
+$$23764:
+	.skip 0xC
+.global $$23765
+$$23765:
+	.skip 0xC
+.global $$23766
+$$23766:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mTestAng_x__7TRocket
+mTestAng_x__7TRocket:
+	.skip 0x4
+.global mTestAng_z__7TRocket
+mTestAng_z__7TRocket:
+	.skip 0x4
+.global init$2897
+init$2897:
+	.skip 0x4
+.global instance$2895
+instance$2895:
+	.skip 0x4
+.global init$2911
+init$2911:
+	.skip 0x4
+.global instance$2909
+instance$2909:
+	.skip 0x4
+.global init$2933
+init$2933:
+	.skip 0x4
+.global instance$2931
+instance$2931:
+	.skip 0x4

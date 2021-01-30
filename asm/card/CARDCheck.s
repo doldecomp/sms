@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __CARDCheckSum
 __CARDCheckSum:
 /* 800A1994 0009E8D4  38 00 00 00 */	li r0, 0

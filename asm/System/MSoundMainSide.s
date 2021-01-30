@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setPosPtr__7MSStageFP3Vec
 setPosPtr__7MSStageFP3Vec:
 /* 8010E9EC 0010B92C  4E 80 00 20 */	blr 
@@ -2599,3 +2598,194 @@ lbl_80110EEC:
 /* 80110EF4 0010DE34  38 21 00 10 */	addi r1, r1, 0x10
 /* 80110EF8 0010DE38  7C 08 03 A6 */	mtlr r0
 /* 80110EFC 0010DE3C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC50, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$23414
+$$23414:
+	.incbin "baserom.dol", 0x3B19D8, 0x28
+.global $$23413
+$$23413:
+	.incbin "baserom.dol", 0x3B1A00, 0xF4
+.global __vt__24MSSTageSimpleEnvironment
+__vt__24MSSTageSimpleEnvironment:
+	.incbin "baserom.dol", 0x3B1AF4, 0x14
+.global __vt__17MSStageCubeSwitch
+__vt__17MSStageCubeSwitch:
+	.incbin "baserom.dol", 0x3B1B08, 0x14
+.global __vt__20MSStageCubeFadeMonte
+__vt__20MSStageCubeFadeMonte:
+	.incbin "baserom.dol", 0x3B1B1C, 0x14
+.global __vt__15MSStageCubeFade
+__vt__15MSStageCubeFade:
+	.incbin "baserom.dol", 0x3B1B30, 0x14
+.global __vt__20MSStageDistFadeMonte
+__vt__20MSStageDistFadeMonte:
+	.incbin "baserom.dol", 0x3B1B44, 0x14
+.global __vt__15MSStageDistFade
+__vt__15MSStageDistFade:
+	.incbin "baserom.dol", 0x3B1B58, 0x14
+.global __vt__7MSStage
+__vt__7MSStage:
+	.incbin "baserom.dol", 0x3B1B6C, 0x14
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22293
+$$22293:
+	.incbin "baserom.dol", 0x3E52E8, 0x4
+.global $$22300
+$$22300:
+	.incbin "baserom.dol", 0x3E52EC, 0x4
+.global $$22344
+$$22344:
+	.incbin "baserom.dol", 0x3E52F0, 0x4
+.global $$22373
+$$22373:
+	.incbin "baserom.dol", 0x3E52F4, 0x4
+.global $$22554
+$$22554:
+	.incbin "baserom.dol", 0x3E52F8, 0x8
+.global $$22555
+$$22555:
+	.incbin "baserom.dol", 0x3E5300, 0x8
+.global $$22556
+$$22556:
+	.incbin "baserom.dol", 0x3E5308, 0x8
+.global $$22796
+$$22796:
+	.incbin "baserom.dol", 0x3E5310, 0x8
+.global $$22814
+$$22814:
+	.incbin "baserom.dol", 0x3E5318, 0x4
+.global $$22815
+$$22815:
+	.incbin "baserom.dol", 0x3E531C, 0x4
+.global $$22999
+$$22999:
+	.incbin "baserom.dol", 0x3E5320, 0x4
+.global $$23000
+$$23000:
+	.incbin "baserom.dol", 0x3E5324, 0x4
+.global $$23001
+$$23001:
+	.incbin "baserom.dol", 0x3E5328, 0x4
+.global $$23002
+$$23002:
+	.incbin "baserom.dol", 0x3E532C, 0x4
+.global $$23408
+$$23408:
+	.incbin "baserom.dol", 0x3E5330, 0x4
+.global $$23409
+$$23409:
+	.incbin "baserom.dol", 0x3E5334, 0x4
+.global $$23410
+$$23410:
+	.incbin "baserom.dol", 0x3E5338, 0x4
+.global $$23411
+$$23411:
+	.incbin "baserom.dol", 0x3E533C, 0x4
+.global $$23412
+$$23412:
+	.incbin "baserom.dol", 0x3E5340, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23490
+$$23490:
+	.skip 0xC
+.global $$23491
+$$23491:
+	.skip 0xC
+.global $$23492
+$$23492:
+	.skip 0xC
+.global $$23493
+$$23493:
+	.skip 0xC
+.global $$23494
+$$23494:
+	.skip 0xC
+.global $$23495
+$$23495:
+	.skip 0xC
+.global $$23496
+$$23496:
+	.skip 0xC
+.global $$23497
+$$23497:
+	.skip 0xC
+.global $$23498
+$$23498:
+	.skip 0xC
+.global $$23499
+$$23499:
+	.skip 0xC
+.global $$23500
+$$23500:
+	.skip 0xC
+.global $$23501
+$$23501:
+	.skip 0xC
+.global $$23502
+$$23502:
+	.skip 0xC
+.global $$23503
+$$23503:
+	.skip 0xC
+.global $$23504
+$$23504:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global msStg__Q210MSMainProc11MSStageInfo
+msStg__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global demoBgm__Q210MSMainProc11MSStageInfo
+demoBgm__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global stageBgm__Q210MSMainProc11MSStageInfo
+stageBgm__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global stageBgmSilent__Q210MSMainProc11MSStageInfo
+stageBgmSilent__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global stageBgmSilentStartStatus__Q210MSMainProc11MSStageInfo
+stageBgmSilentStartStatus__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global flags__Q210MSMainProc11MSStageInfo
+flags__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global volOffCategory__Q210MSMainProc11MSStageInfo
+volOffCategory__Q210MSMainProc11MSStageInfo:
+	.skip 0x2
+.global fadeEvent__Q210MSMainProc11MSStageInfo
+fadeEvent__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global switchBgm__Q210MSMainProc11MSStageInfo
+switchBgm__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global switchBgm2__Q210MSMainProc11MSStageInfo
+switchBgm2__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global cubeFadeRatio__Q210MSMainProc11MSStageInfo
+cubeFadeRatio__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global cubeFadeUsePan__Q210MSMainProc11MSStageInfo
+cubeFadeUsePan__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global bossLives__Q210MSMainProc11MSStageInfo
+bossLives__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global bossLives2__Q210MSMainProc11MSStageInfo
+bossLives2__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global bossNotDamaged__Q210MSMainProc11MSStageInfo
+bossNotDamaged__Q210MSMainProc11MSStageInfo:
+	.skip 0x1
+.global distFadeStageToKage__Q210MSMainProc11MSStageInfo
+distFadeStageToKage__Q210MSMainProc11MSStageInfo:
+	.skip 0x4
+.global smMSStage__7MSStage
+smMSStage__7MSStage:
+	.skip 0x4

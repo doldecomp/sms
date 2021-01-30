@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global receiveMessage__6TMarioFP9THitActorUl
 receiveMessage__6TMarioFP9THitActorUl:
 /* 80161F84 0015EEC4  7C 08 02 A6 */	mflr r0
@@ -2746,3 +2745,98 @@ lbl_80164654:
 /* 8016465C 0016159C  38 21 00 10 */	addi r1, r1, 0x10
 /* 80164660 001615A0  7C 08 03 A6 */	mtlr r0
 /* 80164664 001615A4  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCB8, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$24271
+$$24271:
+	.incbin "baserom.dol", 0x37B720, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$24230
+$$24230:
+	.incbin "baserom.dol", 0x3B5160, 0xF0
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$24221
+$$24221:
+	.incbin "baserom.dol", 0x3E6240, 0x4
+.global $$24222
+$$24222:
+	.incbin "baserom.dol", 0x3E6244, 0x4
+.global $$24223
+$$24223:
+	.incbin "baserom.dol", 0x3E6248, 0x4
+.global $$24224
+$$24224:
+	.incbin "baserom.dol", 0x3E624C, 0x4
+.global $$24225
+$$24225:
+	.incbin "baserom.dol", 0x3E6250, 0x4
+.global $$24226
+$$24226:
+	.incbin "baserom.dol", 0x3E6254, 0x4
+.global $$24227
+$$24227:
+	.incbin "baserom.dol", 0x3E6258, 0x4
+.global $$24228
+$$24228:
+	.incbin "baserom.dol", 0x3E625C, 0x4
+.global $$24229
+$$24229:
+	.incbin "baserom.dol", 0x3E6260, 0x8
+.global $$24233
+$$24233:
+	.incbin "baserom.dol", 0x3E6268, 0x8
+.global $$24272
+$$24272:
+	.incbin "baserom.dol", 0x3E6270, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23257
+$$23257:
+	.skip 0xC
+.global $$23258
+$$23258:
+	.skip 0xC
+.global $$23259
+$$23259:
+	.skip 0xC
+.global $$23260
+$$23260:
+	.skip 0xC
+.global $$23261
+$$23261:
+	.skip 0xC
+.global $$23262
+$$23262:
+	.skip 0xC
+.global $$23263
+$$23263:
+	.skip 0xC
+.global $$23264
+$$23264:
+	.skip 0xC
+.global $$23265
+$$23265:
+	.skip 0xC
+.global $$23266
+$$23266:
+	.skip 0xC
+.global $$23267
+$$23267:
+	.skip 0xC
+.global $$23268
+$$23268:
+	.skip 0xC
+.global $$23269
+$$23269:
+	.skip 0xC
+.global $$23270
+$$23270:
+	.skip 0xC
+.global $$23271
+$$23271:
+	.skip 0x10

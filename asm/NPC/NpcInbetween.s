@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global execMotionBlend__13TNpcInbetweenFP6MActor
 execMotionBlend__13TNpcInbetweenFP6MActor:
 /* 80176450 00173390  7C 08 02 A6 */	mflr r0
@@ -198,3 +197,14 @@ lbl_801766E0:
 lbl_80176700:
 /* 80176700 00173640  38 21 00 20 */	addi r1, r1, 0x20
 /* 80176704 00173644  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21832
+$$21832:
+	.incbin "baserom.dol", 0x3E65E0, 0x4
+.global $$21833
+$$21833:
+	.incbin "baserom.dol", 0x3E65E4, 0x4
+.global $$21835
+$$21835:
+	.incbin "baserom.dol", 0x3E65E8, 0x8

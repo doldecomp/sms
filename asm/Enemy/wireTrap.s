@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__20TNerveWireTrapGoWaitFv
 __dt__20TNerveWireTrapGoWaitFv:
 /* 8031998C 003168CC  7C 08 02 A6 */	mflr r0
@@ -2326,8 +2325,8 @@ lbl_8031BA50:
 /* 8031BA6C 003189AC  7C 08 03 A6 */	mtlr r0
 /* 8031BA70 003189B0  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__wireTrap
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__wireTrap:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8031BA74 003189B4  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8031BA78 003189B8  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8031BA7C 003189BC  D0 63 00 08 */	stfs f3, 8(r3)
@@ -2743,3 +2742,259 @@ lbl_8031C034:
 $$232$$2__dt__9TWireTrapFv:
 /* 8031C048 00318F88  38 63 FF E0 */	addi r3, r3, -32
 /* 8031C04C 00318F8C  4B FF FC 94 */	b __dt__9TWireTrapFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CF04, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x39E810, 0xC
+.global $$21937
+$$21937:
+	.incbin "baserom.dol", 0x39E81C, 0x14
+.global $$22018
+$$22018:
+	.incbin "baserom.dol", 0x39E830, 0x30
+.global $$22019
+$$22019:
+	.incbin "baserom.dol", 0x39E860, 0x38
+.global $$22020
+$$22020:
+	.incbin "baserom.dol", 0x39E898, 0x34
+.global $$22021
+$$22021:
+	.incbin "baserom.dol", 0x39E8CC, 0x24
+.global $$22670
+$$22670:
+	.incbin "baserom.dol", 0x39E8F0, 0x10
+.global entry$2669
+entry$2669:
+	.incbin "baserom.dol", 0x39E900, 0x18
+.global $$23094
+$$23094:
+	.incbin "baserom.dol", 0x39E918, 0x14
+.global $$23095
+$$23095:
+	.incbin "baserom.dol", 0x39E92C, 0x14
+.global $$23097
+$$23097:
+	.incbin "baserom.dol", 0x39E940, 0x10
+.global $$23098
+$$23098:
+	.incbin "baserom.dol", 0x39E950, 0xC
+.global $$23979
+$$23979:
+	.incbin "baserom.dol", 0x39E95C, 0x28
+.global $$23980
+$$23980:
+	.incbin "baserom.dol", 0x39E984, 0x2C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__20TNerveWireTrapGoWait
+__vt__20TNerveWireTrapGoWait:
+	.incbin "baserom.dol", 0x3DDE80, 0x10
+.global $$23924
+$$23924:
+	.incbin "baserom.dol", 0x3DDE90, 0x30
+.global __vt__18TNerveWireTrapWait
+__vt__18TNerveWireTrapWait:
+	.incbin "baserom.dol", 0x3DDEC0, 0x10
+.global __vt__20TNerveWireTrapSearch
+__vt__20TNerveWireTrapSearch:
+	.incbin "baserom.dol", 0x3DDED0, 0x10
+.global __vt__27TNerveWireTrapOnewayMoveEnd
+__vt__27TNerveWireTrapOnewayMoveEnd:
+	.incbin "baserom.dol", 0x3DDEE0, 0x10
+.global __vt__24TNerveWireTrapOnewayMove
+__vt__24TNerveWireTrapOnewayMove:
+	.incbin "baserom.dol", 0x3DDEF0, 0x10
+.global __vt__29TNerveWireTrapOnewayMoveStart
+__vt__29TNerveWireTrapOnewayMoveStart:
+	.incbin "baserom.dol", 0x3DDF00, 0x10
+.global __vt__24TNerveWireTrapReturnMove
+__vt__24TNerveWireTrapReturnMove:
+	.incbin "baserom.dol", 0x3DDF10, 0x10
+.global __vt__16TWireTrapManager
+__vt__16TWireTrapManager:
+	.incbin "baserom.dol", 0x3DDF20, 0x54
+.global __vt__9TWireTrap
+__vt__9TWireTrap:
+	.incbin "baserom.dol", 0x3DDF74, 0x114
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global cMatName__9$$2unnamed$$2
+cMatName__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x3EB8D8, 0x8
+.global cRedColor__9$$2unnamed$$2
+cRedColor__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x3EB8E0, 0x8
+.global cBlueColor__9$$2unnamed$$2
+cBlueColor__9$$2unnamed$$2:
+	.incbin "baserom.dol", 0x3EB8E8, 0x8
+.global $$22844
+$$22844:
+	.incbin "baserom.dol", 0x3EB8F0, 0x4
+.global $$22845
+$$22845:
+	.incbin "baserom.dol", 0x3EB8F4, 0x4
+.global $$22846
+$$22846:
+	.incbin "baserom.dol", 0x3EB8F8, 0x8
+.global $$22848
+$$22848:
+	.incbin "baserom.dol", 0x3EB900, 0x8
+.global $$22879
+$$22879:
+	.incbin "baserom.dol", 0x3EB908, 0x4
+.global $$23069
+$$23069:
+	.incbin "baserom.dol", 0x3EB90C, 0x4
+.global $$23096
+$$23096:
+	.incbin "baserom.dol", 0x3EB910, 0x4
+.global $$23197
+$$23197:
+	.incbin "baserom.dol", 0x3EB914, 0x4
+.global $$23198
+$$23198:
+	.incbin "baserom.dol", 0x3EB918, 0x4
+.global $$23745
+$$23745:
+	.incbin "baserom.dol", 0x3EB91C, 0x4
+.global $$23746
+$$23746:
+	.incbin "baserom.dol", 0x3EB920, 0x4
+.global $$23747
+$$23747:
+	.incbin "baserom.dol", 0x3EB924, 0x4
+.global $$23748
+$$23748:
+	.incbin "baserom.dol", 0x3EB928, 0x4
+.global $$23749
+$$23749:
+	.incbin "baserom.dol", 0x3EB92C, 0x4
+.global $$23750
+$$23750:
+	.incbin "baserom.dol", 0x3EB930, 0x4
+.global $$23968
+$$23968:
+	.incbin "baserom.dol", 0x3EB934, 0x4
+.global $$24047
+$$24047:
+	.incbin "baserom.dol", 0x3EB938, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22571
+$$22571:
+	.skip 0xC
+.global $$22672
+$$22672:
+	.skip 0xC
+.global $$22684
+$$22684:
+	.skip 0xC
+.global $$22692
+$$22692:
+	.skip 0xC
+.global $$22703
+$$22703:
+	.skip 0xC
+.global $$22711
+$$22711:
+	.skip 0xC
+.global $$22721
+$$22721:
+	.skip 0xC
+.global $$22729
+$$22729:
+	.skip 0xC
+.global $$24138
+$$24138:
+	.skip 0xC
+.global $$24139
+$$24139:
+	.skip 0xC
+.global $$24140
+$$24140:
+	.skip 0xC
+.global $$24141
+$$24141:
+	.skip 0xC
+.global $$24142
+$$24142:
+	.skip 0xC
+.global $$24143
+$$24143:
+	.skip 0xC
+.global $$24144
+$$24144:
+	.skip 0xC
+.global $$24145
+$$24145:
+	.skip 0xC
+.global $$24146
+$$24146:
+	.skip 0xC
+.global $$24147
+$$24147:
+	.skip 0xC
+.global $$24148
+$$24148:
+	.skip 0xC
+.global $$24149
+$$24149:
+	.skip 0xC
+.global $$24150
+$$24150:
+	.skip 0xC
+.global $$24151
+$$24151:
+	.skip 0xC
+.global $$24152
+$$24152:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2673
+init$2673:
+	.skip 0x4
+.global instance$2671
+instance$2671:
+	.skip 0x4
+.global init$2685
+init$2685:
+	.skip 0x4
+.global instance$2683
+instance$2683:
+	.skip 0x4
+.global init$2693
+init$2693:
+	.skip 0x4
+.global instance$2691
+instance$2691:
+	.skip 0x4
+.global init$2704
+init$2704:
+	.skip 0x4
+.global instance$2702
+instance$2702:
+	.skip 0x4
+.global init$2712
+init$2712:
+	.skip 0x4
+.global instance$2710
+instance$2710:
+	.skip 0x4
+.global init$2722
+init$2722:
+	.skip 0x4
+.global instance$2720
+instance$2720:
+	.skip 0x4
+.global init$2730
+init$2730:
+	.skip 0x4
+.global instance$2728
+instance$2728:
+	.skip 0x4

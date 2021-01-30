@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__Q26JStage13TAmbientLightFv
 __dt__Q26JStage13TAmbientLightFv:
 /* 80081818 0007E758  7C 08 02 A6 */	mflr r0
@@ -48,3 +47,13 @@ JSGGetColor__Q26JStage13TAmbientLightCFv:
 .global JSGSetColor__Q26JStage13TAmbientLightF8_GXColor
 JSGSetColor__Q26JStage13TAmbientLightF8_GXColor:
 /* 8008189C 0007E7DC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JStage13TAmbientLight
+__vt__Q26JStage13TAmbientLight:
+	.incbin "baserom.dol", 0x3A9D10, 0x38
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2115
+$$2115:
+	.incbin "baserom.dol", 0x3E4630, 0x8

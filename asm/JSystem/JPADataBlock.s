@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__12JPADataBlockFPCUcP7JKRHeap
 __ct__12JPADataBlockFPCUcP7JKRHeap:
 /* 8007FC5C 0007CB9C  7C 08 02 A6 */	mflr r0

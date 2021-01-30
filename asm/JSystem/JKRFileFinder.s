@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__12JKRArcFinderFP10JKRArchivell
 __ct__12JKRArcFinderFP10JKRArchivell:
 /* 8000B920 00008860  7C 08 02 A6 */	mflr r0
@@ -121,3 +120,8 @@ lbl_8000BAB8:
 /* 8000BAC4 00008A04  38 21 00 18 */	addi r1, r1, 0x18
 /* 8000BAC8 00008A08  7C 08 03 A6 */	mtlr r0
 /* 8000BACC 00008A0C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12JKRArcFinder
+__vt__12JKRArcFinder:
+	.incbin "baserom.dol", 0x3A55A8, 0x10

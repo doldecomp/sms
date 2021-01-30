@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q28JASystem15TSimpleWaveBankFv
 __ct__Q28JASystem15TSimpleWaveBankFv:
 /* 8005AB18 00057A58  7C 08 02 A6 */	mflr r0
@@ -289,3 +288,11 @@ $$24$$2getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv:
 $$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv:
 /* 8005AEAC 00057DEC  38 63 FF FC */	addi r3, r3, -4
 /* 8005AEB0 00057DF0  4B FF FF E4 */	b getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q38JASystem15TSimpleWaveBank11TWaveHandle
+__vt__Q38JASystem15TSimpleWaveBank11TWaveHandle:
+	.incbin "baserom.dol", 0x3A7EC8, 0x14
+.global __vt__Q28JASystem15TSimpleWaveBank
+__vt__Q28JASystem15TSimpleWaveBank:
+	.incbin "baserom.dol", 0x3A7EDC, 0x34

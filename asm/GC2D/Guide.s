@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__6TGuideFv
 __dt__6TGuideFv:
 /* 802395DC 0023651C  7C 08 02 A6 */	mflr r0
@@ -4283,3 +4282,220 @@ lbl_8023D430:
 /* 8023D438 0023A378  38 21 00 10 */	addi r1, r1, 0x10
 /* 8023D43C 0023A37C  7C 08 03 A6 */	mtlr r0
 /* 8023D440 0023A380  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CE48, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3912F0, 0xC
+.global $$21942
+$$21942:
+	.incbin "baserom.dol", 0x3912FC, 0x14
+.global $$24089
+$$24089:
+	.incbin "baserom.dol", 0x391310, 0xC
+.global $$24090
+$$24090:
+	.incbin "baserom.dol", 0x39131C, 0x20
+.global $$24091
+$$24091:
+	.incbin "baserom.dol", 0x39133C, 0x20
+.global $$24092
+$$24092:
+	.incbin "baserom.dol", 0x39135C, 0x1C
+.global $$24093
+$$24093:
+	.incbin "baserom.dol", 0x391378, 0x24
+.global $$24094
+$$24094:
+	.incbin "baserom.dol", 0x39139C, 0x24
+.global $$24095
+$$24095:
+	.incbin "baserom.dol", 0x3913C0, 0x28
+.global $$24096
+$$24096:
+	.incbin "baserom.dol", 0x3913E8, 0x28
+.global $$24097
+$$24097:
+	.incbin "baserom.dol", 0x391410, 0x24
+.global $$24098
+$$24098:
+	.incbin "baserom.dol", 0x391434, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global scShineConvTable
+scShineConvTable:
+	.incbin "baserom.dol", 0x3CECE0, 0x28
+.global scEtcShineConvTable
+scEtcShineConvTable:
+	.incbin "baserom.dol", 0x3CED08, 0x28
+.global scNormalStageTable
+scNormalStageTable:
+	.incbin "baserom.dol", 0x3CED30, 0x28
+.global __vt__6TGuide
+__vt__6TGuide:
+	.incbin "baserom.dol", 0x3CED58, 0x24
+.global $$22657
+$$22657:
+	.incbin "baserom.dol", 0x3CED7C, 0x34
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global scShineTableAirport
+scShineTableAirport:
+	.incbin "baserom.dol", 0x3E9670, 0x4
+.global scShineTableDolpicEtc
+scShineTableDolpicEtc:
+	.incbin "baserom.dol", 0x3E9674, 0x4
+.global scShineTableBianco
+scShineTableBianco:
+	.incbin "baserom.dol", 0x3E9678, 0x8
+.global scShineTableBiancoEtc
+scShineTableBiancoEtc:
+	.incbin "baserom.dol", 0x3E9680, 0x4
+.global scShineTableRicco
+scShineTableRicco:
+	.incbin "baserom.dol", 0x3E9684, 0x8
+.global scShineTableRiccoEtc
+scShineTableRiccoEtc:
+	.incbin "baserom.dol", 0x3E968C, 0x4
+.global scShineTableMamma
+scShineTableMamma:
+	.incbin "baserom.dol", 0x3E9690, 0x8
+.global scShineTableMammaEtc
+scShineTableMammaEtc:
+	.incbin "baserom.dol", 0x3E9698, 0x4
+.global scShineTablePinna
+scShineTablePinna:
+	.incbin "baserom.dol", 0x3E969C, 0x8
+.global scShineTablePinnaEtc
+scShineTablePinnaEtc:
+	.incbin "baserom.dol", 0x3E96A4, 0x4
+.global scShineTableSirena
+scShineTableSirena:
+	.incbin "baserom.dol", 0x3E96A8, 0x8
+.global scShineTableSirenaEtc
+scShineTableSirenaEtc:
+	.incbin "baserom.dol", 0x3E96B0, 0x4
+.global scShineTableMare
+scShineTableMare:
+	.incbin "baserom.dol", 0x3E96B4, 0x8
+.global scShineTableMareEtc
+scShineTableMareEtc:
+	.incbin "baserom.dol", 0x3E96BC, 0x4
+.global scShineTableMonte
+scShineTableMonte:
+	.incbin "baserom.dol", 0x3E96C0, 0x8
+.global scShineTableMonteEtc
+scShineTableMonteEtc:
+	.incbin "baserom.dol", 0x3E96C8, 0x4
+.global $$22653
+$$22653:
+	.incbin "baserom.dol", 0x3E96CC, 0x8
+.global $$22654
+$$22654:
+	.incbin "baserom.dol", 0x3E96D4, 0x4
+.global $$22655
+$$22655:
+	.incbin "baserom.dol", 0x3E96D8, 0x4
+.global $$22656
+$$22656:
+	.incbin "baserom.dol", 0x3E96DC, 0x4
+.global $$22659
+$$22659:
+	.incbin "baserom.dol", 0x3E96E0, 0x8
+.global $$22756
+$$22756:
+	.incbin "baserom.dol", 0x3E96E8, 0x4
+.global $$22757
+$$22757:
+	.incbin "baserom.dol", 0x3E96EC, 0x4
+.global $$22758
+$$22758:
+	.incbin "baserom.dol", 0x3E96F0, 0x4
+.global $$22858
+$$22858:
+	.incbin "baserom.dol", 0x3E96F4, 0x4
+.global $$22859
+$$22859:
+	.incbin "baserom.dol", 0x3E96F8, 0x4
+.global $$22954
+$$22954:
+	.incbin "baserom.dol", 0x3E96FC, 0x4
+.global $$22955
+$$22955:
+	.incbin "baserom.dol", 0x3E9700, 0x4
+.global $$22956
+$$22956:
+	.incbin "baserom.dol", 0x3E9704, 0x4
+.global $$23620
+$$23620:
+	.incbin "baserom.dol", 0x3E9708, 0x4
+.global $$23621
+$$23621:
+	.incbin "baserom.dol", 0x3E970C, 0x4
+.global $$23622
+$$23622:
+	.incbin "baserom.dol", 0x3E9710, 0x4
+.global $$23623
+$$23623:
+	.incbin "baserom.dol", 0x3E9714, 0x4
+.global $$23624
+$$23624:
+	.incbin "baserom.dol", 0x3E9718, 0x4
+.global $$23814
+$$23814:
+	.incbin "baserom.dol", 0x3E971C, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$24133
+$$24133:
+	.skip 0xC
+.global $$24134
+$$24134:
+	.skip 0xC
+.global $$24135
+$$24135:
+	.skip 0xC
+.global $$24136
+$$24136:
+	.skip 0xC
+.global $$24137
+$$24137:
+	.skip 0xC
+.global $$24138
+$$24138:
+	.skip 0xC
+.global $$24139
+$$24139:
+	.skip 0xC
+.global $$24140
+$$24140:
+	.skip 0xC
+.global $$24141
+$$24141:
+	.skip 0xC
+.global $$24142
+$$24142:
+	.skip 0xC
+.global $$24143
+$$24143:
+	.skip 0xC
+.global $$24144
+$$24144:
+	.skip 0xC
+.global $$24145
+$$24145:
+	.skip 0xC
+.global $$24146
+$$24146:
+	.skip 0xC
+.global $$24147
+$$24147:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global setup_wait
+setup_wait:
+	.skip 0x8

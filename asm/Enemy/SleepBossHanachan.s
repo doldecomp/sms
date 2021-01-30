@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__14TNerveSBH_FallFv
 __dt__14TNerveSBH_FallFv:
 /* 802FC2B8 002F91F8  7C 08 02 A6 */	mflr r0
@@ -489,3 +488,90 @@ lbl_802FC944:
 $$232$$2__dt__18TSleepBossHanachanFv:
 /* 802FC960 002F98A0  38 63 FF E0 */	addi r3, r3, -32
 /* 802FC964 002F98A4  4B FF FF 04 */	b __dt__18TSleepBossHanachanFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x39C790, 0xC
+.global $$21700
+$$21700:
+	.incbin "baserom.dol", 0x39C79C, 0x14
+.global $$21797
+$$21797:
+	.incbin "baserom.dol", 0x39C7B0, 0x30
+.global $$21798
+$$21798:
+	.incbin "baserom.dol", 0x39C7E0, 0x38
+.global $$21799
+$$21799:
+	.incbin "baserom.dol", 0x39C818, 0x34
+.global $$21800
+$$21800:
+	.incbin "baserom.dol", 0x39C84C, 0x24
+.global $$22258
+$$22258:
+	.incbin "baserom.dol", 0x39C870, 0x34
+.global $$22261
+$$22261:
+	.incbin "baserom.dol", 0x39C8A4, 0x18
+.global entry$2260
+entry$2260:
+	.incbin "baserom.dol", 0x39C8BC, 0x18
+.global $$22311
+$$22311:
+	.incbin "baserom.dol", 0x39C8D4, 0x14
+.global $$22312
+$$22312:
+	.incbin "baserom.dol", 0x39C8E8, 0x14
+.global $$22380
+$$22380:
+	.incbin "baserom.dol", 0x39C8FC, 0x1C
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TNerveSBH_Fall
+__vt__14TNerveSBH_Fall:
+	.incbin "baserom.dol", 0x3DBEE8, 0x10
+.global __vt__23TNerveSBH_SleepContinue
+__vt__23TNerveSBH_SleepContinue:
+	.incbin "baserom.dol", 0x3DBEF8, 0x10
+.global __vt__18TSleepBossHanachan
+__vt__18TSleepBossHanachan:
+	.incbin "baserom.dol", 0x3DBF08, 0x114
+.global __vt__25TSleepBossHanachanManager
+__vt__25TSleepBossHanachanManager:
+	.incbin "baserom.dol", 0x3DC01C, 0x54
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global sleepBossHanachan_bastable
+sleepBossHanachan_bastable:
+	.incbin "baserom.dol", 0x3E3A88, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22378
+$$22378:
+	.incbin "baserom.dol", 0x3EB330, 0x4
+.global $$22379
+$$22379:
+	.incbin "baserom.dol", 0x3EB334, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22265
+$$22265:
+	.skip 0xC
+.global $$22271
+$$22271:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2266
+init$2266:
+	.skip 0x4
+.global instance$2264
+instance$2264:
+	.skip 0x4
+.global init$2272
+init$2272:
+	.skip 0x4
+.global instance$2270
+instance$2270:
+	.skip 0x4

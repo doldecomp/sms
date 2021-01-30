@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__15TCubeStreamInfoFv
 __dt__15TCubeStreamInfoFv:
 /* 8035FC0C 0035CB4C  7C 08 02 A6 */	mflr r0
@@ -348,3 +347,22 @@ lbl_80360110:
 /* 80360120 0035D060  7C 08 03 A6 */	mtlr r0
 /* 80360124 0035D064  38 21 00 18 */	addi r1, r1, 0x18
 /* 80360128 0035D068  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__15TCubeStreamInfo
+__vt__15TCubeStreamInfo:
+	.incbin "baserom.dol", 0x3E1C80, 0x20
+.global __vt__15TCubeCameraInfo
+__vt__15TCubeCameraInfo:
+	.incbin "baserom.dol", 0x3E1CA0, 0x20
+.global __vt__16TCubeGeneralInfo
+__vt__16TCubeGeneralInfo:
+	.incbin "baserom.dol", 0x3E1CC0, 0x20
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21577
+$$21577:
+	.incbin "baserom.dol", 0x3EC500, 0x8
+.global $$21579
+$$21579:
+	.incbin "baserom.dol", 0x3EC508, 0x8

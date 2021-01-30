@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global exec__20JPADrawExecLoadExTexFPC14JPADrawContext
 exec__20JPADrawExecLoadExTexFPC14JPADrawContext:
 /* 80079CE0 00076C20  7C 08 02 A6 */	mflr r0
@@ -6498,3 +6497,252 @@ $$24$$2exec__19JPADrawExecCallBackFPC14JPADrawContextP15JPABaseParticle:
 $$24$$2__dt__19JPADrawExecCallBackFv:
 /* 8007FA8C 0007C9CC  38 63 FF FC */	addi r3, r3, -4
 /* 8007FA90 0007C9D0  4B FF 94 C4 */	b __dt__19JPADrawExecCallBackFv
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__24JPADrawCalcChildScaleOut
+__vt__24JPADrawCalcChildScaleOut:
+	.incbin "baserom.dol", 0x3A96B8, 0x10
+.global __vt__24JPADrawCalcChildAlphaOut
+__vt__24JPADrawCalcChildAlphaOut:
+	.incbin "baserom.dol", 0x3A96C8, 0x10
+.global __vt__28JPADrawCalcAlphaFlickMultSin
+__vt__28JPADrawCalcAlphaFlickMultSin:
+	.incbin "baserom.dol", 0x3A96D8, 0x10
+.global __vt__27JPADrawCalcAlphaFlickAddSin
+__vt__27JPADrawCalcAlphaFlickAddSin:
+	.incbin "baserom.dol", 0x3A96E8, 0x10
+.global __vt__27JPADrawCalcAlphaFlickNrmSin
+__vt__27JPADrawCalcAlphaFlickNrmSin:
+	.incbin "baserom.dol", 0x3A96F8, 0x10
+.global __vt__16JPADrawCalcAlpha
+__vt__16JPADrawCalcAlpha:
+	.incbin "baserom.dol", 0x3A9708, 0x10
+.global __vt__31JPADrawCalcColorCopyFromEmitter
+__vt__31JPADrawCalcColorCopyFromEmitter:
+	.incbin "baserom.dol", 0x3A9718, 0x10
+.global __vt__33JPADrawCalcScaleAnmTimingReverseY
+__vt__33JPADrawCalcScaleAnmTimingReverseY:
+	.incbin "baserom.dol", 0x3A9728, 0x10
+.global __vt__33JPADrawCalcScaleAnmTimingReverseX
+__vt__33JPADrawCalcScaleAnmTimingReverseX:
+	.incbin "baserom.dol", 0x3A9738, 0x10
+.global __vt__32JPADrawCalcScaleAnmTimingRepeatY
+__vt__32JPADrawCalcScaleAnmTimingRepeatY:
+	.incbin "baserom.dol", 0x3A9748, 0x10
+.global __vt__32JPADrawCalcScaleAnmTimingRepeatX
+__vt__32JPADrawCalcScaleAnmTimingRepeatX:
+	.incbin "baserom.dol", 0x3A9758, 0x10
+.global __vt__31JPADrawCalcScaleAnmTimingNormal
+__vt__31JPADrawCalcScaleAnmTimingNormal:
+	.incbin "baserom.dol", 0x3A9768, 0x10
+.global __vt__23JPADrawCalcScaleCopyX2Y
+__vt__23JPADrawCalcScaleCopyX2Y:
+	.incbin "baserom.dol", 0x3A9778, 0x10
+.global __vt__24JPADrawCalcScaleYBySpeed
+__vt__24JPADrawCalcScaleYBySpeed:
+	.incbin "baserom.dol", 0x3A9788, 0x10
+.global __vt__24JPADrawCalcScaleXBySpeed
+__vt__24JPADrawCalcScaleXBySpeed:
+	.incbin "baserom.dol", 0x3A9798, 0x10
+.global __vt__17JPADrawCalcScaleY
+__vt__17JPADrawCalcScaleY:
+	.incbin "baserom.dol", 0x3A97A8, 0x10
+.global __vt__17JPADrawCalcScaleX
+__vt__17JPADrawCalcScaleX:
+	.incbin "baserom.dol", 0x3A97B8, 0x10
+.global __vt__19JPADrawExecCallBack
+__vt__19JPADrawExecCallBack:
+	.incbin "baserom.dol", 0x3A97C8, 0x24
+.global __vt__32JPADrawCalcTextureAnmIndexRandom
+__vt__32JPADrawCalcTextureAnmIndexRandom:
+	.incbin "baserom.dol", 0x3A97EC, 0x24
+.global __vt__31JPADrawCalcTextureAnmIndexMerge
+__vt__31JPADrawCalcTextureAnmIndexMerge:
+	.incbin "baserom.dol", 0x3A9810, 0x24
+.global __vt__33JPADrawCalcTextureAnmIndexReverse
+__vt__33JPADrawCalcTextureAnmIndexReverse:
+	.incbin "baserom.dol", 0x3A9834, 0x24
+.global __vt__32JPADrawCalcTextureAnmIndexRepeat
+__vt__32JPADrawCalcTextureAnmIndexRepeat:
+	.incbin "baserom.dol", 0x3A9858, 0x24
+.global __vt__32JPADrawCalcTextureAnmIndexNormal
+__vt__32JPADrawCalcTextureAnmIndexNormal:
+	.incbin "baserom.dol", 0x3A987C, 0x24
+.global __vt__30JPADrawCalcColorAnmFrameRandom
+__vt__30JPADrawCalcColorAnmFrameRandom:
+	.incbin "baserom.dol", 0x3A98A0, 0x24
+.global __vt__29JPADrawCalcColorAnmFrameMerge
+__vt__29JPADrawCalcColorAnmFrameMerge:
+	.incbin "baserom.dol", 0x3A98C4, 0x24
+.global __vt__31JPADrawCalcColorAnmFrameReverse
+__vt__31JPADrawCalcColorAnmFrameReverse:
+	.incbin "baserom.dol", 0x3A98E8, 0x24
+.global __vt__30JPADrawCalcColorAnmFrameRepeat
+__vt__30JPADrawCalcColorAnmFrameRepeat:
+	.incbin "baserom.dol", 0x3A990C, 0x24
+.global __vt__30JPADrawCalcColorAnmFrameNormal
+__vt__30JPADrawCalcColorAnmFrameNormal:
+	.incbin "baserom.dol", 0x3A9930, 0x24
+.global __vt__19JPADrawCalcColorEnv
+__vt__19JPADrawCalcColorEnv:
+	.incbin "baserom.dol", 0x3A9954, 0x24
+.global __vt__19JPADrawCalcColorPrm
+__vt__19JPADrawCalcColorPrm:
+	.incbin "baserom.dol", 0x3A9978, 0x24
+.global __vt__31JPADrawExecRegisterColorChildPE
+__vt__31JPADrawExecRegisterColorChildPE:
+	.incbin "baserom.dol", 0x3A999C, 0x10
+.global __vt__32JPADrawExecRegisterColorEmitterE
+__vt__32JPADrawExecRegisterColorEmitterE:
+	.incbin "baserom.dol", 0x3A99AC, 0x10
+.global __vt__32JPADrawExecRegisterColorEmitterP
+__vt__32JPADrawExecRegisterColorEmitterP:
+	.incbin "baserom.dol", 0x3A99BC, 0x10
+.global __vt__33JPADrawExecRegisterColorEmitterPE
+__vt__33JPADrawExecRegisterColorEmitterPE:
+	.incbin "baserom.dol", 0x3A99CC, 0x10
+.global __vt__22JPADrawExecStripeCross
+__vt__22JPADrawExecStripeCross:
+	.incbin "baserom.dol", 0x3A99DC, 0x10
+.global __vt__17JPADrawExecStripe
+__vt__17JPADrawExecStripe:
+	.incbin "baserom.dol", 0x3A99EC, 0x10
+.global __vt__15JPADrawExecLine
+__vt__15JPADrawExecLine:
+	.incbin "baserom.dol", 0x3A99FC, 0x10
+.global __vt__16JPADrawExecPoint
+__vt__16JPADrawExecPoint:
+	.incbin "baserom.dol", 0x3A9A0C, 0x10
+.global __vt__24JPADrawExecRotationCross
+__vt__24JPADrawExecRotationCross:
+	.incbin "baserom.dol", 0x3A9A1C, 0x10
+.global __vt__19JPADrawExecRotation
+__vt__19JPADrawExecRotation:
+	.incbin "baserom.dol", 0x3A9A2C, 0x10
+.global __vt__23JPADrawExecDirBillBoard
+__vt__23JPADrawExecDirBillBoard:
+	.incbin "baserom.dol", 0x3A9A3C, 0x10
+.global __vt__30JPADrawExecRotDirectionalCross
+__vt__30JPADrawExecRotDirectionalCross:
+	.incbin "baserom.dol", 0x3A9A4C, 0x10
+.global __vt__27JPADrawExecDirectionalCross
+__vt__27JPADrawExecDirectionalCross:
+	.incbin "baserom.dol", 0x3A9A5C, 0x10
+.global __vt__25JPADrawExecRotDirectional
+__vt__25JPADrawExecRotDirectional:
+	.incbin "baserom.dol", 0x3A9A6C, 0x10
+.global __vt__22JPADrawExecDirectional
+__vt__22JPADrawExecDirectional:
+	.incbin "baserom.dol", 0x3A9A7C, 0x10
+.global __vt__24JPADrawExecRotYBillBoard
+__vt__24JPADrawExecRotYBillBoard:
+	.incbin "baserom.dol", 0x3A9A8C, 0x10
+.global __vt__21JPADrawExecYBillBoard
+__vt__21JPADrawExecYBillBoard:
+	.incbin "baserom.dol", 0x3A9A9C, 0x10
+.global __vt__23JPADrawExecRotBillBoard
+__vt__23JPADrawExecRotBillBoard:
+	.incbin "baserom.dol", 0x3A9AAC, 0x10
+.global __vt__20JPADrawExecBillBoard
+__vt__20JPADrawExecBillBoard:
+	.incbin "baserom.dol", 0x3A9ABC, 0x10
+.global __vt__26JPADrawExecRegisterPrmAEnv
+__vt__26JPADrawExecRegisterPrmAEnv:
+	.incbin "baserom.dol", 0x3A9ACC, 0x10
+.global __vt__26JPADrawExecRegisterPrmCEnv
+__vt__26JPADrawExecRegisterPrmCEnv:
+	.incbin "baserom.dol", 0x3A9ADC, 0x10
+.global __vt__30JPADrawExecRegisterEnvColorAnm
+__vt__30JPADrawExecRegisterEnvColorAnm:
+	.incbin "baserom.dol", 0x3A9AEC, 0x10
+.global __vt__30JPADrawExecRegisterPrmAlphaAnm
+__vt__30JPADrawExecRegisterPrmAlphaAnm:
+	.incbin "baserom.dol", 0x3A9AFC, 0x10
+.global __vt__30JPADrawExecRegisterPrmColorAnm
+__vt__30JPADrawExecRegisterPrmColorAnm:
+	.incbin "baserom.dol", 0x3A9B0C, 0x10
+.global __vt__23JPADrawExecSetLineWidth
+__vt__23JPADrawExecSetLineWidth:
+	.incbin "baserom.dol", 0x3A9B1C, 0x10
+.global __vt__23JPADrawExecSetPointSize
+__vt__23JPADrawExecSetPointSize:
+	.incbin "baserom.dol", 0x3A9B2C, 0x10
+.global __vt__22JPADrawExecLoadTexture
+__vt__22JPADrawExecLoadTexture:
+	.incbin "baserom.dol", 0x3A9B3C, 0x24
+.global __vt__29JPADrawExecLoadDefaultTexture
+__vt__29JPADrawExecLoadDefaultTexture:
+	.incbin "baserom.dol", 0x3A9B60, 0x10
+.global __vt__20JPADrawExecSetTexMtx
+__vt__20JPADrawExecSetTexMtx:
+	.incbin "baserom.dol", 0x3A9B70, 0x24
+.global __vt__20JPADrawExecGenIdtMtx
+__vt__20JPADrawExecGenIdtMtx:
+	.incbin "baserom.dol", 0x3A9B94, 0x10
+.global __vt__21JPADrawExecGenTexMtx0
+__vt__21JPADrawExecGenTexMtx0:
+	.incbin "baserom.dol", 0x3A9BA4, 0x10
+.global __vt__23JPADrawExecGenPrjTexMtx
+__vt__23JPADrawExecGenPrjTexMtx:
+	.incbin "baserom.dol", 0x3A9BB4, 0x10
+.global __vt__20JPADrawExecGenPrjMtx
+__vt__20JPADrawExecGenPrjMtx:
+	.incbin "baserom.dol", 0x3A9BC4, 0x10
+.global __vt__20JPADrawExecLoadExTex
+__vt__20JPADrawExecLoadExTex:
+	.incbin "baserom.dol", 0x3A9BD4, 0x14
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21703
+$$21703:
+	.incbin "baserom.dol", 0x3E45A8, 0x4
+.global $$21704
+$$21704:
+	.incbin "baserom.dol", 0x3E45AC, 0x4
+.global $$21743
+$$21743:
+	.incbin "baserom.dol", 0x3E45B0, 0x4
+.global $$21744
+$$21744:
+	.incbin "baserom.dol", 0x3E45B4, 0x4
+.global $$21745
+$$21745:
+	.incbin "baserom.dol", 0x3E45B8, 0x8
+.global $$21797
+$$21797:
+	.incbin "baserom.dol", 0x3E45C0, 0x8
+.global $$21841
+$$21841:
+	.incbin "baserom.dol", 0x3E45C8, 0x8
+.global $$22374
+$$22374:
+	.incbin "baserom.dol", 0x3E45D0, 0x4
+.global $$22375
+$$22375:
+	.incbin "baserom.dol", 0x3E45D4, 0x4
+.global $$22378
+$$22378:
+	.incbin "baserom.dol", 0x3E45D8, 0x4
+.global $$22379
+$$22379:
+	.incbin "baserom.dol", 0x3E45DC, 0x4
+.global $$22380
+$$22380:
+	.incbin "baserom.dol", 0x3E45E0, 0x4
+.global $$22538
+$$22538:
+	.incbin "baserom.dol", 0x3E45E4, 0x4
+.global $$22542
+$$22542:
+	.incbin "baserom.dol", 0x3E45E8, 0x4
+.global $$24485
+$$24485:
+	.incbin "baserom.dol", 0x3E45EC, 0x4
+.global $$24568
+$$24568:
+	.incbin "baserom.dol", 0x3E45F0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global pcb__14JPADrawContext
+pcb__14JPADrawContext:
+	.skip 0x8

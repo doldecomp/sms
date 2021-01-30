@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXSetFog
 GXSetFog:
 /* 800AC440 000A9380  7C 08 02 A6 */	mflr r0
@@ -517,3 +516,31 @@ GXSetFieldMode:
 /* 800ACB7C 000A9ABC  38 21 00 20 */	addi r1, r1, 0x20
 /* 800ACB80 000A9AC0  7C 08 03 A6 */	mtlr r0
 /* 800ACB84 000A9AC4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global p2f$194
+p2f$194:
+	.incbin "baserom.dol", 0x3AEB38, 0x20
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2125
+$$2125:
+	.incbin "baserom.dol", 0x3E4858, 0x4
+.global $$2126
+$$2126:
+	.incbin "baserom.dol", 0x3E485C, 0x4
+.global $$2127
+$$2127:
+	.incbin "baserom.dol", 0x3E4860, 0x8
+.global $$2128
+$$2128:
+	.incbin "baserom.dol", 0x3E4868, 0x8
+.global $$2129
+$$2129:
+	.incbin "baserom.dol", 0x3E4870, 0x8
+.global $$2130
+$$2130:
+	.incbin "baserom.dol", 0x3E4878, 0x8
+.global $$2132
+$$2132:
+	.incbin "baserom.dol", 0x3E4880, 0x8

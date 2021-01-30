@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global initCheckData__17TMapCollisionBaseFsUsPC10TLiveActor
 initCheckData__17TMapCollisionBaseFsUsPC10TLiveActor:
 /* 801E2FD4 001DFF14  7C 08 02 A6 */	mflr r0
@@ -887,3 +886,58 @@ lbl_801E3C68:
 /* 801E3C70 001E0BB0  38 21 00 10 */	addi r1, r1, 0x10
 /* 801E3C74 001E0BB4  7C 08 03 A6 */	mtlr r0
 /* 801E3C78 001E0BB8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CDC4, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22976
+$$22976:
+	.incbin "baserom.dol", 0x3E8B40, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22744
+$$22744:
+	.skip 0xC
+.global $$22745
+$$22745:
+	.skip 0xC
+.global $$22746
+$$22746:
+	.skip 0xC
+.global $$22747
+$$22747:
+	.skip 0xC
+.global $$22748
+$$22748:
+	.skip 0xC
+.global $$22749
+$$22749:
+	.skip 0xC
+.global $$22750
+$$22750:
+	.skip 0xC
+.global $$22751
+$$22751:
+	.skip 0xC
+.global $$22752
+$$22752:
+	.skip 0xC
+.global $$22753
+$$22753:
+	.skip 0xC
+.global $$22754
+$$22754:
+	.skip 0xC
+.global $$22755
+$$22755:
+	.skip 0xC
+.global $$22756
+$$22756:
+	.skip 0xC
+.global $$22757
+$$22757:
+	.skip 0xC
+.global $$22758
+$$22758:
+	.skip 0x10

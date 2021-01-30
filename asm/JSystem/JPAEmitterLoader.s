@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global load__24JPAEmitterLoaderDataBaseFPCUcP7JKRHeapP18JPATextureResource
 load__24JPAEmitterLoaderDataBaseFPCUcP7JKRHeapP18JPATextureResource:
 /* 8007FCDC 0007CC1C  7C 08 02 A6 */	mflr r0
@@ -435,3 +434,14 @@ lbl_800802A0:
 /* 800802AC 0007D1EC  38 21 00 18 */	addi r1, r1, 0x18
 /* 800802B0 0007D1F0  7C 08 03 A6 */	mtlr r0
 /* 800802B4 0007D1F4  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__16JPAKeyFrameAnime
+__vt__16JPAKeyFrameAnime:
+	.incbin "baserom.dol", 0x3A9C00, 0xC
+.global __vt__16JPAEmitterLoader
+__vt__16JPAEmitterLoader:
+	.incbin "baserom.dol", 0x3A9C0C, 0xC
+.global __vt__20JPAEmitterLoader_v10
+__vt__20JPAEmitterLoader_v10:
+	.incbin "baserom.dol", 0x3A9C18, 0x10

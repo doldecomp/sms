@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__Q28JASystem6DriverFv
 init__Q28JASystem6DriverFv:
 /* 8005E9A4 0005B8E4  7C 08 02 A6 */	mflr r0
@@ -56,3 +55,22 @@ getOutputMode__Q28JASystem6DriverFv:
 getUpdateInterval__Q28JASystem6DriverFv:
 /* 8005EA30 0005B970  88 6D 81 A8 */	lbz r3, JAS_UPDATE_INTERVAL__Q28JASystem6Driver-_SDA_BASE_(r13)
 /* 8005EA34 0005B974  4E 80 00 20 */	blr 
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global MAX_MIXERLEVEL__Q28JASystem6Driver
+MAX_MIXERLEVEL__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x3E31A0, 0x4
+.global JAS_SYSTEM_OUTPUT_MODE__Q28JASystem6Driver
+JAS_SYSTEM_OUTPUT_MODE__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x3E31A4, 0x4
+.global JAS_UPDATE_INTERVAL__Q28JASystem6Driver
+JAS_UPDATE_INTERVAL__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x3E31A8, 0x4
+.global DSP_VOICE_WAITS_MAX__Q28JASystem6Driver
+DSP_VOICE_WAITS_MAX__Q28JASystem6Driver:
+	.incbin "baserom.dol", 0x3E31AC, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2120
+$$2120:
+	.incbin "baserom.dol", 0x3E4368, 0x8

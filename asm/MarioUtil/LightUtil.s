@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__22TLightWithDBSetManagerFv
 __dt__22TLightWithDBSetManagerFv:
 /* 800C34F4 000C0434  7C 08 02 A6 */	mflr r0
@@ -2476,3 +2475,172 @@ lbl_800C57B4:
 /* 800C57C4 000C2704  7C 08 03 A6 */	mtlr r0
 /* 800C57C8 000C2708  38 21 00 18 */	addi r1, r1, 0x18
 /* 800C57CC 000C270C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x36F330, 0xC
+.global lightName$1906
+lightName$1906:
+	.incbin "baserom.dol", 0x36F33C, 0x14
+.global ambName$1907
+ambName$1907:
+	.incbin "baserom.dol", 0x36F350, 0x20
+.global lightName$1917
+lightName$1917:
+	.incbin "baserom.dol", 0x36F370, 0x18
+.global ambName$1918
+ambName$1918:
+	.incbin "baserom.dol", 0x36F388, 0x24
+.global lightName$1928
+lightName$1928:
+	.incbin "baserom.dol", 0x36F3AC, 0x18
+.global ambName$1929
+ambName$1929:
+	.incbin "baserom.dol", 0x36F3C4, 0x24
+.global $$21931
+$$21931:
+	.incbin "baserom.dol", 0x36F3E8, 0x14
+.global $$21932
+$$21932:
+	.incbin "baserom.dol", 0x36F3FC, 0x14
+.global lightName$1942
+lightName$1942:
+	.incbin "baserom.dol", 0x36F410, 0x18
+.global ambName$1943
+ambName$1943:
+	.incbin "baserom.dol", 0x36F428, 0x24
+.global $$21945
+$$21945:
+	.incbin "baserom.dol", 0x36F44C, 0x14
+.global $$21946
+$$21946:
+	.incbin "baserom.dol", 0x36F460, 0x14
+.global $$22007
+$$22007:
+	.incbin "baserom.dol", 0x36F474, 0xC
+.global $$22157
+$$22157:
+	.incbin "baserom.dol", 0x36F480, 0xC
+.global $$22223
+$$22223:
+	.incbin "baserom.dol", 0x36F48C, 0x14
+.global $$22224
+$$22224:
+	.incbin "baserom.dol", 0x36F4A0, 0x18
+.global $$22225
+$$22225:
+	.incbin "baserom.dol", 0x36F4B8, 0x1C
+.global $$22226
+$$22226:
+	.incbin "baserom.dol", 0x36F4D4, 0x20
+.global $$22296
+$$22296:
+	.incbin "baserom.dol", 0x36F4F4, 0x10
+.global $$22477
+$$22477:
+	.incbin "baserom.dol", 0x36F504, 0x10
+.global $$22843
+$$22843:
+	.incbin "baserom.dol", 0x36F514, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__22TLightWithDBSetManager
+__vt__22TLightWithDBSetManager:
+	.incbin "baserom.dol", 0x3AEFD8, 0x24
+.global __vt__23TIndirectLightWithDBSet
+__vt__23TIndirectLightWithDBSet:
+	.incbin "baserom.dol", 0x3AEFFC, 0x28
+.global __vt__24TMapObjectLightWithDBSet
+__vt__24TMapObjectLightWithDBSet:
+	.incbin "baserom.dol", 0x3AF024, 0x28
+.global __vt__21TObjectLightWithDBSet
+__vt__21TObjectLightWithDBSet:
+	.incbin "baserom.dol", 0x3AF04C, 0x28
+.global __vt__21TPlayerLightWithDBSet
+__vt__21TPlayerLightWithDBSet:
+	.incbin "baserom.dol", 0x3AF074, 0x28
+.global __vt__15TLightWithDBSet
+__vt__15TLightWithDBSet:
+	.incbin "baserom.dol", 0x3AF09C, 0x28
+.global __vt__16TLightDrawBuffer
+__vt__16TLightDrawBuffer:
+	.incbin "baserom.dol", 0x3AF0C4, 0x28
+.global __vt__11TLightMario
+__vt__11TLightMario:
+	.incbin "baserom.dol", 0x3AF0EC, 0x34
+.global __vt__12TLightShadow
+__vt__12TLightShadow:
+	.incbin "baserom.dol", 0x3AF120, 0x34
+.global __vt__12TLightCommon
+__vt__12TLightCommon:
+	.incbin "baserom.dol", 0x3AF154, 0x34
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global className$1930
+className$1930:
+	.incbin "baserom.dol", 0x3E3308, 0x8
+.global className$1944
+className$1944:
+	.incbin "baserom.dol", 0x3E3310, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22032
+$$22032:
+	.incbin "baserom.dol", 0x3E49A0, 0x8
+.global $$22043
+$$22043:
+	.incbin "baserom.dol", 0x3E49A8, 0x4
+.global $$22044
+$$22044:
+	.incbin "baserom.dol", 0x3E49AC, 0x4
+.global $$22045
+$$22045:
+	.incbin "baserom.dol", 0x3E49B0, 0x4
+.global $$22046
+$$22046:
+	.incbin "baserom.dol", 0x3E49B4, 0x4
+.global $$22227
+$$22227:
+	.incbin "baserom.dol", 0x3E49B8, 0x4
+.global $$22228
+$$22228:
+	.incbin "baserom.dol", 0x3E49BC, 0x4
+.global $$22229
+$$22229:
+	.incbin "baserom.dol", 0x3E49C0, 0x4
+.global $$22230
+$$22230:
+	.incbin "baserom.dol", 0x3E49C4, 0x4
+.global $$22231
+$$22231:
+	.incbin "baserom.dol", 0x3E49C8, 0x4
+.global $$22232
+$$22232:
+	.incbin "baserom.dol", 0x3E49CC, 0x4
+.global $$22665
+$$22665:
+	.incbin "baserom.dol", 0x3E49D0, 0x8
+.global $$22666
+$$22666:
+	.incbin "baserom.dol", 0x3E49D8, 0x4
+.global $$22667
+$$22667:
+	.incbin "baserom.dol", 0x3E49DC, 0x4
+.global $$22844
+$$22844:
+	.incbin "baserom.dol", 0x3E49E0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global mAmbAry__12TLightCommon
+mAmbAry__12TLightCommon:
+	.skip 0x4
+.global mLightAry__12TLightCommon
+mLightAry__12TLightCommon:
+	.skip 0x4
+.global mLightPos__12TLightCommon
+mLightPos__12TLightCommon:
+	.skip 0x4
+.global gpLightManager
+gpLightManager:
+	.skip 0x4

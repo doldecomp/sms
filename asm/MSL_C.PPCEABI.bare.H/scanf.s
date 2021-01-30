@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __StringRead
 __StringRead:
 /* 80085AE8 00082A28  2C 05 00 01 */	cmpwi r5, 1

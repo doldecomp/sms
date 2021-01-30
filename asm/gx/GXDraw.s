@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GXDrawSphere
 GXDrawSphere:
 /* 800ACB88 000A9AC8  7C 08 02 A6 */	mflr r0
@@ -532,3 +531,37 @@ lbl_800AD20C:
 /* 800AD360 000AA2A0  38 21 00 20 */	addi r1, r1, 0x20
 /* 800AD364 000AA2A4  7C 08 03 A6 */	mtlr r0
 /* 800AD368 000AA2A8  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2133
+$$2133:
+	.incbin "baserom.dol", 0x3E4888, 0x4
+.global $$2357
+$$2357:
+	.incbin "baserom.dol", 0x3E488C, 0x4
+.global $$2358
+$$2358:
+	.incbin "baserom.dol", 0x3E4890, 0x4
+.global $$2360
+$$2360:
+	.incbin "baserom.dol", 0x3E4894, 0x4
+.global $$2362
+$$2362:
+	.incbin "baserom.dol", 0x3E4898, 0x8
+.global $$2364
+$$2364:
+	.incbin "baserom.dol", 0x3E48A0, 0x8
+.global $$2405
+$$2405:
+	.incbin "baserom.dol", 0x3E48A8, 0x4
+.global $$2493
+$$2493:
+	.incbin "baserom.dol", 0x3E48AC, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global vcd
+vcd:
+	.skip 0xD8
+.global vat
+vat:
+	.skip 0x1B0

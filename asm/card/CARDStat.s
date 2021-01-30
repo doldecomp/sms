@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global UpdateIconOffsets
 UpdateIconOffsets:
 /* 800A4A04 000A1944  81 03 00 2C */	lwz r8, 0x2c(r3)

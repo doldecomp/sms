@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global updateDSP__Q28JASystem6DSPBufFv
 updateDSP__Q28JASystem6DSPBufFv:
 /* 8005EA38 0005B978  7C 08 02 A6 */	mflr r0
@@ -357,3 +356,30 @@ lbl_8005EF24:
 /* 8005EF2C 0005BE6C  38 21 00 38 */	addi r1, r1, 0x38
 /* 8005EF30 0005BE70  7C 08 03 A6 */	mtlr r0
 /* 8005EF34 0005BE74  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2119
+$$2119:
+	.incbin "baserom.dol", 0x36E270, 0xC
+.global $$2211
+$$2211:
+	.incbin "baserom.dol", 0x36E27C, 0xC
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global dsp_buf__Q28JASystem6DSPBuf
+dsp_buf__Q28JASystem6DSPBuf:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global write_buffer__Q28JASystem6DSPBuf
+write_buffer__Q28JASystem6DSPBuf:
+	.skip 0x1
+.global read_buffer__Q28JASystem6DSPBuf
+read_buffer__Q28JASystem6DSPBuf:
+	.skip 0x1
+.global dspstatus__Q28JASystem6DSPBuf
+dspstatus__Q28JASystem6DSPBuf:
+	.skip 0x2
+.global dac_sync_counter__Q28JASystem6DSPBuf
+dac_sync_counter__Q28JASystem6DSPBuf:
+	.skip 0x4

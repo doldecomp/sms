@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__16TSwitchHelpActorFv
 __dt__16TSwitchHelpActorFv:
 /* 80218A98 002159D8  7C 08 02 A6 */	mflr r0
@@ -368,3 +367,24 @@ $$232$$2__dt__10THelpActorFv:
 $$232$$2__dt__16TSwitchHelpActorFv:
 /* 80218F8C 00215ECC  38 63 FF E0 */	addi r3, r3, -32
 /* 80218F90 00215ED0  4B FF FB 08 */	b __dt__16TSwitchHelpActorFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21991
+$$21991:
+	.incbin "baserom.dol", 0x390AF0, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__16TSwitchHelpActor
+__vt__16TSwitchHelpActor:
+	.incbin "baserom.dol", 0x3CE2C8, 0xA8
+.global __vt__10THelpActor
+__vt__10THelpActor:
+	.incbin "baserom.dol", 0x3CE370, 0xA8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21995
+$$21995:
+	.incbin "baserom.dol", 0x3E9338, 0x4
+.global $$21996
+$$21996:
+	.incbin "baserom.dol", 0x3E933C, 0x4

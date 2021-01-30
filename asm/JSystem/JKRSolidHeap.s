@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__12JKRSolidHeapFUlP7JKRHeapb
 create__12JKRSolidHeapFUlP7JKRHeapb:
 /* 8000D3D8 0000A318  7C 08 02 A6 */	mflr r0
@@ -566,3 +565,51 @@ getHeapType__12JKRSolidHeapFv:
 /* 8000DB7C 0000AABC  3C 60 53 4C */	lis r3, 0x534C4944@ha
 /* 8000DB80 0000AAC0  38 63 49 44 */	addi r3, r3, 0x534C4944@l
 /* 8000DB84 0000AAC4  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2288
+$$2288:
+	.incbin "baserom.dol", 0x36D550, 0x34
+.global $$2303
+$$2303:
+	.incbin "baserom.dol", 0x36D584, 0x34
+.global $$2305
+$$2305:
+	.incbin "baserom.dol", 0x36D5B8, 0x28
+.global $$2322
+$$2322:
+	.incbin "baserom.dol", 0x36D5E0, 0x30
+.global $$2324
+$$2324:
+	.incbin "baserom.dol", 0x36D610, 0x30
+.global $$2357
+$$2357:
+	.incbin "baserom.dol", 0x36D640, 0x34
+.global $$2364
+$$2364:
+	.incbin "baserom.dol", 0x36D674, 0x14
+.global $$2365
+$$2365:
+	.incbin "baserom.dol", 0x36D688, 0x18
+.global $$2366
+$$2366:
+	.incbin "baserom.dol", 0x36D6A0, 0x14
+.global $$2367
+$$2367:
+	.incbin "baserom.dol", 0x36D6B4, 0x14
+.global $$2368
+$$2368:
+	.incbin "baserom.dol", 0x36D6C8, 0x20
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12JKRSolidHeap
+__vt__12JKRSolidHeap:
+	.incbin "baserom.dol", 0x3A5690, 0x50
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2369
+$$2369:
+	.incbin "baserom.dol", 0x3E3D40, 0x8
+.global $$2371
+$$2371:
+	.incbin "baserom.dol", 0x3E3D48, 0x8

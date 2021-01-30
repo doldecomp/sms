@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getGroupCount__Q28JASystem8WSParserFPv
 getGroupCount__Q28JASystem8WSParserFPv:
 /* 8005B44C 0005838C  7C 08 02 A6 */	mflr r0
@@ -382,3 +381,8 @@ JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl:
 lbl_8005B960:
 /* 8005B960 000588A0  7C 63 22 14 */	add r3, r3, r4
 /* 8005B964 000588A4  4E 80 00 20 */	blr 
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sUsedHeapSize__Q28JASystem8WSParser
+sUsedHeapSize__Q28JASystem8WSParser:
+	.skip 0x8

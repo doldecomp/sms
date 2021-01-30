@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__22TNerveBossHanachanDeadFv
 __dt__22TNerveBossHanachanDeadFv:
 /* 80303070 002FFFB0  7C 08 02 A6 */	mflr r0
@@ -1081,3 +1080,146 @@ lbl_80303F28:
 /* 80303F30 00300E70  38 21 00 10 */	addi r1, r1, 0x10
 /* 80303F34 00300E74  7C 08 03 A6 */	mtlr r0
 /* 80303F38 00300E78  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CEDC, 0x4
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__22TNerveBossHanachanDead
+__vt__22TNerveBossHanachanDead:
+	.incbin "baserom.dol", 0x3DC5B0, 0x10
+.global __vt__23TNerveBossHanachanSnort
+__vt__23TNerveBossHanachanSnort:
+	.incbin "baserom.dol", 0x3DC5C0, 0x10
+.global __vt__24TNerveBossHanachanDamage
+__vt__24TNerveBossHanachanDamage:
+	.incbin "baserom.dol", 0x3DC5D0, 0x10
+.global __vt__23TNerveBossHanachanGetUp
+__vt__23TNerveBossHanachanGetUp:
+	.incbin "baserom.dol", 0x3DC5E0, 0x10
+.global __vt__22TNerveBossHanachanDown
+__vt__22TNerveBossHanachanDown:
+	.incbin "baserom.dol", 0x3DC5F0, 0x10
+.global __vt__24TNerveBossHanachanTumble
+__vt__24TNerveBossHanachanTumble:
+	.incbin "baserom.dol", 0x3DC600, 0x10
+.global __vt__29TNerveBossHanachanGraphWander
+__vt__29TNerveBossHanachanGraphWander:
+	.incbin "baserom.dol", 0x3DC610, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22521
+$$22521:
+	.incbin "baserom.dol", 0x3EB4C0, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22360
+$$22360:
+	.skip 0xC
+.global $$22372
+$$22372:
+	.skip 0xC
+.global $$22384
+$$22384:
+	.skip 0xC
+.global $$22392
+$$22392:
+	.skip 0xC
+.global $$22400
+$$22400:
+	.skip 0xC
+.global $$22409
+$$22409:
+	.skip 0xC
+.global $$22424
+$$22424:
+	.skip 0xC
+.global $$22647
+$$22647:
+	.skip 0xC
+.global $$22648
+$$22648:
+	.skip 0xC
+.global $$22649
+$$22649:
+	.skip 0xC
+.global $$22650
+$$22650:
+	.skip 0xC
+.global $$22651
+$$22651:
+	.skip 0xC
+.global $$22652
+$$22652:
+	.skip 0xC
+.global $$22653
+$$22653:
+	.skip 0xC
+.global $$22654
+$$22654:
+	.skip 0xC
+.global $$22655
+$$22655:
+	.skip 0xC
+.global $$22656
+$$22656:
+	.skip 0xC
+.global $$22657
+$$22657:
+	.skip 0xC
+.global $$22658
+$$22658:
+	.skip 0xC
+.global $$22659
+$$22659:
+	.skip 0xC
+.global $$22660
+$$22660:
+	.skip 0xC
+.global $$22661
+$$22661:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global init$2361
+init$2361:
+	.skip 0x4
+.global instance$2359
+instance$2359:
+	.skip 0x4
+.global init$2373
+init$2373:
+	.skip 0x4
+.global instance$2371
+instance$2371:
+	.skip 0x4
+.global init$2385
+init$2385:
+	.skip 0x4
+.global instance$2383
+instance$2383:
+	.skip 0x4
+.global init$2393
+init$2393:
+	.skip 0x4
+.global instance$2391
+instance$2391:
+	.skip 0x4
+.global init$2401
+init$2401:
+	.skip 0x4
+.global instance$2399
+instance$2399:
+	.skip 0x4
+.global init$2410
+init$2410:
+	.skip 0x4
+.global instance$2408
+instance$2408:
+	.skip 0x4
+.global init$2425
+init$2425:
+	.skip 0x4
+.global instance$2423
+instance$2423:
+	.skip 0x4

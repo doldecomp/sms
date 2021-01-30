@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__Q26JDrama9TSmJ3DScnFPCcl
 __ct__Q26JDrama9TSmJ3DScnFPCcl:
 /* 80046818 00043758  7C 08 02 A6 */	mflr r0
@@ -243,3 +242,13 @@ lbl_80046B64:
 /* 80046B74 00043AB4  7C 08 03 A6 */	mtlr r0
 /* 80046B78 00043AB8  38 21 00 18 */	addi r1, r1, 0x18
 /* 80046B7C 00043ABC  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21578
+$$21578:
+	.incbin "baserom.dol", 0x36E120, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q26JDrama9TSmJ3DScn
+__vt__Q26JDrama9TSmJ3DScn:
+	.incbin "baserom.dol", 0x3A79D0, 0x30

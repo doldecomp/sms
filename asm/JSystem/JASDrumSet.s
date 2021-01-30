@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global getParam__Q28JASystem8TDrumSetCFiiPQ28JASystem10TInstParam
 getParam__Q28JASystem8TDrumSetCFiiPQ28JASystem10TInstParam:
 /* 8005A51C 0005745C  7C 08 02 A6 */	mflr r0
@@ -317,3 +316,32 @@ getType__Q28JASystem8TDrumSetCFv:
 /* 8005A92C 0005786C  3C 60 50 45 */	lis r3, 0x50455243@ha
 /* 8005A930 00057870  38 63 52 43 */	addi r3, r3, 0x50455243@l
 /* 8005A934 00057874  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__Q28JASystem8TDrumSet
+__vt__Q28JASystem8TDrumSet:
+	.incbin "baserom.dol", 0x3A7E90, 0x18
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2323
+$$2323:
+	.incbin "baserom.dol", 0x3E42F8, 0x4
+.global $$2324
+$$2324:
+	.incbin "baserom.dol", 0x3E42FC, 0x4
+.global $$2328
+$$2328:
+	.incbin "baserom.dol", 0x3E4300, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global osc$294
+osc$294:
+	.skip 0x18
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global oscp$295
+oscp$295:
+	.skip 0x4
+.global init$296
+init$296:
+	.skip 0x4

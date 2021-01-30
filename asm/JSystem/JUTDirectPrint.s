@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global start__14JUTDirectPrintFv
 start__14JUTDirectPrintFv:
 /* 800111F8 0000E138  7C 08 02 A6 */	mflr r0
@@ -408,3 +407,24 @@ lbl_8001174C:
 /* 80011754 0000E694  38 21 01 A8 */	addi r1, r1, 0x1a8
 /* 80011758 0000E698  7C 08 03 A6 */	mtlr r0
 /* 8001175C 0000E69C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sAsciiTable__14JUTDirectPrint
+sAsciiTable__14JUTDirectPrint:
+	.incbin "baserom.dol", 0x3A58B0, 0x80
+.global sFontData__14JUTDirectPrint
+sFontData__14JUTDirectPrint:
+	.incbin "baserom.dol", 0x3A5930, 0x100
+.global sFontData2__14JUTDirectPrint
+sFontData2__14JUTDirectPrint:
+	.incbin "baserom.dol", 0x3A5A30, 0x138
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2192
+$$2192:
+	.incbin "baserom.dol", 0x3E3D88, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sDirectPrint__14JUTDirectPrint
+sDirectPrint__14JUTDirectPrint:
+	.skip 0x8

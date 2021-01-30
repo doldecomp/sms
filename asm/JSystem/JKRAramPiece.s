@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global sendCommand__12JKRAramPieceFP12JKRAMCommand
 sendCommand__12JKRAramPieceFP12JKRAMCommand:
 /* 8003A3B0 000372F0  7C 08 02 A6 */	mflr r0
@@ -341,3 +340,41 @@ __sinit_JKRAramPiece_cpp:
 /* 8003A850 00037790  38 21 00 10 */	addi r1, r1, 0x10
 /* 8003A854 00037794  7C 08 03 A6 */	mtlr r0
 /* 8003A858 00037798  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBD8, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$295
+$$295:
+	.incbin "baserom.dol", 0x36DD50, 0x10
+.global $$296
+$$296:
+	.incbin "baserom.dol", 0x36DD60, 0x10
+.global $$297
+$$297:
+	.incbin "baserom.dol", 0x36DD70, 0x14
+.global $$298
+$$298:
+	.incbin "baserom.dol", 0x36DD84, 0x10
+.global $$299
+$$299:
+	.incbin "baserom.dol", 0x36DD94, 0x14
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2100
+$$2100:
+	.incbin "baserom.dol", 0x3E4008, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$260
+$$260:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sAramPieceCommandList__12JKRAramPiece
+sAramPieceCommandList__12JKRAramPiece:
+	.skip 0x24
+.global mMutex__12JKRAramPiece
+mMutex__12JKRAramPiece:
+	.skip 0x18

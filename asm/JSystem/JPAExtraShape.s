@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__13JPAExtraShapeFPCUc
 __ct__13JPAExtraShapeFPCUc:
 /* 80080AE4 0007DA24  7C 08 02 A6 */	mflr r0
@@ -212,3 +211,19 @@ lbl_80080DDC:
 /* 80080DE8 0007DD28  38 21 00 18 */	addi r1, r1, 0x18
 /* 80080DEC 0007DD2C  7C 08 03 A6 */	mtlr r0
 /* 80080DF0 0007DD30  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__13JPAExtraShape
+__vt__13JPAExtraShape:
+	.incbin "baserom.dol", 0x3A9CE0, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21509
+$$21509:
+	.incbin "baserom.dol", 0x3E4618, 0x4
+.global $$21510
+$$21510:
+	.incbin "baserom.dol", 0x3E461C, 0x4
+.global $$21511
+$$21511:
+	.incbin "baserom.dol", 0x3E4620, 0x8

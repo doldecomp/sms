@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
 calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
 /* 8035FA5C 0035C99C  7C 08 02 A6 */	mflr r0
@@ -118,3 +117,21 @@ lbl_8035FBF4:
 /* 8035FC00 0035CB40  7C 08 03 A6 */	mtlr r0
 /* 8035FC04 0035CB44  38 21 00 38 */	addi r1, r1, 0x38
 /* 8035FC08 0035CB48  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TCameraMapTool
+__vt__14TCameraMapTool:
+	.incbin "baserom.dol", 0x3E1C60, 0x20
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21652
+$$21652:
+	.incbin "baserom.dol", 0x3EC4F8, 0x4
+.global $$21653
+$$21653:
+	.incbin "baserom.dol", 0x3EC4FC, 0x4
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpCamMapToolTable
+gpCamMapToolTable:
+	.skip 0x8

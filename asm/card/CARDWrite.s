@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global WriteCallback
 WriteCallback:
 /* 800A4688 000A15C8  7C 08 02 A6 */	mflr r0

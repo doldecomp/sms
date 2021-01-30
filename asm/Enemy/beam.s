@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TBeamManagerFv
 __dt__12TBeamManagerFv:
 /* 802F0BD8 002EDB18  7C 08 02 A6 */	mflr r0
@@ -977,3 +976,42 @@ __ct__9TConeBeamFv:
 /* 802F1A44 002EE984  38 21 00 18 */	addi r1, r1, 0x18
 /* 802F1A48 002EE988  7C 08 03 A6 */	mtlr r0
 /* 802F1A4C 002EE98C  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TBeamManager
+__vt__12TBeamManager:
+	.incbin "baserom.dol", 0x3DB398, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21801
+$$21801:
+	.incbin "baserom.dol", 0x3EB1B0, 0x4
+.global $$22019
+$$22019:
+	.incbin "baserom.dol", 0x3EB1B4, 0x4
+.global $$22020
+$$22020:
+	.incbin "baserom.dol", 0x3EB1B8, 0x4
+.global $$22021
+$$22021:
+	.incbin "baserom.dol", 0x3EB1BC, 0x4
+.global $$22022
+$$22022:
+	.incbin "baserom.dol", 0x3EB1C0, 0x4
+.global $$22023
+$$22023:
+	.incbin "baserom.dol", 0x3EB1C4, 0x4
+.global $$22024
+$$22024:
+	.incbin "baserom.dol", 0x3EB1C8, 0x4
+.global $$22025
+$$22025:
+	.incbin "baserom.dol", 0x3EB1CC, 0x4
+.global $$22027
+$$22027:
+	.incbin "baserom.dol", 0x3EB1D0, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpBeamManager
+gpBeamManager:
+	.skip 0x8

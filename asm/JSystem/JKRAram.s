@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__7JKRAramFUlUllll
 create__7JKRAramFUlUllll:
 /* 800069EC 0000392C  7C 08 02 A6 */	mflr r0
@@ -731,7 +730,7 @@ lbl_800073CC:
 /* 800073D4 00004314  93 ED 8D 30 */	stw r31, fileOffset-_SDA_BASE_(r13)
 /* 800073D8 00004318  90 0D 8D 34 */	stw r0, readCount-_SDA_BASE_(r13)
 /* 800073DC 0000431C  93 CD 8D 38 */	stw r30, maxDest-_SDA_BASE_(r13)
-/* 800073E0 00004320  48 00 02 D1 */	bl firstSrcData__Fv__JKRAram
+/* 800073E0 00004320  48 00 02 D1 */	bl firstSrcData__Fv
 /* 800073E4 00004324  7F 84 E3 78 */	mr r4, r28
 /* 800073E8 00004328  48 00 00 3D */	bl decompSZS_subroutine__FPUcPUc
 /* 800073EC 0000432C  80 6D 8D 0C */	lwz r3, szpBuf-_SDA_BASE_(r13)
@@ -797,7 +796,7 @@ lbl_800074A8:
 /* 800074BC 000043FC  80 0D 8D 24 */	lwz r0, transLeft-_SDA_BASE_(r13)
 /* 800074C0 00004400  28 00 00 00 */	cmplwi r0, 0
 /* 800074C4 00004404  41 82 00 08 */	beq lbl_800074CC
-/* 800074C8 00004408  48 00 02 85 */	bl nextSrcData__FPUc__JKRAram
+/* 800074C8 00004408  48 00 02 85 */	bl nextSrcData__FPUc
 lbl_800074CC:
 /* 800074CC 0000440C  88 03 00 00 */	lbz r0, 0(r3)
 /* 800074D0 00004410  38 80 00 08 */	li r4, 8
@@ -939,8 +938,8 @@ lbl_80007698:
 /* 800076A8 000045E8  38 21 00 18 */	addi r1, r1, 0x18
 /* 800076AC 000045EC  4E 80 00 20 */	blr 
 
-.global firstSrcData__Fv__JKRAram
-firstSrcData__Fv__JKRAram:
+.global firstSrcData__Fv
+firstSrcData__Fv:
 /* 800076B0 000045F0  7C 08 02 A6 */	mflr r0
 /* 800076B4 000045F4  90 01 00 04 */	stw r0, 4(r1)
 /* 800076B8 000045F8  94 21 FF F0 */	stwu r1, -0x10(r1)
@@ -983,8 +982,8 @@ lbl_800076F4:
 /* 80007744 00004684  7C 08 03 A6 */	mtlr r0
 /* 80007748 00004688  4E 80 00 20 */	blr 
 
-.global nextSrcData__FPUc__JKRAram
-nextSrcData__FPUc__JKRAram:
+.global nextSrcData__FPUc
+nextSrcData__FPUc:
 /* 8000774C 0000468C  7C 08 02 A6 */	mflr r0
 /* 80007750 00004690  38 83 00 00 */	addi r4, r3, 0
 /* 80007754 00004694  90 01 00 04 */	stw r0, 4(r1)
@@ -1095,3 +1094,85 @@ lbl_800078BC:
 /* 800078CC 0000480C  7C 08 03 A6 */	mtlr r0
 /* 800078D0 00004810  38 21 00 18 */	addi r1, r1, 0x18
 /* 800078D4 00004814  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBAC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2114
+$$2114:
+	.incbin "baserom.dol", 0x36CFD0, 0xC
+.global $$2115
+$$2115:
+	.incbin "baserom.dol", 0x36CFDC, 0x20
+.global $$2447
+$$2447:
+	.incbin "baserom.dol", 0x36CFFC, 0x8
+.global lbl_80370004
+lbl_80370004:
+	.incbin "baserom.dol", 0x36D004, 0x18
+.global $$2548
+$$2548:
+	.incbin "baserom.dol", 0x36D01C, 0x44
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global sMessageBuffer__7JKRAram
+sMessageBuffer__7JKRAram:
+	.incbin "baserom.dol", 0x3A53F8, 0x10
+.global sMessageQueue__7JKRAram
+sMessageQueue__7JKRAram:
+	.incbin "baserom.dol", 0x3A5408, 0x20
+.global __vt__7JKRAram
+__vt__7JKRAram:
+	.incbin "baserom.dol", 0x3A5428, 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$260
+$$260:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sAramCommandList__7JKRAram
+sAramCommandList__7JKRAram:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sAramObject__7JKRAram
+sAramObject__7JKRAram:
+	.skip 0x4
+.global szpBuf
+szpBuf:
+	.skip 0x4
+.global szpEnd
+szpEnd:
+	.skip 0x4
+.global refBuf
+refBuf:
+	.skip 0x4
+.global refEnd
+refEnd:
+	.skip 0x4
+.global refCurrent
+refCurrent:
+	.skip 0x4
+.global srcOffset
+srcOffset:
+	.skip 0x4
+.global transLeft
+transLeft:
+	.skip 0x4
+.global srcLimit
+srcLimit:
+	.skip 0x4
+.global srcAddress
+srcAddress:
+	.skip 0x4
+.global fileOffset
+fileOffset:
+	.skip 0x4
+.global readCount
+readCount:
+	.skip 0x4
+.global maxDest
+maxDest:
+	.skip 0x8

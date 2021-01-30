@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global mountStageArchive__12TApplicationFv
 mountStageArchive__12TApplicationFv:
 /* 800F939C 000F62DC  7C 08 02 A6 */	mflr r0
@@ -2657,3 +2656,235 @@ lbl_800FBA00:
 /* 800FBA08 000F8948  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FBA0C 000F894C  7C 08 03 A6 */	mtlr r0
 /* 800FBA10 000F8950  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CC38, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x371CA0, 0xC
+.global $$21938
+$$21938:
+	.incbin "baserom.dol", 0x371CAC, 0x14
+.global $$22573
+$$22573:
+	.incbin "baserom.dol", 0x371CC0, 0xC
+.global $$22620
+$$22620:
+	.incbin "baserom.dol", 0x371CCC, 0x68
+.global $$22621
+$$22621:
+	.incbin "baserom.dol", 0x371D34, 0x50
+.global $$22622
+$$22622:
+	.incbin "baserom.dol", 0x371D84, 0x20
+.global $$22623
+$$22623:
+	.incbin "baserom.dol", 0x371DA4, 0x58
+.global $$22624
+$$22624:
+	.incbin "baserom.dol", 0x371DFC, 0x40
+.global $$22625
+$$22625:
+	.incbin "baserom.dol", 0x371E3C, 0x8C
+.global $$23107
+$$23107:
+	.incbin "baserom.dol", 0x371EC8, 0xC
+.global $$23108
+$$23108:
+	.incbin "baserom.dol", 0x371ED4, 0x24
+.global $$23109
+$$23109:
+	.incbin "baserom.dol", 0x371EF8, 0x18
+.global $$23110
+$$23110:
+	.incbin "baserom.dol", 0x371F10, 0x18
+.global $$23137
+$$23137:
+	.incbin "baserom.dol", 0x371F28, 0x14
+.global $$23139
+$$23139:
+	.incbin "baserom.dol", 0x371F3C, 0xC
+.global $$23196
+$$23196:
+	.incbin "baserom.dol", 0x371F48, 0x10
+.global $$23197
+$$23197:
+	.incbin "baserom.dol", 0x371F58, 0x14
+.global $$23198
+$$23198:
+	.incbin "baserom.dol", 0x371F6C, 0x14
+.global $$23199
+$$23199:
+	.incbin "baserom.dol", 0x371F80, 0x14
+.global $$23200
+$$23200:
+	.incbin "baserom.dol", 0x371F94, 0x10
+.global $$23306
+$$23306:
+	.incbin "baserom.dol", 0x371FA4, 0x14
+.global $$23312
+$$23312:
+	.incbin "baserom.dol", 0x371FB8, 0x18
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global $$22633
+$$22633:
+	.incbin "baserom.dol", 0x3B1040, 0x34
+.global $$22929
+$$22929:
+	.incbin "baserom.dol", 0x3B1074, 0x28
+.global __vt__13TMarioGamePad
+__vt__13TMarioGamePad:
+	.incbin "baserom.dol", 0x3B109C, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22481
+$$22481:
+	.incbin "baserom.dol", 0x3E4EE8, 0x4
+.global $$22485
+$$22485:
+	.incbin "baserom.dol", 0x3E4EEC, 0x4
+.global lbl_8040C650
+lbl_8040C650:
+	.incbin "baserom.dol", 0x3E4EF0, 0x4
+.global $$22574
+$$22574:
+	.incbin "baserom.dol", 0x3E4EF4, 0x8
+.global $$22575
+$$22575:
+	.incbin "baserom.dol", 0x3E4EFC, 0x8
+.global $$22576
+$$22576:
+	.incbin "baserom.dol", 0x3E4F04, 0x4
+.global $$22626
+$$22626:
+	.incbin "baserom.dol", 0x3E4F08, 0x4
+.global $$22627
+$$22627:
+	.incbin "baserom.dol", 0x3E4F0C, 0x4
+.global $$22628
+$$22628:
+	.incbin "baserom.dol", 0x3E4F10, 0x4
+.global $$22629
+$$22629:
+	.incbin "baserom.dol", 0x3E4F14, 0x4
+.global $$22630
+$$22630:
+	.incbin "baserom.dol", 0x3E4F18, 0x4
+.global $$22631
+$$22631:
+	.incbin "baserom.dol", 0x3E4F1C, 0x4
+.global $$22632
+$$22632:
+	.incbin "baserom.dol", 0x3E4F20, 0x8
+.global $$22635
+$$22635:
+	.incbin "baserom.dol", 0x3E4F28, 0x8
+.global $$23136
+$$23136:
+	.incbin "baserom.dol", 0x3E4F30, 0x8
+.global $$23138
+$$23138:
+	.incbin "baserom.dol", 0x3E4F38, 0x8
+.global $$23429
+$$23429:
+	.incbin "baserom.dol", 0x3E4F40, 0x4
+.global $$23430
+$$23430:
+	.incbin "baserom.dol", 0x3E4F44, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gSetupThread
+gSetupThread:
+	.skip 0x310
+.global $$22501
+$$22501:
+	.skip 0xC
+.global $$22502
+$$22502:
+	.skip 0xC
+.global $$22503
+$$22503:
+	.skip 0xC
+.global $$22504
+$$22504:
+	.skip 0xC
+.global $$22505
+$$22505:
+	.skip 0xC
+.global $$22506
+$$22506:
+	.skip 0xC
+.global $$22507
+$$22507:
+	.skip 0xC
+.global $$22508
+$$22508:
+	.skip 0xC
+.global $$22509
+$$22509:
+	.skip 0xC
+.global $$22510
+$$22510:
+	.skip 0xC
+.global $$22511
+$$22511:
+	.skip 0xC
+.global $$22512
+$$22512:
+	.skip 0xC
+.global $$22513
+$$22513:
+	.skip 0xC
+.global $$22514
+$$22514:
+	.skip 0xC
+.global $$22515
+$$22515:
+	.skip 0x10
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global gpMarDirector
+gpMarDirector:
+	.skip 0x4
+.global gpMSound
+gpMSound:
+	.skip 0x4
+.global gpSetupThreadStack
+gpSetupThreadStack:
+	.skip 0x4
+.global gpCardManager
+gpCardManager:
+	.skip 0x4
+.global gpSystemFont
+gpSystemFont:
+	.skip 0x4
+.global gpRomFont
+gpRomFont:
+	.skip 0x4
+.global sGameInit
+sGameInit:
+	.skip 0x4
+.global arcBufNLogo
+arcBufNLogo:
+	.skip 0x4
+.global arcBufMario
+arcBufMario:
+	.skip 0x4
+.global arcBufCmn
+arcBufCmn:
+	.skip 0x4
+.global bufStageArcBin
+bufStageArcBin:
+	.skip 0x4
+.global spGameHeapBlock
+spGameHeapBlock:
+	.skip 0x4
+.global gArBkConsole
+gArBkConsole:
+	.skip 0x8
+.global gArBkGuide
+gArBkGuide:
+	.skip 0x8

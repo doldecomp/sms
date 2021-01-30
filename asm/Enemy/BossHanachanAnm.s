@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global changeAnmRateAndFrameUpdate___13TBossHanachanFv
 changeAnmRateAndFrameUpdate___13TBossHanachanFv:
 /* 80303F3C 00300E7C  7C 08 02 A6 */	mflr r0
@@ -1025,3 +1024,26 @@ lbl_80304D4C:
 /* 80304D6C 00301CAC  7C 08 03 A6 */	mtlr r0
 /* 80304D70 00301CB0  38 21 00 68 */	addi r1, r1, 0x68
 /* 80304D74 00301CB4  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22330
+$$22330:
+	.incbin "baserom.dol", 0x3EB4C8, 0x4
+.global $$22331
+$$22331:
+	.incbin "baserom.dol", 0x3EB4CC, 0x4
+.global $$22474
+$$22474:
+	.incbin "baserom.dol", 0x3EB4D0, 0x4
+.global $$22475
+$$22475:
+	.incbin "baserom.dol", 0x3EB4D4, 0x4
+.global $$22476
+$$22476:
+	.incbin "baserom.dol", 0x3EB4D8, 0x4
+.global $$22477
+$$22477:
+	.incbin "baserom.dol", 0x3EB4DC, 0x4
+.global $$22512
+$$22512:
+	.incbin "baserom.dol", 0x3EB4E0, 0x8

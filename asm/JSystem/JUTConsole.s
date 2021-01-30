@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global create__10JUTConsoleFUiPvUl
 create__10JUTConsoleFUiPvUl:
 /* 8003F204 0003C144  7C 08 02 A6 */	mflr r0
@@ -1304,3 +1303,36 @@ JUTWarningConsole:
 /* 80040364 0003D2A4  38 21 00 08 */	addi r1, r1, 8
 /* 80040368 0003D2A8  7C 08 03 A6 */	mtlr r0
 /* 8004036C 0003D2AC  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10JUTConsole
+__vt__10JUTConsole:
+	.incbin "baserom.dol", 0x3A7010, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21718
+$$21718:
+	.incbin "baserom.dol", 0x3E4078, 0x4
+.global $$21719
+$$21719:
+	.incbin "baserom.dol", 0x3E407C, 0x4
+.global $$21721
+$$21721:
+	.incbin "baserom.dol", 0x3E4080, 0x8
+.global $$21724
+$$21724:
+	.incbin "baserom.dol", 0x3E4088, 0x8
+.global $$22338
+$$22338:
+	.incbin "baserom.dol", 0x3E4090, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global sManager__17JUTConsoleManager
+sManager__17JUTConsoleManager:
+	.skip 0x4
+.global sReportConsole
+sReportConsole:
+	.skip 0x4
+.global sWarningConsole
+sWarningConsole:
+	.skip 0x8

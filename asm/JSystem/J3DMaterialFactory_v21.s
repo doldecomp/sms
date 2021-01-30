@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__22J3DMaterialFactory_v21FRC20J3DMaterialBlock_v21
 __ct__22J3DMaterialFactory_v21FRC20J3DMaterialBlock_v21:
 /* 80068C18 00065B58  7C 08 02 A6 */	mflr r0
@@ -1555,3 +1554,17 @@ JSUConvertOffsetToPtr$$023J3DMaterialInitData_v21$$1__FPCvPCv:
 lbl_8006A1C8:
 /* 8006A1C8 00067108  7C 63 22 14 */	add r3, r3, r4
 /* 8006A1CC 0006710C  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21217
+$$21217:
+	.incbin "baserom.dol", 0x3E4468, 0x4
+.global $$21326
+$$21326:
+	.incbin "baserom.dol", 0x3E446C, 0x4
+.global lbl_8040BBD0
+lbl_8040BBD0:
+	.incbin "baserom.dol", 0x3E4470, 0x4
+.global $$21344
+$$21344:
+	.incbin "baserom.dol", 0x3E4474, 0x4

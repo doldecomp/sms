@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__11TWoodBarrelFv
 __dt__11TWoodBarrelFv:
 /* 80186F98 00183ED8  7C 08 02 A6 */	mflr r0
@@ -814,3 +813,85 @@ lbl_80187A60:
 $$232$$2__dt__11TWoodBarrelFv:
 /* 80187A74 001849B4  38 63 FF E0 */	addi r3, r3, -32
 /* 80187A78 001849B8  4B FF F5 20 */	b __dt__11TWoodBarrelFv
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCFC, 0x4
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22790
+$$22790:
+	.incbin "baserom.dol", 0x3846A8, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__11TWoodBarrel
+__vt__11TWoodBarrel:
+	.incbin "baserom.dol", 0x3B72D0, 0x1E0
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global mWaitAppearTime__11TWoodBarrel
+mWaitAppearTime__11TWoodBarrel:
+	.incbin "baserom.dol", 0x3E3528, 0x4
+.global mBreakTime__11TWoodBarrel
+mBreakTime__11TWoodBarrel:
+	.incbin "baserom.dol", 0x3E352C, 0x4
+.global mOilBarrelFlushTime__11TWoodBarrel
+mOilBarrelFlushTime__11TWoodBarrel:
+	.incbin "baserom.dol", 0x3E3530, 0x8
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22850
+$$22850:
+	.incbin "baserom.dol", 0x3E6A10, 0x4
+.global $$22851
+$$22851:
+	.incbin "baserom.dol", 0x3E6A14, 0x4
+.global $$22861
+$$22861:
+	.incbin "baserom.dol", 0x3E6A18, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$22899
+$$22899:
+	.skip 0xC
+.global $$22900
+$$22900:
+	.skip 0xC
+.global $$22901
+$$22901:
+	.skip 0xC
+.global $$22902
+$$22902:
+	.skip 0xC
+.global $$22903
+$$22903:
+	.skip 0xC
+.global $$22904
+$$22904:
+	.skip 0xC
+.global $$22905
+$$22905:
+	.skip 0xC
+.global $$22906
+$$22906:
+	.skip 0xC
+.global $$22907
+$$22907:
+	.skip 0xC
+.global $$22908
+$$22908:
+	.skip 0xC
+.global $$22909
+$$22909:
+	.skip 0xC
+.global $$22910
+$$22910:
+	.skip 0xC
+.global $$22911
+$$22911:
+	.skip 0xC
+.global $$22912
+$$22912:
+	.skip 0xC
+.global $$22913
+$$22913:
+	.skip 0x10

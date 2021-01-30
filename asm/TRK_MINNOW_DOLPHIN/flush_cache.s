@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRK_flush_cache
 TRK_flush_cache:
 /* 8008A33C 0008727C  3C A0 FF FF */	lis r5, 0xFFFFFFF1@h

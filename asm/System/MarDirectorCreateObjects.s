@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global createObjects__12TMarDirectorFv
 createObjects__12TMarDirectorFv:
 /* 8010C334 00109274  7C 08 02 A6 */	mflr r0
@@ -36,3 +35,8 @@ lbl_8010C390:
 /* 8010C3A0 001092E0  38 21 00 18 */	addi r1, r1, 0x18
 /* 8010C3A4 001092E4  7C 08 03 A6 */	mtlr r0
 /* 8010C3A8 001092E8  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21816
+$$21816:
+	.incbin "baserom.dol", 0x376A28, 0x18

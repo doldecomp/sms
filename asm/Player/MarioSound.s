@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__17TMarioSoundValuesFv
 __ct__17TMarioSoundValuesFv:
 /* 80164668 001615A8  38 A0 00 00 */	li r5, 0
@@ -2591,3 +2590,70 @@ lbl_80166B38:
 /* 80166B40 00163A80  38 21 00 10 */	addi r1, r1, 0x10
 /* 80166B44 00163A84  7C 08 03 A6 */	mtlr r0
 /* 80166B48 00163A88  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCBC, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$23069
+$$23069:
+	.incbin "baserom.dol", 0x3E6278, 0x4
+.global $$23161
+$$23161:
+	.incbin "baserom.dol", 0x3E627C, 0x4
+.global $$23163
+$$23163:
+	.incbin "baserom.dol", 0x3E6280, 0x8
+.global $$24004
+$$24004:
+	.incbin "baserom.dol", 0x3E6288, 0x4
+.global $$24005
+$$24005:
+	.incbin "baserom.dol", 0x3E628C, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$23002
+$$23002:
+	.skip 0xC
+.global $$23003
+$$23003:
+	.skip 0xC
+.global $$23004
+$$23004:
+	.skip 0xC
+.global $$23005
+$$23005:
+	.skip 0xC
+.global $$23006
+$$23006:
+	.skip 0xC
+.global $$23007
+$$23007:
+	.skip 0xC
+.global $$23008
+$$23008:
+	.skip 0xC
+.global $$23009
+$$23009:
+	.skip 0xC
+.global $$23010
+$$23010:
+	.skip 0xC
+.global $$23011
+$$23011:
+	.skip 0xC
+.global $$23012
+$$23012:
+	.skip 0xC
+.global $$23013
+$$23013:
+	.skip 0xC
+.global $$23014
+$$23014:
+	.skip 0xC
+.global $$23015
+$$23015:
+	.skip 0xC
+.global $$23016
+$$23016:
+	.skip 0x10

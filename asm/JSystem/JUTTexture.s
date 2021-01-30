@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__10JUTTextureFii9_GXTexFmt
 __ct__10JUTTextureFii9_GXTexFmt:
 /* 80013528 00010468  7C 08 02 A6 */	mflr r0
@@ -402,3 +401,17 @@ lbl_80013AA4:
 /* 80013ABC 000109FC  7C 08 03 A6 */	mtlr r0
 /* 80013AC0 00010A00  38 21 00 18 */	addi r1, r1, 0x18
 /* 80013AC4 00010A04  4E 80 00 20 */	blr 
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2135
+$$2135:
+	.incbin "baserom.dol", 0x3E3DD8, 0x4
+.global $$2136
+$$2136:
+	.incbin "baserom.dol", 0x3E3DDC, 0x4
+.global $$2138
+$$2138:
+	.incbin "baserom.dol", 0x3E3DE0, 0x8
+.global $$2141
+$$2141:
+	.incbin "baserom.dol", 0x3E3DE8, 0x8

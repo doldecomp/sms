@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKInitializeMutex
 TRKInitializeMutex:
 /* 8008A24C 0008718C  38 60 00 00 */	li r3, 0

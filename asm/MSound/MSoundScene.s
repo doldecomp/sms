@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global sortMaxTrans__9MSSceneSEFP3VecUcUc
 sortMaxTrans__9MSSceneSEFP3VecUcUc:
 /* 8018089C 0017D7DC  7C 08 02 A6 */	mflr r0
@@ -733,3 +732,76 @@ lbl_801812EC:
 /* 801812F4 0017E234  38 21 00 10 */	addi r1, r1, 0x10
 /* 801812F8 0017E238  7C 08 03 A6 */	mtlr r0
 /* 801812FC 0017E23C  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CCE8, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22051
+$$22051:
+	.incbin "baserom.dol", 0x3E6770, 0x4
+.global $$22053
+$$22053:
+	.incbin "baserom.dol", 0x3E6774, 0x4
+.global $$22263
+$$22263:
+	.incbin "baserom.dol", 0x3E6778, 0x4
+.global $$22264
+$$22264:
+	.incbin "baserom.dol", 0x3E677C, 0x4
+.global $$22265
+$$22265:
+	.incbin "baserom.dol", 0x3E6780, 0x8
+.global $$22267
+$$22267:
+	.incbin "baserom.dol", 0x3E6788, 0x8
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global _posByCamera
+_posByCamera:
+	.skip 0xC00
+.global $$22002
+$$22002:
+	.skip 0xC
+.global $$22003
+$$22003:
+	.skip 0xC
+.global $$22004
+$$22004:
+	.skip 0xC
+.global $$22005
+$$22005:
+	.skip 0xC
+.global $$22006
+$$22006:
+	.skip 0xC
+.global $$22007
+$$22007:
+	.skip 0xC
+.global $$22008
+$$22008:
+	.skip 0xC
+.global $$22009
+$$22009:
+	.skip 0xC
+.global $$22010
+$$22010:
+	.skip 0xC
+.global $$22011
+$$22011:
+	.skip 0xC
+.global $$22012
+$$22012:
+	.skip 0xC
+.global $$22013
+$$22013:
+	.skip 0xC
+.global $$22014
+$$22014:
+	.skip 0xC
+.global $$22015
+$$22015:
+	.skip 0xC
+.global $$22016
+$$22016:
+	.skip 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global init__12J3DFrameCtrlFs
 init__12J3DFrameCtrlFs:
 /* 8002AC94 00027BD4  38 00 00 02 */	li r0, 2
@@ -4490,3 +4489,70 @@ lbl_8002EB2C:
 /* 8002EB30 0002BA70  38 21 00 08 */	addi r1, r1, 8
 /* 8002EB34 0002BA74  7C 08 03 A6 */	mtlr r0
 /* 8002EB38 0002BA78  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14J3DAnmColorKey
+__vt__14J3DAnmColorKey:
+	.incbin "baserom.dol", 0x3A6990, 0x10
+.global __vt__11J3DAnmColor
+__vt__11J3DAnmColor:
+	.incbin "baserom.dol", 0x3A69A0, 0x10
+.global __vt__15J3DAnmColorFull
+__vt__15J3DAnmColorFull:
+	.incbin "baserom.dol", 0x3A69B0, 0x10
+.global __vt__17J3DAnmVtxColorKey
+__vt__17J3DAnmVtxColorKey:
+	.incbin "baserom.dol", 0x3A69C0, 0x10
+.global __vt__14J3DAnmVtxColor
+__vt__14J3DAnmVtxColor:
+	.incbin "baserom.dol", 0x3A69D0, 0x10
+.global __vt__18J3DAnmVtxColorFull
+__vt__18J3DAnmVtxColorFull:
+	.incbin "baserom.dol", 0x3A69E0, 0x10
+.global __vt__16J3DAnmClusterKey
+__vt__16J3DAnmClusterKey:
+	.incbin "baserom.dol", 0x3A69F0, 0x10
+.global __vt__13J3DAnmCluster
+__vt__13J3DAnmCluster:
+	.incbin "baserom.dol", 0x3A6A00, 0x10
+.global __vt__17J3DAnmClusterFull
+__vt__17J3DAnmClusterFull:
+	.incbin "baserom.dol", 0x3A6A10, 0x10
+.global __vt__18J3DAnmTransformKey
+__vt__18J3DAnmTransformKey:
+	.incbin "baserom.dol", 0x3A6A20, 0x14
+.global __vt__15J3DAnmTransform
+__vt__15J3DAnmTransform:
+	.incbin "baserom.dol", 0x3A6A34, 0x10
+.global __vt__19J3DAnmTransformFull
+__vt__19J3DAnmTransformFull:
+	.incbin "baserom.dol", 0x3A6A44, 0x10
+.global __vt__10J3DAnmBase
+__vt__10J3DAnmBase:
+	.incbin "baserom.dol", 0x3A6A54, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2955
+$$2955:
+	.incbin "baserom.dol", 0x3E3F50, 0x4
+.global $$2956
+$$2956:
+	.incbin "baserom.dol", 0x3E3F54, 0x4
+.global $$21073
+$$21073:
+	.incbin "baserom.dol", 0x3E3F58, 0x8
+.global $$21075
+$$21075:
+	.incbin "baserom.dol", 0x3E3F60, 0x8
+.global $$21230
+$$21230:
+	.incbin "baserom.dol", 0x3E3F68, 0x8
+.global $$21500
+$$21500:
+	.incbin "baserom.dol", 0x3E3F70, 0x4
+.global $$21718
+$$21718:
+	.incbin "baserom.dol", 0x3E3F74, 0x4
+.global $$21719
+$$21719:
+	.incbin "baserom.dol", 0x3E3F78, 0x8

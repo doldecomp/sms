@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global setParamInitDataPointer__18JAIGlobalParameterFPv
 setParamInitDataPointer__18JAIGlobalParameterFPv:
 /* 80054AE0 00051A20  80 8D 8F A0 */	lwz r4, basic__8JAIBasic-_SDA_BASE_(r13)
@@ -170,3 +169,182 @@ getParamOutputGainUp__18JAIGlobalParameterFv:
 getParamMaxVolumeDistance__18JAIGlobalParameterFv:
 /* 80054C48 00051B88  C0 2D 81 54 */	lfs f1, maxVolumeDistance__18JAIGlobalParameter-_SDA_BASE_(r13)
 /* 80054C4C 00051B8C  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$2530
+$$2530:
+	.incbin "baserom.dol", 0x36E1F8, 0x14
+.global $$2531
+$$2531:
+	.incbin "baserom.dol", 0x36E20C, 0x14
+.global $$2532
+$$2532:
+	.incbin "baserom.dol", 0x36E220, 0x14
+.global $$2533
+$$2533:
+	.incbin "baserom.dol", 0x36E234, 0xC
+.global $$2537
+$$2537:
+	.incbin "baserom.dol", 0x36E240, 0x10
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global distanceParameterMoveTime__18JAIGlobalParameter
+distanceParameterMoveTime__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F0, 0x1
+.global audioSystemThreadPriority__18JAIGlobalParameter
+audioSystemThreadPriority__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F1, 0x1
+.global audioDvdThreadPriority__18JAIGlobalParameter
+audioDvdThreadPriority__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F2, 0x1
+.global seqMuteVolumeSePlay__18JAIGlobalParameter
+seqMuteVolumeSePlay__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F3, 0x1
+.global seDistanceFxParameter__18JAIGlobalParameter
+seDistanceFxParameter__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F4, 0x4
+.global soundSceneMax__18JAIGlobalParameter
+soundSceneMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30F8, 0x4
+.global seRegistMax__18JAIGlobalParameter
+seRegistMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E30FC, 0x4
+.global seTrackMax__18JAIGlobalParameter
+seTrackMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3100, 0x4
+.global seqTrackMax__18JAIGlobalParameter
+seqTrackMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3104, 0x4
+.global seqPlayTrackMax__18JAIGlobalParameter
+seqPlayTrackMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3108, 0x4
+.global seqControlBufferMax__18JAIGlobalParameter
+seqControlBufferMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E310C, 0x4
+.global streamControlBufferMax__18JAIGlobalParameter
+streamControlBufferMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3110, 0x4
+.global streamParameterBufferMax__18JAIGlobalParameter
+streamParameterBufferMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3114, 0x4
+.global autoHeapMax__18JAIGlobalParameter
+autoHeapMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3118, 0x4
+.global stayHeapMax__18JAIGlobalParameter
+stayHeapMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E311C, 0x4
+.global autoHeapRoomSize__18JAIGlobalParameter
+autoHeapRoomSize__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3120, 0x4
+.global stayHeapSize__18JAIGlobalParameter
+stayHeapSize__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3124, 0x4
+.global seInfoFileName__18JAIGlobalParameter
+seInfoFileName__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3128, 0x4
+.global seqInfoFileName__18JAIGlobalParameter
+seqInfoFileName__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E312C, 0x4
+.global streamInfoFileName__18JAIGlobalParameter
+streamInfoFileName__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3130, 0x4
+.global initDataFileName__18JAIGlobalParameter
+initDataFileName__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3134, 0x4
+.global wavePath__18JAIGlobalParameter
+wavePath__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3138, 0x4
+.global sequenceArchivesPath__18JAIGlobalParameter
+sequenceArchivesPath__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E313C, 0x4
+.global streamPath__18JAIGlobalParameter
+streamPath__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3140, 0x4
+.global sequenceArchivesFileName__18JAIGlobalParameter
+sequenceArchivesFileName__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3144, 0x4
+.global inputGainDown__18JAIGlobalParameter
+inputGainDown__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3148, 0x4
+.global outputGainUp__18JAIGlobalParameter
+outputGainUp__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E314C, 0x4
+.global distanceMax__18JAIGlobalParameter
+distanceMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3150, 0x4
+.global maxVolumeDistance__18JAIGlobalParameter
+maxVolumeDistance__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3154, 0x4
+.global seDolbyCenterValue__18JAIGlobalParameter
+seDolbyCenterValue__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3158, 0x4
+.global seDolbyFrontDistanceMax__18JAIGlobalParameter
+seDolbyFrontDistanceMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E315C, 0x4
+.global seDolbyBehindDistanceMax__18JAIGlobalParameter
+seDolbyBehindDistanceMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3160, 0x4
+.global dopplarMoveTime__18JAIGlobalParameter
+dopplarMoveTime__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3164, 0x4
+.global dummyPositionMax__18JAIGlobalParameter
+dummyPositionMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3168, 0x4
+.global seqMuteMoveSpeedSePlay__18JAIGlobalParameter
+seqMuteMoveSpeedSePlay__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E316C, 0x4
+.global audioCameraMax__18JAIGlobalParameter
+audioCameraMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3170, 0x4
+.global systemTrackMax__18JAIGlobalParameter
+systemTrackMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3174, 0x4
+.global systemRootTrackMax__18JAIGlobalParameter
+systemRootTrackMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3178, 0x4
+.global panDistanceMax__18JAIGlobalParameter
+panDistanceMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E317C, 0x4
+.global panDistance2Max__18JAIGlobalParameter
+panDistance2Max__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3180, 0x4
+.global panAngleParameter__18JAIGlobalParameter
+panAngleParameter__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3184, 0x4
+.global panAngleParameter2__18JAIGlobalParameter
+panAngleParameter2__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3188, 0x4
+.global dopplarParameter__18JAIGlobalParameter
+dopplarParameter__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E318C, 0x4
+.global seDistanceWaitMax__18JAIGlobalParameter
+seDistanceWaitMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3190, 0x4
+.global seDistancepitchMax__18JAIGlobalParameter
+seDistancepitchMax__18JAIGlobalParameter:
+	.incbin "baserom.dol", 0x3E3194, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2534
+$$2534:
+	.incbin "baserom.dol", 0x3E4240, 0x8
+.global $$2535
+$$2535:
+	.incbin "baserom.dol", 0x3E4248, 0x8
+.global $$2536
+$$2536:
+	.incbin "baserom.dol", 0x3E4250, 0x8
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global seDefaultFx__18JAIGlobalParameter
+seDefaultFx__18JAIGlobalParameter:
+	.skip 0x4
+.global interfaceHeapSize__18JAIGlobalParameter
+interfaceHeapSize__18JAIGlobalParameter:
+	.skip 0x4
+.global audioResPath__18JAIGlobalParameter
+audioResPath__18JAIGlobalParameter:
+	.skip 0x4
+.global minDistanceVolume__18JAIGlobalParameter
+minDistanceVolume__18JAIGlobalParameter:
+	.skip 0x4

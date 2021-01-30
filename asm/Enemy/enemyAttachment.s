@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__18TEnemyPolluteModelFv
 __dt__18TEnemyPolluteModelFv:
 /* 802507DC 0024D71C  7C 08 02 A6 */	mflr r0
@@ -1063,3 +1062,42 @@ receiveMessage__16TEnemyAttachmentFP9THitActorUl:
 $$232$$2__dt__16TEnemyAttachmentFv:
 /* 80251648 0024E588  38 63 FF E0 */	addi r3, r3, -32
 /* 8025164C 0024E58C  4B FF FF 6C */	b __dt__16TEnemyAttachmentFv
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$22620
+$$22620:
+	.incbin "baserom.dol", 0x391FB0, 0x10
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__18TEnemyPolluteModel
+__vt__18TEnemyPolluteModel:
+	.incbin "baserom.dol", 0x3CFEB0, 0x28
+.global __vt__25TEnemyPolluteModelManager
+__vt__25TEnemyPolluteModelManager:
+	.incbin "baserom.dol", 0x3CFED8, 0x28
+.global __vt__16TEnemyAttachment
+__vt__16TEnemyAttachment:
+	.incbin "baserom.dol", 0x3CFF00, 0x148
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22566
+$$22566:
+	.incbin "baserom.dol", 0x3E99F0, 0x4
+.global $$22567
+$$22567:
+	.incbin "baserom.dol", 0x3E99F4, 0x4
+.global $$22700
+$$22700:
+	.incbin "baserom.dol", 0x3E99F8, 0x4
+.global $$22757
+$$22757:
+	.incbin "baserom.dol", 0x3E99FC, 0x4
+.global $$22829
+$$22829:
+	.incbin "baserom.dol", 0x3E9A00, 0x4
+.global $$22860
+$$22860:
+	.incbin "baserom.dol", 0x3E9A04, 0x4
+.global $$22879
+$$22879:
+	.incbin "baserom.dol", 0x3E9A08, 0x8

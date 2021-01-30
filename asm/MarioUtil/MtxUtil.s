@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global SMS_GetActorMtx__FRC9THitActorPA4_f
 SMS_GetActorMtx__FRC9THitActorPA4_f:
 /* 800C64C8 000C3408  7C 08 02 A6 */	mflr r0
@@ -1409,8 +1408,8 @@ __ct__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FP7TParamsQ29JGeometry8TVec3$$0f$$
 /* 800C7944 000C4884  7C 08 03 A6 */	mtlr r0
 /* 800C7948 000C4888  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__MtxUtil
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__MtxUtil:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 800C794C 000C488C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 800C7950 000C4890  D0 43 00 04 */	stfs f2, 4(r3)
 /* 800C7954 000C4894  D0 63 00 08 */	stfs f3, 8(r3)
@@ -2239,3 +2238,120 @@ getParams__11TMtxTimeLagFv:
 getParams__14TMtxEffectBaseFv:
 /* 800C8554 000C5494  38 60 00 00 */	li r3, 0
 /* 800C8558 000C5498  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x36F528, 0xC
+.global $$21819
+$$21819:
+	.incbin "baserom.dol", 0x36F534, 0xC
+.global $$21820
+$$21820:
+	.incbin "baserom.dol", 0x36F540, 0x10
+.global $$21846
+$$21846:
+	.incbin "baserom.dol", 0x36F550, 0xC
+.global $$22544
+$$22544:
+	.incbin "baserom.dol", 0x36F55C, 0x14
+.global $$22545
+$$22545:
+	.incbin "baserom.dol", 0x36F570, 0xC
+.global $$22546
+$$22546:
+	.incbin "baserom.dol", 0x36F57C, 0xC
+.global $$22547
+$$22547:
+	.incbin "baserom.dol", 0x36F588, 0xC
+.global $$22548
+$$22548:
+	.incbin "baserom.dol", 0x36F594, 0xC
+.global $$22549
+$$22549:
+	.incbin "baserom.dol", 0x36F5A0, 0xC
+.global $$22556
+$$22556:
+	.incbin "baserom.dol", 0x36F5AC, 0xC
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TParamT$$0f$$1
+__vt__10TParamT$$0f$$1:
+	.incbin "baserom.dol", 0x3AF9B8, 0xC
+.global __vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1
+__vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1:
+	.incbin "baserom.dol", 0x3AF9C4, 0xC
+.global __vt__20TMtxSwingRZReverseXZ
+__vt__20TMtxSwingRZReverseXZ:
+	.incbin "baserom.dol", 0x3AF9D0, 0xC
+.global __vt__9TParamVec
+__vt__9TParamVec:
+	.incbin "baserom.dol", 0x3AF9DC, 0xC
+.global __vt__11TMtxSwingRZ
+__vt__11TMtxSwingRZ:
+	.incbin "baserom.dol", 0x3AF9E8, 0xC
+.global __vt__11TParamRT$$0f$$1
+__vt__11TParamRT$$0f$$1:
+	.incbin "baserom.dol", 0x3AF9F4, 0xC
+.global __vt__11TMtxTimeLag
+__vt__11TMtxTimeLag:
+	.incbin "baserom.dol", 0x3AFA00, 0xC
+.global __vt__14TMtxEffectBase
+__vt__14TMtxEffectBase:
+	.incbin "baserom.dol", 0x3AFA0C, 0xC
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22093
+$$22093:
+	.incbin "baserom.dol", 0x3E4A38, 0x4
+.global $$22094
+$$22094:
+	.incbin "baserom.dol", 0x3E4A3C, 0x4
+.global $$22123
+$$22123:
+	.incbin "baserom.dol", 0x3E4A40, 0x4
+.global $$22124
+$$22124:
+	.incbin "baserom.dol", 0x3E4A44, 0x4
+.global $$22156
+$$22156:
+	.incbin "baserom.dol", 0x3E4A48, 0x4
+.global $$22157
+$$22157:
+	.incbin "baserom.dol", 0x3E4A4C, 0x4
+.global $$22194
+$$22194:
+	.incbin "baserom.dol", 0x3E4A50, 0x8
+.global $$22375
+$$22375:
+	.incbin "baserom.dol", 0x3E4A58, 0x8
+.global $$22377
+$$22377:
+	.incbin "baserom.dol", 0x3E4A60, 0x8
+.global $$22550
+$$22550:
+	.incbin "baserom.dol", 0x3E4A68, 0x8
+.global $$22551
+$$22551:
+	.incbin "baserom.dol", 0x3E4A70, 0x4
+.global $$22552
+$$22552:
+	.incbin "baserom.dol", 0x3E4A74, 0x4
+.global $$22553
+$$22553:
+	.incbin "baserom.dol", 0x3E4A78, 0x4
+.global $$22554
+$$22554:
+	.incbin "baserom.dol", 0x3E4A7C, 0x8
+.global $$22555
+$$22555:
+	.incbin "baserom.dol", 0x3E4A84, 0x4
+.global $$22687
+$$22687:
+	.incbin "baserom.dol", 0x3E4A88, 0x8
+.global $$22688
+$$22688:
+	.incbin "baserom.dol", 0x3E4A90, 0x8
+.global $$22742
+$$22742:
+	.incbin "baserom.dol", 0x3E4A98, 0x8

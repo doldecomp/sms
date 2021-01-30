@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global partsPerform__9TNpcPartsFUlPQ26JDrama9TGraphics
 partsPerform__9TNpcPartsFUlPQ26JDrama9TGraphics:
 /* 80176708 00173648  7C 08 02 A6 */	mflr r0
@@ -714,3 +713,60 @@ lbl_801770C4:
 /* 801770E0 00174020  38 21 01 F8 */	addi r1, r1, 0x1f8
 /* 801770E4 00174024  7C 08 03 A6 */	mtlr r0
 /* 801770E8 00174028  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x37F6A8, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x37F6B4, 0x14
+.global $$22069
+$$22069:
+	.incbin "baserom.dol", 0x37F6C8, 0x30
+.global $$22070
+$$22070:
+	.incbin "baserom.dol", 0x37F6F8, 0x38
+.global $$22071
+$$22071:
+	.incbin "baserom.dol", 0x37F730, 0x34
+.global $$22072
+$$22072:
+	.incbin "baserom.dol", 0x37F764, 0x24
+.global $$22266
+$$22266:
+	.incbin "baserom.dol", 0x37F788, 0x10
+.global $$22275
+$$22275:
+	.incbin "baserom.dol", 0x37F798, 0x14
+.global $$22276
+$$22276:
+	.incbin "baserom.dol", 0x37F7AC, 0x14
+.global $$22489
+$$22489:
+	.incbin "baserom.dol", 0x37F7C0, 0xC
+.global $$22633
+$$22633:
+	.incbin "baserom.dol", 0x37F7CC, 0x14
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global cPeachPartsTextureName
+cPeachPartsTextureName:
+	.incbin "baserom.dol", 0x3E34E8, 0x4
+.global cPeachHostTextureName
+cPeachHostTextureName:
+	.incbin "baserom.dol", 0x3E34EC, 0x4
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$22491
+$$22491:
+	.incbin "baserom.dol", 0x3E65F0, 0x4
+.global $$22492
+$$22492:
+	.incbin "baserom.dol", 0x3E65F4, 0x4
+.global $$22632
+$$22632:
+	.incbin "baserom.dol", 0x3E65F8, 0x8
+.global $$22635
+$$22635:
+	.incbin "baserom.dol", 0x3E6600, 0x8

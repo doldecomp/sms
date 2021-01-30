@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global loadToAram__16JKRDvdAramRipperFPcUl15JKRExpandSwitchUlUl
 loadToAram__16JKRDvdAramRipperFPcUl15JKRExpandSwitchUlUl:
 /* 8003570C 0003264C  7C 08 02 A6 */	mflr r0
@@ -577,7 +576,7 @@ JKRDecompressFromDVDToAram__FP10JKRDvdFileUlUlUlUlUl:
 /* 80035EF8 00032E38  93 6D 8E 78 */	stw r27, fileOffset-_SDA_BASE_(r13)
 /* 80035EFC 00032E3C  90 0D 8E 7C */	stw r0, readCount-_SDA_BASE_(r13)
 /* 80035F00 00032E40  93 4D 8E 80 */	stw r26, maxDest-_SDA_BASE_(r13)
-/* 80035F04 00032E44  48 00 02 C9 */	bl firstSrcData__Fv__JKRDvdAramRipper
+/* 80035F04 00032E44  48 00 02 C9 */	bl firstSrcData__Fv
 /* 80035F08 00032E48  28 03 00 00 */	cmplwi r3, 0
 /* 80035F0C 00032E4C  41 82 00 10 */	beq lbl_80035F1C
 /* 80035F10 00032E50  7F C4 F3 78 */	mr r4, r30
@@ -648,7 +647,7 @@ lbl_80035FDC:
 /* 80035FF4 00032F34  28 00 00 00 */	cmplwi r0, 0
 /* 80035FF8 00032F38  41 82 00 10 */	beq lbl_80036008
 /* 80035FFC 00032F3C  7F 03 C3 78 */	mr r3, r24
-/* 80036000 00032F40  48 00 02 85 */	bl nextSrcData__FPUc__JKRDvdAramRipper
+/* 80036000 00032F40  48 00 02 85 */	bl nextSrcData__FPUc
 /* 80036004 00032F44  7C 78 1B 78 */	mr r24, r3
 lbl_80036008:
 /* 80036008 00032F48  8B 98 00 00 */	lbz r28, 0(r24)
@@ -780,8 +779,8 @@ lbl_800361B8:
 /* 800361C4 00033104  7C 08 03 A6 */	mtlr r0
 /* 800361C8 00033108  4E 80 00 20 */	blr 
 
-.global firstSrcData__Fv__JKRDvdAramRipper
-firstSrcData__Fv__JKRDvdAramRipper:
+.global firstSrcData__Fv
+firstSrcData__Fv:
 /* 800361CC 0003310C  7C 08 02 A6 */	mflr r0
 /* 800361D0 00033110  90 01 00 04 */	stw r0, 4(r1)
 /* 800361D4 00033114  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -834,8 +833,8 @@ lbl_8003626C:
 /* 8003627C 000331BC  38 21 00 20 */	addi r1, r1, 0x20
 /* 80036280 000331C0  4E 80 00 20 */	blr 
 
-.global nextSrcData__FPUc__JKRDvdAramRipper
-nextSrcData__FPUc__JKRDvdAramRipper:
+.global nextSrcData__FPUc
+nextSrcData__FPUc:
 /* 80036284 000331C4  7C 08 02 A6 */	mflr r0
 /* 80036288 000331C8  38 83 00 00 */	addi r4, r3, 0
 /* 8003628C 000331CC  90 01 00 04 */	stw r0, 4(r1)
@@ -985,3 +984,71 @@ lbl_80036470:
 /* 80036480 000333C0  7C 08 03 A6 */	mtlr r0
 /* 80036484 000333C4  38 21 00 18 */	addi r1, r1, 0x18
 /* 80036488 000333C8  4E 80 00 20 */	blr 
+
+.section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+	.incbin "baserom.dol", 0x36CBD0, 0x4
+
+.section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+.global errorRetry__16JKRDvdAramRipper
+errorRetry__16JKRDvdAramRipper:
+	.incbin "baserom.dol", 0x3E3030, 0x4
+.global szpBufferSize__16JKRDvdAramRipper
+szpBufferSize__16JKRDvdAramRipper:
+	.incbin "baserom.dol", 0x3E3034, 0x4
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global $$256
+$$256:
+	.skip 0x10
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global sDvdAramAsyncList__16JKRDvdAramRipper
+sDvdAramAsyncList__16JKRDvdAramRipper:
+	.skip 0xC
+
+.section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.global szpBuf
+szpBuf:
+	.skip 0x4
+.global szpEnd
+szpEnd:
+	.skip 0x4
+.global refBuf
+refBuf:
+	.skip 0x4
+.global refEnd
+refEnd:
+	.skip 0x4
+.global refCurrent
+refCurrent:
+	.skip 0x4
+.global dmaBuf
+dmaBuf:
+	.skip 0x4
+.global dmaEnd
+dmaEnd:
+	.skip 0x4
+.global dmaCurrent
+dmaCurrent:
+	.skip 0x4
+.global srcOffset
+srcOffset:
+	.skip 0x4
+.global transLeft
+transLeft:
+	.skip 0x4
+.global srcLimit
+srcLimit:
+	.skip 0x4
+.global srcFile
+srcFile:
+	.skip 0x4
+.global fileOffset
+fileOffset:
+	.skip 0x4
+.global readCount
+readCount:
+	.skip 0x4
+.global maxDest
+maxDest:
+	.skip 0x8

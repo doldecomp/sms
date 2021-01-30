@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__12TMovieRumbleFv
 __dt__12TMovieRumbleFv:
 /* 80247868 002447A8  7C 08 02 A6 */	mflr r0
@@ -277,3 +276,36 @@ __ct__12TMovieRumbleFPC10TTHPRender:
 /* 80247C38 00244B78  38 21 00 20 */	addi r1, r1, 0x20
 /* 80247C3C 00244B7C  7C 08 03 A6 */	mtlr r0
 /* 80247C40 00244B80  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x391800, 0xC
+.global $$21526
+$$21526:
+	.incbin "baserom.dol", 0x39180C, 0x14
+.global $$21557
+$$21557:
+	.incbin "baserom.dol", 0x391820, 0x14
+.global $$21578
+$$21578:
+	.incbin "baserom.dol", 0x391834, 0xC
+.global $$21579
+$$21579:
+	.incbin "baserom.dol", 0x391840, 0xC
+.global $$21681
+$$21681:
+	.incbin "baserom.dol", 0x39184C, 0xC
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__12TMovieRumble
+__vt__12TMovieRumble:
+	.incbin "baserom.dol", 0x3CF188, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21558
+$$21558:
+	.incbin "baserom.dol", 0x3E9910, 0x8
+.global $$21580
+$$21580:
+	.incbin "baserom.dol", 0x3E9918, 0x8

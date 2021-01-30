@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __dt__10TTHPRenderFv
 __dt__10TTHPRenderFv:
 /* 800FD2A8 000FA1E8  7C 08 02 A6 */	mflr r0
@@ -100,3 +99,8 @@ __ct__10TTHPRenderFPCc:
 /* 800FD3F8 000FA338  38 21 00 20 */	addi r1, r1, 0x20
 /* 800FD3FC 000FA33C  7C 08 03 A6 */	mtlr r0
 /* 800FD400 000FA340  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__10TTHPRender
+__vt__10TTHPRender:
+	.incbin "baserom.dol", 0x3B1180, 0x28

@@ -1,9 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__BathtubBinder
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff__BathtubBinder:
+.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8034B36C 003482AC  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8034B370 003482B0  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8034B374 003482B4  D0 63 00 08 */	stfs f3, 8(r3)
@@ -460,3 +459,66 @@ __ct__14TBathtubBinderFv:
 /* 8034B9F8 00348938  38 21 00 18 */	addi r1, r1, 0x18
 /* 8034B9FC 0034893C  7C 08 03 A6 */	mtlr r0
 /* 8034BA00 00348940  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$21490
+$$21490:
+	.incbin "baserom.dol", 0x3A20C8, 0xC
+.global $$21525
+$$21525:
+	.incbin "baserom.dol", 0x3A20D4, 0x14
+.global $$21582
+$$21582:
+	.incbin "baserom.dol", 0x3A20E8, 0x30
+.global $$21583
+$$21583:
+	.incbin "baserom.dol", 0x3A2118, 0x38
+.global $$21584
+$$21584:
+	.incbin "baserom.dol", 0x3A2150, 0x34
+.global $$21585
+$$21585:
+	.incbin "baserom.dol", 0x3A2184, 0x24
+.global $$22160
+$$22160:
+	.incbin "baserom.dol", 0x3A21A8, 0xC
+.global $$22161
+$$22161:
+	.incbin "baserom.dol", 0x3A21B4, 0x14
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14TBathtubBinder
+__vt__14TBathtubBinder:
+	.incbin "baserom.dol", 0x3E0D80, 0x10
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$21944
+$$21944:
+	.incbin "baserom.dol", 0x3EC058, 0x4
+.global $$21945
+$$21945:
+	.incbin "baserom.dol", 0x3EC05C, 0x4
+.global $$21946
+$$21946:
+	.incbin "baserom.dol", 0x3EC060, 0x4
+.global $$22126
+$$22126:
+	.incbin "baserom.dol", 0x3EC064, 0x4
+.global $$22127
+$$22127:
+	.incbin "baserom.dol", 0x3EC068, 0x4
+.global $$22128
+$$22128:
+	.incbin "baserom.dol", 0x3EC06C, 0x4
+.global $$22129
+$$22129:
+	.incbin "baserom.dol", 0x3EC070, 0x4
+.global $$22130
+$$22130:
+	.incbin "baserom.dol", 0x3EC074, 0x4
+.global $$22131
+$$22131:
+	.incbin "baserom.dol", 0x3EC078, 0x8
+.global $$22133
+$$22133:
+	.incbin "baserom.dol", 0x3EC080, 0x8

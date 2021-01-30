@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global fwide
 fwide:
 /* 80086528 00083468  A0 03 00 04 */	lhz r0, 4(r3)

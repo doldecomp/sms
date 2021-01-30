@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global GDSetTevOp
 GDSetTevOp:
 /* 800B1EA4 000AEDE4  7C 08 02 A6 */	mflr r0
@@ -668,3 +667,8 @@ lbl_800B27F8:
 /* 800B2860 000AF7A0  38 21 00 30 */	addi r1, r1, 0x30
 /* 800B2864 000AF7A4  7C 08 03 A6 */	mtlr r0
 /* 800B2868 000AF7A8  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global c2r$382
+c2r$382:
+	.incbin "baserom.dol", 0x3AECF8, 0x10

@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global __ct__14J2DGrafContextFRC7JUTRect
 __ct__14J2DGrafContextFRC7JUTRect:
 /* 80034FCC 00031F0C  7C 08 02 A6 */	mflr r0
@@ -504,3 +503,19 @@ place__14J2DGrafContextFiiii:
 .global setLookat__14J2DGrafContextFv
 setLookat__14J2DGrafContextFv:
 /* 80035708 00032648  4E 80 00 20 */	blr 
+
+.section .data, "wa"  # 0x803A8380 - 0x803E6000
+.global __vt__14J2DGrafContext
+__vt__14J2DGrafContext:
+	.incbin "baserom.dol", 0x3A6B48, 0x28
+
+.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.global $$2166
+$$2166:
+	.incbin "baserom.dol", 0x3E3FA0, 0x4
+.global $$2167
+$$2167:
+	.incbin "baserom.dol", 0x3E3FA4, 0x4
+.global $$2169
+$$2169:
+	.incbin "baserom.dol", 0x3E3FA8, 0x8

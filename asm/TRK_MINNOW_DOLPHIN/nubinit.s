@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-
 .global TRKInitializeNub
 TRKInitializeNub:
 /* 80087EC4 00084E04  7C 08 02 A6 */	mflr r0
@@ -124,3 +123,13 @@ lbl_8008804C:
 lbl_80088050:
 /* 80088050 00084F90  38 21 00 10 */	addi r1, r1, 0x10
 /* 80088054 00084F94  4E 80 00 20 */	blr 
+
+.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.global $$240
+$$240:
+	.incbin "baserom.dol", 0x36F1F0, 0x20
+
+.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
+.global gTRKBigEndian
+gTRKBigEndian:
+	.skip 0x8
