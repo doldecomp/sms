@@ -41,7 +41,7 @@ argshift = 1
 if sys.argv[argshift] == '-m':
     with open(sys.argv[argshift + 1], 'r') as mapfile:
         for line in mapfile:
-            match = re.match('  [0-9a-f]{8} [0-9a-f]{6} ([0-9a-f]{8}) [ 0-9][0-9] ([^ 0-9][^ ]*)', line)
+            match = re.match('  [0-9a-f]{8} [0-9a-f]{6} ([0-9a-f]{8}) [ 0-9][0-9] ([^ 0-9.][^ ]*)', line)
             if match:
                 addr = int(match.group(1), 16)
                 name = format(match.group(2))
@@ -176,6 +176,7 @@ blacklistedInsns = {
     PPC_INS_VADDUHM, PPC_INS_XXPERMDI, PPC_INS_XVMADDASP, PPC_INS_XVMADDMSP,
     PPC_INS_XVCMPGTSP, PPC_INS_XXMRGHD, PPC_INS_XSMSUBMDP, PPC_INS_XSTDIVDP,
     PPC_INS_XVADDSP, PPC_INS_XVCMPEQSP, PPC_INS_XVMSUBASP, PPC_INS_XVCMPGESP,
+    PPC_INS_VMRGHB, PPC_INS_XXSPLTW,
 
     # Instructions that Capstone gets wrong
     PPC_INS_MFESR, PPC_INS_MFDEAR, PPC_INS_MTESR, PPC_INS_MTDEAR, PPC_INS_MFICCR, PPC_INS_MFASR
