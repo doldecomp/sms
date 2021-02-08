@@ -698,31 +698,22 @@ lbl_8011E7B4:
 	.incbin "baserom.dol", 0x36CC58, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x377610, 0xC
-.global $$22112
 $$22112:
 	.incbin "baserom.dol", 0x37761C, 0x14
-.global $$22302
 $$22302:
 	.incbin "baserom.dol", 0x377630, 0x30
-.global $$22303
 $$22303:
 	.incbin "baserom.dol", 0x377660, 0x38
-.global $$22304
 $$22304:
 	.incbin "baserom.dol", 0x377698, 0x34
-.global $$22305
 $$22305:
 	.incbin "baserom.dol", 0x3776CC, 0x24
-.global $$22579
 $$22579:
 	.incbin "baserom.dol", 0x3776F0, 0xC
-.global $$22580
 $$22580:
 	.incbin "baserom.dol", 0x3776FC, 0x1C
-.global $$22581
 $$22581:
 	.incbin "baserom.dol", 0x377718, 0x20
 
@@ -732,48 +723,33 @@ __vt__12TMirrorActor:
 	.incbin "baserom.dol", 0x3B2480, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22728
 $$22728:
 	.skip 0xC
-.global $$22729
 $$22729:
 	.skip 0xC
-.global $$22730
 $$22730:
 	.skip 0xC
-.global $$22731
 $$22731:
 	.skip 0xC
-.global $$22732
 $$22732:
 	.skip 0xC
-.global $$22733
 $$22733:
 	.skip 0xC
-.global $$22734
 $$22734:
 	.skip 0xC
-.global $$22735
 $$22735:
 	.skip 0xC
-.global $$22736
 $$22736:
 	.skip 0xC
-.global $$22737
 $$22737:
 	.skip 0xC
-.global $$22738
 $$22738:
 	.skip 0xC
-.global $$22739
 $$22739:
 	.skip 0xC
-.global $$22740
 $$22740:
 	.skip 0xC
-.global $$22741
 $$22741:
 	.skip 0xC
-.global $$22742
 $$22742:
 	.skip 0x10

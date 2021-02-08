@@ -963,9 +963,7 @@ GXEurgb60Hz480IntDf:
 	.incbin "baserom.dol", 0x3AE8A8, 0x40
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$283
 $$283:
 	.incbin "baserom.dol", 0x3E47F0, 0x8
-.global $$2138
 $$2138:
 	.incbin "baserom.dol", 0x3E47F8, 0x8

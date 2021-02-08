@@ -445,18 +445,13 @@ __ct__16TCameraInbetweenFv:
 /* 80356A7C 003539BC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21655
 $$21655:
 	.incbin "baserom.dol", 0x3EC220, 0x8
-.global $$21657
 $$21657:
 	.incbin "baserom.dol", 0x3EC228, 0x8
-.global $$21663
 $$21663:
 	.incbin "baserom.dol", 0x3EC230, 0x4
-.global $$21708
 $$21708:
 	.incbin "baserom.dol", 0x3EC234, 0x4
-.global $$21709
 $$21709:
 	.incbin "baserom.dol", 0x3EC238, 0x8

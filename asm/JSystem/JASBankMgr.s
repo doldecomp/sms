@@ -607,40 +607,29 @@ lbl_80058B6C:
 /* 80058B70 00055AB0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global OSC_RELEASE_TABLE__Q28JASystem7BankMgr
 OSC_RELEASE_TABLE__Q28JASystem7BankMgr:
 	.incbin "baserom.dol", 0x3A7D88, 0xC
-.global OSC_ENV__Q28JASystem7BankMgr
 OSC_ENV__Q28JASystem7BankMgr:
 	.incbin "baserom.dol", 0x3A7D94, 0x1C
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2339
 $$2339:
 	.incbin "baserom.dol", 0x3E42B0, 0x4
-.global $$2340
 $$2340:
 	.incbin "baserom.dol", 0x3E42B4, 0x4
-.global $$2418
 $$2418:
 	.incbin "baserom.dol", 0x3E42B8, 0x4
-.global $$2419
 $$2419:
 	.incbin "baserom.dol", 0x3E42BC, 0x4
-.global $$2421
 $$2421:
 	.incbin "baserom.dol", 0x3E42C0, 0x8
-.global $$2435
 $$2435:
 	.incbin "baserom.dol", 0x3E42C8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sTableSize__Q28JASystem7BankMgr
 sTableSize__Q28JASystem7BankMgr:
 	.skip 0x4
-.global sBankArray__Q28JASystem7BankMgr
 sBankArray__Q28JASystem7BankMgr:
 	.skip 0x4
-.global sVir2PhyTable__Q28JASystem7BankMgr
 sVir2PhyTable__Q28JASystem7BankMgr:
 	.skip 0x8

@@ -406,9 +406,7 @@ lbl_80362F78:
 /* 80362F90 0035FED0  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21767
 $$21767:
 	.incbin "baserom.dol", 0x3EC5D0, 0x4
-.global $$21768
 $$21768:
 	.incbin "baserom.dol", 0x3EC5D4, 0x4

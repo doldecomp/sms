@@ -298,6 +298,5 @@ __vt__11TJ3DSysFlag:
 	.incbin "baserom.dol", 0x3B0B88, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21731
 $$21731:
 	.incbin "baserom.dol", 0x3E4D38, 0x8

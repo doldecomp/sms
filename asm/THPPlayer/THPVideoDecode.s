@@ -370,29 +370,21 @@ lbl_800C01F8:
 /* 800C0208 000BD148  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global VideoDecodeThread
 VideoDecodeThread:
 	.skip 0x310
-.global VideoDecodeThreadStack
 VideoDecodeThreadStack:
 	.skip 0x1000
-.global FreeTextureSetQueue
 FreeTextureSetQueue:
 	.skip 0x20
-.global DecodedTextureSetQueue
 DecodedTextureSetQueue:
 	.skip 0x20
-.global FreeTextureSetMessage
 FreeTextureSetMessage:
 	.skip 0xC
-.global DecodedTextureSetMessage
 DecodedTextureSetMessage:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global VideoDecodeThreadCreated
 VideoDecodeThreadCreated:
 	.skip 0x4
-.global First
 First:
 	.skip 0x4

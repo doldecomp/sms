@@ -1699,21 +1699,16 @@ lbl_801F40B0:
 	.incbin "baserom.dol", 0x36CE04, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22580
 $$22580:
 	.incbin "baserom.dol", 0x38FC40, 0x28
-.global $$22687
 $$22687:
 	.incbin "baserom.dol", 0x38FC68, 0x1C
-.global $$23031
 $$23031:
 	.incbin "baserom.dol", 0x38FC84, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global x_offset_table$2432
 x_offset_table$2432:
 	.incbin "baserom.dol", 0x3CD6A8, 0x28
-.global z_offset_table$2433
 z_offset_table$2433:
 	.incbin "baserom.dol", 0x3CD6D0, 0x28
 .global __vt__15TPollutionLayer
@@ -1733,117 +1728,81 @@ __vt__19TPollutionLayerWave:
 	.incbin "baserom.dol", 0x3CD868, 0x60
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mInterval__19TPollutionLayerWave
 mInterval__19TPollutionLayerWave:
 	.incbin "baserom.dol", 0x3E3830, 0x4
-.global mAlpha__19TPollutionLayerWave
 mAlpha__19TPollutionLayerWave:
 	.incbin "baserom.dol", 0x3E3834, 0x4
-.global mEffectTime__15TPollutionLayer
 mEffectTime__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3838, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22368
 $$22368:
 	.incbin "baserom.dol", 0x3E8DE0, 0x4
-.global $$22548
 $$22548:
 	.incbin "baserom.dol", 0x3E8DE4, 0x4
-.global $$22714
 $$22714:
 	.incbin "baserom.dol", 0x3E8DE8, 0x4
-.global $$22786
 $$22786:
 	.incbin "baserom.dol", 0x3E8DEC, 0x4
-.global $$22788
 $$22788:
 	.incbin "baserom.dol", 0x3E8DF0, 0x8
-.global $$23074
 $$23074:
 	.incbin "baserom.dol", 0x3E8DF8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global pos$2426
 pos$2426:
 	.skip 0x78
-.global $$23091
 $$23091:
 	.skip 0xC
-.global $$23092
 $$23092:
 	.skip 0xC
-.global $$23093
 $$23093:
 	.skip 0xC
-.global $$23094
 $$23094:
 	.skip 0xC
-.global $$23095
 $$23095:
 	.skip 0xC
-.global $$23096
 $$23096:
 	.skip 0xC
-.global $$23097
 $$23097:
 	.skip 0xC
-.global $$23098
 $$23098:
 	.skip 0xC
-.global $$23099
 $$23099:
 	.skip 0xC
-.global $$23100
 $$23100:
 	.skip 0xC
-.global $$23101
 $$23101:
 	.skip 0xC
-.global $$23102
 $$23102:
 	.skip 0xC
-.global $$23103
 $$23103:
 	.skip 0xC
-.global $$23104
 $$23104:
 	.skip 0xC
-.global $$23105
 $$23105:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global effect_counter$2421
 effect_counter$2421:
 	.skip 0x4
-.global init$2422
 init$2422:
 	.skip 0x1
-.global init$2427
 init$2427:
 	.skip 0x3
-.global now_pos_no$2429
 now_pos_no$2429:
 	.skip 0x4
-.global init$2430
 init$2430:
 	.skip 0x4
-.global counter_x$2434
 counter_x$2434:
 	.skip 0x4
-.global init$2435
 init$2435:
 	.skip 0x4
-.global counter_z$2437
 counter_z$2437:
 	.skip 0x4
-.global init$2438
 init$2438:
 	.skip 0x4
-.global effect_timer$2449
 effect_timer$2449:
 	.skip 0x4
-.global init$2450
 init$2450:
 	.skip 0x4

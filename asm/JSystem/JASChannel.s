@@ -2052,35 +2052,25 @@ lbl_8005DC30:
 /* 8005DC4C 0005AB8C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global calc_sw_table__Q28JASystem6Driver
 calc_sw_table__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3A7F50, 0x54
-.global $$2326
 $$2326:
 	.incbin "baserom.dol", 0x3A7FA4, 0x20
-.global $$2325
 $$2325:
 	.incbin "baserom.dol", 0x3A7FC4, 0x3C
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2145
 $$2145:
 	.incbin "baserom.dol", 0x3E4338, 0x4
-.global $$2160
 $$2160:
 	.incbin "baserom.dol", 0x3E433C, 0x4
-.global $$2218
 $$2218:
 	.incbin "baserom.dol", 0x3E4340, 0x8
-.global $$2274
 $$2274:
 	.incbin "baserom.dol", 0x3E4348, 0x4
-.global $$2275
 $$2275:
 	.incbin "baserom.dol", 0x3E434C, 0x4
-.global $$2324
 $$2324:
 	.incbin "baserom.dol", 0x3E4350, 0x4
-.global $$2836
 $$2836:
 	.incbin "baserom.dol", 0x3E4354, 0x4

@@ -183,11 +183,9 @@ TRKInitializeTarget:
 /* 8008BC50 00088B90  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global TRK_ISR_OFFSETS
 TRK_ISR_OFFSETS:
 	.incbin "baserom.dol", 0x3AC048, 0x40
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global lc_base
 lc_base:
 	.skip 0x8

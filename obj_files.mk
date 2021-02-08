@@ -504,6 +504,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MSound/MSoundSE.o                                \
     $(BUILD_DIR)/asm/MSound/MSoundStruct.o                            \
     $(BUILD_DIR)/asm/MSound/MSHandle.o                                \
+    $(BUILD_DIR)/asm/MSound/MSModBgm.o                                \
     $(BUILD_DIR)/asm/MoveBG/WoodBarrel.o                              \
     $(BUILD_DIR)/asm/MoveBG/MapObjBase.o                              \
     $(BUILD_DIR)/asm/MoveBG/MapObjInit.o                              \

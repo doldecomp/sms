@@ -1188,7 +1188,6 @@ lbl_8010BDD8:
 /* 8010BDEC 00108D2C  38 21 02 D8 */	addi r1, r1, 0x2d8
 /* 8010BDF0 00108D30  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8010BDF4 00108D34  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8010BDF8 00108D38  D0 43 00 04 */	stfs f2, 4(r3)
@@ -1566,117 +1565,80 @@ $$212$$2__dt__14TMovieDirectorFv:
 	.incbin "baserom.dol", 0x36CC48, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x376810, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x37681C, 0x14
-.global $$22033
 $$22033:
 	.incbin "baserom.dol", 0x376830, 0x10
-.global $$22034
 $$22034:
 	.incbin "baserom.dol", 0x376840, 0x10
-.global $$22035
 $$22035:
 	.incbin "baserom.dol", 0x376850, 0xC
-.global $$22036
 $$22036:
 	.incbin "baserom.dol", 0x37685C, 0x10
-.global $$22037
 $$22037:
 	.incbin "baserom.dol", 0x37686C, 0x10
-.global $$22038
 $$22038:
 	.incbin "baserom.dol", 0x37687C, 0x14
-.global $$22039
 $$22039:
 	.incbin "baserom.dol", 0x376890, 0xC
-.global $$22040
 $$22040:
 	.incbin "baserom.dol", 0x37689C, 0x10
-.global $$22041
 $$22041:
 	.incbin "baserom.dol", 0x3768AC, 0xC
-.global $$22042
 $$22042:
 	.incbin "baserom.dol", 0x3768B8, 0x10
-.global $$22043
 $$22043:
 	.incbin "baserom.dol", 0x3768C8, 0x10
-.global $$22044
 $$22044:
 	.incbin "baserom.dol", 0x3768D8, 0xC
-.global $$22045
 $$22045:
 	.incbin "baserom.dol", 0x3768E4, 0x10
-.global $$22046
 $$22046:
 	.incbin "baserom.dol", 0x3768F4, 0x10
-.global $$22047
 $$22047:
 	.incbin "baserom.dol", 0x376904, 0x10
-.global $$22048
 $$22048:
 	.incbin "baserom.dol", 0x376914, 0x10
-.global $$22049
 $$22049:
 	.incbin "baserom.dol", 0x376924, 0xC
-.global $$22050
 $$22050:
 	.incbin "baserom.dol", 0x376930, 0xC
-.global $$22051
 $$22051:
 	.incbin "baserom.dol", 0x37693C, 0xC
-.global $$22052
 $$22052:
 	.incbin "baserom.dol", 0x376948, 0x10
-.global $$22554
 $$22554:
 	.incbin "baserom.dol", 0x376958, 0xC
-.global $$22825
 $$22825:
 	.incbin "baserom.dol", 0x376964, 0x14
-.global $$22826
 $$22826:
 	.incbin "baserom.dol", 0x376978, 0x14
-.global $$22827
 $$22827:
 	.incbin "baserom.dol", 0x37698C, 0x10
-.global $$22828
 $$22828:
 	.incbin "baserom.dol", 0x37699C, 0xC
-.global $$22830
 $$22830:
 	.incbin "baserom.dol", 0x3769A8, 0x14
-.global $$22831
 $$22831:
 	.incbin "baserom.dol", 0x3769BC, 0xC
-.global $$22832
 $$22832:
 	.incbin "baserom.dol", 0x3769C8, 0xC
-.global $$22833
 $$22833:
 	.incbin "baserom.dol", 0x3769D4, 0x10
-.global $$22834
 $$22834:
 	.incbin "baserom.dol", 0x3769E4, 0x10
-.global $$22836
 $$22836:
 	.incbin "baserom.dol", 0x3769F4, 0xC
-.global $$22883
 $$22883:
 	.incbin "baserom.dol", 0x376A00, 0x10
-.global $$22884
 $$22884:
 	.incbin "baserom.dol", 0x376A10, 0xC
-.global $$22908
 $$22908:
 	.incbin "baserom.dol", 0x376A1C, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global movies$2032
 movies$2032:
 	.incbin "baserom.dol", 0x3B1888, 0x50
 .global __vt__14TMovieDirector
@@ -1684,74 +1646,51 @@ __vt__14TMovieDirector:
 	.incbin "baserom.dol", 0x3B18D8, 0x70
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22441
 $$22441:
 	.incbin "baserom.dol", 0x3E5288, 0x4
-.global $$22442
 $$22442:
 	.incbin "baserom.dol", 0x3E528C, 0x4
-.global $$22443
 $$22443:
 	.incbin "baserom.dol", 0x3E5290, 0x4
-.global $$22553
 $$22553:
 	.incbin "baserom.dol", 0x3E5294, 0x8
-.global $$22829
 $$22829:
 	.incbin "baserom.dol", 0x3E529C, 0x8
-.global $$22835
 $$22835:
 	.incbin "baserom.dol", 0x3E52A4, 0x4
-.global $$22837
 $$22837:
 	.incbin "baserom.dol", 0x3E52A8, 0x8
-.global $$22839
 $$22839:
 	.incbin "baserom.dol", 0x3E52B0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22913
 $$22913:
 	.skip 0xC
-.global $$22914
 $$22914:
 	.skip 0xC
-.global $$22915
 $$22915:
 	.skip 0xC
-.global $$22916
 $$22916:
 	.skip 0xC
-.global $$22917
 $$22917:
 	.skip 0xC
-.global $$22918
 $$22918:
 	.skip 0xC
-.global $$22919
 $$22919:
 	.skip 0xC
-.global $$22920
 $$22920:
 	.skip 0xC
-.global $$22921
 $$22921:
 	.skip 0xC
-.global $$22922
 $$22922:
 	.skip 0xC
-.global $$22923
 $$22923:
 	.skip 0xC
-.global $$22924
 $$22924:
 	.skip 0xC
-.global $$22925
 $$22925:
 	.skip 0xC
-.global $$22926
 $$22926:
 	.skip 0xC
-.global $$22927
 $$22927:
 	.skip 0x10

@@ -268,48 +268,33 @@ __vt__14TPollutionTest:
 	.incbin "baserom.dol", 0x3CD8C8, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22727
 $$22727:
 	.skip 0xC
-.global $$22728
 $$22728:
 	.skip 0xC
-.global $$22729
 $$22729:
 	.skip 0xC
-.global $$22730
 $$22730:
 	.skip 0xC
-.global $$22731
 $$22731:
 	.skip 0xC
-.global $$22732
 $$22732:
 	.skip 0xC
-.global $$22733
 $$22733:
 	.skip 0xC
-.global $$22734
 $$22734:
 	.skip 0xC
-.global $$22735
 $$22735:
 	.skip 0xC
-.global $$22736
 $$22736:
 	.skip 0xC
-.global $$22737
 $$22737:
 	.skip 0xC
-.global $$22738
 $$22738:
 	.skip 0xC
-.global $$22739
 $$22739:
 	.skip 0xC
-.global $$22740
 $$22740:
 	.skip 0xC
-.global $$22741
 $$22741:
 	.skip 0x10

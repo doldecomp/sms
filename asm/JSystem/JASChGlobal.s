@@ -332,12 +332,9 @@ lbl_8005E968:
 /* 8005E9A0 0005B8E0  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global GLOBAL_CHANNEL__Q28JASystem8ChGlobal
 GLOBAL_CHANNEL__Q28JASystem8ChGlobal:
 	.skip 0x4
-.global CHANNEL__Q28JASystem8ChGlobal
 CHANNEL__Q28JASystem8ChGlobal:
 	.skip 0x4
-.global OSCILLATOR__Q28JASystem8ChGlobal
 OSCILLATOR__Q28JASystem8ChGlobal:
 	.skip 0x8

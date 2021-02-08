@@ -683,17 +683,13 @@ lbl_8005E51C:
 /* 8005E528 0005B468  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global polys_table__Q28JASystem6Driver
 polys_table__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x36E260, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2136
 $$2136:
 	.incbin "baserom.dol", 0x3E4358, 0x4
-.global $$2137
 $$2137:
 	.incbin "baserom.dol", 0x3E435C, 0x4
-.global $$2138
 $$2138:
 	.incbin "baserom.dol", 0x3E4360, 0x8

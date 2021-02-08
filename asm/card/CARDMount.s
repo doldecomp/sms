@@ -770,9 +770,7 @@ lbl_800A3370:
 /* 800A3388 000A02C8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global SectorSizeTable
 SectorSizeTable:
 	.incbin "baserom.dol", 0x3AE500, 0x20
-.global LatencyTable
 LatencyTable:
 	.incbin "baserom.dol", 0x3AE520, 0x20

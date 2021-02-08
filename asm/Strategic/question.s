@@ -394,7 +394,6 @@ __ct__16TQuestionRequestFv:
 /* 8011D5BC 0011A4FC  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21826
 $$21826:
 	.incbin "baserom.dol", 0x3775F0, 0x20
 
@@ -404,10 +403,8 @@ __vt__16TQuestionManager:
 	.incbin "baserom.dol", 0x3B2350, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21772
 $$21772:
 	.incbin "baserom.dol", 0x3E5460, 0x4
-.global $$21825
 $$21825:
 	.incbin "baserom.dol", 0x3E5464, 0x4
 

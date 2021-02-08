@@ -442,64 +442,45 @@ CLBEaseInInbetween$$0s$$1__Fssf:
 /* 80359F04 00356E44  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A2AD8, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A2AE4, 0x14
-.global $$21857
 $$21857:
 	.incbin "baserom.dol", 0x3A2AF8, 0x30
-.global $$21858
 $$21858:
 	.incbin "baserom.dol", 0x3A2B28, 0x38
-.global $$21859
 $$21859:
 	.incbin "baserom.dol", 0x3A2B60, 0x34
-.global $$21860
 $$21860:
 	.incbin "baserom.dol", 0x3A2B94, 0x24
-.global $$22176
 $$22176:
 	.incbin "baserom.dol", 0x3A2BB8, 0x10
-.global $$22177
 $$22177:
 	.incbin "baserom.dol", 0x3A2BC8, 0x10
-.global $$22178
 $$22178:
 	.incbin "baserom.dol", 0x3A2BD8, 0x10
-.global $$22179
 $$22179:
 	.incbin "baserom.dol", 0x3A2BE8, 0x10
-.global $$22180
 $$22180:
 	.incbin "baserom.dol", 0x3A2BF8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec
 sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec:
 	.incbin "baserom.dol", 0x3E1AF8, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22326
 $$22326:
 	.incbin "baserom.dol", 0x3EC2D8, 0x4
-.global $$22327
 $$22327:
 	.incbin "baserom.dol", 0x3EC2DC, 0x4
-.global $$22328
 $$22328:
 	.incbin "baserom.dol", 0x3EC2E0, 0x4
-.global $$22329
 $$22329:
 	.incbin "baserom.dol", 0x3EC2E4, 0x4
-.global $$22330
 $$22330:
 	.incbin "baserom.dol", 0x3EC2E8, 0x4
-.global $$22331
 $$22331:
 	.incbin "baserom.dol", 0x3EC2EC, 0x4
-.global $$22333
 $$22333:
 	.incbin "baserom.dol", 0x3EC2F0, 0x8

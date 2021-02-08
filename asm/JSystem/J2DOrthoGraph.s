@@ -430,21 +430,15 @@ __vt__13J2DOrthoGraph:
 	.incbin "baserom.dol", 0x3A6BB0, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2123
 $$2123:
 	.incbin "baserom.dol", 0x3E3FB0, 0x4
-.global $$2124
 $$2124:
 	.incbin "baserom.dol", 0x3E3FB4, 0x4
-.global $$2130
 $$2130:
 	.incbin "baserom.dol", 0x3E3FB8, 0x8
-.global $$2132
 $$2132:
 	.incbin "baserom.dol", 0x3E3FC0, 0x8
-.global $$2164
 $$2164:
 	.incbin "baserom.dol", 0x3E3FC8, 0x4
-.global $$2165
 $$2165:
 	.incbin "baserom.dol", 0x3E3FCC, 0x4

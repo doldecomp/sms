@@ -601,10 +601,8 @@ $$232$$2__dt__13TPolluterBaseFv:
 	.incbin "baserom.dol", 0x36CD60, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22600
 $$22600:
 	.incbin "baserom.dol", 0x38CBD0, 0x28
-.global $$22703
 $$22703:
 	.incbin "baserom.dol", 0x38CBF8, 0x18
 
@@ -617,56 +615,39 @@ __vt__13TPolluterBase:
 	.incbin "baserom.dol", 0x3C8434, 0x164
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22649
 $$22649:
 	.incbin "baserom.dol", 0x3E8540, 0x4
-.global $$22704
 $$22704:
 	.incbin "baserom.dol", 0x3E8544, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22737
 $$22737:
 	.skip 0xC
-.global $$22738
 $$22738:
 	.skip 0xC
-.global $$22739
 $$22739:
 	.skip 0xC
-.global $$22740
 $$22740:
 	.skip 0xC
-.global $$22741
 $$22741:
 	.skip 0xC
-.global $$22742
 $$22742:
 	.skip 0xC
-.global $$22743
 $$22743:
 	.skip 0xC
-.global $$22744
 $$22744:
 	.skip 0xC
-.global $$22745
 $$22745:
 	.skip 0xC
-.global $$22746
 $$22746:
 	.skip 0xC
-.global $$22747
 $$22747:
 	.skip 0xC
-.global $$22748
 $$22748:
 	.skip 0xC
-.global $$22749
 $$22749:
 	.skip 0xC
-.global $$22750
 $$22750:
 	.skip 0xC
-.global $$22751
 $$22751:
 	.skip 0x10

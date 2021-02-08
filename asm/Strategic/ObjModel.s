@@ -946,11 +946,9 @@ lbl_80116EFC:
 /* 80116F10 00113E50  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21948
 $$21948:
 	.incbin "baserom.dol", 0x377220, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21947
 $$21947:
 	.incbin "baserom.dol", 0x3E53F0, 0x8

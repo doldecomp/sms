@@ -98,15 +98,11 @@ __vt__Q28JASystem10TInstSense:
 	.incbin "baserom.dol", 0x3A7EB8, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2252
 $$2252:
 	.incbin "baserom.dol", 0x3E4318, 0x4
-.global $$2253
 $$2253:
 	.incbin "baserom.dol", 0x3E431C, 0x4
-.global $$2255
 $$2255:
 	.incbin "baserom.dol", 0x3E4320, 0x8
-.global $$2257
 $$2257:
 	.incbin "baserom.dol", 0x3E4328, 0x8

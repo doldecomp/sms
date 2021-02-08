@@ -350,6 +350,5 @@ __vt__14M3UModelCommon:
 	.incbin "baserom.dol", 0x3B0504, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21716
 $$21716:
 	.incbin "baserom.dol", 0x3E4BF0, 0x8

@@ -489,15 +489,11 @@ __GXPEInit:
 /* 800A8804 000A5744  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global TokenCB
 TokenCB:
 	.skip 0x4
-.global DrawDoneCB
 DrawDoneCB:
 	.skip 0x4
-.global DrawDone
 DrawDone:
 	.skip 0x4
-.global FinishQueue
 FinishQueue:
 	.skip 0xC

@@ -83,9 +83,7 @@ lbl_800F05BC:
 /* 800F05E8 000ED528  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global cDispExceptionCommand__9$$2unnamed$$2
 cDispExceptionCommand__9$$2unnamed$$2:
 	.incbin "baserom.dol", 0x370D50, 0x18
-.global $$21503
 $$21503:
 	.incbin "baserom.dol", 0x370D68, 0x10

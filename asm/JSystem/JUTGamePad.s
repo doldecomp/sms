@@ -1591,12 +1591,10 @@ lbl_80012FB0:
 	.incbin "baserom.dol", 0x36CBC0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2855
 $$2855:
 	.incbin "baserom.dol", 0x36DB50, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global channel_mask
 channel_mask:
 	.incbin "baserom.dol", 0x3A5BA0, 0x10
 .global __vt__10JUTGamePad
@@ -1604,105 +1602,74 @@ __vt__10JUTGamePad:
 	.incbin "baserom.dol", 0x3A5BB0, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mStickMode__10JUTGamePad
 mStickMode__10JUTGamePad:
 	.incbin "baserom.dol", 0x3E3010, 0x4
-.global sResetPattern__Q210JUTGamePad13C3ButtonReset
 sResetPattern__Q210JUTGamePad13C3ButtonReset:
 	.incbin "baserom.dol", 0x3E3014, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2604
 $$2604:
 	.incbin "baserom.dol", 0x3E3D90, 0x8
-.global $$2606
 $$2606:
 	.incbin "baserom.dol", 0x3E3D98, 0x8
-.global $$2609
 $$2609:
 	.incbin "baserom.dol", 0x3E3DA0, 0x8
-.global $$2637
 $$2637:
 	.incbin "baserom.dol", 0x3E3DA8, 0x8
-.global $$2638
 $$2638:
 	.incbin "baserom.dol", 0x3E3DB0, 0x8
-.global $$2639
 $$2639:
 	.incbin "baserom.dol", 0x3E3DB8, 0x4
-.global $$2640
 $$2640:
 	.incbin "baserom.dol", 0x3E3DBC, 0x4
-.global $$2641
 $$2641:
 	.incbin "baserom.dol", 0x3E3DC0, 0x8
-.global $$2669
 $$2669:
 	.incbin "baserom.dol", 0x3E3DC8, 0x4
-.global $$2670
 $$2670:
 	.incbin "baserom.dol", 0x3E3DCC, 0x4
-.global $$2671
 $$2671:
 	.incbin "baserom.dol", 0x3E3DD0, 0x4
-.global $$2672
 $$2672:
 	.incbin "baserom.dol", 0x3E3DD4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$2301
 $$2301:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global mPadList__10JUTGamePad
 mPadList__10JUTGamePad:
 	.skip 0x17C
-.global mPadStatus__10JUTGamePad
 mPadStatus__10JUTGamePad:
 	.skip 0x30
-.global mPadButton__10JUTGamePad
 mPadButton__10JUTGamePad:
 	.skip 0xC0
-.global mPadMStick__10JUTGamePad
 mPadMStick__10JUTGamePad:
 	.skip 0x40
-.global mPadSStick__10JUTGamePad
 mPadSStick__10JUTGamePad:
 	.skip 0x40
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global mListInitialized__10JUTGamePad
 mListInitialized__10JUTGamePad:
 	.skip 0x4
-.global mPadAssign__10JUTGamePad
 mPadAssign__10JUTGamePad:
 	.skip 0x4
-.global mSuppressPadReset__10JUTGamePad
 mSuppressPadReset__10JUTGamePad:
 	.skip 0x4
-.global sAnalogMode__10JUTGamePad
 sAnalogMode__10JUTGamePad:
 	.skip 0x4
-.global mStatus__Q210JUTGamePad7CRumble
 mStatus__Q210JUTGamePad7CRumble:
 	.skip 0x4
-.global mEnable__Q210JUTGamePad7CRumble
 mEnable__Q210JUTGamePad7CRumble:
 	.skip 0x4
-.global sCallback__Q210JUTGamePad13C3ButtonReset
 sCallback__Q210JUTGamePad13C3ButtonReset:
 	.skip 0x4
-.global sCallbackArg__Q210JUTGamePad13C3ButtonReset
 sCallbackArg__Q210JUTGamePad13C3ButtonReset:
 	.skip 0x4
-.global sThreshold__Q210JUTGamePad13C3ButtonReset
 sThreshold__Q210JUTGamePad13C3ButtonReset:
 	.skip 0x4
-.global lbl_8040989C
 lbl_8040989C:
 	.skip 0x4
-.global sResetSwitchPushing__Q210JUTGamePad13C3ButtonReset
 sResetSwitchPushing__Q210JUTGamePad13C3ButtonReset:
 	.skip 0x1
 .global sResetOccurred__Q210JUTGamePad13C3ButtonReset

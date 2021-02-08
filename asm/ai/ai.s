@@ -653,48 +653,33 @@ lbl_8009D698:
 /* 8009D6CC 0009A60C  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __AIS_Callback
 __AIS_Callback:
 	.skip 0x4
-.global __AID_Callback
 __AID_Callback:
 	.skip 0x4
-.global __CallbackStack
 __CallbackStack:
 	.skip 0x4
-.global __OldStack
 __OldStack:
 	.skip 0x4
-.global __AI_init_flag
 __AI_init_flag:
 	.skip 0x8
-.global bound_32KHz
 bound_32KHz:
 	.skip 0x4
-.global lbl_80409F94
 lbl_80409F94:
 	.skip 0x4
-.global bound_48KHz
 bound_48KHz:
 	.skip 0x4
-.global lbl_80409F9C
 lbl_80409F9C:
 	.skip 0x4
-.global min_wait
 min_wait:
 	.skip 0x4
-.global lbl_80409FA4
 lbl_80409FA4:
 	.skip 0x4
-.global max_wait
 max_wait:
 	.skip 0x4
-.global lbl_80409FAC
 lbl_80409FAC:
 	.skip 0x4
-.global buffer
 buffer:
 	.skip 0x4
-.global lbl_80409FB4
 lbl_80409FB4:
 	.skip 0x4

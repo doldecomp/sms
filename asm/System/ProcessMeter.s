@@ -21,6 +21,5 @@ __ct__13TProcessMeterFl:
 /* 800FC820 000F9760  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21902
 $$21902:
 	.incbin "baserom.dol", 0x3E4F70, 0x8

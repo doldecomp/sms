@@ -462,6 +462,5 @@ __vt__Q28JASystem5TInst:
 	.incbin "baserom.dol", 0x3A7DF0, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2294
 $$2294:
 	.incbin "baserom.dol", 0x3E42D0, 0x8

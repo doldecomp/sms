@@ -467,9 +467,7 @@ lbl_8003A12C:
 /* 8003A144 00037084  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2360
 $$2360:
 	.incbin "baserom.dol", 0x3E3FF8, 0x8
-.global $$2549
 $$2549:
 	.incbin "baserom.dol", 0x3E4000, 0x8

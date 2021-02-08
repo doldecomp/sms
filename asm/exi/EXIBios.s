@@ -1789,6 +1789,5 @@ lbl_800B5CD8:
 /* 800B5CE8 000B2C28  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global Ecb
 Ecb:
 	.skip 0xC0

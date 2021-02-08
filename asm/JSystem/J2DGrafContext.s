@@ -510,12 +510,9 @@ __vt__14J2DGrafContext:
 	.incbin "baserom.dol", 0x3A6B48, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2166
 $$2166:
 	.incbin "baserom.dol", 0x3E3FA0, 0x4
-.global $$2167
 $$2167:
 	.incbin "baserom.dol", 0x3E3FA4, 0x4
-.global $$2169
 $$2169:
 	.incbin "baserom.dol", 0x3E3FA8, 0x8

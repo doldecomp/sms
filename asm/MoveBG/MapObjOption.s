@@ -751,55 +751,38 @@ $$232$$2__dt__14TFileLoadBlockFv:
 	.incbin "baserom.dol", 0x36CD78, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38D4E8, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38D4F4, 0x14
-.global $$22178
 $$22178:
 	.incbin "baserom.dol", 0x38D508, 0x30
-.global $$22179
 $$22179:
 	.incbin "baserom.dol", 0x38D538, 0x38
-.global $$22180
 $$22180:
 	.incbin "baserom.dol", 0x38D570, 0x34
-.global $$22181
 $$22181:
 	.incbin "baserom.dol", 0x38D5A4, 0x24
-.global $$22678
 $$22678:
 	.incbin "baserom.dol", 0x38D5C8, 0xC
-.global $$22680
 $$22680:
 	.incbin "baserom.dol", 0x38D5D4, 0xC
-.global $$22753
 $$22753:
 	.incbin "baserom.dol", 0x38D5E0, 0x20
-.global $$22779
 $$22779:
 	.incbin "baserom.dol", 0x38D600, 0x10
-.global $$22780
 $$22780:
 	.incbin "baserom.dol", 0x38D610, 0x10
-.global $$22781
 $$22781:
 	.incbin "baserom.dol", 0x38D620, 0x10
-.global $$22782
 $$22782:
 	.incbin "baserom.dol", 0x38D630, 0x24
-.global $$22837
 $$22837:
 	.incbin "baserom.dol", 0x38D654, 0x14
-.global $$22838
 $$22838:
 	.incbin "baserom.dol", 0x38D668, 0x14
-.global $$22839
 $$22839:
 	.incbin "baserom.dol", 0x38D67C, 0x14
-.global $$22857
 $$22857:
 	.incbin "baserom.dol", 0x38D690, 0x10
 
@@ -812,58 +795,41 @@ __vt__17TMapObjOptionWall:
 	.incbin "baserom.dol", 0x3C9384, 0xA4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global sRumbleTime
 sRumbleTime:
 	.incbin "baserom.dol", 0x3E3740, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22744
 $$22744:
 	.incbin "baserom.dol", 0x3E8670, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22895
 $$22895:
 	.skip 0xC
-.global $$22896
 $$22896:
 	.skip 0xC
-.global $$22897
 $$22897:
 	.skip 0xC
-.global $$22898
 $$22898:
 	.skip 0xC
-.global $$22899
 $$22899:
 	.skip 0xC
-.global $$22900
 $$22900:
 	.skip 0xC
-.global $$22901
 $$22901:
 	.skip 0xC
-.global $$22902
 $$22902:
 	.skip 0xC
-.global $$22903
 $$22903:
 	.skip 0xC
-.global $$22904
 $$22904:
 	.skip 0xC
-.global $$22905
 $$22905:
 	.skip 0xC
-.global $$22906
 $$22906:
 	.skip 0xC
-.global $$22907
 $$22907:
 	.skip 0xC
-.global $$22908
 $$22908:
 	.skip 0xC
-.global $$22909
 $$22909:
 	.skip 0x10

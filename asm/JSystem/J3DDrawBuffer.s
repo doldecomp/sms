@@ -533,45 +533,33 @@ __sinit_J3DDrawBuffer_cpp:
 	.incbin "baserom.dol", 0x36CBD4, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2814
 $$2814:
 	.incbin "baserom.dol", 0x3A6DD8, 0xC
-.global $$2815
 $$2815:
 	.incbin "baserom.dol", 0x3A6DE4, 0xC
-.global $$2816
 $$2816:
 	.incbin "baserom.dol", 0x3A6DF0, 0xC
-.global $$2817
 $$2817:
 	.incbin "baserom.dol", 0x3A6DFC, 0xC
-.global $$2818
 $$2818:
 	.incbin "baserom.dol", 0x3A6E08, 0xC
-.global $$2819
 $$2819:
 	.incbin "baserom.dol", 0x3A6E14, 0xC
 .global sortFuncTable__13J3DDrawBuffer
 sortFuncTable__13J3DDrawBuffer:
 	.incbin "baserom.dol", 0x3A6E20, 0x48
-.global $$2820
 $$2820:
 	.incbin "baserom.dol", 0x3A6E68, 0xC
-.global $$2821
 $$2821:
 	.incbin "baserom.dol", 0x3A6E74, 0xC
-.global drawFuncTable__13J3DDrawBuffer
 drawFuncTable__13J3DDrawBuffer:
 	.incbin "baserom.dol", 0x3A6E80, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2824
 $$2824:
 	.incbin "baserom.dol", 0x3E3FE8, 0x4
-.global $$2825
 $$2825:
 	.incbin "baserom.dol", 0x3E3FEC, 0x4
-.global $$2827
 $$2827:
 	.incbin "baserom.dol", 0x3E3FF0, 0x8
 

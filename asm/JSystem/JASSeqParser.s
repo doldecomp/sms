@@ -2567,211 +2567,143 @@ __sinit_JASSeqParser_cpp:
 	.incbin "baserom.dol", 0x36CC00, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global Arglist__8JASystem
 Arglist__8JASystem:
 	.incbin "baserom.dol", 0x36E370, 0x100
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2137
 $$2137:
 	.incbin "baserom.dol", 0x3A8EA0, 0xC
-.global $$2138
 $$2138:
 	.incbin "baserom.dol", 0x3A8EAC, 0xC
-.global $$2139
 $$2139:
 	.incbin "baserom.dol", 0x3A8EB8, 0xC
-.global $$2140
 $$2140:
 	.incbin "baserom.dol", 0x3A8EC4, 0xC
-.global $$2141
 $$2141:
 	.incbin "baserom.dol", 0x3A8ED0, 0xC
-.global $$2142
 $$2142:
 	.incbin "baserom.dol", 0x3A8EDC, 0xC
-.global $$2143
 $$2143:
 	.incbin "baserom.dol", 0x3A8EE8, 0xC
-.global $$2144
 $$2144:
 	.incbin "baserom.dol", 0x3A8EF4, 0xC
-.global $$2145
 $$2145:
 	.incbin "baserom.dol", 0x3A8F00, 0xC
-.global $$2146
 $$2146:
 	.incbin "baserom.dol", 0x3A8F0C, 0xC
-.global $$2147
 $$2147:
 	.incbin "baserom.dol", 0x3A8F18, 0xC
-.global $$2148
 $$2148:
 	.incbin "baserom.dol", 0x3A8F24, 0xC
-.global $$2149
 $$2149:
 	.incbin "baserom.dol", 0x3A8F30, 0xC
-.global $$2150
 $$2150:
 	.incbin "baserom.dol", 0x3A8F3C, 0xC
-.global $$2151
 $$2151:
 	.incbin "baserom.dol", 0x3A8F48, 0xC
-.global $$2152
 $$2152:
 	.incbin "baserom.dol", 0x3A8F54, 0xC
-.global $$2153
 $$2153:
 	.incbin "baserom.dol", 0x3A8F60, 0xC
-.global $$2154
 $$2154:
 	.incbin "baserom.dol", 0x3A8F6C, 0xC
-.global $$2155
 $$2155:
 	.incbin "baserom.dol", 0x3A8F78, 0xC
-.global $$2156
 $$2156:
 	.incbin "baserom.dol", 0x3A8F84, 0xC
-.global $$2157
 $$2157:
 	.incbin "baserom.dol", 0x3A8F90, 0xC
-.global $$2158
 $$2158:
 	.incbin "baserom.dol", 0x3A8F9C, 0xC
-.global $$2159
 $$2159:
 	.incbin "baserom.dol", 0x3A8FA8, 0xC
-.global $$2160
 $$2160:
 	.incbin "baserom.dol", 0x3A8FB4, 0xC
-.global $$2161
 $$2161:
 	.incbin "baserom.dol", 0x3A8FC0, 0xC
-.global $$2162
 $$2162:
 	.incbin "baserom.dol", 0x3A8FCC, 0xC
-.global $$2163
 $$2163:
 	.incbin "baserom.dol", 0x3A8FD8, 0xC
-.global $$2164
 $$2164:
 	.incbin "baserom.dol", 0x3A8FE4, 0xC
-.global $$2165
 $$2165:
 	.incbin "baserom.dol", 0x3A8FF0, 0xC
-.global $$2166
 $$2166:
 	.incbin "baserom.dol", 0x3A8FFC, 0xC
-.global $$2167
 $$2167:
 	.incbin "baserom.dol", 0x3A9008, 0xC
-.global $$2168
 $$2168:
 	.incbin "baserom.dol", 0x3A9014, 0xC
-.global $$2169
 $$2169:
 	.incbin "baserom.dol", 0x3A9020, 0xC
-.global $$2170
 $$2170:
 	.incbin "baserom.dol", 0x3A902C, 0xC
-.global $$2171
 $$2171:
 	.incbin "baserom.dol", 0x3A9038, 0xC
-.global $$2172
 $$2172:
 	.incbin "baserom.dol", 0x3A9044, 0xC
-.global $$2173
 $$2173:
 	.incbin "baserom.dol", 0x3A9050, 0xC
-.global $$2174
 $$2174:
 	.incbin "baserom.dol", 0x3A905C, 0xC
-.global $$2175
 $$2175:
 	.incbin "baserom.dol", 0x3A9068, 0xC
-.global $$2176
 $$2176:
 	.incbin "baserom.dol", 0x3A9074, 0xC
-.global $$2177
 $$2177:
 	.incbin "baserom.dol", 0x3A9080, 0xC
-.global $$2178
 $$2178:
 	.incbin "baserom.dol", 0x3A908C, 0xC
-.global $$2179
 $$2179:
 	.incbin "baserom.dol", 0x3A9098, 0xC
-.global $$2180
 $$2180:
 	.incbin "baserom.dol", 0x3A90A4, 0xC
-.global $$2181
 $$2181:
 	.incbin "baserom.dol", 0x3A90B0, 0xC
-.global $$2182
 $$2182:
 	.incbin "baserom.dol", 0x3A90BC, 0xC
-.global $$2183
 $$2183:
 	.incbin "baserom.dol", 0x3A90C8, 0xC
-.global $$2184
 $$2184:
 	.incbin "baserom.dol", 0x3A90D4, 0xC
-.global $$2185
 $$2185:
 	.incbin "baserom.dol", 0x3A90E0, 0xC
-.global $$2186
 $$2186:
 	.incbin "baserom.dol", 0x3A90EC, 0xC
-.global $$2187
 $$2187:
 	.incbin "baserom.dol", 0x3A90F8, 0xC
-.global $$2188
 $$2188:
 	.incbin "baserom.dol", 0x3A9104, 0xC
-.global $$2189
 $$2189:
 	.incbin "baserom.dol", 0x3A9110, 0xC
-.global sCmdPList__Q28JASystem10TSeqParser
 sCmdPList__Q28JASystem10TSeqParser:
 	.incbin "baserom.dol", 0x3A911C, 0x304
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2363
 $$2363:
 	.incbin "baserom.dol", 0x3E4478, 0x4
-.global $$2364
 $$2364:
 	.incbin "baserom.dol", 0x3E447C, 0x4
-.global $$2377
 $$2377:
 	.incbin "baserom.dol", 0x3E4480, 0x8
-.global $$2379
 $$2379:
 	.incbin "baserom.dol", 0x3E4488, 0x8
-.global $$2397
 $$2397:
 	.incbin "baserom.dol", 0x3E4490, 0x8
-.global $$2399
 $$2399:
 	.incbin "baserom.dol", 0x3E4498, 0x8
-.global $$2411
 $$2411:
 	.incbin "baserom.dol", 0x3E44A0, 0x4
-.global lbl_8040BC04
 lbl_8040BC04:
 	.incbin "baserom.dol", 0x3E44A4, 0x2
-.global lbl_8040BC06
 lbl_8040BC06:
 	.incbin "baserom.dol", 0x3E44A6, 0x2
-.global $$2412
 $$2412:
 	.incbin "baserom.dol", 0x3E44A8, 0x4
-.global lbl_8040BC0C
 lbl_8040BC0C:
 	.incbin "baserom.dol", 0x3E44AC, 0x2
-.global lbl_8040BC0E
 lbl_8040BC0E:
 	.incbin "baserom.dol", 0x3E44AE, 0x2
-.global $$2446
 $$2446:
 	.incbin "baserom.dol", 0x3E44B0, 0x8

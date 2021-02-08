@@ -226,25 +226,19 @@ lbl_80082078:
 /* 8008209C 0007EFDC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global jdsp
 jdsp:
 	.incbin "baserom.dol", 0x3A9F20, 0x1CE0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global audio_task
 audio_task:
 	.skip 0x60
-.global AUDIO_YIELD_BUFFER
 AUDIO_YIELD_BUFFER:
 	.skip 0x2000
-.global taskwork
 taskwork:
 	.skip 0x80
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global taskreadp
 taskreadp:
 	.skip 0x4
-.global taskwritep
 taskwritep:
 	.skip 0x4

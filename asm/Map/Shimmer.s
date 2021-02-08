@@ -115,7 +115,6 @@ lbl_801F110C:
 /* 801F112C 001EE06C  38 21 00 20 */	addi r1, r1, 0x20
 /* 801F1130 001EE070  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801F1134 001EE074  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801F1138 001EE078  D0 43 00 04 */	stfs f2, 4(r3)
@@ -697,13 +696,10 @@ $$232$$2__dt__8TShimmerFv:
 	.incbin "baserom.dol", 0x36CDF8, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22694
 $$22694:
 	.incbin "baserom.dol", 0x38FA50, 0x18
-.global $$22695
 $$22695:
 	.incbin "baserom.dol", 0x38FA68, 0x18
-.global $$22720
 $$22720:
 	.incbin "baserom.dol", 0x38FA80, 0x18
 
@@ -713,59 +709,41 @@ __vt__8TShimmer:
 	.incbin "baserom.dol", 0x3CD508, 0xA0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22641
 $$22641:
 	.incbin "baserom.dol", 0x3E8D98, 0x4
-.global $$22642
 $$22642:
 	.incbin "baserom.dol", 0x3E8D9C, 0x4
-.global $$22803
 $$22803:
 	.incbin "baserom.dol", 0x3E8DA0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22809
 $$22809:
 	.skip 0xC
-.global $$22810
 $$22810:
 	.skip 0xC
-.global $$22811
 $$22811:
 	.skip 0xC
-.global $$22812
 $$22812:
 	.skip 0xC
-.global $$22813
 $$22813:
 	.skip 0xC
-.global $$22814
 $$22814:
 	.skip 0xC
-.global $$22815
 $$22815:
 	.skip 0xC
-.global $$22816
 $$22816:
 	.skip 0xC
-.global $$22817
 $$22817:
 	.skip 0xC
-.global $$22818
 $$22818:
 	.skip 0xC
-.global $$22819
 $$22819:
 	.skip 0xC
-.global $$22820
 $$22820:
 	.skip 0xC
-.global $$22821
 $$22821:
 	.skip 0xC
-.global $$22822
 $$22822:
 	.skip 0xC
-.global $$22823
 $$22823:
 	.skip 0x10

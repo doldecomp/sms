@@ -192,15 +192,11 @@ lbl_800B5F50:
 /* 800B5F60 000B2EA0  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global Chan
 Chan:
 	.skip 0x4
-.global Dev
 Dev:
 	.skip 0x4
-.global Enabled
 Enabled:
 	.skip 0x4
-.global BarnacleEnabled
 BarnacleEnabled:
 	.skip 0x1C

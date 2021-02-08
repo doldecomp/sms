@@ -1973,73 +1973,50 @@ $$220$$2frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv:
 	.incbin "baserom.dol", 0x36CCF0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21994
 $$21994:
 	.incbin "baserom.dol", 0x384500, 0xC
-.global $$22005
 $$22005:
 	.incbin "baserom.dol", 0x38450C, 0x10
-.global $$22016
 $$22016:
 	.incbin "baserom.dol", 0x38451C, 0x14
-.global $$22024
 $$22024:
 	.incbin "baserom.dol", 0x384530, 0xC
-.global $$22026
 $$22026:
 	.incbin "baserom.dol", 0x38453C, 0x10
-.global $$22028
 $$22028:
 	.incbin "baserom.dol", 0x38454C, 0x10
-.global $$22449
 $$22449:
 	.incbin "baserom.dol", 0x38455C, 0x10
-.global $$22450
 $$22450:
 	.incbin "baserom.dol", 0x38456C, 0x10
-.global $$22451
 $$22451:
 	.incbin "baserom.dol", 0x38457C, 0x10
-.global $$22452
 $$22452:
 	.incbin "baserom.dol", 0x38458C, 0xC
-.global $$22453
 $$22453:
 	.incbin "baserom.dol", 0x384598, 0xC
-.global $$22454
 $$22454:
 	.incbin "baserom.dol", 0x3845A4, 0x10
-.global $$22455
 $$22455:
 	.incbin "baserom.dol", 0x3845B4, 0x10
-.global $$22456
 $$22456:
 	.incbin "baserom.dol", 0x3845C4, 0x10
-.global $$22457
 $$22457:
 	.incbin "baserom.dol", 0x3845D4, 0x18
-.global $$22458
 $$22458:
 	.incbin "baserom.dol", 0x3845EC, 0x14
-.global $$22459
 $$22459:
 	.incbin "baserom.dol", 0x384600, 0x10
-.global $$22460
 $$22460:
 	.incbin "baserom.dol", 0x384610, 0x20
-.global $$22461
 $$22461:
 	.incbin "baserom.dol", 0x384630, 0x18
-.global $$22462
 $$22462:
 	.incbin "baserom.dol", 0x384648, 0x10
-.global $$22463
 $$22463:
 	.incbin "baserom.dol", 0x384658, 0x1C
-.global $$22464
 $$22464:
 	.incbin "baserom.dol", 0x384674, 0x18
-.global $$22465
 $$22465:
 	.incbin "baserom.dol", 0x38468C, 0x1C
 
@@ -2055,155 +2032,105 @@ __vt__30JALListFrameLoop$$010MSSetSound$$1:
 	.incbin "baserom.dol", 0x3B6EF8, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21995
 $$21995:
 	.incbin "baserom.dol", 0x3E6910, 0x4
-.global $$21996
 $$21996:
 	.incbin "baserom.dol", 0x3E6914, 0x4
-.global $$21997
 $$21997:
 	.incbin "baserom.dol", 0x3E6918, 0x4
-.global $$21998
 $$21998:
 	.incbin "baserom.dol", 0x3E691C, 0x4
-.global $$21999
 $$21999:
 	.incbin "baserom.dol", 0x3E6920, 0x4
-.global $$22000
 $$22000:
 	.incbin "baserom.dol", 0x3E6924, 0x4
-.global $$22001
 $$22001:
 	.incbin "baserom.dol", 0x3E6928, 0x4
-.global $$22002
 $$22002:
 	.incbin "baserom.dol", 0x3E692C, 0x4
-.global $$22003
 $$22003:
 	.incbin "baserom.dol", 0x3E6930, 0x4
-.global $$22004
 $$22004:
 	.incbin "baserom.dol", 0x3E6934, 0x4
-.global $$22006
 $$22006:
 	.incbin "baserom.dol", 0x3E6938, 0x4
-.global $$22007
 $$22007:
 	.incbin "baserom.dol", 0x3E693C, 0x4
-.global $$22008
 $$22008:
 	.incbin "baserom.dol", 0x3E6940, 0x4
-.global $$22009
 $$22009:
 	.incbin "baserom.dol", 0x3E6944, 0x4
-.global $$22010
 $$22010:
 	.incbin "baserom.dol", 0x3E6948, 0x4
-.global $$22011
 $$22011:
 	.incbin "baserom.dol", 0x3E694C, 0x4
-.global $$22012
 $$22012:
 	.incbin "baserom.dol", 0x3E6950, 0x4
-.global $$22013
 $$22013:
 	.incbin "baserom.dol", 0x3E6954, 0x4
-.global $$22014
 $$22014:
 	.incbin "baserom.dol", 0x3E6958, 0x4
-.global $$22015
 $$22015:
 	.incbin "baserom.dol", 0x3E695C, 0x4
-.global $$22017
 $$22017:
 	.incbin "baserom.dol", 0x3E6960, 0x4
-.global $$22018
 $$22018:
 	.incbin "baserom.dol", 0x3E6964, 0x4
-.global $$22019
 $$22019:
 	.incbin "baserom.dol", 0x3E6968, 0x4
-.global $$22020
 $$22020:
 	.incbin "baserom.dol", 0x3E696C, 0x4
-.global $$22021
 $$22021:
 	.incbin "baserom.dol", 0x3E6970, 0x4
-.global $$22022
 $$22022:
 	.incbin "baserom.dol", 0x3E6974, 0x8
-.global $$22023
 $$22023:
 	.incbin "baserom.dol", 0x3E697C, 0x8
-.global $$22025
 $$22025:
 	.incbin "baserom.dol", 0x3E6984, 0x4
-.global $$22027
 $$22027:
 	.incbin "baserom.dol", 0x3E6988, 0x4
-.global $$22029
 $$22029:
 	.incbin "baserom.dol", 0x3E698C, 0x4
-.global $$22030
 $$22030:
 	.incbin "baserom.dol", 0x3E6990, 0x4
-.global $$22031
 $$22031:
 	.incbin "baserom.dol", 0x3E6994, 0x4
-.global $$22341
 $$22341:
 	.incbin "baserom.dol", 0x3E6998, 0x8
-.global $$22343
 $$22343:
 	.incbin "baserom.dol", 0x3E69A0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global smSetSound__10MSSetSound
 smSetSound__10MSSetSound:
 	.skip 0x24
-.global $$21932
 $$21932:
 	.skip 0xC
-.global $$21933
 $$21933:
 	.skip 0xC
-.global $$21934
 $$21934:
 	.skip 0xC
-.global $$21935
 $$21935:
 	.skip 0xC
-.global $$21936
 $$21936:
 	.skip 0xC
-.global $$21937
 $$21937:
 	.skip 0xC
-.global $$21938
 $$21938:
 	.skip 0xC
-.global $$21939
 $$21939:
 	.skip 0xC
-.global $$21940
 $$21940:
 	.skip 0xC
-.global $$21941
 $$21941:
 	.skip 0xC
-.global $$21942
 $$21942:
 	.skip 0xC
-.global $$21943
 $$21943:
 	.skip 0xC
-.global $$21944
 $$21944:
 	.skip 0xC
-.global $$21945
 $$21945:
 	.skip 0xC
-.global $$21946
 $$21946:
 	.skip 0xC

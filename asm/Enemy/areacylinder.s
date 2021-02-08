@@ -531,15 +531,11 @@ __vt__13TAreaCylinder:
 	.incbin "baserom.dol", 0x3DDE5C, 0x24
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22137
 $$22137:
 	.incbin "baserom.dol", 0x3EB8C0, 0x4
-.global $$22138
 $$22138:
 	.incbin "baserom.dol", 0x3EB8C4, 0x4
-.global $$22140
 $$22140:
 	.incbin "baserom.dol", 0x3EB8C8, 0x8
-.global $$22149
 $$22149:
 	.incbin "baserom.dol", 0x3EB8D0, 0x8

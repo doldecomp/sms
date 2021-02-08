@@ -1419,26 +1419,19 @@ OSGetThreadPriority:
 /* 80093DF4 00090D34  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global RunQueue
 RunQueue:
 	.skip 0x100
-.global IdleThread
 IdleThread:
 	.skip 0x310
-.global DefaultThread
 DefaultThread:
 	.skip 0x310
-.global IdleContext
 IdleContext:
 	.skip 0x2C8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global RunQueueBits
 RunQueueBits:
 	.skip 0x4
-.global RunQueueHint
 RunQueueHint:
 	.skip 0x4
-.global Reschedule
 Reschedule:
 	.skip 0x8

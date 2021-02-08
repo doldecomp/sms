@@ -137,62 +137,43 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367AEC 00364A2C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A4C38, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A4C44, 0x14
-.global $$21562
 $$21562:
 	.incbin "baserom.dol", 0x3A4C58, 0x10
-.global $$21563
 $$21563:
 	.incbin "baserom.dol", 0x3A4C68, 0x10
-.global $$21565
 $$21565:
 	.incbin "baserom.dol", 0x3A4C78, 0x10
-.global $$21567
 $$21567:
 	.incbin "baserom.dol", 0x3A4C88, 0x14
-.global $$21569
 $$21569:
 	.incbin "baserom.dol", 0x3A4C9C, 0x14
-.global $$21571
 $$21571:
 	.incbin "baserom.dol", 0x3A4CB0, 0x10
-.global $$21573
 $$21573:
 	.incbin "baserom.dol", 0x3A4CC0, 0x14
-.global $$21575
 $$21575:
 	.incbin "baserom.dol", 0x3A4CD4, 0x14
-.global $$21577
 $$21577:
 	.incbin "baserom.dol", 0x3A4CE8, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21564
 $$21564:
 	.incbin "baserom.dol", 0x3EC6F8, 0x4
-.global $$21566
 $$21566:
 	.incbin "baserom.dol", 0x3EC6FC, 0x4
-.global $$21568
 $$21568:
 	.incbin "baserom.dol", 0x3EC700, 0x4
-.global $$21570
 $$21570:
 	.incbin "baserom.dol", 0x3EC704, 0x4
-.global $$21572
 $$21572:
 	.incbin "baserom.dol", 0x3EC708, 0x4
-.global $$21574
 $$21574:
 	.incbin "baserom.dol", 0x3EC70C, 0x4
-.global $$21576
 $$21576:
 	.incbin "baserom.dol", 0x3EC710, 0x4
-.global $$21578
 $$21578:
 	.incbin "baserom.dol", 0x3EC714, 0x4

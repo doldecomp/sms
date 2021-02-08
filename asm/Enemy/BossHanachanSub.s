@@ -831,42 +831,29 @@ __vt__14TWaterHitActor:
 	.incbin "baserom.dol", 0x3DC360, 0xA8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22082
 $$22082:
 	.incbin "baserom.dol", 0x3EB3D0, 0x4
-.global $$22083
 $$22083:
 	.incbin "baserom.dol", 0x3EB3D4, 0x4
-.global $$22084
 $$22084:
 	.incbin "baserom.dol", 0x3EB3D8, 0x4
-.global $$22085
 $$22085:
 	.incbin "baserom.dol", 0x3EB3DC, 0x4
-.global $$22086
 $$22086:
 	.incbin "baserom.dol", 0x3EB3E0, 0x4
-.global $$22087
 $$22087:
 	.incbin "baserom.dol", 0x3EB3E4, 0x4
-.global $$22088
 $$22088:
 	.incbin "baserom.dol", 0x3EB3E8, 0x8
-.global $$22090
 $$22090:
 	.incbin "baserom.dol", 0x3EB3F0, 0x8
-.global $$22199
 $$22199:
 	.incbin "baserom.dol", 0x3EB3F8, 0x4
-.global $$22200
 $$22200:
 	.incbin "baserom.dol", 0x3EB3FC, 0x4
-.global $$22356
 $$22356:
 	.incbin "baserom.dol", 0x3EB400, 0x4
-.global $$22357
 $$22357:
 	.incbin "baserom.dol", 0x3EB404, 0x4
-.global $$22358
 $$22358:
 	.incbin "baserom.dol", 0x3EB408, 0x8

@@ -388,15 +388,12 @@ __ct__20JKRAramStreamCommandFv:
 /* 8003AD70 00037CB0  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2110
 $$2110:
 	.incbin "baserom.dol", 0x36DDA8, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sMessageBuffer__13JKRAramStream
 sMessageBuffer__13JKRAramStream:
 	.incbin "baserom.dol", 0x3A6EC8, 0x10
-.global sMessageQueue__13JKRAramStream
 sMessageQueue__13JKRAramStream:
 	.incbin "baserom.dol", 0x3A6ED8, 0x20
 .global __vt__13JKRAramStream
@@ -404,20 +401,15 @@ __vt__13JKRAramStream:
 	.incbin "baserom.dol", 0x3A6EF8, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2111
 $$2111:
 	.incbin "baserom.dol", 0x3E4010, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sAramStreamObject__13JKRAramStream
 sAramStreamObject__13JKRAramStream:
 	.skip 0x4
-.global transBuffer__13JKRAramStream
 transBuffer__13JKRAramStream:
 	.skip 0x4
-.global transSize__13JKRAramStream
 transSize__13JKRAramStream:
 	.skip 0x4
-.global transHeap__13JKRAramStream
 transHeap__13JKRAramStream:
 	.skip 0x4

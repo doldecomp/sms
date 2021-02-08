@@ -3064,226 +3064,152 @@ lbl_8016FF64:
 /* 8016FF7C 0016CEBC  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x37B898, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x37B8A4, 0x14
-.global $$22050
 $$22050:
 	.incbin "baserom.dol", 0x37B8B8, 0x30
-.global $$22051
 $$22051:
 	.incbin "baserom.dol", 0x37B8E8, 0x38
-.global $$22052
 $$22052:
 	.incbin "baserom.dol", 0x37B920, 0x34
-.global $$22053
 $$22053:
 	.incbin "baserom.dol", 0x37B954, 0x24
-.global $$22207
 $$22207:
 	.incbin "baserom.dol", 0x37B978, 0x10
-.global $$22212
 $$22212:
 	.incbin "baserom.dol", 0x37B988, 0x10
-.global $$22213
 $$22213:
 	.incbin "baserom.dol", 0x37B998, 0x24
-.global $$22214
 $$22214:
 	.incbin "baserom.dol", 0x37B9BC, 0x14
-.global $$22215
 $$22215:
 	.incbin "baserom.dol", 0x37B9D0, 0x14
-.global $$22216
 $$22216:
 	.incbin "baserom.dol", 0x37B9E4, 0x28
-.global $$22217
 $$22217:
 	.incbin "baserom.dol", 0x37BA0C, 0x28
-.global $$22218
 $$22218:
 	.incbin "baserom.dol", 0x37BA34, 0x18
-.global $$22219
 $$22219:
 	.incbin "baserom.dol", 0x37BA4C, 0xC
-.global $$22220
 $$22220:
 	.incbin "baserom.dol", 0x37BA58, 0x14
-.global $$22221
 $$22221:
 	.incbin "baserom.dol", 0x37BA6C, 0x24
-.global $$22222
 $$22222:
 	.incbin "baserom.dol", 0x37BA90, 0x14
-.global $$22223
 $$22223:
 	.incbin "baserom.dol", 0x37BAA4, 0x14
-.global $$22224
 $$22224:
 	.incbin "baserom.dol", 0x37BAB8, 0x10
-.global $$22225
 $$22225:
 	.incbin "baserom.dol", 0x37BAC8, 0x10
-.global $$22226
 $$22226:
 	.incbin "baserom.dol", 0x37BAD8, 0x1C
-.global $$22227
 $$22227:
 	.incbin "baserom.dol", 0x37BAF4, 0x24
-.global $$22230
 $$22230:
 	.incbin "baserom.dol", 0x37BB18, 0x10
-.global entry$2229
 entry$2229:
 	.incbin "baserom.dol", 0x37BB28, 0x18
-.global $$22232
 $$22232:
 	.incbin "baserom.dol", 0x37BB40, 0x10
-.global $$22233
 $$22233:
 	.incbin "baserom.dol", 0x37BB50, 0x10
-.global $$22234
 $$22234:
 	.incbin "baserom.dol", 0x37BB60, 0x10
-.global $$22235
 $$22235:
 	.incbin "baserom.dol", 0x37BB70, 0x10
-.global $$22236
 $$22236:
 	.incbin "baserom.dol", 0x37BB80, 0x10
-.global $$22237
 $$22237:
 	.incbin "baserom.dol", 0x37BB90, 0x10
-.global entry$2231
 entry$2231:
 	.incbin "baserom.dol", 0x37BBA0, 0x54
-.global $$22336
 $$22336:
 	.incbin "baserom.dol", 0x37BBF4, 0x10
-.global entry$2335
 entry$2335:
 	.incbin "baserom.dol", 0x37BC04, 0x18
-.global $$22338
 $$22338:
 	.incbin "baserom.dol", 0x37BC1C, 0x10
-.global entry$2337
 entry$2337:
 	.incbin "baserom.dol", 0x37BC2C, 0x18
-.global $$22340
 $$22340:
 	.incbin "baserom.dol", 0x37BC44, 0x10
-.global entry$2339
 entry$2339:
 	.incbin "baserom.dol", 0x37BC54, 0x18
-.global $$22342
 $$22342:
 	.incbin "baserom.dol", 0x37BC6C, 0x10
-.global entry$2341
 entry$2341:
 	.incbin "baserom.dol", 0x37BC7C, 0x18
-.global $$22344
 $$22344:
 	.incbin "baserom.dol", 0x37BC94, 0x10
-.global entry$2343
 entry$2343:
 	.incbin "baserom.dol", 0x37BCA4, 0x18
-.global $$22346
 $$22346:
 	.incbin "baserom.dol", 0x37BCBC, 0x10
-.global entry$2345
 entry$2345:
 	.incbin "baserom.dol", 0x37BCCC, 0x18
-.global entry$2347
 entry$2347:
 	.incbin "baserom.dol", 0x37BCE4, 0x18
-.global entry$2348
 entry$2348:
 	.incbin "baserom.dol", 0x37BCFC, 0x18
-.global entry$2349
 entry$2349:
 	.incbin "baserom.dol", 0x37BD14, 0x18
-.global $$22351
 $$22351:
 	.incbin "baserom.dol", 0x37BD2C, 0x10
-.global entry$2350
 entry$2350:
 	.incbin "baserom.dol", 0x37BD3C, 0x18
-.global $$22353
 $$22353:
 	.incbin "baserom.dol", 0x37BD54, 0x10
-.global entry$2352
 entry$2352:
 	.incbin "baserom.dol", 0x37BD64, 0x18
-.global $$22355
 $$22355:
 	.incbin "baserom.dol", 0x37BD7C, 0x10
-.global entry$2354
 entry$2354:
 	.incbin "baserom.dol", 0x37BD8C, 0x18
-.global entry$2356
 entry$2356:
 	.incbin "baserom.dol", 0x37BDA4, 0x18
-.global $$22358
 $$22358:
 	.incbin "baserom.dol", 0x37BDBC, 0xC
-.global entry$2357
 entry$2357:
 	.incbin "baserom.dol", 0x37BDC8, 0x18
-.global $$22360
 $$22360:
 	.incbin "baserom.dol", 0x37BDE0, 0xC
-.global entry$2359
 entry$2359:
 	.incbin "baserom.dol", 0x37BDEC, 0x18
-.global $$22362
 $$22362:
 	.incbin "baserom.dol", 0x37BE04, 0x14
-.global entry$2361
 entry$2361:
 	.incbin "baserom.dol", 0x37BE18, 0x18
-.global $$22364
 $$22364:
 	.incbin "baserom.dol", 0x37BE30, 0x10
-.global entry$2363
 entry$2363:
 	.incbin "baserom.dol", 0x37BE40, 0x18
-.global $$22366
 $$22366:
 	.incbin "baserom.dol", 0x37BE58, 0x10
-.global entry$2365
 entry$2365:
 	.incbin "baserom.dol", 0x37BE68, 0x18
-.global $$22368
 $$22368:
 	.incbin "baserom.dol", 0x37BE80, 0xC
-.global entry$2367
 entry$2367:
 	.incbin "baserom.dol", 0x37BE8C, 0x18
-.global $$22370
 $$22370:
 	.incbin "baserom.dol", 0x37BEA4, 0x10
-.global entry$2369
 entry$2369:
 	.incbin "baserom.dol", 0x37BEB4, 0x18
-.global $$22372
 $$22372:
 	.incbin "baserom.dol", 0x37BECC, 0x10
-.global entry$2371
 entry$2371:
 	.incbin "baserom.dol", 0x37BEDC, 0x18
-.global $$22416
 $$22416:
 	.incbin "baserom.dol", 0x37BEF4, 0x10
-.global $$22459
 $$22459:
 	.incbin "baserom.dol", 0x37BF04, 0x10
-.global $$22467
 $$22467:
 	.incbin "baserom.dol", 0x37BF14, 0x10
-.global $$22475
 $$22475:
 	.incbin "baserom.dol", 0x37BF24, 0x14
 
@@ -3291,7 +3217,6 @@ $$22475:
 .global __vt__18TSunflowerSManager
 __vt__18TSunflowerSManager:
 	.incbin "baserom.dol", 0x3B5650, 0x58
-.global $$22899
 $$22899:
 	.incbin "baserom.dol", 0x3B56A8, 0x38
 .global __vt__17TMareWBaseManager
@@ -3398,75 +3323,52 @@ __vt__16TBoardNpcManager:
 	.incbin "baserom.dol", 0x3B6210, 0x40
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global cDummyPollutionTexName
 cDummyPollutionTexName:
 	.incbin "baserom.dol", 0x3E3488, 0x4
-.global cRealPollutionTexName
 cRealPollutionTexName:
 	.incbin "baserom.dol", 0x3E348C, 0x4
-.global cMonteMDummyStrawTexName
 cMonteMDummyStrawTexName:
 	.incbin "baserom.dol", 0x3E3490, 0x4
-.global cMonteWDummyStrawTexName
 cMonteWDummyStrawTexName:
 	.incbin "baserom.dol", 0x3E3494, 0x4
-.global cMonteMRealStrawTexName
 cMonteMRealStrawTexName:
 	.incbin "baserom.dol", 0x3E3498, 0x4
-.global cMonteWRealStrawTexName
 cMonteWRealStrawTexName:
 	.incbin "baserom.dol", 0x3E349C, 0x4
-.global cScreenTexViewObjName
 cScreenTexViewObjName:
 	.incbin "baserom.dol", 0x3E34A0, 0x4
-.global cJellyFishDummyScreenTexName
 cJellyFishDummyScreenTexName:
 	.incbin "baserom.dol", 0x3E34A4, 0x4
-.global cJellyFishDummyTexName
 cJellyFishDummyTexName:
 	.incbin "baserom.dol", 0x3E34A8, 0x4
-.global cJellyFishRealTexName
 cJellyFishRealTexName:
 	.incbin "baserom.dol", 0x3E34AC, 0x4
-.global cMonteMCommonVolumeName
 cMonteMCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B0, 0x4
-.global cMonteWCommonVolumeName
 cMonteWCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B4, 0x4
-.global cMareMCommonVolumeName
 cMareMCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34B8, 0x4
-.global cMareWCommonVolumeName
 cMareWCommonVolumeName:
 	.incbin "baserom.dol", 0x3E34BC, 0x4
-.global cMareCommonNormalBmtName
 cMareCommonNormalBmtName:
 	.incbin "baserom.dol", 0x3E34C0, 0x4
-.global cMareCommonPollutionBmtName
 cMareCommonPollutionBmtName:
 	.incbin "baserom.dol", 0x3E34C4, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22535
 $$22535:
 	.incbin "baserom.dol", 0x3E6360, 0x4
-.global $$22536
 $$22536:
 	.incbin "baserom.dol", 0x3E6364, 0x4
-.global $$22804
 $$22804:
 	.incbin "baserom.dol", 0x3E6368, 0x4
-.global $$22805
 $$22805:
 	.incbin "baserom.dol", 0x3E636C, 0x4
-.global $$22860
 $$22860:
 	.incbin "baserom.dol", 0x3E6370, 0x8
-.global $$22898
 $$22898:
 	.incbin "baserom.dol", 0x3E6378, 0x4
-.global $$22934
 $$22934:
 	.incbin "baserom.dol", 0x3E637C, 0x4
 

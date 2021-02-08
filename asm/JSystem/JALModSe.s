@@ -3860,50 +3860,36 @@ __vt__15JALSeModVolFunk:
 	.incbin "baserom.dol", 0x3A7C20, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2544
 $$2544:
 	.incbin "baserom.dol", 0x3E4130, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$21661
 $$21661:
 	.skip 0xC
-.global $$21662
 $$21662:
 	.skip 0xC
-.global $$21663
 $$21663:
 	.skip 0xC
-.global $$21664
 $$21664:
 	.skip 0xC
-.global $$21665
 $$21665:
 	.skip 0xC
-.global $$21666
 $$21666:
 	.skip 0xC
-.global $$21667
 $$21667:
 	.skip 0xC
-.global $$21668
 $$21668:
 	.skip 0xC
-.global $$21669
 $$21669:
 	.skip 0xC
-.global $$21670
 $$21670:
 	.skip 0xC
-.global $$21671
 $$21671:
 	.skip 0xC
-.global $$21672
 $$21672:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global spFManager__9JALSystem
 spFManager__9JALSystem:
 	.skip 0x4
 .global smList__26JALList$$015JALSeModEffDGrp$$1

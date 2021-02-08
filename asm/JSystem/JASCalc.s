@@ -551,29 +551,21 @@ lbl_80061474:
 /* 80061480 0005E3C0  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2525
 $$2525:
 	.incbin "baserom.dol", 0x3E43C0, 0x4
-.global $$2526
 $$2526:
 	.incbin "baserom.dol", 0x3E43C4, 0x4
-.global $$2527
 $$2527:
 	.incbin "baserom.dol", 0x3E43C8, 0x4
-.global $$2528
 $$2528:
 	.incbin "baserom.dol", 0x3E43CC, 0x4
-.global $$2530
 $$2530:
 	.incbin "baserom.dol", 0x3E43D0, 0x8
-.global $$2532
 $$2532:
 	.incbin "baserom.dol", 0x3E43D8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global JASC_SINTABLE__Q28JASystem4Calc
 JASC_SINTABLE__Q28JASystem4Calc:
 	.skip 0x4
-.global JASC_DOL2TABLE__Q28JASystem4Calc
 JASC_DOL2TABLE__Q28JASystem4Calc:
 	.skip 0x4

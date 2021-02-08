@@ -3670,7 +3670,6 @@ __GDWrite:
 /* 800231F8 00020138  98 64 00 00 */	stb r3, 0(r4)
 /* 800231FC 0002013C  4E 80 00 20 */	blr 
 
-.global GDOverflowCheck
 GDOverflowCheck:
 /* 80023200 00020140  7C 08 02 A6 */	mflr r0
 /* 80023204 00020144  90 01 00 04 */	stw r0, 4(r1)
@@ -8269,7 +8268,6 @@ load__15J3DIndBlockNullFP11J3DTevBlock:
 /* 80026A90 000239D0  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2329
 $$2329:
 	.incbin "baserom.dol", 0x36DC28, 0x10
 
@@ -8330,45 +8328,31 @@ __vt__13J3DColorBlock:
 	.incbin "baserom.dol", 0x3A6798, 0x68
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2330
 $$2330:
 	.incbin "baserom.dol", 0x3E3EF8, 0x4
-.global $$22217
 $$22217:
 	.incbin "baserom.dol", 0x3E3EFC, 0x4
-.global lbl_8040B660
 lbl_8040B660:
 	.incbin "baserom.dol", 0x3E3F00, 0x4
-.global $$22218
 $$22218:
 	.incbin "baserom.dol", 0x3E3F04, 0x4
-.global $$22219
 $$22219:
 	.incbin "baserom.dol", 0x3E3F08, 0x4
-.global $$22221
 $$22221:
 	.incbin "baserom.dol", 0x3E3F0C, 0x4
-.global lbl_8040B670
 lbl_8040B670:
 	.incbin "baserom.dol", 0x3E3F10, 0x4
-.global $$22222
 $$22222:
 	.incbin "baserom.dol", 0x3E3F14, 0x4
-.global $$22223
 $$22223:
 	.incbin "baserom.dol", 0x3E3F18, 0x4
-.global $$22225
 $$22225:
 	.incbin "baserom.dol", 0x3E3F1C, 0x4
-.global lbl_8040B680
 lbl_8040B680:
 	.incbin "baserom.dol", 0x3E3F20, 0x4
-.global $$22226
 $$22226:
 	.incbin "baserom.dol", 0x3E3F24, 0x4
-.global $$22227
 $$22227:
 	.incbin "baserom.dol", 0x3E3F28, 0x4
-.global $$22456
 $$22456:
 	.incbin "baserom.dol", 0x3E3F2C, 0x4

@@ -287,11 +287,9 @@ __vt__11JKRAramHeap:
 	.incbin "baserom.dol", 0x3A53E8, 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$256
 $$256:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sAramList__11JKRAramHeap
 sAramList__11JKRAramHeap:
 	.skip 0xC

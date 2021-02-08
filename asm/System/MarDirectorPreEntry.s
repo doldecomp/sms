@@ -230,101 +230,69 @@ lbl_800EF9CC:
 /* 800EFA2C 000EC96C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3708E0, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3708EC, 0x14
-.global cDirtyFileName
 cDirtyFileName:
 	.incbin "baserom.dol", 0x370900, 0x24
-.global cDirtyTexName
 cDirtyTexName:
 	.incbin "baserom.dol", 0x370924, 0x10
-.global $$21615
 $$21615:
 	.incbin "baserom.dol", 0x370934, 0x18
-.global $$21616
 $$21616:
 	.incbin "baserom.dol", 0x37094C, 0x14
-.global $$21617
 $$21617:
 	.incbin "baserom.dol", 0x370960, 0x10
-.global $$21618
 $$21618:
 	.incbin "baserom.dol", 0x370970, 0xC
-.global $$21619
 $$21619:
 	.incbin "baserom.dol", 0x37097C, 0x10
-.global $$21620
 $$21620:
 	.incbin "baserom.dol", 0x37098C, 0x10
-.global $$21621
 $$21621:
 	.incbin "baserom.dol", 0x37099C, 0xC
-.global $$21622
 $$21622:
 	.incbin "baserom.dol", 0x3709A8, 0x10
-.global $$21623
 $$21623:
 	.incbin "baserom.dol", 0x3709B8, 0x10
-.global $$21624
 $$21624:
 	.incbin "baserom.dol", 0x3709C8, 0x20
-.global $$21625
 $$21625:
 	.incbin "baserom.dol", 0x3709E8, 0x20
-.global $$21627
 $$21627:
 	.incbin "baserom.dol", 0x370A08, 0x20
-.global $$21628
 $$21628:
 	.incbin "baserom.dol", 0x370A28, 0x20
-.global $$21629
 $$21629:
 	.incbin "baserom.dol", 0x370A48, 0x14
-.global $$21630
 $$21630:
 	.incbin "baserom.dol", 0x370A5C, 0x10
-.global $$21631
 $$21631:
 	.incbin "baserom.dol", 0x370A6C, 0x14
-.global $$21632
 $$21632:
 	.incbin "baserom.dol", 0x370A80, 0x10
-.global $$21633
 $$21633:
 	.incbin "baserom.dol", 0x370A90, 0x10
-.global $$21634
 $$21634:
 	.incbin "baserom.dol", 0x370AA0, 0x18
-.global $$21635
 $$21635:
 	.incbin "baserom.dol", 0x370AB8, 0x10
-.global $$21636
 $$21636:
 	.incbin "baserom.dol", 0x370AC8, 0x10
-.global $$21637
 $$21637:
 	.incbin "baserom.dol", 0x370AD8, 0x10
-.global $$21638
 $$21638:
 	.incbin "baserom.dol", 0x370AE8, 0x14
-.global $$21639
 $$21639:
 	.incbin "baserom.dol", 0x370AFC, 0x18
-.global $$21640
 $$21640:
 	.incbin "baserom.dol", 0x370B14, 0x18
-.global $$21641
 $$21641:
 	.incbin "baserom.dol", 0x370B2C, 0x14
-.global $$21642
 $$21642:
 	.incbin "baserom.dol", 0x370B40, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21626
 $$21626:
 	.incbin "baserom.dol", 0x3E4DE8, 0x8

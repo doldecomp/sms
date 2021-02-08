@@ -414,7 +414,6 @@ SMS_SetMarioAccessParams__Fv:
 /* 80152DB8 0014FCF8  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22019
 $$22019:
 	.incbin "baserom.dol", 0x3E5E98, 0x8
 

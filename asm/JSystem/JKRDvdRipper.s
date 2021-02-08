@@ -463,7 +463,6 @@ lbl_80034AAC:
 /* 80034ABC 000319FC  7C 08 03 A6 */	mtlr r0
 /* 80034AC0 00031A00  4E 80 00 20 */	blr 
 
-.global decompSZS_subroutine__FPUcPUc
 decompSZS_subroutine__FPUcPUc:
 /* 80034AC4 00031A04  7C 08 02 A6 */	mflr r0
 /* 80034AC8 00031A08  90 01 00 04 */	stw r0, 4(r1)
@@ -656,7 +655,6 @@ lbl_80034D48:
 /* 80034D58 00031C98  38 21 00 18 */	addi r1, r1, 0x18
 /* 80034D5C 00031C9C  4E 80 00 20 */	blr 
 
-.global firstSrcData__Fv
 firstSrcData__Fv:
 /* 80034D60 00031CA0  7C 08 02 A6 */	mflr r0
 /* 80034D64 00031CA4  90 01 00 04 */	stw r0, 4(r1)
@@ -710,7 +708,6 @@ lbl_80034E00:
 /* 80034E10 00031D50  38 21 00 20 */	addi r1, r1, 0x20
 /* 80034E14 00031D54  4E 80 00 20 */	blr 
 
-.global nextSrcData__FPUc
 nextSrcData__FPUc:
 /* 80034E18 00031D58  7C 08 02 A6 */	mflr r0
 /* 80034E1C 00031D5C  38 83 00 00 */	addi r4, r3, 0
@@ -844,18 +841,14 @@ lbl_80034FB0:
 	.incbin "baserom.dol", 0x36CBCC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2177
 $$2177:
 	.incbin "baserom.dol", 0x36DC80, 0x14
-.global $$2178
 $$2178:
 	.incbin "baserom.dol", 0x36DC94, 0x28
-.global $$2179
 $$2179:
 	.incbin "baserom.dol", 0x36DCBC, 0x24
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global errorRetry__12JKRDvdRipper
 errorRetry__12JKRDvdRipper:
 	.incbin "baserom.dol", 0x3E3028, 0x4
 .global szpBufferSize__12JKRDvdRipper
@@ -863,49 +856,35 @@ szpBufferSize__12JKRDvdRipper:
 	.incbin "baserom.dol", 0x3E302C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$256
 $$256:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sDvdAsyncList__12JKRDvdRipper
 sDvdAsyncList__12JKRDvdRipper:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global szpBuf
 szpBuf:
 	.skip 0x4
-.global szpEnd
 szpEnd:
 	.skip 0x4
-.global refBuf
 refBuf:
 	.skip 0x4
-.global refEnd
 refEnd:
 	.skip 0x4
-.global refCurrent
 refCurrent:
 	.skip 0x4
-.global srcOffset
 srcOffset:
 	.skip 0x4
-.global transLeft
 transLeft:
 	.skip 0x4
-.global srcLimit
 srcLimit:
 	.skip 0x4
-.global srcFile
 srcFile:
 	.skip 0x4
-.global fileOffset
 fileOffset:
 	.skip 0x4
-.global readCount
 readCount:
 	.skip 0x4
-.global maxDest
 maxDest:
 	.skip 0x4

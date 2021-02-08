@@ -1611,45 +1611,31 @@ lbl_80051140:
 /* 8005119C 0004E0DC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2587
 $$2587:
 	.incbin "baserom.dol", 0x3E41A0, 0x4
-.global $$2588
 $$2588:
 	.incbin "baserom.dol", 0x3E41A4, 0x4
-.global $$2589
 $$2589:
 	.incbin "baserom.dol", 0x3E41A8, 0x4
-.global $$2590
 $$2590:
 	.incbin "baserom.dol", 0x3E41AC, 0x4
-.global $$2591
 $$2591:
 	.incbin "baserom.dol", 0x3E41B0, 0x4
-.global $$2592
 $$2592:
 	.incbin "baserom.dol", 0x3E41B4, 0x4
-.global $$2594
 $$2594:
 	.incbin "baserom.dol", 0x3E41B8, 0x8
-.global $$2760
 $$2760:
 	.incbin "baserom.dol", 0x3E41C0, 0x8
-.global $$2761
 $$2761:
 	.incbin "baserom.dol", 0x3E41C8, 0x8
-.global $$2762
 $$2762:
 	.incbin "baserom.dol", 0x3E41D0, 0x4
-.global $$2763
 $$2763:
 	.incbin "baserom.dol", 0x3E41D4, 0x4
-.global $$2777
 $$2777:
 	.incbin "baserom.dol", 0x3E41D8, 0x8
-.global $$2934
 $$2934:
 	.incbin "baserom.dol", 0x3E41E0, 0x4
-.global $$2935
 $$2935:
 	.incbin "baserom.dol", 0x3E41E4, 0x4

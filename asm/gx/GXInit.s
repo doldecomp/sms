@@ -1146,33 +1146,24 @@ gx:
 	.incbin "baserom.dol", 0x3E32C8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2121
 $$2121:
 	.incbin "baserom.dol", 0x3E47D0, 0x4
-.global $$2122
 $$2122:
 	.incbin "baserom.dol", 0x3E47D4, 0x4
-.global $$2123
 $$2123:
 	.incbin "baserom.dol", 0x3E47D8, 0x4
-.global $$2177
 $$2177:
 	.incbin "baserom.dol", 0x3E47DC, 0x4
-.global $$2178
 $$2178:
 	.incbin "baserom.dol", 0x3E47E0, 0x4
-.global $$2179
 $$2179:
 	.incbin "baserom.dol", 0x3E47E4, 0x4
-.global $$2181
 $$2181:
 	.incbin "baserom.dol", 0x3E47E8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global gxData
 gxData:
 	.skip 0x4F8
-.global FifoObj
 FifoObj:
 	.skip 0x80
 
@@ -1186,6 +1177,5 @@ __cpReg:
 .global __peReg
 __peReg:
 	.skip 0x4
-.global __memReg
 __memReg:
 	.skip 0x4

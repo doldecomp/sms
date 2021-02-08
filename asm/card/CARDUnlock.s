@@ -1250,11 +1250,9 @@ lbl_800A1128:
 /* 800A1144 0009E084  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global CardData
 CardData:
 	.incbin "baserom.dol", 0x3AE3A0, 0x160
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global next
 next:
 	.incbin "baserom.dol", 0x3E32B8, 0x8

@@ -273,33 +273,23 @@ lbl_8009E634:
 /* 8009E654 0009B594  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __ARQRequestQueueHi
 __ARQRequestQueueHi:
 	.skip 0x4
-.global __ARQRequestTailHi
 __ARQRequestTailHi:
 	.skip 0x4
-.global __ARQRequestQueueLo
 __ARQRequestQueueLo:
 	.skip 0x4
-.global __ARQRequestTailLo
 __ARQRequestTailLo:
 	.skip 0x4
-.global __ARQRequestPendingHi
 __ARQRequestPendingHi:
 	.skip 0x4
-.global __ARQRequestPendingLo
 __ARQRequestPendingLo:
 	.skip 0x4
-.global __ARQCallbackHi
 __ARQCallbackHi:
 	.skip 0x4
-.global __ARQCallbackLo
 __ARQCallbackLo:
 	.skip 0x4
-.global __ARQChunkSize
 __ARQChunkSize:
 	.skip 0x4
-.global __ARQ_init_flag
 __ARQ_init_flag:
 	.skip 0x4

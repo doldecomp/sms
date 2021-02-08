@@ -430,27 +430,19 @@ CLBPalIntSpeed$$0s$$1__Fs:
 /* 8016D584 0016A4C4  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22197
 $$22197:
 	.incbin "baserom.dol", 0x3E6338, 0x4
-.global $$22198
 $$22198:
 	.incbin "baserom.dol", 0x3E633C, 0x4
-.global $$22199
 $$22199:
 	.incbin "baserom.dol", 0x3E6340, 0x4
-.global $$22200
 $$22200:
 	.incbin "baserom.dol", 0x3E6344, 0x4
-.global $$22201
 $$22201:
 	.incbin "baserom.dol", 0x3E6348, 0x4
-.global $$22202
 $$22202:
 	.incbin "baserom.dol", 0x3E634C, 0x4
-.global $$22204
 $$22204:
 	.incbin "baserom.dol", 0x3E6350, 0x8
-.global $$22216
 $$22216:
 	.incbin "baserom.dol", 0x3E6358, 0x8

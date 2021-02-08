@@ -34,11 +34,9 @@ __register_global_object:
 /* 8008273C 0007F67C  4E 80 00 20 */	blr 
 
 .section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
-.global __destroy_global_chain_reference
 __destroy_global_chain_reference:
-	.incbin "baserom.dol", 0x36CF88, 0x18
+	.incbin "baserom.dol", 0x36CF88, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __global_destructor_chain
 __global_destructor_chain:
 	.skip 0x8

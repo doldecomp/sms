@@ -323,25 +323,19 @@ __vt__Q28JASystem8TDrumSet:
 	.incbin "baserom.dol", 0x3A7E90, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2323
 $$2323:
 	.incbin "baserom.dol", 0x3E42F8, 0x4
-.global $$2324
 $$2324:
 	.incbin "baserom.dol", 0x3E42FC, 0x4
-.global $$2328
 $$2328:
 	.incbin "baserom.dol", 0x3E4300, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global osc$294
 osc$294:
 	.skip 0x18
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global oscp$295
 oscp$295:
 	.skip 0x4
-.global init$296
 init$296:
 	.skip 0x4

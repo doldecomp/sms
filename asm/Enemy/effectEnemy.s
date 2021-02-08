@@ -752,13 +752,10 @@ $$232$$2__dt__12TEffectEnemyFv:
 	.incbin "baserom.dol", 0x36CEFC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22971
 $$22971:
 	.incbin "baserom.dol", 0x39E620, 0xC
-.global $$23012
 $$23012:
 	.incbin "baserom.dol", 0x39E62C, 0x10
-.global $$23016
 $$23016:
 	.incbin "baserom.dol", 0x39E63C, 0x1C
 
@@ -771,53 +768,37 @@ __vt__19TEffectEnemyManager:
 	.incbin "baserom.dol", 0x3DDB00, 0x58
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22891
 $$22891:
 	.incbin "baserom.dol", 0x3EB868, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23023
 $$23023:
 	.skip 0xC
-.global $$23024
 $$23024:
 	.skip 0xC
-.global $$23025
 $$23025:
 	.skip 0xC
-.global $$23026
 $$23026:
 	.skip 0xC
-.global $$23027
 $$23027:
 	.skip 0xC
-.global $$23028
 $$23028:
 	.skip 0xC
-.global $$23029
 $$23029:
 	.skip 0xC
-.global $$23030
 $$23030:
 	.skip 0xC
-.global $$23031
 $$23031:
 	.skip 0xC
-.global $$23032
 $$23032:
 	.skip 0xC
-.global $$23033
 $$23033:
 	.skip 0xC
-.global $$23034
 $$23034:
 	.skip 0xC
-.global $$23035
 $$23035:
 	.skip 0xC
-.global $$23036
 $$23036:
 	.skip 0xC
-.global $$23037
 $$23037:
 	.skip 0x10

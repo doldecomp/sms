@@ -360,9 +360,7 @@ __vt__16TCubeGeneralInfo:
 	.incbin "baserom.dol", 0x3E1CC0, 0x20
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21577
 $$21577:
 	.incbin "baserom.dol", 0x3EC500, 0x8
-.global $$21579
 $$21579:
 	.incbin "baserom.dol", 0x3EC508, 0x8

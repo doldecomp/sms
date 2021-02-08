@@ -412,31 +412,22 @@ lbl_803678CC:
 	.incbin "baserom.dol", 0x36CF54, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A4B20, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x3A4B2C, 0x14
-.global $$22337
 $$22337:
 	.incbin "baserom.dol", 0x3A4B40, 0x30
-.global $$22338
 $$22338:
 	.incbin "baserom.dol", 0x3A4B70, 0x38
-.global $$22339
 $$22339:
 	.incbin "baserom.dol", 0x3A4BA8, 0x34
-.global $$22340
 $$22340:
 	.incbin "baserom.dol", 0x3A4BDC, 0x24
-.global $$22543
 $$22543:
 	.incbin "baserom.dol", 0x3A4C00, 0x10
-.global entry$2542
 entry$2542:
 	.incbin "baserom.dol", 0x3A4C10, 0x18
-.global $$22573
 $$22573:
 	.incbin "baserom.dol", 0x3A4C28, 0x10
 
@@ -449,56 +440,39 @@ __vt__18TAnimalManagerBase:
 	.incbin "baserom.dol", 0x3E28BC, 0x54
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22600
 $$22600:
 	.incbin "baserom.dol", 0x3EC6F0, 0x4
-.global $$22613
 $$22613:
 	.incbin "baserom.dol", 0x3EC6F4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22616
 $$22616:
 	.skip 0xC
-.global $$22617
 $$22617:
 	.skip 0xC
-.global $$22618
 $$22618:
 	.skip 0xC
-.global $$22619
 $$22619:
 	.skip 0xC
-.global $$22620
 $$22620:
 	.skip 0xC
-.global $$22621
 $$22621:
 	.skip 0xC
-.global $$22622
 $$22622:
 	.skip 0xC
-.global $$22623
 $$22623:
 	.skip 0xC
-.global $$22624
 $$22624:
 	.skip 0xC
-.global $$22625
 $$22625:
 	.skip 0xC
-.global $$22626
 $$22626:
 	.skip 0xC
-.global $$22627
 $$22627:
 	.skip 0xC
-.global $$22628
 $$22628:
 	.skip 0xC
-.global $$22629
 $$22629:
 	.skip 0xC
-.global $$22630
 $$22630:
 	.skip 0x10

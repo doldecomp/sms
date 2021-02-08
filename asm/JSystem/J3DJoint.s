@@ -2532,16 +2532,12 @@ $$280$$2__dt__17J3DMtxCalcMayaAnmFv:
 /* 8001FD14 0001CC54  4B FF F5 AC */	b __dt__17J3DMtxCalcMayaAnmFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2894
 $$2894:
 	.incbin "baserom.dol", 0x36DBF8, 0xC
-.global $$2914
 $$2914:
 	.incbin "baserom.dol", 0x36DC04, 0xC
-.global $$21249
 $$21249:
 	.incbin "baserom.dol", 0x36DC10, 0xC
-.global $$21251
 $$21251:
 	.incbin "baserom.dol", 0x36DC1C, 0xC
 
@@ -2575,9 +2571,7 @@ __vt__13J3DMtxCalcAnm:
 	.incbin "baserom.dol", 0x3A6028, 0x30
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21077
 $$21077:
 	.incbin "baserom.dol", 0x3E3EF0, 0x4
-.global $$21258
 $$21258:
 	.incbin "baserom.dol", 0x3E3EF4, 0x4

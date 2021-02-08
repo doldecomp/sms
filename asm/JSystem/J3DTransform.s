@@ -763,17 +763,13 @@ PSMulUnit01:
 	.incbin "baserom.dol", 0x3A5E00, 0x8
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global Unit01
 Unit01:
 	.incbin "baserom.dol", 0x3E3018, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2871
 $$2871:
 	.incbin "baserom.dol", 0x3E3EA8, 0x4
-.global $$2872
 $$2872:
 	.incbin "baserom.dol", 0x3E3EAC, 0x4
-.global $$2912
 $$2912:
 	.incbin "baserom.dol", 0x3E3EB0, 0x8

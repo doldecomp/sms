@@ -573,63 +573,44 @@ __vt__18TMapObjPoleManager:
 	.incbin "baserom.dol", 0x3C8660, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22186
 $$22186:
 	.incbin "baserom.dol", 0x3E8570, 0x4
-.global $$22263
 $$22263:
 	.incbin "baserom.dol", 0x3E8574, 0x4
-.global $$22279
 $$22279:
 	.incbin "baserom.dol", 0x3E8578, 0x4
-.global $$22303
 $$22303:
 	.incbin "baserom.dol", 0x3E857C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22311
 $$22311:
 	.skip 0xC
-.global $$22312
 $$22312:
 	.skip 0xC
-.global $$22313
 $$22313:
 	.skip 0xC
-.global $$22314
 $$22314:
 	.skip 0xC
-.global $$22315
 $$22315:
 	.skip 0xC
-.global $$22316
 $$22316:
 	.skip 0xC
-.global $$22317
 $$22317:
 	.skip 0xC
-.global $$22318
 $$22318:
 	.skip 0xC
-.global $$22319
 $$22319:
 	.skip 0xC
-.global $$22320
 $$22320:
 	.skip 0xC
-.global $$22321
 $$22321:
 	.skip 0xC
-.global $$22322
 $$22322:
 	.skip 0xC
-.global $$22323
 $$22323:
 	.skip 0xC
-.global $$22324
 $$22324:
 	.skip 0xC
-.global $$22325
 $$22325:
 	.skip 0x10
 

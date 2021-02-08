@@ -834,13 +834,10 @@ getCurrentGroupId__7JKRHeapFv:
 /* 8000CBAC 00009AEC  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2149
 $$2149:
 	.incbin "baserom.dol", 0x36D4E8, 0x10
-.global $$2150
 $$2150:
 	.incbin "baserom.dol", 0x36D4F8, 0x18
-.global $$2369
 $$2369:
 	.incbin "baserom.dol", 0x36D510, 0x10
 
@@ -850,7 +847,6 @@ __vt__7JKRHeap:
 	.incbin "baserom.dol", 0x3A55F8, 0x50
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2370
 $$2370:
 	.incbin "baserom.dol", 0x3E3D38, 0x8
 
@@ -867,18 +863,13 @@ sRootHeap__7JKRHeap:
 .global mErrorHandler__7JKRHeap
 mErrorHandler__7JKRHeap:
 	.skip 0x4
-.global mCodeStart__7JKRHeap
 mCodeStart__7JKRHeap:
 	.skip 0x4
-.global mCodeEnd__7JKRHeap
 mCodeEnd__7JKRHeap:
 	.skip 0x4
-.global mUserRamStart__7JKRHeap
 mUserRamStart__7JKRHeap:
 	.skip 0x4
-.global mUserRamEnd__7JKRHeap
 mUserRamEnd__7JKRHeap:
 	.skip 0x4
-.global mMemorySize__7JKRHeap
 mMemorySize__7JKRHeap:
 	.skip 0x8

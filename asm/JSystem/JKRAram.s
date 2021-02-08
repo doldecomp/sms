@@ -749,7 +749,6 @@ lbl_8000740C:
 /* 8000741C 0000435C  7C 08 03 A6 */	mtlr r0
 /* 80007420 00004360  4E 80 00 20 */	blr 
 
-.global decompSZS_subroutine__FPUcPUc
 decompSZS_subroutine__FPUcPUc:
 /* 80007424 00004364  7C 08 02 A6 */	mflr r0
 /* 80007428 00004368  90 01 00 04 */	stw r0, 4(r1)
@@ -938,7 +937,6 @@ lbl_80007698:
 /* 800076A8 000045E8  38 21 00 18 */	addi r1, r1, 0x18
 /* 800076AC 000045EC  4E 80 00 20 */	blr 
 
-.global firstSrcData__Fv
 firstSrcData__Fv:
 /* 800076B0 000045F0  7C 08 02 A6 */	mflr r0
 /* 800076B4 000045F4  90 01 00 04 */	stw r0, 4(r1)
@@ -982,7 +980,6 @@ lbl_800076F4:
 /* 80007744 00004684  7C 08 03 A6 */	mtlr r0
 /* 80007748 00004688  4E 80 00 20 */	blr 
 
-.global nextSrcData__FPUc
 nextSrcData__FPUc:
 /* 8000774C 0000468C  7C 08 02 A6 */	mflr r0
 /* 80007750 00004690  38 83 00 00 */	addi r4, r3, 0
@@ -1099,24 +1096,19 @@ lbl_800078BC:
 	.incbin "baserom.dol", 0x36CBAC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2114
 $$2114:
 	.incbin "baserom.dol", 0x36CFD0, 0xC
-.global $$2115
 $$2115:
 	.incbin "baserom.dol", 0x36CFDC, 0x20
-.global $$2447
 $$2447:
 	.incbin "baserom.dol", 0x36CFFC, 0x8
 .global lbl_80370004
 lbl_80370004:
 	.incbin "baserom.dol", 0x36D004, 0x18
-.global $$2548
 $$2548:
 	.incbin "baserom.dol", 0x36D01C, 0x44
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sMessageBuffer__7JKRAram
 sMessageBuffer__7JKRAram:
 	.incbin "baserom.dol", 0x3A53F8, 0x10
 .global sMessageQueue__7JKRAram
@@ -1127,12 +1119,10 @@ __vt__7JKRAram:
 	.incbin "baserom.dol", 0x3A5428, 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$260
 $$260:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sAramCommandList__7JKRAram
 sAramCommandList__7JKRAram:
 	.skip 0xC
 
@@ -1140,39 +1130,27 @@ sAramCommandList__7JKRAram:
 .global sAramObject__7JKRAram
 sAramObject__7JKRAram:
 	.skip 0x4
-.global szpBuf
 szpBuf:
 	.skip 0x4
-.global szpEnd
 szpEnd:
 	.skip 0x4
-.global refBuf
 refBuf:
 	.skip 0x4
-.global refEnd
 refEnd:
 	.skip 0x4
-.global refCurrent
 refCurrent:
 	.skip 0x4
-.global srcOffset
 srcOffset:
 	.skip 0x4
-.global transLeft
 transLeft:
 	.skip 0x4
-.global srcLimit
 srcLimit:
 	.skip 0x4
-.global srcAddress
 srcAddress:
 	.skip 0x4
-.global fileOffset
 fileOffset:
 	.skip 0x4
-.global readCount
 readCount:
 	.skip 0x4
-.global maxDest
 maxDest:
 	.skip 0x8

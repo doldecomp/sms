@@ -1340,7 +1340,6 @@ lbl_8009FE60:
 /* 8009FE90 0009CDD0  7C 08 03 A6 */	mtlr r0
 /* 8009FE94 0009CDD4  4E 80 00 20 */	blr 
 
-.global OnReset
 OnReset:
 /* 8009FE98 0009CDD8  7C 08 02 A6 */	mflr r0
 /* 8009FE9C 0009CDDC  2C 03 00 00 */	cmpwi r3, 0
@@ -1367,7 +1366,6 @@ lbl_8009FED8:
 /* 8009FEE4 0009CE24  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global ResetFunctionInfo
 ResetFunctionInfo:
 	.incbin "baserom.dol", 0x3AE380, 0x20
 

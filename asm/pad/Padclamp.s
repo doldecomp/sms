@@ -168,6 +168,5 @@ lbl_8009B280:
 /* 8009B2A8 000981E8  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global ClampRegion
 ClampRegion:
 	.incbin "baserom.dol", 0x3E3290, 0x8

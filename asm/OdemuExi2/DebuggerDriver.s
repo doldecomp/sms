@@ -760,26 +760,19 @@ lbl_800AEFD4:
 /* 800AEFDC 000ABF1C  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global SendCount
 SendCount:
 	.incbin "baserom.dol", 0x3E32E8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global MTRCallback
 MTRCallback:
 	.skip 0x4
-.global DBGCallback
 DBGCallback:
 	.skip 0x4
-.global SendMailData
 SendMailData:
 	.skip 0x4
-.global RecvDataLeng
 RecvDataLeng:
 	.skip 0x4
-.global pEXIInputFlag
 pEXIInputFlag:
 	.skip 0x4
-.global EXIInputFlag
 EXIInputFlag:
 	.skip 0x4

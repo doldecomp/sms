@@ -1446,33 +1446,24 @@ __ct__16RumbleChannelMgrFv:
 /* 800D0910 000CD850  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mMotorCountLimit__9RumbleMgr
 mMotorCountLimit__9RumbleMgr:
 	.incbin "baserom.dol", 0x3E3330, 0x4
-.global mMotorTimerPeriod__9RumbleMgr
 mMotorTimerPeriod__9RumbleMgr:
 	.incbin "baserom.dol", 0x3E3334, 0x4
-.global mPowerThreshold__9RumbleMgr
 mPowerThreshold__9RumbleMgr:
 	.incbin "baserom.dol", 0x3E3338, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21767
 $$21767:
 	.incbin "baserom.dol", 0x3E4B90, 0x4
-.global $$21790
 $$21790:
 	.incbin "baserom.dol", 0x3E4B94, 0x4
-.global $$21841
 $$21841:
 	.incbin "baserom.dol", 0x3E4B98, 0x4
-.global $$22244
 $$22244:
 	.incbin "baserom.dol", 0x3E4B9C, 0x4
-.global $$22245
 $$22245:
 	.incbin "baserom.dol", 0x3E4BA0, 0x4
-.global $$22249
 $$22249:
 	.incbin "baserom.dol", 0x3E4BA4, 0x4
 

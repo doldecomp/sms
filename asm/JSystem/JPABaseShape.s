@@ -592,21 +592,15 @@ __vt__12JPABaseShape:
 	.incbin "baserom.dol", 0x3A9CD0, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21505
 $$21505:
 	.incbin "baserom.dol", 0x3E45F8, 0x4
-.global $$21506
 $$21506:
 	.incbin "baserom.dol", 0x3E45FC, 0x4
-.global $$21508
 $$21508:
 	.incbin "baserom.dol", 0x3E4600, 0x8
-.global $$21512
 $$21512:
 	.incbin "baserom.dol", 0x3E4608, 0x8
-.global $$21570
 $$21570:
 	.incbin "baserom.dol", 0x3E4610, 0x4
-.global $$21571
 $$21571:
 	.incbin "baserom.dol", 0x3E4614, 0x4

@@ -1252,43 +1252,31 @@ lbl_800AB328:
 /* 800AB334 000A8274  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$292
 $$292:
 	.incbin "baserom.dol", 0x3AE8E8, 0xF4
-.global $$2133
 $$2133:
 	.incbin "baserom.dol", 0x3AE9DC, 0xF4
-.global $$2168
 $$2168:
 	.incbin "baserom.dol", 0x3AEAD0, 0x40
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global GX2HWFiltConv
 GX2HWFiltConv:
 	.incbin "baserom.dol", 0x3E32E0, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2164
 $$2164:
 	.incbin "baserom.dol", 0x3E4828, 0x8
-.global $$2166
 $$2166:
 	.incbin "baserom.dol", 0x3E4830, 0x8
-.global $$2192
 $$2192:
 	.incbin "baserom.dol", 0x3E4838, 0x4
-.global $$2193
 $$2193:
 	.incbin "baserom.dol", 0x3E483C, 0x4
-.global $$2194
 $$2194:
 	.incbin "baserom.dol", 0x3E4840, 0x4
-.global $$2195
 $$2195:
 	.incbin "baserom.dol", 0x3E4844, 0x4
-.global $$2196
 $$2196:
 	.incbin "baserom.dol", 0x3E4848, 0x4
-.global $$2197
 $$2197:
 	.incbin "baserom.dol", 0x3E484C, 0x4

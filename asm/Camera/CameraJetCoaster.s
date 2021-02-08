@@ -999,91 +999,63 @@ lbl_803614C8:
 	.incbin "baserom.dol", 0x36CF4C, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global sFixCameraPos$localstatic0$drawJetCoasterBalloonMessage___15CPolarSubCameraFv
 sFixCameraPos$localstatic0$drawJetCoasterBalloonMessage___15CPolarSubCameraFv:
 	.incbin "baserom.dol", 0x3A3A88, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22347
 $$22347:
 	.incbin "baserom.dol", 0x3EC538, 0x8
-.global $$22361
 $$22361:
 	.incbin "baserom.dol", 0x3EC540, 0x4
-.global $$22362
 $$22362:
 	.incbin "baserom.dol", 0x3EC544, 0x4
-.global $$22363
 $$22363:
 	.incbin "baserom.dol", 0x3EC548, 0x4
-.global $$22364
 $$22364:
 	.incbin "baserom.dol", 0x3EC54C, 0x4
-.global $$22711
 $$22711:
 	.incbin "baserom.dol", 0x3EC550, 0x4
-.global $$22712
 $$22712:
 	.incbin "baserom.dol", 0x3EC554, 0x4
-.global $$22713
 $$22713:
 	.incbin "baserom.dol", 0x3EC558, 0x4
-.global $$22714
 $$22714:
 	.incbin "baserom.dol", 0x3EC55C, 0x4
-.global $$22715
 $$22715:
 	.incbin "baserom.dol", 0x3EC560, 0x4
-.global $$22716
 $$22716:
 	.incbin "baserom.dol", 0x3EC564, 0x4
-.global $$22717
 $$22717:
 	.incbin "baserom.dol", 0x3EC568, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22284
 $$22284:
 	.skip 0xC
-.global $$22285
 $$22285:
 	.skip 0xC
-.global $$22286
 $$22286:
 	.skip 0xC
-.global $$22287
 $$22287:
 	.skip 0xC
-.global $$22288
 $$22288:
 	.skip 0xC
-.global $$22289
 $$22289:
 	.skip 0xC
-.global $$22290
 $$22290:
 	.skip 0xC
-.global $$22291
 $$22291:
 	.skip 0xC
-.global $$22292
 $$22292:
 	.skip 0xC
-.global $$22293
 $$22293:
 	.skip 0xC
-.global $$22294
 $$22294:
 	.skip 0xC
-.global $$22295
 $$22295:
 	.skip 0xC
-.global $$22296
 $$22296:
 	.skip 0xC
-.global $$22297
 $$22297:
 	.skip 0xC
-.global $$22298
 $$22298:
 	.skip 0x10

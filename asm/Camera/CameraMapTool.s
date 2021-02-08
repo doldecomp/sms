@@ -124,10 +124,8 @@ __vt__14TCameraMapTool:
 	.incbin "baserom.dol", 0x3E1C60, 0x20
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21652
 $$21652:
 	.incbin "baserom.dol", 0x3EC4F8, 0x4
-.global $$21653
 $$21653:
 	.incbin "baserom.dol", 0x3EC4FC, 0x4
 

@@ -29,12 +29,9 @@ lbl_802006D8:
 /* 802006DC 001FD61C  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21680
 $$21680:
 	.incbin "baserom.dol", 0x3E90B0, 0x4
-.global $$21681
 $$21681:
 	.incbin "baserom.dol", 0x3E90B4, 0x4
-.global $$21683
 $$21683:
 	.incbin "baserom.dol", 0x3E90B8, 0x8

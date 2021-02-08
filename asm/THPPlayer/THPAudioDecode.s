@@ -264,26 +264,19 @@ lbl_800BDD38:
 /* 800BDD48 000BAC88  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global AudioDecodeThread
 AudioDecodeThread:
 	.skip 0x310
-.global AudioDecodeThreadStack
 AudioDecodeThreadStack:
 	.skip 0x1000
-.global FreeAudioBufferQueue
 FreeAudioBufferQueue:
 	.skip 0x20
-.global DecodedAudioBufferQueue
 DecodedAudioBufferQueue:
 	.skip 0x20
-.global FreeAudioBufferMessage
 FreeAudioBufferMessage:
 	.skip 0xC
-.global DecodedAudioBufferMessage
 DecodedAudioBufferMessage:
 	.skip 0x14
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global AudioDecodeThreadCreated
 AudioDecodeThreadCreated:
 	.skip 0x8

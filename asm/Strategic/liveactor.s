@@ -1496,7 +1496,6 @@ lbl_80112480:
 /* 80112490 0010F3D0  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 80112494 0010F3D4  4E 80 00 20 */	blr 
 
-.global MsWrap$$0f$$1__Ffff
 MsWrap$$0f$$1__Ffff:
 /* 80112498 0010F3D8  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 8011249C 0010F3DC  4C 41 13 82 */	cror 2, 1, 2
@@ -1949,13 +1948,10 @@ $$232$$2__dt__10TLiveActorFv:
 	.incbin "baserom.dol", 0x36CC54, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22836
 $$22836:
 	.incbin "baserom.dol", 0x376F78, 0x10
-.global $$22837
 $$22837:
 	.incbin "baserom.dol", 0x376F88, 0x24
-.global $$23117
 $$23117:
 	.incbin "baserom.dol", 0x376FAC, 0x24
 
@@ -1970,83 +1966,57 @@ mVelocityMinY__10TLiveActor:
 	.incbin "baserom.dol", 0x3E3478, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22838
 $$22838:
 	.incbin "baserom.dol", 0x3E5348, 0x4
-.global $$22872
 $$22872:
 	.incbin "baserom.dol", 0x3E534C, 0x4
-.global $$22873
 $$22873:
 	.incbin "baserom.dol", 0x3E5350, 0x4
-.global $$22935
 $$22935:
 	.incbin "baserom.dol", 0x3E5354, 0x4
-.global $$23064
 $$23064:
 	.incbin "baserom.dol", 0x3E5358, 0x4
-.global $$23163
 $$23163:
 	.incbin "baserom.dol", 0x3E535C, 0x4
-.global $$23282
 $$23282:
 	.incbin "baserom.dol", 0x3E5360, 0x4
-.global $$23344
 $$23344:
 	.incbin "baserom.dol", 0x3E5364, 0x4
-.global $$23345
 $$23345:
 	.incbin "baserom.dol", 0x3E5368, 0x4
-.global $$23346
 $$23346:
 	.incbin "baserom.dol", 0x3E536C, 0x4
-.global $$23347
 $$23347:
 	.incbin "baserom.dol", 0x3E5370, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23355
 $$23355:
 	.skip 0xC
-.global $$23356
 $$23356:
 	.skip 0xC
-.global $$23357
 $$23357:
 	.skip 0xC
-.global $$23358
 $$23358:
 	.skip 0xC
-.global $$23359
 $$23359:
 	.skip 0xC
-.global $$23360
 $$23360:
 	.skip 0xC
-.global $$23361
 $$23361:
 	.skip 0xC
-.global $$23362
 $$23362:
 	.skip 0xC
-.global $$23363
 $$23363:
 	.skip 0xC
-.global $$23364
 $$23364:
 	.skip 0xC
-.global $$23365
 $$23365:
 	.skip 0xC
-.global $$23366
 $$23366:
 	.skip 0xC
-.global $$23367
 $$23367:
 	.skip 0xC
-.global $$23368
 $$23368:
 	.skip 0xC
-.global $$23369
 $$23369:
 	.skip 0x10

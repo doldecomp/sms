@@ -2253,52 +2253,36 @@ $$232$$2__dt__22TBossHanachanPartsHeadFv:
 	.incbin "baserom.dol", 0x36CEE0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x39CED0, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x39CEDC, 0x14
-.global $$22220
 $$22220:
 	.incbin "baserom.dol", 0x39CEF0, 0x30
-.global $$22221
 $$22221:
 	.incbin "baserom.dol", 0x39CF20, 0x38
-.global $$22222
 $$22222:
 	.incbin "baserom.dol", 0x39CF58, 0x34
-.global $$22223
 $$22223:
 	.incbin "baserom.dol", 0x39CF8C, 0x24
-.global $$22360
 $$22360:
 	.incbin "baserom.dol", 0x39CFB0, 0xC
-.global $$22362
 $$22362:
 	.incbin "baserom.dol", 0x39CFBC, 0xC
-.global $$22707
 $$22707:
 	.incbin "baserom.dol", 0x39CFC8, 0x28
-.global $$22708
 $$22708:
 	.incbin "baserom.dol", 0x39CFF0, 0x28
-.global sBodyBckIndex$2891
 sBodyBckIndex$2891:
 	.incbin "baserom.dol", 0x39D018, 0x48
-.global sHeadBckIndex$2906
 sHeadBckIndex$2906:
 	.incbin "baserom.dol", 0x39D060, 0x48
-.global sHeadBtpIndex$2907
 sHeadBtpIndex$2907:
 	.incbin "baserom.dol", 0x39D0A8, 0x48
-.global sHeadBtkIndex$2908
 sHeadBtkIndex$2908:
 	.incbin "baserom.dol", 0x39D0F0, 0x48
-.global $$23645
 $$23645:
 	.incbin "baserom.dol", 0x39D138, 0x14
-.global $$23718
 $$23718:
 	.incbin "baserom.dol", 0x39D14C, 0x1C
 
@@ -2306,7 +2290,6 @@ $$23718:
 .global __vt__22TBossHanachanPartsHead
 __vt__22TBossHanachanPartsHead:
 	.incbin "baserom.dol", 0x3DC620, 0x100
-.global $$23085
 $$23085:
 	.incbin "baserom.dol", 0x3DC720, 0x48
 .global __vt__13TFootHitActor
@@ -2317,124 +2300,85 @@ __vt__22TBossHanachanPartsBody:
 	.incbin "baserom.dol", 0x3DC80C, 0x104
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global cMapCollisionJointName
 cMapCollisionJointName:
 	.incbin "baserom.dol", 0x3E3AB0, 0x4
-.global cBodyMapCollisionFileName
 cBodyMapCollisionFileName:
 	.incbin "baserom.dol", 0x3E3AB4, 0x4
-.global cHeadMapCollisionFileName
 cHeadMapCollisionFileName:
 	.incbin "baserom.dol", 0x3E3AB8, 0x4
-.global cLegJointName_L3
 cLegJointName_L3:
 	.incbin "baserom.dol", 0x3E3ABC, 0x4
-.global cLegJointName_R3
 cLegJointName_R3:
 	.incbin "baserom.dol", 0x3E3AC0, 0x4
-.global cNoseHallJointName_L
 cNoseHallJointName_L:
 	.incbin "baserom.dol", 0x3E3AC4, 0x4
-.global cNoseHallJointName_R
 cNoseHallJointName_R:
 	.incbin "baserom.dol", 0x3E3AC8, 0x4
-.global sFootJointName$2739
 sFootJointName$2739:
 	.incbin "baserom.dol", 0x3E3ACC, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22706
 $$22706:
 	.incbin "baserom.dol", 0x3EB4E8, 0x8
-.global $$22709
 $$22709:
 	.incbin "baserom.dol", 0x3EB4F0, 0x8
-.global $$22710
 $$22710:
 	.incbin "baserom.dol", 0x3EB4F8, 0x8
-.global $$22711
 $$22711:
 	.incbin "baserom.dol", 0x3EB500, 0x8
-.global $$22712
 $$22712:
 	.incbin "baserom.dol", 0x3EB508, 0x8
-.global $$22740
 $$22740:
 	.incbin "baserom.dol", 0x3EB510, 0x8
-.global $$22741
 $$22741:
 	.incbin "baserom.dol", 0x3EB518, 0x8
-.global $$23015
 $$23015:
 	.incbin "baserom.dol", 0x3EB520, 0x4
-.global $$23016
 $$23016:
 	.incbin "baserom.dol", 0x3EB524, 0x4
-.global $$23017
 $$23017:
 	.incbin "baserom.dol", 0x3EB528, 0x4
-.global $$23393
 $$23393:
 	.incbin "baserom.dol", 0x3EB52C, 0x4
-.global $$23395
 $$23395:
 	.incbin "baserom.dol", 0x3EB530, 0x8
-.global $$23421
 $$23421:
 	.incbin "baserom.dol", 0x3EB538, 0x4
-.global $$23422
 $$23422:
 	.incbin "baserom.dol", 0x3EB53C, 0x4
-.global $$23561
 $$23561:
 	.incbin "baserom.dol", 0x3EB540, 0x4
-.global $$23835
 $$23835:
 	.incbin "baserom.dol", 0x3EB544, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23816
 $$23816:
 	.skip 0xC
-.global $$23817
 $$23817:
 	.skip 0xC
-.global $$23818
 $$23818:
 	.skip 0xC
-.global $$23819
 $$23819:
 	.skip 0xC
-.global $$23820
 $$23820:
 	.skip 0xC
-.global $$23821
 $$23821:
 	.skip 0xC
-.global $$23822
 $$23822:
 	.skip 0xC
-.global $$23823
 $$23823:
 	.skip 0xC
-.global $$23824
 $$23824:
 	.skip 0xC
-.global $$23825
 $$23825:
 	.skip 0xC
-.global $$23826
 $$23826:
 	.skip 0xC
-.global $$23827
 $$23827:
 	.skip 0xC
-.global $$23828
 $$23828:
 	.skip 0xC
-.global $$23829
 $$23829:
 	.skip 0xC
-.global $$23830
 $$23830:
 	.skip 0x10

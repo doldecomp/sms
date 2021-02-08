@@ -1676,43 +1676,30 @@ __sinit_cameralib_cpp:
 	.incbin "baserom.dol", 0x36CF44, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21906
 $$21906:
 	.incbin "baserom.dol", 0x3EC250, 0x4
-.global $$21907
 $$21907:
 	.incbin "baserom.dol", 0x3EC254, 0x4
-.global $$21908
 $$21908:
 	.incbin "baserom.dol", 0x3EC258, 0x4
-.global $$21909
 $$21909:
 	.incbin "baserom.dol", 0x3EC25C, 0x4
-.global $$21910
 $$21910:
 	.incbin "baserom.dol", 0x3EC260, 0x4
-.global $$21911
 $$21911:
 	.incbin "baserom.dol", 0x3EC264, 0x4
-.global $$21912
 $$21912:
 	.incbin "baserom.dol", 0x3EC268, 0x8
-.global $$21913
 $$21913:
 	.incbin "baserom.dol", 0x3EC270, 0x8
-.global $$21915
 $$21915:
 	.incbin "baserom.dol", 0x3EC278, 0x8
-.global $$22020
 $$22020:
 	.incbin "baserom.dol", 0x3EC280, 0x4
-.global $$22403
 $$22403:
 	.incbin "baserom.dol", 0x3EC284, 0x4
-.global $$22404
 $$22404:
 	.incbin "baserom.dol", 0x3EC288, 0x8
-.global $$22407
 $$22407:
 	.incbin "baserom.dol", 0x3EC290, 0x8
 

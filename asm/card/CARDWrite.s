@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global WriteCallback
 WriteCallback:
 /* 800A4688 000A15C8  7C 08 02 A6 */	mflr r0
 /* 800A468C 000A15CC  90 01 00 04 */	stw r0, 4(r1)
@@ -103,7 +102,6 @@ lbl_800A47D8:
 /* 800A47F0 000A1730  7C 08 03 A6 */	mtlr r0
 /* 800A47F4 000A1734  4E 80 00 20 */	blr 
 
-.global EraseCallback
 EraseCallback:
 /* 800A47F8 000A1738  7C 08 02 A6 */	mflr r0
 /* 800A47FC 000A173C  90 01 00 04 */	stw r0, 4(r1)

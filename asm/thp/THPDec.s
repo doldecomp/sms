@@ -7925,96 +7925,67 @@ THPInit:
 /* 800BD4A0 000BA3E0  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global __THPJpegNaturalOrder
 __THPJpegNaturalOrder:
 	.incbin "baserom.dol", 0x36F260, 0x50
-.global __THPAANScaleFactor
 __THPAANScaleFactor:
 	.incbin "baserom.dol", 0x36F2B0, 0x40
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2243
 $$2243:
 	.incbin "baserom.dol", 0x3E48D0, 0x8
-.global $$2665
 $$2665:
 	.incbin "baserom.dol", 0x3E48D8, 0x4
-.global $$2666
 $$2666:
 	.incbin "baserom.dol", 0x3E48DC, 0x4
-.global $$2667
 $$2667:
 	.incbin "baserom.dol", 0x3E48E0, 0x4
-.global $$2668
 $$2668:
 	.incbin "baserom.dol", 0x3E48E4, 0x4
-.global $$2669
 $$2669:
 	.incbin "baserom.dol", 0x3E48E8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global __THPIDCTWorkspace
 __THPIDCTWorkspace:
 	.skip 0x100
-.global __THPLCWork512
 __THPLCWork512:
 	.skip 0xC
-.global __THPLCWork640
 __THPLCWork640:
 	.skip 0xC
-.global __THPMCUBuffer
 __THPMCUBuffer:
 	.skip 0x18
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global Ydchuff
 Ydchuff:
 	.skip 0x20
-.global Udchuff
 Udchuff:
 	.skip 0x20
-.global Vdchuff
 Vdchuff:
 	.skip 0x20
-.global Yachuff
 Yachuff:
 	.skip 0x20
-.global Uachuff
 Uachuff:
 	.skip 0x20
-.global Vachuff
 Vachuff:
 	.skip 0x4
-.global __THPHuffmanBits
 __THPHuffmanBits:
 	.skip 0x4
-.global __THPHuffmanSizeTab
 __THPHuffmanSizeTab:
 	.skip 0x4
-.global __THPHuffmanCodeTab
 __THPHuffmanCodeTab:
 	.skip 0x14
-.global Gbase
 Gbase:
 	.skip 0x20
-.global Gwid
 Gwid:
 	.skip 0x20
-.global Gq
 Gq:
 	.skip 0x4
-.global __THPOldGQR5
 __THPOldGQR5:
 	.skip 0x4
-.global __THPOldGQR6
 __THPOldGQR6:
 	.skip 0x4
-.global __THPWorkArea
 __THPWorkArea:
 	.skip 0x4
-.global __THPInfo
 __THPInfo:
 	.skip 0x4
-.global __THPInitFlag
 __THPInitFlag:
 	.skip 0x4

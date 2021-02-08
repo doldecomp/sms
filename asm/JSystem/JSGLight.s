@@ -95,6 +95,5 @@ __vt__Q26JStage6TLight:
 	.incbin "baserom.dol", 0x3A9E38, 0x60
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2118
 $$2118:
 	.incbin "baserom.dol", 0x3E4648, 0x8

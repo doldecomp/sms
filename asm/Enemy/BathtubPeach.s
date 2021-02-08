@@ -1161,54 +1161,38 @@ $$232$$2__dt__13TBathtubPeachFv:
 	.incbin "baserom.dol", 0x36CF24, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A14E0, 0xC
-.global $$22322
 $$22322:
 	.incbin "baserom.dol", 0x3A14EC, 0x14
-.global $$22561
 $$22561:
 	.incbin "baserom.dol", 0x3A1500, 0x30
-.global $$22562
 $$22562:
 	.incbin "baserom.dol", 0x3A1530, 0x38
-.global $$22563
 $$22563:
 	.incbin "baserom.dol", 0x3A1568, 0x34
-.global $$22564
 $$22564:
 	.incbin "baserom.dol", 0x3A159C, 0x24
-.global $$22850
 $$22850:
 	.incbin "baserom.dol", 0x3A15C0, 0xC
-.global $$22852
 $$22852:
 	.incbin "baserom.dol", 0x3A15CC, 0xC
-.global $$22935
 $$22935:
 	.incbin "baserom.dol", 0x3A15D8, 0x28
-.global $$22977
 $$22977:
 	.incbin "baserom.dol", 0x3A1600, 0x10
-.global entry$2976
 entry$2976:
 	.incbin "baserom.dol", 0x3A1610, 0x18
-.global $$23006
 $$23006:
 	.incbin "baserom.dol", 0x3A1628, 0x18
-.global $$23007
 $$23007:
 	.incbin "baserom.dol", 0x3A1640, 0xC
-.global $$23009
 $$23009:
 	.incbin "baserom.dol", 0x3A164C, 0xC
-.global $$23039
 $$23039:
 	.incbin "baserom.dol", 0x3A1658, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global bathtubpeach_bastable
 bathtubpeach_bastable:
 	.incbin "baserom.dol", 0x3DFF98, 0x5C
 .global __vt__20TBathtubPeachManager
@@ -1225,129 +1209,86 @@ __vt__13TBathtubPeach:
 	.incbin "baserom.dol", 0x3E0068, 0x118
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$23008
 $$23008:
 	.incbin "baserom.dol", 0x3EBE80, 0x4
-.global $$23010
 $$23010:
 	.incbin "baserom.dol", 0x3EBE84, 0x4
-.global $$23011
 $$23011:
 	.incbin "baserom.dol", 0x3EBE88, 0x8
-.global $$23012
 $$23012:
 	.incbin "baserom.dol", 0x3EBE90, 0x4
-.global $$23013
 $$23013:
 	.incbin "baserom.dol", 0x3EBE94, 0x8
-.global $$23014
 $$23014:
 	.incbin "baserom.dol", 0x3EBE9C, 0x4
-.global $$23015
 $$23015:
 	.incbin "baserom.dol", 0x3EBEA0, 0x8
-.global $$23016
 $$23016:
 	.incbin "baserom.dol", 0x3EBEA8, 0x4
-.global $$23017
 $$23017:
 	.incbin "baserom.dol", 0x3EBEAC, 0x8
-.global $$23018
 $$23018:
 	.incbin "baserom.dol", 0x3EBEB4, 0x4
-.global $$23064
 $$23064:
 	.incbin "baserom.dol", 0x3EBEB8, 0x4
-.global $$23065
 $$23065:
 	.incbin "baserom.dol", 0x3EBEBC, 0x4
-.global $$23066
 $$23066:
 	.incbin "baserom.dol", 0x3EBEC0, 0x4
-.global $$23067
 $$23067:
 	.incbin "baserom.dol", 0x3EBEC4, 0x4
-.global $$23068
 $$23068:
 	.incbin "baserom.dol", 0x3EBEC8, 0x4
-.global $$23069
 $$23069:
 	.incbin "baserom.dol", 0x3EBECC, 0x4
-.global $$23134
 $$23134:
 	.incbin "baserom.dol", 0x3EBED0, 0x4
-.global $$23135
 $$23135:
 	.incbin "baserom.dol", 0x3EBED4, 0x4
-.global $$23136
 $$23136:
 	.incbin "baserom.dol", 0x3EBED8, 0x4
-.global $$23137
 $$23137:
 	.incbin "baserom.dol", 0x3EBEDC, 0x4
-.global $$23138
 $$23138:
 	.incbin "baserom.dol", 0x3EBEE0, 0x8
-.global $$23140
 $$23140:
-	.incbin "baserom.dol", 0x3EBEE8, 0x4
-.global lbl_8041364C
-lbl_8041364C:
-	.incbin "baserom.dol", 0x3EBEEC, 0x4
-.global $$23435
+	.incbin "baserom.dol", 0x3EBEE8, 0x8
 $$23435:
 	.incbin "baserom.dol", 0x3EBEF0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22938
 $$22938:
 	.skip 0xC
-.global $$22944
 $$22944:
 	.skip 0xC
-.global $$23508
 $$23508:
 	.skip 0xC
-.global $$23509
 $$23509:
 	.skip 0xC
-.global $$23510
 $$23510:
 	.skip 0xC
-.global $$23511
 $$23511:
 	.skip 0xC
-.global $$23512
 $$23512:
 	.skip 0xC
-.global $$23513
 $$23513:
 	.skip 0xC
-.global $$23514
 $$23514:
 	.skip 0xC
-.global $$23515
 $$23515:
 	.skip 0xC
-.global $$23516
 $$23516:
 	.skip 0xC
-.global $$23517
 $$23517:
 	.skip 0xC
-.global $$23518
 $$23518:
 	.skip 0xC
-.global $$23519
 $$23519:
 	.skip 0xC
-.global $$23520
 $$23520:
 	.skip 0xC
-.global $$23521
 $$23521:
 	.skip 0xC
-.global $$23522
 $$23522:
 	.skip 0x10
 
@@ -1355,12 +1296,10 @@ $$23522:
 .global init$localstatic1$theNerve__18TNervePeachStaggerFv
 init$localstatic1$theNerve__18TNervePeachStaggerFv:
 	.skip 0x4
-.global nerve$localstatic0$theNerve__18TNervePeachStaggerFv
 nerve$localstatic0$theNerve__18TNervePeachStaggerFv:
 	.skip 0x4
 .global init$localstatic1$theNerve__17TNervePeachEscapeFv
 init$localstatic1$theNerve__17TNervePeachEscapeFv:
 	.skip 0x4
-.global nerve$localstatic0$theNerve__17TNervePeachEscapeFv
 nerve$localstatic0$theNerve__17TNervePeachEscapeFv:
 	.skip 0x4

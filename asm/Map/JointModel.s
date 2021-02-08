@@ -395,7 +395,6 @@ lbl_801DA36C:
 	.incbin "baserom.dol", 0x36CDA0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22324
 $$22324:
 	.incbin "baserom.dol", 0x38E478, 0x10
 
@@ -405,48 +404,33 @@ __vt__11TJointModel:
 	.incbin "baserom.dol", 0x3CCB80, 0x38
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22331
 $$22331:
 	.skip 0xC
-.global $$22332
 $$22332:
 	.skip 0xC
-.global $$22333
 $$22333:
 	.skip 0xC
-.global $$22334
 $$22334:
 	.skip 0xC
-.global $$22335
 $$22335:
 	.skip 0xC
-.global $$22336
 $$22336:
 	.skip 0xC
-.global $$22337
 $$22337:
 	.skip 0xC
-.global $$22338
 $$22338:
 	.skip 0xC
-.global $$22339
 $$22339:
 	.skip 0xC
-.global $$22340
 $$22340:
 	.skip 0xC
-.global $$22341
 $$22341:
 	.skip 0xC
-.global $$22342
 $$22342:
 	.skip 0xC
-.global $$22343
 $$22343:
 	.skip 0xC
-.global $$22344
 $$22344:
 	.skip 0xC
-.global $$22345
 $$22345:
 	.skip 0x10

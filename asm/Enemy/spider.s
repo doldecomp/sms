@@ -428,12 +428,9 @@ __vt__7TSpider:
 	.incbin "baserom.dol", 0x3D3DE0, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22402
 $$22402:
 	.incbin "baserom.dol", 0x3EA2D8, 0x4
-.global $$22403
 $$22403:
 	.incbin "baserom.dol", 0x3EA2DC, 0x4
-.global $$22404
 $$22404:
 	.incbin "baserom.dol", 0x3EA2E0, 0x8

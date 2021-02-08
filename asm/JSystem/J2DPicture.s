@@ -2046,21 +2046,15 @@ __vt__10J2DPicture:
 	.incbin "baserom.dol", 0x3A5BF0, 0x30
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2297
 $$2297:
 	.incbin "baserom.dol", 0x3E3E40, 0x4
-.global $$2725
 $$2725:
 	.incbin "baserom.dol", 0x3E3E44, 0x4
-.global $$2726
 $$2726:
 	.incbin "baserom.dol", 0x3E3E48, 0x8
-.global $$2728
 $$2728:
 	.incbin "baserom.dol", 0x3E3E50, 0x8
-.global $$2920
 $$2920:
 	.incbin "baserom.dol", 0x3E3E58, 0x4
-.global $$21014
 $$21014:
 	.incbin "baserom.dol", 0x3E3E5C, 0x4

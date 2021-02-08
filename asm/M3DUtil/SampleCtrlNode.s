@@ -456,6 +456,5 @@ __vt__15SampleCtrlShape:
 	.incbin "baserom.dol", 0x3B0808, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global $$21211
 $$21211:
 	.incbin "baserom.dol", 0x3E3440, 0x8

@@ -97,6 +97,5 @@ __vt__Q26JStage6TActor:
 	.incbin "baserom.dol", 0x3A9DD0, 0x68
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2126
 $$2126:
 	.incbin "baserom.dol", 0x3E4640, 0x8

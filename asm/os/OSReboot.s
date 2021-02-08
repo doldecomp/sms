@@ -157,17 +157,13 @@ lbl_800915F4:
 /* 8009161C 0008E55C  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global Header
 Header:
 	.skip 0x20
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global SaveStart
 SaveStart:
 	.skip 0x4
-.global SaveEnd
 SaveEnd:
 	.skip 0x4
-.global Prepared
 Prepared:
 	.skip 0x8

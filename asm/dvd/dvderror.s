@@ -125,6 +125,5 @@ lbl_800993D4:
 /* 800993F4 00096334  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global ErrorTable
 ErrorTable:
 	.incbin "baserom.dol", 0x3ADE78, 0x48

@@ -1936,49 +1936,34 @@ lbl_802530E8:
 	.incbin "baserom.dol", 0x36CE5C, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x391FC0, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x391FCC, 0x14
-.global $$22269
 $$22269:
 	.incbin "baserom.dol", 0x391FE0, 0x30
-.global $$22270
 $$22270:
 	.incbin "baserom.dol", 0x392010, 0x38
-.global $$22271
 $$22271:
 	.incbin "baserom.dol", 0x392048, 0x34
-.global $$22272
 $$22272:
 	.incbin "baserom.dol", 0x39207C, 0x24
-.global $$23758
 $$23758:
 	.incbin "baserom.dol", 0x3920A0, 0xC
-.global $$23894
 $$23894:
 	.incbin "baserom.dol", 0x3920AC, 0x10
-.global $$23896
 $$23896:
 	.incbin "baserom.dol", 0x3920BC, 0x10
-.global $$23898
 $$23898:
 	.incbin "baserom.dol", 0x3920CC, 0x10
-.global $$23900
 $$23900:
 	.incbin "baserom.dol", 0x3920DC, 0x10
-.global $$23901
 $$23901:
 	.incbin "baserom.dol", 0x3920EC, 0xC
-.global $$23903
 $$23903:
 	.incbin "baserom.dol", 0x3920F8, 0x10
-.global $$23904
 $$23904:
 	.incbin "baserom.dol", 0x392108, 0x10
-.global $$23905
 $$23905:
 	.incbin "baserom.dol", 0x392118, 0x18
 
@@ -1993,77 +1978,53 @@ mIsCopyAnmMtx__13TEnemyManager:
 	.incbin "baserom.dol", 0x3E38A8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$23073
 $$23073:
 	.incbin "baserom.dol", 0x3E9A10, 0x8
-.global $$23214
 $$23214:
 	.incbin "baserom.dol", 0x3E9A18, 0x4
-.global $$23262
 $$23262:
 	.incbin "baserom.dol", 0x3E9A1C, 0x4
-.global $$23704
 $$23704:
 	.incbin "baserom.dol", 0x3E9A20, 0x4
-.global $$23836
 $$23836:
 	.incbin "baserom.dol", 0x3E9A24, 0x4
-.global $$23895
 $$23895:
 	.incbin "baserom.dol", 0x3E9A28, 0x4
-.global $$23897
 $$23897:
 	.incbin "baserom.dol", 0x3E9A2C, 0x4
-.global $$23899
 $$23899:
 	.incbin "baserom.dol", 0x3E9A30, 0x4
-.global $$23902
 $$23902:
 	.incbin "baserom.dol", 0x3E9A34, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23908
 $$23908:
 	.skip 0xC
-.global $$23909
 $$23909:
 	.skip 0xC
-.global $$23910
 $$23910:
 	.skip 0xC
-.global $$23911
 $$23911:
 	.skip 0xC
-.global $$23912
 $$23912:
 	.skip 0xC
-.global $$23913
 $$23913:
 	.skip 0xC
-.global $$23914
 $$23914:
 	.skip 0xC
-.global $$23915
 $$23915:
 	.skip 0xC
-.global $$23916
 $$23916:
 	.skip 0xC
-.global $$23917
 $$23917:
 	.skip 0xC
-.global $$23918
 $$23918:
 	.skip 0xC
-.global $$23919
 $$23919:
 	.skip 0xC
-.global $$23920
 $$23920:
 	.skip 0xC
-.global $$23921
 $$23921:
 	.skip 0xC
-.global $$23922
 $$23922:
 	.skip 0x10

@@ -747,28 +747,20 @@ __sinit_MarioGamePad_cpp:
 	.incbin "baserom.dol", 0x36CC3C, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21806
 $$21806:
 	.incbin "baserom.dol", 0x3E4F48, 0x4
-.global $$21807
 $$21807:
 	.incbin "baserom.dol", 0x3E4F4C, 0x4
-.global $$22115
 $$22115:
 	.incbin "baserom.dol", 0x3E4F50, 0x4
-.global $$22116
 $$22116:
 	.incbin "baserom.dol", 0x3E4F54, 0x4
-.global $$22118
 $$22118:
 	.incbin "baserom.dol", 0x3E4F58, 0x8
-.global $$22121
 $$22121:
 	.incbin "baserom.dol", 0x3E4F60, 0x4
-.global $$22122
 $$22122:
 	.incbin "baserom.dol", 0x3E4F64, 0x4
-.global $$22128
 $$22128:
 	.incbin "baserom.dol", 0x3E4F68, 0x8
 

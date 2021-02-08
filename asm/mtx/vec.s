@@ -138,9 +138,7 @@ PSVECDistance:
 /* 8009503C 00091F7C  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2116
 $$2116:
 	.incbin "baserom.dol", 0x3E47C8, 0x4
-.global $$2117
 $$2117:
 	.incbin "baserom.dol", 0x3E47CC, 0x4

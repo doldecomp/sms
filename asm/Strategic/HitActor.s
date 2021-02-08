@@ -75,7 +75,6 @@ __ct__9THitActorFPCc:
 /* 8011D7E0 0011A720  38 21 00 28 */	addi r1, r1, 0x28
 /* 8011D7E4 0011A724  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8011D7E8 0011A728  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8011D7EC 0011A72C  D0 43 00 04 */	stfs f2, 4(r3)
@@ -200,12 +199,9 @@ __vt__9THitActor:
 	.incbin "baserom.dol", 0x3B23A0, 0xA8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21618
 $$21618:
 	.incbin "baserom.dol", 0x3E5470, 0x4
-.global $$21619
 $$21619:
 	.incbin "baserom.dol", 0x3E5474, 0x4
-.global $$21660
 $$21660:
 	.incbin "baserom.dol", 0x3E5478, 0x8

@@ -986,154 +986,105 @@ lbl_8030FCD0:
 	.incbin "baserom.dol", 0x36CEEC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x39DE00, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x39DE0C, 0x14
-.global $$22434
 $$22434:
 	.incbin "baserom.dol", 0x39DE20, 0x30
-.global $$22435
 $$22435:
 	.incbin "baserom.dol", 0x39DE50, 0x38
-.global $$22436
 $$22436:
 	.incbin "baserom.dol", 0x39DE88, 0x34
-.global $$22437
 $$22437:
 	.incbin "baserom.dol", 0x39DEBC, 0x24
-.global sSnortStepFrames
 sSnortStepFrames:
 	.incbin "baserom.dol", 0x39DEE0, 0xC
-.global $$23044
 $$23044:
 	.incbin "baserom.dol", 0x39DEEC, 0x14
-.global $$23045
 $$23045:
 	.incbin "baserom.dol", 0x39DF00, 0x14
-.global $$23046
 $$23046:
 	.incbin "baserom.dol", 0x39DF14, 0x18
-.global $$23047
 $$23047:
 	.incbin "baserom.dol", 0x39DF2C, 0x18
-.global $$23048
 $$23048:
 	.incbin "baserom.dol", 0x39DF44, 0x18
-.global $$23049
 $$23049:
 	.incbin "baserom.dol", 0x39DF5C, 0x18
-.global $$23050
 $$23050:
 	.incbin "baserom.dol", 0x39DF74, 0x14
-.global $$23051
 $$23051:
 	.incbin "baserom.dol", 0x39DF88, 0x14
-.global $$23052
 $$23052:
 	.incbin "baserom.dol", 0x39DF9C, 0x14
-.global $$23053
 $$23053:
 	.incbin "baserom.dol", 0x39DFB0, 0x18
-.global $$23054
 $$23054:
 	.incbin "baserom.dol", 0x39DFC8, 0x18
-.global $$23055
 $$23055:
 	.incbin "baserom.dol", 0x39DFE0, 0x18
-.global $$23056
 $$23056:
 	.incbin "baserom.dol", 0x39DFF8, 0x18
-.global $$23057
 $$23057:
 	.incbin "baserom.dol", 0x39E010, 0x18
-.global $$23058
 $$23058:
 	.incbin "baserom.dol", 0x39E028, 0x14
-.global $$23059
 $$23059:
 	.incbin "baserom.dol", 0x39E03C, 0x14
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global sEmitSandFrameFoot
 sEmitSandFrameFoot:
 	.incbin "baserom.dol", 0x3EB6C8, 0x8
-.global $$22839
 $$22839:
 	.incbin "baserom.dol", 0x3EB6D0, 0x8
-.global $$22840
 $$22840:
 	.incbin "baserom.dol", 0x3EB6D8, 0x8
-.global $$22841
 $$22841:
 	.incbin "baserom.dol", 0x3EB6E0, 0x8
-.global $$22842
 $$22842:
 	.incbin "baserom.dol", 0x3EB6E8, 0x4
-.global $$22843
 $$22843:
 	.incbin "baserom.dol", 0x3EB6EC, 0x4
-.global $$22865
 $$22865:
 	.incbin "baserom.dol", 0x3EB6F0, 0x4
-.global $$22974
 $$22974:
 	.incbin "baserom.dol", 0x3EB6F4, 0x4
-.global $$22975
 $$22975:
 	.incbin "baserom.dol", 0x3EB6F8, 0x4
-.global $$22976
 $$22976:
 	.incbin "baserom.dol", 0x3EB6FC, 0x4
-.global $$22978
 $$22978:
 	.incbin "baserom.dol", 0x3EB700, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22731
 $$22731:
 	.skip 0xC
-.global $$22732
 $$22732:
 	.skip 0xC
-.global $$22733
 $$22733:
 	.skip 0xC
-.global $$22734
 $$22734:
 	.skip 0xC
-.global $$22735
 $$22735:
 	.skip 0xC
-.global $$22736
 $$22736:
 	.skip 0xC
-.global $$22737
 $$22737:
 	.skip 0xC
-.global $$22738
 $$22738:
 	.skip 0xC
-.global $$22739
 $$22739:
 	.skip 0xC
-.global $$22740
 $$22740:
 	.skip 0xC
-.global $$22741
 $$22741:
 	.skip 0xC
-.global $$22742
 $$22742:
 	.skip 0xC
-.global $$22743
 $$22743:
 	.skip 0xC
-.global $$22744
 $$22744:
 	.skip 0xC
-.global $$22745
 $$22745:
 	.skip 0x10

@@ -508,65 +508,45 @@ lbl_801F0F78:
 	.incbin "baserom.dol", 0x36CDF4, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22390
 $$22390:
 	.incbin "baserom.dol", 0x3E8D80, 0x4
-.global $$22392
 $$22392:
 	.incbin "baserom.dol", 0x3E8D84, 0x4
-.global $$22396
 $$22396:
 	.incbin "baserom.dol", 0x3E8D88, 0x4
-.global $$22460
 $$22460:
 	.incbin "baserom.dol", 0x3E8D8C, 0x4
-.global $$22462
 $$22462:
 	.incbin "baserom.dol", 0x3E8D90, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22374
 $$22374:
 	.skip 0xC
-.global $$22375
 $$22375:
 	.skip 0xC
-.global $$22376
 $$22376:
 	.skip 0xC
-.global $$22377
 $$22377:
 	.skip 0xC
-.global $$22378
 $$22378:
 	.skip 0xC
-.global $$22379
 $$22379:
 	.skip 0xC
-.global $$22380
 $$22380:
 	.skip 0xC
-.global $$22381
 $$22381:
 	.skip 0xC
-.global $$22382
 $$22382:
 	.skip 0xC
-.global $$22383
 $$22383:
 	.skip 0xC
-.global $$22384
 $$22384:
 	.skip 0xC
-.global $$22385
 $$22385:
 	.skip 0xC
-.global $$22386
 $$22386:
 	.skip 0xC
-.global $$22387
 $$22387:
 	.skip 0xC
-.global $$22388
 $$22388:
 	.skip 0x10

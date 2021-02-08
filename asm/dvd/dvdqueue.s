@@ -152,6 +152,5 @@ lbl_8009924C:
 /* 8009925C 0009619C  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global WaitingQueue
 WaitingQueue:
 	.skip 0x20

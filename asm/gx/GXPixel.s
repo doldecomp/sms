@@ -518,29 +518,21 @@ GXSetFieldMode:
 /* 800ACB84 000A9AC4  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global p2f$194
 p2f$194:
 	.incbin "baserom.dol", 0x3AEB38, 0x20
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2125
 $$2125:
 	.incbin "baserom.dol", 0x3E4858, 0x4
-.global $$2126
 $$2126:
 	.incbin "baserom.dol", 0x3E485C, 0x4
-.global $$2127
 $$2127:
 	.incbin "baserom.dol", 0x3E4860, 0x8
-.global $$2128
 $$2128:
 	.incbin "baserom.dol", 0x3E4868, 0x8
-.global $$2129
 $$2129:
 	.incbin "baserom.dol", 0x3E4870, 0x8
-.global $$2130
 $$2130:
 	.incbin "baserom.dol", 0x3E4878, 0x8
-.global $$2132
 $$2132:
 	.incbin "baserom.dol", 0x3E4880, 0x8

@@ -439,7 +439,6 @@ __ct__10TBGPolDropFPCc:
 /* 80311770 0030E6B0  38 21 00 28 */	addi r1, r1, 0x28
 /* 80311774 0030E6B4  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 80311778 0030E6B8  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8031177C 0030E6BC  D0 43 00 04 */	stfs f2, 4(r3)
@@ -669,65 +668,45 @@ __vt__10TBGPolDrop:
 	.incbin "baserom.dol", 0x3DD460, 0xA0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22932
 $$22932:
 	.incbin "baserom.dol", 0x3EB740, 0x4
-.global $$22933
 $$22933:
 	.incbin "baserom.dol", 0x3EB744, 0x4
-.global $$22934
 $$22934:
 	.incbin "baserom.dol", 0x3EB748, 0x4
-.global $$22988
 $$22988:
 	.incbin "baserom.dol", 0x3EB74C, 0x4
-.global $$22989
 $$22989:
 	.incbin "baserom.dol", 0x3EB750, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23018
 $$23018:
 	.skip 0xC
-.global $$23019
 $$23019:
 	.skip 0xC
-.global $$23020
 $$23020:
 	.skip 0xC
-.global $$23021
 $$23021:
 	.skip 0xC
-.global $$23022
 $$23022:
 	.skip 0xC
-.global $$23023
 $$23023:
 	.skip 0xC
-.global $$23024
 $$23024:
 	.skip 0xC
-.global $$23025
 $$23025:
 	.skip 0xC
-.global $$23026
 $$23026:
 	.skip 0xC
-.global $$23027
 $$23027:
 	.skip 0xC
-.global $$23028
 $$23028:
 	.skip 0xC
-.global $$23029
 $$23029:
 	.skip 0xC
-.global $$23030
 $$23030:
 	.skip 0xC
-.global $$23031
 $$23031:
 	.skip 0xC
-.global $$23032
 $$23032:
 	.skip 0x10

@@ -80,26 +80,19 @@ lbl_8008338C:
 /* 800833A0 000802E0  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global atexit_funcs
 atexit_funcs:
 	.skip 0x100
-.global __atexit_funcs
 __atexit_funcs:
 	.skip 0x100
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __aborting
 __aborting:
 	.skip 0x4
-.global atexit_curr_func
 atexit_curr_func:
 	.skip 0x4
-.global __atexit_curr_func
 __atexit_curr_func:
 	.skip 0x4
-.global __stdio_exit
 __stdio_exit:
 	.skip 0x4
-.global __console_exit
 __console_exit:
 	.skip 0x8

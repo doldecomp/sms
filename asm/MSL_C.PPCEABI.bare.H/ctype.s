@@ -36,6 +36,5 @@ __ctype_map:
 .global __lower_map
 __lower_map:
 	.incbin "baserom.dol", 0x36E720, 0x100
-.global __upper_map
 __upper_map:
 	.incbin "baserom.dol", 0x36E820, 0x100

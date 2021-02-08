@@ -5262,123 +5262,85 @@ $$232$$2__dt__10TNozzleBoxFv:
 	.incbin "baserom.dol", 0x36CD14, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38A8C0, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38A8CC, 0x14
-.global $$22178
 $$22178:
 	.incbin "baserom.dol", 0x38A8E0, 0x30
-.global $$22179
 $$22179:
 	.incbin "baserom.dol", 0x38A910, 0x38
-.global $$22180
 $$22180:
 	.incbin "baserom.dol", 0x38A948, 0x34
-.global $$22181
 $$22181:
 	.incbin "baserom.dol", 0x38A97C, 0x24
-.global $$22856
 $$22856:
 	.incbin "baserom.dol", 0x38A9A0, 0xC
-.global $$23313
 $$23313:
 	.incbin "baserom.dol", 0x38A9AC, 0x14
-.global $$23314
 $$23314:
 	.incbin "baserom.dol", 0x38A9C0, 0x14
-.global $$23315
 $$23315:
 	.incbin "baserom.dol", 0x38A9D4, 0x14
-.global $$23546
 $$23546:
 	.incbin "baserom.dol", 0x38A9E8, 0x10
-.global $$23547
 $$23547:
 	.incbin "baserom.dol", 0x38A9F8, 0x28
-.global $$23548
 $$23548:
 	.incbin "baserom.dol", 0x38AA20, 0x18
-.global $$23549
 $$23549:
 	.incbin "baserom.dol", 0x38AA38, 0x14
-.global $$23848
 $$23848:
 	.incbin "baserom.dol", 0x38AA4C, 0x1C
-.global $$23912
 $$23912:
 	.incbin "baserom.dol", 0x38AA68, 0x18
-.global $$23913
 $$23913:
 	.incbin "baserom.dol", 0x38AA80, 0x10
-.global $$23914
 $$23914:
 	.incbin "baserom.dol", 0x38AA90, 0xC
-.global $$24022
 $$24022:
 	.incbin "baserom.dol", 0x38AA9C, 0xC
-.global $$24060
 $$24060:
 	.incbin "baserom.dol", 0x38AAA8, 0x20
-.global $$24061
 $$24061:
 	.incbin "baserom.dol", 0x38AAC8, 0x18
-.global $$24062
 $$24062:
 	.incbin "baserom.dol", 0x38AAE0, 0x1C
-.global $$24063
 $$24063:
 	.incbin "baserom.dol", 0x38AAFC, 0x18
-.global $$24267
 $$24267:
 	.incbin "baserom.dol", 0x38AB14, 0x20
-.global $$24506
 $$24506:
 	.incbin "baserom.dol", 0x38AB34, 0x24
-.global $$24524
 $$24524:
 	.incbin "baserom.dol", 0x38AB58, 0xC
-.global $$24686
 $$24686:
 	.incbin "baserom.dol", 0x38AB64, 0x20
-.global $$24687
 $$24687:
 	.incbin "baserom.dol", 0x38AB84, 0x24
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3BDB40, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3BDB4C, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3BDB58, 0x10
-.global MtxCalcTypeName
 MtxCalcTypeName:
 	.incbin "baserom.dol", 0x3BDB68, 0x10
-.global mPromiLife__6TShine
 mPromiLife__6TShine:
 	.incbin "baserom.dol", 0x3BDB78, 0x10
-.global mSenkoRate__6TShine
 mSenkoRate__6TShine:
 	.incbin "baserom.dol", 0x3BDB88, 0x10
-.global mKiraRate__6TShine
 mKiraRate__6TShine:
 	.incbin "baserom.dol", 0x3BDB98, 0x10
-.global mBowRate__6TShine
 mBowRate__6TShine:
 	.incbin "baserom.dol", 0x3BDBA8, 0x10
 .global __vt__10TNozzleBox
 __vt__10TNozzleBox:
 	.incbin "baserom.dol", 0x3BDBB8, 0x1DC
-.global $$23722
 $$23722:
 	.incbin "baserom.dol", 0x3BDD94, 0x44
-.global $$24268
 $$24268:
 	.incbin "baserom.dol", 0x3BDDD8, 0x4C
 .global __vt__11TItemNozzle
@@ -5410,166 +5372,113 @@ __vt__5TItem:
 	.incbin "baserom.dol", 0x3BED3C, 0x1E4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mAppearedScaleSpeed__5TItem
 mAppearedScaleSpeed__5TItem:
 	.incbin "baserom.dol", 0x3E3568, 0x4
-.global mCircleRateY__6TShine
 mCircleRateY__6TShine:
 	.incbin "baserom.dol", 0x3E356C, 0x4
-.global mUpSpeed__6TShine
 mUpSpeed__6TShine:
 	.incbin "baserom.dol", 0x3E3570, 0x4
-.global mSpeedDownRate__6TShine
 mSpeedDownRate__6TShine:
 	.incbin "baserom.dol", 0x3E3574, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22989
 $$22989:
 	.incbin "baserom.dol", 0x3E7C60, 0x4
-.global $$23270
 $$23270:
 	.incbin "baserom.dol", 0x3E7C64, 0x4
-.global $$23312
 $$23312:
 	.incbin "baserom.dol", 0x3E7C68, 0x8
-.global $$23316
 $$23316:
 	.incbin "baserom.dol", 0x3E7C70, 0x4
-.global $$23317
 $$23317:
 	.incbin "baserom.dol", 0x3E7C74, 0x4
-.global $$23345
 $$23345:
 	.incbin "baserom.dol", 0x3E7C78, 0x4
-.global $$23390
 $$23390:
 	.incbin "baserom.dol", 0x3E7C7C, 0x4
-.global $$23550
 $$23550:
 	.incbin "baserom.dol", 0x3E7C80, 0x4
-.global $$23551
 $$23551:
 	.incbin "baserom.dol", 0x3E7C84, 0x4
-.global $$23552
 $$23552:
 	.incbin "baserom.dol", 0x3E7C88, 0x4
-.global $$23553
 $$23553:
 	.incbin "baserom.dol", 0x3E7C8C, 0x4
-.global $$23606
 $$23606:
 	.incbin "baserom.dol", 0x3E7C90, 0x4
-.global $$23787
 $$23787:
 	.incbin "baserom.dol", 0x3E7C94, 0x4
-.global $$23788
 $$23788:
 	.incbin "baserom.dol", 0x3E7C98, 0x4
-.global $$23789
 $$23789:
 	.incbin "baserom.dol", 0x3E7C9C, 0x4
-.global $$23791
 $$23791:
 	.incbin "baserom.dol", 0x3E7CA0, 0x8
-.global $$23849
 $$23849:
 	.incbin "baserom.dol", 0x3E7CA8, 0x4
-.global $$23850
 $$23850:
 	.incbin "baserom.dol", 0x3E7CAC, 0x4
-.global $$23860
 $$23860:
 	.incbin "baserom.dol", 0x3E7CB0, 0x4
-.global $$23885
 $$23885:
 	.incbin "baserom.dol", 0x3E7CB4, 0x8
-.global $$23886
 $$23886:
 	.incbin "baserom.dol", 0x3E7CBC, 0x8
-.global $$24002
 $$24002:
 	.incbin "baserom.dol", 0x3E7CC4, 0x4
-.global $$24020
 $$24020:
 	.incbin "baserom.dol", 0x3E7CC8, 0x4
-.global $$24021
 $$24021:
 	.incbin "baserom.dol", 0x3E7CCC, 0x4
-.global $$24057
 $$24057:
 	.incbin "baserom.dol", 0x3E7CD0, 0x4
-.global $$24058
 $$24058:
 	.incbin "baserom.dol", 0x3E7CD4, 0x4
-.global $$24059
 $$24059:
 	.incbin "baserom.dol", 0x3E7CD8, 0x4
-.global $$24064
 $$24064:
 	.incbin "baserom.dol", 0x3E7CDC, 0x4
-.global $$24265
 $$24265:
 	.incbin "baserom.dol", 0x3E7CE0, 0x4
-.global $$24266
 $$24266:
 	.incbin "baserom.dol", 0x3E7CE4, 0x4
-.global $$24409
 $$24409:
 	.incbin "baserom.dol", 0x3E7CE8, 0x4
-.global $$24410
 $$24410:
 	.incbin "baserom.dol", 0x3E7CEC, 0x4
-.global $$24411
 $$24411:
 	.incbin "baserom.dol", 0x3E7CF0, 0x4
-.global $$24595
 $$24595:
 	.incbin "baserom.dol", 0x3E7CF4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$24856
 $$24856:
 	.skip 0xC
-.global $$24857
 $$24857:
 	.skip 0xC
-.global $$24858
 $$24858:
 	.skip 0xC
-.global $$24859
 $$24859:
 	.skip 0xC
-.global $$24860
 $$24860:
 	.skip 0xC
-.global $$24861
 $$24861:
 	.skip 0xC
-.global $$24862
 $$24862:
 	.skip 0xC
-.global $$24863
 $$24863:
 	.skip 0xC
-.global $$24864
 $$24864:
 	.skip 0xC
-.global $$24865
 $$24865:
 	.skip 0xC
-.global $$24866
 $$24866:
 	.skip 0xC
-.global $$24867
 $$24867:
 	.skip 0xC
-.global $$24868
 $$24868:
 	.skip 0xC
-.global $$24869
 $$24869:
 	.skip 0xC
-.global $$24870
 $$24870:
 	.skip 0x10

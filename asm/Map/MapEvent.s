@@ -390,48 +390,33 @@ __vt__9TMapEvent:
 	.incbin "baserom.dol", 0x3CCD40, 0x40
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22700
 $$22700:
 	.skip 0xC
-.global $$22701
 $$22701:
 	.skip 0xC
-.global $$22702
 $$22702:
 	.skip 0xC
-.global $$22703
 $$22703:
 	.skip 0xC
-.global $$22704
 $$22704:
 	.skip 0xC
-.global $$22705
 $$22705:
 	.skip 0xC
-.global $$22706
 $$22706:
 	.skip 0xC
-.global $$22707
 $$22707:
 	.skip 0xC
-.global $$22708
 $$22708:
 	.skip 0xC
-.global $$22709
 $$22709:
 	.skip 0xC
-.global $$22710
 $$22710:
 	.skip 0xC
-.global $$22711
 $$22711:
 	.skip 0xC
-.global $$22712
 $$22712:
 	.skip 0xC
-.global $$22713
 $$22713:
 	.skip 0xC
-.global $$22714
 $$22714:
 	.skip 0x10

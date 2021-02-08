@@ -90,7 +90,6 @@ getRandomS32__Q28JASystem6PlayerFv:
 .global CUTOFF_TO_IIR_TABLE__Q28JASystem6Player
 CUTOFF_TO_IIR_TABLE__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8808, 0x400
-.global s_key_table__Q28JASystem6Player
 s_key_table__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8C08, 0x100
 .global sAdsrDef__Q28JASystem6Player
@@ -111,34 +110,25 @@ sAdsTable__Q28JASystem6Player:
 .global sRelTable__Q28JASystem6Player
 sRelTable__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D80, 0xC
-.global sVibTable__Q28JASystem6Player
 sVibTable__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D8C, 0x24
-.global sTreTable__Q28JASystem6Player
 sTreTable__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8DB0, 0x28
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global sV0__Q28JASystem6Player
 sV0__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3E3210, 0x4
-.global sV1__Q28JASystem6Player
 sV1__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3E3214, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2127
 $$2127:
 	.incbin "baserom.dol", 0x3E4408, 0x4
-.global $$2128
 $$2128:
 	.incbin "baserom.dol", 0x3E440C, 0x4
-.global $$2129
 $$2129:
 	.incbin "baserom.dol", 0x3E4410, 0x4
-.global $$2130
 $$2130:
 	.incbin "baserom.dol", 0x3E4414, 0x4
-.global $$2134
 $$2134:
 	.incbin "baserom.dol", 0x3E4418, 0x8

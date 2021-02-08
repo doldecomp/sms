@@ -102,13 +102,10 @@ lbl_8009E788:
 /* 8009E798 0009B6D8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$216
 $$216:
 	.incbin "baserom.dol", 0x3AE208, 0x20
-.global $$217
 $$217:
 	.incbin "baserom.dol", 0x3AE228, 0xC
-.global $$218
 $$218:
 	.incbin "baserom.dol", 0x3AE234, 0xC
 

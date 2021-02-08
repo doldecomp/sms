@@ -49,7 +49,6 @@ __init_cpp_exceptions_reference:
 	.incbin "baserom.dol", 0x36CBA0, 0x4
 
 .section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
-.global __destroy_global_chain_reference
 __destroy_global_chain_reference:
 	.incbin "baserom.dol", 0x36CF80, 0x4
 .global __fini_cpp_exceptions_reference
@@ -57,6 +56,5 @@ __fini_cpp_exceptions_reference:
 	.incbin "baserom.dol", 0x36CF84, 0x4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global fragmentID
 fragmentID:
 	.incbin "baserom.dol", 0x3E3220, 0x8

@@ -645,19 +645,14 @@ $$232$$2__dt__14TAirportSwitchFv:
 	.incbin "baserom.dol", 0x36CD58, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22901
 $$22901:
 	.incbin "baserom.dol", 0x38C800, 0x1C
-.global $$22916
 $$22916:
 	.incbin "baserom.dol", 0x38C81C, 0x14
-.global $$22932
 $$22932:
 	.incbin "baserom.dol", 0x38C830, 0x18
-.global $$22933
 $$22933:
 	.incbin "baserom.dol", 0x38C848, 0x18
-.global $$22948
 $$22948:
 	.incbin "baserom.dol", 0x38C860, 0x10
 
@@ -670,59 +665,41 @@ __vt__14TAirportSwitch:
 	.incbin "baserom.dol", 0x3C786C, 0x1DC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22902
 $$22902:
 	.incbin "baserom.dol", 0x3E84C8, 0x4
-.global $$22917
 $$22917:
 	.incbin "baserom.dol", 0x3E84CC, 0x4
-.global $$22924
 $$22924:
 	.incbin "baserom.dol", 0x3E84D0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22992
 $$22992:
 	.skip 0xC
-.global $$22993
 $$22993:
 	.skip 0xC
-.global $$22994
 $$22994:
 	.skip 0xC
-.global $$22995
 $$22995:
 	.skip 0xC
-.global $$22996
 $$22996:
 	.skip 0xC
-.global $$22997
 $$22997:
 	.skip 0xC
-.global $$22998
 $$22998:
 	.skip 0xC
-.global $$22999
 $$22999:
 	.skip 0xC
-.global $$23000
 $$23000:
 	.skip 0xC
-.global $$23001
 $$23001:
 	.skip 0xC
-.global $$23002
 $$23002:
 	.skip 0xC
-.global $$23003
 $$23003:
 	.skip 0xC
-.global $$23004
 $$23004:
 	.skip 0xC
-.global $$23005
 $$23005:
 	.skip 0xC
-.global $$23006
 $$23006:
 	.skip 0x10

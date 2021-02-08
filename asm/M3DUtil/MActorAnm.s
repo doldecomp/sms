@@ -1755,30 +1755,21 @@ __vt__13MActorAnmBase:
 	.incbin "baserom.dol", 0x3B0790, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21875
 $$21875:
 	.incbin "baserom.dol", 0x3E4C08, 0x8
-.global $$21908
 $$21908:
 	.incbin "baserom.dol", 0x3E4C10, 0x4
-.global $$21909
 $$21909:
 	.incbin "baserom.dol", 0x3E4C14, 0x4
-.global $$21911
 $$21911:
 	.incbin "baserom.dol", 0x3E4C18, 0x8
-.global $$22660
 $$22660:
 	.incbin "baserom.dol", 0x3E4C20, 0x8
-.global $$22663
 $$22663:
 	.incbin "baserom.dol", 0x3E4C28, 0x8
-.global $$22666
 $$22666:
 	.incbin "baserom.dol", 0x3E4C30, 0x8
-.global $$22669
 $$22669:
 	.incbin "baserom.dol", 0x3E4C38, 0x8
-.global $$22672
 $$22672:
 	.incbin "baserom.dol", 0x3E4C40, 0x8

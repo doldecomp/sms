@@ -89,9 +89,7 @@ lbl_80013204:
 /* 80013218 00010158  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$283
 $$283:
 	.incbin "baserom.dol", 0x36DB60, 0x10
-.global $$284
 $$284:
 	.incbin "baserom.dol", 0x36DB70, 0x20

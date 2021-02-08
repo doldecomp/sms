@@ -1,16 +1,12 @@
 .include "macros.inc"
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2395
 $$2395:
 	.incbin "baserom.dol", 0x36E130, 0xC
-.global $$2415
 $$2415:
 	.incbin "baserom.dol", 0x36E13C, 0x3C
-.global $$2416
 $$2416:
 	.incbin "baserom.dol", 0x36E178, 0x10
-.global $$2417
 $$2417:
 	.incbin "baserom.dol", 0x36E188, 0x60
 

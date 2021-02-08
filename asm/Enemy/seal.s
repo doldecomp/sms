@@ -1201,43 +1201,30 @@ $$232$$2__dt__5TSealFv:
 	.incbin "baserom.dol", 0x36CEF0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21664
 $$21664:
 	.incbin "baserom.dol", 0x39E170, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x39E17C, 0x14
-.global $$22200
 $$22200:
 	.incbin "baserom.dol", 0x39E190, 0x30
-.global $$22201
 $$22201:
 	.incbin "baserom.dol", 0x39E1C0, 0x38
-.global $$22202
 $$22202:
 	.incbin "baserom.dol", 0x39E1F8, 0x34
-.global $$22203
 $$22203:
 	.incbin "baserom.dol", 0x39E22C, 0x24
-.global $$22761
 $$22761:
 	.incbin "baserom.dol", 0x39E250, 0xC
-.global $$22763
 $$22763:
 	.incbin "baserom.dol", 0x39E25C, 0xC
-.global $$22837
 $$22837:
 	.incbin "baserom.dol", 0x39E268, 0x18
-.global entry$2836
 entry$2836:
 	.incbin "baserom.dol", 0x39E280, 0x18
-.global $$23207
 $$23207:
 	.incbin "baserom.dol", 0x39E298, 0xC
-.global $$23210
 $$23210:
 	.incbin "baserom.dol", 0x39E2A4, 0xC
-.global $$23211
 $$23211:
 	.incbin "baserom.dol", 0x39E2B0, 0x18
 
@@ -1259,100 +1246,69 @@ __vt__5TSeal:
 	.incbin "baserom.dol", 0x3DD34C, 0x114
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22980
 $$22980:
 	.incbin "baserom.dol", 0x3EB720, 0x4
-.global $$23019
 $$23019:
 	.incbin "baserom.dol", 0x3EB724, 0x4
-.global $$23075
 $$23075:
 	.incbin "baserom.dol", 0x3EB728, 0x4
-.global $$23126
 $$23126:
 	.incbin "baserom.dol", 0x3EB72C, 0x4
-.global $$23206
 $$23206:
 	.incbin "baserom.dol", 0x3EB730, 0x4
-.global $$23208
 $$23208:
 	.incbin "baserom.dol", 0x3EB734, 0x4
-.global $$23209
 $$23209:
 	.incbin "baserom.dol", 0x3EB738, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22839
 $$22839:
 	.skip 0xC
-.global $$22857
 $$22857:
 	.skip 0xC
-.global $$22873
 $$22873:
 	.skip 0xC
-.global $$23268
 $$23268:
 	.skip 0xC
-.global $$23269
 $$23269:
 	.skip 0xC
-.global $$23270
 $$23270:
 	.skip 0xC
-.global $$23271
 $$23271:
 	.skip 0xC
-.global $$23272
 $$23272:
 	.skip 0xC
-.global $$23273
 $$23273:
 	.skip 0xC
-.global $$23274
 $$23274:
 	.skip 0xC
-.global $$23275
 $$23275:
 	.skip 0xC
-.global $$23276
 $$23276:
 	.skip 0xC
-.global $$23277
 $$23277:
 	.skip 0xC
-.global $$23278
 $$23278:
 	.skip 0xC
-.global $$23279
 $$23279:
 	.skip 0xC
-.global $$23280
 $$23280:
 	.skip 0xC
-.global $$23281
 $$23281:
 	.skip 0xC
-.global $$23282
 $$23282:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global init$2840
 init$2840:
 	.skip 0x4
-.global instance$2838
 instance$2838:
 	.skip 0x4
-.global init$2858
 init$2858:
 	.skip 0x4
-.global instance$2856
 instance$2856:
 	.skip 0x4
-.global init$2874
 init$2874:
 	.skip 0x4
-.global instance$2872
 instance$2872:
 	.skip 0x4

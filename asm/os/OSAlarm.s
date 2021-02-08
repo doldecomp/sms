@@ -481,6 +481,5 @@ DecrementerExceptionHandler:
 /* 8008D52C 0008A46C  4B FF FD 84 */	b DecrementerExceptionCallback
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global AlarmQueue
 AlarmQueue:
 	.skip 0x8

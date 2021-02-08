@@ -374,21 +374,15 @@ __ct__10TBoundPaneFP9J2DScreenUl:
 /* 802166DC 0021361C  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21549
 $$21549:
 	.incbin "baserom.dol", 0x3E9240, 0x4
-.global $$21550
 $$21550:
 	.incbin "baserom.dol", 0x3E9244, 0x4
-.global $$21551
 $$21551:
 	.incbin "baserom.dol", 0x3E9248, 0x4
-.global $$21552
 $$21552:
 	.incbin "baserom.dol", 0x3E924C, 0x4
-.global $$21553
 $$21553:
 	.incbin "baserom.dol", 0x3E9250, 0x8
-.global $$21555
 $$21555:
 	.incbin "baserom.dol", 0x3E9258, 0x8

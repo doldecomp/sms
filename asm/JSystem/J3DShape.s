@@ -902,19 +902,14 @@ __sinit_J3DShape_cpp:
 	.incbin "baserom.dol", 0x36CBC4, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2952
 $$2952:
 	.incbin "baserom.dol", 0x3A68A0, 0xC
-.global $$2953
 $$2953:
 	.incbin "baserom.dol", 0x3A68AC, 0xC
-.global $$2954
 $$2954:
 	.incbin "baserom.dol", 0x3A68B8, 0xC
-.global $$2955
 $$2955:
 	.incbin "baserom.dol", 0x3A68C4, 0xC
-.global mtxLoadPipeline__11J3DShapeMtx
 mtxLoadPipeline__11J3DShapeMtx:
 	.incbin "baserom.dol", 0x3A68D0, 0x30
 .global __vt__12J3DShapeDraw
@@ -931,11 +926,9 @@ __vt__11J3DShapeMtx:
 	.incbin "baserom.dol", 0x3A694C, 0x34
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2994
 $$2994:
 	.incbin "baserom.dol", 0x3E3F48, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global currentPipeline__11J3DShapeMtx
 currentPipeline__11J3DShapeMtx:
 	.skip 0x8

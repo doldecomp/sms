@@ -1137,18 +1137,13 @@ __vt__29TSolidStack$$0PC12TBGCheckData$$1:
 	.incbin "baserom.dol", 0x3D3F78, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22687
 $$22687:
 	.incbin "baserom.dol", 0x3EA320, 0x4
-.global $$22688
 $$22688:
 	.incbin "baserom.dol", 0x3EA324, 0x4
-.global $$22689
 $$22689:
 	.incbin "baserom.dol", 0x3EA328, 0x4
-.global $$22690
 $$22690:
 	.incbin "baserom.dol", 0x3EA32C, 0x4
-.global $$22691
 $$22691:
 	.incbin "baserom.dol", 0x3EA330, 0x8

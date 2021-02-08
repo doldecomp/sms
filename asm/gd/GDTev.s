@@ -669,6 +669,5 @@ lbl_800B27F8:
 /* 800B2868 000AF7A8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global c2r$382
 c2r$382:
 	.incbin "baserom.dol", 0x3AECF8, 0x10

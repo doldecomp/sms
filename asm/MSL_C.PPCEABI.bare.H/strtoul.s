@@ -362,6 +362,5 @@ lbl_80086374:
 /* 800863A4 000832E4  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2410
 $$2410:
 	.incbin "baserom.dol", 0x3ABEF8, 0x48

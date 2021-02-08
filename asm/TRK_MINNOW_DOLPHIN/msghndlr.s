@@ -1406,9 +1406,7 @@ lbl_80089DB0:
 /* 80089DCC 00086D0C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2175
 $$2175:
 	.incbin "baserom.dol", 0x3ABFE0, 0x1C
-.global $$2214
 $$2214:
 	.incbin "baserom.dol", 0x3ABFFC, 0x1C

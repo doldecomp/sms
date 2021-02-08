@@ -97,10 +97,8 @@ startTrample__11TNpcTrampleFv:
 /* 80179A00 00176940  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21981
 $$21981:
 	.incbin "baserom.dol", 0x3E6650, 0x8
-.global $$21990
 $$21990:
 	.incbin "baserom.dol", 0x3E6658, 0x8
 

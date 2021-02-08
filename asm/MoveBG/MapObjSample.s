@@ -257,48 +257,33 @@ __vt__11TGateShadow:
 	.incbin "baserom.dol", 0x3C5AA0, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22483
 $$22483:
 	.skip 0xC
-.global $$22484
 $$22484:
 	.skip 0xC
-.global $$22485
 $$22485:
 	.skip 0xC
-.global $$22486
 $$22486:
 	.skip 0xC
-.global $$22487
 $$22487:
 	.skip 0xC
-.global $$22488
 $$22488:
 	.skip 0xC
-.global $$22489
 $$22489:
 	.skip 0xC
-.global $$22490
 $$22490:
 	.skip 0xC
-.global $$22491
 $$22491:
 	.skip 0xC
-.global $$22492
 $$22492:
 	.skip 0xC
-.global $$22493
 $$22493:
 	.skip 0xC
-.global $$22494
 $$22494:
 	.skip 0xC
-.global $$22495
 $$22495:
 	.skip 0xC
-.global $$22496
 $$22496:
 	.skip 0xC
-.global $$22497
 $$22497:
 	.skip 0x10

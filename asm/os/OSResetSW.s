@@ -262,24 +262,17 @@ OSGetResetSwitchState:
 /* 80091DAC 0008ECEC  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global ResetCallback
 ResetCallback:
 	.skip 0x4
-.global Down
 Down:
 	.skip 0x4
-.global LastState
 LastState:
 	.skip 0x8
-.global HoldUp
 HoldUp:
 	.skip 0x4
-.global lbl_80409E24
 lbl_80409E24:
 	.skip 0x4
-.global HoldDown
 HoldDown:
 	.skip 0x4
-.global lbl_80409E2C
 lbl_80409E2C:
 	.skip 0x4

@@ -218,12 +218,9 @@ __vt__13JPAExtraShape:
 	.incbin "baserom.dol", 0x3A9CE0, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21509
 $$21509:
 	.incbin "baserom.dol", 0x3E4618, 0x4
-.global $$21510
 $$21510:
 	.incbin "baserom.dol", 0x3E461C, 0x4
-.global $$21511
 $$21511:
 	.incbin "baserom.dol", 0x3E4620, 0x8

@@ -488,12 +488,9 @@ __vt__15JPABaseParticle:
 	.incbin "baserom.dol", 0x3A95C8, 0x58
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21675
 $$21675:
 	.incbin "baserom.dol", 0x3E4558, 0x4
-.global $$21689
 $$21689:
 	.incbin "baserom.dol", 0x3E455C, 0x4
-.global $$21820
 $$21820:
 	.incbin "baserom.dol", 0x3E4560, 0x8

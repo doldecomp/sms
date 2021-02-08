@@ -628,9 +628,7 @@ GXClearPixMetric:
 /* 800AE55C 000AB49C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2242
 $$2242:
 	.incbin "baserom.dol", 0x3AEB58, 0x5C
-.global $$2241
 $$2241:
 	.incbin "baserom.dol", 0x3AEBB4, 0x94

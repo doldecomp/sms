@@ -575,69 +575,48 @@ __vt__12TPoolManager:
 	.incbin "baserom.dol", 0x3CAEA4, 0x44
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22679
 $$22679:
 	.incbin "baserom.dol", 0x3E8848, 0x4
-.global $$22713
 $$22713:
 	.incbin "baserom.dol", 0x3E884C, 0x4
-.global $$22733
 $$22733:
 	.incbin "baserom.dol", 0x3E8850, 0x4
-.global $$22734
 $$22734:
 	.incbin "baserom.dol", 0x3E8854, 0x4
-.global $$22742
 $$22742:
 	.incbin "baserom.dol", 0x3E8858, 0x4
-.global $$22770
 $$22770:
 	.incbin "baserom.dol", 0x3E885C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22782
 $$22782:
 	.skip 0xC
-.global $$22783
 $$22783:
 	.skip 0xC
-.global $$22784
 $$22784:
 	.skip 0xC
-.global $$22785
 $$22785:
 	.skip 0xC
-.global $$22786
 $$22786:
 	.skip 0xC
-.global $$22787
 $$22787:
 	.skip 0xC
-.global $$22788
 $$22788:
 	.skip 0xC
-.global $$22789
 $$22789:
 	.skip 0xC
-.global $$22790
 $$22790:
 	.skip 0xC
-.global $$22791
 $$22791:
 	.skip 0xC
-.global $$22792
 $$22792:
 	.skip 0xC
-.global $$22793
 $$22793:
 	.skip 0xC
-.global $$22794
 $$22794:
 	.skip 0xC
-.global $$22795
 $$22795:
 	.skip 0xC
-.global $$22796
 $$22796:
 	.skip 0x10
 

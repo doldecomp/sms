@@ -702,9 +702,7 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 /* 8006FD78 0006CCB8  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21786
 $$21786:
 	.incbin "baserom.dol", 0x3E44F8, 0x4
-.global $$21787
 $$21787:
 	.incbin "baserom.dol", 0x3E44FC, 0x4

@@ -101,7 +101,6 @@ __ct__4TSkyFPCc:
 /* 801F1ACC 001EEA0C  38 21 00 28 */	addi r1, r1, 0x28
 /* 801F1AD0 001EEA10  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801F1AD4 001EEA14  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801F1AD8 001EEA18  D0 43 00 04 */	stfs f2, 4(r3)
@@ -593,7 +592,6 @@ $$232$$2__dt__4TSkyFv:
 	.incbin "baserom.dol", 0x36CDFC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22827
 $$22827:
 	.incbin "baserom.dol", 0x38FA98, 0x18
 
@@ -603,77 +601,53 @@ __vt__4TSky:
 	.incbin "baserom.dol", 0x3CD5A8, 0xA0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22748
 $$22748:
 	.incbin "baserom.dol", 0x3E8DA8, 0x4
-.global $$22787
 $$22787:
 	.incbin "baserom.dol", 0x3E8DAC, 0x4
-.global $$22788
 $$22788:
 	.incbin "baserom.dol", 0x3E8DB0, 0x4
-.global $$22789
 $$22789:
 	.incbin "baserom.dol", 0x3E8DB4, 0x4
-.global $$22790
 $$22790:
 	.incbin "baserom.dol", 0x3E8DB8, 0x4
-.global $$22828
 $$22828:
 	.incbin "baserom.dol", 0x3E8DBC, 0x4
-.global $$22864
 $$22864:
 	.incbin "baserom.dol", 0x3E8DC0, 0x4
-.global $$22865
 $$22865:
 	.incbin "baserom.dol", 0x3E8DC4, 0x4
-.global $$22866
 $$22866:
 	.incbin "baserom.dol", 0x3E8DC8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22867
 $$22867:
 	.skip 0xC
-.global $$22868
 $$22868:
 	.skip 0xC
-.global $$22869
 $$22869:
 	.skip 0xC
-.global $$22870
 $$22870:
 	.skip 0xC
-.global $$22871
 $$22871:
 	.skip 0xC
-.global $$22872
 $$22872:
 	.skip 0xC
-.global $$22873
 $$22873:
 	.skip 0xC
-.global $$22874
 $$22874:
 	.skip 0xC
-.global $$22875
 $$22875:
 	.skip 0xC
-.global $$22876
 $$22876:
 	.skip 0xC
-.global $$22877
 $$22877:
 	.skip 0xC
-.global $$22878
 $$22878:
 	.skip 0xC
-.global $$22879
 $$22879:
 	.skip 0xC
-.global $$22880
 $$22880:
 	.skip 0xC
-.global $$22881
 $$22881:
 	.skip 0x10

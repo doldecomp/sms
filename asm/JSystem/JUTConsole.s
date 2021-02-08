@@ -1310,19 +1310,14 @@ __vt__10JUTConsole:
 	.incbin "baserom.dol", 0x3A7010, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21718
 $$21718:
 	.incbin "baserom.dol", 0x3E4078, 0x4
-.global $$21719
 $$21719:
 	.incbin "baserom.dol", 0x3E407C, 0x4
-.global $$21721
 $$21721:
 	.incbin "baserom.dol", 0x3E4080, 0x8
-.global $$21724
 $$21724:
 	.incbin "baserom.dol", 0x3E4088, 0x8
-.global $$22338
 $$22338:
 	.incbin "baserom.dol", 0x3E4090, 0x8
 
@@ -1330,9 +1325,7 @@ $$22338:
 .global sManager__17JUTConsoleManager
 sManager__17JUTConsoleManager:
 	.skip 0x4
-.global sReportConsole
 sReportConsole:
 	.skip 0x4
-.global sWarningConsole
 sWarningConsole:
 	.skip 0x8

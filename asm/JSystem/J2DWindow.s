@@ -1801,15 +1801,11 @@ __vt__Q29J2DWindow7Texture:
 	.incbin "baserom.dol", 0x3A5DA4, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21321
 $$21321:
 	.incbin "baserom.dol", 0x3E3E90, 0x4
-.global $$21322
 $$21322:
 	.incbin "baserom.dol", 0x3E3E94, 0x4
-.global $$21324
 $$21324:
 	.incbin "baserom.dol", 0x3E3E98, 0x8
-.global $$21329
 $$21329:
 	.incbin "baserom.dol", 0x3E3EA0, 0x8

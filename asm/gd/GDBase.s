@@ -117,6 +117,5 @@ GDSetOverflowCallback:
 .global __GDCurrentDL
 __GDCurrentDL:
 	.skip 0x4
-.global overflowcb
 overflowcb:
 	.skip 0x4

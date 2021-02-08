@@ -286,26 +286,19 @@ lbl_80083738:
 /* 80083754 00080694  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global bit_values
 bit_values:
 	.incbin "baserom.dol", 0x36E598, 0x48
-.global digit_values
 digit_values:
 	.incbin "baserom.dol", 0x36E5E0, 0x40
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2268
 $$2268:
 	.incbin "baserom.dol", 0x3E4658, 0x8
-.global $$2270
 $$2270:
 	.incbin "baserom.dol", 0x3E4660, 0x8
-.global $$2272
 $$2272:
 	.incbin "baserom.dol", 0x3E4668, 0x8
-.global $$2362
 $$2362:
 	.incbin "baserom.dol", 0x3E4670, 0x8
-.global $$2363
 $$2363:
 	.incbin "baserom.dol", 0x3E4678, 0x8

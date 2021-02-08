@@ -559,27 +559,19 @@ GXGetCPUFifo:
 /* 800A678C 000A36CC  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global CPUFifo
 CPUFifo:
 	.skip 0x4
-.global GPFifo
 GPFifo:
 	.skip 0x4
-.global __GXCurrentThread
 __GXCurrentThread:
 	.skip 0x4
-.global CPGPLinked
 CPGPLinked:
 	.skip 0x4
-.global GXOverflowSuspendInProgress
 GXOverflowSuspendInProgress:
 	.skip 0x4
-.global BreakPointCB
 BreakPointCB:
 	.skip 0x4
-.global __GXOverflowCount
 __GXOverflowCount:
 	.skip 0x4
-.global __GXCurrentBP
 __GXCurrentBP:
 	.skip 0x4

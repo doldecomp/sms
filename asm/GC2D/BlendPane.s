@@ -102,9 +102,7 @@ __vt__10TBlendPane:
 	.incbin "baserom.dol", 0x3CECD0, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21505
 $$21505:
 	.incbin "baserom.dol", 0x3E9668, 0x4
-.global $$21507
 $$21507:
 	.incbin "baserom.dol", 0x3E966C, 0x4

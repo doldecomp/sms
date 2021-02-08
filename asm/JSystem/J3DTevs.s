@@ -1559,18 +1559,14 @@ lbl_80038FF8:
 /* 8003912C 0003606C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2813
 $$2813:
 	.incbin "baserom.dol", 0x36DCE0, 0x30
-.global $$2814
 $$2814:
 	.incbin "baserom.dol", 0x36DD10, 0x30
-.global $$2999
 $$2999:
 	.incbin "baserom.dol", 0x36DD40, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2804
 $$2804:
 	.incbin "baserom.dol", 0x3A6C60, 0x44
 .global j3dDefaultLightInfo
@@ -1620,7 +1616,6 @@ GXTexImage3Ids:
 .global GXTexTlutIds
 GXTexTlutIds:
 	.incbin "baserom.dol", 0x3E3068, 0x8
-.global GX2HWFiltConv
 GX2HWFiltConv:
 	.incbin "baserom.dol", 0x3E3070, 0x8
 .global j3dDefaultColInfo
@@ -1673,24 +1668,18 @@ j3dDefaultZModeID:
 	.incbin "baserom.dol", 0x3E30B4, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2926
 $$2926:
 	.incbin "baserom.dol", 0x3E3FD0, 0x4
-.global $$2927
 $$2927:
 	.incbin "baserom.dol", 0x3E3FD4, 0x4
-.global $$2978
 $$2978:
 	.incbin "baserom.dol", 0x3E3FD8, 0x4
-.global $$2979
 $$2979:
 	.incbin "baserom.dol", 0x3E3FDC, 0x4
-.global $$2981
 $$2981:
 	.incbin "baserom.dol", 0x3E3FE0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global j3dTexCoordTable
 j3dTexCoordTable:
 	.skip 0x2528
 .global j3dTevSwapTableTable

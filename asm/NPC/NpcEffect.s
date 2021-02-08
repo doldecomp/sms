@@ -488,7 +488,6 @@ lbl_8017A0E8:
 /* 8017A100 00177040  38 21 00 F0 */	addi r1, r1, 0xf0
 /* 8017A104 00177044  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1:
 /* 8017A108 00177048  C0 04 00 00 */	lfs f0, 0(r4)
 /* 8017A10C 0017704C  D0 03 00 00 */	stfs f0, 0(r3)
@@ -590,7 +589,6 @@ lbl_8017A23C:
 /* 8017A25C 0017719C  38 21 00 30 */	addi r1, r1, 0x30
 /* 8017A260 001771A0  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8017A264 001771A4  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8017A268 001771A8  D0 43 00 04 */	stfs f2, 4(r3)
@@ -1160,83 +1158,57 @@ lbl_8017AA0C:
 /* 8017AA1C 0017795C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x381328, 0xC
-.global $$21700
 $$21700:
 	.incbin "baserom.dol", 0x381334, 0x14
-.global $$22153
 $$22153:
 	.incbin "baserom.dol", 0x381348, 0x30
-.global $$22154
 $$22154:
 	.incbin "baserom.dol", 0x381378, 0x38
-.global $$22155
 $$22155:
 	.incbin "baserom.dol", 0x3813B0, 0x34
-.global $$22156
 $$22156:
 	.incbin "baserom.dol", 0x3813E4, 0x24
-.global $$22336
 $$22336:
 	.incbin "baserom.dol", 0x381408, 0x10
-.global sCheckFrameMonte$localstatic0$isPolWaitCEffectEmitTime___8TBaseNPCCFv
 sCheckFrameMonte$localstatic0$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
 	.incbin "baserom.dol", 0x381418, 0x1C
-.global sCheckFrameMare$localstatic1$isPolWaitCEffectEmitTime___8TBaseNPCCFv
 sCheckFrameMare$localstatic1$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
 	.incbin "baserom.dol", 0x381434, 0xC
-.global sCheckFrameKino$localstatic2$isPolWaitCEffectEmitTime___8TBaseNPCCFv
 sCheckFrameKino$localstatic2$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
 	.incbin "baserom.dol", 0x381440, 0xC
-.global sCheckFrameMonte$localstatic0$isPolWaitLEffectEmitTime___8TBaseNPCCFv
 sCheckFrameMonte$localstatic0$isPolWaitLEffectEmitTime___8TBaseNPCCFv:
 	.incbin "baserom.dol", 0x38144C, 0x10
-.global sCheckFrameMonte$localstatic0$isPolWaitREffectEmitTime___8TBaseNPCCFv
 sCheckFrameMonte$localstatic0$isPolWaitREffectEmitTime___8TBaseNPCCFv:
 	.incbin "baserom.dol", 0x38145C, 0x10
-.global $$22696
 $$22696:
 	.incbin "baserom.dol", 0x38146C, 0xC
-.global $$22725
 $$22725:
 	.incbin "baserom.dol", 0x381478, 0xC
-.global $$22727
 $$22727:
 	.incbin "baserom.dol", 0x381484, 0xC
-.global $$22728
 $$22728:
 	.incbin "baserom.dol", 0x381490, 0xC
-.global $$22729
 $$22729:
 	.incbin "baserom.dol", 0x38149C, 0xC
-.global $$22738
 $$22738:
 	.incbin "baserom.dol", 0x3814A8, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22611
 $$22611:
 	.incbin "baserom.dol", 0x3E6660, 0x4
-.global $$22612
 $$22612:
 	.incbin "baserom.dol", 0x3E6664, 0x4
-.global $$22613
 $$22613:
 	.incbin "baserom.dol", 0x3E6668, 0x4
-.global $$22614
 $$22614:
 	.incbin "baserom.dol", 0x3E666C, 0x4
-.global $$22615
 $$22615:
 	.incbin "baserom.dol", 0x3E6670, 0x4
-.global $$22695
 $$22695:
 	.incbin "baserom.dol", 0x3E6674, 0x8
-.global $$22726
 $$22726:
 	.incbin "baserom.dol", 0x3E667C, 0x8
-.global $$22739
 $$22739:
 	.incbin "baserom.dol", 0x3E6684, 0xC

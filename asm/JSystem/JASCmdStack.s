@@ -148,9 +148,7 @@ lbl_8006192C:
 /* 80061940 0005E880  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global cmd_once
 cmd_once:
 	.skip 0x8
-.global cmd_stay
 cmd_stay:
 	.skip 0x8

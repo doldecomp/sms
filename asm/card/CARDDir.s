@@ -6,7 +6,6 @@ __CARDGetDirBlock:
 /* 800A1730 0009E670  80 63 00 84 */	lwz r3, 0x84(r3)
 /* 800A1734 0009E674  4E 80 00 20 */	blr 
 
-.global WriteCallback
 WriteCallback:
 /* 800A1738 0009E678  7C 08 02 A6 */	mflr r0
 /* 800A173C 0009E67C  90 01 00 04 */	stw r0, 4(r1)
@@ -65,7 +64,6 @@ lbl_800A17EC:
 /* 800A1800 0009E740  7C 08 03 A6 */	mtlr r0
 /* 800A1804 0009E744  4E 80 00 20 */	blr 
 
-.global EraseCallback
 EraseCallback:
 /* 800A1808 0009E748  7C 08 02 A6 */	mflr r0
 /* 800A180C 0009E74C  90 01 00 04 */	stw r0, 4(r1)

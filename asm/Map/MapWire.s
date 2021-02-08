@@ -456,7 +456,6 @@ lbl_801E8F20:
 /* 801E8F74 001E5EB4  7C 08 03 A6 */	mtlr r0
 /* 801E8F78 001E5EB8  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801E8F7C 001E5EBC  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801E8F80 001E5EC0  D0 43 00 04 */	stfs f2, 4(r3)
@@ -1893,45 +1892,32 @@ lbl_801EA438:
 	.incbin "baserom.dol", 0x36CDD8, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38F760, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x38F76C, 0x14
-.global $$22174
 $$22174:
 	.incbin "baserom.dol", 0x38F780, 0xC
-.global $$22176
 $$22176:
 	.incbin "baserom.dol", 0x38F78C, 0xC
-.global $$22579
 $$22579:
 	.incbin "baserom.dol", 0x38F798, 0x1C
-.global $$22581
 $$22581:
 	.incbin "baserom.dol", 0x38F7B4, 0x1C
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mMoveTimerSpeed__8TMapWire
 mMoveTimerSpeed__8TMapWire:
 	.incbin "baserom.dol", 0x3E37D8, 0x4
-.global mDownRateMax__8TMapWire
 mDownRateMax__8TMapWire:
 	.incbin "baserom.dol", 0x3E37DC, 0x4
-.global mEndRate__8TMapWire
 mEndRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E0, 0x4
-.global mStretchRate__8TMapWire
 mStretchRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E4, 0x4
-.global mHeightRate__8TMapWire
 mHeightRate__8TMapWire:
 	.incbin "baserom.dol", 0x3E37E8, 0x4
-.global mReleaseHeight__8TMapWire
 mReleaseHeight__8TMapWire:
 	.incbin "baserom.dol", 0x3E37EC, 0x4
-.global mFootLength__8TMapWire
 mFootLength__8TMapWire:
 	.incbin "baserom.dol", 0x3E37F0, 0x4
 .global mDrawWidth__8TMapWire
@@ -1942,98 +1928,67 @@ mDrawHeight__8TMapWire:
 	.incbin "baserom.dol", 0x3E37F8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22385
 $$22385:
 	.incbin "baserom.dol", 0x3E8CB0, 0x4
-.global $$22569
 $$22569:
 	.incbin "baserom.dol", 0x3E8CB4, 0x4
-.global $$22570
 $$22570:
 	.incbin "baserom.dol", 0x3E8CB8, 0x4
-.global $$22571
 $$22571:
 	.incbin "baserom.dol", 0x3E8CBC, 0x4
-.global $$22572
 $$22572:
 	.incbin "baserom.dol", 0x3E8CC0, 0x4
-.global $$22573
 $$22573:
 	.incbin "baserom.dol", 0x3E8CC4, 0x4
-.global $$22574
 $$22574:
 	.incbin "baserom.dol", 0x3E8CC8, 0x4
-.global $$22575
 $$22575:
 	.incbin "baserom.dol", 0x3E8CCC, 0x4
-.global $$22576
 $$22576:
 	.incbin "baserom.dol", 0x3E8CD0, 0x4
-.global $$22577
 $$22577:
 	.incbin "baserom.dol", 0x3E8CD4, 0x4
-.global $$22578
 $$22578:
 	.incbin "baserom.dol", 0x3E8CD8, 0x4
-.global $$22580
 $$22580:
 	.incbin "baserom.dol", 0x3E8CDC, 0x4
-.global $$22586
 $$22586:
 	.incbin "baserom.dol", 0x3E8CE0, 0x8
-.global $$22587
 $$22587:
 	.incbin "baserom.dol", 0x3E8CE8, 0x8
-.global $$22595
 $$22595:
 	.incbin "baserom.dol", 0x3E8CF0, 0x4
-.global $$23166
 $$23166:
 	.incbin "baserom.dol", 0x3E8CF4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22358
 $$22358:
 	.skip 0xC
-.global $$22359
 $$22359:
 	.skip 0xC
-.global $$22360
 $$22360:
 	.skip 0xC
-.global $$22361
 $$22361:
 	.skip 0xC
-.global $$22362
 $$22362:
 	.skip 0xC
-.global $$22363
 $$22363:
 	.skip 0xC
-.global $$22364
 $$22364:
 	.skip 0xC
-.global $$22365
 $$22365:
 	.skip 0xC
-.global $$22366
 $$22366:
 	.skip 0xC
-.global $$22367
 $$22367:
 	.skip 0xC
-.global $$22368
 $$22368:
 	.skip 0xC
-.global $$22369
 $$22369:
 	.skip 0xC
-.global $$22370
 $$22370:
 	.skip 0xC
-.global $$22371
 $$22371:
 	.skip 0xC
-.global $$22372
 $$22372:
 	.skip 0x10

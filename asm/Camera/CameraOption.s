@@ -375,47 +375,34 @@ lbl_80361E34:
 /* 80361E84 0035EDC4  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A3CD8, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A3CE4, 0x14
-.global $$21650
 $$21650:
 	.incbin "baserom.dol", 0x3A3CF8, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global cLoadCamName
 cLoadCamName:
 	.incbin "baserom.dol", 0x3E3CE8, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21704
 $$21704:
 	.incbin "baserom.dol", 0x3EC570, 0x4
-.global $$21705
 $$21705:
 	.incbin "baserom.dol", 0x3EC574, 0x4
-.global $$21706
 $$21706:
 	.incbin "baserom.dol", 0x3EC578, 0x4
-.global $$21707
 $$21707:
 	.incbin "baserom.dol", 0x3EC57C, 0x4
-.global $$21708
 $$21708:
 	.incbin "baserom.dol", 0x3EC580, 0x4
-.global $$21709
 $$21709:
 	.incbin "baserom.dol", 0x3EC584, 0x4
-.global $$21710
 $$21710:
 	.incbin "baserom.dol", 0x3EC588, 0x4
-.global $$21765
 $$21765:
 	.incbin "baserom.dol", 0x3EC58C, 0x4
-.global $$21767
 $$21767:
 	.incbin "baserom.dol", 0x3EC590, 0x8
 

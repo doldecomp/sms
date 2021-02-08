@@ -54,6 +54,5 @@ __vt__Q26JStage13TAmbientLight:
 	.incbin "baserom.dol", 0x3A9D10, 0x38
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2115
 $$2115:
 	.incbin "baserom.dol", 0x3E4630, 0x8

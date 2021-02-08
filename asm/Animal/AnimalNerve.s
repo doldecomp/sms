@@ -418,28 +418,21 @@ __vt__23TNerveAnimalGraphWander:
 	.incbin "baserom.dol", 0x3E2910, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22158
 $$22158:
 	.incbin "baserom.dol", 0x3EC718, 0x4
-.global $$22159
 $$22159:
 	.incbin "baserom.dol", 0x3EC71C, 0x4
-.global $$22160
 $$22160:
 	.incbin "baserom.dol", 0x3EC720, 0x8
-.global $$22162
 $$22162:
 	.incbin "baserom.dol", 0x3EC728, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22001
 $$22001:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global init$2002
 init$2002:
 	.skip 0x4
-.global instance$2000
 instance$2000:
 	.skip 0x4

@@ -998,77 +998,55 @@ lbl_800636D0:
 	.incbin "baserom.dol", 0x36CBF4, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global rootDir__Q28JASystem10HardStream
 rootDir__Q28JASystem10HardStream:
 	.incbin "baserom.dol", 0x3A87C8, 0x20
-.global $$2550
 $$2550:
 	.incbin "baserom.dol", 0x3A87E8, 0x20
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global playListMax__Q28JASystem10HardStream
 playListMax__Q28JASystem10HardStream:
 	.incbin "baserom.dol", 0x3E31E8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2275
 $$2275:
 	.incbin "baserom.dol", 0x3E43E0, 0x4
-.global $$2621
 $$2621:
 	.incbin "baserom.dol", 0x3E43E4, 0x4
-.global $$2738
 $$2738:
 	.incbin "baserom.dol", 0x3E43E8, 0x8
-.global $$2754
 $$2754:
 	.incbin "baserom.dol", 0x3E43F0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$2245
 $$2245:
 	.skip 0xC
-.global strCtrl__Q28JASystem10HardStream
 strCtrl__Q28JASystem10HardStream:
 	.skip 0x50
-.global finfo$425
 finfo$425:
 	.skip 0xB4
-.global get_addr_cmd$429
 get_addr_cmd$429:
 	.skip 0x300
-.global stop_cmd$430
 stop_cmd$430:
 	.skip 0x30
-.global finish_cmd$431
 finish_cmd$431:
 	.skip 0x30
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global useHardStreaming__Q28JASystem10HardStream
 useHardStreaming__Q28JASystem10HardStream:
 	.skip 0x4
-.global streamFiles__Q28JASystem10HardStream
 streamFiles__Q28JASystem10HardStream:
 	.skip 0x4
-.global playList__Q28JASystem10HardStream
 playList__Q28JASystem10HardStream:
 	.skip 0x4
-.global cur_finfo$426
 cur_finfo$426:
 	.skip 0x4
-.global init$427
 init$427:
 	.skip 0x1
-.global cur_addr_cmd$432
 cur_addr_cmd$432:
 	.skip 0x1
-.global init$433
 init$433:
 	.skip 0x2
-.global last_frame$577
 last_frame$577:
 	.skip 0x4
-.global init$578
 init$578:
 	.skip 0x8

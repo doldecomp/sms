@@ -171,19 +171,14 @@ getParamMaxVolumeDistance__18JAIGlobalParameterFv:
 /* 80054C4C 00051B8C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2530
 $$2530:
 	.incbin "baserom.dol", 0x36E1F8, 0x14
-.global $$2531
 $$2531:
 	.incbin "baserom.dol", 0x36E20C, 0x14
-.global $$2532
 $$2532:
 	.incbin "baserom.dol", 0x36E220, 0x14
-.global $$2533
 $$2533:
 	.incbin "baserom.dol", 0x36E234, 0xC
-.global $$2537
 $$2537:
 	.incbin "baserom.dol", 0x36E240, 0x10
 
@@ -325,13 +320,10 @@ seDistancepitchMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3194, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2534
 $$2534:
 	.incbin "baserom.dol", 0x3E4240, 0x8
-.global $$2535
 $$2535:
 	.incbin "baserom.dol", 0x3E4248, 0x8
-.global $$2536
 $$2536:
 	.incbin "baserom.dol", 0x3E4250, 0x8
 

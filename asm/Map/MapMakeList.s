@@ -960,15 +960,11 @@ allocCheckData__17TMapCollisionDataFUl:
 /* 801E4968 001E18A8  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22088
 $$22088:
 	.incbin "baserom.dol", 0x3E8B48, 0x4
-.global $$22089
 $$22089:
 	.incbin "baserom.dol", 0x3E8B4C, 0x4
-.global $$22091
 $$22091:
 	.incbin "baserom.dol", 0x3E8B50, 0x8
-.global $$22207
 $$22207:
 	.incbin "baserom.dol", 0x3E8B58, 0x8

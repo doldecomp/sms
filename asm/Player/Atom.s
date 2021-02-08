@@ -22,14 +22,11 @@ __sinit_Atom_cpp:
 	.incbin "baserom.dol", 0x36CC5C, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21908
 $$21908:
 	.incbin "baserom.dol", 0x3E5480, 0x4
-.global $$22110
 $$22110:
 	.incbin "baserom.dol", 0x3E5484, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global cDeformedTerrainCenter
 cDeformedTerrainCenter:
 	.skip 0x10

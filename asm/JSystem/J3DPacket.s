@@ -518,6 +518,5 @@ __vt__9J3DPacket:
 	.incbin "baserom.dol", 0x3A6C48, 0x18
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sInterruptFlag__13J3DDrawPacket
 sInterruptFlag__13J3DDrawPacket:
 	.skip 0x8

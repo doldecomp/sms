@@ -22,11 +22,9 @@ OSSetArenaLo:
 /* 8008DCD0 0008AC10  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global __OSArenaLo
 __OSArenaLo:
 	.incbin "baserom.dol", 0x3E3248, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __OSArenaHi
 __OSArenaHi:
 	.skip 0x8

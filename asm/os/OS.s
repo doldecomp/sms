@@ -691,95 +691,66 @@ __OSGetDIConfig:
 /* 8008CE80 00089DC0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$284
 $$284:
 	.incbin "baserom.dol", 0x3AC0C0, 0x20
-.global $$285
 $$285:
 	.incbin "baserom.dol", 0x3AC0E0, 0x18
-.global $$286
 $$286:
 	.incbin "baserom.dol", 0x3AC0F8, 0xC
-.global $$287
 $$287:
 	.incbin "baserom.dol", 0x3AC104, 0xC
-.global $$288
 $$288:
 	.incbin "baserom.dol", 0x3AC110, 0x10
-.global $$289
 $$289:
 	.incbin "baserom.dol", 0x3AC120, 0xC
-.global $$290
 $$290:
 	.incbin "baserom.dol", 0x3AC12C, 0x10
-.global $$291
 $$291:
 	.incbin "baserom.dol", 0x3AC13C, 0x10
-.global $$292
 $$292:
 	.incbin "baserom.dol", 0x3AC14C, 0x10
-.global $$293
 $$293:
 	.incbin "baserom.dol", 0x3AC15C, 0x10
-.global $$294
 $$294:
 	.incbin "baserom.dol", 0x3AC16C, 0x14
-.global $$295
 $$295:
 	.incbin "baserom.dol", 0x3AC180, 0x10
-.global $$296
 $$296:
 	.incbin "baserom.dol", 0x3AC190, 0x18
-.global __OSExceptionLocations
 __OSExceptionLocations:
 	.incbin "baserom.dol", 0x3AC1A8, 0x3C
-.global $$2130
 $$2130:
 	.incbin "baserom.dol", 0x3AC1E4, 0x1C
-.global $$2131
 $$2131:
 	.incbin "baserom.dol", 0x3AC200, 0x30
-.global $$2132
 $$2132:
 	.incbin "baserom.dol", 0x3AC230, 0x30
-.global $$2133
 $$2133:
 	.incbin "baserom.dol", 0x3AC260, 0x20
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global DriveInfo
 DriveInfo:
 	.skip 0x20
-.global DriveBlock
 DriveBlock:
 	.skip 0x30
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global BootInfo
 BootInfo:
 	.skip 0x4
-.global BI2DebugFlag
 BI2DebugFlag:
 	.skip 0x4
-.global BI2DebugFlagHolder
 BI2DebugFlagHolder:
 	.skip 0x4
-.global __OSIsGcam
 __OSIsGcam:
 	.skip 0x4
-.global AreWeInitialized
 AreWeInitialized:
 	.skip 0x4
-.global OSExceptionTable
 OSExceptionTable:
 	.skip 0x4
-.global __OSSavedRegionEnd
 __OSSavedRegionEnd:
 	.skip 0x4
-.global __OSSavedRegionStart
 __OSSavedRegionStart:
 	.skip 0x4
-.global __OSInIPL
 __OSInIPL:
 	.skip 0x8
 .global __OSStartTime

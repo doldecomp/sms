@@ -149,7 +149,6 @@ __ct__11TMarineSnowFPCc:
 /* 801F4BA8 001F1AE8  38 21 00 28 */	addi r1, r1, 0x28
 /* 801F4BAC 001F1AEC  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801F4BB0 001F1AF0  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801F4BB4 001F1AF4  D0 43 00 04 */	stfs f2, 4(r3)
@@ -162,7 +161,6 @@ $$232$$2__dt__11TMarineSnowFv:
 /* 801F4BC4 001F1B04  4B FF FD D8 */	b __dt__11TMarineSnowFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21974
 $$21974:
 	.incbin "baserom.dol", 0x38FCA0, 0x30
 
@@ -172,9 +170,7 @@ __vt__11TMarineSnow:
 	.incbin "baserom.dol", 0x3CD8F0, 0xA0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21992
 $$21992:
 	.incbin "baserom.dol", 0x3E8E20, 0x4
-.global $$21993
 $$21993:
 	.incbin "baserom.dol", 0x3E8E24, 0x4

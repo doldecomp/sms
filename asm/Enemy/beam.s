@@ -983,31 +983,22 @@ __vt__12TBeamManager:
 	.incbin "baserom.dol", 0x3DB398, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21801
 $$21801:
 	.incbin "baserom.dol", 0x3EB1B0, 0x4
-.global $$22019
 $$22019:
 	.incbin "baserom.dol", 0x3EB1B4, 0x4
-.global $$22020
 $$22020:
 	.incbin "baserom.dol", 0x3EB1B8, 0x4
-.global $$22021
 $$22021:
 	.incbin "baserom.dol", 0x3EB1BC, 0x4
-.global $$22022
 $$22022:
 	.incbin "baserom.dol", 0x3EB1C0, 0x4
-.global $$22023
 $$22023:
 	.incbin "baserom.dol", 0x3EB1C4, 0x4
-.global $$22024
 $$22024:
 	.incbin "baserom.dol", 0x3EB1C8, 0x4
-.global $$22025
 $$22025:
 	.incbin "baserom.dol", 0x3EB1CC, 0x4
-.global $$22027
 $$22027:
 	.incbin "baserom.dol", 0x3EB1D0, 0x8
 

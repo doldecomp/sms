@@ -41,6 +41,5 @@ lbl_80082BB8:
 /* 80082BB8 0007FAF8  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global fragmentinfo
 fragmentinfo:
 	.skip 0x10

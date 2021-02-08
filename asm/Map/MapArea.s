@@ -511,6 +511,5 @@ lbl_801DD164:
 /* 801DD16C 001DA0AC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22050
 $$22050:
 	.incbin "baserom.dol", 0x3E8A88, 0x8

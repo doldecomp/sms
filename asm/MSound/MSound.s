@@ -2464,11 +2464,11 @@ setCameraInfo__6MSoundFP3VecP3VecPA4_fUl:
 /* 8017EA7C 0017B9BC  90 01 00 04 */	stw r0, 4(r1)
 /* 8017EA80 0017B9C0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8017EA84 0017B9C4  40 82 00 30 */	bne lbl_8017EAB4
-/* 8017EA88 0017B9C8  3C 80 80 40 */	lis r4, $$23169@ha
+/* 8017EA88 0017B9C8  3C 80 80 40 */	lis r4, JAInullCamera@ha
 /* 8017EA8C 0017B9CC  80 C3 00 08 */	lwz r6, 8(r3)
 /* 8017EA90 0017B9D0  1C A7 00 0C */	mulli r5, r7, 0xc
-/* 8017EA94 0017B9D4  84 64 3D E8 */	lwzu r3, 0x3de8(r4)
-/* 8017EA98 0017B9D8  80 04 00 04 */	lwz r0, $$23169@l(r4)
+/* 8017EA94 0017B9D4  84 64 3D E8 */	lwzu r3, JAInullCamera@l(r4)
+/* 8017EA98 0017B9D8  80 04 00 04 */	lwz r0, 4(r4)
 /* 8017EA9C 0017B9DC  7C A6 2A 14 */	add r5, r6, r5
 /* 8017EAA0 0017B9E0  90 65 00 00 */	stw r3, 0(r5)
 /* 8017EAA4 0017B9E4  90 05 00 04 */	stw r0, 4(r5)
@@ -3626,162 +3626,113 @@ lbl_8017FA58:
 	.incbin "baserom.dol", 0x36CCDC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21912
 $$21912:
 	.incbin "baserom.dol", 0x383F58, 0xC
-.global $$21953
 $$21953:
 	.incbin "baserom.dol", 0x383F64, 0x14
-.global $$23426
 $$23426:
 	.incbin "baserom.dol", 0x383F78, 0x18
-.global $$23427
 $$23427:
 	.incbin "baserom.dol", 0x383F90, 0x18
-.global $$23428
 $$23428:
 	.incbin "baserom.dol", 0x383FA8, 0x14
-.global $$23429
 $$23429:
 	.incbin "baserom.dol", 0x383FBC, 0x10
-.global $$23430
 $$23430:
 	.incbin "baserom.dol", 0x383FCC, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global smTrackCategory__12MSSeCallBack
 smTrackCategory__12MSSeCallBack:
 	.incbin "baserom.dol", 0x3B6C48, 0x40
-.global smPolifonic__12MSSeCallBack
 smPolifonic__12MSSeCallBack:
 	.incbin "baserom.dol", 0x3B6C88, 0x10
 .global __vt__6MSound
 __vt__6MSound:
 	.incbin "baserom.dol", 0x3B6C98, 0x38
-.global $$22858
 $$22858:
 	.incbin "baserom.dol", 0x3B6CD0, 0x58
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22462
 $$22462:
 	.incbin "baserom.dol", 0x3E6718, 0x4
-.global $$22520
 $$22520:
 	.incbin "baserom.dol", 0x3E671C, 0x4
-.global $$22594
 $$22594:
 	.incbin "baserom.dol", 0x3E6720, 0x4
-.global $$22595
 $$22595:
 	.incbin "baserom.dol", 0x3E6724, 0x4
-.global $$22597
 $$22597:
 	.incbin "baserom.dol", 0x3E6728, 0x8
-.global $$22614
 $$22614:
 	.incbin "baserom.dol", 0x3E6730, 0x4
-.global $$22615
 $$22615:
 	.incbin "baserom.dol", 0x3E6734, 0x4
-.global $$22851
 $$22851:
 	.incbin "baserom.dol", 0x3E6738, 0x4
-.global $$22852
 $$22852:
 	.incbin "baserom.dol", 0x3E673C, 0x4
-.global $$22853
 $$22853:
 	.incbin "baserom.dol", 0x3E6740, 0x4
-.global $$22854
 $$22854:
 	.incbin "baserom.dol", 0x3E6744, 0x4
-.global $$22855
 $$22855:
 	.incbin "baserom.dol", 0x3E6748, 0x4
-.global $$22856
 $$22856:
 	.incbin "baserom.dol", 0x3E674C, 0x4
-.global $$22857
 $$22857:
 	.incbin "baserom.dol", 0x3E6750, 0x4
-.global $$22904
 $$22904:
 	.incbin "baserom.dol", 0x3E6754, 0x4
-.global $$22968
 $$22968:
 	.incbin "baserom.dol", 0x3E6758, 0x4
-.global $$22969
 $$22969:
 	.incbin "baserom.dol", 0x3E675C, 0x4
-.global $$22970
 $$22970:
 	.incbin "baserom.dol", 0x3E6760, 0x4
-.global $$23093
 $$23093:
 	.incbin "baserom.dol", 0x3E6764, 0x4
-.global $$23431
 $$23431:
 	.incbin "baserom.dol", 0x3E6768, 0x4
-.global $$23432
 $$23432:
 	.incbin "baserom.dol", 0x3E676C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23758
 $$23758:
 	.skip 0xC
-.global $$23759
 $$23759:
 	.skip 0xC
-.global $$23760
 $$23760:
 	.skip 0xC
-.global $$23761
 $$23761:
 	.skip 0xC
-.global $$23762
 $$23762:
 	.skip 0xC
-.global $$23763
 $$23763:
 	.skip 0xC
-.global $$23764
 $$23764:
 	.skip 0xC
-.global $$23765
 $$23765:
 	.skip 0xC
-.global $$23766
 $$23766:
 	.skip 0xC
-.global $$23767
 $$23767:
 	.skip 0xC
-.global $$23768
 $$23768:
 	.skip 0xC
-.global $$23769
 $$23769:
 	.skip 0xC
-.global $$23770
 $$23770:
 	.skip 0xC
-.global $$23771
 $$23771:
 	.skip 0xC
-.global $$23772
 $$23772:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global smWaterFilter__12MSSeCallBack
 smWaterFilter__12MSSeCallBack:
 	.skip 0x2
-.global ukuleleFlag$2052
 ukuleleFlag$2052:
 	.skip 0x1
-.global init$2053
 init$2053:
 	.skip 0x1
 .global MSGMSound

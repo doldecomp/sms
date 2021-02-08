@@ -633,19 +633,14 @@ __vt__12TBGCheckList:
 	.incbin "baserom.dol", 0x3CCC7C, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22183
 $$22183:
 	.incbin "baserom.dol", 0x3E8AC8, 0x4
-.global $$22184
 $$22184:
 	.incbin "baserom.dol", 0x3E8ACC, 0x4
-.global $$22185
 $$22185:
 	.incbin "baserom.dol", 0x3E8AD0, 0x4
-.global $$22221
 $$22221:
 	.incbin "baserom.dol", 0x3E8AD4, 0x4
-.global $$22223
 $$22223:
 	.incbin "baserom.dol", 0x3E8AD8, 0x8
 
@@ -653,49 +648,34 @@ $$22223:
 .global mIllegalCheckData__17TMapCollisionData
 mIllegalCheckData__17TMapCollisionData:
 	.skip 0x48
-.global $$22159
 $$22159:
 	.skip 0xC
-.global $$22160
 $$22160:
 	.skip 0xC
-.global $$22161
 $$22161:
 	.skip 0xC
-.global $$22162
 $$22162:
 	.skip 0xC
-.global $$22163
 $$22163:
 	.skip 0xC
-.global $$22164
 $$22164:
 	.skip 0xC
-.global $$22165
 $$22165:
 	.skip 0xC
-.global $$22166
 $$22166:
 	.skip 0xC
-.global $$22167
 $$22167:
 	.skip 0xC
-.global $$22168
 $$22168:
 	.skip 0xC
-.global $$22169
 $$22169:
 	.skip 0xC
-.global $$22170
 $$22170:
 	.skip 0xC
-.global $$22171
 $$22171:
 	.skip 0xC
-.global $$22172
 $$22172:
 	.skip 0xC
-.global $$22173
 $$22173:
 	.skip 0x10
 

@@ -423,9 +423,7 @@ __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
 	.incbin "baserom.dol", 0x3D5AB8, 0x20
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21696
 $$21696:
 	.incbin "baserom.dol", 0x3EA6B8, 0x8
-.global $$21698
 $$21698:
 	.incbin "baserom.dol", 0x3EA6C0, 0x8

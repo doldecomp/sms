@@ -1169,7 +1169,6 @@ lbl_80364818:
 /* 8036484C 0036178C  38 21 01 E0 */	addi r1, r1, 0x1e0
 /* 80364850 00361790  4E 80 00 20 */	blr 
 
-.global MsWrap$$0f$$1__Ffff
 MsWrap$$0f$$1__Ffff:
 /* 80364854 00361794  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 80364858 00361798  4C 41 13 82 */	cror 2, 1, 2
@@ -1349,75 +1348,51 @@ __vt__11TBoidLeader:
 	.incbin "baserom.dol", 0x3E2330, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22190
 $$22190:
 	.incbin "baserom.dol", 0x3EC5F0, 0x4
-.global $$22191
 $$22191:
 	.incbin "baserom.dol", 0x3EC5F4, 0x4
-.global $$22192
 $$22192:
 	.incbin "baserom.dol", 0x3EC5F8, 0x4
-.global $$22193
 $$22193:
 	.incbin "baserom.dol", 0x3EC5FC, 0x4
-.global $$22194
 $$22194:
 	.incbin "baserom.dol", 0x3EC600, 0x4
-.global $$22195
 $$22195:
 	.incbin "baserom.dol", 0x3EC604, 0x4
-.global $$22196
 $$22196:
 	.incbin "baserom.dol", 0x3EC608, 0x8
-.global $$22198
 $$22198:
 	.incbin "baserom.dol", 0x3EC610, 0x8
-.global $$22202
 $$22202:
 	.incbin "baserom.dol", 0x3EC618, 0x4
-.global $$22203
 $$22203:
 	.incbin "baserom.dol", 0x3EC61C, 0x4
-.global $$22289
 $$22289:
 	.incbin "baserom.dol", 0x3EC620, 0x4
-.global $$22290
 $$22290:
 	.incbin "baserom.dol", 0x3EC624, 0x4
-.global $$22526
 $$22526:
 	.incbin "baserom.dol", 0x3EC628, 0x4
-.global $$22527
 $$22527:
 	.incbin "baserom.dol", 0x3EC62C, 0x4
-.global $$22528
 $$22528:
 	.incbin "baserom.dol", 0x3EC630, 0x4
-.global $$22529
 $$22529:
 	.incbin "baserom.dol", 0x3EC634, 0x4
-.global $$22530
 $$22530:
 	.incbin "baserom.dol", 0x3EC638, 0x4
-.global $$22531
 $$22531:
 	.incbin "baserom.dol", 0x3EC63C, 0x4
-.global $$22532
 $$22532:
 	.incbin "baserom.dol", 0x3EC640, 0x4
-.global $$22533
 $$22533:
 	.incbin "baserom.dol", 0x3EC644, 0x4
-.global $$22577
 $$22577:
 	.incbin "baserom.dol", 0x3EC648, 0x4
-.global $$22578
 $$22578:
 	.incbin "baserom.dol", 0x3EC64C, 0x4
-.global $$22579
 $$22579:
 	.incbin "baserom.dol", 0x3EC650, 0x4
-.global $$22580
 $$22580:
 	.incbin "baserom.dol", 0x3EC654, 0x4

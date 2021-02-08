@@ -104,6 +104,5 @@ lbl_80043764:
 /* 80043784 000406C4  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2473
 $$2473:
 	.incbin "baserom.dol", 0x3E40A8, 0x8

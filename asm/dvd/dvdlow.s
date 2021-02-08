@@ -232,7 +232,6 @@ lbl_80095354:
 /* 8009536C 000922AC  7C 08 03 A6 */	mtlr r0
 /* 80095370 000922B0  4E 80 00 20 */	blr 
 
-.global AlarmHandler
 AlarmHandler:
 /* 80095374 000922B4  7C 08 02 A6 */	mflr r0
 /* 80095378 000922B8  3C 60 80 3F */	lis r3, CommandList@ha
@@ -1022,79 +1021,55 @@ __DVDLowSetWAType:
 /* 80095E90 00092DD0  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global FirstRead
 FirstRead:
 	.incbin "baserom.dol", 0x3E3268, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global CommandList
 CommandList:
 	.skip 0x40
-.global AlarmForWA
 AlarmForWA:
 	.skip 0x28
-.global AlarmForTimeout
 AlarmForTimeout:
 	.skip 0x28
-.global AlarmForBreak
 AlarmForBreak:
 	.skip 0x28
-.global Prev
 Prev:
 	.skip 0xC
-.global Curr
 Curr:
 	.skip 0x1C
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global StopAtNextInt
 StopAtNextInt:
 	.skip 0x4
-.global LastLength
 LastLength:
 	.skip 0x4
-.global Callback
 Callback:
 	.skip 0x4
-.global ResetCoverCallback
 ResetCoverCallback:
 	.skip 0x4
-.global LastResetEnd
 LastResetEnd:
 	.skip 0x4
-.global lbl_80409E54
 lbl_80409E54:
 	.skip 0x4
-.global ResetOccurred
 ResetOccurred:
 	.skip 0x4
-.global WaitingCoverClose
 WaitingCoverClose:
 	.skip 0x4
-.global Breaking
 Breaking:
 	.skip 0x4
-.global WorkAroundType
 WorkAroundType:
 	.skip 0x4
-.global WorkAroundSeekLocation
 WorkAroundSeekLocation:
 	.skip 0x8
-.global LastReadFinished
 LastReadFinished:
 	.skip 0x4
-.global lbl_80409E74
 lbl_80409E74:
 	.skip 0x4
-.global LastReadIssued
 LastReadIssued:
 	.skip 0x4
-.global lbl_80409E7C
 lbl_80409E7C:
 	.skip 0x4
-.global LastCommandWasRead
 LastCommandWasRead:
 	.skip 0x4
-.global NextCommandNumber
 NextCommandNumber:
 	.skip 0x4

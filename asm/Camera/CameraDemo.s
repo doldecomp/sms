@@ -786,41 +786,29 @@ lbl_80362968:
 /* 80362984 0035F8C4  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22027
 $$22027:
 	.incbin "baserom.dol", 0x3A3D08, 0xC
-.global $$22028
 $$22028:
 	.incbin "baserom.dol", 0x3A3D14, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21931
 $$21931:
 	.incbin "baserom.dol", 0x3EC598, 0x4
-.global $$21932
 $$21932:
 	.incbin "baserom.dol", 0x3EC59C, 0x4
-.global $$21933
 $$21933:
 	.incbin "baserom.dol", 0x3EC5A0, 0x4
-.global $$21934
 $$21934:
 	.incbin "baserom.dol", 0x3EC5A4, 0x4
-.global $$21935
 $$21935:
 	.incbin "baserom.dol", 0x3EC5A8, 0x4
-.global $$21936
 $$21936:
 	.incbin "baserom.dol", 0x3EC5AC, 0x4
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x3EC5B0, 0x8
-.global $$21939
 $$21939:
 	.incbin "baserom.dol", 0x3EC5B8, 0x8
-.global $$22042
 $$22042:
 	.incbin "baserom.dol", 0x3EC5C0, 0x8
-.global $$22133
 $$22133:
 	.incbin "baserom.dol", 0x3EC5C8, 0x8

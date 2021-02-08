@@ -320,41 +320,30 @@ Dsp_Running_Start__Fv:
 /* 800825E8 0007F528  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2440
 $$2440:
 	.incbin "baserom.dol", 0x36E4B0, 0x10
-.global $$2441
 $$2441:
 	.incbin "baserom.dol", 0x36E4C0, 0x10
-.global $$2442
 $$2442:
 	.incbin "baserom.dol", 0x36E4D0, 0x14
-.global $$2443
 $$2443:
 	.incbin "baserom.dol", 0x36E4E4, 0x14
-.global $$2444
 $$2444:
 	.incbin "baserom.dol", 0x36E4F8, 0x14
-.global $$2445
 $$2445:
 	.incbin "baserom.dol", 0x36E50C, 0x10
-.global $$2446
 $$2446:
 	.incbin "baserom.dol", 0x36E51C, 0x44
-.global $$2451
 $$2451:
 	.incbin "baserom.dol", 0x36E560, 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sync_stack
 sync_stack:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global DSP_prior_yield
 DSP_prior_yield:
 	.skip 0x4
-.global AUDIO_UPDATE_REQUEST
 AUDIO_UPDATE_REQUEST:
 	.skip 0x4
 .global DSP_prior_task

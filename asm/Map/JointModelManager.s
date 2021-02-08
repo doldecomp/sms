@@ -485,48 +485,33 @@ __vt__18TJointModelManager:
 	.incbin "baserom.dol", 0x3CCBB8, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22405
 $$22405:
 	.skip 0xC
-.global $$22406
 $$22406:
 	.skip 0xC
-.global $$22407
 $$22407:
 	.skip 0xC
-.global $$22408
 $$22408:
 	.skip 0xC
-.global $$22409
 $$22409:
 	.skip 0xC
-.global $$22410
 $$22410:
 	.skip 0xC
-.global $$22411
 $$22411:
 	.skip 0xC
-.global $$22412
 $$22412:
 	.skip 0xC
-.global $$22413
 $$22413:
 	.skip 0xC
-.global $$22414
 $$22414:
 	.skip 0xC
-.global $$22415
 $$22415:
 	.skip 0xC
-.global $$22416
 $$22416:
 	.skip 0xC
-.global $$22417
 $$22417:
 	.skip 0xC
-.global $$22418
 $$22418:
 	.skip 0xC
-.global $$22419
 $$22419:
 	.skip 0x10

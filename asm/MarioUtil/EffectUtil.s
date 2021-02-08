@@ -270,12 +270,9 @@ lbl_800CEF48:
 /* 800CEF60 000CBEA0  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21799
 $$21799:
 	.incbin "baserom.dol", 0x3E4B70, 0x4
-.global $$21800
 $$21800:
 	.incbin "baserom.dol", 0x3E4B74, 0x4
-.global $$21801
 $$21801:
 	.incbin "baserom.dol", 0x3E4B78, 0x8

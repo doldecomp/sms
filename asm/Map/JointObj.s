@@ -743,48 +743,33 @@ __vt__9TJointObj:
 	.incbin "baserom.dol", 0x3CCBE0, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22519
 $$22519:
 	.skip 0xC
-.global $$22520
 $$22520:
 	.skip 0xC
-.global $$22521
 $$22521:
 	.skip 0xC
-.global $$22522
 $$22522:
 	.skip 0xC
-.global $$22523
 $$22523:
 	.skip 0xC
-.global $$22524
 $$22524:
 	.skip 0xC
-.global $$22525
 $$22525:
 	.skip 0xC
-.global $$22526
 $$22526:
 	.skip 0xC
-.global $$22527
 $$22527:
 	.skip 0xC
-.global $$22528
 $$22528:
 	.skip 0xC
-.global $$22529
 $$22529:
 	.skip 0xC
-.global $$22530
 $$22530:
 	.skip 0xC
-.global $$22531
 $$22531:
 	.skip 0xC
-.global $$22532
 $$22532:
 	.skip 0xC
-.global $$22533
 $$22533:
 	.skip 0x10

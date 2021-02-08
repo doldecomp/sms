@@ -573,62 +573,43 @@ lbl_80087AF8:
 /* 80087AFC 00084A3C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global __log2_F
 __log2_F:
 	.incbin "baserom.dol", 0x36EFA8, 0x204
-.global __two_to_x
 __two_to_x:
 	.incbin "baserom.dol", 0x36F1AC, 0x24
-.global __exp_to_x$105
 __exp_to_x$105:
 	.incbin "baserom.dol", 0x36F1D0, 0x20
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global __log2e_m1$localstatic0$__log2f__Ff
 __log2e_m1$localstatic0$__log2f__Ff:
 	.incbin "baserom.dol", 0x3E4748, 0x8
-.global $$293
 $$293:
 	.incbin "baserom.dol", 0x3E4750, 0x4
-.global lbl_8040BEB4
 lbl_8040BEB4:
 	.incbin "baserom.dol", 0x3E4754, 0x4
-.global _inf
 _inf:
 	.incbin "baserom.dol", 0x3E4758, 0x4
-.global _nan
 _nan:
 	.incbin "baserom.dol", 0x3E475C, 0x4
-.global $$2246
 $$2246:
 	.incbin "baserom.dol", 0x3E4760, 0x4
-.global $$2247
 $$2247:
 	.incbin "baserom.dol", 0x3E4764, 0x4
-.global $$2248
 $$2248:
 	.incbin "baserom.dol", 0x3E4768, 0x4
-.global $$2249
 $$2249:
 	.incbin "baserom.dol", 0x3E476C, 0x4
-.global $$2250
 $$2250:
 	.incbin "baserom.dol", 0x3E4770, 0x4
-.global $$2251
 $$2251:
 	.incbin "baserom.dol", 0x3E4774, 0x4
-.global $$2253
 $$2253:
 	.incbin "baserom.dol", 0x3E4778, 0x8
-.global $$2259
 $$2259:
 	.incbin "baserom.dol", 0x3E4780, 0x4
-.global $$2260
 $$2260:
 	.incbin "baserom.dol", 0x3E4784, 0x4
-.global $$2261
 $$2261:
 	.incbin "baserom.dol", 0x3E4788, 0x4
-.global $$2262
 $$2262:
 	.incbin "baserom.dol", 0x3E478C, 0x4

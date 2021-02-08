@@ -1239,15 +1239,11 @@ __vt__7J2DPane:
 	.incbin "baserom.dol", 0x3A5BC0, 0x30
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2144
 $$2144:
 	.incbin "baserom.dol", 0x3E3E20, 0x8
-.global $$2295
 $$2295:
 	.incbin "baserom.dol", 0x3E3E28, 0x8
-.global $$2543
 $$2543:
 	.incbin "baserom.dol", 0x3E3E30, 0x8
-.global $$2545
 $$2545:
 	.incbin "baserom.dol", 0x3E3E38, 0x8

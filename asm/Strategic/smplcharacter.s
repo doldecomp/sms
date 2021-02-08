@@ -85,6 +85,5 @@ __vt__13TSMSSmplChara:
 	.incbin "baserom.dol", 0x3B2378, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21540
 $$21540:
 	.incbin "baserom.dol", 0x3E5468, 0x8

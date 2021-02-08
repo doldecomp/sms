@@ -857,7 +857,6 @@ sub__Q29JGeometry8TVec2$$0f$$1FRCQ29JGeometry8TVec2$$0f$$1:
 /* 80238A58 00235998  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80238A5C 0023599C  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 80238A60 002359A0  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80238A64 002359A4  D0 43 00 04 */	stfs f2, 4(r3)
@@ -1574,22 +1573,16 @@ __sinit_SelectShine2_cpp:
 	.incbin "baserom.dol", 0x36CE44, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x391260, 0xC
-.global $$21752
 $$21752:
 	.incbin "baserom.dol", 0x39126C, 0x14
-.global $$22482
 $$22482:
 	.incbin "baserom.dol", 0x391280, 0x18
-.global $$22483
 $$22483:
 	.incbin "baserom.dol", 0x391298, 0x18
-.global $$22484
 $$22484:
 	.incbin "baserom.dol", 0x3912B0, 0x20
-.global $$22485
 $$22485:
 	.incbin "baserom.dol", 0x3912D0, 0x20
 
@@ -1602,74 +1595,51 @@ __vt__19TSelectShineManager:
 	.incbin "baserom.dol", 0x3CECA8, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21912
 $$21912:
 	.incbin "baserom.dol", 0x3E9608, 0x4
-.global $$21913
 $$21913:
 	.incbin "baserom.dol", 0x3E960C, 0x4
-.global $$22031
 $$22031:
 	.incbin "baserom.dol", 0x3E9610, 0x4
-.global $$22032
 $$22032:
 	.incbin "baserom.dol", 0x3E9614, 0x4
-.global $$22033
 $$22033:
 	.incbin "baserom.dol", 0x3E9618, 0x4
-.global $$22034
 $$22034:
 	.incbin "baserom.dol", 0x3E961C, 0x4
-.global $$22035
 $$22035:
 	.incbin "baserom.dol", 0x3E9620, 0x4
-.global $$22036
 $$22036:
 	.incbin "baserom.dol", 0x3E9624, 0x4
-.global $$22037
 $$22037:
 	.incbin "baserom.dol", 0x3E9628, 0x8
-.global $$22040
 $$22040:
 	.incbin "baserom.dol", 0x3E9630, 0x8
-.global $$22217
 $$22217:
 	.incbin "baserom.dol", 0x3E9638, 0x4
-.global $$22218
 $$22218:
 	.incbin "baserom.dol", 0x3E963C, 0x4
-.global $$22219
 $$22219:
 	.incbin "baserom.dol", 0x3E9640, 0x4
-.global $$22220
 $$22220:
 	.incbin "baserom.dol", 0x3E9644, 0x4
-.global $$22221
 $$22221:
 	.incbin "baserom.dol", 0x3E9648, 0x4
-.global $$22486
 $$22486:
 	.incbin "baserom.dol", 0x3E964C, 0x4
-.global $$22487
 $$22487:
 	.incbin "baserom.dol", 0x3E9650, 0x4
-.global $$22488
 $$22488:
 	.incbin "baserom.dol", 0x3E9654, 0x4
-.global $$22489
 $$22489:
 	.incbin "baserom.dol", 0x3E9658, 0x4
-.global $$22490
 $$22490:
 	.incbin "baserom.dol", 0x3E965C, 0x4
-.global $$22514
 $$22514:
 	.incbin "baserom.dol", 0x3E9660, 0x4
-.global $$22515
 $$22515:
 	.incbin "baserom.dol", 0x3E9664, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global cCenter__19TSelectShineManager
 cCenter__19TSelectShineManager:
 	.skip 0x10

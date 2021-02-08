@@ -509,24 +509,17 @@ __vt__9TSunGlass:
 	.incbin "baserom.dol", 0x3CEDD8, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21842
 $$21842:
 	.incbin "baserom.dol", 0x3E9720, 0x4
-.global $$21843
 $$21843:
 	.incbin "baserom.dol", 0x3E9724, 0x4
-.global $$21844
 $$21844:
 	.incbin "baserom.dol", 0x3E9728, 0x4
-.global $$21862
 $$21862:
 	.incbin "baserom.dol", 0x3E972C, 0x4
-.global $$21863
 $$21863:
 	.incbin "baserom.dol", 0x3E9730, 0x8
-.global $$21865
 $$21865:
 	.incbin "baserom.dol", 0x3E9738, 0x8
-.global $$21890
 $$21890:
 	.incbin "baserom.dol", 0x3E9740, 0x8

@@ -994,42 +994,29 @@ lbl_80351160:
 /* 8035117C 0034E0BC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22010
 $$22010:
 	.incbin "baserom.dol", 0x3EC158, 0x4
-.global $$22011
 $$22011:
 	.incbin "baserom.dol", 0x3EC15C, 0x4
-.global $$22046
 $$22046:
 	.incbin "baserom.dol", 0x3EC160, 0x4
-.global $$22112
 $$22112:
 	.incbin "baserom.dol", 0x3EC164, 0x4
-.global $$22113
 $$22113:
 	.incbin "baserom.dol", 0x3EC168, 0x4
-.global $$22167
 $$22167:
 	.incbin "baserom.dol", 0x3EC16C, 0x4
-.global $$22304
 $$22304:
 	.incbin "baserom.dol", 0x3EC170, 0x4
-.global $$22305
 $$22305:
 	.incbin "baserom.dol", 0x3EC174, 0x4
-.global $$22306
 $$22306:
 	.incbin "baserom.dol", 0x3EC178, 0x4
-.global $$22307
 $$22307:
 	.incbin "baserom.dol", 0x3EC17C, 0x4
-.global $$22308
 $$22308:
 	.incbin "baserom.dol", 0x3EC180, 0x4
-.global $$22309
 $$22309:
 	.incbin "baserom.dol", 0x3EC184, 0x4
-.global $$22311
 $$22311:
 	.incbin "baserom.dol", 0x3EC188, 0x8

@@ -10,6 +10,5 @@ getCurrentHeap__Q28JASystem5TBankFv:
 /* 8005831C 0005525C  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sCurrentHeap__Q28JASystem5TBank
 sCurrentHeap__Q28JASystem5TBank:
 	.skip 0x8

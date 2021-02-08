@@ -907,69 +907,48 @@ lbl_8012D2F8:
 	.incbin "baserom.dol", 0x36CC74, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22752
 $$22752:
 	.incbin "baserom.dol", 0x3E5928, 0x4
-.global $$22805
 $$22805:
 	.incbin "baserom.dol", 0x3E592C, 0x4
-.global $$22807
 $$22807:
 	.incbin "baserom.dol", 0x3E5930, 0x8
-.global $$23072
 $$23072:
 	.incbin "baserom.dol", 0x3E5938, 0x4
-.global $$23233
 $$23233:
 	.incbin "baserom.dol", 0x3E593C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global cDeformedTerrainCenter
 cDeformedTerrainCenter:
 	.skip 0xC
-.global $$22772
 $$22772:
 	.skip 0xC
-.global $$22773
 $$22773:
 	.skip 0xC
-.global $$22774
 $$22774:
 	.skip 0xC
-.global $$22775
 $$22775:
 	.skip 0xC
-.global $$22776
 $$22776:
 	.skip 0xC
-.global $$22777
 $$22777:
 	.skip 0xC
-.global $$22778
 $$22778:
 	.skip 0xC
-.global $$22779
 $$22779:
 	.skip 0xC
-.global $$22780
 $$22780:
 	.skip 0xC
-.global $$22781
 $$22781:
 	.skip 0xC
-.global $$22782
 $$22782:
 	.skip 0xC
-.global $$22783
 $$22783:
 	.skip 0xC
-.global $$22784
 $$22784:
 	.skip 0xC
-.global $$22785
 $$22785:
 	.skip 0xC
-.global $$22786
 $$22786:
 	.skip 0xC
 

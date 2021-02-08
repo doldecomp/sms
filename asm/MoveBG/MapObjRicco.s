@@ -2172,82 +2172,56 @@ $$232$$2__dt__14TFruitLauncherFv:
 	.incbin "baserom.dol", 0x36CD2C, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38B388, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38B394, 0x14
-.global $$22178
 $$22178:
 	.incbin "baserom.dol", 0x38B3A8, 0x30
-.global $$22179
 $$22179:
 	.incbin "baserom.dol", 0x38B3D8, 0x38
-.global $$22180
 $$22180:
 	.incbin "baserom.dol", 0x38B410, 0x34
-.global $$22181
 $$22181:
 	.incbin "baserom.dol", 0x38B444, 0x24
-.global $$22738
 $$22738:
 	.incbin "baserom.dol", 0x38B468, 0xC
-.global $$22740
 $$22740:
 	.incbin "baserom.dol", 0x38B474, 0xC
-.global $$22983
 $$22983:
 	.incbin "baserom.dol", 0x38B480, 0x10
-.global $$22984
 $$22984:
 	.incbin "baserom.dol", 0x38B490, 0xC
-.global $$22985
 $$22985:
 	.incbin "baserom.dol", 0x38B49C, 0xC
-.global $$22986
 $$22986:
 	.incbin "baserom.dol", 0x38B4A8, 0xC
-.global $$22987
 $$22987:
 	.incbin "baserom.dol", 0x38B4B4, 0xC
-.global $$22988
 $$22988:
 	.incbin "baserom.dol", 0x38B4C0, 0x14
-.global $$22989
 $$22989:
 	.incbin "baserom.dol", 0x38B4D4, 0x14
-.global $$22990
 $$22990:
 	.incbin "baserom.dol", 0x38B4E8, 0xC
-.global $$23087
 $$23087:
 	.incbin "baserom.dol", 0x38B4F4, 0x1C
-.global $$23153
 $$23153:
 	.incbin "baserom.dol", 0x38B510, 0xC
-.global $$23154
 $$23154:
 	.incbin "baserom.dol", 0x38B51C, 0x10
-.global $$23155
 $$23155:
 	.incbin "baserom.dol", 0x38B52C, 0x10
-.global $$23156
 $$23156:
 	.incbin "baserom.dol", 0x38B53C, 0x10
-.global $$23184
 $$23184:
 	.incbin "baserom.dol", 0x38B54C, 0xC
-.global $$23185
 $$23185:
 	.incbin "baserom.dol", 0x38B558, 0x18
-.global $$23345
 $$23345:
 	.incbin "baserom.dol", 0x38B570, 0x14
-.global $$23346
 $$23346:
 	.incbin "baserom.dol", 0x38B584, 0x10
-.global $$23440
 $$23440:
 	.incbin "baserom.dol", 0x38B594, 0xC
 
@@ -2275,177 +2249,121 @@ __vt__10TCraneRotY:
 	.incbin "baserom.dol", 0x3C36D4, 0x164
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mWaitTime__10TCraneRotY
 mWaitTime__10TCraneRotY:
 	.incbin "baserom.dol", 0x3E3600, 0x4
-.global mRotSpeed__12TCraneUpDown
 mRotSpeed__12TCraneUpDown:
 	.incbin "baserom.dol", 0x3E3604, 0x4
-.global mWaitTime__12TCraneUpDown
 mWaitTime__12TCraneUpDown:
 	.incbin "baserom.dol", 0x3E3608, 0x4
-.global mRotAccel__15TRiccoWatermill
 mRotAccel__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E360C, 0x4
-.global mRotSpeedMaxUp__15TRiccoWatermill
 mRotSpeedMaxUp__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3610, 0x4
-.global mRotSpeedMaxDown__15TRiccoWatermill
 mRotSpeedMaxDown__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3614, 0x4
-.global mRotDown__15TRiccoWatermill
 mRotDown__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3618, 0x4
-.global mSubmarineMoveRate__15TRiccoWatermill
 mSubmarineMoveRate__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E361C, 0x4
-.global mSubmarineMaxTransY__15TRiccoWatermill
 mSubmarineMaxTransY__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3620, 0x4
-.global mSubmarineBottomTransY__15TRiccoWatermill
 mSubmarineBottomTransY__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3624, 0x4
-.global mWaitTime__15TRiccoWatermill
 mWaitTime__15TRiccoWatermill:
 	.incbin "baserom.dol", 0x3E3628, 0x4
-.global mObjSpeedXZ__14TFruitLauncher
 mObjSpeedXZ__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E362C, 0x4
-.global mObjSpeedY__14TFruitLauncher
 mObjSpeedY__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E3630, 0x4
-.global mFruitLiveTime__14TFruitLauncher
 mFruitLiveTime__14TFruitLauncher:
 	.incbin "baserom.dol", 0x3E3634, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22926
 $$22926:
 	.incbin "baserom.dol", 0x3E7F68, 0x4
-.global $$22982
 $$22982:
 	.incbin "baserom.dol", 0x3E7F6C, 0x4
-.global $$23080
 $$23080:
 	.incbin "baserom.dol", 0x3E7F70, 0x4
-.global $$23081
 $$23081:
 	.incbin "baserom.dol", 0x3E7F74, 0x4
-.global $$23082
 $$23082:
 	.incbin "baserom.dol", 0x3E7F78, 0x4
-.global $$23083
 $$23083:
 	.incbin "baserom.dol", 0x3E7F7C, 0x4
-.global $$23084
 $$23084:
 	.incbin "baserom.dol", 0x3E7F80, 0x4
-.global $$23085
 $$23085:
 	.incbin "baserom.dol", 0x3E7F84, 0x4
-.global $$23086
 $$23086:
 	.incbin "baserom.dol", 0x3E7F88, 0x8
-.global $$23089
 $$23089:
 	.incbin "baserom.dol", 0x3E7F90, 0x8
-.global $$23305
 $$23305:
 	.incbin "baserom.dol", 0x3E7F98, 0x4
-.global $$23306
 $$23306:
 	.incbin "baserom.dol", 0x3E7F9C, 0x4
-.global $$23307
 $$23307:
 	.incbin "baserom.dol", 0x3E7FA0, 0x4
-.global $$23347
 $$23347:
 	.incbin "baserom.dol", 0x3E7FA4, 0x4
-.global $$23348
 $$23348:
 	.incbin "baserom.dol", 0x3E7FA8, 0x4
-.global $$23349
 $$23349:
 	.incbin "baserom.dol", 0x3E7FAC, 0x4
-.global $$23427
 $$23427:
 	.incbin "baserom.dol", 0x3E7FB0, 0x4
-.global $$23428
 $$23428:
 	.incbin "baserom.dol", 0x3E7FB4, 0x4
-.global $$23438
 $$23438:
 	.incbin "baserom.dol", 0x3E7FB8, 0x4
-.global $$23439
 $$23439:
 	.incbin "baserom.dol", 0x3E7FBC, 0x4
-.global $$23654
 $$23654:
 	.incbin "baserom.dol", 0x3E7FC0, 0x4
-.global $$23655
 $$23655:
 	.incbin "baserom.dol", 0x3E7FC4, 0x4
-.global $$23656
 $$23656:
 	.incbin "baserom.dol", 0x3E7FC8, 0x4
-.global $$23657
 $$23657:
 	.incbin "baserom.dol", 0x3E7FCC, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global submarineCranePos_forSound
 submarineCranePos_forSound:
 	.skip 0xC
-.global submarineSetWtPos_forSound
 submarineSetWtPos_forSound:
 	.skip 0xC
-.global $$23529
 $$23529:
 	.skip 0xC
-.global $$23530
 $$23530:
 	.skip 0xC
-.global $$23531
 $$23531:
 	.skip 0xC
-.global $$23532
 $$23532:
 	.skip 0xC
-.global $$23533
 $$23533:
 	.skip 0xC
-.global $$23534
 $$23534:
 	.skip 0xC
-.global $$23535
 $$23535:
 	.skip 0xC
-.global $$23536
 $$23536:
 	.skip 0xC
-.global $$23537
 $$23537:
 	.skip 0xC
-.global $$23538
 $$23538:
 	.skip 0xC
-.global $$23539
 $$23539:
 	.skip 0xC
-.global $$23540
 $$23540:
 	.skip 0xC
-.global $$23541
 $$23541:
 	.skip 0xC
-.global $$23542
 $$23542:
 	.skip 0xC
-.global $$23543
 $$23543:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global mSubmarineSurfaceTransY__15TRiccoWatermill
 mSubmarineSurfaceTransY__15TRiccoWatermill:
 	.skip 0x8

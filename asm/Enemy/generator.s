@@ -508,7 +508,6 @@ $$232$$2__dt__17TOneShotGeneratorFv:
 /* 802A29A0 0029F8E0  4B FF F8 DC */	b __dt__17TOneShotGeneratorFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22233
 $$22233:
 	.incbin "baserom.dol", 0x396A50, 0x10
 
@@ -521,21 +520,15 @@ __vt__10TGenerator:
 	.incbin "baserom.dol", 0x3D5B7C, 0x24
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22196
 $$22196:
 	.incbin "baserom.dol", 0x3EA6C8, 0x4
-.global $$22197
 $$22197:
 	.incbin "baserom.dol", 0x3EA6CC, 0x4
-.global $$22231
 $$22231:
 	.incbin "baserom.dol", 0x3EA6D0, 0x4
-.global $$22232
 $$22232:
 	.incbin "baserom.dol", 0x3EA6D4, 0x4
-.global $$22299
 $$22299:
 	.incbin "baserom.dol", 0x3EA6D8, 0x8
-.global $$22301
 $$22301:
 	.incbin "baserom.dol", 0x3EA6E0, 0x8

@@ -1880,27 +1880,19 @@ lbl_80052C18:
 /* 80052C30 0004FB70  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2412
 $$2412:
 	.incbin "baserom.dol", 0x3E41E8, 0x4
-.global $$2826
 $$2826:
 	.incbin "baserom.dol", 0x3E41EC, 0x4
-.global $$2827
 $$2827:
 	.incbin "baserom.dol", 0x3E41F0, 0x8
-.global $$2828
 $$2828:
 	.incbin "baserom.dol", 0x3E41F8, 0x8
-.global $$2829
 $$2829:
 	.incbin "baserom.dol", 0x3E4200, 0x4
-.global $$2830
 $$2830:
 	.incbin "baserom.dol", 0x3E4204, 0x4
-.global $$2833
 $$2833:
 	.incbin "baserom.dol", 0x3E4208, 0x8
-.global $$2932
 $$2932:
 	.incbin "baserom.dol", 0x3E4210, 0x8

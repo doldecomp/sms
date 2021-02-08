@@ -369,7 +369,6 @@ $$232$$2__dt__16TSwitchHelpActorFv:
 /* 80218F90 00215ED0  4B FF FB 08 */	b __dt__16TSwitchHelpActorFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21991
 $$21991:
 	.incbin "baserom.dol", 0x390AF0, 0x10
 
@@ -382,9 +381,7 @@ __vt__10THelpActor:
 	.incbin "baserom.dol", 0x3CE370, 0xA8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21995
 $$21995:
 	.incbin "baserom.dol", 0x3E9338, 0x4
-.global $$21996
 $$21996:
 	.incbin "baserom.dol", 0x3E933C, 0x4

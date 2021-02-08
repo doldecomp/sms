@@ -260,6 +260,5 @@ TRK_board_display:
 /* 8008C368 000892A8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global gDBCommTable
 gDBCommTable:
 	.incbin "baserom.dol", 0x3AC088, 0x20

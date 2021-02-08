@@ -97,7 +97,6 @@ __ct__18TMapObjWaterFilterFPCc:
 /* 801C2224 001BF164  38 21 00 28 */	addi r1, r1, 0x28
 /* 801C2228 001BF168  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 801C222C 001BF16C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801C2230 001BF170  D0 43 00 04 */	stfs f2, 4(r3)
@@ -638,40 +637,28 @@ $$232$$2__dt__18TMapObjWaterFilterFv:
 	.incbin "baserom.dol", 0x36CD6C, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38CC20, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38CC2C, 0x14
-.global $$22188
 $$22188:
 	.incbin "baserom.dol", 0x38CC40, 0x30
-.global $$22189
 $$22189:
 	.incbin "baserom.dol", 0x38CC70, 0x38
-.global $$22190
 $$22190:
 	.incbin "baserom.dol", 0x38CCA8, 0x34
-.global $$22191
 $$22191:
 	.incbin "baserom.dol", 0x38CCDC, 0x24
-.global $$22520
 $$22520:
 	.incbin "baserom.dol", 0x38CD00, 0xC
-.global $$22522
 $$22522:
 	.incbin "baserom.dol", 0x38CD0C, 0xC
-.global $$22650
 $$22650:
 	.incbin "baserom.dol", 0x38CD18, 0x24
-.global $$22748
 $$22748:
 	.incbin "baserom.dol", 0x38CD3C, 0x1C
-.global $$22749
 $$22749:
 	.incbin "baserom.dol", 0x38CD58, 0xC
-.global $$22750
 $$22750:
 	.incbin "baserom.dol", 0x38CD64, 0x1C
 
@@ -684,56 +671,39 @@ __vt__18TMapObjSeaIndirect:
 	.incbin "baserom.dol", 0x3C8728, 0xA0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22635
 $$22635:
 	.incbin "baserom.dol", 0x3E8580, 0x4
-.global $$22636
 $$22636:
 	.incbin "baserom.dol", 0x3E8584, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22811
 $$22811:
 	.skip 0xC
-.global $$22812
 $$22812:
 	.skip 0xC
-.global $$22813
 $$22813:
 	.skip 0xC
-.global $$22814
 $$22814:
 	.skip 0xC
-.global $$22815
 $$22815:
 	.skip 0xC
-.global $$22816
 $$22816:
 	.skip 0xC
-.global $$22817
 $$22817:
 	.skip 0xC
-.global $$22818
 $$22818:
 	.skip 0xC
-.global $$22819
 $$22819:
 	.skip 0xC
-.global $$22820
 $$22820:
 	.skip 0xC
-.global $$22821
 $$22821:
 	.skip 0xC
-.global $$22822
 $$22822:
 	.skip 0xC
-.global $$22823
 $$22823:
 	.skip 0xC
-.global $$22824
 $$22824:
 	.skip 0xC
-.global $$22825
 $$22825:
 	.skip 0x10

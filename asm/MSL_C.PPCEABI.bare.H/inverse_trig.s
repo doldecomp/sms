@@ -270,50 +270,35 @@ lbl_80086EDC:
 /* 80086EE8 00083E28  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global atan_coeff$96
 atan_coeff$96:
 	.incbin "baserom.dol", 0x36E9C8, 0x1C
-.global onep_one_over_xisqr_hi$97
 onep_one_over_xisqr_hi$97:
 	.incbin "baserom.dol", 0x36E9E4, 0x18
-.global onep_one_over_xisqr_lo$98
 onep_one_over_xisqr_lo$98:
 	.incbin "baserom.dol", 0x36E9FC, 0x18
-.global atan_xi_hi$99
 atan_xi_hi$99:
 	.incbin "baserom.dol", 0x36EA14, 0x1C
-.global atan_xi_lo$100
 atan_xi_lo$100:
 	.incbin "baserom.dol", 0x36EA30, 0x1C
-.global one_over_xi_hi$101
 one_over_xi_hi$101:
 	.incbin "baserom.dol", 0x36EA4C, 0x18
-.global one_over_xi_lo$102
 one_over_xi_lo$102:
 	.incbin "baserom.dol", 0x36EA64, 0x1C
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2156
 $$2156:
 	.incbin "baserom.dol", 0x3E4710, 0x4
-.global $$2157
 $$2157:
 	.incbin "baserom.dol", 0x3E4714, 0x4
-.global $$2158
 $$2158:
 	.incbin "baserom.dol", 0x3E4718, 0x4
-.global $$2159
 $$2159:
 	.incbin "baserom.dol", 0x3E471C, 0x4
-.global $$2168
 $$2168:
 	.incbin "baserom.dol", 0x3E4720, 0x4
-.global $$2169
 $$2169:
 	.incbin "baserom.dol", 0x3E4724, 0x4
-.global $$2170
 $$2170:
 	.incbin "baserom.dol", 0x3E4728, 0x4
-.global $$2188
 $$2188:
 	.incbin "baserom.dol", 0x3E472C, 0x4

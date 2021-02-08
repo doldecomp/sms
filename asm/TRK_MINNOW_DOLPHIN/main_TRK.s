@@ -24,6 +24,5 @@ lbl_8008BFF8:
 /* 8008C010 00088F50  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global TRK_mainError
 TRK_mainError:
 	.skip 0x18

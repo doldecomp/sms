@@ -744,21 +744,16 @@ __sinit_J3DSys_cpp:
 	.incbin "baserom.dol", 0x36CBC8, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2838
 $$2838:
 	.incbin "baserom.dol", 0x36DC38, 0x10
-.global $$2839
 $$2839:
 	.incbin "baserom.dol", 0x36DC48, 0x10
-.global $$2877
 $$2877:
 	.incbin "baserom.dol", 0x36DC58, 0x18
-.global $$2885
 $$2885:
 	.incbin "baserom.dol", 0x36DC70, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global NullTexData
 NullTexData:
 	.incbin "baserom.dol", 0x3A6980, 0x10
 

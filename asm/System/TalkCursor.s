@@ -163,34 +163,24 @@ lbl_800F91B4:
 /* 800F91F8 000F6138  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x371B70, 0xC
-.global $$21525
 $$21525:
 	.incbin "baserom.dol", 0x371B7C, 0x14
-.global $$21582
 $$21582:
 	.incbin "baserom.dol", 0x371B90, 0x30
-.global $$21583
 $$21583:
 	.incbin "baserom.dol", 0x371BC0, 0x38
-.global $$21584
 $$21584:
 	.incbin "baserom.dol", 0x371BF8, 0x34
-.global $$21585
 $$21585:
 	.incbin "baserom.dol", 0x371C2C, 0x24
-.global $$22003
 $$22003:
 	.incbin "baserom.dol", 0x371C50, 0x14
-.global $$22004
 $$22004:
 	.incbin "baserom.dol", 0x371C64, 0x20
-.global $$22005
 $$22005:
 	.incbin "baserom.dol", 0x371C84, 0xC
-.global $$22006
 $$22006:
 	.incbin "baserom.dol", 0x371C90, 0x10
 

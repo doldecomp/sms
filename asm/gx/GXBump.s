@@ -495,6 +495,5 @@ __GXFlushTextureState:
 /* 800ABA04 000A8944  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$245
 $$245:
 	.incbin "baserom.dol", 0x3E4850, 0x8

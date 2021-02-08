@@ -598,25 +598,18 @@ lbl_8035DBD8:
 /* 8035DC70 0035ABB0  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A3900, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A390C, 0x14
-.global $$21632
 $$21632:
 	.incbin "baserom.dol", 0x3A3920, 0xC
-.global $$21633
 $$21633:
 	.incbin "baserom.dol", 0x3A392C, 0x10
-.global $$21928
 $$21928:
 	.incbin "baserom.dol", 0x3A393C, 0xC
-.global $$21929
 $$21929:
 	.incbin "baserom.dol", 0x3A3948, 0xC
-.global $$21930
 $$21930:
 	.incbin "baserom.dol", 0x3A3954, 0xC
 
@@ -626,42 +619,29 @@ __vt__9TLensGlow:
 	.incbin "baserom.dol", 0x3E1B38, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21859
 $$21859:
 	.incbin "baserom.dol", 0x3EC410, 0x4
-.global $$21860
 $$21860:
 	.incbin "baserom.dol", 0x3EC414, 0x4
-.global $$21861
 $$21861:
 	.incbin "baserom.dol", 0x3EC418, 0x4
-.global $$21862
 $$21862:
 	.incbin "baserom.dol", 0x3EC41C, 0x4
-.global $$21863
 $$21863:
 	.incbin "baserom.dol", 0x3EC420, 0x8
-.global $$21865
 $$21865:
 	.incbin "baserom.dol", 0x3EC428, 0x8
-.global $$21868
 $$21868:
 	.incbin "baserom.dol", 0x3EC430, 0x8
-.global $$21923
 $$21923:
 	.incbin "baserom.dol", 0x3EC438, 0x4
-.global $$21924
 $$21924:
 	.incbin "baserom.dol", 0x3EC43C, 0x4
-.global $$21925
 $$21925:
 	.incbin "baserom.dol", 0x3EC440, 0x4
-.global $$21926
 $$21926:
 	.incbin "baserom.dol", 0x3EC444, 0x4
-.global $$21927
 $$21927:
 	.incbin "baserom.dol", 0x3EC448, 0x8
-.global $$21931
 $$21931:
 	.incbin "baserom.dol", 0x3EC450, 0x8

@@ -273,9 +273,7 @@ lbl_80085EAC:
 /* 80085EC0 00082E00  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global K1
 K1:
 	.incbin "baserom.dol", 0x3E3238, 0x4
-.global K2
 K2:
 	.incbin "baserom.dol", 0x3E323C, 0x4

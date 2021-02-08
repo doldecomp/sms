@@ -38,80 +38,55 @@ lbl_800D0974:
 /* 800D0984 000CD8C4  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$218
 $$218:
 	.incbin "baserom.dol", 0x36F7B0, 0x10
-.global $$219
 $$219:
 	.incbin "baserom.dol", 0x36F7C0, 0x10
-.global $$220
 $$220:
 	.incbin "baserom.dol", 0x36F7D0, 0x10
-.global $$221
 $$221:
 	.incbin "baserom.dol", 0x36F7E0, 0x14
-.global $$222
 $$222:
 	.incbin "baserom.dol", 0x36F7F4, 0x14
-.global $$223
 $$223:
 	.incbin "baserom.dol", 0x36F808, 0x10
-.global $$224
 $$224:
 	.incbin "baserom.dol", 0x36F818, 0x10
-.global $$225
 $$225:
 	.incbin "baserom.dol", 0x36F828, 0x10
-.global $$226
 $$226:
 	.incbin "baserom.dol", 0x36F838, 0x10
-.global $$227
 $$227:
 	.incbin "baserom.dol", 0x36F848, 0x14
-.global $$228
 $$228:
 	.incbin "baserom.dol", 0x36F85C, 0x10
-.global $$229
 $$229:
 	.incbin "baserom.dol", 0x36F86C, 0x10
-.global $$230
 $$230:
 	.incbin "baserom.dol", 0x36F87C, 0x10
-.global $$231
 $$231:
 	.incbin "baserom.dol", 0x36F88C, 0x10
-.global $$232
 $$232:
 	.incbin "baserom.dol", 0x36F89C, 0x10
-.global $$233
 $$233:
 	.incbin "baserom.dol", 0x36F8AC, 0x10
-.global $$234
 $$234:
 	.incbin "baserom.dol", 0x36F8BC, 0x10
-.global $$235
 $$235:
 	.incbin "baserom.dol", 0x36F8CC, 0x10
-.global $$236
 $$236:
 	.incbin "baserom.dol", 0x36F8DC, 0x10
-.global $$237
 $$237:
 	.incbin "baserom.dol", 0x36F8EC, 0x10
-.global $$238
 $$238:
 	.incbin "baserom.dol", 0x36F8FC, 0xC
-.global $$239
 $$239:
 	.incbin "baserom.dol", 0x36F908, 0xC
-.global $$240
 $$240:
 	.incbin "baserom.dol", 0x36F914, 0x18
-.global $$266
 $$266:
 	.incbin "baserom.dol", 0x36F92C, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global _info
 _info:
 	.incbin "baserom.dol", 0x3B0378, 0xB8

@@ -779,7 +779,6 @@ lbl_800361B8:
 /* 800361C4 00033104  7C 08 03 A6 */	mtlr r0
 /* 800361C8 00033108  4E 80 00 20 */	blr 
 
-.global firstSrcData__Fv
 firstSrcData__Fv:
 /* 800361CC 0003310C  7C 08 02 A6 */	mflr r0
 /* 800361D0 00033110  90 01 00 04 */	stw r0, 4(r1)
@@ -833,7 +832,6 @@ lbl_8003626C:
 /* 8003627C 000331BC  38 21 00 20 */	addi r1, r1, 0x20
 /* 80036280 000331C0  4E 80 00 20 */	blr 
 
-.global nextSrcData__FPUc
 nextSrcData__FPUc:
 /* 80036284 000331C4  7C 08 02 A6 */	mflr r0
 /* 80036288 000331C8  38 83 00 00 */	addi r4, r3, 0
@@ -989,7 +987,6 @@ lbl_80036470:
 	.incbin "baserom.dol", 0x36CBD0, 0x4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global errorRetry__16JKRDvdAramRipper
 errorRetry__16JKRDvdAramRipper:
 	.incbin "baserom.dol", 0x3E3030, 0x4
 .global szpBufferSize__16JKRDvdAramRipper
@@ -997,58 +994,41 @@ szpBufferSize__16JKRDvdAramRipper:
 	.incbin "baserom.dol", 0x3E3034, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$256
 $$256:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sDvdAramAsyncList__16JKRDvdAramRipper
 sDvdAramAsyncList__16JKRDvdAramRipper:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global szpBuf
 szpBuf:
 	.skip 0x4
-.global szpEnd
 szpEnd:
 	.skip 0x4
-.global refBuf
 refBuf:
 	.skip 0x4
-.global refEnd
 refEnd:
 	.skip 0x4
-.global refCurrent
 refCurrent:
 	.skip 0x4
-.global dmaBuf
 dmaBuf:
 	.skip 0x4
-.global dmaEnd
 dmaEnd:
 	.skip 0x4
-.global dmaCurrent
 dmaCurrent:
 	.skip 0x4
-.global srcOffset
 srcOffset:
 	.skip 0x4
-.global transLeft
 transLeft:
 	.skip 0x4
-.global srcLimit
 srcLimit:
 	.skip 0x4
-.global srcFile
 srcFile:
 	.skip 0x4
-.global fileOffset
 fileOffset:
 	.skip 0x4
-.global readCount
 readCount:
 	.skip 0x4
-.global maxDest
 maxDest:
 	.skip 0x8

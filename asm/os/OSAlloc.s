@@ -569,79 +569,55 @@ lbl_8008DC98:
 /* 8008DCB0 0008ABF0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2352
 $$2352:
 	.incbin "baserom.dol", 0x3AC280, 0x24
-.global $$2353
 $$2353:
 	.incbin "baserom.dol", 0x3AC2A4, 0x38
-.global $$2354
 $$2354:
 	.incbin "baserom.dol", 0x3AC2DC, 0x28
-.global $$2355
 $$2355:
 	.incbin "baserom.dol", 0x3AC304, 0x50
-.global $$2356
 $$2356:
 	.incbin "baserom.dol", 0x3AC354, 0x40
-.global $$2357
 $$2357:
 	.incbin "baserom.dol", 0x3AC394, 0x38
-.global $$2358
 $$2358:
 	.incbin "baserom.dol", 0x3AC3CC, 0x4C
-.global $$2359
 $$2359:
 	.incbin "baserom.dol", 0x3AC418, 0x34
-.global $$2360
 $$2360:
 	.incbin "baserom.dol", 0x3AC44C, 0x40
-.global $$2361
 $$2361:
 	.incbin "baserom.dol", 0x3AC48C, 0x3C
-.global $$2362
 $$2362:
 	.incbin "baserom.dol", 0x3AC4C8, 0x48
-.global $$2363
 $$2363:
 	.incbin "baserom.dol", 0x3AC510, 0x60
-.global $$2364
 $$2364:
 	.incbin "baserom.dol", 0x3AC570, 0x2C
-.global $$2383
 $$2383:
 	.incbin "baserom.dol", 0x3AC59C, 0x14
-.global $$2384
 $$2384:
 	.incbin "baserom.dol", 0x3AC5B0, 0x14
-.global $$2385
 $$2385:
 	.incbin "baserom.dol", 0x3AC5C4, 0x1C
-.global $$2386
 $$2386:
 	.incbin "baserom.dol", 0x3AC5E0, 0x14
-.global $$2387
 $$2387:
 	.incbin "baserom.dol", 0x3AC5F4, 0x10
-.global $$2388
 $$2388:
 	.incbin "baserom.dol", 0x3AC604, 0x14
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global __OSCurrHeap
 __OSCurrHeap:
 	.incbin "baserom.dol", 0x3E3240, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global HeapArray
 HeapArray:
 	.skip 0x4
-.global NumHeaps
 NumHeaps:
 	.skip 0x4
-.global ArenaStart
 ArenaStart:
 	.skip 0x4
-.global ArenaEnd
 ArenaEnd:
 	.skip 0x4

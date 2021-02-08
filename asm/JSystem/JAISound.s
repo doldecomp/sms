@@ -3263,49 +3263,34 @@ __vt__8JAISound:
 	.incbin "baserom.dol", 0x3A7D50, 0x38
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2412
 $$2412:
 	.incbin "baserom.dol", 0x3E4258, 0x8
-.global $$2434
 $$2434:
 	.incbin "baserom.dol", 0x3E4260, 0x4
-.global $$2602
 $$2602:
 	.incbin "baserom.dol", 0x3E4264, 0x4
-.global $$2604
 $$2604:
 	.incbin "baserom.dol", 0x3E4268, 0x8
-.global $$2643
 $$2643:
 	.incbin "baserom.dol", 0x3E4270, 0x8
-.global $$2678
 $$2678:
 	.incbin "baserom.dol", 0x3E4278, 0x8
-.global $$2679
 $$2679:
 	.incbin "baserom.dol", 0x3E4280, 0x8
-.global $$2680
 $$2680:
 	.incbin "baserom.dol", 0x3E4288, 0x4
-.global $$2681
 $$2681:
 	.incbin "baserom.dol", 0x3E428C, 0x4
-.global $$2943
 $$2943:
 	.incbin "baserom.dol", 0x3E4290, 0x4
-.global $$2944
 $$2944:
 	.incbin "baserom.dol", 0x3E4294, 0x4
-.global $$21090
 $$21090:
 	.incbin "baserom.dol", 0x3E4298, 0x4
-.global $$21207
 $$21207:
 	.incbin "baserom.dol", 0x3E429C, 0x4
-.global $$21242
 $$21242:
 	.incbin "baserom.dol", 0x3E42A0, 0x4
-.global $$21373
 $$21373:
 	.incbin "baserom.dol", 0x3E42A4, 0x4
 

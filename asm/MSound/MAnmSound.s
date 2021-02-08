@@ -541,68 +541,47 @@ __vt__9MAnmSound:
 	.incbin "baserom.dol", 0x3B6C38, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21981
 $$21981:
 	.incbin "baserom.dol", 0x3E66F8, 0x4
-.global $$21982
 $$21982:
 	.incbin "baserom.dol", 0x3E66FC, 0x4
-.global $$21983
 $$21983:
 	.incbin "baserom.dol", 0x3E6700, 0x4
-.global $$21984
 $$21984:
 	.incbin "baserom.dol", 0x3E6704, 0x4
-.global $$21985
 $$21985:
 	.incbin "baserom.dol", 0x3E6708, 0x8
-.global $$21987
 $$21987:
 	.incbin "baserom.dol", 0x3E6710, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22044
 $$22044:
 	.skip 0xC
-.global $$22045
 $$22045:
 	.skip 0xC
-.global $$22046
 $$22046:
 	.skip 0xC
-.global $$22047
 $$22047:
 	.skip 0xC
-.global $$22048
 $$22048:
 	.skip 0xC
-.global $$22049
 $$22049:
 	.skip 0xC
-.global $$22050
 $$22050:
 	.skip 0xC
-.global $$22051
 $$22051:
 	.skip 0xC
-.global $$22052
 $$22052:
 	.skip 0xC
-.global $$22053
 $$22053:
 	.skip 0xC
-.global $$22054
 $$22054:
 	.skip 0xC
-.global $$22055
 $$22055:
 	.skip 0xC
-.global $$22056
 $$22056:
 	.skip 0xC
-.global $$22057
 $$22057:
 	.skip 0xC
-.global $$22058
 $$22058:
 	.skip 0x10

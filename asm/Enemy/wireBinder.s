@@ -494,24 +494,17 @@ __vt__11TWireBinder:
 	.incbin "baserom.dol", 0x3DE9D8, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21946
 $$21946:
 	.incbin "baserom.dol", 0x3EBAD8, 0x4
-.global $$21947
 $$21947:
 	.incbin "baserom.dol", 0x3EBADC, 0x4
-.global $$21966
 $$21966:
 	.incbin "baserom.dol", 0x3EBAE0, 0x4
-.global $$22039
 $$22039:
 	.incbin "baserom.dol", 0x3EBAE4, 0x4
-.global $$22040
 $$22040:
 	.incbin "baserom.dol", 0x3EBAE8, 0x4
-.global $$22119
 $$22119:
 	.incbin "baserom.dol", 0x3EBAEC, 0x4
-.global $$22152
 $$22152:
 	.incbin "baserom.dol", 0x3EBAF0, 0x8

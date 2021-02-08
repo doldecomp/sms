@@ -82,17 +82,13 @@ SIRefreshSamplingRate:
 /* 800B441C 000B135C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global XYNTSC
 XYNTSC:
 	.incbin "baserom.dol", 0x3AEDD8, 0x30
-.global XYPAL
 XYPAL:
 	.incbin "baserom.dol", 0x3AEE08, 0x30
-.global $$216
 $$216:
 	.incbin "baserom.dol", 0x3AEE38, 0x38
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global SamplingRate
 SamplingRate:
 	.skip 0x8

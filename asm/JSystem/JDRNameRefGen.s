@@ -1047,7 +1047,6 @@ __ct__Q26JDrama6TLightFPCc:
 /* 80045804 00042744  7C 08 03 A6 */	mtlr r0
 /* 80045808 00042748  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8004580C 0004274C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80045810 00042750  D0 43 00 04 */	stfs f2, 4(r3)
@@ -1198,79 +1197,54 @@ lbl_80045A10:
 /* 80045A28 00042968  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2855
 $$2855:
 	.incbin "baserom.dol", 0x36DF50, 0xC
-.global $$21461
 $$21461:
 	.incbin "baserom.dol", 0x36DF5C, 0xC
-.global $$21462
 $$21462:
 	.incbin "baserom.dol", 0x36DF68, 0x14
-.global $$21463
 $$21463:
 	.incbin "baserom.dol", 0x36DF7C, 0xC
-.global $$21464
 $$21464:
 	.incbin "baserom.dol", 0x36DF88, 0xC
-.global $$21465
 $$21465:
 	.incbin "baserom.dol", 0x36DF94, 0xC
-.global $$21468
 $$21468:
 	.incbin "baserom.dol", 0x36DFA0, 0x10
-.global $$21473
 $$21473:
 	.incbin "baserom.dol", 0x36DFB0, 0xC
-.global $$21474
 $$21474:
 	.incbin "baserom.dol", 0x36DFBC, 0xC
-.global $$21475
 $$21475:
 	.incbin "baserom.dol", 0x36DFC8, 0xC
-.global $$21476
 $$21476:
 	.incbin "baserom.dol", 0x36DFD4, 0x10
-.global $$21480
 $$21480:
 	.incbin "baserom.dol", 0x36DFE4, 0xC
-.global $$21481
 $$21481:
 	.incbin "baserom.dol", 0x36DFF0, 0xC
-.global $$21482
 $$21482:
 	.incbin "baserom.dol", 0x36DFFC, 0xC
-.global $$21483
 $$21483:
 	.incbin "baserom.dol", 0x36E008, 0xC
-.global $$21484
 $$21484:
 	.incbin "baserom.dol", 0x36E014, 0xC
-.global $$21485
 $$21485:
 	.incbin "baserom.dol", 0x36E020, 0xC
-.global $$21487
 $$21487:
 	.incbin "baserom.dol", 0x36E02C, 0xC
-.global $$21488
 $$21488:
 	.incbin "baserom.dol", 0x36E038, 0xC
-.global $$21489
 $$21489:
 	.incbin "baserom.dol", 0x36E044, 0x14
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x36E058, 0xC
-.global $$21491
 $$21491:
 	.incbin "baserom.dol", 0x36E064, 0xC
-.global $$21492
 $$21492:
 	.incbin "baserom.dol", 0x36E070, 0x10
-.global $$21493
 $$21493:
 	.incbin "baserom.dol", 0x36E080, 0xC
-.global $$21494
 $$21494:
 	.incbin "baserom.dol", 0x36E08C, 0xC
 
@@ -1283,34 +1257,24 @@ __vt__Q26JDrama11TNameRefGen:
 	.incbin "baserom.dol", 0x3A78A0, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21466
 $$21466:
 	.incbin "baserom.dol", 0x3E40B8, 0x4
-.global $$21467
 $$21467:
 	.incbin "baserom.dol", 0x3E40BC, 0x4
-.global $$21469
 $$21469:
 	.incbin "baserom.dol", 0x3E40C0, 0x4
-.global $$21470
 $$21470:
 	.incbin "baserom.dol", 0x3E40C4, 0x4
-.global $$21471
 $$21471:
 	.incbin "baserom.dol", 0x3E40C8, 0x4
-.global $$21472
 $$21472:
 	.incbin "baserom.dol", 0x3E40CC, 0x4
-.global $$21477
 $$21477:
 	.incbin "baserom.dol", 0x3E40D0, 0x8
-.global $$21478
 $$21478:
 	.incbin "baserom.dol", 0x3E40D8, 0x8
-.global $$21479
 $$21479:
 	.incbin "baserom.dol", 0x3E40E0, 0x4
-.global $$21486
 $$21486:
 	.incbin "baserom.dol", 0x3E40E4, 0xC
 

@@ -805,63 +805,45 @@ lbl_8035988C:
 /* 803598E0 00356820  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A2A58, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A2A64, 0x14
-.global $$21859
 $$21859:
 	.incbin "baserom.dol", 0x3A2A78, 0x18
-.global $$21860
 $$21860:
 	.incbin "baserom.dol", 0x3A2A90, 0x18
-.global $$21861
 $$21861:
 	.incbin "baserom.dol", 0x3A2AA8, 0x1C
-.global $$21862
 $$21862:
 	.incbin "baserom.dol", 0x3A2AC4, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sNoticeActorManagerName
 sNoticeActorManagerName:
 	.incbin "baserom.dol", 0x3E1AE8, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global bossGesoViewObjName
 bossGesoViewObjName:
 	.incbin "baserom.dol", 0x3E3CC8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21990
 $$21990:
 	.incbin "baserom.dol", 0x3EC2A8, 0x4
-.global $$21991
 $$21991:
 	.incbin "baserom.dol", 0x3EC2AC, 0x4
-.global $$21992
 $$21992:
 	.incbin "baserom.dol", 0x3EC2B0, 0x4
-.global $$21993
 $$21993:
 	.incbin "baserom.dol", 0x3EC2B4, 0x4
-.global $$22080
 $$22080:
 	.incbin "baserom.dol", 0x3EC2B8, 0x4
-.global $$22081
 $$22081:
 	.incbin "baserom.dol", 0x3EC2BC, 0x4
-.global $$22082
 $$22082:
 	.incbin "baserom.dol", 0x3EC2C0, 0x8
-.global $$22084
 $$22084:
 	.incbin "baserom.dol", 0x3EC2C8, 0x8
-.global $$22209
 $$22209:
 	.incbin "baserom.dol", 0x3EC2D0, 0x4
-.global $$22210
 $$22210:
 	.incbin "baserom.dol", 0x3EC2D4, 0x4

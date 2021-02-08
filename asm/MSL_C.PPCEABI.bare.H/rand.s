@@ -19,6 +19,5 @@ rand:
 /* 80085AE4 00082A24  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global next
 next:
 	.incbin "baserom.dol", 0x3E3230, 0x8

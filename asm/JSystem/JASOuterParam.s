@@ -151,6 +151,5 @@ setFirFilter__Q38JASystem6TTrack11TOuterParamFPs:
 /* 800646E4 00061624  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2127
 $$2127:
 	.incbin "baserom.dol", 0x3E4400, 0x8

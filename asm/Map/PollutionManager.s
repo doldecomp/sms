@@ -1216,120 +1216,83 @@ lbl_801F0070:
 	.incbin "baserom.dol", 0x36CDEC, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38F7F8, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38F804, 0x14
-.global $$22178
 $$22178:
 	.incbin "baserom.dol", 0x38F818, 0x30
-.global $$22179
 $$22179:
 	.incbin "baserom.dol", 0x38F848, 0x38
-.global $$22180
 $$22180:
 	.incbin "baserom.dol", 0x38F880, 0x34
-.global $$22181
 $$22181:
 	.incbin "baserom.dol", 0x38F8B4, 0x24
-.global $$22647
 $$22647:
 	.incbin "baserom.dol", 0x38F8D8, 0xC
-.global $$22649
 $$22649:
 	.incbin "baserom.dol", 0x38F8E4, 0xC
-.global $$22806
 $$22806:
 	.incbin "baserom.dol", 0x38F8F0, 0xC
-.global $$22807
 $$22807:
 	.incbin "baserom.dol", 0x38F8FC, 0xC
-.global $$22808
 $$22808:
 	.incbin "baserom.dol", 0x38F908, 0xC
-.global $$22809
 $$22809:
 	.incbin "baserom.dol", 0x38F914, 0xC
-.global $$22810
 $$22810:
 	.incbin "baserom.dol", 0x38F920, 0xC
-.global $$22811
 $$22811:
 	.incbin "baserom.dol", 0x38F92C, 0xC
-.global $$22812
 $$22812:
 	.incbin "baserom.dol", 0x38F938, 0xC
-.global $$22813
 $$22813:
 	.incbin "baserom.dol", 0x38F944, 0xC
-.global $$22814
 $$22814:
 	.incbin "baserom.dol", 0x38F950, 0xC
-.global $$22817
 $$22817:
 	.incbin "baserom.dol", 0x38F95C, 0xC
-.global $$22818
 $$22818:
 	.incbin "baserom.dol", 0x38F968, 0xC
-.global $$22819
 $$22819:
 	.incbin "baserom.dol", 0x38F974, 0xC
-.global $$22820
 $$22820:
 	.incbin "baserom.dol", 0x38F980, 0xC
-.global $$22821
 $$22821:
 	.incbin "baserom.dol", 0x38F98C, 0xC
-.global $$22822
 $$22822:
 	.incbin "baserom.dol", 0x38F998, 0xC
-.global $$22823
 $$22823:
 	.incbin "baserom.dol", 0x38F9A4, 0xC
-.global $$22824
 $$22824:
 	.incbin "baserom.dol", 0x38F9B0, 0xC
-.global $$22825
 $$22825:
 	.incbin "baserom.dol", 0x38F9BC, 0xC
-.global $$22826
 $$22826:
 	.incbin "baserom.dol", 0x38F9C8, 0xC
-.global $$22827
 $$22827:
 	.incbin "baserom.dol", 0x38F9D4, 0xC
-.global $$22828
 $$22828:
 	.incbin "baserom.dol", 0x38F9E0, 0xC
-.global $$22829
 $$22829:
 	.incbin "baserom.dol", 0x38F9EC, 0xC
-.global $$22986
 $$22986:
 	.incbin "baserom.dol", 0x38F9F8, 0x14
-.global $$22987
 $$22987:
 	.incbin "baserom.dol", 0x38FA0C, 0x14
-.global $$22988
 $$22988:
 	.incbin "baserom.dol", 0x38FA20, 0x18
-.global $$22989
 $$22989:
 	.incbin "baserom.dol", 0x38FA38, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global mare_name_table$2805
 mare_name_table$2805:
 	.incbin "baserom.dol", 0x3CD368, 0x28
-.global name_table$2816
 name_table$2816:
 	.incbin "baserom.dol", 0x3CD390, 0x54
 .global __vt__17TPollutionManager
 __vt__17TPollutionManager:
 	.incbin "baserom.dol", 0x3CD3E4, 0x28
-.global $$23043
 $$23043:
 	.incbin "baserom.dol", 0x3CD40C, 0x1C
 .global __vt__25TPollutionLayerWallMinusX
@@ -1348,54 +1311,38 @@ mEdgeAlpha__17TPollutionManager:
 	.incbin "baserom.dol", 0x3E382C, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$23188
 $$23188:
 	.incbin "baserom.dol", 0x3E8D60, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23239
 $$23239:
 	.skip 0xC
-.global $$23240
 $$23240:
 	.skip 0xC
-.global $$23241
 $$23241:
 	.skip 0xC
-.global $$23242
 $$23242:
 	.skip 0xC
-.global $$23243
 $$23243:
 	.skip 0xC
-.global $$23244
 $$23244:
 	.skip 0xC
-.global $$23245
 $$23245:
 	.skip 0xC
-.global $$23246
 $$23246:
 	.skip 0xC
-.global $$23247
 $$23247:
 	.skip 0xC
-.global $$23248
 $$23248:
 	.skip 0xC
-.global $$23249
 $$23249:
 	.skip 0xC
-.global $$23250
 $$23250:
 	.skip 0xC
-.global $$23251
 $$23251:
 	.skip 0xC
-.global $$23252
 $$23252:
 	.skip 0xC
-.global $$23253
 $$23253:
 	.skip 0x10
 

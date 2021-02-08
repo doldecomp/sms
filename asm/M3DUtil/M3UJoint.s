@@ -661,7 +661,6 @@ $$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf:
 /* 800D2C08 000CFB48  4B FF F9 7C */	b init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3B0490, 0xC
 .global __vt__24M3UMtxCalcSIAnmBlendQuat
@@ -669,9 +668,7 @@ __vt__24M3UMtxCalcSIAnmBlendQuat:
 	.incbin "baserom.dol", 0x3B049C, 0x44
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21572
 $$21572:
 	.incbin "baserom.dol", 0x3E4BE8, 0x4
-.global $$21573
 $$21573:
 	.incbin "baserom.dol", 0x3E4BEC, 0x4

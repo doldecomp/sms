@@ -213,14 +213,11 @@ __sinit_JASWaveArcLoader_cpp:
 	.incbin "baserom.dol", 0x36CBF0, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sCurrentDir__Q28JASystem13WaveArcLoader
 sCurrentDir__Q28JASystem13WaveArcLoader:
 	.incbin "baserom.dol", 0x3A7F10, 0x40
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$2257
 $$2257:
 	.skip 0xC
-.global sAramHeap__Q28JASystem13WaveArcLoader
 sAramHeap__Q28JASystem13WaveArcLoader:
 	.skip 0x2C

@@ -106,6 +106,5 @@ lbl_80352EAC:
 /* 80352EBC 0034FDFC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21717
 $$21717:
 	.incbin "baserom.dol", 0x3EC198, 0x8

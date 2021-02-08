@@ -1101,7 +1101,6 @@ lbl_800B3B68:
 /* 800B3B80 000B0AC0  7C 08 03 A6 */	mtlr r0
 /* 800B3B84 000B0AC4  4E 80 00 20 */	blr 
 
-.global AlarmHandler
 AlarmHandler:
 /* 800B3B88 000B0AC8  7C 08 02 A6 */	mflr r0
 /* 800B3B8C 000B0ACC  3C 80 80 3F */	lis r4, Alarm@ha
@@ -1632,83 +1631,58 @@ lbl_800B42EC:
 /* 800B4314 000B1254  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global Si
 Si:
 	.incbin "baserom.dol", 0x3AED08, 0x14
-.global Type
 Type:
 	.incbin "baserom.dol", 0x3AED1C, 0x10
-.global $$2456
 $$2456:
 	.incbin "baserom.dol", 0x3AED2C, 0xC
-.global $$2458
 $$2458:
 	.incbin "baserom.dol", 0x3AED38, 0x10
-.global $$2459
 $$2459:
 	.incbin "baserom.dol", 0x3AED48, 0x10
-.global $$2460
 $$2460:
 	.incbin "baserom.dol", 0x3AED58, 0x10
-.global $$2461
 $$2461:
 	.incbin "baserom.dol", 0x3AED68, 0xC
-.global $$2462
 $$2462:
 	.incbin "baserom.dol", 0x3AED74, 0x10
-.global $$2463
 $$2463:
 	.incbin "baserom.dol", 0x3AED84, 0x14
-.global $$2464
 $$2464:
 	.incbin "baserom.dol", 0x3AED98, 0x14
-.global $$2465
 $$2465:
 	.incbin "baserom.dol", 0x3AEDAC, 0x14
-.global $$2466
 $$2466:
 	.incbin "baserom.dol", 0x3AEDC0, 0xC
-.global $$2467
 $$2467:
 	.incbin "baserom.dol", 0x3AEDCC, 0xC
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global Packet
 Packet:
 	.skip 0x80
-.global Alarm
 Alarm:
 	.skip 0xA0
-.global TypeTime
 TypeTime:
 	.skip 0x20
-.global XferTime
 XferTime:
 	.skip 0x20
-.global TypeCallback
 TypeCallback:
 	.skip 0x40
-.global RDSTHandler
 RDSTHandler:
 	.skip 0x10
-.global InputBufferValid
 InputBufferValid:
 	.skip 0x10
-.global InputBuffer
 InputBuffer:
 	.skip 0x20
-.global InputBufferVcount
 InputBufferVcount:
 	.skip 0x10
-.global cmdFixDevice$326
 cmdFixDevice$326:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global cmdTypeAndStatus$77
 cmdTypeAndStatus$77:
 	.skip 0x4
-.global cmdTypeAndStatus$371
 cmdTypeAndStatus$371:
 	.skip 0x4
 .global __PADFixBits

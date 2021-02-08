@@ -2957,12 +2957,10 @@ __sinit_JAIBasic_cpp:
 	.incbin "baserom.dol", 0x36CBE0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2463
 $$2463:
 	.incbin "baserom.dol", 0x36E1E8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2547
 $$2547:
 	.incbin "baserom.dol", 0x3A7C40, 0x24
 .global __vt__8JAIBasic
@@ -2970,22 +2968,16 @@ __vt__8JAIBasic:
 	.incbin "baserom.dol", 0x3A7C64, 0x3C
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2413
 $$2413:
 	.incbin "baserom.dol", 0x3E4160, 0x8
-.global $$2694
 $$2694:
 	.incbin "baserom.dol", 0x3E4168, 0x4
-.global $$2695
 $$2695:
 	.incbin "baserom.dol", 0x3E416C, 0x4
-.global $$2696
 $$2696:
 	.incbin "baserom.dol", 0x3E4170, 0x4
-.global $$21287
 $$21287:
 	.incbin "baserom.dol", 0x3E4174, 0x4
-.global $$21289
 $$21289:
 	.incbin "baserom.dol", 0x3E4178, 0x8
 
@@ -2998,9 +2990,7 @@ JAInullCamera:
 .global basic__8JAIBasic
 basic__8JAIBasic:
 	.skip 0x4
-.global _dinfo$1264
 _dinfo$1264:
 	.skip 0x4
-.global _info$1317
 _info$1317:
 	.skip 0x8

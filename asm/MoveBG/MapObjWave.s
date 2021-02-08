@@ -1385,7 +1385,6 @@ lbl_801B5834:
 	.incbin "baserom.dol", 0x36CD44, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22678
 $$22678:
 	.incbin "baserom.dol", 0x38C180, 0x18
 
@@ -1395,157 +1394,108 @@ __vt__11TMapObjWave:
 	.incbin "baserom.dol", 0x3C68C0, 0x28
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global sAlphaCompLarge
 sAlphaCompLarge:
 	.incbin "baserom.dol", 0x3E36C0, 0x1
-.global sAlphaCompSmall
 sAlphaCompSmall:
 	.incbin "baserom.dol", 0x3E36C1, 0x7
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22646
 $$22646:
 	.incbin "baserom.dol", 0x3E8308, 0x4
-.global $$22647
 $$22647:
 	.incbin "baserom.dol", 0x3E830C, 0x4
-.global $$22648
 $$22648:
 	.incbin "baserom.dol", 0x3E8310, 0x4
-.global $$22649
 $$22649:
 	.incbin "baserom.dol", 0x3E8314, 0x4
-.global $$22650
 $$22650:
 	.incbin "baserom.dol", 0x3E8318, 0x8
-.global $$22652
 $$22652:
 	.incbin "baserom.dol", 0x3E8320, 0x8
-.global $$22674
 $$22674:
 	.incbin "baserom.dol", 0x3E8328, 0x4
-.global $$22675
 $$22675:
 	.incbin "baserom.dol", 0x3E832C, 0x4
-.global $$22676
 $$22676:
 	.incbin "baserom.dol", 0x3E8330, 0x4
-.global $$22677
 $$22677:
 	.incbin "baserom.dol", 0x3E8334, 0x4
-.global $$22679
 $$22679:
 	.incbin "baserom.dol", 0x3E8338, 0x4
-.global $$22680
 $$22680:
 	.incbin "baserom.dol", 0x3E833C, 0x4
-.global $$22681
 $$22681:
 	.incbin "baserom.dol", 0x3E8340, 0x4
-.global $$22682
 $$22682:
 	.incbin "baserom.dol", 0x3E8344, 0x4
-.global $$22683
 $$22683:
 	.incbin "baserom.dol", 0x3E8348, 0x4
-.global $$22684
 $$22684:
 	.incbin "baserom.dol", 0x3E834C, 0x4
-.global $$22685
 $$22685:
 	.incbin "baserom.dol", 0x3E8350, 0x4
-.global $$22686
 $$22686:
 	.incbin "baserom.dol", 0x3E8354, 0x4
-.global $$22687
 $$22687:
 	.incbin "baserom.dol", 0x3E8358, 0x4
-.global $$22688
 $$22688:
 	.incbin "baserom.dol", 0x3E835C, 0x4
-.global $$22689
 $$22689:
 	.incbin "baserom.dol", 0x3E8360, 0x4
-.global $$22690
 $$22690:
 	.incbin "baserom.dol", 0x3E8364, 0x4
-.global $$22691
 $$22691:
 	.incbin "baserom.dol", 0x3E8368, 0x4
-.global $$22730
 $$22730:
 	.incbin "baserom.dol", 0x3E836C, 0x4
-.global $$22831
 $$22831:
 	.incbin "baserom.dol", 0x3E8370, 0x4
-.global $$22832
 $$22832:
 	.incbin "baserom.dol", 0x3E8374, 0x4
-.global $$22833
 $$22833:
 	.incbin "baserom.dol", 0x3E8378, 0x4
-.global $$22834
 $$22834:
 	.incbin "baserom.dol", 0x3E837C, 0x4
-.global $$22921
 $$22921:
 	.incbin "baserom.dol", 0x3E8380, 0x4
-.global $$22922
 $$22922:
 	.incbin "baserom.dol", 0x3E8384, 0x4
-.global $$22954
 $$22954:
 	.incbin "baserom.dol", 0x3E8388, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22971
 $$22971:
 	.skip 0xC
-.global $$22972
 $$22972:
 	.skip 0xC
-.global $$22973
 $$22973:
 	.skip 0xC
-.global $$22974
 $$22974:
 	.skip 0xC
-.global $$22975
 $$22975:
 	.skip 0xC
-.global $$22976
 $$22976:
 	.skip 0xC
-.global $$22977
 $$22977:
 	.skip 0xC
-.global $$22978
 $$22978:
 	.skip 0xC
-.global $$22979
 $$22979:
 	.skip 0xC
-.global $$22980
 $$22980:
 	.skip 0xC
-.global $$22981
 $$22981:
 	.skip 0xC
-.global $$22982
 $$22982:
 	.skip 0xC
-.global $$22983
 $$22983:
 	.skip 0xC
-.global $$22984
 $$22984:
 	.skip 0xC
-.global $$22985
 $$22985:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sColor
 sColor:
 	.skip 0x4
 .global gpMapObjWave

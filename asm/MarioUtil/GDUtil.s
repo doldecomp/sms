@@ -232,6 +232,5 @@ __vt__Q210TGDLStatic12TGDLSentinel:
 	.incbin "baserom.dol", 0x3B0470, 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global currentTGDLStatic
 currentTGDLStatic:
 	.skip 0x8

@@ -1064,7 +1064,6 @@ $$232$$2__dt__16TEnemyAttachmentFv:
 /* 8025164C 0024E58C  4B FF FF 6C */	b __dt__16TEnemyAttachmentFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22620
 $$22620:
 	.incbin "baserom.dol", 0x391FB0, 0x10
 
@@ -1080,24 +1079,17 @@ __vt__16TEnemyAttachment:
 	.incbin "baserom.dol", 0x3CFF00, 0x148
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22566
 $$22566:
 	.incbin "baserom.dol", 0x3E99F0, 0x4
-.global $$22567
 $$22567:
 	.incbin "baserom.dol", 0x3E99F4, 0x4
-.global $$22700
 $$22700:
 	.incbin "baserom.dol", 0x3E99F8, 0x4
-.global $$22757
 $$22757:
 	.incbin "baserom.dol", 0x3E99FC, 0x4
-.global $$22829
 $$22829:
 	.incbin "baserom.dol", 0x3E9A00, 0x4
-.global $$22860
 $$22860:
 	.incbin "baserom.dol", 0x3E9A04, 0x4
-.global $$22879
 $$22879:
 	.incbin "baserom.dol", 0x3E9A08, 0x8

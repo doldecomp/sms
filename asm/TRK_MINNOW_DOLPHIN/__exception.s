@@ -1,6 +1,7 @@
 .include "macros.inc"
 
 .section .init, "ax"  # 0x80003100 - 0x80005540
+.global lbl_80003298
 lbl_80003298:
 /* 80003298 00000298  4D 65 74 72 */	.4byte 0x4D657472  /* unknown instruction */
 /* 8000329C 0000029C  6F 77 65 72 */	xoris r23, r27, 0x6572

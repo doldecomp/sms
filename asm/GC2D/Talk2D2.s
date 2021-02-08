@@ -5008,220 +5008,151 @@ lbl_80216160:
 	.incbin "baserom.dol", 0x36CE28, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x390590, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x39059C, 0x14
-.global $$22484
 $$22484:
 	.incbin "baserom.dol", 0x3905B0, 0x30
-.global $$22485
 $$22485:
 	.incbin "baserom.dol", 0x3905E0, 0x38
-.global $$22486
 $$22486:
 	.incbin "baserom.dol", 0x390618, 0x34
-.global $$22487
 $$22487:
 	.incbin "baserom.dol", 0x39064C, 0x24
-.global scTalkSoundList
 scTalkSoundList:
 	.incbin "baserom.dol", 0x390670, 0x21C
-.global $$22719
 $$22719:
 	.incbin "baserom.dol", 0x39088C, 0x10
-.global $$22722
 $$22722:
 	.incbin "baserom.dol", 0x39089C, 0x28
-.global $$22723
 $$22723:
 	.incbin "baserom.dol", 0x3908C4, 0x28
-.global $$23560
 $$23560:
 	.incbin "baserom.dol", 0x3908EC, 0x10
-.global $$23561
 $$23561:
 	.incbin "baserom.dol", 0x3908FC, 0x10
-.global $$23562
 $$23562:
 	.incbin "baserom.dol", 0x39090C, 0x10
-.global $$23563
 $$23563:
 	.incbin "baserom.dol", 0x39091C, 0x10
-.global $$23639
 $$23639:
 	.incbin "baserom.dol", 0x39092C, 0x1C
-.global $$23640
 $$23640:
 	.incbin "baserom.dol", 0x390948, 0x34
-.global $$24204
 $$24204:
 	.incbin "baserom.dol", 0x39097C, 0x40
-.global $$24205
 $$24205:
 	.incbin "baserom.dol", 0x3909BC, 0x40
-.global $$24977
 $$24977:
 	.incbin "baserom.dol", 0x3909FC, 0x10
-.global $$24978
 $$24978:
 	.incbin "baserom.dol", 0x390A0C, 0x20
-.global $$24979
 $$24979:
 	.incbin "baserom.dol", 0x390A2C, 0x18
-.global $$24980
 $$24980:
 	.incbin "baserom.dol", 0x390A44, 0x1C
-.global $$24981
 $$24981:
 	.incbin "baserom.dol", 0x390A60, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global cColorTable__8TTalk2D2
 cColorTable__8TTalk2D2:
 	.incbin "baserom.dol", 0x3CE100, 0x18
 .global __vt__8TTalk2D2
 __vt__8TTalk2D2:
 	.incbin "baserom.dol", 0x3CE118, 0x24
-.global $$23886
 $$23886:
 	.incbin "baserom.dol", 0x3CE13C, 0x24
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22720
 $$22720:
 	.incbin "baserom.dol", 0x3E91B0, 0x8
-.global $$22721
 $$22721:
 	.incbin "baserom.dol", 0x3E91B8, 0x4
-.global $$23304
 $$23304:
 	.incbin "baserom.dol", 0x3E91BC, 0x4
-.global $$23370
 $$23370:
 	.incbin "baserom.dol", 0x3E91C0, 0x4
-.global $$23371
 $$23371:
 	.incbin "baserom.dol", 0x3E91C4, 0x4
-.global $$23373
 $$23373:
 	.incbin "baserom.dol", 0x3E91C8, 0x8
-.global $$23555
 $$23555:
 	.incbin "baserom.dol", 0x3E91D0, 0x8
-.global $$23556
 $$23556:
 	.incbin "baserom.dol", 0x3E91D8, 0x8
-.global $$23557
 $$23557:
 	.incbin "baserom.dol", 0x3E91E0, 0x4
-.global $$23558
 $$23558:
 	.incbin "baserom.dol", 0x3E91E4, 0x4
-.global $$23559
 $$23559:
 	.incbin "baserom.dol", 0x3E91E8, 0x4
-.global $$23564
 $$23564:
 	.incbin "baserom.dol", 0x3E91EC, 0x4
-.global $$23720
 $$23720:
 	.incbin "baserom.dol", 0x3E91F0, 0x4
-.global $$23721
 $$23721:
 	.incbin "baserom.dol", 0x3E91F4, 0x4
-.global $$23885
 $$23885:
 	.incbin "baserom.dol", 0x3E91F8, 0x4
-.global $$24371
 $$24371:
 	.incbin "baserom.dol", 0x3E91FC, 0x4
-.global $$24548
 $$24548:
 	.incbin "baserom.dol", 0x3E9200, 0x4
-.global $$24549
 $$24549:
 	.incbin "baserom.dol", 0x3E9204, 0x4
-.global $$24550
 $$24550:
 	.incbin "baserom.dol", 0x3E9208, 0x4
-.global $$24551
 $$24551:
 	.incbin "baserom.dol", 0x3E920C, 0x4
-.global $$24552
 $$24552:
 	.incbin "baserom.dol", 0x3E9210, 0x4
-.global $$24553
 $$24553:
 	.incbin "baserom.dol", 0x3E9214, 0x4
-.global $$24554
 $$24554:
 	.incbin "baserom.dol", 0x3E9218, 0x4
-.global $$24555
 $$24555:
 	.incbin "baserom.dol", 0x3E921C, 0x4
-.global $$24561
 $$24561:
 	.incbin "baserom.dol", 0x3E9220, 0x8
-.global $$24944
 $$24944:
 	.incbin "baserom.dol", 0x3E9228, 0x4
-.global $$24945
 $$24945:
 	.incbin "baserom.dol", 0x3E922C, 0x4
-.global $$24976
 $$24976:
 	.incbin "baserom.dol", 0x3E9230, 0x8
-.global $$25010
 $$25010:
 	.incbin "baserom.dol", 0x3E9238, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$25013
 $$25013:
 	.skip 0xC
-.global $$25014
 $$25014:
 	.skip 0xC
-.global $$25015
 $$25015:
 	.skip 0xC
-.global $$25016
 $$25016:
 	.skip 0xC
-.global $$25017
 $$25017:
 	.skip 0xC
-.global $$25018
 $$25018:
 	.skip 0xC
-.global $$25019
 $$25019:
 	.skip 0xC
-.global $$25020
 $$25020:
 	.skip 0xC
-.global $$25021
 $$25021:
 	.skip 0xC
-.global $$25022
 $$25022:
 	.skip 0xC
-.global $$25023
 $$25023:
 	.skip 0xC
-.global $$25024
 $$25024:
 	.skip 0xC
-.global $$25025
 $$25025:
 	.skip 0xC
-.global $$25026
 $$25026:
 	.skip 0xC
-.global $$25027
 $$25027:
 	.skip 0x10
 

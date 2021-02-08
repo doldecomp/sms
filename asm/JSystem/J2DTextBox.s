@@ -903,6 +903,5 @@ __vt__10J2DTextBox:
 	.incbin "baserom.dol", 0x3A5D48, 0x30
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2397
 $$2397:
 	.incbin "baserom.dol", 0x3E3E88, 0x8

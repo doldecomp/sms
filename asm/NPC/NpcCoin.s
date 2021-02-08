@@ -526,59 +526,41 @@ lbl_8017B240:
 	.incbin "baserom.dol", 0x36CCD4, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22499
 $$22499:
 	.incbin "baserom.dol", 0x3E6690, 0x4
-.global $$22500
 $$22500:
 	.incbin "baserom.dol", 0x3E6694, 0x4
-.global $$22501
 $$22501:
 	.incbin "baserom.dol", 0x3E6698, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22377
 $$22377:
 	.skip 0xC
-.global $$22378
 $$22378:
 	.skip 0xC
-.global $$22379
 $$22379:
 	.skip 0xC
-.global $$22380
 $$22380:
 	.skip 0xC
-.global $$22381
 $$22381:
 	.skip 0xC
-.global $$22382
 $$22382:
 	.skip 0xC
-.global $$22383
 $$22383:
 	.skip 0xC
-.global $$22384
 $$22384:
 	.skip 0xC
-.global $$22385
 $$22385:
 	.skip 0xC
-.global $$22386
 $$22386:
 	.skip 0xC
-.global $$22387
 $$22387:
 	.skip 0xC
-.global $$22388
 $$22388:
 	.skip 0xC
-.global $$22389
 $$22389:
 	.skip 0xC
-.global $$22390
 $$22390:
 	.skip 0xC
-.global $$22391
 $$22391:
 	.skip 0x10

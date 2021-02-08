@@ -110,7 +110,6 @@ lbl_8025E364:
 /* 8025E374 0025B2B4  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 8025E378 0025B2B8  4E 80 00 20 */	blr 
 
-.global MsWrap$$0f$$1__Ffff
 MsWrap$$0f$$1__Ffff:
 /* 8025E37C 0025B2BC  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 8025E380 0025B2C0  4C 41 13 82 */	cror 2, 1, 2
@@ -3509,42 +3508,30 @@ __ct__10TGraphNodeFv:
 /* 80261398 0025E2D8  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x393238, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x393244, 0x14
-.global $$21961
 $$21961:
 	.incbin "baserom.dol", 0x393258, 0x30
-.global $$21962
 $$21962:
 	.incbin "baserom.dol", 0x393288, 0x38
-.global $$21963
 $$21963:
 	.incbin "baserom.dol", 0x3932C0, 0x34
-.global $$21964
 $$21964:
 	.incbin "baserom.dol", 0x3932F4, 0x24
-.global $$23085
 $$23085:
 	.incbin "baserom.dol", 0x393318, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3D1358, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3D1364, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3D1370, 0x10
-.global MtxCalcTypeName
 MtxCalcTypeName:
 	.incbin "baserom.dol", 0x3D1380, 0x10
-.global grDummyRail
 grDummyRail:
 	.incbin "baserom.dol", 0x3D1390, 0xCC
 .global __vt__9TGraphWeb
@@ -3552,42 +3539,29 @@ __vt__9TGraphWeb:
 	.incbin "baserom.dol", 0x3D145C, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22783
 $$22783:
 	.incbin "baserom.dol", 0x3E9F08, 0x4
-.global $$22890
 $$22890:
 	.incbin "baserom.dol", 0x3E9F0C, 0x4
-.global $$22892
 $$22892:
 	.incbin "baserom.dol", 0x3E9F10, 0x8
-.global $$22923
 $$22923:
 	.incbin "baserom.dol", 0x3E9F18, 0x4
-.global $$22924
 $$22924:
 	.incbin "baserom.dol", 0x3E9F1C, 0x4
-.global $$22926
 $$22926:
 	.incbin "baserom.dol", 0x3E9F20, 0x8
-.global $$22972
 $$22972:
 	.incbin "baserom.dol", 0x3E9F28, 0x4
-.global $$22973
 $$22973:
 	.incbin "baserom.dol", 0x3E9F2C, 0x4
-.global $$23127
 $$23127:
 	.incbin "baserom.dol", 0x3E9F30, 0x4
-.global $$23419
 $$23419:
 	.incbin "baserom.dol", 0x3E9F34, 0x4
-.global $$23607
 $$23607:
 	.incbin "baserom.dol", 0x3E9F38, 0x4
-.global $$24077
 $$24077:
 	.incbin "baserom.dol", 0x3E9F3C, 0x4
-.global $$24078
 $$24078:
 	.incbin "baserom.dol", 0x3E9F40, 0x8

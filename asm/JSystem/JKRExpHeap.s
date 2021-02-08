@@ -2106,88 +2106,60 @@ getHeapType__10JKRExpHeapFv:
 /* 8000B8D0 00008810  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2237
 $$2237:
 	.incbin "baserom.dol", 0x36D158, 0x10
-.global $$2294
 $$2294:
 	.incbin "baserom.dol", 0x36D168, 0x28
-.global $$2591
 $$2591:
 	.incbin "baserom.dol", 0x36D190, 0x2C
-.global $$2592
 $$2592:
 	.incbin "baserom.dol", 0x36D1BC, 0x30
-.global $$2593
 $$2593:
 	.incbin "baserom.dol", 0x36D1EC, 0x2C
-.global $$2594
 $$2594:
 	.incbin "baserom.dol", 0x36D218, 0x2C
-.global $$2595
 $$2595:
 	.incbin "baserom.dol", 0x36D244, 0x28
-.global $$2596
 $$2596:
 	.incbin "baserom.dol", 0x36D26C, 0x30
-.global $$2597
 $$2597:
 	.incbin "baserom.dol", 0x36D29C, 0x28
-.global $$2606
 $$2606:
 	.incbin "baserom.dol", 0x36D2C4, 0x10
-.global $$2607
 $$2607:
 	.incbin "baserom.dol", 0x36D2D4, 0x1C
-.global $$2688
 $$2688:
 	.incbin "baserom.dol", 0x36D2F0, 0x24
-.global $$2689
 $$2689:
 	.incbin "baserom.dol", 0x36D314, 0x10
-.global $$2720
 $$2720:
 	.incbin "baserom.dol", 0x36D324, 0x38
-.global $$2721
 $$2721:
 	.incbin "baserom.dol", 0x36D35C, 0x10
-.global $$2723
 $$2723:
 	.incbin "baserom.dol", 0x36D36C, 0x3C
-.global $$2726
 $$2726:
 	.incbin "baserom.dol", 0x36D3A8, 0x28
-.global $$2727
 $$2727:
 	.incbin "baserom.dol", 0x36D3D0, 0x10
-.global $$2729
 $$2729:
 	.incbin "baserom.dol", 0x36D3E0, 0x2C
-.global $$2798
 $$2798:
 	.incbin "baserom.dol", 0x36D40C, 0x1C
-.global $$2799
 $$2799:
 	.incbin "baserom.dol", 0x36D428, 0x30
-.global $$2800
 $$2800:
 	.incbin "baserom.dol", 0x36D458, 0x14
-.global $$2801
 $$2801:
 	.incbin "baserom.dol", 0x36D46C, 0xC
-.global $$2802
 $$2802:
 	.incbin "baserom.dol", 0x36D478, 0x1C
-.global $$2803
 $$2803:
 	.incbin "baserom.dol", 0x36D494, 0x14
-.global $$2804
 $$2804:
 	.incbin "baserom.dol", 0x36D4A8, 0x14
-.global $$2805
 $$2805:
 	.incbin "baserom.dol", 0x36D4BC, 0x14
-.global $$2806
 $$2806:
 	.incbin "baserom.dol", 0x36D4D0, 0x18
 
@@ -2197,44 +2169,31 @@ __vt__10JKRExpHeap:
 	.incbin "baserom.dol", 0x3A5548, 0x50
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2722
 $$2722:
 	.incbin "baserom.dol", 0x3E3D00, 0x8
-.global $$2724
 $$2724:
 	.incbin "baserom.dol", 0x3E3D08, 0x8
-.global $$2725
 $$2725:
 	.incbin "baserom.dol", 0x3E3D10, 0x8
-.global $$2728
 $$2728:
 	.incbin "baserom.dol", 0x3E3D18, 0x8
-.global $$2730
 $$2730:
 	.incbin "baserom.dol", 0x3E3D20, 0x8
-.global $$2732
 $$2732:
 	.incbin "baserom.dol", 0x3E3D28, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global whatdo
 whatdo:
 	.skip 0x4
-.global whatdo2
 whatdo2:
 	.skip 0x4
-.global DBfoundSize
 DBfoundSize:
 	.skip 0x4
-.global DBfoundOffset
 DBfoundOffset:
 	.skip 0x4
-.global DBfoundBlock
 DBfoundBlock:
 	.skip 0x4
-.global DBnewFreeBlock
 DBnewFreeBlock:
 	.skip 0x4
-.global DBnewUsedBlock
 DBnewUsedBlock:
 	.skip 0x8

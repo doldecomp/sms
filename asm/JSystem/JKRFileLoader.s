@@ -489,17 +489,14 @@ __vt__13JKRFileLoader:
 	.incbin "baserom.dol", 0x3A55B8, 0x40
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global rootPath$1763
 rootPath$1763:
 	.incbin "baserom.dol", 0x3E3000, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21783
 $$21783:
 	.incbin "baserom.dol", 0x3E3D30, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$21483
 $$21483:
 	.skip 0x10
 

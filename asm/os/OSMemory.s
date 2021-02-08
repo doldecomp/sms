@@ -1,7 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global OnReset
 OnReset:
 /* 80090C54 0008DB94  7C 08 02 A6 */	mflr r0
 /* 80090C58 0008DB98  2C 03 00 00 */	cmpwi r3, 0
@@ -264,6 +263,5 @@ lbl_80090FCC:
 /* 80090FF4 0008DF34  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global ResetFunctionInfo
 ResetFunctionInfo:
 	.incbin "baserom.dol", 0x3AD900, 0x10

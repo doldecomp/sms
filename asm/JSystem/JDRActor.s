@@ -311,7 +311,6 @@ $$232$$2__dt__Q26JDrama6TActorFv:
 /* 80040D14 0003DC54  4B FF FE 80 */	b __dt__Q26JDrama6TActorFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2533
 $$2533:
 	.incbin "baserom.dol", 0x36DEF0, 0x10
 

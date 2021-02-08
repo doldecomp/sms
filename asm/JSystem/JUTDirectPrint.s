@@ -409,18 +409,14 @@ lbl_8001174C:
 /* 8001175C 0000E69C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global sAsciiTable__14JUTDirectPrint
 sAsciiTable__14JUTDirectPrint:
 	.incbin "baserom.dol", 0x3A58B0, 0x80
-.global sFontData__14JUTDirectPrint
 sFontData__14JUTDirectPrint:
 	.incbin "baserom.dol", 0x3A5930, 0x100
-.global sFontData2__14JUTDirectPrint
 sFontData2__14JUTDirectPrint:
 	.incbin "baserom.dol", 0x3A5A30, 0x138
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2192
 $$2192:
 	.incbin "baserom.dol", 0x3E3D88, 0x8
 

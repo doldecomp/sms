@@ -397,19 +397,14 @@ SMSGetRederRect_Game__Fv:
 /* 800F8E70 000F5DB0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3B0F40, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3B0F4C, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3B0F58, 0x10
-.global SMSAASamplePattern_non
 SMSAASamplePattern_non:
 	.incbin "baserom.dol", 0x3B0F68, 0x18
-.global SMSAASamplePattern_aa
 SMSAASamplePattern_aa:
 	.incbin "baserom.dol", 0x3B0F80, 0x18
 .global SMSVFilter_non

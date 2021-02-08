@@ -546,33 +546,25 @@ lbl_800CEAB0:
 /* 800CEB98 000CBAD8  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$217
 $$217:
 	.incbin "baserom.dol", 0x36F6E0, 0xD0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global NullTexData
 NullTexData:
 	.incbin "baserom.dol", 0x3AFB20, 0x10
-.global IdentityMtx
 IdentityMtx:
 	.incbin "baserom.dol", 0x3AFB30, 0x30
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global ColorBlack
 ColorBlack:
 	.incbin "baserom.dol", 0x3E3328, 0x4
-.global ColorWhite
 ColorWhite:
 	.incbin "baserom.dol", 0x3E332C, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$251
 $$251:
 	.incbin "baserom.dol", 0x3E4B60, 0x4
-.global $$252
 $$252:
 	.incbin "baserom.dol", 0x3E4B64, 0x4
-.global $$253
 $$253:
 	.incbin "baserom.dol", 0x3E4B68, 0x8

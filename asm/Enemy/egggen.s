@@ -262,31 +262,22 @@ $$232$$2__dt__13TEggGeneratorFv:
 /* 80310058 0030CF98  4B FF FF 90 */	b __dt__13TEggGeneratorFv
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x39E050, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x39E05C, 0x14
-.global $$21598
 $$21598:
 	.incbin "baserom.dol", 0x39E070, 0x30
-.global $$21599
 $$21599:
 	.incbin "baserom.dol", 0x39E0A0, 0x38
-.global $$21600
 $$21600:
 	.incbin "baserom.dol", 0x39E0D8, 0x34
-.global $$21601
 $$21601:
 	.incbin "baserom.dol", 0x39E10C, 0x24
-.global $$22267
 $$22267:
 	.incbin "baserom.dol", 0x39E130, 0x14
-.global entry$2266
 entry$2266:
 	.incbin "baserom.dol", 0x39E144, 0x18
-.global $$22277
 $$22277:
 	.incbin "baserom.dol", 0x39E15C, 0x14
 
@@ -299,18 +290,13 @@ __vt__13TEggGenerator:
 	.incbin "baserom.dol", 0x3DD1B4, 0x114
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22291
 $$22291:
 	.incbin "baserom.dol", 0x3EB708, 0x4
-.global $$22309
 $$22309:
 	.incbin "baserom.dol", 0x3EB70C, 0x4
-.global $$22310
 $$22310:
 	.incbin "baserom.dol", 0x3EB710, 0x4
-.global $$22311
 $$22311:
 	.incbin "baserom.dol", 0x3EB714, 0x4
-.global $$22312
 $$22312:
 	.incbin "baserom.dol", 0x3EB718, 0x8

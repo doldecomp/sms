@@ -493,88 +493,61 @@ lbl_80186F84:
 	.incbin "baserom.dol", 0x36CCF8, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3B7218, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3B7224, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3B7230, 0x10
-.global scTiming__10MSBgmXFade
 scTiming__10MSBgmXFade:
 	.incbin "baserom.dol", 0x3B7240, 0x48
-.global scExp__10MSBgmXFade
 scExp__10MSBgmXFade:
 	.incbin "baserom.dol", 0x3B7288, 0x48
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22016
 $$22016:
 	.incbin "baserom.dol", 0x3E69F0, 0x4
-.global $$22017
 $$22017:
 	.incbin "baserom.dol", 0x3E69F4, 0x4
-.global $$22018
 $$22018:
 	.incbin "baserom.dol", 0x3E69F8, 0x4
-.global $$22019
 $$22019:
 	.incbin "baserom.dol", 0x3E69FC, 0x4
-.global $$22039
 $$22039:
 	.incbin "baserom.dol", 0x3E6A00, 0x4
-.global $$22040
 $$22040:
 	.incbin "baserom.dol", 0x3E6A04, 0x4
-.global $$22041
 $$22041:
 	.incbin "baserom.dol", 0x3E6A08, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$21945
 $$21945:
 	.skip 0xC
-.global $$21946
 $$21946:
 	.skip 0xC
-.global $$21947
 $$21947:
 	.skip 0xC
-.global $$21948
 $$21948:
 	.skip 0xC
-.global $$21949
 $$21949:
 	.skip 0xC
-.global $$21950
 $$21950:
 	.skip 0xC
-.global $$21951
 $$21951:
 	.skip 0xC
-.global $$21952
 $$21952:
 	.skip 0xC
-.global $$21953
 $$21953:
 	.skip 0xC
-.global $$21954
 $$21954:
 	.skip 0xC
-.global $$21955
 $$21955:
 	.skip 0xC
-.global $$21956
 $$21956:
 	.skip 0xC
-.global $$21957
 $$21957:
 	.skip 0xC
-.global $$21958
 $$21958:
 	.skip 0xC
-.global $$21959
 $$21959:
 	.skip 0x10

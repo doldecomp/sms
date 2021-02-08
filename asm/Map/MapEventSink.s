@@ -2062,55 +2062,38 @@ lbl_801E2FC0:
 	.incbin "baserom.dol", 0x36CDC0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x38E7F0, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x38E7FC, 0x14
-.global $$22272
 $$22272:
 	.incbin "baserom.dol", 0x38E810, 0x30
-.global $$22273
 $$22273:
 	.incbin "baserom.dol", 0x38E840, 0x38
-.global $$22274
 $$22274:
 	.incbin "baserom.dol", 0x38E878, 0x34
-.global $$22275
 $$22275:
 	.incbin "baserom.dol", 0x38E8AC, 0x24
-.global $$22604
 $$22604:
 	.incbin "baserom.dol", 0x38E8D0, 0xC
-.global $$22606
 $$22606:
 	.incbin "baserom.dol", 0x38E8DC, 0xC
-.global $$23076
 $$23076:
 	.incbin "baserom.dol", 0x38E8E8, 0x24
-.global $$23077
 $$23077:
 	.incbin "baserom.dol", 0x38E90C, 0x24
-.global $$23151
 $$23151:
 	.incbin "baserom.dol", 0x38E930, 0xC
-.global $$23154
 $$23154:
 	.incbin "baserom.dol", 0x38E93C, 0x10
-.global $$23224
 $$23224:
 	.incbin "baserom.dol", 0x38E94C, 0x10
-.global $$23233
 $$23233:
 	.incbin "baserom.dol", 0x38E95C, 0x18
-.global $$23306
 $$23306:
 	.incbin "baserom.dol", 0x38E974, 0x1C
-.global $$23307
 $$23307:
 	.incbin "baserom.dol", 0x38E990, 0x10
-.global $$23308
 $$23308:
 	.incbin "baserom.dol", 0x38E9A0, 0x18
 
@@ -2137,80 +2120,55 @@ mCleanedDegree__13TMapEventSink:
 	.incbin "baserom.dol", 0x3E37C8, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$23152
 $$23152:
 	.incbin "baserom.dol", 0x3E8B10, 0x4
-.global $$23153
 $$23153:
 	.incbin "baserom.dol", 0x3E8B14, 0x4
-.global $$23219
 $$23219:
 	.incbin "baserom.dol", 0x3E8B18, 0x4
-.global $$23220
 $$23220:
 	.incbin "baserom.dol", 0x3E8B1C, 0x4
-.global $$23221
 $$23221:
 	.incbin "baserom.dol", 0x3E8B20, 0x4
-.global $$23222
 $$23222:
 	.incbin "baserom.dol", 0x3E8B24, 0x4
-.global $$23223
 $$23223:
 	.incbin "baserom.dol", 0x3E8B28, 0x4
-.global $$23587
 $$23587:
 	.incbin "baserom.dol", 0x3E8B2C, 0x4
-.global $$23617
 $$23617:
 	.incbin "baserom.dol", 0x3E8B30, 0x8
-.global $$23658
 $$23658:
 	.incbin "baserom.dol", 0x3E8B38, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23811
 $$23811:
 	.skip 0xC
-.global $$23812
 $$23812:
 	.skip 0xC
-.global $$23813
 $$23813:
 	.skip 0xC
-.global $$23814
 $$23814:
 	.skip 0xC
-.global $$23815
 $$23815:
 	.skip 0xC
-.global $$23816
 $$23816:
 	.skip 0xC
-.global $$23817
 $$23817:
 	.skip 0xC
-.global $$23818
 $$23818:
 	.skip 0xC
-.global $$23819
 $$23819:
 	.skip 0xC
-.global $$23820
 $$23820:
 	.skip 0xC
-.global $$23821
 $$23821:
 	.skip 0xC
-.global $$23822
 $$23822:
 	.skip 0xC
-.global $$23823
 $$23823:
 	.skip 0xC
-.global $$23824
 $$23824:
 	.skip 0xC
-.global $$23825
 $$23825:
 	.skip 0x10

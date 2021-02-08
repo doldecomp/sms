@@ -89,18 +89,13 @@ lbl_80179818:
 /* 801798AC 001767EC  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21682
 $$21682:
 	.incbin "baserom.dol", 0x3E6638, 0x4
-.global $$21683
 $$21683:
 	.incbin "baserom.dol", 0x3E663C, 0x4
-.global $$21684
 $$21684:
 	.incbin "baserom.dol", 0x3E6640, 0x4
-.global $$21685
 $$21685:
 	.incbin "baserom.dol", 0x3E6644, 0x4
-.global $$21686
 $$21686:
 	.incbin "baserom.dol", 0x3E6648, 0x8

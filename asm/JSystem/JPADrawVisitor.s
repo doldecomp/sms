@@ -6693,52 +6693,36 @@ __vt__20JPADrawExecLoadExTex:
 	.incbin "baserom.dol", 0x3A9BD4, 0x14
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21703
 $$21703:
 	.incbin "baserom.dol", 0x3E45A8, 0x4
-.global $$21704
 $$21704:
 	.incbin "baserom.dol", 0x3E45AC, 0x4
-.global $$21743
 $$21743:
 	.incbin "baserom.dol", 0x3E45B0, 0x4
-.global $$21744
 $$21744:
 	.incbin "baserom.dol", 0x3E45B4, 0x4
-.global $$21745
 $$21745:
 	.incbin "baserom.dol", 0x3E45B8, 0x8
-.global $$21797
 $$21797:
 	.incbin "baserom.dol", 0x3E45C0, 0x8
-.global $$21841
 $$21841:
 	.incbin "baserom.dol", 0x3E45C8, 0x8
-.global $$22374
 $$22374:
 	.incbin "baserom.dol", 0x3E45D0, 0x4
-.global $$22375
 $$22375:
 	.incbin "baserom.dol", 0x3E45D4, 0x4
-.global $$22378
 $$22378:
 	.incbin "baserom.dol", 0x3E45D8, 0x4
-.global $$22379
 $$22379:
 	.incbin "baserom.dol", 0x3E45DC, 0x4
-.global $$22380
 $$22380:
 	.incbin "baserom.dol", 0x3E45E0, 0x4
-.global $$22538
 $$22538:
 	.incbin "baserom.dol", 0x3E45E4, 0x4
-.global $$22542
 $$22542:
 	.incbin "baserom.dol", 0x3E45E8, 0x4
-.global $$24485
 $$24485:
 	.incbin "baserom.dol", 0x3E45EC, 0x4
-.global $$24568
 $$24568:
 	.incbin "baserom.dol", 0x3E45F0, 0x8
 

@@ -812,27 +812,19 @@ lbl_8009E2A4:
 /* 8009E2C0 0009B200  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __AR_Callback
 __AR_Callback:
 	.skip 0x4
-.global __AR_Size
 __AR_Size:
 	.skip 0x4
-.global __AR_InternalSize
 __AR_InternalSize:
 	.skip 0x4
-.global __AR_ExpansionSize
 __AR_ExpansionSize:
 	.skip 0x4
-.global __AR_StackPointer
 __AR_StackPointer:
 	.skip 0x4
-.global __AR_FreeBlocks
 __AR_FreeBlocks:
 	.skip 0x4
-.global __AR_BlockLength
 __AR_BlockLength:
 	.skip 0x4
-.global __AR_init_flag
 __AR_init_flag:
 	.skip 0x4

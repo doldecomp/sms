@@ -252,33 +252,24 @@ JMAHermiteInterpolation__Ffffffff:
 /* 80013E50 00010D90  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2151
 $$2151:
 	.incbin "baserom.dol", 0x3E3DF0, 0x8
-.global $$2153
 $$2153:
 	.incbin "baserom.dol", 0x3E3DF8, 0x8
-.global $$2182
 $$2182:
 	.incbin "baserom.dol", 0x3E3E00, 0x8
-.global $$2183
 $$2183:
 	.incbin "baserom.dol", 0x3E3E08, 0x8
-.global $$2186
 $$2186:
 	.incbin "baserom.dol", 0x3E3E10, 0x4
-.global $$2187
 $$2187:
 	.incbin "baserom.dol", 0x3E3E14, 0x4
-.global $$2188
 $$2188:
 	.incbin "baserom.dol", 0x3E3E18, 0x4
-.global $$2189
 $$2189:
 	.incbin "baserom.dol", 0x3E3E1C, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global jmaSinTableSize
 jmaSinTableSize:
 	.skip 0x4
 .global jmaSinShift

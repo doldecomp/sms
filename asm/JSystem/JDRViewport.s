@@ -161,9 +161,7 @@ __vt__Q26JDrama9TViewport:
 	.incbin "baserom.dol", 0x3A7A28, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2516
 $$2516:
 	.incbin "baserom.dol", 0x3E4108, 0x4
-.global $$2517
 $$2517:
 	.incbin "baserom.dol", 0x3E410C, 0x4

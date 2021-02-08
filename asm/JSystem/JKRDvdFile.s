@@ -410,10 +410,8 @@ lbl_80009C30:
 	.incbin "baserom.dol", 0x36CBB0, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2302
 $$2302:
 	.incbin "baserom.dol", 0x36D130, 0x10
-.global $$2303
 $$2303:
 	.incbin "baserom.dol", 0x36D140, 0x18
 
@@ -423,11 +421,9 @@ __vt__10JKRDvdFile:
 	.incbin "baserom.dol", 0x3A5520, 0x28
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$2237
 $$2237:
 	.skip 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sDvdList__10JKRDvdFile
 sDvdList__10JKRDvdFile:
 	.skip 0xC

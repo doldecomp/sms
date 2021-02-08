@@ -82,9 +82,7 @@ SMS_isExMap__Fv:
 /* 800FC5E8 000F9528  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global shineStageTable
 shineStageTable:
 	.incbin "baserom.dol", 0x3B10E8, 0x40
-.global exShineTable
 exShineTable:
 	.incbin "baserom.dol", 0x3B1128, 0x20

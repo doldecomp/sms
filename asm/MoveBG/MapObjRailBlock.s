@@ -971,7 +971,6 @@ lbl_801C7E48:
 /* 801C7E64 001C4DA4  38 21 01 B0 */	addi r1, r1, 0x1b0
 /* 801C7E68 001C4DA8  4E 80 00 20 */	blr 
 
-.global MsWrap$$0f$$1__Ffff
 MsWrap$$0f$$1__Ffff:
 /* 801C7E6C 001C4DAC  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 801C7E70 001C4DB0  4C 41 13 82 */	cror 2, 1, 2
@@ -2545,42 +2544,29 @@ __vt__11TRailMapObj:
 	.incbin "baserom.dol", 0x3C99DC, 0x174
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22572
 $$22572:
 	.incbin "baserom.dol", 0x3E8678, 0x4
-.global $$22636
 $$22636:
 	.incbin "baserom.dol", 0x3E867C, 0x4
-.global $$22637
 $$22637:
 	.incbin "baserom.dol", 0x3E8680, 0x4
-.global $$22638
 $$22638:
 	.incbin "baserom.dol", 0x3E8684, 0x4
-.global $$22640
 $$22640:
 	.incbin "baserom.dol", 0x3E8688, 0x8
-.global $$22671
 $$22671:
 	.incbin "baserom.dol", 0x3E8690, 0x4
-.global $$22693
 $$22693:
 	.incbin "baserom.dol", 0x3E8694, 0x4
-.global $$22715
 $$22715:
 	.incbin "baserom.dol", 0x3E8698, 0x4
-.global $$22900
 $$22900:
 	.incbin "baserom.dol", 0x3E869C, 0x4
-.global $$22901
 $$22901:
 	.incbin "baserom.dol", 0x3E86A0, 0x4
-.global $$22902
 $$22902:
 	.incbin "baserom.dol", 0x3E86A4, 0x4
-.global $$22904
 $$22904:
 	.incbin "baserom.dol", 0x3E86A8, 0x8
-.global $$22940
 $$22940:
 	.incbin "baserom.dol", 0x3E86B0, 0x8

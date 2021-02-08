@@ -327,59 +327,43 @@ lbl_8005BD9C:
 /* 8005BDB4 00058CF4  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$2128
 $$2128:
 	.incbin "baserom.dol", 0x36E250, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2148
 $$2148:
 	.incbin "baserom.dol", 0x3E4330, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global audioproc_mq__Q28JASystem11AudioThread
 audioproc_mq__Q28JASystem11AudioThread:
 	.skip 0x20
-.global msgbuf__Q28JASystem11AudioThread
 msgbuf__Q28JASystem11AudioThread:
 	.skip 0x40
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global jac_audioThread__Q28JASystem11AudioThread
 jac_audioThread__Q28JASystem11AudioThread:
 	.skip 0x2640
-.global jac_audioStack__Q28JASystem11AudioThread
 jac_audioStack__Q28JASystem11AudioThread:
 	.skip 0x1000
-.global jac_dvdThread__Q28JASystem11AudioThread
 jac_dvdThread__Q28JASystem11AudioThread:
 	.skip 0x320
-.global jac_dvdStack__Q28JASystem11AudioThread
 jac_dvdStack__Q28JASystem11AudioThread:
 	.skip 0x1000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global isDSPBoot__Q28JASystem11AudioThread
 isDSPBoot__Q28JASystem11AudioThread:
 	.skip 0x4
-.global audioproc_mq_init__Q28JASystem11AudioThread
 audioproc_mq_init__Q28JASystem11AudioThread:
 	.skip 0x4
-.global intcount__Q28JASystem11AudioThread
 intcount__Q28JASystem11AudioThread:
 	.skip 0x4
-.global priority_set__Q28JASystem11AudioThread
 priority_set__Q28JASystem11AudioThread:
 	.skip 0x4
-.global jac_pri__Q28JASystem11AudioThread
 jac_pri__Q28JASystem11AudioThread:
 	.skip 0x4
-.global dvd_pri__Q28JASystem11AudioThread
 dvd_pri__Q28JASystem11AudioThread:
 	.skip 0x4
-.global first$120
 first$120:
 	.skip 0x4
-.global init$121
 init$121:
 	.skip 0x4

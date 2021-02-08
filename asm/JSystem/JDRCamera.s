@@ -1008,12 +1008,9 @@ __vt__Q26JDrama7TCamera:
 	.incbin "baserom.dol", 0x3A738C, 0xC4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2877
 $$2877:
 	.incbin "baserom.dol", 0x3E4098, 0x4
-.global $$2878
 $$2878:
 	.incbin "baserom.dol", 0x3E409C, 0x4
-.global $$2879
 $$2879:
 	.incbin "baserom.dol", 0x3E40A0, 0x8

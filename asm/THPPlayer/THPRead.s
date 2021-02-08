@@ -213,32 +213,23 @@ lbl_800BFD10:
 /* 800BFD20 000BCC60  4E 80 00 20 */	blr 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global FreeReadBufferQueue
 FreeReadBufferQueue:
 	.skip 0x20
-.global ReadedBufferQueue
 ReadedBufferQueue:
 	.skip 0x20
-.global ReadedBufferQueue2
 ReadedBufferQueue2:
 	.skip 0x20
-.global FreeReadBufferMessage
 FreeReadBufferMessage:
 	.skip 0x28
-.global ReadedBufferMessage
 ReadedBufferMessage:
 	.skip 0x28
-.global ReadedBufferMessage2
 ReadedBufferMessage2:
 	.skip 0x28
-.global ReadThread
 ReadThread:
 	.skip 0x310
-.global ReadThreadStack
 ReadThreadStack:
 	.skip 0x1000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global ReadThreadCreated
 ReadThreadCreated:
 	.skip 0x8

@@ -3260,9 +3260,7 @@ __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1:
 	.incbin "baserom.dol", 0x3B0678, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$23554
 $$23554:
 	.incbin "baserom.dol", 0x3E4BF8, 0x8
-.global $$23556
 $$23556:
 	.incbin "baserom.dol", 0x3E4C00, 0x8

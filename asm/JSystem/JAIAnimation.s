@@ -746,24 +746,17 @@ __vt__13JAIAnimeSound:
 	.incbin "baserom.dol", 0x3A7C30, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2461
 $$2461:
 	.incbin "baserom.dol", 0x3E4138, 0x4
-.global $$2622
 $$2622:
 	.incbin "baserom.dol", 0x3E413C, 0x4
-.global $$2623
 $$2623:
 	.incbin "baserom.dol", 0x3E4140, 0x4
-.global $$2624
 $$2624:
 	.incbin "baserom.dol", 0x3E4144, 0x4
-.global $$2626
 $$2626:
 	.incbin "baserom.dol", 0x3E4148, 0x8
-.global $$2628
 $$2628:
 	.incbin "baserom.dol", 0x3E4150, 0x8
-.global $$2643
 $$2643:
 	.incbin "baserom.dol", 0x3E4158, 0x8

@@ -47,19 +47,15 @@ lbl_8003ADFC:
 /* 8003AE08 00037D48  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mVisible__Q212JUTAssertion9$$2unnamed$$2
 mVisible__Q212JUTAssertion9$$2unnamed$$2:
 	.incbin "baserom.dol", 0x3E30B8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sMessageFileLine__Q212JUTAssertion9$$2unnamed$$2
 sMessageFileLine__Q212JUTAssertion9$$2unnamed$$2:
 	.skip 0x40
-.global sMessageString__Q212JUTAssertion9$$2unnamed$$2
 sMessageString__Q212JUTAssertion9$$2unnamed$$2:
 	.skip 0x60
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sMessageLife__Q212JUTAssertion9$$2unnamed$$2
 sMessageLife__Q212JUTAssertion9$$2unnamed$$2:
 	.skip 0x8

@@ -77,14 +77,11 @@ lbl_8008C500:
 /* 8008C524 00089464  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$27
 $$27:
 	.incbin "baserom.dol", 0x3AC0A8, 0x18
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global __DBInterface
 __DBInterface:
 	.skip 0x4
-.global DBVerbose
 DBVerbose:
 	.skip 0x4

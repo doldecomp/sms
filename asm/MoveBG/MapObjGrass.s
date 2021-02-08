@@ -1039,7 +1039,6 @@ $$232$$2__dt__17TMapObjGrassGroupFv:
 	.incbin "baserom.dol", 0x36CD64, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$22596
 $$22596:
 	.incbin "baserom.dol", 0x38CC10, 0x10
 
@@ -1052,115 +1051,80 @@ __vt__17TMapObjGrassGroup:
 	.incbin "baserom.dol", 0x3C85BC, 0xA4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mWidth__19TMapObjGrassManager
 mWidth__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3700, 0x4
-.global mSwingWidth__19TMapObjGrassManager
 mSwingWidth__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3704, 0x4
-.global mSwingSpeed__19TMapObjGrassManager
 mSwingSpeed__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3708, 0x4
-.global mDistNear__19TMapObjGrassManager
 mDistNear__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E370C, 0x4
-.global mDistFar__19TMapObjGrassManager
 mDistFar__19TMapObjGrassManager:
 	.incbin "baserom.dol", 0x3E3710, 0x4
-.global sGrassAddTime
 sGrassAddTime:
 	.incbin "baserom.dol", 0x3E3714, 0xC
-.global color_table
 color_table:
 	.incbin "baserom.dol", 0x3E3720, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22453
 $$22453:
 	.incbin "baserom.dol", 0x3E8548, 0x4
-.global $$22496
 $$22496:
 	.incbin "baserom.dol", 0x3E854C, 0x4
-.global $$22555
 $$22555:
 	.incbin "baserom.dol", 0x3E8550, 0x4
-.global $$22620
 $$22620:
 	.incbin "baserom.dol", 0x3E8554, 0x4
-.global $$22621
 $$22621:
 	.incbin "baserom.dol", 0x3E8558, 0x4
-.global $$22622
 $$22622:
 	.incbin "baserom.dol", 0x3E855C, 0x4
-.global $$22623
 $$22623:
 	.incbin "baserom.dol", 0x3E8560, 0x8
-.global $$22625
 $$22625:
 	.incbin "baserom.dol", 0x3E8568, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global mDrawVec__19TMapObjGrassManager
 mDrawVec__19TMapObjGrassManager:
 	.skip 0xC
-.global $$22726
 $$22726:
 	.skip 0xC
-.global $$22727
 $$22727:
 	.skip 0xC
-.global $$22728
 $$22728:
 	.skip 0xC
-.global $$22729
 $$22729:
 	.skip 0xC
-.global $$22730
 $$22730:
 	.skip 0xC
-.global $$22731
 $$22731:
 	.skip 0xC
-.global $$22732
 $$22732:
 	.skip 0xC
-.global $$22733
 $$22733:
 	.skip 0xC
-.global $$22734
 $$22734:
 	.skip 0xC
-.global $$22735
 $$22735:
 	.skip 0xC
-.global $$22736
 $$22736:
 	.skip 0xC
-.global $$22737
 $$22737:
 	.skip 0xC
-.global $$22738
 $$22738:
 	.skip 0xC
-.global $$22739
 $$22739:
 	.skip 0xC
-.global $$22740
 $$22740:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global mColorUpper__19TMapObjGrassManager
 mColorUpper__19TMapObjGrassManager:
 	.skip 0x4
-.global mColorLower__19TMapObjGrassManager
 mColorLower__19TMapObjGrassManager:
 	.skip 0x4
-.global mColorFar__19TMapObjGrassManager
 mColorFar__19TMapObjGrassManager:
 	.skip 0x4
-.global mDrawVecS16__19TMapObjGrassManager
 mDrawVecS16__19TMapObjGrassManager:
 	.skip 0x8
 .global gpMapObjGrassManager

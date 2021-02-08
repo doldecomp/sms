@@ -132,18 +132,14 @@ __sinit_JASSystemHeap_cpp:
 	.incbin "baserom.dol", 0x36CBF8, 0x4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global audioDramSize__Q28JASystem6Kernel
 audioDramSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E3200, 0x4
-.global audioAramSize__Q28JASystem6Kernel
 audioAramSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E3204, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$2241
 $$2241:
 	.skip 0xC
-.global audioAramHeap__Q28JASystem6Kernel
 audioAramHeap__Q28JASystem6Kernel:
 	.skip 0x14
 
@@ -151,12 +147,9 @@ audioAramHeap__Q28JASystem6Kernel:
 .global JASDram
 JASDram:
 	.skip 0x4
-.global JASAramDmaBufferTop__Q28JASystem6Kernel
 JASAramDmaBufferTop__Q28JASystem6Kernel:
 	.skip 0x4
-.global audioAramTop__Q28JASystem6Kernel
 audioAramTop__Q28JASystem6Kernel:
 	.skip 0x4
-.global CARD_SECURITY_BUFFER__Q28JASystem6Kernel
 CARD_SECURITY_BUFFER__Q28JASystem6Kernel:
 	.skip 0x4

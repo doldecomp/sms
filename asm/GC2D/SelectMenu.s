@@ -174,9 +174,9 @@ startOpenWindow__11TSelectMenuFv:
 /* 80233060 0022FFA0  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 80233064 0022FFA4  7D 88 03 A6 */	mtlr r12
 /* 80233068 0022FFA8  4E 80 00 21 */	blrl 
-/* 8023306C 0022FFAC  3C 60 80 01 */	lis r3, lbl_80010024@ha
+/* 8023306C 0022FFAC  3C 60 80 01 */	lis r3, 0x80010024@ha
 /* 80233070 0022FFB0  9B BA 00 4E */	stb r29, 0x4e(r26)
-/* 80233074 0022FFB4  38 63 00 24 */	addi r3, r3, lbl_80010024@l
+/* 80233074 0022FFB4  38 63 00 24 */	addi r3, r3, 0x80010024@l
 /* 80233078 0022FFB8  4B F4 CE 25 */	bl startBGM__5MSBgmFUl
 /* 8023307C 0022FFBC  9B DB 01 38 */	stb r30, 0x138(r27)
 lbl_80233080:
@@ -3442,7 +3442,6 @@ __ct__11TSelectGradFPCc:
 /* 802360B8 00232FF8  7C 08 03 A6 */	mtlr r0
 /* 802360BC 00232FFC  4E 80 00 20 */	blr 
 
-.global SMS_getShineID__FUlUlb
 SMS_getShineID__FUlUlb:
 /* 802360C0 00233000  28 03 00 09 */	cmplwi r3, 9
 /* 802360C4 00233004  40 81 00 0C */	ble lbl_802360D0
@@ -3719,69 +3718,49 @@ lbl_80236478:
 	.incbin "baserom.dol", 0x36CE3C, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x390E40, 0xC
-.global $$22111
 $$22111:
 	.incbin "baserom.dol", 0x390E4C, 0x14
-.global $$22420
 $$22420:
 	.incbin "baserom.dol", 0x390E60, 0x2C
-.global $$22421
 $$22421:
 	.incbin "baserom.dol", 0x390E8C, 0x2C
-.global $$22422
 $$22422:
 	.incbin "baserom.dol", 0x390EB8, 0x2C
-.global $$23928
 $$23928:
 	.incbin "baserom.dol", 0x390EE4, 0x18
-.global $$23929
 $$23929:
 	.incbin "baserom.dol", 0x390EFC, 0x20
-.global $$23930
 $$23930:
 	.incbin "baserom.dol", 0x390F1C, 0x20
-.global $$23933
 $$23933:
 	.incbin "baserom.dol", 0x390F3C, 0x1C
-.global $$23934
 $$23934:
 	.incbin "baserom.dol", 0x390F58, 0x1C
-.global $$23935
 $$23935:
 	.incbin "baserom.dol", 0x390F74, 0x1C
-.global $$23936
 $$23936:
 	.incbin "baserom.dol", 0x390F90, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3CE9D8, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3CE9E4, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3CE9F0, 0x10
-.global scShineConvTable
 scShineConvTable:
 	.incbin "baserom.dol", 0x3CEA00, 0x28
-.global scEtcShineConvTable
 scEtcShineConvTable:
 	.incbin "baserom.dol", 0x3CEA28, 0x28
-.global scScenarioNameTable
 scScenarioNameTable:
 	.incbin "baserom.dol", 0x3CEA50, 0x118
-.global scNormalStageTable
 scNormalStageTable:
 	.incbin "baserom.dol", 0x3CEB68, 0x28
 .global __vt__11TSelectMenu
 __vt__11TSelectMenu:
 	.incbin "baserom.dol", 0x3CEB90, 0x24
-.global $$23617
 $$23617:
 	.incbin "baserom.dol", 0x3CEBB4, 0x4C
 .global __vt__11TSelectGrad
@@ -3789,161 +3768,109 @@ __vt__11TSelectGrad:
 	.incbin "baserom.dol", 0x3CEC00, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global scShineTableAirport
 scShineTableAirport:
 	.incbin "baserom.dol", 0x3E9500, 0x4
-.global scShineTableDolpicEtc
 scShineTableDolpicEtc:
 	.incbin "baserom.dol", 0x3E9504, 0x4
-.global scShineTableBianco
 scShineTableBianco:
 	.incbin "baserom.dol", 0x3E9508, 0x8
-.global scShineTableBiancoEtc
 scShineTableBiancoEtc:
 	.incbin "baserom.dol", 0x3E9510, 0x4
-.global scShineTableRicco
 scShineTableRicco:
 	.incbin "baserom.dol", 0x3E9514, 0x8
-.global scShineTableRiccoEtc
 scShineTableRiccoEtc:
 	.incbin "baserom.dol", 0x3E951C, 0x4
-.global scShineTableMamma
 scShineTableMamma:
 	.incbin "baserom.dol", 0x3E9520, 0x8
-.global scShineTableMammaEtc
 scShineTableMammaEtc:
 	.incbin "baserom.dol", 0x3E9528, 0x4
-.global scShineTablePinna
 scShineTablePinna:
 	.incbin "baserom.dol", 0x3E952C, 0x8
-.global scShineTablePinnaEtc
 scShineTablePinnaEtc:
 	.incbin "baserom.dol", 0x3E9534, 0x4
-.global scShineTableSirena
 scShineTableSirena:
 	.incbin "baserom.dol", 0x3E9538, 0x8
-.global scShineTableSirenaEtc
 scShineTableSirenaEtc:
 	.incbin "baserom.dol", 0x3E9540, 0x4
-.global scShineTableMare
 scShineTableMare:
 	.incbin "baserom.dol", 0x3E9544, 0x8
-.global scShineTableMareEtc
 scShineTableMareEtc:
 	.incbin "baserom.dol", 0x3E954C, 0x4
-.global scShineTableMonte
 scShineTableMonte:
 	.incbin "baserom.dol", 0x3E9550, 0x8
-.global scShineTableMonteEtc
 scShineTableMonteEtc:
 	.incbin "baserom.dol", 0x3E9558, 0x4
-.global $$22809
 $$22809:
 	.incbin "baserom.dol", 0x3E955C, 0x4
-.global $$22878
 $$22878:
 	.incbin "baserom.dol", 0x3E9560, 0x4
-.global $$22879
 $$22879:
 	.incbin "baserom.dol", 0x3E9564, 0x4
-.global $$22882
 $$22882:
 	.incbin "baserom.dol", 0x3E9568, 0x8
-.global $$23607
 $$23607:
 	.incbin "baserom.dol", 0x3E9570, 0x4
-.global $$23608
 $$23608:
 	.incbin "baserom.dol", 0x3E9574, 0x4
-.global $$23609
 $$23609:
 	.incbin "baserom.dol", 0x3E9578, 0x4
-.global $$23610
 $$23610:
 	.incbin "baserom.dol", 0x3E957C, 0x4
-.global $$23611
 $$23611:
 	.incbin "baserom.dol", 0x3E9580, 0x4
-.global $$23612
 $$23612:
 	.incbin "baserom.dol", 0x3E9584, 0x4
-.global $$23613
 $$23613:
 	.incbin "baserom.dol", 0x3E9588, 0x4
-.global $$23614
 $$23614:
 	.incbin "baserom.dol", 0x3E958C, 0x4
-.global $$23615
 $$23615:
 	.incbin "baserom.dol", 0x3E9590, 0x4
-.global $$23616
 $$23616:
 	.incbin "baserom.dol", 0x3E9594, 0x4
-.global $$23620
 $$23620:
 	.incbin "baserom.dol", 0x3E9598, 0x8
-.global $$23931
 $$23931:
 	.incbin "baserom.dol", 0x3E95A0, 0x4
-.global $$23932
 $$23932:
 	.incbin "baserom.dol", 0x3E95A4, 0x4
-.global $$24047
 $$24047:
 	.incbin "baserom.dol", 0x3E95A8, 0x4
-.global $$24048
 $$24048:
 	.incbin "baserom.dol", 0x3E95AC, 0x4
-.global $$24049
 $$24049:
 	.incbin "baserom.dol", 0x3E95B0, 0x4
-.global $$24050
 $$24050:
 	.incbin "baserom.dol", 0x3E95B4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$24101
 $$24101:
 	.skip 0xC
-.global $$24102
 $$24102:
 	.skip 0xC
-.global $$24103
 $$24103:
 	.skip 0xC
-.global $$24104
 $$24104:
 	.skip 0xC
-.global $$24105
 $$24105:
 	.skip 0xC
-.global $$24106
 $$24106:
 	.skip 0xC
-.global $$24107
 $$24107:
 	.skip 0xC
-.global $$24108
 $$24108:
 	.skip 0xC
-.global $$24109
 $$24109:
 	.skip 0xC
-.global $$24110
 $$24110:
 	.skip 0xC
-.global $$24111
 $$24111:
 	.skip 0xC
-.global $$24112
 $$24112:
 	.skip 0xC
-.global $$24113
 $$24113:
 	.skip 0xC
-.global $$24114
 $$24114:
 	.skip 0xC
-.global $$24115
 $$24115:
 	.skip 0x10

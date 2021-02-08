@@ -6,7 +6,6 @@ __CARDGetFatBlock:
 /* 800A13C8 0009E308  80 63 00 88 */	lwz r3, 0x88(r3)
 /* 800A13CC 0009E30C  4E 80 00 20 */	blr 
 
-.global WriteCallback
 WriteCallback:
 /* 800A13D0 0009E310  7C 08 02 A6 */	mflr r0
 /* 800A13D4 0009E314  90 01 00 04 */	stw r0, 4(r1)
@@ -66,7 +65,6 @@ lbl_800A1488:
 /* 800A149C 0009E3DC  7C 08 03 A6 */	mtlr r0
 /* 800A14A0 0009E3E0  4E 80 00 20 */	blr 
 
-.global EraseCallback
 EraseCallback:
 /* 800A14A4 0009E3E4  7C 08 02 A6 */	mflr r0
 /* 800A14A8 0009E3E8  90 01 00 04 */	stw r0, 4(r1)

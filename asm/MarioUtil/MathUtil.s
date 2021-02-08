@@ -321,7 +321,6 @@ lbl_800C5C34:
 /* 800C5C48 000C2B88  38 21 00 60 */	addi r1, r1, 0x60
 /* 800C5C4C 000C2B8C  4E 80 00 20 */	blr 
 
-.global MsWrap$$0f$$1__Ffff
 MsWrap$$0f$$1__Ffff:
 /* 800C5C50 000C2B90  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 800C5C54 000C2B94  4C 41 13 82 */	cror 2, 1, 2
@@ -936,59 +935,41 @@ lbl_800C64C4:
 /* 800C64C4 000C3404  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$21431
 $$21431:
 	.incbin "baserom.dol", 0x3AF188, 0xC
-.global $$21411
 $$21411:
 	.incbin "baserom.dol", 0x3AF194, 0xC
-.global $$21210
 $$21210:
 	.incbin "baserom.dol", 0x3AF1A0, 0x10
-.global atntable
 atntable:
 	.incbin "baserom.dol", 0x3AF1B0, 0x808
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21608
 $$21608:
 	.incbin "baserom.dol", 0x3E49E8, 0x8
-.global $$21611
 $$21611:
 	.incbin "baserom.dol", 0x3E49F0, 0x8
-.global $$21627
 $$21627:
 	.incbin "baserom.dol", 0x3E49F8, 0x4
-.global $$21638
 $$21638:
 	.incbin "baserom.dol", 0x3E49FC, 0x4
-.global $$21639
 $$21639:
 	.incbin "baserom.dol", 0x3E4A00, 0x4
-.global $$21673
 $$21673:
 	.incbin "baserom.dol", 0x3E4A04, 0x4
-.global $$21674
 $$21674:
 	.incbin "baserom.dol", 0x3E4A08, 0x4
-.global $$21675
 $$21675:
 	.incbin "baserom.dol", 0x3E4A0C, 0x4
-.global $$21676
 $$21676:
 	.incbin "baserom.dol", 0x3E4A10, 0x4
-.global $$21797
 $$21797:
 	.incbin "baserom.dol", 0x3E4A14, 0x4
-.global $$21798
 $$21798:
 	.incbin "baserom.dol", 0x3E4A18, 0x8
-.global $$21799
 $$21799:
 	.incbin "baserom.dol", 0x3E4A20, 0x8
-.global $$21800
 $$21800:
 	.incbin "baserom.dol", 0x3E4A28, 0x8
-.global $$21884
 $$21884:
 	.incbin "baserom.dol", 0x3E4A30, 0x8

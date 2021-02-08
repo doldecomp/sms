@@ -542,7 +542,6 @@ lbl_8035F9A8:
 /* 8035F9C4 0035C904  7C 08 03 A6 */	mtlr r0
 /* 8035F9C8 0035C908  4E 80 00 20 */	blr 
 
-.global set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
 set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8035F9CC 0035C90C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8035F9D0 0035C910  D0 43 00 04 */	stfs f2, 4(r3)
@@ -585,16 +584,12 @@ __ct__16TCubeManagerBaseFPCcPCc:
 /* 8035FA58 0035C998  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A3A40, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A3A4C, 0x14
-.global $$22024
 $$22024:
 	.incbin "baserom.dol", 0x3A3A60, 0x14
-.global $$22025
 $$22025:
 	.incbin "baserom.dol", 0x3A3A74, 0x14
 
@@ -604,22 +599,16 @@ __vt__16TCubeManagerBase:
 	.incbin "baserom.dol", 0x3E1C38, 0x28
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21778
 $$21778:
 	.incbin "baserom.dol", 0x3EC4D0, 0x4
-.global $$21897
 $$21897:
 	.incbin "baserom.dol", 0x3EC4D4, 0x8
-.global $$21898
 $$21898:
 	.incbin "baserom.dol", 0x3EC4DC, 0x8
-.global $$21899
 $$21899:
 	.incbin "baserom.dol", 0x3EC4E4, 0x8
-.global $$22026
 $$22026:
 	.incbin "baserom.dol", 0x3EC4EC, 0x4
-.global $$22027
 $$22027:
 	.incbin "baserom.dol", 0x3EC4F0, 0x8
 

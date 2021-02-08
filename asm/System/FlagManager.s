@@ -2247,19 +2247,14 @@ lbl_800E8AC8:
 /* 800E8ADC 000E5A1C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$22031
 $$22031:
 	.incbin "baserom.dol", 0x3B0990, 0x2C
-.global $$22069
 $$22069:
 	.incbin "baserom.dol", 0x3B09BC, 0x2C
-.global $$22087
 $$22087:
 	.incbin "baserom.dol", 0x3B09E8, 0x28
-.global $$22135
 $$22135:
 	.incbin "baserom.dol", 0x3B0A10, 0x2C
-.global $$22168
 $$22168:
 	.incbin "baserom.dol", 0x3B0A3C, 0x2C
 

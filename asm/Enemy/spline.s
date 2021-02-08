@@ -470,21 +470,15 @@ lbl_802823B0:
 /* 802823D0 0027F310  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21601
 $$21601:
 	.incbin "baserom.dol", 0x3EA2E8, 0x4
-.global $$21602
 $$21602:
 	.incbin "baserom.dol", 0x3EA2EC, 0x4
-.global $$21603
 $$21603:
 	.incbin "baserom.dol", 0x3EA2F0, 0x4
-.global $$21630
 $$21630:
 	.incbin "baserom.dol", 0x3EA2F4, 0x4
-.global $$21672
 $$21672:
 	.incbin "baserom.dol", 0x3EA2F8, 0x8
-.global $$21683
 $$21683:
 	.incbin "baserom.dol", 0x3EA300, 0x8

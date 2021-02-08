@@ -799,62 +799,44 @@ lbl_800968DC:
 /* 800968E8 00093828  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$2117
 $$2117:
 	.incbin "baserom.dol", 0x3AD970, 0xC8
-.global $$2138
 $$2138:
 	.incbin "baserom.dol", 0x3ADA38, 0x38
-.global $$2237
 $$2237:
 	.incbin "baserom.dol", 0x3ADA70, 0x34
-.global $$2263
 $$2263:
 	.incbin "baserom.dol", 0x3ADAA4, 0x30
-.global $$2269
 $$2269:
 	.incbin "baserom.dol", 0x3ADAD4, 0x28
-.global $$2309
 $$2309:
 	.incbin "baserom.dol", 0x3ADAFC, 0x3C
-.global $$2340
 $$2340:
 	.incbin "baserom.dol", 0x3ADB38, 0x68
-.global $$2341
 $$2341:
 	.incbin "baserom.dol", 0x3ADBA0, 0x58
-.global $$2342
 $$2342:
 	.incbin "baserom.dol", 0x3ADBF8, 0x5C
-.global $$2373
 $$2373:
 	.incbin "baserom.dol", 0x3ADC54, 0x64
-.global $$2374
 $$2374:
 	.incbin "baserom.dol", 0x3ADCB8, 0x50
-.global $$2375
 $$2375:
 	.incbin "baserom.dol", 0x3ADD08, 0x58
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global $$2116
 $$2116:
 	.incbin "baserom.dol", 0x3E3270, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global BootInfo
 BootInfo:
 	.skip 0x4
-.global FstStart
 FstStart:
 	.skip 0x4
-.global FstStringStart
 FstStringStart:
 	.skip 0x4
-.global MaxEntryNum
 MaxEntryNum:
 	.skip 0x4
-.global currentDirectory
 currentDirectory:
 	.skip 0x4
 .global __DVDLongFileNameFlag

@@ -7,6 +7,7 @@ OSDisableInterrupts:
 /* 800901D0 0008D110  54 64 04 5E */	rlwinm r4, r3, 0, 0x11, 0xf
 /* 800901D4 0008D114  7C 80 01 24 */	mtmsr r4
 /* 800901D8 0008D118  54 63 8F FE */	rlwinm r3, r3, 0x11, 0x1f, 0x1f
+.global lbl_800901DC
 lbl_800901DC:
 /* 800901DC 0008D11C  4E 80 00 20 */	blr 
 
@@ -657,12 +658,10 @@ ExternalInterruptHandler:
 /* 80090A34 0008D974  4B FF FC 70 */	b __OSDispatchInterrupt
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global InterruptPrioTable
 InterruptPrioTable:
 	.incbin "baserom.dol", 0x3AD8D0, 0x30
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global InterruptHandlerTable
 InterruptHandlerTable:
 	.skip 0x4
 .global __OSLastInterruptSrr0

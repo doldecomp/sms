@@ -235,25 +235,19 @@ lbl_800F82C8:
 /* 800F82D8 000F5218  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global SceneParamsDir
 SceneParamsDir:
 	.incbin "baserom.dol", 0x371B60, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21607
 $$21607:
 	.incbin "baserom.dol", 0x3E4ED0, 0x4
-.global $$21618
 $$21618:
 	.incbin "baserom.dol", 0x3E4ED4, 0x8
-.global $$21619
 $$21619:
 	.incbin "baserom.dol", 0x3E4EDC, 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global mArc__7TParams
 mArc__7TParams:
 	.skip 0x4
-.global mSceneArc__7TParams
 mSceneArc__7TParams:
 	.skip 0x4

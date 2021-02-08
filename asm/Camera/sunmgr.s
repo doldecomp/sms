@@ -571,25 +571,18 @@ $$216$$2drawSyncCallback__7TSunMgrFUs:
 	.incbin "baserom.dol", 0x36CF48, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A3960, 0xC
-.global $$21937
 $$21937:
 	.incbin "baserom.dol", 0x3A396C, 0x14
-.global $$22078
 $$22078:
 	.incbin "baserom.dol", 0x3A3980, 0xC
-.global $$22079
 $$22079:
 	.incbin "baserom.dol", 0x3A398C, 0x10
-.global $$22081
 $$22081:
 	.incbin "baserom.dol", 0x3A399C, 0x14
-.global $$22223
 $$22223:
 	.incbin "baserom.dol", 0x3A39B0, 0xC
-.global $$22224
 $$22224:
 	.incbin "baserom.dol", 0x3A39BC, 0xC
 
@@ -599,71 +592,50 @@ __vt__7TSunMgr:
 	.incbin "baserom.dol", 0x3E1B60, 0x38
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global cSunWarpPointName
 cSunWarpPointName:
 	.incbin "baserom.dol", 0x3E3CD0, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22158
 $$22158:
 	.incbin "baserom.dol", 0x3EC458, 0x4
-.global $$22159
 $$22159:
 	.incbin "baserom.dol", 0x3EC45C, 0x4
-.global $$22160
 $$22160:
 	.incbin "baserom.dol", 0x3EC460, 0x4
-.global $$22161
 $$22161:
 	.incbin "baserom.dol", 0x3EC464, 0x4
-.global $$22162
 $$22162:
 	.incbin "baserom.dol", 0x3EC468, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22240
 $$22240:
 	.skip 0xC
-.global $$22241
 $$22241:
 	.skip 0xC
-.global $$22242
 $$22242:
 	.skip 0xC
-.global $$22243
 $$22243:
 	.skip 0xC
-.global $$22244
 $$22244:
 	.skip 0xC
-.global $$22245
 $$22245:
 	.skip 0xC
-.global $$22246
 $$22246:
 	.skip 0xC
-.global $$22247
 $$22247:
 	.skip 0xC
-.global $$22248
 $$22248:
 	.skip 0xC
-.global $$22249
 $$22249:
 	.skip 0xC
-.global $$22250
 $$22250:
 	.skip 0xC
-.global $$22251
 $$22251:
 	.skip 0xC
-.global $$22252
 $$22252:
 	.skip 0xC
-.global $$22253
 $$22253:
 	.skip 0xC
-.global $$22254
 $$22254:
 	.skip 0x10
 

@@ -1508,7 +1508,6 @@ lbl_8001DAA4:
 /* 8001DAB8 0001A9F8  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21454
 $$21454:
 	.incbin "baserom.dol", 0x36DBE8, 0x10
 
@@ -1518,33 +1517,23 @@ __vt__13J3DSkinDeform:
 	.incbin "baserom.dol", 0x3A5E08, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21084
 $$21084:
 	.incbin "baserom.dol", 0x3E3EB8, 0x4
-.global $$21099
 $$21099:
 	.incbin "baserom.dol", 0x3E3EBC, 0x4
-.global lbl_8040B620
 lbl_8040B620:
 	.incbin "baserom.dol", 0x3E3EC0, 0x4
-.global $$21259
 $$21259:
 	.incbin "baserom.dol", 0x3E3EC4, 0x4
-.global $$21260
 $$21260:
 	.incbin "baserom.dol", 0x3E3EC8, 0x4
-.global $$21261
 $$21261:
 	.incbin "baserom.dol", 0x3E3ECC, 0x4
-.global $$21262
 $$21262:
 	.incbin "baserom.dol", 0x3E3ED0, 0x8
-.global $$21264
 $$21264:
 	.incbin "baserom.dol", 0x3E3ED8, 0x8
-.global $$21420
 $$21420:
 	.incbin "baserom.dol", 0x3E3EE0, 0x8
-.global $$21421
 $$21421:
 	.incbin "baserom.dol", 0x3E3EE8, 0x8

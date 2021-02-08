@@ -2378,65 +2378,45 @@ __vt__11TMapObjBase:
 	.incbin "baserom.dol", 0x3B74B0, 0x168
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22995
 $$22995:
 	.incbin "baserom.dol", 0x3E6A20, 0x4
-.global $$23006
 $$23006:
 	.incbin "baserom.dol", 0x3E6A24, 0x4
-.global $$23068
 $$23068:
 	.incbin "baserom.dol", 0x3E6A28, 0x4
-.global $$23322
 $$23322:
 	.incbin "baserom.dol", 0x3E6A2C, 0x4
-.global $$23324
 $$23324:
 	.incbin "baserom.dol", 0x3E6A30, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$23845
 $$23845:
 	.skip 0xC
-.global $$23846
 $$23846:
 	.skip 0xC
-.global $$23847
 $$23847:
 	.skip 0xC
-.global $$23848
 $$23848:
 	.skip 0xC
-.global $$23849
 $$23849:
 	.skip 0xC
-.global $$23850
 $$23850:
 	.skip 0xC
-.global $$23851
 $$23851:
 	.skip 0xC
-.global $$23852
 $$23852:
 	.skip 0xC
-.global $$23853
 $$23853:
 	.skip 0xC
-.global $$23854
 $$23854:
 	.skip 0xC
-.global $$23855
 $$23855:
 	.skip 0xC
-.global $$23856
 $$23856:
 	.skip 0xC
-.global $$23857
 $$23857:
 	.skip 0xC
-.global $$23858
 $$23858:
 	.skip 0xC
-.global $$23859
 $$23859:
 	.skip 0x10

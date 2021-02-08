@@ -634,21 +634,15 @@ lbl_800AA1BC:
 /* 800AA1D0 000A7110  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2121
 $$2121:
 	.incbin "baserom.dol", 0x3E4800, 0x4
-.global $$2127
 $$2127:
 	.incbin "baserom.dol", 0x3E4804, 0x4
-.global $$2148
 $$2148:
 	.incbin "baserom.dol", 0x3E4808, 0x8
-.global $$2165
 $$2165:
 	.incbin "baserom.dol", 0x3E4810, 0x8
-.global $$2166
 $$2166:
 	.incbin "baserom.dol", 0x3E4818, 0x8
-.global $$2167
 $$2167:
 	.incbin "baserom.dol", 0x3E4820, 0x8

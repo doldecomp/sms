@@ -2232,184 +2232,125 @@ __vt__20TNerveNPCGraphWander:
 	.incbin "baserom.dol", 0x3B6350, 0x10
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22727
 $$22727:
 	.incbin "baserom.dol", 0x3E6380, 0x4
-.global $$22728
 $$22728:
 	.incbin "baserom.dol", 0x3E6384, 0x4
-.global $$22729
 $$22729:
 	.incbin "baserom.dol", 0x3E6388, 0x4
-.global $$22730
 $$22730:
 	.incbin "baserom.dol", 0x3E638C, 0x4
-.global $$22731
 $$22731:
 	.incbin "baserom.dol", 0x3E6390, 0x4
-.global $$22732
 $$22732:
 	.incbin "baserom.dol", 0x3E6394, 0x4
-.global $$22733
 $$22733:
 	.incbin "baserom.dol", 0x3E6398, 0x8
-.global $$22735
 $$22735:
 	.incbin "baserom.dol", 0x3E63A0, 0x8
-.global $$22857
 $$22857:
 	.incbin "baserom.dol", 0x3E63A8, 0x4
-.global $$23036
 $$23036:
 	.incbin "baserom.dol", 0x3E63AC, 0x4
-.global $$23037
 $$23037:
 	.incbin "baserom.dol", 0x3E63B0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22213
 $$22213:
 	.skip 0xC
-.global $$22244
 $$22244:
 	.skip 0xC
-.global $$22252
 $$22252:
 	.skip 0xC
-.global $$22265
 $$22265:
 	.skip 0xC
-.global $$22276
 $$22276:
 	.skip 0xC
-.global $$22304
 $$22304:
 	.skip 0xC
-.global $$22350
 $$22350:
 	.skip 0xC
-.global $$22360
 $$22360:
 	.skip 0xC
-.global $$22366
 $$22366:
 	.skip 0xC
-.global $$22374
 $$22374:
 	.skip 0xC
-.global $$22385
 $$22385:
 	.skip 0xC
-.global $$22391
 $$22391:
 	.skip 0xC
-.global $$22405
 $$22405:
 	.skip 0xC
-.global $$22415
 $$22415:
 	.skip 0xC
-.global $$22425
 $$22425:
 	.skip 0xC
-.global $$22437
 $$22437:
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global init$2214
 init$2214:
 	.skip 0x4
-.global instance$2212
 instance$2212:
 	.skip 0x4
-.global init$2245
 init$2245:
 	.skip 0x4
-.global instance$2243
 instance$2243:
 	.skip 0x4
-.global init$2253
 init$2253:
 	.skip 0x4
-.global instance$2251
 instance$2251:
 	.skip 0x4
-.global init$2266
 init$2266:
 	.skip 0x4
-.global instance$2264
 instance$2264:
 	.skip 0x4
-.global init$2277
 init$2277:
 	.skip 0x4
-.global instance$2275
 instance$2275:
 	.skip 0x4
-.global init$2305
 init$2305:
 	.skip 0x4
-.global instance$2303
 instance$2303:
 	.skip 0x4
-.global init$2351
 init$2351:
 	.skip 0x4
-.global instance$2349
 instance$2349:
 	.skip 0x4
-.global init$2361
 init$2361:
 	.skip 0x4
-.global instance$2359
 instance$2359:
 	.skip 0x4
-.global init$2367
 init$2367:
 	.skip 0x4
-.global instance$2365
 instance$2365:
 	.skip 0x4
-.global init$2375
 init$2375:
 	.skip 0x4
-.global instance$2373
 instance$2373:
 	.skip 0x4
-.global init$2386
 init$2386:
 	.skip 0x4
-.global instance$2384
 instance$2384:
 	.skip 0x4
-.global init$2392
 init$2392:
 	.skip 0x4
-.global instance$2390
 instance$2390:
 	.skip 0x4
-.global init$2406
 init$2406:
 	.skip 0x4
-.global instance$2404
 instance$2404:
 	.skip 0x4
-.global init$2416
 init$2416:
 	.skip 0x4
-.global instance$2414
 instance$2414:
 	.skip 0x4
-.global init$2426
 init$2426:
 	.skip 0x4
-.global instance$2424
 instance$2424:
 	.skip 0x4
-.global init$2438
 init$2438:
 	.skip 0x4
-.global instance$2436
 instance$2436:
 	.skip 0x4

@@ -4532,27 +4532,19 @@ __vt__10J3DAnmBase:
 	.incbin "baserom.dol", 0x3A6A54, 0xC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$2955
 $$2955:
 	.incbin "baserom.dol", 0x3E3F50, 0x4
-.global $$2956
 $$2956:
 	.incbin "baserom.dol", 0x3E3F54, 0x4
-.global $$21073
 $$21073:
 	.incbin "baserom.dol", 0x3E3F58, 0x8
-.global $$21075
 $$21075:
 	.incbin "baserom.dol", 0x3E3F60, 0x8
-.global $$21230
 $$21230:
 	.incbin "baserom.dol", 0x3E3F68, 0x8
-.global $$21500
 $$21500:
 	.incbin "baserom.dol", 0x3E3F70, 0x4
-.global $$21718
 $$21718:
 	.incbin "baserom.dol", 0x3E3F74, 0x4
-.global $$21719
 $$21719:
 	.incbin "baserom.dol", 0x3E3F78, 0x8

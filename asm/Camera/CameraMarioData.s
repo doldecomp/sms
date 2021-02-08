@@ -276,13 +276,10 @@ __ct__16TCameraMarioDataFv:
 /* 80358D5C 00355C9C  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22149
 $$22149:
 	.incbin "baserom.dol", 0x3EC298, 0x4
-.global $$22190
 $$22190:
 	.incbin "baserom.dol", 0x3EC29C, 0x4
-.global $$22191
 $$22191:
 	.incbin "baserom.dol", 0x3EC2A0, 0x8
 

@@ -567,10 +567,8 @@ setBusConnect__Q38JASystem12DSPInterface9DSPBufferFUcUc:
 /* 8005FEB0 0005CDF0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global SEND_TABLE__Q28JASystem12DSPInterface
 SEND_TABLE__Q28JASystem12DSPInterface:
 	.incbin "baserom.dol", 0x3A8768, 0x18
-.global connect_table$341
 connect_table$341:
 	.incbin "baserom.dol", 0x3A8780, 0x18
 
@@ -578,17 +576,13 @@ connect_table$341:
 .global JAS_DSP_PREFIX__Q28JASystem12DSPInterface
 JAS_DSP_PREFIX__Q28JASystem12DSPInterface:
 	.incbin "baserom.dol", 0x3E31B8, 0x4
-.global COMP_BLOCKSAMPLES$234
 COMP_BLOCKSAMPLES$234:
 	.incbin "baserom.dol", 0x3E31BC, 0x8
-.global COMP_BLOCKBYTES$235
 COMP_BLOCKBYTES$235:
 	.incbin "baserom.dol", 0x3E31C4, 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global CH_BUF__Q28JASystem12DSPInterface
 CH_BUF__Q28JASystem12DSPInterface:
 	.skip 0x4
-.global FX_BUF__Q28JASystem12DSPInterface
 FX_BUF__Q28JASystem12DSPInterface:
 	.skip 0x4

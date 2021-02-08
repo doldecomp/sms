@@ -219,48 +219,33 @@ lbl_80180888:
 	.incbin "baserom.dol", 0x36CCE4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$21951
 $$21951:
 	.skip 0xC
-.global $$21952
 $$21952:
 	.skip 0xC
-.global $$21953
 $$21953:
 	.skip 0xC
-.global $$21954
 $$21954:
 	.skip 0xC
-.global $$21955
 $$21955:
 	.skip 0xC
-.global $$21956
 $$21956:
 	.skip 0xC
-.global $$21957
 $$21957:
 	.skip 0xC
-.global $$21958
 $$21958:
 	.skip 0xC
-.global $$21959
 $$21959:
 	.skip 0xC
-.global $$21960
 $$21960:
 	.skip 0xC
-.global $$21961
 $$21961:
 	.skip 0xC
-.global $$21962
 $$21962:
 	.skip 0xC
-.global $$21963
 $$21963:
 	.skip 0xC
-.global $$21964
 $$21964:
 	.skip 0xC
-.global $$21965
 $$21965:
 	.skip 0x10

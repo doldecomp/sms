@@ -213,9 +213,7 @@ lbl_8005B434:
 /* 8005B448 00058388  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global sTableSize__Q28JASystem11WaveBankMgr
 sTableSize__Q28JASystem11WaveBankMgr:
 	.skip 0x4
-.global sWaveBank__Q28JASystem11WaveBankMgr
 sWaveBank__Q28JASystem11WaveBankMgr:
 	.skip 0x4

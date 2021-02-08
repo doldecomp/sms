@@ -53,12 +53,9 @@ lbl_8017AAB0:
 /* 8017AACC 00177A0C  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global sBaseActionFlagTable$1938
 sBaseActionFlagTable$1938:
 	.incbin "baserom.dol", 0x383E70, 0x64
-.global sBaseActionFlagTable$1941
 sBaseActionFlagTable$1941:
 	.incbin "baserom.dol", 0x383ED4, 0x44
-.global sBaseActionFlagTable$1944
 sBaseActionFlagTable$1944:
 	.incbin "baserom.dol", 0x383F18, 0x40

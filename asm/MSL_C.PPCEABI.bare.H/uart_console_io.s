@@ -119,6 +119,5 @@ lbl_8008650C:
 /* 80086524 00083464  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global initialized$16
 initialized$16:
 	.skip 0x8

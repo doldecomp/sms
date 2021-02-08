@@ -1714,7 +1714,6 @@ PADSetAnalogMode:
 /* 8009CB1C 00099A5C  7C 08 03 A6 */	mtlr r0
 /* 8009CB20 00099A60  4E 80 00 20 */	blr 
 
-.global OnReset
 OnReset:
 /* 8009CB24 00099A64  7C 08 02 A6 */	mflr r0
 /* 8009CB28 00099A68  90 01 00 04 */	stw r0, 4(r1)
@@ -1918,70 +1917,50 @@ lbl_8009CDC8:
 /* 8009CDE4 00099D24  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global ResetFunctionInfo
 ResetFunctionInfo:
 	.incbin "baserom.dol", 0x3AE1F8, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global ResettingChan
 ResettingChan:
 	.incbin "baserom.dol", 0x3E3298, 0x4
-.global XPatchBits
 XPatchBits:
 	.incbin "baserom.dol", 0x3E329C, 0x4
-.global AnalogMode
 AnalogMode:
 	.incbin "baserom.dol", 0x3E32A0, 0x4
-.global Spec
 Spec:
 	.incbin "baserom.dol", 0x3E32A4, 0x4
-.global MakeStatus
 MakeStatus:
 	.incbin "baserom.dol", 0x3E32A8, 0x4
-.global CmdReadOrigin
 CmdReadOrigin:
 	.incbin "baserom.dol", 0x3E32AC, 0x4
-.global CmdCalibrate
 CmdCalibrate:
 	.incbin "baserom.dol", 0x3E32B0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global Type
 Type:
 	.skip 0x10
-.global Origin
 Origin:
 	.skip 0x30
-.global CmdProbeDevice
 CmdProbeDevice:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global Initialized
 Initialized:
 	.skip 0x4
-.global EnabledBits
 EnabledBits:
 	.skip 0x4
-.global ResettingBits
 ResettingBits:
 	.skip 0x4
-.global RecalibrateBits
 RecalibrateBits:
 	.skip 0x4
-.global WaitingBits
 WaitingBits:
 	.skip 0x4
-.global CheckingBits
 CheckingBits:
 	.skip 0x4
-.global PendingBits
 PendingBits:
 	.skip 0x4
-.global SamplingCallback
 SamplingCallback:
 	.skip 0x4
-.global recalibrated$396
 recalibrated$396:
 	.skip 0x4
 .global __PADSpec

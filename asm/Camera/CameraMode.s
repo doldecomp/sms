@@ -365,229 +365,154 @@ isLButtonCameraSpecifyMode__15CPolarSubCameraCFi:
 /* 80363410 00360350  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x3A3D20, 0xC
-.global $$21526
 $$21526:
 	.incbin "baserom.dol", 0x3A3D2C, 0x14
-.global $$21535
 $$21535:
 	.incbin "baserom.dol", 0x3A3D40, 0x18
-.global $$21536
 $$21536:
 	.incbin "baserom.dol", 0x3A3D58, 0x1C
-.global $$21537
 $$21537:
 	.incbin "baserom.dol", 0x3A3D74, 0x1C
-.global $$21538
 $$21538:
 	.incbin "baserom.dol", 0x3A3D90, 0x1C
-.global $$21539
 $$21539:
 	.incbin "baserom.dol", 0x3A3DAC, 0x1C
-.global $$21540
 $$21540:
 	.incbin "baserom.dol", 0x3A3DC8, 0x1C
-.global $$21541
 $$21541:
 	.incbin "baserom.dol", 0x3A3DE4, 0x18
-.global $$21542
 $$21542:
 	.incbin "baserom.dol", 0x3A3DFC, 0x18
-.global $$21543
 $$21543:
 	.incbin "baserom.dol", 0x3A3E14, 0x20
-.global $$21544
 $$21544:
 	.incbin "baserom.dol", 0x3A3E34, 0x1C
-.global $$21545
 $$21545:
 	.incbin "baserom.dol", 0x3A3E50, 0x18
-.global $$21546
 $$21546:
 	.incbin "baserom.dol", 0x3A3E68, 0x1C
-.global $$21547
 $$21547:
 	.incbin "baserom.dol", 0x3A3E84, 0x18
-.global $$21548
 $$21548:
 	.incbin "baserom.dol", 0x3A3E9C, 0x1C
-.global $$21549
 $$21549:
 	.incbin "baserom.dol", 0x3A3EB8, 0x18
-.global $$21550
 $$21550:
 	.incbin "baserom.dol", 0x3A3ED0, 0x18
-.global $$21551
 $$21551:
 	.incbin "baserom.dol", 0x3A3EE8, 0x1C
-.global $$21552
 $$21552:
 	.incbin "baserom.dol", 0x3A3F04, 0x1C
-.global $$21553
 $$21553:
 	.incbin "baserom.dol", 0x3A3F20, 0x1C
-.global $$21554
 $$21554:
 	.incbin "baserom.dol", 0x3A3F3C, 0x1C
-.global $$21555
 $$21555:
 	.incbin "baserom.dol", 0x3A3F58, 0x18
-.global $$21556
 $$21556:
 	.incbin "baserom.dol", 0x3A3F70, 0x18
-.global $$21557
 $$21557:
 	.incbin "baserom.dol", 0x3A3F88, 0x18
-.global $$21558
 $$21558:
 	.incbin "baserom.dol", 0x3A3FA0, 0x18
-.global $$21559
 $$21559:
 	.incbin "baserom.dol", 0x3A3FB8, 0x18
-.global $$21560
 $$21560:
 	.incbin "baserom.dol", 0x3A3FD0, 0x18
-.global $$21561
 $$21561:
 	.incbin "baserom.dol", 0x3A3FE8, 0x18
-.global $$21562
 $$21562:
 	.incbin "baserom.dol", 0x3A4000, 0x18
-.global $$21563
 $$21563:
 	.incbin "baserom.dol", 0x3A4018, 0x18
-.global $$21564
 $$21564:
 	.incbin "baserom.dol", 0x3A4030, 0x18
-.global $$21565
 $$21565:
 	.incbin "baserom.dol", 0x3A4048, 0x1C
-.global $$21566
 $$21566:
 	.incbin "baserom.dol", 0x3A4064, 0x1C
-.global $$21567
 $$21567:
 	.incbin "baserom.dol", 0x3A4080, 0x1C
-.global $$21568
 $$21568:
 	.incbin "baserom.dol", 0x3A409C, 0x1C
-.global $$21569
 $$21569:
 	.incbin "baserom.dol", 0x3A40B8, 0x1C
-.global $$21570
 $$21570:
 	.incbin "baserom.dol", 0x3A40D4, 0x1C
-.global $$21571
 $$21571:
 	.incbin "baserom.dol", 0x3A40F0, 0x1C
-.global $$21572
 $$21572:
 	.incbin "baserom.dol", 0x3A410C, 0x1C
-.global $$21573
 $$21573:
 	.incbin "baserom.dol", 0x3A4128, 0x18
-.global $$21574
 $$21574:
 	.incbin "baserom.dol", 0x3A4140, 0x18
-.global $$21575
 $$21575:
 	.incbin "baserom.dol", 0x3A4158, 0x18
-.global $$21576
 $$21576:
 	.incbin "baserom.dol", 0x3A4170, 0x18
-.global $$21577
 $$21577:
 	.incbin "baserom.dol", 0x3A4188, 0x18
-.global $$21578
 $$21578:
 	.incbin "baserom.dol", 0x3A41A0, 0x18
-.global $$21579
 $$21579:
 	.incbin "baserom.dol", 0x3A41B8, 0x18
-.global $$21580
 $$21580:
 	.incbin "baserom.dol", 0x3A41D0, 0x18
-.global $$21581
 $$21581:
 	.incbin "baserom.dol", 0x3A41E8, 0x1C
-.global $$21582
 $$21582:
 	.incbin "baserom.dol", 0x3A4204, 0x1C
-.global $$21583
 $$21583:
 	.incbin "baserom.dol", 0x3A4220, 0x18
-.global $$21584
 $$21584:
 	.incbin "baserom.dol", 0x3A4238, 0x1C
-.global $$21585
 $$21585:
 	.incbin "baserom.dol", 0x3A4254, 0x1C
-.global $$21586
 $$21586:
 	.incbin "baserom.dol", 0x3A4270, 0x1C
-.global $$21587
 $$21587:
 	.incbin "baserom.dol", 0x3A428C, 0x1C
-.global $$21588
 $$21588:
 	.incbin "baserom.dol", 0x3A42A8, 0x18
-.global $$21589
 $$21589:
 	.incbin "baserom.dol", 0x3A42C0, 0x18
-.global $$21590
 $$21590:
 	.incbin "baserom.dol", 0x3A42D8, 0x18
-.global $$21591
 $$21591:
 	.incbin "baserom.dol", 0x3A42F0, 0x20
-.global $$21592
 $$21592:
 	.incbin "baserom.dol", 0x3A4310, 0x1C
-.global $$21593
 $$21593:
 	.incbin "baserom.dol", 0x3A432C, 0x18
-.global $$21594
 $$21594:
 	.incbin "baserom.dol", 0x3A4344, 0x1C
-.global $$21595
 $$21595:
 	.incbin "baserom.dol", 0x3A4360, 0x18
-.global $$21596
 $$21596:
 	.incbin "baserom.dol", 0x3A4378, 0x1C
-.global $$21597
 $$21597:
 	.incbin "baserom.dol", 0x3A4394, 0x1C
-.global $$21598
 $$21598:
 	.incbin "baserom.dol", 0x3A43B0, 0x18
-.global $$21599
 $$21599:
 	.incbin "baserom.dol", 0x3A43C8, 0x18
-.global $$21600
 $$21600:
 	.incbin "baserom.dol", 0x3A43E0, 0x18
-.global $$21601
 $$21601:
 	.incbin "baserom.dol", 0x3A43F8, 0x1C
-.global $$21602
 $$21602:
 	.incbin "baserom.dol", 0x3A4414, 0x18
-.global $$21603
 $$21603:
 	.incbin "baserom.dol", 0x3A442C, 0x20
-.global $$21604
 $$21604:
 	.incbin "baserom.dol", 0x3A444C, 0x18
-.global $$21605
 $$21605:
 	.incbin "baserom.dol", 0x3A4464, 0x18
-.global $$21606
 $$21606:
 	.incbin "baserom.dol", 0x3A447C, 0x1C
-.global $$21607
 $$21607:
 	.incbin "baserom.dol", 0x3A4498, 0x20
 
@@ -595,15 +520,11 @@ $$21607:
 .global mCamKindNameSaveFile__15CPolarSubCamera
 mCamKindNameSaveFile__15CPolarSubCamera:
 	.incbin "baserom.dol", 0x3E1CF0, 0x124
-.global $$21781
 $$21781:
 	.incbin "baserom.dol", 0x3E1E14, 0x124
-.global $$21809
 $$21809:
 	.incbin "baserom.dol", 0x3E1F38, 0x104
-.global $$21895
 $$21895:
 	.incbin "baserom.dol", 0x3E203C, 0x124
-.global $$21939
 $$21939:
 	.incbin "baserom.dol", 0x3E2160, 0x128

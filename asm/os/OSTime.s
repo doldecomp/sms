@@ -296,9 +296,7 @@ lbl_80094198:
 /* 80094218 00091158  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global YearDays
 YearDays:
 	.incbin "baserom.dol", 0x3AD910, 0x30
-.global LeapYearDays
 LeapYearDays:
 	.incbin "baserom.dol", 0x3AD940, 0x30

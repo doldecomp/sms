@@ -98,21 +98,15 @@ C_MTXOrtho:
 /* 80094E88 00091DC8  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$297
 $$297:
 	.incbin "baserom.dol", 0x3E47B0, 0x4
-.global $$298
 $$298:
 	.incbin "baserom.dol", 0x3E47B4, 0x4
-.global $$299
 $$299:
 	.incbin "baserom.dol", 0x3E47B8, 0x4
-.global $$2100
 $$2100:
 	.incbin "baserom.dol", 0x3E47BC, 0x4
-.global $$2103
 $$2103:
 	.incbin "baserom.dol", 0x3E47C0, 0x4
-.global $$2104
 $$2104:
 	.incbin "baserom.dol", 0x3E47C4, 0x4

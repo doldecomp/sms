@@ -2716,7 +2716,6 @@ __sinit_JPAField_cpp:
 	.incbin "baserom.dol", 0x36CC08, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$22535
 $$22535:
 	.incbin "baserom.dol", 0x3A9478, 0x20
 .global __vt__12JPADragField
@@ -2748,32 +2747,23 @@ __vt__12JPABaseField:
 	.incbin "baserom.dol", 0x3A9558, 0x18
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21671
 $$21671:
 	.incbin "baserom.dol", 0x3E4500, 0x4
-.global $$21672
 $$21672:
 	.incbin "baserom.dol", 0x3E4504, 0x4
-.global $$21673
 $$21673:
 	.incbin "baserom.dol", 0x3E4508, 0x4
-.global $$21877
 $$21877:
 	.incbin "baserom.dol", 0x3E450C, 0x4
-.global $$21955
 $$21955:
 	.incbin "baserom.dol", 0x3E4510, 0x4
-.global $$21956
 $$21956:
 	.incbin "baserom.dol", 0x3E4514, 0x4
-.global $$21957
 $$21957:
 	.incbin "baserom.dol", 0x3E4518, 0x4
-.global $$22076
 $$22076:
 	.incbin "baserom.dol", 0x3E451C, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global FieldRand
 FieldRand:
 	.skip 0x8

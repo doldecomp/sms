@@ -958,25 +958,18 @@ lbl_8035C91C:
 /* 8035CA3C 0035997C  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$21807
 $$21807:
 	.incbin "baserom.dol", 0x3EC398, 0x4
-.global $$21808
 $$21808:
 	.incbin "baserom.dol", 0x3EC39C, 0x4
-.global $$21809
 $$21809:
 	.incbin "baserom.dol", 0x3EC3A0, 0x4
-.global $$21810
 $$21810:
 	.incbin "baserom.dol", 0x3EC3A4, 0x4
-.global $$21811
 $$21811:
 	.incbin "baserom.dol", 0x3EC3A8, 0x8
-.global $$21815
 $$21815:
 	.incbin "baserom.dol", 0x3EC3B0, 0x8
-.global $$21894
 $$21894:
 	.incbin "baserom.dol", 0x3EC3B8, 0x8
 

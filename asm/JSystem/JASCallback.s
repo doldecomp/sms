@@ -230,14 +230,11 @@ lbl_8006175C:
 /* 80061774 0005E6B4  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global maxCallbacksUser__Q28JASystem6Kernel
 maxCallbacksUser__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E31D0, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global callList__Q28JASystem6Kernel
 callList__Q28JASystem6Kernel:
 	.skip 0x4
-.global callbackInit__Q28JASystem6Kernel
 callbackInit__Q28JASystem6Kernel:
 	.skip 0x4

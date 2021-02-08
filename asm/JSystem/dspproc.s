@@ -122,16 +122,13 @@ DsyncFrame__FUlUlUl:
 /* 80081D9C 0007ECDC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global DSP_MIXERLEVEL
 DSP_MIXERLEVEL:
 	.incbin "baserom.dol", 0x3E3218, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$271
 $$271:
 	.incbin "baserom.dol", 0x3E4650, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global flag
 flag:
 	.skip 0x8

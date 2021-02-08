@@ -503,45 +503,31 @@ lbl_8008E59C:
 /* 8008E5CC 0008B50C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global $$269
 $$269:
 	.incbin "baserom.dol", 0x3AC698, 0x2C
-.global $$290
 $$290:
 	.incbin "baserom.dol", 0x3AC6C4, 0x18
-.global $$291
 $$291:
 	.incbin "baserom.dol", 0x3AC6DC, 0x1C
-.global $$292
 $$292:
 	.incbin "baserom.dol", 0x3AC6F8, 0x30
-.global $$293
 $$293:
 	.incbin "baserom.dol", 0x3AC728, 0x3C
-.global $$294
 $$294:
 	.incbin "baserom.dol", 0x3AC764, 0x38
-.global $$295
 $$295:
 	.incbin "baserom.dol", 0x3AC79C, 0x40
-.global $$296
 $$296:
 	.incbin "baserom.dol", 0x3AC7DC, 0x2C
-.global $$297
 $$297:
 	.incbin "baserom.dol", 0x3AC808, 0x20
-.global $$298
 $$298:
 	.incbin "baserom.dol", 0x3AC828, 0x1C
-.global $$2110
 $$2110:
 	.incbin "baserom.dol", 0x3AC844, 0x1C
-.global $$2111
 $$2111:
 	.incbin "baserom.dol", 0x3AC860, 0x1C
-.global $$2112
 $$2112:
 	.incbin "baserom.dol", 0x3AC87C, 0x18
-.global $$2113
 $$2113:
 	.incbin "baserom.dol", 0x3AC894, 0x34

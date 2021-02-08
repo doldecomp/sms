@@ -5389,7 +5389,6 @@ lbl_800CE074:
 /* 800CE218 000CB158  38 21 04 38 */	addi r1, r1, 0x438
 /* 800CE21C 000CB15C  4E 80 00 20 */	blr 
 
-.global GDOverflowCheck
 GDOverflowCheck:
 /* 800CE220 000CB160  7C 08 02 A6 */	mflr r0
 /* 800CE224 000CB164  90 01 00 04 */	stw r0, 4(r1)
@@ -5476,48 +5475,34 @@ makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
 /* 800CE358 000CB298  4E 80 00 20 */	blr 
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
-.global $$21490
 $$21490:
 	.incbin "baserom.dol", 0x36F5D0, 0xC
-.global $$21809
 $$21809:
 	.incbin "baserom.dol", 0x36F5DC, 0x14
-.global $$21974
 $$21974:
 	.incbin "baserom.dol", 0x36F5F0, 0x10
-.global $$21975
 $$21975:
 	.incbin "baserom.dol", 0x36F600, 0x10
-.global $$22149
 $$22149:
 	.incbin "baserom.dol", 0x36F610, 0x24
-.global $$22150
 $$22150:
 	.incbin "baserom.dol", 0x36F634, 0x24
-.global calctablex$2412
 calctablex$2412:
 	.incbin "baserom.dol", 0x36F658, 0x10
-.global calctablez$2413
 calctablez$2413:
 	.incbin "baserom.dol", 0x36F668, 0x10
-.global $$24135
 $$24135:
 	.incbin "baserom.dol", 0x36F678, 0x1C
-.global $$24136
 $$24136:
 	.incbin "baserom.dol", 0x36F694, 0x1C
-.global $$24137
 $$24137:
 	.incbin "baserom.dol", 0x36F6B0, 0x18
-.global $$24138
 $$24138:
 	.incbin "baserom.dol", 0x36F6C8, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global vl$localstatic0$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv
 vl$localstatic0$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
 	.incbin "baserom.dol", 0x3AFA60, 0x10
-.global fl$localstatic1$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv
 fl$localstatic1$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
 	.incbin "baserom.dol", 0x3AFA70, 0x20
 .global __vt__19TMBindShadowManager
@@ -5543,158 +5528,108 @@ __vt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cpp:
 	.incbin "baserom.dol", 0x3AFB04, 0x1C
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-.global mSquareShadowHeight__19TMBindShadowManager
 mSquareShadowHeight__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E3318, 0x4
-.global mTreeScale__19TMBindShadowManager
 mTreeScale__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E331C, 0x4
-.global mYScalePlus__19TMBindShadowManager
 mYScalePlus__19TMBindShadowManager:
 	.incbin "baserom.dol", 0x3E3320, 0x8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
-.global $$22235
 $$22235:
 	.incbin "baserom.dol", 0x3E4AD0, 0x4
-.global $$22297
 $$22297:
 	.incbin "baserom.dol", 0x3E4AD4, 0x4
-.global $$22312
 $$22312:
 	.incbin "baserom.dol", 0x3E4AD8, 0x4
-.global $$22315
 $$22315:
 	.incbin "baserom.dol", 0x3E4ADC, 0x4
-.global $$22742
 $$22742:
 	.incbin "baserom.dol", 0x3E4AE0, 0x4
-.global $$22743
 $$22743:
 	.incbin "baserom.dol", 0x3E4AE4, 0x4
-.global $$22744
 $$22744:
 	.incbin "baserom.dol", 0x3E4AE8, 0x4
-.global $$22745
 $$22745:
 	.incbin "baserom.dol", 0x3E4AEC, 0x4
-.global $$22746
 $$22746:
 	.incbin "baserom.dol", 0x3E4AF0, 0x4
-.global $$22747
 $$22747:
 	.incbin "baserom.dol", 0x3E4AF4, 0x4
-.global $$22748
 $$22748:
 	.incbin "baserom.dol", 0x3E4AF8, 0x4
-.global $$22749
 $$22749:
 	.incbin "baserom.dol", 0x3E4AFC, 0x4
-.global $$22750
 $$22750:
 	.incbin "baserom.dol", 0x3E4B00, 0x4
-.global $$22751
 $$22751:
 	.incbin "baserom.dol", 0x3E4B04, 0x4
-.global $$22752
 $$22752:
 	.incbin "baserom.dol", 0x3E4B08, 0x4
-.global $$22753
 $$22753:
 	.incbin "baserom.dol", 0x3E4B0C, 0x4
-.global $$22754
 $$22754:
 	.incbin "baserom.dol", 0x3E4B10, 0x4
-.global $$22857
 $$22857:
 	.incbin "baserom.dol", 0x3E4B14, 0x4
-.global $$22858
 $$22858:
 	.incbin "baserom.dol", 0x3E4B18, 0x4
-.global $$22859
 $$22859:
 	.incbin "baserom.dol", 0x3E4B1C, 0x4
-.global $$22976
 $$22976:
 	.incbin "baserom.dol", 0x3E4B20, 0x4
-.global $$22977
 $$22977:
 	.incbin "baserom.dol", 0x3E4B24, 0x4
-.global $$22978
 $$22978:
 	.incbin "baserom.dol", 0x3E4B28, 0x4
-.global $$24014
 $$24014:
 	.incbin "baserom.dol", 0x3E4B2C, 0x4
-.global $$24158
 $$24158:
 	.incbin "baserom.dol", 0x3E4B30, 0x4
-.global $$24159
 $$24159:
 	.incbin "baserom.dol", 0x3E4B34, 0x4
-.global $$24634
 $$24634:
 	.incbin "baserom.dol", 0x3E4B38, 0x4
-.global $$24756
 $$24756:
 	.incbin "baserom.dol", 0x3E4B3C, 0x4
-.global $$24757
 $$24757:
 	.incbin "baserom.dol", 0x3E4B40, 0x4
-.global $$24758
 $$24758:
 	.incbin "baserom.dol", 0x3E4B44, 0x4
-.global $$24759
 $$24759:
 	.incbin "baserom.dol", 0x3E4B48, 0x4
-.global $$24869
 $$24869:
 	.incbin "baserom.dol", 0x3E4B4C, 0x4
-.global $$24871
 $$24871:
 	.incbin "baserom.dol", 0x3E4B50, 0x8
-.global $$25163
 $$25163:
 	.incbin "baserom.dol", 0x3E4B58, 0x4
-.global $$25164
 $$25164:
 	.incbin "baserom.dol", 0x3E4B5C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global $$22174
 $$22174:
 	.skip 0xC
-.global setup1$2173
 setup1$2173:
 	.skip 0x24
-.global $$22178
 $$22178:
 	.skip 0xC
-.global cylinder$2177
 cylinder$2177:
 	.skip 0x24
-.global $$22192
 $$22192:
 	.skip 0xC
-.global setup2$2191
 setup2$2191:
 	.skip 0x24
-.global $$22197
 $$22197:
 	.skip 0xC
-.global setup3$2196
 setup3$2196:
 	.skip 0x24
-.global $$22209
 $$22209:
 	.skip 0xC
-.global setup4$2208
 setup4$2208:
 	.skip 0x24
-.global $$22218
 $$22218:
 	.skip 0xC
-.global setup5$2217
 setup5$2217:
 	.skip 0x24
 
@@ -5702,30 +5637,21 @@ setup5$2217:
 .global gpBindShadowManager
 gpBindShadowManager:
 	.skip 0x4
-.global mJoinDist__19TMBindShadowManager
 mJoinDist__19TMBindShadowManager:
 	.skip 0x4
-.global mTestSw__19TMBindShadowManager
 mTestSw__19TMBindShadowManager:
 	.skip 0x1
-.global mDLSw__19TMBindShadowManager
 mDLSw__19TMBindShadowManager:
 	.skip 0x1
-.global init$2175
 init$2175:
 	.skip 0x1
-.global init$2179
 init$2179:
 	.skip 0x1
-.global init$2193
 init$2193:
 	.skip 0x1
-.global init$2198
 init$2198:
 	.skip 0x1
-.global init$2210
 init$2210:
 	.skip 0x1
-.global init$2219
 init$2219:
 	.skip 0x1
