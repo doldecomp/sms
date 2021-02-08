@@ -3,15 +3,15 @@ _SDA2_BASE_ = 0x80413460;
 SECTIONS
 {
     .init BIND(0x80003100) : { *(.init) }
-    .text BIND(0x80005600) : { *(.text) }
     extab BIND(0x80005540) : { *(extab) }
     extabindex BIND(0x800055A0) : { *(extabindex) }
+    .text BIND(0x80005600) : { *(.text) }
     .ctors BIND(0x8036FBA0) : { *(.ctors) }
     .dtors BIND(0x8036FF80) : { *(.dtors) }
     .rodata BIND(0x8036FFA0) : { *(.rodata) }
     .data BIND(0x803A8380) : { *(.data) }
-    .sdata BIND(0x80408AC0) : { *(.sdata) }
-    .sdata2 BIND(0x8040B460) : { *(.sdata2) }
     .bss BIND(0x803E6000) : { *(.bss) }
-    .bss BIND(0x804097C0) : { *(.bss) }
+    .sdata BIND(0x80408AC0) : { *(.sdata) }
+    .sbss BIND(0x804097C0) : { *(.sbss) }
+    .sdata2 BIND(0x8040B460) : { *(.sdata2) }
 }
