@@ -3,8 +3,8 @@ _SDA2_BASE_ = 0x80413460;
 SECTIONS
 {
     .init BIND(0x80003100) : { *(.init) }
-    extab BIND(0x80005540) : { *(extab) }
-    extabindex BIND(0x800055A0) : { *(extabindex) }
+    extab_ BIND(0x80005540) : { *(extab_) }
+    extabindex_ BIND(0x800055A0) : { *(extabindex_) }
     .text BIND(0x80005600) : { *(.text) }
     .ctors BIND(0x8036FBA0) : { *(.ctors) }
     .dtors BIND(0x8036FF80) : { *(.dtors) }

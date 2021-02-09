@@ -273,7 +273,7 @@ lbl_80082ADC:
 /* 80082AEC 0007FA2C  7C 08 03 A6 */	mtlr r0
 /* 80082AF0 0007FA30  4E 80 00 20 */	blr 
 
-.section extab, "wa"  # 0x80005540 - 0x800055A0
+.section extab_, "wa"  # 0x80005540 - 0x800055A0
 $$2152:
 	.incbin "baserom.dol", 0x36CAE0, 0x8
 $$2157:
@@ -286,7 +286,7 @@ $$2201:
 	.incbin "baserom.dol", 0x36CB10, 0x30
 
 
-.section extabindex, "wa"  # 0x800055A0 - 0x80005600
+.section extabindex_, "wa"  # 0x800055A0 - 0x80005600
 $$2153:
 	.incbin "baserom.dol", 0x36CB40, 0xC
 $$2158:
