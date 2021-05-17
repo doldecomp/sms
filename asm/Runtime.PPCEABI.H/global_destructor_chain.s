@@ -36,6 +36,7 @@ __register_global_object:
 .section .dtors$15, "wa"  # 0x8036FF80 - 0x8036FFA0
 __destroy_global_chain_reference:
 	.incbin "baserom.dol", 0x36CF88, 0x4
+	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 __global_destructor_chain:
