@@ -1,17 +1,43 @@
 _SDA_BASE_ = 0x80410AC0;
 _SDA2_BASE_ = 0x80413460;
-SECTIONS
-{
-    .init BIND(0x80003100) : { *(.init) }
-    extab_ BIND(0x80005540) : { *(extab_) }
-    extabindex_ BIND(0x800055A0) : { *(extabindex_) }
-    .text BIND(0x80005600) : { *(.text) }
-    .ctors BIND(0x8036FBA0) : { *(.ctors) }
-    .dtors BIND(0x8036FF80) : { *(.dtors) }
-    .rodata BIND(0x8036FFA0) : { *(.rodata) }
-    .data BIND(0x803A8380) : { *(.data) }
-    .bss BIND(0x803E6000) : { *(.bss) }
-    .sdata BIND(0x80408AC0) : { *(.sdata) }
-    .sbss BIND(0x804097C0) : { *(.sbss) }
-    .sdata2 BIND(0x8040B460) : { *(.sdata2) }
+
+MEMORY {
+    text: origin = 0x80003100
+}
+
+SECTIONS {
+    GROUP: {
+        .init ALIGN(0x20):{}
+        /* TODO: should be extab and extabindex */
+        extab_ ALIGN(0x20):{}
+        extabindex_ ALIGN(0x20):{}
+        .text ALIGN(0x20):{}
+        .ctors ALIGN(0x20):{}
+        .dtors ALIGN(0x20):{}
+        .rodata ALIGN(0x20):{}
+        .data ALIGN(0x20):{}
+        .bss ALIGN(0x20):{}
+        .sdata ALIGN(0x20):{}
+        .sbss ALIGN(0x20):{}
+        .sdata2 ALIGN(0x20):{}
+        .stack ALIGN(0x100):{}
+    } > text
+    _stack_addr = (_f_sdata2 + SIZEOF(.sdata2) + 65536 + 0x7) & ~0x7;
+    _stack_end = _f_sdata2 + SIZEOF(.sdata2);
+    _db_stack_addr = (_stack_addr + 0x2000);
+    _db_stack_end = _stack_addr;
+    __ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f;
+    __ArenaHi = 0x81700000;
+}
+
+FORCEFILES {
+    __init_cpp_exceptions.o
+    Atom.o
+    EXIUart.o
+    JUTDbPrint.o
+    MarioCheckCol.o
+    MarioReceiveMsg.o
+    NpcSound.o
+    ParamInst.o
+    uart_console_io.o
 }
