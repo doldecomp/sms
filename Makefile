@@ -19,7 +19,7 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src
+SRC_DIRS := src src/NPC
 ASM_DIRS := asm                      \
             asm/JSystem              \
 			asm/Runtime.PPCEABI.H    \
@@ -100,7 +100,7 @@ PYTHON  := python
 POSTPROC := tools/postprocess.py
 
 # Options
-INCLUDES := -i . -I- -i include
+INCLUDES := -i . -I- -i include -i src
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard
@@ -154,6 +154,6 @@ $(BUILD_DIR)/%.o: %.s
 
 $(BUILD_DIR)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
-	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
+# 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
