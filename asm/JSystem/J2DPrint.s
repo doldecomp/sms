@@ -1928,10 +1928,6 @@ $$2405:
 $$2425:
 	.incbin "baserom.dol", 0x3E3E80, 0x8
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-mMutex__8J2DPrint:
-	.skip 0x18
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 mStrBuff__8J2DPrint:
 	.skip 0x4

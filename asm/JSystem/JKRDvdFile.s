@@ -423,7 +423,3 @@ __vt__10JKRDvdFile:
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$2237:
 	.skip 0x10
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-sDvdList__10JKRDvdFile:
-	.skip 0xC

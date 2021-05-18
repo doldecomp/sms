@@ -340,16 +340,6 @@ audioproc_mq__Q28JASystem11AudioThread:
 msgbuf__Q28JASystem11AudioThread:
 	.skip 0x40
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-jac_audioThread__Q28JASystem11AudioThread:
-	.skip 0x2640
-jac_audioStack__Q28JASystem11AudioThread:
-	.skip 0x1000
-jac_dvdThread__Q28JASystem11AudioThread:
-	.skip 0x320
-jac_dvdStack__Q28JASystem11AudioThread:
-	.skip 0x1000
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 isDSPBoot__Q28JASystem11AudioThread:
 	.skip 0x4

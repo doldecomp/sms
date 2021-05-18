@@ -96,8 +96,8 @@ __init_cpp:
 /* 80094240 00091180  90 01 00 04 */	stw r0, 4(r1)
 /* 80094244 00091184  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80094248 00091188  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 8009424C 0009118C  3C 60 80 37 */	lis r3, __init_cpp_exceptions_reference@ha
-/* 80094250 00091190  38 03 FB A0 */	addi r0, r3, __init_cpp_exceptions_reference@l
+/* 8009424C 0009118C  3C 60 80 37 */	lis r3, _ctors@ha
+/* 80094250 00091190  38 03 FB A0 */	addi r0, r3, _ctors@l
 /* 80094254 00091194  7C 1F 03 78 */	mr r31, r0
 /* 80094258 00091198  48 00 00 04 */	b lbl_8009425C
 lbl_8009425C:

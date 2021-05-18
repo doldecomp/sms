@@ -35,20 +35,6 @@ nullInfoData2__8JAIConst:
 sCInfos_0__8JAIConst:
 	.incbin "baserom.dol", 0x3A7CCC, 0x24
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global nullActor__8JAIConst
-nullActor__8JAIConst:
-	.skip 0x58
-.global camMtx__8JAIConst
-camMtx__8JAIConst:
-	.skip 0x30
-.global camTrans__8JAIConst
-camTrans__8JAIConst:
-	.skip 0xC
-.global camPreTrans__8JAIConst
-camPreTrans__8JAIConst:
-	.skip 0xC
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global random__8JAIConst
 random__8JAIConst:

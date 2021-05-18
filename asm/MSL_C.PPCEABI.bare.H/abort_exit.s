@@ -27,8 +27,8 @@ lbl_800832E0:
 /* 800832E4 00080224  2C 00 00 00 */	cmpwi r0, 0
 /* 800832E8 00080228  41 81 FF D8 */	bgt lbl_800832C0
 /* 800832EC 0008022C  4B FF F3 F5 */	bl __destroy_global_chain
-/* 800832F0 00080230  3C 60 80 37 */	lis r3, __destroy_global_chain_reference@ha
-/* 800832F4 00080234  38 03 FF 80 */	addi r0, r3, __destroy_global_chain_reference@l
+/* 800832F0 00080230  3C 60 80 37 */	lis r3, _dtors@ha
+/* 800832F4 00080234  38 03 FF 80 */	addi r0, r3, _dtors@l
 /* 800832F8 00080238  7C 1F 03 78 */	mr r31, r0
 /* 800832FC 0008023C  48 00 00 10 */	b lbl_8008330C
 lbl_80083300:

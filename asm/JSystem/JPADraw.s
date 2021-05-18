@@ -7031,10 +7031,3 @@ $$21657:
 	.skip 0xC
 $$21658:
 	.skip 0x14
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-vc__7JPADraw:
-	.skip 0x1EC
-.global cb__7JPADraw
-cb__7JPADraw:
-	.skip 0xB0

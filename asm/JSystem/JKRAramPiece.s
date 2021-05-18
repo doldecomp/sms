@@ -363,9 +363,3 @@ $$2100:
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$260:
 	.skip 0x10
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-sAramPieceCommandList__12JKRAramPiece:
-	.skip 0x24
-mMutex__12JKRAramPiece:
-	.skip 0x18

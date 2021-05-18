@@ -1637,18 +1637,6 @@ $$2672:
 $$2301:
 	.skip 0x10
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-mPadList__10JUTGamePad:
-	.skip 0x17C
-mPadStatus__10JUTGamePad:
-	.skip 0x30
-mPadButton__10JUTGamePad:
-	.skip 0xC0
-mPadMStick__10JUTGamePad:
-	.skip 0x40
-mPadSStick__10JUTGamePad:
-	.skip 0x40
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 mListInitialized__10JUTGamePad:
 	.skip 0x4

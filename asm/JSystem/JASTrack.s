@@ -4086,10 +4086,6 @@ $$2981:
 oRandom__Q28JASystem6Player:
 	.skip 0x88
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-sParser__Q28JASystem6TTrack:
-	.skip 0x4
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sUpdateSyncMode__Q28JASystem6TTrack:
 	.skip 0x4

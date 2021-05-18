@@ -2213,10 +2213,6 @@ Filename__Q27JAInter9StreamLib:
 $$2531:
 	.skip 0x10
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-streamHeap__Q27JAInter9StreamLib:
-	.skip 0x14
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 adpcm_remain__Q27JAInter9StreamLib:
 	.skip 0x4

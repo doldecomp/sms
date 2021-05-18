@@ -681,7 +681,3 @@ $$2509:
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$2557:
 	.skip 0x10
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-systemPortCmd__18JAISystemInterface:
-	.skip 0x18

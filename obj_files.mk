@@ -734,4 +734,5 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/Animal/AnimalNerve.o                             \
     $(BUILD_DIR)/asm/Animal/Bird.o                                    \
     $(BUILD_DIR)/asm/Animal/BeeHive.o                                 \
-    $(BUILD_DIR)/asm/Animal/Butterfly.o
+    $(BUILD_DIR)/asm/Animal/Butterfly.o                               \
+    $(BUILD_DIR)/asm/JSystem/bss_extras.o

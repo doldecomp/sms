@@ -93,8 +93,7 @@ AS      := $(DEVKITPPC)/bin/powerpc-eabi-as
 OBJCOPY := $(DEVKITPPC)/bin/powerpc-eabi-objcopy
 CPP     := $(DEVKITPPC)/bin/powerpc-eabi-cpp -P
 CC      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwcceppc.exe
-# Due to bss erroring on less than 2.7, we have to use the 2.7 linker.
-LD      := $(WINE) tools/mwcc_compiler/GC/2.7/mwldeppc.exe
+LD      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwldeppc.exe
 ELF2DOL := tools/elf2dol
 SHA1SUM := sha1sum
 PYTHON  := python

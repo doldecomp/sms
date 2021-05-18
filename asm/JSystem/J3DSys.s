@@ -757,23 +757,6 @@ $$2885:
 NullTexData:
 	.incbin "baserom.dol", 0x3A6980, 0x10
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global j3dSys
-j3dSys:
-	.skip 0x1AC
-.global mCurrentMtx__6J3DSys
-mCurrentMtx__6J3DSys:
-	.skip 0x30
-.global mCurrentS__6J3DSys
-mCurrentS__6J3DSys:
-	.skip 0xC
-.global mParentS__6J3DSys
-mParentS__6J3DSys:
-	.skip 0xC
-.global sTexCoordScaleTable__6J3DSys
-sTexCoordScaleTable__6J3DSys:
-	.skip 0x40
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global j3dDefaultViewNo
 j3dDefaultViewNo:

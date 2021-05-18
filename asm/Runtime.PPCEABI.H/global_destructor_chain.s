@@ -33,7 +33,7 @@ __register_global_object:
 /* 80082738 0007F678  90 AD 92 88 */	stw r5, __global_destructor_chain-_SDA_BASE_(r13)
 /* 8008273C 0007F67C  4E 80 00 20 */	blr 
 
-.section .dtors$99, "wa"  # 0x8036FF80 - 0x8036FFA0
+.section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
 __destroy_global_chain_reference:
 	.incbin "baserom.dol", 0x36CF88, 0x4
 	.skip 0x10

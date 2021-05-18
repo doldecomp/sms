@@ -2981,11 +2981,6 @@ $$21287:
 $$21289:
 	.incbin "baserom.dol", 0x3E4178, 0x8
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global JAInullCamera
-JAInullCamera:
-	.skip 0xC
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global basic__8JAIBasic
 basic__8JAIBasic:

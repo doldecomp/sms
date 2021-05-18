@@ -220,7 +220,3 @@ __vt__9JKRThread:
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$225:
 	.skip 0x10
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-sThreadList__9JKRThread:
-	.skip 0xC

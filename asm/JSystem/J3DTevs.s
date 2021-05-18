@@ -1678,16 +1678,3 @@ $$2979:
 	.incbin "baserom.dol", 0x3E3FDC, 0x4
 $$2981:
 	.incbin "baserom.dol", 0x3E3FE0, 0x8
-
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-j3dTexCoordTable:
-	.skip 0x2528
-.global j3dTevSwapTableTable
-j3dTevSwapTableTable:
-	.skip 0x400
-.global j3dAlphaCmpTable
-j3dAlphaCmpTable:
-	.skip 0x300
-.global j3dZModeTable
-j3dZModeTable:
-	.skip 0x60

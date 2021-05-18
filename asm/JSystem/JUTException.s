@@ -2161,10 +2161,6 @@ exCallbackObject:
 $$21483:
 	.skip 0xC
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-sMapFileList__12JUTException:
-	.skip 0xC
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global sErrorManager__12JUTException
 sErrorManager__12JUTException:

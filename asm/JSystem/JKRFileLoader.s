@@ -500,11 +500,6 @@ $$21783:
 $$21483:
 	.skip 0x10
 
-.section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-.global sVolumeList__13JKRFileLoader
-sVolumeList__13JKRFileLoader:
-	.skip 0xC
-
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global sCurrentVolume__13JKRFileLoader
 sCurrentVolume__13JKRFileLoader:
