@@ -18,3 +18,5 @@
 *.exe
 build
 tools/mwcc_compiler/
+tools/elf2dol
+__pycache__/*
