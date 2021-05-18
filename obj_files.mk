@@ -493,7 +493,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/NPC/NpcInitAnmData.o                             \
     $(BUILD_DIR)/asm/NPC/NpcInitActionData.o                          \
     $(BUILD_DIR)/asm/NPC/NpcCoin.o                                    \
-    $(BUILD_DIR)/asm/NPC/NpcBalloon.o                                 \
+    $(BUILD_DIR)/src/NPC/NpcBalloon.o                                 \
     $(BUILD_DIR)/asm/NPC/NpcWalkTurn.o                                \
     $(BUILD_DIR)/asm/NPC/NpcCollision.o                               \
     $(BUILD_DIR)/asm/MSound/MAnmSound.o                               \
