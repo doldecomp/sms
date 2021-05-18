@@ -1,4 +1,9 @@
+import subprocess, binascii
 def apply(config, args):
+    p = subprocess.Popen(["make", "print-DEVKITPPC"], stdout=subprocess.PIPE)
+    devkit_str = p.communicate()[0].decode("ascii")
+    devkit_path = devkit_str.split("[")[1][:-2]
+
     config['mapfile'] = 'build/sms_jp_r0/sms_jp_r0.map'
     config['myimg'] = 'build/sms_jp_r0/main.dol'
     config['baseimg'] = 'baserom.dol'
@@ -8,4 +13,4 @@ def apply(config, args):
     config["map_format"] = "mw" # gnu or mw
     config["mw_build_dir"] = "build/" # only needed for mw map format
     config["makeflags"] = []
-    config["objdump_executable"] = "powerpc-linux-gnu-objdump"
+    config["objdump_executable"] = devkit_path+"/bin/powerpc-eabi-objdump"
