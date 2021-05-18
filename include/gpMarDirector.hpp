@@ -5,8 +5,8 @@
 
 extern class  {
     public:
-        char pad[0x70];
-        int unk70;
+        char pad_000[0x70];
+        int _070;
         TGCConsole2 *console;
 } *gpMarDirector;
 

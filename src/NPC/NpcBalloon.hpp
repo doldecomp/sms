@@ -4,7 +4,7 @@
 class TNpcBalloon {
     bool updateBalloon(void);
     void setNextMessage(u32, s32);
-    int unk0;
+    int _000;
     int mBalloonAppearTimer;
 };
 

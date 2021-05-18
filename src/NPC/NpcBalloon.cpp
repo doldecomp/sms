@@ -8,7 +8,7 @@ bool TNpcBalloon::updateBalloon() {
     bool ret = false;
     
     if (this->mBalloonAppearTimer > 0 && (--this->mBalloonAppearTimer, !this->mBalloonAppearTimer)) {
-        gpMarDirector->console->startAppearBalloon(this->unk0, true);
+        gpMarDirector->console->startAppearBalloon(this->_000, true);
         this->mBalloonAppearTimer = -1;
         ret = true;
     }
@@ -17,6 +17,6 @@ bool TNpcBalloon::updateBalloon() {
 }
 
 void TNpcBalloon::setNextMessage(u32 a, s32 timer) {
-    this->unk0 = a;
+    this->_000 = a;
     this->mBalloonAppearTimer = timer;
 }
