@@ -9,14 +9,13 @@ namespace JDrama
 	f32 GetRenderModeYScale(const GXRenderModeObj &);
 	void CalcRenderModeXFBHeight(GXRenderModeObj *, u16);
 #endif
-	void CalcRenderModeVIXOrigin(GXRenderModeObj *);
-	void CalcRenderModeVIYOrigin(GXRenderModeObj *);
-	void CopyRenderModeSamplePattern(GXRenderModeObj *, const u8 *[2]);
-	void CopyRenderModeVFilter(GXRenderModeObj *, const u8 *);
+	void CalcRenderModeVIXOrigin(GXRenderModeObj *rmo);
+	void CalcRenderModeVIYOrigin(GXRenderModeObj *rmo);
+	void CopyRenderModeSamplePattern(GXRenderModeObj *rmo, const u8 *s);
+	void CopyRenderModeVFilter(GXRenderModeObj *rmo, const u8 *s);
 
-	s32 GetVIWidthMax(VITVMode);
-	s32 GetVIHeightMax(VITVMode);
-
+	s32 GetVIWidthMax(VITVMode tvm);
+	s32 GetVIHeightMax(VITVMode tvm);
 }
 
 #endif /*__JDR_RENDER_MODE_HPP__*/

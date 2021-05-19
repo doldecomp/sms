@@ -47,46 +47,30 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, ushort param_2)
 
 void JDrama::CalcRenderModeVIXOrigin(GXRenderModeObj *rmo)
 {
-	u32 region;
-	s32 max_width;
-	u32 dif;
-
-	region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
-										region is alligned to a power of four	*/
-	max_width = JDrama::GetVIWidthMax((VITVMode)region);
-	dif = (u16)max_width;
-	dif -= rmo->viHeight;
+	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
+											region is alligned to a power of four	*/
+	s32 max_width = JDrama::GetVIWidthMax((VITVMode)region);
+	u32 dif = static_cast<u16>(max_width) - rmo->viWidth;
 	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
-
-	return;
 }
 
 void JDrama::CalcRenderModeVIYOrigin(GXRenderModeObj *rmo)
 {
-	u32 region;
-	s32 max_height;
-	u32 dif;
-
-	region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
-										region is alligned to a power of four	*/
-	max_height = JDrama::GetVIHeightMax((VITVMode)region);
-	dif = (u16)max_height;
-	dif -= rmo->viHeight;
+	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
+											region is alligned to a power of four	*/
+	s32 max_height = JDrama::GetVIHeightMax((VITVMode)region);
+	u32 dif = static_cast<u16>(max_height) - rmo->viHeight;
 	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
-
-	return;
 }
 
 void JDrama::CopyRenderModeSamplePattern(GXRenderModeObj *rmo, u8 *s)
 {
-	/*Runtime.PPCEABI.H::*/ memcpy(rmo->sample_pattern, s, 24);
-	return;
+	/*Runtime.PPCEABI.H::*/ memcpy(rmo->sample_pattern, s, sizeof(rmo->sample_pattern));
 }
 
 void JDrama::CopyRenderModeVFilter(GXRenderModeObj *rmo, u8 *s)
 {
-	/*Runtime.PPCEABI.H::*/ memcpy(rmo->vfilter, s, 7);
-	return;
+	/*Runtime.PPCEABI.H::*/ memcpy(rmo->vfilter, s, sizeof(rmo->vfilter));
 }
 
 s32 JDrama::GetVIWidthMax(VITVMode tvm)
