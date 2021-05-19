@@ -1,5 +1,6 @@
 O_FILES :=                                                            \
 	$(BUILD_DIR)/asm/main.o                                           \
+    $(BUILD_DIR)/asm/JSystem/JDRRenderMode.o                          \
     $(BUILD_DIR)/asm/JSystem/JKRArchivePri.o                          \
     $(BUILD_DIR)/asm/JSystem/JKRAramArchive.o                         \
     $(BUILD_DIR)/asm/JSystem/JKRAramHeap.o                            \
