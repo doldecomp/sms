@@ -491,7 +491,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/NPC/NpcTrample.o                                 \
     $(BUILD_DIR)/asm/NPC/NpcEffect.o                                  \
     $(BUILD_DIR)/asm/NPC/NpcInitAnmData.o                             \
-    $(BUILD_DIR)/asm/NPC/NpcInitActionData.o                          \
+    $(BUILD_DIR)/src/NPC/NpcInitActionData.o                          \
     $(BUILD_DIR)/asm/NPC/NpcCoin.o                                    \
     $(BUILD_DIR)/src/NPC/NpcBalloon.o                                 \
     $(BUILD_DIR)/asm/NPC/NpcWalkTurn.o                                \
