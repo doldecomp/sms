@@ -53,17 +53,17 @@ __ct__10JKRArchiveFlQ210JKRArchive10EMountMode:
 /* 8000571C 0000265C  80 1F 00 38 */	lwz r0, 0x38(r31)
 /* 80005720 00002660  28 00 00 00 */	cmplwi r0, 0
 /* 80005724 00002664  40 82 00 0C */	bne lbl_80005730
-/* 80005728 00002668  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80005728 00002668  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000572C 0000266C  90 03 00 00 */	stw r0, 0(r3)
 lbl_80005730:
 /* 80005730 00002670  80 61 00 08 */	lwz r3, 8(r1)
 /* 80005734 00002674  93 A3 00 40 */	stw r29, 0x40(r3)
-/* 80005738 00002678  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 80005738 00002678  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000573C 0000267C  28 00 00 00 */	cmplwi r0, 0
 /* 80005740 00002680  40 82 00 10 */	bne lbl_80005750
 /* 80005744 00002684  38 00 00 00 */	li r0, 0
-/* 80005748 00002688  90 6D 8D 60 */	stw r3, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
-/* 8000574C 0000268C  90 0D 8D 00 */	stw r0, sCurrentDirID__10JKRArchive-_SDA_BASE_(r13)
+/* 80005748 00002688  90 6D 8D 60 */	stw r3, sCurrentVolume__13JKRFileLoader@sda21(r13)
+/* 8000574C 0000268C  90 0D 8D 00 */	stw r0, sCurrentDirID__10JKRArchive@sda21(r13)
 lbl_80005750:
 /* 80005750 00002690  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80005754 00002694  80 61 00 08 */	lwz r3, 8(r1)

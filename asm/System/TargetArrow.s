@@ -76,12 +76,12 @@ loadAfter__12TTargetArrowFv:
 /* 80110FE8 0010DF28  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80110FEC 0010DF2C  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80110FF0 0010DF30  7C 7F 1B 78 */	mr r31, r3
-/* 80110FF4 0010DF34  80 6D 84 70 */	lwz r3, cTargetArrowBmdFileName-_SDA_BASE_(r13)
+/* 80110FF4 0010DF34  80 6D 84 70 */	lwz r3, cTargetArrowBmdFileName@sda21(r13)
 /* 80110FF8 0010DF38  4B EF AC C5 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80110FFC 0010DF3C  28 03 00 00 */	cmplwi r3, 0
 /* 80111000 0010DF40  41 82 00 30 */	beq lbl_80111030
 /* 80111004 0010DF44  3C 60 80 38 */	lis r3, $$21708@ha
-/* 80111008 0010DF48  80 8D 84 70 */	lwz r4, cTargetArrowBmdFileName-_SDA_BASE_(r13)
+/* 80111008 0010DF48  80 8D 84 70 */	lwz r4, cTargetArrowBmdFileName@sda21(r13)
 /* 8011100C 0010DF4C  38 63 9F 4C */	addi r3, r3, $$21708@l
 /* 80111010 0010DF50  38 A0 00 03 */	li r5, 3
 /* 80111014 0010DF54  3C C0 10 01 */	lis r6, 0x1001

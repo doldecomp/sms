@@ -50,13 +50,13 @@ perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics:
 /* 800F8F10 000F5E50  41 82 00 A0 */	beq lbl_800F8FB0
 /* 800F8F14 000F5E54  57 A0 06 31 */	rlwinm. r0, r29, 0, 0x18, 0x18
 /* 800F8F18 000F5E58  41 82 00 44 */	beq lbl_800F8F5C
-/* 800F8F1C 000F5E5C  80 6D 98 38 */	lwz r3, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800F8F1C 000F5E5C  80 6D 98 38 */	lwz r3, _instance__8TTimeRec@sda21(r13)
 /* 800F8F20 000F5E60  28 03 00 00 */	cmplwi r3, 0
 /* 800F8F24 000F5E64  41 82 00 0C */	beq lbl_800F8F30
 /* 800F8F28 000F5E68  38 80 00 00 */	li r4, 0
 /* 800F8F2C 000F5E6C  48 00 39 49 */	bl snapGXTime__8TTimeRecFUl
 lbl_800F8F30:
-/* 800F8F30 000F5E70  83 CD 98 38 */	lwz r30, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800F8F30 000F5E70  83 CD 98 38 */	lwz r30, _instance__8TTimeRec@sda21(r13)
 /* 800F8F34 000F5E74  28 1E 00 00 */	cmplwi r30, 0
 /* 800F8F38 000F5E78  41 82 00 24 */	beq lbl_800F8F5C
 /* 800F8F3C 000F5E7C  4B F9 AE D5 */	bl OSGetTick
@@ -71,7 +71,7 @@ lbl_800F8F5C:
 /* 800F8F5C 000F5E9C  57 A0 07 39 */	rlwinm. r0, r29, 0, 0x1c, 0x1c
 /* 800F8F60 000F5EA0  41 82 00 50 */	beq lbl_800F8FB0
 /* 800F8F64 000F5EA4  80 1F 00 10 */	lwz r0, 0x10(r31)
-/* 800F8F68 000F5EA8  83 AD 98 38 */	lwz r29, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800F8F68 000F5EA8  83 AD 98 38 */	lwz r29, _instance__8TTimeRec@sda21(r13)
 /* 800F8F6C 000F5EAC  90 01 00 38 */	stw r0, 0x38(r1)
 /* 800F8F70 000F5EB0  28 1D 00 00 */	cmplwi r29, 0
 /* 800F8F74 000F5EB4  83 C1 00 38 */	lwz r30, 0x38(r1)
@@ -85,7 +85,7 @@ lbl_800F8F5C:
 /* 800F8F94 000F5ED4  7C 7D 1A 14 */	add r3, r29, r3
 /* 800F8F98 000F5ED8  48 00 3A C1 */	bl append__10TTimeArrayFUlUl
 lbl_800F8F9C:
-/* 800F8F9C 000F5EDC  80 6D 98 38 */	lwz r3, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800F8F9C 000F5EDC  80 6D 98 38 */	lwz r3, _instance__8TTimeRec@sda21(r13)
 /* 800F8FA0 000F5EE0  80 9F 00 10 */	lwz r4, 0x10(r31)
 /* 800F8FA4 000F5EE4  28 03 00 00 */	cmplwi r3, 0
 /* 800F8FA8 000F5EE8  41 82 00 08 */	beq lbl_800F8FB0

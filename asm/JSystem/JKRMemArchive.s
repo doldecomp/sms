@@ -187,14 +187,14 @@ lbl_8000CE34:
 /* 8000CE44 00009D84  98 7F 00 3C */	stb r3, 0x3c(r31)
 /* 8000CE48 00009D88  90 7F 00 34 */	stw r3, 0x34(r31)
 /* 8000CE4C 00009D8C  90 1F 00 54 */	stw r0, 0x54(r31)
-/* 8000CE50 00009D90  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000CE50 00009D90  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000CE54 00009D94  90 1F 00 38 */	stw r0, 0x38(r31)
 /* 8000CE58 00009D98  93 BF 00 40 */	stw r29, 0x40(r31)
-/* 8000CE5C 00009D9C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000CE5C 00009D9C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000CE60 00009DA0  28 00 00 00 */	cmplwi r0, 0
 /* 8000CE64 00009DA4  40 82 00 0C */	bne lbl_8000CE70
-/* 8000CE68 00009DA8  93 ED 8D 60 */	stw r31, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
-/* 8000CE6C 00009DAC  90 8D 8D 00 */	stw r4, sCurrentDirID__10JKRArchive-_SDA_BASE_(r13)
+/* 8000CE68 00009DA8  93 ED 8D 60 */	stw r31, sCurrentVolume__13JKRFileLoader@sda21(r13)
+/* 8000CE6C 00009DAC  90 8D 8D 00 */	stw r4, sCurrentDirID__10JKRArchive@sda21(r13)
 lbl_8000CE70:
 /* 8000CE70 00009DB0  3C A0 00 01 */	lis r5, 0x0000FFFF@ha
 /* 8000CE74 00009DB4  38 7F 00 00 */	addi r3, r31, 0
@@ -246,11 +246,11 @@ unmountFixed__13JKRMemArchiveFv:
 /* 8000CF10 00009E50  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8000CF14 00009E54  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8000CF18 00009E58  3B E3 00 00 */	addi r31, r3, 0
-/* 8000CF1C 00009E5C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000CF1C 00009E5C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000CF20 00009E60  7C 00 F8 40 */	cmplw r0, r31
 /* 8000CF24 00009E64  40 82 00 0C */	bne lbl_8000CF30
 /* 8000CF28 00009E68  38 00 00 00 */	li r0, 0
-/* 8000CF2C 00009E6C  90 0D 8D 60 */	stw r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000CF2C 00009E6C  90 0D 8D 60 */	stw r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 lbl_8000CF30:
 /* 8000CF30 00009E70  88 1F 00 68 */	lbz r0, 0x68(r31)
 /* 8000CF34 00009E74  28 00 00 00 */	cmplwi r0, 0

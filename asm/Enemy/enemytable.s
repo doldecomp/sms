@@ -65,11 +65,11 @@ lbl_802A1D98:
 lbl_802A1DB0:
 /* 802A1DB0 0029ECF0  4B DE 3D 15 */	bl rand
 /* 802A1DB4 0029ECF4  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, $$21698-_SDA2_BASE_(r2)
+/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, $$21698@sda21(r2)
 /* 802A1DBC 0029ECFC  90 01 00 8C */	stw r0, 0x8c(r1)
 /* 802A1DC0 0029ED00  3C 60 43 30 */	lis r3, 0x4330
 /* 802A1DC4 0029ED04  6F 80 80 00 */	xoris r0, r28, 0x8000
-/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, $$21696-_SDA2_BASE_(r2)
+/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, $$21696@sda21(r2)
 /* 802A1DCC 0029ED0C  90 61 00 88 */	stw r3, 0x88(r1)
 /* 802A1DD0 0029ED10  80 DE 00 00 */	lwz r6, 0(r30)
 /* 802A1DD4 0029ED14  90 01 00 84 */	stw r0, 0x84(r1)
@@ -138,7 +138,7 @@ __ct__20TStageEnemyInfoTableFPCc:
 /* 802A1EB4 0029EDF4  38 03 8A 98 */	addi r0, r3, __vt__20TStageEnemyInfoTable@l
 /* 802A1EB8 0029EDF8  90 1E 00 00 */	stw r0, 0(r30)
 /* 802A1EBC 0029EDFC  7F C4 F3 78 */	mr r4, r30
-/* 802A1EC0 0029EE00  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 802A1EC0 0029EE00  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 802A1EC4 0029EE04  4B FA 6F E9 */	bl registerEnemyInfoTable__10TConductorFP20TStageEnemyInfoTable
 /* 802A1EC8 0029EE08  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802A1ECC 0029EE0C  7F C3 F3 78 */	mr r3, r30

@@ -8,9 +8,9 @@ __ct__Q38JASystem6Kernel5THeapFv:
 /* 800636F0 00060630  38 00 00 01 */	li r0, 1
 /* 800636F4 00060634  90 C3 00 0C */	stw r6, 0xc(r3)
 /* 800636F8 00060638  90 C3 00 10 */	stw r6, 0x10(r3)
-/* 800636FC 0006063C  80 AD 91 F0 */	lwz r5, global_id__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800636FC 0006063C  80 AD 91 F0 */	lwz r5, global_id__Q28JASystem6Kernel@sda21(r13)
 /* 80063700 00060640  38 85 00 01 */	addi r4, r5, 1
-/* 80063704 00060644  90 8D 91 F0 */	stw r4, global_id__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063704 00060644  90 8D 91 F0 */	stw r4, global_id__Q28JASystem6Kernel@sda21(r13)
 /* 80063708 00060648  90 A3 00 04 */	stw r5, 4(r3)
 /* 8006370C 0006064C  98 C3 00 00 */	stb r6, 0(r3)
 /* 80063710 00060650  98 03 00 01 */	stb r0, 1(r3)
@@ -107,9 +107,9 @@ initMotherHeap__Q38JASystem6Kernel5THeapFUlUlUc:
 /* 8006384C 0006078C  7C 80 28 50 */	subf r4, r0, r5
 /* 80063850 00060790  38 00 00 01 */	li r0, 1
 /* 80063854 00060794  90 83 00 10 */	stw r4, 0x10(r3)
-/* 80063858 00060798  80 AD 91 F0 */	lwz r5, global_id__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063858 00060798  80 AD 91 F0 */	lwz r5, global_id__Q28JASystem6Kernel@sda21(r13)
 /* 8006385C 0006079C  38 85 00 01 */	addi r4, r5, 1
-/* 80063860 000607A0  90 8D 91 F0 */	stw r4, global_id__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063860 000607A0  90 8D 91 F0 */	stw r4, global_id__Q28JASystem6Kernel@sda21(r13)
 /* 80063864 000607A4  90 A3 00 04 */	stw r5, 4(r3)
 /* 80063868 000607A8  98 03 00 00 */	stb r0, 0(r3)
 /* 8006386C 000607AC  98 C3 00 01 */	stb r6, 1(r3)

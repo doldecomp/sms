@@ -7,7 +7,7 @@ start__14JUTDirectPrintFv:
 /* 800111FC 0000E13C  90 01 00 04 */	stw r0, 4(r1)
 /* 80011200 0000E140  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80011204 0000E144  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 80011208 0000E148  80 0D 8D B0 */	lwz r0, sDirectPrint__14JUTDirectPrint-_SDA_BASE_(r13)
+/* 80011208 0000E148  80 0D 8D B0 */	lwz r0, sDirectPrint__14JUTDirectPrint@sda21(r13)
 /* 8001120C 0000E14C  28 00 00 00 */	cmplwi r0, 0
 /* 80011210 0000E150  40 82 00 20 */	bne lbl_80011230
 /* 80011214 0000E154  38 60 00 18 */	li r3, 0x18
@@ -17,12 +17,12 @@ start__14JUTDirectPrintFv:
 /* 80011224 0000E164  7F E3 FB 78 */	mr r3, r31
 /* 80011228 0000E168  48 00 00 21 */	bl __ct__14JUTDirectPrintFv
 lbl_8001122C:
-/* 8001122C 0000E16C  93 ED 8D B0 */	stw r31, sDirectPrint__14JUTDirectPrint-_SDA_BASE_(r13)
+/* 8001122C 0000E16C  93 ED 8D B0 */	stw r31, sDirectPrint__14JUTDirectPrint@sda21(r13)
 lbl_80011230:
 /* 80011230 0000E170  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 80011234 0000E174  83 E1 00 0C */	lwz r31, 0xc(r1)
 /* 80011238 0000E178  38 21 00 10 */	addi r1, r1, 0x10
-/* 8001123C 0000E17C  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint-_SDA_BASE_(r13)
+/* 8001123C 0000E17C  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint@sda21(r13)
 /* 80011240 0000E180  7C 08 03 A6 */	mtlr r0
 /* 80011244 0000E184  4E 80 00 20 */	blr 
 
@@ -289,7 +289,7 @@ drawString__14JUTDirectPrintFUsUsPc:
 /* 800115B0 0000E4F0  38 E6 00 00 */	addi r7, r6, 0
 /* 800115B4 0000E4F4  90 01 00 04 */	stw r0, 4(r1)
 /* 800115B8 0000E4F8  4C C6 31 82 */	crclr 6
-/* 800115BC 0000E4FC  38 C2 80 88 */	addi r6, r2, $$2192-_SDA2_BASE_
+/* 800115BC 0000E4FC  38 C2 80 88 */	addi r6, r2, $$2192@sda21
 /* 800115C0 0000E500  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800115C4 0000E504  48 00 00 15 */	bl drawString_f__14JUTDirectPrintFUsUsPCce
 /* 800115C8 0000E508  80 01 00 0C */	lwz r0, 0xc(r1)

@@ -18,7 +18,7 @@ controlByCameraCode___15CPolarSubCameraFPi:
 /* 80352D88 0034FCC8  80 1D 00 50 */	lwz r0, 0x50(r29)
 /* 80352D8C 0034FCCC  2C 00 00 42 */	cmpwi r0, 0x42
 /* 80352D90 0034FCD0  40 82 00 3C */	bne lbl_80352DCC
-/* 80352D94 0034FCD4  80 6D A8 B8 */	lwz r3, gpCameraMario-_SDA_BASE_(r13)
+/* 80352D94 0034FCD4  80 6D A8 B8 */	lwz r3, gpCameraMario@sda21(r13)
 /* 80352D98 0034FCD8  80 03 00 18 */	lwz r0, 0x18(r3)
 /* 80352D9C 0034FCDC  28 00 00 78 */	cmplwi r0, 0x78
 /* 80352DA0 0034FCE0  40 82 00 2C */	bne lbl_80352DCC
@@ -26,7 +26,7 @@ controlByCameraCode___15CPolarSubCameraFPi:
 /* 80352DA8 0034FCE8  38 80 00 14 */	li r4, 0x14
 /* 80352DAC 0034FCEC  38 A0 00 01 */	li r5, 1
 /* 80352DB0 0034FCF0  4B FF F2 19 */	bl changeCamModeSpecifyFrame___15CPolarSubCameraFii
-/* 80352DB4 0034FCF4  80 8D 98 E4 */	lwz r4, gpMarioAngleY-_SDA_BASE_(r13)
+/* 80352DB4 0034FCF4  80 8D 98 E4 */	lwz r4, gpMarioAngleY@sda21(r13)
 /* 80352DB8 0034FCF8  7F A3 EB 78 */	mr r3, r29
 /* 80352DBC 0034FCFC  C0 3D 00 A8 */	lfs f1, 0xa8(r29)
 /* 80352DC0 0034FD00  A8 84 00 00 */	lha r4, 0(r4)
@@ -38,13 +38,13 @@ lbl_80352DCC:
 /* 80352DD4 0034FD14  3B 80 00 00 */	li r28, 0
 /* 80352DD8 0034FD18  48 00 00 D0 */	b lbl_80352EA8
 lbl_80352DDC:
-/* 80352DDC 0034FD1C  80 8D 98 DC */	lwz r4, gpMarioPos-_SDA_BASE_(r13)
+/* 80352DDC 0034FD1C  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
 /* 80352DE0 0034FD20  3B E0 00 00 */	li r31, 0
-/* 80352DE4 0034FD24  80 AD A8 D8 */	lwz r5, gpCubeCamera-_SDA_BASE_(r13)
+/* 80352DE4 0034FD24  80 AD A8 D8 */	lwz r5, gpCubeCamera@sda21(r13)
 /* 80352DE8 0034FD28  80 64 00 00 */	lwz r3, 0(r4)
 /* 80352DEC 0034FD2C  8B 65 00 10 */	lbz r27, 0x10(r5)
 /* 80352DF0 0034FD30  80 04 00 04 */	lwz r0, 4(r4)
-/* 80352DF4 0034FD34  C0 02 04 98 */	lfs f0, $$21717-_SDA2_BASE_(r2)
+/* 80352DF4 0034FD34  C0 02 04 98 */	lfs f0, $$21717@sda21(r2)
 /* 80352DF8 0034FD38  90 61 00 54 */	stw r3, 0x54(r1)
 /* 80352DFC 0034FD3C  90 01 00 58 */	stw r0, 0x58(r1)
 /* 80352E00 0034FD40  80 04 00 08 */	lwz r0, 8(r4)
@@ -54,13 +54,13 @@ lbl_80352DDC:
 /* 80352E10 0034FD50  D0 01 00 58 */	stfs f0, 0x58(r1)
 /* 80352E14 0034FD54  48 00 00 8C */	b lbl_80352EA0
 lbl_80352E18:
-/* 80352E18 0034FD58  80 6D A8 D8 */	lwz r3, gpCubeCamera-_SDA_BASE_(r13)
+/* 80352E18 0034FD58  80 6D A8 D8 */	lwz r3, gpCubeCamera@sda21(r13)
 /* 80352E1C 0034FD5C  38 BF 00 00 */	addi r5, r31, 0
 /* 80352E20 0034FD60  38 81 00 54 */	addi r4, r1, 0x54
 /* 80352E24 0034FD64  48 00 C8 15 */	bl isInCube__16TCubeManagerBaseCFRC3Vecl
 /* 80352E28 0034FD68  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80352E2C 0034FD6C  41 82 00 70 */	beq lbl_80352E9C
-/* 80352E30 0034FD70  80 6D A8 D8 */	lwz r3, gpCubeCamera-_SDA_BASE_(r13)
+/* 80352E30 0034FD70  80 6D A8 D8 */	lwz r3, gpCubeCamera@sda21(r13)
 /* 80352E34 0034FD74  57 E0 10 3A */	slwi r0, r31, 2
 /* 80352E38 0034FD78  80 83 00 14 */	lwz r4, 0x14(r3)
 /* 80352E3C 0034FD7C  80 84 00 10 */	lwz r4, 0x10(r4)

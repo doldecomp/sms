@@ -141,12 +141,12 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80040ECC 0003DE0C  C0 1C 00 2C */	lfs f0, 0x2c(r28)
 /* 80040ED0 0003DE10  D0 1E 00 EC */	stfs f0, 0xec(r30)
 /* 80040ED4 0003DE14  C0 1C 00 40 */	lfs f0, 0x40(r28)
-/* 80040ED8 0003DE18  C3 E2 83 98 */	lfs f31, $$2877-_SDA2_BASE_(r2)
+/* 80040ED8 0003DE18  C3 E2 83 98 */	lfs f31, $$2877@sda21(r2)
 /* 80040EDC 0003DE1C  FC 00 00 50 */	fneg f0, f0
-/* 80040EE0 0003DE20  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 80040EE0 0003DE20  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
 /* 80040EE4 0003DE24  C0 5C 00 44 */	lfs f2, 0x44(r28)
 /* 80040EE8 0003DE28  FF C0 F8 90 */	fmr f30, f31
-/* 80040EEC 0003DE2C  C3 A2 83 9C */	lfs f29, $$2878-_SDA2_BASE_(r2)
+/* 80040EEC 0003DE2C  C3 A2 83 9C */	lfs f29, $$2878@sda21(r2)
 /* 80040EF0 0003DE30  EE E1 00 32 */	fmuls f23, f1, f0
 /* 80040EF4 0003DE34  FF 80 10 50 */	fneg f28, f2
 /* 80040EF8 0003DE38  FC 20 B8 90 */	fmr f1, f23
@@ -160,9 +160,9 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80040F18 0003DE58  D0 01 00 D8 */	stfs f0, 0xd8(r1)
 /* 80040F1C 0003DE5C  D2 C1 00 E4 */	stfs f22, 0xe4(r1)
 /* 80040F20 0003DE60  D0 21 00 E8 */	stfs f1, 0xe8(r1)
-/* 80040F24 0003DE64  C0 22 83 9C */	lfs f1, $$2878-_SDA2_BASE_(r2)
+/* 80040F24 0003DE64  C0 22 83 9C */	lfs f1, $$2878@sda21(r2)
 /* 80040F28 0003DE68  D0 21 00 FC */	stfs f1, 0xfc(r1)
-/* 80040F2C 0003DE6C  C0 02 83 98 */	lfs f0, $$2877-_SDA2_BASE_(r2)
+/* 80040F2C 0003DE6C  C0 02 83 98 */	lfs f0, $$2877@sda21(r2)
 /* 80040F30 0003DE70  D0 01 00 F8 */	stfs f0, 0xf8(r1)
 /* 80040F34 0003DE74  D0 01 00 EC */	stfs f0, 0xec(r1)
 /* 80040F38 0003DE78  D0 01 00 F4 */	stfs f0, 0xf4(r1)
@@ -223,7 +223,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041014 0003DF54  ED 00 40 2A */	fadds f8, f0, f8
 /* 80041018 0003DF58  48 00 02 75 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
 /* 8004101C 0003DF5C  C0 1C 00 3C */	lfs f0, 0x3c(r28)
-/* 80041020 0003DF60  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 80041020 0003DF60  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
 /* 80041024 0003DF64  FC 00 00 50 */	fneg f0, f0
 /* 80041028 0003DF68  EE C1 00 32 */	fmuls f22, f1, f0
 /* 8004102C 0003DF6C  FC 20 B0 90 */	fmr f1, f22
@@ -231,7 +231,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041034 0003DF74  FF E0 08 90 */	fmr f31, f1
 /* 80041038 0003DF78  FC 20 B0 90 */	fmr f1, f22
 /* 8004103C 0003DF7C  48 04 5F 35 */	bl cosf
-/* 80041040 0003DF80  C1 42 83 98 */	lfs f10, $$2877-_SDA2_BASE_(r2)
+/* 80041040 0003DF80  C1 42 83 98 */	lfs f10, $$2877@sda21(r2)
 /* 80041044 0003DF84  FC 00 08 90 */	fmr f0, f1
 /* 80041048 0003DF88  C0 41 00 C8 */	lfs f2, 0xc8(r1)
 /* 8004104C 0003DF8C  FE A0 F8 50 */	fneg f21, f31
@@ -240,7 +240,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041058 0003DF98  C1 01 00 C4 */	lfs f8, 0xc4(r1)
 /* 8004105C 0003DF9C  EC 22 00 32 */	fmuls f1, f2, f0
 /* 80041060 0003DFA0  EC 82 05 72 */	fmuls f4, f2, f21
-/* 80041064 0003DFA4  C0 42 83 9C */	lfs f2, $$2878-_SDA2_BASE_(r2)
+/* 80041064 0003DFA4  C0 42 83 9C */	lfs f2, $$2878@sda21(r2)
 /* 80041068 0003DFA8  C1 81 00 B8 */	lfs f12, 0xb8(r1)
 /* 8004106C 0003DFAC  EE E8 0A BA */	fmadds f23, f8, f10, f1
 /* 80041070 0003DFB0  C0 61 00 CC */	lfs f3, 0xcc(r1)
@@ -289,7 +289,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 8004111C 0003E05C  EC E7 60 3A */	fmadds f7, f7, f0, f12
 /* 80041120 0003E060  ED 08 58 2A */	fadds f8, f8, f11
 /* 80041124 0003E064  48 00 01 69 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
-/* 80041128 0003E068  C0 22 83 A0 */	lfs f1, $$2879-_SDA2_BASE_(r2)
+/* 80041128 0003E068  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
 /* 8004112C 0003E06C  C0 1C 00 38 */	lfs f0, 0x38(r28)
 /* 80041130 0003E070  EE C1 00 32 */	fmuls f22, f1, f0
 /* 80041134 0003E074  FC 20 B0 90 */	fmr f1, f22
@@ -299,7 +299,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041144 0003E084  48 04 5E 2D */	bl cosf
 /* 80041148 0003E088  C0 41 00 F8 */	lfs f2, 0xf8(r1)
 /* 8004114C 0003E08C  FC 80 F8 50 */	fneg f4, f31
-/* 80041150 0003E090  C0 C2 83 98 */	lfs f6, $$2877-_SDA2_BASE_(r2)
+/* 80041150 0003E090  C0 C2 83 98 */	lfs f6, $$2877@sda21(r2)
 /* 80041154 0003E094  38 61 00 A4 */	addi r3, r1, 0xa4
 /* 80041158 0003E098  C1 81 00 E8 */	lfs f12, 0xe8(r1)
 /* 8004115C 0003E09C  EC 62 07 F2 */	fmuls f3, f2, f31
@@ -318,7 +318,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041190 0003E0D0  C0 01 01 00 */	lfs f0, 0x100(r1)
 /* 80041194 0003E0D4  EF C9 07 F2 */	fmuls f30, f9, f31
 /* 80041198 0003E0D8  ED 76 29 BA */	fmadds f11, f22, f6, f5
-/* 8004119C 0003E0DC  C0 E2 83 9C */	lfs f7, $$2878-_SDA2_BASE_(r2)
+/* 8004119C 0003E0DC  C0 E2 83 9C */	lfs f7, $$2878@sda21(r2)
 /* 800411A0 0003E0E0  EC AC 00 72 */	fmuls f5, f12, f1
 /* 800411A4 0003E0E4  C1 01 00 F0 */	lfs f8, 0xf0(r1)
 /* 800411A8 0003E0E8  EF E2 D9 BA */	fmadds f31, f2, f6, f27

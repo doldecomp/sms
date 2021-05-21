@@ -64,48 +64,48 @@ lbl_8006403C:
 lbl_80064054:
 /* 80064054 00060F94  28 1F 00 00 */	cmplwi r31, 0
 /* 80064058 00060F98  40 82 00 20 */	bne lbl_80064078
-/* 8006405C 00060F9C  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
-/* 80064060 00060FA0  38 82 86 F8 */	addi r4, r2, $$2259-_SDA2_BASE_
-/* 80064064 00060FA4  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 8006405C 00060F9C  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
+/* 80064060 00060FA0  38 82 86 F8 */	addi r4, r2, $$2259@sda21
+/* 80064064 00060FA4  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 80064068 00060FA8  54 00 10 3A */	slwi r0, r0, 2
 /* 8006406C 00060FAC  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80064070 00060FB0  48 02 1D 81 */	bl strcpy
 /* 80064074 00060FB4  48 00 00 38 */	b lbl_800640AC
 lbl_80064078:
-/* 80064078 00060FB8  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064078 00060FB8  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 8006407C 00060FBC  7F 84 E3 78 */	mr r4, r28
-/* 80064080 00060FC0  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064080 00060FC0  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 80064084 00060FC4  38 BF 00 00 */	addi r5, r31, 0
 /* 80064088 00060FC8  54 00 10 3A */	slwi r0, r0, 2
 /* 8006408C 00060FCC  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80064090 00060FD0  48 02 1D 1D */	bl strncpy
-/* 80064094 00060FD4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064094 00060FD4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 80064098 00060FD8  38 80 00 00 */	li r4, 0
-/* 8006409C 00060FDC  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 8006409C 00060FDC  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 800640A0 00060FE0  54 00 10 3A */	slwi r0, r0, 2
 /* 800640A4 00060FE4  7C 63 00 2E */	lwzx r3, r3, r0
 /* 800640A8 00060FE8  7C 83 F9 AE */	stbx r4, r3, r31
 lbl_800640AC:
-/* 800640AC 00060FEC  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640AC 00060FEC  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 800640B0 00060FF0  7C 9F E2 14 */	add r4, r31, r28
-/* 800640B4 00060FF4  80 6D 92 14 */	lwz r3, vlArcName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640B4 00060FF4  80 6D 92 14 */	lwz r3, vlArcName__Q28JASystem5Vload@sda21(r13)
 /* 800640B8 00060FF8  38 84 00 01 */	addi r4, r4, 1
 /* 800640BC 00060FFC  54 00 10 3A */	slwi r0, r0, 2
 /* 800640C0 00061000  7C 63 00 2E */	lwzx r3, r3, r0
 /* 800640C4 00061004  48 02 1D 2D */	bl strcpy
-/* 800640C8 00061008  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640C8 00061008  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 800640CC 0006100C  38 60 00 01 */	li r3, 1
-/* 800640D0 00061010  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640D0 00061010  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800640D4 00061014  54 00 10 3A */	slwi r0, r0, 2
 /* 800640D8 00061018  7F A4 01 2E */	stwx r29, r4, r0
-/* 800640DC 0006101C  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
-/* 800640E0 00061020  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640DC 0006101C  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
+/* 800640E0 00061020  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800640E4 00061024  54 00 10 3A */	slwi r0, r0, 2
 /* 800640E8 00061028  7C 84 00 2E */	lwzx r4, r4, r0
 /* 800640EC 0006102C  93 C4 00 08 */	stw r30, 8(r4)
-/* 800640F0 00061030  80 8D 92 1C */	lwz r4, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640F0 00061030  80 8D 92 1C */	lwz r4, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 800640F4 00061034  38 04 00 01 */	addi r0, r4, 1
-/* 800640F8 00061038  90 0D 92 1C */	stw r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800640F8 00061038  90 0D 92 1C */	stw r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 lbl_800640FC:
 /* 800640FC 0006103C  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80064100 00061040  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -129,7 +129,7 @@ getArchiveHandle__Q28JASystem5VloadFPc:
 /* 8006413C 0006107C  3B A3 00 00 */	addi r29, r3, 0
 /* 80064140 00061080  48 00 00 24 */	b lbl_80064164
 lbl_80064144:
-/* 80064144 00061084  80 8D 92 14 */	lwz r4, vlArcName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064144 00061084  80 8D 92 14 */	lwz r4, vlArcName__Q28JASystem5Vload@sda21(r13)
 /* 80064148 00061088  7F A3 EB 78 */	mr r3, r29
 /* 8006414C 0006108C  7C 84 F8 2E */	lwzx r4, r4, r31
 /* 80064150 00061090  48 02 1B 0D */	bl strcmp
@@ -138,11 +138,11 @@ lbl_80064144:
 /* 8006415C 0006109C  3B DE 00 01 */	addi r30, r30, 1
 /* 80064160 000610A0  3B FF 00 04 */	addi r31, r31, 4
 lbl_80064164:
-/* 80064164 000610A4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064164 000610A4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 80064168 000610A8  7C 1E 00 40 */	cmplw r30, r0
 /* 8006416C 000610AC  41 80 FF D8 */	blt lbl_80064144
 lbl_80064170:
-/* 80064170 000610B0  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064170 000610B0  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 80064174 000610B4  7C 1E 00 40 */	cmplw r30, r0
 /* 80064178 000610B8  41 82 00 0C */	beq lbl_80064184
 /* 8006417C 000610BC  57 C3 80 1E */	slwi r3, r30, 0x10
@@ -160,7 +160,7 @@ lbl_80064188:
 
 .global getRealHandle__Q28JASystem5VloadFUl
 getRealHandle__Q28JASystem5VloadFUl:
-/* 800641A4 000610E4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800641A4 000610E4  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
 /* 800641A8 000610E8  54 64 84 3E */	srwi r4, r3, 0x10
 /* 800641AC 000610EC  54 65 04 3E */	clrlwi r5, r3, 0x10
 /* 800641B0 000610F0  7C 04 00 40 */	cmplw r4, r0
@@ -168,7 +168,7 @@ getRealHandle__Q28JASystem5VloadFUl:
 /* 800641B8 000610F8  38 60 00 00 */	li r3, 0
 /* 800641BC 000610FC  4E 80 00 20 */	blr 
 lbl_800641C0:
-/* 800641C0 00061100  80 6D 92 18 */	lwz r3, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800641C0 00061100  80 6D 92 18 */	lwz r3, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800641C4 00061104  54 80 10 3A */	slwi r0, r4, 2
 /* 800641C8 00061108  7C 83 00 2E */	lwzx r4, r3, r0
 /* 800641CC 0006110C  28 04 00 00 */	cmplwi r4, 0
@@ -227,7 +227,7 @@ loadFile__Q28JASystem5VloadFUlPUcUlUl:
 /* 80064270 000611B0  54 7F 84 3E */	srwi r31, r3, 0x10
 /* 80064274 000611B4  90 01 00 18 */	stw r0, 0x18(r1)
 /* 80064278 000611B8  4B FF FF 2D */	bl getRealHandle__Q28JASystem5VloadFUl
-/* 8006427C 000611BC  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 8006427C 000611BC  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 80064280 000611C0  57 FF 10 3A */	slwi r31, r31, 2
 /* 80064284 000611C4  83 C3 00 18 */	lwz r30, 0x18(r3)
 /* 80064288 000611C8  38 61 00 1C */	addi r3, r1, 0x1c
@@ -235,9 +235,9 @@ loadFile__Q28JASystem5VloadFUlPUcUlUl:
 /* 80064290 000611D0  7F DE E2 14 */	add r30, r30, r28
 /* 80064294 000611D4  48 02 1B 5D */	bl strcpy
 /* 80064298 000611D8  38 61 00 1C */	addi r3, r1, 0x1c
-/* 8006429C 000611DC  38 82 86 F8 */	addi r4, r2, $$2259-_SDA2_BASE_
+/* 8006429C 000611DC  38 82 86 F8 */	addi r4, r2, $$2259@sda21
 /* 800642A0 000611E0  48 02 1A E1 */	bl strcat
-/* 800642A4 000611E4  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800642A4 000611E4  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800642A8 000611E8  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800642AC 000611EC  7C 84 F8 2E */	lwzx r4, r4, r31
 /* 800642B0 000611F0  38 84 00 10 */	addi r4, r4, 0x10
@@ -274,7 +274,7 @@ loadFileAsync__Q28JASystem5VloadFUlPUcUlUlPFUl_vUl:
 /* 8006431C 0006125C  3B A8 00 00 */	addi r29, r8, 0
 /* 80064320 00061260  54 7F 84 3E */	srwi r31, r3, 0x10
 /* 80064324 00061264  4B FF FE 81 */	bl getRealHandle__Q28JASystem5VloadFUl
-/* 80064328 00061268  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064328 00061268  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 8006432C 0006126C  57 FF 10 3A */	slwi r31, r31, 2
 /* 80064330 00061270  83 C3 00 18 */	lwz r30, 0x18(r3)
 /* 80064334 00061274  38 61 00 20 */	addi r3, r1, 0x20
@@ -282,9 +282,9 @@ loadFileAsync__Q28JASystem5VloadFUlPUcUlUlPFUl_vUl:
 /* 8006433C 0006127C  7F DE D2 14 */	add r30, r30, r26
 /* 80064340 00061280  48 02 1A B1 */	bl strcpy
 /* 80064344 00061284  38 61 00 20 */	addi r3, r1, 0x20
-/* 80064348 00061288  38 82 86 F8 */	addi r4, r2, $$2259-_SDA2_BASE_
+/* 80064348 00061288  38 82 86 F8 */	addi r4, r2, $$2259@sda21
 /* 8006434C 0006128C  48 02 1A 35 */	bl strcat
-/* 80064350 00061290  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064350 00061290  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 80064354 00061294  38 61 00 20 */	addi r3, r1, 0x20
 /* 80064358 00061298  7C 84 F8 2E */	lwzx r4, r4, r31
 /* 8006435C 0006129C  38 84 00 10 */	addi r4, r4, 0x10
@@ -312,43 +312,43 @@ initVloadBuffers__Q28JASystem5VloadFv:
 /* 800643A8 000612E8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800643AC 000612EC  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 800643B0 000612F0  93 C1 00 08 */	stw r30, 8(r1)
-/* 800643B4 000612F4  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
-/* 800643B8 000612F8  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800643B4 000612F4  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload@sda21(r13)
+/* 800643B8 000612F8  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800643BC 000612FC  54 03 10 3A */	slwi r3, r0, 2
 /* 800643C0 00061300  4B FA 86 85 */	bl __nwa__FUlP7JKRHeapi
-/* 800643C4 00061304  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800643C4 00061304  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload@sda21(r13)
 /* 800643C8 00061308  38 A0 00 00 */	li r5, 0
-/* 800643CC 0006130C  90 6D 92 10 */	stw r3, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
-/* 800643D0 00061310  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800643CC 0006130C  90 6D 92 10 */	stw r3, vlDirName__Q28JASystem5Vload@sda21(r13)
+/* 800643D0 00061310  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800643D4 00061314  54 03 10 3A */	slwi r3, r0, 2
 /* 800643D8 00061318  4B FA 86 6D */	bl __nwa__FUlP7JKRHeapi
-/* 800643DC 0006131C  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800643DC 0006131C  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload@sda21(r13)
 /* 800643E0 00061320  38 A0 00 00 */	li r5, 0
-/* 800643E4 00061324  90 6D 92 14 */	stw r3, vlArcName__Q28JASystem5Vload-_SDA_BASE_(r13)
-/* 800643E8 00061328  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800643E4 00061324  90 6D 92 14 */	stw r3, vlArcName__Q28JASystem5Vload@sda21(r13)
+/* 800643E8 00061328  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800643EC 0006132C  54 03 10 3A */	slwi r3, r0, 2
 /* 800643F0 00061330  4B FA 86 55 */	bl __nwa__FUlP7JKRHeapi
-/* 800643F4 00061334  90 6D 92 18 */	stw r3, vlArc__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 800643F4 00061334  90 6D 92 18 */	stw r3, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800643F8 00061338  3B C0 00 00 */	li r30, 0
 /* 800643FC 0006133C  3B E0 00 00 */	li r31, 0
 /* 80064400 00061340  48 00 00 3C */	b lbl_8006443C
 lbl_80064404:
-/* 80064404 00061344  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80064404 00061344  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80064408 00061348  38 60 00 40 */	li r3, 0x40
 /* 8006440C 0006134C  38 A0 00 00 */	li r5, 0
 /* 80064410 00061350  4B FA 86 35 */	bl __nwa__FUlP7JKRHeapi
-/* 80064414 00061354  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 80064414 00061354  80 8D 92 10 */	lwz r4, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 80064418 00061358  38 A0 00 00 */	li r5, 0
 /* 8006441C 0006135C  7C 64 F9 2E */	stwx r3, r4, r31
 /* 80064420 00061360  38 60 00 20 */	li r3, 0x20
-/* 80064424 00061364  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80064424 00061364  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80064428 00061368  4B FA 86 1D */	bl __nwa__FUlP7JKRHeapi
-/* 8006442C 0006136C  80 8D 92 14 */	lwz r4, vlArcName__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 8006442C 0006136C  80 8D 92 14 */	lwz r4, vlArcName__Q28JASystem5Vload@sda21(r13)
 /* 80064430 00061370  3B DE 00 01 */	addi r30, r30, 1
 /* 80064434 00061374  7C 64 F9 2E */	stwx r3, r4, r31
 /* 80064438 00061378  3B FF 00 04 */	addi r31, r31, 4
 lbl_8006443C:
-/* 8006443C 0006137C  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload-_SDA_BASE_(r13)
+/* 8006443C 0006137C  80 0D 82 08 */	lwz r0, vlMaxArcs__Q28JASystem5Vload@sda21(r13)
 /* 80064440 00061380  7C 1E 00 00 */	cmpw r30, r0
 /* 80064444 00061384  41 80 FF C0 */	blt lbl_80064404
 /* 80064448 00061388  80 01 00 14 */	lwz r0, 0x14(r1)

@@ -6,21 +6,21 @@ __ARQServiceQueueLo:
 /* 8009E2C4 0009B204  7C 08 02 A6 */	mflr r0
 /* 8009E2C8 0009B208  90 01 00 04 */	stw r0, 4(r1)
 /* 8009E2CC 0009B20C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8009E2D0 0009B210  80 0D 95 2C */	lwz r0, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E2D0 0009B210  80 0D 95 2C */	lwz r0, __ARQRequestPendingLo@sda21(r13)
 /* 8009E2D4 0009B214  28 00 00 00 */	cmplwi r0, 0
 /* 8009E2D8 0009B218  40 82 00 1C */	bne lbl_8009E2F4
-/* 8009E2DC 0009B21C  80 6D 95 20 */	lwz r3, __ARQRequestQueueLo-_SDA_BASE_(r13)
+/* 8009E2DC 0009B21C  80 6D 95 20 */	lwz r3, __ARQRequestQueueLo@sda21(r13)
 /* 8009E2E0 0009B220  28 03 00 00 */	cmplwi r3, 0
 /* 8009E2E4 0009B224  41 82 00 10 */	beq lbl_8009E2F4
-/* 8009E2E8 0009B228  90 6D 95 2C */	stw r3, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E2E8 0009B228  90 6D 95 2C */	stw r3, __ARQRequestPendingLo@sda21(r13)
 /* 8009E2EC 0009B22C  80 03 00 00 */	lwz r0, 0(r3)
-/* 8009E2F0 0009B230  90 0D 95 20 */	stw r0, __ARQRequestQueueLo-_SDA_BASE_(r13)
+/* 8009E2F0 0009B230  90 0D 95 20 */	stw r0, __ARQRequestQueueLo@sda21(r13)
 lbl_8009E2F4:
-/* 8009E2F4 0009B234  80 AD 95 2C */	lwz r5, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E2F4 0009B234  80 AD 95 2C */	lwz r5, __ARQRequestPendingLo@sda21(r13)
 /* 8009E2F8 0009B238  28 05 00 00 */	cmplwi r5, 0
 /* 8009E2FC 0009B23C  41 82 00 B8 */	beq lbl_8009E3B4
 /* 8009E300 0009B240  80 C5 00 18 */	lwz r6, 0x18(r5)
-/* 8009E304 0009B244  80 0D 95 38 */	lwz r0, __ARQChunkSize-_SDA_BASE_(r13)
+/* 8009E304 0009B244  80 0D 95 38 */	lwz r0, __ARQChunkSize@sda21(r13)
 /* 8009E308 0009B248  7C 06 00 40 */	cmplw r6, r0
 /* 8009E30C 0009B24C  41 81 00 3C */	bgt lbl_8009E348
 /* 8009E310 0009B250  80 65 00 08 */	lwz r3, 8(r5)
@@ -35,9 +35,9 @@ lbl_8009E32C:
 /* 8009E330 0009B270  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 8009E334 0009B274  4B FF F3 E1 */	bl ARStartDMA
 lbl_8009E338:
-/* 8009E338 0009B278  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E338 0009B278  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo@sda21(r13)
 /* 8009E33C 0009B27C  80 03 00 1C */	lwz r0, 0x1c(r3)
-/* 8009E340 0009B280  90 0D 95 34 */	stw r0, __ARQCallbackLo-_SDA_BASE_(r13)
+/* 8009E340 0009B280  90 0D 95 34 */	stw r0, __ARQCallbackLo@sda21(r13)
 /* 8009E344 0009B284  48 00 00 34 */	b lbl_8009E378
 lbl_8009E348:
 /* 8009E348 0009B288  80 65 00 08 */	lwz r3, 8(r5)
@@ -54,18 +54,18 @@ lbl_8009E368:
 /* 8009E370 0009B2B0  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 8009E374 0009B2B4  4B FF F3 A1 */	bl ARStartDMA
 lbl_8009E378:
-/* 8009E378 0009B2B8  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo-_SDA_BASE_(r13)
-/* 8009E37C 0009B2BC  80 8D 95 38 */	lwz r4, __ARQChunkSize-_SDA_BASE_(r13)
+/* 8009E378 0009B2B8  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo@sda21(r13)
+/* 8009E37C 0009B2BC  80 8D 95 38 */	lwz r4, __ARQChunkSize@sda21(r13)
 /* 8009E380 0009B2C0  80 03 00 18 */	lwz r0, 0x18(r3)
 /* 8009E384 0009B2C4  7C 04 00 50 */	subf r0, r4, r0
 /* 8009E388 0009B2C8  90 03 00 18 */	stw r0, 0x18(r3)
-/* 8009E38C 0009B2CC  80 8D 95 2C */	lwz r4, __ARQRequestPendingLo-_SDA_BASE_(r13)
-/* 8009E390 0009B2D0  80 0D 95 38 */	lwz r0, __ARQChunkSize-_SDA_BASE_(r13)
+/* 8009E38C 0009B2CC  80 8D 95 2C */	lwz r4, __ARQRequestPendingLo@sda21(r13)
+/* 8009E390 0009B2D0  80 0D 95 38 */	lwz r0, __ARQChunkSize@sda21(r13)
 /* 8009E394 0009B2D4  80 64 00 10 */	lwz r3, 0x10(r4)
 /* 8009E398 0009B2D8  7C 03 02 14 */	add r0, r3, r0
 /* 8009E39C 0009B2DC  90 04 00 10 */	stw r0, 0x10(r4)
-/* 8009E3A0 0009B2E0  80 8D 95 2C */	lwz r4, __ARQRequestPendingLo-_SDA_BASE_(r13)
-/* 8009E3A4 0009B2E4  80 0D 95 38 */	lwz r0, __ARQChunkSize-_SDA_BASE_(r13)
+/* 8009E3A0 0009B2E0  80 8D 95 2C */	lwz r4, __ARQRequestPendingLo@sda21(r13)
+/* 8009E3A4 0009B2E4  80 0D 95 38 */	lwz r0, __ARQChunkSize@sda21(r13)
 /* 8009E3A8 0009B2E8  80 64 00 14 */	lwz r3, 0x14(r4)
 /* 8009E3AC 0009B2EC  7C 03 02 14 */	add r0, r3, r0
 /* 8009E3B0 0009B2F0  90 04 00 14 */	stw r0, 0x14(r4)
@@ -84,28 +84,28 @@ __ARQInterruptServiceRoutine:
 /* 8009E3C8 0009B308  7C 08 02 A6 */	mflr r0
 /* 8009E3CC 0009B30C  90 01 00 04 */	stw r0, 4(r1)
 /* 8009E3D0 0009B310  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8009E3D4 0009B314  81 8D 95 30 */	lwz r12, __ARQCallbackHi-_SDA_BASE_(r13)
+/* 8009E3D4 0009B314  81 8D 95 30 */	lwz r12, __ARQCallbackHi@sda21(r13)
 /* 8009E3D8 0009B318  28 0C 00 00 */	cmplwi r12, 0
 /* 8009E3DC 0009B31C  41 82 00 20 */	beq lbl_8009E3FC
-/* 8009E3E0 0009B320  80 6D 95 28 */	lwz r3, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E3E0 0009B320  80 6D 95 28 */	lwz r3, __ARQRequestPendingHi@sda21(r13)
 /* 8009E3E4 0009B324  7D 88 03 A6 */	mtlr r12
 /* 8009E3E8 0009B328  4E 80 00 21 */	blrl 
 /* 8009E3EC 0009B32C  38 00 00 00 */	li r0, 0
-/* 8009E3F0 0009B330  90 0D 95 28 */	stw r0, __ARQRequestPendingHi-_SDA_BASE_(r13)
-/* 8009E3F4 0009B334  90 0D 95 30 */	stw r0, __ARQCallbackHi-_SDA_BASE_(r13)
+/* 8009E3F0 0009B330  90 0D 95 28 */	stw r0, __ARQRequestPendingHi@sda21(r13)
+/* 8009E3F4 0009B334  90 0D 95 30 */	stw r0, __ARQCallbackHi@sda21(r13)
 /* 8009E3F8 0009B338  48 00 00 28 */	b lbl_8009E420
 lbl_8009E3FC:
-/* 8009E3FC 0009B33C  81 8D 95 34 */	lwz r12, __ARQCallbackLo-_SDA_BASE_(r13)
+/* 8009E3FC 0009B33C  81 8D 95 34 */	lwz r12, __ARQCallbackLo@sda21(r13)
 /* 8009E400 0009B340  28 0C 00 00 */	cmplwi r12, 0
 /* 8009E404 0009B344  41 82 00 1C */	beq lbl_8009E420
-/* 8009E408 0009B348  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E408 0009B348  80 6D 95 2C */	lwz r3, __ARQRequestPendingLo@sda21(r13)
 /* 8009E40C 0009B34C  7D 88 03 A6 */	mtlr r12
 /* 8009E410 0009B350  4E 80 00 21 */	blrl 
 /* 8009E414 0009B354  38 00 00 00 */	li r0, 0
-/* 8009E418 0009B358  90 0D 95 2C */	stw r0, __ARQRequestPendingLo-_SDA_BASE_(r13)
-/* 8009E41C 0009B35C  90 0D 95 34 */	stw r0, __ARQCallbackLo-_SDA_BASE_(r13)
+/* 8009E418 0009B358  90 0D 95 2C */	stw r0, __ARQRequestPendingLo@sda21(r13)
+/* 8009E41C 0009B35C  90 0D 95 34 */	stw r0, __ARQCallbackLo@sda21(r13)
 lbl_8009E420:
-/* 8009E420 0009B360  80 CD 95 18 */	lwz r6, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E420 0009B360  80 CD 95 18 */	lwz r6, __ARQRequestQueueHi@sda21(r13)
 /* 8009E424 0009B364  28 06 00 00 */	cmplwi r6, 0
 /* 8009E428 0009B368  41 82 00 4C */	beq lbl_8009E474
 /* 8009E42C 0009B36C  80 66 00 08 */	lwz r3, 8(r6)
@@ -122,14 +122,14 @@ lbl_8009E44C:
 /* 8009E454 0009B394  80 C6 00 18 */	lwz r6, 0x18(r6)
 /* 8009E458 0009B398  4B FF F2 BD */	bl ARStartDMA
 lbl_8009E45C:
-/* 8009E45C 0009B39C  80 6D 95 18 */	lwz r3, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E45C 0009B39C  80 6D 95 18 */	lwz r3, __ARQRequestQueueHi@sda21(r13)
 /* 8009E460 0009B3A0  80 03 00 1C */	lwz r0, 0x1c(r3)
-/* 8009E464 0009B3A4  90 0D 95 30 */	stw r0, __ARQCallbackHi-_SDA_BASE_(r13)
-/* 8009E468 0009B3A8  90 6D 95 28 */	stw r3, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E464 0009B3A4  90 0D 95 30 */	stw r0, __ARQCallbackHi@sda21(r13)
+/* 8009E468 0009B3A8  90 6D 95 28 */	stw r3, __ARQRequestPendingHi@sda21(r13)
 /* 8009E46C 0009B3AC  80 03 00 00 */	lwz r0, 0(r3)
-/* 8009E470 0009B3B0  90 0D 95 18 */	stw r0, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E470 0009B3B0  90 0D 95 18 */	stw r0, __ARQRequestQueueHi@sda21(r13)
 lbl_8009E474:
-/* 8009E474 0009B3B4  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E474 0009B3B4  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi@sda21(r13)
 /* 8009E478 0009B3B8  28 00 00 00 */	cmplwi r0, 0
 /* 8009E47C 0009B3BC  40 82 00 08 */	bne lbl_8009E484
 /* 8009E480 0009B3C0  4B FF FE 45 */	bl __ARQServiceQueueLo
@@ -145,23 +145,23 @@ ARQInit:
 /* 8009E498 0009B3D8  90 01 00 04 */	stw r0, 4(r1)
 /* 8009E49C 0009B3DC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8009E4A0 0009B3E0  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 8009E4A4 0009B3E4  80 0D 95 3C */	lwz r0, __ARQ_init_flag-_SDA_BASE_(r13)
+/* 8009E4A4 0009B3E4  80 0D 95 3C */	lwz r0, __ARQ_init_flag@sda21(r13)
 /* 8009E4A8 0009B3E8  2C 00 00 01 */	cmpwi r0, 1
 /* 8009E4AC 0009B3EC  41 82 00 3C */	beq lbl_8009E4E8
 /* 8009E4B0 0009B3F0  3B E0 00 00 */	li r31, 0
 /* 8009E4B4 0009B3F4  38 00 10 00 */	li r0, 0x1000
-/* 8009E4B8 0009B3F8  93 ED 95 20 */	stw r31, __ARQRequestQueueLo-_SDA_BASE_(r13)
+/* 8009E4B8 0009B3F8  93 ED 95 20 */	stw r31, __ARQRequestQueueLo@sda21(r13)
 /* 8009E4BC 0009B3FC  3C 60 80 0A */	lis r3, __ARQInterruptServiceRoutine@ha
-/* 8009E4C0 0009B400  93 ED 95 18 */	stw r31, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E4C0 0009B400  93 ED 95 18 */	stw r31, __ARQRequestQueueHi@sda21(r13)
 /* 8009E4C4 0009B404  38 63 E3 C8 */	addi r3, r3, __ARQInterruptServiceRoutine@l
-/* 8009E4C8 0009B408  90 0D 95 38 */	stw r0, __ARQChunkSize-_SDA_BASE_(r13)
+/* 8009E4C8 0009B408  90 0D 95 38 */	stw r0, __ARQChunkSize@sda21(r13)
 /* 8009E4CC 0009B40C  4B FF F2 05 */	bl ARRegisterDMACallback
 /* 8009E4D0 0009B410  38 00 00 01 */	li r0, 1
-/* 8009E4D4 0009B414  93 ED 95 28 */	stw r31, __ARQRequestPendingHi-_SDA_BASE_(r13)
-/* 8009E4D8 0009B418  93 ED 95 2C */	stw r31, __ARQRequestPendingLo-_SDA_BASE_(r13)
-/* 8009E4DC 0009B41C  93 ED 95 30 */	stw r31, __ARQCallbackHi-_SDA_BASE_(r13)
-/* 8009E4E0 0009B420  93 ED 95 34 */	stw r31, __ARQCallbackLo-_SDA_BASE_(r13)
-/* 8009E4E4 0009B424  90 0D 95 3C */	stw r0, __ARQ_init_flag-_SDA_BASE_(r13)
+/* 8009E4D4 0009B414  93 ED 95 28 */	stw r31, __ARQRequestPendingHi@sda21(r13)
+/* 8009E4D8 0009B418  93 ED 95 2C */	stw r31, __ARQRequestPendingLo@sda21(r13)
+/* 8009E4DC 0009B41C  93 ED 95 30 */	stw r31, __ARQCallbackHi@sda21(r13)
+/* 8009E4E0 0009B420  93 ED 95 34 */	stw r31, __ARQCallbackLo@sda21(r13)
+/* 8009E4E4 0009B424  90 0D 95 3C */	stw r0, __ARQ_init_flag@sda21(r13)
 lbl_8009E4E8:
 /* 8009E4E8 0009B428  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 8009E4EC 0009B42C  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -204,36 +204,36 @@ lbl_8009E554:
 /* 8009E56C 0009B4AC  40 80 00 08 */	bge lbl_8009E574
 /* 8009E570 0009B4B0  48 00 00 48 */	b lbl_8009E5B8
 lbl_8009E574:
-/* 8009E574 0009B4B4  80 0D 95 20 */	lwz r0, __ARQRequestQueueLo-_SDA_BASE_(r13)
+/* 8009E574 0009B4B4  80 0D 95 20 */	lwz r0, __ARQRequestQueueLo@sda21(r13)
 /* 8009E578 0009B4B8  28 00 00 00 */	cmplwi r0, 0
 /* 8009E57C 0009B4BC  41 82 00 10 */	beq lbl_8009E58C
-/* 8009E580 0009B4C0  80 6D 95 24 */	lwz r3, __ARQRequestTailLo-_SDA_BASE_(r13)
+/* 8009E580 0009B4C0  80 6D 95 24 */	lwz r3, __ARQRequestTailLo@sda21(r13)
 /* 8009E584 0009B4C4  93 A3 00 00 */	stw r29, 0(r3)
 /* 8009E588 0009B4C8  48 00 00 08 */	b lbl_8009E590
 lbl_8009E58C:
-/* 8009E58C 0009B4CC  93 AD 95 20 */	stw r29, __ARQRequestQueueLo-_SDA_BASE_(r13)
+/* 8009E58C 0009B4CC  93 AD 95 20 */	stw r29, __ARQRequestQueueLo@sda21(r13)
 lbl_8009E590:
-/* 8009E590 0009B4D0  93 AD 95 24 */	stw r29, __ARQRequestTailLo-_SDA_BASE_(r13)
+/* 8009E590 0009B4D0  93 AD 95 24 */	stw r29, __ARQRequestTailLo@sda21(r13)
 /* 8009E594 0009B4D4  48 00 00 24 */	b lbl_8009E5B8
 lbl_8009E598:
-/* 8009E598 0009B4D8  80 0D 95 18 */	lwz r0, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E598 0009B4D8  80 0D 95 18 */	lwz r0, __ARQRequestQueueHi@sda21(r13)
 /* 8009E59C 0009B4DC  28 00 00 00 */	cmplwi r0, 0
 /* 8009E5A0 0009B4E0  41 82 00 10 */	beq lbl_8009E5B0
-/* 8009E5A4 0009B4E4  80 6D 95 1C */	lwz r3, __ARQRequestTailHi-_SDA_BASE_(r13)
+/* 8009E5A4 0009B4E4  80 6D 95 1C */	lwz r3, __ARQRequestTailHi@sda21(r13)
 /* 8009E5A8 0009B4E8  93 A3 00 00 */	stw r29, 0(r3)
 /* 8009E5AC 0009B4EC  48 00 00 08 */	b lbl_8009E5B4
 lbl_8009E5B0:
-/* 8009E5B0 0009B4F0  93 AD 95 18 */	stw r29, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E5B0 0009B4F0  93 AD 95 18 */	stw r29, __ARQRequestQueueHi@sda21(r13)
 lbl_8009E5B4:
-/* 8009E5B4 0009B4F4  93 AD 95 1C */	stw r29, __ARQRequestTailHi-_SDA_BASE_(r13)
+/* 8009E5B4 0009B4F4  93 AD 95 1C */	stw r29, __ARQRequestTailHi@sda21(r13)
 lbl_8009E5B8:
-/* 8009E5B8 0009B4F8  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E5B8 0009B4F8  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi@sda21(r13)
 /* 8009E5BC 0009B4FC  28 00 00 00 */	cmplwi r0, 0
 /* 8009E5C0 0009B500  40 82 00 74 */	bne lbl_8009E634
-/* 8009E5C4 0009B504  80 0D 95 2C */	lwz r0, __ARQRequestPendingLo-_SDA_BASE_(r13)
+/* 8009E5C4 0009B504  80 0D 95 2C */	lwz r0, __ARQRequestPendingLo@sda21(r13)
 /* 8009E5C8 0009B508  28 00 00 00 */	cmplwi r0, 0
 /* 8009E5CC 0009B50C  40 82 00 68 */	bne lbl_8009E634
-/* 8009E5D0 0009B510  80 CD 95 18 */	lwz r6, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E5D0 0009B510  80 CD 95 18 */	lwz r6, __ARQRequestQueueHi@sda21(r13)
 /* 8009E5D4 0009B514  28 06 00 00 */	cmplwi r6, 0
 /* 8009E5D8 0009B518  41 82 00 4C */	beq lbl_8009E624
 /* 8009E5DC 0009B51C  80 66 00 08 */	lwz r3, 8(r6)
@@ -250,14 +250,14 @@ lbl_8009E5FC:
 /* 8009E604 0009B544  80 C6 00 18 */	lwz r6, 0x18(r6)
 /* 8009E608 0009B548  4B FF F1 0D */	bl ARStartDMA
 lbl_8009E60C:
-/* 8009E60C 0009B54C  80 6D 95 18 */	lwz r3, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E60C 0009B54C  80 6D 95 18 */	lwz r3, __ARQRequestQueueHi@sda21(r13)
 /* 8009E610 0009B550  80 03 00 1C */	lwz r0, 0x1c(r3)
-/* 8009E614 0009B554  90 0D 95 30 */	stw r0, __ARQCallbackHi-_SDA_BASE_(r13)
-/* 8009E618 0009B558  90 6D 95 28 */	stw r3, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E614 0009B554  90 0D 95 30 */	stw r0, __ARQCallbackHi@sda21(r13)
+/* 8009E618 0009B558  90 6D 95 28 */	stw r3, __ARQRequestPendingHi@sda21(r13)
 /* 8009E61C 0009B55C  80 03 00 00 */	lwz r0, 0(r3)
-/* 8009E620 0009B560  90 0D 95 18 */	stw r0, __ARQRequestQueueHi-_SDA_BASE_(r13)
+/* 8009E620 0009B560  90 0D 95 18 */	stw r0, __ARQRequestQueueHi@sda21(r13)
 lbl_8009E624:
-/* 8009E624 0009B564  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi-_SDA_BASE_(r13)
+/* 8009E624 0009B564  80 0D 95 28 */	lwz r0, __ARQRequestPendingHi@sda21(r13)
 /* 8009E628 0009B568  28 00 00 00 */	cmplwi r0, 0
 /* 8009E62C 0009B56C  40 82 00 08 */	bne lbl_8009E634
 /* 8009E630 0009B570  4B FF FC 95 */	bl __ARQServiceQueueLo

@@ -63,7 +63,7 @@ DSPInit:
 /* 8009E700 0009B640  38 A3 00 2C */	addi r5, r3, 0x2c
 /* 8009E704 0009B644  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8009E708 0009B648  48 00 00 95 */	bl __DSP_debug_printf
-/* 8009E70C 0009B64C  80 0D 95 40 */	lwz r0, __DSP_init_flag-_SDA_BASE_(r13)
+/* 8009E70C 0009B64C  80 0D 95 40 */	lwz r0, __DSP_init_flag@sda21(r13)
 /* 8009E710 0009B650  2C 00 00 01 */	cmpwi r0, 1
 /* 8009E714 0009B654  41 82 00 74 */	beq lbl_8009E788
 /* 8009E718 0009B658  4B FF 1A B5 */	bl OSDisableInterrupts
@@ -88,11 +88,11 @@ DSPInit:
 /* 8009E764 0009B6A4  38 7F 00 00 */	addi r3, r31, 0
 /* 8009E768 0009B6A8  7C E5 28 38 */	and r5, r7, r5
 /* 8009E76C 0009B6AC  B0 A6 00 0A */	sth r5, 0xa(r6)
-/* 8009E770 0009B6B0  90 8D 92 70 */	stw r4, __DSP_tmp_task-_SDA_BASE_(r13)
-/* 8009E774 0009B6B4  90 8D 95 50 */	stw r4, __DSP_curr_task-_SDA_BASE_(r13)
-/* 8009E778 0009B6B8  90 8D 95 48 */	stw r4, __DSP_last_task-_SDA_BASE_(r13)
-/* 8009E77C 0009B6BC  90 8D 95 4C */	stw r4, __DSP_first_task-_SDA_BASE_(r13)
-/* 8009E780 0009B6C0  90 0D 95 40 */	stw r0, __DSP_init_flag-_SDA_BASE_(r13)
+/* 8009E770 0009B6B0  90 8D 92 70 */	stw r4, __DSP_tmp_task@sda21(r13)
+/* 8009E774 0009B6B4  90 8D 95 50 */	stw r4, __DSP_curr_task@sda21(r13)
+/* 8009E778 0009B6B8  90 8D 95 48 */	stw r4, __DSP_last_task@sda21(r13)
+/* 8009E77C 0009B6BC  90 8D 95 4C */	stw r4, __DSP_first_task@sda21(r13)
+/* 8009E780 0009B6C0  90 0D 95 40 */	stw r0, __DSP_init_flag@sda21(r13)
 /* 8009E784 0009B6C4  4B FF 1A 71 */	bl OSRestoreInterrupts
 lbl_8009E788:
 /* 8009E788 0009B6C8  80 01 00 14 */	lwz r0, 0x14(r1)

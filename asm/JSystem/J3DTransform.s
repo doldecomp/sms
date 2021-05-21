@@ -75,14 +75,14 @@ lbl_8001BB5C:
 .global J3DGetTranslateRotateMtx__FRC16J3DTransformInfoPA4_f
 J3DGetTranslateRotateMtx__FRC16J3DTransformInfoPA4_f:
 /* 8001BBB0 00018AF0  A0 A3 00 0C */	lhz r5, 0xc(r3)
-/* 8001BBB4 00018AF4  80 ED 8D EC */	lwz r7, jmaSinShift-_SDA_BASE_(r13)
+/* 8001BBB4 00018AF4  80 ED 8D EC */	lwz r7, jmaSinShift@sda21(r13)
 /* 8001BBB8 00018AF8  A0 03 00 0E */	lhz r0, 0xe(r3)
 /* 8001BBBC 00018AFC  7C A6 3E 30 */	sraw r6, r5, r7
-/* 8001BBC0 00018B00  81 0D 8D F0 */	lwz r8, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BBC0 00018B00  81 0D 8D F0 */	lwz r8, jmaSinTable@sda21(r13)
 /* 8001BBC4 00018B04  7C 05 3E 30 */	sraw r5, r0, r7
 /* 8001BBC8 00018B08  A0 03 00 10 */	lhz r0, 0x10(r3)
 /* 8001BBCC 00018B0C  54 A5 10 3A */	slwi r5, r5, 2
-/* 8001BBD0 00018B10  81 2D 8D F4 */	lwz r9, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BBD0 00018B10  81 2D 8D F4 */	lwz r9, jmaCosTable@sda21(r13)
 /* 8001BBD4 00018B14  7C 00 3E 30 */	sraw r0, r0, r7
 /* 8001BBD8 00018B18  7C A8 2C 2E */	lfsx f5, r8, r5
 /* 8001BBDC 00018B1C  54 07 10 3A */	slwi r7, r0, 2
@@ -124,13 +124,13 @@ J3DGetTranslateRotateMtx__FRC16J3DTransformInfoPA4_f:
 
 .global J3DGetTranslateRotateMtx__FsssfffPA4_f
 J3DGetTranslateRotateMtx__FsssfffPA4_f:
-/* 8001BC6C 00018BAC  80 ED 8D EC */	lwz r7, jmaSinShift-_SDA_BASE_(r13)
+/* 8001BC6C 00018BAC  80 ED 8D EC */	lwz r7, jmaSinShift@sda21(r13)
 /* 8001BC70 00018BB0  54 63 04 3E */	clrlwi r3, r3, 0x10
 /* 8001BC74 00018BB4  54 80 04 3E */	clrlwi r0, r4, 0x10
-/* 8001BC78 00018BB8  80 8D 8D F0 */	lwz r4, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BC78 00018BB8  80 8D 8D F0 */	lwz r4, jmaSinTable@sda21(r13)
 /* 8001BC7C 00018BBC  7C 63 3E 30 */	sraw r3, r3, r7
 /* 8001BC80 00018BC0  7C 00 3E 30 */	sraw r0, r0, r7
-/* 8001BC84 00018BC4  81 2D 8D F4 */	lwz r9, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BC84 00018BC4  81 2D 8D F4 */	lwz r9, jmaCosTable@sda21(r13)
 /* 8001BC88 00018BC8  54 08 10 3A */	slwi r8, r0, 2
 /* 8001BC8C 00018BCC  54 A0 04 3E */	clrlwi r0, r5, 0x10
 /* 8001BC90 00018BD0  7D 04 44 2E */	lfsx f8, r4, r8
@@ -172,12 +172,12 @@ J3DGetTranslateRotateMtx__FsssfffPA4_f:
 .global J3DGetTextureMtx__FRC17J3DTextureSRTInfo3VecPA4_f
 J3DGetTextureMtx__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BD1C 00018C5C  A0 E3 00 08 */	lhz r7, 8(r3)
-/* 8001BD20 00018C60  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001BD24 00018C64  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BD20 00018C60  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001BD24 00018C64  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001BD28 00018C68  7C E0 06 30 */	sraw r0, r7, r0
 /* 8001BD2C 00018C6C  C0 03 00 00 */	lfs f0, 0(r3)
 /* 8001BD30 00018C70  54 00 10 3A */	slwi r0, r0, 2
-/* 8001BD34 00018C74  80 ED 8D F0 */	lwz r7, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BD34 00018C74  80 ED 8D F0 */	lwz r7, jmaSinTable@sda21(r13)
 /* 8001BD38 00018C78  7C A6 04 2E */	lfsx f5, r6, r0
 /* 8001BD3C 00018C7C  7C 87 04 2E */	lfsx f4, r7, r0
 /* 8001BD40 00018C80  EC 00 01 72 */	fmuls f0, f0, f5
@@ -216,25 +216,25 @@ J3DGetTextureMtx__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BDC4 00018D04  EC 06 00 2A */	fadds f0, f6, f0
 /* 8001BDC8 00018D08  EC 03 00 2A */	fadds f0, f3, f0
 /* 8001BDCC 00018D0C  D0 05 00 18 */	stfs f0, 0x18(r5)
-/* 8001BDD0 00018D10  C0 02 81 A8 */	lfs f0, $$2871-_SDA2_BASE_(r2)
+/* 8001BDD0 00018D10  C0 02 81 A8 */	lfs f0, $$2871@sda21(r2)
 /* 8001BDD4 00018D14  D0 05 00 2C */	stfs f0, 0x2c(r5)
 /* 8001BDD8 00018D18  D0 05 00 24 */	stfs f0, 0x24(r5)
 /* 8001BDDC 00018D1C  D0 05 00 20 */	stfs f0, 0x20(r5)
 /* 8001BDE0 00018D20  D0 05 00 1C */	stfs f0, 0x1c(r5)
 /* 8001BDE4 00018D24  D0 05 00 0C */	stfs f0, 0xc(r5)
-/* 8001BDE8 00018D28  C0 02 81 AC */	lfs f0, $$2872-_SDA2_BASE_(r2)
+/* 8001BDE8 00018D28  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
 /* 8001BDEC 00018D2C  D0 05 00 28 */	stfs f0, 0x28(r5)
 /* 8001BDF0 00018D30  4E 80 00 20 */	blr 
 
 .global J3DGetTextureMtxOld__FRC17J3DTextureSRTInfo3VecPA4_f
 J3DGetTextureMtxOld__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BDF4 00018D34  A0 E3 00 08 */	lhz r7, 8(r3)
-/* 8001BDF8 00018D38  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001BDFC 00018D3C  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BDF8 00018D38  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001BDFC 00018D3C  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001BE00 00018D40  7C E0 06 30 */	sraw r0, r7, r0
 /* 8001BE04 00018D44  C0 03 00 00 */	lfs f0, 0(r3)
 /* 8001BE08 00018D48  54 00 10 3A */	slwi r0, r0, 2
-/* 8001BE0C 00018D4C  80 ED 8D F0 */	lwz r7, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BE0C 00018D4C  80 ED 8D F0 */	lwz r7, jmaSinTable@sda21(r13)
 /* 8001BE10 00018D50  7C A6 04 2E */	lfsx f5, r6, r0
 /* 8001BE14 00018D54  7C 87 04 2E */	lfsx f4, r7, r0
 /* 8001BE18 00018D58  EC 00 01 72 */	fmuls f0, f0, f5
@@ -273,21 +273,21 @@ J3DGetTextureMtxOld__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BE9C 00018DDC  EC 06 00 2A */	fadds f0, f6, f0
 /* 8001BEA0 00018DE0  EC 03 00 2A */	fadds f0, f3, f0
 /* 8001BEA4 00018DE4  D0 05 00 1C */	stfs f0, 0x1c(r5)
-/* 8001BEA8 00018DE8  C0 02 81 A8 */	lfs f0, $$2871-_SDA2_BASE_(r2)
+/* 8001BEA8 00018DE8  C0 02 81 A8 */	lfs f0, $$2871@sda21(r2)
 /* 8001BEAC 00018DEC  D0 05 00 2C */	stfs f0, 0x2c(r5)
 /* 8001BEB0 00018DF0  D0 05 00 24 */	stfs f0, 0x24(r5)
 /* 8001BEB4 00018DF4  D0 05 00 20 */	stfs f0, 0x20(r5)
 /* 8001BEB8 00018DF8  D0 05 00 18 */	stfs f0, 0x18(r5)
 /* 8001BEBC 00018DFC  D0 05 00 08 */	stfs f0, 8(r5)
-/* 8001BEC0 00018E00  C0 02 81 AC */	lfs f0, $$2872-_SDA2_BASE_(r2)
+/* 8001BEC0 00018E00  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
 /* 8001BEC4 00018E04  D0 05 00 28 */	stfs f0, 0x28(r5)
 /* 8001BEC8 00018E08  4E 80 00 20 */	blr 
 
 .global J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f
 J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BECC 00018E0C  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001BED0 00018E10  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001BED4 00018E14  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BED0 00018E10  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001BED4 00018E14  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001BED8 00018E18  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001BEDC 00018E1C  C0 23 00 00 */	lfs f1, 0(r3)
 /* 8001BEE0 00018E20  54 00 10 3A */	slwi r0, r0, 2
@@ -295,25 +295,25 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BEE8 00018E28  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001BEEC 00018E2C  D0 04 00 00 */	stfs f0, 0(r4)
 /* 8001BEF0 00018E30  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001BEF4 00018E34  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001BEF8 00018E38  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BEF4 00018E34  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001BEF8 00018E38  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001BEFC 00018E3C  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001BF00 00018E40  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8001BF04 00018E44  54 00 10 3A */	slwi r0, r0, 2
 /* 8001BF08 00018E48  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001BF0C 00018E4C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001BF10 00018E50  D0 04 00 04 */	stfs f0, 4(r4)
-/* 8001BF14 00018E54  C0 82 81 B0 */	lfs f4, $$2912-_SDA2_BASE_(r2)
+/* 8001BF14 00018E54  C0 82 81 B0 */	lfs f4, $$2912@sda21(r2)
 /* 8001BF18 00018E58  C0 03 00 10 */	lfs f0, 0x10(r3)
 /* 8001BF1C 00018E5C  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001BF20 00018E60  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001BF20 00018E60  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001BF24 00018E64  EC 20 20 28 */	fsubs f1, f0, f4
 /* 8001BF28 00018E68  C0 03 00 04 */	lfs f0, 4(r3)
 /* 8001BF2C 00018E6C  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001BF30 00018E70  C0 43 00 0C */	lfs f2, 0xc(r3)
-/* 8001BF34 00018E74  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BF34 00018E74  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001BF38 00018E78  54 00 10 3A */	slwi r0, r0, 2
-/* 8001BF3C 00018E7C  80 AD 8D F4 */	lwz r5, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BF3C 00018E7C  80 AD 8D F4 */	lwz r5, jmaCosTable@sda21(r13)
 /* 8001BF40 00018E80  EC 01 00 2A */	fadds f0, f1, f0
 /* 8001BF44 00018E84  7C 66 04 2E */	lfsx f3, r6, r0
 /* 8001BF48 00018E88  EC 42 20 28 */	fsubs f2, f2, f4
@@ -322,21 +322,21 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BF54 00018E94  EC 02 00 78 */	fmsubs f0, f2, f1, f0
 /* 8001BF58 00018E98  EC 04 00 2A */	fadds f0, f4, f0
 /* 8001BF5C 00018E9C  D0 04 00 08 */	stfs f0, 8(r4)
-/* 8001BF60 00018EA0  C0 62 81 A8 */	lfs f3, $$2871-_SDA2_BASE_(r2)
+/* 8001BF60 00018EA0  C0 62 81 A8 */	lfs f3, $$2871@sda21(r2)
 /* 8001BF64 00018EA4  D0 64 00 0C */	stfs f3, 0xc(r4)
 /* 8001BF68 00018EA8  C0 03 00 00 */	lfs f0, 0(r3)
 /* 8001BF6C 00018EAC  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001BF70 00018EB0  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001BF70 00018EB0  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001BF74 00018EB4  FC 20 00 50 */	fneg f1, f0
-/* 8001BF78 00018EB8  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BF78 00018EB8  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001BF7C 00018EBC  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001BF80 00018EC0  54 00 10 3A */	slwi r0, r0, 2
 /* 8001BF84 00018EC4  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001BF88 00018EC8  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001BF8C 00018ECC  D0 04 00 10 */	stfs f0, 0x10(r4)
 /* 8001BF90 00018ED0  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001BF94 00018ED4  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001BF98 00018ED8  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BF94 00018ED4  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001BF98 00018ED8  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001BF9C 00018EDC  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001BFA0 00018EE0  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8001BFA4 00018EE4  54 00 10 3A */	slwi r0, r0, 2
@@ -349,11 +349,11 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BFC0 00018F00  C0 03 00 04 */	lfs f0, 4(r3)
 /* 8001BFC4 00018F04  EC 42 20 28 */	fsubs f2, f2, f4
 /* 8001BFC8 00018F08  A0 63 00 08 */	lhz r3, 8(r3)
-/* 8001BFCC 00018F0C  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001BFCC 00018F0C  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001BFD0 00018F10  7C 60 06 30 */	sraw r0, r3, r0
-/* 8001BFD4 00018F14  80 AD 8D F4 */	lwz r5, jmaCosTable-_SDA_BASE_(r13)
+/* 8001BFD4 00018F14  80 AD 8D F4 */	lwz r5, jmaCosTable@sda21(r13)
 /* 8001BFD8 00018F18  54 00 10 3A */	slwi r0, r0, 2
-/* 8001BFDC 00018F1C  80 6D 8D F0 */	lwz r3, jmaSinTable-_SDA_BASE_(r13)
+/* 8001BFDC 00018F1C  80 6D 8D F0 */	lwz r3, jmaSinTable@sda21(r13)
 /* 8001BFE0 00018F20  EC 01 00 2A */	fadds f0, f1, f0
 /* 8001BFE4 00018F24  7C A5 04 2E */	lfsx f5, r5, r0
 /* 8001BFE8 00018F28  FC 40 10 50 */	fneg f2, f2
@@ -365,7 +365,7 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C000 00018F40  D0 64 00 1C */	stfs f3, 0x1c(r4)
 /* 8001C004 00018F44  D0 64 00 20 */	stfs f3, 0x20(r4)
 /* 8001C008 00018F48  D0 64 00 24 */	stfs f3, 0x24(r4)
-/* 8001C00C 00018F4C  C0 02 81 AC */	lfs f0, $$2872-_SDA2_BASE_(r2)
+/* 8001C00C 00018F4C  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
 /* 8001C010 00018F50  D0 04 00 28 */	stfs f0, 0x28(r4)
 /* 8001C014 00018F54  D0 64 00 2C */	stfs f3, 0x2c(r4)
 /* 8001C018 00018F58  4E 80 00 20 */	blr 
@@ -373,8 +373,8 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 .global J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f
 J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C01C 00018F5C  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001C020 00018F60  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001C024 00018F64  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001C020 00018F60  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001C024 00018F64  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001C028 00018F68  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001C02C 00018F6C  C0 23 00 00 */	lfs f1, 0(r3)
 /* 8001C030 00018F70  54 00 10 3A */	slwi r0, r0, 2
@@ -382,27 +382,27 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C038 00018F78  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001C03C 00018F7C  D0 04 00 00 */	stfs f0, 0(r4)
 /* 8001C040 00018F80  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001C044 00018F84  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001C048 00018F88  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001C044 00018F84  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001C048 00018F88  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001C04C 00018F8C  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001C050 00018F90  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8001C054 00018F94  54 00 10 3A */	slwi r0, r0, 2
 /* 8001C058 00018F98  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001C05C 00018F9C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001C060 00018FA0  D0 04 00 04 */	stfs f0, 4(r4)
-/* 8001C064 00018FA4  C0 82 81 A8 */	lfs f4, $$2871-_SDA2_BASE_(r2)
+/* 8001C064 00018FA4  C0 82 81 A8 */	lfs f4, $$2871@sda21(r2)
 /* 8001C068 00018FA8  D0 84 00 08 */	stfs f4, 8(r4)
-/* 8001C06C 00018FAC  C0 62 81 B0 */	lfs f3, $$2912-_SDA2_BASE_(r2)
+/* 8001C06C 00018FAC  C0 62 81 B0 */	lfs f3, $$2912@sda21(r2)
 /* 8001C070 00018FB0  C0 03 00 10 */	lfs f0, 0x10(r3)
 /* 8001C074 00018FB4  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001C078 00018FB8  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001C078 00018FB8  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001C07C 00018FBC  EC 20 18 28 */	fsubs f1, f0, f3
 /* 8001C080 00018FC0  C0 03 00 04 */	lfs f0, 4(r3)
 /* 8001C084 00018FC4  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001C088 00018FC8  C0 43 00 0C */	lfs f2, 0xc(r3)
-/* 8001C08C 00018FCC  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001C08C 00018FCC  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001C090 00018FD0  54 00 10 3A */	slwi r0, r0, 2
-/* 8001C094 00018FD4  80 AD 8D F4 */	lwz r5, jmaCosTable-_SDA_BASE_(r13)
+/* 8001C094 00018FD4  80 AD 8D F4 */	lwz r5, jmaCosTable@sda21(r13)
 /* 8001C098 00018FD8  EC 01 00 2A */	fadds f0, f1, f0
 /* 8001C09C 00018FDC  7C A6 04 2E */	lfsx f5, r6, r0
 /* 8001C0A0 00018FE0  EC 42 18 28 */	fsubs f2, f2, f3
@@ -413,17 +413,17 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C0B4 00018FF4  D0 04 00 0C */	stfs f0, 0xc(r4)
 /* 8001C0B8 00018FF8  C0 03 00 00 */	lfs f0, 0(r3)
 /* 8001C0BC 00018FFC  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001C0C0 00019000  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001C0C0 00019000  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001C0C4 00019004  FC 20 00 50 */	fneg f1, f0
-/* 8001C0C8 00019008  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 8001C0C8 00019008  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8001C0CC 0001900C  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001C0D0 00019010  54 00 10 3A */	slwi r0, r0, 2
 /* 8001C0D4 00019014  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001C0D8 00019018  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001C0DC 0001901C  D0 04 00 10 */	stfs f0, 0x10(r4)
 /* 8001C0E0 00019020  A0 A3 00 08 */	lhz r5, 8(r3)
-/* 8001C0E4 00019024  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
-/* 8001C0E8 00019028  80 CD 8D F4 */	lwz r6, jmaCosTable-_SDA_BASE_(r13)
+/* 8001C0E4 00019024  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
+/* 8001C0E8 00019028  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 8001C0EC 0001902C  7C A0 06 30 */	sraw r0, r5, r0
 /* 8001C0F0 00019030  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8001C0F4 00019034  54 00 10 3A */	slwi r0, r0, 2
@@ -437,11 +437,11 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C114 00019054  C0 03 00 04 */	lfs f0, 4(r3)
 /* 8001C118 00019058  EC 42 18 28 */	fsubs f2, f2, f3
 /* 8001C11C 0001905C  A0 63 00 08 */	lhz r3, 8(r3)
-/* 8001C120 00019060  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 8001C120 00019060  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 8001C124 00019064  7C 60 06 30 */	sraw r0, r3, r0
-/* 8001C128 00019068  80 AD 8D F4 */	lwz r5, jmaCosTable-_SDA_BASE_(r13)
+/* 8001C128 00019068  80 AD 8D F4 */	lwz r5, jmaCosTable@sda21(r13)
 /* 8001C12C 0001906C  54 00 10 3A */	slwi r0, r0, 2
-/* 8001C130 00019070  80 6D 8D F0 */	lwz r3, jmaSinTable-_SDA_BASE_(r13)
+/* 8001C130 00019070  80 6D 8D F0 */	lwz r3, jmaSinTable@sda21(r13)
 /* 8001C134 00019074  EC 01 00 2A */	fadds f0, f1, f0
 /* 8001C138 00019078  7C A5 04 2E */	lfsx f5, r5, r0
 /* 8001C13C 0001907C  FC 40 10 50 */	fneg f2, f2
@@ -452,7 +452,7 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C150 00019090  D0 04 00 1C */	stfs f0, 0x1c(r4)
 /* 8001C154 00019094  D0 84 00 20 */	stfs f4, 0x20(r4)
 /* 8001C158 00019098  D0 84 00 24 */	stfs f4, 0x24(r4)
-/* 8001C15C 0001909C  C0 02 81 AC */	lfs f0, $$2872-_SDA2_BASE_(r2)
+/* 8001C15C 0001909C  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
 /* 8001C160 000190A0  D0 04 00 28 */	stfs f0, 0x28(r4)
 /* 8001C164 000190A4  D0 84 00 2C */	stfs f4, 0x2c(r4)
 /* 8001C168 000190A8  4E 80 00 20 */	blr 
@@ -610,7 +610,7 @@ lbl_8001C350:
 
 .global J3DMTXConcatArrayIndexedSrc__FPA4_CfPA3_A4_CfPCUsPA3_A4_fUl
 J3DMTXConcatArrayIndexedSrc__FPA4_CfPA3_A4_CfPCUsPA3_A4_fUl:
-/* 8001C388 000192C8  39 0D 80 18 */	addi r8, r13, Unit01-_SDA_BASE_
+/* 8001C388 000192C8  39 0D 80 18 */	addi r8, r13, Unit01@sda21
 /* 8001C38C 000192CC  A0 05 00 00 */	lhz r0, 0(r5)
 /* 8001C390 000192D0  E0 03 00 00 */	psq_l f0, 0(r3), 0, qr0
 /* 8001C394 000192D4  7C E9 03 A6 */	mtctr r7

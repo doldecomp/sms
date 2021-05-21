@@ -13,7 +13,7 @@ SMSGetNpcInitData__FUl:
 .global __sinit_NpcInitData_cpp
 __sinit_NpcInitData_cpp:
 /* 8017543C 0017237C  3C 60 80 3C */	lis r3, sMareMB_FishingRodData@ha
-/* 80175440 00172380  80 0D 84 80 */	lwz r0, cNpcPartsNameRootJoint-_SDA_BASE_(r13)
+/* 80175440 00172380  80 0D 84 80 */	lwz r0, cNpcPartsNameRootJoint@sda21(r13)
 /* 80175444 00172384  38 83 94 18 */	addi r4, r3, sMareMB_FishingRodData@l
 /* 80175448 00172388  90 04 00 00 */	stw r0, 0(r4)
 /* 8017544C 0017238C  3C 60 80 3C */	lis r3, sMareWB_BabyData@ha

@@ -9,7 +9,7 @@ ctrlTalkCamera___15CPolarSubCameraFv:
 /* 8035CA4C 0035998C  80 03 00 7C */	lwz r0, 0x7c(r3)
 /* 8035CA50 00359990  28 00 00 00 */	cmplwi r0, 0
 /* 8035CA54 00359994  40 82 00 20 */	bne lbl_8035CA74
-/* 8035CA58 00359998  80 8D A8 B8 */	lwz r4, gpCameraMario-_SDA_BASE_(r13)
+/* 8035CA58 00359998  80 8D A8 B8 */	lwz r4, gpCameraMario@sda21(r13)
 /* 8035CA5C 0035999C  C0 04 00 00 */	lfs f0, 0(r4)
 /* 8035CA60 003599A0  D0 03 00 8C */	stfs f0, 0x8c(r3)
 /* 8035CA64 003599A4  C0 04 00 04 */	lfs f0, 4(r4)
@@ -47,7 +47,7 @@ makeMtxForPrevTalk__15CPolarSubCameraFv:
 /* 8035CAD4 00359A14  4B FF 54 F5 */	bl changeCamModeSpecifyFrame___15CPolarSubCameraFii
 /* 8035CAD8 00359A18  80 7E 01 20 */	lwz r3, 0x120(r30)
 /* 8035CADC 00359A1C  4B D9 EF FD */	bl onNeutralMarioKey__13TMarioGamePadFv
-/* 8035CAE0 00359A20  80 6D 97 E8 */	lwz r3, gpMarDirector-_SDA_BASE_(r13)
+/* 8035CAE0 00359A20  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 8035CAE4 00359A24  3B E3 00 88 */	addi r31, r3, 0x88
 /* 8035CAE8 00359A28  83 C3 00 8C */	lwz r30, 0x8c(r3)
 /* 8035CAEC 00359A2C  48 00 00 10 */	b lbl_8035CAFC
@@ -83,7 +83,7 @@ makeMtxForTalk__15CPolarSubCameraFPC8TBaseNPC:
 /* 8035CB4C 00359A8C  38 03 00 1A */	addi r0, r3, 0x0400001A@l
 /* 8035CB50 00359A90  B0 9D 00 AC */	sth r4, 0xac(r29)
 /* 8035CB54 00359A94  3B E0 00 0C */	li r31, 0xc
-/* 8035CB58 00359A98  80 8D 98 E4 */	lwz r4, gpMarioAngleY-_SDA_BASE_(r13)
+/* 8035CB58 00359A98  80 8D 98 E4 */	lwz r4, gpMarioAngleY@sda21(r13)
 /* 8035CB5C 00359A9C  A8 84 00 00 */	lha r4, 0(r4)
 /* 8035CB60 00359AA0  38 84 80 00 */	addi r4, r4, -32768
 /* 8035CB64 00359AA4  B0 9D 00 A6 */	sth r4, 0xa6(r29)
