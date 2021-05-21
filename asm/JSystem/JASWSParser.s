@@ -152,11 +152,11 @@ lbl_8005B64C:
 /* 8005B66C 000585AC  81 8C 00 24 */	lwz r12, 0x24(r12)
 /* 8005B670 000585B0  7D 88 03 A6 */	mtlr r12
 /* 8005B674 000585B4  4E 80 00 21 */	blrl 
-/* 8005B678 000585B8  80 0D 90 B8 */	lwz r0, sUsedHeapSize__Q28JASystem8WSParser-_SDA_BASE_(r13)
+/* 8005B678 000585B8  80 0D 90 B8 */	lwz r0, sUsedHeapSize__Q28JASystem8WSParser@sda21(r13)
 /* 8005B67C 000585BC  7C 83 E0 50 */	subf r4, r3, r28
 /* 8005B680 000585C0  38 7B 00 00 */	addi r3, r27, 0
 /* 8005B684 000585C4  7C 00 22 14 */	add r0, r0, r4
-/* 8005B688 000585C8  90 0D 90 B8 */	stw r0, sUsedHeapSize__Q28JASystem8WSParser-_SDA_BASE_(r13)
+/* 8005B688 000585C8  90 0D 90 B8 */	stw r0, sUsedHeapSize__Q28JASystem8WSParser@sda21(r13)
 lbl_8005B68C:
 /* 8005B68C 000585CC  BA 41 00 48 */	lmw r18, 0x48(r1)
 /* 8005B690 000585D0  80 01 00 84 */	lwz r0, 0x84(r1)
@@ -300,11 +300,11 @@ lbl_8005B86C:
 /* 8005B88C 000587CC  81 8C 00 24 */	lwz r12, 0x24(r12)
 /* 8005B890 000587D0  7D 88 03 A6 */	mtlr r12
 /* 8005B894 000587D4  4E 80 00 21 */	blrl 
-/* 8005B898 000587D8  80 0D 90 B8 */	lwz r0, sUsedHeapSize__Q28JASystem8WSParser-_SDA_BASE_(r13)
+/* 8005B898 000587D8  80 0D 90 B8 */	lwz r0, sUsedHeapSize__Q28JASystem8WSParser@sda21(r13)
 /* 8005B89C 000587DC  7C 83 F0 50 */	subf r4, r3, r30
 /* 8005B8A0 000587E0  38 7D 00 00 */	addi r3, r29, 0
 /* 8005B8A4 000587E4  7C 00 22 14 */	add r0, r0, r4
-/* 8005B8A8 000587E8  90 0D 90 B8 */	stw r0, sUsedHeapSize__Q28JASystem8WSParser-_SDA_BASE_(r13)
+/* 8005B8A8 000587E8  90 0D 90 B8 */	stw r0, sUsedHeapSize__Q28JASystem8WSParser@sda21(r13)
 lbl_8005B8AC:
 /* 8005B8AC 000587EC  BA E1 00 5C */	lmw r23, 0x5c(r1)
 /* 8005B8B0 000587F0  80 01 00 84 */	lwz r0, 0x84(r1)

@@ -43,7 +43,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367974 003648B4  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 80367978 003648B8  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
 /* 8036797C 003648BC  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80367980 003648C0  C0 02 09 F8 */	lfs f0, $$21564-_SDA2_BASE_(r2)
+/* 80367980 003648C0  C0 02 09 F8 */	lfs f0, $$21564@sda21(r2)
 /* 80367984 003648C4  38 7E 00 40 */	addi r3, r30, 0x40
 /* 80367988 003648C8  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 8036798C 003648CC  93 9F 00 1C */	stw r28, 0x1c(r31)
@@ -55,7 +55,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 803679A4 003648E4  4B D7 32 51 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803679A8 003648E8  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 803679AC 003648EC  38 7E 00 50 */	addi r3, r30, 0x50
-/* 803679B0 003648F0  C0 02 09 FC */	lfs f0, $$21566-_SDA2_BASE_(r2)
+/* 803679B0 003648F0  C0 02 09 FC */	lfs f0, $$21566@sda21(r2)
 /* 803679B4 003648F4  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 803679B8 003648F8  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 803679BC 003648FC  4B CD CC D1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -66,7 +66,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 803679D0 00364910  4B D7 32 25 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803679D4 00364914  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 803679D8 00364918  38 7E 00 64 */	addi r3, r30, 0x64
-/* 803679DC 0036491C  C0 02 0A 00 */	lfs f0, $$21568-_SDA2_BASE_(r2)
+/* 803679DC 0036491C  C0 02 0A 00 */	lfs f0, $$21568@sda21(r2)
 /* 803679E0 00364920  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 803679E4 00364924  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 803679E8 00364928  4B CD CC A5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -77,7 +77,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 803679FC 0036493C  4B D7 31 F9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80367A00 00364940  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80367A04 00364944  38 7E 00 78 */	addi r3, r30, 0x78
-/* 80367A08 00364948  C0 02 0A 04 */	lfs f0, $$21570-_SDA2_BASE_(r2)
+/* 80367A08 00364948  C0 02 0A 04 */	lfs f0, $$21570@sda21(r2)
 /* 80367A0C 0036494C  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80367A10 00364950  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80367A14 00364954  4B CD CC 79 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -88,7 +88,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367A28 00364968  4B D7 31 CD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80367A2C 0036496C  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80367A30 00364970  38 7E 00 88 */	addi r3, r30, 0x88
-/* 80367A34 00364974  C0 02 0A 08 */	lfs f0, $$21572-_SDA2_BASE_(r2)
+/* 80367A34 00364974  C0 02 0A 08 */	lfs f0, $$21572@sda21(r2)
 /* 80367A38 00364978  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 80367A3C 0036497C  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80367A40 00364980  4B CD CC 4D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -99,7 +99,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367A54 00364994  4B D7 31 A1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80367A58 00364998  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 80367A5C 0036499C  38 7E 00 9C */	addi r3, r30, 0x9c
-/* 80367A60 003649A0  C0 02 0A 0C */	lfs f0, $$21574-_SDA2_BASE_(r2)
+/* 80367A60 003649A0  C0 02 0A 0C */	lfs f0, $$21574@sda21(r2)
 /* 80367A64 003649A4  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 80367A68 003649A8  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 80367A6C 003649AC  4B CD CC 21 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -110,7 +110,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367A80 003649C0  4B D7 31 75 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80367A84 003649C4  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 80367A88 003649C8  38 7E 00 B0 */	addi r3, r30, 0xb0
-/* 80367A8C 003649CC  C0 02 0A 10 */	lfs f0, $$21576-_SDA2_BASE_(r2)
+/* 80367A8C 003649CC  C0 02 0A 10 */	lfs f0, $$21576@sda21(r2)
 /* 80367A90 003649D0  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 80367A94 003649D4  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 80367A98 003649D8  4B CD CB F5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -121,7 +121,7 @@ __ct__21TAnimalSaveIndividualFPCc:
 /* 80367AAC 003649EC  4B D7 31 49 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80367AB0 003649F0  93 BF 00 A8 */	stw r29, 0xa8(r31)
 /* 80367AB4 003649F4  7F E3 FB 78 */	mr r3, r31
-/* 80367AB8 003649F8  C0 02 0A 14 */	lfs f0, $$21578-_SDA2_BASE_(r2)
+/* 80367AB8 003649F8  C0 02 0A 14 */	lfs f0, $$21578@sda21(r2)
 /* 80367ABC 003649FC  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
 /* 80367AC0 00364A00  93 9F 00 A8 */	stw r28, 0xa8(r31)
 /* 80367AC4 00364A04  80 9F 00 00 */	lwz r4, 0(r31)

@@ -79,13 +79,13 @@ lbl_800BFE08:
 /* 800BFE20 000BCD60  2C 03 00 00 */	cmpwi r3, 0
 /* 800BFE24 000BCD64  90 7F 00 AC */	stw r3, 0xac(r31)
 /* 800BFE28 000BCD68  41 82 00 28 */	beq lbl_800BFE50
-/* 800BFE2C 000BCD6C  80 0D 97 44 */	lwz r0, First-_SDA_BASE_(r13)
+/* 800BFE2C 000BCD6C  80 0D 97 44 */	lwz r0, First@sda21(r13)
 /* 800BFE30 000BCD70  2C 00 00 00 */	cmpwi r0, 0
 /* 800BFE34 000BCD74  41 82 00 14 */	beq lbl_800BFE48
 /* 800BFE38 000BCD78  38 60 00 00 */	li r3, 0
 /* 800BFE3C 000BCD7C  4B FF F3 B5 */	bl PrepareReady__Fi
 /* 800BFE40 000BCD80  38 00 00 00 */	li r0, 0
-/* 800BFE44 000BCD84  90 0D 97 44 */	stw r0, First-_SDA_BASE_(r13)
+/* 800BFE44 000BCD84  90 0D 97 44 */	stw r0, First@sda21(r13)
 lbl_800BFE48:
 /* 800BFE48 000BCD88  7F C3 F3 78 */	mr r3, r30
 /* 800BFE4C 000BCD8C  4B FD 3C 45 */	bl OSSuspendThread
@@ -110,13 +110,13 @@ lbl_800BFE8C:
 /* 800BFE8C 000BCDCC  80 1D 00 00 */	lwz r0, 0(r29)
 /* 800BFE90 000BCDD0  7C 1B 00 40 */	cmplw r27, r0
 /* 800BFE94 000BCDD4  41 80 FF 60 */	blt lbl_800BFDF4
-/* 800BFE98 000BCDD8  80 0D 97 44 */	lwz r0, First-_SDA_BASE_(r13)
+/* 800BFE98 000BCDD8  80 0D 97 44 */	lwz r0, First@sda21(r13)
 /* 800BFE9C 000BCDDC  2C 00 00 00 */	cmpwi r0, 0
 /* 800BFEA0 000BCDE0  41 82 00 14 */	beq lbl_800BFEB4
 /* 800BFEA4 000BCDE4  38 60 00 01 */	li r3, 1
 /* 800BFEA8 000BCDE8  4B FF F3 49 */	bl PrepareReady__Fi
 /* 800BFEAC 000BCDEC  38 00 00 00 */	li r0, 0
-/* 800BFEB0 000BCDF0  90 0D 97 44 */	stw r0, First-_SDA_BASE_(r13)
+/* 800BFEB0 000BCDF0  90 0D 97 44 */	stw r0, First@sda21(r13)
 lbl_800BFEB4:
 /* 800BFEB4 000BCDF4  BB 01 00 18 */	lmw r24, 0x18(r1)
 /* 800BFEB8 000BCDF8  80 01 00 3C */	lwz r0, 0x3c(r1)
@@ -283,14 +283,14 @@ VideoDecodeThreadCancel:
 /* 800C00D8 000BD018  7C 08 02 A6 */	mflr r0
 /* 800C00DC 000BD01C  90 01 00 04 */	stw r0, 4(r1)
 /* 800C00E0 000BD020  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800C00E4 000BD024  80 0D 97 40 */	lwz r0, VideoDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800C00E4 000BD024  80 0D 97 40 */	lwz r0, VideoDecodeThreadCreated@sda21(r13)
 /* 800C00E8 000BD028  2C 00 00 00 */	cmpwi r0, 0
 /* 800C00EC 000BD02C  41 82 00 18 */	beq lbl_800C0104
 /* 800C00F0 000BD030  3C 60 80 3F */	lis r3, VideoDecodeThread@ha
 /* 800C00F4 000BD034  38 63 08 E8 */	addi r3, r3, VideoDecodeThread@l
 /* 800C00F8 000BD038  4B FD 33 75 */	bl OSCancelThread
 /* 800C00FC 000BD03C  38 00 00 00 */	li r0, 0
-/* 800C0100 000BD040  90 0D 97 40 */	stw r0, VideoDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800C0100 000BD040  90 0D 97 40 */	stw r0, VideoDecodeThreadCreated@sda21(r13)
 lbl_800C0104:
 /* 800C0104 000BD044  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800C0108 000BD048  38 21 00 08 */	addi r1, r1, 8
@@ -302,7 +302,7 @@ VideoDecodeThreadStart:
 /* 800C0114 000BD054  7C 08 02 A6 */	mflr r0
 /* 800C0118 000BD058  90 01 00 04 */	stw r0, 4(r1)
 /* 800C011C 000BD05C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800C0120 000BD060  80 0D 97 40 */	lwz r0, VideoDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800C0120 000BD060  80 0D 97 40 */	lwz r0, VideoDecodeThreadCreated@sda21(r13)
 /* 800C0124 000BD064  2C 00 00 00 */	cmpwi r0, 0
 /* 800C0128 000BD068  41 82 00 10 */	beq lbl_800C0138
 /* 800C012C 000BD06C  3C 60 80 3F */	lis r3, VideoDecodeThread@ha
@@ -359,9 +359,9 @@ lbl_800C01C8:
 /* 800C01E0 000BD120  38 A0 00 03 */	li r5, 3
 /* 800C01E4 000BD124  4B FD 08 6D */	bl OSInitMessageQueue
 /* 800C01E8 000BD128  38 00 00 01 */	li r0, 1
-/* 800C01EC 000BD12C  90 0D 97 40 */	stw r0, VideoDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800C01EC 000BD12C  90 0D 97 40 */	stw r0, VideoDecodeThreadCreated@sda21(r13)
 /* 800C01F0 000BD130  38 60 00 01 */	li r3, 1
-/* 800C01F4 000BD134  90 0D 97 44 */	stw r0, First-_SDA_BASE_(r13)
+/* 800C01F4 000BD134  90 0D 97 44 */	stw r0, First@sda21(r13)
 lbl_800C01F8:
 /* 800C01F8 000BD138  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800C01FC 000BD13C  83 E1 00 14 */	lwz r31, 0x14(r1)

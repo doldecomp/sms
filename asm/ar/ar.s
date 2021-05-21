@@ -9,9 +9,9 @@ ARRegisterDMACallback:
 /* 8009D6DC 0009A61C  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8009D6E0 0009A620  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8009D6E4 0009A624  7C 7E 1B 78 */	mr r30, r3
-/* 8009D6E8 0009A628  83 ED 94 F8 */	lwz r31, __AR_Callback-_SDA_BASE_(r13)
+/* 8009D6E8 0009A628  83 ED 94 F8 */	lwz r31, __AR_Callback@sda21(r13)
 /* 8009D6EC 0009A62C  4B FF 2A E1 */	bl OSDisableInterrupts
-/* 8009D6F0 0009A630  93 CD 94 F8 */	stw r30, __AR_Callback-_SDA_BASE_(r13)
+/* 8009D6F0 0009A630  93 CD 94 F8 */	stw r30, __AR_Callback@sda21(r13)
 /* 8009D6F4 0009A634  4B FF 2B 01 */	bl OSRestoreInterrupts
 /* 8009D6F8 0009A638  7F E3 FB 78 */	mr r3, r31
 /* 8009D6FC 0009A63C  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -93,17 +93,17 @@ ARAlloc:
 /* 8009D814 0009A754  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8009D818 0009A758  7C 7E 1B 78 */	mr r30, r3
 /* 8009D81C 0009A75C  4B FF 29 B1 */	bl OSDisableInterrupts
-/* 8009D820 0009A760  83 ED 95 08 */	lwz r31, __AR_StackPointer-_SDA_BASE_(r13)
-/* 8009D824 0009A764  80 8D 95 10 */	lwz r4, __AR_BlockLength-_SDA_BASE_(r13)
+/* 8009D820 0009A760  83 ED 95 08 */	lwz r31, __AR_StackPointer@sda21(r13)
+/* 8009D824 0009A764  80 8D 95 10 */	lwz r4, __AR_BlockLength@sda21(r13)
 /* 8009D828 0009A768  7C 1F F2 14 */	add r0, r31, r30
-/* 8009D82C 0009A76C  90 0D 95 08 */	stw r0, __AR_StackPointer-_SDA_BASE_(r13)
+/* 8009D82C 0009A76C  90 0D 95 08 */	stw r0, __AR_StackPointer@sda21(r13)
 /* 8009D830 0009A770  93 C4 00 00 */	stw r30, 0(r4)
-/* 8009D834 0009A774  80 AD 95 10 */	lwz r5, __AR_BlockLength-_SDA_BASE_(r13)
-/* 8009D838 0009A778  80 8D 95 0C */	lwz r4, __AR_FreeBlocks-_SDA_BASE_(r13)
+/* 8009D834 0009A774  80 AD 95 10 */	lwz r5, __AR_BlockLength@sda21(r13)
+/* 8009D838 0009A778  80 8D 95 0C */	lwz r4, __AR_FreeBlocks@sda21(r13)
 /* 8009D83C 0009A77C  38 A5 00 04 */	addi r5, r5, 4
 /* 8009D840 0009A780  38 04 FF FF */	addi r0, r4, -1
-/* 8009D844 0009A784  90 AD 95 10 */	stw r5, __AR_BlockLength-_SDA_BASE_(r13)
-/* 8009D848 0009A788  90 0D 95 0C */	stw r0, __AR_FreeBlocks-_SDA_BASE_(r13)
+/* 8009D844 0009A784  90 AD 95 10 */	stw r5, __AR_BlockLength@sda21(r13)
+/* 8009D848 0009A788  90 0D 95 0C */	stw r0, __AR_FreeBlocks@sda21(r13)
 /* 8009D84C 0009A78C  4B FF 29 A9 */	bl OSRestoreInterrupts
 /* 8009D850 0009A790  7F E3 FB 78 */	mr r3, r31
 /* 8009D854 0009A794  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -123,7 +123,7 @@ ARInit:
 /* 8009D880 0009A7C0  3B C4 00 00 */	addi r30, r4, 0
 /* 8009D884 0009A7C4  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 8009D888 0009A7C8  3B A3 00 00 */	addi r29, r3, 0
-/* 8009D88C 0009A7CC  80 0D 95 14 */	lwz r0, __AR_init_flag-_SDA_BASE_(r13)
+/* 8009D88C 0009A7CC  80 0D 95 14 */	lwz r0, __AR_init_flag@sda21(r13)
 /* 8009D890 0009A7D0  2C 00 00 01 */	cmpwi r0, 1
 /* 8009D894 0009A7D4  40 82 00 0C */	bne lbl_8009D8A0
 /* 8009D898 0009A7D8  38 60 40 00 */	li r3, 0x4000
@@ -132,7 +132,7 @@ lbl_8009D8A0:
 /* 8009D8A0 0009A7E0  4B FF 29 2D */	bl OSDisableInterrupts
 /* 8009D8A4 0009A7E4  38 00 00 00 */	li r0, 0
 /* 8009D8A8 0009A7E8  3C 80 80 0A */	lis r4, __ARHandler@ha
-/* 8009D8AC 0009A7EC  90 0D 94 F8 */	stw r0, __AR_Callback-_SDA_BASE_(r13)
+/* 8009D8AC 0009A7EC  90 0D 94 F8 */	stw r0, __AR_Callback@sda21(r13)
 /* 8009D8B0 0009A7F0  3B E3 00 00 */	addi r31, r3, 0
 /* 8009D8B4 0009A7F4  38 84 D9 38 */	addi r4, r4, __ARHandler@l
 /* 8009D8B8 0009A7F8  38 60 00 06 */	li r3, 6
@@ -140,11 +140,11 @@ lbl_8009D8A0:
 /* 8009D8C0 0009A800  3C 60 02 00 */	lis r3, 0x200
 /* 8009D8C4 0009A804  4B FF 2D 59 */	bl __OSUnmaskInterrupts
 /* 8009D8C8 0009A808  38 00 40 00 */	li r0, 0x4000
-/* 8009D8CC 0009A80C  93 CD 95 0C */	stw r30, __AR_FreeBlocks-_SDA_BASE_(r13)
+/* 8009D8CC 0009A80C  93 CD 95 0C */	stw r30, __AR_FreeBlocks@sda21(r13)
 /* 8009D8D0 0009A810  3C 60 CC 00 */	lis r3, 0xCC005000@ha
-/* 8009D8D4 0009A814  90 0D 95 08 */	stw r0, __AR_StackPointer-_SDA_BASE_(r13)
+/* 8009D8D4 0009A814  90 0D 95 08 */	stw r0, __AR_StackPointer@sda21(r13)
 /* 8009D8D8 0009A818  38 83 50 00 */	addi r4, r3, 0xCC005000@l
-/* 8009D8DC 0009A81C  93 AD 95 10 */	stw r29, __AR_BlockLength-_SDA_BASE_(r13)
+/* 8009D8DC 0009A81C  93 AD 95 10 */	stw r29, __AR_BlockLength@sda21(r13)
 /* 8009D8E0 0009A820  A0 04 00 1A */	lhz r0, 0x1a(r4)
 /* 8009D8E4 0009A824  A0 63 50 1A */	lhz r3, 0x501a(r3)
 /* 8009D8E8 0009A828  54 00 00 2E */	rlwinm r0, r0, 0, 0, 0x17
@@ -152,10 +152,10 @@ lbl_8009D8A0:
 /* 8009D8F0 0009A830  B0 04 00 1A */	sth r0, 0x1a(r4)
 /* 8009D8F4 0009A834  48 00 00 BD */	bl __ARChecksize
 /* 8009D8F8 0009A838  38 00 00 01 */	li r0, 1
-/* 8009D8FC 0009A83C  90 0D 95 14 */	stw r0, __AR_init_flag-_SDA_BASE_(r13)
+/* 8009D8FC 0009A83C  90 0D 95 14 */	stw r0, __AR_init_flag@sda21(r13)
 /* 8009D900 0009A840  7F E3 FB 78 */	mr r3, r31
 /* 8009D904 0009A844  4B FF 28 F1 */	bl OSRestoreInterrupts
-/* 8009D908 0009A848  80 6D 95 08 */	lwz r3, __AR_StackPointer-_SDA_BASE_(r13)
+/* 8009D908 0009A848  80 6D 95 08 */	lwz r3, __AR_StackPointer@sda21(r13)
 lbl_8009D90C:
 /* 8009D90C 0009A84C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 8009D910 0009A850  83 E1 00 1C */	lwz r31, 0x1c(r1)
@@ -172,7 +172,7 @@ ARGetBaseAddress:
 
 .global ARGetSize
 ARGetSize:
-/* 8009D930 0009A870  80 6D 94 FC */	lwz r3, __AR_Size-_SDA_BASE_(r13)
+/* 8009D930 0009A870  80 6D 94 FC */	lwz r3, __AR_Size@sda21(r13)
 /* 8009D934 0009A874  4E 80 00 20 */	blr 
 
 .global __ARHandler
@@ -193,7 +193,7 @@ __ARHandler:
 /* 8009D96C 0009A8AC  4B FF 10 79 */	bl OSClearContext
 /* 8009D970 0009A8B0  38 61 00 10 */	addi r3, r1, 0x10
 /* 8009D974 0009A8B4  4B FF 0E A9 */	bl OSSetCurrentContext
-/* 8009D978 0009A8B8  81 8D 94 F8 */	lwz r12, __AR_Callback-_SDA_BASE_(r13)
+/* 8009D978 0009A8B8  81 8D 94 F8 */	lwz r12, __AR_Callback@sda21(r13)
 /* 8009D97C 0009A8BC  28 0C 00 00 */	cmplwi r12, 0
 /* 8009D980 0009A8C0  41 82 00 0C */	beq lbl_8009D98C
 /* 8009D984 0009A8C4  7D 88 03 A6 */	mtlr r12
@@ -222,7 +222,7 @@ lbl_8009D9C8:
 /* 8009D9CC 0009A90C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 8009D9D0 0009A910  41 82 FF F8 */	beq lbl_8009D9C8
 /* 8009D9D4 0009A914  3C 60 01 00 */	lis r3, 0x01000000@ha
-/* 8009D9D8 0009A918  90 6D 95 00 */	stw r3, __AR_InternalSize-_SDA_BASE_(r13)
+/* 8009D9D8 0009A918  90 6D 95 00 */	stw r3, __AR_InternalSize@sda21(r13)
 /* 8009D9DC 0009A91C  3E C0 CC 00 */	lis r22, 0xCC005012@ha
 /* 8009D9E0 0009A920  38 01 00 B3 */	addi r0, r1, 0xb3
 /* 8009D9E4 0009A924  A0 B6 50 12 */	lhz r5, 0xCC005012@l(r22)
@@ -264,7 +264,7 @@ lbl_8009D9C8:
 /* 8009DA74 0009A9B4  38 80 00 20 */	li r4, 0x20
 /* 8009DA78 0009A9B8  4B FF 05 35 */	bl DCFlushRange
 /* 8009DA7C 0009A9BC  38 00 00 00 */	li r0, 0
-/* 8009DA80 0009A9C0  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009DA80 0009A9C0  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009DA84 0009A9C4  57 85 84 3E */	srwi r5, r28, 0x10
 /* 8009DA88 0009A9C8  57 86 04 3E */	clrlwi r6, r28, 0x10
 /* 8009DA8C 0009A9CC  A0 16 50 20 */	lhz r0, 0x5020(r22)
@@ -622,7 +622,7 @@ lbl_8009DFC0:
 /* 8009DFEC 0009AF2C  7C 00 18 40 */	cmplw r0, r3
 /* 8009DFF0 0009AF30  40 82 00 14 */	bne lbl_8009E004
 /* 8009DFF4 0009AF34  3C 00 00 20 */	lis r0, 0x20
-/* 8009DFF8 0009AF38  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009DFF8 0009AF38  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009DFFC 0009AF3C  3E B5 00 20 */	addis r21, r21, 0x20
 /* 8009E000 0009AF40  48 00 02 94 */	b lbl_8009E294
 lbl_8009E004:
@@ -677,7 +677,7 @@ lbl_8009E094:
 /* 8009E0C0 0009B000  7C 00 18 40 */	cmplw r0, r3
 /* 8009E0C4 0009B004  40 82 00 18 */	bne lbl_8009E0DC
 /* 8009E0C8 0009B008  3C 00 00 40 */	lis r0, 0x40
-/* 8009E0CC 0009B00C  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009E0CC 0009B00C  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009E0D0 0009B010  62 73 00 08 */	ori r19, r19, 8
 /* 8009E0D4 0009B014  3E B5 00 40 */	addis r21, r21, 0x40
 /* 8009E0D8 0009B018  48 00 01 BC */	b lbl_8009E294
@@ -733,7 +733,7 @@ lbl_8009E16C:
 /* 8009E198 0009B0D8  7C 03 00 40 */	cmplw r3, r0
 /* 8009E19C 0009B0DC  40 82 00 18 */	bne lbl_8009E1B4
 /* 8009E1A0 0009B0E0  3C 00 00 80 */	lis r0, 0x80
-/* 8009E1A4 0009B0E4  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009E1A4 0009B0E4  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009E1A8 0009B0E8  62 73 00 10 */	ori r19, r19, 0x10
 /* 8009E1AC 0009B0EC  3E B5 00 80 */	addis r21, r21, 0x80
 /* 8009E1B0 0009B0F0  48 00 00 E4 */	b lbl_8009E294
@@ -787,13 +787,13 @@ lbl_8009E23C:
 /* 8009E268 0009B1A8  7C 03 00 40 */	cmplw r3, r0
 /* 8009E26C 0009B1AC  40 82 00 18 */	bne lbl_8009E284
 /* 8009E270 0009B1B0  3C 00 01 00 */	lis r0, 0x100
-/* 8009E274 0009B1B4  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009E274 0009B1B4  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009E278 0009B1B8  62 73 00 18 */	ori r19, r19, 0x18
 /* 8009E27C 0009B1BC  3E B5 01 00 */	addis r21, r21, 0x100
 /* 8009E280 0009B1C0  48 00 00 14 */	b lbl_8009E294
 lbl_8009E284:
 /* 8009E284 0009B1C4  3C 00 02 00 */	lis r0, 0x200
-/* 8009E288 0009B1C8  90 0D 95 04 */	stw r0, __AR_ExpansionSize-_SDA_BASE_(r13)
+/* 8009E288 0009B1C8  90 0D 95 04 */	stw r0, __AR_ExpansionSize@sda21(r13)
 /* 8009E28C 0009B1CC  62 73 00 20 */	ori r19, r19, 0x20
 /* 8009E290 0009B1D0  3E B5 02 00 */	addis r21, r21, 0x200
 lbl_8009E294:
@@ -804,7 +804,7 @@ lbl_8009E294:
 lbl_8009E2A4:
 /* 8009E2A4 0009B1E4  3C 60 C0 00 */	lis r3, 0xC00000D0@ha
 /* 8009E2A8 0009B1E8  92 A3 00 D0 */	stw r21, 0xC00000D0@l(r3)
-/* 8009E2AC 0009B1EC  92 AD 94 FC */	stw r21, __AR_Size-_SDA_BASE_(r13)
+/* 8009E2AC 0009B1EC  92 AD 94 FC */	stw r21, __AR_Size@sda21(r13)
 /* 8009E2B0 0009B1F0  80 01 01 3C */	lwz r0, 0x13c(r1)
 /* 8009E2B4 0009B1F4  B9 C1 00 F0 */	lmw r14, 0xf0(r1)
 /* 8009E2B8 0009B1F8  38 21 01 38 */	addi r1, r1, 0x138

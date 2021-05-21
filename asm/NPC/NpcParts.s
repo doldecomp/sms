@@ -152,11 +152,11 @@ setEffectMtx__13J3DTexMtxInfoFPA4_f:
 /* 8017690C 0017384C  D0 03 00 4C */	stfs f0, 0x4c(r3)
 /* 80176910 00173850  C0 04 00 2C */	lfs f0, 0x2c(r4)
 /* 80176914 00173854  D0 03 00 50 */	stfs f0, 0x50(r3)
-/* 80176918 00173858  C0 02 A8 F0 */	lfs f0, $$22491-_SDA2_BASE_(r2)
+/* 80176918 00173858  C0 02 A8 F0 */	lfs f0, $$22491@sda21(r2)
 /* 8017691C 0017385C  D0 03 00 5C */	stfs f0, 0x5c(r3)
 /* 80176920 00173860  D0 03 00 58 */	stfs f0, 0x58(r3)
 /* 80176924 00173864  D0 03 00 54 */	stfs f0, 0x54(r3)
-/* 80176928 00173868  C0 02 A8 F4 */	lfs f0, $$22492-_SDA2_BASE_(r2)
+/* 80176928 00173868  C0 02 A8 F4 */	lfs f0, $$22492@sda21(r2)
 /* 8017692C 0017386C  D0 03 00 60 */	stfs f0, 0x60(r3)
 /* 80176930 00173870  4E 80 00 20 */	blr 
 
@@ -326,19 +326,19 @@ addJellyFishParts__9TNpcPartsFf:
 /* 80176B58 00173A98  BF 61 00 34 */	stmw r27, 0x34(r1)
 /* 80176B5C 00173A9C  7C 7F 1B 78 */	mr r31, r3
 /* 80176B60 00173AA0  3B BF 00 2C */	addi r29, r31, 0x2c
-/* 80176B64 00173AA4  80 6D 99 48 */	lwz r3, gpMareJellyFishManager-_SDA_BASE_(r13)
+/* 80176B64 00173AA4  80 6D 99 48 */	lwz r3, gpMareJellyFishManager@sda21(r13)
 /* 80176B68 00173AA8  4B F9 F1 85 */	bl getModelDataKeeper__11TObjManagerFv
 /* 80176B6C 00173AAC  4B FA 00 29 */	bl getModelDataNum__16TModelDataKeeperCFv
 /* 80176B70 00173AB0  7C 7E 1B 78 */	mr r30, r3
 /* 80176B74 00173AB4  4B F0 EF 51 */	bl rand
 /* 80176B78 00173AB8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80176B7C 00173ABC  C8 62 A9 00 */	lfd f3, $$22635-_SDA2_BASE_(r2)
+/* 80176B7C 00173ABC  C8 62 A9 00 */	lfd f3, $$22635@sda21(r2)
 /* 80176B80 00173AC0  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 80176B84 00173AC4  3C 80 43 30 */	lis r4, 0x4330
 /* 80176B88 00173AC8  6F C0 80 00 */	xoris r0, r30, 0x8000
-/* 80176B8C 00173ACC  C0 22 A8 F8 */	lfs f1, $$22632-_SDA2_BASE_(r2)
+/* 80176B8C 00173ACC  C0 22 A8 F8 */	lfs f1, $$22632@sda21(r2)
 /* 80176B90 00173AD0  90 81 00 28 */	stw r4, 0x28(r1)
-/* 80176B94 00173AD4  80 6D 99 48 */	lwz r3, gpMareJellyFishManager-_SDA_BASE_(r13)
+/* 80176B94 00173AD4  80 6D 99 48 */	lwz r3, gpMareJellyFishManager@sda21(r13)
 /* 80176B98 00173AD8  90 01 00 24 */	stw r0, 0x24(r1)
 /* 80176B9C 00173ADC  C8 01 00 28 */	lfd f0, 0x28(r1)
 /* 80176BA0 00173AE0  90 81 00 20 */	stw r4, 0x20(r1)
@@ -369,7 +369,7 @@ lbl_80176BF8:
 /* 80176C00 00173B40  4B E9 5C B1 */	bl __nw__FUl
 /* 80176C04 00173B44  7C 7B 1B 79 */	or. r27, r3, r3
 /* 80176C08 00173B48  41 82 00 18 */	beq lbl_80176C20
-/* 80176C0C 00173B4C  80 6D 99 48 */	lwz r3, gpMareJellyFishManager-_SDA_BASE_(r13)
+/* 80176C0C 00173B4C  80 6D 99 48 */	lwz r3, gpMareJellyFishManager@sda21(r13)
 /* 80176C10 00173B50  4B F9 F3 B9 */	bl getMActorAnmData__11TObjManagerFv
 /* 80176C14 00173B54  38 83 00 00 */	addi r4, r3, 0
 /* 80176C18 00173B58  38 7B 00 00 */	addi r3, r27, 0
@@ -496,7 +496,7 @@ lbl_80176DB4:
 /* 80176DD8 00173D18  7C 19 03 78 */	mr r25, r0
 /* 80176DDC 00173D1C  41 82 02 D4 */	beq lbl_801770B0
 /* 80176DE0 00173D20  80 63 00 00 */	lwz r3, 0(r3)
-/* 80176DE4 00173D24  80 8D 84 80 */	lwz r4, cNpcPartsNameRootJoint-_SDA_BASE_(r13)
+/* 80176DE4 00173D24  80 8D 84 80 */	lwz r4, cNpcPartsNameRootJoint@sda21(r13)
 /* 80176DE8 00173D28  4B F0 EE 75 */	bl strcmp
 /* 80176DEC 00173D2C  2C 03 00 00 */	cmpwi r3, 0
 /* 80176DF0 00173D30  40 82 00 0C */	bne lbl_80176DFC
@@ -570,12 +570,12 @@ lbl_80176ED8:
 /* 80176EE4 00173E24  83 C4 00 04 */	lwz r30, 4(r4)
 /* 80176EE8 00173E28  4B F9 B3 89 */	bl getModel__10TLiveActorCFv
 /* 80176EEC 00173E2C  83 23 00 04 */	lwz r25, 4(r3)
-/* 80176EF0 00173E30  80 8D 84 EC */	lwz r4, cPeachHostTextureName-_SDA_BASE_(r13)
+/* 80176EF0 00173E30  80 8D 84 EC */	lwz r4, cPeachHostTextureName@sda21(r13)
 /* 80176EF4 00173E34  80 79 00 A8 */	lwz r3, 0xa8(r25)
 /* 80176EF8 00173E38  4B E9 C0 F9 */	bl getIndex__10JUTNameTabCFPCc
 /* 80176EFC 00173E3C  80 B9 00 AC */	lwz r5, 0xac(r25)
 /* 80176F00 00173E40  54 66 2A F4 */	rlwinm r6, r3, 5, 0xb, 0x1a
-/* 80176F04 00173E44  80 8D 84 E8 */	lwz r4, cPeachPartsTextureName-_SDA_BASE_(r13)
+/* 80176F04 00173E44  80 8D 84 E8 */	lwz r4, cPeachPartsTextureName@sda21(r13)
 /* 80176F08 00173E48  38 7E 00 00 */	addi r3, r30, 0
 /* 80176F0C 00173E4C  80 05 00 04 */	lwz r0, 4(r5)
 /* 80176F10 00173E50  7C A0 32 14 */	add r5, r0, r6
@@ -597,7 +597,7 @@ lbl_80176F44:
 /* 80176F44 00173E84  38 80 FF FF */	li r4, -1
 /* 80176F48 00173E88  2C 04 FF FF */	cmpwi r4, -1
 /* 80176F4C 00173E8C  40 82 00 0C */	bne lbl_80176F58
-/* 80176F50 00173E90  80 6D 99 20 */	lwz r3, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 80176F50 00173E90  80 6D 99 20 */	lwz r3, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80176F54 00173E94  80 83 01 A8 */	lwz r4, 0x1a8(r3)
 lbl_80176F58:
 /* 80176F58 00173E98  80 78 00 00 */	lwz r3, 0(r24)
@@ -628,7 +628,7 @@ lbl_80176FA4:
 /* 80176FB4 00173EF4  38 80 FF FF */	li r4, -1
 /* 80176FB8 00173EF8  2C 04 FF FF */	cmpwi r4, -1
 /* 80176FBC 00173EFC  40 82 00 0C */	bne lbl_80176FC8
-/* 80176FC0 00173F00  80 6D 99 20 */	lwz r3, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 80176FC0 00173F00  80 6D 99 20 */	lwz r3, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80176FC4 00173F04  80 83 01 A8 */	lwz r4, 0x1a8(r3)
 lbl_80176FC8:
 /* 80176FC8 00173F08  80 78 00 00 */	lwz r3, 0(r24)

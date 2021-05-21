@@ -122,7 +122,7 @@ lbl_80114C6C:
 /* 80114DB0 00111CF0  38 00 00 00 */	li r0, 0
 /* 80114DB4 00111CF4  90 1E 08 04 */	stw r0, 0x804(r30)
 /* 80114DB8 00111CF8  7F C3 F3 78 */	mr r3, r30
-/* 80114DBC 00111CFC  93 CD 98 90 */	stw r30, gpObjHitCheck-_SDA_BASE_(r13)
+/* 80114DBC 00111CFC  93 CD 98 90 */	stw r30, gpObjHitCheck@sda21(r13)
 /* 80114DC0 00111D00  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80114DC4 00111D04  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 80114DC8 00111D08  83 C1 00 18 */	lwz r30, 0x18(r1)
@@ -136,7 +136,7 @@ clearHitNum__12TObjHitCheckFv:
 /* 80114DDC 00111D1C  90 01 00 04 */	stw r0, 4(r1)
 /* 80114DE0 00111D20  94 21 FD D8 */	stwu r1, -0x228(r1)
 /* 80114DE4 00111D24  93 E1 02 24 */	stw r31, 0x224(r1)
-/* 80114DE8 00111D28  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80114DE8 00111D28  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80114DEC 00111D2C  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80114DF0 00111D30  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 80114DF4 00111D34  40 82 00 9C */	bne lbl_80114E90
@@ -181,7 +181,7 @@ lbl_80114E7C:
 /* 80114E88 00111DC8  7C 03 00 40 */	cmplw r3, r0
 /* 80114E8C 00111DCC  40 82 FF D8 */	bne lbl_80114E64
 lbl_80114E90:
-/* 80114E90 00111DD0  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80114E90 00111DD0  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80114E94 00111DD4  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80114E98 00111DD8  54 00 05 AD */	rlwinm. r0, r0, 0, 0x16, 0x16
 /* 80114E9C 00111DDC  40 82 00 9C */	bne lbl_80114F38
@@ -226,7 +226,7 @@ lbl_80114F24:
 /* 80114F30 00111E70  7C 03 00 40 */	cmplw r3, r0
 /* 80114F34 00111E74  40 82 FF D8 */	bne lbl_80114F0C
 lbl_80114F38:
-/* 80114F38 00111E78  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80114F38 00111E78  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80114F3C 00111E7C  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80114F40 00111E80  54 00 05 6B */	rlwinm. r0, r0, 0, 0x15, 0x15
 /* 80114F44 00111E84  40 82 00 9C */	bne lbl_80114FE0
@@ -271,7 +271,7 @@ lbl_80114FCC:
 /* 80114FD8 00111F18  7C 03 00 40 */	cmplw r3, r0
 /* 80114FDC 00111F1C  40 82 FF D8 */	bne lbl_80114FB4
 lbl_80114FE0:
-/* 80114FE0 00111F20  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80114FE0 00111F20  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80114FE4 00111F24  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80114FE8 00111F28  54 00 06 73 */	rlwinm. r0, r0, 0, 0x19, 0x19
 /* 80114FEC 00111F2C  40 82 00 9C */	bne lbl_80115088
@@ -316,7 +316,7 @@ lbl_80115074:
 /* 80115080 00111FC0  7C 03 00 40 */	cmplw r3, r0
 /* 80115084 00111FC4  40 82 FF D8 */	bne lbl_8011505C
 lbl_80115088:
-/* 80115088 00111FC8  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80115088 00111FC8  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 8011508C 00111FCC  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80115090 00111FD0  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 80115094 00111FD4  40 82 00 9C */	bne lbl_80115130
@@ -361,7 +361,7 @@ lbl_8011511C:
 /* 80115128 00112068  7C 03 00 40 */	cmplw r3, r0
 /* 8011512C 0011206C  40 82 FF D8 */	bne lbl_80115104
 lbl_80115130:
-/* 80115130 00112070  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80115130 00112070  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80115134 00112074  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80115138 00112078  54 00 05 29 */	rlwinm. r0, r0, 0, 0x14, 0x14
 /* 8011513C 0011207C  40 82 00 9C */	bne lbl_801151D8
@@ -515,7 +515,7 @@ lbl_80115224:
 /* 80115364 001122A4  42 00 FE C0 */	bdnz lbl_80115224
 /* 80115368 001122A8  38 00 00 00 */	li r0, 0
 /* 8011536C 001122AC  90 1E 08 04 */	stw r0, 0x804(r30)
-/* 80115370 001122B0  80 8D 98 A0 */	lwz r4, gpStrategy-_SDA_BASE_(r13)
+/* 80115370 001122B0  80 8D 98 A0 */	lwz r4, gpStrategy@sda21(r13)
 /* 80115374 001122B4  A0 04 00 50 */	lhz r0, 0x50(r4)
 /* 80115378 001122B8  54 00 05 29 */	rlwinm. r0, r0, 0, 0x14, 0x14
 /* 8011537C 001122BC  40 82 00 10 */	bne lbl_8011538C
@@ -523,7 +523,7 @@ lbl_80115224:
 /* 80115384 001122C4  80 84 00 1C */	lwz r4, 0x1c(r4)
 /* 80115388 001122C8  48 00 01 BD */	bl entryGroup__12TObjHitCheckFP12TIdxGroupObj
 lbl_8011538C:
-/* 8011538C 001122CC  80 8D 98 A0 */	lwz r4, gpStrategy-_SDA_BASE_(r13)
+/* 8011538C 001122CC  80 8D 98 A0 */	lwz r4, gpStrategy@sda21(r13)
 /* 80115390 001122D0  A0 04 00 50 */	lhz r0, 0x50(r4)
 /* 80115394 001122D4  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 80115398 001122D8  40 82 00 10 */	bne lbl_801153A8
@@ -531,7 +531,7 @@ lbl_8011538C:
 /* 801153A0 001122E0  80 84 00 2C */	lwz r4, 0x2c(r4)
 /* 801153A4 001122E4  48 00 03 79 */	bl checkAndEntryGroup__12TObjHitCheckFP12TIdxGroupObj
 lbl_801153A8:
-/* 801153A8 001122E8  80 8D 98 A0 */	lwz r4, gpStrategy-_SDA_BASE_(r13)
+/* 801153A8 001122E8  80 8D 98 A0 */	lwz r4, gpStrategy@sda21(r13)
 /* 801153AC 001122EC  A0 04 00 50 */	lhz r0, 0x50(r4)
 /* 801153B0 001122F0  54 00 05 AD */	rlwinm. r0, r0, 0, 0x16, 0x16
 /* 801153B4 001122F4  40 82 00 10 */	bne lbl_801153C4
@@ -539,7 +539,7 @@ lbl_801153A8:
 /* 801153BC 001122FC  80 84 00 30 */	lwz r4, 0x30(r4)
 /* 801153C0 00112300  48 00 03 5D */	bl checkAndEntryGroup__12TObjHitCheckFP12TIdxGroupObj
 lbl_801153C4:
-/* 801153C4 00112304  80 8D 98 A0 */	lwz r4, gpStrategy-_SDA_BASE_(r13)
+/* 801153C4 00112304  80 8D 98 A0 */	lwz r4, gpStrategy@sda21(r13)
 /* 801153C8 00112308  A0 04 00 50 */	lhz r0, 0x50(r4)
 /* 801153CC 0011230C  54 00 05 6B */	rlwinm. r0, r0, 0, 0x15, 0x15
 /* 801153D0 00112310  40 82 00 10 */	bne lbl_801153E0
@@ -547,7 +547,7 @@ lbl_801153C4:
 /* 801153D8 00112318  80 84 00 34 */	lwz r4, 0x34(r4)
 /* 801153DC 0011231C  48 00 03 41 */	bl checkAndEntryGroup__12TObjHitCheckFP12TIdxGroupObj
 lbl_801153E0:
-/* 801153E0 00112320  80 8D 98 A0 */	lwz r4, gpStrategy-_SDA_BASE_(r13)
+/* 801153E0 00112320  80 8D 98 A0 */	lwz r4, gpStrategy@sda21(r13)
 /* 801153E4 00112324  A0 04 00 50 */	lhz r0, 0x50(r4)
 /* 801153E8 00112328  54 00 06 73 */	rlwinm. r0, r0, 0, 0x19, 0x19
 /* 801153EC 0011232C  40 82 00 10 */	bne lbl_801153FC
@@ -555,18 +555,18 @@ lbl_801153E0:
 /* 801153F4 00112334  80 84 00 28 */	lwz r4, 0x28(r4)
 /* 801153F8 00112338  48 00 03 25 */	bl checkAndEntryGroup__12TObjHitCheckFP12TIdxGroupObj
 lbl_801153FC:
-/* 801153FC 0011233C  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 801153FC 0011233C  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80115400 00112340  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 80115404 00112344  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 80115408 00112348  40 82 00 1C */	bne lbl_80115424
-/* 8011540C 0011234C  80 6D 99 08 */	lwz r3, gpModelWaterManager-_SDA_BASE_(r13)
+/* 8011540C 0011234C  80 6D 99 08 */	lwz r3, gpModelWaterManager@sda21(r13)
 /* 80115410 00112350  48 04 9C 69 */	bl askDoWaterHitCheck__18TModelWaterManagerFv
 /* 80115414 00112354  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80115418 00112358  41 82 00 0C */	beq lbl_80115424
 /* 8011541C 0011235C  7F C3 F3 78 */	mr r3, r30
 /* 80115420 00112360  48 00 05 BD */	bl checkWater__12TObjHitCheckFv
 lbl_80115424:
-/* 80115424 00112364  80 6D 98 A0 */	lwz r3, gpStrategy-_SDA_BASE_(r13)
+/* 80115424 00112364  80 6D 98 A0 */	lwz r3, gpStrategy@sda21(r13)
 /* 80115428 00112368  A0 03 00 50 */	lhz r0, 0x50(r3)
 /* 8011542C 0011236C  54 00 05 29 */	rlwinm. r0, r0, 0, 0x14, 0x14
 /* 80115430 00112370  40 82 00 F8 */	bne lbl_80115528
@@ -582,7 +582,7 @@ lbl_80115424:
 /* 80115458 00112398  4B F2 F7 D9 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
 /* 8011545C 0011239C  80 01 00 9C */	lwz r0, 0x9c(r1)
 /* 80115460 001123A0  7F A4 EB 78 */	mr r4, r29
-/* 80115464 001123A4  83 ED 98 D8 */	lwz r31, gpMarioAddress-_SDA_BASE_(r13)
+/* 80115464 001123A4  83 ED 98 D8 */	lwz r31, gpMarioAddress@sda21(r13)
 /* 80115468 001123A8  38 61 00 60 */	addi r3, r1, 0x60
 /* 8011546C 001123AC  90 01 00 94 */	stw r0, 0x94(r1)
 /* 80115470 001123B0  4B FF FD 7D */	bl begin__Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1Fv
@@ -669,7 +669,7 @@ entryGroup__12TObjHitCheckFP12TIdxGroupObj:
 /* 80115598 001124D8  80 9C 00 08 */	lwz r4, 8(r28)
 /* 8011559C 001124DC  4B F1 ED C9 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
 /* 801155A0 001124E0  80 01 00 68 */	lwz r0, 0x68(r1)
-/* 801155A4 001124E4  C3 E2 96 E0 */	lfs f31, $$22277-_SDA2_BASE_(r2)
+/* 801155A4 001124E4  C3 E2 96 E0 */	lfs f31, $$22277@sda21(r2)
 /* 801155A8 001124E8  90 01 00 64 */	stw r0, 0x64(r1)
 /* 801155AC 001124EC  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 801155B0 001124F0  90 01 00 A8 */	stw r0, 0xa8(r1)
@@ -796,7 +796,7 @@ checkAndEntryGroup__12TObjHitCheckFP12TIdxGroupObj:
 /* 80115764 001126A4  80 9A 00 08 */	lwz r4, 8(r26)
 /* 80115768 001126A8  4B F1 EB FD */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
 /* 8011576C 001126AC  80 01 00 B4 */	lwz r0, 0xb4(r1)
-/* 80115770 001126B0  C3 E2 96 E0 */	lfs f31, $$22277-_SDA2_BASE_(r2)
+/* 80115770 001126B0  C3 E2 96 E0 */	lfs f31, $$22277@sda21(r2)
 /* 80115774 001126B4  90 01 00 B0 */	stw r0, 0xb0(r1)
 /* 80115778 001126B8  80 01 00 B0 */	lwz r0, 0xb0(r1)
 /* 8011577C 001126BC  90 01 00 F4 */	stw r0, 0xf4(r1)
@@ -985,8 +985,8 @@ checkWater__12TObjHitCheckFv:
 /* 80115A0C 0011294C  3B 20 00 00 */	li r25, 0
 /* 80115A10 00112950  3B 00 00 00 */	li r24, 0
 /* 80115A14 00112954  3A E0 00 00 */	li r23, 0
-/* 80115A18 00112958  80 AD 99 08 */	lwz r5, gpModelWaterManager-_SDA_BASE_(r13)
-/* 80115A1C 0011295C  C3 E2 96 E0 */	lfs f31, $$22277-_SDA2_BASE_(r2)
+/* 80115A18 00112958  80 AD 99 08 */	lwz r5, gpModelWaterManager@sda21(r13)
+/* 80115A1C 0011295C  C3 E2 96 E0 */	lfs f31, $$22277@sda21(r2)
 /* 80115A20 00112960  C3 BF 00 60 */	lfs f29, 0x60(r31)
 /* 80115A24 00112964  3B A5 08 14 */	addi r29, r5, 0x814
 /* 80115A28 00112968  3B 85 25 14 */	addi r28, r5, 0x2514
@@ -1078,7 +1078,7 @@ lbl_80115B50:
 /* 80115B58 00112A98  3B 18 00 0C */	addi r24, r24, 0xc
 /* 80115B5C 00112A9C  3A F7 00 02 */	addi r23, r23, 2
 lbl_80115B60:
-/* 80115B60 00112AA0  80 6D 99 08 */	lwz r3, gpModelWaterManager-_SDA_BASE_(r13)
+/* 80115B60 00112AA0  80 6D 99 08 */	lwz r3, gpModelWaterManager@sda21(r13)
 /* 80115B64 00112AA4  A0 03 00 12 */	lhz r0, 0x12(r3)
 /* 80115B68 00112AA8  7C 1B 00 00 */	cmpw r27, r0
 /* 80115B6C 00112AAC  41 80 FE C4 */	blt lbl_80115A30

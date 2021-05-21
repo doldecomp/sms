@@ -205,7 +205,7 @@ perform__11TObjManagerFUlPQ26JDrama9TGraphics:
 /* 80115EFC 00112E3C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 80115F00 00112E40  41 82 00 48 */	beq lbl_80115F48
 /* 80115F04 00112E44  38 00 00 FF */	li r0, 0xff
-/* 80115F08 00112E48  83 CD 98 38 */	lwz r30, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 80115F08 00112E48  83 CD 98 38 */	lwz r30, _instance__8TTimeRec@sda21(r13)
 /* 80115F0C 00112E4C  98 01 00 34 */	stb r0, 0x34(r1)
 /* 80115F10 00112E50  28 1E 00 00 */	cmplwi r30, 0
 /* 80115F14 00112E54  98 01 00 35 */	stb r0, 0x35(r1)
@@ -240,7 +240,7 @@ lbl_80115F70:
 /* 80115F7C 00112EBC  80 1B 00 30 */	lwz r0, 0x30(r27)
 /* 80115F80 00112EC0  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 80115F84 00112EC4  41 82 00 30 */	beq lbl_80115FB4
-/* 80115F88 00112EC8  83 CD 98 38 */	lwz r30, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 80115F88 00112EC8  83 CD 98 38 */	lwz r30, _instance__8TTimeRec@sda21(r13)
 /* 80115F8C 00112ECC  28 1E 00 00 */	cmplwi r30, 0
 /* 80115F90 00112ED0  41 82 00 24 */	beq lbl_80115FB4
 /* 80115F94 00112ED4  4B F7 DE 7D */	bl OSGetTick
@@ -296,7 +296,7 @@ load__11TObjManagerFR20JSUMemoryInputStream:
 /* 8011603C 00112F7C  38 81 00 2C */	addi r4, r1, 0x2c
 /* 80116040 00112F80  38 A0 01 00 */	li r5, 0x100
 /* 80116044 00112F84  4B EF 86 79 */	bl readString__14JSUInputStreamFPcUs
-/* 80116048 00112F88  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 80116048 00112F88  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 8011604C 00112F8C  38 61 00 2C */	addi r3, r1, 0x2c
 /* 80116050 00112F90  83 E4 00 04 */	lwz r31, 4(r4)
 /* 80116054 00112F94  4B F2 E6 39 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -383,7 +383,7 @@ getRes__9TObjCharaCFPCc:
 /* 80116174 001130B4  4C C6 31 82 */	crclr 6
 /* 80116178 001130B8  38 80 01 00 */	li r4, 0x100
 /* 8011617C 001130BC  94 21 FE F0 */	stwu r1, -0x110(r1)
-/* 80116180 001130C0  38 A2 96 E8 */	addi r5, r2, $$21841-_SDA2_BASE_
+/* 80116180 001130C0  38 A2 96 E8 */	addi r5, r2, $$21841@sda21
 /* 80116184 001130C4  80 C3 00 0C */	lwz r6, 0xc(r3)
 /* 80116188 001130C8  38 61 00 10 */	addi r3, r1, 0x10
 /* 8011618C 001130CC  4B F6 DF 39 */	bl snprintf

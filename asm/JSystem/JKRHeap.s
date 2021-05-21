@@ -49,15 +49,15 @@ lbl_8000C1B4:
 /* 8000C1B4 000090F4  38 9C 00 00 */	addi r4, r28, 0
 /* 8000C1B8 000090F8  38 7B 00 3C */	addi r3, r27, 0x3c
 /* 8000C1BC 000090FC  48 00 2A 8D */	bl append__10JSUPtrListFP10JSUPtrLink
-/* 8000C1C0 00009100  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C1C4 00009104  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C1C0 00009100  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
+/* 8000C1C4 00009104  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000C1C8 00009108  7C 03 00 40 */	cmplw r3, r0
 /* 8000C1CC 0000910C  40 82 00 0C */	bne lbl_8000C1D8
 /* 8000C1D0 00009110  80 61 00 08 */	lwz r3, 8(r1)
 /* 8000C1D4 00009114  48 00 02 59 */	bl becomeSystemHeap__7JKRHeapFv
 lbl_8000C1D8:
-/* 8000C1D8 00009118  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C1DC 0000911C  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C1D8 00009118  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap@sda21(r13)
+/* 8000C1DC 0000911C  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000C1E0 00009120  7C 03 00 40 */	cmplw r3, r0
 /* 8000C1E4 00009124  40 82 00 0C */	bne lbl_8000C1F0
 /* 8000C1E8 00009128  80 61 00 08 */	lwz r3, 8(r1)
@@ -68,12 +68,12 @@ lbl_8000C1F0:
 /* 8000C1F8 00009138  88 03 00 64 */	lbz r0, 0x64(r3)
 /* 8000C1FC 0000913C  28 00 00 01 */	cmplwi r0, 1
 /* 8000C200 00009140  40 82 00 1C */	bne lbl_8000C21C
-/* 8000C204 00009144  80 0D 8D 74 */	lwz r0, mErrorHandler__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C204 00009144  80 0D 8D 74 */	lwz r0, mErrorHandler__7JKRHeap@sda21(r13)
 /* 8000C208 00009148  28 00 00 00 */	cmplwi r0, 0
 /* 8000C20C 0000914C  40 82 00 10 */	bne lbl_8000C21C
 /* 8000C210 00009150  3C 80 80 01 */	lis r4, JKRDefaultMemoryErrorRoutine__FPvUli@ha
 /* 8000C214 00009154  38 04 C8 7C */	addi r0, r4, JKRDefaultMemoryErrorRoutine__FPvUli@l
-/* 8000C218 00009158  90 0D 8D 74 */	stw r0, mErrorHandler__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C218 00009158  90 0D 8D 74 */	stw r0, mErrorHandler__7JKRHeap@sda21(r13)
 lbl_8000C21C:
 /* 8000C21C 0000915C  BB 21 00 24 */	lmw r25, 0x24(r1)
 /* 8000C220 00009160  80 01 00 44 */	lwz r0, 0x44(r1)
@@ -101,13 +101,13 @@ __dt__7JKRHeapFv:
 /* 8000C26C 000091AC  38 84 00 0C */	addi r4, r4, 0xc
 lbl_8000C270:
 /* 8000C270 000091B0  48 00 2D 2D */	bl remove__10JSUPtrListFP10JSUPtrLink
-/* 8000C274 000091B4  80 8D 8D 70 */	lwz r4, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C274 000091B4  80 8D 8D 70 */	lwz r4, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000C278 000091B8  80 64 00 3C */	lwz r3, 0x3c(r4)
 /* 8000C27C 000091BC  28 03 00 00 */	cmplwi r3, 0
 /* 8000C280 000091C0  41 82 00 08 */	beq lbl_8000C288
 /* 8000C284 000091C4  38 63 FF F4 */	addi r3, r3, -12
 lbl_8000C288:
-/* 8000C288 000091C8  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C288 000091C8  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C28C 000091CC  7C 00 F0 40 */	cmplw r0, r30
 /* 8000C290 000091D0  40 82 00 1C */	bne lbl_8000C2AC
 /* 8000C294 000091D4  28 03 00 00 */	cmplwi r3, 0
@@ -117,9 +117,9 @@ lbl_8000C288:
 lbl_8000C2A4:
 /* 8000C2A4 000091E4  80 03 00 0C */	lwz r0, 0xc(r3)
 lbl_8000C2A8:
-/* 8000C2A8 000091E8  90 0D 8D 6C */	stw r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C2A8 000091E8  90 0D 8D 6C */	stw r0, sCurrentHeap__7JKRHeap@sda21(r13)
 lbl_8000C2AC:
-/* 8000C2AC 000091EC  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C2AC 000091EC  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8000C2B0 000091F0  7C 00 F0 40 */	cmplw r0, r30
 /* 8000C2B4 000091F4  40 82 00 18 */	bne lbl_8000C2CC
 /* 8000C2B8 000091F8  28 03 00 00 */	cmplwi r3, 0
@@ -128,7 +128,7 @@ lbl_8000C2AC:
 lbl_8000C2C4:
 /* 8000C2C4 00009204  80 83 00 0C */	lwz r4, 0xc(r3)
 lbl_8000C2C8:
-/* 8000C2C8 00009208  90 8D 8D 68 */	stw r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C2C8 00009208  90 8D 8D 68 */	stw r4, sSystemHeap__7JKRHeap@sda21(r13)
 lbl_8000C2CC:
 /* 8000C2CC 0000920C  34 1E 00 58 */	addic. r0, r30, 0x58
 /* 8000C2D0 00009210  41 82 00 10 */	beq lbl_8000C2E0
@@ -192,20 +192,20 @@ lbl_8000C384:
 /* 8000C398 000092D8  4C C6 31 82 */	crclr 6
 /* 8000C39C 000092DC  54 1F 00 34 */	rlwinm r31, r0, 0, 0, 0x1a
 /* 8000C3A0 000092E0  57 BE 00 34 */	rlwinm r30, r29, 0, 0, 0x1a
-/* 8000C3A4 000092E4  93 ED 8D 7C */	stw r31, mCodeEnd__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C3A4 000092E4  93 ED 8D 7C */	stw r31, mCodeEnd__7JKRHeap@sda21(r13)
 /* 8000C3A8 000092E8  3C E0 80 00 */	lis r7, 0x80000028@ha
-/* 8000C3AC 000092EC  90 ED 8D 78 */	stw r7, mCodeStart__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C3AC 000092EC  90 ED 8D 78 */	stw r7, mCodeStart__7JKRHeap@sda21(r13)
 /* 8000C3B0 000092F0  3C 60 80 37 */	lis r3, $$2149@ha
-/* 8000C3B4 000092F4  80 AD 8D 7C */	lwz r5, mCodeEnd__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C3B4 000092F4  80 AD 8D 7C */	lwz r5, mCodeEnd__7JKRHeap@sda21(r13)
 /* 8000C3B8 000092F8  38 63 04 E8 */	addi r3, r3, $$2149@l
-/* 8000C3BC 000092FC  93 ED 8D 80 */	stw r31, mUserRamStart__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C3C0 00009300  80 8D 8D 78 */	lwz r4, mCodeStart__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C3C4 00009304  93 CD 8D 84 */	stw r30, mUserRamEnd__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C3C8 00009308  80 CD 8D 80 */	lwz r6, mUserRamStart__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C3BC 000092FC  93 ED 8D 80 */	stw r31, mUserRamStart__7JKRHeap@sda21(r13)
+/* 8000C3C0 00009300  80 8D 8D 78 */	lwz r4, mCodeStart__7JKRHeap@sda21(r13)
+/* 8000C3C4 00009304  93 CD 8D 84 */	stw r30, mUserRamEnd__7JKRHeap@sda21(r13)
+/* 8000C3C8 00009308  80 CD 8D 80 */	lwz r6, mUserRamStart__7JKRHeap@sda21(r13)
 /* 8000C3CC 0000930C  80 07 00 28 */	lwz r0, 0x80000028@l(r7)
-/* 8000C3D0 00009310  80 ED 8D 84 */	lwz r7, mUserRamEnd__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C3D4 00009314  90 0D 8D 88 */	stw r0, mMemorySize__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C3D8 00009318  81 0D 8D 88 */	lwz r8, mMemorySize__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C3D0 00009310  80 ED 8D 84 */	lwz r7, mUserRamEnd__7JKRHeap@sda21(r13)
+/* 8000C3D4 00009314  90 0D 8D 88 */	stw r0, mMemorySize__7JKRHeap@sda21(r13)
+/* 8000C3D8 00009318  81 0D 8D 88 */	lwz r8, mMemorySize__7JKRHeap@sda21(r13)
 /* 8000C3DC 0000931C  48 08 2B 89 */	bl OSReport
 /* 8000C3E0 00009320  7F C3 F3 78 */	mr r3, r30
 /* 8000C3E4 00009324  48 08 18 E9 */	bl OSSetArenaLo
@@ -230,15 +230,15 @@ lbl_8000C418:
 
 .global becomeSystemHeap__7JKRHeapFv
 becomeSystemHeap__7JKRHeapFv:
-/* 8000C42C 0000936C  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C430 00009370  90 6D 8D 68 */	stw r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C42C 0000936C  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
+/* 8000C430 00009370  90 6D 8D 68 */	stw r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8000C434 00009374  7C 03 03 78 */	mr r3, r0
 /* 8000C438 00009378  4E 80 00 20 */	blr 
 
 .global becomeCurrentHeap__7JKRHeapFv
 becomeCurrentHeap__7JKRHeapFv:
-/* 8000C43C 0000937C  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
-/* 8000C440 00009380  90 6D 8D 6C */	stw r3, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C43C 0000937C  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
+/* 8000C440 00009380  90 6D 8D 6C */	stw r3, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C444 00009384  7C 03 03 78 */	mr r3, r0
 /* 8000C448 00009388  4E 80 00 20 */	blr 
 
@@ -261,7 +261,7 @@ alloc__7JKRHeapFUliP7JKRHeap:
 /* 8000C484 000093C4  4E 80 00 21 */	blrl 
 /* 8000C488 000093C8  48 00 00 2C */	b lbl_8000C4B4
 lbl_8000C48C:
-/* 8000C48C 000093CC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C48C 000093CC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C490 000093D0  28 00 00 00 */	cmplwi r0, 0
 /* 8000C494 000093D4  41 82 00 20 */	beq lbl_8000C4B4
 /* 8000C498 000093D8  7C 03 03 78 */	mr r3, r0
@@ -335,7 +335,7 @@ findFromRoot__7JKRHeapFPv:
 /* 8000C570 000094B0  38 83 00 00 */	addi r4, r3, 0
 /* 8000C574 000094B4  90 01 00 04 */	stw r0, 4(r1)
 /* 8000C578 000094B8  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8000C57C 000094BC  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C57C 000094BC  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000C580 000094C0  28 00 00 00 */	cmplwi r0, 0
 /* 8000C584 000094C4  41 82 00 10 */	beq lbl_8000C594
 /* 8000C588 000094C8  7C 03 03 78 */	mr r3, r0
@@ -578,7 +578,7 @@ JKRDefaultMemoryErrorRoutine__FPvUli:
 /* 8000C88C 000097CC  38 63 05 10 */	addi r3, r3, $$2369@l
 /* 8000C890 000097D0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000C894 000097D4  38 80 02 B6 */	li r4, 0x2b6
-/* 8000C898 000097D8  38 A2 80 38 */	addi r5, r2, $$2370-_SDA2_BASE_
+/* 8000C898 000097D8  38 A2 80 38 */	addi r5, r2, $$2370@sda21
 /* 8000C89C 000097DC  48 08 27 49 */	bl OSPanic
 /* 8000C8A0 000097E0  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8000C8A4 000097E4  38 21 00 08 */	addi r1, r1, 8
@@ -592,7 +592,7 @@ __nw__FUl:
 /* 8000C8B8 000097F8  90 01 00 04 */	stw r0, 4(r1)
 /* 8000C8BC 000097FC  38 60 00 00 */	li r3, 0
 /* 8000C8C0 00009800  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8000C8C4 00009804  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C8C4 00009804  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C8C8 00009808  28 00 00 00 */	cmplwi r0, 0
 /* 8000C8CC 0000980C  41 82 00 1C */	beq lbl_8000C8E8
 /* 8000C8D0 00009810  7C 03 03 78 */	mr r3, r0
@@ -615,7 +615,7 @@ __nw__FUli:
 /* 8000C904 00009844  38 A4 00 00 */	addi r5, r4, 0
 /* 8000C908 00009848  38 60 00 00 */	li r3, 0
 /* 8000C90C 0000984C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8000C910 00009850  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C910 00009850  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C914 00009854  28 00 00 00 */	cmplwi r0, 0
 /* 8000C918 00009858  41 82 00 1C */	beq lbl_8000C934
 /* 8000C91C 0000985C  7C 03 03 78 */	mr r3, r0
@@ -647,7 +647,7 @@ __nw__FUlP7JKRHeapi:
 /* 8000C974 000098B4  4E 80 00 21 */	blrl 
 /* 8000C978 000098B8  48 00 00 28 */	b lbl_8000C9A0
 lbl_8000C97C:
-/* 8000C97C 000098BC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C97C 000098BC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C980 000098C0  28 00 00 00 */	cmplwi r0, 0
 /* 8000C984 000098C4  41 82 00 1C */	beq lbl_8000C9A0
 /* 8000C988 000098C8  7C 03 03 78 */	mr r3, r0
@@ -669,7 +669,7 @@ __nwa__FUl:
 /* 8000C9B8 000098F8  90 01 00 04 */	stw r0, 4(r1)
 /* 8000C9BC 000098FC  38 60 00 00 */	li r3, 0
 /* 8000C9C0 00009900  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8000C9C4 00009904  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000C9C4 00009904  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000C9C8 00009908  28 00 00 00 */	cmplwi r0, 0
 /* 8000C9CC 0000990C  41 82 00 1C */	beq lbl_8000C9E8
 /* 8000C9D0 00009910  7C 03 03 78 */	mr r3, r0
@@ -692,7 +692,7 @@ __nwa__FUli:
 /* 8000CA04 00009944  38 A4 00 00 */	addi r5, r4, 0
 /* 8000CA08 00009948  38 60 00 00 */	li r3, 0
 /* 8000CA0C 0000994C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8000CA10 00009950  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000CA10 00009950  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000CA14 00009954  28 00 00 00 */	cmplwi r0, 0
 /* 8000CA18 00009958  41 82 00 1C */	beq lbl_8000CA34
 /* 8000CA1C 0000995C  7C 03 03 78 */	mr r3, r0
@@ -724,7 +724,7 @@ __nwa__FUlP7JKRHeapi:
 /* 8000CA74 000099B4  4E 80 00 21 */	blrl 
 /* 8000CA78 000099B8  48 00 00 28 */	b lbl_8000CAA0
 lbl_8000CA7C:
-/* 8000CA7C 000099BC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000CA7C 000099BC  80 0D 8D 6C */	lwz r0, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8000CA80 000099C0  28 00 00 00 */	cmplwi r0, 0
 /* 8000CA84 000099C4  41 82 00 1C */	beq lbl_8000CAA0
 /* 8000CA88 000099C8  7C 03 03 78 */	mr r3, r0
@@ -746,7 +746,7 @@ __dl__FPv:
 /* 8000CAB8 000099F8  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8000CABC 000099FC  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8000CAC0 00009A00  3B E3 00 00 */	addi r31, r3, 0
-/* 8000CAC4 00009A04  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000CAC4 00009A04  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000CAC8 00009A08  28 00 00 00 */	cmplwi r0, 0
 /* 8000CACC 00009A0C  41 82 00 14 */	beq lbl_8000CAE0
 /* 8000CAD0 00009A10  7C 03 03 78 */	mr r3, r0
@@ -777,7 +777,7 @@ __dla__FPv:
 /* 8000CB1C 00009A5C  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8000CB20 00009A60  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8000CB24 00009A64  3B E3 00 00 */	addi r31, r3, 0
-/* 8000CB28 00009A68  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000CB28 00009A68  80 0D 8D 70 */	lwz r0, sRootHeap__7JKRHeap@sda21(r13)
 /* 8000CB2C 00009A6C  28 00 00 00 */	cmplwi r0, 0
 /* 8000CB30 00009A70  41 82 00 14 */	beq lbl_8000CB44
 /* 8000CB34 00009A74  7C 03 03 78 */	mr r3, r0

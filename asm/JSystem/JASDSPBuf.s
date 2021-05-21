@@ -9,9 +9,9 @@ updateDSP__Q28JASystem6DSPBufFv:
 /* 8005EA44 0005B984  38 83 12 70 */	addi r4, r3, $$2119@l
 /* 8005EA48 0005B988  38 60 00 03 */	li r3, 3
 /* 8005EA4C 0005B98C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8005EA50 0005B990  80 AD 91 0C */	lwz r5, dac_sync_counter__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EA50 0005B990  80 AD 91 0C */	lwz r5, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EA54 0005B994  38 05 00 01 */	addi r0, r5, 1
-/* 8005EA58 0005B998  90 0D 91 0C */	stw r0, dac_sync_counter__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EA58 0005B998  90 0D 91 0C */	stw r0, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EA5C 0005B99C  48 00 53 71 */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005EA60 0005B9A0  48 00 0D A1 */	bl invalChannelAll__Q28JASystem12DSPInterfaceFv
 /* 8005EA64 0005B9A4  48 00 2C 75 */	bl subframeCallback__Q28JASystem6KernelFv
@@ -58,7 +58,7 @@ process__Q28JASystem6DSPBufFQ38JASystem6DSPBuf13DSPBUF_EVENTS:
 /* 8005EAE4 0005BA24  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 8005EAE8 0005BA28  BF 41 00 20 */	stmw r26, 0x20(r1)
 /* 8005EAEC 0005BA2C  3B E4 63 C0 */	addi r31, r4, dsp_buf__Q28JASystem6DSPBuf@l
-/* 8005EAF0 0005BA30  83 AD 81 F8 */	lwz r29, gFrameSamples__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8005EAF0 0005BA30  83 AD 81 F8 */	lwz r29, gFrameSamples__Q28JASystem6Kernel@sda21(r13)
 /* 8005EAF4 0005BA34  41 82 01 3C */	beq lbl_8005EC30
 /* 8005EAF8 0005BA38  40 80 00 10 */	bge lbl_8005EB08
 /* 8005EAFC 0005BA3C  2C 03 00 00 */	cmpwi r3, 0
@@ -71,9 +71,9 @@ lbl_8005EB08:
 lbl_8005EB14:
 /* 8005EB14 0005BA54  38 60 00 02 */	li r3, 2
 /* 8005EB18 0005BA58  38 00 00 00 */	li r0, 0
-/* 8005EB1C 0005BA5C  98 6D 91 08 */	stb r3, write_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EB1C 0005BA5C  98 6D 91 08 */	stb r3, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EB20 0005BA60  57 BC 08 3C */	slwi r28, r29, 1
-/* 8005EB24 0005BA64  98 0D 91 09 */	stb r0, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EB24 0005BA64  98 0D 91 09 */	stb r0, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EB28 0005BA68  57 BE 10 3A */	slwi r30, r29, 2
 /* 8005EB2C 0005BA6C  3B BC FF F8 */	addi r29, r28, -8
 /* 8005EB30 0005BA70  3B 60 00 00 */	li r27, 0
@@ -143,44 +143,44 @@ lbl_8005EC08:
 /* 8005EC1C 0005BB5C  3B 5A 00 04 */	addi r26, r26, 4
 /* 8005EC20 0005BB60  41 80 FF 18 */	blt lbl_8005EB38
 /* 8005EC24 0005BB64  38 00 00 00 */	li r0, 0
-/* 8005EC28 0005BB68  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC28 0005BB68  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC2C 0005BB6C  48 00 02 E8 */	b lbl_8005EF14
 lbl_8005EC30:
-/* 8005EC30 0005BB70  88 6D 91 08 */	lbz r3, write_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC30 0005BB70  88 6D 91 08 */	lbz r3, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC34 0005BB74  38 03 00 01 */	addi r0, r3, 1
 /* 8005EC38 0005BB78  54 04 06 3E */	clrlwi r4, r0, 0x18
 /* 8005EC3C 0005BB7C  28 04 00 03 */	cmplwi r4, 3
 /* 8005EC40 0005BB80  40 82 00 08 */	bne lbl_8005EC48
 /* 8005EC44 0005BB84  38 80 00 00 */	li r4, 0
 lbl_8005EC48:
-/* 8005EC48 0005BB88  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC48 0005BB88  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC4C 0005BB8C  54 83 06 3E */	clrlwi r3, r4, 0x18
 /* 8005EC50 0005BB90  7C 03 00 40 */	cmplw r3, r0
 /* 8005EC54 0005BB94  40 82 00 10 */	bne lbl_8005EC64
 /* 8005EC58 0005BB98  38 00 00 00 */	li r0, 0
-/* 8005EC5C 0005BB9C  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC5C 0005BB9C  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC60 0005BBA0  48 00 02 B4 */	b lbl_8005EF14
 lbl_8005EC64:
-/* 8005EC64 0005BBA4  80 6D 81 F4 */	lwz r3, gSubFrames__Q28JASystem6Kernel-_SDA_BASE_(r13)
-/* 8005EC68 0005BBA8  98 8D 91 08 */	stb r4, write_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC64 0005BBA4  80 6D 81 F4 */	lwz r3, gSubFrames__Q28JASystem6Kernel@sda21(r13)
+/* 8005EC68 0005BBA8  98 8D 91 08 */	stb r4, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC6C 0005BBAC  4B FF CD 4D */	bl setDSPSyncCount__Q28JASystem11AudioThreadFUl
 /* 8005EC70 0005BBB0  3C 60 80 37 */	lis r3, $$2211@ha
 /* 8005EC74 0005BBB4  38 83 12 7C */	addi r4, r3, $$2211@l
 /* 8005EC78 0005BBB8  38 60 00 07 */	li r3, 7
 /* 8005EC7C 0005BBBC  48 00 51 51 */	bl probeStart__Q28JASystem6KernelFlPc
-/* 8005EC80 0005BBC0  88 8D 91 08 */	lbz r4, write_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC80 0005BBC0  88 8D 91 08 */	lbz r4, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC84 0005BBC4  57 A0 08 3C */	slwi r0, r29, 1
-/* 8005EC88 0005BBC8  80 6D 81 F4 */	lwz r3, gSubFrames__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8005EC88 0005BBC8  80 6D 81 F4 */	lwz r3, gSubFrames__Q28JASystem6Kernel@sda21(r13)
 /* 8005EC8C 0005BBCC  54 84 10 3A */	slwi r4, r4, 2
 /* 8005EC90 0005BBD0  7C 9F 20 2E */	lwzx r4, r31, r4
 /* 8005EC94 0005BBD4  7C A4 02 14 */	add r5, r4, r0
 /* 8005EC98 0005BBD8  48 02 38 49 */	bl DsyncFrame2__FUlUlUl
-/* 8005EC9C 0005BBDC  80 8D 91 0C */	lwz r4, dac_sync_counter__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EC9C 0005BBDC  80 8D 91 0C */	lwz r4, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECA0 0005BBE0  38 00 00 01 */	li r0, 1
-/* 8005ECA4 0005BBE4  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005ECA4 0005BBE4  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECA8 0005BBE8  3C 60 80 37 */	lis r3, $$2119@ha
 /* 8005ECAC 0005BBEC  38 04 00 01 */	addi r0, r4, 1
-/* 8005ECB0 0005BBF0  90 0D 91 0C */	stw r0, dac_sync_counter__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005ECB0 0005BBF0  90 0D 91 0C */	stw r0, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECB4 0005BBF4  38 83 12 70 */	addi r4, r3, $$2119@l
 /* 8005ECB8 0005BBF8  38 60 00 03 */	li r3, 3
 /* 8005ECBC 0005BBFC  48 00 51 11 */	bl probeStart__Q28JASystem6KernelFlPc
@@ -193,14 +193,14 @@ lbl_8005EC64:
 /* 8005ECD8 0005BC18  48 00 50 F9 */	bl probeFinish__Q28JASystem6KernelFl
 /* 8005ECDC 0005BC1C  48 00 02 38 */	b lbl_8005EF14
 lbl_8005ECE0:
-/* 8005ECE0 0005BC20  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005ECE0 0005BC20  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECE4 0005BC24  38 04 00 01 */	addi r0, r4, 1
 /* 8005ECE8 0005BC28  54 05 06 3E */	clrlwi r5, r0, 0x18
 /* 8005ECEC 0005BC2C  28 05 00 03 */	cmplwi r5, 3
 /* 8005ECF0 0005BC30  40 82 00 08 */	bne lbl_8005ECF8
 /* 8005ECF4 0005BC34  38 A0 00 00 */	li r5, 0
 lbl_8005ECF8:
-/* 8005ECF8 0005BC38  88 0D 91 08 */	lbz r0, write_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005ECF8 0005BC38  88 0D 91 08 */	lbz r0, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECFC 0005BC3C  54 A3 06 3E */	clrlwi r3, r5, 0x18
 /* 8005ED00 0005BC40  7C 03 00 40 */	cmplw r3, r0
 /* 8005ED04 0005BC44  40 82 01 D4 */	bne lbl_8005EED8
@@ -219,7 +219,7 @@ lbl_8005ECF8:
 /* 8005ED38 0005BC78  39 3D FF F8 */	addi r9, r29, -8
 /* 8005ED3C 0005BC7C  40 81 00 88 */	ble lbl_8005EDC4
 /* 8005ED40 0005BC80  38 C9 00 07 */	addi r6, r9, 7
-/* 8005ED44 0005BC84  89 0D 91 09 */	lbz r8, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005ED44 0005BC84  89 0D 91 09 */	lbz r8, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ED48 0005BC88  54 C6 E8 FE */	srwi r6, r6, 3
 /* 8005ED4C 0005BC8C  28 09 00 00 */	cmplwi r9, 0
 /* 8005ED50 0005BC90  7C C9 03 A6 */	mtctr r6
@@ -254,7 +254,7 @@ lbl_8005ED5C:
 /* 8005EDC0 0005BD00  42 00 FF 9C */	bdnz lbl_8005ED5C
 lbl_8005EDC4:
 /* 8005EDC4 0005BD04  7C C4 E8 50 */	subf r6, r4, r29
-/* 8005EDC8 0005BD08  88 ED 91 09 */	lbz r7, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EDC8 0005BD08  88 ED 91 09 */	lbz r7, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EDCC 0005BD0C  7C 04 E8 40 */	cmplw r4, r29
 /* 8005EDD0 0005BD10  7C C9 03 A6 */	mtctr r6
 /* 8005EDD4 0005BD14  54 E7 10 3A */	slwi r7, r7, 2
@@ -273,7 +273,7 @@ lbl_8005EDF0:
 /* 8005EE00 0005BD40  38 C3 FF F8 */	addi r6, r3, -8
 /* 8005EE04 0005BD44  40 81 00 90 */	ble lbl_8005EE94
 /* 8005EE08 0005BD48  38 06 00 07 */	addi r0, r6, 7
-/* 8005EE0C 0005BD4C  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EE0C 0005BD4C  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EE10 0005BD50  7C 1D 00 50 */	subf r0, r29, r0
 /* 8005EE14 0005BD54  54 00 E8 FE */	srwi r0, r0, 3
 /* 8005EE18 0005BD58  7C 1D 30 40 */	cmplw r29, r6
@@ -310,7 +310,7 @@ lbl_8005EE2C:
 /* 8005EE90 0005BDD0  42 00 FF 9C */	bdnz lbl_8005EE2C
 lbl_8005EE94:
 /* 8005EE94 0005BDD4  7C 1D 18 50 */	subf r0, r29, r3
-/* 8005EE98 0005BDD8  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EE98 0005BDD8  88 8D 91 09 */	lbz r4, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EE9C 0005BDDC  7C 1D 18 40 */	cmplw r29, r3
 /* 8005EEA0 0005BDE0  7C 09 03 A6 */	mtctr r0
 /* 8005EEA4 0005BDE4  54 80 10 3A */	slwi r0, r4, 2
@@ -322,26 +322,26 @@ lbl_8005EEB0:
 /* 8005EEB8 0005BDF8  38 63 00 02 */	addi r3, r3, 2
 /* 8005EEBC 0005BDFC  42 00 FF F4 */	bdnz lbl_8005EEB0
 lbl_8005EEC0:
-/* 8005EEC0 0005BE00  88 0D 91 0A */	lbz r0, dspstatus__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EEC0 0005BE00  88 0D 91 0A */	lbz r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EEC4 0005BE04  28 00 00 00 */	cmplwi r0, 0
 /* 8005EEC8 0005BE08  40 82 00 3C */	bne lbl_8005EF04
 /* 8005EECC 0005BE0C  38 60 00 01 */	li r3, 1
 /* 8005EED0 0005BE10  4B FF FC 05 */	bl process__Q28JASystem6DSPBufFQ38JASystem6DSPBuf13DSPBUF_EVENTS
 /* 8005EED4 0005BE14  48 00 00 30 */	b lbl_8005EF04
 lbl_8005EED8:
-/* 8005EED8 0005BE18  98 AD 91 09 */	stb r5, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EED8 0005BE18  98 AD 91 09 */	stb r5, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EEDC 0005BE1C  57 A4 10 3A */	slwi r4, r29, 2
-/* 8005EEE0 0005BE20  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EEE0 0005BE20  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EEE4 0005BE24  54 00 10 3A */	slwi r0, r0, 2
 /* 8005EEE8 0005BE28  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 8005EEEC 0005BE2C  48 02 F0 91 */	bl DCInvalidateRange
-/* 8005EEF0 0005BE30  88 0D 91 0A */	lbz r0, dspstatus__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EEF0 0005BE30  88 0D 91 0A */	lbz r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EEF4 0005BE34  28 00 00 00 */	cmplwi r0, 0
 /* 8005EEF8 0005BE38  40 82 00 0C */	bne lbl_8005EF04
 /* 8005EEFC 0005BE3C  38 60 00 01 */	li r3, 1
 /* 8005EF00 0005BE40  4B FF FB D5 */	bl process__Q28JASystem6DSPBufFQ38JASystem6DSPBuf13DSPBUF_EVENTS
 lbl_8005EF04:
-/* 8005EF04 0005BE44  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf-_SDA_BASE_(r13)
+/* 8005EF04 0005BE44  88 0D 91 09 */	lbz r0, read_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EF08 0005BE48  54 00 10 3A */	slwi r0, r0, 2
 /* 8005EF0C 0005BE4C  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 8005EF10 0005BE50  48 00 00 14 */	b lbl_8005EF24

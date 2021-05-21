@@ -2207,7 +2207,7 @@ start__12TFlagManagerFP7JKRHeap:
 /* 800E8A44 000E5984  90 01 00 04 */	stw r0, 4(r1)
 /* 800E8A48 000E5988  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 800E8A4C 000E598C  93 E1 00 24 */	stw r31, 0x24(r1)
-/* 800E8A50 000E5990  80 0D 97 D0 */	lwz r0, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 800E8A50 000E5990  80 0D 97 D0 */	lwz r0, smInstance__12TFlagManager@sda21(r13)
 /* 800E8A54 000E5994  28 00 00 00 */	cmplwi r0, 0
 /* 800E8A58 000E5998  40 82 00 70 */	bne lbl_800E8AC8
 /* 800E8A5C 000E599C  38 83 00 00 */	addi r4, r3, 0
@@ -2237,12 +2237,12 @@ start__12TFlagManagerFP7JKRHeap:
 /* 800E8ABC 000E59FC  7F E3 FB 78 */	mr r3, r31
 /* 800E8AC0 000E5A00  4B FF E2 0D */	bl correctOptFlag__12TFlagManagerFv
 lbl_800E8AC4:
-/* 800E8AC4 000E5A04  93 ED 97 D0 */	stw r31, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 800E8AC4 000E5A04  93 ED 97 D0 */	stw r31, smInstance__12TFlagManager@sda21(r13)
 lbl_800E8AC8:
 /* 800E8AC8 000E5A08  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 800E8ACC 000E5A0C  83 E1 00 24 */	lwz r31, 0x24(r1)
 /* 800E8AD0 000E5A10  38 21 00 28 */	addi r1, r1, 0x28
-/* 800E8AD4 000E5A14  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 800E8AD4 000E5A14  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 800E8AD8 000E5A18  7C 08 03 A6 */	mtlr r0
 /* 800E8ADC 000E5A1C  4E 80 00 20 */	blr 
 

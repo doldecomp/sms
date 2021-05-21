@@ -115,7 +115,7 @@ push_back__12TPerformListFPCcUl:
 /* 800F85F4 000F5534  93 81 00 60 */	stw r28, 0x60(r1)
 /* 800F85F8 000F5538  3B 83 00 00 */	addi r28, r3, 0
 /* 800F85FC 000F553C  38 7D 00 00 */	addi r3, r29, 0
-/* 800F8600 000F5540  80 CD 8E E0 */	lwz r6, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800F8600 000F5540  80 CD 8E E0 */	lwz r6, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800F8604 000F5544  83 E6 00 04 */	lwz r31, 4(r6)
 /* 800F8608 000F5548  4B F4 C0 85 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800F860C 000F554C  81 9F 00 00 */	lwz r12, 0(r31)
@@ -178,7 +178,7 @@ lbl_800F86D8:
 /* 800F86DC 000F561C  38 81 00 5C */	addi r4, r1, 0x5c
 /* 800F86E0 000F5620  38 A0 00 50 */	li r5, 0x50
 /* 800F86E4 000F5624  4B F1 5F D9 */	bl readString__14JSUInputStreamFPcUs
-/* 800F86E8 000F5628  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800F86E8 000F5628  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800F86EC 000F562C  38 61 00 5C */	addi r3, r1, 0x5c
 /* 800F86F0 000F5630  83 64 00 04 */	lwz r27, 4(r4)
 /* 800F86F4 000F5634  4B F4 BF 99 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc

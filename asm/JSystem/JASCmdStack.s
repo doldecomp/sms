@@ -13,7 +13,7 @@ __ct__Q38JASystem6Kernel8TPortCmdFv:
 .global addPortCmdOnce__Q38JASystem6Kernel8TPortCmdFv
 addPortCmdOnce__Q38JASystem6Kernel8TPortCmdFv:
 /* 80061790 0005E6D0  7C 08 02 A6 */	mflr r0
-/* 80061794 0005E6D4  38 8D 91 68 */	addi r4, r13, cmd_once-_SDA_BASE_
+/* 80061794 0005E6D4  38 8D 91 68 */	addi r4, r13, cmd_once@sda21
 /* 80061798 0005E6D8  90 01 00 04 */	stw r0, 4(r1)
 /* 8006179C 0005E6DC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800617A0 0005E6E0  48 00 00 2D */	bl addPortCmd__Q38JASystem6Kernel8TPortCmdFPQ38JASystem6Kernel9TPortHead
@@ -76,14 +76,14 @@ portCmdInit__Q28JASystem6KernelFv:
 /* 80061850 0005E790  3C 60 80 06 */	lis r3, portCmdMain__Q28JASystem6KernelFPv@ha
 /* 80061854 0005E794  90 01 00 04 */	stw r0, 4(r1)
 /* 80061858 0005E798  38 00 00 00 */	li r0, 0
-/* 8006185C 0005E79C  38 8D 91 68 */	addi r4, r13, cmd_once-_SDA_BASE_
+/* 8006185C 0005E79C  38 8D 91 68 */	addi r4, r13, cmd_once@sda21
 /* 80061860 0005E7A0  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80061864 0005E7A4  38 AD 91 70 */	addi r5, r13, cmd_stay-_SDA_BASE_
+/* 80061864 0005E7A4  38 AD 91 70 */	addi r5, r13, cmd_stay@sda21
 /* 80061868 0005E7A8  38 63 18 D4 */	addi r3, r3, portCmdMain__Q28JASystem6KernelFPv@l
-/* 8006186C 0005E7AC  90 0D 91 68 */	stw r0, cmd_once-_SDA_BASE_(r13)
+/* 8006186C 0005E7AC  90 0D 91 68 */	stw r0, cmd_once@sda21(r13)
 /* 80061870 0005E7B0  90 04 00 04 */	stw r0, 4(r4)
 /* 80061874 0005E7B4  38 80 00 00 */	li r4, 0
-/* 80061878 0005E7B8  90 0D 91 70 */	stw r0, cmd_stay-_SDA_BASE_(r13)
+/* 80061878 0005E7B8  90 0D 91 70 */	stw r0, cmd_stay@sda21(r13)
 /* 8006187C 0005E7BC  90 05 00 04 */	stw r0, 4(r5)
 /* 80061880 0005E7C0  4B FF FC D1 */	bl registerAiCallback__Q28JASystem6KernelFPFPv_lPv
 /* 80061884 0005E7C4  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -119,7 +119,7 @@ portCmdMain__Q28JASystem6KernelFPv:
 /* 800618DC 0005E81C  94 21 FF B8 */	stwu r1, -0x48(r1)
 /* 800618E0 0005E820  93 E1 00 44 */	stw r31, 0x44(r1)
 lbl_800618E4:
-/* 800618E4 0005E824  38 6D 91 68 */	addi r3, r13, cmd_once-_SDA_BASE_
+/* 800618E4 0005E824  38 6D 91 68 */	addi r3, r13, cmd_once@sda21
 /* 800618E8 0005E828  4B FF FF AD */	bl getPortCmd__Q28JASystem6KernelFPQ38JASystem6Kernel9TPortHead
 /* 800618EC 0005E82C  28 03 00 00 */	cmplwi r3, 0
 /* 800618F0 0005E830  41 82 00 18 */	beq lbl_80061908
@@ -129,7 +129,7 @@ lbl_800618E4:
 /* 80061900 0005E840  4E 80 00 21 */	blrl 
 /* 80061904 0005E844  4B FF FF E0 */	b lbl_800618E4
 lbl_80061908:
-/* 80061908 0005E848  83 ED 91 70 */	lwz r31, cmd_stay-_SDA_BASE_(r13)
+/* 80061908 0005E848  83 ED 91 70 */	lwz r31, cmd_stay@sda21(r13)
 lbl_8006190C:
 /* 8006190C 0005E84C  28 1F 00 00 */	cmplwi r31, 0
 /* 80061910 0005E850  41 82 00 1C */	beq lbl_8006192C

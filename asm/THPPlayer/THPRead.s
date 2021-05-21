@@ -137,14 +137,14 @@ ReadThreadCancel:
 /* 800BFC18 000BCB58  7C 08 02 A6 */	mflr r0
 /* 800BFC1C 000BCB5C  90 01 00 04 */	stw r0, 4(r1)
 /* 800BFC20 000BCB60  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800BFC24 000BCB64  80 0D 97 38 */	lwz r0, ReadThreadCreated-_SDA_BASE_(r13)
+/* 800BFC24 000BCB64  80 0D 97 38 */	lwz r0, ReadThreadCreated@sda21(r13)
 /* 800BFC28 000BCB68  2C 00 00 00 */	cmpwi r0, 0
 /* 800BFC2C 000BCB6C  41 82 00 18 */	beq lbl_800BFC44
 /* 800BFC30 000BCB70  3C 60 80 3F */	lis r3, ReadThread@ha
 /* 800BFC34 000BCB74  38 63 F5 D8 */	addi r3, r3, ReadThread@l
 /* 800BFC38 000BCB78  4B FD 38 35 */	bl OSCancelThread
 /* 800BFC3C 000BCB7C  38 00 00 00 */	li r0, 0
-/* 800BFC40 000BCB80  90 0D 97 38 */	stw r0, ReadThreadCreated-_SDA_BASE_(r13)
+/* 800BFC40 000BCB80  90 0D 97 38 */	stw r0, ReadThreadCreated@sda21(r13)
 lbl_800BFC44:
 /* 800BFC44 000BCB84  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800BFC48 000BCB88  38 21 00 08 */	addi r1, r1, 8
@@ -156,7 +156,7 @@ ReadThreadStart:
 /* 800BFC54 000BCB94  7C 08 02 A6 */	mflr r0
 /* 800BFC58 000BCB98  90 01 00 04 */	stw r0, 4(r1)
 /* 800BFC5C 000BCB9C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800BFC60 000BCBA0  80 0D 97 38 */	lwz r0, ReadThreadCreated-_SDA_BASE_(r13)
+/* 800BFC60 000BCBA0  80 0D 97 38 */	lwz r0, ReadThreadCreated@sda21(r13)
 /* 800BFC64 000BCBA4  2C 00 00 00 */	cmpwi r0, 0
 /* 800BFC68 000BCBA8  41 82 00 10 */	beq lbl_800BFC78
 /* 800BFC6C 000BCBAC  3C 60 80 3F */	lis r3, ReadThread@ha
@@ -203,7 +203,7 @@ lbl_800BFCD4:
 /* 800BFCFC 000BCC3C  38 A0 00 0A */	li r5, 0xa
 /* 800BFD00 000BCC40  4B FD 0D 51 */	bl OSInitMessageQueue
 /* 800BFD04 000BCC44  38 00 00 01 */	li r0, 1
-/* 800BFD08 000BCC48  90 0D 97 38 */	stw r0, ReadThreadCreated-_SDA_BASE_(r13)
+/* 800BFD08 000BCC48  90 0D 97 38 */	stw r0, ReadThreadCreated@sda21(r13)
 /* 800BFD0C 000BCC4C  38 60 00 01 */	li r3, 1
 lbl_800BFD10:
 /* 800BFD10 000BCC50  80 01 00 1C */	lwz r0, 0x1c(r1)

@@ -48,7 +48,7 @@ lbl_800BE5B4:
 lbl_800BE5C0:
 /* 800BE5C0 000BB500  4B FD 1C 0D */	bl OSDisableInterrupts
 /* 800BE5C4 000BB504  6F 80 80 00 */	xoris r0, r28, 0x8000
-/* 800BE5C8 000BB508  C8 42 8C 18 */	lfd f2, $$2385-_SDA2_BASE_(r2)
+/* 800BE5C8 000BB508  C8 42 8C 18 */	lfd f2, $$2385@sda21(r2)
 /* 800BE5CC 000BB50C  90 01 00 14 */	stw r0, 0x14(r1)
 /* 800BE5D0 000BB510  3C 80 43 30 */	lis r4, 0x4330
 /* 800BE5D4 000BB514  2C 1D 00 00 */	cmpwi r29, 0
@@ -238,7 +238,7 @@ THPPlayerDrawDone:
 /* 800BE84C 000BB78C  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800BE850 000BB790  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 800BE854 000BB794  4B FE 9B B5 */	bl GXDrawDone
-/* 800BE858 000BB798  80 0D 97 20 */	lwz r0, Initialized-_SDA_BASE_(r13)
+/* 800BE858 000BB798  80 0D 97 20 */	lwz r0, Initialized@sda21(r13)
 /* 800BE85C 000BB79C  2C 00 00 00 */	cmpwi r0, 0
 /* 800BE860 000BB7A0  41 82 00 44 */	beq lbl_800BE8A4
 /* 800BE864 000BB7A4  3C 60 80 3F */	lis r3, UsedTextureSetQueue@ha
@@ -402,7 +402,7 @@ lbl_800BEA60:
 /* 800BEA74 000BB9B4  38 60 00 01 */	li r3, 1
 /* 800BEA78 000BB9B8  48 00 00 B8 */	b lbl_800BEB30
 lbl_800BEA7C:
-/* 800BEA7C 000BB9BC  C0 22 8C 20 */	lfs f1, $$2479-_SDA2_BASE_(r2)
+/* 800BEA7C 000BB9BC  C0 22 8C 20 */	lfs f1, $$2479@sda21(r2)
 /* 800BEA80 000BB9C0  C0 1F 00 4C */	lfs f0, 0x4c(r31)
 /* 800BEA84 000BB9C4  EC 01 00 32 */	fmuls f0, f1, f0
 /* 800BEA88 000BB9C8  FC 00 00 1E */	fctiwz f0, f0
@@ -466,7 +466,7 @@ PlayControl__FUl:
 /* 800BEB54 000BBA94  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 800BEB58 000BBA98  BF 61 00 14 */	stmw r27, 0x14(r1)
 /* 800BEB5C 000BBA9C  3B E4 E1 00 */	addi r31, r4, ActivePlayer@l
-/* 800BEB60 000BBAA0  81 8D 97 28 */	lwz r12, OldVIPostCallback-_SDA_BASE_(r13)
+/* 800BEB60 000BBAA0  81 8D 97 28 */	lwz r12, OldVIPostCallback@sda21(r13)
 /* 800BEB64 000BBAA4  28 0C 00 00 */	cmplwi r12, 0
 /* 800BEB68 000BBAA8  41 82 00 0C */	beq lbl_800BEB74
 /* 800BEB6C 000BBAAC  7D 88 03 A6 */	mtlr r12
@@ -695,7 +695,7 @@ THPPlayerStop:
 /* 800BEE80 000BBDC0  38 00 00 00 */	li r0, 0
 /* 800BEE84 000BBDC4  98 1F 00 A5 */	stb r0, 0xa5(r31)
 /* 800BEE88 000BBDC8  98 03 00 00 */	stb r0, 0(r3)
-/* 800BEE8C 000BBDCC  80 6D 97 28 */	lwz r3, OldVIPostCallback-_SDA_BASE_(r13)
+/* 800BEE8C 000BBDCC  80 6D 97 28 */	lwz r3, OldVIPostCallback@sda21(r13)
 /* 800BEE90 000BBDD0  4B FD A9 D1 */	bl VISetPostRetraceCallback
 /* 800BEE94 000BBDD4  80 1F 00 B0 */	lwz r0, 0xb0(r31)
 /* 800BEE98 000BBDD8  2C 00 00 00 */	cmpwi r0, 0
@@ -933,7 +933,7 @@ lbl_800BF1A0:
 /* 800BF1C0 000BC100  90 1F 00 F0 */	stw r0, 0xf0(r31)
 /* 800BF1C4 000BC104  90 1F 00 F4 */	stw r0, 0xf4(r31)
 /* 800BF1C8 000BC108  4B FD A6 99 */	bl VISetPostRetraceCallback
-/* 800BF1CC 000BC10C  90 6D 97 28 */	stw r3, OldVIPostCallback-_SDA_BASE_(r13)
+/* 800BF1CC 000BC10C  90 6D 97 28 */	stw r3, OldVIPostCallback@sda21(r13)
 /* 800BF1D0 000BC110  38 60 00 01 */	li r3, 1
 /* 800BF1D4 000BC114  48 00 00 08 */	b lbl_800BF1DC
 lbl_800BF1D8:
@@ -1009,7 +1009,7 @@ lbl_800BF2A8:
 /* 800BF2C0 000BC200  41 80 FF E8 */	blt lbl_800BF2A8
 lbl_800BF2C4:
 /* 800BF2C4 000BC204  38 7E 02 20 */	addi r3, r30, 0x220
-/* 800BF2C8 000BC208  38 8D 97 24 */	addi r4, r13, PrepareReadyMessage-_SDA_BASE_
+/* 800BF2C8 000BC208  38 8D 97 24 */	addi r4, r13, PrepareReadyMessage@sda21
 /* 800BF2CC 000BC20C  38 A0 00 01 */	li r5, 1
 /* 800BF2D0 000BC210  4B FD 17 81 */	bl OSInitMessageQueue
 /* 800BF2D4 000BC214  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -1256,7 +1256,7 @@ THPPlayerOpen:
 /* 800BF634 000BC574  3B A5 E1 00 */	addi r29, r5, ActivePlayer@l
 /* 800BF638 000BC578  3A E3 00 00 */	addi r23, r3, 0
 /* 800BF63C 000BC57C  3B C4 00 00 */	addi r30, r4, 0
-/* 800BF640 000BC580  80 0D 97 20 */	lwz r0, Initialized-_SDA_BASE_(r13)
+/* 800BF640 000BC580  80 0D 97 20 */	lwz r0, Initialized@sda21(r13)
 /* 800BF644 000BC584  2C 00 00 00 */	cmpwi r0, 0
 /* 800BF648 000BC588  40 82 00 0C */	bne lbl_800BF654
 /* 800BF64C 000BC58C  38 60 00 00 */	li r3, 0
@@ -1306,7 +1306,7 @@ lbl_800BF6E0:
 /* 800BF6EC 000BC62C  38 A0 00 30 */	li r5, 0x30
 /* 800BF6F0 000BC630  4B F4 3B 05 */	bl memcpy
 /* 800BF6F4 000BC634  38 7C 00 00 */	addi r3, r28, 0
-/* 800BF6F8 000BC638  38 82 8C 24 */	addi r4, r2, $$2791-_SDA2_BASE_
+/* 800BF6F8 000BC638  38 82 8C 24 */	addi r4, r2, $$2791@sda21
 /* 800BF6FC 000BC63C  4B FC 65 61 */	bl strcmp
 /* 800BF700 000BC640  2C 03 00 00 */	cmpwi r3, 0
 /* 800BF704 000BC644  41 82 00 14 */	beq lbl_800BF718
@@ -1417,7 +1417,7 @@ lbl_800BF85C:
 /* 800BF87C 000BC7BC  98 9D 00 A6 */	stb r4, 0xa6(r29)
 /* 800BF880 000BC7C0  93 DD 00 B0 */	stw r30, 0xb0(r29)
 /* 800BF884 000BC7C4  90 1F 00 00 */	stw r0, 0(r31)
-/* 800BF888 000BC7C8  C0 02 8C 28 */	lfs f0, $$2792-_SDA2_BASE_(r2)
+/* 800BF888 000BC7C8  C0 02 8C 28 */	lfs f0, $$2792@sda21(r2)
 /* 800BF88C 000BC7CC  D0 1D 00 DC */	stfs f0, 0xdc(r29)
 /* 800BF890 000BC7D0  C0 1D 00 DC */	lfs f0, 0xdc(r29)
 /* 800BF894 000BC7D4  D0 1D 00 E0 */	stfs f0, 0xe0(r29)
@@ -1439,7 +1439,7 @@ THPPlayerQuit:
 /* 800BF8C4 000BC804  38 80 00 00 */	li r4, 0
 /* 800BF8C8 000BC808  4B FA 0E 35 */	bl registerMixCallback__Q28JASystem6KernelFPFl_PsUc
 /* 800BF8CC 000BC80C  38 00 00 00 */	li r0, 0
-/* 800BF8D0 000BC810  90 0D 97 20 */	stw r0, Initialized-_SDA_BASE_(r13)
+/* 800BF8D0 000BC810  90 0D 97 20 */	stw r0, Initialized@sda21(r13)
 /* 800BF8D4 000BC814  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800BF8D8 000BC818  38 21 00 08 */	addi r1, r1, 8
 /* 800BF8DC 000BC81C  7C 08 03 A6 */	mtlr r0
@@ -1472,12 +1472,12 @@ lbl_800BF938:
 /* 800BF938 000BC878  4B FD 08 95 */	bl OSDisableInterrupts
 /* 800BF93C 000BC87C  38 A0 00 00 */	li r5, 0
 /* 800BF940 000BC880  3C 80 80 0C */	lis r4, audioCallbackWithMSound__Fl@ha
-/* 800BF944 000BC884  90 AD 97 2C */	stw r5, SoundBufferIndex-_SDA_BASE_(r13)
+/* 800BF944 000BC884  90 AD 97 2C */	stw r5, SoundBufferIndex@sda21(r13)
 /* 800BF948 000BC888  38 04 F9 AC */	addi r0, r4, audioCallbackWithMSound__Fl@l
 /* 800BF94C 000BC88C  7C 7E 1B 78 */	mr r30, r3
-/* 800BF950 000BC890  90 AD 97 30 */	stw r5, LastAudioBuffer-_SDA_BASE_(r13)
+/* 800BF950 000BC890  90 AD 97 30 */	stw r5, LastAudioBuffer@sda21(r13)
 /* 800BF954 000BC894  7C 03 03 78 */	mr r3, r0
-/* 800BF958 000BC898  90 AD 97 34 */	stw r5, CurAudioBuffer-_SDA_BASE_(r13)
+/* 800BF958 000BC898  90 AD 97 34 */	stw r5, CurAudioBuffer@sda21(r13)
 /* 800BF95C 000BC89C  38 80 00 03 */	li r4, 3
 /* 800BF960 000BC8A0  4B FA 0D 9D */	bl registerMixCallback__Q28JASystem6KernelFPFl_PsUc
 /* 800BF964 000BC8A4  7F C3 F3 78 */	mr r3, r30
@@ -1490,7 +1490,7 @@ lbl_800BF938:
 /* 800BF980 000BC8C0  38 80 11 80 */	li r4, 0x1180
 /* 800BF984 000BC8C4  4B FC E6 29 */	bl DCFlushRange
 /* 800BF988 000BC8C8  38 00 00 01 */	li r0, 1
-/* 800BF98C 000BC8CC  90 0D 97 20 */	stw r0, Initialized-_SDA_BASE_(r13)
+/* 800BF98C 000BC8CC  90 0D 97 20 */	stw r0, Initialized@sda21(r13)
 /* 800BF990 000BC8D0  38 60 00 01 */	li r3, 1
 lbl_800BF994:
 /* 800BF994 000BC8D4  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -1525,20 +1525,20 @@ lbl_800BF9F4:
 /* 800BF9F8 000BC938  48 00 00 4C */	b lbl_800BFA44
 lbl_800BF9FC:
 /* 800BF9FC 000BC93C  4B FD 07 E5 */	bl OSEnableInterrupts
-/* 800BFA00 000BC940  80 0D 97 2C */	lwz r0, SoundBufferIndex-_SDA_BASE_(r13)
+/* 800BFA00 000BC940  80 0D 97 2C */	lwz r0, SoundBufferIndex@sda21(r13)
 /* 800BFA04 000BC944  3B C3 00 00 */	addi r30, r3, 0
 /* 800BFA08 000BC948  38 BD 00 00 */	addi r5, r29, 0
 /* 800BFA0C 000BC94C  68 00 00 01 */	xori r0, r0, 1
-/* 800BFA10 000BC950  90 0D 97 2C */	stw r0, SoundBufferIndex-_SDA_BASE_(r13)
+/* 800BFA10 000BC950  90 0D 97 2C */	stw r0, SoundBufferIndex@sda21(r13)
 /* 800BFA14 000BC954  38 80 00 00 */	li r4, 0
-/* 800BFA18 000BC958  80 0D 97 2C */	lwz r0, SoundBufferIndex-_SDA_BASE_(r13)
+/* 800BFA18 000BC958  80 0D 97 2C */	lwz r0, SoundBufferIndex@sda21(r13)
 /* 800BFA1C 000BC95C  1C 00 08 C0 */	mulli r0, r0, 0x8c0
 /* 800BFA20 000BC960  7C 7F 02 14 */	add r3, r31, r0
 /* 800BFA24 000BC964  38 63 02 80 */	addi r3, r3, 0x280
 /* 800BFA28 000BC968  4B FF EC 41 */	bl MixAudio__FPsPsUl
 /* 800BFA2C 000BC96C  7F C3 F3 78 */	mr r3, r30
 /* 800BFA30 000BC970  4B FD 07 C5 */	bl OSRestoreInterrupts
-/* 800BFA34 000BC974  80 0D 97 2C */	lwz r0, SoundBufferIndex-_SDA_BASE_(r13)
+/* 800BFA34 000BC974  80 0D 97 2C */	lwz r0, SoundBufferIndex@sda21(r13)
 /* 800BFA38 000BC978  1C 00 08 C0 */	mulli r0, r0, 0x8c0
 /* 800BFA3C 000BC97C  7C 7F 02 14 */	add r3, r31, r0
 /* 800BFA40 000BC980  38 63 02 80 */	addi r3, r3, 0x280

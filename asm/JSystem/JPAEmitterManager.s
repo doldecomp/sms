@@ -20,13 +20,13 @@ __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap:
 /* 8006F420 0006C360  4B F9 F8 15 */	bl initiate__10JSUPtrListFv
 /* 8006F424 0006C364  38 7A 00 28 */	addi r3, r26, 0x28
 /* 8006F428 0006C368  4B F9 F8 0D */	bl initiate__10JSUPtrListFv
-/* 8006F42C 0006C36C  C0 02 87 F8 */	lfs f0, $$21786-_SDA2_BASE_(r2)
+/* 8006F42C 0006C36C  C0 02 87 F8 */	lfs f0, $$21786@sda21(r2)
 /* 8006F430 0006C370  3C 80 80 07 */	lis r4, __ct__25JSUList$$014JPABaseEmitter$$1Fv@ha
 /* 8006F434 0006C374  3C 60 80 07 */	lis r3, __dt__25JSUList$$014JPABaseEmitter$$1Fv@ha
 /* 8006F438 0006C378  D0 1A 00 3C */	stfs f0, 0x3c(r26)
 /* 8006F43C 0006C37C  38 A3 F6 F0 */	addi r5, r3, __dt__25JSUList$$014JPABaseEmitter$$1Fv@l
 /* 8006F440 0006C380  38 84 F6 C0 */	addi r4, r4, __ct__25JSUList$$014JPABaseEmitter$$1Fv@l
-/* 8006F444 0006C384  C0 02 87 FC */	lfs f0, $$21787-_SDA2_BASE_(r2)
+/* 8006F444 0006C384  C0 02 87 FC */	lfs f0, $$21787@sda21(r2)
 /* 8006F448 0006C388  38 7A 00 44 */	addi r3, r26, 0x44
 /* 8006F44C 0006C38C  38 C0 00 0C */	li r6, 0xc
 /* 8006F450 0006C390  D0 1A 00 40 */	stfs f0, 0x40(r26)
@@ -34,7 +34,7 @@ __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap:
 /* 8006F458 0006C398  48 01 33 DD */	bl __construct_array
 /* 8006F45C 0006C39C  28 1C 00 00 */	cmplwi r28, 0
 /* 8006F460 0006C3A0  40 82 00 08 */	bne lbl_8006F468
-/* 8006F464 0006C3A4  83 8D 8D 6C */	lwz r28, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8006F464 0006C3A4  83 8D 8D 6C */	lwz r28, sCurrentHeap__7JKRHeap@sda21(r13)
 lbl_8006F468:
 /* 8006F468 0006C3A8  1C 7F 00 DC */	mulli r3, r31, 0xdc
 /* 8006F46C 0006C3AC  38 03 00 1F */	addi r0, r3, 0x1f
@@ -291,7 +291,7 @@ lbl_8006F7DC:
 /* 8006F7EC 0006C72C  EC 01 00 2A */	fadds f0, f1, f0
 /* 8006F7F0 0006C730  D0 1D 00 3C */	stfs f0, 0x3c(r29)
 /* 8006F7F4 0006C734  C0 3D 00 3C */	lfs f1, 0x3c(r29)
-/* 8006F7F8 0006C738  C0 02 87 F8 */	lfs f0, $$21786-_SDA2_BASE_(r2)
+/* 8006F7F8 0006C738  C0 02 87 F8 */	lfs f0, $$21786@sda21(r2)
 /* 8006F7FC 0006C73C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8006F800 0006C740  40 80 00 08 */	bge lbl_8006F808
 /* 8006F804 0006C744  D0 1D 00 3C */	stfs f0, 0x3c(r29)

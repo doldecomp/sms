@@ -178,14 +178,14 @@ AudioDecodeThreadCancel:
 /* 800BDC1C 000BAB5C  7C 08 02 A6 */	mflr r0
 /* 800BDC20 000BAB60  90 01 00 04 */	stw r0, 4(r1)
 /* 800BDC24 000BAB64  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800BDC28 000BAB68  80 0D 97 18 */	lwz r0, AudioDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800BDC28 000BAB68  80 0D 97 18 */	lwz r0, AudioDecodeThreadCreated@sda21(r13)
 /* 800BDC2C 000BAB6C  2C 00 00 00 */	cmpwi r0, 0
 /* 800BDC30 000BAB70  41 82 00 18 */	beq lbl_800BDC48
 /* 800BDC34 000BAB74  3C 60 80 3F */	lis r3, AudioDecodeThread@ha
 /* 800BDC38 000BAB78  38 63 CD 90 */	addi r3, r3, AudioDecodeThread@l
 /* 800BDC3C 000BAB7C  4B FD 58 31 */	bl OSCancelThread
 /* 800BDC40 000BAB80  38 00 00 00 */	li r0, 0
-/* 800BDC44 000BAB84  90 0D 97 18 */	stw r0, AudioDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800BDC44 000BAB84  90 0D 97 18 */	stw r0, AudioDecodeThreadCreated@sda21(r13)
 lbl_800BDC48:
 /* 800BDC48 000BAB88  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800BDC4C 000BAB8C  38 21 00 08 */	addi r1, r1, 8
@@ -197,7 +197,7 @@ AudioDecodeThreadStart:
 /* 800BDC58 000BAB98  7C 08 02 A6 */	mflr r0
 /* 800BDC5C 000BAB9C  90 01 00 04 */	stw r0, 4(r1)
 /* 800BDC60 000BABA0  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800BDC64 000BABA4  80 0D 97 18 */	lwz r0, AudioDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800BDC64 000BABA4  80 0D 97 18 */	lwz r0, AudioDecodeThreadCreated@sda21(r13)
 /* 800BDC68 000BABA8  2C 00 00 00 */	cmpwi r0, 0
 /* 800BDC6C 000BABAC  41 82 00 10 */	beq lbl_800BDC7C
 /* 800BDC70 000BABB0  3C 60 80 3F */	lis r3, AudioDecodeThread@ha
@@ -254,7 +254,7 @@ lbl_800BDD0C:
 /* 800BDD24 000BAC64  38 A0 00 03 */	li r5, 3
 /* 800BDD28 000BAC68  4B FD 2D 29 */	bl OSInitMessageQueue
 /* 800BDD2C 000BAC6C  38 00 00 01 */	li r0, 1
-/* 800BDD30 000BAC70  90 0D 97 18 */	stw r0, AudioDecodeThreadCreated-_SDA_BASE_(r13)
+/* 800BDD30 000BAC70  90 0D 97 18 */	stw r0, AudioDecodeThreadCreated@sda21(r13)
 /* 800BDD34 000BAC74  38 60 00 01 */	li r3, 1
 lbl_800BDD38:
 /* 800BDD38 000BAC78  80 01 00 1C */	lwz r0, 0x1c(r1)

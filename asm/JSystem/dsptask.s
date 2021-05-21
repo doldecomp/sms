@@ -162,8 +162,8 @@ lbl_80081F98:
 
 .global DspStartWork__FUlPFUs_v
 DspStartWork__FUlPFUs_v:
-/* 80081FC0 0007EF00  81 0D 92 6C */	lwz r8, taskwritep-_SDA_BASE_(r13)
-/* 80081FC4 0007EF04  80 0D 92 68 */	lwz r0, taskreadp-_SDA_BASE_(r13)
+/* 80081FC0 0007EF00  81 0D 92 6C */	lwz r8, taskwritep@sda21(r13)
+/* 80081FC4 0007EF04  80 0D 92 68 */	lwz r0, taskreadp@sda21(r13)
 /* 80081FC8 0007EF08  38 A8 00 01 */	addi r5, r8, 1
 /* 80081FCC 0007EF0C  54 A7 07 3E */	clrlwi r7, r5, 0x1c
 /* 80081FD0 0007EF10  39 25 00 00 */	addi r9, r5, 0
@@ -180,7 +180,7 @@ lbl_80081FE4:
 /* 80081FF8 0007EF38  38 69 00 00 */	addi r3, r9, 0
 /* 80081FFC 0007EF3C  B0 C5 00 00 */	sth r6, 0(r5)
 /* 80082000 0007EF40  90 85 00 04 */	stw r4, 4(r5)
-/* 80082004 0007EF44  90 ED 92 6C */	stw r7, taskwritep-_SDA_BASE_(r13)
+/* 80082004 0007EF44  90 ED 92 6C */	stw r7, taskwritep@sda21(r13)
 /* 80082008 0007EF48  4E 80 00 20 */	blr 
 /* 8008200C 0007EF4C  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 80082010 0007EF50  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
@@ -196,7 +196,7 @@ DspFinishWork__FUs:
 /* 8008202C 0007EF6C  38 04 8E 40 */	addi r0, r4, taskwork@l
 /* 80082030 0007EF70  54 64 04 3E */	clrlwi r4, r3, 0x10
 /* 80082034 0007EF74  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80082038 0007EF78  80 AD 92 68 */	lwz r5, taskreadp-_SDA_BASE_(r13)
+/* 80082038 0007EF78  80 AD 92 68 */	lwz r5, taskreadp@sda21(r13)
 /* 8008203C 0007EF7C  54 A3 18 38 */	slwi r3, r5, 3
 /* 80082040 0007EF80  7C 60 1A 14 */	add r3, r0, r3
 /* 80082044 0007EF84  A0 03 00 00 */	lhz r0, 0(r3)
@@ -209,10 +209,10 @@ DspFinishWork__FUs:
 /* 80082060 0007EFA0  7D 88 03 A6 */	mtlr r12
 /* 80082064 0007EFA4  4E 80 00 21 */	blrl 
 lbl_80082068:
-/* 80082068 0007EFA8  80 6D 92 68 */	lwz r3, taskreadp-_SDA_BASE_(r13)
+/* 80082068 0007EFA8  80 6D 92 68 */	lwz r3, taskreadp@sda21(r13)
 /* 8008206C 0007EFAC  38 03 00 01 */	addi r0, r3, 1
 /* 80082070 0007EFB0  54 00 07 3E */	clrlwi r0, r0, 0x1c
-/* 80082074 0007EFB4  90 0D 92 68 */	stw r0, taskreadp-_SDA_BASE_(r13)
+/* 80082074 0007EFB4  90 0D 92 68 */	stw r0, taskreadp@sda21(r13)
 lbl_80082078:
 /* 80082078 0007EFB8  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8008207C 0007EFBC  38 21 00 08 */	addi r1, r1, 8

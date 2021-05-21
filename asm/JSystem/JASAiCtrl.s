@@ -30,16 +30,16 @@ initSystem__Q28JASystem6KernelFv:
 /* 8006066C 0005D5AC  93 81 00 08 */	stw r28, 8(r1)
 /* 80060670 0005D5B0  3B 80 00 00 */	li r28, 0
 lbl_80060674:
-/* 80060674 0005D5B4  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060674 0005D5B4  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060678 0005D5B8  54 03 08 3C */	slwi r3, r0, 1
 /* 8006067C 0005D5BC  48 00 37 B1 */	bl allocFromSysDram__Q28JASystem6KernelFUl
 /* 80060680 0005D5C0  7F BE FA 14 */	add r29, r30, r31
 /* 80060684 0005D5C4  90 7D 00 00 */	stw r3, 0(r29)
-/* 80060688 0005D5C8  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060688 0005D5C8  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 8006068C 0005D5CC  80 7D 00 00 */	lwz r3, 0(r29)
 /* 80060690 0005D5D0  54 04 08 3C */	slwi r4, r0, 1
 /* 80060694 0005D5D4  48 00 0B 8D */	bl bzero__Q28JASystem4CalcFPvUl
-/* 80060698 0005D5D8  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060698 0005D5D8  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 8006069C 0005D5DC  80 7D 00 00 */	lwz r3, 0(r29)
 /* 800606A0 0005D5E0  54 04 08 3C */	slwi r4, r0, 1
 /* 800606A4 0005D5E4  48 02 D9 3D */	bl DCStoreRange
@@ -50,7 +50,7 @@ lbl_80060674:
 /* 800606B8 0005D5F8  38 60 00 00 */	li r3, 0
 /* 800606BC 0005D5FC  48 03 CB 69 */	bl AIInit
 /* 800606C0 0005D600  3C 60 80 3E */	lis r3, dac__Q28JASystem6Kernel@ha
-/* 800606C4 0005D604  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800606C4 0005D604  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 800606C8 0005D608  38 63 63 D0 */	addi r3, r3, dac__Q28JASystem6Kernel@l
 /* 800606CC 0005D60C  80 63 00 08 */	lwz r3, 8(r3)
 /* 800606D0 0005D610  54 04 08 3C */	slwi r4, r0, 1
@@ -67,8 +67,8 @@ lbl_80060674:
 
 .global registerMixCallback__Q28JASystem6KernelFPFl_PsUc
 registerMixCallback__Q28JASystem6KernelFPFl_PsUc:
-/* 800606FC 0005D63C  90 6D 91 48 */	stw r3, extMixCallback__Q28JASystem6Kernel-_SDA_BASE_(r13)
-/* 80060700 0005D640  98 8D 91 4C */	stb r4, extMixMode__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800606FC 0005D63C  90 6D 91 48 */	stw r3, extMixCallback__Q28JASystem6Kernel@sda21(r13)
+/* 80060700 0005D640  98 8D 91 4C */	stb r4, extMixMode__Q28JASystem6Kernel@sda21(r13)
 /* 80060704 0005D644  4E 80 00 20 */	blr 
 
 .global vframeWork__Q28JASystem6KernelFv
@@ -80,34 +80,34 @@ vframeWork__Q28JASystem6KernelFv:
 /* 80060718 0005D658  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8006071C 0005D65C  3B E3 63 D0 */	addi r31, r3, dac__Q28JASystem6Kernel@l
 /* 80060720 0005D660  93 C1 00 10 */	stw r30, 0x10(r1)
-/* 80060724 0005D664  88 0D 91 54 */	lbz r0, init$141-_SDA_BASE_(r13)
+/* 80060724 0005D664  88 0D 91 54 */	lbz r0, init$141@sda21(r13)
 /* 80060728 0005D668  7C 00 07 75 */	extsb. r0, r0
 /* 8006072C 0005D66C  40 82 00 14 */	bne lbl_80060740
 /* 80060730 0005D670  38 60 00 00 */	li r3, 0
 /* 80060734 0005D674  38 00 00 01 */	li r0, 1
-/* 80060738 0005D678  90 6D 91 50 */	stw r3, dacp$140-_SDA_BASE_(r13)
-/* 8006073C 0005D67C  98 0D 91 54 */	stb r0, init$141-_SDA_BASE_(r13)
+/* 80060738 0005D678  90 6D 91 50 */	stw r3, dacp$140@sda21(r13)
+/* 8006073C 0005D67C  98 0D 91 54 */	stb r0, init$141@sda21(r13)
 lbl_80060740:
-/* 80060740 0005D680  80 6D 91 44 */	lwz r3, JASVframeCounter__Q28JASystem6Kernel-_SDA_BASE_(r13)
-/* 80060744 0005D684  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060740 0005D680  80 6D 91 44 */	lwz r3, JASVframeCounter__Q28JASystem6Kernel@sda21(r13)
+/* 80060744 0005D684  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060748 0005D688  38 03 00 01 */	addi r0, r3, 1
-/* 8006074C 0005D68C  90 0D 91 44 */	stw r0, JASVframeCounter__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006074C 0005D68C  90 0D 91 44 */	stw r0, JASVframeCounter__Q28JASystem6Kernel@sda21(r13)
 /* 80060750 0005D690  54 83 F8 7E */	srwi r3, r4, 1
 /* 80060754 0005D694  4B FF E3 39 */	bl mixDSP__Q28JASystem6DSPBufFl
-/* 80060758 0005D698  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
+/* 80060758 0005D698  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
 /* 8006075C 0005D69C  38 83 00 00 */	addi r4, r3, 0
-/* 80060760 0005D6A0  80 AD 81 F8 */	lwz r5, gFrameSamples__Q28JASystem6Kernel-_SDA_BASE_(r13)
-/* 80060764 0005D6A4  80 CD 81 FC */	lwz r6, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060760 0005D6A0  80 AD 81 F8 */	lwz r5, gFrameSamples__Q28JASystem6Kernel@sda21(r13)
+/* 80060764 0005D6A4  80 CD 81 FC */	lwz r6, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060768 0005D6A8  54 00 10 3A */	slwi r0, r0, 2
 /* 8006076C 0005D6AC  54 A3 08 3C */	slwi r3, r5, 1
 /* 80060770 0005D6B0  7C BF 00 2E */	lwzx r5, r31, r0
 /* 80060774 0005D6B4  7C 64 1A 14 */	add r3, r4, r3
 /* 80060778 0005D6B8  54 C6 F8 7E */	srwi r6, r6, 1
 /* 8006077C 0005D6BC  48 00 06 F1 */	bl imixcopy__Q28JASystem4CalcFPCsPCsPsl
-/* 80060780 0005D6C0  80 AD 91 48 */	lwz r5, extMixCallback__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060780 0005D6C0  80 AD 91 48 */	lwz r5, extMixCallback__Q28JASystem6Kernel@sda21(r13)
 /* 80060784 0005D6C4  28 05 00 00 */	cmplwi r5, 0
 /* 80060788 0005D6C8  41 82 00 9C */	beq lbl_80060824
-/* 8006078C 0005D6CC  88 0D 91 4C */	lbz r0, extMixMode__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006078C 0005D6CC  88 0D 91 4C */	lbz r0, extMixMode__Q28JASystem6Kernel@sda21(r13)
 /* 80060790 0005D6D0  2C 00 00 02 */	cmpwi r0, 2
 /* 80060794 0005D6D4  41 82 00 5C */	beq lbl_800607F0
 /* 80060798 0005D6D8  40 80 00 14 */	bge lbl_800607AC
@@ -120,61 +120,61 @@ lbl_800607AC:
 /* 800607B0 0005D6F0  40 80 00 74 */	bge lbl_80060824
 /* 800607B4 0005D6F4  48 00 00 58 */	b lbl_8006080C
 lbl_800607B8:
-/* 800607B8 0005D6F8  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
-/* 800607BC 0005D6FC  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800607B8 0005D6F8  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
+/* 800607BC 0005D6FC  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 800607C0 0005D700  54 00 10 3A */	slwi r0, r0, 2
 /* 800607C4 0005D704  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 800607C8 0005D708  54 84 F8 7E */	srwi r4, r4, 1
 /* 800607CC 0005D70C  48 00 01 75 */	bl mixMonoTrack__Q28JASystem6KernelFPslPFl_Ps
 /* 800607D0 0005D710  48 00 00 54 */	b lbl_80060824
 lbl_800607D4:
-/* 800607D4 0005D714  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
-/* 800607D8 0005D718  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800607D4 0005D714  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
+/* 800607D8 0005D718  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 800607DC 0005D71C  54 00 10 3A */	slwi r0, r0, 2
 /* 800607E0 0005D720  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 800607E4 0005D724  54 84 F8 7E */	srwi r4, r4, 1
 /* 800607E8 0005D728  48 00 02 55 */	bl mixMonoTrackWide__Q28JASystem6KernelFPslPFl_Ps
 /* 800607EC 0005D72C  48 00 00 38 */	b lbl_80060824
 lbl_800607F0:
-/* 800607F0 0005D730  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
-/* 800607F4 0005D734  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800607F0 0005D730  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
+/* 800607F4 0005D734  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 800607F8 0005D738  54 00 10 3A */	slwi r0, r0, 2
 /* 800607FC 0005D73C  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 80060800 0005D740  54 84 F8 7E */	srwi r4, r4, 1
 /* 80060804 0005D744  48 00 03 35 */	bl mixExtraTrack__Q28JASystem6KernelFPslPFl_Ps
 /* 80060808 0005D748  48 00 00 1C */	b lbl_80060824
 lbl_8006080C:
-/* 8006080C 0005D74C  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
-/* 80060810 0005D750  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006080C 0005D74C  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
+/* 80060810 0005D750  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060814 0005D754  54 00 10 3A */	slwi r0, r0, 2
 /* 80060818 0005D758  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 8006081C 0005D75C  54 84 F8 7E */	srwi r4, r4, 1
 /* 80060820 0005D760  48 00 04 31 */	bl mixInterleaveTrack__Q28JASystem6KernelFPslPFl_Ps
 lbl_80060824:
 /* 80060824 0005D764  48 02 F9 A9 */	bl OSDisableInterrupts
-/* 80060828 0005D768  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
+/* 80060828 0005D768  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
 /* 8006082C 0005D76C  3B C3 00 00 */	addi r30, r3, 0
-/* 80060830 0005D770  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060830 0005D770  80 8D 81 FC */	lwz r4, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060834 0005D774  54 00 10 3A */	slwi r0, r0, 2
 /* 80060838 0005D778  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 8006083C 0005D77C  54 84 08 3C */	slwi r4, r4, 1
 /* 80060840 0005D780  48 02 D7 A1 */	bl DCStoreRange
 /* 80060844 0005D784  7F C3 F3 78 */	mr r3, r30
 /* 80060848 0005D788  48 02 F9 AD */	bl OSRestoreInterrupts
-/* 8006084C 0005D78C  80 8D 91 50 */	lwz r4, dacp$140-_SDA_BASE_(r13)
+/* 8006084C 0005D78C  80 8D 91 50 */	lwz r4, dacp$140@sda21(r13)
 /* 80060850 0005D790  54 80 10 3A */	slwi r0, r4, 2
 /* 80060854 0005D794  7C 7F 00 2E */	lwzx r3, r31, r0
 /* 80060858 0005D798  38 04 00 01 */	addi r0, r4, 1
-/* 8006085C 0005D79C  90 0D 91 50 */	stw r0, dacp$140-_SDA_BASE_(r13)
-/* 80060860 0005D7A0  80 0D 91 50 */	lwz r0, dacp$140-_SDA_BASE_(r13)
-/* 80060864 0005D7A4  90 6D 91 34 */	stw r3, lastRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006085C 0005D79C  90 0D 91 50 */	stw r0, dacp$140@sda21(r13)
+/* 80060860 0005D7A0  80 0D 91 50 */	lwz r0, dacp$140@sda21(r13)
+/* 80060864 0005D7A4  90 6D 91 34 */	stw r3, lastRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 80060868 0005D7A8  28 00 00 03 */	cmplwi r0, 3
 /* 8006086C 0005D7AC  40 82 00 0C */	bne lbl_80060878
 /* 80060870 0005D7B0  38 00 00 00 */	li r0, 0
-/* 80060874 0005D7B4  90 0D 91 50 */	stw r0, dacp$140-_SDA_BASE_(r13)
+/* 80060874 0005D7B4  90 0D 91 50 */	stw r0, dacp$140@sda21(r13)
 lbl_80060878:
 /* 80060878 0005D7B8  38 00 00 00 */	li r0, 0
-/* 8006087C 0005D7BC  90 0D 91 3C */	stw r0, vframeWorkRunning__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006087C 0005D7BC  90 0D 91 3C */	stw r0, vframeWorkRunning__Q28JASystem6Kernel@sda21(r13)
 /* 80060880 0005D7C0  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80060884 0005D7C4  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 80060888 0005D7C8  83 C1 00 10 */	lwz r30, 0x10(r1)
@@ -187,43 +187,43 @@ updateDac__Q28JASystem6KernelFv:
 /* 80060898 0005D7D8  7C 08 02 A6 */	mflr r0
 /* 8006089C 0005D7DC  90 01 00 04 */	stw r0, 4(r1)
 /* 800608A0 0005D7E0  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800608A4 0005D7E4  80 0D 91 38 */	lwz r0, useRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608A4 0005D7E4  80 0D 91 38 */	lwz r0, useRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 800608A8 0005D7E8  28 00 00 00 */	cmplwi r0, 0
 /* 800608AC 0005D7EC  40 82 00 14 */	bne lbl_800608C0
-/* 800608B0 0005D7F0  80 6D 91 34 */	lwz r3, lastRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608B0 0005D7F0  80 6D 91 34 */	lwz r3, lastRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 800608B4 0005D7F4  38 00 00 00 */	li r0, 0
-/* 800608B8 0005D7F8  90 6D 91 38 */	stw r3, useRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
-/* 800608BC 0005D7FC  90 0D 91 34 */	stw r0, lastRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608B8 0005D7F8  90 6D 91 38 */	stw r3, useRspMadep__Q28JASystem6Kernel@sda21(r13)
+/* 800608BC 0005D7FC  90 0D 91 34 */	stw r0, lastRspMadep__Q28JASystem6Kernel@sda21(r13)
 lbl_800608C0:
-/* 800608C0 0005D800  80 6D 91 38 */	lwz r3, useRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608C0 0005D800  80 6D 91 38 */	lwz r3, useRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 800608C4 0005D804  28 03 00 00 */	cmplwi r3, 0
 /* 800608C8 0005D808  41 82 00 1C */	beq lbl_800608E4
-/* 800608CC 0005D80C  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608CC 0005D80C  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 800608D0 0005D810  54 04 08 3C */	slwi r4, r0, 1
 /* 800608D4 0005D814  48 03 C5 59 */	bl AIInitDMA
 /* 800608D8 0005D818  38 00 00 00 */	li r0, 0
-/* 800608DC 0005D81C  90 0D 91 38 */	stw r0, useRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608DC 0005D81C  90 0D 91 38 */	stw r0, useRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 800608E0 0005D820  48 00 00 10 */	b lbl_800608F0
 lbl_800608E4:
-/* 800608E4 0005D824  80 6D 91 30 */	lwz r3, JASUniversalDacCounter__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608E4 0005D824  80 6D 91 30 */	lwz r3, JASUniversalDacCounter__Q28JASystem6Kernel@sda21(r13)
 /* 800608E8 0005D828  38 03 00 01 */	addi r0, r3, 1
-/* 800608EC 0005D82C  90 0D 91 30 */	stw r0, JASUniversalDacCounter__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608EC 0005D82C  90 0D 91 30 */	stw r0, JASUniversalDacCounter__Q28JASystem6Kernel@sda21(r13)
 lbl_800608F0:
-/* 800608F0 0005D830  80 0D 91 34 */	lwz r0, lastRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608F0 0005D830  80 0D 91 34 */	lwz r0, lastRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 800608F4 0005D834  28 00 00 00 */	cmplwi r0, 0
 /* 800608F8 0005D838  40 82 00 14 */	bne lbl_8006090C
-/* 800608FC 0005D83C  80 0D 91 3C */	lwz r0, vframeWorkRunning__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800608FC 0005D83C  80 0D 91 3C */	lwz r0, vframeWorkRunning__Q28JASystem6Kernel@sda21(r13)
 /* 80060900 0005D840  2C 00 00 00 */	cmpwi r0, 0
 /* 80060904 0005D844  40 82 00 08 */	bne lbl_8006090C
 /* 80060908 0005D848  4B FF FE 01 */	bl vframeWork__Q28JASystem6KernelFv
 lbl_8006090C:
 /* 8006090C 0005D84C  48 00 20 2D */	bl main__Q28JASystem10HardStreamFv
-/* 80060910 0005D850  81 8D 91 40 */	lwz r12, dacCallbackFunc__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060910 0005D850  81 8D 91 40 */	lwz r12, dacCallbackFunc__Q28JASystem6Kernel@sda21(r13)
 /* 80060914 0005D854  28 0C 00 00 */	cmplwi r12, 0
 /* 80060918 0005D858  41 82 00 18 */	beq lbl_80060930
-/* 8006091C 0005D85C  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006091C 0005D85C  80 0D 81 FC */	lwz r0, gDacSize__Q28JASystem6Kernel@sda21(r13)
 /* 80060920 0005D860  7D 88 03 A6 */	mtlr r12
-/* 80060924 0005D864  80 6D 91 34 */	lwz r3, lastRspMadep__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060924 0005D864  80 6D 91 34 */	lwz r3, lastRspMadep__Q28JASystem6Kernel@sda21(r13)
 /* 80060928 0005D868  54 04 F8 7E */	srwi r4, r0, 1
 /* 8006092C 0005D86C  4E 80 00 21 */	blrl 
 lbl_80060930:
@@ -389,7 +389,7 @@ mixExtraTrack__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060B48 0005DA88  3B E5 00 00 */	addi r31, r5, 0
 /* 80060B4C 0005DA8C  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80060B50 0005DA90  3B C4 00 00 */	addi r30, r4, 0
-/* 80060B54 0005DA94  38 82 86 B0 */	addi r4, r2, $$2236-_SDA2_BASE_
+/* 80060B54 0005DA94  38 82 86 B0 */	addi r4, r2, $$2236@sda21
 /* 80060B58 0005DA98  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 80060B5C 0005DA9C  3B A3 00 00 */	addi r29, r3, 0
 /* 80060B60 0005DAA0  38 60 00 05 */	li r3, 5
@@ -403,10 +403,10 @@ mixExtraTrack__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060B80 0005DAC0  38 60 00 05 */	li r3, 5
 /* 80060B84 0005DAC4  48 00 32 4D */	bl probeFinish__Q28JASystem6KernelFl
 /* 80060B88 0005DAC8  38 60 00 06 */	li r3, 6
-/* 80060B8C 0005DACC  38 82 86 B8 */	addi r4, r2, $$2237-_SDA2_BASE_
+/* 80060B8C 0005DACC  38 82 86 B8 */	addi r4, r2, $$2237@sda21
 /* 80060B90 0005DAD0  48 00 32 3D */	bl probeStart__Q28JASystem6KernelFlPc
 /* 80060B94 0005DAD4  7F C3 F3 79 */	or. r3, r30, r30
-/* 80060B98 0005DAD8  80 0D 81 F8 */	lwz r0, gFrameSamples__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80060B98 0005DAD8  80 0D 81 F8 */	lwz r0, gFrameSamples__Q28JASystem6Kernel@sda21(r13)
 /* 80060B9C 0005DADC  38 9D 00 00 */	addi r4, r29, 0
 /* 80060BA0 0005DAE0  54 00 08 3C */	slwi r0, r0, 1
 /* 80060BA4 0005DAE4  7C 69 03 A6 */	mtctr r3

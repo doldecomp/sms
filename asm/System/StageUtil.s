@@ -29,7 +29,7 @@ SMS_getShineStage__FUc:
 
 .global SMS_isOptionMap__Fv
 SMS_isOptionMap__Fv:
-/* 800FC54C 000F948C  80 8D 97 E8 */	lwz r4, gpMarDirector-_SDA_BASE_(r13)
+/* 800FC54C 000F948C  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
 /* 800FC550 000F9490  38 60 00 00 */	li r3, 0
 /* 800FC554 000F9494  88 04 00 7C */	lbz r0, 0x7c(r4)
 /* 800FC558 000F9498  28 00 00 0F */	cmplwi r0, 0xf
@@ -39,7 +39,7 @@ SMS_isOptionMap__Fv:
 
 .global SMS_isDivingMap__Fv
 SMS_isDivingMap__Fv:
-/* 800FC568 000F94A8  80 8D 97 E8 */	lwz r4, gpMarDirector-_SDA_BASE_(r13)
+/* 800FC568 000F94A8  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
 /* 800FC56C 000F94AC  38 60 00 00 */	li r3, 0
 /* 800FC570 000F94B0  88 04 00 7C */	lbz r0, 0x7c(r4)
 /* 800FC574 000F94B4  28 00 00 39 */	cmplwi r0, 0x39
@@ -57,7 +57,7 @@ lbl_800FC58C:
 
 .global SMS_isMultiPlayerMap__Fv
 SMS_isMultiPlayerMap__Fv:
-/* 800FC59C 000F94DC  80 8D 97 E8 */	lwz r4, gpMarDirector-_SDA_BASE_(r13)
+/* 800FC59C 000F94DC  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
 /* 800FC5A0 000F94E0  38 60 00 00 */	li r3, 0
 /* 800FC5A4 000F94E4  88 04 00 7C */	lbz r0, 0x7c(r4)
 /* 800FC5A8 000F94E8  28 00 00 0C */	cmplwi r0, 0xc

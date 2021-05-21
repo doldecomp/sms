@@ -93,7 +93,7 @@ lbl_8004F328:
 /* 8004F33C 0004C27C  99 24 00 04 */	stb r9, 4(r4)
 /* 8004F340 0004C280  91 44 00 3C */	stw r10, 0x3c(r4)
 /* 8004F344 0004C284  98 64 00 02 */	stb r3, 2(r4)
-/* 8004F348 0004C288  88 6D 80 F0 */	lbz r3, distanceParameterMoveTime__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004F348 0004C288  88 6D 80 F0 */	lbz r3, distanceParameterMoveTime__18JAIGlobalParameter@sda21(r13)
 /* 8004F34C 0004C28C  98 64 00 05 */	stb r3, 5(r4)
 /* 8004F350 0004C290  B0 04 00 06 */	sth r0, 6(r4)
 /* 8004F354 0004C294  90 04 00 14 */	stw r0, 0x14(r4)

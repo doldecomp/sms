@@ -54,7 +54,7 @@ viewCalcSimple__8SDLModelFv:
 /* 800D88C8 000D5808  80 7E 00 64 */	lwz r3, 0x64(r30)
 /* 800D88CC 000D580C  54 00 10 3A */	slwi r0, r0, 2
 /* 800D88D0 000D5810  7C 83 01 2E */	stwx r4, r3, r0
-/* 800D88D4 000D5814  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 800D88D4 000D5814  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 800D88D8 000D5818  3B 83 01 EC */	addi r28, r3, 0x1ec
 /* 800D88DC 000D581C  48 00 00 30 */	b lbl_800D890C
 lbl_800D88E0:
@@ -958,7 +958,7 @@ __ct__12SDLModelDataFP12J3DModelData:
 /* 800D957C 000D64BC  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 800D9580 000D64C0  90 1F 00 14 */	stw r0, 0x14(r31)
 /* 800D9584 000D64C4  90 BF 00 18 */	stw r5, 0x18(r31)
-/* 800D9588 000D64C8  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 800D9588 000D64C8  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 800D958C 000D64CC  48 16 F9 29 */	bl registerSDLModelData__10TConductorFP12SDLModelData
 /* 800D9590 000D64D0  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 800D9594 000D64D4  7F E3 FB 78 */	mr r3, r31

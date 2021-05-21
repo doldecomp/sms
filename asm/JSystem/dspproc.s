@@ -31,7 +31,7 @@ DSPReleaseHalt__Fv:
 .global setup_callback__FUs
 setup_callback__FUs:
 /* 80081C60 0007EBA0  38 00 00 00 */	li r0, 0
-/* 80081C64 0007EBA4  90 0D 92 60 */	stw r0, flag-_SDA_BASE_(r13)
+/* 80081C64 0007EBA4  90 0D 92 60 */	stw r0, flag@sda21(r13)
 /* 80081C68 0007EBA8  4E 80 00 20 */	blr 
 /* 80081C6C 0007EBAC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 80081C70 0007EBB0  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
@@ -57,10 +57,10 @@ DsetupTable__FUlUlUlUlUl:
 /* 80081CB4 0007EBF4  7C 05 03 78 */	mr r5, r0
 /* 80081CB8 0007EBF8  90 C1 00 28 */	stw r6, 0x28(r1)
 /* 80081CBC 0007EBFC  90 E1 00 2C */	stw r7, 0x2c(r1)
-/* 80081CC0 0007EC00  91 0D 92 60 */	stw r8, flag-_SDA_BASE_(r13)
+/* 80081CC0 0007EC00  91 0D 92 60 */	stw r8, flag@sda21(r13)
 /* 80081CC4 0007EC04  48 00 01 DD */	bl DSPSendCommands2__FPUlUlPFUs_v
 lbl_80081CC8:
-/* 80081CC8 0007EC08  80 0D 92 60 */	lwz r0, flag-_SDA_BASE_(r13)
+/* 80081CC8 0007EC08  80 0D 92 60 */	lwz r0, flag@sda21(r13)
 /* 80081CCC 0007EC0C  2C 00 00 00 */	cmpwi r0, 0
 /* 80081CD0 0007EC10  40 82 FF F8 */	bne lbl_80081CC8
 /* 80081CD4 0007EC14  80 01 00 34 */	lwz r0, 0x34(r1)
@@ -78,12 +78,12 @@ lbl_80081CC8:
 .global DsetMixerLevel__Ff
 DsetMixerLevel__Ff:
 /* 80081D00 0007EC40  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081D04 0007EC44  C0 02 89 50 */	lfs f0, $$271-_SDA2_BASE_(r2)
+/* 80081D04 0007EC44  C0 02 89 50 */	lfs f0, $$271@sda21(r2)
 /* 80081D08 0007EC48  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80081D0C 0007EC4C  FC 00 00 1E */	fctiwz f0, f0
 /* 80081D10 0007EC50  D8 01 00 10 */	stfd f0, 0x10(r1)
 /* 80081D14 0007EC54  80 01 00 14 */	lwz r0, 0x14(r1)
-/* 80081D18 0007EC58  B0 0D 82 18 */	sth r0, DSP_MIXERLEVEL-_SDA_BASE_(r13)
+/* 80081D18 0007EC58  B0 0D 82 18 */	sth r0, DSP_MIXERLEVEL@sda21(r13)
 /* 80081D1C 0007EC5C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80081D20 0007EC60  4E 80 00 20 */	blr 
 /* 80081D24 0007EC64  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
@@ -101,7 +101,7 @@ DsyncFrame__FUlUlUl:
 /* 80081D48 0007EC88  90 01 00 04 */	stw r0, 4(r1)
 /* 80081D4C 0007EC8C  64 C6 82 00 */	oris r6, r6, 0x8200
 /* 80081D50 0007EC90  94 21 FF D8 */	stwu r1, -0x28(r1)
-/* 80081D54 0007EC94  A0 0D 82 18 */	lhz r0, DSP_MIXERLEVEL-_SDA_BASE_(r13)
+/* 80081D54 0007EC94  A0 0D 82 18 */	lhz r0, DSP_MIXERLEVEL@sda21(r13)
 /* 80081D58 0007EC98  38 61 00 18 */	addi r3, r1, 0x18
 /* 80081D5C 0007EC9C  7C C0 03 78 */	or r0, r6, r0
 /* 80081D60 0007ECA0  90 01 00 18 */	stw r0, 0x18(r1)

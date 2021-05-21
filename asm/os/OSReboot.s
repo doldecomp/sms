@@ -23,7 +23,7 @@ Run:
 .global Callback
 Callback:
 /* 80091454 0008E394  38 00 00 01 */	li r0, 1
-/* 80091458 0008E398  90 0D 93 40 */	stw r0, Prepared-_SDA_BASE_(r13)
+/* 80091458 0008E398  90 0D 93 40 */	stw r0, Prepared@sda21(r13)
 /* 8009145C 0008E39C  4E 80 00 20 */	blr 
 
 .global __OSReboot
@@ -36,9 +36,9 @@ __OSReboot:
 /* 80091474 0008E3B4  3C 60 80 3F */	lis r3, Header@ha
 /* 80091478 0008E3B8  3B C3 B1 20 */	addi r30, r3, Header@l
 /* 8009147C 0008E3BC  4B FF ED 51 */	bl OSDisableInterrupts
-/* 80091480 0008E3C0  80 AD 93 38 */	lwz r5, SaveStart-_SDA_BASE_(r13)
+/* 80091480 0008E3C0  80 AD 93 38 */	lwz r5, SaveStart@sda21(r13)
 /* 80091484 0008E3C4  3C 80 81 30 */	lis r4, 0x812FDFF0@ha
-/* 80091488 0008E3C8  80 0D 93 3C */	lwz r0, SaveEnd-_SDA_BASE_(r13)
+/* 80091488 0008E3C8  80 0D 93 3C */	lwz r0, SaveEnd@sda21(r13)
 /* 8009148C 0008E3CC  38 60 00 00 */	li r3, 0
 /* 80091490 0008E3D0  3F E0 81 80 */	lis r31, 0x817FFFFC@ha
 /* 80091494 0008E3D4  38 E0 00 01 */	li r7, 1
@@ -73,7 +73,7 @@ lbl_800914EC:
 lbl_80091504:
 /* 80091504 0008E444  48 00 00 04 */	b lbl_80091508
 lbl_80091508:
-/* 80091508 0008E448  80 0D 93 40 */	lwz r0, Prepared-_SDA_BASE_(r13)
+/* 80091508 0008E448  80 0D 93 40 */	lwz r0, Prepared@sda21(r13)
 /* 8009150C 0008E44C  2C 00 00 00 */	cmpwi r0, 0
 /* 80091510 0008E450  41 82 FF F8 */	beq lbl_80091508
 /* 80091514 0008E454  7F C4 F3 78 */	mr r4, r30
@@ -113,7 +113,7 @@ lbl_80091570:
 lbl_80091588:
 /* 80091588 0008E4C8  48 00 00 04 */	b lbl_8009158C
 lbl_8009158C:
-/* 8009158C 0008E4CC  80 0D 93 40 */	lwz r0, Prepared-_SDA_BASE_(r13)
+/* 8009158C 0008E4CC  80 0D 93 40 */	lwz r0, Prepared@sda21(r13)
 /* 80091590 0008E4D0  2C 00 00 00 */	cmpwi r0, 0
 /* 80091594 0008E4D4  41 82 FF F8 */	beq lbl_8009158C
 /* 80091598 0008E4D8  7F C5 F3 78 */	mr r5, r30

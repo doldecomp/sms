@@ -41,17 +41,17 @@ execute__19TNerveRHGraphWanderCFP24TSpineBase$$010TLiveActor$$1:
 /* 802D9A78 002D69B8  83 E4 00 00 */	lwz r31, 0(r4)
 /* 802D9A7C 002D69BC  2C 00 00 00 */	cmpwi r0, 0
 /* 802D9A80 002D69C0  40 82 00 64 */	bne lbl_802D9AE4
-/* 802D9A84 002D69C4  C0 22 F1 0C */	lfs f1, $$22295-_SDA2_BASE_(r2)
+/* 802D9A84 002D69C4  C0 22 F1 0C */	lfs f1, $$22295@sda21(r2)
 /* 802D9A88 002D69C8  38 81 00 AC */	addi r4, r1, 0xac
 /* 802D9A8C 002D69CC  C0 1F 00 34 */	lfs f0, 0x34(r31)
 /* 802D9A90 002D69D0  7F E3 FB 78 */	mr r3, r31
-/* 802D9A94 002D69D4  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 802D9A94 002D69D4  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 802D9A98 002D69D8  EC 01 00 32 */	fmuls f0, f1, f0
-/* 802D9A9C 002D69DC  80 AD 8D F0 */	lwz r5, jmaSinTable-_SDA_BASE_(r13)
-/* 802D9AA0 002D69E0  C0 62 F1 08 */	lfs f3, $$22294-_SDA2_BASE_(r2)
-/* 802D9AA4 002D69E4  80 ED 8D F4 */	lwz r7, jmaCosTable-_SDA_BASE_(r13)
+/* 802D9A9C 002D69DC  80 AD 8D F0 */	lwz r5, jmaSinTable@sda21(r13)
+/* 802D9AA0 002D69E0  C0 62 F1 08 */	lfs f3, $$22294@sda21(r2)
+/* 802D9AA4 002D69E4  80 ED 8D F4 */	lwz r7, jmaCosTable@sda21(r13)
 /* 802D9AA8 002D69E8  FC 20 00 1E */	fctiwz f1, f0
-/* 802D9AAC 002D69EC  C0 02 F1 10 */	lfs f0, $$22296-_SDA2_BASE_(r2)
+/* 802D9AAC 002D69EC  C0 02 F1 10 */	lfs f0, $$22296@sda21(r2)
 /* 802D9AB0 002D69F0  D8 21 00 D0 */	stfd f1, 0xd0(r1)
 /* 802D9AB4 002D69F4  80 C1 00 D4 */	lwz r6, 0xd4(r1)
 /* 802D9AB8 002D69F8  54 C6 04 3E */	clrlwi r6, r6, 0x10
@@ -101,7 +101,7 @@ lbl_802D9AFC:
 /* 802D9B5C 002D6A9C  EC 01 00 2A */	fadds f0, f1, f0
 /* 802D9B60 002D6AA0  EC 22 00 2A */	fadds f1, f2, f0
 /* 802D9B64 002D6AA4  4B DF 6D 4D */	bl sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 802D9B68 002D6AA8  C0 02 F1 14 */	lfs f0, $$22297-_SDA2_BASE_(r2)
+/* 802D9B68 002D6AA8  C0 02 F1 14 */	lfs f0, $$22297@sda21(r2)
 /* 802D9B6C 002D6AAC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 802D9B70 002D6AB0  40 80 00 B0 */	bge lbl_802D9C20
 /* 802D9B74 002D6AB4  80 9F 01 24 */	lwz r4, 0x124(r31)
@@ -116,25 +116,25 @@ lbl_802D9AFC:
 /* 802D9B98 002D6AD8  A0 03 00 0C */	lhz r0, 0xc(r3)
 /* 802D9B9C 002D6ADC  90 1F 01 54 */	stw r0, 0x154(r31)
 lbl_802D9BA0:
-/* 802D9BA0 002D6AE0  88 0D A2 C0 */	lbz r0, init$2176-_SDA_BASE_(r13)
+/* 802D9BA0 002D6AE0  88 0D A2 C0 */	lbz r0, init$2176@sda21(r13)
 /* 802D9BA4 002D6AE4  7C 00 07 75 */	extsb. r0, r0
 /* 802D9BA8 002D6AE8  40 82 00 3C */	bne lbl_802D9BE4
 /* 802D9BAC 002D6AEC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
 /* 802D9BB0 002D6AF0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
 /* 802D9BB4 002D6AF4  3C 60 80 3E */	lis r3, __vt__19TNerveRHGraphWander@ha
-/* 802D9BB8 002D6AF8  90 0D A2 C4 */	stw r0, instance$2174-_SDA_BASE_(r13)
+/* 802D9BB8 002D6AF8  90 0D A2 C4 */	stw r0, instance$2174@sda21(r13)
 /* 802D9BBC 002D6AFC  38 03 C9 B8 */	addi r0, r3, __vt__19TNerveRHGraphWander@l
 /* 802D9BC0 002D6B00  3C 80 80 2E */	lis r4, __dt__19TNerveRHGraphWanderFv@ha
-/* 802D9BC4 002D6B04  90 0D A2 C4 */	stw r0, instance$2174-_SDA_BASE_(r13)
+/* 802D9BC4 002D6B04  90 0D A2 C4 */	stw r0, instance$2174@sda21(r13)
 /* 802D9BC8 002D6B08  3C 60 80 40 */	lis r3, $$22175@ha
 /* 802D9BCC 002D6B0C  38 A3 E5 50 */	addi r5, r3, $$22175@l
 /* 802D9BD0 002D6B10  38 84 9A 00 */	addi r4, r4, __dt__19TNerveRHGraphWanderFv@l
-/* 802D9BD4 002D6B14  38 6D A2 C4 */	addi r3, r13, instance$2174-_SDA_BASE_
+/* 802D9BD4 002D6B14  38 6D A2 C4 */	addi r3, r13, instance$2174@sda21
 /* 802D9BD8 002D6B18  4B DA 8B 51 */	bl __register_global_object
 /* 802D9BDC 002D6B1C  38 00 00 01 */	li r0, 1
-/* 802D9BE0 002D6B20  98 0D A2 C0 */	stb r0, init$2176-_SDA_BASE_(r13)
+/* 802D9BE0 002D6B20  98 0D A2 C0 */	stb r0, init$2176@sda21(r13)
 lbl_802D9BE4:
-/* 802D9BE4 002D6B24  38 8D A2 C4 */	addi r4, r13, instance$2174-_SDA_BASE_
+/* 802D9BE4 002D6B24  38 8D A2 C4 */	addi r4, r13, instance$2174@sda21
 /* 802D9BE8 002D6B28  28 04 00 00 */	cmplwi r4, 0
 /* 802D9BEC 002D6B2C  41 82 00 2C */	beq lbl_802D9C18
 /* 802D9BF0 002D6B30  80 BE 00 08 */	lwz r5, 8(r30)
@@ -263,7 +263,7 @@ load__17TRiccoHookManagerFR20JSUMemoryInputStream:
 /* 802D9DA4 002D6CE4  93 DA 00 A8 */	stw r30, 0xa8(r26)
 /* 802D9DA8 002D6CE8  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
 /* 802D9DAC 002D6CEC  3B E3 29 F4 */	addi r31, r3, __vt__11TParamRT$$0f$$1@l
-/* 802D9DB0 002D6CF0  C0 02 F1 18 */	lfs f0, $$22330-_SDA2_BASE_(r2)
+/* 802D9DB0 002D6CF0  C0 02 F1 18 */	lfs f0, $$22330@sda21(r2)
 /* 802D9DB4 002D6CF4  38 7D 01 30 */	addi r3, r29, 0x130
 /* 802D9DB8 002D6CF8  D0 1A 00 B8 */	stfs f0, 0xb8(r26)
 /* 802D9DBC 002D6CFC  93 FA 00 A8 */	stw r31, 0xa8(r26)
@@ -275,7 +275,7 @@ load__17TRiccoHookManagerFR20JSUMemoryInputStream:
 /* 802D9DD4 002D6D14  4B E0 0E 21 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 802D9DD8 002D6D18  93 DA 00 BC */	stw r30, 0xbc(r26)
 /* 802D9DDC 002D6D1C  38 7D 01 40 */	addi r3, r29, 0x140
-/* 802D9DE0 002D6D20  C0 02 F1 1C */	lfs f0, $$22332-_SDA2_BASE_(r2)
+/* 802D9DE0 002D6D20  C0 02 F1 1C */	lfs f0, $$22332@sda21(r2)
 /* 802D9DE4 002D6D24  D0 1A 00 CC */	stfs f0, 0xcc(r26)
 /* 802D9DE8 002D6D28  93 FA 00 BC */	stw r31, 0xbc(r26)
 /* 802D9DEC 002D6D2C  4B D6 A8 A1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -286,7 +286,7 @@ load__17TRiccoHookManagerFR20JSUMemoryInputStream:
 /* 802D9E00 002D6D40  4B E0 0D F5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 802D9E04 002D6D44  93 DA 00 D0 */	stw r30, 0xd0(r26)
 /* 802D9E08 002D6D48  38 7D 01 50 */	addi r3, r29, 0x150
-/* 802D9E0C 002D6D4C  C0 02 F1 20 */	lfs f0, $$22334-_SDA2_BASE_(r2)
+/* 802D9E0C 002D6D4C  C0 02 F1 20 */	lfs f0, $$22334@sda21(r2)
 /* 802D9E10 002D6D50  D0 1A 00 E0 */	stfs f0, 0xe0(r26)
 /* 802D9E14 002D6D54  93 FA 00 D0 */	stw r31, 0xd0(r26)
 /* 802D9E18 002D6D58  4B D6 A8 75 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -297,7 +297,7 @@ load__17TRiccoHookManagerFR20JSUMemoryInputStream:
 /* 802D9E2C 002D6D6C  4B E0 0D C9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 802D9E30 002D6D70  93 DA 00 E4 */	stw r30, 0xe4(r26)
 /* 802D9E34 002D6D74  7F 43 D3 78 */	mr r3, r26
-/* 802D9E38 002D6D78  C0 02 F1 24 */	lfs f0, $$22336-_SDA2_BASE_(r2)
+/* 802D9E38 002D6D78  C0 02 F1 24 */	lfs f0, $$22336@sda21(r2)
 /* 802D9E3C 002D6D7C  D0 1A 00 F4 */	stfs f0, 0xf4(r26)
 /* 802D9E40 002D6D80  93 FA 00 E4 */	stw r31, 0xe4(r26)
 /* 802D9E44 002D6D84  80 9A 00 00 */	lwz r4, 0(r26)
@@ -401,27 +401,27 @@ init__10TRiccoHookFP12TLiveManager:
 /* 802D9F7C 002D6EBC  3B C3 00 00 */	addi r30, r3, 0
 /* 802D9F80 002D6EC0  3B E5 D6 00 */	addi r31, r5, $$21490@l
 /* 802D9F84 002D6EC4  4B F7 61 C5 */	bl init__11TSpineEnemyFP12TLiveManager
-/* 802D9F88 002D6EC8  88 0D A2 C0 */	lbz r0, init$2176-_SDA_BASE_(r13)
+/* 802D9F88 002D6EC8  88 0D A2 C0 */	lbz r0, init$2176@sda21(r13)
 /* 802D9F8C 002D6ECC  7C 00 07 75 */	extsb. r0, r0
 /* 802D9F90 002D6ED0  40 82 00 3C */	bne lbl_802D9FCC
 /* 802D9F94 002D6ED4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
 /* 802D9F98 002D6ED8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
 /* 802D9F9C 002D6EDC  3C 60 80 3E */	lis r3, __vt__19TNerveRHGraphWander@ha
-/* 802D9FA0 002D6EE0  90 0D A2 C4 */	stw r0, instance$2174-_SDA_BASE_(r13)
+/* 802D9FA0 002D6EE0  90 0D A2 C4 */	stw r0, instance$2174@sda21(r13)
 /* 802D9FA4 002D6EE4  38 03 C9 B8 */	addi r0, r3, __vt__19TNerveRHGraphWander@l
 /* 802D9FA8 002D6EE8  3C 80 80 2E */	lis r4, __dt__19TNerveRHGraphWanderFv@ha
-/* 802D9FAC 002D6EEC  90 0D A2 C4 */	stw r0, instance$2174-_SDA_BASE_(r13)
+/* 802D9FAC 002D6EEC  90 0D A2 C4 */	stw r0, instance$2174@sda21(r13)
 /* 802D9FB0 002D6EF0  3C 60 80 40 */	lis r3, $$22175@ha
 /* 802D9FB4 002D6EF4  38 A3 E5 50 */	addi r5, r3, $$22175@l
 /* 802D9FB8 002D6EF8  38 84 9A 00 */	addi r4, r4, __dt__19TNerveRHGraphWanderFv@l
-/* 802D9FBC 002D6EFC  38 6D A2 C4 */	addi r3, r13, instance$2174-_SDA_BASE_
+/* 802D9FBC 002D6EFC  38 6D A2 C4 */	addi r3, r13, instance$2174@sda21
 /* 802D9FC0 002D6F00  4B DA 87 69 */	bl __register_global_object
 /* 802D9FC4 002D6F04  38 00 00 01 */	li r0, 1
-/* 802D9FC8 002D6F08  98 0D A2 C0 */	stb r0, init$2176-_SDA_BASE_(r13)
+/* 802D9FC8 002D6F08  98 0D A2 C0 */	stb r0, init$2176@sda21(r13)
 lbl_802D9FCC:
 /* 802D9FCC 002D6F0C  80 9E 00 8C */	lwz r4, 0x8c(r30)
 /* 802D9FD0 002D6F10  3B 80 00 00 */	li r28, 0
-/* 802D9FD4 002D6F14  38 0D A2 C4 */	addi r0, r13, instance$2174-_SDA_BASE_
+/* 802D9FD4 002D6F14  38 0D A2 C4 */	addi r0, r13, instance$2174@sda21
 /* 802D9FD8 002D6F18  93 84 00 08 */	stw r28, 8(r4)
 /* 802D9FDC 002D6F1C  38 60 00 74 */	li r3, 0x74
 /* 802D9FE0 002D6F20  93 84 00 20 */	stw r28, 0x20(r4)
@@ -488,7 +488,7 @@ lbl_802D9FCC:
 /* 802DA0D4 002D7014  38 A0 00 01 */	li r5, 1
 /* 802DA0D8 002D7018  3C C0 80 00 */	lis r6, 0x8000
 /* 802DA0DC 002D701C  4B E4 37 1D */	bl initHitActor__9THitActorFUlUsiffff
-/* 802DA0E0 002D7020  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 802DA0E0 002D7020  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 802DA0E4 002D7024  38 7F 01 70 */	addi r3, r31, 0x170
 /* 802DA0E8 002D7028  83 84 00 04 */	lwz r28, 4(r4)
 /* 802DA0EC 002D702C  4B D6 A5 A1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -536,7 +536,7 @@ lbl_802DA168:
 /* 802DA190 002D70D0  4E 80 00 21 */	blrl 
 /* 802DA194 002D70D4  C0 03 00 F4 */	lfs f0, 0xf4(r3)
 /* 802DA198 002D70D8  D0 1E 01 40 */	stfs f0, 0x140(r30)
-/* 802DA19C 002D70DC  C0 02 F1 14 */	lfs f0, $$22297-_SDA2_BASE_(r2)
+/* 802DA19C 002D70DC  C0 02 F1 14 */	lfs f0, $$22297@sda21(r2)
 /* 802DA1A0 002D70E0  D0 1E 01 44 */	stfs f0, 0x144(r30)
 /* 802DA1A4 002D70E4  80 1E 00 F0 */	lwz r0, 0xf0(r30)
 /* 802DA1A8 002D70E8  60 00 00 10 */	ori r0, r0, 0x10
@@ -588,7 +588,7 @@ perform__9THookTakeFUlPQ26JDrama9TGraphics:
 /* 802DA248 002D7188  80 06 00 18 */	lwz r0, 0x18(r6)
 /* 802DA24C 002D718C  90 1E 00 18 */	stw r0, 0x18(r30)
 /* 802DA250 002D7190  C0 3E 00 14 */	lfs f1, 0x14(r30)
-/* 802DA254 002D7194  C0 02 F1 18 */	lfs f0, $$22330-_SDA2_BASE_(r2)
+/* 802DA254 002D7194  C0 02 F1 18 */	lfs f0, $$22330@sda21(r2)
 /* 802DA258 002D7198  EC 01 00 28 */	fsubs f0, f1, f0
 /* 802DA25C 002D719C  D0 1E 00 14 */	stfs f0, 0x14(r30)
 lbl_802DA260:

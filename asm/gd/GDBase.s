@@ -15,7 +15,7 @@ GDFlushCurrToMem:
 /* 800AF030 000ABF70  7C 08 02 A6 */	mflr r0
 /* 800AF034 000ABF74  90 01 00 04 */	stw r0, 4(r1)
 /* 800AF038 000ABF78  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800AF03C 000ABF7C  80 8D 95 B8 */	lwz r4, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF03C 000ABF7C  80 8D 95 B8 */	lwz r4, __GDCurrentDL@sda21(r13)
 /* 800AF040 000ABF80  80 64 00 00 */	lwz r3, 0(r4)
 /* 800AF044 000ABF84  80 84 00 04 */	lwz r4, 4(r4)
 /* 800AF048 000ABF88  4B FD EF 65 */	bl DCFlushRange
@@ -26,7 +26,7 @@ GDFlushCurrToMem:
 
 .global GDPadCurr32
 GDPadCurr32:
-/* 800AF05C 000ABF9C  80 6D 95 B8 */	lwz r3, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF05C 000ABF9C  80 6D 95 B8 */	lwz r3, __GDCurrentDL@sda21(r13)
 /* 800AF060 000ABFA0  80 03 00 08 */	lwz r0, 8(r3)
 /* 800AF064 000ABFA4  54 00 06 FF */	clrlwi. r0, r0, 0x1b
 /* 800AF068 000ABFA8  4D 82 00 20 */	beqlr 
@@ -38,42 +38,42 @@ GDPadCurr32:
 /* 800AF080 000ABFC0  7C 09 03 A6 */	mtctr r0
 /* 800AF084 000ABFC4  41 82 00 B0 */	beq lbl_800AF134
 lbl_800AF088:
-/* 800AF088 000ABFC8  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF088 000ABFC8  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF08C 000ABFCC  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF090 000ABFD0  38 04 00 01 */	addi r0, r4, 1
 /* 800AF094 000ABFD4  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF098 000ABFD8  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF09C 000ABFDC  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF09C 000ABFDC  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF0A0 000ABFE0  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF0A4 000ABFE4  38 04 00 01 */	addi r0, r4, 1
 /* 800AF0A8 000ABFE8  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF0AC 000ABFEC  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF0B0 000ABFF0  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF0B0 000ABFF0  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF0B4 000ABFF4  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF0B8 000ABFF8  38 04 00 01 */	addi r0, r4, 1
 /* 800AF0BC 000ABFFC  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF0C0 000AC000  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF0C4 000AC004  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF0C4 000AC004  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF0C8 000AC008  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF0CC 000AC00C  38 04 00 01 */	addi r0, r4, 1
 /* 800AF0D0 000AC010  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF0D4 000AC014  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF0D8 000AC018  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF0D8 000AC018  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF0DC 000AC01C  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF0E0 000AC020  38 04 00 01 */	addi r0, r4, 1
 /* 800AF0E4 000AC024  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF0E8 000AC028  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF0EC 000AC02C  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF0EC 000AC02C  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF0F0 000AC030  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF0F4 000AC034  38 04 00 01 */	addi r0, r4, 1
 /* 800AF0F8 000AC038  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF0FC 000AC03C  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF100 000AC040  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF100 000AC040  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF104 000AC044  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF108 000AC048  38 04 00 01 */	addi r0, r4, 1
 /* 800AF10C 000AC04C  90 05 00 08 */	stw r0, 8(r5)
 /* 800AF110 000AC050  98 C4 00 00 */	stb r6, 0(r4)
-/* 800AF114 000AC054  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF114 000AC054  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF118 000AC058  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF11C 000AC05C  38 04 00 01 */	addi r0, r4, 1
 /* 800AF120 000AC060  90 05 00 08 */	stw r0, 8(r5)
@@ -84,7 +84,7 @@ lbl_800AF088:
 lbl_800AF134:
 /* 800AF134 000AC074  7C 69 03 A6 */	mtctr r3
 lbl_800AF138:
-/* 800AF138 000AC078  80 AD 95 B8 */	lwz r5, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800AF138 000AC078  80 AD 95 B8 */	lwz r5, __GDCurrentDL@sda21(r13)
 /* 800AF13C 000AC07C  80 85 00 08 */	lwz r4, 8(r5)
 /* 800AF140 000AC080  38 04 00 01 */	addi r0, r4, 1
 /* 800AF144 000AC084  90 05 00 08 */	stw r0, 8(r5)
@@ -97,7 +97,7 @@ GDOverflowed:
 /* 800AF154 000AC094  7C 08 02 A6 */	mflr r0
 /* 800AF158 000AC098  90 01 00 04 */	stw r0, 4(r1)
 /* 800AF15C 000AC09C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800AF160 000AC0A0  81 8D 95 BC */	lwz r12, overflowcb-_SDA_BASE_(r13)
+/* 800AF160 000AC0A0  81 8D 95 BC */	lwz r12, overflowcb@sda21(r13)
 /* 800AF164 000AC0A4  28 0C 00 00 */	cmplwi r12, 0
 /* 800AF168 000AC0A8  41 82 00 0C */	beq lbl_800AF174
 /* 800AF16C 000AC0AC  7D 88 03 A6 */	mtlr r12
@@ -110,7 +110,7 @@ lbl_800AF174:
 
 .global GDSetOverflowCallback
 GDSetOverflowCallback:
-/* 800AF184 000AC0C4  90 6D 95 BC */	stw r3, overflowcb-_SDA_BASE_(r13)
+/* 800AF184 000AC0C4  90 6D 95 BC */	stw r3, overflowcb@sda21(r13)
 /* 800AF188 000AC0C8  4E 80 00 20 */	blr 
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

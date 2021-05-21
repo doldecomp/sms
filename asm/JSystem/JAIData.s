@@ -23,7 +23,7 @@ initLinkBuffer__7JAIDataFP13JAILinkBufferUl:
 /* 8004DB20 0004AA60  7C 9D 23 78 */	mr r29, r4
 /* 8004DB24 0004AA64  3B 83 00 00 */	addi r28, r3, 0
 /* 8004DB28 0004AA68  3B 45 00 00 */	addi r26, r5, 0
-/* 8004DB2C 0004AA6C  80 8D 81 70 */	lwz r4, audioCameraMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DB2C 0004AA6C  80 8D 81 70 */	lwz r4, audioCameraMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DB30 0004AA70  80 1D 00 08 */	lwz r0, 8(r29)
 /* 8004DB34 0004AA74  1F C4 00 1C */	mulli r30, r4, 0x1c
 /* 8004DB38 0004AA78  90 1D 00 00 */	stw r0, 0(r29)
@@ -35,7 +35,7 @@ initLinkBuffer__7JAIDataFP13JAILinkBufferUl:
 /* 8004DB50 0004AA90  38 03 00 44 */	addi r0, r3, 0x44
 /* 8004DB54 0004AA94  90 03 00 30 */	stw r0, 0x30(r3)
 /* 8004DB58 0004AA98  80 1C 01 F4 */	lwz r0, 0x1f4(r28)
-/* 8004DB5C 0004AA9C  90 0D 90 70 */	stw r0, interPointer__8JAISound-_SDA_BASE_(r13)
+/* 8004DB5C 0004AA9C  90 0D 90 70 */	stw r0, interPointer__8JAISound@sda21(r13)
 /* 8004DB60 0004AAA0  80 7D 00 08 */	lwz r3, 8(r29)
 /* 8004DB64 0004AAA4  98 C3 00 01 */	stb r6, 1(r3)
 /* 8004DB68 0004AAA8  80 7C 01 F4 */	lwz r3, 0x1f4(r28)
@@ -63,7 +63,7 @@ lbl_8004DB88:
 /* 8004DBBC 0004AAFC  38 A0 00 00 */	li r5, 0
 /* 8004DBC0 0004AB00  80 7C 01 F4 */	lwz r3, 0x1f4(r28)
 /* 8004DBC4 0004AB04  7F C4 F3 78 */	mr r4, r30
-/* 8004DBC8 0004AB08  90 6D 90 70 */	stw r3, interPointer__8JAISound-_SDA_BASE_(r13)
+/* 8004DBC8 0004AB08  90 6D 90 70 */	stw r3, interPointer__8JAISound@sda21(r13)
 /* 8004DBCC 0004AB0C  80 7D 00 08 */	lwz r3, 8(r29)
 /* 8004DBD0 0004AB10  7C A3 01 AE */	stbx r5, r3, r0
 /* 8004DBD4 0004AB14  80 7C 01 F4 */	lwz r3, 0x1f4(r28)
@@ -89,7 +89,7 @@ lbl_8004DBF0:
 /* 8004DC20 0004AB60  7C 60 D2 14 */	add r3, r0, r26
 /* 8004DC24 0004AB64  90 A3 00 30 */	stw r5, 0x30(r3)
 /* 8004DC28 0004AB68  80 1C 01 F4 */	lwz r0, 0x1f4(r28)
-/* 8004DC2C 0004AB6C  90 0D 90 70 */	stw r0, interPointer__8JAISound-_SDA_BASE_(r13)
+/* 8004DC2C 0004AB6C  90 0D 90 70 */	stw r0, interPointer__8JAISound@sda21(r13)
 /* 8004DC30 0004AB70  80 1D 00 08 */	lwz r0, 8(r29)
 /* 8004DC34 0004AB74  7C 60 D2 14 */	add r3, r0, r26
 /* 8004DC38 0004AB78  98 A3 00 01 */	stb r5, 1(r3)
@@ -141,7 +141,7 @@ lbl_8004DCB0:
 /* 8004DCE0 0004AC20  38 E7 00 01 */	addi r7, r7, 1
 /* 8004DCE4 0004AC24  38 63 18 5C */	addi r3, r3, 0x185c
 lbl_8004DCE8:
-/* 8004DCE8 0004AC28  80 8D 81 0C */	lwz r4, seqControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DCE8 0004AC28  80 8D 81 0C */	lwz r4, seqControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DCEC 0004AC2C  38 04 FF FF */	addi r0, r4, -1
 /* 8004DCF0 0004AC30  7C 07 00 40 */	cmplw r7, r0
 /* 8004DCF4 0004AC34  41 80 FF BC */	blt lbl_8004DCB0
@@ -167,7 +167,7 @@ lbl_8004DD30:
 /* 8004DD40 0004AC80  3B BD 00 01 */	addi r29, r29, 1
 /* 8004DD44 0004AC84  3B DE 18 5C */	addi r30, r30, 0x185c
 lbl_8004DD48:
-/* 8004DD48 0004AC88  80 0D 81 0C */	lwz r0, seqControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DD48 0004AC88  80 0D 81 0C */	lwz r0, seqControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DD4C 0004AC8C  7C 1D 00 40 */	cmplw r29, r0
 /* 8004DD50 0004AC90  41 80 FF E0 */	blt lbl_8004DD30
 /* 8004DD54 0004AC94  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -189,7 +189,7 @@ initSeqParameter__7JAIDataFP15JAISeqParameter:
 /* 8004DD88 0004ACC8  90 04 17 58 */	stw r0, 0x1758(r4)
 /* 8004DD8C 0004ACCC  38 00 00 00 */	li r0, 0
 /* 8004DD90 0004ACD0  38 C0 00 00 */	li r6, 0
-/* 8004DD94 0004ACD4  C0 42 84 80 */	lfs f2, $$2494-_SDA2_BASE_(r2)
+/* 8004DD94 0004ACD4  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
 /* 8004DD98 0004ACD8  D0 44 00 08 */	stfs f2, 8(r4)
 /* 8004DD9C 0004ACDC  90 04 00 10 */	stw r0, 0x10(r4)
 /* 8004DDA0 0004ACE0  98 04 17 55 */	stb r0, 0x1755(r4)
@@ -207,8 +207,8 @@ initSeqParameter__7JAIDataFP15JAISeqParameter:
 /* 8004DDD0 0004AD10  90 04 17 84 */	stw r0, 0x1784(r4)
 /* 8004DDD4 0004AD14  90 04 17 88 */	stw r0, 0x1788(r4)
 /* 8004DDD8 0004AD18  90 04 17 8C */	stw r0, 0x178c(r4)
-/* 8004DDDC 0004AD1C  C0 22 84 84 */	lfs f1, $$2495-_SDA2_BASE_(r2)
-/* 8004DDE0 0004AD20  C0 02 84 88 */	lfs f0, $$2496-_SDA2_BASE_(r2)
+/* 8004DDDC 0004AD1C  C0 22 84 84 */	lfs f1, $$2495@sda21(r2)
+/* 8004DDE0 0004AD20  C0 02 84 88 */	lfs f0, $$2496@sda21(r2)
 /* 8004DDE4 0004AD24  48 00 00 D0 */	b lbl_8004DEB4
 lbl_8004DDE8:
 /* 8004DDE8 0004AD28  7C E4 32 14 */	add r7, r4, r6
@@ -263,10 +263,10 @@ lbl_8004DDE8:
 /* 8004DEAC 0004ADEC  B1 09 13 70 */	sth r8, 0x1370(r9)
 /* 8004DEB0 0004ADF0  B1 09 13 72 */	sth r8, 0x1372(r9)
 lbl_8004DEB4:
-/* 8004DEB4 0004ADF4  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DEB4 0004ADF4  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DEB8 0004ADF8  7C 1F 00 40 */	cmplw r31, r0
 /* 8004DEBC 0004ADFC  41 80 FF 2C */	blt lbl_8004DDE8
-/* 8004DEC0 0004AE00  C0 42 84 88 */	lfs f2, $$2496-_SDA2_BASE_(r2)
+/* 8004DEC0 0004AE00  C0 42 84 88 */	lfs f2, $$2496@sda21(r2)
 /* 8004DEC4 0004AE04  38 C0 00 00 */	li r6, 0
 /* 8004DEC8 0004AE08  38 E0 00 00 */	li r7, 0
 /* 8004DECC 0004AE0C  D0 44 00 18 */	stfs f2, 0x18(r4)
@@ -302,8 +302,8 @@ lbl_8004DEB4:
 /* 8004DF44 0004AE84  90 C4 01 00 */	stw r6, 0x100(r4)
 /* 8004DF48 0004AE88  D0 44 01 08 */	stfs f2, 0x108(r4)
 /* 8004DF4C 0004AE8C  90 C4 01 10 */	stw r6, 0x110(r4)
-/* 8004DF50 0004AE90  C0 22 84 80 */	lfs f1, $$2494-_SDA2_BASE_(r2)
-/* 8004DF54 0004AE94  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004DF50 0004AE90  C0 22 84 80 */	lfs f1, $$2494@sda21(r2)
+/* 8004DF54 0004AE94  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 /* 8004DF58 0004AE98  48 00 00 4C */	b lbl_8004DFA4
 lbl_8004DF5C:
 /* 8004DF5C 0004AE9C  7C A4 1A 14 */	add r5, r4, r3
@@ -325,7 +325,7 @@ lbl_8004DF5C:
 /* 8004DF9C 0004AEDC  90 C5 04 E0 */	stw r6, 0x4e0(r5)
 /* 8004DFA0 0004AEE0  90 C5 06 20 */	stw r6, 0x620(r5)
 lbl_8004DFA4:
-/* 8004DFA4 0004AEE4  80 AD 81 08 */	lwz r5, seqPlayTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DFA4 0004AEE4  80 AD 81 08 */	lwz r5, seqPlayTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DFA8 0004AEE8  38 05 00 0C */	addi r0, r5, 0xc
 /* 8004DFAC 0004AEEC  7C 07 00 40 */	cmplw r7, r0
 /* 8004DFB0 0004AEF0  41 80 FF AC */	blt lbl_8004DF5C
@@ -335,16 +335,16 @@ lbl_8004DFA4:
 
 .global initSePara__7JAIDataFP14JAISeParameter
 initSePara__7JAIDataFP14JAISeParameter:
-/* 8004DFC0 0004AF00  C0 2D 81 58 */	lfs f1, seDolbyCenterValue__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004DFC0 0004AF00  C0 2D 81 58 */	lfs f1, seDolbyCenterValue__18JAIGlobalParameter@sda21(r13)
 /* 8004DFC4 0004AF04  38 60 00 00 */	li r3, 0
-/* 8004DFC8 0004AF08  C0 02 84 8C */	lfs f0, $$2516-_SDA2_BASE_(r2)
+/* 8004DFC8 0004AF08  C0 02 84 8C */	lfs f0, $$2516@sda21(r2)
 /* 8004DFCC 0004AF0C  38 00 00 02 */	li r0, 2
 /* 8004DFD0 0004AF10  7C 09 03 A6 */	mtctr r0
 /* 8004DFD4 0004AF14  EC 61 00 24 */	fdivs f3, f1, f0
-/* 8004DFD8 0004AF18  C0 42 84 80 */	lfs f2, $$2494-_SDA2_BASE_(r2)
-/* 8004DFDC 0004AF1C  C0 22 84 84 */	lfs f1, $$2495-_SDA2_BASE_(r2)
+/* 8004DFD8 0004AF18  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
+/* 8004DFDC 0004AF1C  C0 22 84 84 */	lfs f1, $$2495@sda21(r2)
 /* 8004DFE0 0004AF20  7C 69 1B 78 */	mr r9, r3
-/* 8004DFE4 0004AF24  C0 02 84 88 */	lfs f0, $$2496-_SDA2_BASE_(r2)
+/* 8004DFE4 0004AF24  C0 02 84 88 */	lfs f0, $$2496@sda21(r2)
 /* 8004DFE8 0004AF28  39 03 00 00 */	addi r8, r3, 0
 /* 8004DFEC 0004AF2C  38 E3 00 00 */	addi r7, r3, 0
 /* 8004DFF0 0004AF30  38 C3 00 00 */	addi r6, r3, 0
@@ -408,7 +408,7 @@ lbl_8004DFFC:
 /* 8004E0D4 0004B014  90 AA 03 30 */	stw r5, 0x330(r10)
 /* 8004E0D8 0004B018  90 0A 03 B0 */	stw r0, 0x3b0(r10)
 /* 8004E0DC 0004B01C  42 00 FF 20 */	bdnz lbl_8004DFFC
-/* 8004E0E0 0004B020  C0 02 84 90 */	lfs f0, $$2517-_SDA2_BASE_(r2)
+/* 8004E0E0 0004B020  C0 02 84 90 */	lfs f0, $$2517@sda21(r2)
 /* 8004E0E4 0004B024  38 00 00 00 */	li r0, 0
 /* 8004E0E8 0004B028  D0 04 01 98 */	stfs f0, 0x198(r4)
 /* 8004E0EC 0004B02C  D0 04 02 18 */	stfs f0, 0x218(r4)
@@ -462,7 +462,7 @@ lbl_8004E16C:
 /* 8004E19C 0004B0DC  38 E7 00 01 */	addi r7, r7, 1
 /* 8004E1A0 0004B0E0  38 63 03 E0 */	addi r3, r3, 0x3e0
 lbl_8004E1A4:
-/* 8004E1A4 0004B0E4  80 8D 81 14 */	lwz r4, streamParameterBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E1A4 0004B0E4  80 8D 81 14 */	lwz r4, streamParameterBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E1A8 0004B0E8  38 04 FF FF */	addi r0, r4, -1
 /* 8004E1AC 0004B0EC  7C 07 00 40 */	cmplw r7, r0
 /* 8004E1B0 0004B0F0  41 80 FF BC */	blt lbl_8004E16C
@@ -488,7 +488,7 @@ lbl_8004E1EC:
 /* 8004E1FC 0004B13C  3B BD 00 01 */	addi r29, r29, 1
 /* 8004E200 0004B140  3B DE 03 E0 */	addi r30, r30, 0x3e0
 lbl_8004E204:
-/* 8004E204 0004B144  80 0D 81 14 */	lwz r0, streamParameterBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E204 0004B144  80 0D 81 14 */	lwz r0, streamParameterBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E208 0004B148  7C 1D 00 40 */	cmplw r29, r0
 /* 8004E20C 0004B14C  41 80 FF E0 */	blt lbl_8004E1EC
 /* 8004E210 0004B150  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -509,8 +509,8 @@ initStreamParameter__7JAIDataFP18JAIStreamParameter:
 /* 8004E240 0004B180  90 A4 00 04 */	stw r5, 4(r4)
 /* 8004E244 0004B184  90 A4 00 08 */	stw r5, 8(r4)
 /* 8004E248 0004B188  90 A4 00 0C */	stw r5, 0xc(r4)
-/* 8004E24C 0004B18C  C0 22 84 80 */	lfs f1, $$2494-_SDA2_BASE_(r2)
-/* 8004E250 0004B190  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004E24C 0004B18C  C0 22 84 80 */	lfs f1, $$2494@sda21(r2)
+/* 8004E250 0004B190  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 lbl_8004E254:
 /* 8004E254 0004B194  7C C4 1A 14 */	add r6, r4, r3
 /* 8004E258 0004B198  D0 26 00 18 */	stfs f1, 0x18(r6)
@@ -530,20 +530,20 @@ lbl_8004E254:
 initSeqTrackInfoParameter__7JAIDataFUl:
 /* 8004E288 0004B1C8  1C 84 00 50 */	mulli r4, r4, 0x50
 /* 8004E28C 0004B1CC  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E290 0004B1D0  C0 42 84 80 */	lfs f2, $$2494-_SDA2_BASE_(r2)
+/* 8004E290 0004B1D0  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
 /* 8004E294 0004B1D4  7C A0 22 14 */	add r5, r0, r4
 /* 8004E298 0004B1D8  D0 45 00 0C */	stfs f2, 0xc(r5)
 /* 8004E29C 0004B1DC  38 A0 00 00 */	li r5, 0
 /* 8004E2A0 0004B1E0  38 C0 00 00 */	li r6, 0
 /* 8004E2A4 0004B1E4  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E2A8 0004B1E8  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004E2A8 0004B1E8  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 /* 8004E2AC 0004B1EC  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2B0 0004B1F0  D0 07 00 18 */	stfs f0, 0x18(r7)
 /* 8004E2B4 0004B1F4  80 03 01 80 */	lwz r0, 0x180(r3)
 /* 8004E2B8 0004B1F8  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2BC 0004B1FC  D0 47 00 10 */	stfs f2, 0x10(r7)
 /* 8004E2C0 0004B200  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E2C4 0004B204  C0 22 84 88 */	lfs f1, $$2496-_SDA2_BASE_(r2)
+/* 8004E2C4 0004B204  C0 22 84 88 */	lfs f1, $$2496@sda21(r2)
 /* 8004E2C8 0004B208  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2CC 0004B20C  D0 27 00 14 */	stfs f1, 0x14(r7)
 /* 8004E2D0 0004B210  80 03 01 80 */	lwz r0, 0x180(r3)
@@ -552,7 +552,7 @@ initSeqTrackInfoParameter__7JAIDataFUl:
 /* 8004E2DC 0004B21C  80 03 01 80 */	lwz r0, 0x180(r3)
 /* 8004E2E0 0004B220  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2E4 0004B224  D0 47 00 20 */	stfs f2, 0x20(r7)
-/* 8004E2E8 0004B228  C0 02 84 94 */	lfs f0, $$2551-_SDA2_BASE_(r2)
+/* 8004E2E8 0004B228  C0 02 84 94 */	lfs f0, $$2551@sda21(r2)
 /* 8004E2EC 0004B22C  48 00 00 70 */	b lbl_8004E35C
 lbl_8004E2F0:
 /* 8004E2F0 0004B230  80 E3 01 80 */	lwz r7, 0x180(r3)
@@ -583,7 +583,7 @@ lbl_8004E2F0:
 /* 8004E354 0004B294  7D 07 31 2E */	stwx r8, r7, r6
 /* 8004E358 0004B298  38 C6 00 04 */	addi r6, r6, 4
 lbl_8004E35C:
-/* 8004E35C 0004B29C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E35C 0004B29C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E360 0004B2A0  7C 05 00 40 */	cmplw r5, r0
 /* 8004E364 0004B2A4  41 80 FF 8C */	blt lbl_8004E2F0
 /* 8004E368 0004B2A8  4E 80 00 20 */	blr 
@@ -597,12 +597,12 @@ initStreamUpdateParameter__7JAIDataFv:
 /* 8004E37C 0004B2BC  98 04 00 01 */	stb r0, 1(r4)
 /* 8004E380 0004B2C0  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E384 0004B2C4  98 04 00 02 */	stb r0, 2(r4)
-/* 8004E388 0004B2C8  C0 02 84 80 */	lfs f0, $$2494-_SDA2_BASE_(r2)
+/* 8004E388 0004B2C8  C0 02 84 80 */	lfs f0, $$2494@sda21(r2)
 /* 8004E38C 0004B2CC  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E390 0004B2D0  D0 04 00 04 */	stfs f0, 4(r4)
 /* 8004E394 0004B2D4  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E398 0004B2D8  D0 04 00 08 */	stfs f0, 8(r4)
-/* 8004E39C 0004B2DC  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004E39C 0004B2DC  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 /* 8004E3A0 0004B2E0  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E3A4 0004B2E4  D0 04 00 0C */	stfs f0, 0xc(r4)
 /* 8004E3A8 0004B2E8  80 83 01 84 */	lwz r4, 0x184(r3)
@@ -668,7 +668,7 @@ lbl_8004E458:
 
 .global checkOnMemory__7JAIDataFUlPUc
 checkOnMemory__7JAIDataFUlPUc:
-/* 8004E468 0004B3A8  80 ED 81 18 */	lwz r7, autoHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E468 0004B3A8  80 ED 81 18 */	lwz r7, autoHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E46C 0004B3AC  39 20 00 00 */	li r9, 0
 /* 8004E470 0004B3B0  48 00 00 54 */	b lbl_8004E4C4
 lbl_8004E474:
@@ -730,7 +730,7 @@ lbl_8004E51C:
 
 .global checkUsefulAutoHeapPosition__7JAIDataFv
 checkUsefulAutoHeapPosition__7JAIDataFv:
-/* 8004E530 0004B470  80 CD 81 18 */	lwz r6, autoHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E530 0004B470  80 CD 81 18 */	lwz r6, autoHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E534 0004B474  38 E0 00 00 */	li r7, 0
 /* 8004E538 0004B478  38 80 00 00 */	li r4, 0
 /* 8004E53C 0004B47C  28 06 00 00 */	cmplwi r6, 0
@@ -818,7 +818,7 @@ releaseAutoHeapPointer__7JAIDataFUc:
 .global getFreeStayHeapPointer__7JAIDataFUlUl
 getFreeStayHeapPointer__7JAIDataFUlUl:
 /* 8004E650 0004B590  81 03 01 B8 */	lwz r8, 0x1b8(r3)
-/* 8004E654 0004B594  81 2D 81 1C */	lwz r9, stayHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E654 0004B594  81 2D 81 1C */	lwz r9, stayHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E658 0004B598  7C 08 48 40 */	cmplw r8, r9
 /* 8004E65C 0004B59C  41 80 00 0C */	blt lbl_8004E668
 /* 8004E660 0004B5A0  38 60 00 00 */	li r3, 0
@@ -826,7 +826,7 @@ getFreeStayHeapPointer__7JAIDataFUlUl:
 lbl_8004E668:
 /* 8004E668 0004B5A8  81 83 01 F0 */	lwz r12, 0x1f0(r3)
 /* 8004E66C 0004B5AC  1D 68 00 14 */	mulli r11, r8, 0x14
-/* 8004E670 0004B5B0  80 0D 81 24 */	lwz r0, stayHeapSize__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E670 0004B5B0  80 0D 81 24 */	lwz r0, stayHeapSize__18JAIGlobalParameter@sda21(r13)
 /* 8004E674 0004B5B4  38 CC 00 04 */	addi r6, r12, 4
 /* 8004E678 0004B5B8  7D 46 58 2E */	lwzx r10, r6, r11
 /* 8004E67C 0004B5BC  80 C6 00 00 */	lwz r6, 0(r6)
@@ -854,7 +854,7 @@ lbl_8004E6CC:
 /* 8004E6D0 0004B610  38 04 00 01 */	addi r0, r4, 1
 /* 8004E6D4 0004B614  90 03 01 B8 */	stw r0, 0x1b8(r3)
 /* 8004E6D8 0004B618  80 83 01 B8 */	lwz r4, 0x1b8(r3)
-/* 8004E6DC 0004B61C  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E6DC 0004B61C  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E6E0 0004B620  7C 04 00 40 */	cmplw r4, r0
 /* 8004E6E4 0004B624  40 80 00 1C */	bge lbl_8004E700
 /* 8004E6E8 0004B628  1C 04 00 14 */	mulli r0, r4, 0x14
@@ -985,16 +985,16 @@ initData__7JAIDataFv:
 /* 8004E880 0004B7C0  BF 41 00 18 */	stmw r26, 0x18(r1)
 /* 8004E884 0004B7C4  7C 7E 1B 78 */	mr r30, r3
 /* 8004E888 0004B7C8  38 9E 00 88 */	addi r4, r30, 0x88
-/* 8004E88C 0004B7CC  80 AD 81 28 */	lwz r5, seInfoFileName__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E88C 0004B7CC  80 AD 81 28 */	lwz r5, seInfoFileName__18JAIGlobalParameter@sda21(r13)
 /* 8004E890 0004B7D0  48 00 08 55 */	bl initInfoDataWork__7JAIDataFP13JAISoundTablePc
 /* 8004E894 0004B7D4  88 1E 01 B0 */	lbz r0, 0x1b0(r30)
 /* 8004E898 0004B7D8  28 00 00 01 */	cmplwi r0, 1
 /* 8004E89C 0004B7DC  40 82 00 24 */	bne lbl_8004E8C0
-/* 8004E8A0 0004B7E0  80 AD 81 2C */	lwz r5, seqInfoFileName__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E8A0 0004B7E0  80 AD 81 2C */	lwz r5, seqInfoFileName__18JAIGlobalParameter@sda21(r13)
 /* 8004E8A4 0004B7E4  38 7E 00 00 */	addi r3, r30, 0
 /* 8004E8A8 0004B7E8  38 9E 00 0C */	addi r4, r30, 0xc
 /* 8004E8AC 0004B7EC  48 00 08 39 */	bl initInfoDataWork__7JAIDataFP13JAISoundTablePc
-/* 8004E8B0 0004B7F0  80 AD 81 30 */	lwz r5, streamInfoFileName__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E8B0 0004B7F0  80 AD 81 30 */	lwz r5, streamInfoFileName__18JAIGlobalParameter@sda21(r13)
 /* 8004E8B4 0004B7F4  38 7E 00 00 */	addi r3, r30, 0
 /* 8004E8B8 0004B7F8  38 9E 01 04 */	addi r4, r30, 0x104
 /* 8004E8BC 0004B7FC  48 00 08 29 */	bl initInfoDataWork__7JAIDataFP13JAISoundTablePc
@@ -1004,7 +1004,7 @@ lbl_8004E8C0:
 /* 8004E8C8 0004B808  28 00 00 00 */	cmplwi r0, 0
 /* 8004E8CC 0004B80C  41 82 00 74 */	beq lbl_8004E940
 /* 8004E8D0 0004B810  38 00 00 00 */	li r0, 0
-/* 8004E8D4 0004B814  90 0D 81 00 */	stw r0, seTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E8D4 0004B814  90 0D 81 00 */	stw r0, seTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E8D8 0004B818  3B E0 00 00 */	li r31, 0
 /* 8004E8DC 0004B81C  3B 80 00 00 */	li r28, 0
 /* 8004E8E0 0004B820  48 00 00 54 */	b lbl_8004E934
@@ -1025,19 +1025,19 @@ lbl_8004E910:
 /* 8004E910 0004B850  48 00 63 19 */	bl getParamSeCategoryMax__18JAIGlobalParameterFv
 /* 8004E914 0004B854  7C 1A 18 40 */	cmplw r26, r3
 /* 8004E918 0004B858  41 80 FF DC */	blt lbl_8004E8F4
-/* 8004E91C 0004B85C  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E91C 0004B85C  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E920 0004B860  7C 00 D8 40 */	cmplw r0, r27
 /* 8004E924 0004B864  40 80 00 08 */	bge lbl_8004E92C
-/* 8004E928 0004B868  93 6D 81 00 */	stw r27, seTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E928 0004B868  93 6D 81 00 */	stw r27, seTrackMax__18JAIGlobalParameter@sda21(r13)
 lbl_8004E92C:
 /* 8004E92C 0004B86C  3B FF 00 01 */	addi r31, r31, 1
 /* 8004E930 0004B870  3B 9C 00 04 */	addi r28, r28, 4
 lbl_8004E934:
-/* 8004E934 0004B874  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E934 0004B874  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E938 0004B878  7C 1F 00 40 */	cmplw r31, r0
 /* 8004E93C 0004B87C  41 80 FF A8 */	blt lbl_8004E8E4
 lbl_8004E940:
-/* 8004E940 0004B880  80 0D 81 68 */	lwz r0, dummyPositionMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E940 0004B880  80 0D 81 68 */	lwz r0, dummyPositionMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E944 0004B884  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004E948 0004B888  1C 80 00 1C */	mulli r4, r0, 0x1c
 /* 8004E94C 0004B88C  4B FF ED A5 */	bl allocHeap__8JAIBasicFUl
@@ -1069,7 +1069,7 @@ lbl_8004E984:
 /* 8004E9B0 0004B8F0  38 A5 00 01 */	addi r5, r5, 1
 /* 8004E9B4 0004B8F4  38 63 00 1C */	addi r3, r3, 0x1c
 lbl_8004E9B8:
-/* 8004E9B8 0004B8F8  80 8D 81 68 */	lwz r4, dummyPositionMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004E9B8 0004B8F8  80 8D 81 68 */	lwz r4, dummyPositionMax__18JAIGlobalParameter@sda21(r13)
 /* 8004E9BC 0004B8FC  38 04 FF FF */	addi r0, r4, -1
 /* 8004E9C0 0004B900  7C 05 00 40 */	cmplw r5, r0
 /* 8004E9C4 0004B904  41 80 FF C0 */	blt lbl_8004E984
@@ -1104,7 +1104,7 @@ lbl_8004E9B8:
 /* 8004EA38 0004B978  48 00 00 A4 */	b lbl_8004EADC
 lbl_8004EA3C:
 /* 8004EA3C 0004B97C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
-/* 8004EA40 0004B980  80 8D 80 FC */	lwz r4, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EA40 0004B980  80 8D 80 FC */	lwz r4, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EA44 0004B984  81 83 00 04 */	lwz r12, 4(r3)
 /* 8004EA48 0004B988  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 8004EA4C 0004B98C  7D 88 03 A6 */	mtlr r12
@@ -1118,10 +1118,10 @@ lbl_8004EA3C:
 /* 8004EA6C 0004B9AC  7C A5 E8 2E */	lwzx r5, r5, r29
 /* 8004EA70 0004B9B0  7C A4 01 2E */	stwx r5, r4, r0
 /* 8004EA74 0004B9B4  80 1E 01 E8 */	lwz r0, 0x1e8(r30)
-/* 8004EA78 0004B9B8  80 AD 80 FC */	lwz r5, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EA78 0004B9B8  80 AD 80 FC */	lwz r5, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EA7C 0004B9BC  7C 80 E2 14 */	add r4, r0, r28
 /* 8004EA80 0004B9C0  4B FF F0 8D */	bl initLinkBuffer__7JAIDataFP13JAILinkBufferUl
-/* 8004EA84 0004B9C4  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EA84 0004B9C4  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EA88 0004B9C8  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EA8C 0004B9CC  1C 80 00 0C */	mulli r4, r0, 0xc
 /* 8004EA90 0004B9D0  4B FF EC 61 */	bl allocHeap__8JAIBasicFUl
@@ -1139,7 +1139,7 @@ lbl_8004EAAC:
 /* 8004EABC 0004B9FC  38 84 00 0C */	addi r4, r4, 0xc
 /* 8004EAC0 0004BA00  7C A3 01 2E */	stwx r5, r3, r0
 lbl_8004EAC4:
-/* 8004EAC4 0004BA04  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EAC4 0004BA04  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EAC8 0004BA08  7C 06 00 40 */	cmplw r6, r0
 /* 8004EACC 0004BA0C  41 80 FF E0 */	blt lbl_8004EAAC
 /* 8004EAD0 0004BA10  3B 5A 00 01 */	addi r26, r26, 1
@@ -1149,17 +1149,17 @@ lbl_8004EADC:
 /* 8004EADC 0004BA1C  48 00 61 4D */	bl getParamSeCategoryMax__18JAIGlobalParameterFv
 /* 8004EAE0 0004BA20  7C 1A 18 40 */	cmplw r26, r3
 /* 8004EAE4 0004BA24  41 80 FF 58 */	blt lbl_8004EA3C
-/* 8004EAE8 0004BA28  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EAE8 0004BA28  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EAEC 0004BA2C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EAF0 0004BA30  1C 80 00 18 */	mulli r4, r0, 0x18
 /* 8004EAF4 0004BA34  4B FF EB FD */	bl allocHeap__8JAIBasicFUl
 /* 8004EAF8 0004BA38  90 7E 00 00 */	stw r3, 0(r30)
 /* 8004EAFC 0004BA3C  38 A0 00 00 */	li r5, 0
 /* 8004EB00 0004BA40  38 60 00 00 */	li r3, 0
-/* 8004EB04 0004BA44  C0 42 84 80 */	lfs f2, $$2494-_SDA2_BASE_(r2)
+/* 8004EB04 0004BA44  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
 /* 8004EB08 0004BA48  38 80 00 FF */	li r4, 0xff
-/* 8004EB0C 0004BA4C  C0 22 84 88 */	lfs f1, $$2496-_SDA2_BASE_(r2)
-/* 8004EB10 0004BA50  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004EB0C 0004BA4C  C0 22 84 88 */	lfs f1, $$2496@sda21(r2)
+/* 8004EB10 0004BA50  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 /* 8004EB14 0004BA54  48 00 00 2C */	b lbl_8004EB40
 lbl_8004EB18:
 /* 8004EB18 0004BA58  80 1E 00 00 */	lwz r0, 0(r30)
@@ -1173,18 +1173,18 @@ lbl_8004EB18:
 /* 8004EB38 0004BA78  98 86 00 00 */	stb r4, 0(r6)
 /* 8004EB3C 0004BA7C  D0 26 00 14 */	stfs f1, 0x14(r6)
 lbl_8004EB40:
-/* 8004EB40 0004BA80  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EB40 0004BA80  80 0D 81 00 */	lwz r0, seTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EB44 0004BA84  7C 05 00 40 */	cmplw r5, r0
 /* 8004EB48 0004BA88  41 80 FF D0 */	blt lbl_8004EB18
 /* 8004EB4C 0004BA8C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
-/* 8004EB50 0004BA90  80 8D 81 0C */	lwz r4, seqControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EB50 0004BA90  80 8D 81 0C */	lwz r4, seqControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EB54 0004BA94  81 83 00 04 */	lwz r12, 4(r3)
 /* 8004EB58 0004BA98  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 8004EB5C 0004BA9C  7D 88 03 A6 */	mtlr r12
 /* 8004EB60 0004BAA0  4E 80 00 21 */	blrl 
 /* 8004EB64 0004BAA4  90 7E 02 08 */	stw r3, 0x208(r30)
 /* 8004EB68 0004BAA8  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
-/* 8004EB6C 0004BAAC  80 8D 81 10 */	lwz r4, streamControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EB6C 0004BAAC  80 8D 81 10 */	lwz r4, streamControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EB70 0004BAB0  81 83 00 04 */	lwz r12, 4(r3)
 /* 8004EB74 0004BAB4  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 8004EB78 0004BAB8  7D 88 03 A6 */	mtlr r12
@@ -1194,15 +1194,15 @@ lbl_8004EB40:
 /* 8004EB88 0004BAC8  38 9E 02 10 */	addi r4, r30, 0x210
 /* 8004EB8C 0004BACC  80 1E 02 08 */	lwz r0, 0x208(r30)
 /* 8004EB90 0004BAD0  90 1E 02 18 */	stw r0, 0x218(r30)
-/* 8004EB94 0004BAD4  80 AD 81 0C */	lwz r5, seqControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EB94 0004BAD4  80 AD 81 0C */	lwz r5, seqControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EB98 0004BAD8  4B FF EF 75 */	bl initLinkBuffer__7JAIDataFP13JAILinkBufferUl
 /* 8004EB9C 0004BADC  80 1E 02 0C */	lwz r0, 0x20c(r30)
 /* 8004EBA0 0004BAE0  38 7E 00 00 */	addi r3, r30, 0
 /* 8004EBA4 0004BAE4  38 9E 02 1C */	addi r4, r30, 0x21c
 /* 8004EBA8 0004BAE8  90 1E 02 24 */	stw r0, 0x224(r30)
-/* 8004EBAC 0004BAEC  80 AD 81 10 */	lwz r5, streamControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EBAC 0004BAEC  80 AD 81 10 */	lwz r5, streamControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EBB0 0004BAF0  4B FF EF 5D */	bl initLinkBuffer__7JAIDataFP13JAILinkBufferUl
-/* 8004EBB4 0004BAF4  80 0D 81 0C */	lwz r0, seqControlBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EBB4 0004BAF4  80 0D 81 0C */	lwz r0, seqControlBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EBB8 0004BAF8  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EBBC 0004BAFC  1C 80 18 5C */	mulli r4, r0, 0x185c
 /* 8004EBC0 0004BB00  4B FF EB 31 */	bl allocHeap__8JAIBasicFUl
@@ -1210,7 +1210,7 @@ lbl_8004EB40:
 /* 8004EBC8 0004BB08  7F C3 F3 78 */	mr r3, r30
 /* 8004EBCC 0004BB0C  4B FF F0 99 */	bl initSeqParaLinkBuffer__7JAIDataFv
 /* 8004EBD0 0004BB10  48 00 60 59 */	bl getParamSeCategoryMax__18JAIGlobalParameterFv
-/* 8004EBD4 0004BB14  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EBD4 0004BB14  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EBD8 0004BB18  7C 00 19 D6 */	mullw r0, r0, r3
 /* 8004EBDC 0004BB1C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EBE0 0004BB20  1C 80 04 44 */	mulli r4, r0, 0x444
@@ -1245,7 +1245,7 @@ lbl_8004EC1C:
 /* 8004EC50 0004BB90  3B 9C 04 44 */	addi r28, r28, 0x444
 lbl_8004EC54:
 /* 8004EC54 0004BB94  48 00 5F D5 */	bl getParamSeCategoryMax__18JAIGlobalParameterFv
-/* 8004EC58 0004BB98  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EC58 0004BB98  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EC5C 0004BB9C  7C 60 19 D6 */	mullw r3, r0, r3
 /* 8004EC60 0004BBA0  38 03 FF FF */	addi r0, r3, -1
 /* 8004EC64 0004BBA4  7C 1F 00 40 */	cmplw r31, r0
@@ -1261,7 +1261,7 @@ lbl_8004EC54:
 /* 8004EC8C 0004BBCC  80 1E 01 D0 */	lwz r0, 0x1d0(r30)
 /* 8004EC90 0004BBD0  7C 60 2A 14 */	add r3, r0, r5
 /* 8004EC94 0004BBD4  90 83 04 40 */	stw r4, 0x440(r3)
-/* 8004EC98 0004BBD8  80 0D 81 14 */	lwz r0, streamParameterBufferMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EC98 0004BBD8  80 0D 81 14 */	lwz r0, streamParameterBufferMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EC9C 0004BBDC  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004ECA0 0004BBE0  1C 80 03 E0 */	mulli r4, r0, 0x3e0
 /* 8004ECA4 0004BBE4  4B FF EA 4D */	bl allocHeap__8JAIBasicFUl
@@ -1280,11 +1280,11 @@ lbl_8004ECC0:
 /* 8004ECD4 0004BC14  3B 9C 04 44 */	addi r28, r28, 0x444
 lbl_8004ECD8:
 /* 8004ECD8 0004BC18  48 00 5F 51 */	bl getParamSeCategoryMax__18JAIGlobalParameterFv
-/* 8004ECDC 0004BC1C  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004ECDC 0004BC1C  80 0D 80 FC */	lwz r0, seRegistMax__18JAIGlobalParameter@sda21(r13)
 /* 8004ECE0 0004BC20  7C 00 19 D6 */	mullw r0, r0, r3
 /* 8004ECE4 0004BC24  7C 1A 00 40 */	cmplw r26, r0
 /* 8004ECE8 0004BC28  41 80 FF D8 */	blt lbl_8004ECC0
-/* 8004ECEC 0004BC2C  80 0D 81 18 */	lwz r0, autoHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004ECEC 0004BC2C  80 0D 81 18 */	lwz r0, autoHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004ECF0 0004BC30  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004ECF4 0004BC34  1C 80 00 14 */	mulli r4, r0, 0x14
 /* 8004ECF8 0004BC38  4B FF E9 F9 */	bl allocHeap__8JAIBasicFUl
@@ -1309,10 +1309,10 @@ lbl_8004ED14:
 /* 8004ED40 0004BC80  80 9E 01 EC */	lwz r4, 0x1ec(r30)
 /* 8004ED44 0004BC84  7C C4 01 2E */	stwx r6, r4, r0
 lbl_8004ED48:
-/* 8004ED48 0004BC88  80 0D 81 18 */	lwz r0, autoHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004ED48 0004BC88  80 0D 81 18 */	lwz r0, autoHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004ED4C 0004BC8C  7C 09 00 40 */	cmplw r9, r0
 /* 8004ED50 0004BC90  41 80 FF C4 */	blt lbl_8004ED14
-/* 8004ED54 0004BC94  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004ED54 0004BC94  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004ED58 0004BC98  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004ED5C 0004BC9C  1C 80 00 14 */	mulli r4, r0, 0x14
 /* 8004ED60 0004BCA0  4B FF E9 91 */	bl allocHeap__8JAIBasicFUl
@@ -1337,15 +1337,15 @@ lbl_8004ED7C:
 /* 8004EDA8 0004BCE8  80 9E 01 F0 */	lwz r4, 0x1f0(r30)
 /* 8004EDAC 0004BCEC  7C C4 01 2E */	stwx r6, r4, r0
 lbl_8004EDB0:
-/* 8004EDB0 0004BCF0  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EDB0 0004BCF0  80 0D 81 1C */	lwz r0, stayHeapMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EDB4 0004BCF4  7C 09 00 40 */	cmplw r9, r0
 /* 8004EDB8 0004BCF8  41 80 FF C4 */	blt lbl_8004ED7C
-/* 8004EDBC 0004BCFC  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EDBC 0004BCFC  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EDC0 0004BD00  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EDC4 0004BD04  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EDC8 0004BD08  4B FF E9 29 */	bl allocHeap__8JAIBasicFUl
 /* 8004EDCC 0004BD0C  90 7E 01 E0 */	stw r3, 0x1e0(r30)
-/* 8004EDD0 0004BD10  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EDD0 0004BD10  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EDD4 0004BD14  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EDD8 0004BD18  1C 80 00 50 */	mulli r4, r0, 0x50
 /* 8004EDDC 0004BD1C  4B FF E9 15 */	bl allocHeap__8JAIBasicFUl
@@ -1381,42 +1381,42 @@ lbl_8004EDF4:
 /* 8004EE50 0004BD90  7D 04 19 2E */	stwx r8, r4, r3
 /* 8004EE54 0004BD94  80 7E 01 80 */	lwz r3, 0x180(r30)
 /* 8004EE58 0004BD98  7D 03 01 2E */	stwx r8, r3, r0
-/* 8004EE5C 0004BD9C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EE5C 0004BD9C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EE60 0004BDA0  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EE64 0004BDA4  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EE68 0004BDA8  4B FF E8 89 */	bl allocHeap__8JAIBasicFUl
 /* 8004EE6C 0004BDAC  80 9E 01 80 */	lwz r4, 0x180(r30)
 /* 8004EE70 0004BDB0  38 1C 00 24 */	addi r0, r28, 0x24
 /* 8004EE74 0004BDB4  7C 64 01 2E */	stwx r3, r4, r0
-/* 8004EE78 0004BDB8  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EE78 0004BDB8  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EE7C 0004BDBC  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EE80 0004BDC0  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EE84 0004BDC4  4B FF E8 6D */	bl allocHeap__8JAIBasicFUl
 /* 8004EE88 0004BDC8  80 9E 01 80 */	lwz r4, 0x180(r30)
 /* 8004EE8C 0004BDCC  38 1C 00 30 */	addi r0, r28, 0x30
 /* 8004EE90 0004BDD0  7C 64 01 2E */	stwx r3, r4, r0
-/* 8004EE94 0004BDD4  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EE94 0004BDD4  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EE98 0004BDD8  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EE9C 0004BDDC  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EEA0 0004BDE0  4B FF E8 51 */	bl allocHeap__8JAIBasicFUl
 /* 8004EEA4 0004BDE4  80 9E 01 80 */	lwz r4, 0x180(r30)
 /* 8004EEA8 0004BDE8  38 1C 00 28 */	addi r0, r28, 0x28
 /* 8004EEAC 0004BDEC  7C 64 01 2E */	stwx r3, r4, r0
-/* 8004EEB0 0004BDF0  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EEB0 0004BDF0  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EEB4 0004BDF4  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EEB8 0004BDF8  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EEBC 0004BDFC  4B FF E8 35 */	bl allocHeap__8JAIBasicFUl
 /* 8004EEC0 0004BE00  80 9E 01 80 */	lwz r4, 0x180(r30)
 /* 8004EEC4 0004BE04  38 1C 00 2C */	addi r0, r28, 0x2c
 /* 8004EEC8 0004BE08  7C 64 01 2E */	stwx r3, r4, r0
-/* 8004EECC 0004BE0C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EECC 0004BE0C  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EED0 0004BE10  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EED4 0004BE14  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EED8 0004BE18  4B FF E8 19 */	bl allocHeap__8JAIBasicFUl
 /* 8004EEDC 0004BE1C  80 9E 01 80 */	lwz r4, 0x180(r30)
 /* 8004EEE0 0004BE20  38 1C 00 34 */	addi r0, r28, 0x34
 /* 8004EEE4 0004BE24  7C 64 01 2E */	stwx r3, r4, r0
-/* 8004EEE8 0004BE28  80 8D 81 04 */	lwz r4, seqTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EEE8 0004BE28  80 8D 81 04 */	lwz r4, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EEEC 0004BE2C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
 /* 8004EEF0 0004BE30  38 04 00 01 */	addi r0, r4, 1
 /* 8004EEF4 0004BE34  54 04 10 3A */	slwi r4, r0, 2
@@ -1431,7 +1431,7 @@ lbl_8004EDF4:
 /* 8004EF18 0004BE58  3B BD 00 04 */	addi r29, r29, 4
 /* 8004EF1C 0004BE5C  3B 9C 00 50 */	addi r28, r28, 0x50
 lbl_8004EF20:
-/* 8004EF20 0004BE60  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EF20 0004BE60  80 0D 81 08 */	lwz r0, seqPlayTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EF24 0004BE64  7C 1F 00 40 */	cmplw r31, r0
 /* 8004EF28 0004BE68  41 80 FE CC */	blt lbl_8004EDF4
 /* 8004EF2C 0004BE6C  80 7E 01 F4 */	lwz r3, 0x1f4(r30)
@@ -1445,12 +1445,12 @@ lbl_8004EF20:
 /* 8004EF4C 0004BE8C  98 03 00 01 */	stb r0, 1(r3)
 /* 8004EF50 0004BE90  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF54 0004BE94  98 03 00 02 */	stb r0, 2(r3)
-/* 8004EF58 0004BE98  C0 02 84 80 */	lfs f0, $$2494-_SDA2_BASE_(r2)
+/* 8004EF58 0004BE98  C0 02 84 80 */	lfs f0, $$2494@sda21(r2)
 /* 8004EF5C 0004BE9C  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF60 0004BEA0  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8004EF64 0004BEA4  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF68 0004BEA8  D0 03 00 08 */	stfs f0, 8(r3)
-/* 8004EF6C 0004BEAC  C0 02 84 84 */	lfs f0, $$2495-_SDA2_BASE_(r2)
+/* 8004EF6C 0004BEAC  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
 /* 8004EF70 0004BEB0  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF74 0004BEB4  D0 03 00 0C */	stfs f0, 0xc(r3)
 /* 8004EF78 0004BEB8  80 7E 01 84 */	lwz r3, 0x184(r30)
@@ -1464,7 +1464,7 @@ lbl_8004EF20:
 /* 8004EF98 0004BED8  90 1E 00 04 */	stw r0, 4(r30)
 /* 8004EF9C 0004BEDC  48 00 00 44 */	b lbl_8004EFE0
 lbl_8004EFA0:
-/* 8004EFA0 0004BEE0  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EFA0 0004BEE0  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EFA4 0004BEE4  54 04 10 3A */	slwi r4, r0, 2
 /* 8004EFA8 0004BEE8  4B FF E7 49 */	bl allocHeap__8JAIBasicFUl
 /* 8004EFAC 0004BEEC  3C 80 80 3B */	lis r4, sCInfos_0__8JAIConst@ha
@@ -1479,7 +1479,7 @@ lbl_8004EFC4:
 /* 8004EFCC 0004BF0C  7C A4 19 2E */	stwx r5, r4, r3
 /* 8004EFD0 0004BF10  38 63 00 04 */	addi r3, r3, 4
 lbl_8004EFD4:
-/* 8004EFD4 0004BF14  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 8004EFD4 0004BF14  80 0D 80 F8 */	lwz r0, soundSceneMax__18JAIGlobalParameter@sda21(r13)
 /* 8004EFD8 0004BF18  7C 06 00 40 */	cmplw r6, r0
 /* 8004EFDC 0004BF1C  41 80 FF E8 */	blt lbl_8004EFC4
 lbl_8004EFE0:

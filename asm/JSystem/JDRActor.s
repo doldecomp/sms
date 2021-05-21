@@ -40,7 +40,7 @@ load__Q26JDrama6TActorFR20JSUMemoryInputStream:
 /* 800409D0 0003D910  38 81 00 4C */	addi r4, r1, 0x4c
 /* 800409D4 0003D914  38 A0 00 50 */	li r5, 0x50
 /* 800409D8 0003D918  4B FC DC E5 */	bl readString__14JSUInputStreamFPcUs
-/* 800409DC 0003D91C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800409DC 0003D91C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800409E0 0003D920  38 61 00 4C */	addi r3, r1, 0x4c
 /* 800409E4 0003D924  83 C4 00 04 */	lwz r30, 4(r4)
 /* 800409E8 0003D928  48 00 3C A5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc

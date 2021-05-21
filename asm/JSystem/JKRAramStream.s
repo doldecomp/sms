@@ -8,10 +8,10 @@ create__13JKRAramStreamFl:
 /* 8003A864 000377A4  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8003A868 000377A8  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8003A86C 000377AC  3B E3 00 00 */	addi r31, r3, 0
-/* 8003A870 000377B0  80 0D 8E A0 */	lwz r0, sAramStreamObject__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003A870 000377B0  80 0D 8E A0 */	lwz r0, sAramStreamObject__13JKRAramStream@sda21(r13)
 /* 8003A874 000377B4  28 00 00 00 */	cmplwi r0, 0
 /* 8003A878 000377B8  40 82 00 38 */	bne lbl_8003A8B0
-/* 8003A87C 000377BC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8003A87C 000377BC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8003A880 000377C0  38 60 00 60 */	li r3, 0x60
 /* 8003A884 000377C4  38 A0 00 00 */	li r5, 0
 /* 8003A888 000377C8  4B FD 20 BD */	bl __nw__FUlP7JKRHeapi
@@ -20,7 +20,7 @@ create__13JKRAramStreamFl:
 /* 8003A894 000377D4  7F E4 FB 78 */	mr r4, r31
 /* 8003A898 000377D8  48 00 00 31 */	bl __ct__13JKRAramStreamFl
 lbl_8003A89C:
-/* 8003A89C 000377DC  90 6D 8E A0 */	stw r3, sAramStreamObject__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003A89C 000377DC  90 6D 8E A0 */	stw r3, sAramStreamObject__13JKRAramStream@sda21(r13)
 /* 8003A8A0 000377E0  38 60 00 00 */	li r3, 0
 /* 8003A8A4 000377E4  38 80 00 00 */	li r4, 0
 /* 8003A8A8 000377E8  38 A0 00 00 */	li r5, 0
@@ -29,7 +29,7 @@ lbl_8003A8B0:
 /* 8003A8B0 000377F0  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8003A8B4 000377F4  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8003A8B8 000377F8  38 21 00 18 */	addi r1, r1, 0x18
-/* 8003A8BC 000377FC  80 6D 8E A0 */	lwz r3, sAramStreamObject__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003A8BC 000377FC  80 6D 8E A0 */	lwz r3, sAramStreamObject__13JKRAramStream@sda21(r13)
 /* 8003A8C0 00037800  7C 08 03 A6 */	mtlr r0
 /* 8003A8C4 00037804  4E 80 00 20 */	blr 
 
@@ -187,7 +187,7 @@ lbl_8003AAB8:
 /* 8003AABC 000379FC  40 82 00 50 */	bne lbl_8003AB0C
 /* 8003AAC0 00037A00  28 1B 00 00 */	cmplwi r27, 0
 /* 8003AAC4 00037A04  40 82 00 1C */	bne lbl_8003AAE0
-/* 8003AAC8 00037A08  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8003AAC8 00037A08  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8003AACC 00037A0C  81 83 00 00 */	lwz r12, 0(r3)
 /* 8003AAD0 00037A10  81 8C 00 38 */	lwz r12, 0x38(r12)
 /* 8003AAD4 00037A14  7D 88 03 A6 */	mtlr r12
@@ -204,7 +204,7 @@ lbl_8003AAF4:
 /* 8003AAF8 00037A38  4C C6 31 82 */	crclr 6
 /* 8003AAFC 00037A3C  38 63 0D A8 */	addi r3, r3, $$2110@l
 /* 8003AB00 00037A40  38 80 00 A9 */	li r4, 0xa9
-/* 8003AB04 00037A44  38 A2 83 10 */	addi r5, r2, $$2111-_SDA2_BASE_
+/* 8003AB04 00037A44  38 A2 83 10 */	addi r5, r2, $$2111@sda21
 /* 8003AB08 00037A48  48 05 44 DD */	bl OSPanic
 lbl_8003AB0C:
 /* 8003AB0C 00037A4C  28 18 00 00 */	cmplwi r24, 0
@@ -271,7 +271,7 @@ write_StreamToAram_Async__13JKRAramStreamFP18JSUFileInputStreamUlUlUl:
 /* 8003ABE0 00037B20  3B C6 00 00 */	addi r30, r6, 0
 /* 8003ABE4 00037B24  38 60 00 58 */	li r3, 0x58
 /* 8003ABE8 00037B28  38 A0 FF FC */	li r5, -4
-/* 8003ABEC 00037B2C  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8003ABEC 00037B2C  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8003ABF0 00037B30  7C 04 03 78 */	mr r4, r0
 /* 8003ABF4 00037B34  4B FD 1D 51 */	bl __nw__FUlP7JKRHeapi
 /* 8003ABF8 00037B38  7C 7F 1B 79 */	or. r31, r3, r3
@@ -291,11 +291,11 @@ lbl_8003AC0C:
 /* 8003AC2C 00037B6C  93 7F 00 10 */	stw r27, 0x10(r31)
 /* 8003AC30 00037B70  90 1F 00 28 */	stw r0, 0x28(r31)
 /* 8003AC34 00037B74  93 DF 00 14 */	stw r30, 0x14(r31)
-/* 8003AC38 00037B78  80 0D 8E A4 */	lwz r0, transBuffer__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AC38 00037B78  80 0D 8E A4 */	lwz r0, transBuffer__13JKRAramStream@sda21(r13)
 /* 8003AC3C 00037B7C  90 1F 00 18 */	stw r0, 0x18(r31)
-/* 8003AC40 00037B80  80 0D 8E AC */	lwz r0, transHeap__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AC40 00037B80  80 0D 8E AC */	lwz r0, transHeap__13JKRAramStream@sda21(r13)
 /* 8003AC44 00037B84  90 1F 00 20 */	stw r0, 0x20(r31)
-/* 8003AC48 00037B88  80 0D 8E A8 */	lwz r0, transSize__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AC48 00037B88  80 0D 8E A8 */	lwz r0, transSize__13JKRAramStream@sda21(r13)
 /* 8003AC4C 00037B8C  90 1F 00 1C */	stw r0, 0x1c(r31)
 /* 8003AC50 00037B90  48 05 5E 01 */	bl OSInitMessageQueue
 /* 8003AC54 00037B94  3C 60 80 3B */	lis r3, sMessageQueue__13JKRAramStream@ha
@@ -360,25 +360,25 @@ setTransBuffer__13JKRAramStreamFPUcUlP7JKRHeap:
 /* 8003AD14 00037C54  3C C0 00 01 */	lis r6, 0x00008000@ha
 /* 8003AD18 00037C58  38 E0 00 00 */	li r7, 0
 /* 8003AD1C 00037C5C  38 06 80 00 */	addi r0, r6, 0x00008000@l
-/* 8003AD20 00037C60  90 ED 8E A4 */	stw r7, transBuffer__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AD20 00037C60  90 ED 8E A4 */	stw r7, transBuffer__13JKRAramStream@sda21(r13)
 /* 8003AD24 00037C64  28 03 00 00 */	cmplwi r3, 0
-/* 8003AD28 00037C68  90 0D 8E A8 */	stw r0, transSize__13JKRAramStream-_SDA_BASE_(r13)
-/* 8003AD2C 00037C6C  90 ED 8E AC */	stw r7, transHeap__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AD28 00037C68  90 0D 8E A8 */	stw r0, transSize__13JKRAramStream@sda21(r13)
+/* 8003AD2C 00037C6C  90 ED 8E AC */	stw r7, transHeap__13JKRAramStream@sda21(r13)
 /* 8003AD30 00037C70  41 82 00 10 */	beq lbl_8003AD40
 /* 8003AD34 00037C74  38 03 00 1F */	addi r0, r3, 0x1f
 /* 8003AD38 00037C78  54 00 00 34 */	rlwinm r0, r0, 0, 0, 0x1a
-/* 8003AD3C 00037C7C  90 0D 8E A4 */	stw r0, transBuffer__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AD3C 00037C7C  90 0D 8E A4 */	stw r0, transBuffer__13JKRAramStream@sda21(r13)
 lbl_8003AD40:
 /* 8003AD40 00037C80  28 04 00 00 */	cmplwi r4, 0
 /* 8003AD44 00037C84  41 82 00 0C */	beq lbl_8003AD50
 /* 8003AD48 00037C88  54 80 00 34 */	rlwinm r0, r4, 0, 0, 0x1a
-/* 8003AD4C 00037C8C  90 0D 8E A8 */	stw r0, transSize__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AD4C 00037C8C  90 0D 8E A8 */	stw r0, transSize__13JKRAramStream@sda21(r13)
 lbl_8003AD50:
 /* 8003AD50 00037C90  28 05 00 00 */	cmplwi r5, 0
 /* 8003AD54 00037C94  4D 82 00 20 */	beqlr 
 /* 8003AD58 00037C98  28 03 00 00 */	cmplwi r3, 0
 /* 8003AD5C 00037C9C  4C 82 00 20 */	bnelr 
-/* 8003AD60 00037CA0  90 AD 8E AC */	stw r5, transHeap__13JKRAramStream-_SDA_BASE_(r13)
+/* 8003AD60 00037CA0  90 AD 8E AC */	stw r5, transHeap__13JKRAramStream@sda21(r13)
 /* 8003AD64 00037CA4  4E 80 00 20 */	blr 
 
 .global __ct__20JKRAramStreamCommandFv

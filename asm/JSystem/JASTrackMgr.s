@@ -14,7 +14,7 @@ init__Q28JASystem8TrackMgrFii:
 /* 8006847C 000653BC  3B A3 00 00 */	addi r29, r3, 0
 /* 80068480 000653C0  3B FD 00 00 */	addi r31, r29, 0
 /* 80068484 000653C4  1C 7F 03 D0 */	mulli r3, r31, 0x3d0
-/* 80068488 000653C8  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80068488 000653C8  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 8006848C 000653CC  38 63 00 08 */	addi r3, r3, 8
 /* 80068490 000653D0  4B FA 45 B5 */	bl __nwa__FUlP7JKRHeapi
 /* 80068494 000653D4  3C 80 80 06 */	lis r4, __ct__Q28JASystem6TTrackFv@ha
@@ -25,9 +25,9 @@ init__Q28JASystem8TrackMgrFii:
 /* 800684A8 000653E8  38 C0 03 D0 */	li r6, 0x3d0
 /* 800684AC 000653EC  48 01 A5 41 */	bl __construct_new_array
 /* 800684B0 000653F0  7F BF EB 78 */	mr r31, r29
-/* 800684B4 000653F4  90 6D 92 28 */	stw r3, sTrackPool__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800684B4 000653F4  90 6D 92 28 */	stw r3, sTrackPool__Q28JASystem8TrackMgr@sda21(r13)
 /* 800684B8 000653F8  1C 7F 00 2C */	mulli r3, r31, 0x2c
-/* 800684BC 000653FC  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800684BC 000653FC  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800684C0 00065400  38 63 00 08 */	addi r3, r3, 8
 /* 800684C4 00065404  38 A0 00 00 */	li r5, 0
 /* 800684C8 00065408  4B FA 45 7D */	bl __nwa__FUlP7JKRHeapi
@@ -37,26 +37,26 @@ init__Q28JASystem8TrackMgrFii:
 /* 800684D8 00065418  38 A0 00 00 */	li r5, 0
 /* 800684DC 0006541C  38 C0 00 2C */	li r6, 0x2c
 /* 800684E0 00065420  48 01 A5 0D */	bl __construct_new_array
-/* 800684E4 00065424  90 6D 92 2C */	stw r3, sSeqOuter__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800684E4 00065424  90 6D 92 2C */	stw r3, sSeqOuter__Q28JASystem8TrackMgr@sda21(r13)
 /* 800684E8 00065428  57 A3 10 3A */	slwi r3, r29, 2
-/* 800684EC 0006542C  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800684EC 0006542C  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800684F0 00065430  38 A0 00 00 */	li r5, 0
 /* 800684F4 00065434  4B FA 45 51 */	bl __nwa__FUlP7JKRHeapi
-/* 800684F8 00065438  90 6D 92 34 */	stw r3, sFreeSeqpQueue__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800684F8 00065438  90 6D 92 34 */	stw r3, sFreeSeqpQueue__Q28JASystem8TrackMgr@sda21(r13)
 /* 800684FC 0006543C  57 DF 10 3A */	slwi r31, r30, 2
 /* 80068500 00065440  38 9F 00 00 */	addi r4, r31, 0
-/* 80068504 00065444  80 6D 92 34 */	lwz r3, sFreeSeqpQueue__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068504 00065444  80 6D 92 34 */	lwz r3, sFreeSeqpQueue__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068508 00065448  4B FF 8D 19 */	bl bzero__Q28JASystem4CalcFPvUl
-/* 8006850C 0006544C  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 8006850C 0006544C  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80068510 00065450  38 7F 00 00 */	addi r3, r31, 0
 /* 80068514 00065454  38 A0 00 00 */	li r5, 0
 /* 80068518 00065458  4B FA 45 2D */	bl __nwa__FUlP7JKRHeapi
-/* 8006851C 0006545C  90 6D 92 30 */	stw r3, sRootTrack__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006851C 0006545C  90 6D 92 30 */	stw r3, sRootTrack__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068520 00065460  7F E4 FB 78 */	mr r4, r31
-/* 80068524 00065464  80 6D 92 30 */	lwz r3, sRootTrack__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068524 00065464  80 6D 92 30 */	lwz r3, sRootTrack__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068528 00065468  4B FF 8C F9 */	bl bzero__Q28JASystem4CalcFPvUl
-/* 8006852C 0006546C  93 AD 92 3C */	stw r29, sTrackCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 80068530 00065470  93 CD 92 38 */	stw r30, sRootSeqCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006852C 0006546C  93 AD 92 3C */	stw r29, sTrackCount__Q28JASystem8TrackMgr@sda21(r13)
+/* 80068530 00065470  93 CD 92 38 */	stw r30, sRootSeqCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068534 00065474  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80068538 00065478  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 8006853C 0006547C  83 C1 00 18 */	lwz r30, 0x18(r1)
@@ -96,13 +96,13 @@ lbl_80068598:
 
 .global handleToSeq__Q28JASystem8TrackMgrFUl
 handleToSeq__Q28JASystem8TrackMgrFUl:
-/* 800685B4 000654F4  80 0D 92 38 */	lwz r0, sRootSeqCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800685B4 000654F4  80 0D 92 38 */	lwz r0, sRootSeqCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 800685B8 000654F8  7C 03 00 40 */	cmplw r3, r0
 /* 800685BC 000654FC  41 80 00 0C */	blt lbl_800685C8
 /* 800685C0 00065500  38 60 00 00 */	li r3, 0
 /* 800685C4 00065504  4E 80 00 20 */	blr 
 lbl_800685C8:
-/* 800685C8 00065508  80 8D 92 30 */	lwz r4, sRootTrack__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800685C8 00065508  80 8D 92 30 */	lwz r4, sRootTrack__Q28JASystem8TrackMgr@sda21(r13)
 /* 800685CC 0006550C  54 60 10 3A */	slwi r0, r3, 2
 /* 800685D0 00065510  7C 64 00 2E */	lwzx r3, r4, r0
 /* 800685D4 00065514  4E 80 00 20 */	blr 
@@ -119,31 +119,31 @@ reset__Q28JASystem8TrackMgrFv:
 /* 800685F4 00065534  3B A0 00 00 */	li r29, 0
 /* 800685F8 00065538  48 00 00 48 */	b lbl_80068640
 lbl_800685FC:
-/* 800685FC 0006553C  80 0D 92 28 */	lwz r0, sTrackPool__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800685FC 0006553C  80 0D 92 28 */	lwz r0, sTrackPool__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068600 00065540  7F 60 EA 14 */	add r27, r0, r29
 /* 80068604 00065544  38 7B 00 00 */	addi r3, r27, 0
 /* 80068608 00065548  4B FF FA B1 */	bl reset__Q28JASystem6TTrackFv
-/* 8006860C 0006554C  80 0D 92 2C */	lwz r0, sSeqOuter__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006860C 0006554C  80 0D 92 2C */	lwz r0, sSeqOuter__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068610 00065550  7C 60 F2 14 */	add r3, r0, r30
 /* 80068614 00065554  4B FF BF 69 */	bl initExtBuffer__Q38JASystem6TTrack11TOuterParamFv
-/* 80068618 00065558  80 0D 92 2C */	lwz r0, sSeqOuter__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068618 00065558  80 0D 92 2C */	lwz r0, sSeqOuter__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006861C 0006555C  38 7B 00 00 */	addi r3, r27, 0
 /* 80068620 00065560  7C 80 F2 14 */	add r4, r0, r30
 /* 80068624 00065564  4B FF C9 31 */	bl assignExtBuffer__Q28JASystem6TTrackFPQ38JASystem6TTrack11TOuterParam
-/* 80068628 00065568  80 6D 92 34 */	lwz r3, sFreeSeqpQueue__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068628 00065568  80 6D 92 34 */	lwz r3, sFreeSeqpQueue__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006862C 0006556C  3B BD 03 D0 */	addi r29, r29, 0x3d0
 /* 80068630 00065570  3B 9C 00 01 */	addi r28, r28, 1
 /* 80068634 00065574  7F 63 F9 2E */	stwx r27, r3, r31
 /* 80068638 00065578  3B FF 00 04 */	addi r31, r31, 4
 /* 8006863C 0006557C  3B DE 00 2C */	addi r30, r30, 0x2c
 lbl_80068640:
-/* 80068640 00065580  80 6D 92 3C */	lwz r3, sTrackCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068640 00065580  80 6D 92 3C */	lwz r3, sTrackCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068644 00065584  7C 1C 18 40 */	cmplw r28, r3
 /* 80068648 00065588  41 80 FF B4 */	blt lbl_800685FC
 /* 8006864C 0006558C  38 00 00 00 */	li r0, 0
-/* 80068650 00065590  90 6D 92 44 */	stw r3, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 80068654 00065594  90 0D 92 4C */	stw r0, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 80068658 00065598  90 0D 92 48 */	stw r0, getP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068650 00065590  90 6D 92 44 */	stw r3, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
+/* 80068654 00065594  90 0D 92 4C */	stw r0, backP__Q28JASystem8TrackMgr@sda21(r13)
+/* 80068658 00065598  90 0D 92 48 */	stw r0, getP__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006865C 0006559C  48 00 00 19 */	bl initRegistTrack__Q28JASystem8TrackMgrFv
 /* 80068660 000655A0  BB 61 00 0C */	lmw r27, 0xc(r1)
 /* 80068664 000655A4  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -154,7 +154,7 @@ lbl_80068640:
 .global initRegistTrack__Q28JASystem8TrackMgrFv
 initRegistTrack__Q28JASystem8TrackMgrFv:
 /* 80068674 000655B4  38 00 00 00 */	li r0, 0
-/* 80068678 000655B8  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068678 000655B8  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006867C 000655BC  3C 60 80 3E */	lis r3, sTrackList__Q28JASystem8TrackMgr@ha
 /* 80068680 000655C0  94 03 6B 40 */	stwu r0, sTrackList__Q28JASystem8TrackMgr@l(r3)
 /* 80068684 000655C4  90 03 00 08 */	stw r0, 8(r3)
@@ -196,26 +196,26 @@ getNewTrack__Q28JASystem8TrackMgrFv:
 /* 80068708 00065648  90 01 00 04 */	stw r0, 4(r1)
 /* 8006870C 0006564C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80068710 00065650  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 80068714 00065654  80 6D 92 44 */	lwz r3, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068714 00065654  80 6D 92 44 */	lwz r3, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068718 00065658  28 03 00 00 */	cmplwi r3, 0
 /* 8006871C 0006565C  40 82 00 0C */	bne lbl_80068728
 /* 80068720 00065660  38 60 00 00 */	li r3, 0
 /* 80068724 00065664  48 00 00 54 */	b lbl_80068778
 lbl_80068728:
-/* 80068728 00065668  80 AD 92 48 */	lwz r5, getP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068728 00065668  80 AD 92 48 */	lwz r5, getP__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006872C 0006566C  38 83 FF FF */	addi r4, r3, -1
-/* 80068730 00065670  80 CD 92 34 */	lwz r6, sFreeSeqpQueue__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068730 00065670  80 CD 92 34 */	lwz r6, sFreeSeqpQueue__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068734 00065674  54 A3 10 3A */	slwi r3, r5, 2
-/* 80068738 00065678  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068738 00065678  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006873C 0006567C  7F E6 18 2E */	lwzx r31, r6, r3
 /* 80068740 00065680  38 65 00 01 */	addi r3, r5, 1
-/* 80068744 00065684  90 6D 92 48 */	stw r3, getP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 80068748 00065688  80 6D 92 48 */	lwz r3, getP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 8006874C 0006568C  90 8D 92 44 */	stw r4, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068744 00065684  90 6D 92 48 */	stw r3, getP__Q28JASystem8TrackMgr@sda21(r13)
+/* 80068748 00065688  80 6D 92 48 */	lwz r3, getP__Q28JASystem8TrackMgr@sda21(r13)
+/* 8006874C 0006568C  90 8D 92 44 */	stw r4, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068750 00065690  7C 03 00 40 */	cmplw r3, r0
 /* 80068754 00065694  40 82 00 0C */	bne lbl_80068760
 /* 80068758 00065698  38 00 00 00 */	li r0, 0
-/* 8006875C 0006569C  90 0D 92 48 */	stw r0, getP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006875C 0006569C  90 0D 92 48 */	stw r0, getP__Q28JASystem8TrackMgr@sda21(r13)
 lbl_80068760:
 /* 80068760 000656A0  38 00 00 02 */	li r0, 2
 /* 80068764 000656A4  98 1F 03 C4 */	stb r0, 0x3c4(r31)
@@ -232,9 +232,9 @@ lbl_80068778:
 
 .global allocNewRoot__Q28JASystem8TrackMgrFPQ28JASystem6TTrack
 allocNewRoot__Q28JASystem8TrackMgrFPQ28JASystem6TTrack:
-/* 8006878C 000656CC  80 ED 92 30 */	lwz r7, sRootTrack__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006878C 000656CC  80 ED 92 30 */	lwz r7, sRootTrack__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068790 000656D0  39 00 00 00 */	li r8, 0
-/* 80068794 000656D4  80 AD 92 38 */	lwz r5, sRootSeqCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068794 000656D4  80 AD 92 38 */	lwz r5, sRootSeqCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068798 000656D8  48 00 00 28 */	b lbl_800687C0
 lbl_8006879C:
 /* 8006879C 000656DC  55 04 06 3E */	clrlwi r4, r8, 0x18
@@ -256,9 +256,9 @@ lbl_800687C0:
 
 .global deAllocRoot__Q28JASystem8TrackMgrFPQ28JASystem6TTrack
 deAllocRoot__Q28JASystem8TrackMgrFPQ28JASystem6TTrack:
-/* 800687D4 00065714  80 ED 92 30 */	lwz r7, sRootTrack__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800687D4 00065714  80 ED 92 30 */	lwz r7, sRootTrack__Q28JASystem8TrackMgr@sda21(r13)
 /* 800687D8 00065718  39 00 00 00 */	li r8, 0
-/* 800687DC 0006571C  80 AD 92 38 */	lwz r5, sRootSeqCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800687DC 0006571C  80 AD 92 38 */	lwz r5, sRootSeqCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 800687E0 00065720  48 00 00 2C */	b lbl_8006880C
 lbl_800687E4:
 /* 800687E4 00065724  55 04 06 3E */	clrlwi r4, r8, 0x18
@@ -281,7 +281,7 @@ lbl_8006880C:
 
 .global registTrack__Q28JASystem8TrackMgrFUlPQ28JASystem6TTrack
 registTrack__Q28JASystem8TrackMgrFUlPQ28JASystem6TTrack:
-/* 80068820 00065760  80 ED 92 40 */	lwz r7, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068820 00065760  80 ED 92 40 */	lwz r7, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068824 00065764  3C A0 80 3E */	lis r5, sTrackList__Q28JASystem8TrackMgr@ha
 /* 80068828 00065768  38 C5 6B 40 */	addi r6, r5, sTrackList__Q28JASystem8TrackMgr@l
 /* 8006882C 0006576C  28 07 00 00 */	cmplwi r7, 0
@@ -349,9 +349,9 @@ lbl_80068910:
 /* 80068914 00065854  40 82 00 14 */	bne lbl_80068928
 /* 80068918 00065858  4E 80 00 20 */	blr 
 lbl_8006891C:
-/* 8006891C 0006585C  80 AD 92 40 */	lwz r5, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006891C 0006585C  80 AD 92 40 */	lwz r5, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068920 00065860  38 05 00 01 */	addi r0, r5, 1
-/* 80068924 00065864  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068924 00065864  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 lbl_80068928:
 /* 80068928 00065868  54 E0 18 38 */	slwi r0, r7, 3
 /* 8006892C 0006586C  7C A6 02 14 */	add r5, r6, r0
@@ -361,7 +361,7 @@ lbl_80068928:
 
 .global unRegistTrack__Q28JASystem8TrackMgrFPQ28JASystem6TTrack
 unRegistTrack__Q28JASystem8TrackMgrFPQ28JASystem6TTrack:
-/* 8006893C 0006587C  80 0D 92 40 */	lwz r0, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 8006893C 0006587C  80 0D 92 40 */	lwz r0, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 80068940 00065880  3C A0 80 3E */	lis r5, sTrackList__Q28JASystem8TrackMgr@ha
 /* 80068944 00065884  38 80 00 00 */	li r4, 0
 /* 80068948 00065888  28 00 00 00 */	cmplwi r0, 0
@@ -388,40 +388,40 @@ lbl_80068984:
 /* 8006898C 000658CC  80 03 FF F8 */	lwz r0, -8(r3)
 /* 80068990 000658D0  28 00 00 00 */	cmplwi r0, 0
 /* 80068994 000658D4  4C 82 00 20 */	bnelr 
-/* 80068998 000658D8  80 6D 92 40 */	lwz r3, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068998 000658D8  80 6D 92 40 */	lwz r3, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 8006899C 000658DC  38 03 FF FF */	addi r0, r3, -1
-/* 800689A0 000658E0  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689A0 000658E0  90 0D 92 40 */	stw r0, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 lbl_800689A4:
-/* 800689A4 000658E4  80 0D 92 40 */	lwz r0, sTLists__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689A4 000658E4  80 0D 92 40 */	lwz r0, sTLists__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689A8 000658E8  28 00 00 00 */	cmplwi r0, 0
 /* 800689AC 000658EC  40 82 FF D8 */	bne lbl_80068984
 /* 800689B0 000658F0  4E 80 00 20 */	blr 
 
 .global backTrack__Q28JASystem8TrackMgrFPQ28JASystem6TTrack
 backTrack__Q28JASystem8TrackMgrFPQ28JASystem6TTrack:
-/* 800689B4 000658F4  80 8D 92 44 */	lwz r4, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 800689B8 000658F8  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689B4 000658F4  80 8D 92 44 */	lwz r4, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
+/* 800689B8 000658F8  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689BC 000658FC  7C 04 00 40 */	cmplw r4, r0
 /* 800689C0 00065900  40 82 00 0C */	bne lbl_800689CC
 /* 800689C4 00065904  38 60 00 00 */	li r3, 0
 /* 800689C8 00065908  4E 80 00 20 */	blr 
 lbl_800689CC:
-/* 800689CC 0006590C  80 0D 92 4C */	lwz r0, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 800689D0 00065910  80 8D 92 34 */	lwz r4, sFreeSeqpQueue__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689CC 0006590C  80 0D 92 4C */	lwz r0, backP__Q28JASystem8TrackMgr@sda21(r13)
+/* 800689D0 00065910  80 8D 92 34 */	lwz r4, sFreeSeqpQueue__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689D4 00065914  54 00 10 3A */	slwi r0, r0, 2
 /* 800689D8 00065918  7C 64 01 2E */	stwx r3, r4, r0
-/* 800689DC 0006591C  80 6D 92 4C */	lwz r3, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 800689E0 00065920  80 8D 92 44 */	lwz r4, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689DC 0006591C  80 6D 92 4C */	lwz r3, backP__Q28JASystem8TrackMgr@sda21(r13)
+/* 800689E0 00065920  80 8D 92 44 */	lwz r4, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689E4 00065924  38 63 00 01 */	addi r3, r3, 1
-/* 800689E8 00065928  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 800689EC 0006592C  90 6D 92 4C */	stw r3, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689E8 00065928  80 0D 92 3C */	lwz r0, sTrackCount__Q28JASystem8TrackMgr@sda21(r13)
+/* 800689EC 0006592C  90 6D 92 4C */	stw r3, backP__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689F0 00065930  38 84 00 01 */	addi r4, r4, 1
-/* 800689F4 00065934  80 6D 92 4C */	lwz r3, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
-/* 800689F8 00065938  90 8D 92 44 */	stw r4, seqRemain__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 800689F4 00065934  80 6D 92 4C */	lwz r3, backP__Q28JASystem8TrackMgr@sda21(r13)
+/* 800689F8 00065938  90 8D 92 44 */	stw r4, seqRemain__Q28JASystem8TrackMgr@sda21(r13)
 /* 800689FC 0006593C  7C 03 00 40 */	cmplw r3, r0
 /* 80068A00 00065940  40 82 00 0C */	bne lbl_80068A0C
 /* 80068A04 00065944  38 00 00 00 */	li r0, 0
-/* 80068A08 00065948  90 0D 92 4C */	stw r0, backP__Q28JASystem8TrackMgr-_SDA_BASE_(r13)
+/* 80068A08 00065948  90 0D 92 4C */	stw r0, backP__Q28JASystem8TrackMgr@sda21(r13)
 lbl_80068A0C:
 /* 80068A0C 0006594C  38 60 00 01 */	li r3, 1
 /* 80068A10 00065950  4E 80 00 20 */	blr 

@@ -39,7 +39,7 @@ perform__11TMarineSnowFUlPQ26JDrama9TGraphics:
 /* 801F4A10 001F1950  54 80 07 BD */	rlwinm. r0, r4, 0, 0x1e, 0x1e
 /* 801F4A14 001F1954  94 21 FF F8 */	stwu r1, -8(r1)
 /* 801F4A18 001F1958  41 82 00 3C */	beq lbl_801F4A54
-/* 801F4A1C 001F195C  80 8D A8 B0 */	lwz r4, gpCamera-_SDA_BASE_(r13)
+/* 801F4A1C 001F195C  80 8D A8 B0 */	lwz r4, gpCamera@sda21(r13)
 /* 801F4A20 001F1960  38 E3 00 00 */	addi r7, r3, 0
 /* 801F4A24 001F1964  38 A3 00 10 */	addi r5, r3, 0x10
 /* 801F4A28 001F1968  39 04 01 24 */	addi r8, r4, 0x124
@@ -51,7 +51,7 @@ perform__11TMarineSnowFUlPQ26JDrama9TGraphics:
 /* 801F4A40 001F1980  D0 03 00 14 */	stfs f0, 0x14(r3)
 /* 801F4A44 001F1984  C0 08 00 08 */	lfs f0, 8(r8)
 /* 801F4A48 001F1988  D0 03 00 18 */	stfs f0, 0x18(r3)
-/* 801F4A4C 001F198C  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 801F4A4C 001F198C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 801F4A50 001F1990  4B EE 6D 81 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
 lbl_801F4A54:
 /* 801F4A54 001F1994  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -72,7 +72,7 @@ loadAfter__11TMarineSnowFv:
 /* 801F4A84 001F19C4  28 00 00 00 */	cmplwi r0, 0
 /* 801F4A88 001F19C8  40 82 00 20 */	bne lbl_801F4AA8
 /* 801F4A8C 001F19CC  3C 80 80 39 */	lis r4, $$21974@ha
-/* 801F4A90 001F19D0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801F4A90 001F19D0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801F4A94 001F19D4  38 84 2C A0 */	addi r4, r4, $$21974@l
 /* 801F4A98 001F19D8  38 A0 01 4B */	li r5, 0x14b
 /* 801F4A9C 001F19DC  4B E8 C5 91 */	bl load__18JPAResourceManagerFPCcUs
@@ -109,7 +109,7 @@ __ct__11TMarineSnowFPCc:
 /* 801F4B08 001F1A48  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 801F4B0C 001F1A4C  90 1E 00 00 */	stw r0, 0(r30)
 /* 801F4B10 001F1A50  38 7E 00 10 */	addi r3, r30, 0x10
-/* 801F4B14 001F1A54  C0 22 D1 20 */	lfs f1, $$21992-_SDA2_BASE_(r2)
+/* 801F4B14 001F1A54  C0 22 D1 20 */	lfs f1, $$21992@sda21(r2)
 /* 801F4B18 001F1A58  FC 40 08 90 */	fmr f2, f1
 /* 801F4B1C 001F1A5C  FC 60 08 90 */	fmr f3, f1
 /* 801F4B20 001F1A60  48 00 00 91 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
@@ -129,12 +129,12 @@ __ct__11TMarineSnowFPCc:
 /* 801F4B58 001F1A98  90 1F 00 20 */	stw r0, 0x20(r31)
 /* 801F4B5C 001F1A9C  38 83 08 F0 */	addi r4, r3, __vt__11TMarineSnow@l
 /* 801F4B60 001F1AA0  38 04 00 24 */	addi r0, r4, 0x24
-/* 801F4B64 001F1AA4  C0 02 D1 24 */	lfs f0, $$21993-_SDA2_BASE_(r2)
+/* 801F4B64 001F1AA4  C0 02 D1 24 */	lfs f0, $$21993@sda21(r2)
 /* 801F4B68 001F1AA8  7F E3 FB 78 */	mr r3, r31
 /* 801F4B6C 001F1AAC  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 801F4B70 001F1AB0  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 801F4B74 001F1AB4  D0 1F 00 2C */	stfs f0, 0x2c(r31)
-/* 801F4B78 001F1AB8  C0 02 D1 20 */	lfs f0, $$21992-_SDA2_BASE_(r2)
+/* 801F4B78 001F1AB8  C0 02 D1 20 */	lfs f0, $$21992@sda21(r2)
 /* 801F4B7C 001F1ABC  D0 1F 00 30 */	stfs f0, 0x30(r31)
 /* 801F4B80 001F1AC0  D0 1F 00 34 */	stfs f0, 0x34(r31)
 /* 801F4B84 001F1AC4  D0 1F 00 38 */	stfs f0, 0x38(r31)

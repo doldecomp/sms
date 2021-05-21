@@ -18,7 +18,7 @@ createObjects__12TMarDirectorFv:
 /* 8010C364 001092A4  38 04 3D 10 */	addi r0, r4, __vt__14TMarNameRefGen@l
 /* 8010C368 001092A8  90 03 00 00 */	stw r0, 0(r3)
 lbl_8010C36C:
-/* 8010C36C 001092AC  90 6D 8E E0 */	stw r3, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 8010C36C 001092AC  90 6D 8E E0 */	stw r3, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 8010C370 001092B0  38 60 00 58 */	li r3, 0x58
 /* 8010C374 001092B4  4B F0 05 3D */	bl __nw__FUl
 /* 8010C378 001092B8  7C 7F 1B 79 */	or. r31, r3, r3
@@ -28,7 +28,7 @@ lbl_8010C36C:
 /* 8010C388 001092C8  38 7F 00 00 */	addi r3, r31, 0
 /* 8010C38C 001092CC  4B FB 75 59 */	bl __ct__22TLightWithDBSetManagerFPCc
 lbl_8010C390:
-/* 8010C390 001092D0  93 ED 97 6C */	stw r31, gpLightManager-_SDA_BASE_(r13)
+/* 8010C390 001092D0  93 ED 97 6C */	stw r31, gpLightManager@sda21(r13)
 /* 8010C394 001092D4  38 60 00 00 */	li r3, 0
 /* 8010C398 001092D8  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8010C39C 001092DC  83 E1 00 14 */	lwz r31, 0x14(r1)

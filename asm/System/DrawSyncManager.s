@@ -234,7 +234,7 @@ drawSyncCallback__16TDrawSyncManagerFUs:
 /* 800FCD88 000F9CC8  38 83 00 00 */	addi r4, r3, 0
 /* 800FCD8C 000F9CCC  90 01 00 04 */	stw r0, 4(r1)
 /* 800FCD90 000F9CD0  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800FCD94 000F9CD4  80 0D 98 40 */	lwz r0, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800FCD94 000F9CD4  80 0D 98 40 */	lwz r0, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800FCD98 000F9CD8  28 00 00 00 */	cmplwi r0, 0
 /* 800FCD9C 000F9CDC  41 82 00 0C */	beq lbl_800FCDA8
 /* 800FCDA0 000F9CE0  7C 03 03 78 */	mr r3, r0
@@ -254,7 +254,7 @@ start__16TDrawSyncManagerFUlUll:
 /* 800FCDC8 000F9D08  3B 43 00 00 */	addi r26, r3, 0
 /* 800FCDCC 000F9D0C  3B E4 00 00 */	addi r31, r4, 0
 /* 800FCDD0 000F9D10  3B 65 00 00 */	addi r27, r5, 0
-/* 800FCDD4 000F9D14  80 0D 98 40 */	lwz r0, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800FCDD4 000F9D14  80 0D 98 40 */	lwz r0, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800FCDD8 000F9D18  28 00 00 00 */	cmplwi r0, 0
 /* 800FCDDC 000F9D1C  40 82 00 FC */	bne lbl_800FCED8
 /* 800FCDE0 000F9D20  38 60 03 50 */	li r3, 0x350
@@ -278,7 +278,7 @@ start__16TDrawSyncManagerFUlUll:
 /* 800FCE28 000F9D68  80 1C 00 04 */	lwz r0, 4(r28)
 /* 800FCE2C 000F9D6C  90 1C 00 08 */	stw r0, 8(r28)
 /* 800FCE30 000F9D70  93 BC 00 0C */	stw r29, 0xc(r28)
-/* 800FCE34 000F9D74  C0 02 92 78 */	lfs f0, $$21665-_SDA2_BASE_(r2)
+/* 800FCE34 000F9D74  C0 02 92 78 */	lfs f0, $$21665@sda21(r2)
 /* 800FCE38 000F9D78  D0 1C 00 10 */	stfs f0, 0x10(r28)
 /* 800FCE3C 000F9D7C  93 BC 00 14 */	stw r29, 0x14(r28)
 /* 800FCE40 000F9D80  80 9C 00 08 */	lwz r4, 8(r28)
@@ -320,12 +320,12 @@ lbl_800FCEC4:
 /* 800FCECC 000F9E0C  38 63 00 18 */	addi r3, r3, 0x18
 /* 800FCED0 000F9E10  4B F9 69 39 */	bl OSResumeThread
 lbl_800FCED4:
-/* 800FCED4 000F9E14  93 CD 98 40 */	stw r30, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800FCED4 000F9E14  93 CD 98 40 */	stw r30, smInstance__16TDrawSyncManager@sda21(r13)
 lbl_800FCED8:
 /* 800FCED8 000F9E18  BB 41 00 28 */	lmw r26, 0x28(r1)
 /* 800FCEDC 000F9E1C  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 800FCEE0 000F9E20  38 21 00 40 */	addi r1, r1, 0x40
-/* 800FCEE4 000F9E24  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800FCEE4 000F9E24  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800FCEE8 000F9E28  7C 08 03 A6 */	mtlr r0
 /* 800FCEEC 000F9E2C  4E 80 00 20 */	blr 
 
@@ -491,7 +491,7 @@ lbl_800FD108:
 lbl_800FD118:
 /* 800FD118 000FA058  90 61 00 DC */	stw r3, 0xdc(r1)
 /* 800FD11C 000FA05C  3C 00 43 30 */	lis r0, 0x4330
-/* 800FD120 000FA060  C8 42 92 80 */	lfd f2, $$21825-_SDA2_BASE_(r2)
+/* 800FD120 000FA060  C8 42 92 80 */	lfd f2, $$21825@sda21(r2)
 /* 800FD124 000FA064  7F 23 EA 14 */	add r25, r3, r29
 /* 800FD128 000FA068  90 01 00 D8 */	stw r0, 0xd8(r1)
 /* 800FD12C 000FA06C  C0 1E 00 10 */	lfs f0, 0x10(r30)

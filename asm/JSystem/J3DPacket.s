@@ -188,14 +188,14 @@ beginDL__13J3DDrawPacketFv:
 /* 80037628 00034568  90 04 00 00 */	stw r0, 0(r4)
 /* 8003762C 0003456C  90 64 00 04 */	stw r3, 4(r4)
 /* 80037630 00034570  48 05 8B 9D */	bl OSDisableInterrupts
-/* 80037634 00034574  90 6D 8E 90 */	stw r3, sInterruptFlag__13J3DDrawPacket-_SDA_BASE_(r13)
+/* 80037634 00034574  90 6D 8E 90 */	stw r3, sInterruptFlag__13J3DDrawPacket@sda21(r13)
 /* 80037638 00034578  38 7F 00 20 */	addi r3, r31, 0x20
 /* 8003763C 0003457C  80 BF 00 30 */	lwz r5, 0x30(r31)
 /* 80037640 00034580  80 85 00 00 */	lwz r4, 0(r5)
 /* 80037644 00034584  80 A5 00 0C */	lwz r5, 0xc(r5)
 /* 80037648 00034588  48 07 79 D1 */	bl GDInitGDLObj
 /* 8003764C 0003458C  38 1F 00 20 */	addi r0, r31, 0x20
-/* 80037650 00034590  90 0D 95 B8 */	stw r0, __GDCurrentDL-_SDA_BASE_(r13)
+/* 80037650 00034590  90 0D 95 B8 */	stw r0, __GDCurrentDL@sda21(r13)
 /* 80037654 00034594  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80037658 00034598  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8003765C 0003459C  38 21 00 18 */	addi r1, r1, 0x18
@@ -210,7 +210,7 @@ endDL__13J3DDrawPacketFv:
 /* 80037674 000345B4  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80037678 000345B8  7C 7F 1B 78 */	mr r31, r3
 /* 8003767C 000345BC  48 07 79 E1 */	bl GDPadCurr32
-/* 80037680 000345C0  80 6D 8E 90 */	lwz r3, sInterruptFlag__13J3DDrawPacket-_SDA_BASE_(r13)
+/* 80037680 000345C0  80 6D 8E 90 */	lwz r3, sInterruptFlag__13J3DDrawPacket@sda21(r13)
 /* 80037684 000345C4  48 05 8B 71 */	bl OSRestoreInterrupts
 /* 80037688 000345C8  80 9F 00 20 */	lwz r4, 0x20(r31)
 /* 8003768C 000345CC  80 1F 00 28 */	lwz r0, 0x28(r31)
@@ -219,7 +219,7 @@ endDL__13J3DDrawPacketFv:
 /* 80037698 000345D8  90 03 00 08 */	stw r0, 8(r3)
 /* 8003769C 000345DC  48 07 79 95 */	bl GDFlushCurrToMem
 /* 800376A0 000345E0  38 00 00 00 */	li r0, 0
-/* 800376A4 000345E4  90 0D 95 B8 */	stw r0, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800376A4 000345E4  90 0D 95 B8 */	stw r0, __GDCurrentDL@sda21(r13)
 /* 800376A8 000345E8  80 7F 00 30 */	lwz r3, 0x30(r31)
 /* 800376AC 000345EC  80 63 00 08 */	lwz r3, 8(r3)
 /* 800376B0 000345F0  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -358,7 +358,7 @@ __ct__14J3DShapePacketFv:
 /* 80037860 000347A0  3C 80 80 3B */	lis r4, __vt__14J3DShapePacket@ha
 /* 80037864 000347A4  90 E3 00 08 */	stw r7, 8(r3)
 /* 80037868 000347A8  38 A4 9B E8 */	addi r5, r4, __vt__14J3DShapePacket@l
-/* 8003786C 000347AC  38 8D 8E 10 */	addi r4, r13, j3dDefaultViewNo-_SDA_BASE_
+/* 8003786C 000347AC  38 8D 8E 10 */	addi r4, r13, j3dDefaultViewNo@sda21
 /* 80037870 000347B0  90 E3 00 0C */	stw r7, 0xc(r3)
 /* 80037874 000347B4  38 00 00 01 */	li r0, 1
 /* 80037878 000347B8  90 C3 00 00 */	stw r6, 0(r3)
