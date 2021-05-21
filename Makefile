@@ -128,13 +128,8 @@ POSTPROC := tools/postprocess.py
 INCLUDES := -i . -I- -i include -i src -ir $(SDK_INC_PATH) -ir $(CW_INC_PATH)
 
 ASFLAGS := -m750cl -I include
-<<<<<<< HEAD
-LDFLAGS := -map $(MAP) -fp hard
-CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -enum int -msgstyle gcc $(INCLUDES)
-=======
 LDFLAGS := -map $(MAP) -fp hard -nodefaults
 CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES) -enum int
->>>>>>> master
 
 # for postprocess.py
 PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack
