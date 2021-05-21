@@ -128,7 +128,7 @@ POSTPROC := tools/postprocess.py
 INCLUDES := -i . -I- -i include -i src -ir $(SDK_INC_PATH) -ir $(CW_INC_PATH)
 
 ASFLAGS := -m750cl -I include
-LDFLAGS := -map $(MAP) -fp hard
+LDFLAGS := -map $(MAP) -fp hard -nodefaults
 CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES) -enum int
 
 # for postprocess.py
