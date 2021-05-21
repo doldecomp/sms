@@ -27,12 +27,12 @@ lbl_8005B990:
 
 .global setDSPSyncCount__Q28JASystem11AudioThreadFUl
 setDSPSyncCount__Q28JASystem11AudioThreadFUl:
-/* 8005B9B8 000588F8  90 6D 90 C8 */	stw r3, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005B9B8 000588F8  90 6D 90 C8 */	stw r3, intcount__Q28JASystem11AudioThread@sda21(r13)
 /* 8005B9BC 000588FC  4E 80 00 20 */	blr 
 
 .global getDSPSyncCount__Q28JASystem11AudioThreadFv
 getDSPSyncCount__Q28JASystem11AudioThreadFv:
-/* 8005B9C0 00058900  80 6D 90 C8 */	lwz r3, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005B9C0 00058900  80 6D 90 C8 */	lwz r3, intcount__Q28JASystem11AudioThread@sda21(r13)
 /* 8005B9C4 00058904  4E 80 00 20 */	blr 
 
 .global syncAudio__Q28JASystem11AudioThreadFv
@@ -40,14 +40,14 @@ syncAudio__Q28JASystem11AudioThreadFv:
 /* 8005B9C8 00058908  7C 08 02 A6 */	mflr r0
 /* 8005B9CC 0005890C  90 01 00 04 */	stw r0, 4(r1)
 /* 8005B9D0 00058910  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8005B9D4 00058914  88 0D 90 DC */	lbz r0, init$121-_SDA_BASE_(r13)
+/* 8005B9D4 00058914  88 0D 90 DC */	lbz r0, init$121@sda21(r13)
 /* 8005B9D8 00058918  7C 00 07 75 */	extsb. r0, r0
 /* 8005B9DC 0005891C  40 82 00 10 */	bne lbl_8005B9EC
 /* 8005B9E0 00058920  38 00 00 01 */	li r0, 1
-/* 8005B9E4 00058924  90 0D 90 D8 */	stw r0, first$120-_SDA_BASE_(r13)
-/* 8005B9E8 00058928  98 0D 90 DC */	stb r0, init$121-_SDA_BASE_(r13)
+/* 8005B9E4 00058924  90 0D 90 D8 */	stw r0, first$120@sda21(r13)
+/* 8005B9E8 00058928  98 0D 90 DC */	stb r0, init$121@sda21(r13)
 lbl_8005B9EC:
-/* 8005B9EC 0005892C  80 0D 90 D8 */	lwz r0, first$120-_SDA_BASE_(r13)
+/* 8005B9EC 0005892C  80 0D 90 D8 */	lwz r0, first$120@sda21(r13)
 /* 8005B9F0 00058930  28 00 00 00 */	cmplwi r0, 0
 /* 8005B9F4 00058934  40 82 00 0C */	bne lbl_8005BA00
 /* 8005B9F8 00058938  38 60 00 04 */	li r3, 4
@@ -55,11 +55,11 @@ lbl_8005B9EC:
 lbl_8005BA00:
 /* 8005BA00 00058940  38 00 00 00 */	li r0, 0
 /* 8005BA04 00058944  3C 60 80 37 */	lis r3, $$2128@ha
-/* 8005BA08 00058948  90 0D 90 D8 */	stw r0, first$120-_SDA_BASE_(r13)
+/* 8005BA08 00058948  90 0D 90 D8 */	stw r0, first$120@sda21(r13)
 /* 8005BA0C 0005894C  38 83 12 50 */	addi r4, r3, $$2128@l
 /* 8005BA10 00058950  38 60 00 04 */	li r3, 4
 /* 8005BA14 00058954  48 00 83 B9 */	bl probeStart__Q28JASystem6KernelFlPc
-/* 8005BA18 00058958  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BA18 00058958  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BA1C 0005895C  28 00 00 00 */	cmplwi r0, 0
 /* 8005BA20 00058960  41 82 00 18 */	beq lbl_8005BA38
 /* 8005BA24 00058964  3C 60 80 3E */	lis r3, audioproc_mq__Q28JASystem11AudioThread@ha
@@ -99,18 +99,18 @@ audioproc__Q28JASystem11AudioThreadFPv:
 /* 8005BA9C 000589DC  38 A0 00 10 */	li r5, 0x10
 /* 8005BAA0 000589E0  48 03 4F B1 */	bl OSInitMessageQueue
 /* 8005BAA4 000589E4  3B E0 00 01 */	li r31, 1
-/* 8005BAA8 000589E8  93 ED 90 C4 */	stw r31, audioproc_mq_init__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BAA8 000589E8  93 ED 90 C4 */	stw r31, audioproc_mq_init__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BAAC 000589EC  48 00 4B 6D */	bl init__Q28JASystem6KernelFv
-/* 8005BAB0 000589F0  80 0D 90 C0 */	lwz r0, isDSPBoot__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BAB0 000589F0  80 0D 90 C0 */	lwz r0, isDSPBoot__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BAB4 000589F4  2C 00 00 00 */	cmpwi r0, 0
 /* 8005BAB8 000589F8  40 82 00 14 */	bne lbl_8005BACC
 /* 8005BABC 000589FC  3C 80 80 06 */	lis r4, syncDSP__Q28JASystem11AudioThreadFPv@ha
 /* 8005BAC0 00058A00  38 64 BB A8 */	addi r3, r4, syncDSP__Q28JASystem11AudioThreadFPv@l
 /* 8005BAC4 00058A04  48 02 63 1D */	bl DspBoot__FPFPv_v
-/* 8005BAC8 00058A08  93 ED 90 C0 */	stw r31, isDSPBoot__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BAC8 00058A08  93 ED 90 C0 */	stw r31, isDSPBoot__Q28JASystem11AudioThread@sda21(r13)
 lbl_8005BACC:
 /* 8005BACC 00058A0C  48 00 2E D9 */	bl init__Q28JASystem6DriverFv
-/* 8005BAD0 00058A10  80 6D 91 FC */	lwz r3, gAiSetting__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8005BAD0 00058A10  80 6D 91 FC */	lwz r3, gAiSetting__Q28JASystem6Kernel@sda21(r13)
 /* 8005BAD4 00058A14  48 04 14 F9 */	bl AISetDSPSampleRate
 /* 8005BAD8 00058A18  3C 80 80 06 */	lis r4, syncAudio__Q28JASystem11AudioThreadFv@ha
 /* 8005BADC 00058A1C  38 64 B9 C8 */	addi r3, r4, syncAudio__Q28JASystem11AudioThreadFv@l
@@ -137,16 +137,16 @@ lbl_8005BB24:
 /* 8005BB24 00058A64  48 00 4D 75 */	bl updateDac__Q28JASystem6KernelFv
 /* 8005BB28 00058A68  4B FF FF C0 */	b lbl_8005BAE8
 lbl_8005BB2C:
-/* 8005BB2C 00058A6C  80 0D 90 C8 */	lwz r0, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BB2C 00058A6C  80 0D 90 C8 */	lwz r0, intcount__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BB30 00058A70  2C 00 00 00 */	cmpwi r0, 0
 /* 8005BB34 00058A74  40 82 00 0C */	bne lbl_8005BB40
 /* 8005BB38 00058A78  38 60 00 00 */	li r3, 0
 /* 8005BB3C 00058A7C  48 00 00 54 */	b lbl_8005BB90
 lbl_8005BB40:
-/* 8005BB40 00058A80  80 8D 90 C8 */	lwz r4, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BB40 00058A80  80 8D 90 C8 */	lwz r4, intcount__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BB44 00058A84  38 04 FF FF */	addi r0, r4, -1
-/* 8005BB48 00058A88  90 0D 90 C8 */	stw r0, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
-/* 8005BB4C 00058A8C  80 0D 90 C8 */	lwz r0, intcount__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BB48 00058A88  90 0D 90 C8 */	stw r0, intcount__Q28JASystem11AudioThread@sda21(r13)
+/* 8005BB4C 00058A8C  80 0D 90 C8 */	lwz r0, intcount__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BB50 00058A90  2C 00 00 00 */	cmpwi r0, 0
 /* 8005BB54 00058A94  40 82 00 14 */	bne lbl_8005BB68
 /* 8005BB58 00058A98  38 60 00 07 */	li r3, 7
@@ -155,7 +155,7 @@ lbl_8005BB40:
 /* 8005BB64 00058AA4  4B FF FF 84 */	b lbl_8005BAE8
 lbl_8005BB68:
 /* 8005BB68 00058AA8  38 60 00 02 */	li r3, 2
-/* 8005BB6C 00058AAC  38 82 86 30 */	addi r4, r2, $$2148-_SDA2_BASE_
+/* 8005BB6C 00058AAC  38 82 86 30 */	addi r4, r2, $$2148@sda21
 /* 8005BB70 00058AB0  48 00 82 5D */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005BB74 00058AB4  48 00 2E C5 */	bl updateDSP__Q28JASystem6DSPBufFv
 /* 8005BB78 00058AB8  38 60 00 02 */	li r3, 2
@@ -183,7 +183,7 @@ lbl_8005BBB4:
 /* 8005BBB8 00058AF8  28 03 00 00 */	cmplwi r3, 0
 /* 8005BBBC 00058AFC  41 82 FF F8 */	beq lbl_8005BBB4
 /* 8005BBC0 00058B00  48 04 2A B9 */	bl DSPReadMailFromDSP
-/* 8005BBC4 00058B04  A0 0D 81 B8 */	lhz r0, JAS_DSP_PREFIX__Q28JASystem12DSPInterface-_SDA_BASE_(r13)
+/* 8005BBC4 00058B04  A0 0D 81 B8 */	lhz r0, JAS_DSP_PREFIX__Q28JASystem12DSPInterface@sda21(r13)
 /* 8005BBC8 00058B08  54 64 84 3E */	srwi r4, r3, 0x10
 /* 8005BBCC 00058B0C  7C 04 00 40 */	cmplw r4, r0
 /* 8005BBD0 00058B10  40 82 00 50 */	bne lbl_8005BC20
@@ -194,7 +194,7 @@ lbl_8005BBB4:
 /* 8005BBE4 00058B24  41 82 00 08 */	beq lbl_8005BBEC
 /* 8005BBE8 00058B28  48 00 00 30 */	b lbl_8005BC18
 lbl_8005BBEC:
-/* 8005BBEC 00058B2C  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BBEC 00058B2C  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BBF0 00058B30  28 00 00 00 */	cmplwi r0, 0
 /* 8005BBF4 00058B34  41 82 00 1C */	beq lbl_8005BC10
 /* 8005BBF8 00058B38  3C 60 80 3E */	lis r3, audioproc_mq__Q28JASystem11AudioThread@ha
@@ -220,7 +220,7 @@ stop__Q28JASystem11AudioThreadFv:
 /* 8005BC30 00058B70  7C 08 02 A6 */	mflr r0
 /* 8005BC34 00058B74  90 01 00 04 */	stw r0, 4(r1)
 /* 8005BC38 00058B78  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8005BC3C 00058B7C  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BC3C 00058B7C  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BC40 00058B80  28 00 00 00 */	cmplwi r0, 0
 /* 8005BC44 00058B84  41 82 00 2C */	beq lbl_8005BC70
 /* 8005BC48 00058B88  3C 60 80 3E */	lis r3, audioproc_mq__Q28JASystem11AudioThread@ha
@@ -243,10 +243,10 @@ lbl_8005BC70:
 setPriority__Q28JASystem11AudioThreadFUcUc:
 /* 8005BC80 00058BC0  54 63 06 3E */	clrlwi r3, r3, 0x18
 /* 8005BC84 00058BC4  54 80 06 3E */	clrlwi r0, r4, 0x18
-/* 8005BC88 00058BC8  90 6D 90 D0 */	stw r3, jac_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BC88 00058BC8  90 6D 90 D0 */	stw r3, jac_pri__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BC8C 00058BCC  38 60 00 01 */	li r3, 1
-/* 8005BC90 00058BD0  90 6D 90 CC */	stw r3, priority_set__Q28JASystem11AudioThread-_SDA_BASE_(r13)
-/* 8005BC94 00058BD4  90 0D 90 D4 */	stw r0, dvd_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BC90 00058BD0  90 6D 90 CC */	stw r3, priority_set__Q28JASystem11AudioThread@sda21(r13)
+/* 8005BC94 00058BD4  90 0D 90 D4 */	stw r0, dvd_pri__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BC98 00058BD8  4E 80 00 20 */	blr 
 
 .global start__Q28JASystem11AudioThreadFP12JKRSolidHeapUlUl
@@ -260,16 +260,16 @@ start__Q28JASystem11AudioThreadFP12JKRSolidHeapUlUl:
 /* 8005BCB4 00058BF4  3B C4 00 00 */	addi r30, r4, 0
 /* 8005BCB8 00058BF8  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 8005BCBC 00058BFC  3B A5 00 00 */	addi r29, r5, 0
-/* 8005BCC0 00058C00  80 0D 90 CC */	lwz r0, priority_set__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BCC0 00058C00  80 0D 90 CC */	lwz r0, priority_set__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BCC4 00058C04  2C 00 00 00 */	cmpwi r0, 0
 /* 8005BCC8 00058C08  40 82 00 20 */	bne lbl_8005BCE8
 /* 8005BCCC 00058C0C  48 03 6F BD */	bl OSGetCurrentThread
 /* 8005BCD0 00058C10  48 03 81 21 */	bl OSGetThreadPriority
 /* 8005BCD4 00058C14  38 03 FF FD */	addi r0, r3, -3
-/* 8005BCD8 00058C18  90 0D 90 D0 */	stw r0, jac_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
-/* 8005BCDC 00058C1C  80 6D 90 D0 */	lwz r3, jac_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BCD8 00058C18  90 0D 90 D0 */	stw r0, jac_pri__Q28JASystem11AudioThread@sda21(r13)
+/* 8005BCDC 00058C1C  80 6D 90 D0 */	lwz r3, jac_pri__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BCE0 00058C20  38 03 00 01 */	addi r0, r3, 1
-/* 8005BCE4 00058C24  90 0D 90 D4 */	stw r0, dvd_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BCE4 00058C24  90 0D 90 D4 */	stw r0, dvd_pri__Q28JASystem11AudioThread@sda21(r13)
 lbl_8005BCE8:
 /* 8005BCE8 00058C28  7F E3 FB 78 */	mr r3, r31
 /* 8005BCEC 00058C2C  48 00 80 E9 */	bl sysDramSetup__Q28JASystem6KernelFP12JKRSolidHeap
@@ -283,7 +283,7 @@ lbl_8005BCE8:
 /* 8005BD0C 00058C4C  57 A0 07 BD */	rlwinm. r0, r29, 0, 0x1e, 0x1e
 /* 8005BD10 00058C50  41 82 00 38 */	beq lbl_8005BD48
 /* 8005BD14 00058C54  3C 80 80 40 */	lis r4, jac_audioThread__Q28JASystem11AudioThread@ha
-/* 8005BD18 00058C58  81 0D 90 D0 */	lwz r8, jac_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BD18 00058C58  81 0D 90 D0 */	lwz r8, jac_pri__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BD1C 00058C5C  3C 60 80 06 */	lis r3, audioproc__Q28JASystem11AudioThreadFPv@ha
 /* 8005BD20 00058C60  3B C4 3E C0 */	addi r30, r4, jac_audioThread__Q28JASystem11AudioThread@l
 /* 8005BD24 00058C64  38 83 BA 48 */	addi r4, r3, audioproc__Q28JASystem11AudioThreadFPv@l
@@ -305,7 +305,7 @@ lbl_8005BD48:
 /* 8005BD60 00058CA0  41 82 00 3C */	beq lbl_8005BD9C
 /* 8005BD64 00058CA4  48 00 5C B5 */	bl dvdProcInit__Q28JASystem3DvdFv
 /* 8005BD68 00058CA8  3C 80 80 40 */	lis r4, jac_dvdThread__Q28JASystem11AudioThread@ha
-/* 8005BD6C 00058CAC  81 0D 90 D4 */	lwz r8, dvd_pri__Q28JASystem11AudioThread-_SDA_BASE_(r13)
+/* 8005BD6C 00058CAC  81 0D 90 D4 */	lwz r8, dvd_pri__Q28JASystem11AudioThread@sda21(r13)
 /* 8005BD70 00058CB0  3C 60 80 06 */	lis r3, dvdProc__Q28JASystem3DvdFPv@ha
 /* 8005BD74 00058CB4  3B E4 75 00 */	addi r31, r4, jac_dvdThread__Q28JASystem11AudioThread@l
 /* 8005BD78 00058CB8  38 83 1A C4 */	addi r4, r3, dvdProc__Q28JASystem3DvdFPv@l

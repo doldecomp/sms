@@ -264,7 +264,7 @@ lbl_80361850:
 /* 80361854 0035E794  3C 60 80 3E */	lis r3, sAddBckFileNameTable@ha
 /* 80361858 0035E798  38 A3 4C E0 */	addi r5, r3, sAddBckFileNameTable@l
 /* 8036185C 0035E79C  80 7F 00 04 */	lwz r3, 4(r31)
-/* 80361860 0035E7A0  80 8D 8C E0 */	lwz r4, cCameraBckVolumeName-_SDA_BASE_(r13)
+/* 80361860 0035E7A0  80 8D 8C E0 */	lwz r4, cCameraBckVolumeName@sda21(r13)
 /* 80361864 0035E7A4  4B D7 5E F9 */	bl init__13MActorAnmDataFPCcPPCc
 /* 80361868 0035E7A8  38 60 00 48 */	li r3, 0x48
 /* 8036186C 0035E7AC  4B CA B0 45 */	bl __nw__FUl
@@ -280,7 +280,7 @@ lbl_80361884:
 /* 80361890 0035E7D0  80 7F 00 00 */	lwz r3, 0(r31)
 /* 80361894 0035E7D4  4B D7 3B 4D */	bl setModel__6MActorFP8J3DModelUl
 /* 80361898 0035E7D8  80 7E 00 04 */	lwz r3, 4(r30)
-/* 8036189C 0035E7DC  80 8D 8C D8 */	lwz r4, cPositionJointName-_SDA_BASE_(r13)
+/* 8036189C 0035E7DC  80 8D 8C D8 */	lwz r4, cPositionJointName@sda21(r13)
 /* 803618A0 0035E7E0  83 A3 00 B0 */	lwz r29, 0xb0(r3)
 /* 803618A4 0035E7E4  7F A3 EB 78 */	mr r3, r29
 /* 803618A8 0035E7E8  4B CB 17 49 */	bl getIndex__10JUTNameTabCFPCc
@@ -292,7 +292,7 @@ lbl_80361884:
 /* 803618C0 0035E800  1C 00 00 30 */	mulli r0, r0, 0x30
 /* 803618C4 0035E804  7C 04 02 14 */	add r0, r4, r0
 /* 803618C8 0035E808  90 1F 00 0C */	stw r0, 0xc(r31)
-/* 803618CC 0035E80C  80 8D 8C DC */	lwz r4, cLookatJointName-_SDA_BASE_(r13)
+/* 803618CC 0035E80C  80 8D 8C DC */	lwz r4, cLookatJointName@sda21(r13)
 /* 803618D0 0035E810  4B CB 17 21 */	bl getIndex__10JUTNameTabCFPCc
 /* 803618D4 0035E814  54 60 04 3E */	clrlwi r0, r3, 0x10
 /* 803618D8 0035E818  80 7E 00 58 */	lwz r3, 0x58(r30)

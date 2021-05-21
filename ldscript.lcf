@@ -1,6 +1,3 @@
-_SDA_BASE_ = 0x80410AC0;
-_SDA2_BASE_ = 0x80413460;
-
 MEMORY {
     text: origin = 0x80003100
 }

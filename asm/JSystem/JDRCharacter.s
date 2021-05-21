@@ -92,7 +92,7 @@ mountArc__Q26JDrama10TSmplCharaFPCc:
 /* 80041A40 0003E980  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 80041A44 0003E984  3B E3 00 00 */	addi r31, r3, 0
 /* 80041A48 0003E988  38 64 00 00 */	addi r3, r4, 0
-/* 80041A4C 0003E98C  80 AD 8D 6C */	lwz r5, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80041A4C 0003E98C  80 AD 8D 6C */	lwz r5, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 80041A50 0003E990  38 80 00 01 */	li r4, 1
 /* 80041A54 0003E994  4B FC 5E D9 */	bl mount__10JKRArchiveFPCcQ210JKRArchive10EMountModeP7JKRHeapQ210JKRArchive15EMountDirection
 /* 80041A58 0003E998  90 7F 00 0C */	stw r3, 0xc(r31)

@@ -3,7 +3,7 @@
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
 .global OSRegisterResetFunction
 OSRegisterResetFunction:
-/* 80091620 0008E560  80 AD 93 48 */	lwz r5, ResetFunctionQueue-_SDA_BASE_(r13)
+/* 80091620 0008E560  80 AD 93 48 */	lwz r5, ResetFunctionQueue@sda21(r13)
 /* 80091624 0008E564  48 00 00 08 */	b lbl_8009162C
 lbl_80091628:
 /* 80091628 0008E568  80 A5 00 08 */	lwz r5, 8(r5)
@@ -17,11 +17,11 @@ lbl_8009162C:
 lbl_80091644:
 /* 80091644 0008E584  28 05 00 00 */	cmplwi r5, 0
 /* 80091648 0008E588  40 82 00 34 */	bne lbl_8009167C
-/* 8009164C 0008E58C  38 AD 93 48 */	addi r5, r13, ResetFunctionQueue-_SDA_BASE_
+/* 8009164C 0008E58C  38 AD 93 48 */	addi r5, r13, ResetFunctionQueue@sda21
 /* 80091650 0008E590  84 85 00 04 */	lwzu r4, 4(r5)
 /* 80091654 0008E594  28 04 00 00 */	cmplwi r4, 0
 /* 80091658 0008E598  40 82 00 0C */	bne lbl_80091664
-/* 8009165C 0008E59C  90 6D 93 48 */	stw r3, ResetFunctionQueue-_SDA_BASE_(r13)
+/* 8009165C 0008E59C  90 6D 93 48 */	stw r3, ResetFunctionQueue@sda21(r13)
 /* 80091660 0008E5A0  48 00 00 08 */	b lbl_80091668
 lbl_80091664:
 /* 80091664 0008E5A4  90 64 00 08 */	stw r3, 8(r4)
@@ -38,7 +38,7 @@ lbl_8009167C:
 /* 80091688 0008E5C8  28 04 00 00 */	cmplwi r4, 0
 /* 8009168C 0008E5CC  90 83 00 0C */	stw r4, 0xc(r3)
 /* 80091690 0008E5D0  40 82 00 0C */	bne lbl_8009169C
-/* 80091694 0008E5D4  90 6D 93 48 */	stw r3, ResetFunctionQueue-_SDA_BASE_(r13)
+/* 80091694 0008E5D4  90 6D 93 48 */	stw r3, ResetFunctionQueue@sda21(r13)
 /* 80091698 0008E5D8  4E 80 00 20 */	blr 
 lbl_8009169C:
 /* 8009169C 0008E5DC  90 64 00 08 */	stw r3, 8(r4)
@@ -126,7 +126,7 @@ lbl_80091794:
 lbl_80091798:
 /* 80091798 0008E6D8  48 00 00 04 */	b lbl_8009179C
 lbl_8009179C:
-/* 8009179C 0008E6DC  83 6D 93 48 */	lwz r27, ResetFunctionQueue-_SDA_BASE_(r13)
+/* 8009179C 0008E6DC  83 6D 93 48 */	lwz r27, ResetFunctionQueue@sda21(r13)
 /* 800917A0 0008E6E0  3B 80 00 00 */	li r28, 0
 /* 800917A4 0008E6E4  48 00 00 04 */	b lbl_800917A8
 lbl_800917A8:
@@ -177,7 +177,7 @@ lbl_80091834:
 /* 8009183C 0008E77C  41 82 FF F8 */	beq lbl_80091834
 lbl_80091840:
 /* 80091840 0008E780  4B FF E9 8D */	bl OSDisableInterrupts
-/* 80091844 0008E784  83 8D 93 48 */	lwz r28, ResetFunctionQueue-_SDA_BASE_(r13)
+/* 80091844 0008E784  83 8D 93 48 */	lwz r28, ResetFunctionQueue@sda21(r13)
 /* 80091848 0008E788  3B 60 00 00 */	li r27, 0
 /* 8009184C 0008E78C  48 00 00 04 */	b lbl_80091850
 lbl_80091850:

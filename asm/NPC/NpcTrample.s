@@ -36,26 +36,26 @@ lbl_80179908:
 /* 80179920 00176860  2C 00 00 00 */	cmpwi r0, 0
 /* 80179924 00176864  40 82 00 18 */	bne lbl_8017993C
 /* 80179928 00176868  D0 24 00 00 */	stfs f1, 0(r4)
-/* 8017992C 0017686C  80 8D 99 20 */	lwz r4, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 8017992C 0017686C  80 8D 99 20 */	lwz r4, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80179930 00176870  A8 04 01 08 */	lha r0, 0x108(r4)
 /* 80179934 00176874  B0 03 00 06 */	sth r0, 6(r3)
 /* 80179938 00176878  48 00 00 64 */	b lbl_8017999C
 lbl_8017993C:
 /* 8017993C 0017687C  C0 43 00 00 */	lfs f2, 0(r3)
-/* 80179940 00176880  C0 0D 99 E8 */	lfs f0, msAmpDecrease__11TNpcTrample-_SDA_BASE_(r13)
+/* 80179940 00176880  C0 0D 99 E8 */	lfs f0, msAmpDecrease__11TNpcTrample@sda21(r13)
 /* 80179944 00176884  EC 02 00 28 */	fsubs f0, f2, f0
 /* 80179948 00176888  D0 03 00 00 */	stfs f0, 0(r3)
-/* 8017994C 0017688C  80 ED 99 20 */	lwz r7, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 8017994C 0017688C  80 ED 99 20 */	lwz r7, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80179950 00176890  A8 C3 00 04 */	lha r6, 4(r3)
 /* 80179954 00176894  38 A7 00 CC */	addi r5, r7, 0xcc
 /* 80179958 00176898  A8 E7 00 F4 */	lha r7, 0xf4(r7)
 /* 8017995C 0017689C  A8 A5 00 00 */	lha r5, 0(r5)
-/* 80179960 001768A0  80 0D 8D EC */	lwz r0, jmaSinShift-_SDA_BASE_(r13)
+/* 80179960 001768A0  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 80179964 001768A4  7C A6 28 50 */	subf r5, r6, r5
-/* 80179968 001768A8  80 CD 8D F0 */	lwz r6, jmaSinTable-_SDA_BASE_(r13)
+/* 80179968 001768A8  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 8017996C 001768AC  7C A7 29 D6 */	mullw r5, r7, r5
 /* 80179970 001768B0  C0 43 00 00 */	lfs f2, 0(r3)
-/* 80179974 001768B4  C0 62 A9 50 */	lfs f3, $$21981-_SDA2_BASE_(r2)
+/* 80179974 001768B4  C0 62 A9 50 */	lfs f3, $$21981@sda21(r2)
 /* 80179978 001768B8  54 A3 04 3E */	clrlwi r3, r5, 0x10
 /* 8017997C 001768BC  7C 60 06 30 */	sraw r0, r3, r0
 /* 80179980 001768C0  54 00 10 3A */	slwi r0, r0, 2
@@ -74,17 +74,17 @@ startTrample__11TNpcTrampleFv:
 /* 801799A4 001768E4  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 801799A8 001768E8  38 80 00 00 */	li r4, 0
 /* 801799AC 001768EC  3C 00 43 30 */	lis r0, 0x4330
-/* 801799B0 001768F0  80 AD 99 20 */	lwz r5, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 801799B0 001768F0  80 AD 99 20 */	lwz r5, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 801799B4 001768F4  C0 05 00 E0 */	lfs f0, 0xe0(r5)
 /* 801799B8 001768F8  D0 03 00 00 */	stfs f0, 0(r3)
-/* 801799BC 001768FC  80 AD 99 20 */	lwz r5, mPtrSaveNormal__8TBaseNPC-_SDA_BASE_(r13)
+/* 801799BC 001768FC  80 AD 99 20 */	lwz r5, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 801799C0 00176900  A8 A5 00 CC */	lha r5, 0xcc(r5)
 /* 801799C4 00176904  B0 A3 00 04 */	sth r5, 4(r3)
 /* 801799C8 00176908  B0 83 00 06 */	sth r4, 6(r3)
 /* 801799CC 0017690C  A8 83 00 04 */	lha r4, 4(r3)
-/* 801799D0 00176910  C8 22 A9 58 */	lfd f1, $$21990-_SDA2_BASE_(r2)
+/* 801799D0 00176910  C8 22 A9 58 */	lfd f1, $$21990@sda21(r2)
 /* 801799D4 00176914  6C 84 80 00 */	xoris r4, r4, 0x8000
-/* 801799D8 00176918  C0 42 A9 50 */	lfs f2, $$21981-_SDA2_BASE_(r2)
+/* 801799D8 00176918  C0 42 A9 50 */	lfs f2, $$21981@sda21(r2)
 /* 801799DC 0017691C  90 81 00 2C */	stw r4, 0x2c(r1)
 /* 801799E0 00176920  C0 63 00 00 */	lfs f3, 0(r3)
 /* 801799E4 00176924  90 01 00 28 */	stw r0, 0x28(r1)
@@ -93,7 +93,7 @@ startTrample__11TNpcTrampleFv:
 /* 801799F0 00176930  EC 00 08 28 */	fsubs f0, f0, f1
 /* 801799F4 00176934  EC 02 00 24 */	fdivs f0, f2, f0
 /* 801799F8 00176938  EC 03 00 32 */	fmuls f0, f3, f0
-/* 801799FC 0017693C  D0 0D 99 E8 */	stfs f0, msAmpDecrease__11TNpcTrample-_SDA_BASE_(r13)
+/* 801799FC 0017693C  D0 0D 99 E8 */	stfs f0, msAmpDecrease__11TNpcTrample@sda21(r13)
 /* 80179A00 00176940  4E 80 00 20 */	blr 
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020

@@ -12,13 +12,13 @@ init__Q28JASystem11WaveBankMgrFi:
 /* 8005B19C 000580DC  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8005B1A0 000580E0  7C 7E 1B 78 */	mr r30, r3
 /* 8005B1A4 000580E4  38 7F 00 00 */	addi r3, r31, 0
-/* 8005B1A8 000580E8  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 8005B1A8 000580E8  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 8005B1AC 000580EC  4B FB 18 99 */	bl __nwa__FUlP7JKRHeapi
-/* 8005B1B0 000580F0  90 6D 90 B4 */	stw r3, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B1B0 000580F0  90 6D 90 B4 */	stw r3, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B1B4 000580F4  7F E4 FB 78 */	mr r4, r31
-/* 8005B1B8 000580F8  80 6D 90 B4 */	lwz r3, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B1B8 000580F8  80 6D 90 B4 */	lwz r3, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B1BC 000580FC  48 00 60 65 */	bl bzero__Q28JASystem4CalcFPvUl
-/* 8005B1C0 00058100  93 CD 90 B0 */	stw r30, sTableSize__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B1C0 00058100  93 CD 90 B0 */	stw r30, sTableSize__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B1C4 00058104  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8005B1C8 00058108  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8005B1CC 0005810C  83 C1 00 10 */	lwz r30, 0x10(r1)
@@ -28,7 +28,7 @@ init__Q28JASystem11WaveBankMgrFi:
 
 .global getWaveBank__Q28JASystem11WaveBankMgrFi
 getWaveBank__Q28JASystem11WaveBankMgrFi:
-/* 8005B1DC 0005811C  80 8D 90 B4 */	lwz r4, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B1DC 0005811C  80 8D 90 B4 */	lwz r4, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B1E0 00058120  54 60 10 3A */	slwi r0, r3, 2
 /* 8005B1E4 00058124  7C 64 00 2E */	lwzx r3, r4, r0
 /* 8005B1E8 00058128  4E 80 00 20 */	blr 
@@ -60,7 +60,7 @@ lbl_8005B234:
 /* 8005B23C 0005817C  38 60 00 00 */	li r3, 0
 /* 8005B240 00058180  48 00 00 14 */	b lbl_8005B254
 lbl_8005B244:
-/* 8005B244 00058184  80 8D 90 B4 */	lwz r4, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B244 00058184  80 8D 90 B4 */	lwz r4, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B248 00058188  57 C0 10 3A */	slwi r0, r30, 2
 /* 8005B24C 0005818C  38 60 00 01 */	li r3, 1
 /* 8005B250 00058190  7C A4 01 2E */	stwx r5, r4, r0
@@ -81,7 +81,7 @@ loadWave__Q28JASystem11WaveBankMgrFii:
 /* 8005B27C 000581BC  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8005B280 000581C0  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8005B284 000581C4  3B C4 00 00 */	addi r30, r4, 0
-/* 8005B288 000581C8  80 AD 90 B4 */	lwz r5, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B288 000581C8  80 AD 90 B4 */	lwz r5, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B28C 000581CC  7F E5 00 2E */	lwzx r31, r5, r0
 /* 8005B290 000581D0  28 1F 00 00 */	cmplwi r31, 0
 /* 8005B294 000581D4  40 82 00 0C */	bne lbl_8005B2A0
@@ -151,7 +151,7 @@ eraseWave__Q28JASystem11WaveBankMgrFii:
 /* 8005B36C 000582AC  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8005B370 000582B0  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8005B374 000582B4  3B C4 00 00 */	addi r30, r4, 0
-/* 8005B378 000582B8  80 AD 90 B4 */	lwz r5, sWaveBank__Q28JASystem11WaveBankMgr-_SDA_BASE_(r13)
+/* 8005B378 000582B8  80 AD 90 B4 */	lwz r5, sWaveBank__Q28JASystem11WaveBankMgr@sda21(r13)
 /* 8005B37C 000582BC  7F E5 00 2E */	lwzx r31, r5, r0
 /* 8005B380 000582C0  28 1F 00 00 */	cmplwi r31, 0
 /* 8005B384 000582C4  40 82 00 0C */	bne lbl_8005B390

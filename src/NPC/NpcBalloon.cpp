@@ -1,4 +1,4 @@
-#include "types.h"
+#include <dolphin.h>
 
 #include "gpMarDirector.hpp"
 #include "NPC/NpcBalloon.hpp"

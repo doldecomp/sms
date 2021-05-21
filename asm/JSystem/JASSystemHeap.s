@@ -8,20 +8,20 @@ sysDramSetup__Q28JASystem6KernelFP12JKRSolidHeap:
 /* 80063DDC 00060D1C  90 01 00 04 */	stw r0, 4(r1)
 /* 80063DE0 00060D20  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80063DE4 00060D24  41 82 00 0C */	beq lbl_80063DF0
-/* 80063DE8 00060D28  90 6D 92 00 */	stw r3, JASDram-_SDA_BASE_(r13)
+/* 80063DE8 00060D28  90 6D 92 00 */	stw r3, JASDram@sda21(r13)
 /* 80063DEC 00060D2C  48 00 00 30 */	b lbl_80063E1C
 lbl_80063DF0:
-/* 80063DF0 00060D30  80 6D 82 00 */	lwz r3, audioDramSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063DF0 00060D30  80 6D 82 00 */	lwz r3, audioDramSize__Q28JASystem6Kernel@sda21(r13)
 /* 80063DF4 00060D34  38 80 00 00 */	li r4, 0
 /* 80063DF8 00060D38  38 A0 00 00 */	li r5, 0
 /* 80063DFC 00060D3C  38 63 01 00 */	addi r3, r3, 0x100
 /* 80063E00 00060D40  4B FA 9D 89 */	bl create__10JKRStdHeapFUlP7JKRHeapb
-/* 80063E04 00060D44  80 0D 82 00 */	lwz r0, audioDramSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063E04 00060D44  80 0D 82 00 */	lwz r0, audioDramSize__Q28JASystem6Kernel@sda21(r13)
 /* 80063E08 00060D48  38 83 00 00 */	addi r4, r3, 0
 /* 80063E0C 00060D4C  38 A0 00 00 */	li r5, 0
 /* 80063E10 00060D50  7C 03 03 78 */	mr r3, r0
 /* 80063E14 00060D54  4B FA 95 C5 */	bl create__12JKRSolidHeapFUlP7JKRHeapb
-/* 80063E18 00060D58  90 6D 92 00 */	stw r3, JASDram-_SDA_BASE_(r13)
+/* 80063E18 00060D58  90 6D 92 00 */	stw r3, JASDram@sda21(r13)
 lbl_80063E1C:
 /* 80063E1C 00060D5C  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80063E20 00060D60  38 21 00 08 */	addi r1, r1, 8
@@ -37,7 +37,7 @@ allocFromSysDram__Q28JASystem6KernelFUl:
 /* 80063E3C 00060D7C  7C 7F 1B 78 */	mr r31, r3
 /* 80063E40 00060D80  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80063E44 00060D84  48 02 C3 89 */	bl OSDisableInterrupts
-/* 80063E48 00060D88  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80063E48 00060D88  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80063E4C 00060D8C  3B C3 00 00 */	addi r30, r3, 0
 /* 80063E50 00060D90  38 7F 00 00 */	addi r3, r31, 0
 /* 80063E54 00060D94  38 A0 00 20 */	li r5, 0x20
@@ -61,18 +61,18 @@ sysAramSetup__Q28JASystem6KernelFUl:
 /* 80063E90 00060DD0  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80063E94 00060DD4  7C 7F 1B 79 */	or. r31, r3, r3
 /* 80063E98 00060DD8  40 82 00 08 */	bne lbl_80063EA0
-/* 80063E9C 00060DDC  83 ED 82 04 */	lwz r31, audioAramSize__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063E9C 00060DDC  83 ED 82 04 */	lwz r31, audioAramSize__Q28JASystem6Kernel@sda21(r13)
 lbl_80063EA0:
 /* 80063EA0 00060DE0  48 03 9A 89 */	bl ARGetBaseAddress
-/* 80063EA4 00060DE4  90 6D 92 08 */	stw r3, audioAramTop__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063EA4 00060DE4  90 6D 92 08 */	stw r3, audioAramTop__Q28JASystem6Kernel@sda21(r13)
 /* 80063EA8 00060DE8  38 00 00 40 */	li r0, 0x40
 /* 80063EAC 00060DEC  3C 60 80 3E */	lis r3, audioAramHeap__Q28JASystem6Kernel@ha
-/* 80063EB0 00060DF0  80 CD 92 08 */	lwz r6, audioAramTop__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063EB0 00060DF0  80 CD 92 08 */	lwz r6, audioAramTop__Q28JASystem6Kernel@sda21(r13)
 /* 80063EB4 00060DF4  38 63 6A A4 */	addi r3, r3, audioAramHeap__Q28JASystem6Kernel@l
-/* 80063EB8 00060DF8  90 0D 92 0C */	stw r0, CARD_SECURITY_BUFFER__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063EB8 00060DF8  90 0D 92 0C */	stw r0, CARD_SECURITY_BUFFER__Q28JASystem6Kernel@sda21(r13)
 /* 80063EBC 00060DFC  3C A6 00 01 */	addis r5, r6, 1
 /* 80063EC0 00060E00  3C 86 00 01 */	addis r4, r6, 1
-/* 80063EC4 00060E04  90 CD 92 04 */	stw r6, JASAramDmaBufferTop__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80063EC4 00060E04  90 CD 92 04 */	stw r6, JASAramDmaBufferTop__Q28JASystem6Kernel@sda21(r13)
 /* 80063EC8 00060E08  38 05 C0 00 */	addi r0, r5, -16384
 /* 80063ECC 00060E0C  7C A0 F8 50 */	subf r5, r0, r31
 /* 80063ED0 00060E10  38 84 C0 00 */	addi r4, r4, -16384

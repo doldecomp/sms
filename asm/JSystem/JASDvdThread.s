@@ -7,17 +7,17 @@ init__Q28JASystem3DvdFv:
 /* 80061948 0005E888  38 A0 00 00 */	li r5, 0
 /* 8006194C 0005E88C  90 01 00 04 */	stw r0, 4(r1)
 /* 80061950 0005E890  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80061954 0005E894  80 0D 81 D8 */	lwz r0, dvdMsgsSize__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80061958 0005E898  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80061954 0005E894  80 0D 81 D8 */	lwz r0, dvdMsgsSize__Q28JASystem3Dvd@sda21(r13)
+/* 80061958 0005E898  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 8006195C 0005E89C  54 03 30 32 */	slwi r3, r0, 6
 /* 80061960 0005E8A0  4B FA B0 E5 */	bl __nwa__FUlP7JKRHeapi
-/* 80061964 0005E8A4  80 0D 81 D8 */	lwz r0, dvdMsgsSize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061964 0005E8A4  80 0D 81 D8 */	lwz r0, dvdMsgsSize__Q28JASystem3Dvd@sda21(r13)
 /* 80061968 0005E8A8  38 A0 00 00 */	li r5, 0
-/* 8006196C 0005E8AC  90 6D 91 A0 */	stw r3, callStackArray__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80061970 0005E8B0  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 8006196C 0005E8AC  90 6D 91 A0 */	stw r3, callStackArray__Q28JASystem3Dvd@sda21(r13)
+/* 80061970 0005E8B0  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80061974 0005E8B4  54 03 10 3A */	slwi r3, r0, 2
 /* 80061978 0005E8B8  4B FA B0 CD */	bl __nwa__FUlP7JKRHeapi
-/* 8006197C 0005E8BC  90 6D 91 A4 */	stw r3, msgBuf__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 8006197C 0005E8BC  90 6D 91 A4 */	stw r3, msgBuf__Q28JASystem3Dvd@sda21(r13)
 /* 80061980 0005E8C0  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80061984 0005E8C4  38 21 00 08 */	addi r1, r1, 8
 /* 80061988 0005E8C8  7C 08 03 A6 */	mtlr r0
@@ -73,37 +73,37 @@ dvdProcInit__Q28JASystem3DvdFv:
 /* 80061A2C 0005E96C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80061A30 0005E970  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80061A34 0005E974  93 C1 00 08 */	stw r30, 8(r1)
-/* 80061A38 0005E978  80 8D 91 A4 */	lwz r4, msgBuf__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A38 0005E978  80 8D 91 A4 */	lwz r4, msgBuf__Q28JASystem3Dvd@sda21(r13)
 /* 80061A3C 0005E97C  48 02 F0 15 */	bl OSInitMessageQueue
-/* 80061A40 0005E980  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A40 0005E980  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd@sda21(r13)
 /* 80061A44 0005E984  38 60 00 01 */	li r3, 1
-/* 80061A48 0005E988  90 6D 91 78 */	stw r3, mqInit__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A48 0005E988  90 6D 91 78 */	stw r3, mqInit__Q28JASystem3Dvd@sda21(r13)
 /* 80061A4C 0005E98C  38 A0 00 00 */	li r5, 0
-/* 80061A50 0005E990  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80061A50 0005E990  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80061A54 0005E994  54 03 10 3A */	slwi r3, r0, 2
 /* 80061A58 0005E998  4B FA AF ED */	bl __nwa__FUlP7JKRHeapi
-/* 80061A5C 0005E99C  90 6D 91 C0 */	stw r3, dvdFile__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A5C 0005E99C  90 6D 91 C0 */	stw r3, dvdFile__Q28JASystem3Dvd@sda21(r13)
 /* 80061A60 0005E9A0  3B C0 00 00 */	li r30, 0
 /* 80061A64 0005E9A4  3B E0 00 00 */	li r31, 0
 /* 80061A68 0005E9A8  48 00 00 24 */	b lbl_80061A8C
 lbl_80061A6C:
-/* 80061A6C 0005E9AC  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80061A6C 0005E9AC  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80061A70 0005E9B0  38 60 00 40 */	li r3, 0x40
 /* 80061A74 0005E9B4  38 A0 00 00 */	li r5, 0
 /* 80061A78 0005E9B8  4B FA AF CD */	bl __nwa__FUlP7JKRHeapi
-/* 80061A7C 0005E9BC  80 8D 91 C0 */	lwz r4, dvdFile__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A7C 0005E9BC  80 8D 91 C0 */	lwz r4, dvdFile__Q28JASystem3Dvd@sda21(r13)
 /* 80061A80 0005E9C0  3B DE 00 01 */	addi r30, r30, 1
 /* 80061A84 0005E9C4  7C 64 F9 2E */	stwx r3, r4, r31
 /* 80061A88 0005E9C8  3B FF 00 04 */	addi r31, r31, 4
 lbl_80061A8C:
-/* 80061A8C 0005E9CC  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061A8C 0005E9CC  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd@sda21(r13)
 /* 80061A90 0005E9D0  7C 1E 00 00 */	cmpw r30, r0
 /* 80061A94 0005E9D4  41 80 FF D8 */	blt lbl_80061A6C
-/* 80061A98 0005E9D8  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 80061A98 0005E9D8  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 80061A9C 0005E9DC  54 03 10 3A */	slwi r3, r0, 2
 /* 80061AA0 0005E9E0  38 A0 00 00 */	li r5, 0
 /* 80061AA4 0005E9E4  4B FA AF A1 */	bl __nwa__FUlP7JKRHeapi
-/* 80061AA8 0005E9E8  90 6D 91 C4 */	stw r3, dvdEntryNum__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061AA8 0005E9E8  90 6D 91 C4 */	stw r3, dvdEntryNum__Q28JASystem3Dvd@sda21(r13)
 /* 80061AAC 0005E9EC  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 80061AB0 0005E9F0  83 E1 00 0C */	lwz r31, 0xc(r1)
 /* 80061AB4 0005E9F4  83 C1 00 08 */	lwz r30, 8(r1)
@@ -120,11 +120,11 @@ dvdProc__Q28JASystem3DvdFPv:
 /* 80061AD4 0005EA14  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80061AD8 0005EA18  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80061ADC 0005EA1C  48 00 0B E9 */	bl allocDvdBuffer__Q28JASystem3DvdFv
-/* 80061AE0 0005EA20  80 0D 81 DC */	lwz r0, dvdBufSize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061AE0 0005EA20  80 0D 81 DC */	lwz r0, dvdBufSize__Q28JASystem3Dvd@sda21(r13)
 /* 80061AE4 0005EA24  54 03 08 3C */	slwi r3, r0, 1
 /* 80061AE8 0005EA28  48 00 23 45 */	bl allocFromSysDram__Q28JASystem6KernelFUl
 /* 80061AEC 0005EA2C  3B A3 00 00 */	addi r29, r3, 0
-/* 80061AF0 0005EA30  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd-_SDA_BASE_
+/* 80061AF0 0005EA30  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd@sda21
 /* 80061AF4 0005EA34  48 03 11 85 */	bl OSInitThreadQueue
 /* 80061AF8 0005EA38  3C 60 80 3E */	lis r3, mq__Q28JASystem3Dvd@ha
 /* 80061AFC 0005EA3C  3B E3 63 E0 */	addi r31, r3, mq__Q28JASystem3Dvd@l
@@ -135,10 +135,10 @@ lbl_80061B00:
 /* 80061B0C 0005EA4C  48 02 F0 6D */	bl OSReceiveMessage
 /* 80061B10 0005EA50  83 C1 00 0C */	lwz r30, 0xc(r1)
 /* 80061B14 0005EA54  48 00 0D 41 */	bl updateBuffer__Q28JASystem3DvdFv
-/* 80061B18 0005EA58  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061B18 0005EA58  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 80061B1C 0005EA5C  28 00 00 00 */	cmplwi r0, 0
 /* 80061B20 0005EA60  40 82 00 14 */	bne lbl_80061B34
-/* 80061B24 0005EA64  80 AD 81 DC */	lwz r5, dvdBufSize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061B24 0005EA64  80 AD 81 DC */	lwz r5, dvdBufSize__Q28JASystem3Dvd@sda21(r13)
 /* 80061B28 0005EA68  38 7D 00 00 */	addi r3, r29, 0
 /* 80061B2C 0005EA6C  38 80 00 02 */	li r4, 2
 /* 80061B30 0005EA70  48 00 0C 6D */	bl writeBufferSize__Q28JASystem3DvdFPUcUlUl
@@ -260,7 +260,7 @@ lbl_80061CC4:
 /* 80061CC4 0005EC04  93 E1 00 58 */	stw r31, 0x58(r1)
 /* 80061CC8 0005EC08  93 61 00 4C */	stw r27, 0x4c(r1)
 /* 80061CCC 0005EC0C  93 81 00 50 */	stw r28, 0x50(r1)
-/* 80061CD0 0005EC10  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061CD0 0005EC10  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd@sda21(r13)
 /* 80061CD4 0005EC14  28 00 00 00 */	cmplwi r0, 0
 /* 80061CD8 0005EC18  41 82 00 3C */	beq lbl_80061D14
 /* 80061CDC 0005EC1C  48 00 08 29 */	bl getCallStack__Q28JASystem3DvdFv
@@ -294,13 +294,13 @@ loadToAramDvdTMain__Q28JASystem3DvdFPv:
 /* 80061D3C 0005EC7C  BF 21 00 54 */	stmw r25, 0x54(r1)
 /* 80061D40 0005EC80  3B C3 00 00 */	addi r30, r3, 0
 /* 80061D44 0005EC84  3B E4 63 E0 */	addi r31, r4, mq__Q28JASystem3Dvd@l
-/* 80061D48 0005EC88  88 0D 91 CC */	lbz r0, init$317-_SDA_BASE_(r13)
+/* 80061D48 0005EC88  88 0D 91 CC */	lbz r0, init$317@sda21(r13)
 /* 80061D4C 0005EC8C  7C 00 07 75 */	extsb. r0, r0
 /* 80061D50 0005EC90  40 82 00 14 */	bne lbl_80061D64
 /* 80061D54 0005EC94  38 60 00 00 */	li r3, 0
 /* 80061D58 0005EC98  38 00 00 01 */	li r0, 1
-/* 80061D5C 0005EC9C  90 6D 91 C8 */	stw r3, arq_index$316-_SDA_BASE_(r13)
-/* 80061D60 0005ECA0  98 0D 91 CC */	stb r0, init$317-_SDA_BASE_(r13)
+/* 80061D5C 0005EC9C  90 6D 91 C8 */	stw r3, arq_index$316@sda21(r13)
+/* 80061D60 0005ECA0  98 0D 91 CC */	stb r0, init$317@sda21(r13)
 lbl_80061D64:
 /* 80061D64 0005ECA4  3C 60 80 3B */	lis r3, audioRootPath__Q28JASystem3Dvd@ha
 /* 80061D68 0005ECA8  38 83 B7 A8 */	addi r4, r3, audioRootPath__Q28JASystem3Dvd@l
@@ -362,22 +362,22 @@ lbl_80061E24:
 /* 80061E30 0005ED70  3F 20 12 34 */	lis r25, 0x1234
 /* 80061E34 0005ED74  48 00 01 18 */	b lbl_80061F4C
 lbl_80061E38:
-/* 80061E38 0005ED78  80 AD 91 98 */	lwz r5, bufferLoad__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80061E3C 0005ED7C  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
-/* 80061E40 0005ED80  80 CD 91 80 */	lwz r6, buffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061E38 0005ED78  80 AD 91 98 */	lwz r5, bufferLoad__Q28JASystem3Dvd@sda21(r13)
+/* 80061E3C 0005ED7C  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
+/* 80061E40 0005ED80  80 CD 91 80 */	lwz r6, buffers__Q28JASystem3Dvd@sda21(r13)
 /* 80061E44 0005ED84  38 65 00 01 */	addi r3, r5, 1
 /* 80061E48 0005ED88  7C 03 33 96 */	divwu r0, r3, r6
 /* 80061E4C 0005ED8C  7C 00 31 D6 */	mullw r0, r0, r6
 /* 80061E50 0005ED90  54 A5 10 3A */	slwi r5, r5, 2
 /* 80061E54 0005ED94  7F 64 28 2E */	lwzx r27, r4, r5
 /* 80061E58 0005ED98  7C 00 18 50 */	subf r0, r0, r3
-/* 80061E5C 0005ED9C  90 0D 91 98 */	stw r0, bufferLoad__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061E5C 0005ED9C  90 0D 91 98 */	stw r0, bufferLoad__Q28JASystem3Dvd@sda21(r13)
 lbl_80061E60:
-/* 80061E60 0005EDA0  80 0D 91 9C */	lwz r0, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061E60 0005EDA0  80 0D 91 9C */	lwz r0, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 80061E64 0005EDA4  7C 00 30 40 */	cmplw r0, r6
 /* 80061E68 0005EDA8  41 82 FF F8 */	beq lbl_80061E60
 /* 80061E6C 0005EDAC  80 7E 00 2C */	lwz r3, 0x2c(r30)
-/* 80061E70 0005EDB0  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061E70 0005EDB0  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 80061E74 0005EDB4  7C 03 00 40 */	cmplw r3, r0
 /* 80061E78 0005EDB8  40 80 00 34 */	bge lbl_80061EAC
 /* 80061E7C 0005EDBC  38 03 00 1F */	addi r0, r3, 0x1f
@@ -402,15 +402,15 @@ lbl_80061EAC:
 /* 80061EC4 0005EE04  48 00 06 9D */	bl dvdReadMutex__Q28JASystem3DvdFP11DVDFileInfoPvllPc
 /* 80061EC8 0005EE08  80 9E 00 28 */	lwz r4, 0x28(r30)
 /* 80061ECC 0005EE0C  3B A3 00 00 */	addi r29, r3, 0
-/* 80061ED0 0005EE10  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061ED0 0005EE10  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 80061ED4 0005EE14  7C 04 02 14 */	add r0, r4, r0
 /* 80061ED8 0005EE18  90 1E 00 28 */	stw r0, 0x28(r30)
-/* 80061EDC 0005EE1C  80 6D 91 7C */	lwz r3, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061EDC 0005EE1C  80 6D 91 7C */	lwz r3, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 80061EE0 0005EE20  80 1E 00 2C */	lwz r0, 0x2c(r30)
 /* 80061EE4 0005EE24  7C 03 00 50 */	subf r0, r3, r0
 /* 80061EE8 0005EE28  90 1E 00 2C */	stw r0, 0x2c(r30)
 lbl_80061EEC:
-/* 80061EEC 0005EE2C  80 0D 91 C8 */	lwz r0, arq_index$316-_SDA_BASE_(r13)
+/* 80061EEC 0005EE2C  80 0D 91 C8 */	lwz r0, arq_index$316@sda21(r13)
 /* 80061EF0 0005EE30  7F 67 DB 78 */	mr r7, r27
 /* 80061EF4 0005EE34  81 1E 00 24 */	lwz r8, 0x24(r30)
 /* 80061EF8 0005EE38  39 3C 00 00 */	addi r9, r28, 0
@@ -422,15 +422,15 @@ lbl_80061EEC:
 /* 80061F10 0005EE50  38 C0 00 01 */	li r6, 1
 /* 80061F14 0005EE54  38 63 00 5C */	addi r3, r3, 0x5c
 /* 80061F18 0005EE58  48 03 C5 E5 */	bl ARQPostRequest
-/* 80061F1C 0005EE5C  80 6D 91 C8 */	lwz r3, arq_index$316-_SDA_BASE_(r13)
-/* 80061F20 0005EE60  80 8D 91 9C */	lwz r4, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061F1C 0005EE5C  80 6D 91 C8 */	lwz r3, arq_index$316@sda21(r13)
+/* 80061F20 0005EE60  80 8D 91 9C */	lwz r4, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 80061F24 0005EE64  38 03 00 01 */	addi r0, r3, 1
-/* 80061F28 0005EE68  90 0D 91 C8 */	stw r0, arq_index$316-_SDA_BASE_(r13)
+/* 80061F28 0005EE68  90 0D 91 C8 */	stw r0, arq_index$316@sda21(r13)
 /* 80061F2C 0005EE6C  38 64 00 01 */	addi r3, r4, 1
-/* 80061F30 0005EE70  80 0D 91 C8 */	lwz r0, arq_index$316-_SDA_BASE_(r13)
-/* 80061F34 0005EE74  90 6D 91 9C */	stw r3, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061F30 0005EE70  80 0D 91 C8 */	lwz r0, arq_index$316@sda21(r13)
+/* 80061F34 0005EE74  90 6D 91 9C */	stw r3, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 80061F38 0005EE78  54 00 07 BE */	clrlwi r0, r0, 0x1e
-/* 80061F3C 0005EE7C  90 0D 91 C8 */	stw r0, arq_index$316-_SDA_BASE_(r13)
+/* 80061F3C 0005EE7C  90 0D 91 C8 */	stw r0, arq_index$316@sda21(r13)
 /* 80061F40 0005EE80  80 1E 00 24 */	lwz r0, 0x24(r30)
 /* 80061F44 0005EE84  7C 00 E2 14 */	add r0, r0, r28
 /* 80061F48 0005EE88  90 1E 00 24 */	stw r0, 0x24(r30)
@@ -441,7 +441,7 @@ lbl_80061F4C:
 /* 80061F58 0005EE98  38 7F 00 20 */	addi r3, r31, 0x20
 /* 80061F5C 0005EE9C  48 03 43 A1 */	bl DVDClose
 lbl_80061F60:
-/* 80061F60 0005EEA0  80 0D 91 9C */	lwz r0, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061F60 0005EEA0  80 0D 91 9C */	lwz r0, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 80061F64 0005EEA4  28 00 00 00 */	cmplwi r0, 0
 /* 80061F68 0005EEA8  40 82 FF F8 */	bne lbl_80061F60
 /* 80061F6C 0005EEAC  48 03 1E A5 */	bl OSGetTick
@@ -481,7 +481,7 @@ lbl_80061FE0:
 /* 80061FE0 0005EF20  93 E1 00 58 */	stw r31, 0x58(r1)
 /* 80061FE4 0005EF24  93 61 00 4C */	stw r27, 0x4c(r1)
 /* 80061FE8 0005EF28  93 81 00 50 */	stw r28, 0x50(r1)
-/* 80061FEC 0005EF2C  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80061FEC 0005EF2C  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd@sda21(r13)
 /* 80061FF0 0005EF30  28 00 00 00 */	cmplwi r0, 0
 /* 80061FF4 0005EF34  41 82 00 3C */	beq lbl_80062030
 /* 80061FF8 0005EF38  48 00 05 0D */	bl getCallStack__Q28JASystem3DvdFv
@@ -586,7 +586,7 @@ lbl_8006214C:
 /* 80062150 0005F090  90 01 00 44 */	stw r0, 0x44(r1)
 /* 80062154 0005F094  90 01 00 38 */	stw r0, 0x38(r1)
 /* 80062158 0005F098  90 01 00 3C */	stw r0, 0x3c(r1)
-/* 8006215C 0005F09C  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 8006215C 0005F09C  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd@sda21(r13)
 /* 80062160 0005F0A0  28 00 00 00 */	cmplwi r0, 0
 /* 80062164 0005F0A4  41 82 00 3C */	beq lbl_800621A0
 /* 80062168 0005F0A8  48 00 03 9D */	bl getCallStack__Q28JASystem3DvdFv
@@ -633,7 +633,7 @@ checkPassDvdT__Q28JASystem3DvdFUlPUlPFUl_v:
 /* 800621F4 0005F134  93 C1 00 50 */	stw r30, 0x50(r1)
 /* 800621F8 0005F138  3B C1 00 14 */	addi r30, r1, 0x14
 /* 800621FC 0005F13C  90 61 00 14 */	stw r3, 0x14(r1)
-/* 80062200 0005F140  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062200 0005F140  80 0D 91 78 */	lwz r0, mqInit__Q28JASystem3Dvd@sda21(r13)
 /* 80062204 0005F144  90 81 00 44 */	stw r4, 0x44(r1)
 /* 80062208 0005F148  28 00 00 00 */	cmplwi r0, 0
 /* 8006220C 0005F14C  90 A1 00 48 */	stw r5, 0x48(r1)
@@ -719,7 +719,7 @@ lbl_8006230C:
 /* 80062320 0005F260  48 03 43 75 */	bl DVDReadPrio
 /* 80062324 0005F264  2C 03 FF FF */	cmpwi r3, -1
 /* 80062328 0005F268  40 82 00 24 */	bne lbl_8006234C
-/* 8006232C 0005F26C  81 8D 91 B8 */	lwz r12, errorCallback__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 8006232C 0005F26C  81 8D 91 B8 */	lwz r12, errorCallback__Q28JASystem3Dvd@sda21(r13)
 /* 80062330 0005F270  28 0C 00 00 */	cmplwi r12, 0
 /* 80062334 0005F274  41 82 00 18 */	beq lbl_8006234C
 /* 80062338 0005F278  7D 88 03 A6 */	mtlr r12
@@ -744,7 +744,7 @@ lbl_80062358:
 .global pauseDvdT__Q28JASystem3DvdFv
 pauseDvdT__Q28JASystem3DvdFv:
 /* 80062378 0005F2B8  38 00 00 01 */	li r0, 1
-/* 8006237C 0005F2BC  90 0D 91 B4 */	stw r0, dvdThreadPauseFlag__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 8006237C 0005F2BC  90 0D 91 B4 */	stw r0, dvdThreadPauseFlag__Q28JASystem3Dvd@sda21(r13)
 /* 80062380 0005F2C0  4E 80 00 20 */	blr 
 
 .global unpauseDvdT__Q28JASystem3DvdFv
@@ -752,14 +752,14 @@ unpauseDvdT__Q28JASystem3DvdFv:
 /* 80062384 0005F2C4  7C 08 02 A6 */	mflr r0
 /* 80062388 0005F2C8  90 01 00 04 */	stw r0, 4(r1)
 /* 8006238C 0005F2CC  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80062390 0005F2D0  80 0D 91 B4 */	lwz r0, dvdThreadPauseFlag__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062390 0005F2D0  80 0D 91 B4 */	lwz r0, dvdThreadPauseFlag__Q28JASystem3Dvd@sda21(r13)
 /* 80062394 0005F2D4  2C 00 00 01 */	cmpwi r0, 1
 /* 80062398 0005F2D8  40 82 00 0C */	bne lbl_800623A4
-/* 8006239C 0005F2DC  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd-_SDA_BASE_
+/* 8006239C 0005F2DC  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd@sda21
 /* 800623A0 0005F2E0  48 03 19 4D */	bl OSWakeupThread
 lbl_800623A4:
 /* 800623A4 0005F2E4  38 00 00 00 */	li r0, 0
-/* 800623A8 0005F2E8  90 0D 91 B4 */	stw r0, dvdThreadPauseFlag__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800623A8 0005F2E8  90 0D 91 B4 */	stw r0, dvdThreadPauseFlag__Q28JASystem3Dvd@sda21(r13)
 /* 800623AC 0005F2EC  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800623B0 0005F2F0  38 21 00 08 */	addi r1, r1, 8
 /* 800623B4 0005F2F4  7C 08 03 A6 */	mtlr r0
@@ -784,23 +784,23 @@ lbl_800623EC:
 /* 800623F0 0005F330  3B E0 00 00 */	li r31, 0
 /* 800623F4 0005F334  48 00 00 30 */	b lbl_80062424
 lbl_800623F8:
-/* 800623F8 0005F338  80 6D 91 C0 */	lwz r3, dvdFile__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800623F8 0005F338  80 6D 91 C0 */	lwz r3, dvdFile__Q28JASystem3Dvd@sda21(r13)
 /* 800623FC 0005F33C  7F A4 EB 78 */	mr r4, r29
 /* 80062400 0005F340  7C 63 F8 2E */	lwzx r3, r3, r31
 /* 80062404 0005F344  48 02 38 59 */	bl strcmp
 /* 80062408 0005F348  2C 03 00 00 */	cmpwi r3, 0
 /* 8006240C 0005F34C  40 82 00 10 */	bne lbl_8006241C
-/* 80062410 0005F350  80 6D 91 C4 */	lwz r3, dvdEntryNum__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062410 0005F350  80 6D 91 C4 */	lwz r3, dvdEntryNum__Q28JASystem3Dvd@sda21(r13)
 /* 80062414 0005F354  7C 63 F8 2E */	lwzx r3, r3, r31
 /* 80062418 0005F358  48 00 00 78 */	b lbl_80062490
 lbl_8006241C:
 /* 8006241C 0005F35C  3B DE 00 01 */	addi r30, r30, 1
 /* 80062420 0005F360  3B FF 00 04 */	addi r31, r31, 4
 lbl_80062424:
-/* 80062424 0005F364  80 6D 91 BC */	lwz r3, dvdFileDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062424 0005F364  80 6D 91 BC */	lwz r3, dvdFileDics__Q28JASystem3Dvd@sda21(r13)
 /* 80062428 0005F368  7C 1E 18 40 */	cmplw r30, r3
 /* 8006242C 0005F36C  41 80 FF CC */	blt lbl_800623F8
-/* 80062430 0005F370  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062430 0005F370  80 0D 81 E0 */	lwz r0, maxDics__Q28JASystem3Dvd@sda21(r13)
 /* 80062434 0005F374  7C 03 00 40 */	cmplw r3, r0
 /* 80062438 0005F378  40 82 00 0C */	bne lbl_80062444
 /* 8006243C 0005F37C  38 60 FF FF */	li r3, -1
@@ -811,19 +811,19 @@ lbl_80062444:
 /* 8006244C 0005F38C  3B C3 00 00 */	addi r30, r3, 0
 /* 80062450 0005F390  2C 1E FF FF */	cmpwi r30, -1
 /* 80062454 0005F394  41 82 00 38 */	beq lbl_8006248C
-/* 80062458 0005F398  80 0D 91 BC */	lwz r0, dvdFileDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062458 0005F398  80 0D 91 BC */	lwz r0, dvdFileDics__Q28JASystem3Dvd@sda21(r13)
 /* 8006245C 0005F39C  7F A4 EB 78 */	mr r4, r29
-/* 80062460 0005F3A0  80 6D 91 C0 */	lwz r3, dvdFile__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062460 0005F3A0  80 6D 91 C0 */	lwz r3, dvdFile__Q28JASystem3Dvd@sda21(r13)
 /* 80062464 0005F3A4  54 00 10 3A */	slwi r0, r0, 2
 /* 80062468 0005F3A8  7C 63 00 2E */	lwzx r3, r3, r0
 /* 8006246C 0005F3AC  48 02 39 85 */	bl strcpy
-/* 80062470 0005F3B0  80 0D 91 BC */	lwz r0, dvdFileDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80062474 0005F3B4  80 6D 91 C4 */	lwz r3, dvdEntryNum__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062470 0005F3B0  80 0D 91 BC */	lwz r0, dvdFileDics__Q28JASystem3Dvd@sda21(r13)
+/* 80062474 0005F3B4  80 6D 91 C4 */	lwz r3, dvdEntryNum__Q28JASystem3Dvd@sda21(r13)
 /* 80062478 0005F3B8  54 00 10 3A */	slwi r0, r0, 2
 /* 8006247C 0005F3BC  7F C3 01 2E */	stwx r30, r3, r0
-/* 80062480 0005F3C0  80 6D 91 BC */	lwz r3, dvdFileDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062480 0005F3C0  80 6D 91 BC */	lwz r3, dvdFileDics__Q28JASystem3Dvd@sda21(r13)
 /* 80062484 0005F3C4  38 03 00 01 */	addi r0, r3, 1
-/* 80062488 0005F3C8  90 0D 91 BC */	stw r0, dvdFileDics__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062488 0005F3C8  90 0D 91 BC */	stw r0, dvdFileDics__Q28JASystem3Dvd@sda21(r13)
 lbl_8006248C:
 /* 8006248C 0005F3CC  7F C3 F3 78 */	mr r3, r30
 lbl_80062490:
@@ -869,17 +869,17 @@ getCallStack__Q28JASystem3DvdFv:
 /* 8006250C 0005F44C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80062510 0005F450  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80062514 0005F454  48 02 DC B9 */	bl OSDisableInterrupts
-/* 80062518 0005F458  80 8D 91 A8 */	lwz r4, curQ__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 8006251C 0005F45C  80 AD 91 A0 */	lwz r5, callStackArray__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062518 0005F458  80 8D 91 A8 */	lwz r4, curQ__Q28JASystem3Dvd@sda21(r13)
+/* 8006251C 0005F45C  80 AD 91 A0 */	lwz r5, callStackArray__Q28JASystem3Dvd@sda21(r13)
 /* 80062520 0005F460  38 04 00 01 */	addi r0, r4, 1
-/* 80062524 0005F464  90 0D 91 A8 */	stw r0, curQ__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062524 0005F464  90 0D 91 A8 */	stw r0, curQ__Q28JASystem3Dvd@sda21(r13)
 /* 80062528 0005F468  54 80 30 32 */	slwi r0, r4, 6
 /* 8006252C 0005F46C  7F E5 02 14 */	add r31, r5, r0
-/* 80062530 0005F470  80 0D 91 A8 */	lwz r0, curQ__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062530 0005F470  80 0D 91 A8 */	lwz r0, curQ__Q28JASystem3Dvd@sda21(r13)
 /* 80062534 0005F474  28 00 00 20 */	cmplwi r0, 0x20
 /* 80062538 0005F478  40 82 00 0C */	bne lbl_80062544
 /* 8006253C 0005F47C  38 00 00 00 */	li r0, 0
-/* 80062540 0005F480  90 0D 91 A8 */	stw r0, curQ__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062540 0005F480  90 0D 91 A8 */	stw r0, curQ__Q28JASystem3Dvd@sda21(r13)
 lbl_80062544:
 /* 80062544 0005F484  48 02 DC B1 */	bl OSRestoreInterrupts
 /* 80062548 0005F488  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -900,10 +900,10 @@ dvdReadMutex__Q28JASystem3DvdFP11DVDFileInfoPvllPc:
 /* 80062578 0005F4B8  3B A5 00 00 */	addi r29, r5, 0
 /* 8006257C 0005F4BC  3B C6 00 00 */	addi r30, r6, 0
 /* 80062580 0005F4C0  3B E7 00 00 */	addi r31, r7, 0
-/* 80062584 0005F4C4  80 0D 91 B4 */	lwz r0, dvdThreadPauseFlag__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062584 0005F4C4  80 0D 91 B4 */	lwz r0, dvdThreadPauseFlag__Q28JASystem3Dvd@sda21(r13)
 /* 80062588 0005F4C8  2C 00 00 01 */	cmpwi r0, 1
 /* 8006258C 0005F4CC  40 82 00 0C */	bne lbl_80062598
-/* 80062590 0005F4D0  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd-_SDA_BASE_
+/* 80062590 0005F4D0  38 6D 91 AC */	addi r3, r13, dvdtSleep__Q28JASystem3Dvd@sda21
 /* 80062594 0005F4D4  48 03 16 6D */	bl OSSleepThread
 lbl_80062598:
 /* 80062598 0005F4D8  38 7B 00 00 */	addi r3, r27, 0
@@ -914,7 +914,7 @@ lbl_80062598:
 /* 800625AC 0005F4EC  48 03 40 E9 */	bl DVDReadPrio
 /* 800625B0 0005F4F0  2C 03 FF FF */	cmpwi r3, -1
 /* 800625B4 0005F4F4  40 82 00 24 */	bne lbl_800625D8
-/* 800625B8 0005F4F8  81 8D 91 B8 */	lwz r12, errorCallback__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800625B8 0005F4F8  81 8D 91 B8 */	lwz r12, errorCallback__Q28JASystem3Dvd@sda21(r13)
 /* 800625BC 0005F4FC  28 0C 00 00 */	cmplwi r12, 0
 /* 800625C0 0005F500  41 82 00 18 */	beq lbl_800625D8
 /* 800625C4 0005F504  7D 88 03 A6 */	mtlr r12
@@ -1002,10 +1002,10 @@ lbl_800626B0:
 allocDvdBuffer__Q28JASystem3DvdFv:
 /* 800626C4 0005F604  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800626C8 0005F608  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 800626CC 0005F60C  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800626CC 0005F60C  80 0D 91 7C */	lwz r0, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 800626D0 0005F610  28 00 00 00 */	cmplwi r0, 0
 /* 800626D4 0005F614  40 82 00 BC */	bne lbl_80062790
-/* 800626D8 0005F618  81 6D 91 80 */	lwz r11, buffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800626D8 0005F618  81 6D 91 80 */	lwz r11, buffers__Q28JASystem3Dvd@sda21(r13)
 /* 800626DC 0005F61C  3B E0 00 00 */	li r31, 0
 /* 800626E0 0005F620  38 60 00 00 */	li r3, 0
 /* 800626E4 0005F624  28 0B 00 00 */	cmplwi r11, 0
@@ -1027,7 +1027,7 @@ allocDvdBuffer__Q28JASystem3DvdFv:
 /* 80062724 0005F664  38 03 00 00 */	addi r0, r3, 0
 /* 80062728 0005F668  40 81 00 38 */	ble lbl_80062760
 lbl_8006272C:
-/* 8006272C 0005F66C  39 8D 91 90 */	addi r12, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 8006272C 0005F66C  39 8D 91 90 */	addi r12, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 80062730 0005F670  7D 8C 1A 14 */	add r12, r12, r3
 /* 80062734 0005F674  91 4C 00 00 */	stw r10, 0(r12)
 /* 80062738 0005F678  3B FF 00 08 */	addi r31, r31, 8
@@ -1046,7 +1046,7 @@ lbl_80062760:
 /* 80062768 0005F6A8  7C 09 03 A6 */	mtctr r0
 /* 8006276C 0005F6AC  57 E3 10 3A */	slwi r3, r31, 2
 /* 80062770 0005F6B0  38 00 00 00 */	li r0, 0
-/* 80062774 0005F6B4  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 80062774 0005F6B4  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 80062778 0005F6B8  40 80 00 18 */	bge lbl_80062790
 lbl_8006277C:
 /* 8006277C 0005F6BC  7C 04 19 2E */	stwx r0, r4, r3
@@ -1062,9 +1062,9 @@ lbl_80062790:
 .global writeBufferSize__Q28JASystem3DvdFPUcUlUl
 writeBufferSize__Q28JASystem3DvdFPUcUlUl:
 /* 8006279C 0005F6DC  28 04 00 00 */	cmplwi r4, 0
-/* 800627A0 0005F6E0  90 AD 91 7C */	stw r5, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800627A0 0005F6E0  90 AD 91 7C */	stw r5, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 800627A4 0005F6E4  39 00 00 00 */	li r8, 0
-/* 800627A8 0005F6E8  90 8D 91 80 */	stw r4, buffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 800627A8 0005F6E8  90 8D 91 80 */	stw r4, buffers__Q28JASystem3Dvd@sda21(r13)
 /* 800627AC 0005F6EC  38 C0 00 00 */	li r6, 0
 /* 800627B0 0005F6F0  4C 81 00 20 */	blelr 
 /* 800627B4 0005F6F4  28 04 00 08 */	cmplwi r4, 8
@@ -1076,7 +1076,7 @@ writeBufferSize__Q28JASystem3DvdFPUcUlUl:
 /* 800627CC 0005F70C  7C 09 03 A6 */	mtctr r0
 /* 800627D0 0005F710  40 81 00 58 */	ble lbl_80062828
 lbl_800627D4:
-/* 800627D4 0005F714  38 ED 91 90 */	addi r7, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 800627D4 0005F714  38 ED 91 90 */	addi r7, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 800627D8 0005F718  7C E7 32 14 */	add r7, r7, r6
 /* 800627DC 0005F71C  90 67 00 00 */	stw r3, 0(r7)
 /* 800627E0 0005F720  7C 63 2A 14 */	add r3, r3, r5
@@ -1102,7 +1102,7 @@ lbl_80062828:
 /* 8006282C 0005F76C  7C 08 20 40 */	cmplw r8, r4
 /* 80062830 0005F770  7C 09 03 A6 */	mtctr r0
 /* 80062834 0005F774  55 04 10 3A */	slwi r4, r8, 2
-/* 80062838 0005F778  38 CD 91 90 */	addi r6, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 80062838 0005F778  38 CD 91 90 */	addi r6, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 8006283C 0005F77C  4C 80 00 20 */	bgelr 
 lbl_80062840:
 /* 80062840 0005F780  7C 66 21 2E */	stwx r3, r6, r4
@@ -1113,15 +1113,15 @@ lbl_80062840:
 
 .global updateBuffer__Q28JASystem3DvdFv
 updateBuffer__Q28JASystem3DvdFv:
-/* 80062854 0005F794  80 ED 91 8C */	lwz r7, nextBuffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062854 0005F794  80 ED 91 8C */	lwz r7, nextBuffers__Q28JASystem3Dvd@sda21(r13)
 /* 80062858 0005F798  28 07 00 00 */	cmplwi r7, 0
 /* 8006285C 0005F79C  4D 82 00 20 */	beqlr 
-/* 80062860 0005F7A0  81 0D 91 84 */	lwz r8, nextBufferSize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062860 0005F7A0  81 0D 91 84 */	lwz r8, nextBufferSize__Q28JASystem3Dvd@sda21(r13)
 /* 80062864 0005F7A4  38 80 00 00 */	li r4, 0
-/* 80062868 0005F7A8  90 ED 91 80 */	stw r7, buffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062868 0005F7A8  90 ED 91 80 */	stw r7, buffers__Q28JASystem3Dvd@sda21(r13)
 /* 8006286C 0005F7AC  7C 83 23 78 */	mr r3, r4
-/* 80062870 0005F7B0  80 AD 91 88 */	lwz r5, nextBufferTop__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80062874 0005F7B4  91 0D 91 7C */	stw r8, buffersize__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062870 0005F7B0  80 AD 91 88 */	lwz r5, nextBufferTop__Q28JASystem3Dvd@sda21(r13)
+/* 80062874 0005F7B4  91 0D 91 7C */	stw r8, buffersize__Q28JASystem3Dvd@sda21(r13)
 /* 80062878 0005F7B8  40 81 00 A0 */	ble lbl_80062918
 /* 8006287C 0005F7BC  28 07 00 08 */	cmplwi r7, 8
 /* 80062880 0005F7C0  38 C7 FF F8 */	addi r6, r7, -8
@@ -1132,7 +1132,7 @@ updateBuffer__Q28JASystem3DvdFv:
 /* 80062894 0005F7D4  7C 09 03 A6 */	mtctr r0
 /* 80062898 0005F7D8  40 81 00 58 */	ble lbl_800628F0
 lbl_8006289C:
-/* 8006289C 0005F7DC  38 CD 91 90 */	addi r6, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 8006289C 0005F7DC  38 CD 91 90 */	addi r6, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 800628A0 0005F7E0  7C C6 1A 14 */	add r6, r6, r3
 /* 800628A4 0005F7E4  90 A6 00 00 */	stw r5, 0(r6)
 /* 800628A8 0005F7E8  7C A5 42 14 */	add r5, r5, r8
@@ -1158,7 +1158,7 @@ lbl_800628F0:
 /* 800628F4 0005F834  7C 04 38 40 */	cmplw r4, r7
 /* 800628F8 0005F838  7C 09 03 A6 */	mtctr r0
 /* 800628FC 0005F83C  54 83 10 3A */	slwi r3, r4, 2
-/* 80062900 0005F840  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd-_SDA_BASE_
+/* 80062900 0005F840  38 8D 91 90 */	addi r4, r13, audioDvdBuffer__Q28JASystem3Dvd@sda21
 /* 80062904 0005F844  40 80 00 14 */	bge lbl_80062918
 lbl_80062908:
 /* 80062908 0005F848  7C A4 19 2E */	stwx r5, r4, r3
@@ -1167,15 +1167,15 @@ lbl_80062908:
 /* 80062914 0005F854  42 00 FF F4 */	bdnz lbl_80062908
 lbl_80062918:
 /* 80062918 0005F858  38 00 00 00 */	li r0, 0
-/* 8006291C 0005F85C  90 0D 91 8C */	stw r0, nextBuffers__Q28JASystem3Dvd-_SDA_BASE_(r13)
-/* 80062920 0005F860  90 0D 91 88 */	stw r0, nextBufferTop__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 8006291C 0005F85C  90 0D 91 8C */	stw r0, nextBuffers__Q28JASystem3Dvd@sda21(r13)
+/* 80062920 0005F860  90 0D 91 88 */	stw r0, nextBufferTop__Q28JASystem3Dvd@sda21(r13)
 /* 80062924 0005F864  4E 80 00 20 */	blr 
 
 .global aramDmaFinish__Q28JASystem3DvdFUl
 aramDmaFinish__Q28JASystem3DvdFUl:
-/* 80062928 0005F868  80 6D 91 9C */	lwz r3, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062928 0005F868  80 6D 91 9C */	lwz r3, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 8006292C 0005F86C  38 03 FF FF */	addi r0, r3, -1
-/* 80062930 0005F870  90 0D 91 9C */	stw r0, bufferFull__Q28JASystem3Dvd-_SDA_BASE_(r13)
+/* 80062930 0005F870  90 0D 91 9C */	stw r0, bufferFull__Q28JASystem3Dvd@sda21(r13)
 /* 80062934 0005F874  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

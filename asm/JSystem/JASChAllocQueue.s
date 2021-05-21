@@ -7,24 +7,24 @@ init__Q38JASystem6Driver8DSPQueueFUl:
 /* 8005BDBC 00058CFC  38 A0 00 00 */	li r5, 0
 /* 8005BDC0 00058D00  90 01 00 04 */	stw r0, 4(r1)
 /* 8005BDC4 00058D04  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8005BDC8 00058D08  90 6D 81 98 */	stw r3, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BDCC 00058D0C  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
-/* 8005BDD0 00058D10  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BDC8 00058D08  90 6D 81 98 */	stw r3, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BDCC 00058D0C  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
+/* 8005BDD0 00058D10  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BDD4 00058D14  54 03 10 3A */	slwi r3, r0, 2
 /* 8005BDD8 00058D18  4B FB 0C 6D */	bl __nwa__FUlP7JKRHeapi
-/* 8005BDDC 00058D1C  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BDDC 00058D1C  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BDE0 00058D20  38 A0 00 00 */	li r5, 0
-/* 8005BDE4 00058D24  90 6D 90 E0 */	stw r3, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BDE8 00058D28  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 8005BDE4 00058D24  90 6D 90 E0 */	stw r3, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BDE8 00058D28  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 8005BDEC 00058D2C  54 03 10 3A */	slwi r3, r0, 2
 /* 8005BDF0 00058D30  4B FB 0C 55 */	bl __nwa__FUlP7JKRHeapi
-/* 8005BDF4 00058D34  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BDF8 00058D38  90 6D 90 E4 */	stw r3, waittime__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BDFC 00058D3C  80 6D 90 E0 */	lwz r3, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BDF4 00058D34  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BDF8 00058D38  90 6D 90 E4 */	stw r3, waittime__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BDFC 00058D3C  80 6D 90 E0 */	lwz r3, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE00 00058D40  54 04 10 3A */	slwi r4, r0, 2
 /* 8005BE04 00058D44  48 00 54 1D */	bl bzero__Q28JASystem4CalcFPvUl
-/* 8005BE08 00058D48  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BE0C 00058D4C  80 6D 90 E4 */	lwz r3, waittime__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE08 00058D48  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BE0C 00058D4C  80 6D 90 E4 */	lwz r3, waittime__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE10 00058D50  54 04 10 3A */	slwi r4, r0, 2
 /* 8005BE14 00058D54  48 00 54 0D */	bl bzero__Q28JASystem4CalcFPvUl
 /* 8005BE18 00058D58  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -39,8 +39,8 @@ enQueue__Q38JASystem6Driver8DSPQueueFPQ28JASystem8TChannel:
 /* 8005BE30 00058D70  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8005BE34 00058D74  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8005BE38 00058D78  7C 7F 1B 78 */	mr r31, r3
-/* 8005BE3C 00058D7C  80 8D 90 E8 */	lwz r4, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BE40 00058D80  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE3C 00058D7C  80 8D 90 E8 */	lwz r4, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BE40 00058D80  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE44 00058D84  7C 04 00 40 */	cmplw r4, r0
 /* 8005BE48 00058D88  40 82 00 0C */	bne lbl_8005BE54
 /* 8005BE4C 00058D8C  38 60 00 00 */	li r3, 0
@@ -54,26 +54,26 @@ lbl_8005BE54:
 /* 8005BE68 00058DA8  38 60 00 00 */	li r3, 0
 /* 8005BE6C 00058DAC  48 00 00 58 */	b lbl_8005BEC4
 lbl_8005BE70:
-/* 8005BE70 00058DB0  80 0D 90 F0 */	lwz r0, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE70 00058DB0  80 0D 90 F0 */	lwz r0, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE74 00058DB4  38 A0 00 00 */	li r5, 0
-/* 8005BE78 00058DB8  80 6D 90 E4 */	lwz r3, waittime__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE78 00058DB8  80 6D 90 E4 */	lwz r3, waittime__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE7C 00058DBC  54 00 10 3A */	slwi r0, r0, 2
 /* 8005BE80 00058DC0  7C A3 01 2E */	stwx r5, r3, r0
-/* 8005BE84 00058DC4  80 0D 90 F0 */	lwz r0, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BE88 00058DC8  80 6D 90 E0 */	lwz r3, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE84 00058DC4  80 0D 90 F0 */	lwz r0, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BE88 00058DC8  80 6D 90 E0 */	lwz r3, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE8C 00058DCC  54 00 10 3A */	slwi r0, r0, 2
 /* 8005BE90 00058DD0  7F E3 01 2E */	stwx r31, r3, r0
-/* 8005BE94 00058DD4  80 8D 90 F0 */	lwz r4, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BE98 00058DD8  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BE94 00058DD4  80 8D 90 F0 */	lwz r4, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BE98 00058DD8  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BE9C 00058DDC  38 84 00 01 */	addi r4, r4, 1
-/* 8005BEA0 00058DE0  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BEA4 00058DE4  90 8D 90 F0 */	stw r4, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BEA0 00058DE0  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BEA4 00058DE4  90 8D 90 F0 */	stw r4, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BEA8 00058DE8  38 83 00 01 */	addi r4, r3, 1
-/* 8005BEAC 00058DEC  80 6D 90 F0 */	lwz r3, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BEB0 00058DF0  90 8D 90 E8 */	stw r4, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BEAC 00058DEC  80 6D 90 F0 */	lwz r3, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BEB0 00058DF0  90 8D 90 E8 */	stw r4, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BEB4 00058DF4  7C 03 00 40 */	cmplw r3, r0
 /* 8005BEB8 00058DF8  40 82 00 08 */	bne lbl_8005BEC0
-/* 8005BEBC 00058DFC  90 AD 90 F0 */	stw r5, cur_tail__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BEBC 00058DFC  90 AD 90 F0 */	stw r5, cur_tail__Q38JASystem6Driver8DSPQueue@sda21(r13)
 lbl_8005BEC0:
 /* 8005BEC0 00058E00  38 60 00 01 */	li r3, 1
 lbl_8005BEC4:
@@ -93,8 +93,8 @@ deQueue__Q38JASystem6Driver8DSPQueueFUc:
 /* 8005BEEC 00058E2C  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8005BEF0 00058E30  48 00 00 CC */	b lbl_8005BFBC
 lbl_8005BEF4:
-/* 8005BEF4 00058E34  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BEF8 00058E38  80 8D 90 E0 */	lwz r4, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BEF4 00058E34  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BEF8 00058E38  80 8D 90 E0 */	lwz r4, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BEFC 00058E3C  54 60 10 3A */	slwi r0, r3, 2
 /* 8005BF00 00058E40  7C 04 00 2E */	lwzx r0, r4, r0
 /* 8005BF04 00058E44  28 00 00 00 */	cmplwi r0, 0
@@ -118,37 +118,37 @@ lbl_8005BEF4:
 /* 8005BF4C 00058E8C  38 A0 00 01 */	li r5, 1
 /* 8005BF50 00058E90  48 00 1E F5 */	bl addListTail__Q28JASystem11TChannelMgrFPQ28JASystem8TChannelUl
 lbl_8005BF54:
-/* 8005BF54 00058E94  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BF58 00058E98  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF54 00058E94  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BF58 00058E98  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BF5C 00058E9C  38 63 00 01 */	addi r3, r3, 1
-/* 8005BF60 00058EA0  90 6D 90 EC */	stw r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BF64 00058EA4  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF60 00058EA0  90 6D 90 EC */	stw r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BF64 00058EA4  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BF68 00058EA8  7C 03 00 40 */	cmplw r3, r0
 /* 8005BF6C 00058EAC  40 82 00 0C */	bne lbl_8005BF78
 /* 8005BF70 00058EB0  38 00 00 00 */	li r0, 0
-/* 8005BF74 00058EB4  90 0D 90 EC */	stw r0, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF74 00058EB4  90 0D 90 EC */	stw r0, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
 lbl_8005BF78:
-/* 8005BF78 00058EB8  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF78 00058EB8  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BF7C 00058EBC  28 1F 00 01 */	cmplwi r31, 1
 /* 8005BF80 00058EC0  38 03 FF FF */	addi r0, r3, -1
-/* 8005BF84 00058EC4  90 0D 90 E8 */	stw r0, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF84 00058EC4  90 0D 90 E8 */	stw r0, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BF88 00058EC8  41 82 00 40 */	beq lbl_8005BFC8
 /* 8005BF8C 00058ECC  48 00 00 30 */	b lbl_8005BFBC
 lbl_8005BF90:
 /* 8005BF90 00058ED0  38 63 00 01 */	addi r3, r3, 1
-/* 8005BF94 00058ED4  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BF98 00058ED8  90 6D 90 EC */	stw r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BF9C 00058EDC  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BF94 00058ED4  80 0D 81 98 */	lwz r0, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BF98 00058ED8  90 6D 90 EC */	stw r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BF9C 00058EDC  80 6D 90 EC */	lwz r3, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFA0 00058EE0  7C 03 00 40 */	cmplw r3, r0
 /* 8005BFA4 00058EE4  40 82 00 0C */	bne lbl_8005BFB0
 /* 8005BFA8 00058EE8  38 00 00 00 */	li r0, 0
-/* 8005BFAC 00058EEC  90 0D 90 EC */	stw r0, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFAC 00058EEC  90 0D 90 EC */	stw r0, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
 lbl_8005BFB0:
-/* 8005BFB0 00058EF0  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFB0 00058EF0  80 6D 90 E8 */	lwz r3, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFB4 00058EF4  38 03 FF FF */	addi r0, r3, -1
-/* 8005BFB8 00058EF8  90 0D 90 E8 */	stw r0, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFB8 00058EF8  90 0D 90 E8 */	stw r0, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 lbl_8005BFBC:
-/* 8005BFBC 00058EFC  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFBC 00058EFC  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFC0 00058F00  28 00 00 00 */	cmplwi r0, 0
 /* 8005BFC4 00058F04  40 82 FF 30 */	bne lbl_8005BEF4
 lbl_8005BFC8:
@@ -161,13 +161,13 @@ lbl_8005BFC8:
 
 .global deleteQueue__Q38JASystem6Driver8DSPQueueFPQ28JASystem8TChannel
 deleteQueue__Q38JASystem6Driver8DSPQueueFPQ28JASystem8TChannel:
-/* 8005BFE0 00058F20  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFE0 00058F20  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFE4 00058F24  39 00 00 00 */	li r8, 0
-/* 8005BFE8 00058F28  80 ED 90 E0 */	lwz r7, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFE8 00058F28  80 ED 90 E0 */	lwz r7, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFEC 00058F2C  28 00 00 00 */	cmplwi r0, 0
 /* 8005BFF0 00058F30  7C 09 03 A6 */	mtctr r0
-/* 8005BFF4 00058F34  80 AD 90 EC */	lwz r5, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005BFF8 00058F38  80 CD 81 98 */	lwz r6, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005BFF4 00058F34  80 AD 90 EC */	lwz r5, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005BFF8 00058F38  80 CD 81 98 */	lwz r6, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005BFFC 00058F3C  40 81 00 3C */	ble lbl_8005C038
 lbl_8005C000:
 /* 8005C000 00058F40  7C 85 42 14 */	add r4, r5, r8
@@ -200,10 +200,10 @@ checkQueue__Q38JASystem6Driver8DSPQueueFv:
 /* 8005C058 00058F98  3B E0 00 00 */	li r31, 0
 /* 8005C05C 00058F9C  48 00 00 A0 */	b lbl_8005C0FC
 lbl_8005C060:
-/* 8005C060 00058FA0  80 0D 90 EC */	lwz r0, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
-/* 8005C064 00058FA4  80 6D 81 98 */	lwz r3, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C060 00058FA0  80 0D 90 EC */	lwz r0, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
+/* 8005C064 00058FA4  80 6D 81 98 */	lwz r3, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C068 00058FA8  7C 80 FA 14 */	add r4, r0, r31
-/* 8005C06C 00058FAC  80 AD 90 E0 */	lwz r5, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C06C 00058FAC  80 AD 90 E0 */	lwz r5, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C070 00058FB0  7C 04 1B 96 */	divwu r0, r4, r3
 /* 8005C074 00058FB4  7C 00 19 D6 */	mullw r0, r0, r3
 /* 8005C078 00058FB8  7C 00 20 50 */	subf r0, r0, r4
@@ -212,7 +212,7 @@ lbl_8005C060:
 /* 8005C084 00058FC4  28 00 00 00 */	cmplwi r0, 0
 /* 8005C088 00058FC8  7C 03 03 78 */	mr r3, r0
 /* 8005C08C 00058FCC  41 82 00 6C */	beq lbl_8005C0F8
-/* 8005C090 00058FD0  80 AD 90 E4 */	lwz r5, waittime__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C090 00058FD0  80 AD 90 E4 */	lwz r5, waittime__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C094 00058FD4  7C 85 30 2E */	lwzx r4, r5, r6
 /* 8005C098 00058FD8  38 04 00 01 */	addi r0, r4, 1
 /* 8005C09C 00058FDC  7C 05 31 2E */	stwx r0, r5, r6
@@ -229,11 +229,11 @@ lbl_8005C0B4:
 /* 8005C0C4 00059004  38 80 00 06 */	li r4, 6
 /* 8005C0C8 00059008  7D 88 03 A6 */	mtlr r12
 /* 8005C0CC 0005900C  4E 80 00 21 */	blrl 
-/* 8005C0D0 00059010  80 0D 90 EC */	lwz r0, cur_top__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C0D0 00059010  80 0D 90 EC */	lwz r0, cur_top__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C0D4 00059014  38 C0 00 00 */	li r6, 0
-/* 8005C0D8 00059018  80 6D 81 98 */	lwz r3, waitMax__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C0D8 00059018  80 6D 81 98 */	lwz r3, waitMax__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C0DC 0005901C  7C 80 FA 14 */	add r4, r0, r31
-/* 8005C0E0 00059020  80 AD 90 E0 */	lwz r5, waitp__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C0E0 00059020  80 AD 90 E0 */	lwz r5, waitp__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C0E4 00059024  7C 04 1B 96 */	divwu r0, r4, r3
 /* 8005C0E8 00059028  7C 00 19 D6 */	mullw r0, r0, r3
 /* 8005C0EC 0005902C  7C 00 20 50 */	subf r0, r0, r4
@@ -242,7 +242,7 @@ lbl_8005C0B4:
 lbl_8005C0F8:
 /* 8005C0F8 00059038  3B FF 00 01 */	addi r31, r31, 1
 lbl_8005C0FC:
-/* 8005C0FC 0005903C  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue-_SDA_BASE_(r13)
+/* 8005C0FC 0005903C  80 0D 90 E8 */	lwz r0, cur_waits__Q38JASystem6Driver8DSPQueue@sda21(r13)
 /* 8005C100 00059040  7C 1F 00 40 */	cmplw r31, r0
 /* 8005C104 00059044  41 80 FF 5C */	blt lbl_8005C060
 /* 8005C108 00059048  80 01 00 14 */	lwz r0, 0x14(r1)

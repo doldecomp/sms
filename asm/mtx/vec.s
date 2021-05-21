@@ -37,8 +37,8 @@ PSVECScale:
 
 .global PSVECNormalize
 PSVECNormalize:
-/* 80094EF0 00091E30  C0 02 8A C8 */	lfs f0, $$2116-_SDA2_BASE_(r2)
-/* 80094EF4 00091E34  C0 22 8A CC */	lfs f1, $$2117-_SDA2_BASE_(r2)
+/* 80094EF0 00091E30  C0 02 8A C8 */	lfs f0, $$2116@sda21(r2)
+/* 80094EF4 00091E34  C0 22 8A CC */	lfs f1, $$2117@sda21(r2)
 /* 80094EF8 00091E38  E0 43 00 00 */	psq_l f2, 0(r3), 0, qr0
 /* 80094EFC 00091E3C  10 A2 00 B2 */	ps_mul f5, f2, f2
 /* 80094F00 00091E40  E0 63 80 08 */	psq_l f3, 8(r3), 1, qr0
@@ -61,10 +61,10 @@ PSVECMag:
 /* 80094F38 00091E78  10 00 00 32 */	ps_mul f0, f0, f0
 /* 80094F3C 00091E7C  C0 23 00 08 */	lfs f1, 8(r3)
 /* 80094F40 00091E80  10 21 00 7A */	ps_madd f1, f1, f1, f0
-/* 80094F44 00091E84  C0 82 8A C8 */	lfs f4, $$2116-_SDA2_BASE_(r2)
+/* 80094F44 00091E84  C0 82 8A C8 */	lfs f4, $$2116@sda21(r2)
 /* 80094F48 00091E88  10 21 00 14 */	ps_sum0 f1, f1, f0, f0
 /* 80094F4C 00091E8C  FC 00 08 34 */	frsqrte f0, f1
-/* 80094F50 00091E90  C0 62 8A CC */	lfs f3, $$2117-_SDA2_BASE_(r2)
+/* 80094F50 00091E90  C0 62 8A CC */	lfs f3, $$2117@sda21(r2)
 /* 80094F54 00091E94  EC 40 00 32 */	fmuls f2, f0, f0
 /* 80094F58 00091E98  EC 00 01 32 */	fmuls f0, f0, f4
 /* 80094F5C 00091E9C  EC 42 18 7C */	fnmsubs f2, f2, f1, f3
@@ -124,10 +124,10 @@ PSVECDistance:
 /* 80095004 00091F44  E0 24 00 00 */	psq_l f1, 0(r4), 0, qr0
 /* 80095008 00091F48  10 42 00 B2 */	ps_mul f2, f2, f2
 /* 8009500C 00091F4C  10 00 08 28 */	ps_sub f0, f0, f1
-/* 80095010 00091F50  C0 62 8A C8 */	lfs f3, $$2116-_SDA2_BASE_(r2)
+/* 80095010 00091F50  C0 62 8A C8 */	lfs f3, $$2116@sda21(r2)
 /* 80095014 00091F54  10 00 10 3A */	ps_madd f0, f0, f0, f2
 /* 80095018 00091F58  10 00 10 94 */	ps_sum0 f0, f0, f2, f2
-/* 8009501C 00091F5C  C0 82 8A CC */	lfs f4, $$2117-_SDA2_BASE_(r2)
+/* 8009501C 00091F5C  C0 82 8A CC */	lfs f4, $$2117@sda21(r2)
 /* 80095020 00091F60  FC 20 00 34 */	frsqrte f1, f0
 /* 80095024 00091F64  EC 41 00 72 */	fmuls f2, f1, f1
 /* 80095028 00091F68  EC 21 00 F2 */	fmuls f1, f1, f3
