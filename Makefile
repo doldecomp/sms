@@ -19,7 +19,7 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src src/NPC
+SRC_DIRS := src src/NPC src/JSystem
 ASM_DIRS := asm                      \
             asm/JSystem              \
 			asm/Runtime.PPCEABI.H    \
@@ -104,7 +104,7 @@ INCLUDES := -i . -I- -i include -i src
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard
-CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES)
+CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -enum int -msgstyle gcc $(INCLUDES)
 
 # for postprocess.py
 PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack

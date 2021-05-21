@@ -1,19 +1,26 @@
-#include "JDRRenderMode.hpp"
+#include "JSystem/JDrama.hpp"
+
+bool JDrama::IsEqualRenderModeVIParams(const GXRenderModeObj &, const GXRenderModeObj &)
+{
+	return false;
+}
+
+bool JDrama::IsRenderModeHalfAspectRatio(const GXRenderModeObj &)
+{
+	return false;
+}
+
+f32 JDrama::GetRenderModeYScale(const GXRenderModeObj &)
+{
+	return 0.0f;
+}
 
 #if 0
-bool IsEqualRenderModeVIParams(const GXRenderModeObj &, const GXRenderModeObj &)
+void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 param_2)
 {
 }
 
-bool IsRenderModeHalfAspectRatio(const GXRenderModeObj &)
-{
-}
-
-f32 GetRenderModeYScale(const GXRenderModeObj &)
-{
-}
-
-void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, ushort param_2)
+void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 param_2)
 {
 	bool bVar1;
 	bool bVar2;
@@ -45,59 +52,61 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, ushort param_2)
 }
 #endif
 
+void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
+{
+	bool first = false;
+	if (rmo->aa == 1)
+	{
+		bool second = true;
+		if (rmo->xFBmode != VI_XFBMODE_DF)
+			if (rmo->viTVmode != VI_TVMODE_NTSC_PROG)
+				second = false;
+		if (second)
+			first = true;
+		/*	NOTE:	Decompiler does not decompile this
+					peace of code correctly at the moment.	*/
+	}
+
+	if (first)
+#line 72 "JDRRenderMode.cpp"
+		OSHalt("future not implemented!\n");
+
+
+	s32 fr = (rmo->field_rendering != 0) ? 2 : 1;
+	u16 fac = GXGetYScaleFactor(rmo->efbHeight, p2 / fr);
+
+	rmo->xfbHeight = GXGetNumXfbLines(fac, rmo->efbHeight);
+	rmo->viHeight = rmo->xfbHeight * fr;
+
+	return;
+}
+
 void JDrama::CalcRenderModeVIXOrigin(GXRenderModeObj *rmo)
 {
 	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
 											region is alligned to a power of four	*/
-	s32 max_width = JDrama::GetVIWidthMax((VITVMode)region);
-	u32 dif = static_cast<u16>(max_width) - rmo->viWidth;
-	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
+	u32 dif = static_cast<u16>(JDrama::GetVIWidthMax((VITVMode)region)) - rmo->viWidth;
+	rmo->viXOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 
 void JDrama::CalcRenderModeVIYOrigin(GXRenderModeObj *rmo)
 {
 	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
 											region is alligned to a power of four	*/
-	s32 max_height = JDrama::GetVIHeightMax((VITVMode)region);
-	u32 dif = static_cast<u16>(max_height) - rmo->viHeight;
+	u32 dif = static_cast<u16>(JDrama::GetVIHeightMax((VITVMode)region)) - rmo->viHeight;
 	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 
-void JDrama::CopyRenderModeSamplePattern(GXRenderModeObj *rmo, u8 *s)
+void JDrama::CopyRenderModeSamplePattern(GXRenderModeObj *rmo, const u8 (*s)[2])
 {
-	/*Runtime.PPCEABI.H::*/ memcpy(rmo->sample_pattern, s, sizeof(rmo->sample_pattern));
+	memcpy( rmo->sample_pattern,
+			s,
+			sizeof(rmo->sample_pattern) );
 }
 
-void JDrama::CopyRenderModeVFilter(GXRenderModeObj *rmo, u8 *s)
+void JDrama::CopyRenderModeVFilter(GXRenderModeObj *rmo, const u8 *s)
 {
-	/*Runtime.PPCEABI.H::*/ memcpy(rmo->vfilter, s, sizeof(rmo->vfilter));
-}
-
-s32 JDrama::GetVIWidthMax(VITVMode tvm)
-{
-	switch (tvm)
-	{
-	case VI_TVMODE_NTSC_INT: // 0
-		return 720;
-	case VI_TVMODE_NTSC_PROG: // 2
-		return 720;
-	case VI_TVMODE_PAL_DS: // 5
-		return 720;
-	}
-	return 720;
-}
-
-s32 JDrama::GetVIHeightMax(VITVMode tvm)
-{
-	switch (tvm)
-	{
-	case VI_TVMODE_NTSC_INT: // 0
-		return 574;
-	case VI_TVMODE_NTSC_PROG: // 2
-		return 480;
-	case VI_TVMODE_PAL_DS: // 5
-		return 480;
-	}
-	//	default:
-	return 480;
+	memcpy( rmo->vfilter,
+			s,
+			sizeof(rmo->vfilter) );
 }
