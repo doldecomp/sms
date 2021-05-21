@@ -1,5 +1,7 @@
 #include "JSystem/JDrama.hpp"
+#include <cstring>
 
+#if 0
 bool JDrama::IsEqualRenderModeVIParams(const GXRenderModeObj &, const GXRenderModeObj &)
 {
 	return false;
@@ -13,42 +15,6 @@ bool JDrama::IsRenderModeHalfAspectRatio(const GXRenderModeObj &)
 f32 JDrama::GetRenderModeYScale(const GXRenderModeObj &)
 {
 	return 0.0f;
-}
-
-#if 0
-void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 param_2)
-{
-}
-
-void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 param_2)
-{
-	bool bVar1;
-	bool bVar2;
-	uint uVar3;
-	uint uVar4;
-	double dVar5;
-
-	bVar2 = false;
-	if (rmo->aa == '\x01')
-	{
-		bVar1 = true;
-		if (rmo->xFBmode != VI_XFBMODE_DF)
-			if (rmo->viTVmode != VI_TVMODE_NTSC_PROG)
-				bVar1 = false;
-		if (bVar1)
-			bVar2 = true;
-	}
-	if (bVar2)
-		os::OSPanic("JDRRenderMode.cpp", 0x48, "future not implemented!\n");
-	if (rmo->field_rendering == '\0')
-		uVar4 = 1;
-	else
-		uVar4 = 2;
-	dVar5 = gx::GXGetYScaleFactor((uint)rmo->efbHeight, param_2 / uVar4);
-	uVar3 = gx::GXGetNumXfbLines(dVar5, (uint)rmo->efbHeight);
-	rmo->xfbHeight = (ushort)uVar3;
-	rmo->viHeight = rmo->xfbHeight * (short)uVar4;
-	return;
 }
 #endif
 
@@ -64,7 +30,7 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
 		if (second)
 			first = true;
 		/*	NOTE:	Decompiler does not decompile this
-					peace of code correctly at the moment.	*/
+					piece of code correctly at the moment.	*/
 	}
 
 	if (first)
