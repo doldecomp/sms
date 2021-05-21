@@ -1,4 +1,4 @@
-#include "types.h"
+#include <dolphin.h>
 
 #include "NPC/NpcBase.hpp"
 
