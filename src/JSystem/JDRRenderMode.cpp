@@ -11,7 +11,6 @@ bool JDrama::IsRenderModeHalfAspectRatio(const GXRenderModeObj &)
 {
 	return false;
 }
-#endif
 
 f32 JDrama::GetRenderModeYScale(const GXRenderModeObj &rmo)
 {
@@ -25,6 +24,7 @@ f32 JDrama::GetRenderModeYScale(const GXRenderModeObj &rmo)
 				second = false;
 		if (second)
 			first = true;
+// BUGBUG
 	}
 	if (first)
 	{
@@ -47,6 +47,7 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
 				second = false;
 		if (second)
 			first = true;
+// BUGBUG
 	}
 
 	if (first)
@@ -61,16 +62,17 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
 
 	return;
 }
+#endif
 
 void JDrama::CalcRenderModeVIXOrigin(GXRenderModeObj *rmo)
 {
-	u32 dif = static_cast<u16>(JDrama::GetVIWidthMax(rmo)) - rmo->viWidth;
+	u32 dif = static_cast<u16>(JDrama::GetVIWidthMax()) - rmo->viWidth;
 	rmo->viXOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 
 void JDrama::CalcRenderModeVIYOrigin(GXRenderModeObj *rmo)
 {
-	u32 dif = static_cast<u16>(JDrama::GetVIHeightMax(rmo)) - rmo->viHeight;
+	u32 dif = static_cast<u16>(JDrama::GetVIHeightMax()) - rmo->viHeight;
 	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 

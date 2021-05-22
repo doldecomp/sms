@@ -96,7 +96,6 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JDRNameRefGen.o                          \
     $(BUILD_DIR)/asm/JSystem/JDRPlacement.o                           \
     $(BUILD_DIR)/asm/JSystem/JDRRenderMode.o                          \
-    $(BUILD_DIR)/src/JSystem/JDRRenderMode.o                          \
     $(BUILD_DIR)/src/JSystem/JDRResolution.o                          \
     $(BUILD_DIR)/asm/JSystem/JDRScreen.o                              \
     $(BUILD_DIR)/asm/JSystem/JDRSmJ3DAct.o                            \
