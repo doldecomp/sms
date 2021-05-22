@@ -15,6 +15,11 @@ namespace JDrama
 	void CopyRenderModeVFilter(GXRenderModeObj *rmo, const u8 *s);
 
 /* JDRResolution: */
+#if defined(SMS_REGION) && (SMS_REGION == EU)
 	s32 GetVIWidthMax(VITVMode tvm);
 	s32 GetVIHeightMax(VITVMode tvm);
+#else
+	s32 GetVIWidthMax(GXRenderModeObj *rmo);
+	s32 GetVIHeightMax(GXRenderModeObj *rmo);
+#endif
 } // namespace JDrama
