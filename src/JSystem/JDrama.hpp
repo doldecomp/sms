@@ -1,8 +1,10 @@
+#define VIGetTvFormat _VIGetTvFormat
+
 #include <dolphin.h>
 
+#undef VIGetTvFormat
 /* VIGetTvFormat has been refactored in the Dolphin SDK, so this is a workaround for now */
-extern "C" VITVMode _VIGetTvFormat(GXRenderModeObj *);
-#define VIGetTvFormat _VIGetTvFormat
+extern "C" VITVMode VIGetTvFormat(GXRenderModeObj *);
 
 
 namespace JDrama
