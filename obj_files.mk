@@ -366,7 +366,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MarioUtil/ModelUtil.o                            \
     $(BUILD_DIR)/asm/MarioUtil/RumbleMgr.o                            \
     $(BUILD_DIR)/asm/MarioUtil/RumbleData.o                           \
-    $(BUILD_DIR)/asm/MarioUtil/RumbleType.o                           \
+    $(BUILD_DIR)/src/MarioUtil/RumbleType.o                           \
     $(BUILD_DIR)/asm/MarioUtil/PacketUtil.o                           \
     $(BUILD_DIR)/asm/MarioUtil/GDUtil.o                               \
     $(BUILD_DIR)/asm/MarioUtil/TexUtil.o                              \
