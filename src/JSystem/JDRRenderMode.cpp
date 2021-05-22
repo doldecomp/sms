@@ -28,10 +28,11 @@ f32 JDrama::GetRenderModeYScale(const GXRenderModeObj &rmo)
 	}
 	if (first)
 	{
-		OSPanic("JDRRenderMode.cpp", 55, "future not implemented!");
+#line 55 "JDRRenderMode.cpp"
+		OSHalt("future not implemented!");
 		return ret;
 	}
-	ret = GXGetYScaleFactor(rmo.efbHeight, rmo.xfbHeight);
+	ret = static_cast<u16>(GXGetYScaleFactor(rmo.efbHeight, rmo.xfbHeight));
 	return ret;
 }
 
@@ -46,8 +47,6 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
 				second = false;
 		if (second)
 			first = true;
-		/*	NOTE:	Decompiler does not decompile this
-					piece of code correctly at the moment.	*/
 	}
 
 	if (first)
@@ -65,24 +64,13 @@ void JDrama::CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16 p2)
 
 void JDrama::CalcRenderModeVIXOrigin(GXRenderModeObj *rmo)
 {
-#if defined(SMS_REGION) && (SMS_REGION == EU)
-	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
-											region is alligned to a power of four	*/
-	u32 dif = static_cast<u16>(JDrama::GetVIWidthMax((VITVMode)region)) - rmo->viWidth;
-#else
 	u32 dif = static_cast<u16>(JDrama::GetVIWidthMax(rmo)) - rmo->viWidth;
-#endif
 	rmo->viXOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 
 void JDrama::CalcRenderModeVIYOrigin(GXRenderModeObj *rmo)
 {
-#if defined(SMS_REGION) && (SMS_REGION == EU)
-	u32 region = (rmo->viTVmode >> 2); /*	TV modes are laid out so every
-											region is alligned to a power of four	*/
-#else
 	u32 dif = static_cast<u16>(JDrama::GetVIHeightMax(rmo)) - rmo->viHeight;
-#endif
 	rmo->viYOrigin = (((s32)dif / 2) + ((dif < 0) && ((dif & 1) != 0)));
 }
 
