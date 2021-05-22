@@ -44,7 +44,11 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
+<<<<<<< HEAD
 SRC_DIRS := src src/NPC src/JSystem
+=======
+SRC_DIRS := src src/NPC src/MarioUtil
+>>>>>>> ac3a0a2da2c73acdfb7b1c2113d4126d0c2ebdd2
 ASM_DIRS := asm                      \
             asm/JSystem              \
 			asm/Runtime.PPCEABI.H    \
@@ -129,7 +133,7 @@ INCLUDES := -i . -I- -i include -i src -ir $(SDK_INC_PATH) -ir $(CW_INC_PATH)
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard -nodefaults
-CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES) -enum int
+CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4 -nodefaults -msgstyle gcc $(INCLUDES) -enum int -rostr
 
 # for postprocess.py
 PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack

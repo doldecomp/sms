@@ -1821,6 +1821,7 @@ __sinit_EmitterViewObj_cpp:
 	.incbin "baserom.dol", 0x36CC14, 0x4
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+    .balign 4
 $$21664:
 	.incbin "baserom.dol", 0x36F940, 0xC
 $$21711:
