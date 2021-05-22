@@ -2,6 +2,8 @@
 #define UNSORTED_TYPES_H
 
 #include <dolphin.h>
+#include "functions.h"
+#include "variables.h"
 
 // TODO
 class TDirector {
@@ -63,6 +65,16 @@ public:
     void initialize();
     void proc();
     void finalize();
+};
+
+struct UnkStruct3B0378 {
+    unsigned int unk0;
+    char *str;
+};
+
+class RumbleType {
+    float foo;
+    static int getIndex(char *strIn);
 };
 
 #endif // UNSORTED_TYPES_H
