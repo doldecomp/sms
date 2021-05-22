@@ -1,22 +1,9 @@
-#if !(defined(SMS_REGION) && (SMS_REGION == EU))
-#define VIGetTvFormat	_dummy
 #include "JSystem/JDrama.hpp"
-#undef VIGetTvFormat
-extern "C"						// TODO	this is a very hacky workaround
-	VITVMode VIGetTvFormat(GXRenderModeObj *);
-#else
-#include "JSystem/JDrama.hpp"
-#endif
 
-#if defined(SMS_REGION) && (SMS_REGION == EU)
-s32 JDrama::GetVIWidthMax(VITVMode tvm)
-{
-	switch (tvm)
-#else
+
 s32 JDrama::GetVIWidthMax(GXRenderModeObj *rmo)
 {
 	switch (VIGetTvFormat(rmo))
-#endif
 	{
 	case VI_TVMODE_NTSC_INT: // 0
 		return 720;
@@ -29,15 +16,10 @@ s32 JDrama::GetVIWidthMax(GXRenderModeObj *rmo)
 	return 720;
 }
 
-#if defined(SMS_REGION) && (SMS_REGION == EU)
-s32 JDrama::GetVIHeightMax(VITVMode tvm)
-{
-	switch (tvm)
-#else
+
 s32 JDrama::GetVIHeightMax(GXRenderModeObj *rmo)
 {
 	switch (VIGetTvFormat(rmo))
-#endif
 	{
 	case VI_TVMODE_NTSC_INT: // 0
 		return 574;
