@@ -948,22 +948,31 @@ lbl_80142DF4:
 /* 80142DFC 0013FD3C  7C 1F E0 2E */	lwzx r0, r31, r28
 /* 80142E00 0013FD40  7C 09 03 A6 */	mtctr r0
 /* 80142E04 0013FD44  4E 80 04 20 */	bctr 
+lbl_80142E08:
 /* 80142E08 0013FD48  88 1D 03 C4 */	lbz r0, 0x3c4(r29)
 /* 80142E0C 0013FD4C  48 00 00 48 */	b lbl_80142E54
+lbl_80142E10:
 /* 80142E10 0013FD50  88 1D 03 CF */	lbz r0, 0x3cf(r29)
 /* 80142E14 0013FD54  48 00 00 40 */	b lbl_80142E54
+lbl_80142E18:
 /* 80142E18 0013FD58  88 1D 03 CF */	lbz r0, 0x3cf(r29)
 /* 80142E1C 0013FD5C  48 00 00 38 */	b lbl_80142E54
+lbl_80142E20:
 /* 80142E20 0013FD60  88 1D 03 C9 */	lbz r0, 0x3c9(r29)
 /* 80142E24 0013FD64  48 00 00 30 */	b lbl_80142E54
+lbl_80142E28:
 /* 80142E28 0013FD68  88 1D 03 CA */	lbz r0, 0x3ca(r29)
 /* 80142E2C 0013FD6C  48 00 00 28 */	b lbl_80142E54
+lbl_80142E30:
 /* 80142E30 0013FD70  88 1D 03 CB */	lbz r0, 0x3cb(r29)
 /* 80142E34 0013FD74  48 00 00 20 */	b lbl_80142E54
+lbl_80142E38:
 /* 80142E38 0013FD78  88 1D 03 CC */	lbz r0, 0x3cc(r29)
 /* 80142E3C 0013FD7C  48 00 00 18 */	b lbl_80142E54
+lbl_80142E40:
 /* 80142E40 0013FD80  88 1D 03 CD */	lbz r0, 0x3cd(r29)
 /* 80142E44 0013FD84  48 00 00 10 */	b lbl_80142E54
+lbl_80142E48:
 /* 80142E48 0013FD88  88 1D 03 CE */	lbz r0, 0x3ce(r29)
 /* 80142E4C 0013FD8C  48 00 00 08 */	b lbl_80142E54
 lbl_80142E50:
@@ -2504,7 +2513,16 @@ cParticleFileNames:
 __vt__15TWarpInCallBack:
 	.incbin "baserom.dol", 0x3B382C, 0x10
 $$23223:
-	.incbin "baserom.dol", 0x3B383C, 0x28
+    .4byte lbl_80142E08
+    .4byte lbl_80142E10
+    .4byte lbl_80142E18
+    .4byte lbl_80142E20
+    .4byte lbl_80142E28
+    .4byte lbl_80142E30
+    .4byte lbl_80142E38
+    .4byte lbl_80142E40
+    .4byte lbl_80142E48
+    .4byte lbl_80142E50
 .global __vt__15TBubbleCallBack
 __vt__15TBubbleCallBack:
 	.incbin "baserom.dol", 0x3B3864, 0x10

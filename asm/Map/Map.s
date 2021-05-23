@@ -724,6 +724,7 @@ initStage__Fv:
 /* 801DBD8C 001D8CCC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801DBD90 001D8CD0  7C 09 03 A6 */	mtctr r0
 /* 801DBD94 001D8CD4  4E 80 04 20 */	bctr 
+lbl_801DBD98:
 /* 801DBD98 001D8CD8  88 04 00 7D */	lbz r0, 0x7d(r4)
 /* 801DBD9C 001D8CDC  28 00 00 05 */	cmplwi r0, 5
 /* 801DBDA0 001D8CE0  41 82 01 38 */	beq lbl_801DBED8
@@ -744,6 +745,7 @@ initStage__Fv:
 /* 801DBDDC 001D8D1C  7D 88 03 A6 */	mtlr r12
 /* 801DBDE0 001D8D20  4E 80 00 21 */	blrl 
 /* 801DBDE4 001D8D24  48 00 00 F4 */	b lbl_801DBED8
+lbl_801DBDE8:
 /* 801DBDE8 001D8D28  88 04 00 7D */	lbz r0, 0x7d(r4)
 /* 801DBDEC 001D8D2C  28 00 00 00 */	cmplwi r0, 0
 /* 801DBDF0 001D8D30  41 82 00 E8 */	beq lbl_801DBED8
@@ -762,10 +764,13 @@ initStage__Fv:
 /* 801DBE24 001D8D64  7D 88 03 A6 */	mtlr r12
 /* 801DBE28 001D8D68  4E 80 00 21 */	blrl 
 /* 801DBE2C 001D8D6C  48 00 00 AC */	b lbl_801DBED8
+lbl_801DBE30:
 /* 801DBE30 001D8D70  48 00 04 85 */	bl initMare__Fv
 /* 801DBE34 001D8D74  48 00 00 A4 */	b lbl_801DBED8
+lbl_801DBE38:
 /* 801DBE38 001D8D78  48 00 07 6D */	bl initMonte__Fv
 /* 801DBE3C 001D8D7C  48 00 00 9C */	b lbl_801DBED8
+lbl_801DBE40:
 /* 801DBE40 001D8D80  88 04 00 7D */	lbz r0, 0x7d(r4)
 /* 801DBE44 001D8D84  28 00 00 00 */	cmplwi r0, 0
 /* 801DBE48 001D8D88  41 82 00 90 */	beq lbl_801DBED8
@@ -777,6 +782,7 @@ initStage__Fv:
 /* 801DBE60 001D8DA0  7D 88 03 A6 */	mtlr r12
 /* 801DBE64 001D8DA4  4E 80 00 21 */	blrl 
 /* 801DBE68 001D8DA8  48 00 00 70 */	b lbl_801DBED8
+lbl_801DBE6C:
 /* 801DBE6C 001D8DAC  3C 60 80 3F */	lis r3, gParticleFlagLoaded@ha
 /* 801DBE70 001D8DB0  38 63 28 10 */	addi r3, r3, gParticleFlagLoaded@l
 /* 801DBE74 001D8DB4  3B C3 00 6A */	addi r30, r3, 0x6a
@@ -790,8 +796,10 @@ initStage__Fv:
 /* 801DBE94 001D8DD4  38 00 00 01 */	li r0, 1
 /* 801DBE98 001D8DD8  98 1E 00 00 */	stb r0, 0(r30)
 /* 801DBE9C 001D8DDC  48 00 00 3C */	b lbl_801DBED8
+lbl_801DBEA0:
 /* 801DBEA0 001D8DE0  48 00 03 31 */	bl initPinnaParco__Fv
 /* 801DBEA4 001D8DE4  48 00 00 34 */	b lbl_801DBED8
+lbl_801DBEA8:
 /* 801DBEA8 001D8DE8  38 60 00 6C */	li r3, 0x6c
 /* 801DBEAC 001D8DEC  4B E3 0A 05 */	bl __nw__FUl
 /* 801DBEB0 001D8DF0  7C 7E 1B 79 */	or. r30, r3, r3
@@ -1669,7 +1677,22 @@ $$23802:
 __vt__4TMap:
 	.incbin "baserom.dol", 0x3CCC08, 0x24
 $$23341:
-	.incbin "baserom.dol", 0x3CCC2C, 0x44
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBD98
+    .4byte lbl_801DBDE8
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBE6C
+    .4byte lbl_801DBE40
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBE38
+    .4byte lbl_801DBE30
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBEA0
+    .4byte lbl_801DBED8
+    .4byte lbl_801DBEA8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23002:

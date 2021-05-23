@@ -2191,6 +2191,7 @@ control__11TResetFruitFv:
 /* 801B9DDC 001B6D1C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801B9DE0 001B6D20  7C 09 03 A6 */	mtctr r0
 /* 801B9DE4 001B6D24  4E 80 04 20 */	bctr 
+lbl_801B9DE8:
 /* 801B9DE8 001B6D28  80 1E 00 64 */	lwz r0, 0x64(r30)
 /* 801B9DEC 001B6D2C  3B E0 00 00 */	li r31, 0
 /* 801B9DF0 001B6D30  3B A0 00 00 */	li r29, 0
@@ -2297,6 +2298,7 @@ lbl_801B9F1C:
 /* 801B9F44 001B6E84  7D 88 03 A6 */	mtlr r12
 /* 801B9F48 001B6E88  4E 80 00 21 */	blrl 
 /* 801B9F4C 001B6E8C  48 00 04 68 */	b lbl_801BA3B4
+lbl_801B9F50:
 /* 801B9F50 001B6E90  80 1E 00 64 */	lwz r0, 0x64(r30)
 /* 801B9F54 001B6E94  54 00 00 3C */	rlwinm r0, r0, 0, 0, 0x1e
 /* 801B9F58 001B6E98  90 1E 00 64 */	stw r0, 0x64(r30)
@@ -2406,6 +2408,7 @@ lbl_801BA0B8:
 /* 801BA0C8 001B7008  D0 1E 00 B4 */	stfs f0, 0xb4(r30)
 /* 801BA0CC 001B700C  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 801BA0D0 001B7010  48 00 02 E4 */	b lbl_801BA3B4
+lbl_801BA0D4:
 /* 801BA0D4 001B7014  7F C3 F3 78 */	mr r3, r30
 /* 801BA0D8 001B7018  48 00 19 85 */	bl control__11TMapObjBallFv
 /* 801BA0DC 001B701C  80 1E 00 F8 */	lwz r0, 0xf8(r30)
@@ -2442,6 +2445,8 @@ lbl_801BA13C:
 /* 801BA14C 001B708C  D0 1E 00 B4 */	stfs f0, 0xb4(r30)
 /* 801BA150 001B7090  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 801BA154 001B7094  48 00 02 60 */	b lbl_801BA3B4
+lbl_801BA158:
+lbl_801BA158:
 /* 801BA158 001B7098  7F C3 F3 78 */	mr r3, r30
 /* 801BA15C 001B709C  4B FD 18 B5 */	bl control__14TMapObjGeneralFv
 /* 801BA160 001B70A0  80 7E 01 94 */	lwz r3, 0x194(r30)
@@ -2507,6 +2512,7 @@ lbl_801BA230:
 /* 801BA23C 001B717C  7D 88 03 A6 */	mtlr r12
 /* 801BA240 001B7180  4E 80 00 21 */	blrl 
 /* 801BA244 001B7184  48 00 01 70 */	b lbl_801BA3B4
+lbl_801BA248:
 /* 801BA248 001B7188  C0 5E 00 BC */	lfs f2, 0xbc(r30)
 /* 801BA24C 001B718C  7F C3 F3 78 */	mr r3, r30
 /* 801BA250 001B7190  C0 22 C7 34 */	lfs f1, $$23497@sda21(r2)
@@ -2543,6 +2549,7 @@ lbl_801BA2B8:
 /* 801BA2C8 001B7208  38 00 00 0D */	li r0, 0xd
 /* 801BA2CC 001B720C  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 801BA2D0 001B7210  48 00 00 E4 */	b lbl_801BA3B4
+lbl_801BA2D4:
 /* 801BA2D4 001B7214  80 1E 01 04 */	lwz r0, 0x104(r30)
 /* 801BA2D8 001B7218  2C 00 00 00 */	cmpwi r0, 0
 /* 801BA2DC 001B721C  40 81 00 0C */	ble lbl_801BA2E8
@@ -6454,7 +6461,20 @@ $$23832:
 __vt__14TBigWatermelon:
 	.incbin "baserom.dol", 0x3C6EB8, 0x1F0
 $$24190:
-	.incbin "baserom.dol", 0x3C70A8, 0x38
+    .4byte lbl_801BA3B4
+    .4byte lbl_801B9DE8
+    .4byte lbl_801BA158
+    .4byte lbl_801BA158
+    .4byte lbl_801BA3B4
+    .4byte lbl_801BA3B4
+    .4byte lbl_801BA0D4
+    .4byte lbl_801BA3B4
+    .4byte lbl_801BA3B4
+    .4byte lbl_801BA3B4
+    .4byte lbl_801BA3B4
+    .4byte lbl_801B9F50
+    .4byte lbl_801BA248
+    .4byte lbl_801BA2D4
 .global __vt__11TCoverFruit
 __vt__11TCoverFruit:
 	.incbin "baserom.dol", 0x3C70E0, 0x164

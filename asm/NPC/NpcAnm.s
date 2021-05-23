@@ -1508,6 +1508,7 @@ lbl_80167F8C:
 /* 80167FAC 00164EEC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80167FB0 00164EF0  7C 09 03 A6 */	mtctr r0
 /* 80167FB4 00164EF4  4E 80 04 20 */	bctr 
+lbl_80167FB8:
 /* 80167FB8 00164EF8  80 7E 00 74 */	lwz r3, 0x74(r30)
 /* 80167FBC 00164EFC  38 80 00 00 */	li r4, 0
 /* 80167FC0 00164F00  4B F6 D3 59 */	bl isCurAnmAlreadyEnd__6MActorFi
@@ -1607,6 +1608,7 @@ lbl_80168110:
 /* 80168118 00165058  38 A0 00 00 */	li r5, 0
 /* 8016811C 0016505C  48 00 20 A5 */	bl setNpcAnm___8TBaseNPCF14EnumNpcAnmKind27EnumNpcStopMotionBlendOnOff
 /* 80168120 00165060  48 00 08 08 */	b lbl_80168928
+lbl_80168124:
 /* 80168124 00165064  80 7E 00 74 */	lwz r3, 0x74(r30)
 /* 80168128 00165068  38 80 00 00 */	li r4, 0
 /* 8016812C 0016506C  4B F6 D1 ED */	bl isCurAnmAlreadyEnd__6MActorFi
@@ -1981,6 +1983,7 @@ lbl_80168620:
 /* 80168654 00165594  7C 04 00 2E */	lwzx r0, r4, r0
 /* 80168658 00165598  7C 09 03 A6 */	mtctr r0
 /* 8016865C 0016559C  4E 80 04 20 */	bctr 
+lbl_80168660:
 /* 80168660 001655A0  80 9E 00 4C */	lwz r4, 0x4c(r30)
 /* 80168664 001655A4  38 1D 00 1E */	addi r0, r29, 0x1e
 /* 80168668 001655A8  7C 04 00 00 */	cmpw r4, r0
@@ -2019,6 +2022,7 @@ lbl_801686D0:
 /* 801686D8 00165618  38 A0 00 00 */	li r5, 0
 /* 801686DC 0016561C  48 00 1A E5 */	bl setNpcAnm___8TBaseNPCF14EnumNpcAnmKind27EnumNpcStopMotionBlendOnOff
 /* 801686E0 00165620  48 00 02 48 */	b lbl_80168928
+lbl_801686E4:
 /* 801686E4 00165624  80 9E 00 4C */	lwz r4, 0x4c(r30)
 /* 801686E8 00165628  38 1D 00 1E */	addi r0, r29, 0x1e
 /* 801686EC 0016562C  7C 04 00 00 */	cmpw r4, r0
@@ -2057,6 +2061,7 @@ lbl_80168754:
 /* 8016875C 0016569C  38 A0 00 01 */	li r5, 1
 /* 80168760 001656A0  48 00 1A 61 */	bl setNpcAnm___8TBaseNPCF14EnumNpcAnmKind27EnumNpcStopMotionBlendOnOff
 /* 80168764 001656A4  48 00 01 C4 */	b lbl_80168928
+lbl_80168768:
 /* 80168768 001656A8  80 9E 00 4C */	lwz r4, 0x4c(r30)
 /* 8016876C 001656AC  38 1D 00 1E */	addi r0, r29, 0x1e
 /* 80168770 001656B0  7C 04 00 00 */	cmpw r4, r0
@@ -2095,6 +2100,7 @@ lbl_801687D8:
 /* 801687E0 00165720  38 A0 00 01 */	li r5, 1
 /* 801687E4 00165724  48 00 19 DD */	bl setNpcAnm___8TBaseNPCF14EnumNpcAnmKind27EnumNpcStopMotionBlendOnOff
 /* 801687E8 00165728  48 00 01 40 */	b lbl_80168928
+lbl_801687EC:
 /* 801687EC 0016572C  80 1E 00 F0 */	lwz r0, 0xf0(r30)
 /* 801687F0 00165730  54 00 01 CA */	rlwinm r0, r0, 0, 7, 5
 /* 801687F4 00165734  90 1E 00 F0 */	stw r0, 0xf0(r30)
@@ -2148,6 +2154,7 @@ lbl_8016886C:
 /* 801688A0 001657E0  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801688A4 001657E4  7C 09 03 A6 */	mtctr r0
 /* 801688A8 001657E8  4E 80 04 20 */	bctr 
+lbl_801688AC:
 /* 801688AC 001657EC  80 1E 00 F0 */	lwz r0, 0xf0(r30)
 /* 801688B0 001657F0  54 00 01 CA */	rlwinm r0, r0, 0, 7, 5
 /* 801688B4 001657F4  90 1E 00 F0 */	stw r0, 0xf0(r30)
@@ -4169,10 +4176,13 @@ lbl_8016A42C:
 /* 8016A45C 0016739C  7C 04 00 2E */	lwzx r0, r4, r0
 /* 8016A460 001673A0  7C 09 03 A6 */	mtctr r0
 /* 8016A464 001673A4  4E 80 04 20 */	bctr 
+lbl_8016A468:
 /* 8016A468 001673A8  3B 40 00 07 */	li r26, 7
 /* 8016A46C 001673AC  48 00 00 3C */	b lbl_8016A4A8
+lbl_8016A470:
 /* 8016A470 001673B0  3B 40 00 0E */	li r26, 0xe
 /* 8016A474 001673B4  48 00 00 34 */	b lbl_8016A4A8
+lbl_8016A478:
 /* 8016A478 001673B8  3B 40 00 0D */	li r26, 0xd
 /* 8016A47C 001673BC  48 00 00 2C */	b lbl_8016A4A8
 lbl_8016A480:
@@ -4667,13 +4677,95 @@ sIndividualSunflowerBtp$2907:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23884:
-	.incbin "baserom.dol", 0x3B5250, 0x54
+    .4byte lbl_801688AC
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_801688AC
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_801688AC
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_801688AC
 $$23883:
-	.incbin "baserom.dol", 0x3B52A4, 0x50
+    .4byte lbl_80168660
+    .4byte lbl_80168928
+    .4byte lbl_801687EC
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_801687EC
+    .4byte lbl_801686E4
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168768
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_801687EC
 $$23880:
-	.incbin "baserom.dol", 0x3B52F4, 0x5C
+    .4byte lbl_80167FB8
+    .4byte lbl_80168928
+    .4byte lbl_80168124
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80167FB8
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80167FB8
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168928
+    .4byte lbl_80168124
 $$24719:
-	.incbin "baserom.dol", 0x3B5350, 0x58
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A468
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A470
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A480
+    .4byte lbl_8016A478
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cNpcPartsNameRootJoint

@@ -223,6 +223,7 @@ lbl_80162240:
 /* 80162264 0015F1A4  7C 03 20 2E */	lwzx r0, r3, r4
 /* 80162268 0015F1A8  7C 09 03 A6 */	mtctr r0
 /* 8016226C 0015F1AC  4E 80 04 20 */	bctr 
+lbl_80162270:
 /* 80162270 0015F1B0  28 1E 00 0E */	cmplwi r30, 0xe
 /* 80162274 0015F1B4  40 82 07 8C */	bne lbl_80162A00
 /* 80162278 0015F1B8  80 1F 01 18 */	lwz r0, 0x118(r31)
@@ -257,6 +258,7 @@ lbl_801622DC:
 /* 801622E0 0015F220  4B FE 18 ED */	bl emitGetWaterEffect__6TMarioFv
 /* 801622E4 0015F224  38 60 00 01 */	li r3, 1
 /* 801622E8 0015F228  48 00 1F 44 */	b lbl_8016422C
+lbl_801622EC:
 /* 801622EC 0015F22C  28 1E 00 0E */	cmplwi r30, 0xe
 /* 801622F0 0015F230  40 82 07 10 */	bne lbl_80162A00
 /* 801622F4 0015F234  80 1F 01 18 */	lwz r0, 0x118(r31)
@@ -289,6 +291,7 @@ lbl_80162350:
 /* 80162354 0015F294  4B FE 18 79 */	bl emitGetWaterEffect__6TMarioFv
 /* 80162358 0015F298  38 60 00 01 */	li r3, 1
 /* 8016235C 0015F29C  48 00 1E D0 */	b lbl_8016422C
+lbl_80162360:
 /* 80162360 0015F2A0  28 1E 00 0E */	cmplwi r30, 0xe
 /* 80162364 0015F2A4  40 82 06 9C */	bne lbl_80162A00
 /* 80162368 0015F2A8  38 7F 00 00 */	addi r3, r31, 0
@@ -298,6 +301,7 @@ lbl_80162350:
 /* 80162378 0015F2B8  4B FE 18 89 */	bl emitGetEffect__6TMarioFv
 /* 8016237C 0015F2BC  38 60 00 01 */	li r3, 1
 /* 80162380 0015F2C0  48 00 1E AC */	b lbl_8016422C
+lbl_80162384:
 /* 80162384 0015F2C4  28 1E 00 0E */	cmplwi r30, 0xe
 /* 80162388 0015F2C8  40 82 06 78 */	bne lbl_80162A00
 /* 8016238C 0015F2CC  38 7F 00 00 */	addi r3, r31, 0
@@ -333,6 +337,7 @@ lbl_801623F4:
 /* 801623F8 0015F338  4B FE 18 09 */	bl emitGetEffect__6TMarioFv
 /* 801623FC 0015F33C  38 60 00 01 */	li r3, 1
 /* 80162400 0015F340  48 00 1E 2C */	b lbl_8016422C
+lbl_80162404:
 /* 80162404 0015F344  28 1E 00 0E */	cmplwi r30, 0xe
 /* 80162408 0015F348  40 82 05 F8 */	bne lbl_80162A00
 /* 8016240C 0015F34C  38 7F 00 00 */	addi r3, r31, 0
@@ -342,6 +347,7 @@ lbl_801623F4:
 /* 8016241C 0015F35C  4B FE 17 E5 */	bl emitGetEffect__6TMarioFv
 /* 80162420 0015F360  38 60 00 01 */	li r3, 1
 /* 80162424 0015F364  48 00 1E 08 */	b lbl_8016422C
+lbl_80162428:
 /* 80162428 0015F368  28 1E 00 0E */	cmplwi r30, 0xe
 /* 8016242C 0015F36C  40 82 05 D4 */	bne lbl_80162A00
 /* 80162430 0015F370  88 1D 01 3A */	lbz r0, 0x13a(r29)
@@ -395,6 +401,7 @@ lbl_801624C0:
 lbl_801624DC:
 /* 801624DC 0015F41C  38 60 00 00 */	li r3, 0
 /* 801624E0 0015F420  48 00 1D 4C */	b lbl_8016422C
+lbl_801624E4:
 /* 801624E4 0015F424  7F E3 FB 78 */	mr r3, r31
 /* 801624E8 0015F428  4B FD 27 D1 */	bl onYoshi__6TMarioCFv
 /* 801624EC 0015F42C  2C 03 00 00 */	cmpwi r3, 0
@@ -447,6 +454,7 @@ lbl_80162580:
 lbl_8016258C:
 /* 8016258C 0015F4CC  54 03 06 3E */	clrlwi r3, r0, 0x18
 /* 80162590 0015F4D0  48 00 1C 9C */	b lbl_8016422C
+lbl_80162594:
 /* 80162594 0015F4D4  7F E3 FB 78 */	mr r3, r31
 /* 80162598 0015F4D8  4B FD 27 21 */	bl onYoshi__6TMarioCFv
 /* 8016259C 0015F4DC  2C 03 00 00 */	cmpwi r3, 0
@@ -499,6 +507,7 @@ lbl_80162630:
 lbl_8016263C:
 /* 8016263C 0015F57C  54 03 06 3E */	clrlwi r3, r0, 0x18
 /* 80162640 0015F580  48 00 1B EC */	b lbl_8016422C
+lbl_80162644:
 /* 80162644 0015F584  7F E3 FB 78 */	mr r3, r31
 /* 80162648 0015F588  4B FD 26 71 */	bl onYoshi__6TMarioCFv
 /* 8016264C 0015F58C  2C 03 00 00 */	cmpwi r3, 0
@@ -551,6 +560,7 @@ lbl_801626E0:
 lbl_801626EC:
 /* 801626EC 0015F62C  54 03 06 3E */	clrlwi r3, r0, 0x18
 /* 801626F0 0015F630  48 00 1B 3C */	b lbl_8016422C
+lbl_801626F4:
 /* 801626F4 0015F634  38 7F 00 00 */	addi r3, r31, 0
 /* 801626F8 0015F638  38 80 08 91 */	li r4, 0x891
 /* 801626FC 0015F63C  38 A0 00 00 */	li r5, 0
@@ -608,6 +618,7 @@ lbl_801627A4:
 lbl_801627B0:
 /* 801627B0 0015F6F0  54 03 06 3E */	clrlwi r3, r0, 0x18
 /* 801627B4 0015F6F4  48 00 1A 78 */	b lbl_8016422C
+lbl_801627B8:
 /* 801627B8 0015F6F8  7F E3 FB 78 */	mr r3, r31
 /* 801627BC 0015F6FC  4B FD 24 FD */	bl onYoshi__6TMarioCFv
 /* 801627C0 0015F700  2C 03 00 00 */	cmpwi r3, 0
@@ -656,6 +667,7 @@ lbl_8016284C:
 lbl_80162854:
 /* 80162854 0015F794  38 60 00 01 */	li r3, 1
 /* 80162858 0015F798  48 00 19 D4 */	b lbl_8016422C
+lbl_8016285C:
 /* 8016285C 0015F79C  80 9F 03 E0 */	lwz r4, 0x3e0(r31)
 /* 80162860 0015F7A0  7F E3 FB 78 */	mr r3, r31
 /* 80162864 0015F7A4  A0 04 00 04 */	lhz r0, 4(r4)
@@ -666,6 +678,7 @@ lbl_80162854:
 /* 80162878 0015F7B8  4B FE 13 89 */	bl emitGetEffect__6TMarioFv
 /* 8016287C 0015F7BC  38 60 00 01 */	li r3, 1
 /* 80162880 0015F7C0  48 00 19 AC */	b lbl_8016422C
+lbl_80162884:
 /* 80162884 0015F7C4  80 BF 05 58 */	lwz r5, 0x558(r31)
 /* 80162888 0015F7C8  38 7F 00 00 */	addi r3, r31, 0
 /* 8016288C 0015F7CC  38 9F 00 10 */	addi r4, r31, 0x10
@@ -704,6 +717,7 @@ lbl_80162854:
 lbl_80162910:
 /* 80162910 0015F850  38 60 00 01 */	li r3, 1
 /* 80162914 0015F854  48 00 19 18 */	b lbl_8016422C
+lbl_80162918:
 /* 80162918 0015F858  38 7F 00 00 */	addi r3, r31, 0
 /* 8016291C 0015F85C  38 80 00 02 */	li r4, 2
 /* 80162920 0015F860  4B FC 01 99 */	bl incHP__6TMarioFi
@@ -721,6 +735,7 @@ lbl_80162910:
 /* 80162950 0015F890  4B F7 8E 81 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
 /* 80162954 0015F894  38 60 00 01 */	li r3, 1
 /* 80162958 0015F898  48 00 18 D4 */	b lbl_8016422C
+lbl_8016295C:
 /* 8016295C 0015F89C  38 7F 00 00 */	addi r3, r31, 0
 /* 80162960 0015F8A0  38 80 00 02 */	li r4, 2
 /* 80162964 0015F8A4  4B FC 01 55 */	bl incHP__6TMarioFi
@@ -729,6 +744,7 @@ lbl_80162910:
 /* 80162970 0015F8B0  4B FE 12 05 */	bl emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3$$0f$$1
 /* 80162974 0015F8B4  38 60 00 01 */	li r3, 1
 /* 80162978 0015F8B8  48 00 18 B4 */	b lbl_8016422C
+lbl_8016297C:
 /* 8016297C 0015F8BC  28 1E 00 0E */	cmplwi r30, 0xe
 /* 80162980 0015F8C0  40 82 00 80 */	bne lbl_80162A00
 /* 80162984 0015F8C4  80 1F 00 7C */	lwz r0, 0x7c(r31)
@@ -2755,7 +2771,66 @@ $$24271:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$24230:
-	.incbin "baserom.dol", 0x3B5160, 0xF0
+    .4byte lbl_80162270
+    .4byte lbl_801622EC
+    .4byte lbl_80162384
+    .4byte lbl_80162404
+    .4byte lbl_80162428
+    .4byte lbl_80162428
+    .4byte lbl_80162428
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162884
+    .4byte lbl_80162918
+    .4byte lbl_8016295C
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_8016297C
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_801627B8
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_801624E4
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162594
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162644
+    .4byte lbl_801626F4
+    .4byte lbl_80162360
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_80162A00
+    .4byte lbl_8016285C
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$24221:

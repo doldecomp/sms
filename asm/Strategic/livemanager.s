@@ -436,6 +436,7 @@ $$22148:
 	.incbin "baserom.dol", 0x377108, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__12TLiveManager
 __vt__12TLiveManager:
 	.incbin "baserom.dol", 0x3B1E58, 0x40

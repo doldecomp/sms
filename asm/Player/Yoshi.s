@@ -247,6 +247,7 @@ calcAnim__6TYoshiFv:
 /* 8014D6EC 0014A62C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8014D6F0 0014A630  7C 09 03 A6 */	mtctr r0
 /* 8014D6F4 0014A634  4E 80 04 20 */	bctr 
+lbl_8014D6F8:
 /* 8014D6F8 0014A638  A8 9F 00 70 */	lha r4, 0x70(r31)
 /* 8014D6FC 0014A63C  38 C1 01 C4 */	addi r6, r1, 0x1c4
 /* 8014D700 0014A640  C0 3F 00 20 */	lfs f1, 0x20(r31)
@@ -256,6 +257,7 @@ calcAnim__6TYoshiFv:
 /* 8014D710 0014A650  38 A0 00 00 */	li r5, 0
 /* 8014D714 0014A654  4B EC E5 59 */	bl J3DGetTranslateRotateMtx__FsssfffPA4_f
 /* 8014D718 0014A658  48 00 00 8C */	b lbl_8014D7A4
+lbl_8014D71C:
 /* 8014D71C 0014A65C  7F E3 FB 78 */	mr r3, r31
 /* 8014D720 0014A660  48 00 1A 81 */	bl thinkAnimation__6TYoshiFv
 /* 8014D724 0014A664  80 7F 00 10 */	lwz r3, 0x10(r31)
@@ -263,6 +265,7 @@ calcAnim__6TYoshiFv:
 /* 8014D72C 0014A66C  38 81 01 C4 */	addi r4, r1, 0x1c4
 /* 8014D730 0014A670  4B F4 6B AD */	bl PSMTXCopy
 /* 8014D734 0014A674  48 00 00 70 */	b lbl_8014D7A4
+lbl_8014D738:
 /* 8014D738 0014A678  A8 7F 00 02 */	lha r3, 2(r31)
 /* 8014D73C 0014A67C  3C 00 43 30 */	lis r0, 0x4330
 /* 8014D740 0014A680  C8 42 A0 E0 */	lfd f2, $$23438@sda21(r2)
@@ -282,6 +285,7 @@ calcAnim__6TYoshiFv:
 /* 8014D778 0014A6B8  EC 44 00 BA */	fmadds f2, f4, f2, f0
 /* 8014D77C 0014A6BC  4B EC E4 F1 */	bl J3DGetTranslateRotateMtx__FsssfffPA4_f
 /* 8014D780 0014A6C0  48 00 00 24 */	b lbl_8014D7A4
+lbl_8014D784:
 /* 8014D784 0014A6C4  A8 9F 00 70 */	lha r4, 0x70(r31)
 /* 8014D788 0014A6C8  38 C1 01 C4 */	addi r6, r1, 0x1c4
 /* 8014D78C 0014A6CC  C0 3F 00 20 */	lfs f1, 0x20(r31)
@@ -592,6 +596,7 @@ lbl_8014DBD4:
 /* 8014DBEC 0014AB2C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8014DBF0 0014AB30  7C 09 03 A6 */	mtctr r0
 /* 8014DBF4 0014AB34  4E 80 04 20 */	bctr 
+lbl_8014DBF8:
 /* 8014DBF8 0014AB38  80 7E 00 34 */	lwz r3, 0x34(r30)
 /* 8014DBFC 0014AB3C  38 80 00 00 */	li r4, 0
 /* 8014DC00 0014AB40  38 A0 00 00 */	li r5, 0
@@ -631,6 +636,7 @@ lbl_8014DC74:
 /* 8014DC80 0014ABC0  38 C0 00 01 */	li r6, 1
 /* 8014DC84 0014ABC4  48 02 F2 C1 */	bl startMarioVoice__6MSoundFUlsUc
 /* 8014DC88 0014ABC8  48 00 06 D4 */	b lbl_8014E35C
+lbl_8014DC8C:
 /* 8014DC8C 0014ABCC  80 7E 00 34 */	lwz r3, 0x34(r30)
 /* 8014DC90 0014ABD0  38 80 00 00 */	li r4, 0
 /* 8014DC94 0014ABD4  38 A0 00 00 */	li r5, 0
@@ -870,6 +876,7 @@ lbl_8014DFC8:
 /* 8014DFD0 0014AF10  38 00 00 1E */	li r0, 0x1e
 /* 8014DFD4 0014AF14  B0 1E 00 02 */	sth r0, 2(r30)
 /* 8014DFD8 0014AF18  48 00 03 84 */	b lbl_8014E35C
+lbl_8014DFDC:
 /* 8014DFDC 0014AF1C  80 9E 00 10 */	lwz r4, 0x10(r30)
 /* 8014DFE0 0014AF20  3C 60 43 30 */	lis r3, 0x4330
 /* 8014DFE4 0014AF24  A8 BE 00 70 */	lha r5, 0x70(r30)
@@ -893,6 +900,7 @@ lbl_8014DFC8:
 /* 8014E02C 0014AF6C  80 01 02 14 */	lwz r0, 0x214(r1)
 /* 8014E030 0014AF70  B0 1E 00 70 */	sth r0, 0x70(r30)
 /* 8014E034 0014AF74  48 00 03 28 */	b lbl_8014E35C
+lbl_8014E038:
 /* 8014E038 0014AF78  80 9E 00 10 */	lwz r4, 0x10(r30)
 /* 8014E03C 0014AF7C  80 64 00 10 */	lwz r3, 0x10(r4)
 /* 8014E040 0014AF80  80 04 00 14 */	lwz r0, 0x14(r4)
@@ -1029,6 +1037,7 @@ lbl_8014E21C:
 /* 8014E224 0014B164  38 00 00 1E */	li r0, 0x1e
 /* 8014E228 0014B168  B0 1E 00 02 */	sth r0, 2(r30)
 /* 8014E22C 0014B16C  48 00 01 30 */	b lbl_8014E35C
+lbl_8014E230:
 /* 8014E230 0014B170  A8 7E 00 02 */	lha r3, 2(r30)
 /* 8014E234 0014B174  38 03 FF FF */	addi r0, r3, -1
 /* 8014E238 0014B178  B0 1E 00 02 */	sth r0, 2(r30)
@@ -1065,6 +1074,7 @@ lbl_8014E2AC:
 /* 8014E2AC 0014B1EC  A8 1E 00 04 */	lha r0, 4(r30)
 /* 8014E2B0 0014B1F0  B0 1E 00 02 */	sth r0, 2(r30)
 /* 8014E2B4 0014B1F4  48 00 00 A8 */	b lbl_8014E35C
+lbl_8014E2B8:
 /* 8014E2B8 0014B1F8  80 7E 00 34 */	lwz r3, 0x34(r30)
 /* 8014E2BC 0014B1FC  38 80 00 00 */	li r4, 0
 /* 8014E2C0 0014B200  4B F8 5F 65 */	bl getFrameCtrl__6MActorFi
@@ -1090,6 +1100,7 @@ lbl_8014E2EC:
 /* 8014E30C 0014B24C  38 00 00 1E */	li r0, 0x1e
 /* 8014E310 0014B250  B0 1E 00 02 */	sth r0, 2(r30)
 /* 8014E314 0014B254  48 00 00 48 */	b lbl_8014E35C
+lbl_8014E318:
 /* 8014E318 0014B258  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8014E31C 0014B25C  38 FE 00 00 */	addi r7, r30, 0
 /* 8014E320 0014B260  38 BE 00 74 */	addi r5, r30, 0x74
@@ -1101,6 +1112,7 @@ lbl_8014E2EC:
 /* 8014E338 0014B278  38 00 00 1E */	li r0, 0x1e
 /* 8014E33C 0014B27C  B0 1E 00 02 */	sth r0, 2(r30)
 /* 8014E340 0014B280  48 00 00 1C */	b lbl_8014E35C
+lbl_8014E344:
 /* 8014E344 0014B284  38 00 00 00 */	li r0, 0
 /* 8014E348 0014B288  98 1E 00 00 */	stb r0, 0(r30)
 /* 8014E34C 0014B28C  80 7E 00 F0 */	lwz r3, 0xf0(r30)
@@ -4112,9 +4124,25 @@ $$24930:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23436:
-	.incbin "baserom.dol", 0x3B3B30, 0x24
+    .4byte lbl_8014D7A4
+    .4byte lbl_8014D738
+    .4byte lbl_8014D6F8
+    .4byte lbl_8014D6F8
+    .4byte lbl_8014D7A4
+    .4byte lbl_8014D784
+    .4byte lbl_8014D6F8
+    .4byte lbl_8014D6F8
+    .4byte lbl_8014D71C
 $$23802:
-	.incbin "baserom.dol", 0x3B3B54, 0x24
+    .4byte lbl_8014E35C
+    .4byte lbl_8014E230
+    .4byte lbl_8014DBF8
+    .4byte lbl_8014E2B8
+    .4byte lbl_8014E318
+    .4byte lbl_8014E344
+    .4byte lbl_8014DC8C
+    .4byte lbl_8014DFDC
+    .4byte lbl_8014E038
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23257:

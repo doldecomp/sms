@@ -625,6 +625,7 @@ lbl_801DF7B4:
 	.incbin "baserom.dol", 0x36CDB4, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__16TBGCheckListWarp
 __vt__16TBGCheckListWarp:
 	.incbin "baserom.dol", 0x3CCC70, 0xC

@@ -1639,6 +1639,7 @@ $$22908:
 	.incbin "baserom.dol", 0x376A1C, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .space 0x10
 movies$2032:
 	.incbin "baserom.dol", 0x3B1888, 0x50
 .global __vt__14TMovieDirector

@@ -3983,6 +3983,7 @@ control__13TSandBombBaseFv:
 /* 801AA41C 001A735C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801AA420 001A7360  7C 09 03 A6 */	mtctr r0
 /* 801AA424 001A7364  4E 80 04 20 */	bctr 
+lbl_801AA428:
 /* 801AA428 001A7368  80 7F 00 74 */	lwz r3, 0x74(r31)
 /* 801AA42C 001A736C  38 80 00 00 */	li r4, 0
 /* 801AA430 001A7370  4B F2 9D F5 */	bl getFrameCtrl__6MActorFi
@@ -4004,6 +4005,7 @@ control__13TSandBombBaseFv:
 /* 801AA470 001A73B0  4B F2 9D B5 */	bl getFrameCtrl__6MActorFi
 /* 801AA474 001A73B4  D3 C3 00 10 */	stfs f30, 0x10(r3)
 /* 801AA478 001A73B8  48 00 01 BC */	b lbl_801AA634
+lbl_801AA47C:
 /* 801AA47C 001A73BC  80 7F 00 74 */	lwz r3, 0x74(r31)
 /* 801AA480 001A73C0  38 80 00 00 */	li r4, 0
 /* 801AA484 001A73C4  C3 ED 86 48 */	lfs f31, mExplodeFrameSpeed__13TSandBombBase@sda21(r13)
@@ -4049,6 +4051,7 @@ control__13TSandBombBaseFv:
 /* 801AA524 001A7464  7D 88 03 A6 */	mtlr r12
 /* 801AA528 001A7468  4E 80 00 21 */	blrl 
 /* 801AA52C 001A746C  48 00 01 08 */	b lbl_801AA634
+lbl_801AA530:
 /* 801AA530 001A7470  80 1E 01 04 */	lwz r0, 0x104(r30)
 /* 801AA534 001A7474  2C 00 00 00 */	cmpwi r0, 0
 /* 801AA538 001A7478  40 81 00 0C */	ble lbl_801AA544
@@ -4065,18 +4068,21 @@ lbl_801AA548:
 /* 801AA55C 001A749C  7D 88 03 A6 */	mtlr r12
 /* 801AA560 001A74A0  4E 80 00 21 */	blrl 
 /* 801AA564 001A74A4  48 00 00 D0 */	b lbl_801AA634
+lbl_801AA568:
 /* 801AA568 001A74A8  7F C3 F3 78 */	mr r3, r30
 /* 801AA56C 001A74AC  81 9E 00 00 */	lwz r12, 0(r30)
 /* 801AA570 001A74B0  81 8C 01 74 */	lwz r12, 0x174(r12)
 /* 801AA574 001A74B4  7D 88 03 A6 */	mtlr r12
 /* 801AA578 001A74B8  4E 80 00 21 */	blrl 
 /* 801AA57C 001A74BC  48 00 00 B8 */	b lbl_801AA634
+lbl_801AA580:
 /* 801AA580 001A74C0  7F C3 F3 78 */	mr r3, r30
 /* 801AA584 001A74C4  81 9E 00 00 */	lwz r12, 0(r30)
 /* 801AA588 001A74C8  81 8C 01 78 */	lwz r12, 0x178(r12)
 /* 801AA58C 001A74CC  7D 88 03 A6 */	mtlr r12
 /* 801AA590 001A74D0  4E 80 00 21 */	blrl 
 /* 801AA594 001A74D4  48 00 00 A0 */	b lbl_801AA634
+lbl_801AA598:
 /* 801AA598 001A74D8  80 6D 97 88 */	lwz r3, SMSRumbleMgr@sda21(r13)
 /* 801AA59C 001A74DC  38 DE 00 10 */	addi r6, r30, 0x10
 /* 801AA5A0 001A74E0  38 80 00 13 */	li r4, 0x13
@@ -4098,6 +4104,7 @@ lbl_801AA548:
 /* 801AA5E0 001A7520  38 80 00 13 */	li r4, 0x13
 /* 801AA5E4 001A7524  4B F2 53 05 */	bl stop__9RumbleMgrFi
 /* 801AA5E8 001A7528  48 00 00 4C */	b lbl_801AA634
+lbl_801AA5EC:
 /* 801AA5EC 001A752C  80 1E 01 04 */	lwz r0, 0x104(r30)
 /* 801AA5F0 001A7530  2C 00 00 00 */	cmpwi r0, 0
 /* 801AA5F4 001A7534  40 81 00 0C */	ble lbl_801AA600
@@ -5716,7 +5723,15 @@ $$25233:
 __vt__8TSandEgg:
 	.incbin "baserom.dol", 0x3C3838, 0x164
 $$25077:
-	.incbin "baserom.dol", 0x3C399C, 0x24
+    .4byte lbl_801AA634
+    .4byte lbl_801AA428
+    .4byte lbl_801AA598
+    .4byte lbl_801AA5EC
+    .4byte lbl_801AA634
+    .4byte lbl_801AA47C
+    .4byte lbl_801AA530
+    .4byte lbl_801AA568
+    .4byte lbl_801AA580
 .global __vt__23TMammaMirrorMapOperator
 __vt__23TMammaMirrorMapOperator:
 	.incbin "baserom.dol", 0x3C39C0, 0x24

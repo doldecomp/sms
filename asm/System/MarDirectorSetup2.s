@@ -781,6 +781,7 @@ $$23424:
 	.incbin "baserom.dol", 0x370D30, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__12TMarDirector
 __vt__12TMarDirector:
 	.incbin "baserom.dol", 0x3B0CA0, 0x70
