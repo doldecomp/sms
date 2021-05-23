@@ -474,21 +474,28 @@ lbl_801C302C:
 /* 801C309C 001BFFDC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801C30A0 001BFFE0  7C 09 03 A6 */	mtctr r0
 /* 801C30A4 001BFFE4  4E 80 04 20 */	bctr 
+lbl_801C30A8:
 /* 801C30A8 001BFFE8  98 87 00 00 */	stb r4, 0(r7)
 /* 801C30AC 001BFFEC  98 A8 00 00 */	stb r5, 0(r8)
 /* 801C30B0 001BFFF0  48 00 00 40 */	b lbl_801C30F0
+lbl_801C30B4:
 /* 801C30B4 001BFFF4  38 00 00 08 */	li r0, 8
 /* 801C30B8 001BFFF8  98 09 00 00 */	stb r0, 0(r9)
 /* 801C30BC 001BFFFC  48 00 00 34 */	b lbl_801C30F0
+lbl_801C30C0:
 /* 801C30C0 001C0000  38 00 00 08 */	li r0, 8
 /* 801C30C4 001C0004  98 07 00 00 */	stb r0, 0(r7)
 /* 801C30C8 001C0008  48 00 00 28 */	b lbl_801C30F0
+lbl_801C30CC:
 /* 801C30CC 001C000C  98 8A 00 00 */	stb r4, 0(r10)
 /* 801C30D0 001C0010  48 00 00 20 */	b lbl_801C30F0
+lbl_801C30D4:
 /* 801C30D4 001C0014  98 AB 00 00 */	stb r5, 0(r11)
 /* 801C30D8 001C0018  48 00 00 18 */	b lbl_801C30F0
+lbl_801C30DC:
 /* 801C30DC 001C001C  98 8C 00 00 */	stb r4, 0(r12)
 /* 801C30E0 001C0020  48 00 00 10 */	b lbl_801C30F0
+lbl_801C30E4:
 /* 801C30E4 001C0024  98 A7 00 00 */	stb r5, 0(r7)
 /* 801C30E8 001C0028  98 98 00 00 */	stb r4, 0(r24)
 /* 801C30EC 001C002C  98 A8 00 00 */	stb r5, 0(r8)
@@ -1947,7 +1954,14 @@ gateNames$2573:
 __vt__10TModelGate:
 	.incbin "baserom.dol", 0x3C882C, 0xB4
 $$23054:
-	.incbin "baserom.dol", 0x3C88E0, 0xD8
+    .4byte lbl_801C30F0
+    .4byte lbl_801C30A8
+    .4byte lbl_801C30B4
+    .4byte lbl_801C30C0
+    .4byte lbl_801C30CC
+    .4byte lbl_801C30D4
+    .4byte lbl_801C30DC
+    .4byte lbl_801C30E4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22574:

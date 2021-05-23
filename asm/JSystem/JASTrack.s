@@ -2155,6 +2155,7 @@ writeTimeParam__Q28JASystem6TTrackFUc:
 /* 8006698C 000638CC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80066990 000638D0  7C 09 03 A6 */	mtctr r0
 /* 80066994 000638D4  4E 80 04 20 */	bctr 
+lbl_80066998:
 /* 80066998 000638D8  80 9C 00 04 */	lwz r4, 4(r28)
 /* 8006699C 000638DC  38 7C 00 00 */	addi r3, r28, 0
 /* 800669A0 000638E0  38 04 00 01 */	addi r0, r4, 1
@@ -2163,11 +2164,13 @@ writeTimeParam__Q28JASystem6TTrackFUc:
 /* 800669AC 000638EC  48 00 0F E9 */	bl readRegDirect__Q28JASystem6TTrackFUc
 /* 800669B0 000638F0  7C 7D 1B 78 */	mr r29, r3
 /* 800669B4 000638F4  48 00 00 60 */	b lbl_80066A14
+lbl_800669B8:
 /* 800669B8 000638F8  80 7C 00 04 */	lwz r3, 4(r28)
 /* 800669BC 000638FC  38 03 00 01 */	addi r0, r3, 1
 /* 800669C0 00063900  90 1C 00 04 */	stw r0, 4(r28)
 /* 800669C4 00063904  8B A3 00 00 */	lbz r29, 0(r3)
 /* 800669C8 00063908  48 00 00 4C */	b lbl_80066A14
+lbl_800669CC:
 /* 800669CC 0006390C  80 7C 00 04 */	lwz r3, 4(r28)
 /* 800669D0 00063910  38 03 00 01 */	addi r0, r3, 1
 /* 800669D4 00063914  90 1C 00 04 */	stw r0, 4(r28)
@@ -2184,6 +2187,7 @@ lbl_800669F4:
 /* 800669FC 0006393C  7C 60 03 78 */	or r0, r3, r0
 /* 80066A00 00063940  7C 1D 07 34 */	extsh r29, r0
 /* 80066A04 00063944  48 00 00 10 */	b lbl_80066A14
+lbl_80066A08:
 /* 80066A08 00063948  7F 83 E3 78 */	mr r3, r28
 /* 80066A0C 0006394C  4B FF E1 3D */	bl read16__Q28JASystem8TSeqCtrlFv
 /* 80066A10 00063950  7C 7D 1B 78 */	mr r29, r3
@@ -2335,6 +2339,7 @@ lbl_80066C04:
 /* 80066C18 00063B58  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80066C1C 00063B5C  7C 09 03 A6 */	mtctr r0
 /* 80066C20 00063B60  4E 80 04 20 */	bctr 
+lbl_80066C24:
 /* 80066C24 00063B64  80 9E 00 04 */	lwz r4, 4(r30)
 /* 80066C28 00063B68  38 7E 00 00 */	addi r3, r30, 0
 /* 80066C2C 00063B6C  38 04 00 01 */	addi r0, r4, 1
@@ -2343,11 +2348,13 @@ lbl_80066C04:
 /* 80066C38 00063B78  48 00 0D 5D */	bl readRegDirect__Q28JASystem6TTrackFUc
 /* 80066C3C 00063B7C  7C 78 1B 78 */	mr r24, r3
 /* 80066C40 00063B80  48 00 00 68 */	b lbl_80066CA8
+lbl_80066C44:
 /* 80066C44 00063B84  80 7E 00 04 */	lwz r3, 4(r30)
 /* 80066C48 00063B88  38 03 00 01 */	addi r0, r3, 1
 /* 80066C4C 00063B8C  90 1E 00 04 */	stw r0, 4(r30)
 /* 80066C50 00063B90  8B 03 00 00 */	lbz r24, 0(r3)
 /* 80066C54 00063B94  48 00 00 54 */	b lbl_80066CA8
+lbl_80066C58:
 /* 80066C58 00063B98  80 7E 00 04 */	lwz r3, 4(r30)
 /* 80066C5C 00063B9C  38 03 00 01 */	addi r0, r3, 1
 /* 80066C60 00063BA0  90 1E 00 04 */	stw r0, 4(r30)
@@ -2364,10 +2371,12 @@ lbl_80066C80:
 /* 80066C88 00063BC8  7C 60 03 78 */	or r0, r3, r0
 /* 80066C8C 00063BCC  7C 18 07 34 */	extsh r24, r0
 /* 80066C90 00063BD0  48 00 00 18 */	b lbl_80066CA8
+lbl_80066C94:
 /* 80066C94 00063BD4  7F C3 F3 78 */	mr r3, r30
 /* 80066C98 00063BD8  4B FF DE B1 */	bl read16__Q28JASystem8TSeqCtrlFv
 /* 80066C9C 00063BDC  7C 78 1B 78 */	mr r24, r3
 /* 80066CA0 00063BE0  48 00 00 08 */	b lbl_80066CA8
+lbl_80066CA4:
 /* 80066CA4 00063BE4  3B 00 FF FF */	li r24, -1
 lbl_80066CA8:
 /* 80066CA8 00063BE8  38 7E 00 00 */	addi r3, r30, 0
@@ -3350,14 +3359,17 @@ readRegDirect__Q28JASystem6TTrackFUc:
 /* 800679D0 00064910  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800679D4 00064914  7C 09 03 A6 */	mtctr r0
 /* 800679D8 00064918  4E 80 04 20 */	bctr 
+lbl_800679DC:
 /* 800679DC 0006491C  38 7F 02 80 */	addi r3, r31, 0x280
 /* 800679E0 00064920  4B FF CF 55 */	bl getBankNumber__Q28JASystem14TRegisterParamCFv
 /* 800679E4 00064924  54 7C 06 3E */	clrlwi r28, r3, 0x18
 /* 800679E8 00064928  48 00 01 C4 */	b lbl_80067BAC
+lbl_800679EC:
 /* 800679EC 0006492C  38 7F 02 80 */	addi r3, r31, 0x280
 /* 800679F0 00064930  4B FF CF 55 */	bl getProgramNumber__Q28JASystem14TRegisterParamCFv
 /* 800679F4 00064934  54 7C 06 3E */	clrlwi r28, r3, 0x18
 /* 800679F8 00064938  48 00 01 B4 */	b lbl_80067BAC
+lbl_800679FC:
 /* 800679FC 0006493C  38 7F 00 00 */	addi r3, r31, 0
 /* 80067A00 00064940  38 80 00 00 */	li r4, 0
 /* 80067A04 00064944  4B FF FF 91 */	bl readRegDirect__Q28JASystem6TTrackFUc
@@ -3370,6 +3382,7 @@ readRegDirect__Q28JASystem6TTrackFUc:
 /* 80067A20 00064960  4B FF FF 75 */	bl readRegDirect__Q28JASystem6TTrackFUc
 /* 80067A24 00064964  7F 9C 1B 78 */	or r28, r28, r3
 /* 80067A28 00064968  48 00 01 84 */	b lbl_80067BAC
+lbl_80067A2C:
 /* 80067A2C 0006496C  38 00 00 04 */	li r0, 4
 /* 80067A30 00064970  7C 09 03 A6 */	mtctr r0
 /* 80067A34 00064974  3B 80 00 00 */	li r28, 0
@@ -3434,6 +3447,7 @@ lbl_80067B08:
 /* 80067B0C 00064A4C  38 63 FF FC */	addi r3, r3, -4
 /* 80067B10 00064A50  42 00 FF 34 */	bdnz lbl_80067A44
 /* 80067B14 00064A54  48 00 00 98 */	b lbl_80067BAC
+lbl_80067B18:
 /* 80067B18 00064A58  3B 80 00 00 */	li r28, 0
 /* 80067B1C 00064A5C  3B A0 00 07 */	li r29, 7
 /* 80067B20 00064A60  3B C0 00 01 */	li r30, 1
@@ -3462,6 +3476,7 @@ lbl_80067B64:
 /* 80067B6C 00064AAC  7F 9C 03 78 */	or r28, r28, r0
 /* 80067B70 00064AB0  40 80 FF B4 */	bge lbl_80067B24
 /* 80067B74 00064AB4  48 00 00 38 */	b lbl_80067BAC
+lbl_80067B78:
 /* 80067B78 00064AB8  80 1F 00 0C */	lwz r0, 0xc(r31)
 /* 80067B7C 00064ABC  28 00 00 00 */	cmplwi r0, 0
 /* 80067B80 00064AC0  40 82 00 0C */	bne lbl_80067B8C
@@ -4048,12 +4063,55 @@ __sinit_JASTrack_cpp:
 sOscTable__Q28JASystem6TTrack:
 	.incbin "baserom.dol", 0x3A8DD8, 0x8
 $$2982:
-	.incbin "baserom.dol", 0x3A8DE0, 0x34
+    .4byte lbl_80066998
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_800669B8
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_800669CC
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_80066A14
+    .4byte lbl_80066A08
 $$21090:
-	.incbin "baserom.dol", 0x3A8E14, 0x44
+    .4byte lbl_80066C24
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066C44
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066C58
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066C94
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA8
+    .4byte lbl_80066CA4
 $$21324:
-	.incbin "baserom.dol", 0x3A8E58, 0x48
-
+    .4byte lbl_800679DC
+    .4byte lbl_800679EC
+    .4byte lbl_800679FC
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067A2C
+    .4byte lbl_80067B18
+    .4byte lbl_80067BA0
+    .4byte lbl_80067BA0
+    .4byte lbl_80067B78
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2357:
 	.incbin "baserom.dol", 0x3E4420, 0x4

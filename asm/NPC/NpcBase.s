@@ -112,6 +112,7 @@ getPtrInitPollutionColor__8TBaseNPCCFv:
 /* 8016AC0C 00167B4C  7C 03 20 2E */	lwzx r0, r3, r4
 /* 8016AC10 00167B50  7C 09 03 A6 */	mtctr r0
 /* 8016AC14 00167B54  4E 80 04 20 */	bctr 
+lbl_8016AC18:
 /* 8016AC18 00167B58  38 A0 00 01 */	li r5, 1
 lbl_8016AC1C:
 /* 8016AC1C 00167B5C  54 A0 06 3F */	clrlwi. r0, r5, 0x18
@@ -1362,6 +1363,7 @@ lbl_8016BD4C:
 /* 8016BD74 00168CB4  7C 03 20 2E */	lwzx r0, r3, r4
 /* 8016BD78 00168CB8  7C 09 03 A6 */	mtctr r0
 /* 8016BD7C 00168CBC  4E 80 04 20 */	bctr 
+lbl_8016BD80:
 /* 8016BD80 00168CC0  38 A0 00 00 */	li r5, 0
 lbl_8016BD84:
 /* 8016BD84 00168CC4  54 A0 06 3F */	clrlwi. r0, r5, 0x18
@@ -1435,6 +1437,7 @@ lbl_8016BE60:
 /* 8016BE80 00168DC0  7C 03 20 2E */	lwzx r0, r3, r4
 /* 8016BE84 00168DC4  7C 09 03 A6 */	mtctr r0
 /* 8016BE88 00168DC8  4E 80 04 20 */	bctr 
+lbl_8016BE8C:
 /* 8016BE8C 00168DCC  3B 80 00 01 */	li r28, 1
 lbl_8016BE90:
 /* 8016BE90 00168DD0  57 80 06 3F */	clrlwi. r0, r28, 0x18
@@ -1705,7 +1708,9 @@ isBehaveToWaterNpc__8TBaseNPCCFv:
 /* 8016C20C 0016914C  7C 04 28 2E */	lwzx r0, r4, r5
 /* 8016C210 00169150  7C 09 03 A6 */	mtctr r0
 /* 8016C214 00169154  4E 80 04 20 */	bctr 
+lbl_8016C218:
 /* 8016C218 00169158  38 60 00 00 */	li r3, 0
+lbl_8016C21C:
 /* 8016C21C 0016915C  4E 80 00 20 */	blr 
 
 .global isMadNpc__8TBaseNPCCFv
@@ -1907,7 +1912,9 @@ isPollutionNpc__8TBaseNPCCFv:
 /* 8016C4C0 00169400  7C 04 28 2E */	lwzx r0, r4, r5
 /* 8016C4C4 00169404  7C 09 03 A6 */	mtctr r0
 /* 8016C4C8 00169408  4E 80 04 20 */	bctr 
+lbl_8016C4CC:
 /* 8016C4CC 0016940C  38 60 00 01 */	li r3, 1
+lbl_8016C4D0:
 /* 8016C4D0 00169410  4E 80 00 20 */	blr 
 
 .global isSmallNpc__8TBaseNPCCFv
@@ -2707,15 +2714,110 @@ $$232$$2__dt__8TBaseNPCFv:
 __vt__8TBaseNPC:
 	.incbin "baserom.dol", 0x3B53A8, 0x114
 $$23445:
-	.incbin "baserom.dol", 0x3B54BC, 0x58
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC18
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC1C
+    .4byte lbl_8016AC18
 $$23991:
-	.incbin "baserom.dol", 0x3B5514, 0x28
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE90
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE90
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE90
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE8C
+    .4byte lbl_8016BE8C
 $$23990:
-	.incbin "baserom.dol", 0x3B553C, 0x5C
+    .4byte lbl_8016BD80
+    .4byte lbl_8016BD80
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD80
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD80
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD84
+    .4byte lbl_8016BD80
+    .4byte lbl_8016BD80
 $$24128:
-	.incbin "baserom.dol", 0x3B5598, 0x5C
+    .4byte lbl_8016C218
+    .4byte lbl_8016C218
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C218
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C218
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C21C
+    .4byte lbl_8016C218
+    .4byte lbl_8016C218
 $$24190:
-	.incbin "baserom.dol", 0x3B55F4, 0x5C
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4CC
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4D0
+    .4byte lbl_8016C4CC
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23364:

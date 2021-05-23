@@ -208,29 +208,34 @@ lbl_8008F1EC:
 /* 8008F244 0008C184  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8008F248 0008C188  7C 09 03 A6 */	mtctr r0
 /* 8008F24C 0008C18C  4E 80 04 20 */	bctr 
+lbl_8008F250:
 /* 8008F250 0008C190  80 9F 01 98 */	lwz r4, 0x198(r31)
 /* 8008F254 0008C194  38 BB 00 00 */	addi r5, r27, 0
 /* 8008F258 0008C198  38 7D 00 D8 */	addi r3, r29, 0xd8
 /* 8008F25C 0008C19C  4C C6 31 82 */	crclr 6
 /* 8008F260 0008C1A0  4B FF FD 05 */	bl OSReport
 /* 8008F264 0008C1A4  48 00 00 94 */	b lbl_8008F2F8
+lbl_8008F268:
 /* 8008F268 0008C1A8  80 9F 01 98 */	lwz r4, 0x198(r31)
 /* 8008F26C 0008C1AC  38 7D 01 38 */	addi r3, r29, 0x138
 /* 8008F270 0008C1B0  4C C6 31 82 */	crclr 6
 /* 8008F274 0008C1B4  4B FF FC F1 */	bl OSReport
 /* 8008F278 0008C1B8  48 00 00 80 */	b lbl_8008F2F8
+lbl_8008F27C:
 /* 8008F27C 0008C1BC  80 9F 01 98 */	lwz r4, 0x198(r31)
 /* 8008F280 0008C1C0  38 BB 00 00 */	addi r5, r27, 0
 /* 8008F284 0008C1C4  38 7D 01 84 */	addi r3, r29, 0x184
 /* 8008F288 0008C1C8  4C C6 31 82 */	crclr 6
 /* 8008F28C 0008C1CC  4B FF FC D9 */	bl OSReport
 /* 8008F290 0008C1D0  48 00 00 68 */	b lbl_8008F2F8
+lbl_8008F294:
 /* 8008F294 0008C1D4  80 9F 01 98 */	lwz r4, 0x198(r31)
 /* 8008F298 0008C1D8  38 BB 00 00 */	addi r5, r27, 0
 /* 8008F29C 0008C1DC  38 7D 01 E8 */	addi r3, r29, 0x1e8
 /* 8008F2A0 0008C1E0  4C C6 31 82 */	crclr 6
 /* 8008F2A4 0008C1E4  4B FF FC C1 */	bl OSReport
 /* 8008F2A8 0008C1E8  48 00 00 50 */	b lbl_8008F2F8
+lbl_8008F2AC:
 /* 8008F2AC 0008C1EC  38 6D 82 50 */	addi r3, r13, $$232@sda21
 /* 8008F2B0 0008C1F0  4C C6 31 82 */	crclr 6
 /* 8008F2B4 0008C1F4  4B FF FC B1 */	bl OSReport
@@ -297,8 +302,22 @@ $$241:
 $$242:
 	.incbin "baserom.dol", 0x3ACD44, 0x38
 $$243:
-	.incbin "baserom.dol", 0x3ACD7C, 0x44
-
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F250
+    .4byte lbl_8008F268
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F27C
+    .4byte lbl_8008F294
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2F8
+    .4byte lbl_8008F2AC
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 $$232:
 	.incbin "baserom.dol", 0x3E3250, 0x8

@@ -79,6 +79,7 @@ execMovement___9TCardSaveFv:
 /* 80219454 00216394  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80219458 00216398  7C 09 03 A6 */	mtctr r0
 /* 8021945C 0021639C  4E 80 04 20 */	bctr 
+lbl_80219460:
 /* 80219460 002163A0  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 80219464 002163A4  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 80219468 002163A8  88 03 00 38 */	lbz r0, 0x38(r3)
@@ -102,6 +103,7 @@ lbl_8021949C:
 /* 802194A8 002163E8  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 802194AC 002163EC  4B EE EC 89 */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 802194B0 002163F0  48 00 31 60 */	b lbl_8021C610
+lbl_802194B4:
 /* 802194B4 002163F4  80 7F 02 70 */	lwz r3, 0x270(r31)
 /* 802194B8 002163F8  A0 03 00 E2 */	lhz r0, 0xe2(r3)
 /* 802194BC 002163FC  54 00 00 3C */	rlwinm r0, r0, 0, 0, 0x1e
@@ -120,6 +122,7 @@ lbl_802194EC:
 /* 802194EC 0021642C  38 00 00 01 */	li r0, 1
 /* 802194F0 00216430  98 1F 02 DF */	stb r0, 0x2df(r31)
 /* 802194F4 00216434  48 00 31 1C */	b lbl_8021C610
+lbl_802194F8:
 /* 802194F8 00216438  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 802194FC 0021643C  4B EE E8 B1 */	bl getLastStatus__12TCardManagerFv
 /* 80219500 00216440  38 83 00 00 */	addi r4, r3, 0
@@ -252,6 +255,7 @@ lbl_802196D4:
 /* 802196D8 00216618  48 00 AA 5D */	bl changeMode__9TCardSaveFl
 /* 802196DC 0021661C  90 7F 03 10 */	stw r3, 0x310(r31)
 /* 802196E0 00216620  48 00 2F 30 */	b lbl_8021C610
+lbl_802196E4:
 /* 802196E4 00216624  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 802196E8 00216628  4B EE E6 C5 */	bl getLastStatus__12TCardManagerFv
 /* 802196EC 0021662C  2C 03 FF FD */	cmpwi r3, -3
@@ -395,6 +399,7 @@ lbl_802198F0:
 /* 8021990C 0021684C  38 9F 02 78 */	addi r4, r31, 0x278
 /* 80219910 00216850  4B EE E8 25 */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 80219914 00216854  48 00 2C FC */	b lbl_8021C610
+lbl_80219918:
 /* 80219918 00216858  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021991C 0021685C  4B EE E4 91 */	bl getLastStatus__12TCardManagerFv
 /* 80219920 00216860  2C 03 FF FD */	cmpwi r3, -3
@@ -532,6 +537,7 @@ lbl_80219B24:
 /* 80219B28 00216A68  38 80 00 03 */	li r4, 3
 /* 80219B2C 00216A6C  48 00 8A FD */	bl waitForStop__9TCardSaveF10TEProgress
 /* 80219B30 00216A70  48 00 2A E0 */	b lbl_8021C610
+lbl_80219B34:
 /* 80219B34 00216A74  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 80219B38 00216A78  4B EE E2 75 */	bl getLastStatus__12TCardManagerFv
 /* 80219B3C 00216A7C  2C 03 FF FD */	cmpwi r3, -3
@@ -692,6 +698,7 @@ lbl_80219D94:
 /* 80219DA0 00216CE0  38 C0 00 01 */	li r6, 1
 /* 80219DA4 00216CE4  48 00 6E D1 */	bl waitForChoice__9TCardSaveF10TEProgress10TEProgressSc
 /* 80219DA8 00216CE8  48 00 28 68 */	b lbl_8021C610
+lbl_80219DAC:
 /* 80219DAC 00216CEC  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 80219DB0 00216CF0  4B EE DF FD */	bl getLastStatus__12TCardManagerFv
 /* 80219DB4 00216CF4  3B 23 00 00 */	addi r25, r3, 0
@@ -861,6 +868,7 @@ lbl_8021A020:
 /* 8021A038 00216F78  38 C0 00 01 */	li r6, 1
 /* 8021A03C 00216F7C  48 00 6C 39 */	bl waitForChoice__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021A040 00216F80  48 00 25 D0 */	b lbl_8021C610
+lbl_8021A044:
 /* 8021A044 00216F84  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021A048 00216F88  4B EE DD 65 */	bl getLastStatus__12TCardManagerFv
 /* 8021A04C 00216F8C  2C 03 FF FF */	cmpwi r3, -1
@@ -1129,6 +1137,7 @@ lbl_8021A454:
 /* 8021A458 00217398  38 80 00 00 */	li r4, 0
 /* 8021A45C 0021739C  48 00 4A BD */	bl drawMessage__9TCardSaveF10TEProgress
 /* 8021A460 002173A0  48 00 21 B0 */	b lbl_8021C610
+lbl_8021A464:
 /* 8021A464 002173A4  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021A468 002173A8  4B EE D9 45 */	bl getLastStatus__12TCardManagerFv
 /* 8021A46C 002173AC  2C 03 00 00 */	cmpwi r3, 0
@@ -1270,6 +1279,7 @@ lbl_8021A680:
 /* 8021A684 002175C4  38 80 00 03 */	li r4, 3
 /* 8021A688 002175C8  48 00 3E A5 */	bl waitForAnyKey__9TCardSaveF10TEProgress
 /* 8021A68C 002175CC  48 00 1F 84 */	b lbl_8021C610
+lbl_8021A690:
 /* 8021A690 002175D0  38 7F 00 00 */	addi r3, r31, 0
 /* 8021A694 002175D4  38 80 00 02 */	li r4, 2
 /* 8021A698 002175D8  48 00 3E 95 */	bl waitForAnyKey__9TCardSaveF10TEProgress
@@ -1280,6 +1290,7 @@ lbl_8021A680:
 /* 8021A6AC 002175EC  38 9F 02 78 */	addi r4, r31, 0x278
 /* 8021A6B0 002175F0  4B EE DA 85 */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 8021A6B4 002175F4  48 00 1F 5C */	b lbl_8021C610
+lbl_8021A6B8:
 /* 8021A6B8 002175F8  80 1F 00 10 */	lwz r0, 0x10(r31)
 /* 8021A6BC 002175FC  2C 00 00 00 */	cmpwi r0, 0
 /* 8021A6C0 00217600  40 82 00 0C */	bne lbl_8021A6CC
@@ -1447,6 +1458,7 @@ lbl_8021A930:
 /* 8021A93C 0021787C  38 C0 00 01 */	li r6, 1
 /* 8021A940 00217880  48 00 63 35 */	bl waitForChoice__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021A944 00217884  48 00 1C CC */	b lbl_8021C610
+lbl_8021A948:
 /* 8021A948 00217888  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021A94C 0021788C  4B EE D4 61 */	bl getLastStatus__12TCardManagerFv
 /* 8021A950 00217890  2C 03 FF FF */	cmpwi r3, -1
@@ -1715,6 +1727,7 @@ lbl_8021AD58:
 /* 8021AD5C 00217C9C  38 80 00 00 */	li r4, 0
 /* 8021AD60 00217CA0  48 00 41 B9 */	bl drawMessage__9TCardSaveF10TEProgress
 /* 8021AD64 00217CA4  48 00 18 AC */	b lbl_8021C610
+lbl_8021AD68:
 /* 8021AD68 00217CA8  38 7F 00 00 */	addi r3, r31, 0
 /* 8021AD6C 00217CAC  38 80 00 02 */	li r4, 2
 /* 8021AD70 00217CB0  48 00 37 BD */	bl waitForAnyKey__9TCardSaveF10TEProgress
@@ -1725,6 +1738,7 @@ lbl_8021AD58:
 /* 8021AD84 00217CC4  38 9F 02 78 */	addi r4, r31, 0x278
 /* 8021AD88 00217CC8  4B EE D3 AD */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 8021AD8C 00217CCC  48 00 18 84 */	b lbl_8021C610
+lbl_8021AD90:
 /* 8021AD90 00217CD0  38 7F 00 00 */	addi r3, r31, 0
 /* 8021AD94 00217CD4  38 80 00 02 */	li r4, 2
 /* 8021AD98 00217CD8  48 00 37 95 */	bl waitForAnyKey__9TCardSaveF10TEProgress
@@ -1735,10 +1749,12 @@ lbl_8021AD58:
 /* 8021ADAC 00217CEC  38 9F 02 78 */	addi r4, r31, 0x278
 /* 8021ADB0 00217CF0  4B EE D3 85 */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 8021ADB4 00217CF4  48 00 18 5C */	b lbl_8021C610
+lbl_8021ADB8:
 /* 8021ADB8 00217CF8  38 7F 00 00 */	addi r3, r31, 0
 /* 8021ADBC 00217CFC  38 80 00 01 */	li r4, 1
 /* 8021ADC0 00217D00  48 00 78 69 */	bl waitForStop__9TCardSaveF10TEProgress
 /* 8021ADC4 00217D04  48 00 18 4C */	b lbl_8021C610
+lbl_8021ADC8:
 /* 8021ADC8 00217D08  88 1F 02 EA */	lbz r0, 0x2ea(r31)
 /* 8021ADCC 00217D0C  98 1F 02 E8 */	stb r0, 0x2e8(r31)
 /* 8021ADD0 00217D10  88 1F 02 EA */	lbz r0, 0x2ea(r31)
@@ -1812,6 +1828,7 @@ lbl_8021AED0:
 /* 8021AED0 00217E10  38 00 00 2C */	li r0, 0x2c
 /* 8021AED4 00217E14  90 1F 03 10 */	stw r0, 0x310(r31)
 /* 8021AED8 00217E18  48 00 17 38 */	b lbl_8021C610
+lbl_8021AEDC:
 /* 8021AEDC 00217E1C  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021AEE0 00217E20  4B EE CE CD */	bl getLastStatus__12TCardManagerFv
 /* 8021AEE4 00217E24  7C 79 1B 79 */	or. r25, r3, r3
@@ -2008,6 +2025,7 @@ lbl_8021B1C0:
 /* 8021B1D8 00218118  38 C0 00 01 */	li r6, 1
 /* 8021B1DC 0021811C  48 00 40 55 */	bl waitForChoiceBM__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021B1E0 00218120  48 00 14 30 */	b lbl_8021C610
+lbl_8021B1E4:
 /* 8021B1E4 00218124  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021B1E8 00218128  4B EE CB C5 */	bl getLastStatus__12TCardManagerFv
 /* 8021B1EC 0021812C  2C 03 00 00 */	cmpwi r3, 0
@@ -2229,6 +2247,7 @@ lbl_8021B52C:
 /* 8021B538 00218478  38 C0 00 01 */	li r6, 1
 /* 8021B53C 0021847C  48 00 3C F5 */	bl waitForChoiceBM__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021B540 00218480  48 00 10 D0 */	b lbl_8021C610
+lbl_8021B544:
 /* 8021B544 00218484  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021B548 00218488  4B EE C8 65 */	bl getLastStatus__12TCardManagerFv
 /* 8021B54C 0021848C  2C 03 FF FF */	cmpwi r3, -1
@@ -2743,6 +2762,7 @@ lbl_8021BCF0:
 /* 8021BD08 00218C48  38 03 00 01 */	addi r0, r3, 1
 /* 8021BD0C 00218C4C  90 1F 02 E0 */	stw r0, 0x2e0(r31)
 /* 8021BD10 00218C50  48 00 09 00 */	b lbl_8021C610
+lbl_8021BD14:
 /* 8021BD14 00218C54  80 1F 03 08 */	lwz r0, 0x308(r31)
 /* 8021BD18 00218C58  2C 00 00 00 */	cmpwi r0, 0
 /* 8021BD1C 00218C5C  40 82 00 10 */	bne lbl_8021BD2C
@@ -2760,6 +2780,7 @@ lbl_8021BD38:
 /* 8021BD44 00218C84  38 C0 00 00 */	li r6, 0
 /* 8021BD48 00218C88  48 00 34 E9 */	bl waitForChoiceBM__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021BD4C 00218C8C  48 00 08 C4 */	b lbl_8021C610
+lbl_8021BD50:
 /* 8021BD50 00218C90  38 7F 00 00 */	addi r3, r31, 0
 /* 8021BD54 00218C94  38 80 00 02 */	li r4, 2
 /* 8021BD58 00218C98  48 00 09 79 */	bl waitForAnyKeyBM__9TCardSaveF10TEProgress
@@ -2770,6 +2791,7 @@ lbl_8021BD38:
 /* 8021BD6C 00218CAC  38 9F 02 78 */	addi r4, r31, 0x278
 /* 8021BD70 00218CB0  4B EE C3 C5 */	bl getBookmarkInfos__12TCardManagerFP17TCardBookmarkInfo
 /* 8021BD74 00218CB4  48 00 08 9C */	b lbl_8021C610
+lbl_8021BD78:
 /* 8021BD78 00218CB8  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021BD7C 00218CBC  4B EE C0 31 */	bl getLastStatus__12TCardManagerFv
 /* 8021BD80 00218CC0  2C 03 00 00 */	cmpwi r3, 0
@@ -2860,6 +2882,7 @@ lbl_8021BEB8:
 /* 8021BEC0 00218E00  38 A0 00 03 */	li r5, 3
 /* 8021BEC4 00218E04  48 00 19 59 */	bl waitForSelect2__9TCardSaveF10TEProgress10TEProgress
 /* 8021BEC8 00218E08  48 00 07 48 */	b lbl_8021C610
+lbl_8021BECC:
 /* 8021BECC 00218E0C  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021BED0 00218E10  4B EE BE DD */	bl getLastStatus__12TCardManagerFv
 /* 8021BED4 00218E14  2C 03 00 00 */	cmpwi r3, 0
@@ -2969,6 +2992,7 @@ lbl_8021C048:
 /* 8021C054 00218F94  38 C0 00 03 */	li r6, 3
 /* 8021C058 00218F98  48 00 0E 65 */	bl waitForSelect3__9TCardSaveF10TEProgress10TEProgress10TEProgress
 /* 8021C05C 00218F9C  48 00 05 B4 */	b lbl_8021C610
+lbl_8021C060:
 /* 8021C060 00218FA0  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021C064 00218FA4  4B EE BD 49 */	bl getLastStatus__12TCardManagerFv
 /* 8021C068 00218FA8  2C 03 FF FD */	cmpwi r3, -3
@@ -3106,9 +3130,11 @@ lbl_8021C26C:
 /* 8021C270 002191B0  38 80 00 03 */	li r4, 3
 /* 8021C274 002191B4  48 00 63 B5 */	bl waitForStop__9TCardSaveF10TEProgress
 /* 8021C278 002191B8  48 00 03 98 */	b lbl_8021C610
+lbl_8021C27C:
 /* 8021C27C 002191BC  7F E3 FB 78 */	mr r3, r31
 /* 8021C280 002191C0  48 00 1C 95 */	bl waitForSelectOver__9TCardSaveFv
 /* 8021C284 002191C4  48 00 03 8C */	b lbl_8021C610
+lbl_8021C288:
 /* 8021C288 002191C8  80 6D 97 F4 */	lwz r3, gpCardManager@sda21(r13)
 /* 8021C28C 002191CC  4B EE BB 21 */	bl getLastStatus__12TCardManagerFv
 /* 8021C290 002191D0  7C 79 1B 79 */	or. r25, r3, r3
@@ -3335,6 +3361,7 @@ lbl_8021C5D8:
 /* 8021C5F0 00219530  38 C0 00 01 */	li r6, 1
 /* 8021C5F4 00219534  48 00 2C 3D */	bl waitForChoiceBM__9TCardSaveF10TEProgress10TEProgressSc
 /* 8021C5F8 00219538  48 00 00 18 */	b lbl_8021C610
+lbl_8021C5FC:
 /* 8021C5FC 0021953C  38 7F 00 00 */	addi r3, r31, 0
 /* 8021C600 00219540  38 80 00 19 */	li r4, 0x19
 /* 8021C604 00219544  38 A0 00 01 */	li r5, 1
@@ -11802,8 +11829,61 @@ cMessageID__9TCardSave:
 __vt__9TCardSave:
 	.incbin "baserom.dol", 0x3CE4EC, 0x24
 $$24199:
-	.incbin "baserom.dol", 0x3CE510, 0xD8
+    .4byte lbl_80219460
+    .4byte lbl_802194B4
+    .4byte lbl_802194F8
+    .4byte lbl_802196E4
+    .4byte lbl_80219918
+    .4byte lbl_80219918
+    .4byte lbl_80219B34
+    .4byte lbl_80219B34
+    .4byte lbl_80219DAC
+    .4byte lbl_8021A044
+    .4byte lbl_8021A464
+    .4byte lbl_8021A690
+    .4byte lbl_80219918
+    .4byte lbl_80219918
+    .4byte lbl_8021A6B8
+    .4byte lbl_8021A948
+    .4byte lbl_8021ADB8
+    .4byte lbl_8021AD68
+    .4byte lbl_8021AD90
+    .4byte lbl_8021ADC8
+    .4byte lbl_8021AEDC
+    .4byte lbl_8021B1E4
+    .4byte lbl_8021B544
+    .4byte lbl_8021BD14
+    .4byte lbl_8021BD50
+    .4byte lbl_802194B4
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021AEDC
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021BD78
+    .4byte lbl_8021BECC
+    .4byte lbl_8021C060
+    .4byte lbl_80219918
+    .4byte lbl_8021C27C
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C610
+    .4byte lbl_8021C288
+    .4byte lbl_8021C5FC
 
+    .balign 8
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$24196:
 	.incbin "baserom.dol", 0x3E9340, 0x4

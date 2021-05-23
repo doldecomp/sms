@@ -501,6 +501,7 @@ lbl_8023DB44:
 /* 8023DB68 0023AAA8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 16
 .global __vt__9TSunShine
 __vt__9TSunShine:
 	.incbin "baserom.dol", 0x3CEDB0, 0x28

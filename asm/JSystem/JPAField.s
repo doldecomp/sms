@@ -2362,27 +2362,35 @@ setField__15JPAFieldManagerFUc:
 /* 80071E08 0006ED48  7C 04 00 2E */	lwzx r0, r4, r0
 /* 80071E0C 0006ED4C  7C 09 03 A6 */	mtctr r0
 /* 80071E10 0006ED50  4E 80 04 20 */	bctr 
+lbl_80071E14:
 /* 80071E14 0006ED54  48 00 00 71 */	bl setGravityField__15JPAFieldManagerFv
 /* 80071E18 0006ED58  7C 65 1B 78 */	mr r5, r3
 /* 80071E1C 0006ED5C  48 00 00 54 */	b lbl_80071E70
+lbl_80071E20:
 /* 80071E20 0006ED60  48 00 00 D9 */	bl setAirField__15JPAFieldManagerFv
 /* 80071E24 0006ED64  7C 65 1B 78 */	mr r5, r3
 /* 80071E28 0006ED68  48 00 00 48 */	b lbl_80071E70
+lbl_80071E2C:
 /* 80071E2C 0006ED6C  48 00 01 41 */	bl setMagnetField__15JPAFieldManagerFv
 /* 80071E30 0006ED70  7C 65 1B 78 */	mr r5, r3
 /* 80071E34 0006ED74  48 00 00 3C */	b lbl_80071E70
+lbl_80071E38:
 /* 80071E38 0006ED78  48 00 01 A9 */	bl setNewtonField__15JPAFieldManagerFv
 /* 80071E3C 0006ED7C  7C 65 1B 78 */	mr r5, r3
 /* 80071E40 0006ED80  48 00 00 30 */	b lbl_80071E70
+lbl_80071E44:
 /* 80071E44 0006ED84  48 00 02 11 */	bl setVortexField__15JPAFieldManagerFv
 /* 80071E48 0006ED88  7C 65 1B 78 */	mr r5, r3
 /* 80071E4C 0006ED8C  48 00 00 24 */	b lbl_80071E70
+lbl_80071E50:
 /* 80071E50 0006ED90  48 00 02 ED */	bl setRandomField__15JPAFieldManagerFv
 /* 80071E54 0006ED94  7C 65 1B 78 */	mr r5, r3
 /* 80071E58 0006ED98  48 00 00 18 */	b lbl_80071E70
+lbl_80071E5C:
 /* 80071E5C 0006ED9C  48 00 03 55 */	bl setDragField__15JPAFieldManagerFv
 /* 80071E60 0006EDA0  7C 65 1B 78 */	mr r5, r3
 /* 80071E64 0006EDA4  48 00 00 0C */	b lbl_80071E70
+lbl_80071E68:
 /* 80071E68 0006EDA8  48 00 02 61 */	bl setConvectionField__15JPAFieldManagerFv
 /* 80071E6C 0006EDAC  7C 65 1B 78 */	mr r5, r3
 lbl_80071E70:
@@ -2717,7 +2725,14 @@ __sinit_JPAField_cpp:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22535:
-	.incbin "baserom.dol", 0x3A9478, 0x20
+    .4byte lbl_80071E14
+    .4byte lbl_80071E20
+    .4byte lbl_80071E2C
+    .4byte lbl_80071E38
+    .4byte lbl_80071E44
+    .4byte lbl_80071E50
+    .4byte lbl_80071E5C
+    .4byte lbl_80071E68
 .global __vt__12JPADragField
 __vt__12JPADragField:
 	.incbin "baserom.dol", 0x3A9498, 0x18

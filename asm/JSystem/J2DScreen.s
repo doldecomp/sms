@@ -324,7 +324,9 @@ lbl_80018C2C:
 /* 80018C3C 00015B7C  7C 0E 00 2E */	lwzx r0, r14, r0
 /* 80018C40 00015B80  7C 09 03 A6 */	mtctr r0
 /* 80018C44 00015B84  4E 80 04 20 */	bctr 
+lbl_80018C48:
 /* 80018C48 00015B88  48 00 01 88 */	b lbl_80018DD0
+lbl_80018C4C:
 /* 80018C4C 00015B8C  7F E3 FB 78 */	mr r3, r31
 /* 80018C50 00015B90  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80018C54 00015B94  38 80 00 04 */	li r4, 4
@@ -340,6 +342,7 @@ lbl_80018C2C:
 /* 80018C7C 00015BBC  39 20 00 00 */	li r9, 0
 /* 80018C80 00015BC0  4B FF FB 85 */	bl makeHiearachyPanes__9J2DScreenFP7J2DPaneP20JSURandomInputStreambbbPl
 /* 80018C84 00015BC4  4B FF FD 60 */	b lbl_800189E4
+lbl_80018C88:
 /* 80018C88 00015BC8  7F E3 FB 78 */	mr r3, r31
 /* 80018C8C 00015BCC  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80018C90 00015BD0  38 80 00 04 */	li r4, 4
@@ -347,6 +350,7 @@ lbl_80018C2C:
 /* 80018C98 00015BD8  7D 88 03 A6 */	mtlr r12
 /* 80018C9C 00015BDC  4E 80 00 21 */	blrl 
 /* 80018CA0 00015BE0  48 00 01 30 */	b lbl_80018DD0
+lbl_80018CA4:
 /* 80018CA4 00015BE4  38 60 00 EC */	li r3, 0xec
 /* 80018CA8 00015BE8  4B FF 3C 09 */	bl __nw__FUl
 /* 80018CAC 00015BEC  7C 7B 1B 79 */	or. r27, r3, r3
@@ -379,6 +383,7 @@ lbl_80018CC8:
 /* 80018D14 00015C54  90 7E 00 1C */	stw r3, 0x1c(r30)
 /* 80018D18 00015C58  90 1E 00 20 */	stw r0, 0x20(r30)
 /* 80018D1C 00015C5C  4B FF FC C8 */	b lbl_800189E4
+lbl_80018D20:
 /* 80018D20 00015C60  38 60 01 3C */	li r3, 0x13c
 /* 80018D24 00015C64  4B FF 3B 8D */	bl __nw__FUl
 /* 80018D28 00015C68  7C 7B 1B 79 */	or. r27, r3, r3
@@ -389,6 +394,7 @@ lbl_80018CC8:
 /* 80018D3C 00015C7C  38 DD 00 00 */	addi r6, r29, 0
 /* 80018D40 00015C80  48 00 13 41 */	bl __ct__9J2DWindowFP7J2DPaneP20JSURandomInputStreamb
 /* 80018D44 00015C84  4B FF FC A0 */	b lbl_800189E4
+lbl_80018D48:
 /* 80018D48 00015C88  38 60 01 5C */	li r3, 0x15c
 /* 80018D4C 00015C8C  4B FF 3B 65 */	bl __nw__FUl
 /* 80018D50 00015C90  7C 7B 1B 79 */	or. r27, r3, r3
@@ -399,6 +405,7 @@ lbl_80018CC8:
 /* 80018D64 00015CA4  38 DD 00 00 */	addi r6, r29, 0
 /* 80018D68 00015CA8  4B FF C2 85 */	bl __ct__10J2DPictureFP7J2DPaneP20JSURandomInputStreamb
 /* 80018D6C 00015CAC  4B FF FC 78 */	b lbl_800189E4
+lbl_80018D70:
 /* 80018D70 00015CB0  38 60 01 28 */	li r3, 0x128
 /* 80018D74 00015CB4  4B FF 3B 3D */	bl __nw__FUl
 /* 80018D78 00015CB8  7C 7B 1B 79 */	or. r27, r3, r3
@@ -845,7 +852,26 @@ $$2326:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2323:
-	.incbin "baserom.dol", 0x3A5C90, 0x50
+    .4byte lbl_80018C48
+    .4byte lbl_80018C4C
+    .4byte lbl_80018C88
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018D98
+    .4byte lbl_80018CA4
+    .4byte lbl_80018D20
+    .4byte lbl_80018D48
+    .4byte lbl_80018D70
 .global __vt__12J2DSetScreen
 __vt__12J2DSetScreen:
 	.incbin "baserom.dol", 0x3A5CE0, 0x34

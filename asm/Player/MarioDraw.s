@@ -4052,38 +4052,55 @@ lbl_80126994:
 /* 801269B8 001238F8  7C 04 00 2E */	lwzx r0, r4, r0
 /* 801269BC 001238FC  7C 09 03 A6 */	mtctr r0
 /* 801269C0 00123900  4E 80 04 20 */	bctr 
+lbl_801269C4:
 /* 801269C4 00123904  3B C0 00 B6 */	li r30, 0xb6
 /* 801269C8 00123908  48 00 00 88 */	b lbl_80126A50
+lbl_801269CC:
 /* 801269CC 0012390C  3B C0 00 B7 */	li r30, 0xb7
 /* 801269D0 00123910  48 00 00 80 */	b lbl_80126A50
+lbl_801269D4:
 /* 801269D4 00123914  3B C0 00 B8 */	li r30, 0xb8
 /* 801269D8 00123918  48 00 00 78 */	b lbl_80126A50
+lbl_801269DC:
 /* 801269DC 0012391C  3B C0 00 B9 */	li r30, 0xb9
 /* 801269E0 00123920  48 00 00 70 */	b lbl_80126A50
+lbl_801269E4:
 /* 801269E4 00123924  3B C0 00 BF */	li r30, 0xbf
 /* 801269E8 00123928  48 00 00 68 */	b lbl_80126A50
+lbl_801269EC:
 /* 801269EC 0012392C  3B C0 00 BA */	li r30, 0xba
 /* 801269F0 00123930  48 00 00 60 */	b lbl_80126A50
+lbl_801269F4:
 /* 801269F4 00123934  3B C0 00 BB */	li r30, 0xbb
 /* 801269F8 00123938  48 00 00 58 */	b lbl_80126A50
+lbl_801269FC:
 /* 801269FC 0012393C  3B C0 00 BC */	li r30, 0xbc
 /* 80126A00 00123940  48 00 00 50 */	b lbl_80126A50
+lbl_80126A04:
 /* 80126A04 00123944  3B C0 00 BD */	li r30, 0xbd
 /* 80126A08 00123948  48 00 00 48 */	b lbl_80126A50
+lbl_80126A0C:
 /* 80126A0C 0012394C  3B C0 00 BE */	li r30, 0xbe
 /* 80126A10 00123950  48 00 00 40 */	b lbl_80126A50
+lbl_80126A14:
 /* 80126A14 00123954  3B C0 00 B8 */	li r30, 0xb8
 /* 80126A18 00123958  48 00 00 38 */	b lbl_80126A50
+lbl_80126A1C:
 /* 80126A1C 0012395C  3B C0 00 C0 */	li r30, 0xc0
 /* 80126A20 00123960  48 00 00 30 */	b lbl_80126A50
+lbl_80126A24:
 /* 80126A24 00123964  3B C0 00 C1 */	li r30, 0xc1
 /* 80126A28 00123968  48 00 00 28 */	b lbl_80126A50
+lbl_80126A2C:
 /* 80126A2C 0012396C  3B C0 00 C2 */	li r30, 0xc2
 /* 80126A30 00123970  48 00 00 20 */	b lbl_80126A50
+lbl_80126A34:
 /* 80126A34 00123974  3B C0 00 C4 */	li r30, 0xc4
 /* 80126A38 00123978  48 00 00 18 */	b lbl_80126A50
+lbl_80126A3C:
 /* 80126A3C 0012397C  3B C0 00 C5 */	li r30, 0xc5
 /* 80126A40 00123980  48 00 00 10 */	b lbl_80126A50
+lbl_80126A44:
 /* 80126A44 00123984  3B C0 00 C6 */	li r30, 0xc6
 /* 80126A48 00123988  48 00 00 08 */	b lbl_80126A50
 lbl_80126A4C:
@@ -6464,7 +6481,33 @@ gMarioAnimeData:
 marioAnimeTexPatternFilenames:
 	.incbin "baserom.dol", 0x3B35D0, 0x60
 $$25888:
-	.incbin "baserom.dol", 0x3B3630, 0x90
+    .4byte lbl_80126A4C
+    .4byte lbl_80126A4C
+    .4byte lbl_80126A34
+    .4byte lbl_801269DC
+    .4byte lbl_801269EC
+    .4byte lbl_80126A4C
+    .4byte lbl_80126A2C
+    .4byte lbl_80126A24
+    .4byte lbl_80126A1C
+    .4byte lbl_80126A0C
+    .4byte lbl_801269F4
+    .4byte lbl_80126A04
+    .4byte lbl_801269FC
+    .4byte lbl_80126A4C
+    .4byte lbl_801269E4
+    .4byte lbl_801269D4
+    .4byte lbl_80126A14
+    .4byte lbl_80126A14
+    .4byte lbl_80126A44
+    .4byte lbl_80126A3C
+    .4byte lbl_80126A4C
+    .4byte lbl_80126A4C
+    .4byte lbl_801269C4
+    .4byte lbl_80126A4C
+    .4byte lbl_801269CC
+    
+    .space 0x2C
 .global __vt__19M3UModelCommonMario
 __vt__19M3UModelCommonMario:
 	.incbin "baserom.dol", 0x3B36C0, 0x10

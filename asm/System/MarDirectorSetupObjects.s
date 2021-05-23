@@ -68,10 +68,12 @@ lbl_8010C480:
 /* 8010C498 001093D8  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8010C49C 001093DC  7C 09 03 A6 */	mtctr r0
 /* 8010C4A0 001093E0  4E 80 04 20 */	bctr 
+lbl_8010C4A4:
 /* 8010C4A4 001093E4  A0 1E 00 4E */	lhz r0, 0x4e(r30)
 /* 8010C4A8 001093E8  60 00 00 02 */	ori r0, r0, 2
 /* 8010C4AC 001093EC  B0 1E 00 4E */	sth r0, 0x4e(r30)
 /* 8010C4B0 001093F0  48 00 02 2C */	b lbl_8010C6DC
+lbl_8010C4B4:
 /* 8010C4B4 001093F4  3C 80 00 01 */	lis r4, 0x00010386@ha
 /* 8010C4B8 001093F8  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8010C4BC 001093FC  38 84 03 86 */	addi r4, r4, 0x00010386@l
@@ -112,6 +114,7 @@ lbl_8010C500:
 /* 8010C544 00109484  60 00 00 02 */	ori r0, r0, 2
 /* 8010C548 00109488  B0 1E 00 4E */	sth r0, 0x4e(r30)
 /* 8010C54C 0010948C  48 00 01 90 */	b lbl_8010C6DC
+lbl_8010C550:
 /* 8010C550 00109490  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8010C554 00109494  3C 80 00 04 */	lis r4, 4
 /* 8010C558 00109498  4B FD BD B1 */	bl getFlag__12TFlagManagerCFUl
@@ -2174,6 +2177,7 @@ decideMarioPosIdx__12TMarDirectorFv:
 /* 8010E4AC 0010B3EC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8010E4B0 0010B3F0  7C 09 03 A6 */	mtctr r0
 /* 8010E4B4 0010B3F4  4E 80 04 20 */	bctr 
+lbl_8010E4B8:
 /* 8010E4B8 0010B3F8  38 00 00 0E */	li r0, 0xe
 /* 8010E4BC 0010B3FC  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E4C0 0010B400  38 00 00 FF */	li r0, 0xff
@@ -2187,6 +2191,7 @@ decideMarioPosIdx__12TMarDirectorFv:
 /* 8010E4E0 0010B420  80 7D 00 34 */	lwz r3, 0x34(r29)
 /* 8010E4E4 0010B424  48 0F 2D F5 */	bl setColor__9TSMSFaderFQ28JUtility6TColor
 /* 8010E4E8 0010B428  48 00 01 F4 */	b lbl_8010E6DC
+lbl_8010E4EC:
 /* 8010E4EC 0010B42C  3F 60 00 03 */	lis r27, 0x00030001@ha
 /* 8010E4F0 0010B430  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8010E4F4 0010B434  38 9B 00 01 */	addi r4, r27, 0x00030001@l
@@ -2198,6 +2203,7 @@ decideMarioPosIdx__12TMarDirectorFv:
 /* 8010E50C 0010B44C  38 80 00 00 */	li r4, 0
 /* 8010E510 0010B450  4B FD 99 91 */	bl setBool__12TFlagManagerFbUl
 /* 8010E514 0010B454  48 00 01 C8 */	b lbl_8010E6DC
+lbl_8010E518:
 /* 8010E518 0010B458  38 00 00 0E */	li r0, 0xe
 /* 8010E51C 0010B45C  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E520 0010B460  38 A0 00 D2 */	li r5, 0xd2
@@ -2216,6 +2222,7 @@ decideMarioPosIdx__12TMarDirectorFv:
 /* 8010E554 0010B494  38 00 00 01 */	li r0, 1
 /* 8010E558 0010B498  98 1C 00 D1 */	stb r0, 0xd1(r28)
 /* 8010E55C 0010B49C  48 00 01 80 */	b lbl_8010E6DC
+lbl_8010E560:
 /* 8010E560 0010B4A0  3F 60 00 03 */	lis r27, 0x00030001@ha
 /* 8010E564 0010B4A4  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8010E568 0010B4A8  38 9B 00 01 */	addi r4, r27, 0x00030001@l
@@ -2252,18 +2259,21 @@ lbl_8010E5BC:
 /* 8010E5DC 0010B51C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8010E5E0 0010B520  7C 09 03 A6 */	mtctr r0
 /* 8010E5E4 0010B524  4E 80 04 20 */	bctr 
+lbl_8010E5E8:
 /* 8010E5E8 0010B528  9B FC 00 D0 */	stb r31, 0xd0(r28)
 /* 8010E5EC 0010B52C  38 60 00 02 */	li r3, 2
 /* 8010E5F0 0010B530  38 00 00 07 */	li r0, 7
 /* 8010E5F4 0010B534  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E5F8 0010B538  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E5FC 0010B53C  48 00 00 E0 */	b lbl_8010E6DC
+lbl_8010E600:
 /* 8010E600 0010B540  38 60 00 02 */	li r3, 2
 /* 8010E604 0010B544  98 7C 00 D0 */	stb r3, 0xd0(r28)
 /* 8010E608 0010B548  38 00 00 07 */	li r0, 7
 /* 8010E60C 0010B54C  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E610 0010B550  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E614 0010B554  48 00 00 C8 */	b lbl_8010E6DC
+lbl_8010E618:
 /* 8010E618 0010B558  38 00 00 03 */	li r0, 3
 /* 8010E61C 0010B55C  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E620 0010B560  38 60 00 02 */	li r3, 2
@@ -2271,6 +2281,7 @@ lbl_8010E5BC:
 /* 8010E628 0010B568  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E62C 0010B56C  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E630 0010B570  48 00 00 AC */	b lbl_8010E6DC
+lbl_8010E634:
 /* 8010E634 0010B574  38 00 00 04 */	li r0, 4
 /* 8010E638 0010B578  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E63C 0010B57C  38 60 00 02 */	li r3, 2
@@ -2278,6 +2289,7 @@ lbl_8010E5BC:
 /* 8010E644 0010B584  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E648 0010B588  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E64C 0010B58C  48 00 00 90 */	b lbl_8010E6DC
+lbl_8010E650:
 /* 8010E650 0010B590  38 00 00 05 */	li r0, 5
 /* 8010E654 0010B594  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E658 0010B598  38 60 00 02 */	li r3, 2
@@ -2285,6 +2297,7 @@ lbl_8010E5BC:
 /* 8010E660 0010B5A0  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E664 0010B5A4  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E668 0010B5A8  48 00 00 74 */	b lbl_8010E6DC
+lbl_8010E66C:
 /* 8010E66C 0010B5AC  38 00 00 06 */	li r0, 6
 /* 8010E670 0010B5B0  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E674 0010B5B4  38 60 00 02 */	li r3, 2
@@ -2292,6 +2305,7 @@ lbl_8010E5BC:
 /* 8010E67C 0010B5BC  98 7C 00 D1 */	stb r3, 0xd1(r28)
 /* 8010E680 0010B5C0  90 1C 00 E4 */	stw r0, 0xe4(r28)
 /* 8010E684 0010B5C4  48 00 00 58 */	b lbl_8010E6DC
+lbl_8010E688:
 /* 8010E688 0010B5C8  38 00 00 07 */	li r0, 7
 /* 8010E68C 0010B5CC  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E690 0010B5D0  38 00 00 02 */	li r0, 2
@@ -2309,6 +2323,7 @@ lbl_8010E5BC:
 /* 8010E6C0 0010B600  80 7D 00 34 */	lwz r3, 0x34(r29)
 /* 8010E6C4 0010B604  48 0F 2C 15 */	bl setColor__9TSMSFaderFQ28JUtility6TColor
 /* 8010E6C8 0010B608  48 00 00 14 */	b lbl_8010E6DC
+lbl_8010E6CC:
 /* 8010E6CC 0010B60C  38 00 00 08 */	li r0, 8
 /* 8010E6D0 0010B610  98 1C 00 D0 */	stb r0, 0xd0(r28)
 /* 8010E6D4 0010B614  38 00 00 07 */	li r0, 7
@@ -2638,11 +2653,44 @@ $$23809:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23810:
-	.incbin "baserom.dol", 0x3B1948, 0x28
+    .4byte lbl_8010C4A4
+    .4byte lbl_8010C4A4
+    .4byte lbl_8010C68C
+    .4byte lbl_8010C6DC
+    .4byte lbl_8010C6DC
+    .4byte lbl_8010C4B4
+    .4byte lbl_8010C6DC
+    .4byte lbl_8010C4A4
+    .4byte lbl_8010C550
+    .4byte lbl_8010C4A4
 $$23898:
-	.incbin "baserom.dol", 0x3B1970, 0x28
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E5E8
+    .4byte lbl_8010E600
+    .4byte lbl_8010E618
+    .4byte lbl_8010E634
+    .4byte lbl_8010E650
+    .4byte lbl_8010E66C
+    .4byte lbl_8010E688
+    .4byte lbl_8010E6CC
 $$23897:
-	.incbin "baserom.dol", 0x3B1998, 0x40
+    .4byte lbl_8010E4EC
+    .4byte lbl_8010E560
+    .4byte lbl_8010E518
+    .4byte lbl_8010E518
+    .4byte lbl_8010E518
+    .4byte lbl_8010E518
+    .4byte lbl_8010E518
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E518
+    .4byte lbl_8010E518
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E6DC
+    .4byte lbl_8010E4B8
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23756:

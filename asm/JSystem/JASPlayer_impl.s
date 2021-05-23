@@ -87,6 +87,7 @@ getRandomS32__Q28JASystem6PlayerFv:
 /* 80064808 00061748  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global CUTOFF_TO_IIR_TABLE__Q28JASystem6Player
 CUTOFF_TO_IIR_TABLE__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8808, 0x400

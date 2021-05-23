@@ -1427,6 +1427,7 @@ control__9TEggYoshiFv:
 /* 801945C4 00191504  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801945C8 00191508  7C 09 03 A6 */	mtctr r0
 /* 801945CC 0019150C  4E 80 04 20 */	bctr 
+lbl_801945D0:
 /* 801945D0 00191510  7F E3 FB 78 */	mr r3, r31
 /* 801945D4 00191514  4B FF 4A B9 */	bl animIsFinished__11TMapObjBaseCFv
 /* 801945D8 00191518  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -1489,6 +1490,7 @@ lbl_801946A0:
 /* 801946A0 001915E0  38 00 00 01 */	li r0, 1
 /* 801946A4 001915E4  B0 1F 00 FC */	sth r0, 0xfc(r31)
 /* 801946A8 001915E8  48 00 00 EC */	b lbl_80194794
+lbl_801946AC:
 /* 801946AC 001915EC  7F E3 FB 78 */	mr r3, r31
 /* 801946B0 001915F0  4B FF 49 DD */	bl animIsFinished__11TMapObjBaseCFv
 /* 801946B4 001915F4  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -1526,6 +1528,7 @@ lbl_80194728:
 /* 80194728 00191668  38 00 00 0C */	li r0, 0xc
 /* 8019472C 0019166C  B0 1F 00 FC */	sth r0, 0xfc(r31)
 /* 80194730 00191670  48 00 00 64 */	b lbl_80194794
+lbl_80194734:
 /* 80194734 00191674  7F E3 FB 78 */	mr r3, r31
 /* 80194738 00191678  4B FF 49 55 */	bl animIsFinished__11TMapObjBaseCFv
 /* 8019473C 0019167C  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -1538,6 +1541,7 @@ lbl_80194728:
 /* 80194758 00191698  38 00 00 00 */	li r0, 0
 /* 8019475C 0019169C  B0 1F 00 FC */	sth r0, 0xfc(r31)
 /* 80194760 001916A0  48 00 00 34 */	b lbl_80194794
+lbl_80194764:
 /* 80194764 001916A4  80 7F 00 AC */	lwz r3, 0xac(r31)
 /* 80194768 001916A8  80 1F 00 B0 */	lwz r0, 0xb0(r31)
 /* 8019476C 001916AC  C0 22 BF 64 */	lfs f1, $$23270@sda21(r2)
@@ -2612,6 +2616,7 @@ lbl_80195650:
 /* 80195664 001925A4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80195668 001925A8  7C 09 03 A6 */	mtctr r0
 /* 8019566C 001925AC  4E 80 04 20 */	bctr 
+lbl_80195670:
 /* 80195670 001925B0  C0 3E 00 34 */	lfs f1, 0x34(r30)
 /* 80195674 001925B4  3F E0 00 01 */	lis r31, 0x000081C1@ha
 /* 80195678 001925B8  C0 1E 01 6C */	lfs f0, 0x16c(r30)
@@ -2655,6 +2660,7 @@ lbl_801956B4:
 /* 8019570C 0019264C  D0 43 00 24 */	stfs f2, 0x24(r3)
 /* 80195710 00192650  98 03 00 54 */	stb r0, 0x54(r3)
 /* 80195714 00192654  48 00 04 40 */	b lbl_80195B54
+lbl_80195718:
 /* 80195718 00192658  80 1E 01 04 */	lwz r0, 0x104(r30)
 /* 8019571C 0019265C  2C 00 00 00 */	cmpwi r0, 0
 /* 80195720 00192660  40 81 00 0C */	ble lbl_8019572C
@@ -2675,6 +2681,7 @@ lbl_80195730:
 /* 80195754 00192694  90 7E 01 04 */	stw r3, 0x104(r30)
 /* 80195758 00192698  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 8019575C 0019269C  48 00 03 F8 */	b lbl_80195B54
+lbl_80195760:
 /* 80195760 001926A0  3F E0 00 01 */	lis r31, 0x000081C1@ha
 /* 80195764 001926A4  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 80195768 001926A8  38 9F 81 C1 */	addi r4, r31, 0x000081C1@l
@@ -2719,6 +2726,7 @@ lbl_801957E4:
 /* 801957F4 00192734  90 7E 01 04 */	stw r3, 0x104(r30)
 /* 801957F8 00192738  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 801957FC 0019273C  48 00 03 58 */	b lbl_80195B54
+lbl_80195800:
 /* 80195800 00192740  3F E0 00 01 */	lis r31, 0x000081C1@ha
 /* 80195804 00192744  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 80195808 00192748  38 9F 81 C1 */	addi r4, r31, 0x000081C1@l
@@ -2754,6 +2762,7 @@ lbl_8019585C:
 /* 80195874 001927B4  90 7E 01 04 */	stw r3, 0x104(r30)
 /* 80195878 001927B8  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 8019587C 001927BC  48 00 02 D8 */	b lbl_80195B54
+lbl_80195880:
 /* 80195880 001927C0  3F E0 00 01 */	lis r31, 0x000081C1@ha
 /* 80195884 001927C4  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 80195888 001927C8  38 9F 81 C1 */	addi r4, r31, 0x000081C1@l
@@ -2771,6 +2780,7 @@ lbl_801958B4:
 /* 801958B4 001927F4  7F C3 F3 78 */	mr r3, r30
 /* 801958B8 001927F8  48 00 02 BD */	bl movingCircle__6TShineFv
 /* 801958BC 001927FC  48 00 02 98 */	b lbl_80195B54
+lbl_801958C0:
 /* 801958C0 00192800  3F E0 00 01 */	lis r31, 0x000081C1@ha
 /* 801958C4 00192804  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 801958C8 00192808  38 9F 81 C1 */	addi r4, r31, 0x000081C1@l
@@ -2857,6 +2867,7 @@ lbl_801959D0:
 /* 801959DC 0019291C  90 7E 00 64 */	stw r3, 0x64(r30)
 /* 801959E0 00192920  B0 1E 00 FC */	sth r0, 0xfc(r30)
 /* 801959E4 00192924  48 00 01 70 */	b lbl_80195B54
+lbl_801959E8:
 /* 801959E8 00192928  C0 3E 00 34 */	lfs f1, 0x34(r30)
 /* 801959EC 0019292C  C0 1E 01 6C */	lfs f0, 0x16c(r30)
 /* 801959F0 00192930  EC 01 00 2A */	fadds f0, f1, f0
@@ -2892,6 +2903,7 @@ lbl_80195A24:
 /* 80195A58 00192998  39 00 00 04 */	li r8, 4
 /* 80195A5C 0019299C  4B FE C4 9D */	bl startSoundActor__Q214MSoundSESystem8MSoundSEFUlPC3VecUlPP8JAISoundUlUc
 /* 80195A60 001929A0  48 00 00 F4 */	b lbl_80195B54
+lbl_80195A64:
 /* 80195A64 001929A4  83 AD A8 B0 */	lwz r29, gpCamera@sda21(r13)
 /* 80195A68 001929A8  3B 80 00 01 */	li r28, 1
 /* 80195A6C 001929AC  38 7D 00 00 */	addi r3, r29, 0
@@ -5340,9 +5352,43 @@ mBowRate__6TShine:
 __vt__10TNozzleBox:
 	.incbin "baserom.dol", 0x3BDBB8, 0x1DC
 $$23722:
-	.incbin "baserom.dol", 0x3BDD94, 0x44
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_80194794
+    .4byte lbl_801946AC
+    .4byte lbl_80194734
+    .4byte lbl_801945D0
+    .4byte lbl_80194794
+    .4byte lbl_80194764
+    .4byte lbl_80194794
 $$24268:
-	.incbin "baserom.dol", 0x3BDDD8, 0x4C
+    .4byte lbl_80195B54
+    .4byte lbl_80195670
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195B54
+    .4byte lbl_80195718
+    .4byte lbl_80195760
+    .4byte lbl_80195880
+    .4byte lbl_80195800
+    .4byte lbl_801958C0
+    .4byte lbl_80195B54
+    .4byte lbl_801959E8
+    .4byte lbl_80195A64
 .global __vt__11TItemNozzle
 __vt__11TItemNozzle:
 	.incbin "baserom.dol", 0x3BDE24, 0x1E4

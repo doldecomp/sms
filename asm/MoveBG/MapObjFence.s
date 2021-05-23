@@ -2453,6 +2453,7 @@ $$23761:
 	.incbin "baserom.dol", 0x38D4D4, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .space 0xB8 # Another dumb big align.
 .global __vt__10TRailFence
 __vt__10TRailFence:
 	.incbin "baserom.dol", 0x3C89B8, 0x164

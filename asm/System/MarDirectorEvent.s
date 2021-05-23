@@ -18,6 +18,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED5F8 000EA538  7C 04 00 2E */	lwzx r0, r4, r0
 /* 800ED5FC 000EA53C  7C 09 03 A6 */	mtctr r0
 /* 800ED600 000EA540  4E 80 04 20 */	bctr 
+lbl_800ED604:
 /* 800ED604 000EA544  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED608 000EA548  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED60C 000EA54C  40 82 01 8C */	bne lbl_800ED798
@@ -41,6 +42,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED654 000EA594  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ED658 000EA598  93 E3 00 18 */	stw r31, 0x18(r3)
 /* 800ED65C 000EA59C  48 00 01 3C */	b lbl_800ED798
+lbl_800ED660:
 /* 800ED660 000EA5A0  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED664 000EA5A4  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED668 000EA5A8  40 82 01 30 */	bne lbl_800ED798
@@ -54,6 +56,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED688 000EA5C8  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ED68C 000EA5CC  93 E3 00 18 */	stw r31, 0x18(r3)
 /* 800ED690 000EA5D0  48 00 01 08 */	b lbl_800ED798
+lbl_800ED694:
 /* 800ED694 000EA5D4  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED698 000EA5D8  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED69C 000EA5DC  40 82 00 FC */	bne lbl_800ED798
@@ -67,6 +70,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED6BC 000EA5FC  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ED6C0 000EA600  93 E3 00 18 */	stw r31, 0x18(r3)
 /* 800ED6C4 000EA604  48 00 00 D4 */	b lbl_800ED798
+lbl_800ED6C8:
 /* 800ED6C8 000EA608  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED6CC 000EA60C  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED6D0 000EA610  40 82 00 C8 */	bne lbl_800ED798
@@ -80,6 +84,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED6F0 000EA630  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ED6F4 000EA634  93 E3 00 18 */	stw r31, 0x18(r3)
 /* 800ED6F8 000EA638  48 00 00 A0 */	b lbl_800ED798
+lbl_800ED6FC:
 /* 800ED6FC 000EA63C  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED700 000EA640  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED704 000EA644  40 82 00 94 */	bne lbl_800ED798
@@ -93,6 +98,7 @@ fireStreamingMovie__12TMarDirectorFUc:
 /* 800ED724 000EA664  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ED728 000EA668  93 E3 00 18 */	stw r31, 0x18(r3)
 /* 800ED72C 000EA66C  48 00 00 6C */	b lbl_800ED798
+lbl_800ED730:
 /* 800ED730 000EA670  A0 03 00 4C */	lhz r0, 0x4c(r3)
 /* 800ED734 000EA674  54 00 05 EF */	rlwinm. r0, r0, 0, 0x17, 0x17
 /* 800ED738 000EA678  40 82 00 60 */	bne lbl_800ED798
@@ -954,7 +960,19 @@ $$23076:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22830:
-	.incbin "baserom.dol", 0x3B0C68, 0x38
+    .4byte lbl_800ED604
+    .4byte lbl_800ED764
+    .4byte lbl_800ED730
+    .4byte lbl_800ED764
+    .4byte lbl_800ED764
+    .4byte lbl_800ED764
+    .4byte lbl_800ED764
+    .4byte lbl_800ED694
+    .4byte lbl_800ED6C8
+    .4byte lbl_800ED764
+    .4byte lbl_800ED660
+    .4byte lbl_800ED6FC
+    .4byte lbl_800ED764
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cCameraBckNameShineGetInside

@@ -1,6 +1,7 @@
 .include "macros.inc"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 32
 .global C5BASE_PITCHTABLE__Q28JASystem6Driver
 C5BASE_PITCHTABLE__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3A8000, 0x200

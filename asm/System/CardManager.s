@@ -30,6 +30,7 @@ lbl_80106910:
 /* 80106928 00103868  7C 1F 00 2E */	lwzx r0, r31, r0
 /* 8010692C 0010386C  7C 09 03 A6 */	mtctr r0
 /* 80106930 00103870  4E 80 04 20 */	bctr 
+lbl_80106934:
 /* 80106934 00103874  38 7D 00 00 */	addi r3, r29, 0
 /* 80106938 00103878  38 80 00 00 */	li r4, 0
 /* 8010693C 0010387C  48 00 12 15 */	bl mount___12TCardManagerFb
@@ -60,24 +61,29 @@ lbl_80106968:
 lbl_8010699C:
 /* 8010699C 001038DC  93 9D 01 28 */	stw r28, 0x128(r29)
 /* 801069A0 001038E0  48 00 01 2C */	b lbl_80106ACC
+lbl_801069A4:
 /* 801069A4 001038E4  7F A3 EB 78 */	mr r3, r29
 /* 801069A8 001038E8  48 00 10 71 */	bl createFile___12TCardManagerFv
 /* 801069AC 001038EC  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069B0 001038F0  48 00 01 1C */	b lbl_80106ACC
+lbl_801069B4:
 /* 801069B4 001038F4  7F A3 EB 78 */	mr r3, r29
 /* 801069B8 001038F8  48 00 07 69 */	bl getBookmarkInfos___12TCardManagerFv
 /* 801069BC 001038FC  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069C0 00103900  48 00 01 0C */	b lbl_80106ACC
+lbl_801069C4:
 /* 801069C4 00103904  7F A3 EB 78 */	mr r3, r29
 /* 801069C8 00103908  80 9D 04 74 */	lwz r4, 0x474(r29)
 /* 801069CC 0010390C  48 00 04 E9 */	bl readBlock___12TCardManagerFUl
 /* 801069D0 00103910  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069D4 00103914  48 00 00 F8 */	b lbl_80106ACC
+lbl_801069D8:
 /* 801069D8 00103918  7F A3 EB 78 */	mr r3, r29
 /* 801069DC 0010391C  80 9D 04 74 */	lwz r4, 0x474(r29)
 /* 801069E0 00103920  48 00 02 B5 */	bl writeBlock___12TCardManagerFUl
 /* 801069E4 00103924  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069E8 00103928  48 00 00 E4 */	b lbl_80106ACC
+lbl_801069EC:
 /* 801069EC 0010392C  38 7D 00 00 */	addi r3, r29, 0
 /* 801069F0 00103930  38 81 00 18 */	addi r4, r1, 0x18
 /* 801069F4 00103934  48 00 09 01 */	bl open___12TCardManagerFP12CARDFileInfo
@@ -134,10 +140,12 @@ lbl_80106A9C:
 lbl_80106AB0:
 /* 80106AB0 001039F0  93 9D 01 28 */	stw r28, 0x128(r29)
 /* 80106AB4 001039F4  48 00 00 18 */	b lbl_80106ACC
+lbl_80106AB8:
 /* 80106AB8 001039F8  7F A3 EB 78 */	mr r3, r29
 /* 80106ABC 001039FC  48 00 00 41 */	bl writeOptionBlock___12TCardManagerFv
 /* 80106AC0 00103A00  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 80106AC4 00103A04  48 00 00 08 */	b lbl_80106ACC
+lbl_80106AC8:
 /* 80106AC8 00103A08  3B C0 00 00 */	li r30, 0
 lbl_80106ACC:
 /* 80106ACC 00103A0C  38 00 00 00 */	li r0, 0
@@ -2275,7 +2283,16 @@ titles:
 comments:
 	.incbin "baserom.dol", 0x3B1834, 0x1C
 $$21818:
-	.incbin "baserom.dol", 0x3B1850, 0x38
+    .4byte lbl_80106ACC
+    .4byte lbl_80106934
+    .4byte lbl_801069A4
+    .4byte lbl_801069B4
+    .4byte lbl_80106ACC
+    .4byte lbl_801069C4
+    .4byte lbl_801069D8
+    .4byte lbl_801069EC
+    .4byte lbl_80106AB8
+    .4byte lbl_80106AC8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sDetach:

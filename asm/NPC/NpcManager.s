@@ -1887,39 +1887,51 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF6C 0016BEAC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8016EF70 0016BEB0  7C 09 03 A6 */	mtctr r0
 /* 8016EF74 0016BEB4  4E 80 04 20 */	bctr 
+lbl_8016EF78:
 /* 8016EF78 0016BEB8  38 04 00 18 */	addi r0, r4, 0x18
 /* 8016EF7C 0016BEBC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF80 0016BEC0  48 00 00 90 */	b lbl_8016F010
+lbl_8016EF84:
 /* 8016EF84 0016BEC4  38 04 00 2C */	addi r0, r4, 0x2c
 /* 8016EF88 0016BEC8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF8C 0016BECC  48 00 00 84 */	b lbl_8016F010
+lbl_8016EF90:
 /* 8016EF90 0016BED0  38 04 00 40 */	addi r0, r4, 0x40
 /* 8016EF94 0016BED4  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF98 0016BED8  48 00 00 78 */	b lbl_8016F010
+lbl_8016EF9C:
 /* 8016EF9C 0016BEDC  38 04 00 54 */	addi r0, r4, 0x54
 /* 8016EFA0 0016BEE0  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFA4 0016BEE4  48 00 00 6C */	b lbl_8016F010
+lbl_8016EFA8:
 /* 8016EFA8 0016BEE8  38 04 00 68 */	addi r0, r4, 0x68
 /* 8016EFAC 0016BEEC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFB0 0016BEF0  48 00 00 60 */	b lbl_8016F010
+lbl_8016EFB4:
 /* 8016EFB4 0016BEF4  38 04 00 7C */	addi r0, r4, 0x7c
 /* 8016EFB8 0016BEF8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFBC 0016BEFC  48 00 00 54 */	b lbl_8016F010
+lbl_8016EFC0:
 /* 8016EFC0 0016BF00  38 04 00 90 */	addi r0, r4, 0x90
 /* 8016EFC4 0016BF04  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFC8 0016BF08  48 00 00 48 */	b lbl_8016F010
+lbl_8016EFCC:
 /* 8016EFCC 0016BF0C  38 04 00 A4 */	addi r0, r4, 0xa4
 /* 8016EFD0 0016BF10  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFD4 0016BF14  48 00 00 3C */	b lbl_8016F010
+lbl_8016EFD8:
 /* 8016EFD8 0016BF18  38 04 00 B8 */	addi r0, r4, 0xb8
 /* 8016EFDC 0016BF1C  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFE0 0016BF20  48 00 00 30 */	b lbl_8016F010
+lbl_8016EFE4:
 /* 8016EFE4 0016BF24  38 04 00 CC */	addi r0, r4, 0xcc
 /* 8016EFE8 0016BF28  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFEC 0016BF2C  48 00 00 24 */	b lbl_8016F010
+lbl_8016EFF0:
 /* 8016EFF0 0016BF30  38 04 00 E0 */	addi r0, r4, 0xe0
 /* 8016EFF4 0016BF34  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFF8 0016BF38  48 00 00 18 */	b lbl_8016F010
+lbl_8016EFFC:
 /* 8016EFFC 0016BF3C  38 04 00 F4 */	addi r0, r4, 0xf4
 /* 8016F000 0016BF40  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016F004 0016BF44  48 00 00 0C */	b lbl_8016F010
@@ -3214,11 +3226,25 @@ $$22475:
 	.incbin "baserom.dol", 0x37BF24, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__18TSunflowerSManager
 __vt__18TSunflowerSManager:
 	.incbin "baserom.dol", 0x3B5650, 0x58
 $$22899:
-	.incbin "baserom.dol", 0x3B56A8, 0x38
+    .4byte lbl_8016EF78
+    .4byte lbl_8016EF84
+    .4byte lbl_8016EF90
+    .4byte lbl_8016EF9C
+    .4byte lbl_8016EFA8
+    .4byte lbl_8016EFB4
+    .4byte lbl_8016EFCC
+    .4byte lbl_8016EFD8
+    .4byte lbl_8016EFF0
+    .4byte lbl_8016EFE4
+    .4byte lbl_8016EFFC
+    .4byte lbl_8016F008
+    .4byte lbl_8016F008
+    .4byte lbl_8016EFC0
 .global __vt__17TMareWBaseManager
 __vt__17TMareWBaseManager:
 	.incbin "baserom.dol", 0x3B56E0, 0x58

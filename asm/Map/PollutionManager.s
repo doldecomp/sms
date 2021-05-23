@@ -217,6 +217,7 @@ newJointModel__17TPollutionManagerCFi:
 /* 801EF308 001EC248  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801EF30C 001EC24C  7C 09 03 A6 */	mtctr r0
 /* 801EF310 001EC250  4E 80 04 20 */	bctr 
+lbl_801EF314:
 /* 801EF314 001EC254  38 60 00 AC */	li r3, 0xac
 /* 801EF318 001EC258  4B E1 D5 99 */	bl __nw__FUl
 /* 801EF31C 001EC25C  7C 7F 1B 79 */	or. r31, r3, r3
@@ -226,6 +227,7 @@ newJointModel__17TPollutionManagerCFi:
 lbl_801EF32C:
 /* 801EF32C 001EC26C  7F E3 FB 78 */	mr r3, r31
 /* 801EF330 001EC270  48 00 01 1C */	b lbl_801EF44C
+lbl_801EF334:
 /* 801EF334 001EC274  38 60 00 AC */	li r3, 0xac
 /* 801EF338 001EC278  4B E1 D5 79 */	bl __nw__FUl
 /* 801EF33C 001EC27C  7C 7F 1B 79 */	or. r31, r3, r3
@@ -235,6 +237,7 @@ lbl_801EF32C:
 lbl_801EF34C:
 /* 801EF34C 001EC28C  7F E3 FB 78 */	mr r3, r31
 /* 801EF350 001EC290  48 00 00 FC */	b lbl_801EF44C
+lbl_801EF354:
 /* 801EF354 001EC294  38 60 00 B4 */	li r3, 0xb4
 /* 801EF358 001EC298  4B E1 D5 59 */	bl __nw__FUl
 /* 801EF35C 001EC29C  7C 7F 1B 79 */	or. r31, r3, r3
@@ -247,6 +250,7 @@ lbl_801EF34C:
 lbl_801EF378:
 /* 801EF378 001EC2B8  7F E3 FB 78 */	mr r3, r31
 /* 801EF37C 001EC2BC  48 00 00 D0 */	b lbl_801EF44C
+lbl_801EF380:
 /* 801EF380 001EC2C0  38 60 00 B4 */	li r3, 0xb4
 /* 801EF384 001EC2C4  4B E1 D5 2D */	bl __nw__FUl
 /* 801EF388 001EC2C8  7C 7F 1B 79 */	or. r31, r3, r3
@@ -262,6 +266,7 @@ lbl_801EF378:
 lbl_801EF3B0:
 /* 801EF3B0 001EC2F0  7F E3 FB 78 */	mr r3, r31
 /* 801EF3B4 001EC2F4  48 00 00 98 */	b lbl_801EF44C
+lbl_801EF3B8:
 /* 801EF3B8 001EC2F8  38 60 00 B4 */	li r3, 0xb4
 /* 801EF3BC 001EC2FC  4B E1 D4 F5 */	bl __nw__FUl
 /* 801EF3C0 001EC300  7C 7F 1B 79 */	or. r31, r3, r3
@@ -274,6 +279,7 @@ lbl_801EF3B0:
 lbl_801EF3DC:
 /* 801EF3DC 001EC31C  7F E3 FB 78 */	mr r3, r31
 /* 801EF3E0 001EC320  48 00 00 6C */	b lbl_801EF44C
+lbl_801EF3E4:
 /* 801EF3E4 001EC324  38 60 00 B4 */	li r3, 0xb4
 /* 801EF3E8 001EC328  4B E1 D4 C9 */	bl __nw__FUl
 /* 801EF3EC 001EC32C  7C 7F 1B 79 */	or. r31, r3, r3
@@ -289,6 +295,7 @@ lbl_801EF3DC:
 lbl_801EF414:
 /* 801EF414 001EC354  7F E3 FB 78 */	mr r3, r31
 /* 801EF418 001EC358  48 00 00 34 */	b lbl_801EF44C
+lbl_801EF41C:
 /* 801EF41C 001EC35C  38 60 00 AC */	li r3, 0xac
 /* 801EF420 001EC360  4B E1 D4 91 */	bl __nw__FUl
 /* 801EF424 001EC364  7C 7F 1B 79 */	or. r31, r3, r3
@@ -1294,7 +1301,13 @@ name_table$2816:
 __vt__17TPollutionManager:
 	.incbin "baserom.dol", 0x3CD3E4, 0x28
 $$23043:
-	.incbin "baserom.dol", 0x3CD40C, 0x1C
+    .4byte lbl_801EF314
+    .4byte lbl_801EF334
+    .4byte lbl_801EF3B8
+    .4byte lbl_801EF3E4
+    .4byte lbl_801EF354
+    .4byte lbl_801EF380
+    .4byte lbl_801EF41C
 .global __vt__25TPollutionLayerWallMinusX
 __vt__25TPollutionLayerWallMinusX:
 	.incbin "baserom.dol", 0x3CD428, 0x5C

@@ -1662,6 +1662,7 @@ lbl_8023FB2C:
 /* 8023FB48 0023CA88  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8023FB4C 0023CA8C  7C 09 03 A6 */	mtctr r0
 /* 8023FB50 0023CA90  4E 80 04 20 */	bctr 
+lbl_8023FB54:
 /* 8023FB54 0023CA94  2C 05 00 00 */	cmpwi r5, 0
 /* 8023FB58 0023CA98  40 82 00 10 */	bne lbl_8023FB68
 /* 8023FB5C 0023CA9C  3C 60 80 39 */	lis r3, $$2941@ha
@@ -1682,6 +1683,7 @@ lbl_8023FB68:
 /* 8023FB94 0023CAD4  90 0D 9B F0 */	stw r0, hxs_logo_resetflag@sda21(r13)
 /* 8023FB98 0023CAD8  90 0D 9B F4 */	stw r0, hxs_logodraw_resetflag@sda21(r13)
 /* 8023FB9C 0023CADC  48 00 03 1C */	b lbl_8023FEB8
+lbl_8023FBA0:
 /* 8023FBA0 0023CAE0  80 1F 00 3C */	lwz r0, 0x3c(r31)
 /* 8023FBA4 0023CAE4  28 00 00 C0 */	cmplwi r0, 0xc0
 /* 8023FBA8 0023CAE8  41 81 00 10 */	bgt lbl_8023FBB8
@@ -1703,6 +1705,7 @@ lbl_8023FBC4:
 /* 8023FBE0 0023CB20  38 03 00 01 */	addi r0, r3, 1
 /* 8023FBE4 0023CB24  90 1E 00 00 */	stw r0, 0(r30)
 /* 8023FBE8 0023CB28  48 00 02 D0 */	b lbl_8023FEB8
+lbl_8023FBEC:
 /* 8023FBEC 0023CB2C  80 CD 9B F8 */	lwz r6, dp$320@sda21(r13)
 /* 8023FBF0 0023CB30  80 06 00 08 */	lwz r0, 8(r6)
 /* 8023FBF4 0023CB34  2C 00 FF FF */	cmpwi r0, -1
@@ -1729,6 +1732,7 @@ lbl_8023FC34:
 /* 8023FC40 0023CB80  80 7E 00 00 */	lwz r3, 0(r30)
 /* 8023FC44 0023CB84  38 03 00 01 */	addi r0, r3, 1
 /* 8023FC48 0023CB88  90 1E 00 00 */	stw r0, 0(r30)
+lbl_8023FC4C:
 /* 8023FC4C 0023CB8C  38 60 00 FF */	li r3, 0xff
 /* 8023FC50 0023CB90  48 00 09 BD */	bl Hxs_Logo_ExtraDraw
 /* 8023FC54 0023CB94  38 BD 00 00 */	addi r5, r29, 0
@@ -1762,6 +1766,7 @@ lbl_8023FCB8:
 /* 8023FCC0 0023CC00  80 7E 00 00 */	lwz r3, 0(r30)
 /* 8023FCC4 0023CC04  38 03 00 01 */	addi r0, r3, 1
 /* 8023FCC8 0023CC08  90 1E 00 00 */	stw r0, 0(r30)
+lbl_8023FCCC:
 /* 8023FCCC 0023CC0C  38 60 00 FF */	li r3, 0xff
 /* 8023FCD0 0023CC10  48 00 09 3D */	bl Hxs_Logo_ExtraDraw
 /* 8023FCD4 0023CC14  38 BD 00 00 */	addi r5, r29, 0
@@ -1782,6 +1787,7 @@ lbl_8023FCB8:
 /* 8023FD10 0023CC50  38 03 00 01 */	addi r0, r3, 1
 /* 8023FD14 0023CC54  90 1E 00 00 */	stw r0, 0(r30)
 /* 8023FD18 0023CC58  48 00 01 A0 */	b lbl_8023FEB8
+lbl_8023FD1C:
 /* 8023FD1C 0023CC5C  3B 9F 00 3C */	addi r28, r31, 0x3c
 /* 8023FD20 0023CC60  80 1F 00 3C */	lwz r0, 0x3c(r31)
 /* 8023FD24 0023CC64  28 00 00 C0 */	cmplwi r0, 0xc0
@@ -1859,6 +1865,7 @@ lbl_8023FDF4:
 /* 8023FE34 0023CD74  38 03 00 01 */	addi r0, r3, 1
 /* 8023FE38 0023CD78  90 1E 00 00 */	stw r0, 0(r30)
 /* 8023FE3C 0023CD7C  48 00 00 7C */	b lbl_8023FEB8
+lbl_8023FE40:
 /* 8023FE40 0023CD80  38 BD 00 00 */	addi r5, r29, 0
 /* 8023FE44 0023CD84  38 60 00 00 */	li r3, 0
 /* 8023FE48 0023CD88  38 80 00 00 */	li r4, 0
@@ -1887,6 +1894,7 @@ lbl_8023FDF4:
 /* 8023FEA4 0023CDE4  38 03 00 01 */	addi r0, r3, 1
 /* 8023FEA8 0023CDE8  90 1E 00 00 */	stw r0, 0(r30)
 /* 8023FEAC 0023CDEC  48 00 00 0C */	b lbl_8023FEB8
+lbl_8023FEB0:
 /* 8023FEB0 0023CDF0  38 00 00 03 */	li r0, 3
 /* 8023FEB4 0023CDF4  98 1F 00 10 */	stb r0, 0x10(r31)
 lbl_8023FEB8:
@@ -5443,7 +5451,15 @@ boundtable$262:
 drawpath_table:
 	.incbin "baserom.dol", 0x3CEF00, 0x144
 $$2943:
-	.incbin "baserom.dol", 0x3CF044, 0x24
+    .4byte lbl_8023FB54
+    .4byte lbl_8023FBA0
+    .4byte lbl_8023FBEC
+    .4byte lbl_8023FC4C
+    .4byte lbl_8023FCB8
+    .4byte lbl_8023FCCC
+    .4byte lbl_8023FD1C
+    .4byte lbl_8023FE40
+    .4byte lbl_8023FEB0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 fbuf:

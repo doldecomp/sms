@@ -909,6 +909,9 @@ $$280$$2__dt__15TMtxCalcFootInvFv:
 /* 802595C0 00256500  4B FF F2 E0 */	b __dt__15TMtxCalcFootInvFv
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .rept 81
+    .4byte 0
+    .endr
 $$21431:
 	.incbin "baserom.dol", 0x3D0A48, 0xC
 $$21411:

@@ -572,6 +572,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1198 000CE0D8  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800D119C 000CE0DC  7C 09 03 A6 */	mtctr r0
 /* 800D11A0 000CE0E0  4E 80 04 20 */	bctr 
+lbl_800D11A4:
 /* 800D11A4 000CE0E4  80 65 00 08 */	lwz r3, 8(r5)
 /* 800D11A8 000CE0E8  38 00 00 10 */	li r0, 0x10
 /* 800D11AC 000CE0EC  3C E0 CC 01 */	lis r7, 0xCC008000@ha
@@ -594,6 +595,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D11F0 000CE130  7C A0 03 78 */	or r0, r5, r0
 /* 800D11F4 000CE134  90 07 80 00 */	stw r0, -0x8000(r7)
 /* 800D11F8 000CE138  48 00 06 E4 */	b lbl_800D18DC
+lbl_800D11FC:
 /* 800D11FC 000CE13C  80 85 00 08 */	lwz r4, 8(r5)
 /* 800D1200 000CE140  38 00 00 61 */	li r0, 0x61
 /* 800D1204 000CE144  3C 60 CC 01 */	lis r3, 0xCC008000@ha
@@ -624,6 +626,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1268 000CE1A8  98 03 80 00 */	stb r0, -0x8000(r3)
 /* 800D126C 000CE1AC  90 A3 80 00 */	stw r5, -0x8000(r3)
 /* 800D1270 000CE1B0  48 00 06 6C */	b lbl_800D18DC
+lbl_800D1274:
 /* 800D1274 000CE1B4  80 85 00 0C */	lwz r4, 0xc(r5)
 /* 800D1278 000CE1B8  39 20 00 61 */	li r9, 0x61
 /* 800D127C 000CE1BC  3D 00 CC 01 */	lis r8, 0xCC008000@ha
@@ -681,6 +684,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D134C 000CE28C  99 28 80 00 */	stb r9, -0x8000(r8)
 /* 800D1350 000CE290  90 68 80 00 */	stw r3, -0x8000(r8)
 /* 800D1354 000CE294  48 00 05 88 */	b lbl_800D18DC
+lbl_800D1358:
 /* 800D1358 000CE298  80 85 00 10 */	lwz r4, 0x10(r5)
 /* 800D135C 000CE29C  38 00 00 61 */	li r0, 0x61
 /* 800D1360 000CE2A0  3C 60 CC 01 */	lis r3, 0xCC008000@ha
@@ -765,10 +769,12 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D149C 000CE3DC  98 03 80 00 */	stb r0, -0x8000(r3)
 /* 800D14A0 000CE3E0  90 A3 80 00 */	stw r5, -0x8000(r3)
 /* 800D14A4 000CE3E4  48 00 04 38 */	b lbl_800D18DC
+lbl_800D14A8:
 /* 800D14A8 000CE3E8  80 65 00 04 */	lwz r3, 4(r5)
 /* 800D14AC 000CE3EC  80 85 00 08 */	lwz r4, 8(r5)
 /* 800D14B0 000CE3F0  4B FD BE C1 */	bl GXCallDisplayList
 /* 800D14B4 000CE3F4  48 00 04 28 */	b lbl_800D18DC
+lbl_800D14B8:
 /* 800D14B8 000CE3F8  83 E5 00 04 */	lwz r31, 4(r5)
 /* 800D14BC 000CE3FC  38 81 00 FC */	addi r4, r1, 0xfc
 /* 800D14C0 000CE400  80 1F 00 14 */	lwz r0, 0x14(r31)
@@ -784,6 +790,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D14E8 000CE428  A0 9F 00 02 */	lhz r4, 2(r31)
 /* 800D14EC 000CE42C  48 00 05 61 */	bl FifoSetFogRangeAdj__FUcUsP14_GXFogAdjTable
 /* 800D14F0 000CE430  48 00 03 EC */	b lbl_800D18DC
+lbl_800D14F4:
 /* 800D14F4 000CE434  80 65 00 08 */	lwz r3, 8(r5)
 /* 800D14F8 000CE438  38 C0 00 61 */	li r6, 0x61
 /* 800D14FC 000CE43C  3C 80 CC 01 */	lis r4, 0xCC008000@ha
@@ -810,6 +817,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1550 000CE490  7C 60 03 78 */	or r0, r3, r0
 /* 800D1554 000CE494  90 04 80 00 */	stw r0, -0x8000(r4)
 /* 800D1558 000CE498  48 00 03 84 */	b lbl_800D18DC
+lbl_800D155C:
 /* 800D155C 000CE49C  80 65 00 0C */	lwz r3, 0xc(r5)
 /* 800D1560 000CE4A0  38 E0 00 61 */	li r7, 0x61
 /* 800D1564 000CE4A4  3C C0 CC 01 */	lis r6, 0xCC008000@ha
@@ -859,6 +867,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1614 000CE554  7C 60 03 78 */	or r0, r3, r0
 /* 800D1618 000CE558  90 06 80 00 */	stw r0, -0x8000(r6)
 /* 800D161C 000CE55C  48 00 02 C0 */	b lbl_800D18DC
+lbl_800D1620:
 /* 800D1620 000CE560  80 65 00 0C */	lwz r3, 0xc(r5)
 /* 800D1624 000CE564  38 E0 00 61 */	li r7, 0x61
 /* 800D1628 000CE568  3C C0 CC 01 */	lis r6, 0xCC008000@ha
@@ -899,6 +908,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D16B4 000CE5F4  A0 9F 00 02 */	lhz r4, 2(r31)
 /* 800D16B8 000CE5F8  48 00 03 95 */	bl FifoSetFogRangeAdj__FUcUsP14_GXFogAdjTable
 /* 800D16BC 000CE5FC  48 00 02 20 */	b lbl_800D18DC
+lbl_800D16C0:
 /* 800D16C0 000CE600  80 85 00 08 */	lwz r4, 8(r5)
 /* 800D16C4 000CE604  38 E0 00 61 */	li r7, 0x61
 /* 800D16C8 000CE608  3C C0 CC 01 */	lis r6, 0xCC008000@ha
@@ -944,6 +954,7 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1768 000CE6A8  64 60 E1 80 */	oris r0, r3, 0xe180
 /* 800D176C 000CE6AC  90 06 80 00 */	stw r0, -0x8000(r6)
 /* 800D1770 000CE6B0  48 00 01 6C */	b lbl_800D18DC
+lbl_800D1774:
 /* 800D1774 000CE6B4  80 85 00 0C */	lwz r4, 0xc(r5)
 /* 800D1778 000CE6B8  38 00 00 61 */	li r0, 0x61
 /* 800D177C 000CE6BC  3C 60 CC 01 */	lis r3, 0xCC008000@ha
@@ -1225,7 +1236,17 @@ lbl_800D1B5C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22227:
-	.incbin "baserom.dol", 0x3B0430, 0x30
+    .4byte lbl_800D11A4
+    .4byte lbl_800D11FC
+    .4byte lbl_800D1274
+    .4byte lbl_800D1358
+    .4byte lbl_800D14A8
+    .4byte lbl_800D14B8
+    .4byte lbl_800D14F4
+    .4byte lbl_800D155C
+    .4byte lbl_800D1620
+    .4byte lbl_800D16C0
+    .4byte lbl_800D1774
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 sFogOffColor$1583:
