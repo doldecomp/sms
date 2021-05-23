@@ -1308,6 +1308,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029465C 0029159C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80294660 002915A0  7C 09 03 A6 */	mtctr r0
 /* 80294664 002915A4  4E 80 04 20 */	bctr 
+lbl_80294668:
 /* 80294668 002915A8  38 7E 01 E4 */	addi r3, r30, 0x1e4
 /* 8029466C 002915AC  4B D7 76 51 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294670 002915B0  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1323,6 +1324,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294698 002915D8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029469C 002915DC  4B E4 4E A9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802946A0 002915E0  48 00 02 94 */	b lbl_80294934
+lbl_802946A4:
 /* 802946A4 002915E4  38 7E 01 FC */	addi r3, r30, 0x1fc
 /* 802946A8 002915E8  4B D7 76 15 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802946AC 002915EC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1338,6 +1340,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802946D4 00291614  38 7D 00 00 */	addi r3, r29, 0
 /* 802946D8 00291618  4B E4 4E 6D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802946DC 0029161C  48 00 02 58 */	b lbl_80294934
+lbl_802946E0:
 /* 802946E0 00291620  38 7E 02 18 */	addi r3, r30, 0x218
 /* 802946E4 00291624  4B D7 75 D9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802946E8 00291628  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1353,6 +1356,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294710 00291650  38 7D 00 00 */	addi r3, r29, 0
 /* 80294714 00291654  4B E4 4E 31 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294718 00291658  48 00 02 1C */	b lbl_80294934
+lbl_8029471C:
 /* 8029471C 0029165C  38 7E 02 34 */	addi r3, r30, 0x234
 /* 80294720 00291660  4B D7 75 9D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294724 00291664  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1368,6 +1372,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029474C 0029168C  38 7D 00 00 */	addi r3, r29, 0
 /* 80294750 00291690  4B E4 4D F5 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294754 00291694  48 00 01 E0 */	b lbl_80294934
+lbl_80294758:
 /* 80294758 00291698  38 7E 02 54 */	addi r3, r30, 0x254
 /* 8029475C 0029169C  4B D7 75 61 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294760 002916A0  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1383,6 +1388,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294788 002916C8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029478C 002916CC  4B E4 4D B9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294790 002916D0  48 00 01 A4 */	b lbl_80294934
+lbl_80294794:
 /* 80294794 002916D4  38 7E 02 74 */	addi r3, r30, 0x274
 /* 80294798 002916D8  4B D7 75 25 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8029479C 002916DC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1398,6 +1404,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802947C4 00291704  38 7D 00 00 */	addi r3, r29, 0
 /* 802947C8 00291708  4B E4 4D 7D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802947CC 0029170C  48 00 01 68 */	b lbl_80294934
+lbl_802947D0:
 /* 802947D0 00291710  38 7E 02 94 */	addi r3, r30, 0x294
 /* 802947D4 00291714  4B D7 74 E9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802947D8 00291718  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1413,6 +1420,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294800 00291740  38 7D 00 00 */	addi r3, r29, 0
 /* 80294804 00291744  4B E4 4D 41 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294808 00291748  48 00 01 2C */	b lbl_80294934
+lbl_8029480C:
 /* 8029480C 0029174C  38 7E 02 B0 */	addi r3, r30, 0x2b0
 /* 80294810 00291750  4B D7 74 AD */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294814 00291754  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1428,6 +1436,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029483C 0029177C  38 7D 00 00 */	addi r3, r29, 0
 /* 80294840 00291780  4B E4 4D 05 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294844 00291784  48 00 00 F0 */	b lbl_80294934
+lbl_80294848:
 /* 80294848 00291788  38 7E 02 D0 */	addi r3, r30, 0x2d0
 /* 8029484C 0029178C  4B D7 74 71 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294850 00291790  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1443,6 +1452,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294878 002917B8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029487C 002917BC  4B E4 4C C9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294880 002917C0  48 00 00 B4 */	b lbl_80294934
+lbl_80294884:
 /* 80294884 002917C4  38 7E 02 F0 */	addi r3, r30, 0x2f0
 /* 80294888 002917C8  4B D7 74 35 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8029488C 002917CC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1458,6 +1468,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802948B4 002917F4  38 7D 00 00 */	addi r3, r29, 0
 /* 802948B8 002917F8  4B E4 4C 8D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802948BC 002917FC  48 00 00 78 */	b lbl_80294934
+lbl_802948C0:
 /* 802948C0 00291800  38 7E 03 0C */	addi r3, r30, 0x30c
 /* 802948C4 00291804  4B D7 73 F9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802948C8 00291808  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1473,6 +1484,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802948F0 00291830  38 7D 00 00 */	addi r3, r29, 0
 /* 802948F4 00291834  4B E4 4C 51 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802948F8 00291838  48 00 00 3C */	b lbl_80294934
+lbl_802948FC:
 /* 802948FC 0029183C  38 7E 03 2C */	addi r3, r30, 0x32c
 /* 80294900 00291840  4B D7 73 BD */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294904 00291844  7C 7C 1B 79 */	or. r28, r3, r3
@@ -5768,7 +5780,20 @@ entry$3402:
 __vt__25TNerveKageMarioModokiWait:
 	.incbin "baserom.dol", 0x3D4B34, 0x10
 $$24007:
-	.incbin "baserom.dol", 0x3D4B44, 0x34
+    .4byte lbl_80294934
+    .4byte lbl_80294668
+    .4byte lbl_802946A4
+    .4byte lbl_802946E0
+    .4byte lbl_8029471C
+    .4byte lbl_80294758
+    .4byte lbl_80294794
+    .4byte lbl_802947D0
+    .4byte lbl_8029480C
+    .4byte lbl_80294848
+    .4byte lbl_80294884
+    .4byte lbl_802948C0
+    .4byte lbl_802948FC
+
 .global __vt__16TKageMarioModoki
 __vt__16TKageMarioModoki:
 	.incbin "baserom.dol", 0x3D4B78, 0x1B8

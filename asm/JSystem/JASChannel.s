@@ -597,16 +597,22 @@ lbl_8005C900:
 /* 8005C918 00059858  7C 1A 00 2E */	lwzx r0, r26, r0
 /* 8005C91C 0005985C  7C 09 03 A6 */	mtctr r0
 /* 8005C920 00059860  4E 80 04 20 */	bctr 
+lbl_8005C924:
 /* 8005C924 00059864  FF 00 A8 90 */	fmr f24, f21
 /* 8005C928 00059868  48 00 00 28 */	b lbl_8005C950
+lbl_8005C92C:
 /* 8005C92C 0005986C  FF 00 B0 90 */	fmr f24, f22
 /* 8005C930 00059870  48 00 00 20 */	b lbl_8005C950
+lbl_8005C934:
 /* 8005C934 00059874  FF 00 B8 90 */	fmr f24, f23
 /* 8005C938 00059878  48 00 00 18 */	b lbl_8005C950
+lbl_8005C93C:
 /* 8005C93C 0005987C  FF 00 D8 90 */	fmr f24, f27
 /* 8005C940 00059880  48 00 00 10 */	b lbl_8005C950
+lbl_8005C944:
 /* 8005C944 00059884  FF 00 D0 90 */	fmr f24, f26
 /* 8005C948 00059888  48 00 00 08 */	b lbl_8005C950
+lbl_8005C94C:
 /* 8005C94C 0005988C  FF 00 C8 90 */	fmr f24, f25
 lbl_8005C950:
 /* 8005C950 00059890  FC 20 C0 90 */	fmr f1, f24
@@ -622,16 +628,22 @@ lbl_8005C95C:
 /* 8005C974 000598B4  7C 1B 00 2E */	lwzx r0, r27, r0
 /* 8005C978 000598B8  7C 09 03 A6 */	mtctr r0
 /* 8005C97C 000598BC  4E 80 04 20 */	bctr 
+lbl_8005C980:
 /* 8005C980 000598C0  FF 00 A8 90 */	fmr f24, f21
 /* 8005C984 000598C4  48 00 00 28 */	b lbl_8005C9AC
+lbl_8005C988:
 /* 8005C988 000598C8  FF 00 B0 90 */	fmr f24, f22
 /* 8005C98C 000598CC  48 00 00 20 */	b lbl_8005C9AC
+lbl_8005C990:
 /* 8005C990 000598D0  FF 00 B8 90 */	fmr f24, f23
 /* 8005C994 000598D4  48 00 00 18 */	b lbl_8005C9AC
+lbl_8005C998:
 /* 8005C998 000598D8  FF 00 D8 90 */	fmr f24, f27
 /* 8005C99C 000598DC  48 00 00 10 */	b lbl_8005C9AC
+lbl_8005C9A0:
 /* 8005C9A0 000598E0  FF 00 D0 90 */	fmr f24, f26
 /* 8005C9A4 000598E4  48 00 00 08 */	b lbl_8005C9AC
+lbl_8005C9A8:
 /* 8005C9A8 000598E8  FF 00 C8 90 */	fmr f24, f25
 lbl_8005C9AC:
 /* 8005C9AC 000598EC  2C 03 00 07 */	cmpwi r3, 7
@@ -2055,10 +2067,23 @@ lbl_8005DC30:
 calc_sw_table__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3A7F50, 0x54
 $$2326:
-	.incbin "baserom.dol", 0x3A7FA4, 0x20
+    .4byte lbl_8005C9AC
+    .4byte lbl_8005C980
+    .4byte lbl_8005C988
+    .4byte lbl_8005C990
+    .4byte lbl_8005C9AC
+    .4byte lbl_8005C998
+    .4byte lbl_8005C9A0
+    .4byte lbl_8005C9A8
 $$2325:
-	.incbin "baserom.dol", 0x3A7FC4, 0x3C
-
+    .4byte lbl_8005C950
+    .4byte lbl_8005C924
+    .4byte lbl_8005C92C
+    .4byte lbl_8005C934
+    .4byte lbl_8005C950
+    .4byte lbl_8005C93C
+    .4byte lbl_8005C944
+    .4byte lbl_8005C94C
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2145:
 	.incbin "baserom.dol", 0x3E4338, 0x4

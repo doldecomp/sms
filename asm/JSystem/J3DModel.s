@@ -115,6 +115,7 @@ lbl_80026BFC:
 /* 80026C1C 00023B5C  7C 1F 00 2E */	lwzx r0, r31, r0
 /* 80026C20 00023B60  7C 09 03 A6 */	mtctr r0
 /* 80026C24 00023B64  4E 80 04 20 */	bctr 
+lbl_80026C28:
 /* 80026C28 00023B68  80 BA 00 00 */	lwz r5, 0(r26)
 /* 80026C2C 00023B6C  38 78 00 00 */	addi r3, r24, 0
 /* 80026C30 00023B70  38 9E 00 00 */	addi r4, r30, 0
@@ -123,11 +124,14 @@ lbl_80026BFC:
 /* 80026C3C 00023B7C  7F 45 D3 78 */	mr r5, r26
 /* 80026C40 00023B80  4B FF FF 8D */	bl makeHierarchy__12J3DModelDataFP7J3DNodePPC17J3DModelHierarchy
 /* 80026C44 00023B84  48 00 00 74 */	b lbl_80026CB8
+lbl_80026C48:
 /* 80026C48 00023B88  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C4C 00023B8C  38 03 00 04 */	addi r0, r3, 4
 /* 80026C50 00023B90  90 1A 00 00 */	stw r0, 0(r26)
 /* 80026C54 00023B94  48 00 01 10 */	b lbl_80026D64
+lbl_80026C58:
 /* 80026C58 00023B98  48 00 01 0C */	b lbl_80026D64
+lbl_80026C5C:
 /* 80026C5C 00023B9C  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C60 00023BA0  80 98 00 20 */	lwz r4, 0x20(r24)
 /* 80026C64 00023BA4  38 03 00 04 */	addi r0, r3, 4
@@ -136,6 +140,7 @@ lbl_80026BFC:
 /* 80026C70 00023BB0  54 00 10 3A */	slwi r0, r0, 2
 /* 80026C74 00023BB4  7F A4 00 2E */	lwzx r29, r4, r0
 /* 80026C78 00023BB8  48 00 00 40 */	b lbl_80026CB8
+lbl_80026C7C:
 /* 80026C7C 00023BBC  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C80 00023BC0  80 98 00 28 */	lwz r4, 0x28(r24)
 /* 80026C84 00023BC4  38 03 00 04 */	addi r0, r3, 4
@@ -144,6 +149,7 @@ lbl_80026BFC:
 /* 80026C90 00023BD0  54 00 10 3A */	slwi r0, r0, 2
 /* 80026C94 00023BD4  7F 84 00 2E */	lwzx r28, r4, r0
 /* 80026C98 00023BD8  48 00 00 20 */	b lbl_80026CB8
+lbl_80026C9C:
 /* 80026C9C 00023BDC  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026CA0 00023BE0  80 98 00 30 */	lwz r4, 0x30(r24)
 /* 80026CA4 00023BE4  38 03 00 04 */	addi r0, r3, 4
@@ -3080,7 +3086,25 @@ lbl_80029508:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2988:
-	.incbin "baserom.dol", 0x3A6800, 0x4C
+    .4byte lbl_80026C58
+    .4byte lbl_80026C28
+    .4byte lbl_80026C48
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026C5C
+    .4byte lbl_80026C7C
+    .4byte lbl_80026C9C
 .global __vt__8J3DModel
 __vt__8J3DModel:
 	.incbin "baserom.dol", 0x3A684C, 0x1C

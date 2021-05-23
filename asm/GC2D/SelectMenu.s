@@ -269,6 +269,7 @@ perform__11TSelectMenuFUlPQ26JDrama9TGraphics:
 /* 8023318C 002300CC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80233190 002300D0  7C 09 03 A6 */	mtctr r0
 /* 80233194 002300D4  4E 80 04 20 */	bctr 
+lbl_80233198:
 /* 80233198 002300D8  3A 80 00 01 */	li r20, 1
 /* 8023319C 002300DC  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 802331A0 002300E0  4B FC D6 81 */	bl update__7TExPaneFv
@@ -329,6 +330,7 @@ lbl_80233270:
 /* 80233274 002301B4  38 03 00 01 */	addi r0, r3, 1
 /* 80233278 002301B8  98 1F 01 38 */	stb r0, 0x138(r31)
 /* 8023327C 002301BC  48 00 16 54 */	b lbl_802348D0
+lbl_80233280:
 /* 80233280 002301C0  3A 80 00 01 */	li r20, 1
 /* 80233284 002301C4  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80233288 002301C8  4B FC D5 99 */	bl update__7TExPaneFv
@@ -410,6 +412,7 @@ lbl_80233270:
 /* 802333B8 002302F8  38 00 00 03 */	li r0, 3
 /* 802333BC 002302FC  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 802333C0 00230300  48 00 15 10 */	b lbl_802348D0
+lbl_802333C4:
 /* 802333C4 00230304  3A 80 00 01 */	li r20, 1
 /* 802333C8 00230308  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 802333CC 0023030C  4B FE 2D A9 */	bl update__10TBoundPaneFv
@@ -490,6 +493,7 @@ lbl_80233270:
 /* 802334F8 00230438  4B FE 2F FD */	bl setPaneSize__10TBoundPaneFlRC8JUTPointRC8JUTPointRC8JUTPoint
 /* 802334FC 0023043C  93 7F 00 10 */	stw r27, 0x10(r31)
 /* 80233500 00230440  48 00 13 D0 */	b lbl_802348D0
+lbl_80233504:
 /* 80233504 00230444  3A 80 00 01 */	li r20, 1
 /* 80233508 00230448  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 8023350C 0023044C  4B FE 2C 69 */	bl update__10TBoundPaneFv
@@ -587,6 +591,7 @@ lbl_80233270:
 /* 8023367C 002305BC  9A C3 00 CC */	stb r22, 0xcc(r3)
 /* 80233680 002305C0  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 80233684 002305C4  48 00 12 4C */	b lbl_802348D0
+lbl_80233688:
 /* 80233688 002305C8  3A 80 00 01 */	li r20, 1
 /* 8023368C 002305CC  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 80233690 002305D0  4B FE 2A E5 */	bl update__10TBoundPaneFv
@@ -664,6 +669,7 @@ lbl_80233790:
 /* 802337A0 002306E0  38 00 00 06 */	li r0, 6
 /* 802337A4 002306E4  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 802337A8 002306E8  48 00 11 28 */	b lbl_802348D0
+lbl_802337AC:
 /* 802337AC 002306EC  88 7F 01 39 */	lbz r3, 0x139(r31)
 /* 802337B0 002306F0  A8 1F 01 6C */	lha r0, 0x16c(r31)
 /* 802337B4 002306F4  7C 03 00 00 */	cmpw r3, r0
@@ -675,6 +681,7 @@ lbl_802337C4:
 /* 802337C8 00230708  38 03 00 01 */	addi r0, r3, 1
 /* 802337CC 0023070C  98 1F 01 39 */	stb r0, 0x139(r31)
 /* 802337D0 00230710  48 00 11 00 */	b lbl_802348D0
+lbl_802337D4:
 /* 802337D4 00230714  80 7F 01 00 */	lwz r3, 0x100(r31)
 /* 802337D8 00230718  80 63 00 D4 */	lwz r3, 0xd4(r3)
 /* 802337DC 0023071C  54 60 06 B5 */	rlwinm. r0, r3, 0, 0x1a, 0x1a
@@ -1627,6 +1634,7 @@ lbl_80234618:
 /* 80234624 00231564  80 63 00 DC */	lwz r3, 0xdc(r3)
 /* 80234628 00231568  98 83 00 CC */	stb r4, 0xcc(r3)
 /* 8023462C 0023156C  48 00 02 A4 */	b lbl_802348D0
+lbl_80234630:
 /* 80234630 00231570  80 7F 00 2C */	lwz r3, 0x2c(r31)
 /* 80234634 00231574  3A 80 00 01 */	li r20, 1
 /* 80234638 00231578  38 83 00 CC */	addi r4, r3, 0xcc
@@ -1804,6 +1812,7 @@ lbl_80234804:
 /* 802348BC 002317FC  38 00 00 00 */	li r0, 0
 /* 802348C0 00231800  98 1F 01 39 */	stb r0, 0x139(r31)
 /* 802348C4 00231804  48 00 00 0C */	b lbl_802348D0
+lbl_802348C8:
 /* 802348C8 00231808  38 00 00 01 */	li r0, 1
 /* 802348CC 0023180C  98 1F 01 4A */	stb r0, 0x14a(r31)
 lbl_802348D0:
@@ -3744,8 +3753,10 @@ $$23936:
 	.incbin "baserom.dol", 0x390F90, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21431:
-	.incbin "baserom.dol", 0x3CE9D8, 0xC
+$$21431: # it wants to align this with extra padding if I use balign/align later. :wat:.
+	.float 1
+	.float 1
+	.float 1
 $$21411:
 	.incbin "baserom.dol", 0x3CE9E4, 0xC
 $$21210:
@@ -3762,8 +3773,19 @@ scNormalStageTable:
 __vt__11TSelectMenu:
 	.incbin "baserom.dol", 0x3CEB90, 0x24
 $$23617:
-	.incbin "baserom.dol", 0x3CEBB4, 0x4C
-.global __vt__11TSelectGrad
+    .4byte lbl_802348C8
+    .4byte lbl_80233198
+    .4byte lbl_80233280
+    .4byte lbl_802333C4
+    .4byte lbl_80233504
+    .4byte lbl_80233688
+    .4byte lbl_802337D4
+    .4byte lbl_80234388
+    .4byte lbl_80234630
+    .4byte lbl_802337AC
+    .4byte 0,0,0,0,0,0,0,0,0 # This is really dumb, but if I use an align/balign here, it INSISTS on aligning the start of the section which is incorrect.
+
+    .global __vt__11TSelectGrad
 __vt__11TSelectGrad:
 	.incbin "baserom.dol", 0x3CEC00, 0x28
 

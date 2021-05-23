@@ -2571,6 +2571,7 @@ Arglist__8JASystem:
 	.incbin "baserom.dol", 0x36E370, 0x100
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 $$2137:
 	.incbin "baserom.dol", 0x3A8EA0, 0xC
 $$2138:
