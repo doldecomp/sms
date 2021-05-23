@@ -44,7 +44,8 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src src/NPC src/MarioUtil
+SRC_DIRS := src src/NPC src/MarioUtil src/JSystem
+
 ASM_DIRS := asm                      \
             asm/JSystem              \
 			asm/Runtime.PPCEABI.H    \
