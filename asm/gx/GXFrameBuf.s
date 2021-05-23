@@ -946,6 +946,7 @@ GXClearBoundingBox:
 /* 800A9940 000A6880  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global GXNtsc480IntDf
 GXNtsc480IntDf:
 	.incbin "baserom.dol", 0x3AE7B8, 0x3C

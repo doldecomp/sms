@@ -738,5 +738,6 @@ GXSetNumTevStages:
 /* 800AC43C 000A937C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 c2r$71:
 	.incbin "baserom.dol", 0x3AEB10, 0x28

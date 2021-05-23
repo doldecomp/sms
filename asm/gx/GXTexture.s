@@ -13,12 +13,15 @@ GXGetTexBufferSize:
 /* 800AA1F0 000A7130  7C 08 00 2E */	lwzx r0, r8, r0
 /* 800AA1F4 000A7134  7C 09 03 A6 */	mtctr r0
 /* 800AA1F8 000A7138  4E 80 04 20 */	bctr 
+lbl_800AA1FC:
 /* 800AA1FC 000A713C  38 00 00 03 */	li r0, 3
 /* 800AA200 000A7140  39 00 00 03 */	li r8, 3
 /* 800AA204 000A7144  48 00 00 24 */	b lbl_800AA228
+lbl_800AA208:
 /* 800AA208 000A7148  38 00 00 03 */	li r0, 3
 /* 800AA20C 000A714C  39 00 00 02 */	li r8, 2
 /* 800AA210 000A7150  48 00 00 18 */	b lbl_800AA228
+lbl_800AA214:
 /* 800AA214 000A7154  38 00 00 02 */	li r0, 2
 /* 800AA218 000A7158  39 00 00 02 */	li r8, 2
 /* 800AA21C 000A715C  48 00 00 0C */	b lbl_800AA228
@@ -114,12 +117,15 @@ __GetImageTileCount:
 /* 800AA344 000A7284  7C 09 00 2E */	lwzx r0, r9, r0
 /* 800AA348 000A7288  7C 09 03 A6 */	mtctr r0
 /* 800AA34C 000A728C  4E 80 04 20 */	bctr 
+lbl_800AA350:
 /* 800AA350 000A7290  39 60 00 03 */	li r11, 3
 /* 800AA354 000A7294  39 80 00 03 */	li r12, 3
 /* 800AA358 000A7298  48 00 00 24 */	b lbl_800AA37C
+lbl_800AA35C:
 /* 800AA35C 000A729C  39 60 00 03 */	li r11, 3
 /* 800AA360 000A72A0  39 80 00 02 */	li r12, 2
 /* 800AA364 000A72A4  48 00 00 18 */	b lbl_800AA37C
+lbl_800AA368:
 /* 800AA368 000A72A8  39 60 00 02 */	li r11, 2
 /* 800AA36C 000A72AC  39 80 00 02 */	li r12, 2
 /* 800AA370 000A72B0  48 00 00 0C */	b lbl_800AA37C
@@ -278,26 +284,31 @@ lbl_800AA520:
 /* 800AA594 000A74D4  7C 05 00 2E */	lwzx r0, r5, r0
 /* 800AA598 000A74D8  7C 09 03 A6 */	mtctr r0
 /* 800AA59C 000A74DC  4E 80 04 20 */	bctr 
+lbl_800AA5A0:
 /* 800AA5A0 000A74E0  38 00 00 01 */	li r0, 1
 /* 800AA5A4 000A74E4  98 1F 00 1E */	stb r0, 0x1e(r31)
 /* 800AA5A8 000A74E8  38 00 00 03 */	li r0, 3
 /* 800AA5AC 000A74EC  38 E0 00 03 */	li r7, 3
 /* 800AA5B0 000A74F0  48 00 00 64 */	b lbl_800AA614
+lbl_800AA5B4:
 /* 800AA5B4 000A74F4  38 00 00 02 */	li r0, 2
 /* 800AA5B8 000A74F8  98 1F 00 1E */	stb r0, 0x1e(r31)
 /* 800AA5BC 000A74FC  38 00 00 03 */	li r0, 3
 /* 800AA5C0 000A7500  38 E0 00 02 */	li r7, 2
 /* 800AA5C4 000A7504  48 00 00 50 */	b lbl_800AA614
+lbl_800AA5C8:
 /* 800AA5C8 000A7508  38 00 00 02 */	li r0, 2
 /* 800AA5CC 000A750C  98 1F 00 1E */	stb r0, 0x1e(r31)
 /* 800AA5D0 000A7510  38 00 00 02 */	li r0, 2
 /* 800AA5D4 000A7514  38 E0 00 02 */	li r7, 2
 /* 800AA5D8 000A7518  48 00 00 3C */	b lbl_800AA614
+lbl_800AA5DC:
 /* 800AA5DC 000A751C  38 00 00 03 */	li r0, 3
 /* 800AA5E0 000A7520  98 1F 00 1E */	stb r0, 0x1e(r31)
 /* 800AA5E4 000A7524  38 00 00 02 */	li r0, 2
 /* 800AA5E8 000A7528  38 E0 00 02 */	li r7, 2
 /* 800AA5EC 000A752C  48 00 00 28 */	b lbl_800AA614
+lbl_800AA5F0:
 /* 800AA5F0 000A7530  38 00 00 00 */	li r0, 0
 /* 800AA5F4 000A7534  98 1F 00 1E */	stb r0, 0x1e(r31)
 /* 800AA5F8 000A7538  38 00 00 03 */	li r0, 3
@@ -1253,11 +1264,145 @@ lbl_800AB328:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$292:
-	.incbin "baserom.dol", 0x3AE8E8, 0xF4
+    .4byte lbl_800AA1FC
+    .4byte lbl_800AA208
+    .4byte lbl_800AA208
+    .4byte lbl_800AA214
+    .4byte lbl_800AA214
+    .4byte lbl_800AA214
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA1FC
+    .4byte lbl_800AA208
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA1FC
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA208
+    .4byte lbl_800AA220
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA1FC
+    .4byte lbl_800AA220
+    .4byte lbl_800AA208
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA208
+    .4byte lbl_800AA208
+    .4byte lbl_800AA208
+    .4byte lbl_800AA208
+    .4byte lbl_800AA214
+    .4byte lbl_800AA214
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA1FC
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA220
+    .4byte lbl_800AA208
+    .4byte lbl_800AA208
+    .4byte lbl_800AA220
+    .4byte lbl_800AA214
 $$2133:
-	.incbin "baserom.dol", 0x3AE9DC, 0xF4
+    .4byte lbl_800AA350
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA368
+    .4byte lbl_800AA368
+    .4byte lbl_800AA368
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA350
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA350
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA374
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA350
+    .4byte lbl_800AA374
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA368
+    .4byte lbl_800AA368
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA350
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA374
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA35C
+    .4byte lbl_800AA374
+    .4byte lbl_800AA368
 $$2168:
-	.incbin "baserom.dol", 0x3AEAD0, 0x40
+    .4byte lbl_800AA5A0
+    .4byte lbl_800AA5B4
+    .4byte lbl_800AA5B4
+    .4byte lbl_800AA5C8
+    .4byte lbl_800AA5C8
+    .4byte lbl_800AA5C8
+    .4byte lbl_800AA5DC
+    .4byte lbl_800AA604
+    .4byte lbl_800AA5A0
+    .4byte lbl_800AA5B4
+    .4byte lbl_800AA5C8
+    .4byte lbl_800AA604
+    .4byte lbl_800AA604
+    .4byte lbl_800AA604
+    .4byte lbl_800AA5F0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 GX2HWFiltConv:
