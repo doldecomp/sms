@@ -4710,21 +4710,27 @@ lbl_802898AC:
 /* 802898D0 00286810  7C 03 00 2E */	lwzx r0, r3, r0
 /* 802898D4 00286814  7C 09 03 A6 */	mtctr r0
 /* 802898D8 00286818  4E 80 04 20 */	bctr 
+lbl_802898DC:
 /* 802898DC 0028681C  7F E3 FB 78 */	mr r3, r31
 /* 802898E0 00286820  48 00 0F 39 */	bl doAttackSingle__10TBossGessoFv
 /* 802898E4 00286824  48 00 02 60 */	b lbl_80289B44
+lbl_802898E8:
 /* 802898E8 00286828  7F E3 FB 78 */	mr r3, r31
 /* 802898EC 0028682C  48 00 0C 79 */	bl doAttackDouble__10TBossGessoFv
 /* 802898F0 00286830  48 00 02 54 */	b lbl_80289B44
+lbl_802898F4:
 /* 802898F4 00286834  7F E3 FB 78 */	mr r3, r31
 /* 802898F8 00286838  48 00 0A 91 */	bl doAttackSkipRope__10TBossGessoFv
 /* 802898FC 0028683C  48 00 02 48 */	b lbl_80289B44
+lbl_80289900:
 /* 80289900 00286840  7F E3 FB 78 */	mr r3, r31
 /* 80289904 00286844  48 00 07 D5 */	bl doAttackUnison__10TBossGessoFv
 /* 80289908 00286848  48 00 02 3C */	b lbl_80289B44
+lbl_8028990C:
 /* 8028990C 0028684C  7F E3 FB 78 */	mr r3, r31
 /* 80289910 00286850  48 00 05 BD */	bl doAttackShoot__10TBossGessoFv
 /* 80289914 00286854  48 00 02 30 */	b lbl_80289B44
+lbl_80289918:
 /* 80289918 00286858  80 7F 01 60 */	lwz r3, 0x160(r31)
 /* 8028991C 0028685C  80 03 00 68 */	lwz r0, 0x68(r3)
 /* 80289920 00286860  28 00 00 00 */	cmplwi r0, 0
@@ -4843,6 +4849,7 @@ lbl_80289AAC:
 /* 80289ABC 002869FC  38 80 00 00 */	li r4, 0
 /* 80289AC0 00286A00  48 00 1B C5 */	bl changeAttackMode__10TBossGessoFi
 /* 80289AC4 00286A04  48 00 00 80 */	b lbl_80289B44
+lbl_80289AC8:
 /* 80289AC8 00286A08  88 0D 9E D8 */	lbz r0, init$3903@sda21(r13)
 /* 80289ACC 00286A0C  7C 00 07 75 */	extsb. r0, r0
 /* 80289AD0 00286A10  40 82 00 38 */	bne lbl_80289B08
@@ -6868,6 +6875,7 @@ changeAttackMode__10TBossGessoFi:
 /* 8028B6D0 00288610  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8028B6D4 00288614  7C 09 03 A6 */	mtctr r0
 /* 8028B6D8 00288618  4E 80 04 20 */	bctr 
+lbl_8028B6DC:
 /* 8028B6DC 0028861C  3B 80 00 00 */	li r28, 0
 /* 8028B6E0 00288620  3B CD 89 38 */	addi r30, r13, idx$3335@sda21
 lbl_8028B6E4:
@@ -6898,6 +6906,7 @@ lbl_8028B72C:
 /* 8028B734 00288674  3B BD 00 04 */	addi r29, r29, 4
 /* 8028B738 00288678  41 80 FF AC */	blt lbl_8028B6E4
 /* 8028B73C 0028867C  48 00 05 44 */	b lbl_8028BC80
+lbl_8028B740:
 /* 8028B740 00288680  3B C0 00 00 */	li r30, 0
 lbl_8028B744:
 /* 8028B744 00288684  38 1E 01 50 */	addi r0, r30, 0x150
@@ -6926,6 +6935,7 @@ lbl_8028B788:
 /* 8028B790 002886D0  3B DE 00 04 */	addi r30, r30, 4
 /* 8028B794 002886D4  41 80 FF B0 */	blt lbl_8028B744
 /* 8028B798 002886D8  48 00 04 E8 */	b lbl_8028BC80
+lbl_8028B79C:
 /* 8028B79C 002886DC  4B DF A3 29 */	bl rand
 /* 8028B7A0 002886E0  6C 60 80 00 */	xoris r0, r3, 0x8000
 /* 8028B7A4 002886E4  C8 62 E6 A0 */	lfd f3, $$24168@sda21(r2)
@@ -7039,6 +7049,7 @@ lbl_8028B8FC:
 /* 8028B92C 0028886C  38 03 00 01 */	addi r0, r3, 1
 /* 8028B930 00288870  90 04 00 08 */	stw r0, 8(r4)
 /* 8028B934 00288874  48 00 03 4C */	b lbl_8028BC80
+lbl_8028B938:
 /* 8028B938 00288878  80 7F 00 8C */	lwz r3, 0x8c(r31)
 /* 8028B93C 0028887C  83 83 00 14 */	lwz r28, 0x14(r3)
 /* 8028B940 00288880  28 1C 00 00 */	cmplwi r28, 0
@@ -7270,6 +7281,7 @@ lbl_8028BC60:
 /* 8028BC68 00288BA8  3B BD 00 04 */	addi r29, r29, 4
 /* 8028BC6C 00288BAC  41 80 FF B0 */	blt lbl_8028BC1C
 /* 8028BC70 00288BB0  48 00 00 10 */	b lbl_8028BC80
+lbl_8028BC74:
 /* 8028BC74 00288BB4  80 7F 01 50 */	lwz r3, 0x150(r31)
 /* 8028BC78 00288BB8  38 80 00 09 */	li r4, 9
 /* 8028BC7C 00288BBC  48 08 7F 65 */	bl changeStateAndFixNodes__11TBGTentacleFi
@@ -11134,9 +11146,23 @@ bgeso_bastable:
 __vt__12TNerveBGRoll:
 	.incbin "baserom.dol", 0x3D4210, 0x10
 $$26268:
-	.incbin "baserom.dol", 0x3D4220, 0x20
+    .4byte lbl_802898DC
+    .4byte lbl_802898E8
+    .4byte lbl_80289900
+    .4byte lbl_80289918
+    .4byte lbl_802898F4
+    .4byte lbl_8028990C
+    .4byte lbl_80289B44
+    .4byte lbl_80289AC8
 $$27548:
-	.incbin "baserom.dol", 0x3D4240, 0x20
+    .4byte lbl_8028BC80
+    .4byte lbl_8028BC80
+    .4byte lbl_8028B740
+    .4byte lbl_8028B6DC
+    .4byte lbl_8028BC80
+    .4byte lbl_8028B938
+    .4byte lbl_8028BC74
+    .4byte lbl_8028B79C
 .global __vt__15TNerveBGPolDrop
 __vt__15TNerveBGPolDrop:
 	.incbin "baserom.dol", 0x3D4260, 0x10

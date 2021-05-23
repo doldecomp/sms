@@ -487,6 +487,7 @@ lbl_8017CFB4:
 /* 8017CFE0 00179F20  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8017CFE4 00179F24  7C 09 03 A6 */	mtctr r0
 /* 8017CFE8 00179F28  4E 80 04 20 */	bctr 
+lbl_8017CFEC:
 /* 8017CFEC 00179F2C  1C 1E 00 0C */	mulli r0, r30, 0xc
 /* 8017CFF0 00179F30  7C 79 02 14 */	add r3, r25, r0
 /* 8017CFF4 00179F34  80 A3 00 AC */	lwz r5, 0xac(r3)
@@ -3650,8 +3651,27 @@ smPolifonic__12MSSeCallBack:
 __vt__6MSound:
 	.incbin "baserom.dol", 0x3B6C98, 0x38
 $$22858:
-	.incbin "baserom.dol", 0x3B6CD0, 0x58
-
+    .4byte lbl_8017CFEC
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017CFEC
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017CFEC
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017CFEC
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017D038
+    .4byte lbl_8017CFEC
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22462:
 	.incbin "baserom.dol", 0x3E6718, 0x4

@@ -279,6 +279,12 @@ lbl_8030510C:
 /* 80305124 00302064  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80305128 00302068  7C 09 03 A6 */	mtctr r0
 /* 8030512C 0030206C  4E 80 04 20 */	bctr 
+lbl_80305130:
+lbl_80305130:
+lbl_80305130:
+lbl_80305130:
+lbl_80305130:
+lbl_80305130:
 /* 80305130 00302070  54 80 06 3F */	clrlwi. r0, r4, 0x18
 /* 80305134 00302074  41 82 00 2C */	beq lbl_80305160
 /* 80305138 00302078  7F A3 EB 78 */	mr r3, r29
@@ -2291,7 +2297,24 @@ $$23718:
 __vt__22TBossHanachanPartsHead:
 	.incbin "baserom.dol", 0x3DC620, 0x100
 $$23085:
-	.incbin "baserom.dol", 0x3DC720, 0x48
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_80305130
+    .4byte lbl_80305130
+    .4byte lbl_803051A0
+    .4byte lbl_80305130
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_80305130
+    .4byte lbl_803051A0
+    .4byte lbl_803051A0
+    .4byte lbl_80305130
+    .4byte lbl_80305130
 .global __vt__13TFootHitActor
 __vt__13TFootHitActor:
 	.incbin "baserom.dol", 0x3DC768, 0xA4

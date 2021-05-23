@@ -1139,6 +1139,7 @@ decideOwnState__11TBGTentacleFv:
 /* 80312AF4 0030FA34  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80312AF8 0030FA38  7C 09 03 A6 */	mtctr r0
 /* 80312AFC 0030FA3C  4E 80 04 20 */	bctr 
+lbl_80312B00:
 /* 80312B00 0030FA40  80 7F 00 80 */	lwz r3, 0x80(r31)
 /* 80312B04 0030FA44  38 80 00 00 */	li r4, 0
 /* 80312B08 0030FA48  38 A0 00 00 */	li r5, 0
@@ -1149,6 +1150,7 @@ decideOwnState__11TBGTentacleFv:
 /* 80312B1C 0030FA5C  38 80 00 02 */	li r4, 2
 /* 80312B20 0030FA60  48 00 10 C1 */	bl changeStateAndFixNodes__11TBGTentacleFi
 /* 80312B24 0030FA64  48 00 02 70 */	b lbl_80312D94
+lbl_80312B28:
 /* 80312B28 0030FA68  80 7F 00 20 */	lwz r3, 0x20(r31)
 /* 80312B2C 0030FA6C  80 9F 00 24 */	lwz r4, 0x24(r31)
 /* 80312B30 0030FA70  38 03 FF FF */	addi r0, r3, -1
@@ -1286,6 +1288,7 @@ lbl_80312D1C:
 /* 80312D20 0030FC60  38 80 00 00 */	li r4, 0
 /* 80312D24 0030FC64  48 00 0E BD */	bl changeStateAndFixNodes__11TBGTentacleFi
 /* 80312D28 0030FC68  48 00 00 6C */	b lbl_80312D94
+lbl_80312D2C:
 /* 80312D2C 0030FC6C  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 80312D30 0030FC70  81 83 00 00 */	lwz r12, 0(r3)
 /* 80312D34 0030FC74  81 8C 01 08 */	lwz r12, 0x108(r12)
@@ -1365,6 +1368,7 @@ moveConstraint__11TBGTentacleFv:
 /* 80312E2C 0030FD6C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80312E30 0030FD70  7C 09 03 A6 */	mtctr r0
 /* 80312E34 0030FD74  4E 80 04 20 */	bctr 
+lbl_80312E38:
 /* 80312E38 0030FD78  38 E0 00 00 */	li r7, 0
 /* 80312E3C 0030FD7C  38 60 00 00 */	li r3, 0
 /* 80312E40 0030FD80  38 80 00 00 */	li r4, 0
@@ -1438,6 +1442,7 @@ lbl_80312F10:
 /* 80312F3C 0030FE7C  C0 03 00 08 */	lfs f0, 8(r3)
 /* 80312F40 0030FE80  D0 1F 00 8C */	stfs f0, 0x8c(r31)
 /* 80312F44 0030FE84  48 00 03 1C */	b lbl_80313260
+lbl_80312F48:
 /* 80312F48 0030FE88  38 E0 00 00 */	li r7, 0
 /* 80312F4C 0030FE8C  38 60 00 00 */	li r3, 0
 /* 80312F50 0030FE90  38 80 00 00 */	li r4, 0
@@ -1469,10 +1474,12 @@ lbl_80312FAC:
 /* 80312FB0 0030FEF0  7C 07 00 00 */	cmpw r7, r0
 /* 80312FB4 0030FEF4  41 80 FF A4 */	blt lbl_80312F58
 /* 80312FB8 0030FEF8  48 00 02 A8 */	b lbl_80313260
+lbl_80312FBC:
 /* 80312FBC 0030FEFC  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 80312FC0 0030FF00  80 03 01 68 */	lwz r0, 0x168(r3)
 /* 80312FC4 0030FF04  2C 00 00 06 */	cmpwi r0, 6
 /* 80312FC8 0030FF08  41 82 02 98 */	beq lbl_80313260
+lbl_80312FCC:
 /* 80312FCC 0030FF0C  80 BF 00 34 */	lwz r5, 0x34(r31)
 /* 80312FD0 0030FF10  80 05 00 F0 */	lwz r0, 0xf0(r5)
 /* 80312FD4 0030FF14  54 00 07 7B */	rlwinm. r0, r0, 0, 0x1d, 0x1d
@@ -1553,6 +1560,7 @@ lbl_803130E0:
 /* 803130E4 00310024  7C 1C 00 00 */	cmpw r28, r0
 /* 803130E8 00310028  41 80 FF A0 */	blt lbl_80313088
 /* 803130EC 0031002C  48 00 01 74 */	b lbl_80313260
+lbl_803130F0:
 /* 803130F0 00310030  80 DF 00 24 */	lwz r6, 0x24(r31)
 /* 803130F4 00310034  38 E0 00 01 */	li r7, 1
 /* 803130F8 00310038  38 60 00 28 */	li r3, 0x28
@@ -1616,6 +1624,7 @@ lbl_803131C4:
 /* 803131C8 00310108  7C 07 00 00 */	cmpw r7, r0
 /* 803131CC 0031010C  41 80 FF 7C */	blt lbl_80313148
 /* 803131D0 00310110  48 00 00 90 */	b lbl_80313260
+lbl_803131D4:
 /* 803131D4 00310114  80 BF 00 34 */	lwz r5, 0x34(r31)
 /* 803131D8 00310118  38 C0 00 00 */	li r6, 0
 /* 803131DC 0031011C  C0 22 FA 68 */	lfs f1, $$23920@sda21(r2)
@@ -2353,12 +2362,14 @@ lbl_80313C30:
 /* 80313C54 00310B94  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80313C58 00310B98  7C 09 03 A6 */	mtctr r0
 /* 80313C5C 00310B9C  4E 80 04 20 */	bctr 
+lbl_80313C60:
 /* 80313C60 00310BA0  80 9F 00 24 */	lwz r4, 0x24(r31)
 /* 80313C64 00310BA4  38 00 00 01 */	li r0, 1
 /* 80313C68 00310BA8  38 7F 00 00 */	addi r3, r31, 0
 /* 80313C6C 00310BAC  90 04 00 24 */	stw r0, 0x24(r4)
 /* 80313C70 00310BB0  48 00 02 3D */	bl setAttackTarget__11TBGTentacleFv
 /* 80313C74 00310BB4  48 00 01 C4 */	b lbl_80313E38
+lbl_80313C78:
 /* 80313C78 00310BB8  80 1F 00 48 */	lwz r0, 0x48(r31)
 /* 80313C7C 00310BBC  2C 00 00 00 */	cmpwi r0, 0
 /* 80313C80 00310BC0  41 82 00 20 */	beq lbl_80313CA0
@@ -2409,6 +2420,7 @@ lbl_80313CA0:
 /* 80313D30 00310C70  38 A3 00 10 */	addi r5, r3, 0x10
 /* 80313D34 00310C74  4B F7 82 D1 */	bl rumblePad__10TBossGessoFiRCQ29JGeometry8TVec3$$0f$$1
 /* 80313D38 00310C78  48 00 01 00 */	b lbl_80313E38
+lbl_80313D3C:
 /* 80313D3C 00310C7C  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313D40 00310C80  38 80 00 01 */	li r4, 1
 /* 80313D44 00310C84  90 83 00 24 */	stw r4, 0x24(r3)
@@ -2442,6 +2454,7 @@ lbl_80313DA4:
 /* 80313DA8 00310CE8  7C 06 00 00 */	cmpw r6, r0
 /* 80313DAC 00310CEC  41 80 FF D0 */	blt lbl_80313D7C
 /* 80313DB0 00310CF0  48 00 00 88 */	b lbl_80313E38
+lbl_80313DB4:
 /* 80313DB4 00310CF4  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313DB8 00310CF8  38 A0 00 01 */	li r5, 1
 /* 80313DBC 00310CFC  90 A3 00 24 */	stw r5, 0x24(r3)
@@ -2452,6 +2465,7 @@ lbl_80313DA4:
 /* 80313DD0 00310D10  38 03 00 24 */	addi r0, r3, 0x24
 /* 80313DD4 00310D14  7C A4 01 2E */	stwx r5, r4, r0
 /* 80313DD8 00310D18  48 00 00 60 */	b lbl_80313E38
+lbl_80313DDC:
 /* 80313DDC 00310D1C  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313DE0 00310D20  38 00 00 01 */	li r0, 1
 /* 80313DE4 00310D24  38 80 00 16 */	li r4, 0x16
@@ -2459,16 +2473,19 @@ lbl_80313DA4:
 /* 80313DEC 00310D2C  80 7F 00 80 */	lwz r3, 0x80(r31)
 /* 80313DF0 00310D30  4B DC 03 31 */	bl setBckFromIndex__6MActorFi
 /* 80313DF4 00310D34  48 00 00 44 */	b lbl_80313E38
+lbl_80313DF8:
 /* 80313DF8 00310D38  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313DFC 00310D3C  38 00 00 01 */	li r0, 1
 /* 80313E00 00310D40  90 03 00 24 */	stw r0, 0x24(r3)
 /* 80313E04 00310D44  48 00 00 34 */	b lbl_80313E38
+lbl_80313E08:
 /* 80313E08 00310D48  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313E0C 00310D4C  38 00 00 01 */	li r0, 1
 /* 80313E10 00310D50  90 03 00 24 */	stw r0, 0x24(r3)
 /* 80313E14 00310D54  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313E18 00310D58  90 03 00 4C */	stw r0, 0x4c(r3)
 /* 80313E1C 00310D5C  48 00 00 1C */	b lbl_80313E38
+lbl_80313E20:
 /* 80313E20 00310D60  80 7F 00 24 */	lwz r3, 0x24(r31)
 /* 80313E24 00310D64  38 80 00 01 */	li r4, 1
 /* 80313E28 00310D68  38 00 00 00 */	li r0, 0
@@ -6190,11 +6207,46 @@ jntidx$3428:
 __vt__11TBGTentacle:
 	.incbin "baserom.dol", 0x3DD574, 0x24
 $$24236:
-	.incbin "baserom.dol", 0x3DD598, 0x2C
+    .4byte lbl_80312CCC
+    .4byte lbl_80312B00
+    .4byte lbl_80312CCC
+    .4byte lbl_80312D94
+    .4byte lbl_80312D2C
+    .4byte lbl_80312B28
+    .4byte lbl_80312D94
+    .4byte lbl_80312D94
+    .4byte lbl_80312D94
+    .4byte lbl_80312D94
+    .4byte lbl_80312D94
 $$24448:
-	.incbin "baserom.dol", 0x3DD5C4, 0x2C
+    .4byte lbl_80312FCC
+    .4byte lbl_80312E38
+    .4byte lbl_80312FCC
+    .4byte lbl_80313260
+    .4byte lbl_80313260
+    .4byte lbl_80312FBC
+    .4byte lbl_803131D4
+    .4byte lbl_80313260
+    .4byte lbl_80312FCC
+    .4byte lbl_803130F0
+    .4byte lbl_80312F48
 $$24838:
-	.incbin "baserom.dol", 0x3DD5F0, 0x1A8
+    .4byte lbl_80313DF8
+    .4byte lbl_80313C60
+    .4byte lbl_80313DF8
+    .4byte lbl_80313DB4
+    .4byte lbl_80313C78
+    .4byte lbl_80313D3C
+    .4byte lbl_80313E20
+    .4byte lbl_80313DF8
+    .4byte lbl_80313DF8
+    .4byte lbl_80313E08
+    .4byte lbl_80313DDC
+    
+    # What the heck are you smoking Metrowerks? I want some.
+    .rept 95
+    .4byte 0
+    .endr
 .global __vt__12TBGAttackHit
 __vt__12TBGAttackHit:
 	.incbin "baserom.dol", 0x3DD798, 0xA4

@@ -150,6 +150,7 @@ getNewIDBySurfaceCode__Q214MSoundSESystem8MSoundSEFUlP8JAIActor:
 /* 80181508 0017E448  7C 04 00 2E */	lwzx r0, r4, r0
 /* 8018150C 0017E44C  7C 09 03 A6 */	mtctr r0
 /* 80181510 0017E450  4E 80 04 20 */	bctr 
+lbl_80181514:
 /* 80181514 0017E454  2C 05 04 00 */	cmpwi r5, 0x400
 /* 80181518 0017E458  41 82 00 64 */	beq lbl_8018157C
 /* 8018151C 0017E45C  40 80 00 28 */	bge lbl_80181544
@@ -185,6 +186,7 @@ lbl_80181574:
 lbl_8018157C:
 /* 8018157C 0017E4BC  38 60 19 30 */	li r3, 0x1930
 /* 80181580 0017E4C0  4E 80 00 20 */	blr 
+lbl_80181584:
 /* 80181584 0017E4C4  2C 05 04 00 */	cmpwi r5, 0x400
 /* 80181588 0017E4C8  41 82 00 64 */	beq lbl_801815EC
 /* 8018158C 0017E4CC  40 80 00 28 */	bge lbl_801815B4
@@ -220,7 +222,9 @@ lbl_801815E4:
 lbl_801815EC:
 /* 801815EC 0017E52C  38 60 19 32 */	li r3, 0x1932
 /* 801815F0 0017E530  4E 80 00 20 */	blr 
+lbl_801815F4:
 /* 801815F4 0017E534  38 60 FF FF */	li r3, -1
+lbl_801815F8:
 /* 801815F8 0017E538  4E 80 00 20 */	blr 
 
 .global startSoundActorInner__Q214MSoundSESystem8MSoundSEFUlPP8JAISoundP8JAIActorUlUc
@@ -417,6 +421,7 @@ lbl_8018185C:
 /* 80181878 0017E7B8  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8018187C 0017E7BC  7C 09 03 A6 */	mtctr r0
 /* 80181880 0017E7C0  4E 80 04 20 */	bctr 
+lbl_80181884:
 /* 80181884 0017E7C4  54 A0 1D 78 */	rlwinm r0, r5, 3, 0x15, 0x1c
 /* 80181888 0017E7C8  7C 84 02 14 */	add r4, r4, r0
 lbl_8018188C:
@@ -438,6 +443,7 @@ lbl_801818A4:
 /* 801818C4 0017E804  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801818C8 0017E808  7C 09 03 A6 */	mtctr r0
 /* 801818CC 0017E80C  4E 80 04 20 */	bctr 
+lbl_801818D0:
 /* 801818D0 0017E810  38 60 00 00 */	li r3, 0
 /* 801818D4 0017E814  48 00 00 D4 */	b lbl_801819A8
 lbl_801818D8:
@@ -3380,11 +3386,43 @@ $$23304:
 __vt__Q214MSoundSESystem10MSRandPlay:
 	.incbin "baserom.dol", 0x3B6DE8, 0xC
 $$22334:
-	.incbin "baserom.dol", 0x3B6DF4, 0x1C
+    .4byte lbl_80181514
+    .4byte lbl_801815F8
+    .4byte lbl_801815F4
+    .4byte lbl_801815F8
+    .4byte lbl_80181584
+    .4byte lbl_801815F8
+    .4byte lbl_801815F4
 $$22460:
-	.incbin "baserom.dol", 0x3B6E10, 0x54
+    .4byte lbl_801818D0
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D0
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D0
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D0
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D0
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D8
+    .4byte lbl_801818D0
 $$22459:
-	.incbin "baserom.dol", 0x3B6E64, 0x1C
+    .4byte lbl_80181884
+    .4byte lbl_8018188C
+    .4byte lbl_80181884
+    .4byte lbl_8018188C
+    .4byte lbl_80181884
+    .4byte lbl_8018188C
+    .4byte lbl_80181884
 .global __vt__29MSSetSoundTL$$013MSSetSoundGrp$$1
 __vt__29MSSetSoundTL$$013MSSetSoundGrp$$1:
 	.incbin "baserom.dol", 0x3B6E80, 0x18
