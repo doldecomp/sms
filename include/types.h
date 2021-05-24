@@ -12,7 +12,10 @@ class TDirector {
 
 // TODO
 class TGameSequence {
-    char filler0[4];
+public:
+    u8 _000;
+    u8 _001;
+    u16 _002;
 };
 
 // TODO
@@ -66,6 +69,8 @@ public:
     void proc();
     void finalize();
 };
+
+extern TApplication gpApplication;
 
 struct UnkStruct3B0378 {
     unsigned int unk0;
