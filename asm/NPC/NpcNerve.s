@@ -2181,55 +2181,106 @@ lbl_80171CA0:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TNerveNPCMareStand
 __vt__18TNerveNPCMareStand:
-	.incbin "baserom.dol", 0x3B6250, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveNPCMareStandFv
+  .4byte execute__18TNerveNPCMareStandCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveBase$$010TLiveActor$$1
 __vt__24TNerveBase$$010TLiveActor$$1:
-	.incbin "baserom.dol", 0x3B6260, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveBase$$010TLiveActor$$1Fv
+  .4byte 0
 .global __vt__14TNerveNPCBlown
 __vt__14TNerveNPCBlown:
-	.incbin "baserom.dol", 0x3B6270, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TNerveNPCBlownFv
+  .4byte execute__14TNerveNPCBlownCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__12TNerveNPCMad
 __vt__12TNerveNPCMad:
-	.incbin "baserom.dol", 0x3B6280, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TNerveNPCMadFv
+  .4byte execute__12TNerveNPCMadCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__14TNerveNPCThrow
 __vt__14TNerveNPCThrow:
-	.incbin "baserom.dol", 0x3B6290, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TNerveNPCThrowFv
+  .4byte execute__14TNerveNPCThrowCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__13TNerveNPCTalk
 __vt__13TNerveNPCTalk:
-	.incbin "baserom.dol", 0x3B62A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TNerveNPCTalkFv
+  .4byte execute__13TNerveNPCTalkCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__30TNerveNPCSetPosAfterSinkBottom
 __vt__30TNerveNPCSetPosAfterSinkBottom:
-	.incbin "baserom.dol", 0x3B62B0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__30TNerveNPCSetPosAfterSinkBottomFv
+  .4byte execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveNPCRecoverAfter
 __vt__21TNerveNPCRecoverAfter:
-	.incbin "baserom.dol", 0x3B62C0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveNPCRecoverAfterFv
+  .4byte execute__21TNerveNPCRecoverAfterCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveNPCRecoverFromSink
 __vt__24TNerveNPCRecoverFromSink:
-	.incbin "baserom.dol", 0x3B62D0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveNPCRecoverFromSinkFv
+  .4byte execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__13TNerveNPCSink
 __vt__13TNerveNPCSink:
-	.incbin "baserom.dol", 0x3B62E0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TNerveNPCSinkFv
+  .4byte execute__13TNerveNPCSinkCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__12TNerveNPCWet
 __vt__12TNerveNPCWet:
-	.incbin "baserom.dol", 0x3B62F0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TNerveNPCWetFv
+  .4byte execute__12TNerveNPCWetCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__20TNerveNPCTurnToMario
 __vt__20TNerveNPCTurnToMario:
-	.incbin "baserom.dol", 0x3B6300, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TNerveNPCTurnToMarioFv
+  .4byte execute__20TNerveNPCTurnToMarioCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__26TNerveNPCWaitMarioApproach
 __vt__26TNerveNPCWaitMarioApproach:
-	.incbin "baserom.dol", 0x3B6310, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26TNerveNPCWaitMarioApproachFv
+  .4byte execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveNPCWaitContinue
 __vt__21TNerveNPCWaitContinue:
-	.incbin "baserom.dol", 0x3B6320, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveNPCWaitContinueFv
+  .4byte execute__21TNerveNPCWaitContinueCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveNPCGraphWait
 __vt__18TNerveNPCGraphWait:
-	.incbin "baserom.dol", 0x3B6330, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveNPCGraphWaitFv
+  .4byte execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__14TNerveNPCUTurn
 __vt__14TNerveNPCUTurn:
-	.incbin "baserom.dol", 0x3B6340, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TNerveNPCUTurnFv
+  .4byte execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__20TNerveNPCGraphWander
 __vt__20TNerveNPCGraphWander:
-	.incbin "baserom.dol", 0x3B6350, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TNerveNPCGraphWanderFv
+  .4byte execute__20TNerveNPCGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22727:

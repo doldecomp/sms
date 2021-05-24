@@ -2125,7 +2125,10 @@ sCpuExpName__12JUTException:
 	.incbin "baserom.dol", 0x3A5860, 0x40
 .global __vt__12JUTException
 __vt__12JUTException:
-	.incbin "baserom.dol", 0x3A58A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JUTExceptionFv
+  .4byte run__12JUTExceptionFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sMessageBuffer__12JUTException:

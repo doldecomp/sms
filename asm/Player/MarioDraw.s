@@ -6510,7 +6510,10 @@ $$25888:
     .space 0x2C
 .global __vt__19M3UModelCommonMario
 __vt__19M3UModelCommonMario:
-	.incbin "baserom.dol", 0x3B36C0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte getMtxCalc__19M3UModelCommonMarioFRC17M3UMtxCalcSetInfo
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22822:

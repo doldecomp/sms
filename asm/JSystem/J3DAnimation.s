@@ -4493,43 +4493,82 @@ lbl_8002EB2C:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J3DAnmColorKey
 __vt__14J3DAnmColorKey:
-	.incbin "baserom.dol", 0x3A6990, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14J3DAnmColorKeyFv
+  .4byte getColor__14J3DAnmColorKeyCFUsP8_GXColor
 .global __vt__11J3DAnmColor
 __vt__11J3DAnmColor:
-	.incbin "baserom.dol", 0x3A69A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11J3DAnmColorFv
+  .4byte getColor__11J3DAnmColorCFUsP8_GXColor
 .global __vt__15J3DAnmColorFull
 __vt__15J3DAnmColorFull:
-	.incbin "baserom.dol", 0x3A69B0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15J3DAnmColorFullFv
+  .4byte getColor__15J3DAnmColorFullCFUsP8_GXColor
 .global __vt__17J3DAnmVtxColorKey
 __vt__17J3DAnmVtxColorKey:
-	.incbin "baserom.dol", 0x3A69C0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17J3DAnmVtxColorKeyFv
+  .4byte getColor__17J3DAnmVtxColorKeyCFUcUsP8_GXColor
 .global __vt__14J3DAnmVtxColor
 __vt__14J3DAnmVtxColor:
-	.incbin "baserom.dol", 0x3A69D0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14J3DAnmVtxColorFv
+  .4byte getColor__14J3DAnmVtxColorCFUcUsP8_GXColor
 .global __vt__18J3DAnmVtxColorFull
 __vt__18J3DAnmVtxColorFull:
-	.incbin "baserom.dol", 0x3A69E0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18J3DAnmVtxColorFullFv
+  .4byte getColor__18J3DAnmVtxColorFullCFUcUsP8_GXColor
 .global __vt__16J3DAnmClusterKey
 __vt__16J3DAnmClusterKey:
-	.incbin "baserom.dol", 0x3A69F0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16J3DAnmClusterKeyFv
+  .4byte getWeight__16J3DAnmClusterKeyCFUs
 .global __vt__13J3DAnmCluster
 __vt__13J3DAnmCluster:
-	.incbin "baserom.dol", 0x3A6A00, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13J3DAnmClusterFv
+  .4byte getWeight__13J3DAnmClusterCFUs
 .global __vt__17J3DAnmClusterFull
 __vt__17J3DAnmClusterFull:
-	.incbin "baserom.dol", 0x3A6A10, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17J3DAnmClusterFullFv
+  .4byte getWeight__17J3DAnmClusterFullCFUs
 .global __vt__18J3DAnmTransformKey
 __vt__18J3DAnmTransformKey:
-	.incbin "baserom.dol", 0x3A6A20, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18J3DAnmTransformKeyFv
+  .4byte getTransform__18J3DAnmTransformKeyCFUsP16J3DTransformInfo
+  .4byte calcTransform__18J3DAnmTransformKeyCFfUsP16J3DTransformInfo
 .global __vt__15J3DAnmTransform
 __vt__15J3DAnmTransform:
-	.incbin "baserom.dol", 0x3A6A34, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15J3DAnmTransformFv
+  .4byte getTransform__15J3DAnmTransformCFUsP16J3DTransformInfo
 .global __vt__19J3DAnmTransformFull
 __vt__19J3DAnmTransformFull:
-	.incbin "baserom.dol", 0x3A6A44, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19J3DAnmTransformFullFv
+  .4byte getTransform__19J3DAnmTransformFullCFUsP16J3DTransformInfo
 .global __vt__10J3DAnmBase
 __vt__10J3DAnmBase:
-	.incbin "baserom.dol", 0x3A6A54, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10J3DAnmBaseFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2955:

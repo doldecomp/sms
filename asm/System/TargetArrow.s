@@ -121,7 +121,16 @@ $$21709:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TTargetArrow
 __vt__12TTargetArrow:
-	.incbin "baserom.dol", 0x3B1B80, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TTargetArrowFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TTargetArrowFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TTargetArrowFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cTargetArrowBmdFileName:

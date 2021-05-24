@@ -874,7 +874,31 @@ $$2323:
     .4byte lbl_80018D70
 .global __vt__12J2DSetScreen
 __vt__12J2DSetScreen:
-	.incbin "baserom.dol", 0x3A5CE0, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J2DSetScreenFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__7J2DPaneFii
+  .4byte setConnectParent__7J2DPaneFb
+  .4byte drawSelf__7J2DPaneFii
+  .4byte drawSelf__9J2DScreenFiiPA3_A4_f
+  .4byte search__9J2DScreenFUl
+  .4byte makeMatrix__7J2DPaneFii
+  .4byte makeUserPane__9J2DScreenFUsP7J2DPaneP20JSURandomInputStream
+  .4byte makeUserPane__9J2DScreenFUlP7J2DPaneP20JSURandomInputStream
 .global __vt__9J2DScreen
 __vt__9J2DScreen:
-	.incbin "baserom.dol", 0x3A5D14, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9J2DScreenFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__7J2DPaneFii
+  .4byte setConnectParent__7J2DPaneFb
+  .4byte drawSelf__7J2DPaneFii
+  .4byte drawSelf__9J2DScreenFiiPA3_A4_f
+  .4byte search__9J2DScreenFUl
+  .4byte makeMatrix__7J2DPaneFii
+  .4byte makeUserPane__9J2DScreenFUsP7J2DPaneP20JSURandomInputStream
+  .4byte makeUserPane__9J2DScreenFUlP7J2DPaneP20JSURandomInputStream

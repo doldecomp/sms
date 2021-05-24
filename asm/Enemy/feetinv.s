@@ -920,7 +920,56 @@ $$21210:
 	.incbin "baserom.dol", 0x3D0A60, 0x10
 .global __vt__15TMtxCalcFootInv
 __vt__15TMtxCalcFootInv:
-	.incbin "baserom.dol", 0x3D0A70, 0xC8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMtxCalcFootInvFv
+  .4byte init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
+  .4byte recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
+  .4byte calc__15TMtxCalcFootInvFUs
+  .4byte 0
+  .4byte 0
+  .4byte $$280$$2__dt__15TMtxCalcFootInvFv
+  .4byte $$280$$2calc__15TMtxCalcFootInvFUs
+  .4byte 0
+  .4byte 0
+  .4byte $$2120$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
+  .4byte $$2120$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2120$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2120$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2120$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
+  .4byte $$2120$$24$$2calc__15TMtxCalcFootInvFUs
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21795:

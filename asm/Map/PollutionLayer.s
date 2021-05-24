@@ -1713,19 +1713,130 @@ z_offset_table$2433:
 	.incbin "baserom.dol", 0x3CD6D0, 0x28
 .global __vt__15TPollutionLayer
 __vt__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3CD6F8, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__15TPollutionLayerCFv
+  .4byte initJointModel__15TPollutionLayerFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__15TPollutionLayerFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__15TPollutionLayerCFv
+  .4byte getPlaneType__15TPollutionLayerCFv
+  .4byte getTexPosS__15TPollutionLayerCFf
+  .4byte getTexPosT__15TPollutionLayerCFf
+  .4byte initLayerInfo__15TPollutionLayerFPC19TPollutionLayerInfo
+  .4byte getTexResource__15TPollutionLayerFPCc
+  .4byte stamp__15TPollutionLayerFUsffff
+  .4byte stampModel__15TPollutionLayerFP8J3DModel
+  .4byte isPolluted__15TPollutionLayerCFfff
+  .4byte isInArea__15TPollutionLayerCFfff
+  .4byte isInAreaSize__15TPollutionLayerCFffff
 .global __vt__23TPollutionLayerWallBase
 __vt__23TPollutionLayerWallBase:
-	.incbin "baserom.dol", 0x3CD754, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__15TPollutionLayerCFv
+  .4byte initJointModel__15TPollutionLayerFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__15TPollutionLayerFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__15TPollutionLayerCFv
+  .4byte getPlaneType__15TPollutionLayerCFv
+  .4byte getTexPosS__15TPollutionLayerCFf
+  .4byte getTexPosT__23TPollutionLayerWallBaseCFf
+  .4byte initLayerInfo__15TPollutionLayerFPC19TPollutionLayerInfo
+  .4byte getTexResource__15TPollutionLayerFPCc
+  .4byte stamp__15TPollutionLayerFUsffff
+  .4byte stampModel__15TPollutionLayerFP8J3DModel
+  .4byte isPolluted__15TPollutionLayerCFfff
+  .4byte isInArea__15TPollutionLayerCFfff
+  .4byte isInAreaSize__15TPollutionLayerCFffff
 .global __vt__24TPollutionLayerWallPlusX
 __vt__24TPollutionLayerWallPlusX:
-	.incbin "baserom.dol", 0x3CD7B0, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__15TPollutionLayerCFv
+  .4byte initJointModel__15TPollutionLayerFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__15TPollutionLayerFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__15TPollutionLayerCFv
+  .4byte getPlaneType__24TPollutionLayerWallPlusXCFv
+  .4byte getTexPosS__24TPollutionLayerWallPlusXCFf
+  .4byte getTexPosT__23TPollutionLayerWallBaseCFf
+  .4byte initLayerInfo__24TPollutionLayerWallPlusXFPC19TPollutionLayerInfo
+  .4byte getTexResource__15TPollutionLayerFPCc
+  .4byte stamp__24TPollutionLayerWallPlusXFUsffff
+  .4byte stampModel__15TPollutionLayerFP8J3DModel
+  .4byte isPolluted__15TPollutionLayerCFfff
+  .4byte isInArea__24TPollutionLayerWallPlusXCFfff
+  .4byte isInAreaSize__24TPollutionLayerWallPlusXCFffff
 .global __vt__24TPollutionLayerWallPlusZ
 __vt__24TPollutionLayerWallPlusZ:
-	.incbin "baserom.dol", 0x3CD80C, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__15TPollutionLayerCFv
+  .4byte initJointModel__15TPollutionLayerFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__15TPollutionLayerFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__15TPollutionLayerCFv
+  .4byte getPlaneType__24TPollutionLayerWallPlusZCFv
+  .4byte getTexPosS__15TPollutionLayerCFf
+  .4byte getTexPosT__23TPollutionLayerWallBaseCFf
+  .4byte initLayerInfo__24TPollutionLayerWallPlusZFPC19TPollutionLayerInfo
+  .4byte getTexResource__15TPollutionLayerFPCc
+  .4byte stamp__24TPollutionLayerWallPlusZFUsffff
+  .4byte stampModel__15TPollutionLayerFP8J3DModel
+  .4byte isPolluted__15TPollutionLayerCFfff
+  .4byte isInArea__24TPollutionLayerWallPlusZCFfff
+  .4byte isInAreaSize__24TPollutionLayerWallPlusZCFffff
 .global __vt__19TPollutionLayerWave
 __vt__19TPollutionLayerWave:
-	.incbin "baserom.dol", 0x3CD868, 0x60
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__15TPollutionLayerCFv
+  .4byte initJointModel__19TPollutionLayerWaveFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__19TPollutionLayerWaveFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__15TPollutionLayerCFv
+  .4byte getPlaneType__19TPollutionLayerWaveCFv
+  .4byte getTexPosS__15TPollutionLayerCFf
+  .4byte getTexPosT__15TPollutionLayerCFf
+  .4byte initLayerInfo__15TPollutionLayerFPC19TPollutionLayerInfo
+  .4byte getTexResource__19TPollutionLayerWaveFPCc
+  .4byte stamp__15TPollutionLayerFUsffff
+  .4byte stampModel__15TPollutionLayerFP8J3DModel
+  .4byte isPolluted__15TPollutionLayerCFfff
+  .4byte isInArea__15TPollutionLayerCFfff
+  .4byte isInAreaSize__15TPollutionLayerCFffff
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mInterval__19TPollutionLayerWave:

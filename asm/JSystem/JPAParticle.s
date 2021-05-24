@@ -482,10 +482,52 @@ getHeight__11JPAParticleFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11JPAParticle
 __vt__11JPAParticle:
-	.incbin "baserom.dol", 0x3A9570, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte init__11JPAParticleFv
+  .4byte calcVelocity__11JPAParticleFv
+  .4byte setVelocity__11JPAParticleFv
+  .4byte checkCreateChildParticle__11JPAParticleFv
+  .4byte executeParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
+  .4byte drawParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
+  .4byte accessFVelVec__11JPAParticleFv
+  .4byte accessFAccVec__11JPAParticleFv
+  .4byte getBaseVelVec__11JPAParticleCFRQ29JGeometry8TVec3$$0f$$1
+  .4byte accessBaseVelVec__11JPAParticleFv
+  .4byte setBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte addBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getDynamicsWeight__11JPAParticleCFv
+  .4byte getAirResistance__11JPAParticleCFv
+  .4byte getCurrentDragForce__11JPAParticleCFv
+  .4byte getDragForce__11JPAParticleCFv
+  .4byte getDrawParamPPtr__11JPAParticleFv
+  .4byte getDrawParamCPtr__11JPAParticleFv
+  .4byte getWidth__11JPAParticleFv
+  .4byte getHeight__11JPAParticleFv
 .global __vt__15JPABaseParticle
 __vt__15JPABaseParticle:
-	.incbin "baserom.dol", 0x3A95C8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte executeParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
+  .4byte drawParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21675:

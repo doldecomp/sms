@@ -447,13 +447,20 @@ lbl_800DA3C4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15SampleCtrlJoint
 __vt__15SampleCtrlJoint:
-	.incbin "baserom.dol", 0x3B07F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15SampleCtrlJointFv
 .global __vt__18SampleCtrlMaterial
 __vt__18SampleCtrlMaterial:
-	.incbin "baserom.dol", 0x3B07FC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18SampleCtrlMaterialFv
 .global __vt__15SampleCtrlShape
 __vt__15SampleCtrlShape:
-	.incbin "baserom.dol", 0x3B0808, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15SampleCtrlShapeFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 $$21211:

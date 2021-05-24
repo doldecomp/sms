@@ -1251,10 +1251,20 @@ $$21494:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1
 __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3A7880, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__Q26JDrama11TNameRefGen
 __vt__Q26JDrama11TNameRefGen:
-	.incbin "baserom.dol", 0x3A78A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__Q26JDrama11TNameRefGenFR20JSUMemoryInputStream
+  .4byte getNameRef__Q26JDrama11TNameRefGenCFPCc
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21466:

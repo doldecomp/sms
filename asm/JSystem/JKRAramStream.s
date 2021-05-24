@@ -398,7 +398,10 @@ sMessageQueue__13JKRAramStream:
 	.incbin "baserom.dol", 0x3A6ED8, 0x20
 .global __vt__13JKRAramStream
 __vt__13JKRAramStream:
-	.incbin "baserom.dol", 0x3A6EF8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRAramStreamFv
+  .4byte run__13JKRAramStreamFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2111:

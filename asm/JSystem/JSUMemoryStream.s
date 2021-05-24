@@ -259,7 +259,25 @@ getPosition__20JSUMemoryInputStreamCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__21JSUMemoryOutputStream
 __vt__21JSUMemoryOutputStream:
-	.incbin "baserom.dol", 0x3A57C8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21JSUMemoryOutputStreamFv
+  .4byte skip__15JSUOutputStreamFlSc
+  .4byte writeData__21JSUMemoryOutputStreamFPCvl
+  .4byte getLength__21JSUMemoryOutputStreamCFv
+  .4byte getPosition__21JSUMemoryOutputStreamCFv
+  .4byte seek__21JSURandomOutputStreamFl17JSUStreamSeekFrom
+  .4byte getAvailable__21JSURandomOutputStreamCFv
+  .4byte seekPos__21JSUMemoryOutputStreamFl17JSUStreamSeekFrom
 .global __vt__20JSUMemoryInputStream
 __vt__20JSUMemoryInputStream:
-	.incbin "baserom.dol", 0x3A57F0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20JSUMemoryInputStreamFv
+  .4byte getAvailable__20JSURandomInputStreamCFv
+  .4byte skip__20JSURandomInputStreamFl
+  .4byte readData__20JSUMemoryInputStreamFPvl
+  .4byte getLength__20JSUMemoryInputStreamCFv
+  .4byte getPosition__20JSUMemoryInputStreamCFv
+  .4byte seekPos__20JSUMemoryInputStreamFl17JSUStreamSeekFrom
+  .4byte 0

@@ -16945,7 +16945,15 @@ MtxCalcTypeName:
 	.incbin "baserom.dol", 0x3CDFD4, 0x10
 .global __vt__11TGCConsole2
 __vt__11TGCConsole2:
-	.incbin "baserom.dol", 0x3CDFE4, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TGCConsole2Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TGCConsole2FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TGCConsole2Fv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TGCConsole2FUlPQ26JDrama9TGraphics
 $$27091:
     .4byte lbl_802057F0
     .4byte lbl_8020582C

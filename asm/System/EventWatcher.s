@@ -12138,13 +12138,30 @@ $$25774:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TEventWatcher
 __vt__13TEventWatcher:
-	.incbin "baserom.dol", 0x3B0940, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TEventWatcherFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TEventWatcherFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
 .global __vt__32TSpcTypedInterp$$013TEventWatcher$$1
 __vt__32TSpcTypedInterp$$013TEventWatcher$$1:
-	.incbin "baserom.dol", 0x3B0968, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte dispatchBuiltin__32TSpcTypedInterp$$013TEventWatcher$$1FUlUl
+  .4byte __dt__32TSpcTypedInterp$$013TEventWatcher$$1Fv
+  .4byte update__10TSpcInterpFv
 .global __vt__32TSpcTypedBinary$$013TEventWatcher$$1
 __vt__32TSpcTypedBinary$$013TEventWatcher$$1:
-	.incbin "baserom.dol", 0x3B097C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__32TSpcTypedBinary$$013TEventWatcher$$1Fv
+  .4byte initUserBuiltin__32TSpcTypedBinary$$013TEventWatcher$$1Fv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sShineViewObjName$3431:

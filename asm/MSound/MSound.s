@@ -3649,7 +3649,20 @@ smPolifonic__12MSSeCallBack:
 	.incbin "baserom.dol", 0x3B6C88, 0x10
 .global __vt__6MSound
 __vt__6MSound:
-	.incbin "baserom.dol", 0x3B6C98, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte initStream__8JAIBasicFv
+  .4byte makeSound__6MSoundFUl
+  .4byte getMapInfoFxline__8JAIBasicFUl
+  .4byte getMapInfoGround__6MSoundFUl
+  .4byte getMapInfoFxParameter__8JAIBasicFUl
+  .4byte sendPlayingSeCommand__8JAIBasicFv
+  .4byte sendSeAllParameter__8JAIBasicFP8JAISound
+  .4byte setSeExtParameter__6MSoundFP8JAISound
+  .4byte setRegisterTrackCallback__6MSoundFv
+  .4byte checkStream__8JAIBasicFv
+  .4byte checkNextFrameSe__8JAIBasicFv
+  .4byte loadGroupWave__6MSoundFll
 $$22858:
     .4byte lbl_8017CFEC
     .4byte lbl_8017D038

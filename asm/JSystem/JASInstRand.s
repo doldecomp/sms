@@ -48,7 +48,10 @@ lbl_8005A974:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem9TInstRand
 __vt__Q28JASystem9TInstRand:
-	.incbin "baserom.dol", 0x3A7EA8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte getY__Q28JASystem9TInstRandCFii
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2345:

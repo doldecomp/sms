@@ -2982,7 +2982,21 @@ $$2547:
     .4byte lbl_8004BC3C
 .global __vt__8JAIBasic
 __vt__8JAIBasic:
-	.incbin "baserom.dol", 0x3A7C64, 0x3C
+  .4byte 0
+  .4byte 0
+  .4byte initStream__8JAIBasicFv
+  .4byte makeSound__8JAIBasicFUl
+  .4byte getMapInfoFxline__8JAIBasicFUl
+  .4byte getMapInfoGround__8JAIBasicFUl
+  .4byte getMapInfoFxParameter__8JAIBasicFUl
+  .4byte sendPlayingSeCommand__8JAIBasicFv
+  .4byte sendSeAllParameter__8JAIBasicFP8JAISound
+  .4byte setSeExtParameter__8JAIBasicFP8JAISound
+  .4byte setRegisterTrackCallback__8JAIBasicFv
+  .4byte checkStream__8JAIBasicFv
+  .4byte checkNextFrameSe__8JAIBasicFv
+  .4byte loadGroupWave__8JAIBasicFll
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2413:

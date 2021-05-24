@@ -169,4 +169,7 @@ __ct__Q24Koga8ToolDataFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q24Koga8ToolData
 __vt__Q24Koga8ToolData:
-	.incbin "baserom.dol", 0x3B0480, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q24Koga8ToolDataFv
+  .4byte 0

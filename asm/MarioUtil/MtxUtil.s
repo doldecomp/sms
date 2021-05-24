@@ -2265,28 +2265,44 @@ $$22556:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TParamT$$0f$$1
 __vt__10TParamT$$0f$$1:
-	.incbin "baserom.dol", 0x3AF9B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0f$$1FR20JSUMemoryInputStream
 .global __vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1
 __vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1:
-	.incbin "baserom.dol", 0x3AF9C4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
 .global __vt__20TMtxSwingRZReverseXZ
 __vt__20TMtxSwingRZReverseXZ:
-	.incbin "baserom.dol", 0x3AF9D0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getParams__11TMtxSwingRZFv
 .global __vt__9TParamVec
 __vt__9TParamVec:
-	.incbin "baserom.dol", 0x3AF9DC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
 .global __vt__11TMtxSwingRZ
 __vt__11TMtxSwingRZ:
-	.incbin "baserom.dol", 0x3AF9E8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getParams__11TMtxSwingRZFv
 .global __vt__11TParamRT$$0f$$1
 __vt__11TParamRT$$0f$$1:
-	.incbin "baserom.dol", 0x3AF9F4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0f$$1FR20JSUMemoryInputStream
 .global __vt__11TMtxTimeLag
 __vt__11TMtxTimeLag:
-	.incbin "baserom.dol", 0x3AFA00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getParams__11TMtxTimeLagFv
 .global __vt__14TMtxEffectBase
 __vt__14TMtxEffectBase:
-	.incbin "baserom.dol", 0x3AFA0C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getParams__14TMtxEffectBaseFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22093:

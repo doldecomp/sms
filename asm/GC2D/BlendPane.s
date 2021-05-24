@@ -99,7 +99,10 @@ __ct__10TBlendPaneFP9J2DScreenUl:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TBlendPane
 __vt__10TBlendPane:
-	.incbin "baserom.dol", 0x3CECD0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte update__10TBlendPaneFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21505:

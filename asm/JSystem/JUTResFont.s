@@ -1302,7 +1302,21 @@ saoAboutEncoding___10JUTResFont:
 	.incbin "baserom.dol", 0x3A6F08, 0xC
 .global __vt__10JUTResFont
 __vt__10JUTResFont:
-	.incbin "baserom.dol", 0x3A6F14, 0x3C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTResFontFv
+  .4byte setGX__10JUTResFontFv
+  .4byte setGX__10JUTResFontFQ28JUtility6TColorQ28JUtility6TColor
+  .4byte drawChar_scale__10JUTResFontFffffib
+  .4byte getLeading__10JUTResFontCFv
+  .4byte getAscent__10JUTResFontCFv
+  .4byte getDescent__10JUTResFontCFv
+  .4byte getHeight__10JUTResFontCFv
+  .4byte getWidth__10JUTResFontCFv
+  .4byte getWidthEntry__10JUTResFontCFiPQ27JUTFont6TWidth
+  .4byte getFontType__10JUTResFontCFv
+  .4byte isLeadByte__10JUTResFontCFi
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2335:

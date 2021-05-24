@@ -589,7 +589,20 @@ $$22224:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7TSunMgr
 __vt__7TSunMgr:
-	.incbin "baserom.dol", 0x3E1B60, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TSunMgrFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__7TSunMgrFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TSunMgrFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$216$$2drawSyncCallback__7TSunMgrFUs
+  .4byte drawSyncCallback__7TSunMgrFUs
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cSunWarpPointName:

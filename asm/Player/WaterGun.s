@@ -5731,7 +5731,9 @@ nozzleBmdData:
 	.incbin "baserom.dol", 0x3B3998, 0xA8
 .global __vt__9TWaterGun
 __vt__9TWaterGun:
-	.incbin "baserom.dol", 0x3B3A40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte perform__9TWaterGunFUlPQ26JDrama9TGraphics
 $$24827:
     .4byte lbl_8014A4EC
     .4byte lbl_8014AA1C
@@ -5744,31 +5746,70 @@ $$24827:
     .4byte lbl_8014A6B8
 .global __vt__11TParamRT$$0l$$1
 __vt__11TParamRT$$0l$$1:
-	.incbin "baserom.dol", 0x3B3A70, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
 .global __vt__10TParamT$$0l$$1
 __vt__10TParamT$$0l$$1:
-	.incbin "baserom.dol", 0x3B3A7C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
 .global __vt__12TParamRT$$0Uc$$1
 __vt__12TParamRT$$0Uc$$1:
-	.incbin "baserom.dol", 0x3B3A88, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
 .global __vt__11TParamT$$0Uc$$1
 __vt__11TParamT$$0Uc$$1:
-	.incbin "baserom.dol", 0x3B3A94, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
 .global __vt__11TParamRT$$0s$$1
 __vt__11TParamRT$$0s$$1:
-	.incbin "baserom.dol", 0x3B3AA0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
 .global __vt__10TParamT$$0s$$1
 __vt__10TParamT$$0s$$1:
-	.incbin "baserom.dol", 0x3B3AAC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
 .global __vt__13TNozzleDeform
 __vt__13TNozzleDeform:
-	.incbin "baserom.dol", 0x3B3AB8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__11TNozzleBaseFv
+  .4byte getNozzleKind__13TNozzleDeformCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__13TNozzleDeformFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__13TNozzleDeformFi
+  .4byte animation__13TNozzleDeformFi
 .global __vt__14TNozzleTrigger
 __vt__14TNozzleTrigger:
-	.incbin "baserom.dol", 0x3B3AE0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__14TNozzleTriggerFv
+  .4byte getNozzleKind__14TNozzleTriggerCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__14TNozzleTriggerFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__14TNozzleTriggerFi
+  .4byte animation__14TNozzleTriggerFi
 .global __vt__11TNozzleBase
 __vt__11TNozzleBase:
-	.incbin "baserom.dol", 0x3B3B08, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__11TNozzleBaseFv
+  .4byte getNozzleKind__11TNozzleBaseCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__11TNozzleBaseFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__11TNozzleBaseFi
+  .4byte animation__11TNozzleBaseFi
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23267:

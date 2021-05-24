@@ -135,7 +135,11 @@ lbl_8007FC44:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JPAExTexShape
 __vt__13JPAExTexShape:
-	.incbin "baserom.dol", 0x3A9BE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JPAExTexShapeFv
 .global __vt__12JPADataBlock
 __vt__12JPADataBlock:
-	.incbin "baserom.dol", 0x3A9BF4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JPADataBlockFv

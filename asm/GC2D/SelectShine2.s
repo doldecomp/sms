@@ -1589,10 +1589,22 @@ $$22485:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TSelectShine
 __vt__12TSelectShine:
-	.incbin "baserom.dol", 0x3CEC98, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TSelectShineFv
+  .4byte move__12TSelectShineFv
 .global __vt__19TSelectShineManager
 __vt__19TSelectShineManager:
-	.incbin "baserom.dol", 0x3CECA8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TSelectShineManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__19TSelectShineManagerFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21912:

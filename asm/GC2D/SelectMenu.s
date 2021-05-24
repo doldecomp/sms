@@ -3771,7 +3771,15 @@ scNormalStageTable:
 	.incbin "baserom.dol", 0x3CEB68, 0x28
 .global __vt__11TSelectMenu
 __vt__11TSelectMenu:
-	.incbin "baserom.dol", 0x3CEB90, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TSelectMenuFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSelectMenuFUlPQ26JDrama9TGraphics
 $$23617:
     .4byte lbl_802348C8
     .4byte lbl_80233198
@@ -3787,7 +3795,16 @@ $$23617:
 
     .global __vt__11TSelectGrad
 __vt__11TSelectGrad:
-	.incbin "baserom.dol", 0x3CEC00, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TSelectGradFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSelectGradFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 scShineTableAirport:

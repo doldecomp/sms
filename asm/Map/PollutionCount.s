@@ -2846,13 +2846,26 @@ lbl_801EF000:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__21TPollutionCounterBase
 __vt__21TPollutionCounterBase:
-	.incbin "baserom.dol", 0x3CD328, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte drawSyncCallback__21TPollutionCounterBaseFUs
+  .4byte 0
+  .4byte 0
 .global __vt__20TPollutionCounterObj
 __vt__20TPollutionCounterObj:
-	.incbin "baserom.dol", 0x3CD33C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte drawSyncCallback__21TPollutionCounterBaseFUs
+  .4byte getCounterNo__20TPollutionCounterObjCFUl
+  .4byte getTokenNo__20TPollutionCounterObjCFi
 .global __vt__22TPollutionCounterLayer
 __vt__22TPollutionCounterLayer:
-	.incbin "baserom.dol", 0x3CD350, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte drawSyncCallback__21TPollutionCounterBaseFUs
+  .4byte getCounterNo__22TPollutionCounterLayerCFUl
+  .4byte getTokenNo__22TPollutionCounterLayerCFi
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22537:

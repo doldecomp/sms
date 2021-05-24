@@ -3536,7 +3536,9 @@ grDummyRail:
 	.incbin "baserom.dol", 0x3D1390, 0xCC
 .global __vt__9TGraphWeb
 __vt__9TGraphWeb:
-	.incbin "baserom.dol", 0x3D145C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TGraphWebFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22783:

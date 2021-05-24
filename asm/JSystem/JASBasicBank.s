@@ -129,7 +129,15 @@ getType__Q28JASystem10TBasicBankCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem10TBasicBank
 __vt__Q28JASystem10TBasicBank:
-	.incbin "baserom.dol", 0x3A7DB0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem10TBasicBankFv
+  .4byte getInst__Q28JASystem10TBasicBankCFi
+  .4byte getType__Q28JASystem10TBasicBankCFv
 .global __vt__Q28JASystem5TBank
 __vt__Q28JASystem5TBank:
-	.incbin "baserom.dol", 0x3A7DC4, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem5TBankFv
+  .4byte 0
+  .4byte 0

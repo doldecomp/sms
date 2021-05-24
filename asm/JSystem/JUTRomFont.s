@@ -609,7 +609,22 @@ saoAboutEncoding___10JUTRomFont:
 	.incbin "baserom.dol", 0x3A6F50, 0x18
 .global __vt__10JUTRomFont
 __vt__10JUTRomFont:
-	.incbin "baserom.dol", 0x3A6F68, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTRomFontFv
+  .4byte setGX__10JUTRomFontFv
+  .4byte setGX__7JUTFontFQ28JUtility6TColorQ28JUtility6TColor
+  .4byte drawChar_scale__10JUTRomFontFffffib
+  .4byte getLeading__10JUTRomFontCFv
+  .4byte getAscent__10JUTRomFontCFv
+  .4byte getDescent__10JUTRomFontCFv
+  .4byte getHeight__10JUTRomFontCFv
+  .4byte getWidth__10JUTRomFontCFv
+  .4byte getWidthEntry__10JUTRomFontCFiPQ27JUTFont6TWidth
+  .4byte getFontType__10JUTRomFontCFv
+  .4byte isLeadByte__10JUTRomFontCFi
+  .4byte getResFont__10JUTRomFontCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2294:

@@ -591,7 +591,16 @@ lbl_801F089C:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TPollutionObj
 __vt__13TPollutionObj:
-	.incbin "baserom.dol", 0x3CD4E0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__13TPollutionObjCFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22849:

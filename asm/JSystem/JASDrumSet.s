@@ -320,7 +320,12 @@ getType__Q28JASystem8TDrumSetCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem8TDrumSet
 __vt__Q28JASystem8TDrumSet:
-	.incbin "baserom.dol", 0x3A7E90, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem8TDrumSetFv
+  .4byte getParam__Q28JASystem8TDrumSetCFiiPQ28JASystem10TInstParam
+  .4byte getType__Q28JASystem8TDrumSetCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2323:

@@ -11827,7 +11827,15 @@ cMessageID__9TCardSave:
 	.incbin "baserom.dol", 0x3CE418, 0xD4
 .global __vt__9TCardSave
 __vt__9TCardSave:
-	.incbin "baserom.dol", 0x3CE4EC, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TCardSaveFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TCardSaveFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TCardSaveFUlPQ26JDrama9TGraphics
 $$24199:
     .4byte lbl_80219460
     .4byte lbl_802194B4

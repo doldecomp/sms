@@ -134,7 +134,23 @@ lbl_80041AB8:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama10TCharacter
 __vt__Q26JDrama10TCharacter:
-	.incbin "baserom.dol", 0x3A7450, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama10TCharacterFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte 0
 .global __vt__Q26JDrama10TSmplChara
 __vt__Q26JDrama10TSmplChara:
-	.incbin "baserom.dol", 0x3A7474, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama10TSmplCharaFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama10TSmplCharaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte getRes__Q26JDrama10TSmplCharaCFPCc

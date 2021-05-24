@@ -2525,34 +2525,132 @@ $$22843:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__22TLightWithDBSetManager
 __vt__22TLightWithDBSetManager:
-	.incbin "baserom.dol", 0x3AEFD8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TLightWithDBSetManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__22TLightWithDBSetManagerFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__22TLightWithDBSetManagerFUlPQ26JDrama9TGraphics
 .global __vt__23TIndirectLightWithDBSet
 __vt__23TIndirectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AEFFC, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TIndirectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__23TIndirectLightWithDBSetFv
 .global __vt__24TMapObjectLightWithDBSet
 __vt__24TMapObjectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF024, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TMapObjectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__24TMapObjectLightWithDBSetFv
 .global __vt__21TObjectLightWithDBSet
 __vt__21TObjectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF04C, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TObjectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__21TObjectLightWithDBSetFv
 .global __vt__21TPlayerLightWithDBSet
 __vt__21TPlayerLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF074, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TPlayerLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__21TPlayerLightWithDBSetFv
 .global __vt__15TLightWithDBSet
 __vt__15TLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF09C, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte 0
 .global __vt__16TLightDrawBuffer
 __vt__16TLightDrawBuffer:
-	.incbin "baserom.dol", 0x3AF0C4, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TLightDrawBufferFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TLightDrawBufferFUlPQ26JDrama9TGraphics
+  .4byte setLight__16TLightDrawBufferFP12TLightCommon
 .global __vt__11TLightMario
 __vt__11TLightMario:
-	.incbin "baserom.dol", 0x3AF0EC, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TLightMarioFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TLightMarioFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__11TLightMarioCFi
+  .4byte getAmbColor__11TLightMarioCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__11TLightMarioFPCQ26JDrama9TGraphicsi
 .global __vt__12TLightShadow
 __vt__12TLightShadow:
-	.incbin "baserom.dol", 0x3AF120, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLightShadowFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TLightShadowFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__12TLightCommonCFi
+  .4byte getAmbColor__12TLightCommonCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__12TLightCommonFPCQ26JDrama9TGraphicsi
 .global __vt__12TLightCommon
 __vt__12TLightCommon:
-	.incbin "baserom.dol", 0x3AF154, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLightCommonFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TLightCommonFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__12TLightCommonCFi
+  .4byte getAmbColor__12TLightCommonCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__12TLightCommonFPCQ26JDrama9TGraphicsi
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 className$1930:

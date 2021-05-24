@@ -111,7 +111,23 @@ lbl_800F9380:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TAlphaCatch
 __vt__11TAlphaCatch:
-	.incbin "baserom.dol", 0x3B0FF8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TAlphaCatchFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TAlphaCatchFUlPQ26JDrama9TGraphics
 .global __vt__13TZBufferCatch
 __vt__13TZBufferCatch:
-	.incbin "baserom.dol", 0x3B101C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TZBufferCatchFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TZBufferCatchFUlPQ26JDrama9TGraphics

@@ -2735,31 +2735,76 @@ $$22535:
     .4byte lbl_80071E68
 .global __vt__12JPADragField
 __vt__12JPADragField:
-	.incbin "baserom.dol", 0x3A9498, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JPADragFieldFv
+  .4byte set__12JPABaseFieldFv
+  .4byte affect__12JPADragFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__14JPARandomField
 __vt__14JPARandomField:
-	.incbin "baserom.dol", 0x3A94B0, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JPARandomFieldFv
+  .4byte set__12JPABaseFieldFv
+  .4byte affect__14JPARandomFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__18JPAConvectionField
 __vt__18JPAConvectionField:
-	.incbin "baserom.dol", 0x3A94C8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18JPAConvectionFieldFv
+  .4byte set__18JPAConvectionFieldFv
+  .4byte affect__18JPAConvectionFieldFP11JPAParticle
+  .4byte checkMaxDistance__18JPAConvectionFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__14JPAVortexField
 __vt__14JPAVortexField:
-	.incbin "baserom.dol", 0x3A94E0, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JPAVortexFieldFv
+  .4byte set__14JPAVortexFieldFv
+  .4byte affect__14JPAVortexFieldFP11JPAParticle
+  .4byte checkMaxDistance__14JPAVortexFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__14JPANewtonField
 __vt__14JPANewtonField:
-	.incbin "baserom.dol", 0x3A94F8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JPANewtonFieldFv
+  .4byte set__14JPANewtonFieldFv
+  .4byte affect__14JPANewtonFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__14JPAMagnetField
 __vt__14JPAMagnetField:
-	.incbin "baserom.dol", 0x3A9510, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JPAMagnetFieldFv
+  .4byte set__14JPAMagnetFieldFv
+  .4byte affect__14JPAMagnetFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__11JPAAirField
 __vt__11JPAAirField:
-	.incbin "baserom.dol", 0x3A9528, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11JPAAirFieldFv
+  .4byte set__11JPAAirFieldFv
+  .4byte affect__11JPAAirFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__15JPAGravityField
 __vt__15JPAGravityField:
-	.incbin "baserom.dol", 0x3A9540, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15JPAGravityFieldFv
+  .4byte set__15JPAGravityFieldFv
+  .4byte affect__12JPABaseFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__12JPABaseField
 __vt__12JPABaseField:
-	.incbin "baserom.dol", 0x3A9558, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JPABaseFieldFv
+  .4byte set__12JPABaseFieldFv
+  .4byte affect__12JPABaseFieldFP11JPAParticle
+  .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21671:

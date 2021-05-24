@@ -2747,7 +2747,9 @@ $$22929:
     .4byte lbl_800F9E2C
 .global __vt__13TMarioGamePad
 __vt__13TMarioGamePad:
-	.incbin "baserom.dol", 0x3B109C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMarioGamePadFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22481:

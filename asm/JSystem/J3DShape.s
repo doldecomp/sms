@@ -914,16 +914,44 @@ mtxLoadPipeline__11J3DShapeMtx:
 	.incbin "baserom.dol", 0x3A68D0, 0x30
 .global __vt__12J3DShapeDraw
 __vt__12J3DShapeDraw:
-	.incbin "baserom.dol", 0x3A6900, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J3DShapeDrawFv
 .global __vt__16J3DShapeMtxMulti
 __vt__16J3DShapeMtxMulti:
-	.incbin "baserom.dol", 0x3A690C, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16J3DShapeMtxMultiFv
+  .4byte getType__16J3DShapeMtxMultiCFv
+  .4byte getUseMtxNum__16J3DShapeMtxMultiCFv
+  .4byte getUseMtxIndex__16J3DShapeMtxMultiCFUs
+  .4byte load__16J3DShapeMtxMultiCFv
+  .4byte calcNBTScale__16J3DShapeMtxMultiFRC3VecPA3_A3_fPA3_A3_f
 .global __vt__13J3DShapeMtxDL
 __vt__13J3DShapeMtxDL:
-	.incbin "baserom.dol", 0x3A692C, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13J3DShapeMtxDLFv
+  .4byte getType__11J3DShapeMtxCFv
+  .4byte getUseMtxNum__11J3DShapeMtxCFv
+  .4byte getUseMtxIndex__11J3DShapeMtxCFUs
+  .4byte load__13J3DShapeMtxDLCFv
+  .4byte calcNBTScale__13J3DShapeMtxDLFRC3VecPA3_A3_fPA3_A3_f
 .global __vt__11J3DShapeMtx
 __vt__11J3DShapeMtx:
-	.incbin "baserom.dol", 0x3A694C, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11J3DShapeMtxFv
+  .4byte getType__11J3DShapeMtxCFv
+  .4byte getUseMtxNum__11J3DShapeMtxCFv
+  .4byte getUseMtxIndex__11J3DShapeMtxCFUs
+  .4byte load__11J3DShapeMtxCFv
+  .4byte calcNBTScale__11J3DShapeMtxFRC3VecPA3_A3_fPA3_A3_f
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2994:

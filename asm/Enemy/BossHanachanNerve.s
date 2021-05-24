@@ -1087,25 +1087,46 @@ lbl_80303F28:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__22TNerveBossHanachanDead
 __vt__22TNerveBossHanachanDead:
-	.incbin "baserom.dol", 0x3DC5B0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveBossHanachanDeadFv
+  .4byte execute__22TNerveBossHanachanDeadCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveBossHanachanSnort
 __vt__23TNerveBossHanachanSnort:
-	.incbin "baserom.dol", 0x3DC5C0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveBossHanachanSnortFv
+  .4byte execute__23TNerveBossHanachanSnortCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveBossHanachanDamage
 __vt__24TNerveBossHanachanDamage:
-	.incbin "baserom.dol", 0x3DC5D0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveBossHanachanDamageFv
+  .4byte execute__24TNerveBossHanachanDamageCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveBossHanachanGetUp
 __vt__23TNerveBossHanachanGetUp:
-	.incbin "baserom.dol", 0x3DC5E0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveBossHanachanGetUpFv
+  .4byte execute__23TNerveBossHanachanGetUpCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__22TNerveBossHanachanDown
 __vt__22TNerveBossHanachanDown:
-	.incbin "baserom.dol", 0x3DC5F0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveBossHanachanDownFv
+  .4byte execute__22TNerveBossHanachanDownCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveBossHanachanTumble
 __vt__24TNerveBossHanachanTumble:
-	.incbin "baserom.dol", 0x3DC600, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveBossHanachanTumbleFv
+  .4byte execute__24TNerveBossHanachanTumbleCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__29TNerveBossHanachanGraphWander
 __vt__29TNerveBossHanachanGraphWander:
-	.incbin "baserom.dol", 0x3DC610, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TNerveBossHanachanGraphWanderFv
+  .4byte execute__29TNerveBossHanachanGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22521:

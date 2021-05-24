@@ -215,7 +215,10 @@ lbl_8000E280:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9JKRThread
 __vt__9JKRThread:
-	.incbin "baserom.dol", 0x3A5730, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9JKRThreadFv
+  .4byte run__9JKRThreadFv
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$225:

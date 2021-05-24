@@ -719,10 +719,24 @@ lbl_800C0C58:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TDLColorTexQuad
 __vt__15TDLColorTexQuad:
-	.incbin "baserom.dol", 0x3AEF70, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte createDLBuffer__10TDLTexQuadFUs
+  .4byte createBuffer__15TDLColorTexQuadFUs
+  .4byte reset__10TDLTexQuadFv
+  .4byte request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1
+  .4byte setEnd__15TDLColorTexQuadFv
+  .4byte draw__15TDLColorTexQuadFv
 .global __vt__10TDLTexQuad
 __vt__10TDLTexQuad:
-	.incbin "baserom.dol", 0x3AEF90, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte createDLBuffer__10TDLTexQuadFUs
+  .4byte createBuffer__10TDLTexQuadFUs
+  .4byte reset__10TDLTexQuadFv
+  .4byte request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1
+  .4byte setEnd__10TDLTexQuadFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 uv:

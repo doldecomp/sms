@@ -469,10 +469,30 @@ entry$1734:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TObjManager
 __vt__11TObjManager:
-	.incbin "baserom.dol", 0x3B1EA8, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TObjManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TObjManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TObjManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
 .global __vt__9TObjChara
 __vt__9TObjChara:
-	.incbin "baserom.dol", 0x3B1ED8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TObjCharaFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TObjCharaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte getRes__9TObjCharaCFPCc
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21841:

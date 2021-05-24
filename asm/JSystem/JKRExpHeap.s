@@ -2166,7 +2166,26 @@ $$2806:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRExpHeap
 __vt__10JKRExpHeap:
-	.incbin "baserom.dol", 0x3A5548, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JKRExpHeapFv
+  .4byte alloc__10JKRExpHeapFUli
+  .4byte free__10JKRExpHeapFPv
+  .4byte freeAll__10JKRExpHeapFv
+  .4byte freeTail__10JKRExpHeapFv
+  .4byte resize__10JKRExpHeapFPvUl
+  .4byte getSize__10JKRExpHeapFPv
+  .4byte getFreeSize__10JKRExpHeapFv
+  .4byte getTotalFreeSize__10JKRExpHeapFv
+  .4byte getHeapType__10JKRExpHeapFv
+  .4byte check__10JKRExpHeapFv
+  .4byte dump_sort__10JKRExpHeapFv
+  .4byte dump__10JKRExpHeapFv
+  .4byte changeGroupID__10JKRExpHeapFUc
+  .4byte getCurrentGroupId__10JKRExpHeapFv
+  .4byte state_register__10JKRExpHeapCFPQ27JKRHeap6TStateUl
+  .4byte state_compare__10JKRExpHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
+  .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2722:

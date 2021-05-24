@@ -1943,7 +1943,10 @@ $$2426:
     .4byte lbl_80018054
 .global __vt__8J2DPrint
 __vt__8J2DPrint:
-	.incbin "baserom.dol", 0x3A5C80, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__8J2DPrintFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$252:

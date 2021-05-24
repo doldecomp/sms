@@ -3384,7 +3384,9 @@ $$23304:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q214MSoundSESystem10MSRandPlay
 __vt__Q214MSoundSESystem10MSRandPlay:
-	.incbin "baserom.dol", 0x3B6DE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte randPlay__Q214MSoundSESystem10MSRandPlayFUl
 $$22334:
     .4byte lbl_80181514
     .4byte lbl_801815F8
@@ -3425,16 +3427,30 @@ $$22459:
     .4byte lbl_80181884
 .global __vt__29MSSetSoundTL$$013MSSetSoundGrp$$1
 __vt__29MSSetSoundTL$$013MSSetSoundGrp$$1:
-	.incbin "baserom.dol", 0x3B6E80, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$220$$2frameLoopDyna__29MSSetSoundTL$$013MSSetSoundGrp$$1Fv
+  .4byte frameLoopDyna__29MSSetSoundTL$$013MSSetSoundGrp$$1Fv
 .global __vt__13MSSetSoundGrp
 __vt__13MSSetSoundGrp:
-	.incbin "baserom.dol", 0x3B6E98, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$220$$2frameLoopDyna__29MSSetSoundTL$$013MSSetSoundGrp$$1Fv
+  .4byte frameLoopDyna__29MSSetSoundTL$$013MSSetSoundGrp$$1Fv
 .global __vt__Q214MSoundSESystem9MSRandVol
 __vt__Q214MSoundSESystem9MSRandVol:
-	.incbin "baserom.dol", 0x3B6EB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getRandVol__Q214MSoundSESystem9MSRandVolFUl
 .global __vt__33JALListFrameLoop$$013MSSetSoundGrp$$1
 __vt__33JALListFrameLoop$$013MSSetSoundGrp$$1:
-	.incbin "baserom.dol", 0x3B6EBC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte frameLoopDyna__33JALListFrameLoop$$013MSSetSoundGrp$$1Fv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22486:

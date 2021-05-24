@@ -482,7 +482,16 @@ lbl_801DAA10:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TJointModelManager
 __vt__18TJointModelManager:
-	.incbin "baserom.dol", 0x3CCBB8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TJointModelManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__18TJointModelManagerFUlPQ26JDrama9TGraphics
+  .4byte newJointModel__18TJointModelManagerCFi
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22405:
