@@ -404,7 +404,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/RenderModeObj.o                           \
     $(BUILD_DIR)/asm/System/SnapTimeObj.o                             \
     $(BUILD_DIR)/asm/System/TalkCursor.o                              \
-    $(BUILD_DIR)/asm/System/TexCache.o                                \
+    $(BUILD_DIR)/src/System/TexCache.o                                \
     $(BUILD_DIR)/asm/System/ZBufferCatch.o                            \
     $(BUILD_DIR)/asm/System/Application.o                             \
     $(BUILD_DIR)/asm/System/ScenarioArchiveName.o                     \
