@@ -5067,7 +5067,15 @@ cColorTable__8TTalk2D2:
 	.incbin "baserom.dol", 0x3CE100, 0x18
 .global __vt__8TTalk2D2
 __vt__8TTalk2D2:
-	.incbin "baserom.dol", 0x3CE118, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__8TTalk2D2Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__8TTalk2D2FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__8TTalk2D2Fv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__8TTalk2D2FUlPQ26JDrama9TGraphics
 $$23886:
     .4byte lbl_802132B4
     .4byte lbl_802132B4

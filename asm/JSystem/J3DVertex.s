@@ -189,4 +189,7 @@ lbl_800373D0:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15J3DVertexBuffer
 __vt__15J3DVertexBuffer:
-	.incbin "baserom.dol", 0x3A6BD8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15J3DVertexBufferFv
+  .4byte 0

@@ -34,4 +34,7 @@ load__10TBaseParamFR20JSUMemoryInputStream:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TBaseParam
 __vt__10TBaseParam:
-	.incbin "baserom.dol", 0x3B0828, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__10TBaseParamFR20JSUMemoryInputStream
+  .4byte 0

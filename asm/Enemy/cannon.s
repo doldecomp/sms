@@ -6093,40 +6093,239 @@ sCannonDomPartsJointTable$3043:
 	.incbin "baserom.dol", 0x3D9F70, 0xC
 .global __vt__18TNerveCannonObject
 __vt__18TNerveCannonObject:
-	.incbin "baserom.dol", 0x3D9F7C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveCannonObjectFv
+  .4byte execute__18TNerveCannonObjectCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__22TNerveCannonDamageDemo
 __vt__22TNerveCannonDamageDemo:
-	.incbin "baserom.dol", 0x3D9F8C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveCannonDamageDemoFv
+  .4byte execute__22TNerveCannonDamageDemoCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveCannonDamage
 __vt__18TNerveCannonDamage:
-	.incbin "baserom.dol", 0x3D9F9C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveCannonDamageFv
+  .4byte execute__18TNerveCannonDamageCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveCannonClose
 __vt__17TNerveCannonClose:
-	.incbin "baserom.dol", 0x3D9FAC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveCannonCloseFv
+  .4byte execute__17TNerveCannonCloseCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__26TNerveCannonForceBombShoot
 __vt__26TNerveCannonForceBombShoot:
-	.incbin "baserom.dol", 0x3D9FBC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26TNerveCannonForceBombShootFv
+  .4byte execute__26TNerveCannonForceBombShootCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveCannonShoot
 __vt__17TNerveCannonShoot:
-	.incbin "baserom.dol", 0x3D9FCC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveCannonShootFv
+  .4byte execute__17TNerveCannonShootCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveCannonSearch
 __vt__18TNerveCannonSearch:
-	.incbin "baserom.dol", 0x3D9FDC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveCannonSearchFv
+  .4byte execute__18TNerveCannonSearchCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveCannonOpen
 __vt__16TNerveCannonOpen:
-	.incbin "baserom.dol", 0x3D9FEC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveCannonOpenFv
+  .4byte execute__16TNerveCannonOpenCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__7TCannon
 __vt__7TCannon:
-	.incbin "baserom.dol", 0x3D9FFC, 0x1AC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TCannonFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__7TCannonFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__7TCannonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TCannonFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__7TCannonFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__7TCannonFP9THitActorUl
+  .4byte getTakingMtx__7TCannonFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__7TCannonFP12TLiveManager
+  .4byte calcRootMatrix__7TCannonFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__7TCannonFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__11TSmallEnemyFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TCannonCFv
+  .4byte reset__7TCannonFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__11TSmallEnemyFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__11TSmallEnemyFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__11TSmallEnemyFv
+  .4byte forceKill__11TSmallEnemyFv
+  .4byte setMActorAndKeeper__11TSmallEnemyFv
+  .4byte initAttacker__11TSmallEnemyFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__7TCannonFP9THitActor
+  .4byte isInhibitedForceMove__7TCannonFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
+  .4byte isHitVallid__7TCannonFUl
 .global __vt__10TCannonDom
 __vt__10TCannonDom:
-	.incbin "baserom.dol", 0x3DA1A8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TCannonDomFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TCannonDomFUlPQ26JDrama9TGraphics
 .global __vt__9TChorobei
 __vt__9TChorobei:
-	.incbin "baserom.dol", 0x3DA1CC, 0xA4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TChorobeiFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TChorobeiFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__9TChorobeiFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__9TChorobeiFP9THitActorUl
 .global __vt__14TCannonManager
 __vt__14TCannonManager:
-	.incbin "baserom.dol", 0x3DA270, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TCannonManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TCannonManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSmallEnemyManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__14TCannonManagerFv
+  .4byte clipEnemies__14TCannonManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mChorobeiJntIdx__7TCannon:

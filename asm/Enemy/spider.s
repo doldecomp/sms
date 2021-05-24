@@ -425,7 +425,10 @@ __ct__7TSpiderFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7TSpider
 __vt__7TSpider:
-	.incbin "baserom.dol", 0x3D3DE0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TSpiderFv
+  .4byte bind__7TSpiderFP10TLiveActor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22402:

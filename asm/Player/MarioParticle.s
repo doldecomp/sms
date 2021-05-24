@@ -2511,7 +2511,10 @@ cParticleFileNames:
 	.incbin "baserom.dol", 0x3B3820, 0xC
 .global __vt__15TWarpInCallBack
 __vt__15TWarpInCallBack:
-	.incbin "baserom.dol", 0x3B382C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle
+  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
 $$23223:
     .4byte lbl_80142E08
     .4byte lbl_80142E10
@@ -2525,10 +2528,17 @@ $$23223:
     .4byte lbl_80142E50
 .global __vt__15TBubbleCallBack
 __vt__15TBubbleCallBack:
-	.incbin "baserom.dol", 0x3B3864, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte execute__15TBubbleCallBackFP14JPABaseEmitterP15JPABaseParticle
+  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
 .global __vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
 __vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
-	.incbin "baserom.dol", 0x3B3874, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
+  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22884:

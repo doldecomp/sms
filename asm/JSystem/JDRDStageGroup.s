@@ -105,4 +105,15 @@ lbl_800427B4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama12TDStageGroup
 __vt__Q26JDrama12TDStageGroup:
-	.incbin "baserom.dol", 0x3A7590, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama12TDStageGroupFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc
+  .4byte perform__Q26JDrama12TDStageGroupFUlPQ26JDrama9TGraphics
+  .4byte loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte 0

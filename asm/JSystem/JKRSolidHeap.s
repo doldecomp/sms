@@ -593,7 +593,26 @@ $$2368:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12JKRSolidHeap
 __vt__12JKRSolidHeap:
-	.incbin "baserom.dol", 0x3A5690, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JKRSolidHeapFv
+  .4byte alloc__12JKRSolidHeapFUli
+  .4byte free__12JKRSolidHeapFPv
+  .4byte freeAll__12JKRSolidHeapFv
+  .4byte freeTail__12JKRSolidHeapFv
+  .4byte resize__12JKRSolidHeapFPvUl
+  .4byte getSize__12JKRSolidHeapFPv
+  .4byte getFreeSize__12JKRSolidHeapFv
+  .4byte getTotalFreeSize__12JKRSolidHeapFv
+  .4byte getHeapType__12JKRSolidHeapFv
+  .4byte check__12JKRSolidHeapFv
+  .4byte dump_sort__7JKRHeapFv
+  .4byte dump__12JKRSolidHeapFv
+  .4byte changeGroupID__7JKRHeapFUc
+  .4byte getCurrentGroupId__7JKRHeapFv
+  .4byte state_register__12JKRSolidHeapCFPQ27JKRHeap6TStateUl
+  .4byte state_compare__12JKRSolidHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
+  .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2369:

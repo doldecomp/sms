@@ -2100,19 +2100,120 @@ $$23308:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__24TMapEventSinkShadowMario
 __vt__24TMapEventSinkShadowMario:
-	.incbin "baserom.dol", 0x3CCD80, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TMapEventSinkShadowMarioFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__24TMapEventSinkShadowMarioFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__13TMapEventSinkFv
+  .4byte startControl__13TMapEventSinkFv
+  .4byte control__13TMapEventSinkFv
+  .4byte finishControl__13TMapEventSinkFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__24TMapEventSinkShadowMarioFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__24TMapEventSinkShadowMarioFR20JSUMemoryInputStream
+  .4byte rising__24TMapEventSinkShadowMarioFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__13TMapEventSinkFi
 .global __vt__19TMapEventSinkBianco
 __vt__19TMapEventSinkBianco:
-	.incbin "baserom.dol", 0x3CCDD4, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TMapEventSinkBiancoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__19TMapEventSinkBiancoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__19TMapEventSinkBiancoFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__19TMapEventSinkBiancoFv
+  .4byte startControl__19TMapEventSinkBiancoFv
+  .4byte control__19TMapEventSinkBiancoFv
+  .4byte finishControl__19TMapEventSinkBiancoFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__13TMapEventSinkFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte rising__19TMapEventSinkBiancoFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__29TMapEventSinkInPollutionResetFi
 .global __vt__29TMapEventSinkInPollutionReset
 __vt__29TMapEventSinkInPollutionReset:
-	.incbin "baserom.dol", 0x3CCE28, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TMapEventSinkInPollutionResetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__29TMapEventSinkInPollutionResetFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__24TMapEventSinkInPollutionFv
+  .4byte startControl__13TMapEventSinkFv
+  .4byte control__13TMapEventSinkFv
+  .4byte finishControl__13TMapEventSinkFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__13TMapEventSinkFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte rising__13TMapEventSinkFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__29TMapEventSinkInPollutionResetFi
 .global __vt__24TMapEventSinkInPollution
 __vt__24TMapEventSinkInPollution:
-	.incbin "baserom.dol", 0x3CCE7C, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TMapEventSinkInPollutionFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__24TMapEventSinkInPollutionFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__24TMapEventSinkInPollutionFv
+  .4byte startControl__13TMapEventSinkFv
+  .4byte control__13TMapEventSinkFv
+  .4byte finishControl__13TMapEventSinkFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__13TMapEventSinkFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte rising__13TMapEventSinkFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__13TMapEventSinkFi
 .global __vt__13TMapEventSink
 __vt__13TMapEventSink:
-	.incbin "baserom.dol", 0x3CCED0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMapEventSinkFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__13TMapEventSinkFv
+  .4byte startControl__13TMapEventSinkFv
+  .4byte control__13TMapEventSinkFv
+  .4byte finishControl__13TMapEventSinkFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__13TMapEventSinkFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte rising__13TMapEventSinkFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__13TMapEventSinkFi
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global mCleanedDegree__13TMapEventSink

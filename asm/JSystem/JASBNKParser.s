@@ -723,7 +723,10 @@ lbl_8005A514:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem11TInstEffect
 __vt__Q28JASystem11TInstEffect:
-	.incbin "baserom.dol", 0x3A7E80, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2531:

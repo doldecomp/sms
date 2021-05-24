@@ -163,4 +163,15 @@ lbl_8023DD58:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TShineFader
 __vt__11TShineFader:
-	.incbin "baserom.dol", 0x3CEE00, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TShineFaderFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TShineFaderFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TShineFaderFUlPQ26JDrama9TGraphics
+  .4byte update__11TShineFaderFv
+  .4byte draw__9TSMSFaderFRCQ26JDrama5TRect
+  .4byte 0

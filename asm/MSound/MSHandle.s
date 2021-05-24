@@ -843,7 +843,19 @@ smSeCategory__8MSHandle:
 	.incbin "baserom.dol", 0x3B70C4, 0x100
 .global __vt__8MSHandle
 __vt__8MSHandle:
-	.incbin "baserom.dol", 0x3B71C4, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte setSeDistanceParameters__8MSHandleFv
+  .4byte setSeDistanceVolume__8MSHandleFUc
+  .4byte setSeDistancePan__8MSHandleFUc
+  .4byte setSeDistancePitch__8MSHandleFUc
+  .4byte setSeDistanceFxmix__8JAISoundFUc
+  .4byte setSeDistanceFir__8JAISoundFUc
+  .4byte setSeDistanceDolby__8MSHandleFUc
+  .4byte setSePositionDopplar__8JAISoundFv
+  .4byte setPositionDopplarCommon__8JAISoundFUl
+  .4byte setDistanceVolumeCommon__8MSHandleFfUc
+  .4byte setDistancePanCommon__8JAISoundFv
 $$21960:
     .4byte lbl_80185E70
     .4byte lbl_80185DFC

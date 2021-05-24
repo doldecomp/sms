@@ -850,16 +850,48 @@ $$22020:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TMapCollisionWarp
 __vt__17TMapCollisionWarp:
-	.incbin "baserom.dol", 0x3CCC88, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte init__17TMapCollisionWarpFPCcUsPC10TLiveActor
+  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveMtx__17TMapCollisionBaseFPA4_f
+  .4byte setUp__17TMapCollisionWarpFv
+  .4byte setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte remove__17TMapCollisionWarpFv
 .global __vt__17TMapCollisionMove
 __vt__17TMapCollisionMove:
-	.incbin "baserom.dol", 0x3CCCAC, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte init__17TMapCollisionMoveFPCcUsPC10TLiveActor
+  .4byte moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveMtx__17TMapCollisionMoveFPA4_f
+  .4byte setUp__17TMapCollisionBaseFv
+  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte remove__17TMapCollisionBaseFv
 .global __vt__19TMapCollisionStatic
 __vt__19TMapCollisionStatic:
-	.incbin "baserom.dol", 0x3CCCD0, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte init__19TMapCollisionStaticFPCcUsPC10TLiveActor
+  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveMtx__17TMapCollisionBaseFPA4_f
+  .4byte setUp__19TMapCollisionStaticFv
+  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte remove__19TMapCollisionStaticFv
 .global __vt__17TMapCollisionBase
 __vt__17TMapCollisionBase:
-	.incbin "baserom.dol", 0x3CCCF4, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte init__17TMapCollisionBaseFPCcUsPC10TLiveActor
+  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte moveMtx__17TMapCollisionBaseFPA4_f
+  .4byte setUp__17TMapCollisionBaseFv
+  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte remove__17TMapCollisionBaseFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21871:

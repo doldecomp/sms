@@ -3107,10 +3107,19 @@ $$2988:
     .4byte lbl_80026C9C
 .global __vt__8J3DModel
 __vt__8J3DModel:
-	.incbin "baserom.dol", 0x3A684C, 0x1C
+  .4byte 0
+  .4byte 0
+  .4byte update__8J3DModelFv
+  .4byte entry__8J3DModelFv
+  .4byte calc__8J3DModelFv
+  .4byte viewCalc__8J3DModelFv
+  .4byte __dt__8J3DModelFv
 .global __vt__12J3DModelData
 __vt__12J3DModelData:
-	.incbin "baserom.dol", 0x3A6868, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J3DModelDataFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 J3DUnit01:

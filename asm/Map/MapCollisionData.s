@@ -628,10 +628,14 @@ lbl_801DF7B4:
     .balign 8
 .global __vt__16TBGCheckListWarp
 __vt__16TBGCheckListWarp:
-	.incbin "baserom.dol", 0x3CCC70, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte setPreNode__16TBGCheckListWarpFP12TBGCheckList
 .global __vt__12TBGCheckList
 __vt__12TBGCheckList:
-	.incbin "baserom.dol", 0x3CCC7C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte setPreNode__12TBGCheckListFP12TBGCheckList
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22183:

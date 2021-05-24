@@ -1795,10 +1795,22 @@ lbl_8001BA9C:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9J2DWindow
 __vt__9J2DWindow:
-	.incbin "baserom.dol", 0x3A5D78, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9J2DWindowFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__9J2DWindowFii
+  .4byte setConnectParent__7J2DPaneFb
+  .4byte drawSelf__9J2DWindowFii
+  .4byte drawSelf__9J2DWindowFiiPA3_A4_f
+  .4byte search__7J2DPaneFUl
+  .4byte makeMatrix__7J2DPaneFii
 .global __vt__Q29J2DWindow7Texture
 __vt__Q29J2DWindow7Texture:
-	.incbin "baserom.dol", 0x3A5DA4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q29J2DWindow7TextureFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21321:

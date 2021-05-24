@@ -589,7 +589,10 @@ stAlphaOp__12JPABaseShape:
 	.incbin "baserom.dol", 0x3A9CC0, 0x10
 .global __vt__12JPABaseShape
 __vt__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9CD0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JPABaseShapeFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21505:

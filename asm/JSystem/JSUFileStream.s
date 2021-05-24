@@ -204,4 +204,13 @@ getPosition__18JSUFileInputStreamCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18JSUFileInputStream
 __vt__18JSUFileInputStream:
-	.incbin "baserom.dol", 0x3A5818, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18JSUFileInputStreamFv
+  .4byte getAvailable__20JSURandomInputStreamCFv
+  .4byte skip__20JSURandomInputStreamFl
+  .4byte readData__18JSUFileInputStreamFPvl
+  .4byte getLength__18JSUFileInputStreamCFv
+  .4byte getPosition__18JSUFileInputStreamCFv
+  .4byte seekPos__18JSUFileInputStreamFl17JSUStreamSeekFrom
+  .4byte 0

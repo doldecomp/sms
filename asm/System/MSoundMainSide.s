@@ -2713,25 +2713,53 @@ $$23413:
     .4byte lbl_80110940
 .global __vt__24MSSTageSimpleEnvironment
 __vt__24MSSTageSimpleEnvironment:
-	.incbin "baserom.dol", 0x3B1AF4, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__24MSSTageSimpleEnvironmentFv
 .global __vt__17MSStageCubeSwitch
 __vt__17MSStageCubeSwitch:
-	.incbin "baserom.dol", 0x3B1B08, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__17MSStageCubeSwitchFv
 .global __vt__20MSStageCubeFadeMonte
 __vt__20MSStageCubeFadeMonte:
-	.incbin "baserom.dol", 0x3B1B1C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__20MSStageCubeFadeMonteFv
 .global __vt__15MSStageCubeFade
 __vt__15MSStageCubeFade:
-	.incbin "baserom.dol", 0x3B1B30, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__15MSStageCubeFadeFv
 .global __vt__20MSStageDistFadeMonte
 __vt__20MSStageDistFadeMonte:
-	.incbin "baserom.dol", 0x3B1B44, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__20MSStageDistFadeMonteFv
 .global __vt__15MSStageDistFade
 __vt__15MSStageDistFade:
-	.incbin "baserom.dol", 0x3B1B58, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__15MSStageDistFadeFv
 .global __vt__7MSStage
 __vt__7MSStage:
-	.incbin "baserom.dol", 0x3B1B6C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22293:

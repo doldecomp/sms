@@ -3528,7 +3528,68 @@ $$22181:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15CPolarSubCamera
 __vt__15CPolarSubCamera:
-	.incbin "baserom.dol", 0x3E1820, 0xF8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15CPolarSubCameraFv
+  .4byte getType__Q26JDrama7TCameraCFv
+  .4byte load__Q26JDrama10TPlacementFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__15CPolarSubCameraFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15CPolarSubCameraFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__15CPolarSubCameraFv
+  .4byte JSGFGetType__Q26JStage7TCameraCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
+  .4byte $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
+  .4byte $$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
+  .4byte $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
+  .4byte $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
+  .4byte $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
+  .4byte $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
+  .4byte $$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
+  .4byte $$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
+  .4byte $$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
+  .4byte $$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+  .4byte JSGGetProjectionField__Q26JStage7TCameraCFPf
+  .4byte JSGSetProjectionField__Q26JStage7TCameraFPCf
+  .4byte JSGGetViewType__Q26JStage7TCameraCFv
+  .4byte JSGSetViewType__Q26JStage7TCameraFQ26JStage12TECameraView
+  .4byte $$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte $$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte $$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte $$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte $$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte $$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte JSGGetViewRoll__Q26JStage7TCameraCFv
+  .4byte JSGSetViewRoll__Q26JStage7TCameraFf
+  .4byte JSGGetFlag__Q26JDrama7TCameraCFv
+  .4byte JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte JSGGetProjectionNear__Q26JDrama7TCameraCFv
+  .4byte JSGSetProjectionNear__Q26JDrama7TCameraFf
+  .4byte JSGGetProjectionFar__Q26JDrama7TCameraCFv
+  .4byte JSGSetProjectionFar__Q26JDrama7TCameraFf
+  .4byte JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
+  .4byte JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
+  .4byte JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
+  .4byte JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
+  .4byte JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
+  .4byte JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+  .4byte JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
+  .4byte JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cStartCamName:

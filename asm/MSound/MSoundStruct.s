@@ -2023,13 +2023,26 @@ $$22465:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__26MSSetSoundTL$$010MSSetSound$$1
 __vt__26MSSetSoundTL$$010MSSetSound$$1:
-	.incbin "baserom.dol", 0x3B6EC8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$220$$2frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv
+  .4byte frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv
 .global __vt__10MSSetSound
 __vt__10MSSetSound:
-	.incbin "baserom.dol", 0x3B6EE0, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$220$$2frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv
+  .4byte frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv
 .global __vt__30JALListFrameLoop$$010MSSetSound$$1
 __vt__30JALListFrameLoop$$010MSSetSound$$1:
-	.incbin "baserom.dol", 0x3B6EF8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte frameLoopDyna__30JALListFrameLoop$$010MSSetSound$$1Fv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21995:

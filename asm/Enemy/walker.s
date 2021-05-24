@@ -1131,10 +1131,16 @@ lbl_80283944:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7TWalker
 __vt__7TWalker:
-	.incbin "baserom.dol", 0x3D3F68, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TWalkerFv
+  .4byte bind__7TWalkerFP10TLiveActor
 .global __vt__29TSolidStack$$0PC12TBGCheckData$$1
 __vt__29TSolidStack$$0PC12TBGCheckData$$1:
-	.incbin "baserom.dol", 0x3D3F78, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TSolidStack$$0PC12TBGCheckData$$1Fv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22687:

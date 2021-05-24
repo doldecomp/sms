@@ -292,7 +292,23 @@ $$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q38JASystem15TSimpleWaveBank11TWaveHandle
 __vt__Q38JASystem15TSimpleWaveBank11TWaveHandle:
-	.incbin "baserom.dol", 0x3A7EC8, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q38JASystem15TSimpleWaveBank11TWaveHandleFv
+  .4byte getWaveInfo__Q38JASystem15TSimpleWaveBank11TWaveHandleCFv
+  .4byte getWavePtr__Q38JASystem15TSimpleWaveBank11TWaveHandleCFv
 .global __vt__Q28JASystem15TSimpleWaveBank
 __vt__Q28JASystem15TSimpleWaveBank:
-	.incbin "baserom.dol", 0x3A7EDC, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem15TSimpleWaveBankFv
+  .4byte getWaveHandle__Q28JASystem15TSimpleWaveBankCFUl
+  .4byte getType__Q28JASystem15TSimpleWaveBankCFv
+  .4byte 0
+  .4byte 0
+  .4byte $$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
+  .4byte $$24$$2getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
+  .4byte $$24$$2getHeap__Q28JASystem15TSimpleWaveBankFv
+  .4byte getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
+  .4byte getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
+  .4byte getHeap__Q28JASystem15TSimpleWaveBankFv

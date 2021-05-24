@@ -422,10 +422,28 @@ lbl_8011D014:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TStrategy
 __vt__9TStrategy:
-	.incbin "baserom.dol", 0x3B2300, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TStrategyFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TStrategyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__9TStrategyFv
+  .4byte searchF__9TStrategyFUsPCc
+  .4byte perform__9TStrategyFUlPQ26JDrama9TGraphics
 .global __vt__12TIdxGroupObj
 __vt__12TIdxGroupObj:
-	.incbin "baserom.dol", 0x3B2324, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TIdxGroupObjFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
+  .4byte searchF__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUsPCc
+  .4byte perform__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+  .4byte loadSuper__12TIdxGroupObjFR20JSUMemoryInputStream
+  .4byte loadAfterSuper__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpStrategy

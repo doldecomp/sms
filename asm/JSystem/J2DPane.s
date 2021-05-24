@@ -1236,7 +1236,18 @@ drawSelf__7J2DPaneFii:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7J2DPane
 __vt__7J2DPane:
-	.incbin "baserom.dol", 0x3A5BC0, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7J2DPaneFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__7J2DPaneFii
+  .4byte setConnectParent__7J2DPaneFb
+  .4byte drawSelf__7J2DPaneFii
+  .4byte drawSelf__7J2DPaneFiiPA3_A4_f
+  .4byte search__7J2DPaneFUl
+  .4byte makeMatrix__7J2DPaneFii
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2144:

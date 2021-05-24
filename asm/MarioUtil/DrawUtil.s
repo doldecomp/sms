@@ -2792,7 +2792,16 @@ $$23559:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TSilhouette
 __vt__11TSilhouette:
-	.incbin "baserom.dol", 0x3AEFB0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TSilhouetteFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TSilhouetteFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSilhouetteFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSilhouetteFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21997:

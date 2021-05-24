@@ -192,4 +192,7 @@ lbl_80042034:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama8TDisplay
 __vt__Q26JDrama8TDisplay:
-	.incbin "baserom.dol", 0x3A7508, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte startRendering__Q26JDrama8TDisplayFv
+  .4byte endRendering__Q26JDrama8TDisplayFv

@@ -508,7 +508,30 @@ $$22811:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19TMapEventSirenaSink
 __vt__19TMapEventSirenaSink:
-	.incbin "baserom.dol", 0x3CD648, 0x60
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TMapEventSirenaSinkFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__19TMapEventSirenaSinkFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__19TMapEventSirenaSinkFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__13TMapEventSinkCFv
+  .4byte watch__19TMapEventSirenaSinkFv
+  .4byte startControl__13TMapEventSinkFv
+  .4byte control__13TMapEventSinkFv
+  .4byte finishControl__13TMapEventSinkFv
+  .4byte getBuilding__13TMapEventSinkCFi
+  .4byte initBuilding__13TMapEventSinkFiR20JSUMemoryInputStream
+  .4byte initWithBuildingNum__13TMapEventSinkFR20JSUMemoryInputStream
+  .4byte rising__13TMapEventSinkFv
+  .4byte getSinkOffsetY__13TMapEventSinkCFv
+  .4byte makeBuildingRecovered__13TMapEventSinkFi
+  .4byte initPollution__19TMapEventSirenaSinkFv
+  .4byte makePollutionRecovered__19TMapEventSirenaSinkFUl
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22744:

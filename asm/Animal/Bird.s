@@ -4200,37 +4200,153 @@ bird_bastable:
 	.incbin "baserom.dol", 0x3E2920, 0x24
 .global __vt__23TNerveAnimalBirdLanding
 __vt__23TNerveAnimalBirdLanding:
-	.incbin "baserom.dol", 0x3E2944, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveAnimalBirdLandingFv
+  .4byte execute__23TNerveAnimalBirdLandingCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__26TNerveAnimalBirdPreLanding
 __vt__26TNerveAnimalBirdPreLanding:
-	.incbin "baserom.dol", 0x3E2954, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26TNerveAnimalBirdPreLandingFv
+  .4byte execute__26TNerveAnimalBirdPreLandingCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveAnimalBirdComeback
 __vt__24TNerveAnimalBirdComeback:
-	.incbin "baserom.dol", 0x3E2964, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveAnimalBirdComebackFv
+  .4byte execute__24TNerveAnimalBirdComebackCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__28TNerveAnimalBirdChangeToCoin
 __vt__28TNerveAnimalBirdChangeToCoin:
-	.incbin "baserom.dol", 0x3E2974, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__28TNerveAnimalBirdChangeToCoinFv
+  .4byte execute__28TNerveAnimalBirdChangeToCoinCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__27TNerveAnimalBirdGraphWander
 __vt__27TNerveAnimalBirdGraphWander:
-	.incbin "baserom.dol", 0x3E2984, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__27TNerveAnimalBirdGraphWanderFv
+  .4byte execute__27TNerveAnimalBirdGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveAnimalBirdTakeoff
 __vt__23TNerveAnimalBirdTakeoff:
-	.incbin "baserom.dol", 0x3E2994, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveAnimalBirdTakeoffFv
+  .4byte execute__23TNerveAnimalBirdTakeoffCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__28TNerveAnimalBirdWalkOnGround
 __vt__28TNerveAnimalBirdWalkOnGround:
-	.incbin "baserom.dol", 0x3E29A4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__28TNerveAnimalBirdWalkOnGroundFv
+  .4byte execute__28TNerveAnimalBirdWalkOnGroundCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__30TNerveAnimalBirdActionOnGround
 __vt__30TNerveAnimalBirdActionOnGround:
-	.incbin "baserom.dol", 0x3E29B4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__30TNerveAnimalBirdActionOnGroundFv
+  .4byte execute__30TNerveAnimalBirdActionOnGroundCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__28TNerveAnimalBirdWaitOnGround
 __vt__28TNerveAnimalBirdWaitOnGround:
-	.incbin "baserom.dol", 0x3E29C4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__28TNerveAnimalBirdWaitOnGroundFv
+  .4byte execute__28TNerveAnimalBirdWaitOnGroundCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TAnimalBirdManager
 __vt__18TAnimalBirdManager:
-	.incbin "baserom.dol", 0x3E29D4, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TAnimalBirdManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TAnimalBirdManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TAnimalBirdManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TAnimalBirdManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
 .global __vt__11TAnimalBird
 __vt__11TAnimalBird:
-	.incbin "baserom.dol", 0x3E2A28, 0x118
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TAnimalBirdFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TAnimalBirdFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TAnimalBirdFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__11TAnimalBirdFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TAnimalBirdFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__11TAnimalBirdFP12TLiveManager
+  .4byte calcRootMatrix__11TAnimalBirdFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__11TAnimalBirdFv
+  .4byte moveObject__11TAnimalBirdFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__11TAnimalBirdCFv
+  .4byte reset__11TSpineEnemyFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 cMatName__9$$2unnamed$$2:

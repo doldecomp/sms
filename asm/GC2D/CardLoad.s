@@ -12863,7 +12863,15 @@ cMessageID__9TCardLoad:
 	.incbin "baserom.dol", 0x3CE638, 0xD4
 .global __vt__9TCardLoad
 __vt__9TCardLoad:
-	.incbin "baserom.dol", 0x3CE70C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TCardLoadFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TCardLoadFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__9TCardLoadFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TCardLoadFUlPQ26JDrama9TGraphics
 $$24549:
     .4byte lbl_80224660
     .4byte lbl_80224688

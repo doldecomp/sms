@@ -743,7 +743,10 @@ lbl_8004B284:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JAIAnimeSound
 __vt__13JAIAnimeSound:
-	.incbin "baserom.dol", 0x3A7C30, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte startAnimSound__13JAIAnimeSoundFPvUlPP8JAISoundP8JAIActorUc
+  .4byte setSpeedModifySound__13JAIAnimeSoundFP8JAISoundP22JAIAnimeFrameSoundDataf
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2461:

@@ -367,7 +367,10 @@ lbl_800817FC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JPATexture
 __vt__10JPATexture:
-	.incbin "baserom.dol", 0x3A9D00, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JPATextureFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21494:

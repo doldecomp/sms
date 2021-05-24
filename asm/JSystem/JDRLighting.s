@@ -1154,22 +1154,146 @@ $$2753:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama9TLightMap
 __vt__Q26JDrama9TLightMap:
-	.incbin "baserom.dol", 0x3A7658, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama9TLightMapFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama9TLightMapFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama9TLightMapFUlPQ26JDrama9TGraphics
 .global __vt__Q26JDrama7TAmbAry
 __vt__Q26JDrama7TAmbAry:
-	.incbin "baserom.dol", 0x3A767C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama7TAmbAryFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama7TAmbAryFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama7TAmbAryFUsPCc
+  .4byte perform__Q26JDrama7TAmbAryFUlPQ26JDrama9TGraphics
 .global __vt__Q26JDrama9TAmbColor
 __vt__Q26JDrama9TAmbColor:
-	.incbin "baserom.dol", 0x3A76A0, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama9TAmbColorFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama9TAmbColorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama9TAmbColorFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$216$$2__dt__Q26JDrama9TAmbColorFv
+  .4byte JSGFGetType__Q26JStage13TAmbientLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$216$$2JSGGetColor__Q26JDrama9TAmbColorCFv
+  .4byte $$216$$2JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
+  .4byte JSGGetColor__Q26JDrama9TAmbColorCFv
+  .4byte JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
 .global __vt__Q26JDrama9TIdxLight
 __vt__Q26JDrama9TIdxLight:
-	.incbin "baserom.dol", 0x3A7704, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama9TIdxLightFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama6TLightFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama6TLightFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__Q26JDrama9TIdxLightFv
+  .4byte JSGFGetType__Q26JStage6TLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetLightType__Q26JDrama6TLightCFv
+  .4byte $$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
+  .4byte $$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec
+  .4byte $$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec
+  .4byte $$232$$2JSGGetColor__Q26JDrama6TLightCFv
+  .4byte $$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor
+  .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
+  .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
+  .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
+  .4byte JSGSetAngleAttenuation__Q26JStage6TLightFf9_GXSpotFn
+  .4byte JSGGetDirection__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetDirection__Q26JStage6TLightFRC3Vec
+  .4byte JSGGetLightType__Q26JDrama6TLightCFv
+  .4byte JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
+  .4byte JSGGetPosition__Q26JDrama6TLightCFP3Vec
+  .4byte JSGSetPosition__Q26JDrama6TLightFRC3Vec
+  .4byte JSGGetColor__Q26JDrama6TLightCFv
+  .4byte JSGSetColor__Q26JDrama6TLightF8_GXColor
 .global __vt__Q26JDrama9TLightAry
 __vt__Q26JDrama9TLightAry:
-	.incbin "baserom.dol", 0x3A77A0, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama9TLightAryFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama9TLightAryFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama9TLightAryFUsPCc
+  .4byte perform__Q26JDrama9TLightAryFUlPQ26JDrama9TGraphics
 .global __vt__Q26JDrama6TLight
 __vt__Q26JDrama6TLight:
-	.incbin "baserom.dol", 0x3A77C4, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama6TLightFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama6TLightFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama6TLightFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__Q26JDrama6TLightFv
+  .4byte JSGFGetType__Q26JStage6TLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetLightType__Q26JDrama6TLightCFv
+  .4byte $$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
+  .4byte $$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec
+  .4byte $$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec
+  .4byte $$232$$2JSGGetColor__Q26JDrama6TLightCFv
+  .4byte $$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor
+  .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
+  .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
+  .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
+  .4byte JSGSetAngleAttenuation__Q26JStage6TLightFf9_GXSpotFn
+  .4byte JSGGetDirection__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetDirection__Q26JStage6TLightFRC3Vec
+  .4byte JSGGetLightType__Q26JDrama6TLightCFv
+  .4byte JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
+  .4byte JSGGetPosition__Q26JDrama6TLightCFP3Vec
+  .4byte JSGSetPosition__Q26JDrama6TLightFRC3Vec
+  .4byte JSGGetColor__Q26JDrama6TLightCFv
+  .4byte JSGSetColor__Q26JDrama6TLightF8_GXColor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2633:

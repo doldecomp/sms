@@ -50,4 +50,7 @@ lbl_8006C558:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16J3DMaterialTable
 __vt__16J3DMaterialTable:
-	.incbin "baserom.dol", 0x3A9420, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16J3DMaterialTableFv
+  .4byte 0

@@ -51,7 +51,20 @@ JSGSetColor__Q26JStage13TAmbientLightF8_GXColor:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage13TAmbientLight
 __vt__Q26JStage13TAmbientLight:
-	.incbin "baserom.dol", 0x3A9D10, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage13TAmbientLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetColor__Q26JStage13TAmbientLightCFv
+  .4byte JSGSetColor__Q26JStage13TAmbientLightF8_GXColor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2115:

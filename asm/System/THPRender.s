@@ -103,4 +103,13 @@ __ct__10TTHPRenderFPCc:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TTHPRender
 __vt__10TTHPRender:
-	.incbin "baserom.dol", 0x3B1180, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TTHPRenderFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TTHPRenderFUlPQ26JDrama9TGraphics
+  .4byte 0

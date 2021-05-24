@@ -414,13 +414,34 @@ lbl_802A2260:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TStageEnemyInfo
 __vt__15TStageEnemyInfo:
-	.incbin "baserom.dol", 0x3D5A78, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TStageEnemyInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TStageEnemyInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 .global __vt__20TStageEnemyInfoTable
 __vt__20TStageEnemyInfoTable:
-	.incbin "baserom.dol", 0x3D5A98, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TStageEnemyInfoTableFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1
 __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3D5AB8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21696:

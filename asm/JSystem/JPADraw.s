@@ -7029,16 +7029,28 @@ $$22382:
     .4byte lbl_80075250
 .global __vt__25JPADrawCalcEmitterVisitor
 __vt__25JPADrawCalcEmitterVisitor:
-	.incbin "baserom.dol", 0x3A9678, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25JPADrawCalcEmitterVisitorFv
+  .4byte 0
 .global __vt__26JPADrawCalcParticleVisitor
 __vt__26JPADrawCalcParticleVisitor:
-	.incbin "baserom.dol", 0x3A9688, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26JPADrawCalcParticleVisitorFv
+  .4byte 0
 .global __vt__26JPADrawExecParticleVisitor
 __vt__26JPADrawExecParticleVisitor:
-	.incbin "baserom.dol", 0x3A9698, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26JPADrawExecParticleVisitorFv
+  .4byte 0
 .global __vt__25JPADrawExecEmitterVisitor
 __vt__25JPADrawExecEmitterVisitor:
-	.incbin "baserom.dol", 0x3A96A8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25JPADrawExecEmitterVisitorFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21659:

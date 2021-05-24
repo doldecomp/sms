@@ -4328,7 +4328,15 @@ scNormalStageTable:
 	.incbin "baserom.dol", 0x3CED30, 0x28
 .global __vt__6TGuide
 __vt__6TGuide:
-	.incbin "baserom.dol", 0x3CED58, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__6TGuideFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__6TGuideFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__6TGuideFUlPQ26JDrama9TGraphics
 $$22657:
     .4byte lbl_8023995C
     .4byte lbl_80239968

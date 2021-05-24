@@ -344,10 +344,20 @@ lbl_800D3084:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8M3UModel
 __vt__8M3UModel:
-	.incbin "baserom.dol", 0x3B04E0, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte changeMtxCalcAnmTransform__8M3UModelFiUc
+  .4byte changeAnmTexPattern__8M3UModelFiUc
+  .4byte setMtxCalc__8M3UModelFRC17M3UMtxCalcSetInfo
+  .4byte updateIn__8M3UModelFv
+  .4byte updateOut__8M3UModelFv
+  .4byte entryIn__8M3UModelFv
+  .4byte entryOut__8M3UModelFv
 .global __vt__14M3UModelCommon
 __vt__14M3UModelCommon:
-	.incbin "baserom.dol", 0x3B0504, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getMtxCalc__14M3UModelCommonFRC17M3UMtxCalcSetInfo
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21716:

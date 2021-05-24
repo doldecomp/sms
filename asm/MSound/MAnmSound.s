@@ -535,10 +535,16 @@ lbl_8017C998:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12MAnmSoundNPC
 __vt__12MAnmSoundNPC:
-	.incbin "baserom.dol", 0x3B6C28, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte startAnimSound__12MAnmSoundNPCFPvUlPP8JAISoundP8JAIActorUc
+  .4byte setSpeedModifySound__9MAnmSoundFP8JAISoundP22JAIAnimeFrameSoundDataf
 .global __vt__9MAnmSound
 __vt__9MAnmSound:
-	.incbin "baserom.dol", 0x3B6C38, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte startAnimSound__9MAnmSoundFPvUlPP8JAISoundP8JAIActorUc
+  .4byte setSpeedModifySound__9MAnmSoundFP8JAISoundP22JAIAnimeFrameSoundDataf
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21981:

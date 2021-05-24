@@ -427,7 +427,16 @@ J2DFillBox__F7JUTRectQ28JUtility6TColor:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13J2DOrthoGraph
 __vt__13J2DOrthoGraph:
-	.incbin "baserom.dol", 0x3A6BB0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13J2DOrthoGraphFv
+  .4byte place__14J2DGrafContextFRC7JUTRect
+  .4byte place__14J2DGrafContextFiiii
+  .4byte setPort__13J2DOrthoGraphFv
+  .4byte setup2D__14J2DGrafContextFv
+  .4byte setScissor__14J2DGrafContextFv
+  .4byte setLookat__13J2DOrthoGraphFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2123:

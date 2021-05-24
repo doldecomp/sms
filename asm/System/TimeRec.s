@@ -186,10 +186,14 @@ lbl_800FCA84:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8TTimeRec
 __vt__8TTimeRec:
-	.incbin "baserom.dol", 0x3B1168, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte drawSyncCallback__8TTimeRecFUs
 .global __vt__17TDrawSyncCallback
 __vt__17TDrawSyncCallback:
-	.incbin "baserom.dol", 0x3B1174, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global _instance__8TTimeRec

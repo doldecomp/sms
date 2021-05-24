@@ -3140,31 +3140,198 @@ entry$2918:
 	.incbin "baserom.dol", 0x3D9C3C, 0x24
 .global __vt__22TNerveBombHeiExplosion
 __vt__22TNerveBombHeiExplosion:
-	.incbin "baserom.dol", 0x3D9C60, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveBombHeiExplosionFv
+  .4byte execute__22TNerveBombHeiExplosionCFP24TSpineBase$$010TLiveActor$$1
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__19TNerveBombHeiThrown
 __vt__19TNerveBombHeiThrown:
-	.incbin "baserom.dol", 0x3D9CB0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveBombHeiThrownFv
+  .4byte execute__19TNerveBombHeiThrownCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveBombHeiPickUp
 __vt__19TNerveBombHeiPickUp:
-	.incbin "baserom.dol", 0x3D9CC0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveBombHeiPickUpFv
+  .4byte execute__19TNerveBombHeiPickUpCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__26TNerveBombHeiWaitExplosion
 __vt__26TNerveBombHeiWaitExplosion:
-	.incbin "baserom.dol", 0x3D9CD0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26TNerveBombHeiWaitExplosionFv
+  .4byte execute__26TNerveBombHeiWaitExplosionCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__26TNerveBombHeiWalkExplosion
 __vt__26TNerveBombHeiWalkExplosion:
-	.incbin "baserom.dol", 0x3D9CE0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__26TNerveBombHeiWalkExplosionFv
+  .4byte execute__26TNerveBombHeiWalkExplosionCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveBombHeiAttack
 __vt__19TNerveBombHeiAttack:
-	.incbin "baserom.dol", 0x3D9CF0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveBombHeiAttackFv
+  .4byte execute__19TNerveBombHeiAttackCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveBombHeiGenerate
 __vt__21TNerveBombHeiGenerate:
-	.incbin "baserom.dol", 0x3D9D00, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveBombHeiGenerateFv
+  .4byte execute__21TNerveBombHeiGenerateCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__8TBombHei
 __vt__8TBombHei:
-	.incbin "baserom.dol", 0x3D9D10, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__8TBombHeiFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSmallEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__8TBombHeiFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__8TBombHeiFP12TLiveManager
+  .4byte calcRootMatrix__8TBombHeiFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__8TBombHeiFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__8TBombHeiFv
+  .4byte getGravityY__8TBombHeiCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__8TBombHeiCFv
+  .4byte reset__8TBombHeiFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__8TBombHeiFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__8TBombHeiFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__8TBombHeiFv
+  .4byte behaveToTaken__8TBombHeiFP9THitActor
+  .4byte behaveToRelease__8TBombHeiFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__8TBombHeiFv
+  .4byte setDeadAnm__8TBombHeiFv
+  .4byte setFreezeAnm__8TBombHeiFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__11TSmallEnemyFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__8TBombHeiFv
+  .4byte forceKill__8TBombHeiFv
+  .4byte setMActorAndKeeper__8TBombHeiFv
+  .4byte initAttacker__12TWalkerEnemyFP9THitActor
+  .4byte isHitValid__8TBombHeiFUl
+  .4byte isCollidMove__8TBombHeiFP9THitActor
+  .4byte isInhibitedForceMove__11TSmallEnemyFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__8TBombHeiFv
+  .4byte doKeepDistance__8TBombHeiFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__8TBombHeiFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__15TBombHeiManager
 __vt__15TBombHeiManager:
-	.incbin "baserom.dol", 0x3D9EC8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TBombHeiManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TBombHeiManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TBombHeiManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__15TBombHeiManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mSerialBomb__8TBombHei:

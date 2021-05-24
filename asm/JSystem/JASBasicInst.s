@@ -456,10 +456,20 @@ getType__Q28JASystem10TBasicInstCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem10TBasicInst
 __vt__Q28JASystem10TBasicInst:
-	.incbin "baserom.dol", 0x3A7DD8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem10TBasicInstFv
+  .4byte getParam__Q28JASystem10TBasicInstCFiiPQ28JASystem10TInstParam
+  .4byte getType__Q28JASystem10TBasicInstCFv
+  .4byte getKeymapIndex__Q28JASystem10TBasicInstCFi
 .global __vt__Q28JASystem5TInst
 __vt__Q28JASystem5TInst:
-	.incbin "baserom.dol", 0x3A7DF0, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem5TInstFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2294:

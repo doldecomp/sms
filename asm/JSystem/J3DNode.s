@@ -58,4 +58,13 @@ lbl_800295C4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7J3DNode
 __vt__7J3DNode:
-	.incbin "baserom.dol", 0x3A6878, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__7J3DNodeFP12J3DModelData
+  .4byte updateIn__7J3DNodeFv
+  .4byte updateOut__7J3DNodeFv
+  .4byte entryIn__7J3DNodeFv
+  .4byte calcIn__7J3DNodeFv
+  .4byte calcOut__7J3DNodeFv
+  .4byte getType__7J3DNodeCFv
+  .4byte __dt__7J3DNodeFv

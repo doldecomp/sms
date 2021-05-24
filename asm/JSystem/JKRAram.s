@@ -1116,7 +1116,10 @@ sMessageQueue__7JKRAram:
 	.incbin "baserom.dol", 0x3A5408, 0x20
 .global __vt__7JKRAram
 __vt__7JKRAram:
-	.incbin "baserom.dol", 0x3A5428, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7JKRAramFv
+  .4byte run__7JKRAramFv
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$260:

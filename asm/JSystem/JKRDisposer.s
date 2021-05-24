@@ -77,4 +77,7 @@ lbl_80008D94:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11JKRDisposer
 __vt__11JKRDisposer:
-	.incbin "baserom.dol", 0x3A54C8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11JKRDisposerFv
+  .4byte 0

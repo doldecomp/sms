@@ -229,4 +229,7 @@ lbl_800DA6EC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19SampleCtrlModelData
 __vt__19SampleCtrlModelData:
-	.incbin "baserom.dol", 0x3B0818, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19SampleCtrlModelDataFv
+  .4byte 0
