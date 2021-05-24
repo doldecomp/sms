@@ -691,42 +691,60 @@ __OSGetDIConfig:
 /* 8008CE80 00089DC0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 $$284:
-	.incbin "baserom.dol", 0x3AC0C0, 0x20
+    .asciz "\nDolphin OS $Revision: 54 $.\n"
+    .balign 8
 $$285:
-	.incbin "baserom.dol", 0x3AC0E0, 0x18
+	.asciz "Kernel built : %s %s\n"
+    .balign 8
 $$286:
-	.incbin "baserom.dol", 0x3AC0F8, 0xC
+	.asciz "Jun  5 2002"
+    .balign 4
 $$287:
-	.incbin "baserom.dol", 0x3AC104, 0xC
+    .asciz "02:09:12"
+    .balign 8
 $$288:
-	.incbin "baserom.dol", 0x3AC110, 0x10
+	.asciz "Console Type : "
+    .balign 8
 $$289:
-	.incbin "baserom.dol", 0x3AC120, 0xC
+    .asciz "Retail %d\n"
+	.balign 4
 $$290:
-	.incbin "baserom.dol", 0x3AC12C, 0x10
+    .asciz "Mac Emulator\n"
+    .balign 4
 $$291:
-	.incbin "baserom.dol", 0x3AC13C, 0x10
+    .asciz "PC Emulator\n"
+    .balign 4
 $$292:
-	.incbin "baserom.dol", 0x3AC14C, 0x10
+    .asciz "EPPC Arthur\n"
+	.balign 4
 $$293:
-	.incbin "baserom.dol", 0x3AC15C, 0x10
+    .asciz "EPPC Minnow\n"
+    .balign 4
 $$294:
-	.incbin "baserom.dol", 0x3AC16C, 0x14
+    .asciz "Development HW%d\n"
+    .balign 4
 $$295:
-	.incbin "baserom.dol", 0x3AC180, 0x10
+    .asciz "Memory %d MB\n"
+	.balign 4
 $$296:
-	.incbin "baserom.dol", 0x3AC190, 0x18
+    .asciz "Arena : 0x%x - 0x%x\n"
+	.balign 4
 __OSExceptionLocations:
 	.incbin "baserom.dol", 0x3AC1A8, 0x3C
 $$2130:
-	.incbin "baserom.dol", 0x3AC1E4, 0x1C
+    .asciz "Installing OSDBIntegrator\n"
+	.balign 4
 $$2131:
-	.incbin "baserom.dol", 0x3AC200, 0x30
+    .asciz ">>> OSINIT: exception %d commandeered by TRK\n"
+	.balign 4
 $$2132:
-	.incbin "baserom.dol", 0x3AC230, 0x30
+    .asciz ">>> OSINIT: exception %d vectored to debugger\n"
+	.balign 4
 $$2133:
-	.incbin "baserom.dol", 0x3AC260, 0x20
+    .asciz "Exceptions initialized...\n"
+	.balign 8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 DriveInfo:
