@@ -404,14 +404,14 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/RenderModeObj.o                           \
     $(BUILD_DIR)/asm/System/SnapTimeObj.o                             \
     $(BUILD_DIR)/asm/System/TalkCursor.o                              \
-    $(BUILD_DIR)/asm/System/TexCache.o                                \
+    $(BUILD_DIR)/src/System/TexCache.o                                \
     $(BUILD_DIR)/asm/System/ZBufferCatch.o                            \
     $(BUILD_DIR)/asm/System/Application.o                             \
     $(BUILD_DIR)/asm/System/ScenarioArchiveName.o                     \
     $(BUILD_DIR)/asm/System/MarioGamePad.o                            \
     $(BUILD_DIR)/asm/System/StageEventInfo.o                          \
-    $(BUILD_DIR)/asm/System/StageUtil.o                               \
-    $(BUILD_DIR)/asm/System/Resolution.o                              \
+    $(BUILD_DIR)/src/System/StageUtil.o                               \
+    $(BUILD_DIR)/src/System/Resolution.o                              \
     $(BUILD_DIR)/asm/System/PositionHolder.o                          \
     $(BUILD_DIR)/asm/System/ProcessMeter.o                            \
     $(BUILD_DIR)/asm/System/TimeRec.o                                 \
