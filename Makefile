@@ -44,7 +44,7 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src src/NPC src/MarioUtil src/JSystem
+SRC_DIRS := src src/NPC src/MarioUtil src/JSystem src/System
 
 ASM_DIRS := asm                      \
             asm/JSystem              \
