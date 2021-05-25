@@ -693,7 +693,7 @@ $$232$$2__dt__8TShimmerFv:
 /* 801F195C 001EE89C  4B FF F6 30 */	b __dt__8TShimmerFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDF8, 0x4
+  .4byte __sinit_Shimmer_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$22694:

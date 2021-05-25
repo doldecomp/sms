@@ -4117,7 +4117,7 @@ $$232$$2__dt__15TMareEventPointFv:
 /* 801B2D4C 001AFC8C  4B FF C4 F4 */	b __dt__15TMareEventPointFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD3C, 0x4
+  .4byte __sinit_MapObjMare_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

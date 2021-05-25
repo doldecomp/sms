@@ -1901,7 +1901,7 @@ $$232$$2__dt__18TSuperHipDropBlockFv:
 /* 8019C790 001996D0  4B FF E5 B4 */	b __dt__18TSuperHipDropBlockFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD20, 0x4
+  .4byte __sinit_MapObjBlock_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

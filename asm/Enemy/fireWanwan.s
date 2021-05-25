@@ -10652,7 +10652,7 @@ $$232$$2__dt__11TFireWanwanFv:
 /* 802A1CDC 0029EC1C  4B FF FA 0C */	b __dt__11TFireWanwanFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE90, 0x4
+  .4byte __sinit_fireWanwan_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

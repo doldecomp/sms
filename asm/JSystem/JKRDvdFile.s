@@ -407,7 +407,7 @@ lbl_80009C30:
 /* 80009C48 00006B88  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBB0, 0x4
+  .4byte __sinit_JKRDvdFile_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$2302:

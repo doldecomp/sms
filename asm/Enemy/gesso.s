@@ -5513,7 +5513,7 @@ $$232$$2__dt__16TGessoPolluteObjFv:
 /* 8025E1FC 0025B13C  4B FF F8 C4 */	b __dt__16TGessoPolluteObjFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE64, 0x4
+  .4byte __sinit_gesso_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

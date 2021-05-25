@@ -4032,7 +4032,7 @@ lbl_80150CBC:
 /* 80150CCC 0014DC0C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCA0, 0x4
+  .4byte __sinit_Yoshi_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

@@ -6048,7 +6048,7 @@ $$232$$2__dt__11TEnemyMarioFv:
 /* 8025889C 002557DC  4B FF A8 60 */	b __dt__11TEnemyMarioFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE60, 0x4
+  .4byte __sinit_enemyMario_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

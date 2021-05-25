@@ -4121,7 +4121,7 @@ $$232$$2__dt__11TAnimalBirdFv:
 /* 8036BB70 00368AB0  4B FF FC 94 */	b __dt__11TAnimalBirdFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF58, 0x4
+  .4byte __sinit_Bird_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

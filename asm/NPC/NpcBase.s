@@ -2707,7 +2707,7 @@ $$232$$2__dt__8TBaseNPCFv:
 /* 8016CF80 00169EC0  4B FF DB 1C */	b __dt__8TBaseNPCFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCC4, 0x4
+  .4byte __sinit_NpcBase_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8TBaseNPC

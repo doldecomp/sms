@@ -589,7 +589,7 @@ $$232$$2__dt__4TSkyFv:
 /* 801F21D4 001EF114  4B FF F7 8C */	b __dt__4TSkyFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDFC, 0x4
+  .4byte __sinit_Sky_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$22827:

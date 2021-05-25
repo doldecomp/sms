@@ -2873,7 +2873,7 @@ $$232$$2__dt__10TMerryPoleFv:
 /* 8018FE9C 0018CDDC  4B FF FB D8 */	b __dt__10TMerryPoleFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD0C, 0x4
+  .4byte __sinit_MapObjManager_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

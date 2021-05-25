@@ -2564,7 +2564,7 @@ __sinit_JASSeqParser_cpp:
 /* 8006C4DC 0006941C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC00, 0x4
+  .4byte __sinit_JASSeqParser_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 Arglist__8JASystem:

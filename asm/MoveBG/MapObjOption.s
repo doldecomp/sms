@@ -748,7 +748,7 @@ $$232$$2__dt__14TFileLoadBlockFv:
 /* 801C7074 001C3FB4  4B FF F5 B4 */	b __dt__14TFileLoadBlockFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD78, 0x4
+  .4byte __sinit_MapObjOption_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

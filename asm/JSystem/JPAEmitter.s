@@ -3259,7 +3259,7 @@ __sinit_JPAEmitter_cpp:
 /* 8006F3E4 0006C324  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC04, 0x4
+  .4byte __sinit_JPAEmitter_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22833:

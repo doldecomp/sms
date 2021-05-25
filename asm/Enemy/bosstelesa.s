@@ -10889,7 +10889,7 @@ $$232$$2__dt__25TBossTelesaKillSmallEnemyFv:
 /* 802D99FC 002D693C  4B FF F8 C4 */	b __dt__25TBossTelesaKillSmallEnemyFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEB8, 0x4
+  .4byte __sinit_bosstelesa_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

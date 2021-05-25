@@ -974,7 +974,7 @@ $$232$$2__dt__12TMapObjSteamFv:
 /* 801CFB14 001CCA54  4B FF F2 7C */	b __dt__12TMapObjSteamFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD88, 0x4
+  .4byte __sinit_MapObjEx_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

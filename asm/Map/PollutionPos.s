@@ -505,7 +505,7 @@ lbl_801F0F78:
 /* 801F0F88 001EDEC8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDF4, 0x4
+  .4byte __sinit_PollutionPos_cpp
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22390:
