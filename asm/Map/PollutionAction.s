@@ -839,7 +839,7 @@ lbl_801EC6C8:
 /* 801EC6D8 001E9618  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDE4, 0x4
+  .4byte __sinit_PollutionAction_cpp
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mAreaMinRate__15TPollutionLayer:

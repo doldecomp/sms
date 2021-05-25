@@ -46,15 +46,15 @@ lbl_80083288:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
 .global __init_cpp_exceptions_reference
 __init_cpp_exceptions_reference:
-	.incbin "baserom.dol", 0x36CBA0, 0x4
+	.4byte __init_cpp_exceptions
 
 .section .dtors, "wa"  # 0x8036FF80 - 0x8036FFA0
 .global __destroy_global_chain_reference
 __destroy_global_chain_reference:
-	.incbin "baserom.dol", 0x36CF80, 0x4
+	.4byte __destroy_global_chain
 .global __fini_cpp_exceptions_reference
 __fini_cpp_exceptions_reference:
-	.incbin "baserom.dol", 0x36CF84, 0x4
+	.4byte __fini_cpp_exceptions
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 fragmentID:

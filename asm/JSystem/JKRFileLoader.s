@@ -481,7 +481,7 @@ lbl_8000C0F4:
 /* 8000C10C 0000904C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBB4, 0x4
+  .4byte __sinit_JKRFileLoader_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRFileLoader

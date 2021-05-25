@@ -1421,7 +1421,7 @@ $$232$$2__dt__14TMapModelActorFv:
 /* 801E8898 001E57D8  4B FF FB F0 */	b __dt__14TMapModelActorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDD4, 0x4
+  .4byte __sinit_MapStaticObject_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

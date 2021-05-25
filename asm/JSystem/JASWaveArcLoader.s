@@ -210,7 +210,7 @@ __sinit_JASWaveArcLoader_cpp:
 /* 8005B16C 000580AC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBF0, 0x4
+  .4byte __sinit_JASWaveArcLoader_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sCurrentDir__Q28JASystem13WaveArcLoader:

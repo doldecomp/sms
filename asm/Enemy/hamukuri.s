@@ -12728,7 +12728,7 @@ $$232$$2__dt__13TDoroHamuKuriFv:
 /* 8026C568 002694A8  4B FF F5 A8 */	b __dt__13TDoroHamuKuriFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE68, 0x4
+  .4byte __sinit_hamukuri_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

@@ -12496,7 +12496,7 @@ $$232$$2__dt__8TBossEelFv:
 /* 802ED7B8 002EA6F8  4B FF F5 E4 */	b __dt__8TBossEelFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEC4, 0x4
+  .4byte __sinit_bosseel_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

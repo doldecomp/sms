@@ -5608,7 +5608,7 @@ $$232$$2__dt__8TSandEggFv:
 /* 801ABA50 001A8990  4B FF B0 F0 */	b __dt__8TSandEggFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD30, 0x4
+  .4byte __sinit_MapObjMamma_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

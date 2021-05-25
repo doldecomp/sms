@@ -10937,7 +10937,7 @@ $$232$$2__dt__10TBossGessoFv:
 /* 8028F104 0028C044  4B FF F9 8C */	b __dt__10TBossGessoFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE84, 0x4
+  .4byte __sinit_bossgesso_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

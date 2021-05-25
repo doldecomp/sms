@@ -3096,7 +3096,7 @@ $$232$$2__dt__8TWoodBoxFv:
 /* 801D8CA0 001D5BE0  4B FF D5 B4 */	b __dt__8TWoodBoxFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD98, 0x4
+  .4byte __sinit_MapObjHide_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

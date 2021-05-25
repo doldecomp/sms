@@ -5515,7 +5515,7 @@ $$232$$2__dt__14TPictureTelesaFv:
 /* 801A4CE8 001A1C28  4B FF B2 C4 */	b __dt__14TPictureTelesaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD28, 0x4
+  .4byte __sinit_MapObjSirena_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

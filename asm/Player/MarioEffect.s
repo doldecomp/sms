@@ -864,7 +864,7 @@ $$232$$2__dt__12TMarioEffectFv:
 /* 80151918 0014E858  4B FF F3 B8 */	b __dt__12TMarioEffectFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCA4, 0x4
+  .4byte __sinit_MarioEffect_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

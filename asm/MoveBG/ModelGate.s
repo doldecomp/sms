@@ -1861,7 +1861,7 @@ $$232$$2__dt__10TModelGateFv:
 /* 801C44E8 001C1428  4B FF E4 D0 */	b __dt__10TModelGateFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD70, 0x4
+  .4byte __sinit_ModelGate_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

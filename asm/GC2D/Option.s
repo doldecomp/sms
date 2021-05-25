@@ -4572,7 +4572,7 @@ lbl_80247854:
 /* 80247864 002447A4  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE4C, 0x4
+  .4byte __sinit_Option_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

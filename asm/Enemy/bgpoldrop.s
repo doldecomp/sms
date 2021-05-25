@@ -660,7 +660,7 @@ $$232$$2__dt__10TBGPolDropFv:
 /* 80311A88 0030E9C8  4B FF F6 98 */	b __dt__10TBGPolDropFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEF4, 0x4
+  .4byte __sinit_bgpoldrop_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TBGPolDrop

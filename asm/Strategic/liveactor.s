@@ -1945,7 +1945,7 @@ $$232$$2__dt__10TLiveActorFv:
 /* 80112AC0 0010FA00  4B FF FB 34 */	b __dt__10TLiveActorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC54, 0x4
+  .4byte __sinit_liveactor_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$22836:

@@ -428,7 +428,7 @@ $$232$$2__dt__17TMapObjFloatOnSeaFv:
 /* 801B5E38 001B2D78  4B F4 ED D4 */	b __dt__17TMapObjFloatOnSeaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD48, 0x4
+  .4byte __sinit_MapObjFloat_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

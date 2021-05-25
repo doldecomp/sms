@@ -815,7 +815,7 @@ lbl_80180584:
 /* 80180594 0017D4D4  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCE0, 0x4
+  .4byte __sinit_MSoundBGM_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8

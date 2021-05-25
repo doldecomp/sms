@@ -1198,7 +1198,7 @@ $$232$$2__dt__5TSealFv:
 /* 8031111C 0030E05C  4B FF FC 94 */	b __dt__5TSealFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEF0, 0x4
+  .4byte __sinit_seal_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21664:

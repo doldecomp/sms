@@ -3441,7 +3441,7 @@ $$232$$2__dt__8TKazekunFv:
 /* 80320DBC 0031DCFC  4B FF FC 7C */	b __dt__8TKazekunFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF0C, 0x4
+  .4byte __sinit_Kazekun_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

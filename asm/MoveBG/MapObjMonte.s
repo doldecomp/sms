@@ -4612,7 +4612,7 @@ $$232$$2__dt__13TFluffManagerFv:
 /* 801CD748 001CA688  4B FF BC C8 */	b __dt__13TFluffManagerFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD7C, 0x4
+  .4byte __sinit_MapObjMonte_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

@@ -1562,7 +1562,7 @@ $$212$$2__dt__14TMovieDirectorFv:
 /* 8010C330 00109270  4B FF F2 24 */	b __dt__14TMovieDirectorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC48, 0x4
+  .4byte __sinit_MovieDirector_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

@@ -316,7 +316,7 @@ lbl_801F5000:
 /* 801F5010 001F1F50  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE10, 0x4
+  .4byte __sinit_MapData_cpp
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22674:

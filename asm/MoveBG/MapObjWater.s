@@ -634,7 +634,7 @@ $$232$$2__dt__18TMapObjWaterFilterFv:
 /* 801C29B4 001BF8F4  4B FF F7 14 */	b __dt__18TMapObjWaterFilterFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD6C, 0x4
+  .4byte __sinit_MapObjWater_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

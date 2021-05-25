@@ -2076,7 +2076,7 @@ lbl_80352D44:
 /* 80352D54 0034FC94  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF40, 0x4
+  .4byte __sinit_CameraChange_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23698:

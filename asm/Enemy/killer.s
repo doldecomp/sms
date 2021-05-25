@@ -3705,7 +3705,7 @@ $$232$$2__dt__7TKillerFv:
 /* 802F0BD4 002EDB14  4B FF FB E8 */	b __dt__7TKillerFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEC8, 0x4
+  .4byte __sinit_killer_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

@@ -2543,7 +2543,7 @@ $$232$$2__dt__6TYumboFv:
 /* 80328DA8 00325CE8  4B FF FB 7C */	b __dt__6TYumboFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF14, 0x4
+  .4byte __sinit_yunbo_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

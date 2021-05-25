@@ -220,7 +220,7 @@ lbl_801CED7C:
 /* 801CED8C 001CBCCC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD84, 0x4
+  .4byte __sinit_MapObjTumblePole_cpp
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22855:

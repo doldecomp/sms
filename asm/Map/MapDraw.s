@@ -510,7 +510,7 @@ lbl_801E0D54:
 /* 801E0D64 001DDCA4  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDB8, 0x4
+  .4byte __sinit_MapDraw_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$22364:

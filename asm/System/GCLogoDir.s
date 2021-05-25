@@ -1384,7 +1384,7 @@ $$212$$2__dt__10TGCLogoDirFv:
 /* 800E9EF0 000E6E30  4B FF F2 3C */	b __dt__10TGCLogoDirFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC1C, 0x4
+  .4byte __sinit_GCLogoDir_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

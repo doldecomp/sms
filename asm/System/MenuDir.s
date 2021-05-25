@@ -1962,7 +1962,7 @@ $$212$$2__dt__13TMenuDirectorFv:
 /* 800F7F94 000F4ED4  4B FF FB 74 */	b __dt__13TMenuDirectorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC34, 0x4
+  .4byte __sinit_MenuDir_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
