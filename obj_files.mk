@@ -413,7 +413,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/src/System/StageUtil.o                               \
     $(BUILD_DIR)/src/System/Resolution.o                              \
     $(BUILD_DIR)/asm/System/PositionHolder.o                          \
-    $(BUILD_DIR)/asm/System/ProcessMeter.o                            \
+    $(BUILD_DIR)/src/System/ProcessMeter.o                            \
     $(BUILD_DIR)/asm/System/TimeRec.o                                 \
     $(BUILD_DIR)/asm/System/DrawSyncManager.o                         \
     $(BUILD_DIR)/asm/System/THPRender.o                               \
