@@ -1469,7 +1469,7 @@ $$232$$2__dt__9TJumpBaseFv:
 /* 801D6250 001D3190  4B FF EB 98 */	b __dt__9TJumpBaseFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD94, 0x4
+  .4byte __sinit_MapObjItem2_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

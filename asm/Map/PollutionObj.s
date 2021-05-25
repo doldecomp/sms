@@ -586,7 +586,7 @@ lbl_801F089C:
 /* 801F08AC 001ED7EC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CDF0, 0x4
+  .4byte __sinit_PollutionObj_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TPollutionObj

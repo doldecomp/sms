@@ -5778,7 +5778,7 @@ lbl_80141840:
 /* 80141850 0013E790  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC84, 0x4
+  .4byte __sinit_MarioSpecial_cpp
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23400:

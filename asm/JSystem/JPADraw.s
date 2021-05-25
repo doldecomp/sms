@@ -7000,7 +7000,7 @@ lbl_80079CC8:
 /* 80079CDC 00076C1C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC0C, 0x4
+  .4byte __sinit_JPADraw_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22383:

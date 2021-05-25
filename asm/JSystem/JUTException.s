@@ -2034,7 +2034,7 @@ lbl_800111DC:
 /* 800111F4 0000E134  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBBC, 0x4
+  .4byte __sinit_JUTException_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21210:

@@ -1733,7 +1733,7 @@ $$232$$2__dt__12TYoshiTongueFv:
 /* 80148440 00145380  4B FF E7 48 */	b __dt__12TYoshiTongueFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC98, 0x4
+  .4byte __sinit_Tongue_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

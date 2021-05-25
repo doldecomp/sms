@@ -642,7 +642,7 @@ $$232$$2__dt__14TAirportSwitchFv:
 /* 801BE274 001BB1B4  4B FF FC 64 */	b __dt__14TAirportSwitchFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD58, 0x4
+  .4byte __sinit_MapObjAirport_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$22901:

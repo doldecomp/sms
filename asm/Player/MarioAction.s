@@ -462,7 +462,7 @@ lbl_8011EE58:
 /* 8011EE68 0011BDA8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC60, 0x4
+  .4byte __sinit_MarioAction_cpp
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22152:

@@ -1794,7 +1794,7 @@ $$232$$2__dt__13TLimitKoopaJrFv:
 /* 80350388 0034D2C8  4B FF FC 94 */	b __dt__13TLimitKoopaJrFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF3C, 0x4
+  .4byte __sinit_limitkoopajr_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

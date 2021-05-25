@@ -5665,7 +5665,7 @@ $$232$$2__dt__16TKageMarioModokiFv:
 /* 8029846C 002953AC  4B FF F8 C0 */	b __dt__16TKageMarioModokiFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE8C, 0x4
+  .4byte __sinit_telesa_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

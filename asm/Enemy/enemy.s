@@ -3136,7 +3136,7 @@ $$232$$2__dt__11TSpineEnemyFv:
 /* 802507D8 0024D718  4B FF F9 E0 */	b __dt__11TSpineEnemyFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE58, 0x4
+  .4byte __sinit_enemy_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TSpineEnemy

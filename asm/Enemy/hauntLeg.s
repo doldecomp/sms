@@ -1589,7 +1589,7 @@ $$232$$2__dt__9THauntLegFv:
 /* 80319268 003161A8  4B FF FB 64 */	b __dt__9THauntLegFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF00, 0x4
+  .4byte __sinit_hauntLeg_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

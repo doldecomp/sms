@@ -3624,7 +3624,7 @@ lbl_8017FA58:
 /* 8017FA68 0017C9A8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCDC, 0x4
+  .4byte __sinit_MSound_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21912:

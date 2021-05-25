@@ -564,7 +564,7 @@ $$232$$2__dt__5TPoolFv:
 /* 801D02F0 001CD230  4B FE DB 64 */	b __dt__5TPoolFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD8C, 0x4
+  .4byte __sinit_Pool_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__5TPool

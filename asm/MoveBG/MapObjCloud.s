@@ -774,7 +774,7 @@ $$232$$2__dt__10TRideCloudFv:
 /* 801B7FAC 001B4EEC  4B FF F5 48 */	b __dt__10TRideCloudFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD50, 0x4
+  .4byte __sinit_MapObjCloud_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TRideCloud

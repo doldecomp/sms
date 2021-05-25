@@ -1970,7 +1970,7 @@ $$220$$2frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv:
 /* 80185DB0 00182CF0  4B FF 99 88 */	b frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CCF0, 0x4
+  .4byte __sinit_MSoundStruct_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21994:

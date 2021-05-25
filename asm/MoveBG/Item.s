@@ -5271,7 +5271,7 @@ $$232$$2__dt__10TNozzleBoxFv:
 /* 80197A94 001949D4  4B FF B7 B8 */	b __dt__10TNozzleBoxFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD14, 0x4
+  .4byte __sinit_Item_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

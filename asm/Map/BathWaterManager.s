@@ -8526,7 +8526,7 @@ $$232$$2__dt__10TBathWaterFv:
 /* 80200608 001FD548  4B FF D0 A4 */	b __dt__10TBathWaterFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE1C, 0x4
+  .4byte __sinit_BathWaterManager_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21900:

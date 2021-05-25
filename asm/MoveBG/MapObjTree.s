@@ -1358,7 +1358,7 @@ $$232$$2__dt__16TMapObjTreeScaleFv:
 /* 801CEA78 001CB9B8  4B FF EC D4 */	b __dt__16TMapObjTreeScaleFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD80, 0x4
+  .4byte __sinit_MapObjTree_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$23023:

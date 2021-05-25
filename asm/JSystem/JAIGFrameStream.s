@@ -2171,7 +2171,7 @@ lbl_80054AC8:
 /* 80054ADC 00051A1C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBE8, 0x4
+  .4byte __sinit_JAIGFrameStream_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 filter_table__Q27JAInter9StreamLib:

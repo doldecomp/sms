@@ -1716,7 +1716,7 @@ $$232$$2__dt__14TMapObjGeneralFv:
 /* 8018B3A8 001882E8  4B F7 96 3C */	b __dt__14TMapObjGeneralFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD04, 0x4
+  .4byte __sinit_MapObjInit_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

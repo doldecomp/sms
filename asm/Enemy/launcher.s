@@ -1655,7 +1655,7 @@ $$232$$2__dt__15TCommonLauncherFv:
 /* 802B6A48 002B3988  4B FF FC 6C */	b __dt__15TCommonLauncherFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEA0, 0x4
+  .4byte __sinit_launcher_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21664:

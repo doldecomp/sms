@@ -12812,7 +12812,7 @@ lbl_802302EC:
 /* 802302FC 0022D23C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CE34, 0x4
+  .4byte __sinit_CardLoad_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

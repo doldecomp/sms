@@ -5910,7 +5910,7 @@ $$232$$2__dt__29TBossMantaAdditionalCollisionFv:
 /* 80326314 00323254  4B FF FC 00 */	b __dt__29TBossMantaAdditionalCollisionFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF10, 0x4
+  .4byte __sinit_bossManta_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

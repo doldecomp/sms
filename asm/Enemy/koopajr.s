@@ -5520,7 +5520,7 @@ $$232$$2__dt__17TKoopaJrSubmarineFv:
 /* 8032DC60 0032ABA0  4B FF FB 30 */	b __dt__17TKoopaJrSubmarineFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF18, 0x4
+  .4byte __sinit_koopajr_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

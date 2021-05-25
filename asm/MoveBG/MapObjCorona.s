@@ -5219,7 +5219,7 @@ $$232$$2__dt__8TBathtubFv:
 /* 801D4DE4 001D1D24  4B FF B5 10 */	b __dt__8TBathtubFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD90, 0x4
+  .4byte __sinit_MapObjCorona_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

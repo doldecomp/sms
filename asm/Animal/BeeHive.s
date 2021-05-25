@@ -3880,7 +3880,7 @@ $$232$$2__dt__8TBeeHiveFv:
 /* 8036F2F0 0036C230  4B FF FB D0 */	b __dt__8TBeeHiveFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CF5C, 0x4
+  .4byte __sinit_BeeHive_cpp
 	.skip 0x1C
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380

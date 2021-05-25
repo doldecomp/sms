@@ -2963,7 +2963,7 @@ __sinit_JAIBasic_cpp:
 /* 8004DAA0 0004A9E0  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBE0, 0x4
+  .4byte __sinit_JAIBasic_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$2463:

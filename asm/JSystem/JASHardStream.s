@@ -1000,7 +1000,7 @@ lbl_800636D0:
 /* 800636E4 00060624  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBF4, 0x4
+  .4byte __sinit_JASHardStream_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 rootDir__Q28JASystem10HardStream:

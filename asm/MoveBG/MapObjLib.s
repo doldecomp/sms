@@ -3734,7 +3734,7 @@ $$232$$2__dt__11TMapObjTurnFv:
 /* 80193248 00190188  4B FF CC 58 */	b __dt__11TMapObjTurnFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD10, 0x4
+  .4byte __sinit_MapObjLib_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$23453:

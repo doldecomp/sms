@@ -983,7 +983,7 @@ lbl_8030FCD0:
 /* 8030FCE0 0030CC20  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEEC, 0x4
+  .4byte __sinit_BossHanachanEffect_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

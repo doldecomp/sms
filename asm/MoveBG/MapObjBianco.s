@@ -3991,7 +3991,7 @@ $$232$$2__dt__8TWoodLogFv:
 /* 8019FFA8 0019CEE8  4B FF C7 EC */	b __dt__8TWoodLogFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD24, 0x4
+  .4byte __sinit_MapObjBianco_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:

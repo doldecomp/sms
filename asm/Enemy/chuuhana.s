@@ -5666,7 +5666,7 @@ $$232$$2__dt__9TChuuHanaFv:
 /* 802C3590 002C04D0  4B FF FB F0 */	b __dt__9TChuuHanaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CEA8, 0x4
+  .4byte __sinit_chuuhana_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
