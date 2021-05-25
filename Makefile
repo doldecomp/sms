@@ -182,4 +182,6 @@ $(BUILD_DIR)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 # 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
 
+$(BUILD_DIR)/src/JSystem/JDRRenderMode.o: CFLAGS += -O4,p
+
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true

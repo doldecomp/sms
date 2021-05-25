@@ -4,8 +4,8 @@
 namespace JDrama
 {
 //* JDRRenderMode:
-	bool IsEqualRenderModeVIParams(const GXRenderModeObj &, const GXRenderModeObj &);
-	bool IsRenderModeHalfAspectRatio(const GXRenderModeObj &);
+	bool IsEqualRenderModeVIParams(const GXRenderModeObj &rmo1, const GXRenderModeObj &rmo2);
+	bool IsRenderModeHalfAspectRatio(const GXRenderModeObj &rmo);
 	f32 GetRenderModeYScale(const GXRenderModeObj &rmo);
 	void CalcRenderModeXFBHeight(GXRenderModeObj *rmo, u16);
 	void CalcRenderModeVIXOrigin(GXRenderModeObj *rmo);
