@@ -5507,25 +5507,54 @@ fl$localstatic1$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
 	.incbin "baserom.dol", 0x3AFA70, 0x20
 .global __vt__19TMBindShadowManager
 __vt__19TMBindShadowManager:
-	.incbin "baserom.dol", 0x3AFA90, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TMBindShadowManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__19TMBindShadowManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__19TMBindShadowManagerFUlPQ26JDrama9TGraphics
 .global __vt__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cpp
 __vt__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFAB4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cppFv
 .global __vt__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cpp
 __vt__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFAC4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cppFv
 .global __vt__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cpp
 __vt__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFAD4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cppFv
 .global __vt__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cpp
 __vt__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFAE4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cppFv
 .global __vt__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cpp
 __vt__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFAF4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cppFv
 .global __vt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cpp
 __vt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cpp:
-	.incbin "baserom.dol", 0x3AFB04, 0x1C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv
+  .4byte makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mSquareShadowHeight__19TMBindShadowManager:

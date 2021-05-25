@@ -486,7 +486,22 @@ lbl_8000C0F4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRFileLoader
 __vt__13JKRFileLoader:
-	.incbin "baserom.dol", 0x3A55B8, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRFileLoaderFv
+  .4byte unmount__13JKRFileLoaderFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 rootPath$1763:

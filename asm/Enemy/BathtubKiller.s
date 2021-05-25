@@ -5312,28 +5312,172 @@ entry$3235:
 	.incbin "baserom.dol", 0x3E018C, 0x24
 .global __vt__21TBathtubKillerManager
 __vt__21TBathtubKillerManager:
-	.incbin "baserom.dol", 0x3E01B0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TBathtubKillerManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__21TBathtubKillerManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__21TBathtubKillerManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__21TBathtubKillerManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__21TBathtubKillerManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 .global __vt__28TNerveBathtubKillerExplosion
 __vt__28TNerveBathtubKillerExplosion:
-	.incbin "baserom.dol", 0x3E0208, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__28TNerveBathtubKillerExplosionFv
+  .4byte execute__28TNerveBathtubKillerExplosionCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveBathtubKillerBreak
 __vt__24TNerveBathtubKillerBreak:
-	.incbin "baserom.dol", 0x3E0218, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveBathtubKillerBreakFv
+  .4byte execute__24TNerveBathtubKillerBreakCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__27TNerveBathtubKillerStraight
 __vt__27TNerveBathtubKillerStraight:
-	.incbin "baserom.dol", 0x3E0228, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__27TNerveBathtubKillerStraightFv
+  .4byte execute__27TNerveBathtubKillerStraightCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__32TNerveBathtubKillerChaseStraight
 __vt__32TNerveBathtubKillerChaseStraight:
-	.incbin "baserom.dol", 0x3E0238, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__32TNerveBathtubKillerChaseStraightFv
+  .4byte execute__32TNerveBathtubKillerChaseStraightCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveBathtubKillerChase
 __vt__24TNerveBathtubKillerChase:
-	.incbin "baserom.dol", 0x3E0248, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveBathtubKillerChaseFv
+  .4byte execute__24TNerveBathtubKillerChaseCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__25TNerveBathtubKillerWander
 __vt__25TNerveBathtubKillerWander:
-	.incbin "baserom.dol", 0x3E0258, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25TNerveBathtubKillerWanderFv
+  .4byte execute__25TNerveBathtubKillerWanderCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__14TBathtubKiller
 __vt__14TBathtubKiller:
-	.incbin "baserom.dol", 0x3E0268, 0x1A8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TBathtubKillerFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSmallEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__14TBathtubKillerFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__14TBathtubKillerFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__14TBathtubKillerFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__14TBathtubKillerFP12TLiveManager
+  .4byte calcRootMatrix__14TBathtubKillerFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__14TBathtubKillerFv
+  .4byte moveObject__11TSmallEnemyFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__11TSmallEnemyFv
+  .4byte getGravityY__14TBathtubKillerCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__14TBathtubKillerCFv
+  .4byte reset__14TBathtubKillerFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__14TBathtubKillerFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__11TSmallEnemyFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__14TBathtubKillerFv
+  .4byte forceKill__11TSmallEnemyFv
+  .4byte setMActorAndKeeper__14TBathtubKillerFv
+  .4byte initAttacker__11TSmallEnemyFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__14TBathtubKillerFP9THitActor
+  .4byte isInhibitedForceMove__11TSmallEnemyFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 $$22921:

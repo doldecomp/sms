@@ -507,7 +507,10 @@ sMessageQueue__9JKRDecomp:
 	.incbin "baserom.dol", 0x3A6B80, 0x20
 .global __vt__9JKRDecomp
 __vt__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6BA0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9JKRDecompFv
+  .4byte run__9JKRDecompFv
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sDecompObject__9JKRDecomp:

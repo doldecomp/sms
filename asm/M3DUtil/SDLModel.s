@@ -1315,7 +1315,19 @@ lbl_800D9A60:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8SDLModel
 __vt__8SDLModel:
-	.incbin "baserom.dol", 0x3B07B8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte update__8J3DModelFv
+  .4byte entry__8SDLModelFv
+  .4byte calc__8J3DModelFv
+  .4byte viewCalc__8J3DModelFv
+  .4byte __dt__8SDLModelFv
+  .4byte viewCalcSimple__8SDLModelFv
 .global __vt__12SDLMatPacket
 __vt__12SDLMatPacket:
-	.incbin "baserom.dol", 0x3B07D8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__12J3DMatPacketCFP12J3DMatPacket
+  .4byte entry__12J3DMatPacketFP13J3DDrawBuffer
+  .4byte draw__12J3DMatPacketFv
+  .4byte __dt__12SDLMatPacketFv

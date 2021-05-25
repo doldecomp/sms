@@ -635,10 +635,31 @@ name_table$2428:
 	.incbin "baserom.dol", 0x3CD070, 0x14
 .global __vt__9TMapModel
 __vt__9TMapModel:
-	.incbin "baserom.dol", 0x3CD084, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__9TJointObjCFv
+  .4byte initJointModel__9TMapModelFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__9TMapModelFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__9TMapModelCFv
 .global __vt__16TMapModelManager
 __vt__16TMapModelManager:
-	.incbin "baserom.dol", 0x3CD0B8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TMapModelManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__18TJointModelManagerFUlPQ26JDrama9TGraphics
+  .4byte newJointModel__16TMapModelManagerCFi
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22429:

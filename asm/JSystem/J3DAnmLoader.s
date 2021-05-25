@@ -1875,25 +1875,42 @@ lbl_800341F4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19J3DAnmKeyLoader_v15
 __vt__19J3DAnmKeyLoader_v15:
-	.incbin "baserom.dol", 0x3A6AE8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__19J3DAnmKeyLoader_v15FPCv
+  .4byte __dt__19J3DAnmKeyLoader_v15Fv
 .global __vt__20J3DAnmFullLoader_v15
 __vt__20J3DAnmFullLoader_v15:
-	.incbin "baserom.dol", 0x3A6AF8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__20J3DAnmFullLoader_v15FPCv
+  .4byte __dt__20J3DAnmFullLoader_v15Fv
 .global __vt__12J3DAnmLoader
 __vt__12J3DAnmLoader:
-	.incbin "baserom.dol", 0x3A6B08, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J3DAnmLoaderFv
 .global __vt__20J3DAnmVisibilityFull
 __vt__20J3DAnmVisibilityFull:
-	.incbin "baserom.dol", 0x3A6B18, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20J3DAnmVisibilityFullFv
 .global __vt__16J3DAnmTexPattern
 __vt__16J3DAnmTexPattern:
-	.incbin "baserom.dol", 0x3A6B24, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16J3DAnmTexPatternFv
 .global __vt__15J3DAnmTevRegKey
 __vt__15J3DAnmTevRegKey:
-	.incbin "baserom.dol", 0x3A6B30, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15J3DAnmTevRegKeyFv
 .global __vt__19J3DAnmTextureSRTKey
 __vt__19J3DAnmTextureSRTKey:
-	.incbin "baserom.dol", 0x3A6B3C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19J3DAnmTextureSRTKeyFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21126:

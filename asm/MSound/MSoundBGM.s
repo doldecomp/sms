@@ -818,6 +818,7 @@ lbl_80180584:
 	.incbin "baserom.dol", 0x36CCE0, 0x4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 $$22331:
 	.incbin "baserom.dol", 0x3B6D28, 0xC0
 

@@ -503,19 +503,44 @@ isSame__12J3DMatPacketCFP12J3DMatPacket:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J3DShapePacket
 __vt__14J3DShapePacket:
-	.incbin "baserom.dol", 0x3A6BE8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__9J3DPacketCFP12J3DMatPacket
+  .4byte entry__9J3DPacketFP13J3DDrawBuffer
+  .4byte draw__14J3DShapePacketFv
+  .4byte __dt__14J3DShapePacketFv
 .global __vt__12J3DMatPacket
 __vt__12J3DMatPacket:
-	.incbin "baserom.dol", 0x3A6C00, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__12J3DMatPacketCFP12J3DMatPacket
+  .4byte entry__12J3DMatPacketFP13J3DDrawBuffer
+  .4byte draw__12J3DMatPacketFv
+  .4byte __dt__12J3DMatPacketFv
 .global __vt__13J3DDrawPacket
 __vt__13J3DDrawPacket:
-	.incbin "baserom.dol", 0x3A6C18, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__9J3DPacketCFP12J3DMatPacket
+  .4byte entry__9J3DPacketFP13J3DDrawBuffer
+  .4byte draw__13J3DDrawPacketFv
+  .4byte __dt__13J3DDrawPacketFv
 .global __vt__17J3DCallBackPacket
 __vt__17J3DCallBackPacket:
-	.incbin "baserom.dol", 0x3A6C30, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__9J3DPacketCFP12J3DMatPacket
+  .4byte entry__9J3DPacketFP13J3DDrawBuffer
+  .4byte draw__17J3DCallBackPacketFv
+  .4byte __dt__17J3DCallBackPacketFv
 .global __vt__9J3DPacket
 __vt__9J3DPacket:
-	.incbin "baserom.dol", 0x3A6C48, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte isSame__9J3DPacketCFP12J3DMatPacket
+  .4byte entry__9J3DPacketFP13J3DDrawBuffer
+  .4byte draw__9J3DPacketFv
+  .4byte __dt__9J3DPacketFv
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sInterruptFlag__13J3DDrawPacket:

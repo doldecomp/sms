@@ -351,13 +351,34 @@ lbl_80360110:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TCubeStreamInfo
 __vt__15TCubeStreamInfo:
-	.incbin "baserom.dol", 0x3E1C80, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TCubeStreamInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TCubeStreamInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 .global __vt__15TCubeCameraInfo
 __vt__15TCubeCameraInfo:
-	.incbin "baserom.dol", 0x3E1CA0, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TCubeCameraInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TCubeCameraInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 .global __vt__16TCubeGeneralInfo
 __vt__16TCubeGeneralInfo:
-	.incbin "baserom.dol", 0x3E1CC0, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TCubeGeneralInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TCubeGeneralInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21577:

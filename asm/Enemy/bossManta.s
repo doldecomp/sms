@@ -6047,28 +6047,171 @@ loopFilenames$3273:
 	.incbin "baserom.dol", 0x3DE754, 0x28
 .global __vt__17TBossMantaManager
 __vt__17TBossMantaManager:
-	.incbin "baserom.dol", 0x3DE77C, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TBossMantaManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17TBossMantaManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__17TBossMantaManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__17TBossMantaManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TBossMantaManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__17TBossMantaManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__17TBossMantaManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
 .global __vt__29TBossMantaAdditionalCollision
 __vt__29TBossMantaAdditionalCollision:
-	.incbin "baserom.dol", 0x3DE7D0, 0xA4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TBossMantaAdditionalCollisionFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__29TBossMantaAdditionalCollisionFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__29TBossMantaAdditionalCollisionFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__29TBossMantaAdditionalCollisionFP9THitActorUl
 .global __vt__10TBossManta
 __vt__10TBossManta:
-	.incbin "baserom.dol", 0x3DE874, 0x114
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TBossMantaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSpineEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TBossMantaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__10TBossMantaFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10TBossMantaFP12TLiveManager
+  .4byte calcRootMatrix__10TBossMantaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TBossMantaFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TBossMantaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TBossMantaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__10TBossMantaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
 .global __vt__21TNerveMantaAppearDemo
 __vt__21TNerveMantaAppearDemo:
-	.incbin "baserom.dol", 0x3DE988, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveMantaAppearDemoFv
+  .4byte execute__21TNerveMantaAppearDemoCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveMantaDeath
 __vt__16TNerveMantaDeath:
-	.incbin "baserom.dol", 0x3DE998, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveMantaDeathFv
+  .4byte execute__16TNerveMantaDeathCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveMantaSpawn
 __vt__16TNerveMantaSpawn:
-	.incbin "baserom.dol", 0x3DE9A8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveMantaSpawnFv
+  .4byte execute__16TNerveMantaSpawnCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveMantaHitWater
 __vt__19TNerveMantaHitWater:
-	.incbin "baserom.dol", 0x3DE9B8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveMantaHitWaterFv
+  .4byte execute__19TNerveMantaHitWaterCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__15TNerveMantaMove
 __vt__15TNerveMantaMove:
-	.incbin "baserom.dol", 0x3DE9C8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TNerveMantaMoveFv
+  .4byte execute__15TNerveMantaMoveCFP24TSpineBase$$010TLiveActor$$1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23125:

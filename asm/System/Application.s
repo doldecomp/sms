@@ -142,6 +142,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F958C 000F64CC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800F9590 000F64D0  7C 09 03 A6 */	mtctr r0
 /* 800F9594 000F64D4  4E 80 04 20 */	bctr 
+lbl_800F9598:
 /* 800F9598 000F64D8  38 61 00 F8 */	addi r3, r1, 0xf8
 /* 800F959C 000F64DC  4C C6 31 82 */	crclr 6
 /* 800F95A0 000F64E0  38 BE 00 2C */	addi r5, r30, 0x2c
@@ -150,6 +151,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F95AC 000F64EC  3C 60 65 6D */	lis r3, 0x656D5F31@ha
 /* 800F95B0 000F64F0  3B E3 5F 31 */	addi r31, r3, 0x656D5F31@l
 /* 800F95B4 000F64F4  48 00 00 AC */	b lbl_800F9660
+lbl_800F95B8:
 /* 800F95B8 000F64F8  38 61 00 F8 */	addi r3, r1, 0xf8
 /* 800F95BC 000F64FC  4C C6 31 82 */	crclr 6
 /* 800F95C0 000F6500  38 BE 00 94 */	addi r5, r30, 0x94
@@ -158,6 +160,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F95CC 000F650C  3C 60 65 6D */	lis r3, 0x656D5F32@ha
 /* 800F95D0 000F6510  3B E3 5F 32 */	addi r31, r3, 0x656D5F32@l
 /* 800F95D4 000F6514  48 00 00 8C */	b lbl_800F9660
+lbl_800F95D8:
 /* 800F95D8 000F6518  4B F9 F8 91 */	bl DVDCheckDisk
 /* 800F95DC 000F651C  2C 03 00 00 */	cmpwi r3, 0
 /* 800F95E0 000F6520  40 82 00 80 */	bne lbl_800F9660
@@ -169,6 +172,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F95F8 000F6538  3C 60 65 6D */	lis r3, 0x656D5F33@ha
 /* 800F95FC 000F653C  3B E3 5F 33 */	addi r31, r3, 0x656D5F33@l
 /* 800F9600 000F6540  48 00 00 60 */	b lbl_800F9660
+lbl_800F9604:
 /* 800F9604 000F6544  38 61 00 F8 */	addi r3, r1, 0xf8
 /* 800F9608 000F6548  4C C6 31 82 */	crclr 6
 /* 800F960C 000F654C  38 BE 01 04 */	addi r5, r30, 0x104
@@ -177,6 +181,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F9618 000F6558  3C 60 65 6D */	lis r3, 0x656D5F34@ha
 /* 800F961C 000F655C  3B E3 5F 34 */	addi r31, r3, 0x656D5F34@l
 /* 800F9620 000F6560  48 00 00 40 */	b lbl_800F9660
+lbl_800F9624:
 /* 800F9624 000F6564  38 61 00 F8 */	addi r3, r1, 0xf8
 /* 800F9628 000F6568  4C C6 31 82 */	crclr 6
 /* 800F962C 000F656C  38 BE 01 5C */	addi r5, r30, 0x15c
@@ -185,6 +190,7 @@ drawDVDErr__12TApplicationFv:
 /* 800F9638 000F6578  3C 60 65 6D */	lis r3, 0x656D5F35@ha
 /* 800F963C 000F657C  3B E3 5F 35 */	addi r31, r3, 0x656D5F35@l
 /* 800F9640 000F6580  48 00 00 20 */	b lbl_800F9660
+lbl_800F9644:
 /* 800F9644 000F6584  38 61 00 F8 */	addi r3, r1, 0xf8
 /* 800F9648 000F6588  4C C6 31 82 */	crclr 6
 /* 800F964C 000F658C  38 BE 01 9C */	addi r5, r30, 0x19c
@@ -701,9 +707,11 @@ lbl_800F9DC8:
 /* 800F9DDC 000F6D1C  7C 1C 00 2E */	lwzx r0, r28, r0
 /* 800F9DE0 000F6D20  7C 09 03 A6 */	mtctr r0
 /* 800F9DE4 000F6D24  4E 80 04 20 */	bctr 
+lbl_800F9DE8:
 /* 800F9DE8 000F6D28  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800F9DEC 000F6D2C  4B FF EF 7D */	bl SMSSetupGCLogoRenderingInfo__FPQ26JDrama8TDisplay
 /* 800F9DF0 000F6D30  48 00 02 58 */	b lbl_800FA048
+lbl_800F9DF4:
 /* 800F9DF4 000F6D34  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800F9DF8 000F6D38  4B FF EF 71 */	bl SMSSetupGCLogoRenderingInfo__FPQ26JDrama8TDisplay
 /* 800F9DFC 000F6D3C  38 60 00 48 */	li r3, 0x48
@@ -719,6 +727,7 @@ lbl_800F9E14:
 /* 800F9E20 000F6D60  80 BF 00 20 */	lwz r5, 0x20(r31)
 /* 800F9E24 000F6D64  4B FE F3 A9 */	bl setup__10TGCLogoDirFPQ26JDrama8TDisplayP13TMarioGamePad
 /* 800F9E28 000F6D68  48 00 02 20 */	b lbl_800FA048
+lbl_800F9E2C:
 /* 800F9E2C 000F6D6C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800F9E30 000F6D70  4B FF ED 21 */	bl SMSSetupTitleRenderingInfo__FPQ26JDrama8TDisplay
 /* 800F9E34 000F6D74  48 00 27 F1 */	bl SMSGetTitleRenderHeight__Fv
@@ -750,6 +759,7 @@ lbl_800F9E68:
 /* 800F9E98 000F6DD8  98 1F 00 0F */	stb r0, 0xf(r31)
 /* 800F9E9C 000F6DDC  B0 1F 00 10 */	sth r0, 0x10(r31)
 /* 800F9EA0 000F6DE0  48 00 01 A8 */	b lbl_800FA048
+lbl_800F9EA4:
 /* 800F9EA4 000F6DE4  7F E3 FB 78 */	mr r3, r31
 /* 800F9EA8 000F6DE8  48 00 03 45 */	bl checkAdditionalMovie__12TApplicationFv
 /* 800F9EAC 000F6DEC  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -809,6 +819,7 @@ lbl_800F9F58:
 /* 800F9F78 000F6EB8  41 82 00 D0 */	beq lbl_800FA048
 /* 800F9F7C 000F6EBC  3B C0 00 04 */	li r30, 4
 /* 800F9F80 000F6EC0  48 00 00 C8 */	b lbl_800FA048
+lbl_800F9F84:
 /* 800F9F84 000F6EC4  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800F9F88 000F6EC8  4B FF EB C9 */	bl SMSSetupTitleRenderingInfo__FPQ26JDrama8TDisplay
 /* 800F9F8C 000F6ECC  48 00 26 99 */	bl SMSGetTitleRenderHeight__Fv
@@ -832,6 +843,7 @@ lbl_800F9FC0:
 /* 800F9FD0 000F6F10  80 BF 00 20 */	lwz r5, 0x20(r31)
 /* 800F9FD4 000F6F14  48 13 D8 F5 */	bl setup__10TSelectDirFPQ26JDrama8TDisplayP13TMarioGamePadUc
 /* 800F9FD8 000F6F18  48 00 00 70 */	b lbl_800FA048
+lbl_800F9FDC:
 /* 800F9FDC 000F6F1C  38 00 00 09 */	li r0, 9
 /* 800F9FE0 000F6F20  90 1A 00 18 */	stw r0, 0x18(r26)
 /* 800F9FE4 000F6F24  38 60 00 0F */	li r3, 0xf
@@ -839,6 +851,7 @@ lbl_800F9FC0:
 /* 800F9FEC 000F6F2C  98 7F 00 12 */	stb r3, 0x12(r31)
 /* 800F9FF0 000F6F30  98 1F 00 13 */	stb r0, 0x13(r31)
 /* 800F9FF4 000F6F34  B0 1F 00 14 */	sth r0, 0x14(r31)
+lbl_800F9FF8:
 /* 800F9FF8 000F6F38  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800F9FFC 000F6F3C  4B FF E9 09 */	bl SMSSetupMovieRenderingInfo__FPQ26JDrama8TDisplay
 /* 800FA000 000F6F40  48 00 26 35 */	bl SMSGetGameRenderHeight__Fv
@@ -2708,12 +2721,35 @@ $$23312:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22633:
-	.incbin "baserom.dol", 0x3B1040, 0x34
+    .4byte lbl_800F9598
+    .4byte lbl_800F9660
+    .4byte lbl_800F95D8
+    .4byte lbl_800F9660
+    .4byte lbl_800F9660
+    .4byte lbl_800F9624
+    .4byte lbl_800F9604
+    .4byte lbl_800F9644
+    .4byte lbl_800F9660
+    .4byte lbl_800F9660
+    .4byte lbl_800F9660
+    .4byte lbl_800F9660
+    .4byte lbl_800F95B8
 $$22929:
-	.incbin "baserom.dol", 0x3B1074, 0x28
+    .4byte lbl_800FA048
+    .4byte lbl_800FA048
+    .4byte lbl_800F9DE8
+    .4byte lbl_800F9DF4
+    .4byte lbl_800F9FDC
+    .4byte lbl_800F9EA4
+    .4byte lbl_800F9FF8
+    .4byte lbl_800FA048
+    .4byte lbl_800F9F84
+    .4byte lbl_800F9E2C
 .global __vt__13TMarioGamePad
 __vt__13TMarioGamePad:
-	.incbin "baserom.dol", 0x3B109C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMarioGamePadFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22481:

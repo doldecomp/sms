@@ -224,12 +224,19 @@ TGDLStaticOverFlow__Fv:
 /* 800D1E98 000CEDD8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__10TGDLStatic
 __vt__10TGDLStatic:
-	.incbin "baserom.dol", 0x3B0460, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TGDLStaticFv
+  .4byte 0
 .global __vt__Q210TGDLStatic12TGDLSentinel
 __vt__Q210TGDLStatic12TGDLSentinel:
-	.incbin "baserom.dol", 0x3B0470, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q210TGDLStatic12TGDLSentinelFv
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 currentTGDLStatic:

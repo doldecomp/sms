@@ -436,12 +436,31 @@ $$22148:
 	.incbin "baserom.dol", 0x377108, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__12TLiveManager
 __vt__12TLiveManager:
-	.incbin "baserom.dol", 0x3B1E58, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLiveManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TLiveManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
 .global __vt__29TSpcTypedBinary$$010TLiveActor$$1
 __vt__29TSpcTypedBinary$$010TLiveActor$$1:
-	.incbin "baserom.dol", 0x3B1E98, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TSpcTypedBinary$$010TLiveActor$$1Fv
+  .4byte initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22101:

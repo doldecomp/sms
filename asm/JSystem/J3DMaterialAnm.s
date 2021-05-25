@@ -211,7 +211,13 @@ lbl_80039B20:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J3DMaterialAnm
 __vt__14J3DMaterialAnm:
-	.incbin "baserom.dol", 0x3A6E98, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14J3DMaterialAnmFv
+  .4byte calc__14J3DMaterialAnmCFP11J3DMaterial
 .global __vt__11J3DTexNoAnm
 __vt__11J3DTexNoAnm:
-	.incbin "baserom.dol", 0x3A6EA8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte calc__11J3DTexNoAnmCFPUs
+  .4byte 0

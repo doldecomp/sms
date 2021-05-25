@@ -1642,12 +1642,14 @@ setMSoundEnterStage__10MSMainProcFUcUc:
 /* 80110140 0010D080  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80110144 0010D084  7C 09 03 A6 */	mtctr r0
 /* 80110148 0010D088  4E 80 04 20 */	bctr 
+lbl_8011014C:
 /* 8011014C 0010D08C  38 7B 00 1A */	addi r3, r27, 0x1a
 /* 80110150 0010D090  48 06 FE 95 */	bl getSceneNo__5MSBgmFUl
 /* 80110154 0010D094  38 1B 00 1A */	addi r0, r27, 0x1a
 /* 80110158 0010D098  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011015C 0010D09C  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110160 0010D0A0  48 00 08 08 */	b lbl_80110968
+lbl_80110164:
 /* 80110164 0010D0A4  38 7B 00 01 */	addi r3, r27, 1
 /* 80110168 0010D0A8  48 06 FE 7D */	bl getSceneNo__5MSBgmFUl
 /* 8011016C 0010D0AC  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1662,12 +1664,14 @@ setMSoundEnterStage__10MSMainProcFUcUc:
 /* 80110190 0010D0D0  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80110194 0010D0D4  7C 09 03 A6 */	mtctr r0
 /* 80110198 0010D0D8  4E 80 04 20 */	bctr 
+lbl_8011019C:
 /* 8011019C 0010D0DC  C0 02 96 34 */	lfs f0, $$23409@sda21(r2)
 /* 801101A0 0010D0E0  9B AD 98 6C */	stb r29, fadeEvent__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101A4 0010D0E4  93 4D 98 70 */	stw r26, switchBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101A8 0010D0E8  93 4D 98 74 */	stw r26, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101AC 0010D0EC  D0 0D 98 78 */	stfs f0, cubeFadeRatio__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101B0 0010D0F0  48 00 07 B8 */	b lbl_80110968
+lbl_801101B4:
 /* 801101B4 0010D0F4  A0 6D 98 6A */	lhz r3, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101B8 0010D0F8  38 1B 00 16 */	addi r0, r27, 0x16
 /* 801101BC 0010D0FC  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
@@ -1675,12 +1679,14 @@ setMSoundEnterStage__10MSMainProcFUcUc:
 /* 801101C4 0010D104  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101C8 0010D108  B0 0D 98 6A */	sth r0, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101CC 0010D10C  48 00 07 9C */	b lbl_80110968
+lbl_801101D0:
 /* 801101D0 0010D110  C0 02 96 38 */	lfs f0, $$23410@sda21(r2)
 /* 801101D4 0010D114  9B AD 98 6C */	stb r29, fadeEvent__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101D8 0010D118  93 4D 98 70 */	stw r26, switchBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101DC 0010D11C  93 4D 98 74 */	stw r26, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101E0 0010D120  D0 0D 98 78 */	stfs f0, cubeFadeRatio__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801101E4 0010D124  48 00 07 84 */	b lbl_80110968
+lbl_801101E8:
 /* 801101E8 0010D128  3C 80 00 06 */	lis r4, 0x00060003@ha
 /* 801101EC 0010D12C  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 801101F0 0010D130  38 84 00 03 */	addi r4, r4, 0x00060003@l
@@ -1698,6 +1704,7 @@ setMSoundEnterStage__10MSMainProcFUcUc:
 /* 80110220 0010D160  93 4D 98 70 */	stw r26, switchBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110224 0010D164  93 4D 98 74 */	stw r26, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110228 0010D168  48 00 07 40 */	b lbl_80110968
+lbl_8011022C:
 /* 8011022C 0010D16C  A0 6D 98 6A */	lhz r3, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110230 0010D170  38 1B 00 16 */	addi r0, r27, 0x16
 /* 80110234 0010D174  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
@@ -1705,6 +1712,7 @@ setMSoundEnterStage__10MSMainProcFUcUc:
 /* 8011023C 0010D17C  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110240 0010D180  B0 0D 98 6A */	sth r0, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110244 0010D184  48 00 07 24 */	b lbl_80110968
+lbl_80110248:
 /* 80110248 0010D188  38 7B 00 02 */	addi r3, r27, 2
 /* 8011024C 0010D18C  48 06 FD 99 */	bl getSceneNo__5MSBgmFUl
 /* 80110250 0010D190  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1740,6 +1748,7 @@ lbl_8011029C:
 /* 801102C0 0010D200  93 4D 98 74 */	stw r26, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801102C4 0010D204  9B CD 98 80 */	stb r30, distFadeStageToKage__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801102C8 0010D208  48 00 06 A0 */	b lbl_80110968
+lbl_801102CC:
 /* 801102CC 0010D20C  38 7B 00 09 */	addi r3, r27, 9
 /* 801102D0 0010D210  48 06 FD 15 */	bl getSceneNo__5MSBgmFUl
 /* 801102D4 0010D214  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1773,6 +1782,7 @@ lbl_80110318:
 /* 80110340 0010D280  90 0D 98 74 */	stw r0, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110344 0010D284  D0 0D 98 78 */	stfs f0, cubeFadeRatio__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110348 0010D288  48 00 06 20 */	b lbl_80110968
+lbl_8011034C:
 /* 8011034C 0010D28C  57 00 06 3E */	clrlwi r0, r24, 0x18
 /* 80110350 0010D290  28 00 00 02 */	cmplwi r0, 2
 /* 80110354 0010D294  41 82 00 1C */	beq lbl_80110370
@@ -1817,6 +1827,7 @@ lbl_801103D0:
 /* 801103E4 0010D324  90 6D 98 5C */	stw r3, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801103E8 0010D328  98 0D 98 69 */	stb r0, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801103EC 0010D32C  48 00 05 7C */	b lbl_80110968
+lbl_801103F0:
 /* 801103F0 0010D330  38 7B 00 04 */	addi r3, r27, 4
 /* 801103F4 0010D334  48 06 FB F1 */	bl getSceneNo__5MSBgmFUl
 /* 801103F8 0010D338  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1839,12 +1850,14 @@ lbl_80110430:
 /* 80110434 0010D374  38 03 FF FC */	addi r0, r3, -4
 /* 80110438 0010D378  B0 0D 98 6A */	sth r0, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011043C 0010D37C  48 00 05 2C */	b lbl_80110968
+lbl_80110440:
 /* 80110440 0010D380  38 7B 00 08 */	addi r3, r27, 8
 /* 80110444 0010D384  48 06 FB A1 */	bl getSceneNo__5MSBgmFUl
 /* 80110448 0010D388  38 1B 00 08 */	addi r0, r27, 8
 /* 8011044C 0010D38C  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110450 0010D390  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110454 0010D394  48 00 05 14 */	b lbl_80110968
+lbl_80110458:
 /* 80110458 0010D398  38 7B 00 13 */	addi r3, r27, 0x13
 /* 8011045C 0010D39C  48 06 FB 89 */	bl getSceneNo__5MSBgmFUl
 /* 80110460 0010D3A0  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1862,6 +1875,7 @@ lbl_80110430:
 /* 80110490 0010D3D0  9B AD 98 68 */	stb r29, stageBgmSilentStartStatus__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110494 0010D3D4  9B CD 98 80 */	stb r30, distFadeStageToKage__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110498 0010D3D8  48 00 04 D0 */	b lbl_80110968
+lbl_8011049C:
 /* 8011049C 0010D3DC  57 1A 06 3E */	clrlwi r26, r24, 0x18
 /* 801104A0 0010D3E0  2C 1A 00 05 */	cmpwi r26, 5
 /* 801104A4 0010D3E4  41 82 00 08 */	beq lbl_801104AC
@@ -1934,6 +1948,7 @@ lbl_80110584:
 /* 80110590 0010D4D0  90 6D 98 64 */	stw r3, stageBgmSilent__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110594 0010D4D4  98 0D 98 68 */	stb r0, stageBgmSilentStartStatus__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110598 0010D4D8  48 00 03 D0 */	b lbl_80110968
+lbl_8011059C:
 /* 8011059C 0010D4DC  38 7B 00 14 */	addi r3, r27, 0x14
 /* 801105A0 0010D4E0  48 06 FA 45 */	bl getSceneNo__5MSBgmFUl
 /* 801105A4 0010D4E4  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -1963,6 +1978,7 @@ lbl_801105EC:
 /* 80110600 0010D540  98 6D 98 6C */	stb r3, fadeEvent__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110604 0010D544  90 0D 98 74 */	stw r0, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110608 0010D548  48 00 03 60 */	b lbl_80110968
+lbl_8011060C:
 /* 8011060C 0010D54C  38 7B 00 05 */	addi r3, r27, 5
 /* 80110610 0010D550  48 06 F9 D5 */	bl getSceneNo__5MSBgmFUl
 /* 80110614 0010D554  57 00 06 3E */	clrlwi r0, r24, 0x18
@@ -2009,12 +2025,14 @@ lbl_801106A0:
 /* 801106AC 0010D5EC  38 00 FF F0 */	li r0, -16
 /* 801106B0 0010D5F0  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801106B4 0010D5F4  48 00 02 B4 */	b lbl_80110968
+lbl_801106B8:
 /* 801106B8 0010D5F8  38 7B 00 1E */	addi r3, r27, 0x1e
 /* 801106BC 0010D5FC  48 06 F9 29 */	bl getSceneNo__5MSBgmFUl
 /* 801106C0 0010D600  38 1B 00 1E */	addi r0, r27, 0x1e
 /* 801106C4 0010D604  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801106C8 0010D608  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801106CC 0010D60C  48 00 02 9C */	b lbl_80110968
+lbl_801106D0:
 /* 801106D0 0010D610  38 7B 00 10 */	addi r3, r27, 0x10
 /* 801106D4 0010D614  48 06 F9 11 */	bl getSceneNo__5MSBgmFUl
 /* 801106D8 0010D618  38 9B 00 10 */	addi r4, r27, 0x10
@@ -2025,6 +2043,7 @@ lbl_801106A0:
 /* 801106EC 0010D62C  90 8D 98 60 */	stw r4, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801106F0 0010D630  4B F3 D2 15 */	bl loadArcSeqData__8JAIBasicFUlb
 /* 801106F4 0010D634  48 00 02 74 */	b lbl_80110968
+lbl_801106F8:
 /* 801106F8 0010D638  38 7B 00 06 */	addi r3, r27, 6
 /* 801106FC 0010D63C  48 06 F8 E9 */	bl getSceneNo__5MSBgmFUl
 /* 80110700 0010D640  38 1B 00 06 */	addi r0, r27, 6
@@ -2032,6 +2051,7 @@ lbl_801106A0:
 /* 80110708 0010D648  3B 20 00 01 */	li r25, 1
 /* 8011070C 0010D64C  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110710 0010D650  48 00 02 58 */	b lbl_80110968
+lbl_80110714:
 /* 80110714 0010D654  38 7B 00 01 */	addi r3, r27, 1
 /* 80110718 0010D658  48 06 F8 CD */	bl getSceneNo__5MSBgmFUl
 /* 8011071C 0010D65C  38 1B 00 01 */	addi r0, r27, 1
@@ -2040,6 +2060,7 @@ lbl_801106A0:
 /* 80110728 0010D668  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011072C 0010D66C  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110730 0010D670  48 00 02 38 */	b lbl_80110968
+lbl_80110734:
 /* 80110734 0010D674  3F 40 80 01 */	lis r26, 0x80010021@ha
 /* 80110738 0010D678  38 7A 00 21 */	addi r3, r26, 0x80010021@l
 /* 8011073C 0010D67C  48 06 F8 A9 */	bl getSceneNo__5MSBgmFUl
@@ -2050,6 +2071,7 @@ lbl_801106A0:
 /* 80110750 0010D690  90 8D 98 5C */	stw r4, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110754 0010D694  98 0D 98 69 */	stb r0, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110758 0010D698  48 00 02 10 */	b lbl_80110968
+lbl_8011075C:
 /* 8011075C 0010D69C  38 7B 00 12 */	addi r3, r27, 0x12
 /* 80110760 0010D6A0  48 06 F8 85 */	bl getSceneNo__5MSBgmFUl
 /* 80110764 0010D6A4  38 1B 00 12 */	addi r0, r27, 0x12
@@ -2058,6 +2080,7 @@ lbl_801106A0:
 /* 80110770 0010D6B0  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110774 0010D6B4  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110778 0010D6B8  48 00 01 F0 */	b lbl_80110968
+lbl_8011077C:
 /* 8011077C 0010D6BC  38 7B 00 21 */	addi r3, r27, 0x21
 /* 80110780 0010D6C0  48 06 F8 65 */	bl getSceneNo__5MSBgmFUl
 /* 80110784 0010D6C4  38 1B 00 21 */	addi r0, r27, 0x21
@@ -2066,12 +2089,14 @@ lbl_801106A0:
 /* 80110790 0010D6D0  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110794 0010D6D4  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110798 0010D6D8  48 00 01 D0 */	b lbl_80110968
+lbl_8011079C:
 /* 8011079C 0010D6DC  38 7B 00 12 */	addi r3, r27, 0x12
 /* 801107A0 0010D6E0  48 06 F8 45 */	bl getSceneNo__5MSBgmFUl
 /* 801107A4 0010D6E4  38 1B 00 12 */	addi r0, r27, 0x12
 /* 801107A8 0010D6E8  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107AC 0010D6EC  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107B0 0010D6F0  48 00 01 B8 */	b lbl_80110968
+lbl_801107B4:
 /* 801107B4 0010D6F4  3F 40 80 01 */	lis r26, 0x80010012@ha
 /* 801107B8 0010D6F8  38 7A 00 12 */	addi r3, r26, 0x80010012@l
 /* 801107BC 0010D6FC  48 06 F8 29 */	bl getSceneNo__5MSBgmFUl
@@ -2082,6 +2107,7 @@ lbl_801106A0:
 /* 801107D0 0010D710  90 8D 98 5C */	stw r4, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107D4 0010D714  98 0D 98 69 */	stb r0, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107D8 0010D718  48 00 01 90 */	b lbl_80110968
+lbl_801107DC:
 /* 801107DC 0010D71C  38 7B 00 21 */	addi r3, r27, 0x21
 /* 801107E0 0010D720  48 06 F8 05 */	bl getSceneNo__5MSBgmFUl
 /* 801107E4 0010D724  38 1B 00 21 */	addi r0, r27, 0x21
@@ -2090,6 +2116,7 @@ lbl_801106A0:
 /* 801107F0 0010D730  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107F4 0010D734  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801107F8 0010D738  48 00 01 70 */	b lbl_80110968
+lbl_801107FC:
 /* 801107FC 0010D73C  3F 40 80 01 */	lis r26, 0x80010012@ha
 /* 80110800 0010D740  38 7A 00 12 */	addi r3, r26, 0x80010012@l
 /* 80110804 0010D744  48 06 F7 E1 */	bl getSceneNo__5MSBgmFUl
@@ -2100,6 +2127,7 @@ lbl_801106A0:
 /* 80110818 0010D758  90 8D 98 5C */	stw r4, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011081C 0010D75C  98 0D 98 69 */	stb r0, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110820 0010D760  48 00 01 48 */	b lbl_80110968
+lbl_80110824:
 /* 80110824 0010D764  38 7B 00 21 */	addi r3, r27, 0x21
 /* 80110828 0010D768  48 06 F7 BD */	bl getSceneNo__5MSBgmFUl
 /* 8011082C 0010D76C  38 1B 00 21 */	addi r0, r27, 0x21
@@ -2109,6 +2137,7 @@ lbl_801106A0:
 /* 8011083C 0010D77C  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110840 0010D780  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110844 0010D784  48 00 01 24 */	b lbl_80110968
+lbl_80110848:
 /* 80110848 0010D788  3F 40 80 01 */	lis r26, 0x80010012@ha
 /* 8011084C 0010D78C  38 7A 00 12 */	addi r3, r26, 0x80010012@l
 /* 80110850 0010D790  48 06 F7 95 */	bl getSceneNo__5MSBgmFUl
@@ -2119,6 +2148,7 @@ lbl_801106A0:
 /* 80110864 0010D7A4  90 8D 98 5C */	stw r4, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110868 0010D7A8  98 0D 98 69 */	stb r0, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011086C 0010D7AC  48 00 00 FC */	b lbl_80110968
+lbl_80110870:
 /* 80110870 0010D7B0  38 7B 00 15 */	addi r3, r27, 0x15
 /* 80110874 0010D7B4  48 06 F7 71 */	bl getSceneNo__5MSBgmFUl
 /* 80110878 0010D7B8  38 1B 00 15 */	addi r0, r27, 0x15
@@ -2127,18 +2157,21 @@ lbl_801106A0:
 /* 80110884 0010D7C4  90 0D 98 5C */	stw r0, demoBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110888 0010D7C8  9B CD 98 69 */	stb r30, flags__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011088C 0010D7CC  48 00 00 DC */	b lbl_80110968
+lbl_80110890:
 /* 80110890 0010D7D0  38 7B 00 0D */	addi r3, r27, 0xd
 /* 80110894 0010D7D4  48 06 F7 51 */	bl getSceneNo__5MSBgmFUl
 /* 80110898 0010D7D8  38 1B 00 0D */	addi r0, r27, 0xd
 /* 8011089C 0010D7DC  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801108A0 0010D7E0  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801108A4 0010D7E4  48 00 00 C4 */	b lbl_80110968
+lbl_801108A8:
 /* 801108A8 0010D7E8  38 7B 00 0D */	addi r3, r27, 0xd
 /* 801108AC 0010D7EC  48 06 F7 39 */	bl getSceneNo__5MSBgmFUl
 /* 801108B0 0010D7F0  38 1B 00 0D */	addi r0, r27, 0xd
 /* 801108B4 0010D7F4  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801108B8 0010D7F8  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 801108BC 0010D7FC  48 00 00 AC */	b lbl_80110968
+lbl_801108C0:
 /* 801108C0 0010D800  57 00 06 3E */	clrlwi r0, r24, 0x18
 /* 801108C4 0010D804  2C 00 00 01 */	cmpwi r0, 1
 /* 801108C8 0010D808  41 82 00 2C */	beq lbl_801108F4
@@ -2160,6 +2193,7 @@ lbl_801108F4:
 /* 80110900 0010D840  90 6D 98 58 */	stw r3, msStg__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110904 0010D844  90 0D 98 60 */	stw r0, stageBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110908 0010D848  48 00 00 60 */	b lbl_80110968
+lbl_8011090C:
 /* 8011090C 0010D84C  38 7B 00 09 */	addi r3, r27, 9
 /* 80110910 0010D850  48 06 F6 D5 */	bl getSceneNo__5MSBgmFUl
 /* 80110914 0010D854  38 1B 00 09 */	addi r0, r27, 9
@@ -2173,6 +2207,7 @@ lbl_801108F4:
 /* 80110934 0010D874  93 4D 98 70 */	stw r26, switchBgm__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 80110938 0010D878  93 4D 98 74 */	stw r26, switchBgm2__Q210MSMainProc11MSStageInfo@sda21(r13)
 /* 8011093C 0010D87C  48 00 00 2C */	b lbl_80110968
+lbl_80110940:
 /* 80110940 0010D880  38 7B 00 2E */	addi r3, r27, 0x2e
 /* 80110944 0010D884  48 06 F6 A1 */	bl getSceneNo__5MSBgmFUl
 /* 80110948 0010D888  A0 8D 98 6A */	lhz r4, volOffCategory__Q210MSMainProc11MSStageInfo@sda21(r13)
@@ -2604,30 +2639,127 @@ lbl_80110EEC:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23414:
-	.incbin "baserom.dol", 0x3B19D8, 0x28
+    .4byte lbl_8011019C
+    .4byte lbl_801101B4
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_801101D0
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_801101E8
+    .4byte lbl_8011022C
 $$23413:
-	.incbin "baserom.dol", 0x3B1A00, 0xF4
+    .4byte lbl_8011014C
+    .4byte lbl_80110164
+    .4byte lbl_80110248
+    .4byte lbl_801102CC
+    .4byte lbl_8011034C
+    .4byte lbl_801103F0
+    .4byte lbl_80110440
+    .4byte lbl_80110458
+    .4byte lbl_8011049C
+    .4byte lbl_8011059C
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_8011060C
+    .4byte lbl_801106B8
+    .4byte lbl_801106D0
+    .4byte lbl_801106F8
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110714
+    .4byte lbl_80110734
+    .4byte lbl_80110734
+    .4byte lbl_80110734
+    .4byte lbl_80110734
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_8011075C
+    .4byte lbl_8011077C
+    .4byte lbl_8011079C
+    .4byte lbl_801107B4
+    .4byte lbl_801107B4
+    .4byte lbl_801107DC
+    .4byte lbl_801107FC
+    .4byte lbl_801107FC
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_801107FC
+    .4byte lbl_801107FC
+    .4byte lbl_801107FC
+    .4byte lbl_801107FC
+    .4byte lbl_80110824
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110848
+    .4byte lbl_80110870
+    .4byte lbl_80110968
+    .4byte lbl_80110968
+    .4byte lbl_80110890
+    .4byte lbl_80110968
+    .4byte lbl_801108A8
+    .4byte lbl_801108C0
+    .4byte lbl_8011090C
+    .4byte lbl_80110940
 .global __vt__24MSSTageSimpleEnvironment
 __vt__24MSSTageSimpleEnvironment:
-	.incbin "baserom.dol", 0x3B1AF4, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__24MSSTageSimpleEnvironmentFv
 .global __vt__17MSStageCubeSwitch
 __vt__17MSStageCubeSwitch:
-	.incbin "baserom.dol", 0x3B1B08, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__17MSStageCubeSwitchFv
 .global __vt__20MSStageCubeFadeMonte
 __vt__20MSStageCubeFadeMonte:
-	.incbin "baserom.dol", 0x3B1B1C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__20MSStageCubeFadeMonteFv
 .global __vt__15MSStageCubeFade
 __vt__15MSStageCubeFade:
-	.incbin "baserom.dol", 0x3B1B30, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__15MSStageCubeFadeFv
 .global __vt__20MSStageDistFadeMonte
 __vt__20MSStageDistFadeMonte:
-	.incbin "baserom.dol", 0x3B1B44, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__20MSStageDistFadeMonteFv
 .global __vt__15MSStageDistFade
 __vt__15MSStageDistFade:
-	.incbin "baserom.dol", 0x3B1B58, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte proc__15MSStageDistFadeFv
 .global __vt__7MSStage
 __vt__7MSStage:
-	.incbin "baserom.dol", 0x3B1B6C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte setPosPtr__7MSStageFP3Vec
+  .4byte stageLoop__7MSStageFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22293:

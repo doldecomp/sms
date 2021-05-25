@@ -525,10 +525,26 @@ lbl_80319970:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20TAreaCylinderManager
 __vt__20TAreaCylinderManager:
-	.incbin "baserom.dol", 0x3DDE38, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TAreaCylinderManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__20TAreaCylinderManagerFUlPQ26JDrama9TGraphics
 .global __vt__13TAreaCylinder
 __vt__13TAreaCylinder:
-	.incbin "baserom.dol", 0x3DDE5C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TAreaCylinderFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TAreaCylinderFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TAreaCylinderFUlPQ26JDrama9TGraphics
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22137:

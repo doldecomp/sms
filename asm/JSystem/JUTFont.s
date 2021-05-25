@@ -165,4 +165,17 @@ setGX__7JUTFontFQ28JUtility6TColorQ28JUtility6TColor:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7JUTFont
 __vt__7JUTFont:
-	.incbin "baserom.dol", 0x3A5B68, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7JUTFontFv
+  .4byte 0
+  .4byte setGX__7JUTFontFQ28JUtility6TColorQ28JUtility6TColor
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0

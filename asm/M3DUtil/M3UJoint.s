@@ -665,7 +665,23 @@ $$21411:
 	.incbin "baserom.dol", 0x3B0490, 0xC
 .global __vt__24M3UMtxCalcSIAnmBlendQuat
 __vt__24M3UMtxCalcSIAnmBlendQuat:
-	.incbin "baserom.dol", 0x3B049C, 0x44
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24M3UMtxCalcSIAnmBlendQuatFv
+  .4byte init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
+  .4byte recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
+  .4byte calc__24M3UMtxCalcSIAnmBlendQuatFUs
+  .4byte 0
+  .4byte 0
+  .4byte $$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
+  .4byte $$2100$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2100$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2100$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2100$$24$$2calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
+  .4byte $$2100$$24$$2calc__24M3UMtxCalcSIAnmBlendQuatFUs
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21572:

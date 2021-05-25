@@ -923,7 +923,10 @@ $$22484:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TMarioCap
 __vt__9TMarioCap:
-	.incbin "baserom.dol", 0x3B24D0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte perform__9TMarioCapFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22278:

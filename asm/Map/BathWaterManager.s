@@ -8639,22 +8639,90 @@ fileNames__17TBathWaterManager:
 	.incbin "baserom.dol", 0x3CDD20, 0x8
 .global __vt__17TBathWaterManager
 __vt__17TBathWaterManager:
-	.incbin "baserom.dol", 0x3CDD28, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TBathWaterManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17TBathWaterManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__17TBathWaterManagerFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__17TBathWaterManagerFUlPQ26JDrama9TGraphics
 .global __vt__10TBathWater
 __vt__10TBathWater:
-	.incbin "baserom.dol", 0x3CDD4C, 0xA4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TBathWaterFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9THitActorFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TBathWaterFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__9THitActorFP9THitActorUl
 .global __vt__22TBathWaterMeshRenderer
 __vt__22TBathWaterMeshRenderer:
-	.incbin "baserom.dol", 0x3CDDF0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte prerender__22TBathWaterMeshRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi
+  .4byte render__22TBathWaterMeshRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi
+  .4byte getHeight__22TBathWaterMeshRendererCFff
 .global __vt__22TBathWaterFlatRenderer
 __vt__22TBathWaterFlatRenderer:
-	.incbin "baserom.dol", 0x3CDE04, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte prerender__22TBathWaterFlatRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi
+  .4byte render__22TBathWaterFlatRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi
+  .4byte getHeight__22TBathWaterFlatRendererCFff
 .global __vt__18TBathWaterRenderer
 __vt__18TBathWaterRenderer:
-	.incbin "baserom.dol", 0x3CDE18, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TBathWaterPreprocessor
 __vt__22TBathWaterPreprocessor:
-	.incbin "baserom.dol", 0x3CDE2C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TBathWaterPreprocessorFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__22TBathWaterPreprocessorFUlPQ26JDrama9TGraphics
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22375:

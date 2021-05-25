@@ -95,7 +95,10 @@ setParams__Q28JASystem10TInstSenseFiiff:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem10TInstSense
 __vt__Q28JASystem10TInstSense:
-	.incbin "baserom.dol", 0x3A7EB8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte getY__Q28JASystem10TInstSenseCFii
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2252:

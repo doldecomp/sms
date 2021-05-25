@@ -215,7 +215,10 @@ lbl_80080DDC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JPAExtraShape
 __vt__13JPAExtraShape:
-	.incbin "baserom.dol", 0x3A9CE0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JPAExtraShapeFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21509:

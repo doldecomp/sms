@@ -2058,6 +2058,7 @@ receiveMessage__9TWireTrapFP9THitActorUl:
 /* 8031B674 003185B4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8031B678 003185B8  7C 09 03 A6 */	mtctr r0
 /* 8031B67C 003185BC  4E 80 04 20 */	bctr 
+lbl_8031B680:
 /* 8031B680 003185C0  C0 02 FB F4 */	lfs f0, $$22845@sda21(r2)
 /* 8031B684 003185C4  38 C1 00 6C */	addi r6, r1, 0x6c
 /* 8031B688 003185C8  38 9F 00 10 */	addi r4, r31, 0x10
@@ -2147,6 +2148,7 @@ lbl_8031B7B4:
 lbl_8031B7D4:
 /* 8031B7D4 00318714  38 60 00 01 */	li r3, 1
 /* 8031B7D8 00318718  48 00 00 68 */	b lbl_8031B840
+lbl_8031B7DC:
 /* 8031B7DC 0031871C  80 1F 00 68 */	lwz r0, 0x68(r31)
 /* 8031B7E0 00318720  28 00 00 00 */	cmplwi r0, 0
 /* 8031B7E4 00318724  40 82 00 54 */	bne lbl_8031B838
@@ -2156,6 +2158,7 @@ lbl_8031B7D4:
 /* 8031B7F4 00318734  90 1F 00 64 */	stw r0, 0x64(r31)
 /* 8031B7F8 00318738  90 9F 00 68 */	stw r4, 0x68(r31)
 /* 8031B7FC 0031873C  48 00 00 44 */	b lbl_8031B840
+lbl_8031B800:
 /* 8031B800 00318740  80 1F 00 68 */	lwz r0, 0x68(r31)
 /* 8031B804 00318744  28 00 00 00 */	cmplwi r0, 0
 /* 8031B808 00318748  41 82 00 30 */	beq lbl_8031B838
@@ -2163,6 +2166,7 @@ lbl_8031B7D4:
 /* 8031B810 00318750  90 1F 00 68 */	stw r0, 0x68(r31)
 /* 8031B814 00318754  38 60 00 01 */	li r3, 1
 /* 8031B818 00318758  48 00 00 28 */	b lbl_8031B840
+lbl_8031B81C:
 /* 8031B81C 0031875C  7F E3 FB 78 */	mr r3, r31
 /* 8031B820 00318760  81 9F 00 00 */	lwz r12, 0(r31)
 /* 8031B824 00318764  81 8C 00 E4 */	lwz r12, 0xe4(r12)
@@ -2778,33 +2782,154 @@ $$23980:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20TNerveWireTrapGoWait
 __vt__20TNerveWireTrapGoWait:
-	.incbin "baserom.dol", 0x3DDE80, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TNerveWireTrapGoWaitFv
+  .4byte execute__20TNerveWireTrapGoWaitCFP24TSpineBase$$010TLiveActor$$1
 $$23924:
-	.incbin "baserom.dol", 0x3DDE90, 0x30
+    .4byte lbl_8031B7DC
+    .4byte lbl_8031B838
+    .4byte lbl_8031B838
+    .4byte lbl_8031B800
+    .4byte lbl_8031B800
+    .4byte lbl_8031B838
+    .4byte lbl_8031B838
+    .4byte lbl_8031B81C
+    .4byte lbl_8031B838
+    .4byte lbl_8031B838
+    .4byte lbl_8031B838
+    .4byte lbl_8031B680
+
 .global __vt__18TNerveWireTrapWait
 __vt__18TNerveWireTrapWait:
-	.incbin "baserom.dol", 0x3DDEC0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveWireTrapWaitFv
+  .4byte execute__18TNerveWireTrapWaitCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__20TNerveWireTrapSearch
 __vt__20TNerveWireTrapSearch:
-	.incbin "baserom.dol", 0x3DDED0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TNerveWireTrapSearchFv
+  .4byte execute__20TNerveWireTrapSearchCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__27TNerveWireTrapOnewayMoveEnd
 __vt__27TNerveWireTrapOnewayMoveEnd:
-	.incbin "baserom.dol", 0x3DDEE0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__27TNerveWireTrapOnewayMoveEndFv
+  .4byte execute__27TNerveWireTrapOnewayMoveEndCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveWireTrapOnewayMove
 __vt__24TNerveWireTrapOnewayMove:
-	.incbin "baserom.dol", 0x3DDEF0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveWireTrapOnewayMoveFv
+  .4byte execute__24TNerveWireTrapOnewayMoveCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__29TNerveWireTrapOnewayMoveStart
 __vt__29TNerveWireTrapOnewayMoveStart:
-	.incbin "baserom.dol", 0x3DDF00, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TNerveWireTrapOnewayMoveStartFv
+  .4byte execute__29TNerveWireTrapOnewayMoveStartCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__24TNerveWireTrapReturnMove
 __vt__24TNerveWireTrapReturnMove:
-	.incbin "baserom.dol", 0x3DDF10, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TNerveWireTrapReturnMoveFv
+  .4byte execute__24TNerveWireTrapReturnMoveCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TWireTrapManager
 __vt__16TWireTrapManager:
-	.incbin "baserom.dol", 0x3DDF20, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TWireTrapManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TWireTrapManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__16TWireTrapManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
 .global __vt__9TWireTrap
 __vt__9TWireTrap:
-	.incbin "baserom.dol", 0x3DDF74, 0x114
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TWireTrapFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__9TWireTrapFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__9TWireTrapFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__9TWireTrapFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__9TWireTrapFP12TLiveManager
+  .4byte calcRootMatrix__9TWireTrapFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__9TWireTrapFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__9TWireTrapFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__11TSpineEnemyFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 cMatName__9$$2unnamed$$2:

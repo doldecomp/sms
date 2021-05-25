@@ -330,6 +330,7 @@ lbl_80146FE8:
 /* 80146FFC 00143F3C  54 00 07 FA */	rlwinm r0, r0, 0, 0x1f, 0x1d
 /* 80147000 00143F40  90 1E 00 64 */	stw r0, 0x64(r30)
 /* 80147004 00143F44  48 00 02 90 */	b lbl_80147294
+lbl_80147008:
 /* 80147008 00143F48  C0 02 9F E8 */	lfs f0, $$22837@sda21(r2)
 /* 8014700C 00143F4C  7F C3 F3 78 */	mr r3, r30
 /* 80147010 00143F50  D0 1E 00 50 */	stfs f0, 0x50(r30)
@@ -352,6 +353,7 @@ lbl_80147040:
 /* 80147050 00143F90  38 00 00 03 */	li r0, 3
 /* 80147054 00143F94  B0 1E 00 7C */	sth r0, 0x7c(r30)
 /* 80147058 00143F98  48 00 02 3C */	b lbl_80147294
+lbl_8014705C:
 /* 8014705C 00143F9C  C0 02 9F EC */	lfs f0, $$22838@sda21(r2)
 /* 80147060 00143FA0  7F C3 F3 78 */	mr r3, r30
 /* 80147064 00143FA4  D0 1E 00 50 */	stfs f0, 0x50(r30)
@@ -484,6 +486,7 @@ lbl_80147244:
 /* 80147244 00144184  38 00 00 00 */	li r0, 0
 /* 80147248 00144188  B0 1E 00 7C */	sth r0, 0x7c(r30)
 /* 8014724C 0014418C  48 00 00 48 */	b lbl_80147294
+lbl_80147250:
 /* 80147250 00144190  C0 02 9F EC */	lfs f0, $$22838@sda21(r2)
 /* 80147254 00144194  7F C3 F3 78 */	mr r3, r30
 /* 80147258 00144198  D0 1E 00 50 */	stfs f0, 0x50(r30)
@@ -498,6 +501,8 @@ lbl_80147244:
 /* 8014727C 001441BC  38 00 00 03 */	li r0, 3
 /* 80147280 001441C0  B0 1E 00 7C */	sth r0, 0x7c(r30)
 /* 80147284 001441C4  48 00 00 10 */	b lbl_80147294
+lbl_80147288:
+lbl_80147288:
 /* 80147288 001441C8  A0 7E 00 7E */	lhz r3, 0x7e(r30)
 /* 8014728C 001441CC  38 03 00 01 */	addi r0, r3, 1
 /* 80147290 001441D0  B0 1E 00 7E */	sth r0, 0x7e(r30)
@@ -1753,9 +1758,64 @@ $$23087:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TYoshiTongue
 __vt__12TYoshiTongue:
-	.incbin "baserom.dol", 0x3B38B0, 0xC4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TYoshiTongueFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9THitActorFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__12TYoshiTongueFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__9THitActorFP9THitActorUl
+  .4byte getTakingMtx__12TYoshiTongueFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte init__12TYoshiTongueFP6TYoshi
+  .4byte movement__12TYoshiTongueFv
+  .4byte checkTaking__12TYoshiTongueFv
+  .4byte checkTaken__12TYoshiTongueFv
 $$22843:
-	.incbin "baserom.dol", 0x3B3974, 0x24
+    .4byte lbl_80146FE8
+    .4byte lbl_80147008
+    .4byte lbl_80146FE8
+    .4byte lbl_8014705C
+    .4byte lbl_80146FE8
+    .4byte lbl_80147250
+    .4byte lbl_80147288
+    .4byte lbl_80147288
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22631:

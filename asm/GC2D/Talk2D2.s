@@ -1608,6 +1608,7 @@ lbl_802130E0:
 /* 802130F8 00210038  7C 03 00 2E */	lwzx r0, r3, r0
 /* 802130FC 0021003C  7C 09 03 A6 */	mtctr r0
 /* 80213100 00210040  4E 80 04 20 */	bctr 
+lbl_80213104:
 /* 80213104 00210044  83 ED A8 B0 */	lwz r31, gpCamera@sda21(r13)
 /* 80213108 00210048  3B 60 00 00 */	li r27, 0
 /* 8021310C 0021004C  80 9F 00 50 */	lwz r4, 0x50(r31)
@@ -1635,6 +1636,7 @@ lbl_80213148:
 /* 80213158 00210098  38 00 00 03 */	li r0, 3
 /* 8021315C 0021009C  90 1C 02 48 */	stw r0, 0x248(r28)
 /* 80213160 002100A0  48 00 01 54 */	b lbl_802132B4
+lbl_80213164:
 /* 80213164 002100A4  88 1C 00 28 */	lbz r0, 0x28(r28)
 /* 80213168 002100A8  28 00 00 00 */	cmplwi r0, 0
 /* 8021316C 002100AC  41 82 00 10 */	beq lbl_8021317C
@@ -1650,6 +1652,7 @@ lbl_80213184:
 /* 8021318C 002100CC  38 00 00 05 */	li r0, 5
 /* 80213190 002100D0  90 1C 02 48 */	stw r0, 0x248(r28)
 /* 80213194 002100D4  48 00 01 20 */	b lbl_802132B4
+lbl_80213198:
 /* 80213198 002100D8  88 1C 00 28 */	lbz r0, 0x28(r28)
 /* 8021319C 002100DC  28 00 00 00 */	cmplwi r0, 0
 /* 802131A0 002100E0  41 82 00 18 */	beq lbl_802131B8
@@ -1664,6 +1667,7 @@ lbl_802131B8:
 /* 802131C0 00210100  7F 83 E3 78 */	mr r3, r28
 /* 802131C4 00210104  48 00 0A 09 */	bl checkControler__8TTalk2D2Fv
 /* 802131C8 00210108  48 00 00 EC */	b lbl_802132B4
+lbl_802131CC:
 /* 802131CC 0021010C  88 1C 00 28 */	lbz r0, 0x28(r28)
 /* 802131D0 00210110  28 00 00 00 */	cmplwi r0, 0
 /* 802131D4 00210114  41 82 00 20 */	beq lbl_802131F4
@@ -1691,6 +1695,7 @@ lbl_80213220:
 /* 80213220 00210160  38 00 00 01 */	li r0, 1
 /* 80213224 00210164  90 1C 02 48 */	stw r0, 0x248(r28)
 /* 80213228 00210168  48 00 00 8C */	b lbl_802132B4
+lbl_8021322C:
 /* 8021322C 0021016C  88 1C 00 28 */	lbz r0, 0x28(r28)
 /* 80213230 00210170  28 00 00 00 */	cmplwi r0, 0
 /* 80213234 00210174  41 82 00 10 */	beq lbl_80213244
@@ -1713,6 +1718,7 @@ lbl_8021326C:
 /* 8021326C 002101AC  38 00 00 04 */	li r0, 4
 /* 80213270 002101B0  90 1C 02 48 */	stw r0, 0x248(r28)
 /* 80213274 002101B4  48 00 00 40 */	b lbl_802132B4
+lbl_80213278:
 /* 80213278 002101B8  80 7C 00 18 */	lwz r3, 0x18(r28)
 /* 8021327C 002101BC  38 80 00 00 */	li r4, 0
 /* 80213280 002101C0  38 A3 00 CC */	addi r5, r3, 0xcc
@@ -5056,13 +5062,30 @@ $$24981:
 	.incbin "baserom.dol", 0x390A60, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 64 # ok but why though?
 cColorTable__8TTalk2D2:
 	.incbin "baserom.dol", 0x3CE100, 0x18
 .global __vt__8TTalk2D2
 __vt__8TTalk2D2:
-	.incbin "baserom.dol", 0x3CE118, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__8TTalk2D2Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__8TTalk2D2FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__8TTalk2D2Fv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__8TTalk2D2FUlPQ26JDrama9TGraphics
 $$23886:
-	.incbin "baserom.dol", 0x3CE13C, 0x24
+    .4byte lbl_802132B4
+    .4byte lbl_802132B4
+    .4byte lbl_80213104
+    .4byte lbl_802132B4
+    .4byte lbl_80213164
+    .4byte lbl_80213198
+    .4byte lbl_802131CC
+    .4byte lbl_8021322C
+    .4byte lbl_80213278
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22720:

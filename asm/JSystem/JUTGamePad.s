@@ -1599,7 +1599,10 @@ channel_mask:
 	.incbin "baserom.dol", 0x3A5BA0, 0x10
 .global __vt__10JUTGamePad
 __vt__10JUTGamePad:
-	.incbin "baserom.dol", 0x3A5BB0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTGamePadFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mStickMode__10JUTGamePad:

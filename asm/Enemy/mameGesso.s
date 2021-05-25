@@ -3667,34 +3667,189 @@ mameGesso_bastable:
 	.incbin "baserom.dol", 0x3D2CC0, 0x4C
 .global __vt__19TNerveMameGessoWait
 __vt__19TNerveMameGessoWait:
-	.incbin "baserom.dol", 0x3D2D0C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveMameGessoWaitFv
+  .4byte execute__19TNerveMameGessoWaitCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveMameGessoObject
 __vt__21TNerveMameGessoObject:
-	.incbin "baserom.dol", 0x3D2D1C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveMameGessoObjectFv
+  .4byte execute__21TNerveMameGessoObjectCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveMameGessoThrown
 __vt__21TNerveMameGessoThrown:
-	.incbin "baserom.dol", 0x3D2D2C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveMameGessoThrownFv
+  .4byte execute__21TNerveMameGessoThrownCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveMameGessoPickUp
 __vt__21TNerveMameGessoPickUp:
-	.incbin "baserom.dol", 0x3D2D3C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveMameGessoPickUpFv
+  .4byte execute__21TNerveMameGessoPickUpCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__22TNerveMameGessoTrample
 __vt__22TNerveMameGessoTrample:
-	.incbin "baserom.dol", 0x3D2D4C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveMameGessoTrampleFv
+  .4byte execute__22TNerveMameGessoTrampleCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveMameGessoJitabata
 __vt__23TNerveMameGessoJitabata:
-	.incbin "baserom.dol", 0x3D2D5C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveMameGessoJitabataFv
+  .4byte execute__23TNerveMameGessoJitabataCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveMameGessoDamage
 __vt__21TNerveMameGessoDamage:
-	.incbin "baserom.dol", 0x3D2D6C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveMameGessoDamageFv
+  .4byte execute__21TNerveMameGessoDamageCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__30TNerveMameGessoGraphJumpWander
 __vt__30TNerveMameGessoGraphJumpWander:
-	.incbin "baserom.dol", 0x3D2D7C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__30TNerveMameGessoGraphJumpWanderFv
+  .4byte execute__30TNerveMameGessoGraphJumpWanderCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__10TMameGesso
 __vt__10TMameGesso:
-	.incbin "baserom.dol", 0x3D2D8C, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TMameGessoFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__10TMameGessoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TMameGessoFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10TMameGessoFP12TLiveManager
+  .4byte calcRootMatrix__10TMameGessoFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TMameGessoFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TMameGessoFv
+  .4byte getGravityY__10TMameGessoCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__10TMameGessoCFv
+  .4byte reset__10TMameGessoFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__10TMameGessoFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__10TMameGessoFP9THitActor
+  .4byte changeByJuice__10TMameGessoFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__10TMameGessoFP9THitActor
+  .4byte behaveToRelease__10TMameGessoFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__10TMameGessoFv
+  .4byte setFreezeAnm__10TMameGessoFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__10TMameGessoFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__10TMameGessoFv
+  .4byte forceKill__10TMameGessoFv
+  .4byte setMActorAndKeeper__10TMameGessoFv
+  .4byte initAttacker__12TWalkerEnemyFP9THitActor
+  .4byte isHitValid__10TMameGessoFUl
+  .4byte isCollidMove__10TMameGessoFP9THitActor
+  .4byte isInhibitedForceMove__10TMameGessoFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__10TMameGessoFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__12TWalkerEnemyFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__17TMameGessoManager
 __vt__17TMameGessoManager:
-	.incbin "baserom.dol", 0x3D2F44, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TMameGessoManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17TMameGessoManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__17TMameGessoManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__17TMameGessoManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSmallEnemyManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__17TMameGessoManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__17TMameGessoManagerFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mBaseHoseiTransY__10TMameGesso:

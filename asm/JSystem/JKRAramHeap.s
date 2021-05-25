@@ -284,7 +284,10 @@ lbl_800069D0:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11JKRAramHeap
 __vt__11JKRAramHeap:
-	.incbin "baserom.dol", 0x3A53E8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11JKRAramHeapFv
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$256:

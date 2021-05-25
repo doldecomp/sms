@@ -201,10 +201,25 @@ lbl_8000E51C:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__21JSURandomOutputStream
 __vt__21JSURandomOutputStream:
-	.incbin "baserom.dol", 0x3A5740, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21JSURandomOutputStreamFv
+  .4byte skip__15JSUOutputStreamFlSc
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte seek__21JSURandomOutputStreamFl17JSUStreamSeekFrom
+  .4byte getAvailable__21JSURandomOutputStreamCFv
+  .4byte 0
 .global __vt__10JSUIosBase
 __vt__10JSUIosBase:
-	.incbin "baserom.dol", 0x3A5768, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JSUIosBaseFv
 .global __vt__15JSUOutputStream
 __vt__15JSUOutputStream:
-	.incbin "baserom.dol", 0x3A5774, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15JSUOutputStreamFv
+  .4byte skip__15JSUOutputStreamFlSc
+  .4byte 0

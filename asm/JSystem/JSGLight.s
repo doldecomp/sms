@@ -92,7 +92,30 @@ JSGSetDirection__Q26JStage6TLightFRC3Vec:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage6TLight
 __vt__Q26JStage6TLight:
-	.incbin "baserom.dol", 0x3A9E38, 0x60
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage6TLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetLightType__Q26JStage6TLightCFv
+  .4byte JSGSetLightType__Q26JStage6TLightFQ26JStage7TELight
+  .4byte JSGGetPosition__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetPosition__Q26JStage6TLightFRC3Vec
+  .4byte JSGGetColor__Q26JStage6TLightCFv
+  .4byte JSGSetColor__Q26JStage6TLightF8_GXColor
+  .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
+  .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
+  .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
+  .4byte JSGSetAngleAttenuation__Q26JStage6TLightFf9_GXSpotFn
+  .4byte JSGGetDirection__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetDirection__Q26JStage6TLightFRC3Vec
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2118:

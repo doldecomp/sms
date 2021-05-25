@@ -6821,16 +6821,28 @@ table$284:
 	.incbin "baserom.dol", 0x3B20E0, 0x1E0
 .global __vt__10TSpcInterp
 __vt__10TSpcInterp:
-	.incbin "baserom.dol", 0x3B22C0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte dispatchBuiltin__10TSpcInterpFUlUl
+  .4byte __dt__10TSpcInterpFv
+  .4byte update__10TSpcInterpFv
 .global __vt__21TSpcStack$$09TSpcSlice$$1
 __vt__21TSpcStack$$09TSpcSlice$$1:
-	.incbin "baserom.dol", 0x3B22D4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TSpcStack$$09TSpcSlice$$1Fv
 .global __vt__13TSpcStack$$0Ul$$1
 __vt__13TSpcStack$$0Ul$$1:
-	.incbin "baserom.dol", 0x3B22E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TSpcStack$$0Ul$$1Fv
 .global __vt__10TSpcBinary
 __vt__10TSpcBinary:
-	.incbin "baserom.dol", 0x3B22EC, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSpcBinaryFv
+  .4byte initUserBuiltin__10TSpcBinaryFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21662:

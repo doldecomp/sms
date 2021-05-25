@@ -7043,64 +7043,495 @@ entry$3085:
 	.incbin "baserom.dol", 0x3DB46C, 0x18
 .global __vt__22TNerveSamboHeadHitWall
 __vt__22TNerveSamboHeadHitWall:
-	.incbin "baserom.dol", 0x3DB484, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveSamboHeadHitWallFv
+  .4byte execute__22TNerveSamboHeadHitWallCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__27TNerveSamboHeadRecoverWater
 __vt__27TNerveSamboHeadRecoverWater:
-	.incbin "baserom.dol", 0x3DB494, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__27TNerveSamboHeadRecoverWaterFv
+  .4byte execute__27TNerveSamboHeadRecoverWaterCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveSamboHeadHitWater
 __vt__23TNerveSamboHeadHitWater:
-	.incbin "baserom.dol", 0x3DB4A4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveSamboHeadHitWaterFv
+  .4byte execute__23TNerveSamboHeadHitWaterCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveSamboHeadHide
 __vt__19TNerveSamboHeadHide:
-	.incbin "baserom.dol", 0x3DB4B4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveSamboHeadHideFv
+  .4byte execute__19TNerveSamboHeadHideCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveSamboHeadAttack
 __vt__21TNerveSamboHeadAttack:
-	.incbin "baserom.dol", 0x3DB4C4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveSamboHeadAttackFv
+  .4byte execute__21TNerveSamboHeadAttackCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveSamboHeadAppear
 __vt__21TNerveSamboHeadAppear:
-	.incbin "baserom.dol", 0x3DB4D4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveSamboHeadAppearFv
+  .4byte execute__21TNerveSamboHeadAppearCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__10TSamboHead
 __vt__10TSamboHead:
-	.incbin "baserom.dol", 0x3DB4E4, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSamboHeadFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__10TSamboHeadFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TSamboHeadFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10TSamboHeadFP12TLiveManager
+  .4byte calcRootMatrix__10TSamboHeadFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__12TWalkerEnemyFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TSamboHeadFv
+  .4byte getGravityY__10TSamboHeadCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__10TSamboHeadCFv
+  .4byte reset__10TSamboHeadFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__10TSamboHeadFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__10TSamboHeadFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__10TSamboHeadFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__11TSmallEnemyFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__10TSamboHeadFv
+  .4byte forceKill__11TSmallEnemyFv
+  .4byte setMActorAndKeeper__10TSamboHeadFv
+  .4byte initAttacker__12TWalkerEnemyFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__11TSmallEnemyFP9THitActor
+  .4byte isInhibitedForceMove__11TSmallEnemyFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__10TSamboHeadFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__12TWalkerEnemyFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__17TSamboHeadManager
 __vt__17TSamboHeadManager:
-	.incbin "baserom.dol", 0x3DB69C, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TSamboHeadManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17TSamboHeadManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TSamboHeadManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__17TSamboHeadManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 .global __vt__21TNerveHanaSamboFreeze
 __vt__21TNerveHanaSamboFreeze:
-	.incbin "baserom.dol", 0x3DB6F4, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveHanaSamboFreezeFv
+  .4byte execute__21TNerveHanaSamboFreezeCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveHanaSamboDie
 __vt__18TNerveHanaSamboDie:
-	.incbin "baserom.dol", 0x3DB704, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveHanaSamboDieFv
+  .4byte execute__18TNerveHanaSamboDieCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveHanaSamboHide
 __vt__19TNerveHanaSamboHide:
-	.incbin "baserom.dol", 0x3DB714, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveHanaSamboHideFv
+  .4byte execute__19TNerveHanaSamboHideCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveHanaSamboAttack
 __vt__21TNerveHanaSamboAttack:
-	.incbin "baserom.dol", 0x3DB724, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveHanaSamboAttackFv
+  .4byte execute__21TNerveHanaSamboAttackCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveHanaSamboWait
 __vt__19TNerveHanaSamboWait:
-	.incbin "baserom.dol", 0x3DB734, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveHanaSamboWaitFv
+  .4byte execute__19TNerveHanaSamboWaitCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__21TNerveHanaSamboAppear
 __vt__21TNerveHanaSamboAppear:
-	.incbin "baserom.dol", 0x3DB744, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TNerveHanaSamboAppearFv
+  .4byte execute__21TNerveHanaSamboAppearCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__10THanaSambo
 __vt__10THanaSambo:
-	.incbin "baserom.dol", 0x3DB754, 0x1A8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10THanaSamboFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__10THanaSamboFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10THanaSamboFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10THanaSamboFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10THanaSamboFP12TLiveManager
+  .4byte calcRootMatrix__11TSpineEnemyFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10THanaSamboFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10THanaSamboFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10THanaSamboFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__10THanaSamboCFv
+  .4byte reset__10THanaSamboFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__10THanaSamboFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__10THanaSamboFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__10THanaSamboFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__11TSmallEnemyFv
+  .4byte forceKill__11TSmallEnemyFv
+  .4byte setMActorAndKeeper__10THanaSamboFv
+  .4byte initAttacker__11TSmallEnemyFP9THitActor
+  .4byte isHitValid__10THanaSamboFUl
+  .4byte isCollidMove__10THanaSamboFP9THitActor
+  .4byte isInhibitedForceMove__11TSmallEnemyFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
 .global __vt__14THanaSamboHead
 __vt__14THanaSamboHead:
-	.incbin "baserom.dol", 0x3DB8FC, 0xA4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14THanaSamboHeadFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9THitActorFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__14THanaSamboHeadFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__14THanaSamboHeadFP9THitActorUl
 .global __vt__17THanaSamboManager
 __vt__17THanaSamboManager:
-	.incbin "baserom.dol", 0x3DB9A0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17THanaSamboManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17THanaSamboManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17THanaSamboManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__17THanaSamboManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 .global __vt__12TSamboFlower
 __vt__12TSamboFlower:
-	.incbin "baserom.dol", 0x3DB9F8, 0x118
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TSamboFlowerFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__12TSamboFlowerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TSamboFlowerFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__12TSamboFlowerFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__12TSamboFlowerFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__12TSamboFlowerFP12TLiveManager
+  .4byte calcRootMatrix__11TSpineEnemyFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__12TSamboFlowerFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__12TSamboFlowerFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__12TSamboFlowerFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__12TSamboFlowerFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte setMActorAndKeeper__12TSamboFlowerFv
 .global __vt__19TSamboFlowerManager
 __vt__19TSamboFlowerManager:
-	.incbin "baserom.dol", 0x3DBB10, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TSamboFlowerManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__19TSamboFlowerManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__19TSamboFlowerManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__19TSamboFlowerManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__19TSamboFlowerManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__19TSamboFlowerManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte dropLeaf__19TSamboFlowerManagerFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 .global __vt__10TSamboLeaf
 __vt__10TSamboLeaf:
-	.incbin "baserom.dol", 0x3DBB68, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSamboLeafFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TSamboLeafFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mHeadJntIndex__10THanaSambo:

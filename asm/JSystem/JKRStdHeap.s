@@ -342,4 +342,23 @@ $$21562:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRStdHeap
 __vt__10JKRStdHeap:
-	.incbin "baserom.dol", 0x3A56E0, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JKRStdHeapFv
+  .4byte alloc__10JKRStdHeapFUli
+  .4byte free__10JKRStdHeapFPv
+  .4byte freeAll__10JKRStdHeapFv
+  .4byte freeTail__10JKRStdHeapFv
+  .4byte resize__10JKRStdHeapFPvUl
+  .4byte getSize__10JKRStdHeapFPv
+  .4byte getFreeSize__10JKRStdHeapFv
+  .4byte getTotalFreeSize__10JKRStdHeapFv
+  .4byte getHeapType__10JKRStdHeapFv
+  .4byte check__10JKRStdHeapFv
+  .4byte dump_sort__7JKRHeapFv
+  .4byte dump__10JKRStdHeapFv
+  .4byte changeGroupID__7JKRHeapFUc
+  .4byte getCurrentGroupId__7JKRHeapFv
+  .4byte state_register__10JKRStdHeapCFPQ27JKRHeap6TStateUl
+  .4byte state_compare__10JKRStdHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
+  .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState

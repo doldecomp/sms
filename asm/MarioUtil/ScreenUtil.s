@@ -967,10 +967,26 @@ $$21831:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TScreenTexture
 __vt__14TScreenTexture:
-	.incbin "baserom.dol", 0x3AFA18, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TScreenTextureFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TScreenTextureFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__14TScreenTextureFUlPQ26JDrama9TGraphics
 .global __vt__12TAfterEffect
 __vt__12TAfterEffect:
-	.incbin "baserom.dol", 0x3AFA3C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TAfterEffectFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TAfterEffectFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TAfterEffectFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TAfterEffectFUlPQ26JDrama9TGraphics
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21629:

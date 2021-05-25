@@ -2287,6 +2287,7 @@ lbl_8014A4B8:
 /* 8014A4E0 00147420  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8014A4E4 00147424  7C 09 03 A6 */	mtctr r0
 /* 8014A4E8 00147428  4E 80 04 20 */	bctr 
+lbl_8014A4EC:
 /* 8014A4EC 0014742C  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A4F0 00147430  38 80 00 04 */	li r4, 4
 /* 8014A4F4 00147434  38 7D 00 00 */	addi r3, r29, 0
@@ -2310,6 +2311,7 @@ lbl_8014A510:
 /* 8014A538 00147478  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8014A53C 0014747C  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 8014A540 00147480  48 00 04 DC */	b lbl_8014AA1C
+lbl_8014A544:
 /* 8014A544 00147484  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A548 00147488  38 80 00 07 */	li r4, 7
 /* 8014A54C 0014748C  38 7D 00 00 */	addi r3, r29, 0
@@ -2356,6 +2358,7 @@ lbl_8014A5D4:
 /* 8014A5DC 0014751C  38 00 00 03 */	li r0, 3
 /* 8014A5E0 00147520  B0 1E 03 6C */	sth r0, 0x36c(r30)
 /* 8014A5E4 00147524  48 00 04 38 */	b lbl_8014AA1C
+lbl_8014A5E8:
 /* 8014A5E8 00147528  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A5EC 0014752C  38 80 00 05 */	li r4, 5
 /* 8014A5F0 00147530  38 7D 00 00 */	addi r3, r29, 0
@@ -2414,6 +2417,7 @@ lbl_8014A6A4:
 /* 8014A6AC 001475EC  38 00 00 08 */	li r0, 8
 /* 8014A6B0 001475F0  B0 1E 03 6C */	sth r0, 0x36c(r30)
 /* 8014A6B4 001475F4  48 00 03 68 */	b lbl_8014AA1C
+lbl_8014A6B8:
 /* 8014A6B8 001475F8  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A6BC 001475FC  38 80 00 06 */	li r4, 6
 /* 8014A6C0 00147600  38 7D 00 00 */	addi r3, r29, 0
@@ -2521,6 +2525,7 @@ lbl_8014A81C:
 /* 8014A824 00147764  38 00 00 00 */	li r0, 0
 /* 8014A828 00147768  B0 1E 03 6C */	sth r0, 0x36c(r30)
 /* 8014A82C 0014776C  48 00 01 F0 */	b lbl_8014AA1C
+lbl_8014A830:
 /* 8014A830 00147770  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A834 00147774  38 80 00 01 */	li r4, 1
 /* 8014A838 00147778  38 7D 00 00 */	addi r3, r29, 0
@@ -2548,6 +2553,7 @@ lbl_8014A854:
 /* 8014A88C 001477CC  C0 02 A0 20 */	lfs f0, $$23267@sda21(r2)
 /* 8014A890 001477D0  D0 1F 00 0C */	stfs f0, 0xc(r31)
 /* 8014A894 001477D4  48 00 01 88 */	b lbl_8014AA1C
+lbl_8014A898:
 /* 8014A898 001477D8  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A89C 001477DC  38 80 00 00 */	li r4, 0
 /* 8014A8A0 001477E0  38 7D 00 00 */	addi r3, r29, 0
@@ -2585,6 +2591,7 @@ lbl_8014A8BC:
 /* 8014A91C 0014785C  80 7E 03 68 */	lwz r3, 0x368(r30)
 /* 8014A920 00147860  D0 23 1C EC */	stfs f1, 0x1cec(r3)
 /* 8014A924 00147864  48 00 00 F8 */	b lbl_8014AA1C
+lbl_8014A928:
 /* 8014A928 00147868  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A92C 0014786C  38 80 00 03 */	li r4, 3
 /* 8014A930 00147870  38 7D 00 00 */	addi r3, r29, 0
@@ -2612,6 +2619,7 @@ lbl_8014A94C:
 /* 8014A984 001478C4  C0 02 A0 20 */	lfs f0, $$23267@sda21(r2)
 /* 8014A988 001478C8  D0 1F 00 0C */	stfs f0, 0xc(r31)
 /* 8014A98C 001478CC  48 00 00 90 */	b lbl_8014AA1C
+lbl_8014A990:
 /* 8014A990 001478D0  83 BE 03 80 */	lwz r29, 0x380(r30)
 /* 8014A994 001478D4  38 80 00 02 */	li r4, 2
 /* 8014A998 001478D8  38 7D 00 00 */	addi r3, r29, 0
@@ -5718,40 +5726,90 @@ $$25918:
 	.incbin "baserom.dol", 0x3790D0, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 nozzleBmdData:
 	.incbin "baserom.dol", 0x3B3998, 0xA8
 .global __vt__9TWaterGun
 __vt__9TWaterGun:
-	.incbin "baserom.dol", 0x3B3A40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte perform__9TWaterGunFUlPQ26JDrama9TGraphics
 $$24827:
-	.incbin "baserom.dol", 0x3B3A4C, 0x24
+    .4byte lbl_8014A4EC
+    .4byte lbl_8014AA1C
+    .4byte lbl_8014A544
+    .4byte lbl_8014A5E8
+    .4byte lbl_8014A830
+    .4byte lbl_8014A898
+    .4byte lbl_8014A928
+    .4byte lbl_8014A990
+    .4byte lbl_8014A6B8
 .global __vt__11TParamRT$$0l$$1
 __vt__11TParamRT$$0l$$1:
-	.incbin "baserom.dol", 0x3B3A70, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
 .global __vt__10TParamT$$0l$$1
 __vt__10TParamT$$0l$$1:
-	.incbin "baserom.dol", 0x3B3A7C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
 .global __vt__12TParamRT$$0Uc$$1
 __vt__12TParamRT$$0Uc$$1:
-	.incbin "baserom.dol", 0x3B3A88, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
 .global __vt__11TParamT$$0Uc$$1
 __vt__11TParamT$$0Uc$$1:
-	.incbin "baserom.dol", 0x3B3A94, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
 .global __vt__11TParamRT$$0s$$1
 __vt__11TParamRT$$0s$$1:
-	.incbin "baserom.dol", 0x3B3AA0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
 .global __vt__10TParamT$$0s$$1
 __vt__10TParamT$$0s$$1:
-	.incbin "baserom.dol", 0x3B3AAC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
 .global __vt__13TNozzleDeform
 __vt__13TNozzleDeform:
-	.incbin "baserom.dol", 0x3B3AB8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__11TNozzleBaseFv
+  .4byte getNozzleKind__13TNozzleDeformCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__13TNozzleDeformFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__13TNozzleDeformFi
+  .4byte animation__13TNozzleDeformFi
 .global __vt__14TNozzleTrigger
 __vt__14TNozzleTrigger:
-	.incbin "baserom.dol", 0x3B3AE0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__14TNozzleTriggerFv
+  .4byte getNozzleKind__14TNozzleTriggerCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__14TNozzleTriggerFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__14TNozzleTriggerFi
+  .4byte animation__14TNozzleTriggerFi
 .global __vt__11TNozzleBase
 __vt__11TNozzleBase:
-	.incbin "baserom.dol", 0x3B3B08, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte init__11TNozzleBaseFv
+  .4byte getNozzleKind__11TNozzleBaseCFv
+  .4byte getGunAngle__11TNozzleBaseFv
+  .4byte getWaistAngle__11TNozzleBaseFv
+  .4byte movement__11TNozzleBaseFRC20TMarioControllerWork
+  .4byte emitCommon__11TNozzleBaseFiP14TWaterEmitInfo
+  .4byte emit__11TNozzleBaseFi
+  .4byte animation__11TNozzleBaseFi
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23267:

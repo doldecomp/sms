@@ -1773,7 +1773,34 @@ $$23128:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TSelectDir
 __vt__10TSelectDir:
-	.incbin "baserom.dol", 0x3CEC28, 0x70
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSelectDirFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama9TDirectorFUsPCc
+  .4byte 0
+  .4byte 0
+  .4byte $$212$$2__dt__10TSelectDirFv
+  .4byte JSGFGetType__Q26JStage7TSystemCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$212$$2JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
+  .4byte JSGCreateObject__Q26JStage7TSystemFPCcQ26JStage8TEObjectUl
+  .4byte JSGDestroyObject__Q26JStage7TSystemFPQ26JStage7TObject
+  .4byte JSGGetSystemData__Q26JStage7TSystemFUl
+  .4byte JSGSetSystemData__Q26JStage7TSystemFUlUl
+  .4byte direct__10TSelectDirFv
+  .4byte JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22392:

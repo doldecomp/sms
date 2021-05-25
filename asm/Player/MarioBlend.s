@@ -171,4 +171,13 @@ lbl_80120ACC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13M3UModelMario
 __vt__13M3UModelMario:
-	.incbin "baserom.dol", 0x3B24A8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte changeMtxCalcAnmTransform__8M3UModelFiUc
+  .4byte changeAnmTexPattern__8M3UModelFiUc
+  .4byte setMtxCalc__8M3UModelFRC17M3UMtxCalcSetInfo
+  .4byte updateIn__13M3UModelMarioFv
+  .4byte updateOut__13M3UModelMarioFv
+  .4byte entryIn__8M3UModelFv
+  .4byte entryOut__8M3UModelFv
+  .4byte 0

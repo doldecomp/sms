@@ -356,6 +356,7 @@ lbl_80202788:
 /* 802027A0 001FF6E0  7C 03 00 2E */	lwzx r0, r3, r0
 /* 802027A4 001FF6E4  7C 09 03 A6 */	mtctr r0
 /* 802027A8 001FF6E8  4E 80 04 20 */	bctr 
+lbl_802027AC:
 /* 802027AC 001FF6EC  80 7F 01 C4 */	lwz r3, 0x1c4(r31)
 /* 802027B0 001FF6F0  80 63 00 00 */	lwz r3, 0(r3)
 /* 802027B4 001FF6F4  88 03 00 0C */	lbz r0, 0xc(r3)
@@ -416,6 +417,7 @@ lbl_8020284C:
 /* 80202880 001FF7C0  38 00 00 01 */	li r0, 1
 /* 80202884 001FF7C4  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202888 001FF7C8  48 00 05 C4 */	b lbl_80202E4C
+lbl_8020288C:
 /* 8020288C 001FF7CC  A0 9F 00 84 */	lhz r4, 0x84(r31)
 /* 80202890 001FF7D0  38 7F 00 00 */	addi r3, r31, 0
 /* 80202894 001FF7D4  38 04 00 01 */	addi r0, r4, 1
@@ -483,6 +485,7 @@ lbl_80202974:
 /* 8020297C 001FF8BC  38 00 00 03 */	li r0, 3
 /* 80202980 001FF8C0  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202984 001FF8C4  48 00 04 C8 */	b lbl_80202E4C
+lbl_80202988:
 /* 80202988 001FF8C8  88 1F 01 CC */	lbz r0, 0x1cc(r31)
 /* 8020298C 001FF8CC  28 00 00 08 */	cmplwi r0, 8
 /* 80202990 001FF8D0  40 82 00 BC */	bne lbl_80202A4C
@@ -589,6 +592,7 @@ lbl_80202B08:
 /* 80202B10 001FFA50  38 00 00 03 */	li r0, 3
 /* 80202B14 001FFA54  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202B18 001FFA58  48 00 03 34 */	b lbl_80202E4C
+lbl_80202B1C:
 /* 80202B1C 001FFA5C  A0 7F 00 84 */	lhz r3, 0x84(r31)
 /* 80202B20 001FFA60  28 03 00 78 */	cmplwi r3, 0x78
 /* 80202B24 001FFA64  40 81 00 24 */	ble lbl_80202B48
@@ -604,6 +608,7 @@ lbl_80202B48:
 /* 80202B48 001FFA88  38 03 00 01 */	addi r0, r3, 1
 /* 80202B4C 001FFA8C  B0 1F 00 84 */	sth r0, 0x84(r31)
 /* 80202B50 001FFA90  48 00 02 FC */	b lbl_80202E4C
+lbl_80202B54:
 /* 80202B54 001FFA94  A0 9F 00 84 */	lhz r4, 0x84(r31)
 /* 80202B58 001FFA98  38 7F 00 00 */	addi r3, r31, 0
 /* 80202B5C 001FFA9C  38 04 00 01 */	addi r0, r4, 1
@@ -614,6 +619,7 @@ lbl_80202B48:
 /* 80202B70 001FFAB0  38 00 00 02 */	li r0, 2
 /* 80202B74 001FFAB4  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202B78 001FFAB8  48 00 02 D4 */	b lbl_80202E4C
+lbl_80202B7C:
 /* 80202B7C 001FFABC  A0 9F 00 84 */	lhz r4, 0x84(r31)
 /* 80202B80 001FFAC0  38 7F 00 00 */	addi r3, r31, 0
 /* 80202B84 001FFAC4  38 04 00 01 */	addi r0, r4, 1
@@ -631,6 +637,7 @@ lbl_80202BB0:
 /* 80202BB0 001FFAF0  38 00 00 05 */	li r0, 5
 /* 80202BB4 001FFAF4  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202BB8 001FFAF8  48 00 02 94 */	b lbl_80202E4C
+lbl_80202BBC:
 /* 80202BBC 001FFAFC  7F E3 FB 78 */	mr r3, r31
 /* 80202BC0 001FFB00  A0 9F 00 84 */	lhz r4, 0x84(r31)
 /* 80202BC4 001FFB04  48 00 71 25 */	bl processAppearLife__11TGCConsole2Fi
@@ -664,6 +671,7 @@ lbl_80202C1C:
 /* 80202C28 001FFB68  38 03 00 01 */	addi r0, r3, 1
 /* 80202C2C 001FFB6C  B0 1F 00 84 */	sth r0, 0x84(r31)
 /* 80202C30 001FFB70  48 00 02 1C */	b lbl_80202E4C
+lbl_80202C34:
 /* 80202C34 001FFB74  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
 /* 80202C38 001FFB78  4B F3 27 11 */	bl isUnderWater__6TMarioCFv
 /* 80202C3C 001FFB7C  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -735,6 +743,7 @@ lbl_80202D08:
 /* 80202D3C 001FFC7C  38 00 00 01 */	li r0, 1
 /* 80202D40 001FFC80  90 1F 00 18 */	stw r0, 0x18(r31)
 /* 80202D44 001FFC84  48 00 01 08 */	b lbl_80202E4C
+lbl_80202D48:
 /* 80202D48 001FFC88  A0 7F 00 84 */	lhz r3, 0x84(r31)
 /* 80202D4C 001FFC8C  28 03 00 78 */	cmplwi r3, 0x78
 /* 80202D50 001FFC90  40 81 00 60 */	ble lbl_80202DB0
@@ -766,6 +775,7 @@ lbl_80202DB0:
 /* 80202DB0 001FFCF0  38 03 00 01 */	addi r0, r3, 1
 /* 80202DB4 001FFCF4  B0 1F 00 84 */	sth r0, 0x84(r31)
 /* 80202DB8 001FFCF8  48 00 00 94 */	b lbl_80202E4C
+lbl_80202DBC:
 /* 80202DBC 001FFCFC  88 1F 00 50 */	lbz r0, 0x50(r31)
 /* 80202DC0 001FFD00  28 00 00 00 */	cmplwi r0, 0
 /* 80202DC4 001FFD04  41 82 00 20 */	beq lbl_80202DE4
@@ -3595,6 +3605,7 @@ lbl_80205744:
 /* 8020578C 002026CC  7C 1E 18 2E */	lwzx r0, r30, r3
 /* 80205790 002026D0  7C 09 03 A6 */	mtctr r0
 /* 80205794 002026D4  4E 80 04 20 */	bctr 
+lbl_80205798:
 /* 80205798 002026D8  38 60 00 64 */	li r3, 0x64
 /* 8020579C 002026DC  98 61 0F 94 */	stb r3, 0xf94(r1)
 /* 802057A0 002026E0  38 00 00 FF */	li r0, 0xff
@@ -3602,6 +3613,7 @@ lbl_80205744:
 /* 802057A8 002026E8  98 61 0F 96 */	stb r3, 0xf96(r1)
 /* 802057AC 002026EC  98 01 0F 97 */	stb r0, 0xf97(r1)
 /* 802057B0 002026F0  48 00 00 80 */	b lbl_80205830
+lbl_802057B4:
 /* 802057B4 002026F4  38 80 00 FF */	li r4, 0xff
 /* 802057B8 002026F8  98 81 0F 94 */	stb r4, 0xf94(r1)
 /* 802057BC 002026FC  38 60 00 A0 */	li r3, 0xa0
@@ -3610,6 +3622,7 @@ lbl_80205744:
 /* 802057C8 00202708  98 01 0F 96 */	stb r0, 0xf96(r1)
 /* 802057CC 0020270C  98 81 0F 97 */	stb r4, 0xf97(r1)
 /* 802057D0 00202710  48 00 00 60 */	b lbl_80205830
+lbl_802057D4:
 /* 802057D4 00202714  38 60 00 FF */	li r3, 0xff
 /* 802057D8 00202718  98 61 0F 94 */	stb r3, 0xf94(r1)
 /* 802057DC 0020271C  38 00 00 00 */	li r0, 0
@@ -3617,6 +3630,7 @@ lbl_80205744:
 /* 802057E4 00202724  98 01 0F 96 */	stb r0, 0xf96(r1)
 /* 802057E8 00202728  98 61 0F 97 */	stb r3, 0xf97(r1)
 /* 802057EC 0020272C  48 00 00 44 */	b lbl_80205830
+lbl_802057F0:
 /* 802057F0 00202730  38 60 00 DC */	li r3, 0xdc
 /* 802057F4 00202734  98 61 0F 94 */	stb r3, 0xf94(r1)
 /* 802057F8 00202738  38 00 00 FF */	li r0, 0xff
@@ -3624,6 +3638,7 @@ lbl_80205744:
 /* 80205800 00202740  98 61 0F 96 */	stb r3, 0xf96(r1)
 /* 80205804 00202744  98 01 0F 97 */	stb r0, 0xf97(r1)
 /* 80205808 00202748  48 00 00 28 */	b lbl_80205830
+lbl_8020580C:
 /* 8020580C 0020274C  38 00 00 6E */	li r0, 0x6e
 /* 80205810 00202750  98 01 0F 94 */	stb r0, 0xf94(r1)
 /* 80205814 00202754  38 60 00 E6 */	li r3, 0xe6
@@ -6537,9 +6552,11 @@ checkChangeTelopArray__11TGCConsole2Fv:
 /* 80208294 002051D4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80208298 002051D8  7C 09 03 A6 */	mtctr r0
 /* 8020829C 002051DC  4E 80 04 20 */	bctr 
+lbl_802082A0:
 /* 802082A0 002051E0  38 0D 88 60 */	addi r0, r13, scDolpicNewsDolpic0@sda21
 /* 802082A4 002051E4  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 802082A8 002051E8  48 00 02 48 */	b lbl_802084F0
+lbl_802082AC:
 /* 802082AC 002051EC  80 7D 00 C4 */	lwz r3, 0xc4(r29)
 /* 802082B0 002051F0  80 03 00 68 */	lwz r0, 0x68(r3)
 /* 802082B4 002051F4  28 00 00 00 */	cmplwi r0, 0
@@ -6551,18 +6568,23 @@ lbl_802082C8:
 /* 802082C8 00205208  38 00 00 00 */	li r0, 0
 /* 802082CC 0020520C  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 802082D0 00205210  48 00 02 20 */	b lbl_802084F0
+lbl_802082D4:
 /* 802082D4 00205214  38 1F 00 40 */	addi r0, r31, 0x40
 /* 802082D8 00205218  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 802082DC 0020521C  48 00 02 14 */	b lbl_802084F0
+lbl_802082E0:
 /* 802082E0 00205220  38 1F 00 4C */	addi r0, r31, 0x4c
 /* 802082E4 00205224  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 802082E8 00205228  48 00 02 08 */	b lbl_802084F0
+lbl_802082EC:
 /* 802082EC 0020522C  38 1F 00 A4 */	addi r0, r31, 0xa4
 /* 802082F0 00205230  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 802082F4 00205234  48 00 01 FC */	b lbl_802084F0
+lbl_802082F8:
 /* 802082F8 00205238  38 1F 00 B0 */	addi r0, r31, 0xb0
 /* 802082FC 0020523C  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 80208300 00205240  48 00 01 F0 */	b lbl_802084F0
+lbl_80208304:
 /* 80208304 00205244  3F 80 00 05 */	lis r28, 0x00050001@ha
 /* 80208308 00205248  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8020830C 0020524C  38 9C 00 01 */	addi r4, r28, 0x00050001@l
@@ -6594,6 +6616,7 @@ lbl_80208368:
 /* 80208368 002052A8  38 1F 00 28 */	addi r0, r31, 0x28
 /* 8020836C 002052AC  90 1D 05 70 */	stw r0, 0x570(r29)
 /* 80208370 002052B0  48 00 01 80 */	b lbl_802084F0
+lbl_80208374:
 /* 80208374 002052B4  3C 80 00 06 */	lis r4, 0x00060003@ha
 /* 80208378 002052B8  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8020837C 002052BC  38 84 00 03 */	addi r4, r4, 0x00060003@l
@@ -16922,13 +16945,68 @@ MtxCalcTypeName:
 	.incbin "baserom.dol", 0x3CDFD4, 0x10
 .global __vt__11TGCConsole2
 __vt__11TGCConsole2:
-	.incbin "baserom.dol", 0x3CDFE4, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TGCConsole2Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TGCConsole2FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TGCConsole2Fv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TGCConsole2FUlPQ26JDrama9TGraphics
 $$27091:
-	.incbin "baserom.dol", 0x3CE008, 0x74
+    .4byte lbl_802057F0
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_802057F0
+    .4byte lbl_802057F0
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_802057F0
+    .4byte lbl_8020580C
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_802057D4
+    .4byte lbl_802057B4
+    .4byte lbl_8020582C
+    .4byte lbl_8020582C
+    .4byte lbl_80205798
 $$27077:
-	.incbin "baserom.dol", 0x3CE07C, 0x2C
+    .4byte lbl_802027AC
+    .4byte lbl_8020288C
+    .4byte lbl_80202988
+    .4byte lbl_80202B1C
+    .4byte lbl_80202BBC
+    .4byte lbl_80202C34
+    .4byte lbl_80202D48
+    .4byte lbl_80202B54
+    .4byte lbl_80202B7C
+    .4byte lbl_80202E4C
+    .4byte lbl_80202DBC
 $$27657:
-	.incbin "baserom.dol", 0x3CE0A8, 0x58
+    .4byte lbl_802082A0
+    .4byte lbl_802082AC
+    .4byte lbl_802082F8
+    .4byte lbl_802084DC
+    .4byte lbl_802084DC
+    .4byte lbl_80208304
+    .4byte lbl_802082D4
+    .4byte lbl_802082E0
+    .4byte lbl_80208374
+    .4byte lbl_802082EC
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 scDolpicNewsDolpic0:

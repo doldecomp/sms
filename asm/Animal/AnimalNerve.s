@@ -415,7 +415,10 @@ lbl_803680D4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__23TNerveAnimalGraphWander
 __vt__23TNerveAnimalGraphWander:
-	.incbin "baserom.dol", 0x3E2910, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveAnimalGraphWanderFv
+  .4byte execute__23TNerveAnimalGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22158:

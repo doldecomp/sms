@@ -387,7 +387,22 @@ lbl_801E1274:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TMapEvent
 __vt__9TMapEvent:
-	.incbin "baserom.dol", 0x3CCD40, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TMapEventFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TMapEventFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMapEventFUlPQ26JDrama9TGraphics
+  .4byte launchScript__13TEventWatcherFPCc
+  .4byte isFinishedAll__9TMapEventCFv
+  .4byte 0
+  .4byte startControl__9TMapEventFv
+  .4byte 0
+  .4byte finishControl__9TMapEventFv
+  .4byte getBuilding__9TMapEventCFi
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22700:

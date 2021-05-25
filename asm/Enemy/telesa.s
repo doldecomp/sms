@@ -1308,6 +1308,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029465C 0029159C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80294660 002915A0  7C 09 03 A6 */	mtctr r0
 /* 80294664 002915A4  4E 80 04 20 */	bctr 
+lbl_80294668:
 /* 80294668 002915A8  38 7E 01 E4 */	addi r3, r30, 0x1e4
 /* 8029466C 002915AC  4B D7 76 51 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294670 002915B0  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1323,6 +1324,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294698 002915D8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029469C 002915DC  4B E4 4E A9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802946A0 002915E0  48 00 02 94 */	b lbl_80294934
+lbl_802946A4:
 /* 802946A4 002915E4  38 7E 01 FC */	addi r3, r30, 0x1fc
 /* 802946A8 002915E8  4B D7 76 15 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802946AC 002915EC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1338,6 +1340,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802946D4 00291614  38 7D 00 00 */	addi r3, r29, 0
 /* 802946D8 00291618  4B E4 4E 6D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802946DC 0029161C  48 00 02 58 */	b lbl_80294934
+lbl_802946E0:
 /* 802946E0 00291620  38 7E 02 18 */	addi r3, r30, 0x218
 /* 802946E4 00291624  4B D7 75 D9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802946E8 00291628  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1353,6 +1356,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294710 00291650  38 7D 00 00 */	addi r3, r29, 0
 /* 80294714 00291654  4B E4 4E 31 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294718 00291658  48 00 02 1C */	b lbl_80294934
+lbl_8029471C:
 /* 8029471C 0029165C  38 7E 02 34 */	addi r3, r30, 0x234
 /* 80294720 00291660  4B D7 75 9D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294724 00291664  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1368,6 +1372,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029474C 0029168C  38 7D 00 00 */	addi r3, r29, 0
 /* 80294750 00291690  4B E4 4D F5 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294754 00291694  48 00 01 E0 */	b lbl_80294934
+lbl_80294758:
 /* 80294758 00291698  38 7E 02 54 */	addi r3, r30, 0x254
 /* 8029475C 0029169C  4B D7 75 61 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294760 002916A0  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1383,6 +1388,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294788 002916C8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029478C 002916CC  4B E4 4D B9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294790 002916D0  48 00 01 A4 */	b lbl_80294934
+lbl_80294794:
 /* 80294794 002916D4  38 7E 02 74 */	addi r3, r30, 0x274
 /* 80294798 002916D8  4B D7 75 25 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8029479C 002916DC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1398,6 +1404,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802947C4 00291704  38 7D 00 00 */	addi r3, r29, 0
 /* 802947C8 00291708  4B E4 4D 7D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802947CC 0029170C  48 00 01 68 */	b lbl_80294934
+lbl_802947D0:
 /* 802947D0 00291710  38 7E 02 94 */	addi r3, r30, 0x294
 /* 802947D4 00291714  4B D7 74 E9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802947D8 00291718  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1413,6 +1420,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294800 00291740  38 7D 00 00 */	addi r3, r29, 0
 /* 80294804 00291744  4B E4 4D 41 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294808 00291748  48 00 01 2C */	b lbl_80294934
+lbl_8029480C:
 /* 8029480C 0029174C  38 7E 02 B0 */	addi r3, r30, 0x2b0
 /* 80294810 00291750  4B D7 74 AD */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294814 00291754  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1428,6 +1436,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 8029483C 0029177C  38 7D 00 00 */	addi r3, r29, 0
 /* 80294840 00291780  4B E4 4D 05 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294844 00291784  48 00 00 F0 */	b lbl_80294934
+lbl_80294848:
 /* 80294848 00291788  38 7E 02 D0 */	addi r3, r30, 0x2d0
 /* 8029484C 0029178C  4B D7 74 71 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294850 00291790  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1443,6 +1452,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294878 002917B8  38 7D 00 00 */	addi r3, r29, 0
 /* 8029487C 002917BC  4B E4 4C C9 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 80294880 002917C0  48 00 00 B4 */	b lbl_80294934
+lbl_80294884:
 /* 80294884 002917C4  38 7E 02 F0 */	addi r3, r30, 0x2f0
 /* 80294888 002917C8  4B D7 74 35 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8029488C 002917CC  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1458,6 +1468,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802948B4 002917F4  38 7D 00 00 */	addi r3, r29, 0
 /* 802948B8 002917F8  4B E4 4C 8D */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802948BC 002917FC  48 00 00 78 */	b lbl_80294934
+lbl_802948C0:
 /* 802948C0 00291800  38 7E 03 0C */	addi r3, r30, 0x30c
 /* 802948C4 00291804  4B D7 73 F9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 802948C8 00291808  7C 7C 1B 79 */	or. r28, r3, r3
@@ -1473,6 +1484,7 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802948F0 00291830  38 7D 00 00 */	addi r3, r29, 0
 /* 802948F4 00291834  4B E4 4C 51 */	bl __ct__12SDLModelDataFP12J3DModelData
 /* 802948F8 00291838  48 00 00 3C */	b lbl_80294934
+lbl_802948FC:
 /* 802948FC 0029183C  38 7E 03 2C */	addi r3, r30, 0x32c
 /* 80294900 00291840  4B D7 73 BD */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80294904 00291844  7C 7C 1B 79 */	or. r28, r3, r3
@@ -5766,48 +5778,775 @@ entry$3402:
 	.incbin "baserom.dol", 0x3D4B1C, 0x18
 .global __vt__25TNerveKageMarioModokiWait
 __vt__25TNerveKageMarioModokiWait:
-	.incbin "baserom.dol", 0x3D4B34, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25TNerveKageMarioModokiWaitFv
+  .4byte execute__25TNerveKageMarioModokiWaitCFP24TSpineBase$$010TLiveActor$$1
 $$24007:
-	.incbin "baserom.dol", 0x3D4B44, 0x34
+    .4byte lbl_80294934
+    .4byte lbl_80294668
+    .4byte lbl_802946A4
+    .4byte lbl_802946E0
+    .4byte lbl_8029471C
+    .4byte lbl_80294758
+    .4byte lbl_80294794
+    .4byte lbl_802947D0
+    .4byte lbl_8029480C
+    .4byte lbl_80294848
+    .4byte lbl_80294884
+    .4byte lbl_802948C0
+    .4byte lbl_802948FC
+
 .global __vt__16TKageMarioModoki
 __vt__16TKageMarioModoki:
-	.incbin "baserom.dol", 0x3D4B78, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TKageMarioModokiFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__16TKageMarioModokiFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__16TKageMarioModokiFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__16TKageMarioModokiFP12TLiveManager
+  .4byte calcRootMatrix__11TSpineEnemyFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__12TWalkerEnemyFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__11TSmallEnemyFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__12TWalkerEnemyFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__11TSmallEnemyFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__11TSmallEnemyFP9THitActor
+  .4byte changeByJuice__11TSmallEnemyFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__11TSmallEnemyFv
+  .4byte scalingChangeActor__11TSmallEnemyFv
+  .4byte changeOut__11TSmallEnemyFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__11TSmallEnemyFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__11TSmallEnemyFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__12TWalkerEnemyFv
+  .4byte forceKill__11TSmallEnemyFv
+  .4byte setMActorAndKeeper__11TSmallEnemyFv
+  .4byte initAttacker__12TWalkerEnemyFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__11TSmallEnemyFP9THitActor
+  .4byte isInhibitedForceMove__11TSmallEnemyFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__11TSmallEnemyFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__11TSmallEnemyFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__12TWalkerEnemyFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__23TKageMarioModokiManager
 __vt__23TKageMarioModokiManager:
-	.incbin "baserom.dol", 0x3D4D30, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TKageMarioModokiManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__23TKageMarioModokiManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__23TKageMarioModokiManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__23TKageMarioModokiManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__18TSmallEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 .global __vt__19TNerveTelesaTrample
 __vt__19TNerveTelesaTrample:
-	.incbin "baserom.dol", 0x3D4D88, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveTelesaTrampleFv
+  .4byte execute__19TNerveTelesaTrampleCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__23TNerveTelesaAttackMario
 __vt__23TNerveTelesaAttackMario:
-	.incbin "baserom.dol", 0x3D4D98, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TNerveTelesaAttackMarioFv
+  .4byte execute__23TNerveTelesaAttackMarioCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveTelesaFreeze
 __vt__18TNerveTelesaFreeze:
-	.incbin "baserom.dol", 0x3D4DA8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveTelesaFreezeFv
+  .4byte execute__18TNerveTelesaFreezeCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__15TNerveTelesaDie
 __vt__15TNerveTelesaDie:
-	.incbin "baserom.dol", 0x3D4DB8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TNerveTelesaDieFv
+  .4byte execute__15TNerveTelesaDieCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveTelesaImitate
 __vt__19TNerveTelesaImitate:
-	.incbin "baserom.dol", 0x3D4DC8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveTelesaImitateFv
+  .4byte execute__19TNerveTelesaImitateCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TMarioModokiTelesa
 __vt__18TMarioModokiTelesa:
-	.incbin "baserom.dol", 0x3D4DD8, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMarioModokiTelesaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__18TMarioModokiTelesaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__18TMarioModokiTelesaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__18TMarioModokiTelesaFP12TLiveManager
+  .4byte calcRootMatrix__7TTelesaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__7TTelesaFv
+  .4byte moveObject__7TTelesaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__7TTelesaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__7TTelesaFv
+  .4byte getGravityY__7TTelesaCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TTelesaCFv
+  .4byte reset__7TTelesaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__7TTelesaCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__7TTelesaFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__7TTelesaFP9THitActor
+  .4byte changeByJuice__7TTelesaFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__7TTelesaFv
+  .4byte scalingChangeActor__7TTelesaFv
+  .4byte changeOut__7TTelesaFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__7TTelesaFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__7TTelesaFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__7TTelesaFv
+  .4byte forceKill__7TTelesaFv
+  .4byte setMActorAndKeeper__7TTelesaFv
+  .4byte initAttacker__7TTelesaFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__7TTelesaFP9THitActor
+  .4byte isInhibitedForceMove__7TTelesaFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__7TTelesaFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__7TTelesaFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__7TTelesaFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__10TBoxTelesa
 __vt__10TBoxTelesa:
-	.incbin "baserom.dol", 0x3D4F90, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TBoxTelesaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__10TBoxTelesaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TBoxTelesaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__7TTelesaFP12TLiveManager
+  .4byte calcRootMatrix__7TTelesaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__7TTelesaFv
+  .4byte moveObject__7TTelesaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__7TTelesaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__7TTelesaFv
+  .4byte getGravityY__7TTelesaCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TTelesaCFv
+  .4byte reset__10TBoxTelesaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__7TTelesaCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__10TBoxTelesaFv
+  .4byte setBehavior__7TTelesaFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__7TTelesaFP9THitActor
+  .4byte changeByJuice__7TTelesaFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__7TTelesaFv
+  .4byte scalingChangeActor__7TTelesaFv
+  .4byte changeOut__7TTelesaFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__7TTelesaFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__7TTelesaFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__7TTelesaFv
+  .4byte forceKill__7TTelesaFv
+  .4byte setMActorAndKeeper__7TTelesaFv
+  .4byte initAttacker__7TTelesaFP9THitActor
+  .4byte isHitValid__10TBoxTelesaFUl
+  .4byte isCollidMove__7TTelesaFP9THitActor
+  .4byte isInhibitedForceMove__7TTelesaFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__7TTelesaFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__7TTelesaFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__7TTelesaFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__11TLoopTelesa
 __vt__11TLoopTelesa:
-	.incbin "baserom.dol", 0x3D5148, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TLoopTelesaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TLoopTelesaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__11TLoopTelesaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__7TTelesaFP12TLiveManager
+  .4byte calcRootMatrix__7TTelesaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__7TTelesaFv
+  .4byte moveObject__7TTelesaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__7TTelesaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__7TTelesaFv
+  .4byte getGravityY__7TTelesaCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TTelesaCFv
+  .4byte reset__7TTelesaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__7TTelesaCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__7TTelesaFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__7TTelesaFP9THitActor
+  .4byte changeByJuice__7TTelesaFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__7TTelesaFv
+  .4byte scalingChangeActor__7TTelesaFv
+  .4byte changeOut__7TTelesaFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__7TTelesaFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__7TTelesaFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__7TTelesaFv
+  .4byte forceKill__7TTelesaFv
+  .4byte setMActorAndKeeper__7TTelesaFv
+  .4byte initAttacker__7TTelesaFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__7TTelesaFP9THitActor
+  .4byte isInhibitedForceMove__7TTelesaFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__7TTelesaFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__7TTelesaFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__7TTelesaFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__10TSeeTelesa
 __vt__10TSeeTelesa:
-	.incbin "baserom.dol", 0x3D5300, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSeeTelesaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__10TSeeTelesaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TSeeTelesaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__7TTelesaFP12TLiveManager
+  .4byte calcRootMatrix__7TTelesaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__7TTelesaFv
+  .4byte moveObject__7TTelesaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__7TTelesaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__7TTelesaFv
+  .4byte getGravityY__7TTelesaCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TTelesaCFv
+  .4byte reset__7TTelesaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__7TTelesaCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__7TTelesaFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__7TTelesaFP9THitActor
+  .4byte changeByJuice__7TTelesaFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__7TTelesaFv
+  .4byte scalingChangeActor__7TTelesaFv
+  .4byte changeOut__7TTelesaFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__7TTelesaFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__7TTelesaFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__7TTelesaFv
+  .4byte forceKill__7TTelesaFv
+  .4byte setMActorAndKeeper__7TTelesaFv
+  .4byte initAttacker__7TTelesaFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__7TTelesaFP9THitActor
+  .4byte isInhibitedForceMove__7TTelesaFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__7TTelesaFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__7TTelesaFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__7TTelesaFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__7TTelesa
 __vt__7TTelesa:
-	.incbin "baserom.dol", 0x3D54B8, 0x1B8
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TTelesaFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__7TTelesaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TSmallEnemyFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__7TTelesaFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__7TTelesaFP12TLiveManager
+  .4byte calcRootMatrix__7TTelesaFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__7TTelesaFv
+  .4byte moveObject__7TTelesaFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__7TTelesaFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__7TTelesaFv
+  .4byte getGravityY__7TTelesaCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__11TSmallEnemyFv
+  .4byte getBasNameTable__7TTelesaCFv
+  .4byte reset__7TTelesaFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__7TTelesaCFv
+  .4byte genRandomItem__11TSmallEnemyFv
+  .4byte genEventCoin__11TSmallEnemyFv
+  .4byte generateItem__11TSmallEnemyFv
+  .4byte isEatenByYosshi__11TSmallEnemyFv
+  .4byte setBehavior__7TTelesaFv
+  .4byte jumpBehavior__11TSmallEnemyFv
+  .4byte behaveToWater__7TTelesaFP9THitActor
+  .4byte changeByJuice__7TTelesaFv
+  .4byte changeMove__11TSmallEnemyFv
+  .4byte getChangeBlockTime__7TTelesaFv
+  .4byte scalingChangeActor__7TTelesaFv
+  .4byte changeOut__7TTelesaFv
+  .4byte behaveToTaken__11TSmallEnemyFP9THitActor
+  .4byte behaveToRelease__11TSmallEnemyFv
+  .4byte setGenerateAnm__11TSmallEnemyFv
+  .4byte setWalkAnm__7TTelesaFv
+  .4byte setDeadAnm__11TSmallEnemyFv
+  .4byte setFreezeAnm__11TSmallEnemyFv
+  .4byte setMeltAnm__11TSmallEnemyFv
+  .4byte setWaitAnm__7TTelesaFv
+  .4byte setRunAnm__11TSmallEnemyFv
+  .4byte attackToMario__7TTelesaFv
+  .4byte forceKill__7TTelesaFv
+  .4byte setMActorAndKeeper__7TTelesaFv
+  .4byte initAttacker__7TTelesaFP9THitActor
+  .4byte isHitValid__11TSmallEnemyFUl
+  .4byte isCollidMove__7TTelesaFP9THitActor
+  .4byte isInhibitedForceMove__7TTelesaFv
+  .4byte endHitWaterJump__11TSmallEnemyFv
+  .4byte sendAttackMsgToMario__11TSmallEnemyFv
+  .4byte decHpByWater__7TTelesaFP9THitActor
+  .4byte setBckAnm__11TSmallEnemyFi
+  .4byte setDeadEffect__11TSmallEnemyFv
+  .4byte setAfterDeadEffect__11TSmallEnemyFv
+  .4byte doKeepDistance__11TSmallEnemyFv
+  .4byte generateEffectColumWater__11TSmallEnemyFv
+  .4byte isFindMario__7TTelesaFf
+  .4byte behaveToFindMario__12TWalkerEnemyFv
+  .4byte walkBehavior__7TTelesaFif
+  .4byte isResignationAttack__12TWalkerEnemyFv
+  .4byte initialGraphNode__12TWalkerEnemyFv
 .global __vt__14TTelesaManager
 __vt__14TTelesaManager:
-	.incbin "baserom.dol", 0x3D5670, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TTelesaManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TTelesaManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSmallEnemyManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TTelesaManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__14TTelesaManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__14TTelesaManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__14TTelesaManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte initSetEnemies__18TSmallEnemyManagerFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mFlyAngMax__7TTelesa:

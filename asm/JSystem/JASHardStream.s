@@ -43,6 +43,7 @@ lbl_800629B0:
 /* 800629C0 0005F900  7C 1C 00 2E */	lwzx r0, r28, r0
 /* 800629C4 0005F904  7C 09 03 A6 */	mtctr r0
 /* 800629C8 0005F908  4E 80 04 20 */	bctr 
+lbl_800629CC:
 /* 800629CC 0005F90C  80 1F 00 10 */	lwz r0, 0x10(r31)
 /* 800629D0 0005F910  28 00 00 00 */	cmplwi r0, 0
 /* 800629D4 0005F914  41 82 03 C8 */	beq lbl_80062D9C
@@ -87,6 +88,7 @@ lbl_80062A60:
 /* 80062A60 0005F9A0  38 00 00 03 */	li r0, 3
 /* 80062A64 0005F9A4  98 1E 00 00 */	stb r0, 0(r30)
 /* 80062A68 0005F9A8  48 00 03 34 */	b lbl_80062D9C
+lbl_80062A6C:
 /* 80062A6C 0005F9AC  3B BF 00 14 */	addi r29, r31, 0x14
 /* 80062A70 0005F9B0  A0 1F 00 14 */	lhz r0, 0x14(r31)
 /* 80062A74 0005F9B4  28 00 00 00 */	cmplwi r0, 0
@@ -179,6 +181,7 @@ lbl_80062BB0:
 /* 80062BB0 0005FAF0  38 00 00 04 */	li r0, 4
 /* 80062BB4 0005FAF4  98 1E 00 00 */	stb r0, 0(r30)
 /* 80062BB8 0005FAF8  48 00 01 E4 */	b lbl_80062D9C
+lbl_80062BBC:
 /* 80062BBC 0005FAFC  38 7F 00 0C */	addi r3, r31, 0xc
 /* 80062BC0 0005FB00  48 00 07 B1 */	bl getCurVol__Q38JASystem10HardStream8TControlFv
 /* 80062BC4 0005FB04  7C 7C 1B 78 */	mr r28, r3
@@ -202,6 +205,7 @@ lbl_80062BB0:
 /* 80062C0C 0005FB4C  7C 00 20 50 */	subf r0, r0, r4
 /* 80062C10 0005FB50  98 0D 91 E1 */	stb r0, cur_addr_cmd$432@sda21(r13)
 /* 80062C14 0005FB54  48 00 01 88 */	b lbl_80062D9C
+lbl_80062C18:
 /* 80062C18 0005FB58  80 9F 00 10 */	lwz r4, 0x10(r31)
 /* 80062C1C 0005FB5C  28 04 00 00 */	cmplwi r4, 0
 /* 80062C20 0005FB60  40 82 00 28 */	bne lbl_80062C48
@@ -294,6 +298,7 @@ lbl_80062D54:
 /* 80062D54 0005FC94  38 00 00 04 */	li r0, 4
 /* 80062D58 0005FC98  98 1E 00 00 */	stb r0, 0(r30)
 /* 80062D5C 0005FC9C  48 00 00 40 */	b lbl_80062D9C
+lbl_80062D60:
 /* 80062D60 0005FCA0  38 60 00 00 */	li r3, 0
 /* 80062D64 0005FCA4  48 03 A4 69 */	bl AISetStreamVolLeft
 /* 80062D68 0005FCA8  38 60 00 00 */	li r3, 0
@@ -1001,7 +1006,13 @@ lbl_800636D0:
 rootDir__Q28JASystem10HardStream:
 	.incbin "baserom.dol", 0x3A87C8, 0x20
 $$2550:
-	.incbin "baserom.dol", 0x3A87E8, 0x20
+    .4byte lbl_80062D9C
+    .4byte lbl_800629CC
+    .4byte lbl_80062A6C
+    .4byte lbl_80062D9C
+    .4byte lbl_80062BBC
+    .4byte lbl_80062C18
+    .4byte lbl_80062D60
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 playListMax__Q28JASystem10HardStream:

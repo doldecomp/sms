@@ -1749,218 +1749,325 @@ NerveGetByIndex__Fi:
 /* 801142A8 001111E8  7C 04 00 2E */	lwzx r0, r4, r0
 /* 801142AC 001111EC  7C 09 03 A6 */	mtctr r0
 /* 801142B0 001111F0  4E 80 04 20 */	bctr 
+lbl_801142B4:
 /* 801142B4 001111F4  48 16 97 D1 */	bl theNerve__22TNerveSmallEnemyFreezeFv
 /* 801142B8 001111F8  48 00 03 58 */	b lbl_80114610
+lbl_801142BC:
 /* 801142BC 001111FC  48 16 9C 31 */	bl theNerve__19TNerveSmallEnemyDieFv
 /* 801142C0 00111200  48 00 03 50 */	b lbl_80114610
+lbl_801142C4:
 /* 801142C4 00111204  48 16 96 61 */	bl theNerve__20TNerveSmallEnemyJumpFv
 /* 801142C8 00111208  48 00 03 48 */	b lbl_80114610
+lbl_801142CC:
 /* 801142CC 0011120C  48 16 94 89 */	bl theNerve__28TNerveSmallEnemyHitWaterJumpFv
 /* 801142D0 00111210  48 00 03 40 */	b lbl_80114610
+lbl_801142D4:
 /* 801142D4 00111214  48 17 02 25 */	bl theNerve__20TNerveWalkerGenerateFv
 /* 801142D8 00111218  48 00 03 38 */	b lbl_80114610
+lbl_801142DC:
 /* 801142DC 0011121C  48 17 00 7D */	bl theNerve__23TNerveWalkerGraphWanderFv
 /* 801142E0 00111220  48 00 03 30 */	b lbl_80114610
+lbl_801142E4:
 /* 801142E4 00111224  48 16 FB 45 */	bl theNerve__18TNerveWalkerEscapeFv
 /* 801142E8 00111228  48 00 03 28 */	b lbl_80114610
+lbl_801142EC:
 /* 801142EC 0011122C  48 16 FE D1 */	bl theNerve__18TNerveWalkerAttackFv
 /* 801142F0 00111230  48 00 03 20 */	b lbl_80114610
+lbl_801142F4:
 /* 801142F4 00111234  48 16 FC 8D */	bl theNerve__22TNerveWalkerPostAttackFv
 /* 801142F8 00111238  48 00 03 18 */	b lbl_80114610
+lbl_801142FC:
 /* 801142FC 0011123C  48 16 F9 69 */	bl theNerve__22TNerveWalkerTraceMarioFv
 /* 80114300 00111240  48 00 03 10 */	b lbl_80114610
+lbl_80114304:
 /* 80114304 00111244  48 16 14 35 */	bl theNerve__25TNerveNameKuriDrawPolluteFv
 /* 80114308 00111248  48 00 03 08 */	b lbl_80114610
+lbl_8011430C:
 /* 8011430C 0011124C  48 16 1F 9D */	bl theNerve__18TNerveNameKuriLandFv
 /* 80114310 00111250  48 00 03 00 */	b lbl_80114610
+lbl_80114314:
 /* 80114314 00111254  48 16 1E A1 */	bl theNerve__24TNerveNameKuriJumpAttackFv
 /* 80114318 00111258  48 00 02 F8 */	b lbl_80114610
+lbl_8011431C:
 /* 8011431C 0011125C  48 16 19 4D */	bl theNerve__31TNerveNameKuriJumpAttackPrepareFv
 /* 80114320 00111260  48 00 02 F0 */	b lbl_80114610
+lbl_80114324:
 /* 80114324 00111264  48 16 16 3D */	bl theNerve__23TNerveNameKuriExplosionFv
 /* 80114328 00111268  48 00 02 E8 */	b lbl_80114610
+lbl_8011432C:
 /* 8011432C 0011126C  48 16 15 01 */	bl theNerve__21TNerveNameKuriDiffuseFv
 /* 80114330 00111270  48 00 02 E0 */	b lbl_80114610
+lbl_80114334:
 /* 80114334 00111274  48 16 13 99 */	bl theNerve__19TNerveNKFollowMarioFv
 /* 80114338 00111278  48 00 02 D8 */	b lbl_80114610
+lbl_8011433C:
 /* 8011433C 0011127C  48 17 40 C5 */	bl theNerve__12TNerveBGWaitFv
 /* 80114340 00111280  48 00 02 D0 */	b lbl_80114610
+lbl_80114344:
 /* 80114344 00111284  48 17 33 49 */	bl theNerve__22TNerveBGTentacleDamageFv
 /* 80114348 00111288  48 00 02 C8 */	b lbl_80114610
+lbl_8011434C:
 /* 8011434C 0011128C  48 17 3B F1 */	bl theNerve__17TNerveBGEyeDamageFv
 /* 80114350 00111290  48 00 02 C0 */	b lbl_80114610
+lbl_80114354:
 /* 80114354 00111294  48 17 38 85 */	bl theNerve__18TNerveBGBeakDamageFv
 /* 80114358 00111298  48 00 02 B8 */	b lbl_80114610
+lbl_8011435C:
 /* 8011435C 0011129C  48 17 2F 4D */	bl theNerve__11TNerveBGTugFv
 /* 80114360 001112A0  48 00 02 B0 */	b lbl_80114610
+lbl_80114364:
 /* 80114364 001112A4  48 17 29 E9 */	bl theNerve__11TNerveBGDieFv
 /* 80114368 001112A8  48 00 02 A8 */	b lbl_80114610
+lbl_8011436C:
 /* 8011436C 001112AC  48 17 22 0D */	bl theNerve__15TNerveBGPolluteFv
 /* 80114370 001112B0  48 00 02 A0 */	b lbl_80114610
+lbl_80114374:
 /* 80114374 001112B4  48 17 1F 31 */	bl theNerve__15TNerveBGPolDropFv
 /* 80114378 001112B8  48 00 02 98 */	b lbl_80114610
+lbl_8011437C:
 /* 8011437C 001112BC  48 17 1B 2D */	bl theNerve__12TNerveBGRollFv
 /* 80114380 001112C0  48 00 02 90 */	b lbl_80114610
+lbl_80114384:
 /* 80114384 001112C4  48 19 2F 2D */	bl theNerve__12TNerveBPWaitFv
 /* 80114388 001112C8  48 00 02 88 */	b lbl_80114610
+lbl_8011438C:
 /* 8011438C 001112CC  48 19 22 0D */	bl theNerve__14TNerveBPCannonFv
 /* 80114390 001112D0  48 00 02 80 */	b lbl_80114610
+lbl_80114394:
 /* 80114394 001112D4  48 19 20 7D */	bl theNerve__13TNerveBPVomitFv
 /* 80114398 001112D8  48 00 02 78 */	b lbl_80114610
+lbl_8011439C:
 /* 8011439C 001112DC  48 19 1C A1 */	bl theNerve__15TNerveBPTornadoFv
 /* 801143A0 001112E0  48 00 02 70 */	b lbl_80114610
+lbl_801143A4:
 /* 801143A4 001112E4  48 19 1A 5D */	bl theNerve__13TNerveBPPivotFv
 /* 801143A8 001112E8  48 00 02 68 */	b lbl_80114610
+lbl_801143AC:
 /* 801143AC 001112EC  48 19 18 3D */	bl theNerve__15TNerveBPSwallowFv
 /* 801143B0 001112F0  48 00 02 60 */	b lbl_80114610
+lbl_801143B4:
 /* 801143B4 001112F4  48 19 15 85 */	bl theNerve__16TNerveBPTumbleInFv
 /* 801143B8 001112F8  48 00 02 58 */	b lbl_80114610
+lbl_801143BC:
 /* 801143BC 001112FC  48 19 13 69 */	bl theNerve__14TNerveBPTumbleFv
 /* 801143C0 00111300  48 00 02 50 */	b lbl_80114610
+lbl_801143C4:
 /* 801143C4 00111304  48 19 11 29 */	bl theNerve__17TNerveBPTumbleOutFv
 /* 801143C8 00111308  48 00 02 48 */	b lbl_80114610
+lbl_801143CC:
 /* 801143CC 0011130C  48 19 0D E5 */	bl theNerve__13TNerveBPGetUpFv
 /* 801143D0 00111310  48 00 02 40 */	b lbl_80114610
+lbl_801143D4:
 /* 801143D4 00111314  48 19 0C 65 */	bl theNerve__13TNerveBPSwingFv
 /* 801143D8 00111318  48 00 02 38 */	b lbl_80114610
+lbl_801143DC:
 /* 801143DC 0011131C  48 19 0A ED */	bl theNerve__18TNerveBPStompReactFv
 /* 801143E0 00111320  48 00 02 30 */	b lbl_80114610
+lbl_801143E4:
 /* 801143E4 00111324  48 19 08 E9 */	bl theNerve__17TNerveBPJumpReactFv
 /* 801143E8 00111328  48 00 02 28 */	b lbl_80114610
+lbl_801143EC:
 /* 801143EC 0011132C  48 19 07 BD */	bl theNerve__14TNerveBPPreDieFv
 /* 801143F0 00111330  48 00 02 20 */	b lbl_80114610
+lbl_801143F4:
 /* 801143F4 00111334  48 19 05 1D */	bl theNerve__11TNerveBPDieFv
 /* 801143F8 00111338  48 00 02 18 */	b lbl_80114610
+lbl_801143FC:
 /* 801143FC 0011133C  48 19 03 99 */	bl theNerve__15TNerveBPTakeOffFv
 /* 80114400 00111340  48 00 02 10 */	b lbl_80114610
+lbl_80114404:
 /* 80114404 00111344  48 19 01 05 */	bl theNerve__11TNerveBPFlyFv
 /* 80114408 00111348  48 00 02 08 */	b lbl_80114610
+lbl_8011440C:
 /* 8011440C 0011134C  48 18 FD 71 */	bl theNerve__17TNerveBPTouchDownFv
 /* 80114410 00111350  48 00 02 00 */	b lbl_80114610
+lbl_80114414:
 /* 80114414 00111354  48 18 FB 75 */	bl theNerve__17TNerveBPFlyCannonFv
 /* 80114418 00111358  48 00 01 F8 */	b lbl_80114610
+lbl_8011441C:
 /* 8011441C 0011135C  48 18 FA 75 */	bl theNerve__16TNerveBPFlyPivotFv
 /* 80114420 00111360  48 00 01 F0 */	b lbl_80114610
+lbl_80114424:
 /* 80114424 00111364  48 18 F3 A5 */	bl theNerve__12TNerveBPFallFv
 /* 80114428 00111368  48 00 01 E8 */	b lbl_80114610
+lbl_8011442C:
 /* 8011442C 0011136C  48 18 F9 55 */	bl theNerve__13TNerveBPHoverFv
 /* 80114430 00111370  48 00 01 E0 */	b lbl_80114610
+lbl_80114434:
 /* 80114434 00111374  48 18 EC A5 */	bl theNerve__13TNerveBPSleepFv
 /* 80114438 00111378  48 00 01 D8 */	b lbl_80114610
+lbl_8011443C:
 /* 8011443C 0011137C  48 18 EB A5 */	bl theNerve__18TNerveBPBreakSleepFv
 /* 80114440 00111380  48 00 01 D0 */	b lbl_80114610
+lbl_80114444:
 /* 80114444 00111384  48 18 E9 E9 */	bl theNerve__13TNerveBPWaitLFv
 /* 80114448 00111388  48 00 01 C8 */	b lbl_80114610
+lbl_8011444C:
 /* 8011444C 0011138C  48 18 E7 49 */	bl theNerve__15TNerveBPCannonLFv
 /* 80114450 00111390  48 00 01 C0 */	b lbl_80114610
+lbl_80114454:
 /* 80114454 00111394  48 1A 4F 49 */	bl theNerve__19TNerveBWGraphWanderFv
 /* 80114458 00111398  48 00 01 B8 */	b lbl_80114610
+lbl_8011445C:
 /* 8011445C 0011139C  48 1A 44 ED */	bl theNerve__12TNerveBWRollFv
 /* 80114460 001113A0  48 00 01 B0 */	b lbl_80114610
+lbl_80114464:
 /* 80114464 001113A4  48 1A 42 79 */	bl theNerve__12TNerveBWBarkFv
 /* 80114468 001113A8  48 00 01 A8 */	b lbl_80114610
+lbl_8011446C:
 /* 8011446C 001113AC  48 1A 3F 31 */	bl theNerve__12TNerveBWJumpFv
 /* 80114470 001113B0  48 00 01 A0 */	b lbl_80114610
+lbl_80114474:
 /* 80114474 001113B4  48 1A 3C E9 */	bl theNerve__12TNerveBWStunFv
 /* 80114478 001113B8  48 00 01 98 */	b lbl_80114610
+lbl_8011447C:
 /* 8011447C 001113BC  48 1A 39 0D */	bl theNerve__14TNerveBWWakeupFv
 /* 80114480 001113C0  48 00 01 90 */	b lbl_80114610
+lbl_80114484:
 /* 80114484 001113C4  48 1A 36 B1 */	bl theNerve__18TNerveBWJumpToBathFv
 /* 80114488 001113C8  48 00 01 88 */	b lbl_80114610
+lbl_8011448C:
 /* 8011448C 001113CC  48 1A 33 11 */	bl theNerve__11TNerveBWDieFv
 /* 80114490 001113D0  48 00 01 80 */	b lbl_80114610
+lbl_80114494:
 /* 80114494 001113D4  48 1A 2D B9 */	bl theNerve__16TNerveBWJumpAwayFv
 /* 80114498 001113D8  48 00 01 78 */	b lbl_80114610
+lbl_8011449C:
 /* 8011449C 001113DC  48 1A 2A 65 */	bl theNerve__13TNerveBWShakeFv
 /* 801144A0 001113E0  48 00 01 70 */	b lbl_80114610
+lbl_801144A4:
 /* 801144A4 001113E4  48 1A 28 61 */	bl theNerve__12TNerveBWFallFv
 /* 801144A8 001113E8  48 00 01 68 */	b lbl_80114610
+lbl_801144AC:
 /* 801144AC 001113EC  48 1D 6D 89 */	bl theNerve__23TNerveBEelTearsGenerateFv
 /* 801144B0 001113F0  48 00 01 60 */	b lbl_80114610
+lbl_801144B4:
 /* 801144B4 001113F4  48 1D 67 C9 */	bl theNerve__27TNerveBEelTearsMarioRecoverFv
 /* 801144B8 001113F8  48 00 01 58 */	b lbl_80114610
+lbl_801144BC:
 /* 801144BC 001113FC  48 1D 65 FD */	bl theNerve__20TNerveBEelTearsSplitFv
 /* 801144C0 00111400  48 00 01 50 */	b lbl_80114610
+lbl_801144C4:
 /* 801144C4 00111404  48 1D 6A E9 */	bl theNerve__23TNerveBEelTearsWaterHitFv
 /* 801144C8 00111408  48 00 01 48 */	b lbl_80114610
+lbl_801144CC:
 /* 801144CC 0011140C  48 1D 6C 0D */	bl theNerve__21TNerveBEelTearsMoveUpFv
 /* 801144D0 00111410  48 00 01 40 */	b lbl_80114610
+lbl_801144D4:
 /* 801144D4 00111414  48 1D 5C 3D */	bl theNerve__17TNerveOilBallStayFv
 /* 801144D8 00111418  48 00 01 38 */	b lbl_80114610
+lbl_801144DC:
 /* 801144DC 0011141C  48 1D 10 DD */	bl theNerve__23TNerveBossEelWaitAppearFv
 /* 801144E0 00111420  48 00 01 30 */	b lbl_80114610
+lbl_801144E4:
 /* 801144E4 00111424  48 1D 0E 25 */	bl theNerve__22TNerveBossEelFirstSpinFv
 /* 801144E8 00111428  48 00 01 28 */	b lbl_80114610
+lbl_801144EC:
 /* 801144EC 0011142C  48 1D 0A 5D */	bl theNerve__23TNerveBossEelSecondSpinFv
 /* 801144F0 00111430  48 00 01 20 */	b lbl_80114610
+lbl_801144F4:
 /* 801144F4 00111434  48 1D 05 71 */	bl theNerve__19TNerveBossEelAppearFv
 /* 801144F8 00111438  48 00 01 18 */	b lbl_80114610
+lbl_801144FC:
 /* 801144FC 0011143C  48 1D 01 B5 */	bl theNerve__20TNerveBossEelOutWaitFv
 /* 80114500 00111440  48 00 01 10 */	b lbl_80114610
+lbl_80114504:
 /* 80114504 00111444  48 1C F6 D5 */	bl theNerve__21TNerveBossEelSlowBackFv
 /* 80114508 00111448  48 00 01 08 */	b lbl_80114610
+lbl_8011450C:
 /* 8011450C 0011144C  48 1C F6 41 */	bl theNerve__22TNerveBossEelQuickBackFv
 /* 80114510 00111450  48 00 01 00 */	b lbl_80114610
+lbl_80114514:
 /* 80114514 00111454  48 1C F4 B1 */	bl theNerve__16TNerveBossEelEatFv
 /* 80114518 00111458  48 00 00 F8 */	b lbl_80114610
+lbl_8011451C:
 /* 8011451C 0011145C  48 1C ED 51 */	bl theNerve__16TNerveBossEelDieFv
 /* 80114520 00111460  48 00 00 F0 */	b lbl_80114610
+lbl_80114524:
 /* 80114524 00111464  48 1C E8 01 */	bl theNerve__26TNerveBossEelMouthOpenWaitFv
 /* 80114528 00111468  48 00 00 E8 */	b lbl_80114610
+lbl_8011452C:
 /* 8011452C 0011146C  48 1C E2 31 */	bl theNerve__26TNerveBossEelSleepOnBottomFv
 /* 80114530 00111470  48 00 00 E0 */	b lbl_80114610
+lbl_80114534:
 /* 80114534 00111474  48 1E F6 A9 */	bl theNerve__29TNerveBossHanachanGraphWanderFv
 /* 80114538 00111478  48 00 00 D8 */	b lbl_80114610
+lbl_8011453C:
 /* 8011453C 0011147C  48 1E F4 F1 */	bl theNerve__24TNerveBossHanachanTumbleFv
 /* 80114540 00111480  48 00 00 D0 */	b lbl_80114610
+lbl_80114544:
 /* 80114544 00111484  48 1E F3 09 */	bl theNerve__22TNerveBossHanachanDownFv
 /* 80114548 00111488  48 00 00 C8 */	b lbl_80114610
+lbl_8011454C:
 /* 8011454C 0011148C  48 1E F1 BD */	bl theNerve__23TNerveBossHanachanGetUpFv
 /* 80114550 00111490  48 00 00 C0 */	b lbl_80114610
+lbl_80114554:
 /* 80114554 00111494  48 1E F0 11 */	bl theNerve__24TNerveBossHanachanDamageFv
 /* 80114558 00111498  48 00 00 B8 */	b lbl_80114610
+lbl_8011455C:
 /* 8011455C 0011149C  48 1E ED F5 */	bl theNerve__23TNerveBossHanachanSnortFv
 /* 80114560 001114A0  48 00 00 B0 */	b lbl_80114610
+lbl_80114564:
 /* 80114564 001114A4  48 1E EB D5 */	bl theNerve__22TNerveBossHanachanDeadFv
 /* 80114568 001114A8  48 00 00 A8 */	b lbl_80114610
+lbl_8011456C:
 /* 8011456C 001114AC  48 1E 7F AD */	bl theNerve__23TNerveSBH_SleepContinueFv
 /* 80114570 001114B0  48 00 00 A0 */	b lbl_80114610
+lbl_80114574:
 /* 80114574 001114B4  48 1E 7F 39 */	bl theNerve__14TNerveSBH_FallFv
 /* 80114578 001114B8  48 00 00 98 */	b lbl_80114610
+lbl_8011457C:
 /* 8011457C 001114BC  48 16 DF B9 */	bl theNerve__24TNerveTypicalGraphWanderFv
 /* 80114580 001114C0  48 00 00 90 */	b lbl_80114610
+lbl_80114584:
 /* 80114584 001114C4  48 05 D6 CD */	bl theNerve__20TNerveNPCGraphWanderFv
 /* 80114588 001114C8  48 00 00 88 */	b lbl_80114610
+lbl_8011458C:
 /* 8011458C 001114CC  48 05 D1 89 */	bl theNerve__14TNerveNPCUTurnFv
 /* 80114590 001114D0  48 00 00 80 */	b lbl_80114610
+lbl_80114594:
 /* 80114594 001114D4  48 05 CF E5 */	bl theNerve__18TNerveNPCGraphWaitFv
 /* 80114598 001114D8  48 00 00 78 */	b lbl_80114610
+lbl_8011459C:
 /* 8011459C 001114DC  48 05 CD 41 */	bl theNerve__21TNerveNPCWaitContinueFv
 /* 801145A0 001114E0  48 00 00 70 */	b lbl_80114610
+lbl_801145A4:
 /* 801145A4 001114E4  48 05 CC 8D */	bl theNerve__26TNerveNPCWaitMarioApproachFv
 /* 801145A8 001114E8  48 00 00 68 */	b lbl_80114610
+lbl_801145AC:
 /* 801145AC 001114EC  48 05 CA 01 */	bl theNerve__20TNerveNPCTurnToMarioFv
 /* 801145B0 001114F0  48 00 00 60 */	b lbl_80114610
+lbl_801145B4:
 /* 801145B4 001114F4  48 05 C5 75 */	bl theNerve__12TNerveNPCWetFv
 /* 801145B8 001114F8  48 00 00 58 */	b lbl_80114610
+lbl_801145BC:
 /* 801145BC 001114FC  48 05 C4 55 */	bl theNerve__13TNerveNPCSinkFv
 /* 801145C0 00111500  48 00 00 50 */	b lbl_80114610
+lbl_801145C4:
 /* 801145C4 00111504  48 05 C3 65 */	bl theNerve__24TNerveNPCRecoverFromSinkFv
 /* 801145C8 00111508  48 00 00 48 */	b lbl_80114610
+lbl_801145CC:
 /* 801145CC 0011150C  48 05 C1 E1 */	bl theNerve__21TNerveNPCRecoverAfterFv
 /* 801145D0 00111510  48 00 00 40 */	b lbl_80114610
+lbl_801145D4:
 /* 801145D4 00111514  48 05 C0 AD */	bl theNerve__30TNerveNPCSetPosAfterSinkBottomFv
 /* 801145D8 00111518  48 00 00 38 */	b lbl_80114610
+lbl_801145DC:
 /* 801145DC 0011151C  48 05 BF BD */	bl theNerve__13TNerveNPCTalkFv
 /* 801145E0 00111520  48 00 00 30 */	b lbl_80114610
+lbl_801145E4:
 /* 801145E4 00111524  48 05 BE 45 */	bl theNerve__14TNerveNPCThrowFv
 /* 801145E8 00111528  48 00 00 28 */	b lbl_80114610
+lbl_801145EC:
 /* 801145EC 0011152C  48 05 BD 25 */	bl theNerve__12TNerveNPCMadFv
 /* 801145F0 00111530  48 00 00 20 */	b lbl_80114610
+lbl_801145F4:
 /* 801145F4 00111534  48 05 BC 05 */	bl theNerve__14TNerveNPCBlownFv
 /* 801145F8 00111538  48 00 00 18 */	b lbl_80114610
+lbl_801145FC:
 /* 801145FC 0011153C  48 05 BA 39 */	bl theNerve__18TNerveNPCMareStandFv
 /* 80114600 00111540  48 00 00 10 */	b lbl_80114610
+lbl_80114604:
 /* 80114604 00111544  48 25 3A 81 */	bl theNerve__23TNerveAnimalGraphWanderFv
 /* 80114608 00111548  48 00 00 08 */	b lbl_80114610
 lbl_8011460C:
@@ -1995,7 +2102,113 @@ $$22778:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23444:
-	.incbin "baserom.dol", 0x3B1CA8, 0x1B0
+    .4byte lbl_801142B4
+    .4byte lbl_801142BC
+    .4byte lbl_801142C4
+    .4byte lbl_801142CC
+    .4byte lbl_801142D4
+    .4byte lbl_801142DC
+    .4byte lbl_801142E4
+    .4byte lbl_801142EC
+    .4byte lbl_801142F4
+    .4byte lbl_801142FC
+    .4byte lbl_80114304
+    .4byte lbl_8011430C
+    .4byte lbl_80114314
+    .4byte lbl_8011431C
+    .4byte lbl_80114324
+    .4byte lbl_8011432C
+    .4byte lbl_80114334
+    .4byte lbl_8011433C
+    .4byte lbl_80114344
+    .4byte lbl_8011434C
+    .4byte lbl_80114354
+    .4byte lbl_8011435C
+    .4byte lbl_80114364
+    .4byte lbl_8011436C
+    .4byte lbl_80114374
+    .4byte lbl_8011437C
+    .4byte lbl_80114384
+    .4byte lbl_8011438C
+    .4byte lbl_80114394
+    .4byte lbl_8011439C
+    .4byte lbl_801143A4
+    .4byte lbl_801143AC
+    .4byte lbl_801143B4
+    .4byte lbl_801143BC
+    .4byte lbl_801143C4
+    .4byte lbl_801143CC
+    .4byte lbl_801143D4
+    .4byte lbl_801143DC
+    .4byte lbl_801143E4
+    .4byte lbl_801143EC
+    .4byte lbl_801143F4
+    .4byte lbl_801143FC
+    .4byte lbl_80114404
+    .4byte lbl_8011440C
+    .4byte lbl_80114414
+    .4byte lbl_8011441C
+    .4byte lbl_80114424
+    .4byte lbl_8011442C
+    .4byte lbl_80114434
+    .4byte lbl_8011443C
+    .4byte lbl_80114444
+    .4byte lbl_8011444C
+    .4byte lbl_80114454
+    .4byte lbl_8011445C
+    .4byte lbl_80114464
+    .4byte lbl_8011446C
+    .4byte lbl_80114474
+    .4byte lbl_8011447C
+    .4byte lbl_80114484
+    .4byte lbl_8011448C
+    .4byte lbl_80114494
+    .4byte lbl_8011449C
+    .4byte lbl_801144A4
+    .4byte lbl_801144AC
+    .4byte lbl_801144B4
+    .4byte lbl_801144BC
+    .4byte lbl_801144C4
+    .4byte lbl_801144CC
+    .4byte lbl_801144D4
+    .4byte lbl_801144DC
+    .4byte lbl_801144E4
+    .4byte lbl_801144EC
+    .4byte lbl_801144F4
+    .4byte lbl_801144FC
+    .4byte lbl_80114504
+    .4byte lbl_8011450C
+    .4byte lbl_80114514
+    .4byte lbl_8011451C
+    .4byte lbl_80114524
+    .4byte lbl_8011452C
+    .4byte lbl_80114534
+    .4byte lbl_8011453C
+    .4byte lbl_80114544
+    .4byte lbl_8011454C
+    .4byte lbl_80114554
+    .4byte lbl_8011455C
+    .4byte lbl_80114564
+    .4byte lbl_8011456C
+    .4byte lbl_80114574
+    .4byte lbl_8011457C
+    .4byte lbl_80114584
+    .4byte lbl_8011458C
+    .4byte lbl_80114594
+    .4byte lbl_8011459C
+    .4byte lbl_801145A4
+    .4byte lbl_801145AC
+    .4byte lbl_801145B4
+    .4byte lbl_801145BC
+    .4byte lbl_801145C4
+    .4byte lbl_801145CC
+    .4byte lbl_801145D4
+    .4byte lbl_801145DC
+    .4byte lbl_801145E4
+    .4byte lbl_801145EC
+    .4byte lbl_801145F4
+    .4byte lbl_801145FC
+    .4byte lbl_80114604
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22726:

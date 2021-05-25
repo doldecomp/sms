@@ -2140,6 +2140,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7CF0 001F4C30  7C 04 00 2E */	lwzx r0, r4, r0
 /* 801F7CF4 001F4C34  7C 09 03 A6 */	mtctr r0
 /* 801F7CF8 001F4C38  4E 80 04 20 */	bctr 
+lbl_801F7CFC:
 /* 801F7CFC 001F4C3C  C0 02 D1 F0 */	lfs f0, $$23760@sda21(r2)
 /* 801F7D00 001F4C40  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7D04 001F4C44  C0 02 D1 F4 */	lfs f0, $$23761@sda21(r2)
@@ -2153,6 +2154,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7D24 001F4C64  C0 02 D2 00 */	lfs f0, $$23764@sda21(r2)
 /* 801F7D28 001F4C68  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7D2C 001F4C6C  4E 80 00 20 */	blr 
+lbl_801F7D30:
 /* 801F7D30 001F4C70  C0 02 D1 EC */	lfs f0, $$23700@sda21(r2)
 /* 801F7D34 001F4C74  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7D38 001F4C78  D0 03 01 14 */	stfs f0, 0x114(r3)
@@ -2164,6 +2166,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7D50 001F4C90  C0 02 D2 0C */	lfs f0, $$23767@sda21(r2)
 /* 801F7D54 001F4C94  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7D58 001F4C98  4E 80 00 20 */	blr 
+lbl_801F7D5C:
 /* 801F7D5C 001F4C9C  C0 02 D2 10 */	lfs f0, $$23768@sda21(r2)
 /* 801F7D60 001F4CA0  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7D64 001F4CA4  C0 02 D2 14 */	lfs f0, $$23769@sda21(r2)
@@ -2177,6 +2180,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7D84 001F4CC4  C0 02 D2 20 */	lfs f0, $$23772@sda21(r2)
 /* 801F7D88 001F4CC8  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7D8C 001F4CCC  4E 80 00 20 */	blr 
+lbl_801F7D90:
 /* 801F7D90 001F4CD0  C0 02 D2 24 */	lfs f0, $$23773@sda21(r2)
 /* 801F7D94 001F4CD4  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7D98 001F4CD8  C0 02 D1 EC */	lfs f0, $$23700@sda21(r2)
@@ -2189,6 +2193,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7DB4 001F4CF4  C0 02 D2 30 */	lfs f0, $$23776@sda21(r2)
 /* 801F7DB8 001F4CF8  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7DBC 001F4CFC  4E 80 00 20 */	blr 
+lbl_801F7DC0:
 /* 801F7DC0 001F4D00  C0 02 D2 34 */	lfs f0, $$23777@sda21(r2)
 /* 801F7DC4 001F4D04  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7DC8 001F4D08  C0 02 D2 38 */	lfs f0, $$23778@sda21(r2)
@@ -2202,6 +2207,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7DE8 001F4D28  C0 02 D2 44 */	lfs f0, $$23781@sda21(r2)
 /* 801F7DEC 001F4D2C  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7DF0 001F4D30  4E 80 00 20 */	blr 
+lbl_801F7DF4:
 /* 801F7DF4 001F4D34  C0 02 D2 48 */	lfs f0, $$23782@sda21(r2)
 /* 801F7DF8 001F4D38  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7DFC 001F4D3C  C0 02 D2 4C */	lfs f0, $$23783@sda21(r2)
@@ -2215,6 +2221,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7E1C 001F4D5C  C0 02 D2 58 */	lfs f0, $$23786@sda21(r2)
 /* 801F7E20 001F4D60  D0 03 01 24 */	stfs f0, 0x124(r3)
 /* 801F7E24 001F4D64  4E 80 00 20 */	blr 
+lbl_801F7E28:
 /* 801F7E28 001F4D68  C0 02 D1 F0 */	lfs f0, $$23760@sda21(r2)
 /* 801F7E2C 001F4D6C  D0 03 01 10 */	stfs f0, 0x110(r3)
 /* 801F7E30 001F4D70  D0 03 01 14 */	stfs f0, 0x114(r3)
@@ -2226,6 +2233,7 @@ initEffect__13TMareWallRockFv:
 /* 801F7E48 001F4D88  D0 03 01 20 */	stfs f0, 0x120(r3)
 /* 801F7E4C 001F4D8C  C0 02 D2 64 */	lfs f0, $$23789@sda21(r2)
 /* 801F7E50 001F4D90  D0 03 01 24 */	stfs f0, 0x124(r3)
+lbl_801F7E54:
 /* 801F7E54 001F4D94  4E 80 00 20 */	blr 
 
 .global perform__13TMareWallRockFUlPQ26JDrama9TGraphics
@@ -2913,18 +2921,193 @@ $$23735:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19TMareEventBumpyWall
 __vt__19TMareEventBumpyWall:
-	.incbin "baserom.dol", 0x3CDA10, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TMareEventBumpyWallFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__19TMareEventBumpyWallFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__19TMareEventBumpyWallFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__19TMareEventBumpyWallFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TMapObjBaseFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__11TMapObjBaseFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__19TMareEventBumpyWallFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 $$23790:
-	.incbin "baserom.dol", 0x3CDB74, 0x20
+    .4byte lbl_801F7E54
+    .4byte lbl_801F7CFC
+    .4byte lbl_801F7D30
+    .4byte lbl_801F7D5C
+    .4byte lbl_801F7D90
+    .4byte lbl_801F7DC0
+    .4byte lbl_801F7DF4
+    .4byte lbl_801F7E28
 .global __vt__21TMareEventDepressWall
 __vt__21TMareEventDepressWall:
-	.incbin "baserom.dol", 0x3CDB94, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMareEventDepressWallFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__21TMareEventDepressWallFUlPQ26JDrama9TGraphics
 .global __vt__18TMareEventWallRock
 __vt__18TMareEventWallRock:
-	.incbin "baserom.dol", 0x3CDBB8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMareEventWallRockFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TMareEventWallRockFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__18TMareEventWallRockFUlPQ26JDrama9TGraphics
 .global __vt__13TMareWallRock
 __vt__13TMareWallRock:
-	.incbin "baserom.dol", 0x3CDBDC, 0x104
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMareWallRockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__13TMareWallRockFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__13TMareWallRockFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TMareWallRockFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__13TMareWallRockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__10TLiveActorFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__10TLiveActorFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte 0
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mAppearSpeed__13TMareWallRock:

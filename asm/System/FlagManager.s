@@ -1356,6 +1356,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7DCC 000E4D0C  7C 06 00 2E */	lwzx r0, r6, r0
 /* 800E7DD0 000E4D10  7C 09 03 A6 */	mtctr r0
 /* 800E7DD4 000E4D14  4E 80 04 20 */	bctr 
+lbl_800E7DD8:
 /* 800E7DD8 000E4D18  3C C0 00 02 */	lis r6, 0x00020015@ha
 /* 800E7DDC 000E4D1C  38 06 00 15 */	addi r0, r6, 0x00020015@l
 /* 800E7DE0 000E4D20  7C 04 00 40 */	cmplw r4, r0
@@ -1366,6 +1367,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7DF4 000E4D34  7C 00 2A 14 */	add r0, r0, r5
 /* 800E7DF8 000E4D38  90 03 00 78 */	stw r0, 0x78(r3)
 /* 800E7DFC 000E4D3C  4E 80 00 20 */	blr 
+lbl_800E7E00:
 /* 800E7E00 000E4D40  3C C0 00 04 */	lis r6, 0x00040005@ha
 /* 800E7E04 000E4D44  38 06 00 05 */	addi r0, r6, 0x00040005@l
 /* 800E7E08 000E4D48  7C 04 00 40 */	cmplw r4, r0
@@ -1376,6 +1378,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7E1C 000E4D5C  7C 00 2A 14 */	add r0, r0, r5
 /* 800E7E20 000E4D60  90 03 00 D0 */	stw r0, 0xd0(r3)
 /* 800E7E24 000E4D64  4E 80 00 20 */	blr 
+lbl_800E7E28:
 /* 800E7E28 000E4D68  3C C0 00 06 */	lis r6, 0x00060064@ha
 /* 800E7E2C 000E4D6C  38 06 00 64 */	addi r0, r6, 0x00060064@l
 /* 800E7E30 000E4D70  7C 04 00 40 */	cmplw r4, r0
@@ -1386,6 +1389,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7E44 000E4D84  7C 00 2A 14 */	add r0, r0, r5
 /* 800E7E48 000E4D88  90 03 00 F4 */	stw r0, 0xf4(r3)
 /* 800E7E4C 000E4D8C  4E 80 00 20 */	blr 
+lbl_800E7E50:
 /* 800E7E50 000E4D90  3C C0 00 08 */	lis r6, 0x00080001@ha
 /* 800E7E54 000E4D94  38 06 00 01 */	addi r0, r6, 0x00080001@l
 /* 800E7E58 000E4D98  7C 04 00 40 */	cmplw r4, r0
@@ -1396,6 +1400,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7E6C 000E4DAC  7C 00 2A 14 */	add r0, r0, r5
 /* 800E7E70 000E4DB0  90 03 02 88 */	stw r0, 0x288(r3)
 /* 800E7E74 000E4DB4  4E 80 00 20 */	blr 
+lbl_800E7E78:
 /* 800E7E78 000E4DB8  3C C0 00 0A */	lis r6, 0x000A0002@ha
 /* 800E7E7C 000E4DBC  38 06 00 02 */	addi r0, r6, 0x000A0002@l
 /* 800E7E80 000E4DC0  7C 04 00 40 */	cmplw r4, r0
@@ -1405,6 +1410,7 @@ incFlag__12TFlagManagerFUll:
 /* 800E7E90 000E4DD0  80 03 02 90 */	lwz r0, 0x290(r3)
 /* 800E7E94 000E4DD4  7C 00 2A 14 */	add r0, r0, r5
 /* 800E7E98 000E4DD8  90 03 02 90 */	stw r0, 0x290(r3)
+lbl_800E7E9C:
 /* 800E7E9C 000E4DDC  4E 80 00 20 */	blr 
 
 .global setBool__12TFlagManagerFbUl
@@ -1421,6 +1427,7 @@ setBool__12TFlagManagerFbUl:
 /* 800E7EC4 000E4E04  7C 06 00 2E */	lwzx r0, r6, r0
 /* 800E7EC8 000E4E08  7C 09 03 A6 */	mtctr r0
 /* 800E7ECC 000E4E0C  4E 80 04 20 */	bctr 
+lbl_800E7ED0:
 /* 800E7ED0 000E4E10  3C C0 00 01 */	lis r6, 0x000103B4@ha
 /* 800E7ED4 000E4E14  38 06 03 B4 */	addi r0, r6, 0x000103B4@l
 /* 800E7ED8 000E4E18  7C 05 00 40 */	cmplw r5, r0
@@ -1436,6 +1443,7 @@ lbl_800E7EF4:
 /* 800E7EF8 000E4E38  7C 05 03 78 */	mr r5, r0
 /* 800E7EFC 000E4E3C  48 00 01 DD */	bl setFlag__12TFlagManagerFUll
 /* 800E7F00 000E4E40  48 00 00 D0 */	b lbl_800E7FD0
+lbl_800E7F04:
 /* 800E7F04 000E4E44  3C C0 00 03 */	lis r6, 0x0003001D@ha
 /* 800E7F08 000E4E48  38 06 00 1D */	addi r0, r6, 0x0003001D@l
 /* 800E7F0C 000E4E4C  7C 05 00 40 */	cmplw r5, r0
@@ -1451,6 +1459,7 @@ lbl_800E7F28:
 /* 800E7F2C 000E4E6C  7C 05 03 78 */	mr r5, r0
 /* 800E7F30 000E4E70  48 00 01 A9 */	bl setFlag__12TFlagManagerFUll
 /* 800E7F34 000E4E74  48 00 00 9C */	b lbl_800E7FD0
+lbl_800E7F38:
 /* 800E7F38 000E4E78  3C C0 00 05 */	lis r6, 0x00050064@ha
 /* 800E7F3C 000E4E7C  38 06 00 64 */	addi r0, r6, 0x00050064@l
 /* 800E7F40 000E4E80  7C 05 00 40 */	cmplw r5, r0
@@ -1466,6 +1475,7 @@ lbl_800E7F5C:
 /* 800E7F60 000E4EA0  7C 05 03 78 */	mr r5, r0
 /* 800E7F64 000E4EA4  48 00 01 75 */	bl setFlag__12TFlagManagerFUll
 /* 800E7F68 000E4EA8  48 00 00 68 */	b lbl_800E7FD0
+lbl_800E7F6C:
 /* 800E7F6C 000E4EAC  3C C0 00 07 */	lis r6, 0x00070002@ha
 /* 800E7F70 000E4EB0  38 06 00 02 */	addi r0, r6, 0x00070002@l
 /* 800E7F74 000E4EB4  7C 05 00 40 */	cmplw r5, r0
@@ -1481,6 +1491,7 @@ lbl_800E7F90:
 /* 800E7F94 000E4ED4  7C 05 03 78 */	mr r5, r0
 /* 800E7F98 000E4ED8  48 00 01 41 */	bl setFlag__12TFlagManagerFUll
 /* 800E7F9C 000E4EDC  48 00 00 34 */	b lbl_800E7FD0
+lbl_800E7FA0:
 /* 800E7FA0 000E4EE0  3C C0 00 09 */	lis r6, 0x00090001@ha
 /* 800E7FA4 000E4EE4  38 06 00 01 */	addi r0, r6, 0x00090001@l
 /* 800E7FA8 000E4EE8  7C 05 00 40 */	cmplw r5, r0
@@ -1515,6 +1526,7 @@ getBool__12TFlagManagerCFUl:
 /* 800E8004 000E4F44  7C 05 00 2E */	lwzx r0, r5, r0
 /* 800E8008 000E4F48  7C 09 03 A6 */	mtctr r0
 /* 800E800C 000E4F4C  4E 80 04 20 */	bctr 
+lbl_800E8010:
 /* 800E8010 000E4F50  3C A0 00 01 */	lis r5, 0x000103B4@ha
 /* 800E8014 000E4F54  38 05 03 B4 */	addi r0, r5, 0x000103B4@l
 /* 800E8018 000E4F58  7C 04 00 40 */	cmplw r4, r0
@@ -1524,6 +1536,7 @@ getBool__12TFlagManagerCFUl:
 /* 800E8028 000E4F68  30 03 FF FF */	addic r0, r3, -1
 /* 800E802C 000E4F6C  7C 60 19 10 */	subfe r3, r0, r3
 /* 800E8030 000E4F70  48 00 00 98 */	b lbl_800E80C8
+lbl_800E8034:
 /* 800E8034 000E4F74  3C A0 00 03 */	lis r5, 0x0003001D@ha
 /* 800E8038 000E4F78  38 05 00 1D */	addi r0, r5, 0x0003001D@l
 /* 800E803C 000E4F7C  7C 04 00 40 */	cmplw r4, r0
@@ -1533,6 +1546,7 @@ getBool__12TFlagManagerCFUl:
 /* 800E804C 000E4F8C  30 03 FF FF */	addic r0, r3, -1
 /* 800E8050 000E4F90  7C 60 19 10 */	subfe r3, r0, r3
 /* 800E8054 000E4F94  48 00 00 74 */	b lbl_800E80C8
+lbl_800E8058:
 /* 800E8058 000E4F98  3C A0 00 05 */	lis r5, 0x00050064@ha
 /* 800E805C 000E4F9C  38 05 00 64 */	addi r0, r5, 0x00050064@l
 /* 800E8060 000E4FA0  7C 04 00 40 */	cmplw r4, r0
@@ -1542,6 +1556,7 @@ getBool__12TFlagManagerCFUl:
 /* 800E8070 000E4FB0  30 03 FF FF */	addic r0, r3, -1
 /* 800E8074 000E4FB4  7C 60 19 10 */	subfe r3, r0, r3
 /* 800E8078 000E4FB8  48 00 00 50 */	b lbl_800E80C8
+lbl_800E807C:
 /* 800E807C 000E4FBC  3C A0 00 07 */	lis r5, 0x00070002@ha
 /* 800E8080 000E4FC0  38 05 00 02 */	addi r0, r5, 0x00070002@l
 /* 800E8084 000E4FC4  7C 04 00 40 */	cmplw r4, r0
@@ -1551,6 +1566,7 @@ getBool__12TFlagManagerCFUl:
 /* 800E8094 000E4FD4  30 03 FF FF */	addic r0, r3, -1
 /* 800E8098 000E4FD8  7C 60 19 10 */	subfe r3, r0, r3
 /* 800E809C 000E4FDC  48 00 00 2C */	b lbl_800E80C8
+lbl_800E80A0:
 /* 800E80A0 000E4FE0  3C A0 00 09 */	lis r5, 0x00090001@ha
 /* 800E80A4 000E4FE4  38 05 00 01 */	addi r0, r5, 0x00090001@l
 /* 800E80A8 000E4FE8  7C 04 00 40 */	cmplw r4, r0
@@ -1580,6 +1596,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E80F4 000E5034  7C C7 30 2E */	lwzx r6, r7, r6
 /* 800E80F8 000E5038  7C C9 03 A6 */	mtctr r6
 /* 800E80FC 000E503C  4E 80 04 20 */	bctr 
+lbl_800E8100:
 /* 800E8100 000E5040  3C C0 00 01 */	lis r6, 0x000103B4@ha
 /* 800E8104 000E5044  38 C6 03 B4 */	addi r6, r6, 0x000103B4@l
 /* 800E8108 000E5048  7C 04 30 40 */	cmplw r4, r6
@@ -1598,6 +1615,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E813C 000E507C  7C 60 03 78 */	or r0, r3, r0
 /* 800E8140 000E5080  98 06 00 00 */	stb r0, 0(r6)
 /* 800E8144 000E5084  4E 80 00 20 */	blr 
+lbl_800E8148:
 /* 800E8148 000E5088  3C C0 00 02 */	lis r6, 0x00020015@ha
 /* 800E814C 000E508C  38 C6 00 15 */	addi r6, r6, 0x00020015@l
 /* 800E8150 000E5090  7C 04 30 40 */	cmplw r4, r6
@@ -1606,6 +1624,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E815C 000E509C  7C 63 02 14 */	add r3, r3, r0
 /* 800E8160 000E50A0  90 A3 00 78 */	stw r5, 0x78(r3)
 /* 800E8164 000E50A4  4E 80 00 20 */	blr 
+lbl_800E8168:
 /* 800E8168 000E50A8  3C C0 00 03 */	lis r6, 0x0003001D@ha
 /* 800E816C 000E50AC  38 C6 00 1D */	addi r6, r6, 0x0003001D@l
 /* 800E8170 000E50B0  7C 04 30 40 */	cmplw r4, r6
@@ -1624,6 +1643,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E81A4 000E50E4  7C 60 03 78 */	or r0, r3, r0
 /* 800E81A8 000E50E8  98 06 00 CC */	stb r0, 0xcc(r6)
 /* 800E81AC 000E50EC  4E 80 00 20 */	blr 
+lbl_800E81B0:
 /* 800E81B0 000E50F0  3C C0 00 04 */	lis r6, 0x00040005@ha
 /* 800E81B4 000E50F4  38 C6 00 05 */	addi r6, r6, 0x00040005@l
 /* 800E81B8 000E50F8  7C 04 30 40 */	cmplw r4, r6
@@ -1632,6 +1652,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E81C4 000E5104  7C 63 02 14 */	add r3, r3, r0
 /* 800E81C8 000E5108  90 A3 00 D0 */	stw r5, 0xd0(r3)
 /* 800E81CC 000E510C  4E 80 00 20 */	blr 
+lbl_800E81D0:
 /* 800E81D0 000E5110  3C C0 00 05 */	lis r6, 0x00050064@ha
 /* 800E81D4 000E5114  38 C6 00 64 */	addi r6, r6, 0x00050064@l
 /* 800E81D8 000E5118  7C 04 30 40 */	cmplw r4, r6
@@ -1650,6 +1671,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E820C 000E514C  7C 60 03 78 */	or r0, r3, r0
 /* 800E8210 000E5150  98 06 00 E4 */	stb r0, 0xe4(r6)
 /* 800E8214 000E5154  4E 80 00 20 */	blr 
+lbl_800E8218:
 /* 800E8218 000E5158  3C C0 00 06 */	lis r6, 0x00060064@ha
 /* 800E821C 000E515C  38 C6 00 64 */	addi r6, r6, 0x00060064@l
 /* 800E8220 000E5160  7C 04 30 40 */	cmplw r4, r6
@@ -1658,6 +1680,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E822C 000E516C  7C 63 02 14 */	add r3, r3, r0
 /* 800E8230 000E5170  90 A3 00 F4 */	stw r5, 0xf4(r3)
 /* 800E8234 000E5174  4E 80 00 20 */	blr 
+lbl_800E8238:
 /* 800E8238 000E5178  3C C0 00 07 */	lis r6, 0x00070002@ha
 /* 800E823C 000E517C  38 C6 00 02 */	addi r6, r6, 0x00070002@l
 /* 800E8240 000E5180  7C 04 30 40 */	cmplw r4, r6
@@ -1676,6 +1699,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E8274 000E51B4  7C 60 03 78 */	or r0, r3, r0
 /* 800E8278 000E51B8  98 06 02 84 */	stb r0, 0x284(r6)
 /* 800E827C 000E51BC  4E 80 00 20 */	blr 
+lbl_800E8280:
 /* 800E8280 000E51C0  3C C0 00 08 */	lis r6, 0x00080001@ha
 /* 800E8284 000E51C4  38 C6 00 01 */	addi r6, r6, 0x00080001@l
 /* 800E8288 000E51C8  7C 04 30 40 */	cmplw r4, r6
@@ -1684,6 +1708,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E8294 000E51D4  7C 63 02 14 */	add r3, r3, r0
 /* 800E8298 000E51D8  90 A3 02 88 */	stw r5, 0x288(r3)
 /* 800E829C 000E51DC  4E 80 00 20 */	blr 
+lbl_800E82A0:
 /* 800E82A0 000E51E0  3C C0 00 09 */	lis r6, 0x00090001@ha
 /* 800E82A4 000E51E4  38 C6 00 01 */	addi r6, r6, 0x00090001@l
 /* 800E82A8 000E51E8  7C 04 30 40 */	cmplw r4, r6
@@ -1702,6 +1727,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E82DC 000E521C  7C 60 03 78 */	or r0, r3, r0
 /* 800E82E0 000E5220  98 06 02 8C */	stb r0, 0x28c(r6)
 /* 800E82E4 000E5224  4E 80 00 20 */	blr 
+lbl_800E82E8:
 /* 800E82E8 000E5228  3C C0 00 0A */	lis r6, 0x000A0002@ha
 /* 800E82EC 000E522C  38 C6 00 02 */	addi r6, r6, 0x000A0002@l
 /* 800E82F0 000E5230  7C 04 30 40 */	cmplw r4, r6
@@ -1709,6 +1735,7 @@ setFlag__12TFlagManagerFUll:
 /* 800E82F8 000E5238  54 00 10 3A */	slwi r0, r0, 2
 /* 800E82FC 000E523C  7C 63 02 14 */	add r3, r3, r0
 /* 800E8300 000E5240  90 A3 02 90 */	stw r5, 0x290(r3)
+lbl_800E8304:
 /* 800E8304 000E5244  4E 80 00 20 */	blr 
 
 .global getFlag__12TFlagManagerCFUl
@@ -1723,6 +1750,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E8324 000E5264  7C A6 28 2E */	lwzx r5, r6, r5
 /* 800E8328 000E5268  7C A9 03 A6 */	mtctr r5
 /* 800E832C 000E526C  4E 80 04 20 */	bctr 
+lbl_800E8330:
 /* 800E8330 000E5270  3C A0 00 01 */	lis r5, 0x000103B4@ha
 /* 800E8334 000E5274  38 A5 03 B4 */	addi r5, r5, 0x000103B4@l
 /* 800E8338 000E5278  7C 04 28 40 */	cmplw r4, r5
@@ -1733,6 +1761,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E834C 000E528C  7C 60 06 30 */	sraw r0, r3, r0
 /* 800E8350 000E5290  54 03 07 FE */	clrlwi r3, r0, 0x1f
 /* 800E8354 000E5294  4E 80 00 20 */	blr 
+lbl_800E8358:
 /* 800E8358 000E5298  3C A0 00 02 */	lis r5, 0x00020015@ha
 /* 800E835C 000E529C  38 A5 00 15 */	addi r5, r5, 0x00020015@l
 /* 800E8360 000E52A0  7C 04 28 40 */	cmplw r4, r5
@@ -1741,6 +1770,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E836C 000E52AC  7C 63 02 14 */	add r3, r3, r0
 /* 800E8370 000E52B0  80 63 00 78 */	lwz r3, 0x78(r3)
 /* 800E8374 000E52B4  4E 80 00 20 */	blr 
+lbl_800E8378:
 /* 800E8378 000E52B8  3C A0 00 03 */	lis r5, 0x0003001D@ha
 /* 800E837C 000E52BC  38 A5 00 1D */	addi r5, r5, 0x0003001D@l
 /* 800E8380 000E52C0  7C 04 28 40 */	cmplw r4, r5
@@ -1752,6 +1782,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E8398 000E52D8  7C 60 06 30 */	sraw r0, r3, r0
 /* 800E839C 000E52DC  54 03 07 FE */	clrlwi r3, r0, 0x1f
 /* 800E83A0 000E52E0  4E 80 00 20 */	blr 
+lbl_800E83A4:
 /* 800E83A4 000E52E4  3C A0 00 04 */	lis r5, 0x00040005@ha
 /* 800E83A8 000E52E8  38 A5 00 05 */	addi r5, r5, 0x00040005@l
 /* 800E83AC 000E52EC  7C 04 28 40 */	cmplw r4, r5
@@ -1760,6 +1791,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E83B8 000E52F8  7C 63 02 14 */	add r3, r3, r0
 /* 800E83BC 000E52FC  80 63 00 D0 */	lwz r3, 0xd0(r3)
 /* 800E83C0 000E5300  4E 80 00 20 */	blr 
+lbl_800E83C4:
 /* 800E83C4 000E5304  3C A0 00 05 */	lis r5, 0x00050064@ha
 /* 800E83C8 000E5308  38 A5 00 64 */	addi r5, r5, 0x00050064@l
 /* 800E83CC 000E530C  7C 04 28 40 */	cmplw r4, r5
@@ -1771,6 +1803,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E83E4 000E5324  7C 60 06 30 */	sraw r0, r3, r0
 /* 800E83E8 000E5328  54 03 07 FE */	clrlwi r3, r0, 0x1f
 /* 800E83EC 000E532C  4E 80 00 20 */	blr 
+lbl_800E83F0:
 /* 800E83F0 000E5330  3C A0 00 06 */	lis r5, 0x00060064@ha
 /* 800E83F4 000E5334  38 A5 00 64 */	addi r5, r5, 0x00060064@l
 /* 800E83F8 000E5338  7C 04 28 40 */	cmplw r4, r5
@@ -1779,6 +1812,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E8404 000E5344  7C 63 02 14 */	add r3, r3, r0
 /* 800E8408 000E5348  80 63 00 F4 */	lwz r3, 0xf4(r3)
 /* 800E840C 000E534C  4E 80 00 20 */	blr 
+lbl_800E8410:
 /* 800E8410 000E5350  3C A0 00 07 */	lis r5, 0x00070002@ha
 /* 800E8414 000E5354  38 A5 00 02 */	addi r5, r5, 0x00070002@l
 /* 800E8418 000E5358  7C 04 28 40 */	cmplw r4, r5
@@ -1790,6 +1824,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E8430 000E5370  7C 60 06 30 */	sraw r0, r3, r0
 /* 800E8434 000E5374  54 03 07 FE */	clrlwi r3, r0, 0x1f
 /* 800E8438 000E5378  4E 80 00 20 */	blr 
+lbl_800E843C:
 /* 800E843C 000E537C  3C A0 00 08 */	lis r5, 0x00080001@ha
 /* 800E8440 000E5380  38 A5 00 01 */	addi r5, r5, 0x00080001@l
 /* 800E8444 000E5384  7C 04 28 40 */	cmplw r4, r5
@@ -1798,6 +1833,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E8450 000E5390  7C 63 02 14 */	add r3, r3, r0
 /* 800E8454 000E5394  80 63 02 88 */	lwz r3, 0x288(r3)
 /* 800E8458 000E5398  4E 80 00 20 */	blr 
+lbl_800E845C:
 /* 800E845C 000E539C  3C A0 00 09 */	lis r5, 0x00090001@ha
 /* 800E8460 000E53A0  38 A5 00 01 */	addi r5, r5, 0x00090001@l
 /* 800E8464 000E53A4  7C 04 28 40 */	cmplw r4, r5
@@ -1809,6 +1845,7 @@ getFlag__12TFlagManagerCFUl:
 /* 800E847C 000E53BC  7C 60 06 30 */	sraw r0, r3, r0
 /* 800E8480 000E53C0  54 03 07 FE */	clrlwi r3, r0, 0x1f
 /* 800E8484 000E53C4  4E 80 00 20 */	blr 
+lbl_800E8488:
 /* 800E8488 000E53C8  3C A0 00 0A */	lis r5, 0x000A0002@ha
 /* 800E848C 000E53CC  38 A5 00 02 */	addi r5, r5, 0x000A0002@l
 /* 800E8490 000E53D0  7C 04 28 40 */	cmplw r4, r5
@@ -2248,15 +2285,64 @@ lbl_800E8AC8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$22031:
-	.incbin "baserom.dol", 0x3B0990, 0x2C
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7DD8
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7E00
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7E28
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7E50
+    .4byte lbl_800E7E9C
+    .4byte lbl_800E7E78
 $$22069:
-	.incbin "baserom.dol", 0x3B09BC, 0x2C
+    .4byte lbl_800E7FD0
+    .4byte lbl_800E7ED0
+    .4byte lbl_800E7FD0
+    .4byte lbl_800E7F04
+    .4byte lbl_800E7FD0
+    .4byte lbl_800E7F38
+    .4byte lbl_800E7FD0
+    .4byte lbl_800E7F6C
+    .4byte lbl_800E7FD0
+    .4byte lbl_800E7FA0
+    .4byte lbl_800E7FD0
 $$22087:
-	.incbin "baserom.dol", 0x3B09E8, 0x28
+    .4byte lbl_800E80C4
+    .4byte lbl_800E8010
+    .4byte lbl_800E80C4
+    .4byte lbl_800E8034
+    .4byte lbl_800E80C4
+    .4byte lbl_800E8058
+    .4byte lbl_800E80C4
+    .4byte lbl_800E807C
+    .4byte lbl_800E80C4
+    .4byte lbl_800E80A0
 $$22135:
-	.incbin "baserom.dol", 0x3B0A10, 0x2C
+    .4byte lbl_800E8304
+    .4byte lbl_800E8100
+    .4byte lbl_800E8148
+    .4byte lbl_800E8168
+    .4byte lbl_800E81B0
+    .4byte lbl_800E81D0
+    .4byte lbl_800E8218
+    .4byte lbl_800E8238
+    .4byte lbl_800E8280
+    .4byte lbl_800E82A0
+    .4byte lbl_800E82E8
 $$22168:
-	.incbin "baserom.dol", 0x3B0A3C, 0x2C
+    .4byte lbl_800E84A8
+    .4byte lbl_800E8330
+    .4byte lbl_800E8358
+    .4byte lbl_800E8378
+    .4byte lbl_800E83A4
+    .4byte lbl_800E83C4
+    .4byte lbl_800E83F0
+    .4byte lbl_800E8410
+    .4byte lbl_800E843C
+    .4byte lbl_800E845C
+    .4byte lbl_800E8488
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global smInstance__12TFlagManager

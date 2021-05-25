@@ -3086,13 +3086,132 @@ item_names$3004:
 	.incbin "baserom.dol", 0x3BD728, 0x18
 .global __vt__18TMapObjBaseManager
 __vt__18TMapObjBaseManager:
-	.incbin "baserom.dol", 0x3BD740, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMapObjBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TMapObjBaseManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TMapObjBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__18TMapObjBaseManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
 .global __vt__10TMerryPole
 __vt__10TMerryPole:
-	.incbin "baserom.dol", 0x3BD780, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TMerryPoleFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TMerryPoleFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TMerryPoleCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__11TMapObjBaseFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TMapObjBaseFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__11TMapObjBaseFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 .global __vt__14TMapObjManager
 __vt__14TMapObjManager:
-	.incbin "baserom.dol", 0x3BD8E4, 0x44
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMapObjManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMapObjManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__14TMapObjManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TMapObjBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__18TMapObjBaseManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__14TMapObjManagerCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23297:

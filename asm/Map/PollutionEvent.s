@@ -265,7 +265,16 @@ lbl_801F4444:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TPollutionTest
 __vt__14TPollutionTest:
-	.incbin "baserom.dol", 0x3CD8C8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TPollutionTestFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__14TPollutionTestFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__14TPollutionTestFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22727:

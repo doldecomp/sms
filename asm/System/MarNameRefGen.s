@@ -7052,40 +7052,130 @@ $$25832:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TMarNameRefGen
 __vt__14TMarNameRefGen:
-	.incbin "baserom.dol", 0x3B0D10, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__Q26JDrama11TNameRefGenFR20JSUMemoryInputStream
+  .4byte getNameRef__14TMarNameRefGenCFPCc
 .global __vt__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1
 __vt__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0D20, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__53TNameRefAryT$$018TStagePositionInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1
 __vt__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0D40, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__93TNameRefPtrAryT$$055TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1
 __vt__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0D60, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__55TNameRefAryT$$020TScenarioArchiveName$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1
 __vt__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0D80, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__54TNameRefPtrAryT$$016TCubeGeneralInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1
 __vt__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0DA0, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__49TNameRefAryT$$014TCameraMapTool$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1
 __vt__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3B0DC0, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__50TNameRefAryT$$015TStageEventInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__16TCubeManagerFast
 __vt__16TCubeManagerFast:
-	.incbin "baserom.dol", 0x3B0DE0, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TCubeManagerFastFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TCubeManagerBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TCubeManagerBaseFUlPQ26JDrama9TGraphics
 .global __vt__16TCubeManagerArea
 __vt__16TCubeManagerArea:
-	.incbin "baserom.dol", 0x3B0E04, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TCubeManagerAreaFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TCubeManagerBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TCubeManagerBaseFUlPQ26JDrama9TGraphics
 .global __vt__19TCubeManagerMarioIn
 __vt__19TCubeManagerMarioIn:
-	.incbin "baserom.dol", 0x3B0E28, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TCubeManagerMarioInFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TCubeManagerBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TCubeManagerBaseFUlPQ26JDrama9TGraphics
 .global __vt__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1
 __vt__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1:
-	.incbin "baserom.dol", 0x3B0E4C, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
+  .4byte searchF__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUsPCc
+  .4byte perform__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+  .4byte loadSuper__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte loadAfterSuper__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
 .global __vt__10TSmplFader
 __vt__10TSmplFader:
-	.incbin "baserom.dol", 0x3B0E78, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSmplFaderFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TSMSFaderFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TSMSFaderFUlPQ26JDrama9TGraphics
+  .4byte update__9TSMSFaderFv
+  .4byte draw__9TSMSFaderFRCQ26JDrama5TRect
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$24661:

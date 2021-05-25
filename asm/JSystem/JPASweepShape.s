@@ -118,4 +118,7 @@ lbl_80081280:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JPASweepShape
 __vt__13JPASweepShape:
-	.incbin "baserom.dol", 0x3A9CF0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JPASweepShapeFv
+  .4byte 0

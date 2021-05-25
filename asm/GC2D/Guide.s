@@ -181,6 +181,7 @@ lbl_8023982C:
 /* 80239850 00236790  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80239854 00236794  7C 09 03 A6 */	mtctr r0
 /* 80239858 00236798  4E 80 04 20 */	bctr 
+lbl_8023985C:
 /* 8023985C 0023679C  88 1D 00 C5 */	lbz r0, 0xc5(r29)
 /* 80239860 002367A0  28 00 00 00 */	cmplwi r0, 0
 /* 80239864 002367A4  41 82 00 34 */	beq lbl_80239898
@@ -227,6 +228,7 @@ lbl_80239898:
 /* 80239904 00236844  7D 88 03 A6 */	mtlr r12
 /* 80239908 00236848  4E 80 00 21 */	blrl 
 /* 8023990C 0023684C  48 00 04 50 */	b lbl_80239D5C
+lbl_80239910:
 /* 80239910 00236850  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 80239914 00236854  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 80239918 00236858  80 63 00 34 */	lwz r3, 0x34(r3)
@@ -246,9 +248,11 @@ lbl_80239898:
 /* 80239950 00236890  80 63 00 00 */	lwz r3, 0(r3)
 /* 80239954 00236894  98 03 00 CC */	stb r0, 0xcc(r3)
 /* 80239958 00236898  48 00 04 04 */	b lbl_80239D5C
+lbl_8023995C:
 /* 8023995C 0023689C  7F A3 EB 78 */	mr r3, r29
 /* 80239960 002368A0  48 00 13 11 */	bl linkSelect__6TGuideFv
 /* 80239964 002368A4  48 00 03 F8 */	b lbl_80239D5C
+lbl_80239968:
 /* 80239968 002368A8  80 7D 04 24 */	lwz r3, 0x424(r29)
 /* 8023996C 002368AC  4B FC 6E B5 */	bl update__7TExPaneFv
 /* 80239970 002368B0  7F 9C 18 38 */	and r28, r28, r3
@@ -272,6 +276,7 @@ lbl_8023997C:
 /* 802399B4 002368F4  38 00 00 02 */	li r0, 2
 /* 802399B8 002368F8  90 1D 00 10 */	stw r0, 0x10(r29)
 /* 802399BC 002368FC  48 00 03 A0 */	b lbl_80239D5C
+lbl_802399C0:
 /* 802399C0 00236900  80 7D 00 C0 */	lwz r3, 0xc0(r29)
 /* 802399C4 00236904  80 03 00 D4 */	lwz r0, 0xd4(r3)
 /* 802399C8 00236908  54 00 06 75 */	rlwinm. r0, r0, 0, 0x19, 0x1a
@@ -420,6 +425,7 @@ lbl_80239BF0:
 /* 80239BFC 00236B3C  38 00 00 07 */	li r0, 7
 /* 80239C00 00236B40  90 1D 00 10 */	stw r0, 0x10(r29)
 /* 80239C04 00236B44  48 00 01 58 */	b lbl_80239D5C
+lbl_80239C08:
 /* 80239C08 00236B48  80 7D 04 28 */	lwz r3, 0x428(r29)
 /* 80239C0C 00236B4C  4B FC 6C 15 */	bl update__7TExPaneFv
 /* 80239C10 00236B50  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -450,6 +456,7 @@ lbl_80239C2C:
 /* 80239C70 00236BB0  90 1D 00 10 */	stw r0, 0x10(r29)
 /* 80239C74 00236BB4  B0 1D 00 F0 */	sth r0, 0xf0(r29)
 /* 80239C78 00236BB8  48 00 00 E4 */	b lbl_80239D5C
+lbl_80239C7C:
 /* 80239C7C 00236BBC  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 80239C80 00236BC0  C0 22 D9 D4 */	lfs f1, $$22654@sda21(r2)
 /* 80239C84 00236BC4  38 63 60 00 */	addi r3, r3, gpApplication@l
@@ -475,6 +482,7 @@ lbl_80239CD0:
 /* 80239CD0 00236C10  38 00 00 0B */	li r0, 0xb
 /* 80239CD4 00236C14  90 1D 00 10 */	stw r0, 0x10(r29)
 /* 80239CD8 00236C18  48 00 00 84 */	b lbl_80239D5C
+lbl_80239CDC:
 /* 80239CDC 00236C1C  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 80239CE0 00236C20  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 80239CE4 00236C24  80 63 00 34 */	lwz r3, 0x34(r3)
@@ -4320,10 +4328,28 @@ scNormalStageTable:
 	.incbin "baserom.dol", 0x3CED30, 0x28
 .global __vt__6TGuide
 __vt__6TGuide:
-	.incbin "baserom.dol", 0x3CED58, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__6TGuideFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__6TGuideFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__6TGuideFUlPQ26JDrama9TGraphics
 $$22657:
-	.incbin "baserom.dol", 0x3CED7C, 0x34
-
+    .4byte lbl_8023995C
+    .4byte lbl_80239968
+    .4byte lbl_802399C0
+    .4byte lbl_80239C08
+    .4byte lbl_80239D5C
+    .4byte lbl_80239D5C
+    .4byte lbl_80239D5C
+    .4byte lbl_80239C7C
+    .4byte lbl_80239D5C
+    .4byte lbl_8023985C
+    .4byte lbl_80239910
+    .4byte lbl_80239CDC
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 scShineTableAirport:
 	.incbin "baserom.dol", 0x3E9670, 0x4

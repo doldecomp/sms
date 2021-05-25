@@ -1887,39 +1887,51 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF6C 0016BEAC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8016EF70 0016BEB0  7C 09 03 A6 */	mtctr r0
 /* 8016EF74 0016BEB4  4E 80 04 20 */	bctr 
+lbl_8016EF78:
 /* 8016EF78 0016BEB8  38 04 00 18 */	addi r0, r4, 0x18
 /* 8016EF7C 0016BEBC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF80 0016BEC0  48 00 00 90 */	b lbl_8016F010
+lbl_8016EF84:
 /* 8016EF84 0016BEC4  38 04 00 2C */	addi r0, r4, 0x2c
 /* 8016EF88 0016BEC8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF8C 0016BECC  48 00 00 84 */	b lbl_8016F010
+lbl_8016EF90:
 /* 8016EF90 0016BED0  38 04 00 40 */	addi r0, r4, 0x40
 /* 8016EF94 0016BED4  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF98 0016BED8  48 00 00 78 */	b lbl_8016F010
+lbl_8016EF9C:
 /* 8016EF9C 0016BEDC  38 04 00 54 */	addi r0, r4, 0x54
 /* 8016EFA0 0016BEE0  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFA4 0016BEE4  48 00 00 6C */	b lbl_8016F010
+lbl_8016EFA8:
 /* 8016EFA8 0016BEE8  38 04 00 68 */	addi r0, r4, 0x68
 /* 8016EFAC 0016BEEC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFB0 0016BEF0  48 00 00 60 */	b lbl_8016F010
+lbl_8016EFB4:
 /* 8016EFB4 0016BEF4  38 04 00 7C */	addi r0, r4, 0x7c
 /* 8016EFB8 0016BEF8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFBC 0016BEFC  48 00 00 54 */	b lbl_8016F010
+lbl_8016EFC0:
 /* 8016EFC0 0016BF00  38 04 00 90 */	addi r0, r4, 0x90
 /* 8016EFC4 0016BF04  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFC8 0016BF08  48 00 00 48 */	b lbl_8016F010
+lbl_8016EFCC:
 /* 8016EFCC 0016BF0C  38 04 00 A4 */	addi r0, r4, 0xa4
 /* 8016EFD0 0016BF10  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFD4 0016BF14  48 00 00 3C */	b lbl_8016F010
+lbl_8016EFD8:
 /* 8016EFD8 0016BF18  38 04 00 B8 */	addi r0, r4, 0xb8
 /* 8016EFDC 0016BF1C  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFE0 0016BF20  48 00 00 30 */	b lbl_8016F010
+lbl_8016EFE4:
 /* 8016EFE4 0016BF24  38 04 00 CC */	addi r0, r4, 0xcc
 /* 8016EFE8 0016BF28  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFEC 0016BF2C  48 00 00 24 */	b lbl_8016F010
+lbl_8016EFF0:
 /* 8016EFF0 0016BF30  38 04 00 E0 */	addi r0, r4, 0xe0
 /* 8016EFF4 0016BF34  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFF8 0016BF38  48 00 00 18 */	b lbl_8016F010
+lbl_8016EFFC:
 /* 8016EFFC 0016BF3C  38 04 00 F4 */	addi r0, r4, 0xf4
 /* 8016F000 0016BF40  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016F004 0016BF44  48 00 00 0C */	b lbl_8016F010
@@ -3214,113 +3226,846 @@ $$22475:
 	.incbin "baserom.dol", 0x37BF24, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__18TSunflowerSManager
 __vt__18TSunflowerSManager:
-	.incbin "baserom.dol", 0x3B5650, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TSunflowerSManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSunflowerSManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 $$22899:
-	.incbin "baserom.dol", 0x3B56A8, 0x38
+    .4byte lbl_8016EF78
+    .4byte lbl_8016EF84
+    .4byte lbl_8016EF90
+    .4byte lbl_8016EF9C
+    .4byte lbl_8016EFA8
+    .4byte lbl_8016EFB4
+    .4byte lbl_8016EFCC
+    .4byte lbl_8016EFD8
+    .4byte lbl_8016EFF0
+    .4byte lbl_8016EFE4
+    .4byte lbl_8016EFFC
+    .4byte lbl_8016F008
+    .4byte lbl_8016F008
+    .4byte lbl_8016EFC0
 .global __vt__17TMareWBaseManager
 __vt__17TMareWBaseManager:
-	.incbin "baserom.dol", 0x3B56E0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TMareWBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__17TMareMBaseManager
 __vt__17TMareMBaseManager:
-	.incbin "baserom.dol", 0x3B5738, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TMareMBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__15TMonteWBManager
 __vt__15TMonteWBManager:
-	.incbin "baserom.dol", 0x3B5790, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWBManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteWAManager
 __vt__15TMonteWAManager:
-	.incbin "baserom.dol", 0x3B57E8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWAManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMonteWManager
 __vt__14TMonteWManager:
-	.incbin "baserom.dol", 0x3B5840, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMonteWManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TMonteWManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMEManager
 __vt__15TMonteMEManager:
-	.incbin "baserom.dol", 0x3B5898, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMEManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMEManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMDManager
 __vt__15TMonteMDManager:
-	.incbin "baserom.dol", 0x3B58F0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMDManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMDManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMCManager
 __vt__15TMonteMCManager:
-	.incbin "baserom.dol", 0x3B5948, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMCManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMBManager
 __vt__15TMonteMBManager:
-	.incbin "baserom.dol", 0x3B59A0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMBManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMAManager
 __vt__15TMonteMAManager:
-	.incbin "baserom.dol", 0x3B59F8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMAManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMonteMManager
 __vt__14TMonteMManager:
-	.incbin "baserom.dol", 0x3B5A50, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMonteMManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TMonteMManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TSunflowerLManager
 __vt__18TSunflowerLManager:
-	.incbin "baserom.dol", 0x3B5AA8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TSunflowerLManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TSunflowerLManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSunflowerLManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TRaccoonDogManager
 __vt__18TRaccoonDogManager:
-	.incbin "baserom.dol", 0x3B5B00, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TRaccoonDogManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TRaccoonDogManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TRaccoonDogManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__13TPeachManager
 __vt__13TPeachManager:
-	.incbin "baserom.dol", 0x3B5B58, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TPeachManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TPeachManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__13TPeachManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TKinojiiManager
 __vt__15TKinojiiManager:
-	.incbin "baserom.dol", 0x3B5BB0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TKinojiiManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TKinojiiManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TKinojiiManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TKinopioManager
 __vt__15TKinopioManager:
-	.incbin "baserom.dol", 0x3B5C08, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TKinopioManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TKinopioManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TKinopioManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMareWBManager
 __vt__14TMareWBManager:
-	.incbin "baserom.dol", 0x3B5C60, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareWBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareWBManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareWAManager
 __vt__14TMareWAManager:
-	.incbin "baserom.dol", 0x3B5CB8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareWAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareWAManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMDManager
 __vt__14TMareMDManager:
-	.incbin "baserom.dol", 0x3B5D10, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMDManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMDManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMCManager
 __vt__14TMareMCManager:
-	.incbin "baserom.dol", 0x3B5D68, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMBManager
 __vt__14TMareMBManager:
-	.incbin "baserom.dol", 0x3B5DC0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMBManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMAManager
 __vt__14TMareMAManager:
-	.incbin "baserom.dol", 0x3B5E18, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMAManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__15TMonteWCManager
 __vt__15TMonteWCManager:
-	.incbin "baserom.dol", 0x3B5E70, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteWCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWCManagerFv
+  .4byte createAnmData__21TMonteWSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMHManager
 __vt__15TMonteMHManager:
-	.incbin "baserom.dol", 0x3B5EC8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMHManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMHManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMHManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMGManager
 __vt__15TMonteMGManager:
-	.incbin "baserom.dol", 0x3B5F20, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMGManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMGManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMGManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMFManager
 __vt__15TMonteMFManager:
-	.incbin "baserom.dol", 0x3B5F78, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMFManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMFManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMFManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMonteWSpecialManager
 __vt__21TMonteWSpecialManager:
-	.incbin "baserom.dol", 0x3B5FD0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMonteWSpecialManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__21TMonteWSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMonteMSpecialManager
 __vt__21TMonteMSpecialManager:
-	.incbin "baserom.dol", 0x3B6028, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMonteMSpecialManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TMonteWBaseManager
 __vt__18TMonteWBaseManager:
-	.incbin "baserom.dol", 0x3B6080, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMonteWBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TMonteMBaseManager
 __vt__18TMonteMBaseManager:
-	.incbin "baserom.dol", 0x3B60D8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMonteMBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__16TMareBaseManager
 __vt__16TMareBaseManager:
-	.incbin "baserom.dol", 0x3B6130, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TMareBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__11TNPCManager
 __vt__11TNPCManager:
-	.incbin "baserom.dol", 0x3B6188, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TNPCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMareJellyFishManager
 __vt__21TMareJellyFishManager:
-	.incbin "baserom.dol", 0x3B61E0, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMareJellyFishManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TObjManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__21TMareJellyFishManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__21TMareJellyFishManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
 .global __vt__16TBoardNpcManager
 __vt__16TBoardNpcManager:
-	.incbin "baserom.dol", 0x3B6210, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TBoardNpcManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TLiveManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__16TBoardNpcManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__16TBoardNpcManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cDummyPollutionTexName:

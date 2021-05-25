@@ -173,16 +173,22 @@ lbl_800EAC88:
 /* 800EACB8 000E7BF8  7C 04 00 2E */	lwzx r0, r4, r0
 /* 800EACBC 000E7BFC  7C 09 03 A6 */	mtctr r0
 /* 800EACC0 000E7C00  4E 80 04 20 */	bctr 
+lbl_800EACC4:
 /* 800EACC4 000E7C04  3B 80 00 00 */	li r28, 0
 /* 800EACC8 000E7C08  48 00 00 28 */	b lbl_800EACF0
+lbl_800EACCC:
 /* 800EACCC 000E7C0C  3B 80 00 01 */	li r28, 1
 /* 800EACD0 000E7C10  48 00 00 20 */	b lbl_800EACF0
+lbl_800EACD4:
 /* 800EACD4 000E7C14  3B 80 00 02 */	li r28, 2
 /* 800EACD8 000E7C18  48 00 00 18 */	b lbl_800EACF0
+lbl_800EACDC:
 /* 800EACDC 000E7C1C  3B 80 00 03 */	li r28, 3
 /* 800EACE0 000E7C20  48 00 00 10 */	b lbl_800EACF0
+lbl_800EACE4:
 /* 800EACE4 000E7C24  3B 80 00 04 */	li r28, 4
 /* 800EACE8 000E7C28  48 00 00 08 */	b lbl_800EACF0
+lbl_800EACEC:
 /* 800EACEC 000E7C2C  3B 80 00 05 */	li r28, 5
 lbl_800EACF0:
 /* 800EACF0 000E7C30  9B 9D 00 01 */	stb r28, 1(r29)
@@ -1008,6 +1014,7 @@ nextStateInitialize__12TMarDirectorFUc:
 /* 800EB84C 000E878C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800EB850 000E8790  7C 09 03 A6 */	mtctr r0
 /* 800EB854 000E8794  4E 80 04 20 */	bctr 
+lbl_800EB858:
 /* 800EB858 000E8798  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 800EB85C 000E879C  38 00 00 00 */	li r0, 0
 /* 800EB860 000E87A0  3B 9E 01 54 */	addi r28, r30, 0x154
@@ -1095,6 +1102,7 @@ lbl_800EB980:
 /* 800EB984 000E88C4  88 7D 00 00 */	lbz r3, 0(r29)
 /* 800EB988 000E88C8  48 02 46 79 */	bl startStageEntranceDemo__10MSMainProcFUcUc
 /* 800EB98C 000E88CC  48 00 04 A8 */	b lbl_800EBE34
+lbl_800EB990:
 /* 800EB990 000E88D0  38 00 00 00 */	li r0, 0
 /* 800EB994 000E88D4  90 1F 00 68 */	stw r0, 0x68(r31)
 /* 800EB998 000E88D8  A0 1F 00 50 */	lhz r0, 0x50(r31)
@@ -1109,6 +1117,7 @@ lbl_800EB980:
 /* 800EB9BC 000E88FC  60 00 00 01 */	ori r0, r0, 1
 /* 800EB9C0 000E8900  B0 1F 00 50 */	sth r0, 0x50(r31)
 /* 800EB9C4 000E8904  48 00 04 70 */	b lbl_800EBE34
+lbl_800EB9C8:
 /* 800EB9C8 000E8908  A0 1F 00 50 */	lhz r0, 0x50(r31)
 /* 800EB9CC 000E890C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 800EB9D0 000E8910  40 82 00 24 */	bne lbl_800EB9F4
@@ -1130,6 +1139,7 @@ lbl_800EB9F4:
 /* 800EBA0C 000E894C  7C 60 00 38 */	and r0, r3, r0
 /* 800EBA10 000E8950  B0 04 00 0C */	sth r0, 0xc(r4)
 /* 800EBA14 000E8954  48 00 04 20 */	b lbl_800EBE34
+lbl_800EBA18:
 /* 800EBA18 000E8958  88 1F 00 64 */	lbz r0, 0x64(r31)
 /* 800EBA1C 000E895C  28 00 00 03 */	cmplwi r0, 3
 /* 800EBA20 000E8960  41 81 00 24 */	bgt lbl_800EBA44
@@ -1176,6 +1186,7 @@ lbl_800EBAA8:
 /* 800EBAB4 000E89F4  60 00 00 02 */	ori r0, r0, 2
 /* 800EBAB8 000E89F8  B0 03 00 E2 */	sth r0, 0xe2(r3)
 /* 800EBABC 000E89FC  48 00 03 78 */	b lbl_800EBE34
+lbl_800EBAC0:
 /* 800EBAC0 000E8A00  88 1D 00 00 */	lbz r0, 0(r29)
 /* 800EBAC4 000E8A04  28 00 00 01 */	cmplwi r0, 1
 /* 800EBAC8 000E8A08  40 82 00 08 */	bne lbl_800EBAD0
@@ -1224,6 +1235,7 @@ lbl_800EBB50:
 /* 800EBB68 000E8AA8  3B 9C 00 04 */	addi r28, r28, 4
 /* 800EBB6C 000E8AAC  41 80 FF E4 */	blt lbl_800EBB50
 /* 800EBB70 000E8AB0  48 00 02 C4 */	b lbl_800EBE34
+lbl_800EBB74:
 /* 800EBB74 000E8AB4  88 1D 00 00 */	lbz r0, 0(r29)
 /* 800EBB78 000E8AB8  28 00 00 01 */	cmplwi r0, 1
 /* 800EBB7C 000E8ABC  40 82 00 08 */	bne lbl_800EBB84
@@ -1250,6 +1262,7 @@ lbl_800EBB9C:
 /* 800EBBC8 000E8B08  60 00 00 01 */	ori r0, r0, 1
 /* 800EBBCC 000E8B0C  B0 03 00 E2 */	sth r0, 0xe2(r3)
 /* 800EBBD0 000E8B10  48 00 02 64 */	b lbl_800EBE34
+lbl_800EBBD4:
 /* 800EBBD4 000E8B14  88 1D 00 00 */	lbz r0, 0(r29)
 /* 800EBBD8 000E8B18  28 00 00 01 */	cmplwi r0, 1
 /* 800EBBDC 000E8B1C  40 82 00 08 */	bne lbl_800EBBE4
@@ -1326,6 +1339,7 @@ lbl_800EBCC4:
 /* 800EBCEC 000E8C2C  80 7F 00 78 */	lwz r3, 0x78(r31)
 /* 800EBCF0 000E8C30  48 14 FB E1 */	bl startMoveCursor__6TGuideFv
 /* 800EBCF4 000E8C34  48 00 01 40 */	b lbl_800EBE34
+lbl_800EBCF8:
 /* 800EBCF8 000E8C38  88 1D 00 00 */	lbz r0, 0(r29)
 /* 800EBCFC 000E8C3C  28 00 00 01 */	cmplwi r0, 1
 /* 800EBD00 000E8C40  40 82 00 08 */	bne lbl_800EBD08
@@ -1354,6 +1368,7 @@ lbl_800EBD28:
 /* 800EBD54 000E8C94  60 00 00 01 */	ori r0, r0, 1
 /* 800EBD58 000E8C98  B0 03 00 E2 */	sth r0, 0xe2(r3)
 /* 800EBD5C 000E8C9C  48 00 00 D8 */	b lbl_800EBE34
+lbl_800EBD60:
 /* 800EBD60 000E8CA0  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 800EBD64 000E8CA4  80 63 00 74 */	lwz r3, 0x74(r3)
 /* 800EBD68 000E8CA8  80 63 00 94 */	lwz r3, 0x94(r3)
@@ -1644,6 +1659,7 @@ currentStateFinalize__12TMarDirectorFUc:
 /* 800EC158 000E9098  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800EC15C 000E909C  7C 09 03 A6 */	mtctr r0
 /* 800EC160 000E90A0  4E 80 04 20 */	bctr 
+lbl_800EC164:
 /* 800EC164 000E90A4  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EC168 000E90A8  38 7E 01 CC */	addi r3, r30, 0x1cc
 /* 800EC16C 000E90AC  83 A4 00 04 */	lwz r29, 4(r4)
@@ -1687,6 +1703,7 @@ currentStateFinalize__12TMarDirectorFUc:
 /* 800EC204 000E9144  40 82 01 E4 */	bne lbl_800EC3E8
 /* 800EC208 000E9148  4B FD 2D 1D */	bl THPPlayerPlay
 /* 800EC20C 000E914C  48 00 01 DC */	b lbl_800EC3E8
+lbl_800EC210:
 /* 800EC210 000E9150  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 800EC214 000E9154  80 63 00 00 */	lwz r3, 0(r3)
 /* 800EC218 000E9158  A0 03 00 E2 */	lhz r0, 0xe2(r3)
@@ -1703,6 +1720,7 @@ currentStateFinalize__12TMarDirectorFUc:
 /* 800EC244 000E9184  88 63 00 0E */	lbz r3, 0xe(r3)
 /* 800EC248 000E9188  48 02 3D 15 */	bl endStageEntranceDemo__10MSMainProcFUcUc
 /* 800EC24C 000E918C  48 00 01 9C */	b lbl_800EC3E8
+lbl_800EC250:
 /* 800EC250 000E9190  88 1F 01 24 */	lbz r0, 0x124(r31)
 /* 800EC254 000E9194  28 00 00 00 */	cmplwi r0, 0
 /* 800EC258 000E9198  40 82 00 0C */	bne lbl_800EC264
@@ -1715,6 +1733,7 @@ lbl_800EC264:
 /* 800EC270 000E91B0  54 00 07 FA */	rlwinm r0, r0, 0, 0x1f, 0x1d
 /* 800EC274 000E91B4  B0 03 00 E2 */	sth r0, 0xe2(r3)
 /* 800EC278 000E91B8  48 00 01 70 */	b lbl_800EC3E8
+lbl_800EC27C:
 /* 800EC27C 000E91BC  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 800EC280 000E91C0  80 63 00 00 */	lwz r3, 0(r3)
 /* 800EC284 000E91C4  A0 03 00 E2 */	lhz r0, 0xe2(r3)
@@ -1729,6 +1748,7 @@ lbl_800EC264:
 /* 800EC2A8 000E91E8  40 82 01 40 */	bne lbl_800EC3E8
 /* 800EC2AC 000E91EC  4B FD 2C 79 */	bl THPPlayerPlay
 /* 800EC2B0 000E91F0  48 00 01 38 */	b lbl_800EC3E8
+lbl_800EC2B4:
 /* 800EC2B4 000E91F4  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 800EC2B8 000E91F8  80 63 00 00 */	lwz r3, 0(r3)
 /* 800EC2BC 000E91FC  A0 03 00 E2 */	lhz r0, 0xe2(r3)
@@ -1775,6 +1795,7 @@ lbl_800EC264:
 /* 800EC360 000E92A0  40 82 00 88 */	bne lbl_800EC3E8
 /* 800EC364 000E92A4  4B FD 2B C1 */	bl THPPlayerPlay
 /* 800EC368 000E92A8  48 00 00 80 */	b lbl_800EC3E8
+lbl_800EC36C:
 /* 800EC36C 000E92AC  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 800EC370 000E92B0  80 63 00 00 */	lwz r3, 0(r3)
 /* 800EC374 000E92B4  A0 03 00 E2 */	lhz r0, 0xe2(r3)
@@ -1837,6 +1858,7 @@ changeState__12TMarDirectorFv:
 /* 800EC43C 000E937C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800EC440 000E9380  7C 09 03 A6 */	mtctr r0
 /* 800EC444 000E9384  4E 80 04 20 */	bctr 
+lbl_800EC448:
 /* 800EC448 000E9388  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 800EC44C 000E938C  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800EC450 000E9390  88 03 00 0E */	lbz r0, 0xe(r3)
@@ -1894,6 +1916,7 @@ lbl_800EC4E0:
 lbl_800EC508:
 /* 800EC508 000E9448  3B 80 00 04 */	li r28, 4
 /* 800EC50C 000E944C  48 00 05 B4 */	b lbl_800ECAC0
+lbl_800EC510:
 /* 800EC510 000E9450  A0 1F 00 4E */	lhz r0, 0x4e(r31)
 /* 800EC514 000E9454  54 00 07 7B */	rlwinm. r0, r0, 0, 0x1d, 0x1d
 /* 800EC518 000E9458  41 82 00 2C */	beq lbl_800EC544
@@ -1963,6 +1986,7 @@ lbl_800EC5D8:
 /* 800EC608 000E9548  54 00 07 76 */	rlwinm r0, r0, 0, 0x1d, 0x1b
 /* 800EC60C 000E954C  B0 1F 00 50 */	sth r0, 0x50(r31)
 /* 800EC610 000E9550  48 00 04 B0 */	b lbl_800ECAC0
+lbl_800EC614:
 /* 800EC614 000E9554  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 800EC618 000E9558  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800EC61C 000E955C  88 03 00 0E */	lbz r0, 0xe(r3)
@@ -1994,6 +2018,7 @@ lbl_800EC674:
 /* 800EC678 000E95B8  40 82 04 48 */	bne lbl_800ECAC0
 /* 800EC67C 000E95BC  3B 80 00 04 */	li r28, 4
 /* 800EC680 000E95C0  48 00 04 40 */	b lbl_800ECAC0
+lbl_800EC684:
 /* 800EC684 000E95C4  80 7F 00 E0 */	lwz r3, 0xe0(r31)
 /* 800EC688 000E95C8  88 03 00 26 */	lbz r0, 0x26(r3)
 /* 800EC68C 000E95CC  28 00 00 00 */	cmplwi r0, 0
@@ -2011,10 +2036,12 @@ lbl_800EC6B0:
 /* 800EC6B4 000E95F4  40 82 04 0C */	bne lbl_800ECAC0
 /* 800EC6B8 000E95F8  3B 80 00 04 */	li r28, 4
 /* 800EC6BC 000E95FC  48 00 04 04 */	b lbl_800ECAC0
+lbl_800EC6C0:
 /* 800EC6C0 000E9600  7F E3 FB 78 */	mr r3, r31
 /* 800EC6C4 000E9604  4B FF E8 AD */	bl updateGameMode__12TMarDirectorFv
 /* 800EC6C8 000E9608  7C 7C 1B 78 */	mr r28, r3
 /* 800EC6CC 000E960C  48 00 03 F4 */	b lbl_800ECAC0
+lbl_800EC6D0:
 /* 800EC6D0 000E9610  80 7F 00 AC */	lwz r3, 0xac(r31)
 /* 800EC6D4 000E9614  48 12 A4 D1 */	bl getNextState__11TPauseMenu2Fv
 /* 800EC6D8 000E9618  54 60 06 3E */	clrlwi r0, r3, 0x18
@@ -2089,6 +2116,7 @@ lbl_800EC794:
 /* 800EC7D0 000E9710  90 1F 00 E4 */	stw r0, 0xe4(r31)
 /* 800EC7D4 000E9714  3B 80 00 09 */	li r28, 9
 /* 800EC7D8 000E9718  48 00 02 E8 */	b lbl_800ECAC0
+lbl_800EC7DC:
 /* 800EC7DC 000E971C  80 7F 00 78 */	lwz r3, 0x78(r31)
 /* 800EC7E0 000E9720  88 03 00 C4 */	lbz r0, 0xc4(r3)
 /* 800EC7E4 000E9724  28 00 00 00 */	cmplwi r0, 0
@@ -2101,6 +2129,7 @@ lbl_800EC794:
 /* 800EC800 000E9740  40 82 02 C0 */	bne lbl_800ECAC0
 /* 800EC804 000E9744  3B 80 00 04 */	li r28, 4
 /* 800EC808 000E9748  48 00 02 B8 */	b lbl_800ECAC0
+lbl_800EC80C:
 /* 800EC80C 000E974C  80 7F 00 AC */	lwz r3, 0xac(r31)
 /* 800EC810 000E9750  80 63 01 18 */	lwz r3, 0x118(r3)
 /* 800EC814 000E9754  48 12 CB BD */	bl getNextState__9TCardSaveFv
@@ -2177,6 +2206,7 @@ lbl_800EC910:
 /* 800EC918 000E9858  3B 80 00 0C */	li r28, 0xc
 /* 800EC91C 000E985C  98 1F 00 B4 */	stb r0, 0xb4(r31)
 /* 800EC920 000E9860  48 00 01 A0 */	b lbl_800ECAC0
+lbl_800EC924:
 /* 800EC924 000E9864  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 800EC928 000E9868  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800EC92C 000E986C  3B A3 00 34 */	addi r29, r3, 0x34
@@ -2273,6 +2303,7 @@ lbl_800ECA30:
 /* 800ECA84 000E99C4  80 7F 00 74 */	lwz r3, 0x74(r31)
 /* 800ECA88 000E99C8  48 12 0E DD */	bl startDisappearCoin__11TGCConsole2Fv
 /* 800ECA8C 000E99CC  48 00 00 34 */	b lbl_800ECAC0
+lbl_800ECA90:
 /* 800ECA90 000E99D0  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 800ECA94 000E99D4  38 63 60 00 */	addi r3, r3, gpApplication@l
 /* 800ECA98 000E99D8  80 63 00 34 */	lwz r3, 0x34(r3)
@@ -3133,13 +3164,55 @@ $$24664:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$23623:
-	.incbin "baserom.dol", 0x3B0BB0, 0x20
+    .4byte lbl_800EACC4
+    .4byte lbl_800EACF0
+    .4byte lbl_800EACCC
+    .4byte lbl_800EACF0
+    .4byte lbl_800EACD4
+    .4byte lbl_800EACDC
+    .4byte lbl_800EACE4
+    .4byte lbl_800EACEC
 $$24168:
-	.incbin "baserom.dol", 0x3B0BD0, 0x34
+    .4byte lbl_800EBE34
+    .4byte lbl_800EB858
+    .4byte lbl_800EB9C8
+    .4byte lbl_800EB990
+    .4byte lbl_800EBA18
+    .4byte lbl_800EBB74
+    .4byte lbl_800EBE34
+    .4byte lbl_800EBD60
+    .4byte lbl_800EBE34
+    .4byte lbl_800EBAD0
+    .4byte lbl_800EBBD4
+    .4byte lbl_800EBCF8
+    .4byte lbl_800EBAC0
 $$24377:
-	.incbin "baserom.dol", 0x3B0C04, 0x30
+    .4byte lbl_800EC164
+    .4byte lbl_800EC210
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC250
+    .4byte lbl_800EC27C
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC3E8
+    .4byte lbl_800EC2B4
+    .4byte lbl_800EC36C
 $$24667:
-	.incbin "baserom.dol", 0x3B0C34, 0x34
+    .4byte lbl_800EC448
+    .4byte lbl_800EC510
+    .4byte lbl_800EC684
+    .4byte lbl_800EC614
+    .4byte lbl_800EC6C0
+    .4byte lbl_800EC6D0
+    .4byte lbl_800ECAC0
+    .4byte lbl_800EC924
+    .4byte lbl_800ECAC0
+    .4byte lbl_800ECA90
+    .4byte lbl_800EC7DC
+    .4byte lbl_800EC80C
+    .4byte lbl_800ECA90
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 stages$3022:

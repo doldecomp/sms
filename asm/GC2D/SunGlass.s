@@ -501,12 +501,31 @@ lbl_8023DB44:
 /* 8023DB68 0023AAA8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 16
 .global __vt__9TSunShine
 __vt__9TSunShine:
-	.incbin "baserom.dol", 0x3CEDB0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TSunShineFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TSunGlassFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__9TSunShineFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TSunShineFUlPQ26JDrama9TGraphics
+  .4byte draw__9TSunGlassFRCQ26JDrama5TRectQ28JUtility6TColor
 .global __vt__9TSunGlass
 __vt__9TSunGlass:
-	.incbin "baserom.dol", 0x3CEDD8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TSunGlassFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__9TSunGlassFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__9TSunGlassFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TSunGlassFUlPQ26JDrama9TGraphics
+  .4byte draw__9TSunGlassFRCQ26JDrama5TRectQ28JUtility6TColor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21842:

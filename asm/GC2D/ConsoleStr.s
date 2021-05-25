@@ -2954,7 +2954,16 @@ scScenarioNameTable:
 	.incbin "baserom.dol", 0x3CE898, 0x118
 .global __vt__11TConsoleStr
 __vt__11TConsoleStr:
-	.incbin "baserom.dol", 0x3CE9B0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TConsoleStrFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TConsoleStrFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TConsoleStrFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TConsoleStrFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 scShineTableAirport:

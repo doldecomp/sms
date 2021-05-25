@@ -1307,7 +1307,10 @@ JUTWarningConsole:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JUTConsole
 __vt__10JUTConsole:
-	.incbin "baserom.dol", 0x3A7010, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTConsoleFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21718:

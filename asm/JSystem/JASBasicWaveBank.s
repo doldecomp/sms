@@ -644,19 +644,43 @@ getType__Q28JASystem14TBasicWaveBankCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem11TWaveHandle
 __vt__Q28JASystem11TWaveHandle:
-	.incbin "baserom.dol", 0x3A7E08, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem11TWaveHandleFv
+  .4byte 0
+  .4byte 0
 .global __vt__Q38JASystem14TBasicWaveBank11TWaveHandle
 __vt__Q38JASystem14TBasicWaveBank11TWaveHandle:
-	.incbin "baserom.dol", 0x3A7E1C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q38JASystem14TBasicWaveBank11TWaveHandleFv
+  .4byte getWaveInfo__Q38JASystem14TBasicWaveBank11TWaveHandleCFv
+  .4byte getWavePtr__Q38JASystem14TBasicWaveBank11TWaveHandleCFv
 .global __vt__Q38JASystem14TBasicWaveBank10TWaveGroup
 __vt__Q38JASystem14TBasicWaveBank10TWaveGroup:
-	.incbin "baserom.dol", 0x3A7E30, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte getLoadFlagPtr__Q38JASystem14TBasicWaveBank10TWaveGroupFv
+  .4byte getWaveArcFileName__Q38JASystem14TBasicWaveBank10TWaveGroupCFv
+  .4byte getHeap__Q38JASystem14TBasicWaveBank10TWaveGroupFv
 .global __vt__Q38JASystem13WaveArcLoader7TObject
 __vt__Q38JASystem13WaveArcLoader7TObject:
-	.incbin "baserom.dol", 0x3A7E44, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__Q28JASystem14TBasicWaveBank
 __vt__Q28JASystem14TBasicWaveBank:
-	.incbin "baserom.dol", 0x3A7E58, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem14TBasicWaveBankFv
+  .4byte getWaveHandle__Q28JASystem14TBasicWaveBankCFUl
+  .4byte getType__Q28JASystem14TBasicWaveBankCFv
 .global __vt__Q28JASystem9TWaveBank
 __vt__Q28JASystem9TWaveBank:
-	.incbin "baserom.dol", 0x3A7E6C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem9TWaveBankFv
+  .4byte 0
+  .4byte 0

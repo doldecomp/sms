@@ -507,7 +507,16 @@ setLookat__14J2DGrafContextFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J2DGrafContext
 __vt__14J2DGrafContext:
-	.incbin "baserom.dol", 0x3A6B48, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14J2DGrafContextFv
+  .4byte place__14J2DGrafContextFRC7JUTRect
+  .4byte place__14J2DGrafContextFiiii
+  .4byte setPort__14J2DGrafContextFv
+  .4byte setup2D__14J2DGrafContextFv
+  .4byte setScissor__14J2DGrafContextFv
+  .4byte setLookat__14J2DGrafContextFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2166:

@@ -1840,25 +1840,74 @@ $$21210:
 	.incbin "baserom.dol", 0x3B0850, 0x10
 .global __vt__21TMarioParticleManager
 __vt__21TMarioParticleManager:
-	.incbin "baserom.dol", 0x3B0860, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMarioParticleManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__21TMarioParticleManagerFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__36TMarioEmitterCallBackBindToSRTMtxPtr
 __vt__36TMarioEmitterCallBackBindToSRTMtxPtr:
-	.incbin "baserom.dol", 0x3B08A8, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__36TMarioEmitterCallBackBindToSRTMtxPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__36TMarioEmitterCallBackBindToSRTMtxPtrFP14JPABaseEmitter
 .global __vt__33TMarioEmitterCallBackBindToMtxPtr
 __vt__33TMarioEmitterCallBackBindToMtxPtr:
-	.incbin "baserom.dol", 0x3B08BC, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__33TMarioEmitterCallBackBindToMtxPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__33TMarioEmitterCallBackBindToMtxPtrFP14JPABaseEmitter
 .global __vt__33TMarioEmitterCallBackBindToPosPtr
 __vt__33TMarioEmitterCallBackBindToPosPtr:
-	.incbin "baserom.dol", 0x3B08D0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__33TMarioEmitterCallBackBindToPosPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__33TMarioEmitterCallBackBindToPosPtrFP14JPABaseEmitter
 .global __vt__23TEmitterIndirectViewObj
 __vt__23TEmitterIndirectViewObj:
-	.incbin "baserom.dol", 0x3B08E4, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TEmitterIndirectViewObjFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__23TEmitterIndirectViewObjFUlPQ26JDrama9TGraphics
 .global __vt__15TEmitterViewObj
 __vt__15TEmitterViewObj:
-	.incbin "baserom.dol", 0x3B0908, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TEmitterViewObjFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TEmitterViewObjFUlPQ26JDrama9TGraphics
 .global __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1
 __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1:
-	.incbin "baserom.dol", 0x3B092C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22802:

@@ -22,30 +22,37 @@ lbl_80185DD0:
 /* 80185DF0 00182D30  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80185DF4 00182D34  7C 09 03 A6 */	mtctr r0
 /* 80185DF8 00182D38  4E 80 04 20 */	bctr 
+lbl_80185DFC:
 /* 80185DFC 00182D3C  C0 42 AC AC */	lfs f2, $$21953@sda21(r2)
 /* 80185E00 00182D40  C0 02 AC B0 */	lfs f0, $$21954@sda21(r2)
 /* 80185E04 00182D44  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 80185E08 00182D48  EC 62 00 24 */	fdivs f3, f2, f0
 /* 80185E0C 00182D4C  48 00 00 64 */	b lbl_80185E70
+lbl_80185E10:
 /* 80185E10 00182D50  C0 42 AC B4 */	lfs f2, $$21955@sda21(r2)
 /* 80185E14 00182D54  C0 02 AC B0 */	lfs f0, $$21954@sda21(r2)
 /* 80185E18 00182D58  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 80185E1C 00182D5C  EC 62 00 24 */	fdivs f3, f2, f0
 /* 80185E20 00182D60  48 00 00 50 */	b lbl_80185E70
+lbl_80185E24:
 /* 80185E24 00182D64  C0 02 AC B8 */	lfs f0, $$21956@sda21(r2)
 /* 80185E28 00182D68  EC 60 00 F2 */	fmuls f3, f0, f3
 /* 80185E2C 00182D6C  48 00 00 44 */	b lbl_80185E70
+lbl_80185E30:
 /* 80185E30 00182D70  C0 42 AC B0 */	lfs f2, $$21954@sda21(r2)
 /* 80185E34 00182D74  C0 02 AC BC */	lfs f0, $$21957@sda21(r2)
 /* 80185E38 00182D78  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 80185E3C 00182D7C  EC 62 00 32 */	fmuls f3, f2, f0
 /* 80185E40 00182D80  48 00 00 30 */	b lbl_80185E70
+lbl_80185E44:
 /* 80185E44 00182D84  C0 02 AC C0 */	lfs f0, $$21958@sda21(r2)
 /* 80185E48 00182D88  EC 63 00 32 */	fmuls f3, f3, f0
 /* 80185E4C 00182D8C  48 00 00 24 */	b lbl_80185E70
+lbl_80185E50:
 /* 80185E50 00182D90  C0 02 AC BC */	lfs f0, $$21957@sda21(r2)
 /* 80185E54 00182D94  EC 63 00 32 */	fmuls f3, f3, f0
 /* 80185E58 00182D98  48 00 00 18 */	b lbl_80185E70
+lbl_80185E5C:
 /* 80185E5C 00182D9C  3C 60 80 3C */	lis r3, smSeCategory__8MSHandle@ha
 /* 80185E60 00182DA0  38 63 A0 C4 */	addi r3, r3, smSeCategory__8MSHandle@l
 /* 80185E64 00182DA4  54 80 25 36 */	rlwinm r0, r4, 4, 0x14, 0x1b
@@ -836,9 +843,28 @@ smSeCategory__8MSHandle:
 	.incbin "baserom.dol", 0x3B70C4, 0x100
 .global __vt__8MSHandle
 __vt__8MSHandle:
-	.incbin "baserom.dol", 0x3B71C4, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte setSeDistanceParameters__8MSHandleFv
+  .4byte setSeDistanceVolume__8MSHandleFUc
+  .4byte setSeDistancePan__8MSHandleFUc
+  .4byte setSeDistancePitch__8MSHandleFUc
+  .4byte setSeDistanceFxmix__8JAISoundFUc
+  .4byte setSeDistanceFir__8JAISoundFUc
+  .4byte setSeDistanceDolby__8MSHandleFUc
+  .4byte setSePositionDopplar__8JAISoundFv
+  .4byte setPositionDopplarCommon__8JAISoundFUl
+  .4byte setDistanceVolumeCommon__8MSHandleFfUc
+  .4byte setDistancePanCommon__8JAISoundFv
 $$21960:
-	.incbin "baserom.dol", 0x3B71F8, 0x20
+    .4byte lbl_80185E70
+    .4byte lbl_80185DFC
+    .4byte lbl_80185E10
+    .4byte lbl_80185E24
+    .4byte lbl_80185E30
+    .4byte lbl_80185E44
+    .4byte lbl_80185E50
+    .4byte lbl_80185E5C
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cPan_MaxAmp__8MSHandle:

@@ -57,7 +57,14 @@ load__18TStagePositionInfoFR20JSUMemoryInputStream:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TStagePositionInfo
 __vt__18TStagePositionInfo:
-	.incbin "baserom.dol", 0x3B1148, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TStagePositionInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TStagePositionInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpPositionHolder

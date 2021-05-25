@@ -610,4 +610,21 @@ $$21644:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRMemArchive
 __vt__13JKRMemArchive:
-	.incbin "baserom.dol", 0x3A5648, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRMemArchiveFv
+  .4byte unmount__13JKRFileLoaderFv
+  .4byte becomeCurrent__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFUlPCc
+  .4byte readResource__10JKRArchiveFPvUlPCc
+  .4byte readResource__10JKRArchiveFPvUlUlPCc
+  .4byte removeResourceAll__13JKRMemArchiveFv
+  .4byte removeResource__13JKRMemArchiveFPv
+  .4byte detachResource__10JKRArchiveFPv
+  .4byte getResSize__10JKRArchiveCFPCv
+  .4byte countFile__10JKRArchiveCFPCc
+  .4byte getFirstFile__10JKRArchiveCFPCc
+  .4byte fetchResource__13JKRMemArchiveFPQ210JKRArchive12SDIFileEntryPUl
+  .4byte fetchResource__13JKRMemArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl
+  .4byte 0

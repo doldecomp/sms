@@ -480,7 +480,10 @@ $$22161:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TBathtubBinder
 __vt__14TBathtubBinder:
-	.incbin "baserom.dol", 0x3E0D80, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TBathtubBinderFv
+  .4byte bind__14TBathtubBinderFP10TLiveActor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21944:

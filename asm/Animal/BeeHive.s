@@ -3930,31 +3930,184 @@ $$25081:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TNerveBeeHiveReset
 __vt__18TNerveBeeHiveReset:
-	.incbin "baserom.dol", 0x3E2B40, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveBeeHiveResetFv
+  .4byte execute__18TNerveBeeHiveResetCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__25TNerveBeeHiveMarioWaterIn
 __vt__25TNerveBeeHiveMarioWaterIn:
-	.incbin "baserom.dol", 0x3E2B50, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25TNerveBeeHiveMarioWaterInFv
+  .4byte execute__25TNerveBeeHiveMarioWaterInCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__19TNerveBeeHiveAttack
 __vt__19TNerveBeeHiveAttack:
-	.incbin "baserom.dol", 0x3E2B60, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__19TNerveBeeHiveAttackFv
+  .4byte execute__19TNerveBeeHiveAttackCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveBeeHiveBreak
 __vt__18TNerveBeeHiveBreak:
-	.incbin "baserom.dol", 0x3E2B70, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveBeeHiveBreakFv
+  .4byte execute__18TNerveBeeHiveBreakCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveBeeHiveFall
 __vt__17TNerveBeeHiveFall:
-	.incbin "baserom.dol", 0x3E2B80, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveBeeHiveFallFv
+  .4byte execute__17TNerveBeeHiveFallCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveBeeHiveWait
 __vt__17TNerveBeeHiveWait:
-	.incbin "baserom.dol", 0x3E2B90, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveBeeHiveWaitFv
+  .4byte execute__17TNerveBeeHiveWaitCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__15TBeeHiveManager
 __vt__15TBeeHiveManager:
-	.incbin "baserom.dol", 0x3E2BA0, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TBeeHiveManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TBeeHiveManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TBeeHiveManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
 .global __vt__8TBeeHive
 __vt__8TBeeHive:
-	.incbin "baserom.dol", 0x3E2BF4, 0x118
+  .4byte 0
+  .4byte 0
+  .4byte __dt__8TBeeHiveFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__8TBeeHiveFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__8TBeeHiveFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__8TBeeHiveFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__8TBeeHiveFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__8TBeeHiveFP12TLiveManager
+  .4byte calcRootMatrix__8TBeeHiveFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__8TBeeHiveFv
+  .4byte bind__8TBeeHiveFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__8TBeeHiveFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte createRealoidActor__8TBeeHiveFP6MActor
 .global __vt__4TBee
 __vt__4TBee:
-	.incbin "baserom.dol", 0x3E2D0C, 0xBC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__4TBeeFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TRealoidActorFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__4TBeeFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__4TBeeFP9THitActorUl
+  .4byte getTakingMtx__13TRealoidActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte init__4TBeeFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23087:

@@ -1514,7 +1514,10 @@ $$21454:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13J3DSkinDeform
 __vt__13J3DSkinDeform:
-	.incbin "baserom.dol", 0x3A5E08, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte deform__13J3DSkinDeformFP8J3DModel
+  .4byte __dt__13J3DSkinDeformFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21084:

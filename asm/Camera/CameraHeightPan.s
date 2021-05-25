@@ -208,6 +208,7 @@ lbl_803562EC:
 /* 80356308 00353248  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8035630C 0035324C  7C 09 03 A6 */	mtctr r0
 /* 80356310 00353250  4E 80 04 20 */	bctr 
+lbl_80356314:
 /* 80356314 00353254  3B E0 00 01 */	li r31, 1
 lbl_80356318:
 /* 80356318 00353258  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -252,6 +253,7 @@ lbl_80356384:
 /* 803563A0 003532E0  7C 03 00 2E */	lwzx r0, r3, r0
 /* 803563A4 003532E4  7C 09 03 A6 */	mtctr r0
 /* 803563A8 003532E8  4E 80 04 20 */	bctr 
+lbl_803563AC:
 /* 803563AC 003532EC  3B E0 00 01 */	li r31, 1
 lbl_803563B0:
 /* 803563B0 003532F0  57 E0 06 3F */	clrlwi. r0, r31, 0x18
@@ -291,10 +293,123 @@ lbl_8035640C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$21767:
-	.incbin "baserom.dol", 0x3E1918, 0xE8
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
+    .4byte lbl_80356318
+    .4byte lbl_80356318
+    .4byte lbl_80356314
 $$21790:
-	.incbin "baserom.dol", 0x3E1A00, 0xE8
-
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
+    .4byte lbl_803563B0
+    .4byte lbl_803563B0
+    .4byte lbl_803563AC
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21704:
 	.incbin "baserom.dol", 0x3EC218, 0x8

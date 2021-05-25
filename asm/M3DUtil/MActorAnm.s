@@ -1734,25 +1734,88 @@ verifySuffix__12MActorAnmBckFPCc:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12MActorAnmBlk
 __vt__12MActorAnmBlk:
-	.incbin "baserom.dol", 0x3B06A0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__12MActorAnmBlkFv
+  .4byte updateOut__12MActorAnmBlkFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__12MActorAnmBlkFiPUs
+  .4byte setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBlkFPCc
 .global __vt__12MActorAnmBrk
 __vt__12MActorAnmBrk:
-	.incbin "baserom.dol", 0x3B06C8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__12MActorAnmBrkFv
+  .4byte updateOut__12MActorAnmBrkFv
+  .4byte checkUseMaterialIDInit__12MActorAnmBrkFPUs
+  .4byte checkUseMaterialID__12MActorAnmBrkFPUs
+  .4byte setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs
+  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBrkFPCc
 .global __vt__12MActorAnmBpk
 __vt__12MActorAnmBpk:
-	.incbin "baserom.dol", 0x3B06F0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__12MActorAnmBpkFv
+  .4byte updateOut__12MActorAnmBpkFv
+  .4byte checkUseMaterialIDInit__12MActorAnmBpkFPUs
+  .4byte checkUseMaterialID__12MActorAnmBpkFPUs
+  .4byte setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs
+  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBpkFPCc
 .global __vt__12MActorAnmBtk
 __vt__12MActorAnmBtk:
-	.incbin "baserom.dol", 0x3B0718, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__12MActorAnmBtkFv
+  .4byte updateOut__12MActorAnmBtkFv
+  .4byte checkUseMaterialIDInit__12MActorAnmBtkFPUs
+  .4byte checkUseMaterialID__12MActorAnmBtkFPUs
+  .4byte setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs
+  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBtkFPCc
 .global __vt__12MActorAnmBtp
 __vt__12MActorAnmBtp:
-	.incbin "baserom.dol", 0x3B0740, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__12MActorAnmBtpFv
+  .4byte updateOut__12MActorAnmBtpFv
+  .4byte checkUseMaterialIDInit__12MActorAnmBtpFPUs
+  .4byte checkUseMaterialID__12MActorAnmBtpFPUs
+  .4byte setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs
+  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBtpFPCc
 .global __vt__12MActorAnmBck
 __vt__12MActorAnmBck:
-	.incbin "baserom.dol", 0x3B0768, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__12MActorAnmBckFP8J3DModel
+  .4byte updateIn__12MActorAnmBckFv
+  .4byte updateOut__12MActorAnmBckFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__12MActorAnmBckFiPUs
+  .4byte setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs
+  .4byte verifySuffix__12MActorAnmBckFPCc
 .global __vt__13MActorAnmBase
 __vt__13MActorAnmBase:
-	.incbin "baserom.dol", 0x3B0790, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21875:

@@ -438,10 +438,17 @@ lbl_800802A0:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16JPAKeyFrameAnime
 __vt__16JPAKeyFrameAnime:
-	.incbin "baserom.dol", 0x3A9C00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16JPAKeyFrameAnimeFv
 .global __vt__16JPAEmitterLoader
 __vt__16JPAEmitterLoader:
-	.incbin "baserom.dol", 0x3A9C0C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16JPAEmitterLoaderFv
 .global __vt__20JPAEmitterLoader_v10
 __vt__20JPAEmitterLoader_v10:
-	.incbin "baserom.dol", 0x3A9C18, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20JPAEmitterLoader_v10Fv
+  .4byte 0

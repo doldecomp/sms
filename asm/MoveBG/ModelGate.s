@@ -474,21 +474,28 @@ lbl_801C302C:
 /* 801C309C 001BFFDC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 801C30A0 001BFFE0  7C 09 03 A6 */	mtctr r0
 /* 801C30A4 001BFFE4  4E 80 04 20 */	bctr 
+lbl_801C30A8:
 /* 801C30A8 001BFFE8  98 87 00 00 */	stb r4, 0(r7)
 /* 801C30AC 001BFFEC  98 A8 00 00 */	stb r5, 0(r8)
 /* 801C30B0 001BFFF0  48 00 00 40 */	b lbl_801C30F0
+lbl_801C30B4:
 /* 801C30B4 001BFFF4  38 00 00 08 */	li r0, 8
 /* 801C30B8 001BFFF8  98 09 00 00 */	stb r0, 0(r9)
 /* 801C30BC 001BFFFC  48 00 00 34 */	b lbl_801C30F0
+lbl_801C30C0:
 /* 801C30C0 001C0000  38 00 00 08 */	li r0, 8
 /* 801C30C4 001C0004  98 07 00 00 */	stb r0, 0(r7)
 /* 801C30C8 001C0008  48 00 00 28 */	b lbl_801C30F0
+lbl_801C30CC:
 /* 801C30CC 001C000C  98 8A 00 00 */	stb r4, 0(r10)
 /* 801C30D0 001C0010  48 00 00 20 */	b lbl_801C30F0
+lbl_801C30D4:
 /* 801C30D4 001C0014  98 AB 00 00 */	stb r5, 0(r11)
 /* 801C30D8 001C0018  48 00 00 18 */	b lbl_801C30F0
+lbl_801C30DC:
 /* 801C30DC 001C001C  98 8C 00 00 */	stb r4, 0(r12)
 /* 801C30E0 001C0020  48 00 00 10 */	b lbl_801C30F0
+lbl_801C30E4:
 /* 801C30E4 001C0024  98 A7 00 00 */	stb r5, 0(r7)
 /* 801C30E8 001C0028  98 98 00 00 */	stb r4, 0(r24)
 /* 801C30EC 001C002C  98 A8 00 00 */	stb r5, 0(r8)
@@ -1945,9 +1952,60 @@ gateNames$2573:
 	.incbin "baserom.dol", 0x3C8814, 0x18
 .global __vt__10TModelGate
 __vt__10TModelGate:
-	.incbin "baserom.dol", 0x3C882C, 0xB4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TModelGateFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__10TModelGateFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TModelGateFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TModelGateFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__10TModelGateFP9THitActorUl
+  .4byte getTakingMtx__10TModelGateFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
 $$23054:
-	.incbin "baserom.dol", 0x3C88E0, 0xD8
+    .4byte lbl_801C30F0
+    .4byte lbl_801C30A8
+    .4byte lbl_801C30B4
+    .4byte lbl_801C30C0
+    .4byte lbl_801C30CC
+    .4byte lbl_801C30D4
+    .4byte lbl_801C30DC
+    .4byte lbl_801C30E4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22574:

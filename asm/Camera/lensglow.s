@@ -616,7 +616,16 @@ $$21930:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TLensGlow
 __vt__9TLensGlow:
-	.incbin "baserom.dol", 0x3E1B38, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TLensGlowFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TLensGlowFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21859:

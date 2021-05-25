@@ -900,7 +900,18 @@ lbl_8001A070:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10J2DTextBox
 __vt__10J2DTextBox:
-	.incbin "baserom.dol", 0x3A5D48, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10J2DTextBoxFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__10J2DTextBoxFii
+  .4byte setConnectParent__10J2DTextBoxFb
+  .4byte drawSelf__10J2DTextBoxFii
+  .4byte drawSelf__10J2DTextBoxFiiPA3_A4_f
+  .4byte search__7J2DPaneFUl
+  .4byte makeMatrix__7J2DPaneFii
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2397:

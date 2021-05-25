@@ -401,7 +401,20 @@ $$22324:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TJointModel
 __vt__11TJointModel:
-	.incbin "baserom.dol", 0x3CCB80, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte initJointObj__9TJointObjFP8J3DJoint
+  .4byte alive__9TJointObjFv
+  .4byte awake__9TJointObjFv
+  .4byte stand__9TJointObjFv
+  .4byte kill__9TJointObjFv
+  .4byte sleep__9TJointObjFv
+  .4byte sit__9TJointObjFv
+  .4byte newJointObj__9TJointObjCFv
+  .4byte initJointModel__11TJointModelFP18TJointModelManagerPCcP13MActorAnmData
+  .4byte perform__11TJointModelFUlPQ26JDrama9TGraphics
+  .4byte getJ3DModelDataFlag__11TJointModelCFv
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22331:

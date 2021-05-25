@@ -1609,10 +1609,52 @@ $$22632:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TMareWManager
 __vt__13TMareWManager:
-	.incbin "baserom.dol", 0x3B1740, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMareWManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__13TMareMManager
 __vt__13TMareMManager:
-	.incbin "baserom.dol", 0x3B1798, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TMareMManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22575:

@@ -89,6 +89,7 @@ $$21576:
 	.incbin "baserom.dol", 0x3A4978, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global mCamShakeNameSave__12TCameraShake
 mCamShakeNameSave__12TCameraShake:
 	.incbin "baserom.dol", 0x3E2288, 0xA8

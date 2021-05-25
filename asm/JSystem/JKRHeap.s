@@ -844,7 +844,26 @@ $$2369:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7JKRHeap
 __vt__7JKRHeap:
-	.incbin "baserom.dol", 0x3A55F8, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7JKRHeapFv
+  .4byte 0
+  .4byte 0
+  .4byte freeAll__7JKRHeapFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte dump_sort__7JKRHeapFv
+  .4byte 0
+  .4byte changeGroupID__7JKRHeapFUc
+  .4byte getCurrentGroupId__7JKRHeapFv
+  .4byte state_register__7JKRHeapCFPQ27JKRHeap6TStateUl
+  .4byte state_compare__7JKRHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
+  .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2370:

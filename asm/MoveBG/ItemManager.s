@@ -771,7 +771,22 @@ $$22704:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TItemManager
 __vt__12TItemManager:
-	.incbin "baserom.dol", 0x3BEF20, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TItemManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TItemManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TItemManagerFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TItemManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TMapObjBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__18TMapObjBaseManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TItemManagerCFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22636:

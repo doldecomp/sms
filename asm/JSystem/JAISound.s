@@ -3260,7 +3260,20 @@ lbl_800579EC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8JAISound
 __vt__8JAISound:
-	.incbin "baserom.dol", 0x3A7D50, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte setSeDistanceParameters__8JAISoundFv
+  .4byte setSeDistanceVolume__8JAISoundFUc
+  .4byte setSeDistancePan__8JAISoundFUc
+  .4byte setSeDistancePitch__8JAISoundFUc
+  .4byte setSeDistanceFxmix__8JAISoundFUc
+  .4byte setSeDistanceFir__8JAISoundFUc
+  .4byte setSeDistanceDolby__8JAISoundFUc
+  .4byte setSePositionDopplar__8JAISoundFv
+  .4byte setPositionDopplarCommon__8JAISoundFUl
+  .4byte setDistanceVolumeCommon__8JAISoundFfUc
+  .4byte setDistancePanCommon__8JAISoundFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2412:

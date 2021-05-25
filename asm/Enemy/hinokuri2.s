@@ -6823,61 +6823,306 @@ hinokuri2_bastable:
 	.incbin "baserom.dol", 0x3D2830, 0x70
 .global __vt__18TNerveHino2WaitAnm
 __vt__18TNerveHino2WaitAnm:
-	.incbin "baserom.dol", 0x3D28A0, 0xDC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveHino2WaitAnmFv
+  .4byte execute__18TNerveHino2WaitAnmCFP24TSpineBase$$010TLiveActor$$1
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__17TNerveHino2Freeze
 __vt__17TNerveHino2Freeze:
-	.incbin "baserom.dol", 0x3D297C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveHino2FreezeFv
+  .4byte execute__17TNerveHino2FreezeCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveHino2Stamp
 __vt__16TNerveHino2Stamp:
-	.incbin "baserom.dol", 0x3D298C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveHino2StampFv
+  .4byte execute__16TNerveHino2StampCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__14TNerveHino2Die
 __vt__14TNerveHino2Die:
-	.incbin "baserom.dol", 0x3D299C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TNerveHino2DieFv
+  .4byte execute__14TNerveHino2DieCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveHino2Burst
 __vt__16TNerveHino2Burst:
-	.incbin "baserom.dol", 0x3D29AC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveHino2BurstFv
+  .4byte execute__16TNerveHino2BurstCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__16TNerveHino2Squat
 __vt__16TNerveHino2Squat:
-	.incbin "baserom.dol", 0x3D29BC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TNerveHino2SquatFv
+  .4byte execute__16TNerveHino2SquatCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveHino2Damage
 __vt__17TNerveHino2Damage:
-	.incbin "baserom.dol", 0x3D29CC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveHino2DamageFv
+  .4byte execute__17TNerveHino2DamageCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveHino2Pollute
 __vt__18TNerveHino2Pollute:
-	.incbin "baserom.dol", 0x3D29DC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveHino2PolluteFv
+  .4byte execute__18TNerveHino2PolluteCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveHino2PrePol
 __vt__17TNerveHino2PrePol:
-	.incbin "baserom.dol", 0x3D29EC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveHino2PrePolFv
+  .4byte execute__17TNerveHino2PrePolCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__15TNerveHino2Turn
 __vt__15TNerveHino2Turn:
-	.incbin "baserom.dol", 0x3D29FC, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TNerveHino2TurnFv
+  .4byte execute__15TNerveHino2TurnCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__18TNerveHino2Landing
 __vt__18TNerveHino2Landing:
-	.incbin "baserom.dol", 0x3D2A0C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TNerveHino2LandingFv
+  .4byte execute__18TNerveHino2LandingCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveHino2JumpIn
 __vt__17TNerveHino2JumpIn:
-	.incbin "baserom.dol", 0x3D2A1C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveHino2JumpInFv
+  .4byte execute__17TNerveHino2JumpInCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__14TNerveHino2Fly
 __vt__14TNerveHino2Fly:
-	.incbin "baserom.dol", 0x3D2A2C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TNerveHino2FlyFv
+  .4byte execute__14TNerveHino2FlyCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__22TNerveHino2GraphWander
 __vt__22TNerveHino2GraphWander:
-	.incbin "baserom.dol", 0x3D2A3C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TNerveHino2GraphWanderFv
+  .4byte execute__22TNerveHino2GraphWanderCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__17TNerveHino2Appear
 __vt__17TNerveHino2Appear:
-	.incbin "baserom.dol", 0x3D2A4C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TNerveHino2AppearFv
+  .4byte execute__17TNerveHino2AppearCFP24TSpineBase$$010TLiveActor$$1
 .global __vt__10THinokuri2
 __vt__10THinokuri2:
-	.incbin "baserom.dol", 0x3D2A5C, 0x114
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10THinokuri2Fv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSpineEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10THinokuri2FUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10THinokuri2Fv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__10THinokuri2FP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__10THinokuri2FP12TLiveManager
+  .4byte calcRootMatrix__11TSpineEnemyFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10THinokuri2Fv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10THinokuri2Fv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10THinokuri2Fv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__10THinokuri2Fv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
 .global __vt__9THino2Hit
 __vt__9THino2Hit:
-	.incbin "baserom.dol", 0x3D2B70, 0xA4
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9THino2HitFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__Q26JDrama6TActorFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9THino2HitFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__9THino2HitFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__9THino2HitFP9THitActorUl
 .global __vt__13THino2MtxCalc
 __vt__13THino2MtxCalc:
-	.incbin "baserom.dol", 0x3D2C14, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13THino2MtxCalcFv
+  .4byte init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
+  .4byte recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
+  .4byte calc__13THino2MtxCalcFUs
+  .4byte 0
+  .4byte 0
+  .4byte $$280$$2__dt__13THino2MtxCalcFv
+  .4byte $$280$$2calc__13THino2MtxCalcFUs
+  .4byte 0
+  .4byte 0
+  .4byte $$2124$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
+  .4byte $$2124$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2124$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2124$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
+  .4byte $$2124$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
+  .4byte $$2124$$24$$2calc__13THino2MtxCalcFUs
 .global __vt__17THinokuri2Manager
 __vt__17THinokuri2Manager:
-	.incbin "baserom.dol", 0x3D2C68, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17THinokuri2ManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__17THinokuri2ManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17THinokuri2ManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__17THinokuri2ManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mannameTable$3222:

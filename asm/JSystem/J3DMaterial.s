@@ -8274,58 +8274,530 @@ $$2329:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J3DPEBlockFull
 __vt__14J3DPEBlockFull:
-	.incbin "baserom.dol", 0x3A6058, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__14J3DPEBlockFullFP10J3DPEBlock
+  .4byte countDLSize__14J3DPEBlockFullFv
+  .4byte getType__14J3DPEBlockFullFv
+  .4byte setFog__14J3DPEBlockFullFP6J3DFog
+  .4byte replaceFog__14J3DPEBlockFullFP6J3DFog
+  .4byte getFog__14J3DPEBlockFullFv
+  .4byte setAlphaComp__14J3DPEBlockFullFPC12J3DAlphaComp
+  .4byte setAlphaComp__14J3DPEBlockFullF12J3DAlphaComp
+  .4byte getAlphaComp__14J3DPEBlockFullFv
+  .4byte setBlend__14J3DPEBlockFullFPC8J3DBlend
+  .4byte setBlend__14J3DPEBlockFullF8J3DBlend
+  .4byte getBlend__14J3DPEBlockFullFv
+  .4byte setZMode__14J3DPEBlockFullFPC8J3DZMode
+  .4byte setZMode__14J3DPEBlockFullF8J3DZMode
+  .4byte getZMode__14J3DPEBlockFullFv
+  .4byte setZCompLoc__14J3DPEBlockFullFPCUc
+  .4byte setZCompLoc__14J3DPEBlockFullFUc
+  .4byte getZCompLoc__14J3DPEBlockFullCFv
+  .4byte setDither__14J3DPEBlockFullFPCUc
+  .4byte setDither__14J3DPEBlockFullFUc
+  .4byte getDither__14J3DPEBlockFullCFv
+  .4byte __dt__14J3DPEBlockFullFv
+  .4byte load__14J3DPEBlockFullFv
 .global __vt__15J3DIndBlockFull
 __vt__15J3DIndBlockFull:
-	.incbin "baserom.dol", 0x3A60BC, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte reset__15J3DIndBlockFullFP11J3DIndBlock
+  .4byte countDLSize__15J3DIndBlockFullFv
+  .4byte getType__15J3DIndBlockFullFv
+  .4byte setIndTexStageNum__15J3DIndBlockFullFUc
+  .4byte getIndTexStageNum__15J3DIndBlockFullCFv
+  .4byte setIndTexOrder__15J3DIndBlockFullFUl14J3DIndTexOrder
+  .4byte setIndTexOrder__15J3DIndBlockFullFUlPC14J3DIndTexOrder
+  .4byte getIndTexOrder__15J3DIndBlockFullFUl
+  .4byte setIndTexMtx__15J3DIndBlockFullFUlPC12J3DIndTexMtx
+  .4byte setIndTexMtx__15J3DIndBlockFullFUl12J3DIndTexMtx
+  .4byte getIndTexMtx__15J3DIndBlockFullFUl
+  .4byte setIndTexCoordScale__15J3DIndBlockFullFUlPC19J3DIndTexCoordScale
+  .4byte setIndTexCoordScale__15J3DIndBlockFullFUl19J3DIndTexCoordScale
+  .4byte getIndTexCoordScale__15J3DIndBlockFullFUl
+  .4byte __dt__15J3DIndBlockFullFv
+  .4byte load__15J3DIndBlockFullFP11J3DTevBlock
 .global __vt__13J3DTevBlock16
 __vt__13J3DTevBlock16:
-	.incbin "baserom.dol", 0x3A6104, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte reset__13J3DTevBlock16FP11J3DTevBlock
+  .4byte getType__13J3DTevBlock16Fv
+  .4byte countDLSize__13J3DTevBlock16Fv
+  .4byte setTexNo__13J3DTevBlock16FUlPCUs
+  .4byte setTexNo__13J3DTevBlock16FUlUs
+  .4byte getTexNo__13J3DTevBlock16CFUl
+  .4byte setTevOrder__13J3DTevBlock16FUlPC11J3DTevOrder
+  .4byte setTevOrder__13J3DTevBlock16FUl11J3DTevOrder
+  .4byte getTevOrder__13J3DTevBlock16FUl
+  .4byte setTevColor__13J3DTevBlock16FUlPC13J3DGXColorS10
+  .4byte setTevColor__13J3DTevBlock16FUl13J3DGXColorS10
+  .4byte getTevColor__13J3DTevBlock16FUl
+  .4byte setTevKColor__13J3DTevBlock16FUlPC10J3DGXColor
+  .4byte setTevKColor__13J3DTevBlock16FUl10J3DGXColor
+  .4byte getTevKColor__13J3DTevBlock16FUl
+  .4byte setTevKColorSel__13J3DTevBlock16FUlPCUc
+  .4byte setTevKColorSel__13J3DTevBlock16FUlUc
+  .4byte getTevKColorSel__13J3DTevBlock16FUl
+  .4byte setTevKAlphaSel__13J3DTevBlock16FUlPCUc
+  .4byte setTevKAlphaSel__13J3DTevBlock16FUlUc
+  .4byte getTevKAlphaSel__13J3DTevBlock16FUl
+  .4byte setTevStageNum__13J3DTevBlock16FPCUc
+  .4byte setTevStageNum__13J3DTevBlock16FUc
+  .4byte getTevStageNum__13J3DTevBlock16CFv
+  .4byte setTevStage__13J3DTevBlock16FUlPC11J3DTevStage
+  .4byte setTevStage__13J3DTevBlock16FUl11J3DTevStage
+  .4byte getTevStage__13J3DTevBlock16FUl
+  .4byte setTevSwapModeInfo__13J3DTevBlock16FUlPC18J3DTevSwapModeInfo
+  .4byte setTevSwapModeInfo__13J3DTevBlock16FUl18J3DTevSwapModeInfo
+  .4byte setTevSwapModeTable__13J3DTevBlock16FUlPC19J3DTevSwapModeTable
+  .4byte setTevSwapModeTable__13J3DTevBlock16FUl19J3DTevSwapModeTable
+  .4byte getTevSwapModeTable__13J3DTevBlock16FUl
+  .4byte setIndTevStage__13J3DTevBlock16FUlPC14J3DIndTevStage
+  .4byte setIndTevStage__13J3DTevBlock16FUl14J3DIndTevStage
+  .4byte getIndTevStage__13J3DTevBlock16FUl
+  .4byte __dt__13J3DTevBlock16Fv
+  .4byte load__13J3DTevBlock16Fv
 .global __vt__12J3DTevBlock4
 __vt__12J3DTevBlock4:
-	.incbin "baserom.dol", 0x3A61A0, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte reset__12J3DTevBlock4FP11J3DTevBlock
+  .4byte getType__12J3DTevBlock4Fv
+  .4byte countDLSize__12J3DTevBlock4Fv
+  .4byte setTexNo__12J3DTevBlock4FUlPCUs
+  .4byte setTexNo__12J3DTevBlock4FUlUs
+  .4byte getTexNo__12J3DTevBlock4CFUl
+  .4byte setTevOrder__12J3DTevBlock4FUlPC11J3DTevOrder
+  .4byte setTevOrder__12J3DTevBlock4FUl11J3DTevOrder
+  .4byte getTevOrder__12J3DTevBlock4FUl
+  .4byte setTevColor__12J3DTevBlock4FUlPC13J3DGXColorS10
+  .4byte setTevColor__12J3DTevBlock4FUl13J3DGXColorS10
+  .4byte getTevColor__12J3DTevBlock4FUl
+  .4byte setTevKColor__12J3DTevBlock4FUlPC10J3DGXColor
+  .4byte setTevKColor__12J3DTevBlock4FUl10J3DGXColor
+  .4byte getTevKColor__12J3DTevBlock4FUl
+  .4byte setTevKColorSel__12J3DTevBlock4FUlPCUc
+  .4byte setTevKColorSel__12J3DTevBlock4FUlUc
+  .4byte getTevKColorSel__12J3DTevBlock4FUl
+  .4byte setTevKAlphaSel__12J3DTevBlock4FUlPCUc
+  .4byte setTevKAlphaSel__12J3DTevBlock4FUlUc
+  .4byte getTevKAlphaSel__12J3DTevBlock4FUl
+  .4byte setTevStageNum__12J3DTevBlock4FPCUc
+  .4byte setTevStageNum__12J3DTevBlock4FUc
+  .4byte getTevStageNum__12J3DTevBlock4CFv
+  .4byte setTevStage__12J3DTevBlock4FUlPC11J3DTevStage
+  .4byte setTevStage__12J3DTevBlock4FUl11J3DTevStage
+  .4byte getTevStage__12J3DTevBlock4FUl
+  .4byte setTevSwapModeInfo__12J3DTevBlock4FUlPC18J3DTevSwapModeInfo
+  .4byte setTevSwapModeInfo__12J3DTevBlock4FUl18J3DTevSwapModeInfo
+  .4byte setTevSwapModeTable__12J3DTevBlock4FUlPC19J3DTevSwapModeTable
+  .4byte setTevSwapModeTable__12J3DTevBlock4FUl19J3DTevSwapModeTable
+  .4byte getTevSwapModeTable__12J3DTevBlock4FUl
+  .4byte setIndTevStage__12J3DTevBlock4FUlPC14J3DIndTevStage
+  .4byte setIndTevStage__12J3DTevBlock4FUl14J3DIndTevStage
+  .4byte getIndTevStage__12J3DTevBlock4FUl
+  .4byte __dt__12J3DTevBlock4Fv
+  .4byte load__12J3DTevBlock4Fv
 .global __vt__12J3DTevBlock2
 __vt__12J3DTevBlock2:
-	.incbin "baserom.dol", 0x3A623C, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte reset__12J3DTevBlock2FP11J3DTevBlock
+  .4byte getType__12J3DTevBlock2Fv
+  .4byte countDLSize__12J3DTevBlock2Fv
+  .4byte setTexNo__12J3DTevBlock2FUlPCUs
+  .4byte setTexNo__12J3DTevBlock2FUlUs
+  .4byte getTexNo__12J3DTevBlock2CFUl
+  .4byte setTevOrder__12J3DTevBlock2FUlPC11J3DTevOrder
+  .4byte setTevOrder__12J3DTevBlock2FUl11J3DTevOrder
+  .4byte getTevOrder__12J3DTevBlock2FUl
+  .4byte setTevColor__12J3DTevBlock2FUlPC13J3DGXColorS10
+  .4byte setTevColor__12J3DTevBlock2FUl13J3DGXColorS10
+  .4byte getTevColor__12J3DTevBlock2FUl
+  .4byte setTevKColor__12J3DTevBlock2FUlPC10J3DGXColor
+  .4byte setTevKColor__12J3DTevBlock2FUl10J3DGXColor
+  .4byte getTevKColor__12J3DTevBlock2FUl
+  .4byte setTevKColorSel__12J3DTevBlock2FUlPCUc
+  .4byte setTevKColorSel__12J3DTevBlock2FUlUc
+  .4byte getTevKColorSel__12J3DTevBlock2FUl
+  .4byte setTevKAlphaSel__12J3DTevBlock2FUlPCUc
+  .4byte setTevKAlphaSel__12J3DTevBlock2FUlUc
+  .4byte getTevKAlphaSel__12J3DTevBlock2FUl
+  .4byte setTevStageNum__12J3DTevBlock2FPCUc
+  .4byte setTevStageNum__12J3DTevBlock2FUc
+  .4byte getTevStageNum__12J3DTevBlock2CFv
+  .4byte setTevStage__12J3DTevBlock2FUlPC11J3DTevStage
+  .4byte setTevStage__12J3DTevBlock2FUl11J3DTevStage
+  .4byte getTevStage__12J3DTevBlock2FUl
+  .4byte setTevSwapModeInfo__12J3DTevBlock2FUlPC18J3DTevSwapModeInfo
+  .4byte setTevSwapModeInfo__12J3DTevBlock2FUl18J3DTevSwapModeInfo
+  .4byte setTevSwapModeTable__12J3DTevBlock2FUlPC19J3DTevSwapModeTable
+  .4byte setTevSwapModeTable__12J3DTevBlock2FUl19J3DTevSwapModeTable
+  .4byte getTevSwapModeTable__12J3DTevBlock2FUl
+  .4byte setIndTevStage__12J3DTevBlock2FUlPC14J3DIndTevStage
+  .4byte setIndTevStage__12J3DTevBlock2FUl14J3DIndTevStage
+  .4byte getIndTevStage__12J3DTevBlock2FUl
+  .4byte __dt__12J3DTevBlock2Fv
+  .4byte load__12J3DTevBlock2Fv
 .global __vt__12J3DTevBlock1
 __vt__12J3DTevBlock1:
-	.incbin "baserom.dol", 0x3A62D8, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte reset__12J3DTevBlock1FP11J3DTevBlock
+  .4byte getType__12J3DTevBlock1Fv
+  .4byte countDLSize__12J3DTevBlock1Fv
+  .4byte setTexNo__12J3DTevBlock1FUlPCUs
+  .4byte setTexNo__12J3DTevBlock1FUlUs
+  .4byte getTexNo__12J3DTevBlock1CFUl
+  .4byte setTevOrder__12J3DTevBlock1FUlPC11J3DTevOrder
+  .4byte setTevOrder__12J3DTevBlock1FUl11J3DTevOrder
+  .4byte getTevOrder__12J3DTevBlock1FUl
+  .4byte setTevColor__12J3DTevBlock1FUlPC13J3DGXColorS10
+  .4byte setTevColor__12J3DTevBlock1FUl13J3DGXColorS10
+  .4byte getTevColor__12J3DTevBlock1FUl
+  .4byte setTevKColor__12J3DTevBlock1FUlPC10J3DGXColor
+  .4byte setTevKColor__12J3DTevBlock1FUl10J3DGXColor
+  .4byte getTevKColor__12J3DTevBlock1FUl
+  .4byte setTevKColorSel__12J3DTevBlock1FUlPCUc
+  .4byte setTevKColorSel__12J3DTevBlock1FUlUc
+  .4byte getTevKColorSel__12J3DTevBlock1FUl
+  .4byte setTevKAlphaSel__12J3DTevBlock1FUlPCUc
+  .4byte setTevKAlphaSel__12J3DTevBlock1FUlUc
+  .4byte getTevKAlphaSel__12J3DTevBlock1FUl
+  .4byte setTevStageNum__12J3DTevBlock1FPCUc
+  .4byte setTevStageNum__12J3DTevBlock1FUc
+  .4byte getTevStageNum__12J3DTevBlock1CFv
+  .4byte setTevStage__12J3DTevBlock1FUlPC11J3DTevStage
+  .4byte setTevStage__12J3DTevBlock1FUl11J3DTevStage
+  .4byte getTevStage__12J3DTevBlock1FUl
+  .4byte setTevSwapModeInfo__12J3DTevBlock1FUlPC18J3DTevSwapModeInfo
+  .4byte setTevSwapModeInfo__12J3DTevBlock1FUl18J3DTevSwapModeInfo
+  .4byte setTevSwapModeTable__12J3DTevBlock1FUlPC19J3DTevSwapModeTable
+  .4byte setTevSwapModeTable__12J3DTevBlock1FUl19J3DTevSwapModeTable
+  .4byte getTevSwapModeTable__12J3DTevBlock1FUl
+  .4byte setIndTevStage__12J3DTevBlock1FUlPC14J3DIndTevStage
+  .4byte setIndTevStage__12J3DTevBlock1FUl14J3DIndTevStage
+  .4byte getIndTevStage__12J3DTevBlock1FUl
+  .4byte __dt__12J3DTevBlock1Fv
+  .4byte load__12J3DTevBlock1Fv
 .global __vt__19J3DTexGenBlockBasic
 __vt__19J3DTexGenBlockBasic:
-	.incbin "baserom.dol", 0x3A6374, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte reset__19J3DTexGenBlockBasicFP14J3DTexGenBlock
+  .4byte calc__19J3DTexGenBlockBasicFPA4_f
+  .4byte countDLSize__19J3DTexGenBlockBasicFv
+  .4byte getType__19J3DTexGenBlockBasicFv
+  .4byte setTexGenNum__19J3DTexGenBlockBasicFPCUl
+  .4byte setTexGenNum__19J3DTexGenBlockBasicFUl
+  .4byte getTexGenNum__19J3DTexGenBlockBasicCFv
+  .4byte setTexCoord__19J3DTexGenBlockBasicFUlPC11J3DTexCoord
+  .4byte getTexCoord__19J3DTexGenBlockBasicFUl
+  .4byte setTexMtx__19J3DTexGenBlockBasicFUlP9J3DTexMtx
+  .4byte replaceTexMtx__19J3DTexGenBlockBasicFUlP9J3DTexMtx
+  .4byte getTexMtx__19J3DTexGenBlockBasicFUl
+  .4byte setNBTScale__19J3DTexGenBlockBasicFPC11J3DNBTScale
+  .4byte setNBTScale__19J3DTexGenBlockBasicF11J3DNBTScale
+  .4byte getNBTScale__19J3DTexGenBlockBasicFv
+  .4byte __dt__19J3DTexGenBlockBasicFv
+  .4byte load__19J3DTexGenBlockBasicFv
+  .4byte patch__19J3DTexGenBlockBasicFv
 .global __vt__20J3DColorBlockLightOn
 __vt__20J3DColorBlockLightOn:
-	.incbin "baserom.dol", 0x3A63C4, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__20J3DColorBlockLightOnFP13J3DColorBlock
+  .4byte countDLSize__20J3DColorBlockLightOnFv
+  .4byte getType__20J3DColorBlockLightOnFv
+  .4byte setMatColor__20J3DColorBlockLightOnFUlPC10J3DGXColor
+  .4byte setMatColor__20J3DColorBlockLightOnFUl10J3DGXColor
+  .4byte getMatColor__20J3DColorBlockLightOnFUl
+  .4byte setAmbColor__20J3DColorBlockLightOnFUlPC10J3DGXColor
+  .4byte setAmbColor__20J3DColorBlockLightOnFUl10J3DGXColor
+  .4byte getAmbColor__20J3DColorBlockLightOnFUl
+  .4byte setColorChanNum__20J3DColorBlockLightOnFUc
+  .4byte setColorChanNum__20J3DColorBlockLightOnFPCUc
+  .4byte getColorChanNum__20J3DColorBlockLightOnCFv
+  .4byte setColorChan__20J3DColorBlockLightOnFUlRC12J3DColorChan
+  .4byte setColorChan__20J3DColorBlockLightOnFUlPC12J3DColorChan
+  .4byte getColorChan__20J3DColorBlockLightOnFUl
+  .4byte setLight__20J3DColorBlockLightOnFUlP11J3DLightObj
+  .4byte replaceLight__20J3DColorBlockLightOnFUlP11J3DLightObj
+  .4byte getLight__20J3DColorBlockLightOnFUl
+  .4byte setCullMode__20J3DColorBlockLightOnFPCUc
+  .4byte setCullMode__20J3DColorBlockLightOnFUc
+  .4byte getCullMode__20J3DColorBlockLightOnCFv
+  .4byte __dt__20J3DColorBlockLightOnFv
+  .4byte load__20J3DColorBlockLightOnFv
 .global __vt__21J3DColorBlockLightOff
 __vt__21J3DColorBlockLightOff:
-	.incbin "baserom.dol", 0x3A6428, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__21J3DColorBlockLightOffFP13J3DColorBlock
+  .4byte countDLSize__21J3DColorBlockLightOffFv
+  .4byte getType__21J3DColorBlockLightOffFv
+  .4byte setMatColor__21J3DColorBlockLightOffFUlPC10J3DGXColor
+  .4byte setMatColor__21J3DColorBlockLightOffFUl10J3DGXColor
+  .4byte getMatColor__21J3DColorBlockLightOffFUl
+  .4byte setAmbColor__21J3DColorBlockLightOffFUlPC10J3DGXColor
+  .4byte setAmbColor__21J3DColorBlockLightOffFUl10J3DGXColor
+  .4byte getAmbColor__21J3DColorBlockLightOffFUl
+  .4byte setColorChanNum__21J3DColorBlockLightOffFUc
+  .4byte setColorChanNum__21J3DColorBlockLightOffFPCUc
+  .4byte getColorChanNum__21J3DColorBlockLightOffCFv
+  .4byte setColorChan__21J3DColorBlockLightOffFUlRC12J3DColorChan
+  .4byte setColorChan__21J3DColorBlockLightOffFUlPC12J3DColorChan
+  .4byte getColorChan__21J3DColorBlockLightOffFUl
+  .4byte setLight__21J3DColorBlockLightOffFUlP11J3DLightObj
+  .4byte replaceLight__21J3DColorBlockLightOffFUlP11J3DLightObj
+  .4byte getLight__21J3DColorBlockLightOffFUl
+  .4byte setCullMode__21J3DColorBlockLightOffFPCUc
+  .4byte setCullMode__21J3DColorBlockLightOffFUc
+  .4byte getCullMode__21J3DColorBlockLightOffCFv
+  .4byte __dt__21J3DColorBlockLightOffFv
+  .4byte load__21J3DColorBlockLightOffFv
 .global __vt__13J3DPEBlockXlu
 __vt__13J3DPEBlockXlu:
-	.incbin "baserom.dol", 0x3A648C, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__10J3DPEBlockFP10J3DPEBlock
+  .4byte countDLSize__13J3DPEBlockXluFv
+  .4byte getType__13J3DPEBlockXluFv
+  .4byte setFog__10J3DPEBlockFP6J3DFog
+  .4byte replaceFog__10J3DPEBlockFP6J3DFog
+  .4byte getFog__10J3DPEBlockFv
+  .4byte setAlphaComp__10J3DPEBlockFPC12J3DAlphaComp
+  .4byte setAlphaComp__10J3DPEBlockF12J3DAlphaComp
+  .4byte getAlphaComp__10J3DPEBlockFv
+  .4byte setBlend__10J3DPEBlockFPC8J3DBlend
+  .4byte setBlend__10J3DPEBlockF8J3DBlend
+  .4byte getBlend__10J3DPEBlockFv
+  .4byte setZMode__10J3DPEBlockFPC8J3DZMode
+  .4byte setZMode__10J3DPEBlockF8J3DZMode
+  .4byte getZMode__10J3DPEBlockFv
+  .4byte setZCompLoc__10J3DPEBlockFPCUc
+  .4byte setZCompLoc__10J3DPEBlockFUc
+  .4byte getZCompLoc__10J3DPEBlockCFv
+  .4byte setDither__10J3DPEBlockFPCUc
+  .4byte setDither__10J3DPEBlockFUc
+  .4byte getDither__10J3DPEBlockCFv
+  .4byte __dt__13J3DPEBlockXluFv
+  .4byte load__13J3DPEBlockXluFv
 .global __vt__17J3DPEBlockTexEdge
 __vt__17J3DPEBlockTexEdge:
-	.incbin "baserom.dol", 0x3A64F0, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__10J3DPEBlockFP10J3DPEBlock
+  .4byte countDLSize__17J3DPEBlockTexEdgeFv
+  .4byte getType__17J3DPEBlockTexEdgeFv
+  .4byte setFog__10J3DPEBlockFP6J3DFog
+  .4byte replaceFog__10J3DPEBlockFP6J3DFog
+  .4byte getFog__10J3DPEBlockFv
+  .4byte setAlphaComp__10J3DPEBlockFPC12J3DAlphaComp
+  .4byte setAlphaComp__10J3DPEBlockF12J3DAlphaComp
+  .4byte getAlphaComp__10J3DPEBlockFv
+  .4byte setBlend__10J3DPEBlockFPC8J3DBlend
+  .4byte setBlend__10J3DPEBlockF8J3DBlend
+  .4byte getBlend__10J3DPEBlockFv
+  .4byte setZMode__10J3DPEBlockFPC8J3DZMode
+  .4byte setZMode__10J3DPEBlockF8J3DZMode
+  .4byte getZMode__10J3DPEBlockFv
+  .4byte setZCompLoc__10J3DPEBlockFPCUc
+  .4byte setZCompLoc__10J3DPEBlockFUc
+  .4byte getZCompLoc__10J3DPEBlockCFv
+  .4byte setDither__10J3DPEBlockFPCUc
+  .4byte setDither__10J3DPEBlockFUc
+  .4byte getDither__10J3DPEBlockCFv
+  .4byte __dt__17J3DPEBlockTexEdgeFv
+  .4byte load__17J3DPEBlockTexEdgeFv
 .global __vt__13J3DPEBlockOpa
 __vt__13J3DPEBlockOpa:
-	.incbin "baserom.dol", 0x3A6554, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__10J3DPEBlockFP10J3DPEBlock
+  .4byte countDLSize__13J3DPEBlockOpaFv
+  .4byte getType__13J3DPEBlockOpaFv
+  .4byte setFog__10J3DPEBlockFP6J3DFog
+  .4byte replaceFog__10J3DPEBlockFP6J3DFog
+  .4byte getFog__10J3DPEBlockFv
+  .4byte setAlphaComp__10J3DPEBlockFPC12J3DAlphaComp
+  .4byte setAlphaComp__10J3DPEBlockF12J3DAlphaComp
+  .4byte getAlphaComp__10J3DPEBlockFv
+  .4byte setBlend__10J3DPEBlockFPC8J3DBlend
+  .4byte setBlend__10J3DPEBlockF8J3DBlend
+  .4byte getBlend__10J3DPEBlockFv
+  .4byte setZMode__10J3DPEBlockFPC8J3DZMode
+  .4byte setZMode__10J3DPEBlockF8J3DZMode
+  .4byte getZMode__10J3DPEBlockFv
+  .4byte setZCompLoc__10J3DPEBlockFPCUc
+  .4byte setZCompLoc__10J3DPEBlockFUc
+  .4byte getZCompLoc__10J3DPEBlockCFv
+  .4byte setDither__10J3DPEBlockFPCUc
+  .4byte setDither__10J3DPEBlockFUc
+  .4byte getDither__10J3DPEBlockCFv
+  .4byte __dt__13J3DPEBlockOpaFv
+  .4byte load__13J3DPEBlockOpaFv
 .global __vt__10J3DPEBlock
 __vt__10J3DPEBlock:
-	.incbin "baserom.dol", 0x3A65B8, 0x64
+  .4byte 0
+  .4byte 0
+  .4byte reset__10J3DPEBlockFP10J3DPEBlock
+  .4byte 0
+  .4byte 0
+  .4byte setFog__10J3DPEBlockFP6J3DFog
+  .4byte replaceFog__10J3DPEBlockFP6J3DFog
+  .4byte getFog__10J3DPEBlockFv
+  .4byte setAlphaComp__10J3DPEBlockFPC12J3DAlphaComp
+  .4byte setAlphaComp__10J3DPEBlockF12J3DAlphaComp
+  .4byte getAlphaComp__10J3DPEBlockFv
+  .4byte setBlend__10J3DPEBlockFPC8J3DBlend
+  .4byte setBlend__10J3DPEBlockF8J3DBlend
+  .4byte getBlend__10J3DPEBlockFv
+  .4byte setZMode__10J3DPEBlockFPC8J3DZMode
+  .4byte setZMode__10J3DPEBlockF8J3DZMode
+  .4byte getZMode__10J3DPEBlockFv
+  .4byte setZCompLoc__10J3DPEBlockFPCUc
+  .4byte setZCompLoc__10J3DPEBlockFUc
+  .4byte getZCompLoc__10J3DPEBlockCFv
+  .4byte setDither__10J3DPEBlockFPCUc
+  .4byte setDither__10J3DPEBlockFUc
+  .4byte getDither__10J3DPEBlockCFv
+  .4byte __dt__10J3DPEBlockFv
+  .4byte 0
 .global __vt__15J3DIndBlockNull
 __vt__15J3DIndBlockNull:
-	.incbin "baserom.dol", 0x3A661C, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte reset__15J3DIndBlockNullFP11J3DIndBlock
+  .4byte countDLSize__15J3DIndBlockNullFv
+  .4byte getType__15J3DIndBlockNullFv
+  .4byte setIndTexStageNum__15J3DIndBlockNullFUc
+  .4byte getIndTexStageNum__15J3DIndBlockNullCFv
+  .4byte setIndTexOrder__15J3DIndBlockNullFUl14J3DIndTexOrder
+  .4byte setIndTexOrder__15J3DIndBlockNullFUlPC14J3DIndTexOrder
+  .4byte getIndTexOrder__15J3DIndBlockNullFUl
+  .4byte setIndTexMtx__15J3DIndBlockNullFUlPC12J3DIndTexMtx
+  .4byte setIndTexMtx__15J3DIndBlockNullFUl12J3DIndTexMtx
+  .4byte getIndTexMtx__15J3DIndBlockNullFUl
+  .4byte setIndTexCoordScale__15J3DIndBlockNullFUlPC19J3DIndTexCoordScale
+  .4byte setIndTexCoordScale__15J3DIndBlockNullFUl19J3DIndTexCoordScale
+  .4byte getIndTexCoordScale__15J3DIndBlockNullFUl
+  .4byte __dt__15J3DIndBlockNullFv
+  .4byte load__15J3DIndBlockNullFP11J3DTevBlock
 .global __vt__11J3DIndBlock
 __vt__11J3DIndBlock:
-	.incbin "baserom.dol", 0x3A6664, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte reset__11J3DIndBlockFP11J3DIndBlock
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11J3DIndBlockFv
+  .4byte 0
 .global __vt__11J3DTevBlock
 __vt__11J3DTevBlock:
-	.incbin "baserom.dol", 0x3A66AC, 0x9C
+  .4byte 0
+  .4byte 0
+  .4byte reset__11J3DTevBlockFP11J3DTevBlock
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11J3DTevBlockFv
+  .4byte 0
 .global __vt__14J3DTexGenBlock
 __vt__14J3DTexGenBlock:
-	.incbin "baserom.dol", 0x3A6748, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte reset__14J3DTexGenBlockFP14J3DTexGenBlock
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14J3DTexGenBlockFv
+  .4byte 0
+  .4byte 0
 .global __vt__13J3DColorBlock
 __vt__13J3DColorBlock:
-	.incbin "baserom.dol", 0x3A6798, 0x68
+  .4byte 0
+  .4byte 0
+  .4byte reset__13J3DColorBlockFP13J3DColorBlock
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13J3DColorBlockFv
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2330:
