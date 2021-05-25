@@ -6,10 +6,10 @@
 #include "types.h"
 
 class J3DSys {
-	public:
-		void setTexCacheRegion(GXTexCacheSize);
-		char pad_000[0x34];
-		s32 _034;
+    public:
+        void setTexCacheRegion(GXTexCacheSize);
+        char pad_000[0x34];
+        s32 _034;
 };
 
 extern J3DSys j3dSys;
