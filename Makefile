@@ -139,6 +139,9 @@ PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack
 SDATA_PDHR := 9
 SBSS_PDHR := 10
 
+# hardcoded flags
+$(BUILD_DIR)/src/System/ParamInst.o: FILE_UNIQUE_CFLAGS = -use_lmw_stmw=off
+
 #-------------------------------------------------------------------------------
 # Recipes
 #-------------------------------------------------------------------------------
@@ -177,9 +180,9 @@ $(ELF): $(O_FILES) $(LDSCRIPT)
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
+# 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
 
 $(BUILD_DIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<
-# 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
+	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
