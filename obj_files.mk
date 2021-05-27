@@ -399,7 +399,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/MarNameRefGen.o                           \
     $(BUILD_DIR)/asm/System/MenuDir.o                                 \
     $(BUILD_DIR)/asm/System/Params.o                                  \
-    $(BUILD_DIR)/asm/System/ParamInst.o                               \
+    $(BUILD_DIR)/src/System/ParamInst.o                               \
     $(BUILD_DIR)/asm/System/PerformList.o                             \
     $(BUILD_DIR)/asm/System/RenderModeObj.o                           \
     $(BUILD_DIR)/asm/System/SnapTimeObj.o                             \

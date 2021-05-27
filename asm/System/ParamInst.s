@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
-load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream:
+.global "load__30TParamT<Q29JGeometry8TVec3<f>>FR20JSUMemoryInputStream"
+"load__30TParamT<Q29JGeometry8TVec3<f>>FR20JSUMemoryInputStream":
 /* 800F82DC 000F521C  7C 08 02 A6 */	mflr r0
 /* 800F82E0 000F5220  38 A0 00 04 */	li r5, 4
 /* 800F82E4 000F5224  90 01 00 04 */	stw r0, 4(r1)
@@ -25,8 +25,8 @@ load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream:
 /* 800F8328 000F5268  38 21 00 28 */	addi r1, r1, 0x28
 /* 800F832C 000F526C  4E 80 00 20 */	blr 
 
-.global load__10TParamT$$0f$$1FR20JSUMemoryInputStream
-load__10TParamT$$0f$$1FR20JSUMemoryInputStream:
+.global "load__10TParamT<f>FR20JSUMemoryInputStream"
+"load__10TParamT<f>FR20JSUMemoryInputStream":
 /* 800F8330 000F5270  7C 08 02 A6 */	mflr r0
 /* 800F8334 000F5274  38 A0 00 04 */	li r5, 4
 /* 800F8338 000F5278  90 01 00 04 */	stw r0, 4(r1)
@@ -49,8 +49,8 @@ load__10TParamT$$0f$$1FR20JSUMemoryInputStream:
 /* 800F837C 000F52BC  38 21 00 28 */	addi r1, r1, 0x28
 /* 800F8380 000F52C0  4E 80 00 20 */	blr 
 
-.global load__10TParamT$$0l$$1FR20JSUMemoryInputStream
-load__10TParamT$$0l$$1FR20JSUMemoryInputStream:
+.global "load__10TParamT<l>FR20JSUMemoryInputStream"
+"load__10TParamT<l>FR20JSUMemoryInputStream":
 /* 800F8384 000F52C4  7C 08 02 A6 */	mflr r0
 /* 800F8388 000F52C8  38 A0 00 04 */	li r5, 4
 /* 800F838C 000F52CC  90 01 00 04 */	stw r0, 4(r1)
@@ -73,8 +73,8 @@ load__10TParamT$$0l$$1FR20JSUMemoryInputStream:
 /* 800F83D0 000F5310  38 21 00 28 */	addi r1, r1, 0x28
 /* 800F83D4 000F5314  4E 80 00 20 */	blr 
 
-.global load__10TParamT$$0s$$1FR20JSUMemoryInputStream
-load__10TParamT$$0s$$1FR20JSUMemoryInputStream:
+.global "load__10TParamT<s>FR20JSUMemoryInputStream"
+"load__10TParamT<s>FR20JSUMemoryInputStream":
 /* 800F83D8 000F5318  7C 08 02 A6 */	mflr r0
 /* 800F83DC 000F531C  38 A0 00 04 */	li r5, 4
 /* 800F83E0 000F5320  90 01 00 04 */	stw r0, 4(r1)
@@ -97,8 +97,8 @@ load__10TParamT$$0s$$1FR20JSUMemoryInputStream:
 /* 800F8424 000F5364  38 21 00 28 */	addi r1, r1, 0x28
 /* 800F8428 000F5368  4E 80 00 20 */	blr 
 
-.global load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
-load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream:
+.global "load__11TParamT<Uc>FR20JSUMemoryInputStream"
+"load__11TParamT<Uc>FR20JSUMemoryInputStream":
 /* 800F842C 000F536C  7C 08 02 A6 */	mflr r0
 /* 800F8430 000F5370  38 A0 00 04 */	li r5, 4
 /* 800F8434 000F5374  90 01 00 04 */	stw r0, 4(r1)
