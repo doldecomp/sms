@@ -399,7 +399,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/MarNameRefGen.o                           \
     $(BUILD_DIR)/asm/System/MenuDir.o                                 \
     $(BUILD_DIR)/asm/System/Params.o                                  \
-    $(BUILD_DIR)/asm/System/ParamInst.o                               \
+    $(BUILD_DIR)/src/System/ParamInst.o                               \
     $(BUILD_DIR)/asm/System/PerformList.o                             \
     $(BUILD_DIR)/asm/System/RenderModeObj.o                           \
     $(BUILD_DIR)/asm/System/SnapTimeObj.o                             \
@@ -413,7 +413,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/src/System/StageUtil.o                               \
     $(BUILD_DIR)/src/System/Resolution.o                              \
     $(BUILD_DIR)/asm/System/PositionHolder.o                          \
-    $(BUILD_DIR)/asm/System/ProcessMeter.o                            \
+    $(BUILD_DIR)/src/System/ProcessMeter.o                            \
     $(BUILD_DIR)/asm/System/TimeRec.o                                 \
     $(BUILD_DIR)/asm/System/DrawSyncManager.o                         \
     $(BUILD_DIR)/asm/System/THPRender.o                               \

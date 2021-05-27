@@ -38,9 +38,18 @@ class JKRExpHeap {
     char filler0[4];
 };
 
-// TODO
+// TODO: src/System/ProcessMeter.hpp
 class TProcessMeter {
-    char filler0[4];
+    TProcessMeter(s32);
+    s32 _000;
+    s32 _004;
+    s32 _008;
+    s32 _00C;
+    s32 _010;
+    f32 _014;
+    f32 _018;
+    s16 _01C;
+    s16 _01E;
 };
 
 class TApplication {
