@@ -2267,12 +2267,12 @@ $$22556:
 __vt__10TParamT$$0f$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0f$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<f>FR20JSUMemoryInputStream"
 .global __vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1
 __vt__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1:
   .4byte 0
   .4byte 0
-  .4byte load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
+  .4byte "load__30TParamT<Q29JGeometry8TVec3<f>>FR20JSUMemoryInputStream"
 .global __vt__20TMtxSwingRZReverseXZ
 __vt__20TMtxSwingRZReverseXZ:
   .4byte 0
@@ -2282,7 +2282,7 @@ __vt__20TMtxSwingRZReverseXZ:
 __vt__9TParamVec:
   .4byte 0
   .4byte 0
-  .4byte load__30TParamT$$0Q29JGeometry8TVec3$$0f$$1$$1FR20JSUMemoryInputStream
+  .4byte "load__30TParamT<Q29JGeometry8TVec3<f>>FR20JSUMemoryInputStream"
 .global __vt__11TMtxSwingRZ
 __vt__11TMtxSwingRZ:
   .4byte 0
@@ -2292,7 +2292,7 @@ __vt__11TMtxSwingRZ:
 __vt__11TParamRT$$0f$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0f$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<f>FR20JSUMemoryInputStream"
 .global __vt__11TMtxTimeLag
 __vt__11TMtxTimeLag:
   .4byte 0

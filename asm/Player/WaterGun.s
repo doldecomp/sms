@@ -5748,32 +5748,32 @@ $$24827:
 __vt__11TParamRT$$0l$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<l>FR20JSUMemoryInputStream"
 .global __vt__10TParamT$$0l$$1
 __vt__10TParamT$$0l$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0l$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<l>FR20JSUMemoryInputStream"
 .global __vt__12TParamRT$$0Uc$$1
 __vt__12TParamRT$$0Uc$$1:
   .4byte 0
   .4byte 0
-  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
+  .4byte "load__11TParamT<Uc>FR20JSUMemoryInputStream"
 .global __vt__11TParamT$$0Uc$$1
 __vt__11TParamT$$0Uc$$1:
   .4byte 0
   .4byte 0
-  .4byte load__11TParamT$$0Uc$$1FR20JSUMemoryInputStream
+  .4byte "load__11TParamT<Uc>FR20JSUMemoryInputStream"
 .global __vt__11TParamRT$$0s$$1
 __vt__11TParamRT$$0s$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<s>FR20JSUMemoryInputStream"
 .global __vt__10TParamT$$0s$$1
 __vt__10TParamT$$0s$$1:
   .4byte 0
   .4byte 0
-  .4byte load__10TParamT$$0s$$1FR20JSUMemoryInputStream
+  .4byte "load__10TParamT<s>FR20JSUMemoryInputStream"
 .global __vt__13TNozzleDeform
 __vt__13TNozzleDeform:
   .4byte 0
