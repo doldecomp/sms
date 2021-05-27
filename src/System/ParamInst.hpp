@@ -4,7 +4,6 @@
 #include "System/BaseParam.hpp"
 #include "JSystem/JSUInputStream.hpp"
 
-
 template<typename T> class TParamT: public TBaseParam {
 public:
 	void load(JSUMemoryInputStream&);
