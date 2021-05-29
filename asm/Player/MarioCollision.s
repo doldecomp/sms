@@ -154,7 +154,7 @@ lbl_80121938:
 .global damageExec__6TMarioFP9THitActoriiififs
 damageExec__6TMarioFP9THitActoriiififs:
 /* 8012194C 0011E88C  7C 08 02 A6 */	mflr r0
-/* 80121950 0011E890  3D 40 80 38 */	lis r10, lbl_80380004@ha
+/* 80121950 0011E890  3D 40 80 38 */	lis r10, $$22438@ha
 /* 80121954 0011E894  90 01 00 04 */	stw r0, 4(r1)
 /* 80121958 0011E898  94 21 FE B0 */	stwu r1, -0x150(r1)
 /* 8012195C 0011E89C  DB E1 01 48 */	stfd f31, 0x148(r1)
@@ -169,8 +169,8 @@ damageExec__6TMarioFP9THitActoriiififs:
 /* 80121980 0011E8C0  3B 87 00 00 */	addi r28, r7, 0
 /* 80121984 0011E8C4  3B A8 00 00 */	addi r29, r8, 0
 /* 80121988 0011E8C8  3B C9 00 00 */	addi r30, r9, 0
-/* 8012198C 0011E8CC  85 6A A8 30 */	lwzu r11, -0x57d0(r10)
-/* 80121990 0011E8D0  80 0A 00 04 */	lwz r0, lbl_80380004@l(r10)
+/* 8012198C 0011E8CC  85 6A A8 30 */	lwzu r11, $$22438@l(r10)
+/* 80121990 0011E8D0  80 0A 00 04 */	lwz r0, 4(r10)
 /* 80121994 0011E8D4  91 61 00 D4 */	stw r11, 0xd4(r1)
 /* 80121998 0011E8D8  90 01 00 D8 */	stw r0, 0xd8(r1)
 /* 8012199C 0011E8DC  80 8A 00 08 */	lwz r4, 8(r10)
@@ -1766,6 +1766,7 @@ lbl_80122F6C:
   .4byte __sinit_MarioCollision_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+
 $$22438:
 	.incbin "baserom.dol", 0x377830, 0x40
 
