@@ -1950,7 +1950,8 @@ __vt__8J2DPrint:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$252:
-	.incbin "baserom.dol", 0x3E3E60, 0x8
+  .4byte 0
+  .4byte 0
 $$2196:
 	.incbin "baserom.dol", 0x3E3E68, 0x8
 $$2276:

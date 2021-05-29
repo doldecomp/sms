@@ -900,7 +900,7 @@ $$21957:
 $$21958:
 	.incbin "baserom.dol", 0x3E69C0, 0x4
 $$21959:
-	.incbin "baserom.dol", 0x3E69C4, 0x4
+  .4byte 0
 $$22036:
 	.incbin "baserom.dol", 0x3E69C8, 0x4
 $$22058:

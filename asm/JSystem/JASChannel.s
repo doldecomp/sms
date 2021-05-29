@@ -2086,7 +2086,7 @@ $$2325:
     .4byte lbl_8005C94C
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2145:
-	.incbin "baserom.dol", 0x3E4338, 0x4
+  .4byte 0
 $$2160:
 	.incbin "baserom.dol", 0x3E433C, 0x4
 $$2218:

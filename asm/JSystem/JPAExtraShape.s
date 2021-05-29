@@ -222,7 +222,7 @@ __vt__13JPAExtraShape:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21509:
-	.incbin "baserom.dol", 0x3E4618, 0x4
+  .4byte 0
 $$21510:
 	.incbin "baserom.dol", 0x3E461C, 0x4
 $$21511:

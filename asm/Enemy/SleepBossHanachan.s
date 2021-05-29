@@ -491,7 +491,9 @@ $$232$$2__dt__18TSleepBossHanachanFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39C790, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21700:
 	.incbin "baserom.dol", 0x39C79C, 0x14
 $$21797:
@@ -625,11 +627,12 @@ __vt__25TSleepBossHanachanManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sleepBossHanachan_bastable:
-	.incbin "baserom.dol", 0x3E3A88, 0x8
+  .4byte $$22258
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22378:
-	.incbin "baserom.dol", 0x3EB330, 0x4
+  .4byte 0
 $$22379:
 	.incbin "baserom.dol", 0x3EB334, 0x4
 

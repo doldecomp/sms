@@ -27,10 +27,19 @@ __sinit_JAIConst_cpp:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global dummyZeroVec__8JAIConst
 dummyZeroVec__8JAIConst:
-	.incbin "baserom.dol", 0x3A7CA0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global nullInfoData2__8JAIConst
 nullInfoData2__8JAIConst:
-	.incbin "baserom.dol", 0x3A7CAC, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global sCInfos_0__8JAIConst
 sCInfos_0__8JAIConst:
 	.incbin "baserom.dol", 0x3A7CCC, 0x24

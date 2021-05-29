@@ -2396,7 +2396,9 @@ $$232$$2__dt__10TRailFenceFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38D208, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38D214, 0x14
 $$22178:
@@ -2412,7 +2414,9 @@ cDirtyFileName:
 cDirtyTexName:
 	.incbin "baserom.dol", 0x38D30C, 0x10
 $$22698:
-	.incbin "baserom.dol", 0x38D31C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22700:
 	.incbin "baserom.dol", 0x38D328, 0xC
 $$23311:
@@ -3021,7 +3025,7 @@ mWaitTime__10TRailFence:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23023:
-	.incbin "baserom.dol", 0x3E8610, 0x4
+  .4byte 0
 $$23041:
 	.incbin "baserom.dol", 0x3E8614, 0x4
 $$23042:

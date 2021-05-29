@@ -5182,7 +5182,9 @@ $$232$$2__dt__12TBGKObstacleFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39D8E8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39D8F4, 0x14
 $$22197:
@@ -5264,7 +5266,26 @@ $$25577:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 gatekeeper_bastable:
-	.incbin "baserom.dol", 0x3DCC60, 0x50
+  .4byte $$22930
+  .4byte 0
+  .4byte 0
+  .4byte $$22931
+  .4byte 0
+  .4byte $$22932
+  .4byte $$22933
+  .4byte $$22934
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22935
+  .4byte 0
+  .4byte 0
+  .4byte $$22936
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__19TNerveBGKLaunchName
 __vt__19TNerveBGKLaunchName:
   .4byte 0
@@ -5612,7 +5633,7 @@ $$23635:
 $$23637:
 	.incbin "baserom.dol", 0x3EB648, 0x8
 $$23761:
-	.incbin "baserom.dol", 0x3EB650, 0x4
+  .4byte 0
 $$23762:
 	.incbin "baserom.dol", 0x3EB654, 0x4
 $$23834:

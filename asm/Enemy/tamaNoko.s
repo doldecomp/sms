@@ -4632,7 +4632,9 @@ $$232$$2__dt__9TTamaNokoFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3996D0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22429:
 	.incbin "baserom.dol", 0x3996DC, 0x14
 $$22640:
@@ -4702,7 +4704,23 @@ $$25060:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 tamaNoko_bastable:
-	.incbin "baserom.dol", 0x3D8E78, 0x44
+  .4byte $$23067
+  .4byte $$23068
+  .4byte $$23069
+  .4byte $$23070
+  .4byte $$23071
+  .4byte $$23072
+  .4byte $$23073
+  .4byte $$23074
+  .4byte 0
+  .4byte $$23075
+  .4byte 0
+  .4byte $$23076
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23077
+  .4byte $$23078
 entry$3149:
 	.incbin "baserom.dol", 0x3D8EBC, 0x18
 .global __vt__18TNerveTamaNokoWait
@@ -4913,7 +4931,7 @@ mDropVelocityY__9TTamaNoko:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23743:
-	.incbin "baserom.dol", 0x3EAC70, 0x4
+  .4byte 0
 $$23744:
 	.incbin "baserom.dol", 0x3EAC74, 0x4
 $$23746:

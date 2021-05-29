@@ -592,7 +592,7 @@ _inf:
 _nan:
 	.incbin "baserom.dol", 0x3E475C, 0x4
 $$2246:
-	.incbin "baserom.dol", 0x3E4760, 0x4
+  .4byte 0
 $$2247:
 	.incbin "baserom.dol", 0x3E4764, 0x4
 $$2248:
@@ -602,7 +602,7 @@ $$2249:
 $$2250:
 	.incbin "baserom.dol", 0x3E4770, 0x4
 $$2251:
-	.incbin "baserom.dol", 0x3E4774, 0x4
+  .4byte 0x80000000
 $$2253:
 	.incbin "baserom.dol", 0x3E4778, 0x8
 $$2259:

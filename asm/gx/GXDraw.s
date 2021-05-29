@@ -534,7 +534,7 @@ lbl_800AD20C:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2133:
-	.incbin "baserom.dol", 0x3E4888, 0x4
+  .4byte 0
 $$2357:
 	.incbin "baserom.dol", 0x3E488C, 0x4
 $$2358:

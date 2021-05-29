@@ -3747,7 +3747,9 @@ $$232$$2__dt__13TPinnaCoasterFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38BAB8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38BAC4, 0x14
 $$22178:
@@ -3759,7 +3761,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38BB74, 0x24
 $$22735:
-	.incbin "baserom.dol", 0x38BB98, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22737:
 	.incbin "baserom.dol", 0x38BBA4, 0xC
 $$23270:
@@ -4915,7 +4919,7 @@ mRotSpeed__13TMerrygoround:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23241:
-	.incbin "baserom.dol", 0x3E80E8, 0x4
+  .4byte 0
 $$23272:
 	.incbin "baserom.dol", 0x3E80EC, 0x4
 $$23273:

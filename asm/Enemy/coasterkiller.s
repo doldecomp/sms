@@ -2176,7 +2176,9 @@ $$232$$2__dt__14TCoasterKillerFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A1AE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22355:
 	.incbin "baserom.dol", 0x3A1AF4, 0x14
 $$22422:
@@ -2214,7 +2216,11 @@ $$23299:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 killer_bastable:
-	.incbin "baserom.dol", 0x3E0410, 0x14
+  .4byte $$22839
+  .4byte 0
+  .4byte 0
+  .4byte $$22840
+  .4byte 0
 entry$2930:
 	.incbin "baserom.dol", 0x3E0424, 0x24
 .global __vt__21TCoasterKillerManager
@@ -2496,7 +2502,7 @@ $$23038:
 $$23041:
 	.incbin "baserom.dol", 0x3EBF74, 0x4
 $$23103:
-	.incbin "baserom.dol", 0x3EBF78, 0x4
+  .4byte 0
 $$23104:
 	.incbin "baserom.dol", 0x3EBF7C, 0x4
 $$23105:

@@ -289,7 +289,10 @@ tmp_float:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 __four_over_pi_m1:
-	.incbin "baserom.dol", 0x3ABF48, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2106:

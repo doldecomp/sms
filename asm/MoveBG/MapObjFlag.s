@@ -1621,7 +1621,9 @@ $$232$$2__dt__11TMapObjFlagFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38C078, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38C084, 0x14
 $$22487:
@@ -1719,7 +1721,7 @@ mFlutterSpeed__11TMapObjFlag:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22283:
-	.incbin "baserom.dol", 0x3E82B0, 0x4
+  .4byte -1
 $$22392:
 	.incbin "baserom.dol", 0x3E82B4, 0x4
 $$22393:
@@ -1735,7 +1737,7 @@ $$22554:
 $$22555:
 	.incbin "baserom.dol", 0x3E82D0, 0x4
 $$22587:
-	.incbin "baserom.dol", 0x3E82D4, 0x4
+  .4byte 0
 $$22588:
 	.incbin "baserom.dol", 0x3E82D8, 0x4
 $$22589:

@@ -130,7 +130,9 @@ lbl_80177480:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37F7E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37F7EC, 0x14
 $$21755:
@@ -500,83 +502,474 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B6500, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3B6510, 0x10
+  .4byte $$21755
+  .4byte $$21756
+  .4byte $$21757
+  .4byte $$21758
 monteMCommon_bastable:
-	.incbin "baserom.dol", 0x3B6520, 0x5C
+  .4byte $$21938
+  .4byte $$21939
+  .4byte $$21940
+  .4byte $$21941
+  .4byte $$21942
+  .4byte $$21943
+  .4byte $$21944
+  .4byte $$21945
+  .4byte 0
+  .4byte 0
+  .4byte $$21946
+  .4byte 0
+  .4byte 0
+  .4byte $$21947
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$21948
+  .4byte $$21949
+  .4byte $$21950
+  .4byte $$21951
+  .4byte $$21952
 monteMCommon_bas_c_table:
-	.incbin "baserom.dol", 0x3B657C, 0x5C
+  .4byte $$21953
+  .4byte $$21954
+  .4byte $$21955
+  .4byte $$21956
+  .4byte $$21957
+  .4byte $$21958
+  .4byte $$21959
+  .4byte $$21960
+  .4byte 0
+  .4byte 0
+  .4byte $$21961
+  .4byte 0
+  .4byte 0
+  .4byte $$21962
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$21963
+  .4byte $$21964
+  .4byte $$21965
+  .4byte $$21966
+  .4byte $$21967
 monteME_bastable:
-	.incbin "baserom.dol", 0x3B65D8, 0x1C
+  .4byte $$21970
+  .4byte 0
+  .4byte 0
+  .4byte $$21971
+  .4byte 0
+  .4byte 0
+  .4byte $$21972
 monteME_bas_c_table:
-	.incbin "baserom.dol", 0x3B65F4, 0x1C
+  .4byte $$21970
+  .4byte 0
+  .4byte 0
+  .4byte $$21971
+  .4byte 0
+  .4byte 0
+  .4byte $$21972
 monteMF_bastable:
-	.incbin "baserom.dol", 0x3B6610, 0xC
+  .4byte $$21975
+  .4byte $$21976
+  .4byte $$21977
 monteMF_bas_c_table:
-	.incbin "baserom.dol", 0x3B661C, 0xC
+  .4byte $$21975
+  .4byte $$21976
+  .4byte $$21977
 monteMH_bastable:
-	.incbin "baserom.dol", 0x3B6628, 0x10
+  .4byte $$21984
+  .4byte 0
+  .4byte $$21985
+  .4byte $$21986
 monteMH_bas_c_table:
-	.incbin "baserom.dol", 0x3B6638, 0x10
+  .4byte $$21984
+  .4byte 0
+  .4byte $$21985
+  .4byte $$21986
 monteWCommon_bastable:
-	.incbin "baserom.dol", 0x3B6648, 0x60
+  .4byte $$21989
+  .4byte $$21990
+  .4byte $$21991
+  .4byte $$21992
+  .4byte $$21993
+  .4byte $$21994
+  .4byte 0
+  .4byte $$21995
+  .4byte 0
+  .4byte 0
+  .4byte $$21996
+  .4byte 0
+  .4byte 0
+  .4byte $$21997
+  .4byte 0
+  .4byte 0
+  .4byte $$21998
+  .4byte 0
+  .4byte 0
+  .4byte $$21999
+  .4byte $$22000
+  .4byte $$22001
+  .4byte $$22002
+  .4byte $$22003
 monteWCommon_bas_c_table:
-	.incbin "baserom.dol", 0x3B66A8, 0x60
+  .4byte $$22004
+  .4byte $$22005
+  .4byte $$22006
+  .4byte $$22007
+  .4byte $$22008
+  .4byte $$22009
+  .4byte 0
+  .4byte $$22010
+  .4byte 0
+  .4byte 0
+  .4byte $$22011
+  .4byte 0
+  .4byte 0
+  .4byte $$22012
+  .4byte 0
+  .4byte 0
+  .4byte $$22013
+  .4byte 0
+  .4byte 0
+  .4byte $$22014
+  .4byte $$22015
+  .4byte $$22016
+  .4byte $$22017
+  .4byte $$22018
 monteWC_bastable:
-	.incbin "baserom.dol", 0x3B6708, 0x14
+  .4byte 0
+  .4byte $$22021
+  .4byte 0
+  .4byte $$22022
+  .4byte $$22023
 monteWC_bas_c_table:
-	.incbin "baserom.dol", 0x3B671C, 0x14
+  .4byte 0
+  .4byte $$22021
+  .4byte 0
+  .4byte $$22022
+  .4byte $$22023
 mareM_bastable:
-	.incbin "baserom.dol", 0x3B6730, 0x54
+  .4byte $$22026
+  .4byte $$22027
+  .4byte $$22028
+  .4byte $$22029
+  .4byte $$22030
+  .4byte $$22031
+  .4byte $$22032
+  .4byte 0
+  .4byte 0
+  .4byte $$22033
+  .4byte $$22034
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22035
+  .4byte $$22036
+  .4byte $$22037
+  .4byte $$22038
+  .4byte $$22039
 mareM_bas_c_table:
-	.incbin "baserom.dol", 0x3B6784, 0x54
+  .4byte $$22040
+  .4byte $$22041
+  .4byte $$22042
+  .4byte $$22043
+  .4byte $$22044
+  .4byte $$22045
+  .4byte $$22046
+  .4byte 0
+  .4byte 0
+  .4byte $$22047
+  .4byte $$22048
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22035
+  .4byte $$22049
+  .4byte $$22050
+  .4byte $$22051
+  .4byte $$22052
 mareMA_bastable:
-	.incbin "baserom.dol", 0x3B67D8, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mareMA_bas_c_table:
-	.incbin "baserom.dol", 0x3B67EC, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mareMB_bastable:
-	.incbin "baserom.dol", 0x3B6800, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22057
 mareMB_bas_c_table:
-	.incbin "baserom.dol", 0x3B6818, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22057
 mareMC_bastable:
-	.incbin "baserom.dol", 0x3B6830, 0x14
+  .4byte $$22059
+  .4byte $$22060
+  .4byte 0
+  .4byte $$22061
+  .4byte $$22062
 mareMC_bas_c_table:
-	.incbin "baserom.dol", 0x3B6844, 0x14
+  .4byte $$22059
+  .4byte $$22060
+  .4byte 0
+  .4byte $$22061
+  .4byte $$22062
 mareW_bastable:
-	.incbin "baserom.dol", 0x3B6858, 0x50
+  .4byte $$22069
+  .4byte $$22070
+  .4byte $$22071
+  .4byte $$22072
+  .4byte $$22073
+  .4byte $$22074
+  .4byte 0
+  .4byte 0
+  .4byte $$22075
+  .4byte $$22076
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22077
+  .4byte $$22078
+  .4byte $$22079
+  .4byte $$22080
+  .4byte $$22081
 mareW_bas_c_table:
-	.incbin "baserom.dol", 0x3B68A8, 0x50
+  .4byte $$22082
+  .4byte $$22083
+  .4byte $$22084
+  .4byte $$22085
+  .4byte $$22086
+  .4byte $$22087
+  .4byte 0
+  .4byte 0
+  .4byte $$22088
+  .4byte $$22089
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22077
+  .4byte $$22090
+  .4byte $$22091
+  .4byte $$22092
+  .4byte $$22093
 mareWA_bastable:
-	.incbin "baserom.dol", 0x3B68F8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mareWA_bas_c_table:
-	.incbin "baserom.dol", 0x3B6908, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mareWB_bastable:
-	.incbin "baserom.dol", 0x3B6918, 0x18
+  .4byte $$22098
+  .4byte $$22099
+  .4byte $$22100
+  .4byte 0
+  .4byte $$22101
+  .4byte $$22102
 mareWB_bas_c_table:
-	.incbin "baserom.dol", 0x3B6930, 0x18
+  .4byte $$22098
+  .4byte $$22099
+  .4byte $$22100
+  .4byte 0
+  .4byte $$22101
+  .4byte $$22102
 kinopio_bastable:
-	.incbin "baserom.dol", 0x3B6948, 0x64
+  .4byte $$22105
+  .4byte $$22106
+  .4byte $$22107
+  .4byte $$22108
+  .4byte $$22109
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22110
+  .4byte 0
+  .4byte $$22111
+  .4byte 0
+  .4byte 0
+  .4byte $$22112
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22113
+  .4byte $$22114
+  .4byte 0
+  .4byte $$22115
+  .4byte $$22116
+  .4byte $$22117
+  .4byte 0
 kinopio_bas_c_table:
-	.incbin "baserom.dol", 0x3B69AC, 0x64
+  .4byte $$22105
+  .4byte $$22106
+  .4byte $$22107
+  .4byte $$22108
+  .4byte $$22109
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22110
+  .4byte 0
+  .4byte $$22111
+  .4byte 0
+  .4byte 0
+  .4byte $$22112
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22113
+  .4byte $$22114
+  .4byte 0
+  .4byte $$22115
+  .4byte $$22116
+  .4byte $$22117
+  .4byte 0
 kinojii_bastable:
-	.incbin "baserom.dol", 0x3B6A10, 0x48
+  .4byte $$22120
+  .4byte $$22121
+  .4byte 0
+  .4byte 0
+  .4byte $$22122
+  .4byte 0
+  .4byte $$22123
+  .4byte 0
+  .4byte 0
+  .4byte $$22124
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22125
+  .4byte 0
+  .4byte $$22126
+  .4byte $$22127
+  .4byte 0
 kinojii_bas_c_table:
-	.incbin "baserom.dol", 0x3B6A58, 0x48
+  .4byte $$22120
+  .4byte $$22121
+  .4byte 0
+  .4byte 0
+  .4byte $$22122
+  .4byte 0
+  .4byte $$22123
+  .4byte 0
+  .4byte 0
+  .4byte $$22124
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22125
+  .4byte 0
+  .4byte $$22126
+  .4byte $$22127
+  .4byte 0
 peach_bastable:
-	.incbin "baserom.dol", 0x3B6AA0, 0x5C
+  .4byte $$22130
+  .4byte $$22131
+  .4byte $$22132
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22133
+  .4byte $$22134
+  .4byte $$22135
+  .4byte 0
+  .4byte $$22136
 peach_bas_c_table:
-	.incbin "baserom.dol", 0x3B6AFC, 0x5C
+  .4byte $$22130
+  .4byte $$22131
+  .4byte $$22132
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22133
+  .4byte $$22134
+  .4byte $$22135
+  .4byte 0
+  .4byte $$22136
 raccoonDog_bastable:
-	.incbin "baserom.dol", 0x3B6B58, 0x10
+  .4byte $$22139
+  .4byte $$22140
+  .4byte 0
+  .4byte $$22141
 raccoonDog_bas_c_table:
-	.incbin "baserom.dol", 0x3B6B68, 0x10
+  .4byte $$22139
+  .4byte $$22140
+  .4byte 0
+  .4byte $$22141
 sunflowerL_bastable:
-	.incbin "baserom.dol", 0x3B6B78, 0x14
+  .4byte 0
+  .4byte $$22144
+  .4byte 0
+  .4byte $$22145
+  .4byte $$22146
 sunflowerL_bas_c_table:
-	.incbin "baserom.dol", 0x3B6B8C, 0x14
+  .4byte 0
+  .4byte $$22144
+  .4byte 0
+  .4byte $$22145
+  .4byte $$22146
 sunflowerS_bastable:
-	.incbin "baserom.dol", 0x3B6BA0, 0x14
+  .4byte 0
+  .4byte $$22150
+  .4byte 0
+  .4byte $$22151
+  .4byte $$22152
 sunflowerS_bas_c_table:
-	.incbin "baserom.dol", 0x3B6BB4, 0x14
+  .4byte 0
+  .4byte $$22150
+  .4byte 0
+  .4byte $$22151
+  .4byte $$22152
 $$22235:
     .4byte lbl_801773CC
     .4byte lbl_801773D4
@@ -605,6 +998,8 @@ $$22235:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 monteMG_bastable:
-	.incbin "baserom.dol", 0x3E34F0, 0x8
+  .4byte $$21980
+  .4byte $$21981
 mareMD_bastable:
-	.incbin "baserom.dol", 0x3E34F8, 0x8
+  .4byte $$22065
+  .4byte $$22066

@@ -551,19 +551,22 @@ $$217:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 NullTexData:
-	.incbin "baserom.dol", 0x3AFB20, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 IdentityMtx:
 	.incbin "baserom.dol", 0x3AFB30, 0x30
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ColorBlack:
-	.incbin "baserom.dol", 0x3E3328, 0x4
+  .4byte 0
 ColorWhite:
-	.incbin "baserom.dol", 0x3E332C, 0x4
+  .4byte -1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$251:
-	.incbin "baserom.dol", 0x3E4B60, 0x4
+  .4byte 0
 $$252:
 	.incbin "baserom.dol", 0x3E4B64, 0x4
 $$253:

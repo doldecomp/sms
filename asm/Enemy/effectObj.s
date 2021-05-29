@@ -3196,7 +3196,9 @@ $$232$$2__dt__16TEffectExplosionFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x391A38, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22141:
 	.incbin "baserom.dol", 0x391A44, 0x14
 $$22197:
@@ -3932,7 +3934,7 @@ __vt__13TSimpleEffect:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22718:
-	.incbin "baserom.dol", 0x3E9950, 0x4
+  .4byte 0
 $$22828:
 	.incbin "baserom.dol", 0x3E9954, 0x4
 $$22829:

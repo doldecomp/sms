@@ -1720,7 +1720,9 @@ $$232$$2__dt__14TMapObjGeneralFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3846B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x3846C4, 0x14
 $$22189:
@@ -1732,11 +1734,16 @@ $$22191:
 $$22192:
 	.incbin "baserom.dol", 0x384774, 0x24
 $$22688:
-	.incbin "baserom.dol", 0x384798, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22690:
 	.incbin "baserom.dol", 0x3847A4, 0xC
 no_data_obj_hit_table:
-	.incbin "baserom.dol", 0x3847B0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 no_data_obj_hit_info:
 	.incbin "baserom.dol", 0x3847C0, 0x10
 $$22771:
@@ -1748,7 +1755,21 @@ $$22773:
 $$22774:
 	.incbin "baserom.dol", 0x384810, 0x10
 billboard_dolphin_anim_data:
-	.incbin "baserom.dol", 0x384820, 0x3C
+  .4byte $$22772
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22773
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22774
+  .4byte 0
+  .4byte 0
+  .4byte 0
 billboard_hit_data_table:
 	.incbin "baserom.dol", 0x38485C, 0x10
 billboard_obj_hit_info:
@@ -1760,19 +1781,61 @@ $$22776:
 $$22777:
 	.incbin "baserom.dol", 0x3848A8, 0x14
 billboard_sun_anim_data:
-	.incbin "baserom.dol", 0x3848BC, 0x3C
+  .4byte $$22777
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22773
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22774
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22778:
 	.incbin "baserom.dol", 0x3848F8, 0x10
 $$22779:
 	.incbin "baserom.dol", 0x384908, 0x18
 billboard_restaurant_anim_data:
-	.incbin "baserom.dol", 0x384920, 0x3C
+  .4byte $$22779
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22773
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22774
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22780:
 	.incbin "baserom.dol", 0x38495C, 0x18
 $$22781:
 	.incbin "baserom.dol", 0x384974, 0x14
 billboard_fish_anim_data:
-	.incbin "baserom.dol", 0x384988, 0x3C
+  .4byte $$22781
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22773
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22774
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22782:
 	.incbin "baserom.dol", 0x3849C4, 0x10
 HideObj_hit_data_table:
@@ -1800,7 +1863,11 @@ $$22786:
 $$22787:
 	.incbin "baserom.dol", 0x384A84, 0x18
 MonteChair_anim_data:
-	.incbin "baserom.dol", 0x384A9C, 0x14
+  .4byte $$22787
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22788:
 	.incbin "baserom.dol", 0x384AB0, 0xC
 $$22789:
@@ -1822,7 +1889,31 @@ $$22796:
 $$22797:
 	.incbin "baserom.dol", 0x384B58, 0x20
 door_anim_data:
-	.incbin "baserom.dol", 0x384B78, 0x64
+  .4byte $$22789
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22790
+  .4byte 0
+  .4byte 0
+  .4byte $$22791
+  .4byte 0
+  .4byte $$22792
+  .4byte 0
+  .4byte 0
+  .4byte $$22793
+  .4byte 0
+  .4byte $$22794
+  .4byte 0
+  .4byte 0
+  .4byte $$22795
+  .4byte 0
+  .4byte $$22796
+  .4byte 0
+  .4byte 0
+  .4byte $$22797
 door_hit_data_table:
 	.incbin "baserom.dol", 0x384BDC, 0x10
 door_obj_hit_info:
@@ -1830,13 +1921,41 @@ door_obj_hit_info:
 $$22799:
 	.incbin "baserom.dol", 0x384BFC, 0x10
 doorHotel_anim_data:
-	.incbin "baserom.dol", 0x384C0C, 0x64
+  .4byte $$22799
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22790
+  .4byte 0
+  .4byte 0
+  .4byte $$22791
+  .4byte 0
+  .4byte $$22792
+  .4byte 0
+  .4byte 0
+  .4byte $$22793
+  .4byte 0
+  .4byte $$22794
+  .4byte 0
+  .4byte 0
+  .4byte $$22795
+  .4byte 0
+  .4byte $$22796
+  .4byte 0
+  .4byte 0
+  .4byte $$22797
 $$22800:
 	.incbin "baserom.dol", 0x384C70, 0xC
 $$22801:
 	.incbin "baserom.dol", 0x384C7C, 0xC
 manhole_anim_data:
-	.incbin "baserom.dol", 0x384C88, 0x14
+  .4byte $$22801
+  .4byte $$22802
+  .4byte 0
+  .4byte 0
+  .4byte 0
 manhole_hit_data_table:
 	.incbin "baserom.dol", 0x384C9C, 0x10
 manhole_obj_hit_info:
@@ -1846,7 +1965,16 @@ manhole_map_collision_data:
 $$22803:
 	.incbin "baserom.dol", 0x384CCC, 0xC
 FruitBasket_anim_data:
-	.incbin "baserom.dol", 0x384CD8, 0x28
+  .4byte $$22803
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22804
+  .4byte 0
+  .4byte 0
+  .4byte 0
 FruitBasket_hit_data_table:
 	.incbin "baserom.dol", 0x384D00, 0x10
 FruitBasket_obj_hit_info:
@@ -1854,7 +1982,11 @@ FruitBasket_obj_hit_info:
 $$22806:
 	.incbin "baserom.dol", 0x384D20, 0xC
 BasketReverse_anim_data:
-	.incbin "baserom.dol", 0x384D2C, 0x14
+  .4byte $$22803
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 BasketReverse_hit_data_table:
 	.incbin "baserom.dol", 0x384D40, 0x10
 BasketReverse_obj_hit_info:
@@ -1890,7 +2022,11 @@ $$22813:
 $$22814:
 	.incbin "baserom.dol", 0x384E50, 0x18
 ChipShine_anim_data:
-	.incbin "baserom.dol", 0x384E68, 0x14
+  .4byte $$22814
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 ChipShine_hit_data_table:
 	.incbin "baserom.dol", 0x384E7C, 0x10
 ChipShine_obj_hit_info:
@@ -1900,7 +2036,11 @@ $$22815:
 $$22816:
 	.incbin "baserom.dol", 0x384EA8, 0x14
 KoopaJrSignM_anim_data:
-	.incbin "baserom.dol", 0x384EBC, 0x14
+  .4byte $$22816
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 KoopaJrSignM_hit_data_table:
 	.incbin "baserom.dol", 0x384ED0, 0x10
 KoopaJrSignM_obj_hit_info:
@@ -1912,19 +2052,31 @@ $$22818:
 $$22819:
 	.incbin "baserom.dol", 0x384F0C, 0x10
 SignCircle_anim_data:
-	.incbin "baserom.dol", 0x384F1C, 0x14
+  .4byte $$22819
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22820:
 	.incbin "baserom.dol", 0x384F30, 0xC
 $$22821:
 	.incbin "baserom.dol", 0x384F3C, 0x10
 SignCross_anim_data:
-	.incbin "baserom.dol", 0x384F4C, 0x14
+  .4byte $$22821
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22822:
 	.incbin "baserom.dol", 0x384F60, 0xC
 $$22823:
 	.incbin "baserom.dol", 0x384F6C, 0x10
 SignTriangle_anim_data:
-	.incbin "baserom.dol", 0x384F7C, 0x14
+  .4byte $$22823
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22824:
 	.incbin "baserom.dol", 0x384F90, 0x10
 ArrowBoardLR_hit_data_table:
@@ -2008,7 +2160,11 @@ $$22849:
 $$22850:
 	.incbin "baserom.dol", 0x385244, 0x10
 mario_cap_anim_data:
-	.incbin "baserom.dol", 0x385254, 0x14
+  .4byte $$22850
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mario_cap_hit_data_table:
 	.incbin "baserom.dol", 0x385268, 0x10
 mario_cap_obj_hit_info:
@@ -2018,7 +2174,11 @@ $$22851:
 $$22852:
 	.incbin "baserom.dol", 0x385294, 0xC
 coin_anim_data:
-	.incbin "baserom.dol", 0x3852A0, 0x14
+  .4byte $$22852
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22853:
 	.incbin "baserom.dol", 0x3852B4, 0xC
 $$22854:
@@ -2034,7 +2194,26 @@ $$22858:
 $$22859:
 	.incbin "baserom.dol", 0x385318, 0x10
 eggYoshi_anim_data:
-	.incbin "baserom.dol", 0x385328, 0x50
+  .4byte $$22854
+  .4byte $$22855
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22856
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22857
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22858
+  .4byte $$22859
+  .4byte 0
+  .4byte 0
+  .4byte 0
 eggYoshi_hit_data_table:
 	.incbin "baserom.dol", 0x385378, 0xA0
 eggYoshi_obj_hit_info:
@@ -2052,7 +2231,26 @@ $$22864:
 $$22865:
 	.incbin "baserom.dol", 0x385478, 0x14
 NozzleBox_anim_data:
-	.incbin "baserom.dol", 0x38548C, 0x50
+  .4byte $$22862
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22863
+  .4byte $$22864
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22865
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 NozzleBox_hit_data_table:
 	.incbin "baserom.dol", 0x3854DC, 0x10
 NozzleBox_obj_hit_info:
@@ -2062,7 +2260,11 @@ $$22866:
 $$22867:
 	.incbin "baserom.dol", 0x385508, 0x10
 mushroom1up_anim_data:
-	.incbin "baserom.dol", 0x385518, 0x14
+  .4byte $$22867
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 mushroom1up_hit_data_table:
 	.incbin "baserom.dol", 0x38552C, 0x10
 mushroom1up_obj_hit_info:
@@ -2076,7 +2278,11 @@ $$22870:
 $$22871:
 	.incbin "baserom.dol", 0x385578, 0x10
 jumpbase_anim_data:
-	.incbin "baserom.dol", 0x385588, 0x14
+  .4byte $$22871
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 jumpbase_hit_data_table:
 	.incbin "baserom.dol", 0x38559C, 0x10
 jumpbase_obj_hit_info:
@@ -2112,7 +2318,41 @@ $$22876:
 $$22877:
 	.incbin "baserom.dol", 0x3856A4, 0x10
 CoverPine_anim_data:
-	.incbin "baserom.dol", 0x3856B4, 0x8C
+  .4byte $$22877
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 cover_pine_hit_data_table:
 	.incbin "baserom.dol", 0x385740, 0x10
 cover_pine_obj_hit_info:
@@ -2140,13 +2380,21 @@ $$22882:
 $$22883:
 	.incbin "baserom.dol", 0x38580C, 0x10
 fence3x3_anim_data:
-	.incbin "baserom.dol", 0x38581C, 0x14
+  .4byte $$22883
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22884:
 	.incbin "baserom.dol", 0x385830, 0xC
 $$22885:
 	.incbin "baserom.dol", 0x38583C, 0x18
 fence_revolve_outer_anim_data:
-	.incbin "baserom.dol", 0x385854, 0x14
+  .4byte $$22885
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22886:
 	.incbin "baserom.dol", 0x385868, 0x10
 FenceInner_hit_data_table:
@@ -2168,7 +2416,16 @@ FenceWaterH_map_collision_data:
 $$22892:
 	.incbin "baserom.dol", 0x3858F8, 0x14
 RailFence_anim_data:
-	.incbin "baserom.dol", 0x38590C, 0x28
+  .4byte $$22892
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22893:
 	.incbin "baserom.dol", 0x385934, 0x14
 RailFence_map_collision_data:
@@ -2184,7 +2441,16 @@ $$22897:
 $$22898:
 	.incbin "baserom.dol", 0x3859B4, 0x14
 BambooRailFence_anim_data:
-	.incbin "baserom.dol", 0x3859C8, 0x28
+  .4byte $$22897
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22898
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22899:
 	.incbin "baserom.dol", 0x3859F0, 0x10
 $$22900:
@@ -2200,7 +2466,41 @@ $$22904:
 $$22905:
 	.incbin "baserom.dol", 0x385A64, 0x20
 wood_barrel_anim_data:
-	.incbin "baserom.dol", 0x385A84, 0x8C
+  .4byte $$22900
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22901
+  .4byte $$22902
+  .4byte 0
+  .4byte 0
+  .4byte $$22903
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22904
+  .4byte 0
+  .4byte 0
+  .4byte $$22905
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 wood_barrel_hit_data_table:
 	.incbin "baserom.dol", 0x385B10, 0x30
 wood_barrel_obj_hit_info:
@@ -2232,7 +2532,21 @@ $$22914:
 $$22915:
 	.incbin "baserom.dol", 0x385C4C, 0x10
 drum_can_anim_data:
-	.incbin "baserom.dol", 0x385C5C, 0x3C
+  .4byte $$22913
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22914
+  .4byte $$22915
+  .4byte 0
+  .4byte 0
+  .4byte 0
 drum_can_hit_data_table:
 	.incbin "baserom.dol", 0x385C98, 0x10
 drum_can_obj_hit_info:
@@ -2248,7 +2562,41 @@ $$22918:
 $$22919:
 	.incbin "baserom.dol", 0x385CF4, 0x28
 barrel_oil_anim_data:
-	.incbin "baserom.dol", 0x385D1C, 0x8C
+  .4byte $$22918
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22901
+  .4byte $$22902
+  .4byte 0
+  .4byte 0
+  .4byte $$22919
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22918
+  .4byte $$22904
+  .4byte 0
+  .4byte 0
+  .4byte $$22905
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 barrel_oil_hit_data_table:
 	.incbin "baserom.dol", 0x385DA8, 0x10
 barrel_oil_obj_hit_info:
@@ -2266,7 +2614,21 @@ $$22924:
 $$22925:
 	.incbin "baserom.dol", 0x385E24, 0x18
 breakable_block_anim_data:
-	.incbin "baserom.dol", 0x385E3C, 0x3C
+  .4byte $$22923
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22924
+  .4byte $$22925
+  .4byte 0
+  .4byte 0
+  .4byte 0
 breakable_block_hit_data_table:
 	.incbin "baserom.dol", 0x385E78, 0x10
 breakable_block_obj_hit_info:
@@ -2296,7 +2658,11 @@ $$22931:
 $$22932:
 	.incbin "baserom.dol", 0x385F48, 0x18
 water_roll_block_anim_data:
-	.incbin "baserom.dol", 0x385F60, 0x14
+  .4byte $$22932
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 water_roll_block_obj_hit_info:
 	.incbin "baserom.dol", 0x385F74, 0x10
 $$22933:
@@ -2306,7 +2672,21 @@ $$22934:
 $$22935:
 	.incbin "baserom.dol", 0x385FA8, 0xC
 sand_block_anim_data:
-	.incbin "baserom.dol", 0x385FB4, 0x3C
+  .4byte $$22934
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22934
+  .4byte $$22935
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sand_block_hit_data_table:
 	.incbin "baserom.dol", 0x385FF0, 0x10
 sand_block_obj_hit_info:
@@ -2338,13 +2718,21 @@ $$22944:
 $$22945:
 	.incbin "baserom.dol", 0x3860E4, 0x10
 MoveCoin_anim_data:
-	.incbin "baserom.dol", 0x3860F4, 0x14
+  .4byte $$22944
+  .4byte $$22945
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22946:
 	.incbin "baserom.dol", 0x386108, 0xC
 $$22947:
 	.incbin "baserom.dol", 0x386114, 0x14
 cluster_block_anim_data:
-	.incbin "baserom.dol", 0x386128, 0x14
+  .4byte $$22947
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22948:
 	.incbin "baserom.dol", 0x38613C, 0x10
 $$22949:
@@ -2362,7 +2750,21 @@ $$22952:
 $$22953:
 	.incbin "baserom.dol", 0x3861A8, 0x10
 BrickBlock_anim_data:
-	.incbin "baserom.dol", 0x3861B8, 0x3C
+  .4byte $$22951
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22952
+  .4byte $$22953
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22954:
 	.incbin "baserom.dol", 0x3861F4, 0xC
 $$22955:
@@ -2372,7 +2774,21 @@ $$22956:
 $$22957:
 	.incbin "baserom.dol", 0x386230, 0x18
 WaterMelonBlock_anim_data:
-	.incbin "baserom.dol", 0x386248, 0x3C
+  .4byte $$22955
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22956
+  .4byte $$22957
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22958:
 	.incbin "baserom.dol", 0x386284, 0x10
 $$22959:
@@ -2394,7 +2810,21 @@ $$22964:
 $$22965:
 	.incbin "baserom.dol", 0x386310, 0x24
 SuperHipDropBlock_anim_data:
-	.incbin "baserom.dol", 0x386334, 0x3C
+  .4byte $$22962
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22963
+  .4byte $$22964
+  .4byte 0
+  .4byte 0
+  .4byte $$22965
 $$22966:
 	.incbin "baserom.dol", 0x386370, 0xC
 $$22967:
@@ -2404,7 +2834,11 @@ tree_sound_data:
 $$22968:
 	.incbin "baserom.dol", 0x3863B8, 0x10
 PalmNormal_anim_data:
-	.incbin "baserom.dol", 0x3863C8, 0x14
+  .4byte $$22968
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 palmNormal_hit_data_table:
 	.incbin "baserom.dol", 0x3863DC, 0x10
 palmNormal_obj_hit_info:
@@ -2434,7 +2868,11 @@ $$22973:
 $$22974:
 	.incbin "baserom.dol", 0x38649C, 0x10
 PalmLeaf_anim_data:
-	.incbin "baserom.dol", 0x3864AC, 0x14
+  .4byte $$22974
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 palmLeaf_hit_data_table:
 	.incbin "baserom.dol", 0x3864C0, 0x10
 palmLeaf_obj_hit_info:
@@ -2444,7 +2882,11 @@ $$22975:
 $$22976:
 	.incbin "baserom.dol", 0x3864EC, 0x10
 BananaTree_anim_data:
-	.incbin "baserom.dol", 0x3864FC, 0x14
+  .4byte $$22976
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 BananaTree_hit_data_table:
 	.incbin "baserom.dol", 0x386510, 0x10
 BananaTree_obj_hit_info:
@@ -2468,7 +2910,16 @@ $$22980:
 $$22982:
 	.incbin "baserom.dol", 0x3865A8, 0x14
 flowerOrange_anim_data:
-	.incbin "baserom.dol", 0x3865BC, 0x28
+  .4byte $$22980
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22982
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22983:
 	.incbin "baserom.dol", 0x3865E4, 0x10
 $$22984:
@@ -2476,7 +2927,16 @@ $$22984:
 $$22985:
 	.incbin "baserom.dol", 0x386604, 0x10
 flowerPink_anim_data:
-	.incbin "baserom.dol", 0x386614, 0x28
+  .4byte $$22984
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22985
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22986:
 	.incbin "baserom.dol", 0x38663C, 0xC
 $$22987:
@@ -2484,7 +2944,16 @@ $$22987:
 $$22988:
 	.incbin "baserom.dol", 0x38665C, 0x14
 flowerPurple_anim_data:
-	.incbin "baserom.dol", 0x386670, 0x28
+  .4byte $$22987
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22988
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22989:
 	.incbin "baserom.dol", 0x386698, 0x10
 $$22990:
@@ -2492,7 +2961,16 @@ $$22990:
 $$22991:
 	.incbin "baserom.dol", 0x3866B8, 0x10
 flowerRed_anim_data:
-	.incbin "baserom.dol", 0x3866C8, 0x28
+  .4byte $$22990
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22991
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22992:
 	.incbin "baserom.dol", 0x3866F0, 0xC
 $$22993:
@@ -2500,7 +2978,16 @@ $$22993:
 $$22994:
 	.incbin "baserom.dol", 0x386710, 0x14
 flowerYellow_anim_data:
-	.incbin "baserom.dol", 0x386724, 0x28
+  .4byte $$22993
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22994
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22995:
 	.incbin "baserom.dol", 0x38674C, 0x10
 $$22996:
@@ -2508,7 +2995,16 @@ $$22996:
 $$22997:
 	.incbin "baserom.dol", 0x386770, 0x18
 flowerSunflower_anim_data:
-	.incbin "baserom.dol", 0x386788, 0x28
+  .4byte $$22996
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
+  .4byte $$22997
+  .4byte 0
+  .4byte 0
+  .4byte $$22981
+  .4byte 0
 $$22998:
 	.incbin "baserom.dol", 0x3867B0, 0x10
 pole_sound_data:
@@ -2532,7 +3028,41 @@ $$23002:
 $$23003:
 	.incbin "baserom.dol", 0x386878, 0x14
 dptlight_anim_data:
-	.incbin "baserom.dol", 0x38688C, 0x8C
+  .4byte $$23001
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23002
+  .4byte $$23003
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 streetlamp_hit_data_table:
 	.incbin "baserom.dol", 0x386918, 0x30
 streetlamp_obj_hit_info:
@@ -2552,7 +3082,11 @@ $$23006:
 $$23007:
 	.incbin "baserom.dol", 0x3869B0, 0x10
 football_anim_data:
-	.incbin "baserom.dol", 0x3869C0, 0x14
+  .4byte $$23007
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 football_hit_data_table:
 	.incbin "baserom.dol", 0x3869D4, 0x10
 football_obj_hit_info:
@@ -2564,7 +3098,11 @@ $$23008:
 $$23009:
 	.incbin "baserom.dol", 0x386A28, 0x18
 football_goal_anim_data:
-	.incbin "baserom.dol", 0x386A40, 0x14
+  .4byte $$23009
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 football_goal_hit_data_table:
 	.incbin "baserom.dol", 0x386A54, 0x10
 football_goal_obj_hit_info:
@@ -2588,7 +3126,46 @@ $$23016:
 $$23017:
 	.incbin "baserom.dol", 0x386AF4, 0x24
 Watermelon_anim_data:
-	.incbin "baserom.dol", 0x386B18, 0xA0
+  .4byte $$23015
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23016
+  .4byte 0
+  .4byte 0
+  .4byte $$23017
 watermelon_hit_data_table:
 	.incbin "baserom.dol", 0x386BB8, 0x10
 watermelon_obj_hit_info:
@@ -2598,7 +3175,11 @@ watermelon_sound_data:
 $$23018:
 	.incbin "baserom.dol", 0x386C00, 0xC
 WatermelonStatic_anim_data:
-	.incbin "baserom.dol", 0x386C0C, 0x14
+  .4byte $$23015
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23019:
 	.incbin "baserom.dol", 0x386C20, 0x14
 $$23020:
@@ -2606,7 +3187,11 @@ $$23020:
 $$23021:
 	.incbin "baserom.dol", 0x386C40, 0xC
 cloud_anim_data:
-	.incbin "baserom.dol", 0x386C4C, 0x14
+  .4byte $$23020
+  .4byte $$23021
+  .4byte 0
+  .4byte 0
+  .4byte 0
 cloud_hit_data_table:
 	.incbin "baserom.dol", 0x386C60, 0x10
 cloud_obj_hit_info:
@@ -2614,7 +3199,11 @@ cloud_obj_hit_info:
 $$23023:
 	.incbin "baserom.dol", 0x386C80, 0x10
 normallift_anim_data:
-	.incbin "baserom.dol", 0x386C90, 0x14
+  .4byte $$23023
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 normallift_hit_data_table:
 	.incbin "baserom.dol", 0x386CA4, 0x10
 normallift_obj_hit_info:
@@ -2624,7 +3213,11 @@ $$23024:
 $$23025:
 	.incbin "baserom.dol", 0x386CD0, 0x10
 exrollcube_anim_data:
-	.incbin "baserom.dol", 0x386CE0, 0x14
+  .4byte $$23025
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 exrollcube_hit_data_table:
 	.incbin "baserom.dol", 0x386CF4, 0x10
 exrollcube_obj_hit_info:
@@ -2636,7 +3229,11 @@ $$23027:
 $$23028:
 	.incbin "baserom.dol", 0x386D2C, 0x10
 exkickboard_anim_data:
-	.incbin "baserom.dol", 0x386D3C, 0x14
+  .4byte $$23028
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 exkickboard_hit_data_table:
 	.incbin "baserom.dol", 0x386D50, 0x10
 exkickboard_obj_hit_info:
@@ -2648,15 +3245,27 @@ $$23030:
 $$23031:
 	.incbin "baserom.dol", 0x386D88, 0x18
 railblockr_anim_data:
-	.incbin "baserom.dol", 0x386DA0, 0x14
+  .4byte $$23031
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23032:
 	.incbin "baserom.dol", 0x386DB4, 0x18
 railblocky_anim_data:
-	.incbin "baserom.dol", 0x386DCC, 0x14
+  .4byte $$23032
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23033:
 	.incbin "baserom.dol", 0x386DE0, 0x18
 railblockb_anim_data:
-	.incbin "baserom.dol", 0x386DF8, 0x14
+  .4byte $$23033
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 railblock_hit_data_table:
 	.incbin "baserom.dol", 0x386E0C, 0x10
 railblock_obj_hit_info:
@@ -2678,7 +3287,11 @@ $$23040:
 $$23041:
 	.incbin "baserom.dol", 0x386E84, 0xC
 umaibou_anim_data:
-	.incbin "baserom.dol", 0x386E90, 0x14
+  .4byte $$23041
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 umaibou_hit_data_table:
 	.incbin "baserom.dol", 0x386EA4, 0x10
 umaibou_obj_hit_info:
@@ -2686,7 +3299,11 @@ umaibou_obj_hit_info:
 $$23043:
 	.incbin "baserom.dol", 0x386EC4, 0x10
 kamaboko_anim_data:
-	.incbin "baserom.dol", 0x386ED4, 0x14
+  .4byte $$23043
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 kamaboko_hit_data_table:
 	.incbin "baserom.dol", 0x386EE8, 0x10
 kamaboko_obj_hit_info:
@@ -2696,11 +3313,19 @@ $$23044:
 $$23045:
 	.incbin "baserom.dol", 0x386F14, 0x10
 getag_anim_data:
-	.incbin "baserom.dol", 0x386F24, 0x14
+  .4byte $$23045
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23046:
 	.incbin "baserom.dol", 0x386F38, 0x10
 getao_anim_data:
-	.incbin "baserom.dol", 0x386F48, 0x14
+  .4byte $$23046
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 geta_hit_data_table:
 	.incbin "baserom.dol", 0x386F5C, 0x10
 geta_obj_hit_info:
@@ -2708,7 +3333,11 @@ geta_obj_hit_info:
 $$23050:
 	.incbin "baserom.dol", 0x386F7C, 0xC
 uirou_anim_data:
-	.incbin "baserom.dol", 0x386F88, 0x14
+  .4byte $$23050
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 uirou_hit_data_table:
 	.incbin "baserom.dol", 0x386F9C, 0x10
 uirou_obj_hit_info:
@@ -2716,7 +3345,11 @@ uirou_obj_hit_info:
 $$23052:
 	.incbin "baserom.dol", 0x386FBC, 0x10
 hikidashi_anim_data:
-	.incbin "baserom.dol", 0x386FCC, 0x14
+  .4byte $$23052
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 hikidashi_hit_data_table:
 	.incbin "baserom.dol", 0x386FE0, 0x10
 hikidashi_obj_hit_info:
@@ -2726,7 +3359,11 @@ $$23053:
 $$23054:
 	.incbin "baserom.dol", 0x38700C, 0x10
 castella_anim_data:
-	.incbin "baserom.dol", 0x38701C, 0x14
+  .4byte $$23054
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 castella_hit_data_table:
 	.incbin "baserom.dol", 0x387030, 0x10
 castella_obj_hit_info:
@@ -2736,7 +3373,11 @@ $$23055:
 $$23056:
 	.incbin "baserom.dol", 0x38705C, 0x10
 yoshiblock_anim_data:
-	.incbin "baserom.dol", 0x38706C, 0x14
+  .4byte $$23056
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 yoshiblock_hit_data_table:
 	.incbin "baserom.dol", 0x387080, 0x10
 yoshiblock_obj_hit_info:
@@ -2852,11 +3493,19 @@ $$23080:
 $$23081:
 	.incbin "baserom.dol", 0x387400, 0x14
 lamptrapspike_anim_data:
-	.incbin "baserom.dol", 0x387414, 0x14
+  .4byte $$23081
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23082:
 	.incbin "baserom.dol", 0x387428, 0x14
 lamptrapiron_anim_data:
-	.incbin "baserom.dol", 0x38743C, 0x14
+  .4byte $$23082
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 lamptrap_hit_data_table:
 	.incbin "baserom.dol", 0x387450, 0x10
 lamptrap_obj_hit_info:
@@ -2876,7 +3525,21 @@ $$23088:
 $$23089:
 	.incbin "baserom.dol", 0x3874C8, 0x10
 WoodBox_anim_data:
-	.incbin "baserom.dol", 0x3874D8, 0x3C
+  .4byte $$23087
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23088
+  .4byte $$23089
+  .4byte 0
+  .4byte 0
+  .4byte 0
 WoodBox_sound_data:
 	.incbin "baserom.dol", 0x387514, 0x28
 AirportPole_hit_data_table:
@@ -2890,7 +3553,41 @@ $$23093:
 $$23094:
 	.incbin "baserom.dol", 0x387574, 0xC
 ice_car_anim_data:
-	.incbin "baserom.dol", 0x387580, 0x8C
+  .4byte $$23093
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23093
+  .4byte $$23094
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 ice_car_hit_data_table:
 	.incbin "baserom.dol", 0x38760C, 0x10
 ice_car_obj_hit_info:
@@ -2910,7 +3607,11 @@ $$23101:
 $$23102:
 	.incbin "baserom.dol", 0x38768C, 0x14
 monumentshine_anim_data:
-	.incbin "baserom.dol", 0x3876A0, 0x14
+  .4byte $$23102
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 monumentshine_hit_data_table:
 	.incbin "baserom.dol", 0x3876B4, 0x10
 monumentshine_obj_hit_info:
@@ -2920,7 +3621,11 @@ $$23103:
 $$23104:
 	.incbin "baserom.dol", 0x3876E4, 0x10
 belldolpic_anim_data:
-	.incbin "baserom.dol", 0x3876F4, 0x14
+  .4byte $$23104
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 belldolpic_hit_data_table:
 	.incbin "baserom.dol", 0x387708, 0x10
 belldolpic_obj_hit_info:
@@ -2932,7 +3637,11 @@ $$23106:
 $$23107:
 	.incbin "baserom.dol", 0x387748, 0x10
 DptWeathercock_anim_data:
-	.incbin "baserom.dol", 0x387758, 0x14
+  .4byte $$23106
+  .4byte $$23107
+  .4byte 0
+  .4byte 0
+  .4byte 0
 DptWeathercock_hit_data_table:
 	.incbin "baserom.dol", 0x38776C, 0x10
 DptWeathercock_obj_hit_info:
@@ -2966,7 +3675,16 @@ $$23115:
 $$23116:
 	.incbin "baserom.dol", 0x387854, 0xC
 NozzleDoor_anim_data:
-	.incbin "baserom.dol", 0x387860, 0x28
+  .4byte $$23115
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23115
+  .4byte $$23116
+  .4byte 0
+  .4byte 0
+  .4byte 0
 NozzleDoor_hit_data_table:
 	.incbin "baserom.dol", 0x387888, 0x10
 NozzleDoor_obj_hit_info:
@@ -3032,7 +3750,11 @@ $$23131:
 $$23132:
 	.incbin "baserom.dol", 0x387A5C, 0x10
 gesoSurfboard_anim_data:
-	.incbin "baserom.dol", 0x387A6C, 0x14
+  .4byte $$23132
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 gesoSurfboard_hit_data_table:
 	.incbin "baserom.dol", 0x387A80, 0x10
 gesoSurfboard_obj_hit_info:
@@ -3114,7 +3836,11 @@ surfgeso_obj_hit_info:
 $$23154:
 	.incbin "baserom.dol", 0x387CD8, 0x10
 surfgeso_anim_data:
-	.incbin "baserom.dol", 0x387CE8, 0x14
+  .4byte $$23154
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23155:
 	.incbin "baserom.dol", 0x387CFC, 0xC
 $$23156:
@@ -3124,7 +3850,11 @@ $$23157:
 $$23158:
 	.incbin "baserom.dol", 0x387D28, 0x10
 windmill_anim_data:
-	.incbin "baserom.dol", 0x387D38, 0x14
+  .4byte $$23158
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Windmill_hit_data_table:
 	.incbin "baserom.dol", 0x387D4C, 0x10
 Windmill_obj_hit_info:
@@ -3146,7 +3876,41 @@ $$23163:
 $$23164:
 	.incbin "baserom.dol", 0x387DD8, 0x10
 lamp_bianco_anim_data:
-	.incbin "baserom.dol", 0x387DE8, 0x8C
+  .4byte $$23164
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 lamp_bianco_hit_data_table:
 	.incbin "baserom.dol", 0x387E74, 0x30
 lamp_bianco_obj_hit_info:
@@ -3180,7 +3944,31 @@ $$23172:
 $$23173:
 	.incbin "baserom.dol", 0x387F70, 0xC
 BiaBell_anim_data:
-	.incbin "baserom.dol", 0x387F7C, 0x64
+  .4byte $$23169
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23170
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23171
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23172
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23173
+  .4byte 0
+  .4byte 0
+  .4byte 0
 BiaBell_hit_data_table:
 	.incbin "baserom.dol", 0x387FE0, 0x10
 BiaBell_obj_hit_info:
@@ -3190,7 +3978,11 @@ $$23175:
 $$23176:
 	.incbin "baserom.dol", 0x388028, 0x14
 watermill00_anim_data:
-	.incbin "baserom.dol", 0x38803C, 0x14
+  .4byte $$23176
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 BiaWatermill00_hit_data_table:
 	.incbin "baserom.dol", 0x388050, 0x10
 BiaWatermill00_obj_hit_info:
@@ -3224,7 +4016,11 @@ $$23181:
 $$23182:
 	.incbin "baserom.dol", 0x388144, 0x10
 LampSeesaw_anim_data:
-	.incbin "baserom.dol", 0x388154, 0x14
+  .4byte $$23164
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 LampSeesaw_hit_data_table:
 	.incbin "baserom.dol", 0x388168, 0x30
 LampSeesaw_obj_hit_info:
@@ -3238,7 +4034,11 @@ $$23186:
 $$23187:
 	.incbin "baserom.dol", 0x3881D0, 0xC
 SandBird_anim_data:
-	.incbin "baserom.dol", 0x3881DC, 0x14
+  .4byte $$23186
+  .4byte $$23187
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23188:
 	.incbin "baserom.dol", 0x3881F0, 0xC
 SandBirdBlock_hit_data_table:
@@ -3254,7 +4054,11 @@ $$23190:
 $$23191:
 	.incbin "baserom.dol", 0x38824C, 0xC
 SkyIsland_anim_data:
-	.incbin "baserom.dol", 0x388258, 0x14
+  .4byte $$23190
+  .4byte $$23191
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23192:
 	.incbin "baserom.dol", 0x38826C, 0xC
 $$23193:
@@ -3278,7 +4082,11 @@ $$23198:
 $$23199:
 	.incbin "baserom.dol", 0x388358, 0x14
 SandLeafBase00_anim_data:
-	.incbin "baserom.dol", 0x38836C, 0x14
+  .4byte $$23199
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23200:
 	.incbin "baserom.dol", 0x388380, 0x10
 SandLeafBase00_map_collision_data:
@@ -3286,7 +4094,11 @@ SandLeafBase00_map_collision_data:
 $$23201:
 	.incbin "baserom.dol", 0x3883A0, 0x14
 SandLeafBase01_anim_data:
-	.incbin "baserom.dol", 0x3883B4, 0x14
+  .4byte $$23201
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23202:
 	.incbin "baserom.dol", 0x3883C8, 0x10
 SandLeafBase01_map_collision_data:
@@ -3294,7 +4106,11 @@ SandLeafBase01_map_collision_data:
 $$23203:
 	.incbin "baserom.dol", 0x3883E8, 0x14
 SandLeafBase02_anim_data:
-	.incbin "baserom.dol", 0x3883FC, 0x14
+  .4byte $$23203
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23204:
 	.incbin "baserom.dol", 0x388410, 0x10
 SandLeafBase02_map_collision_data:
@@ -3302,7 +4118,11 @@ SandLeafBase02_map_collision_data:
 $$23205:
 	.incbin "baserom.dol", 0x388430, 0x14
 SandLeafBase03_anim_data:
-	.incbin "baserom.dol", 0x388444, 0x14
+  .4byte $$23205
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23206:
 	.incbin "baserom.dol", 0x388458, 0x10
 SandLeafBase03_map_collision_data:
@@ -3394,7 +4214,16 @@ $$23232:
 $$23233:
 	.incbin "baserom.dol", 0x3887E8, 0x10
 SandBombBase00_anim_data:
-	.incbin "baserom.dol", 0x3887F8, 0x28
+  .4byte $$23232
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23234:
 	.incbin "baserom.dol", 0x388820, 0x10
 SandBombBase00_map_collision_data:
@@ -3402,7 +4231,16 @@ SandBombBase00_map_collision_data:
 $$23235:
 	.incbin "baserom.dol", 0x388840, 0x1C
 SandBombBaseMushroom_anim_data:
-	.incbin "baserom.dol", 0x38885C, 0x28
+  .4byte $$23235
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23236:
 	.incbin "baserom.dol", 0x388884, 0x18
 SandBombBaseMushroom_map_collision_data:
@@ -3410,7 +4248,16 @@ SandBombBaseMushroom_map_collision_data:
 $$23237:
 	.incbin "baserom.dol", 0x3888AC, 0x18
 SandBombBasePyramid_anim_data:
-	.incbin "baserom.dol", 0x3888C4, 0x28
+  .4byte $$23237
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23238:
 	.incbin "baserom.dol", 0x3888EC, 0x14
 SandBombBasePyramid_map_collision_data:
@@ -3418,7 +4265,16 @@ SandBombBasePyramid_map_collision_data:
 $$23239:
 	.incbin "baserom.dol", 0x388910, 0x18
 SandBombBaseShit_anim_data:
-	.incbin "baserom.dol", 0x388928, 0x28
+  .4byte $$23239
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23240:
 	.incbin "baserom.dol", 0x388950, 0x14
 SandBombBaseShit_map_collision_data:
@@ -3426,7 +4282,16 @@ SandBombBaseShit_map_collision_data:
 $$23241:
 	.incbin "baserom.dol", 0x388974, 0x18
 SandBombBaseStar_anim_data:
-	.incbin "baserom.dol", 0x38898C, 0x28
+  .4byte $$23241
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23242:
 	.incbin "baserom.dol", 0x3889B4, 0x14
 SandBombBaseStar_map_collision_data:
@@ -3434,7 +4299,16 @@ SandBombBaseStar_map_collision_data:
 $$23243:
 	.incbin "baserom.dol", 0x3889D8, 0x18
 SandBombBaseTurtle_anim_data:
-	.incbin "baserom.dol", 0x3889F0, 0x28
+  .4byte $$23243
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23244:
 	.incbin "baserom.dol", 0x388A18, 0x14
 SandBombBaseTurtle_map_collision_data:
@@ -3442,7 +4316,16 @@ SandBombBaseTurtle_map_collision_data:
 $$23245:
 	.incbin "baserom.dol", 0x388A3C, 0x18
 SandBombBaseFoot_anim_data:
-	.incbin "baserom.dol", 0x388A54, 0x28
+  .4byte $$23245
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23246:
 	.incbin "baserom.dol", 0x388A7C, 0x14
 SandBombBaseFoot_map_collision_data:
@@ -3450,7 +4333,16 @@ SandBombBaseFoot_map_collision_data:
 $$23247:
 	.incbin "baserom.dol", 0x388AA0, 0x18
 SandBombBaseHand_anim_data:
-	.incbin "baserom.dol", 0x388AB8, 0x28
+  .4byte $$23247
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23248:
 	.incbin "baserom.dol", 0x388AE0, 0x14
 SandBombBaseHand_map_collision_data:
@@ -3458,7 +4350,16 @@ SandBombBaseHand_map_collision_data:
 $$23249:
 	.incbin "baserom.dol", 0x388B04, 0x18
 SandBombBaseStairs_anim_data:
-	.incbin "baserom.dol", 0x388B1C, 0x28
+  .4byte $$23249
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23233
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23250:
 	.incbin "baserom.dol", 0x388B44, 0x14
 SandBombBaseStairs_map_collision_data:
@@ -3474,7 +4375,11 @@ $$23254:
 $$23255:
 	.incbin "baserom.dol", 0x388BAC, 0x10
 TeethOfJuicer_anim_data:
-	.incbin "baserom.dol", 0x388BBC, 0x14
+  .4byte $$23254
+  .4byte $$23255
+  .4byte 0
+  .4byte 0
+  .4byte 0
 TeethOfJuicer_hit_data_table:
 	.incbin "baserom.dol", 0x388BD0, 0x10
 TeethOfJuicer_obj_hit_info:
@@ -3486,7 +4391,11 @@ $$23257:
 $$23258:
 	.incbin "baserom.dol", 0x388C10, 0xC
 merrygoround_anim_data:
-	.incbin "baserom.dol", 0x388C1C, 0x14
+  .4byte $$23258
+  .4byte $$23259
+  .4byte 0
+  .4byte 0
+  .4byte 0
 merry_hit_data_table:
 	.incbin "baserom.dol", 0x388C30, 0x10
 merrygoround_obj_hit_info:
@@ -3508,7 +4417,11 @@ $$23262:
 $$23263:
 	.incbin "baserom.dol", 0x388CB8, 0xC
 FerrisWheel_anim_data:
-	.incbin "baserom.dol", 0x388CC4, 0x14
+  .4byte $$23262
+  .4byte $$23263
+  .4byte 0
+  .4byte 0
+  .4byte 0
 FerrisWheel_hit_data_table:
 	.incbin "baserom.dol", 0x388CD8, 0x10
 FerrisWheel_obj_hit_info:
@@ -3526,7 +4439,11 @@ $$23266:
 $$23267:
 	.incbin "baserom.dol", 0x388D44, 0xC
 FerrisLOD_anim_data:
-	.incbin "baserom.dol", 0x388D50, 0x14
+  .4byte $$23266
+  .4byte $$23267
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23268:
 	.incbin "baserom.dol", 0x388D64, 0xC
 Viking_hit_data_table:
@@ -3544,7 +4461,21 @@ $$23273:
 $$23274:
 	.incbin "baserom.dol", 0x388DCC, 0x14
 balloon_koopajr_anim_data:
-	.incbin "baserom.dol", 0x388DE0, 0x3C
+  .4byte $$23273
+  .4byte $$23274
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 balloon_koopajr_hit_data_table:
 	.incbin "baserom.dol", 0x388E1C, 0x10
 balloon_koopajr_obj_hit_info:
@@ -3556,7 +4487,11 @@ $$23276:
 $$23277:
 	.incbin "baserom.dol", 0x388E5C, 0xC
 ShellCup_anim_data:
-	.incbin "baserom.dol", 0x388E68, 0x14
+  .4byte $$23276
+  .4byte $$23277
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23278:
 	.incbin "baserom.dol", 0x388E7C, 0x10
 ShellCup_hit_data_table:
@@ -3570,13 +4505,21 @@ $$23280:
 $$23281:
 	.incbin "baserom.dol", 0x388EC8, 0xC
 Gateshell_anim_data:
-	.incbin "baserom.dol", 0x388ED4, 0x14
+  .4byte $$23280
+  .4byte $$23281
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23282:
 	.incbin "baserom.dol", 0x388EE8, 0xC
 $$23283:
 	.incbin "baserom.dol", 0x388EF4, 0x10
 PinnaHangingBridgeBoard_anim_data:
-	.incbin "baserom.dol", 0x388F04, 0x14
+  .4byte $$23283
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 PinnaHangingBridgeBoard_hit_data_table:
 	.incbin "baserom.dol", 0x388F18, 0x10
 PinnaHangingBridgeBoard_obj_hit_info:
@@ -3590,7 +4533,11 @@ $$23286:
 $$23287:
 	.incbin "baserom.dol", 0x388F6C, 0xC
 GateManta_anim_data:
-	.incbin "baserom.dol", 0x388F78, 0x14
+  .4byte $$23286
+  .4byte $$23287
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23288:
 	.incbin "baserom.dol", 0x388F8C, 0xC
 $$23289:
@@ -3598,7 +4545,11 @@ $$23289:
 $$23290:
 	.incbin "baserom.dol", 0x388FA8, 0x14
 AmiKing_anim_data:
-	.incbin "baserom.dol", 0x388FBC, 0x14
+  .4byte $$23290
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 AmiKing_hit_data_table:
 	.incbin "baserom.dol", 0x388FD0, 0x10
 AmiKing_obj_hit_info:
@@ -3612,7 +4563,11 @@ $$23293:
 $$23294:
 	.incbin "baserom.dol", 0x38901C, 0xC
 roulette_anim_data:
-	.incbin "baserom.dol", 0x389028, 0x14
+  .4byte $$23294
+  .4byte $$23295
+  .4byte 0
+  .4byte 0
+  .4byte 0
 slotdrum_hit_data_table:
 	.incbin "baserom.dol", 0x38903C, 0x10
 slotdrum_obj_hit_info:
@@ -3628,7 +4583,11 @@ telesaslot_obj_hit_info:
 $$23300:
 	.incbin "baserom.dol", 0x389094, 0xC
 donchou_anim_data:
-	.incbin "baserom.dol", 0x3890A0, 0x14
+  .4byte $$23300
+  .4byte $$23301
+  .4byte 0
+  .4byte 0
+  .4byte 0
 donchou_hit_data_table:
 	.incbin "baserom.dol", 0x3890B4, 0x10
 donchou_obj_hit_info:
@@ -3642,7 +4601,11 @@ $$23304:
 $$23305:
 	.incbin "baserom.dol", 0x389100, 0x10
 bosswall_anim_data:
-	.incbin "baserom.dol", 0x389110, 0x14
+  .4byte $$23305
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23306:
 	.incbin "baserom.dol", 0x389124, 0x10
 $$23307:
@@ -3658,7 +4621,41 @@ $$23310:
 $$23311:
 	.incbin "baserom.dol", 0x389190, 0xC
 GlassBreak_anim_data:
-	.incbin "baserom.dol", 0x38919C, 0x8C
+  .4byte $$23310
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23311
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 GlassBreak_sound_data:
 	.incbin "baserom.dol", 0x389228, 0x28
 $$23312:
@@ -3666,7 +4663,11 @@ $$23312:
 $$23313:
 	.incbin "baserom.dol", 0x38925C, 0xC
 closet_anim_data:
-	.incbin "baserom.dol", 0x389268, 0x14
+  .4byte $$23312
+  .4byte $$23313
+  .4byte 0
+  .4byte 0
+  .4byte 0
 closet_hit_data_table:
 	.incbin "baserom.dol", 0x38927C, 0x10
 closet_obj_hit_info:
@@ -3678,7 +4679,16 @@ $$23316:
 $$23317:
 	.incbin "baserom.dol", 0x3892C0, 0x20
 ChestRevolve_anim_data:
-	.incbin "baserom.dol", 0x3892E0, 0x28
+  .4byte $$23315
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23316
+  .4byte 0
+  .4byte 0
+  .4byte $$23317
 $$23318:
 	.incbin "baserom.dol", 0x389308, 0x10
 ChestRevolve_map_collision_data:
@@ -3708,7 +4718,41 @@ $$23325:
 $$23326:
 	.incbin "baserom.dol", 0x3893E8, 0xC
 PanelBreak_anim_data:
-	.incbin "baserom.dol", 0x3893F4, 0x8C
+  .4byte $$23325
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23326
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 PanelBreak_sound_data:
 	.incbin "baserom.dol", 0x389480, 0x28
 $$23327:
@@ -3716,7 +4760,16 @@ $$23327:
 $$23328:
 	.incbin "baserom.dol", 0x3894BC, 0x10
 PanelRevolve_anim_data:
-	.incbin "baserom.dol", 0x3894CC, 0x28
+  .4byte $$23327
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23328
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23329:
 	.incbin "baserom.dol", 0x3894F4, 0x10
 $$23330:
@@ -3728,7 +4781,11 @@ $$23332:
 $$23333:
 	.incbin "baserom.dol", 0x389530, 0x14
 cogwheel_anim_data:
-	.incbin "baserom.dol", 0x389544, 0x14
+  .4byte $$23333
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Cogwheel_hit_data_table:
 	.incbin "baserom.dol", 0x389558, 0x10
 Cogwheel_obj_hit_info:
@@ -3772,7 +4829,16 @@ $$23342:
 $$23343:
 	.incbin "baserom.dol", 0x389684, 0x10
 GrowthTree_anim_data:
-	.incbin "baserom.dol", 0x389694, 0x28
+  .4byte $$23341
+  .4byte $$23342
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23343
+  .4byte 0
+  .4byte 0
+  .4byte 0
 GrowthTree_hit_data_table:
 	.incbin "baserom.dol", 0x3896BC, 0x10
 GrowthTree_obj_hit_info:
@@ -3800,7 +4866,16 @@ $$23351:
 $$23352:
 	.incbin "baserom.dol", 0x3897B0, 0x24
 Puncher_anim_data:
-	.incbin "baserom.dol", 0x3897D4, 0x28
+  .4byte $$23350
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23351
+  .4byte 0
+  .4byte 0
+  .4byte $$23352
 Puncher_hit_data_table:
 	.incbin "baserom.dol", 0x3897FC, 0x10
 Puncher_obj_hit_info:
@@ -3812,7 +4887,16 @@ $$23355:
 $$23356:
 	.incbin "baserom.dol", 0x389840, 0x24
 HatoPop_anim_data:
-	.incbin "baserom.dol", 0x389864, 0x28
+  .4byte $$23354
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23355
+  .4byte 0
+  .4byte 0
+  .4byte $$23356
 HatoPop_hit_data_table:
 	.incbin "baserom.dol", 0x38988C, 0x10
 HatoPop_obj_hit_info:
@@ -3842,7 +4926,11 @@ $$23362:
 $$23363:
 	.incbin "baserom.dol", 0x389960, 0xC
 CoinFish_anim_data:
-	.incbin "baserom.dol", 0x38996C, 0x14
+  .4byte $$23362
+  .4byte $$23363
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23364:
 	.incbin "baserom.dol", 0x389980, 0xC
 $$23365:
@@ -3858,7 +4946,11 @@ $$23368:
 $$23369:
 	.incbin "baserom.dol", 0x3899D4, 0xC
 MonteRoot_anim_data:
-	.incbin "baserom.dol", 0x3899E0, 0x14
+  .4byte $$23369
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 MonteRoot_hit_data_table:
 	.incbin "baserom.dol", 0x3899F4, 0x10
 MonteRoot_obj_hit_info:
@@ -3870,7 +4962,16 @@ $$23371:
 $$23372:
 	.incbin "baserom.dol", 0x389A30, 0x14
 JumpMushroom_anim_data:
-	.incbin "baserom.dol", 0x389A44, 0x28
+  .4byte $$23371
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23372
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23373:
 	.incbin "baserom.dol", 0x389A6C, 0xC
 $$23374:
@@ -3880,7 +4981,11 @@ $$23375:
 $$23376:
 	.incbin "baserom.dol", 0x389A98, 0x10
 MonteGoalFlag_anim_data:
-	.incbin "baserom.dol", 0x389AA8, 0x14
+  .4byte $$23375
+  .4byte $$23376
+  .4byte 0
+  .4byte 0
+  .4byte 0
 MonteGoalFlag_hit_data_table:
 	.incbin "baserom.dol", 0x389ABC, 0x10
 MonteGoalFlag_obj_hit_info:
@@ -3890,7 +4995,11 @@ $$23377:
 $$23378:
 	.incbin "baserom.dol", 0x389AEC, 0xC
 HangingBridgeBoard_anim_data:
-	.incbin "baserom.dol", 0x389AF8, 0x14
+  .4byte $$23378
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 HangingBridgeBoard_hit_data_table:
 	.incbin "baserom.dol", 0x389B0C, 0x10
 HangingBridgeBoard_obj_hit_info:
@@ -3908,7 +5017,11 @@ $$23382:
 $$23383:
 	.incbin "baserom.dol", 0x389B7C, 0xC
 Fluff_anim_data:
-	.incbin "baserom.dol", 0x389B88, 0x14
+  .4byte $$23383
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Fluff_hit_data_table:
 	.incbin "baserom.dol", 0x389B9C, 0x10
 Fluff_obj_hit_info:
@@ -3920,7 +5033,16 @@ $$23386:
 $$23387:
 	.incbin "baserom.dol", 0x389BD8, 0x10
 Bathtub_anim_data:
-	.incbin "baserom.dol", 0x389BE8, 0x28
+  .4byte $$23386
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23386
+  .4byte $$23387
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23390:
 	.incbin "baserom.dol", 0x389C10, 0x20
 $$23391:
@@ -3936,13 +5058,41 @@ $$23395:
 $$23396:
 	.incbin "baserom.dol", 0x389C80, 0x10
 BathtubStandBreaking_anim_data:
-	.incbin "baserom.dol", 0x389C90, 0x64
+  .4byte $$23391
+  .4byte $$23392
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23391
+  .4byte $$23393
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23391
+  .4byte $$23394
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23391
+  .4byte $$23395
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23391
+  .4byte $$23396
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23397:
 	.incbin "baserom.dol", 0x389CF4, 0xC
 $$23398:
 	.incbin "baserom.dol", 0x389D00, 0x10
 ex1_turn_lift_anim_data:
-	.incbin "baserom.dol", 0x389D10, 0x14
+  .4byte $$23398
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23399:
 	.incbin "baserom.dol", 0x389D24, 0x1C
 $$23400:
@@ -3956,7 +5106,11 @@ $$23403:
 $$23404:
 	.incbin "baserom.dol", 0x389D84, 0x10
 y_turn_lift_anim_data:
-	.incbin "baserom.dol", 0x389D94, 0x14
+  .4byte $$23404
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23405:
 	.incbin "baserom.dol", 0x389DA8, 0x1C
 $$23406:
@@ -3970,7 +5124,11 @@ $$23409:
 $$23410:
 	.incbin "baserom.dol", 0x389DF4, 0xC
 Nail_anim_data:
-	.incbin "baserom.dol", 0x389E00, 0x14
+  .4byte $$23410
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Nail_hit_data_table:
 	.incbin "baserom.dol", 0x389E14, 0x10
 Nail_obj_hit_info:
@@ -3980,7 +5138,11 @@ $$23412:
 $$23413:
 	.incbin "baserom.dol", 0x389E40, 0x14
 PachinkoNail_anim_data:
-	.incbin "baserom.dol", 0x389E54, 0x14
+  .4byte $$23413
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23414:
 	.incbin "baserom.dol", 0x389E68, 0x10
 $$23415:
@@ -3994,7 +5156,21 @@ $$23418:
 $$23419:
 	.incbin "baserom.dol", 0x389EC8, 0x18
 FileLoadBlockA_anim_data:
-	.incbin "baserom.dol", 0x389EE0, 0x3C
+  .4byte $$23417
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23418
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23419
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 FileLoadBlock_hit_data_table:
 	.incbin "baserom.dol", 0x389F1C, 0x10
 FileLoadBlock_obj_hit_info:
@@ -4006,7 +5182,21 @@ $$23421:
 $$23422:
 	.incbin "baserom.dol", 0x389F60, 0x18
 FileLoadBlockB_anim_data:
-	.incbin "baserom.dol", 0x389F78, 0x3C
+  .4byte $$23421
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23422
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23419
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23423:
 	.incbin "baserom.dol", 0x389FB4, 0x10
 $$23424:
@@ -4014,7 +5204,21 @@ $$23424:
 $$23425:
 	.incbin "baserom.dol", 0x389FD8, 0x18
 FileLoadBlockC_anim_data:
-	.incbin "baserom.dol", 0x389FF0, 0x3C
+  .4byte $$23424
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23425
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23419
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23426:
 	.incbin "baserom.dol", 0x38A02C, 0x10
 $$23728:
@@ -4030,14 +5234,40 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B7630, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3B7640, 0x10
+  .4byte $$22189
+  .4byte $$22190
+  .4byte $$22191
+  .4byte $$22192
 .global mDefaultSound__14TMapObjGeneral
 mDefaultSound__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3B7650, 0x28
 normal_sound_data:
-	.incbin "baserom.dol", 0x3B7678, 0x28
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
 end_data:
-	.incbin "baserom.dol", 0x3B76A0, 0x3C
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte no_data_anim_info
+  .4byte no_data_obj_hit_info
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 no_data:
 	.incbin "baserom.dol", 0x3B76DC, 0x3C
 billboard_dolphin_data:
@@ -4229,7 +5459,11 @@ wood_barrel_physical_data:
 wood_barrel_physical_info:
 	.incbin "baserom.dol", 0x3B8AE4, 0xC
 wood_barrel_hold_data:
-	.incbin "baserom.dol", 0x3B8AF0, 0x14
+  .4byte $$22907
+  .4byte $$22908
+  .4byte 0
+  .4byte 0
+  .4byte 0
 wood_barrel_data:
 	.incbin "baserom.dol", 0x3B8B04, 0x3C
 wood_barrel_once_data:
@@ -4797,19 +6031,27 @@ Bathtub_data:
 BathtubStand_data:
 	.incbin "baserom.dol", 0x3BCC3C, 0x3C
 BathtubStandBreaking_animation:
-	.incbin "baserom.dol", 0x3BCC78, 0xC
+  .4byte $$23390
+  .4byte 0
+  .4byte 0
 BathtubStandBreaking_data:
 	.incbin "baserom.dol", 0x3BCC84, 0x3C
 ex1_turn_lift_move_data:
-	.incbin "baserom.dol", 0x3BCCC0, 0xC
+  .4byte $$23399
+  .4byte 0
+  .4byte 0
 ex1_turn_lift_data:
 	.incbin "baserom.dol", 0x3BCCCC, 0x3C
 z_turn_disk_move_data:
-	.incbin "baserom.dol", 0x3BCD08, 0xC
+  .4byte $$23402
+  .4byte 0
+  .4byte 0
 z_turn_disk_data:
 	.incbin "baserom.dol", 0x3BCD14, 0x3C
 y_turn_lift_move_data:
-	.incbin "baserom.dol", 0x3BCD50, 0xC
+  .4byte $$23405
+  .4byte 0
+  .4byte 0
 y_turn_lift_data:
 	.incbin "baserom.dol", 0x3BCD5C, 0x3C
 EXskyTumiki_data:
@@ -4829,7 +6071,366 @@ FileLoadBlockB_data:
 FileLoadBlockC_data:
 	.incbin "baserom.dol", 0x3BCF3C, 0x3C
 sObjDataTable:
-	.incbin "baserom.dol", 0x3BCF78, 0x5A0
+  .4byte bottle_large_data
+  .4byte bottle_short_data
+  .4byte WaterRecoverObj_data
+  .4byte watergun_item_data
+  .4byte nozzle_normal_item_data
+  .4byte nozzle_rocket_item_data
+  .4byte nozzle_back_item_data
+  .4byte yoshi_whistle_item_data
+  .4byte NozzleBox_data
+  .4byte coin_data
+  .4byte invisible_coin_data
+  .4byte coin_red_data
+  .4byte coin_blue_data
+  .4byte shine_data
+  .4byte mario_cap_data
+  .4byte mushroom1up_data
+  .4byte mushroom1upR_data
+  .4byte mushroom1upX_data
+  .4byte jumpbase_data
+  .4byte eggYoshi_data
+  .4byte eggYoshiEvent_data
+  .4byte coconut_data
+  .4byte papaya_data
+  .4byte pine_data
+  .4byte durian_data
+  .4byte banana_data
+  .4byte RedPepper_data
+  .4byte CoverPine_data
+  .4byte wood_barrel_data
+  .4byte wood_barrel_once_data
+  .4byte barrel_float_data
+  .4byte barrel_oil_data
+  .4byte drum_can_data
+  .4byte football_data
+  .4byte football_goal_data
+  .4byte baloonball_data
+  .4byte coconutball_data
+  .4byte watermelon_data
+  .4byte WatermelonStatic_data
+  .4byte BananaTree_data
+  .4byte FruitTree_data
+  .4byte GrowthTree_data
+  .4byte palmNormal_data
+  .4byte palmOugi_data
+  .4byte palmSago_data
+  .4byte palmNatume_data
+  .4byte palmLeaf_data
+  .4byte flower_data
+  .4byte flowerOrange_data
+  .4byte flowerPink_data
+  .4byte flowerPurple_data
+  .4byte flowerRed_data
+  .4byte flowerYellow_data
+  .4byte flowerSunflower_data
+  .4byte Fluff_data
+  .4byte FluffManager_data
+  .4byte PoleNormal_data
+  .4byte streetlamp_data
+  .4byte MonteChair_data
+  .4byte door_data
+  .4byte doorHotel_data
+  .4byte manhole_data
+  .4byte cloud_data
+  .4byte ChipShine_data
+  .4byte StarSign_data
+  .4byte KoopaJrSignM_data
+  .4byte SignCircle_data
+  .4byte SignCross_data
+  .4byte SignTriangle_data
+  .4byte lamptrapspike_data
+  .4byte lamptrapiron_data
+  .4byte ArrowBoardLR_data
+  .4byte ArrowBoardUp_data
+  .4byte ArrowBoardDown_data
+  .4byte WoodBox_data
+  .4byte MapSmoke_data
+  .4byte GeneralHitObj_data
+  .4byte billboard_dolphin_data
+  .4byte billboard_sun_data
+  .4byte billboard_restaurant_data
+  .4byte billboard_fish_data
+  .4byte fence_normal_data
+  .4byte fence3x3_data
+  .4byte fence_revolve_data
+  .4byte fence_revolve_inner_data
+  .4byte fenceInnerGreen_data
+  .4byte FenceWaterH_data
+  .4byte FenceWaterV_data
+  .4byte RailFence_data
+  .4byte bambooRailFence_data
+  .4byte bambooFenceRevolveInner_data
+  .4byte bambooFenceRevolveOuter_data
+  .4byte HideObj_data
+  .4byte WaterHitHideObj_data
+  .4byte FruitHitHideObj_data
+  .4byte HipDropHideObj_data
+  .4byte FruitBasket_data
+  .4byte BasketReverse_data
+  .4byte CoconutJuice_data
+  .4byte Pile_data
+  .4byte ObjSwitch_data
+  .4byte RedCoinSwitch_data
+  .4byte bucket_data
+  .4byte ChangeStage_data
+  .4byte ChangeStageMerrygoround_data
+  .4byte StartDemo_data
+  .4byte WaterSprayCylinder_data
+  .4byte WaterSprayBox_data
+  .4byte airplane_data
+  .4byte AirportPole_data
+  .4byte ice_car_data
+  .4byte AirportBuoy_data
+  .4byte dptCannon_data
+  .4byte dptKing_data
+  .4byte KoopaJrSubmarine_data
+  .4byte monumentshine_data
+  .4byte belldolpic_data
+  .4byte dptWeathercock_data
+  .4byte dptMonteFence_data
+  .4byte dptCoronaFence_data
+  .4byte MareGate_data
+  .4byte DemoCannon_data
+  .4byte NozzleDoor_data
+  .4byte DokanGate_data
+  .4byte crane_data
+  .4byte crane180Scene1_data
+  .4byte crane90Scene2_data
+  .4byte craneUpDown_data
+  .4byte craneCargoUpDown_data
+  .4byte tank_data
+  .4byte container_data
+  .4byte submarine_data
+  .4byte riccoShip_data
+  .4byte riccoShipLog_data
+  .4byte riccoShipDol_data
+  .4byte riccoYachtS_data
+  .4byte riccoYachtL_data
+  .4byte riccoBoatS_data
+  .4byte riccoBoatL_data
+  .4byte riccoShipFish_data
+  .4byte riccoShipGeso_data
+  .4byte riccoPole_data
+  .4byte riccoLog_data
+  .4byte gesoSurfboard_data
+  .4byte gesoSurfboardStatic_data
+  .4byte riccoWatermill_data
+  .4byte riccoBasket_data
+  .4byte riccoGangway_data
+  .4byte riccoSwitch_data
+  .4byte riccoSwitchShine_data
+  .4byte riccoFenceMaze_data
+  .4byte riccoStand_data
+  .4byte riccoGrille_data
+  .4byte riccoArrow_data
+  .4byte riccoStreetStall_data
+  .4byte riccoHericopter_data
+  .4byte surfgeso_red_data
+  .4byte surfgeso_yellow_data
+  .4byte surfgeso_green_data
+  .4byte lamp_bianco_data
+  .4byte big_windmill_data
+  .4byte windmill_block_data
+  .4byte windmill_far_data
+  .4byte MiniWindmillL_data
+  .4byte MiniWindmillS_data
+  .4byte WindmillRoof_data
+  .4byte root_pakkun_data
+  .4byte PolluterPakkun_data
+  .4byte BiaBell_data
+  .4byte BiaWatermill00_data
+  .4byte BiaWatermill01_data
+  .4byte BiaWatermillVertical_data
+  .4byte BiaTurnBridge_data
+  .4byte LeafBoat_data
+  .4byte LeafBoatRotten_data
+  .4byte LampSeesaw_data
+  .4byte BiancoDoor_data
+  .4byte BiaBridge_data
+  .4byte SandBird_data
+  .4byte SandBirdBlock_data
+  .4byte SkyIsland_data
+  .4byte SandLeaf_data
+  .4byte SandLeafBase00_data
+  .4byte SandLeafBase01_data
+  .4byte SandLeafBase02_data
+  .4byte SandLeafBase03_data
+  .4byte SandBomb_data
+  .4byte SandBombBase00_data
+  .4byte SandBombBaseMushroom_data
+  .4byte SandBombBasePyramid_data
+  .4byte SandBombBaseShit_data
+  .4byte SandBombBaseStar_data
+  .4byte SandBombBaseTurtle_data
+  .4byte SandBombBaseFoot_data
+  .4byte SandBombBaseHand_data
+  .4byte SandBombBaseStairs_data
+  .4byte MirrorL_data
+  .4byte MirrorM_data
+  .4byte MirrorS_data
+  .4byte SandCastle_data
+  .4byte MammaBlockRotate_data
+  .4byte SandEgg_data
+  .4byte SandEggBroken_data
+  .4byte ShiningStone_data
+  .4byte MammaSurfboard00_data
+  .4byte MammaSurfboard01_data
+  .4byte MammaSurfboard02_data
+  .4byte MammaSurfboard03_data
+  .4byte MammaSurfboardStand_data
+  .4byte MammaYacht00_data
+  .4byte MammaYacht01_data
+  .4byte MammaYacht02_data
+  .4byte coral00_data
+  .4byte coral01_data
+  .4byte GoalWatermelon_data
+  .4byte TeethOfJuicer_data
+  .4byte SandEggRepair_data
+  .4byte merrygoround_data
+  .4byte merry_egg_data
+  .4byte merry_pole_data
+  .4byte FerrisWheel_data
+  .4byte FerrisLOD_data
+  .4byte gondola_data
+  .4byte viking_data
+  .4byte PinnaEntrance_data
+  .4byte PinnaEntranceOpen_data
+  .4byte SirenaGate_data
+  .4byte BalloonKoopaJr_data
+  .4byte ShellCup_data
+  .4byte Gateshell_data
+  .4byte PinnaHangingBridgeBoard_data
+  .4byte GateManta_data
+  .4byte AmiKing_data
+  .4byte PinnaSunFlower_data
+  .4byte PinnaCoaster_data
+  .4byte roulette00_data
+  .4byte roulette01_data
+  .4byte roulette02_data
+  .4byte casinoroulette_data
+  .4byte slotdrum_data
+  .4byte telesaslot_data
+  .4byte donchou_data
+  .4byte casino_panel_gate_data
+  .4byte GlassBreak_data
+  .4byte Closet_data
+  .4byte ChestRevolve_data
+  .4byte PosterTeresa_data
+  .4byte PictureTeresa_data
+  .4byte PanelBreak_data
+  .4byte PanelRevolve_data
+  .4byte SirenaBlockBreak_data
+  .4byte SakuCasino_data
+  .4byte SirenabossWall_data
+  .4byte SirenaCasinoRoof_data
+  .4byte SirenaShop_data
+  .4byte StainHotel_data
+  .4byte cogwheel_data
+  .4byte CogwheelPlate_data
+  .4byte CogwheelPot_data
+  .4byte mare_float_house_data
+  .4byte StopRock_data
+  .4byte ElasticCode_data
+  .4byte WireBellPurple_data
+  .4byte MuddyBoat_data
+  .4byte Puncher_data
+  .4byte HatoPop_data
+  .4byte MareWaterJump_data
+  .4byte BumpyWall_data
+  .4byte ExBottle_data
+  .4byte CoinFish_data
+  .4byte MareFall_data
+  .4byte MareCork_data
+  .4byte MonteRoot_data
+  .4byte JumpMushroom_data
+  .4byte MonteGoalFlag_data
+  .4byte HangingBridge_data
+  .4byte HangingBridgeBoard_data
+  .4byte SwingBoard_data
+  .4byte Bathtub_data
+  .4byte BathtubStand_data
+  .4byte BathtubStandBreaking_data
+  .4byte normallift_data
+  .4byte exrollcube_data
+  .4byte exkickboard_data
+  .4byte railblockr_data
+  .4byte railblocky_data
+  .4byte railblockb_data
+  .4byte rollblockr_data
+  .4byte rollblocky_data
+  .4byte rollblockb_data
+  .4byte umaibou_data
+  .4byte kamaboko_data
+  .4byte getag_data
+  .4byte getao_data
+  .4byte uirou_data
+  .4byte hikidashi_data
+  .4byte castella_data
+  .4byte yoshiblock_data
+  .4byte Nail_data
+  .4byte PachinkoNail_data
+  .4byte ex1_turn_lift_data
+  .4byte EXskyTumiki_data
+  .4byte EXskyWindow_data
+  .4byte EXskySenro_data
+  .4byte z_turn_disk_data
+  .4byte y_turn_lift_data
+  .4byte FileLoadBlockA_data
+  .4byte FileLoadBlockB_data
+  .4byte FileLoadBlockC_data
+  .4byte NormalBlock_data
+  .4byte IceBlock_data
+  .4byte breakable_block_data
+  .4byte supermario_block_data
+  .4byte move_block_data
+  .4byte fall_slow_block_data
+  .4byte expand_block_data
+  .4byte spread_block_data
+  .4byte sand_block_data
+  .4byte water_roll_block_data
+  .4byte water_power_lift_data
+  .4byte water_power_inertial_lift_data
+  .4byte water_power_ship_data
+  .4byte lean_direct_block_data
+  .4byte lean_indirect_block_data
+  .4byte lean_block_data
+  .4byte skate_block_data
+  .4byte MoveCoin_data
+  .4byte joint_coin_data
+  .4byte cluster_block_data
+  .4byte BrickBlock_data
+  .4byte WaterMelonBlock_data
+  .4byte TelesaBlock_data
+  .4byte JuiceBlock_data
+  .4byte SuperHipDropBlock_data
+  .4byte WoodBlockTriangle_data
+  .4byte WoodBlockPyramid_data
+  .4byte WoodBlockPole_data
+  .4byte WoodBlockLong_data
+  .4byte WoodBlockLarge_data
+  .4byte WoodBlockCone_data
+  .4byte WoodBlockL_data
+  .4byte WoodBlockBridge_data
+  .4byte WoodBlockCube_data
+  .4byte normalvariant0_data
+  .4byte normalvariant1_data
+  .4byte normalvariant2_data
+  .4byte normalvariant3_data
+  .4byte normalvariant4_data
+  .4byte railvariant0_data
+  .4byte railvariant1_data
+  .4byte railvariant2_data
+  .4byte railvariant3_data
+  .4byte railvariant4_data
+  .4byte rollvariant0_data
+  .4byte rollvariant1_data
+  .4byte rollvariant2_data
+  .4byte rollvariant3_data
+  .4byte rollvariant4_data
+  .4byte no_data
+  .4byte end_data
 .global __vt__14TMapObjGeneral
 __vt__14TMapObjGeneral:
   .4byte 0
@@ -4963,7 +6564,8 @@ lamp_bianco_sink_data:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 no_data_anim_info:
-	.incbin "baserom.dol", 0x3E6A38, 0x8
+  .4byte 0
+  .4byte 0
 normal_sound_info:
 	.incbin "baserom.dol", 0x3E6A40, 0x8
 $$22770:
@@ -4997,7 +6599,8 @@ FruitBasket_anim_info:
 $$22805:
 	.incbin "baserom.dol", 0x3E6AB8, 0x8
 FruitBasket_map_collision_data:
-	.incbin "baserom.dol", 0x3E6AC0, 0x8
+  .4byte $$22805
+  .4byte 0
 FruitBasket_map_collision_info:
 	.incbin "baserom.dol", 0x3E6AC8, 0x8
 BasketReverse_anim_info:
@@ -5009,7 +6612,8 @@ BasketReverse_map_collision_info:
 $$22809:
 	.incbin "baserom.dol", 0x3E6AE8, 0x8
 Pile_map_collision_data:
-	.incbin "baserom.dol", 0x3E6AF0, 0x8
+  .4byte $$22809
+  .4byte 0
 Pile_map_collision_info:
 	.incbin "baserom.dol", 0x3E6AF8, 0x8
 ChipShine_anim_info:
@@ -5165,25 +6769,30 @@ SuperHipDropBlock_map_collision_info:
 PalmNormal_anim_info:
 	.incbin "baserom.dol", 0x3E6D58, 0x8
 PalmNormalTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6D60, 0x8
+  .4byte $$22969
+  .4byte 0
 PalmNormalTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6D68, 0x8
 PalmOugiTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6D70, 0x8
+  .4byte $$22971
+  .4byte 0
 PalmOugiTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6D78, 0x8
 PalmSagoTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6D80, 0x8
+  .4byte $$22972
+  .4byte 0
 PalmSagoTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6D88, 0x8
 PalmNatumeTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6D90, 0x8
+  .4byte $$22973
+  .4byte 0
 PalmNatumeTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6D98, 0x8
 PalmLeaf_anim_info:
 	.incbin "baserom.dol", 0x3E6DA0, 0x8
 PalmLeafTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6DA8, 0x8
+  .4byte $$22975
+  .4byte 0
 PalmLeafTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6DB0, 0x8
 BananaTree_anim_info:
@@ -5193,7 +6802,8 @@ BananaTree_map_collision_data:
 BananaTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6DC8, 0x8
 FruitTree_map_collision_data:
-	.incbin "baserom.dol", 0x3E6DD0, 0x8
+  .4byte $$22978
+  .4byte 0
 FruitTree_map_collision_info:
 	.incbin "baserom.dol", 0x3E6DD8, 0x8
 $$22981:
@@ -5459,7 +7069,8 @@ $$23100:
 dptKing_map_collision_info:
 	.incbin "baserom.dol", 0x3E71F0, 0x8
 KoopaJrSubmarine_map_collision_data:
-	.incbin "baserom.dol", 0x3E71F8, 0x8
+  .4byte $$23101
+  .4byte 0
 KoopaJrSubmarine_map_collision_info:
 	.incbin "baserom.dol", 0x3E7200, 0x8
 monumentshine_anim_info:
@@ -5555,19 +7166,23 @@ riccoBoatS_map_collision_data:
 riccoBoatS_map_collision_info:
 	.incbin "baserom.dol", 0x3E7370, 0x8
 riccoBasket_map_collision_data:
-	.incbin "baserom.dol", 0x3E7378, 0x8
+  .4byte $$23142
+  .4byte 0
 riccoBasket_map_collision_info:
 	.incbin "baserom.dol", 0x3E7380, 0x8
 riccoGangway_map_collision_data:
-	.incbin "baserom.dol", 0x3E7388, 0x8
+  .4byte $$23143
+  .4byte 0
 riccoGangway_map_collision_info:
 	.incbin "baserom.dol", 0x3E7390, 0x8
 riccoShipFish_map_collision_data:
-	.incbin "baserom.dol", 0x3E7398, 0x8
+  .4byte $$23144
+  .4byte 0
 riccoShipFish_map_collision_info:
 	.incbin "baserom.dol", 0x3E73A0, 0x8
 riccoShipGeso_map_collision_data:
-	.incbin "baserom.dol", 0x3E73A8, 0x8
+  .4byte $$23145
+  .4byte 0
 riccoShipGeso_map_collision_info:
 	.incbin "baserom.dol", 0x3E73B0, 0x8
 riccoSwitch_map_collision_data:
@@ -5575,27 +7190,33 @@ riccoSwitch_map_collision_data:
 riccoSwitch_map_collision_info:
 	.incbin "baserom.dol", 0x3E73C0, 0x8
 riccoFenceMaze_map_collision_data:
-	.incbin "baserom.dol", 0x3E73C8, 0x8
+  .4byte $$23148
+  .4byte 0
 riccoFenceMaze_map_collision_info:
 	.incbin "baserom.dol", 0x3E73D0, 0x8
 riccoStand_map_collision_data:
-	.incbin "baserom.dol", 0x3E73D8, 0x8
+  .4byte $$23149
+  .4byte 0
 riccoStand_map_collision_info:
 	.incbin "baserom.dol", 0x3E73E0, 0x8
 riccoGrille_map_collision_data:
-	.incbin "baserom.dol", 0x3E73E8, 0x8
+  .4byte $$23150
+  .4byte 0
 riccoGrille_map_collision_info:
 	.incbin "baserom.dol", 0x3E73F0, 0x8
 riccoArrow_map_collision_data:
-	.incbin "baserom.dol", 0x3E73F8, 0x8
+  .4byte $$23151
+  .4byte 0
 riccoArrow_map_collision_info:
 	.incbin "baserom.dol", 0x3E7400, 0x8
 riccoStreetStall_map_collision_data:
-	.incbin "baserom.dol", 0x3E7408, 0x8
+  .4byte $$23152
+  .4byte 0
 riccoStreetStall_map_collision_info:
 	.incbin "baserom.dol", 0x3E7410, 0x8
 riccoHericopter_map_collision_data:
-	.incbin "baserom.dol", 0x3E7418, 0x8
+  .4byte $$23153
+  .4byte 0
 riccoHericopter_map_collision_info:
 	.incbin "baserom.dol", 0x3E7420, 0x8
 windmill_anim_info:
@@ -5621,7 +7242,8 @@ lamp_bianco_anim_info:
 lamp_bianco_map_collision_info:
 	.incbin "baserom.dol", 0x3E7478, 0x8
 RootPakkun_map_collision_data:
-	.incbin "baserom.dol", 0x3E7480, 0x8
+  .4byte $$23166
+  .4byte 0
 RootPakkun_map_collision_info:
 	.incbin "baserom.dol", 0x3E7488, 0x8
 windmill_block_map_collision_data:
@@ -5659,11 +7281,13 @@ LampSeesaw_map_collision_info:
 $$23184:
 	.incbin "baserom.dol", 0x3E7510, 0x8
 BiancoDoor_map_collision_data:
-	.incbin "baserom.dol", 0x3E7518, 0x8
+  .4byte $$23184
+  .4byte 0
 BiancoDoor_map_collision_info:
 	.incbin "baserom.dol", 0x3E7520, 0x8
 BiaBridge_map_collision_data:
-	.incbin "baserom.dol", 0x3E7528, 0x8
+  .4byte $$23185
+  .4byte 0
 BiaBridge_map_collision_info:
 	.incbin "baserom.dol", 0x3E7530, 0x8
 SandBird_anim_info:
@@ -5673,7 +7297,8 @@ SandBirdBlock_map_collision_info:
 SkyIsland_anim_info:
 	.incbin "baserom.dol", 0x3E7548, 0x8
 SkyIsland_map_collision_data:
-	.incbin "baserom.dol", 0x3E7550, 0x8
+  .4byte $$23192
+  .4byte 0
 SkyIsland_map_collision_info:
 	.incbin "baserom.dol", 0x3E7558, 0x8
 SandLeaf_anim_info:
@@ -5715,27 +7340,33 @@ SandCastle_map_collision_info:
 MammaBlockRotate_map_collision_info:
 	.incbin "baserom.dol", 0x3E75F0, 0x8
 SandEgg_map_collision_data:
-	.incbin "baserom.dol", 0x3E75F8, 0x8
+  .4byte $$23221
+  .4byte 0
 SandEgg_map_collision_info:
 	.incbin "baserom.dol", 0x3E7600, 0x8
 SandEggBroken_map_collision_data:
-	.incbin "baserom.dol", 0x3E7608, 0x8
+  .4byte $$23222
+  .4byte 0
 SandEggBroken_map_collision_info:
 	.incbin "baserom.dol", 0x3E7610, 0x8
 MammaSurfboardStand_map_collision_data:
-	.incbin "baserom.dol", 0x3E7618, 0x8
+  .4byte $$23228
+  .4byte 0
 MammaSurfboardStand_map_collision_info:
 	.incbin "baserom.dol", 0x3E7620, 0x8
 MammaYacht00_map_collision_data:
-	.incbin "baserom.dol", 0x3E7628, 0x8
+  .4byte $$23229
+  .4byte 0
 MammaYacht00_map_collision_info:
 	.incbin "baserom.dol", 0x3E7630, 0x8
 MammaYacht01_map_collision_data:
-	.incbin "baserom.dol", 0x3E7638, 0x8
+  .4byte $$23230
+  .4byte 0
 MammaYacht01_map_collision_info:
 	.incbin "baserom.dol", 0x3E7640, 0x8
 MammaYacht02_map_collision_data:
-	.incbin "baserom.dol", 0x3E7648, 0x8
+  .4byte $$23231
+  .4byte 0
 MammaYacht02_map_collision_info:
 	.incbin "baserom.dol", 0x3E7650, 0x8
 SandBombBase00_anim_info:
@@ -5781,7 +7412,8 @@ $$23252:
 TeethOfJuicer_anim_info:
 	.incbin "baserom.dol", 0x3E76F8, 0x8
 SandEggRepair_map_collision_data:
-	.incbin "baserom.dol", 0x3E7700, 0x8
+  .4byte $$23257
+  .4byte 0
 SandEggRepair_map_collision_info:
 	.incbin "baserom.dol", 0x3E7708, 0x8
 $$23259:
@@ -5789,7 +7421,8 @@ $$23259:
 merrygoround_anim_info:
 	.incbin "baserom.dol", 0x3E7718, 0x8
 merrygoround_map_collision_data:
-	.incbin "baserom.dol", 0x3E7720, 0x8
+  .4byte $$23259
+  .4byte 0
 merrygoround_map_collision_info:
 	.incbin "baserom.dol", 0x3E7728, 0x8
 merry_egg_map_collision_data:
@@ -5865,13 +7498,15 @@ roulette00_map_collision_info:
 $$23296:
 	.incbin "baserom.dol", 0x3E7848, 0x8
 roulette01_map_collision_data:
-	.incbin "baserom.dol", 0x3E7850, 0x8
+  .4byte $$23296
+  .4byte 0
 roulette01_map_collision_info:
 	.incbin "baserom.dol", 0x3E7858, 0x8
 $$23297:
 	.incbin "baserom.dol", 0x3E7860, 0x8
 roulette02_map_collision_data:
-	.incbin "baserom.dol", 0x3E7868, 0x8
+  .4byte $$23297
+  .4byte 0
 roulette02_map_collision_info:
 	.incbin "baserom.dol", 0x3E7870, 0x8
 $$23301:
@@ -5927,7 +7562,8 @@ PanelRevolve_map_collision_data:
 PanelRevolve_map_collision_info:
 	.incbin "baserom.dol", 0x3E7940, 0x8
 SirenaShop_map_collision_data:
-	.incbin "baserom.dol", 0x3E7948, 0x8
+  .4byte $$23331
+  .4byte 0
 SirenaShop_map_collision_info:
 	.incbin "baserom.dol", 0x3E7950, 0x8
 cogwheel_anim_info:
@@ -5993,7 +7629,8 @@ MonteRoot_anim_info:
 JumpMushroom_anim_info:
 	.incbin "baserom.dol", 0x3E7A48, 0x8
 JumpMushroom_map_collision_data:
-	.incbin "baserom.dol", 0x3E7A50, 0x8
+  .4byte $$23373
+  .4byte 0
 JumpMushroom_map_collision_info:
 	.incbin "baserom.dol", 0x3E7A58, 0x8
 MonteGoalFlag_anim_info:
@@ -6053,7 +7690,8 @@ PachinkoNail_map_collision_data:
 PachinkoNail_map_collision_info:
 	.incbin "baserom.dol", 0x3E7B38, 0x8
 FileLoadBlock_map_collision_data:
-	.incbin "baserom.dol", 0x3E7B40, 0x8
+  .4byte $$23416
+  .4byte 0
 FileLoadBlock_map_collision_info:
 	.incbin "baserom.dol", 0x3E7B48, 0x8
 FileLoadBlockA_anim_info:
@@ -6063,7 +7701,7 @@ FileLoadBlockB_anim_info:
 FileLoadBlockC_anim_info:
 	.incbin "baserom.dol", 0x3E7B60, 0x8
 $$23635:
-	.incbin "baserom.dol", 0x3E7B68, 0x4
+  .4byte 0
 $$23910:
 	.incbin "baserom.dol", 0x3E7B6C, 0x8
 $$23969:

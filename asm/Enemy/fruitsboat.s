@@ -2238,7 +2238,9 @@ $$232$$2__dt__11TFruitsBoatFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39CA20, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39CA2C, 0x14
 $$22009:
@@ -2250,7 +2252,9 @@ $$22011:
 $$22012:
 	.incbin "baserom.dol", 0x39CADC, 0x24
 $$22333:
-	.incbin "baserom.dol", 0x39CB00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22335:
 	.incbin "baserom.dol", 0x39CB0C, 0xC
 $$22759:
@@ -2424,7 +2428,7 @@ $$22975:
 $$22976:
 	.incbin "baserom.dol", 0x3EB36C, 0x4
 $$22977:
-	.incbin "baserom.dol", 0x3EB370, 0x4
+  .4byte 0
 $$22978:
 	.incbin "baserom.dol", 0x3EB374, 0x4
 $$22979:

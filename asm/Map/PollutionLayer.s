@@ -1848,9 +1848,9 @@ mEffectTime__15TPollutionLayer:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22368:
-	.incbin "baserom.dol", 0x3E8DE0, 0x4
+  .4byte 0
 $$22548:
-	.incbin "baserom.dol", 0x3E8DE4, 0x4
+  .4byte 0
 $$22714:
 	.incbin "baserom.dol", 0x3E8DE8, 0x4
 $$22786:

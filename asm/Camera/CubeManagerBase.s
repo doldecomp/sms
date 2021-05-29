@@ -585,7 +585,9 @@ __ct__16TCubeManagerBaseFPCcPCc:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3A40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A3A4C, 0x14
 $$22024:
@@ -617,7 +619,7 @@ $$21898:
 $$21899:
 	.incbin "baserom.dol", 0x3EC4E4, 0x8
 $$22026:
-	.incbin "baserom.dol", 0x3EC4EC, 0x4
+  .4byte 0
 $$22027:
 	.incbin "baserom.dol", 0x3EC4F0, 0x8
 

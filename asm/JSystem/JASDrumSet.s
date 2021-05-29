@@ -331,7 +331,7 @@ __vt__Q28JASystem8TDrumSet:
 $$2323:
 	.incbin "baserom.dol", 0x3E42F8, 0x4
 $$2324:
-	.incbin "baserom.dol", 0x3E42FC, 0x4
+  .4byte 0
 $$2328:
 	.incbin "baserom.dol", 0x3E4300, 0x8
 

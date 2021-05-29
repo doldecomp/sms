@@ -1234,7 +1234,9 @@ $$232$$2__dt__8TFishoidFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A4998, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A49A4, 0x14
 $$21585:
@@ -1254,7 +1256,10 @@ $$22232:
 $$22233:
 	.incbin "baserom.dol", 0x3A4A9C, 0xC
 cFishoidMdlNames__9$$2unnamed$$2:
-	.incbin "baserom.dol", 0x3A4AA8, 0x10
+  .4byte $$22230
+  .4byte $$22231
+  .4byte $$22232
+  .4byte $$22233
 entry$2319:
 	.incbin "baserom.dol", 0x3A4AB8, 0x3C
 $$22458:
@@ -1532,7 +1537,7 @@ __vt__13TRealoidActor:
 $$22339:
 	.incbin "baserom.dol", 0x3EC658, 0x8
 $$22362:
-	.incbin "baserom.dol", 0x3EC660, 0x4
+  .4byte 0
 $$22450:
 	.incbin "baserom.dol", 0x3EC664, 0x4
 $$22451:
@@ -1544,7 +1549,7 @@ $$22453:
 $$22454:
 	.incbin "baserom.dol", 0x3EC674, 0x4
 $$22455:
-	.incbin "baserom.dol", 0x3EC678, 0x4
+  .4byte 0
 $$22456:
 	.incbin "baserom.dol", 0x3EC67C, 0x4
 $$22457:

@@ -1299,7 +1299,9 @@ halftofull$376:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 saoAboutEncoding___10JUTResFont:
-	.incbin "baserom.dol", 0x3A6F08, 0xC
+  .4byte isLeadByte_1Byte__7JUTFontFi
+  .4byte isLeadByte_2Byte__7JUTFontFi
+  .4byte isLeadByte_ShiftJIS__7JUTFontFi
 .global __vt__10JUTResFont
 __vt__10JUTResFont:
   .4byte 0
@@ -1320,7 +1322,8 @@ __vt__10JUTResFont:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2335:
-	.incbin "baserom.dol", 0x3E4018, 0x8
+  .4byte 0
+  .4byte 0
 $$2337:
 	.incbin "baserom.dol", 0x3E4020, 0x8
 $$2339:

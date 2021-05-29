@@ -293,7 +293,8 @@ digit_values:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2268:
-	.incbin "baserom.dol", 0x3E4658, 0x8
+  .4byte 0
+  .4byte 0
 $$2270:
 	.incbin "baserom.dol", 0x3E4660, 0x8
 $$2272:

@@ -6719,7 +6719,9 @@ lbl_800F635C:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x370D78, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22117:
 	.incbin "baserom.dol", 0x370D84, 0x14
 $$22173:
@@ -6735,7 +6737,9 @@ cDirtyFileName:
 cDirtyTexName:
 	.incbin "baserom.dol", 0x370E7C, 0x10
 $$22958:
-	.incbin "baserom.dol", 0x370E8C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22960:
 	.incbin "baserom.dol", 0x370E98, 0xC
 $$24634:
@@ -7195,7 +7199,7 @@ $$24712:
 $$24750:
 	.incbin "baserom.dol", 0x3E4E58, 0x8
 $$24766:
-	.incbin "baserom.dol", 0x3E4E60, 0x4
+  .4byte 0
 $$24767:
 	.incbin "baserom.dol", 0x3E4E64, 0x4
 $$24835:

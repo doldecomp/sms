@@ -237,7 +237,9 @@ lbl_80100EC4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3738F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21723:
 	.incbin "baserom.dol", 0x3738FC, 0x14
 $$21779:
@@ -286,10 +288,10 @@ $$22108:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cSunVolumeName
 cSunVolumeName:
-	.incbin "baserom.dol", 0x3E3468, 0x4
+  .4byte $$21956
 .global cSunsetVolumeName
 cSunsetVolumeName:
-	.incbin "baserom.dol", 0x3E346C, 0x4
+  .4byte $$21957
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22088:

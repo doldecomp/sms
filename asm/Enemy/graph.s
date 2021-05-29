@@ -3509,7 +3509,9 @@ __ct__10TGraphNodeFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x393238, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x393244, 0x14
 $$21961:
@@ -3531,7 +3533,10 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D1370, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D1380, 0x10
+  .4byte $$21961
+  .4byte $$21962
+  .4byte $$21963
+  .4byte $$21964
 grDummyRail:
 	.incbin "baserom.dol", 0x3D1390, 0xCC
 .global __vt__9TGraphWeb
@@ -3542,7 +3547,7 @@ __vt__9TGraphWeb:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22783:
-	.incbin "baserom.dol", 0x3E9F08, 0x4
+  .4byte 0
 $$22890:
 	.incbin "baserom.dol", 0x3E9F0C, 0x4
 $$22892:

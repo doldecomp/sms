@@ -2030,7 +2030,7 @@ mVelocityMinY__10TLiveActor:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22838:
-	.incbin "baserom.dol", 0x3E5348, 0x4
+  .4byte 0
 $$22872:
 	.incbin "baserom.dol", 0x3E534C, 0x4
 $$22873:

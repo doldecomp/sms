@@ -4574,7 +4574,7 @@ __vt__10J3DAnmBase:
 $$2955:
 	.incbin "baserom.dol", 0x3E3F50, 0x4
 $$2956:
-	.incbin "baserom.dol", 0x3E3F54, 0x4
+  .4byte 0
 $$21073:
 	.incbin "baserom.dol", 0x3E3F58, 0x8
 $$21075:

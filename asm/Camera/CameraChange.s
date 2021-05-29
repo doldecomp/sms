@@ -2209,7 +2209,7 @@ $$23874:
 $$23696:
 	.incbin "baserom.dol", 0x3EC190, 0x4
 $$23697:
-	.incbin "baserom.dol", 0x3EC194, 0x4
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$23186:

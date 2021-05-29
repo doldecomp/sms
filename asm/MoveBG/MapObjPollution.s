@@ -712,7 +712,7 @@ __vt__13TPolluterBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22649:
-	.incbin "baserom.dol", 0x3E8540, 0x4
+  .4byte 0
 $$22704:
 	.incbin "baserom.dol", 0x3E8544, 0x4
 

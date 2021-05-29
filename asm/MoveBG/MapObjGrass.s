@@ -1118,7 +1118,7 @@ color_table:
 $$22453:
 	.incbin "baserom.dol", 0x3E8548, 0x4
 $$22496:
-	.incbin "baserom.dol", 0x3E854C, 0x4
+  .4byte 0
 $$22555:
 	.incbin "baserom.dol", 0x3E8550, 0x4
 $$22620:

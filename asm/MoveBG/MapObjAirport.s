@@ -806,7 +806,7 @@ __vt__14TAirportSwitch:
 $$22902:
 	.incbin "baserom.dol", 0x3E84C8, 0x4
 $$22917:
-	.incbin "baserom.dol", 0x3E84CC, 0x4
+  .4byte 0
 $$22924:
 	.incbin "baserom.dol", 0x3E84D0, 0x8
 

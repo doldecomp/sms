@@ -100,7 +100,9 @@ lbl_80111030:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x376E40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x376E4C, 0x14
 $$21582:
@@ -134,7 +136,8 @@ __vt__12TTargetArrow:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cTargetArrowBmdFileName:
-	.incbin "baserom.dol", 0x3E3470, 0x8
+  .4byte $$21681
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpTargetArrow

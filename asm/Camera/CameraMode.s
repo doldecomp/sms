@@ -372,7 +372,9 @@ isLButtonCameraSpecifyMode__15CPolarSubCameraCFi:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3D20, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A3D2C, 0x14
 $$21535:
@@ -525,7 +527,79 @@ $$21607:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global mCamKindNameSaveFile__15CPolarSubCamera
 mCamKindNameSaveFile__15CPolarSubCamera:
-	.incbin "baserom.dol", 0x3E1CF0, 0x124
+  .4byte $$21535
+  .4byte $$21536
+  .4byte $$21537
+  .4byte $$21538
+  .4byte $$21539
+  .4byte $$21540
+  .4byte $$21541
+  .4byte $$21542
+  .4byte $$21543
+  .4byte $$21544
+  .4byte $$21545
+  .4byte $$21546
+  .4byte $$21547
+  .4byte $$21548
+  .4byte $$21549
+  .4byte $$21550
+  .4byte $$21551
+  .4byte $$21552
+  .4byte $$21553
+  .4byte $$21554
+  .4byte $$21555
+  .4byte $$21556
+  .4byte $$21557
+  .4byte $$21558
+  .4byte $$21559
+  .4byte $$21560
+  .4byte $$21561
+  .4byte $$21562
+  .4byte $$21563
+  .4byte $$21564
+  .4byte $$21565
+  .4byte $$21566
+  .4byte $$21567
+  .4byte $$21568
+  .4byte $$21569
+  .4byte $$21570
+  .4byte $$21571
+  .4byte $$21572
+  .4byte $$21573
+  .4byte $$21574
+  .4byte $$21575
+  .4byte $$21576
+  .4byte $$21577
+  .4byte $$21578
+  .4byte $$21579
+  .4byte $$21580
+  .4byte $$21581
+  .4byte $$21582
+  .4byte $$21583
+  .4byte $$21584
+  .4byte $$21585
+  .4byte $$21586
+  .4byte $$21587
+  .4byte $$21588
+  .4byte $$21589
+  .4byte $$21590
+  .4byte $$21591
+  .4byte $$21592
+  .4byte $$21593
+  .4byte $$21594
+  .4byte $$21595
+  .4byte $$21596
+  .4byte $$21597
+  .4byte $$21598
+  .4byte $$21599
+  .4byte $$21600
+  .4byte $$21601
+  .4byte $$21602
+  .4byte $$21603
+  .4byte $$21604
+  .4byte $$21605
+  .4byte $$21606
+  .4byte $$21607
 $$21781:
     .4byte lbl_80362FBC
     .4byte lbl_80362FBC

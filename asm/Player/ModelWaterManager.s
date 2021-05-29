@@ -5470,7 +5470,9 @@ $$232$$2__dt__14TWaterHitActorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37B2C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22239:
 	.incbin "baserom.dol", 0x37B2D4, 0x14
 $$22295:
@@ -5568,11 +5570,30 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B3E78, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3B3E88, 0x10
+  .4byte $$22295
+  .4byte $$22296
+  .4byte $$22297
+  .4byte $$22298
 gModelWaterManagerWaterColor:
 	.incbin "baserom.dol", 0x3B3E98, 0x10
 prmNames:
-	.incbin "baserom.dol", 0x3B3EA8, 0x44
+  .4byte $$22665
+  .4byte $$22666
+  .4byte $$22667
+  .4byte $$22668
+  .4byte $$22669
+  .4byte $$22670
+  .4byte $$22671
+  .4byte $$22672
+  .4byte $$22673
+  .4byte $$22674
+  .4byte $$22675
+  .4byte $$22676
+  .4byte $$22677
+  .4byte $$22678
+  .4byte $$22679
+  .4byte $$22680
+  .4byte $$22681
 gWaterManagerPlaneInfo:
 	.incbin "baserom.dol", 0x3B3EEC, 0x34
 tmp_data:
@@ -5669,33 +5690,33 @@ $$22699:
 $$22701:
 	.incbin "baserom.dol", 0x3E60C4, 0x4
 $$23018:
-	.incbin "baserom.dol", 0x3E60C8, 0x4
+  .4byte -1
 $$23035:
 	.incbin "baserom.dol", 0x3E60CC, 0x4
 $$23040:
-	.incbin "baserom.dol", 0x3E60D0, 0x4
+  .4byte 0
 $$23049:
 	.incbin "baserom.dol", 0x3E60D4, 0x4
 $$23072:
-	.incbin "baserom.dol", 0x3E60D8, 0x4
+  .4byte -1
 $$23080:
 	.incbin "baserom.dol", 0x3E60DC, 0x4
 $$23087:
-	.incbin "baserom.dol", 0x3E60E0, 0x4
+  .4byte -1
 $$23103:
 	.incbin "baserom.dol", 0x3E60E4, 0x4
 $$23124:
-	.incbin "baserom.dol", 0x3E60E8, 0x4
+  .4byte -1
 $$23175:
-	.incbin "baserom.dol", 0x3E60EC, 0x4
+  .4byte 0
 $$23178:
-	.incbin "baserom.dol", 0x3E60F0, 0x4
+  .4byte -1
 $$23346:
 	.incbin "baserom.dol", 0x3E60F4, 0x4
 $$23347:
 	.incbin "baserom.dol", 0x3E60F8, 0x4
 $$23348:
-	.incbin "baserom.dol", 0x3E60FC, 0x4
+  .4byte 0
 $$23382:
 	.incbin "baserom.dol", 0x3E6100, 0x8
 $$23564:

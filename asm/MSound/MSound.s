@@ -3628,7 +3628,9 @@ lbl_8017FA58:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21912:
-	.incbin "baserom.dol", 0x383F58, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21953:
 	.incbin "baserom.dol", 0x383F64, 0x14
 $$23426:
@@ -3644,9 +3646,27 @@ $$23430:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 smTrackCategory__12MSSeCallBack:
-	.incbin "baserom.dol", 0x3B6C48, 0x40
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
+  .4byte -1
 smPolifonic__12MSSeCallBack:
-	.incbin "baserom.dol", 0x3B6C88, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__6MSound
 __vt__6MSound:
   .4byte 0
@@ -3687,7 +3707,7 @@ $$22858:
     .4byte lbl_8017CFEC
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22462:
-	.incbin "baserom.dol", 0x3E6718, 0x4
+  .4byte 0
 $$22520:
 	.incbin "baserom.dol", 0x3E671C, 0x4
 $$22594:

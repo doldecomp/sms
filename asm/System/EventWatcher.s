@@ -11921,7 +11921,9 @@ lbl_800E6A80:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x36F990, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x36F99C, 0x14
 $$22200:
@@ -11933,7 +11935,9 @@ $$22202:
 $$22203:
 	.incbin "baserom.dol", 0x36FA4C, 0x24
 $$22728:
-	.incbin "baserom.dol", 0x36FA70, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22730:
 	.incbin "baserom.dol", 0x36FA7C, 0xC
 $$23432:
@@ -12165,7 +12169,8 @@ __vt__32TSpcTypedBinary$$013TEventWatcher$$1:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sShineViewObjName$3431:
-	.incbin "baserom.dol", 0x3E3448, 0x8
+  .4byte $$23432
+  .4byte $$23433
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23756:
@@ -12179,7 +12184,7 @@ $$23830:
 $$23831:
 	.incbin "baserom.dol", 0x3E4CCC, 0x4
 $$23832:
-	.incbin "baserom.dol", 0x3E4CD0, 0x4
+  .4byte 0
 $$23833:
 	.incbin "baserom.dol", 0x3E4CD4, 0x4
 $$23931:
@@ -12193,7 +12198,7 @@ $$23989:
 $$23990:
 	.incbin "baserom.dol", 0x3E4CEC, 0x4
 $$24053:
-	.incbin "baserom.dol", 0x3E4CF0, 0x4
+  .4byte 0
 $$24803:
 	.incbin "baserom.dol", 0x3E4CF4, 0x4
 $$25131:

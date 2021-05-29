@@ -1358,7 +1358,7 @@ __vt__11TBoidLeader:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22190:
-	.incbin "baserom.dol", 0x3EC5F0, 0x4
+  .4byte 0
 $$22191:
 	.incbin "baserom.dol", 0x3EC5F4, 0x4
 $$22192:

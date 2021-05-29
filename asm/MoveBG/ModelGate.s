@@ -1865,7 +1865,9 @@ $$232$$2__dt__10TModelGateFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38CD80, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22182:
 	.incbin "baserom.dol", 0x38CD8C, 0x14
 $$22397:
@@ -1945,11 +1947,23 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3C87E0, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3C87F0, 0x10
+  .4byte $$22397
+  .4byte $$22398
+  .4byte $$22399
+  .4byte $$22400
 gateMActorNames:
-	.incbin "baserom.dol", 0x3C8800, 0x14
+  .4byte $$22568
+  .4byte $$22569
+  .4byte $$22570
+  .4byte $$22571
+  .4byte $$22572
 gateNames$2573:
-	.incbin "baserom.dol", 0x3C8814, 0x18
+  .4byte $$22574
+  .4byte $$22575
+  .4byte $$22576
+  .4byte $$22577
+  .4byte $$22578
+  .4byte 0
 .global __vt__10TModelGate
 __vt__10TModelGate:
   .4byte 0
@@ -2017,7 +2031,7 @@ $$23046:
 $$23047:
 	.incbin "baserom.dol", 0x3E8598, 0x4
 $$23048:
-	.incbin "baserom.dol", 0x3E859C, 0x4
+  .4byte 0
 $$23049:
 	.incbin "baserom.dol", 0x3E85A0, 0x8
 $$23050:

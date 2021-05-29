@@ -969,7 +969,9 @@ $$232$$2__dt__9TSunModelFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A39C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A39D4, 0x14
 $$21633:
@@ -1035,7 +1037,7 @@ __vt__9TSunModel:
 $$21861:
 	.incbin "baserom.dol", 0x3EC470, 0x4
 $$21862:
-	.incbin "baserom.dol", 0x3EC474, 0x4
+  .4byte 0
 $$21863:
 	.incbin "baserom.dol", 0x3EC478, 0x4
 $$21864:

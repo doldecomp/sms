@@ -2708,7 +2708,9 @@ lbl_80175410:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37C8F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x37C8FC, 0x14
 $$22219:
@@ -2784,17 +2786,23 @@ $$23130:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sCameraNames$2626:
-	.incbin "baserom.dol", 0x3B63D8, 0x18
+  .4byte $$22627
+  .4byte $$22628
+  .4byte $$22629
+  .4byte $$22630
+  .4byte $$22631
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22681:
 	.incbin "baserom.dol", 0x3E6460, 0x8
 $$22682:
-	.incbin "baserom.dol", 0x3E6468, 0x4
+  .4byte 0
 $$22685:
 	.incbin "baserom.dol", 0x3E646C, 0x4
 $$22821:
-	.incbin "baserom.dol", 0x3E6470, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22640:

@@ -2537,9 +2537,13 @@ $$2894:
 $$2914:
 	.incbin "baserom.dol", 0x36DC04, 0xC
 $$21249:
-	.incbin "baserom.dol", 0x36DC10, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21251:
-	.incbin "baserom.dol", 0x36DC1C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8J3DJoint
@@ -2709,4 +2713,4 @@ __vt__13J3DMtxCalcAnm:
 $$21077:
 	.incbin "baserom.dol", 0x3E3EF0, 0x4
 $$21258:
-	.incbin "baserom.dol", 0x3E3EF4, 0x4
+  .4byte 0

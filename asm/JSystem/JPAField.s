@@ -2808,7 +2808,7 @@ __vt__12JPABaseField:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21671:
-	.incbin "baserom.dol", 0x3E4500, 0x4
+  .4byte 0
 $$21672:
 	.incbin "baserom.dol", 0x3E4504, 0x4
 $$21673:

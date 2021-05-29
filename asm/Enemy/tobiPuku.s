@@ -5669,7 +5669,9 @@ $$232$$2__dt__8TMoePukuFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x397588, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x397594, 0x14
 $$22354:
@@ -5741,9 +5743,29 @@ $$24989:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 pukupuku_bastable:
-	.incbin "baserom.dol", 0x3D6218, 0x2C
+  .4byte 0
+  .4byte $$22894
+  .4byte $$22895
+  .4byte $$22896
+  .4byte 0
+  .4byte $$22897
+  .4byte 0
+  .4byte 0
+  .4byte $$22898
+  .4byte $$22899
+  .4byte 0
 moepuku_bastable:
-	.incbin "baserom.dol", 0x3D6244, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte $$22901
+  .4byte $$22902
+  .4byte 0
+  .4byte $$22903
+  .4byte 0
+  .4byte 0
+  .4byte $$22904
+  .4byte 0
+  .4byte 0
 .global __vt__24TNerveTobiPukuSwimWander
 __vt__24TNerveTobiPukuSwimWander:
   .4byte 0
@@ -6535,7 +6557,7 @@ mReturnLaunchSw__9TTobiPuku:
 $$23300:
 	.incbin "baserom.dol", 0x3EA7D0, 0x4
 $$23356:
-	.incbin "baserom.dol", 0x3EA7D4, 0x4
+  .4byte 0
 $$23357:
 	.incbin "baserom.dol", 0x3EA7D8, 0x4
 $$23358:

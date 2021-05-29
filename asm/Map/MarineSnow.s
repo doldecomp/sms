@@ -210,6 +210,6 @@ __vt__11TMarineSnow:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21992:
-	.incbin "baserom.dol", 0x3E8E20, 0x4
+  .4byte 0
 $$21993:
 	.incbin "baserom.dol", 0x3E8E24, 0x4

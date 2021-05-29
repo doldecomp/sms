@@ -6874,7 +6874,9 @@ $$232$$2__dt__10TSamboHeadFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39BD90, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22118:
 	.incbin "baserom.dol", 0x39BD9C, 0x14
 $$22357:
@@ -7030,9 +7032,31 @@ $$25723:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sambo_bastable:
-	.incbin "baserom.dol", 0x3DB3C0, 0x2C
+  .4byte $$22687
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22688
+  .4byte 0
+  .4byte $$22689
+  .4byte $$22690
+  .4byte $$22691
+  .4byte 0
+  .4byte $$22692
 sambohead_bastable:
-	.incbin "baserom.dol", 0x3DB3EC, 0x34
+  .4byte $$22694
+  .4byte $$22695
+  .4byte $$22696
+  .4byte $$22697
+  .4byte $$22698
+  .4byte $$22699
+  .4byte $$22700
+  .4byte $$22701
+  .4byte $$22702
+  .4byte 0
+  .4byte $$22703
+  .4byte $$22704
+  .4byte 0
 entry$2760:
 	.incbin "baserom.dol", 0x3DB420, 0x18
 entry$2894:
@@ -7549,7 +7573,7 @@ $$23345:
 $$23346:
 	.incbin "baserom.dol", 0x3EB1E4, 0x4
 $$23510:
-	.incbin "baserom.dol", 0x3EB1E8, 0x4
+  .4byte 0
 $$23511:
 	.incbin "baserom.dol", 0x3EB1EC, 0x4
 $$23512:

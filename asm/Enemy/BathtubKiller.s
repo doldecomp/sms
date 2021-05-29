@@ -5205,7 +5205,9 @@ $$232$$2__dt__14TBathtubKillerFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A1668, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22355:
 	.incbin "baserom.dol", 0x3A1674, 0x14
 $$22422:
@@ -5307,7 +5309,9 @@ $$25737:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bathtubkiller_bastable:
-	.incbin "baserom.dol", 0x3E0180, 0xC
+  .4byte $$22919
+  .4byte 0
+  .4byte 0
 entry$3235:
 	.incbin "baserom.dol", 0x3E018C, 0x24
 .global __vt__21TBathtubKillerManager
@@ -5553,13 +5557,14 @@ $$22955:
 $$22956:
 	.incbin "baserom.dol", 0x3E3C44, 0x4
 loopFilenames$3201:
-	.incbin "baserom.dol", 0x3E3C48, 0x8
+  .4byte $$23202
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23352:
 	.incbin "baserom.dol", 0x3EBEF8, 0x4
 $$23353:
-	.incbin "baserom.dol", 0x3EBEFC, 0x4
+  .4byte 0
 $$23425:
 	.incbin "baserom.dol", 0x3EBF00, 0x8
 $$23511:

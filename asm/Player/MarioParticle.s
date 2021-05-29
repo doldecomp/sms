@@ -2480,7 +2480,9 @@ lbl_801442EC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x378640, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22110:
 	.incbin "baserom.dol", 0x37864C, 0x14
 cDirtyFileName:
@@ -2508,7 +2510,9 @@ warpInEffectIDs:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 cParticleFileNames:
-	.incbin "baserom.dol", 0x3B3820, 0xC
+  .4byte $$22659
+  .4byte $$22660
+  .4byte $$22661
 .global __vt__15TWarpInCallBack
 __vt__15TWarpInCallBack:
   .4byte 0
@@ -2548,7 +2552,7 @@ $$22899:
 $$22900:
 	.incbin "baserom.dol", 0x3E5C20, 0x4
 $$22939:
-	.incbin "baserom.dol", 0x3E5C24, 0x4
+  .4byte 0
 $$22957:
 	.incbin "baserom.dol", 0x3E5C28, 0x4
 $$23006:

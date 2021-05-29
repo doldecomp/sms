@@ -5612,7 +5612,9 @@ $$232$$2__dt__8TSandEggFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38B5A0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38B5AC, 0x14
 $$22178:
@@ -5624,7 +5626,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38B65C, 0x24
 $$22724:
-	.incbin "baserom.dol", 0x38B680, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22726:
 	.incbin "baserom.dol", 0x38B68C, 0xC
 $$23325:
@@ -5636,7 +5640,10 @@ $$23327:
 $$23328:
 	.incbin "baserom.dol", 0x38B704, 0x24
 $$23329:
-	.incbin "baserom.dol", 0x38B728, 0x10
+  .4byte $$23325
+  .4byte $$23326
+  .4byte $$23327
+  .4byte $$23328
 $$23566:
 	.incbin "baserom.dol", 0x38B738, 0xC
 $$23686:
@@ -6919,7 +6926,7 @@ mCollisionRate__11TSandCastle:
 mGoTargetTime__11TLeanMirror:
 	.incbin "baserom.dol", 0x3E3658, 0x4
 mDemoWaitTime__11TLeanMirror:
-	.incbin "baserom.dol", 0x3E365C, 0x4
+  .4byte -1
 mDemoLightTime__11TLeanMirror:
 	.incbin "baserom.dol", 0x3E3660, 0x4
 mRotSpeed__17TMammaBlockRotate:
@@ -6937,7 +6944,7 @@ mWaitTime__17TMammaBlockRotate:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23463:
-	.incbin "baserom.dol", 0x3E7FD0, 0x4
+  .4byte 0
 $$23563:
 	.incbin "baserom.dol", 0x3E7FD4, 0x8
 $$23564:

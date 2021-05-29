@@ -563,7 +563,7 @@ FORCE_STOP_TABLE__Q28JASystem6Driver:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2204:
-	.incbin "baserom.dol", 0x3E4378, 0x4
+  .4byte 0
 $$2231:
 	.incbin "baserom.dol", 0x3E437C, 0x4
 $$2260:
@@ -577,6 +577,7 @@ $$2265:
 $$2332:
 	.incbin "baserom.dol", 0x3E4398, 0x8
 $$2333:
-	.incbin "baserom.dol", 0x3E43A0, 0x8
+  .4byte 0
+  .4byte 0
 $$2334:
 	.incbin "baserom.dol", 0x3E43A8, 0x8

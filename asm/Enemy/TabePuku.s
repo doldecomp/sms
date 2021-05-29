@@ -3737,7 +3737,9 @@ $$232$$2__dt__9TTabePukuFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A1E78, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21940:
 	.incbin "baserom.dol", 0x3A1E84, 0x14
 $$22018:
@@ -3789,7 +3791,9 @@ $$24862:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 tabepuku_bastable:
-	.incbin "baserom.dol", 0x3E0A58, 0xC
+  .4byte $$22570
+  .4byte $$22571
+  .4byte $$22572
 .global __vt__18TNerveTabePukuDrag
 __vt__18TNerveTabePukuDrag:
   .4byte 0
@@ -4012,7 +4016,7 @@ __vt__11TTPHitActor:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23045:
-	.incbin "baserom.dol", 0x3EBFC8, 0x4
+  .4byte 0
 $$23046:
 	.incbin "baserom.dol", 0x3EBFCC, 0x4
 $$23047:

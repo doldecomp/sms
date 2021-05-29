@@ -1614,7 +1614,7 @@ lbl_80051140:
 $$2587:
 	.incbin "baserom.dol", 0x3E41A0, 0x4
 $$2588:
-	.incbin "baserom.dol", 0x3E41A4, 0x4
+  .4byte 0
 $$2589:
 	.incbin "baserom.dol", 0x3E41A8, 0x4
 $$2590:

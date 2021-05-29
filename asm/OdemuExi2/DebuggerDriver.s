@@ -761,7 +761,8 @@ lbl_800AEFD4:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 SendCount:
-	.incbin "baserom.dol", 0x3E32E8, 0x8
+  .4byte 0x80000000
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 MTRCallback:

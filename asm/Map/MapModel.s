@@ -632,7 +632,11 @@ $$22571:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 name_table$2428:
-	.incbin "baserom.dol", 0x3CD070, 0x14
+  .4byte $$22429
+  .4byte $$22430
+  .4byte $$22431
+  .4byte $$22432
+  .4byte 0
 .global __vt__9TMapModel
 __vt__9TMapModel:
   .4byte 0

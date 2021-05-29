@@ -502,9 +502,19 @@ lbl_80036B20:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6B70, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMessageQueue__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6B80, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__9JKRDecomp
 __vt__9JKRDecomp:
   .4byte 0

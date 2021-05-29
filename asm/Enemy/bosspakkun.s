@@ -10957,7 +10957,9 @@ $$232$$2__dt__11TBossPakkunFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x396A60, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22154:
 	.incbin "baserom.dol", 0x396A6C, 0x14
 $$22210:
@@ -10969,7 +10971,9 @@ $$22212:
 $$22213:
 	.incbin "baserom.dol", 0x396B1C, 0x24
 $$22815:
-	.incbin "baserom.dol", 0x396B40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22817:
 	.incbin "baserom.dol", 0x396B4C, 0xC
 $$23105:
@@ -11151,7 +11155,36 @@ $$28338:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bosspakkun_bastable:
-	.incbin "baserom.dol", 0x3D5BA0, 0x78
+  .4byte 0
+  .4byte 0
+  .4byte $$23105
+  .4byte $$23106
+  .4byte $$23107
+  .4byte 0
+  .4byte $$23108
+  .4byte 0
+  .4byte $$23109
+  .4byte 0
+  .4byte $$23110
+  .4byte $$23111
+  .4byte $$23112
+  .4byte $$23113
+  .4byte $$23114
+  .4byte $$23115
+  .4byte $$23116
+  .4byte $$23117
+  .4byte $$23118
+  .4byte $$23119
+  .4byte $$23120
+  .4byte $$23121
+  .4byte $$23122
+  .4byte $$23123
+  .4byte $$23124
+  .4byte 0
+  .4byte $$23125
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__15TNerveBPCannonL
 __vt__15TNerveBPCannonL:
   .4byte 0
@@ -11621,7 +11654,7 @@ $$24349:
 $$24588:
 	.incbin "baserom.dol", 0x3EA6F8, 0x4
 $$24681:
-	.incbin "baserom.dol", 0x3EA6FC, 0x4
+  .4byte 0
 $$24682:
 	.incbin "baserom.dol", 0x3EA700, 0x4
 $$24848:

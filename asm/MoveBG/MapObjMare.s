@@ -4121,7 +4121,9 @@ $$232$$2__dt__15TMareEventPointFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38BE50, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38BE5C, 0x14
 $$22211:
@@ -4133,7 +4135,9 @@ $$22213:
 $$22214:
 	.incbin "baserom.dol", 0x38BF0C, 0x24
 $$22690:
-	.incbin "baserom.dol", 0x38BF30, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22692:
 	.incbin "baserom.dol", 0x38BF3C, 0xC
 $$23159:
@@ -5051,7 +5055,7 @@ $$22954:
 $$22997:
 	.incbin "baserom.dol", 0x3E81B8, 0x4
 $$23102:
-	.incbin "baserom.dol", 0x3E81BC, 0x4
+  .4byte 0
 $$23103:
 	.incbin "baserom.dol", 0x3E81C0, 0x4
 $$23104:

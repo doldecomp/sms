@@ -4036,7 +4036,9 @@ lbl_80150CBC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3790E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22172:
 	.incbin "baserom.dol", 0x3790EC, 0x14
 $$22228:
@@ -4146,7 +4148,7 @@ $$23802:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23257:
-	.incbin "baserom.dol", 0x3E5DD8, 0x4
+  .4byte 0
 $$23435:
 	.incbin "baserom.dol", 0x3E5DDC, 0x4
 $$23438:

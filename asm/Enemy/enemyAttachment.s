@@ -1181,7 +1181,7 @@ __vt__16TEnemyAttachment:
 $$22566:
 	.incbin "baserom.dol", 0x3E99F0, 0x4
 $$22567:
-	.incbin "baserom.dol", 0x3E99F4, 0x4
+  .4byte 0
 $$22700:
 	.incbin "baserom.dol", 0x3E99F8, 0x4
 $$22757:

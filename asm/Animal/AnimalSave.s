@@ -138,7 +138,9 @@ __ct__21TAnimalSaveIndividualFPCc:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A4C38, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A4C44, 0x14
 $$21562:

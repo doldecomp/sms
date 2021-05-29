@@ -12816,7 +12816,9 @@ lbl_802302EC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390BC0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22112:
 	.incbin "baserom.dol", 0x390BCC, 0x14
 $$22368:
@@ -12856,9 +12858,27 @@ $$28258:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 scShineConvTable:
-	.incbin "baserom.dol", 0x3CE5E8, 0x28
+  .4byte scShineTableAirport
+  .4byte 0
+  .4byte scShineTableBianco
+  .4byte scShineTableRicco
+  .4byte scShineTableMamma
+  .4byte scShineTablePinna
+  .4byte scShineTableSirena
+  .4byte scShineTableMonte
+  .4byte scShineTableMare
+  .4byte 0
 scEtcShineConvTable:
-	.incbin "baserom.dol", 0x3CE610, 0x28
+  .4byte 0
+  .4byte scShineTableDolpicEtc
+  .4byte scShineTableBiancoEtc
+  .4byte scShineTableRiccoEtc
+  .4byte scShineTableMammaEtc
+  .4byte scShineTablePinnaEtc
+  .4byte scShineTableSirenaEtc
+  .4byte scShineTableMonteEtc
+  .4byte scShineTableMareEtc
+  .4byte 0
 cMessageID__9TCardLoad:
 	.incbin "baserom.dol", 0x3CE638, 0xD4
 .global __vt__9TCardLoad
@@ -12990,7 +13010,7 @@ scShineTableMonte:
 scShineTableMonteEtc:
 	.incbin "baserom.dol", 0x3E93E8, 0x4
 $$24546:
-	.incbin "baserom.dol", 0x3E93EC, 0x4
+  .4byte 0
 $$24547:
 	.incbin "baserom.dol", 0x3E93F0, 0x4
 $$24548:

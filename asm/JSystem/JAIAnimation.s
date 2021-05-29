@@ -750,7 +750,7 @@ __vt__13JAIAnimeSound:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2461:
-	.incbin "baserom.dol", 0x3E4138, 0x4
+  .4byte 0
 $$2622:
 	.incbin "baserom.dol", 0x3E413C, 0x4
 $$2623:

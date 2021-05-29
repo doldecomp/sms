@@ -1566,7 +1566,9 @@ $$212$$2__dt__14TMovieDirectorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x376810, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x37681C, 0x14
 $$22033:
@@ -1641,7 +1643,26 @@ $$22908:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .space 0x10
 movies$2032:
-	.incbin "baserom.dol", 0x3B1888, 0x50
+  .4byte $$22033
+  .4byte $$22034
+  .4byte $$22035
+  .4byte $$22036
+  .4byte $$22037
+  .4byte $$22038
+  .4byte $$22039
+  .4byte $$22040
+  .4byte $$22041
+  .4byte $$22042
+  .4byte $$22043
+  .4byte $$22044
+  .4byte $$22045
+  .4byte $$22046
+  .4byte $$22047
+  .4byte $$22048
+  .4byte $$22049
+  .4byte $$22050
+  .4byte $$22051
+  .4byte $$22052
 .global __vt__14TMovieDirector
 __vt__14TMovieDirector:
   .4byte 0
@@ -1675,7 +1696,7 @@ __vt__14TMovieDirector:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22441:
-	.incbin "baserom.dol", 0x3E5288, 0x4
+  .4byte 0
 $$22442:
 	.incbin "baserom.dol", 0x3E528C, 0x4
 $$22443:

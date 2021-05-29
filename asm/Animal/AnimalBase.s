@@ -1712,7 +1712,7 @@ __vt__11TAnimalBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22579:
-	.incbin "baserom.dol", 0x3EC690, 0x4
+  .4byte 0
 $$22601:
 	.incbin "baserom.dol", 0x3EC694, 0x4
 $$22605:

@@ -654,7 +654,7 @@ Unit01:
 $$294:
 	.incbin "baserom.dol", 0x3E4798, 0x4
 $$295:
-	.incbin "baserom.dol", 0x3E479C, 0x4
+  .4byte 0
 $$2193:
 	.incbin "baserom.dol", 0x3E47A0, 0x4
 $$2214:

@@ -3129,7 +3129,7 @@ J3DUnit01:
 $$21460:
 	.incbin "baserom.dol", 0x3E3F30, 0x4
 $$22249:
-	.incbin "baserom.dol", 0x3E3F34, 0x4
+  .4byte 0
 $$22250:
 	.incbin "baserom.dol", 0x3E3F38, 0x8
 $$22251:

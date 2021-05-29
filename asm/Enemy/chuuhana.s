@@ -5670,7 +5670,9 @@ $$232$$2__dt__9TChuuHanaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x398BC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x398BD4, 0x14
 $$22354:
@@ -5682,7 +5684,9 @@ $$22356:
 $$22357:
 	.incbin "baserom.dol", 0x398C84, 0x24
 $$22768:
-	.incbin "baserom.dol", 0x398CA8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22770:
 	.incbin "baserom.dol", 0x398CB4, 0xC
 $$22810:
@@ -5758,9 +5762,26 @@ $$25772:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 tyuhana_bastable:
-	.incbin "baserom.dol", 0x3D7D48, 0x34
+  .4byte $$22810
+  .4byte 0
+  .4byte $$22811
+  .4byte $$22812
+  .4byte $$22813
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22814
 graphlist$2835:
-	.incbin "baserom.dol", 0x3D7D7C, 0x18
+  .4byte $$22836
+  .4byte $$22837
+  .4byte $$22837
+  .4byte $$22838
+  .4byte $$22838
+  .4byte $$22838
 .global __vt__18TNerveChuuHanaWait
 __vt__18TNerveChuuHanaWait:
   .4byte 0
@@ -6009,7 +6030,7 @@ $$23303:
 $$23304:
 	.incbin "baserom.dol", 0x3EAABC, 0x4
 $$23434:
-	.incbin "baserom.dol", 0x3EAAC0, 0x4
+  .4byte 0
 $$23435:
 	.incbin "baserom.dol", 0x3EAAC4, 0x4
 $$23493:

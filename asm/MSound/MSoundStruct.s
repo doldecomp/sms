@@ -2092,7 +2092,7 @@ $$22018:
 $$22019:
 	.incbin "baserom.dol", 0x3E6968, 0x4
 $$22020:
-	.incbin "baserom.dol", 0x3E696C, 0x4
+  .4byte 0
 $$22021:
 	.incbin "baserom.dol", 0x3E6970, 0x4
 $$22022:

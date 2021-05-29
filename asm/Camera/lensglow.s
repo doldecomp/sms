@@ -599,7 +599,9 @@ lbl_8035DBD8:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3900, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A390C, 0x14
 $$21632:
@@ -629,7 +631,7 @@ __vt__9TLensGlow:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21859:
-	.incbin "baserom.dol", 0x3EC410, 0x4
+  .4byte 0
 $$21860:
 	.incbin "baserom.dol", 0x3EC414, 0x4
 $$21861:

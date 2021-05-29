@@ -1251,7 +1251,8 @@ __vt__7J2DPane:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2144:
-	.incbin "baserom.dol", 0x3E3E20, 0x8
+  .4byte 0
+  .4byte 0
 $$2295:
 	.incbin "baserom.dol", 0x3E3E28, 0x8
 $$2543:

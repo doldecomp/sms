@@ -2468,7 +2468,7 @@ __vt__11TMapObjBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22995:
-	.incbin "baserom.dol", 0x3E6A20, 0x4
+  .4byte 0
 $$23006:
 	.incbin "baserom.dol", 0x3E6A24, 0x4
 $$23068:

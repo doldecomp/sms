@@ -639,7 +639,7 @@ __vt__12TBGCheckList:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22183:
-	.incbin "baserom.dol", 0x3E8AC8, 0x4
+  .4byte 0
 $$22184:
 	.incbin "baserom.dol", 0x3E8ACC, 0x4
 $$22185:

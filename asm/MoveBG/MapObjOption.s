@@ -752,7 +752,9 @@ $$232$$2__dt__14TFileLoadBlockFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38D4E8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38D4F4, 0x14
 $$22178:
@@ -764,7 +766,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38D5A4, 0x24
 $$22678:
-	.incbin "baserom.dol", 0x38D5C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22680:
 	.incbin "baserom.dol", 0x38D5D4, 0xC
 $$22753:
@@ -928,7 +932,8 @@ sRumbleTime:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22744:
-	.incbin "baserom.dol", 0x3E8670, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22895:

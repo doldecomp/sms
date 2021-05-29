@@ -2240,13 +2240,22 @@ getParams__14TMtxEffectBaseFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x36F528, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21819:
-	.incbin "baserom.dol", 0x36F534, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21820:
-	.incbin "baserom.dol", 0x36F540, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21846:
-	.incbin "baserom.dol", 0x36F550, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22544:
 	.incbin "baserom.dol", 0x36F55C, 0x14
 $$22545:
@@ -2310,7 +2319,7 @@ $$22093:
 $$22094:
 	.incbin "baserom.dol", 0x3E4A3C, 0x4
 $$22123:
-	.incbin "baserom.dol", 0x3E4A40, 0x4
+  .4byte 0
 $$22124:
 	.incbin "baserom.dol", 0x3E4A44, 0x4
 $$22156:

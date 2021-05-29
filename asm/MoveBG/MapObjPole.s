@@ -583,9 +583,9 @@ __vt__18TMapObjPoleManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22186:
-	.incbin "baserom.dol", 0x3E8570, 0x4
+  .4byte -1
 $$22263:
-	.incbin "baserom.dol", 0x3E8574, 0x4
+  .4byte 0
 $$22279:
 	.incbin "baserom.dol", 0x3E8578, 0x4
 $$22303:

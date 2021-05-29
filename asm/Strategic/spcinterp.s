@@ -6738,87 +6738,286 @@ $$22620:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2285:
-	.incbin "baserom.dol", 0x3B1F00, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint__10TSpcInterpFv
 $$2286:
-	.incbin "baserom.dol", 0x3B1F0C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execflt__10TSpcInterpFv
 $$2287:
-	.incbin "baserom.dol", 0x3B1F18, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execstr__10TSpcInterpFv
 $$2288:
-	.incbin "baserom.dol", 0x3B1F24, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execadr__10TSpcInterpFv
 $$2289:
-	.incbin "baserom.dol", 0x3B1F30, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execvar__10TSpcInterpFv
 $$2290:
-	.incbin "baserom.dol", 0x3B1F3C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execnop__10TSpcInterpFv
 $$2291:
-	.incbin "baserom.dol", 0x3B1F48, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execinc__10TSpcInterpFv
 $$2292:
-	.incbin "baserom.dol", 0x3B1F54, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execdec__10TSpcInterpFv
 $$2293:
-	.incbin "baserom.dol", 0x3B1F60, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execadd__10TSpcInterpFv
 $$2294:
-	.incbin "baserom.dol", 0x3B1F6C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execsub__10TSpcInterpFv
 $$2295:
-	.incbin "baserom.dol", 0x3B1F78, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmul__10TSpcInterpFv
 $$2296:
-	.incbin "baserom.dol", 0x3B1F84, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execdiv__10TSpcInterpFv
 $$2297:
-	.incbin "baserom.dol", 0x3B1F90, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmod__10TSpcInterpFv
 $$2298:
-	.incbin "baserom.dol", 0x3B1F9C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execass__10TSpcInterpFv
 $$2299:
-	.incbin "baserom.dol", 0x3B1FA8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execeq__10TSpcInterpFv
 $$2300:
-	.incbin "baserom.dol", 0x3B1FB4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execne__10TSpcInterpFv
 $$2301:
-	.incbin "baserom.dol", 0x3B1FC0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execgt__10TSpcInterpFv
 $$2302:
-	.incbin "baserom.dol", 0x3B1FCC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execlt__10TSpcInterpFv
 $$2303:
-	.incbin "baserom.dol", 0x3B1FD8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execge__10TSpcInterpFv
 $$2304:
-	.incbin "baserom.dol", 0x3B1FE4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execle__10TSpcInterpFv
 $$2305:
-	.incbin "baserom.dol", 0x3B1FF0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execneg__10TSpcInterpFv
 $$2306:
-	.incbin "baserom.dol", 0x3B1FFC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execnot__10TSpcInterpFv
 $$2307:
-	.incbin "baserom.dol", 0x3B2008, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execand__10TSpcInterpFv
 $$2308:
-	.incbin "baserom.dol", 0x3B2014, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execor__10TSpcInterpFv
 $$2309:
-	.incbin "baserom.dol", 0x3B2020, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execband__10TSpcInterpFv
 $$2310:
-	.incbin "baserom.dol", 0x3B202C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execbor__10TSpcInterpFv
 $$2311:
-	.incbin "baserom.dol", 0x3B2038, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execshl__10TSpcInterpFv
 $$2312:
-	.incbin "baserom.dol", 0x3B2044, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execshr__10TSpcInterpFv
 $$2313:
-	.incbin "baserom.dol", 0x3B2050, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execcall__10TSpcInterpFv
 $$2314:
-	.incbin "baserom.dol", 0x3B205C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execfunc__10TSpcInterpFv
 $$2315:
-	.incbin "baserom.dol", 0x3B2068, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmkfr__10TSpcInterpFv
 $$2316:
-	.incbin "baserom.dol", 0x3B2074, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmkds__10TSpcInterpFv
 $$2317:
-	.incbin "baserom.dol", 0x3B2080, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execret__10TSpcInterpFv
 $$2318:
-	.incbin "baserom.dol", 0x3B208C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execret0__10TSpcInterpFv
 $$2319:
-	.incbin "baserom.dol", 0x3B2098, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execjne__10TSpcInterpFv
 $$2320:
-	.incbin "baserom.dol", 0x3B20A4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execjmp__10TSpcInterpFv
 $$2321:
-	.incbin "baserom.dol", 0x3B20B0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execpop__10TSpcInterpFv
 $$2322:
-	.incbin "baserom.dol", 0x3B20BC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint0__10TSpcInterpFv
 $$2323:
-	.incbin "baserom.dol", 0x3B20C8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint1__10TSpcInterpFv
 $$2324:
-	.incbin "baserom.dol", 0x3B20D4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execend__10TSpcInterpFv
 table$284:
-	.incbin "baserom.dol", 0x3B20E0, 0x1E0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__10TSpcInterp
 __vt__10TSpcInterp:
   .4byte 0
@@ -6846,13 +7045,14 @@ __vt__10TSpcBinary:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21662:
-	.incbin "baserom.dol", 0x3E53F8, 0x8
+  .4byte 0
+  .4byte 0
 $$21664:
 	.incbin "baserom.dol", 0x3E5400, 0x8
 $$22285:
 	.incbin "baserom.dol", 0x3E5408, 0x4
 $$22409:
-	.incbin "baserom.dol", 0x3E540C, 0x4
+  .4byte 0
 $$22532:
 	.incbin "baserom.dol", 0x3E5410, 0x8
 $$22533:

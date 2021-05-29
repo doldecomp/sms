@@ -5476,7 +5476,9 @@ makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x36F5D0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21809:
 	.incbin "baserom.dol", 0x36F5DC, 0x14
 $$21974:
@@ -5570,7 +5572,7 @@ $$22235:
 $$22297:
 	.incbin "baserom.dol", 0x3E4AD4, 0x4
 $$22312:
-	.incbin "baserom.dol", 0x3E4AD8, 0x4
+  .4byte -1
 $$22315:
 	.incbin "baserom.dol", 0x3E4ADC, 0x4
 $$22742:
@@ -5580,7 +5582,7 @@ $$22743:
 $$22744:
 	.incbin "baserom.dol", 0x3E4AE8, 0x4
 $$22745:
-	.incbin "baserom.dol", 0x3E4AEC, 0x4
+  .4byte 0
 $$22746:
 	.incbin "baserom.dol", 0x3E4AF0, 0x4
 $$22747:

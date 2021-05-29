@@ -1911,7 +1911,7 @@ lbl_80161F70:
 $$23189:
 	.incbin "baserom.dol", 0x3E6200, 0x4
 $$23190:
-	.incbin "baserom.dol", 0x3E6204, 0x4
+  .4byte 0
 $$23191:
 	.incbin "baserom.dol", 0x3E6208, 0x8
 $$23192:

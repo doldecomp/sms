@@ -2849,7 +2849,7 @@ JRNTexImage2Ids:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2385:
-	.incbin "baserom.dol", 0x3E4040, 0x4
+  .4byte 0
 $$2386:
 	.incbin "baserom.dol", 0x3E4044, 0x4
 $$2387:

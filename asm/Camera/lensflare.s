@@ -562,7 +562,7 @@ __vt__10TLensFlare:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21949:
-	.incbin "baserom.dol", 0x3EC3C0, 0x4
+  .4byte 0
 $$21950:
 	.incbin "baserom.dol", 0x3EC3C4, 0x4
 $$21951:

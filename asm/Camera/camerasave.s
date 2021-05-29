@@ -1928,7 +1928,9 @@ __ct__14TCamSaveNoticeFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A2C08, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A2C14, 0x14
 $$21897:
@@ -2290,7 +2292,7 @@ $$21910:
 $$21914:
 	.incbin "baserom.dol", 0x3EC31C, 0x4
 $$21916:
-	.incbin "baserom.dol", 0x3EC320, 0x4
+  .4byte 0
 $$21918:
 	.incbin "baserom.dol", 0x3EC324, 0x4
 $$21920:

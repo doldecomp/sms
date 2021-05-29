@@ -8533,11 +8533,15 @@ $$232$$2__dt__11TBossWanwanFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x398670, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22110:
 	.incbin "baserom.dol", 0x39867C, 0x14
 $$22495:
-	.incbin "baserom.dol", 0x398690, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22497:
 	.incbin "baserom.dol", 0x39869C, 0xC
 $$22719:
@@ -8647,9 +8651,18 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D7730, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D7740, 0x10
+  .4byte $$22719
+  .4byte $$22720
+  .4byte $$22721
+  .4byte $$22722
 bwanwan_bastable:
-	.incbin "baserom.dol", 0x3D7750, 0x1C
+  .4byte $$23022
+  .4byte 0
+  .4byte $$23023
+  .4byte 0
+  .4byte $$23024
+  .4byte $$23025
+  .4byte 0
 .global __vt__12TNerveBWFall
 __vt__12TNerveBWFall:
   .4byte 0
@@ -9070,7 +9083,7 @@ $$23732:
 $$23760:
 	.incbin "baserom.dol", 0x3EA954, 0x4
 $$23764:
-	.incbin "baserom.dol", 0x3EA958, 0x4
+  .4byte 0
 $$23765:
 	.incbin "baserom.dol", 0x3EA95C, 0x4
 $$23766:

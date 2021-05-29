@@ -10941,7 +10941,9 @@ $$232$$2__dt__10TBossGessoFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3951F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22112:
 	.incbin "baserom.dol", 0x3951FC, 0x14
 $$22445:
@@ -11141,7 +11143,34 @@ $$29196:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bgeso_bastable:
-	.incbin "baserom.dol", 0x3D41A0, 0x70
+  .4byte 0
+  .4byte $$23092
+  .4byte 0
+  .4byte $$23093
+  .4byte 0
+  .4byte $$23094
+  .4byte $$23095
+  .4byte $$23096
+  .4byte 0
+  .4byte $$23097
+  .4byte $$23098
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23099
+  .4byte 0
+  .4byte $$23100
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23101
+  .4byte $$23102
+  .4byte $$23103
 .global __vt__12TNerveBGRoll
 __vt__12TNerveBGRoll:
   .4byte 0
@@ -11487,7 +11516,7 @@ $$24166:
 $$24168:
 	.incbin "baserom.dol", 0x3EA3A0, 0x8
 $$24312:
-	.incbin "baserom.dol", 0x3EA3A8, 0x4
+  .4byte 0
 $$24313:
 	.incbin "baserom.dol", 0x3EA3AC, 0x4
 $$24314:

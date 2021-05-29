@@ -3728,7 +3728,9 @@ lbl_80236478:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390E40, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x390E4C, 0x14
 $$22420:
@@ -3736,7 +3738,17 @@ $$22420:
 $$22421:
 	.incbin "baserom.dol", 0x390E8C, 0x2C
 $$22422:
-	.incbin "baserom.dol", 0x390EB8, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte scShineTableBiancoEtc
+  .4byte scShineTableRiccoEtc
+  .4byte scShineTableMammaEtc
+  .4byte scShineTablePinnaEtc
+  .4byte scShineTableSirenaEtc
+  .4byte 0
+  .4byte scShineTableMonteEtc
+  .4byte scShineTableMareEtc
+  .4byte 0
 $$23928:
 	.incbin "baserom.dol", 0x390EE4, 0x18
 $$23929:
@@ -3762,9 +3774,27 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3CE9F0, 0x10
 scShineConvTable:
-	.incbin "baserom.dol", 0x3CEA00, 0x28
+  .4byte scShineTableAirport
+  .4byte 0
+  .4byte scShineTableBianco
+  .4byte scShineTableRicco
+  .4byte scShineTableMamma
+  .4byte scShineTablePinna
+  .4byte scShineTableSirena
+  .4byte scShineTableMonte
+  .4byte scShineTableMare
+  .4byte 0
 scEtcShineConvTable:
-	.incbin "baserom.dol", 0x3CEA28, 0x28
+  .4byte 0
+  .4byte scShineTableDolpicEtc
+  .4byte scShineTableBiancoEtc
+  .4byte scShineTableRiccoEtc
+  .4byte scShineTableMammaEtc
+  .4byte scShineTablePinnaEtc
+  .4byte scShineTableSirenaEtc
+  .4byte scShineTableMonteEtc
+  .4byte scShineTableMareEtc
+  .4byte 0
 scScenarioNameTable:
 	.incbin "baserom.dol", 0x3CEA50, 0x118
 scNormalStageTable:
@@ -3840,11 +3870,11 @@ scShineTableMonte:
 scShineTableMonteEtc:
 	.incbin "baserom.dol", 0x3E9558, 0x4
 $$22809:
-	.incbin "baserom.dol", 0x3E955C, 0x4
+  .4byte -1
 $$22878:
 	.incbin "baserom.dol", 0x3E9560, 0x4
 $$22879:
-	.incbin "baserom.dol", 0x3E9564, 0x4
+  .4byte 0
 $$22882:
 	.incbin "baserom.dol", 0x3E9568, 0x8
 $$23607:

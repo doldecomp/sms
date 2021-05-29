@@ -5069,7 +5069,9 @@ $$232$$2__dt__17TSirenaRollMapObjFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x373AB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21752:
 	.incbin "baserom.dol", 0x373ABC, 0x14
 $$21808:
@@ -5081,7 +5083,9 @@ $$21810:
 $$21811:
 	.incbin "baserom.dol", 0x373B6C, 0x24
 $$22364:
-	.incbin "baserom.dol", 0x373B90, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22366:
 	.incbin "baserom.dol", 0x373B9C, 0xC
 $$24980:
@@ -6083,7 +6087,7 @@ $$25045:
 $$25046:
 	.incbin "baserom.dol", 0x3E5148, 0x8
 $$25052:
-	.incbin "baserom.dol", 0x3E5150, 0x4
+  .4byte 0
 $$25060:
 	.incbin "baserom.dol", 0x3E5154, 0x8
 $$25061:

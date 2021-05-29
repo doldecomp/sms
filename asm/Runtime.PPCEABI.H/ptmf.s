@@ -33,4 +33,7 @@ lbl_80082B44:
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 .global __ptmf_null
 __ptmf_null:
-	.incbin "baserom.dol", 0x36E570, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0

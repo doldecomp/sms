@@ -12732,7 +12732,9 @@ $$232$$2__dt__13TDoroHamuKuriFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x393328, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22248:
 	.incbin "baserom.dol", 0x393334, 0x14
 $$22459:
@@ -12888,9 +12890,26 @@ $$28308:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 hanekuri_bastable:
-	.incbin "baserom.dol", 0x3D1468, 0x10
+  .4byte $$22997
+  .4byte $$22998
+  .4byte $$22999
+  .4byte $$23000
 hamukurianm_bastable:
-	.incbin "baserom.dol", 0x3D1478, 0x3C
+  .4byte 0
+  .4byte 0
+  .4byte $$23002
+  .4byte $$23003
+  .4byte 0
+  .4byte 0
+  .4byte $$23004
+  .4byte $$23005
+  .4byte $$23006
+  .4byte $$23007
+  .4byte $$23008
+  .4byte $$23009
+  .4byte $$23010
+  .4byte 0
+  .4byte $$23011
 entry$3048:
 	.incbin "baserom.dol", 0x3D14B4, 0x18
 entry$3115:
@@ -14177,9 +14196,12 @@ mLandAnmFrameNum__9THamuKuri:
 mSearchActSw__16THamuKuriManager:
 	.incbin "baserom.dol", 0x3E38D0, 0x4
 mFireHamNoseColorDiff:
-	.incbin "baserom.dol", 0x3E38D4, 0x8
+  .4byte 0
+  .4byte 0
 mFireHamOtherColorDiff:
-	.incbin "baserom.dol", 0x3E38DC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 mFireHamNoseColorStart:
@@ -14205,7 +14227,7 @@ $$23984:
 $$23985:
 	.incbin "baserom.dol", 0x3E9F78, 0x4
 $$23986:
-	.incbin "baserom.dol", 0x3E9F7C, 0x4
+  .4byte 0
 $$23987:
 	.incbin "baserom.dol", 0x3E9F80, 0x4
 $$24048:

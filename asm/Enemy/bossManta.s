@@ -5914,7 +5914,9 @@ $$232$$2__dt__29TBossMantaAdditionalCollisionFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39F260, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39F26C, 0x14
 $$22200:
@@ -5926,7 +5928,9 @@ $$22202:
 $$22203:
 	.incbin "baserom.dol", 0x39F31C, 0x24
 $$22805:
-	.incbin "baserom.dol", 0x39F340, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22807:
 	.incbin "baserom.dol", 0x39F34C, 0xC
 $$22983:
@@ -6042,9 +6046,22 @@ sFrameRate__10TBossManta:
 sScale__10TBossManta:
 	.incbin "baserom.dol", 0x3DE728, 0x18
 onetimeFilenames$3261:
-	.incbin "baserom.dol", 0x3DE740, 0x14
+  .4byte $$23262
+  .4byte $$23263
+  .4byte $$23264
+  .4byte $$23265
+  .4byte $$23266
 loopFilenames$3273:
-	.incbin "baserom.dol", 0x3DE754, 0x28
+  .4byte $$23274
+  .4byte $$23275
+  .4byte $$23276
+  .4byte $$23277
+  .4byte $$23278
+  .4byte $$23279
+  .4byte $$23280
+  .4byte $$23281
+  .4byte $$23282
+  .4byte $$23283
 .global __vt__17TBossMantaManager
 __vt__17TBossMantaManager:
   .4byte 0
@@ -6241,7 +6258,7 @@ $$23583:
 $$23584:
 	.incbin "baserom.dol", 0x3EBA18, 0x4
 $$23585:
-	.incbin "baserom.dol", 0x3EBA1C, 0x4
+  .4byte 0
 $$23586:
 	.incbin "baserom.dol", 0x3EBA20, 0x8
 $$23588:

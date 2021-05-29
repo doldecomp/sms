@@ -1410,7 +1410,7 @@ sAlphaCompSmall:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22646:
-	.incbin "baserom.dol", 0x3E8308, 0x4
+  .4byte 0
 $$22647:
 	.incbin "baserom.dol", 0x3E830C, 0x4
 $$22648:

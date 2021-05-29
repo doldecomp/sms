@@ -975,7 +975,7 @@ __vt__15TMtxCalcFootInv:
 $$21795:
 	.incbin "baserom.dol", 0x3E9E18, 0x4
 $$22168:
-	.incbin "baserom.dol", 0x3E9E1C, 0x4
+  .4byte 0
 $$22169:
 	.incbin "baserom.dol", 0x3E9E20, 0x4
 $$22170:

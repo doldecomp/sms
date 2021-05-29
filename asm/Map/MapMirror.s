@@ -1677,7 +1677,9 @@ $$232$$2__dt__13TMirrorCameraFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E9B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38E9C4, 0x14
 $$22167:
@@ -1797,13 +1799,14 @@ __vt__13TMirrorCamera:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 table$2575:
-	.incbin "baserom.dol", 0x3E37D0, 0x8
+  .4byte $$22576
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22576:
 	.incbin "baserom.dol", 0x3E8B60, 0x4
 $$22632:
-	.incbin "baserom.dol", 0x3E8B64, 0x4
+  .4byte 0
 $$22821:
 	.incbin "baserom.dol", 0x3E8B68, 0x4
 $$22822:

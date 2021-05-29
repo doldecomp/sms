@@ -6559,7 +6559,9 @@ $$232$$2__dt__8TKumokunFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A02A8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21529:
 	.incbin "baserom.dol", 0x3A02B4, 0x14
 $$21607:
@@ -6663,9 +6665,33 @@ $$25316:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 kumokun_bastable:
-	.incbin "baserom.dol", 0x3DF130, 0x34
+  .4byte $$22179
+  .4byte $$22180
+  .4byte $$22181
+  .4byte $$22182
+  .4byte $$22183
+  .4byte $$22184
+  .4byte $$22185
+  .4byte $$22186
+  .4byte 0
+  .4byte $$22187
+  .4byte $$22188
+  .4byte 0
+  .4byte $$22189
 kumokun_bas_c_table:
-	.incbin "baserom.dol", 0x3DF164, 0x34
+  .4byte $$22190
+  .4byte $$22191
+  .4byte $$22192
+  .4byte $$22193
+  .4byte $$22194
+  .4byte $$22195
+  .4byte $$22196
+  .4byte $$22197
+  .4byte 0
+  .4byte $$22198
+  .4byte $$22199
+  .4byte 0
+  .4byte $$22200
 .global __vt__19TNerveKumokunPreFly
 __vt__19TNerveKumokunPreFly:
   .4byte 0
@@ -6877,7 +6903,7 @@ $$22946:
 $$22947:
 	.incbin "baserom.dol", 0x3EBC10, 0x4
 $$22948:
-	.incbin "baserom.dol", 0x3EBC14, 0x4
+  .4byte 0
 $$22949:
 	.incbin "baserom.dol", 0x3EBC18, 0x4
 $$22986:

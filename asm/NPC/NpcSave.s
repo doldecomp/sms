@@ -1177,7 +1177,9 @@ __ct__20TNpcSaveStageFarClipFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37BF38, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37BF44, 0x14
 $$21755:
@@ -1421,7 +1423,36 @@ $$22431:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sSaveFileName$1960:
-	.incbin "baserom.dol", 0x3B6360, 0x78
+  .4byte $$21961
+  .4byte $$21961
+  .4byte $$21961
+  .4byte $$21961
+  .4byte $$21961
+  .4byte $$21962
+  .4byte $$21963
+  .4byte $$21964
+  .4byte $$21965
+  .4byte $$21966
+  .4byte $$21966
+  .4byte $$21966
+  .4byte $$21967
+  .4byte $$21968
+  .4byte $$21969
+  .4byte $$21970
+  .4byte $$21971
+  .4byte $$21972
+  .4byte $$21973
+  .4byte $$21974
+  .4byte $$21975
+  .4byte $$21976
+  .4byte $$21977
+  .4byte $$21978
+  .4byte $$21979
+  .4byte $$21980
+  .4byte $$21981
+  .4byte $$21982
+  .4byte $$21983
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22161:

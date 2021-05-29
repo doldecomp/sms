@@ -755,7 +755,10 @@ $$2885:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 NullTexData:
-	.incbin "baserom.dol", 0x3A6980, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global j3dDefaultViewNo

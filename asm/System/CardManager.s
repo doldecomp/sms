@@ -2279,9 +2279,21 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B1808, 0x10
 titles:
-	.incbin "baserom.dol", 0x3B1818, 0x1C
+  .4byte $$21632
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
 comments:
-	.incbin "baserom.dol", 0x3B1834, 0x1C
+  .4byte $$21634
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
 $$21818:
     .4byte lbl_80106ACC
     .4byte lbl_80106934

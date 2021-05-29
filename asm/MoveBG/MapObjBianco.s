@@ -3995,7 +3995,9 @@ $$232$$2__dt__8TWoodLogFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38AFD8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38AFE4, 0x14
 $$22178:
@@ -4007,7 +4009,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38B094, 0x24
 $$22801:
-	.incbin "baserom.dol", 0x38B0B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22803:
 	.incbin "baserom.dol", 0x38B0C4, 0xC
 $$23259:
@@ -5181,7 +5185,7 @@ mRottenColor__15TLeafBoatRotten:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23181:
-	.incbin "baserom.dol", 0x3E7DC8, 0x4
+  .4byte 0
 $$23213:
 	.incbin "baserom.dol", 0x3E7DCC, 0x4
 $$23214:

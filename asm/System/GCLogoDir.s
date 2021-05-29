@@ -1388,7 +1388,9 @@ $$212$$2__dt__10TGCLogoDirFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3701C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x3701D4, 0x14
 $$22608:
@@ -1464,7 +1466,8 @@ $$22171:
 $$22172:
 	.incbin "baserom.dol", 0x3E4D0C, 0x4
 $$22173:
-	.incbin "baserom.dol", 0x3E4D10, 0x8
+  .4byte 0
+  .4byte 0
 $$22175:
 	.incbin "baserom.dol", 0x3E4D18, 0x8
 $$22316:

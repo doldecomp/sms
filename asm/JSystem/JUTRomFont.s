@@ -628,7 +628,7 @@ __vt__10JUTRomFont:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2294:
-	.incbin "baserom.dol", 0x3E4030, 0x4
+  .4byte 0
 $$2295:
 	.incbin "baserom.dol", 0x3E4034, 0x4
 $$2297:

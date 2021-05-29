@@ -207,7 +207,7 @@ lbl_800DA964:
 $$21661:
 	.incbin "baserom.dol", 0x3E4C90, 0x4
 $$21694:
-	.incbin "baserom.dol", 0x3E4C94, 0x4
+  .4byte 0
 $$21702:
 	.incbin "baserom.dol", 0x3E4C98, 0x8
 $$21710:

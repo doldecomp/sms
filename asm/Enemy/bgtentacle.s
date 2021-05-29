@@ -6098,7 +6098,9 @@ $$232$$2__dt__12TBGAttackHitFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E2C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39E2D4, 0x14
 $$22444:
@@ -6198,9 +6200,22 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3DD518, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3DD528, 0x10
+  .4byte $$22444
+  .4byte $$22445
+  .4byte $$22446
+  .4byte $$22447
 tstatestr:
-	.incbin "baserom.dol", 0x3DD538, 0x2C
+  .4byte $$22956
+  .4byte $$22957
+  .4byte $$22958
+  .4byte $$22959
+  .4byte $$22960
+  .4byte $$22961
+  .4byte $$22962
+  .4byte $$22963
+  .4byte $$22964
+  .4byte $$22965
+  .4byte 0
 jntidx$3428:
 	.incbin "baserom.dol", 0x3DD564, 0x10
 .global __vt__11TBGTentacle
@@ -6376,7 +6391,7 @@ $$23763:
 $$23764:
 	.incbin "baserom.dol", 0x3EB75C, 0x4
 $$23811:
-	.incbin "baserom.dol", 0x3EB760, 0x4
+  .4byte 0
 $$23812:
 	.incbin "baserom.dol", 0x3EB764, 0x4
 $$23920:

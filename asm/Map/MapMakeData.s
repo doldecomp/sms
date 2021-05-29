@@ -892,7 +892,8 @@ lbl_801E3C68:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22976:
-	.incbin "baserom.dol", 0x3E8B40, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22744:

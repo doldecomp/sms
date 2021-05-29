@@ -716,7 +716,9 @@ lbl_801770C4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37F6A8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37F6B4, 0x14
 $$22069:
@@ -740,13 +742,13 @@ $$22633:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cPeachPartsTextureName:
-	.incbin "baserom.dol", 0x3E34E8, 0x4
+  .4byte $$22275
 cPeachHostTextureName:
-	.incbin "baserom.dol", 0x3E34EC, 0x4
+  .4byte $$22276
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22491:
-	.incbin "baserom.dol", 0x3E65F0, 0x4
+  .4byte 0
 $$22492:
 	.incbin "baserom.dol", 0x3E65F4, 0x4
 $$22632:

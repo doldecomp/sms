@@ -1629,7 +1629,7 @@ sWaitTime:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22961:
-	.incbin "baserom.dol", 0x3E87B8, 0x4
+  .4byte 0
 $$23022:
 	.incbin "baserom.dol", 0x3E87BC, 0x4
 $$23123:

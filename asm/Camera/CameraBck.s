@@ -310,7 +310,9 @@ lbl_80361884:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3A98, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A3AA4, 0x14
 $$21593:
@@ -344,13 +346,17 @@ $$21837:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sAddBckFileNameTable:
-	.incbin "baserom.dol", 0x3E1CE0, 0x10
+  .4byte $$21687
+  .4byte $$21688
+  .4byte $$21689
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cPositionJointName:
-	.incbin "baserom.dol", 0x3E3CD8, 0x4
+  .4byte $$21684
 cLookatJointName:
-	.incbin "baserom.dol", 0x3E3CDC, 0x4
+  .4byte $$21685
 .global cCameraBckVolumeName
 cCameraBckVolumeName:
-	.incbin "baserom.dol", 0x3E3CE0, 0x8
+  .4byte $$21686
+  .4byte 0

@@ -49,7 +49,40 @@ lbl_80088B10:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global gTRKDispatchTable
 gTRKDispatchTable:
-	.incbin "baserom.dol", 0x3ABF58, 0x88
+  .4byte TRKDoUnsupported
+  .4byte TRKDoConnect
+  .4byte TRKDoDisconnect
+  .4byte TRKDoReset
+  .4byte TRKDoVersions
+  .4byte TRKDoSupportMask
+  .4byte TRKDoCPUType
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoReadMemory
+  .4byte TRKDoWriteMemory
+  .4byte TRKDoReadRegisters
+  .4byte TRKDoWriteRegisters
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoFlushCache
+  .4byte TRKDoUnsupported
+  .4byte TRKDoContinue
+  .4byte TRKDoStep
+  .4byte TRKDoStop
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte TRKDoUnsupported
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global gTRKDispatchTableSize

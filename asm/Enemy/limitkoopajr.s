@@ -1798,7 +1798,9 @@ $$232$$2__dt__13TLimitKoopaJrFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A25B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x3A25C4, 0x14
 $$22194:
@@ -1810,7 +1812,9 @@ $$22196:
 $$22197:
 	.incbin "baserom.dol", 0x3A2674, 0x24
 $$22659:
-	.incbin "baserom.dol", 0x3A2698, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22661:
 	.incbin "baserom.dol", 0x3A26A4, 0xC
 $$22942:
@@ -1854,7 +1858,10 @@ $$23798:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 koopajr_bastable:
-	.incbin "baserom.dol", 0x3E1478, 0x10
+  .4byte $$22942
+  .4byte $$22943
+  .4byte 0
+  .4byte $$22944
 .global __vt__20TLimitKoopaJrManager
 __vt__20TLimitKoopaJrManager:
   .4byte 0
@@ -2000,7 +2007,7 @@ $$22956:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23233:
-	.incbin "baserom.dol", 0x3EC128, 0x4
+  .4byte 0
 $$23234:
 	.incbin "baserom.dol", 0x3EC12C, 0x4
 $$23235:

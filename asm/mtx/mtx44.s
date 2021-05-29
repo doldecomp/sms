@@ -103,7 +103,7 @@ $$297:
 $$298:
 	.incbin "baserom.dol", 0x3E47B4, 0x4
 $$299:
-	.incbin "baserom.dol", 0x3E47B8, 0x4
+  .4byte 0
 $$2100:
 	.incbin "baserom.dol", 0x3E47BC, 0x4
 $$2103:

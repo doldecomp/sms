@@ -432,7 +432,9 @@ $$232$$2__dt__17TMapObjFloatOnSeaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38C198, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38C1A4, 0x14
 $$22178:
@@ -568,7 +570,8 @@ $$22465:
 $$22466:
 	.incbin "baserom.dol", 0x3E8398, 0x8
 $$22512:
-	.incbin "baserom.dol", 0x3E83A0, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22557:

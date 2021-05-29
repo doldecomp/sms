@@ -2889,7 +2889,7 @@ $$24190:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23364:
-	.incbin "baserom.dol", 0x3E62F0, 0x4
+  .4byte 0
 $$23386:
 	.incbin "baserom.dol", 0x3E62F4, 0x4
 $$23390:

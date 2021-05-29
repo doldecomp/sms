@@ -3885,7 +3885,9 @@ $$232$$2__dt__8TBeeHiveFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A5010, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x3A501C, 0x14
 $$21996:
@@ -4111,7 +4113,7 @@ __vt__4TBee:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23087:
-	.incbin "baserom.dol", 0x3EC7B8, 0x4
+  .4byte 0
 $$23088:
 	.incbin "baserom.dol", 0x3EC7BC, 0x4
 $$23089:
@@ -4173,7 +4175,7 @@ $$24455:
 $$24456:
 	.incbin "baserom.dol", 0x3EC83C, 0x4
 $$24641:
-	.incbin "baserom.dol", 0x3EC840, 0x4
+  .4byte 0
 $$24642:
 	.incbin "baserom.dol", 0x3EC844, 0x8
 $$24709:

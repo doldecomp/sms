@@ -1614,7 +1614,9 @@ j3dDefaultTevStageInfo:
 	.incbin "baserom.dol", 0x3A6D78, 0x14
 .global j3dDefaultIndTevStageInfo
 j3dDefaultIndTevStageInfo:
-	.incbin "baserom.dol", 0x3A6D8C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global j3dDefaultFogInfo
 j3dDefaultFogInfo:
 	.incbin "baserom.dol", 0x3A6D98, 0x2C
@@ -1648,7 +1650,7 @@ GX2HWFiltConv:
 	.incbin "baserom.dol", 0x3E3070, 0x8
 .global j3dDefaultColInfo
 j3dDefaultColInfo:
-	.incbin "baserom.dol", 0x3E3078, 0x4
+  .4byte -1
 .global j3dDefaultAmbInfo
 j3dDefaultAmbInfo:
 	.incbin "baserom.dol", 0x3E307C, 0x4
@@ -1669,13 +1671,13 @@ lbl_80408B50:
 	.incbin "baserom.dol", 0x3E3090, 0x4
 .global j3dDefaultIndTexCoordScaleInfo
 j3dDefaultIndTexCoordScaleInfo:
-	.incbin "baserom.dol", 0x3E3094, 0x4
+  .4byte 0
 .global j3dDefaultTevKColor
 j3dDefaultTevKColor:
-	.incbin "baserom.dol", 0x3E3098, 0x4
+  .4byte -1
 .global j3dDefaultTevSwapMode
 j3dDefaultTevSwapMode:
-	.incbin "baserom.dol", 0x3E309C, 0x4
+  .4byte 0
 .global j3dDefaultTevSwapModeTable
 j3dDefaultTevSwapModeTable:
 	.incbin "baserom.dol", 0x3E30A0, 0x4

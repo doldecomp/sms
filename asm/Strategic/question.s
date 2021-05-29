@@ -413,7 +413,7 @@ __vt__16TQuestionManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21772:
-	.incbin "baserom.dol", 0x3E5460, 0x4
+  .4byte 0
 $$21825:
 	.incbin "baserom.dol", 0x3E5464, 0x4
 

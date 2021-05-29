@@ -370,7 +370,7 @@ __ct__16TMultiPlayerDataFv:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21758:
-	.incbin "baserom.dol", 0x3EC510, 0x4
+  .4byte 0
 $$21759:
 	.incbin "baserom.dol", 0x3EC514, 0x4
 $$21760:

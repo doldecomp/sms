@@ -3445,7 +3445,9 @@ $$232$$2__dt__8TKazekunFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39EF10, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21940:
 	.incbin "baserom.dol", 0x39EF1C, 0x14
 $$22018:
@@ -3519,7 +3521,11 @@ $$24673:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 Kazekun_bastable:
-	.incbin "baserom.dol", 0x3DE478, 0x14
+  .4byte $$22586
+  .4byte $$22587
+  .4byte 0
+  .4byte $$22588
+  .4byte $$22589
 .global __vt__21TNerveKazekunHitWater
 __vt__21TNerveKazekunHitWater:
   .4byte 0
@@ -3714,7 +3720,7 @@ $$22836:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22971:
-	.incbin "baserom.dol", 0x3EB980, 0x4
+  .4byte 0
 $$23264:
 	.incbin "baserom.dol", 0x3EB984, 0x4
 $$23265:

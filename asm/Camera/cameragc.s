@@ -3491,7 +3491,9 @@ $$232$$2__dt__15CPolarSubCameraFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A2848, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A2854, 0x14
 $$21873:
@@ -3593,21 +3595,21 @@ __vt__15CPolarSubCamera:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cStartCamName:
-	.incbin "baserom.dol", 0x3E3CB0, 0x4
+  .4byte $$22176
 cStartAfterCamName:
-	.incbin "baserom.dol", 0x3E3CB4, 0x4
+  .4byte $$22177
 cJetCoasterCam0BckName:
-	.incbin "baserom.dol", 0x3E3CB8, 0x4
+  .4byte $$22178
 cJetCoasterCam1BckName:
-	.incbin "baserom.dol", 0x3E3CBC, 0x4
+  .4byte $$22179
 cJetCoasterDemoBckName:
-	.incbin "baserom.dol", 0x3E3CC0, 0x4
+  .4byte $$22180
 cStartCamBckFileName:
-	.incbin "baserom.dol", 0x3E3CC4, 0x4
+  .4byte $$22181
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22650:
-	.incbin "baserom.dol", 0x3EC1A0, 0x4
+  .4byte 0
 $$22651:
 	.incbin "baserom.dol", 0x3EC1A4, 0x4
 $$22670:

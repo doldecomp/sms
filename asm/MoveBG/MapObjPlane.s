@@ -1811,13 +1811,13 @@ mAmbColor__12TMapObjPlane:
 $$22490:
 	.incbin "baserom.dol", 0x3E83A8, 0x4
 $$22493:
-	.incbin "baserom.dol", 0x3E83AC, 0x4
+  .4byte -1
 $$22496:
-	.incbin "baserom.dol", 0x3E83B0, 0x4
+  .4byte -1
 $$22633:
 	.incbin "baserom.dol", 0x3E83B4, 0x4
 $$22641:
-	.incbin "baserom.dol", 0x3E83B8, 0x4
+  .4byte 0
 $$22662:
 	.incbin "baserom.dol", 0x3E83BC, 0x4
 $$22664:

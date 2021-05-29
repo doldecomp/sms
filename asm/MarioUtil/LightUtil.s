@@ -2478,7 +2478,9 @@ lbl_800C57B4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x36F330, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 lightName$1906:
 	.incbin "baserom.dol", 0x36F33C, 0x14
 ambName$1907:
@@ -2654,9 +2656,11 @@ __vt__12TLightCommon:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 className$1930:
-	.incbin "baserom.dol", 0x3E3308, 0x8
+  .4byte $$21931
+  .4byte $$21932
 className$1944:
-	.incbin "baserom.dol", 0x3E3310, 0x8
+  .4byte $$21945
+  .4byte $$21946
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22032:
@@ -2664,7 +2668,7 @@ $$22032:
 $$22043:
 	.incbin "baserom.dol", 0x3E49A8, 0x4
 $$22044:
-	.incbin "baserom.dol", 0x3E49AC, 0x4
+  .4byte 0
 $$22045:
 	.incbin "baserom.dol", 0x3E49B0, 0x4
 $$22046:

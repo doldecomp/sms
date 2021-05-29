@@ -1914,4 +1914,5 @@ __vt__19J3DAnmTextureSRTKey:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21126:
-	.incbin "baserom.dol", 0x3E3F98, 0x8
+  .4byte 0
+  .4byte 0

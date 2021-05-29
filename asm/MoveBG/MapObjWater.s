@@ -638,7 +638,9 @@ $$232$$2__dt__18TMapObjWaterFilterFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38CC20, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38CC2C, 0x14
 $$22188:
@@ -650,7 +652,9 @@ $$22190:
 $$22191:
 	.incbin "baserom.dol", 0x38CCDC, 0x24
 $$22520:
-	.incbin "baserom.dol", 0x38CD00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22522:
 	.incbin "baserom.dol", 0x38CD0C, 0xC
 $$22650:
@@ -750,7 +754,7 @@ __vt__18TMapObjSeaIndirect:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22635:
-	.incbin "baserom.dol", 0x3E8580, 0x4
+  .4byte 0
 $$22636:
 	.incbin "baserom.dol", 0x3E8584, 0x4
 

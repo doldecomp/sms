@@ -790,7 +790,9 @@ $$232$$2__dt__11TDebuTelesaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A1CE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x3A1CF4, 0x14
 $$22015:
@@ -802,7 +804,9 @@ $$22017:
 $$22018:
 	.incbin "baserom.dol", 0x3A1DA4, 0x24
 $$22602:
-	.incbin "baserom.dol", 0x3A1DC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22604:
 	.incbin "baserom.dol", 0x3A1DD4, 0xC
 $$22621:
@@ -962,7 +966,7 @@ __vt__11TDebuTelesa:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 DebuTelesa_bastable:
-	.incbin "baserom.dol", 0x3E3C58, 0x4
+  .4byte $$22621
 $$22830:
 	.incbin "baserom.dol", 0x3E3C5C, 0x4
 $$22831:

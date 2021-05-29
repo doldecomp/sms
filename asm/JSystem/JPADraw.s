@@ -7054,7 +7054,7 @@ __vt__25JPADrawExecEmitterVisitor:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21659:
-	.incbin "baserom.dol", 0x3E4568, 0x4
+  .4byte -1
 $$21860:
 	.incbin "baserom.dol", 0x3E456C, 0x4
 $$22021:
@@ -7076,7 +7076,7 @@ $$22760:
 $$22761:
 	.incbin "baserom.dol", 0x3E4598, 0x4
 $$22762:
-	.incbin "baserom.dol", 0x3E459C, 0x4
+  .4byte 0
 $$23307:
 	.incbin "baserom.dol", 0x3E45A0, 0x8
 

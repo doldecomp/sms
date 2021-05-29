@@ -2284,7 +2284,7 @@ __vt__20TNerveNPCGraphWander:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22727:
-	.incbin "baserom.dol", 0x3E6380, 0x4
+  .4byte 0
 $$22728:
 	.incbin "baserom.dol", 0x3E6384, 0x4
 $$22729:

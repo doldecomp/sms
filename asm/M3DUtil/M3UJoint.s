@@ -685,6 +685,6 @@ __vt__24M3UMtxCalcSIAnmBlendQuat:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21572:
-	.incbin "baserom.dol", 0x3E4BE8, 0x4
+  .4byte 0
 $$21573:
 	.incbin "baserom.dol", 0x3E4BEC, 0x4

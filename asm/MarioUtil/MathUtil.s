@@ -946,7 +946,8 @@ atntable:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21608:
-	.incbin "baserom.dol", 0x3E49E8, 0x8
+  .4byte 0
+  .4byte 0
 $$21611:
 	.incbin "baserom.dol", 0x3E49F0, 0x8
 $$21627:

@@ -1265,7 +1265,9 @@ $$232$$2__dt__13TLampTrapIronFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E328, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38E334, 0x14
 $$22327:
@@ -1277,7 +1279,9 @@ $$22329:
 $$22330:
 	.incbin "baserom.dol", 0x38E3E4, 0x24
 $$22768:
-	.incbin "baserom.dol", 0x38E408, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22770:
 	.incbin "baserom.dol", 0x38E414, 0xC
 $$22972:
@@ -1569,7 +1573,7 @@ mFireTimerMax__13TLampTrapIron:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22917:
-	.incbin "baserom.dol", 0x3E8A48, 0x4
+  .4byte 0
 $$22973:
 	.incbin "baserom.dol", 0x3E8A4C, 0x4
 $$22974:

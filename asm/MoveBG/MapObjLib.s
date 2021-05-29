@@ -3888,7 +3888,7 @@ mWaveSpeed__14TMapObjLibWave:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23123:
-	.incbin "baserom.dol", 0x3E7C00, 0x4
+  .4byte 0
 $$23137:
 	.incbin "baserom.dol", 0x3E7C04, 0x4
 $$23138:

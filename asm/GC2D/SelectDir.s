@@ -1710,7 +1710,9 @@ $$212$$2__dt__10TSelectDirFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390FB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x390FBC, 0x14
 $$23038:
@@ -1806,7 +1808,7 @@ __vt__10TSelectDir:
 $$22392:
 	.incbin "baserom.dol", 0x3E95B8, 0x4
 $$22393:
-	.incbin "baserom.dol", 0x3E95BC, 0x4
+  .4byte 0
 $$22394:
 	.incbin "baserom.dol", 0x3E95C0, 0x4
 $$23061:

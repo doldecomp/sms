@@ -11,7 +11,9 @@ SMSGetNpcInitAnmData__FUl:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3814B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3814C4, 0x14
 sMonteM_AnmIndex:
@@ -69,4 +71,61 @@ sMonteWA_IndividualBtp:
 sMonteWB_IndividualBtp:
 	.incbin "baserom.dol", 0x383D18, 0x70
 sAllNpcInitAnmData$1577:
-	.incbin "baserom.dol", 0x383D88, 0xE8
+  .4byte sMonteM_AnmIndex
+  .4byte 0
+  .4byte sMonteM_AnmIndex
+  .4byte sMonteMA_IndividualBtp
+  .4byte sMonteM_AnmIndex
+  .4byte sMonteMB_IndividualBtp
+  .4byte sMonteM_AnmIndex
+  .4byte sMonteMC_IndividualBtp
+  .4byte sMonteM_AnmIndex
+  .4byte sMonteMD_IndividualBtp
+  .4byte sMonteME_AnmIndex
+  .4byte 0
+  .4byte sMonteMF_AnmIndex
+  .4byte 0
+  .4byte sMonteMG_AnmIndex
+  .4byte 0
+  .4byte sMonteMH_AnmIndex
+  .4byte 0
+  .4byte sMonteW_AnmIndex
+  .4byte 0
+  .4byte sMonteW_AnmIndex
+  .4byte sMonteWA_IndividualBtp
+  .4byte sMonteW_AnmIndex
+  .4byte sMonteWB_IndividualBtp
+  .4byte sMonteWC_AnmIndex
+  .4byte 0
+  .4byte sMareM_AnmIndex
+  .4byte 0
+  .4byte sMareMA_AnmIndex
+  .4byte 0
+  .4byte sMareMB_AnmIndex
+  .4byte 0
+  .4byte sMareMC_AnmIndex
+  .4byte 0
+  .4byte sMareMD_AnmIndex
+  .4byte 0
+  .4byte sMareW_AnmIndex
+  .4byte 0
+  .4byte sMareWA_AnmIndex
+  .4byte 0
+  .4byte sMareWB_AnmIndex
+  .4byte 0
+  .4byte sKinopio_AnmIndex
+  .4byte 0
+  .4byte sKinojii_AnmIndex
+  .4byte 0
+  .4byte sPeach_AnmIndex
+  .4byte 0
+  .4byte sRaccoonDog_AnmIndex
+  .4byte 0
+  .4byte sSunflowerL_AnmIndex
+  .4byte 0
+  .4byte sSunflowerS_AnmIndex
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0

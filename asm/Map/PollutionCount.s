@@ -2871,25 +2871,25 @@ __vt__22TPollutionCounterLayer:
 $$22537:
 	.incbin "baserom.dol", 0x3E8D28, 0x4
 $$22547:
-	.incbin "baserom.dol", 0x3E8D2C, 0x4
+  .4byte -1
 $$22582:
-	.incbin "baserom.dol", 0x3E8D30, 0x4
+  .4byte 0
 $$22585:
-	.incbin "baserom.dol", 0x3E8D34, 0x4
+  .4byte 0
 $$22606:
 	.incbin "baserom.dol", 0x3E8D38, 0x4
 $$22610:
-	.incbin "baserom.dol", 0x3E8D3C, 0x4
+  .4byte -1
 $$22636:
-	.incbin "baserom.dol", 0x3E8D40, 0x4
+  .4byte 0
 $$22639:
-	.incbin "baserom.dol", 0x3E8D44, 0x4
+  .4byte 0
 $$22652:
 	.incbin "baserom.dol", 0x3E8D48, 0x4
 $$22670:
 	.incbin "baserom.dol", 0x3E8D4C, 0x4
 $$22863:
-	.incbin "baserom.dol", 0x3E8D50, 0x4
+  .4byte 0
 $$22958:
 	.incbin "baserom.dol", 0x3E8D54, 0x4
 $$23357:

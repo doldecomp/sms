@@ -1574,7 +1574,9 @@ __sinit_SelectShine2_cpp:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x391260, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21752:
 	.incbin "baserom.dol", 0x39126C, 0x14
 $$22482:
@@ -1612,7 +1614,7 @@ $$21912:
 $$21913:
 	.incbin "baserom.dol", 0x3E960C, 0x4
 $$22031:
-	.incbin "baserom.dol", 0x3E9610, 0x4
+  .4byte 0
 $$22032:
 	.incbin "baserom.dol", 0x3E9614, 0x4
 $$22033:

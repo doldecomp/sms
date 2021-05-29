@@ -4576,7 +4576,9 @@ lbl_80247854:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3915E8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21938:
 	.incbin "baserom.dol", 0x3915F4, 0x14
 cRumbleAnm__9$$2unnamed$$2:
@@ -4618,29 +4620,57 @@ cSoundSettings__16TOptionSoundUnit:
 cFlagInfos__16TOptionSoundUnit:
 	.incbin "baserom.dol", 0x3CF0D0, 0x18
 $$22212:
-	.incbin "baserom.dol", 0x3CF0E8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22214:
-	.incbin "baserom.dol", 0x3CF0F4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22216:
-	.incbin "baserom.dol", 0x3CF100, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte show__18TPatternAnmControlFv
 $$22218:
-	.incbin "baserom.dol", 0x3CF10C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte setupAnm__18TPatternAnmControlFv
 $$22221:
-	.incbin "baserom.dol", 0x3CF118, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22223:
-	.incbin "baserom.dol", 0x3CF124, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22225:
-	.incbin "baserom.dol", 0x3CF130, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte show__18TPatternAnmControlFv
 $$22227:
-	.incbin "baserom.dol", 0x3CF13C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte setupAnm__18TPatternAnmControlFv
 $$22230:
-	.incbin "baserom.dol", 0x3CF148, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22232:
-	.incbin "baserom.dol", 0x3CF154, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte hide__18TPatternAnmControlFv
 $$22234:
-	.incbin "baserom.dol", 0x3CF160, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte show__18TPatternAnmControlFv
 $$22236:
-	.incbin "baserom.dol", 0x3CF16C, 0x1C
+  .4byte 0
+  .4byte -1
+  .4byte setupAnm__18TPatternAnmControlFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 cStopRumbleAnm__9$$2unnamed$$2:
@@ -4648,7 +4678,7 @@ cStopRumbleAnm__9$$2unnamed$$2:
 cRumbleToggleItems__9$$2unnamed$$2:
 	.incbin "baserom.dol", 0x3E98C0, 0x8
 $$22496:
-	.incbin "baserom.dol", 0x3E98C8, 0x4
+  .4byte 0
 $$22497:
 	.incbin "baserom.dol", 0x3E98CC, 0x4
 $$22498:

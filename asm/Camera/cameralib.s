@@ -1679,7 +1679,7 @@ __sinit_cameralib_cpp:
 $$21906:
 	.incbin "baserom.dol", 0x3EC250, 0x4
 $$21907:
-	.incbin "baserom.dol", 0x3EC254, 0x4
+  .4byte 0
 $$21908:
 	.incbin "baserom.dol", 0x3EC258, 0x4
 $$21909:

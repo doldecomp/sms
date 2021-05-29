@@ -987,7 +987,9 @@ lbl_8030FCD0:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39DE00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39DE0C, 0x14
 $$22434:
@@ -1037,7 +1039,8 @@ $$23059:
 sEmitSandFrameFoot:
 	.incbin "baserom.dol", 0x3EB6C8, 0x8
 $$22839:
-	.incbin "baserom.dol", 0x3EB6D0, 0x8
+  .4byte 0
+  .4byte 0
 $$22840:
 	.incbin "baserom.dol", 0x3EB6D8, 0x8
 $$22841:

@@ -643,7 +643,7 @@ __vt__4TSky:
 $$22748:
 	.incbin "baserom.dol", 0x3E8DA8, 0x4
 $$22787:
-	.incbin "baserom.dol", 0x3E8DAC, 0x4
+  .4byte 0
 $$22788:
 	.incbin "baserom.dol", 0x3E8DB0, 0x4
 $$22789:

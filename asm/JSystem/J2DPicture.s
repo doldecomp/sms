@@ -2060,7 +2060,7 @@ __vt__10J2DPicture:
 $$2297:
 	.incbin "baserom.dol", 0x3E3E40, 0x4
 $$2725:
-	.incbin "baserom.dol", 0x3E3E44, 0x4
+  .4byte 0
 $$2726:
 	.incbin "baserom.dol", 0x3E3E48, 0x8
 $$2728:

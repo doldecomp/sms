@@ -5980,7 +5980,9 @@ $$232$$2__dt__7TCannonFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39A9E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x39A9EC, 0x14
 $$22354:
@@ -5992,7 +5994,9 @@ $$22356:
 $$22357:
 	.incbin "baserom.dol", 0x39AA9C, 0x24
 $$22935:
-	.incbin "baserom.dol", 0x39AAC0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22937:
 	.incbin "baserom.dol", 0x39AACC, 0xC
 $$22957:
@@ -6088,9 +6092,30 @@ $$26169:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 cannon_bastable:
-	.incbin "baserom.dol", 0x3D9F20, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte $$22957
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22958
+  .4byte $$22959
+  .4byte $$22960
+  .4byte $$22961
+  .4byte $$22962
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sCannonDomPartsJointTable$3043:
-	.incbin "baserom.dol", 0x3D9F70, 0xC
+  .4byte $$23044
+  .4byte $$23045
+  .4byte $$23046
 .global __vt__18TNerveCannonObject
 __vt__18TNerveCannonObject:
   .4byte 0
@@ -6357,7 +6382,8 @@ $$23545:
 $$23546:
 	.incbin "baserom.dol", 0x3EAEA4, 0x4
 $$23547:
-	.incbin "baserom.dol", 0x3EAEA8, 0x8
+  .4byte 0
+  .4byte 0
 $$23549:
 	.incbin "baserom.dol", 0x3EAEB0, 0x8
 $$23623:

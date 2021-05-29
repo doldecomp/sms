@@ -16874,7 +16874,9 @@ lbl_80211944:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390388, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x390394, 0x14
 scNozzleSoundList:
@@ -16942,7 +16944,10 @@ scDolpicNewsDolpic9:
 scDolpicNewsDolpic10:
 	.incbin "baserom.dol", 0x3CDFC8, 0xC
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3CDFD4, 0x10
+  .4byte $$22426
+  .4byte $$22427
+  .4byte $$22428
+  .4byte $$22429
 .global __vt__11TGCConsole2
 __vt__11TGCConsole2:
   .4byte 0
@@ -17022,21 +17027,21 @@ scDolpicNewsDolpic8_1:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23494:
-	.incbin "baserom.dol", 0x3E9108, 0x4
+  .4byte -1
 $$23522:
-	.incbin "baserom.dol", 0x3E910C, 0x4
+  .4byte -1
 $$23576:
-	.incbin "baserom.dol", 0x3E9110, 0x4
+  .4byte -1
 height$localstatic0$drawWater__11TGCConsole2FR13J2DOrthoGraph:
 	.incbin "baserom.dol", 0x3E9114, 0x8
 topDiff$localstatic1$drawWater__11TGCConsole2FR13J2DOrthoGraph:
 	.incbin "baserom.dol", 0x3E911C, 0x4
 $$23578:
-	.incbin "baserom.dol", 0x3E9120, 0x2
+  .2byte 0
 lbl_80410882:
-	.incbin "baserom.dol", 0x3E9122, 0x2
+  .2byte 0
 $$27060:
-	.incbin "baserom.dol", 0x3E9124, 0x4
+  .4byte 0
 $$27061:
 	.incbin "baserom.dol", 0x3E9128, 0x4
 $$27062:

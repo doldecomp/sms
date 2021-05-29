@@ -763,7 +763,9 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39D168, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x39D174, 0x14
 $$21637:
@@ -951,7 +953,7 @@ $$21796:
 $$21800:
 	.incbin "baserom.dol", 0x3EB5B4, 0x4
 $$21804:
-	.incbin "baserom.dol", 0x3EB5B8, 0x4
+  .4byte 0
 $$21807:
 	.incbin "baserom.dol", 0x3EB5BC, 0x4
 $$21809:
