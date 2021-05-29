@@ -376,7 +376,9 @@ lbl_80361E34:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3CD8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A3CE4, 0x14
 $$21650:
@@ -384,13 +386,18 @@ $$21650:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cLoadCamName:
-	.incbin "baserom.dol", 0x3E3CE8, 0x18
+  .4byte $$21650
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21704:
 	.incbin "baserom.dol", 0x3EC570, 0x4
 $$21705:
-	.incbin "baserom.dol", 0x3EC574, 0x4
+  .4byte 0
 $$21706:
 	.incbin "baserom.dol", 0x3EC578, 0x4
 $$21707:

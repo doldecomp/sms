@@ -1006,7 +1006,7 @@ sFixCameraPos$localstatic0$drawJetCoasterBalloonMessage___15CPolarSubCameraFv:
 $$22347:
 	.incbin "baserom.dol", 0x3EC538, 0x8
 $$22361:
-	.incbin "baserom.dol", 0x3EC540, 0x4
+  .4byte 0
 $$22362:
 	.incbin "baserom.dol", 0x3EC544, 0x4
 $$22363:

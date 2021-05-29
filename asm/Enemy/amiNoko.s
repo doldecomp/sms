@@ -3272,7 +3272,9 @@ $$232$$2__dt__8TAmiNokoFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39D698, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22351:
 	.incbin "baserom.dol", 0x39D6A4, 0x14
 $$22557:
@@ -3310,7 +3312,22 @@ $$24370:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 amiNoko_bastable:
-	.incbin "baserom.dol", 0x3DC910, 0x40
+  .4byte 0
+  .4byte $$22792
+  .4byte $$22793
+  .4byte 0
+  .4byte $$22794
+  .4byte 0
+  .4byte 0
+  .4byte $$22795
+  .4byte 0
+  .4byte 0
+  .4byte $$22796
+  .4byte 0
+  .4byte 0
+  .4byte $$22797
+  .4byte 0
+  .4byte 0
 entry$2820:
 	.incbin "baserom.dol", 0x3DC950, 0x18
 .global __vt__19TNerveAmiNokoFreeze
@@ -3522,7 +3539,7 @@ __vt__15TAmiNokoManager:
 $$23134:
 	.incbin "baserom.dol", 0x3EB5E0, 0x4
 $$23263:
-	.incbin "baserom.dol", 0x3EB5E4, 0x4
+  .4byte 0
 $$23264:
 	.incbin "baserom.dol", 0x3EB5E8, 0x4
 $$23265:

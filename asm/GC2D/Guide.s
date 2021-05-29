@@ -4295,7 +4295,9 @@ lbl_8023D430:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3912F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21942:
 	.incbin "baserom.dol", 0x3912FC, 0x14
 $$24089:
@@ -4321,9 +4323,27 @@ $$24098:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 scShineConvTable:
-	.incbin "baserom.dol", 0x3CECE0, 0x28
+  .4byte scShineTableAirport
+  .4byte 0
+  .4byte scShineTableBianco
+  .4byte scShineTableRicco
+  .4byte scShineTableMamma
+  .4byte scShineTablePinna
+  .4byte scShineTableSirena
+  .4byte scShineTableMonte
+  .4byte scShineTableMare
+  .4byte 0
 scEtcShineConvTable:
-	.incbin "baserom.dol", 0x3CED08, 0x28
+  .4byte 0
+  .4byte scShineTableDolpicEtc
+  .4byte scShineTableBiancoEtc
+  .4byte scShineTableRiccoEtc
+  .4byte scShineTableMammaEtc
+  .4byte scShineTablePinnaEtc
+  .4byte scShineTableSirenaEtc
+  .4byte scShineTableMonteEtc
+  .4byte scShineTableMareEtc
+  .4byte 0
 scNormalStageTable:
 	.incbin "baserom.dol", 0x3CED30, 0x28
 .global __vt__6TGuide
@@ -4388,7 +4408,7 @@ $$22653:
 $$22654:
 	.incbin "baserom.dol", 0x3E96D4, 0x4
 $$22655:
-	.incbin "baserom.dol", 0x3E96D8, 0x4
+  .4byte 0
 $$22656:
 	.incbin "baserom.dol", 0x3E96DC, 0x4
 $$22659:

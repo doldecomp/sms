@@ -1616,7 +1616,8 @@ $$2604:
 $$2606:
 	.incbin "baserom.dol", 0x3E3D98, 0x8
 $$2609:
-	.incbin "baserom.dol", 0x3E3DA0, 0x8
+  .4byte 0
+  .4byte 0
 $$2637:
 	.incbin "baserom.dol", 0x3E3DA8, 0x8
 $$2638:

@@ -2260,7 +2260,9 @@ $$232$$2__dt__22TBossHanachanPartsHeadFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39CED0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39CEDC, 0x14
 $$22220:
@@ -2272,7 +2274,9 @@ $$22222:
 $$22223:
 	.incbin "baserom.dol", 0x39CF8C, 0x24
 $$22360:
-	.incbin "baserom.dol", 0x39CFB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22362:
 	.incbin "baserom.dol", 0x39CFBC, 0xC
 $$22707:
@@ -2491,21 +2495,23 @@ __vt__22TBossHanachanPartsBody:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cMapCollisionJointName:
-	.incbin "baserom.dol", 0x3E3AB0, 0x4
+  .4byte $$22706
 cBodyMapCollisionFileName:
-	.incbin "baserom.dol", 0x3E3AB4, 0x4
+  .4byte $$22707
 cHeadMapCollisionFileName:
-	.incbin "baserom.dol", 0x3E3AB8, 0x4
+  .4byte $$22708
 cLegJointName_L3:
-	.incbin "baserom.dol", 0x3E3ABC, 0x4
+  .4byte $$22709
 cLegJointName_R3:
-	.incbin "baserom.dol", 0x3E3AC0, 0x4
+  .4byte $$22710
 cNoseHallJointName_L:
-	.incbin "baserom.dol", 0x3E3AC4, 0x4
+  .4byte $$22711
 cNoseHallJointName_R:
-	.incbin "baserom.dol", 0x3E3AC8, 0x4
+  .4byte $$22712
 sFootJointName$2739:
-	.incbin "baserom.dol", 0x3E3ACC, 0xC
+  .4byte $$22740
+  .4byte $$22741
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22706:
@@ -2527,7 +2533,7 @@ $$23015:
 $$23016:
 	.incbin "baserom.dol", 0x3EB524, 0x4
 $$23017:
-	.incbin "baserom.dol", 0x3EB528, 0x4
+  .4byte 0
 $$23393:
 	.incbin "baserom.dol", 0x3EB52C, 0x4
 $$23395:

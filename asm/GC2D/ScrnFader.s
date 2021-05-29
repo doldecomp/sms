@@ -1247,7 +1247,9 @@ lbl_802022CC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390308, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21953:
 	.incbin "baserom.dol", 0x390314, 0x14
 $$22082:
@@ -1275,7 +1277,7 @@ __vt__9TSMSFader:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22120:
-	.incbin "baserom.dol", 0x3E90F0, 0x4
+  .4byte 0
 $$22239:
 	.incbin "baserom.dol", 0x3E90F4, 0x4
 $$22375:

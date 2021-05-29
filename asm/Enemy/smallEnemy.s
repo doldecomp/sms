@@ -4841,11 +4841,15 @@ $$232$$2__dt__11TSmallEnemyFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x394CC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x394CD4, 0x14
 $$22396:
-	.incbin "baserom.dol", 0x394CE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22398:
 	.incbin "baserom.dol", 0x394CF4, 0xC
 $$22594:
@@ -5116,7 +5120,7 @@ mIsAmpPolluter__11TSmallEnemy:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23330:
-	.incbin "baserom.dol", 0x3EA228, 0x4
+  .4byte 0
 $$23420:
 	.incbin "baserom.dol", 0x3EA22C, 0x4
 $$23421:

@@ -13,7 +13,8 @@ $$2417:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global asnFileName__Q27JAInter8TAsnData
 asnFileName__Q27JAInter8TAsnData:
-	.incbin "baserom.dol", 0x3E30D8, 0x8
+  .4byte $$2395
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global asnData__Q27JAInter8TAsnData

@@ -1180,7 +1180,14 @@ aramDmaFinish__Q28JASystem3DvdFUl:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 audioRootPath__Q28JASystem3Dvd:
-	.incbin "baserom.dol", 0x3A87A8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 dvdMsgsSize__Q28JASystem3Dvd:

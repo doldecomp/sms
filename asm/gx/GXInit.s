@@ -1143,19 +1143,20 @@ lbl_800A5EC0:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global gx
 gx:
-	.incbin "baserom.dol", 0x3E32C8, 0x8
+  .4byte gxData
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2121:
 	.incbin "baserom.dol", 0x3E47D0, 0x4
 $$2122:
-	.incbin "baserom.dol", 0x3E47D4, 0x4
+  .4byte 0
 $$2123:
-	.incbin "baserom.dol", 0x3E47D8, 0x4
+  .4byte -1
 $$2177:
 	.incbin "baserom.dol", 0x3E47DC, 0x4
 $$2178:
-	.incbin "baserom.dol", 0x3E47E0, 0x4
+  .4byte 0
 $$2179:
 	.incbin "baserom.dol", 0x3E47E4, 0x4
 $$2181:

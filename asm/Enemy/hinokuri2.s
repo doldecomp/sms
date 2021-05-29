@@ -6660,7 +6660,9 @@ $$232$$2__dt__10THinokuri2Fv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x393AA8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x393AB4, 0x14
 $$22438:
@@ -6672,7 +6674,9 @@ $$22440:
 $$22441:
 	.incbin "baserom.dol", 0x393B64, 0x24
 $$22539:
-	.incbin "baserom.dol", 0x393B88, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22541:
 	.incbin "baserom.dol", 0x393B94, 0xC
 $$22985:
@@ -6818,9 +6822,39 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D2810, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D2820, 0x10
+  .4byte $$22438
+  .4byte $$22439
+  .4byte $$22440
+  .4byte $$22441
 hinokuri2_bastable:
-	.incbin "baserom.dol", 0x3D2830, 0x70
+  .4byte $$22985
+  .4byte $$22986
+  .4byte $$22987
+  .4byte $$22988
+  .4byte $$22989
+  .4byte $$22990
+  .4byte $$22991
+  .4byte $$22992
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22993
+  .4byte $$22994
+  .4byte 0
+  .4byte $$22995
+  .4byte 0
+  .4byte $$22996
+  .4byte 0
+  .4byte $$22997
+  .4byte $$22998
+  .4byte 0
+  .4byte $$22999
+  .4byte 0
+  .4byte 0
+  .4byte $$23000
+  .4byte 0
+  .4byte $$23001
+  .4byte $$23002
 .global __vt__18TNerveHino2WaitAnm
 __vt__18TNerveHino2WaitAnm:
   .4byte 0
@@ -7126,7 +7160,8 @@ __vt__17THinokuri2Manager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mannameTable$3222:
-	.incbin "baserom.dol", 0x3E38E8, 0x8
+  .4byte $$23223
+  .4byte $$23224
 $$23326:
 	.incbin "baserom.dol", 0x3E38F0, 0x4
 $$23328:
@@ -7142,7 +7177,7 @@ $$23770:
 $$24250:
 	.incbin "baserom.dol", 0x3EA028, 0x4
 $$24408:
-	.incbin "baserom.dol", 0x3EA02C, 0x4
+  .4byte 0
 $$24409:
 	.incbin "baserom.dol", 0x3EA030, 0x4
 $$24410:

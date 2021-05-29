@@ -5705,7 +5705,9 @@ lbl_8013C510:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x378528, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x378534, 0x14
 $$22532:
@@ -5729,7 +5731,10 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B3788, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3B3798, 0x10
+  .4byte $$22532
+  .4byte $$22533
+  .4byte $$22534
+  .4byte $$22535
 param$3393:
 	.incbin "baserom.dol", 0x3B37A8, 0x14
 param$3396:
@@ -5747,7 +5752,7 @@ param$3410:
 $$23616:
 	.incbin "baserom.dol", 0x3E5A90, 0x4
 $$23617:
-	.incbin "baserom.dol", 0x3E5A94, 0x4
+  .4byte 0
 $$23618:
 	.incbin "baserom.dol", 0x3E5A98, 0x4
 $$23619:

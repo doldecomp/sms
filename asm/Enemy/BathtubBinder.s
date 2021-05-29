@@ -461,7 +461,9 @@ __ct__14TBathtubBinderFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A20C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21525:
 	.incbin "baserom.dol", 0x3A20D4, 0x14
 $$21582:
@@ -487,7 +489,7 @@ __vt__14TBathtubBinder:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21944:
-	.incbin "baserom.dol", 0x3EC058, 0x4
+  .4byte 0
 $$21945:
 	.incbin "baserom.dol", 0x3EC05C, 0x4
 $$21946:

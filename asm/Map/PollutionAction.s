@@ -861,7 +861,7 @@ mGlassWallEffectTime__15TPollutionLayer:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22703:
-	.incbin "baserom.dol", 0x3E8D00, 0x4
+  .4byte 0
 $$22704:
 	.incbin "baserom.dol", 0x3E8D04, 0x4
 $$22705:

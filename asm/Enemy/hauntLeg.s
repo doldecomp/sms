@@ -1593,7 +1593,9 @@ $$232$$2__dt__9THauntLegFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E658, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22122:
 	.incbin "baserom.dol", 0x39E664, 0x14
 $$22362:
@@ -1621,7 +1623,9 @@ $$23368:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 hauntleg_bastable:
-	.incbin "baserom.dol", 0x3DDB58, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2798:
 	.incbin "baserom.dol", 0x3DDB64, 0xC
 .global __vt__19TNerveHauntLegHaunt
@@ -1815,7 +1819,7 @@ __vt__16THauntLegManager:
 $$22976:
 	.incbin "baserom.dol", 0x3EB870, 0x4
 $$22977:
-	.incbin "baserom.dol", 0x3EB874, 0x4
+  .4byte 0
 $$22978:
 	.incbin "baserom.dol", 0x3EB878, 0x4
 $$22979:

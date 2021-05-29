@@ -2834,7 +2834,9 @@ $$232$$2__dt__7TAmenboFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A11B0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A11BC, 0x14
 $$21585:
@@ -2846,7 +2848,9 @@ $$21587:
 $$21588:
 	.incbin "baserom.dol", 0x3A126C, 0x24
 $$22367:
-	.incbin "baserom.dol", 0x3A1290, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22369:
 	.incbin "baserom.dol", 0x3A129C, 0xC
 $$22386:
@@ -2862,7 +2866,10 @@ $$22391:
 $$22392:
 	.incbin "baserom.dol", 0x3A1318, 0xC
 cJointNames__9$$2unnamed$$2:
-	.incbin "baserom.dol", 0x3A1324, 0x10
+  .4byte $$22389
+  .4byte $$22390
+  .4byte $$22391
+  .4byte $$22392
 $$22528:
 	.incbin "baserom.dol", 0x3A1334, 0x14
 entry$2527:
@@ -2910,7 +2917,13 @@ $$24424:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 amenbo_bastable:
-	.incbin "baserom.dol", 0x3DFD28, 0x1C
+  .4byte 0
+  .4byte $$22386
+  .4byte 0
+  .4byte $$22387
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__20TNerveAmenboHitWater
 __vt__20TNerveAmenboHitWater:
   .4byte 0
@@ -3091,7 +3104,7 @@ $$22525:
 $$22689:
 	.incbin "baserom.dol", 0x3EBE10, 0x4
 $$22691:
-	.incbin "baserom.dol", 0x3EBE14, 0x4
+  .4byte 0
 $$22804:
 	.incbin "baserom.dol", 0x3EBE18, 0x4
 $$22861:

@@ -1005,7 +1005,9 @@ lbl_801F5E38:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38FCD0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38FCDC, 0x14
 $$22253:
@@ -1017,7 +1019,9 @@ $$22255:
 $$22256:
 	.incbin "baserom.dol", 0x38FD8C, 0x24
 $$22585:
-	.incbin "baserom.dol", 0x38FDB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22587:
 	.incbin "baserom.dol", 0x38FDBC, 0xC
 $$22925:
@@ -1075,7 +1079,7 @@ __vt__22TDolpicEventBiancoGate:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22864:
-	.incbin "baserom.dol", 0x3E8E48, 0x4
+  .4byte 0
 $$22926:
 	.incbin "baserom.dol", 0x3E8E4C, 0x4
 $$22927:

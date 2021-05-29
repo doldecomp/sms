@@ -2763,7 +2763,7 @@ __vt__7MSStage:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22293:
-	.incbin "baserom.dol", 0x3E52E8, 0x4
+  .4byte 0
 $$22300:
 	.incbin "baserom.dol", 0x3E52EC, 0x4
 $$22344:

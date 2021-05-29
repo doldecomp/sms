@@ -703,6 +703,6 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21786:
-	.incbin "baserom.dol", 0x3E44F8, 0x4
+  .4byte 0
 $$21787:
 	.incbin "baserom.dol", 0x3E44FC, 0x4

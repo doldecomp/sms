@@ -1737,7 +1737,9 @@ $$232$$2__dt__12TYoshiTongueFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x378818, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x378824, 0x14
 cDirtyFileName:
@@ -1821,7 +1823,7 @@ $$22843:
 $$22631:
 	.incbin "baserom.dol", 0x3E5CD8, 0x4
 $$22632:
-	.incbin "baserom.dol", 0x3E5CDC, 0x4
+  .4byte 0
 $$22633:
 	.incbin "baserom.dol", 0x3E5CE0, 0x4
 $$22836:

@@ -1823,7 +1823,7 @@ $$21875:
 $$21908:
 	.incbin "baserom.dol", 0x3E4C10, 0x4
 $$21909:
-	.incbin "baserom.dol", 0x3E4C14, 0x4
+  .4byte 0
 $$21911:
 	.incbin "baserom.dol", 0x3E4C18, 0x8
 $$22660:

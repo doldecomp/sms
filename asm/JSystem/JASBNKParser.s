@@ -732,7 +732,7 @@ __vt__Q28JASystem11TInstEffect:
 $$2531:
 	.incbin "baserom.dol", 0x3E42D8, 0x4
 $$2532:
-	.incbin "baserom.dol", 0x3E42DC, 0x4
+  .4byte 0
 $$2533:
 	.incbin "baserom.dol", 0x3E42E0, 0x8
 $$2535:

@@ -4544,7 +4544,9 @@ $$2104$$24$$2calc__16TTinKoopaMtxCalcFUs:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x397968, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x397974, 0x14
 $$22194:
@@ -4556,7 +4558,9 @@ $$22196:
 $$22197:
 	.incbin "baserom.dol", 0x397A24, 0x24
 $$22659:
-	.incbin "baserom.dol", 0x397A48, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22661:
 	.incbin "baserom.dol", 0x397A54, 0xC
 $$22986:
@@ -4754,15 +4758,58 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D6E00, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D6E10, 0x10
+  .4byte $$22194
+  .4byte $$22195
+  .4byte $$22196
+  .4byte $$22197
 tinkoopa_bastable:
-	.incbin "baserom.dol", 0x3D6E20, 0x44
+  .4byte $$22986
+  .4byte $$22987
+  .4byte $$22988
+  .4byte $$22989
+  .4byte 0
+  .4byte $$22990
+  .4byte $$22991
+  .4byte $$22992
+  .4byte $$22993
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22994
+  .4byte $$22995
+  .4byte $$22996
+  .4byte $$22997
+  .4byte $$22998
 TTinKoopa_jointNameTable:
-	.incbin "baserom.dol", 0x3D6E64, 0x3C
+  .4byte $$23014
+  .4byte $$23015
+  .4byte $$23016
+  .4byte $$23017
+  .4byte $$23018
+  .4byte $$23019
+  .4byte $$23020
+  .4byte $$23021
+  .4byte $$23022
+  .4byte $$23023
+  .4byte $$23024
+  .4byte $$23025
+  .4byte $$23026
+  .4byte $$23027
+  .4byte $$23028
 table$3029:
-	.incbin "baserom.dol", 0x3D6EA0, 0x18
+  .4byte $$23030
+  .4byte $$23031
+  .4byte $$23032
+  .4byte $$23033
+  .4byte $$23034
+  .4byte $$23035
 table$3036:
-	.incbin "baserom.dol", 0x3D6EB8, 0x18
+  .4byte 0
+  .4byte $$23037
+  .4byte $$23038
+  .4byte $$23039
+  .4byte $$23040
+  .4byte 0
 table$3041:
 	.incbin "baserom.dol", 0x3D6ED0, 0x18
 table$3042:
@@ -4778,17 +4825,55 @@ table$3046:
 table$3047:
 	.incbin "baserom.dol", 0x3D6F50, 0x14
 breastTrackJointNameTable:
-	.incbin "baserom.dol", 0x3D6F64, 0x18
+  .4byte $$23048
+  .4byte $$23049
+  .4byte $$23050
+  .4byte $$23051
+  .4byte $$23052
+  .4byte $$23053
 bellyTrackJointNameTable:
-	.incbin "baserom.dol", 0x3D6F7C, 0x18
+  .4byte $$23054
+  .4byte $$23055
+  .4byte $$23056
+  .4byte $$23057
+  .4byte $$23058
+  .4byte $$23059
 rightArmTrackJointNameTable:
-	.incbin "baserom.dol", 0x3D6F94, 0x10
+  .4byte $$23060
+  .4byte $$23061
+  .4byte $$23062
+  .4byte $$23063
 leftArmTrackJointNameTable:
-	.incbin "baserom.dol", 0x3D6FA4, 0x10
+  .4byte $$23064
+  .4byte $$23065
+  .4byte $$23066
+  .4byte $$23067
 onetimeFilenames$3493:
-	.incbin "baserom.dol", 0x3D6FB4, 0x1C
+  .4byte $$23494
+  .4byte $$23495
+  .4byte $$23496
+  .4byte $$23497
+  .4byte $$23498
+  .4byte $$23499
+  .4byte $$23500
 loopFilenames$3507:
-	.incbin "baserom.dol", 0x3D6FD0, 0x44
+  .4byte $$23508
+  .4byte $$23509
+  .4byte $$23510
+  .4byte $$23511
+  .4byte $$23512
+  .4byte $$23513
+  .4byte $$23514
+  .4byte $$23515
+  .4byte $$23516
+  .4byte $$23517
+  .4byte $$23518
+  .4byte $$23519
+  .4byte $$23520
+  .4byte $$23521
+  .4byte $$23522
+  .4byte $$23523
+  .4byte $$23524
 .global __vt__19TNerveTinKoopaBreak
 __vt__19TNerveTinKoopaBreak:
   .4byte 0
@@ -5083,7 +5168,7 @@ $$23011:
 $$23012:
 	.incbin "baserom.dol", 0x3E39A0, 0x4
 loopIndirectFilenames$3531:
-	.incbin "baserom.dol", 0x3E39A4, 0x4
+  .4byte $$23532
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23019:
@@ -5107,7 +5192,7 @@ $$23067:
 $$23725:
 	.incbin "baserom.dol", 0x3EA8B0, 0x4
 $$23726:
-	.incbin "baserom.dol", 0x3EA8B4, 0x4
+  .4byte 0
 $$23728:
 	.incbin "baserom.dol", 0x3EA8B8, 0x8
 $$24259:

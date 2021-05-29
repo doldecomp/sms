@@ -749,7 +749,7 @@ __vt__8TShimmer:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22641:
-	.incbin "baserom.dol", 0x3E8D98, 0x4
+  .4byte 0
 $$22642:
 	.incbin "baserom.dol", 0x3E8D9C, 0x4
 $$22803:

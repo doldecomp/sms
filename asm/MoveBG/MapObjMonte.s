@@ -4616,7 +4616,9 @@ $$232$$2__dt__13TFluffManagerFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38D6A0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38D6AC, 0x14
 $$22178:
@@ -4628,7 +4630,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38D75C, 0x24
 $$22699:
-	.incbin "baserom.dol", 0x38D780, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22701:
 	.incbin "baserom.dol", 0x38D78C, 0xC
 $$22884:
@@ -5342,7 +5346,7 @@ $$22870:
 $$22934:
 	.incbin "baserom.dol", 0x3E86BC, 0x4
 $$23059:
-	.incbin "baserom.dol", 0x3E86C0, 0x4
+  .4byte 0
 $$23106:
 	.incbin "baserom.dol", 0x3E86C4, 0x4
 $$23107:

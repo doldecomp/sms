@@ -1202,7 +1202,9 @@ $$232$$2__dt__5TSealFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21664:
-	.incbin "baserom.dol", 0x39E170, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39E17C, 0x14
 $$22200:
@@ -1214,7 +1216,9 @@ $$22202:
 $$22203:
 	.incbin "baserom.dol", 0x39E22C, 0x24
 $$22761:
-	.incbin "baserom.dol", 0x39E250, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22763:
 	.incbin "baserom.dol", 0x39E25C, 0xC
 $$22837:
@@ -1350,7 +1354,7 @@ $$23019:
 $$23075:
 	.incbin "baserom.dol", 0x3EB728, 0x4
 $$23126:
-	.incbin "baserom.dol", 0x3EB72C, 0x4
+  .4byte 0
 $$23206:
 	.incbin "baserom.dol", 0x3EB730, 0x4
 $$23208:

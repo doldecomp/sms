@@ -5669,7 +5669,9 @@ $$232$$2__dt__16TKageMarioModokiFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x396070, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22151:
 	.incbin "baserom.dol", 0x39607C, 0x14
 $$22390:
@@ -5771,7 +5773,13 @@ $$25425:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 telesa_bastable:
-	.incbin "baserom.dol", 0x3D4AE8, 0x1C
+  .4byte 0
+  .4byte $$22961
+  .4byte $$22962
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22963
 entry$2992:
 	.incbin "baserom.dol", 0x3D4B04, 0x18
 entry$3402:
@@ -6554,7 +6562,7 @@ mFlyAngMax__7TTelesa:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 cTelesaColorStart:
-	.incbin "baserom.dol", 0x3EA508, 0x4
+  .4byte 0
 $$23470:
 	.incbin "baserom.dol", 0x3EA50C, 0x8
 $$23471:
@@ -6578,7 +6586,7 @@ $$23631:
 $$23633:
 	.incbin "baserom.dol", 0x3EA538, 0x8
 $$23705:
-	.incbin "baserom.dol", 0x3EA540, 0x4
+  .4byte 0
 $$23706:
 	.incbin "baserom.dol", 0x3EA544, 0x4
 $$23769:

@@ -4798,7 +4798,9 @@ $$232$$2__dt__13TElecCarapaceFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x395CC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22346:
 	.incbin "baserom.dol", 0x395CD4, 0x14
 $$22569:
@@ -4860,7 +4862,24 @@ $$25272:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 dennoko_bastable:
-	.incbin "baserom.dol", 0x3D4698, 0x48
+  .4byte $$22879
+  .4byte $$22880
+  .4byte $$22881
+  .4byte $$22882
+  .4byte 0
+  .4byte 0
+  .4byte $$22883
+  .4byte $$22884
+  .4byte 0
+  .4byte 0
+  .4byte $$22885
+  .4byte 0
+  .4byte $$22886
+  .4byte $$22887
+  .4byte 0
+  .4byte $$22888
+  .4byte 0
+  .4byte 0
 entry$2916:
 	.incbin "baserom.dol", 0x3D46E0, 0x18
 .global __vt__24TNerveElecCarapaceReturn
@@ -5152,7 +5171,7 @@ $$23459:
 $$23460:
 	.incbin "baserom.dol", 0x3EA488, 0x4
 $$23461:
-	.incbin "baserom.dol", 0x3EA48C, 0x4
+  .4byte 0
 $$23462:
 	.incbin "baserom.dol", 0x3EA490, 0x4
 $$23463:

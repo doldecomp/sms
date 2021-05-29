@@ -2906,7 +2906,9 @@ $$232$$2__dt__14TBasketReverseFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38ABE0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38ABEC, 0x14
 $$22178:
@@ -2918,7 +2920,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38AC9C, 0x24
 $$22808:
-	.incbin "baserom.dol", 0x38ACC0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22810:
 	.incbin "baserom.dol", 0x38ACCC, 0xC
 $$23114:
@@ -3990,7 +3994,7 @@ mVibrationDecreaseRate__8TManhole:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23070:
-	.incbin "baserom.dol", 0x3E7D20, 0x4
+  .4byte 0
 $$23075:
 	.incbin "baserom.dol", 0x3E7D24, 0x4
 $$23220:

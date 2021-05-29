@@ -7847,7 +7847,9 @@ $$232$$2__dt__6TKoopaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A0860, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22322:
 	.incbin "baserom.dol", 0x3A086C, 0x14
 $$22561:
@@ -7859,7 +7861,9 @@ $$22563:
 $$22564:
 	.incbin "baserom.dol", 0x3A091C, 0x24
 $$22850:
-	.incbin "baserom.dol", 0x3A0940, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22852:
 	.incbin "baserom.dol", 0x3A094C, 0xC
 $$22935:
@@ -7985,7 +7989,21 @@ $$26256:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 koopa_bastable:
-	.incbin "baserom.dol", 0x3DF438, 0x3C
+  .4byte $$22935
+  .4byte 0
+  .4byte $$22936
+  .4byte $$22937
+  .4byte $$22938
+  .4byte $$22939
+  .4byte $$22940
+  .4byte $$22941
+  .4byte $$22942
+  .4byte $$22943
+  .4byte $$22944
+  .4byte $$22945
+  .4byte $$22946
+  .4byte 0
+  .4byte $$22947
 .global __vt__13TKoopaManager
 __vt__13TKoopaManager:
   .4byte 0
@@ -8437,7 +8455,7 @@ $$23673:
 $$23674:
 	.incbin "baserom.dol", 0x3EBCE0, 0x4
 $$23675:
-	.incbin "baserom.dol", 0x3EBCE4, 0x4
+  .4byte 0
 $$23677:
 	.incbin "baserom.dol", 0x3EBCE8, 0x8
 $$23827:

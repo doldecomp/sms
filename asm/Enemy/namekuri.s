@@ -3936,7 +3936,9 @@ $$232$$2__dt__18TDiffusionNameKuriFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x394608, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22121:
 	.incbin "baserom.dol", 0x394614, 0x14
 $$22178:
@@ -4006,7 +4008,14 @@ $$24682:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 namekuri2_bastable:
-	.incbin "baserom.dol", 0x3D2FA0, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22909
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2947:
 	.incbin "baserom.dol", 0x3D2FC0, 0x18
 .global __vt__19TNerveNKFollowMario
@@ -4416,7 +4425,7 @@ mStopMinScaleFrame__16TNameKuriManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23235:
-	.incbin "baserom.dol", 0x3EA110, 0x4
+  .4byte 0
 $$23236:
 	.incbin "baserom.dol", 0x3EA114, 0x4
 $$23288:

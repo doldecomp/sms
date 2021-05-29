@@ -680,7 +680,7 @@ __vt__12TPoolManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22679:
-	.incbin "baserom.dol", 0x3E8848, 0x4
+  .4byte 0
 $$22713:
 	.incbin "baserom.dol", 0x3E884C, 0x4
 $$22733:

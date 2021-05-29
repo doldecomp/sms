@@ -3709,7 +3709,9 @@ $$232$$2__dt__7TKillerFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39BB18, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22322:
 	.incbin "baserom.dol", 0x39BB24, 0x14
 $$22561:
@@ -3765,9 +3767,16 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3DAEF0, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3DAF00, 0x10
+  .4byte $$22561
+  .4byte $$22562
+  .4byte $$22563
+  .4byte $$22564
 killer_bastable:
-	.incbin "baserom.dol", 0x3DAF10, 0x14
+  .4byte $$22910
+  .4byte 0
+  .4byte 0
+  .4byte $$22911
+  .4byte 0
 entry$3036:
 	.incbin "baserom.dol", 0x3DAF24, 0x24
 .global __vt__21TNerveKillerExplosion
@@ -4073,7 +4082,7 @@ mTestMarioSpMax__9TFlyEnemy:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23243:
-	.incbin "baserom.dol", 0x3EB0F8, 0x4
+  .4byte 0
 $$23245:
 	.incbin "baserom.dol", 0x3EB0FC, 0x4
 $$23247:

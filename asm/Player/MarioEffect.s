@@ -868,7 +868,9 @@ $$232$$2__dt__12TMarioEffectFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x379570, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22246:
 	.incbin "baserom.dol", 0x37957C, 0x14
 $$22302:
@@ -948,7 +950,7 @@ __vt__12TMarioEffect:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22767:
-	.incbin "baserom.dol", 0x3E5E48, 0x4
+  .4byte 0
 $$22835:
 	.incbin "baserom.dol", 0x3E5E4C, 0x4
 $$22836:

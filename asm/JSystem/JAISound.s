@@ -3279,7 +3279,7 @@ __vt__8JAISound:
 $$2412:
 	.incbin "baserom.dol", 0x3E4258, 0x8
 $$2434:
-	.incbin "baserom.dol", 0x3E4260, 0x4
+  .4byte 0
 $$2602:
 	.incbin "baserom.dol", 0x3E4264, 0x4
 $$2604:

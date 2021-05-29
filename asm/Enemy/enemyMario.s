@@ -6052,7 +6052,9 @@ $$232$$2__dt__11TEnemyMarioFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x392130, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39213C, 0x14
 $$22280:
@@ -6402,17 +6404,39 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D00B8, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D00C8, 0x10
+  .4byte $$22280
+  .4byte $$22281
+  .4byte $$22282
+  .4byte $$22283
 marioAnimeFiles:
 	.incbin "baserom.dol", 0x3D00D8, 0x638
 recordFileNamesDolpic1:
-	.incbin "baserom.dol", 0x3D0710, 0x20
+  .4byte 0
+  .4byte $$23204
+  .4byte $$23205
+  .4byte $$23206
+  .4byte $$23207
+  .4byte $$23208
+  .4byte $$23209
+  .4byte 0
 recordFileNamesMonteMan:
-	.incbin "baserom.dol", 0x3D0730, 0xC
+  .4byte $$23212
+  .4byte $$23213
+  .4byte $$23214
 names$3274:
-	.incbin "baserom.dol", 0x3D073C, 0x14
+  .4byte $$23275
+  .4byte $$23276
+  .4byte $$23277
+  .4byte $$23278
+  .4byte $$23279
 bmdFileNames$3287:
-	.incbin "baserom.dol", 0x3D0750, 0x1C
+  .4byte $$23288
+  .4byte $$23288
+  .4byte $$23288
+  .4byte $$23288
+  .4byte $$23289
+  .4byte 0
+  .4byte 0
 .global __vt__11TEnemyMario
 __vt__11TEnemyMario:
   .4byte 0
@@ -6723,7 +6747,7 @@ $$23762:
 $$23769:
 	.incbin "baserom.dol", 0x3E9D20, 0x4
 $$24108:
-	.incbin "baserom.dol", 0x3E9D24, 0x4
+  .4byte 0
 $$24109:
 	.incbin "baserom.dol", 0x3E9D28, 0x4
 $$24110:

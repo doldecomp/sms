@@ -873,7 +873,7 @@ __vt__14TWaterHitActor:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22082:
-	.incbin "baserom.dol", 0x3EB3D0, 0x4
+  .4byte 0
 $$22083:
 	.incbin "baserom.dol", 0x3EB3D4, 0x4
 $$22084:

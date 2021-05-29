@@ -993,9 +993,9 @@ __vt__12TBeamManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21801:
-	.incbin "baserom.dol", 0x3EB1B0, 0x4
+  .4byte 0x808040FF
 $$22019:
-	.incbin "baserom.dol", 0x3EB1B4, 0x4
+  .4byte 0
 $$22020:
 	.incbin "baserom.dol", 0x3EB1B8, 0x4
 $$22021:

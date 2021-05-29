@@ -938,7 +938,9 @@ lbl_800EE2AC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21491:
-	.incbin "baserom.dol", 0x370508, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21938:
 	.incbin "baserom.dol", 0x370514, 0x14
 $$22268:
@@ -977,13 +979,14 @@ $$22830:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cCameraBckNameShineGetInside
 cCameraBckNameShineGetInside:
-	.incbin "baserom.dol", 0x3E3458, 0x4
+  .4byte $$22452
 .global cCameraBckNameShineGetOutside
 cCameraBckNameShineGetOutside:
-	.incbin "baserom.dol", 0x3E345C, 0x4
+  .4byte $$22453
 .global cCameraBckNameGate
 cCameraBckNameGate:
-	.incbin "baserom.dol", 0x3E3460, 0x8
+  .4byte $$22454
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23071:

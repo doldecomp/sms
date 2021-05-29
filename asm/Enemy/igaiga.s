@@ -6104,7 +6104,9 @@ $$232$$2__dt__9TGorogoroFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x398FB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22150:
 	.incbin "baserom.dol", 0x398FBC, 0x14
 $$22378:
@@ -6128,7 +6130,9 @@ $$23037:
 $$23111:
 	.incbin "baserom.dol", 0x39914C, 0x14
 $$23262:
-	.incbin "baserom.dol", 0x399160, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23264:
 	.incbin "baserom.dol", 0x39916C, 0xC
 $$23318:
@@ -6182,9 +6186,19 @@ $$25448:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 igaiga_bastable:
-	.incbin "baserom.dol", 0x3D8068, 0x20
+  .4byte $$23033
+  .4byte $$23034
+  .4byte 0
+  .4byte 0
+  .4byte $$23035
+  .4byte $$23036
+  .4byte $$23037
+  .4byte 0
 gorogoro_bastable:
-	.incbin "baserom.dol", 0x3D8088, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3110:
 	.incbin "baserom.dol", 0x3D8098, 0x18
 entry$3337:
@@ -6676,9 +6690,11 @@ mBoundVal__10TRollEnemy:
 mReachNodeDist__7TIgaiga:
 	.incbin "baserom.dol", 0x3E39CC, 0x4
 anmlist$3317:
-	.incbin "baserom.dol", 0x3E39D0, 0x8
+  .4byte $$23318
+  .4byte 0
 graphlist$3323:
-	.incbin "baserom.dol", 0x3E39D8, 0x8
+  .4byte $$23324
+  .4byte $$23325
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23553:
@@ -6702,7 +6718,7 @@ $$23697:
 $$23698:
 	.incbin "baserom.dol", 0x3EAB74, 0x4
 $$23699:
-	.incbin "baserom.dol", 0x3EAB78, 0x4
+  .4byte 0
 $$23700:
 	.incbin "baserom.dol", 0x3EAB7C, 0x4
 $$23701:

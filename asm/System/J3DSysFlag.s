@@ -340,4 +340,5 @@ __vt__11TJ3DSysFlag:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21731:
-	.incbin "baserom.dol", 0x3E4D38, 0x8
+  .4byte -1
+  .4byte 0

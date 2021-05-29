@@ -14,7 +14,9 @@ $$232$$2__dt__22TBossHanachanPartsBaseFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E9B0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x39E9BC, 0x14
 $$21755:
@@ -62,7 +64,44 @@ $$21956:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bosshanachan_bastable:
-	.incbin "baserom.dol", 0x3DE088, 0x98
+  .4byte $$21940
+  .4byte 0
+  .4byte 0
+  .4byte $$21941
+  .4byte $$21942
+  .4byte 0
+  .4byte $$21943
+  .4byte $$21944
+  .4byte $$21945
+  .4byte 0
+  .4byte 0
+  .4byte $$21946
+  .4byte $$21947
+  .4byte 0
+  .4byte $$21948
+  .4byte $$21949
+  .4byte $$21950
+  .4byte 0
+  .4byte 0
+  .4byte $$21951
+  .4byte 0
+  .4byte $$21952
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$21953
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$21954
+  .4byte $$21955
+  .4byte $$21956
+  .4byte 0
+  .4byte 0
 .global __vt__22TBossHanachanPartsBase
 __vt__22TBossHanachanPartsBase:
   .4byte 0

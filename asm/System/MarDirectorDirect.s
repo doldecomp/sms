@@ -3116,7 +3116,9 @@ lbl_800ED5B4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3702F8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22182:
 	.incbin "baserom.dol", 0x370304, 0x14
 $$22358:
@@ -3128,7 +3130,9 @@ $$22360:
 $$22361:
 	.incbin "baserom.dol", 0x3703B4, 0x24
 $$22697:
-	.incbin "baserom.dol", 0x3703D8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22699:
 	.incbin "baserom.dol", 0x3703E4, 0xC
 $$23517:
@@ -3228,7 +3232,7 @@ $$23915:
 $$23916:
 	.incbin "baserom.dol", 0x3E4D5C, 0x4
 $$23918:
-	.incbin "baserom.dol", 0x3E4D60, 0x4
+  .4byte 0
 $$24163:
 	.incbin "baserom.dol", 0x3E4D64, 0x4
 $$24165:

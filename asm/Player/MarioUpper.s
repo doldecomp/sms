@@ -612,7 +612,7 @@ lbl_80142098:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22245:
-	.incbin "baserom.dol", 0x3E5C08, 0x4
+  .4byte 0
 $$22246:
 	.incbin "baserom.dol", 0x3E5C0C, 0x4
 $$22314:

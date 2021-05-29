@@ -3100,7 +3100,9 @@ $$232$$2__dt__8TWoodBoxFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E178, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38E184, 0x14
 $$22178:
@@ -3112,7 +3114,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38E234, 0x24
 $$22782:
-	.incbin "baserom.dol", 0x38E258, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22784:
 	.incbin "baserom.dol", 0x38E264, 0xC
 $$23113:
@@ -4180,7 +4184,7 @@ __vt__12THideObjBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23068:
-	.incbin "baserom.dol", 0x3E89D0, 0x4
+  .4byte 0
 $$23230:
 	.incbin "baserom.dol", 0x3E89D4, 0x4
 $$23231:

@@ -3398,7 +3398,9 @@ $$232$$2__dt__11TLimitKoopaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A21C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22322:
 	.incbin "baserom.dol", 0x3A21D4, 0x14
 $$22561:
@@ -3410,7 +3412,9 @@ $$22563:
 $$22564:
 	.incbin "baserom.dol", 0x3A2284, 0x24
 $$22850:
-	.incbin "baserom.dol", 0x3A22A8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22852:
 	.incbin "baserom.dol", 0x3A22B4, 0xC
 $$23214:
@@ -4022,7 +4026,8 @@ $$23391:
 $$23393:
 	.incbin "baserom.dol", 0x3EC0CC, 0x4
 $$23414:
-	.incbin "baserom.dol", 0x3EC0D0, 0x8
+  .4byte 0
+  .4byte 0
 $$23430:
 	.incbin "baserom.dol", 0x3EC0D8, 0x8
 $$23722:

@@ -710,7 +710,7 @@ __vt__10TBGPolDrop:
 $$22932:
 	.incbin "baserom.dol", 0x3EB740, 0x4
 $$22933:
-	.incbin "baserom.dol", 0x3EB744, 0x4
+  .4byte 0
 $$22934:
 	.incbin "baserom.dol", 0x3EB748, 0x4
 $$22988:

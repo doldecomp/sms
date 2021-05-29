@@ -2063,7 +2063,9 @@ lbl_801E2FC0:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E7F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38E7FC, 0x14
 $$22272:
@@ -2075,7 +2077,9 @@ $$22274:
 $$22275:
 	.incbin "baserom.dol", 0x38E8AC, 0x24
 $$22604:
-	.incbin "baserom.dol", 0x38E8D0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22606:
 	.incbin "baserom.dol", 0x38E8DC, 0xC
 $$23076:
@@ -2222,7 +2226,7 @@ mCleanedDegree__13TMapEventSink:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23152:
-	.incbin "baserom.dol", 0x3E8B10, 0x4
+  .4byte 0
 $$23153:
 	.incbin "baserom.dol", 0x3E8B14, 0x4
 $$23219:

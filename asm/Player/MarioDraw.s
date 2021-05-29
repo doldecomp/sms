@@ -6111,7 +6111,9 @@ lbl_801285F8:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x377870, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21936:
 	.incbin "baserom.dol", 0x37787C, 0x14
 $$22445:
@@ -6387,17 +6389,29 @@ $$23110:
 $$23111:
 	.incbin "baserom.dol", 0x378240, 0x20
 $$23177:
-	.incbin "baserom.dol", 0x378260, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23179:
-	.incbin "baserom.dol", 0x37826C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23181:
-	.incbin "baserom.dol", 0x378278, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23202:
-	.incbin "baserom.dol", 0x378284, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23204:
-	.incbin "baserom.dol", 0x378290, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23206:
-	.incbin "baserom.dol", 0x37829C, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23340:
 	.incbin "baserom.dol", 0x3782A8, 0xC
 $$23342:
@@ -6471,7 +6485,10 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B24F8, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3B2508, 0x10
+  .4byte $$22445
+  .4byte $$22446
+  .4byte $$22447
+  .4byte $$22448
 marioAnimeFiles:
 	.incbin "baserom.dol", 0x3B2518, 0x638
 .global gMarioAnimeData
@@ -6479,7 +6496,30 @@ gMarioAnimeData:
 	.incbin "baserom.dol", 0x3B2B50, 0xA80
 .global marioAnimeTexPatternFilenames
 marioAnimeTexPatternFilenames:
-	.incbin "baserom.dol", 0x3B35D0, 0x60
+  .4byte $$23088
+  .4byte $$23089
+  .4byte $$23090
+  .4byte $$23091
+  .4byte $$23092
+  .4byte $$23093
+  .4byte $$23094
+  .4byte $$23095
+  .4byte $$23096
+  .4byte $$23097
+  .4byte $$23098
+  .4byte $$23099
+  .4byte $$23100
+  .4byte $$23101
+  .4byte $$23102
+  .4byte $$23103
+  .4byte $$23104
+  .4byte $$23105
+  .4byte $$23106
+  .4byte $$23107
+  .4byte $$23108
+  .4byte $$23109
+  .4byte $$23110
+  .4byte $$23111
 $$25888:
     .4byte lbl_80126A4C
     .4byte lbl_80126A4C
@@ -6697,9 +6737,9 @@ $$23009:
 $$23344:
 	.incbin "baserom.dol", 0x3E5804, 0x4
 $$23613:
-	.incbin "baserom.dol", 0x3E5808, 0x4
+  .4byte -1
 $$23620:
-	.incbin "baserom.dol", 0x3E580C, 0x4
+  .4byte -1
 $$23647:
 	.incbin "baserom.dol", 0x3E5810, 0x4
 $$23656:
@@ -6709,7 +6749,7 @@ $$23659:
 $$23759:
 	.incbin "baserom.dol", 0x3E581C, 0x4
 $$23760:
-	.incbin "baserom.dol", 0x3E5820, 0x4
+  .4byte 0
 $$23969:
 	.incbin "baserom.dol", 0x3E5824, 0x4
 $$23970:

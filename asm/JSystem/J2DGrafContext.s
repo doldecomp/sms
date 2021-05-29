@@ -520,7 +520,7 @@ __vt__14J2DGrafContext:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2166:
-	.incbin "baserom.dol", 0x3E3FA0, 0x4
+  .4byte 0
 $$2167:
 	.incbin "baserom.dol", 0x3E3FA4, 0x4
 $$2169:

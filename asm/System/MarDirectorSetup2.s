@@ -736,7 +736,9 @@ $$212$$2__dt__12TMarDirectorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x370B58, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x370B64, 0x14
 $$22205:
@@ -748,7 +750,9 @@ $$22207:
 $$22208:
 	.incbin "baserom.dol", 0x370C14, 0x24
 $$22694:
-	.incbin "baserom.dol", 0x370C38, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22696:
 	.incbin "baserom.dol", 0x370C44, 0xC
 $$23409:

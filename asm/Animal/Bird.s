@@ -4125,7 +4125,9 @@ $$232$$2__dt__11TAnimalBirdFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A4D00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21940:
 	.incbin "baserom.dol", 0x3A4D0C, 0x14
 $$22018:
@@ -4197,7 +4199,15 @@ $$23953:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bird_bastable:
-	.incbin "baserom.dol", 0x3E2920, 0x24
+  .4byte 0
+  .4byte $$22904
+  .4byte $$22905
+  .4byte 0
+  .4byte 0
+  .4byte $$22906
+  .4byte $$22907
+  .4byte 0
+  .4byte 0
 .global __vt__23TNerveAnimalBirdLanding
 __vt__23TNerveAnimalBirdLanding:
   .4byte 0
@@ -4350,9 +4360,9 @@ __vt__11TAnimalBird:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 cMatName__9$$2unnamed$$2:
-	.incbin "baserom.dol", 0x3EC730, 0x4
+  .4byte $$22909
 $$23220:
-	.incbin "baserom.dol", 0x3EC734, 0x4
+  .4byte 0
 $$23221:
 	.incbin "baserom.dol", 0x3EC738, 0x8
 $$23223:
@@ -4404,7 +4414,7 @@ $$24755:
 $$24897:
 	.incbin "baserom.dol", 0x3EC7A0, 0x8
 $$24898:
-	.incbin "baserom.dol", 0x3EC7A8, 0x4
+  .4byte 0
 $$24921:
 	.incbin "baserom.dol", 0x3EC7AC, 0x4
 $$24922:

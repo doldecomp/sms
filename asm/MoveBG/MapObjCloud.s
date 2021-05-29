@@ -884,7 +884,7 @@ mScaleSpeed__10TRideCloud:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22842:
-	.incbin "baserom.dol", 0x3E83F0, 0x4
+  .4byte 0
 $$22958:
 	.incbin "baserom.dol", 0x3E83F4, 0x4
 $$22959:

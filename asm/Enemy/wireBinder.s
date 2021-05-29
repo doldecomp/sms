@@ -498,7 +498,7 @@ __vt__11TWireBinder:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21946:
-	.incbin "baserom.dol", 0x3EBAD8, 0x4
+  .4byte 0
 $$21947:
 	.incbin "baserom.dol", 0x3EBADC, 0x4
 $$21966:

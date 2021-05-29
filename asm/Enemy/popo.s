@@ -5014,7 +5014,9 @@ $$232$$2__dt__5TPopoFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39C4E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22269:
 	.incbin "baserom.dol", 0x39C4EC, 0x14
 $$22447:
@@ -5078,7 +5080,13 @@ $$25361:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 popo_bastable:
-	.incbin "baserom.dol", 0x3DBB90, 0x1C
+  .4byte $$22894
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22895
+  .4byte $$22896
 entry$2927:
 	.incbin "baserom.dol", 0x3DBBAC, 0x24
 .global __vt__16TNervePopoThrown
@@ -5334,7 +5342,7 @@ mLevelShootSw__5TPopo:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23330:
-	.incbin "baserom.dol", 0x3EB288, 0x4
+  .4byte 0
 $$23489:
 	.incbin "baserom.dol", 0x3EB28C, 0x4
 $$23490:

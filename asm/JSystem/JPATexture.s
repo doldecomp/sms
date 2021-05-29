@@ -374,4 +374,5 @@ __vt__10JPATexture:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21494:
-	.incbin "baserom.dol", 0x3E4628, 0x8
+  .4byte 0
+  .4byte 0

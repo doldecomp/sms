@@ -1632,7 +1632,11 @@ lbl_800B42EC:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 Si:
-	.incbin "baserom.dol", 0x3AED08, 0x14
+  .4byte -1
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Type:
 	.incbin "baserom.dol", 0x3AED1C, 0x10
 $$2456:

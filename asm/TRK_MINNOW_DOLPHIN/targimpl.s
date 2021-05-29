@@ -1628,13 +1628,19 @@ $$2243:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global gTRKRestoreFlags
 gTRKRestoreFlags:
-	.incbin "baserom.dol", 0x3AC018, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global gTRKExceptionStatus
 gTRKExceptionStatus:
 	.incbin "baserom.dol", 0x3AC024, 0x10
 .global gTRKStepStatus
 gTRKStepStatus:
-	.incbin "baserom.dol", 0x3AC034, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 TRK_saved_exceptionID:

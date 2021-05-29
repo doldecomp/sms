@@ -5223,7 +5223,9 @@ $$232$$2__dt__8TBathtubFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38DB10, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38DB1C, 0x14
 $$22178:
@@ -5235,7 +5237,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38DBCC, 0x24
 $$22683:
-	.incbin "baserom.dol", 0x38DBF0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22685:
 	.incbin "baserom.dol", 0x38DBFC, 0xC
 $$23557:
@@ -5723,7 +5727,7 @@ __vt__17TBathtubGripParts:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23376:
-	.incbin "baserom.dol", 0x3E8860, 0x4
+  .4byte 0
 $$23414:
 	.incbin "baserom.dol", 0x3E8864, 0x8
 $$23484:

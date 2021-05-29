@@ -3130,7 +3130,7 @@ mWaitTimeToWatch__21TMareEventDepressWall:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23097:
-	.incbin "baserom.dol", 0x3E8E90, 0x4
+  .4byte 0
 $$23135:
 	.incbin "baserom.dol", 0x3E8E94, 0x4
 $$23136:

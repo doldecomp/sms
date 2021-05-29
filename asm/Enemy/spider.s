@@ -434,6 +434,6 @@ __vt__7TSpider:
 $$22402:
 	.incbin "baserom.dol", 0x3EA2D8, 0x4
 $$22403:
-	.incbin "baserom.dol", 0x3EA2DC, 0x4
+  .4byte 0
 $$22404:
 	.incbin "baserom.dol", 0x3EA2E0, 0x8

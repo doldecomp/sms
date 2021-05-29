@@ -2807,13 +2807,14 @@ __vt__11TSilhouette:
 $$21997:
 	.incbin "baserom.dol", 0x3E4930, 0x4
 $$21999:
-	.incbin "baserom.dol", 0x3E4934, 0x4
+  .4byte -1
 $$22009:
-	.incbin "baserom.dol", 0x3E4938, 0x8
+  .4byte 0
+  .4byte 0
 $$22402:
 	.incbin "baserom.dol", 0x3E4940, 0x8
 $$22452:
-	.incbin "baserom.dol", 0x3E4948, 0x4
+  .4byte 0
 $$22453:
 	.incbin "baserom.dol", 0x3E494C, 0x4
 $$22472:

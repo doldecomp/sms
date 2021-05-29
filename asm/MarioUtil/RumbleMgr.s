@@ -1457,7 +1457,7 @@ mPowerThreshold__9RumbleMgr:
 $$21767:
 	.incbin "baserom.dol", 0x3E4B90, 0x4
 $$21790:
-	.incbin "baserom.dol", 0x3E4B94, 0x4
+  .4byte 0
 $$21841:
 	.incbin "baserom.dol", 0x3E4B98, 0x4
 $$22244:

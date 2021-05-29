@@ -2173,7 +2173,9 @@ $$232$$2__dt__14TFruitLauncherFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38B388, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38B394, 0x14
 $$22178:
@@ -2185,7 +2187,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38B444, 0x24
 $$22738:
-	.incbin "baserom.dol", 0x38B468, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22740:
 	.incbin "baserom.dol", 0x38B474, 0xC
 $$22983:
@@ -2929,7 +2933,7 @@ mFruitLiveTime__14TFruitLauncher:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22926:
-	.incbin "baserom.dol", 0x3E7F68, 0x4
+  .4byte 0
 $$22982:
 	.incbin "baserom.dol", 0x3E7F6C, 0x4
 $$23080:

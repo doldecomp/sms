@@ -2869,7 +2869,9 @@ $$232$$2__dt__6TKukkuFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A0E60, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x3A0E6C, 0x14
 $$22018:
@@ -2949,7 +2951,12 @@ $$24779:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 tori_bastable:
-	.incbin "baserom.dol", 0x3DFA28, 0x18
+  .4byte $$22947
+  .4byte $$22948
+  .4byte 0
+  .4byte $$22949
+  .4byte $$22950
+  .4byte $$22951
 .global __vt__23TNerveKukkuRecoverGraph
 __vt__23TNerveKukkuRecoverGraph:
   .4byte 0
@@ -3165,7 +3172,7 @@ $$23096:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23208:
-	.incbin "baserom.dol", 0x3EBD90, 0x4
+  .4byte 0
 $$23326:
 	.incbin "baserom.dol", 0x3EBD94, 0x4
 $$23327:

@@ -1120,7 +1120,9 @@ lbl_8017643C:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37F350, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37F35C, 0x14
 $$21962:
@@ -1180,19 +1182,20 @@ sIndividualMareMA1Btp$localstatic5$initIndividualAnm___8TBaseNPCFv:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cManiyaParentViewObjName:
-	.incbin "baserom.dol", 0x3E34C8, 0x4
+  .4byte $$22105
 cManiyaChildViewObjName:
-	.incbin "baserom.dol", 0x3E34CC, 0x4
+  .4byte $$22106
 cNotUseFastCubeViewObjName0:
-	.incbin "baserom.dol", 0x3E34D0, 0x4
+  .4byte $$22107
 cNotUseFastCubeViewObjName1:
-	.incbin "baserom.dol", 0x3E34D4, 0x4
+  .4byte $$22108
 cEyeMaterialName:
-	.incbin "baserom.dol", 0x3E34D8, 0x4
+  .4byte $$22109
 cNeckJointName:
-	.incbin "baserom.dol", 0x3E34DC, 0x4
+  .4byte $$22111
 sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x3E34E0, 0x8
+  .4byte $$22112
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22111:
@@ -1212,7 +1215,7 @@ $$22537:
 $$22539:
 	.incbin "baserom.dol", 0x3E65C8, 0x8
 $$22754:
-	.incbin "baserom.dol", 0x3E65D0, 0x4
+  .4byte 0
 $$22755:
 	.incbin "baserom.dol", 0x3E65D4, 0x4
 $$22756:

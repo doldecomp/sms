@@ -3230,7 +3230,7 @@ __vt__23TSolidStack$$09TPathNode$$1:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22765:
-	.incbin "baserom.dol", 0x3E99A8, 0x4
+  .4byte 0
 $$22787:
 	.incbin "baserom.dol", 0x3E99AC, 0x4
 $$22791:

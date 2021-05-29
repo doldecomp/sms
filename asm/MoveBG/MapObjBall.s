@@ -6416,7 +6416,9 @@ $$232$$2__dt__14TBigWatermelonFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38C5C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38C5D4, 0x14
 $$22371:
@@ -7081,7 +7083,7 @@ mFruitWaitTimeToAppear__11TResetFruit:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23387:
-	.incbin "baserom.dol", 0x3E8410, 0x4
+  .4byte 0
 $$23433:
 	.incbin "baserom.dol", 0x3E8414, 0x4
 $$23434:

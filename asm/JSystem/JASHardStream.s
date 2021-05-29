@@ -1004,7 +1004,14 @@ lbl_800636D0:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 rootDir__Q28JASystem10HardStream:
-	.incbin "baserom.dol", 0x3A87C8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$2550:
     .4byte lbl_80062D9C
     .4byte lbl_800629CC
@@ -1020,7 +1027,7 @@ playListMax__Q28JASystem10HardStream:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2275:
-	.incbin "baserom.dol", 0x3E43E0, 0x4
+  .4byte 0
 $$2621:
 	.incbin "baserom.dol", 0x3E43E4, 0x4
 $$2738:

@@ -8588,7 +8588,9 @@ $$2112$$2drawSyncCallback__6TMarioFUs:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x379740, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22367:
 	.incbin "baserom.dol", 0x37974C, 0x14
 cDirtyFileName:
@@ -9540,7 +9542,7 @@ $$22594:
 $$22595:
 	.incbin "baserom.dol", 0x3E5EE4, 0x8
 $$22596:
-	.incbin "baserom.dol", 0x3E5EEC, 0x4
+  .4byte 0
 $$22615:
 	.incbin "baserom.dol", 0x3E5EF0, 0x8
 $$22617:

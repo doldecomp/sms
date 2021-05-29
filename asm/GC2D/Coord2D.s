@@ -98,6 +98,7 @@ __ct__8TCoord2DFv:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21644:
-	.incbin "baserom.dol", 0x3E90C0, 0x8
+  .4byte 0
+  .4byte 0
 $$21652:
 	.incbin "baserom.dol", 0x3E90C8, 0x8

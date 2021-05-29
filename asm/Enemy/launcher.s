@@ -1659,7 +1659,9 @@ $$232$$2__dt__15TCommonLauncherFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21664:
-	.incbin "baserom.dol", 0x3984A0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x3984AC, 0x14
 $$22200:
@@ -1691,7 +1693,10 @@ $$23196:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 clauncher_bastable:
-	.incbin "baserom.dol", 0x3D73F8, 0x10
+  .4byte 0
+  .4byte $$22763
+  .4byte $$22764
+  .4byte 0
 .global __vt__22TCommonLauncherManager
 __vt__22TCommonLauncherManager:
   .4byte 0
@@ -1905,7 +1910,7 @@ $$23059:
 $$23060:
 	.incbin "baserom.dol", 0x3EA92C, 0x4
 $$23061:
-	.incbin "baserom.dol", 0x3EA930, 0x4
+  .4byte 0
 $$23062:
 	.incbin "baserom.dol", 0x3EA934, 0x4
 $$23166:

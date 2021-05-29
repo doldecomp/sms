@@ -1297,6 +1297,6 @@ __vt__Q26JDrama6TLight:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2633:
-	.incbin "baserom.dol", 0x3E40B0, 0x4
+  .4byte 0
 $$2634:
 	.incbin "baserom.dol", 0x3E40B4, 0x4

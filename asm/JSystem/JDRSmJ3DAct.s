@@ -503,7 +503,7 @@ __vt__12J3DFrameCtrl:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21562:
-	.incbin "baserom.dol", 0x3E40F8, 0x4
+  .4byte 0
 $$21563:
 	.incbin "baserom.dol", 0x3E40FC, 0x4
 $$21564:

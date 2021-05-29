@@ -263,7 +263,9 @@ $$232$$2__dt__13TEggGeneratorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E050, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x39E05C, 0x14
 $$21598:
@@ -387,4 +389,5 @@ $$22310:
 $$22311:
 	.incbin "baserom.dol", 0x3EB714, 0x4
 $$22312:
-	.incbin "baserom.dol", 0x3EB718, 0x8
+  .4byte 0
+  .4byte 0

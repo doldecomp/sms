@@ -2217,7 +2217,9 @@ lbl_80218714:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390A78, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x390A84, 0x14
 $$23284:
@@ -2231,7 +2233,16 @@ $$23341:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 scShineConvTable:
-	.incbin "baserom.dol", 0x3CE160, 0x28
+  .4byte scShineTableAirport
+  .4byte 0
+  .4byte scShineTableBianco
+  .4byte scShineTableRicco
+  .4byte scShineTableMamma
+  .4byte scShineTablePinna
+  .4byte scShineTableSirena
+  .4byte scShineTableMonte
+  .4byte scShineTableMare
+  .4byte 0
 scScenarioNameTable:
 	.incbin "baserom.dol", 0x3CE188, 0x118
 .global __vt__11TPauseMenu2
@@ -2265,7 +2276,7 @@ scShineTableMare:
 scShineTableMonte:
 	.incbin "baserom.dol", 0x3E9294, 0x8
 $$22665:
-	.incbin "baserom.dol", 0x3E929C, 0x4
+  .4byte 0
 $$22666:
 	.incbin "baserom.dol", 0x3E92A0, 0x4
 $$22667:
@@ -2329,7 +2340,7 @@ $$23225:
 $$23338:
 	.incbin "baserom.dol", 0x3E9328, 0x8
 $$23342:
-	.incbin "baserom.dol", 0x3E9330, 0x4
+  .4byte 0
 $$23343:
 	.incbin "baserom.dol", 0x3E9334, 0x4
 

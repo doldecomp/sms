@@ -5443,7 +5443,21 @@ objPt$97:
 up$98:
 	.incbin "baserom.dol", 0x3CEE70, 0xC
 handle_table:
-	.incbin "baserom.dol", 0x3CEE7C, 0x3C
+  .4byte dummy_handler
+  .4byte Hx_Circle
+  .4byte Hx_Circle
+  .4byte Hx_Test1
+  .4byte Hx_Test1
+  .4byte Hx_Test5
+  .4byte Hx_Test5
+  .4byte Hx_Test4
+  .4byte Hx_Test4
+  .4byte Hx_Test2R
+  .4byte Hx_Test2
+  .4byte Hx_Door
+  .4byte Hx_Logo
+  .4byte Hx_GameOver
+  .4byte dummy_handler
 handle_type:
 	.incbin "baserom.dol", 0x3CEEB8, 0x10
 boundtable$262:
@@ -5463,7 +5477,7 @@ $$2943:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 fbuf:
-	.incbin "baserom.dol", 0x3E3888, 0x4
+  .4byte hx_buffer
 vtable_org:
 	.incbin "baserom.dol", 0x3E388C, 0x8
 dec_step:
@@ -5471,23 +5485,23 @@ dec_step:
 inc_step:
 	.incbin "baserom.dol", 0x3E3898, 0x4
 fbuf2:
-	.incbin "baserom.dol", 0x3E389C, 0x4
+  .4byte hx_buffer
 gmover_tex_buffer:
-	.incbin "baserom.dol", 0x3E38A0, 0x4
+  .4byte hx_buffer
 mag$259:
 	.incbin "baserom.dol", 0x3E38A4, 0x4
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2114:
-	.incbin "baserom.dol", 0x3E9768, 0x4
+  .4byte 0
 $$2256:
-	.incbin "baserom.dol", 0x3E976C, 0x4
+  .4byte 0
 $$2292:
-	.incbin "baserom.dol", 0x3E9770, 0x4
+  .4byte -1
 $$2295:
 	.incbin "baserom.dol", 0x3E9774, 0x4
 $$2599:
-	.incbin "baserom.dol", 0x3E9778, 0x4
+  .4byte 0
 $$2600:
 	.incbin "baserom.dol", 0x3E977C, 0x4
 $$2601:

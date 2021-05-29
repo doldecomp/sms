@@ -1527,7 +1527,7 @@ $$21099:
 lbl_8040B620:
 	.incbin "baserom.dol", 0x3E3EC0, 0x4
 $$21259:
-	.incbin "baserom.dol", 0x3E3EC4, 0x4
+  .4byte 0
 $$21260:
 	.incbin "baserom.dol", 0x3E3EC8, 0x4
 $$21261:

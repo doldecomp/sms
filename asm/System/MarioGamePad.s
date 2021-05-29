@@ -750,7 +750,7 @@ __sinit_MarioGamePad_cpp:
 $$21806:
 	.incbin "baserom.dol", 0x3E4F48, 0x4
 $$21807:
-	.incbin "baserom.dol", 0x3E4F4C, 0x4
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x3E4F50, 0x4
 $$22116:

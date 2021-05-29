@@ -3674,7 +3674,9 @@ $$232$$2__dt__13TSleepPoiHanaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x399370, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x39937C, 0x14
 $$22354:
@@ -3736,7 +3738,20 @@ $$24485:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 poihana_bastable:
-	.incbin "baserom.dol", 0x3D87D8, 0x38
+  .4byte $$22893
+  .4byte $$22894
+  .4byte $$22895
+  .4byte $$22896
+  .4byte 0
+  .4byte 0
+  .4byte $$22897
+  .4byte 0
+  .4byte $$22898
+  .4byte 0
+  .4byte $$22899
+  .4byte $$22900
+  .4byte $$22901
+  .4byte $$22902
 .global __vt__20TNervePoihanaTrapped
 __vt__20TNervePoihanaTrapped:
   .4byte 0
@@ -4194,7 +4209,7 @@ $$23391:
 $$23453:
 	.incbin "baserom.dol", 0x3EAC38, 0x4
 $$23454:
-	.incbin "baserom.dol", 0x3EAC3C, 0x4
+  .4byte 0
 $$23617:
 	.incbin "baserom.dol", 0x3EAC40, 0x4
 $$23735:

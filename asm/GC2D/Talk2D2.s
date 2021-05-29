@@ -5015,7 +5015,9 @@ lbl_80216160:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390590, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39059C, 0x14
 $$22484:
@@ -5031,7 +5033,16 @@ scTalkSoundList:
 $$22719:
 	.incbin "baserom.dol", 0x39088C, 0x10
 $$22722:
-	.incbin "baserom.dol", 0x39089C, 0x28
+  .4byte $$22719
+  .4byte $$22720
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
+  .4byte $$22721
 $$22723:
 	.incbin "baserom.dol", 0x3908C4, 0x28
 $$23560:
@@ -5091,11 +5102,11 @@ $$23886:
 $$22720:
 	.incbin "baserom.dol", 0x3E91B0, 0x8
 $$22721:
-	.incbin "baserom.dol", 0x3E91B8, 0x4
+  .4byte 0
 $$23304:
-	.incbin "baserom.dol", 0x3E91BC, 0x4
+  .4byte -1
 $$23370:
-	.incbin "baserom.dol", 0x3E91C0, 0x4
+  .4byte 0
 $$23371:
 	.incbin "baserom.dol", 0x3E91C4, 0x4
 $$23373:

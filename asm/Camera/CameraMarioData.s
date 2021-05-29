@@ -277,7 +277,7 @@ __ct__16TCameraMarioDataFv:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22149:
-	.incbin "baserom.dol", 0x3EC298, 0x4
+  .4byte 0
 $$22190:
 	.incbin "baserom.dol", 0x3EC29C, 0x4
 $$22191:

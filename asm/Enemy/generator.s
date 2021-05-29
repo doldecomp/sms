@@ -569,7 +569,7 @@ __vt__10TGenerator:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22196:
-	.incbin "baserom.dol", 0x3EA6C8, 0x4
+  .4byte 0
 $$22197:
 	.incbin "baserom.dol", 0x3EA6CC, 0x4
 $$22231:

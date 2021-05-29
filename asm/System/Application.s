@@ -2675,7 +2675,9 @@ lbl_800FBA00:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x371CA0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21938:
 	.incbin "baserom.dol", 0x371CAC, 0x14
 $$22573:
@@ -2753,7 +2755,7 @@ __vt__13TMarioGamePad:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22481:
-	.incbin "baserom.dol", 0x3E4EE8, 0x4
+  .4byte -1
 $$22485:
 	.incbin "baserom.dol", 0x3E4EEC, 0x4
 lbl_8040C650:
@@ -2765,7 +2767,7 @@ $$22575:
 $$22576:
 	.incbin "baserom.dol", 0x3E4F04, 0x4
 $$22626:
-	.incbin "baserom.dol", 0x3E4F08, 0x4
+  .4byte 0
 $$22627:
 	.incbin "baserom.dol", 0x3E4F0C, 0x4
 $$22628:

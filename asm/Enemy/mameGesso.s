@@ -3580,7 +3580,9 @@ $$232$$2__dt__10TMameGessoFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x394260, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21790:
 	.incbin "baserom.dol", 0x39426C, 0x14
 $$22018:
@@ -3592,7 +3594,9 @@ $$22020:
 $$22021:
 	.incbin "baserom.dol", 0x39431C, 0x24
 $$22428:
-	.incbin "baserom.dol", 0x394340, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22430:
 	.incbin "baserom.dol", 0x39434C, 0xC
 $$22458:
@@ -3664,7 +3668,25 @@ $$24005:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 mameGesso_bastable:
-	.incbin "baserom.dol", 0x3D2CC0, 0x4C
+  .4byte 0
+  .4byte 0
+  .4byte $$22458
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22459
+  .4byte 0
+  .4byte 0
+  .4byte $$22460
+  .4byte $$22461
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22462
 .global __vt__19TNerveMameGessoWait
 __vt__19TNerveMameGessoWait:
   .4byte 0
@@ -3859,7 +3881,7 @@ mBaseHoseiTransY__10TMameGesso:
 $$22884:
 	.incbin "baserom.dol", 0x3EA0C8, 0x4
 $$22885:
-	.incbin "baserom.dol", 0x3EA0CC, 0x4
+  .4byte 0
 $$22886:
 	.incbin "baserom.dol", 0x3EA0D0, 0x4
 $$22887:

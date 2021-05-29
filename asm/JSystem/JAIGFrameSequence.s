@@ -1883,7 +1883,7 @@ lbl_80052C18:
 $$2412:
 	.incbin "baserom.dol", 0x3E41E8, 0x4
 $$2826:
-	.incbin "baserom.dol", 0x3E41EC, 0x4
+  .4byte 0
 $$2827:
 	.incbin "baserom.dol", 0x3E41F0, 0x8
 $$2828:

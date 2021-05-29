@@ -12500,7 +12500,9 @@ $$232$$2__dt__8TBossEelFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39AF48, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39AF54, 0x14
 $$22556:
@@ -12512,7 +12514,9 @@ $$22558:
 $$22559:
 	.incbin "baserom.dol", 0x39B004, 0x24
 $$22933:
-	.incbin "baserom.dol", 0x39B028, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22935:
 	.incbin "baserom.dol", 0x39B034, 0xC
 $$23093:
@@ -12748,21 +12752,65 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3DA2E0, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3DA2F0, 0x10
+  .4byte $$22556
+  .4byte $$22557
+  .4byte $$22558
+  .4byte $$22559
 bosseel_bastable:
-	.incbin "baserom.dol", 0x3DA300, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23093
+  .4byte 0
+  .4byte $$23094
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23095
+  .4byte $$23096
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 bossEelTears_bastable:
-	.incbin "baserom.dol", 0x3DA35C, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3126:
 	.incbin "baserom.dol", 0x3DA36C, 0x24
 sEyePartsJointTable$3535:
-	.incbin "baserom.dol", 0x3DA390, 0x10
+  .4byte $$23536
+  .4byte $$23537
+  .4byte $$23538
+  .4byte $$23539
 sToothPartsJointTable$3546:
-	.incbin "baserom.dol", 0x3DA3A0, 0x20
+  .4byte $$23547
+  .4byte $$23548
+  .4byte $$23549
+  .4byte $$23550
+  .4byte $$23551
+  .4byte $$23552
+  .4byte $$23553
+  .4byte $$23554
 sCollisionJointTable$3578:
-	.incbin "baserom.dol", 0x3DA3C0, 0x10
+  .4byte $$23579
+  .4byte $$23580
+  .4byte $$23581
+  .4byte $$23581
 sCollisionFileTable$3582:
-	.incbin "baserom.dol", 0x3DA3D0, 0x10
+  .4byte $$23583
+  .4byte $$23584
+  .4byte $$23585
+  .4byte $$23586
 .global __vt__26TNerveBossEelSleepOnBottom
 __vt__26TNerveBossEelSleepOnBottom:
   .4byte 0
@@ -13570,7 +13618,7 @@ $$24039:
 $$24040:
 	.incbin "baserom.dol", 0x3EAFE4, 0x4
 $$24419:
-	.incbin "baserom.dol", 0x3EAFE8, 0x4
+  .4byte 0
 $$24420:
 	.incbin "baserom.dol", 0x3EAFEC, 0x4
 $$24650:

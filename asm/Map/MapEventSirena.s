@@ -479,7 +479,9 @@ lbl_801F2874:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38FAB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38FABC, 0x14
 $$22253:
@@ -491,7 +493,9 @@ $$22255:
 $$22256:
 	.incbin "baserom.dol", 0x38FB6C, 0x24
 $$22585:
-	.incbin "baserom.dol", 0x38FB90, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22587:
 	.incbin "baserom.dol", 0x38FB9C, 0xC
 $$22771:
@@ -535,7 +539,7 @@ __vt__19TMapEventSirenaSink:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22744:
-	.incbin "baserom.dol", 0x3E8DD0, 0x4
+  .4byte 0
 $$22785:
 	.incbin "baserom.dol", 0x3E8DD4, 0x4
 $$22786:

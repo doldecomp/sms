@@ -1250,9 +1250,9 @@ $$22227:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 sFogOffColor$1583:
-	.incbin "baserom.dol", 0x3E4BA8, 0x4
+  .4byte 0
 $$22226:
-	.incbin "baserom.dol", 0x3E4BAC, 0x4
+  .4byte 0
 $$22278:
 	.incbin "baserom.dol", 0x3E4BB0, 0x8
 $$22279:

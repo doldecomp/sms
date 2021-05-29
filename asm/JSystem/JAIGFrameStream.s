@@ -2189,7 +2189,7 @@ outputmode__Q27JAInter9StreamLib:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2425:
-	.incbin "baserom.dol", 0x3E4218, 0x4
+  .4byte 0
 $$2426:
 	.incbin "baserom.dol", 0x3E421C, 0x4
 $$2504:

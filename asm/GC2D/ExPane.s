@@ -253,7 +253,7 @@ __ct__7TExPaneFP9J2DScreenUl:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21610:
-	.incbin "baserom.dol", 0x3E90D0, 0x4
+  .4byte 0
 $$21611:
 	.incbin "baserom.dol", 0x3E90D4, 0x4
 $$21612:

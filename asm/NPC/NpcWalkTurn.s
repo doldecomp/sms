@@ -637,7 +637,7 @@ set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22109:
-	.incbin "baserom.dol", 0x3E66A0, 0x4
+  .4byte 0
 $$22155:
 	.incbin "baserom.dol", 0x3E66A4, 0x4
 $$22156:

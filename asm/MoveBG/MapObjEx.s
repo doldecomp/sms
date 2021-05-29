@@ -978,7 +978,9 @@ $$232$$2__dt__12TMapObjSteamFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38D988, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38D994, 0x14
 $$22178:
@@ -1296,7 +1298,7 @@ mDownHeight__11TMapObjNail:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22596:
-	.incbin "baserom.dol", 0x3E8810, 0x4
+  .4byte 0
 $$22662:
 	.incbin "baserom.dol", 0x3E8814, 0x4
 $$22668:

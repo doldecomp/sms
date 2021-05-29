@@ -1252,7 +1252,7 @@ mCommonAttackHeight__13TMapWireActor:
 $$22393:
 	.incbin "baserom.dol", 0x3E8CF8, 0x4
 $$22538:
-	.incbin "baserom.dol", 0x3E8CFC, 0x4
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$22938:

@@ -1966,7 +1966,9 @@ $$212$$2__dt__13TMenuDirectorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x371938, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x371944, 0x14
 $$22385:
@@ -2086,7 +2088,7 @@ $$22856:
 $$23206:
 	.incbin "baserom.dol", 0x3E4EA8, 0x8
 $$23211:
-	.incbin "baserom.dol", 0x3E4EB0, 0x4
+  .4byte 0
 $$23212:
 	.incbin "baserom.dol", 0x3E4EB4, 0x4
 $$23213:

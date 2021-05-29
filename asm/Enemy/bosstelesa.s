@@ -10893,7 +10893,9 @@ $$232$$2__dt__25TBossTelesaKillSmallEnemyFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x399B00, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22315:
 	.incbin "baserom.dol", 0x399B0C, 0x14
 $$22554:
@@ -10905,7 +10907,9 @@ $$22556:
 $$22557:
 	.incbin "baserom.dol", 0x399BBC, 0x24
 $$22945:
-	.incbin "baserom.dol", 0x399BE0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22947:
 	.incbin "baserom.dol", 0x399BEC, 0xC
 $$23151:
@@ -11133,13 +11137,37 @@ $$29065:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 btelesa_bastable:
-	.incbin "baserom.dol", 0x3D9188, 0x44
+  .4byte $$23151
+  .4byte $$23152
+  .4byte $$23153
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23154
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$23155
+  .4byte $$23156
+  .4byte 0
+  .4byte 0
+  .4byte $$23157
+  .4byte $$23158
 entry$3173:
 	.incbin "baserom.dol", 0x3D91CC, 0x18
 entry$3276:
 	.incbin "baserom.dol", 0x3D91E4, 0x18
 manNameTable$3933:
-	.incbin "baserom.dol", 0x3D91FC, 0x24
+  .4byte $$23934
+  .4byte $$23935
+  .4byte $$23936
+  .4byte $$23937
+  .4byte $$23938
+  .4byte $$23939
+  .4byte $$23940
+  .4byte $$23941
+  .4byte $$23942
 .global __vt__24TNerveBossTelesaFallDemo
 __vt__24TNerveBossTelesaFallDemo:
   .4byte 0
@@ -11687,7 +11715,7 @@ mCameraMoveSp__11TBossTelesa:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$24289:
-	.incbin "baserom.dol", 0x3EACF8, 0x4
+  .4byte 0
 $$24357:
 	.incbin "baserom.dol", 0x3EACFC, 0x4
 $$24600:

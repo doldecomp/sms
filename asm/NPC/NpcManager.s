@@ -3077,7 +3077,9 @@ lbl_8016FF64:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37B898, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37B8A4, 0x14
 $$22050:
@@ -4069,37 +4071,37 @@ __vt__16TBoardNpcManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cDummyPollutionTexName:
-	.incbin "baserom.dol", 0x3E3488, 0x4
+  .4byte $$22212
 cRealPollutionTexName:
-	.incbin "baserom.dol", 0x3E348C, 0x4
+  .4byte $$22213
 cMonteMDummyStrawTexName:
-	.incbin "baserom.dol", 0x3E3490, 0x4
+  .4byte $$22214
 cMonteWDummyStrawTexName:
-	.incbin "baserom.dol", 0x3E3494, 0x4
+  .4byte $$22215
 cMonteMRealStrawTexName:
-	.incbin "baserom.dol", 0x3E3498, 0x4
+  .4byte $$22216
 cMonteWRealStrawTexName:
-	.incbin "baserom.dol", 0x3E349C, 0x4
+  .4byte $$22217
 cScreenTexViewObjName:
-	.incbin "baserom.dol", 0x3E34A0, 0x4
+  .4byte $$22218
 cJellyFishDummyScreenTexName:
-	.incbin "baserom.dol", 0x3E34A4, 0x4
+  .4byte $$22219
 cJellyFishDummyTexName:
-	.incbin "baserom.dol", 0x3E34A8, 0x4
+  .4byte $$22220
 cJellyFishRealTexName:
-	.incbin "baserom.dol", 0x3E34AC, 0x4
+  .4byte $$22221
 cMonteMCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B0, 0x4
+  .4byte $$22222
 cMonteWCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B4, 0x4
+  .4byte $$22223
 cMareMCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B8, 0x4
+  .4byte $$22224
 cMareWCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34BC, 0x4
+  .4byte $$22225
 cMareCommonNormalBmtName:
-	.incbin "baserom.dol", 0x3E34C0, 0x4
+  .4byte $$22226
 cMareCommonPollutionBmtName:
-	.incbin "baserom.dol", 0x3E34C4, 0x4
+  .4byte $$22227
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22535:

@@ -3255,7 +3255,9 @@ $$220$$2frameLoopDyna__29MSSetSoundTL$$013MSSetSoundGrp$$1Fv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21501:
-	.incbin "baserom.dol", 0x383FE0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21953:
 	.incbin "baserom.dol", 0x383FEC, 0x14
 $$22817:
@@ -3456,7 +3458,7 @@ __vt__33JALListFrameLoop$$013MSSetSoundGrp$$1:
 $$22486:
 	.incbin "baserom.dol", 0x3E6790, 0x4
 $$22543:
-	.incbin "baserom.dol", 0x3E6794, 0x4
+  .4byte 0
 $$22544:
 	.incbin "baserom.dol", 0x3E6798, 0x4
 $$22545:

@@ -1905,7 +1905,9 @@ $$232$$2__dt__18TSuperHipDropBlockFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38ADE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38ADF4, 0x14
 $$22409:
@@ -1917,7 +1919,9 @@ $$22411:
 $$22412:
 	.incbin "baserom.dol", 0x38AEA4, 0x24
 $$22778:
-	.incbin "baserom.dol", 0x38AEC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22780:
 	.incbin "baserom.dol", 0x38AED4, 0xC
 $$22953:
@@ -2725,7 +2729,7 @@ mAutoMeltScale__9TIceBlock:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22942:
-	.incbin "baserom.dol", 0x3E7D88, 0x4
+  .4byte 0
 $$23037:
 	.incbin "baserom.dol", 0x3E7D8C, 0x4
 $$23071:

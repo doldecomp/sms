@@ -5519,7 +5519,9 @@ $$232$$2__dt__14TPictureTelesaFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38B1A8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22235:
 	.incbin "baserom.dol", 0x38B1B4, 0x14
 $$22291:
@@ -5531,11 +5533,15 @@ $$22293:
 $$22294:
 	.incbin "baserom.dol", 0x38B264, 0x24
 $$22853:
-	.incbin "baserom.dol", 0x38B288, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22855:
 	.incbin "baserom.dol", 0x38B294, 0xC
 $$23092:
-	.incbin "baserom.dol", 0x38B2A0, 0xC
+  .4byte $$23089
+  .4byte $$23090
+  .4byte $$23091
 $$23766:
 	.incbin "baserom.dol", 0x38B2AC, 0x10
 $$23847:
@@ -6771,7 +6777,7 @@ $$23090:
 $$23091:
 	.incbin "baserom.dol", 0x3E7E80, 0x8
 $$23629:
-	.incbin "baserom.dol", 0x3E7E88, 0x4
+  .4byte 0
 $$23665:
 	.incbin "baserom.dol", 0x3E7E8C, 0x4
 $$23666:

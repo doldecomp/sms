@@ -361,4 +361,5 @@ __vt__14M3UModelCommon:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21716:
-	.incbin "baserom.dol", 0x3E4BF0, 0x8
+  .4byte 0
+  .4byte 0

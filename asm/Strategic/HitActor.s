@@ -241,7 +241,7 @@ __vt__9THitActor:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21618:
-	.incbin "baserom.dol", 0x3E5470, 0x4
+  .4byte 0
 $$21619:
 	.incbin "baserom.dol", 0x3E5474, 0x4
 $$21660:

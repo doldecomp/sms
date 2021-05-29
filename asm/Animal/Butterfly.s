@@ -624,7 +624,9 @@ $$232$$2__dt__12TButterfloidFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A5200, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A520C, 0x14
 $$21585:
@@ -642,7 +644,9 @@ $$22394:
 $$22395:
 	.incbin "baserom.dol", 0x3A5300, 0x10
 cButterflyMdlNames__9$$2unnamed$$2:
-	.incbin "baserom.dol", 0x3A5310, 0xC
+  .4byte $$22393
+  .4byte $$22394
+  .4byte $$22395
 entry$2459:
 	.incbin "baserom.dol", 0x3A531C, 0x30
 $$22493:
@@ -806,11 +810,11 @@ __vt__10TButterfly:
 $$22489:
 	.incbin "baserom.dol", 0x3EC868, 0x4
 $$22490:
-	.incbin "baserom.dol", 0x3EC86C, 0x4
+  .4byte 0
 $$22491:
 	.incbin "baserom.dol", 0x3EC870, 0x8
 $$22492:
-	.incbin "baserom.dol", 0x3EC878, 0x4
+  .4byte 0
 $$22586:
 	.incbin "baserom.dol", 0x3EC87C, 0x4
 $$22587:
@@ -833,7 +837,13 @@ $$22710:
 	.incbin "baserom.dol", 0x3EC8A0, 0x4
 .global lbl_80414004
 lbl_80414004:
-	.incbin "baserom.dol", 0x3EC8A4, 0x1C
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

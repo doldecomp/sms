@@ -1072,7 +1072,9 @@ lbl_800FE2AC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x371FD0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21726:
 	.incbin "baserom.dol", 0x371FDC, 0x14
 cDirtyFileName:
@@ -1238,7 +1240,7 @@ $$23483:
 $$23488:
 	.incbin "baserom.dol", 0x3E4F90, 0x4
 $$23491:
-	.incbin "baserom.dol", 0x3E4F94, 0x4
+  .4byte 0
 $$23494:
 	.incbin "baserom.dol", 0x3E4F98, 0x8
 $$23498:

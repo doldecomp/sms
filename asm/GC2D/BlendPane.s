@@ -108,4 +108,4 @@ __vt__10TBlendPane:
 $$21505:
 	.incbin "baserom.dol", 0x3E9668, 0x4
 $$21507:
-	.incbin "baserom.dol", 0x3E966C, 0x4
+  .4byte 0

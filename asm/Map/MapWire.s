@@ -1893,11 +1893,15 @@ lbl_801EA438:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38F760, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x38F76C, 0x14
 $$22174:
-	.incbin "baserom.dol", 0x38F780, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22176:
 	.incbin "baserom.dol", 0x38F78C, 0xC
 $$22579:
@@ -1929,7 +1933,7 @@ mDrawHeight__8TMapWire:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22385:
-	.incbin "baserom.dol", 0x3E8CB0, 0x4
+  .4byte 0
 $$22569:
 	.incbin "baserom.dol", 0x3E8CB4, 0x4
 $$22570:

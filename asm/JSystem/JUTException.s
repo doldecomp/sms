@@ -2120,9 +2120,31 @@ $$22193:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageQueue__12JUTException:
-	.incbin "baserom.dol", 0x3A5840, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sCpuExpName__12JUTException:
-	.incbin "baserom.dol", 0x3A5860, 0x40
+  .4byte $$21484
+  .4byte $$21485
+  .4byte $$21486
+  .4byte $$21487
+  .4byte $$21488
+  .4byte $$21489
+  .4byte $$21490
+  .4byte $$21491
+  .4byte $$21492
+  .4byte $$21493
+  .4byte $$21494
+  .4byte $$21495
+  .4byte $$21496
+  .4byte $$21497
+  .4byte $$21498
+  .4byte $$21499
 .global __vt__12JUTException
 __vt__12JUTException:
   .4byte 0
@@ -2132,7 +2154,8 @@ __vt__12JUTException:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sMessageBuffer__12JUTException:
-	.incbin "baserom.dol", 0x3E3008, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21486:
@@ -2144,13 +2167,13 @@ $$21490:
 $$21494:
 	.incbin "baserom.dol", 0x3E3D60, 0x8
 $$21565:
-	.incbin "baserom.dol", 0x3E3D68, 0x4
+  .4byte 0
 $$21629:
 	.incbin "baserom.dol", 0x3E3D6C, 0x4
 $$21630:
 	.incbin "baserom.dol", 0x3E3D70, 0x4
 $$21756:
-	.incbin "baserom.dol", 0x3E3D74, 0x4
+  .4byte 0
 $$22094:
 	.incbin "baserom.dol", 0x3E3D78, 0x8
 $$22216:

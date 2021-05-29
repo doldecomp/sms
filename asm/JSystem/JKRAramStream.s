@@ -393,9 +393,19 @@ $$2110:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__13JKRAramStream:
-	.incbin "baserom.dol", 0x3A6EC8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMessageQueue__13JKRAramStream:
-	.incbin "baserom.dol", 0x3A6ED8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__13JKRAramStream
 __vt__13JKRAramStream:
   .4byte 0

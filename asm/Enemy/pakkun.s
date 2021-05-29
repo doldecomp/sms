@@ -5019,7 +5019,9 @@ $$232$$2__dt__11TStayPakkunFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x394940, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22325:
 	.incbin "baserom.dol", 0x39494C, 0x14
 $$22564:
@@ -5095,7 +5097,16 @@ $$25137:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 pakkun_bastable:
-	.incbin "baserom.dol", 0x3D35A8, 0x28
+  .4byte $$22974
+  .4byte $$22975
+  .4byte $$22976
+  .4byte $$22977
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22978
+  .4byte $$22979
+  .4byte 0
 entry$3011:
 	.incbin "baserom.dol", 0x3D35D0, 0x18
 .global __vt__22TNerveStayPakkunAppear
@@ -5485,7 +5496,7 @@ mIgnoreHitWaterY__14TPakkunManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23450:
-	.incbin "baserom.dol", 0x3EA188, 0x4
+  .4byte 0
 $$23451:
 	.incbin "baserom.dol", 0x3EA18C, 0x4
 $$23452:

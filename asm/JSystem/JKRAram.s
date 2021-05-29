@@ -1110,10 +1110,20 @@ $$2548:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__7JKRAram:
-	.incbin "baserom.dol", 0x3A53F8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global sMessageQueue__7JKRAram
 sMessageQueue__7JKRAram:
-	.incbin "baserom.dol", 0x3A5408, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__7JKRAram
 __vt__7JKRAram:
   .4byte 0

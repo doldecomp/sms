@@ -2998,7 +2998,7 @@ __vt__11TRailMapObj:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22572:
-	.incbin "baserom.dol", 0x3E8678, 0x4
+  .4byte 0
 $$22636:
 	.incbin "baserom.dol", 0x3E867C, 0x4
 $$22637:

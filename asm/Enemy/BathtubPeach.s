@@ -1162,7 +1162,9 @@ $$232$$2__dt__13TBathtubPeachFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A14E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22322:
 	.incbin "baserom.dol", 0x3A14EC, 0x14
 $$22561:
@@ -1174,7 +1176,9 @@ $$22563:
 $$22564:
 	.incbin "baserom.dol", 0x3A159C, 0x24
 $$22850:
-	.incbin "baserom.dol", 0x3A15C0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22852:
 	.incbin "baserom.dol", 0x3A15CC, 0xC
 $$22935:
@@ -1194,7 +1198,29 @@ $$23039:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bathtubpeach_bastable:
-	.incbin "baserom.dol", 0x3DFF98, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22935
+  .4byte 0
 .global __vt__20TBathtubPeachManager
 __vt__20TBathtubPeachManager:
   .4byte 0
@@ -1329,7 +1355,7 @@ $$23064:
 $$23065:
 	.incbin "baserom.dol", 0x3EBEBC, 0x4
 $$23066:
-	.incbin "baserom.dol", 0x3EBEC0, 0x4
+  .4byte 0
 $$23067:
 	.incbin "baserom.dol", 0x3EBEC4, 0x4
 $$23068:

@@ -3002,7 +3002,7 @@ __vt__8JAIBasic:
 $$2413:
 	.incbin "baserom.dol", 0x3E4160, 0x8
 $$2694:
-	.incbin "baserom.dol", 0x3E4168, 0x4
+  .4byte 0
 $$2695:
 	.incbin "baserom.dol", 0x3E416C, 0x4
 $$2696:

@@ -2751,7 +2751,9 @@ $$232$$2__dt__9TWireTrapFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E810, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39E81C, 0x14
 $$22018:
@@ -2939,7 +2941,7 @@ cRedColor__9$$2unnamed$$2:
 cBlueColor__9$$2unnamed$$2:
 	.incbin "baserom.dol", 0x3EB8E8, 0x8
 $$22844:
-	.incbin "baserom.dol", 0x3EB8F0, 0x4
+  .4byte 0
 $$22845:
 	.incbin "baserom.dol", 0x3EB8F4, 0x4
 $$22846:

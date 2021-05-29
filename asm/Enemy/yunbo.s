@@ -2547,7 +2547,9 @@ $$232$$2__dt__6TYumboFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39F930, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21940:
 	.incbin "baserom.dol", 0x39F93C, 0x14
 $$22018:
@@ -2613,7 +2615,19 @@ $$24066:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sambohead_bastable:
-	.incbin "baserom.dol", 0x3DE9E8, 0x34
+  .4byte $$22762
+  .4byte $$22763
+  .4byte $$22764
+  .4byte $$22765
+  .4byte $$22766
+  .4byte $$22767
+  .4byte $$22768
+  .4byte $$22769
+  .4byte $$22770
+  .4byte 0
+  .4byte $$22771
+  .4byte $$22772
+  .4byte 0
 .global __vt__17TNerveYumboFreeze
 __vt__17TNerveYumboFreeze:
   .4byte 0
@@ -2834,7 +2848,7 @@ $$22870:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23040:
-	.incbin "baserom.dol", 0x3EBAF8, 0x4
+  .4byte 0
 $$23099:
 	.incbin "baserom.dol", 0x3EBAFC, 0x4
 $$23100:

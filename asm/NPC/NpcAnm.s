@@ -4649,7 +4649,9 @@ lbl_8016AA88:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37B730, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x37B73C, 0x14
 $$22255:
@@ -4770,7 +4772,8 @@ $$24719:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cNpcPartsNameRootJoint
 cNpcPartsNameRootJoint:
-	.incbin "baserom.dol", 0x3E3480, 0x8
+  .4byte $$22440
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23245:
@@ -4778,7 +4781,8 @@ $$23245:
 $$23246:
 	.incbin "baserom.dol", 0x3E6294, 0x4
 $$23247:
-	.incbin "baserom.dol", 0x3E6298, 0x8
+  .4byte 0
+  .4byte 0
 $$23249:
 	.incbin "baserom.dol", 0x3E62A0, 0x8
 $$23361:

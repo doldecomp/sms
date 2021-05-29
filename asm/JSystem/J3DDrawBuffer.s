@@ -534,26 +534,64 @@ __sinit_J3DDrawBuffer_cpp:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2814:
-	.incbin "baserom.dol", 0x3A6DD8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryMatSort__13J3DDrawBufferFP12J3DMatPacket
 $$2815:
-	.incbin "baserom.dol", 0x3A6DE4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryMatAnmSort__13J3DDrawBufferFP12J3DMatPacket
 $$2816:
-	.incbin "baserom.dol", 0x3A6DF0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryZSort__13J3DDrawBufferFP12J3DMatPacket
 $$2817:
-	.incbin "baserom.dol", 0x3A6DFC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryModelSort__13J3DDrawBufferFP12J3DMatPacket
 $$2818:
-	.incbin "baserom.dol", 0x3A6E08, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryInvalidSort__13J3DDrawBufferFP12J3DMatPacket
 $$2819:
-	.incbin "baserom.dol", 0x3A6E14, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryNonSort__13J3DDrawBufferFP12J3DMatPacket
 .global sortFuncTable__13J3DDrawBuffer
 sortFuncTable__13J3DDrawBuffer:
-	.incbin "baserom.dol", 0x3A6E20, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$2820:
-	.incbin "baserom.dol", 0x3A6E68, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte drawHead__13J3DDrawBufferCFv
 $$2821:
-	.incbin "baserom.dol", 0x3A6E74, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte drawTail__13J3DDrawBufferCFv
 drawFuncTable__13J3DDrawBuffer:
-	.incbin "baserom.dol", 0x3A6E80, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2824:

@@ -1473,11 +1473,15 @@ $$232$$2__dt__9TJumpBaseFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E050, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38E05C, 0x14
 $$22472:
-	.incbin "baserom.dol", 0x38E070, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22474:
 	.incbin "baserom.dol", 0x38E07C, 0xC
 $$22546:
@@ -1687,7 +1691,7 @@ $$22833:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22961:
-	.incbin "baserom.dol", 0x3E8980, 0x4
+  .4byte 0
 $$23116:
 	.incbin "baserom.dol", 0x3E8984, 0x4
 $$23118:

@@ -8805,7 +8805,7 @@ $$2330:
 $$22217:
 	.incbin "baserom.dol", 0x3E3EFC, 0x4
 lbl_8040B660:
-	.incbin "baserom.dol", 0x3E3F00, 0x4
+  .4byte 0
 $$22218:
 	.incbin "baserom.dol", 0x3E3F04, 0x4
 $$22219:
@@ -8821,10 +8821,10 @@ $$22223:
 $$22225:
 	.incbin "baserom.dol", 0x3E3F1C, 0x4
 lbl_8040B680:
-	.incbin "baserom.dol", 0x3E3F20, 0x4
+  .4byte 0
 $$22226:
 	.incbin "baserom.dol", 0x3E3F24, 0x4
 $$22227:
 	.incbin "baserom.dol", 0x3E3F28, 0x4
 $$22456:
-	.incbin "baserom.dol", 0x3E3F2C, 0x4
+  .4byte 0

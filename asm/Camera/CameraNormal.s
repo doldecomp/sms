@@ -443,7 +443,9 @@ CLBEaseInInbetween$$0s$$1__Fssf:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A2AD8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A2AE4, 0x14
 $$21857:
@@ -467,11 +469,16 @@ $$22180:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec:
-	.incbin "baserom.dol", 0x3E1AF8, 0x18
+  .4byte $$22176
+  .4byte $$22177
+  .4byte $$22178
+  .4byte $$22179
+  .4byte $$22180
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22326:
-	.incbin "baserom.dol", 0x3EC2D8, 0x4
+  .4byte 0
 $$22327:
 	.incbin "baserom.dol", 0x3EC2DC, 0x4
 $$22328:

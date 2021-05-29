@@ -1425,7 +1425,9 @@ $$232$$2__dt__14TMapModelActorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38EBD8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38EBE4, 0x14
 $$22197:
@@ -1437,7 +1439,9 @@ $$22199:
 $$22200:
 	.incbin "baserom.dol", 0x38EC94, 0x24
 $$22521:
-	.incbin "baserom.dol", 0x38ECB8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22523:
 	.incbin "baserom.dol", 0x38ECC4, 0xC
 $$22868:
@@ -1631,7 +1635,7 @@ $$22874:
 $$22998:
 	.incbin "baserom.dol", 0x3E8C8C, 0x8
 $$23140:
-	.incbin "baserom.dol", 0x3E8C94, 0x4
+  .4byte 0
 $$23141:
 	.incbin "baserom.dol", 0x3E8C98, 0x4
 $$23166:

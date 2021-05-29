@@ -2933,7 +2933,9 @@ __sinit_ConsoleStr_cpp:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x390DB8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21705:
 	.incbin "baserom.dol", 0x390DC4, 0x14
 $$21917:
@@ -2949,7 +2951,16 @@ $$23487:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 scShineConvTable:
-	.incbin "baserom.dol", 0x3CE870, 0x28
+  .4byte scShineTableAirport
+  .4byte 0
+  .4byte scShineTableBianco
+  .4byte scShineTableRicco
+  .4byte scShineTableMamma
+  .4byte scShineTablePinna
+  .4byte scShineTableSirena
+  .4byte scShineTableMonte
+  .4byte scShineTableMare
+  .4byte 0
 scScenarioNameTable:
 	.incbin "baserom.dol", 0x3CE898, 0x118
 .global __vt__11TConsoleStr
@@ -2983,7 +2994,7 @@ scShineTableMare:
 scShineTableMonte:
 	.incbin "baserom.dol", 0x3E949C, 0x8
 $$22222:
-	.incbin "baserom.dol", 0x3E94A4, 0x4
+  .4byte 0
 $$22223:
 	.incbin "baserom.dol", 0x3E94A8, 0x4
 $$22224:
@@ -3015,7 +3026,7 @@ $$23399:
 $$23483:
 	.incbin "baserom.dol", 0x3E94E8, 0x8
 $$23488:
-	.incbin "baserom.dol", 0x3E94F0, 0x4
+  .4byte 0
 $$23489:
 	.incbin "baserom.dol", 0x3E94F4, 0x4
 $$23491:

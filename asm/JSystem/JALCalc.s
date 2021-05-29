@@ -315,7 +315,7 @@ cPlusPSlope__7JALCalc:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2244:
-	.incbin "baserom.dol", 0x3E4110, 0x4
+  .4byte 0
 $$2245:
 	.incbin "baserom.dol", 0x3E4114, 0x4
 $$2354:

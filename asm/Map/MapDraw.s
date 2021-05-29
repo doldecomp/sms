@@ -532,7 +532,7 @@ __vt__12TMapDrawWall:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22341:
-	.incbin "baserom.dol", 0x3E8B08, 0x4
+  .4byte 0
 $$22346:
 	.incbin "baserom.dol", 0x3E8B0C, 0x4
 

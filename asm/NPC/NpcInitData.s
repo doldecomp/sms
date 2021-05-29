@@ -25,7 +25,9 @@ __sinit_NpcInitData_cpp:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37CC20, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37CC2C, 0x14
 $$21530:
@@ -51,11 +53,24 @@ sMonteM_HatABeltColorChange:
 $$21540:
 	.incbin "baserom.dol", 0x37CD68, 0x10
 sMonteM_HatAData:
-	.incbin "baserom.dol", 0x37CD78, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21540
+  .4byte 0
+  .4byte sMonteM_HatAColorChange
+  .4byte 0
+  .4byte sMonteM_HatABeltColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_HatBColorBuf:
 	.incbin "baserom.dol", 0x37CDA4, 0x18
 sMonteM_HatBColorChange:
-	.incbin "baserom.dol", 0x37CDBC, 0x10
+  .4byte 0
+  .4byte $$21537
+  .4byte sMonteM_HatBColorBuf
+  .4byte 0
 sMonteM_HatBBeltColorBuf:
 	.incbin "baserom.dol", 0x37CDCC, 0x18
 sMonteM_HatBBeltColorChange:
@@ -63,7 +78,17 @@ sMonteM_HatBBeltColorChange:
 $$21541:
 	.incbin "baserom.dol", 0x37CDF4, 0x10
 sMonteM_HatBData:
-	.incbin "baserom.dol", 0x37CE04, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21541
+  .4byte 0
+  .4byte sMonteM_HatBColorChange
+  .4byte 0
+  .4byte sMonteM_HatBBeltColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_HatDColorBuf:
 	.incbin "baserom.dol", 0x37CE30, 0x10
 sMonteM_HatDColorChange:
@@ -71,7 +96,17 @@ sMonteM_HatDColorChange:
 $$21542:
 	.incbin "baserom.dol", 0x37CE50, 0x10
 sMonteM_HatDData:
-	.incbin "baserom.dol", 0x37CE60, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21542
+  .4byte 0
+  .4byte sMonteM_HatDColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_HatEColorBuf0:
 	.incbin "baserom.dol", 0x37CE8C, 0x10
 sMonteM_HatEColorBuf1:
@@ -81,7 +116,17 @@ sMonteM_HatEColorChange:
 $$21543:
 	.incbin "baserom.dol", 0x37CEBC, 0x10
 sMonteM_HatEData:
-	.incbin "baserom.dol", 0x37CECC, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21543
+  .4byte 0
+  .4byte sMonteM_HatEColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_HatFColorBuf0:
 	.incbin "baserom.dol", 0x37CEF8, 0x10
 sMonteM_HatFColorBuf1:
@@ -91,7 +136,17 @@ sMonteM_HatFColorChange:
 $$21544:
 	.incbin "baserom.dol", 0x37CF28, 0x10
 sMonteM_HatFData:
-	.incbin "baserom.dol", 0x37CF38, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21544
+  .4byte 0
+  .4byte sMonteM_HatFColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_HatGColorBuf0:
 	.incbin "baserom.dol", 0x37CF64, 0x28
 sMonteM_HatGColorBuf1:
@@ -101,9 +156,19 @@ sMonteM_HatGColorChange:
 $$21545:
 	.incbin "baserom.dol", 0x37CFC4, 0x10
 sMonteM_HatGData:
-	.incbin "baserom.dol", 0x37CFD4, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21545
+  .4byte 0
+  .4byte sMonteM_HatGColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_MustacheAColorBuf0:
-	.incbin "baserom.dol", 0x37D000, 0x4
+  .4byte 0
 .global lbl_80380004
 lbl_80380004:
 	.incbin "baserom.dol", 0x37D004, 0x1C
@@ -124,7 +189,10 @@ sMonteM_GlassesBColorBuf0:
 $$21549:
 	.incbin "baserom.dol", 0x37D0D0, 0xC
 sMonteM_GlassesBColorChange:
-	.incbin "baserom.dol", 0x37D0DC, 0x10
+  .4byte 0
+  .4byte $$21549
+  .4byte sMonteM_GlassesBColorBuf0
+  .4byte 0
 $$21550:
 	.incbin "baserom.dol", 0x37D0EC, 0x14
 sMonteM_GlassesBData:
@@ -150,25 +218,75 @@ sMonteM_TieBColorChange:
 $$21555:
 	.incbin "baserom.dol", 0x37D1CC, 0x10
 sMonteM_TieBData:
-	.incbin "baserom.dol", 0x37D1DC, 0x2C
+  .4byte $$21552
+  .4byte 0
+  .4byte $$21555
+  .4byte 0
+  .4byte sMonteM_TieBColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21556:
 	.incbin "baserom.dol", 0x37D208, 0x14
 sMonteM_LuggageData:
-	.incbin "baserom.dol", 0x37D21C, 0x2C
+  .4byte $$21552
+  .4byte 0
+  .4byte $$21556
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21557:
 	.incbin "baserom.dol", 0x37D248, 0x10
 sMonteMF_TubeData:
-	.incbin "baserom.dol", 0x37D258, 0x2C
+  .4byte $$21552
+  .4byte 0
+  .4byte $$21557
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21558:
 	.incbin "baserom.dol", 0x37D284, 0xC
 $$21559:
 	.incbin "baserom.dol", 0x37D290, 0x10
 sMonteMG_MopData:
-	.incbin "baserom.dol", 0x37D2A0, 0x2C
+  .4byte $$21558
+  .4byte 0
+  .4byte $$21559
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21560:
 	.incbin "baserom.dol", 0x37D2CC, 0x14
 sMonteMH_UkleleData:
-	.incbin "baserom.dol", 0x37D2E0, 0x2C
+  .4byte $$21552
+  .4byte 0
+  .4byte $$21560
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteW_FlowerInColorBuf:
 	.incbin "baserom.dol", 0x37D30C, 0x18
 $$21561:
@@ -180,7 +298,10 @@ sMonteW_FlowerOutColorBuf:
 $$21562:
 	.incbin "baserom.dol", 0x37D358, 0xC
 sMonteW_FlowerOutColorChange:
-	.incbin "baserom.dol", 0x37D364, 0x10
+  .4byte 0
+  .4byte $$21562
+  .4byte sMonteW_FlowerOutColorBuf
+  .4byte 0
 $$21563:
 	.incbin "baserom.dol", 0x37D374, 0xC
 $$21564:
@@ -200,11 +321,24 @@ sMonteW_HatABeltColorChange:
 $$21565:
 	.incbin "baserom.dol", 0x37D440, 0x10
 sMonteW_HatAData:
-	.incbin "baserom.dol", 0x37D450, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21565
+  .4byte 0
+  .4byte sMonteW_HatAMainColorChange
+  .4byte 0
+  .4byte sMonteW_HatABeltColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteW_GlassBColorBuf:
 	.incbin "baserom.dol", 0x37D47C, 0x18
 sMonteW_GlassBColorChange:
-	.incbin "baserom.dol", 0x37D494, 0x10
+  .4byte 0
+  .4byte $$21549
+  .4byte sMonteW_GlassBColorBuf
+  .4byte 0
 $$21566:
 	.incbin "baserom.dol", 0x37D4A4, 0x10
 sMonteW_GlassBData:
@@ -212,25 +346,75 @@ sMonteW_GlassBData:
 $$21567:
 	.incbin "baserom.dol", 0x37D4E0, 0x14
 sMonteW_ArrowRData:
-	.incbin "baserom.dol", 0x37D4F4, 0x2C
+  .4byte $$21558
+  .4byte 0
+  .4byte $$21567
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21568:
 	.incbin "baserom.dol", 0x37D520, 0x14
 sMonteW_ArrowLData:
-	.incbin "baserom.dol", 0x37D534, 0x2C
+  .4byte $$21558
+  .4byte 0
+  .4byte $$21568
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21569:
 	.incbin "baserom.dol", 0x37D560, 0x10
 sMonteWC_HatCData:
-	.incbin "baserom.dol", 0x37D570, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21569
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21570:
 	.incbin "baserom.dol", 0x37D59C, 0x14
 sMonteWC_BraceletRData:
-	.incbin "baserom.dol", 0x37D5B0, 0x2C
+  .4byte $$21558
+  .4byte 0
+  .4byte $$21570
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21571:
 	.incbin "baserom.dol", 0x37D5DC, 0xC
 $$21572:
 	.incbin "baserom.dol", 0x37D5E8, 0x14
 sMonteWC_BraceletLData:
-	.incbin "baserom.dol", 0x37D5FC, 0x2C
+  .4byte $$21571
+  .4byte 0
+  .4byte $$21572
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMareM_HatAColorBuf0:
 	.incbin "baserom.dol", 0x37D628, 0x48
 sMareM_HatAColorBuf1:
@@ -420,45 +604,135 @@ $$21601:
 $$21602:
 	.incbin "baserom.dol", 0x37E298, 0x18
 sKinopio_SunGlassesData:
-	.incbin "baserom.dol", 0x37E2B0, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21602
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21603:
 	.incbin "baserom.dol", 0x37E2DC, 0x10
 $$21604:
 	.incbin "baserom.dol", 0x37E2EC, 0x14
 sKinojii_StickData:
-	.incbin "baserom.dol", 0x37E300, 0x2C
+  .4byte $$21603
+  .4byte 0
+  .4byte $$21604
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21605:
 	.incbin "baserom.dol", 0x37E32C, 0x18
 sPeach_HairNormalData:
-	.incbin "baserom.dol", 0x37E344, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21605
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21606:
 	.incbin "baserom.dol", 0x37E370, 0xC
 $$21607:
 	.incbin "baserom.dol", 0x37E37C, 0x14
 sPeach_Hand1LData:
-	.incbin "baserom.dol", 0x37E390, 0x2C
+  .4byte $$21606
+  .4byte 0
+  .4byte $$21607
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21608:
 	.incbin "baserom.dol", 0x37E3BC, 0xC
 $$21609:
 	.incbin "baserom.dol", 0x37E3C8, 0x14
 sPeach_Hand1RData:
-	.incbin "baserom.dol", 0x37E3DC, 0x2C
+  .4byte $$21608
+  .4byte 0
+  .4byte $$21609
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21610:
 	.incbin "baserom.dol", 0x37E408, 0x18
 sPeach_HairPonytailData:
-	.incbin "baserom.dol", 0x37E420, 0x2C
+  .4byte $$21539
+  .4byte 0
+  .4byte $$21610
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21611:
 	.incbin "baserom.dol", 0x37E44C, 0x14
 sPeach_ParasolData:
-	.incbin "baserom.dol", 0x37E460, 0x2C
+  .4byte $$21608
+  .4byte 0
+  .4byte $$21611
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21612:
 	.incbin "baserom.dol", 0x37E48C, 0x14
 sPeach_Hand2LData:
-	.incbin "baserom.dol", 0x37E4A0, 0x2C
+  .4byte $$21606
+  .4byte 0
+  .4byte $$21612
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21613:
 	.incbin "baserom.dol", 0x37E4CC, 0x14
 sPeach_Hand2RData:
-	.incbin "baserom.dol", 0x37E4E0, 0x2C
+  .4byte $$21608
+  .4byte 0
+  .4byte $$21613
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sRaccoonDog_TubeColorBuf0:
 	.incbin "baserom.dol", 0x37E50C, 0x10
 sRaccoonDog_TubeColorBuf1:
@@ -470,7 +744,17 @@ $$21615:
 $$21616:
 	.incbin "baserom.dol", 0x37E548, 0xC
 sRaccoonDog_TubeData:
-	.incbin "baserom.dol", 0x37E554, 0x2C
+  .4byte $$21615
+  .4byte 0
+  .4byte $$21616
+  .4byte 0
+  .4byte sRaccoonDog_TubeColorChange
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMonteM_BodyColorBuf:
 	.incbin "baserom.dol", 0x37E580, 0x50
 $$21617:
@@ -612,11 +896,41 @@ sMareMB_FishingRodData:
 sMareWB_BabyData:
 	.incbin "baserom.dol", 0x3B6444, 0x2C
 sAllNpcInitData$1622:
-	.incbin "baserom.dol", 0x3B6470, 0x78
+  .4byte sMonteM_InitData
+  .4byte sMonteMA_InitData
+  .4byte sMonteMB_InitData
+  .4byte sMonteMC_InitData
+  .4byte sMonteMD_InitData
+  .4byte sMonteME_InitData
+  .4byte sMonteMF_InitData
+  .4byte sMonteMG_InitData
+  .4byte sMonteMH_InitData
+  .4byte sMonteW_InitData
+  .4byte sMonteWA_InitData
+  .4byte sMonteWB_InitData
+  .4byte sMonteWC_InitData
+  .4byte sMareM_InitData
+  .4byte sMareM_InitData
+  .4byte sMareMB_InitData
+  .4byte sMareMC_InitData
+  .4byte sMareMD_InitData
+  .4byte sMareW_InitData
+  .4byte sMareW_InitData
+  .4byte sMareWB_InitData
+  .4byte sKinopio_InitData
+  .4byte sKinojii_InitData
+  .4byte sPeach_InitData
+  .4byte sRaccoonDog_InitData
+  .4byte sSunflowerL_InitData
+  .4byte sSunflowerS_InitData
+  .4byte 0
+  .4byte sBoardNpc_InitData
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 sPeach_TakenMiddle:
-	.incbin "baserom.dol", 0x3E6478, 0x8
+  .4byte $$21535
+  .4byte $$21536
 $$21539:
 	.incbin "baserom.dol", 0x3E6480, 0x8
 sMonteM_TieBColorBuf0:

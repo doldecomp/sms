@@ -833,11 +833,15 @@ remove__19TMapCollisionStaticFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38E770, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x38E77C, 0x14
 $$21766:
-	.incbin "baserom.dol", 0x38E790, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21768:
 	.incbin "baserom.dol", 0x38E79C, 0xC
 $$22018:
@@ -895,6 +899,6 @@ __vt__17TMapCollisionBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21871:
-	.incbin "baserom.dol", 0x3E8AE0, 0x4
+  .4byte 0
 $$22017:
 	.incbin "baserom.dol", 0x3E8AE4, 0xC

@@ -768,7 +768,7 @@ Unit01:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2871:
-	.incbin "baserom.dol", 0x3E3EA8, 0x4
+  .4byte 0
 $$2872:
 	.incbin "baserom.dol", 0x3E3EAC, 0x4
 $$2912:

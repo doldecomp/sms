@@ -1224,7 +1224,9 @@ lbl_801F0070:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38F7F8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38F804, 0x14
 $$22178:
@@ -1236,7 +1238,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38F8B4, 0x24
 $$22647:
-	.incbin "baserom.dol", 0x38F8D8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22649:
 	.incbin "baserom.dol", 0x38F8E4, 0xC
 $$22806:
@@ -1294,9 +1298,38 @@ $$22989:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 mare_name_table$2805:
-	.incbin "baserom.dol", 0x3CD368, 0x28
+  .4byte $$22806
+  .4byte $$22807
+  .4byte $$22808
+  .4byte $$22809
+  .4byte $$22810
+  .4byte $$22811
+  .4byte $$22812
+  .4byte $$22813
+  .4byte $$22814
+  .4byte 0
 name_table$2816:
-	.incbin "baserom.dol", 0x3CD390, 0x54
+  .4byte $$22806
+  .4byte $$22807
+  .4byte $$22808
+  .4byte $$22809
+  .4byte $$22810
+  .4byte $$22811
+  .4byte $$22812
+  .4byte $$22817
+  .4byte $$22818
+  .4byte $$22819
+  .4byte $$22820
+  .4byte $$22821
+  .4byte $$22822
+  .4byte $$22823
+  .4byte $$22824
+  .4byte $$22825
+  .4byte $$22826
+  .4byte $$22827
+  .4byte $$22828
+  .4byte $$22829
+  .4byte 0
 .global __vt__17TPollutionManager
 __vt__17TPollutionManager:
   .4byte 0

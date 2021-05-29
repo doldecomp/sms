@@ -2877,7 +2877,9 @@ $$232$$2__dt__10TMerryPoleFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38A068, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38A074, 0x14
 $$22182:
@@ -2889,7 +2891,9 @@ $$22184:
 $$22185:
 	.incbin "baserom.dol", 0x38A124, 0x24
 $$22760:
-	.incbin "baserom.dol", 0x38A148, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22762:
 	.incbin "baserom.dol", 0x38A154, 0xC
 $$23005:
@@ -2903,7 +2907,9 @@ $$23008:
 $$23009:
 	.incbin "baserom.dol", 0x38A1A0, 0x10
 entry$3280:
-	.incbin "baserom.dol", 0x38A1B0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23484:
 	.incbin "baserom.dol", 0x38A1BC, 0x10
 $$23486:
@@ -3083,7 +3089,12 @@ $$24188:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 item_names$3004:
-	.incbin "baserom.dol", 0x3BD728, 0x18
+  .4byte $$23005
+  .4byte $$23006
+  .4byte $$23007
+  .4byte $$23008
+  .4byte $$23009
+  .4byte 0
 .global __vt__18TMapObjBaseManager
 __vt__18TMapObjBaseManager:
   .4byte 0
@@ -3215,7 +3226,7 @@ __vt__14TMapObjManager:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23297:
-	.incbin "baserom.dol", 0x3E7BC0, 0x4
+  .4byte 0
 $$23485:
 	.incbin "baserom.dol", 0x3E7BC4, 0x4
 $$23772:

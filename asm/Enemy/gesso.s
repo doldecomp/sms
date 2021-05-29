@@ -5517,7 +5517,9 @@ $$232$$2__dt__16TGessoPolluteObjFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x392CF8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x392D04, 0x14
 $$22354:
@@ -5615,7 +5617,29 @@ $$25342:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 rikuGesso_bastable:
-	.incbin "baserom.dol", 0x3D0B38, 0x5C
+  .4byte 0
+  .4byte 0
+  .4byte $$22874
+  .4byte $$22875
+  .4byte 0
+  .4byte $$22876
+  .4byte $$22877
+  .4byte $$22878
+  .4byte $$22879
+  .4byte $$22880
+  .4byte $$22881
+  .4byte $$22882
+  .4byte $$22883
+  .4byte $$22884
+  .4byte 0
+  .4byte $$22885
+  .4byte $$22886
+  .4byte 0
+  .4byte $$22887
+  .4byte $$22888
+  .4byte 0
+  .4byte $$22889
+  .4byte 0
 entry$2957:
 	.incbin "baserom.dol", 0x3D0B94, 0x18
 .global __vt__15TNerveGessoTurn
@@ -6156,7 +6180,7 @@ mThroughHoseiDistY__6TGesso:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23420:
-	.incbin "baserom.dol", 0x3E9E60, 0x4
+  .4byte 0
 $$23421:
 	.incbin "baserom.dol", 0x3E9E64, 0x4
 $$23422:

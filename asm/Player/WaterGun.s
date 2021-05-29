@@ -5529,7 +5529,9 @@ lbl_8014D368:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3788D8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22386:
 	.incbin "baserom.dol", 0x3788E4, 0x14
 $$22442:
@@ -5545,7 +5547,9 @@ cDirtyFileName:
 cDirtyTexName:
 	.incbin "baserom.dol", 0x3789DC, 0x10
 $$22694:
-	.incbin "baserom.dol", 0x3789EC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22696:
 	.incbin "baserom.dol", 0x3789F8, 0xC
 $$22741:
@@ -5813,7 +5817,7 @@ __vt__11TNozzleBase:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23267:
-	.incbin "baserom.dol", 0x3E5D20, 0x4
+  .4byte 0
 $$23268:
 	.incbin "baserom.dol", 0x3E5D24, 0x4
 $$23322:

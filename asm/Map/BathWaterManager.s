@@ -8532,7 +8532,9 @@ $$232$$2__dt__10TBathWaterFv:
 $$21900:
 	.incbin "baserom.dol", 0x38FF30, 0x14
 $$21907:
-	.incbin "baserom.dol", 0x38FF44, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21996:
 	.incbin "baserom.dol", 0x38FF50, 0x30
 $$21997:
@@ -8636,7 +8638,8 @@ $$24858:
 clear_z_TX$localstatic0$__ct__22TBathWaterMeshRendererFP22TBathWaterGlobalParamsP10JUTTexture:
 	.incbin "baserom.dol", 0x3CDCE0, 0x40
 fileNames__17TBathWaterManager:
-	.incbin "baserom.dol", 0x3CDD20, 0x8
+  .4byte $$22741
+  .4byte $$22742
 .global __vt__17TBathWaterManager
 __vt__17TBathWaterManager:
   .4byte 0
@@ -8738,13 +8741,13 @@ $$22566:
 $$22567:
 	.incbin "baserom.dol", 0x3E8F78, 0x4
 $$22580:
-	.incbin "baserom.dol", 0x3E8F7C, 0x4
+  .4byte 0
 $$22583:
-	.incbin "baserom.dol", 0x3E8F80, 0x4
+  .4byte 0
 $$22724:
 	.incbin "baserom.dol", 0x3E8F84, 0x4
 $$23413:
-	.incbin "baserom.dol", 0x3E8F88, 0x4
+  .4byte 0
 $$23414:
 	.incbin "baserom.dol", 0x3E8F8C, 0x4
 $$23415:

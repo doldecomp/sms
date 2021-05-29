@@ -126,7 +126,7 @@ sV1__Q28JASystem6Player:
 $$2127:
 	.incbin "baserom.dol", 0x3E4408, 0x4
 $$2128:
-	.incbin "baserom.dol", 0x3E440C, 0x4
+  .4byte 0
 $$2129:
 	.incbin "baserom.dol", 0x3E4410, 0x4
 $$2130:

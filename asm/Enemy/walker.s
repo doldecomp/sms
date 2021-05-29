@@ -1144,7 +1144,7 @@ __vt__29TSolidStack$$0PC12TBGCheckData$$1:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22687:
-	.incbin "baserom.dol", 0x3EA320, 0x4
+  .4byte 0
 $$22688:
 	.incbin "baserom.dol", 0x3EA324, 0x4
 $$22689:

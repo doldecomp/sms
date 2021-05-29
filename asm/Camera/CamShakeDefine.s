@@ -2,7 +2,9 @@
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A44B8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A44C4, 0x14
 $$21536:
@@ -92,4 +94,45 @@ $$21576:
     .balign 8
 .global mCamShakeNameSave__12TCameraShake
 mCamShakeNameSave__12TCameraShake:
-	.incbin "baserom.dol", 0x3E2288, 0xA8
+  .4byte $$21536
+  .4byte $$21537
+  .4byte $$21538
+  .4byte $$21539
+  .4byte $$21540
+  .4byte $$21541
+  .4byte $$21542
+  .4byte $$21543
+  .4byte $$21544
+  .4byte $$21545
+  .4byte $$21546
+  .4byte $$21547
+  .4byte $$21548
+  .4byte $$21549
+  .4byte $$21550
+  .4byte $$21551
+  .4byte $$21552
+  .4byte $$21553
+  .4byte $$21554
+  .4byte $$21555
+  .4byte $$21556
+  .4byte $$21557
+  .4byte $$21558
+  .4byte $$21559
+  .4byte $$21560
+  .4byte $$21561
+  .4byte $$21562
+  .4byte $$21563
+  .4byte $$21564
+  .4byte $$21565
+  .4byte $$21566
+  .4byte $$21567
+  .4byte $$21568
+  .4byte $$21569
+  .4byte $$21570
+  .4byte $$21571
+  .4byte $$21572
+  .4byte $$21573
+  .4byte $$21574
+  .4byte $$21575
+  .4byte $$21576
+  .4byte 0

@@ -5275,7 +5275,9 @@ $$232$$2__dt__10TNozzleBoxFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38A8C0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38A8CC, 0x14
 $$22178:
@@ -5287,7 +5289,9 @@ $$22180:
 $$22181:
 	.incbin "baserom.dol", 0x38A97C, 0x24
 $$22856:
-	.incbin "baserom.dol", 0x38A9A0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23313:
 	.incbin "baserom.dol", 0x38A9AC, 0x14
 $$23314:
@@ -5339,7 +5343,10 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3BDB58, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3BDB68, 0x10
+  .4byte $$22178
+  .4byte $$22179
+  .4byte $$22180
+  .4byte $$22181
 mPromiLife__6TShine:
 	.incbin "baserom.dol", 0x3BDB78, 0x10
 mSenkoRate__6TShine:
@@ -6625,9 +6632,9 @@ mSpeedDownRate__6TShine:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22989:
-	.incbin "baserom.dol", 0x3E7C60, 0x4
+  .4byte -1
 $$23270:
-	.incbin "baserom.dol", 0x3E7C64, 0x4
+  .4byte 0
 $$23312:
 	.incbin "baserom.dol", 0x3E7C68, 0x8
 $$23316:

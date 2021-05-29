@@ -1930,7 +1930,7 @@ AnalogMode:
 Spec:
 	.incbin "baserom.dol", 0x3E32A4, 0x4
 MakeStatus:
-	.incbin "baserom.dol", 0x3E32A8, 0x4
+  .4byte SPEC2_MakeStatus
 CmdReadOrigin:
 	.incbin "baserom.dol", 0x3E32AC, 0x4
 CmdCalibrate:

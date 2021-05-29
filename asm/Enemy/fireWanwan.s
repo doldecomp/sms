@@ -10656,11 +10656,15 @@ $$232$$2__dt__11TFireWanwanFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x396540, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39654C, 0x14
 $$22180:
-	.incbin "baserom.dol", 0x396560, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22182:
 	.incbin "baserom.dol", 0x39656C, 0xC
 $$22254:
@@ -10772,7 +10776,14 @@ $$29150:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 fireWanwan_bastable:
-	.incbin "baserom.dol", 0x3D56C8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte $$22953
+  .4byte $$22954
+  .4byte 0
+  .4byte $$22955
+  .4byte $$22956
+  .4byte $$22957
 entry$3027:
 	.incbin "baserom.dol", 0x3D56E8, 0x18
 .global __vt__22TNerveFireWanwanEscape
@@ -11046,7 +11057,7 @@ cBodyColorOnSilver__9$$2unnamed$$2:
 lbl_80411D1C:
 	.incbin "baserom.dol", 0x3EA5BC, 0x4
 $$23702:
-	.incbin "baserom.dol", 0x3EA5C0, 0x4
+  .4byte 0
 $$23724:
 	.incbin "baserom.dol", 0x3EA5C4, 0x4
 $$23728:

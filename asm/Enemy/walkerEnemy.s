@@ -2101,7 +2101,9 @@ $$232$$2__dt__12TWalkerEnemyFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3950C8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22177:
 	.incbin "baserom.dol", 0x3950D4, 0x14
 $$22370:
@@ -2273,7 +2275,7 @@ __vt__12TWalkerEnemy:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22788:
-	.incbin "baserom.dol", 0x3EA338, 0x4
+  .4byte 0
 $$22789:
 	.incbin "baserom.dol", 0x3EA33C, 0x4
 $$22836:

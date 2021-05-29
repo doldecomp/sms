@@ -5524,7 +5524,9 @@ $$232$$2__dt__17TKoopaJrSubmarineFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39FCE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x39FCF4, 0x14
 $$22194:
@@ -5536,7 +5538,9 @@ $$22196:
 $$22197:
 	.incbin "baserom.dol", 0x39FDA4, 0x24
 $$22659:
-	.incbin "baserom.dol", 0x39FDC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22661:
 	.incbin "baserom.dol", 0x39FDD4, 0xC
 $$22974:
@@ -5648,9 +5652,16 @@ $$26069:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 koopajr_bastable:
-	.incbin "baserom.dol", 0x3DED18, 0x10
+  .4byte $$22974
+  .4byte $$22975
+  .4byte 0
+  .4byte $$22976
 TKoopaJr_jointNameTable:
-	.incbin "baserom.dol", 0x3DED28, 0x14
+  .4byte $$23038
+  .4byte $$23039
+  .4byte $$23040
+  .4byte $$23041
+  .4byte $$23042
 .global __vt__24TKoopaJrSubmarineManager
 __vt__24TKoopaJrSubmarineManager:
   .4byte 0
@@ -5933,7 +5944,7 @@ __vt__17TCallbackHitActor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 koopajrsubmarine_bastable:
-	.incbin "baserom.dol", 0x3E3B10, 0x4
+  .4byte 0
 $$22995:
 	.incbin "baserom.dol", 0x3E3B14, 0x4
 $$22996:
@@ -5955,7 +5966,7 @@ $$23003:
 $$23004:
 	.incbin "baserom.dol", 0x3E3B38, 0x4
 $$23005:
-	.incbin "baserom.dol", 0x3E3B3C, 0x4
+  .4byte 0
 $$23006:
 	.incbin "baserom.dol", 0x3E3B40, 0x4
 $$23016:
@@ -5983,11 +5994,11 @@ $$23026:
 $$23027:
 	.incbin "baserom.dol", 0x3E3B70, 0x4
 onetimeFilenames$3171:
-	.incbin "baserom.dol", 0x3E3B74, 0x4
+  .4byte $$23172
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23480:
-	.incbin "baserom.dol", 0x3EBB70, 0x4
+  .4byte 0
 $$23606:
 	.incbin "baserom.dol", 0x3EBB74, 0x4
 $$23607:

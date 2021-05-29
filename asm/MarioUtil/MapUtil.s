@@ -78,4 +78,4 @@ lbl_800D2094:
 $$21941:
 	.incbin "baserom.dol", 0x3E4BE0, 0x4
 $$21942:
-	.incbin "baserom.dol", 0x3E4BE4, 0x4
+  .4byte 0

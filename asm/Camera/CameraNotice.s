@@ -806,7 +806,9 @@ lbl_8035988C:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A2A58, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A2A64, 0x14
 $$21859:
@@ -820,11 +822,15 @@ $$21862:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sNoticeActorManagerName:
-	.incbin "baserom.dol", 0x3E1AE8, 0x10
+  .4byte $$21859
+  .4byte $$21860
+  .4byte $$21861
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 bossGesoViewObjName:
-	.incbin "baserom.dol", 0x3E3CC8, 0x8
+  .4byte $$21862
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21990:
@@ -832,7 +838,7 @@ $$21990:
 $$21991:
 	.incbin "baserom.dol", 0x3EC2AC, 0x4
 $$21992:
-	.incbin "baserom.dol", 0x3EC2B0, 0x4
+  .4byte 0
 $$21993:
 	.incbin "baserom.dol", 0x3EC2B4, 0x4
 $$22080:

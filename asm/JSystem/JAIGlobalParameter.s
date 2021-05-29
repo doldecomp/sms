@@ -236,28 +236,28 @@ stayHeapSize__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3124, 0x4
 .global seInfoFileName__18JAIGlobalParameter
 seInfoFileName__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3128, 0x4
+  .4byte $$2530
 .global seqInfoFileName__18JAIGlobalParameter
 seqInfoFileName__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E312C, 0x4
+  .4byte $$2531
 .global streamInfoFileName__18JAIGlobalParameter
 streamInfoFileName__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3130, 0x4
+  .4byte $$2532
 .global initDataFileName__18JAIGlobalParameter
 initDataFileName__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3134, 0x4
+  .4byte $$2533
 .global wavePath__18JAIGlobalParameter
 wavePath__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3138, 0x4
+  .4byte $$2534
 .global sequenceArchivesPath__18JAIGlobalParameter
 sequenceArchivesPath__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E313C, 0x4
+  .4byte $$2535
 .global streamPath__18JAIGlobalParameter
 streamPath__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3140, 0x4
+  .4byte $$2536
 .global sequenceArchivesFileName__18JAIGlobalParameter
 sequenceArchivesFileName__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3144, 0x4
+  .4byte $$2537
 .global inputGainDown__18JAIGlobalParameter
 inputGainDown__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3148, 0x4

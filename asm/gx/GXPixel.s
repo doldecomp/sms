@@ -523,7 +523,7 @@ p2f$194:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2125:
-	.incbin "baserom.dol", 0x3E4858, 0x4
+  .4byte 0
 $$2126:
 	.incbin "baserom.dol", 0x3E485C, 0x4
 $$2127:

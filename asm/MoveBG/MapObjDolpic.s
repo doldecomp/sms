@@ -2232,7 +2232,9 @@ $$232$$2__dt__16TTurboNozzleDoorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38C870, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38C87C, 0x14
 $$22178:
@@ -2936,7 +2938,7 @@ __vt__14TMonumentShine:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22803:
-	.incbin "baserom.dol", 0x3E84D8, 0x4
+  .4byte 0
 $$22838:
 	.incbin "baserom.dol", 0x3E84DC, 0x4
 $$22839:

@@ -792,7 +792,7 @@ __vt__12TItemManager:
 $$22636:
 	.incbin "baserom.dol", 0x3E7CF8, 0x4
 $$22637:
-	.incbin "baserom.dol", 0x3E7CFC, 0x4
+  .4byte 0
 $$22638:
 	.incbin "baserom.dol", 0x3E7D00, 0x4
 $$22665:

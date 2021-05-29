@@ -3083,7 +3083,9 @@ $$232$$2__dt__8TBombHeiFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39A788, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22115:
 	.incbin "baserom.dol", 0x39A794, 0x14
 $$22354:
@@ -3133,9 +3135,18 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3D9C00, 0x10
 MtxCalcTypeName:
-	.incbin "baserom.dol", 0x3D9C10, 0x10
+  .4byte $$22354
+  .4byte $$22355
+  .4byte $$22356
+  .4byte $$22357
 bombhei_bastable:
-	.incbin "baserom.dol", 0x3D9C20, 0x1C
+  .4byte $$22904
+  .4byte 0
+  .4byte 0
+  .4byte $$22905
+  .4byte 0
+  .4byte 0
+  .4byte $$22906
 entry$2918:
 	.incbin "baserom.dol", 0x3D9C3C, 0x24
 .global __vt__22TNerveBombHeiExplosion
@@ -3347,7 +3358,7 @@ $$23192:
 $$23347:
 	.incbin "baserom.dol", 0x3EAE34, 0x4
 $$23348:
-	.incbin "baserom.dol", 0x3EAE38, 0x4
+  .4byte 0
 $$23349:
 	.incbin "baserom.dol", 0x3EAE3C, 0x4
 $$23350:

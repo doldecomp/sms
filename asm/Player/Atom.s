@@ -23,7 +23,7 @@ __sinit_Atom_cpp:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21908:
-	.incbin "baserom.dol", 0x3E5480, 0x4
+  .4byte 0
 $$22110:
 	.incbin "baserom.dol", 0x3E5484, 0x4
 

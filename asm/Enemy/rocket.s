@@ -2008,7 +2008,9 @@ $$232$$2__dt__7TRocketFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39EDB8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22391:
 	.incbin "baserom.dol", 0x39EDC4, 0x14
 $$22603:
@@ -2036,7 +2038,10 @@ $$23655:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 rocket_bastable:
-	.incbin "baserom.dol", 0x3DE220, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2821:
 	.incbin "baserom.dol", 0x3DE230, 0x18
 .global __vt__16TNerveRocketWait
@@ -2200,7 +2205,7 @@ mColOffsetY__7TRocket:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23024:
-	.incbin "baserom.dol", 0x3EB940, 0x4
+  .4byte 0
 $$23025:
 	.incbin "baserom.dol", 0x3EB944, 0x4
 $$23026:

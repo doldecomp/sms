@@ -614,7 +614,7 @@ OSC_ENV__Q28JASystem7BankMgr:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2339:
-	.incbin "baserom.dol", 0x3E42B0, 0x4
+  .4byte 0
 $$2340:
 	.incbin "baserom.dol", 0x3E42B4, 0x4
 $$2418:

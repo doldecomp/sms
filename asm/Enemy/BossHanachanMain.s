@@ -4029,7 +4029,9 @@ $$232$$2__dt__13TBossHanachanFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39CCB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21937:
 	.incbin "baserom.dol", 0x39CCBC, 0x14
 $$22004:
@@ -4041,7 +4043,9 @@ $$22006:
 $$22007:
 	.incbin "baserom.dol", 0x39CD6C, 0x24
 $$22351:
-	.incbin "baserom.dol", 0x39CD90, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22353:
 	.incbin "baserom.dol", 0x39CD9C, 0xC
 $$22704:
@@ -4075,7 +4079,9 @@ $$24900:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sChangeSaveFileName$2712:
-	.incbin "baserom.dol", 0x3DC408, 0xC
+  .4byte $$22713
+  .4byte $$22714
+  .4byte $$22715
 entry$2725:
 	.incbin "baserom.dol", 0x3DC414, 0x30
 .global __vt__13TBossHanachan
@@ -4176,15 +4182,16 @@ __vt__20TBossHanachanManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cSandPillarModelName:
-	.incbin "baserom.dol", 0x3E3A98, 0x4
+  .4byte $$22704
 cHitPoint1_RailName:
-	.incbin "baserom.dol", 0x3E3A9C, 0x4
+  .4byte $$22705
 cHitPoint2_RailName:
-	.incbin "baserom.dol", 0x3E3AA0, 0x4
+  .4byte $$22706
 cSandTextureName:
-	.incbin "baserom.dol", 0x3E3AA4, 0x4
+  .4byte $$22707
 cDummyTextureName:
-	.incbin "baserom.dol", 0x3E3AA8, 0x8
+  .4byte $$22708
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22707:
@@ -4192,7 +4199,7 @@ $$22707:
 $$22708:
 	.incbin "baserom.dol", 0x3EB418, 0x8
 $$23153:
-	.incbin "baserom.dol", 0x3EB420, 0x4
+  .4byte 0
 $$23175:
 	.incbin "baserom.dol", 0x3EB424, 0x4
 $$23373:
