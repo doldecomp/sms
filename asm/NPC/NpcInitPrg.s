@@ -1156,7 +1156,62 @@ $$22115:
 $$22116:
 	.incbin "baserom.dol", 0x37F4B4, 0xC
 sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F4C0, 0xE0
+  .4byte 0x4000001
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000002
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000003
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000004
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000005
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000007
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000008
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x4000009
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22114
+  .4byte 0x10000
+  .4byte 0x400000a
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22115
+  .4byte 0x10000
+  .4byte 0x400000b
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22115
+  .4byte 0x10000
+  .4byte 0x400000c
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22115
+  .4byte 0x10000
+  .4byte 0x400000d
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22115
+  .4byte 0x10000
+  .4byte 0x4000018
+  .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
+  .4byte $$22116
+  .4byte 0x10000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sIndividualHoldArrowBck$localstatic0$initBaseActionFlag___8TBaseNPCFv:
 	.incbin "baserom.dol", 0x37F5A0, 0x10
 sIndividualKinopioBck$localstatic1$initBaseActionFlag___8TBaseNPCFv:

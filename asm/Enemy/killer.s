@@ -3778,7 +3778,15 @@ killer_bastable:
   .4byte $$22911
   .4byte 0
 entry$3036:
-	.incbin "baserom.dol", 0x3DAF24, 0x24
+  .4byte $$23037
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$23038
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__21TNerveKillerExplosion
 __vt__21TNerveKillerExplosion:
   .4byte 0

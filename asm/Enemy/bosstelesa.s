@@ -11155,9 +11155,19 @@ btelesa_bastable:
   .4byte $$23157
   .4byte $$23158
 entry$3173:
-	.incbin "baserom.dol", 0x3D91CC, 0x18
+  .4byte $$23174
+  .4byte 0x11020000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3276:
-	.incbin "baserom.dol", 0x3D91E4, 0x18
+  .4byte $$23277
+  .4byte 0x15300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 manNameTable$3933:
   .4byte $$23934
   .4byte $$23935

@@ -2001,7 +2001,12 @@ actor_data_table: # TODO: Im sure this 0x44 struct has an actual format, use tha
 $$22999:
 	.incbin "baserom.dol", 0x38F690, 0xC
 sound_info:
-	.incbin "baserom.dol", 0x38F69C, 0x18
+  .4byte $$22998
+  .4byte 0x5000
+  .4byte $$22999
+  .4byte 0x5003
+  .4byte 0
+  .4byte 0
 $$23307:
 	.incbin "baserom.dol", 0x38F6B4, 0xC
 $$23308:

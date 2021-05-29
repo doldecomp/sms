@@ -4881,7 +4881,12 @@ dennoko_bastable:
   .4byte 0
   .4byte 0
 entry$2916:
-	.incbin "baserom.dol", 0x3D46E0, 0x18
+  .4byte $$22917
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__24TNerveElecCarapaceReturn
 __vt__24TNerveElecCarapaceReturn:
   .4byte 0

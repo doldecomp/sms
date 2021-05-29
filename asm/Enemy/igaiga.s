@@ -6200,9 +6200,19 @@ gorogoro_bastable:
   .4byte 0
   .4byte 0
 entry$3110:
-	.incbin "baserom.dol", 0x3D8098, 0x18
+  .4byte $$23111
+  .4byte 0x11240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3337:
-	.incbin "baserom.dol", 0x3D80B0, 0x18
+  .4byte $$23338
+  .4byte 0x10300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__17TNerveGorogoroDie
 __vt__17TNerveGorogoroDie:
   .4byte 0

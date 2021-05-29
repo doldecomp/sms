@@ -12534,7 +12534,12 @@ $$23128:
 $$23313:
 	.incbin "baserom.dol", 0x39B0F8, 0x10
 entry$3312:
-	.incbin "baserom.dol", 0x39B108, 0x18
+  .4byte $$23313
+  .4byte 0x10020000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23579:
 	.incbin "baserom.dol", 0x39B120, 0xC
 $$23580:
@@ -12786,7 +12791,15 @@ bossEelTears_bastable:
   .4byte 0
   .4byte 0
 entry$3126:
-	.incbin "baserom.dol", 0x3DA36C, 0x24
+  .4byte $$23127
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$23128
+  .4byte 0x11240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sEyePartsJointTable$3535:
   .4byte $$23536
   .4byte $$23537

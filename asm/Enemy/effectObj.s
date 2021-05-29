@@ -3266,13 +3266,33 @@ $$23501:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 entry$2672:
-	.incbin "baserom.dol", 0x3CF1D8, 0x18
+  .4byte $$22673
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2684:
-	.incbin "baserom.dol", 0x3CF1F0, 0x18
+  .4byte $$22685
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2697:
-	.incbin "baserom.dol", 0x3CF208, 0x18
+  .4byte $$22698
+  .4byte 0x10240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2706:
-	.incbin "baserom.dol", 0x3CF220, 0x18
+  .4byte $$22707
+  .4byte 0x10240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__16TEffectExplosion
 __vt__16TEffectExplosion:
   .4byte 0

@@ -2260,19 +2260,39 @@ $$22335:
 $$22759:
 	.incbin "baserom.dol", 0x39CB18, 0x10
 entry$2758:
-	.incbin "baserom.dol", 0x39CB28, 0x18
+  .4byte $$22759
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22762:
 	.incbin "baserom.dol", 0x39CB40, 0x10
 entry$2761:
-	.incbin "baserom.dol", 0x39CB50, 0x18
+  .4byte $$22762
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22765:
 	.incbin "baserom.dol", 0x39CB68, 0x10
 entry$2764:
-	.incbin "baserom.dol", 0x39CB78, 0x18
+  .4byte $$22765
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22769:
 	.incbin "baserom.dol", 0x39CB90, 0x10
 entry$2768:
-	.incbin "baserom.dol", 0x39CBA0, 0x18
+  .4byte $$22769
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23040:
 	.incbin "baserom.dol", 0x39CBB8, 0x18
 $$23041:

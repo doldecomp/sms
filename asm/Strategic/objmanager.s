@@ -466,7 +466,13 @@ $$21601:
 $$21735:
 	.incbin "baserom.dol", 0x3771F8, 0xC
 entry$1734:
-	.incbin "baserom.dol", 0x377204, 0x1C
+  .4byte $$21735
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TObjManager

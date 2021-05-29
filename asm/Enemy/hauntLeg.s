@@ -1627,7 +1627,9 @@ hauntleg_bastable:
   .4byte 0
   .4byte 0
 entry$2798:
-	.incbin "baserom.dol", 0x3DDB64, 0xC
+  .4byte $$22799
+  .4byte 0x10220000
+  .4byte 0
 .global __vt__19TNerveHauntLegHaunt
 __vt__19TNerveHauntLegHaunt:
   .4byte 0

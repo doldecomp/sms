@@ -1367,7 +1367,14 @@ lbl_8009FED8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 ResetFunctionInfo:
-	.incbin "baserom.dol", 0x3AE380, 0x20
+    .4byte OnReset
+    .4byte 0x7F
+	.4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global __CARDBlock

@@ -2222,7 +2222,15 @@ killer_bastable:
   .4byte $$22840
   .4byte 0
 entry$2930:
-	.incbin "baserom.dol", 0x3E0424, 0x24
+  .4byte $$22931
+  .4byte 0x10230000
+  .4byte 0
+  .4byte $$22932
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__21TCoasterKillerManager
 __vt__21TCoasterKillerManager:
   .4byte 0

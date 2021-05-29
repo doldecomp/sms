@@ -4664,7 +4664,12 @@ $$23059:
 $$23489:
 	.incbin "baserom.dol", 0x397ED4, 0x14
 entry$3488:
-	.incbin "baserom.dol", 0x397EE8, 0x18
+  .4byte $$23489
+  .4byte 0x14240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23494:
 	.incbin "baserom.dol", 0x397F00, 0x2C
 $$23495:
