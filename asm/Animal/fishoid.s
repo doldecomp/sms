@@ -1261,7 +1261,21 @@ cFishoidMdlNames__9$$2unnamed$$2:
   .4byte $$22232
   .4byte $$22233
 entry$2319:
-	.incbin "baserom.dol", 0x3A4AB8, 0x3C
+    .4byte $$22230
+    .4byte 0x10210000
+    .4byte 0
+    .4byte $$22231
+    .4byte 0x10210000
+    .4byte 0
+    .4byte $$22232
+    .4byte 0x10210000
+    .4byte 0
+    .4byte $$22233
+    .4byte 0x10210000
+    .4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
 $$22458:
 	.incbin "baserom.dol", 0x3A4AF4, 0xC
 $$22688:
