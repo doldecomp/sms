@@ -7058,13 +7058,31 @@ sambohead_bastable:
   .4byte $$22704
   .4byte 0
 entry$2760:
-	.incbin "baserom.dol", 0x3DB420, 0x18
+  .4byte $$22761
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2894:
-	.incbin "baserom.dol", 0x3DB438, 0x24
+  .4byte $$22895
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$22896
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 jIndexTable$3043:
 	.incbin "baserom.dol", 0x3DB45C, 0x10
 entry$3085:
-	.incbin "baserom.dol", 0x3DB46C, 0x18
+  .4byte $$23086
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TNerveSamboHeadHitWall
 __vt__22TNerveSamboHeadHitWall:
   .4byte 0

@@ -5641,7 +5641,12 @@ rikuGesso_bastable:
   .4byte $$22889
   .4byte 0
 entry$2957:
-	.incbin "baserom.dol", 0x3D0B94, 0x18
+  .4byte $$22958
+  .4byte 0x10230000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__15TNerveGessoTurn
 __vt__15TNerveGessoTurn:
   .4byte 0

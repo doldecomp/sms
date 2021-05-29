@@ -10785,7 +10785,12 @@ fireWanwan_bastable:
   .4byte $$22956
   .4byte $$22957
 entry$3027:
-	.incbin "baserom.dol", 0x3D56E8, 0x18
+  .4byte $$23028
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TNerveFireWanwanEscape
 __vt__22TNerveFireWanwanEscape:
   .4byte 0

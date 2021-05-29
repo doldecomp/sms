@@ -648,7 +648,18 @@ cButterflyMdlNames__9$$2unnamed$$2:
   .4byte $$22394
   .4byte $$22395
 entry$2459:
-	.incbin "baserom.dol", 0x3A531C, 0x30
+    .4byte $$22393
+    .4byte 0x10210000
+    .4byte 0
+    .4byte $$22394
+    .4byte 0x10210000
+    .4byte 0
+    .4byte $$22395
+    .4byte 0x10210000
+    .4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
 $$22493:
 	.incbin "baserom.dol", 0x3A534C, 0x10
 $$22594:

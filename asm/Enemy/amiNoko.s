@@ -3329,7 +3329,12 @@ amiNoko_bastable:
   .4byte 0
   .4byte 0
 entry$2820:
-	.incbin "baserom.dol", 0x3DC950, 0x18
+  .4byte $$22821
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__19TNerveAmiNokoFreeze
 __vt__19TNerveAmiNokoFreeze:
   .4byte 0

@@ -5108,7 +5108,12 @@ pakkun_bastable:
   .4byte $$22979
   .4byte 0
 entry$3011:
-	.incbin "baserom.dol", 0x3D35D0, 0x18
+  .4byte $$23012
+  .4byte 0x10300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TNerveStayPakkunAppear
 __vt__22TNerveStayPakkunAppear:
   .4byte 0

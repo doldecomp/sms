@@ -4923,7 +4923,12 @@ $$24968:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 entry$3004:
-	.incbin "baserom.dol", 0x3D3B68, 0x18
+  .4byte $$23005
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TNerveSmallEnemyChange
 __vt__22TNerveSmallEnemyChange:
   .4byte 0

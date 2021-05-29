@@ -4155,7 +4155,12 @@ cColorTable__9$$2unnamed$$2:
 $$23024:
 	.incbin "baserom.dol", 0x3A4EA0, 0x10
 entry$3023:
-	.incbin "baserom.dol", 0x3A4EB0, 0x18
+    .4byte $$23024
+    .4byte 0x10210000
+    .4byte 0
+    .4byte 0
+    .4byte 0
+    .4byte 0
 $$23452:
 	.incbin "baserom.dol", 0x3A4EC8, 0x14
 $$23871:

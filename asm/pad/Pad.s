@@ -1918,7 +1918,10 @@ lbl_8009CDC8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 ResetFunctionInfo:
-	.incbin "baserom.dol", 0x3AE1F8, 0x10
+    .4byte OnReset
+    .4byte 0x7F
+    .4byte 0
+    .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ResettingChan:

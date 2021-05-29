@@ -98,13 +98,28 @@ sAdsrDef__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D08, 0x18
 .global sEnvelopeDef__Q28JASystem6Player
 sEnvelopeDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D20, 0x18
+    .4byte 0
+    .float 1.0
+    .4byte 0
+    .4byte sRelTable__Q28JASystem6Player
+    .float 1.0
+    .4byte 0
 .global sVibratoDef__Q28JASystem6Player
 sVibratoDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D38, 0x18
+    .4byte 0x01000000
+    .float 0.5
+    .4byte sVibTable__Q28JASystem6Player
+    .4byte sVibTable__Q28JASystem6Player
+    .4byte 0
+    .float 1.0
 .global sTremoroDef__Q28JASystem6Player
 sTremoroDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D50, 0x18
+    .4byte 0
+    .float 0.5
+    .4byte sTreTable__Q28JASystem6Player
+    .4byte sTreTable__Q28JASystem6Player
+    .4byte 0
+    .float 1.0
 .global sAdsTable__Q28JASystem6Player
 sAdsTable__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D68, 0x18

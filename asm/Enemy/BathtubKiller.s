@@ -5313,7 +5313,15 @@ bathtubkiller_bastable:
   .4byte 0
   .4byte 0
 entry$3235:
-	.incbin "baserom.dol", 0x3E018C, 0x24
+  .4byte $$23236
+  .4byte 0x50230000
+  .4byte 0
+  .4byte $$23237
+  .4byte 0x50210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__21TBathtubKillerManager
 __vt__21TBathtubKillerManager:
   .4byte 0

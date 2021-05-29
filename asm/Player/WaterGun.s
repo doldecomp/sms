@@ -5732,7 +5732,48 @@ $$25918:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
 nozzleBmdData:
-	.incbin "baserom.dol", 0x3B3998, 0xA8
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22741
+  .4byte $$22742
+  .4byte 0x1020100
+  .4byte 0x4000400
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22743
+  .4byte $$22744
+  .4byte 0x1020201
+  .4byte 0x4000400
+  .4byte 0
+  .4byte 0
+  .4byte $$22745
+  .4byte $$22746
+  .4byte $$22747
+  .4byte 0x20c0100
+  .4byte 0x1000400
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22748
+  .4byte $$22749
+  .4byte 0x1020300
+  .4byte 0x4000400
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22746
+  .4byte $$22747
+  .4byte 0x20c0100
+  .4byte 0x1000400
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte $$22750
+  .4byte $$22751
+  .4byte 0x1020100
+  .4byte 0x4000400
 .global __vt__9TWaterGun
 __vt__9TWaterGun:
   .4byte 0

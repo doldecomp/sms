@@ -3148,7 +3148,15 @@ bombhei_bastable:
   .4byte 0
   .4byte $$22906
 entry$2918:
-	.incbin "baserom.dol", 0x3D9C3C, 0x24
+  .4byte $$22919
+  .4byte 0x10230000
+  .4byte 0
+  .4byte $$22920
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__22TNerveBombHeiExplosion
 __vt__22TNerveBombHeiExplosion:
   .4byte 0

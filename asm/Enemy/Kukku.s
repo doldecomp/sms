@@ -2897,7 +2897,12 @@ cDropCoinNumTable__9$$2unnamed$$2:
 $$23099:
 	.incbin "baserom.dol", 0x3A0FF4, 0xC
 entry$3098:
-	.incbin "baserom.dol", 0x3A1000, 0x18
+  .4byte $$23099
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$23207:
 	.incbin "baserom.dol", 0x3A1018, 0xC
 $$23325:

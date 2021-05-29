@@ -279,7 +279,12 @@ $$21601:
 $$22267:
 	.incbin "baserom.dol", 0x39E130, 0x14
 entry$2266:
-	.incbin "baserom.dol", 0x39E144, 0x18
+  .4byte $$22267
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22277:
 	.incbin "baserom.dol", 0x39E15C, 0x14
 

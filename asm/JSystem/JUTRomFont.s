@@ -606,7 +606,12 @@ $$2259:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 saoAboutEncoding___10JUTRomFont:
-	.incbin "baserom.dol", 0x3A6F50, 0x18
+    .4byte 0
+    .4byte 0x00020120
+    .4byte isLeadByte_1Byte__7JUTFontFi
+    .4byte 2
+    .4byte 0x00120F00
+    .4byte isLeadByte_ShiftJIS__7JUTFontFi
 .global __vt__10JUTRomFont
 __vt__10JUTRomFont:
   .4byte 0

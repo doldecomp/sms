@@ -5088,7 +5088,15 @@ popo_bastable:
   .4byte $$22895
   .4byte $$22896
 entry$2927:
-	.incbin "baserom.dol", 0x3DBBAC, 0x24
+  .4byte $$22928
+  .4byte 0x10020000
+  .4byte 0
+  .4byte $$22929
+  .4byte 0x10020000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__16TNervePopoThrown
 __vt__16TNervePopoThrown:
   .4byte 0

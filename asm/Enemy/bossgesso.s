@@ -10997,7 +10997,33 @@ $$23714:
 $$23715:
 	.incbin "baserom.dol", 0x395518, 0x18
 entry$3707:
-	.incbin "baserom.dol", 0x395530, 0x6C
+  .4byte $$23708
+  .4byte 0x10300000
+  .4byte 0
+  .4byte $$23709
+  .4byte 0x10240000
+  .4byte 0
+  .4byte $$23710
+  .4byte 0x200000
+  .4byte 0
+  .4byte $$23711
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$23712
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$23713
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$23714
+  .4byte 0x10220000
+  .4byte 0
+  .4byte $$23715
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$24687:
 	.incbin "baserom.dol", 0x39559C, 0x14
 $$24688:

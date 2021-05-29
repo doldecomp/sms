@@ -2873,7 +2873,12 @@ cJointNames__9$$2unnamed$$2:
 $$22528:
 	.incbin "baserom.dol", 0x3A1334, 0x14
 entry$2527:
-	.incbin "baserom.dol", 0x3A1348, 0x18
+  .4byte $$22528
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22687:
 	.incbin "baserom.dol", 0x3A1360, 0x10
 $$22688:

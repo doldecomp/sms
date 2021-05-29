@@ -4083,7 +4083,18 @@ sChangeSaveFileName$2712:
   .4byte $$22714
   .4byte $$22715
 entry$2725:
-	.incbin "baserom.dol", 0x3DC414, 0x30
+  .4byte $$22726
+  .4byte 0x10300000
+  .4byte 0
+  .4byte $$22727
+  .4byte 0x10100000
+  .4byte 0
+  .4byte 0
+  .4byte 0x10010000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__13TBossHanachan
 __vt__13TBossHanachan:
   .4byte 0

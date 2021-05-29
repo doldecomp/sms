@@ -5781,9 +5781,19 @@ telesa_bastable:
   .4byte 0
   .4byte $$22963
 entry$2992:
-	.incbin "baserom.dol", 0x3D4B04, 0x18
+  .4byte $$22993
+  .4byte 0x15240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3402:
-	.incbin "baserom.dol", 0x3D4B1C, 0x18
+  .4byte $$23403
+  .4byte 0x11020000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__25TNerveKageMarioModokiWait
 __vt__25TNerveKageMarioModokiWait:
   .4byte 0

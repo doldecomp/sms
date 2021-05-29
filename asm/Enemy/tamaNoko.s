@@ -4722,7 +4722,12 @@ tamaNoko_bastable:
   .4byte $$23077
   .4byte $$23078
 entry$3149:
-	.incbin "baserom.dol", 0x3D8EBC, 0x18
+  .4byte $$23150
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__18TNerveTamaNokoWait
 __vt__18TNerveTamaNokoWait:
   .4byte 0

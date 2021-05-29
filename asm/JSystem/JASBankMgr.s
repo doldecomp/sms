@@ -610,7 +610,13 @@ lbl_80058B6C:
 OSC_RELEASE_TABLE__Q28JASystem7BankMgr:
 	.incbin "baserom.dol", 0x3A7D88, 0xC
 OSC_ENV__Q28JASystem7BankMgr:
-	.incbin "baserom.dol", 0x3A7D94, 0x1C
+    .4byte 0
+    .float 1.0
+    .4byte 0
+    .4byte OSC_RELEASE_TABLE__Q28JASystem7BankMgr
+    .float 1.0
+    .4byte 0
+    .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2339:

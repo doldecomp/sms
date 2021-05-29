@@ -748,7 +748,25 @@ lbl_801E7468:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 point_name_table$2639:
-	.incbin "baserom.dol", 0x38EB40, 0x98
+    .4byte $$22640, 0
+    .4byte $$22641, 1
+    .4byte $$22642, 2
+    .4byte $$22643, 3
+    .4byte $$22644, 4
+    .4byte $$22645, 5
+    .4byte $$22646, 6
+    .4byte $$22647, 7
+    .4byte $$22648, 8
+    .4byte $$22649, 9
+    .4byte $$22650, 10
+    .4byte $$22651, 11
+    .4byte $$22652, 12
+    .4byte $$22653, 13
+    .4byte $$22654, 14
+    .4byte $$22655, 15
+    .4byte $$22656, 16
+    .4byte $$22657, 17
+    .4byte 0, 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22640:

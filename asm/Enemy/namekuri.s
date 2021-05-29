@@ -4017,7 +4017,12 @@ namekuri2_bastable:
   .4byte 0
   .4byte 0
 entry$2947:
-	.incbin "baserom.dol", 0x3D2FC0, 0x18
+  .4byte $$22948
+  .4byte 0x15300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__19TNerveNKFollowMario
 __vt__19TNerveNKFollowMario:
   .4byte 0

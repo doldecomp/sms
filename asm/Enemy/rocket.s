@@ -2043,7 +2043,12 @@ rocket_bastable:
   .4byte 0
   .4byte 0
 entry$2821:
-	.incbin "baserom.dol", 0x3DE230, 0x18
+  .4byte $$22822
+  .4byte 0x10040000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__16TNerveRocketWait
 __vt__16TNerveRocketWait:
   .4byte 0

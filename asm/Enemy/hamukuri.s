@@ -12911,15 +12911,40 @@ hamukurianm_bastable:
   .4byte 0
   .4byte $$23011
 entry$3048:
-	.incbin "baserom.dol", 0x3D14B4, 0x18
+  .4byte $$23049
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3115:
-	.incbin "baserom.dol", 0x3D14CC, 0x18
+  .4byte $$23116
+  .4byte 0x10250000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3125:
-	.incbin "baserom.dol", 0x3D14E4, 0x18
+  .4byte $$23126
+  .4byte 0x10250000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3156:
-	.incbin "baserom.dol", 0x3D14FC, 0x18
+  .4byte $$23049
+  .4byte 0x10240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$3168:
-	.incbin "baserom.dol", 0x3D1514, 0x18
+  .4byte $$23169
+  .4byte 0x10240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__27TNerveDoroHanePrepareAttack
 __vt__27TNerveDoroHanePrepareAttack:
   .4byte 0
