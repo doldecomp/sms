@@ -273,6 +273,7 @@ lbl_80085EAC:
 /* 80085EC0 00082E00  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+    .balign 8
 K1:
   .4byte 0x80808080
 K2:
