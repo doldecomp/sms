@@ -221,7 +221,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/mem_funcs.o                 \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/misc_io.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/printf.o                    \
-    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/rand.o                      \
+    $(BUILD_DIR)/src/MSL_C.PPCEABI.bare.H/rand.o                      \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/scanf.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/string.o                    \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/strtoul.o                   \
