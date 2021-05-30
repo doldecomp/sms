@@ -44,7 +44,12 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src src/NPC src/MarioUtil src/JSystem src/System
+SRC_DIRS := src                      \
+            src/NPC                  \
+            src/MarioUtil            \
+            src/JSystem              \
+            src/System               \
+            src/MSL_C.PPCEABI.bare.H \
 
 ASM_DIRS := asm                      \
             asm/JSystem              \
@@ -183,6 +188,9 @@ $(BUILD_DIR)/%.o: %.s
 # 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
 
 $(BUILD_DIR)/%.o: %.cpp
+	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
