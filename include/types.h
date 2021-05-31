@@ -1,29 +1,94 @@
-#ifndef _DOL_TYPES_H_
-#define _DOL_TYPES_H_
+#ifndef UNSORTED_TYPES_H
+#define UNSORTED_TYPES_H
 
-#ifndef NULL
-#define NULL    (void *)0
-#endif
+#include <dolphin.h>
+#include "functions.h"
+#include "variables.h"
 
-typedef signed char            s8;
-typedef unsigned char          u8;
-typedef signed short int       s16;
-typedef unsigned short int     u16;
-typedef signed long            s32;
-typedef unsigned long          u32;
-typedef signed long long int   s64;
-typedef unsigned long long int u64;
+// TODO
+class TDirector {
+    char filler0;
+};
 
-typedef volatile u8   vu8;
-typedef volatile u16 vu16;
-typedef volatile u32 vu32;
-typedef volatile u64 vu64;
-typedef volatile s8   vs8;
-typedef volatile s16 vs16;
-typedef volatile s32 vs32;
-typedef volatile s64 vs64;
+// TODO
+class TGameSequence {
+public:
+    u8 _000;
+    u8 _001;
+    u16 _002;
+};
 
-typedef float  f32;
-typedef double f64;
+// TODO
+class TDisplay {
+    char filler0;
+};
 
-#endif
+// TODO
+class TMarioGamePad {
+    char filler0[4];
+};
+
+// TODO
+class TSMSFader {
+    char filler0[4];
+};
+
+// TODO
+class JKRExpHeap {
+    char filler0[4];
+};
+
+// TODO: src/System/ProcessMeter.hpp
+class TProcessMeter {
+    TProcessMeter(s32);
+    s32 _000;
+    s32 _004;
+    s32 _008;
+    s32 _00C;
+    s32 _010;
+    f32 _014;
+    f32 _018;
+    s16 _01C;
+    s16 _01E;
+};
+
+class TApplication {
+public:
+    /* 0x00 */ TApplication *self;
+    /* 0x04 */ TDirector *director;
+    /* 0x08 */ char undefined1;
+    /* 0x0A */ TGameSequence prevArea;
+    /* 0x0E */ TGameSequence currArea;
+    /* 0x12 */ TGameSequence nextArea;
+    /* 0x18 */ int movie;
+    /* 0x1C */ TDisplay *display;
+    /* 0x20 */ TMarioGamePad *gamePads[4];
+    /* 0x30 */ char undefined4[4];
+    /* 0x34 */ TSMSFader *unkFader;
+    /* 0x38 */ char saveFile;
+    /* 0x3C */ char undefined4_2[4];
+    /* 0x40 */ JKRExpHeap *heap;
+    /* 0x44 */ char undefined2[2];
+    /* 0x46 */ char undefined2_2[2];
+    /* 0x48 */ TProcessMeter *meter;
+               char filler4C[4]; // this should be 0x50 according to the bss padding...
+    // functions
+    TApplication();
+    void initialize();
+    void proc();
+    void finalize();
+};
+
+extern TApplication gpApplication;
+
+struct UnkStruct3B0378 {
+    unsigned int unk0;
+    char *str;
+};
+
+class RumbleType {
+    float foo;
+    static int getIndex(char *strIn);
+};
+
+#endif // UNSORTED_TYPES_H

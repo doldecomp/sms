@@ -1,5 +1,5 @@
 O_FILES :=                                                            \
-	$(BUILD_DIR)/asm/main.o                                           \
+	$(BUILD_DIR)/src/main.o                                           \
     $(BUILD_DIR)/asm/JSystem/JKRArchivePri.o                          \
     $(BUILD_DIR)/asm/JSystem/JKRAramArchive.o                         \
     $(BUILD_DIR)/asm/JSystem/JKRAramHeap.o                            \
@@ -96,7 +96,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JDRNameRefGen.o                          \
     $(BUILD_DIR)/asm/JSystem/JDRPlacement.o                           \
     $(BUILD_DIR)/asm/JSystem/JDRRenderMode.o                          \
-    $(BUILD_DIR)/asm/JSystem/JDRResolution.o                          \
+    $(BUILD_DIR)/src/JSystem/JDRResolution.o                          \
     $(BUILD_DIR)/asm/JSystem/JDRScreen.o                              \
     $(BUILD_DIR)/asm/JSystem/JDRSmJ3DAct.o                            \
     $(BUILD_DIR)/asm/JSystem/JDRSmJ3DScn.o                            \
@@ -221,7 +221,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/mem_funcs.o                 \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/misc_io.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/printf.o                    \
-    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/rand.o                      \
+    $(BUILD_DIR)/src/MSL_C.PPCEABI.bare.H/rand.o                      \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/scanf.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/string.o                    \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/strtoul.o                   \
@@ -366,7 +366,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MarioUtil/ModelUtil.o                            \
     $(BUILD_DIR)/asm/MarioUtil/RumbleMgr.o                            \
     $(BUILD_DIR)/asm/MarioUtil/RumbleData.o                           \
-    $(BUILD_DIR)/asm/MarioUtil/RumbleType.o                           \
+    $(BUILD_DIR)/src/MarioUtil/RumbleType.o                           \
     $(BUILD_DIR)/asm/MarioUtil/PacketUtil.o                           \
     $(BUILD_DIR)/asm/MarioUtil/GDUtil.o                               \
     $(BUILD_DIR)/asm/MarioUtil/TexUtil.o                              \
@@ -399,21 +399,21 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/MarNameRefGen.o                           \
     $(BUILD_DIR)/asm/System/MenuDir.o                                 \
     $(BUILD_DIR)/asm/System/Params.o                                  \
-    $(BUILD_DIR)/asm/System/ParamInst.o                               \
+    $(BUILD_DIR)/src/System/ParamInst.o                               \
     $(BUILD_DIR)/asm/System/PerformList.o                             \
     $(BUILD_DIR)/asm/System/RenderModeObj.o                           \
     $(BUILD_DIR)/asm/System/SnapTimeObj.o                             \
     $(BUILD_DIR)/asm/System/TalkCursor.o                              \
-    $(BUILD_DIR)/asm/System/TexCache.o                                \
+    $(BUILD_DIR)/src/System/TexCache.o                                \
     $(BUILD_DIR)/asm/System/ZBufferCatch.o                            \
     $(BUILD_DIR)/asm/System/Application.o                             \
     $(BUILD_DIR)/asm/System/ScenarioArchiveName.o                     \
     $(BUILD_DIR)/asm/System/MarioGamePad.o                            \
     $(BUILD_DIR)/asm/System/StageEventInfo.o                          \
-    $(BUILD_DIR)/asm/System/StageUtil.o                               \
-    $(BUILD_DIR)/asm/System/Resolution.o                              \
+    $(BUILD_DIR)/src/System/StageUtil.o                               \
+    $(BUILD_DIR)/src/System/Resolution.o                              \
     $(BUILD_DIR)/asm/System/PositionHolder.o                          \
-    $(BUILD_DIR)/asm/System/ProcessMeter.o                            \
+    $(BUILD_DIR)/src/System/ProcessMeter.o                            \
     $(BUILD_DIR)/asm/System/TimeRec.o                                 \
     $(BUILD_DIR)/asm/System/DrawSyncManager.o                         \
     $(BUILD_DIR)/asm/System/THPRender.o                               \
@@ -491,7 +491,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/NPC/NpcTrample.o                                 \
     $(BUILD_DIR)/asm/NPC/NpcEffect.o                                  \
     $(BUILD_DIR)/asm/NPC/NpcInitAnmData.o                             \
-    $(BUILD_DIR)/asm/NPC/NpcInitActionData.o                          \
+    $(BUILD_DIR)/src/NPC/NpcInitActionData.o                          \
     $(BUILD_DIR)/asm/NPC/NpcCoin.o                                    \
     $(BUILD_DIR)/src/NPC/NpcBalloon.o                                 \
     $(BUILD_DIR)/asm/NPC/NpcWalkTurn.o                                \
