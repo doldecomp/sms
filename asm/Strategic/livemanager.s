@@ -61,7 +61,7 @@ perform__12TLiveManagerFUlPQ26JDrama9TGraphics:
 /* 801146D0 00111610  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 801146D4 00111614  41 82 00 48 */	beq lbl_8011471C
 /* 801146D8 00111618  38 00 00 FF */	li r0, 0xff
-/* 801146DC 0011161C  83 6D 98 38 */	lwz r27, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 801146DC 0011161C  83 6D 98 38 */	lwz r27, _instance__8TTimeRec@sda21(r13)
 /* 801146E0 00111620  98 01 00 34 */	stb r0, 0x34(r1)
 /* 801146E4 00111624  28 1B 00 00 */	cmplwi r27, 0
 /* 801146E8 00111628  98 01 00 35 */	stb r0, 0x35(r1)
@@ -92,7 +92,7 @@ lbl_8011471C:
 /* 80114748 00111688  80 1D 00 30 */	lwz r0, 0x30(r29)
 /* 8011474C 0011168C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 80114750 00111690  41 82 00 30 */	beq lbl_80114780
-/* 80114754 00111694  83 6D 98 38 */	lwz r27, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 80114754 00111694  83 6D 98 38 */	lwz r27, _instance__8TTimeRec@sda21(r13)
 /* 80114758 00111698  28 1B 00 00 */	cmplwi r27, 0
 /* 8011475C 0011169C  41 82 00 24 */	beq lbl_80114780
 /* 80114760 001116A0  4B F7 F6 B1 */	bl OSGetTick
@@ -127,12 +127,12 @@ setFlagOutOfCube__12TLiveManagerFv:
 /* 801147C4 00111704  3B A0 00 00 */	li r29, 0
 /* 801147C8 00111708  93 81 00 28 */	stw r28, 0x28(r1)
 /* 801147CC 0011170C  3B 83 00 00 */	addi r28, r3, 0
-/* 801147D0 00111710  C3 E2 96 D0 */	lfs f31, $$22101-_SDA2_BASE_(r2)
+/* 801147D0 00111710  C3 E2 96 D0 */	lfs f31, $$22101@sda21(r2)
 /* 801147D4 00111714  48 00 00 68 */	b lbl_8011483C
 lbl_801147D8:
 /* 801147D8 00111718  80 BC 00 18 */	lwz r5, 0x18(r28)
 /* 801147DC 0011171C  38 81 00 14 */	addi r4, r1, 0x14
-/* 801147E0 00111720  80 6D A8 EC */	lwz r3, gpCubeArea-_SDA_BASE_(r13)
+/* 801147E0 00111720  80 6D A8 EC */	lwz r3, gpCubeArea@sda21(r13)
 /* 801147E4 00111724  7F C5 F8 2E */	lwzx r30, r5, r31
 /* 801147E8 00111728  80 BE 00 10 */	lwz r5, 0x10(r30)
 /* 801147EC 0011172C  80 1E 00 14 */	lwz r0, 0x14(r30)
@@ -176,8 +176,8 @@ clipActors__12TLiveManagerFPQ26JDrama9TGraphics:
 /* 8011486C 001117AC  7C 08 02 A6 */	mflr r0
 /* 80114870 001117B0  90 01 00 04 */	stw r0, 4(r1)
 /* 80114874 001117B4  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80114878 001117B8  C0 22 96 D4 */	lfs f1, $$22103-_SDA2_BASE_(r2)
-/* 8011487C 001117BC  C0 42 96 D8 */	lfs f2, $$22104-_SDA2_BASE_(r2)
+/* 80114878 001117B8  C0 22 96 D4 */	lfs f1, $$22103@sda21(r2)
+/* 8011487C 001117BC  C0 42 96 D8 */	lfs f2, $$22104@sda21(r2)
 /* 80114880 001117C0  48 00 00 15 */	bl clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff
 /* 80114884 001117C4  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80114888 001117C8  38 21 00 08 */	addi r1, r1, 8
@@ -196,13 +196,13 @@ clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff:
 /* 801148B0 001117F0  BF 61 00 44 */	stmw r27, 0x44(r1)
 /* 801148B4 001117F4  7C 9D 23 78 */	mr r29, r4
 /* 801148B8 001117F8  7C 7C 1B 78 */	mr r28, r3
-/* 801148BC 001117FC  80 AD A8 B0 */	lwz r5, gpCamera-_SDA_BASE_(r13)
+/* 801148BC 001117FC  80 AD A8 B0 */	lwz r5, gpCamera@sda21(r13)
 /* 801148C0 00111800  C0 64 00 E8 */	lfs f3, 0xe8(r4)
 /* 801148C4 00111804  C0 05 00 4C */	lfs f0, 0x4c(r5)
 /* 801148C8 00111808  C0 25 00 48 */	lfs f1, 0x48(r5)
 /* 801148CC 0011180C  FC 40 00 90 */	fmr f2, f0
 /* 801148D0 00111810  4B FA CB 45 */	bl SetViewFrustumClipCheckPerspective__Fffff
-/* 801148D4 00111814  C3 E2 96 D0 */	lfs f31, $$22101-_SDA2_BASE_(r2)
+/* 801148D4 00111814  C3 E2 96 D0 */	lfs f31, $$22101@sda21(r2)
 /* 801148D8 00111818  3B C0 00 00 */	li r30, 0
 /* 801148DC 0011181C  3B 60 00 00 */	li r27, 0
 /* 801148E0 00111820  48 00 00 B4 */	b lbl_80114994
@@ -354,9 +354,9 @@ __ct__12TLiveManagerFPCc:
 /* 80114AD8 00111A18  38 00 00 00 */	li r0, 0
 /* 80114ADC 00111A1C  38 9F 00 00 */	addi r4, r31, 0
 /* 80114AE0 00111A20  90 1F 00 34 */	stw r0, 0x34(r31)
-/* 80114AE4 00111A24  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 80114AE4 00111A24  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 80114AE8 00111A28  48 13 49 CD */	bl registerManager__10TConductorFP12TLiveManager
-/* 80114AEC 00111A2C  80 8D 97 6C */	lwz r4, gpLightManager-_SDA_BASE_(r13)
+/* 80114AEC 00111A2C  80 8D 97 6C */	lwz r4, gpLightManager@sda21(r13)
 /* 80114AF0 00111A30  38 00 00 01 */	li r0, 1
 /* 80114AF4 00111A34  38 7F 00 00 */	addi r3, r31, 0
 /* 80114AF8 00111A38  80 84 00 14 */	lwz r4, 0x14(r4)
@@ -436,12 +436,31 @@ $$22148:
 	.incbin "baserom.dol", 0x377108, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__12TLiveManager
 __vt__12TLiveManager:
-	.incbin "baserom.dol", 0x3B1E58, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLiveManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TLiveManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
 .global __vt__29TSpcTypedBinary$$010TLiveActor$$1
 __vt__29TSpcTypedBinary$$010TLiveActor$$1:
-	.incbin "baserom.dol", 0x3B1E98, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__29TSpcTypedBinary$$010TLiveActor$$1Fv
+  .4byte initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22101:

@@ -18,7 +18,7 @@ loadParticleMario__12TMarDirectorFv:
 /* 80108850 00105790  88 1F 00 01 */	lbz r0, 1(r31)
 /* 80108854 00105794  28 00 00 00 */	cmplwi r0, 0
 /* 80108858 00105798  40 82 00 1C */	bne lbl_80108874
-/* 8010885C 0010579C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010885C 0010579C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108860 001057A0  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 80108864 001057A4  38 A0 00 01 */	li r5, 1
 /* 80108868 001057A8  4B F7 87 C5 */	bl load__18JPAResourceManagerFPCcUs
@@ -29,7 +29,7 @@ lbl_80108874:
 /* 80108878 001057B8  88 1F 00 02 */	lbz r0, 2(r31)
 /* 8010887C 001057BC  28 00 00 00 */	cmplwi r0, 0
 /* 80108880 001057C0  40 82 00 1C */	bne lbl_8010889C
-/* 80108884 001057C4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108884 001057C4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108888 001057C8  38 9E 01 0C */	addi r4, r30, 0x10c
 /* 8010888C 001057CC  38 A0 00 02 */	li r5, 2
 /* 80108890 001057D0  4B F7 87 9D */	bl load__18JPAResourceManagerFPCcUs
@@ -40,7 +40,7 @@ lbl_8010889C:
 /* 801088A0 001057E0  88 1F 00 03 */	lbz r0, 3(r31)
 /* 801088A4 001057E4  28 00 00 00 */	cmplwi r0, 0
 /* 801088A8 001057E8  40 82 00 1C */	bne lbl_801088C4
-/* 801088AC 001057EC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801088AC 001057EC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801088B0 001057F0  38 9E 01 20 */	addi r4, r30, 0x120
 /* 801088B4 001057F4  38 A0 00 03 */	li r5, 3
 /* 801088B8 001057F8  4B F7 87 75 */	bl load__18JPAResourceManagerFPCcUs
@@ -51,7 +51,7 @@ lbl_801088C4:
 /* 801088C8 00105808  88 1F 00 04 */	lbz r0, 4(r31)
 /* 801088CC 0010580C  28 00 00 00 */	cmplwi r0, 0
 /* 801088D0 00105810  40 82 00 1C */	bne lbl_801088EC
-/* 801088D4 00105814  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801088D4 00105814  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801088D8 00105818  38 9E 01 34 */	addi r4, r30, 0x134
 /* 801088DC 0010581C  38 A0 00 04 */	li r5, 4
 /* 801088E0 00105820  4B F7 87 4D */	bl load__18JPAResourceManagerFPCcUs
@@ -62,7 +62,7 @@ lbl_801088EC:
 /* 801088F0 00105830  88 1F 00 05 */	lbz r0, 5(r31)
 /* 801088F4 00105834  28 00 00 00 */	cmplwi r0, 0
 /* 801088F8 00105838  40 82 00 1C */	bne lbl_80108914
-/* 801088FC 0010583C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801088FC 0010583C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108900 00105840  38 9E 01 48 */	addi r4, r30, 0x148
 /* 80108904 00105844  38 A0 00 05 */	li r5, 5
 /* 80108908 00105848  4B F7 87 25 */	bl load__18JPAResourceManagerFPCcUs
@@ -73,7 +73,7 @@ lbl_80108914:
 /* 80108918 00105858  88 1F 00 06 */	lbz r0, 6(r31)
 /* 8010891C 0010585C  28 00 00 00 */	cmplwi r0, 0
 /* 80108920 00105860  40 82 00 1C */	bne lbl_8010893C
-/* 80108924 00105864  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108924 00105864  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108928 00105868  38 9E 01 5C */	addi r4, r30, 0x15c
 /* 8010892C 0010586C  38 A0 00 06 */	li r5, 6
 /* 80108930 00105870  4B F7 86 FD */	bl load__18JPAResourceManagerFPCcUs
@@ -84,7 +84,7 @@ lbl_8010893C:
 /* 80108940 00105880  88 1F 00 07 */	lbz r0, 7(r31)
 /* 80108944 00105884  28 00 00 00 */	cmplwi r0, 0
 /* 80108948 00105888  40 82 00 1C */	bne lbl_80108964
-/* 8010894C 0010588C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010894C 0010588C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108950 00105890  38 9E 01 70 */	addi r4, r30, 0x170
 /* 80108954 00105894  38 A0 00 07 */	li r5, 7
 /* 80108958 00105898  4B F7 86 D5 */	bl load__18JPAResourceManagerFPCcUs
@@ -95,7 +95,7 @@ lbl_80108964:
 /* 80108968 001058A8  88 1F 00 08 */	lbz r0, 8(r31)
 /* 8010896C 001058AC  28 00 00 00 */	cmplwi r0, 0
 /* 80108970 001058B0  40 82 00 1C */	bne lbl_8010898C
-/* 80108974 001058B4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108974 001058B4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108978 001058B8  38 9E 01 80 */	addi r4, r30, 0x180
 /* 8010897C 001058BC  38 A0 00 08 */	li r5, 8
 /* 80108980 001058C0  4B F7 86 AD */	bl load__18JPAResourceManagerFPCcUs
@@ -106,7 +106,7 @@ lbl_8010898C:
 /* 80108990 001058D0  88 1F 00 09 */	lbz r0, 9(r31)
 /* 80108994 001058D4  28 00 00 00 */	cmplwi r0, 0
 /* 80108998 001058D8  40 82 00 1C */	bne lbl_801089B4
-/* 8010899C 001058DC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010899C 001058DC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801089A0 001058E0  38 9E 01 90 */	addi r4, r30, 0x190
 /* 801089A4 001058E4  38 A0 00 09 */	li r5, 9
 /* 801089A8 001058E8  4B F7 86 85 */	bl load__18JPAResourceManagerFPCcUs
@@ -117,7 +117,7 @@ lbl_801089B4:
 /* 801089B8 001058F8  88 1F 00 0A */	lbz r0, 0xa(r31)
 /* 801089BC 001058FC  28 00 00 00 */	cmplwi r0, 0
 /* 801089C0 00105900  40 82 00 1C */	bne lbl_801089DC
-/* 801089C4 00105904  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801089C4 00105904  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801089C8 00105908  38 9E 01 A0 */	addi r4, r30, 0x1a0
 /* 801089CC 0010590C  38 A0 00 0A */	li r5, 0xa
 /* 801089D0 00105910  4B F7 86 5D */	bl load__18JPAResourceManagerFPCcUs
@@ -128,7 +128,7 @@ lbl_801089DC:
 /* 801089E0 00105920  88 1F 00 0B */	lbz r0, 0xb(r31)
 /* 801089E4 00105924  28 00 00 00 */	cmplwi r0, 0
 /* 801089E8 00105928  40 82 00 1C */	bne lbl_80108A04
-/* 801089EC 0010592C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801089EC 0010592C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801089F0 00105930  38 9E 01 B0 */	addi r4, r30, 0x1b0
 /* 801089F4 00105934  38 A0 00 0B */	li r5, 0xb
 /* 801089F8 00105938  4B F7 86 35 */	bl load__18JPAResourceManagerFPCcUs
@@ -139,7 +139,7 @@ lbl_80108A04:
 /* 80108A08 00105948  88 1F 00 0C */	lbz r0, 0xc(r31)
 /* 80108A0C 0010594C  28 00 00 00 */	cmplwi r0, 0
 /* 80108A10 00105950  40 82 00 1C */	bne lbl_80108A2C
-/* 80108A14 00105954  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108A14 00105954  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108A18 00105958  38 9E 01 C0 */	addi r4, r30, 0x1c0
 /* 80108A1C 0010595C  38 A0 00 0C */	li r5, 0xc
 /* 80108A20 00105960  4B F7 86 0D */	bl load__18JPAResourceManagerFPCcUs
@@ -150,7 +150,7 @@ lbl_80108A2C:
 /* 80108A30 00105970  88 1F 00 15 */	lbz r0, 0x15(r31)
 /* 80108A34 00105974  28 00 00 00 */	cmplwi r0, 0
 /* 80108A38 00105978  40 82 00 1C */	bne lbl_80108A54
-/* 80108A3C 0010597C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108A3C 0010597C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108A40 00105980  38 9E 01 D0 */	addi r4, r30, 0x1d0
 /* 80108A44 00105984  38 A0 00 15 */	li r5, 0x15
 /* 80108A48 00105988  4B F7 85 E5 */	bl load__18JPAResourceManagerFPCcUs
@@ -161,7 +161,7 @@ lbl_80108A54:
 /* 80108A58 00105998  88 1F 00 16 */	lbz r0, 0x16(r31)
 /* 80108A5C 0010599C  28 00 00 00 */	cmplwi r0, 0
 /* 80108A60 001059A0  40 82 00 1C */	bne lbl_80108A7C
-/* 80108A64 001059A4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108A64 001059A4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108A68 001059A8  38 9E 01 E4 */	addi r4, r30, 0x1e4
 /* 80108A6C 001059AC  38 A0 00 16 */	li r5, 0x16
 /* 80108A70 001059B0  4B F7 85 BD */	bl load__18JPAResourceManagerFPCcUs
@@ -172,7 +172,7 @@ lbl_80108A7C:
 /* 80108A80 001059C0  88 1F 00 17 */	lbz r0, 0x17(r31)
 /* 80108A84 001059C4  28 00 00 00 */	cmplwi r0, 0
 /* 80108A88 001059C8  40 82 00 1C */	bne lbl_80108AA4
-/* 80108A8C 001059CC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108A8C 001059CC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108A90 001059D0  38 9E 01 F8 */	addi r4, r30, 0x1f8
 /* 80108A94 001059D4  38 A0 00 17 */	li r5, 0x17
 /* 80108A98 001059D8  4B F7 85 95 */	bl load__18JPAResourceManagerFPCcUs
@@ -183,7 +183,7 @@ lbl_80108AA4:
 /* 80108AA8 001059E8  88 1F 00 0D */	lbz r0, 0xd(r31)
 /* 80108AAC 001059EC  28 00 00 00 */	cmplwi r0, 0
 /* 80108AB0 001059F0  40 82 00 1C */	bne lbl_80108ACC
-/* 80108AB4 001059F4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108AB4 001059F4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108AB8 001059F8  38 9E 02 0C */	addi r4, r30, 0x20c
 /* 80108ABC 001059FC  38 A0 00 0D */	li r5, 0xd
 /* 80108AC0 00105A00  4B F7 85 6D */	bl load__18JPAResourceManagerFPCcUs
@@ -194,7 +194,7 @@ lbl_80108ACC:
 /* 80108AD0 00105A10  88 1F 00 0E */	lbz r0, 0xe(r31)
 /* 80108AD4 00105A14  28 00 00 00 */	cmplwi r0, 0
 /* 80108AD8 00105A18  40 82 00 1C */	bne lbl_80108AF4
-/* 80108ADC 00105A1C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108ADC 00105A1C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108AE0 00105A20  38 9E 02 18 */	addi r4, r30, 0x218
 /* 80108AE4 00105A24  38 A0 00 0E */	li r5, 0xe
 /* 80108AE8 00105A28  4B F7 85 45 */	bl load__18JPAResourceManagerFPCcUs
@@ -205,7 +205,7 @@ lbl_80108AF4:
 /* 80108AF8 00105A38  88 1F 00 0F */	lbz r0, 0xf(r31)
 /* 80108AFC 00105A3C  28 00 00 00 */	cmplwi r0, 0
 /* 80108B00 00105A40  40 82 00 1C */	bne lbl_80108B1C
-/* 80108B04 00105A44  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108B04 00105A44  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108B08 00105A48  38 9E 02 2C */	addi r4, r30, 0x22c
 /* 80108B0C 00105A4C  38 A0 00 0F */	li r5, 0xf
 /* 80108B10 00105A50  4B F7 85 1D */	bl load__18JPAResourceManagerFPCcUs
@@ -215,7 +215,7 @@ lbl_80108B1C:
 /* 80108B1C 00105A5C  88 1D 00 00 */	lbz r0, 0(r29)
 /* 80108B20 00105A60  28 00 00 00 */	cmplwi r0, 0
 /* 80108B24 00105A64  40 82 00 1C */	bne lbl_80108B40
-/* 80108B28 00105A68  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108B28 00105A68  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108B2C 00105A6C  38 9E 02 18 */	addi r4, r30, 0x218
 /* 80108B30 00105A70  38 A0 00 0E */	li r5, 0xe
 /* 80108B34 00105A74  4B F7 84 F9 */	bl load__18JPAResourceManagerFPCcUs
@@ -225,7 +225,7 @@ lbl_80108B40:
 /* 80108B40 00105A80  88 1C 00 00 */	lbz r0, 0(r28)
 /* 80108B44 00105A84  28 00 00 00 */	cmplwi r0, 0
 /* 80108B48 00105A88  40 82 00 1C */	bne lbl_80108B64
-/* 80108B4C 00105A8C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108B4C 00105A8C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108B50 00105A90  38 9E 02 2C */	addi r4, r30, 0x22c
 /* 80108B54 00105A94  38 A0 00 0F */	li r5, 0xf
 /* 80108B58 00105A98  4B F7 84 D5 */	bl load__18JPAResourceManagerFPCcUs
@@ -236,7 +236,7 @@ lbl_80108B64:
 /* 80108B68 00105AA8  88 1F 00 10 */	lbz r0, 0x10(r31)
 /* 80108B6C 00105AAC  28 00 00 00 */	cmplwi r0, 0
 /* 80108B70 00105AB0  40 82 00 1C */	bne lbl_80108B8C
-/* 80108B74 00105AB4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108B74 00105AB4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108B78 00105AB8  38 9E 02 40 */	addi r4, r30, 0x240
 /* 80108B7C 00105ABC  38 A0 00 10 */	li r5, 0x10
 /* 80108B80 00105AC0  4B F7 84 AD */	bl load__18JPAResourceManagerFPCcUs
@@ -247,7 +247,7 @@ lbl_80108B8C:
 /* 80108B90 00105AD0  88 1F 00 11 */	lbz r0, 0x11(r31)
 /* 80108B94 00105AD4  28 00 00 00 */	cmplwi r0, 0
 /* 80108B98 00105AD8  40 82 00 1C */	bne lbl_80108BB4
-/* 80108B9C 00105ADC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108B9C 00105ADC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108BA0 00105AE0  38 9E 02 54 */	addi r4, r30, 0x254
 /* 80108BA4 00105AE4  38 A0 00 11 */	li r5, 0x11
 /* 80108BA8 00105AE8  4B F7 84 85 */	bl load__18JPAResourceManagerFPCcUs
@@ -258,7 +258,7 @@ lbl_80108BB4:
 /* 80108BB8 00105AF8  88 1F 00 12 */	lbz r0, 0x12(r31)
 /* 80108BBC 00105AFC  28 00 00 00 */	cmplwi r0, 0
 /* 80108BC0 00105B00  40 82 00 1C */	bne lbl_80108BDC
-/* 80108BC4 00105B04  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108BC4 00105B04  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108BC8 00105B08  38 9E 02 68 */	addi r4, r30, 0x268
 /* 80108BCC 00105B0C  38 A0 00 12 */	li r5, 0x12
 /* 80108BD0 00105B10  4B F7 84 5D */	bl load__18JPAResourceManagerFPCcUs
@@ -269,7 +269,7 @@ lbl_80108BDC:
 /* 80108BE0 00105B20  88 1F 00 13 */	lbz r0, 0x13(r31)
 /* 80108BE4 00105B24  28 00 00 00 */	cmplwi r0, 0
 /* 80108BE8 00105B28  40 82 00 1C */	bne lbl_80108C04
-/* 80108BEC 00105B2C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108BEC 00105B2C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108BF0 00105B30  38 9E 02 7C */	addi r4, r30, 0x27c
 /* 80108BF4 00105B34  38 A0 00 13 */	li r5, 0x13
 /* 80108BF8 00105B38  4B F7 84 35 */	bl load__18JPAResourceManagerFPCcUs
@@ -280,7 +280,7 @@ lbl_80108C04:
 /* 80108C08 00105B48  88 1F 00 14 */	lbz r0, 0x14(r31)
 /* 80108C0C 00105B4C  28 00 00 00 */	cmplwi r0, 0
 /* 80108C10 00105B50  40 82 00 1C */	bne lbl_80108C2C
-/* 80108C14 00105B54  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108C14 00105B54  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108C18 00105B58  38 9E 02 90 */	addi r4, r30, 0x290
 /* 80108C1C 00105B5C  38 A0 00 14 */	li r5, 0x14
 /* 80108C20 00105B60  4B F7 84 0D */	bl load__18JPAResourceManagerFPCcUs
@@ -291,7 +291,7 @@ lbl_80108C2C:
 /* 80108C30 00105B70  88 1F 00 18 */	lbz r0, 0x18(r31)
 /* 80108C34 00105B74  28 00 00 00 */	cmplwi r0, 0
 /* 80108C38 00105B78  40 82 00 1C */	bne lbl_80108C54
-/* 80108C3C 00105B7C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108C3C 00105B7C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108C40 00105B80  38 9E 02 A4 */	addi r4, r30, 0x2a4
 /* 80108C44 00105B84  38 A0 00 18 */	li r5, 0x18
 /* 80108C48 00105B88  4B F7 83 E5 */	bl load__18JPAResourceManagerFPCcUs
@@ -302,7 +302,7 @@ lbl_80108C54:
 /* 80108C58 00105B98  88 1F 00 19 */	lbz r0, 0x19(r31)
 /* 80108C5C 00105B9C  28 00 00 00 */	cmplwi r0, 0
 /* 80108C60 00105BA0  40 82 00 1C */	bne lbl_80108C7C
-/* 80108C64 00105BA4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108C64 00105BA4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108C68 00105BA8  38 9E 02 B8 */	addi r4, r30, 0x2b8
 /* 80108C6C 00105BAC  38 A0 00 19 */	li r5, 0x19
 /* 80108C70 00105BB0  4B F7 83 BD */	bl load__18JPAResourceManagerFPCcUs
@@ -313,7 +313,7 @@ lbl_80108C7C:
 /* 80108C80 00105BC0  88 1F 00 24 */	lbz r0, 0x24(r31)
 /* 80108C84 00105BC4  28 00 00 00 */	cmplwi r0, 0
 /* 80108C88 00105BC8  40 82 00 1C */	bne lbl_80108CA4
-/* 80108C8C 00105BCC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108C8C 00105BCC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108C90 00105BD0  38 9E 02 CC */	addi r4, r30, 0x2cc
 /* 80108C94 00105BD4  38 A0 00 24 */	li r5, 0x24
 /* 80108C98 00105BD8  4B F7 83 95 */	bl load__18JPAResourceManagerFPCcUs
@@ -324,7 +324,7 @@ lbl_80108CA4:
 /* 80108CA8 00105BE8  88 1F 00 25 */	lbz r0, 0x25(r31)
 /* 80108CAC 00105BEC  28 00 00 00 */	cmplwi r0, 0
 /* 80108CB0 00105BF0  40 82 00 1C */	bne lbl_80108CCC
-/* 80108CB4 00105BF4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108CB4 00105BF4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108CB8 00105BF8  38 9E 02 E0 */	addi r4, r30, 0x2e0
 /* 80108CBC 00105BFC  38 A0 00 25 */	li r5, 0x25
 /* 80108CC0 00105C00  4B F7 83 6D */	bl load__18JPAResourceManagerFPCcUs
@@ -335,7 +335,7 @@ lbl_80108CCC:
 /* 80108CD0 00105C10  88 1F 00 26 */	lbz r0, 0x26(r31)
 /* 80108CD4 00105C14  28 00 00 00 */	cmplwi r0, 0
 /* 80108CD8 00105C18  40 82 00 1C */	bne lbl_80108CF4
-/* 80108CDC 00105C1C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108CDC 00105C1C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108CE0 00105C20  38 9E 02 F4 */	addi r4, r30, 0x2f4
 /* 80108CE4 00105C24  38 A0 00 26 */	li r5, 0x26
 /* 80108CE8 00105C28  4B F7 83 45 */	bl load__18JPAResourceManagerFPCcUs
@@ -346,7 +346,7 @@ lbl_80108CF4:
 /* 80108CF8 00105C38  88 1F 00 27 */	lbz r0, 0x27(r31)
 /* 80108CFC 00105C3C  28 00 00 00 */	cmplwi r0, 0
 /* 80108D00 00105C40  40 82 00 1C */	bne lbl_80108D1C
-/* 80108D04 00105C44  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108D04 00105C44  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108D08 00105C48  38 9E 03 08 */	addi r4, r30, 0x308
 /* 80108D0C 00105C4C  38 A0 00 27 */	li r5, 0x27
 /* 80108D10 00105C50  4B F7 83 1D */	bl load__18JPAResourceManagerFPCcUs
@@ -357,7 +357,7 @@ lbl_80108D1C:
 /* 80108D20 00105C60  88 1F 00 28 */	lbz r0, 0x28(r31)
 /* 80108D24 00105C64  28 00 00 00 */	cmplwi r0, 0
 /* 80108D28 00105C68  40 82 00 1C */	bne lbl_80108D44
-/* 80108D2C 00105C6C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108D2C 00105C6C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108D30 00105C70  38 9E 03 20 */	addi r4, r30, 0x320
 /* 80108D34 00105C74  38 A0 00 28 */	li r5, 0x28
 /* 80108D38 00105C78  4B F7 82 F5 */	bl load__18JPAResourceManagerFPCcUs
@@ -368,7 +368,7 @@ lbl_80108D44:
 /* 80108D48 00105C88  88 1F 00 29 */	lbz r0, 0x29(r31)
 /* 80108D4C 00105C8C  28 00 00 00 */	cmplwi r0, 0
 /* 80108D50 00105C90  40 82 00 1C */	bne lbl_80108D6C
-/* 80108D54 00105C94  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108D54 00105C94  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108D58 00105C98  38 9E 03 38 */	addi r4, r30, 0x338
 /* 80108D5C 00105C9C  38 A0 00 29 */	li r5, 0x29
 /* 80108D60 00105CA0  4B F7 82 CD */	bl load__18JPAResourceManagerFPCcUs
@@ -379,7 +379,7 @@ lbl_80108D6C:
 /* 80108D70 00105CB0  88 1F 00 2A */	lbz r0, 0x2a(r31)
 /* 80108D74 00105CB4  28 00 00 00 */	cmplwi r0, 0
 /* 80108D78 00105CB8  40 82 00 1C */	bne lbl_80108D94
-/* 80108D7C 00105CBC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108D7C 00105CBC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108D80 00105CC0  38 9E 03 4C */	addi r4, r30, 0x34c
 /* 80108D84 00105CC4  38 A0 00 2A */	li r5, 0x2a
 /* 80108D88 00105CC8  4B F7 82 A5 */	bl load__18JPAResourceManagerFPCcUs
@@ -390,7 +390,7 @@ lbl_80108D94:
 /* 80108D98 00105CD8  88 1F 00 2B */	lbz r0, 0x2b(r31)
 /* 80108D9C 00105CDC  28 00 00 00 */	cmplwi r0, 0
 /* 80108DA0 00105CE0  40 82 00 1C */	bne lbl_80108DBC
-/* 80108DA4 00105CE4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108DA4 00105CE4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108DA8 00105CE8  38 9E 03 64 */	addi r4, r30, 0x364
 /* 80108DAC 00105CEC  38 A0 00 2B */	li r5, 0x2b
 /* 80108DB0 00105CF0  4B F7 82 7D */	bl load__18JPAResourceManagerFPCcUs
@@ -401,7 +401,7 @@ lbl_80108DBC:
 /* 80108DC0 00105D00  88 1F 00 2C */	lbz r0, 0x2c(r31)
 /* 80108DC4 00105D04  28 00 00 00 */	cmplwi r0, 0
 /* 80108DC8 00105D08  40 82 00 1C */	bne lbl_80108DE4
-/* 80108DCC 00105D0C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108DCC 00105D0C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108DD0 00105D10  38 9E 03 78 */	addi r4, r30, 0x378
 /* 80108DD4 00105D14  38 A0 00 2C */	li r5, 0x2c
 /* 80108DD8 00105D18  4B F7 82 55 */	bl load__18JPAResourceManagerFPCcUs
@@ -412,7 +412,7 @@ lbl_80108DE4:
 /* 80108DE8 00105D28  88 1F 00 2D */	lbz r0, 0x2d(r31)
 /* 80108DEC 00105D2C  28 00 00 00 */	cmplwi r0, 0
 /* 80108DF0 00105D30  40 82 00 1C */	bne lbl_80108E0C
-/* 80108DF4 00105D34  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108DF4 00105D34  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108DF8 00105D38  38 9E 03 90 */	addi r4, r30, 0x390
 /* 80108DFC 00105D3C  38 A0 00 2D */	li r5, 0x2d
 /* 80108E00 00105D40  4B F7 82 2D */	bl load__18JPAResourceManagerFPCcUs
@@ -423,7 +423,7 @@ lbl_80108E0C:
 /* 80108E10 00105D50  88 1F 00 2E */	lbz r0, 0x2e(r31)
 /* 80108E14 00105D54  28 00 00 00 */	cmplwi r0, 0
 /* 80108E18 00105D58  40 82 00 1C */	bne lbl_80108E34
-/* 80108E1C 00105D5C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108E1C 00105D5C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108E20 00105D60  38 9E 03 A8 */	addi r4, r30, 0x3a8
 /* 80108E24 00105D64  38 A0 00 2E */	li r5, 0x2e
 /* 80108E28 00105D68  4B F7 82 05 */	bl load__18JPAResourceManagerFPCcUs
@@ -434,7 +434,7 @@ lbl_80108E34:
 /* 80108E38 00105D78  88 1F 00 2F */	lbz r0, 0x2f(r31)
 /* 80108E3C 00105D7C  28 00 00 00 */	cmplwi r0, 0
 /* 80108E40 00105D80  40 82 00 1C */	bne lbl_80108E5C
-/* 80108E44 00105D84  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108E44 00105D84  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108E48 00105D88  38 9E 03 BC */	addi r4, r30, 0x3bc
 /* 80108E4C 00105D8C  38 A0 00 2F */	li r5, 0x2f
 /* 80108E50 00105D90  4B F7 81 DD */	bl load__18JPAResourceManagerFPCcUs
@@ -445,7 +445,7 @@ lbl_80108E5C:
 /* 80108E60 00105DA0  88 1F 00 30 */	lbz r0, 0x30(r31)
 /* 80108E64 00105DA4  28 00 00 00 */	cmplwi r0, 0
 /* 80108E68 00105DA8  40 82 00 1C */	bne lbl_80108E84
-/* 80108E6C 00105DAC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108E6C 00105DAC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108E70 00105DB0  38 9E 03 D0 */	addi r4, r30, 0x3d0
 /* 80108E74 00105DB4  38 A0 00 30 */	li r5, 0x30
 /* 80108E78 00105DB8  4B F7 81 B5 */	bl load__18JPAResourceManagerFPCcUs
@@ -456,7 +456,7 @@ lbl_80108E84:
 /* 80108E88 00105DC8  88 1F 00 31 */	lbz r0, 0x31(r31)
 /* 80108E8C 00105DCC  28 00 00 00 */	cmplwi r0, 0
 /* 80108E90 00105DD0  40 82 00 1C */	bne lbl_80108EAC
-/* 80108E94 00105DD4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108E94 00105DD4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108E98 00105DD8  38 9E 03 E4 */	addi r4, r30, 0x3e4
 /* 80108E9C 00105DDC  38 A0 00 31 */	li r5, 0x31
 /* 80108EA0 00105DE0  4B F7 81 8D */	bl load__18JPAResourceManagerFPCcUs
@@ -467,7 +467,7 @@ lbl_80108EAC:
 /* 80108EB0 00105DF0  88 1F 00 32 */	lbz r0, 0x32(r31)
 /* 80108EB4 00105DF4  28 00 00 00 */	cmplwi r0, 0
 /* 80108EB8 00105DF8  40 82 00 1C */	bne lbl_80108ED4
-/* 80108EBC 00105DFC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108EBC 00105DFC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108EC0 00105E00  38 9E 03 FC */	addi r4, r30, 0x3fc
 /* 80108EC4 00105E04  38 A0 00 32 */	li r5, 0x32
 /* 80108EC8 00105E08  4B F7 81 65 */	bl load__18JPAResourceManagerFPCcUs
@@ -478,7 +478,7 @@ lbl_80108ED4:
 /* 80108ED8 00105E18  88 1F 00 33 */	lbz r0, 0x33(r31)
 /* 80108EDC 00105E1C  28 00 00 00 */	cmplwi r0, 0
 /* 80108EE0 00105E20  40 82 00 1C */	bne lbl_80108EFC
-/* 80108EE4 00105E24  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108EE4 00105E24  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108EE8 00105E28  38 9E 04 14 */	addi r4, r30, 0x414
 /* 80108EEC 00105E2C  38 A0 00 33 */	li r5, 0x33
 /* 80108EF0 00105E30  4B F7 81 3D */	bl load__18JPAResourceManagerFPCcUs
@@ -489,7 +489,7 @@ lbl_80108EFC:
 /* 80108F00 00105E40  88 1F 00 34 */	lbz r0, 0x34(r31)
 /* 80108F04 00105E44  28 00 00 00 */	cmplwi r0, 0
 /* 80108F08 00105E48  40 82 00 1C */	bne lbl_80108F24
-/* 80108F0C 00105E4C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108F0C 00105E4C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108F10 00105E50  38 9E 04 28 */	addi r4, r30, 0x428
 /* 80108F14 00105E54  38 A0 00 34 */	li r5, 0x34
 /* 80108F18 00105E58  4B F7 81 15 */	bl load__18JPAResourceManagerFPCcUs
@@ -500,7 +500,7 @@ lbl_80108F24:
 /* 80108F28 00105E68  88 1F 00 35 */	lbz r0, 0x35(r31)
 /* 80108F2C 00105E6C  28 00 00 00 */	cmplwi r0, 0
 /* 80108F30 00105E70  40 82 00 1C */	bne lbl_80108F4C
-/* 80108F34 00105E74  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108F34 00105E74  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108F38 00105E78  38 9E 04 3C */	addi r4, r30, 0x43c
 /* 80108F3C 00105E7C  38 A0 00 35 */	li r5, 0x35
 /* 80108F40 00105E80  4B F7 80 ED */	bl load__18JPAResourceManagerFPCcUs
@@ -511,7 +511,7 @@ lbl_80108F4C:
 /* 80108F50 00105E90  88 1F 00 36 */	lbz r0, 0x36(r31)
 /* 80108F54 00105E94  28 00 00 00 */	cmplwi r0, 0
 /* 80108F58 00105E98  40 82 00 1C */	bne lbl_80108F74
-/* 80108F5C 00105E9C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108F5C 00105E9C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108F60 00105EA0  38 9E 04 50 */	addi r4, r30, 0x450
 /* 80108F64 00105EA4  38 A0 00 36 */	li r5, 0x36
 /* 80108F68 00105EA8  4B F7 80 C5 */	bl load__18JPAResourceManagerFPCcUs
@@ -522,7 +522,7 @@ lbl_80108F74:
 /* 80108F78 00105EB8  88 1F 00 37 */	lbz r0, 0x37(r31)
 /* 80108F7C 00105EBC  28 00 00 00 */	cmplwi r0, 0
 /* 80108F80 00105EC0  40 82 00 1C */	bne lbl_80108F9C
-/* 80108F84 00105EC4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108F84 00105EC4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108F88 00105EC8  38 9E 04 64 */	addi r4, r30, 0x464
 /* 80108F8C 00105ECC  38 A0 00 37 */	li r5, 0x37
 /* 80108F90 00105ED0  4B F7 80 9D */	bl load__18JPAResourceManagerFPCcUs
@@ -533,7 +533,7 @@ lbl_80108F9C:
 /* 80108FA0 00105EE0  88 1F 00 38 */	lbz r0, 0x38(r31)
 /* 80108FA4 00105EE4  28 00 00 00 */	cmplwi r0, 0
 /* 80108FA8 00105EE8  40 82 00 1C */	bne lbl_80108FC4
-/* 80108FAC 00105EEC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108FAC 00105EEC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108FB0 00105EF0  38 9E 04 78 */	addi r4, r30, 0x478
 /* 80108FB4 00105EF4  38 A0 00 38 */	li r5, 0x38
 /* 80108FB8 00105EF8  4B F7 80 75 */	bl load__18JPAResourceManagerFPCcUs
@@ -544,7 +544,7 @@ lbl_80108FC4:
 /* 80108FC8 00105F08  88 1F 00 39 */	lbz r0, 0x39(r31)
 /* 80108FCC 00105F0C  28 00 00 00 */	cmplwi r0, 0
 /* 80108FD0 00105F10  40 82 00 1C */	bne lbl_80108FEC
-/* 80108FD4 00105F14  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108FD4 00105F14  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80108FD8 00105F18  38 9E 04 8C */	addi r4, r30, 0x48c
 /* 80108FDC 00105F1C  38 A0 00 39 */	li r5, 0x39
 /* 80108FE0 00105F20  4B F7 80 4D */	bl load__18JPAResourceManagerFPCcUs
@@ -555,7 +555,7 @@ lbl_80108FEC:
 /* 80108FF0 00105F30  88 1F 00 3A */	lbz r0, 0x3a(r31)
 /* 80108FF4 00105F34  28 00 00 00 */	cmplwi r0, 0
 /* 80108FF8 00105F38  40 82 00 1C */	bne lbl_80109014
-/* 80108FFC 00105F3C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80108FFC 00105F3C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109000 00105F40  38 9E 04 A0 */	addi r4, r30, 0x4a0
 /* 80109004 00105F44  38 A0 00 3A */	li r5, 0x3a
 /* 80109008 00105F48  4B F7 80 25 */	bl load__18JPAResourceManagerFPCcUs
@@ -566,7 +566,7 @@ lbl_80109014:
 /* 80109018 00105F58  88 1F 00 3B */	lbz r0, 0x3b(r31)
 /* 8010901C 00105F5C  28 00 00 00 */	cmplwi r0, 0
 /* 80109020 00105F60  40 82 00 1C */	bne lbl_8010903C
-/* 80109024 00105F64  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109024 00105F64  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109028 00105F68  38 9E 04 B4 */	addi r4, r30, 0x4b4
 /* 8010902C 00105F6C  38 A0 00 3B */	li r5, 0x3b
 /* 80109030 00105F70  4B F7 7F FD */	bl load__18JPAResourceManagerFPCcUs
@@ -577,7 +577,7 @@ lbl_8010903C:
 /* 80109040 00105F80  88 1F 00 3D */	lbz r0, 0x3d(r31)
 /* 80109044 00105F84  28 00 00 00 */	cmplwi r0, 0
 /* 80109048 00105F88  40 82 00 1C */	bne lbl_80109064
-/* 8010904C 00105F8C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010904C 00105F8C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109050 00105F90  38 9E 04 C8 */	addi r4, r30, 0x4c8
 /* 80109054 00105F94  38 A0 00 3D */	li r5, 0x3d
 /* 80109058 00105F98  4B F7 7F D5 */	bl load__18JPAResourceManagerFPCcUs
@@ -588,7 +588,7 @@ lbl_80109064:
 /* 80109068 00105FA8  88 1F 00 3E */	lbz r0, 0x3e(r31)
 /* 8010906C 00105FAC  28 00 00 00 */	cmplwi r0, 0
 /* 80109070 00105FB0  40 82 00 1C */	bne lbl_8010908C
-/* 80109074 00105FB4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109074 00105FB4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109078 00105FB8  38 9E 04 DC */	addi r4, r30, 0x4dc
 /* 8010907C 00105FBC  38 A0 00 3E */	li r5, 0x3e
 /* 80109080 00105FC0  4B F7 7F AD */	bl load__18JPAResourceManagerFPCcUs
@@ -599,7 +599,7 @@ lbl_8010908C:
 /* 80109090 00105FD0  88 1F 00 3F */	lbz r0, 0x3f(r31)
 /* 80109094 00105FD4  28 00 00 00 */	cmplwi r0, 0
 /* 80109098 00105FD8  40 82 00 1C */	bne lbl_801090B4
-/* 8010909C 00105FDC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010909C 00105FDC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801090A0 00105FE0  38 9E 04 F0 */	addi r4, r30, 0x4f0
 /* 801090A4 00105FE4  38 A0 00 3F */	li r5, 0x3f
 /* 801090A8 00105FE8  4B F7 7F 85 */	bl load__18JPAResourceManagerFPCcUs
@@ -610,7 +610,7 @@ lbl_801090B4:
 /* 801090B8 00105FF8  88 1F 00 40 */	lbz r0, 0x40(r31)
 /* 801090BC 00105FFC  28 00 00 00 */	cmplwi r0, 0
 /* 801090C0 00106000  40 82 00 1C */	bne lbl_801090DC
-/* 801090C4 00106004  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801090C4 00106004  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801090C8 00106008  38 9E 05 00 */	addi r4, r30, 0x500
 /* 801090CC 0010600C  38 A0 00 40 */	li r5, 0x40
 /* 801090D0 00106010  4B F7 7F 5D */	bl load__18JPAResourceManagerFPCcUs
@@ -621,7 +621,7 @@ lbl_801090DC:
 /* 801090E0 00106020  88 1F 00 41 */	lbz r0, 0x41(r31)
 /* 801090E4 00106024  28 00 00 00 */	cmplwi r0, 0
 /* 801090E8 00106028  40 82 00 1C */	bne lbl_80109104
-/* 801090EC 0010602C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801090EC 0010602C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801090F0 00106030  38 9E 05 14 */	addi r4, r30, 0x514
 /* 801090F4 00106034  38 A0 00 41 */	li r5, 0x41
 /* 801090F8 00106038  4B F7 7F 35 */	bl load__18JPAResourceManagerFPCcUs
@@ -632,7 +632,7 @@ lbl_80109104:
 /* 80109108 00106048  88 1F 00 42 */	lbz r0, 0x42(r31)
 /* 8010910C 0010604C  28 00 00 00 */	cmplwi r0, 0
 /* 80109110 00106050  40 82 00 1C */	bne lbl_8010912C
-/* 80109114 00106054  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109114 00106054  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109118 00106058  38 9E 05 28 */	addi r4, r30, 0x528
 /* 8010911C 0010605C  38 A0 00 42 */	li r5, 0x42
 /* 80109120 00106060  4B F7 7F 0D */	bl load__18JPAResourceManagerFPCcUs
@@ -643,7 +643,7 @@ lbl_8010912C:
 /* 80109130 00106070  88 1F 00 43 */	lbz r0, 0x43(r31)
 /* 80109134 00106074  28 00 00 00 */	cmplwi r0, 0
 /* 80109138 00106078  40 82 00 1C */	bne lbl_80109154
-/* 8010913C 0010607C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010913C 0010607C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109140 00106080  38 9E 05 3C */	addi r4, r30, 0x53c
 /* 80109144 00106084  38 A0 00 43 */	li r5, 0x43
 /* 80109148 00106088  4B F7 7E E5 */	bl load__18JPAResourceManagerFPCcUs
@@ -654,7 +654,7 @@ lbl_80109154:
 /* 80109158 00106098  88 1F 00 44 */	lbz r0, 0x44(r31)
 /* 8010915C 0010609C  28 00 00 00 */	cmplwi r0, 0
 /* 80109160 001060A0  40 82 00 1C */	bne lbl_8010917C
-/* 80109164 001060A4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109164 001060A4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109168 001060A8  38 9E 05 54 */	addi r4, r30, 0x554
 /* 8010916C 001060AC  38 A0 00 44 */	li r5, 0x44
 /* 80109170 001060B0  4B F7 7E BD */	bl load__18JPAResourceManagerFPCcUs
@@ -665,7 +665,7 @@ lbl_8010917C:
 /* 80109180 001060C0  88 1F 00 45 */	lbz r0, 0x45(r31)
 /* 80109184 001060C4  28 00 00 00 */	cmplwi r0, 0
 /* 80109188 001060C8  40 82 00 1C */	bne lbl_801091A4
-/* 8010918C 001060CC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010918C 001060CC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109190 001060D0  38 9E 05 6C */	addi r4, r30, 0x56c
 /* 80109194 001060D4  38 A0 00 45 */	li r5, 0x45
 /* 80109198 001060D8  4B F7 7E 95 */	bl load__18JPAResourceManagerFPCcUs
@@ -676,7 +676,7 @@ lbl_801091A4:
 /* 801091A8 001060E8  88 1F 00 46 */	lbz r0, 0x46(r31)
 /* 801091AC 001060EC  28 00 00 00 */	cmplwi r0, 0
 /* 801091B0 001060F0  40 82 00 1C */	bne lbl_801091CC
-/* 801091B4 001060F4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801091B4 001060F4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801091B8 001060F8  38 9E 05 84 */	addi r4, r30, 0x584
 /* 801091BC 001060FC  38 A0 00 46 */	li r5, 0x46
 /* 801091C0 00106100  4B F7 7E 6D */	bl load__18JPAResourceManagerFPCcUs
@@ -687,7 +687,7 @@ lbl_801091CC:
 /* 801091D0 00106110  88 1F 00 47 */	lbz r0, 0x47(r31)
 /* 801091D4 00106114  28 00 00 00 */	cmplwi r0, 0
 /* 801091D8 00106118  40 82 00 1C */	bne lbl_801091F4
-/* 801091DC 0010611C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801091DC 0010611C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801091E0 00106120  38 9E 05 9C */	addi r4, r30, 0x59c
 /* 801091E4 00106124  38 A0 00 47 */	li r5, 0x47
 /* 801091E8 00106128  4B F7 7E 45 */	bl load__18JPAResourceManagerFPCcUs
@@ -698,7 +698,7 @@ lbl_801091F4:
 /* 801091F8 00106138  88 1F 00 48 */	lbz r0, 0x48(r31)
 /* 801091FC 0010613C  28 00 00 00 */	cmplwi r0, 0
 /* 80109200 00106140  40 82 00 1C */	bne lbl_8010921C
-/* 80109204 00106144  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109204 00106144  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109208 00106148  38 9E 05 B0 */	addi r4, r30, 0x5b0
 /* 8010920C 0010614C  38 A0 00 48 */	li r5, 0x48
 /* 80109210 00106150  4B F7 7E 1D */	bl load__18JPAResourceManagerFPCcUs
@@ -709,7 +709,7 @@ lbl_8010921C:
 /* 80109220 00106160  88 1F 00 49 */	lbz r0, 0x49(r31)
 /* 80109224 00106164  28 00 00 00 */	cmplwi r0, 0
 /* 80109228 00106168  40 82 00 1C */	bne lbl_80109244
-/* 8010922C 0010616C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010922C 0010616C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109230 00106170  38 9E 05 C4 */	addi r4, r30, 0x5c4
 /* 80109234 00106174  38 A0 00 49 */	li r5, 0x49
 /* 80109238 00106178  4B F7 7D F5 */	bl load__18JPAResourceManagerFPCcUs
@@ -720,7 +720,7 @@ lbl_80109244:
 /* 80109248 00106188  88 1F 00 4A */	lbz r0, 0x4a(r31)
 /* 8010924C 0010618C  28 00 00 00 */	cmplwi r0, 0
 /* 80109250 00106190  40 82 00 1C */	bne lbl_8010926C
-/* 80109254 00106194  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109254 00106194  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109258 00106198  38 9E 05 D8 */	addi r4, r30, 0x5d8
 /* 8010925C 0010619C  38 A0 00 4A */	li r5, 0x4a
 /* 80109260 001061A0  4B F7 7D CD */	bl load__18JPAResourceManagerFPCcUs
@@ -731,7 +731,7 @@ lbl_8010926C:
 /* 80109270 001061B0  88 1F 00 4B */	lbz r0, 0x4b(r31)
 /* 80109274 001061B4  28 00 00 00 */	cmplwi r0, 0
 /* 80109278 001061B8  40 82 00 1C */	bne lbl_80109294
-/* 8010927C 001061BC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010927C 001061BC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109280 001061C0  38 9E 05 EC */	addi r4, r30, 0x5ec
 /* 80109284 001061C4  38 A0 00 4B */	li r5, 0x4b
 /* 80109288 001061C8  4B F7 7D A5 */	bl load__18JPAResourceManagerFPCcUs
@@ -742,7 +742,7 @@ lbl_80109294:
 /* 80109298 001061D8  88 1F 00 4C */	lbz r0, 0x4c(r31)
 /* 8010929C 001061DC  28 00 00 00 */	cmplwi r0, 0
 /* 801092A0 001061E0  40 82 00 1C */	bne lbl_801092BC
-/* 801092A4 001061E4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801092A4 001061E4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801092A8 001061E8  38 9E 06 00 */	addi r4, r30, 0x600
 /* 801092AC 001061EC  38 A0 00 4C */	li r5, 0x4c
 /* 801092B0 001061F0  4B F7 7D 7D */	bl load__18JPAResourceManagerFPCcUs
@@ -753,7 +753,7 @@ lbl_801092BC:
 /* 801092C0 00106200  88 1F 00 4D */	lbz r0, 0x4d(r31)
 /* 801092C4 00106204  28 00 00 00 */	cmplwi r0, 0
 /* 801092C8 00106208  40 82 00 1C */	bne lbl_801092E4
-/* 801092CC 0010620C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801092CC 0010620C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801092D0 00106210  38 9E 06 14 */	addi r4, r30, 0x614
 /* 801092D4 00106214  38 A0 00 4D */	li r5, 0x4d
 /* 801092D8 00106218  4B F7 7D 55 */	bl load__18JPAResourceManagerFPCcUs
@@ -764,7 +764,7 @@ lbl_801092E4:
 /* 801092E8 00106228  88 1F 00 4E */	lbz r0, 0x4e(r31)
 /* 801092EC 0010622C  28 00 00 00 */	cmplwi r0, 0
 /* 801092F0 00106230  40 82 00 1C */	bne lbl_8010930C
-/* 801092F4 00106234  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801092F4 00106234  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801092F8 00106238  38 9E 06 28 */	addi r4, r30, 0x628
 /* 801092FC 0010623C  38 A0 00 4E */	li r5, 0x4e
 /* 80109300 00106240  4B F7 7D 2D */	bl load__18JPAResourceManagerFPCcUs
@@ -775,7 +775,7 @@ lbl_8010930C:
 /* 80109310 00106250  88 1F 00 FE */	lbz r0, 0xfe(r31)
 /* 80109314 00106254  28 00 00 00 */	cmplwi r0, 0
 /* 80109318 00106258  40 82 00 1C */	bne lbl_80109334
-/* 8010931C 0010625C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010931C 0010625C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109320 00106260  38 9E 06 3C */	addi r4, r30, 0x63c
 /* 80109324 00106264  38 A0 00 FE */	li r5, 0xfe
 /* 80109328 00106268  4B F7 7D 05 */	bl load__18JPAResourceManagerFPCcUs
@@ -786,7 +786,7 @@ lbl_80109334:
 /* 80109338 00106278  88 1F 00 FF */	lbz r0, 0xff(r31)
 /* 8010933C 0010627C  28 00 00 00 */	cmplwi r0, 0
 /* 80109340 00106280  40 82 00 1C */	bne lbl_8010935C
-/* 80109344 00106284  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109344 00106284  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109348 00106288  38 9E 06 50 */	addi r4, r30, 0x650
 /* 8010934C 0010628C  38 A0 00 FF */	li r5, 0xff
 /* 80109350 00106290  4B F7 7C DD */	bl load__18JPAResourceManagerFPCcUs
@@ -797,7 +797,7 @@ lbl_8010935C:
 /* 80109360 001062A0  88 1F 01 00 */	lbz r0, 0x100(r31)
 /* 80109364 001062A4  28 00 00 00 */	cmplwi r0, 0
 /* 80109368 001062A8  40 82 00 1C */	bne lbl_80109384
-/* 8010936C 001062AC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010936C 001062AC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109370 001062B0  38 9E 06 64 */	addi r4, r30, 0x664
 /* 80109374 001062B4  38 A0 01 00 */	li r5, 0x100
 /* 80109378 001062B8  4B F7 7C B5 */	bl load__18JPAResourceManagerFPCcUs
@@ -808,7 +808,7 @@ lbl_80109384:
 /* 80109388 001062C8  88 1F 01 01 */	lbz r0, 0x101(r31)
 /* 8010938C 001062CC  28 00 00 00 */	cmplwi r0, 0
 /* 80109390 001062D0  40 82 00 1C */	bne lbl_801093AC
-/* 80109394 001062D4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109394 001062D4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109398 001062D8  38 9E 06 78 */	addi r4, r30, 0x678
 /* 8010939C 001062DC  38 A0 01 01 */	li r5, 0x101
 /* 801093A0 001062E0  4B F7 7C 8D */	bl load__18JPAResourceManagerFPCcUs
@@ -819,7 +819,7 @@ lbl_801093AC:
 /* 801093B0 001062F0  88 1F 01 02 */	lbz r0, 0x102(r31)
 /* 801093B4 001062F4  28 00 00 00 */	cmplwi r0, 0
 /* 801093B8 001062F8  40 82 00 1C */	bne lbl_801093D4
-/* 801093BC 001062FC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801093BC 001062FC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801093C0 00106300  38 9E 06 8C */	addi r4, r30, 0x68c
 /* 801093C4 00106304  38 A0 01 02 */	li r5, 0x102
 /* 801093C8 00106308  4B F7 7C 65 */	bl load__18JPAResourceManagerFPCcUs
@@ -830,7 +830,7 @@ lbl_801093D4:
 /* 801093D8 00106318  88 1F 01 03 */	lbz r0, 0x103(r31)
 /* 801093DC 0010631C  28 00 00 00 */	cmplwi r0, 0
 /* 801093E0 00106320  40 82 00 1C */	bne lbl_801093FC
-/* 801093E4 00106324  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801093E4 00106324  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801093E8 00106328  38 9E 06 A0 */	addi r4, r30, 0x6a0
 /* 801093EC 0010632C  38 A0 01 03 */	li r5, 0x103
 /* 801093F0 00106330  4B F7 7C 3D */	bl load__18JPAResourceManagerFPCcUs
@@ -841,7 +841,7 @@ lbl_801093FC:
 /* 80109400 00106340  88 1F 01 07 */	lbz r0, 0x107(r31)
 /* 80109404 00106344  28 00 00 00 */	cmplwi r0, 0
 /* 80109408 00106348  40 82 00 1C */	bne lbl_80109424
-/* 8010940C 0010634C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010940C 0010634C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109410 00106350  38 9E 06 B4 */	addi r4, r30, 0x6b4
 /* 80109414 00106354  38 A0 01 07 */	li r5, 0x107
 /* 80109418 00106358  4B F7 7C 15 */	bl load__18JPAResourceManagerFPCcUs
@@ -852,7 +852,7 @@ lbl_80109424:
 /* 80109428 00106368  88 1F 01 08 */	lbz r0, 0x108(r31)
 /* 8010942C 0010636C  28 00 00 00 */	cmplwi r0, 0
 /* 80109430 00106370  40 82 00 1C */	bne lbl_8010944C
-/* 80109434 00106374  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109434 00106374  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109438 00106378  38 9E 06 C8 */	addi r4, r30, 0x6c8
 /* 8010943C 0010637C  38 A0 01 08 */	li r5, 0x108
 /* 80109440 00106380  4B F7 7B ED */	bl load__18JPAResourceManagerFPCcUs
@@ -863,7 +863,7 @@ lbl_8010944C:
 /* 80109450 00106390  88 1F 01 09 */	lbz r0, 0x109(r31)
 /* 80109454 00106394  28 00 00 00 */	cmplwi r0, 0
 /* 80109458 00106398  40 82 00 1C */	bne lbl_80109474
-/* 8010945C 0010639C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010945C 0010639C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109460 001063A0  38 9E 06 DC */	addi r4, r30, 0x6dc
 /* 80109464 001063A4  38 A0 01 09 */	li r5, 0x109
 /* 80109468 001063A8  4B F7 7B C5 */	bl load__18JPAResourceManagerFPCcUs
@@ -874,7 +874,7 @@ lbl_80109474:
 /* 80109478 001063B8  88 1F 01 04 */	lbz r0, 0x104(r31)
 /* 8010947C 001063BC  28 00 00 00 */	cmplwi r0, 0
 /* 80109480 001063C0  40 82 00 1C */	bne lbl_8010949C
-/* 80109484 001063C4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109484 001063C4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109488 001063C8  38 9E 06 F0 */	addi r4, r30, 0x6f0
 /* 8010948C 001063CC  38 A0 01 04 */	li r5, 0x104
 /* 80109490 001063D0  4B F7 7B 9D */	bl load__18JPAResourceManagerFPCcUs
@@ -885,7 +885,7 @@ lbl_8010949C:
 /* 801094A0 001063E0  88 1F 01 05 */	lbz r0, 0x105(r31)
 /* 801094A4 001063E4  28 00 00 00 */	cmplwi r0, 0
 /* 801094A8 001063E8  40 82 00 1C */	bne lbl_801094C4
-/* 801094AC 001063EC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801094AC 001063EC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801094B0 001063F0  38 9E 07 00 */	addi r4, r30, 0x700
 /* 801094B4 001063F4  38 A0 01 05 */	li r5, 0x105
 /* 801094B8 001063F8  4B F7 7B 75 */	bl load__18JPAResourceManagerFPCcUs
@@ -896,7 +896,7 @@ lbl_801094C4:
 /* 801094C8 00106408  88 1F 01 06 */	lbz r0, 0x106(r31)
 /* 801094CC 0010640C  28 00 00 00 */	cmplwi r0, 0
 /* 801094D0 00106410  40 82 00 1C */	bne lbl_801094EC
-/* 801094D4 00106414  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801094D4 00106414  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801094D8 00106418  38 9E 07 10 */	addi r4, r30, 0x710
 /* 801094DC 0010641C  38 A0 01 06 */	li r5, 0x106
 /* 801094E0 00106420  4B F7 7B 4D */	bl load__18JPAResourceManagerFPCcUs
@@ -907,7 +907,7 @@ lbl_801094EC:
 /* 801094F0 00106430  88 1F 01 0C */	lbz r0, 0x10c(r31)
 /* 801094F4 00106434  28 00 00 00 */	cmplwi r0, 0
 /* 801094F8 00106438  40 82 00 1C */	bne lbl_80109514
-/* 801094FC 0010643C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801094FC 0010643C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109500 00106440  38 9E 07 24 */	addi r4, r30, 0x724
 /* 80109504 00106444  38 A0 01 0C */	li r5, 0x10c
 /* 80109508 00106448  4B F7 7B 25 */	bl load__18JPAResourceManagerFPCcUs
@@ -918,7 +918,7 @@ lbl_80109514:
 /* 80109518 00106458  88 1F 01 0D */	lbz r0, 0x10d(r31)
 /* 8010951C 0010645C  28 00 00 00 */	cmplwi r0, 0
 /* 80109520 00106460  40 82 00 1C */	bne lbl_8010953C
-/* 80109524 00106464  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109524 00106464  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109528 00106468  38 9E 07 34 */	addi r4, r30, 0x734
 /* 8010952C 0010646C  38 A0 01 0D */	li r5, 0x10d
 /* 80109530 00106470  4B F7 7A FD */	bl load__18JPAResourceManagerFPCcUs
@@ -929,7 +929,7 @@ lbl_8010953C:
 /* 80109540 00106480  88 1F 01 0E */	lbz r0, 0x10e(r31)
 /* 80109544 00106484  28 00 00 00 */	cmplwi r0, 0
 /* 80109548 00106488  40 82 00 1C */	bne lbl_80109564
-/* 8010954C 0010648C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010954C 0010648C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109550 00106490  38 9E 07 48 */	addi r4, r30, 0x748
 /* 80109554 00106494  38 A0 01 0E */	li r5, 0x10e
 /* 80109558 00106498  4B F7 7A D5 */	bl load__18JPAResourceManagerFPCcUs
@@ -940,7 +940,7 @@ lbl_80109564:
 /* 80109568 001064A8  88 1F 01 0F */	lbz r0, 0x10f(r31)
 /* 8010956C 001064AC  28 00 00 00 */	cmplwi r0, 0
 /* 80109570 001064B0  40 82 00 1C */	bne lbl_8010958C
-/* 80109574 001064B4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109574 001064B4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109578 001064B8  38 9E 07 58 */	addi r4, r30, 0x758
 /* 8010957C 001064BC  38 A0 01 0F */	li r5, 0x10f
 /* 80109580 001064C0  4B F7 7A AD */	bl load__18JPAResourceManagerFPCcUs
@@ -951,7 +951,7 @@ lbl_8010958C:
 /* 80109590 001064D0  88 1F 01 10 */	lbz r0, 0x110(r31)
 /* 80109594 001064D4  28 00 00 00 */	cmplwi r0, 0
 /* 80109598 001064D8  40 82 00 1C */	bne lbl_801095B4
-/* 8010959C 001064DC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010959C 001064DC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801095A0 001064E0  38 9E 07 70 */	addi r4, r30, 0x770
 /* 801095A4 001064E4  38 A0 01 10 */	li r5, 0x110
 /* 801095A8 001064E8  4B F7 7A 85 */	bl load__18JPAResourceManagerFPCcUs
@@ -962,7 +962,7 @@ lbl_801095B4:
 /* 801095B8 001064F8  88 1F 01 11 */	lbz r0, 0x111(r31)
 /* 801095BC 001064FC  28 00 00 00 */	cmplwi r0, 0
 /* 801095C0 00106500  40 82 00 1C */	bne lbl_801095DC
-/* 801095C4 00106504  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801095C4 00106504  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801095C8 00106508  38 9E 07 88 */	addi r4, r30, 0x788
 /* 801095CC 0010650C  38 A0 01 11 */	li r5, 0x111
 /* 801095D0 00106510  4B F7 7A 5D */	bl load__18JPAResourceManagerFPCcUs
@@ -973,7 +973,7 @@ lbl_801095DC:
 /* 801095E0 00106520  88 1F 01 12 */	lbz r0, 0x112(r31)
 /* 801095E4 00106524  28 00 00 00 */	cmplwi r0, 0
 /* 801095E8 00106528  40 82 00 1C */	bne lbl_80109604
-/* 801095EC 0010652C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801095EC 0010652C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801095F0 00106530  38 9E 07 98 */	addi r4, r30, 0x798
 /* 801095F4 00106534  38 A0 01 12 */	li r5, 0x112
 /* 801095F8 00106538  4B F7 7A 35 */	bl load__18JPAResourceManagerFPCcUs
@@ -984,7 +984,7 @@ lbl_80109604:
 /* 80109608 00106548  88 1F 01 13 */	lbz r0, 0x113(r31)
 /* 8010960C 0010654C  28 00 00 00 */	cmplwi r0, 0
 /* 80109610 00106550  40 82 00 1C */	bne lbl_8010962C
-/* 80109614 00106554  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109614 00106554  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109618 00106558  38 9E 07 AC */	addi r4, r30, 0x7ac
 /* 8010961C 0010655C  38 A0 01 13 */	li r5, 0x113
 /* 80109620 00106560  4B F7 7A 0D */	bl load__18JPAResourceManagerFPCcUs
@@ -995,7 +995,7 @@ lbl_8010962C:
 /* 80109630 00106570  88 1F 01 14 */	lbz r0, 0x114(r31)
 /* 80109634 00106574  28 00 00 00 */	cmplwi r0, 0
 /* 80109638 00106578  40 82 00 1C */	bne lbl_80109654
-/* 8010963C 0010657C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010963C 0010657C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109640 00106580  38 9E 07 C0 */	addi r4, r30, 0x7c0
 /* 80109644 00106584  38 A0 01 14 */	li r5, 0x114
 /* 80109648 00106588  4B F7 79 E5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1006,7 +1006,7 @@ lbl_80109654:
 /* 80109658 00106598  88 1F 01 15 */	lbz r0, 0x115(r31)
 /* 8010965C 0010659C  28 00 00 00 */	cmplwi r0, 0
 /* 80109660 001065A0  40 82 00 1C */	bne lbl_8010967C
-/* 80109664 001065A4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109664 001065A4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109668 001065A8  38 9E 07 D4 */	addi r4, r30, 0x7d4
 /* 8010966C 001065AC  38 A0 01 15 */	li r5, 0x115
 /* 80109670 001065B0  4B F7 79 BD */	bl load__18JPAResourceManagerFPCcUs
@@ -1017,7 +1017,7 @@ lbl_8010967C:
 /* 80109680 001065C0  88 1F 01 16 */	lbz r0, 0x116(r31)
 /* 80109684 001065C4  28 00 00 00 */	cmplwi r0, 0
 /* 80109688 001065C8  40 82 00 1C */	bne lbl_801096A4
-/* 8010968C 001065CC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010968C 001065CC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109690 001065D0  38 9E 07 E8 */	addi r4, r30, 0x7e8
 /* 80109694 001065D4  38 A0 01 16 */	li r5, 0x116
 /* 80109698 001065D8  4B F7 79 95 */	bl load__18JPAResourceManagerFPCcUs
@@ -1028,7 +1028,7 @@ lbl_801096A4:
 /* 801096A8 001065E8  88 1F 01 17 */	lbz r0, 0x117(r31)
 /* 801096AC 001065EC  28 00 00 00 */	cmplwi r0, 0
 /* 801096B0 001065F0  40 82 00 1C */	bne lbl_801096CC
-/* 801096B4 001065F4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801096B4 001065F4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801096B8 001065F8  38 9E 07 F8 */	addi r4, r30, 0x7f8
 /* 801096BC 001065FC  38 A0 01 17 */	li r5, 0x117
 /* 801096C0 00106600  4B F7 79 6D */	bl load__18JPAResourceManagerFPCcUs
@@ -1039,7 +1039,7 @@ lbl_801096CC:
 /* 801096D0 00106610  88 1F 01 18 */	lbz r0, 0x118(r31)
 /* 801096D4 00106614  28 00 00 00 */	cmplwi r0, 0
 /* 801096D8 00106618  40 82 00 1C */	bne lbl_801096F4
-/* 801096DC 0010661C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801096DC 0010661C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801096E0 00106620  38 9E 08 08 */	addi r4, r30, 0x808
 /* 801096E4 00106624  38 A0 01 18 */	li r5, 0x118
 /* 801096E8 00106628  4B F7 79 45 */	bl load__18JPAResourceManagerFPCcUs
@@ -1050,7 +1050,7 @@ lbl_801096F4:
 /* 801096F8 00106638  88 1F 01 19 */	lbz r0, 0x119(r31)
 /* 801096FC 0010663C  28 00 00 00 */	cmplwi r0, 0
 /* 80109700 00106640  40 82 00 1C */	bne lbl_8010971C
-/* 80109704 00106644  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109704 00106644  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109708 00106648  38 9E 08 18 */	addi r4, r30, 0x818
 /* 8010970C 0010664C  38 A0 01 19 */	li r5, 0x119
 /* 80109710 00106650  4B F7 79 1D */	bl load__18JPAResourceManagerFPCcUs
@@ -1061,7 +1061,7 @@ lbl_8010971C:
 /* 80109720 00106660  88 1F 01 21 */	lbz r0, 0x121(r31)
 /* 80109724 00106664  28 00 00 00 */	cmplwi r0, 0
 /* 80109728 00106668  40 82 00 1C */	bne lbl_80109744
-/* 8010972C 0010666C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010972C 0010666C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109730 00106670  38 9E 08 28 */	addi r4, r30, 0x828
 /* 80109734 00106674  38 A0 01 21 */	li r5, 0x121
 /* 80109738 00106678  4B F7 78 F5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1072,7 +1072,7 @@ lbl_80109744:
 /* 80109748 00106688  88 1F 01 22 */	lbz r0, 0x122(r31)
 /* 8010974C 0010668C  28 00 00 00 */	cmplwi r0, 0
 /* 80109750 00106690  40 82 00 1C */	bne lbl_8010976C
-/* 80109754 00106694  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109754 00106694  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109758 00106698  38 9E 08 3C */	addi r4, r30, 0x83c
 /* 8010975C 0010669C  38 A0 01 22 */	li r5, 0x122
 /* 80109760 001066A0  4B F7 78 CD */	bl load__18JPAResourceManagerFPCcUs
@@ -1083,7 +1083,7 @@ lbl_8010976C:
 /* 80109770 001066B0  88 1F 01 23 */	lbz r0, 0x123(r31)
 /* 80109774 001066B4  28 00 00 00 */	cmplwi r0, 0
 /* 80109778 001066B8  40 82 00 1C */	bne lbl_80109794
-/* 8010977C 001066BC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010977C 001066BC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109780 001066C0  38 9E 08 50 */	addi r4, r30, 0x850
 /* 80109784 001066C4  38 A0 01 23 */	li r5, 0x123
 /* 80109788 001066C8  4B F7 78 A5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1094,7 +1094,7 @@ lbl_80109794:
 /* 80109798 001066D8  88 1F 01 24 */	lbz r0, 0x124(r31)
 /* 8010979C 001066DC  28 00 00 00 */	cmplwi r0, 0
 /* 801097A0 001066E0  40 82 00 1C */	bne lbl_801097BC
-/* 801097A4 001066E4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801097A4 001066E4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801097A8 001066E8  38 9E 08 64 */	addi r4, r30, 0x864
 /* 801097AC 001066EC  38 A0 01 24 */	li r5, 0x124
 /* 801097B0 001066F0  4B F7 78 7D */	bl load__18JPAResourceManagerFPCcUs
@@ -1105,7 +1105,7 @@ lbl_801097BC:
 /* 801097C0 00106700  88 1F 01 0A */	lbz r0, 0x10a(r31)
 /* 801097C4 00106704  28 00 00 00 */	cmplwi r0, 0
 /* 801097C8 00106708  40 82 00 1C */	bne lbl_801097E4
-/* 801097CC 0010670C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801097CC 0010670C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801097D0 00106710  38 9E 08 74 */	addi r4, r30, 0x874
 /* 801097D4 00106714  38 A0 01 0A */	li r5, 0x10a
 /* 801097D8 00106718  4B F7 78 55 */	bl load__18JPAResourceManagerFPCcUs
@@ -1116,7 +1116,7 @@ lbl_801097E4:
 /* 801097E8 00106728  88 1F 01 0B */	lbz r0, 0x10b(r31)
 /* 801097EC 0010672C  28 00 00 00 */	cmplwi r0, 0
 /* 801097F0 00106730  40 82 00 1C */	bne lbl_8010980C
-/* 801097F4 00106734  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801097F4 00106734  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801097F8 00106738  38 9E 08 88 */	addi r4, r30, 0x888
 /* 801097FC 0010673C  38 A0 01 0B */	li r5, 0x10b
 /* 80109800 00106740  4B F7 78 2D */	bl load__18JPAResourceManagerFPCcUs
@@ -1127,7 +1127,7 @@ lbl_8010980C:
 /* 80109810 00106750  88 1F 01 1A */	lbz r0, 0x11a(r31)
 /* 80109814 00106754  28 00 00 00 */	cmplwi r0, 0
 /* 80109818 00106758  40 82 00 1C */	bne lbl_80109834
-/* 8010981C 0010675C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010981C 0010675C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109820 00106760  38 9E 08 9C */	addi r4, r30, 0x89c
 /* 80109824 00106764  38 A0 01 1A */	li r5, 0x11a
 /* 80109828 00106768  4B F7 78 05 */	bl load__18JPAResourceManagerFPCcUs
@@ -1138,7 +1138,7 @@ lbl_80109834:
 /* 80109838 00106778  88 1F 01 1B */	lbz r0, 0x11b(r31)
 /* 8010983C 0010677C  28 00 00 00 */	cmplwi r0, 0
 /* 80109840 00106780  40 82 00 1C */	bne lbl_8010985C
-/* 80109844 00106784  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109844 00106784  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109848 00106788  38 9E 08 B0 */	addi r4, r30, 0x8b0
 /* 8010984C 0010678C  38 A0 01 1B */	li r5, 0x11b
 /* 80109850 00106790  4B F7 77 DD */	bl load__18JPAResourceManagerFPCcUs
@@ -1149,7 +1149,7 @@ lbl_8010985C:
 /* 80109860 001067A0  88 1F 01 1C */	lbz r0, 0x11c(r31)
 /* 80109864 001067A4  28 00 00 00 */	cmplwi r0, 0
 /* 80109868 001067A8  40 82 00 1C */	bne lbl_80109884
-/* 8010986C 001067AC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010986C 001067AC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109870 001067B0  38 9E 08 C4 */	addi r4, r30, 0x8c4
 /* 80109874 001067B4  38 A0 01 1C */	li r5, 0x11c
 /* 80109878 001067B8  4B F7 77 B5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1160,7 +1160,7 @@ lbl_80109884:
 /* 80109888 001067C8  88 1F 01 1D */	lbz r0, 0x11d(r31)
 /* 8010988C 001067CC  28 00 00 00 */	cmplwi r0, 0
 /* 80109890 001067D0  40 82 00 1C */	bne lbl_801098AC
-/* 80109894 001067D4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109894 001067D4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109898 001067D8  38 9E 08 D8 */	addi r4, r30, 0x8d8
 /* 8010989C 001067DC  38 A0 01 1D */	li r5, 0x11d
 /* 801098A0 001067E0  4B F7 77 8D */	bl load__18JPAResourceManagerFPCcUs
@@ -1171,7 +1171,7 @@ lbl_801098AC:
 /* 801098B0 001067F0  88 1F 01 1E */	lbz r0, 0x11e(r31)
 /* 801098B4 001067F4  28 00 00 00 */	cmplwi r0, 0
 /* 801098B8 001067F8  40 82 00 1C */	bne lbl_801098D4
-/* 801098BC 001067FC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801098BC 001067FC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801098C0 00106800  38 9E 08 EC */	addi r4, r30, 0x8ec
 /* 801098C4 00106804  38 A0 01 1E */	li r5, 0x11e
 /* 801098C8 00106808  4B F7 77 65 */	bl load__18JPAResourceManagerFPCcUs
@@ -1182,7 +1182,7 @@ lbl_801098D4:
 /* 801098D8 00106818  88 1F 01 1F */	lbz r0, 0x11f(r31)
 /* 801098DC 0010681C  28 00 00 00 */	cmplwi r0, 0
 /* 801098E0 00106820  40 82 00 1C */	bne lbl_801098FC
-/* 801098E4 00106824  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801098E4 00106824  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801098E8 00106828  38 9E 09 00 */	addi r4, r30, 0x900
 /* 801098EC 0010682C  38 A0 01 1F */	li r5, 0x11f
 /* 801098F0 00106830  4B F7 77 3D */	bl load__18JPAResourceManagerFPCcUs
@@ -1193,7 +1193,7 @@ lbl_801098FC:
 /* 80109900 00106840  88 1F 01 20 */	lbz r0, 0x120(r31)
 /* 80109904 00106844  28 00 00 00 */	cmplwi r0, 0
 /* 80109908 00106848  40 82 00 1C */	bne lbl_80109924
-/* 8010990C 0010684C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010990C 0010684C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109910 00106850  38 9E 09 14 */	addi r4, r30, 0x914
 /* 80109914 00106854  38 A0 01 20 */	li r5, 0x120
 /* 80109918 00106858  4B F7 77 15 */	bl load__18JPAResourceManagerFPCcUs
@@ -1204,7 +1204,7 @@ lbl_80109924:
 /* 80109928 00106868  88 1F 01 D4 */	lbz r0, 0x1d4(r31)
 /* 8010992C 0010686C  28 00 00 00 */	cmplwi r0, 0
 /* 80109930 00106870  40 82 00 1C */	bne lbl_8010994C
-/* 80109934 00106874  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109934 00106874  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109938 00106878  38 9E 09 28 */	addi r4, r30, 0x928
 /* 8010993C 0010687C  38 A0 01 D4 */	li r5, 0x1d4
 /* 80109940 00106880  4B F7 76 ED */	bl load__18JPAResourceManagerFPCcUs
@@ -1215,7 +1215,7 @@ lbl_8010994C:
 /* 80109950 00106890  88 1F 01 D5 */	lbz r0, 0x1d5(r31)
 /* 80109954 00106894  28 00 00 00 */	cmplwi r0, 0
 /* 80109958 00106898  40 82 00 1C */	bne lbl_80109974
-/* 8010995C 0010689C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010995C 0010689C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109960 001068A0  38 9E 09 3C */	addi r4, r30, 0x93c
 /* 80109964 001068A4  38 A0 01 D5 */	li r5, 0x1d5
 /* 80109968 001068A8  4B F7 76 C5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1226,7 +1226,7 @@ lbl_80109974:
 /* 80109978 001068B8  88 1F 01 D6 */	lbz r0, 0x1d6(r31)
 /* 8010997C 001068BC  28 00 00 00 */	cmplwi r0, 0
 /* 80109980 001068C0  40 82 00 1C */	bne lbl_8010999C
-/* 80109984 001068C4  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109984 001068C4  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109988 001068C8  38 9E 09 54 */	addi r4, r30, 0x954
 /* 8010998C 001068CC  38 A0 01 D6 */	li r5, 0x1d6
 /* 80109990 001068D0  4B F7 76 9D */	bl load__18JPAResourceManagerFPCcUs
@@ -1237,7 +1237,7 @@ lbl_8010999C:
 /* 801099A0 001068E0  88 1F 01 E8 */	lbz r0, 0x1e8(r31)
 /* 801099A4 001068E4  28 00 00 00 */	cmplwi r0, 0
 /* 801099A8 001068E8  40 82 00 1C */	bne lbl_801099C4
-/* 801099AC 001068EC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801099AC 001068EC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801099B0 001068F0  38 9E 09 64 */	addi r4, r30, 0x964
 /* 801099B4 001068F4  38 A0 01 E8 */	li r5, 0x1e8
 /* 801099B8 001068F8  4B F7 76 75 */	bl load__18JPAResourceManagerFPCcUs
@@ -1248,7 +1248,7 @@ lbl_801099C4:
 /* 801099C8 00106908  88 1F 01 E7 */	lbz r0, 0x1e7(r31)
 /* 801099CC 0010690C  28 00 00 00 */	cmplwi r0, 0
 /* 801099D0 00106910  40 82 00 1C */	bne lbl_801099EC
-/* 801099D4 00106914  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801099D4 00106914  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 801099D8 00106918  38 9E 09 78 */	addi r4, r30, 0x978
 /* 801099DC 0010691C  38 A0 01 E7 */	li r5, 0x1e7
 /* 801099E0 00106920  4B F7 76 4D */	bl load__18JPAResourceManagerFPCcUs
@@ -1259,7 +1259,7 @@ lbl_801099EC:
 /* 801099F0 00106930  88 1F 01 E9 */	lbz r0, 0x1e9(r31)
 /* 801099F4 00106934  28 00 00 00 */	cmplwi r0, 0
 /* 801099F8 00106938  40 82 00 1C */	bne lbl_80109A14
-/* 801099FC 0010693C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 801099FC 0010693C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109A00 00106940  38 9E 09 8C */	addi r4, r30, 0x98c
 /* 80109A04 00106944  38 A0 01 E9 */	li r5, 0x1e9
 /* 80109A08 00106948  4B F7 76 25 */	bl load__18JPAResourceManagerFPCcUs
@@ -1270,7 +1270,7 @@ lbl_80109A14:
 /* 80109A18 00106958  88 1F 01 EA */	lbz r0, 0x1ea(r31)
 /* 80109A1C 0010695C  28 00 00 00 */	cmplwi r0, 0
 /* 80109A20 00106960  40 82 00 1C */	bne lbl_80109A3C
-/* 80109A24 00106964  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109A24 00106964  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109A28 00106968  38 9E 09 A0 */	addi r4, r30, 0x9a0
 /* 80109A2C 0010696C  38 A0 01 EA */	li r5, 0x1ea
 /* 80109A30 00106970  4B F7 75 FD */	bl load__18JPAResourceManagerFPCcUs
@@ -1281,7 +1281,7 @@ lbl_80109A3C:
 /* 80109A40 00106980  88 1F 01 F8 */	lbz r0, 0x1f8(r31)
 /* 80109A44 00106984  28 00 00 00 */	cmplwi r0, 0
 /* 80109A48 00106988  40 82 00 1C */	bne lbl_80109A64
-/* 80109A4C 0010698C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109A4C 0010698C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109A50 00106990  38 9E 09 B4 */	addi r4, r30, 0x9b4
 /* 80109A54 00106994  38 A0 01 F8 */	li r5, 0x1f8
 /* 80109A58 00106998  4B F7 75 D5 */	bl load__18JPAResourceManagerFPCcUs
@@ -1330,460 +1330,460 @@ lbl_80109AE4:
 /* 80109AF0 00106A30  4B F0 33 09 */	bl mountFixed__13JKRMemArchiveFPv15JKRMemBreakFlag
 /* 80109AF4 00106A34  7F A3 EB 78 */	mr r3, r29
 /* 80109AF8 00106A38  81 9D 00 00 */	lwz r12, 0(r29)
-/* 80109AFC 00106A3C  38 82 95 80 */	addi r4, r2, $$23263-_SDA2_BASE_
+/* 80109AFC 00106A3C  38 82 95 80 */	addi r4, r2, $$23263@sda21
 /* 80109B00 00106A40  81 8C 00 10 */	lwz r12, 0x10(r12)
 /* 80109B04 00106A44  7D 88 03 A6 */	mtlr r12
 /* 80109B08 00106A48  4E 80 00 21 */	blrl 
 /* 80109B0C 00106A4C  4B FF ED 15 */	bl loadParticleMario__12TMarDirectorFv
-/* 80109B10 00106A50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B10 00106A50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B14 00106A54  38 9F 09 DC */	addi r4, r31, 0x9dc
 /* 80109B18 00106A58  38 A0 01 27 */	li r5, 0x127
 /* 80109B1C 00106A5C  4B F7 75 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B20 00106A60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B20 00106A60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B24 00106A64  38 9F 09 F0 */	addi r4, r31, 0x9f0
 /* 80109B28 00106A68  38 A0 01 28 */	li r5, 0x128
 /* 80109B2C 00106A6C  4B F7 75 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B30 00106A70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B30 00106A70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B34 00106A74  38 9F 0A 04 */	addi r4, r31, 0xa04
 /* 80109B38 00106A78  38 A0 01 29 */	li r5, 0x129
 /* 80109B3C 00106A7C  4B F7 74 F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B40 00106A80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B40 00106A80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B44 00106A84  38 9F 0A 18 */	addi r4, r31, 0xa18
 /* 80109B48 00106A88  38 A0 01 2A */	li r5, 0x12a
 /* 80109B4C 00106A8C  4B F7 74 E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B50 00106A90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B50 00106A90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B54 00106A94  38 9F 0A 2C */	addi r4, r31, 0xa2c
 /* 80109B58 00106A98  38 A0 00 52 */	li r5, 0x52
 /* 80109B5C 00106A9C  4B F7 74 D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B60 00106AA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B60 00106AA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B64 00106AA4  38 9F 0A 3C */	addi r4, r31, 0xa3c
 /* 80109B68 00106AA8  38 A0 00 53 */	li r5, 0x53
 /* 80109B6C 00106AAC  4B F7 74 C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B70 00106AB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B70 00106AB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B74 00106AB4  38 9F 0A 4C */	addi r4, r31, 0xa4c
 /* 80109B78 00106AB8  38 A0 00 54 */	li r5, 0x54
 /* 80109B7C 00106ABC  4B F7 74 B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B80 00106AC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B80 00106AC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B84 00106AC4  38 9F 0A 5C */	addi r4, r31, 0xa5c
 /* 80109B88 00106AC8  38 A0 00 7F */	li r5, 0x7f
 /* 80109B8C 00106ACC  4B F7 74 A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109B90 00106AD0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109B90 00106AD0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109B94 00106AD4  38 9F 0A 74 */	addi r4, r31, 0xa74
 /* 80109B98 00106AD8  38 A0 00 80 */	li r5, 0x80
 /* 80109B9C 00106ADC  4B F7 74 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BA0 00106AE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BA0 00106AE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BA4 00106AE4  38 9F 0A 8C */	addi r4, r31, 0xa8c
 /* 80109BA8 00106AE8  38 A0 00 81 */	li r5, 0x81
 /* 80109BAC 00106AEC  4B F7 74 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BB0 00106AF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BB0 00106AF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BB4 00106AF4  38 9F 0A A4 */	addi r4, r31, 0xaa4
 /* 80109BB8 00106AF8  38 A0 00 82 */	li r5, 0x82
 /* 80109BBC 00106AFC  4B F7 74 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BC0 00106B00  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BC0 00106B00  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BC4 00106B04  38 9F 0A BC */	addi r4, r31, 0xabc
 /* 80109BC8 00106B08  38 A0 00 83 */	li r5, 0x83
 /* 80109BCC 00106B0C  4B F7 74 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BD0 00106B10  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BD0 00106B10  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BD4 00106B14  38 9F 0A D4 */	addi r4, r31, 0xad4
 /* 80109BD8 00106B18  38 A0 00 84 */	li r5, 0x84
 /* 80109BDC 00106B1C  4B F7 74 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BE0 00106B20  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BE0 00106B20  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BE4 00106B24  38 9F 0A EC */	addi r4, r31, 0xaec
 /* 80109BE8 00106B28  38 A0 00 85 */	li r5, 0x85
 /* 80109BEC 00106B2C  4B F7 74 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109BF0 00106B30  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109BF0 00106B30  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109BF4 00106B34  38 9F 0B 00 */	addi r4, r31, 0xb00
 /* 80109BF8 00106B38  38 A0 00 86 */	li r5, 0x86
 /* 80109BFC 00106B3C  4B F7 74 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C00 00106B40  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C00 00106B40  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C04 00106B44  38 9F 0B 18 */	addi r4, r31, 0xb18
 /* 80109C08 00106B48  38 A0 00 87 */	li r5, 0x87
 /* 80109C0C 00106B4C  4B F7 74 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C10 00106B50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C10 00106B50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C14 00106B54  38 9F 0B 2C */	addi r4, r31, 0xb2c
 /* 80109C18 00106B58  38 A0 00 88 */	li r5, 0x88
 /* 80109C1C 00106B5C  4B F7 74 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C20 00106B60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C20 00106B60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C24 00106B64  38 9F 0B 40 */	addi r4, r31, 0xb40
 /* 80109C28 00106B68  38 A0 00 8B */	li r5, 0x8b
 /* 80109C2C 00106B6C  4B F7 74 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C30 00106B70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C30 00106B70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C34 00106B74  38 9F 0B 54 */	addi r4, r31, 0xb54
 /* 80109C38 00106B78  38 A0 00 A1 */	li r5, 0xa1
 /* 80109C3C 00106B7C  4B F7 73 F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C40 00106B80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C40 00106B80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C44 00106B84  38 9F 0B 68 */	addi r4, r31, 0xb68
 /* 80109C48 00106B88  38 A0 00 A2 */	li r5, 0xa2
 /* 80109C4C 00106B8C  4B F7 73 E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C50 00106B90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C50 00106B90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C54 00106B94  38 9F 0B 7C */	addi r4, r31, 0xb7c
 /* 80109C58 00106B98  38 A0 00 A3 */	li r5, 0xa3
 /* 80109C5C 00106B9C  4B F7 73 D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C60 00106BA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C60 00106BA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C64 00106BA4  38 9F 0B 90 */	addi r4, r31, 0xb90
 /* 80109C68 00106BA8  38 A0 00 A4 */	li r5, 0xa4
 /* 80109C6C 00106BAC  4B F7 73 C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C70 00106BB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C70 00106BB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C74 00106BB4  38 9F 0B A8 */	addi r4, r31, 0xba8
 /* 80109C78 00106BB8  38 A0 00 A5 */	li r5, 0xa5
 /* 80109C7C 00106BBC  4B F7 73 B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C80 00106BC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C80 00106BC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C84 00106BC4  38 9F 0B BC */	addi r4, r31, 0xbbc
 /* 80109C88 00106BC8  38 A0 00 A6 */	li r5, 0xa6
 /* 80109C8C 00106BCC  4B F7 73 A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109C90 00106BD0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109C90 00106BD0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109C94 00106BD4  38 9F 0B D0 */	addi r4, r31, 0xbd0
 /* 80109C98 00106BD8  38 A0 00 B2 */	li r5, 0xb2
 /* 80109C9C 00106BDC  4B F7 73 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CA0 00106BE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CA0 00106BE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CA4 00106BE4  38 9F 0B E4 */	addi r4, r31, 0xbe4
 /* 80109CA8 00106BE8  38 A0 00 B3 */	li r5, 0xb3
 /* 80109CAC 00106BEC  4B F7 73 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CB0 00106BF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CB0 00106BF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CB4 00106BF4  38 9F 0B F8 */	addi r4, r31, 0xbf8
 /* 80109CB8 00106BF8  38 A0 00 B4 */	li r5, 0xb4
 /* 80109CBC 00106BFC  4B F7 73 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CC0 00106C00  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CC0 00106C00  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CC4 00106C04  38 9F 0C 0C */	addi r4, r31, 0xc0c
 /* 80109CC8 00106C08  38 A0 00 B5 */	li r5, 0xb5
 /* 80109CCC 00106C0C  4B F7 73 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CD0 00106C10  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CD0 00106C10  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CD4 00106C14  38 9F 0C 20 */	addi r4, r31, 0xc20
 /* 80109CD8 00106C18  38 A0 00 B6 */	li r5, 0xb6
 /* 80109CDC 00106C1C  4B F7 73 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CE0 00106C20  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CE0 00106C20  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CE4 00106C24  38 9F 0C 34 */	addi r4, r31, 0xc34
 /* 80109CE8 00106C28  38 A0 00 B7 */	li r5, 0xb7
 /* 80109CEC 00106C2C  4B F7 73 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109CF0 00106C30  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109CF0 00106C30  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109CF4 00106C34  38 9F 0C 48 */	addi r4, r31, 0xc48
 /* 80109CF8 00106C38  38 A0 00 B8 */	li r5, 0xb8
 /* 80109CFC 00106C3C  4B F7 73 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D00 00106C40  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D00 00106C40  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D04 00106C44  38 9F 0C 5C */	addi r4, r31, 0xc5c
 /* 80109D08 00106C48  38 A0 00 B9 */	li r5, 0xb9
 /* 80109D0C 00106C4C  4B F7 73 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D10 00106C50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D10 00106C50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D14 00106C54  38 9F 0C 70 */	addi r4, r31, 0xc70
 /* 80109D18 00106C58  38 A0 00 BA */	li r5, 0xba
 /* 80109D1C 00106C5C  4B F7 73 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D20 00106C60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D20 00106C60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D24 00106C64  38 9F 0C 84 */	addi r4, r31, 0xc84
 /* 80109D28 00106C68  38 A0 00 BB */	li r5, 0xbb
 /* 80109D2C 00106C6C  4B F7 73 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D30 00106C70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D30 00106C70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D34 00106C74  38 9F 0C 98 */	addi r4, r31, 0xc98
 /* 80109D38 00106C78  38 A0 00 BC */	li r5, 0xbc
 /* 80109D3C 00106C7C  4B F7 72 F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D40 00106C80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D40 00106C80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D44 00106C84  38 9F 0C B0 */	addi r4, r31, 0xcb0
 /* 80109D48 00106C88  38 A0 00 BD */	li r5, 0xbd
 /* 80109D4C 00106C8C  4B F7 72 E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D50 00106C90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D50 00106C90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D54 00106C94  38 9F 0C C8 */	addi r4, r31, 0xcc8
 /* 80109D58 00106C98  38 A0 00 BE */	li r5, 0xbe
 /* 80109D5C 00106C9C  4B F7 72 D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D60 00106CA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D60 00106CA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D64 00106CA4  38 9F 0C D8 */	addi r4, r31, 0xcd8
 /* 80109D68 00106CA8  38 A0 00 BF */	li r5, 0xbf
 /* 80109D6C 00106CAC  4B F7 72 C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D70 00106CB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D70 00106CB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D74 00106CB4  38 9F 0C E8 */	addi r4, r31, 0xce8
 /* 80109D78 00106CB8  38 A0 00 C0 */	li r5, 0xc0
 /* 80109D7C 00106CBC  4B F7 72 B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D80 00106CC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D80 00106CC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D84 00106CC4  38 9F 0C F8 */	addi r4, r31, 0xcf8
 /* 80109D88 00106CC8  38 A0 00 C1 */	li r5, 0xc1
 /* 80109D8C 00106CCC  4B F7 72 A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109D90 00106CD0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109D90 00106CD0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109D94 00106CD4  38 9F 0D 10 */	addi r4, r31, 0xd10
 /* 80109D98 00106CD8  38 A0 00 C2 */	li r5, 0xc2
 /* 80109D9C 00106CDC  4B F7 72 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DA0 00106CE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DA0 00106CE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DA4 00106CE4  38 9F 0D 28 */	addi r4, r31, 0xd28
 /* 80109DA8 00106CE8  38 A0 00 C3 */	li r5, 0xc3
 /* 80109DAC 00106CEC  4B F7 72 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DB0 00106CF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DB0 00106CF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DB4 00106CF4  38 9F 0D 40 */	addi r4, r31, 0xd40
 /* 80109DB8 00106CF8  38 A0 00 70 */	li r5, 0x70
 /* 80109DBC 00106CFC  4B F7 72 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DC0 00106D00  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DC0 00106D00  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DC4 00106D04  38 9F 0D 50 */	addi r4, r31, 0xd50
 /* 80109DC8 00106D08  38 A0 00 71 */	li r5, 0x71
 /* 80109DCC 00106D0C  4B F7 72 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DD0 00106D10  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DD0 00106D10  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DD4 00106D14  38 9F 0D 64 */	addi r4, r31, 0xd64
 /* 80109DD8 00106D18  38 A0 00 72 */	li r5, 0x72
 /* 80109DDC 00106D1C  4B F7 72 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DE0 00106D20  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DE0 00106D20  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DE4 00106D24  38 9F 0D 78 */	addi r4, r31, 0xd78
 /* 80109DE8 00106D28  38 A0 00 73 */	li r5, 0x73
 /* 80109DEC 00106D2C  4B F7 72 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109DF0 00106D30  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109DF0 00106D30  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109DF4 00106D34  38 9F 0D 8C */	addi r4, r31, 0xd8c
 /* 80109DF8 00106D38  38 A0 00 74 */	li r5, 0x74
 /* 80109DFC 00106D3C  4B F7 72 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E00 00106D40  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E00 00106D40  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E04 00106D44  38 9F 0D A0 */	addi r4, r31, 0xda0
 /* 80109E08 00106D48  38 A0 00 75 */	li r5, 0x75
 /* 80109E0C 00106D4C  4B F7 72 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E10 00106D50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E10 00106D50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E14 00106D54  38 9F 0D B4 */	addi r4, r31, 0xdb4
 /* 80109E18 00106D58  38 A0 00 C7 */	li r5, 0xc7
 /* 80109E1C 00106D5C  4B F7 72 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E20 00106D60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E20 00106D60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E24 00106D64  38 9F 0D C8 */	addi r4, r31, 0xdc8
 /* 80109E28 00106D68  38 A0 00 C8 */	li r5, 0xc8
 /* 80109E2C 00106D6C  4B F7 72 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E30 00106D70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E30 00106D70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E34 00106D74  38 9F 0D DC */	addi r4, r31, 0xddc
 /* 80109E38 00106D78  38 A0 00 C9 */	li r5, 0xc9
 /* 80109E3C 00106D7C  4B F7 71 F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E40 00106D80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E40 00106D80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E44 00106D84  38 9F 0D EC */	addi r4, r31, 0xdec
 /* 80109E48 00106D88  38 A0 00 CA */	li r5, 0xca
 /* 80109E4C 00106D8C  4B F7 71 E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E50 00106D90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E50 00106D90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E54 00106D94  38 9F 0E 04 */	addi r4, r31, 0xe04
 /* 80109E58 00106D98  38 A0 00 CB */	li r5, 0xcb
 /* 80109E5C 00106D9C  4B F7 71 D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E60 00106DA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E60 00106DA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E64 00106DA4  38 9F 0E 18 */	addi r4, r31, 0xe18
 /* 80109E68 00106DA8  38 A0 00 CC */	li r5, 0xcc
 /* 80109E6C 00106DAC  4B F7 71 C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E70 00106DB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E70 00106DB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E74 00106DB4  38 9F 0E 2C */	addi r4, r31, 0xe2c
 /* 80109E78 00106DB8  38 A0 00 CD */	li r5, 0xcd
 /* 80109E7C 00106DBC  4B F7 71 B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E80 00106DC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E80 00106DC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E84 00106DC4  38 9F 0E 40 */	addi r4, r31, 0xe40
 /* 80109E88 00106DC8  38 A0 00 CE */	li r5, 0xce
 /* 80109E8C 00106DCC  4B F7 71 A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109E90 00106DD0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109E90 00106DD0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109E94 00106DD4  38 9F 0E 50 */	addi r4, r31, 0xe50
 /* 80109E98 00106DD8  38 A0 00 64 */	li r5, 0x64
 /* 80109E9C 00106DDC  4B F7 71 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109EA0 00106DE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109EA0 00106DE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109EA4 00106DE4  38 9F 0E 64 */	addi r4, r31, 0xe64
 /* 80109EA8 00106DE8  38 A0 00 E2 */	li r5, 0xe2
 /* 80109EAC 00106DEC  4B F7 71 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109EB0 00106DF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109EB0 00106DF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109EB4 00106DF4  38 9F 0E 78 */	addi r4, r31, 0xe78
 /* 80109EB8 00106DF8  38 A0 00 E3 */	li r5, 0xe3
 /* 80109EBC 00106DFC  4B F7 71 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109EC0 00106E00  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109EC0 00106E00  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109EC4 00106E04  38 9F 0E 90 */	addi r4, r31, 0xe90
 /* 80109EC8 00106E08  38 A0 00 E4 */	li r5, 0xe4
 /* 80109ECC 00106E0C  4B F7 71 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109ED0 00106E10  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109ED0 00106E10  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109ED4 00106E14  38 9F 0E A4 */	addi r4, r31, 0xea4
 /* 80109ED8 00106E18  38 A0 00 E5 */	li r5, 0xe5
 /* 80109EDC 00106E1C  4B F7 71 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109EE0 00106E20  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109EE0 00106E20  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109EE4 00106E24  38 9F 0E BC */	addi r4, r31, 0xebc
 /* 80109EE8 00106E28  38 A0 00 E6 */	li r5, 0xe6
 /* 80109EEC 00106E2C  4B F7 71 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109EF0 00106E30  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109EF0 00106E30  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109EF4 00106E34  38 9F 0E D0 */	addi r4, r31, 0xed0
 /* 80109EF8 00106E38  38 A0 00 E7 */	li r5, 0xe7
 /* 80109EFC 00106E3C  4B F7 71 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F00 00106E40  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F00 00106E40  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F04 00106E44  38 9F 0E E4 */	addi r4, r31, 0xee4
 /* 80109F08 00106E48  38 A0 00 6D */	li r5, 0x6d
 /* 80109F0C 00106E4C  4B F7 71 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F10 00106E50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F10 00106E50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F14 00106E54  38 9F 0E F8 */	addi r4, r31, 0xef8
 /* 80109F18 00106E58  38 A0 01 2F */	li r5, 0x12f
 /* 80109F1C 00106E5C  4B F7 71 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F20 00106E60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F20 00106E60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F24 00106E64  38 9F 0F 0C */	addi r4, r31, 0xf0c
 /* 80109F28 00106E68  38 A0 01 30 */	li r5, 0x130
 /* 80109F2C 00106E6C  4B F7 71 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F30 00106E70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F30 00106E70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F34 00106E74  38 9F 0F 1C */	addi r4, r31, 0xf1c
 /* 80109F38 00106E78  38 A0 01 35 */	li r5, 0x135
 /* 80109F3C 00106E7C  4B F7 70 F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F40 00106E80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F40 00106E80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F44 00106E84  38 9F 0F 30 */	addi r4, r31, 0xf30
 /* 80109F48 00106E88  38 A0 01 36 */	li r5, 0x136
 /* 80109F4C 00106E8C  4B F7 70 E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F50 00106E90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F50 00106E90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F54 00106E94  38 9F 0F 44 */	addi r4, r31, 0xf44
 /* 80109F58 00106E98  38 A0 01 37 */	li r5, 0x137
 /* 80109F5C 00106E9C  4B F7 70 D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F60 00106EA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F60 00106EA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F64 00106EA4  38 9F 0F 58 */	addi r4, r31, 0xf58
 /* 80109F68 00106EA8  38 A0 01 3C */	li r5, 0x13c
 /* 80109F6C 00106EAC  4B F7 70 C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F70 00106EB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F70 00106EB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F74 00106EB4  38 9F 0F 6C */	addi r4, r31, 0xf6c
 /* 80109F78 00106EB8  38 A0 01 3D */	li r5, 0x13d
 /* 80109F7C 00106EBC  4B F7 70 B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F80 00106EC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F80 00106EC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F84 00106EC4  38 9F 0F 80 */	addi r4, r31, 0xf80
 /* 80109F88 00106EC8  38 A0 01 3E */	li r5, 0x13e
 /* 80109F8C 00106ECC  4B F7 70 A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109F90 00106ED0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109F90 00106ED0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109F94 00106ED4  38 9F 0F 98 */	addi r4, r31, 0xf98
 /* 80109F98 00106ED8  38 A0 01 3F */	li r5, 0x13f
 /* 80109F9C 00106EDC  4B F7 70 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FA0 00106EE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FA0 00106EE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FA4 00106EE4  38 9F 0F B0 */	addi r4, r31, 0xfb0
 /* 80109FA8 00106EE8  38 A0 01 65 */	li r5, 0x165
 /* 80109FAC 00106EEC  4B F7 70 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FB0 00106EF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FB0 00106EF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FB4 00106EF4  38 9F 0F C4 */	addi r4, r31, 0xfc4
 /* 80109FB8 00106EF8  38 A0 01 70 */	li r5, 0x170
 /* 80109FBC 00106EFC  4B F7 70 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FC0 00106F00  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FC0 00106F00  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FC4 00106F04  38 9F 0F D8 */	addi r4, r31, 0xfd8
 /* 80109FC8 00106F08  38 A0 01 71 */	li r5, 0x171
 /* 80109FCC 00106F0C  4B F7 70 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FD0 00106F10  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FD0 00106F10  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FD4 00106F14  38 9F 0F EC */	addi r4, r31, 0xfec
 /* 80109FD8 00106F18  38 A0 01 F7 */	li r5, 0x1f7
 /* 80109FDC 00106F1C  4B F7 70 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FE0 00106F20  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FE0 00106F20  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FE4 00106F24  38 9F 10 00 */	addi r4, r31, 0x1000
 /* 80109FE8 00106F28  38 A0 01 72 */	li r5, 0x172
 /* 80109FEC 00106F2C  4B F7 70 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 80109FF0 00106F30  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 80109FF0 00106F30  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 80109FF4 00106F34  38 9F 10 10 */	addi r4, r31, 0x1010
 /* 80109FF8 00106F38  38 A0 01 73 */	li r5, 0x173
 /* 80109FFC 00106F3C  4B F7 70 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A000 00106F40  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A000 00106F40  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A004 00106F44  38 9F 10 24 */	addi r4, r31, 0x1024
 /* 8010A008 00106F48  38 A0 01 74 */	li r5, 0x174
 /* 8010A00C 00106F4C  4B F7 70 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A010 00106F50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A010 00106F50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A014 00106F54  38 9F 10 38 */	addi r4, r31, 0x1038
 /* 8010A018 00106F58  38 A0 01 75 */	li r5, 0x175
 /* 8010A01C 00106F5C  4B F7 70 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A020 00106F60  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A020 00106F60  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A024 00106F64  38 9F 10 48 */	addi r4, r31, 0x1048
 /* 8010A028 00106F68  38 A0 01 76 */	li r5, 0x176
 /* 8010A02C 00106F6C  4B F7 70 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A030 00106F70  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A030 00106F70  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A034 00106F74  38 9F 10 58 */	addi r4, r31, 0x1058
 /* 8010A038 00106F78  38 A0 01 77 */	li r5, 0x177
 /* 8010A03C 00106F7C  4B F7 6F F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A040 00106F80  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A040 00106F80  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A044 00106F84  38 9F 10 6C */	addi r4, r31, 0x106c
 /* 8010A048 00106F88  38 A0 01 78 */	li r5, 0x178
 /* 8010A04C 00106F8C  4B F7 6F E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A050 00106F90  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A050 00106F90  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A054 00106F94  38 9F 10 7C */	addi r4, r31, 0x107c
 /* 8010A058 00106F98  38 A0 01 79 */	li r5, 0x179
 /* 8010A05C 00106F9C  4B F7 6F D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A060 00106FA0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A060 00106FA0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A064 00106FA4  38 9F 10 90 */	addi r4, r31, 0x1090
 /* 8010A068 00106FA8  38 A0 01 7A */	li r5, 0x17a
 /* 8010A06C 00106FAC  4B F7 6F C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A070 00106FB0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A070 00106FB0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A074 00106FB4  38 9F 10 A0 */	addi r4, r31, 0x10a0
 /* 8010A078 00106FB8  38 A0 01 7B */	li r5, 0x17b
 /* 8010A07C 00106FBC  4B F7 6F B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A080 00106FC0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A080 00106FC0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A084 00106FC4  38 9F 10 B4 */	addi r4, r31, 0x10b4
 /* 8010A088 00106FC8  38 A0 01 7C */	li r5, 0x17c
 /* 8010A08C 00106FCC  4B F7 6F A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A090 00106FD0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A090 00106FD0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A094 00106FD4  38 9F 10 C8 */	addi r4, r31, 0x10c8
 /* 8010A098 00106FD8  38 A0 01 7D */	li r5, 0x17d
 /* 8010A09C 00106FDC  4B F7 6F 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0A0 00106FE0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0A0 00106FE0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0A4 00106FE4  38 9F 10 E0 */	addi r4, r31, 0x10e0
 /* 8010A0A8 00106FE8  38 A0 01 7E */	li r5, 0x17e
 /* 8010A0AC 00106FEC  4B F7 6F 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0B0 00106FF0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0B0 00106FF0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0B4 00106FF4  38 9F 10 F4 */	addi r4, r31, 0x10f4
 /* 8010A0B8 00106FF8  38 A0 01 7F */	li r5, 0x17f
 /* 8010A0BC 00106FFC  4B F7 6F 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0C0 00107000  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0C0 00107000  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0C4 00107004  38 9F 11 08 */	addi r4, r31, 0x1108
 /* 8010A0C8 00107008  38 A0 01 80 */	li r5, 0x180
 /* 8010A0CC 0010700C  4B F7 6F 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0D0 00107010  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0D0 00107010  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0D4 00107014  38 9F 11 18 */	addi r4, r31, 0x1118
 /* 8010A0D8 00107018  38 A0 01 81 */	li r5, 0x181
 /* 8010A0DC 0010701C  4B F7 6F 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0E0 00107020  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0E0 00107020  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0E4 00107024  38 9F 11 2C */	addi r4, r31, 0x112c
 /* 8010A0E8 00107028  38 A0 01 82 */	li r5, 0x182
 /* 8010A0EC 0010702C  4B F7 6F 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A0F0 00107030  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A0F0 00107030  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A0F4 00107034  38 9F 11 40 */	addi r4, r31, 0x1140
 /* 8010A0F8 00107038  38 A0 01 83 */	li r5, 0x183
 /* 8010A0FC 0010703C  4B F7 6F 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A100 00107040  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A100 00107040  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A104 00107044  38 9F 11 54 */	addi r4, r31, 0x1154
 /* 8010A108 00107048  38 A0 01 85 */	li r5, 0x185
 /* 8010A10C 0010704C  4B F7 6F 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A110 00107050  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A110 00107050  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A114 00107054  38 9F 11 64 */	addi r4, r31, 0x1164
 /* 8010A118 00107058  38 A0 01 86 */	li r5, 0x186
 /* 8010A11C 0010705C  4B F7 6F 11 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A120 00107060  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A120 00107060  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A124 00107064  38 9F 11 78 */	addi r4, r31, 0x1178
 /* 8010A128 00107068  38 A0 01 87 */	li r5, 0x187
 /* 8010A12C 0010706C  4B F7 6F 01 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A130 00107070  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A130 00107070  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A134 00107074  38 9F 11 8C */	addi r4, r31, 0x118c
 /* 8010A138 00107078  38 A0 01 88 */	li r5, 0x188
 /* 8010A13C 0010707C  4B F7 6E F1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A140 00107080  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A140 00107080  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A144 00107084  38 9F 11 A0 */	addi r4, r31, 0x11a0
 /* 8010A148 00107088  38 A0 01 8B */	li r5, 0x18b
 /* 8010A14C 0010708C  4B F7 6E E1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A150 00107090  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A150 00107090  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A154 00107094  38 9F 11 B0 */	addi r4, r31, 0x11b0
 /* 8010A158 00107098  38 A0 01 2C */	li r5, 0x12c
 /* 8010A15C 0010709C  4B F7 6E D1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A160 001070A0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A160 001070A0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A164 001070A4  38 9F 11 C4 */	addi r4, r31, 0x11c4
 /* 8010A168 001070A8  38 A0 01 C4 */	li r5, 0x1c4
 /* 8010A16C 001070AC  4B F7 6E C1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A170 001070B0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A170 001070B0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A174 001070B4  38 9F 11 D8 */	addi r4, r31, 0x11d8
 /* 8010A178 001070B8  38 A0 01 C5 */	li r5, 0x1c5
 /* 8010A17C 001070BC  4B F7 6E B1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A180 001070C0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A180 001070C0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A184 001070C4  38 9F 11 EC */	addi r4, r31, 0x11ec
 /* 8010A188 001070C8  38 A0 01 D1 */	li r5, 0x1d1
 /* 8010A18C 001070CC  4B F7 6E A1 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A190 001070D0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A190 001070D0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A194 001070D4  38 9F 12 00 */	addi r4, r31, 0x1200
 /* 8010A198 001070D8  38 A0 01 D2 */	li r5, 0x1d2
 /* 8010A19C 001070DC  4B F7 6E 91 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1A0 001070E0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1A0 001070E0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1A4 001070E4  38 9F 12 14 */	addi r4, r31, 0x1214
 /* 8010A1A8 001070E8  38 A0 01 D8 */	li r5, 0x1d8
 /* 8010A1AC 001070EC  4B F7 6E 81 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1B0 001070F0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1B0 001070F0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1B4 001070F4  38 9F 12 2C */	addi r4, r31, 0x122c
 /* 8010A1B8 001070F8  38 A0 01 D9 */	li r5, 0x1d9
 /* 8010A1BC 001070FC  4B F7 6E 71 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1C0 00107100  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1C0 00107100  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1C4 00107104  38 9F 12 44 */	addi r4, r31, 0x1244
 /* 8010A1C8 00107108  38 A0 01 DA */	li r5, 0x1da
 /* 8010A1CC 0010710C  4B F7 6E 61 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1D0 00107110  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1D0 00107110  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1D4 00107114  38 9F 12 58 */	addi r4, r31, 0x1258
 /* 8010A1D8 00107118  38 A0 01 DB */	li r5, 0x1db
 /* 8010A1DC 0010711C  4B F7 6E 51 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1E0 00107120  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1E0 00107120  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1E4 00107124  38 9F 12 68 */	addi r4, r31, 0x1268
 /* 8010A1E8 00107128  38 A0 01 F1 */	li r5, 0x1f1
 /* 8010A1EC 0010712C  4B F7 6E 41 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A1F0 00107130  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A1F0 00107130  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A1F4 00107134  38 9F 12 7C */	addi r4, r31, 0x127c
 /* 8010A1F8 00107138  38 A0 01 EC */	li r5, 0x1ec
 /* 8010A1FC 0010713C  4B F7 6E 31 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A200 00107140  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A200 00107140  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A204 00107144  38 9F 12 94 */	addi r4, r31, 0x1294
 /* 8010A208 00107148  38 A0 01 ED */	li r5, 0x1ed
 /* 8010A20C 0010714C  4B F7 6E 21 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A210 00107150  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A210 00107150  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A214 00107154  38 9F 12 A8 */	addi r4, r31, 0x12a8
 /* 8010A218 00107158  38 A0 01 F5 */	li r5, 0x1f5
 /* 8010A21C 0010715C  4B F7 6E 11 */	bl load__18JPAResourceManagerFPCcUs
@@ -1791,7 +1791,7 @@ lbl_80109AE4:
 /* 8010A224 00107164  88 1B 00 D1 */	lbz r0, 0xd1(r27)
 /* 8010A228 00107168  28 00 00 00 */	cmplwi r0, 0
 /* 8010A22C 0010716C  40 82 00 1C */	bne lbl_8010A248
-/* 8010A230 00107170  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A230 00107170  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A234 00107174  38 9F 12 BC */	addi r4, r31, 0x12bc
 /* 8010A238 00107178  38 A0 00 D1 */	li r5, 0xd1
 /* 8010A23C 0010717C  4B F7 6D F1 */	bl load__18JPAResourceManagerFPCcUs
@@ -1802,7 +1802,7 @@ lbl_8010A248:
 /* 8010A24C 0010718C  88 1B 00 D2 */	lbz r0, 0xd2(r27)
 /* 8010A250 00107190  28 00 00 00 */	cmplwi r0, 0
 /* 8010A254 00107194  40 82 00 1C */	bne lbl_8010A270
-/* 8010A258 00107198  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A258 00107198  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A25C 0010719C  38 9F 12 D0 */	addi r4, r31, 0x12d0
 /* 8010A260 001071A0  38 A0 00 D2 */	li r5, 0xd2
 /* 8010A264 001071A4  4B F7 6D C9 */	bl load__18JPAResourceManagerFPCcUs
@@ -1813,7 +1813,7 @@ lbl_8010A270:
 /* 8010A274 001071B4  88 1B 01 2E */	lbz r0, 0x12e(r27)
 /* 8010A278 001071B8  28 00 00 00 */	cmplwi r0, 0
 /* 8010A27C 001071BC  40 82 00 1C */	bne lbl_8010A298
-/* 8010A280 001071C0  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A280 001071C0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A284 001071C4  38 9F 12 E4 */	addi r4, r31, 0x12e4
 /* 8010A288 001071C8  38 A0 01 2E */	li r5, 0x12e
 /* 8010A28C 001071CC  4B F7 6D A1 */	bl load__18JPAResourceManagerFPCcUs
@@ -1824,7 +1824,7 @@ lbl_8010A298:
 /* 8010A29C 001071DC  88 1B 00 D0 */	lbz r0, 0xd0(r27)
 /* 8010A2A0 001071E0  28 00 00 00 */	cmplwi r0, 0
 /* 8010A2A4 001071E4  40 82 00 1C */	bne lbl_8010A2C0
-/* 8010A2A8 001071E8  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A2A8 001071E8  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A2AC 001071EC  38 9F 12 F8 */	addi r4, r31, 0x12f8
 /* 8010A2B0 001071F0  38 A0 00 D0 */	li r5, 0xd0
 /* 8010A2B4 001071F4  4B F7 6D 79 */	bl load__18JPAResourceManagerFPCcUs
@@ -1835,48 +1835,48 @@ lbl_8010A2C0:
 /* 8010A2C4 00107204  88 1B 01 2D */	lbz r0, 0x12d(r27)
 /* 8010A2C8 00107208  28 00 00 00 */	cmplwi r0, 0
 /* 8010A2CC 0010720C  40 82 00 1C */	bne lbl_8010A2E8
-/* 8010A2D0 00107210  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A2D0 00107210  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A2D4 00107214  38 9F 13 0C */	addi r4, r31, 0x130c
 /* 8010A2D8 00107218  38 A0 01 2D */	li r5, 0x12d
 /* 8010A2DC 0010721C  4B F7 6D 51 */	bl load__18JPAResourceManagerFPCcUs
 /* 8010A2E0 00107220  38 00 00 01 */	li r0, 1
 /* 8010A2E4 00107224  98 1A 00 00 */	stb r0, 0(r26)
 lbl_8010A2E8:
-/* 8010A2E8 00107228  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A2E8 00107228  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A2EC 0010722C  38 9F 13 1C */	addi r4, r31, 0x131c
 /* 8010A2F0 00107230  38 A0 01 F9 */	li r5, 0x1f9
 /* 8010A2F4 00107234  4B F7 6D 39 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A2F8 00107238  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A2F8 00107238  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A2FC 0010723C  38 9F 13 30 */	addi r4, r31, 0x1330
 /* 8010A300 00107240  38 A0 01 FA */	li r5, 0x1fa
 /* 8010A304 00107244  4B F7 6D 29 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A308 00107248  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A308 00107248  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A30C 0010724C  38 9F 13 44 */	addi r4, r31, 0x1344
 /* 8010A310 00107250  38 A0 01 FB */	li r5, 0x1fb
 /* 8010A314 00107254  4B F7 6D 19 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A318 00107258  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A318 00107258  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A31C 0010725C  38 9F 13 5C */	addi r4, r31, 0x135c
 /* 8010A320 00107260  38 A0 01 FC */	li r5, 0x1fc
 /* 8010A324 00107264  4B F7 6D 09 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A328 00107268  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A328 00107268  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A32C 0010726C  38 9F 13 74 */	addi r4, r31, 0x1374
 /* 8010A330 00107270  38 A0 01 FD */	li r5, 0x1fd
 /* 8010A334 00107274  4B F7 6C F9 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A338 00107278  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A338 00107278  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A33C 0010727C  38 9F 13 84 */	addi r4, r31, 0x1384
 /* 8010A340 00107280  38 A0 01 FE */	li r5, 0x1fe
 /* 8010A344 00107284  4B F7 6C E9 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A348 00107288  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A348 00107288  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A34C 0010728C  38 9F 13 94 */	addi r4, r31, 0x1394
 /* 8010A350 00107290  38 A0 01 FF */	li r5, 0x1ff
 /* 8010A354 00107294  4B F7 6C D9 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A358 00107298  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A358 00107298  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8010A35C 0010729C  38 9F 13 A4 */	addi r4, r31, 0x13a4
 /* 8010A360 001072A0  38 A0 02 00 */	li r5, 0x200
 /* 8010A364 001072A4  4B F7 6C C9 */	bl load__18JPAResourceManagerFPCcUs
-/* 8010A368 001072A8  80 0D 98 50 */	lwz r0, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A368 001072A8  80 0D 98 50 */	lwz r0, gpResourceManager@sda21(r13)
 /* 8010A36C 001072AC  7F A3 EB 78 */	mr r3, r29
-/* 8010A370 001072B0  80 8D 98 54 */	lwz r4, gpEmitterManager4D2-_SDA_BASE_(r13)
+/* 8010A370 001072B0  80 8D 98 54 */	lwz r4, gpEmitterManager4D2@sda21(r13)
 /* 8010A374 001072B4  90 04 00 A4 */	stw r0, 0xa4(r4)
 /* 8010A378 001072B8  4B F0 2B 91 */	bl unmountFixed__13JKRMemArchiveFv
 /* 8010A37C 001072BC  88 1C 00 7C */	lbz r0, 0x7c(r28)
@@ -1896,7 +1896,7 @@ lbl_8010A2E8:
 /* 8010A3B4 001072F4  4B F0 2A 45 */	bl mountFixed__13JKRMemArchiveFPv15JKRMemBreakFlag
 /* 8010A3B8 001072F8  7F A3 EB 78 */	mr r3, r29
 /* 8010A3BC 001072FC  81 9D 00 00 */	lwz r12, 0(r29)
-/* 8010A3C0 00107300  38 82 95 80 */	addi r4, r2, $$23263-_SDA2_BASE_
+/* 8010A3C0 00107300  38 82 95 80 */	addi r4, r2, $$23263@sda21
 /* 8010A3C4 00107304  81 8C 00 10 */	lwz r12, 0x10(r12)
 /* 8010A3C8 00107308  7D 88 03 A6 */	mtlr r12
 /* 8010A3CC 0010730C  4E 80 00 21 */	blrl 
@@ -1904,7 +1904,7 @@ lbl_8010A2E8:
 /* 8010A3D4 00107314  7F A3 EB 78 */	mr r3, r29
 /* 8010A3D8 00107318  4B F0 2B 31 */	bl unmountFixed__13JKRMemArchiveFv
 lbl_8010A3DC:
-/* 8010A3DC 0010731C  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8010A3DC 0010731C  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 8010A3E0 00107320  81 83 00 00 */	lwz r12, 0(r3)
 /* 8010A3E4 00107324  81 8C 00 18 */	lwz r12, 0x18(r12)
 /* 8010A3E8 00107328  7D 88 03 A6 */	mtlr r12
@@ -2036,9 +2036,9 @@ loadResource__12TMarDirectorFv:
 /* 8010A5C0 00107500  38 9E 13 D4 */	addi r4, r30, 0x13d4
 /* 8010A5C4 00107504  4B FD 1B D9 */	bl __ct__21TMarioParticleManagerFPCc
 lbl_8010A5C8:
-/* 8010A5C8 00107508  93 8D 97 98 */	stw r28, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8010A5C8 00107508  93 8D 97 98 */	stw r28, gpMarioParticleManager@sda21(r13)
 /* 8010A5CC 0010750C  3B A0 03 E8 */	li r29, 0x3e8
-/* 8010A5D0 00107510  80 6D 97 E8 */	lwz r3, gpMarDirector-_SDA_BASE_(r13)
+/* 8010A5D0 00107510  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 8010A5D4 00107514  3B 80 01 00 */	li r28, 0x100
 /* 8010A5D8 00107518  38 80 00 20 */	li r4, 0x20
 /* 8010A5DC 0010751C  88 03 00 7C */	lbz r0, 0x7c(r3)
@@ -2105,7 +2105,7 @@ lbl_8010A694:
 lbl_8010A6A8:
 /* 8010A6A8 001075E8  3B A0 13 88 */	li r29, 0x1388
 lbl_8010A6AC:
-/* 8010A6AC 001075EC  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8010A6AC 001075EC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8010A6B0 001075F0  4B FD 1A 29 */	bl createEffectInfoAry__21TMarioParticleManagerFi
 /* 8010A6B4 001075F4  38 60 00 0C */	li r3, 0xc
 /* 8010A6B8 001075F8  4B F0 21 F9 */	bl __nw__FUl
@@ -2117,12 +2117,12 @@ lbl_8010A6AC:
 /* 8010A6D0 00107610  38 C0 00 00 */	li r6, 0
 /* 8010A6D4 00107614  4B F7 68 91 */	bl __ct__18JPAResourceManagerFUlUlP7JKRHeap
 lbl_8010A6D8:
-/* 8010A6D8 00107618  93 6D 98 50 */	stw r27, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A6D8 00107618  93 6D 98 50 */	stw r27, gpResourceManager@sda21(r13)
 /* 8010A6DC 0010761C  38 60 01 48 */	li r3, 0x148
 /* 8010A6E0 00107620  4B F0 21 D1 */	bl __nw__FUl
 /* 8010A6E4 00107624  7C 7B 1B 79 */	or. r27, r3, r3
 /* 8010A6E8 00107628  41 82 00 20 */	beq lbl_8010A708
-/* 8010A6EC 0010762C  80 8D 98 50 */	lwz r4, gpResourceManager-_SDA_BASE_(r13)
+/* 8010A6EC 0010762C  80 8D 98 50 */	lwz r4, gpResourceManager@sda21(r13)
 /* 8010A6F0 00107630  38 7B 00 00 */	addi r3, r27, 0
 /* 8010A6F4 00107634  38 BD 00 00 */	addi r5, r29, 0
 /* 8010A6F8 00107638  57 87 08 3C */	slwi r7, r28, 1
@@ -2130,7 +2130,7 @@ lbl_8010A6D8:
 /* 8010A700 00107640  39 00 00 00 */	li r8, 0
 /* 8010A704 00107644  4B F6 4C E5 */	bl __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap
 lbl_8010A708:
-/* 8010A708 00107648  80 8D 97 98 */	lwz r4, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8010A708 00107648  80 8D 97 98 */	lwz r4, gpMarioParticleManager@sda21(r13)
 /* 8010A70C 0010764C  38 60 01 48 */	li r3, 0x148
 /* 8010A710 00107650  93 64 03 B8 */	stw r27, 0x3b8(r4)
 /* 8010A714 00107654  4B F0 21 9D */	bl __nw__FUl
@@ -2144,7 +2144,7 @@ lbl_8010A708:
 /* 8010A734 00107674  39 00 00 00 */	li r8, 0
 /* 8010A738 00107678  4B F6 4C B1 */	bl __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap
 lbl_8010A73C:
-/* 8010A73C 0010767C  93 6D 98 54 */	stw r27, gpEmitterManager4D2-_SDA_BASE_(r13)
+/* 8010A73C 0010767C  93 6D 98 54 */	stw r27, gpEmitterManager4D2@sda21(r13)
 /* 8010A740 00107680  7F E3 FB 78 */	mr r3, r31
 /* 8010A744 00107684  4B FF F3 41 */	bl loadParticle__12TMarDirectorFv
 /* 8010A748 00107688  38 7E 13 EC */	addi r3, r30, 0x13ec
@@ -2185,7 +2185,7 @@ lbl_8010A7C8:
 /* 8010A7C8 00107708  80 01 00 F0 */	lwz r0, 0xf0(r1)
 /* 8010A7CC 0010770C  38 61 00 60 */	addi r3, r1, 0x60
 /* 8010A7D0 00107710  38 80 00 00 */	li r4, 0
-/* 8010A7D4 00107714  90 0D 97 DC */	stw r0, gpSceneCmnDatSize-_SDA_BASE_(r13)
+/* 8010A7D4 00107714  90 0D 97 DC */	stw r0, gpSceneCmnDatSize@sda21(r13)
 /* 8010A7D8 00107718  38 A0 00 00 */	li r5, 0
 /* 8010A7DC 0010771C  38 C0 00 00 */	li r6, 0
 /* 8010A7E0 00107720  38 E0 00 00 */	li r7, 0
@@ -2193,8 +2193,8 @@ lbl_8010A7C8:
 /* 8010A7E8 00107728  39 20 00 00 */	li r9, 0
 /* 8010A7EC 0010772C  39 40 00 00 */	li r10, 0
 /* 8010A7F0 00107730  4B F2 9D D1 */	bl loadToMainRAM__12JKRDvdRipperFP10JKRDvdFilePUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
-/* 8010A7F4 00107734  90 6D 97 D8 */	stw r3, gpSceneCmnDat-_SDA_BASE_(r13)
-/* 8010A7F8 00107738  80 0D 97 D8 */	lwz r0, gpSceneCmnDat-_SDA_BASE_(r13)
+/* 8010A7F4 00107734  90 6D 97 D8 */	stw r3, gpSceneCmnDat@sda21(r13)
+/* 8010A7F8 00107738  80 0D 97 D8 */	lwz r0, gpSceneCmnDat@sda21(r13)
 /* 8010A7FC 0010773C  28 00 00 00 */	cmplwi r0, 0
 /* 8010A800 00107740  40 82 00 18 */	bne lbl_8010A818
 /* 8010A804 00107744  38 61 00 60 */	addi r3, r1, 0x60
@@ -2332,200 +2332,200 @@ __sinit_MarDirectorLoadResource_cpp:
 /* 8010A9D4 00107914  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8010A9D8 00107918  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8010A9DC 0010791C  3B E3 28 10 */	addi r31, r3, gParticleFlagLoaded@l
-/* 8010A9E0 00107920  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1-_SDA_BASE_(r13)
+/* 8010A9E0 00107920  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
 /* 8010A9E4 00107924  7C 00 07 75 */	extsb. r0, r0
 /* 8010A9E8 00107928  40 82 00 28 */	bne lbl_8010AA10
-/* 8010A9EC 0010792C  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1-_SDA_BASE_
+/* 8010A9EC 0010792C  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
 /* 8010A9F0 00107930  4B F0 42 45 */	bl initiate__10JSUPtrListFv
 /* 8010A9F4 00107934  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
 /* 8010A9F8 00107938  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 8010A9FC 0010793C  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1-_SDA_BASE_
+/* 8010A9FC 0010793C  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
 /* 8010AA00 00107940  38 BF 02 04 */	addi r5, r31, 0x204
 /* 8010AA04 00107944  4B F7 7D 25 */	bl __register_global_object
 /* 8010AA08 00107948  38 00 00 01 */	li r0, 1
-/* 8010AA0C 0010794C  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1-_SDA_BASE_(r13)
+/* 8010AA0C 0010794C  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
 lbl_8010AA10:
-/* 8010AA10 00107950  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_(r13)
+/* 8010AA10 00107950  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
 /* 8010AA14 00107954  7C 00 07 75 */	extsb. r0, r0
 /* 8010AA18 00107958  40 82 00 28 */	bne lbl_8010AA40
-/* 8010AA1C 0010795C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_
+/* 8010AA1C 0010795C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
 /* 8010AA20 00107960  4B F0 42 15 */	bl initiate__10JSUPtrListFv
 /* 8010AA24 00107964  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
 /* 8010AA28 00107968  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 8010AA2C 0010796C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_
+/* 8010AA2C 0010796C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
 /* 8010AA30 00107970  38 BF 02 10 */	addi r5, r31, 0x210
 /* 8010AA34 00107974  4B F7 7C F5 */	bl __register_global_object
 /* 8010AA38 00107978  38 00 00 01 */	li r0, 1
-/* 8010AA3C 0010797C  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_(r13)
+/* 8010AA3C 0010797C  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
 lbl_8010AA40:
-/* 8010AA40 00107980  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1-_SDA_BASE_(r13)
+/* 8010AA40 00107980  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
 /* 8010AA44 00107984  7C 00 07 75 */	extsb. r0, r0
 /* 8010AA48 00107988  40 82 00 28 */	bne lbl_8010AA70
-/* 8010AA4C 0010798C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1-_SDA_BASE_
+/* 8010AA4C 0010798C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
 /* 8010AA50 00107990  4B F0 41 E5 */	bl initiate__10JSUPtrListFv
 /* 8010AA54 00107994  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
 /* 8010AA58 00107998  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 8010AA5C 0010799C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1-_SDA_BASE_
+/* 8010AA5C 0010799C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
 /* 8010AA60 001079A0  38 BF 02 1C */	addi r5, r31, 0x21c
 /* 8010AA64 001079A4  4B F7 7C C5 */	bl __register_global_object
 /* 8010AA68 001079A8  38 00 00 01 */	li r0, 1
-/* 8010AA6C 001079AC  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1-_SDA_BASE_(r13)
+/* 8010AA6C 001079AC  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
 lbl_8010AA70:
-/* 8010AA70 001079B0  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_(r13)
+/* 8010AA70 001079B0  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
 /* 8010AA74 001079B4  7C 00 07 75 */	extsb. r0, r0
 /* 8010AA78 001079B8  40 82 00 28 */	bne lbl_8010AAA0
-/* 8010AA7C 001079BC  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_
+/* 8010AA7C 001079BC  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
 /* 8010AA80 001079C0  4B F0 41 B5 */	bl initiate__10JSUPtrListFv
 /* 8010AA84 001079C4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
 /* 8010AA88 001079C8  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 8010AA8C 001079CC  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_
+/* 8010AA8C 001079CC  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
 /* 8010AA90 001079D0  38 BF 02 28 */	addi r5, r31, 0x228
 /* 8010AA94 001079D4  4B F7 7C 95 */	bl __register_global_object
 /* 8010AA98 001079D8  38 00 00 01 */	li r0, 1
-/* 8010AA9C 001079DC  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_(r13)
+/* 8010AA9C 001079DC  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
 lbl_8010AAA0:
-/* 8010AAA0 001079E0  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_(r13)
+/* 8010AAA0 001079E0  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
 /* 8010AAA4 001079E4  7C 00 07 75 */	extsb. r0, r0
 /* 8010AAA8 001079E8  40 82 00 28 */	bne lbl_8010AAD0
-/* 8010AAAC 001079EC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_
+/* 8010AAAC 001079EC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
 /* 8010AAB0 001079F0  4B F0 41 85 */	bl initiate__10JSUPtrListFv
 /* 8010AAB4 001079F4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
 /* 8010AAB8 001079F8  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 8010AABC 001079FC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_
+/* 8010AABC 001079FC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
 /* 8010AAC0 00107A00  38 BF 02 34 */	addi r5, r31, 0x234
 /* 8010AAC4 00107A04  4B F7 7C 65 */	bl __register_global_object
 /* 8010AAC8 00107A08  38 00 00 01 */	li r0, 1
-/* 8010AACC 00107A0C  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_(r13)
+/* 8010AACC 00107A0C  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
 lbl_8010AAD0:
-/* 8010AAD0 00107A10  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_(r13)
+/* 8010AAD0 00107A10  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
 /* 8010AAD4 00107A14  7C 00 07 75 */	extsb. r0, r0
 /* 8010AAD8 00107A18  40 82 00 28 */	bne lbl_8010AB00
-/* 8010AADC 00107A1C  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_
+/* 8010AADC 00107A1C  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
 /* 8010AAE0 00107A20  4B F0 41 55 */	bl initiate__10JSUPtrListFv
 /* 8010AAE4 00107A24  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
 /* 8010AAE8 00107A28  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 8010AAEC 00107A2C  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_
+/* 8010AAEC 00107A2C  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
 /* 8010AAF0 00107A30  38 BF 02 40 */	addi r5, r31, 0x240
 /* 8010AAF4 00107A34  4B F7 7C 35 */	bl __register_global_object
 /* 8010AAF8 00107A38  38 00 00 01 */	li r0, 1
-/* 8010AAFC 00107A3C  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_(r13)
+/* 8010AAFC 00107A3C  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
 lbl_8010AB00:
-/* 8010AB00 00107A40  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB00 00107A40  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
 /* 8010AB04 00107A44  7C 00 07 75 */	extsb. r0, r0
 /* 8010AB08 00107A48  40 82 00 28 */	bne lbl_8010AB30
-/* 8010AB0C 00107A4C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_
+/* 8010AB0C 00107A4C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
 /* 8010AB10 00107A50  4B F0 41 25 */	bl initiate__10JSUPtrListFv
 /* 8010AB14 00107A54  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
 /* 8010AB18 00107A58  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 8010AB1C 00107A5C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_
+/* 8010AB1C 00107A5C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
 /* 8010AB20 00107A60  38 BF 02 4C */	addi r5, r31, 0x24c
 /* 8010AB24 00107A64  4B F7 7C 05 */	bl __register_global_object
 /* 8010AB28 00107A68  38 00 00 01 */	li r0, 1
-/* 8010AB2C 00107A6C  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB2C 00107A6C  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
 lbl_8010AB30:
-/* 8010AB30 00107A70  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB30 00107A70  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
 /* 8010AB34 00107A74  7C 00 07 75 */	extsb. r0, r0
 /* 8010AB38 00107A78  40 82 00 28 */	bne lbl_8010AB60
-/* 8010AB3C 00107A7C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_
+/* 8010AB3C 00107A7C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
 /* 8010AB40 00107A80  4B F0 40 F5 */	bl initiate__10JSUPtrListFv
 /* 8010AB44 00107A84  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
 /* 8010AB48 00107A88  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 8010AB4C 00107A8C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_
+/* 8010AB4C 00107A8C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
 /* 8010AB50 00107A90  38 BF 02 58 */	addi r5, r31, 0x258
 /* 8010AB54 00107A94  4B F7 7B D5 */	bl __register_global_object
 /* 8010AB58 00107A98  38 00 00 01 */	li r0, 1
-/* 8010AB5C 00107A9C  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB5C 00107A9C  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
 lbl_8010AB60:
-/* 8010AB60 00107AA0  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB60 00107AA0  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
 /* 8010AB64 00107AA4  7C 00 07 75 */	extsb. r0, r0
 /* 8010AB68 00107AA8  40 82 00 28 */	bne lbl_8010AB90
-/* 8010AB6C 00107AAC  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_
+/* 8010AB6C 00107AAC  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
 /* 8010AB70 00107AB0  4B F0 40 C5 */	bl initiate__10JSUPtrListFv
 /* 8010AB74 00107AB4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
 /* 8010AB78 00107AB8  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 8010AB7C 00107ABC  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_
+/* 8010AB7C 00107ABC  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
 /* 8010AB80 00107AC0  38 BF 02 64 */	addi r5, r31, 0x264
 /* 8010AB84 00107AC4  4B F7 7B A5 */	bl __register_global_object
 /* 8010AB88 00107AC8  38 00 00 01 */	li r0, 1
-/* 8010AB8C 00107ACC  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_(r13)
+/* 8010AB8C 00107ACC  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
 lbl_8010AB90:
-/* 8010AB90 00107AD0  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_(r13)
+/* 8010AB90 00107AD0  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
 /* 8010AB94 00107AD4  7C 00 07 75 */	extsb. r0, r0
 /* 8010AB98 00107AD8  40 82 00 28 */	bne lbl_8010ABC0
-/* 8010AB9C 00107ADC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_
+/* 8010AB9C 00107ADC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
 /* 8010ABA0 00107AE0  4B F0 40 95 */	bl initiate__10JSUPtrListFv
 /* 8010ABA4 00107AE4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
 /* 8010ABA8 00107AE8  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 8010ABAC 00107AEC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_
+/* 8010ABAC 00107AEC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
 /* 8010ABB0 00107AF0  38 BF 02 70 */	addi r5, r31, 0x270
 /* 8010ABB4 00107AF4  4B F7 7B 75 */	bl __register_global_object
 /* 8010ABB8 00107AF8  38 00 00 01 */	li r0, 1
-/* 8010ABBC 00107AFC  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_(r13)
+/* 8010ABBC 00107AFC  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
 lbl_8010ABC0:
-/* 8010ABC0 00107B00  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_(r13)
+/* 8010ABC0 00107B00  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
 /* 8010ABC4 00107B04  7C 00 07 75 */	extsb. r0, r0
 /* 8010ABC8 00107B08  40 82 00 28 */	bne lbl_8010ABF0
-/* 8010ABCC 00107B0C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_
+/* 8010ABCC 00107B0C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
 /* 8010ABD0 00107B10  4B F0 40 65 */	bl initiate__10JSUPtrListFv
 /* 8010ABD4 00107B14  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
 /* 8010ABD8 00107B18  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 8010ABDC 00107B1C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_
+/* 8010ABDC 00107B1C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
 /* 8010ABE0 00107B20  38 BF 02 7C */	addi r5, r31, 0x27c
 /* 8010ABE4 00107B24  4B F7 7B 45 */	bl __register_global_object
 /* 8010ABE8 00107B28  38 00 00 01 */	li r0, 1
-/* 8010ABEC 00107B2C  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_(r13)
+/* 8010ABEC 00107B2C  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
 lbl_8010ABF0:
-/* 8010ABF0 00107B30  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_(r13)
+/* 8010ABF0 00107B30  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
 /* 8010ABF4 00107B34  7C 00 07 75 */	extsb. r0, r0
 /* 8010ABF8 00107B38  40 82 00 28 */	bne lbl_8010AC20
-/* 8010ABFC 00107B3C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_
+/* 8010ABFC 00107B3C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
 /* 8010AC00 00107B40  4B F0 40 35 */	bl initiate__10JSUPtrListFv
 /* 8010AC04 00107B44  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
 /* 8010AC08 00107B48  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 8010AC0C 00107B4C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_
+/* 8010AC0C 00107B4C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
 /* 8010AC10 00107B50  38 BF 02 88 */	addi r5, r31, 0x288
 /* 8010AC14 00107B54  4B F7 7B 15 */	bl __register_global_object
 /* 8010AC18 00107B58  38 00 00 01 */	li r0, 1
-/* 8010AC1C 00107B5C  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_(r13)
+/* 8010AC1C 00107B5C  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
 lbl_8010AC20:
-/* 8010AC20 00107B60  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_(r13)
+/* 8010AC20 00107B60  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
 /* 8010AC24 00107B64  7C 00 07 75 */	extsb. r0, r0
 /* 8010AC28 00107B68  40 82 00 28 */	bne lbl_8010AC50
-/* 8010AC2C 00107B6C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_
+/* 8010AC2C 00107B6C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
 /* 8010AC30 00107B70  4B F0 40 05 */	bl initiate__10JSUPtrListFv
 /* 8010AC34 00107B74  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
 /* 8010AC38 00107B78  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 8010AC3C 00107B7C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_
+/* 8010AC3C 00107B7C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
 /* 8010AC40 00107B80  38 BF 02 94 */	addi r5, r31, 0x294
 /* 8010AC44 00107B84  4B F7 7A E5 */	bl __register_global_object
 /* 8010AC48 00107B88  38 00 00 01 */	li r0, 1
-/* 8010AC4C 00107B8C  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_(r13)
+/* 8010AC4C 00107B8C  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
 lbl_8010AC50:
-/* 8010AC50 00107B90  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_(r13)
+/* 8010AC50 00107B90  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
 /* 8010AC54 00107B94  7C 00 07 75 */	extsb. r0, r0
 /* 8010AC58 00107B98  40 82 00 28 */	bne lbl_8010AC80
-/* 8010AC5C 00107B9C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_
+/* 8010AC5C 00107B9C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
 /* 8010AC60 00107BA0  4B F0 3F D5 */	bl initiate__10JSUPtrListFv
 /* 8010AC64 00107BA4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
 /* 8010AC68 00107BA8  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 8010AC6C 00107BAC  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_
+/* 8010AC6C 00107BAC  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
 /* 8010AC70 00107BB0  38 BF 02 A0 */	addi r5, r31, 0x2a0
 /* 8010AC74 00107BB4  4B F7 7A B5 */	bl __register_global_object
 /* 8010AC78 00107BB8  38 00 00 01 */	li r0, 1
-/* 8010AC7C 00107BBC  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_(r13)
+/* 8010AC7C 00107BBC  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
 lbl_8010AC80:
-/* 8010AC80 00107BC0  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_(r13)
+/* 8010AC80 00107BC0  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
 /* 8010AC84 00107BC4  7C 00 07 75 */	extsb. r0, r0
 /* 8010AC88 00107BC8  40 82 00 28 */	bne lbl_8010ACB0
-/* 8010AC8C 00107BCC  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_
+/* 8010AC8C 00107BCC  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
 /* 8010AC90 00107BD0  4B F0 3F A5 */	bl initiate__10JSUPtrListFv
 /* 8010AC94 00107BD4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
 /* 8010AC98 00107BD8  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 8010AC9C 00107BDC  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_
+/* 8010AC9C 00107BDC  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
 /* 8010ACA0 00107BE0  38 BF 02 AC */	addi r5, r31, 0x2ac
 /* 8010ACA4 00107BE4  4B F7 7A 85 */	bl __register_global_object
 /* 8010ACA8 00107BE8  38 00 00 01 */	li r0, 1
-/* 8010ACAC 00107BEC  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_(r13)
+/* 8010ACAC 00107BEC  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
 lbl_8010ACB0:
 /* 8010ACB0 00107BF0  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 8010ACB4 00107BF4  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -2534,11 +2534,13 @@ lbl_8010ACB0:
 /* 8010ACC0 00107C00  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC44, 0x4
+  .4byte __sinit_MarDirectorLoadResource_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3753D8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22155:
 	.incbin "baserom.dol", 0x3753E4, 0x14
 $$22384:

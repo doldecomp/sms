@@ -738,7 +738,7 @@ newMatColor__22J3DMaterialFactory_v21CFii:
 /* 80069680 000665C0  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 80069684 000665C4  54 A0 08 3C */	slwi r0, r5, 1
 /* 80069688 000665C8  54 CA 08 3C */	slwi r10, r6, 1
-/* 8006968C 000665CC  80 E2 87 68 */	lwz r7, $$21217-_SDA2_BASE_(r2)
+/* 8006968C 000665CC  80 E2 87 68 */	lwz r7, $$21217@sda21(r2)
 /* 80069690 000665D0  90 E1 00 2C */	stw r7, 0x2c(r1)
 /* 80069694 000665D4  80 A4 00 08 */	lwz r5, 8(r4)
 /* 80069698 000665D8  80 C4 00 04 */	lwz r6, 4(r4)
@@ -827,15 +827,15 @@ lbl_800697A4:
 /* 800697BC 000666FC  B0 7F 00 00 */	sth r3, 0(r31)
 /* 800697C0 00066700  48 00 00 3C */	b lbl_800697FC
 lbl_800697C4:
-/* 800697C4 00066704  38 6D 80 A8 */	addi r3, r13, j3dDefaultColorChanInfo-_SDA_BASE_
+/* 800697C4 00066704  38 6D 80 A8 */	addi r3, r13, j3dDefaultColorChanInfo@sda21
 /* 800697C8 00066708  89 03 00 05 */	lbz r8, 5(r3)
 /* 800697CC 0006670C  3C 08 00 00 */	addis r0, r8, 0
 /* 800697D0 00066710  28 00 FF FF */	cmplwi r0, 0xffff
 /* 800697D4 00066714  40 82 00 08 */	bne lbl_800697DC
 /* 800697D8 00066718  39 00 00 00 */	li r8, 0
 lbl_800697DC:
-/* 800697DC 0006671C  38 ED 80 A8 */	addi r7, r13, j3dDefaultColorChanInfo-_SDA_BASE_
-/* 800697E0 00066720  88 6D 80 A8 */	lbz r3, j3dDefaultColorChanInfo-_SDA_BASE_(r13)
+/* 800697DC 0006671C  38 ED 80 A8 */	addi r7, r13, j3dDefaultColorChanInfo@sda21
+/* 800697E0 00066720  88 6D 80 A8 */	lbz r3, j3dDefaultColorChanInfo@sda21(r13)
 /* 800697E4 00066724  88 87 00 01 */	lbz r4, 1(r7)
 /* 800697E8 00066728  88 A7 00 02 */	lbz r5, 2(r7)
 /* 800697EC 0006672C  88 C7 00 03 */	lbz r6, 3(r7)
@@ -1008,8 +1008,8 @@ newTevOrder__22J3DMaterialFactory_v21CFii:
 /* 80069A24 00066964  98 03 00 02 */	stb r0, 2(r3)
 /* 80069A28 00066968  4E 80 00 20 */	blr 
 lbl_80069A2C:
-/* 80069A2C 0006696C  88 0D 80 84 */	lbz r0, j3dDefaultTevOrderInfoNull-_SDA_BASE_(r13)
-/* 80069A30 00066970  38 8D 80 84 */	addi r4, r13, j3dDefaultTevOrderInfoNull-_SDA_BASE_
+/* 80069A2C 0006696C  88 0D 80 84 */	lbz r0, j3dDefaultTevOrderInfoNull@sda21(r13)
+/* 80069A30 00066970  38 8D 80 84 */	addi r4, r13, j3dDefaultTevOrderInfoNull@sda21
 /* 80069A34 00066974  98 03 00 00 */	stb r0, 0(r3)
 /* 80069A38 00066978  88 04 00 01 */	lbz r0, 1(r4)
 /* 80069A3C 0006697C  98 03 00 01 */	stb r0, 1(r3)
@@ -1022,8 +1022,8 @@ newTevColor__22J3DMaterialFactory_v21CFii:
 /* 80069A4C 0006698C  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 80069A50 00066990  54 A0 08 3C */	slwi r0, r5, 1
 /* 80069A54 00066994  54 CA 08 3C */	slwi r10, r6, 1
-/* 80069A58 00066998  80 E2 87 6C */	lwz r7, $$21326-_SDA2_BASE_(r2)
-/* 80069A5C 0006699C  80 A2 87 70 */	lwz r5, lbl_8040BBD0-_SDA2_BASE_(r2)
+/* 80069A58 00066998  80 E2 87 6C */	lwz r7, $$21326@sda21(r2)
+/* 80069A5C 0006699C  80 A2 87 70 */	lwz r5, lbl_8040BBD0@sda21(r2)
 /* 80069A60 000669A0  90 E1 00 2C */	stw r7, 0x2c(r1)
 /* 80069A64 000669A4  90 A1 00 30 */	stw r5, 0x30(r1)
 /* 80069A68 000669A8  80 A4 00 08 */	lwz r5, 8(r4)
@@ -1065,7 +1065,7 @@ newTevKColor__22J3DMaterialFactory_v21CFii:
 /* 80069AE4 00066A24  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 80069AE8 00066A28  54 A0 08 3C */	slwi r0, r5, 1
 /* 80069AEC 00066A2C  54 CA 08 3C */	slwi r10, r6, 1
-/* 80069AF0 00066A30  80 E2 87 74 */	lwz r7, $$21344-_SDA2_BASE_(r2)
+/* 80069AF0 00066A30  80 E2 87 74 */	lwz r7, $$21344@sda21(r2)
 /* 80069AF4 00066A34  90 E1 00 2C */	stw r7, 0x2c(r1)
 /* 80069AF8 00066A38  80 A4 00 08 */	lwz r5, 8(r4)
 /* 80069AFC 00066A3C  80 C4 00 04 */	lwz r6, 4(r4)
@@ -1192,7 +1192,7 @@ newTevStage__22J3DMaterialFactory_v21CFii:
 /* 80069CBC 00066BFC  88 FF 00 11 */	lbz r7, 0x11(r31)
 /* 80069CC0 00066C00  89 1F 00 12 */	lbz r8, 0x12(r31)
 /* 80069CC4 00066C04  4B FB 71 6D */	bl setTevAlphaOp__11J3DTevStageFUcUcUcUcUc
-/* 80069CC8 00066C08  38 6D 80 9C */	addi r3, r13, j3dDefaultTevSwapMode-_SDA_BASE_
+/* 80069CC8 00066C08  38 6D 80 9C */	addi r3, r13, j3dDefaultTevSwapMode@sda21
 /* 80069CCC 00066C0C  88 9E 00 07 */	lbz r4, 7(r30)
 /* 80069CD0 00066C10  88 03 00 01 */	lbz r0, 1(r3)
 /* 80069CD4 00066C14  54 83 07 B6 */	rlwinm r3, r4, 0, 0x1e, 0x1b
@@ -1200,7 +1200,7 @@ newTevStage__22J3DMaterialFactory_v21CFii:
 /* 80069CDC 00066C1C  7C 60 03 78 */	or r0, r3, r0
 /* 80069CE0 00066C20  98 1E 00 07 */	stb r0, 7(r30)
 /* 80069CE4 00066C24  88 7E 00 07 */	lbz r3, 7(r30)
-/* 80069CE8 00066C28  88 0D 80 9C */	lbz r0, j3dDefaultTevSwapMode-_SDA_BASE_(r13)
+/* 80069CE8 00066C28  88 0D 80 9C */	lbz r0, j3dDefaultTevSwapMode@sda21(r13)
 /* 80069CEC 00066C2C  54 63 00 3A */	rlwinm r3, r3, 0, 0, 0x1d
 /* 80069CF0 00066C30  7C 60 03 78 */	or r0, r3, r0
 /* 80069CF4 00066C34  98 1E 00 07 */	stb r0, 7(r30)
@@ -1259,7 +1259,7 @@ lbl_80069CFC:
 /* 80069DC4 00066D04  88 FF 00 11 */	lbz r7, 0x11(r31)
 /* 80069DC8 00066D08  89 1F 00 12 */	lbz r8, 0x12(r31)
 /* 80069DCC 00066D0C  4B FB 70 65 */	bl setTevAlphaOp__11J3DTevStageFUcUcUcUcUc
-/* 80069DD0 00066D10  38 6D 80 9C */	addi r3, r13, j3dDefaultTevSwapMode-_SDA_BASE_
+/* 80069DD0 00066D10  38 6D 80 9C */	addi r3, r13, j3dDefaultTevSwapMode@sda21
 /* 80069DD4 00066D14  88 9E 00 07 */	lbz r4, 7(r30)
 /* 80069DD8 00066D18  88 03 00 01 */	lbz r0, 1(r3)
 /* 80069DDC 00066D1C  54 83 07 B6 */	rlwinm r3, r4, 0, 0x1e, 0x1b
@@ -1267,7 +1267,7 @@ lbl_80069CFC:
 /* 80069DE4 00066D24  7C 60 03 78 */	or r0, r3, r0
 /* 80069DE8 00066D28  98 1E 00 07 */	stb r0, 7(r30)
 /* 80069DEC 00066D2C  88 7E 00 07 */	lbz r3, 7(r30)
-/* 80069DF0 00066D30  88 0D 80 9C */	lbz r0, j3dDefaultTevSwapMode-_SDA_BASE_(r13)
+/* 80069DF0 00066D30  88 0D 80 9C */	lbz r0, j3dDefaultTevSwapMode@sda21(r13)
 /* 80069DF4 00066D34  54 63 00 3A */	rlwinm r3, r3, 0, 0, 0x1d
 /* 80069DF8 00066D38  7C 60 03 78 */	or r0, r3, r0
 /* 80069DFC 00066D3C  98 1E 00 07 */	stb r0, 7(r30)
@@ -1308,8 +1308,8 @@ newTevSwapModeTable__22J3DMaterialFactory_v21CFii:
 /* 80069E78 00066DB8  98 03 00 00 */	stb r0, 0(r3)
 /* 80069E7C 00066DBC  4E 80 00 20 */	blr 
 lbl_80069E80:
-/* 80069E80 00066DC0  38 CD 80 A0 */	addi r6, r13, j3dDefaultTevSwapModeTable-_SDA_BASE_
-/* 80069E84 00066DC4  88 8D 80 A0 */	lbz r4, j3dDefaultTevSwapModeTable-_SDA_BASE_(r13)
+/* 80069E80 00066DC0  38 CD 80 A0 */	addi r6, r13, j3dDefaultTevSwapModeTable@sda21
+/* 80069E84 00066DC4  88 8D 80 A0 */	lbz r4, j3dDefaultTevSwapModeTable@sda21(r13)
 /* 80069E88 00066DC8  88 A6 00 02 */	lbz r5, 2(r6)
 /* 80069E8C 00066DCC  88 06 00 01 */	lbz r0, 1(r6)
 /* 80069E90 00066DD0  54 84 30 32 */	slwi r4, r4, 6
@@ -1422,8 +1422,8 @@ newBlend__22J3DMaterialFactory_v21CFi:
 /* 8006A00C 00066F4C  98 03 00 03 */	stb r0, 3(r3)
 /* 8006A010 00066F50  4E 80 00 20 */	blr 
 lbl_8006A014:
-/* 8006A014 00066F54  88 0D 80 A4 */	lbz r0, j3dDefaultBlendInfo-_SDA_BASE_(r13)
-/* 8006A018 00066F58  38 8D 80 A4 */	addi r4, r13, j3dDefaultBlendInfo-_SDA_BASE_
+/* 8006A014 00066F54  88 0D 80 A4 */	lbz r0, j3dDefaultBlendInfo@sda21(r13)
+/* 8006A018 00066F58  38 8D 80 A4 */	addi r4, r13, j3dDefaultBlendInfo@sda21
 /* 8006A01C 00066F5C  98 03 00 00 */	stb r0, 0(r3)
 /* 8006A020 00066F60  88 04 00 01 */	lbz r0, 1(r4)
 /* 8006A024 00066F64  98 03 00 01 */	stb r0, 1(r3)
@@ -1557,10 +1557,10 @@ lbl_8006A1C8:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21217:
-	.incbin "baserom.dol", 0x3E4468, 0x4
+  .4byte -1
 $$21326:
-	.incbin "baserom.dol", 0x3E446C, 0x4
+  .4byte 0
 lbl_8040BBD0:
-	.incbin "baserom.dol", 0x3E4470, 0x4
+  .4byte 0
 $$21344:
-	.incbin "baserom.dol", 0x3E4474, 0x4
+  .4byte -1

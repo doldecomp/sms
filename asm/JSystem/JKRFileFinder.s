@@ -124,4 +124,7 @@ lbl_8000BAB8:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12JKRArcFinder
 __vt__12JKRArcFinder:
-	.incbin "baserom.dol", 0x3A55A8, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JKRArcFinderFv
+  .4byte findNextFile__12JKRArcFinderFv

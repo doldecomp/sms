@@ -13,7 +13,7 @@ create__10JUTConsoleFUiPvUl:
 /* 8003F220 0003C160  93 81 00 20 */	stw r28, 0x20(r1)
 /* 8003F224 0003C164  7C 7C 1B 78 */	mr r28, r3
 /* 8003F228 0003C168  38 65 00 00 */	addi r3, r5, 0
-/* 8003F22C 0003C16C  83 CD 8E D0 */	lwz r30, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 8003F22C 0003C16C  83 CD 8E D0 */	lwz r30, sManager__17JUTConsoleManager@sda21(r13)
 /* 8003F230 0003C170  38 9C 00 00 */	addi r4, r28, 0
 /* 8003F234 0003C174  48 00 01 DD */	bl getLineFromObjectSize__10JUTConsoleFUlUi
 /* 8003F238 0003C178  28 1D 00 00 */	cmplwi r29, 0
@@ -126,7 +126,7 @@ __dt__10JUTConsoleFv:
 /* 8003F3C4 0003C304  38 03 A0 10 */	addi r0, r3, __vt__10JUTConsole@l
 /* 8003F3C8 0003C308  90 1E 00 00 */	stw r0, 0(r30)
 /* 8003F3CC 0003C30C  7F C4 F3 78 */	mr r4, r30
-/* 8003F3D0 0003C310  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 8003F3D0 0003C310  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 8003F3D4 0003C314  48 00 0A 55 */	bl removeConsole__17JUTConsoleManagerFP10JUTConsole
 /* 8003F3D8 0003C318  38 7E 00 00 */	addi r3, r30, 0
 /* 8003F3DC 0003C31C  38 80 00 00 */	li r4, 0
@@ -212,12 +212,12 @@ lbl_8003F4CC:
 lbl_8003F4E8:
 /* 8003F4E8 0003C428  3B E0 00 00 */	li r31, 0
 lbl_8003F4EC:
-/* 8003F4EC 0003C42C  C0 22 83 78 */	lfs f1, $$21718-_SDA2_BASE_(r2)
+/* 8003F4EC 0003C42C  C0 22 83 78 */	lfs f1, $$21718@sda21(r2)
 /* 8003F4F0 0003C430  2C 1D 00 02 */	cmpwi r29, 2
 /* 8003F4F4 0003C434  C0 1C 00 54 */	lfs f0, 0x54(r28)
 /* 8003F4F8 0003C438  EF E1 00 2A */	fadds f31, f1, f0
 /* 8003F4FC 0003C43C  41 82 02 48 */	beq lbl_8003F744
-/* 8003F500 0003C440  80 6D 8E B8 */	lwz r3, sManager__8JUTVideo-_SDA_BASE_(r13)
+/* 8003F500 0003C440  80 6D 8E B8 */	lwz r3, sManager__8JUTVideo@sda21(r13)
 /* 8003F504 0003C444  28 03 00 00 */	cmplwi r3, 0
 /* 8003F508 0003C448  40 82 00 40 */	bne lbl_8003F548
 /* 8003F50C 0003C44C  38 61 02 70 */	addi r3, r1, 0x270
@@ -261,10 +261,10 @@ lbl_8003F594:
 lbl_8003F598:
 /* 8003F598 0003C4D8  80 03 00 00 */	lwz r0, 0(r3)
 /* 8003F59C 0003C4DC  3C 80 43 30 */	lis r4, 0x4330
-/* 8003F5A0 0003C4E0  C8 A2 83 80 */	lfd f5, $$21721-_SDA2_BASE_(r2)
+/* 8003F5A0 0003C4E0  C8 A2 83 80 */	lfd f5, $$21721@sda21(r2)
 /* 8003F5A4 0003C4E4  38 E1 01 2C */	addi r7, r1, 0x12c
 /* 8003F5A8 0003C4E8  90 01 01 2C */	stw r0, 0x12c(r1)
-/* 8003F5AC 0003C4EC  C8 62 83 88 */	lfd f3, $$21724-_SDA2_BASE_(r2)
+/* 8003F5AC 0003C4EC  C8 62 83 88 */	lfd f3, $$21724@sda21(r2)
 /* 8003F5B0 0003C4F0  80 BC 00 44 */	lwz r5, 0x44(r28)
 /* 8003F5B4 0003C4F4  80 7C 00 20 */	lwz r3, 0x20(r28)
 /* 8003F5B8 0003C4F8  6C A5 80 00 */	xoris r5, r5, 0x8000
@@ -274,7 +274,7 @@ lbl_8003F598:
 /* 8003F5C8 0003C508  90 61 03 84 */	stw r3, 0x384(r1)
 /* 8003F5CC 0003C50C  80 BC 00 40 */	lwz r5, 0x40(r28)
 /* 8003F5D0 0003C510  90 01 03 74 */	stw r0, 0x374(r1)
-/* 8003F5D4 0003C514  C0 22 83 7C */	lfs f1, $$21719-_SDA2_BASE_(r2)
+/* 8003F5D4 0003C514  C0 22 83 7C */	lfs f1, $$21719@sda21(r2)
 /* 8003F5D8 0003C518  38 65 FF FE */	addi r3, r5, -2
 /* 8003F5DC 0003C51C  90 81 03 90 */	stw r4, 0x390(r1)
 /* 8003F5E0 0003C520  90 81 03 80 */	stw r4, 0x380(r1)
@@ -378,11 +378,11 @@ lbl_8003F744:
 /* 8003F750 0003C690  90 01 03 68 */	stw r0, 0x368(r1)
 /* 8003F754 0003C694  1C C3 00 06 */	mulli r6, r3, 6
 /* 8003F758 0003C698  80 9C 00 40 */	lwz r4, 0x40(r28)
-/* 8003F75C 0003C69C  C8 22 83 88 */	lfd f1, $$21724-_SDA2_BASE_(r2)
+/* 8003F75C 0003C69C  C8 22 83 88 */	lfd f1, $$21724@sda21(r2)
 /* 8003F760 0003C6A0  C8 01 03 68 */	lfd f0, 0x368(r1)
 /* 8003F764 0003C6A4  80 BC 00 44 */	lwz r5, 0x44(r28)
 /* 8003F768 0003C6A8  EC 00 08 28 */	fsubs f0, f0, f1
-/* 8003F76C 0003C6AC  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint-_SDA_BASE_(r13)
+/* 8003F76C 0003C6AC  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint@sda21(r13)
 /* 8003F770 0003C6B0  38 84 FF FD */	addi r4, r4, -3
 /* 8003F774 0003C6B4  38 A5 FF FE */	addi r5, r5, -2
 /* 8003F778 0003C6B8  EC 1F 00 32 */	fmuls f0, f31, f0
@@ -395,7 +395,7 @@ lbl_8003F744:
 lbl_8003F794:
 /* 8003F794 0003C6D4  83 FC 00 30 */	lwz r31, 0x30(r28)
 /* 8003F798 0003C6D8  3B C0 00 00 */	li r30, 0
-/* 8003F79C 0003C6DC  CB C2 83 80 */	lfd f30, $$21721-_SDA2_BASE_(r2)
+/* 8003F79C 0003C6DC  CB C2 83 80 */	lfd f30, $$21721@sda21(r2)
 /* 8003F7A0 0003C6E0  3F 60 43 30 */	lis r27, 0x4330
 lbl_8003F7A4:
 /* 8003F7A4 0003C6E4  80 7C 00 20 */	lwz r3, 0x20(r28)
@@ -458,7 +458,7 @@ lbl_8003F870:
 /* 8003F884 0003C7C4  90 01 03 74 */	stw r0, 0x374(r1)
 /* 8003F888 0003C7C8  80 1C 00 40 */	lwz r0, 0x40(r28)
 /* 8003F88C 0003C7CC  93 61 03 68 */	stw r27, 0x368(r1)
-/* 8003F890 0003C7D0  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint-_SDA_BASE_(r13)
+/* 8003F890 0003C7D0  80 6D 8D B0 */	lwz r3, sDirectPrint__14JUTDirectPrint@sda21(r13)
 /* 8003F894 0003C7D4  54 04 04 3E */	clrlwi r4, r0, 0x10
 /* 8003F898 0003C7D8  93 61 03 70 */	stw r27, 0x370(r1)
 /* 8003F89C 0003C7DC  C8 21 03 68 */	lfd f1, 0x368(r1)
@@ -824,7 +824,7 @@ createManager__17JUTConsoleManagerFP7JKRHeap:
 /* 8003FD4C 0003CC8C  90 01 00 04 */	stw r0, 4(r1)
 /* 8003FD50 0003CC90  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8003FD54 0003CC94  40 82 00 08 */	bne lbl_8003FD5C
-/* 8003FD58 0003CC98  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8003FD58 0003CC98  80 6D 8D 6C */	lwz r3, sCurrentHeap__7JKRHeap@sda21(r13)
 lbl_8003FD5C:
 /* 8003FD5C 0003CC9C  38 83 00 00 */	addi r4, r3, 0
 /* 8003FD60 0003CCA0  38 60 00 14 */	li r3, 0x14
@@ -834,7 +834,7 @@ lbl_8003FD5C:
 /* 8003FD70 0003CCB0  41 82 00 08 */	beq lbl_8003FD78
 /* 8003FD74 0003CCB4  4B FF FF A9 */	bl __ct__17JUTConsoleManagerFv
 lbl_8003FD78:
-/* 8003FD78 0003CCB8  90 6D 8E D0 */	stw r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 8003FD78 0003CCB8  90 6D 8E D0 */	stw r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 8003FD7C 0003CCBC  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8003FD80 0003CCC0  38 21 00 08 */	addi r1, r1, 8
 /* 8003FD84 0003CCC4  7C 08 03 A6 */	mtlr r0
@@ -1148,22 +1148,22 @@ Element_getNode__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FP10JUTConsole:
 
 .global JUTSetReportConsole
 JUTSetReportConsole:
-/* 80040170 0003D0B0  90 6D 8E D4 */	stw r3, sReportConsole-_SDA_BASE_(r13)
+/* 80040170 0003D0B0  90 6D 8E D4 */	stw r3, sReportConsole@sda21(r13)
 /* 80040174 0003D0B4  4E 80 00 20 */	blr 
 
 .global JUTGetReportConsole
 JUTGetReportConsole:
-/* 80040178 0003D0B8  80 6D 8E D4 */	lwz r3, sReportConsole-_SDA_BASE_(r13)
+/* 80040178 0003D0B8  80 6D 8E D4 */	lwz r3, sReportConsole@sda21(r13)
 /* 8004017C 0003D0BC  4E 80 00 20 */	blr 
 
 .global JUTSetWarningConsole
 JUTSetWarningConsole:
-/* 80040180 0003D0C0  90 6D 8E D8 */	stw r3, sWarningConsole-_SDA_BASE_(r13)
+/* 80040180 0003D0C0  90 6D 8E D8 */	stw r3, sWarningConsole@sda21(r13)
 /* 80040184 0003D0C4  4E 80 00 20 */	blr 
 
 .global JUTGetWarningConsole
 JUTGetWarningConsole:
-/* 80040188 0003D0C8  80 6D 8E D8 */	lwz r3, sWarningConsole-_SDA_BASE_(r13)
+/* 80040188 0003D0C8  80 6D 8E D8 */	lwz r3, sWarningConsole@sda21(r13)
 /* 8004018C 0003D0CC  4E 80 00 20 */	blr 
 
 .global JUTReportConsole_f
@@ -1196,7 +1196,7 @@ lbl_800401C0:
 /* 800401F0 0003D130  38 01 00 08 */	addi r0, r1, 8
 /* 800401F4 0003D134  90 81 01 88 */	stw r4, 0x188(r1)
 /* 800401F8 0003D138  90 01 01 8C */	stw r0, 0x18c(r1)
-/* 800401FC 0003D13C  80 8D 8E D4 */	lwz r4, sReportConsole-_SDA_BASE_(r13)
+/* 800401FC 0003D13C  80 8D 8E D4 */	lwz r4, sReportConsole@sda21(r13)
 /* 80040200 0003D140  28 04 00 00 */	cmplwi r4, 0
 /* 80040204 0003D144  40 82 00 18 */	bne lbl_8004021C
 /* 80040208 0003D148  38 A3 00 00 */	addi r5, r3, 0
@@ -1212,7 +1212,7 @@ lbl_8004021C:
 /* 8004022C 0003D16C  38 61 00 80 */	addi r3, r1, 0x80
 /* 80040230 0003D170  38 80 01 00 */	li r4, 0x100
 /* 80040234 0003D174  48 04 3F 61 */	bl vsnprintf
-/* 80040238 0003D178  80 6D 8E D4 */	lwz r3, sReportConsole-_SDA_BASE_(r13)
+/* 80040238 0003D178  80 6D 8E D4 */	lwz r3, sReportConsole@sda21(r13)
 /* 8004023C 0003D17C  38 81 00 80 */	addi r4, r1, 0x80
 /* 80040240 0003D180  4B FF F7 61 */	bl print__10JUTConsoleFPCc
 lbl_80040244:
@@ -1227,7 +1227,7 @@ JUTReportConsole:
 /* 80040258 0003D198  38 83 00 00 */	addi r4, r3, 0
 /* 8004025C 0003D19C  90 01 00 04 */	stw r0, 4(r1)
 /* 80040260 0003D1A0  4C C6 31 82 */	crclr 6
-/* 80040264 0003D1A4  38 62 83 90 */	addi r3, r2, $$22338-_SDA2_BASE_
+/* 80040264 0003D1A4  38 62 83 90 */	addi r3, r2, $$22338@sda21
 /* 80040268 0003D1A8  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8004026C 0003D1AC  4B FF FF 25 */	bl JUTReportConsole_f
 /* 80040270 0003D1B0  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1265,7 +1265,7 @@ lbl_800402B0:
 /* 800402E0 0003D220  38 01 00 08 */	addi r0, r1, 8
 /* 800402E4 0003D224  90 81 01 88 */	stw r4, 0x188(r1)
 /* 800402E8 0003D228  90 01 01 8C */	stw r0, 0x18c(r1)
-/* 800402EC 0003D22C  80 8D 8E D4 */	lwz r4, sReportConsole-_SDA_BASE_(r13)
+/* 800402EC 0003D22C  80 8D 8E D4 */	lwz r4, sReportConsole@sda21(r13)
 /* 800402F0 0003D230  28 04 00 00 */	cmplwi r4, 0
 /* 800402F4 0003D234  40 82 00 18 */	bne lbl_8004030C
 /* 800402F8 0003D238  38 A3 00 00 */	addi r5, r3, 0
@@ -1281,7 +1281,7 @@ lbl_8004030C:
 /* 8004031C 0003D25C  38 61 00 80 */	addi r3, r1, 0x80
 /* 80040320 0003D260  38 80 01 00 */	li r4, 0x100
 /* 80040324 0003D264  48 04 3E 71 */	bl vsnprintf
-/* 80040328 0003D268  80 6D 8E D4 */	lwz r3, sReportConsole-_SDA_BASE_(r13)
+/* 80040328 0003D268  80 6D 8E D4 */	lwz r3, sReportConsole@sda21(r13)
 /* 8004032C 0003D26C  38 81 00 80 */	addi r4, r1, 0x80
 /* 80040330 0003D270  4B FF F6 71 */	bl print__10JUTConsoleFPCc
 lbl_80040334:
@@ -1296,7 +1296,7 @@ JUTWarningConsole:
 /* 80040348 0003D288  38 83 00 00 */	addi r4, r3, 0
 /* 8004034C 0003D28C  90 01 00 04 */	stw r0, 4(r1)
 /* 80040350 0003D290  4C C6 31 82 */	crclr 6
-/* 80040354 0003D294  38 62 83 90 */	addi r3, r2, $$22338-_SDA2_BASE_
+/* 80040354 0003D294  38 62 83 90 */	addi r3, r2, $$22338@sda21
 /* 80040358 0003D298  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8004035C 0003D29C  4B FF FE 35 */	bl JUTReportConsole_f
 /* 80040360 0003D2A0  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1307,7 +1307,10 @@ JUTWarningConsole:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JUTConsole
 __vt__10JUTConsole:
-	.incbin "baserom.dol", 0x3A7010, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTConsoleFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21718:

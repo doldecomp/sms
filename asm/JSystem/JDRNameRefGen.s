@@ -616,9 +616,9 @@ lbl_800451A0:
 /* 800451B8 000420F8  4B FC 76 F9 */	bl __nw__FUl
 /* 800451BC 000420FC  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800451C0 00042100  41 82 00 58 */	beq lbl_80045218
-/* 800451C4 00042104  C0 22 83 B8 */	lfs f1, $$21466-_SDA2_BASE_(r2)
+/* 800451C4 00042104  C0 22 83 B8 */	lfs f1, $$21466@sda21(r2)
 /* 800451C8 00042108  7F C3 F3 78 */	mr r3, r30
-/* 800451CC 0004210C  C0 42 83 BC */	lfs f2, $$21467-_SDA2_BASE_(r2)
+/* 800451CC 0004210C  C0 42 83 BC */	lfs f2, $$21467@sda21(r2)
 /* 800451D0 00042110  38 9F 00 50 */	addi r4, r31, 0x50
 /* 800451D4 00042114  48 00 07 15 */	bl __ct__Q26JDrama7TCameraFffPCc
 /* 800451D8 00042118  3C 60 80 3B */	lis r3, __vt__Q26JDrama12TPolarCamera@ha
@@ -626,16 +626,16 @@ lbl_800451A0:
 /* 800451E0 00042120  90 7E 00 00 */	stw r3, 0(r30)
 /* 800451E4 00042124  38 03 00 24 */	addi r0, r3, 0x24
 /* 800451E8 00042128  90 1E 00 20 */	stw r0, 0x20(r30)
-/* 800451EC 0004212C  C0 02 83 C0 */	lfs f0, $$21469-_SDA2_BASE_(r2)
+/* 800451EC 0004212C  C0 02 83 C0 */	lfs f0, $$21469@sda21(r2)
 /* 800451F0 00042130  D0 1E 00 30 */	stfs f0, 0x30(r30)
-/* 800451F4 00042134  C0 02 83 C4 */	lfs f0, $$21470-_SDA2_BASE_(r2)
+/* 800451F4 00042134  C0 02 83 C4 */	lfs f0, $$21470@sda21(r2)
 /* 800451F8 00042138  D0 1E 00 34 */	stfs f0, 0x34(r30)
-/* 800451FC 0004213C  C0 22 83 C8 */	lfs f1, $$21471-_SDA2_BASE_(r2)
+/* 800451FC 0004213C  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
 /* 80045200 00042140  D0 3E 00 38 */	stfs f1, 0x38(r30)
 /* 80045204 00042144  FC 00 08 90 */	fmr f0, f1
 /* 80045208 00042148  D0 3E 00 3C */	stfs f1, 0x3c(r30)
 /* 8004520C 0004214C  D0 1E 00 40 */	stfs f0, 0x40(r30)
-/* 80045210 00042150  C0 02 83 CC */	lfs f0, $$21472-_SDA2_BASE_(r2)
+/* 80045210 00042150  C0 02 83 CC */	lfs f0, $$21472@sda21(r2)
 /* 80045214 00042154  D0 1E 00 44 */	stfs f0, 0x44(r30)
 lbl_80045218:
 /* 80045218 00042158  7F C3 F3 78 */	mr r3, r30
@@ -693,7 +693,7 @@ lbl_800452D4:
 /* 800452D8 00042218  48 00 04 24 */	b lbl_800456FC
 lbl_800452DC:
 /* 800452DC 0004221C  38 7E 00 00 */	addi r3, r30, 0
-/* 800452E0 00042220  38 82 83 D0 */	addi r4, r2, $$21477-_SDA2_BASE_
+/* 800452E0 00042220  38 82 83 D0 */	addi r4, r2, $$21477@sda21
 /* 800452E4 00042224  48 04 09 79 */	bl strcmp
 /* 800452E8 00042228  2C 03 00 00 */	cmpwi r3, 0
 /* 800452EC 0004222C  40 82 00 E0 */	bne lbl_800453CC
@@ -702,7 +702,7 @@ lbl_800452DC:
 /* 800452F8 00042238  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800452FC 0004223C  41 82 00 C8 */	beq lbl_800453C4
 /* 80045300 00042240  93 C1 00 2C */	stw r30, 0x2c(r1)
-/* 80045304 00042244  38 82 83 D8 */	addi r4, r2, $$21478-_SDA2_BASE_
+/* 80045304 00042244  38 82 83 D8 */	addi r4, r2, $$21478@sda21
 /* 80045308 00042248  93 C1 00 48 */	stw r30, 0x48(r1)
 /* 8004530C 0004224C  80 61 00 2C */	lwz r3, 0x2c(r1)
 /* 80045310 00042250  4B FF EB 5D */	bl __ct__Q26JDrama8TViewObjFPCc
@@ -711,7 +711,7 @@ lbl_800452DC:
 /* 8004531C 0004225C  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 80045320 00042260  90 1F 00 00 */	stw r0, 0(r31)
 /* 80045324 00042264  38 7F 00 10 */	addi r3, r31, 0x10
-/* 80045328 00042268  C0 22 83 C8 */	lfs f1, $$21471-_SDA2_BASE_(r2)
+/* 80045328 00042268  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
 /* 8004532C 0004226C  FC 40 08 90 */	fmr f2, f1
 /* 80045330 00042270  FC 60 08 90 */	fmr f3, f1
 /* 80045334 00042274  48 00 04 D9 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
@@ -732,8 +732,8 @@ lbl_800452DC:
 /* 80045370 000422B0  38 7F 00 24 */	addi r3, r31, 0x24
 /* 80045374 000422B4  90 9F 00 20 */	stw r4, 0x20(r31)
 /* 80045378 000422B8  90 1F 00 64 */	stw r0, 0x64(r31)
-/* 8004537C 000422BC  C0 42 83 C8 */	lfs f2, $$21471-_SDA2_BASE_(r2)
-/* 80045380 000422C0  C0 22 83 E0 */	lfs f1, $$21479-_SDA2_BASE_(r2)
+/* 8004537C 000422BC  C0 42 83 C8 */	lfs f2, $$21471@sda21(r2)
+/* 80045380 000422C0  C0 22 83 E0 */	lfs f1, $$21479@sda21(r2)
 /* 80045384 000422C4  FC 60 10 90 */	fmr f3, f2
 /* 80045388 000422C8  FC 80 08 90 */	fmr f4, f1
 /* 8004538C 000422CC  FC A0 10 90 */	fmr f5, f2
@@ -855,7 +855,7 @@ lbl_8004553C:
 /* 80045540 00042480  48 00 01 BC */	b lbl_800456FC
 lbl_80045544:
 /* 80045544 00042484  38 7E 00 00 */	addi r3, r30, 0
-/* 80045548 00042488  38 82 83 E4 */	addi r4, r2, $$21486-_SDA2_BASE_
+/* 80045548 00042488  38 82 83 E4 */	addi r4, r2, $$21486@sda21
 /* 8004554C 0004248C  48 04 07 11 */	bl strcmp
 /* 80045550 00042490  2C 03 00 00 */	cmpwi r3, 0
 /* 80045554 00042494  40 82 00 70 */	bne lbl_800455C4
@@ -1008,7 +1008,7 @@ __ct__Q26JDrama6TLightFPCc:
 /* 80045768 000426A8  90 1F 00 00 */	stw r0, 0(r31)
 /* 8004576C 000426AC  3C 60 80 3B */	lis r3, __vt__Q26JDrama6TLight@ha
 /* 80045770 000426B0  38 A3 A7 C4 */	addi r5, r3, __vt__Q26JDrama6TLight@l
-/* 80045774 000426B4  C0 62 83 C8 */	lfs f3, $$21471-_SDA2_BASE_(r2)
+/* 80045774 000426B4  C0 62 83 C8 */	lfs f3, $$21471@sda21(r2)
 /* 80045778 000426B8  38 E6 CE 98 */	addi r7, r6, __vt__Q26JStage7TObject@l
 /* 8004577C 000426BC  3C 80 80 3B */	lis r4, __vt__Q26JStage6TLight@ha
 /* 80045780 000426C0  D0 7F 00 10 */	stfs f3, 0x10(r31)
@@ -1027,7 +1027,7 @@ __ct__Q26JDrama6TLightFPCc:
 /* 800457B4 000426F4  90 BF 00 00 */	stw r5, 0(r31)
 /* 800457B8 000426F8  90 9F 00 20 */	stw r4, 0x20(r31)
 /* 800457BC 000426FC  90 1F 00 64 */	stw r0, 0x64(r31)
-/* 800457C0 00042700  C0 22 83 E0 */	lfs f1, $$21479-_SDA2_BASE_(r2)
+/* 800457C0 00042700  C0 22 83 E0 */	lfs f1, $$21479@sda21(r2)
 /* 800457C4 00042704  FC 80 08 90 */	fmr f4, f1
 /* 800457C8 00042708  48 06 41 7D */	bl GXInitLightAttn
 /* 800457CC 0004270C  38 00 00 FF */	li r0, 0xff
@@ -1078,7 +1078,7 @@ __ct__Q26JDrama6TActorFPCc:
 /* 8004586C 000427AC  90 1F 00 00 */	stw r0, 0(r31)
 /* 80045870 000427B0  3C A0 80 3B */	lis r5, __vt__Q26JStage6TActor@ha
 /* 80045874 000427B4  3C 60 80 3B */	lis r3, __vt__Q26JDrama6TActor@ha
-/* 80045878 000427B8  C0 22 83 C8 */	lfs f1, $$21471-_SDA2_BASE_(r2)
+/* 80045878 000427B8  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
 /* 8004587C 000427BC  38 83 A0 20 */	addi r4, r3, __vt__Q26JDrama6TActor@l
 /* 80045880 000427C0  38 C6 CE 98 */	addi r6, r6, __vt__Q26JStage7TObject@l
 /* 80045884 000427C4  D0 3F 00 10 */	stfs f1, 0x10(r31)
@@ -1092,7 +1092,7 @@ __ct__Q26JDrama6TActorFPCc:
 /* 800458A4 000427E4  90 BF 00 20 */	stw r5, 0x20(r31)
 /* 800458A8 000427E8  90 9F 00 00 */	stw r4, 0(r31)
 /* 800458AC 000427EC  90 1F 00 20 */	stw r0, 0x20(r31)
-/* 800458B0 000427F0  C0 02 83 E0 */	lfs f0, $$21479-_SDA2_BASE_(r2)
+/* 800458B0 000427F0  C0 02 83 E0 */	lfs f0, $$21479@sda21(r2)
 /* 800458B4 000427F4  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 800458B8 000427F8  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 800458BC 000427FC  D0 1F 00 2C */	stfs f0, 0x2c(r31)
@@ -1136,7 +1136,7 @@ __ct__Q26JDrama7TCameraFffPCc:
 /* 80045948 00042888  90 1F 00 00 */	stw r0, 0(r31)
 /* 8004594C 0004288C  3C A0 80 3B */	lis r5, __vt__Q26JStage7TCamera@ha
 /* 80045950 00042890  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
-/* 80045954 00042894  C0 02 83 C8 */	lfs f0, $$21471-_SDA2_BASE_(r2)
+/* 80045954 00042894  C0 02 83 C8 */	lfs f0, $$21471@sda21(r2)
 /* 80045958 00042898  38 83 A3 8C */	addi r4, r3, __vt__Q26JDrama7TCamera@l
 /* 8004595C 0004289C  38 C6 CE 98 */	addi r6, r6, __vt__Q26JStage7TObject@l
 /* 80045960 000428A0  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -1198,7 +1198,9 @@ lbl_80045A10:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$2855:
-	.incbin "baserom.dol", 0x36DF50, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21461:
 	.incbin "baserom.dol", 0x36DF5C, 0xC
 $$21462:
@@ -1251,10 +1253,20 @@ $$21494:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1
 __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3A7880, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__Q26JDrama11TNameRefGen
 __vt__Q26JDrama11TNameRefGen:
-	.incbin "baserom.dol", 0x3A78A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte load__Q26JDrama11TNameRefGenFR20JSUMemoryInputStream
+  .4byte getNameRef__Q26JDrama11TNameRefGenCFPCc
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21466:
@@ -1266,7 +1278,7 @@ $$21469:
 $$21470:
 	.incbin "baserom.dol", 0x3E40C4, 0x4
 $$21471:
-	.incbin "baserom.dol", 0x3E40C8, 0x4
+  .4byte 0
 $$21472:
 	.incbin "baserom.dol", 0x3E40CC, 0x4
 $$21477:

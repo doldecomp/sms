@@ -9,7 +9,7 @@ __sinit_JAIConst_cpp:
 /* 8004DAB0 0004A9F0  38 A3 3D F4 */	addi r5, r3, nullActor__8JAIConst@l
 /* 8004DAB4 0004A9F4  38 00 00 00 */	li r0, 0
 /* 8004DAB8 0004A9F8  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8004DABC 0004A9FC  38 6D 8F B0 */	addi r3, r13, random__8JAIConst-_SDA_BASE_
+/* 8004DABC 0004A9FC  38 6D 8F B0 */	addi r3, r13, random__8JAIConst@sda21
 /* 8004DAC0 0004AA00  38 80 00 00 */	li r4, 0
 /* 8004DAC4 0004AA04  90 05 00 00 */	stw r0, 0(r5)
 /* 8004DAC8 0004AA08  90 05 00 04 */	stw r0, 4(r5)
@@ -22,15 +22,24 @@ __sinit_JAIConst_cpp:
 /* 8004DAE4 0004AA24  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBE4, 0x4
+  .4byte __sinit_JAIConst_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global dummyZeroVec__8JAIConst
 dummyZeroVec__8JAIConst:
-	.incbin "baserom.dol", 0x3A7CA0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global nullInfoData2__8JAIConst
 nullInfoData2__8JAIConst:
-	.incbin "baserom.dol", 0x3A7CAC, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global sCInfos_0__8JAIConst
 sCInfos_0__8JAIConst:
 	.incbin "baserom.dol", 0x3A7CCC, 0x24

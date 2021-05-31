@@ -8,10 +8,10 @@ create__9JKRDecompFl:
 /* 80036494 000333D4  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80036498 000333D8  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8003649C 000333DC  3B E3 00 00 */	addi r31, r3, 0
-/* 800364A0 000333E0  80 0D 8E 88 */	lwz r0, sDecompObject__9JKRDecomp-_SDA_BASE_(r13)
+/* 800364A0 000333E0  80 0D 8E 88 */	lwz r0, sDecompObject__9JKRDecomp@sda21(r13)
 /* 800364A4 000333E4  28 00 00 00 */	cmplwi r0, 0
 /* 800364A8 000333E8  40 82 00 28 */	bne lbl_800364D0
-/* 800364AC 000333EC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800364AC 000333EC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800364B0 000333F0  38 60 00 60 */	li r3, 0x60
 /* 800364B4 000333F4  38 A0 00 00 */	li r5, 0
 /* 800364B8 000333F8  4B FD 64 8D */	bl __nw__FUlP7JKRHeapi
@@ -20,12 +20,12 @@ create__9JKRDecompFl:
 /* 800364C4 00033404  7F E4 FB 78 */	mr r4, r31
 /* 800364C8 00033408  48 00 00 21 */	bl __ct__9JKRDecompFl
 lbl_800364CC:
-/* 800364CC 0003340C  90 6D 8E 88 */	stw r3, sDecompObject__9JKRDecomp-_SDA_BASE_(r13)
+/* 800364CC 0003340C  90 6D 8E 88 */	stw r3, sDecompObject__9JKRDecomp@sda21(r13)
 lbl_800364D0:
 /* 800364D0 00033410  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800364D4 00033414  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 800364D8 00033418  38 21 00 18 */	addi r1, r1, 0x18
-/* 800364DC 0003341C  80 6D 8E 88 */	lwz r3, sDecompObject__9JKRDecomp-_SDA_BASE_(r13)
+/* 800364DC 0003341C  80 6D 8E 88 */	lwz r3, sDecompObject__9JKRDecomp@sda21(r13)
 /* 800364E0 00033420  7C 08 03 A6 */	mtlr r0
 /* 800364E4 00033424  4E 80 00 20 */	blr 
 
@@ -165,7 +165,7 @@ orderSync__9JKRDecompFPUcPUcUlUl:
 /* 800366B0 000335F0  3B C6 00 00 */	addi r30, r6, 0
 /* 800366B4 000335F4  38 60 00 4C */	li r3, 0x4c
 /* 800366B8 000335F8  38 A0 FF FC */	li r5, -4
-/* 800366BC 000335FC  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800366BC 000335FC  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800366C0 00033600  7C 04 03 78 */	mr r4, r0
 /* 800366C4 00033604  4B FD 62 81 */	bl __nw__FUlP7JKRHeapi
 /* 800366C8 00033608  7C 7F 1B 79 */	or. r31, r3, r3
@@ -502,12 +502,25 @@ lbl_80036B20:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6B70, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sMessageQueue__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6B80, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__9JKRDecomp
 __vt__9JKRDecomp:
-	.incbin "baserom.dol", 0x3A6BA0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9JKRDecompFv
+  .4byte run__9JKRDecompFv
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sDecompObject__9JKRDecomp:

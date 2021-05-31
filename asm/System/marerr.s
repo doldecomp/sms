@@ -23,12 +23,12 @@ MarErrInit__Fv:
 /* 800F0514 000ED454  3C 60 80 0F */	lis r3, MarErrException__FUsP9OSContextUlUl@ha
 /* 800F0518 000ED458  38 63 05 50 */	addi r3, r3, MarErrException__FUsP9OSContextUlUl@l
 /* 800F051C 000ED45C  4B F2 05 E9 */	bl setPreUserCallback__12JUTExceptionFPFUsP9OSContextUlUl_v
-/* 800F0520 000ED460  80 8D 8D 90 */	lwz r4, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 800F0520 000ED460  80 8D 8D 90 */	lwz r4, sErrorManager__12JUTException@sda21(r13)
 /* 800F0524 000ED464  38 60 FF FF */	li r3, -1
 /* 800F0528 000ED468  38 00 00 08 */	li r0, 8
 /* 800F052C 000ED46C  90 64 00 68 */	stw r3, 0x68(r4)
 /* 800F0530 000ED470  90 64 00 6C */	stw r3, 0x6c(r4)
-/* 800F0534 000ED474  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 800F0534 000ED474  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 800F0538 000ED478  90 03 00 80 */	stw r0, 0x80(r3)
 /* 800F053C 000ED47C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 800F0540 000ED480  83 E1 00 1C */	lwz r31, 0x1c(r1)
@@ -51,7 +51,7 @@ MarErrException__FUsP9OSContextUlUl:
 lbl_800F0578:
 /* 800F0578 000ED4B8  38 60 00 64 */	li r3, 0x64
 /* 800F057C 000ED4BC  4B F2 04 0D */	bl waitTime__12JUTExceptionFl
-/* 800F0580 000ED4C0  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 800F0580 000ED4C0  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 800F0584 000ED4C4  38 81 00 18 */	addi r4, r1, 0x18
 /* 800F0588 000ED4C8  38 A0 00 00 */	li r5, 0
 /* 800F058C 000ED4CC  4B F1 FD 6D */	bl readPad__12JUTExceptionFPUlPUl

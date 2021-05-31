@@ -48,8 +48,8 @@ perform__16TQuestionManagerFUlPQ26JDrama9TGraphics:
 /* 8011D0C4 0011A004  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 8011D0C8 0011A008  3B A3 00 00 */	addi r29, r3, 0
 /* 8011D0CC 0011A00C  41 82 00 70 */	beq lbl_8011D13C
-/* 8011D0D0 0011A010  80 6D 97 48 */	lwz r3, gpSilhouetteManager-_SDA_BASE_(r13)
-/* 8011D0D4 0011A014  C0 02 97 60 */	lfs f0, $$21772-_SDA2_BASE_(r2)
+/* 8011D0D0 0011A010  80 6D 97 48 */	lwz r3, gpSilhouetteManager@sda21(r13)
+/* 8011D0D4 0011A014  C0 02 97 60 */	lfs f0, $$21772@sda21(r2)
 /* 8011D0D8 0011A018  C0 23 00 48 */	lfs f1, 0x48(r3)
 /* 8011D0DC 0011A01C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8011D0E0 0011A020  40 81 00 0C */	ble lbl_8011D0EC
@@ -82,8 +82,8 @@ lbl_8011D134:
 lbl_8011D13C:
 /* 8011D13C 0011A07C  57 C0 07 39 */	rlwinm. r0, r30, 0, 0x1c, 0x1c
 /* 8011D140 0011A080  41 82 00 40 */	beq lbl_8011D180
-/* 8011D144 0011A084  80 6D 97 48 */	lwz r3, gpSilhouetteManager-_SDA_BASE_(r13)
-/* 8011D148 0011A088  C0 02 97 60 */	lfs f0, $$21772-_SDA2_BASE_(r2)
+/* 8011D144 0011A084  80 6D 97 48 */	lwz r3, gpSilhouetteManager@sda21(r13)
+/* 8011D148 0011A088  C0 02 97 60 */	lfs f0, $$21772@sda21(r2)
 /* 8011D14C 0011A08C  C0 23 00 48 */	lfs f1, 0x48(r3)
 /* 8011D150 0011A090  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8011D154 0011A094  40 81 00 0C */	ble lbl_8011D160
@@ -288,7 +288,7 @@ request__16TQuestionManagerFQ29JGeometry8TVec3$$0f$$1f:
 /* 8011D438 0011A378  A0 03 00 12 */	lhz r0, 0x12(r3)
 /* 8011D43C 0011A37C  28 00 00 20 */	cmplwi r0, 0x20
 /* 8011D440 0011A380  40 80 00 84 */	bge lbl_8011D4C4
-/* 8011D444 0011A384  80 AD 98 DC */	lwz r5, gpMarioPos-_SDA_BASE_(r13)
+/* 8011D444 0011A384  80 AD 98 DC */	lwz r5, gpMarioPos@sda21(r13)
 /* 8011D448 0011A388  C0 03 00 14 */	lfs f0, 0x14(r3)
 /* 8011D44C 0011A38C  C0 65 00 08 */	lfs f3, 8(r5)
 /* 8011D450 0011A390  C0 44 00 08 */	lfs f2, 8(r4)
@@ -340,7 +340,7 @@ load__16TQuestionManagerFR20JSUMemoryInputStream:
 /* 8011D4F8 0011A438  3C 60 80 38 */	lis r3, $$21826@ha
 /* 8011D4FC 0011A43C  38 63 A5 F0 */	addi r3, r3, $$21826@l
 /* 8011D500 0011A440  B3 FD 00 12 */	sth r31, 0x12(r29)
-/* 8011D504 0011A444  C0 02 97 64 */	lfs f0, $$21825-_SDA2_BASE_(r2)
+/* 8011D504 0011A444  C0 02 97 64 */	lfs f0, $$21825@sda21(r2)
 /* 8011D508 0011A448  D0 1D 00 14 */	stfs f0, 0x14(r29)
 /* 8011D50C 0011A44C  4B EE E7 B1 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8011D510 0011A450  3B C3 00 00 */	addi r30, r3, 0
@@ -379,7 +379,7 @@ lbl_8011D57C:
 /* 8011D58C 0011A4CC  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 8011D590 0011A4D0  7D 88 03 A6 */	mtlr r12
 /* 8011D594 0011A4D4  4E 80 00 21 */	blrl 
-/* 8011D598 0011A4D8  93 AD 98 A8 */	stw r29, gpQuestionManager-_SDA_BASE_(r13)
+/* 8011D598 0011A4D8  93 AD 98 A8 */	stw r29, gpQuestionManager@sda21(r13)
 /* 8011D59C 0011A4DC  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 8011D5A0 0011A4E0  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 8011D5A4 0011A4E4  83 C1 00 18 */	lwz r30, 0x18(r1)
@@ -400,11 +400,20 @@ $$21826:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16TQuestionManager
 __vt__16TQuestionManager:
-	.incbin "baserom.dol", 0x3B2350, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TQuestionManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__16TQuestionManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TQuestionManagerFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21772:
-	.incbin "baserom.dol", 0x3E5460, 0x4
+  .4byte 0
 $$21825:
 	.incbin "baserom.dol", 0x3E5464, 0x4
 

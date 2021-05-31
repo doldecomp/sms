@@ -1859,13 +1859,43 @@ lbl_80032378:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18J3DModelLoader_v21
 __vt__18J3DModelLoader_v21:
-	.incbin "baserom.dol", 0x3A6A60, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte load__14J3DModelLoaderFPCvUl
+  .4byte loadMaterialTable__14J3DModelLoaderFPCv
+  .4byte setupBBoardInfo__14J3DModelLoaderFv
+  .4byte __dt__18J3DModelLoader_v21Fv
+  .4byte readMaterial__14J3DModelLoaderFPC16J3DMaterialBlockUl
+  .4byte readMaterial_v21__18J3DModelLoader_v21FPC20J3DMaterialBlock_v21Ul
+  .4byte readMaterialTable__14J3DModelLoaderFPC16J3DMaterialBlockUl
+  .4byte readMaterialTable_v21__18J3DModelLoader_v21FPC20J3DMaterialBlock_v21Ul
 .global __vt__18J3DModelLoader_v26
 __vt__18J3DModelLoader_v26:
-	.incbin "baserom.dol", 0x3A6A88, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte load__14J3DModelLoaderFPCvUl
+  .4byte loadMaterialTable__14J3DModelLoaderFPCv
+  .4byte setupBBoardInfo__14J3DModelLoaderFv
+  .4byte __dt__18J3DModelLoader_v26Fv
+  .4byte readMaterial__18J3DModelLoader_v26FPC16J3DMaterialBlockUl
+  .4byte readMaterial_v21__14J3DModelLoaderFPC20J3DMaterialBlock_v21Ul
+  .4byte readMaterialTable__18J3DModelLoader_v26FPC16J3DMaterialBlockUl
+  .4byte readMaterialTable_v21__14J3DModelLoaderFPC20J3DMaterialBlock_v21Ul
 .global __vt__10J3DTexture
 __vt__10J3DTexture:
-	.incbin "baserom.dol", 0x3A6AB0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10J3DTextureFv
 .global __vt__14J3DModelLoader
 __vt__14J3DModelLoader:
-	.incbin "baserom.dol", 0x3A6ABC, 0x2C
+  .4byte 0
+  .4byte 0
+  .4byte load__14J3DModelLoaderFPCvUl
+  .4byte loadMaterialTable__14J3DModelLoaderFPCv
+  .4byte setupBBoardInfo__14J3DModelLoaderFv
+  .4byte __dt__14J3DModelLoaderFv
+  .4byte readMaterial__14J3DModelLoaderFPC16J3DMaterialBlockUl
+  .4byte readMaterial_v21__14J3DModelLoaderFPC20J3DMaterialBlock_v21Ul
+  .4byte readMaterialTable__14J3DModelLoaderFPC16J3DMaterialBlockUl
+  .4byte readMaterialTable_v21__14J3DModelLoaderFPC20J3DMaterialBlock_v21Ul
+  .4byte 0

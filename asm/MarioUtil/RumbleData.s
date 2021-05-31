@@ -47,7 +47,82 @@ rumblePower_24:
 	.incbin "baserom.dol", 0x3B01B4, 0x94
 .global channelDataTbl
 channelDataTbl:
-	.incbin "baserom.dol", 0x3B0248, 0x130
+  .4byte rumblePoint_00
+  .4byte rumbleFrame_00
+  .4byte rumblePower_00
+  .4byte rumblePoint_01
+  .4byte rumbleFrame_01
+  .4byte rumblePower_01
+  .4byte rumblePoint_02
+  .4byte rumbleFrame_02
+  .4byte rumblePower_02
+  .4byte rumblePoint_03
+  .4byte rumbleFrame_03
+  .4byte rumblePower_03
+  .4byte rumblePoint_04
+  .4byte rumbleFrame_04
+  .4byte rumblePower_04
+  .4byte rumblePoint_05
+  .4byte rumbleFrame_05
+  .4byte rumblePower_05
+  .4byte rumblePoint_06
+  .4byte rumbleFrame_06
+  .4byte rumblePower_06
+  .4byte rumblePoint_07
+  .4byte rumbleFrame_07
+  .4byte rumblePower_07
+  .4byte rumblePoint_08
+  .4byte rumbleFrame_08
+  .4byte rumblePower_08
+  .4byte rumblePoint_09
+  .4byte rumbleFrame_09
+  .4byte rumblePower_09
+  .4byte rumblePoint_10
+  .4byte rumbleFrame_10
+  .4byte rumblePower_10
+  .4byte rumblePoint_11
+  .4byte rumbleFrame_11
+  .4byte rumblePower_11
+  .4byte rumblePoint_12
+  .4byte rumbleFrame_12
+  .4byte rumblePower_12
+  .4byte rumblePoint_13
+  .4byte rumbleFrame_13
+  .4byte rumblePower_13
+  .4byte rumblePoint_14
+  .4byte rumbleFrame_14
+  .4byte rumblePower_14
+  .4byte rumblePoint_15
+  .4byte rumbleFrame_15
+  .4byte rumblePower_15
+  .4byte rumblePoint_16
+  .4byte rumbleFrame_16
+  .4byte rumblePower_16
+  .4byte rumblePoint_17
+  .4byte rumbleFrame_17
+  .4byte rumblePower_17
+  .4byte rumblePoint_18
+  .4byte rumbleFrame_18
+  .4byte rumblePower_18
+  .4byte rumblePoint_19
+  .4byte rumbleFrame_19
+  .4byte rumblePower_19
+  .4byte rumblePoint_20
+  .4byte rumbleFrame_20
+  .4byte rumblePower_20
+  .4byte rumblePoint_21
+  .4byte rumbleFrame_21
+  .4byte rumblePower_21
+  .4byte rumblePoint_22
+  .4byte rumbleFrame_22
+  .4byte rumblePower_22
+  .4byte rumblePoint_23
+  .4byte rumbleFrame_23
+  .4byte rumblePower_23
+  .4byte rumblePoint_24
+  .4byte rumbleFrame_24
+  .4byte rumblePower_24
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 rumblePoint_00:
@@ -81,57 +156,57 @@ rumblePoint_09:
 rumblePoint_10:
 	.incbin "baserom.dol", 0x3E3388, 0x4
 rumbleFrame_10:
-	.incbin "baserom.dol", 0x3E338C, 0x4
+  .4byte 0
 rumblePower_10:
-	.incbin "baserom.dol", 0x3E3390, 0x4
+  .4byte 0
 rumblePoint_11:
 	.incbin "baserom.dol", 0x3E3394, 0x4
 rumbleFrame_11:
-	.incbin "baserom.dol", 0x3E3398, 0x4
+  .4byte 0
 rumblePower_11:
-	.incbin "baserom.dol", 0x3E339C, 0x4
+  .4byte 0
 rumblePoint_12:
 	.incbin "baserom.dol", 0x3E33A0, 0x4
 rumbleFrame_12:
-	.incbin "baserom.dol", 0x3E33A4, 0x4
+  .4byte 0
 rumblePower_12:
-	.incbin "baserom.dol", 0x3E33A8, 0x4
+  .4byte 0
 rumblePoint_13:
 	.incbin "baserom.dol", 0x3E33AC, 0x4
 rumbleFrame_13:
-	.incbin "baserom.dol", 0x3E33B0, 0x4
+  .4byte 0
 rumblePower_13:
-	.incbin "baserom.dol", 0x3E33B4, 0x4
+  .4byte 0
 rumblePoint_14:
 	.incbin "baserom.dol", 0x3E33B8, 0x4
 rumbleFrame_14:
-	.incbin "baserom.dol", 0x3E33BC, 0x4
+  .4byte 0
 rumblePower_14:
-	.incbin "baserom.dol", 0x3E33C0, 0x4
+  .4byte 0
 rumblePoint_15:
 	.incbin "baserom.dol", 0x3E33C4, 0x4
 rumbleFrame_15:
-	.incbin "baserom.dol", 0x3E33C8, 0x4
+  .4byte 0
 rumblePower_15:
-	.incbin "baserom.dol", 0x3E33CC, 0x4
+  .4byte 0
 rumblePoint_16:
 	.incbin "baserom.dol", 0x3E33D0, 0x4
 rumbleFrame_16:
-	.incbin "baserom.dol", 0x3E33D4, 0x4
+  .4byte 0
 rumblePower_16:
-	.incbin "baserom.dol", 0x3E33D8, 0x4
+  .4byte 0
 rumblePoint_17:
 	.incbin "baserom.dol", 0x3E33DC, 0x4
 rumbleFrame_17:
-	.incbin "baserom.dol", 0x3E33E0, 0x4
+  .4byte 0
 rumblePower_17:
-	.incbin "baserom.dol", 0x3E33E4, 0x4
+  .4byte 0
 rumblePoint_18:
 	.incbin "baserom.dol", 0x3E33E8, 0x4
 rumbleFrame_18:
-	.incbin "baserom.dol", 0x3E33EC, 0x4
+  .4byte 0
 rumblePower_18:
-	.incbin "baserom.dol", 0x3E33F0, 0x4
+  .4byte 0
 rumblePoint_19:
 	.incbin "baserom.dol", 0x3E33F4, 0x4
 rumblePoint_20:

@@ -91,7 +91,7 @@ perform__9TMarioCapFUlPQ26JDrama9TGraphics:
 /* 80120BF8 0011DB38  40 82 01 20 */	bne lbl_80120D18
 /* 80120BFC 0011DB3C  48 00 65 65 */	bl getMotionFrameCtrl__6TMarioFv
 /* 80120C00 0011DB40  C0 23 00 10 */	lfs f1, 0x10(r3)
-/* 80120C04 0011DB44  C0 02 98 10 */	lfs f0, $$22278-_SDA2_BASE_(r2)
+/* 80120C04 0011DB44  C0 02 98 10 */	lfs f0, $$22278@sda21(r2)
 /* 80120C08 0011DB48  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120C0C 0011DB4C  40 80 00 88 */	bge lbl_80120C94
 /* 80120C10 0011DB50  80 1D 00 14 */	lwz r0, 0x14(r29)
@@ -256,7 +256,7 @@ lbl_80120DA8:
 /* 80120E4C 0011DD8C  3C 03 FF 7F */	addis r0, r3, 0xff7f
 /* 80120E50 0011DD90  28 00 04 46 */	cmplwi r0, 0x446
 /* 80120E54 0011DD94  40 82 00 14 */	bne lbl_80120E68
-/* 80120E58 0011DD98  C0 02 98 14 */	lfs f0, $$22279-_SDA2_BASE_(r2)
+/* 80120E58 0011DD98  C0 02 98 14 */	lfs f0, $$22279@sda21(r2)
 /* 80120E5C 0011DD9C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120E60 0011DDA0  40 81 00 08 */	ble lbl_80120E68
 /* 80120E64 0011DDA4  3B E0 00 01 */	li r31, 1
@@ -280,7 +280,7 @@ lbl_80120E98:
 lbl_80120E9C:
 /* 80120E9C 0011DDDC  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80120EA0 0011DDE0  41 82 00 14 */	beq lbl_80120EB4
-/* 80120EA4 0011DDE4  C0 02 98 14 */	lfs f0, $$22279-_SDA2_BASE_(r2)
+/* 80120EA4 0011DDE4  C0 02 98 14 */	lfs f0, $$22279@sda21(r2)
 /* 80120EA8 0011DDE8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120EAC 0011DDEC  40 81 00 08 */	ble lbl_80120EB4
 /* 80120EB0 0011DDF0  3B E0 00 01 */	li r31, 1
@@ -298,7 +298,7 @@ lbl_80120EC0:
 /* 80120ED8 0011DE18  48 00 00 94 */	b lbl_80120F6C
 lbl_80120EDC:
 /* 80120EDC 0011DE1C  80 7D 00 30 */	lwz r3, 0x30(r29)
-/* 80120EE0 0011DE20  C0 22 98 18 */	lfs f1, $$22280-_SDA2_BASE_(r2)
+/* 80120EE0 0011DE20  C0 22 98 18 */	lfs f1, $$22280@sda21(r2)
 /* 80120EE4 0011DE24  4B FA 12 0D */	bl clash__19TTrembleModelEffectFf
 /* 80120EE8 0011DE28  48 00 00 84 */	b lbl_80120F6C
 lbl_80120EEC:
@@ -864,7 +864,7 @@ lbl_80121560:
 /* 801216DC 0011E61C  80 64 00 30 */	lwz r3, 0x30(r4)
 /* 801216E0 0011E620  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 801216E4 0011E624  4B FA 10 51 */	bl init__19TTrembleModelEffectFP8J3DModel
-/* 801216E8 0011E628  C0 02 98 1C */	lfs f0, $$22485-_SDA2_BASE_(r2)
+/* 801216E8 0011E628  C0 02 98 1C */	lfs f0, $$22485@sda21(r2)
 /* 801216EC 0011E62C  3B 60 00 00 */	li r27, 0
 /* 801216F0 0011E630  3B A0 00 00 */	li r29, 0
 /* 801216F4 0011E634  D0 1F 00 34 */	stfs f0, 0x34(r31)
@@ -898,7 +898,9 @@ lbl_80121718:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x377738, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21763:
 	.incbin "baserom.dol", 0x377744, 0x14
 cDirtyFileName:
@@ -923,7 +925,10 @@ $$22484:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TMarioCap
 __vt__9TMarioCap:
-	.incbin "baserom.dol", 0x3B24D0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte perform__9TMarioCapFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22278:
@@ -931,6 +936,6 @@ $$22278:
 $$22279:
 	.incbin "baserom.dol", 0x3E5514, 0x4
 $$22280:
-	.incbin "baserom.dol", 0x3E5518, 0x4
+  .4byte 0
 $$22485:
 	.incbin "baserom.dol", 0x3E551C, 0x4

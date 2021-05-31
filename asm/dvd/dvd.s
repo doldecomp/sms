@@ -10,32 +10,32 @@ DVDInit:
 /* 800968FC 0009383C  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80096900 00093840  93 C1 00 08 */	stw r30, 8(r1)
 /* 80096904 00093844  3B C3 0D 60 */	addi r30, r3, $$213@l
-/* 80096908 00093848  80 0D 94 28 */	lwz r0, DVDInitialized-_SDA_BASE_(r13)
+/* 80096908 00093848  80 0D 94 28 */	lwz r0, DVDInitialized@sda21(r13)
 /* 8009690C 0009384C  2C 00 00 00 */	cmpwi r0, 0
 /* 80096910 00093850  40 82 00 C0 */	bne lbl_800969D0
 /* 80096914 00093854  4B FF 65 71 */	bl OSInitAlarm
 /* 80096918 00093858  3B E0 00 01 */	li r31, 1
-/* 8009691C 0009385C  93 ED 94 28 */	stw r31, DVDInitialized-_SDA_BASE_(r13)
+/* 8009691C 0009385C  93 ED 94 28 */	stw r31, DVDInitialized@sda21(r13)
 /* 80096920 00093860  4B FF F5 75 */	bl __DVDFSInit
 /* 80096924 00093864  48 00 27 45 */	bl __DVDClearWaitingQueue
 /* 80096928 00093868  4B FF E7 19 */	bl __DVDInitWA
 /* 8009692C 0009386C  3C 00 80 00 */	lis r0, 0x8000
 /* 80096930 00093870  3C 60 80 09 */	lis r3, __DVDInterruptHandler@ha
-/* 80096934 00093874  90 0D 93 F0 */	stw r0, bootInfo-_SDA_BASE_(r13)
+/* 80096934 00093874  90 0D 93 F0 */	stw r0, bootInfo@sda21(r13)
 /* 80096938 00093878  38 83 50 80 */	addi r4, r3, __DVDInterruptHandler@l
-/* 8009693C 0009387C  90 0D 93 EC */	stw r0, currID-_SDA_BASE_(r13)
+/* 8009693C 0009387C  90 0D 93 EC */	stw r0, currID@sda21(r13)
 /* 80096940 00093880  38 60 00 15 */	li r3, 0x15
 /* 80096944 00093884  4B FF 98 D5 */	bl __OSSetInterruptHandler
 /* 80096948 00093888  38 60 04 00 */	li r3, 0x400
 /* 8009694C 0009388C  4B FF 9C D1 */	bl __OSUnmaskInterrupts
-/* 80096950 00093890  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue-_SDA_BASE_
+/* 80096950 00093890  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue@sda21
 /* 80096954 00093894  4B FF C3 25 */	bl OSInitThreadQueue
 /* 80096958 00093898  3C 60 CC 00 */	lis r3, 0xCC006000@ha
 /* 8009695C 0009389C  38 00 00 2A */	li r0, 0x2a
 /* 80096960 000938A0  90 03 60 00 */	stw r0, 0xCC006000@l(r3)
 /* 80096964 000938A4  38 00 00 00 */	li r0, 0
 /* 80096968 000938A8  90 03 60 04 */	stw r0, 0x6004(r3)
-/* 8009696C 000938AC  80 6D 93 F0 */	lwz r3, bootInfo-_SDA_BASE_(r13)
+/* 8009696C 000938AC  80 6D 93 F0 */	lwz r3, bootInfo@sda21(r13)
 /* 80096970 000938B0  38 63 00 20 */	addi r3, r3, 0x20
 /* 80096974 000938B4  80 63 00 00 */	lwz r3, 0(r3)
 /* 80096978 000938B8  3C 03 1A E0 */	addis r0, r3, 0x1ae0
@@ -58,7 +58,7 @@ lbl_800969A4:
 /* 800969B8 000938F8  4B FF 85 AD */	bl OSReport
 /* 800969BC 000938FC  48 00 00 14 */	b lbl_800969D0
 lbl_800969C0:
-/* 800969C0 00093900  93 ED 94 24 */	stw r31, FirstTimeInBootrom-_SDA_BASE_(r13)
+/* 800969C0 00093900  93 ED 94 24 */	stw r31, FirstTimeInBootrom@sda21(r13)
 /* 800969C4 00093904  38 7E 00 40 */	addi r3, r30, 0x40
 /* 800969C8 00093908  4C C6 31 82 */	crclr 6
 /* 800969CC 0009390C  4B FF 85 99 */	bl OSReport
@@ -80,9 +80,9 @@ stateReadingFST:
 /* 800969FC 0009393C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80096A00 00093940  38 A3 BC 60 */	addi r5, r3, tmpBuffer@l
 /* 80096A04 00093944  3C 60 80 09 */	lis r3, cbForStateReadingFST@ha
-/* 80096A08 00093948  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 80096A08 00093948  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 80096A0C 0009394C  38 C3 6A 3C */	addi r6, r3, cbForStateReadingFST@l
-/* 80096A10 00093950  80 ED 93 F0 */	lwz r7, bootInfo-_SDA_BASE_(r13)
+/* 80096A10 00093950  80 ED 93 F0 */	lwz r7, bootInfo@sda21(r13)
 /* 80096A14 00093954  80 85 00 08 */	lwz r4, 8(r5)
 /* 80096A18 00093958  80 67 00 38 */	lwz r3, 0x38(r7)
 /* 80096A1C 0009395C  38 04 00 1F */	addi r0, r4, 0x1f
@@ -101,7 +101,7 @@ cbForStateReadingFST:
 /* 80096A44 00093984  90 01 00 04 */	stw r0, 4(r1)
 /* 80096A48 00093988  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80096A4C 0009398C  40 82 00 18 */	bne lbl_80096A64
-/* 80096A50 00093990  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096A50 00093990  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096A54 00093994  38 00 FF FF */	li r0, -1
 /* 80096A58 00093998  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80096A5C 0009399C  48 00 01 09 */	bl stateTimeout
@@ -110,11 +110,11 @@ lbl_80096A64:
 /* 80096A64 000939A4  54 60 07 FF */	clrlwi. r0, r3, 0x1f
 /* 80096A68 000939A8  41 82 00 40 */	beq lbl_80096AA8
 /* 80096A6C 000939AC  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 80096A70 000939B0  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096A70 000939B0  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096A74 000939B4  38 03 BC E0 */	addi r0, r3, DummyCommandBlock@l
 /* 80096A78 000939B8  38 60 00 00 */	li r3, 0
-/* 80096A7C 000939BC  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
-/* 80096A80 000939C0  90 6D 94 1C */	stw r3, NumInternalRetry-_SDA_BASE_(r13)
+/* 80096A7C 000939BC  90 0D 93 E8 */	stw r0, executing@sda21(r13)
+/* 80096A80 000939C0  90 6D 94 1C */	stw r3, NumInternalRetry@sda21(r13)
 /* 80096A84 000939C4  90 64 00 0C */	stw r3, 0xc(r4)
 /* 80096A88 000939C8  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80096A8C 000939CC  28 0C 00 00 */	cmplwi r12, 0
@@ -141,18 +141,18 @@ cbForStateError:
 /* 80096AC8 00093A08  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80096ACC 00093A0C  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80096AD0 00093A10  40 82 00 18 */	bne lbl_80096AE8
-/* 80096AD4 00093A14  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096AD4 00093A14  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096AD8 00093A18  38 00 FF FF */	li r0, -1
 /* 80096ADC 00093A1C  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80096AE0 00093A20  48 00 00 85 */	bl stateTimeout
 /* 80096AE4 00093A24  48 00 00 6C */	b lbl_80096B50
 lbl_80096AE8:
 /* 80096AE8 00093A28  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 80096AEC 00093A2C  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
+/* 80096AEC 00093A2C  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
 /* 80096AF0 00093A30  38 03 BC E0 */	addi r0, r3, DummyCommandBlock@l
 /* 80096AF4 00093A34  38 60 00 01 */	li r3, 1
-/* 80096AF8 00093A38  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
-/* 80096AFC 00093A3C  90 6D 94 00 */	stw r3, FatalErrorFlag-_SDA_BASE_(r13)
+/* 80096AF8 00093A38  90 0D 93 E8 */	stw r0, executing@sda21(r13)
+/* 80096AFC 00093A3C  90 6D 94 00 */	stw r3, FatalErrorFlag@sda21(r13)
 /* 80096B00 00093A40  81 9F 00 28 */	lwz r12, 0x28(r31)
 /* 80096B04 00093A44  28 0C 00 00 */	cmplwi r12, 0
 /* 80096B08 00093A48  41 82 00 14 */	beq lbl_80096B1C
@@ -161,12 +161,12 @@ lbl_80096AE8:
 /* 80096B14 00093A54  38 60 FF FF */	li r3, -1
 /* 80096B18 00093A58  4E 80 00 21 */	blrl 
 lbl_80096B1C:
-/* 80096B1C 00093A5C  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80096B1C 00093A5C  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80096B20 00093A60  28 00 00 00 */	cmplwi r0, 0
 /* 80096B24 00093A64  41 82 00 28 */	beq lbl_80096B4C
-/* 80096B28 00093A68  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80096B28 00093A68  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80096B2C 00093A6C  38 00 00 00 */	li r0, 0
-/* 80096B30 00093A70  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80096B30 00093A70  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80096B34 00093A74  28 0C 00 00 */	cmplwi r12, 0
 /* 80096B38 00093A78  41 82 00 14 */	beq lbl_80096B4C
 /* 80096B3C 00093A7C  7D 88 03 A6 */	mtlr r12
@@ -193,11 +193,11 @@ stateTimeout:
 /* 80096B7C 00093ABC  48 00 28 01 */	bl __DVDStoreErrorCode
 /* 80096B80 00093AC0  48 00 1E 55 */	bl DVDReset
 /* 80096B84 00093AC4  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 80096B88 00093AC8  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
+/* 80096B88 00093AC8  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
 /* 80096B8C 00093ACC  38 03 BC E0 */	addi r0, r3, DummyCommandBlock@l
 /* 80096B90 00093AD0  38 60 00 01 */	li r3, 1
-/* 80096B94 00093AD4  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
-/* 80096B98 00093AD8  90 6D 94 00 */	stw r3, FatalErrorFlag-_SDA_BASE_(r13)
+/* 80096B94 00093AD4  90 0D 93 E8 */	stw r0, executing@sda21(r13)
+/* 80096B98 00093AD8  90 6D 94 00 */	stw r3, FatalErrorFlag@sda21(r13)
 /* 80096B9C 00093ADC  81 9F 00 28 */	lwz r12, 0x28(r31)
 /* 80096BA0 00093AE0  28 0C 00 00 */	cmplwi r12, 0
 /* 80096BA4 00093AE4  41 82 00 14 */	beq lbl_80096BB8
@@ -206,12 +206,12 @@ stateTimeout:
 /* 80096BB0 00093AF0  38 60 FF FF */	li r3, -1
 /* 80096BB4 00093AF4  4E 80 00 21 */	blrl 
 lbl_80096BB8:
-/* 80096BB8 00093AF8  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80096BB8 00093AF8  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80096BBC 00093AFC  28 00 00 00 */	cmplwi r0, 0
 /* 80096BC0 00093B00  41 82 00 28 */	beq lbl_80096BE8
-/* 80096BC4 00093B04  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80096BC4 00093B04  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80096BC8 00093B08  38 00 00 00 */	li r0, 0
-/* 80096BCC 00093B0C  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80096BCC 00093B0C  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80096BD0 00093B10  28 0C 00 00 */	cmplwi r12, 0
 /* 80096BD4 00093B14  41 82 00 14 */	beq lbl_80096BE8
 /* 80096BD8 00093B18  7D 88 03 A6 */	mtlr r12
@@ -244,7 +244,7 @@ CategorizeError:
 /* 80096C28 00093B68  3C 03 FF FE */	addis r0, r3, 0xfffe
 /* 80096C2C 00093B6C  28 00 04 00 */	cmplwi r0, 0x400
 /* 80096C30 00093B70  40 82 00 10 */	bne lbl_80096C40
-/* 80096C34 00093B74  90 6D 94 18 */	stw r3, LastError-_SDA_BASE_(r13)
+/* 80096C34 00093B74  90 6D 94 18 */	stw r3, LastError@sda21(r13)
 /* 80096C38 00093B78  38 60 00 01 */	li r3, 1
 /* 80096C3C 00093B7C  4E 80 00 20 */	blr 
 lbl_80096C40:
@@ -262,28 +262,28 @@ lbl_80096C68:
 /* 80096C68 00093BA8  38 60 00 00 */	li r3, 0
 /* 80096C6C 00093BAC  4E 80 00 20 */	blr 
 lbl_80096C70:
-/* 80096C70 00093BB0  80 6D 94 1C */	lwz r3, NumInternalRetry-_SDA_BASE_(r13)
+/* 80096C70 00093BB0  80 6D 94 1C */	lwz r3, NumInternalRetry@sda21(r13)
 /* 80096C74 00093BB4  38 03 00 01 */	addi r0, r3, 1
-/* 80096C78 00093BB8  90 0D 94 1C */	stw r0, NumInternalRetry-_SDA_BASE_(r13)
-/* 80096C7C 00093BBC  80 0D 94 1C */	lwz r0, NumInternalRetry-_SDA_BASE_(r13)
+/* 80096C78 00093BB8  90 0D 94 1C */	stw r0, NumInternalRetry@sda21(r13)
+/* 80096C7C 00093BBC  80 0D 94 1C */	lwz r0, NumInternalRetry@sda21(r13)
 /* 80096C80 00093BC0  2C 00 00 02 */	cmpwi r0, 2
 /* 80096C84 00093BC4  40 82 00 28 */	bne lbl_80096CAC
-/* 80096C88 00093BC8  80 0D 94 18 */	lwz r0, LastError-_SDA_BASE_(r13)
+/* 80096C88 00093BC8  80 0D 94 18 */	lwz r0, LastError@sda21(r13)
 /* 80096C8C 00093BCC  7C 04 00 40 */	cmplw r4, r0
 /* 80096C90 00093BD0  40 82 00 10 */	bne lbl_80096CA0
-/* 80096C94 00093BD4  90 8D 94 18 */	stw r4, LastError-_SDA_BASE_(r13)
+/* 80096C94 00093BD4  90 8D 94 18 */	stw r4, LastError@sda21(r13)
 /* 80096C98 00093BD8  38 60 00 01 */	li r3, 1
 /* 80096C9C 00093BDC  4E 80 00 20 */	blr 
 lbl_80096CA0:
-/* 80096CA0 00093BE0  90 8D 94 18 */	stw r4, LastError-_SDA_BASE_(r13)
+/* 80096CA0 00093BE0  90 8D 94 18 */	stw r4, LastError@sda21(r13)
 /* 80096CA4 00093BE4  38 60 00 02 */	li r3, 2
 /* 80096CA8 00093BE8  4E 80 00 20 */	blr 
 lbl_80096CAC:
 /* 80096CAC 00093BEC  3C 04 FF FD */	addis r0, r4, 0xfffd
-/* 80096CB0 00093BF0  90 8D 94 18 */	stw r4, LastError-_SDA_BASE_(r13)
+/* 80096CB0 00093BF0  90 8D 94 18 */	stw r4, LastError@sda21(r13)
 /* 80096CB4 00093BF4  28 00 11 00 */	cmplwi r0, 0x1100
 /* 80096CB8 00093BF8  41 82 00 14 */	beq lbl_80096CCC
-/* 80096CBC 00093BFC  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096CBC 00093BFC  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096CC0 00093C00  80 03 00 08 */	lwz r0, 8(r3)
 /* 80096CC4 00093C04  28 00 00 05 */	cmplwi r0, 5
 /* 80096CC8 00093C08  40 82 00 0C */	bne lbl_80096CD4
@@ -305,7 +305,7 @@ cbForStateGettingError:
 /* 80096CF4 00093C34  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80096CF8 00093C38  93 81 00 10 */	stw r28, 0x10(r1)
 /* 80096CFC 00093C3C  40 82 00 2C */	bne lbl_80096D28
-/* 80096D00 00093C40  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096D00 00093C40  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096D04 00093C44  38 00 FF FF */	li r0, -1
 /* 80096D08 00093C48  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80096D0C 00093C4C  90 04 00 0C */	stw r0, 0xc(r4)
@@ -318,7 +318,7 @@ cbForStateGettingError:
 lbl_80096D28:
 /* 80096D28 00093C68  54 60 07 BD */	rlwinm. r0, r3, 0, 0x1e, 0x1e
 /* 80096D2C 00093C6C  41 82 00 2C */	beq lbl_80096D58
-/* 80096D30 00093C70  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096D30 00093C70  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096D34 00093C74  38 00 FF FF */	li r0, -1
 /* 80096D38 00093C78  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 80096D3C 00093C7C  90 04 00 0C */	stw r0, 0xc(r4)
@@ -337,7 +337,7 @@ lbl_80096D58:
 /* 80096D6C 00093CAC  3B E3 00 00 */	addi r31, r3, 0
 /* 80096D70 00093CB0  28 1F 00 01 */	cmplwi r31, 1
 /* 80096D74 00093CB4  40 82 00 28 */	bne lbl_80096D9C
-/* 80096D78 00093CB8  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096D78 00093CB8  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096D7C 00093CBC  38 00 FF FF */	li r0, -1
 /* 80096D80 00093CC0  38 7D 00 00 */	addi r3, r29, 0
 /* 80096D84 00093CC4  90 04 00 0C */	stw r0, 0xc(r4)
@@ -373,17 +373,17 @@ lbl_80096DD8:
 lbl_80096DEC:
 /* 80096DEC 00093D2C  38 80 00 05 */	li r4, 5
 lbl_80096DF0:
-/* 80096DF0 00093D30  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80096DF0 00093D30  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80096DF4 00093D34  28 00 00 00 */	cmplwi r0, 0
 /* 80096DF8 00093D38  41 82 00 6C */	beq lbl_80096E64
 /* 80096DFC 00093D3C  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 80096E00 00093D40  90 8D 94 10 */	stw r4, ResumeFromHere-_SDA_BASE_(r13)
+/* 80096E00 00093D40  90 8D 94 10 */	stw r4, ResumeFromHere@sda21(r13)
 /* 80096E04 00093D44  38 00 00 00 */	li r0, 0
-/* 80096E08 00093D48  83 CD 93 E8 */	lwz r30, executing-_SDA_BASE_(r13)
+/* 80096E08 00093D48  83 CD 93 E8 */	lwz r30, executing@sda21(r13)
 /* 80096E0C 00093D4C  38 63 BC E0 */	addi r3, r3, DummyCommandBlock@l
-/* 80096E10 00093D50  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80096E10 00093D50  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80096E14 00093D54  38 00 00 0A */	li r0, 0xa
-/* 80096E18 00093D58  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80096E18 00093D58  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80096E1C 00093D5C  90 1E 00 0C */	stw r0, 0xc(r30)
 /* 80096E20 00093D60  81 9E 00 28 */	lwz r12, 0x28(r30)
 /* 80096E24 00093D64  28 0C 00 00 */	cmplwi r12, 0
@@ -393,7 +393,7 @@ lbl_80096DF0:
 /* 80096E34 00093D74  38 60 FF FD */	li r3, -3
 /* 80096E38 00093D78  4E 80 00 21 */	blrl 
 lbl_80096E3C:
-/* 80096E3C 00093D7C  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80096E3C 00093D7C  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80096E40 00093D80  28 0C 00 00 */	cmplwi r12, 0
 /* 80096E44 00093D84  41 82 00 14 */	beq lbl_80096E58
 /* 80096E48 00093D88  7D 88 03 A6 */	mtlr r12
@@ -422,15 +422,15 @@ lbl_80096E88:
 /* 80096E94 00093DD4  3C 03 FF FD */	addis r0, r3, 0xfffd
 /* 80096E98 00093DD8  28 00 11 00 */	cmplwi r0, 0x1100
 /* 80096E9C 00093DDC  40 82 00 1C */	bne lbl_80096EB8
-/* 80096EA0 00093DE0  80 AD 93 E8 */	lwz r5, executing-_SDA_BASE_(r13)
+/* 80096EA0 00093DE0  80 AD 93 E8 */	lwz r5, executing@sda21(r13)
 /* 80096EA4 00093DE4  3C 60 80 09 */	lis r3, cbForUnrecoveredError@ha
 /* 80096EA8 00093DE8  38 83 6F 70 */	addi r4, r3, cbForUnrecoveredError@l
 /* 80096EAC 00093DEC  80 65 00 10 */	lwz r3, 0x10(r5)
 /* 80096EB0 00093DF0  4B FF E9 E1 */	bl DVDLowSeek
 /* 80096EB4 00093DF4  48 00 00 9C */	b lbl_80096F50
 lbl_80096EB8:
-/* 80096EB8 00093DF8  81 8D 94 2C */	lwz r12, LastState-_SDA_BASE_(r13)
-/* 80096EBC 00093DFC  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096EB8 00093DF8  81 8D 94 2C */	lwz r12, LastState@sda21(r13)
+/* 80096EBC 00093DFC  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096EC0 00093E00  7D 88 03 A6 */	mtlr r12
 /* 80096EC4 00093E04  4E 80 00 21 */	blrl 
 /* 80096EC8 00093E08  48 00 00 88 */	b lbl_80096F50
@@ -438,7 +438,7 @@ lbl_80096ECC:
 /* 80096ECC 00093E0C  3C 1C FF 00 */	addis r0, r28, 0xff00
 /* 80096ED0 00093E10  28 00 00 00 */	cmplwi r0, 0
 /* 80096ED4 00093E14  40 82 00 18 */	bne lbl_80096EEC
-/* 80096ED8 00093E18  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096ED8 00093E18  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096EDC 00093E1C  38 00 00 05 */	li r0, 5
 /* 80096EE0 00093E20  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80096EE4 00093E24  48 00 08 C1 */	bl stateMotorStopped
@@ -447,7 +447,7 @@ lbl_80096EEC:
 /* 80096EEC 00093E2C  3C 1C FE 00 */	addis r0, r28, 0xfe00
 /* 80096EF0 00093E30  28 00 00 00 */	cmplwi r0, 0
 /* 80096EF4 00093E34  40 82 00 18 */	bne lbl_80096F0C
-/* 80096EF8 00093E38  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096EF8 00093E38  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096EFC 00093E3C  38 00 00 03 */	li r0, 3
 /* 80096F00 00093E40  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80096F04 00093E44  48 00 07 35 */	bl stateCoverClosed
@@ -456,13 +456,13 @@ lbl_80096F0C:
 /* 80096F0C 00093E4C  3C 1C FD 00 */	addis r0, r28, 0xfd00
 /* 80096F10 00093E50  28 00 00 00 */	cmplwi r0, 0
 /* 80096F14 00093E54  40 82 00 18 */	bne lbl_80096F2C
-/* 80096F18 00093E58  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80096F18 00093E58  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80096F1C 00093E5C  38 00 00 04 */	li r0, 4
 /* 80096F20 00093E60  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80096F24 00093E64  48 00 08 81 */	bl stateMotorStopped
 /* 80096F28 00093E68  48 00 00 28 */	b lbl_80096F50
 lbl_80096F2C:
-/* 80096F2C 00093E6C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096F2C 00093E6C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096F30 00093E70  38 00 FF FF */	li r0, -1
 /* 80096F34 00093E74  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 80096F38 00093E78  90 04 00 0C */	stw r0, 0xc(r4)
@@ -488,7 +488,7 @@ cbForUnrecoveredError:
 /* 80096F78 00093EB8  90 01 00 04 */	stw r0, 4(r1)
 /* 80096F7C 00093EBC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80096F80 00093EC0  40 82 00 2C */	bne lbl_80096FAC
-/* 80096F84 00093EC4  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096F84 00093EC4  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096F88 00093EC8  38 00 FF FF */	li r0, -1
 /* 80096F8C 00093ECC  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80096F90 00093ED0  90 04 00 0C */	stw r0, 0xc(r4)
@@ -520,7 +520,7 @@ cbForUnrecoveredErrorRetry:
 /* 80096FE0 00093F20  90 01 00 04 */	stw r0, 4(r1)
 /* 80096FE4 00093F24  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80096FE8 00093F28  40 82 00 2C */	bne lbl_80097014
-/* 80096FEC 00093F2C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80096FEC 00093F2C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80096FF0 00093F30  38 00 FF FF */	li r0, -1
 /* 80096FF4 00093F34  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80096FF8 00093F38  90 04 00 0C */	stw r0, 0xc(r4)
@@ -532,7 +532,7 @@ cbForUnrecoveredErrorRetry:
 /* 80097010 00093F50  48 00 00 50 */	b lbl_80097060
 lbl_80097014:
 /* 80097014 00093F54  54 60 07 BD */	rlwinm. r0, r3, 0, 0x1e, 0x1e
-/* 80097018 00093F58  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097018 00093F58  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 8009701C 00093F5C  38 80 FF FF */	li r4, -1
 /* 80097020 00093F60  90 83 00 0C */	stw r4, 0xc(r3)
 /* 80097024 00093F64  41 82 00 20 */	beq lbl_80097044
@@ -578,7 +578,7 @@ cbForStateGoToRetry:
 /* 800970A4 00093FE4  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800970A8 00093FE8  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 800970AC 00093FEC  40 82 00 2C */	bne lbl_800970D8
-/* 800970B0 00093FF0  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 800970B0 00093FF0  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 800970B4 00093FF4  38 00 FF FF */	li r0, -1
 /* 800970B8 00093FF8  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 800970BC 00093FFC  90 04 00 0C */	stw r0, 0xc(r4)
@@ -591,7 +591,7 @@ cbForStateGoToRetry:
 lbl_800970D8:
 /* 800970D8 00094018  54 60 07 BD */	rlwinm. r0, r3, 0, 0x1e, 0x1e
 /* 800970DC 0009401C  41 82 00 2C */	beq lbl_80097108
-/* 800970E0 00094020  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 800970E0 00094020  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 800970E4 00094024  38 00 FF FF */	li r0, -1
 /* 800970E8 00094028  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 800970EC 0009402C  90 04 00 0C */	stw r0, 0xc(r4)
@@ -603,35 +603,35 @@ lbl_800970D8:
 /* 80097104 00094044  48 00 00 D8 */	b lbl_800971DC
 lbl_80097108:
 /* 80097108 00094048  38 00 00 00 */	li r0, 0
-/* 8009710C 0009404C  90 0D 94 1C */	stw r0, NumInternalRetry-_SDA_BASE_(r13)
-/* 80097110 00094050  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 8009710C 0009404C  90 0D 94 1C */	stw r0, NumInternalRetry@sda21(r13)
+/* 80097110 00094050  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097114 00094054  28 00 00 04 */	cmplwi r0, 4
 /* 80097118 00094058  41 82 00 28 */	beq lbl_80097140
-/* 8009711C 0009405C  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 8009711C 0009405C  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097120 00094060  28 00 00 05 */	cmplwi r0, 5
 /* 80097124 00094064  41 82 00 1C */	beq lbl_80097140
-/* 80097128 00094068  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097128 00094068  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 8009712C 0009406C  28 00 00 0D */	cmplwi r0, 0xd
 /* 80097130 00094070  41 82 00 10 */	beq lbl_80097140
-/* 80097134 00094074  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097134 00094074  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097138 00094078  28 00 00 0F */	cmplwi r0, 0xf
 /* 8009713C 0009407C  40 82 00 0C */	bne lbl_80097148
 lbl_80097140:
 /* 80097140 00094080  38 00 00 01 */	li r0, 1
-/* 80097144 00094084  90 0D 94 20 */	stw r0, ResetRequired-_SDA_BASE_(r13)
+/* 80097144 00094084  90 0D 94 20 */	stw r0, ResetRequired@sda21(r13)
 lbl_80097148:
-/* 80097148 00094088  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80097148 00094088  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 8009714C 0009408C  28 00 00 00 */	cmplwi r0, 0
 /* 80097150 00094090  41 82 00 70 */	beq lbl_800971C0
 /* 80097154 00094094  38 00 00 02 */	li r0, 2
-/* 80097158 00094098  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
+/* 80097158 00094098  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
 /* 8009715C 0009409C  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 80097160 000940A0  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097160 000940A0  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 /* 80097164 000940A4  38 03 BC E0 */	addi r0, r3, DummyCommandBlock@l
 /* 80097168 000940A8  38 60 00 00 */	li r3, 0
-/* 8009716C 000940AC  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 8009716C 000940AC  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 80097170 000940B0  38 00 00 0A */	li r0, 0xa
-/* 80097174 000940B4  90 6D 94 08 */	stw r3, Canceling-_SDA_BASE_(r13)
+/* 80097174 000940B4  90 6D 94 08 */	stw r3, Canceling@sda21(r13)
 /* 80097178 000940B8  90 1F 00 0C */	stw r0, 0xc(r31)
 /* 8009717C 000940BC  81 9F 00 28 */	lwz r12, 0x28(r31)
 /* 80097180 000940C0  28 0C 00 00 */	cmplwi r12, 0
@@ -641,7 +641,7 @@ lbl_80097148:
 /* 80097190 000940D0  38 60 FF FD */	li r3, -3
 /* 80097194 000940D4  4E 80 00 21 */	blrl 
 lbl_80097198:
-/* 80097198 000940D8  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80097198 000940D8  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 8009719C 000940DC  28 0C 00 00 */	cmplwi r12, 0
 /* 800971A0 000940E0  41 82 00 14 */	beq lbl_800971B4
 /* 800971A4 000940E4  7D 88 03 A6 */	mtlr r12
@@ -657,7 +657,7 @@ lbl_800971C0:
 lbl_800971C4:
 /* 800971C4 00094104  2C 00 00 00 */	cmpwi r0, 0
 /* 800971C8 00094108  40 82 00 14 */	bne lbl_800971DC
-/* 800971CC 0009410C  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 800971CC 0009410C  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 800971D0 00094110  38 00 00 0B */	li r0, 0xb
 /* 800971D4 00094114  90 03 00 0C */	stw r0, 0xc(r3)
 /* 800971D8 00094118  48 00 05 CD */	bl stateMotorStopped
@@ -676,12 +676,12 @@ stateCheckID:
 /* 800971FC 0009413C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80097200 00094140  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80097204 00094144  3B E3 BC 60 */	addi r31, r3, tmpBuffer@l
-/* 80097208 00094148  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097208 00094148  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 8009720C 0009414C  2C 00 00 03 */	cmpwi r0, 3
 /* 80097210 00094150  41 82 00 08 */	beq lbl_80097218
 /* 80097214 00094154  48 00 00 70 */	b lbl_80097284
 lbl_80097218:
-/* 80097218 00094158  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097218 00094158  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 8009721C 0009415C  38 7F 00 00 */	addi r3, r31, 0
 /* 80097220 00094160  38 A0 00 1C */	li r5, 0x1c
 /* 80097224 00094164  80 84 00 24 */	lwz r4, 0x24(r4)
@@ -693,24 +693,24 @@ lbl_80097218:
 /* 8009723C 0009417C  4B FF E7 B9 */	bl DVDLowStopMotor
 /* 80097240 00094180  48 00 00 80 */	b lbl_800972C0
 lbl_80097244:
-/* 80097244 00094184  80 6D 93 EC */	lwz r3, currID-_SDA_BASE_(r13)
+/* 80097244 00094184  80 6D 93 EC */	lwz r3, currID@sda21(r13)
 /* 80097248 00094188  38 9F 00 00 */	addi r4, r31, 0
 /* 8009724C 0009418C  38 A0 00 20 */	li r5, 0x20
 /* 80097250 00094190  4B F6 BF A5 */	bl memcpy
-/* 80097254 00094194  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097254 00094194  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097258 00094198  38 00 00 01 */	li r0, 1
 /* 8009725C 0009419C  38 7F 00 00 */	addi r3, r31, 0
 /* 80097260 000941A0  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80097264 000941A4  38 80 00 20 */	li r4, 0x20
 /* 80097268 000941A8  4B FF 6D 15 */	bl DCInvalidateRange
 /* 8009726C 000941AC  3C 80 80 09 */	lis r4, stateCheckID2@ha
-/* 80097270 000941B0  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097270 000941B0  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80097274 000941B4  38 04 73 08 */	addi r0, r4, stateCheckID2@l
-/* 80097278 000941B8  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 80097278 000941B8  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 8009727C 000941BC  48 00 00 8D */	bl stateCheckID2
 /* 80097280 000941C0  48 00 00 40 */	b lbl_800972C0
 lbl_80097284:
-/* 80097284 000941C4  80 8D 93 EC */	lwz r4, currID-_SDA_BASE_(r13)
+/* 80097284 000941C4  80 8D 93 EC */	lwz r4, currID@sda21(r13)
 /* 80097288 000941C8  38 7F 00 00 */	addi r3, r31, 0
 /* 8009728C 000941CC  38 A0 00 20 */	li r5, 0x20
 /* 80097290 000941D0  4B FE C9 35 */	bl memcmp
@@ -722,9 +722,9 @@ lbl_80097284:
 /* 800972A8 000941E8  48 00 00 18 */	b lbl_800972C0
 lbl_800972AC:
 /* 800972AC 000941EC  3C 80 80 09 */	lis r4, stateCheckID3@ha
-/* 800972B0 000941F0  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 800972B0 000941F0  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 800972B4 000941F4  38 04 72 D4 */	addi r0, r4, stateCheckID3@l
-/* 800972B8 000941F8  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 800972B8 000941F8  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 800972BC 000941FC  48 00 00 19 */	bl stateCheckID3
 lbl_800972C0:
 /* 800972C0 00094200  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -740,7 +740,7 @@ stateCheckID3:
 /* 800972DC 0009421C  90 01 00 04 */	stw r0, 4(r1)
 /* 800972E0 00094220  38 A3 74 F8 */	addi r5, r3, cbForStateCheckID3@l
 /* 800972E4 00094224  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800972E8 00094228  80 8D 93 EC */	lwz r4, currID-_SDA_BASE_(r13)
+/* 800972E8 00094228  80 8D 93 EC */	lwz r4, currID@sda21(r13)
 /* 800972EC 0009422C  88 64 00 08 */	lbz r3, 8(r4)
 /* 800972F0 00094230  38 80 00 0A */	li r4, 0xa
 /* 800972F4 00094234  4B FF E9 D9 */	bl DVDLowAudioBufferConfig
@@ -774,7 +774,7 @@ cbForStateCheckID1:
 /* 8009734C 0009428C  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80097350 00094290  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80097354 00094294  40 82 00 2C */	bne lbl_80097380
-/* 80097358 00094298  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097358 00094298  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 8009735C 0009429C  38 00 FF FF */	li r0, -1
 /* 80097360 000942A0  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80097364 000942A4  90 04 00 0C */	stw r0, 0xc(r4)
@@ -787,7 +787,7 @@ cbForStateCheckID1:
 lbl_80097380:
 /* 80097380 000942C0  54 60 07 BD */	rlwinm. r0, r3, 0, 0x1e, 0x1e
 /* 80097384 000942C4  41 82 00 2C */	beq lbl_800973B0
-/* 80097388 000942C8  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097388 000942C8  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 8009738C 000942CC  38 00 FF FF */	li r0, -1
 /* 80097390 000942D0  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 80097394 000942D4  90 04 00 0C */	stw r0, 0xc(r4)
@@ -799,18 +799,18 @@ lbl_80097380:
 /* 800973AC 000942EC  48 00 00 94 */	b lbl_80097440
 lbl_800973B0:
 /* 800973B0 000942F0  38 80 00 00 */	li r4, 0
-/* 800973B4 000942F4  90 8D 94 1C */	stw r4, NumInternalRetry-_SDA_BASE_(r13)
-/* 800973B8 000942F8  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 800973B4 000942F4  90 8D 94 1C */	stw r4, NumInternalRetry@sda21(r13)
+/* 800973B8 000942F8  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 800973BC 000942FC  28 00 00 00 */	cmplwi r0, 0
 /* 800973C0 00094300  41 82 00 68 */	beq lbl_80097428
 /* 800973C4 00094304  38 00 00 01 */	li r0, 1
-/* 800973C8 00094308  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
-/* 800973CC 0009430C  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 800973C8 00094308  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
+/* 800973CC 0009430C  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 /* 800973D0 00094310  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
 /* 800973D4 00094314  38 63 BC E0 */	addi r3, r3, DummyCommandBlock@l
-/* 800973D8 00094318  90 8D 94 08 */	stw r4, Canceling-_SDA_BASE_(r13)
+/* 800973D8 00094318  90 8D 94 08 */	stw r4, Canceling@sda21(r13)
 /* 800973DC 0009431C  38 00 00 0A */	li r0, 0xa
-/* 800973E0 00094320  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 800973E0 00094320  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 800973E4 00094324  90 1F 00 0C */	stw r0, 0xc(r31)
 /* 800973E8 00094328  81 9F 00 28 */	lwz r12, 0x28(r31)
 /* 800973EC 0009432C  28 0C 00 00 */	cmplwi r12, 0
@@ -820,7 +820,7 @@ lbl_800973B0:
 /* 800973FC 0009433C  38 60 FF FD */	li r3, -3
 /* 80097400 00094340  4E 80 00 21 */	blrl 
 lbl_80097404:
-/* 80097404 00094344  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80097404 00094344  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80097408 00094348  28 0C 00 00 */	cmplwi r12, 0
 /* 8009740C 0009434C  41 82 00 14 */	beq lbl_80097420
 /* 80097410 00094350  7D 88 03 A6 */	mtlr r12
@@ -833,7 +833,7 @@ lbl_80097420:
 lbl_80097428:
 /* 80097428 00094368  2C 04 00 00 */	cmpwi r4, 0
 /* 8009742C 0009436C  40 82 00 14 */	bne lbl_80097440
-/* 80097430 00094370  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097430 00094370  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80097434 00094374  38 00 00 06 */	li r0, 6
 /* 80097438 00094378  90 03 00 0C */	stw r0, 0xc(r3)
 /* 8009743C 0009437C  48 00 03 69 */	bl stateMotorStopped
@@ -851,7 +851,7 @@ cbForStateCheckID2:
 /* 8009745C 0009439C  90 01 00 04 */	stw r0, 4(r1)
 /* 80097460 000943A0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80097464 000943A4  40 82 00 2C */	bne lbl_80097490
-/* 80097468 000943A8  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097468 000943A8  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 8009746C 000943AC  38 00 FF FF */	li r0, -1
 /* 80097470 000943B0  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80097474 000943B4  90 04 00 0C */	stw r0, 0xc(r4)
@@ -865,13 +865,13 @@ lbl_80097490:
 /* 80097490 000943D0  54 60 07 FF */	clrlwi. r0, r3, 0x1f
 /* 80097494 000943D4  41 82 00 48 */	beq lbl_800974DC
 /* 80097498 000943D8  3C 60 80 09 */	lis r3, stateReadingFST@ha
-/* 8009749C 000943DC  80 ED 93 F0 */	lwz r7, bootInfo-_SDA_BASE_(r13)
+/* 8009749C 000943DC  80 ED 93 F0 */	lwz r7, bootInfo@sda21(r13)
 /* 800974A0 000943E0  38 03 69 E8 */	addi r0, r3, stateReadingFST@l
 /* 800974A4 000943E4  38 80 00 00 */	li r4, 0
-/* 800974A8 000943E8  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 800974A8 000943E8  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 800974AC 000943EC  3C 60 80 3F */	lis r3, tmpBuffer@ha
 /* 800974B0 000943F0  38 A3 BC 60 */	addi r5, r3, tmpBuffer@l
-/* 800974B4 000943F4  90 8D 94 1C */	stw r4, NumInternalRetry-_SDA_BASE_(r13)
+/* 800974B4 000943F4  90 8D 94 1C */	stw r4, NumInternalRetry@sda21(r13)
 /* 800974B8 000943F8  3C 60 80 09 */	lis r3, cbForStateReadingFST@ha
 /* 800974BC 000943FC  80 85 00 08 */	lwz r4, 8(r5)
 /* 800974C0 00094400  38 C3 6A 3C */	addi r6, r3, cbForStateReadingFST@l
@@ -899,7 +899,7 @@ cbForStateCheckID3:
 /* 80097504 00094444  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80097508 00094448  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8009750C 0009444C  40 82 00 2C */	bne lbl_80097538
-/* 80097510 00094450  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097510 00094450  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097514 00094454  38 00 FF FF */	li r0, -1
 /* 80097518 00094458  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 8009751C 0009445C  90 04 00 0C */	stw r0, 0xc(r4)
@@ -913,17 +913,17 @@ lbl_80097538:
 /* 80097538 00094478  54 60 07 FF */	clrlwi. r0, r3, 0x1f
 /* 8009753C 0009447C  41 82 00 98 */	beq lbl_800975D4
 /* 80097540 00094480  38 80 00 00 */	li r4, 0
-/* 80097544 00094484  90 8D 94 1C */	stw r4, NumInternalRetry-_SDA_BASE_(r13)
-/* 80097548 00094488  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80097544 00094484  90 8D 94 1C */	stw r4, NumInternalRetry@sda21(r13)
+/* 80097548 00094488  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 8009754C 0009448C  28 00 00 00 */	cmplwi r0, 0
 /* 80097550 00094490  41 82 00 64 */	beq lbl_800975B4
-/* 80097554 00094494  90 8D 94 10 */	stw r4, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097554 00094494  90 8D 94 10 */	stw r4, ResumeFromHere@sda21(r13)
 /* 80097558 00094498  3C 60 80 3F */	lis r3, DummyCommandBlock@ha
-/* 8009755C 0009449C  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
+/* 8009755C 0009449C  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
 /* 80097560 000944A0  38 63 BC E0 */	addi r3, r3, DummyCommandBlock@l
-/* 80097564 000944A4  90 8D 94 08 */	stw r4, Canceling-_SDA_BASE_(r13)
+/* 80097564 000944A4  90 8D 94 08 */	stw r4, Canceling@sda21(r13)
 /* 80097568 000944A8  38 00 00 0A */	li r0, 0xa
-/* 8009756C 000944AC  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 8009756C 000944AC  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80097570 000944B0  90 1F 00 0C */	stw r0, 0xc(r31)
 /* 80097574 000944B4  81 9F 00 28 */	lwz r12, 0x28(r31)
 /* 80097578 000944B8  28 0C 00 00 */	cmplwi r12, 0
@@ -933,7 +933,7 @@ lbl_80097538:
 /* 80097588 000944C8  38 60 FF FD */	li r3, -3
 /* 8009758C 000944CC  4E 80 00 21 */	blrl 
 lbl_80097590:
-/* 80097590 000944D0  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80097590 000944D0  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80097594 000944D4  28 0C 00 00 */	cmplwi r12, 0
 /* 80097598 000944D8  41 82 00 14 */	beq lbl_800975AC
 /* 8009759C 000944DC  7D 88 03 A6 */	mtlr r12
@@ -946,10 +946,10 @@ lbl_800975AC:
 lbl_800975B4:
 /* 800975B4 000944F4  2C 04 00 00 */	cmpwi r4, 0
 /* 800975B8 000944F8  40 82 00 28 */	bne lbl_800975E0
-/* 800975BC 000944FC  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 800975BC 000944FC  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 800975C0 00094500  38 00 00 01 */	li r0, 1
 /* 800975C4 00094504  90 03 00 0C */	stw r0, 0xc(r3)
-/* 800975C8 00094508  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 800975C8 00094508  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 800975CC 0009450C  48 00 05 2D */	bl stateBusy
 /* 800975D0 00094510  48 00 00 10 */	b lbl_800975E0
 lbl_800975D4:
@@ -973,9 +973,9 @@ AlarmHandler:
 /* 8009760C 0009454C  38 80 00 20 */	li r4, 0x20
 /* 80097610 00094550  4B FF 69 6D */	bl DCInvalidateRange
 /* 80097614 00094554  3C 80 80 09 */	lis r4, stateCoverClosed_CMD@ha
-/* 80097618 00094558  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097618 00094558  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 8009761C 0009455C  38 04 77 04 */	addi r0, r4, stateCoverClosed_CMD@l
-/* 80097620 00094560  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 80097620 00094560  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 80097624 00094564  48 00 00 E1 */	bl stateCoverClosed_CMD
 /* 80097628 00094568  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8009762C 0009456C  38 21 00 08 */	addi r1, r1, 8
@@ -990,7 +990,7 @@ stateCoverClosed:
 /* 80097644 00094584  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80097648 00094588  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8009764C 0009458C  3B E3 BC 60 */	addi r31, r3, tmpBuffer@l
-/* 80097650 00094590  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097650 00094590  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097654 00094594  2C 00 00 0D */	cmpwi r0, 0xd
 /* 80097658 00094598  41 82 00 28 */	beq lbl_80097680
 /* 8009765C 0009459C  40 80 00 18 */	bge lbl_80097674
@@ -1005,9 +1005,9 @@ lbl_80097674:
 /* 8009767C 000945BC  48 00 00 34 */	b lbl_800976B0
 lbl_80097680:
 /* 80097680 000945C0  48 00 19 E9 */	bl __DVDClearWaitingQueue
-/* 80097684 000945C4  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097684 000945C4  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097688 000945C8  38 1F 00 80 */	addi r0, r31, 0x80
-/* 8009768C 000945CC  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 8009768C 000945CC  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 80097690 000945D0  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80097694 000945D4  28 0C 00 00 */	cmplwi r12, 0
 /* 80097698 000945D8  41 82 00 10 */	beq lbl_800976A8
@@ -1063,7 +1063,7 @@ cbForStateCoverClosed:
 /* 8009773C 0009467C  90 01 00 04 */	stw r0, 4(r1)
 /* 80097740 00094680  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80097744 00094684  40 82 00 2C */	bne lbl_80097770
-/* 80097748 00094688  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097748 00094688  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 8009774C 0009468C  38 00 FF FF */	li r0, -1
 /* 80097750 00094690  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80097754 00094694  90 04 00 0C */	stw r0, 0xc(r4)
@@ -1077,7 +1077,7 @@ lbl_80097770:
 /* 80097770 000946B0  54 60 07 FF */	clrlwi. r0, r3, 0x1f
 /* 80097774 000946B4  41 82 00 14 */	beq lbl_80097788
 /* 80097778 000946B8  38 00 00 00 */	li r0, 0
-/* 8009777C 000946BC  90 0D 94 1C */	stw r0, NumInternalRetry-_SDA_BASE_(r13)
+/* 8009777C 000946BC  90 0D 94 1C */	stw r0, NumInternalRetry@sda21(r13)
 /* 80097780 000946C0  4B FF FA 71 */	bl stateCheckID
 /* 80097784 000946C4  48 00 00 10 */	b lbl_80097794
 lbl_80097788:
@@ -1115,9 +1115,9 @@ cbForStateMotorStopped:
 /* 800977E8 00094728  3B E4 BC 60 */	addi r31, r4, tmpBuffer@l
 /* 800977EC 0009472C  90 03 60 04 */	stw r0, 0xCC006004@l(r3)
 /* 800977F0 00094730  38 00 00 03 */	li r0, 3
-/* 800977F4 00094734  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 800977F4 00094734  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 800977F8 00094738  90 03 00 0C */	stw r0, 0xc(r3)
-/* 800977FC 0009473C  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800977FC 0009473C  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097800 00094740  2C 00 00 0D */	cmpwi r0, 0xd
 /* 80097804 00094744  41 82 00 28 */	beq lbl_8009782C
 /* 80097808 00094748  40 80 00 18 */	bge lbl_80097820
@@ -1132,9 +1132,9 @@ lbl_80097820:
 /* 80097828 00094768  48 00 00 34 */	b lbl_8009785C
 lbl_8009782C:
 /* 8009782C 0009476C  48 00 18 3D */	bl __DVDClearWaitingQueue
-/* 80097830 00094770  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097830 00094770  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097834 00094774  38 1F 00 80 */	addi r0, r31, 0x80
-/* 80097838 00094778  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 80097838 00094778  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 8009783C 0009477C  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80097840 00094780  28 0C 00 00 */	cmplwi r12, 0
 /* 80097844 00094784  41 82 00 10 */	beq lbl_80097854
@@ -1180,29 +1180,29 @@ stateReady:
 /* 800978CC 0009480C  2C 03 00 00 */	cmpwi r3, 0
 /* 800978D0 00094810  40 82 00 10 */	bne lbl_800978E0
 /* 800978D4 00094814  38 00 00 00 */	li r0, 0
-/* 800978D8 00094818  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 800978D8 00094818  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 800978DC 0009481C  48 00 02 08 */	b lbl_80097AE4
 lbl_800978E0:
-/* 800978E0 00094820  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 800978E0 00094820  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 800978E4 00094824  2C 00 00 00 */	cmpwi r0, 0
 /* 800978E8 00094828  41 82 00 18 */	beq lbl_80097900
 /* 800978EC 0009482C  38 60 00 01 */	li r3, 1
 /* 800978F0 00094830  38 00 00 00 */	li r0, 0
-/* 800978F4 00094834  90 6D 93 F8 */	stw r3, PausingFlag-_SDA_BASE_(r13)
-/* 800978F8 00094838  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 800978F4 00094834  90 6D 93 F8 */	stw r3, PausingFlag@sda21(r13)
+/* 800978F8 00094838  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 800978FC 0009483C  48 00 01 E8 */	b lbl_80097AE4
 lbl_80097900:
 /* 80097900 00094840  48 00 18 09 */	bl __DVDPopWaitingQueue
-/* 80097904 00094844  80 0D 94 00 */	lwz r0, FatalErrorFlag-_SDA_BASE_(r13)
-/* 80097908 00094848  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80097904 00094844  80 0D 94 00 */	lwz r0, FatalErrorFlag@sda21(r13)
+/* 80097908 00094848  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 8009790C 0009484C  2C 00 00 00 */	cmpwi r0, 0
 /* 80097910 00094850  41 82 00 3C */	beq lbl_8009794C
-/* 80097914 00094854  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097914 00094854  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80097918 00094858  38 80 FF FF */	li r4, -1
 /* 8009791C 0009485C  38 1F 00 80 */	addi r0, r31, 0x80
 /* 80097920 00094860  90 83 00 0C */	stw r4, 0xc(r3)
-/* 80097924 00094864  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
-/* 80097928 00094868  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 80097924 00094864  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
+/* 80097928 00094868  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 8009792C 0009486C  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80097930 00094870  28 0C 00 00 */	cmplwi r12, 0
 /* 80097934 00094874  41 82 00 10 */	beq lbl_80097944
@@ -1213,13 +1213,13 @@ lbl_80097944:
 /* 80097944 00094884  4B FF FF 6D */	bl stateReady
 /* 80097948 00094888  48 00 01 9C */	b lbl_80097AE4
 lbl_8009794C:
-/* 8009794C 0009488C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 8009794C 0009488C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097950 00094890  80 04 00 08 */	lwz r0, 8(r4)
-/* 80097954 00094894  90 0D 94 04 */	stw r0, CurrCommand-_SDA_BASE_(r13)
-/* 80097958 00094898  80 0D 94 10 */	lwz r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097954 00094894  90 0D 94 04 */	stw r0, CurrCommand@sda21(r13)
+/* 80097958 00094898  80 0D 94 10 */	lwz r0, ResumeFromHere@sda21(r13)
 /* 8009795C 0009489C  28 00 00 00 */	cmplwi r0, 0
 /* 80097960 000948A0  41 82 01 74 */	beq lbl_80097AD4
-/* 80097964 000948A4  80 0D 94 10 */	lwz r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097964 000948A4  80 0D 94 10 */	lwz r0, ResumeFromHere@sda21(r13)
 /* 80097968 000948A8  28 00 00 07 */	cmplwi r0, 7
 /* 8009796C 000948AC  41 81 01 5C */	bgt lbl_80097AC8
 /* 80097970 000948B0  3C 60 80 3B */	lis r3, $$2293@ha
@@ -1228,39 +1228,45 @@ lbl_8009794C:
 /* 8009797C 000948BC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80097980 000948C0  7C 09 03 A6 */	mtctr r0
 /* 80097984 000948C4  4E 80 04 20 */	bctr 
+lbl_80097988:
 /* 80097988 000948C8  38 00 00 06 */	li r0, 6
 /* 8009798C 000948CC  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 80097990 000948D0  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80097994 000948D4  38 63 77 CC */	addi r3, r3, cbForStateMotorStopped@l
 /* 80097998 000948D8  4B FF DF 8D */	bl DVDLowWaitCoverClose
 /* 8009799C 000948DC  48 00 01 2C */	b lbl_80097AC8
+lbl_800979A0:
 /* 800979A0 000948E0  38 00 00 0B */	li r0, 0xb
 /* 800979A4 000948E4  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 800979A8 000948E8  90 04 00 0C */	stw r0, 0xc(r4)
 /* 800979AC 000948EC  38 63 77 CC */	addi r3, r3, cbForStateMotorStopped@l
 /* 800979B0 000948F0  4B FF DF 75 */	bl DVDLowWaitCoverClose
 /* 800979B4 000948F4  48 00 01 14 */	b lbl_80097AC8
+lbl_800979B8:
 /* 800979B8 000948F8  38 00 00 04 */	li r0, 4
 /* 800979BC 000948FC  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 800979C0 00094900  90 04 00 0C */	stw r0, 0xc(r4)
 /* 800979C4 00094904  38 63 77 CC */	addi r3, r3, cbForStateMotorStopped@l
 /* 800979C8 00094908  4B FF DF 5D */	bl DVDLowWaitCoverClose
 /* 800979CC 0009490C  48 00 00 FC */	b lbl_80097AC8
+lbl_800979D0:
 /* 800979D0 00094910  38 00 00 07 */	li r0, 7
 /* 800979D4 00094914  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 800979D8 00094918  90 04 00 0C */	stw r0, 0xc(r4)
 /* 800979DC 0009491C  38 63 77 CC */	addi r3, r3, cbForStateMotorStopped@l
 /* 800979E0 00094920  4B FF DF 45 */	bl DVDLowWaitCoverClose
 /* 800979E4 00094924  48 00 00 E4 */	b lbl_80097AC8
+lbl_800979E8:
 /* 800979E8 00094928  38 00 00 05 */	li r0, 5
 /* 800979EC 0009492C  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 800979F0 00094930  90 04 00 0C */	stw r0, 0xc(r4)
 /* 800979F4 00094934  38 63 77 CC */	addi r3, r3, cbForStateMotorStopped@l
 /* 800979F8 00094938  4B FF DF 2D */	bl DVDLowWaitCoverClose
 /* 800979FC 0009493C  48 00 00 CC */	b lbl_80097AC8
+lbl_80097A00:
 /* 80097A00 00094940  38 00 00 03 */	li r0, 3
 /* 80097A04 00094944  90 04 00 0C */	stw r0, 0xc(r4)
-/* 80097A08 00094948  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097A08 00094948  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097A0C 0009494C  2C 00 00 0D */	cmpwi r0, 0xd
 /* 80097A10 00094950  41 82 00 28 */	beq lbl_80097A38
 /* 80097A14 00094954  40 80 00 18 */	bge lbl_80097A2C
@@ -1275,9 +1281,9 @@ lbl_80097A2C:
 /* 80097A34 00094974  48 00 00 34 */	b lbl_80097A68
 lbl_80097A38:
 /* 80097A38 00094978  48 00 16 31 */	bl __DVDClearWaitingQueue
-/* 80097A3C 0009497C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097A3C 0009497C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097A40 00094980  38 1F 00 80 */	addi r0, r31, 0x80
-/* 80097A44 00094984  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 80097A44 00094984  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 80097A48 00094988  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80097A4C 0009498C  28 0C 00 00 */	cmplwi r12, 0
 /* 80097A50 00094990  41 82 00 10 */	beq lbl_80097A60
@@ -1305,21 +1311,22 @@ lbl_80097A68:
 /* 80097AA0 000949E0  38 A0 00 00 */	li r5, 0
 /* 80097AA4 000949E4  4B FF 56 89 */	bl OSSetAlarm
 /* 80097AA8 000949E8  48 00 00 20 */	b lbl_80097AC8
+lbl_80097AAC:
 /* 80097AAC 000949EC  38 00 FF FF */	li r0, -1
 /* 80097AB0 000949F0  90 04 00 0C */	stw r0, 0xc(r4)
-/* 80097AB4 000949F4  80 6D 94 14 */	lwz r3, CancelLastError-_SDA_BASE_(r13)
+/* 80097AB4 000949F4  80 6D 94 14 */	lwz r3, CancelLastError@sda21(r13)
 /* 80097AB8 000949F8  48 00 18 C5 */	bl __DVDStoreErrorCode
 /* 80097ABC 000949FC  3C 60 80 09 */	lis r3, cbForStateError@ha
 /* 80097AC0 00094A00  38 63 6A BC */	addi r3, r3, cbForStateError@l
 /* 80097AC4 00094A04  4B FF DF 31 */	bl DVDLowStopMotor
 lbl_80097AC8:
 /* 80097AC8 00094A08  38 00 00 00 */	li r0, 0
-/* 80097ACC 00094A0C  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097ACC 00094A0C  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 /* 80097AD0 00094A10  48 00 00 14 */	b lbl_80097AE4
 lbl_80097AD4:
 /* 80097AD4 00094A14  38 00 00 01 */	li r0, 1
 /* 80097AD8 00094A18  90 04 00 0C */	stw r0, 0xc(r4)
-/* 80097ADC 00094A1C  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80097ADC 00094A1C  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80097AE0 00094A20  48 00 00 19 */	bl stateBusy
 lbl_80097AE4:
 /* 80097AE4 00094A24  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -1336,7 +1343,7 @@ stateBusy:
 /* 80097B04 00094A44  38 04 7A F8 */	addi r0, r4, stateBusy@l
 /* 80097B08 00094A48  7C 67 1B 78 */	mr r7, r3
 /* 80097B0C 00094A4C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80097B10 00094A50  90 0D 94 2C */	stw r0, LastState-_SDA_BASE_(r13)
+/* 80097B10 00094A50  90 0D 94 2C */	stw r0, LastState@sda21(r13)
 /* 80097B14 00094A54  80 03 00 08 */	lwz r0, 8(r3)
 /* 80097B18 00094A58  28 00 00 0F */	cmplwi r0, 0xf
 /* 80097B1C 00094A5C  41 81 02 8C */	bgt lbl_80097DA8
@@ -1346,6 +1353,7 @@ stateBusy:
 /* 80097B2C 00094A6C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80097B30 00094A70  7C 09 03 A6 */	mtctr r0
 /* 80097B34 00094A74  4E 80 04 20 */	bctr 
+lbl_80097B38:
 /* 80097B38 00094A78  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097B3C 00094A7C  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097B40 00094A80  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1357,6 +1365,7 @@ stateBusy:
 /* 80097B58 00094A98  80 67 00 18 */	lwz r3, 0x18(r7)
 /* 80097B5C 00094A9C  4B FF DD F5 */	bl DVDLowReadDiskID
 /* 80097B60 00094AA0  48 00 02 48 */	b lbl_80097DA8
+lbl_80097B64:
 /* 80097B64 00094AA4  3C 60 CC 00 */	lis r3, 0xCC006000@ha
 /* 80097B68 00094AA8  38 63 60 00 */	addi r3, r3, 0xCC006000@l
 /* 80097B6C 00094AAC  80 03 00 04 */	lwz r0, 4(r3)
@@ -1382,6 +1391,7 @@ lbl_80097B94:
 /* 80097BB4 00094AF4  7C A0 2A 14 */	add r5, r0, r5
 /* 80097BB8 00094AF8  4B FF DA 41 */	bl DVDLowRead
 /* 80097BBC 00094AFC  48 00 01 EC */	b lbl_80097DA8
+lbl_80097BC0:
 /* 80097BC0 00094B00  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097BC4 00094B04  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097BC8 00094B08  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1391,22 +1401,25 @@ lbl_80097B94:
 /* 80097BD8 00094B18  80 67 00 10 */	lwz r3, 0x10(r7)
 /* 80097BDC 00094B1C  4B FF DC B5 */	bl DVDLowSeek
 /* 80097BE0 00094B20  48 00 01 C8 */	b lbl_80097DA8
+lbl_80097BE4:
 /* 80097BE4 00094B24  3C 60 80 09 */	lis r3, cbForStateBusy@ha
 /* 80097BE8 00094B28  38 63 7D B8 */	addi r3, r3, cbForStateBusy@l
 /* 80097BEC 00094B2C  4B FF DE 09 */	bl DVDLowStopMotor
 /* 80097BF0 00094B30  48 00 01 B8 */	b lbl_80097DA8
+lbl_80097BF4:
 /* 80097BF4 00094B34  3C 60 80 09 */	lis r3, cbForStateBusy@ha
 /* 80097BF8 00094B38  38 63 7D B8 */	addi r3, r3, cbForStateBusy@l
 /* 80097BFC 00094B3C  4B FF DD F9 */	bl DVDLowStopMotor
 /* 80097C00 00094B40  48 00 01 A8 */	b lbl_80097DA8
+lbl_80097C04:
 /* 80097C04 00094B44  3C 60 CC 00 */	lis r3, 0xCC006000@ha
 /* 80097C08 00094B48  38 63 60 00 */	addi r3, r3, 0xCC006000@l
 /* 80097C0C 00094B4C  80 03 00 04 */	lwz r0, 4(r3)
 /* 80097C10 00094B50  90 03 00 04 */	stw r0, 4(r3)
-/* 80097C14 00094B54  80 0D 93 FC */	lwz r0, AutoFinishing-_SDA_BASE_(r13)
+/* 80097C14 00094B54  80 0D 93 FC */	lwz r0, AutoFinishing@sda21(r13)
 /* 80097C18 00094B58  2C 00 00 00 */	cmpwi r0, 0
 /* 80097C1C 00094B5C  41 82 00 24 */	beq lbl_80097C40
-/* 80097C20 00094B60  80 AD 93 E8 */	lwz r5, executing-_SDA_BASE_(r13)
+/* 80097C20 00094B60  80 AD 93 E8 */	lwz r5, executing@sda21(r13)
 /* 80097C24 00094B64  38 00 00 00 */	li r0, 0
 /* 80097C28 00094B68  3C 60 80 09 */	lis r3, cbForStateBusy@ha
 /* 80097C2C 00094B6C  90 05 00 1C */	stw r0, 0x1c(r5)
@@ -1415,7 +1428,7 @@ lbl_80097B94:
 /* 80097C38 00094B78  4B FF E0 09 */	bl DVDLowRequestAudioStatus
 /* 80097C3C 00094B7C  48 00 01 6C */	b lbl_80097DA8
 lbl_80097C40:
-/* 80097C40 00094B80  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097C40 00094B80  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097C44 00094B84  38 00 00 01 */	li r0, 1
 /* 80097C48 00094B88  3C 60 80 09 */	lis r3, cbForStateBusy@ha
 /* 80097C4C 00094B8C  90 04 00 1C */	stw r0, 0x1c(r4)
@@ -1425,6 +1438,7 @@ lbl_80097C40:
 /* 80097C5C 00094B9C  80 A7 00 10 */	lwz r5, 0x10(r7)
 /* 80097C60 00094BA0  4B FF DF 49 */	bl DVDLowAudioStream
 /* 80097C64 00094BA4  48 00 01 44 */	b lbl_80097DA8
+lbl_80097C68:
 /* 80097C68 00094BA8  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097C6C 00094BAC  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097C70 00094BB0  38 83 60 00 */	addi r4, r3, 0x6000
@@ -1436,6 +1450,7 @@ lbl_80097C40:
 /* 80097C88 00094BC8  38 A0 00 00 */	li r5, 0
 /* 80097C8C 00094BCC  4B FF DF 1D */	bl DVDLowAudioStream
 /* 80097C90 00094BD0  48 00 01 18 */	b lbl_80097DA8
+lbl_80097C94:
 /* 80097C94 00094BD4  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097C98 00094BD8  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097C9C 00094BDC  38 83 60 00 */	addi r4, r3, 0x6000
@@ -1443,12 +1458,13 @@ lbl_80097C40:
 /* 80097CA4 00094BE4  90 04 00 04 */	stw r0, 4(r4)
 /* 80097CA8 00094BE8  38 00 00 01 */	li r0, 1
 /* 80097CAC 00094BEC  38 C3 7D B8 */	addi r6, r3, cbForStateBusy@l
-/* 80097CB0 00094BF0  90 0D 93 FC */	stw r0, AutoFinishing-_SDA_BASE_(r13)
+/* 80097CB0 00094BF0  90 0D 93 FC */	stw r0, AutoFinishing@sda21(r13)
 /* 80097CB4 00094BF4  38 60 00 00 */	li r3, 0
 /* 80097CB8 00094BF8  38 80 00 00 */	li r4, 0
 /* 80097CBC 00094BFC  38 A0 00 00 */	li r5, 0
 /* 80097CC0 00094C00  4B FF DE E9 */	bl DVDLowAudioStream
 /* 80097CC4 00094C04  48 00 00 E4 */	b lbl_80097DA8
+lbl_80097CC8:
 /* 80097CC8 00094C08  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097CCC 00094C0C  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097CD0 00094C10  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1458,6 +1474,7 @@ lbl_80097C40:
 /* 80097CE0 00094C20  38 60 00 00 */	li r3, 0
 /* 80097CE4 00094C24  4B FF DF 5D */	bl DVDLowRequestAudioStatus
 /* 80097CE8 00094C28  48 00 00 C0 */	b lbl_80097DA8
+lbl_80097CEC:
 /* 80097CEC 00094C2C  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097CF0 00094C30  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097CF4 00094C34  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1467,6 +1484,7 @@ lbl_80097C40:
 /* 80097D04 00094C44  3C 60 00 01 */	lis r3, 1
 /* 80097D08 00094C48  4B FF DF 39 */	bl DVDLowRequestAudioStatus
 /* 80097D0C 00094C4C  48 00 00 9C */	b lbl_80097DA8
+lbl_80097D10:
 /* 80097D10 00094C50  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097D14 00094C54  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097D18 00094C58  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1476,6 +1494,7 @@ lbl_80097C40:
 /* 80097D28 00094C68  3C 60 00 02 */	lis r3, 2
 /* 80097D2C 00094C6C  4B FF DF 15 */	bl DVDLowRequestAudioStatus
 /* 80097D30 00094C70  48 00 00 78 */	b lbl_80097DA8
+lbl_80097D34:
 /* 80097D34 00094C74  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097D38 00094C78  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097D3C 00094C7C  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1485,6 +1504,7 @@ lbl_80097C40:
 /* 80097D4C 00094C8C  3C 60 00 03 */	lis r3, 3
 /* 80097D50 00094C90  4B FF DE F1 */	bl DVDLowRequestAudioStatus
 /* 80097D54 00094C94  48 00 00 54 */	b lbl_80097DA8
+lbl_80097D58:
 /* 80097D58 00094C98  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097D5C 00094C9C  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097D60 00094CA0  38 83 60 00 */	addi r4, r3, 0x6000
@@ -1495,6 +1515,7 @@ lbl_80097C40:
 /* 80097D74 00094CB4  80 87 00 14 */	lwz r4, 0x14(r7)
 /* 80097D78 00094CB8  4B FF DF 55 */	bl DVDLowAudioBufferConfig
 /* 80097D7C 00094CBC  48 00 00 2C */	b lbl_80097DA8
+lbl_80097D80:
 /* 80097D80 00094CC0  3C 60 CC 00 */	lis r3, 0xCC006004@ha
 /* 80097D84 00094CC4  80 03 60 04 */	lwz r0, 0xCC006004@l(r3)
 /* 80097D88 00094CC8  38 A3 60 00 */	addi r5, r3, 0x6000
@@ -1522,7 +1543,7 @@ cbForStateBusy:
 /* 80097DD0 00094D10  3B E4 BC 60 */	addi r31, r4, tmpBuffer@l
 /* 80097DD4 00094D14  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80097DD8 00094D18  40 82 00 2C */	bne lbl_80097E04
-/* 80097DDC 00094D1C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097DDC 00094D1C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097DE0 00094D20  38 00 FF FF */	li r0, -1
 /* 80097DE4 00094D24  3C 60 01 23 */	lis r3, 0x01234568@ha
 /* 80097DE8 00094D28  90 04 00 0C */	stw r0, 0xc(r4)
@@ -1533,16 +1554,16 @@ cbForStateBusy:
 /* 80097DFC 00094D3C  4B FF EC C1 */	bl cbForStateError
 /* 80097E00 00094D40  48 00 05 74 */	b lbl_80098374
 lbl_80097E04:
-/* 80097E04 00094D44  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097E04 00094D44  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097E08 00094D48  28 00 00 03 */	cmplwi r0, 3
 /* 80097E0C 00094D4C  41 82 00 10 */	beq lbl_80097E1C
-/* 80097E10 00094D50  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097E10 00094D50  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097E14 00094D54  28 00 00 0F */	cmplwi r0, 0xf
 /* 80097E18 00094D58  40 82 00 EC */	bne lbl_80097F04
 lbl_80097E1C:
 /* 80097E1C 00094D5C  54 60 07 BD */	rlwinm. r0, r3, 0, 0x1e, 0x1e
 /* 80097E20 00094D60  41 82 00 2C */	beq lbl_80097E4C
-/* 80097E24 00094D64  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097E24 00094D64  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097E28 00094D68  38 00 FF FF */	li r0, -1
 /* 80097E2C 00094D6C  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 80097E30 00094D70  90 04 00 0C */	stw r0, 0xc(r4)
@@ -1554,24 +1575,24 @@ lbl_80097E1C:
 /* 80097E48 00094D88  48 00 05 2C */	b lbl_80098374
 lbl_80097E4C:
 /* 80097E4C 00094D8C  38 00 00 00 */	li r0, 0
-/* 80097E50 00094D90  90 0D 94 1C */	stw r0, NumInternalRetry-_SDA_BASE_(r13)
-/* 80097E54 00094D94  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097E50 00094D90  90 0D 94 1C */	stw r0, NumInternalRetry@sda21(r13)
+/* 80097E54 00094D94  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097E58 00094D98  28 00 00 0F */	cmplwi r0, 0xf
 /* 80097E5C 00094D9C  40 82 00 0C */	bne lbl_80097E68
 /* 80097E60 00094DA0  38 00 00 01 */	li r0, 1
-/* 80097E64 00094DA4  90 0D 94 20 */	stw r0, ResetRequired-_SDA_BASE_(r13)
+/* 80097E64 00094DA4  90 0D 94 20 */	stw r0, ResetRequired@sda21(r13)
 lbl_80097E68:
-/* 80097E68 00094DA8  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80097E68 00094DA8  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80097E6C 00094DAC  28 00 00 00 */	cmplwi r0, 0
 /* 80097E70 00094DB0  41 82 00 6C */	beq lbl_80097EDC
 /* 80097E74 00094DB4  38 00 00 07 */	li r0, 7
-/* 80097E78 00094DB8  83 CD 93 E8 */	lwz r30, executing-_SDA_BASE_(r13)
-/* 80097E7C 00094DBC  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097E78 00094DB8  83 CD 93 E8 */	lwz r30, executing@sda21(r13)
+/* 80097E7C 00094DBC  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 /* 80097E80 00094DC0  38 7F 00 80 */	addi r3, r31, 0x80
 /* 80097E84 00094DC4  38 00 00 00 */	li r0, 0
-/* 80097E88 00094DC8  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80097E88 00094DC8  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80097E8C 00094DCC  38 00 00 0A */	li r0, 0xa
-/* 80097E90 00094DD0  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80097E90 00094DD0  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80097E94 00094DD4  90 1E 00 0C */	stw r0, 0xc(r30)
 /* 80097E98 00094DD8  81 9E 00 28 */	lwz r12, 0x28(r30)
 /* 80097E9C 00094DDC  28 0C 00 00 */	cmplwi r12, 0
@@ -1581,7 +1602,7 @@ lbl_80097E68:
 /* 80097EAC 00094DEC  38 60 FF FD */	li r3, -3
 /* 80097EB0 00094DF0  4E 80 00 21 */	blrl 
 lbl_80097EB4:
-/* 80097EB4 00094DF4  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80097EB4 00094DF4  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80097EB8 00094DF8  28 0C 00 00 */	cmplwi r12, 0
 /* 80097EBC 00094DFC  41 82 00 14 */	beq lbl_80097ED0
 /* 80097EC0 00094E00  7D 88 03 A6 */	mtlr r12
@@ -1597,7 +1618,7 @@ lbl_80097EDC:
 lbl_80097EE0:
 /* 80097EE0 00094E20  2C 00 00 00 */	cmpwi r0, 0
 /* 80097EE4 00094E24  40 82 04 90 */	bne lbl_80098374
-/* 80097EE8 00094E28  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80097EE8 00094E28  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80097EEC 00094E2C  38 00 00 07 */	li r0, 7
 /* 80097EF0 00094E30  3C 60 80 09 */	lis r3, cbForStateMotorStopped@ha
 /* 80097EF4 00094E34  90 04 00 0C */	stw r0, 0xc(r4)
@@ -1605,20 +1626,20 @@ lbl_80097EE0:
 /* 80097EFC 00094E3C  4B FF DA 29 */	bl DVDLowWaitCoverClose
 /* 80097F00 00094E40  48 00 04 74 */	b lbl_80098374
 lbl_80097F04:
-/* 80097F04 00094E44  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097F04 00094E44  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097F08 00094E48  28 00 00 01 */	cmplwi r0, 1
 /* 80097F0C 00094E4C  41 82 00 28 */	beq lbl_80097F34
-/* 80097F10 00094E50  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097F10 00094E50  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097F14 00094E54  28 00 00 04 */	cmplwi r0, 4
 /* 80097F18 00094E58  41 82 00 1C */	beq lbl_80097F34
-/* 80097F1C 00094E5C  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097F1C 00094E5C  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097F20 00094E60  28 00 00 05 */	cmplwi r0, 5
 /* 80097F24 00094E64  41 82 00 10 */	beq lbl_80097F34
-/* 80097F28 00094E68  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80097F28 00094E68  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80097F2C 00094E6C  28 00 00 0E */	cmplwi r0, 0xe
 /* 80097F30 00094E70  40 82 00 28 */	bne lbl_80097F58
 lbl_80097F34:
-/* 80097F34 00094E74  80 CD 93 E8 */	lwz r6, executing-_SDA_BASE_(r13)
+/* 80097F34 00094E74  80 CD 93 E8 */	lwz r6, executing@sda21(r13)
 /* 80097F38 00094E78  3C 80 CC 00 */	lis r4, 0xCC006000@ha
 /* 80097F3C 00094E7C  38 84 60 00 */	addi r4, r4, 0xCC006000@l
 /* 80097F40 00094E80  80 84 00 18 */	lwz r4, 0x18(r4)
@@ -1630,12 +1651,12 @@ lbl_80097F34:
 lbl_80097F58:
 /* 80097F58 00094E98  54 60 07 39 */	rlwinm. r0, r3, 0, 0x1c, 0x1c
 /* 80097F5C 00094E9C  41 82 00 60 */	beq lbl_80097FBC
-/* 80097F60 00094EA0  83 CD 93 E8 */	lwz r30, executing-_SDA_BASE_(r13)
+/* 80097F60 00094EA0  83 CD 93 E8 */	lwz r30, executing@sda21(r13)
 /* 80097F64 00094EA4  38 7F 00 80 */	addi r3, r31, 0x80
 /* 80097F68 00094EA8  38 00 00 00 */	li r0, 0
-/* 80097F6C 00094EAC  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80097F6C 00094EAC  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80097F70 00094EB0  38 00 00 0A */	li r0, 0xa
-/* 80097F74 00094EB4  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80097F74 00094EB4  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80097F78 00094EB8  90 1E 00 0C */	stw r0, 0xc(r30)
 /* 80097F7C 00094EBC  81 9E 00 28 */	lwz r12, 0x28(r30)
 /* 80097F80 00094EC0  28 0C 00 00 */	cmplwi r12, 0
@@ -1645,7 +1666,7 @@ lbl_80097F58:
 /* 80097F90 00094ED0  38 60 FF FD */	li r3, -3
 /* 80097F94 00094ED4  4E 80 00 21 */	blrl 
 lbl_80097F98:
-/* 80097F98 00094ED8  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80097F98 00094ED8  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80097F9C 00094EDC  28 0C 00 00 */	cmplwi r12, 0
 /* 80097FA0 00094EE0  41 82 00 14 */	beq lbl_80097FB4
 /* 80097FA4 00094EE4  7D 88 03 A6 */	mtlr r12
@@ -1659,16 +1680,16 @@ lbl_80097FBC:
 /* 80097FBC 00094EFC  54 60 07 FF */	clrlwi. r0, r3, 0x1f
 /* 80097FC0 00094F00  41 82 02 84 */	beq lbl_80098244
 /* 80097FC4 00094F04  38 80 00 00 */	li r4, 0
-/* 80097FC8 00094F08  90 8D 94 1C */	stw r4, NumInternalRetry-_SDA_BASE_(r13)
-/* 80097FCC 00094F0C  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80097FC8 00094F08  90 8D 94 1C */	stw r4, NumInternalRetry@sda21(r13)
+/* 80097FCC 00094F0C  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80097FD0 00094F10  28 00 00 00 */	cmplwi r0, 0
 /* 80097FD4 00094F14  41 82 00 60 */	beq lbl_80098034
-/* 80097FD8 00094F18  90 8D 94 10 */	stw r4, ResumeFromHere-_SDA_BASE_(r13)
+/* 80097FD8 00094F18  90 8D 94 10 */	stw r4, ResumeFromHere@sda21(r13)
 /* 80097FDC 00094F1C  38 7F 00 80 */	addi r3, r31, 0x80
-/* 80097FE0 00094F20  83 CD 93 E8 */	lwz r30, executing-_SDA_BASE_(r13)
+/* 80097FE0 00094F20  83 CD 93 E8 */	lwz r30, executing@sda21(r13)
 /* 80097FE4 00094F24  38 00 00 0A */	li r0, 0xa
-/* 80097FE8 00094F28  90 8D 94 08 */	stw r4, Canceling-_SDA_BASE_(r13)
-/* 80097FEC 00094F2C  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80097FE8 00094F28  90 8D 94 08 */	stw r4, Canceling@sda21(r13)
+/* 80097FEC 00094F2C  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80097FF0 00094F30  90 1E 00 0C */	stw r0, 0xc(r30)
 /* 80097FF4 00094F34  81 9E 00 28 */	lwz r12, 0x28(r30)
 /* 80097FF8 00094F38  28 0C 00 00 */	cmplwi r12, 0
@@ -1678,7 +1699,7 @@ lbl_80097FBC:
 /* 80098008 00094F48  38 60 FF FD */	li r3, -3
 /* 8009800C 00094F4C  4E 80 00 21 */	blrl 
 lbl_80098010:
-/* 80098010 00094F50  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80098010 00094F50  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80098014 00094F54  28 0C 00 00 */	cmplwi r12, 0
 /* 80098018 00094F58  41 82 00 14 */	beq lbl_8009802C
 /* 8009801C 00094F5C  7D 88 03 A6 */	mtlr r12
@@ -1691,20 +1712,20 @@ lbl_8009802C:
 lbl_80098034:
 /* 80098034 00094F74  2C 04 00 00 */	cmpwi r4, 0
 /* 80098038 00094F78  40 82 03 3C */	bne lbl_80098374
-/* 8009803C 00094F7C  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 8009803C 00094F7C  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098040 00094F80  28 00 00 01 */	cmplwi r0, 1
 /* 80098044 00094F84  41 82 00 28 */	beq lbl_8009806C
-/* 80098048 00094F88  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098048 00094F88  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 8009804C 00094F8C  28 00 00 04 */	cmplwi r0, 4
 /* 80098050 00094F90  41 82 00 1C */	beq lbl_8009806C
-/* 80098054 00094F94  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098054 00094F94  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098058 00094F98  28 00 00 05 */	cmplwi r0, 5
 /* 8009805C 00094F9C  41 82 00 10 */	beq lbl_8009806C
-/* 80098060 00094FA0  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098060 00094FA0  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098064 00094FA4  28 00 00 0E */	cmplwi r0, 0xe
 /* 80098068 00094FA8  40 82 00 54 */	bne lbl_800980BC
 lbl_8009806C:
-/* 8009806C 00094FAC  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 8009806C 00094FAC  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80098070 00094FB0  80 83 00 20 */	lwz r4, 0x20(r3)
 /* 80098074 00094FB4  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 80098078 00094FB8  7C 04 00 40 */	cmplw r4, r0
@@ -1713,7 +1734,7 @@ lbl_8009806C:
 /* 80098084 00094FC4  48 00 02 F0 */	b lbl_80098374
 lbl_80098088:
 /* 80098088 00094FC8  38 1F 00 80 */	addi r0, r31, 0x80
-/* 8009808C 00094FCC  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 8009808C 00094FCC  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 80098090 00094FD0  38 00 00 00 */	li r0, 0
 /* 80098094 00094FD4  38 83 00 00 */	addi r4, r3, 0
 /* 80098098 00094FD8  90 03 00 0C */	stw r0, 0xc(r3)
@@ -1727,23 +1748,23 @@ lbl_800980B4:
 /* 800980B4 00094FF4  4B FF F7 FD */	bl stateReady
 /* 800980B8 00094FF8  48 00 02 BC */	b lbl_80098374
 lbl_800980BC:
-/* 800980BC 00094FFC  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980BC 00094FFC  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980C0 00095000  28 00 00 09 */	cmplwi r0, 9
 /* 800980C4 00095004  41 82 00 28 */	beq lbl_800980EC
-/* 800980C8 00095008  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980C8 00095008  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980CC 0009500C  28 00 00 0A */	cmplwi r0, 0xa
 /* 800980D0 00095010  41 82 00 1C */	beq lbl_800980EC
-/* 800980D4 00095014  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980D4 00095014  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980D8 00095018  28 00 00 0B */	cmplwi r0, 0xb
 /* 800980DC 0009501C  41 82 00 10 */	beq lbl_800980EC
-/* 800980E0 00095020  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980E0 00095020  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980E4 00095024  28 00 00 0C */	cmplwi r0, 0xc
 /* 800980E8 00095028  40 82 00 68 */	bne lbl_80098150
 lbl_800980EC:
-/* 800980EC 0009502C  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980EC 0009502C  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980F0 00095030  28 00 00 0B */	cmplwi r0, 0xb
 /* 800980F4 00095034  41 82 00 10 */	beq lbl_80098104
-/* 800980F8 00095038  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 800980F8 00095038  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800980FC 0009503C  28 00 00 0A */	cmplwi r0, 0xa
 /* 80098100 00095040  40 82 00 14 */	bne lbl_80098114
 lbl_80098104:
@@ -1756,10 +1777,10 @@ lbl_80098114:
 /* 80098118 00095058  38 63 60 00 */	addi r3, r3, 0xCC006000@l
 /* 8009811C 0009505C  80 63 00 20 */	lwz r3, 0x20(r3)
 lbl_80098120:
-/* 80098120 00095060  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80098120 00095060  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80098124 00095064  38 BF 00 80 */	addi r5, r31, 0x80
 /* 80098128 00095068  38 00 00 00 */	li r0, 0
-/* 8009812C 0009506C  90 AD 93 E8 */	stw r5, executing-_SDA_BASE_(r13)
+/* 8009812C 0009506C  90 AD 93 E8 */	stw r5, executing@sda21(r13)
 /* 80098130 00095070  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80098134 00095074  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80098138 00095078  28 0C 00 00 */	cmplwi r12, 0
@@ -1770,10 +1791,10 @@ lbl_80098148:
 /* 80098148 00095088  4B FF F7 69 */	bl stateReady
 /* 8009814C 0009508C  48 00 02 28 */	b lbl_80098374
 lbl_80098150:
-/* 80098150 00095090  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098150 00095090  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098154 00095094  28 00 00 06 */	cmplwi r0, 6
 /* 80098158 00095098  40 82 00 B8 */	bne lbl_80098210
-/* 8009815C 0009509C  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 8009815C 0009509C  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80098160 000950A0  38 A4 00 1C */	addi r5, r4, 0x1c
 /* 80098164 000950A4  80 04 00 1C */	lwz r0, 0x1c(r4)
 /* 80098168 000950A8  28 00 00 00 */	cmplwi r0, 0
@@ -1783,7 +1804,7 @@ lbl_80098150:
 /* 80098178 000950B8  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 8009817C 000950BC  41 82 00 34 */	beq lbl_800981B0
 /* 80098180 000950C0  38 1F 00 80 */	addi r0, r31, 0x80
-/* 80098184 000950C4  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 80098184 000950C4  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 80098188 000950C8  38 00 00 09 */	li r0, 9
 /* 8009818C 000950CC  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80098190 000950D0  81 84 00 28 */	lwz r12, 0x28(r4)
@@ -1797,20 +1818,20 @@ lbl_800981A8:
 /* 800981AC 000950EC  48 00 01 C8 */	b lbl_80098374
 lbl_800981B0:
 /* 800981B0 000950F0  38 00 00 00 */	li r0, 0
-/* 800981B4 000950F4  90 0D 93 FC */	stw r0, AutoFinishing-_SDA_BASE_(r13)
+/* 800981B4 000950F4  90 0D 93 FC */	stw r0, AutoFinishing@sda21(r13)
 /* 800981B8 000950F8  38 00 00 01 */	li r0, 1
 /* 800981BC 000950FC  3C 60 80 09 */	lis r3, cbForStateBusy@ha
 /* 800981C0 00095100  90 05 00 00 */	stw r0, 0(r5)
 /* 800981C4 00095104  38 C3 7D B8 */	addi r6, r3, cbForStateBusy@l
 /* 800981C8 00095108  38 60 00 00 */	li r3, 0
-/* 800981CC 0009510C  80 AD 93 E8 */	lwz r5, executing-_SDA_BASE_(r13)
+/* 800981CC 0009510C  80 AD 93 E8 */	lwz r5, executing@sda21(r13)
 /* 800981D0 00095110  80 85 00 14 */	lwz r4, 0x14(r5)
 /* 800981D4 00095114  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800981D8 00095118  4B FF D9 D1 */	bl DVDLowAudioStream
 /* 800981DC 0009511C  48 00 01 98 */	b lbl_80098374
 lbl_800981E0:
 /* 800981E0 00095120  38 1F 00 80 */	addi r0, r31, 0x80
-/* 800981E4 00095124  90 0D 93 E8 */	stw r0, executing-_SDA_BASE_(r13)
+/* 800981E4 00095124  90 0D 93 E8 */	stw r0, executing@sda21(r13)
 /* 800981E8 00095128  38 00 00 00 */	li r0, 0
 /* 800981EC 0009512C  90 04 00 0C */	stw r0, 0xc(r4)
 /* 800981F0 00095130  81 84 00 28 */	lwz r12, 0x28(r4)
@@ -1823,10 +1844,10 @@ lbl_80098208:
 /* 80098208 00095148  4B FF F6 A9 */	bl stateReady
 /* 8009820C 0009514C  48 00 01 68 */	b lbl_80098374
 lbl_80098210:
-/* 80098210 00095150  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80098210 00095150  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80098214 00095154  38 7F 00 80 */	addi r3, r31, 0x80
 /* 80098218 00095158  38 00 00 00 */	li r0, 0
-/* 8009821C 0009515C  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 8009821C 0009515C  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80098220 00095160  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80098224 00095164  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 80098228 00095168  28 0C 00 00 */	cmplwi r12, 0
@@ -1838,10 +1859,10 @@ lbl_8009823C:
 /* 8009823C 0009517C  4B FF F6 75 */	bl stateReady
 /* 80098240 00095180  48 00 01 34 */	b lbl_80098374
 lbl_80098244:
-/* 80098244 00095184  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098244 00095184  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098248 00095188  28 00 00 0E */	cmplwi r0, 0xe
 /* 8009824C 0009518C  40 82 00 2C */	bne lbl_80098278
-/* 80098250 00095190  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80098250 00095190  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80098254 00095194  38 00 FF FF */	li r0, -1
 /* 80098258 00095198  3C 60 01 23 */	lis r3, 0x01234567@ha
 /* 8009825C 0009519C  90 04 00 0C */	stw r0, 0xc(r4)
@@ -1852,33 +1873,33 @@ lbl_80098244:
 /* 80098270 000951B0  4B FF D7 85 */	bl DVDLowStopMotor
 /* 80098274 000951B4  48 00 01 00 */	b lbl_80098374
 lbl_80098278:
-/* 80098278 000951B8  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098278 000951B8  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 8009827C 000951BC  28 00 00 01 */	cmplwi r0, 1
 /* 80098280 000951C0  41 82 00 28 */	beq lbl_800982A8
-/* 80098284 000951C4  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098284 000951C4  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098288 000951C8  28 00 00 04 */	cmplwi r0, 4
 /* 8009828C 000951CC  41 82 00 1C */	beq lbl_800982A8
-/* 80098290 000951D0  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 80098290 000951D0  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 80098294 000951D4  28 00 00 05 */	cmplwi r0, 5
 /* 80098298 000951D8  41 82 00 10 */	beq lbl_800982A8
-/* 8009829C 000951DC  80 0D 94 04 */	lwz r0, CurrCommand-_SDA_BASE_(r13)
+/* 8009829C 000951DC  80 0D 94 04 */	lwz r0, CurrCommand@sda21(r13)
 /* 800982A0 000951E0  28 00 00 0E */	cmplwi r0, 0xe
 /* 800982A4 000951E4  40 82 00 C4 */	bne lbl_80098368
 lbl_800982A8:
-/* 800982A8 000951E8  83 CD 93 E8 */	lwz r30, executing-_SDA_BASE_(r13)
+/* 800982A8 000951E8  83 CD 93 E8 */	lwz r30, executing@sda21(r13)
 /* 800982AC 000951EC  80 7E 00 20 */	lwz r3, 0x20(r30)
 /* 800982B0 000951F0  80 1E 00 14 */	lwz r0, 0x14(r30)
 /* 800982B4 000951F4  7C 03 00 40 */	cmplw r3, r0
 /* 800982B8 000951F8  40 82 00 B0 */	bne lbl_80098368
-/* 800982BC 000951FC  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 800982BC 000951FC  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 800982C0 00095200  28 00 00 00 */	cmplwi r0, 0
 /* 800982C4 00095204  41 82 00 64 */	beq lbl_80098328
 /* 800982C8 00095208  38 80 00 00 */	li r4, 0
-/* 800982CC 0009520C  90 8D 94 10 */	stw r4, ResumeFromHere-_SDA_BASE_(r13)
+/* 800982CC 0009520C  90 8D 94 10 */	stw r4, ResumeFromHere@sda21(r13)
 /* 800982D0 00095210  38 7F 00 80 */	addi r3, r31, 0x80
 /* 800982D4 00095214  38 00 00 0A */	li r0, 0xa
-/* 800982D8 00095218  90 8D 94 08 */	stw r4, Canceling-_SDA_BASE_(r13)
-/* 800982DC 0009521C  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 800982D8 00095218  90 8D 94 08 */	stw r4, Canceling@sda21(r13)
+/* 800982DC 0009521C  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 800982E0 00095220  90 1E 00 0C */	stw r0, 0xc(r30)
 /* 800982E4 00095224  81 9E 00 28 */	lwz r12, 0x28(r30)
 /* 800982E8 00095228  28 0C 00 00 */	cmplwi r12, 0
@@ -1888,7 +1909,7 @@ lbl_800982A8:
 /* 800982F8 00095238  38 60 FF FD */	li r3, -3
 /* 800982FC 0009523C  4E 80 00 21 */	blrl 
 lbl_80098300:
-/* 80098300 00095240  81 8D 94 0C */	lwz r12, CancelCallback-_SDA_BASE_(r13)
+/* 80098300 00095240  81 8D 94 0C */	lwz r12, CancelCallback@sda21(r13)
 /* 80098304 00095244  28 0C 00 00 */	cmplwi r12, 0
 /* 80098308 00095248  41 82 00 14 */	beq lbl_8009831C
 /* 8009830C 0009524C  7D 88 03 A6 */	mtlr r12
@@ -1904,10 +1925,10 @@ lbl_80098328:
 lbl_8009832C:
 /* 8009832C 0009526C  2C 00 00 00 */	cmpwi r0, 0
 /* 80098330 00095270  40 82 00 44 */	bne lbl_80098374
-/* 80098334 00095274  80 8D 93 E8 */	lwz r4, executing-_SDA_BASE_(r13)
+/* 80098334 00095274  80 8D 93 E8 */	lwz r4, executing@sda21(r13)
 /* 80098338 00095278  38 7F 00 80 */	addi r3, r31, 0x80
 /* 8009833C 0009527C  38 00 00 00 */	li r0, 0
-/* 80098340 00095280  90 6D 93 E8 */	stw r3, executing-_SDA_BASE_(r13)
+/* 80098340 00095280  90 6D 93 E8 */	stw r3, executing@sda21(r13)
 /* 80098344 00095284  90 04 00 0C */	stw r0, 0xc(r4)
 /* 80098348 00095288  81 84 00 28 */	lwz r12, 0x28(r4)
 /* 8009834C 0009528C  28 0C 00 00 */	cmplwi r12, 0
@@ -1948,7 +1969,7 @@ DVDReadAbsAsyncPrio:
 /* 800983C0 00095300  90 C3 00 10 */	stw r6, 0x10(r3)
 /* 800983C4 00095304  90 03 00 20 */	stw r0, 0x20(r3)
 /* 800983C8 00095308  90 E3 00 28 */	stw r7, 0x28(r3)
-/* 800983CC 0009530C  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 800983CC 0009530C  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 800983D0 00095310  2C 00 00 00 */	cmpwi r0, 0
 /* 800983D4 00095314  41 82 00 30 */	beq lbl_80098404
 /* 800983D8 00095318  80 7D 00 08 */	lwz r3, 8(r29)
@@ -1971,11 +1992,11 @@ lbl_80098404:
 /* 80098414 00095354  38 7F 00 00 */	addi r3, r31, 0
 /* 80098418 00095358  38 9D 00 00 */	addi r4, r29, 0
 /* 8009841C 0009535C  48 00 0C 85 */	bl __DVDPushWaitingQueue
-/* 80098420 00095360  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 80098420 00095360  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 80098424 00095364  3B E3 00 00 */	addi r31, r3, 0
 /* 80098428 00095368  28 00 00 00 */	cmplwi r0, 0
 /* 8009842C 0009536C  40 82 00 14 */	bne lbl_80098440
-/* 80098430 00095370  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 80098430 00095370  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 80098434 00095374  2C 00 00 00 */	cmpwi r0, 0
 /* 80098438 00095378  40 82 00 08 */	bne lbl_80098440
 /* 8009843C 0009537C  4B FF F4 75 */	bl stateReady
@@ -2007,7 +2028,7 @@ DVDReadAbsAsyncForBS:
 /* 80098494 000953D4  90 C3 00 10 */	stw r6, 0x10(r3)
 /* 80098498 000953D8  90 03 00 20 */	stw r0, 0x20(r3)
 /* 8009849C 000953DC  90 E3 00 28 */	stw r7, 0x28(r3)
-/* 800984A0 000953E0  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 800984A0 000953E0  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 800984A4 000953E4  2C 00 00 00 */	cmpwi r0, 0
 /* 800984A8 000953E8  41 82 00 30 */	beq lbl_800984D8
 /* 800984AC 000953EC  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2030,11 +2051,11 @@ lbl_800984D8:
 /* 800984E8 00095428  38 9F 00 00 */	addi r4, r31, 0
 /* 800984EC 0009542C  38 60 00 02 */	li r3, 2
 /* 800984F0 00095430  48 00 0B B1 */	bl __DVDPushWaitingQueue
-/* 800984F4 00095434  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 800984F4 00095434  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 800984F8 00095438  3B E3 00 00 */	addi r31, r3, 0
 /* 800984FC 0009543C  28 00 00 00 */	cmplwi r0, 0
 /* 80098500 00095440  40 82 00 14 */	bne lbl_80098514
-/* 80098504 00095444  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 80098504 00095444  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 80098508 00095448  2C 00 00 00 */	cmpwi r0, 0
 /* 8009850C 0009544C  40 82 00 08 */	bne lbl_80098514
 /* 80098510 00095450  4B FF F3 A1 */	bl stateReady
@@ -2066,7 +2087,7 @@ DVDReadDiskID:
 /* 80098568 000954A8  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 8009856C 000954AC  90 1F 00 20 */	stw r0, 0x20(r31)
 /* 80098570 000954B0  90 BF 00 28 */	stw r5, 0x28(r31)
-/* 80098574 000954B4  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 80098574 000954B4  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 80098578 000954B8  2C 00 00 00 */	cmpwi r0, 0
 /* 8009857C 000954BC  41 82 00 30 */	beq lbl_800985AC
 /* 80098580 000954C0  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2089,11 +2110,11 @@ lbl_800985AC:
 /* 800985BC 000954FC  38 9F 00 00 */	addi r4, r31, 0
 /* 800985C0 00095500  38 60 00 02 */	li r3, 2
 /* 800985C4 00095504  48 00 0A DD */	bl __DVDPushWaitingQueue
-/* 800985C8 00095508  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 800985C8 00095508  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 800985CC 0009550C  3B E3 00 00 */	addi r31, r3, 0
 /* 800985D0 00095510  28 00 00 00 */	cmplwi r0, 0
 /* 800985D4 00095514  40 82 00 14 */	bne lbl_800985E8
-/* 800985D8 00095518  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 800985D8 00095518  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 800985DC 0009551C  2C 00 00 00 */	cmpwi r0, 0
 /* 800985E0 00095520  40 82 00 08 */	bne lbl_800985E8
 /* 800985E4 00095524  4B FF F2 CD */	bl stateReady
@@ -2121,7 +2142,7 @@ DVDPrepareStreamAbsAsync:
 /* 8009862C 0009556C  90 83 00 14 */	stw r4, 0x14(r3)
 /* 80098630 00095570  90 A3 00 10 */	stw r5, 0x10(r3)
 /* 80098634 00095574  90 C3 00 28 */	stw r6, 0x28(r3)
-/* 80098638 00095578  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 80098638 00095578  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 8009863C 0009557C  2C 00 00 00 */	cmpwi r0, 0
 /* 80098640 00095580  41 82 00 30 */	beq lbl_80098670
 /* 80098644 00095584  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2144,11 +2165,11 @@ lbl_80098670:
 /* 80098680 000955C0  38 9F 00 00 */	addi r4, r31, 0
 /* 80098684 000955C4  38 60 00 01 */	li r3, 1
 /* 80098688 000955C8  48 00 0A 19 */	bl __DVDPushWaitingQueue
-/* 8009868C 000955CC  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 8009868C 000955CC  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 80098690 000955D0  3B E3 00 00 */	addi r31, r3, 0
 /* 80098694 000955D4  28 00 00 00 */	cmplwi r0, 0
 /* 80098698 000955D8  40 82 00 14 */	bne lbl_800986AC
-/* 8009869C 000955DC  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 8009869C 000955DC  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 800986A0 000955E0  2C 00 00 00 */	cmpwi r0, 0
 /* 800986A4 000955E4  40 82 00 08 */	bne lbl_800986AC
 /* 800986A8 000955E8  4B FF F2 09 */	bl stateReady
@@ -2174,7 +2195,7 @@ DVDCancelStreamAsync:
 /* 800986E8 00095628  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 800986EC 0009562C  90 03 00 08 */	stw r0, 8(r3)
 /* 800986F0 00095630  90 83 00 28 */	stw r4, 0x28(r3)
-/* 800986F4 00095634  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 800986F4 00095634  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 800986F8 00095638  2C 00 00 00 */	cmpwi r0, 0
 /* 800986FC 0009563C  41 82 00 30 */	beq lbl_8009872C
 /* 80098700 00095640  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2197,11 +2218,11 @@ lbl_8009872C:
 /* 8009873C 0009567C  38 9F 00 00 */	addi r4, r31, 0
 /* 80098740 00095680  38 60 00 01 */	li r3, 1
 /* 80098744 00095684  48 00 09 5D */	bl __DVDPushWaitingQueue
-/* 80098748 00095688  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 80098748 00095688  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 8009874C 0009568C  3B E3 00 00 */	addi r31, r3, 0
 /* 80098750 00095690  28 00 00 00 */	cmplwi r0, 0
 /* 80098754 00095694  40 82 00 14 */	bne lbl_80098768
-/* 80098758 00095698  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 80098758 00095698  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 8009875C 0009569C  2C 00 00 00 */	cmpwi r0, 0
 /* 80098760 000956A0  40 82 00 08 */	bne lbl_80098768
 /* 80098764 000956A4  4B FF F1 4D */	bl stateReady
@@ -2227,7 +2248,7 @@ DVDStopStreamAtEndAsync:
 /* 800987A4 000956E4  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 800987A8 000956E8  90 03 00 08 */	stw r0, 8(r3)
 /* 800987AC 000956EC  90 83 00 28 */	stw r4, 0x28(r3)
-/* 800987B0 000956F0  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 800987B0 000956F0  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 800987B4 000956F4  2C 00 00 00 */	cmpwi r0, 0
 /* 800987B8 000956F8  41 82 00 30 */	beq lbl_800987E8
 /* 800987BC 000956FC  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2250,11 +2271,11 @@ lbl_800987E8:
 /* 800987F8 00095738  38 9F 00 00 */	addi r4, r31, 0
 /* 800987FC 0009573C  38 60 00 01 */	li r3, 1
 /* 80098800 00095740  48 00 08 A1 */	bl __DVDPushWaitingQueue
-/* 80098804 00095744  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 80098804 00095744  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 80098808 00095748  3B E3 00 00 */	addi r31, r3, 0
 /* 8009880C 0009574C  28 00 00 00 */	cmplwi r0, 0
 /* 80098810 00095750  40 82 00 14 */	bne lbl_80098824
-/* 80098814 00095754  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 80098814 00095754  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 80098818 00095758  2C 00 00 00 */	cmpwi r0, 0
 /* 8009881C 0009575C  40 82 00 08 */	bne lbl_80098824
 /* 80098820 00095760  4B FF F0 91 */	bl stateReady
@@ -2280,7 +2301,7 @@ DVDGetStreamPlayAddrAsync:
 /* 80098860 000957A0  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80098864 000957A4  90 03 00 08 */	stw r0, 8(r3)
 /* 80098868 000957A8  90 83 00 28 */	stw r4, 0x28(r3)
-/* 8009886C 000957AC  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 8009886C 000957AC  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 80098870 000957B0  2C 00 00 00 */	cmpwi r0, 0
 /* 80098874 000957B4  41 82 00 30 */	beq lbl_800988A4
 /* 80098878 000957B8  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2303,11 +2324,11 @@ lbl_800988A4:
 /* 800988B4 000957F4  38 9F 00 00 */	addi r4, r31, 0
 /* 800988B8 000957F8  38 60 00 01 */	li r3, 1
 /* 800988BC 000957FC  48 00 07 E5 */	bl __DVDPushWaitingQueue
-/* 800988C0 00095800  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 800988C0 00095800  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 800988C4 00095804  3B E3 00 00 */	addi r31, r3, 0
 /* 800988C8 00095808  28 00 00 00 */	cmplwi r0, 0
 /* 800988CC 0009580C  40 82 00 14 */	bne lbl_800988E0
-/* 800988D0 00095810  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 800988D0 00095810  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 800988D4 00095814  2C 00 00 00 */	cmpwi r0, 0
 /* 800988D8 00095818  40 82 00 08 */	bne lbl_800988E0
 /* 800988DC 0009581C  4B FF EF D5 */	bl stateReady
@@ -2338,7 +2359,7 @@ DVDInquiryAsync:
 /* 80098930 00095870  90 7F 00 14 */	stw r3, 0x14(r31)
 /* 80098934 00095874  90 1F 00 20 */	stw r0, 0x20(r31)
 /* 80098938 00095878  90 BF 00 28 */	stw r5, 0x28(r31)
-/* 8009893C 0009587C  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
+/* 8009893C 0009587C  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
 /* 80098940 00095880  2C 00 00 00 */	cmpwi r0, 0
 /* 80098944 00095884  41 82 00 30 */	beq lbl_80098974
 /* 80098948 00095888  80 7F 00 08 */	lwz r3, 8(r31)
@@ -2361,11 +2382,11 @@ lbl_80098974:
 /* 80098984 000958C4  38 9F 00 00 */	addi r4, r31, 0
 /* 80098988 000958C8  38 60 00 02 */	li r3, 2
 /* 8009898C 000958CC  48 00 07 15 */	bl __DVDPushWaitingQueue
-/* 80098990 000958D0  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 80098990 000958D0  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 80098994 000958D4  3B E3 00 00 */	addi r31, r3, 0
 /* 80098998 000958D8  28 00 00 00 */	cmplwi r0, 0
 /* 8009899C 000958DC  40 82 00 14 */	bne lbl_800989B0
-/* 800989A0 000958E0  80 0D 93 F4 */	lwz r0, PauseFlag-_SDA_BASE_(r13)
+/* 800989A0 000958E0  80 0D 93 F4 */	lwz r0, PauseFlag@sda21(r13)
 /* 800989A4 000958E4  2C 00 00 00 */	cmpwi r0, 0
 /* 800989A8 000958E8  40 82 00 08 */	bne lbl_800989B0
 /* 800989AC 000958EC  4B FF EF 05 */	bl stateReady
@@ -2393,8 +2414,8 @@ DVDReset:
 /* 800989F4 00095934  38 00 00 00 */	li r0, 0
 /* 800989F8 00095938  80 63 60 04 */	lwz r3, 0x6004(r3)
 /* 800989FC 0009593C  90 64 00 04 */	stw r3, 4(r4)
-/* 80098A00 00095940  90 0D 94 20 */	stw r0, ResetRequired-_SDA_BASE_(r13)
-/* 80098A04 00095944  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098A00 00095940  90 0D 94 20 */	stw r0, ResetRequired@sda21(r13)
+/* 80098A04 00095944  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 /* 80098A08 00095948  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80098A0C 0009594C  38 21 00 08 */	addi r1, r1, 8
 /* 80098A10 00095950  7C 08 03 A6 */	mtlr r0
@@ -2432,20 +2453,20 @@ DVDGetDriveStatus:
 /* 80098A70 000959B0  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80098A74 000959B4  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80098A78 000959B8  4B FF 77 55 */	bl OSDisableInterrupts
-/* 80098A7C 000959BC  80 0D 94 00 */	lwz r0, FatalErrorFlag-_SDA_BASE_(r13)
+/* 80098A7C 000959BC  80 0D 94 00 */	lwz r0, FatalErrorFlag@sda21(r13)
 /* 80098A80 000959C0  3B C3 00 00 */	addi r30, r3, 0
 /* 80098A84 000959C4  2C 00 00 00 */	cmpwi r0, 0
 /* 80098A88 000959C8  41 82 00 0C */	beq lbl_80098A94
 /* 80098A8C 000959CC  3B E0 FF FF */	li r31, -1
 /* 80098A90 000959D0  48 00 00 5C */	b lbl_80098AEC
 lbl_80098A94:
-/* 80098A94 000959D4  80 0D 93 F8 */	lwz r0, PausingFlag-_SDA_BASE_(r13)
+/* 80098A94 000959D4  80 0D 93 F8 */	lwz r0, PausingFlag@sda21(r13)
 /* 80098A98 000959D8  2C 00 00 00 */	cmpwi r0, 0
 /* 80098A9C 000959DC  41 82 00 0C */	beq lbl_80098AA8
 /* 80098AA0 000959E0  3B E0 00 08 */	li r31, 8
 /* 80098AA4 000959E4  48 00 00 48 */	b lbl_80098AEC
 lbl_80098AA8:
-/* 80098AA8 000959E8  83 ED 93 E8 */	lwz r31, executing-_SDA_BASE_(r13)
+/* 80098AA8 000959E8  83 ED 93 E8 */	lwz r31, executing@sda21(r13)
 /* 80098AAC 000959EC  28 1F 00 00 */	cmplwi r31, 0
 /* 80098AB0 000959F0  40 82 00 0C */	bne lbl_80098ABC
 /* 80098AB4 000959F4  3B E0 00 00 */	li r31, 0
@@ -2478,8 +2499,8 @@ lbl_80098AEC:
 
 .global DVDSetAutoInvalidation
 DVDSetAutoInvalidation:
-/* 80098B10 00095A50  80 0D 82 78 */	lwz r0, autoInvalidation-_SDA_BASE_(r13)
-/* 80098B14 00095A54  90 6D 82 78 */	stw r3, autoInvalidation-_SDA_BASE_(r13)
+/* 80098B10 00095A50  80 0D 82 78 */	lwz r0, autoInvalidation@sda21(r13)
+/* 80098B14 00095A54  90 6D 82 78 */	stw r3, autoInvalidation@sda21(r13)
 /* 80098B18 00095A58  7C 03 03 78 */	mr r3, r0
 /* 80098B1C 00095A5C  4E 80 00 20 */	blr 
 
@@ -2505,6 +2526,7 @@ DVDCancelAsync:
 /* 80098B64 00095AA4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80098B68 00095AA8  7C 09 03 A6 */	mtctr r0
 /* 80098B6C 00095AAC  4E 80 04 20 */	bctr 
+lbl_80098B70:
 /* 80098B70 00095AB0  28 1E 00 00 */	cmplwi r30, 0
 /* 80098B74 00095AB4  41 82 01 F4 */	beq lbl_80098D68
 /* 80098B78 00095AB8  39 9E 00 00 */	addi r12, r30, 0
@@ -2513,7 +2535,8 @@ DVDCancelAsync:
 /* 80098B84 00095AC4  38 60 00 00 */	li r3, 0
 /* 80098B88 00095AC8  4E 80 00 21 */	blrl 
 /* 80098B8C 00095ACC  48 00 01 DC */	b lbl_80098D68
-/* 80098B90 00095AD0  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+lbl_80098B90:
+/* 80098B90 00095AD0  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80098B94 00095AD4  28 00 00 00 */	cmplwi r0, 0
 /* 80098B98 00095AD8  41 82 00 14 */	beq lbl_80098BAC
 /* 80098B9C 00095ADC  7F E3 FB 78 */	mr r3, r31
@@ -2522,8 +2545,8 @@ DVDCancelAsync:
 /* 80098BA8 00095AE8  48 00 01 CC */	b lbl_80098D74
 lbl_80098BAC:
 /* 80098BAC 00095AEC  38 00 00 01 */	li r0, 1
-/* 80098BB0 00095AF0  93 CD 94 0C */	stw r30, CancelCallback-_SDA_BASE_(r13)
-/* 80098BB4 00095AF4  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80098BB0 00095AF0  93 CD 94 0C */	stw r30, CancelCallback@sda21(r13)
+/* 80098BB4 00095AF4  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80098BB8 00095AF8  80 1D 00 08 */	lwz r0, 8(r29)
 /* 80098BBC 00095AFC  28 00 00 04 */	cmplwi r0, 4
 /* 80098BC0 00095B00  41 82 00 0C */	beq lbl_80098BCC
@@ -2532,6 +2555,7 @@ lbl_80098BAC:
 lbl_80098BCC:
 /* 80098BCC 00095B0C  4B FF D2 59 */	bl DVDLowBreak
 /* 80098BD0 00095B10  48 00 01 98 */	b lbl_80098D68
+lbl_80098BD4:
 /* 80098BD4 00095B14  7F A3 EB 78 */	mr r3, r29
 /* 80098BD8 00095B18  48 00 06 29 */	bl __DVDDequeueWaitingQueue
 /* 80098BDC 00095B1C  38 00 00 0A */	li r0, 0xa
@@ -2552,6 +2576,7 @@ lbl_80098C00:
 /* 80098C14 00095B54  38 60 00 00 */	li r3, 0
 /* 80098C18 00095B58  4E 80 00 21 */	blrl 
 /* 80098C1C 00095B5C  48 00 01 4C */	b lbl_80098D68
+lbl_80098C20:
 /* 80098C20 00095B60  80 1D 00 08 */	lwz r0, 8(r29)
 /* 80098C24 00095B64  2C 00 00 0D */	cmpwi r0, 0xd
 /* 80098C28 00095B68  41 82 00 28 */	beq lbl_80098C50
@@ -2575,7 +2600,7 @@ lbl_80098C50:
 /* 80098C68 00095BA8  4E 80 00 21 */	blrl 
 /* 80098C6C 00095BAC  48 00 00 FC */	b lbl_80098D68
 lbl_80098C70:
-/* 80098C70 00095BB0  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80098C70 00095BB0  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80098C74 00095BB4  28 00 00 00 */	cmplwi r0, 0
 /* 80098C78 00095BB8  41 82 00 14 */	beq lbl_80098C8C
 /* 80098C7C 00095BBC  7F E3 FB 78 */	mr r3, r31
@@ -2584,9 +2609,10 @@ lbl_80098C70:
 /* 80098C88 00095BC8  48 00 00 EC */	b lbl_80098D74
 lbl_80098C8C:
 /* 80098C8C 00095BCC  38 00 00 01 */	li r0, 1
-/* 80098C90 00095BD0  93 CD 94 0C */	stw r30, CancelCallback-_SDA_BASE_(r13)
-/* 80098C94 00095BD4  90 0D 94 08 */	stw r0, Canceling-_SDA_BASE_(r13)
+/* 80098C90 00095BD0  93 CD 94 0C */	stw r30, CancelCallback@sda21(r13)
+/* 80098C94 00095BD4  90 0D 94 08 */	stw r0, Canceling@sda21(r13)
 /* 80098C98 00095BD8  48 00 00 D0 */	b lbl_80098D68
+lbl_80098C9C:
 /* 80098C9C 00095BDC  4B FF D1 9D */	bl DVDLowClearCallback
 /* 80098CA0 00095BE0  3C 80 80 09 */	lis r4, cbForStateMotorStopped@ha
 /* 80098CA4 00095BE4  38 04 77 CC */	addi r0, r4, cbForStateMotorStopped@l
@@ -2601,31 +2627,31 @@ lbl_80098CC0:
 /* 80098CC4 00095C04  2C 00 00 04 */	cmpwi r0, 4
 /* 80098CC8 00095C08  40 82 00 0C */	bne lbl_80098CD4
 /* 80098CCC 00095C0C  38 00 00 03 */	li r0, 3
-/* 80098CD0 00095C10  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098CD0 00095C10  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 lbl_80098CD4:
 /* 80098CD4 00095C14  80 1D 00 0C */	lwz r0, 0xc(r29)
 /* 80098CD8 00095C18  2C 00 00 05 */	cmpwi r0, 5
 /* 80098CDC 00095C1C  40 82 00 0C */	bne lbl_80098CE8
 /* 80098CE0 00095C20  38 00 00 04 */	li r0, 4
-/* 80098CE4 00095C24  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098CE4 00095C24  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 lbl_80098CE8:
 /* 80098CE8 00095C28  80 1D 00 0C */	lwz r0, 0xc(r29)
 /* 80098CEC 00095C2C  2C 00 00 06 */	cmpwi r0, 6
 /* 80098CF0 00095C30  40 82 00 0C */	bne lbl_80098CFC
 /* 80098CF4 00095C34  38 00 00 01 */	li r0, 1
-/* 80098CF8 00095C38  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098CF8 00095C38  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 lbl_80098CFC:
 /* 80098CFC 00095C3C  80 1D 00 0C */	lwz r0, 0xc(r29)
 /* 80098D00 00095C40  2C 00 00 0B */	cmpwi r0, 0xb
 /* 80098D04 00095C44  40 82 00 0C */	bne lbl_80098D10
 /* 80098D08 00095C48  38 00 00 02 */	li r0, 2
-/* 80098D0C 00095C4C  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098D0C 00095C4C  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 lbl_80098D10:
 /* 80098D10 00095C50  80 1D 00 0C */	lwz r0, 0xc(r29)
 /* 80098D14 00095C54  2C 00 00 07 */	cmpwi r0, 7
 /* 80098D18 00095C58  40 82 00 0C */	bne lbl_80098D24
 /* 80098D1C 00095C5C  38 00 00 07 */	li r0, 7
-/* 80098D20 00095C60  90 0D 94 10 */	stw r0, ResumeFromHere-_SDA_BASE_(r13)
+/* 80098D20 00095C60  90 0D 94 10 */	stw r0, ResumeFromHere@sda21(r13)
 lbl_80098D24:
 /* 80098D24 00095C64  38 00 00 0A */	li r0, 0xa
 /* 80098D28 00095C68  90 1D 00 0C */	stw r0, 0xc(r29)
@@ -2695,7 +2721,7 @@ lbl_80098DCC:
 /* 80098E04 00095D44  28 03 00 0F */	cmplwi r3, 0xf
 /* 80098E08 00095D48  41 82 00 10 */	beq lbl_80098E18
 lbl_80098E0C:
-/* 80098E0C 00095D4C  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue-_SDA_BASE_
+/* 80098E0C 00095D4C  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue@sda21
 /* 80098E10 00095D50  4B FF AD F1 */	bl OSSleepThread
 /* 80098E14 00095D54  4B FF FF B8 */	b lbl_80098DCC
 lbl_80098E18:
@@ -2713,7 +2739,7 @@ lbl_80098E24:
 .global cbForCancelSync
 cbForCancelSync:
 /* 80098E3C 00095D7C  7C 08 02 A6 */	mflr r0
-/* 80098E40 00095D80  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue-_SDA_BASE_
+/* 80098E40 00095D80  38 6D 93 E0 */	addi r3, r13, __DVDThreadQueue@sda21
 /* 80098E44 00095D84  90 01 00 04 */	stw r0, 4(r1)
 /* 80098E48 00095D88  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80098E4C 00095D8C  4B FF AE A1 */	bl OSWakeupThread
@@ -2734,19 +2760,19 @@ DVDCheckDisk:
 /* 80098E70 00095DB0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80098E74 00095DB4  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 80098E78 00095DB8  4B FF 73 55 */	bl OSDisableInterrupts
-/* 80098E7C 00095DBC  80 0D 94 00 */	lwz r0, FatalErrorFlag-_SDA_BASE_(r13)
+/* 80098E7C 00095DBC  80 0D 94 00 */	lwz r0, FatalErrorFlag@sda21(r13)
 /* 80098E80 00095DC0  2C 00 00 00 */	cmpwi r0, 0
 /* 80098E84 00095DC4  41 82 00 0C */	beq lbl_80098E90
 /* 80098E88 00095DC8  38 80 FF FF */	li r4, -1
 /* 80098E8C 00095DCC  48 00 00 48 */	b lbl_80098ED4
 lbl_80098E90:
-/* 80098E90 00095DD0  80 0D 93 F8 */	lwz r0, PausingFlag-_SDA_BASE_(r13)
+/* 80098E90 00095DD0  80 0D 93 F8 */	lwz r0, PausingFlag@sda21(r13)
 /* 80098E94 00095DD4  2C 00 00 00 */	cmpwi r0, 0
 /* 80098E98 00095DD8  41 82 00 0C */	beq lbl_80098EA4
 /* 80098E9C 00095DDC  38 80 00 08 */	li r4, 8
 /* 80098EA0 00095DE0  48 00 00 34 */	b lbl_80098ED4
 lbl_80098EA4:
-/* 80098EA4 00095DE4  80 AD 93 E8 */	lwz r5, executing-_SDA_BASE_(r13)
+/* 80098EA4 00095DE4  80 AD 93 E8 */	lwz r5, executing@sda21(r13)
 /* 80098EA8 00095DE8  28 05 00 00 */	cmplwi r5, 0
 /* 80098EAC 00095DEC  40 82 00 0C */	bne lbl_80098EB8
 /* 80098EB0 00095DF0  38 80 00 00 */	li r4, 0
@@ -2770,10 +2796,13 @@ lbl_80098ED4:
 /* 80098EEC 00095E2C  7C 04 00 2E */	lwzx r0, r4, r0
 /* 80098EF0 00095E30  7C 09 03 A6 */	mtctr r0
 /* 80098EF4 00095E34  4E 80 04 20 */	bctr 
+lbl_80098EF8:
 /* 80098EF8 00095E38  3B E0 00 01 */	li r31, 1
 /* 80098EFC 00095E3C  48 00 00 34 */	b lbl_80098F30
+lbl_80098F00:
 /* 80098F00 00095E40  3B E0 00 00 */	li r31, 0
 /* 80098F04 00095E44  48 00 00 2C */	b lbl_80098F30
+lbl_80098F08:
 /* 80098F08 00095E48  3C 80 CC 00 */	lis r4, 0xCC006000@ha
 /* 80098F0C 00095E4C  38 84 60 00 */	addi r4, r4, 0xCC006000@l
 /* 80098F10 00095E50  80 84 00 04 */	lwz r4, 4(r4)
@@ -2807,13 +2836,13 @@ __DVDPrepareResetAsync:
 /* 80098F68 00095EA8  4B FF 72 65 */	bl OSDisableInterrupts
 /* 80098F6C 00095EAC  7C 7D 1B 78 */	mr r29, r3
 /* 80098F70 00095EB0  48 00 00 F9 */	bl __DVDClearWaitingQueue
-/* 80098F74 00095EB4  80 0D 94 08 */	lwz r0, Canceling-_SDA_BASE_(r13)
+/* 80098F74 00095EB4  80 0D 94 08 */	lwz r0, Canceling@sda21(r13)
 /* 80098F78 00095EB8  28 00 00 00 */	cmplwi r0, 0
 /* 80098F7C 00095EBC  41 82 00 0C */	beq lbl_80098F88
-/* 80098F80 00095EC0  93 CD 94 0C */	stw r30, CancelCallback-_SDA_BASE_(r13)
+/* 80098F80 00095EC0  93 CD 94 0C */	stw r30, CancelCallback@sda21(r13)
 /* 80098F84 00095EC4  48 00 00 C0 */	b lbl_80099044
 lbl_80098F88:
-/* 80098F88 00095EC8  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80098F88 00095EC8  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80098F8C 00095ECC  28 03 00 00 */	cmplwi r3, 0
 /* 80098F90 00095ED0  41 82 00 0C */	beq lbl_80098F9C
 /* 80098F94 00095ED4  38 00 00 00 */	li r0, 0
@@ -2822,12 +2851,12 @@ lbl_80098F9C:
 /* 80098F9C 00095EDC  4B FF 72 31 */	bl OSDisableInterrupts
 /* 80098FA0 00095EE0  7C 7F 1B 78 */	mr r31, r3
 /* 80098FA4 00095EE4  4B FF 72 29 */	bl OSDisableInterrupts
-/* 80098FA8 00095EE8  80 0D 93 E8 */	lwz r0, executing-_SDA_BASE_(r13)
+/* 80098FA8 00095EE8  80 0D 93 E8 */	lwz r0, executing@sda21(r13)
 /* 80098FAC 00095EEC  38 80 00 01 */	li r4, 1
-/* 80098FB0 00095EF0  90 8D 93 F4 */	stw r4, PauseFlag-_SDA_BASE_(r13)
+/* 80098FB0 00095EF0  90 8D 93 F4 */	stw r4, PauseFlag@sda21(r13)
 /* 80098FB4 00095EF4  28 00 00 00 */	cmplwi r0, 0
 /* 80098FB8 00095EF8  40 82 00 08 */	bne lbl_80098FC0
-/* 80098FBC 00095EFC  90 8D 93 F8 */	stw r4, PausingFlag-_SDA_BASE_(r13)
+/* 80098FBC 00095EFC  90 8D 93 F8 */	stw r4, PausingFlag@sda21(r13)
 lbl_80098FC0:
 /* 80098FC0 00095F00  4B FF 72 35 */	bl OSRestoreInterrupts
 /* 80098FC4 00095F04  48 00 00 0C */	b lbl_80098FD0
@@ -2838,7 +2867,7 @@ lbl_80098FD0:
 /* 80098FD0 00095F10  48 00 01 39 */	bl __DVDPopWaitingQueue
 /* 80098FD4 00095F14  28 03 00 00 */	cmplwi r3, 0
 /* 80098FD8 00095F18  40 82 FF F0 */	bne lbl_80098FC8
-/* 80098FDC 00095F1C  80 6D 93 E8 */	lwz r3, executing-_SDA_BASE_(r13)
+/* 80098FDC 00095F1C  80 6D 93 E8 */	lwz r3, executing@sda21(r13)
 /* 80098FE0 00095F20  28 03 00 00 */	cmplwi r3, 0
 /* 80098FE4 00095F24  41 82 00 10 */	beq lbl_80098FF4
 /* 80098FE8 00095F28  7F C4 F3 78 */	mr r4, r30
@@ -2855,12 +2884,12 @@ lbl_80098FF4:
 lbl_80099010:
 /* 80099010 00095F50  4B FF 71 BD */	bl OSDisableInterrupts
 /* 80099014 00095F54  38 80 00 00 */	li r4, 0
-/* 80099018 00095F58  90 8D 93 F4 */	stw r4, PauseFlag-_SDA_BASE_(r13)
+/* 80099018 00095F58  90 8D 93 F4 */	stw r4, PauseFlag@sda21(r13)
 /* 8009901C 00095F5C  7C 7E 1B 78 */	mr r30, r3
-/* 80099020 00095F60  80 0D 93 F8 */	lwz r0, PausingFlag-_SDA_BASE_(r13)
+/* 80099020 00095F60  80 0D 93 F8 */	lwz r0, PausingFlag@sda21(r13)
 /* 80099024 00095F64  2C 00 00 00 */	cmpwi r0, 0
 /* 80099028 00095F68  41 82 00 0C */	beq lbl_80099034
-/* 8009902C 00095F6C  90 8D 93 F8 */	stw r4, PausingFlag-_SDA_BASE_(r13)
+/* 8009902C 00095F6C  90 8D 93 F8 */	stw r4, PausingFlag@sda21(r13)
 /* 80099030 00095F70  4B FF E8 81 */	bl stateReady
 lbl_80099034:
 /* 80099034 00095F74  7F C3 F3 78 */	mr r3, r30
@@ -2888,14 +2917,59 @@ $$215:
 $$216:
 	.incbin "baserom.dol", 0x3ADDA0, 0xC
 $$2293:
-	.incbin "baserom.dol", 0x3ADDAC, 0x20
+    .4byte lbl_80097AC8
+    .4byte lbl_80097988
+    .4byte lbl_800979A0
+    .4byte lbl_800979B8
+    .4byte lbl_800979E8
+    .4byte lbl_80097AAC
+    .4byte lbl_80097A00
+    .4byte lbl_800979D0
 $$2331:
-	.incbin "baserom.dol", 0x3ADDCC, 0x40
+    .4byte lbl_80097DA8
+    .4byte lbl_80097B64
+    .4byte lbl_80097BC0
+    .4byte lbl_80097BE4
+    .4byte lbl_80097B64
+    .4byte lbl_80097B38
+    .4byte lbl_80097C04
+    .4byte lbl_80097C68
+    .4byte lbl_80097C94
+    .4byte lbl_80097CC8
+    .4byte lbl_80097CEC
+    .4byte lbl_80097D10
+    .4byte lbl_80097D34
+    .4byte lbl_80097D58
+    .4byte lbl_80097D80
+    .4byte lbl_80097BF4
 $$2835:
-	.incbin "baserom.dol", 0x3ADE0C, 0x34
+    .4byte lbl_80098B70
+    .4byte lbl_80098B70
+    .4byte lbl_80098B90
+    .4byte lbl_80098BD4
+    .4byte lbl_80098C20
+    .4byte lbl_80098C9C
+    .4byte lbl_80098C9C
+    .4byte lbl_80098C9C
+    .4byte lbl_80098C9C
+    .4byte lbl_80098D68
+    .4byte lbl_80098D68
+    .4byte lbl_80098B70
+    .4byte lbl_80098C9C
 $$2936:
-	.incbin "baserom.dol", 0x3ADE40, 0x38
-
+    .4byte lbl_80098F00
+    .4byte lbl_80098F08
+    .4byte lbl_80098EF8
+    .4byte lbl_80098EF8
+    .4byte lbl_80098F00
+    .4byte lbl_80098F00
+    .4byte lbl_80098F00
+    .4byte lbl_80098F00
+    .4byte lbl_80098F00
+    .4byte lbl_80098F08
+    .4byte lbl_80098EF8
+    .4byte lbl_80098EF8
+    .4byte lbl_80098F00
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 autoInvalidation:
 	.incbin "baserom.dol", 0x3E3278, 0x8

@@ -407,7 +407,7 @@ lbl_80009C30:
 /* 80009C48 00006B88  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBB0, 0x4
+  .4byte __sinit_JKRDvdFile_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$2302:
@@ -418,7 +418,16 @@ $$2303:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRDvdFile
 __vt__10JKRDvdFile:
-	.incbin "baserom.dol", 0x3A5520, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JKRDvdFileFv
+  .4byte open__10JKRDvdFileFPCc
+  .4byte close__10JKRDvdFileFv
+  .4byte readData__10JKRDvdFileFPvll
+  .4byte writeData__10JKRDvdFileFPCvll
+  .4byte getFileSize__10JKRDvdFileCFv
+  .4byte open__10JKRDvdFileFl
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$2237:

@@ -91,4 +91,13 @@ lbl_80046F50:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama14TViewConnecter
 __vt__Q26JDrama14TViewConnecter:
-	.incbin "baserom.dol", 0x3A7A00, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama14TViewConnecterFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama14TViewConnecterFUlPQ26JDrama9TGraphics
+  .4byte 0

@@ -6,30 +6,30 @@ resetCallback__Q28JASystem6KernelFv:
 /* 80061484 0005E3C4  7C 08 02 A6 */	mflr r0
 /* 80061488 0005E3C8  90 01 00 04 */	stw r0, 4(r1)
 /* 8006148C 0005E3CC  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80061490 0005E3D0  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061490 0005E3D0  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel@sda21(r13)
 /* 80061494 0005E3D4  28 00 00 01 */	cmplwi r0, 1
 /* 80061498 0005E3D8  41 82 00 50 */	beq lbl_800614E8
-/* 8006149C 0005E3DC  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006149C 0005E3DC  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel@sda21(r13)
 /* 800614A0 0005E3E0  38 A0 00 00 */	li r5, 0
-/* 800614A4 0005E3E4  80 8D 92 00 */	lwz r4, JASDram-_SDA_BASE_(r13)
+/* 800614A4 0005E3E4  80 8D 92 00 */	lwz r4, JASDram@sda21(r13)
 /* 800614A8 0005E3E8  1C 60 00 0C */	mulli r3, r0, 0xc
 /* 800614AC 0005E3EC  4B FA B5 99 */	bl __nwa__FUlP7JKRHeapi
 /* 800614B0 0005E3F0  38 80 00 00 */	li r4, 0
-/* 800614B4 0005E3F4  90 6D 91 60 */	stw r3, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800614B4 0005E3F4  90 6D 91 60 */	stw r3, callList__Q28JASystem6Kernel@sda21(r13)
 /* 800614B8 0005E3F8  38 A4 00 00 */	addi r5, r4, 0
 /* 800614BC 0005E3FC  38 C0 00 00 */	li r6, 0
 /* 800614C0 0005E400  48 00 00 14 */	b lbl_800614D4
 lbl_800614C4:
-/* 800614C4 0005E404  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800614C4 0005E404  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel@sda21(r13)
 /* 800614C8 0005E408  38 C6 00 01 */	addi r6, r6, 1
 /* 800614CC 0005E40C  7C A3 21 2E */	stwx r5, r3, r4
 /* 800614D0 0005E410  38 84 00 0C */	addi r4, r4, 0xc
 lbl_800614D4:
-/* 800614D4 0005E414  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800614D4 0005E414  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel@sda21(r13)
 /* 800614D8 0005E418  7C 06 00 40 */	cmplw r6, r0
 /* 800614DC 0005E41C  41 80 FF E8 */	blt lbl_800614C4
 /* 800614E0 0005E420  38 00 00 01 */	li r0, 1
-/* 800614E4 0005E424  98 0D 91 64 */	stb r0, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800614E4 0005E424  98 0D 91 64 */	stb r0, callbackInit__Q28JASystem6Kernel@sda21(r13)
 lbl_800614E8:
 /* 800614E8 0005E428  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800614EC 0005E42C  38 21 00 08 */	addi r1, r1, 8
@@ -41,7 +41,7 @@ registerSubframeCallback__Q28JASystem6KernelFPFPv_lPv:
 /* 800614F8 0005E438  7C 08 02 A6 */	mflr r0
 /* 800614FC 0005E43C  90 01 00 04 */	stw r0, 4(r1)
 /* 80061500 0005E440  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80061504 0005E444  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061504 0005E444  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel@sda21(r13)
 /* 80061508 0005E448  28 00 00 00 */	cmplwi r0, 0
 /* 8006150C 0005E44C  40 82 00 0C */	bne lbl_80061518
 /* 80061510 0005E450  38 60 FF FF */	li r3, -1
@@ -54,7 +54,7 @@ lbl_80061518:
 /* 80061528 0005E468  48 00 00 18 */	b lbl_80061540
 lbl_8006152C:
 /* 8006152C 0005E46C  1C 03 00 0C */	mulli r0, r3, 0xc
-/* 80061530 0005E470  80 8D 91 60 */	lwz r4, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061530 0005E470  80 8D 91 60 */	lwz r4, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061534 0005E474  7C 84 02 14 */	add r4, r4, r0
 /* 80061538 0005E478  38 00 00 01 */	li r0, 1
 /* 8006153C 0005E47C  90 04 00 08 */	stw r0, 8(r4)
@@ -66,15 +66,15 @@ lbl_80061540:
 
 .global registerAiCallback__Q28JASystem6KernelFPFPv_lPv
 registerAiCallback__Q28JASystem6KernelFPFPv_lPv:
-/* 80061550 0005E490  88 ED 91 64 */	lbz r7, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061550 0005E490  88 ED 91 64 */	lbz r7, callbackInit__Q28JASystem6Kernel@sda21(r13)
 /* 80061554 0005E494  28 07 00 00 */	cmplwi r7, 0
 /* 80061558 0005E498  40 82 00 0C */	bne lbl_80061564
 /* 8006155C 0005E49C  38 60 FF FF */	li r3, -1
 /* 80061560 0005E4A0  4E 80 00 20 */	blr 
 lbl_80061564:
-/* 80061564 0005E4A4  80 CD 81 D0 */	lwz r6, maxCallbacksUser__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061564 0005E4A4  80 CD 81 D0 */	lwz r6, maxCallbacksUser__Q28JASystem6Kernel@sda21(r13)
 /* 80061568 0005E4A8  39 20 00 00 */	li r9, 0
-/* 8006156C 0005E4AC  81 0D 91 60 */	lwz r8, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006156C 0005E4AC  81 0D 91 60 */	lwz r8, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061570 0005E4B0  38 A0 00 00 */	li r5, 0
 /* 80061574 0005E4B4  28 06 00 00 */	cmplwi r6, 0
 /* 80061578 0005E4B8  7C C9 03 A6 */	mtctr r6
@@ -127,10 +127,10 @@ lbl_8006160C:
 /* 80061610 0005E550  7C 68 39 2E */	stwx r3, r8, r7
 /* 80061614 0005E554  38 A0 00 00 */	li r5, 0
 /* 80061618 0005E558  38 69 00 00 */	addi r3, r9, 0
-/* 8006161C 0005E55C  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006161C 0005E55C  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061620 0005E560  7C C0 3A 14 */	add r6, r0, r7
 /* 80061624 0005E564  90 86 00 04 */	stw r4, 4(r6)
-/* 80061628 0005E568  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061628 0005E568  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel@sda21(r13)
 /* 8006162C 0005E56C  7C 80 3A 14 */	add r4, r0, r7
 /* 80061630 0005E570  90 A4 00 08 */	stw r5, 8(r4)
 /* 80061634 0005E574  4E 80 00 20 */	blr 
@@ -143,7 +143,7 @@ aiCallback__Q28JASystem6KernelFv:
 /* 80061644 0005E584  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80061648 0005E588  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8006164C 0005E58C  93 A1 00 0C */	stw r29, 0xc(r1)
-/* 80061650 0005E590  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061650 0005E590  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel@sda21(r13)
 /* 80061654 0005E594  28 00 00 00 */	cmplwi r0, 0
 /* 80061658 0005E598  41 82 00 64 */	beq lbl_800616BC
 /* 8006165C 0005E59C  3B E0 00 00 */	li r31, 0
@@ -151,7 +151,7 @@ aiCallback__Q28JASystem6KernelFv:
 /* 80061664 0005E5A4  3B A0 00 00 */	li r29, 0
 /* 80061668 0005E5A8  48 00 00 48 */	b lbl_800616B0
 lbl_8006166C:
-/* 8006166C 0005E5AC  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006166C 0005E5AC  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061670 0005E5B0  7C 60 FA 14 */	add r3, r0, r31
 /* 80061674 0005E5B4  81 83 00 00 */	lwz r12, 0(r3)
 /* 80061678 0005E5B8  28 0C 00 00 */	cmplwi r12, 0
@@ -164,13 +164,13 @@ lbl_8006166C:
 /* 80061694 0005E5D4  4E 80 00 21 */	blrl 
 /* 80061698 0005E5D8  2C 03 FF FF */	cmpwi r3, -1
 /* 8006169C 0005E5DC  40 82 00 0C */	bne lbl_800616A8
-/* 800616A0 0005E5E0  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800616A0 0005E5E0  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel@sda21(r13)
 /* 800616A4 0005E5E4  7F C3 F9 2E */	stwx r30, r3, r31
 lbl_800616A8:
 /* 800616A8 0005E5E8  3B BD 00 01 */	addi r29, r29, 1
 /* 800616AC 0005E5EC  3B FF 00 0C */	addi r31, r31, 0xc
 lbl_800616B0:
-/* 800616B0 0005E5F0  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800616B0 0005E5F0  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel@sda21(r13)
 /* 800616B4 0005E5F4  7C 1D 00 40 */	cmplw r29, r0
 /* 800616B8 0005E5F8  41 80 FF B4 */	blt lbl_8006166C
 lbl_800616BC:
@@ -190,7 +190,7 @@ subframeCallback__Q28JASystem6KernelFv:
 /* 800616E4 0005E624  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 800616E8 0005E628  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800616EC 0005E62C  93 A1 00 0C */	stw r29, 0xc(r1)
-/* 800616F0 0005E630  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 800616F0 0005E630  88 0D 91 64 */	lbz r0, callbackInit__Q28JASystem6Kernel@sda21(r13)
 /* 800616F4 0005E634  28 00 00 00 */	cmplwi r0, 0
 /* 800616F8 0005E638  41 82 00 64 */	beq lbl_8006175C
 /* 800616FC 0005E63C  3B E0 00 00 */	li r31, 0
@@ -198,7 +198,7 @@ subframeCallback__Q28JASystem6KernelFv:
 /* 80061704 0005E644  3B A0 00 00 */	li r29, 0
 /* 80061708 0005E648  48 00 00 48 */	b lbl_80061750
 lbl_8006170C:
-/* 8006170C 0005E64C  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 8006170C 0005E64C  80 0D 91 60 */	lwz r0, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061710 0005E650  7C 60 FA 14 */	add r3, r0, r31
 /* 80061714 0005E654  81 83 00 00 */	lwz r12, 0(r3)
 /* 80061718 0005E658  28 0C 00 00 */	cmplwi r12, 0
@@ -211,13 +211,13 @@ lbl_8006170C:
 /* 80061734 0005E674  4E 80 00 21 */	blrl 
 /* 80061738 0005E678  2C 03 FF FF */	cmpwi r3, -1
 /* 8006173C 0005E67C  40 82 00 0C */	bne lbl_80061748
-/* 80061740 0005E680  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061740 0005E680  80 6D 91 60 */	lwz r3, callList__Q28JASystem6Kernel@sda21(r13)
 /* 80061744 0005E684  7F C3 F9 2E */	stwx r30, r3, r31
 lbl_80061748:
 /* 80061748 0005E688  3B BD 00 01 */	addi r29, r29, 1
 /* 8006174C 0005E68C  3B FF 00 0C */	addi r31, r31, 0xc
 lbl_80061750:
-/* 80061750 0005E690  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel-_SDA_BASE_(r13)
+/* 80061750 0005E690  80 0D 81 D0 */	lwz r0, maxCallbacksUser__Q28JASystem6Kernel@sda21(r13)
 /* 80061754 0005E694  7C 1D 00 40 */	cmplw r29, r0
 /* 80061758 0005E698  41 80 FF B4 */	blt lbl_8006170C
 lbl_8006175C:

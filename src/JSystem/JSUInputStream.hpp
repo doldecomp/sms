@@ -2,11 +2,10 @@
 #define JSUINPUTSTREAM_HPP
 
 class JSUInputStream {
-    public:
-        virtual ~JSUInputStream();
-        void read(void *, s32);
-        virtual u32 getAvailable() = 0;
-        virtual void skip(s32);
+public:
+	void read(void *, s32);
+	u32 _000;
+	u32 _004;
 };
 
 class JSURandomInputStream: public JSUInputStream {};

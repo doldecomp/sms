@@ -633,7 +633,7 @@ lbl_80019C6C:
 /* 80019CCC 00016C0C  4C C6 31 82 */	crclr 6
 /* 80019CD0 00016C10  38 80 00 00 */	li r4, 0
 /* 80019CD4 00016C14  38 A0 00 00 */	li r5, 0
-/* 80019CD8 00016C18  38 E2 81 88 */	addi r7, r2, $$2397-_SDA2_BASE_
+/* 80019CD8 00016C18  38 E2 81 88 */	addi r7, r2, $$2397@sda21
 /* 80019CDC 00016C1C  4B FF D5 A1 */	bl print__8J2DPrintFiiUcPCce
 /* 80019CE0 00016C20  38 61 00 24 */	addi r3, r1, 0x24
 /* 80019CE4 00016C24  48 07 A5 CD */	bl PSMTXIdentity
@@ -900,7 +900,18 @@ lbl_8001A070:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10J2DTextBox
 __vt__10J2DTextBox:
-	.incbin "baserom.dol", 0x3A5D48, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10J2DTextBoxFv
+  .4byte move__7J2DPaneFii
+  .4byte add__7J2DPaneFii
+  .4byte resize__10J2DTextBoxFii
+  .4byte setConnectParent__10J2DTextBoxFb
+  .4byte drawSelf__10J2DTextBoxFii
+  .4byte drawSelf__10J2DTextBoxFiiPA3_A4_f
+  .4byte search__7J2DPaneFUl
+  .4byte makeMatrix__7J2DPaneFii
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2397:

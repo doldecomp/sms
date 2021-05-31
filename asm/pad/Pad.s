@@ -11,7 +11,7 @@ UpdateOrigin:
 /* 8009B2C0 00098200  38 A5 BF 20 */	addi r5, r5, Origin@l
 /* 8009B2C4 00098204  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8009B2C8 00098208  7F E5 32 14 */	add r31, r5, r6
-/* 8009B2CC 0009820C  80 0D 82 A0 */	lwz r0, AnalogMode-_SDA_BASE_(r13)
+/* 8009B2CC 0009820C  80 0D 82 A0 */	lwz r0, AnalogMode@sda21(r13)
 /* 8009B2D0 00098210  54 04 05 6E */	rlwinm r4, r0, 0, 0x15, 0x17
 /* 8009B2D4 00098214  2C 04 04 00 */	cmpwi r4, 0x400
 /* 8009B2D8 00098218  3C 00 80 00 */	lis r0, 0x8000
@@ -96,7 +96,7 @@ lbl_8009B3D4:
 /* 8009B3F8 00098338  88 9F 00 05 */	lbz r4, 5(r31)
 /* 8009B3FC 0009833C  38 84 FF 80 */	addi r4, r4, -128
 /* 8009B400 00098340  98 9F 00 05 */	stb r4, 5(r31)
-/* 8009B404 00098344  80 8D 82 9C */	lwz r4, XPatchBits-_SDA_BASE_(r13)
+/* 8009B404 00098344  80 8D 82 9C */	lwz r4, XPatchBits@sda21(r13)
 /* 8009B408 00098348  7C 80 00 39 */	and. r0, r4, r0
 /* 8009B40C 0009834C  41 82 00 30 */	beq lbl_8009B43C
 /* 8009B410 00098350  88 1F 00 02 */	lbz r0, 2(r31)
@@ -125,35 +125,35 @@ PADOriginCallback:
 /* 8009B45C 0009839C  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8009B460 000983A0  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 8009B464 000983A4  40 82 00 48 */	bne lbl_8009B4AC
-/* 8009B468 000983A8  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B468 000983A8  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B46C 000983AC  4B FF FE 41 */	bl UpdateOrigin
-/* 8009B470 000983B0  83 ED 82 98 */	lwz r31, ResettingChan-_SDA_BASE_(r13)
+/* 8009B470 000983B0  83 ED 82 98 */	lwz r31, ResettingChan@sda21(r13)
 /* 8009B474 000983B4  3C 00 80 00 */	lis r0, 0x8000
-/* 8009B478 000983B8  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B478 000983B8  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B47C 000983BC  38 81 00 1C */	addi r4, r1, 0x1c
 /* 8009B480 000983C0  7C 00 FC 30 */	srw r0, r0, r31
 /* 8009B484 000983C4  7C 60 03 78 */	or r0, r3, r0
-/* 8009B488 000983C8  90 0D 94 94 */	stw r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009B488 000983C8  90 0D 94 94 */	stw r0, EnabledBits@sda21(r13)
 /* 8009B48C 000983CC  7F E3 FB 78 */	mr r3, r31
 /* 8009B490 000983D0  48 01 86 35 */	bl SIGetResponse
-/* 8009B494 000983D4  80 0D 82 A0 */	lwz r0, AnalogMode-_SDA_BASE_(r13)
+/* 8009B494 000983D4  80 0D 82 A0 */	lwz r0, AnalogMode@sda21(r13)
 /* 8009B498 000983D8  38 7F 00 00 */	addi r3, r31, 0
 /* 8009B49C 000983DC  64 04 00 40 */	oris r4, r0, 0x40
 /* 8009B4A0 000983E0  48 01 83 B9 */	bl SISetCommand
-/* 8009B4A4 000983E4  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B4A4 000983E4  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B4A8 000983E8  48 01 84 41 */	bl SIEnablePolling
 lbl_8009B4AC:
-/* 8009B4AC 000983EC  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009B4AC 000983EC  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009B4B0 000983F0  7C A0 00 34 */	cntlzw r0, r5
-/* 8009B4B4 000983F4  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B4B8 000983F8  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009B4B4 000983F4  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009B4B8 000983F8  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009B4BC 000983FC  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009B4C0 00098400  41 82 00 40 */	beq lbl_8009B500
 /* 8009B4C4 00098404  3C 00 80 00 */	lis r0, 0x8000
 /* 8009B4C8 00098408  7C 00 24 30 */	srw r0, r0, r4
 /* 8009B4CC 0009840C  7C A0 00 78 */	andc r0, r5, r0
 /* 8009B4D0 00098410  1C 84 00 0C */	mulli r4, r4, 0xc
-/* 8009B4D4 00098414  90 0D 94 98 */	stw r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009B4D4 00098414  90 0D 94 98 */	stw r0, ResettingBits@sda21(r13)
 /* 8009B4D8 00098418  3C 60 80 3F */	lis r3, Origin@ha
 /* 8009B4DC 0009841C  38 03 BF 20 */	addi r0, r3, Origin@l
 /* 8009B4E0 00098420  7C 60 22 14 */	add r3, r0, r4
@@ -161,7 +161,7 @@ lbl_8009B4AC:
 /* 8009B4E8 00098428  38 A0 00 0C */	li r5, 0xc
 /* 8009B4EC 0009842C  4B F6 7C 15 */	bl memset
 /* 8009B4F0 00098430  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B4F4 00098434  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B4F4 00098434  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B4F8 00098438  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B4FC 0009843C  48 01 8C E1 */	bl SIGetTypeAsync
 lbl_8009B500:
@@ -183,7 +183,7 @@ PADOriginUpdateCallback:
 /* 8009B530 00098470  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 8009B534 00098474  7C 7D 1B 78 */	mr r29, r3
 /* 8009B538 00098478  7C 1E EC 30 */	srw r30, r0, r29
-/* 8009B53C 0009847C  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B53C 0009847C  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B540 00098480  7C 60 F0 39 */	and. r0, r3, r30
 /* 8009B544 00098484  41 82 00 74 */	beq lbl_8009B5B8
 /* 8009B548 00098488  57 E0 07 3F */	clrlwi. r0, r31, 0x1c
@@ -197,21 +197,21 @@ lbl_8009B558:
 /* 8009B564 000984A4  3B E3 00 00 */	addi r31, r3, 0
 /* 8009B568 000984A8  38 7E 00 00 */	addi r3, r30, 0
 /* 8009B56C 000984AC  48 01 84 19 */	bl SIDisablePolling
-/* 8009B570 000984B0  80 CD 94 94 */	lwz r6, EnabledBits-_SDA_BASE_(r13)
+/* 8009B570 000984B0  80 CD 94 94 */	lwz r6, EnabledBits@sda21(r13)
 /* 8009B574 000984B4  7F C8 F0 F8 */	nor r8, r30, r30
-/* 8009B578 000984B8  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009B578 000984B8  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009B57C 000984BC  7F A3 EB 78 */	mr r3, r29
-/* 8009B580 000984C0  80 8D 94 A4 */	lwz r4, CheckingBits-_SDA_BASE_(r13)
-/* 8009B584 000984C4  80 0D 94 A8 */	lwz r0, PendingBits-_SDA_BASE_(r13)
+/* 8009B580 000984C0  80 8D 94 A4 */	lwz r4, CheckingBits@sda21(r13)
+/* 8009B584 000984C4  80 0D 94 A8 */	lwz r0, PendingBits@sda21(r13)
 /* 8009B588 000984C8  7C C7 40 38 */	and r7, r6, r8
 /* 8009B58C 000984CC  7C A6 40 38 */	and r6, r5, r8
-/* 8009B590 000984D0  90 ED 94 94 */	stw r7, EnabledBits-_SDA_BASE_(r13)
+/* 8009B590 000984D0  90 ED 94 94 */	stw r7, EnabledBits@sda21(r13)
 /* 8009B594 000984D4  7C 85 40 38 */	and r5, r4, r8
 /* 8009B598 000984D8  7C 00 40 38 */	and r0, r0, r8
-/* 8009B59C 000984DC  90 CD 94 A0 */	stw r6, WaitingBits-_SDA_BASE_(r13)
+/* 8009B59C 000984DC  90 CD 94 A0 */	stw r6, WaitingBits@sda21(r13)
 /* 8009B5A0 000984E0  38 80 00 00 */	li r4, 0
-/* 8009B5A4 000984E4  90 AD 94 A4 */	stw r5, CheckingBits-_SDA_BASE_(r13)
-/* 8009B5A8 000984E8  90 0D 94 A8 */	stw r0, PendingBits-_SDA_BASE_(r13)
+/* 8009B5A4 000984E4  90 AD 94 A4 */	stw r5, CheckingBits@sda21(r13)
+/* 8009B5A8 000984E8  90 0D 94 A8 */	stw r0, PendingBits@sda21(r13)
 /* 8009B5AC 000984EC  4B FF 72 A9 */	bl OSSetWirelessID
 /* 8009B5B0 000984F0  7F E3 FB 78 */	mr r3, r31
 /* 8009B5B4 000984F4  4B FF 4C 41 */	bl OSRestoreInterrupts
@@ -233,38 +233,38 @@ PADProbeCallback:
 /* 8009B5E4 00098524  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 8009B5E8 00098528  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 8009B5EC 0009852C  40 82 00 54 */	bne lbl_8009B640
-/* 8009B5F0 00098530  83 CD 82 98 */	lwz r30, ResettingChan-_SDA_BASE_(r13)
+/* 8009B5F0 00098530  83 CD 82 98 */	lwz r30, ResettingChan@sda21(r13)
 /* 8009B5F4 00098534  3F E0 80 00 */	lis r31, 0x8000
-/* 8009B5F8 00098538  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B5F8 00098538  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B5FC 0009853C  38 81 00 1C */	addi r4, r1, 0x1c
 /* 8009B600 00098540  7F E0 F4 30 */	srw r0, r31, r30
 /* 8009B604 00098544  7C 60 03 78 */	or r0, r3, r0
-/* 8009B608 00098548  90 0D 94 94 */	stw r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009B608 00098548  90 0D 94 94 */	stw r0, EnabledBits@sda21(r13)
 /* 8009B60C 0009854C  7F C3 F3 78 */	mr r3, r30
 /* 8009B610 00098550  48 01 84 B5 */	bl SIGetResponse
-/* 8009B614 00098554  80 0D 82 A0 */	lwz r0, AnalogMode-_SDA_BASE_(r13)
+/* 8009B614 00098554  80 0D 82 A0 */	lwz r0, AnalogMode@sda21(r13)
 /* 8009B618 00098558  38 7E 00 00 */	addi r3, r30, 0
 /* 8009B61C 0009855C  64 04 00 40 */	oris r4, r0, 0x40
 /* 8009B620 00098560  48 01 82 39 */	bl SISetCommand
-/* 8009B624 00098564  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B624 00098564  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B628 00098568  48 01 82 C1 */	bl SIEnablePolling
-/* 8009B62C 0009856C  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B630 00098570  80 6D 94 A0 */	lwz r3, WaitingBits-_SDA_BASE_(r13)
+/* 8009B62C 0009856C  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
+/* 8009B630 00098570  80 6D 94 A0 */	lwz r3, WaitingBits@sda21(r13)
 /* 8009B634 00098574  7F E0 04 30 */	srw r0, r31, r0
 /* 8009B638 00098578  7C 60 03 78 */	or r0, r3, r0
-/* 8009B63C 0009857C  90 0D 94 A0 */	stw r0, WaitingBits-_SDA_BASE_(r13)
+/* 8009B63C 0009857C  90 0D 94 A0 */	stw r0, WaitingBits@sda21(r13)
 lbl_8009B640:
-/* 8009B640 00098580  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009B640 00098580  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009B644 00098584  7C A0 00 34 */	cntlzw r0, r5
-/* 8009B648 00098588  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B64C 0009858C  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009B648 00098588  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009B64C 0009858C  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009B650 00098590  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009B654 00098594  41 82 00 40 */	beq lbl_8009B694
 /* 8009B658 00098598  3C 00 80 00 */	lis r0, 0x8000
 /* 8009B65C 0009859C  7C 00 24 30 */	srw r0, r0, r4
 /* 8009B660 000985A0  7C A0 00 78 */	andc r0, r5, r0
 /* 8009B664 000985A4  1C 84 00 0C */	mulli r4, r4, 0xc
-/* 8009B668 000985A8  90 0D 94 98 */	stw r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009B668 000985A8  90 0D 94 98 */	stw r0, ResettingBits@sda21(r13)
 /* 8009B66C 000985AC  3C 60 80 3F */	lis r3, Origin@ha
 /* 8009B670 000985B0  38 03 BF 20 */	addi r0, r3, Origin@l
 /* 8009B674 000985B4  7C 60 22 14 */	add r3, r0, r4
@@ -272,7 +272,7 @@ lbl_8009B640:
 /* 8009B67C 000985BC  38 A0 00 0C */	li r5, 0xc
 /* 8009B680 000985C0  4B F6 7A 81 */	bl memset
 /* 8009B684 000985C4  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B688 000985C8  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B688 000985C8  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B68C 000985CC  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B690 000985D0  48 01 8B 4D */	bl SIGetTypeAsync
 lbl_8009B694:
@@ -296,31 +296,31 @@ PADTypeAndStatusCallback:
 /* 8009B6CC 0009860C  3B C6 BF 10 */	addi r30, r6, Type@l
 /* 8009B6D0 00098610  93 A1 00 34 */	stw r29, 0x34(r1)
 /* 8009B6D4 00098614  93 81 00 30 */	stw r28, 0x30(r1)
-/* 8009B6D8 00098618  83 AD 82 98 */	lwz r29, ResettingChan-_SDA_BASE_(r13)
-/* 8009B6DC 0009861C  80 AD 94 9C */	lwz r5, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009B6D8 00098618  83 AD 82 98 */	lwz r29, ResettingChan@sda21(r13)
+/* 8009B6DC 0009861C  80 AD 94 9C */	lwz r5, RecalibrateBits@sda21(r13)
 /* 8009B6E0 00098620  7F FC EC 30 */	srw r28, r31, r29
 /* 8009B6E4 00098624  7C A3 E0 78 */	andc r3, r5, r28
-/* 8009B6E8 00098628  90 6D 94 9C */	stw r3, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009B6E8 00098628  90 6D 94 9C */	stw r3, RecalibrateBits@sda21(r13)
 /* 8009B6EC 0009862C  7C A5 E0 38 */	and r5, r5, r28
 /* 8009B6F0 00098630  38 60 00 01 */	li r3, 1
 /* 8009B6F4 00098634  41 82 00 54 */	beq lbl_8009B748
-/* 8009B6F8 00098638  80 8D 94 98 */	lwz r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B6F8 00098638  80 8D 94 98 */	lwz r4, ResettingBits@sda21(r13)
 /* 8009B6FC 0009863C  7C 80 00 34 */	cntlzw r0, r4
-/* 8009B700 00098640  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B704 00098644  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B700 00098640  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009B704 00098644  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B708 00098648  2C 03 00 20 */	cmpwi r3, 0x20
 /* 8009B70C 0009864C  41 82 02 AC */	beq lbl_8009B9B8
 /* 8009B710 00098650  1C 03 00 0C */	mulli r0, r3, 0xc
 /* 8009B714 00098654  7F E3 1C 30 */	srw r3, r31, r3
 /* 8009B718 00098658  7C 84 18 78 */	andc r4, r4, r3
 /* 8009B71C 0009865C  7C 7E 02 14 */	add r3, r30, r0
-/* 8009B720 00098660  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B720 00098660  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009B724 00098664  38 80 00 00 */	li r4, 0
 /* 8009B728 00098668  38 A0 00 0C */	li r5, 0xc
 /* 8009B72C 0009866C  38 63 00 10 */	addi r3, r3, 0x10
 /* 8009B730 00098670  4B F6 79 D1 */	bl memset
 /* 8009B734 00098674  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B738 00098678  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B738 00098678  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B73C 0009867C  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B740 00098680  48 01 8A 9D */	bl SIGetTypeAsync
 /* 8009B744 00098684  48 00 02 74 */	b lbl_8009B9B8
@@ -335,10 +335,10 @@ lbl_8009B748:
 /* 8009B764 000986A4  54 C0 01 CF */	rlwinm. r0, r6, 0, 7, 7
 /* 8009B768 000986A8  40 82 00 58 */	bne lbl_8009B7C0
 lbl_8009B76C:
-/* 8009B76C 000986AC  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009B76C 000986AC  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009B770 000986B0  7C A0 00 34 */	cntlzw r0, r5
-/* 8009B774 000986B4  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B778 000986B8  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009B774 000986B4  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009B778 000986B8  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009B77C 000986BC  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009B780 000986C0  41 82 02 38 */	beq lbl_8009B9B8
 /* 8009B784 000986C4  3C 60 80 00 */	lis r3, 0x8000
@@ -346,49 +346,49 @@ lbl_8009B76C:
 /* 8009B78C 000986CC  7C 63 24 30 */	srw r3, r3, r4
 /* 8009B790 000986D0  7C A4 18 78 */	andc r4, r5, r3
 /* 8009B794 000986D4  7C 7E 02 14 */	add r3, r30, r0
-/* 8009B798 000986D8  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B798 000986D8  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009B79C 000986DC  38 80 00 00 */	li r4, 0
 /* 8009B7A0 000986E0  38 A0 00 0C */	li r5, 0xc
 /* 8009B7A4 000986E4  38 63 00 10 */	addi r3, r3, 0x10
 /* 8009B7A8 000986E8  4B F6 79 59 */	bl memset
 /* 8009B7AC 000986EC  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B7B0 000986F0  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B7B0 000986F0  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B7B4 000986F4  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B7B8 000986F8  48 01 8A 25 */	bl SIGetTypeAsync
 /* 8009B7BC 000986FC  48 00 01 FC */	b lbl_8009B9B8
 lbl_8009B7C0:
-/* 8009B7C0 00098700  80 0D 82 A4 */	lwz r0, Spec-_SDA_BASE_(r13)
+/* 8009B7C0 00098700  80 0D 82 A4 */	lwz r0, Spec@sda21(r13)
 /* 8009B7C4 00098704  28 00 00 02 */	cmplwi r0, 2
 /* 8009B7C8 00098708  40 80 00 84 */	bge lbl_8009B84C
-/* 8009B7CC 0009870C  80 0D 94 94 */	lwz r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009B7CC 0009870C  80 0D 94 94 */	lwz r0, EnabledBits@sda21(r13)
 /* 8009B7D0 00098710  38 7D 00 00 */	addi r3, r29, 0
 /* 8009B7D4 00098714  38 81 00 1C */	addi r4, r1, 0x1c
 /* 8009B7D8 00098718  7C 00 E3 78 */	or r0, r0, r28
-/* 8009B7DC 0009871C  90 0D 94 94 */	stw r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009B7DC 0009871C  90 0D 94 94 */	stw r0, EnabledBits@sda21(r13)
 /* 8009B7E0 00098720  48 01 82 E5 */	bl SIGetResponse
-/* 8009B7E4 00098724  80 0D 82 A0 */	lwz r0, AnalogMode-_SDA_BASE_(r13)
+/* 8009B7E4 00098724  80 0D 82 A0 */	lwz r0, AnalogMode@sda21(r13)
 /* 8009B7E8 00098728  38 7D 00 00 */	addi r3, r29, 0
 /* 8009B7EC 0009872C  64 04 00 40 */	oris r4, r0, 0x40
 /* 8009B7F0 00098730  48 01 80 69 */	bl SISetCommand
-/* 8009B7F4 00098734  80 6D 94 94 */	lwz r3, EnabledBits-_SDA_BASE_(r13)
+/* 8009B7F4 00098734  80 6D 94 94 */	lwz r3, EnabledBits@sda21(r13)
 /* 8009B7F8 00098738  48 01 80 F1 */	bl SIEnablePolling
-/* 8009B7FC 0009873C  80 8D 94 98 */	lwz r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B7FC 0009873C  80 8D 94 98 */	lwz r4, ResettingBits@sda21(r13)
 /* 8009B800 00098740  7C 80 00 34 */	cntlzw r0, r4
-/* 8009B804 00098744  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009B808 00098748  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B804 00098744  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009B808 00098748  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B80C 0009874C  2C 03 00 20 */	cmpwi r3, 0x20
 /* 8009B810 00098750  41 82 01 A8 */	beq lbl_8009B9B8
 /* 8009B814 00098754  1C 03 00 0C */	mulli r0, r3, 0xc
 /* 8009B818 00098758  7F E3 1C 30 */	srw r3, r31, r3
 /* 8009B81C 0009875C  7C 84 18 78 */	andc r4, r4, r3
 /* 8009B820 00098760  7C 7E 02 14 */	add r3, r30, r0
-/* 8009B824 00098764  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B824 00098764  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009B828 00098768  38 80 00 00 */	li r4, 0
 /* 8009B82C 0009876C  38 A0 00 0C */	li r5, 0xc
 /* 8009B830 00098770  38 63 00 10 */	addi r3, r3, 0x10
 /* 8009B834 00098774  4B F6 78 CD */	bl memset
 /* 8009B838 00098778  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B83C 0009877C  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B83C 0009877C  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B840 00098780  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B844 00098784  48 01 89 99 */	bl SIGetTypeAsync
 /* 8009B848 00098788  48 00 01 70 */	b lbl_8009B9B8
@@ -405,7 +405,7 @@ lbl_8009B85C:
 /* 8009B86C 000987AC  7C DE 02 14 */	add r6, r30, r0
 /* 8009B870 000987B0  39 03 B4 50 */	addi r8, r3, PADOriginCallback@l
 /* 8009B874 000987B4  38 7D 00 00 */	addi r3, r29, 0
-/* 8009B878 000987B8  38 8D 82 B0 */	addi r4, r13, CmdCalibrate-_SDA_BASE_
+/* 8009B878 000987B8  38 8D 82 B0 */	addi r4, r13, CmdCalibrate@sda21
 /* 8009B87C 000987BC  38 A0 00 03 */	li r5, 3
 /* 8009B880 000987C0  38 E0 00 0A */	li r7, 0xa
 /* 8009B884 000987C4  39 40 00 00 */	li r10, 0
@@ -419,7 +419,7 @@ lbl_8009B898:
 /* 8009B8A0 000987E0  7C DE 02 14 */	add r6, r30, r0
 /* 8009B8A4 000987E4  39 03 B4 50 */	addi r8, r3, PADOriginCallback@l
 /* 8009B8A8 000987E8  38 7D 00 00 */	addi r3, r29, 0
-/* 8009B8AC 000987EC  38 8D 82 AC */	addi r4, r13, CmdReadOrigin-_SDA_BASE_
+/* 8009B8AC 000987EC  38 8D 82 AC */	addi r4, r13, CmdReadOrigin@sda21
 /* 8009B8B0 000987F0  38 A0 00 01 */	li r5, 1
 /* 8009B8B4 000987F4  38 E0 00 0A */	li r7, 0xa
 /* 8009B8B8 000987F8  39 40 00 00 */	li r10, 0
@@ -441,7 +441,7 @@ lbl_8009B8CC:
 /* 8009B8F4 00098834  7C DE 02 14 */	add r6, r30, r0
 /* 8009B8F8 00098838  39 03 B4 50 */	addi r8, r3, PADOriginCallback@l
 /* 8009B8FC 0009883C  38 7D 00 00 */	addi r3, r29, 0
-/* 8009B900 00098840  38 8D 82 AC */	addi r4, r13, CmdReadOrigin-_SDA_BASE_
+/* 8009B900 00098840  38 8D 82 AC */	addi r4, r13, CmdReadOrigin@sda21
 /* 8009B904 00098844  38 A0 00 01 */	li r5, 1
 /* 8009B908 00098848  38 E0 00 0A */	li r7, 0xa
 /* 8009B90C 0009884C  39 40 00 00 */	li r10, 0
@@ -466,13 +466,13 @@ lbl_8009B920:
 lbl_8009B954:
 /* 8009B954 00098894  2C 03 00 00 */	cmpwi r3, 0
 /* 8009B958 00098898  40 82 00 60 */	bne lbl_8009B9B8
-/* 8009B95C 0009889C  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
-/* 8009B960 000988A0  80 6D 94 A8 */	lwz r3, PendingBits-_SDA_BASE_(r13)
+/* 8009B95C 0009889C  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
+/* 8009B960 000988A0  80 6D 94 A8 */	lwz r3, PendingBits@sda21(r13)
 /* 8009B964 000988A4  7C A0 00 34 */	cntlzw r0, r5
-/* 8009B968 000988A8  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009B968 000988A8  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
 /* 8009B96C 000988AC  7C 60 E3 78 */	or r0, r3, r28
-/* 8009B970 000988B0  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
-/* 8009B974 000988B4  90 0D 94 A8 */	stw r0, PendingBits-_SDA_BASE_(r13)
+/* 8009B970 000988B0  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
+/* 8009B974 000988B4  90 0D 94 A8 */	stw r0, PendingBits@sda21(r13)
 /* 8009B978 000988B8  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009B97C 000988BC  41 82 00 3C */	beq lbl_8009B9B8
 /* 8009B980 000988C0  3C 60 80 00 */	lis r3, 0x8000
@@ -480,13 +480,13 @@ lbl_8009B954:
 /* 8009B988 000988C8  7C 63 24 30 */	srw r3, r3, r4
 /* 8009B98C 000988CC  7C A4 18 78 */	andc r4, r5, r3
 /* 8009B990 000988D0  7C 7E 02 14 */	add r3, r30, r0
-/* 8009B994 000988D4  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009B994 000988D4  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009B998 000988D8  38 80 00 00 */	li r4, 0
 /* 8009B99C 000988DC  38 A0 00 0C */	li r5, 0xc
 /* 8009B9A0 000988E0  38 63 00 10 */	addi r3, r3, 0x10
 /* 8009B9A4 000988E4  4B F6 77 5D */	bl memset
 /* 8009B9A8 000988E8  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009B9AC 000988EC  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009B9AC 000988EC  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009B9B0 000988F0  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009B9B4 000988F4  48 01 88 29 */	bl SIGetTypeAsync
 lbl_8009B9B8:
@@ -510,17 +510,17 @@ PADReceiveCheckCallback:
 /* 8009B9F0 00098930  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 8009B9F4 00098934  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 8009B9F8 00098938  7C 7D FC 30 */	srw r29, r3, r31
-/* 8009B9FC 0009893C  80 0D 94 94 */	lwz r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009B9FC 0009893C  80 0D 94 94 */	lwz r0, EnabledBits@sda21(r13)
 /* 8009BA00 00098940  7C 00 E8 39 */	and. r0, r0, r29
 /* 8009BA04 00098944  41 82 00 EC */	beq lbl_8009BAF0
-/* 8009BA08 00098948  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009BA08 00098948  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009BA0C 0009894C  7F A6 E8 F8 */	nor r6, r29, r29
-/* 8009BA10 00098950  80 6D 94 A4 */	lwz r3, CheckingBits-_SDA_BASE_(r13)
+/* 8009BA10 00098950  80 6D 94 A4 */	lwz r3, CheckingBits@sda21(r13)
 /* 8009BA14 00098954  54 80 07 3F */	clrlwi. r0, r4, 0x1c
 /* 8009BA18 00098958  7C A5 30 38 */	and r5, r5, r6
 /* 8009BA1C 0009895C  7C 63 30 38 */	and r3, r3, r6
-/* 8009BA20 00098960  90 AD 94 A0 */	stw r5, WaitingBits-_SDA_BASE_(r13)
-/* 8009BA24 00098964  90 6D 94 A4 */	stw r3, CheckingBits-_SDA_BASE_(r13)
+/* 8009BA20 00098960  90 AD 94 A0 */	stw r5, WaitingBits@sda21(r13)
+/* 8009BA24 00098964  90 6D 94 A4 */	stw r3, CheckingBits@sda21(r13)
 /* 8009BA28 00098968  54 83 00 2E */	rlwinm r3, r4, 0, 0, 0x17
 /* 8009BA2C 0009896C  40 82 00 6C */	bne lbl_8009BA98
 /* 8009BA30 00098970  54 60 00 01 */	rlwinm. r0, r3, 0, 0, 0
@@ -542,7 +542,7 @@ PADReceiveCheckCallback:
 /* 8009BA70 000989B0  7C C0 22 14 */	add r6, r0, r4
 /* 8009BA74 000989B4  39 03 B5 14 */	addi r8, r3, PADOriginUpdateCallback@l
 /* 8009BA78 000989B8  38 7F 00 00 */	addi r3, r31, 0
-/* 8009BA7C 000989BC  38 8D 82 AC */	addi r4, r13, CmdReadOrigin-_SDA_BASE_
+/* 8009BA7C 000989BC  38 8D 82 AC */	addi r4, r13, CmdReadOrigin@sda21
 /* 8009BA80 000989C0  38 A0 00 01 */	li r5, 1
 /* 8009BA84 000989C4  38 E0 00 0A */	li r7, 0xa
 /* 8009BA88 000989C8  39 40 00 00 */	li r10, 0
@@ -554,21 +554,21 @@ lbl_8009BA98:
 /* 8009BA9C 000989DC  3B C3 00 00 */	addi r30, r3, 0
 /* 8009BAA0 000989E0  38 7D 00 00 */	addi r3, r29, 0
 /* 8009BAA4 000989E4  48 01 7E E1 */	bl SIDisablePolling
-/* 8009BAA8 000989E8  80 CD 94 94 */	lwz r6, EnabledBits-_SDA_BASE_(r13)
+/* 8009BAA8 000989E8  80 CD 94 94 */	lwz r6, EnabledBits@sda21(r13)
 /* 8009BAAC 000989EC  7F A8 E8 F8 */	nor r8, r29, r29
-/* 8009BAB0 000989F0  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009BAB0 000989F0  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009BAB4 000989F4  7F E3 FB 78 */	mr r3, r31
-/* 8009BAB8 000989F8  80 8D 94 A4 */	lwz r4, CheckingBits-_SDA_BASE_(r13)
-/* 8009BABC 000989FC  80 0D 94 A8 */	lwz r0, PendingBits-_SDA_BASE_(r13)
+/* 8009BAB8 000989F8  80 8D 94 A4 */	lwz r4, CheckingBits@sda21(r13)
+/* 8009BABC 000989FC  80 0D 94 A8 */	lwz r0, PendingBits@sda21(r13)
 /* 8009BAC0 00098A00  7C C7 40 38 */	and r7, r6, r8
 /* 8009BAC4 00098A04  7C A6 40 38 */	and r6, r5, r8
-/* 8009BAC8 00098A08  90 ED 94 94 */	stw r7, EnabledBits-_SDA_BASE_(r13)
+/* 8009BAC8 00098A08  90 ED 94 94 */	stw r7, EnabledBits@sda21(r13)
 /* 8009BACC 00098A0C  7C 85 40 38 */	and r5, r4, r8
 /* 8009BAD0 00098A10  7C 00 40 38 */	and r0, r0, r8
-/* 8009BAD4 00098A14  90 CD 94 A0 */	stw r6, WaitingBits-_SDA_BASE_(r13)
+/* 8009BAD4 00098A14  90 CD 94 A0 */	stw r6, WaitingBits@sda21(r13)
 /* 8009BAD8 00098A18  38 80 00 00 */	li r4, 0
-/* 8009BADC 00098A1C  90 AD 94 A4 */	stw r5, CheckingBits-_SDA_BASE_(r13)
-/* 8009BAE0 00098A20  90 0D 94 A8 */	stw r0, PendingBits-_SDA_BASE_(r13)
+/* 8009BADC 00098A1C  90 AD 94 A4 */	stw r5, CheckingBits@sda21(r13)
+/* 8009BAE0 00098A20  90 0D 94 A8 */	stw r0, PendingBits@sda21(r13)
 /* 8009BAE4 00098A24  4B FF 6D 71 */	bl OSSetWirelessID
 /* 8009BAE8 00098A28  7F C3 F3 78 */	mr r3, r30
 /* 8009BAEC 00098A2C  4B FF 47 09 */	bl OSRestoreInterrupts
@@ -590,45 +590,45 @@ PADReset:
 /* 8009BB1C 00098A5C  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8009BB20 00098A60  7C 7E 1B 78 */	mr r30, r3
 /* 8009BB24 00098A64  4B FF 46 A9 */	bl OSDisableInterrupts
-/* 8009BB28 00098A68  80 8D 94 A8 */	lwz r4, PendingBits-_SDA_BASE_(r13)
+/* 8009BB28 00098A68  80 8D 94 A8 */	lwz r4, PendingBits@sda21(r13)
 /* 8009BB2C 00098A6C  38 E0 00 00 */	li r7, 0
-/* 8009BB30 00098A70  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009BB30 00098A70  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009BB34 00098A74  3B E3 00 00 */	addi r31, r3, 0
-/* 8009BB38 00098A78  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009BB38 00098A78  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009BB3C 00098A7C  7F DE 23 78 */	or r30, r30, r4
-/* 8009BB40 00098A80  80 8D 94 98 */	lwz r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BB40 00098A80  80 8D 94 98 */	lwz r4, ResettingBits@sda21(r13)
 /* 8009BB44 00098A84  7C A5 03 78 */	or r5, r5, r0
-/* 8009BB48 00098A88  80 0D 82 A4 */	lwz r0, Spec-_SDA_BASE_(r13)
+/* 8009BB48 00098A88  80 0D 82 A4 */	lwz r0, Spec@sda21(r13)
 /* 8009BB4C 00098A8C  7F DE 28 78 */	andc r30, r30, r5
-/* 8009BB50 00098A90  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009BB50 00098A90  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009BB54 00098A94  7C 86 F3 78 */	or r6, r4, r30
-/* 8009BB58 00098A98  90 ED 94 A8 */	stw r7, PendingBits-_SDA_BASE_(r13)
+/* 8009BB58 00098A98  90 ED 94 A8 */	stw r7, PendingBits@sda21(r13)
 /* 8009BB5C 00098A9C  7C A4 F0 78 */	andc r4, r5, r30
-/* 8009BB60 00098AA0  90 CD 94 98 */	stw r6, ResettingBits-_SDA_BASE_(r13)
+/* 8009BB60 00098AA0  90 CD 94 98 */	stw r6, ResettingBits@sda21(r13)
 /* 8009BB64 00098AA4  28 00 00 04 */	cmplwi r0, 4
-/* 8009BB68 00098AA8  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
-/* 8009BB6C 00098AAC  90 8D 94 94 */	stw r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009BB68 00098AA8  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
+/* 8009BB6C 00098AAC  90 8D 94 94 */	stw r4, EnabledBits@sda21(r13)
 /* 8009BB70 00098AB0  7C 03 28 38 */	and r3, r0, r5
 /* 8009BB74 00098AB4  40 82 00 10 */	bne lbl_8009BB84
-/* 8009BB78 00098AB8  80 0D 94 9C */	lwz r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BB78 00098AB8  80 0D 94 9C */	lwz r0, RecalibrateBits@sda21(r13)
 /* 8009BB7C 00098ABC  7C 00 F3 78 */	or r0, r0, r30
-/* 8009BB80 00098AC0  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BB80 00098AC0  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 lbl_8009BB84:
 /* 8009BB84 00098AC4  48 01 7E 01 */	bl SIDisablePolling
-/* 8009BB88 00098AC8  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009BB88 00098AC8  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009BB8C 00098ACC  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009BB90 00098AD0  40 82 00 58 */	bne lbl_8009BBE8
-/* 8009BB94 00098AD4  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009BB94 00098AD4  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009BB98 00098AD8  7C A0 00 34 */	cntlzw r0, r5
-/* 8009BB9C 00098ADC  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009BBA0 00098AE0  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009BB9C 00098ADC  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009BBA0 00098AE0  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009BBA4 00098AE4  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009BBA8 00098AE8  41 82 00 40 */	beq lbl_8009BBE8
 /* 8009BBAC 00098AEC  3C 00 80 00 */	lis r0, 0x8000
 /* 8009BBB0 00098AF0  7C 00 24 30 */	srw r0, r0, r4
 /* 8009BBB4 00098AF4  7C A0 00 78 */	andc r0, r5, r0
 /* 8009BBB8 00098AF8  1C 84 00 0C */	mulli r4, r4, 0xc
-/* 8009BBBC 00098AFC  90 0D 94 98 */	stw r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009BBBC 00098AFC  90 0D 94 98 */	stw r0, ResettingBits@sda21(r13)
 /* 8009BBC0 00098B00  3C 60 80 3F */	lis r3, Origin@ha
 /* 8009BBC4 00098B04  38 03 BF 20 */	addi r0, r3, Origin@l
 /* 8009BBC8 00098B08  7C 60 22 14 */	add r3, r0, r4
@@ -636,7 +636,7 @@ lbl_8009BB84:
 /* 8009BBD0 00098B10  38 A0 00 0C */	li r5, 0xc
 /* 8009BBD4 00098B14  4B F6 75 2D */	bl memset
 /* 8009BBD8 00098B18  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009BBDC 00098B1C  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009BBDC 00098B1C  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009BBE0 00098B20  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009BBE4 00098B24  48 01 85 F9 */	bl SIGetTypeAsync
 lbl_8009BBE8:
@@ -659,46 +659,46 @@ PADRecalibrate:
 /* 8009BC1C 00098B5C  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8009BC20 00098B60  7C 7E 1B 78 */	mr r30, r3
 /* 8009BC24 00098B64  4B FF 45 A9 */	bl OSDisableInterrupts
-/* 8009BC28 00098B68  80 CD 94 A8 */	lwz r6, PendingBits-_SDA_BASE_(r13)
+/* 8009BC28 00098B68  80 CD 94 A8 */	lwz r6, PendingBits@sda21(r13)
 /* 8009BC2C 00098B6C  38 E0 00 00 */	li r7, 0
-/* 8009BC30 00098B70  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009BC30 00098B70  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009BC34 00098B74  3C 80 80 00 */	lis r4, 0x800030E3@ha
-/* 8009BC38 00098B78  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009BC38 00098B78  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009BC3C 00098B7C  7F DE 33 78 */	or r30, r30, r6
-/* 8009BC40 00098B80  80 CD 94 98 */	lwz r6, ResettingBits-_SDA_BASE_(r13)
+/* 8009BC40 00098B80  80 CD 94 98 */	lwz r6, ResettingBits@sda21(r13)
 /* 8009BC44 00098B84  7C A5 03 78 */	or r5, r5, r0
 /* 8009BC48 00098B88  88 04 30 E3 */	lbz r0, 0x800030E3@l(r4)
 /* 8009BC4C 00098B8C  7F DE 28 78 */	andc r30, r30, r5
-/* 8009BC50 00098B90  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009BC50 00098B90  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009BC54 00098B94  7C C4 F3 78 */	or r4, r6, r30
-/* 8009BC58 00098B98  90 ED 94 A8 */	stw r7, PendingBits-_SDA_BASE_(r13)
+/* 8009BC58 00098B98  90 ED 94 A8 */	stw r7, PendingBits@sda21(r13)
 /* 8009BC5C 00098B9C  54 00 06 73 */	rlwinm. r0, r0, 0, 0x19, 0x19
-/* 8009BC60 00098BA0  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BC60 00098BA0  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009BC64 00098BA4  7C A4 F0 78 */	andc r4, r5, r30
 /* 8009BC68 00098BA8  3B E3 00 00 */	addi r31, r3, 0
-/* 8009BC6C 00098BAC  80 CD 94 98 */	lwz r6, ResettingBits-_SDA_BASE_(r13)
-/* 8009BC70 00098BB0  90 8D 94 94 */	stw r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009BC6C 00098BAC  80 CD 94 98 */	lwz r6, ResettingBits@sda21(r13)
+/* 8009BC70 00098BB0  90 8D 94 94 */	stw r4, EnabledBits@sda21(r13)
 /* 8009BC74 00098BB4  7C C3 28 38 */	and r3, r6, r5
 /* 8009BC78 00098BB8  40 82 00 10 */	bne lbl_8009BC88
-/* 8009BC7C 00098BBC  80 0D 94 9C */	lwz r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BC7C 00098BBC  80 0D 94 9C */	lwz r0, RecalibrateBits@sda21(r13)
 /* 8009BC80 00098BC0  7C 00 F3 78 */	or r0, r0, r30
-/* 8009BC84 00098BC4  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BC84 00098BC4  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 lbl_8009BC88:
 /* 8009BC88 00098BC8  48 01 7C FD */	bl SIDisablePolling
-/* 8009BC8C 00098BCC  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009BC8C 00098BCC  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009BC90 00098BD0  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009BC94 00098BD4  40 82 00 58 */	bne lbl_8009BCEC
-/* 8009BC98 00098BD8  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009BC98 00098BD8  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009BC9C 00098BDC  7C A0 00 34 */	cntlzw r0, r5
-/* 8009BCA0 00098BE0  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009BCA4 00098BE4  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009BCA0 00098BE0  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009BCA4 00098BE4  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009BCA8 00098BE8  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009BCAC 00098BEC  41 82 00 40 */	beq lbl_8009BCEC
 /* 8009BCB0 00098BF0  3C 00 80 00 */	lis r0, 0x8000
 /* 8009BCB4 00098BF4  7C 00 24 30 */	srw r0, r0, r4
 /* 8009BCB8 00098BF8  7C A0 00 78 */	andc r0, r5, r0
 /* 8009BCBC 00098BFC  1C 84 00 0C */	mulli r4, r4, 0xc
-/* 8009BCC0 00098C00  90 0D 94 98 */	stw r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009BCC0 00098C00  90 0D 94 98 */	stw r0, ResettingBits@sda21(r13)
 /* 8009BCC4 00098C04  3C 60 80 3F */	lis r3, Origin@ha
 /* 8009BCC8 00098C08  38 03 BF 20 */	addi r0, r3, Origin@l
 /* 8009BCCC 00098C0C  7C 60 22 14 */	add r3, r0, r4
@@ -706,7 +706,7 @@ lbl_8009BC88:
 /* 8009BCD4 00098C14  38 A0 00 0C */	li r5, 0xc
 /* 8009BCD8 00098C18  4B F6 74 29 */	bl memset
 /* 8009BCDC 00098C1C  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009BCE0 00098C20  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009BCE0 00098C20  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009BCE4 00098C24  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009BCE8 00098C28  48 01 84 F5 */	bl SIGetTypeAsync
 lbl_8009BCEC:
@@ -728,20 +728,20 @@ PADInit:
 /* 8009BD1C 00098C5C  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 8009BD20 00098C60  BF 21 00 1C */	stmw r25, 0x1c(r1)
 /* 8009BD24 00098C64  3B E3 BF 10 */	addi r31, r3, Type@l
-/* 8009BD28 00098C68  80 0D 94 90 */	lwz r0, Initialized-_SDA_BASE_(r13)
+/* 8009BD28 00098C68  80 0D 94 90 */	lwz r0, Initialized@sda21(r13)
 /* 8009BD2C 00098C6C  2C 00 00 00 */	cmpwi r0, 0
 /* 8009BD30 00098C70  41 82 00 0C */	beq lbl_8009BD3C
 /* 8009BD34 00098C74  38 60 00 01 */	li r3, 1
 /* 8009BD38 00098C78  48 00 01 D4 */	b lbl_8009BF0C
 lbl_8009BD3C:
-/* 8009BD3C 00098C7C  80 6D 94 B4 */	lwz r3, __PADSpec-_SDA_BASE_(r13)
+/* 8009BD3C 00098C7C  80 6D 94 B4 */	lwz r3, __PADSpec@sda21(r13)
 /* 8009BD40 00098C80  28 03 00 00 */	cmplwi r3, 0
 /* 8009BD44 00098C84  41 82 00 08 */	beq lbl_8009BD4C
 /* 8009BD48 00098C88  48 00 06 29 */	bl PADSetSpec
 lbl_8009BD4C:
-/* 8009BD4C 00098C8C  80 0D 95 C8 */	lwz r0, __PADFixBits-_SDA_BASE_(r13)
+/* 8009BD4C 00098C8C  80 0D 95 C8 */	lwz r0, __PADFixBits@sda21(r13)
 /* 8009BD50 00098C90  38 60 00 01 */	li r3, 1
-/* 8009BD54 00098C94  90 6D 94 90 */	stw r3, Initialized-_SDA_BASE_(r13)
+/* 8009BD54 00098C94  90 6D 94 90 */	stw r3, Initialized@sda21(r13)
 /* 8009BD58 00098C98  28 00 00 00 */	cmplwi r0, 0
 /* 8009BD5C 00098C9C  41 82 00 8C */	beq lbl_8009BDE8
 /* 8009BD60 00098CA0  4B FF 80 99 */	bl OSGetTime
@@ -774,7 +774,7 @@ lbl_8009BD4C:
 /* 8009BDCC 00098D0C  7C A0 E8 14 */	addc r5, r0, r29
 /* 8009BDD0 00098D10  3C 00 F0 00 */	lis r0, 0xf000
 /* 8009BDD4 00098D14  38 80 3F FF */	li r4, 0x3fff
-/* 8009BDD8 00098D18  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BDD8 00098D18  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 /* 8009BDDC 00098D1C  7C A0 20 38 */	and r0, r5, r4
 /* 8009BDE0 00098D20  3C 60 80 00 */	lis r3, 0x800030E0@ha
 /* 8009BDE4 00098D24  B0 03 30 E0 */	sth r0, 0x800030E0@l(r3)
@@ -802,38 +802,38 @@ lbl_8009BDE8:
 /* 8009BE38 00098D78  4B FF 57 E9 */	bl OSRegisterResetFunction
 /* 8009BE3C 00098D7C  3F 80 F0 00 */	lis r28, 0xf000
 /* 8009BE40 00098D80  4B FF 43 8D */	bl OSDisableInterrupts
-/* 8009BE44 00098D84  80 8D 94 A8 */	lwz r4, PendingBits-_SDA_BASE_(r13)
+/* 8009BE44 00098D84  80 8D 94 A8 */	lwz r4, PendingBits@sda21(r13)
 /* 8009BE48 00098D88  38 E0 00 00 */	li r7, 0
-/* 8009BE4C 00098D8C  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009BE4C 00098D8C  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009BE50 00098D90  3B 63 00 00 */	addi r27, r3, 0
-/* 8009BE54 00098D94  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009BE54 00098D94  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009BE58 00098D98  7F 9C 23 78 */	or r28, r28, r4
-/* 8009BE5C 00098D9C  80 8D 94 98 */	lwz r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BE5C 00098D9C  80 8D 94 98 */	lwz r4, ResettingBits@sda21(r13)
 /* 8009BE60 00098DA0  7C A5 03 78 */	or r5, r5, r0
-/* 8009BE64 00098DA4  80 0D 82 A4 */	lwz r0, Spec-_SDA_BASE_(r13)
+/* 8009BE64 00098DA4  80 0D 82 A4 */	lwz r0, Spec@sda21(r13)
 /* 8009BE68 00098DA8  7F 9C 28 78 */	andc r28, r28, r5
-/* 8009BE6C 00098DAC  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009BE6C 00098DAC  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009BE70 00098DB0  7C 86 E3 78 */	or r6, r4, r28
-/* 8009BE74 00098DB4  90 ED 94 A8 */	stw r7, PendingBits-_SDA_BASE_(r13)
+/* 8009BE74 00098DB4  90 ED 94 A8 */	stw r7, PendingBits@sda21(r13)
 /* 8009BE78 00098DB8  7C A4 E0 78 */	andc r4, r5, r28
-/* 8009BE7C 00098DBC  90 CD 94 98 */	stw r6, ResettingBits-_SDA_BASE_(r13)
+/* 8009BE7C 00098DBC  90 CD 94 98 */	stw r6, ResettingBits@sda21(r13)
 /* 8009BE80 00098DC0  28 00 00 04 */	cmplwi r0, 4
-/* 8009BE84 00098DC4  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
-/* 8009BE88 00098DC8  90 8D 94 94 */	stw r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009BE84 00098DC4  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
+/* 8009BE88 00098DC8  90 8D 94 94 */	stw r4, EnabledBits@sda21(r13)
 /* 8009BE8C 00098DCC  7C 03 28 38 */	and r3, r0, r5
 /* 8009BE90 00098DD0  40 82 00 10 */	bne lbl_8009BEA0
-/* 8009BE94 00098DD4  80 0D 94 9C */	lwz r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BE94 00098DD4  80 0D 94 9C */	lwz r0, RecalibrateBits@sda21(r13)
 /* 8009BE98 00098DD8  7C 00 E3 78 */	or r0, r0, r28
-/* 8009BE9C 00098DDC  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BE9C 00098DDC  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 lbl_8009BEA0:
 /* 8009BEA0 00098DE0  48 01 7A E5 */	bl SIDisablePolling
-/* 8009BEA4 00098DE4  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009BEA4 00098DE4  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009BEA8 00098DE8  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009BEAC 00098DEC  40 82 00 54 */	bne lbl_8009BF00
-/* 8009BEB0 00098DF0  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009BEB0 00098DF0  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009BEB4 00098DF4  7C A0 00 34 */	cntlzw r0, r5
-/* 8009BEB8 00098DF8  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009BEBC 00098DFC  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009BEB8 00098DF8  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009BEBC 00098DFC  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009BEC0 00098E00  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009BEC4 00098E04  41 82 00 3C */	beq lbl_8009BF00
 /* 8009BEC8 00098E08  3C 60 80 00 */	lis r3, 0x8000
@@ -841,13 +841,13 @@ lbl_8009BEA0:
 /* 8009BED0 00098E10  7C 63 24 30 */	srw r3, r3, r4
 /* 8009BED4 00098E14  7C A4 18 78 */	andc r4, r5, r3
 /* 8009BED8 00098E18  7C 7F 02 14 */	add r3, r31, r0
-/* 8009BEDC 00098E1C  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BEDC 00098E1C  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009BEE0 00098E20  38 80 00 00 */	li r4, 0
 /* 8009BEE4 00098E24  38 A0 00 0C */	li r5, 0xc
 /* 8009BEE8 00098E28  38 63 00 10 */	addi r3, r3, 0x10
 /* 8009BEEC 00098E2C  4B F6 72 15 */	bl memset
 /* 8009BEF0 00098E30  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009BEF4 00098E34  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009BEF4 00098E34  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009BEF8 00098E38  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009BEFC 00098E3C  48 01 82 E1 */	bl SIGetTypeAsync
 lbl_8009BF00:
@@ -884,53 +884,53 @@ PADRead:
 /* 8009BF68 00098EA8  3A 80 00 00 */	li r20, 0
 /* 8009BF6C 00098EAC  3F 60 80 00 */	lis r27, 0x8000
 lbl_8009BF70:
-/* 8009BF70 00098EB0  80 0D 94 A8 */	lwz r0, PendingBits-_SDA_BASE_(r13)
+/* 8009BF70 00098EB0  80 0D 94 A8 */	lwz r0, PendingBits@sda21(r13)
 /* 8009BF74 00098EB4  7F 77 AC 30 */	srw r23, r27, r21
 /* 8009BF78 00098EB8  7C 00 B8 39 */	and. r0, r0, r23
 /* 8009BF7C 00098EBC  41 82 00 D8 */	beq lbl_8009C054
 /* 8009BF80 00098EC0  4B FF 42 4D */	bl OSDisableInterrupts
-/* 8009BF84 00098EC4  80 8D 94 A0 */	lwz r4, WaitingBits-_SDA_BASE_(r13)
+/* 8009BF84 00098EC4  80 8D 94 A0 */	lwz r4, WaitingBits@sda21(r13)
 /* 8009BF88 00098EC8  38 C0 00 00 */	li r6, 0
-/* 8009BF8C 00098ECC  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009BF8C 00098ECC  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009BF90 00098ED0  7C 79 1B 78 */	mr r25, r3
-/* 8009BF94 00098ED4  80 AD 94 A8 */	lwz r5, PendingBits-_SDA_BASE_(r13)
+/* 8009BF94 00098ED4  80 AD 94 A8 */	lwz r5, PendingBits@sda21(r13)
 /* 8009BF98 00098ED8  7C 84 03 78 */	or r4, r4, r0
-/* 8009BF9C 00098EDC  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009BF9C 00098EDC  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
 /* 8009BFA0 00098EE0  7C A7 20 78 */	andc r7, r5, r4
-/* 8009BFA4 00098EE4  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009BFA4 00098EE4  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009BFA8 00098EE8  7C 04 3B 78 */	or r4, r0, r7
-/* 8009BFAC 00098EEC  80 0D 82 A4 */	lwz r0, Spec-_SDA_BASE_(r13)
-/* 8009BFB0 00098EF0  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BFAC 00098EEC  80 0D 82 A4 */	lwz r0, Spec@sda21(r13)
+/* 8009BFB0 00098EF0  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009BFB4 00098EF4  7C A4 38 78 */	andc r4, r5, r7
 /* 8009BFB8 00098EF8  28 00 00 04 */	cmplwi r0, 4
-/* 8009BFBC 00098EFC  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
-/* 8009BFC0 00098F00  90 CD 94 A8 */	stw r6, PendingBits-_SDA_BASE_(r13)
+/* 8009BFBC 00098EFC  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
+/* 8009BFC0 00098F00  90 CD 94 A8 */	stw r6, PendingBits@sda21(r13)
 /* 8009BFC4 00098F04  7C 03 28 38 */	and r3, r0, r5
-/* 8009BFC8 00098F08  90 8D 94 94 */	stw r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009BFC8 00098F08  90 8D 94 94 */	stw r4, EnabledBits@sda21(r13)
 /* 8009BFCC 00098F0C  40 82 00 10 */	bne lbl_8009BFDC
-/* 8009BFD0 00098F10  80 0D 94 9C */	lwz r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BFD0 00098F10  80 0D 94 9C */	lwz r0, RecalibrateBits@sda21(r13)
 /* 8009BFD4 00098F14  7C 00 3B 78 */	or r0, r0, r7
-/* 8009BFD8 00098F18  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009BFD8 00098F18  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 lbl_8009BFDC:
 /* 8009BFDC 00098F1C  48 01 79 A9 */	bl SIDisablePolling
-/* 8009BFE0 00098F20  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009BFE0 00098F20  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009BFE4 00098F24  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009BFE8 00098F28  40 82 00 48 */	bne lbl_8009C030
-/* 8009BFEC 00098F2C  80 8D 94 98 */	lwz r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009BFEC 00098F2C  80 8D 94 98 */	lwz r4, ResettingBits@sda21(r13)
 /* 8009BFF0 00098F30  7C 80 00 34 */	cntlzw r0, r4
-/* 8009BFF4 00098F34  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009BFF8 00098F38  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009BFF4 00098F34  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009BFF8 00098F38  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009BFFC 00098F3C  2C 03 00 20 */	cmpwi r3, 0x20
 /* 8009C000 00098F40  41 82 00 30 */	beq lbl_8009C030
 /* 8009C004 00098F44  1C 03 00 0C */	mulli r0, r3, 0xc
 /* 8009C008 00098F48  7F 63 1C 30 */	srw r3, r27, r3
 /* 8009C00C 00098F4C  7C 84 18 78 */	andc r4, r4, r3
-/* 8009C010 00098F50  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009C010 00098F50  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009C014 00098F54  7C 7A 02 14 */	add r3, r26, r0
 /* 8009C018 00098F58  38 80 00 00 */	li r4, 0
 /* 8009C01C 00098F5C  38 A0 00 0C */	li r5, 0xc
 /* 8009C020 00098F60  4B F6 70 E1 */	bl memset
-/* 8009C024 00098F64  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009C024 00098F64  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009C028 00098F68  7F 84 E3 78 */	mr r4, r28
 /* 8009C02C 00098F6C  48 01 81 B1 */	bl SIGetTypeAsync
 lbl_8009C030:
@@ -944,10 +944,10 @@ lbl_8009C030:
 /* 8009C04C 00098F8C  4B F6 70 B5 */	bl memset
 /* 8009C050 00098F90  48 00 02 48 */	b lbl_8009C298
 lbl_8009C054:
-/* 8009C054 00098F94  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009C054 00098F94  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
 /* 8009C058 00098F98  7C 00 B8 39 */	and. r0, r0, r23
 /* 8009C05C 00098F9C  40 82 00 10 */	bne lbl_8009C06C
-/* 8009C060 00098FA0  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009C060 00098FA0  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009C064 00098FA4  7C 00 A8 00 */	cmpw r0, r21
 /* 8009C068 00098FA8  40 82 00 20 */	bne lbl_8009C088
 lbl_8009C06C:
@@ -959,7 +959,7 @@ lbl_8009C06C:
 /* 8009C080 00098FC0  4B F6 70 81 */	bl memset
 /* 8009C084 00098FC4  48 00 02 14 */	b lbl_8009C298
 lbl_8009C088:
-/* 8009C088 00098FC8  80 0D 94 94 */	lwz r0, EnabledBits-_SDA_BASE_(r13)
+/* 8009C088 00098FC8  80 0D 94 94 */	lwz r0, EnabledBits@sda21(r13)
 /* 8009C08C 00098FCC  7C 00 B8 39 */	and. r0, r0, r23
 /* 8009C090 00098FD0  40 82 00 20 */	bne lbl_8009C0B0
 /* 8009C094 00098FD4  38 00 FF FF */	li r0, -1
@@ -989,7 +989,7 @@ lbl_8009C0DC:
 /* 8009C0EC 0009902C  38 75 00 00 */	addi r3, r21, 0
 /* 8009C0F0 00099030  38 81 00 14 */	addi r4, r1, 0x14
 /* 8009C0F4 00099034  48 01 79 D1 */	bl SIGetResponse
-/* 8009C0F8 00099038  80 0D 94 A0 */	lwz r0, WaitingBits-_SDA_BASE_(r13)
+/* 8009C0F8 00099038  80 0D 94 A0 */	lwz r0, WaitingBits@sda21(r13)
 /* 8009C0FC 0009903C  7C 00 B8 39 */	and. r0, r0, r23
 /* 8009C100 00099040  41 82 00 40 */	beq lbl_8009C140
 /* 8009C104 00099044  38 00 00 00 */	li r0, 0
@@ -998,11 +998,11 @@ lbl_8009C0DC:
 /* 8009C110 00099050  38 80 00 00 */	li r4, 0
 /* 8009C114 00099054  38 A0 00 0A */	li r5, 0xa
 /* 8009C118 00099058  4B F6 6F E9 */	bl memset
-/* 8009C11C 0009905C  80 6D 94 A4 */	lwz r3, CheckingBits-_SDA_BASE_(r13)
+/* 8009C11C 0009905C  80 6D 94 A4 */	lwz r3, CheckingBits@sda21(r13)
 /* 8009C120 00099060  7C 60 B8 39 */	and. r0, r3, r23
 /* 8009C124 00099064  40 82 01 74 */	bne lbl_8009C298
 /* 8009C128 00099068  7C 60 BB 78 */	or r0, r3, r23
-/* 8009C12C 0009906C  90 0D 94 A4 */	stw r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009C12C 0009906C  90 0D 94 A4 */	stw r0, CheckingBits@sda21(r13)
 /* 8009C130 00099070  38 75 00 00 */	addi r3, r21, 0
 /* 8009C134 00099074  38 9D 00 00 */	addi r4, r29, 0
 /* 8009C138 00099078  48 01 80 A5 */	bl SIGetTypeAsync
@@ -1012,21 +1012,21 @@ lbl_8009C140:
 /* 8009C144 00099084  3B 23 00 00 */	addi r25, r3, 0
 /* 8009C148 00099088  38 77 00 00 */	addi r3, r23, 0
 /* 8009C14C 0009908C  48 01 78 39 */	bl SIDisablePolling
-/* 8009C150 00099090  80 CD 94 94 */	lwz r6, EnabledBits-_SDA_BASE_(r13)
+/* 8009C150 00099090  80 CD 94 94 */	lwz r6, EnabledBits@sda21(r13)
 /* 8009C154 00099094  7E E8 B8 F8 */	nor r8, r23, r23
-/* 8009C158 00099098  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009C158 00099098  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009C15C 0009909C  7E A3 AB 78 */	mr r3, r21
-/* 8009C160 000990A0  80 8D 94 A4 */	lwz r4, CheckingBits-_SDA_BASE_(r13)
-/* 8009C164 000990A4  80 0D 94 A8 */	lwz r0, PendingBits-_SDA_BASE_(r13)
+/* 8009C160 000990A0  80 8D 94 A4 */	lwz r4, CheckingBits@sda21(r13)
+/* 8009C164 000990A4  80 0D 94 A8 */	lwz r0, PendingBits@sda21(r13)
 /* 8009C168 000990A8  7C C7 40 38 */	and r7, r6, r8
 /* 8009C16C 000990AC  7C A6 40 38 */	and r6, r5, r8
-/* 8009C170 000990B0  90 ED 94 94 */	stw r7, EnabledBits-_SDA_BASE_(r13)
+/* 8009C170 000990B0  90 ED 94 94 */	stw r7, EnabledBits@sda21(r13)
 /* 8009C174 000990B4  7C 85 40 38 */	and r5, r4, r8
 /* 8009C178 000990B8  7C 00 40 38 */	and r0, r0, r8
-/* 8009C17C 000990BC  90 CD 94 A0 */	stw r6, WaitingBits-_SDA_BASE_(r13)
+/* 8009C17C 000990BC  90 CD 94 A0 */	stw r6, WaitingBits@sda21(r13)
 /* 8009C180 000990C0  38 80 00 00 */	li r4, 0
-/* 8009C184 000990C4  90 AD 94 A4 */	stw r5, CheckingBits-_SDA_BASE_(r13)
-/* 8009C188 000990C8  90 0D 94 A8 */	stw r0, PendingBits-_SDA_BASE_(r13)
+/* 8009C184 000990C4  90 AD 94 A4 */	stw r5, CheckingBits@sda21(r13)
+/* 8009C188 000990C8  90 0D 94 A8 */	stw r0, PendingBits@sda21(r13)
 /* 8009C18C 000990CC  4B FF 66 C9 */	bl OSSetWirelessID
 /* 8009C190 000990D0  7F 23 CB 78 */	mr r3, r25
 /* 8009C194 000990D4  4B FF 40 61 */	bl OSRestoreInterrupts
@@ -1068,7 +1068,7 @@ lbl_8009C1F8:
 /* 8009C218 00099158  4B F6 6E E9 */	bl memset
 /* 8009C21C 0009915C  48 00 00 7C */	b lbl_8009C298
 lbl_8009C220:
-/* 8009C220 00099160  81 8D 82 A8 */	lwz r12, MakeStatus-_SDA_BASE_(r13)
+/* 8009C220 00099160  81 8D 82 A8 */	lwz r12, MakeStatus@sda21(r13)
 /* 8009C224 00099164  38 75 00 00 */	addi r3, r21, 0
 /* 8009C228 00099168  38 9F 00 00 */	addi r4, r31, 0
 /* 8009C22C 0009916C  7D 88 03 A6 */	mtlr r12
@@ -1086,7 +1086,7 @@ lbl_8009C220:
 /* 8009C25C 0009919C  38 75 00 00 */	addi r3, r21, 0
 /* 8009C260 000991A0  38 D8 00 00 */	addi r6, r24, 0
 /* 8009C264 000991A4  39 1E 00 00 */	addi r8, r30, 0
-/* 8009C268 000991A8  38 8D 82 AC */	addi r4, r13, CmdReadOrigin-_SDA_BASE_
+/* 8009C268 000991A8  38 8D 82 AC */	addi r4, r13, CmdReadOrigin@sda21
 /* 8009C26C 000991AC  38 A0 00 01 */	li r5, 1
 /* 8009C270 000991B0  38 E0 00 0A */	li r7, 0xa
 /* 8009C274 000991B4  39 40 00 00 */	li r10, 0
@@ -1126,7 +1126,7 @@ PADControlMotor:
 /* 8009C2E8 00099228  3B A3 00 00 */	addi r29, r3, 0
 /* 8009C2EC 0009922C  4B FF 3E E1 */	bl OSDisableInterrupts
 /* 8009C2F0 00099230  3C 00 80 00 */	lis r0, 0x8000
-/* 8009C2F4 00099234  80 8D 94 94 */	lwz r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009C2F4 00099234  80 8D 94 94 */	lwz r4, EnabledBits@sda21(r13)
 /* 8009C2F8 00099238  7C 00 EC 30 */	srw r0, r0, r29
 /* 8009C2FC 0009923C  7C 80 00 39 */	and. r0, r4, r0
 /* 8009C300 00099240  3B E3 00 00 */	addi r31, r3, 0
@@ -1135,14 +1135,14 @@ PADControlMotor:
 /* 8009C30C 0009924C  48 01 7D 0D */	bl SIGetType
 /* 8009C310 00099250  54 60 00 85 */	rlwinm. r0, r3, 0, 2, 2
 /* 8009C314 00099254  40 82 00 38 */	bne lbl_8009C34C
-/* 8009C318 00099258  80 0D 82 A4 */	lwz r0, Spec-_SDA_BASE_(r13)
+/* 8009C318 00099258  80 0D 82 A4 */	lwz r0, Spec@sda21(r13)
 /* 8009C31C 0009925C  28 00 00 02 */	cmplwi r0, 2
 /* 8009C320 00099260  40 80 00 10 */	bge lbl_8009C330
 /* 8009C324 00099264  28 1E 00 02 */	cmplwi r30, 2
 /* 8009C328 00099268  40 82 00 08 */	bne lbl_8009C330
 /* 8009C32C 0009926C  3B C0 00 00 */	li r30, 0
 lbl_8009C330:
-/* 8009C330 00099270  80 8D 82 A0 */	lwz r4, AnalogMode-_SDA_BASE_(r13)
+/* 8009C330 00099270  80 8D 82 A0 */	lwz r4, AnalogMode@sda21(r13)
 /* 8009C334 00099274  57 C0 07 BE */	clrlwi r0, r30, 0x1e
 /* 8009C338 00099278  38 7D 00 00 */	addi r3, r29, 0
 /* 8009C33C 0009927C  64 84 00 40 */	oris r4, r4, 0x40
@@ -1164,7 +1164,7 @@ lbl_8009C34C:
 PADSetSpec:
 /* 8009C370 000992B0  38 00 00 00 */	li r0, 0
 /* 8009C374 000992B4  2C 03 00 01 */	cmpwi r3, 1
-/* 8009C378 000992B8  90 0D 94 B4 */	stw r0, __PADSpec-_SDA_BASE_(r13)
+/* 8009C378 000992B8  90 0D 94 B4 */	stw r0, __PADSpec@sda21(r13)
 /* 8009C37C 000992BC  41 82 00 30 */	beq lbl_8009C3AC
 /* 8009C380 000992C0  40 80 00 10 */	bge lbl_8009C390
 /* 8009C384 000992C4  2C 03 00 00 */	cmpwi r3, 0
@@ -1177,19 +1177,19 @@ lbl_8009C390:
 lbl_8009C39C:
 /* 8009C39C 000992DC  3C 80 80 0A */	lis r4, SPEC0_MakeStatus@ha
 /* 8009C3A0 000992E0  38 04 C3 D0 */	addi r0, r4, SPEC0_MakeStatus@l
-/* 8009C3A4 000992E4  90 0D 82 A8 */	stw r0, MakeStatus-_SDA_BASE_(r13)
+/* 8009C3A4 000992E4  90 0D 82 A8 */	stw r0, MakeStatus@sda21(r13)
 /* 8009C3A8 000992E8  48 00 00 20 */	b lbl_8009C3C8
 lbl_8009C3AC:
 /* 8009C3AC 000992EC  3C 80 80 0A */	lis r4, SPEC1_MakeStatus@ha
 /* 8009C3B0 000992F0  38 04 C5 44 */	addi r0, r4, SPEC1_MakeStatus@l
-/* 8009C3B4 000992F4  90 0D 82 A8 */	stw r0, MakeStatus-_SDA_BASE_(r13)
+/* 8009C3B4 000992F4  90 0D 82 A8 */	stw r0, MakeStatus@sda21(r13)
 /* 8009C3B8 000992F8  48 00 00 10 */	b lbl_8009C3C8
 lbl_8009C3BC:
 /* 8009C3BC 000992FC  3C 80 80 0A */	lis r4, SPEC2_MakeStatus@ha
 /* 8009C3C0 00099300  38 04 C6 B8 */	addi r0, r4, SPEC2_MakeStatus@l
-/* 8009C3C4 00099304  90 0D 82 A8 */	stw r0, MakeStatus-_SDA_BASE_(r13)
+/* 8009C3C4 00099304  90 0D 82 A8 */	stw r0, MakeStatus@sda21(r13)
 lbl_8009C3C8:
-/* 8009C3C8 00099308  90 6D 82 A4 */	stw r3, Spec-_SDA_BASE_(r13)
+/* 8009C3C8 00099308  90 6D 82 A4 */	stw r3, Spec@sda21(r13)
 /* 8009C3CC 0009930C  4E 80 00 20 */	blr 
 
 .global SPEC0_MakeStatus
@@ -1418,7 +1418,7 @@ SPEC2_MakeStatus:
 /* 8009C6D4 00099614  80 05 00 00 */	lwz r0, 0(r5)
 /* 8009C6D8 00099618  7C 00 07 74 */	extsb r0, r0
 /* 8009C6DC 0009961C  98 04 00 03 */	stb r0, 3(r4)
-/* 8009C6E0 00099620  80 0D 82 A0 */	lwz r0, AnalogMode-_SDA_BASE_(r13)
+/* 8009C6E0 00099620  80 0D 82 A0 */	lwz r0, AnalogMode@sda21(r13)
 /* 8009C6E4 00099624  54 00 05 6E */	rlwinm r0, r0, 0, 0x15, 0x17
 /* 8009C6E8 00099628  2C 00 04 00 */	cmpwi r0, 0x400
 /* 8009C6EC 0009962C  41 82 01 98 */	beq lbl_8009C884
@@ -1690,21 +1690,21 @@ PADSetAnalogMode:
 /* 8009CABC 000999FC  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8009CAC0 00099A00  7C 7F 1B 78 */	mr r31, r3
 /* 8009CAC4 00099A04  4B FF 37 09 */	bl OSDisableInterrupts
-/* 8009CAC8 00099A08  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009CAC8 00099A08  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009CACC 00099A0C  57 E6 40 2E */	slwi r6, r31, 8
-/* 8009CAD0 00099A10  80 8D 94 A0 */	lwz r4, WaitingBits-_SDA_BASE_(r13)
+/* 8009CAD0 00099A10  80 8D 94 A0 */	lwz r4, WaitingBits@sda21(r13)
 /* 8009CAD4 00099A14  7C 7F 1B 78 */	mr r31, r3
 /* 8009CAD8 00099A18  39 05 00 00 */	addi r8, r5, 0
 /* 8009CADC 00099A1C  7D 07 40 F8 */	nor r7, r8, r8
-/* 8009CAE0 00099A20  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009CAE0 00099A20  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009CAE4 00099A24  7C A5 28 78 */	andc r5, r5, r5
-/* 8009CAE8 00099A28  90 CD 82 A0 */	stw r6, AnalogMode-_SDA_BASE_(r13)
+/* 8009CAE8 00099A28  90 CD 82 A0 */	stw r6, AnalogMode@sda21(r13)
 /* 8009CAEC 00099A2C  7C 84 38 38 */	and r4, r4, r7
 /* 8009CAF0 00099A30  7C 00 38 38 */	and r0, r0, r7
-/* 8009CAF4 00099A34  90 AD 94 94 */	stw r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009CAF4 00099A34  90 AD 94 94 */	stw r5, EnabledBits@sda21(r13)
 /* 8009CAF8 00099A38  7D 03 43 78 */	mr r3, r8
-/* 8009CAFC 00099A3C  90 8D 94 A0 */	stw r4, WaitingBits-_SDA_BASE_(r13)
-/* 8009CB00 00099A40  90 0D 94 A4 */	stw r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009CAFC 00099A3C  90 8D 94 A0 */	stw r4, WaitingBits@sda21(r13)
+/* 8009CB00 00099A40  90 0D 94 A4 */	stw r0, CheckingBits@sda21(r13)
 /* 8009CB04 00099A44  48 01 6E 81 */	bl SIDisablePolling
 /* 8009CB08 00099A48  7F E3 FB 78 */	mr r3, r31
 /* 8009CB0C 00099A4C  4B FF 36 E9 */	bl OSRestoreInterrupts
@@ -1721,7 +1721,7 @@ OnReset:
 /* 8009CB30 00099A70  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 8009CB34 00099A74  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8009CB38 00099A78  3B C3 00 00 */	addi r30, r3, 0
-/* 8009CB3C 00099A7C  80 0D 94 AC */	lwz r0, SamplingCallback-_SDA_BASE_(r13)
+/* 8009CB3C 00099A7C  80 0D 94 AC */	lwz r0, SamplingCallback@sda21(r13)
 /* 8009CB40 00099A80  28 00 00 00 */	cmplwi r0, 0
 /* 8009CB44 00099A84  41 82 00 0C */	beq lbl_8009CB50
 /* 8009CB48 00099A88  38 60 00 00 */	li r3, 0
@@ -1729,12 +1729,12 @@ OnReset:
 lbl_8009CB50:
 /* 8009CB50 00099A90  2C 1E 00 00 */	cmpwi r30, 0
 /* 8009CB54 00099A94  40 82 01 40 */	bne lbl_8009CC94
-/* 8009CB58 00099A98  80 0D 94 98 */	lwz r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009CB58 00099A98  80 0D 94 98 */	lwz r0, ResettingBits@sda21(r13)
 /* 8009CB5C 00099A9C  3B C0 00 00 */	li r30, 0
 /* 8009CB60 00099AA0  38 7E 00 00 */	addi r3, r30, 0
 /* 8009CB64 00099AA4  28 00 00 00 */	cmplwi r0, 0
 /* 8009CB68 00099AA8  40 82 00 14 */	bne lbl_8009CB7C
-/* 8009CB6C 00099AAC  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009CB6C 00099AAC  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009CB70 00099AB0  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009CB74 00099AB4  40 82 00 08 */	bne lbl_8009CB7C
 /* 8009CB78 00099AB8  38 60 00 01 */	li r3, 1
@@ -1746,53 +1746,53 @@ lbl_8009CB7C:
 /* 8009CB8C 00099ACC  40 82 00 08 */	bne lbl_8009CB94
 /* 8009CB90 00099AD0  3B C0 00 01 */	li r30, 1
 lbl_8009CB94:
-/* 8009CB94 00099AD4  80 0D 94 B0 */	lwz r0, recalibrated$396-_SDA_BASE_(r13)
+/* 8009CB94 00099AD4  80 0D 94 B0 */	lwz r0, recalibrated$396@sda21(r13)
 /* 8009CB98 00099AD8  2C 00 00 00 */	cmpwi r0, 0
 /* 8009CB9C 00099ADC  40 82 00 F0 */	bne lbl_8009CC8C
 /* 8009CBA0 00099AE0  2C 1E 00 00 */	cmpwi r30, 0
 /* 8009CBA4 00099AE4  41 82 00 E8 */	beq lbl_8009CC8C
 /* 8009CBA8 00099AE8  3F C0 F0 00 */	lis r30, 0xf000
 /* 8009CBAC 00099AEC  4B FF 36 21 */	bl OSDisableInterrupts
-/* 8009CBB0 00099AF0  80 CD 94 A8 */	lwz r6, PendingBits-_SDA_BASE_(r13)
+/* 8009CBB0 00099AF0  80 CD 94 A8 */	lwz r6, PendingBits@sda21(r13)
 /* 8009CBB4 00099AF4  38 E0 00 00 */	li r7, 0
-/* 8009CBB8 00099AF8  80 AD 94 A0 */	lwz r5, WaitingBits-_SDA_BASE_(r13)
+/* 8009CBB8 00099AF8  80 AD 94 A0 */	lwz r5, WaitingBits@sda21(r13)
 /* 8009CBBC 00099AFC  3C 80 80 00 */	lis r4, 0x800030E3@ha
-/* 8009CBC0 00099B00  80 0D 94 A4 */	lwz r0, CheckingBits-_SDA_BASE_(r13)
+/* 8009CBC0 00099B00  80 0D 94 A4 */	lwz r0, CheckingBits@sda21(r13)
 /* 8009CBC4 00099B04  7F DE 33 78 */	or r30, r30, r6
-/* 8009CBC8 00099B08  80 CD 94 98 */	lwz r6, ResettingBits-_SDA_BASE_(r13)
+/* 8009CBC8 00099B08  80 CD 94 98 */	lwz r6, ResettingBits@sda21(r13)
 /* 8009CBCC 00099B0C  7C A5 03 78 */	or r5, r5, r0
 /* 8009CBD0 00099B10  88 04 30 E3 */	lbz r0, 0x800030E3@l(r4)
 /* 8009CBD4 00099B14  7F DE 28 78 */	andc r30, r30, r5
-/* 8009CBD8 00099B18  80 AD 94 94 */	lwz r5, EnabledBits-_SDA_BASE_(r13)
+/* 8009CBD8 00099B18  80 AD 94 94 */	lwz r5, EnabledBits@sda21(r13)
 /* 8009CBDC 00099B1C  7C C4 F3 78 */	or r4, r6, r30
-/* 8009CBE0 00099B20  90 ED 94 A8 */	stw r7, PendingBits-_SDA_BASE_(r13)
+/* 8009CBE0 00099B20  90 ED 94 A8 */	stw r7, PendingBits@sda21(r13)
 /* 8009CBE4 00099B24  54 00 06 73 */	rlwinm. r0, r0, 0, 0x19, 0x19
-/* 8009CBE8 00099B28  90 8D 94 98 */	stw r4, ResettingBits-_SDA_BASE_(r13)
+/* 8009CBE8 00099B28  90 8D 94 98 */	stw r4, ResettingBits@sda21(r13)
 /* 8009CBEC 00099B2C  7C A4 F0 78 */	andc r4, r5, r30
 /* 8009CBF0 00099B30  3B E3 00 00 */	addi r31, r3, 0
-/* 8009CBF4 00099B34  80 CD 94 98 */	lwz r6, ResettingBits-_SDA_BASE_(r13)
-/* 8009CBF8 00099B38  90 8D 94 94 */	stw r4, EnabledBits-_SDA_BASE_(r13)
+/* 8009CBF4 00099B34  80 CD 94 98 */	lwz r6, ResettingBits@sda21(r13)
+/* 8009CBF8 00099B38  90 8D 94 94 */	stw r4, EnabledBits@sda21(r13)
 /* 8009CBFC 00099B3C  7C C3 28 38 */	and r3, r6, r5
 /* 8009CC00 00099B40  40 82 00 10 */	bne lbl_8009CC10
-/* 8009CC04 00099B44  80 0D 94 9C */	lwz r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009CC04 00099B44  80 0D 94 9C */	lwz r0, RecalibrateBits@sda21(r13)
 /* 8009CC08 00099B48  7C 00 F3 78 */	or r0, r0, r30
-/* 8009CC0C 00099B4C  90 0D 94 9C */	stw r0, RecalibrateBits-_SDA_BASE_(r13)
+/* 8009CC0C 00099B4C  90 0D 94 9C */	stw r0, RecalibrateBits@sda21(r13)
 lbl_8009CC10:
 /* 8009CC10 00099B50  48 01 6D 75 */	bl SIDisablePolling
-/* 8009CC14 00099B54  80 0D 82 98 */	lwz r0, ResettingChan-_SDA_BASE_(r13)
+/* 8009CC14 00099B54  80 0D 82 98 */	lwz r0, ResettingChan@sda21(r13)
 /* 8009CC18 00099B58  2C 00 00 20 */	cmpwi r0, 0x20
 /* 8009CC1C 00099B5C  40 82 00 58 */	bne lbl_8009CC74
-/* 8009CC20 00099B60  80 AD 94 98 */	lwz r5, ResettingBits-_SDA_BASE_(r13)
+/* 8009CC20 00099B60  80 AD 94 98 */	lwz r5, ResettingBits@sda21(r13)
 /* 8009CC24 00099B64  7C A0 00 34 */	cntlzw r0, r5
-/* 8009CC28 00099B68  90 0D 82 98 */	stw r0, ResettingChan-_SDA_BASE_(r13)
-/* 8009CC2C 00099B6C  80 8D 82 98 */	lwz r4, ResettingChan-_SDA_BASE_(r13)
+/* 8009CC28 00099B68  90 0D 82 98 */	stw r0, ResettingChan@sda21(r13)
+/* 8009CC2C 00099B6C  80 8D 82 98 */	lwz r4, ResettingChan@sda21(r13)
 /* 8009CC30 00099B70  2C 04 00 20 */	cmpwi r4, 0x20
 /* 8009CC34 00099B74  41 82 00 40 */	beq lbl_8009CC74
 /* 8009CC38 00099B78  3C 00 80 00 */	lis r0, 0x8000
 /* 8009CC3C 00099B7C  7C 00 24 30 */	srw r0, r0, r4
 /* 8009CC40 00099B80  7C A0 00 78 */	andc r0, r5, r0
 /* 8009CC44 00099B84  1C 84 00 0C */	mulli r4, r4, 0xc
-/* 8009CC48 00099B88  90 0D 94 98 */	stw r0, ResettingBits-_SDA_BASE_(r13)
+/* 8009CC48 00099B88  90 0D 94 98 */	stw r0, ResettingBits@sda21(r13)
 /* 8009CC4C 00099B8C  3C 60 80 3F */	lis r3, Origin@ha
 /* 8009CC50 00099B90  38 03 BF 20 */	addi r0, r3, Origin@l
 /* 8009CC54 00099B94  7C 60 22 14 */	add r3, r0, r4
@@ -1800,14 +1800,14 @@ lbl_8009CC10:
 /* 8009CC5C 00099B9C  38 A0 00 0C */	li r5, 0xc
 /* 8009CC60 00099BA0  4B F6 64 A1 */	bl memset
 /* 8009CC64 00099BA4  3C 80 80 0A */	lis r4, PADTypeAndStatusCallback@ha
-/* 8009CC68 00099BA8  80 6D 82 98 */	lwz r3, ResettingChan-_SDA_BASE_(r13)
+/* 8009CC68 00099BA8  80 6D 82 98 */	lwz r3, ResettingChan@sda21(r13)
 /* 8009CC6C 00099BAC  38 84 B6 AC */	addi r4, r4, PADTypeAndStatusCallback@l
 /* 8009CC70 00099BB0  48 01 75 6D */	bl SIGetTypeAsync
 lbl_8009CC74:
 /* 8009CC74 00099BB4  7F E3 FB 78 */	mr r3, r31
 /* 8009CC78 00099BB8  4B FF 35 7D */	bl OSRestoreInterrupts
 /* 8009CC7C 00099BBC  38 00 00 01 */	li r0, 1
-/* 8009CC80 00099BC0  90 0D 94 B0 */	stw r0, recalibrated$396-_SDA_BASE_(r13)
+/* 8009CC80 00099BC0  90 0D 94 B0 */	stw r0, recalibrated$396@sda21(r13)
 /* 8009CC84 00099BC4  38 60 00 00 */	li r3, 0
 /* 8009CC88 00099BC8  48 00 00 18 */	b lbl_8009CCA0
 lbl_8009CC8C:
@@ -1815,7 +1815,7 @@ lbl_8009CC8C:
 /* 8009CC90 00099BD0  48 00 00 10 */	b lbl_8009CCA0
 lbl_8009CC94:
 /* 8009CC94 00099BD4  38 00 00 00 */	li r0, 0
-/* 8009CC98 00099BD8  90 0D 94 B0 */	stw r0, recalibrated$396-_SDA_BASE_(r13)
+/* 8009CC98 00099BD8  90 0D 94 B0 */	stw r0, recalibrated$396@sda21(r13)
 /* 8009CC9C 00099BDC  38 60 00 01 */	li r3, 1
 lbl_8009CCA0:
 /* 8009CCA0 00099BE0  80 01 00 2C */	lwz r0, 0x2c(r1)
@@ -1832,14 +1832,14 @@ SamplingHandler:
 /* 8009CCC0 00099C00  94 21 FD 20 */	stwu r1, -0x2e0(r1)
 /* 8009CCC4 00099C04  93 E1 02 DC */	stw r31, 0x2dc(r1)
 /* 8009CCC8 00099C08  3B E4 00 00 */	addi r31, r4, 0
-/* 8009CCCC 00099C0C  80 0D 94 AC */	lwz r0, SamplingCallback-_SDA_BASE_(r13)
+/* 8009CCCC 00099C0C  80 0D 94 AC */	lwz r0, SamplingCallback@sda21(r13)
 /* 8009CCD0 00099C10  28 00 00 00 */	cmplwi r0, 0
 /* 8009CCD4 00099C14  41 82 00 30 */	beq lbl_8009CD04
 /* 8009CCD8 00099C18  38 61 00 10 */	addi r3, r1, 0x10
 /* 8009CCDC 00099C1C  4B FF 1D 09 */	bl OSClearContext
 /* 8009CCE0 00099C20  38 61 00 10 */	addi r3, r1, 0x10
 /* 8009CCE4 00099C24  4B FF 1B 39 */	bl OSSetCurrentContext
-/* 8009CCE8 00099C28  81 8D 94 AC */	lwz r12, SamplingCallback-_SDA_BASE_(r13)
+/* 8009CCE8 00099C28  81 8D 94 AC */	lwz r12, SamplingCallback@sda21(r13)
 /* 8009CCEC 00099C2C  7D 88 03 A6 */	mtlr r12
 /* 8009CCF0 00099C30  4E 80 00 21 */	blrl 
 /* 8009CCF4 00099C34  38 61 00 10 */	addi r3, r1, 0x10
@@ -1860,8 +1860,8 @@ PADSetSamplingCallback:
 /* 8009CD20 00099C60  90 01 00 04 */	stw r0, 4(r1)
 /* 8009CD24 00099C64  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8009CD28 00099C68  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 8009CD2C 00099C6C  83 ED 94 AC */	lwz r31, SamplingCallback-_SDA_BASE_(r13)
-/* 8009CD30 00099C70  90 6D 94 AC */	stw r3, SamplingCallback-_SDA_BASE_(r13)
+/* 8009CD2C 00099C6C  83 ED 94 AC */	lwz r31, SamplingCallback@sda21(r13)
+/* 8009CD30 00099C70  90 6D 94 AC */	stw r3, SamplingCallback@sda21(r13)
 /* 8009CD34 00099C74  41 82 00 14 */	beq lbl_8009CD48
 /* 8009CD38 00099C78  3C 60 80 0A */	lis r3, SamplingHandler@ha
 /* 8009CD3C 00099C7C  38 63 CC B8 */	addi r3, r3, SamplingHandler@l
@@ -1918,7 +1918,10 @@ lbl_8009CDC8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 ResetFunctionInfo:
-	.incbin "baserom.dol", 0x3AE1F8, 0x10
+    .4byte OnReset
+    .4byte 0x7F
+    .4byte 0
+    .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ResettingChan:
@@ -1930,7 +1933,7 @@ AnalogMode:
 Spec:
 	.incbin "baserom.dol", 0x3E32A4, 0x4
 MakeStatus:
-	.incbin "baserom.dol", 0x3E32A8, 0x4
+  .4byte SPEC2_MakeStatus
 CmdReadOrigin:
 	.incbin "baserom.dol", 0x3E32AC, 0x4
 CmdCalibrate:

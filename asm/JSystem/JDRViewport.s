@@ -51,9 +51,9 @@ perform__Q26JDrama9TViewportFUlPQ26JDrama9TGraphics:
 /* 8004707C 00043FBC  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 80047080 00043FC0  3B C3 00 00 */	addi r30, r3, 0
 /* 80047084 00043FC4  41 82 00 78 */	beq lbl_800470FC
-/* 80047088 00043FC8  C0 22 84 08 */	lfs f1, $$2516-_SDA2_BASE_(r2)
+/* 80047088 00043FC8  C0 22 84 08 */	lfs f1, $$2516@sda21(r2)
 /* 8004708C 00043FCC  7F E3 FB 78 */	mr r3, r31
-/* 80047090 00043FD0  C0 42 84 0C */	lfs f2, $$2517-_SDA2_BASE_(r2)
+/* 80047090 00043FD0  C0 42 84 0C */	lfs f2, $$2517@sda21(r2)
 /* 80047094 00043FD4  38 9E 00 10 */	addi r4, r30, 0x10
 /* 80047098 00043FD8  4B FF C5 6D */	bl setViewport__Q26JDrama9TGraphicsFRCQ26JDrama5TRectff
 /* 8004709C 00043FDC  A0 1E 00 20 */	lhz r0, 0x20(r30)
@@ -158,10 +158,19 @@ lbl_800471E4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama9TViewport
 __vt__Q26JDrama9TViewport:
-	.incbin "baserom.dol", 0x3A7A28, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama9TViewportFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama9TViewportFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__Q26JDrama9TViewportFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2516:
-	.incbin "baserom.dol", 0x3E4108, 0x4
+  .4byte 0
 $$2517:
 	.incbin "baserom.dol", 0x3E410C, 0x4

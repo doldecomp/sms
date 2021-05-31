@@ -21,12 +21,12 @@ init__Q28JASystem11TChannelMgrFv:
 /* 8005DC8C 0005ABCC  38 00 00 0D */	li r0, 0xd
 /* 8005DC90 0005ABD0  91 83 00 00 */	stw r12, 0(r3)
 /* 8005DC94 0005ABD4  91 63 00 70 */	stw r11, 0x70(r3)
-/* 8005DC98 0005ABD8  C0 02 86 58 */	lfs f0, $$2136-_SDA2_BASE_(r2)
+/* 8005DC98 0005ABD8  C0 02 86 58 */	lfs f0, $$2136@sda21(r2)
 /* 8005DC9C 0005ABDC  D0 03 00 18 */	stfs f0, 0x18(r3)
 /* 8005DCA0 0005ABE0  D0 03 00 1C */	stfs f0, 0x1c(r3)
-/* 8005DCA4 0005ABE4  C0 02 86 5C */	lfs f0, $$2137-_SDA2_BASE_(r2)
+/* 8005DCA4 0005ABE4  C0 02 86 5C */	lfs f0, $$2137@sda21(r2)
 /* 8005DCA8 0005ABE8  D0 03 00 20 */	stfs f0, 0x20(r3)
-/* 8005DCAC 0005ABEC  C0 02 86 60 */	lfs f0, $$2138-_SDA2_BASE_(r2)
+/* 8005DCAC 0005ABEC  C0 02 86 60 */	lfs f0, $$2138@sda21(r2)
 /* 8005DCB0 0005ABF0  D0 03 00 24 */	stfs f0, 0x24(r3)
 /* 8005DCB4 0005ABF4  D0 03 00 28 */	stfs f0, 0x28(r3)
 /* 8005DCB8 0005ABF8  B1 83 00 2C */	sth r12, 0x2c(r3)
@@ -391,7 +391,7 @@ lbl_8005E148:
 /* 8005E14C 0005B08C  38 00 00 00 */	li r0, 0
 /* 8005E150 0005B090  38 7E 00 00 */	addi r3, r30, 0
 /* 8005E154 0005B094  90 1E 00 18 */	stw r0, 0x18(r30)
-/* 8005E158 0005B098  C0 22 86 58 */	lfs f1, $$2136-_SDA2_BASE_(r2)
+/* 8005E158 0005B098  C0 22 86 58 */	lfs f1, $$2136@sda21(r2)
 /* 8005E15C 0005B09C  FC 40 08 90 */	fmr f2, f1
 /* 8005E160 0005B0A0  FC 60 08 90 */	fmr f3, f1
 /* 8005E164 0005B0A4  FC 80 08 90 */	fmr f4, f1
@@ -692,4 +692,5 @@ $$2136:
 $$2137:
 	.incbin "baserom.dol", 0x3E435C, 0x4
 $$2138:
-	.incbin "baserom.dol", 0x3E4360, 0x8
+  .4byte 0
+  .4byte 0

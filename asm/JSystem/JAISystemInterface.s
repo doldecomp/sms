@@ -350,35 +350,35 @@ lbl_80057E90:
 /* 80057ECC 00054E0C  57 A0 07 FF */	clrlwi. r0, r29, 0x1f
 /* 80057ED0 00054E10  57 BB 04 3E */	clrlwi r27, r29, 0x10
 /* 80057ED4 00054E14  40 82 00 14 */	bne lbl_80057EE8
-/* 80057ED8 00054E18  C0 22 85 A8 */	lfs f1, $$2509-_SDA2_BASE_(r2)
+/* 80057ED8 00054E18  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
 /* 80057EDC 00054E1C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057EE0 00054E20  38 80 00 01 */	li r4, 1
 /* 80057EE4 00054E24  48 00 C6 F1 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057EE8:
 /* 80057EE8 00054E28  57 60 07 BD */	rlwinm. r0, r27, 0, 0x1e, 0x1e
 /* 80057EEC 00054E2C  40 82 00 14 */	bne lbl_80057F00
-/* 80057EF0 00054E30  C0 22 85 A8 */	lfs f1, $$2509-_SDA2_BASE_(r2)
+/* 80057EF0 00054E30  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
 /* 80057EF4 00054E34  38 7E 00 00 */	addi r3, r30, 0
 /* 80057EF8 00054E38  38 80 00 02 */	li r4, 2
 /* 80057EFC 00054E3C  48 00 C6 D9 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F00:
 /* 80057F00 00054E40  57 60 07 7B */	rlwinm. r0, r27, 0, 0x1d, 0x1d
 /* 80057F04 00054E44  40 82 00 14 */	bne lbl_80057F18
-/* 80057F08 00054E48  C0 22 85 A8 */	lfs f1, $$2509-_SDA2_BASE_(r2)
+/* 80057F08 00054E48  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
 /* 80057F0C 00054E4C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F10 00054E50  38 80 00 04 */	li r4, 4
 /* 80057F14 00054E54  48 00 C6 C1 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F18:
 /* 80057F18 00054E58  57 60 07 39 */	rlwinm. r0, r27, 0, 0x1c, 0x1c
 /* 80057F1C 00054E5C  40 82 00 14 */	bne lbl_80057F30
-/* 80057F20 00054E60  C0 22 85 A8 */	lfs f1, $$2509-_SDA2_BASE_(r2)
+/* 80057F20 00054E60  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
 /* 80057F24 00054E64  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F28 00054E68  38 80 00 08 */	li r4, 8
 /* 80057F2C 00054E6C  48 00 C6 A9 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F30:
 /* 80057F30 00054E70  57 60 06 F7 */	rlwinm. r0, r27, 0, 0x1b, 0x1b
 /* 80057F34 00054E74  40 82 00 14 */	bne lbl_80057F48
-/* 80057F38 00054E78  C0 22 85 A8 */	lfs f1, $$2509-_SDA2_BASE_(r2)
+/* 80057F38 00054E78  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
 /* 80057F3C 00054E7C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F40 00054E80  38 80 00 10 */	li r4, 0x10
 /* 80057F44 00054E84  48 00 C6 91 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
@@ -672,11 +672,12 @@ lbl_800582F4:
 /* 80058308 00055248  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBEC, 0x4
+  .4byte __sinit_JAISystemInterface_cpp
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2509:
-	.incbin "baserom.dol", 0x3E42A8, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$2557:

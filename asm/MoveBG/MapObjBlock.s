@@ -63,7 +63,7 @@ loadAfter__18TSuperHipDropBlockFv:
 /* 8019AE14 00197D54  98 1F 01 50 */	stb r0, 0x150(r31)
 /* 8019AE18 00197D58  3C 60 00 01 */	lis r3, 0x0001038C@ha
 /* 8019AE1C 00197D5C  38 83 03 8C */	addi r4, r3, 0x0001038C@l
-/* 8019AE20 00197D60  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 8019AE20 00197D60  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8019AE24 00197D64  4B F4 D1 BD */	bl getBool__12TFlagManagerCFUl
 /* 8019AE28 00197D68  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8019AE2C 00197D6C  41 82 00 18 */	beq lbl_8019AE44
@@ -101,12 +101,12 @@ receiveMessage__18TSuperHipDropBlockFP9THitActorUl:
 /* 8019AE98 00197DD8  28 00 00 00 */	cmplwi r0, 0
 /* 8019AE9C 00197DDC  41 82 00 18 */	beq lbl_8019AEB4
 /* 8019AEA0 00197DE0  3C 80 00 01 */	lis r4, 0x0001038C@ha
-/* 8019AEA4 00197DE4  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 8019AEA4 00197DE4  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8019AEA8 00197DE8  38 A4 03 8C */	addi r5, r4, 0x0001038C@l
 /* 8019AEAC 00197DEC  38 80 00 01 */	li r4, 1
 /* 8019AEB0 00197DF0  4B F4 CF F1 */	bl setBool__12TFlagManagerFbUl
 lbl_8019AEB4:
-/* 8019AEB4 00197DF4  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019AEB4 00197DF4  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019AEB8 00197DF8  38 80 38 21 */	li r4, 0x3821
 /* 8019AEBC 00197DFC  4B FE 1B 95 */	bl gateCheck__6MSoundFUl
 /* 8019AEC0 00197E00  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -170,7 +170,7 @@ perform__12TTelesaBlockFUlPQ26JDrama9TGraphics:
 /* 8019AF80 00197EC0  54 00 05 EA */	rlwinm r0, r0, 0, 0x17, 0x15
 /* 8019AF84 00197EC4  90 03 00 F0 */	stw r0, 0xf0(r3)
 /* 8019AF88 00197EC8  38 60 00 01 */	li r3, 1
-/* 8019AF8C 00197ECC  80 8D 97 E8 */	lwz r4, gpMarDirector-_SDA_BASE_(r13)
+/* 8019AF8C 00197ECC  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
 /* 8019AF90 00197ED0  88 04 01 24 */	lbz r0, 0x124(r4)
 /* 8019AF94 00197ED4  28 00 00 01 */	cmplwi r0, 1
 /* 8019AF98 00197ED8  41 82 00 10 */	beq lbl_8019AFA8
@@ -209,7 +209,7 @@ lbl_8019B000:
 lbl_8019B010:
 /* 8019B010 00197F50  57 A0 07 BD */	rlwinm. r0, r29, 0, 0x1e, 0x1e
 /* 8019B014 00197F54  41 82 00 C4 */	beq lbl_8019B0D8
-/* 8019B018 00197F58  C0 22 C0 88 */	lfs f1, $$22942-_SDA2_BASE_(r2)
+/* 8019B018 00197F58  C0 22 C0 88 */	lfs f1, $$22942@sda21(r2)
 /* 8019B01C 00197F5C  7F E3 FB 78 */	mr r3, r31
 /* 8019B020 00197F60  D0 21 00 44 */	stfs f1, 0x44(r1)
 /* 8019B024 00197F64  D0 21 00 54 */	stfs f1, 0x54(r1)
@@ -239,7 +239,7 @@ lbl_8019B010:
 /* 8019B084 00197FC4  C0 3F 01 48 */	lfs f1, 0x148(r31)
 /* 8019B088 00197FC8  7F E3 FB 78 */	mr r3, r31
 /* 8019B08C 00197FCC  C0 5F 01 44 */	lfs f2, 0x144(r31)
-/* 8019B090 00197FD0  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019B090 00197FD0  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019B094 00197FD4  D0 41 00 38 */	stfs f2, 0x38(r1)
 /* 8019B098 00197FD8  D0 01 00 3C */	stfs f0, 0x3c(r1)
 /* 8019B09C 00197FDC  D0 01 00 40 */	stfs f0, 0x40(r1)
@@ -333,7 +333,7 @@ initMapObj__11TJuiceBlockFv:
 /* 8019B1C4 00198104  80 63 00 04 */	lwz r3, 4(r3)
 /* 8019B1C8 00198108  38 A0 00 01 */	li r5, 1
 /* 8019B1CC 0019810C  4B F3 5E 89 */	bl SMS_InitPacket_OneTevColor__FP8J3DModelUs11_GXTevRegIDPC11_GXColorS10
-/* 8019B1D0 00198110  C0 02 C0 8C */	lfs f0, $$23037-_SDA2_BASE_(r2)
+/* 8019B1D0 00198110  C0 02 C0 8C */	lfs f0, $$23037@sda21(r2)
 /* 8019B1D4 00198114  D0 1F 01 40 */	stfs f0, 0x140(r31)
 /* 8019B1D8 00198118  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 8019B1DC 0019811C  D0 1F 01 48 */	stfs f0, 0x148(r31)
@@ -359,7 +359,7 @@ initMapObj__11TBrickBlockFv:
 /* 8019B220 00198160  88 03 00 60 */	lbz r0, 0x60(r3)
 /* 8019B224 00198164  28 00 00 00 */	cmplwi r0, 0
 /* 8019B228 00198168  40 82 00 1C */	bne lbl_8019B244
-/* 8019B22C 0019816C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019B22C 0019816C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019B230 00198170  38 9F 01 10 */	addi r4, r31, 0x110
 /* 8019B234 00198174  38 A0 00 60 */	li r5, 0x60
 /* 8019B238 00198178  4B EE 5D F5 */	bl load__18JPAResourceManagerFPCcUs
@@ -372,7 +372,7 @@ lbl_8019B244:
 /* 8019B250 00198190  88 03 00 61 */	lbz r0, 0x61(r3)
 /* 8019B254 00198194  28 00 00 00 */	cmplwi r0, 0
 /* 8019B258 00198198  40 82 00 1C */	bne lbl_8019B274
-/* 8019B25C 0019819C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019B25C 0019819C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019B260 001981A0  38 9F 01 30 */	addi r4, r31, 0x130
 /* 8019B264 001981A4  38 A0 00 61 */	li r5, 0x61
 /* 8019B268 001981A8  4B EE 5D C5 */	bl load__18JPAResourceManagerFPCcUs
@@ -385,7 +385,7 @@ lbl_8019B274:
 /* 8019B280 001981C0  88 03 00 62 */	lbz r0, 0x62(r3)
 /* 8019B284 001981C4  28 00 00 00 */	cmplwi r0, 0
 /* 8019B288 001981C8  40 82 00 1C */	bne lbl_8019B2A4
-/* 8019B28C 001981CC  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019B28C 001981CC  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019B290 001981D0  38 9F 01 50 */	addi r4, r31, 0x150
 /* 8019B294 001981D4  38 A0 00 62 */	li r5, 0x62
 /* 8019B298 001981D8  4B EE 5D 95 */	bl load__18JPAResourceManagerFPCcUs
@@ -490,7 +490,7 @@ kill__11TBrickBlockFv:
 /* 8019B3EC 0019832C  38 80 00 62 */	li r4, 0x62
 /* 8019B3F0 00198330  38 A0 00 00 */	li r5, 0
 /* 8019B3F4 00198334  4B FF 57 E1 */	bl emitAndScale__11TMapObjBaseCFlUcPCQ29JGeometry8TVec3$$0f$$1
-/* 8019B3F8 00198338  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019B3F8 00198338  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019B3FC 0019833C  38 80 38 78 */	li r4, 0x3878
 /* 8019B400 00198340  4B FE 16 51 */	bl gateCheck__6MSoundFUl
 /* 8019B404 00198344  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -503,13 +503,13 @@ kill__11TBrickBlockFv:
 /* 8019B420 00198360  39 00 00 04 */	li r8, 4
 /* 8019B424 00198364  4B FE 6A D5 */	bl startSoundActor__Q214MSoundSESystem8MSoundSEFUlPC3VecUlPP8JAISoundUlUc
 lbl_8019B428:
-/* 8019B428 00198368  80 6D 97 88 */	lwz r3, SMSRumbleMgr-_SDA_BASE_(r13)
+/* 8019B428 00198368  80 6D 97 88 */	lwz r3, SMSRumbleMgr@sda21(r13)
 /* 8019B42C 0019836C  38 DF 00 10 */	addi r6, r31, 0x10
 /* 8019B430 00198370  38 80 00 15 */	li r4, 0x15
 /* 8019B434 00198374  38 A0 00 14 */	li r5, 0x14
 /* 8019B438 00198378  4B F3 46 51 */	bl start__9RumbleMgrFiiP3Vec
 /* 8019B43C 0019837C  7F E3 FB 78 */	mr r3, r31
-/* 8019B440 00198380  C0 22 C0 90 */	lfs f1, $$23071-_SDA2_BASE_(r2)
+/* 8019B440 00198380  C0 22 C0 90 */	lfs f1, $$23071@sda21(r2)
 /* 8019B444 00198384  81 9F 00 00 */	lwz r12, 0(r31)
 /* 8019B448 00198388  81 8C 01 64 */	lwz r12, 0x164(r12)
 /* 8019B44C 0019838C  7D 88 03 A6 */	mtlr r12
@@ -534,7 +534,7 @@ initMapObj__9TIceBlockFv:
 /* 8019B48C 001983CC  28 00 00 00 */	cmplwi r0, 0
 /* 8019B490 001983D0  40 82 00 20 */	bne lbl_8019B4B0
 /* 8019B494 001983D4  3C 80 80 39 */	lis r4, $$23081@ha
-/* 8019B498 001983D8  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019B498 001983D8  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019B49C 001983DC  38 84 DF 58 */	addi r4, r4, $$23081@l
 /* 8019B4A0 001983E0  38 A0 01 57 */	li r5, 0x157
 /* 8019B4A4 001983E4  4B EE 5B 89 */	bl load__18JPAResourceManagerFPCcUs
@@ -548,7 +548,7 @@ lbl_8019B4B0:
 /* 8019B4C0 00198400  28 00 00 00 */	cmplwi r0, 0
 /* 8019B4C4 00198404  40 82 00 20 */	bne lbl_8019B4E4
 /* 8019B4C8 00198408  3C 80 80 39 */	lis r4, $$23082@ha
-/* 8019B4CC 0019840C  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019B4CC 0019840C  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019B4D0 00198410  38 84 DF 74 */	addi r4, r4, $$23082@l
 /* 8019B4D4 00198414  38 A0 01 58 */	li r5, 0x158
 /* 8019B4D8 00198418  4B EE 5B 55 */	bl load__18JPAResourceManagerFPCcUs
@@ -599,7 +599,7 @@ control__9TIceBlockFv:
 /* 8019B570 001984B0  93 E1 00 34 */	stw r31, 0x34(r1)
 /* 8019B574 001984B4  7C 7F 1B 78 */	mr r31, r3
 /* 8019B578 001984B8  38 FF 00 00 */	addi r7, r31, 0
-/* 8019B57C 001984BC  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8019B57C 001984BC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8019B580 001984C0  38 BF 00 10 */	addi r5, r31, 0x10
 /* 8019B584 001984C4  4B F4 05 99 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
 /* 8019B588 001984C8  28 03 00 00 */	cmplwi r3, 0
@@ -611,7 +611,7 @@ control__9TIceBlockFv:
 /* 8019B5A0 001984E0  C0 1F 00 2C */	lfs f0, 0x2c(r31)
 /* 8019B5A4 001984E4  D0 03 01 5C */	stfs f0, 0x15c(r3)
 lbl_8019B5A8:
-/* 8019B5A8 001984E8  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8019B5A8 001984E8  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8019B5AC 001984EC  38 FF 00 00 */	addi r7, r31, 0
 /* 8019B5B0 001984F0  38 BF 00 10 */	addi r5, r31, 0x10
 /* 8019B5B4 001984F4  38 80 01 58 */	li r4, 0x158
@@ -630,34 +630,34 @@ lbl_8019B5E0:
 /* 8019B5E4 00198524  38 7F 00 00 */	addi r3, r31, 0
 /* 8019B5E8 00198528  54 00 00 3C */	rlwinm r0, r0, 0, 0, 0x1e
 /* 8019B5EC 0019852C  90 1F 00 64 */	stw r0, 0x64(r31)
-/* 8019B5F0 00198530  C0 22 C0 94 */	lfs f1, $$23136-_SDA2_BASE_(r2)
+/* 8019B5F0 00198530  C0 22 C0 94 */	lfs f1, $$23136@sda21(r2)
 /* 8019B5F4 00198534  C0 1F 00 24 */	lfs f0, 0x24(r31)
 /* 8019B5F8 00198538  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8019B5FC 0019853C  D0 1F 00 58 */	stfs f0, 0x58(r31)
 /* 8019B600 00198540  4B F8 22 E5 */	bl calcEntryRadius__9THitActorFv
-/* 8019B604 00198544  C0 22 C0 98 */	lfs f1, $$23137-_SDA2_BASE_(r2)
+/* 8019B604 00198544  C0 22 C0 98 */	lfs f1, $$23137@sda21(r2)
 /* 8019B608 00198548  7F E3 FB 78 */	mr r3, r31
 /* 8019B60C 0019854C  C0 1F 00 28 */	lfs f0, 0x28(r31)
 /* 8019B610 00198550  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8019B614 00198554  D0 1F 00 5C */	stfs f0, 0x5c(r31)
 /* 8019B618 00198558  4B F8 22 CD */	bl calcEntryRadius__9THitActorFv
 /* 8019B61C 0019855C  38 7F 01 28 */	addi r3, r31, 0x128
-/* 8019B620 00198560  C0 2D 85 AC */	lfs f1, mAutoMeltScale__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B620 00198560  C0 2D 85 AC */	lfs f1, mAutoMeltScale__9TIceBlock@sda21(r13)
 /* 8019B624 00198564  C0 1F 01 28 */	lfs f0, 0x128(r31)
 /* 8019B628 00198568  C0 5F 00 28 */	lfs f2, 0x28(r31)
 /* 8019B62C 0019856C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8019B630 00198570  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 8019B634 00198574  40 80 00 F4 */	bge lbl_8019B728
 /* 8019B638 00198578  C0 3F 00 24 */	lfs f1, 0x24(r31)
-/* 8019B63C 0019857C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B63C 0019857C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock@sda21(r13)
 /* 8019B640 00198580  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B644 00198584  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 8019B648 00198588  C0 3F 00 28 */	lfs f1, 0x28(r31)
-/* 8019B64C 0019858C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B64C 0019858C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock@sda21(r13)
 /* 8019B650 00198590  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B654 00198594  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 8019B658 00198598  C0 3F 00 2C */	lfs f1, 0x2c(r31)
-/* 8019B65C 0019859C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B65C 0019859C  C0 0D 85 A8 */	lfs f0, mMeltSpeedAuto__9TIceBlock@sda21(r13)
 /* 8019B660 001985A0  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B664 001985A4  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 8019B668 001985A8  C0 03 00 00 */	lfs f0, 0(r3)
@@ -667,7 +667,7 @@ lbl_8019B5E0:
 /* 8019B678 001985B8  FC 20 00 90 */	fmr f1, f0
 /* 8019B67C 001985BC  48 00 00 14 */	b lbl_8019B690
 lbl_8019B680:
-/* 8019B680 001985C0  C0 02 C0 9C */	lfs f0, $$23138-_SDA2_BASE_(r2)
+/* 8019B680 001985C0  C0 02 C0 9C */	lfs f0, $$23138@sda21(r2)
 /* 8019B684 001985C4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8019B688 001985C8  40 80 00 08 */	bge lbl_8019B690
 /* 8019B68C 001985CC  FC 20 00 90 */	fmr f1, f0
@@ -679,7 +679,7 @@ lbl_8019B690:
 /* 8019B6A0 001985E0  C0 03 00 30 */	lfs f0, 0x30(r3)
 /* 8019B6A4 001985E4  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8019B6A8 001985E8  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
-/* 8019B6AC 001985EC  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019B6AC 001985EC  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019B6B0 001985F0  4B FE 13 A1 */	bl gateCheck__6MSoundFUl
 /* 8019B6B4 001985F4  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8019B6B8 001985F8  41 82 00 20 */	beq lbl_8019B6D8
@@ -703,7 +703,7 @@ lbl_8019B6D8:
 /* 8019B6FC 0019863C  90 1F 00 64 */	stw r0, 0x64(r31)
 /* 8019B700 00198640  4B FE DE 49 */	bl removeMapCollision__11TMapObjBaseFv
 /* 8019B704 00198644  C0 3F 00 24 */	lfs f1, 0x24(r31)
-/* 8019B708 00198648  C0 02 C0 A0 */	lfs f0, $$23139-_SDA2_BASE_(r2)
+/* 8019B708 00198648  C0 02 C0 A0 */	lfs f0, $$23139@sda21(r2)
 /* 8019B70C 0019864C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8019B710 00198650  40 80 00 18 */	bge lbl_8019B728
 /* 8019B714 00198654  7F E3 FB 78 */	mr r3, r31
@@ -731,7 +731,7 @@ touchWater__9TIceBlockFP9THitActor:
 /* 8019B75C 0019869C  4B FF 59 BD */	bl getWaterSpeed__11TMapObjBaseFP9THitActor
 /* 8019B760 001986A0  7F E3 FB 78 */	mr r3, r31
 /* 8019B764 001986A4  4B FF 59 E5 */	bl getWaterID__11TMapObjBaseFP9THitActor
-/* 8019B768 001986A8  80 8D 99 08 */	lwz r4, gpModelWaterManager-_SDA_BASE_(r13)
+/* 8019B768 001986A8  80 8D 99 08 */	lwz r4, gpModelWaterManager@sda21(r13)
 /* 8019B76C 001986AC  54 60 08 3C */	slwi r0, r3, 1
 /* 8019B770 001986B0  7C 64 02 14 */	add r3, r4, r0
 /* 8019B774 001986B4  A0 03 04 14 */	lhz r0, 0x414(r3)
@@ -745,22 +745,22 @@ lbl_8019B78C:
 lbl_8019B790:
 /* 8019B790 001986D0  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 8019B794 001986D4  41 82 01 14 */	beq lbl_8019B8A8
-/* 8019B798 001986D8  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 8019B798 001986D8  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8019B79C 001986DC  38 BF 00 10 */	addi r5, r31, 0x10
 /* 8019B7A0 001986E0  38 80 00 E7 */	li r4, 0xe7
 /* 8019B7A4 001986E4  38 C0 00 00 */	li r6, 0
 /* 8019B7A8 001986E8  38 E0 00 00 */	li r7, 0
 /* 8019B7AC 001986EC  4B F4 03 71 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
-/* 8019B7B0 001986F0  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019B7B0 001986F0  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019B7B4 001986F4  38 BE 00 10 */	addi r5, r30, 0x10
-/* 8019B7B8 001986F8  C0 22 C0 88 */	lfs f1, $$22942-_SDA2_BASE_(r2)
+/* 8019B7B8 001986F8  C0 22 C0 88 */	lfs f1, $$22942@sda21(r2)
 /* 8019B7BC 001986FC  38 80 68 02 */	li r4, 0x6802
 /* 8019B7C0 00198700  38 C0 00 00 */	li r6, 0
 /* 8019B7C4 00198704  38 E0 00 00 */	li r7, 0
 /* 8019B7C8 00198708  39 00 00 00 */	li r8, 0
 /* 8019B7CC 0019870C  39 20 00 04 */	li r9, 4
 /* 8019B7D0 00198710  4B FE 2C D5 */	bl startSoundSet__6MSoundFUlPC3VecUlfUlUlUc
-/* 8019B7D4 00198714  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019B7D4 00198714  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019B7D8 00198718  38 80 30 79 */	li r4, 0x3079
 /* 8019B7DC 0019871C  4B FE 12 75 */	bl gateCheck__6MSoundFUl
 /* 8019B7E0 00198720  54 60 06 3F */	clrlwi. r0, r3, 0x18
@@ -774,15 +774,15 @@ lbl_8019B790:
 /* 8019B800 00198740  4B FE 66 F9 */	bl startSoundActor__Q214MSoundSESystem8MSoundSEFUlPC3VecUlPP8JAISoundUlUc
 lbl_8019B804:
 /* 8019B804 00198744  C0 3E 00 24 */	lfs f1, 0x24(r30)
-/* 8019B808 00198748  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B808 00198748  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock@sda21(r13)
 /* 8019B80C 0019874C  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B810 00198750  D0 1E 00 24 */	stfs f0, 0x24(r30)
 /* 8019B814 00198754  C0 3E 00 28 */	lfs f1, 0x28(r30)
-/* 8019B818 00198758  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B818 00198758  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock@sda21(r13)
 /* 8019B81C 0019875C  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B820 00198760  D0 1E 00 28 */	stfs f0, 0x28(r30)
 /* 8019B824 00198764  C0 3E 00 2C */	lfs f1, 0x2c(r30)
-/* 8019B828 00198768  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock-_SDA_BASE_(r13)
+/* 8019B828 00198768  C0 0D 85 A4 */	lfs f0, mMeltSpeedWater__9TIceBlock@sda21(r13)
 /* 8019B82C 0019876C  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019B830 00198770  D0 1E 00 2C */	stfs f0, 0x2c(r30)
 /* 8019B834 00198774  80 7E 01 30 */	lwz r3, 0x130(r30)
@@ -797,14 +797,14 @@ lbl_8019B804:
 /* 8019B858 00198798  FC 20 00 90 */	fmr f1, f0
 /* 8019B85C 0019879C  48 00 00 14 */	b lbl_8019B870
 lbl_8019B860:
-/* 8019B860 001987A0  C0 02 C0 9C */	lfs f0, $$23138-_SDA2_BASE_(r2)
+/* 8019B860 001987A0  C0 02 C0 9C */	lfs f0, $$23138@sda21(r2)
 /* 8019B864 001987A4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8019B868 001987A8  40 80 00 08 */	bge lbl_8019B870
 /* 8019B86C 001987AC  FC 20 00 90 */	fmr f1, f0
 lbl_8019B870:
 /* 8019B870 001987B0  D0 3E 00 28 */	stfs f1, 0x28(r30)
 /* 8019B874 001987B4  C0 3E 00 24 */	lfs f1, 0x24(r30)
-/* 8019B878 001987B8  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019B878 001987B8  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019B87C 001987BC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8019B880 001987C0  40 80 00 18 */	bge lbl_8019B898
 /* 8019B884 001987C4  7F C3 F3 78 */	mr r3, r30
@@ -846,7 +846,7 @@ __ct__10TLeanBlockFPCc:
 /* 8019B8F0 00198830  38 03 00 24 */	addi r0, r3, 0x24
 /* 8019B8F4 00198834  7F E3 FB 78 */	mr r3, r31
 /* 8019B8F8 00198838  90 1F 00 20 */	stw r0, 0x20(r31)
-/* 8019B8FC 0019883C  C0 22 C0 88 */	lfs f1, $$22942-_SDA2_BASE_(r2)
+/* 8019B8FC 0019883C  C0 22 C0 88 */	lfs f1, $$22942@sda21(r2)
 /* 8019B900 00198840  D0 3F 01 38 */	stfs f1, 0x138(r31)
 /* 8019B904 00198844  D0 3F 01 3C */	stfs f1, 0x13c(r31)
 /* 8019B908 00198848  D0 3F 01 40 */	stfs f1, 0x140(r31)
@@ -856,7 +856,7 @@ __ct__10TLeanBlockFPCc:
 /* 8019B918 00198858  D0 3F 01 5C */	stfs f1, 0x15c(r31)
 /* 8019B91C 0019885C  D0 3F 01 60 */	stfs f1, 0x160(r31)
 /* 8019B920 00198860  D0 3F 01 4C */	stfs f1, 0x14c(r31)
-/* 8019B924 00198864  C0 02 C0 8C */	lfs f0, $$23037-_SDA2_BASE_(r2)
+/* 8019B924 00198864  C0 02 C0 8C */	lfs f0, $$23037@sda21(r2)
 /* 8019B928 00198868  D0 1F 01 50 */	stfs f0, 0x150(r31)
 /* 8019B92C 0019886C  D0 3F 01 54 */	stfs f1, 0x154(r31)
 /* 8019B930 00198870  D0 3F 01 90 */	stfs f1, 0x190(r31)
@@ -885,16 +885,16 @@ initMapObj__10TLeanBlockFv:
 /* 8019B980 001988C0  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8019B984 001988C4  7C 7F 1B 78 */	mr r31, r3
 /* 8019B988 001988C8  4B FE E2 B5 */	bl initMapObj__11TMapObjBaseFv
-/* 8019B98C 001988CC  C0 02 C0 9C */	lfs f0, $$23138-_SDA2_BASE_(r2)
+/* 8019B98C 001988CC  C0 02 C0 9C */	lfs f0, $$23138@sda21(r2)
 /* 8019B990 001988D0  7F E3 FB 78 */	mr r3, r31
 /* 8019B994 001988D4  D0 1F 01 40 */	stfs f0, 0x140(r31)
-/* 8019B998 001988D8  C0 02 C0 A4 */	lfs f0, $$23193-_SDA2_BASE_(r2)
+/* 8019B998 001988D8  C0 02 C0 A4 */	lfs f0, $$23193@sda21(r2)
 /* 8019B99C 001988DC  D0 1F 01 44 */	stfs f0, 0x144(r31)
-/* 8019B9A0 001988E0  C0 02 C0 8C */	lfs f0, $$23037-_SDA2_BASE_(r2)
+/* 8019B9A0 001988E0  C0 02 C0 8C */	lfs f0, $$23037@sda21(r2)
 /* 8019B9A4 001988E4  D0 1F 01 48 */	stfs f0, 0x148(r31)
-/* 8019B9A8 001988E8  C0 42 C0 90 */	lfs f2, $$23071-_SDA2_BASE_(r2)
+/* 8019B9A8 001988E8  C0 42 C0 90 */	lfs f2, $$23071@sda21(r2)
 /* 8019B9AC 001988EC  C0 1F 00 24 */	lfs f0, 0x24(r31)
-/* 8019B9B0 001988F0  C0 22 C0 A8 */	lfs f1, $$23194-_SDA2_BASE_(r2)
+/* 8019B9B0 001988F0  C0 22 C0 A8 */	lfs f1, $$23194@sda21(r2)
 /* 8019B9B4 001988F4  EC 02 00 32 */	fmuls f0, f2, f0
 /* 8019B9B8 001988F8  EC 00 00 72 */	fmuls f0, f0, f1
 /* 8019B9BC 001988FC  D0 1F 01 38 */	stfs f0, 0x138(r31)
@@ -959,7 +959,7 @@ calcLeanMtx__10TLeanBlockFPA4_f:
 /* 8019BA84 001989C4  EC 44 01 32 */	fmuls f2, f4, f4
 /* 8019BA88 001989C8  C0 63 01 60 */	lfs f3, 0x160(r3)
 /* 8019BA8C 001989CC  EC 21 00 72 */	fmuls f1, f1, f1
-/* 8019BA90 001989D0  C0 02 C0 AC */	lfs f0, $$23232-_SDA2_BASE_(r2)
+/* 8019BA90 001989D0  C0 02 C0 AC */	lfs f0, $$23232@sda21(r2)
 /* 8019BA94 001989D4  EC 63 00 F2 */	fmuls f3, f3, f3
 /* 8019BA98 001989D8  EC 22 08 2A */	fadds f1, f2, f1
 /* 8019BA9C 001989DC  EC 23 08 2A */	fadds f1, f3, f1
@@ -987,28 +987,28 @@ lbl_8019BAEC:
 /* 8019BAEC 00198A2C  38 7E 01 4C */	addi r3, r30, 0x14c
 /* 8019BAF0 00198A30  38 83 00 00 */	addi r4, r3, 0
 /* 8019BAF4 00198A34  4B F2 9D 05 */	bl MsVECNormalize__FP3VecP3Vec
-/* 8019BAF8 00198A38  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BAF8 00198A38  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BAFC 00198A3C  C0 3E 01 4C */	lfs f1, 0x14c(r30)
 /* 8019BB00 00198A40  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8019BB04 00198A44  C0 5E 01 54 */	lfs f2, 0x154(r30)
 /* 8019BB08 00198A48  38 61 00 20 */	addi r3, r1, 0x20
-/* 8019BB0C 00198A4C  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BB0C 00198A4C  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BB10 00198A50  D0 21 00 20 */	stfs f1, 0x20(r1)
-/* 8019BB14 00198A54  C0 22 C0 B0 */	lfs f1, $$23233-_SDA2_BASE_(r2)
+/* 8019BB14 00198A54  C0 22 C0 B0 */	lfs f1, $$23233@sda21(r2)
 /* 8019BB18 00198A58  D0 01 00 24 */	stfs f0, 0x24(r1)
 /* 8019BB1C 00198A5C  D0 41 00 28 */	stfs f2, 0x28(r1)
 /* 8019BB20 00198A60  4B FF 58 7D */	bl rotateVecByAxisY__11TMapObjBaseFPQ29JGeometry8TVec3$$0f$$1f
 /* 8019BB24 00198A64  C0 1E 01 4C */	lfs f0, 0x14c(r30)
 /* 8019BB28 00198A68  C0 3E 01 54 */	lfs f1, 0x154(r30)
 /* 8019BB2C 00198A6C  EC 40 00 32 */	fmuls f2, f0, f0
-/* 8019BB30 00198A70  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BB30 00198A70  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BB34 00198A74  EC 21 00 72 */	fmuls f1, f1, f1
 /* 8019BB38 00198A78  EC 82 08 2A */	fadds f4, f2, f1
 /* 8019BB3C 00198A7C  FC 04 00 40 */	fcmpo cr0, f4, f0
 /* 8019BB40 00198A80  40 81 00 30 */	ble lbl_8019BB70
 /* 8019BB44 00198A84  FC 60 20 34 */	frsqrte f3, f4
-/* 8019BB48 00198A88  C8 42 C0 B8 */	lfd f2, $$23234-_SDA2_BASE_(r2)
-/* 8019BB4C 00198A8C  C8 02 C0 C0 */	lfd f0, $$23235-_SDA2_BASE_(r2)
+/* 8019BB48 00198A88  C8 42 C0 B8 */	lfd f2, $$23234@sda21(r2)
+/* 8019BB4C 00198A8C  C8 02 C0 C0 */	lfd f0, $$23235@sda21(r2)
 /* 8019BB50 00198A90  FC 23 00 F2 */	fmul f1, f3, f3
 /* 8019BB54 00198A94  FC 42 00 F2 */	fmul f2, f2, f3
 /* 8019BB58 00198A98  FC 04 00 7C */	fnmsub f0, f4, f1, f0
@@ -1051,7 +1051,7 @@ control__10TLeanBlockFv:
 /* 8019BBDC 00198B1C  EC 44 01 32 */	fmuls f2, f4, f4
 /* 8019BBE0 00198B20  C0 7E 01 60 */	lfs f3, 0x160(r30)
 /* 8019BBE4 00198B24  EC 20 00 32 */	fmuls f1, f0, f0
-/* 8019BBE8 00198B28  C0 02 C0 AC */	lfs f0, $$23232-_SDA2_BASE_(r2)
+/* 8019BBE8 00198B28  C0 02 C0 AC */	lfs f0, $$23232@sda21(r2)
 /* 8019BBEC 00198B2C  EC 63 00 F2 */	fmuls f3, f3, f3
 /* 8019BBF0 00198B30  EC 22 08 2A */	fadds f1, f2, f1
 /* 8019BBF4 00198B34  83 E3 00 58 */	lwz r31, 0x58(r3)
@@ -1080,28 +1080,28 @@ lbl_8019BC48:
 /* 8019BC48 00198B88  38 7E 01 4C */	addi r3, r30, 0x14c
 /* 8019BC4C 00198B8C  38 83 00 00 */	addi r4, r3, 0
 /* 8019BC50 00198B90  4B F2 9B A9 */	bl MsVECNormalize__FP3VecP3Vec
-/* 8019BC54 00198B94  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BC54 00198B94  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BC58 00198B98  C0 3E 01 4C */	lfs f1, 0x14c(r30)
 /* 8019BC5C 00198B9C  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8019BC60 00198BA0  C0 5E 01 54 */	lfs f2, 0x154(r30)
 /* 8019BC64 00198BA4  38 61 00 20 */	addi r3, r1, 0x20
-/* 8019BC68 00198BA8  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BC68 00198BA8  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BC6C 00198BAC  D0 21 00 20 */	stfs f1, 0x20(r1)
-/* 8019BC70 00198BB0  C0 22 C0 B0 */	lfs f1, $$23233-_SDA2_BASE_(r2)
+/* 8019BC70 00198BB0  C0 22 C0 B0 */	lfs f1, $$23233@sda21(r2)
 /* 8019BC74 00198BB4  D0 01 00 24 */	stfs f0, 0x24(r1)
 /* 8019BC78 00198BB8  D0 41 00 28 */	stfs f2, 0x28(r1)
 /* 8019BC7C 00198BBC  4B FF 57 21 */	bl rotateVecByAxisY__11TMapObjBaseFPQ29JGeometry8TVec3$$0f$$1f
 /* 8019BC80 00198BC0  C0 1E 01 4C */	lfs f0, 0x14c(r30)
 /* 8019BC84 00198BC4  C0 3E 01 54 */	lfs f1, 0x154(r30)
 /* 8019BC88 00198BC8  EC 40 00 32 */	fmuls f2, f0, f0
-/* 8019BC8C 00198BCC  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BC8C 00198BCC  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BC90 00198BD0  EC 21 00 72 */	fmuls f1, f1, f1
 /* 8019BC94 00198BD4  EC 82 08 2A */	fadds f4, f2, f1
 /* 8019BC98 00198BD8  FC 04 00 40 */	fcmpo cr0, f4, f0
 /* 8019BC9C 00198BDC  40 81 00 30 */	ble lbl_8019BCCC
 /* 8019BCA0 00198BE0  FC 60 20 34 */	frsqrte f3, f4
-/* 8019BCA4 00198BE4  C8 42 C0 B8 */	lfd f2, $$23234-_SDA2_BASE_(r2)
-/* 8019BCA8 00198BE8  C8 02 C0 C0 */	lfd f0, $$23235-_SDA2_BASE_(r2)
+/* 8019BCA4 00198BE4  C8 42 C0 B8 */	lfd f2, $$23234@sda21(r2)
+/* 8019BCA8 00198BE8  C8 02 C0 C0 */	lfd f0, $$23235@sda21(r2)
 /* 8019BCAC 00198BEC  FC 23 00 F2 */	fmul f1, f3, f3
 /* 8019BCB0 00198BF0  FC 42 00 F2 */	fmul f2, f2, f3
 /* 8019BCB4 00198BF4  FC 04 00 7C */	fnmsub f0, f4, f1, f0
@@ -1121,7 +1121,7 @@ lbl_8019BCCC:
 /* 8019BCE8 00198C28  38 7F 00 00 */	addi r3, r31, 0
 /* 8019BCEC 00198C2C  38 BF 00 00 */	addi r5, r31, 0
 /* 8019BCF0 00198C30  4B FF 5F 45 */	bl concatOnlyRotFromRight__11TMapObjBaseFPA4_fPA4_fPA4_f
-/* 8019BCF4 00198C34  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BCF4 00198C34  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BCF8 00198C38  D0 1E 01 60 */	stfs f0, 0x160(r30)
 /* 8019BCFC 00198C3C  D0 1E 01 5C */	stfs f0, 0x15c(r30)
 /* 8019BD00 00198C40  D0 1E 01 58 */	stfs f0, 0x158(r30)
@@ -1142,7 +1142,7 @@ touchPlayer__10TLeanBlockFP9THitActor:
 /* 8019BD30 00198C70  4B FF 52 15 */	bl marioIsOn__11TMapObjBaseCFv
 /* 8019BD34 00198C74  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8019BD38 00198C78  41 82 00 74 */	beq lbl_8019BDAC
-/* 8019BD3C 00198C7C  80 6D 98 DC */	lwz r3, gpMarioPos-_SDA_BASE_(r13)
+/* 8019BD3C 00198C7C  80 6D 98 DC */	lwz r3, gpMarioPos@sda21(r13)
 /* 8019BD40 00198C80  C0 3F 00 10 */	lfs f1, 0x10(r31)
 /* 8019BD44 00198C84  C0 43 00 00 */	lfs f2, 0(r3)
 /* 8019BD48 00198C88  C0 1F 01 38 */	lfs f0, 0x138(r31)
@@ -1160,7 +1160,7 @@ touchPlayer__10TLeanBlockFP9THitActor:
 /* 8019BD78 00198CB8  EC 45 00 B2 */	fmuls f2, f5, f2
 /* 8019BD7C 00198CBC  D0 1F 01 58 */	stfs f0, 0x158(r31)
 /* 8019BD80 00198CC0  C0 3F 01 5C */	lfs f1, 0x15c(r31)
-/* 8019BD84 00198CC4  C0 02 C0 88 */	lfs f0, $$22942-_SDA2_BASE_(r2)
+/* 8019BD84 00198CC4  C0 02 C0 88 */	lfs f0, $$22942@sda21(r2)
 /* 8019BD88 00198CC8  EC 01 00 2A */	fadds f0, f1, f0
 /* 8019BD8C 00198CCC  D0 1F 01 5C */	stfs f0, 0x15c(r31)
 /* 8019BD90 00198CD0  C0 1F 01 60 */	lfs f0, 0x160(r31)
@@ -1199,7 +1199,7 @@ initMapObj__10TSandBlockFv:
 /* 8019BE04 00198D44  28 00 00 00 */	cmplwi r0, 0
 /* 8019BE08 00198D48  40 82 00 20 */	bne lbl_8019BE28
 /* 8019BE0C 00198D4C  3C 80 80 39 */	lis r4, $$23293@ha
-/* 8019BE10 00198D50  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019BE10 00198D50  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019BE14 00198D54  38 84 DF 90 */	addi r4, r4, $$23293@l
 /* 8019BE18 00198D58  38 A0 01 47 */	li r5, 0x147
 /* 8019BE1C 00198D5C  4B EE 52 11 */	bl load__18JPAResourceManagerFPCcUs
@@ -1213,7 +1213,7 @@ lbl_8019BE28:
 /* 8019BE38 00198D78  28 00 00 00 */	cmplwi r0, 0
 /* 8019BE3C 00198D7C  40 82 00 20 */	bne lbl_8019BE5C
 /* 8019BE40 00198D80  3C 80 80 39 */	lis r4, $$23294@ha
-/* 8019BE44 00198D84  80 6D 98 50 */	lwz r3, gpResourceManager-_SDA_BASE_(r13)
+/* 8019BE44 00198D84  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
 /* 8019BE48 00198D88  38 84 DF B4 */	addi r4, r4, $$23294@l
 /* 8019BE4C 00198D8C  38 A0 01 48 */	li r5, 0x148
 /* 8019BE50 00198D90  4B EE 51 DD */	bl load__18JPAResourceManagerFPCcUs
@@ -1250,15 +1250,15 @@ lbl_8019BEAC:
 /* 8019BEB8 00198DF8  48 00 00 A0 */	b lbl_8019BF58
 lbl_8019BEBC:
 /* 8019BEBC 00198DFC  C0 3F 00 24 */	lfs f1, 0x24(r31)
-/* 8019BEC0 00198E00  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock-_SDA_BASE_(r13)
+/* 8019BEC0 00198E00  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock@sda21(r13)
 /* 8019BEC4 00198E04  EC 01 00 2A */	fadds f0, f1, f0
 /* 8019BEC8 00198E08  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 8019BECC 00198E0C  C0 3F 00 28 */	lfs f1, 0x28(r31)
-/* 8019BED0 00198E10  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock-_SDA_BASE_(r13)
+/* 8019BED0 00198E10  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock@sda21(r13)
 /* 8019BED4 00198E14  EC 01 00 2A */	fadds f0, f1, f0
 /* 8019BED8 00198E18  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 8019BEDC 00198E1C  C0 3F 00 2C */	lfs f1, 0x2c(r31)
-/* 8019BEE0 00198E20  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock-_SDA_BASE_(r13)
+/* 8019BEE0 00198E20  C0 0D 85 90 */	lfs f0, mSandScaleUp__10TSandBlock@sda21(r13)
 /* 8019BEE4 00198E24  EC 01 00 2A */	fadds f0, f1, f0
 /* 8019BEE8 00198E28  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 8019BEEC 00198E2C  C0 1F 00 28 */	lfs f0, 0x28(r31)
@@ -1294,10 +1294,10 @@ lbl_8019BF38:
 lbl_8019BF58:
 /* 8019BF58 00198E98  C0 3F 00 28 */	lfs f1, 0x28(r31)
 /* 8019BF5C 00198E9C  38 80 30 AA */	li r4, 0x30aa
-/* 8019BF60 00198EA0  C0 0D 85 94 */	lfs f0, mSandScaleDown__10TSandBlock-_SDA_BASE_(r13)
+/* 8019BF60 00198EA0  C0 0D 85 94 */	lfs f0, mSandScaleDown__10TSandBlock@sda21(r13)
 /* 8019BF64 00198EA4  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8019BF68 00198EA8  D0 1F 00 28 */	stfs f0, 0x28(r31)
-/* 8019BF6C 00198EAC  80 6D 97 EC */	lwz r3, gpMSound-_SDA_BASE_(r13)
+/* 8019BF6C 00198EAC  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 8019BF70 00198EB0  4B FE 0A E1 */	bl gateCheck__6MSoundFUl
 /* 8019BF74 00198EB4  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8019BF78 00198EB8  41 82 00 20 */	beq lbl_8019BF98
@@ -1328,7 +1328,7 @@ lbl_8019BF98:
 /* 8019BFD8 00198F18  38 A0 00 01 */	li r5, 1
 /* 8019BFDC 00198F1C  4B FF 4B 01 */	bl emitAndScale__11TMapObjBaseCFlUcPCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
 /* 8019BFE0 00198F20  C0 3F 00 28 */	lfs f1, 0x28(r31)
-/* 8019BFE4 00198F24  C0 0D 85 98 */	lfs f0, mSandScaleMin__10TSandBlock-_SDA_BASE_(r13)
+/* 8019BFE4 00198F24  C0 0D 85 98 */	lfs f0, mSandScaleMin__10TSandBlock@sda21(r13)
 /* 8019BFE8 00198F28  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8019BFEC 00198F2C  40 80 00 D0 */	bge lbl_8019C0BC
 /* 8019BFF0 00198F30  D0 3F 00 24 */	stfs f1, 0x24(r31)
@@ -1336,7 +1336,7 @@ lbl_8019BF98:
 /* 8019BFF8 00198F38  C0 1F 00 28 */	lfs f0, 0x28(r31)
 /* 8019BFFC 00198F3C  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 8019C000 00198F40  4B FE D6 51 */	bl sleep__11TMapObjBaseFv
-/* 8019C004 00198F44  80 6D 85 A0 */	lwz r3, mSandWaitTime__10TSandBlock-_SDA_BASE_(r13)
+/* 8019C004 00198F44  80 6D 85 A0 */	lwz r3, mSandWaitTime__10TSandBlock@sda21(r13)
 /* 8019C008 00198F48  38 00 00 05 */	li r0, 5
 /* 8019C00C 00198F4C  90 7F 01 04 */	stw r3, 0x104(r31)
 /* 8019C010 00198F50  B0 1F 00 FC */	sth r0, 0xfc(r31)
@@ -1352,10 +1352,10 @@ lbl_8019C02C:
 lbl_8019C030:
 /* 8019C030 00198F70  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 8019C034 00198F74  40 82 00 88 */	bne lbl_8019C0BC
-/* 8019C038 00198F78  80 8D 98 DC */	lwz r4, gpMarioPos-_SDA_BASE_(r13)
+/* 8019C038 00198F78  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
 /* 8019C03C 00198F7C  7F E3 FB 78 */	mr r3, r31
 /* 8019C040 00198F80  4B FF 51 11 */	bl getDistance__11TMapObjBaseCFRCQ29JGeometry8TVec3$$0f$$1
-/* 8019C044 00198F84  C0 42 C0 90 */	lfs f2, $$23071-_SDA2_BASE_(r2)
+/* 8019C044 00198F84  C0 42 C0 90 */	lfs f2, $$23071@sda21(r2)
 /* 8019C048 00198F88  C0 1F 00 24 */	lfs f0, 0x24(r31)
 /* 8019C04C 00198F8C  EC 02 00 32 */	fmuls f0, f2, f0
 /* 8019C050 00198F90  FC 01 00 40 */	fcmpo cr0, f1, f0
@@ -1405,7 +1405,7 @@ touchPlayer__10TSandBlockFP9THitActor:
 /* 8019C0F0 00199030  A0 1F 00 FC */	lhz r0, 0xfc(r31)
 /* 8019C0F4 00199034  28 00 00 01 */	cmplwi r0, 1
 /* 8019C0F8 00199038  40 82 00 14 */	bne lbl_8019C10C
-/* 8019C0FC 0019903C  80 6D 85 9C */	lwz r3, mWaitTimeToFall__10TSandBlock-_SDA_BASE_(r13)
+/* 8019C0FC 0019903C  80 6D 85 9C */	lwz r3, mWaitTimeToFall__10TSandBlock@sda21(r13)
 /* 8019C100 00199040  38 00 00 03 */	li r0, 3
 /* 8019C104 00199044  90 7F 01 04 */	stw r3, 0x104(r31)
 /* 8019C108 00199048  B0 1F 00 FC */	sth r0, 0xfc(r31)
@@ -1426,7 +1426,7 @@ touchPlayer__15TBreakableBlockFP9THitActor:
 /* 8019C134 00199074  4B FF 4D 3D */	bl marioHipAttack__11TMapObjBaseCFv
 /* 8019C138 00199078  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8019C13C 0019907C  41 82 00 2C */	beq lbl_8019C168
-/* 8019C140 00199080  80 6D 97 88 */	lwz r3, SMSRumbleMgr-_SDA_BASE_(r13)
+/* 8019C140 00199080  80 6D 97 88 */	lwz r3, SMSRumbleMgr@sda21(r13)
 /* 8019C144 00199084  38 DF 00 10 */	addi r6, r31, 0x10
 /* 8019C148 00199088  38 80 00 15 */	li r4, 0x15
 /* 8019C14C 0019908C  38 A0 00 14 */	li r5, 0x14
@@ -1659,200 +1659,200 @@ __sinit_MapObjBlock_cpp:
 /* 8019C464 001993A4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8019C468 001993A8  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8019C46C 001993AC  3B E3 5E 18 */	addi r31, r3, $$23395@l
-/* 8019C470 001993B0  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1-_SDA_BASE_(r13)
+/* 8019C470 001993B0  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
 /* 8019C474 001993B4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C478 001993B8  40 82 00 28 */	bne lbl_8019C4A0
-/* 8019C47C 001993BC  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1-_SDA_BASE_
+/* 8019C47C 001993BC  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
 /* 8019C480 001993C0  4B E7 27 B5 */	bl initiate__10JSUPtrListFv
 /* 8019C484 001993C4  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
 /* 8019C488 001993C8  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 8019C48C 001993CC  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1-_SDA_BASE_
+/* 8019C48C 001993CC  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
 /* 8019C490 001993D0  38 BF 00 00 */	addi r5, r31, 0
 /* 8019C494 001993D4  4B EE 62 95 */	bl __register_global_object
 /* 8019C498 001993D8  38 00 00 01 */	li r0, 1
-/* 8019C49C 001993DC  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1-_SDA_BASE_(r13)
+/* 8019C49C 001993DC  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
 lbl_8019C4A0:
-/* 8019C4A0 001993E0  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_(r13)
+/* 8019C4A0 001993E0  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
 /* 8019C4A4 001993E4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C4A8 001993E8  40 82 00 28 */	bne lbl_8019C4D0
-/* 8019C4AC 001993EC  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_
+/* 8019C4AC 001993EC  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
 /* 8019C4B0 001993F0  4B E7 27 85 */	bl initiate__10JSUPtrListFv
 /* 8019C4B4 001993F4  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
 /* 8019C4B8 001993F8  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 8019C4BC 001993FC  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_
+/* 8019C4BC 001993FC  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
 /* 8019C4C0 00199400  38 BF 00 0C */	addi r5, r31, 0xc
 /* 8019C4C4 00199404  4B EE 62 65 */	bl __register_global_object
 /* 8019C4C8 00199408  38 00 00 01 */	li r0, 1
-/* 8019C4CC 0019940C  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1-_SDA_BASE_(r13)
+/* 8019C4CC 0019940C  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
 lbl_8019C4D0:
-/* 8019C4D0 00199410  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1-_SDA_BASE_(r13)
+/* 8019C4D0 00199410  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
 /* 8019C4D4 00199414  7C 00 07 75 */	extsb. r0, r0
 /* 8019C4D8 00199418  40 82 00 28 */	bne lbl_8019C500
-/* 8019C4DC 0019941C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1-_SDA_BASE_
+/* 8019C4DC 0019941C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
 /* 8019C4E0 00199420  4B E7 27 55 */	bl initiate__10JSUPtrListFv
 /* 8019C4E4 00199424  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
 /* 8019C4E8 00199428  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 8019C4EC 0019942C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1-_SDA_BASE_
+/* 8019C4EC 0019942C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
 /* 8019C4F0 00199430  38 BF 00 18 */	addi r5, r31, 0x18
 /* 8019C4F4 00199434  4B EE 62 35 */	bl __register_global_object
 /* 8019C4F8 00199438  38 00 00 01 */	li r0, 1
-/* 8019C4FC 0019943C  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1-_SDA_BASE_(r13)
+/* 8019C4FC 0019943C  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
 lbl_8019C500:
-/* 8019C500 00199440  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_(r13)
+/* 8019C500 00199440  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
 /* 8019C504 00199444  7C 00 07 75 */	extsb. r0, r0
 /* 8019C508 00199448  40 82 00 28 */	bne lbl_8019C530
-/* 8019C50C 0019944C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_
+/* 8019C50C 0019944C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
 /* 8019C510 00199450  4B E7 27 25 */	bl initiate__10JSUPtrListFv
 /* 8019C514 00199454  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
 /* 8019C518 00199458  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 8019C51C 0019945C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_
+/* 8019C51C 0019945C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
 /* 8019C520 00199460  38 BF 00 24 */	addi r5, r31, 0x24
 /* 8019C524 00199464  4B EE 62 05 */	bl __register_global_object
 /* 8019C528 00199468  38 00 00 01 */	li r0, 1
-/* 8019C52C 0019946C  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1-_SDA_BASE_(r13)
+/* 8019C52C 0019946C  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
 lbl_8019C530:
-/* 8019C530 00199470  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_(r13)
+/* 8019C530 00199470  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
 /* 8019C534 00199474  7C 00 07 75 */	extsb. r0, r0
 /* 8019C538 00199478  40 82 00 28 */	bne lbl_8019C560
-/* 8019C53C 0019947C  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_
+/* 8019C53C 0019947C  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
 /* 8019C540 00199480  4B E7 26 F5 */	bl initiate__10JSUPtrListFv
 /* 8019C544 00199484  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
 /* 8019C548 00199488  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 8019C54C 0019948C  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_
+/* 8019C54C 0019948C  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
 /* 8019C550 00199490  38 BF 00 30 */	addi r5, r31, 0x30
 /* 8019C554 00199494  4B EE 61 D5 */	bl __register_global_object
 /* 8019C558 00199498  38 00 00 01 */	li r0, 1
-/* 8019C55C 0019949C  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1-_SDA_BASE_(r13)
+/* 8019C55C 0019949C  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
 lbl_8019C560:
-/* 8019C560 001994A0  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_(r13)
+/* 8019C560 001994A0  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
 /* 8019C564 001994A4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C568 001994A8  40 82 00 28 */	bne lbl_8019C590
-/* 8019C56C 001994AC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_
+/* 8019C56C 001994AC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
 /* 8019C570 001994B0  4B E7 26 C5 */	bl initiate__10JSUPtrListFv
 /* 8019C574 001994B4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
 /* 8019C578 001994B8  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 8019C57C 001994BC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_
+/* 8019C57C 001994BC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
 /* 8019C580 001994C0  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 8019C584 001994C4  4B EE 61 A5 */	bl __register_global_object
 /* 8019C588 001994C8  38 00 00 01 */	li r0, 1
-/* 8019C58C 001994CC  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1-_SDA_BASE_(r13)
+/* 8019C58C 001994CC  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
 lbl_8019C590:
-/* 8019C590 001994D0  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_(r13)
+/* 8019C590 001994D0  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
 /* 8019C594 001994D4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C598 001994D8  40 82 00 28 */	bne lbl_8019C5C0
-/* 8019C59C 001994DC  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_
+/* 8019C59C 001994DC  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
 /* 8019C5A0 001994E0  4B E7 26 95 */	bl initiate__10JSUPtrListFv
 /* 8019C5A4 001994E4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
 /* 8019C5A8 001994E8  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 8019C5AC 001994EC  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_
+/* 8019C5AC 001994EC  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
 /* 8019C5B0 001994F0  38 BF 00 48 */	addi r5, r31, 0x48
 /* 8019C5B4 001994F4  4B EE 61 75 */	bl __register_global_object
 /* 8019C5B8 001994F8  38 00 00 01 */	li r0, 1
-/* 8019C5BC 001994FC  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1-_SDA_BASE_(r13)
+/* 8019C5BC 001994FC  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
 lbl_8019C5C0:
-/* 8019C5C0 00199500  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_(r13)
+/* 8019C5C0 00199500  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
 /* 8019C5C4 00199504  7C 00 07 75 */	extsb. r0, r0
 /* 8019C5C8 00199508  40 82 00 28 */	bne lbl_8019C5F0
-/* 8019C5CC 0019950C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_
+/* 8019C5CC 0019950C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
 /* 8019C5D0 00199510  4B E7 26 65 */	bl initiate__10JSUPtrListFv
 /* 8019C5D4 00199514  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
 /* 8019C5D8 00199518  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 8019C5DC 0019951C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_
+/* 8019C5DC 0019951C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
 /* 8019C5E0 00199520  38 BF 00 54 */	addi r5, r31, 0x54
 /* 8019C5E4 00199524  4B EE 61 45 */	bl __register_global_object
 /* 8019C5E8 00199528  38 00 00 01 */	li r0, 1
-/* 8019C5EC 0019952C  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1-_SDA_BASE_(r13)
+/* 8019C5EC 0019952C  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
 lbl_8019C5F0:
-/* 8019C5F0 00199530  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_(r13)
+/* 8019C5F0 00199530  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
 /* 8019C5F4 00199534  7C 00 07 75 */	extsb. r0, r0
 /* 8019C5F8 00199538  40 82 00 28 */	bne lbl_8019C620
-/* 8019C5FC 0019953C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_
+/* 8019C5FC 0019953C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
 /* 8019C600 00199540  4B E7 26 35 */	bl initiate__10JSUPtrListFv
 /* 8019C604 00199544  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
 /* 8019C608 00199548  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 8019C60C 0019954C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_
+/* 8019C60C 0019954C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
 /* 8019C610 00199550  38 BF 00 60 */	addi r5, r31, 0x60
 /* 8019C614 00199554  4B EE 61 15 */	bl __register_global_object
 /* 8019C618 00199558  38 00 00 01 */	li r0, 1
-/* 8019C61C 0019955C  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1-_SDA_BASE_(r13)
+/* 8019C61C 0019955C  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
 lbl_8019C620:
-/* 8019C620 00199560  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_(r13)
+/* 8019C620 00199560  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
 /* 8019C624 00199564  7C 00 07 75 */	extsb. r0, r0
 /* 8019C628 00199568  40 82 00 28 */	bne lbl_8019C650
-/* 8019C62C 0019956C  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_
+/* 8019C62C 0019956C  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
 /* 8019C630 00199570  4B E7 26 05 */	bl initiate__10JSUPtrListFv
 /* 8019C634 00199574  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
 /* 8019C638 00199578  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 8019C63C 0019957C  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_
+/* 8019C63C 0019957C  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
 /* 8019C640 00199580  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 8019C644 00199584  4B EE 60 E5 */	bl __register_global_object
 /* 8019C648 00199588  38 00 00 01 */	li r0, 1
-/* 8019C64C 0019958C  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1-_SDA_BASE_(r13)
+/* 8019C64C 0019958C  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
 lbl_8019C650:
-/* 8019C650 00199590  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_(r13)
+/* 8019C650 00199590  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
 /* 8019C654 00199594  7C 00 07 75 */	extsb. r0, r0
 /* 8019C658 00199598  40 82 00 28 */	bne lbl_8019C680
-/* 8019C65C 0019959C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_
+/* 8019C65C 0019959C  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
 /* 8019C660 001995A0  4B E7 25 D5 */	bl initiate__10JSUPtrListFv
 /* 8019C664 001995A4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
 /* 8019C668 001995A8  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 8019C66C 001995AC  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_
+/* 8019C66C 001995AC  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
 /* 8019C670 001995B0  38 BF 00 78 */	addi r5, r31, 0x78
 /* 8019C674 001995B4  4B EE 60 B5 */	bl __register_global_object
 /* 8019C678 001995B8  38 00 00 01 */	li r0, 1
-/* 8019C67C 001995BC  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1-_SDA_BASE_(r13)
+/* 8019C67C 001995BC  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
 lbl_8019C680:
-/* 8019C680 001995C0  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_(r13)
+/* 8019C680 001995C0  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
 /* 8019C684 001995C4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C688 001995C8  40 82 00 28 */	bne lbl_8019C6B0
-/* 8019C68C 001995CC  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_
+/* 8019C68C 001995CC  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
 /* 8019C690 001995D0  4B E7 25 A5 */	bl initiate__10JSUPtrListFv
 /* 8019C694 001995D4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
 /* 8019C698 001995D8  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 8019C69C 001995DC  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_
+/* 8019C69C 001995DC  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
 /* 8019C6A0 001995E0  38 BF 00 84 */	addi r5, r31, 0x84
 /* 8019C6A4 001995E4  4B EE 60 85 */	bl __register_global_object
 /* 8019C6A8 001995E8  38 00 00 01 */	li r0, 1
-/* 8019C6AC 001995EC  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1-_SDA_BASE_(r13)
+/* 8019C6AC 001995EC  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
 lbl_8019C6B0:
-/* 8019C6B0 001995F0  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_(r13)
+/* 8019C6B0 001995F0  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
 /* 8019C6B4 001995F4  7C 00 07 75 */	extsb. r0, r0
 /* 8019C6B8 001995F8  40 82 00 28 */	bne lbl_8019C6E0
-/* 8019C6BC 001995FC  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_
+/* 8019C6BC 001995FC  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
 /* 8019C6C0 00199600  4B E7 25 75 */	bl initiate__10JSUPtrListFv
 /* 8019C6C4 00199604  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
 /* 8019C6C8 00199608  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 8019C6CC 0019960C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_
+/* 8019C6CC 0019960C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
 /* 8019C6D0 00199610  38 BF 00 90 */	addi r5, r31, 0x90
 /* 8019C6D4 00199614  4B EE 60 55 */	bl __register_global_object
 /* 8019C6D8 00199618  38 00 00 01 */	li r0, 1
-/* 8019C6DC 0019961C  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1-_SDA_BASE_(r13)
+/* 8019C6DC 0019961C  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
 lbl_8019C6E0:
-/* 8019C6E0 00199620  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_(r13)
+/* 8019C6E0 00199620  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
 /* 8019C6E4 00199624  7C 00 07 75 */	extsb. r0, r0
 /* 8019C6E8 00199628  40 82 00 28 */	bne lbl_8019C710
-/* 8019C6EC 0019962C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_
+/* 8019C6EC 0019962C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
 /* 8019C6F0 00199630  4B E7 25 45 */	bl initiate__10JSUPtrListFv
 /* 8019C6F4 00199634  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
 /* 8019C6F8 00199638  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 8019C6FC 0019963C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_
+/* 8019C6FC 0019963C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
 /* 8019C700 00199640  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 8019C704 00199644  4B EE 60 25 */	bl __register_global_object
 /* 8019C708 00199648  38 00 00 01 */	li r0, 1
-/* 8019C70C 0019964C  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1-_SDA_BASE_(r13)
+/* 8019C70C 0019964C  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
 lbl_8019C710:
-/* 8019C710 00199650  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_(r13)
+/* 8019C710 00199650  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
 /* 8019C714 00199654  7C 00 07 75 */	extsb. r0, r0
 /* 8019C718 00199658  40 82 00 28 */	bne lbl_8019C740
-/* 8019C71C 0019965C  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_
+/* 8019C71C 0019965C  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
 /* 8019C720 00199660  4B E7 25 15 */	bl initiate__10JSUPtrListFv
 /* 8019C724 00199664  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
 /* 8019C728 00199668  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 8019C72C 0019966C  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_
+/* 8019C72C 0019966C  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
 /* 8019C730 00199670  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 8019C734 00199674  4B EE 5F F5 */	bl __register_global_object
 /* 8019C738 00199678  38 00 00 01 */	li r0, 1
-/* 8019C73C 0019967C  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1-_SDA_BASE_(r13)
+/* 8019C73C 0019967C  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
 lbl_8019C740:
 /* 8019C740 00199680  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 8019C744 00199684  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -1901,11 +1901,13 @@ $$232$$2__dt__18TSuperHipDropBlockFv:
 /* 8019C790 001996D0  4B FF E5 B4 */	b __dt__18TSuperHipDropBlockFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CD20, 0x4
+  .4byte __sinit_MapObjBlock_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x38ADE8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22111:
 	.incbin "baserom.dol", 0x38ADF4, 0x14
 $$22409:
@@ -1917,7 +1919,9 @@ $$22411:
 $$22412:
 	.incbin "baserom.dol", 0x38AEA4, 0x24
 $$22778:
-	.incbin "baserom.dol", 0x38AEC8, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22780:
 	.incbin "baserom.dol", 0x38AED4, 0xC
 $$22953:
@@ -1940,28 +1944,770 @@ $$23294:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TSuperHipDropBlock
 __vt__18TSuperHipDropBlock:
-	.incbin "baserom.dol", 0x3BFF18, 0x170
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TSuperHipDropBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__12THideObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__18TSuperHipDropBlockFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__18TSuperHipDropBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__18TSuperHipDropBlockFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__13TBreakHideObjFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__13TBreakHideObjFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__13TBreakHideObjFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
+  .4byte appearObj__12THideObjBaseFf
+  .4byte appearObjFromPoint__12THideObjBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte emitEffect__12THideObjBaseFv
 .global __vt__12TTelesaBlock
 __vt__12TTelesaBlock:
-	.incbin "baserom.dol", 0x3C0088, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TTelesaBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TTelesaBlockFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__12TTelesaBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__12TTelesaBlockFv
+  .4byte control__11TMapObjBaseFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__11TJuiceBlockFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TJuiceBlockFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__12TTelesaBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 .global __vt__11TJuiceBlock
 __vt__11TJuiceBlock:
-	.incbin "baserom.dol", 0x3C01EC, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TJuiceBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__11TJuiceBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__11TMapObjBaseFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__11TJuiceBlockFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TJuiceBlockFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__11TJuiceBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 .global __vt__11TBrickBlock
 __vt__11TBrickBlock:
-	.incbin "baserom.dol", 0x3C0350, 0x170
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TBrickBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__12THideObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12THideObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__11TBrickBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TBrickBlockFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__11TMapObjBaseFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TBrickBlockFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__11TBrickBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
+  .4byte appearObj__12THideObjBaseFf
+  .4byte appearObjFromPoint__12THideObjBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte emitEffect__12THideObjBaseFv
 .global __vt__9TIceBlock
 __vt__9TIceBlock:
-	.incbin "baserom.dol", 0x3C04C0, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TIceBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__9TIceBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__9TIceBlockFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TMapObjBaseFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__9TIceBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__9TIceBlockCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__9TIceBlockFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__11TMapObjBaseFP9THitActor
+  .4byte touchWater__9TIceBlockFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 .global __vt__10TLeanBlock
 __vt__10TLeanBlock:
-	.incbin "baserom.dol", 0x3C0624, 0x168
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TLeanBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TLeanBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__10TLeanBlockFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TMapObjBaseFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__10TLeanBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__10TLeanBlockFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
+  .4byte calcDefaultMtx__10TLeanBlockFv
 .global __vt__10TSandBlock
 __vt__10TSandBlock:
-	.incbin "baserom.dol", 0x3C078C, 0x164
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSandBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TMapObjBaseFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__10TSandBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__11TMapObjBaseFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__11TMapObjBaseFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__10TSandBlockFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__11TMapObjBaseFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__11TMapObjBaseFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__10TSandBlockFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__11TMapObjBaseCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__10TSandBlockFP9THitActor
+  .4byte touchWater__11TMapObjBaseFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
 .global __vt__15TBreakableBlock
 __vt__15TBreakableBlock:
-	.incbin "baserom.dol", 0x3C08F0, 0x1E0
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TBreakableBlockFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__14TMapObjGeneralFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__14TMapObjGeneralFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__15TBreakableBlockFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__14TMapObjGeneralFP9THitActorUl
+  .4byte getTakingMtx__11TMapObjBaseFv
+  .4byte ensureTakeSituation__14TMapObjGeneralFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__11TMapObjBaseCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__11TMapObjBaseCFv
+  .4byte init__10TLiveActorFP12TLiveManager
+  .4byte calcRootMatrix__14TMapObjGeneralFv
+  .4byte setGroundCollision__11TMapObjBaseFv
+  .4byte control__14TMapObjGeneralFv
+  .4byte bind__14TMapObjGeneralFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__11TMapObjBaseFv
+  .4byte kill__14TMapObjGeneralFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte appear__14TMapObjGeneralFv
+  .4byte makeObjAppeared__11TMapObjBaseFv
+  .4byte makeObjDead__11TMapObjBaseFv
+  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte changeObjMtx__11TMapObjBaseFPA4_f
+  .4byte updateObjMtx__11TMapObjBaseFv
+  .4byte setUpCurrentMapCollision__11TMapObjBaseFv
+  .4byte setObjHitData__11TMapObjBaseFUs
+  .4byte setModelMtx__11TMapObjBaseFPA4_f
+  .4byte initMapObj__14TMapObjGeneralFv
+  .4byte loadBeforeInit__11TMapObjBaseFR20JSUMemoryInputStream
+  .4byte initMapCollisionData__11TMapObjBaseFv
+  .4byte makeMActors__11TMapObjBaseFv
+  .4byte getSDLModelFlag__11TMapObjBaseCFv
+  .4byte checkIllegalAttr__14TMapObjGeneralCFv
+  .4byte calc__11TMapObjBaseFv
+  .4byte draw__11TMapObjBaseCFv
+  .4byte dead__11TMapObjBaseFv
+  .4byte touchActor__11TMapObjBaseFP9THitActor
+  .4byte touchPlayer__15TBreakableBlockFP9THitActor
+  .4byte touchWater__14TMapObjGeneralFP9THitActor
+  .4byte touchEnemy__11TMapObjBaseFP9THitActor
+  .4byte touchBoss__11TMapObjBaseFP9THitActor
+  .4byte makeObjDefault__11TMapObjBaseFv
+  .4byte getHitObjNumMax__11TMapObjBaseFv
+  .4byte getDepthAtFloating__11TMapObjBaseFv
+  .4byte getLivingTime__14TMapObjGeneralCFv
+  .4byte getFlushTime__14TMapObjGeneralCFv
+  .4byte isPollutedGround__14TMapObjGeneralCFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte work__14TMapObjGeneralFv
+  .4byte appearing__14TMapObjGeneralFv
+  .4byte appeared__14TMapObjGeneralFv
+  .4byte breaking__14TMapObjGeneralFv
+  .4byte sinking__14TMapObjGeneralFv
+  .4byte holding__14TMapObjGeneralFv
+  .4byte waitingToRecover__14TMapObjGeneralFv
+  .4byte recovering__14TMapObjGeneralFv
+  .4byte waitingToAppear__14TMapObjGeneralFv
+  .4byte touchingPlayer__14TMapObjGeneralFv
+  .4byte touchingWater__14TMapObjGeneralFv
+  .4byte hold__14TMapObjGeneralFP10TTakeActor
+  .4byte put__14TMapObjGeneralFv
+  .4byte thrown__14TMapObjGeneralFv
+  .4byte sink__14TMapObjGeneralFv
+  .4byte recover__14TMapObjGeneralFv
+  .4byte waitToAppear__14TMapObjGeneralFl
+  .4byte makeObjBuried__14TMapObjGeneralFv
+  .4byte makeObjRecovered__14TMapObjGeneralFv
+  .4byte receiveMessageFromPlayer__14TMapObjGeneralFv
+  .4byte calcVelocity__14TMapObjGeneralFv
+  .4byte checkGroundCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte touchGround__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte checkWallCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte touchWall__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1P18TBGWallCheckRecord
+  .4byte checkRoofCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte touchRoof__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mSandScaleUp__10TSandBlock:
@@ -1983,7 +2729,7 @@ mAutoMeltScale__9TIceBlock:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22942:
-	.incbin "baserom.dol", 0x3E7D88, 0x4
+  .4byte 0
 $$23037:
 	.incbin "baserom.dol", 0x3E7D8C, 0x4
 $$23071:

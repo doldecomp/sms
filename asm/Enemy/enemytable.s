@@ -65,11 +65,11 @@ lbl_802A1D98:
 lbl_802A1DB0:
 /* 802A1DB0 0029ECF0  4B DE 3D 15 */	bl rand
 /* 802A1DB4 0029ECF4  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, $$21698-_SDA2_BASE_(r2)
+/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, $$21698@sda21(r2)
 /* 802A1DBC 0029ECFC  90 01 00 8C */	stw r0, 0x8c(r1)
 /* 802A1DC0 0029ED00  3C 60 43 30 */	lis r3, 0x4330
 /* 802A1DC4 0029ED04  6F 80 80 00 */	xoris r0, r28, 0x8000
-/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, $$21696-_SDA2_BASE_(r2)
+/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, $$21696@sda21(r2)
 /* 802A1DCC 0029ED0C  90 61 00 88 */	stw r3, 0x88(r1)
 /* 802A1DD0 0029ED10  80 DE 00 00 */	lwz r6, 0(r30)
 /* 802A1DD4 0029ED14  90 01 00 84 */	stw r0, 0x84(r1)
@@ -138,7 +138,7 @@ __ct__20TStageEnemyInfoTableFPCc:
 /* 802A1EB4 0029EDF4  38 03 8A 98 */	addi r0, r3, __vt__20TStageEnemyInfoTable@l
 /* 802A1EB8 0029EDF8  90 1E 00 00 */	stw r0, 0(r30)
 /* 802A1EBC 0029EDFC  7F C4 F3 78 */	mr r4, r30
-/* 802A1EC0 0029EE00  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 802A1EC0 0029EE00  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 802A1EC4 0029EE04  4B FA 6F E9 */	bl registerEnemyInfoTable__10TConductorFP20TStageEnemyInfoTable
 /* 802A1EC8 0029EE08  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802A1ECC 0029EE0C  7F C3 F3 78 */	mr r3, r30
@@ -414,13 +414,34 @@ lbl_802A2260:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TStageEnemyInfo
 __vt__15TStageEnemyInfo:
-	.incbin "baserom.dol", 0x3D5A78, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TStageEnemyInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TStageEnemyInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
 .global __vt__20TStageEnemyInfoTable
 __vt__20TStageEnemyInfoTable:
-	.incbin "baserom.dol", 0x3D5A98, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TStageEnemyInfoTableFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 .global __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1
 __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
-	.incbin "baserom.dol", 0x3D5AB8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21696:

@@ -42,11 +42,11 @@ perform__11TAlphaCatchFUlPQ26JDrama9TGraphics:
 /* 800F92B4 000F61F4  54 80 07 39 */	rlwinm. r0, r4, 0, 0x1c, 0x1c
 /* 800F92B8 000F61F8  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800F92BC 000F61FC  41 82 00 24 */	beq lbl_800F92E0
-/* 800F92C0 000F6200  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800F92C0 000F6200  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800F92C4 000F6204  48 00 37 C9 */	bl pushBreakPoint__16TDrawSyncManagerFv
 /* 800F92C8 000F6208  38 60 00 7C */	li r3, 0x7c
 /* 800F92CC 000F620C  4B FA EF A1 */	bl GXSetDrawSync
-/* 800F92D0 000F6210  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800F92D0 000F6210  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800F92D4 000F6214  48 00 37 B9 */	bl pushBreakPoint__16TDrawSyncManagerFv
 /* 800F92D8 000F6218  38 60 00 00 */	li r3, 0
 /* 800F92DC 000F621C  4B FA EF 91 */	bl GXSetDrawSync
@@ -63,7 +63,7 @@ perform__13TZBufferCatchFUlPQ26JDrama9TGraphics:
 /* 800F92F8 000F6238  54 80 07 39 */	rlwinm. r0, r4, 0, 0x1c, 0x1c
 /* 800F92FC 000F623C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800F9300 000F6240  41 82 00 18 */	beq lbl_800F9318
-/* 800F9304 000F6244  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800F9304 000F6244  80 6D 98 40 */	lwz r3, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800F9308 000F6248  48 00 37 85 */	bl pushBreakPoint__16TDrawSyncManagerFv
 /* 800F930C 000F624C  4B FD 56 3D */	bl ReInitializeGX
 /* 800F9310 000F6250  38 60 00 7D */	li r3, 0x7d
@@ -111,7 +111,23 @@ lbl_800F9380:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TAlphaCatch
 __vt__11TAlphaCatch:
-	.incbin "baserom.dol", 0x3B0FF8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TAlphaCatchFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TAlphaCatchFUlPQ26JDrama9TGraphics
 .global __vt__13TZBufferCatch
 __vt__13TZBufferCatch:
-	.incbin "baserom.dol", 0x3B101C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TZBufferCatchFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TZBufferCatchFUlPQ26JDrama9TGraphics

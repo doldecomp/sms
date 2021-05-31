@@ -37,7 +37,7 @@ lbl_800C354C:
 
 .global getLightPos__22TLightWithDBSetManagerCFv
 getLightPos__22TLightWithDBSetManagerCFv:
-/* 800C3568 000C04A8  80 6D 97 68 */	lwz r3, mLightPos__12TLightCommon-_SDA_BASE_(r13)
+/* 800C3568 000C04A8  80 6D 97 68 */	lwz r3, mLightPos__12TLightCommon@sda21(r13)
 /* 800C356C 000C04AC  4E 80 00 20 */	blr 
 
 .global makeDrawBuffer__22TLightWithDBSetManagerFv
@@ -263,7 +263,7 @@ loadAfter__22TLightWithDBSetManagerFv:
 /* 800C385C 000C079C  93 A1 00 44 */	stw r29, 0x44(r1)
 /* 800C3860 000C07A0  3B A3 00 00 */	addi r29, r3, 0
 /* 800C3864 000C07A4  38 7F 00 00 */	addi r3, r31, 0
-/* 800C3868 000C07A8  80 AD 8E E0 */	lwz r5, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800C3868 000C07A8  80 AD 8E E0 */	lwz r5, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800C386C 000C07AC  83 C5 00 04 */	lwz r30, 4(r5)
 /* 800C3870 000C07B0  4B F8 0E 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800C3874 000C07B4  81 9E 00 00 */	lwz r12, 0(r30)
@@ -456,26 +456,26 @@ lbl_800C3B44:
 /* 800C3B44 000C0A84  80 81 00 08 */	lwz r4, 8(r1)
 /* 800C3B48 000C0A88  80 64 00 14 */	lwz r3, 0x14(r4)
 /* 800C3B4C 000C0A8C  93 83 00 0C */	stw r28, 0xc(r3)
-/* 800C3B50 000C0A90  90 8D 97 6C */	stw r4, gpLightManager-_SDA_BASE_(r13)
-/* 800C3B54 000C0A94  C0 02 8C AC */	lfs f0, $$22044-_SDA2_BASE_(r2)
+/* 800C3B50 000C0A90  90 8D 97 6C */	stw r4, gpLightManager@sda21(r13)
+/* 800C3B54 000C0A94  C0 02 8C AC */	lfs f0, $$22044@sda21(r2)
 /* 800C3B58 000C0A98  D0 04 00 48 */	stfs f0, 0x48(r4)
 /* 800C3B5C 000C0A9C  D0 04 00 4C */	stfs f0, 0x4c(r4)
 /* 800C3B60 000C0AA0  D0 04 00 50 */	stfs f0, 0x50(r4)
-/* 800C3B64 000C0AA4  C0 02 8C A8 */	lfs f0, $$22043-_SDA2_BASE_(r2)
+/* 800C3B64 000C0AA4  C0 02 8C A8 */	lfs f0, $$22043@sda21(r2)
 /* 800C3B68 000C0AA8  D0 04 00 28 */	stfs f0, 0x28(r4)
-/* 800C3B6C 000C0AAC  C0 02 8C B8 */	lfs f0, $$22227-_SDA2_BASE_(r2)
+/* 800C3B6C 000C0AAC  C0 02 8C B8 */	lfs f0, $$22227@sda21(r2)
 /* 800C3B70 000C0AB0  D0 04 00 2C */	stfs f0, 0x2c(r4)
-/* 800C3B74 000C0AB4  C0 02 8C BC */	lfs f0, $$22228-_SDA2_BASE_(r2)
+/* 800C3B74 000C0AB4  C0 02 8C BC */	lfs f0, $$22228@sda21(r2)
 /* 800C3B78 000C0AB8  D0 04 00 30 */	stfs f0, 0x30(r4)
-/* 800C3B7C 000C0ABC  C0 02 8C B0 */	lfs f0, $$22045-_SDA2_BASE_(r2)
+/* 800C3B7C 000C0ABC  C0 02 8C B0 */	lfs f0, $$22045@sda21(r2)
 /* 800C3B80 000C0AC0  D0 04 00 34 */	stfs f0, 0x34(r4)
-/* 800C3B84 000C0AC4  C0 02 8C C0 */	lfs f0, $$22229-_SDA2_BASE_(r2)
+/* 800C3B84 000C0AC4  C0 02 8C C0 */	lfs f0, $$22229@sda21(r2)
 /* 800C3B88 000C0AC8  D0 04 00 38 */	stfs f0, 0x38(r4)
-/* 800C3B8C 000C0ACC  C0 02 8C C4 */	lfs f0, $$22230-_SDA2_BASE_(r2)
+/* 800C3B8C 000C0ACC  C0 02 8C C4 */	lfs f0, $$22230@sda21(r2)
 /* 800C3B90 000C0AD0  D0 04 00 3C */	stfs f0, 0x3c(r4)
-/* 800C3B94 000C0AD4  C0 02 8C C8 */	lfs f0, $$22231-_SDA2_BASE_(r2)
+/* 800C3B94 000C0AD4  C0 02 8C C8 */	lfs f0, $$22231@sda21(r2)
 /* 800C3B98 000C0AD8  D0 04 00 40 */	stfs f0, 0x40(r4)
-/* 800C3B9C 000C0ADC  C0 02 8C CC */	lfs f0, $$22232-_SDA2_BASE_(r2)
+/* 800C3B9C 000C0ADC  C0 02 8C CC */	lfs f0, $$22232@sda21(r2)
 /* 800C3BA0 000C0AE0  D0 04 00 44 */	stfs f0, 0x44(r4)
 /* 800C3BA4 000C0AE4  80 7F 01 44 */	lwz r3, 0x144(r31)
 /* 800C3BA8 000C0AE8  80 1F 01 48 */	lwz r0, 0x148(r31)
@@ -618,7 +618,7 @@ lbl_800C3DA4:
 /* 800C3DA4 000C0CE4  3B DE 00 01 */	addi r30, r30, 1
 /* 800C3DA8 000C0CE8  3B 5A 00 6C */	addi r26, r26, 0x6c
 lbl_800C3DAC:
-/* 800C3DAC 000C0CEC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C3DAC 000C0CEC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C3DB0 000C0CF0  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C3DB4 000C0CF4  7C 1E 00 00 */	cmpw r30, r0
 /* 800C3DB8 000C0CF8  41 80 FF CC */	blt lbl_800C3D84
@@ -640,7 +640,7 @@ lbl_800C3DEC:
 /* 800C3DEC 000C0D2C  3B BD 00 01 */	addi r29, r29, 1
 /* 800C3DF0 000C0D30  3B 5A 00 18 */	addi r26, r26, 0x18
 lbl_800C3DF4:
-/* 800C3DF4 000C0D34  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C3DF4 000C0D34  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C3DF8 000C0D38  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C3DFC 000C0D3C  7C 1D 00 00 */	cmpw r29, r0
 /* 800C3E00 000C0D40  41 80 FF CC */	blt lbl_800C3DCC
@@ -658,7 +658,7 @@ lbl_800C3E24:
 /* 800C3E28 000C0D68  4B F4 8A 89 */	bl __nw__FUl
 /* 800C3E2C 000C0D6C  7C 79 1B 79 */	or. r25, r3, r3
 /* 800C3E30 000C0D70  41 82 00 1C */	beq lbl_800C3E4C
-/* 800C3E34 000C0D74  38 6D 83 10 */	addi r3, r13, className$1944-_SDA_BASE_
+/* 800C3E34 000C0D74  38 6D 83 10 */	addi r3, r13, className$1944@sda21
 /* 800C3E38 000C0D78  7C C3 D0 2E */	lwzx r6, r3, r26
 /* 800C3E3C 000C0D7C  38 79 00 00 */	addi r3, r25, 0
 /* 800C3E40 000C0D80  38 9C 00 00 */	addi r4, r28, 0
@@ -750,7 +750,7 @@ lbl_800C3F6C:
 /* 800C3F6C 000C0EAC  3B DE 00 01 */	addi r30, r30, 1
 /* 800C3F70 000C0EB0  3B 5A 00 6C */	addi r26, r26, 0x6c
 lbl_800C3F74:
-/* 800C3F74 000C0EB4  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C3F74 000C0EB4  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C3F78 000C0EB8  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C3F7C 000C0EBC  7C 1E 00 00 */	cmpw r30, r0
 /* 800C3F80 000C0EC0  41 80 FF CC */	blt lbl_800C3F4C
@@ -772,7 +772,7 @@ lbl_800C3FB4:
 /* 800C3FB4 000C0EF4  3B BD 00 01 */	addi r29, r29, 1
 /* 800C3FB8 000C0EF8  3B 5A 00 18 */	addi r26, r26, 0x18
 lbl_800C3FBC:
-/* 800C3FBC 000C0EFC  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C3FBC 000C0EFC  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C3FC0 000C0F00  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C3FC4 000C0F04  7C 1D 00 00 */	cmpw r29, r0
 /* 800C3FC8 000C0F08  41 80 FF CC */	blt lbl_800C3F94
@@ -790,7 +790,7 @@ lbl_800C3FEC:
 /* 800C3FF0 000C0F30  4B F4 88 C1 */	bl __nw__FUl
 /* 800C3FF4 000C0F34  7C 79 1B 79 */	or. r25, r3, r3
 /* 800C3FF8 000C0F38  41 82 00 1C */	beq lbl_800C4014
-/* 800C3FFC 000C0F3C  38 6D 83 08 */	addi r3, r13, className$1930-_SDA_BASE_
+/* 800C3FFC 000C0F3C  38 6D 83 08 */	addi r3, r13, className$1930@sda21
 /* 800C4000 000C0F40  7C C3 D0 2E */	lwzx r6, r3, r26
 /* 800C4004 000C0F44  38 79 00 00 */	addi r3, r25, 0
 /* 800C4008 000C0F48  38 9C 00 00 */	addi r4, r28, 0
@@ -866,7 +866,7 @@ lbl_800C4100:
 /* 800C4100 000C1040  3B DE 00 01 */	addi r30, r30, 1
 /* 800C4104 000C1044  3B 5A 00 6C */	addi r26, r26, 0x6c
 lbl_800C4108:
-/* 800C4108 000C1048  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4108 000C1048  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C410C 000C104C  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C4110 000C1050  7C 1E 00 00 */	cmpw r30, r0
 /* 800C4114 000C1054  41 80 FF CC */	blt lbl_800C40E0
@@ -888,7 +888,7 @@ lbl_800C4148:
 /* 800C4148 000C1088  3B BD 00 01 */	addi r29, r29, 1
 /* 800C414C 000C108C  3B 5A 00 18 */	addi r26, r26, 0x18
 lbl_800C4150:
-/* 800C4150 000C1090  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4150 000C1090  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C4154 000C1094  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C4158 000C1098  7C 1D 00 00 */	cmpw r29, r0
 /* 800C415C 000C109C  41 80 FF CC */	blt lbl_800C4128
@@ -907,7 +907,7 @@ lbl_800C4180:
 /* 800C4188 000C10C8  7C 79 1B 79 */	or. r25, r3, r3
 /* 800C418C 000C10CC  41 82 00 2C */	beq lbl_800C41B8
 /* 800C4190 000C10D0  7C 1D E2 14 */	add r0, r29, r28
-/* 800C4194 000C10D4  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4194 000C10D4  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C4198 000C10D8  1C 60 00 18 */	mulli r3, r0, 0x18
 /* 800C419C 000C10DC  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 800C41A0 000C10E0  38 03 00 04 */	addi r0, r3, 4
@@ -986,7 +986,7 @@ lbl_800C42A4:
 /* 800C42A4 000C11E4  3B BD 00 01 */	addi r29, r29, 1
 /* 800C42A8 000C11E8  3B 39 00 6C */	addi r25, r25, 0x6c
 lbl_800C42AC:
-/* 800C42AC 000C11EC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C42AC 000C11EC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C42B0 000C11F0  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C42B4 000C11F4  7C 1D 00 00 */	cmpw r29, r0
 /* 800C42B8 000C11F8  41 80 FF CC */	blt lbl_800C4284
@@ -1008,7 +1008,7 @@ lbl_800C42EC:
 /* 800C42EC 000C122C  3B 9C 00 01 */	addi r28, r28, 1
 /* 800C42F0 000C1230  3B 39 00 18 */	addi r25, r25, 0x18
 lbl_800C42F4:
-/* 800C42F4 000C1234  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C42F4 000C1234  80 6D 97 60 */	lwz r3, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C42F8 000C1238  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 800C42FC 000C123C  7C 1C 00 00 */	cmpw r28, r0
 /* 800C4300 000C1240  41 80 FF CC */	blt lbl_800C42CC
@@ -1029,7 +1029,7 @@ lbl_800C432C:
 /* 800C4334 000C1274  7C 78 1B 79 */	or. r24, r3, r3
 /* 800C4338 000C1278  41 82 00 2C */	beq lbl_800C4364
 /* 800C433C 000C127C  7C 1C DA 14 */	add r0, r28, r27
-/* 800C4340 000C1280  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4340 000C1280  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C4344 000C1284  1C 60 00 18 */	mulli r3, r0, 0x18
 /* 800C4348 000C1288  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 800C434C 000C128C  38 03 00 04 */	addi r0, r3, 4
@@ -1321,9 +1321,9 @@ __ct__16TLightDrawBufferFiUlPCc:
 /* 800C4734 000C1674  38 7F 00 1C */	addi r3, r31, 0x1c
 /* 800C4738 000C1678  91 1F 00 10 */	stw r8, 0x10(r31)
 /* 800C473C 000C167C  38 80 00 32 */	li r4, 0x32
-/* 800C4740 000C1680  38 A2 8C D0 */	addi r5, r2, $$22665-_SDA2_BASE_
+/* 800C4740 000C1680  38 A2 8C D0 */	addi r5, r2, $$22665@sda21
 /* 800C4744 000C1684  91 1F 00 14 */	stw r8, 0x14(r31)
-/* 800C4748 000C1688  38 E2 8C D8 */	addi r7, r2, $$22666-_SDA2_BASE_
+/* 800C4748 000C1688  38 E2 8C D8 */	addi r7, r2, $$22666@sda21
 /* 800C474C 000C168C  91 1F 00 18 */	stw r8, 0x18(r31)
 /* 800C4750 000C1690  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 800C4754 000C1694  4B FB F9 71 */	bl snprintf
@@ -1343,8 +1343,8 @@ lbl_800C477C:
 /* 800C4788 000C16C8  38 80 00 32 */	li r4, 0x32
 /* 800C478C 000C16CC  93 9F 00 14 */	stw r28, 0x14(r31)
 /* 800C4790 000C16D0  38 7F 00 4E */	addi r3, r31, 0x4e
-/* 800C4794 000C16D4  38 A2 8C D0 */	addi r5, r2, $$22665-_SDA2_BASE_
-/* 800C4798 000C16D8  38 E2 8C DC */	addi r7, r2, $$22667-_SDA2_BASE_
+/* 800C4794 000C16D4  38 A2 8C D0 */	addi r5, r2, $$22665@sda21
+/* 800C4798 000C16D8  38 E2 8C DC */	addi r7, r2, $$22667@sda21
 /* 800C479C 000C16DC  4B FB F9 29 */	bl snprintf
 /* 800C47A0 000C16E0  38 60 00 1C */	li r3, 0x1c
 /* 800C47A4 000C16E4  4B F4 81 0D */	bl __nw__FUl
@@ -1388,9 +1388,9 @@ lbl_800C4814:
 lbl_800C4828:
 /* 800C4828 000C1768  80 83 00 20 */	lwz r4, 0x20(r3)
 /* 800C482C 000C176C  3C 00 43 30 */	lis r0, 0x4330
-/* 800C4830 000C1770  80 AD 97 60 */	lwz r5, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4830 000C1770  80 AD 97 60 */	lwz r5, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C4834 000C1774  7C C6 22 14 */	add r6, r6, r4
-/* 800C4838 000C1778  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C4838 000C1778  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C483C 000C177C  1C 86 00 18 */	mulli r4, r6, 0x18
 /* 800C4840 000C1780  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800C4844 000C1784  38 84 00 14 */	addi r4, r4, 0x14
@@ -1412,7 +1412,7 @@ lbl_800C4828:
 lbl_800C4884:
 /* 800C4884 000C17C4  80 81 00 2C */	lwz r4, 0x2c(r1)
 /* 800C4888 000C17C8  3C 00 43 30 */	lis r0, 0x4330
-/* 800C488C 000C17CC  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C488C 000C17CC  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C4890 000C17D0  90 81 00 30 */	stw r4, 0x30(r1)
 /* 800C4894 000C17D4  88 81 00 33 */	lbz r4, 0x33(r1)
 /* 800C4898 000C17D8  C0 03 00 14 */	lfs f0, 0x14(r3)
@@ -1452,7 +1452,7 @@ lbl_800C4900:
 /* 800C4910 000C1850  48 00 00 68 */	b lbl_800C4978
 lbl_800C4914:
 /* 800C4914 000C1854  7C 00 1A 14 */	add r0, r0, r3
-/* 800C4918 000C1858  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C4918 000C1858  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C491C 000C185C  1C 00 00 6C */	mulli r0, r0, 0x6c
 /* 800C4920 000C1860  80 63 00 10 */	lwz r3, 0x10(r3)
 /* 800C4924 000C1864  7C 63 02 14 */	add r3, r3, r0
@@ -1461,7 +1461,7 @@ lbl_800C4914:
 /* 800C4930 000C1870  4B FE 52 2D */	bl GXGetLightColor
 /* 800C4934 000C1874  80 61 00 20 */	lwz r3, 0x20(r1)
 /* 800C4938 000C1878  3C 00 43 30 */	lis r0, 0x4330
-/* 800C493C 000C187C  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C493C 000C187C  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C4940 000C1880  90 61 00 28 */	stw r3, 0x28(r1)
 /* 800C4944 000C1884  88 61 00 2B */	lbz r3, 0x2b(r1)
 /* 800C4948 000C1888  C0 1F 00 1C */	lfs f0, 0x1c(r31)
@@ -1479,7 +1479,7 @@ lbl_800C4914:
 lbl_800C4978:
 /* 800C4978 000C18B8  80 61 00 2C */	lwz r3, 0x2c(r1)
 /* 800C497C 000C18BC  3C 00 43 30 */	lis r0, 0x4330
-/* 800C4980 000C18C0  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C4980 000C18C0  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C4984 000C18C4  90 61 00 30 */	stw r3, 0x30(r1)
 /* 800C4988 000C18C8  88 61 00 33 */	lbz r3, 0x33(r1)
 /* 800C498C 000C18CC  C0 1F 00 14 */	lfs f0, 0x14(r31)
@@ -1537,9 +1537,9 @@ setLight__11TLightMarioFPCQ26JDrama9TGraphicsi:
 /* 800C4A50 000C1990  38 81 00 38 */	addi r4, r1, 0x38
 /* 800C4A54 000C1994  38 61 00 48 */	addi r3, r1, 0x48
 /* 800C4A58 000C1998  4B FE 50 DD */	bl GXInitLightColor
-/* 800C4A5C 000C199C  C0 42 8C AC */	lfs f2, $$22044-_SDA2_BASE_(r2)
+/* 800C4A5C 000C199C  C0 42 8C AC */	lfs f2, $$22044@sda21(r2)
 /* 800C4A60 000C19A0  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4A64 000C19A4  C0 22 8C A8 */	lfs f1, $$22043-_SDA2_BASE_(r2)
+/* 800C4A64 000C19A4  C0 22 8C A8 */	lfs f1, $$22043@sda21(r2)
 /* 800C4A68 000C19A8  FC 60 10 90 */	fmr f3, f2
 /* 800C4A6C 000C19AC  FC 80 08 90 */	fmr f4, f1
 /* 800C4A70 000C19B0  FC A0 10 90 */	fmr f5, f2
@@ -1548,7 +1548,7 @@ setLight__11TLightMarioFPCQ26JDrama9TGraphicsi:
 /* 800C4A7C 000C19BC  38 61 00 48 */	addi r3, r1, 0x48
 /* 800C4A80 000C19C0  38 80 00 01 */	li r4, 1
 /* 800C4A84 000C19C4  4B FE 51 09 */	bl GXLoadLightObjImm
-/* 800C4A88 000C19C8  83 6D 97 6C */	lwz r27, gpLightManager-_SDA_BASE_(r13)
+/* 800C4A88 000C19C8  83 6D 97 6C */	lwz r27, gpLightManager@sda21(r13)
 /* 800C4A8C 000C19CC  88 1B 00 54 */	lbz r0, 0x54(r27)
 /* 800C4A90 000C19D0  28 00 00 00 */	cmplwi r0, 0
 /* 800C4A94 000C19D4  41 82 00 B8 */	beq lbl_800C4B4C
@@ -1566,7 +1566,7 @@ setLight__11TLightMarioFPCQ26JDrama9TGraphicsi:
 /* 800C4AC4 000C1A04  4B FE 4F 8D */	bl GXInitLightPos
 /* 800C4AC8 000C1A08  80 7B 00 18 */	lwz r3, 0x18(r27)
 /* 800C4ACC 000C1A0C  3C 00 43 30 */	lis r0, 0x4330
-/* 800C4AD0 000C1A10  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C4AD0 000C1A10  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C4AD4 000C1A14  38 81 00 2C */	addi r4, r1, 0x2c
 /* 800C4AD8 000C1A18  90 61 00 1C */	stw r3, 0x1c(r1)
 /* 800C4ADC 000C1A1C  38 61 00 48 */	addi r3, r1, 0x48
@@ -1584,14 +1584,14 @@ setLight__11TLightMarioFPCQ26JDrama9TGraphicsi:
 /* 800C4B0C 000C1A4C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800C4B10 000C1A50  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 800C4B14 000C1A54  4B FE 50 21 */	bl GXInitLightColor
-/* 800C4B18 000C1A58  C0 42 8C AC */	lfs f2, $$22044-_SDA2_BASE_(r2)
+/* 800C4B18 000C1A58  C0 42 8C AC */	lfs f2, $$22044@sda21(r2)
 /* 800C4B1C 000C1A5C  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4B20 000C1A60  C0 22 8C A8 */	lfs f1, $$22043-_SDA2_BASE_(r2)
+/* 800C4B20 000C1A60  C0 22 8C A8 */	lfs f1, $$22043@sda21(r2)
 /* 800C4B24 000C1A64  FC 60 10 90 */	fmr f3, f2
 /* 800C4B28 000C1A68  4B FE 4E 39 */	bl GXInitLightAttnA
-/* 800C4B2C 000C1A6C  C0 22 8C B0 */	lfs f1, $$22045-_SDA2_BASE_(r2)
+/* 800C4B2C 000C1A6C  C0 22 8C B0 */	lfs f1, $$22045@sda21(r2)
 /* 800C4B30 000C1A70  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4B34 000C1A74  C0 42 8C B4 */	lfs f2, $$22046-_SDA2_BASE_(r2)
+/* 800C4B34 000C1A74  C0 42 8C B4 */	lfs f2, $$22046@sda21(r2)
 /* 800C4B38 000C1A78  38 80 00 03 */	li r4, 3
 /* 800C4B3C 000C1A7C  4B FE 4E 45 */	bl GXInitLightDistAttn
 /* 800C4B40 000C1A80  38 61 00 48 */	addi r3, r1, 0x48
@@ -1632,10 +1632,10 @@ lbl_800C4B4C:
 /* 800C4BC8 000C1B08  4B FE 4F 6D */	bl GXInitLightColor
 /* 800C4BCC 000C1B0C  C0 5D 00 10 */	lfs f2, 0x10(r29)
 /* 800C4BD0 000C1B10  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4BD4 000C1B14  C0 02 8C B4 */	lfs f0, $$22046-_SDA2_BASE_(r2)
-/* 800C4BD8 000C1B18  C0 22 8C AC */	lfs f1, $$22044-_SDA2_BASE_(r2)
+/* 800C4BD4 000C1B14  C0 02 8C B4 */	lfs f0, $$22046@sda21(r2)
+/* 800C4BD8 000C1B18  C0 22 8C AC */	lfs f1, $$22044@sda21(r2)
 /* 800C4BDC 000C1B1C  EC 82 00 32 */	fmuls f4, f2, f0
-/* 800C4BE0 000C1B20  C0 62 8C A8 */	lfs f3, $$22043-_SDA2_BASE_(r2)
+/* 800C4BE0 000C1B20  C0 62 8C A8 */	lfs f3, $$22043@sda21(r2)
 /* 800C4BE4 000C1B24  FC 40 08 90 */	fmr f2, f1
 /* 800C4BE8 000C1B28  FC A0 08 90 */	fmr f5, f1
 /* 800C4BEC 000C1B2C  EC C3 20 28 */	fsubs f6, f3, f4
@@ -1668,7 +1668,7 @@ perform__11TLightMarioFUlPQ26JDrama9TGraphics:
 /* 800C4C4C 000C1B8C  41 82 00 20 */	beq lbl_800C4C6C
 /* 800C4C50 000C1B90  81 83 00 00 */	lwz r12, 0(r3)
 /* 800C4C54 000C1B94  7C A4 2B 78 */	mr r4, r5
-/* 800C4C58 000C1B98  80 CD 98 F8 */	lwz r6, gpMarioLightID-_SDA_BASE_(r13)
+/* 800C4C58 000C1B98  80 CD 98 F8 */	lwz r6, gpMarioLightID@sda21(r13)
 /* 800C4C5C 000C1B9C  81 8C 00 30 */	lwz r12, 0x30(r12)
 /* 800C4C60 000C1BA0  A8 A6 00 00 */	lha r5, 0(r6)
 /* 800C4C64 000C1BA4  7D 88 03 A6 */	mtlr r12
@@ -1746,7 +1746,7 @@ perform__12TLightCommonFUlPQ26JDrama9TGraphics:
 /* 800C4D64 000C1CA4  38 81 00 14 */	addi r4, r1, 0x14
 /* 800C4D68 000C1CA8  38 61 00 24 */	addi r3, r1, 0x24
 /* 800C4D6C 000C1CAC  4B FE 4D C9 */	bl GXInitLightColor
-/* 800C4D70 000C1CB0  C0 22 8C AC */	lfs f1, $$22044-_SDA2_BASE_(r2)
+/* 800C4D70 000C1CB0  C0 22 8C AC */	lfs f1, $$22044@sda21(r2)
 /* 800C4D74 000C1CB4  38 61 00 24 */	addi r3, r1, 0x24
 /* 800C4D78 000C1CB8  FC 40 08 90 */	fmr f2, f1
 /* 800C4D7C 000C1CBC  FC 60 08 90 */	fmr f3, f1
@@ -1818,9 +1818,9 @@ setLight__12TLightCommonFPCQ26JDrama9TGraphicsi:
 /* 800C4E70 000C1DB0  38 81 00 38 */	addi r4, r1, 0x38
 /* 800C4E74 000C1DB4  38 61 00 48 */	addi r3, r1, 0x48
 /* 800C4E78 000C1DB8  4B FE 4C BD */	bl GXInitLightColor
-/* 800C4E7C 000C1DBC  C0 42 8C AC */	lfs f2, $$22044-_SDA2_BASE_(r2)
+/* 800C4E7C 000C1DBC  C0 42 8C AC */	lfs f2, $$22044@sda21(r2)
 /* 800C4E80 000C1DC0  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4E84 000C1DC4  C0 22 8C A8 */	lfs f1, $$22043-_SDA2_BASE_(r2)
+/* 800C4E84 000C1DC4  C0 22 8C A8 */	lfs f1, $$22043@sda21(r2)
 /* 800C4E88 000C1DC8  FC 60 10 90 */	fmr f3, f2
 /* 800C4E8C 000C1DCC  FC 80 08 90 */	fmr f4, f1
 /* 800C4E90 000C1DD0  FC A0 10 90 */	fmr f5, f2
@@ -1829,7 +1829,7 @@ setLight__12TLightCommonFPCQ26JDrama9TGraphicsi:
 /* 800C4E9C 000C1DDC  38 61 00 48 */	addi r3, r1, 0x48
 /* 800C4EA0 000C1DE0  38 80 00 01 */	li r4, 1
 /* 800C4EA4 000C1DE4  4B FE 4C E9 */	bl GXLoadLightObjImm
-/* 800C4EA8 000C1DE8  83 6D 97 6C */	lwz r27, gpLightManager-_SDA_BASE_(r13)
+/* 800C4EA8 000C1DE8  83 6D 97 6C */	lwz r27, gpLightManager@sda21(r13)
 /* 800C4EAC 000C1DEC  88 1B 00 54 */	lbz r0, 0x54(r27)
 /* 800C4EB0 000C1DF0  28 00 00 00 */	cmplwi r0, 0
 /* 800C4EB4 000C1DF4  41 82 00 B8 */	beq lbl_800C4F6C
@@ -1847,7 +1847,7 @@ setLight__12TLightCommonFPCQ26JDrama9TGraphicsi:
 /* 800C4EE4 000C1E24  4B FE 4B 6D */	bl GXInitLightPos
 /* 800C4EE8 000C1E28  80 7B 00 18 */	lwz r3, 0x18(r27)
 /* 800C4EEC 000C1E2C  3C 00 43 30 */	lis r0, 0x4330
-/* 800C4EF0 000C1E30  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C4EF0 000C1E30  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C4EF4 000C1E34  38 81 00 2C */	addi r4, r1, 0x2c
 /* 800C4EF8 000C1E38  90 61 00 1C */	stw r3, 0x1c(r1)
 /* 800C4EFC 000C1E3C  38 61 00 48 */	addi r3, r1, 0x48
@@ -1865,14 +1865,14 @@ setLight__12TLightCommonFPCQ26JDrama9TGraphicsi:
 /* 800C4F2C 000C1E6C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800C4F30 000C1E70  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 800C4F34 000C1E74  4B FE 4C 01 */	bl GXInitLightColor
-/* 800C4F38 000C1E78  C0 42 8C AC */	lfs f2, $$22044-_SDA2_BASE_(r2)
+/* 800C4F38 000C1E78  C0 42 8C AC */	lfs f2, $$22044@sda21(r2)
 /* 800C4F3C 000C1E7C  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4F40 000C1E80  C0 22 8C A8 */	lfs f1, $$22043-_SDA2_BASE_(r2)
+/* 800C4F40 000C1E80  C0 22 8C A8 */	lfs f1, $$22043@sda21(r2)
 /* 800C4F44 000C1E84  FC 60 10 90 */	fmr f3, f2
 /* 800C4F48 000C1E88  4B FE 4A 19 */	bl GXInitLightAttnA
-/* 800C4F4C 000C1E8C  C0 22 8C B0 */	lfs f1, $$22045-_SDA2_BASE_(r2)
+/* 800C4F4C 000C1E8C  C0 22 8C B0 */	lfs f1, $$22045@sda21(r2)
 /* 800C4F50 000C1E90  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4F54 000C1E94  C0 42 8C B4 */	lfs f2, $$22046-_SDA2_BASE_(r2)
+/* 800C4F54 000C1E94  C0 42 8C B4 */	lfs f2, $$22046@sda21(r2)
 /* 800C4F58 000C1E98  38 80 00 03 */	li r4, 3
 /* 800C4F5C 000C1E9C  4B FE 4A 25 */	bl GXInitLightDistAttn
 /* 800C4F60 000C1EA0  38 61 00 48 */	addi r3, r1, 0x48
@@ -1913,10 +1913,10 @@ lbl_800C4F6C:
 /* 800C4FE8 000C1F28  4B FE 4B 4D */	bl GXInitLightColor
 /* 800C4FEC 000C1F2C  C0 5D 00 10 */	lfs f2, 0x10(r29)
 /* 800C4FF0 000C1F30  38 61 00 48 */	addi r3, r1, 0x48
-/* 800C4FF4 000C1F34  C0 02 8C B4 */	lfs f0, $$22046-_SDA2_BASE_(r2)
-/* 800C4FF8 000C1F38  C0 22 8C AC */	lfs f1, $$22044-_SDA2_BASE_(r2)
+/* 800C4FF4 000C1F34  C0 02 8C B4 */	lfs f0, $$22046@sda21(r2)
+/* 800C4FF8 000C1F38  C0 22 8C AC */	lfs f1, $$22044@sda21(r2)
 /* 800C4FFC 000C1F3C  EC 82 00 32 */	fmuls f4, f2, f0
-/* 800C5000 000C1F40  C0 62 8C A8 */	lfs f3, $$22043-_SDA2_BASE_(r2)
+/* 800C5000 000C1F40  C0 62 8C A8 */	lfs f3, $$22043@sda21(r2)
 /* 800C5004 000C1F44  FC 40 08 90 */	fmr f2, f1
 /* 800C5008 000C1F48  FC A0 08 90 */	fmr f5, f1
 /* 800C500C 000C1F4C  EC C3 20 28 */	fsubs f6, f3, f4
@@ -1956,7 +1956,7 @@ lbl_800C5078:
 /* 800C5084 000C1FC4  4E 80 00 20 */	blr 
 lbl_800C5088:
 /* 800C5088 000C1FC8  80 05 00 24 */	lwz r0, 0x24(r5)
-/* 800C508C 000C1FCC  80 AD 97 64 */	lwz r5, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C508C 000C1FCC  80 AD 97 64 */	lwz r5, mLightAry__12TLightCommon@sda21(r13)
 /* 800C5090 000C1FD0  7C 84 02 14 */	add r4, r4, r0
 /* 800C5094 000C1FD4  1C 64 00 6C */	mulli r3, r4, 0x6c
 /* 800C5098 000C1FD8  80 05 00 10 */	lwz r0, 0x10(r5)
@@ -1981,9 +1981,9 @@ lbl_800C50C4:
 lbl_800C50D4:
 /* 800C50D4 000C2014  80 C3 00 20 */	lwz r6, 0x20(r3)
 /* 800C50D8 000C2018  3C 00 43 30 */	lis r0, 0x4330
-/* 800C50DC 000C201C  80 AD 97 60 */	lwz r5, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C50DC 000C201C  80 AD 97 60 */	lwz r5, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C50E0 000C2020  7C 84 32 14 */	add r4, r4, r6
-/* 800C50E4 000C2024  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C50E4 000C2024  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C50E8 000C2028  1C 84 00 18 */	mulli r4, r4, 0x18
 /* 800C50EC 000C202C  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800C50F0 000C2030  38 84 00 14 */	addi r4, r4, 0x14
@@ -2027,7 +2027,7 @@ lbl_800C5164:
 lbl_800C5174:
 /* 800C5174 000C20B4  80 1F 00 24 */	lwz r0, 0x24(r31)
 /* 800C5178 000C20B8  38 81 00 20 */	addi r4, r1, 0x20
-/* 800C517C 000C20BC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C517C 000C20BC  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C5180 000C20C0  7C A5 02 14 */	add r5, r5, r0
 /* 800C5184 000C20C4  1C 05 00 6C */	mulli r0, r5, 0x6c
 /* 800C5188 000C20C8  80 63 00 10 */	lwz r3, 0x10(r3)
@@ -2036,7 +2036,7 @@ lbl_800C5174:
 /* 800C5194 000C20D4  4B FE 49 C9 */	bl GXGetLightColor
 /* 800C5198 000C20D8  80 61 00 20 */	lwz r3, 0x20(r1)
 /* 800C519C 000C20DC  3C 00 43 30 */	lis r0, 0x4330
-/* 800C51A0 000C20E0  C8 42 8C A0 */	lfd f2, $$22032-_SDA2_BASE_(r2)
+/* 800C51A0 000C20E0  C8 42 8C A0 */	lfd f2, $$22032@sda21(r2)
 /* 800C51A4 000C20E4  90 61 00 28 */	stw r3, 0x28(r1)
 /* 800C51A8 000C20E8  88 61 00 2B */	lbz r3, 0x2b(r1)
 /* 800C51AC 000C20EC  C0 1F 00 1C */	lfs f0, 0x1c(r31)
@@ -2070,7 +2070,7 @@ loadAfter__12TLightCommonFv:
 /* 800C520C 000C214C  93 81 00 90 */	stw r28, 0x90(r1)
 /* 800C5210 000C2150  3B 85 23 30 */	addi r28, r5, $$21490@l
 /* 800C5214 000C2154  38 7C 01 E4 */	addi r3, r28, 0x1e4
-/* 800C5218 000C2158  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800C5218 000C2158  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800C521C 000C215C  83 A4 00 04 */	lwz r29, 4(r4)
 /* 800C5220 000C2160  4B F7 F4 6D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800C5224 000C2164  81 9D 00 00 */	lwz r12, 0(r29)
@@ -2080,9 +2080,9 @@ loadAfter__12TLightCommonFv:
 /* 800C5234 000C2174  38 BC 01 E4 */	addi r5, r28, 0x1e4
 /* 800C5238 000C2178  7D 88 03 A6 */	mtlr r12
 /* 800C523C 000C217C  4E 80 00 21 */	blrl 
-/* 800C5240 000C2180  90 6D 97 60 */	stw r3, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5240 000C2180  90 6D 97 60 */	stw r3, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C5244 000C2184  38 7C 01 50 */	addi r3, r28, 0x150
-/* 800C5248 000C2188  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800C5248 000C2188  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800C524C 000C218C  83 A4 00 04 */	lwz r29, 4(r4)
 /* 800C5250 000C2190  4B F7 F4 3D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800C5254 000C2194  81 9D 00 00 */	lwz r12, 0(r29)
@@ -2092,20 +2092,20 @@ loadAfter__12TLightCommonFv:
 /* 800C5264 000C21A4  38 BC 01 50 */	addi r5, r28, 0x150
 /* 800C5268 000C21A8  7D 88 03 A6 */	mtlr r12
 /* 800C526C 000C21AC  4E 80 00 21 */	blrl 
-/* 800C5270 000C21B0  90 6D 97 64 */	stw r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5270 000C21B0  90 6D 97 64 */	stw r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C5274 000C21B4  3B E0 00 00 */	li r31, 0
-/* 800C5278 000C21B8  C0 02 8C E0 */	lfs f0, $$22844-_SDA2_BASE_(r2)
+/* 800C5278 000C21B8  C0 02 8C E0 */	lfs f0, $$22844@sda21(r2)
 /* 800C527C 000C21BC  3B A0 00 00 */	li r29, 0
-/* 800C5280 000C21C0  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5280 000C21C0  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C5284 000C21C4  3B 80 00 00 */	li r28, 0
 /* 800C5288 000C21C8  80 63 00 10 */	lwz r3, 0x10(r3)
 /* 800C528C 000C21CC  38 03 00 10 */	addi r0, r3, 0x10
-/* 800C5290 000C21D0  90 0D 97 68 */	stw r0, mLightPos__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5290 000C21D0  90 0D 97 68 */	stw r0, mLightPos__12TLightCommon@sda21(r13)
 /* 800C5294 000C21D4  D0 1E 00 10 */	stfs f0, 0x10(r30)
 lbl_800C5298:
 /* 800C5298 000C21D8  80 1E 00 24 */	lwz r0, 0x24(r30)
 /* 800C529C 000C21DC  38 81 00 80 */	addi r4, r1, 0x80
-/* 800C52A0 000C21E0  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C52A0 000C21E0  80 6D 97 64 */	lwz r3, mLightAry__12TLightCommon@sda21(r13)
 /* 800C52A4 000C21E4  7C 1F 02 14 */	add r0, r31, r0
 /* 800C52A8 000C21E8  1C 00 00 6C */	mulli r0, r0, 0x6c
 /* 800C52AC 000C21EC  80 63 00 10 */	lwz r3, 0x10(r3)
@@ -2119,7 +2119,7 @@ lbl_800C5298:
 /* 800C52CC 000C220C  3B BD 00 0C */	addi r29, r29, 0xc
 /* 800C52D0 000C2210  3B 9C 00 04 */	addi r28, r28, 4
 /* 800C52D4 000C2214  80 1E 00 24 */	lwz r0, 0x24(r30)
-/* 800C52D8 000C2218  80 8D 97 64 */	lwz r4, mLightAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C52D8 000C2218  80 8D 97 64 */	lwz r4, mLightAry__12TLightCommon@sda21(r13)
 /* 800C52DC 000C221C  7C 1F 02 14 */	add r0, r31, r0
 /* 800C52E0 000C2220  1C 60 00 6C */	mulli r3, r0, 0x6c
 /* 800C52E4 000C2224  80 84 00 10 */	lwz r4, 0x10(r4)
@@ -2135,7 +2135,7 @@ lbl_800C5298:
 /* 800C530C 000C224C  90 05 00 4C */	stw r0, 0x4c(r5)
 /* 800C5310 000C2250  41 80 FF 88 */	blt lbl_800C5298
 /* 800C5314 000C2254  80 1E 00 20 */	lwz r0, 0x20(r30)
-/* 800C5318 000C2258  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5318 000C2258  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C531C 000C225C  1C 60 00 18 */	mulli r3, r0, 0x18
 /* 800C5320 000C2260  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 800C5324 000C2264  38 03 00 14 */	addi r0, r3, 0x14
@@ -2144,7 +2144,7 @@ lbl_800C5298:
 /* 800C5330 000C2270  80 01 00 18 */	lwz r0, 0x18(r1)
 /* 800C5334 000C2274  90 1E 00 29 */	stw r0, 0x29(r30)
 /* 800C5338 000C2278  80 7E 00 20 */	lwz r3, 0x20(r30)
-/* 800C533C 000C227C  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C533C 000C227C  80 8D 97 60 */	lwz r4, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C5340 000C2280  38 03 00 01 */	addi r0, r3, 1
 /* 800C5344 000C2284  1C 60 00 18 */	mulli r3, r0, 0x18
 /* 800C5348 000C2288  80 84 00 10 */	lwz r4, 0x10(r4)
@@ -2187,12 +2187,12 @@ __ct__12TLightCommonFPCc:
 /* 800C53D0 000C2310  90 1E 00 00 */	stw r0, 0(r30)
 /* 800C53D4 000C2314  38 83 2C BC */	addi r4, r3, __ct__Q29JGeometry8TVec3$$0f$$1Fv@l
 /* 800C53D8 000C2318  38 7E 00 44 */	addi r3, r30, 0x44
-/* 800C53DC 000C231C  C0 02 8C AC */	lfs f0, $$22044-_SDA2_BASE_(r2)
+/* 800C53DC 000C231C  C0 02 8C AC */	lfs f0, $$22044@sda21(r2)
 /* 800C53E0 000C2320  38 A0 00 00 */	li r5, 0
 /* 800C53E4 000C2324  38 C0 00 0C */	li r6, 0xc
 /* 800C53E8 000C2328  D0 1E 00 10 */	stfs f0, 0x10(r30)
 /* 800C53EC 000C232C  38 E0 00 04 */	li r7, 4
-/* 800C53F0 000C2330  C0 02 8C A8 */	lfs f0, $$22043-_SDA2_BASE_(r2)
+/* 800C53F0 000C2330  C0 02 8C A8 */	lfs f0, $$22043@sda21(r2)
 /* 800C53F4 000C2334  D0 1E 00 14 */	stfs f0, 0x14(r30)
 /* 800C53F8 000C2338  D0 1E 00 18 */	stfs f0, 0x18(r30)
 /* 800C53FC 000C233C  D0 1E 00 1C */	stfs f0, 0x1c(r30)
@@ -2201,11 +2201,11 @@ __ct__12TLightCommonFPCc:
 /* 800C5408 000C2348  9B FE 00 28 */	stb r31, 0x28(r30)
 /* 800C540C 000C234C  9B FE 00 41 */	stb r31, 0x41(r30)
 /* 800C5410 000C2350  4B FB D4 25 */	bl __construct_array
-/* 800C5414 000C2354  93 ED 97 60 */	stw r31, mAmbAry__12TLightCommon-_SDA_BASE_(r13)
+/* 800C5414 000C2354  93 ED 97 60 */	stw r31, mAmbAry__12TLightCommon@sda21(r13)
 /* 800C5418 000C2358  7F C3 F3 78 */	mr r3, r30
-/* 800C541C 000C235C  C0 02 8C E0 */	lfs f0, $$22844-_SDA2_BASE_(r2)
-/* 800C5420 000C2360  93 ED 97 64 */	stw r31, mLightAry__12TLightCommon-_SDA_BASE_(r13)
-/* 800C5424 000C2364  93 ED 97 68 */	stw r31, mLightPos__12TLightCommon-_SDA_BASE_(r13)
+/* 800C541C 000C235C  C0 02 8C E0 */	lfs f0, $$22844@sda21(r2)
+/* 800C5420 000C2360  93 ED 97 64 */	stw r31, mLightAry__12TLightCommon@sda21(r13)
+/* 800C5424 000C2364  93 ED 97 68 */	stw r31, mLightPos__12TLightCommon@sda21(r13)
 /* 800C5428 000C2368  D0 1E 00 10 */	stfs f0, 0x10(r30)
 /* 800C542C 000C236C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800C5430 000C2370  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -2478,7 +2478,9 @@ lbl_800C57B4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x36F330, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 lightName$1906:
 	.incbin "baserom.dol", 0x36F33C, 0x14
 ambName$1907:
@@ -2525,40 +2527,140 @@ $$22843:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__22TLightWithDBSetManager
 __vt__22TLightWithDBSetManager:
-	.incbin "baserom.dol", 0x3AEFD8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__22TLightWithDBSetManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__22TLightWithDBSetManagerFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__22TLightWithDBSetManagerFUlPQ26JDrama9TGraphics
 .global __vt__23TIndirectLightWithDBSet
 __vt__23TIndirectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AEFFC, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TIndirectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__23TIndirectLightWithDBSetFv
 .global __vt__24TMapObjectLightWithDBSet
 __vt__24TMapObjectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF024, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__24TMapObjectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__24TMapObjectLightWithDBSetFv
 .global __vt__21TObjectLightWithDBSet
 __vt__21TObjectLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF04C, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TObjectLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__21TObjectLightWithDBSetFv
 .global __vt__21TPlayerLightWithDBSet
 __vt__21TPlayerLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF074, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TPlayerLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte makeDrawBuffer__21TPlayerLightWithDBSetFv
 .global __vt__15TLightWithDBSet
 __vt__15TLightWithDBSet:
-	.incbin "baserom.dol", 0x3AF09C, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TLightWithDBSetFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TLightWithDBSetFUlPQ26JDrama9TGraphics
+  .4byte 0
 .global __vt__16TLightDrawBuffer
 __vt__16TLightDrawBuffer:
-	.incbin "baserom.dol", 0x3AF0C4, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TLightDrawBufferFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TLightDrawBufferFUlPQ26JDrama9TGraphics
+  .4byte setLight__16TLightDrawBufferFP12TLightCommon
 .global __vt__11TLightMario
 __vt__11TLightMario:
-	.incbin "baserom.dol", 0x3AF0EC, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TLightMarioFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TLightMarioFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__11TLightMarioCFi
+  .4byte getAmbColor__11TLightMarioCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__11TLightMarioFPCQ26JDrama9TGraphicsi
 .global __vt__12TLightShadow
 __vt__12TLightShadow:
-	.incbin "baserom.dol", 0x3AF120, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLightShadowFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TLightShadowFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__12TLightCommonCFi
+  .4byte getAmbColor__12TLightCommonCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__12TLightCommonFPCQ26JDrama9TGraphicsi
 .global __vt__12TLightCommon
 __vt__12TLightCommon:
-	.incbin "baserom.dol", 0x3AF154, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TLightCommonFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__12TLightCommonFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TLightCommonFUlPQ26JDrama9TGraphics
+  .4byte getLightColor__12TLightCommonCFi
+  .4byte getAmbColor__12TLightCommonCFi
+  .4byte getLightPosition__12TLightCommonFi
+  .4byte setLight__12TLightCommonFPCQ26JDrama9TGraphicsi
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 className$1930:
-	.incbin "baserom.dol", 0x3E3308, 0x8
+  .4byte $$21931
+  .4byte $$21932
 className$1944:
-	.incbin "baserom.dol", 0x3E3310, 0x8
+  .4byte $$21945
+  .4byte $$21946
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22032:
@@ -2566,7 +2668,7 @@ $$22032:
 $$22043:
 	.incbin "baserom.dol", 0x3E49A8, 0x4
 $$22044:
-	.incbin "baserom.dol", 0x3E49AC, 0x4
+  .4byte 0
 $$22045:
 	.incbin "baserom.dol", 0x3E49B0, 0x4
 $$22046:

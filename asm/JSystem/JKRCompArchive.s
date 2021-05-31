@@ -154,7 +154,7 @@ open__14JKRCompArchiveFl:
 /* 800083A0 000052E0  90 1F 00 48 */	stw r0, 0x48(r31)
 /* 800083A4 000052E4  90 1F 00 4C */	stw r0, 0x4c(r31)
 /* 800083A8 000052E8  90 1F 00 50 */	stw r0, 0x50(r31)
-/* 800083AC 000052EC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800083AC 000052EC  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800083B0 000052F0  48 00 45 95 */	bl __nw__FUlP7JKRHeapi
 /* 800083B4 000052F4  28 03 00 00 */	cmplwi r3, 0
 /* 800083B8 000052F8  41 82 00 0C */	beq lbl_800083C4
@@ -170,7 +170,7 @@ lbl_800083C4:
 /* 800083DC 0000531C  38 60 00 00 */	li r3, 0
 /* 800083E0 00005320  48 00 04 30 */	b lbl_80008810
 lbl_800083E4:
-/* 800083E4 00005324  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800083E4 00005324  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800083E8 00005328  38 80 00 20 */	li r4, 0x20
 /* 800083EC 0000532C  38 A0 FF E0 */	li r5, -32
 /* 800083F0 00005330  81 83 00 00 */	lwz r12, 0(r3)
@@ -247,7 +247,7 @@ lbl_800084BC:
 /* 800084F4 00005434  80 9F 00 74 */	lwz r4, 0x74(r31)
 /* 800084F8 00005438  28 04 00 00 */	cmplwi r4, 0
 /* 800084FC 0000543C  41 82 00 58 */	beq lbl_80008554
-/* 80008500 00005440  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram-_SDA_BASE_(r13)
+/* 80008500 00005440  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram@sda21(r13)
 /* 80008504 00005444  38 A0 00 00 */	li r5, 0
 /* 80008508 00005448  80 63 00 78 */	lwz r3, 0x78(r3)
 /* 8000850C 0000544C  4B FF E2 B9 */	bl alloc__11JKRAramHeapFUlQ211JKRAramHeap10EAllocMode
@@ -303,7 +303,7 @@ lbl_80008598:
 lbl_800085C8:
 /* 800085C8 00005508  3B 80 FF E0 */	li r28, -32
 lbl_800085CC:
-/* 800085CC 0000550C  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800085CC 0000550C  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800085D0 00005510  7F 5C 00 D0 */	neg r26, r28
 /* 800085D4 00005514  38 99 00 00 */	addi r4, r25, 0
 /* 800085D8 00005518  81 83 00 00 */	lwz r12, 0(r3)
@@ -354,7 +354,7 @@ lbl_80008678:
 /* 80008684 000055C4  38 B9 00 00 */	addi r5, r25, 0
 /* 80008688 000055C8  38 C0 00 00 */	li r6, 0
 /* 8000868C 000055CC  48 02 E0 09 */	bl orderSync__9JKRDecompFPUcPUcUlUl
-/* 80008690 000055D0  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80008690 000055D0  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 80008694 000055D4  7F 64 DB 78 */	mr r4, r27
 /* 80008698 000055D8  81 83 00 00 */	lwz r12, 0(r3)
 /* 8000869C 000055DC  81 8C 00 10 */	lwz r12, 0x10(r12)
@@ -386,7 +386,7 @@ lbl_800086DC:
 /* 80008700 00005640  80 9F 00 74 */	lwz r4, 0x74(r31)
 /* 80008704 00005644  28 04 00 00 */	cmplwi r4, 0
 /* 80008708 00005648  41 82 00 64 */	beq lbl_8000876C
-/* 8000870C 0000564C  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram-_SDA_BASE_(r13)
+/* 8000870C 0000564C  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram@sda21(r13)
 /* 80008710 00005650  38 A0 00 00 */	li r5, 0
 /* 80008714 00005654  80 63 00 78 */	lwz r3, 0x78(r3)
 /* 80008718 00005658  4B FF E0 AD */	bl alloc__11JKRAramHeapFUlQ211JKRAramHeap10EAllocMode
@@ -821,4 +821,21 @@ $$21811:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14JKRCompArchive
 __vt__14JKRCompArchive:
-	.incbin "baserom.dol", 0x3A5480, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JKRCompArchiveFv
+  .4byte unmount__13JKRFileLoaderFv
+  .4byte becomeCurrent__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFUlPCc
+  .4byte readResource__10JKRArchiveFPvUlPCc
+  .4byte readResource__10JKRArchiveFPvUlUlPCc
+  .4byte removeResourceAll__14JKRCompArchiveFv
+  .4byte removeResource__14JKRCompArchiveFPv
+  .4byte detachResource__10JKRArchiveFPv
+  .4byte getResSize__10JKRArchiveCFPCv
+  .4byte countFile__10JKRArchiveCFPCc
+  .4byte getFirstFile__10JKRArchiveCFPCc
+  .4byte fetchResource__14JKRCompArchiveFPQ210JKRArchive12SDIFileEntryPUl
+  .4byte fetchResource__14JKRCompArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl
+  .4byte 0

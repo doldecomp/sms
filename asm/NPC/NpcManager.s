@@ -133,11 +133,11 @@ createModelData__15TKinopioManagerFv:
 /* 8016D734 0016A674  38 80 00 00 */	li r4, 0
 /* 8016D738 0016A678  4B FA 95 A5 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D73C 0016A67C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D740 0016A680  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016D740 0016A680  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016D744 0016A684  4B E9 E5 79 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016D748 0016A688  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016D74C 0016A68C  41 82 00 10 */	beq lbl_8016D75C
-/* 8016D750 0016A690  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016D750 0016A690  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016D754 0016A694  7F E3 FB 78 */	mr r3, r31
 /* 8016D758 0016A698  4B F6 47 45 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016D75C:
@@ -164,11 +164,11 @@ createModelData__17TMareWBaseManagerFv:
 /* 8016D7A0 0016A6E0  38 80 00 00 */	li r4, 0
 /* 8016D7A4 0016A6E4  4B FA 95 39 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D7A8 0016A6E8  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D7AC 0016A6EC  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016D7AC 0016A6EC  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016D7B0 0016A6F0  4B E9 E5 0D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016D7B4 0016A6F4  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016D7B8 0016A6F8  41 82 00 10 */	beq lbl_8016D7C8
-/* 8016D7BC 0016A6FC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016D7BC 0016A6FC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016D7C0 0016A700  7F E3 FB 78 */	mr r3, r31
 /* 8016D7C4 0016A704  4B F6 46 D9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016D7C8:
@@ -195,11 +195,11 @@ createModelData__17TMareMBaseManagerFv:
 /* 8016D80C 0016A74C  38 80 00 00 */	li r4, 0
 /* 8016D810 0016A750  4B FA 94 CD */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D814 0016A754  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D818 0016A758  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016D818 0016A758  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016D81C 0016A75C  4B E9 E4 A1 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016D820 0016A760  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016D824 0016A764  41 82 00 10 */	beq lbl_8016D834
-/* 8016D828 0016A768  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016D828 0016A768  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016D82C 0016A76C  7F E3 FB 78 */	mr r3, r31
 /* 8016D830 0016A770  4B F6 46 6D */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016D834:
@@ -226,9 +226,9 @@ createModelData__15TMonteWCManagerFv:
 /* 8016D878 0016A7B8  38 80 00 00 */	li r4, 0
 /* 8016D87C 0016A7BC  4B FA 94 61 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D880 0016A7C0  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D884 0016A7C4  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName-_SDA_BASE_(r13)
+/* 8016D884 0016A7C4  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName@sda21(r13)
 /* 8016D888 0016A7C8  4B E9 E4 35 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016D88C 0016A7CC  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016D88C 0016A7CC  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName@sda21(r13)
 /* 8016D890 0016A7D0  38 A3 00 00 */	addi r5, r3, 0
 /* 8016D894 0016A7D4  38 7F 00 00 */	addi r3, r31, 0
 /* 8016D898 0016A7D8  4B F6 46 05 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -256,9 +256,9 @@ createModelData__15TMonteWBManagerFv:
 /* 8016D8E4 0016A824  38 80 00 00 */	li r4, 0
 /* 8016D8E8 0016A828  4B FA 93 F5 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D8EC 0016A82C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D8F0 0016A830  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName-_SDA_BASE_(r13)
+/* 8016D8F0 0016A830  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName@sda21(r13)
 /* 8016D8F4 0016A834  4B E9 E3 C9 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016D8F8 0016A838  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016D8F8 0016A838  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName@sda21(r13)
 /* 8016D8FC 0016A83C  38 A3 00 00 */	addi r5, r3, 0
 /* 8016D900 0016A840  38 7F 00 00 */	addi r3, r31, 0
 /* 8016D904 0016A844  4B F6 45 99 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -287,9 +287,9 @@ createModelData__15TMonteWAManagerFv:
 /* 8016D954 0016A894  38 80 00 00 */	li r4, 0
 /* 8016D958 0016A898  4B FA 93 85 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D95C 0016A89C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D960 0016A8A0  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName-_SDA_BASE_(r13)
+/* 8016D960 0016A8A0  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName@sda21(r13)
 /* 8016D964 0016A8A4  4B E9 E3 59 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016D968 0016A8A8  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016D968 0016A8A8  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName@sda21(r13)
 /* 8016D96C 0016A8AC  38 A3 00 00 */	addi r5, r3, 0
 /* 8016D970 0016A8B0  38 7F 00 00 */	addi r3, r31, 0
 /* 8016D974 0016A8B4  4B F6 45 29 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -298,11 +298,11 @@ createModelData__15TMonteWAManagerFv:
 /* 8016D980 0016A8C0  38 80 00 00 */	li r4, 0
 /* 8016D984 0016A8C4  4B FA 93 59 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016D988 0016A8C8  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016D98C 0016A8CC  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016D98C 0016A8CC  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016D990 0016A8D0  4B E9 E3 2D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016D994 0016A8D4  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016D998 0016A8D8  41 82 00 10 */	beq lbl_8016D9A8
-/* 8016D99C 0016A8DC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016D99C 0016A8DC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016D9A0 0016A8E0  7F E3 FB 78 */	mr r3, r31
 /* 8016D9A4 0016A8E4  4B F6 44 F9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016D9A8:
@@ -332,9 +332,9 @@ createModelData__14TMonteWManagerFv:
 /* 8016D9F8 0016A938  38 80 00 00 */	li r4, 0
 /* 8016D9FC 0016A93C  4B FA 92 E1 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DA00 0016A940  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DA04 0016A944  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DA04 0016A944  80 6D 84 9C */	lwz r3, cMonteWRealStrawTexName@sda21(r13)
 /* 8016DA08 0016A948  4B E9 E2 B5 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DA0C 0016A94C  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DA0C 0016A94C  80 8D 84 94 */	lwz r4, cMonteWDummyStrawTexName@sda21(r13)
 /* 8016DA10 0016A950  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DA14 0016A954  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DA18 0016A958  4B F6 44 85 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -343,11 +343,11 @@ createModelData__14TMonteWManagerFv:
 /* 8016DA24 0016A964  38 80 00 00 */	li r4, 0
 /* 8016DA28 0016A968  4B FA 92 B5 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DA2C 0016A96C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DA30 0016A970  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016DA30 0016A970  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016DA34 0016A974  4B E9 E2 89 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016DA38 0016A978  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016DA3C 0016A97C  41 82 00 10 */	beq lbl_8016DA4C
-/* 8016DA40 0016A980  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016DA40 0016A980  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016DA44 0016A984  7F E3 FB 78 */	mr r3, r31
 /* 8016DA48 0016A988  4B F6 44 55 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016DA4C:
@@ -375,9 +375,9 @@ createModelData__15TMonteMHManagerFv:
 /* 8016DA94 0016A9D4  38 80 00 00 */	li r4, 0
 /* 8016DA98 0016A9D8  4B FA 92 45 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DA9C 0016A9DC  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DAA0 0016A9E0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DAA0 0016A9E0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DAA4 0016A9E4  4B E9 E2 19 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DAA8 0016A9E8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DAA8 0016A9E8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DAAC 0016A9EC  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DAB0 0016A9F0  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DAB4 0016A9F4  4B F6 43 E9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -404,9 +404,9 @@ createModelData__15TMonteMGManagerFv:
 /* 8016DAFC 0016AA3C  38 80 00 00 */	li r4, 0
 /* 8016DB00 0016AA40  4B FA 91 DD */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DB04 0016AA44  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DB08 0016AA48  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DB08 0016AA48  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DB0C 0016AA4C  4B E9 E1 B1 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DB10 0016AA50  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DB10 0016AA50  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DB14 0016AA54  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DB18 0016AA58  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DB1C 0016AA5C  4B F6 43 81 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -433,9 +433,9 @@ createModelData__15TMonteMFManagerFv:
 /* 8016DB64 0016AAA4  38 80 00 00 */	li r4, 0
 /* 8016DB68 0016AAA8  4B FA 91 75 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DB6C 0016AAAC  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DB70 0016AAB0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DB70 0016AAB0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DB74 0016AAB4  4B E9 E1 49 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DB78 0016AAB8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DB78 0016AAB8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DB7C 0016AABC  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DB80 0016AAC0  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DB84 0016AAC4  4B F6 43 19 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -479,9 +479,9 @@ createModelData__15TMonteMDManagerFv:
 /* 8016DC04 0016AB44  38 80 00 00 */	li r4, 0
 /* 8016DC08 0016AB48  4B FA 90 D5 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DC0C 0016AB4C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DC10 0016AB50  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DC10 0016AB50  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DC14 0016AB54  4B E9 E0 A9 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DC18 0016AB58  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DC18 0016AB58  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DC1C 0016AB5C  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DC20 0016AB60  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DC24 0016AB64  4B F6 42 79 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -510,9 +510,9 @@ createModelData__15TMonteMCManagerFv:
 /* 8016DC74 0016ABB4  38 80 00 00 */	li r4, 0
 /* 8016DC78 0016ABB8  4B FA 90 65 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DC7C 0016ABBC  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DC80 0016ABC0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DC80 0016ABC0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DC84 0016ABC4  4B E9 E0 39 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DC88 0016ABC8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DC88 0016ABC8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DC8C 0016ABCC  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DC90 0016ABD0  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DC94 0016ABD4  4B F6 42 09 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -521,11 +521,11 @@ createModelData__15TMonteMCManagerFv:
 /* 8016DCA0 0016ABE0  38 80 00 00 */	li r4, 0
 /* 8016DCA4 0016ABE4  4B FA 90 39 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DCA8 0016ABE8  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DCAC 0016ABEC  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016DCAC 0016ABEC  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016DCB0 0016ABF0  4B E9 E0 0D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016DCB4 0016ABF4  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016DCB8 0016ABF8  41 82 00 10 */	beq lbl_8016DCC8
-/* 8016DCBC 0016ABFC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016DCBC 0016ABFC  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016DCC0 0016AC00  7F E3 FB 78 */	mr r3, r31
 /* 8016DCC4 0016AC04  4B F6 41 D9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016DCC8:
@@ -554,9 +554,9 @@ createModelData__15TMonteMBManagerFv:
 /* 8016DD14 0016AC54  38 80 00 00 */	li r4, 0
 /* 8016DD18 0016AC58  4B FA 8F C5 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DD1C 0016AC5C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DD20 0016AC60  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DD20 0016AC60  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DD24 0016AC64  4B E9 DF 99 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DD28 0016AC68  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DD28 0016AC68  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DD2C 0016AC6C  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DD30 0016AC70  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DD34 0016AC74  4B F6 41 69 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -585,9 +585,9 @@ createModelData__15TMonteMAManagerFv:
 /* 8016DD84 0016ACC4  38 80 00 00 */	li r4, 0
 /* 8016DD88 0016ACC8  4B FA 8F 55 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DD8C 0016ACCC  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DD90 0016ACD0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DD90 0016ACD0  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DD94 0016ACD4  4B E9 DF 29 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DD98 0016ACD8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DD98 0016ACD8  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DD9C 0016ACDC  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DDA0 0016ACE0  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DDA4 0016ACE4  4B F6 40 F9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -596,11 +596,11 @@ createModelData__15TMonteMAManagerFv:
 /* 8016DDB0 0016ACF0  38 80 00 00 */	li r4, 0
 /* 8016DDB4 0016ACF4  4B FA 8F 29 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DDB8 0016ACF8  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DDBC 0016ACFC  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016DDBC 0016ACFC  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016DDC0 0016AD00  4B E9 DE FD */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016DDC4 0016AD04  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016DDC8 0016AD08  41 82 00 10 */	beq lbl_8016DDD8
-/* 8016DDCC 0016AD0C  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016DDCC 0016AD0C  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016DDD0 0016AD10  7F E3 FB 78 */	mr r3, r31
 /* 8016DDD4 0016AD14  4B F6 40 C9 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016DDD8:
@@ -630,9 +630,9 @@ createModelData__14TMonteMManagerFv:
 /* 8016DE28 0016AD68  38 80 00 00 */	li r4, 0
 /* 8016DE2C 0016AD6C  4B FA 8E B1 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DE30 0016AD70  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DE34 0016AD74  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName-_SDA_BASE_(r13)
+/* 8016DE34 0016AD74  80 6D 84 98 */	lwz r3, cMonteMRealStrawTexName@sda21(r13)
 /* 8016DE38 0016AD78  4B E9 DE 85 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016DE3C 0016AD7C  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName-_SDA_BASE_(r13)
+/* 8016DE3C 0016AD7C  80 8D 84 90 */	lwz r4, cMonteMDummyStrawTexName@sda21(r13)
 /* 8016DE40 0016AD80  38 A3 00 00 */	addi r5, r3, 0
 /* 8016DE44 0016AD84  38 7F 00 00 */	addi r3, r31, 0
 /* 8016DE48 0016AD88  4B F6 40 55 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -641,11 +641,11 @@ createModelData__14TMonteMManagerFv:
 /* 8016DE54 0016AD94  38 80 00 00 */	li r4, 0
 /* 8016DE58 0016AD98  4B FA 8E 85 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016DE5C 0016AD9C  83 E3 00 00 */	lwz r31, 0(r3)
-/* 8016DE60 0016ADA0  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016DE60 0016ADA0  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016DE64 0016ADA4  4B E9 DE 59 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016DE68 0016ADA8  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016DE6C 0016ADAC  41 82 00 10 */	beq lbl_8016DE7C
-/* 8016DE70 0016ADB0  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016DE70 0016ADB0  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016DE74 0016ADB4  7F E3 FB 78 */	mr r3, r31
 /* 8016DE78 0016ADB8  4B F6 40 25 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016DE7C:
@@ -664,9 +664,9 @@ load__18TSunflowerLManagerFR20JSUMemoryInputStream:
 /* 8016DEA0 0016ADE0  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8016DEA4 0016ADE4  7C 7F 1B 78 */	mr r31, r3
 /* 8016DEA8 0016ADE8  48 0E 49 5D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DEAC 0016ADEC  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016DEAC 0016ADEC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016DEB0 0016ADF0  D0 1F 00 3C */	stfs f0, 0x3c(r31)
-/* 8016DEB4 0016ADF4  C0 02 A6 64 */	lfs f0, $$22536-_SDA2_BASE_(r2)
+/* 8016DEB4 0016ADF4  C0 02 A6 64 */	lfs f0, $$22536@sda21(r2)
 /* 8016DEB8 0016ADF8  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DEBC 0016ADFC  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016DEC0 0016AE00  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -683,7 +683,7 @@ load__18TRaccoonDogManagerFR20JSUMemoryInputStream:
 /* 8016DEE0 0016AE20  7C 7F 1B 78 */	mr r31, r3
 /* 8016DEE4 0016AE24  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DEE8 0016AE28  48 0E 49 1D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DEEC 0016AE2C  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016DEEC 0016AE2C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016DEF0 0016AE30  38 60 00 14 */	li r3, 0x14
 /* 8016DEF4 0016AE34  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DEF8 0016AE38  4B E9 E9 B9 */	bl __nw__FUl
@@ -716,7 +716,7 @@ load__13TPeachManagerFR20JSUMemoryInputStream:
 /* 8016DF54 0016AE94  7C 7F 1B 78 */	mr r31, r3
 /* 8016DF58 0016AE98  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DF5C 0016AE9C  48 0E 48 A9 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DF60 0016AEA0  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016DF60 0016AEA0  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016DF64 0016AEA4  38 60 00 14 */	li r3, 0x14
 /* 8016DF68 0016AEA8  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DF6C 0016AEAC  4B E9 E9 45 */	bl __nw__FUl
@@ -749,7 +749,7 @@ load__15TKinojiiManagerFR20JSUMemoryInputStream:
 /* 8016DFC8 0016AF08  7C 7F 1B 78 */	mr r31, r3
 /* 8016DFCC 0016AF0C  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DFD0 0016AF10  48 0E 48 35 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DFD4 0016AF14  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016DFD4 0016AF14  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016DFD8 0016AF18  38 60 00 14 */	li r3, 0x14
 /* 8016DFDC 0016AF1C  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DFE0 0016AF20  4B E9 E8 D1 */	bl __nw__FUl
@@ -782,7 +782,7 @@ load__15TKinopioManagerFR20JSUMemoryInputStream:
 /* 8016E03C 0016AF7C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E040 0016AF80  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E044 0016AF84  48 0E 47 C1 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E048 0016AF88  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E048 0016AF88  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E04C 0016AF8C  38 60 00 14 */	li r3, 0x14
 /* 8016E050 0016AF90  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E054 0016AF94  4B E9 E8 5D */	bl __nw__FUl
@@ -815,7 +815,7 @@ load__14TMareWBManagerFR20JSUMemoryInputStream:
 /* 8016E0B0 0016AFF0  7C 7F 1B 78 */	mr r31, r3
 /* 8016E0B4 0016AFF4  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E0B8 0016AFF8  48 0E 47 4D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E0BC 0016AFFC  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E0BC 0016AFFC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E0C0 0016B000  38 60 00 14 */	li r3, 0x14
 /* 8016E0C4 0016B004  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E0C8 0016B008  4B E9 E7 E9 */	bl __nw__FUl
@@ -848,7 +848,7 @@ load__14TMareWAManagerFR20JSUMemoryInputStream:
 /* 8016E124 0016B064  7C 7F 1B 78 */	mr r31, r3
 /* 8016E128 0016B068  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E12C 0016B06C  48 0E 46 D9 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E130 0016B070  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E130 0016B070  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E134 0016B074  38 60 00 14 */	li r3, 0x14
 /* 8016E138 0016B078  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E13C 0016B07C  4B E9 E7 75 */	bl __nw__FUl
@@ -881,7 +881,7 @@ load__14TMareMDManagerFR20JSUMemoryInputStream:
 /* 8016E198 0016B0D8  7C 7F 1B 78 */	mr r31, r3
 /* 8016E19C 0016B0DC  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E1A0 0016B0E0  48 0E 46 65 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E1A4 0016B0E4  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E1A4 0016B0E4  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E1A8 0016B0E8  38 60 00 14 */	li r3, 0x14
 /* 8016E1AC 0016B0EC  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E1B0 0016B0F0  4B E9 E7 01 */	bl __nw__FUl
@@ -914,7 +914,7 @@ load__14TMareMCManagerFR20JSUMemoryInputStream:
 /* 8016E20C 0016B14C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E210 0016B150  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E214 0016B154  48 0E 45 F1 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E218 0016B158  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E218 0016B158  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E21C 0016B15C  38 60 00 14 */	li r3, 0x14
 /* 8016E220 0016B160  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E224 0016B164  4B E9 E6 8D */	bl __nw__FUl
@@ -947,7 +947,7 @@ load__14TMareMBManagerFR20JSUMemoryInputStream:
 /* 8016E280 0016B1C0  7C 7F 1B 78 */	mr r31, r3
 /* 8016E284 0016B1C4  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E288 0016B1C8  48 0E 45 7D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E28C 0016B1CC  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E28C 0016B1CC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E290 0016B1D0  38 60 00 14 */	li r3, 0x14
 /* 8016E294 0016B1D4  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E298 0016B1D8  4B E9 E6 19 */	bl __nw__FUl
@@ -980,7 +980,7 @@ load__14TMareMAManagerFR20JSUMemoryInputStream:
 /* 8016E2F4 0016B234  7C 7F 1B 78 */	mr r31, r3
 /* 8016E2F8 0016B238  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E2FC 0016B23C  48 0E 45 09 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E300 0016B240  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E300 0016B240  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E304 0016B244  38 60 00 14 */	li r3, 0x14
 /* 8016E308 0016B248  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E30C 0016B24C  4B E9 E5 A5 */	bl __nw__FUl
@@ -1013,7 +1013,7 @@ load__15TMonteWCManagerFR20JSUMemoryInputStream:
 /* 8016E368 0016B2A8  7C 7F 1B 78 */	mr r31, r3
 /* 8016E36C 0016B2AC  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E370 0016B2B0  48 0E 44 95 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E374 0016B2B4  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E374 0016B2B4  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E378 0016B2B8  38 60 00 14 */	li r3, 0x14
 /* 8016E37C 0016B2BC  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E380 0016B2C0  4B E9 E5 31 */	bl __nw__FUl
@@ -1046,7 +1046,7 @@ load__15TMonteMHManagerFR20JSUMemoryInputStream:
 /* 8016E3DC 0016B31C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E3E0 0016B320  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E3E4 0016B324  48 0E 44 21 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E3E8 0016B328  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E3E8 0016B328  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E3EC 0016B32C  38 60 00 14 */	li r3, 0x14
 /* 8016E3F0 0016B330  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E3F4 0016B334  4B E9 E4 BD */	bl __nw__FUl
@@ -1079,7 +1079,7 @@ load__15TMonteMGManagerFR20JSUMemoryInputStream:
 /* 8016E450 0016B390  7C 7F 1B 78 */	mr r31, r3
 /* 8016E454 0016B394  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E458 0016B398  48 0E 43 AD */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E45C 0016B39C  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E45C 0016B39C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E460 0016B3A0  38 60 00 14 */	li r3, 0x14
 /* 8016E464 0016B3A4  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E468 0016B3A8  4B E9 E4 49 */	bl __nw__FUl
@@ -1112,7 +1112,7 @@ load__15TMonteMFManagerFR20JSUMemoryInputStream:
 /* 8016E4C4 0016B404  7C 7F 1B 78 */	mr r31, r3
 /* 8016E4C8 0016B408  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E4CC 0016B40C  48 0E 43 39 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E4D0 0016B410  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016E4D0 0016B410  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016E4D4 0016B414  38 60 00 14 */	li r3, 0x14
 /* 8016E4D8 0016B418  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E4DC 0016B41C  4B E9 E3 D5 */	bl __nw__FUl
@@ -1173,7 +1173,7 @@ createAnmData__18TMonteWBaseManagerFv:
 /* 8016E590 0016B4D0  7F C3 F3 78 */	mr r3, r30
 /* 8016E594 0016B4D4  4B F6 98 71 */	bl __ct__13MActorAnmDataFv
 lbl_8016E598:
-/* 8016E598 0016B4D8  80 8D 84 B4 */	lwz r4, cMonteWCommonVolumeName-_SDA_BASE_(r13)
+/* 8016E598 0016B4D8  80 8D 84 B4 */	lwz r4, cMonteWCommonVolumeName@sda21(r13)
 /* 8016E59C 0016B4DC  7F C3 F3 78 */	mr r3, r30
 /* 8016E5A0 0016B4E0  38 A0 00 00 */	li r5, 0
 /* 8016E5A4 0016B4E4  4B F6 91 B9 */	bl init__13MActorAnmDataFPCcPPCc
@@ -1200,7 +1200,7 @@ createAnmData__18TMonteMBaseManagerFv:
 /* 8016E5EC 0016B52C  7F C3 F3 78 */	mr r3, r30
 /* 8016E5F0 0016B530  4B F6 98 15 */	bl __ct__13MActorAnmDataFv
 lbl_8016E5F4:
-/* 8016E5F4 0016B534  80 8D 84 B0 */	lwz r4, cMonteMCommonVolumeName-_SDA_BASE_(r13)
+/* 8016E5F4 0016B534  80 8D 84 B0 */	lwz r4, cMonteMCommonVolumeName@sda21(r13)
 /* 8016E5F8 0016B538  7F C3 F3 78 */	mr r3, r30
 /* 8016E5FC 0016B53C  38 A0 00 00 */	li r5, 0
 /* 8016E600 0016B540  4B F6 91 5D */	bl init__13MActorAnmDataFPCcPPCc
@@ -1216,10 +1216,10 @@ lbl_8016E5F4:
 getBmt___16TMareBaseManagerFb:
 /* 8016E620 0016B560  54 80 06 3F */	clrlwi. r0, r4, 0x18
 /* 8016E624 0016B564  41 82 00 0C */	beq lbl_8016E630
-/* 8016E628 0016B568  80 6D 99 44 */	lwz r3, mStaticBmtPollution__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E628 0016B568  80 6D 99 44 */	lwz r3, mStaticBmtPollution__16TMareBaseManager@sda21(r13)
 /* 8016E62C 0016B56C  4E 80 00 20 */	blr 
 lbl_8016E630:
-/* 8016E630 0016B570  80 6D 99 40 */	lwz r3, mStaticBmtNormal__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E630 0016B570  80 6D 99 40 */	lwz r3, mStaticBmtNormal__16TMareBaseManager@sda21(r13)
 /* 8016E634 0016B574  4E 80 00 20 */	blr 
 
 .global __ct__17TMareWBaseManagerFPCc
@@ -1238,28 +1238,28 @@ __ct__17TMareWBaseManagerFPCc:
 /* 8016E664 0016B5A4  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 8016E668 0016B5A8  38 04 91 30 */	addi r0, r4, __vt__16TMareBaseManager@l
 /* 8016E66C 0016B5AC  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E670 0016B5B0  80 0D 99 40 */	lwz r0, mStaticBmtNormal__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E670 0016B5B0  80 0D 99 40 */	lwz r0, mStaticBmtNormal__16TMareBaseManager@sda21(r13)
 /* 8016E674 0016B5B4  28 00 00 00 */	cmplwi r0, 0
 /* 8016E678 0016B5B8  40 82 00 14 */	bne lbl_8016E68C
-/* 8016E67C 0016B5BC  80 6D 84 C0 */	lwz r3, cMareCommonNormalBmtName-_SDA_BASE_(r13)
+/* 8016E67C 0016B5BC  80 6D 84 C0 */	lwz r3, cMareCommonNormalBmtName@sda21(r13)
 /* 8016E680 0016B5C0  4B E9 D6 3D */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016E684 0016B5C4  4B EC 26 09 */	bl loadMaterialTable__22J3DModelLoaderDataBaseFPCv
-/* 8016E688 0016B5C8  90 6D 99 40 */	stw r3, mStaticBmtNormal__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E688 0016B5C8  90 6D 99 40 */	stw r3, mStaticBmtNormal__16TMareBaseManager@sda21(r13)
 lbl_8016E68C:
-/* 8016E68C 0016B5CC  80 0D 99 44 */	lwz r0, mStaticBmtPollution__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E68C 0016B5CC  80 0D 99 44 */	lwz r0, mStaticBmtPollution__16TMareBaseManager@sda21(r13)
 /* 8016E690 0016B5D0  28 00 00 00 */	cmplwi r0, 0
 /* 8016E694 0016B5D4  40 82 00 14 */	bne lbl_8016E6A8
-/* 8016E698 0016B5D8  80 6D 84 C4 */	lwz r3, cMareCommonPollutionBmtName-_SDA_BASE_(r13)
+/* 8016E698 0016B5D8  80 6D 84 C4 */	lwz r3, cMareCommonPollutionBmtName@sda21(r13)
 /* 8016E69C 0016B5DC  4B E9 D6 21 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016E6A0 0016B5E0  4B EC 25 ED */	bl loadMaterialTable__22J3DModelLoaderDataBaseFPCv
-/* 8016E6A4 0016B5E4  90 6D 99 44 */	stw r3, mStaticBmtPollution__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E6A4 0016B5E4  90 6D 99 44 */	stw r3, mStaticBmtPollution__16TMareBaseManager@sda21(r13)
 lbl_8016E6A8:
 /* 8016E6A8 0016B5E8  3C 80 80 3C */	lis r4, __vt__17TMareWBaseManager@ha
 /* 8016E6AC 0016B5EC  80 61 00 08 */	lwz r3, 8(r1)
 /* 8016E6B0 0016B5F0  38 04 86 E0 */	addi r0, r4, __vt__17TMareWBaseManager@l
 /* 8016E6B4 0016B5F4  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E6B8 0016B5F8  83 ED 84 BC */	lwz r31, cMareWCommonVolumeName-_SDA_BASE_(r13)
-/* 8016E6BC 0016B5FC  80 0D 99 3C */	lwz r0, mStaticCommonKeeper__17TMareWBaseManager-_SDA_BASE_(r13)
+/* 8016E6B8 0016B5F8  83 ED 84 BC */	lwz r31, cMareWCommonVolumeName@sda21(r13)
+/* 8016E6BC 0016B5FC  80 0D 99 3C */	lwz r0, mStaticCommonKeeper__17TMareWBaseManager@sda21(r13)
 /* 8016E6C0 0016B600  90 03 00 5C */	stw r0, 0x5c(r3)
 /* 8016E6C4 0016B604  80 03 00 5C */	lwz r0, 0x5c(r3)
 /* 8016E6C8 0016B608  28 00 00 00 */	cmplwi r0, 0
@@ -1278,7 +1278,7 @@ lbl_8016E6EC:
 /* 8016E6F8 0016B638  93 C3 00 5C */	stw r30, 0x5c(r3)
 /* 8016E6FC 0016B63C  38 C3 00 5C */	addi r6, r3, 0x5c
 /* 8016E700 0016B640  80 03 00 5C */	lwz r0, 0x5c(r3)
-/* 8016E704 0016B644  90 0D 99 3C */	stw r0, mStaticCommonKeeper__17TMareWBaseManager-_SDA_BASE_(r13)
+/* 8016E704 0016B644  90 0D 99 3C */	stw r0, mStaticCommonKeeper__17TMareWBaseManager@sda21(r13)
 /* 8016E708 0016B648  80 C6 00 00 */	lwz r6, 0(r6)
 /* 8016E70C 0016B64C  48 00 06 79 */	bl makePartsModelData___11TNPCManagerFUlUlP16TModelDataKeeper
 lbl_8016E710:
@@ -1340,28 +1340,28 @@ __ct__17TMareMBaseManagerFPCc:
 /* 8016E7CC 0016B70C  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 8016E7D0 0016B710  38 04 91 30 */	addi r0, r4, __vt__16TMareBaseManager@l
 /* 8016E7D4 0016B714  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E7D8 0016B718  80 0D 99 40 */	lwz r0, mStaticBmtNormal__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E7D8 0016B718  80 0D 99 40 */	lwz r0, mStaticBmtNormal__16TMareBaseManager@sda21(r13)
 /* 8016E7DC 0016B71C  28 00 00 00 */	cmplwi r0, 0
 /* 8016E7E0 0016B720  40 82 00 14 */	bne lbl_8016E7F4
-/* 8016E7E4 0016B724  80 6D 84 C0 */	lwz r3, cMareCommonNormalBmtName-_SDA_BASE_(r13)
+/* 8016E7E4 0016B724  80 6D 84 C0 */	lwz r3, cMareCommonNormalBmtName@sda21(r13)
 /* 8016E7E8 0016B728  4B E9 D4 D5 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016E7EC 0016B72C  4B EC 24 A1 */	bl loadMaterialTable__22J3DModelLoaderDataBaseFPCv
-/* 8016E7F0 0016B730  90 6D 99 40 */	stw r3, mStaticBmtNormal__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E7F0 0016B730  90 6D 99 40 */	stw r3, mStaticBmtNormal__16TMareBaseManager@sda21(r13)
 lbl_8016E7F4:
-/* 8016E7F4 0016B734  80 0D 99 44 */	lwz r0, mStaticBmtPollution__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E7F4 0016B734  80 0D 99 44 */	lwz r0, mStaticBmtPollution__16TMareBaseManager@sda21(r13)
 /* 8016E7F8 0016B738  28 00 00 00 */	cmplwi r0, 0
 /* 8016E7FC 0016B73C  40 82 00 14 */	bne lbl_8016E810
-/* 8016E800 0016B740  80 6D 84 C4 */	lwz r3, cMareCommonPollutionBmtName-_SDA_BASE_(r13)
+/* 8016E800 0016B740  80 6D 84 C4 */	lwz r3, cMareCommonPollutionBmtName@sda21(r13)
 /* 8016E804 0016B744  4B E9 D4 B9 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016E808 0016B748  4B EC 24 85 */	bl loadMaterialTable__22J3DModelLoaderDataBaseFPCv
-/* 8016E80C 0016B74C  90 6D 99 44 */	stw r3, mStaticBmtPollution__16TMareBaseManager-_SDA_BASE_(r13)
+/* 8016E80C 0016B74C  90 6D 99 44 */	stw r3, mStaticBmtPollution__16TMareBaseManager@sda21(r13)
 lbl_8016E810:
 /* 8016E810 0016B750  3C 80 80 3C */	lis r4, __vt__17TMareMBaseManager@ha
 /* 8016E814 0016B754  80 61 00 08 */	lwz r3, 8(r1)
 /* 8016E818 0016B758  38 04 87 38 */	addi r0, r4, __vt__17TMareMBaseManager@l
 /* 8016E81C 0016B75C  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E820 0016B760  83 ED 84 B8 */	lwz r31, cMareMCommonVolumeName-_SDA_BASE_(r13)
-/* 8016E824 0016B764  80 0D 99 38 */	lwz r0, mStaticCommonKeeper__17TMareMBaseManager-_SDA_BASE_(r13)
+/* 8016E820 0016B760  83 ED 84 B8 */	lwz r31, cMareMCommonVolumeName@sda21(r13)
+/* 8016E824 0016B764  80 0D 99 38 */	lwz r0, mStaticCommonKeeper__17TMareMBaseManager@sda21(r13)
 /* 8016E828 0016B768  90 03 00 5C */	stw r0, 0x5c(r3)
 /* 8016E82C 0016B76C  80 03 00 5C */	lwz r0, 0x5c(r3)
 /* 8016E830 0016B770  28 00 00 00 */	cmplwi r0, 0
@@ -1380,7 +1380,7 @@ lbl_8016E854:
 /* 8016E860 0016B7A0  93 C3 00 5C */	stw r30, 0x5c(r3)
 /* 8016E864 0016B7A4  38 C3 00 5C */	addi r6, r3, 0x5c
 /* 8016E868 0016B7A8  80 03 00 5C */	lwz r0, 0x5c(r3)
-/* 8016E86C 0016B7AC  90 0D 99 38 */	stw r0, mStaticCommonKeeper__17TMareMBaseManager-_SDA_BASE_(r13)
+/* 8016E86C 0016B7AC  90 0D 99 38 */	stw r0, mStaticCommonKeeper__17TMareMBaseManager@sda21(r13)
 /* 8016E870 0016B7B0  80 C6 00 00 */	lwz r6, 0(r6)
 /* 8016E874 0016B7B4  48 00 05 11 */	bl makePartsModelData___11TNPCManagerFUlUlP16TModelDataKeeper
 lbl_8016E878:
@@ -1406,8 +1406,8 @@ __ct__18TMonteWBaseManagerFPCc:
 /* 8016E8B8 0016B7F8  80 61 00 08 */	lwz r3, 8(r1)
 /* 8016E8BC 0016B7FC  38 04 90 80 */	addi r0, r4, __vt__18TMonteWBaseManager@l
 /* 8016E8C0 0016B800  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E8C4 0016B804  83 ED 84 B4 */	lwz r31, cMonteWCommonVolumeName-_SDA_BASE_(r13)
-/* 8016E8C8 0016B808  80 0D 99 34 */	lwz r0, mStaticCommonKeeper__18TMonteWBaseManager-_SDA_BASE_(r13)
+/* 8016E8C4 0016B804  83 ED 84 B4 */	lwz r31, cMonteWCommonVolumeName@sda21(r13)
+/* 8016E8C8 0016B808  80 0D 99 34 */	lwz r0, mStaticCommonKeeper__18TMonteWBaseManager@sda21(r13)
 /* 8016E8CC 0016B80C  90 03 00 5C */	stw r0, 0x5c(r3)
 /* 8016E8D0 0016B810  80 03 00 5C */	lwz r0, 0x5c(r3)
 /* 8016E8D4 0016B814  28 00 00 00 */	cmplwi r0, 0
@@ -1426,7 +1426,7 @@ lbl_8016E8F8:
 /* 8016E904 0016B844  93 C3 00 5C */	stw r30, 0x5c(r3)
 /* 8016E908 0016B848  38 C3 00 5C */	addi r6, r3, 0x5c
 /* 8016E90C 0016B84C  80 03 00 5C */	lwz r0, 0x5c(r3)
-/* 8016E910 0016B850  90 0D 99 34 */	stw r0, mStaticCommonKeeper__18TMonteWBaseManager-_SDA_BASE_(r13)
+/* 8016E910 0016B850  90 0D 99 34 */	stw r0, mStaticCommonKeeper__18TMonteWBaseManager@sda21(r13)
 /* 8016E914 0016B854  80 C6 00 00 */	lwz r6, 0(r6)
 /* 8016E918 0016B858  48 00 04 6D */	bl makePartsModelData___11TNPCManagerFUlUlP16TModelDataKeeper
 lbl_8016E91C:
@@ -1452,8 +1452,8 @@ __ct__18TMonteMBaseManagerFPCc:
 /* 8016E95C 0016B89C  80 61 00 08 */	lwz r3, 8(r1)
 /* 8016E960 0016B8A0  38 04 90 D8 */	addi r0, r4, __vt__18TMonteMBaseManager@l
 /* 8016E964 0016B8A4  90 03 00 00 */	stw r0, 0(r3)
-/* 8016E968 0016B8A8  83 ED 84 B0 */	lwz r31, cMonteMCommonVolumeName-_SDA_BASE_(r13)
-/* 8016E96C 0016B8AC  80 0D 99 30 */	lwz r0, mStaticCommonKeeper__18TMonteMBaseManager-_SDA_BASE_(r13)
+/* 8016E968 0016B8A8  83 ED 84 B0 */	lwz r31, cMonteMCommonVolumeName@sda21(r13)
+/* 8016E96C 0016B8AC  80 0D 99 30 */	lwz r0, mStaticCommonKeeper__18TMonteMBaseManager@sda21(r13)
 /* 8016E970 0016B8B0  90 03 00 5C */	stw r0, 0x5c(r3)
 /* 8016E974 0016B8B4  80 03 00 5C */	lwz r0, 0x5c(r3)
 /* 8016E978 0016B8B8  28 00 00 00 */	cmplwi r0, 0
@@ -1472,7 +1472,7 @@ lbl_8016E99C:
 /* 8016E9A8 0016B8E8  93 C3 00 5C */	stw r30, 0x5c(r3)
 /* 8016E9AC 0016B8EC  38 C3 00 5C */	addi r6, r3, 0x5c
 /* 8016E9B0 0016B8F0  80 03 00 5C */	lwz r0, 0x5c(r3)
-/* 8016E9B4 0016B8F4  90 0D 99 30 */	stw r0, mStaticCommonKeeper__18TMonteMBaseManager-_SDA_BASE_(r13)
+/* 8016E9B4 0016B8F4  90 0D 99 30 */	stw r0, mStaticCommonKeeper__18TMonteMBaseManager@sda21(r13)
 /* 8016E9B8 0016B8F8  80 C6 00 00 */	lwz r6, 0(r6)
 /* 8016E9BC 0016B8FC  48 00 03 C9 */	bl makePartsModelData___11TNPCManagerFUlUlP16TModelDataKeeper
 lbl_8016E9C0:
@@ -1592,14 +1592,14 @@ clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics:
 /* 8016EB5C 0016BA9C  BF 41 00 68 */	stmw r26, 0x68(r1)
 /* 8016EB60 0016BAA0  7C 7B 1B 78 */	mr r27, r3
 /* 8016EB64 0016BAA4  7C 9C 23 78 */	mr r28, r4
-/* 8016EB68 0016BAA8  80 AD 97 E8 */	lwz r5, gpMarDirector-_SDA_BASE_(r13)
+/* 8016EB68 0016BAA8  80 AD 97 E8 */	lwz r5, gpMarDirector@sda21(r13)
 /* 8016EB6C 0016BAAC  80 63 00 58 */	lwz r3, 0x58(r3)
 /* 8016EB70 0016BAB0  88 05 00 7C */	lbz r0, 0x7c(r5)
 /* 8016EB74 0016BAB4  C3 FB 00 54 */	lfs f31, 0x54(r27)
 /* 8016EB78 0016BAB8  28 00 00 01 */	cmplwi r0, 1
 /* 8016EB7C 0016BABC  C3 C3 00 00 */	lfs f30, 0(r3)
 /* 8016EB80 0016BAC0  40 82 00 A4 */	bne lbl_8016EC24
-/* 8016EB84 0016BAC4  83 4D A8 B0 */	lwz r26, gpCamera-_SDA_BASE_(r13)
+/* 8016EB84 0016BAC4  83 4D A8 B0 */	lwz r26, gpCamera@sda21(r13)
 /* 8016EB88 0016BAC8  3B A0 00 01 */	li r29, 1
 /* 8016EB8C 0016BACC  38 7A 00 00 */	addi r3, r26, 0
 /* 8016EB90 0016BAD0  48 1F 35 BD */	bl isSimpleDemoCamera__15CPolarSubCameraCFv
@@ -1626,7 +1626,7 @@ lbl_8016EBD0:
 lbl_8016EBD4:
 /* 8016EBD4 0016BB14  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 8016EBD8 0016BB18  40 82 00 3C */	bne lbl_8016EC14
-/* 8016EBDC 0016BB1C  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 8016EBDC 0016BB1C  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 8016EBE0 0016BB20  80 03 00 50 */	lwz r0, 0x50(r3)
 /* 8016EBE4 0016BB24  2C 00 00 0D */	cmpwi r0, 0xd
 /* 8016EBE8 0016BB28  41 82 00 2C */	beq lbl_8016EC14
@@ -1636,17 +1636,17 @@ lbl_8016EBD4:
 /* 8016EBF8 0016BB38  48 1E 66 8D */	bl isNowInbetween__15CPolarSubCameraCFv
 /* 8016EBFC 0016BB3C  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8016EC00 0016BB40  40 82 00 14 */	bne lbl_8016EC14
-/* 8016EC04 0016BB44  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 8016EC04 0016BB44  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 8016EC08 0016BB48  80 03 00 50 */	lwz r0, 0x50(r3)
 /* 8016EC0C 0016BB4C  2C 00 00 13 */	cmpwi r0, 0x13
 /* 8016EC10 0016BB50  40 82 00 14 */	bne lbl_8016EC24
 lbl_8016EC14:
-/* 8016EC14 0016BB54  C0 02 A6 68 */	lfs f0, $$22804-_SDA2_BASE_(r2)
+/* 8016EC14 0016BB54  C0 02 A6 68 */	lfs f0, $$22804@sda21(r2)
 /* 8016EC18 0016BB58  FC 1E 00 40 */	fcmpo cr0, f30, f0
 /* 8016EC1C 0016BB5C  40 80 00 08 */	bge lbl_8016EC24
 /* 8016EC20 0016BB60  FF C0 00 90 */	fmr f30, f0
 lbl_8016EC24:
-/* 8016EC24 0016BB64  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 8016EC24 0016BB64  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 8016EC28 0016BB68  FC 60 F8 90 */	fmr f3, f31
 /* 8016EC2C 0016BB6C  FC 80 F0 90 */	fmr f4, f30
 /* 8016EC30 0016BB70  C0 43 00 4C */	lfs f2, 0x4c(r3)
@@ -1654,7 +1654,7 @@ lbl_8016EC24:
 /* 8016EC38 0016BB78  4B F5 27 DD */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 8016EC3C 0016BB7C  83 FB 00 14 */	lwz r31, 0x14(r27)
 /* 8016EC40 0016BB80  3B A0 00 00 */	li r29, 0
-/* 8016EC44 0016BB84  C3 E2 A6 6C */	lfs f31, $$22805-_SDA2_BASE_(r2)
+/* 8016EC44 0016BB84  C3 E2 A6 6C */	lfs f31, $$22805@sda21(r2)
 /* 8016EC48 0016BB88  3B 40 00 00 */	li r26, 0
 /* 8016EC4C 0016BB8C  48 00 00 98 */	b lbl_8016ECE4
 lbl_8016EC50:
@@ -1786,7 +1786,7 @@ lbl_8016EDE4:
 /* 8016EDFC 0016BD3C  38 61 00 20 */	addi r3, r1, 0x20
 /* 8016EE00 0016BD40  4C C6 31 82 */	crclr 6
 /* 8016EE04 0016BD44  38 80 01 00 */	li r4, 0x100
-/* 8016EE08 0016BD48  38 A2 A6 70 */	addi r5, r2, $$22860-_SDA2_BASE_
+/* 8016EE08 0016BD48  38 A2 A6 70 */	addi r5, r2, $$22860@sda21
 /* 8016EE0C 0016BD4C  4B F1 52 B9 */	bl snprintf
 /* 8016EE10 0016BD50  38 61 00 20 */	addi r3, r1, 0x20
 /* 8016EE14 0016BD54  4B E9 CE A9 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -1818,11 +1818,11 @@ lbl_8016EE74:
 /* 8016EE78 0016BDB8  28 00 00 00 */	cmplwi r0, 0
 /* 8016EE7C 0016BDBC  41 82 00 24 */	beq lbl_8016EEA0
 /* 8016EE80 0016BDC0  82 B5 00 00 */	lwz r21, 0(r21)
-/* 8016EE84 0016BDC4  80 6D 84 8C */	lwz r3, cRealPollutionTexName-_SDA_BASE_(r13)
+/* 8016EE84 0016BDC4  80 6D 84 8C */	lwz r3, cRealPollutionTexName@sda21(r13)
 /* 8016EE88 0016BDC8  4B E9 CE 35 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8016EE8C 0016BDCC  7C 65 1B 79 */	or. r5, r3, r3
 /* 8016EE90 0016BDD0  41 82 00 10 */	beq lbl_8016EEA0
-/* 8016EE94 0016BDD4  80 8D 84 88 */	lwz r4, cDummyPollutionTexName-_SDA_BASE_(r13)
+/* 8016EE94 0016BDD4  80 8D 84 88 */	lwz r4, cDummyPollutionTexName@sda21(r13)
 /* 8016EE98 0016BDD8  7E A3 AB 78 */	mr r3, r21
 /* 8016EE9C 0016BDDC  4B F6 30 01 */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
 lbl_8016EEA0:
@@ -1849,7 +1849,7 @@ load__11TNPCManagerFR20JSUMemoryInputStream:
 /* 8016EEE0 0016BE20  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8016EEE4 0016BE24  7C 7F 1B 78 */	mr r31, r3
 /* 8016EEE8 0016BE28  48 0E 39 1D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016EEEC 0016BE2C  C0 02 A6 60 */	lfs f0, $$22535-_SDA2_BASE_(r2)
+/* 8016EEEC 0016BE2C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
 /* 8016EEF0 0016BE30  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016EEF4 0016BE34  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016EEF8 0016BE38  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -1869,13 +1869,13 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF24 0016BE64  38 03 91 88 */	addi r0, r3, __vt__11TNPCManager@l
 /* 8016EF28 0016BE68  90 1F 00 00 */	stw r0, 0(r31)
 /* 8016EF2C 0016BE6C  38 00 00 00 */	li r0, 0
-/* 8016EF30 0016BE70  C0 02 A6 78 */	lfs f0, $$22898-_SDA2_BASE_(r2)
+/* 8016EF30 0016BE70  C0 02 A6 78 */	lfs f0, $$22898@sda21(r2)
 /* 8016EF34 0016BE74  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 8016EF38 0016BE78  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF3C 0016BE7C  90 1F 00 5C */	stw r0, 0x5c(r31)
 /* 8016EF40 0016BE80  90 1F 00 60 */	stw r0, 0x60(r31)
-/* 8016EF44 0016BE84  80 6D 97 E8 */	lwz r3, gpMarDirector-_SDA_BASE_(r13)
-/* 8016EF48 0016BE88  80 8D 9C 28 */	lwz r4, gpConductor-_SDA_BASE_(r13)
+/* 8016EF44 0016BE84  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
+/* 8016EF48 0016BE88  80 8D 9C 28 */	lwz r4, gpConductor@sda21(r13)
 /* 8016EF4C 0016BE8C  88 03 00 7C */	lbz r0, 0x7c(r3)
 /* 8016EF50 0016BE90  80 64 00 F4 */	lwz r3, 0xf4(r4)
 /* 8016EF54 0016BE94  28 00 00 0D */	cmplwi r0, 0xd
@@ -1887,39 +1887,51 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF6C 0016BEAC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8016EF70 0016BEB0  7C 09 03 A6 */	mtctr r0
 /* 8016EF74 0016BEB4  4E 80 04 20 */	bctr 
+lbl_8016EF78:
 /* 8016EF78 0016BEB8  38 04 00 18 */	addi r0, r4, 0x18
 /* 8016EF7C 0016BEBC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF80 0016BEC0  48 00 00 90 */	b lbl_8016F010
+lbl_8016EF84:
 /* 8016EF84 0016BEC4  38 04 00 2C */	addi r0, r4, 0x2c
 /* 8016EF88 0016BEC8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF8C 0016BECC  48 00 00 84 */	b lbl_8016F010
+lbl_8016EF90:
 /* 8016EF90 0016BED0  38 04 00 40 */	addi r0, r4, 0x40
 /* 8016EF94 0016BED4  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF98 0016BED8  48 00 00 78 */	b lbl_8016F010
+lbl_8016EF9C:
 /* 8016EF9C 0016BEDC  38 04 00 54 */	addi r0, r4, 0x54
 /* 8016EFA0 0016BEE0  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFA4 0016BEE4  48 00 00 6C */	b lbl_8016F010
+lbl_8016EFA8:
 /* 8016EFA8 0016BEE8  38 04 00 68 */	addi r0, r4, 0x68
 /* 8016EFAC 0016BEEC  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFB0 0016BEF0  48 00 00 60 */	b lbl_8016F010
+lbl_8016EFB4:
 /* 8016EFB4 0016BEF4  38 04 00 7C */	addi r0, r4, 0x7c
 /* 8016EFB8 0016BEF8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFBC 0016BEFC  48 00 00 54 */	b lbl_8016F010
+lbl_8016EFC0:
 /* 8016EFC0 0016BF00  38 04 00 90 */	addi r0, r4, 0x90
 /* 8016EFC4 0016BF04  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFC8 0016BF08  48 00 00 48 */	b lbl_8016F010
+lbl_8016EFCC:
 /* 8016EFCC 0016BF0C  38 04 00 A4 */	addi r0, r4, 0xa4
 /* 8016EFD0 0016BF10  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFD4 0016BF14  48 00 00 3C */	b lbl_8016F010
+lbl_8016EFD8:
 /* 8016EFD8 0016BF18  38 04 00 B8 */	addi r0, r4, 0xb8
 /* 8016EFDC 0016BF1C  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFE0 0016BF20  48 00 00 30 */	b lbl_8016F010
+lbl_8016EFE4:
 /* 8016EFE4 0016BF24  38 04 00 CC */	addi r0, r4, 0xcc
 /* 8016EFE8 0016BF28  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFEC 0016BF2C  48 00 00 24 */	b lbl_8016F010
+lbl_8016EFF0:
 /* 8016EFF0 0016BF30  38 04 00 E0 */	addi r0, r4, 0xe0
 /* 8016EFF4 0016BF34  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EFF8 0016BF38  48 00 00 18 */	b lbl_8016F010
+lbl_8016EFFC:
 /* 8016EFFC 0016BF3C  38 04 00 F4 */	addi r0, r4, 0xf4
 /* 8016F000 0016BF40  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016F004 0016BF44  48 00 00 0C */	b lbl_8016F010
@@ -1947,11 +1959,11 @@ createModelData__21TMareJellyFishManagerFv:
 /* 8016F048 0016BF88  81 8C 00 2C */	lwz r12, 0x2c(r12)
 /* 8016F04C 0016BF8C  7D 88 03 A6 */	mtlr r12
 /* 8016F050 0016BF90  4E 80 00 21 */	blrl 
-/* 8016F054 0016BF94  80 6D 84 AC */	lwz r3, cJellyFishRealTexName-_SDA_BASE_(r13)
+/* 8016F054 0016BF94  80 6D 84 AC */	lwz r3, cJellyFishRealTexName@sda21(r13)
 /* 8016F058 0016BF98  4B E9 CC 65 */	bl getGlbResource__13JKRFileLoaderFPCc
-/* 8016F05C 0016BF9C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 8016F05C 0016BF9C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 8016F060 0016BFA0  7C 7D 1B 78 */	mr r29, r3
-/* 8016F064 0016BFA4  83 ED 84 A0 */	lwz r31, cScreenTexViewObjName-_SDA_BASE_(r13)
+/* 8016F064 0016BFA4  83 ED 84 A0 */	lwz r31, cScreenTexViewObjName@sda21(r13)
 /* 8016F068 0016BFA8  83 C4 00 04 */	lwz r30, 4(r4)
 /* 8016F06C 0016BFAC  7F E3 FB 78 */	mr r3, r31
 /* 8016F070 0016BFB0  4B ED 56 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1977,10 +1989,10 @@ lbl_8016F0B0:
 /* 8016F0BC 0016BFFC  4B FA 7C 21 */	bl getNthData__16TModelDataKeeperCFi
 /* 8016F0C0 0016C000  83 83 00 00 */	lwz r28, 0(r3)
 /* 8016F0C4 0016C004  7F A5 EB 78 */	mr r5, r29
-/* 8016F0C8 0016C008  80 8D 84 A8 */	lwz r4, cJellyFishDummyTexName-_SDA_BASE_(r13)
+/* 8016F0C8 0016C008  80 8D 84 A8 */	lwz r4, cJellyFishDummyTexName@sda21(r13)
 /* 8016F0CC 0016C00C  7F 83 E3 78 */	mr r3, r28
 /* 8016F0D0 0016C010  4B F6 2D CD */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
-/* 8016F0D4 0016C014  80 8D 84 A4 */	lwz r4, cJellyFishDummyScreenTexName-_SDA_BASE_(r13)
+/* 8016F0D4 0016C014  80 8D 84 A4 */	lwz r4, cJellyFishDummyScreenTexName@sda21(r13)
 /* 8016F0D8 0016C018  38 7C 00 00 */	addi r3, r28, 0
 /* 8016F0DC 0016C01C  38 BE 00 00 */	addi r5, r30, 0
 /* 8016F0E0 0016C020  4B F6 2D BD */	bl SMS_ChangeTextureAll__FP12J3DModelDataPCcRC7ResTIMG
@@ -2010,7 +2022,7 @@ __ct__21TMareJellyFishManagerFPCc:
 /* 8016F124 0016C064  38 03 91 E0 */	addi r0, r3, __vt__21TMareJellyFishManager@l
 /* 8016F128 0016C068  90 1F 00 00 */	stw r0, 0(r31)
 /* 8016F12C 0016C06C  7F E3 FB 78 */	mr r3, r31
-/* 8016F130 0016C070  93 ED 99 48 */	stw r31, gpMareJellyFishManager-_SDA_BASE_(r13)
+/* 8016F130 0016C070  93 ED 99 48 */	stw r31, gpMareJellyFishManager@sda21(r13)
 /* 8016F134 0016C074  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016F138 0016C078  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8016F13C 0016C07C  38 21 00 18 */	addi r1, r1, 0x18
@@ -2038,8 +2050,8 @@ clipActors__16TBoardNpcManagerFPQ26JDrama9TGraphics:
 /* 8016F17C 0016C0BC  7C 08 02 A6 */	mflr r0
 /* 8016F180 0016C0C0  90 01 00 04 */	stw r0, 4(r1)
 /* 8016F184 0016C0C4  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8016F188 0016C0C8  80 AD 9C 28 */	lwz r5, gpConductor-_SDA_BASE_(r13)
-/* 8016F18C 0016C0CC  C0 42 A6 7C */	lfs f2, $$22934-_SDA2_BASE_(r2)
+/* 8016F188 0016C0C8  80 AD 9C 28 */	lwz r5, gpConductor@sda21(r13)
+/* 8016F18C 0016C0CC  C0 42 A6 7C */	lfs f2, $$22934@sda21(r2)
 /* 8016F190 0016C0D0  C0 25 00 9C */	lfs f1, 0x9c(r5)
 /* 8016F194 0016C0D4  4B FA 57 01 */	bl clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff
 /* 8016F198 0016C0D8  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -3065,7 +3077,9 @@ lbl_8016FF64:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x37B898, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x37B8A4, 0x14
 $$22050:
@@ -3113,7 +3127,12 @@ $$22227:
 $$22230:
 	.incbin "baserom.dol", 0x37BB18, 0x10
 entry$2229:
-	.incbin "baserom.dol", 0x37BB28, 0x18
+  .4byte $$22230
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22232:
 	.incbin "baserom.dol", 0x37BB40, 0x10
 $$22233:
@@ -3127,83 +3146,208 @@ $$22236:
 $$22237:
 	.incbin "baserom.dol", 0x37BB90, 0x10
 entry$2231:
-	.incbin "baserom.dol", 0x37BBA0, 0x54
+  .4byte $$22232
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$22233
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$22234
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$22235
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$22236
+  .4byte 0x11240000
+  .4byte 0
+  .4byte $$22237
+  .4byte 0x11240000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22336:
 	.incbin "baserom.dol", 0x37BBF4, 0x10
 entry$2335:
-	.incbin "baserom.dol", 0x37BC04, 0x18
+  .4byte $$22336
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22338:
 	.incbin "baserom.dol", 0x37BC1C, 0x10
 entry$2337:
-	.incbin "baserom.dol", 0x37BC2C, 0x18
+  .4byte $$22338
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22340:
 	.incbin "baserom.dol", 0x37BC44, 0x10
 entry$2339:
-	.incbin "baserom.dol", 0x37BC54, 0x18
+  .4byte $$22340
+  .4byte 0x10210000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22342:
 	.incbin "baserom.dol", 0x37BC6C, 0x10
 entry$2341:
-	.incbin "baserom.dol", 0x37BC7C, 0x18
+  .4byte $$22342
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22344:
 	.incbin "baserom.dol", 0x37BC94, 0x10
 entry$2343:
-	.incbin "baserom.dol", 0x37BCA4, 0x18
+  .4byte $$22344
+  .4byte 0x10210000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22346:
 	.incbin "baserom.dol", 0x37BCBC, 0x10
 entry$2345:
-	.incbin "baserom.dol", 0x37BCCC, 0x18
+  .4byte $$22346
+  .4byte 0x10010000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2347:
-	.incbin "baserom.dol", 0x37BCE4, 0x18
+  .4byte $$22336
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2348:
-	.incbin "baserom.dol", 0x37BCFC, 0x18
+  .4byte $$22342
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2349:
-	.incbin "baserom.dol", 0x37BD14, 0x18
+  .4byte $$22338
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22351:
 	.incbin "baserom.dol", 0x37BD2C, 0x10
 entry$2350:
-	.incbin "baserom.dol", 0x37BD3C, 0x18
+  .4byte $$22351
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22353:
 	.incbin "baserom.dol", 0x37BD54, 0x10
 entry$2352:
-	.incbin "baserom.dol", 0x37BD64, 0x18
+  .4byte $$22353
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22355:
 	.incbin "baserom.dol", 0x37BD7C, 0x10
 entry$2354:
-	.incbin "baserom.dol", 0x37BD8C, 0x18
+  .4byte $$22355
+  .4byte 0x10210000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 entry$2356:
-	.incbin "baserom.dol", 0x37BDA4, 0x18
+  .4byte $$22351
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22358:
 	.incbin "baserom.dol", 0x37BDBC, 0xC
 entry$2357:
-	.incbin "baserom.dol", 0x37BDC8, 0x18
+  .4byte $$22358
+  .4byte 0x10300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22360:
 	.incbin "baserom.dol", 0x37BDE0, 0xC
 entry$2359:
-	.incbin "baserom.dol", 0x37BDEC, 0x18
+  .4byte $$22360
+  .4byte 0x10300000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22362:
 	.incbin "baserom.dol", 0x37BE04, 0x14
 entry$2361:
-	.incbin "baserom.dol", 0x37BE18, 0x18
+  .4byte $$22362
+  .4byte 0x10300000
+  .4byte 0x1
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22364:
 	.incbin "baserom.dol", 0x37BE30, 0x10
 entry$2363:
-	.incbin "baserom.dol", 0x37BE40, 0x18
+  .4byte $$22364
+  .4byte 0x10010000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22366:
 	.incbin "baserom.dol", 0x37BE58, 0x10
 entry$2365:
-	.incbin "baserom.dol", 0x37BE68, 0x18
+  .4byte $$22366
+  .4byte 0x10010000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22368:
 	.incbin "baserom.dol", 0x37BE80, 0xC
 entry$2367:
-	.incbin "baserom.dol", 0x37BE8C, 0x18
+  .4byte $$22368
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22370:
 	.incbin "baserom.dol", 0x37BEA4, 0x10
 entry$2369:
-	.incbin "baserom.dol", 0x37BEB4, 0x18
+  .4byte $$22370
+  .4byte 0x10020000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22372:
 	.incbin "baserom.dol", 0x37BECC, 0x10
 entry$2371:
-	.incbin "baserom.dol", 0x37BEDC, 0x18
+  .4byte $$22372
+  .4byte 0x10220000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22416:
 	.incbin "baserom.dol", 0x37BEF4, 0x10
 $$22459:
@@ -3214,147 +3358,880 @@ $$22475:
 	.incbin "baserom.dol", 0x37BF24, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__18TSunflowerSManager
 __vt__18TSunflowerSManager:
-	.incbin "baserom.dol", 0x3B5650, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TSunflowerSManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSunflowerSManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 $$22899:
-	.incbin "baserom.dol", 0x3B56A8, 0x38
+    .4byte lbl_8016EF78
+    .4byte lbl_8016EF84
+    .4byte lbl_8016EF90
+    .4byte lbl_8016EF9C
+    .4byte lbl_8016EFA8
+    .4byte lbl_8016EFB4
+    .4byte lbl_8016EFCC
+    .4byte lbl_8016EFD8
+    .4byte lbl_8016EFF0
+    .4byte lbl_8016EFE4
+    .4byte lbl_8016EFFC
+    .4byte lbl_8016F008
+    .4byte lbl_8016F008
+    .4byte lbl_8016EFC0
 .global __vt__17TMareWBaseManager
 __vt__17TMareWBaseManager:
-	.incbin "baserom.dol", 0x3B56E0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TMareWBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__17TMareMBaseManager
 __vt__17TMareMBaseManager:
-	.incbin "baserom.dol", 0x3B5738, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TMareMBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__15TMonteWBManager
 __vt__15TMonteWBManager:
-	.incbin "baserom.dol", 0x3B5790, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWBManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteWAManager
 __vt__15TMonteWAManager:
-	.incbin "baserom.dol", 0x3B57E8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWAManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMonteWManager
 __vt__14TMonteWManager:
-	.incbin "baserom.dol", 0x3B5840, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMonteWManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TMonteWManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMEManager
 __vt__15TMonteMEManager:
-	.incbin "baserom.dol", 0x3B5898, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMEManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMEManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMDManager
 __vt__15TMonteMDManager:
-	.incbin "baserom.dol", 0x3B58F0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMDManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMDManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMCManager
 __vt__15TMonteMCManager:
-	.incbin "baserom.dol", 0x3B5948, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMCManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMBManager
 __vt__15TMonteMBManager:
-	.incbin "baserom.dol", 0x3B59A0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMBManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMAManager
 __vt__15TMonteMAManager:
-	.incbin "baserom.dol", 0x3B59F8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMAManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMonteMManager
 __vt__14TMonteMManager:
-	.incbin "baserom.dol", 0x3B5A50, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMonteMManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TMonteMManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TSunflowerLManager
 __vt__18TSunflowerLManager:
-	.incbin "baserom.dol", 0x3B5AA8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TSunflowerLManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TSunflowerLManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TSunflowerLManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TRaccoonDogManager
 __vt__18TRaccoonDogManager:
-	.incbin "baserom.dol", 0x3B5B00, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TRaccoonDogManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__18TRaccoonDogManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__18TRaccoonDogManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__13TPeachManager
 __vt__13TPeachManager:
-	.incbin "baserom.dol", 0x3B5B58, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TPeachManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TPeachManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__13TPeachManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TKinojiiManager
 __vt__15TKinojiiManager:
-	.incbin "baserom.dol", 0x3B5BB0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TKinojiiManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TKinojiiManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TKinojiiManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TKinopioManager
 __vt__15TKinopioManager:
-	.incbin "baserom.dol", 0x3B5C08, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TKinopioManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TKinopioManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TKinopioManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__14TMareWBManager
 __vt__14TMareWBManager:
-	.incbin "baserom.dol", 0x3B5C60, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareWBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareWBManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareWAManager
 __vt__14TMareWAManager:
-	.incbin "baserom.dol", 0x3B5CB8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareWAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareWAManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareWBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMDManager
 __vt__14TMareMDManager:
-	.incbin "baserom.dol", 0x3B5D10, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMDManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMDManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMCManager
 __vt__14TMareMCManager:
-	.incbin "baserom.dol", 0x3B5D68, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMBManager
 __vt__14TMareMBManager:
-	.incbin "baserom.dol", 0x3B5DC0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMBManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMBManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__14TMareMAManager
 __vt__14TMareMAManager:
-	.incbin "baserom.dol", 0x3B5E18, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TMareMAManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TMareMAManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__17TMareMBaseManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__15TMonteWCManager
 __vt__15TMonteWCManager:
-	.incbin "baserom.dol", 0x3B5E70, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteWCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteWCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteWCManagerFv
+  .4byte createAnmData__21TMonteWSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMHManager
 __vt__15TMonteMHManager:
-	.incbin "baserom.dol", 0x3B5EC8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMHManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMHManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMHManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMGManager
 __vt__15TMonteMGManager:
-	.incbin "baserom.dol", 0x3B5F20, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMGManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMGManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMGManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__15TMonteMFManager
 __vt__15TMonteMFManager:
-	.incbin "baserom.dol", 0x3B5F78, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TMonteMFManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TMonteMFManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__15TMonteMFManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMonteWSpecialManager
 __vt__21TMonteWSpecialManager:
-	.incbin "baserom.dol", 0x3B5FD0, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMonteWSpecialManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__21TMonteWSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMonteMSpecialManager
 __vt__21TMonteMSpecialManager:
-	.incbin "baserom.dol", 0x3B6028, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMonteMSpecialManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__21TMonteMSpecialManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TMonteWBaseManager
 __vt__18TMonteWBaseManager:
-	.incbin "baserom.dol", 0x3B6080, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMonteWBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__18TMonteWBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__18TMonteMBaseManager
 __vt__18TMonteMBaseManager:
-	.incbin "baserom.dol", 0x3B60D8, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TMonteMBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__18TMonteMBaseManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__16TMareBaseManager
 __vt__16TMareBaseManager:
-	.incbin "baserom.dol", 0x3B6130, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TMareBaseManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___16TMareBaseManagerFb
 .global __vt__11TNPCManager
 __vt__11TNPCManager:
-	.incbin "baserom.dol", 0x3B6188, 0x58
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TNPCManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TNPCManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__11TNPCManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__11TObjManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
+  .4byte getBmt___11TNPCManagerFb
 .global __vt__21TMareJellyFishManager
 __vt__21TMareJellyFishManager:
-	.incbin "baserom.dol", 0x3B61E0, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMareJellyFishManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__11TObjManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__21TMareJellyFishManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__21TMareJellyFishManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
 .global __vt__16TBoardNpcManager
 __vt__16TBoardNpcManager:
-	.incbin "baserom.dol", 0x3B6210, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TBoardNpcManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__12TLiveManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__12TLiveManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__16TBoardNpcManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__16TBoardNpcManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cDummyPollutionTexName:
-	.incbin "baserom.dol", 0x3E3488, 0x4
+  .4byte $$22212
 cRealPollutionTexName:
-	.incbin "baserom.dol", 0x3E348C, 0x4
+  .4byte $$22213
 cMonteMDummyStrawTexName:
-	.incbin "baserom.dol", 0x3E3490, 0x4
+  .4byte $$22214
 cMonteWDummyStrawTexName:
-	.incbin "baserom.dol", 0x3E3494, 0x4
+  .4byte $$22215
 cMonteMRealStrawTexName:
-	.incbin "baserom.dol", 0x3E3498, 0x4
+  .4byte $$22216
 cMonteWRealStrawTexName:
-	.incbin "baserom.dol", 0x3E349C, 0x4
+  .4byte $$22217
 cScreenTexViewObjName:
-	.incbin "baserom.dol", 0x3E34A0, 0x4
+  .4byte $$22218
 cJellyFishDummyScreenTexName:
-	.incbin "baserom.dol", 0x3E34A4, 0x4
+  .4byte $$22219
 cJellyFishDummyTexName:
-	.incbin "baserom.dol", 0x3E34A8, 0x4
+  .4byte $$22220
 cJellyFishRealTexName:
-	.incbin "baserom.dol", 0x3E34AC, 0x4
+  .4byte $$22221
 cMonteMCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B0, 0x4
+  .4byte $$22222
 cMonteWCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B4, 0x4
+  .4byte $$22223
 cMareMCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34B8, 0x4
+  .4byte $$22224
 cMareWCommonVolumeName:
-	.incbin "baserom.dol", 0x3E34BC, 0x4
+  .4byte $$22225
 cMareCommonNormalBmtName:
-	.incbin "baserom.dol", 0x3E34C0, 0x4
+  .4byte $$22226
 cMareCommonPollutionBmtName:
-	.incbin "baserom.dol", 0x3E34C4, 0x4
+  .4byte $$22227
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22535:

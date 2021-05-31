@@ -89,7 +89,7 @@ genObject__Q26JDrama8TNameRefFR20JSUMemoryInputStreamR20JSUMemoryInputStream:
 /* 800447B8 000416F8  4B FC 9D D9 */	bl read__14JSUInputStreamFPvl
 /* 800447BC 000416FC  7F C3 F3 78 */	mr r3, r30
 /* 800447C0 00041700  4B FC 9E 29 */	bl readString__14JSUInputStreamFv
-/* 800447C4 00041704  80 0D 8E E0 */	lwz r0, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800447C4 00041704  80 0D 8E E0 */	lwz r0, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800447C8 00041708  38 83 00 00 */	addi r4, r3, 0
 /* 800447CC 0004170C  7C 03 03 78 */	mr r3, r0
 /* 800447D0 00041710  81 83 00 00 */	lwz r12, 0(r3)
@@ -202,4 +202,11 @@ lbl_80044908:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama8TNameRef
 __vt__Q26JDrama8TNameRef:
-	.incbin "baserom.dol", 0x3A7860, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama8TNameRefFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc

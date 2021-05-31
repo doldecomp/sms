@@ -30,7 +30,7 @@ __ct__9JKRThreadFUlii:
 /* 8000E01C 0000AF5C  80 1D 00 28 */	lwz r0, 0x28(r29)
 /* 8000E020 0000AF60  28 00 00 00 */	cmplwi r0, 0
 /* 8000E024 0000AF64  40 82 00 0C */	bne lbl_8000E030
-/* 8000E028 0000AF68  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000E028 0000AF68  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8000E02C 0000AF6C  90 03 00 00 */	stw r0, 0(r3)
 lbl_8000E030:
 /* 8000E030 0000AF70  83 A1 00 08 */	lwz r29, 8(r1)
@@ -210,12 +210,15 @@ lbl_8000E280:
 /* 8000E298 0000B1D8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBB8, 0x4
+  .4byte __sinit_JKRThread_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9JKRThread
 __vt__9JKRThread:
-	.incbin "baserom.dol", 0x3A5730, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9JKRThreadFv
+  .4byte run__9JKRThreadFv
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 $$225:

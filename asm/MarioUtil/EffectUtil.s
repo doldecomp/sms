@@ -21,7 +21,7 @@ SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$
 /* 800CEBD8 000CBB18  3B C4 00 00 */	addi r30, r4, 0
 /* 800CEBDC 000CBB1C  93 A1 00 94 */	stw r29, 0x94(r1)
 /* 800CEBE0 000CBB20  3B A3 00 00 */	addi r29, r3, 0
-/* 800CEBE4 000CBB24  80 ED 97 E8 */	lwz r7, gpMarDirector-_SDA_BASE_(r13)
+/* 800CEBE4 000CBB24  80 ED 97 E8 */	lwz r7, gpMarDirector@sda21(r13)
 /* 800CEBE8 000CBB28  80 C7 00 58 */	lwz r6, 0x58(r7)
 /* 800CEBEC 000CBB2C  7C 00 30 96 */	mulhw r0, r0, r6
 /* 800CEBF0 000CBB30  7C 00 1E 70 */	srawi r0, r0, 3
@@ -30,14 +30,14 @@ SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$
 /* 800CEBFC 000CBB3C  1C 00 00 14 */	mulli r0, r0, 0x14
 /* 800CEC00 000CBB40  7C 00 30 51 */	subf. r0, r0, r6
 /* 800CEC04 000CBB44  40 82 01 48 */	bne lbl_800CED4C
-/* 800CEC08 000CBB48  C3 82 8E 70 */	lfs f28, $$21799-_SDA2_BASE_(r2)
+/* 800CEC08 000CBB48  C3 82 8E 70 */	lfs f28, $$21799@sda21(r2)
 /* 800CEC0C 000CBB4C  C0 DE 00 00 */	lfs f6, 0(r30)
 /* 800CEC10 000CBB50  C0 BE 00 04 */	lfs f5, 4(r30)
 /* 800CEC14 000CBB54  EC 7C 01 B2 */	fmuls f3, f28, f6
-/* 800CEC18 000CBB58  C0 22 8E 74 */	lfs f1, $$21800-_SDA2_BASE_(r2)
+/* 800CEC18 000CBB58  C0 22 8E 74 */	lfs f1, $$21800@sda21(r2)
 /* 800CEC1C 000CBB5C  C0 9E 00 08 */	lfs f4, 8(r30)
 /* 800CEC20 000CBB60  EC 5C 01 72 */	fmuls f2, f28, f5
-/* 800CEC24 000CBB64  C0 02 8E 78 */	lfs f0, $$21801-_SDA2_BASE_(r2)
+/* 800CEC24 000CBB64  C0 02 8E 78 */	lfs f0, $$21801@sda21(r2)
 /* 800CEC28 000CBB68  EF A1 19 78 */	fmsubs f29, f1, f5, f3
 /* 800CEC2C 000CBB6C  EF FC 11 38 */	fmsubs f31, f28, f4, f2
 /* 800CEC30 000CBB70  EF C1 19 3C */	fnmsubs f30, f1, f4, f3
@@ -58,26 +58,26 @@ SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$
 /* 800CEC6C 000CBBAC  48 00 00 1C */	b lbl_800CEC88
 lbl_800CEC70:
 /* 800CEC70 000CBBB0  4B F9 E1 01 */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 800CEC74 000CBBB4  C0 02 8E 74 */	lfs f0, $$21800-_SDA2_BASE_(r2)
+/* 800CEC74 000CBBB4  C0 02 8E 74 */	lfs f0, $$21800@sda21(r2)
 /* 800CEC78 000CBBB8  EC 00 00 72 */	fmuls f0, f0, f1
 /* 800CEC7C 000CBBBC  EF 7B 00 32 */	fmuls f27, f27, f0
 /* 800CEC80 000CBBC0  EF 5A 00 32 */	fmuls f26, f26, f0
 /* 800CEC84 000CBBC4  EF 99 00 32 */	fmuls f28, f25, f0
 lbl_800CEC88:
 /* 800CEC88 000CBBC8  EC 3E 07 B2 */	fmuls f1, f30, f30
-/* 800CEC8C 000CBBCC  C0 02 8E 78 */	lfs f0, $$21801-_SDA2_BASE_(r2)
+/* 800CEC8C 000CBBCC  C0 02 8E 78 */	lfs f0, $$21801@sda21(r2)
 /* 800CEC90 000CBBD0  EC 3F 0F FA */	fmadds f1, f31, f31, f1
 /* 800CEC94 000CBBD4  EC 3D 0F 7A */	fmadds f1, f29, f29, f1
 /* 800CEC98 000CBBD8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800CEC9C 000CBBDC  4C 40 13 82 */	cror 2, 0, 2
 /* 800CECA0 000CBBE0  40 82 00 14 */	bne lbl_800CECB4
-/* 800CECA4 000CBBE4  C0 62 8E 70 */	lfs f3, $$21799-_SDA2_BASE_(r2)
+/* 800CECA4 000CBBE4  C0 62 8E 70 */	lfs f3, $$21799@sda21(r2)
 /* 800CECA8 000CBBE8  FC 40 18 90 */	fmr f2, f3
 /* 800CECAC 000CBBEC  FC 20 10 90 */	fmr f1, f2
 /* 800CECB0 000CBBF0  48 00 00 1C */	b lbl_800CECCC
 lbl_800CECB4:
 /* 800CECB4 000CBBF4  4B F9 E0 BD */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 800CECB8 000CBBF8  C0 02 8E 74 */	lfs f0, $$21800-_SDA2_BASE_(r2)
+/* 800CECB8 000CBBF8  C0 02 8E 74 */	lfs f0, $$21800@sda21(r2)
 /* 800CECBC 000CBBFC  EC 00 00 72 */	fmuls f0, f0, f1
 /* 800CECC0 000CBC00  EC 3F 00 32 */	fmuls f1, f31, f0
 /* 800CECC4 000CBC04  EC 5E 00 32 */	fmuls f2, f30, f0
@@ -103,14 +103,14 @@ lbl_800CECCC:
 /* 800CED10 000CBC50  C0 1D 00 08 */	lfs f0, 8(r29)
 /* 800CED14 000CBC54  D0 01 00 74 */	stfs f0, 0x74(r1)
 /* 800CED18 000CBC58  41 82 00 1C */	beq lbl_800CED34
-/* 800CED1C 000CBC5C  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CED1C 000CBC5C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CED20 000CBC60  38 A1 00 48 */	addi r5, r1, 0x48
 /* 800CED24 000CBC64  38 80 01 D8 */	li r4, 0x1d8
 /* 800CED28 000CBC68  38 C0 00 02 */	li r6, 2
 /* 800CED2C 000CBC6C  38 E0 00 00 */	li r7, 0
 /* 800CED30 000CBC70  48 00 C5 15 */	bl emitAndBindToMtx__21TMarioParticleManagerFlPA4_fUcPCv
 lbl_800CED34:
-/* 800CED34 000CBC74  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CED34 000CBC74  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CED38 000CBC78  38 A1 00 48 */	addi r5, r1, 0x48
 /* 800CED3C 000CBC7C  38 80 01 D9 */	li r4, 0x1d9
 /* 800CED40 000CBC80  38 C0 00 02 */	li r6, 2
@@ -146,14 +146,14 @@ SMS_EmitRippleSea__FPA4_fPv:
 /* 800CEDA8 000CBCE8  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 800CEDAC 000CBCEC  7C 7D 1B 78 */	mr r29, r3
 /* 800CEDB0 000CBCF0  38 BD 00 00 */	addi r5, r29, 0
-/* 800CEDB4 000CBCF4  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEDB4 000CBCF4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEDB8 000CBCF8  38 80 01 E8 */	li r4, 0x1e8
 /* 800CEDBC 000CBCFC  48 00 C7 D1 */	bl emitAndBindToMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv
 /* 800CEDC0 000CBD00  28 03 00 00 */	cmplwi r3, 0
 /* 800CEDC4 000CBD04  40 82 00 08 */	bne lbl_800CEDCC
 /* 800CEDC8 000CBD08  3B E0 00 00 */	li r31, 0
 lbl_800CEDCC:
-/* 800CEDCC 000CBD0C  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEDCC 000CBD0C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEDD0 000CBD10  38 BD 00 00 */	addi r5, r29, 0
 /* 800CEDD4 000CBD14  38 FE 00 00 */	addi r7, r30, 0
 /* 800CEDD8 000CBD18  38 80 01 07 */	li r4, 0x107
@@ -163,7 +163,7 @@ lbl_800CEDCC:
 /* 800CEDE8 000CBD28  40 82 00 08 */	bne lbl_800CEDF0
 /* 800CEDEC 000CBD2C  3B E0 00 00 */	li r31, 0
 lbl_800CEDF0:
-/* 800CEDF0 000CBD30  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEDF0 000CBD30  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEDF4 000CBD34  38 BD 00 00 */	addi r5, r29, 0
 /* 800CEDF8 000CBD38  38 FE 00 00 */	addi r7, r30, 0
 /* 800CEDFC 000CBD3C  38 80 01 08 */	li r4, 0x108
@@ -196,14 +196,14 @@ SMS_EmitRipplePool__FPA4_fPv:
 /* 800CEE58 000CBD98  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 800CEE5C 000CBD9C  7C 7D 1B 78 */	mr r29, r3
 /* 800CEE60 000CBDA0  38 BD 00 00 */	addi r5, r29, 0
-/* 800CEE64 000CBDA4  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEE64 000CBDA4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEE68 000CBDA8  38 80 01 E9 */	li r4, 0x1e9
 /* 800CEE6C 000CBDAC  48 00 C7 21 */	bl emitAndBindToMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv
 /* 800CEE70 000CBDB0  28 03 00 00 */	cmplwi r3, 0
 /* 800CEE74 000CBDB4  40 82 00 08 */	bne lbl_800CEE7C
 /* 800CEE78 000CBDB8  3B E0 00 00 */	li r31, 0
 lbl_800CEE7C:
-/* 800CEE7C 000CBDBC  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEE7C 000CBDBC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEE80 000CBDC0  38 BD 00 00 */	addi r5, r29, 0
 /* 800CEE84 000CBDC4  38 FE 00 00 */	addi r7, r30, 0
 /* 800CEE88 000CBDC8  38 80 01 0A */	li r4, 0x10a
@@ -213,7 +213,7 @@ lbl_800CEE7C:
 /* 800CEE98 000CBDD8  40 82 00 08 */	bne lbl_800CEEA0
 /* 800CEE9C 000CBDDC  3B E0 00 00 */	li r31, 0
 lbl_800CEEA0:
-/* 800CEEA0 000CBDE0  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEEA0 000CBDE0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEEA4 000CBDE4  38 BD 00 00 */	addi r5, r29, 0
 /* 800CEEA8 000CBDE8  38 FE 00 00 */	addi r7, r30, 0
 /* 800CEEAC 000CBDEC  38 80 01 0B */	li r4, 0x10b
@@ -245,13 +245,13 @@ SMS_EmitRippleTiny__FPQ29JGeometry8TVec3$$0f$$1:
 /* 800CEF04 000CBE44  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800CEF08 000CBE48  7C 7E 1B 78 */	mr r30, r3
 /* 800CEF0C 000CBE4C  38 BE 00 00 */	addi r5, r30, 0
-/* 800CEF10 000CBE50  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEF10 000CBE50  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEF14 000CBE54  48 00 CC 09 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
 /* 800CEF18 000CBE58  28 03 00 00 */	cmplwi r3, 0
 /* 800CEF1C 000CBE5C  40 82 00 08 */	bne lbl_800CEF24
 /* 800CEF20 000CBE60  3B E0 00 00 */	li r31, 0
 lbl_800CEF24:
-/* 800CEF24 000CBE64  80 6D 97 98 */	lwz r3, gpMarioParticleManager-_SDA_BASE_(r13)
+/* 800CEF24 000CBE64  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800CEF28 000CBE68  38 BE 00 00 */	addi r5, r30, 0
 /* 800CEF2C 000CBE6C  38 80 00 36 */	li r4, 0x36
 /* 800CEF30 000CBE70  38 C0 00 00 */	li r6, 0
@@ -271,7 +271,7 @@ lbl_800CEF48:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21799:
-	.incbin "baserom.dol", 0x3E4B70, 0x4
+  .4byte 0
 $$21800:
 	.incbin "baserom.dol", 0x3E4B74, 0x4
 $$21801:

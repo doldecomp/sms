@@ -41,11 +41,11 @@ __dt__13JKRFileLoaderFv:
 /* 8000BB50 00008A90  3C 60 80 3B */	lis r3, __vt__13JKRFileLoader@ha
 /* 8000BB54 00008A94  38 03 85 B8 */	addi r0, r3, __vt__13JKRFileLoader@l
 /* 8000BB58 00008A98  90 1E 00 00 */	stw r0, 0(r30)
-/* 8000BB5C 00008A9C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000BB5C 00008A9C  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000BB60 00008AA0  7C 00 F0 40 */	cmplw r0, r30
 /* 8000BB64 00008AA4  40 82 00 0C */	bne lbl_8000BB70
 /* 8000BB68 00008AA8  38 00 00 00 */	li r0, 0
-/* 8000BB6C 00008AAC  90 0D 8D 60 */	stw r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000BB6C 00008AAC  90 0D 8D 60 */	stw r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 lbl_8000BB70:
 /* 8000BB70 00008AB0  34 1E 00 18 */	addic. r0, r30, 0x18
 /* 8000BB74 00008AB4  41 82 00 10 */	beq lbl_8000BB84
@@ -271,7 +271,7 @@ findVolume__13JKRFileLoaderFPPCc:
 /* 8000BE48 00008D88  88 05 00 00 */	lbz r0, 0(r5)
 /* 8000BE4C 00008D8C  2C 00 00 2F */	cmpwi r0, 0x2f
 /* 8000BE50 00008D90  41 82 00 0C */	beq lbl_8000BE5C
-/* 8000BE54 00008D94  80 6D 8D 60 */	lwz r3, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000BE54 00008D94  80 6D 8D 60 */	lwz r3, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000BE58 00008D98  48 00 00 50 */	b lbl_8000BEA8
 lbl_8000BE5C:
 /* 8000BE5C 00008D9C  38 61 00 3C */	addi r3, r1, 0x3c
@@ -316,7 +316,7 @@ findFirstFile__13JKRFileLoaderFPCc:
 /* 8000BEDC 00008E1C  88 03 00 00 */	lbz r0, 0(r3)
 /* 8000BEE0 00008E20  2C 00 00 2F */	cmpwi r0, 0x2f
 /* 8000BEE4 00008E24  41 82 00 0C */	beq lbl_8000BEF0
-/* 8000BEE8 00008E28  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader-_SDA_BASE_(r13)
+/* 8000BEE8 00008E28  80 0D 8D 60 */	lwz r0, sCurrentVolume__13JKRFileLoader@sda21(r13)
 /* 8000BEEC 00008E2C  48 00 00 54 */	b lbl_8000BF40
 lbl_8000BEF0:
 /* 8000BEF0 00008E30  38 BD 00 00 */	addi r5, r29, 0
@@ -371,7 +371,7 @@ fetchVolumeName__13JKRFileLoaderFPclPCc:
 /* 8000BF94 00008ED4  3B E5 00 00 */	addi r31, r5, 0
 /* 8000BF98 00008ED8  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 8000BF9C 00008EDC  3B C4 00 00 */	addi r30, r4, 0
-/* 8000BFA0 00008EE0  38 82 80 30 */	addi r4, r2, $$21783-_SDA2_BASE_
+/* 8000BFA0 00008EE0  38 82 80 30 */	addi r4, r2, $$21783@sda21
 /* 8000BFA4 00008EE4  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 8000BFA8 00008EE8  3B A3 00 00 */	addi r29, r3, 0
 /* 8000BFAC 00008EEC  38 7F 00 00 */	addi r3, r31, 0
@@ -379,9 +379,9 @@ fetchVolumeName__13JKRFileLoaderFPclPCc:
 /* 8000BFB4 00008EF4  2C 03 00 00 */	cmpwi r3, 0
 /* 8000BFB8 00008EF8  40 82 00 18 */	bne lbl_8000BFD0
 /* 8000BFBC 00008EFC  38 7D 00 00 */	addi r3, r29, 0
-/* 8000BFC0 00008F00  38 8D 80 00 */	addi r4, r13, rootPath$1763-_SDA_BASE_
+/* 8000BFC0 00008F00  38 8D 80 00 */	addi r4, r13, rootPath$1763@sda21
 /* 8000BFC4 00008F04  48 07 9E 2D */	bl strcpy
-/* 8000BFC8 00008F08  38 6D 80 00 */	addi r3, r13, rootPath$1763-_SDA_BASE_
+/* 8000BFC8 00008F08  38 6D 80 00 */	addi r3, r13, rootPath$1763@sda21
 /* 8000BFCC 00008F0C  48 00 00 84 */	b lbl_8000C050
 lbl_8000BFD0:
 /* 8000BFD0 00008F10  3C 60 80 37 */	lis r3, __lower_map@ha
@@ -420,7 +420,7 @@ lbl_8000C034:
 /* 8000C03C 00008F7C  88 1F 00 00 */	lbz r0, 0(r31)
 /* 8000C040 00008F80  7C 00 07 75 */	extsb. r0, r0
 /* 8000C044 00008F84  40 82 00 08 */	bne lbl_8000C04C
-/* 8000C048 00008F88  3B ED 80 00 */	addi r31, r13, rootPath$1763-_SDA_BASE_
+/* 8000C048 00008F88  3B ED 80 00 */	addi r31, r13, rootPath$1763@sda21
 lbl_8000C04C:
 /* 8000C04C 00008F8C  7F E3 FB 78 */	mr r3, r31
 lbl_8000C050:
@@ -481,12 +481,27 @@ lbl_8000C0F4:
 /* 8000C10C 0000904C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBB4, 0x4
+  .4byte __sinit_JKRFileLoader_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRFileLoader
 __vt__13JKRFileLoader:
-	.incbin "baserom.dol", 0x3A55B8, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRFileLoaderFv
+  .4byte unmount__13JKRFileLoaderFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 rootPath$1763:

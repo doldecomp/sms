@@ -87,17 +87,17 @@ ReInitTevStages__Fv:
 /* 800CE4A0 000CB3E0  38 A0 00 FF */	li r5, 0xff
 /* 800CE4A4 000CB3E4  38 C0 00 FF */	li r6, 0xff
 /* 800CE4A8 000CB3E8  4B FD DD 89 */	bl GXSetTevOrder
-/* 800CE4AC 000CB3EC  80 0D 83 2C */	lwz r0, ColorWhite-_SDA_BASE_(r13)
+/* 800CE4AC 000CB3EC  80 0D 83 2C */	lwz r0, ColorWhite@sda21(r13)
 /* 800CE4B0 000CB3F0  38 81 00 10 */	addi r4, r1, 0x10
 /* 800CE4B4 000CB3F4  38 60 00 01 */	li r3, 1
 /* 800CE4B8 000CB3F8  90 01 00 10 */	stw r0, 0x10(r1)
 /* 800CE4BC 000CB3FC  4B FD D9 75 */	bl GXSetTevColor
-/* 800CE4C0 000CB400  80 0D 83 2C */	lwz r0, ColorWhite-_SDA_BASE_(r13)
+/* 800CE4C0 000CB400  80 0D 83 2C */	lwz r0, ColorWhite@sda21(r13)
 /* 800CE4C4 000CB404  38 81 00 0C */	addi r4, r1, 0xc
 /* 800CE4C8 000CB408  38 60 00 02 */	li r3, 2
 /* 800CE4CC 000CB40C  90 01 00 0C */	stw r0, 0xc(r1)
 /* 800CE4D0 000CB410  4B FD D9 61 */	bl GXSetTevColor
-/* 800CE4D4 000CB414  80 0D 83 2C */	lwz r0, ColorWhite-_SDA_BASE_(r13)
+/* 800CE4D4 000CB414  80 0D 83 2C */	lwz r0, ColorWhite@sda21(r13)
 /* 800CE4D8 000CB418  38 81 00 08 */	addi r4, r1, 8
 /* 800CE4DC 000CB41C  38 60 00 03 */	li r3, 3
 /* 800CE4E0 000CB420  90 01 00 08 */	stw r0, 8(r1)
@@ -427,22 +427,22 @@ ReInitializeGX:
 /* 800CE9C0 000CB900  39 00 00 00 */	li r8, 0
 /* 800CE9C4 000CB904  39 20 00 02 */	li r9, 2
 /* 800CE9C8 000CB908  4B FD B6 29 */	bl GXSetChanCtrl
-/* 800CE9CC 000CB90C  80 0D 83 28 */	lwz r0, ColorBlack-_SDA_BASE_(r13)
+/* 800CE9CC 000CB90C  80 0D 83 28 */	lwz r0, ColorBlack@sda21(r13)
 /* 800CE9D0 000CB910  38 81 00 2C */	addi r4, r1, 0x2c
 /* 800CE9D4 000CB914  38 60 00 04 */	li r3, 4
 /* 800CE9D8 000CB918  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 800CE9DC 000CB91C  4B FD B2 F9 */	bl GXSetChanAmbColor
-/* 800CE9E0 000CB920  80 0D 83 28 */	lwz r0, ColorBlack-_SDA_BASE_(r13)
+/* 800CE9E0 000CB920  80 0D 83 28 */	lwz r0, ColorBlack@sda21(r13)
 /* 800CE9E4 000CB924  38 81 00 30 */	addi r4, r1, 0x30
 /* 800CE9E8 000CB928  38 60 00 05 */	li r3, 5
 /* 800CE9EC 000CB92C  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800CE9F0 000CB930  4B FD B2 E5 */	bl GXSetChanAmbColor
-/* 800CE9F4 000CB934  80 0D 83 2C */	lwz r0, ColorWhite-_SDA_BASE_(r13)
+/* 800CE9F4 000CB934  80 0D 83 2C */	lwz r0, ColorWhite@sda21(r13)
 /* 800CE9F8 000CB938  38 81 00 34 */	addi r4, r1, 0x34
 /* 800CE9FC 000CB93C  38 60 00 04 */	li r3, 4
 /* 800CEA00 000CB940  90 01 00 34 */	stw r0, 0x34(r1)
 /* 800CEA04 000CB944  4B FD B4 39 */	bl GXSetChanMatColor
-/* 800CEA08 000CB948  80 0D 83 2C */	lwz r0, ColorWhite-_SDA_BASE_(r13)
+/* 800CEA08 000CB948  80 0D 83 2C */	lwz r0, ColorWhite@sda21(r13)
 /* 800CEA0C 000CB94C  38 81 00 38 */	addi r4, r1, 0x38
 /* 800CEA10 000CB950  38 60 00 05 */	li r3, 5
 /* 800CEA14 000CB954  90 01 00 38 */	stw r0, 0x38(r1)
@@ -517,14 +517,14 @@ lbl_800CEAB0:
 /* 800CEB24 000CBA64  4B FD DD 11 */	bl GXSetAlphaUpdate
 /* 800CEB28 000CBA68  38 60 00 01 */	li r3, 1
 /* 800CEB2C 000CBA6C  4B FD DF 11 */	bl GXSetDither
-/* 800CEB30 000CBA70  C0 42 8E 64 */	lfs f2, $$252-_SDA2_BASE_(r2)
+/* 800CEB30 000CBA70  C0 42 8E 64 */	lfs f2, $$252@sda21(r2)
 /* 800CEB34 000CBA74  38 81 00 08 */	addi r4, r1, 8
-/* 800CEB38 000CBA78  80 0D 83 28 */	lwz r0, ColorBlack-_SDA_BASE_(r13)
+/* 800CEB38 000CBA78  80 0D 83 28 */	lwz r0, ColorBlack@sda21(r13)
 /* 800CEB3C 000CBA7C  38 60 00 00 */	li r3, 0
 /* 800CEB40 000CBA80  FC 80 10 90 */	fmr f4, f2
 /* 800CEB44 000CBA84  90 01 00 08 */	stw r0, 8(r1)
-/* 800CEB48 000CBA88  C0 22 8E 60 */	lfs f1, $$251-_SDA2_BASE_(r2)
-/* 800CEB4C 000CBA8C  C0 62 8E 68 */	lfs f3, $$253-_SDA2_BASE_(r2)
+/* 800CEB48 000CBA88  C0 22 8E 60 */	lfs f1, $$251@sda21(r2)
+/* 800CEB4C 000CBA8C  C0 62 8E 68 */	lfs f3, $$253@sda21(r2)
 /* 800CEB50 000CBA90  4B FD D8 F1 */	bl GXSetFog
 /* 800CEB54 000CBA94  38 60 00 00 */	li r3, 0
 /* 800CEB58 000CBA98  38 80 00 00 */	li r4, 0
@@ -551,19 +551,22 @@ $$217:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 NullTexData:
-	.incbin "baserom.dol", 0x3AFB20, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 IdentityMtx:
 	.incbin "baserom.dol", 0x3AFB30, 0x30
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ColorBlack:
-	.incbin "baserom.dol", 0x3E3328, 0x4
+  .4byte 0
 ColorWhite:
-	.incbin "baserom.dol", 0x3E332C, 0x4
+  .4byte -1
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$251:
-	.incbin "baserom.dol", 0x3E4B60, 0x4
+  .4byte 0
 $$252:
 	.incbin "baserom.dol", 0x3E4B64, 0x4
 $$253:

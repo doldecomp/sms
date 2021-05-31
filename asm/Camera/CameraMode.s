@@ -13,7 +13,9 @@ isSlopeCameraMode__15CPolarSubCameraCFv:
 /* 80362FB0 0035FEF0  7C 04 00 2E */	lwzx r0, r4, r0
 /* 80362FB4 0035FEF4  7C 09 03 A6 */	mtctr r0
 /* 80362FB8 0035FEF8  4E 80 04 20 */	bctr 
+lbl_80362FBC:
 /* 80362FBC 0035FEFC  38 60 00 01 */	li r3, 1
+lbl_80362FC0:
 /* 80362FC0 0035FF00  4E 80 00 20 */	blr 
 
 .global isOverHipAttackSpecifyMode__15CPolarSubCameraCFi
@@ -53,6 +55,7 @@ lbl_80363024:
 /* 8036303C 0035FF7C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80363040 0035FF80  7C 09 03 A6 */	mtctr r0
 /* 80363044 0035FF84  4E 80 04 20 */	bctr 
+lbl_80363048:
 /* 80363048 0035FF88  3B C0 00 01 */	li r30, 1
 lbl_8036304C:
 /* 8036304C 0035FF8C  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -167,6 +170,7 @@ isNormalCameraCompletely__15CPolarSubCameraCFv:
 /* 8036319C 003600DC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 803631A0 003600E0  7C 09 03 A6 */	mtctr r0
 /* 803631A4 003600E4  4E 80 04 20 */	bctr 
+lbl_803631A8:
 /* 803631A8 003600E8  38 80 00 01 */	li r4, 1
 lbl_803631AC:
 /* 803631AC 003600EC  54 80 06 3F */	clrlwi. r0, r4, 0x18
@@ -193,7 +197,9 @@ isNormalCameraSpecifyMode__15CPolarSubCameraCFi:
 /* 803631EC 0036012C  7C 05 00 2E */	lwzx r0, r5, r0
 /* 803631F0 00360130  7C 09 03 A6 */	mtctr r0
 /* 803631F4 00360134  4E 80 04 20 */	bctr 
+lbl_803631F8:
 /* 803631F8 00360138  38 60 00 01 */	li r3, 1
+lbl_803631FC:
 /* 803631FC 0036013C  4E 80 00 20 */	blr 
 
 .global isTalkCameraInbetween__15CPolarSubCameraCFv
@@ -366,7 +372,9 @@ isLButtonCameraSpecifyMode__15CPolarSubCameraCFi:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3A3D20, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3A3D2C, 0x14
 $$21535:
@@ -519,12 +527,364 @@ $$21607:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global mCamKindNameSaveFile__15CPolarSubCamera
 mCamKindNameSaveFile__15CPolarSubCamera:
-	.incbin "baserom.dol", 0x3E1CF0, 0x124
+  .4byte $$21535
+  .4byte $$21536
+  .4byte $$21537
+  .4byte $$21538
+  .4byte $$21539
+  .4byte $$21540
+  .4byte $$21541
+  .4byte $$21542
+  .4byte $$21543
+  .4byte $$21544
+  .4byte $$21545
+  .4byte $$21546
+  .4byte $$21547
+  .4byte $$21548
+  .4byte $$21549
+  .4byte $$21550
+  .4byte $$21551
+  .4byte $$21552
+  .4byte $$21553
+  .4byte $$21554
+  .4byte $$21555
+  .4byte $$21556
+  .4byte $$21557
+  .4byte $$21558
+  .4byte $$21559
+  .4byte $$21560
+  .4byte $$21561
+  .4byte $$21562
+  .4byte $$21563
+  .4byte $$21564
+  .4byte $$21565
+  .4byte $$21566
+  .4byte $$21567
+  .4byte $$21568
+  .4byte $$21569
+  .4byte $$21570
+  .4byte $$21571
+  .4byte $$21572
+  .4byte $$21573
+  .4byte $$21574
+  .4byte $$21575
+  .4byte $$21576
+  .4byte $$21577
+  .4byte $$21578
+  .4byte $$21579
+  .4byte $$21580
+  .4byte $$21581
+  .4byte $$21582
+  .4byte $$21583
+  .4byte $$21584
+  .4byte $$21585
+  .4byte $$21586
+  .4byte $$21587
+  .4byte $$21588
+  .4byte $$21589
+  .4byte $$21590
+  .4byte $$21591
+  .4byte $$21592
+  .4byte $$21593
+  .4byte $$21594
+  .4byte $$21595
+  .4byte $$21596
+  .4byte $$21597
+  .4byte $$21598
+  .4byte $$21599
+  .4byte $$21600
+  .4byte $$21601
+  .4byte $$21602
+  .4byte $$21603
+  .4byte $$21604
+  .4byte $$21605
+  .4byte $$21606
+  .4byte $$21607
 $$21781:
-	.incbin "baserom.dol", 0x3E1E14, 0x124
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FC0
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
+    .4byte lbl_80362FBC
 $$21809:
-	.incbin "baserom.dol", 0x3E1F38, 0x104
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_80363048
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_8036304C
+    .4byte lbl_80363048
+    .4byte lbl_80363048
 $$21895:
-	.incbin "baserom.dol", 0x3E203C, 0x124
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631AC
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
+    .4byte lbl_803631A8
 $$21939:
-	.incbin "baserom.dol", 0x3E2160, 0x128
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631FC
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8
+    .4byte lbl_803631F8

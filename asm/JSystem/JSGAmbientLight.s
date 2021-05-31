@@ -38,7 +38,7 @@ JSGFGetType__Q26JStage13TAmbientLightCFv:
 .global JSGGetColor__Q26JStage13TAmbientLightCFv
 JSGGetColor__Q26JStage13TAmbientLightCFv:
 /* 80081884 0007E7C4  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081888 0007E7C8  80 02 89 30 */	lwz r0, $$2115-_SDA2_BASE_(r2)
+/* 80081888 0007E7C8  80 02 89 30 */	lwz r0, $$2115@sda21(r2)
 /* 8008188C 0007E7CC  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80081890 0007E7D0  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 80081894 0007E7D4  38 21 00 18 */	addi r1, r1, 0x18
@@ -51,8 +51,22 @@ JSGSetColor__Q26JStage13TAmbientLightF8_GXColor:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage13TAmbientLight
 __vt__Q26JStage13TAmbientLight:
-	.incbin "baserom.dol", 0x3A9D10, 0x38
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage13TAmbientLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetColor__Q26JStage13TAmbientLightCFv
+  .4byte JSGSetColor__Q26JStage13TAmbientLightF8_GXColor
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2115:
-	.incbin "baserom.dol", 0x3E4630, 0x8
+  .4byte -1
+  .4byte 0

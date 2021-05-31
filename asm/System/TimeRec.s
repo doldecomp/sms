@@ -52,7 +52,7 @@ lbl_800FC8C0:
 /* 800FC8CC 000F980C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 800FC8D0 000F9810  40 82 00 3C */	bne lbl_800FC90C
 /* 800FC8D4 000F9814  80 03 08 14 */	lwz r0, 0x814(r3)
-/* 800FC8D8 000F9818  80 CD 98 40 */	lwz r6, smInstance__16TDrawSyncManager-_SDA_BASE_(r13)
+/* 800FC8D8 000F9818  80 CD 98 40 */	lwz r6, smInstance__16TDrawSyncManager@sda21(r13)
 /* 800FC8DC 000F981C  1C 80 04 08 */	mulli r4, r0, 0x408
 /* 800FC8E0 000F9820  A0 A3 08 1A */	lhz r5, 0x81a(r3)
 /* 800FC8E4 000F9824  38 04 04 08 */	addi r0, r4, 0x408
@@ -75,7 +75,7 @@ lbl_800FC90C:
 
 .global flip__8TTimeRecFv
 flip__8TTimeRecFv:
-/* 800FC920 000F9860  80 AD 98 38 */	lwz r5, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800FC920 000F9860  80 AD 98 38 */	lwz r5, _instance__8TTimeRec@sda21(r13)
 /* 800FC924 000F9864  80 05 08 14 */	lwz r0, 0x814(r5)
 /* 800FC928 000F9868  1C 80 04 08 */	mulli r4, r0, 0x408
 /* 800FC92C 000F986C  38 84 00 04 */	addi r4, r4, 4
@@ -130,7 +130,7 @@ start__8TTimeRecFUs:
 /* 800FC9C8 000F9908  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 800FC9CC 000F990C  3B E3 00 00 */	addi r31, r3, 0
 /* 800FC9D0 000F9910  93 C1 00 10 */	stw r30, 0x10(r1)
-/* 800FC9D4 000F9914  80 0D 98 38 */	lwz r0, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800FC9D4 000F9914  80 0D 98 38 */	lwz r0, _instance__8TTimeRec@sda21(r13)
 /* 800FC9D8 000F9918  28 00 00 00 */	cmplwi r0, 0
 /* 800FC9DC 000F991C  40 82 00 60 */	bne lbl_800FCA3C
 /* 800FC9E0 000F9920  38 60 08 20 */	li r3, 0x820
@@ -156,10 +156,10 @@ start__8TTimeRecFUs:
 /* 800FCA30 000F9970  B3 FE 08 1A */	sth r31, 0x81a(r30)
 /* 800FCA34 000F9974  B0 1E 08 1C */	sth r0, 0x81c(r30)
 lbl_800FCA38:
-/* 800FCA38 000F9978  93 CD 98 38 */	stw r30, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800FCA38 000F9978  93 CD 98 38 */	stw r30, _instance__8TTimeRec@sda21(r13)
 lbl_800FCA3C:
 /* 800FCA3C 000F997C  80 01 00 1C */	lwz r0, 0x1c(r1)
-/* 800FCA40 000F9980  80 6D 98 38 */	lwz r3, _instance__8TTimeRec-_SDA_BASE_(r13)
+/* 800FCA40 000F9980  80 6D 98 38 */	lwz r3, _instance__8TTimeRec@sda21(r13)
 /* 800FCA44 000F9984  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 800FCA48 000F9988  7C 08 03 A6 */	mtlr r0
 /* 800FCA4C 000F998C  83 C1 00 10 */	lwz r30, 0x10(r1)
@@ -186,10 +186,14 @@ lbl_800FCA84:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8TTimeRec
 __vt__8TTimeRec:
-	.incbin "baserom.dol", 0x3B1168, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte drawSyncCallback__8TTimeRecFUs
 .global __vt__17TDrawSyncCallback
 __vt__17TDrawSyncCallback:
-	.incbin "baserom.dol", 0x3B1174, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global _instance__8TTimeRec

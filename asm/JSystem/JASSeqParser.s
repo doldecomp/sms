@@ -789,7 +789,7 @@ cmdSyncCPU__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006ABE8 00067B28  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8006ABEC 00067B2C  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8006ABF0 00067B30  3B E4 00 00 */	addi r31, r4, 0
-/* 8006ABF4 00067B34  81 8D 92 24 */	lwz r12, sCallBackFunc__Q28JASystem6TTrack-_SDA_BASE_(r13)
+/* 8006ABF4 00067B34  81 8D 92 24 */	lwz r12, sCallBackFunc__Q28JASystem6TTrack@sda21(r13)
 /* 8006ABF8 00067B38  28 0C 00 00 */	cmplwi r12, 0
 /* 8006ABFC 00067B3C  41 82 00 1C */	beq lbl_8006AC18
 /* 8006AC00 00067B40  80 05 00 00 */	lwz r0, 0(r5)
@@ -891,8 +891,8 @@ cmdFinish__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006AD34 00067C74  3B C0 00 00 */	li r30, 0
 /* 8006AD38 00067C78  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 8006AD3C 00067C7C  7C 9D 23 78 */	mr r29, r4
-/* 8006AD40 00067C80  C3 E2 87 7C */	lfs f31, $$2364-_SDA2_BASE_(r2)
-/* 8006AD44 00067C84  C3 C2 87 78 */	lfs f30, $$2363-_SDA2_BASE_(r2)
+/* 8006AD40 00067C80  C3 E2 87 7C */	lfs f31, $$2364@sda21(r2)
+/* 8006AD44 00067C84  C3 C2 87 78 */	lfs f30, $$2363@sda21(r2)
 /* 8006AD48 00067C88  48 00 00 74 */	b lbl_8006ADBC
 lbl_8006AD4C:
 /* 8006AD4C 00067C8C  57 C3 06 3E */	clrlwi r3, r30, 0x18
@@ -962,9 +962,9 @@ cmdPanPowSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006AE24 00067D64  80 05 00 08 */	lwz r0, 8(r5)
 /* 8006AE28 00067D68  B0 04 02 94 */	sth r0, 0x294(r4)
 /* 8006AE2C 00067D6C  80 05 00 0C */	lwz r0, 0xc(r5)
-/* 8006AE30 00067D70  C8 22 87 88 */	lfd f1, $$2379-_SDA2_BASE_(r2)
+/* 8006AE30 00067D70  C8 22 87 88 */	lfd f1, $$2379@sda21(r2)
 /* 8006AE34 00067D74  90 01 00 3C */	stw r0, 0x3c(r1)
-/* 8006AE38 00067D78  C0 42 87 80 */	lfs f2, $$2377-_SDA2_BASE_(r2)
+/* 8006AE38 00067D78  C0 42 87 80 */	lfs f2, $$2377@sda21(r2)
 /* 8006AE3C 00067D7C  90 C1 00 38 */	stw r6, 0x38(r1)
 /* 8006AE40 00067D80  C8 01 00 38 */	lfd f0, 0x38(r1)
 /* 8006AE44 00067D84  EC 00 08 28 */	fsubs f0, f0, f1
@@ -994,10 +994,10 @@ cmdIIRSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006AE98 00067DD8  80 05 00 00 */	lwz r0, 0(r5)
 /* 8006AE9C 00067DDC  39 04 02 30 */	addi r8, r4, 0x230
 /* 8006AEA0 00067DE0  38 E4 02 40 */	addi r7, r4, 0x240
-/* 8006AEA4 00067DE4  C8 82 87 98 */	lfd f4, $$2399-_SDA2_BASE_(r2)
+/* 8006AEA4 00067DE4  C8 82 87 98 */	lfd f4, $$2399@sda21(r2)
 /* 8006AEA8 00067DE8  7C 00 07 34 */	extsh r0, r0
 /* 8006AEAC 00067DEC  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8006AEB0 00067DF0  C0 62 87 90 */	lfs f3, $$2397-_SDA2_BASE_(r2)
+/* 8006AEB0 00067DF0  C0 62 87 90 */	lfs f3, $$2397@sda21(r2)
 /* 8006AEB4 00067DF4  90 01 00 3C */	stw r0, 0x3c(r1)
 /* 8006AEB8 00067DF8  38 84 02 50 */	addi r4, r4, 0x250
 /* 8006AEBC 00067DFC  38 60 00 00 */	li r3, 0
@@ -1008,9 +1008,9 @@ cmdIIRSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006AED0 00067E10  D0 09 00 04 */	stfs f0, 4(r9)
 /* 8006AED4 00067E14  C0 09 00 04 */	lfs f0, 4(r9)
 /* 8006AED8 00067E18  D0 09 00 00 */	stfs f0, 0(r9)
-/* 8006AEDC 00067E1C  C0 42 87 78 */	lfs f2, $$2363-_SDA2_BASE_(r2)
+/* 8006AEDC 00067E1C  C0 42 87 78 */	lfs f2, $$2363@sda21(r2)
 /* 8006AEE0 00067E20  D0 49 00 0C */	stfs f2, 0xc(r9)
-/* 8006AEE4 00067E24  C0 22 87 7C */	lfs f1, $$2364-_SDA2_BASE_(r2)
+/* 8006AEE4 00067E24  C0 22 87 7C */	lfs f1, $$2364@sda21(r2)
 /* 8006AEE8 00067E28  D0 29 00 08 */	stfs f1, 8(r9)
 /* 8006AEEC 00067E2C  80 05 00 04 */	lwz r0, 4(r5)
 /* 8006AEF0 00067E30  7C 00 07 34 */	extsh r0, r0
@@ -1097,19 +1097,19 @@ cmdEXTSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 .global cmdPanSwSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 cmdPanSwSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006B018 00067F58  94 21 FF D8 */	stwu r1, -0x28(r1)
-/* 8006B01C 00067F5C  80 62 87 A0 */	lwz r3, $$2411-_SDA2_BASE_(r2)
+/* 8006B01C 00067F5C  80 62 87 A0 */	lwz r3, $$2411@sda21(r2)
 /* 8006B020 00067F60  39 21 00 20 */	addi r9, r1, 0x20
-/* 8006B024 00067F64  80 02 87 A8 */	lwz r0, $$2412-_SDA2_BASE_(r2)
+/* 8006B024 00067F64  80 02 87 A8 */	lwz r0, $$2412@sda21(r2)
 /* 8006B028 00067F68  39 01 00 18 */	addi r8, r1, 0x18
 /* 8006B02C 00067F6C  90 61 00 20 */	stw r3, 0x20(r1)
-/* 8006B030 00067F70  A0 62 87 A4 */	lhz r3, lbl_8040BC04-_SDA2_BASE_(r2)
+/* 8006B030 00067F70  A0 62 87 A4 */	lhz r3, lbl_8040BC04@sda21(r2)
 /* 8006B034 00067F74  90 01 00 18 */	stw r0, 0x18(r1)
-/* 8006B038 00067F78  A0 02 87 AC */	lhz r0, lbl_8040BC0C-_SDA2_BASE_(r2)
+/* 8006B038 00067F78  A0 02 87 AC */	lhz r0, lbl_8040BC0C@sda21(r2)
 /* 8006B03C 00067F7C  B0 61 00 24 */	sth r3, 0x24(r1)
 /* 8006B040 00067F80  38 60 00 00 */	li r3, 0
-/* 8006B044 00067F84  89 42 87 A6 */	lbz r10, lbl_8040BC06-_SDA2_BASE_(r2)
+/* 8006B044 00067F84  89 42 87 A6 */	lbz r10, lbl_8040BC06@sda21(r2)
 /* 8006B048 00067F88  B0 01 00 1C */	sth r0, 0x1c(r1)
-/* 8006B04C 00067F8C  88 02 87 AE */	lbz r0, lbl_8040BC0E-_SDA2_BASE_(r2)
+/* 8006B04C 00067F8C  88 02 87 AE */	lbz r0, lbl_8040BC0E@sda21(r2)
 /* 8006B050 00067F90  99 41 00 26 */	stb r10, 0x26(r1)
 /* 8006B054 00067F94  98 01 00 1E */	stb r0, 0x1e(r1)
 /* 8006B058 00067F98  38 21 00 28 */	addi r1, r1, 0x28
@@ -1188,11 +1188,11 @@ cmdIIRCutOff__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006B160 000680A0  38 03 B8 08 */	addi r0, r3, CUTOFF_TO_IIR_TABLE__Q28JASystem6Player@l
 /* 8006B164 000680A4  80 A5 00 00 */	lwz r5, 0(r5)
 /* 8006B168 000680A8  39 24 02 20 */	addi r9, r4, 0x220
-/* 8006B16C 000680AC  C8 82 87 98 */	lfd f4, $$2399-_SDA2_BASE_(r2)
+/* 8006B16C 000680AC  C8 82 87 98 */	lfd f4, $$2399@sda21(r2)
 /* 8006B170 000680B0  39 04 02 30 */	addi r8, r4, 0x230
 /* 8006B174 000680B4  54 A3 1D 78 */	rlwinm r3, r5, 3, 0x15, 0x1c
 /* 8006B178 000680B8  7C C0 1A 14 */	add r6, r0, r3
-/* 8006B17C 000680BC  C0 62 87 B0 */	lfs f3, $$2446-_SDA2_BASE_(r2)
+/* 8006B17C 000680BC  C0 62 87 B0 */	lfs f3, $$2446@sda21(r2)
 /* 8006B180 000680C0  A8 06 00 00 */	lha r0, 0(r6)
 /* 8006B184 000680C4  38 E4 02 40 */	addi r7, r4, 0x240
 /* 8006B188 000680C8  3C A0 43 30 */	lis r5, 0x43300000@ha
@@ -1207,9 +1207,9 @@ cmdIIRCutOff__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl:
 /* 8006B1AC 000680EC  D0 09 00 04 */	stfs f0, 4(r9)
 /* 8006B1B0 000680F0  C0 09 00 04 */	lfs f0, 4(r9)
 /* 8006B1B4 000680F4  D0 09 00 00 */	stfs f0, 0(r9)
-/* 8006B1B8 000680F8  C0 42 87 78 */	lfs f2, $$2363-_SDA2_BASE_(r2)
+/* 8006B1B8 000680F8  C0 42 87 78 */	lfs f2, $$2363@sda21(r2)
 /* 8006B1BC 000680FC  D0 49 00 0C */	stfs f2, 0xc(r9)
-/* 8006B1C0 00068100  C0 22 87 7C */	lfs f1, $$2364-_SDA2_BASE_(r2)
+/* 8006B1C0 00068100  C0 22 87 7C */	lfs f1, $$2364@sda21(r2)
 /* 8006B1C4 00068104  D0 29 00 08 */	stfs f1, 8(r9)
 /* 8006B1C8 00068108  A8 06 00 02 */	lha r0, 2(r6)
 /* 8006B1CC 0006810C  6C 00 80 00 */	xoris r0, r0, 0x8000
@@ -2564,125 +2564,424 @@ __sinit_JASSeqParser_cpp:
 /* 8006C4DC 0006941C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC00, 0x4
+  .4byte __sinit_JASSeqParser_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 Arglist__8JASystem:
 	.incbin "baserom.dol", 0x36E370, 0x100
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 $$2137:
-	.incbin "baserom.dol", 0x3A8EA0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdOpenTrack__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2138:
-	.incbin "baserom.dol", 0x3A8EAC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdOpenTrackBros__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2139:
-	.incbin "baserom.dol", 0x3A8EB8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdCall__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2140:
-	.incbin "baserom.dol", 0x3A8EC4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdRet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2141:
-	.incbin "baserom.dol", 0x3A8ED0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdJmp__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2142:
-	.incbin "baserom.dol", 0x3A8EDC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdLoopS__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2143:
-	.incbin "baserom.dol", 0x3A8EE8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdLoopE__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2144:
-	.incbin "baserom.dol", 0x3A8EF4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdReadPort__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2145:
-	.incbin "baserom.dol", 0x3A8F00, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdWritePort__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2146:
-	.incbin "baserom.dol", 0x3A8F0C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdCheckPortImport__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2147:
-	.incbin "baserom.dol", 0x3A8F18, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdCheckPortExport__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2148:
-	.incbin "baserom.dol", 0x3A8F24, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdWait__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2149:
-	.incbin "baserom.dol", 0x3A8F30, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdConnectName__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2150:
-	.incbin "baserom.dol", 0x3A8F3C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdParentWritePort__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2151:
-	.incbin "baserom.dol", 0x3A8F48, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdChildWritePort__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2152:
-	.incbin "baserom.dol", 0x3A8F54, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSetLastNote__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2153:
-	.incbin "baserom.dol", 0x3A8F60, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdTimeRelate__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2154:
-	.incbin "baserom.dol", 0x3A8F6C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSimpleOsc__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2155:
-	.incbin "baserom.dol", 0x3A8F78, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSimpleEnv__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2156:
-	.incbin "baserom.dol", 0x3A8F84, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSimpleADSR__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2157:
-	.incbin "baserom.dol", 0x3A8F90, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdTranspose__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2158:
-	.incbin "baserom.dol", 0x3A8F9C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdCloseTrack__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2159:
-	.incbin "baserom.dol", 0x3A8FA8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdOutSwitch__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2160:
-	.incbin "baserom.dol", 0x3A8FB4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdUpdateSync__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2161:
-	.incbin "baserom.dol", 0x3A8FC0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdBusConnect__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2162:
-	.incbin "baserom.dol", 0x3A8FCC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdPauseStatus__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2163:
-	.incbin "baserom.dol", 0x3A8FD8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSetInterrupt__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2164:
-	.incbin "baserom.dol", 0x3A8FE4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdDisInterrupt__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2165:
-	.incbin "baserom.dol", 0x3A8FF0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdClrI__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2166:
-	.incbin "baserom.dol", 0x3A8FFC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSetI__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2167:
-	.incbin "baserom.dol", 0x3A9008, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdRetI__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2168:
-	.incbin "baserom.dol", 0x3A9014, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdIntTimer__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2169:
-	.incbin "baserom.dol", 0x3A9020, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdConnectOpen__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2170:
-	.incbin "baserom.dol", 0x3A902C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdConnectClose__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2171:
-	.incbin "baserom.dol", 0x3A9038, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdSyncCPU__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2172:
-	.incbin "baserom.dol", 0x3A9044, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdFlushAll__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2173:
-	.incbin "baserom.dol", 0x3A9050, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdFlushRelease__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2174:
-	.incbin "baserom.dol", 0x3A905C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdWait__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2175:
-	.incbin "baserom.dol", 0x3A9068, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdPanPowSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2176:
-	.incbin "baserom.dol", 0x3A9074, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdIIRSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2177:
-	.incbin "baserom.dol", 0x3A9080, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdFIRSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2178:
-	.incbin "baserom.dol", 0x3A908C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdEXTSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2179:
-	.incbin "baserom.dol", 0x3A9098, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdPanSwSet__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2180:
-	.incbin "baserom.dol", 0x3A90A4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdOscRoute__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2181:
-	.incbin "baserom.dol", 0x3A90B0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdIIRCutOff__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2182:
-	.incbin "baserom.dol", 0x3A90BC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdOscFull__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2183:
-	.incbin "baserom.dol", 0x3A90C8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdVolumeMode__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2184:
-	.incbin "baserom.dol", 0x3A90D4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdCheckWave__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2185:
-	.incbin "baserom.dol", 0x3A90E0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdPrintf__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2186:
-	.incbin "baserom.dol", 0x3A90EC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdNop__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2187:
-	.incbin "baserom.dol", 0x3A90F8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdTempo__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2188:
-	.incbin "baserom.dol", 0x3A9104, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdTimeBase__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 $$2189:
-	.incbin "baserom.dol", 0x3A9110, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte cmdFinish__Q28JASystem10TSeqParserFPQ28JASystem6TTrackPUl
 sCmdPList__Q28JASystem10TSeqParser:
-	.incbin "baserom.dol", 0x3A911C, 0x304
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2363:
-	.incbin "baserom.dol", 0x3E4478, 0x4
+  .4byte 0
 $$2364:
 	.incbin "baserom.dol", 0x3E447C, 0x4
 $$2377:

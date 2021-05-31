@@ -288,7 +288,7 @@ changeAnmTexPattern__8M3UModelFiUc:
 /* 800D2FD4 000CFF14  A8 03 00 02 */	lha r0, 2(r3)
 /* 800D2FD8 000CFF18  7C 66 2A 14 */	add r3, r6, r5
 /* 800D2FDC 000CFF1C  B0 03 00 08 */	sth r0, 8(r3)
-/* 800D2FE0 000CFF20  C0 02 8E F0 */	lfs f0, $$21716-_SDA2_BASE_(r2)
+/* 800D2FE0 000CFF20  C0 02 8E F0 */	lfs f0, $$21716@sda21(r2)
 /* 800D2FE4 000CFF24  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 800D2FE8 000CFF28  4E 80 00 20 */	blr 
 
@@ -308,7 +308,7 @@ changeMtxCalcAnmTransform__8M3UModelFiUc:
 /* 800D3018 000CFF58  A8 03 00 02 */	lha r0, 2(r3)
 /* 800D301C 000CFF5C  7C 66 2A 14 */	add r3, r6, r5
 /* 800D3020 000CFF60  B0 03 00 08 */	sth r0, 8(r3)
-/* 800D3024 000CFF64  C0 02 8E F0 */	lfs f0, $$21716-_SDA2_BASE_(r2)
+/* 800D3024 000CFF64  C0 02 8E F0 */	lfs f0, $$21716@sda21(r2)
 /* 800D3028 000CFF68  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 800D302C 000CFF6C  4E 80 00 20 */	blr 
 
@@ -344,11 +344,22 @@ lbl_800D3084:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8M3UModel
 __vt__8M3UModel:
-	.incbin "baserom.dol", 0x3B04E0, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte changeMtxCalcAnmTransform__8M3UModelFiUc
+  .4byte changeAnmTexPattern__8M3UModelFiUc
+  .4byte setMtxCalc__8M3UModelFRC17M3UMtxCalcSetInfo
+  .4byte updateIn__8M3UModelFv
+  .4byte updateOut__8M3UModelFv
+  .4byte entryIn__8M3UModelFv
+  .4byte entryOut__8M3UModelFv
 .global __vt__14M3UModelCommon
 __vt__14M3UModelCommon:
-	.incbin "baserom.dol", 0x3B0504, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte getMtxCalc__14M3UModelCommonFRC17M3UMtxCalcSetInfo
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21716:
-	.incbin "baserom.dol", 0x3E4BF0, 0x8
+  .4byte 0
+  .4byte 0

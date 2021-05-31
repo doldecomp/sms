@@ -45,4 +45,11 @@ load__15TStageEventInfoFR20JSUMemoryInputStream:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TStageEventInfo
 __vt__15TStageEventInfo:
-	.incbin "baserom.dol", 0x3B10C8, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TStageEventInfoFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__15TStageEventInfoFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc

@@ -46,7 +46,7 @@ lbl_800D1C20:
 /* 800D1C20 000CEB60  93 7F 00 1C */	stw r27, 0x1c(r31)
 lbl_800D1C24:
 /* 800D1C24 000CEB64  3C 80 80 0D */	lis r4, TGDLStaticOverFlow__Fv@ha
-/* 800D1C28 000CEB68  83 6D 95 B8 */	lwz r27, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800D1C28 000CEB68  83 6D 95 B8 */	lwz r27, __GDCurrentDL@sda21(r13)
 /* 800D1C2C 000CEB6C  3C 60 80 3B */	lis r3, __vt__Q210TGDLStatic12TGDLSentinel@ha
 /* 800D1C30 000CEB70  3B A4 1E 8C */	addi r29, r4, TGDLStaticOverFlow__Fv@l
 /* 800D1C34 000CEB74  3B C3 34 70 */	addi r30, r3, __vt__Q210TGDLStatic12TGDLSentinel@l
@@ -54,8 +54,8 @@ lbl_800D1C38:
 /* 800D1C38 000CEB78  3B 80 00 00 */	li r28, 0
 /* 800D1C3C 000CEB7C  9B 9F 00 11 */	stb r28, 0x11(r31)
 /* 800D1C40 000CEB80  7F E3 FB 78 */	mr r3, r31
-/* 800D1C44 000CEB84  93 ED 97 90 */	stw r31, currentTGDLStatic-_SDA_BASE_(r13)
-/* 800D1C48 000CEB88  93 ED 95 B8 */	stw r31, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800D1C44 000CEB84  93 ED 97 90 */	stw r31, currentTGDLStatic@sda21(r13)
+/* 800D1C48 000CEB88  93 ED 95 B8 */	stw r31, __GDCurrentDL@sda21(r13)
 /* 800D1C4C 000CEB8C  81 9F 00 20 */	lwz r12, 0x20(r31)
 /* 800D1C50 000CEB90  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 800D1C54 000CEB94  7D 88 03 A6 */	mtlr r12
@@ -103,7 +103,7 @@ lbl_800D1CF4:
 /* 800D1CF4 000CEC34  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 800D1CF8 000CEC38  4B FF FF 40 */	b lbl_800D1C38
 lbl_800D1CFC:
-/* 800D1CFC 000CEC3C  93 6D 95 B8 */	stw r27, __GDCurrentDL-_SDA_BASE_(r13)
+/* 800D1CFC 000CEC3C  93 6D 95 B8 */	stw r27, __GDCurrentDL@sda21(r13)
 /* 800D1D00 000CEC40  BB 61 00 1C */	lmw r27, 0x1c(r1)
 /* 800D1D04 000CEC44  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 800D1D08 000CEC48  38 21 00 30 */	addi r1, r1, 0x30
@@ -218,18 +218,25 @@ lbl_800D1E70:
 
 .global TGDLStaticOverFlow__Fv
 TGDLStaticOverFlow__Fv:
-/* 800D1E8C 000CEDCC  80 6D 97 90 */	lwz r3, currentTGDLStatic-_SDA_BASE_(r13)
+/* 800D1E8C 000CEDCC  80 6D 97 90 */	lwz r3, currentTGDLStatic@sda21(r13)
 /* 800D1E90 000CEDD0  38 00 00 01 */	li r0, 1
 /* 800D1E94 000CEDD4  98 03 00 11 */	stb r0, 0x11(r3)
 /* 800D1E98 000CEDD8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global __vt__10TGDLStatic
 __vt__10TGDLStatic:
-	.incbin "baserom.dol", 0x3B0460, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TGDLStaticFv
+  .4byte 0
 .global __vt__Q210TGDLStatic12TGDLSentinel
 __vt__Q210TGDLStatic12TGDLSentinel:
-	.incbin "baserom.dol", 0x3B0470, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q210TGDLStatic12TGDLSentinelFv
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 currentTGDLStatic:

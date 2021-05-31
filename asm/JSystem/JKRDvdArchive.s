@@ -140,7 +140,7 @@ open__13JKRDvdArchiveFl:
 /* 80008F94 00005ED4  90 1F 00 48 */	stw r0, 0x48(r31)
 /* 80008F98 00005ED8  90 1F 00 4C */	stw r0, 0x4c(r31)
 /* 80008F9C 00005EDC  90 1F 00 50 */	stw r0, 0x50(r31)
-/* 80008FA0 00005EE0  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80008FA0 00005EE0  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 80008FA4 00005EE4  48 00 39 A1 */	bl __nw__FUlP7JKRHeapi
 /* 80008FA8 00005EE8  28 03 00 00 */	cmplwi r3, 0
 /* 80008FAC 00005EEC  41 82 00 0C */	beq lbl_80008FB8
@@ -156,7 +156,7 @@ lbl_80008FB8:
 /* 80008FD0 00005F10  38 60 00 00 */	li r3, 0
 /* 80008FD4 00005F14  48 00 01 68 */	b lbl_8000913C
 lbl_80008FD8:
-/* 80008FD8 00005F18  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80008FD8 00005F18  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 80008FDC 00005F1C  38 80 00 20 */	li r4, 0x20
 /* 80008FE0 00005F20  38 A0 00 20 */	li r5, 0x20
 /* 80008FE4 00005F24  81 83 00 00 */	lwz r12, 0(r3)
@@ -226,7 +226,7 @@ lbl_80009074:
 lbl_800090D4:
 /* 800090D4 00006014  28 1E 00 00 */	cmplwi r30, 0
 /* 800090D8 00006018  41 82 00 1C */	beq lbl_800090F4
-/* 800090DC 0000601C  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800090DC 0000601C  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800090E0 00006020  7F C4 F3 78 */	mr r4, r30
 /* 800090E4 00006024  81 83 00 00 */	lwz r12, 0(r3)
 /* 800090E8 00006028  81 8C 00 10 */	lwz r12, 0x10(r12)
@@ -435,7 +435,7 @@ lbl_80009378:
 /* 8000939C 000062DC  7F 63 DB 78 */	mr r3, r27
 /* 800093A0 000062E0  48 00 01 2C */	b lbl_800094CC
 lbl_800093A4:
-/* 800093A4 000062E4  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800093A4 000062E4  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800093A8 000062E8  38 80 00 20 */	li r4, 0x20
 /* 800093AC 000062EC  38 A0 00 20 */	li r5, 0x20
 /* 800093B0 000062F0  81 83 00 00 */	lwz r12, 0(r3)
@@ -452,7 +452,7 @@ lbl_800093A4:
 /* 800093DC 0000631C  39 00 00 01 */	li r8, 1
 /* 800093E0 00006320  39 40 00 00 */	li r10, 0
 /* 800093E4 00006324  48 02 B1 31 */	bl loadToMainRAM__12JKRDvdRipperFlPUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
-/* 800093E8 00006328  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800093E8 00006328  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800093EC 0000632C  7F 64 DB 78 */	mr r4, r27
 /* 800093F0 00006330  88 1B 00 05 */	lbz r0, 5(r27)
 /* 800093F4 00006334  81 83 00 00 */	lwz r12, 0(r3)
@@ -666,4 +666,21 @@ $$2440:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRDvdArchive
 __vt__13JKRDvdArchive:
-	.incbin "baserom.dol", 0x3A54D8, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRDvdArchiveFv
+  .4byte unmount__13JKRFileLoaderFv
+  .4byte becomeCurrent__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFPCc
+  .4byte getResource__10JKRArchiveFUlPCc
+  .4byte readResource__10JKRArchiveFPvUlPCc
+  .4byte readResource__10JKRArchiveFPvUlUlPCc
+  .4byte removeResourceAll__10JKRArchiveFv
+  .4byte removeResource__10JKRArchiveFPv
+  .4byte detachResource__10JKRArchiveFPv
+  .4byte getResSize__10JKRArchiveCFPCv
+  .4byte countFile__10JKRArchiveCFPCc
+  .4byte getFirstFile__10JKRArchiveCFPCc
+  .4byte fetchResource__13JKRDvdArchiveFPQ210JKRArchive12SDIFileEntryPUl
+  .4byte fetchResource__13JKRDvdArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl
+  .4byte 0

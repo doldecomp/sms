@@ -27,4 +27,7 @@ lbl_8000B908:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRFileFinder
 __vt__13JKRFileFinder:
-	.incbin "baserom.dol", 0x3A5598, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13JKRFileFinderFv
+  .4byte 0

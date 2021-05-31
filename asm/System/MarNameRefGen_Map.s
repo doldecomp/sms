@@ -12,7 +12,7 @@ getNameRef_Map__14TMarNameRefGenCFPCc:
 /* 80100BBC 000FDAFC  3C 80 80 37 */	lis r4, $$21490@ha
 /* 80100BC0 000FDB00  3B E4 68 F0 */	addi r31, r4, $$21490@l
 /* 80100BC4 000FDB04  38 7E 00 00 */	addi r3, r30, 0
-/* 80100BC8 000FDB08  38 82 93 C0 */	addi r4, r2, $$22088-_SDA2_BASE_
+/* 80100BC8 000FDB08  38 82 93 C0 */	addi r4, r2, $$22088@sda21
 /* 80100BCC 000FDB0C  4B F8 50 91 */	bl strcmp
 /* 80100BD0 000FDB10  2C 03 00 00 */	cmpwi r3, 0
 /* 80100BD4 000FDB14  40 82 00 28 */	bne lbl_80100BFC
@@ -21,7 +21,7 @@ getNameRef_Map__14TMarNameRefGenCFPCc:
 /* 80100BE0 000FDB20  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80100BE4 000FDB24  41 82 00 10 */	beq lbl_80100BF4
 /* 80100BE8 000FDB28  38 7E 00 00 */	addi r3, r30, 0
-/* 80100BEC 000FDB2C  38 82 93 C4 */	addi r4, r2, $$22089-_SDA2_BASE_
+/* 80100BEC 000FDB2C  38 82 93 C4 */	addi r4, r2, $$22089@sda21
 /* 80100BF0 000FDB30  48 0D A8 95 */	bl __ct__4TMapFPCc
 lbl_80100BF4:
 /* 80100BF4 000FDB34  7F C3 F3 78 */	mr r3, r30
@@ -44,7 +44,7 @@ lbl_80100C2C:
 /* 80100C30 000FDB70  48 00 02 94 */	b lbl_80100EC4
 lbl_80100C34:
 /* 80100C34 000FDB74  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C38 000FDB78  38 82 93 CC */	addi r4, r2, $$22092-_SDA2_BASE_
+/* 80100C38 000FDB78  38 82 93 CC */	addi r4, r2, $$22092@sda21
 /* 80100C3C 000FDB7C  4B F8 50 21 */	bl strcmp
 /* 80100C40 000FDB80  2C 03 00 00 */	cmpwi r3, 0
 /* 80100C44 000FDB84  40 82 00 28 */	bne lbl_80100C6C
@@ -53,14 +53,14 @@ lbl_80100C34:
 /* 80100C50 000FDB90  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80100C54 000FDB94  41 82 00 10 */	beq lbl_80100C64
 /* 80100C58 000FDB98  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C5C 000FDB9C  38 82 93 D0 */	addi r4, r2, $$22093-_SDA2_BASE_
+/* 80100C5C 000FDB9C  38 82 93 D0 */	addi r4, r2, $$22093@sda21
 /* 80100C60 000FDBA0  48 0F 0D 6D */	bl __ct__4TSkyFPCc
 lbl_80100C64:
 /* 80100C64 000FDBA4  7F C3 F3 78 */	mr r3, r30
 /* 80100C68 000FDBA8  48 00 02 5C */	b lbl_80100EC4
 lbl_80100C6C:
 /* 80100C6C 000FDBAC  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C70 000FDBB0  38 82 93 D4 */	addi r4, r2, $$22094-_SDA2_BASE_
+/* 80100C70 000FDBB0  38 82 93 D4 */	addi r4, r2, $$22094@sda21
 /* 80100C74 000FDBB4  4B F8 4F E9 */	bl strcmp
 /* 80100C78 000FDBB8  2C 03 00 00 */	cmpwi r3, 0
 /* 80100C7C 000FDBBC  40 82 00 28 */	bne lbl_80100CA4
@@ -119,7 +119,7 @@ lbl_80100D38:
 /* 80100D3C 000FDC7C  48 00 01 88 */	b lbl_80100EC4
 lbl_80100D40:
 /* 80100D40 000FDC80  38 7E 00 00 */	addi r3, r30, 0
-/* 80100D44 000FDC84  38 82 93 DC */	addi r4, r2, $$22100-_SDA2_BASE_
+/* 80100D44 000FDC84  38 82 93 DC */	addi r4, r2, $$22100@sda21
 /* 80100D48 000FDC88  4B F8 4F 15 */	bl strcmp
 /* 80100D4C 000FDC8C  2C 03 00 00 */	cmpwi r3, 0
 /* 80100D50 000FDC90  40 82 00 28 */	bne lbl_80100D78
@@ -237,7 +237,9 @@ lbl_80100EC4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3738F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21723:
 	.incbin "baserom.dol", 0x3738FC, 0x14
 $$21779:
@@ -286,10 +288,10 @@ $$22108:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cSunVolumeName
 cSunVolumeName:
-	.incbin "baserom.dol", 0x3E3468, 0x4
+  .4byte $$21956
 .global cSunsetVolumeName
 cSunsetVolumeName:
-	.incbin "baserom.dol", 0x3E346C, 0x4
+  .4byte $$21957
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22088:

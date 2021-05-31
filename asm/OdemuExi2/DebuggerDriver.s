@@ -53,10 +53,10 @@ lbl_800AE5E0:
 /* 800AE5F8 000AB538  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 800AE5FC 000AB53C  54 00 07 BD */	rlwinm. r0, r0, 0, 0x1e, 0x1e
 /* 800AE600 000AB540  40 82 FF 90 */	bne lbl_800AE590
-/* 800AE604 000AB544  88 6D 82 E8 */	lbz r3, SendCount-_SDA_BASE_(r13)
+/* 800AE604 000AB544  88 6D 82 E8 */	lbz r3, SendCount@sda21(r13)
 /* 800AE608 000AB548  38 03 00 01 */	addi r0, r3, 1
-/* 800AE60C 000AB54C  98 0D 82 E8 */	stb r0, SendCount-_SDA_BASE_(r13)
-/* 800AE610 000AB550  88 0D 82 E8 */	lbz r0, SendCount-_SDA_BASE_(r13)
+/* 800AE60C 000AB54C  98 0D 82 E8 */	stb r0, SendCount@sda21(r13)
+/* 800AE610 000AB550  88 0D 82 E8 */	lbz r0, SendCount@sda21(r13)
 /* 800AE614 000AB554  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 800AE618 000AB558  41 82 00 0C */	beq lbl_800AE624
 /* 800AE61C 000AB55C  38 60 10 00 */	li r3, 0x1000
@@ -106,7 +106,7 @@ lbl_800AE69C:
 /* 800AE6B4 000AB5F4  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 800AE6B8 000AB5F8  54 00 07 BD */	rlwinm. r0, r0, 0, 0x1e, 0x1e
 /* 800AE6BC 000AB5FC  40 82 FF 98 */	bne lbl_800AE654
-/* 800AE6C0 000AB600  88 0D 82 E8 */	lbz r0, SendCount-_SDA_BASE_(r13)
+/* 800AE6C0 000AB600  88 0D 82 E8 */	lbz r0, SendCount@sda21(r13)
 /* 800AE6C4 000AB604  54 00 80 1E */	slwi r0, r0, 0x10
 /* 800AE6C8 000AB608  64 00 1F 00 */	oris r0, r0, 0x1f00
 /* 800AE6CC 000AB60C  7C 00 DB 78 */	or r0, r0, r27
@@ -189,7 +189,7 @@ DBRead:
 /* 800AE7E0 000AB720  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 800AE7E4 000AB724  3B A3 00 00 */	addi r29, r3, 0
 /* 800AE7E8 000AB728  4B FE 19 E5 */	bl OSDisableInterrupts
-/* 800AE7EC 000AB72C  80 0D 95 A8 */	lwz r0, SendMailData-_SDA_BASE_(r13)
+/* 800AE7EC 000AB72C  80 0D 95 A8 */	lwz r0, SendMailData@sda21(r13)
 /* 800AE7F0 000AB730  3B E3 00 00 */	addi r31, r3, 0
 /* 800AE7F4 000AB734  54 00 03 DF */	rlwinm. r0, r0, 0, 0xf, 0xf
 /* 800AE7F8 000AB738  41 82 00 0C */	beq lbl_800AE804
@@ -205,9 +205,9 @@ lbl_800AE808:
 /* 800AE818 000AB758  38 63 E0 00 */	addi r3, r3, -8192
 /* 800AE81C 000AB75C  48 00 03 A5 */	bl DBGRead
 /* 800AE820 000AB760  38 00 00 00 */	li r0, 0
-/* 800AE824 000AB764  90 0D 95 AC */	stw r0, RecvDataLeng-_SDA_BASE_(r13)
+/* 800AE824 000AB764  90 0D 95 AC */	stw r0, RecvDataLeng@sda21(r13)
 /* 800AE828 000AB768  7F E3 FB 78 */	mr r3, r31
-/* 800AE82C 000AB76C  98 0D 95 B4 */	stb r0, EXIInputFlag-_SDA_BASE_(r13)
+/* 800AE82C 000AB76C  98 0D 95 B4 */	stb r0, EXIInputFlag@sda21(r13)
 /* 800AE830 000AB770  4B FE 19 C5 */	bl OSRestoreInterrupts
 /* 800AE834 000AB774  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 800AE838 000AB778  38 60 00 00 */	li r3, 0
@@ -225,8 +225,8 @@ DBQueryData:
 /* 800AE85C 000AB79C  90 01 00 04 */	stw r0, 4(r1)
 /* 800AE860 000AB7A0  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800AE864 000AB7A4  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 800AE868 000AB7A8  80 0D 95 AC */	lwz r0, RecvDataLeng-_SDA_BASE_(r13)
-/* 800AE86C 000AB7AC  98 6D 95 B4 */	stb r3, EXIInputFlag-_SDA_BASE_(r13)
+/* 800AE868 000AB7A8  80 0D 95 AC */	lwz r0, RecvDataLeng@sda21(r13)
+/* 800AE86C 000AB7AC  98 6D 95 B4 */	stb r3, EXIInputFlag@sda21(r13)
 /* 800AE870 000AB7B0  2C 00 00 00 */	cmpwi r0, 0
 /* 800AE874 000AB7B4  40 82 00 64 */	bne lbl_800AE8D8
 /* 800AE878 000AB7B8  4B FE 19 55 */	bl OSDisableInterrupts
@@ -247,15 +247,15 @@ DBQueryData:
 /* 800AE8B4 000AB7F4  28 00 00 00 */	cmplwi r0, 0
 /* 800AE8B8 000AB7F8  40 82 00 18 */	bne lbl_800AE8D0
 /* 800AE8BC 000AB7FC  54 83 04 7E */	clrlwi r3, r4, 0x11
-/* 800AE8C0 000AB800  90 8D 95 A8 */	stw r4, SendMailData-_SDA_BASE_(r13)
+/* 800AE8C0 000AB800  90 8D 95 A8 */	stw r4, SendMailData@sda21(r13)
 /* 800AE8C4 000AB804  38 00 00 01 */	li r0, 1
-/* 800AE8C8 000AB808  90 6D 95 AC */	stw r3, RecvDataLeng-_SDA_BASE_(r13)
-/* 800AE8CC 000AB80C  98 0D 95 B4 */	stb r0, EXIInputFlag-_SDA_BASE_(r13)
+/* 800AE8C8 000AB808  90 6D 95 AC */	stw r3, RecvDataLeng@sda21(r13)
+/* 800AE8CC 000AB80C  98 0D 95 B4 */	stb r0, EXIInputFlag@sda21(r13)
 lbl_800AE8D0:
 /* 800AE8D0 000AB810  7F E3 FB 78 */	mr r3, r31
 /* 800AE8D4 000AB814  4B FE 19 21 */	bl OSRestoreInterrupts
 lbl_800AE8D8:
-/* 800AE8D8 000AB818  80 6D 95 AC */	lwz r3, RecvDataLeng-_SDA_BASE_(r13)
+/* 800AE8D8 000AB818  80 6D 95 AC */	lwz r3, RecvDataLeng@sda21(r13)
 /* 800AE8DC 000AB81C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800AE8E0 000AB820  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 800AE8E4 000AB824  38 21 00 18 */	addi r1, r1, 0x18
@@ -275,7 +275,7 @@ DBInitInterrupts:
 /* 800AE910 000AB850  3C 60 80 0B */	lis r3, MWCallback@ha
 /* 800AE914 000AB854  38 03 E9 FC */	addi r0, r3, MWCallback@l
 /* 800AE918 000AB858  3C 60 80 0B */	lis r3, DBGHandler@ha
-/* 800AE91C 000AB85C  90 0D 95 A4 */	stw r0, DBGCallback-_SDA_BASE_(r13)
+/* 800AE91C 000AB85C  90 0D 95 A4 */	stw r0, DBGCallback@sda21(r13)
 /* 800AE920 000AB860  38 83 E9 BC */	addi r4, r3, DBGHandler@l
 /* 800AE924 000AB864  38 60 00 19 */	li r3, 0x19
 /* 800AE928 000AB868  4B FE 18 F1 */	bl __OSSetInterruptHandler
@@ -297,14 +297,14 @@ DBInitComm:
 /* 800AE95C 000AB89C  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 800AE960 000AB8A0  3B A3 00 00 */	addi r29, r3, 0
 /* 800AE964 000AB8A4  4B FE 18 69 */	bl OSDisableInterrupts
-/* 800AE968 000AB8A8  38 0D 95 B4 */	addi r0, r13, EXIInputFlag-_SDA_BASE_
-/* 800AE96C 000AB8AC  90 0D 95 B0 */	stw r0, pEXIInputFlag-_SDA_BASE_(r13)
+/* 800AE968 000AB8A8  38 0D 95 B4 */	addi r0, r13, EXIInputFlag@sda21
+/* 800AE96C 000AB8AC  90 0D 95 B0 */	stw r0, pEXIInputFlag@sda21(r13)
 /* 800AE970 000AB8B0  3C 80 00 02 */	lis r4, 0x00018000@ha
 /* 800AE974 000AB8B4  3B E3 00 00 */	addi r31, r3, 0
-/* 800AE978 000AB8B8  80 0D 95 B0 */	lwz r0, pEXIInputFlag-_SDA_BASE_(r13)
+/* 800AE978 000AB8B8  80 0D 95 B0 */	lwz r0, pEXIInputFlag@sda21(r13)
 /* 800AE97C 000AB8BC  38 64 80 00 */	addi r3, r4, 0x00018000@l
 /* 800AE980 000AB8C0  90 1D 00 00 */	stw r0, 0(r29)
-/* 800AE984 000AB8C4  93 CD 95 A0 */	stw r30, MTRCallback-_SDA_BASE_(r13)
+/* 800AE984 000AB8C4  93 CD 95 A0 */	stw r30, MTRCallback@sda21(r13)
 /* 800AE988 000AB8C8  4B FE 1C 0D */	bl __OSMaskInterrupts
 /* 800AE98C 000AB8CC  3C 60 CC 00 */	lis r3, 0xCC006828@ha
 /* 800AE990 000AB8D0  38 00 00 00 */	li r0, 0
@@ -326,7 +326,7 @@ DBGHandler:
 /* 800AE9C4 000AB904  90 01 00 04 */	stw r0, 4(r1)
 /* 800AE9C8 000AB908  38 00 10 00 */	li r0, 0x1000
 /* 800AE9CC 000AB90C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800AE9D0 000AB910  81 8D 95 A4 */	lwz r12, DBGCallback-_SDA_BASE_(r13)
+/* 800AE9D0 000AB910  81 8D 95 A4 */	lwz r12, DBGCallback@sda21(r13)
 /* 800AE9D4 000AB914  90 05 30 00 */	stw r0, 0xCC003000@l(r5)
 /* 800AE9D8 000AB918  28 0C 00 00 */	cmplwi r12, 0
 /* 800AE9DC 000AB91C  41 82 00 10 */	beq lbl_800AE9EC
@@ -345,8 +345,8 @@ MWCallback:
 /* 800AEA00 000AB940  90 01 00 04 */	stw r0, 4(r1)
 /* 800AEA04 000AB944  38 00 00 01 */	li r0, 1
 /* 800AEA08 000AB948  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800AEA0C 000AB94C  81 8D 95 A0 */	lwz r12, MTRCallback-_SDA_BASE_(r13)
-/* 800AEA10 000AB950  98 0D 95 B4 */	stb r0, EXIInputFlag-_SDA_BASE_(r13)
+/* 800AEA0C 000AB94C  81 8D 95 A0 */	lwz r12, MTRCallback@sda21(r13)
+/* 800AEA10 000AB950  98 0D 95 B4 */	stb r0, EXIInputFlag@sda21(r13)
 /* 800AEA14 000AB954  28 0C 00 00 */	cmplwi r12, 0
 /* 800AEA18 000AB958  41 82 00 10 */	beq lbl_800AEA28
 /* 800AEA1C 000AB95C  7D 88 03 A6 */	mtlr r12
@@ -761,7 +761,8 @@ lbl_800AEFD4:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 SendCount:
-	.incbin "baserom.dol", 0x3E32E8, 0x8
+  .4byte 0x80000000
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 MTRCallback:

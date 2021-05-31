@@ -347,7 +347,7 @@ load__13TAreaCylinderFR20JSUMemoryInputStream:
 /* 803196F8 00316638  4B CF 4E 99 */	bl read__14JSUInputStreamFPvl
 /* 803196FC 0031663C  C0 1E 00 1C */	lfs f0, 0x1c(r30)
 /* 80319700 00316640  7F E3 FB 78 */	mr r3, r31
-/* 80319704 00316644  C0 22 FB C0 */	lfs f1, $$22137-_SDA2_BASE_(r2)
+/* 80319704 00316644  C0 22 FB C0 */	lfs f1, $$22137@sda21(r2)
 /* 80319708 00316648  EC 00 00 72 */	fmuls f0, f0, f1
 /* 8031970C 0031664C  D0 1E 00 1C */	stfs f0, 0x1c(r30)
 /* 80319710 00316650  C0 1E 00 20 */	lfs f0, 0x20(r30)
@@ -374,7 +374,7 @@ lbl_80319758:
 /* 8031975C 0031669C  41 80 FF E0 */	blt lbl_8031973C
 /* 80319760 003166A0  7F E3 FB 78 */	mr r3, r31
 /* 80319764 003166A4  4B CF 4E 85 */	bl readString__14JSUInputStreamFv
-/* 80319768 003166A8  83 AD 9C 28 */	lwz r29, gpConductor-_SDA_BASE_(r13)
+/* 80319768 003166A8  83 AD 9C 28 */	lwz r29, gpConductor@sda21(r13)
 /* 8031976C 003166AC  7C 7C 1B 78 */	mr r28, r3
 /* 80319770 003166B0  4B D2 AF 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 80319774 003166B4  81 9D 00 00 */	lwz r12, 0(r29)
@@ -415,7 +415,7 @@ lbl_80319758:
 /* 80319800 00316740  90 A6 00 14 */	stw r5, 0x14(r6)
 /* 80319804 00316744  90 06 00 18 */	stw r0, 0x18(r6)
 /* 80319808 00316748  90 06 00 1C */	stw r0, 0x1c(r6)
-/* 8031980C 0031674C  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 8031980C 0031674C  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 80319810 00316750  4B F2 F7 A5 */	bl registerAreaCylinderManager__10TConductorFP20TAreaCylinderManager
 lbl_80319814:
 /* 80319814 00316754  7F A4 EB 78 */	mr r4, r29
@@ -436,9 +436,9 @@ lbl_80319818:
 /* 8031984C 0031678C  4B CF 4D 45 */	bl read__14JSUInputStreamFPvl
 /* 80319850 00316790  80 61 00 5C */	lwz r3, 0x5c(r1)
 /* 80319854 00316794  3C 00 43 30 */	lis r0, 0x4330
-/* 80319858 00316798  C8 42 FB C8 */	lfd f2, $$22140-_SDA2_BASE_(r2)
+/* 80319858 00316798  C8 42 FB C8 */	lfd f2, $$22140@sda21(r2)
 /* 8031985C 0031679C  6C 63 80 00 */	xoris r3, r3, 0x8000
-/* 80319860 003167A0  C0 02 FB C4 */	lfs f0, $$22138-_SDA2_BASE_(r2)
+/* 80319860 003167A0  C0 02 FB C4 */	lfs f0, $$22138@sda21(r2)
 /* 80319864 003167A4  90 61 00 8C */	stw r3, 0x8c(r1)
 /* 80319868 003167A8  90 01 00 88 */	stw r0, 0x88(r1)
 /* 8031986C 003167AC  C8 21 00 88 */	lfd f1, 0x88(r1)
@@ -477,7 +477,7 @@ __ct__13TAreaCylinderFPCc:
 /* 803198E4 00316824  38 03 0E 5C */	addi r0, r3, __vt__13TAreaCylinder@l
 /* 803198E8 00316828  38 7F 00 00 */	addi r3, r31, 0
 /* 803198EC 0031682C  90 1F 00 00 */	stw r0, 0(r31)
-/* 803198F0 00316830  C0 02 FB D0 */	lfs f0, $$22149-_SDA2_BASE_(r2)
+/* 803198F0 00316830  C0 02 FB D0 */	lfs f0, $$22149@sda21(r2)
 /* 803198F4 00316834  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 803198F8 00316838  D0 1F 00 14 */	stfs f0, 0x14(r31)
 /* 803198FC 0031683C  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -525,10 +525,26 @@ lbl_80319970:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20TAreaCylinderManager
 __vt__20TAreaCylinderManager:
-	.incbin "baserom.dol", 0x3DDE38, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20TAreaCylinderManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__20TAreaCylinderManagerFUlPQ26JDrama9TGraphics
 .global __vt__13TAreaCylinder
 __vt__13TAreaCylinder:
-	.incbin "baserom.dol", 0x3DDE5C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TAreaCylinderFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TAreaCylinderFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__13TAreaCylinderFUlPQ26JDrama9TGraphics
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22137:
@@ -538,4 +554,5 @@ $$22138:
 $$22140:
 	.incbin "baserom.dol", 0x3EB8C8, 0x8
 $$22149:
-	.incbin "baserom.dol", 0x3EB8D0, 0x8
+  .4byte 0
+  .4byte 0

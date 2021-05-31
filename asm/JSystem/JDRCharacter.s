@@ -92,7 +92,7 @@ mountArc__Q26JDrama10TSmplCharaFPCc:
 /* 80041A40 0003E980  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 80041A44 0003E984  3B E3 00 00 */	addi r31, r3, 0
 /* 80041A48 0003E988  38 64 00 00 */	addi r3, r4, 0
-/* 80041A4C 0003E98C  80 AD 8D 6C */	lwz r5, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80041A4C 0003E98C  80 AD 8D 6C */	lwz r5, sCurrentHeap__7JKRHeap@sda21(r13)
 /* 80041A50 0003E990  38 80 00 01 */	li r4, 1
 /* 80041A54 0003E994  4B FC 5E D9 */	bl mount__10JKRArchiveFPCcQ210JKRArchive10EMountModeP7JKRHeapQ210JKRArchive15EMountDirection
 /* 80041A58 0003E998  90 7F 00 0C */	stw r3, 0xc(r31)
@@ -134,7 +134,23 @@ lbl_80041AB8:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama10TCharacter
 __vt__Q26JDrama10TCharacter:
-	.incbin "baserom.dol", 0x3A7450, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama10TCharacterFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte 0
 .global __vt__Q26JDrama10TSmplChara
 __vt__Q26JDrama10TSmplChara:
-	.incbin "baserom.dol", 0x3A7474, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q26JDrama10TSmplCharaFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama10TSmplCharaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte getRes__Q26JDrama10TSmplCharaCFPCc

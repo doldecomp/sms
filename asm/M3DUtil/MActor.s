@@ -1635,7 +1635,7 @@ lbl_800D4600:
 /* 800D462C 000D156C  40 80 00 08 */	bge lbl_800D4634
 /* 800D4630 000D1570  93 DF 00 3C */	stw r30, 0x3c(r31)
 lbl_800D4634:
-/* 800D4634 000D1574  80 6D 97 6C */	lwz r3, gpLightManager-_SDA_BASE_(r13)
+/* 800D4634 000D1574  80 6D 97 6C */	lwz r3, gpLightManager@sda21(r13)
 /* 800D4638 000D1578  80 1F 00 44 */	lwz r0, 0x44(r31)
 /* 800D463C 000D157C  80 63 00 14 */	lwz r3, 0x14(r3)
 /* 800D4640 000D1580  54 00 10 3A */	slwi r0, r0, 2
@@ -1655,7 +1655,7 @@ lbl_800D4654:
 /* 800D4674 000D15B4  4B FF EA AD */	bl entryOut__6MActorFv
 /* 800D4678 000D15B8  57 C0 06 3F */	clrlwi. r0, r30, 0x18
 /* 800D467C 000D15BC  41 82 00 1C */	beq lbl_800D4698
-/* 800D4680 000D15C0  80 6D 97 6C */	lwz r3, gpLightManager-_SDA_BASE_(r13)
+/* 800D4680 000D15C0  80 6D 97 6C */	lwz r3, gpLightManager@sda21(r13)
 /* 800D4684 000D15C4  80 1F 00 44 */	lwz r0, 0x44(r31)
 /* 800D4688 000D15C8  80 63 00 14 */	lwz r3, 0x14(r3)
 /* 800D468C 000D15CC  54 00 10 3A */	slwi r0, r0, 2
@@ -1783,7 +1783,7 @@ entry__6MActorFv:
 /* 800D482C 000D176C  38 00 00 00 */	li r0, 0
 /* 800D4830 000D1770  90 1F 00 3C */	stw r0, 0x3c(r31)
 lbl_800D4834:
-/* 800D4834 000D1774  80 6D 97 6C */	lwz r3, gpLightManager-_SDA_BASE_(r13)
+/* 800D4834 000D1774  80 6D 97 6C */	lwz r3, gpLightManager@sda21(r13)
 /* 800D4838 000D1778  80 1F 00 44 */	lwz r0, 0x44(r31)
 /* 800D483C 000D177C  80 63 00 14 */	lwz r3, 0x14(r3)
 /* 800D4840 000D1780  54 00 10 3A */	slwi r0, r0, 2
@@ -1837,7 +1837,7 @@ lbl_800D48E0:
 /* 800D48EC 000D182C  41 80 FF C8 */	blt lbl_800D48B4
 /* 800D48F0 000D1830  57 80 06 3F */	clrlwi. r0, r28, 0x18
 /* 800D48F4 000D1834  41 82 00 1C */	beq lbl_800D4910
-/* 800D48F8 000D1838  80 6D 97 6C */	lwz r3, gpLightManager-_SDA_BASE_(r13)
+/* 800D48F8 000D1838  80 6D 97 6C */	lwz r3, gpLightManager@sda21(r13)
 /* 800D48FC 000D183C  80 1F 00 44 */	lwz r0, 0x44(r31)
 /* 800D4900 000D1840  80 63 00 14 */	lwz r3, 0x14(r3)
 /* 800D4904 000D1844  54 00 10 3A */	slwi r0, r0, 2
@@ -1858,7 +1858,7 @@ setLightType__6MActorFi:
 /* 800D4930 000D1870  90 83 00 44 */	stw r4, 0x44(r3)
 /* 800D4934 000D1874  54 80 10 3A */	slwi r0, r4, 2
 /* 800D4938 000D1878  38 80 00 01 */	li r4, 1
-/* 800D493C 000D187C  80 6D 97 6C */	lwz r3, gpLightManager-_SDA_BASE_(r13)
+/* 800D493C 000D187C  80 6D 97 6C */	lwz r3, gpLightManager@sda21(r13)
 /* 800D4940 000D1880  80 63 00 14 */	lwz r3, 0x14(r3)
 /* 800D4944 000D1884  7C 63 00 2E */	lwzx r3, r3, r0
 /* 800D4948 000D1888  98 83 00 20 */	stb r4, 0x20(r3)
@@ -1876,7 +1876,7 @@ setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1:
 /* 800D496C 000D18AC  88 03 00 40 */	lbz r0, 0x40(r3)
 /* 800D4970 000D18B0  28 00 00 00 */	cmplwi r0, 0
 /* 800D4974 000D18B4  41 82 00 64 */	beq lbl_800D49D8
-/* 800D4978 000D18B8  80 6D A8 E8 */	lwz r3, gpCubeShadow-_SDA_BASE_(r13)
+/* 800D4978 000D18B8  80 6D A8 E8 */	lwz r3, gpCubeShadow@sda21(r13)
 /* 800D497C 000D18BC  28 03 00 00 */	cmplwi r3, 0
 /* 800D4980 000D18C0  41 82 00 20 */	beq lbl_800D49A0
 /* 800D4984 000D18C4  7C A4 2B 78 */	mr r4, r5
@@ -2509,9 +2509,9 @@ lbl_800D51DC:
 /* 800D51FC 000D213C  C0 06 00 10 */	lfs f0, 0x10(r6)
 /* 800D5200 000D2140  90 61 00 44 */	stw r3, 0x44(r1)
 /* 800D5204 000D2144  EC 41 00 2A */	fadds f2, f1, f0
-/* 800D5208 000D2148  C0 62 8E F8 */	lfs f3, $$23554-_SDA2_BASE_(r2)
+/* 800D5208 000D2148  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
 /* 800D520C 000D214C  90 01 00 40 */	stw r0, 0x40(r1)
-/* 800D5210 000D2150  C8 22 8F 00 */	lfd f1, $$23556-_SDA2_BASE_(r2)
+/* 800D5210 000D2150  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
 /* 800D5214 000D2154  C8 01 00 40 */	lfd f0, 0x40(r1)
 /* 800D5218 000D2158  EC 43 10 2A */	fadds f2, f3, f2
 /* 800D521C 000D215C  EC 00 08 28 */	fsubs f0, f0, f1
@@ -2536,9 +2536,9 @@ lbl_800D5250:
 /* 800D525C 000D219C  80 9F 00 10 */	lwz r4, 0x10(r31)
 /* 800D5260 000D21A0  54 63 10 3A */	slwi r3, r3, 2
 /* 800D5264 000D21A4  3C 00 43 30 */	lis r0, 0x4330
-/* 800D5268 000D21A8  C0 62 8E F8 */	lfs f3, $$23554-_SDA2_BASE_(r2)
+/* 800D5268 000D21A8  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
 /* 800D526C 000D21AC  7C 84 18 2E */	lwzx r4, r4, r3
-/* 800D5270 000D21B0  C8 22 8F 00 */	lfd f1, $$23556-_SDA2_BASE_(r2)
+/* 800D5270 000D21B0  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
 /* 800D5274 000D21B4  A8 64 00 0C */	lha r3, 0xc(r4)
 /* 800D5278 000D21B8  C0 44 00 14 */	lfs f2, 0x14(r4)
 /* 800D527C 000D21BC  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -2565,9 +2565,9 @@ lbl_800D52B8:
 /* 800D52C8 000D2208  C0 06 00 10 */	lfs f0, 0x10(r6)
 /* 800D52CC 000D220C  90 61 00 44 */	stw r3, 0x44(r1)
 /* 800D52D0 000D2210  EC 41 00 2A */	fadds f2, f1, f0
-/* 800D52D4 000D2214  C0 62 8E F8 */	lfs f3, $$23554-_SDA2_BASE_(r2)
+/* 800D52D4 000D2214  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
 /* 800D52D8 000D2218  90 01 00 40 */	stw r0, 0x40(r1)
-/* 800D52DC 000D221C  C8 22 8F 00 */	lfd f1, $$23556-_SDA2_BASE_(r2)
+/* 800D52DC 000D221C  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
 /* 800D52E0 000D2220  C8 01 00 40 */	lfd f0, 0x40(r1)
 /* 800D52E4 000D2224  EC 43 10 2A */	fadds f2, f3, f2
 /* 800D52E8 000D2228  EC 00 08 28 */	fsubs f0, f0, f1
@@ -2628,11 +2628,11 @@ lbl_800D5390:
 /* 800D5394 000D22D4  40 82 00 40 */	bne lbl_800D53D4
 /* 800D5398 000D22D8  A8 64 00 08 */	lha r3, 8(r4)
 /* 800D539C 000D22DC  3C 00 43 30 */	lis r0, 0x4330
-/* 800D53A0 000D22E0  C0 42 8E F8 */	lfs f2, $$23554-_SDA2_BASE_(r2)
+/* 800D53A0 000D22E0  C0 42 8E F8 */	lfs f2, $$23554@sda21(r2)
 /* 800D53A4 000D22E4  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800D53A8 000D22E8  C0 04 00 10 */	lfs f0, 0x10(r4)
 /* 800D53AC 000D22EC  90 61 00 34 */	stw r3, 0x34(r1)
-/* 800D53B0 000D22F0  C8 22 8F 00 */	lfd f1, $$23556-_SDA2_BASE_(r2)
+/* 800D53B0 000D22F0  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
 /* 800D53B4 000D22F4  EC 42 00 2A */	fadds f2, f2, f0
 /* 800D53B8 000D22F8  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800D53BC 000D22FC  C8 01 00 30 */	lfd f0, 0x30(r1)
@@ -3230,34 +3230,124 @@ __ct__13MActorAnmBaseFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1
 __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1:
-	.incbin "baserom.dol", 0x3B0510, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs
+  .4byte 0
 .global __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1
 __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1:
-	.incbin "baserom.dol", 0x3B0538, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs
+  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
+  .4byte 0
 .global __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1
 __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1:
-	.incbin "baserom.dol", 0x3B0560, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
+  .4byte 0
 .global __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1
 __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1:
-	.incbin "baserom.dol", 0x3B0588, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs
+  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
+  .4byte 0
 .global __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1
 __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1:
-	.incbin "baserom.dol", 0x3B05B0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
+  .4byte 0
 .global __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1
 __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1:
-	.incbin "baserom.dol", 0x3B05D8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs
+  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
+  .4byte 0
 .global __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1
 __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1:
-	.incbin "baserom.dol", 0x3B0600, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
+  .4byte 0
 .global __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1
 __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1:
-	.incbin "baserom.dol", 0x3B0628, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs
+  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
+  .4byte 0
 .global __vt__31MActorAnmEach$$014J3DAnmColorKey$$1
 __vt__31MActorAnmEach$$014J3DAnmColorKey$$1:
-	.incbin "baserom.dol", 0x3B0650, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
+  .4byte 0
 .global __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1
 __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1:
-	.incbin "baserom.dol", 0x3B0678, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$23554:

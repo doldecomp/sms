@@ -37,20 +37,20 @@ lbl_8005A550:
 /* 8005A594 000574D4  A0 1F 00 0C */	lhz r0, 0xc(r31)
 /* 8005A598 000574D8  B0 1E 00 3A */	sth r0, 0x3a(r30)
 /* 8005A59C 000574DC  98 A7 00 00 */	stb r5, 0(r7)
-/* 8005A5A0 000574E0  C0 02 85 F8 */	lfs f0, $$2323-_SDA2_BASE_(r2)
+/* 8005A5A0 000574E0  C0 02 85 F8 */	lfs f0, $$2323@sda21(r2)
 /* 8005A5A4 000574E4  D0 07 00 04 */	stfs f0, 4(r7)
 /* 8005A5A8 000574E8  90 A7 00 08 */	stw r5, 8(r7)
 /* 8005A5AC 000574EC  90 A7 00 0C */	stw r5, 0xc(r7)
 /* 8005A5B0 000574F0  D0 07 00 10 */	stfs f0, 0x10(r7)
-/* 8005A5B4 000574F4  C0 02 85 FC */	lfs f0, $$2324-_SDA2_BASE_(r2)
+/* 8005A5B4 000574F4  C0 02 85 FC */	lfs f0, $$2324@sda21(r2)
 /* 8005A5B8 000574F8  D0 07 00 14 */	stfs f0, 0x14(r7)
-/* 8005A5BC 000574FC  88 0D 90 9C */	lbz r0, init$296-_SDA_BASE_(r13)
+/* 8005A5BC 000574FC  88 0D 90 9C */	lbz r0, init$296@sda21(r13)
 /* 8005A5C0 00057500  7C 00 07 75 */	extsb. r0, r0
 /* 8005A5C4 00057504  40 82 00 0C */	bne lbl_8005A5D0
-/* 8005A5C8 00057508  90 ED 90 98 */	stw r7, oscp$295-_SDA_BASE_(r13)
-/* 8005A5CC 0005750C  98 8D 90 9C */	stb r4, init$296-_SDA_BASE_(r13)
+/* 8005A5C8 00057508  90 ED 90 98 */	stw r7, oscp$295@sda21(r13)
+/* 8005A5CC 0005750C  98 8D 90 9C */	stb r4, init$296@sda21(r13)
 lbl_8005A5D0:
-/* 8005A5D0 00057510  38 0D 90 98 */	addi r0, r13, oscp$295-_SDA_BASE_
+/* 8005A5D0 00057510  38 0D 90 98 */	addi r0, r13, oscp$295@sda21
 /* 8005A5D4 00057514  90 1E 00 08 */	stw r0, 8(r30)
 /* 8005A5D8 00057518  38 00 00 01 */	li r0, 1
 /* 8005A5DC 0005751C  3B 40 00 00 */	li r26, 0
@@ -153,12 +153,12 @@ getPerc__Q28JASystem8TDrumSetFi:
 
 .global __ct__Q38JASystem8TDrumSet5TPercFv
 __ct__Q38JASystem8TDrumSet5TPercFv:
-/* 8005A720 00057660  C0 02 85 F8 */	lfs f0, $$2323-_SDA2_BASE_(r2)
+/* 8005A720 00057660  C0 02 85 F8 */	lfs f0, $$2323@sda21(r2)
 /* 8005A724 00057664  38 80 03 E8 */	li r4, 0x3e8
 /* 8005A728 00057668  38 00 00 00 */	li r0, 0
 /* 8005A72C 0005766C  D0 03 00 00 */	stfs f0, 0(r3)
 /* 8005A730 00057670  D0 03 00 04 */	stfs f0, 4(r3)
-/* 8005A734 00057674  C0 02 86 00 */	lfs f0, $$2328-_SDA2_BASE_(r2)
+/* 8005A734 00057674  C0 02 86 00 */	lfs f0, $$2328@sda21(r2)
 /* 8005A738 00057678  D0 03 00 08 */	stfs f0, 8(r3)
 /* 8005A73C 0005767C  B0 83 00 0C */	sth r4, 0xc(r3)
 /* 8005A740 00057680  90 03 00 10 */	stw r0, 0x10(r3)
@@ -320,13 +320,18 @@ getType__Q28JASystem8TDrumSetCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem8TDrumSet
 __vt__Q28JASystem8TDrumSet:
-	.incbin "baserom.dol", 0x3A7E90, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem8TDrumSetFv
+  .4byte getParam__Q28JASystem8TDrumSetCFiiPQ28JASystem10TInstParam
+  .4byte getType__Q28JASystem8TDrumSetCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2323:
 	.incbin "baserom.dol", 0x3E42F8, 0x4
 $$2324:
-	.incbin "baserom.dol", 0x3E42FC, 0x4
+  .4byte 0
 $$2328:
 	.incbin "baserom.dol", 0x3E4300, 0x8
 

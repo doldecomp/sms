@@ -104,11 +104,11 @@ lbl_8023DED0:
 /* 8023DEE0 0023AE20  38 63 00 01 */	addi r3, r3, 1
 /* 8023DEE4 0023AE24  90 7C 01 28 */	stw r3, 0x128(r28)
 /* 8023DEE8 0023AE28  80 7C 01 28 */	lwz r3, 0x128(r28)
-/* 8023DEEC 0023AE2C  C8 62 DA 50 */	lfd f3, $$21688-_SDA2_BASE_(r2)
+/* 8023DEEC 0023AE2C  C8 62 DA 50 */	lfd f3, $$21688@sda21(r2)
 /* 8023DEF0 0023AE30  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8023DEF4 0023AE34  C0 3C 01 2C */	lfs f1, 0x12c(r28)
 /* 8023DEF8 0023AE38  90 61 01 E4 */	stw r3, 0x1e4(r1)
-/* 8023DEFC 0023AE3C  C0 02 DA 48 */	lfs f0, $$21684-_SDA2_BASE_(r2)
+/* 8023DEFC 0023AE3C  C0 02 DA 48 */	lfs f0, $$21684@sda21(r2)
 /* 8023DF00 0023AE40  90 01 01 E0 */	stw r0, 0x1e0(r1)
 /* 8023DF04 0023AE44  C8 41 01 E0 */	lfd f2, 0x1e0(r1)
 /* 8023DF08 0023AE48  EC 42 18 28 */	fsubs f2, f2, f3
@@ -200,7 +200,7 @@ lbl_8023E038:
 /* 8023E048 0023AF88  4B DF 8A F1 */	bl __ct__13J2DOrthoGraphFRC7JUTRect
 /* 8023E04C 0023AF8C  38 61 00 E8 */	addi r3, r1, 0xe8
 /* 8023E050 0023AF90  4B DF 71 D9 */	bl setup2D__14J2DGrafContextFv
-/* 8023E054 0023AF94  80 8D 97 F8 */	lwz r4, gpSystemFont-_SDA_BASE_(r13)
+/* 8023E054 0023AF94  80 8D 97 F8 */	lwz r4, gpSystemFont@sda21(r13)
 /* 8023E058 0023AF98  38 61 00 84 */	addi r3, r1, 0x84
 /* 8023E05C 0023AF9C  38 A0 00 00 */	li r5, 0
 /* 8023E060 0023AFA0  4B DD 8C D9 */	bl __ct__8J2DPrintFP7JUTFonti
@@ -292,9 +292,9 @@ __ct__11TProgSelectFUcPCc:
 /* 8023E1A4 0023B0E4  4B DC E7 0D */	bl __nw__FUl
 /* 8023E1A8 0023B0E8  7C 7D 1B 79 */	or. r29, r3, r3
 /* 8023E1AC 0023B0EC  41 82 00 18 */	beq lbl_8023E1C4
-/* 8023E1B0 0023B0F0  80 8D 97 F8 */	lwz r4, gpSystemFont-_SDA_BASE_(r13)
+/* 8023E1B0 0023B0F0  80 8D 97 F8 */	lwz r4, gpSystemFont@sda21(r13)
 /* 8023E1B4 0023B0F4  38 7D 00 00 */	addi r3, r29, 0
-/* 8023E1B8 0023B0F8  38 A2 DA 58 */	addi r5, r2, $$21735-_SDA2_BASE_
+/* 8023E1B8 0023B0F8  38 A2 DA 58 */	addi r5, r2, $$21735@sda21
 /* 8023E1BC 0023B0FC  80 84 00 48 */	lwz r4, 0x48(r4)
 /* 8023E1C0 0023B100  4B DD B1 F1 */	bl __ct__10J2DTextBoxFPC7ResFONTPCc
 lbl_8023E1C4:
@@ -304,9 +304,9 @@ lbl_8023E1C4:
 /* 8023E1D0 0023B110  4B DC E6 E1 */	bl __nw__FUl
 /* 8023E1D4 0023B114  7C 7D 1B 79 */	or. r29, r3, r3
 /* 8023E1D8 0023B118  41 82 00 18 */	beq lbl_8023E1F0
-/* 8023E1DC 0023B11C  80 8D 97 F8 */	lwz r4, gpSystemFont-_SDA_BASE_(r13)
+/* 8023E1DC 0023B11C  80 8D 97 F8 */	lwz r4, gpSystemFont@sda21(r13)
 /* 8023E1E0 0023B120  38 7D 00 00 */	addi r3, r29, 0
-/* 8023E1E4 0023B124  38 A2 DA 60 */	addi r5, r2, $$21736-_SDA2_BASE_
+/* 8023E1E4 0023B124  38 A2 DA 60 */	addi r5, r2, $$21736@sda21
 /* 8023E1E8 0023B128  80 84 00 48 */	lwz r4, 0x48(r4)
 /* 8023E1EC 0023B12C  4B DD B1 C5 */	bl __ct__10J2DTextBoxFPC7ResFONTPCc
 lbl_8023E1F0:
@@ -391,7 +391,16 @@ $$21734:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TProgSelect
 __vt__11TProgSelect:
-	.incbin "baserom.dol", 0x3CEE30, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TProgSelectFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TProgSelectFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21684:

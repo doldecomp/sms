@@ -37,7 +37,7 @@ lbl_80200750:
 lbl_80200754:
 /* 80200754 001FD694  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80200758 001FD698  41 82 00 14 */	beq lbl_8020076C
-/* 8020075C 001FD69C  C0 02 D3 C0 */	lfs f0, $$21644-_SDA2_BASE_(r2)
+/* 8020075C 001FD69C  C0 02 D3 C0 */	lfs f0, $$21644@sda21(r2)
 /* 80200760 001FD6A0  3B E0 00 01 */	li r31, 1
 /* 80200764 001FD6A4  D0 1E 00 10 */	stfs f0, 0x10(r30)
 /* 80200768 001FD6A8  D0 1E 00 14 */	stfs f0, 0x14(r30)
@@ -59,13 +59,13 @@ setValue__8TCoord2DFlffff:
 /* 80200798 001FD6D8  D0 63 00 00 */	stfs f3, 0(r3)
 /* 8020079C 001FD6DC  D0 83 00 04 */	stfs f4, 4(r3)
 /* 802007A0 001FD6E0  41 81 00 14 */	bgt lbl_802007B4
-/* 802007A4 001FD6E4  C0 02 D3 C0 */	lfs f0, $$21644-_SDA2_BASE_(r2)
+/* 802007A4 001FD6E4  C0 02 D3 C0 */	lfs f0, $$21644@sda21(r2)
 /* 802007A8 001FD6E8  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 802007AC 001FD6EC  D0 03 00 14 */	stfs f0, 0x14(r3)
 /* 802007B0 001FD6F0  48 00 00 48 */	b lbl_802007F8
 lbl_802007B4:
 /* 802007B4 001FD6F4  6C 84 80 00 */	xoris r4, r4, 0x8000
-/* 802007B8 001FD6F8  C8 A2 D3 C8 */	lfd f5, $$21652-_SDA2_BASE_(r2)
+/* 802007B8 001FD6F8  C8 A2 D3 C8 */	lfd f5, $$21652@sda21(r2)
 /* 802007BC 001FD6FC  90 81 00 2C */	stw r4, 0x2c(r1)
 /* 802007C0 001FD700  3C 00 43 30 */	lis r0, 0x4330
 /* 802007C4 001FD704  EC 61 18 28 */	fsubs f3, f1, f3
@@ -87,7 +87,7 @@ lbl_802007F8:
 
 .global __ct__8TCoord2DFv
 __ct__8TCoord2DFv:
-/* 80200800 001FD740  C0 02 D3 C0 */	lfs f0, $$21644-_SDA2_BASE_(r2)
+/* 80200800 001FD740  C0 02 D3 C0 */	lfs f0, $$21644@sda21(r2)
 /* 80200804 001FD744  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80200808 001FD748  D0 03 00 00 */	stfs f0, 0(r3)
 /* 8020080C 001FD74C  D0 03 00 0C */	stfs f0, 0xc(r3)
@@ -98,6 +98,7 @@ __ct__8TCoord2DFv:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21644:
-	.incbin "baserom.dol", 0x3E90C0, 0x8
+  .4byte 0
+  .4byte 0
 $$21652:
 	.incbin "baserom.dol", 0x3E90C8, 0x8

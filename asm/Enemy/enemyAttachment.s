@@ -91,7 +91,7 @@ lbl_80250904:
 /* 80250904 0024D844  57 E0 05 AD */	rlwinm. r0, r31, 0, 0x16, 0x16
 /* 80250908 0024D848  41 82 00 18 */	beq lbl_80250920
 /* 8025090C 0024D84C  80 9E 00 10 */	lwz r4, 0x10(r30)
-/* 80250910 0024D850  80 6D 9A E8 */	lwz r3, gpPollution-_SDA_BASE_(r13)
+/* 80250910 0024D850  80 6D 9A E8 */	lwz r3, gpPollution@sda21(r13)
 /* 80250914 0024D854  80 84 00 18 */	lwz r4, 0x18(r4)
 /* 80250918 0024D858  80 84 00 04 */	lwz r4, 4(r4)
 /* 8025091C 0024D85C  4B F9 F1 C1 */	bl stampModel__17TPollutionManagerFP8J3DModel
@@ -178,7 +178,7 @@ generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3$$0f$$1RQ29
 /* 80250A40 0024D980  80 1C 00 10 */	lwz r0, 0x10(r28)
 /* 80250A44 0024D984  80 9C 00 18 */	lwz r4, 0x18(r28)
 /* 80250A48 0024D988  54 00 10 3A */	slwi r0, r0, 2
-/* 80250A4C 0024D98C  80 6D 9A B0 */	lwz r3, gpMap-_SDA_BASE_(r13)
+/* 80250A4C 0024D98C  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 80250A50 0024D990  7F E4 00 2E */	lwzx r31, r4, r0
 /* 80250A54 0024D994  38 9D 00 00 */	addi r4, r29, 0
 /* 80250A58 0024D998  4B F8 AD 0D */	bl checkGround__4TMapCFRCQ29JGeometry8TVec3$$0f$$1PPC12TBGCheckData
@@ -276,13 +276,13 @@ perform__25TEnemyPolluteModelManagerFUlPQ26JDrama9TGraphics:
 /* 80250BAC 0024DAEC  3B A3 00 00 */	addi r29, r3, 0
 /* 80250BB0 0024DAF0  3B E5 00 00 */	addi r31, r5, 0
 /* 80250BB4 0024DAF4  41 82 00 94 */	beq lbl_80250C48
-/* 80250BB8 0024DAF8  80 8D A8 B0 */	lwz r4, gpCamera-_SDA_BASE_(r13)
-/* 80250BBC 0024DAFC  80 6D 9C 28 */	lwz r3, gpConductor-_SDA_BASE_(r13)
+/* 80250BB8 0024DAF8  80 8D A8 B0 */	lwz r4, gpCamera@sda21(r13)
+/* 80250BBC 0024DAFC  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 80250BC0 0024DB00  C0 7F 00 E8 */	lfs f3, 0xe8(r31)
 /* 80250BC4 0024DB04  C0 83 00 9C */	lfs f4, 0x9c(r3)
 /* 80250BC8 0024DB08  C0 44 00 4C */	lfs f2, 0x4c(r4)
 /* 80250BCC 0024DB0C  C0 24 00 48 */	lfs f1, 0x48(r4)
-/* 80250BD0 0024DB10  C3 E2 DC F8 */	lfs f31, $$22700-_SDA2_BASE_(r2)
+/* 80250BD0 0024DB10  C3 E2 DC F8 */	lfs f31, $$22700@sda21(r2)
 /* 80250BD4 0024DB14  4B E7 08 41 */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 80250BD8 0024DB18  3B 80 00 00 */	li r28, 0
 /* 80250BDC 0024DB1C  3B 5C 00 00 */	addi r26, r28, 0
@@ -380,7 +380,7 @@ perform__16TEnemyAttachmentFUlPQ26JDrama9TGraphics:
 /* 80250D18 0024DC58  4E 80 00 21 */	blrl 
 /* 80250D1C 0024DC5C  48 00 00 C8 */	b lbl_80250DE4
 lbl_80250D20:
-/* 80250D20 0024DC60  80 6D 97 E8 */	lwz r3, gpMarDirector-_SDA_BASE_(r13)
+/* 80250D20 0024DC60  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 80250D24 0024DC64  38 00 00 01 */	li r0, 1
 /* 80250D28 0024DC68  88 63 01 24 */	lbz r3, 0x124(r3)
 /* 80250D2C 0024DC6C  28 03 00 03 */	cmplwi r3, 3
@@ -454,7 +454,7 @@ calcRootMatrix__16TEnemyAttachmentFv:
 /* 80250E08 0024DD48  94 21 FF A0 */	stwu r1, -0x60(r1)
 /* 80250E0C 0024DD4C  93 E1 00 5C */	stw r31, 0x5c(r1)
 /* 80250E10 0024DD50  7C 7F 1B 78 */	mr r31, r3
-/* 80250E14 0024DD54  C0 42 DC FC */	lfs f2, $$22757-_SDA2_BASE_(r2)
+/* 80250E14 0024DD54  C0 42 DC FC */	lfs f2, $$22757@sda21(r2)
 /* 80250E18 0024DD58  C0 03 00 38 */	lfs f0, 0x38(r3)
 /* 80250E1C 0024DD5C  C0 23 00 34 */	lfs f1, 0x34(r3)
 /* 80250E20 0024DD60  C0 63 00 30 */	lfs f3, 0x30(r3)
@@ -619,7 +619,7 @@ rebirth__16TEnemyAttachmentFv:
 /* 80251040 0024DF80  80 03 00 64 */	lwz r0, 0x64(r3)
 /* 80251044 0024DF84  60 00 00 01 */	ori r0, r0, 1
 /* 80251048 0024DF88  90 03 00 64 */	stw r0, 0x64(r3)
-/* 8025104C 0024DF8C  C0 02 DC F4 */	lfs f0, $$22567-_SDA2_BASE_(r2)
+/* 8025104C 0024DF8C  C0 02 DC F4 */	lfs f0, $$22567@sda21(r2)
 /* 80251050 0024DF90  D0 03 00 B0 */	stfs f0, 0xb0(r3)
 /* 80251054 0024DF94  4E 80 00 20 */	blr 
 
@@ -674,7 +674,7 @@ bind__16TEnemyAttachmentFv:
 /* 80251110 0024E050  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80251114 0024E054  D0 1F 00 B0 */	stfs f0, 0xb0(r31)
 /* 80251118 0024E058  C0 1F 00 B0 */	lfs f0, 0xb0(r31)
-/* 8025111C 0024E05C  C0 2D 84 78 */	lfs f1, mVelocityMinY__10TLiveActor-_SDA_BASE_(r13)
+/* 8025111C 0024E05C  C0 2D 84 78 */	lfs f1, mVelocityMinY__10TLiveActor@sda21(r13)
 /* 80251120 0024E060  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 80251124 0024E064  40 80 00 08 */	bge lbl_8025112C
 /* 80251128 0024E068  D0 3F 00 B0 */	stfs f1, 0xb0(r31)
@@ -685,14 +685,14 @@ lbl_8025112C:
 /* 80251138 0024E078  C0 21 00 60 */	lfs f1, 0x60(r1)
 /* 8025113C 0024E07C  38 9F 00 C4 */	addi r4, r31, 0xc4
 /* 80251140 0024E080  C0 1F 00 C0 */	lfs f0, 0xc0(r31)
-/* 80251144 0024E084  80 6D 9A B0 */	lwz r3, gpMap-_SDA_BASE_(r13)
+/* 80251144 0024E084  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 80251148 0024E088  EC 41 00 2A */	fadds f2, f1, f0
 /* 8025114C 0024E08C  C0 21 00 5C */	lfs f1, 0x5c(r1)
 /* 80251150 0024E090  C0 61 00 64 */	lfs f3, 0x64(r1)
 /* 80251154 0024E094  4B F8 A5 E5 */	bl checkGround__4TMapCFfffPPC12TBGCheckData
 /* 80251158 0024E098  D0 3F 00 C8 */	stfs f1, 0xc8(r31)
 /* 8025115C 0024E09C  C0 3F 00 C8 */	lfs f1, 0xc8(r31)
-/* 80251160 0024E0A0  C0 02 DC F0 */	lfs f0, $$22566-_SDA2_BASE_(r2)
+/* 80251160 0024E0A0  C0 02 DC F0 */	lfs f0, $$22566@sda21(r2)
 /* 80251164 0024E0A4  EC 01 00 2A */	fadds f0, f1, f0
 /* 80251168 0024E0A8  D0 1F 00 C8 */	stfs f0, 0xc8(r31)
 lbl_8025116C:
@@ -720,12 +720,12 @@ lbl_802511AC:
 /* 802511B8 0024E0F8  38 00 00 00 */	li r0, 0
 /* 802511BC 0024E0FC  C0 01 00 5C */	lfs f0, 0x5c(r1)
 /* 802511C0 0024E100  EC 7F 08 2A */	fadds f3, f31, f1
-/* 802511C4 0024E104  C0 22 DD 00 */	lfs f1, $$22829-_SDA2_BASE_(r2)
+/* 802511C4 0024E104  C0 22 DD 00 */	lfs f1, $$22829@sda21(r2)
 /* 802511C8 0024E108  D0 01 00 30 */	stfs f0, 0x30(r1)
 /* 802511CC 0024E10C  38 81 00 30 */	addi r4, r1, 0x30
 /* 802511D0 0024E110  EC 21 00 B2 */	fmuls f1, f1, f2
 /* 802511D4 0024E114  D0 61 00 34 */	stfs f3, 0x34(r1)
-/* 802511D8 0024E118  80 6D 9A B0 */	lwz r3, gpMap-_SDA_BASE_(r13)
+/* 802511D8 0024E118  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 802511DC 0024E11C  C0 01 00 64 */	lfs f0, 0x64(r1)
 /* 802511E0 0024E120  D0 01 00 38 */	stfs f0, 0x38(r1)
 /* 802511E4 0024E124  D0 21 00 3C */	stfs f1, 0x3c(r1)
@@ -810,7 +810,7 @@ recoverScale__16TEnemyAttachmentFv:
 /* 802512F8 0024E238  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 802512FC 0024E23C  40 80 00 18 */	bge lbl_80251314
 /* 80251300 0024E240  38 63 00 24 */	addi r3, r3, 0x24
-/* 80251304 0024E244  C0 22 DD 00 */	lfs f1, $$22829-_SDA2_BASE_(r2)
+/* 80251304 0024E244  C0 22 DD 00 */	lfs f1, $$22829@sda21(r2)
 /* 80251308 0024E248  7C 64 1B 78 */	mr r4, r3
 /* 8025130C 0024E24C  4B E4 3B C9 */	bl PSVECScale
 /* 80251310 0024E250  48 00 00 10 */	b lbl_80251320
@@ -847,7 +847,7 @@ lbl_8025136C:
 lbl_80251370:
 /* 80251370 0024E2B0  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80251374 0024E2B4  40 82 00 1C */	bne lbl_80251390
-/* 80251378 0024E2B8  80 6D 9A B0 */	lwz r3, gpMap-_SDA_BASE_(r13)
+/* 80251378 0024E2B8  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 8025137C 0024E2BC  C0 3F 00 10 */	lfs f1, 0x10(r31)
 /* 80251380 0024E2C0  C0 5F 00 18 */	lfs f2, 0x18(r31)
 /* 80251384 0024E2C4  4B F8 A7 09 */	bl isInArea__4TMapCFff
@@ -902,9 +902,9 @@ behaveToHitGround__16TEnemyAttachmentFv:
 /* 80251428 0024E368  80 03 00 F0 */	lwz r0, 0xf0(r3)
 /* 8025142C 0024E36C  54 00 06 6E */	rlwinm r0, r0, 0, 0x19, 0x17
 /* 80251430 0024E370  90 03 00 F0 */	stw r0, 0xf0(r3)
-/* 80251434 0024E374  C0 22 DC F4 */	lfs f1, $$22567-_SDA2_BASE_(r2)
+/* 80251434 0024E374  C0 22 DC F4 */	lfs f1, $$22567@sda21(r2)
 /* 80251438 0024E378  D0 23 00 AC */	stfs f1, 0xac(r3)
-/* 8025143C 0024E37C  C0 02 DD 04 */	lfs f0, $$22860-_SDA2_BASE_(r2)
+/* 8025143C 0024E37C  C0 02 DD 04 */	lfs f0, $$22860@sda21(r2)
 /* 80251440 0024E380  D0 03 00 B0 */	stfs f0, 0xb0(r3)
 /* 80251444 0024E384  D0 23 00 B4 */	stfs f1, 0xb4(r3)
 /* 80251448 0024E388  81 83 00 00 */	lwz r12, 0(r3)
@@ -969,7 +969,7 @@ __ct__16TEnemyAttachmentFPCc:
 /* 80251518 0024E458  90 1F 01 54 */	stw r0, 0x154(r31)
 /* 8025151C 0024E45C  90 1F 01 58 */	stw r0, 0x158(r31)
 /* 80251520 0024E460  90 1F 01 60 */	stw r0, 0x160(r31)
-/* 80251524 0024E464  C0 02 DC F0 */	lfs f0, $$22566-_SDA2_BASE_(r2)
+/* 80251524 0024E464  C0 02 DC F0 */	lfs f0, $$22566@sda21(r2)
 /* 80251528 0024E468  D0 1F 01 64 */	stfs f0, 0x164(r31)
 /* 8025152C 0024E46C  98 1F 01 68 */	stb r0, 0x168(r31)
 /* 80251530 0024E470  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -1047,7 +1047,7 @@ lbl_80251608:
 appear__16TEnemyAttachmentFv:
 /* 80251624 0024E564  38 00 00 01 */	li r0, 1
 /* 80251628 0024E568  90 03 01 50 */	stw r0, 0x150(r3)
-/* 8025162C 0024E56C  C0 02 DD 08 */	lfs f0, $$22879-_SDA2_BASE_(r2)
+/* 8025162C 0024E56C  C0 02 DD 08 */	lfs f0, $$22879@sda21(r2)
 /* 80251630 0024E570  D0 03 00 2C */	stfs f0, 0x2c(r3)
 /* 80251634 0024E574  D0 03 00 28 */	stfs f0, 0x28(r3)
 /* 80251638 0024E578  D0 03 00 24 */	stfs f0, 0x24(r3)
@@ -1070,19 +1070,118 @@ $$22620:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TEnemyPolluteModel
 __vt__18TEnemyPolluteModel:
-	.incbin "baserom.dol", 0x3CFEB0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18TEnemyPolluteModelFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__18TEnemyPolluteModelFUlPQ26JDrama9TGraphics
+  .4byte setAnm__18TEnemyPolluteModelFv
 .global __vt__25TEnemyPolluteModelManager
 __vt__25TEnemyPolluteModelManager:
-	.incbin "baserom.dol", 0x3CFED8, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__25TEnemyPolluteModelManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__25TEnemyPolluteModelManagerFUlPQ26JDrama9TGraphics
+  .4byte init__25TEnemyPolluteModelManagerFP10TLiveActor
 .global __vt__16TEnemyAttachment
 __vt__16TEnemyAttachment:
-	.incbin "baserom.dol", 0x3CFF00, 0x148
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16TEnemyAttachmentFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSpineEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__16TEnemyAttachmentFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__16TEnemyAttachmentFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__16TEnemyAttachmentFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__11TSpineEnemyFP12TLiveManager
+  .4byte calcRootMatrix__16TEnemyAttachmentFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__10TLiveActorFv
+  .4byte bind__16TEnemyAttachmentFv
+  .4byte moveObject__16TEnemyAttachmentFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__16TEnemyAttachmentFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__11TSpineEnemyFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
+  .4byte loadInit__16TEnemyAttachmentFP11TSpineEnemyPCc
+  .4byte appear__16TEnemyAttachmentFv
+  .4byte rebirth__16TEnemyAttachmentFv
+  .4byte sendMessage__16TEnemyAttachmentFv
+  .4byte set__16TEnemyAttachmentFv
+  .4byte behaveToHost__16TEnemyAttachmentFv
+  .4byte behaveToHitGround__16TEnemyAttachmentFv
+  .4byte behaveToHitWall__16TEnemyAttachmentFPC12TBGCheckData
+  .4byte forceKill__16TEnemyAttachmentFv
+  .4byte setBehavior__16TEnemyAttachmentFv
+  .4byte recoverScale__16TEnemyAttachmentFv
+  .4byte getNowGravity__16TEnemyAttachmentFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22566:
 	.incbin "baserom.dol", 0x3E99F0, 0x4
 $$22567:
-	.incbin "baserom.dol", 0x3E99F4, 0x4
+  .4byte 0
 $$22700:
 	.incbin "baserom.dol", 0x3E99F8, 0x4
 $$22757:

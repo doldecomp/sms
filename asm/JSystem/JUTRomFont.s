@@ -60,18 +60,18 @@ __dt__10JUTRomFontFv:
 /* 8003C0C4 00039004  3C 60 80 3B */	lis r3, __vt__10JUTRomFont@ha
 /* 8003C0C8 00039008  38 03 9F 68 */	addi r0, r3, __vt__10JUTRomFont@l
 /* 8003C0CC 0003900C  90 1E 00 00 */	stw r0, 0(r30)
-/* 8003C0D0 00039010  80 6D 8E C8 */	lwz r3, suFontHeaderRefered___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C0D0 00039010  80 6D 8E C8 */	lwz r3, suFontHeaderRefered___10JUTRomFont@sda21(r13)
 /* 8003C0D4 00039014  38 03 FF FF */	addi r0, r3, -1
-/* 8003C0D8 00039018  90 0D 8E C8 */	stw r0, suFontHeaderRefered___10JUTRomFont-_SDA_BASE_(r13)
-/* 8003C0DC 0003901C  80 0D 8E C8 */	lwz r0, suFontHeaderRefered___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C0D8 00039018  90 0D 8E C8 */	stw r0, suFontHeaderRefered___10JUTRomFont@sda21(r13)
+/* 8003C0DC 0003901C  80 0D 8E C8 */	lwz r0, suFontHeaderRefered___10JUTRomFont@sda21(r13)
 /* 8003C0E0 00039020  28 00 00 00 */	cmplwi r0, 0
 /* 8003C0E4 00039024  40 82 00 1C */	bne lbl_8003C100
-/* 8003C0E8 00039028  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C0E8 00039028  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C0EC 0003902C  38 80 00 00 */	li r4, 0
 /* 8003C0F0 00039030  4B FD 03 D5 */	bl free__7JKRHeapFPvP7JKRHeap
 /* 8003C0F4 00039034  38 00 00 00 */	li r0, 0
-/* 8003C0F8 00039038  90 0D 8E C4 */	stw r0, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
-/* 8003C0FC 0003903C  90 0D 8E C0 */	stw r0, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C0F8 00039038  90 0D 8E C4 */	stw r0, spFontHeader___10JUTRomFont@sda21(r13)
+/* 8003C0FC 0003903C  90 0D 8E C0 */	stw r0, spAboutEncoding___10JUTRomFont@sda21(r13)
 lbl_8003C100:
 /* 8003C100 00039040  28 1E 00 00 */	cmplwi r30, 0
 /* 8003C104 00039044  41 82 00 10 */	beq lbl_8003C114
@@ -103,9 +103,9 @@ loadImage__10JUTRomFontFP7JKRHeap:
 /* 8003C158 00039098  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 8003C15C 0003909C  3B A3 00 00 */	addi r29, r3, 0
 /* 8003C160 000390A0  40 82 00 08 */	bne lbl_8003C168
-/* 8003C164 000390A4  83 CD 8D 6C */	lwz r30, sCurrentHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8003C164 000390A4  83 CD 8D 6C */	lwz r30, sCurrentHeap__7JKRHeap@sda21(r13)
 lbl_8003C168:
-/* 8003C168 000390A8  80 0D 8E C4 */	lwz r0, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C168 000390A8  80 0D 8E C4 */	lwz r0, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C16C 000390AC  28 00 00 00 */	cmplwi r0, 0
 /* 8003C170 000390B0  40 82 00 7C */	bne lbl_8003C1EC
 /* 8003C174 000390B4  48 05 34 C9 */	bl OSGetFontEncode
@@ -121,10 +121,10 @@ lbl_8003C168:
 /* 8003C19C 000390DC  3C 60 80 3B */	lis r3, saoAboutEncoding___10JUTRomFont@ha
 /* 8003C1A0 000390E0  38 03 9F 50 */	addi r0, r3, saoAboutEncoding___10JUTRomFont@l
 /* 8003C1A4 000390E4  7C 00 22 14 */	add r0, r0, r4
-/* 8003C1A8 000390E8  90 0D 8E C0 */	stw r0, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1A8 000390E8  90 0D 8E C0 */	stw r0, spAboutEncoding___10JUTRomFont@sda21(r13)
 /* 8003C1AC 000390EC  3C 60 80 37 */	lis r3, $$2259@ha
 /* 8003C1B0 000390F0  38 63 0E D0 */	addi r3, r3, $$2259@l
-/* 8003C1B4 000390F4  80 8D 8E C0 */	lwz r4, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1B4 000390F4  80 8D 8E C0 */	lwz r4, spAboutEncoding___10JUTRomFont@sda21(r13)
 /* 8003C1B8 000390F8  83 E4 00 04 */	lwz r31, 4(r4)
 /* 8003C1BC 000390FC  7F E4 FB 78 */	mr r4, r31
 /* 8003C1C0 00039100  48 00 3F D1 */	bl JUTReportConsole_f
@@ -132,16 +132,16 @@ lbl_8003C168:
 /* 8003C1C8 00039108  38 BE 00 00 */	addi r5, r30, 0
 /* 8003C1CC 0003910C  38 80 00 20 */	li r4, 0x20
 /* 8003C1D0 00039110  4B FD 02 7D */	bl alloc__7JKRHeapFUliP7JKRHeap
-/* 8003C1D4 00039114  90 6D 8E C4 */	stw r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
-/* 8003C1D8 00039118  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1D4 00039114  90 6D 8E C4 */	stw r3, spFontHeader___10JUTRomFont@sda21(r13)
+/* 8003C1D8 00039118  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C1DC 0003911C  48 05 3C 29 */	bl OSInitFont
-/* 8003C1E0 00039120  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1E0 00039120  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C1E4 00039124  A0 03 00 0C */	lhz r0, 0xc(r3)
 /* 8003C1E8 00039128  90 1D 00 08 */	stw r0, 8(r29)
 lbl_8003C1EC:
-/* 8003C1EC 0003912C  80 6D 8E C8 */	lwz r3, suFontHeaderRefered___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1EC 0003912C  80 6D 8E C8 */	lwz r3, suFontHeaderRefered___10JUTRomFont@sda21(r13)
 /* 8003C1F0 00039130  38 03 00 01 */	addi r0, r3, 1
-/* 8003C1F4 00039134  90 0D 8E C8 */	stw r0, suFontHeaderRefered___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C1F4 00039134  90 0D 8E C8 */	stw r0, suFontHeaderRefered___10JUTRomFont@sda21(r13)
 /* 8003C1F8 00039138  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 8003C1FC 0003913C  83 E1 00 24 */	lwz r31, 0x24(r1)
 /* 8003C200 00039140  83 C1 00 20 */	lwz r30, 0x20(r1)
@@ -226,7 +226,7 @@ drawChar_scale__10JUTRomFontFffffib:
 /* 8003C324 00039264  7C 9B 23 79 */	or. r27, r4, r4
 /* 8003C328 00039268  7C 79 1B 78 */	mr r25, r3
 /* 8003C32C 0003926C  40 82 00 0C */	bne lbl_8003C338
-/* 8003C330 00039270  C0 22 83 30 */	lfs f1, $$2294-_SDA2_BASE_(r2)
+/* 8003C330 00039270  C0 22 83 30 */	lfs f1, $$2294@sda21(r2)
 /* 8003C334 00039274  48 00 03 E0 */	b lbl_8003C714
 lbl_8003C338:
 /* 8003C338 00039278  7F 23 CB 78 */	mr r3, r25
@@ -235,7 +235,7 @@ lbl_8003C338:
 /* 8003C344 00039284  7D 88 03 A6 */	mtlr r12
 /* 8003C348 00039288  4E 80 00 21 */	blrl 
 /* 8003C34C 0003928C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8003C350 00039290  C8 22 83 38 */	lfd f1, $$2297-_SDA2_BASE_(r2)
+/* 8003C350 00039290  C8 22 83 38 */	lfd f1, $$2297@sda21(r2)
 /* 8003C354 00039294  90 01 01 2C */	stw r0, 0x12c(r1)
 /* 8003C358 00039298  3F 40 43 30 */	lis r26, 0x4330
 /* 8003C35C 0003929C  38 79 00 00 */	addi r3, r25, 0
@@ -248,7 +248,7 @@ lbl_8003C338:
 /* 8003C378 000392B8  EF FB 00 24 */	fdivs f31, f27, f0
 /* 8003C37C 000392BC  4E 80 00 21 */	blrl 
 /* 8003C380 000392C0  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8003C384 000392C4  C8 22 83 38 */	lfd f1, $$2297-_SDA2_BASE_(r2)
+/* 8003C384 000392C4  C8 22 83 38 */	lfd f1, $$2297@sda21(r2)
 /* 8003C388 000392C8  90 01 01 24 */	stw r0, 0x124(r1)
 /* 8003C38C 000392CC  2C 1B 01 00 */	cmpwi r27, 0x100
 /* 8003C390 000392D0  38 61 00 6C */	addi r3, r1, 0x6c
@@ -279,7 +279,7 @@ lbl_8003C3B8:
 /* 8003C3F0 00039330  39 20 00 00 */	li r9, 0
 /* 8003C3F4 00039334  39 40 00 00 */	li r10, 0
 /* 8003C3F8 00039338  48 06 E0 01 */	bl GXInitTexObj
-/* 8003C3FC 0003933C  C0 22 83 30 */	lfs f1, $$2294-_SDA2_BASE_(r2)
+/* 8003C3FC 0003933C  C0 22 83 30 */	lfs f1, $$2294@sda21(r2)
 /* 8003C400 00039340  38 61 00 48 */	addi r3, r1, 0x48
 /* 8003C404 00039344  38 80 00 01 */	li r4, 1
 /* 8003C408 00039348  FC 40 08 90 */	fmr f2, f1
@@ -307,10 +307,10 @@ lbl_8003C450:
 /* 8003C458 00039398  90 61 01 24 */	stw r3, 0x124(r1)
 /* 8003C45C 0003939C  3F E0 43 30 */	lis r31, 0x4330
 /* 8003C460 000393A0  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8003C464 000393A4  C8 62 83 38 */	lfd f3, $$2297-_SDA2_BASE_(r2)
+/* 8003C464 000393A4  C8 62 83 38 */	lfd f3, $$2297@sda21(r2)
 /* 8003C468 000393A8  93 E1 01 20 */	stw r31, 0x120(r1)
 /* 8003C46C 000393AC  7F 23 CB 78 */	mr r3, r25
-/* 8003C470 000393B0  C0 22 83 34 */	lfs f1, $$2295-_SDA2_BASE_(r2)
+/* 8003C470 000393B0  C0 22 83 34 */	lfs f1, $$2295@sda21(r2)
 /* 8003C474 000393B4  C8 01 01 20 */	lfd f0, 0x120(r1)
 /* 8003C478 000393B8  90 01 01 2C */	stw r0, 0x12c(r1)
 /* 8003C47C 000393BC  EC 00 18 28 */	fsubs f0, f0, f3
@@ -325,7 +325,7 @@ lbl_8003C450:
 /* 8003C4A0 000393E0  EF 60 E7 FA */	fmadds f27, f0, f31, f28
 /* 8003C4A4 000393E4  4E 80 00 21 */	blrl 
 /* 8003C4A8 000393E8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8003C4AC 000393EC  C8 22 83 38 */	lfd f1, $$2297-_SDA2_BASE_(r2)
+/* 8003C4AC 000393EC  C8 22 83 38 */	lfd f1, $$2297@sda21(r2)
 /* 8003C4B0 000393F0  90 01 01 1C */	stw r0, 0x11c(r1)
 /* 8003C4B4 000393F4  7F 23 CB 78 */	mr r3, r25
 /* 8003C4B8 000393F8  81 99 00 00 */	lwz r12, 0(r25)
@@ -345,7 +345,7 @@ lbl_8003C450:
 /* 8003C4F0 00039430  93 E1 01 10 */	stw r31, 0x110(r1)
 /* 8003C4F4 00039434  7C 9D 4E 70 */	srawi r29, r4, 9
 /* 8003C4F8 00039438  81 99 00 00 */	lwz r12, 0(r25)
-/* 8003C4FC 0003943C  C8 22 83 38 */	lfd f1, $$2297-_SDA2_BASE_(r2)
+/* 8003C4FC 0003943C  C8 22 83 38 */	lfd f1, $$2297@sda21(r2)
 /* 8003C500 00039440  7C 05 02 14 */	add r0, r5, r0
 /* 8003C504 00039444  C8 01 01 10 */	lfd f0, 0x110(r1)
 /* 8003C508 00039448  7F BD 01 94 */	addze r29, r29
@@ -371,13 +371,13 @@ lbl_8003C450:
 /* 8003C558 00039498  38 60 00 80 */	li r3, 0x80
 /* 8003C55C 0003949C  48 06 C3 4D */	bl GXBegin
 /* 8003C560 000394A0  FC E0 E0 1E */	fctiwz f7, f28
-/* 8003C564 000394A4  C8 C2 83 38 */	lfd f6, $$2297-_SDA2_BASE_(r2)
+/* 8003C564 000394A4  C8 C2 83 38 */	lfd f6, $$2297@sda21(r2)
 /* 8003C568 000394A8  FC 40 D0 1E */	fctiwz f2, f26
 /* 8003C56C 000394AC  3C 60 CC 01 */	lis r3, 0xCC008000@ha
 /* 8003C570 000394B0  FC 60 D8 1E */	fctiwz f3, f27
 /* 8003C574 000394B4  D8 E1 01 08 */	stfd f7, 0x108(r1)
 /* 8003C578 000394B8  FC 20 E8 1E */	fctiwz f1, f29
-/* 8003C57C 000394BC  C0 82 83 30 */	lfs f4, $$2294-_SDA2_BASE_(r2)
+/* 8003C57C 000394BC  C0 82 83 30 */	lfs f4, $$2294@sda21(r2)
 /* 8003C580 000394C0  57 A0 04 3E */	clrlwi r0, r29, 0x10
 /* 8003C584 000394C4  D8 41 00 F8 */	stfd f2, 0xf8(r1)
 /* 8003C588 000394C8  80 A1 01 0C */	lwz r5, 0x10c(r1)
@@ -494,13 +494,13 @@ lbl_8003C714:
 
 .global getDescent__10JUTRomFontCFv
 getDescent__10JUTRomFontCFv:
-/* 8003C740 00039680  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C740 00039680  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C744 00039684  A0 63 00 0A */	lhz r3, 0xa(r3)
 /* 8003C748 00039688  4E 80 00 20 */	blr 
 
 .global getAscent__10JUTRomFontCFv
 getAscent__10JUTRomFontCFv:
-/* 8003C74C 0003968C  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C74C 0003968C  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C750 00039690  A0 63 00 08 */	lhz r3, 8(r3)
 /* 8003C754 00039694  4E 80 00 20 */	blr 
 
@@ -532,7 +532,7 @@ getHeight__10JUTRomFontCFv:
 
 .global getWidth__10JUTRomFontCFv
 getWidth__10JUTRomFontCFv:
-/* 8003C7B4 000396F4  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C7B4 000396F4  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C7B8 000396F8  A0 63 00 0C */	lhz r3, 0xc(r3)
 /* 8003C7BC 000396FC  4E 80 00 20 */	blr 
 
@@ -572,7 +572,7 @@ isLeadByte__10JUTRomFontCFi:
 /* 8003C82C 0003976C  7C 83 23 78 */	mr r3, r4
 /* 8003C830 00039770  90 01 00 04 */	stw r0, 4(r1)
 /* 8003C834 00039774  94 21 FF F8 */	stwu r1, -8(r1)
-/* 8003C838 00039778  80 AD 8E C0 */	lwz r5, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C838 00039778  80 AD 8E C0 */	lwz r5, spAboutEncoding___10JUTRomFont@sda21(r13)
 /* 8003C83C 0003977C  81 85 00 08 */	lwz r12, 8(r5)
 /* 8003C840 00039780  7D 88 03 A6 */	mtlr r12
 /* 8003C844 00039784  4E 80 00 21 */	blrl 
@@ -583,7 +583,7 @@ isLeadByte__10JUTRomFontCFi:
 
 .global getLeading__10JUTRomFontCFv
 getLeading__10JUTRomFontCFv:
-/* 8003C858 00039798  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C858 00039798  80 6D 8E C4 */	lwz r3, spFontHeader___10JUTRomFont@sda21(r13)
 /* 8003C85C 0003979C  A0 63 00 0E */	lhz r3, 0xe(r3)
 /* 8003C860 000397A0  4E 80 00 20 */	blr 
 
@@ -594,7 +594,7 @@ getResFont__10JUTRomFontCFv:
 
 .global getFontType__10JUTRomFontCFv
 getFontType__10JUTRomFontCFv:
-/* 8003C86C 000397AC  80 6D 8E C0 */	lwz r3, spAboutEncoding___10JUTRomFont-_SDA_BASE_(r13)
+/* 8003C86C 000397AC  80 6D 8E C0 */	lwz r3, spAboutEncoding___10JUTRomFont@sda21(r13)
 /* 8003C870 000397B0  80 63 00 00 */	lwz r3, 0(r3)
 /* 8003C874 000397B4  4E 80 00 20 */	blr 
 
@@ -606,14 +606,34 @@ $$2259:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 saoAboutEncoding___10JUTRomFont:
-	.incbin "baserom.dol", 0x3A6F50, 0x18
+    .4byte 0
+    .4byte 0x00020120
+    .4byte isLeadByte_1Byte__7JUTFontFi
+    .4byte 2
+    .4byte 0x00120F00
+    .4byte isLeadByte_ShiftJIS__7JUTFontFi
 .global __vt__10JUTRomFont
 __vt__10JUTRomFont:
-	.incbin "baserom.dol", 0x3A6F68, 0x40
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JUTRomFontFv
+  .4byte setGX__10JUTRomFontFv
+  .4byte setGX__7JUTFontFQ28JUtility6TColorQ28JUtility6TColor
+  .4byte drawChar_scale__10JUTRomFontFffffib
+  .4byte getLeading__10JUTRomFontCFv
+  .4byte getAscent__10JUTRomFontCFv
+  .4byte getDescent__10JUTRomFontCFv
+  .4byte getHeight__10JUTRomFontCFv
+  .4byte getWidth__10JUTRomFontCFv
+  .4byte getWidthEntry__10JUTRomFontCFiPQ27JUTFont6TWidth
+  .4byte getFontType__10JUTRomFontCFv
+  .4byte isLeadByte__10JUTRomFontCFi
+  .4byte getResFont__10JUTRomFontCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2294:
-	.incbin "baserom.dol", 0x3E4030, 0x4
+  .4byte 0
 $$2295:
 	.incbin "baserom.dol", 0x3E4034, 0x4
 $$2297:

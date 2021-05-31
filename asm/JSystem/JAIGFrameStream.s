@@ -78,7 +78,7 @@ checkWaitStream__8JAIBasicFv:
 /* 80052D34 0004FC74  28 00 00 02 */	cmplwi r0, 2
 /* 80052D38 0004FC78  40 82 00 98 */	bne lbl_80052DD0
 /* 80052D3C 0004FC7C  38 61 00 0C */	addi r3, r1, 0xc
-/* 80052D40 0004FC80  80 8D 81 40 */	lwz r4, streamPath__18JAIGlobalParameter-_SDA_BASE_(r13)
+/* 80052D40 0004FC80  80 8D 81 40 */	lwz r4, streamPath__18JAIGlobalParameter@sda21(r13)
 /* 80052D44 0004FC84  48 03 30 AD */	bl strcpy
 /* 80052D48 0004FC88  80 1F 00 08 */	lwz r0, 8(r31)
 /* 80052D4C 0004FC8C  38 61 00 0C */	addi r3, r1, 0xc
@@ -145,12 +145,12 @@ checkRequestStream__8JAIBasicFv:
 /* 80052E30 0004FD70  80 1F 00 10 */	lwz r0, 0x10(r31)
 /* 80052E34 0004FD74  28 00 00 01 */	cmplwi r0, 1
 /* 80052E38 0004FD78  40 81 00 2C */	ble lbl_80052E64
-/* 80052E3C 0004FD7C  C0 22 85 18 */	lfs f1, $$2425-_SDA2_BASE_(r2)
+/* 80052E3C 0004FD7C  C0 22 85 18 */	lfs f1, $$2425@sda21(r2)
 /* 80052E40 0004FD80  38 7F 00 00 */	addi r3, r31, 0
 /* 80052E44 0004FD84  38 80 00 06 */	li r4, 6
 /* 80052E48 0004FD88  38 A0 00 00 */	li r5, 0
 /* 80052E4C 0004FD8C  48 00 43 CD */	bl setStreamInterVolume__8JAISoundFUcfUl
-/* 80052E50 0004FD90  C0 22 85 1C */	lfs f1, $$2426-_SDA2_BASE_(r2)
+/* 80052E50 0004FD90  C0 22 85 1C */	lfs f1, $$2426@sda21(r2)
 /* 80052E54 0004FD94  7F E3 FB 78 */	mr r3, r31
 /* 80052E58 0004FD98  80 BF 00 10 */	lwz r5, 0x10(r31)
 /* 80052E5C 0004FD9C  38 80 00 06 */	li r4, 6
@@ -225,7 +225,7 @@ lbl_80052F50:
 /* 80052F50 0004FE90  80 1D 00 00 */	lwz r0, 0(r29)
 /* 80052F54 0004FE94  54 00 07 BD */	rlwinm. r0, r0, 0, 0x1e, 0x1e
 /* 80052F58 0004FE98  41 82 00 2C */	beq lbl_80052F84
-/* 80052F5C 0004FE9C  C0 22 85 18 */	lfs f1, $$2425-_SDA2_BASE_(r2)
+/* 80052F5C 0004FE9C  C0 22 85 18 */	lfs f1, $$2425@sda21(r2)
 /* 80052F60 0004FEA0  7F C3 F3 78 */	mr r3, r30
 /* 80052F64 0004FEA4  80 BE 00 10 */	lwz r5, 0x10(r30)
 /* 80052F68 0004FEA8  38 80 00 06 */	li r4, 6
@@ -242,7 +242,7 @@ lbl_80052F84:
 /* 80052F90 0004FED0  38 7E 00 00 */	addi r3, r30, 0
 /* 80052F94 0004FED4  38 80 00 06 */	li r4, 6
 /* 80052F98 0004FED8  48 00 49 85 */	bl getStreamInterVolume__8JAISoundFUc
-/* 80052F9C 0004FEDC  C0 02 85 18 */	lfs f0, $$2425-_SDA2_BASE_(r2)
+/* 80052F9C 0004FEDC  C0 02 85 18 */	lfs f0, $$2425@sda21(r2)
 /* 80052FA0 0004FEE0  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80052FA4 0004FEE4  41 82 00 10 */	beq lbl_80052FB4
 /* 80052FA8 0004FEE8  80 1E 00 10 */	lwz r0, 0x10(r30)
@@ -287,7 +287,7 @@ lbl_80053020:
 /* 80053038 0004FF78  3B E3 00 00 */	addi r31, r3, 0
 /* 8005303C 0004FF7C  54 00 03 5B */	rlwinm. r0, r0, 0, 0xd, 0xd
 /* 80053040 0004FF80  41 82 00 AC */	beq lbl_800530EC
-/* 80053044 0004FF84  C3 E2 85 1C */	lfs f31, $$2426-_SDA2_BASE_(r2)
+/* 80053044 0004FF84  C3 E2 85 1C */	lfs f31, $$2426@sda21(r2)
 /* 80053048 0004FF88  3B 20 00 00 */	li r25, 0
 /* 8005304C 0004FF8C  3B 60 00 01 */	li r27, 1
 /* 80053050 0004FF90  48 00 00 50 */	b lbl_800530A0
@@ -337,7 +337,7 @@ lbl_800530EC:
 /* 800530EC 0005002C  80 1D 00 00 */	lwz r0, 0(r29)
 /* 800530F0 00050030  54 00 02 D7 */	rlwinm. r0, r0, 0, 0xb, 0xb
 /* 800530F4 00050034  41 82 00 AC */	beq lbl_800531A0
-/* 800530F8 00050038  C3 E2 85 1C */	lfs f31, $$2426-_SDA2_BASE_(r2)
+/* 800530F8 00050038  C3 E2 85 1C */	lfs f31, $$2426@sda21(r2)
 /* 800530FC 0005003C  3B 00 00 00 */	li r24, 0
 /* 80053100 00050040  3B 60 00 01 */	li r27, 1
 /* 80053104 00050044  48 00 00 50 */	b lbl_80053154
@@ -387,9 +387,9 @@ lbl_800531A0:
 /* 800531A0 000500E0  80 1D 00 00 */	lwz r0, 0(r29)
 /* 800531A4 000500E4  54 00 03 19 */	rlwinm. r0, r0, 0, 0xc, 0xc
 /* 800531A8 000500E8  41 82 00 E0 */	beq lbl_80053288
-/* 800531AC 000500EC  C3 C2 85 18 */	lfs f30, $$2425-_SDA2_BASE_(r2)
+/* 800531AC 000500EC  C3 C2 85 18 */	lfs f30, $$2425@sda21(r2)
 /* 800531B0 000500F0  3B 00 00 00 */	li r24, 0
-/* 800531B4 000500F4  C3 E2 85 20 */	lfs f31, $$2504-_SDA2_BASE_(r2)
+/* 800531B4 000500F4  C3 E2 85 20 */	lfs f31, $$2504@sda21(r2)
 /* 800531B8 000500F8  3B 60 00 01 */	li r27, 1
 /* 800531BC 000500FC  48 00 00 54 */	b lbl_80053210
 lbl_800531C0:
@@ -418,15 +418,15 @@ lbl_80053210:
 /* 80053210 00050150  57 00 06 3E */	clrlwi r0, r24, 0x18
 /* 80053214 00050154  28 00 00 0D */	cmplwi r0, 0xd
 /* 80053218 00050158  41 80 FF A8 */	blt lbl_800531C0
-/* 8005321C 0005015C  C0 22 85 20 */	lfs f1, $$2504-_SDA2_BASE_(r2)
-/* 80053220 00050160  C0 02 85 1C */	lfs f0, $$2426-_SDA2_BASE_(r2)
+/* 8005321C 0005015C  C0 22 85 20 */	lfs f1, $$2504@sda21(r2)
+/* 80053220 00050160  C0 02 85 1C */	lfs f0, $$2426@sda21(r2)
 /* 80053224 00050164  EF DE 08 2A */	fadds f30, f30, f1
 /* 80053228 00050168  FC 1E 00 40 */	fcmpo cr0, f30, f0
 /* 8005322C 0005016C  40 81 00 0C */	ble lbl_80053238
 /* 80053230 00050170  FF C0 00 90 */	fmr f30, f0
 /* 80053234 00050174  48 00 00 14 */	b lbl_80053248
 lbl_80053238:
-/* 80053238 00050178  C0 02 85 18 */	lfs f0, $$2425-_SDA2_BASE_(r2)
+/* 80053238 00050178  C0 02 85 18 */	lfs f0, $$2425@sda21(r2)
 /* 8005323C 0005017C  FC 1E 00 40 */	fcmpo cr0, f30, f0
 /* 80053240 00050180  40 80 00 08 */	bge lbl_80053248
 /* 80053244 00050184  FF C0 00 90 */	fmr f30, f0
@@ -546,11 +546,11 @@ init__Q27JAInter9StreamLibFb:
 /* 800533D4 00050314  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 800533D8 00050318  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800533DC 0005031C  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 800533E0 00050320  98 6D 90 3C */	stb r3, bufferMode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800533E0 00050320  98 6D 90 3C */	stb r3, bufferMode__Q27JAInter9StreamLib@sda21(r13)
 /* 800533E4 00050324  40 82 00 34 */	bne lbl_80053418
 /* 800533E8 00050328  48 00 01 6D */	bl getNeedBufferSize__Q27JAInter9StreamLibFv
 /* 800533EC 0005032C  7C 60 1B 78 */	mr r0, r3
-/* 800533F0 00050330  80 6D 92 00 */	lwz r3, JASDram-_SDA_BASE_(r13)
+/* 800533F0 00050330  80 6D 92 00 */	lwz r3, JASDram@sda21(r13)
 /* 800533F4 00050334  7C 1F 03 78 */	mr r31, r0
 /* 800533F8 00050338  81 83 00 00 */	lwz r12, 0(r3)
 /* 800533FC 0005033C  38 9F 00 00 */	addi r4, r31, 0
@@ -575,7 +575,7 @@ allocBuffer__Q27JAInter9StreamLibFPvl:
 /* 80053438 00050378  38 A4 00 00 */	addi r5, r4, 0
 /* 8005343C 0005037C  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 80053440 00050380  BF 41 00 10 */	stmw r26, 0x10(r1)
-/* 80053444 00050384  88 0D 90 3D */	lbz r0, allocFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053444 00050384  88 0D 90 3D */	lbz r0, allocFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053448 00050388  28 00 00 00 */	cmplwi r0, 0
 /* 8005344C 0005038C  40 82 00 F4 */	bne lbl_80053540
 /* 80053450 00050390  3C 60 80 40 */	lis r3, streamHeap__Q27JAInter9StreamLib@ha
@@ -586,16 +586,16 @@ allocBuffer__Q27JAInter9StreamLibFPvl:
 /* 80053464 000503A4  38 7C 00 00 */	addi r3, r28, 0
 /* 80053468 000503A8  38 80 00 08 */	li r4, 8
 /* 8005346C 000503AC  48 01 07 D5 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
-/* 80053470 000503B0  90 6D 8F D0 */	stw r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053470 000503B0  90 6D 8F D0 */	stw r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053474 000503B4  3B BC 00 00 */	addi r29, r28, 0
 /* 80053478 000503B8  3B 60 00 00 */	li r27, 0
 /* 8005347C 000503BC  3B E0 00 00 */	li r31, 0
 lbl_80053480:
-/* 80053480 000503C0  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053480 000503C0  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 80053484 000503C4  38 7D 00 00 */	addi r3, r29, 0
 /* 80053488 000503C8  54 04 10 3A */	slwi r4, r0, 2
 /* 8005348C 000503CC  48 01 07 B5 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
-/* 80053490 000503D0  80 8D 8F D0 */	lwz r4, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053490 000503D0  80 8D 8F D0 */	lwz r4, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053494 000503D4  3B 40 00 00 */	li r26, 0
 /* 80053498 000503D8  3B C0 00 00 */	li r30, 0
 /* 8005349C 000503DC  7C 64 F9 2E */	stwx r3, r4, r31
@@ -604,13 +604,13 @@ lbl_800534A4:
 /* 800534A4 000503E4  38 7C 00 00 */	addi r3, r28, 0
 /* 800534A8 000503E8  38 80 28 00 */	li r4, 0x2800
 /* 800534AC 000503EC  48 01 07 95 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
-/* 800534B0 000503F0  80 0D 8F D0 */	lwz r0, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800534B0 000503F0  80 0D 8F D0 */	lwz r0, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 800534B4 000503F4  3B 5A 00 01 */	addi r26, r26, 1
 /* 800534B8 000503F8  7C 9F 00 2E */	lwzx r4, r31, r0
 /* 800534BC 000503FC  7C 64 F1 2E */	stwx r3, r4, r30
 /* 800534C0 00050400  3B DE 00 04 */	addi r30, r30, 4
 lbl_800534C4:
-/* 800534C4 00050404  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800534C4 00050404  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 800534C8 00050408  7C 1A 00 40 */	cmplw r26, r0
 /* 800534CC 0005040C  41 80 FF D8 */	blt lbl_800534A4
 /* 800534D0 00050410  3B 7B 00 01 */	addi r27, r27, 1
@@ -622,14 +622,14 @@ lbl_800534C4:
 /* 800534E8 00050428  38 7E 00 00 */	addi r3, r30, 0
 /* 800534EC 0005042C  38 80 00 08 */	li r4, 8
 /* 800534F0 00050430  48 01 07 51 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
-/* 800534F4 00050434  90 6D 8F D4 */	stw r3, store_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800534F4 00050434  90 6D 8F D4 */	stw r3, store_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 800534F8 00050438  3B 40 00 00 */	li r26, 0
 /* 800534FC 0005043C  3B E0 00 00 */	li r31, 0
 lbl_80053500:
 /* 80053500 00050440  38 7E 00 00 */	addi r3, r30, 0
 /* 80053504 00050444  38 80 50 00 */	li r4, 0x5000
 /* 80053508 00050448  48 01 07 39 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
-/* 8005350C 0005044C  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005350C 0005044C  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053510 00050450  3B 5A 00 01 */	addi r26, r26, 1
 /* 80053514 00050454  28 1A 00 02 */	cmplwi r26, 2
 /* 80053518 00050458  7C 64 F9 2E */	stwx r3, r4, r31
@@ -640,8 +640,8 @@ lbl_80053500:
 /* 8005352C 0005046C  38 80 50 00 */	li r4, 0x5000
 /* 80053530 00050470  48 01 07 11 */	bl alloc__Q38JASystem6Kernel10TSolidHeapFl
 /* 80053534 00050474  38 00 00 01 */	li r0, 1
-/* 80053538 00050478  90 6D 8F CC */	stw r3, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 8005353C 0005047C  98 0D 90 3D */	stb r0, allocFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053538 00050478  90 6D 8F CC */	stw r3, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 8005353C 0005047C  98 0D 90 3D */	stb r0, allocFlag__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053540:
 /* 80053540 00050480  BB 41 00 10 */	lmw r26, 0x10(r1)
 /* 80053544 00050484  80 01 00 2C */	lwz r0, 0x2c(r1)
@@ -651,7 +651,7 @@ lbl_80053540:
 
 .global getNeedBufferSize__Q27JAInter9StreamLibFv
 getNeedBufferSize__Q27JAInter9StreamLibFv:
-/* 80053554 00050494  80 AD 80 E0 */	lwz r5, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053554 00050494  80 AD 80 E0 */	lwz r5, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 80053558 00050498  38 C0 00 20 */	li r6, 0x20
 /* 8005355C 0005049C  38 E0 00 00 */	li r7, 0
 /* 80053560 000504A0  54 A3 10 34 */	rlwinm r3, r5, 2, 0, 0x1a
@@ -697,9 +697,9 @@ __DecodePCM__Q27JAInter9StreamLibFv:
 /* 800535E0 00050520  7C 08 02 A6 */	mflr r0
 /* 800535E4 00050524  90 01 00 04 */	stw r0, 4(r1)
 /* 800535E8 00050528  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800535EC 0005052C  80 8D 8F D0 */	lwz r4, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800535F0 00050530  80 CD 8F C8 */	lwz r6, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800535F4 00050534  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800535EC 0005052C  80 8D 8F D0 */	lwz r4, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 800535F0 00050530  80 CD 8F C8 */	lwz r6, loadsize__Q27JAInter9StreamLib@sda21(r13)
+/* 800535F4 00050534  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 800535F8 00050538  54 C3 F0 BE */	srwi r3, r6, 2
 /* 800535FC 0005053C  80 A4 00 00 */	lwz r5, 0(r4)
 /* 80053600 00050540  54 00 10 3A */	slwi r0, r0, 2
@@ -707,7 +707,7 @@ __DecodePCM__Q27JAInter9StreamLibFv:
 /* 80053608 00050548  28 03 00 00 */	cmplwi r3, 0
 /* 8005360C 0005054C  7C A5 00 2E */	lwzx r5, r5, r0
 /* 80053610 00050550  7C 84 00 2E */	lwzx r4, r4, r0
-/* 80053614 00050554  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053614 00050554  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053618 00050558  40 81 00 CC */	ble lbl_800536E4
 /* 8005361C 0005055C  54 60 E8 FF */	rlwinm. r0, r3, 0x1d, 3, 0x1f
 /* 80053620 00050560  7C 09 03 A6 */	mtctr r0
@@ -763,22 +763,22 @@ lbl_800536C4:
 /* 800536DC 0005061C  38 84 00 02 */	addi r4, r4, 2
 /* 800536E0 00050620  42 00 FF E4 */	bdnz lbl_800536C4
 lbl_800536E4:
-/* 800536E4 00050624  80 AD 8F E8 */	lwz r5, loadup_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800536E4 00050624  80 AD 8F E8 */	lwz r5, loadup_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 800536E8 00050628  54 C3 F0 BE */	srwi r3, r6, 2
-/* 800536EC 0005062C  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800536EC 0005062C  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 800536F0 00050630  54 C4 F8 7E */	srwi r4, r6, 1
 /* 800536F4 00050634  7C A5 1A 14 */	add r5, r5, r3
-/* 800536F8 00050638  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800536F8 00050638  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 800536FC 0005063C  54 00 10 3A */	slwi r0, r0, 2
-/* 80053700 00050640  90 AD 8F E8 */	stw r5, loadup_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053700 00050640  90 AD 8F E8 */	stw r5, loadup_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 80053704 00050644  80 63 00 00 */	lwz r3, 0(r3)
 /* 80053708 00050648  7C 63 00 2E */	lwzx r3, r3, r0
 /* 8005370C 0005064C  48 03 A8 D5 */	bl DCStoreRange
-/* 80053710 00050650  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053714 00050654  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053710 00050650  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 80053714 00050654  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053718 00050658  80 83 00 04 */	lwz r4, 4(r3)
 /* 8005371C 0005065C  54 03 10 3A */	slwi r3, r0, 2
-/* 80053720 00050660  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053720 00050660  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 80053724 00050664  7C 64 18 2E */	lwzx r3, r4, r3
 /* 80053728 00050668  54 04 F8 7E */	srwi r4, r0, 1
 /* 8005372C 0005066C  48 03 A8 B5 */	bl DCStoreRange
@@ -799,21 +799,21 @@ __DecodeADPCM__Q27JAInter9StreamLibFv:
 /* 8005375C 0005069C  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80053760 000506A0  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80053764 000506A4  93 81 00 10 */	stw r28, 0x10(r1)
-/* 80053768 000506A8  80 6D 8F F0 */	lwz r3, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053768 000506A8  80 6D 8F F0 */	lwz r3, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 8005376C 000506AC  28 03 00 00 */	cmplwi r3, 0
 /* 80053770 000506B0  40 82 00 24 */	bne lbl_80053794
-/* 80053774 000506B4  80 6D 8F E0 */	lwz r3, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053774 000506B4  80 6D 8F E0 */	lwz r3, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053778 000506B8  28 03 00 00 */	cmplwi r3, 0
 /* 8005377C 000506BC  40 82 00 18 */	bne lbl_80053794
 /* 80053780 000506C0  38 60 00 00 */	li r3, 0
-/* 80053784 000506C4  B0 6D 90 4C */	sth r3, R2$632-_SDA_BASE_(r13)
-/* 80053788 000506C8  B0 6D 90 4A */	sth r3, R1$631-_SDA_BASE_(r13)
-/* 8005378C 000506CC  B0 6D 90 48 */	sth r3, L2$630-_SDA_BASE_(r13)
-/* 80053790 000506D0  B0 6D 90 46 */	sth r3, L1$629-_SDA_BASE_(r13)
+/* 80053784 000506C4  B0 6D 90 4C */	sth r3, R2$632@sda21(r13)
+/* 80053788 000506C8  B0 6D 90 4A */	sth r3, R1$631@sda21(r13)
+/* 8005378C 000506CC  B0 6D 90 48 */	sth r3, L2$630@sda21(r13)
+/* 80053790 000506D0  B0 6D 90 46 */	sth r3, L1$629@sda21(r13)
 lbl_80053794:
-/* 80053794 000506D4  80 6D 90 18 */	lwz r3, loop_start_flag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053798 000506D8  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 8005379C 000506DC  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053794 000506D4  80 6D 90 18 */	lwz r3, loop_start_flag__Q27JAInter9StreamLib@sda21(r13)
+/* 80053798 000506D8  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 8005379C 000506DC  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 800537A0 000506E0  28 03 00 00 */	cmplwi r3, 0
 /* 800537A4 000506E4  80 E4 00 00 */	lwz r7, 0(r4)
 /* 800537A8 000506E8  81 04 00 04 */	lwz r8, 4(r4)
@@ -823,15 +823,15 @@ lbl_80053794:
 /* 800537B8 000506F8  38 63 62 6C */	addi r3, r3, header__Q27JAInter9StreamLib@l
 /* 800537BC 000506FC  80 83 00 14 */	lwz r4, 0x14(r3)
 /* 800537C0 00050700  38 60 00 00 */	li r3, 0
-/* 800537C4 00050704  90 6D 90 18 */	stw r3, loop_start_flag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800537C4 00050704  90 6D 90 18 */	stw r3, loop_start_flag__Q27JAInter9StreamLib@sda21(r13)
 /* 800537C8 00050708  54 83 E7 7E */	rlwinm r3, r4, 0x1c, 0x1d, 0x1f
 /* 800537CC 0005070C  1D 63 00 12 */	mulli r11, r3, 0x12
 /* 800537D0 00050710  20 6B 16 80 */	subfic r3, r11, 0x1680
-/* 800537D4 00050714  90 6D 8F C8 */	stw r3, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800537D4 00050714  90 6D 8F C8 */	stw r3, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 800537D8 00050718  7D 25 5A 14 */	add r9, r5, r11
 lbl_800537DC:
 /* 800537DC 0005071C  3C 60 38 E4 */	lis r3, 0x38E38E39@ha
-/* 800537E0 00050720  80 8D 8F C8 */	lwz r4, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800537E0 00050720  80 8D 8F C8 */	lwz r4, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 800537E4 00050724  38 63 8E 39 */	addi r3, r3, 0x38E38E39@l
 /* 800537E8 00050728  7C 63 20 16 */	mulhwu r3, r3, r4
 /* 800537EC 0005072C  54 6C F0 BE */	srwi r12, r3, 2
@@ -848,8 +848,8 @@ lbl_800537F8:
 /* 80053814 00050754  54 A5 E7 3E */	rlwinm r5, r5, 0x1c, 0x1c, 0x1f
 /* 80053818 00050758  A8 63 00 02 */	lha r3, 2(r3)
 lbl_8005381C:
-/* 8005381C 0005075C  AB AD 90 46 */	lha r29, L1$629-_SDA_BASE_(r13)
-/* 80053820 00050760  AB 8D 90 48 */	lha r28, L2$630-_SDA_BASE_(r13)
+/* 8005381C 0005075C  AB AD 90 46 */	lha r29, L1$629@sda21(r13)
+/* 80053820 00050760  AB 8D 90 48 */	lha r28, L2$630@sda21(r13)
 /* 80053824 00050764  8B E9 00 00 */	lbz r31, 0(r9)
 /* 80053828 00050768  7F A6 E9 D6 */	mullw r29, r6, r29
 /* 8005382C 0005076C  7F 83 E1 D6 */	mullw r28, r3, r28
@@ -865,9 +865,9 @@ lbl_8005381C:
 /* 80053854 00050794  7F BD 07 34 */	extsh r29, r29
 /* 80053858 00050798  B3 A7 00 00 */	sth r29, 0(r7)
 /* 8005385C 0005079C  7F C0 E2 14 */	add r30, r0, r28
-/* 80053860 000507A0  B3 AD 90 48 */	sth r29, L2$630-_SDA_BASE_(r13)
-/* 80053864 000507A4  AB 8D 90 46 */	lha r28, L1$629-_SDA_BASE_(r13)
-/* 80053868 000507A8  AB AD 90 48 */	lha r29, L2$630-_SDA_BASE_(r13)
+/* 80053860 000507A0  B3 AD 90 48 */	sth r29, L2$630@sda21(r13)
+/* 80053864 000507A4  AB 8D 90 46 */	lha r28, L1$629@sda21(r13)
+/* 80053868 000507A8  AB AD 90 48 */	lha r29, L2$630@sda21(r13)
 /* 8005386C 000507AC  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 80053870 000507B0  AB DE 00 40 */	lha r30, 0x40(r30)
 /* 80053874 000507B4  7F A6 E9 D6 */	mullw r29, r6, r29
@@ -877,11 +877,11 @@ lbl_8005381C:
 /* 80053884 000507C4  7F 9D E2 14 */	add r28, r29, r28
 /* 80053888 000507C8  7F 9C 07 34 */	extsh r28, r28
 /* 8005388C 000507CC  B3 87 00 02 */	sth r28, 2(r7)
-/* 80053890 000507D0  B3 8D 90 46 */	sth r28, L1$629-_SDA_BASE_(r13)
-/* 80053894 000507D4  AB 8D 90 48 */	lha r28, L2$630-_SDA_BASE_(r13)
+/* 80053890 000507D0  B3 8D 90 46 */	sth r28, L1$629@sda21(r13)
+/* 80053894 000507D4  AB 8D 90 48 */	lha r28, L2$630@sda21(r13)
 /* 80053898 000507D8  8B E9 00 01 */	lbz r31, 1(r9)
 /* 8005389C 000507DC  39 29 00 02 */	addi r9, r9, 2
-/* 800538A0 000507E0  AB AD 90 46 */	lha r29, L1$629-_SDA_BASE_(r13)
+/* 800538A0 000507E0  AB AD 90 46 */	lha r29, L1$629@sda21(r13)
 /* 800538A4 000507E4  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 800538A8 000507E8  7F A6 E9 D6 */	mullw r29, r6, r29
 /* 800538AC 000507EC  7F FE 26 70 */	srawi r30, r31, 4
@@ -896,9 +896,9 @@ lbl_8005381C:
 /* 800538D0 00050810  7F BD 07 34 */	extsh r29, r29
 /* 800538D4 00050814  B3 A7 00 04 */	sth r29, 4(r7)
 /* 800538D8 00050818  7F C0 E2 14 */	add r30, r0, r28
-/* 800538DC 0005081C  B3 AD 90 48 */	sth r29, L2$630-_SDA_BASE_(r13)
-/* 800538E0 00050820  AB 8D 90 46 */	lha r28, L1$629-_SDA_BASE_(r13)
-/* 800538E4 00050824  AB AD 90 48 */	lha r29, L2$630-_SDA_BASE_(r13)
+/* 800538DC 0005081C  B3 AD 90 48 */	sth r29, L2$630@sda21(r13)
+/* 800538E0 00050820  AB 8D 90 46 */	lha r28, L1$629@sda21(r13)
+/* 800538E4 00050824  AB AD 90 48 */	lha r29, L2$630@sda21(r13)
 /* 800538E8 00050828  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 800538EC 0005082C  AB DE 00 40 */	lha r30, 0x40(r30)
 /* 800538F0 00050830  7F A6 E9 D6 */	mullw r29, r6, r29
@@ -909,7 +909,7 @@ lbl_8005381C:
 /* 80053904 00050844  7F 9C 07 34 */	extsh r28, r28
 /* 80053908 00050848  B3 87 00 06 */	sth r28, 6(r7)
 /* 8005390C 0005084C  38 E7 00 08 */	addi r7, r7, 8
-/* 80053910 00050850  B3 8D 90 46 */	sth r28, L1$629-_SDA_BASE_(r13)
+/* 80053910 00050850  B3 8D 90 46 */	sth r28, L1$629@sda21(r13)
 /* 80053914 00050854  42 00 FF 08 */	bdnz lbl_8005381C
 /* 80053918 00050858  88 A9 00 00 */	lbz r5, 0(r9)
 /* 8005391C 0005085C  38 60 00 04 */	li r3, 4
@@ -921,8 +921,8 @@ lbl_8005381C:
 /* 80053934 00050874  54 A5 E7 3E */	rlwinm r5, r5, 0x1c, 0x1c, 0x1f
 /* 80053938 00050878  A8 63 00 02 */	lha r3, 2(r3)
 lbl_8005393C:
-/* 8005393C 0005087C  AB AD 90 4A */	lha r29, R1$631-_SDA_BASE_(r13)
-/* 80053940 00050880  AB 8D 90 4C */	lha r28, R2$632-_SDA_BASE_(r13)
+/* 8005393C 0005087C  AB AD 90 4A */	lha r29, R1$631@sda21(r13)
+/* 80053940 00050880  AB 8D 90 4C */	lha r28, R2$632@sda21(r13)
 /* 80053944 00050884  8B E9 00 00 */	lbz r31, 0(r9)
 /* 80053948 00050888  7F A6 E9 D6 */	mullw r29, r6, r29
 /* 8005394C 0005088C  7F 83 E1 D6 */	mullw r28, r3, r28
@@ -938,9 +938,9 @@ lbl_8005393C:
 /* 80053974 000508B4  7F BD 07 34 */	extsh r29, r29
 /* 80053978 000508B8  B3 A8 00 00 */	sth r29, 0(r8)
 /* 8005397C 000508BC  7F C0 E2 14 */	add r30, r0, r28
-/* 80053980 000508C0  B3 AD 90 4C */	sth r29, R2$632-_SDA_BASE_(r13)
-/* 80053984 000508C4  AB 8D 90 4A */	lha r28, R1$631-_SDA_BASE_(r13)
-/* 80053988 000508C8  AB AD 90 4C */	lha r29, R2$632-_SDA_BASE_(r13)
+/* 80053980 000508C0  B3 AD 90 4C */	sth r29, R2$632@sda21(r13)
+/* 80053984 000508C4  AB 8D 90 4A */	lha r28, R1$631@sda21(r13)
+/* 80053988 000508C8  AB AD 90 4C */	lha r29, R2$632@sda21(r13)
 /* 8005398C 000508CC  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 80053990 000508D0  AB DE 00 40 */	lha r30, 0x40(r30)
 /* 80053994 000508D4  7F A6 E9 D6 */	mullw r29, r6, r29
@@ -950,11 +950,11 @@ lbl_8005393C:
 /* 800539A4 000508E4  7F 9D E2 14 */	add r28, r29, r28
 /* 800539A8 000508E8  7F 9C 07 34 */	extsh r28, r28
 /* 800539AC 000508EC  B3 88 00 02 */	sth r28, 2(r8)
-/* 800539B0 000508F0  B3 8D 90 4A */	sth r28, R1$631-_SDA_BASE_(r13)
-/* 800539B4 000508F4  AB 8D 90 4C */	lha r28, R2$632-_SDA_BASE_(r13)
+/* 800539B0 000508F0  B3 8D 90 4A */	sth r28, R1$631@sda21(r13)
+/* 800539B4 000508F4  AB 8D 90 4C */	lha r28, R2$632@sda21(r13)
 /* 800539B8 000508F8  8B E9 00 01 */	lbz r31, 1(r9)
 /* 800539BC 000508FC  39 29 00 02 */	addi r9, r9, 2
-/* 800539C0 00050900  AB AD 90 4A */	lha r29, R1$631-_SDA_BASE_(r13)
+/* 800539C0 00050900  AB AD 90 4A */	lha r29, R1$631@sda21(r13)
 /* 800539C4 00050904  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 800539C8 00050908  7F A6 E9 D6 */	mullw r29, r6, r29
 /* 800539CC 0005090C  7F FE 26 70 */	srawi r30, r31, 4
@@ -969,9 +969,9 @@ lbl_8005393C:
 /* 800539F0 00050930  7F BD 07 34 */	extsh r29, r29
 /* 800539F4 00050934  B3 A8 00 04 */	sth r29, 4(r8)
 /* 800539F8 00050938  7F C0 E2 14 */	add r30, r0, r28
-/* 800539FC 0005093C  B3 AD 90 4C */	sth r29, R2$632-_SDA_BASE_(r13)
-/* 80053A00 00050940  AB 8D 90 4A */	lha r28, R1$631-_SDA_BASE_(r13)
-/* 80053A04 00050944  AB AD 90 4C */	lha r29, R2$632-_SDA_BASE_(r13)
+/* 800539FC 0005093C  B3 AD 90 4C */	sth r29, R2$632@sda21(r13)
+/* 80053A00 00050940  AB 8D 90 4A */	lha r28, R1$631@sda21(r13)
+/* 80053A04 00050944  AB AD 90 4C */	lha r29, R2$632@sda21(r13)
 /* 80053A08 00050948  7F 83 E1 D6 */	mullw r28, r3, r28
 /* 80053A0C 0005094C  AB DE 00 40 */	lha r30, 0x40(r30)
 /* 80053A10 00050950  7F A6 E9 D6 */	mullw r29, r6, r29
@@ -982,32 +982,32 @@ lbl_8005393C:
 /* 80053A24 00050964  7F 9C 07 34 */	extsh r28, r28
 /* 80053A28 00050968  B3 88 00 06 */	sth r28, 6(r8)
 /* 80053A2C 0005096C  39 08 00 08 */	addi r8, r8, 8
-/* 80053A30 00050970  B3 8D 90 4A */	sth r28, R1$631-_SDA_BASE_(r13)
+/* 80053A30 00050970  B3 8D 90 4A */	sth r28, R1$631@sda21(r13)
 /* 80053A34 00050974  42 00 FF 08 */	bdnz lbl_8005393C
 /* 80053A38 00050978  39 4A 00 01 */	addi r10, r10, 1
 lbl_80053A3C:
 /* 80053A3C 0005097C  7C 0A 60 40 */	cmplw r10, r12
 /* 80053A40 00050980  41 80 FD B8 */	blt lbl_800537F8
 /* 80053A44 00050984  3C 60 38 E4 */	lis r3, 0x38E38E39@ha
-/* 80053A48 00050988  80 AD 8F E8 */	lwz r5, loadup_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053A48 00050988  80 AD 8F E8 */	lwz r5, loadup_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 80053A4C 0005098C  7C 0B 20 50 */	subf r0, r11, r4
 /* 80053A50 00050990  3B E3 8E 39 */	addi r31, r3, 0x38E38E39@l
 /* 80053A54 00050994  7C 1F 00 16 */	mulhwu r0, r31, r0
 /* 80053A58 00050998  54 00 10 76 */	rlwinm r0, r0, 2, 1, 0x1b
 /* 80053A5C 0005099C  7C 05 02 14 */	add r0, r5, r0
-/* 80053A60 000509A0  90 0D 8F E8 */	stw r0, loadup_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053A60 000509A0  90 0D 8F E8 */	stw r0, loadup_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 80053A64 000509A4  3B A0 00 00 */	li r29, 0
 /* 80053A68 000509A8  3B 80 00 00 */	li r28, 0
 /* 80053A6C 000509AC  48 00 00 E8 */	b lbl_80053B54
 lbl_80053A70:
-/* 80053A70 000509B0  80 6D 90 24 */	lwz r3, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053A70 000509B0  80 6D 90 24 */	lwz r3, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053A74 000509B4  7C 1D 1A 14 */	add r0, r29, r3
 /* 80053A78 000509B8  28 00 14 00 */	cmplwi r0, 0x1400
 /* 80053A7C 000509BC  7C 1E 03 78 */	mr r30, r0
 /* 80053A80 000509C0  40 82 00 74 */	bne lbl_80053AF4
-/* 80053A84 000509C4  80 AD 8F D0 */	lwz r5, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053A84 000509C4  80 AD 8F D0 */	lwz r5, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053A88 000509C8  20 03 14 00 */	subfic r0, r3, 0x1400
-/* 80053A8C 000509CC  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053A8C 000509CC  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053A90 000509D0  54 63 08 3C */	slwi r3, r3, 1
 /* 80053A94 000509D4  80 A5 00 00 */	lwz r5, 0(r5)
 /* 80053A98 000509D8  54 84 10 3A */	slwi r4, r4, 2
@@ -1015,10 +1015,10 @@ lbl_80053A70:
 /* 80053AA0 000509E0  54 04 08 3C */	slwi r4, r0, 1
 /* 80053AA4 000509E4  7C 65 1A 14 */	add r3, r5, r3
 /* 80053AA8 000509E8  48 03 A5 39 */	bl DCStoreRange
-/* 80053AAC 000509EC  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053AB0 000509F0  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053AAC 000509EC  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 80053AB0 000509F0  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053AB4 000509F4  80 63 00 04 */	lwz r3, 4(r3)
-/* 80053AB8 000509F8  80 AD 90 24 */	lwz r5, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053AB8 000509F8  80 AD 90 24 */	lwz r5, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053ABC 000509FC  54 00 10 3A */	slwi r0, r0, 2
 /* 80053AC0 00050A00  7C 83 00 2E */	lwzx r4, r3, r0
 /* 80053AC4 00050A04  54 A3 08 3C */	slwi r3, r5, 1
@@ -1026,32 +1026,32 @@ lbl_80053A70:
 /* 80053ACC 00050A0C  7C 64 1A 14 */	add r3, r4, r3
 /* 80053AD0 00050A10  54 04 08 3C */	slwi r4, r0, 1
 /* 80053AD4 00050A14  48 03 A5 0D */	bl DCStoreRange
-/* 80053AD8 00050A18  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053ADC 00050A1C  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053AD8 00050A18  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib@sda21(r13)
+/* 80053ADC 00050A1C  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 80053AE0 00050A20  38 84 00 01 */	addi r4, r4, 1
 /* 80053AE4 00050A24  7C 04 1B 96 */	divwu r0, r4, r3
 /* 80053AE8 00050A28  7C 00 19 D6 */	mullw r0, r0, r3
 /* 80053AEC 00050A2C  7C 00 20 50 */	subf r0, r0, r4
-/* 80053AF0 00050A30  90 0D 8F E0 */	stw r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053AF0 00050A30  90 0D 8F E0 */	stw r0, playside__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053AF4:
 /* 80053AF4 00050A34  28 1E 14 00 */	cmplwi r30, 0x1400
 /* 80053AF8 00050A38  41 80 00 08 */	blt lbl_80053B00
 /* 80053AFC 00050A3C  3B DE EC 00 */	addi r30, r30, -5120
 lbl_80053B00:
-/* 80053B00 00050A40  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B00 00050A40  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B04 00050A44  57 C5 08 3C */	slwi r5, r30, 1
-/* 80053B08 00050A48  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B08 00050A48  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B0C 00050A4C  3B BD 00 01 */	addi r29, r29, 1
-/* 80053B10 00050A50  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B10 00050A50  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B14 00050A54  80 84 00 00 */	lwz r4, 0(r4)
 /* 80053B18 00050A58  80 63 00 00 */	lwz r3, 0(r3)
 /* 80053B1C 00050A5C  54 00 10 3A */	slwi r0, r0, 2
 /* 80053B20 00050A60  7C 84 E2 AE */	lhax r4, r4, r28
 /* 80053B24 00050A64  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80053B28 00050A68  7C 83 2B 2E */	sthx r4, r3, r5
-/* 80053B2C 00050A6C  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053B30 00050A70  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053B34 00050A74  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B2C 00050A6C  80 8D 8F D4 */	lwz r4, store_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 80053B30 00050A70  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 80053B34 00050A74  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B38 00050A78  80 84 00 04 */	lwz r4, 4(r4)
 /* 80053B3C 00050A7C  80 63 00 04 */	lwz r3, 4(r3)
 /* 80053B40 00050A80  54 00 10 3A */	slwi r0, r0, 2
@@ -1060,48 +1060,48 @@ lbl_80053B00:
 /* 80053B4C 00050A8C  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80053B50 00050A90  7C 83 2B 2E */	sthx r4, r3, r5
 lbl_80053B54:
-/* 80053B54 00050A94  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B54 00050A94  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B58 00050A98  7C 1F 00 16 */	mulhwu r0, r31, r0
 /* 80053B5C 00050A9C  54 00 10 36 */	rlwinm r0, r0, 2, 0, 0x1b
 /* 80053B60 00050AA0  7C 1D 00 40 */	cmplw r29, r0
 /* 80053B64 00050AA4  41 80 FF 0C */	blt lbl_80053A70
-/* 80053B68 00050AA8  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B68 00050AA8  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B6C 00050AAC  38 80 28 00 */	li r4, 0x2800
-/* 80053B70 00050AB0  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B70 00050AB0  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B74 00050AB4  80 63 00 00 */	lwz r3, 0(r3)
 /* 80053B78 00050AB8  54 00 10 3A */	slwi r0, r0, 2
-/* 80053B7C 00050ABC  80 AD 90 24 */	lwz r5, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B7C 00050ABC  80 AD 90 24 */	lwz r5, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B80 00050AC0  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80053B84 00050AC4  7F 9D 2A 14 */	add r28, r29, r5
 /* 80053B88 00050AC8  48 03 A4 59 */	bl DCStoreRange
-/* 80053B8C 00050ACC  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B8C 00050ACC  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B90 00050AD0  38 80 28 00 */	li r4, 0x2800
-/* 80053B94 00050AD4  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053B94 00050AD4  80 0D 8F E0 */	lwz r0, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 80053B98 00050AD8  80 63 00 04 */	lwz r3, 4(r3)
 /* 80053B9C 00050ADC  54 00 10 3A */	slwi r0, r0, 2
 /* 80053BA0 00050AE0  7C 63 00 2E */	lwzx r3, r3, r0
 /* 80053BA4 00050AE4  48 03 A4 3D */	bl DCStoreRange
 /* 80053BA8 00050AE8  28 1C 14 00 */	cmplwi r28, 0x1400
 /* 80053BAC 00050AEC  40 82 00 20 */	bne lbl_80053BCC
-/* 80053BB0 00050AF0  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053BB4 00050AF4  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BB0 00050AF0  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib@sda21(r13)
+/* 80053BB4 00050AF4  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 80053BB8 00050AF8  38 84 00 01 */	addi r4, r4, 1
 /* 80053BBC 00050AFC  7C 04 1B 96 */	divwu r0, r4, r3
 /* 80053BC0 00050B00  7C 00 19 D6 */	mullw r0, r0, r3
 /* 80053BC4 00050B04  7C 00 20 50 */	subf r0, r0, r4
-/* 80053BC8 00050B08  90 0D 8F E0 */	stw r0, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BC8 00050B08  90 0D 8F E0 */	stw r0, playside__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053BCC:
 /* 80053BCC 00050B0C  28 1C 14 00 */	cmplwi r28, 0x1400
 /* 80053BD0 00050B10  41 80 00 10 */	blt lbl_80053BE0
 /* 80053BD4 00050B14  38 1C EC 00 */	addi r0, r28, -5120
-/* 80053BD8 00050B18  90 0D 90 24 */	stw r0, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BD8 00050B18  90 0D 90 24 */	stw r0, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053BDC 00050B1C  48 00 00 18 */	b lbl_80053BF4
 lbl_80053BE0:
-/* 80053BE0 00050B20  93 8D 90 24 */	stw r28, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BE0 00050B20  93 8D 90 24 */	stw r28, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053BE4 00050B24  40 81 00 10 */	ble lbl_80053BF4
-/* 80053BE8 00050B28  80 6D 90 24 */	lwz r3, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BE8 00050B28  80 6D 90 24 */	lwz r3, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053BEC 00050B2C  38 03 EC 00 */	addi r0, r3, -5120
-/* 80053BF0 00050B30  90 0D 90 24 */	stw r0, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053BF0 00050B30  90 0D 90 24 */	stw r0, shift_sample__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053BF4:
 /* 80053BF4 00050B34  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80053BF8 00050B38  83 E1 00 1C */	lwz r31, 0x1c(r1)
@@ -1114,13 +1114,13 @@ lbl_80053BF4:
 
 .global __LoadFin__Q27JAInter9StreamLibFlP11DVDFileInfo
 __LoadFin__Q27JAInter9StreamLibFlP11DVDFileInfo:
-/* 80053C14 00050B54  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C14 00050B54  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C18 00050B58  38 60 00 00 */	li r3, 0
-/* 80053C1C 00050B5C  90 6D 90 2C */	stw r3, DvdLoadFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C1C 00050B5C  90 6D 90 2C */	stw r3, DvdLoadFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C20 00050B60  28 00 00 03 */	cmplwi r0, 3
 /* 80053C24 00050B64  4D 82 00 20 */	beqlr 
 /* 80053C28 00050B68  38 00 00 02 */	li r0, 2
-/* 80053C2C 00050B6C  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C2C 00050B6C  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C30 00050B70  4E 80 00 20 */	blr 
 
 .global LoadADPCM__Q27JAInter9StreamLibFv
@@ -1129,7 +1129,7 @@ LoadADPCM__Q27JAInter9StreamLibFv:
 /* 80053C38 00050B78  90 01 00 04 */	stw r0, 4(r1)
 /* 80053C3C 00050B7C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80053C40 00050B80  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 80053C44 00050B84  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C44 00050B84  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C48 00050B88  28 00 00 00 */	cmplwi r0, 0
 /* 80053C4C 00050B8C  40 82 00 E8 */	bne lbl_80053D34
 /* 80053C50 00050B90  3C 60 80 3E */	lis r3, header__Q27JAInter9StreamLib@ha
@@ -1147,55 +1147,55 @@ lbl_80053C74:
 /* 80053C7C 00050BBC  48 00 00 10 */	b lbl_80053C8C
 lbl_80053C80:
 /* 80053C80 00050BC0  38 00 50 00 */	li r0, 0x5000
-/* 80053C84 00050BC4  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C84 00050BC4  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C88 00050BC8  48 00 00 0C */	b lbl_80053C94
 lbl_80053C8C:
 /* 80053C8C 00050BCC  38 00 16 80 */	li r0, 0x1680
-/* 80053C90 00050BD0  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C90 00050BD0  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053C94:
-/* 80053C94 00050BD4  80 8D 8F C0 */	lwz r4, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C94 00050BD4  80 8D 8F C0 */	lwz r4, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 80053C98 00050BD8  38 60 00 00 */	li r3, 0
-/* 80053C9C 00050BDC  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053CA0 00050BE0  90 6D 90 28 */	stw r3, extra_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053C9C 00050BDC  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
+/* 80053CA0 00050BE0  90 6D 90 28 */	stw r3, extra_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CA4 00050BE4  7C 04 00 40 */	cmplw r4, r0
 /* 80053CA8 00050BE8  40 80 00 2C */	bge lbl_80053CD4
 /* 80053CAC 00050BEC  54 80 06 FF */	clrlwi. r0, r4, 0x1b
 /* 80053CB0 00050BF0  41 82 00 20 */	beq lbl_80053CD0
 /* 80053CB4 00050BF4  20 00 00 20 */	subfic r0, r0, 0x20
 /* 80053CB8 00050BF8  7C 04 02 14 */	add r0, r4, r0
-/* 80053CBC 00050BFC  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053CC0 00050C00  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CBC 00050BFC  90 0D 8F C8 */	stw r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
+/* 80053CC0 00050C00  80 0D 8F C8 */	lwz r0, loadsize__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CC4 00050C04  7C 04 00 50 */	subf r0, r4, r0
-/* 80053CC8 00050C08  90 0D 90 28 */	stw r0, extra_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CC8 00050C08  90 0D 90 28 */	stw r0, extra_sample__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CCC 00050C0C  48 00 00 08 */	b lbl_80053CD4
 lbl_80053CD0:
-/* 80053CD0 00050C10  90 8D 8F C8 */	stw r4, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CD0 00050C10  90 8D 8F C8 */	stw r4, loadsize__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053CD4:
 /* 80053CD4 00050C14  3B E0 00 01 */	li r31, 1
-/* 80053CD8 00050C18  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CD8 00050C18  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CDC 00050C1C  3C 60 80 3E */	lis r3, finfo__Q27JAInter9StreamLib@ha
-/* 80053CE0 00050C20  93 ED 8F EC */	stw r31, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CE0 00050C20  93 ED 8F EC */	stw r31, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CE4 00050C24  3C E0 80 05 */	lis r7, __LoadFin__Q27JAInter9StreamLibFlP11DVDFileInfo@ha
-/* 80053CE8 00050C28  80 AD 8F C8 */	lwz r5, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053CEC 00050C2C  80 CD 8F C4 */	lwz r6, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053CE8 00050C28  80 AD 8F C8 */	lwz r5, loadsize__Q27JAInter9StreamLib@sda21(r13)
+/* 80053CEC 00050C2C  80 CD 8F C4 */	lwz r6, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
 /* 80053CF0 00050C30  38 63 62 30 */	addi r3, r3, finfo__Q27JAInter9StreamLib@l
 /* 80053CF4 00050C34  38 E7 3C 14 */	addi r7, r7, __LoadFin__Q27JAInter9StreamLibFlP11DVDFileInfo@l
 /* 80053CF8 00050C38  39 00 00 02 */	li r8, 2
 /* 80053CFC 00050C3C  48 04 28 A9 */	bl DVDReadAsyncPrio
-/* 80053D00 00050C40  80 6D 8F C4 */	lwz r3, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D04 00050C44  80 8D 8F C8 */	lwz r4, loadsize__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D08 00050C48  80 0D 8F C0 */	lwz r0, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D00 00050C40  80 6D 8F C4 */	lwz r3, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D04 00050C44  80 8D 8F C8 */	lwz r4, loadsize__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D08 00050C48  80 0D 8F C0 */	lwz r0, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D0C 00050C4C  7C 63 22 14 */	add r3, r3, r4
-/* 80053D10 00050C50  93 ED 90 2C */	stw r31, DvdLoadFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D10 00050C50  93 ED 90 2C */	stw r31, DvdLoadFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D14 00050C54  7C 00 20 40 */	cmplw r0, r4
-/* 80053D18 00050C58  90 6D 8F C4 */	stw r3, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D18 00050C58  90 6D 8F C4 */	stw r3, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D1C 00050C5C  40 80 00 10 */	bge lbl_80053D2C
 /* 80053D20 00050C60  38 00 00 00 */	li r0, 0
-/* 80053D24 00050C64  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D24 00050C64  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D28 00050C68  48 00 00 0C */	b lbl_80053D34
 lbl_80053D2C:
 /* 80053D2C 00050C6C  7C 04 00 50 */	subf r0, r4, r0
-/* 80053D30 00050C70  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D30 00050C70  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053D34:
 /* 80053D34 00050C74  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 80053D38 00050C78  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -1206,61 +1206,61 @@ lbl_80053D34:
 .global setVolume__Q27JAInter9StreamLibFf
 setVolume__Q27JAInter9StreamLibFf:
 /* 80053D48 00050C88  38 00 00 01 */	li r0, 1
-/* 80053D4C 00050C8C  D0 2D 90 08 */	stfs f1, stackvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D50 00050C90  98 0D 90 14 */	stb r0, outflag_volume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D4C 00050C8C  D0 2D 90 08 */	stfs f1, stackvolume__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D50 00050C90  98 0D 90 14 */	stb r0, outflag_volume__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D54 00050C94  4E 80 00 20 */	blr 
 
 .global setPitch__Q27JAInter9StreamLibFf
 setPitch__Q27JAInter9StreamLibFf:
 /* 80053D58 00050C98  38 00 00 01 */	li r0, 1
-/* 80053D5C 00050C9C  D0 2D 90 0C */	stfs f1, stackpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D60 00050CA0  98 0D 90 16 */	stb r0, outflag_pitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D5C 00050C9C  D0 2D 90 0C */	stfs f1, stackpitch__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D60 00050CA0  98 0D 90 16 */	stb r0, outflag_pitch__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D64 00050CA4  4E 80 00 20 */	blr 
 
 .global setPan__Q27JAInter9StreamLibFf
 setPan__Q27JAInter9StreamLibFf:
 /* 80053D68 00050CA8  38 00 00 01 */	li r0, 1
-/* 80053D6C 00050CAC  D0 2D 90 10 */	stfs f1, stackpan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D70 00050CB0  98 0D 90 15 */	stb r0, outflag_pan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D6C 00050CAC  D0 2D 90 10 */	stfs f1, stackpan__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D70 00050CB0  98 0D 90 15 */	stb r0, outflag_pan__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D74 00050CB4  4E 80 00 20 */	blr 
 
 .global stop__Q27JAInter9StreamLibFv
 stop__Q27JAInter9StreamLibFv:
 /* 80053D78 00050CB8  38 00 00 01 */	li r0, 1
-/* 80053D7C 00050CBC  98 0D 8F F4 */	stb r0, stopflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053D80 00050CC0  98 0D 8F F5 */	stb r0, stopflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D7C 00050CBC  98 0D 8F F4 */	stb r0, stopflag__Q27JAInter9StreamLib@sda21(r13)
+/* 80053D80 00050CC0  98 0D 8F F5 */	stb r0, stopflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D84 00050CC4  4E 80 00 20 */	blr 
 
 .global setPauseFlag__Q27JAInter9StreamLibFUc
 setPauseFlag__Q27JAInter9StreamLibFUc:
-/* 80053D88 00050CC8  80 8D 90 1C */	lwz r4, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D88 00050CC8  80 8D 90 1C */	lwz r4, outpause__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D8C 00050CCC  54 60 06 3E */	clrlwi r0, r3, 0x18
 /* 80053D90 00050CD0  7C 80 03 78 */	or r0, r4, r0
-/* 80053D94 00050CD4  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053D94 00050CD4  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib@sda21(r13)
 /* 80053D98 00050CD8  4E 80 00 20 */	blr 
 
 .global clearPauseFlag__Q27JAInter9StreamLibFUc
 clearPauseFlag__Q27JAInter9StreamLibFUc:
 /* 80053D9C 00050CDC  54 60 06 3E */	clrlwi r0, r3, 0x18
-/* 80053DA0 00050CE0  80 6D 90 1C */	lwz r3, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DA0 00050CE0  80 6D 90 1C */	lwz r3, outpause__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DA4 00050CE4  68 00 00 FF */	xori r0, r0, 0xff
 /* 80053DA8 00050CE8  7C 60 00 38 */	and r0, r3, r0
-/* 80053DAC 00050CEC  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DAC 00050CEC  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DB0 00050CF0  4E 80 00 20 */	blr 
 
 .global setPrepareFlag__Q27JAInter9StreamLibFUc
 setPrepareFlag__Q27JAInter9StreamLibFUc:
-/* 80053DB4 00050CF4  98 6D 8F F8 */	stb r3, prepareflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DB4 00050CF4  98 6D 8F F8 */	stb r3, prepareflag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DB8 00050CF8  4E 80 00 20 */	blr 
 
 .global setOutputMode__Q27JAInter9StreamLibFUl
 setOutputMode__Q27JAInter9StreamLibFUl:
-/* 80053DBC 00050CFC  90 6D 80 E8 */	stw r3, outputmode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DBC 00050CFC  90 6D 80 E8 */	stw r3, outputmode__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DC0 00050D00  4E 80 00 20 */	blr 
 
 .global getPlayingFlag__Q27JAInter9StreamLibFv
 getPlayingFlag__Q27JAInter9StreamLibFv:
-/* 80053DC4 00050D04  88 6D 8F F7 */	lbz r3, playflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DC4 00050D04  88 6D 8F F7 */	lbz r3, playflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DC8 00050D08  4E 80 00 20 */	blr 
 
 .global start__Q27JAInter9StreamLibFPcUlPv
@@ -1273,21 +1273,21 @@ start__Q27JAInter9StreamLibFPcUlPv:
 /* 80053DE0 00050D20  3B E5 00 00 */	addi r31, r5, 0
 /* 80053DE4 00050D24  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80053DE8 00050D28  3B C4 00 00 */	addi r30, r4, 0
-/* 80053DEC 00050D2C  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053DEC 00050D2C  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053DF0 00050D30  28 00 00 00 */	cmplwi r0, 0
 /* 80053DF4 00050D34  40 82 00 38 */	bne lbl_80053E2C
 /* 80053DF8 00050D38  3C 60 80 3E */	lis r3, Filename__Q27JAInter9StreamLib@ha
 /* 80053DFC 00050D3C  38 63 62 8C */	addi r3, r3, Filename__Q27JAInter9StreamLib@l
 /* 80053E00 00050D40  38 86 00 00 */	addi r4, r6, 0
 /* 80053E04 00050D44  48 03 1F ED */	bl strcpy
-/* 80053E08 00050D48  80 8D 90 30 */	lwz r4, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E08 00050D48  80 8D 90 30 */	lwz r4, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E0C 00050D4C  3C 60 80 05 */	lis r3, callBack__Q27JAInter9StreamLibFPv@ha
-/* 80053E10 00050D50  93 CD 90 34 */	stw r30, Mode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E10 00050D50  93 CD 90 34 */	stw r30, Mode__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E14 00050D54  38 63 41 90 */	addi r3, r3, callBack__Q27JAInter9StreamLibFPv@l
 /* 80053E18 00050D58  38 04 00 01 */	addi r0, r4, 1
-/* 80053E1C 00050D5C  93 ED 90 38 */	stw r31, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E1C 00050D5C  93 ED 90 38 */	stw r31, Head__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E20 00050D60  38 80 00 00 */	li r4, 0
-/* 80053E24 00050D64  90 0D 90 30 */	stw r0, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E24 00050D64  90 0D 90 30 */	stw r0, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E28 00050D68  48 00 D6 D1 */	bl registerSubframeCallback__Q28JASystem6KernelFPFPv_lPv
 lbl_80053E2C:
 /* 80053E2C 00050D6C  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -1309,28 +1309,28 @@ __start__Q27JAInter9StreamLibFv:
 /* 80053E60 00050DA0  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80053E64 00050DA4  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 80053E68 00050DA8  93 81 00 18 */	stw r28, 0x18(r1)
-/* 80053E6C 00050DAC  88 0D 8F F6 */	lbz r0, playflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053E70 00050DB0  80 6D 90 34 */	lwz r3, Mode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E6C 00050DAC  88 0D 8F F6 */	lbz r0, playflag__Q27JAInter9StreamLib@sda21(r13)
+/* 80053E70 00050DB0  80 6D 90 34 */	lwz r3, Mode__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E74 00050DB4  28 00 00 00 */	cmplwi r0, 0
-/* 80053E78 00050DB8  90 8D 90 30 */	stw r4, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053E7C 00050DBC  90 6D 90 20 */	stw r3, playmode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E78 00050DB8  90 8D 90 30 */	stw r4, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
+/* 80053E7C 00050DBC  90 6D 90 20 */	stw r3, playmode__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E80 00050DC0  41 82 00 24 */	beq lbl_80053EA4
-/* 80053E84 00050DC4  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E84 00050DC4  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E88 00050DC8  48 00 B0 B1 */	bl forceStop__Q28JASystem11TDSPChannelFv
-/* 80053E8C 00050DCC  38 6D 8F D8 */	addi r3, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 80053E8C 00050DCC  38 6D 8F D8 */	addi r3, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 80053E90 00050DD0  80 63 00 04 */	lwz r3, 4(r3)
 /* 80053E94 00050DD4  48 00 B0 A5 */	bl forceStop__Q28JASystem11TDSPChannelFv
-/* 80053E98 00050DD8  88 6D 8F F6 */	lbz r3, playflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053E98 00050DD8  88 6D 8F F6 */	lbz r3, playflag__Q27JAInter9StreamLib@sda21(r13)
 /* 80053E9C 00050DDC  38 03 00 01 */	addi r0, r3, 1
-/* 80053EA0 00050DE0  98 0D 8F F6 */	stb r0, playflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053EA0 00050DE0  98 0D 8F F6 */	stb r0, playflag__Q27JAInter9StreamLib@sda21(r13)
 lbl_80053EA4:
 /* 80053EA4 00050DE4  38 7F 00 5C */	addi r3, r31, 0x5c
 /* 80053EA8 00050DE8  38 9F 00 00 */	addi r4, r31, 0
 /* 80053EAC 00050DEC  48 04 23 89 */	bl DVDOpen
-/* 80053EB0 00050DF0  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053EB0 00050DF0  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib@sda21(r13)
 /* 80053EB4 00050DF4  28 00 00 00 */	cmplwi r0, 0
 /* 80053EB8 00050DF8  40 82 00 20 */	bne lbl_80053ED8
-/* 80053EBC 00050DFC  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053EBC 00050DFC  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053EC0 00050E00  38 7F 00 00 */	addi r3, r31, 0
 /* 80053EC4 00050E04  38 A0 00 20 */	li r5, 0x20
 /* 80053EC8 00050E08  38 C0 00 00 */	li r6, 0
@@ -1342,96 +1342,96 @@ lbl_80053ED8:
 /* 80053EDC 00050E1C  7C 09 03 A6 */	mtctr r0
 /* 80053EE0 00050E20  38 60 00 00 */	li r3, 0
 lbl_80053EE4:
-/* 80053EE4 00050E24  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053EE4 00050E24  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib@sda21(r13)
 /* 80053EE8 00050E28  39 23 00 01 */	addi r9, r3, 1
-/* 80053EEC 00050E2C  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053EEC 00050E2C  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053EF0 00050E30  39 03 00 02 */	addi r8, r3, 2
 /* 80053EF4 00050E34  7C 03 00 AE */	lbzx r0, r3, r0
 /* 80053EF8 00050E38  38 E3 00 03 */	addi r7, r3, 3
 /* 80053EFC 00050E3C  7C 0A 19 AE */	stbx r0, r10, r3
 /* 80053F00 00050E40  38 C3 00 04 */	addi r6, r3, 4
 /* 80053F04 00050E44  38 A3 00 05 */	addi r5, r3, 5
-/* 80053F08 00050E48  81 6D 90 38 */	lwz r11, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F08 00050E48  81 6D 90 38 */	lwz r11, Head__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F0C 00050E4C  38 83 00 06 */	addi r4, r3, 6
-/* 80053F10 00050E50  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F10 00050E50  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F14 00050E54  38 03 00 07 */	addi r0, r3, 7
 /* 80053F18 00050E58  39 6B 00 01 */	addi r11, r11, 1
 /* 80053F1C 00050E5C  7D 63 58 AE */	lbzx r11, r3, r11
 /* 80053F20 00050E60  7D 6A 49 AE */	stbx r11, r10, r9
-/* 80053F24 00050E64  81 4D 90 38 */	lwz r10, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F28 00050E68  81 2D 8F CC */	lwz r9, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F24 00050E64  81 4D 90 38 */	lwz r10, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F28 00050E68  81 2D 8F CC */	lwz r9, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F2C 00050E6C  39 4A 00 02 */	addi r10, r10, 2
 /* 80053F30 00050E70  7D 43 50 AE */	lbzx r10, r3, r10
 /* 80053F34 00050E74  7D 49 41 AE */	stbx r10, r9, r8
-/* 80053F38 00050E78  81 2D 90 38 */	lwz r9, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F3C 00050E7C  81 0D 8F CC */	lwz r8, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F38 00050E78  81 2D 90 38 */	lwz r9, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F3C 00050E7C  81 0D 8F CC */	lwz r8, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F40 00050E80  39 29 00 03 */	addi r9, r9, 3
 /* 80053F44 00050E84  7D 23 48 AE */	lbzx r9, r3, r9
 /* 80053F48 00050E88  7D 28 39 AE */	stbx r9, r8, r7
 /* 80053F4C 00050E8C  39 23 00 09 */	addi r9, r3, 9
-/* 80053F50 00050E90  81 0D 90 38 */	lwz r8, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F54 00050E94  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F50 00050E90  81 0D 90 38 */	lwz r8, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F54 00050E94  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F58 00050E98  39 08 00 04 */	addi r8, r8, 4
 /* 80053F5C 00050E9C  7D 03 40 AE */	lbzx r8, r3, r8
 /* 80053F60 00050EA0  7D 07 31 AE */	stbx r8, r7, r6
 /* 80053F64 00050EA4  39 03 00 0A */	addi r8, r3, 0xa
-/* 80053F68 00050EA8  80 ED 90 38 */	lwz r7, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F6C 00050EAC  80 CD 8F CC */	lwz r6, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F68 00050EA8  80 ED 90 38 */	lwz r7, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F6C 00050EAC  80 CD 8F CC */	lwz r6, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F70 00050EB0  38 E7 00 05 */	addi r7, r7, 5
 /* 80053F74 00050EB4  7C E3 38 AE */	lbzx r7, r3, r7
 /* 80053F78 00050EB8  7C E6 29 AE */	stbx r7, r6, r5
 /* 80053F7C 00050EBC  38 E3 00 0B */	addi r7, r3, 0xb
-/* 80053F80 00050EC0  80 CD 90 38 */	lwz r6, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F84 00050EC4  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F80 00050EC0  80 CD 90 38 */	lwz r6, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F84 00050EC4  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053F88 00050EC8  38 C6 00 06 */	addi r6, r6, 6
 /* 80053F8C 00050ECC  7C C3 30 AE */	lbzx r6, r3, r6
 /* 80053F90 00050ED0  7C C5 21 AE */	stbx r6, r5, r4
 /* 80053F94 00050ED4  38 C3 00 0C */	addi r6, r3, 0xc
-/* 80053F98 00050ED8  80 AD 90 38 */	lwz r5, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053F9C 00050EDC  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053F98 00050ED8  80 AD 90 38 */	lwz r5, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053F9C 00050EDC  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FA0 00050EE0  38 A5 00 07 */	addi r5, r5, 7
 /* 80053FA4 00050EE4  7C A3 28 AE */	lbzx r5, r3, r5
 /* 80053FA8 00050EE8  7C A4 01 AE */	stbx r5, r4, r0
 /* 80053FAC 00050EEC  38 A3 00 0D */	addi r5, r3, 0xd
 /* 80053FB0 00050EF0  38 63 00 08 */	addi r3, r3, 8
-/* 80053FB4 00050EF4  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053FB4 00050EF4  80 0D 90 38 */	lwz r0, Head__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FB8 00050EF8  38 83 00 06 */	addi r4, r3, 6
-/* 80053FBC 00050EFC  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053FBC 00050EFC  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FC0 00050F00  7C 03 00 AE */	lbzx r0, r3, r0
 /* 80053FC4 00050F04  7C 0A 19 AE */	stbx r0, r10, r3
 /* 80053FC8 00050F08  38 03 00 07 */	addi r0, r3, 7
-/* 80053FCC 00050F0C  81 6D 90 38 */	lwz r11, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053FD0 00050F10  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053FCC 00050F0C  81 6D 90 38 */	lwz r11, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053FD0 00050F10  81 4D 8F CC */	lwz r10, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FD4 00050F14  39 6B 00 01 */	addi r11, r11, 1
 /* 80053FD8 00050F18  7D 63 58 AE */	lbzx r11, r3, r11
 /* 80053FDC 00050F1C  7D 6A 49 AE */	stbx r11, r10, r9
-/* 80053FE0 00050F20  81 4D 90 38 */	lwz r10, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053FE4 00050F24  81 2D 8F CC */	lwz r9, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053FE0 00050F20  81 4D 90 38 */	lwz r10, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053FE4 00050F24  81 2D 8F CC */	lwz r9, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FE8 00050F28  39 4A 00 02 */	addi r10, r10, 2
 /* 80053FEC 00050F2C  7D 43 50 AE */	lbzx r10, r3, r10
 /* 80053FF0 00050F30  7D 49 41 AE */	stbx r10, r9, r8
-/* 80053FF4 00050F34  81 2D 90 38 */	lwz r9, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80053FF8 00050F38  81 0D 8F CC */	lwz r8, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80053FF4 00050F34  81 2D 90 38 */	lwz r9, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80053FF8 00050F38  81 0D 8F CC */	lwz r8, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80053FFC 00050F3C  39 29 00 03 */	addi r9, r9, 3
 /* 80054000 00050F40  7D 23 48 AE */	lbzx r9, r3, r9
 /* 80054004 00050F44  7D 28 39 AE */	stbx r9, r8, r7
-/* 80054008 00050F48  81 0D 90 38 */	lwz r8, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 8005400C 00050F4C  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054008 00050F48  81 0D 90 38 */	lwz r8, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 8005400C 00050F4C  80 ED 8F CC */	lwz r7, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80054010 00050F50  39 08 00 04 */	addi r8, r8, 4
 /* 80054014 00050F54  7D 03 40 AE */	lbzx r8, r3, r8
 /* 80054018 00050F58  7D 07 31 AE */	stbx r8, r7, r6
-/* 8005401C 00050F5C  80 ED 90 38 */	lwz r7, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054020 00050F60  80 CD 8F CC */	lwz r6, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005401C 00050F5C  80 ED 90 38 */	lwz r7, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80054020 00050F60  80 CD 8F CC */	lwz r6, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80054024 00050F64  38 E7 00 05 */	addi r7, r7, 5
 /* 80054028 00050F68  7C E3 38 AE */	lbzx r7, r3, r7
 /* 8005402C 00050F6C  7C E6 29 AE */	stbx r7, r6, r5
-/* 80054030 00050F70  80 CD 90 38 */	lwz r6, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054034 00050F74  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054030 00050F70  80 CD 90 38 */	lwz r6, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80054034 00050F74  80 AD 8F CC */	lwz r5, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80054038 00050F78  38 C6 00 06 */	addi r6, r6, 6
 /* 8005403C 00050F7C  7C C3 30 AE */	lbzx r6, r3, r6
 /* 80054040 00050F80  7C C5 21 AE */	stbx r6, r5, r4
-/* 80054044 00050F84  80 AD 90 38 */	lwz r5, Head__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054048 00050F88  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054044 00050F84  80 AD 90 38 */	lwz r5, Head__Q27JAInter9StreamLib@sda21(r13)
+/* 80054048 00050F88  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 8005404C 00050F8C  38 A5 00 07 */	addi r5, r5, 7
 /* 80054050 00050F90  7C A3 28 AE */	lbzx r5, r3, r5
 /* 80054054 00050F94  38 63 00 08 */	addi r3, r3, 8
@@ -1439,8 +1439,8 @@ lbl_80053EE4:
 /* 8005405C 00050F9C  42 00 FE 88 */	bdnz lbl_80053EE4
 lbl_80054060:
 /* 80054060 00050FA0  38 00 00 20 */	li r0, 0x20
-/* 80054064 00050FA4  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054068 00050FA8  90 0D 8F C4 */	stw r0, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054064 00050FA4  80 8D 8F CC */	lwz r4, adpcm_buffer__Q27JAInter9StreamLib@sda21(r13)
+/* 80054068 00050FA8  90 0D 8F C4 */	stw r0, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
 /* 8005406C 00050FAC  80 64 00 00 */	lwz r3, 0(r4)
 /* 80054070 00050FB0  80 04 00 04 */	lwz r0, 4(r4)
 /* 80054074 00050FB4  90 7F 00 3C */	stw r3, 0x3c(r31)
@@ -1458,40 +1458,40 @@ lbl_80054060:
 /* 800540A4 00050FE4  90 7F 00 54 */	stw r3, 0x54(r31)
 /* 800540A8 00050FE8  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 800540AC 00050FEC  80 7F 00 3C */	lwz r3, 0x3c(r31)
-/* 800540B0 00050FF0  80 0D 90 20 */	lwz r0, playmode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540B4 00050FF4  90 6D 8F C0 */	stw r3, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800540B0 00050FF0  80 0D 90 20 */	lwz r0, playmode__Q27JAInter9StreamLib@sda21(r13)
+/* 800540B4 00050FF4  90 6D 8F C0 */	stw r3, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 800540B8 00050FF8  28 00 00 00 */	cmplwi r0, 0
 /* 800540BC 00050FFC  80 1F 00 40 */	lwz r0, 0x40(r31)
-/* 800540C0 00051000  90 0D 8F E4 */	stw r0, playback_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800540C0 00051000  90 0D 8F E4 */	stw r0, playback_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 800540C4 00051004  41 82 00 0C */	beq lbl_800540D0
 /* 800540C8 00051008  38 00 00 00 */	li r0, 0
 /* 800540CC 0005100C  90 1F 00 4C */	stw r0, 0x4c(r31)
 lbl_800540D0:
-/* 800540D0 00051010  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800540D0 00051010  80 0D 80 E0 */	lwz r0, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 800540D4 00051014  3B C0 00 00 */	li r30, 0
-/* 800540D8 00051018  C0 22 85 1C */	lfs f1, $$2426-_SDA2_BASE_(r2)
+/* 800540D8 00051018  C0 22 85 1C */	lfs f1, $$2426@sda21(r2)
 /* 800540DC 0005101C  1C 00 14 00 */	mulli r0, r0, 0x1400
-/* 800540E0 00051020  C0 02 85 20 */	lfs f0, $$2504-_SDA2_BASE_(r2)
-/* 800540E4 00051024  9B CD 8F F4 */	stb r30, stopflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540E8 00051028  9B CD 8F F5 */	stb r30, stopflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540EC 0005102C  9B CD 8F F7 */	stb r30, playflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540F0 00051030  9B CD 8F F8 */	stb r30, prepareflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540F4 00051034  D0 2D 8F FC */	stfs f1, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540F8 00051038  D0 2D 90 00 */	stfs f1, outpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800540FC 0005103C  D0 0D 90 04 */	stfs f0, outpan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054100 00051040  93 CD 8F E8 */	stw r30, loadup_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054104 00051044  93 CD 8F F0 */	stw r30, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054108 00051048  93 CD 90 18 */	stw r30, loop_start_flag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 8005410C 0005104C  93 CD 8F EC */	stw r30, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054110 00051050  93 CD 8F E0 */	stw r30, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054114 00051054  93 CD 90 24 */	stw r30, shift_sample__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054118 00051058  90 0D 80 E4 */	stw r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800540E0 00051020  C0 02 85 20 */	lfs f0, $$2504@sda21(r2)
+/* 800540E4 00051024  9B CD 8F F4 */	stb r30, stopflag__Q27JAInter9StreamLib@sda21(r13)
+/* 800540E8 00051028  9B CD 8F F5 */	stb r30, stopflag2__Q27JAInter9StreamLib@sda21(r13)
+/* 800540EC 0005102C  9B CD 8F F7 */	stb r30, playflag2__Q27JAInter9StreamLib@sda21(r13)
+/* 800540F0 00051030  9B CD 8F F8 */	stb r30, prepareflag__Q27JAInter9StreamLib@sda21(r13)
+/* 800540F4 00051034  D0 2D 8F FC */	stfs f1, outvolume__Q27JAInter9StreamLib@sda21(r13)
+/* 800540F8 00051038  D0 2D 90 00 */	stfs f1, outpitch__Q27JAInter9StreamLib@sda21(r13)
+/* 800540FC 0005103C  D0 0D 90 04 */	stfs f0, outpan__Q27JAInter9StreamLib@sda21(r13)
+/* 80054100 00051040  93 CD 8F E8 */	stw r30, loadup_samples__Q27JAInter9StreamLib@sda21(r13)
+/* 80054104 00051044  93 CD 8F F0 */	stw r30, movieframe__Q27JAInter9StreamLib@sda21(r13)
+/* 80054108 00051048  93 CD 90 18 */	stw r30, loop_start_flag__Q27JAInter9StreamLib@sda21(r13)
+/* 8005410C 0005104C  93 CD 8F EC */	stw r30, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
+/* 80054110 00051050  93 CD 8F E0 */	stw r30, playside__Q27JAInter9StreamLib@sda21(r13)
+/* 80054114 00051054  93 CD 90 24 */	stw r30, shift_sample__Q27JAInter9StreamLib@sda21(r13)
+/* 80054118 00051058  90 0D 80 E4 */	stw r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib@sda21(r13)
 /* 8005411C 0005105C  48 00 E2 5D */	bl pauseDvdT__Q28JASystem3DvdFv
 /* 80054120 00051060  4B FF FB 15 */	bl LoadADPCM__Q27JAInter9StreamLibFv
 /* 80054124 00051064  3B 80 00 00 */	li r28, 0
 /* 80054128 00051068  3B FE 00 00 */	addi r31, r30, 0
 lbl_8005412C:
-/* 8005412C 0005106C  3B AD 8F D8 */	addi r29, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 8005412C 0005106C  3B AD 8F D8 */	addi r29, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 80054130 00051070  7F BD FA 14 */	add r29, r29, r31
 /* 80054134 00051074  80 7D 00 00 */	lwz r3, 0(r29)
 /* 80054138 00051078  28 03 00 00 */	cmplwi r3, 0
@@ -1508,7 +1508,7 @@ lbl_80054154:
 /* 80054160 000510A0  3B FF 00 04 */	addi r31, r31, 4
 /* 80054164 000510A4  41 80 FF C8 */	blt lbl_8005412C
 /* 80054168 000510A8  38 00 00 01 */	li r0, 1
-/* 8005416C 000510AC  98 0D 8F F9 */	stb r0, dspch_deallockflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005416C 000510AC  98 0D 8F F9 */	stb r0, dspch_deallockflag__Q27JAInter9StreamLib@sda21(r13)
 /* 80054170 000510B0  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80054174 000510B4  83 E1 00 24 */	lwz r31, 0x24(r1)
 /* 80054178 000510B8  83 C1 00 20 */	lwz r30, 0x20(r1)
@@ -1529,10 +1529,10 @@ callBack__Q27JAInter9StreamLibFPv:
 /* 800541A8 000510E8  BE C1 00 78 */	stmw r22, 0x78(r1)
 /* 800541AC 000510EC  3B E3 62 30 */	addi r31, r3, finfo__Q27JAInter9StreamLib@l
 /* 800541B0 000510F0  3B A0 00 00 */	li r29, 0
-/* 800541B4 000510F4  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541B4 000510F4  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 800541B8 000510F8  28 00 00 00 */	cmplwi r0, 0
 /* 800541BC 000510FC  41 82 00 1C */	beq lbl_800541D8
-/* 800541C0 00051100  80 0D 90 2C */	lwz r0, DvdLoadFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541C0 00051100  80 0D 90 2C */	lwz r0, DvdLoadFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 800541C4 00051104  2C 00 00 00 */	cmpwi r0, 0
 /* 800541C8 00051108  41 82 00 0C */	beq lbl_800541D4
 /* 800541CC 0005110C  38 60 00 00 */	li r3, 0
@@ -1540,47 +1540,47 @@ callBack__Q27JAInter9StreamLibFPv:
 lbl_800541D4:
 /* 800541D4 00051114  4B FF FC 71 */	bl __start__Q27JAInter9StreamLibFv
 lbl_800541D8:
-/* 800541D8 00051118  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541D8 00051118  80 0D 90 30 */	lwz r0, startInitFlag__Q27JAInter9StreamLib@sda21(r13)
 /* 800541DC 0005111C  28 00 00 00 */	cmplwi r0, 0
 /* 800541E0 00051120  40 82 00 58 */	bne lbl_80054238
-/* 800541E4 00051124  88 0D 90 14 */	lbz r0, outflag_volume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541E4 00051124  88 0D 90 14 */	lbz r0, outflag_volume__Q27JAInter9StreamLib@sda21(r13)
 /* 800541E8 00051128  28 00 00 00 */	cmplwi r0, 0
 /* 800541EC 0005112C  41 82 00 14 */	beq lbl_80054200
-/* 800541F0 00051130  C0 0D 90 08 */	lfs f0, stackvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541F0 00051130  C0 0D 90 08 */	lfs f0, stackvolume__Q27JAInter9StreamLib@sda21(r13)
 /* 800541F4 00051134  38 00 00 00 */	li r0, 0
-/* 800541F8 00051138  98 0D 90 14 */	stb r0, outflag_volume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800541FC 0005113C  D0 0D 8F FC */	stfs f0, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800541F8 00051138  98 0D 90 14 */	stb r0, outflag_volume__Q27JAInter9StreamLib@sda21(r13)
+/* 800541FC 0005113C  D0 0D 8F FC */	stfs f0, outvolume__Q27JAInter9StreamLib@sda21(r13)
 lbl_80054200:
-/* 80054200 00051140  88 0D 90 16 */	lbz r0, outflag_pitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054200 00051140  88 0D 90 16 */	lbz r0, outflag_pitch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054204 00051144  28 00 00 00 */	cmplwi r0, 0
 /* 80054208 00051148  41 82 00 14 */	beq lbl_8005421C
-/* 8005420C 0005114C  C0 0D 90 0C */	lfs f0, stackpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005420C 0005114C  C0 0D 90 0C */	lfs f0, stackpitch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054210 00051150  38 00 00 00 */	li r0, 0
-/* 80054214 00051154  98 0D 90 16 */	stb r0, outflag_pitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054218 00051158  D0 0D 90 00 */	stfs f0, outpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054214 00051154  98 0D 90 16 */	stb r0, outflag_pitch__Q27JAInter9StreamLib@sda21(r13)
+/* 80054218 00051158  D0 0D 90 00 */	stfs f0, outpitch__Q27JAInter9StreamLib@sda21(r13)
 lbl_8005421C:
-/* 8005421C 0005115C  88 0D 90 15 */	lbz r0, outflag_pan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005421C 0005115C  88 0D 90 15 */	lbz r0, outflag_pan__Q27JAInter9StreamLib@sda21(r13)
 /* 80054220 00051160  28 00 00 00 */	cmplwi r0, 0
 /* 80054224 00051164  41 82 00 14 */	beq lbl_80054238
-/* 80054228 00051168  C0 0D 90 10 */	lfs f0, stackpan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054228 00051168  C0 0D 90 10 */	lfs f0, stackpan__Q27JAInter9StreamLib@sda21(r13)
 /* 8005422C 0005116C  38 00 00 00 */	li r0, 0
-/* 80054230 00051170  98 0D 90 15 */	stb r0, outflag_pan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054234 00051174  D0 0D 90 04 */	stfs f0, outpan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054230 00051170  98 0D 90 15 */	stb r0, outflag_pan__Q27JAInter9StreamLib@sda21(r13)
+/* 80054234 00051174  D0 0D 90 04 */	stfs f0, outpan__Q27JAInter9StreamLib@sda21(r13)
 lbl_80054238:
-/* 80054238 00051178  80 0D 8F D8 */	lwz r0, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054238 00051178  80 0D 8F D8 */	lwz r0, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 8005423C 0005117C  28 00 00 00 */	cmplwi r0, 0
 /* 80054240 00051180  40 82 00 54 */	bne lbl_80054294
 /* 80054244 00051184  38 60 00 00 */	li r3, 0
-/* 80054248 00051188  38 8D 8F D8 */	addi r4, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 80054248 00051188  38 8D 8F D8 */	addi r4, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 8005424C 0005118C  48 00 AF 39 */	bl alloc__Q28JASystem11TDSPChannelFUlUl
-/* 80054250 00051190  3B 0D 8F D8 */	addi r24, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
-/* 80054254 00051194  90 6D 8F D8 */	stw r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054250 00051190  3B 0D 8F D8 */	addi r24, r13, assign_ch__Q27JAInter9StreamLib@sda21
+/* 80054254 00051194  90 6D 8F D8 */	stw r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054258 00051198  3B 18 00 04 */	addi r24, r24, 4
 /* 8005425C 0005119C  38 98 00 00 */	addi r4, r24, 0
 /* 80054260 000511A0  38 60 00 00 */	li r3, 0
 /* 80054264 000511A4  48 00 AF 21 */	bl alloc__Q28JASystem11TDSPChannelFUlUl
 /* 80054268 000511A8  90 78 00 00 */	stw r3, 0(r24)
-/* 8005426C 000511AC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005426C 000511AC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054270 000511B0  28 03 00 00 */	cmplwi r3, 0
 /* 80054274 000511B4  41 82 00 20 */	beq lbl_80054294
 /* 80054278 000511B8  80 18 00 00 */	lwz r0, 0(r24)
@@ -1591,37 +1591,37 @@ lbl_80054238:
 /* 8005428C 000511CC  80 78 00 00 */	lwz r3, 0(r24)
 /* 80054290 000511D0  98 03 00 03 */	stb r0, 3(r3)
 lbl_80054294:
-/* 80054294 000511D4  80 0D 8F D8 */	lwz r0, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054294 000511D4  80 0D 8F D8 */	lwz r0, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054298 000511D8  28 00 00 00 */	cmplwi r0, 0
 /* 8005429C 000511DC  41 82 00 14 */	beq lbl_800542B0
-/* 800542A0 000511E0  3B CD 8F D8 */	addi r30, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 800542A0 000511E0  3B CD 8F D8 */	addi r30, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 800542A4 000511E4  84 1E 00 04 */	lwzu r0, 4(r30)
 /* 800542A8 000511E8  28 00 00 00 */	cmplwi r0, 0
 /* 800542AC 000511EC  40 82 00 3C */	bne lbl_800542E8
 lbl_800542B0:
-/* 800542B0 000511F0  88 0D 90 44 */	lbz r0, init$613-_SDA_BASE_(r13)
+/* 800542B0 000511F0  88 0D 90 44 */	lbz r0, init$613@sda21(r13)
 /* 800542B4 000511F4  7C 00 07 75 */	extsb. r0, r0
 /* 800542B8 000511F8  40 82 00 0C */	bne lbl_800542C4
 /* 800542BC 000511FC  38 00 00 01 */	li r0, 1
-/* 800542C0 00051200  98 0D 90 44 */	stb r0, init$613-_SDA_BASE_(r13)
+/* 800542C0 00051200  98 0D 90 44 */	stb r0, init$613@sda21(r13)
 lbl_800542C4:
 /* 800542C4 00051204  38 00 FF FF */	li r0, -1
 /* 800542C8 00051208  38 60 00 00 */	li r3, 0
-/* 800542CC 0005120C  90 0D 90 40 */	stw r0, before$612-_SDA_BASE_(r13)
+/* 800542CC 0005120C  90 0D 90 40 */	stw r0, before$612@sda21(r13)
 /* 800542D0 00051210  38 00 00 02 */	li r0, 2
-/* 800542D4 00051214  98 6D 8F F6 */	stb r3, playflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800542D8 00051218  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800542D4 00051214  98 6D 8F F6 */	stb r3, playflag__Q27JAInter9StreamLib@sda21(r13)
+/* 800542D8 00051218  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 800542DC 0005121C  48 00 E0 A9 */	bl unpauseDvdT__Q28JASystem3DvdFv
 /* 800542E0 00051220  38 60 FF FF */	li r3, -1
 /* 800542E4 00051224  48 00 07 64 */	b lbl_80054A48
 lbl_800542E8:
-/* 800542E8 00051228  88 0D 90 54 */	lbz r0, init$824-_SDA_BASE_(r13)
+/* 800542E8 00051228  88 0D 90 54 */	lbz r0, init$824@sda21(r13)
 /* 800542EC 0005122C  7C 00 07 75 */	extsb. r0, r0
 /* 800542F0 00051230  40 82 00 14 */	bne lbl_80054304
 /* 800542F4 00051234  38 60 00 00 */	li r3, 0
 /* 800542F8 00051238  38 00 00 01 */	li r0, 1
-/* 800542FC 0005123C  90 6D 90 50 */	stw r3, oldstat$823-_SDA_BASE_(r13)
-/* 80054300 00051240  98 0D 90 54 */	stb r0, init$824-_SDA_BASE_(r13)
+/* 800542FC 0005123C  90 6D 90 50 */	stw r3, oldstat$823@sda21(r13)
+/* 80054300 00051240  98 0D 90 54 */	stb r0, init$824@sda21(r13)
 lbl_80054304:
 /* 80054304 00051244  48 04 47 61 */	bl DVDGetDriveStatus
 /* 80054308 00051248  2C 03 00 05 */	cmpwi r3, 5
@@ -1631,7 +1631,7 @@ lbl_80054304:
 /* 80054318 00051258  41 82 00 5C */	beq lbl_80054374
 /* 8005431C 0005125C  48 00 00 B8 */	b lbl_800543D4
 lbl_80054320:
-/* 80054320 00051260  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054320 00051260  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054324 00051264  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054328 00051268  48 00 B4 C5 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 8005432C 0005126C  38 80 00 01 */	li r4, 1
@@ -1642,8 +1642,8 @@ lbl_80054320:
 /* 80054340 00051280  38 80 00 01 */	li r4, 1
 /* 80054344 00051284  48 00 BA 25 */	bl setPauseFlag__Q38JASystem12DSPInterface9DSPBufferFUc
 /* 80054348 00051288  38 00 00 01 */	li r0, 1
-/* 8005434C 0005128C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054350 00051290  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005434C 0005128C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
+/* 80054350 00051290  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib@sda21(r13)
 /* 80054354 00051294  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054358 00051298  48 00 B4 95 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 8005435C 0005129C  48 00 BA 19 */	bl flushChannel__Q38JASystem12DSPInterface9DSPBufferFv
@@ -1654,10 +1654,10 @@ lbl_80054320:
 /* 80054370 000512B0  48 00 00 64 */	b lbl_800543D4
 lbl_80054374:
 /* 80054374 000512B4  48 04 46 F1 */	bl DVDGetDriveStatus
-/* 80054378 000512B8  80 0D 90 50 */	lwz r0, oldstat$823-_SDA_BASE_(r13)
+/* 80054378 000512B8  80 0D 90 50 */	lwz r0, oldstat$823@sda21(r13)
 /* 8005437C 000512BC  7C 00 18 00 */	cmpw r0, r3
 /* 80054380 000512C0  41 82 00 54 */	beq lbl_800543D4
-/* 80054384 000512C4  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054384 000512C4  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054388 000512C8  88 63 00 00 */	lbz r3, 0(r3)
 /* 8005438C 000512CC  48 00 B4 61 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 80054390 000512D0  38 80 00 00 */	li r4, 0
@@ -1667,7 +1667,7 @@ lbl_80054374:
 /* 800543A0 000512E0  48 00 B4 4D */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 800543A4 000512E4  38 80 00 00 */	li r4, 0
 /* 800543A8 000512E8  48 00 B9 C1 */	bl setPauseFlag__Q38JASystem12DSPInterface9DSPBufferFUc
-/* 800543AC 000512EC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800543AC 000512EC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 800543B0 000512F0  88 63 00 00 */	lbz r3, 0(r3)
 /* 800543B4 000512F4  48 00 B4 39 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 800543B8 000512F8  48 00 B9 BD */	bl flushChannel__Q38JASystem12DSPInterface9DSPBufferFv
@@ -1676,46 +1676,46 @@ lbl_80054374:
 /* 800543C4 00051304  48 00 B4 29 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 800543C8 00051308  48 00 B9 AD */	bl flushChannel__Q38JASystem12DSPInterface9DSPBufferFv
 /* 800543CC 0005130C  38 00 00 00 */	li r0, 0
-/* 800543D0 00051310  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800543D0 00051310  90 0D 90 1C */	stw r0, outpause__Q27JAInter9StreamLib@sda21(r13)
 lbl_800543D4:
 /* 800543D4 00051314  48 04 46 91 */	bl DVDGetDriveStatus
-/* 800543D8 00051318  80 0D 90 1C */	lwz r0, outpause__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800543DC 0005131C  90 6D 90 50 */	stw r3, oldstat$823-_SDA_BASE_(r13)
+/* 800543D8 00051318  80 0D 90 1C */	lwz r0, outpause__Q27JAInter9StreamLib@sda21(r13)
+/* 800543DC 0005131C  90 6D 90 50 */	stw r3, oldstat$823@sda21(r13)
 /* 800543E0 00051320  28 00 00 00 */	cmplwi r0, 0
 /* 800543E4 00051324  41 82 00 0C */	beq lbl_800543F0
 /* 800543E8 00051328  38 60 00 00 */	li r3, 0
 /* 800543EC 0005132C  48 00 06 5C */	b lbl_80054A48
 lbl_800543F0:
-/* 800543F0 00051330  80 0D 8F F0 */	lwz r0, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800543F0 00051330  80 0D 8F F0 */	lwz r0, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 800543F4 00051334  28 00 00 00 */	cmplwi r0, 0
 /* 800543F8 00051338  41 82 01 38 */	beq lbl_80054530
-/* 800543FC 0005133C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800543FC 0005133C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054400 00051340  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054404 00051344  48 00 B3 E9 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 80054408 00051348  A0 03 00 02 */	lhz r0, 2(r3)
 /* 8005440C 0005134C  28 00 00 00 */	cmplwi r0, 0
 /* 80054410 00051350  41 82 00 68 */	beq lbl_80054478
-/* 80054414 00051354  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054414 00051354  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80054418 00051358  28 00 00 02 */	cmplwi r0, 2
 /* 8005441C 0005135C  41 82 00 54 */	beq lbl_80054470
-/* 80054420 00051360  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054424 00051364  38 8D 8F D8 */	addi r4, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 80054420 00051360  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
+/* 80054424 00051364  38 8D 8F D8 */	addi r4, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 80054428 00051368  48 00 AE 5D */	bl free__Q28JASystem11TDSPChannelFPQ28JASystem11TDSPChannelUl
 /* 8005442C 0005136C  80 7E 00 00 */	lwz r3, 0(r30)
 /* 80054430 00051370  7F C4 F3 78 */	mr r4, r30
 /* 80054434 00051374  48 00 AE 51 */	bl free__Q28JASystem11TDSPChannelFPQ28JASystem11TDSPChannelUl
-/* 80054438 00051378  88 0D 90 44 */	lbz r0, init$613-_SDA_BASE_(r13)
+/* 80054438 00051378  88 0D 90 44 */	lbz r0, init$613@sda21(r13)
 /* 8005443C 0005137C  7C 00 07 75 */	extsb. r0, r0
 /* 80054440 00051380  40 82 00 0C */	bne lbl_8005444C
 /* 80054444 00051384  38 00 00 01 */	li r0, 1
-/* 80054448 00051388  98 0D 90 44 */	stb r0, init$613-_SDA_BASE_(r13)
+/* 80054448 00051388  98 0D 90 44 */	stb r0, init$613@sda21(r13)
 lbl_8005444C:
 /* 8005444C 0005138C  38 00 FF FF */	li r0, -1
 /* 80054450 00051390  38 60 00 00 */	li r3, 0
-/* 80054454 00051394  90 0D 90 40 */	stw r0, before$612-_SDA_BASE_(r13)
+/* 80054454 00051394  90 0D 90 40 */	stw r0, before$612@sda21(r13)
 /* 80054458 00051398  38 00 00 02 */	li r0, 2
-/* 8005445C 0005139C  98 6D 8F F6 */	stb r3, playflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054460 000513A0  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005445C 0005139C  98 6D 8F F6 */	stb r3, playflag__Q27JAInter9StreamLib@sda21(r13)
+/* 80054460 000513A0  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80054464 000513A4  48 00 DF 21 */	bl unpauseDvdT__Q28JASystem3DvdFv
 /* 80054468 000513A8  38 60 FF FF */	li r3, -1
 /* 8005446C 000513AC  48 00 05 DC */	b lbl_80054A48
@@ -1724,27 +1724,27 @@ lbl_80054470:
 /* 80054474 000513B4  48 00 05 D4 */	b lbl_80054A48
 lbl_80054478:
 /* 80054478 000513B8  80 A3 00 74 */	lwz r5, 0x74(r3)
-/* 8005447C 000513BC  80 0D 8F E4 */	lwz r0, playback_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005447C 000513BC  80 0D 8F E4 */	lwz r0, playback_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 80054480 000513C0  A0 9F 00 4A */	lhz r4, 0x4a(r31)
 /* 80054484 000513C4  7C A5 00 50 */	subf r5, r5, r0
-/* 80054488 000513C8  88 0D 90 44 */	lbz r0, init$613-_SDA_BASE_(r13)
+/* 80054488 000513C8  88 0D 90 44 */	lbz r0, init$613@sda21(r13)
 /* 8005448C 000513CC  7C A5 21 D6 */	mullw r5, r5, r4
 /* 80054490 000513D0  A0 9F 00 44 */	lhz r4, 0x44(r31)
 /* 80054494 000513D4  7C C5 23 96 */	divwu r6, r5, r4
 /* 80054498 000513D8  7C 00 07 75 */	extsb. r0, r0
 /* 8005449C 000513DC  40 82 00 0C */	bne lbl_800544A8
 /* 800544A0 000513E0  38 00 00 01 */	li r0, 1
-/* 800544A4 000513E4  98 0D 90 44 */	stb r0, init$613-_SDA_BASE_(r13)
+/* 800544A4 000513E4  98 0D 90 44 */	stb r0, init$613@sda21(r13)
 lbl_800544A8:
-/* 800544A8 000513E8  80 AD 8F F0 */	lwz r5, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800544A8 000513E8  80 AD 8F F0 */	lwz r5, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 800544AC 000513EC  3C 80 CC CD */	lis r4, 0xCCCCCCCD@ha
-/* 800544B0 000513F0  88 0D 90 5C */	lbz r0, init$840-_SDA_BASE_(r13)
+/* 800544B0 000513F0  88 0D 90 5C */	lbz r0, init$840@sda21(r13)
 /* 800544B4 000513F4  38 84 CC CD */	addi r4, r4, 0xCCCCCCCD@l
 /* 800544B8 000513F8  38 A5 00 01 */	addi r5, r5, 1
-/* 800544BC 000513FC  90 CD 90 40 */	stw r6, before$612-_SDA_BASE_(r13)
+/* 800544BC 000513FC  90 CD 90 40 */	stw r6, before$612@sda21(r13)
 /* 800544C0 00051400  7C 00 07 75 */	extsb. r0, r0
-/* 800544C4 00051404  80 0D 80 E4 */	lwz r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800544C8 00051408  90 AD 8F F0 */	stw r5, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800544C4 00051404  80 0D 80 E4 */	lwz r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib@sda21(r13)
+/* 800544C8 00051408  90 AD 8F F0 */	stw r5, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 800544CC 0005140C  80 63 00 6C */	lwz r3, 0x6c(r3)
 /* 800544D0 00051410  54 63 84 3E */	srwi r3, r3, 0x10
 /* 800544D4 00051414  7C 03 00 50 */	subf r0, r3, r0
@@ -1753,16 +1753,16 @@ lbl_800544A8:
 /* 800544E0 00051420  40 82 00 14 */	bne lbl_800544F4
 /* 800544E4 00051424  38 60 00 00 */	li r3, 0
 /* 800544E8 00051428  38 00 00 01 */	li r0, 1
-/* 800544EC 0005142C  90 6D 90 58 */	stw r3, old_dspside$839-_SDA_BASE_(r13)
-/* 800544F0 00051430  98 0D 90 5C */	stb r0, init$840-_SDA_BASE_(r13)
+/* 800544EC 0005142C  90 6D 90 58 */	stw r3, old_dspside$839@sda21(r13)
+/* 800544F0 00051430  98 0D 90 5C */	stb r0, init$840@sda21(r13)
 lbl_800544F4:
-/* 800544F4 00051434  80 0D 90 58 */	lwz r0, old_dspside$839-_SDA_BASE_(r13)
+/* 800544F4 00051434  80 0D 90 58 */	lwz r0, old_dspside$839@sda21(r13)
 /* 800544F8 00051438  7C 00 28 40 */	cmplw r0, r5
 /* 800544FC 0005143C  41 82 00 08 */	beq lbl_80054504
-/* 80054500 00051440  90 AD 90 58 */	stw r5, old_dspside$839-_SDA_BASE_(r13)
+/* 80054500 00051440  90 AD 90 58 */	stw r5, old_dspside$839@sda21(r13)
 lbl_80054504:
-/* 80054504 00051444  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054508 00051448  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054504 00051444  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib@sda21(r13)
+/* 80054508 00051448  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
 /* 8005450C 0005144C  38 84 00 01 */	addi r4, r4, 1
 /* 80054510 00051450  7C 04 1B 96 */	divwu r0, r4, r3
 /* 80054514 00051454  7C 00 19 D6 */	mullw r0, r0, r3
@@ -1776,11 +1776,11 @@ lbl_8005452C:
 lbl_80054530:
 /* 80054530 00051470  2C 1C 00 01 */	cmpwi r28, 1
 /* 80054534 00051474  41 82 00 10 */	beq lbl_80054544
-/* 80054538 00051478  80 0D 8F F0 */	lwz r0, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054538 00051478  80 0D 8F F0 */	lwz r0, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 8005453C 0005147C  28 00 00 00 */	cmplwi r0, 0
 /* 80054540 00051480  40 82 01 D4 */	bne lbl_80054714
 lbl_80054544:
-/* 80054544 00051484  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054544 00051484  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80054548 00051488  28 00 00 02 */	cmplwi r0, 2
 /* 8005454C 0005148C  41 82 00 0C */	beq lbl_80054558
 /* 80054550 00051490  28 00 00 04 */	cmplwi r0, 4
@@ -1806,59 +1806,59 @@ lbl_80054590:
 /* 80054590 000514D0  4B FF F1 B1 */	bl __DecodeADPCM__Q27JAInter9StreamLibFv
 lbl_80054594:
 /* 80054594 000514D4  38 00 00 00 */	li r0, 0
-/* 80054598 000514D8  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054598 000514D8  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 lbl_8005459C:
-/* 8005459C 000514DC  80 AD 8F F0 */	lwz r5, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005459C 000514DC  80 AD 8F F0 */	lwz r5, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 800545A0 000514E0  28 05 00 00 */	cmplwi r5, 0
 /* 800545A4 000514E4  40 82 01 70 */	bne lbl_80054714
-/* 800545A8 000514E8  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800545AC 000514EC  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545A8 000514E8  80 6D 80 E0 */	lwz r3, LOOP_BLOCKS__Q27JAInter9StreamLib@sda21(r13)
+/* 800545AC 000514EC  80 8D 8F E0 */	lwz r4, playside__Q27JAInter9StreamLib@sda21(r13)
 /* 800545B0 000514F0  38 03 FF FE */	addi r0, r3, -2
 /* 800545B4 000514F4  7C 04 00 40 */	cmplw r4, r0
 /* 800545B8 000514F8  40 82 01 5C */	bne lbl_80054714
-/* 800545BC 000514FC  88 0D 8F F8 */	lbz r0, prepareflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545BC 000514FC  88 0D 8F F8 */	lbz r0, prepareflag__Q27JAInter9StreamLib@sda21(r13)
 /* 800545C0 00051500  28 00 00 00 */	cmplwi r0, 0
 /* 800545C4 00051504  41 82 00 1C */	beq lbl_800545E0
 /* 800545C8 00051508  38 60 00 02 */	li r3, 2
 /* 800545CC 0005150C  38 00 00 04 */	li r0, 4
-/* 800545D0 00051510  98 6D 8F F8 */	stb r3, prepareflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545D0 00051510  98 6D 8F F8 */	stb r3, prepareflag__Q27JAInter9StreamLib@sda21(r13)
 /* 800545D4 00051514  38 60 00 00 */	li r3, 0
-/* 800545D8 00051518  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545D8 00051518  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 800545DC 0005151C  48 00 04 6C */	b lbl_80054A48
 lbl_800545E0:
 /* 800545E0 00051520  38 05 00 01 */	addi r0, r5, 1
 /* 800545E4 00051524  38 80 00 02 */	li r4, 2
-/* 800545E8 00051528  90 0D 8F F0 */	stw r0, movieframe__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545E8 00051528  90 0D 8F F0 */	stw r0, movieframe__Q27JAInter9StreamLib@sda21(r13)
 /* 800545EC 0005152C  38 00 00 01 */	li r0, 1
 /* 800545F0 00051530  3C 60 10 62 */	lis r3, 0x10624DD3@ha
-/* 800545F4 00051534  98 8D 8F F8 */	stb r4, prepareflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545F4 00051534  98 8D 8F F8 */	stb r4, prepareflag__Q27JAInter9StreamLib@sda21(r13)
 /* 800545F8 00051538  3B 83 4D D3 */	addi r28, r3, 0x10624DD3@l
-/* 800545FC 0005153C  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800545FC 0005153C  98 0D 8F F7 */	stb r0, playflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80054600 00051540  3B 20 00 00 */	li r25, 0
 /* 80054604 00051544  3B 00 00 00 */	li r24, 0
 lbl_80054608:
-/* 80054608 00051548  3B 4D 8F D8 */	addi r26, r13, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_
+/* 80054608 00051548  3B 4D 8F D8 */	addi r26, r13, assign_ch__Q27JAInter9StreamLib@sda21
 /* 8005460C 0005154C  7F 5A C2 14 */	add r26, r26, r24
 /* 80054610 00051550  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80054614 00051554  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054618 00051558  48 00 B1 D5 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 8005461C 0005155C  A0 1F 00 44 */	lhz r0, 0x44(r31)
 /* 80054620 00051560  7C 7B 1B 78 */	mr r27, r3
-/* 80054624 00051564  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054624 00051564  80 6D 8F D0 */	lwz r3, loop_buffer__Q27JAInter9StreamLib@sda21(r13)
 /* 80054628 00051568  54 04 60 26 */	slwi r4, r0, 0xc
-/* 8005462C 0005156C  80 0D 80 E4 */	lwz r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005462C 0005156C  80 0D 80 E4 */	lwz r0, LOOP_SAMPLESIZE__Q27JAInter9StreamLib@sda21(r13)
 /* 80054630 00051570  7C BC 20 96 */	mulhw r5, r28, r4
 /* 80054634 00051574  7C 83 C0 2E */	lwzx r4, r3, r24
 /* 80054638 00051578  80 7A 00 00 */	lwz r3, 0(r26)
 /* 8005463C 0005157C  80 84 00 00 */	lwz r4, 0(r4)
-/* 80054640 00051580  80 CD 8F E4 */	lwz r6, playback_samples__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054640 00051580  80 CD 8F E4 */	lwz r6, playback_samples__Q27JAInter9StreamLib@sda21(r13)
 /* 80054644 00051584  7C A5 5E 70 */	srawi r5, r5, 0xb
 /* 80054648 00051588  54 A7 0F FE */	srwi r7, r5, 0x1f
 /* 8005464C 0005158C  7C A5 3A 14 */	add r5, r5, r7
 /* 80054650 00051590  54 BD 04 3E */	clrlwi r29, r5, 0x10
 /* 80054654 00051594  54 05 04 3E */	clrlwi r5, r0, 0x10
 /* 80054658 00051598  4B FF EC 59 */	bl Play_DirectPCM__Q27JAInter9StreamLibFPQ28JASystem11TDSPChannelPsUsUl
-/* 8005465C 0005159C  80 0D 80 E8 */	lwz r0, outputmode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005465C 0005159C  80 0D 80 E8 */	lwz r0, outputmode__Q27JAInter9StreamLib@sda21(r13)
 /* 80054660 000515A0  28 00 00 01 */	cmplwi r0, 1
 /* 80054664 000515A4  40 82 00 10 */	bne lbl_80054674
 /* 80054668 000515A8  3A E0 7F FF */	li r23, 0x7fff
@@ -1902,50 +1902,50 @@ lbl_800546E0:
 /* 800546F4 00051634  28 19 00 02 */	cmplwi r25, 2
 /* 800546F8 00051638  3B 18 00 04 */	addi r24, r24, 4
 /* 800546FC 0005163C  41 80 FF 0C */	blt lbl_80054608
-/* 80054700 00051640  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054700 00051640  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80054704 00051644  28 00 00 03 */	cmplwi r0, 3
 /* 80054708 00051648  41 82 00 0C */	beq lbl_80054714
 /* 8005470C 0005164C  38 00 00 00 */	li r0, 0
-/* 80054710 00051650  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054710 00051650  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 lbl_80054714:
-/* 80054714 00051654  88 0D 8F F4 */	lbz r0, stopflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054714 00051654  88 0D 8F F4 */	lbz r0, stopflag__Q27JAInter9StreamLib@sda21(r13)
 /* 80054718 00051658  28 00 00 00 */	cmplwi r0, 0
 /* 8005471C 0005165C  41 82 00 30 */	beq lbl_8005474C
-/* 80054720 00051660  88 0D 8F F5 */	lbz r0, stopflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054720 00051660  88 0D 8F F5 */	lbz r0, stopflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80054724 00051664  28 00 00 00 */	cmplwi r0, 0
 /* 80054728 00051668  41 82 00 24 */	beq lbl_8005474C
 /* 8005472C 0005166C  38 00 00 00 */	li r0, 0
-/* 80054730 00051670  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054734 00051674  98 0D 8F F5 */	stb r0, stopflag2__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054730 00051670  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
+/* 80054734 00051674  98 0D 8F F5 */	stb r0, stopflag2__Q27JAInter9StreamLib@sda21(r13)
 /* 80054738 00051678  48 00 A8 01 */	bl forceStop__Q28JASystem11TDSPChannelFv
 /* 8005473C 0005167C  80 7E 00 00 */	lwz r3, 0(r30)
 /* 80054740 00051680  48 00 A7 F9 */	bl forceStop__Q28JASystem11TDSPChannelFv
 /* 80054744 00051684  38 00 00 03 */	li r0, 3
-/* 80054748 00051688  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054748 00051688  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 lbl_8005474C:
 /* 8005474C 0005168C  57 A0 06 3F */	clrlwi. r0, r29, 0x18
 /* 80054750 00051690  40 82 02 6C */	bne lbl_800549BC
-/* 80054754 00051694  C3 C2 85 1C */	lfs f30, $$2426-_SDA2_BASE_(r2)
-/* 80054758 00051698  80 0D 80 E8 */	lwz r0, outputmode__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054754 00051694  C3 C2 85 1C */	lfs f30, $$2426@sda21(r2)
+/* 80054758 00051698  80 0D 80 E8 */	lwz r0, outputmode__Q27JAInter9StreamLib@sda21(r13)
 /* 8005475C 0005169C  FF E0 F0 90 */	fmr f31, f30
 /* 80054760 000516A0  28 00 00 01 */	cmplwi r0, 1
 /* 80054764 000516A4  40 82 00 78 */	bne lbl_800547DC
-/* 80054768 000516A8  C0 2D 90 04 */	lfs f1, outpan__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 8005476C 000516AC  C0 02 85 20 */	lfs f0, $$2504-_SDA2_BASE_(r2)
+/* 80054768 000516A8  C0 2D 90 04 */	lfs f1, outpan__Q27JAInter9StreamLib@sda21(r13)
+/* 8005476C 000516AC  C0 02 85 20 */	lfs f0, $$2504@sda21(r2)
 /* 80054770 000516B0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80054774 000516B4  40 80 00 14 */	bge lbl_80054788
 /* 80054778 000516B8  48 00 C6 9D */	bl sinfT__Q28JASystem4CalcFf
-/* 8005477C 000516BC  C0 02 85 24 */	lfs f0, $$2988-_SDA2_BASE_(r2)
+/* 8005477C 000516BC  C0 02 85 24 */	lfs f0, $$2988@sda21(r2)
 /* 80054780 000516C0  EF E0 00 72 */	fmuls f31, f0, f1
 /* 80054784 000516C4  48 00 00 18 */	b lbl_8005479C
 lbl_80054788:
 /* 80054788 000516C8  EC 3E 08 28 */	fsubs f1, f30, f1
 /* 8005478C 000516CC  48 00 C6 89 */	bl sinfT__Q28JASystem4CalcFf
-/* 80054790 000516D0  C0 02 85 24 */	lfs f0, $$2988-_SDA2_BASE_(r2)
-/* 80054794 000516D4  C3 E2 85 1C */	lfs f31, $$2426-_SDA2_BASE_(r2)
+/* 80054790 000516D0  C0 02 85 24 */	lfs f0, $$2988@sda21(r2)
+/* 80054794 000516D4  C3 E2 85 1C */	lfs f31, $$2426@sda21(r2)
 /* 80054798 000516D8  EF C0 00 72 */	fmuls f30, f0, f1
 lbl_8005479C:
-/* 8005479C 000516DC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005479C 000516DC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 800547A0 000516E0  3A C0 7F FF */	li r22, 0x7fff
 /* 800547A4 000516E4  88 63 00 00 */	lbz r3, 0(r3)
 /* 800547A8 000516E8  48 00 B0 45 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
@@ -1962,10 +1962,10 @@ lbl_8005479C:
 /* 800547D4 00051714  48 00 B5 49 */	bl setMixerVolume__Q38JASystem12DSPInterface9DSPBufferFUcsUc
 /* 800547D8 00051718  48 00 00 70 */	b lbl_80054848
 lbl_800547DC:
-/* 800547DC 0005171C  C0 22 85 28 */	lfs f1, $$2989-_SDA2_BASE_(r2)
+/* 800547DC 0005171C  C0 22 85 28 */	lfs f1, $$2989@sda21(r2)
 /* 800547E0 00051720  3A C0 5A 7E */	li r22, 0x5a7e
-/* 800547E4 00051724  C0 0D 8F FC */	lfs f0, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 800547E8 00051728  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800547E4 00051724  C0 0D 8F FC */	lfs f0, outvolume__Q27JAInter9StreamLib@sda21(r13)
+/* 800547E8 00051728  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 800547EC 0005172C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 800547F0 00051730  88 63 00 00 */	lbz r3, 0(r3)
 /* 800547F4 00051734  FC 00 00 1E */	fctiwz f0, f0
@@ -1976,8 +1976,8 @@ lbl_800547DC:
 /* 80054808 00051748  38 80 00 01 */	li r4, 1
 /* 8005480C 0005174C  38 C0 00 00 */	li r6, 0
 /* 80054810 00051750  48 00 B5 0D */	bl setMixerVolume__Q38JASystem12DSPInterface9DSPBufferFUcsUc
-/* 80054814 00051754  C0 22 85 28 */	lfs f1, $$2989-_SDA2_BASE_(r2)
-/* 80054818 00051758  C0 0D 8F FC */	lfs f0, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054814 00051754  C0 22 85 28 */	lfs f1, $$2989@sda21(r2)
+/* 80054818 00051758  C0 0D 8F FC */	lfs f0, outvolume__Q27JAInter9StreamLib@sda21(r13)
 /* 8005481C 0005175C  80 7E 00 00 */	lwz r3, 0(r30)
 /* 80054820 00051760  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80054824 00051764  88 63 00 00 */	lbz r3, 0(r3)
@@ -1991,12 +1991,12 @@ lbl_800547DC:
 /* 80054844 00051784  48 00 B4 D9 */	bl setMixerVolume__Q38JASystem12DSPInterface9DSPBufferFUcsUc
 lbl_80054848:
 /* 80054848 00051788  56 D8 04 3E */	clrlwi r24, r22, 0x10
-/* 8005484C 0005178C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005484C 0005178C  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054850 00051790  93 01 00 6C */	stw r24, 0x6c(r1)
 /* 80054854 00051794  3F 80 43 30 */	lis r28, 0x4330
-/* 80054858 00051798  C8 22 85 30 */	lfd f1, $$2992-_SDA2_BASE_(r2)
+/* 80054858 00051798  C8 22 85 30 */	lfd f1, $$2992@sda21(r2)
 /* 8005485C 0005179C  93 81 00 68 */	stw r28, 0x68(r1)
-/* 80054860 000517A0  C0 4D 8F FC */	lfs f2, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054860 000517A0  C0 4D 8F FC */	lfs f2, outvolume__Q27JAInter9StreamLib@sda21(r13)
 /* 80054864 000517A4  C8 01 00 68 */	lfd f0, 0x68(r1)
 /* 80054868 000517A8  88 63 00 00 */	lbz r3, 0(r3)
 /* 8005486C 000517AC  EC 00 08 28 */	fsubs f0, f0, f1
@@ -2013,9 +2013,9 @@ lbl_80054848:
 /* 80054898 000517D8  93 01 00 64 */	stw r24, 0x64(r1)
 /* 8005489C 000517DC  80 7E 00 00 */	lwz r3, 0(r30)
 /* 800548A0 000517E0  93 81 00 60 */	stw r28, 0x60(r1)
-/* 800548A4 000517E4  C8 22 85 30 */	lfd f1, $$2992-_SDA2_BASE_(r2)
+/* 800548A4 000517E4  C8 22 85 30 */	lfd f1, $$2992@sda21(r2)
 /* 800548A8 000517E8  C8 01 00 60 */	lfd f0, 0x60(r1)
-/* 800548AC 000517EC  C0 4D 8F FC */	lfs f2, outvolume__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800548AC 000517EC  C0 4D 8F FC */	lfs f2, outvolume__Q27JAInter9StreamLib@sda21(r13)
 /* 800548B0 000517F0  EC 00 08 28 */	fsubs f0, f0, f1
 /* 800548B4 000517F4  88 63 00 00 */	lbz r3, 0(r3)
 /* 800548B8 000517F8  EC 00 07 F2 */	fmuls f0, f0, f31
@@ -2030,12 +2030,12 @@ lbl_80054848:
 /* 800548DC 0005181C  48 00 B4 41 */	bl setMixerVolume__Q38JASystem12DSPInterface9DSPBufferFUcsUc
 /* 800548E0 00051820  A0 1F 00 44 */	lhz r0, 0x44(r31)
 /* 800548E4 00051824  3C 80 10 62 */	lis r4, 0x10624DD3@ha
-/* 800548E8 00051828  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800548E8 00051828  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 800548EC 0005182C  3B 04 4D D3 */	addi r24, r4, 0x10624DD3@l
 /* 800548F0 00051830  54 00 60 26 */	slwi r0, r0, 0xc
 /* 800548F4 00051834  7C 18 00 96 */	mulhw r0, r24, r0
-/* 800548F8 00051838  C8 22 85 38 */	lfd f1, $$2996-_SDA2_BASE_(r2)
-/* 800548FC 0005183C  C0 4D 90 00 */	lfs f2, outpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800548F8 00051838  C8 22 85 38 */	lfd f1, $$2996@sda21(r2)
+/* 800548FC 0005183C  C0 4D 90 00 */	lfs f2, outpitch__Q27JAInter9StreamLib@sda21(r13)
 /* 80054900 00051840  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054904 00051844  7C 00 5E 70 */	srawi r0, r0, 0xb
 /* 80054908 00051848  54 04 0F FE */	srwi r4, r0, 0x1f
@@ -2056,9 +2056,9 @@ lbl_80054848:
 /* 80054944 00051884  A0 1A 00 00 */	lhz r0, 0(r26)
 /* 80054948 00051888  80 7E 00 00 */	lwz r3, 0(r30)
 /* 8005494C 0005188C  54 00 60 26 */	slwi r0, r0, 0xc
-/* 80054950 00051890  C8 22 85 38 */	lfd f1, $$2996-_SDA2_BASE_(r2)
+/* 80054950 00051890  C8 22 85 38 */	lfd f1, $$2996@sda21(r2)
 /* 80054954 00051894  7C 18 00 96 */	mulhw r0, r24, r0
-/* 80054958 00051898  C0 4D 90 00 */	lfs f2, outpitch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054958 00051898  C0 4D 90 00 */	lfs f2, outpitch__Q27JAInter9StreamLib@sda21(r13)
 /* 8005495C 0005189C  88 63 00 00 */	lbz r3, 0(r3)
 /* 80054960 000518A0  7C 00 5E 70 */	srawi r0, r0, 0xb
 /* 80054964 000518A4  54 04 0F FE */	srwi r4, r0, 0x1f
@@ -2075,7 +2075,7 @@ lbl_80054848:
 /* 80054990 000518D0  48 00 AE 5D */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 80054994 000518D4  7F 04 C3 78 */	mr r4, r24
 /* 80054998 000518D8  48 00 B3 3D */	bl setPitch__Q38JASystem12DSPInterface9DSPBufferFUs
-/* 8005499C 000518DC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 8005499C 000518DC  80 6D 8F D8 */	lwz r3, assign_ch__Q27JAInter9StreamLib@sda21(r13)
 /* 800549A0 000518E0  88 63 00 00 */	lbz r3, 0(r3)
 /* 800549A4 000518E4  48 00 AE 49 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 800549A8 000518E8  48 00 B3 CD */	bl flushChannel__Q38JASystem12DSPInterface9DSPBufferFv
@@ -2084,40 +2084,40 @@ lbl_80054848:
 /* 800549B4 000518F4  48 00 AE 39 */	bl getDSPHandle__Q28JASystem12DSPInterfaceFUc
 /* 800549B8 000518F8  48 00 B3 BD */	bl flushChannel__Q38JASystem12DSPInterface9DSPBufferFv
 lbl_800549BC:
-/* 800549BC 000518FC  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800549BC 000518FC  80 0D 8F EC */	lwz r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 800549C0 00051900  28 00 00 00 */	cmplwi r0, 0
 /* 800549C4 00051904  40 82 00 80 */	bne lbl_80054A44
-/* 800549C8 00051908  80 0D 8F C0 */	lwz r0, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800549C8 00051908  80 0D 8F C0 */	lwz r0, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 800549CC 0005190C  28 00 00 00 */	cmplwi r0, 0
 /* 800549D0 00051910  40 82 00 58 */	bne lbl_80054A28
 /* 800549D4 00051914  80 1F 00 4C */	lwz r0, 0x4c(r31)
 /* 800549D8 00051918  28 00 00 00 */	cmplwi r0, 0
 /* 800549DC 0005191C  41 82 00 40 */	beq lbl_80054A1C
 /* 800549E0 00051920  38 00 00 01 */	li r0, 1
-/* 800549E4 00051924  90 0D 90 18 */	stw r0, loop_start_flag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 800549E4 00051924  90 0D 90 18 */	stw r0, loop_start_flag__Q27JAInter9StreamLib@sda21(r13)
 /* 800549E8 00051928  80 7F 00 50 */	lwz r3, 0x50(r31)
 /* 800549EC 0005192C  54 60 06 7E */	clrlwi r0, r3, 0x19
 /* 800549F0 00051930  7C 00 18 50 */	subf r0, r0, r3
 /* 800549F4 00051934  54 00 E1 3E */	srwi r0, r0, 4
 /* 800549F8 00051938  1C 60 00 12 */	mulli r3, r0, 0x12
 /* 800549FC 0005193C  38 03 00 20 */	addi r0, r3, 0x20
-/* 80054A00 00051940  90 0D 8F C4 */	stw r0, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
-/* 80054A04 00051944  80 6D 8F C4 */	lwz r3, adpcm_loadpoint__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054A00 00051940  90 0D 8F C4 */	stw r0, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
+/* 80054A04 00051944  80 6D 8F C4 */	lwz r3, adpcm_loadpoint__Q27JAInter9StreamLib@sda21(r13)
 /* 80054A08 00051948  80 1F 00 3C */	lwz r0, 0x3c(r31)
 /* 80054A0C 0005194C  38 63 FF E0 */	addi r3, r3, -32
 /* 80054A10 00051950  7C 03 00 50 */	subf r0, r3, r0
-/* 80054A14 00051954  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054A14 00051954  90 0D 8F C0 */	stw r0, adpcm_remain__Q27JAInter9StreamLib@sda21(r13)
 /* 80054A18 00051958  48 00 00 2C */	b lbl_80054A44
 lbl_80054A1C:
 /* 80054A1C 0005195C  38 00 00 03 */	li r0, 3
-/* 80054A20 00051960  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054A20 00051960  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80054A24 00051964  48 00 00 20 */	b lbl_80054A44
 lbl_80054A28:
-/* 80054A28 00051968  88 0D 8F F4 */	lbz r0, stopflag__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054A28 00051968  88 0D 8F F4 */	lbz r0, stopflag__Q27JAInter9StreamLib@sda21(r13)
 /* 80054A2C 0005196C  28 00 00 00 */	cmplwi r0, 0
 /* 80054A30 00051970  41 82 00 10 */	beq lbl_80054A40
 /* 80054A34 00051974  38 00 00 03 */	li r0, 3
-/* 80054A38 00051978  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib-_SDA_BASE_(r13)
+/* 80054A38 00051978  90 0D 8F EC */	stw r0, adpcmbuf_state__Q27JAInter9StreamLib@sda21(r13)
 /* 80054A3C 0005197C  48 00 00 08 */	b lbl_80054A44
 lbl_80054A40:
 /* 80054A40 00051980  4B FF F1 F5 */	bl LoadADPCM__Q27JAInter9StreamLibFv
@@ -2171,7 +2171,7 @@ lbl_80054AC8:
 /* 80054ADC 00051A1C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBE8, 0x4
+  .4byte __sinit_JAIGFrameStream_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 filter_table__Q27JAInter9StreamLib:
@@ -2189,7 +2189,7 @@ outputmode__Q27JAInter9StreamLib:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2425:
-	.incbin "baserom.dol", 0x3E4218, 0x4
+  .4byte 0
 $$2426:
 	.incbin "baserom.dol", 0x3E421C, 0x4
 $$2504:

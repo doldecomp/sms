@@ -48,7 +48,7 @@ lbl_80116F94:
 /* 80116FAC 00113EEC  7C 65 1A 14 */	add r3, r5, r3
 /* 80116FB0 00113EF0  88 83 00 00 */	lbz r4, 0(r3)
 /* 80116FB4 00113EF4  90 1E 00 08 */	stw r0, 8(r30)
-/* 80116FB8 00113EF8  88 0D 98 98 */	lbz r0, init$325-_SDA_BASE_(r13)
+/* 80116FB8 00113EF8  88 0D 98 98 */	lbz r0, init$325@sda21(r13)
 /* 80116FBC 00113EFC  7C 00 07 75 */	extsb. r0, r0
 /* 80116FC0 00113F00  40 82 03 CC */	bne lbl_8011738C
 /* 80116FC4 00113F04  80 7F 00 00 */	lwz r3, 0(r31)
@@ -292,7 +292,7 @@ lbl_80116F94:
 /* 8011737C 001142BC  90 7F 03 B8 */	stw r3, 0x3b8(r31)
 /* 80117380 001142C0  80 7F 01 DC */	lwz r3, 0x1dc(r31)
 /* 80117384 001142C4  90 7F 03 BC */	stw r3, 0x3bc(r31)
-/* 80117388 001142C8  98 0D 98 98 */	stb r0, init$325-_SDA_BASE_(r13)
+/* 80117388 001142C8  98 0D 98 98 */	stb r0, init$325@sda21(r13)
 lbl_8011738C:
 /* 8011738C 001142CC  28 04 00 28 */	cmplwi r4, 0x28
 /* 80117390 001142D0  41 80 00 2C */	blt lbl_801173BC
@@ -2974,7 +2974,7 @@ getDataFloat__9TSpcSliceCFv:
 lbl_80119840:
 /* 80119840 00116780  80 63 00 04 */	lwz r3, 4(r3)
 /* 80119844 00116784  3C 00 43 30 */	lis r0, 0x4330
-/* 80119848 00116788  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 80119848 00116788  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011984C 0011678C  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 80119850 00116790  90 61 00 14 */	stw r3, 0x14(r1)
 /* 80119854 00116794  90 01 00 10 */	stw r0, 0x10(r1)
@@ -2985,7 +2985,7 @@ lbl_80119864:
 /* 80119864 001167A4  C0 23 00 04 */	lfs f1, 4(r3)
 /* 80119868 001167A8  48 00 00 08 */	b lbl_80119870
 lbl_8011986C:
-/* 8011986C 001167AC  C0 22 96 F8 */	lfs f1, $$21662-_SDA2_BASE_(r2)
+/* 8011986C 001167AC  C0 22 96 F8 */	lfs f1, $$21662@sda21(r2)
 lbl_80119870:
 /* 80119870 001167B0  38 21 00 18 */	addi r1, r1, 0x18
 /* 80119874 001167B4  4E 80 00 20 */	blr 
@@ -3523,7 +3523,7 @@ lbl_80119FC8:
 lbl_80119FE0:
 /* 80119FE0 00116F20  80 63 00 04 */	lwz r3, 4(r3)
 /* 80119FE4 00116F24  3C 00 43 30 */	lis r0, 0x4330
-/* 80119FE8 00116F28  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 80119FE8 00116F28  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 80119FEC 00116F2C  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 80119FF0 00116F30  90 61 00 14 */	stw r3, 0x14(r1)
 /* 80119FF4 00116F34  90 01 00 10 */	stw r0, 0x10(r1)
@@ -3534,7 +3534,7 @@ lbl_8011A004:
 /* 8011A004 00116F44  C0 43 00 04 */	lfs f2, 4(r3)
 /* 8011A008 00116F48  48 00 00 08 */	b lbl_8011A010
 lbl_8011A00C:
-/* 8011A00C 00116F4C  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011A00C 00116F4C  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011A010:
 /* 8011A010 00116F50  80 04 00 00 */	lwz r0, 0(r4)
 /* 8011A014 00116F54  2C 00 00 01 */	cmpwi r0, 1
@@ -3546,7 +3546,7 @@ lbl_8011A010:
 lbl_8011A02C:
 /* 8011A02C 00116F6C  80 64 00 04 */	lwz r3, 4(r4)
 /* 8011A030 00116F70  3C 00 43 30 */	lis r0, 0x4330
-/* 8011A034 00116F74  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011A034 00116F74  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011A038 00116F78  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011A03C 00116F7C  90 61 00 14 */	stw r3, 0x14(r1)
 /* 8011A040 00116F80  90 01 00 10 */	stw r0, 0x10(r1)
@@ -3557,7 +3557,7 @@ lbl_8011A050:
 /* 8011A050 00116F90  C0 04 00 04 */	lfs f0, 4(r4)
 /* 8011A054 00116F94  48 00 00 08 */	b lbl_8011A05C
 lbl_8011A058:
-/* 8011A058 00116F98  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011A058 00116F98  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011A05C:
 /* 8011A05C 00116F9C  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 8011A060 00116FA0  41 82 00 0C */	beq lbl_8011A06C
@@ -3751,7 +3751,7 @@ lbl_8011A2CC:
 lbl_8011A2E4:
 /* 8011A2E4 00117224  80 63 00 04 */	lwz r3, 4(r3)
 /* 8011A2E8 00117228  3C 00 43 30 */	lis r0, 0x4330
-/* 8011A2EC 0011722C  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011A2EC 0011722C  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011A2F0 00117230  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011A2F4 00117234  90 61 00 14 */	stw r3, 0x14(r1)
 /* 8011A2F8 00117238  90 01 00 10 */	stw r0, 0x10(r1)
@@ -3762,7 +3762,7 @@ lbl_8011A308:
 /* 8011A308 00117248  C0 43 00 04 */	lfs f2, 4(r3)
 /* 8011A30C 0011724C  48 00 00 08 */	b lbl_8011A314
 lbl_8011A310:
-/* 8011A310 00117250  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011A310 00117250  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011A314:
 /* 8011A314 00117254  80 04 00 00 */	lwz r0, 0(r4)
 /* 8011A318 00117258  2C 00 00 01 */	cmpwi r0, 1
@@ -3774,7 +3774,7 @@ lbl_8011A314:
 lbl_8011A330:
 /* 8011A330 00117270  80 64 00 04 */	lwz r3, 4(r4)
 /* 8011A334 00117274  3C 00 43 30 */	lis r0, 0x4330
-/* 8011A338 00117278  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011A338 00117278  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011A33C 0011727C  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011A340 00117280  90 61 00 14 */	stw r3, 0x14(r1)
 /* 8011A344 00117284  90 01 00 10 */	stw r0, 0x10(r1)
@@ -3785,7 +3785,7 @@ lbl_8011A354:
 /* 8011A354 00117294  C0 04 00 04 */	lfs f0, 4(r4)
 /* 8011A358 00117298  48 00 00 08 */	b lbl_8011A360
 lbl_8011A35C:
-/* 8011A35C 0011729C  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011A35C 0011729C  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011A360:
 /* 8011A360 001172A0  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 8011A364 001172A4  40 82 00 0C */	bne lbl_8011A370
@@ -4152,7 +4152,7 @@ lbl_8011A83C:
 lbl_8011A860:
 /* 8011A860 001177A0  80 61 00 48 */	lwz r3, 0x48(r1)
 /* 8011A864 001177A4  3C 00 43 30 */	lis r0, 0x4330
-/* 8011A868 001177A8  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011A868 001177A8  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011A86C 001177AC  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011A870 001177B0  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011A874 001177B4  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4163,7 +4163,7 @@ lbl_8011A884:
 /* 8011A884 001177C4  C0 41 00 48 */	lfs f2, 0x48(r1)
 /* 8011A888 001177C8  48 00 00 08 */	b lbl_8011A890
 lbl_8011A88C:
-/* 8011A88C 001177CC  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011A88C 001177CC  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011A890:
 /* 8011A890 001177D0  2C 1E 00 01 */	cmpwi r30, 1
 /* 8011A894 001177D4  41 82 00 38 */	beq lbl_8011A8CC
@@ -4174,7 +4174,7 @@ lbl_8011A890:
 lbl_8011A8A8:
 /* 8011A8A8 001177E8  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 8011A8AC 001177EC  3C 00 43 30 */	lis r0, 0x4330
-/* 8011A8B0 001177F0  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011A8B0 001177F0  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011A8B4 001177F4  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011A8B8 001177F8  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011A8BC 001177FC  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4185,7 +4185,7 @@ lbl_8011A8CC:
 /* 8011A8CC 0011780C  C0 01 00 50 */	lfs f0, 0x50(r1)
 /* 8011A8D0 00117810  48 00 00 08 */	b lbl_8011A8D8
 lbl_8011A8D4:
-/* 8011A8D4 00117814  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011A8D4 00117814  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011A8D8:
 /* 8011A8D8 00117818  EC 02 00 24 */	fdivs f0, f2, f0
 /* 8011A8DC 0011781C  38 00 00 01 */	li r0, 1
@@ -4362,7 +4362,7 @@ lbl_8011AB14:
 lbl_8011AB38:
 /* 8011AB38 00117A78  80 61 00 48 */	lwz r3, 0x48(r1)
 /* 8011AB3C 00117A7C  3C 00 43 30 */	lis r0, 0x4330
-/* 8011AB40 00117A80  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011AB40 00117A80  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011AB44 00117A84  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011AB48 00117A88  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011AB4C 00117A8C  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4373,7 +4373,7 @@ lbl_8011AB5C:
 /* 8011AB5C 00117A9C  C0 41 00 48 */	lfs f2, 0x48(r1)
 /* 8011AB60 00117AA0  48 00 00 08 */	b lbl_8011AB68
 lbl_8011AB64:
-/* 8011AB64 00117AA4  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011AB64 00117AA4  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011AB68:
 /* 8011AB68 00117AA8  2C 1E 00 01 */	cmpwi r30, 1
 /* 8011AB6C 00117AAC  41 82 00 38 */	beq lbl_8011ABA4
@@ -4384,7 +4384,7 @@ lbl_8011AB68:
 lbl_8011AB80:
 /* 8011AB80 00117AC0  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 8011AB84 00117AC4  3C 00 43 30 */	lis r0, 0x4330
-/* 8011AB88 00117AC8  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011AB88 00117AC8  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011AB8C 00117ACC  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011AB90 00117AD0  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011AB94 00117AD4  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4395,7 +4395,7 @@ lbl_8011ABA4:
 /* 8011ABA4 00117AE4  C0 01 00 50 */	lfs f0, 0x50(r1)
 /* 8011ABA8 00117AE8  48 00 00 08 */	b lbl_8011ABB0
 lbl_8011ABAC:
-/* 8011ABAC 00117AEC  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011ABAC 00117AEC  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011ABB0:
 /* 8011ABB0 00117AF0  38 00 00 01 */	li r0, 1
 /* 8011ABB4 00117AF4  EC 02 00 32 */	fmuls f0, f2, f0
@@ -4572,7 +4572,7 @@ lbl_8011ADEC:
 lbl_8011AE10:
 /* 8011AE10 00117D50  80 61 00 48 */	lwz r3, 0x48(r1)
 /* 8011AE14 00117D54  3C 00 43 30 */	lis r0, 0x4330
-/* 8011AE18 00117D58  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011AE18 00117D58  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011AE1C 00117D5C  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011AE20 00117D60  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011AE24 00117D64  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4583,7 +4583,7 @@ lbl_8011AE34:
 /* 8011AE34 00117D74  C0 41 00 48 */	lfs f2, 0x48(r1)
 /* 8011AE38 00117D78  48 00 00 08 */	b lbl_8011AE40
 lbl_8011AE3C:
-/* 8011AE3C 00117D7C  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011AE3C 00117D7C  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011AE40:
 /* 8011AE40 00117D80  2C 1E 00 01 */	cmpwi r30, 1
 /* 8011AE44 00117D84  41 82 00 38 */	beq lbl_8011AE7C
@@ -4594,7 +4594,7 @@ lbl_8011AE40:
 lbl_8011AE58:
 /* 8011AE58 00117D98  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 8011AE5C 00117D9C  3C 00 43 30 */	lis r0, 0x4330
-/* 8011AE60 00117DA0  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011AE60 00117DA0  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011AE64 00117DA4  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011AE68 00117DA8  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011AE6C 00117DAC  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4605,7 +4605,7 @@ lbl_8011AE7C:
 /* 8011AE7C 00117DBC  C0 01 00 50 */	lfs f0, 0x50(r1)
 /* 8011AE80 00117DC0  48 00 00 08 */	b lbl_8011AE88
 lbl_8011AE84:
-/* 8011AE84 00117DC4  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011AE84 00117DC4  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011AE88:
 /* 8011AE88 00117DC8  38 00 00 01 */	li r0, 1
 /* 8011AE8C 00117DCC  EC 02 00 28 */	fsubs f0, f2, f0
@@ -4782,7 +4782,7 @@ lbl_8011B0C4:
 lbl_8011B0E8:
 /* 8011B0E8 00118028  80 61 00 48 */	lwz r3, 0x48(r1)
 /* 8011B0EC 0011802C  3C 00 43 30 */	lis r0, 0x4330
-/* 8011B0F0 00118030  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011B0F0 00118030  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011B0F4 00118034  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011B0F8 00118038  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011B0FC 0011803C  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4793,7 +4793,7 @@ lbl_8011B10C:
 /* 8011B10C 0011804C  C0 41 00 48 */	lfs f2, 0x48(r1)
 /* 8011B110 00118050  48 00 00 08 */	b lbl_8011B118
 lbl_8011B114:
-/* 8011B114 00118054  C0 42 96 F8 */	lfs f2, $$21662-_SDA2_BASE_(r2)
+/* 8011B114 00118054  C0 42 96 F8 */	lfs f2, $$21662@sda21(r2)
 lbl_8011B118:
 /* 8011B118 00118058  2C 1E 00 01 */	cmpwi r30, 1
 /* 8011B11C 0011805C  41 82 00 38 */	beq lbl_8011B154
@@ -4804,7 +4804,7 @@ lbl_8011B118:
 lbl_8011B130:
 /* 8011B130 00118070  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 8011B134 00118074  3C 00 43 30 */	lis r0, 0x4330
-/* 8011B138 00118078  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011B138 00118078  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011B13C 0011807C  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011B140 00118080  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011B144 00118084  90 01 00 58 */	stw r0, 0x58(r1)
@@ -4815,7 +4815,7 @@ lbl_8011B154:
 /* 8011B154 00118094  C0 01 00 50 */	lfs f0, 0x50(r1)
 /* 8011B158 00118098  48 00 00 08 */	b lbl_8011B160
 lbl_8011B15C:
-/* 8011B15C 0011809C  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011B15C 0011809C  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011B160:
 /* 8011B160 001180A0  38 00 00 01 */	li r0, 1
 /* 8011B164 001180A4  EC 02 00 2A */	fadds f0, f2, f0
@@ -4975,7 +4975,7 @@ lbl_8011B380:
 /* 8011B38C 001182CC  48 00 00 14 */	b lbl_8011B3A0
 lbl_8011B390:
 /* 8011B390 001182D0  C0 27 00 04 */	lfs f1, 4(r7)
-/* 8011B394 001182D4  C0 02 97 08 */	lfs f0, $$22285-_SDA2_BASE_(r2)
+/* 8011B394 001182D4  C0 02 97 08 */	lfs f0, $$22285@sda21(r2)
 /* 8011B398 001182D8  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8011B39C 001182DC  D0 07 00 04 */	stfs f0, 4(r7)
 lbl_8011B3A0:
@@ -5074,7 +5074,7 @@ lbl_8011B4EC:
 /* 8011B4F8 00118438  48 00 00 14 */	b lbl_8011B50C
 lbl_8011B4FC:
 /* 8011B4FC 0011843C  C0 27 00 04 */	lfs f1, 4(r7)
-/* 8011B500 00118440  C0 02 97 08 */	lfs f0, $$22285-_SDA2_BASE_(r2)
+/* 8011B500 00118440  C0 02 97 08 */	lfs f0, $$22285@sda21(r2)
 /* 8011B504 00118444  EC 01 00 2A */	fadds f0, f1, f0
 /* 8011B508 00118448  D0 07 00 04 */	stfs f0, 4(r7)
 lbl_8011B50C:
@@ -5281,7 +5281,7 @@ execstr__10TSpcInterpFv:
 /* 8011B7D8 00118718  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8011B7DC 0011871C  7C 66 1A 15 */	add. r3, r6, r3
 /* 8011B7E0 00118720  40 82 00 10 */	bne lbl_8011B7F0
-/* 8011B7E4 00118724  38 02 97 0C */	addi r0, r2, $$22409-_SDA2_BASE_
+/* 8011B7E4 00118724  38 02 97 0C */	addi r0, r2, $$22409@sda21
 /* 8011B7E8 00118728  90 01 00 20 */	stw r0, 0x20(r1)
 /* 8011B7EC 0011872C  48 00 00 08 */	b lbl_8011B7F4
 lbl_8011B7F0:
@@ -5605,13 +5605,13 @@ lbl_8011BC18:
 /* 8011BC20 00118B60  7C 05 20 40 */	cmplw r5, r4
 /* 8011BC24 00118B64  41 80 FF A8 */	blt lbl_8011BBCC
 /* 8011BC28 00118B68  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BC2C 00118B6C  38 82 97 10 */	addi r4, r2, $$22532-_SDA2_BASE_
+/* 8011BC2C 00118B6C  38 82 97 10 */	addi r4, r2, $$22532@sda21
 /* 8011BC30 00118B70  4B FF FE B5 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BC34 00118B74  28 03 00 00 */	cmplwi r3, 0
 /* 8011BC38 00118B78  40 82 00 18 */	bne lbl_8011BC50
 /* 8011BC3C 00118B7C  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BC40 00118B80  4C C6 31 82 */	crclr 6
-/* 8011BC44 00118B84  38 82 97 10 */	addi r4, r2, $$22532-_SDA2_BASE_
+/* 8011BC44 00118B84  38 82 97 10 */	addi r4, r2, $$22532@sda21
 /* 8011BC48 00118B88  4B FC 14 5D */	bl SpcTrace__FPCce
 /* 8011BC4C 00118B8C  48 00 00 10 */	b lbl_8011BC5C
 lbl_8011BC50:
@@ -5620,13 +5620,13 @@ lbl_8011BC50:
 /* 8011BC58 00118B98  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BC5C:
 /* 8011BC5C 00118B9C  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BC60 00118BA0  38 82 97 18 */	addi r4, r2, $$22533-_SDA2_BASE_
+/* 8011BC60 00118BA0  38 82 97 18 */	addi r4, r2, $$22533@sda21
 /* 8011BC64 00118BA4  4B FF FE 81 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BC68 00118BA8  28 03 00 00 */	cmplwi r3, 0
 /* 8011BC6C 00118BAC  40 82 00 18 */	bne lbl_8011BC84
 /* 8011BC70 00118BB0  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BC74 00118BB4  4C C6 31 82 */	crclr 6
-/* 8011BC78 00118BB8  38 82 97 18 */	addi r4, r2, $$22533-_SDA2_BASE_
+/* 8011BC78 00118BB8  38 82 97 18 */	addi r4, r2, $$22533@sda21
 /* 8011BC7C 00118BBC  4B FC 14 29 */	bl SpcTrace__FPCce
 /* 8011BC80 00118BC0  48 00 00 10 */	b lbl_8011BC90
 lbl_8011BC84:
@@ -5635,13 +5635,13 @@ lbl_8011BC84:
 /* 8011BC8C 00118BCC  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BC90:
 /* 8011BC90 00118BD0  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BC94 00118BD4  38 82 97 20 */	addi r4, r2, $$22534-_SDA2_BASE_
+/* 8011BC94 00118BD4  38 82 97 20 */	addi r4, r2, $$22534@sda21
 /* 8011BC98 00118BD8  4B FF FE 4D */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BC9C 00118BDC  28 03 00 00 */	cmplwi r3, 0
 /* 8011BCA0 00118BE0  40 82 00 18 */	bne lbl_8011BCB8
 /* 8011BCA4 00118BE4  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BCA8 00118BE8  4C C6 31 82 */	crclr 6
-/* 8011BCAC 00118BEC  38 82 97 20 */	addi r4, r2, $$22534-_SDA2_BASE_
+/* 8011BCAC 00118BEC  38 82 97 20 */	addi r4, r2, $$22534@sda21
 /* 8011BCB0 00118BF0  4B FC 13 F5 */	bl SpcTrace__FPCce
 /* 8011BCB4 00118BF4  48 00 00 10 */	b lbl_8011BCC4
 lbl_8011BCB8:
@@ -5650,13 +5650,13 @@ lbl_8011BCB8:
 /* 8011BCC0 00118C00  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BCC4:
 /* 8011BCC4 00118C04  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BCC8 00118C08  38 82 97 28 */	addi r4, r2, $$22535-_SDA2_BASE_
+/* 8011BCC8 00118C08  38 82 97 28 */	addi r4, r2, $$22535@sda21
 /* 8011BCCC 00118C0C  4B FF FE 19 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BCD0 00118C10  28 03 00 00 */	cmplwi r3, 0
 /* 8011BCD4 00118C14  40 82 00 18 */	bne lbl_8011BCEC
 /* 8011BCD8 00118C18  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BCDC 00118C1C  4C C6 31 82 */	crclr 6
-/* 8011BCE0 00118C20  38 82 97 28 */	addi r4, r2, $$22535-_SDA2_BASE_
+/* 8011BCE0 00118C20  38 82 97 28 */	addi r4, r2, $$22535@sda21
 /* 8011BCE4 00118C24  4B FC 13 C1 */	bl SpcTrace__FPCce
 /* 8011BCE8 00118C28  48 00 00 10 */	b lbl_8011BCF8
 lbl_8011BCEC:
@@ -5665,13 +5665,13 @@ lbl_8011BCEC:
 /* 8011BCF4 00118C34  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BCF8:
 /* 8011BCF8 00118C38  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BCFC 00118C3C  38 82 97 30 */	addi r4, r2, $$22536-_SDA2_BASE_
+/* 8011BCFC 00118C3C  38 82 97 30 */	addi r4, r2, $$22536@sda21
 /* 8011BD00 00118C40  4B FF FD E5 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BD04 00118C44  28 03 00 00 */	cmplwi r3, 0
 /* 8011BD08 00118C48  40 82 00 18 */	bne lbl_8011BD20
 /* 8011BD0C 00118C4C  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BD10 00118C50  4C C6 31 82 */	crclr 6
-/* 8011BD14 00118C54  38 82 97 30 */	addi r4, r2, $$22536-_SDA2_BASE_
+/* 8011BD14 00118C54  38 82 97 30 */	addi r4, r2, $$22536@sda21
 /* 8011BD18 00118C58  4B FC 13 8D */	bl SpcTrace__FPCce
 /* 8011BD1C 00118C5C  48 00 00 10 */	b lbl_8011BD2C
 lbl_8011BD20:
@@ -5680,13 +5680,13 @@ lbl_8011BD20:
 /* 8011BD28 00118C68  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BD2C:
 /* 8011BD2C 00118C6C  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BD30 00118C70  38 82 97 38 */	addi r4, r2, $$22537-_SDA2_BASE_
+/* 8011BD30 00118C70  38 82 97 38 */	addi r4, r2, $$22537@sda21
 /* 8011BD34 00118C74  4B FF FD B1 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BD38 00118C78  28 03 00 00 */	cmplwi r3, 0
 /* 8011BD3C 00118C7C  40 82 00 18 */	bne lbl_8011BD54
 /* 8011BD40 00118C80  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BD44 00118C84  4C C6 31 82 */	crclr 6
-/* 8011BD48 00118C88  38 82 97 38 */	addi r4, r2, $$22537-_SDA2_BASE_
+/* 8011BD48 00118C88  38 82 97 38 */	addi r4, r2, $$22537@sda21
 /* 8011BD4C 00118C8C  4B FC 13 59 */	bl SpcTrace__FPCce
 /* 8011BD50 00118C90  48 00 00 10 */	b lbl_8011BD60
 lbl_8011BD54:
@@ -5695,13 +5695,13 @@ lbl_8011BD54:
 /* 8011BD5C 00118C9C  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BD60:
 /* 8011BD60 00118CA0  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BD64 00118CA4  38 82 97 40 */	addi r4, r2, $$22538-_SDA2_BASE_
+/* 8011BD64 00118CA4  38 82 97 40 */	addi r4, r2, $$22538@sda21
 /* 8011BD68 00118CA8  4B FF FD 7D */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BD6C 00118CAC  28 03 00 00 */	cmplwi r3, 0
 /* 8011BD70 00118CB0  40 82 00 18 */	bne lbl_8011BD88
 /* 8011BD74 00118CB4  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BD78 00118CB8  4C C6 31 82 */	crclr 6
-/* 8011BD7C 00118CBC  38 82 97 40 */	addi r4, r2, $$22538-_SDA2_BASE_
+/* 8011BD7C 00118CBC  38 82 97 40 */	addi r4, r2, $$22538@sda21
 /* 8011BD80 00118CC0  4B FC 13 25 */	bl SpcTrace__FPCce
 /* 8011BD84 00118CC4  48 00 00 10 */	b lbl_8011BD94
 lbl_8011BD88:
@@ -5710,13 +5710,13 @@ lbl_8011BD88:
 /* 8011BD90 00118CD0  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BD94:
 /* 8011BD94 00118CD4  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BD98 00118CD8  38 82 97 44 */	addi r4, r2, $$22539-_SDA2_BASE_
+/* 8011BD98 00118CD8  38 82 97 44 */	addi r4, r2, $$22539@sda21
 /* 8011BD9C 00118CDC  4B FF FD 49 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BDA0 00118CE0  28 03 00 00 */	cmplwi r3, 0
 /* 8011BDA4 00118CE4  40 82 00 18 */	bne lbl_8011BDBC
 /* 8011BDA8 00118CE8  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BDAC 00118CEC  4C C6 31 82 */	crclr 6
-/* 8011BDB0 00118CF0  38 82 97 44 */	addi r4, r2, $$22539-_SDA2_BASE_
+/* 8011BDB0 00118CF0  38 82 97 44 */	addi r4, r2, $$22539@sda21
 /* 8011BDB4 00118CF4  4B FC 12 F1 */	bl SpcTrace__FPCce
 /* 8011BDB8 00118CF8  48 00 00 10 */	b lbl_8011BDC8
 lbl_8011BDBC:
@@ -5725,13 +5725,13 @@ lbl_8011BDBC:
 /* 8011BDC4 00118D04  90 03 00 10 */	stw r0, 0x10(r3)
 lbl_8011BDC8:
 /* 8011BDC8 00118D08  38 7E 00 00 */	addi r3, r30, 0
-/* 8011BDCC 00118D0C  38 82 97 4C */	addi r4, r2, $$22540-_SDA2_BASE_
+/* 8011BDCC 00118D0C  38 82 97 4C */	addi r4, r2, $$22540@sda21
 /* 8011BDD0 00118D10  4B FF FD 15 */	bl searchSymbol__10TSpcBinaryFPCc
 /* 8011BDD4 00118D14  28 03 00 00 */	cmplwi r3, 0
 /* 8011BDD8 00118D18  40 82 00 18 */	bne lbl_8011BDF0
 /* 8011BDDC 00118D1C  38 7F 03 54 */	addi r3, r31, 0x354
 /* 8011BDE0 00118D20  4C C6 31 82 */	crclr 6
-/* 8011BDE4 00118D24  38 82 97 4C */	addi r4, r2, $$22540-_SDA2_BASE_
+/* 8011BDE4 00118D24  38 82 97 4C */	addi r4, r2, $$22540@sda21
 /* 8011BDE8 00118D28  4B FC 12 BD */	bl SpcTrace__FPCce
 /* 8011BDEC 00118D2C  48 00 00 10 */	b lbl_8011BDFC
 lbl_8011BDF0:
@@ -6016,7 +6016,7 @@ lbl_8011C190:
 lbl_8011C1AC:
 /* 8011C1AC 001190EC  80 61 00 4C */	lwz r3, 0x4c(r1)
 /* 8011C1B0 001190F0  3C 00 43 30 */	lis r0, 0x4330
-/* 8011C1B4 001190F4  C8 22 97 00 */	lfd f1, $$21664-_SDA2_BASE_(r2)
+/* 8011C1B4 001190F4  C8 22 97 00 */	lfd f1, $$21664@sda21(r2)
 /* 8011C1B8 001190F8  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8011C1BC 001190FC  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8011C1C0 00119100  90 01 00 58 */	stw r0, 0x58(r1)
@@ -6027,7 +6027,7 @@ lbl_8011C1D0:
 /* 8011C1D0 00119110  C0 01 00 4C */	lfs f0, 0x4c(r1)
 /* 8011C1D4 00119114  48 00 00 08 */	b lbl_8011C1DC
 lbl_8011C1D8:
-/* 8011C1D8 00119118  C0 02 96 F8 */	lfs f0, $$21662-_SDA2_BASE_(r2)
+/* 8011C1D8 00119118  C0 02 96 F8 */	lfs f0, $$21662@sda21(r2)
 lbl_8011C1DC:
 /* 8011C1DC 0011911C  38 00 00 01 */	li r0, 1
 /* 8011C1E0 00119120  90 01 00 50 */	stw r0, 0x50(r1)
@@ -6270,7 +6270,7 @@ spcPrint__FP10TSpcInterpUl:
 /* 8011C514 00119454  3F A0 43 30 */	lis r29, 0x4330
 /* 8011C518 00119458  93 81 00 38 */	stw r28, 0x38(r1)
 /* 8011C51C 0011945C  3B 80 00 00 */	li r28, 0
-/* 8011C520 00119460  CB E2 97 00 */	lfd f31, $$21664-_SDA2_BASE_(r2)
+/* 8011C520 00119460  CB E2 97 00 */	lfd f31, $$21664@sda21(r2)
 /* 8011C524 00119464  48 00 01 00 */	b lbl_8011C624
 lbl_8011C528:
 /* 8011C528 00119468  80 1E 00 1C */	lwz r0, 0x1c(r30)
@@ -6310,7 +6310,7 @@ lbl_8011C59C:
 /* 8011C59C 001194DC  38 80 00 00 */	li r4, 0
 lbl_8011C5A0:
 /* 8011C5A0 001194E0  4C C6 31 82 */	crclr 6
-/* 8011C5A4 001194E4  38 62 97 54 */	addi r3, r2, $$22829-_SDA2_BASE_
+/* 8011C5A4 001194E4  38 62 97 54 */	addi r3, r2, $$22829@sda21
 /* 8011C5A8 001194E8  4B FC 0A FD */	bl SpcTrace__FPCce
 /* 8011C5AC 001194EC  48 00 00 74 */	b lbl_8011C620
 lbl_8011C5B0:
@@ -6331,10 +6331,10 @@ lbl_8011C5E0:
 /* 8011C5E0 00119520  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8011C5E4 00119524  48 00 00 08 */	b lbl_8011C5EC
 lbl_8011C5E8:
-/* 8011C5E8 00119528  C0 22 96 F8 */	lfs f1, $$21662-_SDA2_BASE_(r2)
+/* 8011C5E8 00119528  C0 22 96 F8 */	lfs f1, $$21662@sda21(r2)
 lbl_8011C5EC:
 /* 8011C5EC 0011952C  4C C6 32 42 */	crset 6
-/* 8011C5F0 00119530  38 62 97 58 */	addi r3, r2, $$22830-_SDA2_BASE_
+/* 8011C5F0 00119530  38 62 97 58 */	addi r3, r2, $$22830@sda21
 /* 8011C5F4 00119534  4B FC 0A B1 */	bl SpcTrace__FPCce
 /* 8011C5F8 00119538  48 00 00 28 */	b lbl_8011C620
 lbl_8011C5FC:
@@ -6345,10 +6345,10 @@ lbl_8011C608:
 /* 8011C608 00119548  80 83 00 04 */	lwz r4, 4(r3)
 /* 8011C60C 0011954C  48 00 00 08 */	b lbl_8011C614
 lbl_8011C610:
-/* 8011C610 00119550  38 82 97 0C */	addi r4, r2, $$22409-_SDA2_BASE_
+/* 8011C610 00119550  38 82 97 0C */	addi r4, r2, $$22409@sda21
 lbl_8011C614:
 /* 8011C614 00119554  4C C6 31 82 */	crclr 6
-/* 8011C618 00119558  38 62 97 5C */	addi r3, r2, $$22831-_SDA2_BASE_
+/* 8011C618 00119558  38 62 97 5C */	addi r3, r2, $$22831@sda21
 /* 8011C61C 0011955C  4B FC 0A 89 */	bl SpcTrace__FPCce
 lbl_8011C620:
 /* 8011C620 00119560  3B 9C 00 01 */	addi r28, r28, 1
@@ -6738,109 +6738,321 @@ $$22620:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2285:
-	.incbin "baserom.dol", 0x3B1F00, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint__10TSpcInterpFv
 $$2286:
-	.incbin "baserom.dol", 0x3B1F0C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execflt__10TSpcInterpFv
 $$2287:
-	.incbin "baserom.dol", 0x3B1F18, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execstr__10TSpcInterpFv
 $$2288:
-	.incbin "baserom.dol", 0x3B1F24, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execadr__10TSpcInterpFv
 $$2289:
-	.incbin "baserom.dol", 0x3B1F30, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execvar__10TSpcInterpFv
 $$2290:
-	.incbin "baserom.dol", 0x3B1F3C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execnop__10TSpcInterpFv
 $$2291:
-	.incbin "baserom.dol", 0x3B1F48, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execinc__10TSpcInterpFv
 $$2292:
-	.incbin "baserom.dol", 0x3B1F54, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execdec__10TSpcInterpFv
 $$2293:
-	.incbin "baserom.dol", 0x3B1F60, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execadd__10TSpcInterpFv
 $$2294:
-	.incbin "baserom.dol", 0x3B1F6C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execsub__10TSpcInterpFv
 $$2295:
-	.incbin "baserom.dol", 0x3B1F78, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmul__10TSpcInterpFv
 $$2296:
-	.incbin "baserom.dol", 0x3B1F84, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execdiv__10TSpcInterpFv
 $$2297:
-	.incbin "baserom.dol", 0x3B1F90, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmod__10TSpcInterpFv
 $$2298:
-	.incbin "baserom.dol", 0x3B1F9C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execass__10TSpcInterpFv
 $$2299:
-	.incbin "baserom.dol", 0x3B1FA8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execeq__10TSpcInterpFv
 $$2300:
-	.incbin "baserom.dol", 0x3B1FB4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execne__10TSpcInterpFv
 $$2301:
-	.incbin "baserom.dol", 0x3B1FC0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execgt__10TSpcInterpFv
 $$2302:
-	.incbin "baserom.dol", 0x3B1FCC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execlt__10TSpcInterpFv
 $$2303:
-	.incbin "baserom.dol", 0x3B1FD8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execge__10TSpcInterpFv
 $$2304:
-	.incbin "baserom.dol", 0x3B1FE4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execle__10TSpcInterpFv
 $$2305:
-	.incbin "baserom.dol", 0x3B1FF0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execneg__10TSpcInterpFv
 $$2306:
-	.incbin "baserom.dol", 0x3B1FFC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execnot__10TSpcInterpFv
 $$2307:
-	.incbin "baserom.dol", 0x3B2008, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execand__10TSpcInterpFv
 $$2308:
-	.incbin "baserom.dol", 0x3B2014, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execor__10TSpcInterpFv
 $$2309:
-	.incbin "baserom.dol", 0x3B2020, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execband__10TSpcInterpFv
 $$2310:
-	.incbin "baserom.dol", 0x3B202C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execbor__10TSpcInterpFv
 $$2311:
-	.incbin "baserom.dol", 0x3B2038, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execshl__10TSpcInterpFv
 $$2312:
-	.incbin "baserom.dol", 0x3B2044, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execshr__10TSpcInterpFv
 $$2313:
-	.incbin "baserom.dol", 0x3B2050, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execcall__10TSpcInterpFv
 $$2314:
-	.incbin "baserom.dol", 0x3B205C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execfunc__10TSpcInterpFv
 $$2315:
-	.incbin "baserom.dol", 0x3B2068, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmkfr__10TSpcInterpFv
 $$2316:
-	.incbin "baserom.dol", 0x3B2074, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execmkds__10TSpcInterpFv
 $$2317:
-	.incbin "baserom.dol", 0x3B2080, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execret__10TSpcInterpFv
 $$2318:
-	.incbin "baserom.dol", 0x3B208C, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execret0__10TSpcInterpFv
 $$2319:
-	.incbin "baserom.dol", 0x3B2098, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execjne__10TSpcInterpFv
 $$2320:
-	.incbin "baserom.dol", 0x3B20A4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execjmp__10TSpcInterpFv
 $$2321:
-	.incbin "baserom.dol", 0x3B20B0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execpop__10TSpcInterpFv
 $$2322:
-	.incbin "baserom.dol", 0x3B20BC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint0__10TSpcInterpFv
 $$2323:
-	.incbin "baserom.dol", 0x3B20C8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execint1__10TSpcInterpFv
 $$2324:
-	.incbin "baserom.dol", 0x3B20D4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte execend__10TSpcInterpFv
 table$284:
-	.incbin "baserom.dol", 0x3B20E0, 0x1E0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__10TSpcInterp
 __vt__10TSpcInterp:
-	.incbin "baserom.dol", 0x3B22C0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte dispatchBuiltin__10TSpcInterpFUlUl
+  .4byte __dt__10TSpcInterpFv
+  .4byte update__10TSpcInterpFv
 .global __vt__21TSpcStack$$09TSpcSlice$$1
 __vt__21TSpcStack$$09TSpcSlice$$1:
-	.incbin "baserom.dol", 0x3B22D4, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TSpcStack$$09TSpcSlice$$1Fv
 .global __vt__13TSpcStack$$0Ul$$1
 __vt__13TSpcStack$$0Ul$$1:
-	.incbin "baserom.dol", 0x3B22E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TSpcStack$$0Ul$$1Fv
 .global __vt__10TSpcBinary
 __vt__10TSpcBinary:
-	.incbin "baserom.dol", 0x3B22EC, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TSpcBinaryFv
+  .4byte initUserBuiltin__10TSpcBinaryFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21662:
-	.incbin "baserom.dol", 0x3E53F8, 0x8
+  .4byte 0
+  .4byte 0
 $$21664:
 	.incbin "baserom.dol", 0x3E5400, 0x8
 $$22285:
 	.incbin "baserom.dol", 0x3E5408, 0x4
 $$22409:
-	.incbin "baserom.dol", 0x3E540C, 0x4
+  .4byte 0
 $$22532:
 	.incbin "baserom.dol", 0x3E5410, 0x8
 $$22533:

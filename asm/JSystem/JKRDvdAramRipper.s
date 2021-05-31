@@ -135,7 +135,7 @@ loadToAram_Async__16JKRDvdAramRipperFP10JKRDvdFileUl15JKRExpandSwitchPFUl_vUlUl:
 /* 800358D4 00032814  3B C8 00 00 */	addi r30, r8, 0
 /* 800358D8 00032818  38 60 00 4C */	li r3, 0x4c
 /* 800358DC 0003281C  38 A0 FF FC */	li r5, -4
-/* 800358E0 00032820  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800358E0 00032820  80 0D 8D 68 */	lwz r0, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800358E4 00032824  7C 04 03 78 */	mr r4, r0
 /* 800358E8 00032828  4B FD 70 5D */	bl __nw__FUlP7JKRHeapi
 /* 800358EC 0003282C  7C 7F 1B 79 */	or. r31, r3, r3
@@ -192,7 +192,7 @@ lbl_80035998:
 /* 8003599C 000328DC  90 7E 00 50 */	stw r3, 0x50(r30)
 /* 800359A0 000328E0  38 60 00 10 */	li r3, 0x10
 /* 800359A4 000328E4  38 A0 FF FC */	li r5, -4
-/* 800359A8 000328E8  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 800359A8 000328E8  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 800359AC 000328EC  4B FD 6F 99 */	bl __nw__FUlP7JKRHeapi
 /* 800359B0 000328F0  7C 79 1B 79 */	or. r25, r3, r3
 /* 800359B4 000328F4  41 82 00 14 */	beq lbl_800359C8
@@ -231,7 +231,7 @@ lbl_80035A18:
 /* 80035A2C 0003296C  48 06 0C 69 */	bl DVDReadPrio
 /* 80035A30 00032970  2C 03 00 00 */	cmpwi r3, 0
 /* 80035A34 00032974  40 80 00 40 */	bge lbl_80035A74
-/* 80035A38 00032978  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper-_SDA_BASE_(r13)
+/* 80035A38 00032978  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper@sda21(r13)
 /* 80035A3C 0003297C  28 00 00 00 */	cmplwi r0, 0
 /* 80035A40 00032980  40 82 00 2C */	bne lbl_80035A6C
 /* 80035A44 00032984  28 19 00 00 */	cmplwi r25, 0
@@ -282,7 +282,7 @@ lbl_80035ACC:
 /* 80035AE4 00032A24  80 1F 00 20 */	lwz r0, 0x20(r31)
 /* 80035AE8 00032A28  28 00 00 00 */	cmplwi r0, 0
 /* 80035AEC 00032A2C  40 82 00 38 */	bne lbl_80035B24
-/* 80035AF0 00032A30  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram-_SDA_BASE_(r13)
+/* 80035AF0 00032A30  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram@sda21(r13)
 /* 80035AF4 00032A34  38 9A 00 00 */	addi r4, r26, 0
 /* 80035AF8 00032A38  38 A0 00 00 */	li r5, 0
 /* 80035AFC 00032A3C  80 63 00 78 */	lwz r3, 0x78(r3)
@@ -317,7 +317,7 @@ lbl_80035B54:
 /* 80035B60 00032AA0  80 1F 00 20 */	lwz r0, 0x20(r31)
 /* 80035B64 00032AA4  28 00 00 00 */	cmplwi r0, 0
 /* 80035B68 00032AA8  40 82 00 1C */	bne lbl_80035B84
-/* 80035B6C 00032AAC  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram-_SDA_BASE_(r13)
+/* 80035B6C 00032AAC  80 6D 8D 08 */	lwz r3, sAramObject__7JKRAram@sda21(r13)
 /* 80035B70 00032AB0  38 9C 00 00 */	addi r4, r28, 0
 /* 80035B74 00032AB4  38 A0 00 00 */	li r5, 0
 /* 80035B78 00032AB8  80 63 00 78 */	lwz r3, 0x78(r3)
@@ -531,51 +531,51 @@ JKRDecompressFromDVDToAram__FP10JKRDvdFileUlUlUlUlUl:
 /* 80035E44 00032D84  3B 88 00 00 */	addi r28, r8, 0
 /* 80035E48 00032D88  3B E0 00 00 */	li r31, 0
 /* 80035E4C 00032D8C  38 A0 00 20 */	li r5, 0x20
-/* 80035E50 00032D90  81 2D 8D 68 */	lwz r9, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
-/* 80035E54 00032D94  80 0D 80 34 */	lwz r0, szpBufferSize__16JKRDvdAramRipper-_SDA_BASE_(r13)
+/* 80035E50 00032D90  81 2D 8D 68 */	lwz r9, sSystemHeap__7JKRHeap@sda21(r13)
+/* 80035E54 00032D94  80 0D 80 34 */	lwz r0, szpBufferSize__16JKRDvdAramRipper@sda21(r13)
 /* 80035E58 00032D98  81 89 00 00 */	lwz r12, 0(r9)
 /* 80035E5C 00032D9C  7D 23 4B 78 */	mr r3, r9
 /* 80035E60 00032DA0  7C 04 03 78 */	mr r4, r0
 /* 80035E64 00032DA4  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 80035E68 00032DA8  7D 88 03 A6 */	mtlr r12
 /* 80035E6C 00032DAC  4E 80 00 21 */	blrl 
-/* 80035E70 00032DB0  90 6D 8E 48 */	stw r3, szpBuf-_SDA_BASE_(r13)
+/* 80035E70 00032DB0  90 6D 8E 48 */	stw r3, szpBuf@sda21(r13)
 /* 80035E74 00032DB4  38 80 11 20 */	li r4, 0x1120
-/* 80035E78 00032DB8  80 0D 80 34 */	lwz r0, szpBufferSize__16JKRDvdAramRipper-_SDA_BASE_(r13)
+/* 80035E78 00032DB8  80 0D 80 34 */	lwz r0, szpBufferSize__16JKRDvdAramRipper@sda21(r13)
 /* 80035E7C 00032DBC  38 A0 00 00 */	li r5, 0
-/* 80035E80 00032DC0  80 CD 8E 48 */	lwz r6, szpBuf-_SDA_BASE_(r13)
-/* 80035E84 00032DC4  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80035E80 00032DC0  80 CD 8E 48 */	lwz r6, szpBuf@sda21(r13)
+/* 80035E84 00032DC4  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 80035E88 00032DC8  7C 06 02 14 */	add r0, r6, r0
-/* 80035E8C 00032DCC  90 0D 8E 4C */	stw r0, szpEnd-_SDA_BASE_(r13)
+/* 80035E8C 00032DCC  90 0D 8E 4C */	stw r0, szpEnd@sda21(r13)
 /* 80035E90 00032DD0  81 83 00 00 */	lwz r12, 0(r3)
 /* 80035E94 00032DD4  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 80035E98 00032DD8  7D 88 03 A6 */	mtlr r12
 /* 80035E9C 00032DDC  4E 80 00 21 */	blrl 
-/* 80035EA0 00032DE0  90 6D 8E 50 */	stw r3, refBuf-_SDA_BASE_(r13)
+/* 80035EA0 00032DE0  90 6D 8E 50 */	stw r3, refBuf@sda21(r13)
 /* 80035EA4 00032DE4  38 80 01 00 */	li r4, 0x100
-/* 80035EA8 00032DE8  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 80035EA8 00032DE8  80 6D 8D 68 */	lwz r3, sSystemHeap__7JKRHeap@sda21(r13)
 /* 80035EAC 00032DEC  38 A0 00 20 */	li r5, 0x20
-/* 80035EB0 00032DF0  80 CD 8E 50 */	lwz r6, refBuf-_SDA_BASE_(r13)
+/* 80035EB0 00032DF0  80 CD 8E 50 */	lwz r6, refBuf@sda21(r13)
 /* 80035EB4 00032DF4  38 06 11 20 */	addi r0, r6, 0x1120
-/* 80035EB8 00032DF8  90 CD 8E 58 */	stw r6, refCurrent-_SDA_BASE_(r13)
-/* 80035EBC 00032DFC  90 0D 8E 54 */	stw r0, refEnd-_SDA_BASE_(r13)
+/* 80035EB8 00032DF8  90 CD 8E 58 */	stw r6, refCurrent@sda21(r13)
+/* 80035EBC 00032DFC  90 0D 8E 54 */	stw r0, refEnd@sda21(r13)
 /* 80035EC0 00032E00  81 83 00 00 */	lwz r12, 0(r3)
 /* 80035EC4 00032E04  81 8C 00 0C */	lwz r12, 0xc(r12)
 /* 80035EC8 00032E08  7D 88 03 A6 */	mtlr r12
 /* 80035ECC 00032E0C  4E 80 00 21 */	blrl 
-/* 80035ED0 00032E10  90 6D 8E 5C */	stw r3, dmaBuf-_SDA_BASE_(r13)
+/* 80035ED0 00032E10  90 6D 8E 5C */	stw r3, dmaBuf@sda21(r13)
 /* 80035ED4 00032E14  7C 7C C8 50 */	subf r3, r28, r25
 /* 80035ED8 00032E18  38 00 00 00 */	li r0, 0
-/* 80035EDC 00032E1C  80 AD 8E 5C */	lwz r5, dmaBuf-_SDA_BASE_(r13)
-/* 80035EE0 00032E20  93 AD 8E 74 */	stw r29, srcFile-_SDA_BASE_(r13)
+/* 80035EDC 00032E1C  80 AD 8E 5C */	lwz r5, dmaBuf@sda21(r13)
+/* 80035EE0 00032E20  93 AD 8E 74 */	stw r29, srcFile@sda21(r13)
 /* 80035EE4 00032E24  38 85 01 00 */	addi r4, r5, 0x100
-/* 80035EE8 00032E28  90 8D 8E 60 */	stw r4, dmaEnd-_SDA_BASE_(r13)
-/* 80035EEC 00032E2C  90 AD 8E 64 */	stw r5, dmaCurrent-_SDA_BASE_(r13)
-/* 80035EF0 00032E30  93 8D 8E 68 */	stw r28, srcOffset-_SDA_BASE_(r13)
-/* 80035EF4 00032E34  90 6D 8E 6C */	stw r3, transLeft-_SDA_BASE_(r13)
-/* 80035EF8 00032E38  93 6D 8E 78 */	stw r27, fileOffset-_SDA_BASE_(r13)
-/* 80035EFC 00032E3C  90 0D 8E 7C */	stw r0, readCount-_SDA_BASE_(r13)
-/* 80035F00 00032E40  93 4D 8E 80 */	stw r26, maxDest-_SDA_BASE_(r13)
+/* 80035EE8 00032E28  90 8D 8E 60 */	stw r4, dmaEnd@sda21(r13)
+/* 80035EEC 00032E2C  90 AD 8E 64 */	stw r5, dmaCurrent@sda21(r13)
+/* 80035EF0 00032E30  93 8D 8E 68 */	stw r28, srcOffset@sda21(r13)
+/* 80035EF4 00032E34  90 6D 8E 6C */	stw r3, transLeft@sda21(r13)
+/* 80035EF8 00032E38  93 6D 8E 78 */	stw r27, fileOffset@sda21(r13)
+/* 80035EFC 00032E3C  90 0D 8E 7C */	stw r0, readCount@sda21(r13)
+/* 80035F00 00032E40  93 4D 8E 80 */	stw r26, maxDest@sda21(r13)
 /* 80035F04 00032E44  48 00 02 C9 */	bl firstSrcData__Fv
 /* 80035F08 00032E48  28 03 00 00 */	cmplwi r3, 0
 /* 80035F0C 00032E4C  41 82 00 10 */	beq lbl_80035F1C
@@ -583,13 +583,13 @@ JKRDecompressFromDVDToAram__FP10JKRDvdFileUlUlUlUlUl:
 /* 80035F14 00032E54  48 00 00 45 */	bl decompSZS_subroutine__FPUcUl
 /* 80035F18 00032E58  7C 7F 1B 78 */	mr r31, r3
 lbl_80035F1C:
-/* 80035F1C 00032E5C  80 6D 8E 48 */	lwz r3, szpBuf-_SDA_BASE_(r13)
+/* 80035F1C 00032E5C  80 6D 8E 48 */	lwz r3, szpBuf@sda21(r13)
 /* 80035F20 00032E60  38 80 00 00 */	li r4, 0
 /* 80035F24 00032E64  4B FD 65 A1 */	bl free__7JKRHeapFPvP7JKRHeap
-/* 80035F28 00032E68  80 6D 8E 50 */	lwz r3, refBuf-_SDA_BASE_(r13)
+/* 80035F28 00032E68  80 6D 8E 50 */	lwz r3, refBuf@sda21(r13)
 /* 80035F2C 00032E6C  38 80 00 00 */	li r4, 0
 /* 80035F30 00032E70  4B FD 65 95 */	bl free__7JKRHeapFPvP7JKRHeap
-/* 80035F34 00032E74  80 6D 8E 5C */	lwz r3, dmaBuf-_SDA_BASE_(r13)
+/* 80035F34 00032E74  80 6D 8E 5C */	lwz r3, dmaBuf@sda21(r13)
 /* 80035F38 00032E78  38 80 00 00 */	li r4, 0
 /* 80035F3C 00032E7C  4B FD 65 89 */	bl free__7JKRHeapFPvP7JKRHeap
 /* 80035F40 00032E80  7F E3 FB 78 */	mr r3, r31
@@ -625,9 +625,9 @@ lbl_80035FA8:
 /* 80035FA8 00032EE8  38 60 FF FF */	li r3, -1
 /* 80035FAC 00032EEC  48 00 02 0C */	b lbl_800361B8
 lbl_80035FB0:
-/* 80035FB0 00032EF0  80 AD 8E 78 */	lwz r5, fileOffset-_SDA_BASE_(r13)
+/* 80035FB0 00032EF0  80 AD 8E 78 */	lwz r5, fileOffset@sda21(r13)
 /* 80035FB4 00032EF4  80 83 00 04 */	lwz r4, 4(r3)
-/* 80035FB8 00032EF8  80 0D 8E 80 */	lwz r0, maxDest-_SDA_BASE_(r13)
+/* 80035FB8 00032EF8  80 0D 8E 80 */	lwz r0, maxDest@sda21(r13)
 /* 80035FBC 00032EFC  7C 85 20 50 */	subf r4, r5, r4
 /* 80035FC0 00032F00  7C 99 22 14 */	add r4, r25, r4
 /* 80035FC4 00032F04  7C 19 02 14 */	add r0, r25, r0
@@ -640,10 +640,10 @@ lbl_80035FD8:
 lbl_80035FDC:
 /* 80035FDC 00032F1C  2C 1D 00 00 */	cmpwi r29, 0
 /* 80035FE0 00032F20  40 82 00 34 */	bne lbl_80036014
-/* 80035FE4 00032F24  80 0D 8E 70 */	lwz r0, srcLimit-_SDA_BASE_(r13)
+/* 80035FE4 00032F24  80 0D 8E 70 */	lwz r0, srcLimit@sda21(r13)
 /* 80035FE8 00032F28  7C 18 00 40 */	cmplw r24, r0
 /* 80035FEC 00032F2C  40 81 00 1C */	ble lbl_80036008
-/* 80035FF0 00032F30  80 0D 8E 6C */	lwz r0, transLeft-_SDA_BASE_(r13)
+/* 80035FF0 00032F30  80 0D 8E 6C */	lwz r0, transLeft@sda21(r13)
 /* 80035FF4 00032F34  28 00 00 00 */	cmplwi r0, 0
 /* 80035FF8 00032F38  41 82 00 10 */	beq lbl_80036008
 /* 80035FFC 00032F3C  7F 03 C3 78 */	mr r3, r24
@@ -656,18 +656,18 @@ lbl_80036008:
 lbl_80036014:
 /* 80036014 00032F54  57 80 06 31 */	rlwinm. r0, r28, 0, 0x18, 0x18
 /* 80036018 00032F58  41 82 00 90 */	beq lbl_800360A8
-/* 8003601C 00032F5C  80 6D 8E 7C */	lwz r3, readCount-_SDA_BASE_(r13)
-/* 80036020 00032F60  80 0D 8E 78 */	lwz r0, fileOffset-_SDA_BASE_(r13)
+/* 8003601C 00032F5C  80 6D 8E 7C */	lwz r3, readCount@sda21(r13)
+/* 80036020 00032F60  80 0D 8E 78 */	lwz r0, fileOffset@sda21(r13)
 /* 80036024 00032F64  7C 03 00 40 */	cmplw r3, r0
 /* 80036028 00032F68  41 80 00 40 */	blt lbl_80036068
-/* 8003602C 00032F6C  80 6D 8E 64 */	lwz r3, dmaCurrent-_SDA_BASE_(r13)
+/* 8003602C 00032F6C  80 6D 8E 64 */	lwz r3, dmaCurrent@sda21(r13)
 /* 80036030 00032F70  3B 39 00 01 */	addi r25, r25, 1
 /* 80036034 00032F74  88 98 00 00 */	lbz r4, 0(r24)
 /* 80036038 00032F78  38 03 00 01 */	addi r0, r3, 1
-/* 8003603C 00032F7C  90 0D 8E 64 */	stw r0, dmaCurrent-_SDA_BASE_(r13)
+/* 8003603C 00032F7C  90 0D 8E 64 */	stw r0, dmaCurrent@sda21(r13)
 /* 80036040 00032F80  98 83 00 00 */	stb r4, 0(r3)
-/* 80036044 00032F84  80 6D 8E 64 */	lwz r3, dmaCurrent-_SDA_BASE_(r13)
-/* 80036048 00032F88  80 0D 8E 60 */	lwz r0, dmaEnd-_SDA_BASE_(r13)
+/* 80036044 00032F84  80 6D 8E 64 */	lwz r3, dmaCurrent@sda21(r13)
+/* 80036048 00032F88  80 0D 8E 60 */	lwz r0, dmaEnd@sda21(r13)
 /* 8003604C 00032F8C  7C 03 00 40 */	cmplw r3, r0
 /* 80036050 00032F90  40 82 00 10 */	bne lbl_80036060
 /* 80036054 00032F94  7F 43 D3 78 */	mr r3, r26
@@ -677,37 +677,37 @@ lbl_80036060:
 /* 80036060 00032FA0  7C 19 F8 40 */	cmplw r25, r31
 /* 80036064 00032FA4  41 82 01 48 */	beq lbl_800361AC
 lbl_80036068:
-/* 80036068 00032FA8  80 6D 8E 58 */	lwz r3, refCurrent-_SDA_BASE_(r13)
+/* 80036068 00032FA8  80 6D 8E 58 */	lwz r3, refCurrent@sda21(r13)
 /* 8003606C 00032FAC  88 98 00 00 */	lbz r4, 0(r24)
 /* 80036070 00032FB0  38 03 00 01 */	addi r0, r3, 1
-/* 80036074 00032FB4  90 0D 8E 58 */	stw r0, refCurrent-_SDA_BASE_(r13)
+/* 80036074 00032FB4  90 0D 8E 58 */	stw r0, refCurrent@sda21(r13)
 /* 80036078 00032FB8  98 83 00 00 */	stb r4, 0(r3)
-/* 8003607C 00032FBC  80 6D 8E 58 */	lwz r3, refCurrent-_SDA_BASE_(r13)
-/* 80036080 00032FC0  80 0D 8E 54 */	lwz r0, refEnd-_SDA_BASE_(r13)
+/* 8003607C 00032FBC  80 6D 8E 58 */	lwz r3, refCurrent@sda21(r13)
+/* 80036080 00032FC0  80 0D 8E 54 */	lwz r0, refEnd@sda21(r13)
 /* 80036084 00032FC4  7C 03 00 40 */	cmplw r3, r0
 /* 80036088 00032FC8  40 82 00 0C */	bne lbl_80036094
-/* 8003608C 00032FCC  80 0D 8E 50 */	lwz r0, refBuf-_SDA_BASE_(r13)
-/* 80036090 00032FD0  90 0D 8E 58 */	stw r0, refCurrent-_SDA_BASE_(r13)
+/* 8003608C 00032FCC  80 0D 8E 50 */	lwz r0, refBuf@sda21(r13)
+/* 80036090 00032FD0  90 0D 8E 58 */	stw r0, refCurrent@sda21(r13)
 lbl_80036094:
-/* 80036094 00032FD4  80 6D 8E 7C */	lwz r3, readCount-_SDA_BASE_(r13)
+/* 80036094 00032FD4  80 6D 8E 7C */	lwz r3, readCount@sda21(r13)
 /* 80036098 00032FD8  3B 18 00 01 */	addi r24, r24, 1
 /* 8003609C 00032FDC  38 03 00 01 */	addi r0, r3, 1
-/* 800360A0 00032FE0  90 0D 8E 7C */	stw r0, readCount-_SDA_BASE_(r13)
+/* 800360A0 00032FE0  90 0D 8E 7C */	stw r0, readCount@sda21(r13)
 /* 800360A4 00032FE4  48 00 00 F8 */	b lbl_8003619C
 lbl_800360A8:
 /* 800360A8 00032FE8  88 B8 00 00 */	lbz r5, 0(r24)
 /* 800360AC 00032FEC  88 78 00 01 */	lbz r3, 1(r24)
 /* 800360B0 00032FF0  3B 18 00 02 */	addi r24, r24, 2
-/* 800360B4 00032FF4  80 0D 8E 58 */	lwz r0, refCurrent-_SDA_BASE_(r13)
+/* 800360B4 00032FF4  80 0D 8E 58 */	lwz r0, refCurrent@sda21(r13)
 /* 800360B8 00032FF8  50 A3 45 2E */	rlwimi r3, r5, 8, 0x14, 0x17
-/* 800360BC 00032FFC  80 8D 8E 50 */	lwz r4, refBuf-_SDA_BASE_(r13)
+/* 800360BC 00032FFC  80 8D 8E 50 */	lwz r4, refBuf@sda21(r13)
 /* 800360C0 00033000  7C 63 00 50 */	subf r3, r3, r0
 /* 800360C4 00033004  38 03 FF FF */	addi r0, r3, -1
 /* 800360C8 00033008  7C 00 20 40 */	cmplw r0, r4
 /* 800360CC 0003300C  7C 1E 03 78 */	mr r30, r0
 /* 800360D0 00033010  7C BB 26 70 */	srawi r27, r5, 4
 /* 800360D4 00033014  40 80 00 10 */	bge lbl_800360E4
-/* 800360D8 00033018  80 0D 8E 54 */	lwz r0, refEnd-_SDA_BASE_(r13)
+/* 800360D8 00033018  80 0D 8E 54 */	lwz r0, refEnd@sda21(r13)
 /* 800360DC 0003301C  7C 04 00 50 */	subf r0, r4, r0
 /* 800360E0 00033020  7F DE 02 14 */	add r30, r30, r0
 lbl_800360E4:
@@ -720,18 +720,18 @@ lbl_800360E4:
 lbl_800360FC:
 /* 800360FC 0003303C  3B 7B 00 02 */	addi r27, r27, 2
 lbl_80036100:
-/* 80036100 00033040  80 6D 8E 7C */	lwz r3, readCount-_SDA_BASE_(r13)
-/* 80036104 00033044  80 0D 8E 78 */	lwz r0, fileOffset-_SDA_BASE_(r13)
+/* 80036100 00033040  80 6D 8E 7C */	lwz r3, readCount@sda21(r13)
+/* 80036104 00033044  80 0D 8E 78 */	lwz r0, fileOffset@sda21(r13)
 /* 80036108 00033048  7C 03 00 40 */	cmplw r3, r0
 /* 8003610C 0003304C  41 80 00 40 */	blt lbl_8003614C
-/* 80036110 00033050  80 6D 8E 64 */	lwz r3, dmaCurrent-_SDA_BASE_(r13)
+/* 80036110 00033050  80 6D 8E 64 */	lwz r3, dmaCurrent@sda21(r13)
 /* 80036114 00033054  3B 39 00 01 */	addi r25, r25, 1
 /* 80036118 00033058  88 9E 00 00 */	lbz r4, 0(r30)
 /* 8003611C 0003305C  38 03 00 01 */	addi r0, r3, 1
-/* 80036120 00033060  90 0D 8E 64 */	stw r0, dmaCurrent-_SDA_BASE_(r13)
+/* 80036120 00033060  90 0D 8E 64 */	stw r0, dmaCurrent@sda21(r13)
 /* 80036124 00033064  98 83 00 00 */	stb r4, 0(r3)
-/* 80036128 00033068  80 6D 8E 64 */	lwz r3, dmaCurrent-_SDA_BASE_(r13)
-/* 8003612C 0003306C  80 0D 8E 60 */	lwz r0, dmaEnd-_SDA_BASE_(r13)
+/* 80036128 00033068  80 6D 8E 64 */	lwz r3, dmaCurrent@sda21(r13)
+/* 8003612C 0003306C  80 0D 8E 60 */	lwz r0, dmaEnd@sda21(r13)
 /* 80036130 00033070  7C 03 00 40 */	cmplw r3, r0
 /* 80036134 00033074  40 82 00 10 */	bne lbl_80036144
 /* 80036138 00033078  7F 43 D3 78 */	mr r3, r26
@@ -741,27 +741,27 @@ lbl_80036144:
 /* 80036144 00033084  7C 19 F8 40 */	cmplw r25, r31
 /* 80036148 00033088  41 82 00 54 */	beq lbl_8003619C
 lbl_8003614C:
-/* 8003614C 0003308C  80 6D 8E 58 */	lwz r3, refCurrent-_SDA_BASE_(r13)
+/* 8003614C 0003308C  80 6D 8E 58 */	lwz r3, refCurrent@sda21(r13)
 /* 80036150 00033090  88 9E 00 00 */	lbz r4, 0(r30)
 /* 80036154 00033094  38 03 00 01 */	addi r0, r3, 1
-/* 80036158 00033098  90 0D 8E 58 */	stw r0, refCurrent-_SDA_BASE_(r13)
+/* 80036158 00033098  90 0D 8E 58 */	stw r0, refCurrent@sda21(r13)
 /* 8003615C 0003309C  98 83 00 00 */	stb r4, 0(r3)
-/* 80036160 000330A0  80 0D 8E 58 */	lwz r0, refCurrent-_SDA_BASE_(r13)
-/* 80036164 000330A4  80 6D 8E 54 */	lwz r3, refEnd-_SDA_BASE_(r13)
+/* 80036160 000330A0  80 0D 8E 58 */	lwz r0, refCurrent@sda21(r13)
+/* 80036164 000330A4  80 6D 8E 54 */	lwz r3, refEnd@sda21(r13)
 /* 80036168 000330A8  7C 00 18 40 */	cmplw r0, r3
 /* 8003616C 000330AC  40 82 00 0C */	bne lbl_80036178
-/* 80036170 000330B0  80 0D 8E 50 */	lwz r0, refBuf-_SDA_BASE_(r13)
-/* 80036174 000330B4  90 0D 8E 58 */	stw r0, refCurrent-_SDA_BASE_(r13)
+/* 80036170 000330B0  80 0D 8E 50 */	lwz r0, refBuf@sda21(r13)
+/* 80036174 000330B4  90 0D 8E 58 */	stw r0, refCurrent@sda21(r13)
 lbl_80036178:
 /* 80036178 000330B8  3B DE 00 01 */	addi r30, r30, 1
 /* 8003617C 000330BC  7C 1E 18 40 */	cmplw r30, r3
 /* 80036180 000330C0  40 82 00 08 */	bne lbl_80036188
-/* 80036184 000330C4  83 CD 8E 50 */	lwz r30, refBuf-_SDA_BASE_(r13)
+/* 80036184 000330C4  83 CD 8E 50 */	lwz r30, refBuf@sda21(r13)
 lbl_80036188:
-/* 80036188 000330C8  80 6D 8E 7C */	lwz r3, readCount-_SDA_BASE_(r13)
+/* 80036188 000330C8  80 6D 8E 7C */	lwz r3, readCount@sda21(r13)
 /* 8003618C 000330CC  37 7B FF FF */	addic. r27, r27, -1
 /* 80036190 000330D0  38 03 00 01 */	addi r0, r3, 1
-/* 80036194 000330D4  90 0D 8E 7C */	stw r0, readCount-_SDA_BASE_(r13)
+/* 80036194 000330D4  90 0D 8E 7C */	stw r0, readCount@sda21(r13)
 /* 80036198 000330D8  40 82 FF 68 */	bne lbl_80036100
 lbl_8003619C:
 /* 8003619C 000330DC  7C 19 F8 40 */	cmplw r25, r31
@@ -785,12 +785,12 @@ firstSrcData__Fv:
 /* 800361D4 00033114  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800361D8 00033118  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 800361DC 0003311C  93 C1 00 18 */	stw r30, 0x18(r1)
-/* 800361E0 00033120  80 8D 8E 4C */	lwz r4, szpEnd-_SDA_BASE_(r13)
-/* 800361E4 00033124  80 6D 8E 48 */	lwz r3, szpBuf-_SDA_BASE_(r13)
+/* 800361E0 00033120  80 8D 8E 4C */	lwz r4, szpEnd@sda21(r13)
+/* 800361E4 00033124  80 6D 8E 48 */	lwz r3, szpBuf@sda21(r13)
 /* 800361E8 00033128  38 04 FF E7 */	addi r0, r4, -25
-/* 800361EC 0003312C  83 ED 8E 6C */	lwz r31, transLeft-_SDA_BASE_(r13)
+/* 800361EC 0003312C  83 ED 8E 6C */	lwz r31, transLeft@sda21(r13)
 /* 800361F0 00033130  7C 83 20 50 */	subf r4, r3, r4
-/* 800361F4 00033134  90 0D 8E 70 */	stw r0, srcLimit-_SDA_BASE_(r13)
+/* 800361F4 00033134  90 0D 8E 70 */	stw r0, srcLimit@sda21(r13)
 /* 800361F8 00033138  7C 1F 20 40 */	cmplw r31, r4
 /* 800361FC 0003313C  3B C3 00 00 */	addi r30, r3, 0
 /* 80036200 00033140  38 04 00 00 */	addi r0, r4, 0
@@ -799,7 +799,7 @@ firstSrcData__Fv:
 lbl_8003620C:
 /* 8003620C 0003314C  7C 1F 03 78 */	mr r31, r0
 lbl_80036210:
-/* 80036210 00033150  80 6D 8E 74 */	lwz r3, srcFile-_SDA_BASE_(r13)
+/* 80036210 00033150  80 6D 8E 74 */	lwz r3, srcFile@sda21(r13)
 /* 80036214 00033154  38 9E 00 00 */	addi r4, r30, 0
 /* 80036218 00033158  38 BF 00 00 */	addi r5, r31, 0
 /* 8003621C 0003315C  38 63 00 5C */	addi r3, r3, 0x5c
@@ -808,7 +808,7 @@ lbl_80036210:
 /* 80036228 00033168  48 06 04 6D */	bl DVDReadPrio
 /* 8003622C 0003316C  2C 03 00 00 */	cmpwi r3, 0
 /* 80036230 00033170  40 80 00 20 */	bge lbl_80036250
-/* 80036234 00033174  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper-_SDA_BASE_(r13)
+/* 80036234 00033174  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper@sda21(r13)
 /* 80036238 00033178  28 00 00 00 */	cmplwi r0, 0
 /* 8003623C 0003317C  40 82 00 0C */	bne lbl_80036248
 /* 80036240 00033180  38 60 00 00 */	li r3, 0
@@ -817,13 +817,13 @@ lbl_80036248:
 /* 80036248 00033188  48 06 3D 5D */	bl VIWaitForRetrace
 /* 8003624C 0003318C  4B FF FF C4 */	b lbl_80036210
 lbl_80036250:
-/* 80036250 00033190  80 8D 8E 68 */	lwz r4, srcOffset-_SDA_BASE_(r13)
+/* 80036250 00033190  80 8D 8E 68 */	lwz r4, srcOffset@sda21(r13)
 /* 80036254 00033194  7F C3 F3 78 */	mr r3, r30
-/* 80036258 00033198  80 0D 8E 6C */	lwz r0, transLeft-_SDA_BASE_(r13)
+/* 80036258 00033198  80 0D 8E 6C */	lwz r0, transLeft@sda21(r13)
 /* 8003625C 0003319C  7C 84 FA 14 */	add r4, r4, r31
 /* 80036260 000331A0  7C 1F 00 50 */	subf r0, r31, r0
-/* 80036264 000331A4  90 8D 8E 68 */	stw r4, srcOffset-_SDA_BASE_(r13)
-/* 80036268 000331A8  90 0D 8E 6C */	stw r0, transLeft-_SDA_BASE_(r13)
+/* 80036264 000331A4  90 8D 8E 68 */	stw r4, srcOffset@sda21(r13)
+/* 80036268 000331A8  90 0D 8E 6C */	stw r0, transLeft@sda21(r13)
 lbl_8003626C:
 /* 8003626C 000331AC  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80036270 000331B0  83 E1 00 1C */	lwz r31, 0x1c(r1)
@@ -840,40 +840,40 @@ nextSrcData__FPUc:
 /* 80036294 000331D4  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 80036298 000331D8  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8003629C 000331DC  93 A1 00 1C */	stw r29, 0x1c(r1)
-/* 800362A0 000331E0  80 0D 8E 4C */	lwz r0, szpEnd-_SDA_BASE_(r13)
+/* 800362A0 000331E0  80 0D 8E 4C */	lwz r0, szpEnd@sda21(r13)
 /* 800362A4 000331E4  7C 04 00 50 */	subf r0, r4, r0
 /* 800362A8 000331E8  54 05 06 FF */	clrlwi. r5, r0, 0x1b
 /* 800362AC 000331EC  7C 1F 03 78 */	mr r31, r0
 /* 800362B0 000331F0  41 82 00 14 */	beq lbl_800362C4
-/* 800362B4 000331F4  80 6D 8E 48 */	lwz r3, szpBuf-_SDA_BASE_(r13)
+/* 800362B4 000331F4  80 6D 8E 48 */	lwz r3, szpBuf@sda21(r13)
 /* 800362B8 000331F8  38 03 00 20 */	addi r0, r3, 0x20
 /* 800362BC 000331FC  7F C5 00 50 */	subf r30, r5, r0
 /* 800362C0 00033200  48 00 00 08 */	b lbl_800362C8
 lbl_800362C4:
-/* 800362C4 00033204  83 CD 8E 48 */	lwz r30, szpBuf-_SDA_BASE_(r13)
+/* 800362C4 00033204  83 CD 8E 48 */	lwz r30, szpBuf@sda21(r13)
 lbl_800362C8:
 /* 800362C8 00033208  38 7E 00 00 */	addi r3, r30, 0
 /* 800362CC 0003320C  38 BF 00 00 */	addi r5, r31, 0
 /* 800362D0 00033210  4B FC CF 25 */	bl memcpy
-/* 800362D4 00033214  80 0D 8E 4C */	lwz r0, szpEnd-_SDA_BASE_(r13)
+/* 800362D4 00033214  80 0D 8E 4C */	lwz r0, szpEnd@sda21(r13)
 /* 800362D8 00033218  7F FE FA 14 */	add r31, r30, r31
-/* 800362DC 0003321C  80 6D 8E 6C */	lwz r3, transLeft-_SDA_BASE_(r13)
+/* 800362DC 0003321C  80 6D 8E 6C */	lwz r3, transLeft@sda21(r13)
 /* 800362E0 00033220  7C 1F 00 50 */	subf r0, r31, r0
 /* 800362E4 00033224  7C 00 18 40 */	cmplw r0, r3
 /* 800362E8 00033228  7C 1D 03 78 */	mr r29, r0
 /* 800362EC 0003322C  40 81 00 08 */	ble lbl_800362F4
 /* 800362F0 00033230  7C 7D 1B 78 */	mr r29, r3
 lbl_800362F4:
-/* 800362F4 00033234  80 6D 8E 74 */	lwz r3, srcFile-_SDA_BASE_(r13)
+/* 800362F4 00033234  80 6D 8E 74 */	lwz r3, srcFile@sda21(r13)
 /* 800362F8 00033238  7F E4 FB 78 */	mr r4, r31
-/* 800362FC 0003323C  80 CD 8E 68 */	lwz r6, srcOffset-_SDA_BASE_(r13)
+/* 800362FC 0003323C  80 CD 8E 68 */	lwz r6, srcOffset@sda21(r13)
 /* 80036300 00033240  38 BD 00 00 */	addi r5, r29, 0
 /* 80036304 00033244  38 63 00 5C */	addi r3, r3, 0x5c
 /* 80036308 00033248  38 E0 00 02 */	li r7, 2
 /* 8003630C 0003324C  48 06 03 89 */	bl DVDReadPrio
 /* 80036310 00033250  2C 03 00 00 */	cmpwi r3, 0
 /* 80036314 00033254  40 80 00 20 */	bge lbl_80036334
-/* 80036318 00033258  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper-_SDA_BASE_(r13)
+/* 80036318 00033258  88 0D 80 30 */	lbz r0, errorRetry__16JKRDvdAramRipper@sda21(r13)
 /* 8003631C 0003325C  28 00 00 00 */	cmplwi r0, 0
 /* 80036320 00033260  40 82 00 0C */	bne lbl_8003632C
 /* 80036324 00033264  38 60 00 00 */	li r3, 0
@@ -882,17 +882,17 @@ lbl_8003632C:
 /* 8003632C 0003326C  48 06 3C 79 */	bl VIWaitForRetrace
 /* 80036330 00033270  4B FF FF C4 */	b lbl_800362F4
 lbl_80036334:
-/* 80036334 00033274  80 0D 8E 6C */	lwz r0, transLeft-_SDA_BASE_(r13)
-/* 80036338 00033278  80 6D 8E 68 */	lwz r3, srcOffset-_SDA_BASE_(r13)
+/* 80036334 00033274  80 0D 8E 6C */	lwz r0, transLeft@sda21(r13)
+/* 80036338 00033278  80 6D 8E 68 */	lwz r3, srcOffset@sda21(r13)
 /* 8003633C 0003327C  7C 1D 00 50 */	subf r0, r29, r0
-/* 80036340 00033280  90 0D 8E 6C */	stw r0, transLeft-_SDA_BASE_(r13)
+/* 80036340 00033280  90 0D 8E 6C */	stw r0, transLeft@sda21(r13)
 /* 80036344 00033284  7C 63 EA 14 */	add r3, r3, r29
-/* 80036348 00033288  80 0D 8E 6C */	lwz r0, transLeft-_SDA_BASE_(r13)
-/* 8003634C 0003328C  90 6D 8E 68 */	stw r3, srcOffset-_SDA_BASE_(r13)
+/* 80036348 00033288  80 0D 8E 6C */	lwz r0, transLeft@sda21(r13)
+/* 8003634C 0003328C  90 6D 8E 68 */	stw r3, srcOffset@sda21(r13)
 /* 80036350 00033290  28 00 00 00 */	cmplwi r0, 0
 /* 80036354 00033294  40 82 00 0C */	bne lbl_80036360
 /* 80036358 00033298  7C 1F EA 14 */	add r0, r31, r29
-/* 8003635C 0003329C  90 0D 8E 70 */	stw r0, srcLimit-_SDA_BASE_(r13)
+/* 8003635C 0003329C  90 0D 8E 70 */	stw r0, srcLimit@sda21(r13)
 lbl_80036360:
 /* 80036360 000332A0  7F C3 F3 78 */	mr r3, r30
 lbl_80036364:
@@ -910,8 +910,8 @@ dmaBufferFlush__FUl:
 /* 80036384 000332C4  90 01 00 04 */	stw r0, 4(r1)
 /* 80036388 000332C8  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8003638C 000332CC  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 80036390 000332D0  80 0D 8E 64 */	lwz r0, dmaCurrent-_SDA_BASE_(r13)
-/* 80036394 000332D4  80 8D 8E 5C */	lwz r4, dmaBuf-_SDA_BASE_(r13)
+/* 80036390 000332D0  80 0D 8E 64 */	lwz r0, dmaCurrent@sda21(r13)
+/* 80036394 000332D4  80 8D 8E 5C */	lwz r4, dmaBuf@sda21(r13)
 /* 80036398 000332D8  7C 00 20 40 */	cmplw r0, r4
 /* 8003639C 000332DC  40 82 00 0C */	bne lbl_800363A8
 /* 800363A0 000332E0  38 60 00 00 */	li r3, 0
@@ -925,9 +925,9 @@ lbl_800363A8:
 /* 800363BC 000332FC  38 60 00 00 */	li r3, 0
 /* 800363C0 00033300  38 E0 00 00 */	li r7, 0
 /* 800363C4 00033304  48 00 41 61 */	bl orderSync__12JKRAramPieceFiUlUlUlP12JKRAramBlock
-/* 800363C8 00033308  80 0D 8E 5C */	lwz r0, dmaBuf-_SDA_BASE_(r13)
+/* 800363C8 00033308  80 0D 8E 5C */	lwz r0, dmaBuf@sda21(r13)
 /* 800363CC 0003330C  7F E3 FB 78 */	mr r3, r31
-/* 800363D0 00033310  90 0D 8E 64 */	stw r0, dmaCurrent-_SDA_BASE_(r13)
+/* 800363D0 00033310  90 0D 8E 64 */	stw r0, dmaCurrent@sda21(r13)
 lbl_800363D4:
 /* 800363D4 00033314  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800363D8 00033318  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -984,7 +984,7 @@ lbl_80036470:
 /* 80036488 000333C8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBD0, 0x4
+  .4byte __sinit_JKRDvdAramRipper_cpp
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 errorRetry__16JKRDvdAramRipper:

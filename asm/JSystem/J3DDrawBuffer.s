@@ -20,9 +20,9 @@ __ct__13J3DDrawBufferFUl:
 /* 80039168 000360A8  7F C3 F3 78 */	mr r3, r30
 /* 8003916C 000360AC  90 9E 00 08 */	stw r4, 8(r30)
 /* 80039170 000360B0  90 9E 00 0C */	stw r4, 0xc(r30)
-/* 80039174 000360B4  C0 02 82 E8 */	lfs f0, $$2824-_SDA2_BASE_(r2)
+/* 80039174 000360B4  C0 02 82 E8 */	lfs f0, $$2824@sda21(r2)
 /* 80039178 000360B8  D0 1E 00 10 */	stfs f0, 0x10(r30)
-/* 8003917C 000360BC  C0 02 82 EC */	lfs f0, $$2825-_SDA2_BASE_(r2)
+/* 8003917C 000360BC  C0 02 82 EC */	lfs f0, $$2825@sda21(r2)
 /* 80039180 000360C0  D0 1E 00 14 */	stfs f0, 0x14(r30)
 /* 80039184 000360C4  90 9E 00 1C */	stw r4, 0x1c(r30)
 /* 80039188 000360C8  90 9E 00 20 */	stw r4, 0x20(r30)
@@ -31,7 +31,7 @@ __ct__13J3DDrawBufferFUl:
 /* 80039194 000360D4  90 81 00 14 */	stw r4, 0x14(r1)
 /* 80039198 000360D8  C0 1E 00 10 */	lfs f0, 0x10(r30)
 /* 8003919C 000360DC  90 01 00 10 */	stw r0, 0x10(r1)
-/* 800391A0 000360E0  C8 22 82 F0 */	lfd f1, $$2827-_SDA2_BASE_(r2)
+/* 800391A0 000360E0  C8 22 82 F0 */	lfd f1, $$2827@sda21(r2)
 /* 800391A4 000360E4  EC 42 00 28 */	fsubs f2, f2, f0
 /* 800391A8 000360E8  C8 01 00 10 */	lfd f0, 0x10(r1)
 /* 800391AC 000360EC  EC 00 08 28 */	fsubs f0, f0, f1
@@ -530,30 +530,68 @@ __sinit_J3DDrawBuffer_cpp:
 /* 80039854 00036794  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBD4, 0x4
+  .4byte __sinit_J3DDrawBuffer_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2814:
-	.incbin "baserom.dol", 0x3A6DD8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryMatSort__13J3DDrawBufferFP12J3DMatPacket
 $$2815:
-	.incbin "baserom.dol", 0x3A6DE4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryMatAnmSort__13J3DDrawBufferFP12J3DMatPacket
 $$2816:
-	.incbin "baserom.dol", 0x3A6DF0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryZSort__13J3DDrawBufferFP12J3DMatPacket
 $$2817:
-	.incbin "baserom.dol", 0x3A6DFC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryModelSort__13J3DDrawBufferFP12J3DMatPacket
 $$2818:
-	.incbin "baserom.dol", 0x3A6E08, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryInvalidSort__13J3DDrawBufferFP12J3DMatPacket
 $$2819:
-	.incbin "baserom.dol", 0x3A6E14, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte entryNonSort__13J3DDrawBufferFP12J3DMatPacket
 .global sortFuncTable__13J3DDrawBuffer
 sortFuncTable__13J3DDrawBuffer:
-	.incbin "baserom.dol", 0x3A6E20, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$2820:
-	.incbin "baserom.dol", 0x3A6E68, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte drawHead__13J3DDrawBufferCFv
 $$2821:
-	.incbin "baserom.dol", 0x3A6E74, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte drawTail__13J3DDrawBufferCFv
 drawFuncTable__13J3DDrawBuffer:
-	.incbin "baserom.dol", 0x3A6E80, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2824:

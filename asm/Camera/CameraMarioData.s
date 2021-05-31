@@ -144,13 +144,13 @@ lbl_80358B7C:
 
 .global isMarioGoDown__16TCameraMarioDataCFv
 isMarioGoDown__16TCameraMarioDataCFv:
-/* 80358B94 00355AD4  C0 42 05 98 */	lfs f2, $$22149-_SDA2_BASE_(r2)
+/* 80358B94 00355AD4  C0 42 05 98 */	lfs f2, $$22149@sda21(r2)
 /* 80358B98 00355AD8  38 00 00 00 */	li r0, 0
 /* 80358B9C 00355ADC  C0 03 00 10 */	lfs f0, 0x10(r3)
 /* 80358BA0 00355AE0  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 80358BA4 00355AE4  41 82 00 24 */	beq lbl_80358BC8
-/* 80358BA8 00355AE8  80 8D 98 DC */	lwz r4, gpMarioPos-_SDA_BASE_(r13)
-/* 80358BAC 00355AEC  80 6D 98 B8 */	lwz r3, gpMarioOriginal-_SDA_BASE_(r13)
+/* 80358BA8 00355AE8  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
+/* 80358BAC 00355AEC  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
 /* 80358BB0 00355AF0  C0 24 00 04 */	lfs f1, 4(r4)
 /* 80358BB4 00355AF4  C0 03 02 A0 */	lfs f0, 0x2a0(r3)
 /* 80358BB8 00355AF8  EC 01 00 28 */	fsubs f0, f1, f0
@@ -181,13 +181,13 @@ calcAndSetMarioData__16TCameraMarioDataFv:
 /* 80358C0C 00355B4C  41 82 00 08 */	beq lbl_80358C14
 /* 80358C10 00355B50  48 00 00 14 */	b lbl_80358C24
 lbl_80358C14:
-/* 80358C14 00355B54  C0 02 05 98 */	lfs f0, $$22149-_SDA2_BASE_(r2)
+/* 80358C14 00355B54  C0 02 05 98 */	lfs f0, $$22149@sda21(r2)
 /* 80358C18 00355B58  D0 1F 00 0C */	stfs f0, 0xc(r31)
 /* 80358C1C 00355B5C  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 80358C20 00355B60  48 00 00 70 */	b lbl_80358C90
 lbl_80358C24:
-/* 80358C24 00355B64  80 8D 98 B8 */	lwz r4, gpMarioOriginal-_SDA_BASE_(r13)
-/* 80358C28 00355B68  80 AD 98 DC */	lwz r5, gpMarioPos-_SDA_BASE_(r13)
+/* 80358C24 00355B64  80 8D 98 B8 */	lwz r4, gpMarioOriginal@sda21(r13)
+/* 80358C28 00355B68  80 AD 98 DC */	lwz r5, gpMarioPos@sda21(r13)
 /* 80358C2C 00355B6C  38 84 02 9C */	addi r4, r4, 0x29c
 /* 80358C30 00355B70  C0 25 00 08 */	lfs f1, 8(r5)
 /* 80358C34 00355B74  C0 04 00 08 */	lfs f0, 8(r4)
@@ -204,13 +204,13 @@ lbl_80358C24:
 /* 80358C60 00355BA0  D0 3F 00 0C */	stfs f1, 0xc(r31)
 /* 80358C64 00355BA4  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 80358C68 00355BA8  C0 3F 00 0C */	lfs f1, 0xc(r31)
-/* 80358C6C 00355BAC  C0 02 05 9C */	lfs f0, $$22190-_SDA2_BASE_(r2)
+/* 80358C6C 00355BAC  C0 02 05 9C */	lfs f0, $$22190@sda21(r2)
 /* 80358C70 00355BB0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80358C74 00355BB4  40 81 00 08 */	ble lbl_80358C7C
 /* 80358C78 00355BB8  D0 1F 00 0C */	stfs f0, 0xc(r31)
 lbl_80358C7C:
 /* 80358C7C 00355BBC  C0 3F 00 10 */	lfs f1, 0x10(r31)
-/* 80358C80 00355BC0  C0 02 05 9C */	lfs f0, $$22190-_SDA2_BASE_(r2)
+/* 80358C80 00355BC0  C0 02 05 9C */	lfs f0, $$22190@sda21(r2)
 /* 80358C84 00355BC4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80358C88 00355BC8  40 81 00 08 */	ble lbl_80358C90
 /* 80358C8C 00355BCC  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -242,13 +242,13 @@ lbl_80358CB8:
 /* 80358CE8 00355C28  4B DA 37 11 */	bl CLBCalcRatio$$0s$$1__Fsss
 /* 80358CEC 00355C2C  D0 3F 00 1C */	stfs f1, 0x1c(r31)
 /* 80358CF0 00355C30  C0 3F 00 1C */	lfs f1, 0x1c(r31)
-/* 80358CF4 00355C34  C0 02 05 A0 */	lfs f0, $$22191-_SDA2_BASE_(r2)
+/* 80358CF4 00355C34  C0 02 05 A0 */	lfs f0, $$22191@sda21(r2)
 /* 80358CF8 00355C38  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80358CFC 00355C3C  40 81 00 0C */	ble lbl_80358D08
 /* 80358D00 00355C40  FC 20 00 90 */	fmr f1, f0
 /* 80358D04 00355C44  48 00 00 14 */	b lbl_80358D18
 lbl_80358D08:
-/* 80358D08 00355C48  C0 02 05 98 */	lfs f0, $$22149-_SDA2_BASE_(r2)
+/* 80358D08 00355C48  C0 02 05 98 */	lfs f0, $$22149@sda21(r2)
 /* 80358D0C 00355C4C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80358D10 00355C50  40 80 00 08 */	bge lbl_80358D18
 /* 80358D14 00355C54  FC 20 00 90 */	fmr f1, f0
@@ -263,7 +263,7 @@ lbl_80358D18:
 
 .global __ct__16TCameraMarioDataFv
 __ct__16TCameraMarioDataFv:
-/* 80358D34 00355C74  C0 02 05 98 */	lfs f0, $$22149-_SDA2_BASE_(r2)
+/* 80358D34 00355C74  C0 02 05 98 */	lfs f0, $$22149@sda21(r2)
 /* 80358D38 00355C78  38 00 00 00 */	li r0, 0
 /* 80358D3C 00355C7C  D0 03 00 00 */	stfs f0, 0(r3)
 /* 80358D40 00355C80  D0 03 00 04 */	stfs f0, 4(r3)
@@ -277,7 +277,7 @@ __ct__16TCameraMarioDataFv:
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22149:
-	.incbin "baserom.dol", 0x3EC298, 0x4
+  .4byte 0
 $$22190:
 	.incbin "baserom.dol", 0x3EC29C, 0x4
 $$22191:

@@ -437,7 +437,21 @@ getAvailable__20JSURandomInputStreamCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20JSURandomInputStream
 __vt__20JSURandomInputStream:
-	.incbin "baserom.dol", 0x3A5788, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__20JSURandomInputStreamFv
+  .4byte getAvailable__20JSURandomInputStreamCFv
+  .4byte skip__20JSURandomInputStreamFl
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__14JSUInputStream
 __vt__14JSUInputStream:
-	.incbin "baserom.dol", 0x3A57AC, 0x1C
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14JSUInputStreamFv
+  .4byte 0
+  .4byte skip__14JSUInputStreamFl
+  .4byte 0
+  .4byte 0

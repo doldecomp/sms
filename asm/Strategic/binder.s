@@ -34,4 +34,7 @@ __ct__7TBinderFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7TBinder
 __vt__7TBinder:
-	.incbin "baserom.dol", 0x3B2448, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__7TBinderFv
+  .4byte 0

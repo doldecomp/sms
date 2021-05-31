@@ -354,7 +354,7 @@ lbl_800B3104:
 /* 800B3130 000B0070  39 04 3D 80 */	addi r8, r4, GetTypeCallback@l
 /* 800B3134 000B0074  54 0A E8 FE */	srwi r10, r0, 3
 /* 800B3138 000B0078  38 77 00 00 */	addi r3, r23, 0
-/* 800B313C 000B007C  38 8D 95 C0 */	addi r4, r13, cmdTypeAndStatus$77-_SDA_BASE_
+/* 800B313C 000B007C  38 8D 95 C0 */	addi r4, r13, cmdTypeAndStatus$77@sda21
 /* 800B3140 000B0080  38 A0 00 01 */	li r5, 1
 /* 800B3144 000B0084  38 E0 00 03 */	li r7, 3
 /* 800B3148 000B0088  39 20 00 00 */	li r9, 0
@@ -1268,10 +1268,10 @@ GetTypeCallback:
 /* 800B3DDC 000B0D1C  57 40 07 3F */	clrlwi. r0, r26, 0x1c
 /* 800B3DE0 000B0D20  90 65 01 20 */	stw r3, 0x120(r5)
 /* 800B3DE4 000B0D24  7C 84 DC 30 */	srw r4, r4, r27
-/* 800B3DE8 000B0D28  80 6D 95 C8 */	lwz r3, __PADFixBits-_SDA_BASE_(r13)
+/* 800B3DE8 000B0D28  80 6D 95 C8 */	lwz r3, __PADFixBits@sda21(r13)
 /* 800B3DEC 000B0D2C  83 9E 00 00 */	lwz r28, 0(r30)
 /* 800B3DF0 000B0D30  7C 60 20 78 */	andc r0, r3, r4
-/* 800B3DF4 000B0D34  90 0D 95 C8 */	stw r0, __PADFixBits-_SDA_BASE_(r13)
+/* 800B3DF4 000B0D34  90 0D 95 C8 */	stw r0, __PADFixBits@sda21(r13)
 /* 800B3DF8 000B0D38  7C 7A 20 38 */	and r26, r3, r4
 /* 800B3DFC 000B0D3C  40 82 00 24 */	bne lbl_800B3E20
 /* 800B3E00 000B0D40  57 83 00 C8 */	rlwinm r3, r28, 0, 3, 4
@@ -1528,7 +1528,7 @@ lbl_800B4168:
 /* 800B419C 000B10DC  1C 00 00 41 */	mulli r0, r0, 0x41
 /* 800B41A0 000B10E0  54 0A E8 FE */	srwi r10, r0, 3
 /* 800B41A4 000B10E4  38 DE 00 00 */	addi r6, r30, 0
-/* 800B41A8 000B10E8  38 8D 95 C4 */	addi r4, r13, cmdTypeAndStatus$371-_SDA_BASE_
+/* 800B41A8 000B10E8  38 8D 95 C4 */	addi r4, r13, cmdTypeAndStatus$371@sda21
 /* 800B41AC 000B10EC  38 A0 00 01 */	li r5, 1
 /* 800B41B0 000B10F0  38 E0 00 03 */	li r7, 3
 /* 800B41B4 000B10F4  39 20 00 00 */	li r9, 0
@@ -1632,7 +1632,11 @@ lbl_800B42EC:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 Si:
-	.incbin "baserom.dol", 0x3AED08, 0x14
+  .4byte -1
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 Type:
 	.incbin "baserom.dol", 0x3AED1C, 0x10
 $$2456:

@@ -31,7 +31,7 @@ __ct__18SampleCtrlMaterialFP11J3DMaterial:
 /* 800D9DBC 000D6CFC  3C A0 80 3B */	lis r5, __vt__18SampleCtrlMaterial@ha
 /* 800D9DC0 000D6D00  90 01 00 04 */	stw r0, 4(r1)
 /* 800D9DC4 000D6D04  38 05 37 FC */	addi r0, r5, __vt__18SampleCtrlMaterial@l
-/* 800D9DC8 000D6D08  38 AD 80 84 */	addi r5, r13, j3dDefaultTevOrderInfoNull-_SDA_BASE_
+/* 800D9DC8 000D6D08  38 AD 80 84 */	addi r5, r13, j3dDefaultTevOrderInfoNull@sda21
 /* 800D9DCC 000D6D0C  94 21 FF 38 */	stwu r1, -0xc8(r1)
 /* 800D9DD0 000D6D10  BF 41 00 B0 */	stmw r26, 0xb0(r1)
 /* 800D9DD4 000D6D14  3B 84 00 00 */	addi r28, r4, 0
@@ -39,7 +39,7 @@ __ct__18SampleCtrlMaterialFP11J3DMaterial:
 /* 800D9DDC 000D6D1C  38 80 00 00 */	li r4, 0
 /* 800D9DE0 000D6D20  90 03 00 00 */	stw r0, 0(r3)
 /* 800D9DE4 000D6D24  38 00 00 00 */	li r0, 0
-/* 800D9DE8 000D6D28  88 6D 80 84 */	lbz r3, j3dDefaultTevOrderInfoNull-_SDA_BASE_(r13)
+/* 800D9DE8 000D6D28  88 6D 80 84 */	lbz r3, j3dDefaultTevOrderInfoNull@sda21(r13)
 /* 800D9DEC 000D6D2C  98 7B 00 38 */	stb r3, 0x38(r27)
 /* 800D9DF0 000D6D30  88 65 00 01 */	lbz r3, 1(r5)
 /* 800D9DF4 000D6D34  98 7B 00 39 */	stb r3, 0x39(r27)
@@ -116,7 +116,7 @@ lbl_800D9E3C:
 /* 800D9F0C 000D6E4C  81 8C 00 40 */	lwz r12, 0x40(r12)
 /* 800D9F10 000D6E50  7D 88 03 A6 */	mtlr r12
 /* 800D9F14 000D6E54  4E 80 00 21 */	blrl 
-/* 800D9F18 000D6E58  80 0D 84 40 */	lwz r0, $$21211-_SDA_BASE_(r13)
+/* 800D9F18 000D6E58  80 0D 84 40 */	lwz r0, $$21211@sda21(r13)
 /* 800D9F1C 000D6E5C  3B DE 00 01 */	addi r30, r30, 1
 /* 800D9F20 000D6E60  90 01 00 90 */	stw r0, 0x90(r1)
 /* 800D9F24 000D6E64  A0 03 00 00 */	lhz r0, 0(r3)
@@ -447,13 +447,20 @@ lbl_800DA3C4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15SampleCtrlJoint
 __vt__15SampleCtrlJoint:
-	.incbin "baserom.dol", 0x3B07F0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15SampleCtrlJointFv
 .global __vt__18SampleCtrlMaterial
 __vt__18SampleCtrlMaterial:
-	.incbin "baserom.dol", 0x3B07FC, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__18SampleCtrlMaterialFv
 .global __vt__15SampleCtrlShape
 __vt__15SampleCtrlShape:
-	.incbin "baserom.dol", 0x3B0808, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15SampleCtrlShapeFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 $$21211:

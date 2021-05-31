@@ -12,7 +12,7 @@ create__10JKRStdHeapFUlP7JKRHeapb:
 /* 8000DBA0 0000AAE0  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 8000DBA4 0000AAE4  7C 9D 23 79 */	or. r29, r4, r4
 /* 8000DBA8 0000AAE8  40 82 00 08 */	bne lbl_8000DBB0
-/* 8000DBAC 0000AAEC  83 AD 8D 70 */	lwz r29, sRootHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000DBAC 0000AAEC  83 AD 8D 70 */	lwz r29, sRootHeap__7JKRHeap@sda21(r13)
 lbl_8000DBB0:
 /* 8000DBB0 0000AAF0  54 7F 00 34 */	rlwinm r31, r3, 0, 0, 0x1a
 /* 8000DBB4 0000AAF4  38 7F 00 00 */	addi r3, r31, 0
@@ -129,7 +129,7 @@ lbl_8000DD14:
 /* 8000DD38 0000AC78  88 1C 00 64 */	lbz r0, 0x64(r28)
 /* 8000DD3C 0000AC7C  28 00 00 01 */	cmplwi r0, 1
 /* 8000DD40 0000AC80  40 82 00 24 */	bne lbl_8000DD64
-/* 8000DD44 0000AC84  81 8D 8D 74 */	lwz r12, mErrorHandler__7JKRHeap-_SDA_BASE_(r13)
+/* 8000DD44 0000AC84  81 8D 8D 74 */	lwz r12, mErrorHandler__7JKRHeap@sda21(r13)
 /* 8000DD48 0000AC88  28 0C 00 00 */	cmplwi r12, 0
 /* 8000DD4C 0000AC8C  41 82 00 18 */	beq lbl_8000DD64
 /* 8000DD50 0000AC90  7D 88 03 A6 */	mtlr r12
@@ -342,4 +342,23 @@ $$21562:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRStdHeap
 __vt__10JKRStdHeap:
-	.incbin "baserom.dol", 0x3A56E0, 0x50
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10JKRStdHeapFv
+  .4byte alloc__10JKRStdHeapFUli
+  .4byte free__10JKRStdHeapFPv
+  .4byte freeAll__10JKRStdHeapFv
+  .4byte freeTail__10JKRStdHeapFv
+  .4byte resize__10JKRStdHeapFPvUl
+  .4byte getSize__10JKRStdHeapFPv
+  .4byte getFreeSize__10JKRStdHeapFv
+  .4byte getTotalFreeSize__10JKRStdHeapFv
+  .4byte getHeapType__10JKRStdHeapFv
+  .4byte check__10JKRStdHeapFv
+  .4byte dump_sort__7JKRHeapFv
+  .4byte dump__10JKRStdHeapFv
+  .4byte changeGroupID__7JKRHeapFUc
+  .4byte getCurrentGroupId__7JKRHeapFv
+  .4byte state_register__10JKRStdHeapCFPQ27JKRHeap6TStateUl
+  .4byte state_compare__10JKRStdHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
+  .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState

@@ -279,24 +279,41 @@ $$2152:
 $$2157:
 	.incbin "baserom.dol", 0x36CAE8, 0x8
 $$2174:
-	.incbin "baserom.dol", 0x36CAF0, 0x18
+	.incbin "baserom.dol", 0x36CAF0, 0x14
+    .4byte __dt__26__partial_array_destructorFv
 $$2182:
 	.incbin "baserom.dol", 0x36CB08, 0x8
 $$2201:
-	.incbin "baserom.dol", 0x36CB10, 0x30
+	.incbin "baserom.dol", 0x36CB10, 0x14
+    .4byte __dt__26__partial_array_destructorFv
 
-
+    .space 0x18
 .section extabindex_, "wa"  # 0x800055A0 - 0x80005600
 $$2153:
-	.incbin "baserom.dol", 0x36CB40, 0xC
+    .4byte __destroy_new_array
+    .4byte 0x0000007C
+    .4byte $$2152
 $$2158:
-	.incbin "baserom.dol", 0x36CB4C, 0xC
+    .4byte __destroy_arr
+    .4byte 0x00000078
+    .4byte $$2157
 $$2175:
-	.incbin "baserom.dol", 0x36CB58, 0xC
+    .4byte __construct_array
+    .4byte 0x00000100
+    .4byte $$2174
 $$2183:
-	.incbin "baserom.dol", 0x36CB64, 0xC
+    .4byte __dt__26__partial_array_destructorFv
+    .4byte 0x000000B8
+    .4byte $$2182
 $$2202:
-	.incbin "baserom.dol", 0x36CB70, 0xC
+    .4byte __construct_new_array
+    .4byte 0x00000108
+    .4byte $$2201
 .global lbl_800055DC
 lbl_800055DC:
-	.incbin "baserom.dol", 0x36CB7C, 0x24
+    .4byte $$2153
+    .4byte lbl_800055DC
+    .4byte __destroy_new_array
+    .4byte 0x000003B4
+
+    .space 0x14

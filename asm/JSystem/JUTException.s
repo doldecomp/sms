@@ -8,10 +8,10 @@ create__12JUTExceptionFP14JUTDirectPrint:
 /* 8000F614 0000C554  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8000F618 0000C558  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8000F61C 0000C55C  3B E3 00 00 */	addi r31, r3, 0
-/* 8000F620 0000C560  80 0D 8D 90 */	lwz r0, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F620 0000C560  80 0D 8D 90 */	lwz r0, sErrorManager__12JUTException@sda21(r13)
 /* 8000F624 0000C564  28 00 00 00 */	cmplwi r0, 0
 /* 8000F628 0000C568  40 82 00 30 */	bne lbl_8000F658
-/* 8000F62C 0000C56C  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap-_SDA_BASE_(r13)
+/* 8000F62C 0000C56C  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
 /* 8000F630 0000C570  38 60 00 84 */	li r3, 0x84
 /* 8000F634 0000C574  38 A0 00 00 */	li r5, 0
 /* 8000F638 0000C578  4B FF D3 0D */	bl __nw__FUlP7JKRHeapi
@@ -20,14 +20,14 @@ create__12JUTExceptionFP14JUTDirectPrint:
 /* 8000F644 0000C584  7F E4 FB 78 */	mr r4, r31
 /* 8000F648 0000C588  48 00 00 E9 */	bl __ct__12JUTExceptionFP14JUTDirectPrint
 lbl_8000F64C:
-/* 8000F64C 0000C58C  90 6D 8D 90 */	stw r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F64C 0000C58C  90 6D 8D 90 */	stw r3, sErrorManager__12JUTException@sda21(r13)
 /* 8000F650 0000C590  80 63 00 2C */	lwz r3, 0x2c(r3)
 /* 8000F654 0000C594  48 08 41 B5 */	bl OSResumeThread
 lbl_8000F658:
 /* 8000F658 0000C598  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8000F65C 0000C59C  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8000F660 0000C5A0  38 21 00 18 */	addi r1, r1, 0x18
-/* 8000F664 0000C5A4  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F664 0000C5A4  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 8000F668 0000C5A8  7C 08 03 A6 */	mtlr r0
 /* 8000F66C 0000C5AC  4E 80 00 20 */	blr 
 
@@ -42,14 +42,14 @@ run__12JUTExceptionFv:
 /* 8000F688 0000C5C8  3B E4 88 40 */	addi r31, r4, sMessageQueue__12JUTException@l
 /* 8000F68C 0000C5CC  3B 23 00 00 */	addi r25, r3, 0
 /* 8000F690 0000C5D0  38 7F 00 00 */	addi r3, r31, 0
-/* 8000F694 0000C5D4  38 8D 80 08 */	addi r4, r13, sMessageBuffer__12JUTException-_SDA_BASE_
+/* 8000F694 0000C5D4  38 8D 80 08 */	addi r4, r13, sMessageBuffer__12JUTException@sda21
 /* 8000F698 0000C5D8  48 08 13 B9 */	bl OSInitMessageQueue
 lbl_8000F69C:
 /* 8000F69C 0000C5DC  38 7F 00 00 */	addi r3, r31, 0
 /* 8000F6A0 0000C5E0  38 81 00 1C */	addi r4, r1, 0x1c
 /* 8000F6A4 0000C5E4  38 A0 00 01 */	li r5, 1
 /* 8000F6A8 0000C5E8  48 08 14 D1 */	bl OSReceiveMessage
-/* 8000F6AC 0000C5EC  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F6AC 0000C5EC  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 8000F6B0 0000C5F0  80 81 00 1C */	lwz r4, 0x1c(r1)
 /* 8000F6B4 0000C5F4  80 63 00 64 */	lwz r3, 0x64(r3)
 /* 8000F6B8 0000C5F8  83 C4 00 00 */	lwz r30, 0(r4)
@@ -59,7 +59,7 @@ lbl_8000F69C:
 /* 8000F6C8 0000C608  83 44 00 10 */	lwz r26, 0x10(r4)
 /* 8000F6CC 0000C60C  80 03 00 00 */	lwz r0, 0(r3)
 /* 8000F6D0 0000C610  90 19 00 60 */	stw r0, 0x60(r25)
-/* 8000F6D4 0000C614  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F6D4 0000C614  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 8000F6D8 0000C618  80 83 00 64 */	lwz r4, 0x64(r3)
 /* 8000F6DC 0000C61C  80 04 00 00 */	lwz r0, 0(r4)
 /* 8000F6E0 0000C620  28 00 00 00 */	cmplwi r0, 0
@@ -77,7 +77,7 @@ lbl_8000F6EC:
 /* 8000F70C 0000C64C  4E 80 00 21 */	blrl 
 lbl_8000F710:
 /* 8000F710 0000C650  48 08 0A BD */	bl OSDisableInterrupts
-/* 8000F714 0000C654  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 8000F714 0000C654  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 8000F718 0000C658  38 9D 00 00 */	addi r4, r29, 0
 /* 8000F71C 0000C65C  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F720 0000C660  38 DB 00 00 */	addi r6, r27, 0
@@ -123,10 +123,10 @@ __ct__12JUTExceptionFP14JUTDirectPrint:
 /* 8000F7B4 0000C6F4  38 60 00 0F */	li r3, 0xf
 /* 8000F7B8 0000C6F8  48 07 F9 59 */	bl OSSetErrorHandler
 /* 8000F7BC 0000C6FC  38 C0 00 00 */	li r6, 0
-/* 8000F7C0 0000C700  90 CD 8D 94 */	stw r6, sPreUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 8000F7C0 0000C700  90 CD 8D 94 */	stw r6, sPreUserCallback__12JUTException@sda21(r13)
 /* 8000F7C4 0000C704  38 A0 FF FF */	li r5, -1
 /* 8000F7C8 0000C708  38 80 00 0A */	li r4, 0xa
-/* 8000F7CC 0000C70C  90 CD 8D 98 */	stw r6, sPostUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 8000F7CC 0000C70C  90 CD 8D 98 */	stw r6, sPostUserCallback__12JUTException@sda21(r13)
 /* 8000F7D0 0000C710  38 00 00 FF */	li r0, 0xff
 /* 8000F7D4 0000C714  38 7E 00 00 */	addi r3, r30, 0
 /* 8000F7D8 0000C718  90 DE 00 68 */	stw r6, 0x68(r30)
@@ -157,9 +157,9 @@ errorHandler__12JUTExceptionFUsP9OSContextUlUl:
 /* 8000F830 0000C770  3B A5 00 00 */	addi r29, r5, 0
 /* 8000F834 0000C774  3B C6 00 00 */	addi r30, r6, 0
 /* 8000F838 0000C778  48 07 CB 69 */	bl PPCMfmsr
-/* 8000F83C 0000C77C  90 6D 8D A8 */	stw r3, msr__12JUTException-_SDA_BASE_(r13)
+/* 8000F83C 0000C77C  90 6D 8D A8 */	stw r3, msr__12JUTException@sda21(r13)
 /* 8000F840 0000C780  48 00 12 9D */	bl getFpscr__12JUTExceptionFv
-/* 8000F844 0000C784  90 6D 8D AC */	stw r3, fpscr__12JUTException-_SDA_BASE_(r13)
+/* 8000F844 0000C784  90 6D 8D AC */	stw r3, fpscr__12JUTException@sda21(r13)
 /* 8000F848 0000C788  7F 83 E3 78 */	mr r3, r28
 /* 8000F84C 0000C78C  48 07 F5 ED */	bl OSFillFPUContext
 /* 8000F850 0000C790  38 7B 00 00 */	addi r3, r27, 0
@@ -189,7 +189,7 @@ errorHandler__12JUTExceptionFUsP9OSContextUlUl:
 /* 8000F8B0 0000C7F0  38 C0 00 03 */	li r6, 3
 /* 8000F8B4 0000C7F4  48 08 14 49 */	bl OSProtectRange
 lbl_8000F8B8:
-/* 8000F8B8 0000C7F8  80 0D 8D 94 */	lwz r0, sPreUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 8000F8B8 0000C7F8  80 0D 8D 94 */	lwz r0, sPreUserCallback__12JUTException@sda21(r13)
 /* 8000F8BC 0000C7FC  3C 60 80 3B */	lis r3, sMessageQueue__12JUTException@ha
 /* 8000F8C0 0000C800  38 63 88 40 */	addi r3, r3, sMessageQueue__12JUTException@l
 /* 8000F8C4 0000C804  90 1F 00 00 */	stw r0, 0(r31)
@@ -218,12 +218,12 @@ showFloat__12JUTExceptionFP9OSContext:
 /* 8000F914 0000C854  BF 61 00 2C */	stmw r27, 0x2c(r1)
 /* 8000F918 0000C858  3B 64 00 00 */	addi r27, r4, 0
 /* 8000F91C 0000C85C  3B C5 07 90 */	addi r30, r5, $$21210@l
-/* 8000F920 0000C860  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F920 0000C860  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F924 0000C864  28 03 00 00 */	cmplwi r3, 0
 /* 8000F928 0000C868  41 82 04 08 */	beq lbl_8000FD30
 /* 8000F92C 0000C86C  38 9E 01 38 */	addi r4, r30, 0x138
 /* 8000F930 0000C870  48 03 00 71 */	bl print__10JUTConsoleFPCc
-/* 8000F934 0000C874  C3 E2 80 68 */	lfs f31, $$21565-_SDA2_BASE_(r2)
+/* 8000F934 0000C874  C3 E2 80 68 */	lfs f31, $$21565@sda21(r2)
 /* 8000F938 0000C878  3B 80 00 00 */	li r28, 0
 /* 8000F93C 0000C87C  3B E0 00 00 */	li r31, 0
 lbl_8000F940:
@@ -235,7 +235,7 @@ lbl_8000F940:
 /* 8000F954 0000C894  48 00 03 F5 */	bl __fpclassifyf__Ff
 /* 8000F958 0000C898  2C 03 00 01 */	cmpwi r3, 1
 /* 8000F95C 0000C89C  40 82 00 1C */	bne lbl_8000F978
-/* 8000F960 0000C8A0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F960 0000C8A0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F964 0000C8A4  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F968 0000C8A8  38 9E 00 E4 */	addi r4, r30, 0xe4
 /* 8000F96C 0000C8AC  4C C6 31 82 */	crclr 6
@@ -249,14 +249,14 @@ lbl_8000F978:
 /* 8000F988 0000C8C8  88 01 00 20 */	lbz r0, 0x20(r1)
 /* 8000F98C 0000C8CC  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 8000F990 0000C8D0  41 82 00 1C */	beq lbl_8000F9AC
-/* 8000F994 0000C8D4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F994 0000C8D4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F998 0000C8D8  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F99C 0000C8DC  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 8000F9A0 0000C8E0  4C C6 31 82 */	crclr 6
 /* 8000F9A4 0000C8E4  48 02 FF 7D */	bl print_f__10JUTConsoleFPCce
 /* 8000F9A8 0000C8E8  48 00 00 54 */	b lbl_8000F9FC
 lbl_8000F9AC:
-/* 8000F9AC 0000C8EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F9AC 0000C8EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F9B0 0000C8F0  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F9B4 0000C8F4  38 9E 01 08 */	addi r4, r30, 0x108
 /* 8000F9B8 0000C8F8  4C C6 31 82 */	crclr 6
@@ -266,21 +266,21 @@ lbl_8000F9C4:
 /* 8000F9C4 0000C904  C0 21 00 20 */	lfs f1, 0x20(r1)
 /* 8000F9C8 0000C908  FC 1F 08 00 */	fcmpu cr0, f31, f1
 /* 8000F9CC 0000C90C  40 82 00 1C */	bne lbl_8000F9E8
-/* 8000F9D0 0000C910  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F9D0 0000C910  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F9D4 0000C914  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F9D8 0000C918  38 9E 01 18 */	addi r4, r30, 0x118
 /* 8000F9DC 0000C91C  4C C6 31 82 */	crclr 6
 /* 8000F9E0 0000C920  48 02 FF 41 */	bl print_f__10JUTConsoleFPCce
 /* 8000F9E4 0000C924  48 00 00 18 */	b lbl_8000F9FC
 lbl_8000F9E8:
-/* 8000F9E8 0000C928  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000F9E8 0000C928  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F9EC 0000C92C  38 BC 00 00 */	addi r5, r28, 0
 /* 8000F9F0 0000C930  4C C6 32 42 */	crset 6
 /* 8000F9F4 0000C934  38 9E 01 2C */	addi r4, r30, 0x12c
 /* 8000F9F8 0000C938  48 02 FF 29 */	bl print_f__10JUTConsoleFPCce
 lbl_8000F9FC:
-/* 8000F9FC 0000C93C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 8000FA00 0000C940  38 82 80 6C */	addi r4, r2, $$21629-_SDA2_BASE_
+/* 8000F9FC 0000C93C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 8000FA00 0000C940  38 82 80 6C */	addi r4, r2, $$21629@sda21
 /* 8000FA04 0000C944  48 02 FF 9D */	bl print__10JUTConsoleFPCc
 /* 8000FA08 0000C948  C8 1D 00 E8 */	lfd f0, 0xe8(r29)
 /* 8000FA0C 0000C94C  FC 00 00 18 */	frsp f0, f0
@@ -289,7 +289,7 @@ lbl_8000F9FC:
 /* 8000FA18 0000C958  48 00 03 31 */	bl __fpclassifyf__Ff
 /* 8000FA1C 0000C95C  2C 03 00 01 */	cmpwi r3, 1
 /* 8000FA20 0000C960  40 82 00 1C */	bne lbl_8000FA3C
-/* 8000FA24 0000C964  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FA24 0000C964  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FA28 0000C968  38 9E 00 E4 */	addi r4, r30, 0xe4
 /* 8000FA2C 0000C96C  38 BC 00 0B */	addi r5, r28, 0xb
 /* 8000FA30 0000C970  4C C6 31 82 */	crclr 6
@@ -303,14 +303,14 @@ lbl_8000FA3C:
 /* 8000FA4C 0000C98C  88 01 00 1C */	lbz r0, 0x1c(r1)
 /* 8000FA50 0000C990  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 8000FA54 0000C994  41 82 00 1C */	beq lbl_8000FA70
-/* 8000FA58 0000C998  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FA58 0000C998  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FA5C 0000C99C  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 8000FA60 0000C9A0  38 BC 00 0B */	addi r5, r28, 0xb
 /* 8000FA64 0000C9A4  4C C6 31 82 */	crclr 6
 /* 8000FA68 0000C9A8  48 02 FE B9 */	bl print_f__10JUTConsoleFPCce
 /* 8000FA6C 0000C9AC  48 00 00 54 */	b lbl_8000FAC0
 lbl_8000FA70:
-/* 8000FA70 0000C9B0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FA70 0000C9B0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FA74 0000C9B4  38 9E 01 08 */	addi r4, r30, 0x108
 /* 8000FA78 0000C9B8  38 BC 00 0B */	addi r5, r28, 0xb
 /* 8000FA7C 0000C9BC  4C C6 31 82 */	crclr 6
@@ -320,21 +320,21 @@ lbl_8000FA88:
 /* 8000FA88 0000C9C8  C0 21 00 1C */	lfs f1, 0x1c(r1)
 /* 8000FA8C 0000C9CC  FC 1F 08 00 */	fcmpu cr0, f31, f1
 /* 8000FA90 0000C9D0  40 82 00 1C */	bne lbl_8000FAAC
-/* 8000FA94 0000C9D4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FA94 0000C9D4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FA98 0000C9D8  38 9E 01 18 */	addi r4, r30, 0x118
 /* 8000FA9C 0000C9DC  38 BC 00 0B */	addi r5, r28, 0xb
 /* 8000FAA0 0000C9E0  4C C6 31 82 */	crclr 6
 /* 8000FAA4 0000C9E4  48 02 FE 7D */	bl print_f__10JUTConsoleFPCce
 /* 8000FAA8 0000C9E8  48 00 00 18 */	b lbl_8000FAC0
 lbl_8000FAAC:
-/* 8000FAAC 0000C9EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FAAC 0000C9EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FAB0 0000C9F0  38 9E 01 2C */	addi r4, r30, 0x12c
 /* 8000FAB4 0000C9F4  4C C6 32 42 */	crset 6
 /* 8000FAB8 0000C9F8  38 BC 00 0B */	addi r5, r28, 0xb
 /* 8000FABC 0000C9FC  48 02 FE 65 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FAC0:
-/* 8000FAC0 0000CA00  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 8000FAC4 0000CA04  38 82 80 6C */	addi r4, r2, $$21629-_SDA2_BASE_
+/* 8000FAC0 0000CA00  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 8000FAC4 0000CA04  38 82 80 6C */	addi r4, r2, $$21629@sda21
 /* 8000FAC8 0000CA08  48 02 FE D9 */	bl print__10JUTConsoleFPCc
 /* 8000FACC 0000CA0C  C8 1D 01 40 */	lfd f0, 0x140(r29)
 /* 8000FAD0 0000CA10  FC 00 00 18 */	frsp f0, f0
@@ -343,7 +343,7 @@ lbl_8000FAC0:
 /* 8000FADC 0000CA1C  48 00 02 6D */	bl __fpclassifyf__Ff
 /* 8000FAE0 0000CA20  2C 03 00 01 */	cmpwi r3, 1
 /* 8000FAE4 0000CA24  40 82 00 1C */	bne lbl_8000FB00
-/* 8000FAE8 0000CA28  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FAE8 0000CA28  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FAEC 0000CA2C  38 9E 00 E4 */	addi r4, r30, 0xe4
 /* 8000FAF0 0000CA30  38 BC 00 16 */	addi r5, r28, 0x16
 /* 8000FAF4 0000CA34  4C C6 31 82 */	crclr 6
@@ -357,14 +357,14 @@ lbl_8000FB00:
 /* 8000FB10 0000CA50  88 01 00 18 */	lbz r0, 0x18(r1)
 /* 8000FB14 0000CA54  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 8000FB18 0000CA58  41 82 00 1C */	beq lbl_8000FB34
-/* 8000FB1C 0000CA5C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FB1C 0000CA5C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FB20 0000CA60  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 8000FB24 0000CA64  38 BC 00 16 */	addi r5, r28, 0x16
 /* 8000FB28 0000CA68  4C C6 31 82 */	crclr 6
 /* 8000FB2C 0000CA6C  48 02 FD F5 */	bl print_f__10JUTConsoleFPCce
 /* 8000FB30 0000CA70  48 00 00 54 */	b lbl_8000FB84
 lbl_8000FB34:
-/* 8000FB34 0000CA74  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FB34 0000CA74  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FB38 0000CA78  38 9E 01 08 */	addi r4, r30, 0x108
 /* 8000FB3C 0000CA7C  38 BC 00 16 */	addi r5, r28, 0x16
 /* 8000FB40 0000CA80  4C C6 31 82 */	crclr 6
@@ -374,21 +374,21 @@ lbl_8000FB4C:
 /* 8000FB4C 0000CA8C  C0 21 00 18 */	lfs f1, 0x18(r1)
 /* 8000FB50 0000CA90  FC 1F 08 00 */	fcmpu cr0, f31, f1
 /* 8000FB54 0000CA94  40 82 00 1C */	bne lbl_8000FB70
-/* 8000FB58 0000CA98  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FB58 0000CA98  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FB5C 0000CA9C  38 9E 01 18 */	addi r4, r30, 0x118
 /* 8000FB60 0000CAA0  38 BC 00 16 */	addi r5, r28, 0x16
 /* 8000FB64 0000CAA4  4C C6 31 82 */	crclr 6
 /* 8000FB68 0000CAA8  48 02 FD B9 */	bl print_f__10JUTConsoleFPCce
 /* 8000FB6C 0000CAAC  48 00 00 18 */	b lbl_8000FB84
 lbl_8000FB70:
-/* 8000FB70 0000CAB0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FB70 0000CAB0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FB74 0000CAB4  38 9E 01 2C */	addi r4, r30, 0x12c
 /* 8000FB78 0000CAB8  4C C6 32 42 */	crset 6
 /* 8000FB7C 0000CABC  38 BC 00 16 */	addi r5, r28, 0x16
 /* 8000FB80 0000CAC0  48 02 FD A1 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FB84:
-/* 8000FB84 0000CAC4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 8000FB88 0000CAC8  38 82 80 70 */	addi r4, r2, $$21630-_SDA2_BASE_
+/* 8000FB84 0000CAC4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 8000FB88 0000CAC8  38 82 80 70 */	addi r4, r2, $$21630@sda21
 /* 8000FB8C 0000CACC  48 02 FE 15 */	bl print__10JUTConsoleFPCc
 /* 8000FB90 0000CAD0  3B 9C 00 01 */	addi r28, r28, 1
 /* 8000FB94 0000CAD4  2C 1C 00 0A */	cmpwi r28, 0xa
@@ -401,7 +401,7 @@ lbl_8000FB84:
 /* 8000FBB0 0000CAF0  48 00 01 99 */	bl __fpclassifyf__Ff
 /* 8000FBB4 0000CAF4  2C 03 00 01 */	cmpwi r3, 1
 /* 8000FBB8 0000CAF8  40 82 00 1C */	bne lbl_8000FBD4
-/* 8000FBBC 0000CAFC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FBBC 0000CAFC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FBC0 0000CB00  38 9E 00 E4 */	addi r4, r30, 0xe4
 /* 8000FBC4 0000CB04  4C C6 31 82 */	crclr 6
 /* 8000FBC8 0000CB08  38 A0 00 0A */	li r5, 0xa
@@ -415,39 +415,39 @@ lbl_8000FBD4:
 /* 8000FBE4 0000CB24  88 01 00 14 */	lbz r0, 0x14(r1)
 /* 8000FBE8 0000CB28  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 8000FBEC 0000CB2C  41 82 00 1C */	beq lbl_8000FC08
-/* 8000FBF0 0000CB30  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FBF0 0000CB30  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FBF4 0000CB34  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 8000FBF8 0000CB38  4C C6 31 82 */	crclr 6
 /* 8000FBFC 0000CB3C  38 A0 00 0A */	li r5, 0xa
 /* 8000FC00 0000CB40  48 02 FD 21 */	bl print_f__10JUTConsoleFPCce
 /* 8000FC04 0000CB44  48 00 00 58 */	b lbl_8000FC5C
 lbl_8000FC08:
-/* 8000FC08 0000CB48  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FC08 0000CB48  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FC0C 0000CB4C  38 9E 01 08 */	addi r4, r30, 0x108
 /* 8000FC10 0000CB50  4C C6 31 82 */	crclr 6
 /* 8000FC14 0000CB54  38 A0 00 0A */	li r5, 0xa
 /* 8000FC18 0000CB58  48 02 FD 09 */	bl print_f__10JUTConsoleFPCce
 /* 8000FC1C 0000CB5C  48 00 00 40 */	b lbl_8000FC5C
 lbl_8000FC20:
-/* 8000FC20 0000CB60  C0 02 80 68 */	lfs f0, $$21565-_SDA2_BASE_(r2)
+/* 8000FC20 0000CB60  C0 02 80 68 */	lfs f0, $$21565@sda21(r2)
 /* 8000FC24 0000CB64  C0 21 00 14 */	lfs f1, 0x14(r1)
 /* 8000FC28 0000CB68  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8000FC2C 0000CB6C  40 82 00 1C */	bne lbl_8000FC48
-/* 8000FC30 0000CB70  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FC30 0000CB70  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FC34 0000CB74  38 9E 01 18 */	addi r4, r30, 0x118
 /* 8000FC38 0000CB78  4C C6 31 82 */	crclr 6
 /* 8000FC3C 0000CB7C  38 A0 00 0A */	li r5, 0xa
 /* 8000FC40 0000CB80  48 02 FC E1 */	bl print_f__10JUTConsoleFPCce
 /* 8000FC44 0000CB84  48 00 00 18 */	b lbl_8000FC5C
 lbl_8000FC48:
-/* 8000FC48 0000CB88  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FC48 0000CB88  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FC4C 0000CB8C  38 9E 01 2C */	addi r4, r30, 0x12c
 /* 8000FC50 0000CB90  4C C6 32 42 */	crset 6
 /* 8000FC54 0000CB94  38 A0 00 0A */	li r5, 0xa
 /* 8000FC58 0000CB98  48 02 FC C9 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FC5C:
-/* 8000FC5C 0000CB9C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 8000FC60 0000CBA0  38 82 80 6C */	addi r4, r2, $$21629-_SDA2_BASE_
+/* 8000FC5C 0000CB9C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 8000FC60 0000CBA0  38 82 80 6C */	addi r4, r2, $$21629@sda21
 /* 8000FC64 0000CBA4  48 02 FD 3D */	bl print__10JUTConsoleFPCc
 /* 8000FC68 0000CBA8  C8 1B 01 38 */	lfd f0, 0x138(r27)
 /* 8000FC6C 0000CBAC  FC 00 00 18 */	frsp f0, f0
@@ -456,7 +456,7 @@ lbl_8000FC5C:
 /* 8000FC78 0000CBB8  48 00 00 D1 */	bl __fpclassifyf__Ff
 /* 8000FC7C 0000CBBC  2C 03 00 01 */	cmpwi r3, 1
 /* 8000FC80 0000CBC0  40 82 00 1C */	bne lbl_8000FC9C
-/* 8000FC84 0000CBC4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FC84 0000CBC4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FC88 0000CBC8  38 9E 00 E4 */	addi r4, r30, 0xe4
 /* 8000FC8C 0000CBCC  4C C6 31 82 */	crclr 6
 /* 8000FC90 0000CBD0  38 A0 00 15 */	li r5, 0x15
@@ -470,39 +470,39 @@ lbl_8000FC9C:
 /* 8000FCAC 0000CBEC  88 01 00 10 */	lbz r0, 0x10(r1)
 /* 8000FCB0 0000CBF0  54 00 06 31 */	rlwinm. r0, r0, 0, 0x18, 0x18
 /* 8000FCB4 0000CBF4  41 82 00 1C */	beq lbl_8000FCD0
-/* 8000FCB8 0000CBF8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FCB8 0000CBF8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FCBC 0000CBFC  38 9E 00 F8 */	addi r4, r30, 0xf8
 /* 8000FCC0 0000CC00  4C C6 31 82 */	crclr 6
 /* 8000FCC4 0000CC04  38 A0 00 15 */	li r5, 0x15
 /* 8000FCC8 0000CC08  48 02 FC 59 */	bl print_f__10JUTConsoleFPCce
 /* 8000FCCC 0000CC0C  48 00 00 58 */	b lbl_8000FD24
 lbl_8000FCD0:
-/* 8000FCD0 0000CC10  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FCD0 0000CC10  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FCD4 0000CC14  38 9E 01 08 */	addi r4, r30, 0x108
 /* 8000FCD8 0000CC18  4C C6 31 82 */	crclr 6
 /* 8000FCDC 0000CC1C  38 A0 00 15 */	li r5, 0x15
 /* 8000FCE0 0000CC20  48 02 FC 41 */	bl print_f__10JUTConsoleFPCce
 /* 8000FCE4 0000CC24  48 00 00 40 */	b lbl_8000FD24
 lbl_8000FCE8:
-/* 8000FCE8 0000CC28  C0 02 80 68 */	lfs f0, $$21565-_SDA2_BASE_(r2)
+/* 8000FCE8 0000CC28  C0 02 80 68 */	lfs f0, $$21565@sda21(r2)
 /* 8000FCEC 0000CC2C  C0 21 00 10 */	lfs f1, 0x10(r1)
 /* 8000FCF0 0000CC30  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8000FCF4 0000CC34  40 82 00 1C */	bne lbl_8000FD10
-/* 8000FCF8 0000CC38  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FCF8 0000CC38  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FCFC 0000CC3C  38 9E 01 18 */	addi r4, r30, 0x118
 /* 8000FD00 0000CC40  4C C6 31 82 */	crclr 6
 /* 8000FD04 0000CC44  38 A0 00 15 */	li r5, 0x15
 /* 8000FD08 0000CC48  48 02 FC 19 */	bl print_f__10JUTConsoleFPCce
 /* 8000FD0C 0000CC4C  48 00 00 18 */	b lbl_8000FD24
 lbl_8000FD10:
-/* 8000FD10 0000CC50  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FD10 0000CC50  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FD14 0000CC54  38 9E 01 2C */	addi r4, r30, 0x12c
 /* 8000FD18 0000CC58  4C C6 32 42 */	crset 6
 /* 8000FD1C 0000CC5C  38 A0 00 15 */	li r5, 0x15
 /* 8000FD20 0000CC60  48 02 FC 01 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FD24:
-/* 8000FD24 0000CC64  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 8000FD28 0000CC68  38 82 80 70 */	addi r4, r2, $$21630-_SDA2_BASE_
+/* 8000FD24 0000CC64  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 8000FD28 0000CC68  38 82 80 70 */	addi r4, r2, $$21630@sda21
 /* 8000FD2C 0000CC6C  48 02 FC 75 */	bl print__10JUTConsoleFPCc
 lbl_8000FD30:
 /* 8000FD30 0000CC70  BB 61 00 2C */	lmw r27, 0x2c(r1)
@@ -661,13 +661,13 @@ showStack__12JUTExceptionFP9OSContext:
 /* 8000FF08 0000CE48  3B A4 00 00 */	addi r29, r4, 0
 /* 8000FF0C 0000CE4C  93 81 00 10 */	stw r28, 0x10(r1)
 /* 8000FF10 0000CE50  3B 83 00 00 */	addi r28, r3, 0
-/* 8000FF14 0000CE54  80 0D 8D A4 */	lwz r0, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FF14 0000CE54  80 0D 8D A4 */	lwz r0, sConsole__12JUTException@sda21(r13)
 /* 8000FF18 0000CE58  28 00 00 00 */	cmplwi r0, 0
 /* 8000FF1C 0000CE5C  41 82 00 AC */	beq lbl_8000FFC8
 /* 8000FF20 0000CE60  7C 03 03 78 */	mr r3, r0
 /* 8000FF24 0000CE64  38 9F 01 60 */	addi r4, r31, 0x160
 /* 8000FF28 0000CE68  48 02 FA 79 */	bl print__10JUTConsoleFPCc
-/* 8000FF2C 0000CE6C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FF2C 0000CE6C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FF30 0000CE70  38 9F 01 88 */	addi r4, r31, 0x188
 /* 8000FF34 0000CE74  4C C6 31 82 */	crclr 6
 /* 8000FF38 0000CE78  48 02 F9 E9 */	bl print_f__10JUTConsoleFPCce
@@ -678,12 +678,12 @@ lbl_8000FF48:
 /* 8000FF48 0000CE88  80 1C 00 78 */	lwz r0, 0x78(r28)
 /* 8000FF4C 0000CE8C  7C 1E 00 40 */	cmplw r30, r0
 /* 8000FF50 0000CE90  40 81 00 14 */	ble lbl_8000FF64
-/* 8000FF54 0000CE94  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FF54 0000CE94  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FF58 0000CE98  38 9F 01 A8 */	addi r4, r31, 0x1a8
 /* 8000FF5C 0000CE9C  48 02 FA 45 */	bl print__10JUTConsoleFPCc
 /* 8000FF60 0000CEA0  48 00 00 68 */	b lbl_8000FFC8
 lbl_8000FF64:
-/* 8000FF64 0000CEA4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8000FF64 0000CEA4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000FF68 0000CEA8  7F A5 EB 78 */	mr r5, r29
 /* 8000FF6C 0000CEAC  80 DD 00 00 */	lwz r6, 0(r29)
 /* 8000FF70 0000CEB0  38 9F 01 BC */	addi r4, r31, 0x1bc
@@ -694,7 +694,7 @@ lbl_8000FF64:
 /* 8000FF84 0000CEC4  38 7C 00 00 */	addi r3, r28, 0
 /* 8000FF88 0000CEC8  38 A0 00 00 */	li r5, 0
 /* 8000FF8C 0000CECC  48 00 01 1D */	bl showMapInfo_subroutine__12JUTExceptionFUlb
-/* 8000FF90 0000CED0  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 8000FF90 0000CED0  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 8000FF94 0000CED4  38 80 00 01 */	li r4, 1
 /* 8000FF98 0000CED8  48 02 FF 81 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 8000FF9C 0000CEDC  80 7C 00 74 */	lwz r3, 0x74(r28)
@@ -733,7 +733,7 @@ showGPR__12JUTExceptionFP9OSContext:
 lbl_8001000C:
 /* 8001000C 0000CF4C  3B 84 00 00 */	addi r28, r4, 0
 lbl_80010010:
-/* 80010010 0000CF50  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010010 0000CF50  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010014 0000CF54  28 03 00 00 */	cmplwi r3, 0
 lbl_80010018:
 /* 80010018 0000CF58  41 82 00 70 */	beq lbl_80010088
@@ -745,7 +745,7 @@ lbl_80010028:
 /* 80010028 0000CF68  3B E0 00 00 */	li r31, 0
 lbl_8001002C:
 /* 8001002C 0000CF6C  7C FC FA 14 */	add r7, r28, r31
-/* 80010030 0000CF70  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010030 0000CF70  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010034 0000CF74  80 C7 00 00 */	lwz r6, 0(r7)
 /* 80010038 0000CF78  7F A5 EB 78 */	mr r5, r29
 /* 8001003C 0000CF7C  81 07 00 2C */	lwz r8, 0x2c(r7)
@@ -759,7 +759,7 @@ lbl_8001002C:
 /* 8001005C 0000CF9C  2C 1D 00 0A */	cmpwi r29, 0xa
 /* 80010060 0000CFA0  3B FF 00 04 */	addi r31, r31, 4
 /* 80010064 0000CFA4  41 80 FF C8 */	blt lbl_8001002C
-/* 80010068 0000CFA8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010068 0000CFA8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8001006C 0000CFAC  38 9E 02 7C */	addi r4, r30, 0x27c
 /* 80010070 0000CFB0  80 DC 00 28 */	lwz r6, 0x28(r28)
 /* 80010074 0000CFB4  4C C6 31 82 */	crclr 6
@@ -800,9 +800,9 @@ lbl_800100E8:
 /* 800100EC 0000D02C  48 00 00 FC */	b lbl_800101E8
 lbl_800100F0:
 /* 800100F0 0000D030  57 A0 06 3F */	clrlwi. r0, r29, 0x18
-/* 800100F4 0000D034  3B C2 80 70 */	addi r30, r2, $$21630-_SDA2_BASE_
+/* 800100F4 0000D034  3B C2 80 70 */	addi r30, r2, $$21630@sda21
 /* 800100F8 0000D038  40 82 00 08 */	bne lbl_80010100
-/* 800100FC 0000D03C  3B C2 80 74 */	addi r30, r2, $$21756-_SDA2_BASE_
+/* 800100FC 0000D03C  3B C2 80 74 */	addi r30, r2, $$21756@sda21
 lbl_80010100:
 /* 80010100 0000D040  38 7C 00 00 */	addi r3, r28, 0
 /* 80010104 0000D044  38 81 01 58 */	addi r4, r1, 0x158
@@ -819,7 +819,7 @@ lbl_80010100:
 /* 80010130 0000D070  38 A0 00 20 */	li r5, 0x20
 /* 80010134 0000D074  4B FF FD 3D */	bl search_name_part__FPUcPUci
 /* 80010138 0000D078  3C 80 80 37 */	lis r4, $$21757@ha
-/* 8001013C 0000D07C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8001013C 0000D07C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010140 0000D080  80 E1 01 50 */	lwz r7, 0x150(r1)
 /* 80010144 0000D084  38 84 0A 28 */	addi r4, r4, $$21757@l
 /* 80010148 0000D088  81 01 01 54 */	lwz r8, 0x154(r1)
@@ -886,7 +886,7 @@ showGPRMap__12JUTExceptionFP9OSContext:
 /* 8001021C 0000D15C  3A E3 00 00 */	addi r23, r3, 0
 /* 80010220 0000D160  3B 04 00 00 */	addi r24, r4, 0
 /* 80010224 0000D164  3B 85 07 90 */	addi r28, r5, $$21210@l
-/* 80010228 0000D168  80 0D 8D A4 */	lwz r0, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010228 0000D168  80 0D 8D A4 */	lwz r0, sConsole__12JUTException@sda21(r13)
 /* 8001022C 0000D16C  28 00 00 00 */	cmplwi r0, 0
 /* 80010230 0000D170  41 82 00 B4 */	beq lbl_800102E4
 /* 80010234 0000D174  7C 03 03 78 */	mr r3, r0
@@ -904,7 +904,7 @@ lbl_80010258:
 /* 80010260 0000D1A0  41 80 00 60 */	blt lbl_800102C0
 /* 80010264 0000D1A4  7C 1E C8 40 */	cmplw r30, r25
 /* 80010268 0000D1A8  41 80 00 58 */	blt lbl_800102C0
-/* 8001026C 0000D1AC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8001026C 0000D1AC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010270 0000D1B0  38 BA 00 00 */	addi r5, r26, 0
 /* 80010274 0000D1B4  38 D9 00 00 */	addi r6, r25, 0
 /* 80010278 0000D1B8  4C C6 31 82 */	crclr 6
@@ -917,11 +917,11 @@ lbl_80010258:
 /* 80010294 0000D1D4  4B FF FE 15 */	bl showMapInfo_subroutine__12JUTExceptionFUlb
 /* 80010298 0000D1D8  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8001029C 0000D1DC  40 82 00 10 */	bne lbl_800102AC
-/* 800102A0 0000D1E0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800102A0 0000D1E0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800102A4 0000D1E4  38 9C 02 EC */	addi r4, r28, 0x2ec
 /* 800102A8 0000D1E8  48 02 F6 F9 */	bl print__10JUTConsoleFPCc
 lbl_800102AC:
-/* 800102AC 0000D1EC  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800102AC 0000D1EC  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800102B0 0000D1F0  38 80 00 01 */	li r4, 1
 /* 800102B4 0000D1F4  48 02 FC 65 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 800102B8 0000D1F8  80 77 00 74 */	lwz r3, 0x74(r23)
@@ -933,7 +933,7 @@ lbl_800102C0:
 /* 800102CC 0000D20C  41 80 FF 8C */	blt lbl_80010258
 /* 800102D0 0000D210  57 60 06 3F */	clrlwi. r0, r27, 0x18
 /* 800102D4 0000D214  40 82 00 10 */	bne lbl_800102E4
-/* 800102D8 0000D218  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800102D8 0000D218  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800102DC 0000D21C  38 9C 03 00 */	addi r4, r28, 0x300
 /* 800102E0 0000D220  48 02 F6 C1 */	bl print__10JUTConsoleFPCc
 lbl_800102E4:
@@ -1119,12 +1119,12 @@ lbl_80010550:
 lbl_80010560:
 /* 80010560 0000D4A0  3A C0 00 01 */	li r22, 1
 lbl_80010564:
-/* 80010564 0000D4A4  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException-_SDA_BASE_(r13)
+/* 80010564 0000D4A4  80 6D 8D 90 */	lwz r3, sErrorManager__12JUTException@sda21(r13)
 /* 80010568 0000D4A8  80 63 00 64 */	lwz r3, 0x64(r3)
 /* 8001056C 0000D4AC  80 03 00 00 */	lwz r0, 0(r3)
 /* 80010570 0000D4B0  28 00 00 00 */	cmplwi r0, 0
 /* 80010574 0000D4B4  41 82 04 00 */	beq lbl_80010974
-/* 80010578 0000D4B8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010578 0000D4B8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8001057C 0000D4BC  28 03 00 00 */	cmplwi r3, 0
 /* 80010580 0000D4C0  41 82 03 F4 */	beq lbl_80010974
 /* 80010584 0000D4C4  80 BF 00 60 */	lwz r5, 0x60(r31)
@@ -1138,7 +1138,7 @@ lbl_80010564:
 /* 800105A4 0000D4E4  56 D9 06 3E */	clrlwi r25, r22, 0x18
 /* 800105A8 0000D4E8  3A E0 00 00 */	li r23, 0
 lbl_800105AC:
-/* 800105AC 0000D4EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800105AC 0000D4EC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800105B0 0000D4F0  28 03 00 00 */	cmplwi r3, 0
 /* 800105B4 0000D4F4  41 82 00 48 */	beq lbl_800105FC
 /* 800105B8 0000D4F8  80 D8 00 00 */	lwz r6, 0(r24)
@@ -1146,20 +1146,20 @@ lbl_800105AC:
 /* 800105C0 0000D500  4C C6 31 82 */	crclr 6
 /* 800105C4 0000D504  38 9E 01 D4 */	addi r4, r30, 0x1d4
 /* 800105C8 0000D508  48 02 F3 59 */	bl print_f__10JUTConsoleFPCce
-/* 800105CC 0000D50C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800105CC 0000D50C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800105D0 0000D510  38 9E 01 F4 */	addi r4, r30, 0x1f4
 /* 800105D4 0000D514  80 BB 01 98 */	lwz r5, 0x198(r27)
 /* 800105D8 0000D518  4C C6 31 82 */	crclr 6
 /* 800105DC 0000D51C  80 DB 01 9C */	lwz r6, 0x19c(r27)
 /* 800105E0 0000D520  48 02 F3 41 */	bl print_f__10JUTConsoleFPCce
-/* 800105E4 0000D524  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800105E4 0000D524  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800105E8 0000D528  38 BC 00 00 */	addi r5, r28, 0
 /* 800105EC 0000D52C  38 DD 00 00 */	addi r6, r29, 0
 /* 800105F0 0000D530  4C C6 31 82 */	crclr 6
 /* 800105F4 0000D534  38 9E 02 10 */	addi r4, r30, 0x210
 /* 800105F8 0000D538  48 02 F3 29 */	bl print_f__10JUTConsoleFPCce
 lbl_800105FC:
-/* 800105FC 0000D53C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800105FC 0000D53C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 80010600 0000D540  38 80 00 01 */	li r4, 1
 /* 80010604 0000D544  48 02 F9 15 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 80010608 0000D548  80 7F 00 70 */	lwz r3, 0x70(r31)
@@ -1170,7 +1170,7 @@ lbl_800105FC:
 /* 8001061C 0000D55C  38 7F 00 00 */	addi r3, r31, 0
 /* 80010620 0000D560  38 9B 00 00 */	addi r4, r27, 0
 /* 80010624 0000D564  4B FF F9 C5 */	bl showGPR__12JUTExceptionFP9OSContext
-/* 80010628 0000D568  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 80010628 0000D568  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 8001062C 0000D56C  38 80 00 01 */	li r4, 1
 /* 80010630 0000D570  48 02 F8 E9 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 80010634 0000D574  80 7F 00 70 */	lwz r3, 0x70(r31)
@@ -1182,7 +1182,7 @@ lbl_8001063C:
 /* 80010648 0000D588  38 7F 00 00 */	addi r3, r31, 0
 /* 8001064C 0000D58C  38 9B 00 00 */	addi r4, r27, 0
 /* 80010650 0000D590  4B FF FB B9 */	bl showGPRMap__12JUTExceptionFP9OSContext
-/* 80010654 0000D594  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 80010654 0000D594  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 80010658 0000D598  38 80 00 01 */	li r4, 1
 /* 8001065C 0000D59C  48 02 F8 BD */	bl drawDirect__17JUTConsoleManagerCFb
 /* 80010660 0000D5A0  80 7F 00 70 */	lwz r3, 0x70(r31)
@@ -1194,16 +1194,16 @@ lbl_80010668:
 /* 80010674 0000D5B4  38 7F 00 00 */	addi r3, r31, 0
 /* 80010678 0000D5B8  38 9B 00 00 */	addi r4, r27, 0
 /* 8001067C 0000D5BC  4B FF F2 85 */	bl showFloat__12JUTExceptionFP9OSContext
-/* 80010680 0000D5C0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010680 0000D5C0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010684 0000D5C4  28 03 00 00 */	cmplwi r3, 0
 /* 80010688 0000D5C8  41 82 00 18 */	beq lbl_800106A0
-/* 8001068C 0000D5CC  80 AD 8D A8 */	lwz r5, msr__12JUTException-_SDA_BASE_(r13)
+/* 8001068C 0000D5CC  80 AD 8D A8 */	lwz r5, msr__12JUTException@sda21(r13)
 /* 80010690 0000D5D0  38 9E 03 28 */	addi r4, r30, 0x328
-/* 80010694 0000D5D4  80 CD 8D AC */	lwz r6, fpscr__12JUTException-_SDA_BASE_(r13)
+/* 80010694 0000D5D4  80 CD 8D AC */	lwz r6, fpscr__12JUTException@sda21(r13)
 /* 80010698 0000D5D8  4C C6 31 82 */	crclr 6
 /* 8001069C 0000D5DC  48 02 F2 85 */	bl print_f__10JUTConsoleFPCce
 lbl_800106A0:
-/* 800106A0 0000D5E0  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800106A0 0000D5E0  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800106A4 0000D5E4  38 80 00 01 */	li r4, 1
 /* 800106A8 0000D5E8  48 02 F8 71 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 800106AC 0000D5EC  80 7F 00 70 */	lwz r3, 0x70(r31)
@@ -1215,25 +1215,25 @@ lbl_800106B4:
 /* 800106C0 0000D600  38 7F 00 00 */	addi r3, r31, 0
 /* 800106C4 0000D604  38 9B 00 00 */	addi r4, r27, 0
 /* 800106C8 0000D608  4B FF F8 21 */	bl showStack__12JUTExceptionFP9OSContext
-/* 800106CC 0000D60C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800106CC 0000D60C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800106D0 0000D610  38 80 00 01 */	li r4, 1
 /* 800106D4 0000D614  48 02 F8 45 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 800106D8 0000D618  80 7F 00 74 */	lwz r3, 0x74(r31)
 /* 800106DC 0000D61C  48 00 02 AD */	bl waitTime__12JUTExceptionFl
 lbl_800106E0:
-/* 800106E0 0000D620  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800106E0 0000D620  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800106E4 0000D624  38 9E 03 7C */	addi r4, r30, 0x37c
 /* 800106E8 0000D628  48 02 F2 B9 */	bl print__10JUTConsoleFPCc
-/* 800106EC 0000D62C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800106EC 0000D62C  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800106F0 0000D630  38 80 00 01 */	li r4, 1
 /* 800106F4 0000D634  48 02 F8 25 */	bl drawDirect__17JUTConsoleManagerCFb
 /* 800106F8 0000D638  2C 17 00 00 */	cmpwi r23, 0
 /* 800106FC 0000D63C  40 82 00 40 */	bne lbl_8001073C
-/* 80010700 0000D640  80 0D 8D 98 */	lwz r0, sPostUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 80010700 0000D640  80 0D 8D 98 */	lwz r0, sPostUserCallback__12JUTException@sda21(r13)
 /* 80010704 0000D644  28 00 00 00 */	cmplwi r0, 0
 /* 80010708 0000D648  41 82 00 34 */	beq lbl_8001073C
 /* 8001070C 0000D64C  48 07 FA D5 */	bl OSEnableInterrupts
-/* 80010710 0000D650  81 8D 8D 98 */	lwz r12, sPostUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 80010710 0000D650  81 8D 8D 98 */	lwz r12, sPostUserCallback__12JUTException@sda21(r13)
 /* 80010714 0000D654  3A A3 00 00 */	addi r21, r3, 0
 /* 80010718 0000D658  38 7A 00 00 */	addi r3, r26, 0
 /* 8001071C 0000D65C  7D 88 03 A6 */	mtlr r12
@@ -1250,7 +1250,7 @@ lbl_8001073C:
 /* 80010744 0000D684  41 82 00 20 */	beq lbl_80010764
 /* 80010748 0000D688  28 19 00 00 */	cmplwi r25, 0
 /* 8001074C 0000D68C  41 82 00 18 */	beq lbl_80010764
-/* 80010750 0000D690  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010750 0000D690  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010754 0000D694  84 03 00 58 */	lwzu r0, 0x58(r3)
 /* 80010758 0000D698  54 00 07 FE */	clrlwi r0, r0, 0x1f
 /* 8001075C 0000D69C  90 03 00 00 */	stw r0, 0(r3)
@@ -1270,7 +1270,7 @@ lbl_80010778:
 /* 8001078C 0000D6CC  38 60 00 00 */	li r3, 0
 /* 80010790 0000D6D0  28 00 01 00 */	cmplwi r0, 0x100
 /* 80010794 0000D6D4  40 82 00 14 */	bne lbl_800107A8
-/* 80010798 0000D6D8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010798 0000D6D8  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8001079C 0000D6DC  80 83 00 24 */	lwz r4, 0x24(r3)
 /* 800107A0 0000D6E0  48 02 F4 59 */	bl scroll__10JUTConsoleFi
 /* 800107A4 0000D6E4  38 60 00 01 */	li r3, 1
@@ -1278,7 +1278,7 @@ lbl_800107A8:
 /* 800107A8 0000D6E8  80 01 00 48 */	lwz r0, 0x48(r1)
 /* 800107AC 0000D6EC  28 00 02 00 */	cmplwi r0, 0x200
 /* 800107B0 0000D6F0  40 82 00 18 */	bne lbl_800107C8
-/* 800107B4 0000D6F4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800107B4 0000D6F4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800107B8 0000D6F8  80 03 00 24 */	lwz r0, 0x24(r3)
 /* 800107BC 0000D6FC  7C 80 00 D0 */	neg r4, r0
 /* 800107C0 0000D700  48 02 F4 39 */	bl scroll__10JUTConsoleFi
@@ -1304,7 +1304,7 @@ lbl_800107F4:
 lbl_80010804:
 /* 80010804 0000D744  38 80 FF F8 */	li r4, -8
 lbl_80010808:
-/* 80010808 0000D748  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010808 0000D748  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8001080C 0000D74C  48 02 F3 ED */	bl scroll__10JUTConsoleFi
 /* 80010810 0000D750  38 60 00 01 */	li r3, 1
 /* 80010814 0000D754  3A E0 00 00 */	li r23, 0
@@ -1330,7 +1330,7 @@ lbl_80010848:
 lbl_80010858:
 /* 80010858 0000D798  38 80 00 08 */	li r4, 8
 lbl_8001085C:
-/* 8001085C 0000D79C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8001085C 0000D79C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010860 0000D7A0  48 02 F3 99 */	bl scroll__10JUTConsoleFi
 /* 80010864 0000D7A4  38 60 00 01 */	li r3, 1
 /* 80010868 0000D7A8  3A A0 00 00 */	li r21, 0
@@ -1349,7 +1349,7 @@ lbl_80010890:
 /* 80010890 0000D7D0  48 08 A5 7D */	bl VIGetRetraceCount
 /* 80010894 0000D7D4  7C 16 18 40 */	cmplw r22, r3
 /* 80010898 0000D7D8  41 82 FF F8 */	beq lbl_80010890
-/* 8001089C 0000D7DC  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 8001089C 0000D7DC  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800108A0 0000D7E0  38 80 00 01 */	li r4, 1
 /* 800108A4 0000D7E4  48 02 F6 75 */	bl drawDirect__17JUTConsoleManagerCFb
 lbl_800108A8:
@@ -1357,27 +1357,27 @@ lbl_800108A8:
 /* 800108AC 0000D7EC  48 00 00 DD */	bl waitTime__12JUTExceptionFl
 /* 800108B0 0000D7F0  4B FF FE C8 */	b lbl_80010778
 lbl_800108B4:
-/* 800108B4 0000D7F4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800108B4 0000D7F4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800108B8 0000D7F8  80 03 00 24 */	lwz r0, 0x24(r3)
 /* 800108BC 0000D7FC  7C 80 00 D0 */	neg r4, r0
 /* 800108C0 0000D800  48 02 F3 39 */	bl scroll__10JUTConsoleFi
-/* 800108C4 0000D804  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800108C4 0000D804  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800108C8 0000D808  38 80 00 01 */	li r4, 1
 /* 800108CC 0000D80C  48 02 F6 4D */	bl drawDirect__17JUTConsoleManagerCFb
 /* 800108D0 0000D810  38 60 07 D0 */	li r3, 0x7d0
 /* 800108D4 0000D814  48 00 00 B5 */	bl waitTime__12JUTExceptionFl
 lbl_800108D8:
-/* 800108D8 0000D818  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800108D8 0000D818  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800108DC 0000D81C  82 A3 00 48 */	lwz r21, 0x48(r3)
 /* 800108E0 0000D820  48 00 00 54 */	b lbl_80010934
 lbl_800108E4:
-/* 800108E4 0000D824  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800108E4 0000D824  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800108E8 0000D828  38 80 00 01 */	li r4, 1
 /* 800108EC 0000D82C  48 02 F3 0D */	bl scroll__10JUTConsoleFi
-/* 800108F0 0000D830  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
+/* 800108F0 0000D830  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
 /* 800108F4 0000D834  38 80 00 01 */	li r4, 1
 /* 800108F8 0000D838  48 02 F6 21 */	bl drawDirect__17JUTConsoleManagerCFb
-/* 800108FC 0000D83C  83 0D 8D A4 */	lwz r24, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800108FC 0000D83C  83 0D 8D A4 */	lwz r24, sConsole__12JUTException@sda21(r13)
 /* 80010900 0000D840  82 F8 00 48 */	lwz r23, 0x48(r24)
 /* 80010904 0000D844  7F 03 C3 78 */	mr r3, r24
 /* 80010908 0000D848  48 02 F3 F1 */	bl getLineOffset__10JUTConsoleCFv
@@ -1397,7 +1397,7 @@ lbl_80010934:
 lbl_8001093C:
 /* 8001093C 0000D87C  38 60 0B B8 */	li r3, 0xbb8
 /* 80010940 0000D880  48 00 00 49 */	bl waitTime__12JUTExceptionFl
-/* 80010944 0000D884  83 0D 8D A4 */	lwz r24, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010944 0000D884  83 0D 8D A4 */	lwz r24, sConsole__12JUTException@sda21(r13)
 /* 80010948 0000D888  82 F8 00 48 */	lwz r23, 0x48(r24)
 /* 8001094C 0000D88C  7F 03 C3 78 */	mr r3, r24
 /* 80010950 0000D890  48 02 F3 A9 */	bl getLineOffset__10JUTConsoleCFv
@@ -1525,8 +1525,8 @@ getFpscr__12JUTExceptionFv:
 
 .global setPreUserCallback__12JUTExceptionFPFUsP9OSContextUlUl_v
 setPreUserCallback__12JUTExceptionFPFUsP9OSContextUlUl_v:
-/* 80010B04 0000DA44  80 0D 8D 94 */	lwz r0, sPreUserCallback__12JUTException-_SDA_BASE_(r13)
-/* 80010B08 0000DA48  90 6D 8D 94 */	stw r3, sPreUserCallback__12JUTException-_SDA_BASE_(r13)
+/* 80010B04 0000DA44  80 0D 8D 94 */	lwz r0, sPreUserCallback__12JUTException@sda21(r13)
+/* 80010B08 0000DA48  90 6D 8D 94 */	stw r3, sPreUserCallback__12JUTException@sda21(r13)
 /* 80010B0C 0000DA4C  7C 03 03 78 */	mr r3, r0
 /* 80010B10 0000DA50  4E 80 00 20 */	blr 
 
@@ -1594,7 +1594,7 @@ queryMapAddress__12JUTExceptionFPcUllPUlPUlPcUlbb:
 /* 80010BE4 0000DB24  7C 04 03 78 */	mr r4, r0
 /* 80010BE8 0000DB28  48 07 52 09 */	bl strcpy
 /* 80010BEC 0000DB2C  38 61 00 48 */	addi r3, r1, 0x48
-/* 80010BF0 0000DB30  38 82 80 78 */	addi r4, r2, $$22094-_SDA2_BASE_
+/* 80010BF0 0000DB30  38 82 80 78 */	addi r4, r2, $$22094@sda21
 /* 80010BF4 0000DB34  48 07 51 8D */	bl strcat
 /* 80010BF8 0000DB38  93 E1 00 08 */	stw r31, 8(r1)
 /* 80010BFC 0000DB3C  38 98 00 00 */	addi r4, r24, 0
@@ -1832,11 +1832,11 @@ lbl_80010F2C:
 /* 80010F38 0000DE78  41 82 00 40 */	beq lbl_80010F78
 /* 80010F3C 0000DE7C  56 40 06 3F */	clrlwi. r0, r18, 0x18
 /* 80010F40 0000DE80  41 82 00 10 */	beq lbl_80010F50
-/* 80010F44 0000DE84  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 80010F48 0000DE88  38 82 80 70 */	addi r4, r2, $$21630-_SDA2_BASE_
+/* 80010F44 0000DE84  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 80010F48 0000DE88  38 82 80 70 */	addi r4, r2, $$21630@sda21
 /* 80010F4C 0000DE8C  48 02 EA 55 */	bl print__10JUTConsoleFPCc
 lbl_80010F50:
-/* 80010F50 0000DE90  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80010F50 0000DE90  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010F54 0000DE94  38 8F 00 00 */	addi r4, r15, 0
 /* 80010F58 0000DE98  38 BE 00 00 */	addi r5, r30, 0
 /* 80010F5C 0000DE9C  4C C6 31 82 */	crclr 6
@@ -1858,8 +1858,8 @@ lbl_80010F7C:
 /* 80010F94 0000DED4  41 82 00 18 */	beq lbl_80010FAC
 /* 80010F98 0000DED8  56 40 06 3F */	clrlwi. r0, r18, 0x18
 /* 80010F9C 0000DEDC  41 82 00 10 */	beq lbl_80010FAC
-/* 80010FA0 0000DEE0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 80010FA4 0000DEE4  38 82 80 70 */	addi r4, r2, $$21630-_SDA2_BASE_
+/* 80010FA0 0000DEE0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
+/* 80010FA4 0000DEE4  38 82 80 70 */	addi r4, r2, $$21630@sda21
 /* 80010FA8 0000DEE8  48 02 E9 F9 */	bl print__10JUTConsoleFPCc
 lbl_80010FAC:
 /* 80010FAC 0000DEEC  38 61 02 38 */	addi r3, r1, 0x238
@@ -1901,28 +1901,28 @@ lbl_80011018:
 /* 80011020 0000DF60  48 02 E3 F1 */	bl getLineFromObjectSize__10JUTConsoleFUlUi
 /* 80011024 0000DF64  28 03 00 00 */	cmplwi r3, 0
 /* 80011028 0000DF68  41 82 00 8C */	beq lbl_800110B4
-/* 8001102C 0000DF6C  93 CD 8D 9C */	stw r30, sConsoleBuffer__12JUTException-_SDA_BASE_(r13)
+/* 8001102C 0000DF6C  93 CD 8D 9C */	stw r30, sConsoleBuffer__12JUTException@sda21(r13)
 /* 80011030 0000DF70  38 60 00 32 */	li r3, 0x32
-/* 80011034 0000DF74  93 ED 8D A0 */	stw r31, sConsoleBufferSize__12JUTException-_SDA_BASE_(r13)
-/* 80011038 0000DF78  80 8D 8D 9C */	lwz r4, sConsoleBuffer__12JUTException-_SDA_BASE_(r13)
-/* 8001103C 0000DF7C  80 AD 8D A0 */	lwz r5, sConsoleBufferSize__12JUTException-_SDA_BASE_(r13)
+/* 80011034 0000DF74  93 ED 8D A0 */	stw r31, sConsoleBufferSize__12JUTException@sda21(r13)
+/* 80011038 0000DF78  80 8D 8D 9C */	lwz r4, sConsoleBuffer__12JUTException@sda21(r13)
+/* 8001103C 0000DF7C  80 AD 8D A0 */	lwz r5, sConsoleBufferSize__12JUTException@sda21(r13)
 /* 80011040 0000DF80  48 02 E1 C5 */	bl create__10JUTConsoleFUiPvUl
-/* 80011044 0000DF84  90 6D 8D A4 */	stw r3, sConsole__12JUTException-_SDA_BASE_(r13)
-/* 80011048 0000DF88  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager-_SDA_BASE_(r13)
-/* 8001104C 0000DF8C  80 8D 8D A4 */	lwz r4, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80011044 0000DF84  90 6D 8D A4 */	stw r3, sConsole__12JUTException@sda21(r13)
+/* 80011048 0000DF88  80 6D 8E D0 */	lwz r3, sManager__17JUTConsoleManager@sda21(r13)
+/* 8001104C 0000DF8C  80 8D 8D A4 */	lwz r4, sConsole__12JUTException@sda21(r13)
 /* 80011050 0000DF90  48 02 EF 49 */	bl setDirectConsole__17JUTConsoleManagerFP10JUTConsole
-/* 80011054 0000DF94  80 AD 8D A4 */	lwz r5, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80011054 0000DF94  80 AD 8D A4 */	lwz r5, sConsole__12JUTException@sda21(r13)
 /* 80011058 0000DF98  38 80 00 0F */	li r4, 0xf
-/* 8001105C 0000DF9C  C0 02 80 80 */	lfs f0, $$22216-_SDA2_BASE_(r2)
+/* 8001105C 0000DF9C  C0 02 80 80 */	lfs f0, $$22216@sda21(r2)
 /* 80011060 0000DFA0  38 60 00 1A */	li r3, 0x1a
 /* 80011064 0000DFA4  38 00 00 17 */	li r0, 0x17
 /* 80011068 0000DFA8  D0 05 00 50 */	stfs f0, 0x50(r5)
-/* 8001106C 0000DFAC  C0 02 80 84 */	lfs f0, $$22217-_SDA2_BASE_(r2)
+/* 8001106C 0000DFAC  C0 02 80 84 */	lfs f0, $$22217@sda21(r2)
 /* 80011070 0000DFB0  D0 05 00 54 */	stfs f0, 0x54(r5)
-/* 80011074 0000DFB4  80 AD 8D A4 */	lwz r5, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80011074 0000DFB4  80 AD 8D A4 */	lwz r5, sConsole__12JUTException@sda21(r13)
 /* 80011078 0000DFB8  90 85 00 40 */	stw r4, 0x40(r5)
 /* 8001107C 0000DFBC  90 65 00 44 */	stw r3, 0x44(r5)
-/* 80011080 0000DFC0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 80011080 0000DFC0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80011084 0000DFC4  90 03 00 48 */	stw r0, 0x48(r3)
 /* 80011088 0000DFC8  80 03 00 48 */	lwz r0, 0x48(r3)
 /* 8001108C 0000DFCC  80 83 00 24 */	lwz r4, 0x24(r3)
@@ -1930,11 +1930,11 @@ lbl_80011018:
 /* 80011094 0000DFD4  40 81 00 08 */	ble lbl_8001109C
 /* 80011098 0000DFD8  90 83 00 48 */	stw r4, 0x48(r3)
 lbl_8001109C:
-/* 8001109C 0000DFDC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 8001109C 0000DFDC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800110A0 0000DFE0  38 80 00 01 */	li r4, 1
 /* 800110A4 0000DFE4  38 00 00 03 */	li r0, 3
 /* 800110A8 0000DFE8  98 83 00 64 */	stb r4, 0x64(r3)
-/* 800110AC 0000DFEC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException-_SDA_BASE_(r13)
+/* 800110AC 0000DFEC  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 800110B0 0000DFF0  90 03 00 58 */	stw r0, 0x58(r3)
 lbl_800110B4:
 /* 800110B4 0000DFF4  80 01 00 24 */	lwz r0, 0x24(r1)
@@ -2034,7 +2034,7 @@ lbl_800111DC:
 /* 800111F4 0000E134  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBBC, 0x4
+  .4byte __sinit_JUTException_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21210:
@@ -2120,16 +2120,42 @@ $$22193:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageQueue__12JUTException:
-	.incbin "baserom.dol", 0x3A5840, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 sCpuExpName__12JUTException:
-	.incbin "baserom.dol", 0x3A5860, 0x40
+  .4byte $$21484
+  .4byte $$21485
+  .4byte $$21486
+  .4byte $$21487
+  .4byte $$21488
+  .4byte $$21489
+  .4byte $$21490
+  .4byte $$21491
+  .4byte $$21492
+  .4byte $$21493
+  .4byte $$21494
+  .4byte $$21495
+  .4byte $$21496
+  .4byte $$21497
+  .4byte $$21498
+  .4byte $$21499
 .global __vt__12JUTException
 __vt__12JUTException:
-	.incbin "baserom.dol", 0x3A58A0, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12JUTExceptionFv
+  .4byte run__12JUTExceptionFv
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sMessageBuffer__12JUTException:
-	.incbin "baserom.dol", 0x3E3008, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21486:
@@ -2141,13 +2167,13 @@ $$21490:
 $$21494:
 	.incbin "baserom.dol", 0x3E3D60, 0x8
 $$21565:
-	.incbin "baserom.dol", 0x3E3D68, 0x4
+  .4byte 0
 $$21629:
 	.incbin "baserom.dol", 0x3E3D6C, 0x4
 $$21630:
 	.incbin "baserom.dol", 0x3E3D70, 0x4
 $$21756:
-	.incbin "baserom.dol", 0x3E3D74, 0x4
+  .4byte 0
 $$22094:
 	.incbin "baserom.dol", 0x3E3D78, 0x8
 $$22216:

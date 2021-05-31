@@ -30,6 +30,7 @@ lbl_80106910:
 /* 80106928 00103868  7C 1F 00 2E */	lwzx r0, r31, r0
 /* 8010692C 0010386C  7C 09 03 A6 */	mtctr r0
 /* 80106930 00103870  4E 80 04 20 */	bctr 
+lbl_80106934:
 /* 80106934 00103874  38 7D 00 00 */	addi r3, r29, 0
 /* 80106938 00103878  38 80 00 00 */	li r4, 0
 /* 8010693C 0010387C  48 00 12 15 */	bl mount___12TCardManagerFb
@@ -53,31 +54,36 @@ lbl_80106968:
 /* 80106980 001038C0  4B F9 C9 61 */	bl CARDUnmount
 /* 80106984 001038C4  38 80 00 00 */	li r4, 0
 /* 80106988 001038C8  98 9D 01 25 */	stb r4, 0x125(r29)
-/* 8010698C 001038CC  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 8010698C 001038CC  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80106990 001038D0  98 9D 01 26 */	stb r4, 0x126(r29)
 /* 80106994 001038D4  80 1D 00 00 */	lwz r0, 0(r29)
 /* 80106998 001038D8  7C 83 01 AE */	stbx r4, r3, r0
 lbl_8010699C:
 /* 8010699C 001038DC  93 9D 01 28 */	stw r28, 0x128(r29)
 /* 801069A0 001038E0  48 00 01 2C */	b lbl_80106ACC
+lbl_801069A4:
 /* 801069A4 001038E4  7F A3 EB 78 */	mr r3, r29
 /* 801069A8 001038E8  48 00 10 71 */	bl createFile___12TCardManagerFv
 /* 801069AC 001038EC  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069B0 001038F0  48 00 01 1C */	b lbl_80106ACC
+lbl_801069B4:
 /* 801069B4 001038F4  7F A3 EB 78 */	mr r3, r29
 /* 801069B8 001038F8  48 00 07 69 */	bl getBookmarkInfos___12TCardManagerFv
 /* 801069BC 001038FC  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069C0 00103900  48 00 01 0C */	b lbl_80106ACC
+lbl_801069C4:
 /* 801069C4 00103904  7F A3 EB 78 */	mr r3, r29
 /* 801069C8 00103908  80 9D 04 74 */	lwz r4, 0x474(r29)
 /* 801069CC 0010390C  48 00 04 E9 */	bl readBlock___12TCardManagerFUl
 /* 801069D0 00103910  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069D4 00103914  48 00 00 F8 */	b lbl_80106ACC
+lbl_801069D8:
 /* 801069D8 00103918  7F A3 EB 78 */	mr r3, r29
 /* 801069DC 0010391C  80 9D 04 74 */	lwz r4, 0x474(r29)
 /* 801069E0 00103920  48 00 02 B5 */	bl writeBlock___12TCardManagerFUl
 /* 801069E4 00103924  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 801069E8 00103928  48 00 00 E4 */	b lbl_80106ACC
+lbl_801069EC:
 /* 801069EC 0010392C  38 7D 00 00 */	addi r3, r29, 0
 /* 801069F0 00103930  38 81 00 18 */	addi r4, r1, 0x18
 /* 801069F4 00103934  48 00 09 01 */	bl open___12TCardManagerFP12CARDFileInfo
@@ -134,10 +140,12 @@ lbl_80106A9C:
 lbl_80106AB0:
 /* 80106AB0 001039F0  93 9D 01 28 */	stw r28, 0x128(r29)
 /* 80106AB4 001039F4  48 00 00 18 */	b lbl_80106ACC
+lbl_80106AB8:
 /* 80106AB8 001039F8  7F A3 EB 78 */	mr r3, r29
 /* 80106ABC 001039FC  48 00 00 41 */	bl writeOptionBlock___12TCardManagerFv
 /* 80106AC0 00103A00  90 7D 01 28 */	stw r3, 0x128(r29)
 /* 80106AC4 00103A04  48 00 00 08 */	b lbl_80106ACC
+lbl_80106AC8:
 /* 80106AC8 00103A08  3B C0 00 00 */	li r30, 0
 lbl_80106ACC:
 /* 80106ACC 00103A0C  38 00 00 00 */	li r0, 0
@@ -256,7 +264,7 @@ lbl_80106C48:
 /* 80106C60 00103BA0  4B F9 C6 81 */	bl CARDUnmount
 /* 80106C64 00103BA4  38 80 00 00 */	li r4, 0
 /* 80106C68 00103BA8  98 9E 01 25 */	stb r4, 0x125(r30)
-/* 80106C6C 00103BAC  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80106C6C 00103BAC  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80106C70 00103BB0  98 9E 01 26 */	stb r4, 0x126(r30)
 /* 80106C74 00103BB4  80 1E 00 00 */	lwz r0, 0(r30)
 /* 80106C78 00103BB8  7C 83 01 AE */	stbx r4, r3, r0
@@ -410,7 +418,7 @@ lbl_80106E68:
 /* 80106E80 00103DC0  4B F9 C4 61 */	bl CARDUnmount
 /* 80106E84 00103DC4  38 80 00 00 */	li r4, 0
 /* 80106E88 00103DC8  98 9D 01 25 */	stb r4, 0x125(r29)
-/* 80106E8C 00103DCC  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80106E8C 00103DCC  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80106E90 00103DD0  98 9D 01 26 */	stb r4, 0x126(r29)
 /* 80106E94 00103DD4  80 1D 00 00 */	lwz r0, 0(r29)
 /* 80106E98 00103DD8  7C 83 01 AE */	stbx r4, r3, r0
@@ -1016,14 +1024,14 @@ filledInitData___12TCardManagerFP12CARDFileInfo:
 /* 80107700 00104640  38 A0 1F F8 */	li r5, 0x1ff8
 /* 80107704 00104644  4B EF B9 FD */	bl memset
 /* 80107708 00104648  3F 00 00 0A */	lis r24, 0x000A0001@ha
-/* 8010770C 0010464C  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 8010770C 0010464C  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 80107710 00104650  3B 7F 00 04 */	addi r27, r31, 4
 /* 80107714 00104654  38 98 00 01 */	addi r4, r24, 0x000A0001@l
 /* 80107718 00104658  3B 40 00 00 */	li r26, 0
 /* 8010771C 0010465C  4B FE 0B ED */	bl getFlag__12TFlagManagerCFUl
 /* 80107720 00104660  2C 03 01 00 */	cmpwi r3, 0x100
 /* 80107724 00104664  41 82 00 14 */	beq lbl_80107738
-/* 80107728 00104668  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 80107728 00104668  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 8010772C 0010466C  38 98 00 01 */	addi r4, r24, 1
 /* 80107730 00104670  4B FE 0B D9 */	bl getFlag__12TFlagManagerCFUl
 /* 80107734 00104674  3B 43 00 01 */	addi r26, r3, 1
@@ -1301,7 +1309,7 @@ lbl_80107AFC:
 /* 80107B14 00104A54  4B F9 B7 CD */	bl CARDUnmount
 /* 80107B18 00104A58  38 80 00 00 */	li r4, 0
 /* 80107B1C 00104A5C  98 9F 01 25 */	stb r4, 0x125(r31)
-/* 80107B20 00104A60  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80107B20 00104A60  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80107B24 00104A64  98 9F 01 26 */	stb r4, 0x126(r31)
 /* 80107B28 00104A68  80 1F 00 00 */	lwz r0, 0(r31)
 /* 80107B2C 00104A6C  7C 83 01 AE */	stbx r4, r3, r0
@@ -1324,7 +1332,7 @@ mount___12TCardManagerFb:
 /* 80107B60 00104AA0  7C 7F 1B 78 */	mr r31, r3
 /* 80107B64 00104AA4  93 C1 00 30 */	stw r30, 0x30(r1)
 /* 80107B68 00104AA8  93 A1 00 2C */	stw r29, 0x2c(r1)
-/* 80107B6C 00104AAC  3B AD 98 48 */	addi r29, r13, sDetach-_SDA_BASE_
+/* 80107B6C 00104AAC  3B AD 98 48 */	addi r29, r13, sDetach@sda21
 /* 80107B70 00104AB0  93 81 00 28 */	stw r28, 0x28(r1)
 /* 80107B74 00104AB4  3B 84 00 00 */	addi r28, r4, 0
 /* 80107B78 00104AB8  80 63 00 00 */	lwz r3, 0(r3)
@@ -1355,7 +1363,7 @@ lbl_80107BAC:
 /* 80107BD8 00104B18  4B F9 B7 09 */	bl CARDUnmount
 /* 80107BDC 00104B1C  38 80 00 00 */	li r4, 0
 /* 80107BE0 00104B20  98 9F 01 25 */	stb r4, 0x125(r31)
-/* 80107BE4 00104B24  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80107BE4 00104B24  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80107BE8 00104B28  98 9F 01 26 */	stb r4, 0x126(r31)
 /* 80107BEC 00104B2C  80 1F 00 00 */	lwz r0, 0(r31)
 /* 80107BF0 00104B30  7C 83 01 AE */	stbx r4, r3, r0
@@ -1462,7 +1470,7 @@ lbl_80107D40:
 /* 80107D50 00104C90  4B F9 B5 91 */	bl CARDUnmount
 /* 80107D54 00104C94  38 80 00 00 */	li r4, 0
 /* 80107D58 00104C98  98 9F 01 25 */	stb r4, 0x125(r31)
-/* 80107D5C 00104C9C  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80107D5C 00104C9C  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80107D60 00104CA0  98 9F 01 26 */	stb r4, 0x126(r31)
 /* 80107D64 00104CA4  80 1F 00 00 */	lwz r0, 0(r31)
 /* 80107D68 00104CA8  7C 83 01 AE */	stbx r4, r3, r0
@@ -1484,7 +1492,7 @@ lbl_80107D78:
 .global detachCallback__Fll
 detachCallback__Fll:
 /* 80107D9C 00104CDC  38 00 00 01 */	li r0, 1
-/* 80107DA0 00104CE0  38 8D 98 48 */	addi r4, r13, sDetach-_SDA_BASE_
+/* 80107DA0 00104CE0  38 8D 98 48 */	addi r4, r13, sDetach@sda21
 /* 80107DA4 00104CE4  7C 04 19 AE */	stbx r0, r4, r3
 /* 80107DA8 00104CE8  4E 80 00 20 */	blr 
 
@@ -1554,14 +1562,14 @@ getOptionWriteStream__12TCardManagerFP21JSUMemoryOutputStream:
 /* 80107E80 00104DC0  38 7B 00 04 */	addi r3, r27, 4
 /* 80107E84 00104DC4  4B EF B2 7D */	bl memset
 /* 80107E88 00104DC8  3F E0 00 0A */	lis r31, 0x000A0001@ha
-/* 80107E8C 00104DCC  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 80107E8C 00104DCC  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 80107E90 00104DD0  3B 9B 00 04 */	addi r28, r27, 4
 /* 80107E94 00104DD4  38 9F 00 01 */	addi r4, r31, 0x000A0001@l
 /* 80107E98 00104DD8  3B A0 00 00 */	li r29, 0
 /* 80107E9C 00104DDC  4B FE 04 6D */	bl getFlag__12TFlagManagerCFUl
 /* 80107EA0 00104DE0  2C 03 01 00 */	cmpwi r3, 0x100
 /* 80107EA4 00104DE4  41 82 00 14 */	beq lbl_80107EB8
-/* 80107EA8 00104DE8  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager-_SDA_BASE_(r13)
+/* 80107EA8 00104DE8  80 6D 97 D0 */	lwz r3, smInstance__12TFlagManager@sda21(r13)
 /* 80107EAC 00104DEC  38 9F 00 01 */	addi r4, r31, 1
 /* 80107EB0 00104DF0  4B FE 04 59 */	bl getFlag__12TFlagManagerCFUl
 /* 80107EB4 00104DF4  3B A3 00 01 */	addi r29, r3, 1
@@ -1837,7 +1845,7 @@ unmount__12TCardManagerFv:
 /* 80108268 001051A8  4B F9 B0 79 */	bl CARDUnmount
 /* 8010826C 001051AC  38 A0 00 00 */	li r5, 0
 /* 80108270 001051B0  98 BE 01 25 */	stb r5, 0x125(r30)
-/* 80108274 001051B4  38 8D 98 48 */	addi r4, r13, sDetach-_SDA_BASE_
+/* 80108274 001051B4  38 8D 98 48 */	addi r4, r13, sDetach@sda21
 /* 80108278 001051B8  98 BE 01 26 */	stb r5, 0x126(r30)
 /* 8010827C 001051BC  80 1E 00 00 */	lwz r0, 0(r30)
 /* 80108280 001051C0  7C A4 01 AE */	stbx r5, r4, r0
@@ -1910,7 +1918,7 @@ __dt__12TCardManagerFv:
 /* 80108364 001052A4  4B F9 AF 7D */	bl CARDUnmount
 /* 80108368 001052A8  38 80 00 00 */	li r4, 0
 /* 8010836C 001052AC  98 9E 01 25 */	stb r4, 0x125(r30)
-/* 80108370 001052B0  38 6D 98 48 */	addi r3, r13, sDetach-_SDA_BASE_
+/* 80108370 001052B0  38 6D 98 48 */	addi r3, r13, sDetach@sda21
 /* 80108374 001052B4  98 9E 01 26 */	stb r4, 0x126(r30)
 /* 80108378 001052B8  80 1E 00 00 */	lwz r0, 0(r30)
 /* 8010837C 001052BC  7C 83 01 AE */	stbx r4, r3, r0
@@ -2271,11 +2279,32 @@ $$21411:
 $$21210:
 	.incbin "baserom.dol", 0x3B1808, 0x10
 titles:
-	.incbin "baserom.dol", 0x3B1818, 0x1C
+  .4byte $$21632
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
+  .4byte $$21633
 comments:
-	.incbin "baserom.dol", 0x3B1834, 0x1C
+  .4byte $$21634
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
+  .4byte $$21635
 $$21818:
-	.incbin "baserom.dol", 0x3B1850, 0x38
+    .4byte lbl_80106ACC
+    .4byte lbl_80106934
+    .4byte lbl_801069A4
+    .4byte lbl_801069B4
+    .4byte lbl_80106ACC
+    .4byte lbl_801069C4
+    .4byte lbl_801069D8
+    .4byte lbl_801069EC
+    .4byte lbl_80106AB8
+    .4byte lbl_80106AC8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sDetach:

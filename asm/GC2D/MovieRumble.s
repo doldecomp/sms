@@ -52,7 +52,7 @@ checkRumbleOff__12TMovieRumbleFv:
 /* 8024790C 0024484C  80 03 00 20 */	lwz r0, 0x20(r3)
 /* 80247910 00244850  7C 04 00 00 */	cmpw r4, r0
 /* 80247914 00244854  41 81 00 B8 */	bgt lbl_802479CC
-/* 80247918 00244858  80 6D 97 88 */	lwz r3, SMSRumbleMgr-_SDA_BASE_(r13)
+/* 80247918 00244858  80 6D 97 88 */	lwz r3, SMSRumbleMgr@sda21(r13)
 /* 8024791C 0024485C  4B E8 80 21 */	bl stop__9RumbleMgrFv
 /* 80247920 00244860  80 7F 00 18 */	lwz r3, 0x18(r31)
 /* 80247924 00244864  38 80 00 00 */	li r4, 0
@@ -88,7 +88,7 @@ lbl_80247950:
 /* 80247998 002448D8  38 7E 00 00 */	addi r3, r30, 0
 /* 8024799C 002448DC  38 9D 00 00 */	addi r4, r29, 0
 /* 802479A0 002448E0  38 C1 00 2C */	addi r6, r1, 0x2c
-/* 802479A4 002448E4  38 A2 DC 18 */	addi r5, r2, $$21580-_SDA2_BASE_
+/* 802479A4 002448E4  38 A2 DC 18 */	addi r5, r2, $$21580@sda21
 /* 802479A8 002448E8  4B E8 A6 F5 */	bl GetValue__Q24Koga8ToolDataCFiPCcRPCc
 /* 802479AC 002448EC  80 61 00 2C */	lwz r3, 0x2c(r1)
 /* 802479B0 002448F0  4B E8 8F 65 */	bl getIndex__10RumbleTypeFPc
@@ -133,7 +133,7 @@ lbl_80247A1C:
 /* 80247A30 00244970  80 03 00 20 */	lwz r0, 0x20(r3)
 /* 80247A34 00244974  7C 05 00 00 */	cmpw r5, r0
 /* 80247A38 00244978  41 81 00 1C */	bgt lbl_80247A54
-/* 80247A3C 0024497C  80 6D 97 88 */	lwz r3, SMSRumbleMgr-_SDA_BASE_(r13)
+/* 80247A3C 0024497C  80 6D 97 88 */	lwz r3, SMSRumbleMgr@sda21(r13)
 /* 80247A40 00244980  38 A0 FF FF */	li r5, -1
 /* 80247A44 00244984  38 C0 00 00 */	li r6, 0
 /* 80247A48 00244988  4B E8 80 95 */	bl start__9RumbleMgrFiiPf
@@ -166,7 +166,7 @@ init__12TMovieRumbleFPCc:
 /* 80247AA4 002449E4  38 61 00 30 */	addi r3, r1, 0x30
 /* 80247AA8 002449E8  38 80 00 2E */	li r4, 0x2e
 /* 80247AAC 002449EC  4B E3 E1 39 */	bl strrchr
-/* 80247AB0 002449F0  38 82 DC 10 */	addi r4, r2, $$21558-_SDA2_BASE_
+/* 80247AB0 002449F0  38 82 DC 10 */	addi r4, r2, $$21558@sda21
 /* 80247AB4 002449F4  4B E3 E3 3D */	bl strcpy
 /* 80247AB8 002449F8  38 60 00 08 */	li r3, 8
 /* 80247ABC 002449FC  4B DC 4D F5 */	bl __nw__FUl
@@ -222,7 +222,7 @@ lbl_80247B34:
 /* 80247B74 00244AB4  38 7D 00 00 */	addi r3, r29, 0
 /* 80247B78 00244AB8  38 9C 00 00 */	addi r4, r28, 0
 /* 80247B7C 00244ABC  38 C1 00 28 */	addi r6, r1, 0x28
-/* 80247B80 00244AC0  38 A2 DC 18 */	addi r5, r2, $$21580-_SDA2_BASE_
+/* 80247B80 00244AC0  38 A2 DC 18 */	addi r5, r2, $$21580@sda21
 /* 80247B84 00244AC4  4B E8 A5 19 */	bl GetValue__Q24Koga8ToolDataCFiPCcRPCc
 /* 80247B88 00244AC8  80 61 00 28 */	lwz r3, 0x28(r1)
 /* 80247B8C 00244ACC  4B E8 8D 89 */	bl getIndex__10RumbleTypeFPc
@@ -279,7 +279,9 @@ __ct__12TMovieRumbleFPC10TTHPRender:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x391800, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x39180C, 0x14
 $$21557:
@@ -294,7 +296,16 @@ $$21681:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TMovieRumble
 __vt__12TMovieRumble:
-	.incbin "baserom.dol", 0x3CF188, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TMovieRumbleFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TMovieRumbleFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21558:

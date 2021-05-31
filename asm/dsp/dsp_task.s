@@ -244,13 +244,13 @@ lbl_8009EA94:
 
 .global __DSP_insert_task
 __DSP_insert_task:
-/* 8009EB18 0009BA58  80 0D 95 4C */	lwz r0, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EB18 0009BA58  80 0D 95 4C */	lwz r0, __DSP_first_task@sda21(r13)
 /* 8009EB1C 0009BA5C  28 00 00 00 */	cmplwi r0, 0
 /* 8009EB20 0009BA60  40 82 00 20 */	bne lbl_8009EB40
-/* 8009EB24 0009BA64  90 6D 95 50 */	stw r3, __DSP_curr_task-_SDA_BASE_(r13)
+/* 8009EB24 0009BA64  90 6D 95 50 */	stw r3, __DSP_curr_task@sda21(r13)
 /* 8009EB28 0009BA68  38 00 00 00 */	li r0, 0
-/* 8009EB2C 0009BA6C  90 6D 95 48 */	stw r3, __DSP_last_task-_SDA_BASE_(r13)
-/* 8009EB30 0009BA70  90 6D 95 4C */	stw r3, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EB2C 0009BA6C  90 6D 95 48 */	stw r3, __DSP_last_task@sda21(r13)
+/* 8009EB30 0009BA70  90 6D 95 4C */	stw r3, __DSP_first_task@sda21(r13)
 /* 8009EB34 0009BA74  90 03 00 3C */	stw r0, 0x3c(r3)
 /* 8009EB38 0009BA78  90 03 00 38 */	stw r0, 0x38(r3)
 /* 8009EB3C 0009BA7C  4E 80 00 20 */	blr 
@@ -269,7 +269,7 @@ lbl_8009EB48:
 /* 8009EB68 0009BAA8  80 83 00 3C */	lwz r4, 0x3c(r3)
 /* 8009EB6C 0009BAAC  28 04 00 00 */	cmplwi r4, 0
 /* 8009EB70 0009BAB0  40 82 00 0C */	bne lbl_8009EB7C
-/* 8009EB74 0009BAB4  90 6D 95 4C */	stw r3, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EB74 0009BAB4  90 6D 95 4C */	stw r3, __DSP_first_task@sda21(r13)
 /* 8009EB78 0009BAB8  48 00 00 18 */	b lbl_8009EB90
 lbl_8009EB7C:
 /* 8009EB7C 0009BABC  90 64 00 38 */	stw r3, 0x38(r4)
@@ -282,13 +282,13 @@ lbl_8009EB88:
 lbl_8009EB90:
 /* 8009EB90 0009BAD0  28 05 00 00 */	cmplwi r5, 0
 /* 8009EB94 0009BAD4  4C 82 00 20 */	bnelr 
-/* 8009EB98 0009BAD8  80 8D 95 48 */	lwz r4, __DSP_last_task-_SDA_BASE_(r13)
+/* 8009EB98 0009BAD8  80 8D 95 48 */	lwz r4, __DSP_last_task@sda21(r13)
 /* 8009EB9C 0009BADC  38 00 00 00 */	li r0, 0
 /* 8009EBA0 0009BAE0  90 64 00 38 */	stw r3, 0x38(r4)
 /* 8009EBA4 0009BAE4  90 03 00 38 */	stw r0, 0x38(r3)
-/* 8009EBA8 0009BAE8  80 0D 95 48 */	lwz r0, __DSP_last_task-_SDA_BASE_(r13)
+/* 8009EBA8 0009BAE8  80 0D 95 48 */	lwz r0, __DSP_last_task@sda21(r13)
 /* 8009EBAC 0009BAEC  90 03 00 3C */	stw r0, 0x3c(r3)
-/* 8009EBB0 0009BAF0  90 6D 95 48 */	stw r3, __DSP_last_task-_SDA_BASE_(r13)
+/* 8009EBB0 0009BAF0  90 6D 95 48 */	stw r3, __DSP_last_task@sda21(r13)
 /* 8009EBB4 0009BAF4  4E 80 00 20 */	blr 
 
 .global __DSP_remove_task
@@ -297,35 +297,35 @@ __DSP_remove_task:
 /* 8009EBBC 0009BAFC  90 83 00 08 */	stw r4, 8(r3)
 /* 8009EBC0 0009BB00  38 00 00 03 */	li r0, 3
 /* 8009EBC4 0009BB04  90 03 00 00 */	stw r0, 0(r3)
-/* 8009EBC8 0009BB08  80 0D 95 4C */	lwz r0, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EBC8 0009BB08  80 0D 95 4C */	lwz r0, __DSP_first_task@sda21(r13)
 /* 8009EBCC 0009BB0C  7C 00 18 40 */	cmplw r0, r3
 /* 8009EBD0 0009BB10  40 82 00 30 */	bne lbl_8009EC00
 /* 8009EBD4 0009BB14  80 03 00 38 */	lwz r0, 0x38(r3)
 /* 8009EBD8 0009BB18  28 00 00 00 */	cmplwi r0, 0
 /* 8009EBDC 0009BB1C  41 82 00 14 */	beq lbl_8009EBF0
-/* 8009EBE0 0009BB20  90 0D 95 4C */	stw r0, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EBE0 0009BB20  90 0D 95 4C */	stw r0, __DSP_first_task@sda21(r13)
 /* 8009EBE4 0009BB24  80 63 00 38 */	lwz r3, 0x38(r3)
 /* 8009EBE8 0009BB28  90 83 00 3C */	stw r4, 0x3c(r3)
 /* 8009EBEC 0009BB2C  4E 80 00 20 */	blr 
 lbl_8009EBF0:
-/* 8009EBF0 0009BB30  90 8D 95 50 */	stw r4, __DSP_curr_task-_SDA_BASE_(r13)
-/* 8009EBF4 0009BB34  90 8D 95 48 */	stw r4, __DSP_last_task-_SDA_BASE_(r13)
-/* 8009EBF8 0009BB38  90 8D 95 4C */	stw r4, __DSP_first_task-_SDA_BASE_(r13)
+/* 8009EBF0 0009BB30  90 8D 95 50 */	stw r4, __DSP_curr_task@sda21(r13)
+/* 8009EBF4 0009BB34  90 8D 95 48 */	stw r4, __DSP_last_task@sda21(r13)
+/* 8009EBF8 0009BB38  90 8D 95 4C */	stw r4, __DSP_first_task@sda21(r13)
 /* 8009EBFC 0009BB3C  4E 80 00 20 */	blr 
 lbl_8009EC00:
-/* 8009EC00 0009BB40  80 0D 95 48 */	lwz r0, __DSP_last_task-_SDA_BASE_(r13)
+/* 8009EC00 0009BB40  80 0D 95 48 */	lwz r0, __DSP_last_task@sda21(r13)
 /* 8009EC04 0009BB44  7C 00 18 40 */	cmplw r0, r3
 /* 8009EC08 0009BB48  40 82 00 20 */	bne lbl_8009EC28
 /* 8009EC0C 0009BB4C  80 03 00 3C */	lwz r0, 0x3c(r3)
-/* 8009EC10 0009BB50  90 0D 95 48 */	stw r0, __DSP_last_task-_SDA_BASE_(r13)
+/* 8009EC10 0009BB50  90 0D 95 48 */	stw r0, __DSP_last_task@sda21(r13)
 /* 8009EC14 0009BB54  80 63 00 3C */	lwz r3, 0x3c(r3)
 /* 8009EC18 0009BB58  90 83 00 38 */	stw r4, 0x38(r3)
-/* 8009EC1C 0009BB5C  80 0D 95 4C */	lwz r0, __DSP_first_task-_SDA_BASE_(r13)
-/* 8009EC20 0009BB60  90 0D 95 50 */	stw r0, __DSP_curr_task-_SDA_BASE_(r13)
+/* 8009EC1C 0009BB5C  80 0D 95 4C */	lwz r0, __DSP_first_task@sda21(r13)
+/* 8009EC20 0009BB60  90 0D 95 50 */	stw r0, __DSP_curr_task@sda21(r13)
 /* 8009EC24 0009BB64  4E 80 00 20 */	blr 
 lbl_8009EC28:
 /* 8009EC28 0009BB68  80 03 00 38 */	lwz r0, 0x38(r3)
-/* 8009EC2C 0009BB6C  90 0D 95 50 */	stw r0, __DSP_curr_task-_SDA_BASE_(r13)
+/* 8009EC2C 0009BB6C  90 0D 95 50 */	stw r0, __DSP_curr_task@sda21(r13)
 /* 8009EC30 0009BB70  80 03 00 38 */	lwz r0, 0x38(r3)
 /* 8009EC34 0009BB74  80 83 00 3C */	lwz r4, 0x3c(r3)
 /* 8009EC38 0009BB78  90 04 00 38 */	stw r0, 0x38(r4)

@@ -10,7 +10,7 @@ __ct__Q28JASystem10TBasicInstFv:
 /* 80058D14 00055C54  38 04 AD D8 */	addi r0, r4, __vt__Q28JASystem10TBasicInst@l
 /* 80058D18 00055C58  90 03 00 00 */	stw r0, 0(r3)
 /* 80058D1C 00055C5C  38 00 00 00 */	li r0, 0
-/* 80058D20 00055C60  C0 02 85 D0 */	lfs f0, $$2294-_SDA2_BASE_(r2)
+/* 80058D20 00055C60  C0 02 85 D0 */	lfs f0, $$2294@sda21(r2)
 /* 80058D24 00055C64  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80058D28 00055C68  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80058D2C 00055C6C  90 03 00 0C */	stw r0, 0xc(r3)
@@ -456,10 +456,20 @@ getType__Q28JASystem10TBasicInstCFv:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q28JASystem10TBasicInst
 __vt__Q28JASystem10TBasicInst:
-	.incbin "baserom.dol", 0x3A7DD8, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem10TBasicInstFv
+  .4byte getParam__Q28JASystem10TBasicInstCFiiPQ28JASystem10TInstParam
+  .4byte getType__Q28JASystem10TBasicInstCFv
+  .4byte getKeymapIndex__Q28JASystem10TBasicInstCFi
 .global __vt__Q28JASystem5TInst
 __vt__Q28JASystem5TInst:
-	.incbin "baserom.dol", 0x3A7DF0, 0x18
+  .4byte 0
+  .4byte 0
+  .4byte __dt__Q28JASystem5TInstFv
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2294:

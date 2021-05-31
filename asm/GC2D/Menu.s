@@ -421,10 +421,35 @@ $$21772:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TFlashPane
 __vt__10TFlashPane:
-	.incbin "baserom.dol", 0x3CDE78, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TFlashPaneFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TFlashPaneFUlPQ26JDrama9TGraphics
 .global __vt__10TMenuPlane
 __vt__10TMenuPlane:
-	.incbin "baserom.dol", 0x3CDE9C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__10TMenuPlaneFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__10TMenuPlaneFUlPQ26JDrama9TGraphics
 .global __vt__9TMenuBase
 __vt__9TMenuBase:
-	.incbin "baserom.dol", 0x3CDEC0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TMenuBaseFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TMenuBaseFUlPQ26JDrama9TGraphics
+  .4byte 0

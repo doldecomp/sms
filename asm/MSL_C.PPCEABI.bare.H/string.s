@@ -119,8 +119,8 @@ lbl_80085CD8:
 /* 80085CDC 00082C1C  38 84 00 01 */	addi r4, r4, 1
 lbl_80085CE0:
 /* 80085CE0 00082C20  80 E3 00 00 */	lwz r7, 0(r3)
-/* 80085CE4 00082C24  80 CD 82 3C */	lwz r6, K2-_SDA_BASE_(r13)
-/* 80085CE8 00082C28  80 AD 82 38 */	lwz r5, K1-_SDA_BASE_(r13)
+/* 80085CE4 00082C24  80 CD 82 3C */	lwz r6, K2@sda21(r13)
+/* 80085CE8 00082C28  80 AD 82 38 */	lwz r5, K1@sda21(r13)
 /* 80085CEC 00082C2C  7C 07 32 14 */	add r0, r7, r6
 /* 80085CF0 00082C30  81 04 00 00 */	lwz r8, 0(r4)
 /* 80085CF4 00082C34  7C 00 28 39 */	and. r0, r0, r5
@@ -234,8 +234,8 @@ lbl_80085E40:
 /* 80085E44 00082D84  38 84 00 01 */	addi r4, r4, 1
 lbl_80085E48:
 /* 80085E48 00082D88  80 A4 00 00 */	lwz r5, 0(r4)
-/* 80085E4C 00082D8C  80 0D 82 3C */	lwz r0, K2-_SDA_BASE_(r13)
-/* 80085E50 00082D90  80 CD 82 38 */	lwz r6, K1-_SDA_BASE_(r13)
+/* 80085E4C 00082D8C  80 0D 82 3C */	lwz r0, K2@sda21(r13)
+/* 80085E50 00082D90  80 CD 82 38 */	lwz r6, K1@sda21(r13)
 /* 80085E54 00082D94  39 05 00 00 */	addi r8, r5, 0
 /* 80085E58 00082D98  7C A5 02 14 */	add r5, r5, r0
 /* 80085E5C 00082D9C  7C A5 30 39 */	and. r5, r5, r6
@@ -273,7 +273,8 @@ lbl_80085EAC:
 /* 80085EC0 00082E00  4E 80 00 20 */	blr 
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
+    .balign 8
 K1:
-	.incbin "baserom.dol", 0x3E3238, 0x4
+  .4byte 0x80808080
 K2:
 	.incbin "baserom.dol", 0x3E323C, 0x4

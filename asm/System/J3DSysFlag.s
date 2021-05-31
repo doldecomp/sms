@@ -128,7 +128,7 @@ lbl_800EA068:
 /* 800EA080 000E6FC0  60 00 00 02 */	ori r0, r0, 2
 /* 800EA084 000E6FC4  90 03 00 34 */	stw r0, 0x34(r3)
 /* 800EA088 000E6FC8  38 60 00 04 */	li r3, 4
-/* 800EA08C 000E6FCC  80 02 90 38 */	lwz r0, $$21731-_SDA2_BASE_(r2)
+/* 800EA08C 000E6FCC  80 02 90 38 */	lwz r0, $$21731@sda21(r2)
 /* 800EA090 000E6FD0  90 01 00 18 */	stw r0, 0x18(r1)
 /* 800EA094 000E6FD4  80 01 00 18 */	lwz r0, 0x18(r1)
 /* 800EA098 000E6FD8  90 01 00 1C */	stw r0, 0x1c(r1)
@@ -283,20 +283,62 @@ lbl_800EA278:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TGXAlphaUpdate
 __vt__14TGXAlphaUpdate:
-	.incbin "baserom.dol", 0x3B0AF8, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TGXAlphaUpdateFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__14TGXAlphaUpdateFUlPQ26JDrama9TGraphics
 .global __vt__9TReInitGX
 __vt__9TReInitGX:
-	.incbin "baserom.dol", 0x3B0B1C, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__9TReInitGXFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__9TReInitGXFUlPQ26JDrama9TGraphics
 .global __vt__12TSMSDrawInit
 __vt__12TSMSDrawInit:
-	.incbin "baserom.dol", 0x3B0B40, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12TSMSDrawInitFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__12TSMSDrawInitFUlPQ26JDrama9TGraphics
 .global __vt__17TJ3DSysSetViewMtx
 __vt__17TJ3DSysSetViewMtx:
-	.incbin "baserom.dol", 0x3B0B64, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__17TJ3DSysSetViewMtxFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__17TJ3DSysSetViewMtxFUlPQ26JDrama9TGraphics
 .global __vt__11TJ3DSysFlag
 __vt__11TJ3DSysFlag:
-	.incbin "baserom.dol", 0x3B0B88, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TJ3DSysFlagFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TJ3DSysFlagFUlPQ26JDrama9TGraphics
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21731:
-	.incbin "baserom.dol", 0x3E4D38, 0x8
+  .4byte -1
+  .4byte 0

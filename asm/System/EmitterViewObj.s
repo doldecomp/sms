@@ -49,7 +49,7 @@ SMSSetEmitterPolColor__FP14JPABaseEmitteri:
 lbl_800DACE0:
 /* 800DACE0 000D7C20  2C 04 00 06 */	cmpwi r4, 6
 /* 800DACE4 000D7C24  40 82 00 B8 */	bne lbl_800DAD9C
-/* 800DACE8 000D7C28  80 8D 97 E8 */	lwz r4, gpMarDirector-_SDA_BASE_(r13)
+/* 800DACE8 000D7C28  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
 /* 800DACEC 000D7C2C  88 04 00 7C */	lbz r0, 0x7c(r4)
 /* 800DACF0 000D7C30  2C 00 00 09 */	cmpwi r0, 9
 /* 800DACF4 000D7C34  41 82 00 84 */	beq lbl_800DAD78
@@ -241,7 +241,7 @@ lbl_800DAF30:
 /* 800DAF60 000D7EA0  28 04 00 00 */	cmplwi r4, 0
 /* 800DAF64 000D7EA4  41 82 00 F8 */	beq lbl_800DB05C
 /* 800DAF68 000D7EA8  80 7E 00 04 */	lwz r3, 4(r30)
-/* 800DAF6C 000D7EAC  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr-_SDA_BASE_
+/* 800DAF6C 000D7EAC  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr@sda21
 /* 800DAF70 000D7EB0  90 64 01 20 */	stw r3, 0x120(r4)
 /* 800DAF74 000D7EB4  80 7E 00 0C */	lwz r3, 0xc(r30)
 /* 800DAF78 000D7EB8  90 03 01 10 */	stw r0, 0x110(r3)
@@ -290,12 +290,12 @@ lbl_800DB010:
 /* 800DB010 000D7F50  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 800DB014 000D7F54  41 82 00 14 */	beq lbl_800DB028
 /* 800DB018 000D7F58  80 7E 00 0C */	lwz r3, 0xc(r30)
-/* 800DB01C 000D7F5C  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr-_SDA_BASE_
+/* 800DB01C 000D7F5C  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr@sda21
 /* 800DB020 000D7F60  90 03 01 10 */	stw r0, 0x110(r3)
 /* 800DB024 000D7F64  48 00 00 38 */	b lbl_800DB05C
 lbl_800DB028:
 /* 800DB028 000D7F68  80 7E 00 0C */	lwz r3, 0xc(r30)
-/* 800DB02C 000D7F6C  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr-_SDA_BASE_
+/* 800DB02C 000D7F6C  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr@sda21
 /* 800DB030 000D7F70  90 03 01 10 */	stw r0, 0x110(r3)
 /* 800DB034 000D7F74  48 00 00 28 */	b lbl_800DB05C
 lbl_800DB038:
@@ -315,7 +315,7 @@ lbl_800DB05C:
 /* 800DB068 000D7FA8  83 FE 00 0C */	lwz r31, 0xc(r30)
 /* 800DB06C 000D7FAC  28 1F 00 00 */	cmplwi r31, 0
 /* 800DB070 000D7FB0  41 82 00 2C */	beq lbl_800DB09C
-/* 800DB074 000D7FB4  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DB074 000D7FB4  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DB078 000D7FB8  38 7F 00 30 */	addi r3, r31, 0x30
 /* 800DB07C 000D7FBC  38 80 00 00 */	li r4, 0
 /* 800DB080 000D7FC0  80 A5 00 10 */	lwz r5, 0x10(r5)
@@ -491,7 +491,7 @@ lbl_800DB2C0:
 /* 800DB2F4 000D8234  38 7E 00 00 */	addi r3, r30, 0
 /* 800DB2F8 000D8238  38 9D 00 00 */	addi r4, r29, 0
 /* 800DB2FC 000D823C  4B F9 40 29 */	bl setGlobalRTMatrix__14JPABaseEmitterFPA4_f
-/* 800DB300 000D8240  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DB300 000D8240  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DB304 000D8244  38 7E 00 30 */	addi r3, r30, 0x30
 /* 800DB308 000D8248  38 80 00 00 */	li r4, 0
 /* 800DB30C 000D824C  80 A5 00 10 */	lwz r5, 0x10(r5)
@@ -542,7 +542,7 @@ emitAndBindToSRTMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv:
 /* 800DB3AC 000D82EC  28 03 00 00 */	cmplwi r3, 0
 /* 800DB3B0 000D82F0  41 82 00 14 */	beq lbl_800DB3C4
 /* 800DB3B4 000D82F4  93 A3 01 20 */	stw r29, 0x120(r3)
-/* 800DB3B8 000D82F8  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr-_SDA_BASE_
+/* 800DB3B8 000D82F8  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr@sda21
 /* 800DB3BC 000D82FC  90 03 01 10 */	stw r0, 0x110(r3)
 /* 800DB3C0 000D8300  48 00 01 B8 */	b lbl_800DB578
 lbl_800DB3C4:
@@ -560,11 +560,11 @@ lbl_800DB3C4:
 /* 800DB3F0 000D8330  7C 7A 1B 79 */	or. r26, r3, r3
 /* 800DB3F4 000D8334  41 82 00 40 */	beq lbl_800DB434
 /* 800DB3F8 000D8338  93 BA 01 20 */	stw r29, 0x120(r26)
-/* 800DB3FC 000D833C  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr-_SDA_BASE_
+/* 800DB3FC 000D833C  38 0D 97 A4 */	addi r0, r13, emitterCallBackBindToSRTMtxPtr@sda21
 /* 800DB400 000D8340  38 7A 00 30 */	addi r3, r26, 0x30
 /* 800DB404 000D8344  90 1A 01 10 */	stw r0, 0x110(r26)
 /* 800DB408 000D8348  38 80 00 00 */	li r4, 0
-/* 800DB40C 000D834C  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DB40C 000D834C  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DB410 000D8350  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800DB414 000D8354  83 65 00 20 */	lwz r27, 0x20(r5)
 /* 800DB418 000D8358  4B F9 BC 09 */	bl getMainTextureID__7JPADrawFUc
@@ -697,7 +697,7 @@ emitAndBindToMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv:
 /* 800DB5F0 000D8530  28 03 00 00 */	cmplwi r3, 0
 /* 800DB5F4 000D8534  41 82 00 14 */	beq lbl_800DB608
 /* 800DB5F8 000D8538  93 A3 01 20 */	stw r29, 0x120(r3)
-/* 800DB5FC 000D853C  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr-_SDA_BASE_
+/* 800DB5FC 000D853C  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr@sda21
 /* 800DB600 000D8540  90 03 01 10 */	stw r0, 0x110(r3)
 /* 800DB604 000D8544  48 00 01 B8 */	b lbl_800DB7BC
 lbl_800DB608:
@@ -715,11 +715,11 @@ lbl_800DB608:
 /* 800DB634 000D8574  7C 7A 1B 79 */	or. r26, r3, r3
 /* 800DB638 000D8578  41 82 00 40 */	beq lbl_800DB678
 /* 800DB63C 000D857C  93 BA 01 20 */	stw r29, 0x120(r26)
-/* 800DB640 000D8580  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr-_SDA_BASE_
+/* 800DB640 000D8580  38 0D 97 A0 */	addi r0, r13, emitterCallBackBindToMtxPtr@sda21
 /* 800DB644 000D8584  38 7A 00 30 */	addi r3, r26, 0x30
 /* 800DB648 000D8588  90 1A 01 10 */	stw r0, 0x110(r26)
 /* 800DB64C 000D858C  38 80 00 00 */	li r4, 0
-/* 800DB650 000D8590  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DB650 000D8590  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DB654 000D8594  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800DB658 000D8598  83 65 00 20 */	lwz r27, 0x20(r5)
 /* 800DB65C 000D859C  4B F9 B9 C5 */	bl getMainTextureID__7JPADrawFUc
@@ -846,7 +846,7 @@ emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv:
 /* 800DB81C 000D875C  28 03 00 00 */	cmplwi r3, 0
 /* 800DB820 000D8760  41 82 00 14 */	beq lbl_800DB834
 /* 800DB824 000D8764  93 A3 01 20 */	stw r29, 0x120(r3)
-/* 800DB828 000D8768  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr-_SDA_BASE_
+/* 800DB828 000D8768  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr@sda21
 /* 800DB82C 000D876C  90 03 01 10 */	stw r0, 0x110(r3)
 /* 800DB830 000D8770  48 00 01 B8 */	b lbl_800DB9E8
 lbl_800DB834:
@@ -864,11 +864,11 @@ lbl_800DB834:
 /* 800DB860 000D87A0  7C 7A 1B 79 */	or. r26, r3, r3
 /* 800DB864 000D87A4  41 82 00 40 */	beq lbl_800DB8A4
 /* 800DB868 000D87A8  93 BA 01 20 */	stw r29, 0x120(r26)
-/* 800DB86C 000D87AC  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr-_SDA_BASE_
+/* 800DB86C 000D87AC  38 0D 97 9C */	addi r0, r13, emitterCallBackBindToPosPtr@sda21
 /* 800DB870 000D87B0  38 7A 00 30 */	addi r3, r26, 0x30
 /* 800DB874 000D87B4  90 1A 01 10 */	stw r0, 0x110(r26)
 /* 800DB878 000D87B8  38 80 00 00 */	li r4, 0
-/* 800DB87C 000D87BC  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DB87C 000D87BC  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DB880 000D87C0  80 A5 00 10 */	lwz r5, 0x10(r5)
 /* 800DB884 000D87C4  83 65 00 20 */	lwz r27, 0x20(r5)
 /* 800DB888 000D87C8  4B F9 B7 99 */	bl getMainTextureID__7JPADrawFUc
@@ -1028,7 +1028,7 @@ lbl_800DBA80:
 /* 800DBAC8 000D8A08  A8 9E 01 6E */	lha r4, 0x16e(r30)
 /* 800DBACC 000D8A0C  A8 BE 01 70 */	lha r5, 0x170(r30)
 /* 800DBAD0 000D8A10  4B F9 68 19 */	bl JPAGetXYZRotateMtx__FsssPA4_f
-/* 800DBAD4 000D8A14  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DBAD4 000D8A14  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DBAD8 000D8A18  38 7E 00 30 */	addi r3, r30, 0x30
 /* 800DBADC 000D8A1C  38 80 00 00 */	li r4, 0
 /* 800DBAE0 000D8A20  80 A5 00 10 */	lwz r5, 0x10(r5)
@@ -1087,7 +1087,7 @@ lbl_800DBB74:
 /* 800DBB9C 000D8ADC  4B F9 40 15 */	bl createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
 /* 800DBBA0 000D8AE0  7C 7A 1B 79 */	or. r26, r3, r3
 /* 800DBBA4 000D8AE4  41 82 00 34 */	beq lbl_800DBBD8
-/* 800DBBA8 000D8AE8  80 AD 97 74 */	lwz r5, gpScreenTexture-_SDA_BASE_(r13)
+/* 800DBBA8 000D8AE8  80 AD 97 74 */	lwz r5, gpScreenTexture@sda21(r13)
 /* 800DBBAC 000D8AEC  38 7A 00 30 */	addi r3, r26, 0x30
 /* 800DBBB0 000D8AF0  38 80 00 00 */	li r4, 0
 /* 800DBBB4 000D8AF4  80 A5 00 10 */	lwz r5, 0x10(r5)
@@ -1410,14 +1410,14 @@ lbl_800DC024:
 /* 800DC030 000D8F70  41 82 00 54 */	beq lbl_800DC084
 /* 800DC034 000D8F74  4B FE 4E 91 */	bl SMS_DrawInit__Fv
 /* 800DC038 000D8F78  38 1B 00 B4 */	addi r0, r27, 0xb4
-/* 800DC03C 000D8F7C  C0 02 8F A8 */	lfs f0, $$22802-_SDA2_BASE_(r2)
+/* 800DC03C 000D8F7C  C0 02 8F A8 */	lfs f0, $$22802@sda21(r2)
 /* 800DC040 000D8F80  90 01 00 84 */	stw r0, 0x84(r1)
 /* 800DC044 000D8F84  38 81 00 84 */	addi r4, r1, 0x84
 /* 800DC048 000D8F88  38 A0 00 02 */	li r5, 2
 /* 800DC04C 000D8F8C  D0 01 00 88 */	stfs f0, 0x88(r1)
-/* 800DC050 000D8F90  C0 02 8F AC */	lfs f0, $$22803-_SDA2_BASE_(r2)
+/* 800DC050 000D8F90  C0 02 8F AC */	lfs f0, $$22803@sda21(r2)
 /* 800DC054 000D8F94  D0 01 00 8C */	stfs f0, 0x8c(r1)
-/* 800DC058 000D8F98  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 800DC058 000D8F98  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 800DC05C 000D8F9C  C0 03 00 48 */	lfs f0, 0x48(r3)
 /* 800DC060 000D8FA0  D0 01 00 88 */	stfs f0, 0x88(r1)
 /* 800DC064 000D8FA4  C0 03 00 4C */	lfs f0, 0x4c(r3)
@@ -1432,10 +1432,10 @@ lbl_800DC084:
 /* 800DC084 000D8FC4  57 40 00 01 */	rlwinm. r0, r26, 0, 0, 0
 /* 800DC088 000D8FC8  41 82 00 3C */	beq lbl_800DC0C4
 /* 800DC08C 000D8FCC  38 1B 00 B4 */	addi r0, r27, 0xb4
-/* 800DC090 000D8FD0  C0 22 8F A8 */	lfs f1, $$22802-_SDA2_BASE_(r2)
+/* 800DC090 000D8FD0  C0 22 8F A8 */	lfs f1, $$22802@sda21(r2)
 /* 800DC094 000D8FD4  90 01 00 78 */	stw r0, 0x78(r1)
 /* 800DC098 000D8FD8  38 81 00 78 */	addi r4, r1, 0x78
-/* 800DC09C 000D8FDC  C0 02 8F AC */	lfs f0, $$22803-_SDA2_BASE_(r2)
+/* 800DC09C 000D8FDC  C0 02 8F AC */	lfs f0, $$22803@sda21(r2)
 /* 800DC0A0 000D8FE0  38 A0 00 00 */	li r5, 0
 /* 800DC0A4 000D8FE4  D0 21 00 7C */	stfs f1, 0x7c(r1)
 /* 800DC0A8 000D8FE8  D0 01 00 80 */	stfs f0, 0x80(r1)
@@ -1629,13 +1629,13 @@ lbl_800DC304:
 /* 800DC308 000D9248  41 82 00 40 */	beq lbl_800DC348
 /* 800DC30C 000D924C  4B FE 4B B9 */	bl SMS_DrawInit__Fv
 /* 800DC310 000D9250  38 1E 00 B4 */	addi r0, r30, 0xb4
-/* 800DC314 000D9254  C0 02 8F A8 */	lfs f0, $$22802-_SDA2_BASE_(r2)
+/* 800DC314 000D9254  C0 02 8F A8 */	lfs f0, $$22802@sda21(r2)
 /* 800DC318 000D9258  90 01 00 38 */	stw r0, 0x38(r1)
 /* 800DC31C 000D925C  38 81 00 38 */	addi r4, r1, 0x38
 /* 800DC320 000D9260  D0 01 00 3C */	stfs f0, 0x3c(r1)
-/* 800DC324 000D9264  C0 02 8F AC */	lfs f0, $$22803-_SDA2_BASE_(r2)
+/* 800DC324 000D9264  C0 02 8F AC */	lfs f0, $$22803@sda21(r2)
 /* 800DC328 000D9268  D0 01 00 40 */	stfs f0, 0x40(r1)
-/* 800DC32C 000D926C  80 6D A8 B0 */	lwz r3, gpCamera-_SDA_BASE_(r13)
+/* 800DC32C 000D926C  80 6D A8 B0 */	lwz r3, gpCamera@sda21(r13)
 /* 800DC330 000D9270  C0 03 00 48 */	lfs f0, 0x48(r3)
 /* 800DC334 000D9274  D0 01 00 3C */	stfs f0, 0x3c(r1)
 /* 800DC338 000D9278  C0 03 00 4C */	lfs f0, 0x4c(r3)
@@ -1682,10 +1682,10 @@ lbl_800DC3C0:
 /* 800DC3C0 000D9300  57 A0 07 39 */	rlwinm. r0, r29, 0, 0x1c, 0x1c
 /* 800DC3C4 000D9304  41 82 00 28 */	beq lbl_800DC3EC
 /* 800DC3C8 000D9308  38 1E 00 B4 */	addi r0, r30, 0xb4
-/* 800DC3CC 000D930C  C0 22 8F A8 */	lfs f1, $$22802-_SDA2_BASE_(r2)
+/* 800DC3CC 000D930C  C0 22 8F A8 */	lfs f1, $$22802@sda21(r2)
 /* 800DC3D0 000D9310  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 800DC3D4 000D9314  38 81 00 1C */	addi r4, r1, 0x1c
-/* 800DC3D8 000D9318  C0 02 8F AC */	lfs f0, $$22803-_SDA2_BASE_(r2)
+/* 800DC3D8 000D9318  C0 02 8F AC */	lfs f0, $$22803@sda21(r2)
 /* 800DC3DC 000D931C  D0 21 00 20 */	stfs f1, 0x20(r1)
 /* 800DC3E0 000D9320  D0 01 00 24 */	stfs f0, 0x24(r1)
 /* 800DC3E4 000D9324  80 7C 00 10 */	lwz r3, 0x10(r28)
@@ -1811,18 +1811,21 @@ __sinit_EmitterViewObj_cpp:
 /* 800DC580 000D94C0  38 83 38 38 */	addi r4, r3, $$21431@l
 /* 800DC584 000D94C4  38 04 00 98 */	addi r0, r4, 0x98
 /* 800DC588 000D94C8  38 64 00 84 */	addi r3, r4, 0x84
-/* 800DC58C 000D94CC  90 0D 97 9C */	stw r0, emitterCallBackBindToPosPtr-_SDA_BASE_(r13)
+/* 800DC58C 000D94CC  90 0D 97 9C */	stw r0, emitterCallBackBindToPosPtr@sda21(r13)
 /* 800DC590 000D94D0  38 04 00 70 */	addi r0, r4, 0x70
-/* 800DC594 000D94D4  90 6D 97 A0 */	stw r3, emitterCallBackBindToMtxPtr-_SDA_BASE_(r13)
-/* 800DC598 000D94D8  90 0D 97 A4 */	stw r0, emitterCallBackBindToSRTMtxPtr-_SDA_BASE_(r13)
+/* 800DC594 000D94D4  90 6D 97 A0 */	stw r3, emitterCallBackBindToMtxPtr@sda21(r13)
+/* 800DC598 000D94D8  90 0D 97 A4 */	stw r0, emitterCallBackBindToSRTMtxPtr@sda21(r13)
 /* 800DC59C 000D94DC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CC14, 0x4
+  .4byte __sinit_EmitterViewObj_cpp
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+    .balign 4
 $$21664:
-	.incbin "baserom.dol", 0x36F940, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21711:
 	.incbin "baserom.dol", 0x36F94C, 0x14
 prmarray$2214:
@@ -1839,25 +1842,74 @@ $$21210:
 	.incbin "baserom.dol", 0x3B0850, 0x10
 .global __vt__21TMarioParticleManager
 __vt__21TMarioParticleManager:
-	.incbin "baserom.dol", 0x3B0860, 0x48
+  .4byte 0
+  .4byte 0
+  .4byte __dt__21TMarioParticleManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__21TMarioParticleManagerFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__36TMarioEmitterCallBackBindToSRTMtxPtr
 __vt__36TMarioEmitterCallBackBindToSRTMtxPtr:
-	.incbin "baserom.dol", 0x3B08A8, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__36TMarioEmitterCallBackBindToSRTMtxPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__36TMarioEmitterCallBackBindToSRTMtxPtrFP14JPABaseEmitter
 .global __vt__33TMarioEmitterCallBackBindToMtxPtr
 __vt__33TMarioEmitterCallBackBindToMtxPtr:
-	.incbin "baserom.dol", 0x3B08BC, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__33TMarioEmitterCallBackBindToMtxPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__33TMarioEmitterCallBackBindToMtxPtrFP14JPABaseEmitter
 .global __vt__33TMarioEmitterCallBackBindToPosPtr
 __vt__33TMarioEmitterCallBackBindToPosPtr:
-	.incbin "baserom.dol", 0x3B08D0, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__33TMarioEmitterCallBackBindToPosPtrFP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__33TMarioEmitterCallBackBindToPosPtrFP14JPABaseEmitter
 .global __vt__23TEmitterIndirectViewObj
 __vt__23TEmitterIndirectViewObj:
-	.incbin "baserom.dol", 0x3B08E4, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__23TEmitterIndirectViewObjFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__23TEmitterIndirectViewObjFUlPQ26JDrama9TGraphics
 .global __vt__15TEmitterViewObj
 __vt__15TEmitterViewObj:
-	.incbin "baserom.dol", 0x3B0908, 0x24
+  .4byte 0
+  .4byte 0
+  .4byte __dt__15TEmitterViewObjFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__15TEmitterViewObjFUlPQ26JDrama9TGraphics
 .global __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1
 __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1:
-	.incbin "baserom.dol", 0x3B092C, 0x14
+  .4byte 0
+  .4byte 0
+  .4byte execute__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
+  .4byte draw__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22802:

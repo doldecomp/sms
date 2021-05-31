@@ -11,7 +11,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF6C8 000EC608  3B C5 38 E0 */	addi r30, r5, $$21490@l
 /* 800EF6CC 000EC60C  3B E3 00 00 */	addi r31, r3, 0
 /* 800EF6D0 000EC610  38 7E 00 54 */	addi r3, r30, 0x54
-/* 800EF6D4 000EC614  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800EF6D4 000EC614  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EF6D8 000EC618  83 A4 00 04 */	lwz r29, 4(r4)
 /* 800EF6DC 000EC61C  4B F5 4F B1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800EF6E0 000EC620  81 9D 00 00 */	lwz r12, 0(r29)
@@ -21,7 +21,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF6F0 000EC630  38 BE 00 54 */	addi r5, r30, 0x54
 /* 800EF6F4 000EC634  7D 88 03 A6 */	mtlr r12
 /* 800EF6F8 000EC638  4E 80 00 21 */	blrl 
-/* 800EF6FC 000EC63C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800EF6FC 000EC63C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EF700 000EC640  3B A3 00 00 */	addi r29, r3, 0
 /* 800EF704 000EC644  38 7E 00 6C */	addi r3, r30, 0x6c
 /* 800EF708 000EC648  83 84 00 04 */	lwz r28, 4(r4)
@@ -33,7 +33,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF720 000EC660  38 BE 00 6C */	addi r5, r30, 0x6c
 /* 800EF724 000EC664  7D 88 03 A6 */	mtlr r12
 /* 800EF728 000EC668  4E 80 00 21 */	blrl 
-/* 800EF72C 000EC66C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800EF72C 000EC66C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EF730 000EC670  3B 63 00 00 */	addi r27, r3, 0
 /* 800EF734 000EC674  38 7E 00 80 */	addi r3, r30, 0x80
 /* 800EF738 000EC678  83 84 00 04 */	lwz r28, 4(r4)
@@ -45,7 +45,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF750 000EC690  38 BE 00 80 */	addi r5, r30, 0x80
 /* 800EF754 000EC694  7D 88 03 A6 */	mtlr r12
 /* 800EF758 000EC698  4E 80 00 21 */	blrl 
-/* 800EF75C 000EC69C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800EF75C 000EC69C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EF760 000EC6A0  3B 43 00 00 */	addi r26, r3, 0
 /* 800EF764 000EC6A4  38 7E 00 90 */	addi r3, r30, 0x90
 /* 800EF768 000EC6A8  83 84 00 04 */	lwz r28, 4(r4)
@@ -105,7 +105,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF840 000EC780  3C 80 04 00 */	lis r4, 0x04000200@ha
 /* 800EF844 000EC784  38 7F 00 00 */	addi r3, r31, 0
 /* 800EF848 000EC788  38 A4 02 00 */	addi r5, r4, 0x04000200@l
-/* 800EF84C 000EC78C  38 82 90 E8 */	addi r4, r2, $$21626-_SDA2_BASE_
+/* 800EF84C 000EC78C  38 82 90 E8 */	addi r4, r2, $$21626@sda21
 /* 800EF850 000EC790  48 00 8D 85 */	bl push_back__12TPerformListFPCcUl
 /* 800EF854 000EC794  38 7F 00 00 */	addi r3, r31, 0
 /* 800EF858 000EC798  38 9E 01 28 */	addi r4, r30, 0x128
@@ -118,7 +118,7 @@ preEntry__12TMarDirectorFP12TPerformList:
 /* 800EF874 000EC7B4  3C 80 02 00 */	lis r4, 0x02000200@ha
 /* 800EF878 000EC7B8  38 7F 00 00 */	addi r3, r31, 0
 /* 800EF87C 000EC7BC  38 A4 02 00 */	addi r5, r4, 0x02000200@l
-/* 800EF880 000EC7C0  38 82 90 E8 */	addi r4, r2, $$21626-_SDA2_BASE_
+/* 800EF880 000EC7C0  38 82 90 E8 */	addi r4, r2, $$21626@sda21
 /* 800EF884 000EC7C4  48 00 8D 51 */	bl push_back__12TPerformListFPCcUl
 /* 800EF888 000EC7C8  38 7F 00 00 */	addi r3, r31, 0
 /* 800EF88C 000EC7CC  38 9E 01 68 */	addi r4, r30, 0x168
@@ -179,7 +179,7 @@ lbl_800EF920:
 /* 800EF964 000EC8A4  38 9E 02 1C */	addi r4, r30, 0x21c
 /* 800EF968 000EC8A8  38 A0 00 04 */	li r5, 4
 /* 800EF96C 000EC8AC  48 00 8C 69 */	bl push_back__12TPerformListFPCcUl
-/* 800EF970 000EC8B0  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen-_SDA_BASE_(r13)
+/* 800EF970 000EC8B0  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800EF974 000EC8B4  38 7E 02 34 */	addi r3, r30, 0x234
 /* 800EF978 000EC8B8  83 84 00 04 */	lwz r28, 4(r4)
 /* 800EF97C 000EC8BC  4B F5 4D 11 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -231,7 +231,9 @@ lbl_800EF9CC:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x3708E0, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x3708EC, 0x14
 cDirtyFileName:

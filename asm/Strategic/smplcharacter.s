@@ -44,7 +44,7 @@ getRes__13TSMSSmplCharaCFPCc:
 /* 8011D644 0011A584  38 83 00 00 */	addi r4, r3, 0
 /* 8011D648 0011A588  90 01 00 04 */	stw r0, 4(r1)
 /* 8011D64C 0011A58C  4C C6 31 82 */	crclr 6
-/* 8011D650 0011A590  38 A2 97 68 */	addi r5, r2, $$21540-_SDA2_BASE_
+/* 8011D650 0011A590  38 A2 97 68 */	addi r5, r2, $$21540@sda21
 /* 8011D654 0011A594  94 21 FE F0 */	stwu r1, -0x110(r1)
 /* 8011D658 0011A598  38 61 00 10 */	addi r3, r1, 0x10
 /* 8011D65C 0011A59C  80 C4 00 0C */	lwz r6, 0xc(r4)
@@ -82,7 +82,16 @@ load__13TSMSSmplCharaFR20JSUMemoryInputStream:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TSMSSmplChara
 __vt__13TSMSSmplChara:
-	.incbin "baserom.dol", 0x3B2378, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TSMSSmplCharaFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__13TSMSSmplCharaFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte getRes__13TSMSSmplCharaCFPCc
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21540:

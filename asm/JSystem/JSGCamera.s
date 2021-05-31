@@ -46,7 +46,7 @@ JSGSetProjectionType__Q26JStage7TCameraFQ26JStage18TECameraProjection:
 
 .global JSGGetProjectionNear__Q26JStage7TCameraCFv
 JSGGetProjectionNear__Q26JStage7TCameraCFv:
-/* 80081918 0007E858  C0 22 89 38 */	lfs f1, $$2127-_SDA2_BASE_(r2)
+/* 80081918 0007E858  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
 /* 8008191C 0007E85C  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionNear__Q26JStage7TCameraFf
@@ -55,7 +55,7 @@ JSGSetProjectionNear__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionFar__Q26JStage7TCameraCFv
 JSGGetProjectionFar__Q26JStage7TCameraCFv:
-/* 80081924 0007E864  C0 22 89 3C */	lfs f1, $$2130-_SDA2_BASE_(r2)
+/* 80081924 0007E864  C0 22 89 3C */	lfs f1, $$2130@sda21(r2)
 /* 80081928 0007E868  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionFar__Q26JStage7TCameraFf
@@ -64,7 +64,7 @@ JSGSetProjectionFar__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionFovy__Q26JStage7TCameraCFv
 JSGGetProjectionFovy__Q26JStage7TCameraCFv:
-/* 80081930 0007E870  C0 22 89 38 */	lfs f1, $$2127-_SDA2_BASE_(r2)
+/* 80081930 0007E870  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
 /* 80081934 0007E874  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionFovy__Q26JStage7TCameraFf
@@ -73,7 +73,7 @@ JSGSetProjectionFovy__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionAspect__Q26JStage7TCameraCFv
 JSGGetProjectionAspect__Q26JStage7TCameraCFv:
-/* 8008193C 0007E87C  C0 22 89 38 */	lfs f1, $$2127-_SDA2_BASE_(r2)
+/* 8008193C 0007E87C  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
 /* 80081940 0007E880  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionAspect__Q26JStage7TCameraFf
@@ -123,7 +123,7 @@ JSGSetViewTargetPosition__Q26JStage7TCameraFRC3Vec:
 
 .global JSGGetViewRoll__Q26JStage7TCameraCFv
 JSGGetViewRoll__Q26JStage7TCameraCFv:
-/* 80081974 0007E8B4  C0 22 89 38 */	lfs f1, $$2127-_SDA2_BASE_(r2)
+/* 80081974 0007E8B4  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
 /* 80081978 0007E8B8  4E 80 00 20 */	blr 
 
 .global JSGSetViewRoll__Q26JStage7TCameraFf
@@ -133,10 +133,43 @@ JSGSetViewRoll__Q26JStage7TCameraFf:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage7TCamera
 __vt__Q26JStage7TCamera:
-	.incbin "baserom.dol", 0x3A9D48, 0x88
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage7TCameraCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetProjectionType__Q26JStage7TCameraCFv
+  .4byte JSGSetProjectionType__Q26JStage7TCameraFQ26JStage18TECameraProjection
+  .4byte JSGGetProjectionNear__Q26JStage7TCameraCFv
+  .4byte JSGSetProjectionNear__Q26JStage7TCameraFf
+  .4byte JSGGetProjectionFar__Q26JStage7TCameraCFv
+  .4byte JSGSetProjectionFar__Q26JStage7TCameraFf
+  .4byte JSGGetProjectionFovy__Q26JStage7TCameraCFv
+  .4byte JSGSetProjectionFovy__Q26JStage7TCameraFf
+  .4byte JSGGetProjectionAspect__Q26JStage7TCameraCFv
+  .4byte JSGSetProjectionAspect__Q26JStage7TCameraFf
+  .4byte JSGGetProjectionField__Q26JStage7TCameraCFPf
+  .4byte JSGSetProjectionField__Q26JStage7TCameraFPCf
+  .4byte JSGGetViewType__Q26JStage7TCameraCFv
+  .4byte JSGSetViewType__Q26JStage7TCameraFQ26JStage12TECameraView
+  .4byte JSGGetViewPosition__Q26JStage7TCameraCFP3Vec
+  .4byte JSGSetViewPosition__Q26JStage7TCameraFRC3Vec
+  .4byte JSGGetViewUpVector__Q26JStage7TCameraCFP3Vec
+  .4byte JSGSetViewUpVector__Q26JStage7TCameraFRC3Vec
+  .4byte JSGGetViewTargetPosition__Q26JStage7TCameraCFP3Vec
+  .4byte JSGSetViewTargetPosition__Q26JStage7TCameraFRC3Vec
+  .4byte JSGGetViewRoll__Q26JStage7TCameraCFv
+  .4byte JSGSetViewRoll__Q26JStage7TCameraFf
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2127:
-	.incbin "baserom.dol", 0x3E4638, 0x4
+  .4byte 0
 $$2130:
 	.incbin "baserom.dol", 0x3E463C, 0x4

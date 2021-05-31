@@ -164,7 +164,9 @@ lbl_800F91B4:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x371B70, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21525:
 	.incbin "baserom.dol", 0x371B7C, 0x14
 $$21582:
@@ -187,4 +189,13 @@ $$22006:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TTalkCursor
 __vt__11TTalkCursor:
-	.incbin "baserom.dol", 0x3B0FD0, 0x28
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11TTalkCursorFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__11TTalkCursorFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TTalkCursorFUlPQ26JDrama9TGraphics
+  .4byte 0

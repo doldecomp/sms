@@ -115,6 +115,7 @@ lbl_80026BFC:
 /* 80026C1C 00023B5C  7C 1F 00 2E */	lwzx r0, r31, r0
 /* 80026C20 00023B60  7C 09 03 A6 */	mtctr r0
 /* 80026C24 00023B64  4E 80 04 20 */	bctr 
+lbl_80026C28:
 /* 80026C28 00023B68  80 BA 00 00 */	lwz r5, 0(r26)
 /* 80026C2C 00023B6C  38 78 00 00 */	addi r3, r24, 0
 /* 80026C30 00023B70  38 9E 00 00 */	addi r4, r30, 0
@@ -123,11 +124,14 @@ lbl_80026BFC:
 /* 80026C3C 00023B7C  7F 45 D3 78 */	mr r5, r26
 /* 80026C40 00023B80  4B FF FF 8D */	bl makeHierarchy__12J3DModelDataFP7J3DNodePPC17J3DModelHierarchy
 /* 80026C44 00023B84  48 00 00 74 */	b lbl_80026CB8
+lbl_80026C48:
 /* 80026C48 00023B88  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C4C 00023B8C  38 03 00 04 */	addi r0, r3, 4
 /* 80026C50 00023B90  90 1A 00 00 */	stw r0, 0(r26)
 /* 80026C54 00023B94  48 00 01 10 */	b lbl_80026D64
+lbl_80026C58:
 /* 80026C58 00023B98  48 00 01 0C */	b lbl_80026D64
+lbl_80026C5C:
 /* 80026C5C 00023B9C  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C60 00023BA0  80 98 00 20 */	lwz r4, 0x20(r24)
 /* 80026C64 00023BA4  38 03 00 04 */	addi r0, r3, 4
@@ -136,6 +140,7 @@ lbl_80026BFC:
 /* 80026C70 00023BB0  54 00 10 3A */	slwi r0, r0, 2
 /* 80026C74 00023BB4  7F A4 00 2E */	lwzx r29, r4, r0
 /* 80026C78 00023BB8  48 00 00 40 */	b lbl_80026CB8
+lbl_80026C7C:
 /* 80026C7C 00023BBC  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026C80 00023BC0  80 98 00 28 */	lwz r4, 0x28(r24)
 /* 80026C84 00023BC4  38 03 00 04 */	addi r0, r3, 4
@@ -144,6 +149,7 @@ lbl_80026BFC:
 /* 80026C90 00023BD0  54 00 10 3A */	slwi r0, r0, 2
 /* 80026C94 00023BD4  7F 84 00 2E */	lwzx r28, r4, r0
 /* 80026C98 00023BD8  48 00 00 20 */	b lbl_80026CB8
+lbl_80026C9C:
 /* 80026C9C 00023BDC  80 7A 00 00 */	lwz r3, 0(r26)
 /* 80026CA0 00023BE0  80 98 00 30 */	lwz r4, 0x30(r24)
 /* 80026CA4 00023BE4  38 03 00 04 */	addi r0, r3, 4
@@ -1182,7 +1188,7 @@ initialize__8J3DModelFv:
 /* 80027A40 00024980  93 FE 00 04 */	stw r31, 4(r30)
 /* 80027A44 00024984  93 FE 00 88 */	stw r31, 0x88(r30)
 /* 80027A48 00024988  93 FE 00 8C */	stw r31, 0x8c(r30)
-/* 80027A4C 0002498C  C0 02 82 30 */	lfs f0, $$21460-_SDA2_BASE_(r2)
+/* 80027A4C 0002498C  C0 02 82 30 */	lfs f0, $$21460@sda21(r2)
 /* 80027A50 00024990  D0 1E 00 14 */	stfs f0, 0x14(r30)
 /* 80027A54 00024994  D0 1E 00 18 */	stfs f0, 0x18(r30)
 /* 80027A58 00024998  D0 1E 00 1C */	stfs f0, 0x1c(r30)
@@ -1809,7 +1815,7 @@ lbl_800282FC:
 .global calcWeightEnvelopeMtx__8J3DModelFv
 calcWeightEnvelopeMtx__8J3DModelFv:
 /* 80028310 00025250  94 21 FF B8 */	stwu r1, -0x48(r1)
-/* 80028314 00025254  39 2D 80 20 */	addi r9, r13, J3DUnit01-_SDA_BASE_
+/* 80028314 00025254  39 2D 80 20 */	addi r9, r13, J3DUnit01@sda21
 /* 80028318 00025258  38 80 FF FF */	li r4, -1
 /* 8002831C 0002525C  DB E1 00 40 */	stfd f31, 0x40(r1)
 /* 80028320 00025260  38 E0 FF D0 */	li r7, -48
@@ -2632,11 +2638,11 @@ calcBBoard__8J3DModelFv:
 /* 80028EA8 00025DE8  A0 03 00 1A */	lhz r0, 0x1a(r3)
 /* 80028EAC 00025DEC  28 00 00 01 */	cmplwi r0, 1
 /* 80028EB0 00025DF0  40 82 04 84 */	bne lbl_80029334
-/* 80028EB4 00025DF4  C3 82 82 34 */	lfs f28, $$22249-_SDA2_BASE_(r2)
+/* 80028EB4 00025DF4  C3 82 82 34 */	lfs f28, $$22249@sda21(r2)
 /* 80028EB8 00025DF8  3B C0 00 00 */	li r30, 0
-/* 80028EBC 00025DFC  CB A2 82 38 */	lfd f29, $$22250-_SDA2_BASE_(r2)
-/* 80028EC0 00025E00  CB C2 82 40 */	lfd f30, $$22251-_SDA2_BASE_(r2)
-/* 80028EC4 00025E04  C3 E2 82 30 */	lfs f31, $$21460-_SDA2_BASE_(r2)
+/* 80028EBC 00025DFC  CB A2 82 38 */	lfd f29, $$22250@sda21(r2)
+/* 80028EC0 00025E00  CB C2 82 40 */	lfd f30, $$22251@sda21(r2)
+/* 80028EC4 00025E04  C3 E2 82 30 */	lfs f31, $$21460@sda21(r2)
 /* 80028EC8 00025E08  48 00 04 58 */	b lbl_80029320
 lbl_80028ECC:
 /* 80028ECC 00025E0C  80 64 00 9C */	lwz r3, 0x9c(r4)
@@ -3080,13 +3086,40 @@ lbl_80029508:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2988:
-	.incbin "baserom.dol", 0x3A6800, 0x4C
+    .4byte lbl_80026C58
+    .4byte lbl_80026C28
+    .4byte lbl_80026C48
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026CB8
+    .4byte lbl_80026C5C
+    .4byte lbl_80026C7C
+    .4byte lbl_80026C9C
 .global __vt__8J3DModel
 __vt__8J3DModel:
-	.incbin "baserom.dol", 0x3A684C, 0x1C
+  .4byte 0
+  .4byte 0
+  .4byte update__8J3DModelFv
+  .4byte entry__8J3DModelFv
+  .4byte calc__8J3DModelFv
+  .4byte viewCalc__8J3DModelFv
+  .4byte __dt__8J3DModelFv
 .global __vt__12J3DModelData
 __vt__12J3DModelData:
-	.incbin "baserom.dol", 0x3A6868, 0x10
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J3DModelDataFv
+  .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 J3DUnit01:
@@ -3096,7 +3129,7 @@ J3DUnit01:
 $$21460:
 	.incbin "baserom.dol", 0x3E3F30, 0x4
 $$22249:
-	.incbin "baserom.dol", 0x3E3F34, 0x4
+  .4byte 0
 $$22250:
 	.incbin "baserom.dol", 0x3E3F38, 0x8
 $$22251:

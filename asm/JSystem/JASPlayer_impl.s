@@ -17,10 +17,10 @@ lbl_80064700:
 pitchToCent__Q28JASystem6PlayerFff:
 /* 80064708 00061648  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8006470C 0006164C  3C 00 43 30 */	lis r0, 0x4330
-/* 80064710 00061650  C0 02 87 08 */	lfs f0, $$2127-_SDA2_BASE_(r2)
-/* 80064714 00061654  C8 62 87 18 */	lfd f3, $$2134-_SDA2_BASE_(r2)
+/* 80064710 00061650  C0 02 87 08 */	lfs f0, $$2127@sda21(r2)
+/* 80064714 00061654  C8 62 87 18 */	lfd f3, $$2134@sda21(r2)
 /* 80064718 00061658  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8006471C 0006165C  C0 02 87 0C */	lfs f0, $$2128-_SDA2_BASE_(r2)
+/* 8006471C 0006165C  C0 02 87 0C */	lfs f0, $$2128@sda21(r2)
 /* 80064720 00061660  EC 41 00 B2 */	fmuls f2, f1, f2
 /* 80064724 00061664  FC 20 10 1E */	fctiwz f1, f2
 /* 80064728 00061668  FC 02 00 40 */	fcmpo cr0, f2, f0
@@ -38,18 +38,18 @@ pitchToCent__Q28JASystem6PlayerFff:
 /* 80064758 00061698  40 80 00 18 */	bge lbl_80064770
 /* 8006475C 0006169C  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80064760 000616A0  41 82 00 10 */	beq lbl_80064770
-/* 80064764 000616A4  C0 02 87 10 */	lfs f0, $$2129-_SDA2_BASE_(r2)
+/* 80064764 000616A4  C0 02 87 10 */	lfs f0, $$2129@sda21(r2)
 /* 80064768 000616A8  38 84 FF FF */	addi r4, r4, -1
 /* 8006476C 000616AC  EC 21 00 2A */	fadds f1, f1, f0
 lbl_80064770:
-/* 80064770 000616B0  C0 02 87 10 */	lfs f0, $$2129-_SDA2_BASE_(r2)
+/* 80064770 000616B0  C0 02 87 10 */	lfs f0, $$2129@sda21(r2)
 /* 80064774 000616B4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80064778 000616B8  4C 41 13 82 */	cror 2, 1, 2
 /* 8006477C 000616BC  40 82 00 0C */	bne lbl_80064788
 /* 80064780 000616C0  EC 21 00 28 */	fsubs f1, f1, f0
 /* 80064784 000616C4  38 84 00 01 */	addi r4, r4, 1
 lbl_80064788:
-/* 80064788 000616C8  C0 02 87 14 */	lfs f0, $$2130-_SDA2_BASE_(r2)
+/* 80064788 000616C8  C0 02 87 14 */	lfs f0, $$2130@sda21(r2)
 /* 8006478C 000616CC  7C 80 07 34 */	extsh r0, r4
 /* 80064790 000616D0  3C 60 80 3B */	lis r3, C5BASE_PITCHTABLE__Q28JASystem6Driver@ha
 /* 80064794 000616D4  EC 00 00 72 */	fmuls f0, f0, f1
@@ -72,21 +72,22 @@ lbl_80064788:
 .global getRandomS32__Q28JASystem6PlayerFv
 getRandomS32__Q28JASystem6PlayerFv:
 /* 800647D4 00061714  3C 60 13 58 */	lis r3, 0x13579BDE@ha
-/* 800647D8 00061718  80 8D 82 10 */	lwz r4, sV0__Q28JASystem6Player-_SDA_BASE_(r13)
+/* 800647D8 00061718  80 8D 82 10 */	lwz r4, sV0__Q28JASystem6Player@sda21(r13)
 /* 800647DC 0006171C  38 03 9B DE */	addi r0, r3, 0x13579BDE@l
-/* 800647E0 00061720  80 AD 82 14 */	lwz r5, sV1__Q28JASystem6Player-_SDA_BASE_(r13)
+/* 800647E0 00061720  80 AD 82 14 */	lwz r5, sV1__Q28JASystem6Player@sda21(r13)
 /* 800647E4 00061724  3C 60 98 76 */	lis r3, 0x98765432@ha
 /* 800647E8 00061728  38 63 54 32 */	addi r3, r3, 0x98765432@l
-/* 800647EC 0006172C  90 AD 82 10 */	stw r5, sV0__Q28JASystem6Player-_SDA_BASE_(r13)
+/* 800647EC 0006172C  90 AD 82 10 */	stw r5, sV0__Q28JASystem6Player@sda21(r13)
 /* 800647F0 00061730  7C 04 01 D6 */	mullw r0, r4, r0
 /* 800647F4 00061734  7C 65 19 D6 */	mullw r3, r5, r3
 /* 800647F8 00061738  7C 00 26 70 */	srawi r0, r0, 4
 /* 800647FC 0006173C  7C 63 02 14 */	add r3, r3, r0
 /* 80064800 00061740  38 63 00 01 */	addi r3, r3, 1
-/* 80064804 00061744  90 6D 82 14 */	stw r3, sV1__Q28JASystem6Player-_SDA_BASE_(r13)
+/* 80064804 00061744  90 6D 82 14 */	stw r3, sV1__Q28JASystem6Player@sda21(r13)
 /* 80064808 00061748  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
+    .balign 8
 .global CUTOFF_TO_IIR_TABLE__Q28JASystem6Player
 CUTOFF_TO_IIR_TABLE__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8808, 0x400
@@ -97,13 +98,28 @@ sAdsrDef__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D08, 0x18
 .global sEnvelopeDef__Q28JASystem6Player
 sEnvelopeDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D20, 0x18
+    .4byte 0
+    .float 1.0
+    .4byte 0
+    .4byte sRelTable__Q28JASystem6Player
+    .float 1.0
+    .4byte 0
 .global sVibratoDef__Q28JASystem6Player
 sVibratoDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D38, 0x18
+    .4byte 0x01000000
+    .float 0.5
+    .4byte sVibTable__Q28JASystem6Player
+    .4byte sVibTable__Q28JASystem6Player
+    .4byte 0
+    .float 1.0
 .global sTremoroDef__Q28JASystem6Player
 sTremoroDef__Q28JASystem6Player:
-	.incbin "baserom.dol", 0x3A8D50, 0x18
+    .4byte 0
+    .float 0.5
+    .4byte sTreTable__Q28JASystem6Player
+    .4byte sTreTable__Q28JASystem6Player
+    .4byte 0
+    .float 1.0
 .global sAdsTable__Q28JASystem6Player
 sAdsTable__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3A8D68, 0x18
@@ -125,7 +141,7 @@ sV1__Q28JASystem6Player:
 $$2127:
 	.incbin "baserom.dol", 0x3E4408, 0x4
 $$2128:
-	.incbin "baserom.dol", 0x3E440C, 0x4
+  .4byte 0
 $$2129:
 	.incbin "baserom.dol", 0x3E4410, 0x4
 $$2130:

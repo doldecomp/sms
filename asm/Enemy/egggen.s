@@ -103,13 +103,13 @@ control__13TEggGeneratorFv:
 /* 8030FE30 0030CD70  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 8030FE34 0030CD74  3B E3 00 00 */	addi r31, r3, 0
 /* 8030FE38 0030CD78  38 7F 00 10 */	addi r3, r31, 0x10
-/* 8030FE3C 0030CD7C  80 8D 98 B8 */	lwz r4, gpMarioOriginal-_SDA_BASE_(r13)
+/* 8030FE3C 0030CD7C  80 8D 98 B8 */	lwz r4, gpMarioOriginal@sda21(r13)
 /* 8030FE40 0030CD80  38 84 00 10 */	addi r4, r4, 0x10
 /* 8030FE44 0030CD84  4B D8 51 89 */	bl PSVECSquareDistance
-/* 8030FE48 0030CD88  C0 02 FA 08 */	lfs f0, $$22291-_SDA2_BASE_(r2)
+/* 8030FE48 0030CD88  C0 02 FA 08 */	lfs f0, $$22291@sda21(r2)
 /* 8030FE4C 0030CD8C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8030FE50 0030CD90  40 80 00 38 */	bge lbl_8030FE88
-/* 8030FE54 0030CD94  80 6D 98 B8 */	lwz r3, gpMarioOriginal-_SDA_BASE_(r13)
+/* 8030FE54 0030CD94  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
 /* 8030FE58 0030CD98  80 63 03 F0 */	lwz r3, 0x3f0(r3)
 /* 8030FE5C 0030CD9C  88 03 00 00 */	lbz r0, 0(r3)
 /* 8030FE60 0030CDA0  28 00 00 00 */	cmplwi r0, 0
@@ -161,7 +161,7 @@ lbl_8030FEE4:
 /* 8030FEFC 0030CE3C  90 7F 00 74 */	stw r3, 0x74(r31)
 /* 8030FF00 0030CE40  3C 80 02 00 */	lis r4, 0x02000001@ha
 /* 8030FF04 0030CE44  38 7F 00 00 */	addi r3, r31, 0
-/* 8030FF08 0030CE48  C0 22 FA 0C */	lfs f1, $$22309-_SDA2_BASE_(r2)
+/* 8030FF08 0030CE48  C0 22 FA 0C */	lfs f1, $$22309@sda21(r2)
 /* 8030FF0C 0030CE4C  38 84 00 01 */	addi r4, r4, 0x02000001@l
 /* 8030FF10 0030CE50  38 A0 00 01 */	li r5, 1
 /* 8030FF14 0030CE54  FC 40 08 90 */	fmr f2, f1
@@ -173,8 +173,8 @@ lbl_8030FEE4:
 /* 8030FF2C 0030CE6C  38 80 00 00 */	li r4, 0
 /* 8030FF30 0030CE70  4B DC 41 F1 */	bl setBckFromIndex__6MActorFi
 /* 8030FF34 0030CE74  C0 5F 00 30 */	lfs f2, 0x30(r31)
-/* 8030FF38 0030CE78  C0 22 FA 10 */	lfs f1, $$22310-_SDA2_BASE_(r2)
-/* 8030FF3C 0030CE7C  C0 02 FA 14 */	lfs f0, $$22311-_SDA2_BASE_(r2)
+/* 8030FF38 0030CE78  C0 22 FA 10 */	lfs f1, $$22310@sda21(r2)
+/* 8030FF3C 0030CE7C  C0 02 FA 14 */	lfs f0, $$22311@sda21(r2)
 /* 8030FF40 0030CE80  EC 42 08 28 */	fsubs f2, f2, f1
 /* 8030FF44 0030CE84  48 00 00 08 */	b lbl_8030FF4C
 lbl_8030FF48:
@@ -183,8 +183,8 @@ lbl_8030FF4C:
 /* 8030FF4C 0030CE8C  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 8030FF50 0030CE90  4C 41 13 82 */	cror 2, 1, 2
 /* 8030FF54 0030CE94  41 82 FF F4 */	beq lbl_8030FF48
-/* 8030FF58 0030CE98  C0 22 FA 14 */	lfs f1, $$22311-_SDA2_BASE_(r2)
-/* 8030FF5C 0030CE9C  C0 02 FA 18 */	lfs f0, $$22312-_SDA2_BASE_(r2)
+/* 8030FF58 0030CE98  C0 22 FA 14 */	lfs f1, $$22311@sda21(r2)
+/* 8030FF5C 0030CE9C  C0 02 FA 18 */	lfs f0, $$22312@sda21(r2)
 /* 8030FF60 0030CEA0  48 00 00 08 */	b lbl_8030FF68
 lbl_8030FF64:
 /* 8030FF64 0030CEA4  EC 42 08 2A */	fadds f2, f2, f1
@@ -263,7 +263,9 @@ $$232$$2__dt__13TEggGeneratorFv:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
-	.incbin "baserom.dol", 0x39E050, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$21526:
 	.incbin "baserom.dol", 0x39E05C, 0x14
 $$21598:
@@ -277,17 +279,110 @@ $$21601:
 $$22267:
 	.incbin "baserom.dol", 0x39E130, 0x14
 entry$2266:
-	.incbin "baserom.dol", 0x39E144, 0x18
+  .4byte $$22267
+  .4byte 0x10210000
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 $$22277:
 	.incbin "baserom.dol", 0x39E15C, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TEggGenManager
 __vt__14TEggGenManager:
-	.incbin "baserom.dol", 0x3DD160, 0x54
+  .4byte 0
+  .4byte 0
+  .4byte __dt__14TEggGenManagerFv
+  .4byte getType__Q26JDrama8TNameRefCFv
+  .4byte load__14TEggGenManagerFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__11TObjManagerFUsPCc
+  .4byte perform__13TEnemyManagerFUlPQ26JDrama9TGraphics
+  .4byte createModelData__14TEggGenManagerFv
+  .4byte createAnmData__11TObjManagerFv
+  .4byte createModelDataArray__11TObjManagerFPC19TModelDataLoadEntry
+  .4byte clipActors__12TLiveManagerFPQ26JDrama9TGraphics
+  .4byte setFlagOutOfCube__12TLiveManagerFv
+  .4byte createSpcBinary__12TLiveManagerFv
+  .4byte hasMapCollision__12TLiveManagerCFv
+  .4byte createEnemyInstance__13TEnemyManagerFv
+  .4byte clipEnemies__13TEnemyManagerFPQ26JDrama9TGraphics
+  .4byte restoreDrawBuffer__13TEnemyManagerFUl
+  .4byte createEnemies__13TEnemyManagerFi
+  .4byte changeDrawBuffer__13TEnemyManagerFUl
 .global __vt__13TEggGenerator
 __vt__13TEggGenerator:
-	.incbin "baserom.dol", 0x3DD1B4, 0x114
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13TEggGeneratorFv
+  .4byte getType__Q26JDrama6TActorCFv
+  .4byte load__11TSpineEnemyFR20JSUMemoryInputStream
+  .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
+  .4byte loadAfter__Q26JDrama8TNameRefFv
+  .4byte searchF__Q26JDrama8TNameRefFUsPCc
+  .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
+  .4byte 0
+  .4byte 0
+  .4byte $$232$$2__dt__13TEggGeneratorFv
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte JSGGetTranslation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JDrama6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte receiveMessage__11TSpineEnemyFP9THitActorUl
+  .4byte getTakingMtx__10TLiveActorFv
+  .4byte ensureTakeSituation__10TTakeActorFv
+  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte getRadiusAtY__10TTakeActorCFf
+  .4byte belongToGround__10TLiveActorCFv
+  .4byte getRootJointMtx__10TLiveActorCFv
+  .4byte init__13TEggGeneratorFP12TLiveManager
+  .4byte calcRootMatrix__11TSpineEnemyFv
+  .4byte setGroundCollision__10TLiveActorFv
+  .4byte control__13TEggGeneratorFv
+  .4byte bind__10TLiveActorFv
+  .4byte moveObject__10TLiveActorFv
+  .4byte requestShadow__10TLiveActorFv
+  .4byte drawObject__10TLiveActorFPQ26JDrama9TGraphics
+  .4byte performOnlyDraw__10TLiveActorFUlPQ26JDrama9TGraphics
+  .4byte getShadowType__10TLiveActorFv
+  .4byte kill__10TLiveActorFv
+  .4byte getGravityY__10TLiveActorCFv
+  .4byte hasMapCollision__10TLiveActorCFv
+  .4byte getFocalPoint__10TLiveActorCFv
+  .4byte updateAnmSound__10TLiveActorFv
+  .4byte getBasNameTable__10TLiveActorCFv
+  .4byte reset__11TSpineEnemyFv
+  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte getSaveParam__11TSpineEnemyCFv
+  .4byte getPhaseShift__11TSpineEnemyCFv
+  .4byte isReachedToGoal__11TSpineEnemyCFv
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22291:
@@ -299,4 +394,5 @@ $$22310:
 $$22311:
 	.incbin "baserom.dol", 0x3EB714, 0x4
 $$22312:
-	.incbin "baserom.dol", 0x3EB718, 0x8
+  .4byte 0
+  .4byte 0

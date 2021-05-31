@@ -47,7 +47,7 @@ JSGSetLightType__Q26JStage6TLightFQ26JStage7TELight:
 .global JSGGetColor__Q26JStage6TLightCFv
 JSGGetColor__Q26JStage6TLightCFv:
 /* 80081AA8 0007E9E8  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081AAC 0007E9EC  80 02 89 48 */	lwz r0, $$2118-_SDA2_BASE_(r2)
+/* 80081AAC 0007E9EC  80 02 89 48 */	lwz r0, $$2118@sda21(r2)
 /* 80081AB0 0007E9F0  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80081AB4 0007E9F4  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 80081AB8 0007E9F8  38 21 00 18 */	addi r1, r1, 0x18
@@ -92,8 +92,32 @@ JSGSetDirection__Q26JStage6TLightFRC3Vec:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage6TLight
 __vt__Q26JStage6TLight:
-	.incbin "baserom.dol", 0x3A9E38, 0x60
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage6TLightCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetLightType__Q26JStage6TLightCFv
+  .4byte JSGSetLightType__Q26JStage6TLightFQ26JStage7TELight
+  .4byte JSGGetPosition__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetPosition__Q26JStage6TLightFRC3Vec
+  .4byte JSGGetColor__Q26JStage6TLightCFv
+  .4byte JSGSetColor__Q26JStage6TLightF8_GXColor
+  .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
+  .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
+  .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
+  .4byte JSGSetAngleAttenuation__Q26JStage6TLightFf9_GXSpotFn
+  .4byte JSGGetDirection__Q26JStage6TLightCFP3Vec
+  .4byte JSGSetDirection__Q26JStage6TLightFRC3Vec
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2118:
-	.incbin "baserom.dol", 0x3E4648, 0x8
+  .4byte -1
+  .4byte 0

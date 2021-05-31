@@ -79,7 +79,7 @@ JSGSetAnimation__Q26JStage6TActorFUl:
 
 .global JSGGetAnimationFrame__Q26JStage6TActorCFv
 JSGGetAnimationFrame__Q26JStage6TActorCFv:
-/* 80081A1C 0007E95C  C0 22 89 40 */	lfs f1, $$2126-_SDA2_BASE_(r2)
+/* 80081A1C 0007E95C  C0 22 89 40 */	lfs f1, $$2126@sda21(r2)
 /* 80081A20 0007E960  4E 80 00 20 */	blr 
 
 .global JSGSetAnimationFrame__Q26JStage6TActorFf
@@ -88,14 +88,40 @@ JSGSetAnimationFrame__Q26JStage6TActorFf:
 
 .global JSGGetAnimationFrameMax__Q26JStage6TActorCFv
 JSGGetAnimationFrameMax__Q26JStage6TActorCFv:
-/* 80081A28 0007E968  C0 22 89 40 */	lfs f1, $$2126-_SDA2_BASE_(r2)
+/* 80081A28 0007E968  C0 22 89 40 */	lfs f1, $$2126@sda21(r2)
 /* 80081A2C 0007E96C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JStage6TActor
 __vt__Q26JStage6TActor:
-	.incbin "baserom.dol", 0x3A9DD0, 0x68
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte JSGFGetType__Q26JStage6TActorCFv
+  .4byte JSGGetName__Q26JStage7TObjectCFv
+  .4byte JSGGetFlag__Q26JStage7TObjectCFv
+  .4byte JSGSetFlag__Q26JStage7TObjectFUl
+  .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
+  .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
+  .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
+  .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
+  .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
+  .4byte JSGGetTranslation__Q26JStage6TActorCFP3Vec
+  .4byte JSGSetTranslation__Q26JStage6TActorFRC3Vec
+  .4byte JSGGetScaling__Q26JStage6TActorCFP3Vec
+  .4byte JSGSetScaling__Q26JStage6TActorFRC3Vec
+  .4byte JSGGetRotation__Q26JStage6TActorCFP3Vec
+  .4byte JSGSetRotation__Q26JStage6TActorFRC3Vec
+  .4byte JSGGetShape__Q26JStage6TActorCFv
+  .4byte JSGSetShape__Q26JStage6TActorFUl
+  .4byte JSGGetAnimation__Q26JStage6TActorCFv
+  .4byte JSGSetAnimation__Q26JStage6TActorFUl
+  .4byte JSGGetAnimationFrame__Q26JStage6TActorCFv
+  .4byte JSGSetAnimationFrame__Q26JStage6TActorFf
+  .4byte JSGGetAnimationFrameMax__Q26JStage6TActorCFv
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2126:
-	.incbin "baserom.dol", 0x3E4640, 0x8
+  .4byte 0
+  .4byte 0

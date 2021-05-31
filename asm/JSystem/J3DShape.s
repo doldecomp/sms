@@ -105,7 +105,7 @@ load__11J3DShapeMtxCFv:
 /* 80029734 00026674  3C 80 80 3B */	lis r4, mtxLoadPipeline__11J3DShapeMtx@ha
 /* 80029738 00026678  90 01 00 04 */	stw r0, 4(r1)
 /* 8002973C 0002667C  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80029740 00026680  80 0D 8E 08 */	lwz r0, currentPipeline__11J3DShapeMtx-_SDA_BASE_(r13)
+/* 80029740 00026680  80 0D 8E 08 */	lwz r0, currentPipeline__11J3DShapeMtx@sda21(r13)
 /* 80029744 00026684  39 81 00 0C */	addi r12, r1, 0xc
 /* 80029748 00026688  1C A0 00 0C */	mulli r5, r0, 0xc
 /* 8002974C 0002668C  38 04 98 D0 */	addi r0, r4, mtxLoadPipeline__11J3DShapeMtx@l
@@ -203,7 +203,7 @@ load__16J3DShapeMtxMultiCFv:
 /* 80029888 000267C8  3B C0 00 00 */	li r30, 0
 /* 8002988C 000267CC  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 80029890 000267D0  7C 7D 1B 78 */	mr r29, r3
-/* 80029894 000267D4  80 AD 8E 08 */	lwz r5, currentPipeline__11J3DShapeMtx-_SDA_BASE_(r13)
+/* 80029894 000267D4  80 AD 8E 08 */	lwz r5, currentPipeline__11J3DShapeMtx@sda21(r13)
 /* 80029898 000267D8  1C 85 00 0C */	mulli r4, r5, 0xc
 /* 8002989C 000267DC  7C A0 22 14 */	add r5, r0, r4
 /* 800298A0 000267E0  80 85 00 00 */	lwz r4, 0(r5)
@@ -309,10 +309,10 @@ initialize__8J3DShapeFv:
 /* 800299E8 00026928  90 A3 00 00 */	stw r5, 0(r3)
 /* 800299EC 0002692C  38 04 FF FF */	addi r0, r4, 0x0000FFFF@l
 /* 800299F0 00026930  B0 03 00 04 */	sth r0, 4(r3)
-/* 800299F4 00026934  38 0D 8E 10 */	addi r0, r13, j3dDefaultViewNo-_SDA_BASE_
+/* 800299F4 00026934  38 0D 8E 10 */	addi r0, r13, j3dDefaultViewNo@sda21
 /* 800299F8 00026938  B0 A3 00 06 */	sth r5, 6(r3)
 /* 800299FC 0002693C  90 A3 00 08 */	stw r5, 8(r3)
-/* 80029A00 00026940  C0 02 82 48 */	lfs f0, $$2994-_SDA2_BASE_(r2)
+/* 80029A00 00026940  C0 02 82 48 */	lfs f0, $$2994@sda21(r2)
 /* 80029A04 00026944  D0 03 00 0C */	stfs f0, 0xc(r3)
 /* 80029A08 00026948  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 80029A0C 0002694C  D0 03 00 14 */	stfs f0, 0x14(r3)
@@ -611,7 +611,7 @@ makeVcdVatCmd__8J3DShapeFv:
 /* 80029DFC 00026D3C  38 61 00 14 */	addi r3, r1, 0x14
 /* 80029E00 00026D40  48 08 52 19 */	bl GDInitGDLObj
 /* 80029E04 00026D44  38 01 00 14 */	addi r0, r1, 0x14
-/* 80029E08 00026D48  90 0D 95 B8 */	stw r0, __GDCurrentDL-_SDA_BASE_(r13)
+/* 80029E08 00026D48  90 0D 95 B8 */	stw r0, __GDCurrentDL@sda21(r13)
 /* 80029E0C 00026D4C  80 7F 00 2C */	lwz r3, 0x2c(r31)
 /* 80029E10 00026D50  48 08 53 7D */	bl GDSetVtxDescv
 /* 80029E14 00026D54  7F E3 FB 78 */	mr r3, r31
@@ -624,7 +624,7 @@ makeVcdVatCmd__8J3DShapeFv:
 /* 80029E30 00026D70  48 08 52 2D */	bl GDPadCurr32
 /* 80029E34 00026D74  48 08 51 FD */	bl GDFlushCurrToMem
 /* 80029E38 00026D78  38 00 00 00 */	li r0, 0
-/* 80029E3C 00026D7C  90 0D 95 B8 */	stw r0, __GDCurrentDL-_SDA_BASE_(r13)
+/* 80029E3C 00026D7C  90 0D 95 B8 */	stw r0, __GDCurrentDL@sda21(r13)
 /* 80029E40 00026D80  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 80029E44 00026D84  83 E1 00 2C */	lwz r31, 0x2c(r1)
 /* 80029E48 00026D88  38 21 00 30 */	addi r1, r1, 0x30
@@ -679,7 +679,7 @@ draw__8J3DShapeCFv:
 /* 80029EF0 00026E30  3C 60 80 40 */	lis r3, j3dSys@ha
 /* 80029EF4 00026E34  3B C3 0E D8 */	addi r30, r3, j3dSys@l
 /* 80029EF8 00026E38  54 00 F7 BE */	rlwinm r0, r0, 0x1e, 0x1e, 0x1f
-/* 80029EFC 00026E3C  90 0D 8E 08 */	stw r0, currentPipeline__11J3DShapeMtx-_SDA_BASE_(r13)
+/* 80029EFC 00026E3C  90 0D 8E 08 */	stw r0, currentPipeline__11J3DShapeMtx@sda21(r13)
 /* 80029F00 00026E40  38 60 00 09 */	li r3, 9
 /* 80029F04 00026E44  80 9E 01 0C */	lwz r4, 0x10c(r30)
 /* 80029F08 00026E48  48 00 DB 51 */	bl J3DLoadArrayBasePtr__F7_GXAttrPv
@@ -899,35 +899,83 @@ __sinit_J3DShape_cpp:
 /* 8002A1CC 0002710C  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
-	.incbin "baserom.dol", 0x36CBC4, 0x4
+  .4byte __sinit_J3DShape_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 $$2952:
-	.incbin "baserom.dol", 0x3A68A0, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte loadMtxIndx_PNGP__11J3DShapeMtxCFiUs
 $$2953:
-	.incbin "baserom.dol", 0x3A68AC, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte loadMtxIndx_PCPU__11J3DShapeMtxCFiUs
 $$2954:
-	.incbin "baserom.dol", 0x3A68B8, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte loadMtxIndx_NCPU__11J3DShapeMtxCFiUs
 $$2955:
-	.incbin "baserom.dol", 0x3A68C4, 0xC
+  .4byte 0
+  .4byte -1
+  .4byte loadMtxIndx_PNCPU__11J3DShapeMtxCFiUs
 mtxLoadPipeline__11J3DShapeMtx:
-	.incbin "baserom.dol", 0x3A68D0, 0x30
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 .global __vt__12J3DShapeDraw
 __vt__12J3DShapeDraw:
-	.incbin "baserom.dol", 0x3A6900, 0xC
+  .4byte 0
+  .4byte 0
+  .4byte __dt__12J3DShapeDrawFv
 .global __vt__16J3DShapeMtxMulti
 __vt__16J3DShapeMtxMulti:
-	.incbin "baserom.dol", 0x3A690C, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__16J3DShapeMtxMultiFv
+  .4byte getType__16J3DShapeMtxMultiCFv
+  .4byte getUseMtxNum__16J3DShapeMtxMultiCFv
+  .4byte getUseMtxIndex__16J3DShapeMtxMultiCFUs
+  .4byte load__16J3DShapeMtxMultiCFv
+  .4byte calcNBTScale__16J3DShapeMtxMultiFRC3VecPA3_A3_fPA3_A3_f
 .global __vt__13J3DShapeMtxDL
 __vt__13J3DShapeMtxDL:
-	.incbin "baserom.dol", 0x3A692C, 0x20
+  .4byte 0
+  .4byte 0
+  .4byte __dt__13J3DShapeMtxDLFv
+  .4byte getType__11J3DShapeMtxCFv
+  .4byte getUseMtxNum__11J3DShapeMtxCFv
+  .4byte getUseMtxIndex__11J3DShapeMtxCFUs
+  .4byte load__13J3DShapeMtxDLCFv
+  .4byte calcNBTScale__13J3DShapeMtxDLFRC3VecPA3_A3_fPA3_A3_f
 .global __vt__11J3DShapeMtx
 __vt__11J3DShapeMtx:
-	.incbin "baserom.dol", 0x3A694C, 0x34
+  .4byte 0
+  .4byte 0
+  .4byte __dt__11J3DShapeMtxFv
+  .4byte getType__11J3DShapeMtxCFv
+  .4byte getUseMtxNum__11J3DShapeMtxCFv
+  .4byte getUseMtxIndex__11J3DShapeMtxCFUs
+  .4byte load__11J3DShapeMtxCFv
+  .4byte calcNBTScale__11J3DShapeMtxFRC3VecPA3_A3_fPA3_A3_f
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
+  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$2994:
-	.incbin "baserom.dol", 0x3E3F48, 0x8
+  .4byte 0
+  .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 currentPipeline__11J3DShapeMtx:
