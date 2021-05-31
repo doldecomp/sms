@@ -131,7 +131,7 @@ PYTHON  := python
 POSTPROC := tools/postprocess.py
 
 # Options
-INCLUDES := -i . -I- -i include -i src -ir $(SDK_INC_PATH) -ir $(CW_INC_PATH)
+INCLUDES := -i . -I- -i include -i src -ir "$(SDK_INC_PATH)" -ir "$(CW_INC_PATH)"
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard -nodefaults
