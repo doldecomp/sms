@@ -8,8 +8,8 @@ template <typename T>
 void TParamT<T>::load(JSUMemoryInputStream &stream) {
 	u8 discard[16];
 
-	stream._000._000.read(&discard[8], 4);
-	stream._000._000.read(&this->value, sizeof(T));
+	stream.read(&discard[8], 4);
+	stream.read(&this->value, sizeof(T));
 };
 
 template class TParamT< JGeometry::TVec3<f32> >;
