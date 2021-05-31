@@ -3,7 +3,10 @@
 
 class JSUInputStream {
 public:
+	virtual ~JSUInputStream();
+	virtual void getAvailable() = 0;
 	void read(void *, s32);
+	virtual void skip(u8);
 	u32 _000;
 	u32 _004;
 };
