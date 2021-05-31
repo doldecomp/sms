@@ -1,7 +1,7 @@
 #ifndef OSRTC_H
 #define OSRTC_H
 
-#include "types.h"
+#include <dolphin.h>
 
 #ifdef __cplusplus
 extern "C" {

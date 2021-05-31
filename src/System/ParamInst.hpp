@@ -2,7 +2,7 @@
 
 #include "types.h"
 #include "System/BaseParam.hpp"
-#include "JSystem/JSUInputStream.hpp"
+#include "JSystem/JSUMemoryStream.hpp"
 
 template<typename T> class TParamT: public TBaseParam {
 public:
