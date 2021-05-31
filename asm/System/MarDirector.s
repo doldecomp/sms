@@ -586,6 +586,7 @@ $$22283:
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
+.balign 8
 .global gpSceneCmnDat
 gpSceneCmnDat:
 	.skip 0x4

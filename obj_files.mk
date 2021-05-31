@@ -386,7 +386,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/System/BaseParam.o                               \
     $(BUILD_DIR)/asm/System/EmitterViewObj.o                          \
     $(BUILD_DIR)/asm/System/EventWatcher.o                            \
-    $(BUILD_DIR)/asm/System/FlagManager.o                             \
+    $(BUILD_DIR)/src/System/FlagManager.o                             \
     $(BUILD_DIR)/asm/System/GCLogoDir.o                               \
     $(BUILD_DIR)/asm/System/J3DSysFlag.o                              \
     $(BUILD_DIR)/asm/System/MarDirector.o                             \

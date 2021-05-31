@@ -19,7 +19,7 @@ TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
 
-SRC_DIRS := src src/NPC
+SRC_DIRS := src src/NPC src/System
 ASM_DIRS := asm                      \
             asm/JSystem              \
 			asm/Runtime.PPCEABI.H    \
@@ -106,6 +106,8 @@ ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard
 CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4,p -nodefaults -msgstyle gcc $(INCLUDES)
 
+$(BUILD_DIR)/src/System/FlagManager.o: CFLAGS := $(CFLAGS) -opt all,nostrength -inline all,level=1,deferred
+
 # for postprocess.py
 PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack
 
@@ -153,7 +155,7 @@ $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c $< -o $@
 # 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
