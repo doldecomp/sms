@@ -370,7 +370,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MarioUtil/PacketUtil.o                           \
     $(BUILD_DIR)/asm/MarioUtil/GDUtil.o                               \
     $(BUILD_DIR)/asm/MarioUtil/TexUtil.o                              \
-    $(BUILD_DIR)/asm/MarioUtil/MapUtil.o                              \
+    $(BUILD_DIR)/src/MarioUtil/MapUtil.o                              \
     $(BUILD_DIR)/asm/MarioUtil/ToolData.o                             \
     $(BUILD_DIR)/asm/M3DUtil/M3UJoint.o                               \
     $(BUILD_DIR)/asm/M3DUtil/M3UModel.o                               \
