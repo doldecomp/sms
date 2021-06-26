@@ -194,4 +194,6 @@ $(BUILD_DIR)/%.o: %.cpp
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
 
+$(BUILD_DIR)/src/JSystem/JDRRenderMode.o: CFLAGS += -O4,p
+
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
