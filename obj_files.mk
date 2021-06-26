@@ -30,7 +30,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JUTGamePad.o                             \
     $(BUILD_DIR)/asm/JSystem/JUTNameTab.o                             \
     $(BUILD_DIR)/asm/JSystem/JUTPalette.o                             \
-    $(BUILD_DIR)/asm/JSystem/JUTRect.o                                \
+    $(BUILD_DIR)/src/JSystem/JUTRect.o                                \
     $(BUILD_DIR)/asm/JSystem/JUTResource.o                            \
     $(BUILD_DIR)/asm/JSystem/JUTTexture.o                             \
     $(BUILD_DIR)/asm/JSystem/JMath.o                                  \
