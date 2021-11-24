@@ -48,6 +48,7 @@ SRC_DIRS := src                      \
             src/NPC                  \
             src/MarioUtil            \
             src/JSystem              \
+            src/Player               \
             src/System               \
             src/MSL_C.PPCEABI.bare.H \
 
