@@ -1,0 +1,17 @@
+﻿BasedOnStyle: WebKit
+ColumnLimit: 80
+AlignTrailingComments: true
+AlignAfterOpenBracket: true
+AlignConsecutiveAssignments: true
+AllowShortFunctionsOnASingleLine: true
+FixNamespaceComments: true
+IndentWidth: 4
+TabWidth: 4
+UseTab: ForIndentation
+SortIncludes: false
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands: true
+AllowShortIfStatementsOnASingleLine: Never
+Cpp11BracedListStyle: false
+Language: Cpp
