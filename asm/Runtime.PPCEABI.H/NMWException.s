@@ -287,7 +287,6 @@ $$2201:
 	.incbin "baserom.dol", 0x36CB10, 0x14
     .4byte __dt__26__partial_array_destructorFv
 
-    .space 0x18
 .section extabindex_, "wa"  # 0x800055A0 - 0x80005600
 $$2153:
     .4byte __destroy_new_array
@@ -316,4 +315,4 @@ lbl_800055DC:
     .4byte __destroy_new_array
     .4byte 0x000003B4
 
-    .space 0x14
+    .space 0x10

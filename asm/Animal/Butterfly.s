@@ -615,12 +615,6 @@ $$232$$2__dt__10TButterflyFv:
 $$232$$2__dt__12TButterfloidFv:
 /* 8036FB80 0036CAC0  38 63 FF E0 */	addi r3, r3, -32
 /* 8036FB84 0036CAC4  4B FF FE D4 */	b __dt__12TButterfloidFv
-/* 8036FB88 0036CAC8  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
-/* 8036FB8C 0036CACC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
-/* 8036FB90 0036CAD0  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
-/* 8036FB94 0036CAD4  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
-/* 8036FB98 0036CAD8  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
-/* 8036FB9C 0036CADC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$21490:
@@ -661,11 +655,13 @@ entry$2459:
     .4byte 0
     .4byte 0
 $$22493:
-	.incbin "baserom.dol", 0x3A534C, 0x10
+	.asciz "mushroom1upR"
+.balign 4
 $$22594:
-	.incbin "baserom.dol", 0x3A535C, 0x10
+	.asciz "butterfly_fly"
+.balign 4
 $$22711:
-	.incbin "baserom.dol", 0x3A536C, 0x14
+	.incbin "baserom.dol", 0x3A536C, 0xB
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19TButterfloidManager
@@ -811,11 +807,6 @@ __vt__10TButterfly:
   .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte init__10TButterflyFv
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$22489:
@@ -846,15 +837,6 @@ $$22616:
 	.incbin "baserom.dol", 0x3EC89C, 0x4
 $$22710:
 	.incbin "baserom.dol", 0x3EC8A0, 0x4
-.global lbl_80414004
-lbl_80414004:
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
 
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

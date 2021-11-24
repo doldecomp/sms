@@ -387,11 +387,6 @@ $$21650:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cLoadCamName:
   .4byte $$21650
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
-  .4byte 0
 
 .section .sdata2, "wa"  # 0x8040B460 - 0x80414020
 $$21704:
