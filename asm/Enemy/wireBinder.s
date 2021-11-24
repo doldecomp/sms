@@ -496,7 +496,8 @@ __vt__11TWireBinder:
   .4byte __dt__11TWireBinderFv
   .4byte bind__11TWireBinderFP10TLiveActor
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21946:
   .4byte 0
 $$21947:

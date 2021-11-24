@@ -409,7 +409,8 @@ lbl_80009C30:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_JKRDvdFile_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2302:
 	.incbin "baserom.dol", 0x36D130, 0x10
 $$2303:

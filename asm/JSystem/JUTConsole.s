@@ -1312,7 +1312,8 @@ __vt__10JUTConsole:
   .4byte __dt__10JUTConsoleFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21718:
 	.incbin "baserom.dol", 0x3E4078, 0x4
 $$21719:

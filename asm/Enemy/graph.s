@@ -3507,7 +3507,8 @@ __ct__10TGraphNodeFv:
 /* 80261394 0025E2D4  B0 03 00 0C */	sth r0, 0xc(r3)
 /* 80261398 0025E2D8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -3545,7 +3546,8 @@ __vt__9TGraphWeb:
   .4byte 0
   .4byte __dt__9TGraphWebFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22783:
   .4byte 0
 $$22890:

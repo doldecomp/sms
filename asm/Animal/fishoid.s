@@ -1232,7 +1232,8 @@ $$232$$2__dt__8TFishoidFv:
 /* 80365BF8 00362B38  38 63 FF E0 */	addi r3, r3, -32
 /* 80365BFC 00362B3C  4B FF FE C4 */	b __dt__8TFishoidFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -1547,7 +1548,8 @@ __vt__13TRealoidActor:
   .4byte 0
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22339:
 	.incbin "baserom.dol", 0x3EC658, 0x8
 $$22362:

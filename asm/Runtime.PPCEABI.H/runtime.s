@@ -495,6 +495,7 @@ lbl_80083214:
 /* 80083214 00080154  38 21 00 10 */	addi r1, r1, 0x10
 /* 80083218 00080158  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 __constants:
 	.incbin "baserom.dol", 0x36E580, 0x18

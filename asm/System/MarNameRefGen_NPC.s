@@ -1476,7 +1476,8 @@ lbl_801068B8:
 /* 801068CC 0010380C  38 21 00 18 */	addi r1, r1, 0x18
 /* 801068D0 00103810  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -1658,6 +1659,7 @@ __vt__13TMareMManager:
   .4byte changeDrawBuffer__13TEnemyManagerFUl
   .4byte getBmt___16TMareBaseManagerFb
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22575:
 	.incbin "baserom.dol", 0x3E5278, 0x8

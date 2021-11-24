@@ -33,43 +33,43 @@ lbl_80005474:
 lbl_80005494:
     .4byte _f_init
     .4byte _f_init
-    .4byte _size_init_reduced
+    .4byte _size_init
 
     .4byte _fextab_
     .4byte _fextab_
-    .4byte _size_extab_reduced
+    .4byte _size_extab
 
     .4byte _fextabindex_
     .4byte _fextabindex_
-    .4byte _size_extabindex_reduced
+    .4byte _size_extabindex
 
     .4byte _f_text
     .4byte _f_text
-    .4byte _size_text_reduced
+    .4byte _size_text
 
     .4byte _f_ctors
     .4byte _f_ctors
-    .4byte _size_ctors_reduced
+    .4byte _size_ctors
 
     .4byte _f_dtors
     .4byte _f_dtors
-    .4byte _size_dtors_reduced
+    .4byte _size_dtors
 
     .4byte _f_rodata
     .4byte _f_rodata
-    .4byte _size_rodata_reduced
+    .4byte _size_rodata
 
     .4byte _f_data
     .4byte _f_data
-    .4byte _size_data_reduced
+    .4byte _size_data
 
     .4byte _f_sdata
     .4byte _f_sdata
-    .4byte _size_sdata_reduced
+    .4byte _size_sdata
 
     .4byte _f_sdata2
     .4byte _f_sdata2
-    .4byte _size_sdata2_reduced
+    .4byte _size_sdata2
 
     /* terminating? */
     .4byte 0
@@ -85,13 +85,6 @@ lbl_80005518:
     .4byte _size_sbss
 
     /* terminating? */
-    .4byte 0
-    .4byte 0
-
-    /* We need these 4 bytes for the full .init size in the header, even       */
-    /* though the above table doesn't see these. TODO: What's the discrepency? */
-    .4byte 0
-    .4byte 0
     .4byte 0
     .4byte 0
 

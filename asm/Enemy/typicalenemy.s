@@ -385,7 +385,8 @@ $$232$$2__dt__13TTypicalEnemyFv:
 /* 8028290C 0027F84C  38 63 FF E0 */	addi r3, r3, -32
 /* 80282910 0027F850  4B FF FF 90 */	b __dt__13TTypicalEnemyFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -507,7 +508,8 @@ __vt__13TTypicalEnemy:
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22202:
   .4byte 0
 $$22245:

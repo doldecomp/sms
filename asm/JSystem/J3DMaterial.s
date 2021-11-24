@@ -8267,7 +8267,8 @@ lbl_80026A78:
 load__15J3DIndBlockNullFP11J3DTevBlock:
 /* 80026A90 000239D0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2329:
 	.incbin "baserom.dol", 0x36DC28, 0x10
 
@@ -8799,7 +8800,8 @@ __vt__13J3DColorBlock:
   .4byte 0
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2330:
 	.incbin "baserom.dol", 0x3E3EF8, 0x4
 $$22217:

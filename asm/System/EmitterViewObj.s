@@ -1820,7 +1820,8 @@ __sinit_EmitterViewObj_cpp:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_EmitterViewObj_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
     .balign 4
 $$21664:
   .4byte 0
@@ -1911,7 +1912,8 @@ __vt__34JPACallBackBase$$0P14JPABaseEmitter$$1:
   .4byte executeAfter__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
   .4byte draw__34JPACallBackBase$$0P14JPABaseEmitter$$1FP14JPABaseEmitter
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22802:
 	.incbin "baserom.dol", 0x3E4CA8, 0x4
 $$22803:

@@ -1248,7 +1248,8 @@ $$22227:
     .4byte lbl_800D16C0
     .4byte lbl_800D1774
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 sFogOffColor$1583:
   .4byte 0
 $$22226:

@@ -542,7 +542,8 @@ CLBEaseOutInbetween$$0f$$1__Ffff:
 /* 8035D3C0 0035A300  7C 08 03 A6 */	mtlr r0
 /* 8035D3C4 0035A304  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21987:
 	.incbin "baserom.dol", 0x3A38F0, 0x10
 
@@ -560,7 +561,8 @@ __vt__10TLensFlare:
   .4byte perform__10TLensFlareFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21949:
   .4byte 0
 $$21950:

@@ -3949,7 +3949,8 @@ __vt__15JALSeModVolFunk:
   .4byte calcDyna__31JALSeModData$$015JALSeModVolFunk$$1Ff
   .4byte gateCheckDyna__31JALSeModData$$015JALSeModVolFunk$$1Ff
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2544:
 	.incbin "baserom.dol", 0x3E4130, 0x8
 

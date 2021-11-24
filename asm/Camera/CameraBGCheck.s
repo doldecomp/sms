@@ -993,7 +993,8 @@ lbl_80351160:
 /* 80351178 0034E0B8  38 21 01 C0 */	addi r1, r1, 0x1c0
 /* 8035117C 0034E0BC  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22010:
 	.incbin "baserom.dol", 0x3EC158, 0x4
 $$22011:

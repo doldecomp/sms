@@ -591,7 +591,8 @@ $$232$$2__dt__4TSkyFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_Sky_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22827:
 	.incbin "baserom.dol", 0x38FA98, 0x18
 
@@ -639,7 +640,8 @@ __vt__4TSky:
   .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22748:
 	.incbin "baserom.dol", 0x3E8DA8, 0x4
 $$22787:

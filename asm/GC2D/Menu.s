@@ -414,7 +414,8 @@ lbl_80201134:
 /* 80201148 001FE088  38 21 00 18 */	addi r1, r1, 0x18
 /* 8020114C 001FE08C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21772:
 	.incbin "baserom.dol", 0x3902F8, 0x10
 

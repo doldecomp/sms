@@ -758,7 +758,8 @@ lbl_80198520:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_ItemManager_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22650:
 	.incbin "baserom.dol", 0x38ABA8, 0xC
 $$22667:
@@ -788,7 +789,8 @@ __vt__12TItemManager:
   .4byte createSpcBinary__12TLiveManagerFv
   .4byte hasMapCollision__12TItemManagerCFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22636:
 	.incbin "baserom.dol", 0x3E7CF8, 0x4
 $$22637:

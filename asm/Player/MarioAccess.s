@@ -355,7 +355,8 @@ SMS_SetMarioAccessParams__Fv:
 /* 80152DB4 0014FCF4  90 0D 99 04 */	stw r0, gpMarioGroundPlane@sda21(r13)
 /* 80152DB8 0014FCF8  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22019:
 	.incbin "baserom.dol", 0x3E5E98, 0x8
 

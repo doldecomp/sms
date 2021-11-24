@@ -644,7 +644,8 @@ $$232$$2__dt__14TAirportSwitchFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MapObjAirport_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22901:
 	.incbin "baserom.dol", 0x38C800, 0x1C
 $$22916:
@@ -802,7 +803,8 @@ __vt__14TAirportSwitch:
   .4byte checkRoofCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
   .4byte touchRoof__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22902:
 	.incbin "baserom.dol", 0x3E84C8, 0x4
 $$22917:

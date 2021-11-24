@@ -532,7 +532,8 @@ lbl_800AD20C:
 /* 800AD364 000AA2A4  7C 08 03 A6 */	mtlr r0
 /* 800AD368 000AA2A8  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2133:
   .4byte 0
 $$2357:

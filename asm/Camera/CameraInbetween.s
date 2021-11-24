@@ -444,7 +444,8 @@ __ct__16TCameraInbetweenFv:
 /* 80356A78 003539B8  D0 03 00 44 */	stfs f0, 0x44(r3)
 /* 80356A7C 003539BC  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21655:
 	.incbin "baserom.dol", 0x3EC220, 0x8
 $$21657:

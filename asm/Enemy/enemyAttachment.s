@@ -1063,7 +1063,8 @@ $$232$$2__dt__16TEnemyAttachmentFv:
 /* 80251648 0024E588  38 63 FF E0 */	addi r3, r3, -32
 /* 8025164C 0024E58C  4B FF FF 6C */	b __dt__16TEnemyAttachmentFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22620:
 	.incbin "baserom.dol", 0x391FB0, 0x10
 
@@ -1177,7 +1178,8 @@ __vt__16TEnemyAttachment:
   .4byte getNowGravity__16TEnemyAttachmentFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22566:
 	.incbin "baserom.dol", 0x3E99F0, 0x4
 $$22567:

@@ -160,7 +160,8 @@ lbl_80086A6C:
 /* 80086A80 000839C0  38 21 00 20 */	addi r1, r1, 0x20
 /* 80086A84 000839C4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 atanhi:
 	.incbin "baserom.dol", 0x36E930, 0x20
 atanlo:
@@ -168,7 +169,8 @@ atanlo:
 aT:
 	.incbin "baserom.dol", 0x36E970, 0x58
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2155:
 	.incbin "baserom.dol", 0x3E46E0, 0x8
 $$2156:

@@ -12730,7 +12730,8 @@ $$232$$2__dt__13TDoroHamuKuriFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_hamukuri_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -14228,7 +14229,8 @@ mFireHamOtherColorDiff:
   .4byte 0
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 mFireHamNoseColorStart:
 	.incbin "baserom.dol", 0x3E9F48, 0x4
 lbl_804116AC:

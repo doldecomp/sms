@@ -1356,7 +1356,8 @@ __vt__11TBoidLeader:
   .4byte perform__11TBoidLeaderFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22190:
   .4byte 0
 $$22191:

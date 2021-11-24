@@ -494,6 +494,7 @@ __GXFlushTextureState:
 /* 800ABA00 000A8940  B0 04 00 02 */	sth r0, 2(r4)
 /* 800ABA04 000A8944  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$245:
 	.incbin "baserom.dol", 0x3E4850, 0x8

@@ -47,6 +47,7 @@ lbl_80086B1C:
 /* 80086B1C 00083A5C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80086B20 00083A60  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2100:
 	.incbin "baserom.dol", 0x3E4708, 0x8

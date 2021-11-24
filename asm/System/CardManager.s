@@ -2259,7 +2259,8 @@ lbl_80108814:
 /* 80108818 00105758  50 C3 80 1E */	rlwimi r3, r6, 0x10, 0, 0xf
 /* 8010881C 0010575C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 CardFileName:
 	.incbin "baserom.dol", 0x375350, 0x20
 $$21632:

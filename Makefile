@@ -37,9 +37,6 @@ endif
 # Files
 #-------------------------------------------------------------------------------
 
-# Used for elf2dol
-USES_SBSS2 := yes
-
 TARGET := sms_jp_r0
 
 BUILD_DIR := build/$(TARGET)
@@ -122,13 +119,12 @@ ifeq ($(NOWINE),1)
 endif
 
 AS      := $(DEVKITPPC)/bin/powerpc-eabi-as
-OBJCOPY := $(DEVKITPPC)/bin/powerpc-eabi-objcopy
 CPP     := $(DEVKITPPC)/bin/powerpc-eabi-cpp -P
 CC      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwcceppc.exe
 LD      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwldeppc.exe
 ELF2DOL := tools/elf2dol
 SHA1SUM := sha1sum
-PYTHON  := python
+PYTHON  := python3
 POSTPROC := tools/postprocess.py
 
 # Options
@@ -136,14 +132,11 @@ INCLUDES := -i . -I- -i include -i src -ir "$(SDK_INC_PATH)" -ir "$(CW_INC_PATH)
 
 ASFLAGS := -m750cl -I include
 LDFLAGS := -map $(MAP) -fp hard -nodefaults
+# LDFLAGS := -fp hard -nodefaults
 CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4 -nodefaults -msgstyle gcc $(INCLUDES) -enum int -rostr
 
 # for postprocess.py
 PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack
-
-# elf2dol needs to know these in order to calculate sbss correctly.
-SDATA_PDHR := 9
-SBSS_PDHR := 10
 
 # hardcoded flags
 $(BUILD_DIR)/src/System/FlagManager.o: FILE_UNIQUE_CFLAGS = -opt all,nostrength -inline all,level=1,deferred
@@ -170,9 +163,9 @@ $(LDSCRIPT): ldscript.lcf
 	$(CPP) -MMD -MP -MT $@ -MF $@.d -I include/ -I . -DBUILD_DIR=$(BUILD_DIR) -o $@ $<
 
 $(DOL): $(ELF) | tools
-	$(ELF2DOL) $< $@ $(SDATA_PDHR) $(SBSS_PDHR) $(USES_SBSS2)
+	$(ELF2DOL) $< $@
 	$(SHA1SUM) -c $(TARGET).sha1
-
+	$(PYTHON) calcprogress.py $@
 clean:
 	rm -fdr build
 	$(MAKE) -C tools clean
@@ -181,9 +174,8 @@ tools:
 	$(MAKE) -C tools
 
 $(ELF): $(O_FILES) $(LDSCRIPT)
-	$(LD) $(LDFLAGS) -o $@ -lcf $(LDSCRIPT) $(O_FILES)
-# The Metrowerks linker doesn't generate physical addresses in the ELF program headers. This fixes it somehow.
-	$(OBJCOPY) $@ $@
+	@echo $(O_FILES) > build/o_files
+	$(LD) $(LDFLAGS) -o $@ -lcf $(LDSCRIPT) @build/o_files
 
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<

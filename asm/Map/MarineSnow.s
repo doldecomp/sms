@@ -160,7 +160,8 @@ $$232$$2__dt__11TMarineSnowFv:
 /* 801F4BC0 001F1B00  38 63 FF E0 */	addi r3, r3, -32
 /* 801F4BC4 001F1B04  4B FF FD D8 */	b __dt__11TMarineSnowFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21974:
 	.incbin "baserom.dol", 0x38FCA0, 0x30
 
@@ -208,7 +209,8 @@ __vt__11TMarineSnow:
   .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21992:
   .4byte 0
 $$21993:

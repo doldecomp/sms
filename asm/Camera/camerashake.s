@@ -957,7 +957,8 @@ lbl_8035C91C:
 /* 8035CA38 00359978  7C 08 03 A6 */	mtlr r0
 /* 8035CA3C 0035997C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21807:
   .4byte 0
 $$21808:

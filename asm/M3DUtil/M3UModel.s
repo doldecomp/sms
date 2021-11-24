@@ -359,7 +359,8 @@ __vt__14M3UModelCommon:
   .4byte 0
   .4byte getMtxCalc__14M3UModelCommonFRC17M3UMtxCalcSetInfo
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21716:
   .4byte 0
   .4byte 0

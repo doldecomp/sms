@@ -701,7 +701,8 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 /* 8006FD74 0006CCB4  38 21 00 28 */	addi r1, r1, 0x28
 /* 8006FD78 0006CCB8  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21786:
   .4byte 0
 $$21787:

@@ -12,7 +12,8 @@ $$232$$2__dt__22TBossHanachanPartsBaseFv:
 /* 8031C05C 00318F9C  38 63 FF E0 */	addi r3, r3, -32
 /* 8031C060 00318FA0  4B FE A4 98 */	b __dt__22TBossHanachanPartsBaseFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0

@@ -150,7 +150,8 @@ setFirFilter__Q38JASystem6TTrack11TOuterParamFPs:
 /* 800646E0 00061620  B0 03 00 2A */	sth r0, 0x2a(r3)
 /* 800646E4 00061624  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2127:
   .4byte 0
   .4byte 0

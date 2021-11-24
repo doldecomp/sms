@@ -4027,7 +4027,8 @@ $$232$$2__dt__13TBossHanachanFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_BossHanachanMain_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -4204,7 +4205,8 @@ cDummyTextureName:
   .4byte $$22708
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22707:
 	.incbin "baserom.dol", 0x3EB410, 0x8
 $$22708:

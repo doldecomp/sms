@@ -594,7 +594,8 @@ __vt__12JPABaseShape:
   .4byte __dt__12JPABaseShapeFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21505:
   .4byte 0
 $$21506:

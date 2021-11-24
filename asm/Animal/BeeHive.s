@@ -3881,9 +3881,9 @@ $$232$$2__dt__8TBeeHiveFv:
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_BeeHive_cpp
-	.skip 0x1C
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -4122,7 +4122,8 @@ __vt__4TBee:
   .4byte init__4TBeeFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23087:
   .4byte 0
 $$23088:

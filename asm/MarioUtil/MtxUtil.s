@@ -2238,7 +2238,8 @@ getParams__14TMtxEffectBaseFv:
 /* 800C8554 000C5494  38 60 00 00 */	li r3, 0
 /* 800C8558 000C5498  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -2313,7 +2314,8 @@ __vt__14TMtxEffectBase:
   .4byte 0
   .4byte getParams__14TMtxEffectBaseFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22093:
 	.incbin "baserom.dol", 0x3E4A38, 0x4
 $$22094:

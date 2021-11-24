@@ -753,7 +753,8 @@ lbl_80146B74:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_SplashManager_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22153:
 	.incbin "baserom.dol", 0x378800, 0x18
 
@@ -771,7 +772,8 @@ __vt__14TSplashManager:
   .4byte perform__14TSplashManagerFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21978:
 	.incbin "baserom.dol", 0x3E5CA8, 0x4
 $$22014:

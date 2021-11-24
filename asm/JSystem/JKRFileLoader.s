@@ -507,7 +507,8 @@ __vt__13JKRFileLoader:
 rootPath$1763:
 	.incbin "baserom.dol", 0x3E3000, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21783:
 	.incbin "baserom.dol", 0x3E3D30, 0x8
 

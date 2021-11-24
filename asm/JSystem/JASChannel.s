@@ -2084,7 +2084,8 @@ $$2325:
     .4byte lbl_8005C93C
     .4byte lbl_8005C944
     .4byte lbl_8005C94C
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2145:
   .4byte 0
 $$2160:

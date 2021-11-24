@@ -504,7 +504,8 @@ scTiming__10MSBgmXFade:
 scExp__10MSBgmXFade:
 	.incbin "baserom.dol", 0x3B7288, 0x48
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22016:
 	.incbin "baserom.dol", 0x3E69F0, 0x4
 $$22017:

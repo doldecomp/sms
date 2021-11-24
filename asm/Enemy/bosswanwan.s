@@ -8531,7 +8531,8 @@ $$232$$2__dt__11TBossWanwanFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_bosswanwan_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -9088,7 +9089,8 @@ __vt__12TBWLeashNode:
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
   .4byte receiveMessage__9THitActorFP9THitActorUl
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23732:
 	.incbin "baserom.dol", 0x3EA950, 0x4
 $$23760:

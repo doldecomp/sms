@@ -75,7 +75,8 @@ lbl_80082180:
 /* 80082198 0007F0D8  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 /* 8008219C 0007F0DC  00 00 00 00 */	.4byte 0x00000000  /* unknown instruction */
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2347:
 	.incbin "baserom.dol", 0x36E470, 0x1C
 $$2351:

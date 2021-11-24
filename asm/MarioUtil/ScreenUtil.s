@@ -960,7 +960,8 @@ lbl_800C9360:
 /* 800C9374 000C62B4  38 21 00 18 */	addi r1, r1, 0x18
 /* 800C9378 000C62B8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21831:
 	.incbin "baserom.dol", 0x36F5B8, 0x18
 
@@ -988,7 +989,8 @@ __vt__12TAfterEffect:
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
   .4byte perform__12TAfterEffectFUlPQ26JDrama9TGraphics
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21629:
 	.incbin "baserom.dol", 0x3E4AA0, 0x4
 $$21630:

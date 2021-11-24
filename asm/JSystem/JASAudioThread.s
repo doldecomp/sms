@@ -326,11 +326,13 @@ lbl_8005BD9C:
 /* 8005BDB0 00058CF0  38 21 00 28 */	addi r1, r1, 0x28
 /* 8005BDB4 00058CF4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2128:
 	.incbin "baserom.dol", 0x36E250, 0x10
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2148:
 	.incbin "baserom.dol", 0x3E4330, 0x8
 

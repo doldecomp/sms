@@ -566,7 +566,8 @@ getHeapType__12JKRSolidHeapFv:
 /* 8000DB80 0000AAC0  38 63 49 44 */	addi r3, r3, 0x534C4944@l
 /* 8000DB84 0000AAC4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2288:
 	.incbin "baserom.dol", 0x36D550, 0x34
 $$2303:
@@ -614,7 +615,8 @@ __vt__12JKRSolidHeap:
   .4byte state_compare__12JKRSolidHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
   .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2369:
 	.incbin "baserom.dol", 0x3E3D40, 0x8
 $$2371:

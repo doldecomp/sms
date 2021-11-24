@@ -275,7 +275,8 @@ __ct__16TCameraMarioDataFv:
 /* 80358D58 00355C98  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 80358D5C 00355C9C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22149:
   .4byte 0
 $$22190:

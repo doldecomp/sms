@@ -2078,7 +2078,8 @@ lbl_80114610:
 /* 80114618 00111558  7C 08 03 A6 */	mtlr r0
 /* 8011461C 0011155C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -2212,7 +2213,8 @@ $$23444:
     .4byte lbl_801145FC
     .4byte lbl_80114604
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22726:
 	.incbin "baserom.dol", 0x3E5378, 0x8
 $$22727:

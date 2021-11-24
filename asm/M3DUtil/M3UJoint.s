@@ -683,7 +683,8 @@ __vt__24M3UMtxCalcSIAnmBlendQuat:
   .4byte $$2100$$24$$2calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
   .4byte $$2100$$24$$2calc__24M3UMtxCalcSIAnmBlendQuatFUs
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21572:
   .4byte 0
 $$21573:

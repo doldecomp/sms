@@ -272,7 +272,8 @@ CopyRenderModeVFilter__6JDramaFP16_GXRenderModeObjPCUc:
 /* 80045E24 00042D64  7C 08 03 A6 */	mtlr r0
 /* 80045E28 00042D68  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$249:
 	.incbin "baserom.dol", 0x36E098, 0x14
 $$250:
@@ -280,6 +281,7 @@ $$250:
 $$261:
 	.incbin "baserom.dol", 0x36E0C4, 0x1C
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$248:
 	.incbin "baserom.dol", 0x3E40F0, 0x8

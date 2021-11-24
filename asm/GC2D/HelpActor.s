@@ -368,7 +368,8 @@ $$232$$2__dt__16TSwitchHelpActorFv:
 /* 80218F8C 00215ECC  38 63 FF E0 */	addi r3, r3, -32
 /* 80218F90 00215ED0  4B FF FB 08 */	b __dt__16TSwitchHelpActorFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21991:
 	.incbin "baserom.dol", 0x390AF0, 0x10
 
@@ -462,7 +463,8 @@ __vt__10THelpActor:
   .4byte receiveMessage__9THitActorFP9THitActorUl
   .4byte check__10THelpActorFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21995:
 	.incbin "baserom.dol", 0x3E9338, 0x4
 $$21996:

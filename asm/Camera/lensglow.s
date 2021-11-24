@@ -597,7 +597,8 @@ lbl_8035DBD8:
 /* 8035DC6C 0035ABAC  7C 08 03 A6 */	mtlr r0
 /* 8035DC70 0035ABB0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -629,7 +630,8 @@ __vt__9TLensGlow:
   .4byte perform__9TLensGlowFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21859:
   .4byte 0
 $$21860:

@@ -137,7 +137,8 @@ PSVECDistance:
 /* 80095038 00091F78  EC 20 00 72 */	fmuls f1, f0, f1
 /* 8009503C 00091F7C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2116:
 	.incbin "baserom.dol", 0x3E47C8, 0x4
 $$2117:
