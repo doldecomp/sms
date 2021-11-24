@@ -469,7 +469,8 @@ lbl_802823B0:
 /* 802823CC 0027F30C  7C 08 03 A6 */	mtlr r0
 /* 802823D0 0027F310  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21601:
 	.incbin "baserom.dol", 0x3EA2E8, 0x4
 $$21602:

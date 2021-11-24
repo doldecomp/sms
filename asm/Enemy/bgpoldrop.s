@@ -706,7 +706,8 @@ __vt__10TBGPolDrop:
   .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22932:
 	.incbin "baserom.dol", 0x3EB740, 0x4
 $$22933:

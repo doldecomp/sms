@@ -313,7 +313,8 @@ cEqualCSlope__7JALCalc:
 cPlusPSlope__7JALCalc:
 	.incbin "baserom.dol", 0x3E30D4, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2244:
   .4byte 0
 $$2245:

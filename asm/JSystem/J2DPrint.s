@@ -1948,7 +1948,8 @@ __vt__8J2DPrint:
   .4byte __dt__8J2DPrintFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$252:
   .4byte 0
   .4byte 0

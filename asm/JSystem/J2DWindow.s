@@ -1812,7 +1812,8 @@ __vt__Q29J2DWindow7Texture:
   .4byte 0
   .4byte __dt__Q29J2DWindow7TextureFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21321:
 	.incbin "baserom.dol", 0x3E3E90, 0x4
 $$21322:

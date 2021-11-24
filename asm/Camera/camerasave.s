@@ -1926,7 +1926,8 @@ __ct__14TCamSaveNoticeFv:
 /* 8035BCD8 00358C18  38 21 00 20 */	addi r1, r1, 0x20
 /* 8035BCDC 00358C1C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -2272,7 +2273,8 @@ $$22252:
 $$22253:
 	.incbin "baserom.dol", 0x3A38D8, 0x18
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21895:
 	.incbin "baserom.dol", 0x3EC2F8, 0x8
 $$21896:

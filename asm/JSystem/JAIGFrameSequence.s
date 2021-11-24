@@ -1879,7 +1879,8 @@ lbl_80052C18:
 /* 80052C2C 0004FB6C  38 21 00 20 */	addi r1, r1, 0x20
 /* 80052C30 0004FB70  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2412:
 	.incbin "baserom.dol", 0x3E41E8, 0x4
 $$2826:

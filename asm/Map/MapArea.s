@@ -510,7 +510,8 @@ lbl_801DD164:
 /* 801DD168 001DA0A8  38 21 00 38 */	addi r1, r1, 0x38
 /* 801DD16C 001DA0AC  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22050:
   .4byte 0
   .4byte 0

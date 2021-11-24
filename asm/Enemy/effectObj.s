@@ -3194,7 +3194,8 @@ $$232$$2__dt__16TEffectExplosionFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_effectObj_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -3952,7 +3953,8 @@ __vt__13TSimpleEffect:
   .4byte 0
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22718:
   .4byte 0
 $$22828:

@@ -509,13 +509,15 @@ lbl_80060CD4:
 /* 80060CE4 0005DC24  38 21 00 20 */	addi r1, r1, 0x20
 /* 80060CE8 0005DC28  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2197:
 	.incbin "baserom.dol", 0x36E358, 0xC
 $$2216:
 	.incbin "baserom.dol", 0x36E364, 0xC
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2236:
 	.incbin "baserom.dol", 0x3E43B0, 0x8
 $$2237:

@@ -945,10 +945,12 @@ lbl_80116EFC:
 /* 80116F0C 00113E4C  7C 08 03 A6 */	mtlr r0
 /* 80116F10 00113E50  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21948:
 	.incbin "baserom.dol", 0x377220, 0x10
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21947:
 	.incbin "baserom.dol", 0x3E53F0, 0x8

@@ -766,7 +766,8 @@ PSMulUnit01:
 Unit01:
 	.incbin "baserom.dol", 0x3E3018, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2871:
   .4byte 0
 $$2872:

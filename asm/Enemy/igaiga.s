@@ -6102,7 +6102,8 @@ $$232$$2__dt__9TGorogoroFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_igaiga_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -6706,7 +6707,8 @@ graphlist$3323:
   .4byte $$23324
   .4byte $$23325
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23553:
 	.incbin "baserom.dol", 0x3EAB50, 0x4
 $$23570:

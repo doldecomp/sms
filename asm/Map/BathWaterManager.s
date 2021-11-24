@@ -8528,7 +8528,8 @@ $$232$$2__dt__10TBathWaterFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_BathWaterManager_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21900:
 	.incbin "baserom.dol", 0x38FF30, 0x14
 $$21907:
@@ -8727,7 +8728,8 @@ __vt__22TBathWaterPreprocessor:
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
   .4byte perform__22TBathWaterPreprocessorFUlPQ26JDrama9TGraphics
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22375:
 	.incbin "baserom.dol", 0x3E8F68, 0x4
 $$22376:

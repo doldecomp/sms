@@ -2593,7 +2593,8 @@ mNormalAppearingScaleUp__14TMapObjGeneral:
 mNormalThrowSpeedRate__14TMapObjGeneral:
 	.incbin "baserom.dol", 0x3E355C, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23049:
   .4byte 0
 $$23139:

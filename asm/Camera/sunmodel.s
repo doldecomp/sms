@@ -967,7 +967,8 @@ $$232$$2__dt__9TSunModelFv:
 /* 8035F258 0035C198  38 63 FF E0 */	addi r3, r3, -32
 /* 8035F25C 0035C19C  4B FF F2 14 */	b __dt__9TSunModelFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -1033,7 +1034,8 @@ __vt__9TSunModel:
   .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21861:
 	.incbin "baserom.dol", 0x3EC470, 0x4
 $$21862:

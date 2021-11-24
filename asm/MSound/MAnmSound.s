@@ -546,7 +546,8 @@ __vt__9MAnmSound:
   .4byte startAnimSound__9MAnmSoundFPvUlPP8JAISoundP8JAIActorUc
   .4byte setSpeedModifySound__9MAnmSoundFP8JAISoundP22JAIAnimeFrameSoundDataf
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21981:
 	.incbin "baserom.dol", 0x3E66F8, 0x4
 $$21982:

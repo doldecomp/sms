@@ -5067,7 +5067,8 @@ $$232$$2__dt__17TSirenaRollMapObjFv:
 /* 80105464 001023A4  38 63 FF E0 */	addi r3, r3, -32
 /* 80105468 001023A8  4B FF FD EC */	b __dt__17TSirenaRollMapObjFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -6057,7 +6058,8 @@ __vt__10TTakeActor:
   .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
   .4byte getRadiusAtY__10TTakeActorCFf
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$24984:
 	.incbin "baserom.dol", 0x3E50E8, 0x8
 $$24986:

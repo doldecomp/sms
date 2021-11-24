@@ -618,7 +618,8 @@ OSC_ENV__Q28JASystem7BankMgr:
     .4byte 0
     .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2339:
   .4byte 0
 $$2340:

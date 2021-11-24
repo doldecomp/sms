@@ -308,7 +308,8 @@ lbl_80361884:
 /* 80361900 0035E840  7C 08 03 A6 */	mtlr r0
 /* 80361904 0035E844  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0

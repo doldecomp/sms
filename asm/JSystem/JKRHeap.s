@@ -833,7 +833,8 @@ getCurrentGroupId__7JKRHeapFv:
 /* 8000CBA8 00009AE8  38 60 00 00 */	li r3, 0
 /* 8000CBAC 00009AEC  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2149:
 	.incbin "baserom.dol", 0x36D4E8, 0x10
 $$2150:
@@ -865,7 +866,8 @@ __vt__7JKRHeap:
   .4byte state_compare__7JKRHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
   .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2370:
 	.incbin "baserom.dol", 0x3E3D38, 0x8
 

@@ -601,7 +601,8 @@ lbl_8000D3C4:
 /* 8000D3D0 0000A310  7C 08 03 A6 */	mtlr r0
 /* 8000D3D4 0000A314  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21643:
 	.incbin "baserom.dol", 0x36D520, 0x14
 $$21644:

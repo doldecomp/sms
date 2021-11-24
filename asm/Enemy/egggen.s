@@ -261,7 +261,8 @@ $$232$$2__dt__13TEggGeneratorFv:
 /* 80310054 0030CF94  38 63 FF E0 */	addi r3, r3, -32
 /* 80310058 0030CF98  4B FF FF 90 */	b __dt__13TEggGeneratorFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -384,7 +385,8 @@ __vt__13TEggGenerator:
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22291:
 	.incbin "baserom.dol", 0x3EB708, 0x4
 $$22309:

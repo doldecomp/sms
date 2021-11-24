@@ -11919,7 +11919,8 @@ lbl_800E6A80:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_EventWatcher_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -12172,7 +12173,8 @@ sShineViewObjName$3431:
   .4byte $$23432
   .4byte $$23433
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23756:
 	.incbin "baserom.dol", 0x3E4CB0, 0x8
 $$23772:

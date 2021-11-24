@@ -633,7 +633,8 @@ lbl_800AA1BC:
 /* 800AA1CC 000A710C  38 21 00 38 */	addi r1, r1, 0x38
 /* 800AA1D0 000A7110  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2121:
   .4byte 0
 $$2127:

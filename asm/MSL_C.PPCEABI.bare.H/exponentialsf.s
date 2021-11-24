@@ -572,7 +572,8 @@ lbl_80087AF8:
 /* 80087AF8 00084A38  38 21 00 28 */	addi r1, r1, 0x28
 /* 80087AFC 00084A3C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 __log2_F:
 	.incbin "baserom.dol", 0x36EFA8, 0x204
 __two_to_x:
@@ -580,7 +581,8 @@ __two_to_x:
 __exp_to_x$105:
 	.incbin "baserom.dol", 0x36F1D0, 0x20
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 __log2e_m1$localstatic0$__log2f__Ff:
 	.incbin "baserom.dol", 0x3E4748, 0x8
 $$293:

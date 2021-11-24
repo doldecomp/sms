@@ -30,7 +30,8 @@ lbl_80082B44:
 /* 80082B44 0007FA84  7D 89 03 A6 */	mtctr r12
 /* 80082B48 0007FA88  4E 80 04 20 */	bctr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 .global __ptmf_null
 __ptmf_null:
   .4byte 0

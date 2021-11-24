@@ -678,7 +678,8 @@ __vt__12TPoolManager:
   .4byte hasMapCollision__12TLiveManagerCFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22679:
   .4byte 0
 $$22713:

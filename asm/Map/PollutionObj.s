@@ -602,7 +602,8 @@ __vt__13TPollutionObj:
   .4byte sit__9TJointObjFv
   .4byte newJointObj__13TPollutionObjCFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22849:
 	.incbin "baserom.dol", 0x3E8D68, 0x4
 $$22850:

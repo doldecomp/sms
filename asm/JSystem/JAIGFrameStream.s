@@ -2187,7 +2187,8 @@ LOOP_SAMPLESIZE__Q27JAInter9StreamLib:
 outputmode__Q27JAInter9StreamLib:
 	.incbin "baserom.dol", 0x3E30E8, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2425:
   .4byte 0
 $$2426:

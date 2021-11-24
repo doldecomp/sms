@@ -635,7 +635,8 @@ set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
 /* 8017BB38 00178A78  D0 63 00 08 */	stfs f3, 8(r3)
 /* 8017BB3C 00178A7C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22109:
   .4byte 0
 $$22155:

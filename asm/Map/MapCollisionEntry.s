@@ -831,7 +831,8 @@ setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1:
 remove__19TMapCollisionStaticFv:
 /* 801E02D0 001DD210  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -897,7 +898,8 @@ __vt__17TMapCollisionBase:
   .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
   .4byte remove__17TMapCollisionBaseFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21871:
   .4byte 0
 $$22017:

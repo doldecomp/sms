@@ -3489,7 +3489,8 @@ $$232$$2__dt__15CPolarSubCameraFv:
 /* 80356024 00352F64  38 63 FF E0 */	addi r3, r3, -32
 /* 80356028 00352F68  4B FF CE 98 */	b __dt__15CPolarSubCameraFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -3607,7 +3608,8 @@ cJetCoasterDemoBckName:
 cStartCamBckFileName:
   .4byte $$22181
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22650:
   .4byte 0
 $$22651:

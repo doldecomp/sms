@@ -251,7 +251,8 @@ __ct__7TExPaneFP9J2DScreenUl:
 /* 80200B88 001FDAC8  7C 08 03 A6 */	mtlr r0
 /* 80200B8C 001FDACC  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21610:
   .4byte 0
 $$21611:

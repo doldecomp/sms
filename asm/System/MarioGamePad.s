@@ -746,7 +746,8 @@ __sinit_MarioGamePad_cpp:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarioGamePad_cpp
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21806:
 	.incbin "baserom.dol", 0x3E4F48, 0x4
 $$21807:

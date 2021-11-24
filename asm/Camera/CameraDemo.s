@@ -785,13 +785,15 @@ lbl_80362968:
 /* 80362980 0035F8C0  38 21 00 C8 */	addi r1, r1, 0xc8
 /* 80362984 0035F8C4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22027:
 	.incbin "baserom.dol", 0x3A3D08, 0xC
 $$22028:
 	.incbin "baserom.dol", 0x3A3D14, 0xC
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21931:
 	.incbin "baserom.dol", 0x3EC598, 0x4
 $$21932:

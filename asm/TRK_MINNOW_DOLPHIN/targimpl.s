@@ -1614,7 +1614,8 @@ TRKTargetSetInputPendingPtr:
 /* 8008BA0C 0008894C  90 64 00 A0 */	stw r3, 0xa0(r4)
 /* 8008BA10 00088950  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 .global gTRKMemMap
 gTRKMemMap:
 	.incbin "baserom.dol", 0x36F210, 0x10

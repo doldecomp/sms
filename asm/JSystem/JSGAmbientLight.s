@@ -66,7 +66,8 @@ __vt__Q26JStage13TAmbientLight:
   .4byte JSGGetColor__Q26JStage13TAmbientLightCFv
   .4byte JSGSetColor__Q26JStage13TAmbientLightF8_GXColor
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2115:
   .4byte -1
   .4byte 0

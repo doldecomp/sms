@@ -137,7 +137,8 @@ sV0__Q28JASystem6Player:
 sV1__Q28JASystem6Player:
 	.incbin "baserom.dol", 0x3E3214, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2127:
 	.incbin "baserom.dol", 0x3E4408, 0x4
 $$2128:

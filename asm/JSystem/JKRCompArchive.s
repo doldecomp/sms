@@ -804,7 +804,8 @@ lbl_80008C98:
 /* 80008CAC 00005BEC  38 21 00 28 */	addi r1, r1, 0x28
 /* 80008CB0 00005BF0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21210:
 	.incbin "baserom.dol", 0x36D060, 0x10
 $$21411:

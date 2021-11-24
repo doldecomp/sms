@@ -443,7 +443,8 @@ __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
   .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
   .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21696:
 	.incbin "baserom.dol", 0x3EA6B8, 0x8
 $$21698:

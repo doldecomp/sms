@@ -1128,7 +1128,8 @@ __vt__29TNerveBossHanachanGraphWander:
   .4byte __dt__29TNerveBossHanachanGraphWanderFv
   .4byte execute__29TNerveBossHanachanGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22521:
   .4byte 0
   .4byte 0

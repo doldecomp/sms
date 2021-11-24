@@ -695,7 +695,8 @@ $$232$$2__dt__8TShimmerFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_Shimmer_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22694:
 	.incbin "baserom.dol", 0x38FA50, 0x18
 $$22695:
@@ -747,7 +748,8 @@ __vt__8TShimmer:
   .4byte JSGGetRotation__Q26JDrama6TActorCFP3Vec
   .4byte JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22641:
   .4byte 0
 $$22642:

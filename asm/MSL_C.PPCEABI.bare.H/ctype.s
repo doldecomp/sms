@@ -29,7 +29,8 @@ lbl_80083894:
 /* 800838A4 000807E4  88 63 00 00 */	lbz r3, 0(r3)
 /* 800838A8 000807E8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 .global __ctype_map
 __ctype_map:
 	.incbin "baserom.dol", 0x36E620, 0x100

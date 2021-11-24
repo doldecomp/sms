@@ -2765,7 +2765,8 @@ lbl_80164654:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarioReceiveMsg_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$24271:
 	.incbin "baserom.dol", 0x37B720, 0x10
 
@@ -2832,7 +2833,8 @@ $$24230:
     .4byte lbl_80162A00
     .4byte lbl_8016285C
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$24221:
 	.incbin "baserom.dol", 0x3E6240, 0x4
 $$24222:

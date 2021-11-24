@@ -521,7 +521,8 @@ GXSetFieldMode:
 p2f$194:
 	.incbin "baserom.dol", 0x3AEB38, 0x20
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2125:
   .4byte 0
 $$2126:

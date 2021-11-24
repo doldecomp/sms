@@ -6557,7 +6557,8 @@ $$232$$2__dt__8TKumokunFv:
 /* 803338EC 0033082C  38 63 FF E0 */	addi r3, r3, -32
 /* 803338F0 00330830  4B FF FF 60 */	b __dt__8TKumokunFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -6900,7 +6901,8 @@ $$22657:
 $$22658:
 	.incbin "baserom.dol", 0x3E3B84, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22945:
 	.incbin "baserom.dol", 0x3EBC08, 0x4
 $$22946:

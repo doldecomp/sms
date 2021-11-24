@@ -22,3 +22,5 @@ tools/elf2dol
 __pycache__/*
 build.bat
 clean.bat
+calcprogress.bat
+!clang-format.exe

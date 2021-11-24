@@ -2832,7 +2832,8 @@ $$232$$2__dt__7TAmenboFv:
 /* 8033F978 0033C8B8  38 63 FF E0 */	addi r3, r3, -32
 /* 8033F97C 0033C8BC  4B FF FF 04 */	b __dt__7TAmenboFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -3105,7 +3106,8 @@ $$22524:
 $$22525:
 	.incbin "baserom.dol", 0x3E3BB0, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22689:
 	.incbin "baserom.dol", 0x3EBE10, 0x4
 $$22691:

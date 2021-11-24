@@ -357,7 +357,8 @@ lbl_8005EF24:
 /* 8005EF30 0005BE70  7C 08 03 A6 */	mtlr r0
 /* 8005EF34 0005BE74  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2119:
 	.incbin "baserom.dol", 0x36E270, 0xC
 $$2211:

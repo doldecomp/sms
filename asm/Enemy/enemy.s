@@ -3228,7 +3228,8 @@ __vt__23TSolidStack$$09TPathNode$$1:
   .4byte __dt__23TSolidStack$$09TPathNode$$1Fv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22765:
   .4byte 0
 $$22787:

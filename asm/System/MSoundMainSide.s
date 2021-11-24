@@ -2761,7 +2761,8 @@ __vt__7MSStage:
   .4byte stageLoop__7MSStageFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22293:
   .4byte 0
 $$22300:

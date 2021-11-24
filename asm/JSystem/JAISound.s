@@ -3275,7 +3275,8 @@ __vt__8JAISound:
   .4byte setDistancePanCommon__8JAISoundFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2412:
 	.incbin "baserom.dol", 0x3E4258, 0x8
 $$2434:

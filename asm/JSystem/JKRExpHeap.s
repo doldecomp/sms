@@ -2105,7 +2105,8 @@ getHeapType__10JKRExpHeapFv:
 /* 8000B8CC 0000880C  38 63 50 48 */	addi r3, r3, 0x45585048@l
 /* 8000B8D0 00008810  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2237:
 	.incbin "baserom.dol", 0x36D158, 0x10
 $$2294:
@@ -2187,7 +2188,8 @@ __vt__10JKRExpHeap:
   .4byte state_compare__10JKRExpHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState
   .4byte state_dump__7JKRHeapCFRCQ27JKRHeap6TState
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2722:
 	.incbin "baserom.dol", 0x3E3D00, 0x8
 $$2724:

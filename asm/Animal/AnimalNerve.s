@@ -420,7 +420,8 @@ __vt__23TNerveAnimalGraphWander:
   .4byte __dt__23TNerveAnimalGraphWanderFv
   .4byte execute__23TNerveAnimalGraphWanderCFP24TSpineBase$$010TLiveActor$$1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22158:
 	.incbin "baserom.dol", 0x3EC718, 0x4
 $$22159:

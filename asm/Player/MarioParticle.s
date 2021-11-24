@@ -2478,7 +2478,8 @@ lbl_801442EC:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarioParticle_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -2544,7 +2545,8 @@ __vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
   .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22884:
 	.incbin "baserom.dol", 0x3E5C18, 0x4
 $$22899:

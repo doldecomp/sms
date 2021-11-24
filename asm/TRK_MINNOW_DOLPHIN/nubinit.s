@@ -124,7 +124,8 @@ lbl_80088050:
 /* 80088050 00084F90  38 21 00 10 */	addi r1, r1, 0x10
 /* 80088054 00084F94  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$240:
 	.asciz "MetroTRK for Dolphin v0.8"
 .balign 8

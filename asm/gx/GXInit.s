@@ -1146,7 +1146,8 @@ gx:
   .4byte gxData
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2121:
 	.incbin "baserom.dol", 0x3E47D0, 0x4
 $$2122:

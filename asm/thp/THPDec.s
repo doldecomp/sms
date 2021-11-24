@@ -7924,13 +7924,15 @@ THPInit:
 /* 800BD49C 000BA3DC  38 60 00 01 */	li r3, 1
 /* 800BD4A0 000BA3E0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 __THPJpegNaturalOrder:
 	.incbin "baserom.dol", 0x36F260, 0x50
 __THPAANScaleFactor:
 	.incbin "baserom.dol", 0x36F2B0, 0x40
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2243:
 	.incbin "baserom.dol", 0x3E48D0, 0x8
 $$2665:

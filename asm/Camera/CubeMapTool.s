@@ -380,7 +380,8 @@ __vt__16TCubeGeneralInfo:
   .4byte loadAfter__Q26JDrama8TNameRefFv
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21577:
 	.incbin "baserom.dol", 0x3EC500, 0x8
 $$21579:

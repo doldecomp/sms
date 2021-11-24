@@ -128,7 +128,8 @@ lbl_80177480:
 /* 8017749C 001743DC  38 21 00 20 */	addi r1, r1, 0x20
 /* 801774A0 001743E0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0

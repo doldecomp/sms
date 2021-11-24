@@ -1070,7 +1070,8 @@ lbl_800FE2AC:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarNameRefGen_BossEnemy_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -1234,7 +1235,8 @@ $$23562:
 $$23563:
 	.incbin "baserom.dol", 0x37265C, 0x1C
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23483:
 	.incbin "baserom.dol", 0x3E4F88, 0x8
 $$23488:

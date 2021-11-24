@@ -459,7 +459,8 @@ __ct__14TBathtubBinderFv:
 /* 8034B9FC 0034893C  7C 08 03 A6 */	mtlr r0
 /* 8034BA00 00348940  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -487,7 +488,8 @@ __vt__14TBathtubBinder:
   .4byte __dt__14TBathtubBinderFv
   .4byte bind__14TBathtubBinderFP10TLiveActor
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21944:
   .4byte 0
 $$21945:

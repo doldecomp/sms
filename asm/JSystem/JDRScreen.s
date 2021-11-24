@@ -193,7 +193,8 @@ lbl_8004616C:
 /* 80046180 000430C0  38 21 00 18 */	addi r1, r1, 0x18
 /* 80046184 000430C4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2293:
 	.incbin "baserom.dol", 0x36E0E0, 0xC
 $$2294:

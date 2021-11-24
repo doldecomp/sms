@@ -546,7 +546,8 @@ __vt__13TAreaCylinder:
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
   .4byte perform__13TAreaCylinderFUlPQ26JDrama9TGraphics
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22137:
 	.incbin "baserom.dol", 0x3EB8C0, 0x4
 $$22138:

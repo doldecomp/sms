@@ -1038,7 +1038,8 @@ $$232$$2__dt__17TMapObjGrassGroupFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MapObjGrass_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22596:
 	.incbin "baserom.dol", 0x38CC10, 0x10
 
@@ -1114,7 +1115,8 @@ sGrassAddTime:
 color_table:
 	.incbin "baserom.dol", 0x3E3720, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22453:
 	.incbin "baserom.dol", 0x3E8548, 0x4
 $$22496:

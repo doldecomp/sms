@@ -1153,7 +1153,8 @@ lbl_80115C54:
 /* 80115C54 00112B94  38 60 00 01 */	li r3, 1
 /* 80115C58 00112B98  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22277:
 	.incbin "baserom.dol", 0x3E53E0, 0x8
 

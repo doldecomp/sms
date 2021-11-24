@@ -3745,7 +3745,8 @@ $$232$$2__dt__13TPinnaCoasterFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MapObjPinna_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -4917,7 +4918,8 @@ mCloseAccel__9TShellCup:
 mRotSpeed__13TMerrygoround:
 	.incbin "baserom.dol", 0x3E3690, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23241:
   .4byte 0
 $$23272:

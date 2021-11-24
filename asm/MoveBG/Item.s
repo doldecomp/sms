@@ -5273,7 +5273,8 @@ $$232$$2__dt__10TNozzleBoxFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_Item_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -6630,7 +6631,8 @@ mUpSpeed__6TShine:
 mSpeedDownRate__6TShine:
 	.incbin "baserom.dol", 0x3E3574, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22989:
   .4byte -1
 $$23270:

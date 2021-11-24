@@ -394,7 +394,8 @@ lbl_801DA36C:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_JointModel_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22324:
 	.incbin "baserom.dol", 0x38E478, 0x10
 

@@ -1507,7 +1507,8 @@ lbl_8001DAA4:
 /* 8001DAB4 0001A9F4  7C 08 03 A6 */	mtlr r0
 /* 8001DAB8 0001A9F8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21454:
 	.incbin "baserom.dol", 0x36DBE8, 0x10
 
@@ -1519,7 +1520,8 @@ __vt__13J3DSkinDeform:
   .4byte deform__13J3DSkinDeformFP8J3DModel
   .4byte __dt__13J3DSkinDeformFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21084:
 	.incbin "baserom.dol", 0x3E3EB8, 0x4
 $$21099:

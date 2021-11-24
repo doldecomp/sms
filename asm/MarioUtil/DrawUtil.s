@@ -2781,7 +2781,8 @@ load__11TSilhouetteFR20JSUMemoryInputStream:
 /* 800C34EC 000C042C  7C 08 03 A6 */	mtlr r0
 /* 800C34F0 000C0430  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22036:
 	.incbin "baserom.dol", 0x36F2F0, 0xC
 $$22195:
@@ -2803,7 +2804,8 @@ __vt__11TSilhouette:
   .4byte perform__11TSilhouetteFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21997:
 	.incbin "baserom.dol", 0x3E4930, 0x4
 $$21999:

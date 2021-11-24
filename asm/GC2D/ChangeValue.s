@@ -28,7 +28,8 @@ lbl_802006D8:
 /* 802006D8 001FD618  38 21 00 28 */	addi r1, r1, 0x28
 /* 802006DC 001FD61C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21680:
   .4byte 0
 $$21681:

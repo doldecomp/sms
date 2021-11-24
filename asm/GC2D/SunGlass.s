@@ -527,7 +527,8 @@ __vt__9TSunGlass:
   .4byte perform__9TSunGlassFUlPQ26JDrama9TGraphics
   .4byte draw__9TSunGlassFRCQ26JDrama5TRectQ28JUtility6TColor
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21842:
 	.incbin "baserom.dol", 0x3E9720, 0x4
 $$21843:

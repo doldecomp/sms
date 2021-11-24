@@ -96,7 +96,8 @@ startTrample__11TNpcTrampleFv:
 /* 801799FC 0017693C  D0 0D 99 E8 */	stfs f0, msAmpDecrease__11TNpcTrample@sda21(r13)
 /* 80179A00 00176940  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21981:
 	.incbin "baserom.dol", 0x3E6650, 0x8
 $$21990:

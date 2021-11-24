@@ -545,7 +545,8 @@ lbl_800CEAB0:
 /* 800CEB94 000CBAD4  7C 08 03 A6 */	mtlr r0
 /* 800CEB98 000CBAD8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$217:
 	.incbin "baserom.dol", 0x36F6E0, 0xD0
 
@@ -564,7 +565,8 @@ ColorBlack:
 ColorWhite:
   .4byte -1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$251:
   .4byte 0
 $$252:

@@ -2205,7 +2205,8 @@ $$23874:
     .4byte lbl_80352A40
     .4byte lbl_80352A48
     .4byte lbl_80352A50
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23696:
 	.incbin "baserom.dol", 0x3EC190, 0x4
 $$23697:
