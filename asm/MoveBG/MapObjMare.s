@@ -1583,7 +1583,7 @@ touchPlayer__14TMapObjPuncherFP9THitActor:
 /* 801B08F0 001AD830  C0 21 00 50 */	lfs f1, 0x50(r1)
 /* 801B08F4 001AD834  EC 01 00 2A */	fadds f0, f1, f0
 /* 801B08F8 001AD838  D0 01 00 50 */	stfs f0, 0x50(r1)
-/* 801B08FC 001AD83C  4B FA 21 41 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 801B08FC 001AD83C  4B FA 21 41 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 801B0900 001AD840  38 7F 00 00 */	addi r3, r31, 0
 /* 801B0904 001AD844  38 80 00 07 */	li r4, 7
 /* 801B0908 001AD848  4B FA 22 AD */	bl SMS_SendMessageToMario__FP9THitActorUl

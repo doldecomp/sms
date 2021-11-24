@@ -2810,7 +2810,7 @@ release__11TLeanMirrorFv:
 /* 801A9348 001A6288  80 1E 00 F8 */	lwz r0, 0xf8(r30)
 /* 801A934C 001A628C  54 00 07 FA */	rlwinm r0, r0, 0, 0x1f, 0x1d
 /* 801A9350 001A6290  90 1E 00 F8 */	stw r0, 0xf8(r30)
-/* 801A9354 001A6294  4B FA 96 E9 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 801A9354 001A6294  4B FA 96 E9 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 801A9358 001A6298  80 7E 00 F4 */	lwz r3, 0xf4(r30)
 /* 801A935C 001A629C  38 82 C2 D4 */	addi r4, r2, $$23563@sda21
 /* 801A9360 001A62A0  4B ED C8 FD */	bl strcmp

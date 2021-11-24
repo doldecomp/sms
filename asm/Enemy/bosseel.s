@@ -4629,7 +4629,7 @@ lbl_802E66B8:
 /* 802E66E4 002E3624  C0 01 00 A4 */	lfs f0, 0xa4(r1)
 /* 802E66E8 002E3628  EC 00 C0 2A */	fadds f0, f0, f24
 /* 802E66EC 002E362C  D0 01 00 A4 */	stfs f0, 0xa4(r1)
-/* 802E66F0 002E3630  4B E6 C3 4D */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 802E66F0 002E3630  4B E6 C3 4D */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 802E66F4 002E3634  80 01 01 24 */	lwz r0, 0x124(r1)
 /* 802E66F8 002E3638  CB E1 01 18 */	lfd f31, 0x118(r1)
 /* 802E66FC 002E363C  CB C1 01 10 */	lfd f30, 0x110(r1)
@@ -5917,7 +5917,7 @@ behaveToMario__24TBossEelBarrierCollisionFv:
 /* 802E7990 002E48D0  C0 04 00 08 */	lfs f0, 8(r4)
 /* 802E7994 002E48D4  EC 01 00 2A */	fadds f0, f1, f0
 /* 802E7998 002E48D8  D0 01 00 20 */	stfs f0, 0x20(r1)
-/* 802E799C 002E48DC  4B E6 B0 A1 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 802E799C 002E48DC  4B E6 B0 A1 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 802E79A0 002E48E0  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 802E79A4 002E48E4  38 21 00 28 */	addi r1, r1, 0x28
 /* 802E79A8 002E48E8  7C 08 03 A6 */	mtlr r0
@@ -6064,7 +6064,7 @@ behaveToMario__20TBossEelAwaCollisionFv:
 /* 802E7B94 002E4AD4  C0 04 00 08 */	lfs f0, 8(r4)
 /* 802E7B98 002E4AD8  EC 01 00 2A */	fadds f0, f1, f0
 /* 802E7B9C 002E4ADC  D0 01 00 1C */	stfs f0, 0x1c(r1)
-/* 802E7BA0 002E4AE0  4B E6 AE 9D */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 802E7BA0 002E4AE0  4B E6 AE 9D */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 802E7BA4 002E4AE4  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802E7BA8 002E4AE8  38 21 00 20 */	addi r1, r1, 0x20
 /* 802E7BAC 002E4AEC  7C 08 03 A6 */	mtlr r0
@@ -6147,7 +6147,7 @@ behaveToMario__17TBossEelCollisionFv:
 /* 802E7CBC 002E4BFC  C0 04 00 08 */	lfs f0, 8(r4)
 /* 802E7CC0 002E4C00  EC 01 00 2A */	fadds f0, f1, f0
 /* 802E7CC4 002E4C04  D0 01 00 70 */	stfs f0, 0x70(r1)
-/* 802E7CC8 002E4C08  4B E6 AD 75 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 802E7CC8 002E4C08  4B E6 AD 75 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 802E7CCC 002E4C0C  83 DF 00 7C */	lwz r30, 0x7c(r31)
 /* 802E7CD0 002E4C10  28 1E 00 00 */	cmplwi r30, 0
 /* 802E7CD4 002E4C14  41 82 01 A0 */	beq lbl_802E7E74
@@ -7112,7 +7112,7 @@ lbl_802E8A44:
 /* 802E8A94 002E59D4  C0 04 00 08 */	lfs f0, 8(r4)
 /* 802E8A98 002E59D8  EC 01 00 2A */	fadds f0, f1, f0
 /* 802E8A9C 002E59DC  D0 01 01 40 */	stfs f0, 0x140(r1)
-/* 802E8AA0 002E59E0  4B E6 9F 9D */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 802E8AA0 002E59E0  4B E6 9F 9D */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 lbl_802E8AA4:
 /* 802E8AA4 002E59E4  3B FF 00 01 */	addi r31, r31, 1
 /* 802E8AA8 002E59E8  3B 7B 00 04 */	addi r27, r27, 4
