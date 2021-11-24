@@ -714,7 +714,8 @@ lbl_801770C4:
 /* 801770E4 00174024  7C 08 03 A6 */	mtlr r0
 /* 801770E8 00174028  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -746,7 +747,8 @@ cPeachPartsTextureName:
 cPeachHostTextureName:
   .4byte $$22276
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22491:
   .4byte 0
 $$22492:

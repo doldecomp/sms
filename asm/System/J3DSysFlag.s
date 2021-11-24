@@ -338,7 +338,8 @@ __vt__11TJ3DSysFlag:
   .4byte perform__11TJ3DSysFlagFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21731:
   .4byte -1
   .4byte 0

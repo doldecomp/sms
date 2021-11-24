@@ -1,6 +1,7 @@
 .include "macros.inc"
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 .global __two_to_log2e_m1_tI
 __two_to_log2e_m1_tI:
 	.incbin "baserom.dol", 0x36EA90, 0x2C8

@@ -606,7 +606,8 @@ __ct__Q216TDrawSyncManager19TDrawSyncTokenRangeFUsUsP17TDrawSyncCallback:
 /* 800FD2A0 000FA1E0  90 C3 00 04 */	stw r6, 4(r3)
 /* 800FD2A4 000FA1E4  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 .balign 8
 $$21665:
 	.incbin "baserom.dol", 0x3E4F78, 0x8

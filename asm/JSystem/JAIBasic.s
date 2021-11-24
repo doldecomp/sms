@@ -2965,7 +2965,8 @@ __sinit_JAIBasic_cpp:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_JAIBasic_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2463:
 	.incbin "baserom.dol", 0x36E1E8, 0x10
 
@@ -2998,7 +2999,8 @@ __vt__8JAIBasic:
   .4byte loadGroupWave__8JAIBasicFll
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2413:
 	.incbin "baserom.dol", 0x3E4160, 0x8
 $$2694:

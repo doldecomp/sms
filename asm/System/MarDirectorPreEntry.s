@@ -229,7 +229,8 @@ lbl_800EF9CC:
 /* 800EFA28 000EC968  7C 08 03 A6 */	mtlr r0
 /* 800EFA2C 000EC96C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -295,6 +296,7 @@ $$21641:
 $$21642:
 	.incbin "baserom.dol", 0x370B40, 0x18
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21626:
 	.incbin "baserom.dol", 0x3E4DE8, 0x8

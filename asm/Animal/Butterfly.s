@@ -616,7 +616,8 @@ $$232$$2__dt__12TButterfloidFv:
 /* 8036FB80 0036CAC0  38 63 FF E0 */	addi r3, r3, -32
 /* 8036FB84 0036CAC4  4B FF FE D4 */	b __dt__12TButterfloidFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -808,7 +809,8 @@ __vt__10TButterfly:
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte init__10TButterflyFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22489:
 	.incbin "baserom.dol", 0x3EC868, 0x4
 $$22490:

@@ -4570,7 +4570,8 @@ __vt__10J3DAnmBase:
   .4byte 0
   .4byte __dt__10J3DAnmBaseFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2955:
 	.incbin "baserom.dol", 0x3E3F50, 0x4
 $$2956:

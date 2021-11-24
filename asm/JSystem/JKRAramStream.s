@@ -387,7 +387,8 @@ __ct__20JKRAramStreamCommandFv:
 /* 8003AD6C 00037CAC  98 03 00 24 */	stb r0, 0x24(r3)
 /* 8003AD70 00037CB0  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2110:
 	.incbin "baserom.dol", 0x36DDA8, 0x18
 
@@ -413,7 +414,8 @@ __vt__13JKRAramStream:
   .4byte __dt__13JKRAramStreamFv
   .4byte run__13JKRAramStreamFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2111:
 	.incbin "baserom.dol", 0x3E4010, 0x8
 

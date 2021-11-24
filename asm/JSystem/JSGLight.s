@@ -117,7 +117,8 @@ __vt__Q26JStage6TLight:
   .4byte JSGGetDirection__Q26JStage6TLightCFP3Vec
   .4byte JSGSetDirection__Q26JStage6TLightFRC3Vec
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2118:
   .4byte -1
   .4byte 0

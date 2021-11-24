@@ -1632,7 +1632,8 @@ $$232$$2__dt__11TAnimalBaseFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_AnimalBase_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$23202:
 	.incbin "baserom.dol", 0x3A4B10, 0x10
 
@@ -1710,7 +1711,8 @@ __vt__11TAnimalBase:
   .4byte isReachedToGoal__11TSpineEnemyCFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22579:
   .4byte 0
 $$22601:

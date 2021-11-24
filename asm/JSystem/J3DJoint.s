@@ -2531,7 +2531,8 @@ $$280$$2__dt__17J3DMtxCalcMayaAnmFv:
 /* 8001FD10 0001CC50  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FD14 0001CC54  4B FF F5 AC */	b __dt__17J3DMtxCalcMayaAnmFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2894:
 	.incbin "baserom.dol", 0x36DBF8, 0xC
 $$2914:
@@ -2709,7 +2710,8 @@ __vt__13J3DMtxCalcAnm:
   .4byte calcTransform__10J3DMtxCalcFUsRC16J3DTransformInfo
   .4byte $$224$$24$$2calc__13J3DMtxCalcAnmFUs
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21077:
 	.incbin "baserom.dol", 0x3E3EF0, 0x4
 $$21258:

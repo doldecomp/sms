@@ -1,6 +1,7 @@
 .include "macros.inc"
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2395:
 	.incbin "baserom.dol", 0x36E130, 0xC
 $$2415:

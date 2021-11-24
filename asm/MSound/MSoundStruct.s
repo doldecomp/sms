@@ -1972,7 +1972,8 @@ $$220$$2frameLoopDyna__26MSSetSoundTL$$010MSSetSound$$1Fv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MSoundStruct_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21994:
 	.incbin "baserom.dol", 0x384500, 0xC
 $$22005:
@@ -2044,7 +2045,8 @@ __vt__30JALListFrameLoop$$010MSSetSound$$1:
   .4byte frameLoopDyna__30JALListFrameLoop$$010MSSetSound$$1Fv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21995:
 	.incbin "baserom.dol", 0x3E6910, 0x4
 $$21996:

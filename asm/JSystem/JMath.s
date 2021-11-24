@@ -251,7 +251,8 @@ JMAHermiteInterpolation__Ffffffff:
 /* 80013E4C 00010D8C  EC 27 02 3A */	fmadds f1, f7, f8, f0
 /* 80013E50 00010D90  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2151:
 	.incbin "baserom.dol", 0x3E3DF0, 0x8
 $$2153:

@@ -1612,7 +1612,8 @@ lbl_801DCA4C:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_Map_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -1706,7 +1707,8 @@ $$23341:
     .4byte lbl_801DBED8
     .4byte lbl_801DBEA8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23002:
 	.incbin "baserom.dol", 0x3E8A70, 0x4
 $$23209:

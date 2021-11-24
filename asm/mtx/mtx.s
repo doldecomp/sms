@@ -650,7 +650,8 @@ C_MTXLightOrtho:
 Unit01:
 	.incbin "baserom.dol", 0x3E3260, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$294:
 	.incbin "baserom.dol", 0x3E4798, 0x4
 $$295:

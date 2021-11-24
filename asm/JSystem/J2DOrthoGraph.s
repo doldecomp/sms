@@ -438,7 +438,8 @@ __vt__13J2DOrthoGraph:
   .4byte setLookat__13J2DOrthoGraphFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2123:
 	.incbin "baserom.dol", 0x3E3FB0, 0x4
 $$2124:

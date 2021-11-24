@@ -6674,7 +6674,8 @@ lbl_8011CA5C:
 /* 8011CA74 001199B4  38 21 00 40 */	addi r1, r1, 0x40
 /* 8011CA78 001199B8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2514:
 	.incbin "baserom.dol", 0x377230, 0x1C
 $$2515:
@@ -7043,7 +7044,8 @@ __vt__10TSpcBinary:
   .4byte initUserBuiltin__10TSpcBinaryFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21662:
   .4byte 0
   .4byte 0

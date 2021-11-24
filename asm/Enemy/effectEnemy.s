@@ -751,7 +751,8 @@ $$232$$2__dt__12TEffectEnemyFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_effectEnemy_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22971:
 	.incbin "baserom.dol", 0x39E620, 0xC
 $$23012:
@@ -897,7 +898,8 @@ __vt__19TEffectEnemyManager:
   .4byte changeDrawBuffer__13TEnemyManagerFUl
   .4byte initSetEnemies__19TEffectEnemyManagerFv
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22891:
 	.incbin "baserom.dol", 0x3EB868, 0x8
 

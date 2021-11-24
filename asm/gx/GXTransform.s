@@ -590,7 +590,8 @@ lbl_800ADBE8:
 /* 800ADBF0 000AAB30  B0 03 00 02 */	sth r0, 2(r3)
 /* 800ADBF4 000AAB34  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$214:
   .4byte 0
 $$215:

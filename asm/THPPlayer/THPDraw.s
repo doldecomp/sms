@@ -516,7 +516,8 @@ THPGXRestore:
 /* 800BE524 000BB464  7C 08 03 A6 */	mtlr r0
 /* 800BE528 000BB468  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$222:
 	.incbin "baserom.dol", 0x3E48F0, 0x4
 lbl_8040C054:

@@ -1698,7 +1698,8 @@ lbl_801F40B0:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_PollutionLayer_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22580:
 	.incbin "baserom.dol", 0x38FC40, 0x28
 $$22687:
@@ -1846,7 +1847,8 @@ mAlpha__19TPollutionLayerWave:
 mEffectTime__15TPollutionLayer:
 	.incbin "baserom.dol", 0x3E3838, 0x8
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22368:
   .4byte 0
 $$22548:

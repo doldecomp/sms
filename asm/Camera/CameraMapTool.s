@@ -130,7 +130,8 @@ __vt__14TCameraMapTool:
   .4byte loadAfter__Q26JDrama8TNameRefFv
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21652:
 	.incbin "baserom.dol", 0x3EC4F8, 0x4
 $$21653:

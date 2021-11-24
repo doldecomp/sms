@@ -1221,7 +1221,8 @@ __vt__Q26JDrama7TCamera:
   .4byte JSGGetProjectionFar__Q26JDrama7TCameraCFv
   .4byte JSGSetProjectionFar__Q26JDrama7TCameraFf
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2877:
   .4byte 0
 $$2878:

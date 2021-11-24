@@ -96,7 +96,8 @@ __ct__8TCoord2DFv:
 /* 80200818 001FD758  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8020081C 001FD75C  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21644:
   .4byte 0
   .4byte 0

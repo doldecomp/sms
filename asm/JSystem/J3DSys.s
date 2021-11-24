@@ -743,7 +743,8 @@ __sinit_J3DSys_cpp:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_J3DSys_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2838:
 	.incbin "baserom.dol", 0x36DC38, 0x10
 $$2839:

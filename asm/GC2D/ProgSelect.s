@@ -380,7 +380,8 @@ lbl_8023E2DC:
 /* 8023E2F4 0023B234  38 21 00 98 */	addi r1, r1, 0x98
 /* 8023E2F8 0023B238  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21685:
 	.incbin "baserom.dol", 0x391450, 0x74
 $$21686:
@@ -402,7 +403,8 @@ __vt__11TProgSelect:
   .4byte perform__11TProgSelectFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21684:
 	.incbin "baserom.dol", 0x3E9748, 0x8
 $$21688:

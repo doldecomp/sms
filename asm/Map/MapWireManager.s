@@ -1176,7 +1176,8 @@ $$232$$2__dt__13TMapWireActorFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MapWireManager_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22537:
 	.incbin "baserom.dol", 0x38F7D0, 0x10
 $$22539:
@@ -1248,7 +1249,8 @@ mCommonAttackRadius__13TMapWireActor:
 mCommonAttackHeight__13TMapWireActor:
 	.incbin "baserom.dol", 0x3E3804, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22393:
 	.incbin "baserom.dol", 0x3E8CF8, 0x4
 $$22538:

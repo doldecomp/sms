@@ -5780,7 +5780,8 @@ lbl_80141840:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarioSpecial_cpp
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23400:
   .4byte 0
 $$23401:

@@ -203,7 +203,8 @@ lbl_80086834:
 /* 80086840 00083780  7C 08 03 A6 */	mtlr r0
 /* 80086844 00083784  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2182:
 	.incbin "baserom.dol", 0x3E4688, 0x8
 $$2183:

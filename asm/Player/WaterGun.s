@@ -5527,7 +5527,8 @@ lbl_8014D368:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_WaterGun_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -5856,7 +5857,8 @@ __vt__11TNozzleBase:
   .4byte emit__11TNozzleBaseFi
   .4byte animation__11TNozzleBaseFi
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23267:
   .4byte 0
 $$23268:

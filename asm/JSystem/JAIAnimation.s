@@ -748,7 +748,8 @@ __vt__13JAIAnimeSound:
   .4byte startAnimSound__13JAIAnimeSoundFPvUlPP8JAISoundP8JAIActorUc
   .4byte setSpeedModifySound__13JAIAnimeSoundFP8JAISoundP22JAIAnimeFrameSoundDataf
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2461:
   .4byte 0
 $$2622:

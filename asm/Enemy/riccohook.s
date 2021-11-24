@@ -790,7 +790,8 @@ $$232$$2__dt__10TRiccoHookFv:
 /* 802DA4F0 002D7430  38 63 FF E0 */	addi r3, r3, -32
 /* 802DA4F4 002D7434  4B FF FE EC */	b __dt__10TRiccoHookFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -979,7 +980,8 @@ __vt__9THookTake:
   .4byte getRadiusAtY__9THookTakeCFf
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22294:
 	.incbin "baserom.dol", 0x3EAE08, 0x4
 $$22295:

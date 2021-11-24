@@ -319,7 +319,8 @@ Dsp_Running_Start__Fv:
 /* 800825E4 0007F524  98 0D 92 78 */	stb r0, DSP_prior_yield@sda21(r13)
 /* 800825E8 0007F528  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2440:
 	.incbin "baserom.dol", 0x36E4B0, 0x10
 $$2441:

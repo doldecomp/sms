@@ -884,7 +884,8 @@ cDol_HalfRad__8MSHandle:
 cDol_FullRad__8MSHandle:
 	.incbin "baserom.dol", 0x3E3524, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21952:
 	.incbin "baserom.dol", 0x3E69A8, 0x4
 $$21953:

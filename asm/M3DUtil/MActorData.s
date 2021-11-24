@@ -1566,7 +1566,8 @@ lbl_800D87EC:
 /* 800D8810 000D5750  7C 08 03 A6 */	mtlr r0
 /* 800D8814 000D5754  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22019:
 	.incbin "baserom.dol", 0x3E4C48, 0x8
 $$22020:

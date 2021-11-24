@@ -104,7 +104,8 @@ __vt__10TBlendPane:
   .4byte update__10TBlendPaneFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21505:
 	.incbin "baserom.dol", 0x3E9668, 0x4
 $$21507:

@@ -5912,7 +5912,8 @@ $$232$$2__dt__29TBossMantaAdditionalCollisionFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_bossManta_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -6235,7 +6236,8 @@ __vt__15TNerveMantaMove:
   .4byte __dt__15TNerveMantaMoveFv
   .4byte execute__15TNerveMantaMoveCFP24TSpineBase$$010TLiveActor$$1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23125:
 	.incbin "baserom.dol", 0x3EB9E8, 0x4
 lbl_8041314C:

@@ -329,7 +329,8 @@ dump__10JKRStdHeapFv:
 /* 8000DFB4 0000AEF4  7C 08 03 A6 */	mtlr r0
 /* 8000DFB8 0000AEF8  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21545:
 	.incbin "baserom.dol", 0x36D6E8, 0x2C
 $$21558:

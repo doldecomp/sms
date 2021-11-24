@@ -269,7 +269,8 @@ lbl_80086EDC:
 /* 80086EE4 00083E24  7C 08 03 A6 */	mtlr r0
 /* 80086EE8 00083E28  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 atan_coeff$96:
 	.incbin "baserom.dol", 0x36E9C8, 0x1C
 onep_one_over_xisqr_hi$97:
@@ -285,7 +286,8 @@ one_over_xi_hi$101:
 one_over_xi_lo$102:
 	.incbin "baserom.dol", 0x36EA64, 0x1C
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2156:
 	.incbin "baserom.dol", 0x3E4710, 0x4
 $$2157:

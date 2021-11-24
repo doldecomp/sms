@@ -170,7 +170,8 @@ getParamMaxVolumeDistance__18JAIGlobalParameterFv:
 /* 80054C48 00051B88  C0 2D 81 54 */	lfs f1, maxVolumeDistance__18JAIGlobalParameter@sda21(r13)
 /* 80054C4C 00051B8C  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2530:
 	.incbin "baserom.dol", 0x36E1F8, 0x14
 $$2531:
@@ -319,7 +320,8 @@ seDistanceWaitMax__18JAIGlobalParameter:
 seDistancepitchMax__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3194, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2534:
 	.incbin "baserom.dol", 0x3E4240, 0x8
 $$2535:

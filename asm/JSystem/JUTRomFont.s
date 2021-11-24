@@ -598,7 +598,8 @@ getFontType__10JUTRomFontCFv:
 /* 8003C870 000397B0  80 63 00 00 */	lwz r3, 0(r3)
 /* 8003C874 000397B4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2258:
 	.incbin "baserom.dol", 0x36DEB8, 0x18
 $$2259:
@@ -631,7 +632,8 @@ __vt__10JUTRomFont:
   .4byte getResFont__10JUTRomFontCFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2294:
   .4byte 0
 $$2295:

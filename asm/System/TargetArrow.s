@@ -98,7 +98,8 @@ lbl_80111030:
 /* 8011103C 0010DF7C  7C 08 03 A6 */	mtlr r0
 /* 80111040 0010DF80  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0

@@ -9,7 +9,8 @@ SMSGetNpcInitAnmData__FUl:
 /* 8017AA2C 0017796C  7C 60 1A 14 */	add r3, r0, r3
 /* 8017AA30 00177970  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0

@@ -93,6 +93,7 @@ __vt__13TSMSSmplChara:
   .4byte getRes__13TSMSSmplCharaCFPCc
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21540:
 	.incbin "baserom.dol", 0x3E5468, 0x8

@@ -637,7 +637,8 @@ __vt__12TBGCheckList:
   .4byte 0
   .4byte setPreNode__12TBGCheckListFP12TBGCheckList
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22183:
   .4byte 0
 $$22184:

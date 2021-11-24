@@ -205,7 +205,8 @@ lbl_8004F9B8:
 /* 8004F9C4 0004C904  7C 08 03 A6 */	mtlr r0
 /* 8004F9C8 0004C908  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2443:
   .4byte 0
   .4byte 0

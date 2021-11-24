@@ -1610,7 +1610,8 @@ lbl_80051140:
 /* 80051198 0004E0D8  7C 08 03 A6 */	mtlr r0
 /* 8005119C 0004E0DC  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2587:
 	.incbin "baserom.dol", 0x3E41A0, 0x4
 $$2588:

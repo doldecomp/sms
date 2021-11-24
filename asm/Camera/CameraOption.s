@@ -374,7 +374,8 @@ lbl_80361E34:
 /* 80361E80 0035EDC0  7C 08 03 A6 */	mtlr r0
 /* 80361E84 0035EDC4  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -388,7 +389,8 @@ $$21650:
 cLoadCamName:
   .4byte $$21650
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21704:
 	.incbin "baserom.dol", 0x3EC570, 0x4
 $$21705:

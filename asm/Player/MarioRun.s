@@ -5703,7 +5703,8 @@ lbl_8013C510:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MarioRun_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -5748,7 +5749,8 @@ param$3407:
 param$3410:
 	.incbin "baserom.dol", 0x3B380C, 0x14
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$23616:
 	.incbin "baserom.dol", 0x3E5A90, 0x4
 $$23617:

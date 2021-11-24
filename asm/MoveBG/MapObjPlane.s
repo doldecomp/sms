@@ -1589,7 +1589,8 @@ $$232$$2__dt__10TSandPlaneFv:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MapObjPlane_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22634:
 	.incbin "baserom.dol", 0x38C548, 0x20
 $$22635:
@@ -1807,7 +1808,8 @@ mTexScale__12TMapObjPlane:
 mAmbColor__12TMapObjPlane:
 	.incbin "baserom.dol", 0x3E36D4, 0x4
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22490:
 	.incbin "baserom.dol", 0x3E83A8, 0x4
 $$22493:

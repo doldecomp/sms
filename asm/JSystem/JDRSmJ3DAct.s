@@ -445,7 +445,8 @@ $$232$$2__dt__Q26JDrama9TSmJ3DActFv:
 /* 80046810 00043750  38 63 FF E0 */	addi r3, r3, -32
 /* 80046814 00043754  4B FF FF 44 */	b __dt__Q26JDrama9TSmJ3DActFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21143:
 	.incbin "baserom.dol", 0x36E100, 0x10
 $$21144:
@@ -501,7 +502,8 @@ __vt__12J3DFrameCtrl:
   .4byte __dt__12J3DFrameCtrlFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21562:
   .4byte 0
 $$21563:

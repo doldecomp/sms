@@ -1145,7 +1145,8 @@ $$216$$2__dt__Q26JDrama9TAmbColorFv:
 /* 80044684 000415C4  38 63 FF F0 */	addi r3, r3, -16
 /* 80044688 000415C8  4B FF FB 80 */	b __dt__Q26JDrama9TAmbColorFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$2632:
 	.incbin "baserom.dol", 0x36DF38, 0xC
 $$2753:
@@ -1295,7 +1296,8 @@ __vt__Q26JDrama6TLight:
   .4byte JSGGetColor__Q26JDrama6TLightCFv
   .4byte JSGSetColor__Q26JDrama6TLightF8_GXColor
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2633:
   .4byte 0
 $$2634:

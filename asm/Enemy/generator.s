@@ -507,7 +507,8 @@ $$232$$2__dt__17TOneShotGeneratorFv:
 /* 802A299C 0029F8DC  38 63 FF E0 */	addi r3, r3, -32
 /* 802A29A0 0029F8E0  4B FF F8 DC */	b __dt__17TOneShotGeneratorFv
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$22233:
 	.incbin "baserom.dol", 0x396A50, 0x10
 
@@ -567,7 +568,8 @@ __vt__10TGenerator:
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
   .4byte perform__10TGeneratorFUlPQ26JDrama9TGraphics
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22196:
   .4byte 0
 $$22197:

@@ -239,7 +239,8 @@ __vt__9THitActor:
   .4byte receiveMessage__9THitActorFP9THitActorUl
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21618:
   .4byte 0
 $$21619:

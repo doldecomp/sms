@@ -2806,7 +2806,8 @@ __vt__12JPABaseField:
   .4byte affect__12JPABaseFieldFP11JPAParticle
   .4byte checkMaxDistance__12JPABaseFieldFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21671:
   .4byte 0
 $$21672:

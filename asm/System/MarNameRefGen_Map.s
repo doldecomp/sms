@@ -235,7 +235,8 @@ lbl_80100EC4:
 /* 80100ED4 000FDE14  38 21 00 28 */	addi r1, r1, 0x28
 /* 80100ED8 000FDE18  4E 80 00 20 */	blr 
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -293,7 +294,8 @@ cSunVolumeName:
 cSunsetVolumeName:
   .4byte $$21957
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22088:
 	.incbin "baserom.dol", 0x3E50C0, 0x4
 $$22089:

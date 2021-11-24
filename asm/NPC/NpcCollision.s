@@ -492,7 +492,8 @@ lbl_8017C224:
 /* 8017C234 00179174  38 21 00 18 */	addi r1, r1, 0x18
 /* 8017C238 00179178  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22319:
 	.incbin "baserom.dol", 0x3E66D8, 0x4
 $$22320:

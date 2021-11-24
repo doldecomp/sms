@@ -368,7 +368,8 @@ __ct__16TMultiPlayerDataFv:
 /* 8036063C 0035D57C  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80360640 0035D580  4E 80 00 20 */	blr 
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$21758:
   .4byte 0
 $$21759:

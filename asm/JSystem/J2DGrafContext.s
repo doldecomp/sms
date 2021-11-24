@@ -518,7 +518,8 @@ __vt__14J2DGrafContext:
   .4byte setLookat__14J2DGrafContextFv
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2166:
   .4byte 0
 $$2167:

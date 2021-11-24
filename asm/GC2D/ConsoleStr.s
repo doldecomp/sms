@@ -2931,7 +2931,8 @@ __sinit_ConsoleStr_cpp:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_ConsoleStr_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21490:
   .4byte 0
   .4byte 0
@@ -2976,7 +2977,8 @@ __vt__11TConsoleStr:
   .4byte perform__11TConsoleStrFUlPQ26JDrama9TGraphics
   .4byte 0
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 scShineTableAirport:
 	.incbin "baserom.dol", 0x3E9468, 0x4
 scShineTableBianco:

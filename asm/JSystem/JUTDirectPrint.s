@@ -416,7 +416,8 @@ sFontData__14JUTDirectPrint:
 sFontData2__14JUTDirectPrint:
 	.incbin "baserom.dol", 0x3A5A30, 0x138
 
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$2192:
 	.incbin "baserom.dol", 0x3E3D88, 0x8
 

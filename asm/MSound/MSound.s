@@ -3626,7 +3626,8 @@ lbl_8017FA58:
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
   .4byte __sinit_MSound_cpp
 
-.section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
+.section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
+.balign 8
 $$21912:
   .4byte 0
   .4byte 0
@@ -3705,7 +3706,8 @@ $$22858:
     .4byte lbl_8017D038
     .4byte lbl_8017D038
     .4byte lbl_8017CFEC
-.section .sdata2, "wa"  # 0x8040B460 - 0x80414020
+.section .sdata2, "a"  # 0x8040B460 - 0x80414020
+.balign 8
 $$22462:
   .4byte 0
 $$22520:
