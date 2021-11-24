@@ -17,7 +17,11 @@ class THitActor {
     public:
         char _000[0x7C];
         u32 _07C; // status or action?
-        char _080[0x58];
+        char _080[0x2C];
+
+        void (*_0AC)(const JGeometry::TVec3<float>&);
+
+        char _0B0[0x28];
 
         void *_0D8; // wall pointer
         void *_0DC; // ceiling pointer
