@@ -126,7 +126,8 @@ lbl_80088050:
 
 .section .rodata, "wa"  # 0x8036FFA0 - 0x803A8380
 $$240:
-	.incbin "baserom.dol", 0x36F1F0, 0x20
+	.asciz "MetroTRK for Dolphin v0.8"
+.balign 8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global gTRKBigEndian
