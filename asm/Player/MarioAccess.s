@@ -1,64 +1,6 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global SMS_IsMarioRoofing__Fv
-SMS_IsMarioRoofing__Fv:
-/* 80152934 0014F874  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 80152938 0014F878  80 03 00 7C */	lwz r0, 0x7c(r3)
-/* 8015293C 0014F87C  54 00 05 FE */	clrlwi r0, r0, 0x17
-/* 80152940 0014F880  28 00 01 47 */	cmplwi r0, 0x147
-/* 80152944 0014F884  41 80 00 14 */	blt lbl_80152958
-/* 80152948 0014F888  28 00 01 4A */	cmplwi r0, 0x14a
-/* 8015294C 0014F88C  41 81 00 0C */	bgt lbl_80152958
-/* 80152950 0014F890  38 60 00 01 */	li r3, 1
-/* 80152954 0014F894  4E 80 00 20 */	blr 
-lbl_80152958:
-/* 80152958 0014F898  38 60 00 00 */	li r3, 0
-/* 8015295C 0014F89C  4E 80 00 20 */	blr 
-
-.global SMS_IsMarioFencing__Fv
-SMS_IsMarioFencing__Fv:
-/* 80152960 0014F8A0  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 80152964 0014F8A4  80 03 00 7C */	lwz r0, 0x7c(r3)
-/* 80152968 0014F8A8  54 00 05 FE */	clrlwi r0, r0, 0x17
-/* 8015296C 0014F8AC  28 00 01 68 */	cmplwi r0, 0x168
-/* 80152970 0014F8B0  41 80 00 14 */	blt lbl_80152984
-/* 80152974 0014F8B4  28 00 01 6C */	cmplwi r0, 0x16c
-/* 80152978 0014F8B8  41 81 00 0C */	bgt lbl_80152984
-/* 8015297C 0014F8BC  38 60 00 01 */	li r3, 1
-/* 80152980 0014F8C0  4E 80 00 20 */	blr 
-lbl_80152984:
-/* 80152984 0014F8C4  38 60 00 00 */	li r3, 0
-/* 80152988 0014F8C8  4E 80 00 20 */	blr 
-
-.global SMS_GetMarioStatus__FP9THitActor
-SMS_GetMarioStatus__FP9THitActor:
-/* 8015298C 0014F8CC  80 63 00 7C */	lwz r3, 0x7c(r3)
-/* 80152990 0014F8D0  4E 80 00 20 */	blr 
-
-.global SMS_GetMarioRfPlane__Fv
-SMS_GetMarioRfPlane__Fv:
-/* 80152994 0014F8D4  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 80152998 0014F8D8  80 63 00 DC */	lwz r3, 0xdc(r3)
-/* 8015299C 0014F8DC  4E 80 00 20 */	blr 
-
-.global SMS_GetMarioWlPlane__Fv
-SMS_GetMarioWlPlane__Fv:
-/* 801529A0 0014F8E0  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 801529A4 0014F8E4  80 63 00 D8 */	lwz r3, 0xd8(r3)
-/* 801529A8 0014F8E8  4E 80 00 20 */	blr 
-
-.global SMS_GetMarioGrPlane__Fv
-SMS_GetMarioGrPlane__Fv:
-/* 801529AC 0014F8EC  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 801529B0 0014F8F0  80 63 00 E0 */	lwz r3, 0xe0(r3)
-/* 801529B4 0014F8F4  4E 80 00 20 */	blr 
-
-.global SMS_GetMarioStatus__Fv
-SMS_GetMarioStatus__Fv:
-/* 801529B8 0014F8F8  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 801529BC 0014F8FC  80 63 00 7C */	lwz r3, 0x7c(r3)
-/* 801529C0 0014F900  4E 80 00 20 */	blr 
 
 .global SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1
 SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1:
