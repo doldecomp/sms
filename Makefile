@@ -123,7 +123,7 @@ CC      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwcceppc.exe
 LD      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwldeppc.exe
 ELF2DOL := tools/elf2dol
 SHA1SUM := sha1sum
-PYTHON  := python
+PYTHON  := python3
 POSTPROC := tools/postprocess.py
 
 # Options
@@ -164,7 +164,7 @@ $(LDSCRIPT): ldscript.lcf
 $(DOL): $(ELF) | tools
 	$(ELF2DOL) $< $@
 	$(SHA1SUM) -c $(TARGET).sha1
-
+	$(PYTHON) calcprogress.py $@
 clean:
 	rm -fdr build
 	$(MAKE) -C tools clean

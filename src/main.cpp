@@ -4,8 +4,9 @@
 // BSS
 TApplication gpApplication;
 
-void main(void) {
-    gpApplication.initialize();
-    gpApplication.proc();
-    gpApplication.finalize();
+void main(void)
+{
+	gpApplication.initialize();
+	gpApplication.proc();
+	gpApplication.finalize();
 }
