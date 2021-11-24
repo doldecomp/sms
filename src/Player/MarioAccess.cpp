@@ -1,6 +1,7 @@
 #include <dolphin.h>
 
 #include "Player/MarioMain.hpp"
+#include "JSystem/JGeometry.hpp"
 
 bool SMS_IsMarioRoofing(void) {
     bool ret;
@@ -50,3 +51,19 @@ void *SMS_GetMarioGrPlane(void) {
 u32 SMS_GetMarioStatus(void) {
     return gpMarioOriginal->_07C;
 }
+
+u32 SMS_WindMoveMario(const JGeometry::TVec3<float>& vec) {
+    gpMarioOriginal->windMove(vec);
+}
+
+u32 SMS_FlowMoveMario(const JGeometry::TVec3<float>& vec) {
+    gpMarioOriginal->flowMove(vec);
+}
+
+u32 SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f) {
+    gpMarioOriginal->warpRequest(vec, f);
+}
+
+
+
+

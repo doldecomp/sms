@@ -2,44 +2,44 @@
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
 
-.global SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1
-SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1:
-/* 801529C4 0014F904  7C 08 02 A6 */	mflr r0
-/* 801529C8 0014F908  7C 64 1B 78 */	mr r4, r3
-/* 801529CC 0014F90C  90 01 00 04 */	stw r0, 4(r1)
-/* 801529D0 0014F910  94 21 FF F8 */	stwu r1, -8(r1)
-/* 801529D4 0014F914  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 801529D8 0014F918  4B FE 23 29 */	bl windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
-/* 801529DC 0014F91C  80 01 00 0C */	lwz r0, 0xc(r1)
-/* 801529E0 0014F920  38 21 00 08 */	addi r1, r1, 8
-/* 801529E4 0014F924  7C 08 03 A6 */	mtlr r0
-/* 801529E8 0014F928  4E 80 00 20 */	blr 
+# .global SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1
+# SMS_WindMoveMario__FRCQ29JGeometry8TVec3$$0f$$1:
+# /* 801529C4 0014F904  7C 08 02 A6 */	mflr r0
+# /* 801529C8 0014F908  7C 64 1B 78 */	mr r4, r3
+# /* 801529CC 0014F90C  90 01 00 04 */	stw r0, 4(r1)
+# /* 801529D0 0014F910  94 21 FF F8 */	stwu r1, -8(r1)
+# /* 801529D4 0014F914  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
+# /* 801529D8 0014F918  4B FE 23 29 */	bl windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
+# /* 801529DC 0014F91C  80 01 00 0C */	lwz r0, 0xc(r1)
+# /* 801529E0 0014F920  38 21 00 08 */	addi r1, r1, 8
+# /* 801529E4 0014F924  7C 08 03 A6 */	mtlr r0
+# /* 801529E8 0014F928  4E 80 00 20 */	blr 
 
-.global SMS_FlowMoveMario__FRCQ29JGeometry8TVec3$$0f$$1
-SMS_FlowMoveMario__FRCQ29JGeometry8TVec3$$0f$$1:
-/* 801529EC 0014F92C  7C 08 02 A6 */	mflr r0
-/* 801529F0 0014F930  7C 64 1B 78 */	mr r4, r3
-/* 801529F4 0014F934  90 01 00 04 */	stw r0, 4(r1)
-/* 801529F8 0014F938  94 21 FF F8 */	stwu r1, -8(r1)
-/* 801529FC 0014F93C  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 80152A00 0014F940  4B FE 23 35 */	bl flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
-/* 80152A04 0014F944  80 01 00 0C */	lwz r0, 0xc(r1)
-/* 80152A08 0014F948  38 21 00 08 */	addi r1, r1, 8
-/* 80152A0C 0014F94C  7C 08 03 A6 */	mtlr r0
-/* 80152A10 0014F950  4E 80 00 20 */	blr 
+# .global SMS_FlowMoveMario__FRCQ29JGeometry8TVec3$$0f$$1
+# SMS_FlowMoveMario__FRCQ29JGeometry8TVec3$$0f$$1:
+# /* 801529EC 0014F92C  7C 08 02 A6 */	mflr r0
+# /* 801529F0 0014F930  7C 64 1B 78 */	mr r4, r3
+# /* 801529F4 0014F934  90 01 00 04 */	stw r0, 4(r1)
+# /* 801529F8 0014F938  94 21 FF F8 */	stwu r1, -8(r1)
+# /* 801529FC 0014F93C  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
+# /* 80152A00 0014F940  4B FE 23 35 */	bl flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
+# /* 80152A04 0014F944  80 01 00 0C */	lwz r0, 0xc(r1)
+# /* 80152A08 0014F948  38 21 00 08 */	addi r1, r1, 8
+# /* 80152A0C 0014F94C  7C 08 03 A6 */	mtlr r0
+# /* 80152A10 0014F950  4E 80 00 20 */	blr 
 
-.global SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f
-SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f:
-/* 80152A14 0014F954  7C 08 02 A6 */	mflr r0
-/* 80152A18 0014F958  7C 64 1B 78 */	mr r4, r3
-/* 80152A1C 0014F95C  90 01 00 04 */	stw r0, 4(r1)
-/* 80152A20 0014F960  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80152A24 0014F964  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 80152A28 0014F968  4B FE 23 65 */	bl warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
-/* 80152A2C 0014F96C  80 01 00 0C */	lwz r0, 0xc(r1)
-/* 80152A30 0014F970  38 21 00 08 */	addi r1, r1, 8
-/* 80152A34 0014F974  7C 08 03 A6 */	mtlr r0
-/* 80152A38 0014F978  4E 80 00 20 */	blr 
+# .global SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f
+# SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f:
+# /* 80152A14 0014F954  7C 08 02 A6 */	mflr r0
+# /* 80152A18 0014F958  7C 64 1B 78 */	mr r4, r3
+# /* 80152A1C 0014F95C  90 01 00 04 */	stw r0, 4(r1)
+# /* 80152A20 0014F960  94 21 FF F8 */	stwu r1, -8(r1)
+# /* 80152A24 0014F964  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
+# /* 80152A28 0014F968  4B FE 23 65 */	bl warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
+# /* 80152A2C 0014F96C  80 01 00 0C */	lwz r0, 0xc(r1)
+# /* 80152A30 0014F970  38 21 00 08 */	addi r1, r1, 8
+# /* 80152A34 0014F974  7C 08 03 A6 */	mtlr r0
+# /* 80152A38 0014F978  4E 80 00 20 */	blr 
 
 .global SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
 SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1:

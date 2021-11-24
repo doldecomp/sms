@@ -238,7 +238,7 @@ watch__19TMapEventSirenaSinkFv:
 /* 801F2520 001EF460  4B EF 59 81 */	bl setBool__12TFlagManagerFbUl
 /* 801F2524 001EF464  38 7E 00 74 */	addi r3, r30, 0x74
 /* 801F2528 001EF468  C0 3E 00 80 */	lfs f1, 0x80(r30)
-/* 801F252C 001EF46C  4B F6 04 E9 */	bl SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 801F252C 001EF46C  4B F6 04 E9 */	bl "SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3<f>f"
 /* 801F2530 001EF470  80 AD 9A 10 */	lwz r5, gpMapObjManager@sda21(r13)
 /* 801F2534 001EF474  38 80 00 68 */	li r4, 0x68
 /* 801F2538 001EF478  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)

@@ -8893,6 +8893,8 @@ lbl_80134CE8:
 
 .global windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
 windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
+.global "windMove__6TMarioFRCQ29JGeometry8TVec3<f>"
+"windMove__6TMarioFRCQ29JGeometry8TVec3<f>":
 /* 80134D00 00131C40  C0 23 00 10 */	lfs f1, 0x10(r3)
 /* 80134D04 00131C44  C0 04 00 00 */	lfs f0, 0(r4)
 /* 80134D08 00131C48  EC 01 00 2A */	fadds f0, f1, f0
@@ -8909,6 +8911,8 @@ windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
 
 .global flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
 flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
+.global "flowMove__6TMarioFRCQ29JGeometry8TVec3<f>"
+"flowMove__6TMarioFRCQ29JGeometry8TVec3<f>":
 /* 80134D34 00131C74  80 03 00 7C */	lwz r0, 0x7c(r3)
 /* 80134D38 00131C78  54 00 04 A5 */	rlwinm. r0, r0, 0, 0x12, 0x12
 /* 80134D3C 00131C7C  41 82 00 0C */	beq lbl_80134D48
@@ -8936,6 +8940,8 @@ lbl_80134D4C:
 
 .global warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
 warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "warpRequest__6TMarioFRCQ29JGeometry8TVec3<f>f"
+"warpRequest__6TMarioFRCQ29JGeometry8TVec3<f>f":
 /* 80134D8C 00131CCC  7C 08 02 A6 */	mflr r0
 /* 80134D90 00131CD0  90 01 00 04 */	stw r0, 4(r1)
 /* 80134D94 00131CD4  94 21 FF 98 */	stwu r1, -0x68(r1)

@@ -2,6 +2,7 @@
 #define MARIOMAIN_HPP
 
 #include <dolphin.h>
+#include "JSystem/JGeometry.hpp"
 
 
 class TMarioOriginal {
@@ -23,8 +24,19 @@ class THitActor {
         void *_0E0; // floor pointer
 };
 
+// TODO: find a spot for this
+class TMario : public THitActor{
+    public:
+        void windMove(const JGeometry::TVec3<float>&);
+        void flowMove(const JGeometry::TVec3<float>&);
+        void warpRequest(const JGeometry::TVec3<float>&, float);
+        void onYoshi() const;
+        void throwMario(const JGeometry::TVec3<float>&);
 
-extern class THitActor *gpMarioOriginal;
+};
+
+
+extern class TMario *gpMarioOriginal;
 
 
 #endif
