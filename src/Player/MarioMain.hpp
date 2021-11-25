@@ -80,7 +80,6 @@ class TMario : public TTakeActor {
         void *floor; // 0xE0
         void *waterFloor; // 0xE4
 
-        // floor pos? (used by SMS_IsMarioTouchGround4cm to compare with Mario->position.y)
         JGeometry::TVec3<f32> floorPosition; // 0xE8
 
         u32 _0F4;
