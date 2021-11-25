@@ -15,7 +15,7 @@ u32 *gpMarioFlag;
 f32 *gpMarioThrowPower;
 void **gpMarioGroundPlane; // TODO: TBGCheckData**
 
-bool SMS_IsMarioRoofing(void) {
+bool SMS_IsMarioRoofing() {
     bool ret;
 
     u32 val = gpMarioOriginal->status & 0x1FF;
@@ -29,7 +29,7 @@ bool SMS_IsMarioRoofing(void) {
     return ret;
 }
 
-bool SMS_IsMarioFencing(void) {
+bool SMS_IsMarioFencing() {
     bool ret;
 
     u32 val = gpMarioOriginal->status & 0x1FF;
@@ -47,19 +47,19 @@ u32 SMS_GetMarioStatus(THitActor *actor) {
     return ((TMario*) actor)->status;
 }
 
-void *SMS_GetMarioRfPlane(void) {
+void *SMS_GetMarioRfPlane() {
     return gpMarioOriginal->ceil;
 }
 
-void *SMS_GetMarioWlPlane(void) {
+void *SMS_GetMarioWlPlane() {
     return gpMarioOriginal->wall;
 }
 
-void *SMS_GetMarioGrPlane(void) {
+void *SMS_GetMarioGrPlane() {
     return gpMarioOriginal->floor;
 }
 
-u32 SMS_GetMarioStatus(void) {
+u32 SMS_GetMarioStatus() {
     return gpMarioOriginal->status;
 }
 
