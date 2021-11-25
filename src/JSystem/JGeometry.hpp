@@ -3,6 +3,7 @@
 
 namespace JGeometry {
 	template <typename T> class TVec3 {
+	public:
 		TVec3();
 		TVec3(const TVec3&);
 

@@ -4018,7 +4018,7 @@ lbl_803153DC:
 /* 80315420 00312360  4B E3 D7 95 */	bl SMS_SendMessageToMario__FP9THitActorUl
 /* 80315424 00312364  38 61 00 90 */	addi r3, r1, 0x90
 /* 80315428 00312368  C0 22 FB 0C */	lfs f1, $$25129@sda21(r2)
-/* 8031542C 0031236C  4B E3 D7 61 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 8031542C 0031236C  4B E3 D7 61 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80315430 00312370  80 7B 00 34 */	lwz r3, 0x34(r27)
 /* 80315434 00312374  38 9C 00 05 */	addi r4, r28, 5
 /* 80315438 00312378  4B F7 69 A5 */	bl showMessage__10TBossGessoFUl
@@ -4083,7 +4083,7 @@ lbl_803154D4:
 /* 80315518 00312458  4B E3 D6 9D */	bl SMS_SendMessageToMario__FP9THitActorUl
 /* 8031551C 0031245C  38 61 00 7C */	addi r3, r1, 0x7c
 /* 80315520 00312460  C0 22 FB 0C */	lfs f1, $$25129@sda21(r2)
-/* 80315524 00312464  4B E3 D6 69 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80315524 00312464  4B E3 D6 69 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80315528 00312468  80 7B 00 34 */	lwz r3, 0x34(r27)
 /* 8031552C 0031246C  38 9C 00 05 */	addi r4, r28, 5
 /* 80315530 00312470  4B F7 68 AD */	bl showMessage__10TBossGessoFUl
@@ -4499,7 +4499,7 @@ lbl_80315ADC:
 /* 80315B20 00312A60  4B E3 D0 95 */	bl SMS_SendMessageToMario__FP9THitActorUl
 /* 80315B24 00312A64  38 61 01 60 */	addi r3, r1, 0x160
 /* 80315B28 00312A68  C0 22 FB 0C */	lfs f1, $$25129@sda21(r2)
-/* 80315B2C 00312A6C  4B E3 D0 61 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80315B2C 00312A6C  4B E3 D0 61 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80315B30 00312A70  80 7B 00 34 */	lwz r3, 0x34(r27)
 /* 80315B34 00312A74  38 9C 00 05 */	addi r4, r28, 5
 /* 80315B38 00312A78  4B F7 62 A5 */	bl showMessage__10TBossGessoFUl
@@ -4564,7 +4564,7 @@ lbl_80315BD4:
 /* 80315C18 00312B58  4B E3 CF 9D */	bl SMS_SendMessageToMario__FP9THitActorUl
 /* 80315C1C 00312B5C  38 61 01 4C */	addi r3, r1, 0x14c
 /* 80315C20 00312B60  C0 22 FB 0C */	lfs f1, $$25129@sda21(r2)
-/* 80315C24 00312B64  4B E3 CF 69 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80315C24 00312B64  4B E3 CF 69 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80315C28 00312B68  80 7B 00 34 */	lwz r3, 0x34(r27)
 /* 80315C2C 00312B6C  38 9C 00 05 */	addi r4, r28, 5
 /* 80315C30 00312B70  4B F7 61 AD */	bl showMessage__10TBossGessoFUl

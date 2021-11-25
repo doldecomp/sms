@@ -4329,7 +4329,7 @@ lbl_801AA88C:
 /* 801AA900 001A7840  C0 1E 01 54 */	lfs f0, 0x154(r30)
 /* 801AA904 001A7844  EC 00 F8 28 */	fsubs f0, f0, f31
 /* 801AA908 001A7848  EC 21 00 32 */	fmuls f1, f1, f0
-/* 801AA90C 001A784C  4B FA 82 81 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 801AA90C 001A784C  4B FA 82 81 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 lbl_801AA910:
 /* 801AA910 001A7850  7F C3 F3 78 */	mr r3, r30
 /* 801AA914 001A7854  4B FD E7 79 */	bl animIsFinished__11TMapObjBaseCFv

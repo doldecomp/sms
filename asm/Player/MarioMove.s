@@ -7184,8 +7184,8 @@ lbl_801335D4:
 /* 801335E8 00130528  38 21 00 38 */	addi r1, r1, 0x38
 /* 801335EC 0013052C  4E 80 00 20 */	blr 
 
-.global throwMario__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
-throwMario__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "throwMario__6TMarioFRCQ29JGeometry8TVec3<f>f"
+"throwMario__6TMarioFRCQ29JGeometry8TVec3<f>f":
 /* 801335F0 00130530  7C 08 02 A6 */	mflr r0
 /* 801335F4 00130534  90 01 00 04 */	stw r0, 4(r1)
 /* 801335F8 00130538  94 21 FF B8 */	stwu r1, -0x48(r1)
