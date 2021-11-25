@@ -120,8 +120,6 @@ class TMario : public TTakeActor {
         TJumpParams jumpParams; // 0xB00
 };
 
-
 extern TMario *gpMarioOriginal;
-
 
 #endif

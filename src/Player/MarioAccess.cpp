@@ -76,7 +76,6 @@ void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f) {
 }
 
 #pragma push
-
 asm void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec) {
     nofralloc
     /* 80152A3C 0014F97C  7C 08 02 A6 */  mflr r0;
@@ -93,7 +92,6 @@ asm void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec) {
     /* 80152A68 0014F9A8  7C 08 03 A6 */  mtlr r0;
     /* 80152A6C 0014F9AC  4E 80 00 20 */  blr;
 }
-
 #pragma pop
 
 u8 SMS_IsMarioDashing() {
@@ -121,7 +119,6 @@ bool SMS_IsMarioOpeningDoor() {
         return false;
     }
 }
-
 
 #pragma push
 asm u8 SMS_IsMarioOnWire() {
@@ -161,7 +158,6 @@ u8 SMS_IsMarioTouchGround4cm() {
     if (ret) return 1;
     else return 0;
 }
-
 
 void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f) {
     gpMarioOriginal->throwMario(vec, f);

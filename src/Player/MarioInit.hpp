@@ -11,7 +11,6 @@ class TParams {
         TBaseParam *head;
 };
 
-
 // length 0x42C
 class TDeParams : public TParams {
     public:
@@ -70,56 +69,54 @@ class TDeParams : public TParams {
         TParamT<s16> illegalPlaneTime;
 };
 
-
-struct TJumpParams : TParams{ /* PlaceHolder Class Structure */
-    TParamT<f32> gravity;
-    TParamT<f32> spinJumpGravity;
-    TParamT<f32> jumpingMax;
-    TParamT<f32> jumpSpeedBrake;
-    TParamT<f32> jumpAccelControl;
-    TParamT<f32> jumpSlideControl;
-    TParamT<f32> turnJumpForce;
-    TParamT<f32> fenceSpeed;
-    TParamT<f32> fireDownForce;
-    TParamT<f32> fireDownControl;
-    TParamT<f32> fireBackVelocity;
-    TParamT<f32> broadJumpForce;
-    TParamT<f32> broadJumpForceY;
-    TParamT<f32> rotateJumpForceY;
-    TParamT<f32> popUpSpeedY;
-    TParamT<f32> popUpSpeedYMult;
-    TParamT<f32> backJumpForce;
-    TParamT<f32> backJumpForceY;
-    TParamT<f32> hipAttackSpeedY;
-    TParamT<f32> superHipAttackSpeedY;
-    TParamT<s16> jumpCatchRotXSp;
-    TParamT<s16> jumpCatchRotXMax;
-    TParamT<f32> rotBroadEnableV;
-    TParamT<f32> rotBroadJumpForce;
-    TParamT<f32> rotBroadJumpForceY;
-    TParamT<f32> trampolineDec;
-    TParamT<f32> secJumpEnableSp;
-    TParamT<f32> secJumpForce;
-    TParamT<f32> secJumpSpeedMult;
-    TParamT<f32> secJumpXZMult;
-    TParamT<f32> triJumpEnableSp;
-    TParamT<f32> ultraJumpForce;
-    TParamT<f32> ultraJumpSpeedMult;
-    TParamT<f32> ultraJumpXZMult;
-    TParamT<f32> valleyDepth;
-    TParamT<f32> thrownAccel;
-    TParamT<f32> thrownSlide;
-    TParamT<f32> thrownBrake;
-    TParamT<f32> tremblePower;
-    TParamT<f32> trembleAccele;
-    TParamT<f32> trembleBrake;
-    TParamT<s16> trembleTime;
-    TParamT<s16> clashAngle;
-    TParamT<f32> jumpJumpCatchSp;
-    TParamT<f32> getOffYoshiY;
-    TParamT<s16> superHipAttackCt;
+class TJumpParams : TParams {
+    public:
+        TParamT<f32> gravity;
+        TParamT<f32> spinJumpGravity;
+        TParamT<f32> jumpingMax;
+        TParamT<f32> jumpSpeedBrake;
+        TParamT<f32> jumpAccelControl;
+        TParamT<f32> jumpSlideControl;
+        TParamT<f32> turnJumpForce;
+        TParamT<f32> fenceSpeed;
+        TParamT<f32> fireDownForce;
+        TParamT<f32> fireDownControl;
+        TParamT<f32> fireBackVelocity;
+        TParamT<f32> broadJumpForce;
+        TParamT<f32> broadJumpForceY;
+        TParamT<f32> rotateJumpForceY;
+        TParamT<f32> popUpSpeedY;
+        TParamT<f32> popUpSpeedYMult;
+        TParamT<f32> backJumpForce;
+        TParamT<f32> backJumpForceY;
+        TParamT<f32> hipAttackSpeedY;
+        TParamT<f32> superHipAttackSpeedY;
+        TParamT<s16> jumpCatchRotXSp;
+        TParamT<s16> jumpCatchRotXMax;
+        TParamT<f32> rotBroadEnableV;
+        TParamT<f32> rotBroadJumpForce;
+        TParamT<f32> rotBroadJumpForceY;
+        TParamT<f32> trampolineDec;
+        TParamT<f32> secJumpEnableSp;
+        TParamT<f32> secJumpForce;
+        TParamT<f32> secJumpSpeedMult;
+        TParamT<f32> secJumpXZMult;
+        TParamT<f32> triJumpEnableSp;
+        TParamT<f32> ultraJumpForce;
+        TParamT<f32> ultraJumpSpeedMult;
+        TParamT<f32> ultraJumpXZMult;
+        TParamT<f32> valleyDepth;
+        TParamT<f32> thrownAccel;
+        TParamT<f32> thrownSlide;
+        TParamT<f32> thrownBrake;
+        TParamT<f32> tremblePower;
+        TParamT<f32> trembleAccele;
+        TParamT<f32> trembleBrake;
+        TParamT<s16> trembleTime;
+        TParamT<s16> clashAngle;
+        TParamT<f32> jumpJumpCatchSp;
+        TParamT<f32> getOffYoshiY;
+        TParamT<s16> superHipAttackCt;
 };
-
-
 
 #endif
