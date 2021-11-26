@@ -591,7 +591,7 @@ lbl_801E1AC0:
 /* 801E1AE0 001DEA20  4B ED F3 95 */	bl SMS_ShowJoint__FP11J3DMaterialb
 /* 801E1AE4 001DEA24  38 7F 00 6C */	addi r3, r31, 0x6c
 /* 801E1AE8 001DEA28  C0 3F 00 78 */	lfs f1, 0x78(r31)
-/* 801E1AEC 001DEA2C  4B F7 0F 29 */	bl SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 801E1AEC 001DEA2C  4B F7 0F 29 */	bl "SMS_MarioWarpRequest__FRCQ29JGeometry8TVec3<f>f"
 /* 801E1AF0 001DEA30  80 1F 00 28 */	lwz r0, 0x28(r31)
 /* 801E1AF4 001DEA34  3C 60 80 39 */	lis r3, $$23224@ha
 /* 801E1AF8 001DEA38  38 83 19 4C */	addi r4, r3, $$23224@l

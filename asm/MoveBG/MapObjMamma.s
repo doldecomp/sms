@@ -2810,7 +2810,7 @@ release__11TLeanMirrorFv:
 /* 801A9348 001A6288  80 1E 00 F8 */	lwz r0, 0xf8(r30)
 /* 801A934C 001A628C  54 00 07 FA */	rlwinm r0, r0, 0, 0x1f, 0x1d
 /* 801A9350 001A6290  90 1E 00 F8 */	stw r0, 0xf8(r30)
-/* 801A9354 001A6294  4B FA 96 E9 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 801A9354 001A6294  4B FA 96 E9 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 /* 801A9358 001A6298  80 7E 00 F4 */	lwz r3, 0xf4(r30)
 /* 801A935C 001A629C  38 82 C2 D4 */	addi r4, r2, $$23563@sda21
 /* 801A9360 001A62A0  4B ED C8 FD */	bl strcmp
@@ -4329,7 +4329,7 @@ lbl_801AA88C:
 /* 801AA900 001A7840  C0 1E 01 54 */	lfs f0, 0x154(r30)
 /* 801AA904 001A7844  EC 00 F8 28 */	fsubs f0, f0, f31
 /* 801AA908 001A7848  EC 21 00 32 */	fmuls f1, f1, f0
-/* 801AA90C 001A784C  4B FA 82 81 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 801AA90C 001A784C  4B FA 82 81 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 lbl_801AA910:
 /* 801AA910 001A7850  7F C3 F3 78 */	mr r3, r30
 /* 801AA914 001A7854  4B FD E7 79 */	bl animIsFinished__11TMapObjBaseCFv

@@ -4317,7 +4317,7 @@ attack___10TKoopaBodyFP9THitActor:
 /* 80337700 00334640  C0 22 00 58 */	lfs f1, $$25029@sda21(r2)
 /* 80337704 00334644  D0 01 00 14 */	stfs f0, 0x14(r1)
 /* 80337708 00334648  D0 41 00 18 */	stfs f2, 0x18(r1)
-/* 8033770C 0033464C  4B E1 B4 81 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 8033770C 0033464C  4B E1 B4 81 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 lbl_80337710:
 /* 80337710 00334650  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80337714 00334654  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -4536,7 +4536,7 @@ attack___10TKoopaHeadFP9THitActor:
 /* 80337A2C 0033496C  C0 22 00 58 */	lfs f1, $$25029@sda21(r2)
 /* 80337A30 00334970  D0 01 00 14 */	stfs f0, 0x14(r1)
 /* 80337A34 00334974  D0 41 00 18 */	stfs f2, 0x18(r1)
-/* 80337A38 00334978  4B E1 B1 55 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80337A38 00334978  4B E1 B1 55 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 lbl_80337A3C:
 /* 80337A3C 0033497C  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80337A40 00334980  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -4809,7 +4809,7 @@ attack___11TKoopaFlameFP9THitActor:
 /* 80337E14 00334D54  D0 41 00 60 */	stfs f2, 0x60(r1)
 /* 80337E18 00334D58  D0 01 00 64 */	stfs f0, 0x64(r1)
 /* 80337E1C 00334D5C  D0 41 00 68 */	stfs f2, 0x68(r1)
-/* 80337E20 00334D60  4B E1 AD 6D */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80337E20 00334D60  4B E1 AD 6D */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80337E24 00334D64  80 7E 00 68 */	lwz r3, 0x68(r30)
 /* 80337E28 00334D68  38 00 00 01 */	li r0, 1
 /* 80337E2C 00334D6C  38 80 00 03 */	li r4, 3

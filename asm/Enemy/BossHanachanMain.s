@@ -3181,7 +3181,7 @@ lbl_80302424:
 /* 80302438 002FF378  4B E5 07 7D */	bl SMS_SendMessageToMario__FP9THitActorUl
 /* 8030243C 002FF37C  38 61 00 A8 */	addi r3, r1, 0xa8
 /* 80302440 002FF380  FC 20 F8 90 */	fmr f1, f31
-/* 80302444 002FF384  4B E5 07 49 */	bl SMS_ThrowMario__FRCQ29JGeometry8TVec3$$0f$$1f
+/* 80302444 002FF384  4B E5 07 49 */	bl "SMS_ThrowMario__FRCQ29JGeometry8TVec3<f>f"
 /* 80302448 002FF388  80 7F 01 70 */	lwz r3, 0x170(r31)
 /* 8030244C 002FF38C  80 63 01 00 */	lwz r3, 0x100(r3)
 /* 80302450 002FF390  4B FF CF 5D */	bl onWaterHitCounter__14TWaterHitActorFv

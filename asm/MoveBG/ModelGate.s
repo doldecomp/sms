@@ -274,7 +274,7 @@ lbl_801C2D68:
 /* 801C2DAC 001BFCEC  C0 01 01 C4 */	lfs f0, 0x1c4(r1)
 /* 801C2DB0 001BFCF0  EC 03 00 7A */	fmadds f0, f3, f1, f0
 /* 801C2DB4 001BFCF4  D0 01 01 C4 */	stfs f0, 0x1c4(r1)
-/* 801C2DB8 001BFCF8  4B F8 FC 85 */	bl SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3$$0f$$1
+/* 801C2DB8 001BFCF8  4B F8 FC 85 */	bl "SMS_MarioMoveRequest__FRCQ29JGeometry8TVec3<f>"
 lbl_801C2DBC:
 /* 801C2DBC 001BFCFC  57 C0 07 BD */	rlwinm. r0, r30, 0, 0x1e, 0x1e
 /* 801C2DC0 001BFD00  41 82 07 08 */	beq lbl_801C34C8

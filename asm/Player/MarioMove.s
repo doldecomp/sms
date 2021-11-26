@@ -7184,8 +7184,8 @@ lbl_801335D4:
 /* 801335E8 00130528  38 21 00 38 */	addi r1, r1, 0x38
 /* 801335EC 0013052C  4E 80 00 20 */	blr 
 
-.global throwMario__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
-throwMario__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "throwMario__6TMarioFRCQ29JGeometry8TVec3<f>f"
+"throwMario__6TMarioFRCQ29JGeometry8TVec3<f>f":
 /* 801335F0 00130530  7C 08 02 A6 */	mflr r0
 /* 801335F4 00130534  90 01 00 04 */	stw r0, 4(r1)
 /* 801335F8 00130538  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -8893,6 +8893,8 @@ lbl_80134CE8:
 
 .global windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
 windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
+.global "windMove__6TMarioFRCQ29JGeometry8TVec3<f>"
+"windMove__6TMarioFRCQ29JGeometry8TVec3<f>":
 /* 80134D00 00131C40  C0 23 00 10 */	lfs f1, 0x10(r3)
 /* 80134D04 00131C44  C0 04 00 00 */	lfs f0, 0(r4)
 /* 80134D08 00131C48  EC 01 00 2A */	fadds f0, f1, f0
@@ -8909,6 +8911,8 @@ windMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
 
 .global flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
 flowMove__6TMarioFRCQ29JGeometry8TVec3$$0f$$1:
+.global "flowMove__6TMarioFRCQ29JGeometry8TVec3<f>"
+"flowMove__6TMarioFRCQ29JGeometry8TVec3<f>":
 /* 80134D34 00131C74  80 03 00 7C */	lwz r0, 0x7c(r3)
 /* 80134D38 00131C78  54 00 04 A5 */	rlwinm. r0, r0, 0, 0x12, 0x12
 /* 80134D3C 00131C7C  41 82 00 0C */	beq lbl_80134D48
@@ -8936,6 +8940,8 @@ lbl_80134D4C:
 
 .global warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f
 warpRequest__6TMarioFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "warpRequest__6TMarioFRCQ29JGeometry8TVec3<f>f"
+"warpRequest__6TMarioFRCQ29JGeometry8TVec3<f>f":
 /* 80134D8C 00131CCC  7C 08 02 A6 */	mflr r0
 /* 80134D90 00131CD0  90 01 00 04 */	stw r0, 4(r1)
 /* 80134D94 00131CD4  94 21 FF 98 */	stwu r1, -0x68(r1)
