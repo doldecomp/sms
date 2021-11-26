@@ -466,7 +466,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/Player/Yoshi.o                                   \
     $(BUILD_DIR)/asm/Player/MarioEffect.o                             \
     $(BUILD_DIR)/asm/Player/MarioSwim.o                               \
-    $(BUILD_DIR)/asm/Player/MarioAccess.o                             \
+    $(BUILD_DIR)/src/Player/MarioAccess.o                             \
     $(BUILD_DIR)/asm/Player/MarioInit.o                               \
     $(BUILD_DIR)/asm/Player/ModelWaterManager.o                       \
     $(BUILD_DIR)/asm/Player/MarioPositionObj.o                        \
