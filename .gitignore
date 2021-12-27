@@ -24,3 +24,8 @@ build.bat
 clean.bat
 calcprogress.bat
 !clang-format.exe
+
+# SDK folders
+CW11/*
+DolphinSDK2001/*
+
