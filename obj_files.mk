@@ -20,7 +20,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JKRThread.o                              \
     $(BUILD_DIR)/asm/JSystem/JSUOutputStream.o                        \
     $(BUILD_DIR)/asm/JSystem/JSUInputStream.o                         \
-    $(BUILD_DIR)/asm/JSystem/JSUList.o                                \
+    $(BUILD_DIR)/src/JSystem/JSUList.o                                \
     $(BUILD_DIR)/asm/JSystem/JSUMemoryStream.o                        \
     $(BUILD_DIR)/asm/JSystem/JSUFileStream.o                          \
     $(BUILD_DIR)/asm/JSystem/JUTException.o                           \
