@@ -20,7 +20,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JKRThread.o                              \
     $(BUILD_DIR)/asm/JSystem/JSUOutputStream.o                        \
     $(BUILD_DIR)/asm/JSystem/JSUInputStream.o                         \
-    $(BUILD_DIR)/asm/JSystem/JSUList.o                                \
+    $(BUILD_DIR)/src/JSystem/JSUList.o                                \
     $(BUILD_DIR)/asm/JSystem/JSUMemoryStream.o                        \
     $(BUILD_DIR)/asm/JSystem/JSUFileStream.o                          \
     $(BUILD_DIR)/asm/JSystem/JUTException.o                           \
@@ -49,7 +49,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/J3DShape.o                               \
     $(BUILD_DIR)/asm/JSystem/J3DSys.o                                 \
     $(BUILD_DIR)/asm/JSystem/J3DAnimation.o                           \
-    $(BUILD_DIR)/asm/JSystem/J3DClusterLoader.o                       \
+    $(BUILD_DIR)/src/JSystem/J3DClusterLoader.o                       \
     $(BUILD_DIR)/asm/JSystem/J3DJointFactory.o                        \
     $(BUILD_DIR)/asm/JSystem/J3DMaterialFactory.o                     \
     $(BUILD_DIR)/asm/JSystem/J3DModelLoader.o                         \
@@ -94,7 +94,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JDRLighting.o                            \
     $(BUILD_DIR)/asm/JSystem/JDRNameRef.o                             \
     $(BUILD_DIR)/asm/JSystem/JDRNameRefGen.o                          \
-    $(BUILD_DIR)/asm/JSystem/JDRPlacement.o                           \
+    $(BUILD_DIR)/src/JSystem/JDRPlacement.o                           \
     $(BUILD_DIR)/asm/JSystem/JDRRenderMode.o                          \
     $(BUILD_DIR)/src/JSystem/JDRResolution.o                          \
     $(BUILD_DIR)/asm/JSystem/JDRScreen.o                              \
