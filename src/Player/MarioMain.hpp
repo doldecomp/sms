@@ -4,23 +4,10 @@
 #include <dolphin.h>
 #include "JSystem/JGeometry.hpp"
 #include "JSystem/JDRNameRef.hpp"
+#include "JSystem/JDRPlacement.hpp"
 #include "Player/MarioInit.hpp"
 
-class TViewObj { // based on TNameRef
-    public:
-        char _000[0x8];
-        // TViewObj start
-        char _008[0x8];
-};
-
-class TPlacement : public TViewObj {
-    public:
-        // TPlacement
-        JGeometry::TVec3<f32> position;
-        u16 _01C;
-};
-
-class TActor : public TPlacement {
+class TActor : public JDrama::TPlacement {
     public:
         // TActor
         char _020[0x24];
