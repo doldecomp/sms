@@ -49,7 +49,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/J3DShape.o                               \
     $(BUILD_DIR)/asm/JSystem/J3DSys.o                                 \
     $(BUILD_DIR)/asm/JSystem/J3DAnimation.o                           \
-    $(BUILD_DIR)/asm/JSystem/J3DClusterLoader.o                       \
+    $(BUILD_DIR)/src/JSystem/J3DClusterLoader.o                       \
     $(BUILD_DIR)/asm/JSystem/J3DJointFactory.o                        \
     $(BUILD_DIR)/asm/JSystem/J3DMaterialFactory.o                     \
     $(BUILD_DIR)/asm/JSystem/J3DModelLoader.o                         \
