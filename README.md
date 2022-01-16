@@ -1,26 +1,85 @@
-# Super Mario Sunshine
 
-This repo contains a WIP decompilation of Super Mario Sunshine (JP, revision 0).
+# Super Mario Sunshine [![Discord Badge]][Discord]
 
-It builds the following DOL:
+*A* ***WIP*** *decompilation of the* ***0th*** *revision of the* ***JP*** *version.*
 
-sms_jp_r0.dol: `sha1: 9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
+<br>
+
+---
+
+## DOL
+
+*The* ***DOL*** *built with this repository.*
+
+**File** : `sms_jp_r0.dol` <br>
+**SHA1** : `9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
+
+---
+
+<br>
 
 ## Building
 
-### Required tools
+### Requirements
 
-* [devkitPro](https://devkitpro.org/wiki/Getting_Started)
-* gcc
+- **[DevKitPro]**
+
+- **[GCC]**
+
+    ```sh
+    pacman -S gcc
+    ```
+
+<br>
 
 ### Instructions
 
-1. Download the Gamecube SDK Dec 2001 version and make an environment variable called SDK_BASE_PATH that points to this folder such that the folder root has the dolphin folder in it.
-2. Download the Codewarrior for Gamecube 1.1 and install it and make CW_BASE_PATH point to this folder where it is installed. 
-3. Obtain a clean DOL of SMS JP 1.0 and place it in the base working directory and name it `baserom.dol`.
-4. Download GC_WII_COMPILERS.zip from (https://cdn.discordapp.com/attachments/704241951972524063/801641758249320478/GC_WII_COMPILERS.zip) and extract it to tools/mwcc_compiler/.
-5. Run the `make` command
+1. Download the **Gamecube SDK**.
+
+    *Version : `December 2001`*
+
+2. Create an **Environment Variable** called <br>
+   `SDK_BASE_PATH` pointing to its root folder.
+
+    *The selected root folder should* <br>
+    *contain the `dolphin` folder.*
+
+3. Install **Codewarrior** for the `Gamecube 1.1`.
+
+4. Create an **Environment Variable** called <br>
+   `CW_BASE_PATH` pointing to the installation folder.
+
+5. Obtain a clean **DOL** of `Super Mario Sunshine JP 1.0`.
+
+6. Place it in the root folder with `baserom.dol` as its name.
+
+7. Download <kbd>**[GC_WII_COMPILERS.zip][GC]**</kbd>
+
+8. Extract it's content to `/tools/mwcc_compiler/`.
+
+9. Run the **Make** command :
+
+    ```sh
+    make
+    ```
+
+<br>
+
+---
+
+<br>
 
 ## Contributions
 
-Contributions and PRs are welcome.
+*`Contributions` / `Pull Requests` are welcome !*
+
+
+
+<!----------------------------------------------------------------------------->
+
+[DevKitPro]: https://devkitpro.org/wiki/Getting_Started
+[GCC]: https://gcc.gnu.org/
+[GC]: https://cdn.discordapp.com/attachments/727918646525165659/917185027656286218/GC_WII_COMPILERS.zip
+
+[Discord Badge]: https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white
+[Discord]: https://discord.gg/hKx3FJJgrV
