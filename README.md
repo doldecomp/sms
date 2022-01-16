@@ -44,18 +44,18 @@
     *The selected root folder should* <br>
     *contain the `dolphin` folder.*
 
-3. Install **Codewarrior** for the `Gamecube 1.1`.
+3. Install **Codewarrior** for the `Gamecube 1.1` .
 
 4. Create an **Environment Variable** called <br>
    `CW_BASE_PATH` pointing to the installation folder.
 
-5. Obtain a clean **DOL** of `Super Mario Sunshine JP 1.0`.
+5. Obtain a clean **DOL** of `Super Mario Sunshine JP 1.0` .
 
 6. Place it in the root folder with `baserom.dol` as its name.
 
 7. Download <kbd>**[GC_WII_COMPILERS.zip][GC]**</kbd>
 
-8. Extract it's content to `/tools/mwcc_compiler/`.
+8. Extract it's content to `/tools/mwcc_compiler/` .
 
 9. Run the **Make** command :
 
