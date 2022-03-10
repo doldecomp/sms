@@ -3268,6 +3268,7 @@ $$232$$2__dt__8TAmiNokoFv:
 /* 8030A658 00307598  4B FF FB 5C */	b __dt__8TAmiNokoFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_amiNoko_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

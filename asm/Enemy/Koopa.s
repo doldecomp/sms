@@ -7843,6 +7843,7 @@ $$232$$2__dt__6TKoopaFv:
 /* 8033A8C4 00337804  4B FF F9 FC */	b __dt__6TKoopaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_Koopa_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

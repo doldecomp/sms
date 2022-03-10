@@ -3932,6 +3932,7 @@ $$232$$2__dt__18TDiffusionNameKuriFv:
 /* 80278BC4 00275B04  4B FF FB 4C */	b __dt__18TDiffusionNameKuriFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_namekuri_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

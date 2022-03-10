@@ -1617,6 +1617,7 @@ $$232$$2__dt__11TMapObjFlagFv:
 /* 801B4480 001B13C0  4B FF FC 7C */	b __dt__11TMapObjFlagFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjFlag_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

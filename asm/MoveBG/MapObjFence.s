@@ -2392,6 +2392,7 @@ $$232$$2__dt__10TRailFenceFv:
 /* 801C6624 001C3564  4B FF DE C8 */	b __dt__10TRailFenceFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjFence_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
@@ -2458,7 +2459,6 @@ $$23761:
 	.incbin "baserom.dol", 0x38D4D4, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-    .space 0xB8 # Another dumb big align.
 .global __vt__10TRailFence
 __vt__10TRailFence:
   .4byte 0

@@ -732,6 +732,7 @@ $$212$$2__dt__12TMarDirectorFv:
 /* 800F04CC 000ED40C  4B FF F5 64 */	b __dt__12TMarDirectorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MarDirectorSetup2_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

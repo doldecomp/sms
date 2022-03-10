@@ -10953,6 +10953,7 @@ $$232$$2__dt__11TBossPakkunFv:
 /* 802AC458 002A9398  4B FF F9 30 */	b __dt__11TBossPakkunFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_bosspakkun_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

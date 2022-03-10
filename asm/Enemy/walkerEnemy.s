@@ -2097,6 +2097,7 @@ $$232$$2__dt__12TWalkerEnemyFv:
 /* 80285674 002825B4  4B E7 AE 54 */	b __dt__12TWalkerEnemyFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_walkerEnemy_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

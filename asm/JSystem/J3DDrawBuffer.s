@@ -530,6 +530,7 @@ __sinit_J3DDrawBuffer_cpp:
 /* 80039854 00036794  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_J3DDrawBuffer_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

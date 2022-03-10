@@ -1063,6 +1063,7 @@ $$232$$2__dt__7TEMarioFv:
 /* 8024DB90 0024AAD0  4B FF FC 94 */	b __dt__7TEMarioFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_emario_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

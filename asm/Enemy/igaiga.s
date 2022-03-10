@@ -6100,6 +6100,7 @@ $$232$$2__dt__9TGorogoroFv:
 /* 802C8B80 002C5AC0  4B FF F8 C0 */	b __dt__9TGorogoroFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_igaiga_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

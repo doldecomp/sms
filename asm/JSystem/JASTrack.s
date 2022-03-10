@@ -4057,6 +4057,7 @@ __sinit_JASTrack_cpp:
 /* 800682D8 00065218  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_JASTrack_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

@@ -3192,6 +3192,7 @@ $$232$$2__dt__16TEffectExplosionFv:
 /* 8024CCDC 00249C1C  4B FF D3 A0 */	b __dt__16TEffectExplosionFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_effectObj_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

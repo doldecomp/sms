@@ -157,7 +157,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/JSystem/JASHardStream.o                          \
     $(BUILD_DIR)/asm/JSystem/JASHeapCtrl.o                            \
     $(BUILD_DIR)/asm/JSystem/JASKernelDebug.o                         \
-    $(BUILD_DIR)/asm/JSystem/JASProbe.o                               \
+    $(BUILD_DIR)/src/JSystem/JASProbe.o                               \
     $(BUILD_DIR)/asm/JSystem/JASRate.o                                \
     $(BUILD_DIR)/asm/JSystem/JASSystemHeap.o                          \
     $(BUILD_DIR)/asm/JSystem/JASVload.o                               \
@@ -233,7 +233,7 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/s_frexp.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/w_atan2.o                   \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/float.o                     \
-    $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/hyperbolicsf.o              \
+    $(BUILD_DIR)/src/MSL_C.PPCEABI.bare.H/hyperbolicsf.o              \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/inverse_trig.o              \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/trigf.o                     \
     $(BUILD_DIR)/asm/MSL_C.PPCEABI.bare.H/common_float_tables.o       \

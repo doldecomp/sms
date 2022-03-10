@@ -6412,6 +6412,7 @@ $$232$$2__dt__14TBigWatermelonFv:
 /* 801BD98C 001BA8CC  4B FF A6 24 */	b __dt__14TBigWatermelonFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjBall_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

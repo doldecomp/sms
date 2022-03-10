@@ -5466,6 +5466,7 @@ $$232$$2__dt__14TWaterHitActorFv:
 /* 801602C0 0015D200  4B FF FF 78 */	b __dt__14TWaterHitActorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_ModelWaterManager_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

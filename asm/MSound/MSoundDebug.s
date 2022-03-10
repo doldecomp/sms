@@ -216,6 +216,7 @@ lbl_80180888:
 /* 80180898 0017D7D8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MSoundDebug_cpp
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

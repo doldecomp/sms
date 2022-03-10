@@ -1158,6 +1158,7 @@ $$232$$2__dt__13TBathtubPeachFv:
 /* 803409C0 0033D900  4B FF FC 88 */	b __dt__13TBathtubPeachFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_BathtubPeach_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

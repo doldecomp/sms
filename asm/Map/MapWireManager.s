@@ -1174,6 +1174,7 @@ $$232$$2__dt__13TMapWireActorFv:
 /* 801EB4A8 001E83E8  4B FF F4 64 */	b __dt__13TMapWireActorFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapWireManager_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

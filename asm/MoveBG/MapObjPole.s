@@ -565,6 +565,7 @@ lbl_801C20B4:
 /* 801C20C4 001BF004  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjPole_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

@@ -2370,6 +2370,7 @@ $$232$$2__dt__11TMapObjBaseFv:
 /* 80189B78 00186AB8  4B F7 B5 9C */	b __dt__11TMapObjBaseFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjBase_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

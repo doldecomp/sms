@@ -5976,6 +5976,7 @@ $$232$$2__dt__7TCannonFv:
 /* 802E2568 002DF4A8  4B FF FA F4 */	b __dt__7TCannonFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_cannon_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -2904,6 +2904,7 @@ $$232$$2__dt__19TMareEventBumpyWallFv:
 /* 801F87CC 001F570C  4B FF D6 80 */	b __dt__19TMareEventBumpyWallFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapEventMare_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

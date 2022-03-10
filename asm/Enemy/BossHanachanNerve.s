@@ -1082,6 +1082,7 @@ lbl_80303F28:
 /* 80303F38 00300E78  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_BossHanachanNerve_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

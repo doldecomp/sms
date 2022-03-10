@@ -1068,6 +1068,7 @@ lbl_800FE2AC:
 /* 800FE2BC 000FB1FC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MarNameRefGen_BossEnemy_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

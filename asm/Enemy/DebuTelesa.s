@@ -786,6 +786,7 @@ $$232$$2__dt__11TDebuTelesaFv:
 /* 80347E50 00344D90  4B FF FC 74 */	b __dt__11TDebuTelesaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_DebuTelesa_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

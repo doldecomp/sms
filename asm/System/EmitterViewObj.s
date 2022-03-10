@@ -1818,6 +1818,7 @@ __sinit_EmitterViewObj_cpp:
 /* 800DC59C 000D94DC  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_EmitterViewObj_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

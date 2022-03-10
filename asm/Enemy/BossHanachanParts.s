@@ -2256,6 +2256,7 @@ $$232$$2__dt__22TBossHanachanPartsHeadFv:
 /* 80306CC8 00303C08  4B FF E0 B0 */	b __dt__22TBossHanachanPartsHeadFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_BossHanachanParts_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
