@@ -3670,6 +3670,7 @@ $$232$$2__dt__13TSleepPoiHanaFv:
 /* 802CBE94 002C8DD4  4B FF FA B8 */	b __dt__13TSleepPoiHanaFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_poihana_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

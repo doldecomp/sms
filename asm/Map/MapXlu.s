@@ -447,6 +447,7 @@ lbl_801EBAD0:
 /* 801EBAE0 001E8A20  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapXlu_cpp
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

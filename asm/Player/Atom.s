@@ -19,6 +19,7 @@ __sinit_Atom_cpp:
 /* 8011E7F0 0011B730  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_Atom_cpp
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020

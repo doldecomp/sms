@@ -8584,6 +8584,7 @@ $$2112$$2drawSyncCallback__6TMarioFUs:
 /* 8015B254 00158194  4B FD 13 FC */	b drawSyncCallback__6TMarioFUs
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MarioInit_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

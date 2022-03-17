@@ -5513,6 +5513,7 @@ $$232$$2__dt__16TGessoPolluteObjFv:
 /* 8025E1FC 0025B13C  4B FF F8 C4 */	b __dt__16TGessoPolluteObjFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_gesso_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

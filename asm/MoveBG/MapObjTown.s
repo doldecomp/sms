@@ -2902,6 +2902,7 @@ $$232$$2__dt__14TBasketReverseFv:
 /* 8019AD40 00197C80  4B FF D7 F4 */	b __dt__14TBasketReverseFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjTown_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

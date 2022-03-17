@@ -2865,6 +2865,7 @@ $$232$$2__dt__6TKukkuFv:
 /* 8033D1A4 0033A0E4  4B FF FB 7C */	b __dt__6TKukkuFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_Kukku_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -1587,6 +1587,7 @@ $$232$$2__dt__10TSandPlaneFv:
 /* 801B74F0 001B4430  4B FF E9 4C */	b __dt__10TSandPlaneFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjPlane_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -6870,6 +6870,7 @@ $$232$$2__dt__10TSamboHeadFv:
 /* 802F7B88 002F4AC8  4B FF F8 F0 */	b __dt__10TSamboHeadFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_hanasambo_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

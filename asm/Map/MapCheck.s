@@ -2028,6 +2028,7 @@ lbl_801DEEC0:
 /* 801DEED0 001DBE10  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapCheck_cpp
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020

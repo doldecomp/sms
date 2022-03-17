@@ -1630,6 +1630,7 @@ $$232$$2__dt__11TAnimalBaseFv:
 /* 80367330 00364270  4B FF E8 D0 */	b __dt__11TAnimalBaseFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_AnimalBase_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

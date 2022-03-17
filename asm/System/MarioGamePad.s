@@ -744,6 +744,7 @@ __sinit_MarioGamePad_cpp:
 /* 800FC468 000F93A8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MarioGamePad_cpp
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020

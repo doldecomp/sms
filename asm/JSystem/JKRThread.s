@@ -210,6 +210,7 @@ lbl_8000E280:
 /* 8000E298 0000B1D8  4E 80 00 20 */	blr 
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_JKRThread_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

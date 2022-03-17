@@ -1706,6 +1706,7 @@ $$212$$2__dt__10TSelectDirFv:
 /* 80237DC8 00234D08  4B FF FB 80 */	b __dt__10TSelectDirFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_SelectDir_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

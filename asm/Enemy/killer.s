@@ -3705,6 +3705,7 @@ $$232$$2__dt__7TKillerFv:
 /* 802F0BD4 002EDB14  4B FF FB E8 */	b __dt__7TKillerFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_killer_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

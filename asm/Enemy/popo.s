@@ -5010,6 +5010,7 @@ $$232$$2__dt__5TPopoFv:
 /* 802FC2B4 002F91F4  4B FF FB 64 */	b __dt__5TPopoFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_popo_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -1589,6 +1589,7 @@ $$232$$2__dt__9THauntLegFv:
 /* 80319268 003161A8  4B FF FB 64 */	b __dt__9THauntLegFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_hauntLeg_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

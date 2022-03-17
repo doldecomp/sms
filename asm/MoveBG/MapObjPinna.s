@@ -3743,6 +3743,7 @@ $$232$$2__dt__13TPinnaCoasterFv:
 /* 801AEEC8 001ABE08  4B FF CB 8C */	b __dt__13TPinnaCoasterFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_MapObjPinna_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -6656,6 +6656,7 @@ $$232$$2__dt__10THinokuri2Fv:
 /* 80272318 0026F258  4B FF FA 5C */	b __dt__10THinokuri2Fv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_hinokuri2_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

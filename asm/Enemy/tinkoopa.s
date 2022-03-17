@@ -4540,6 +4540,7 @@ $$2104$$24$$2calc__16TTinKoopaMtxCalcFUs:
 /* 802B5390 002B22D0  4B FF E1 D0 */	b calc__16TTinKoopaMtxCalcFUs
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_tinkoopa_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

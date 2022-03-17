@@ -5015,6 +5015,7 @@ $$232$$2__dt__11TStayPakkunFv:
 /* 8027D248 0027A188  4B FF FB 5C */	b __dt__11TStayPakkunFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_pakkun_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380

@@ -2004,6 +2004,7 @@ $$232$$2__dt__7TRocketFv:
 /* 8031DC5C 0031AB9C  4B FF FC 04 */	b __dt__7TRocketFv
 
 .section .ctors, "wa"  # 0x8036FBA0 - 0x8036FF80
+lbl_constructor:
   .4byte __sinit_rocket_cpp
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
