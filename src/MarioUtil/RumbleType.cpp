@@ -1,4 +1,4 @@
-#include <dolphin.h>
+#include "dolphin.h"
 #include "types.h"
 
 // Enum To Str?

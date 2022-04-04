@@ -29,3 +29,6 @@ calcprogress.bat
 CW11/*
 DolphinSDK2001/*
 
+*.bat
+include/*.s
+ctx.c

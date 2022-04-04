@@ -1,7 +1,7 @@
 #ifndef JDRPLACEMENT_HPP
 #define JDRPLACEMENT_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 #include "types.h"
 
 #include "JSystem/JDRViewObj.hpp"

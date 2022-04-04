@@ -1,7 +1,7 @@
 #ifndef NPCBALLOON_HPP
 #define NPCBALLOON_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 class TNpcBalloon {
     bool updateBalloon();

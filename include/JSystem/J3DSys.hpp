@@ -1,7 +1,7 @@
 #ifndef J3DSYS_HPP
 #define J3DSYS_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 #include "types.h"
 

@@ -1,7 +1,7 @@
 #ifndef BASEPARAM_HPP
 #define BASEPARAM_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 #include "types.h"
 

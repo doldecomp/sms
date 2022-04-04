@@ -1,6 +1,3 @@
-# If defined, wine is not used.
-NOWINE ?= 0
-
 ifneq ($(findstring MINGW,$(shell uname)),)
   WINDOWS := 1
 endif
@@ -8,85 +5,31 @@ ifneq ($(findstring MSYS,$(shell uname)),)
   WINDOWS := 1
 endif
 
-#-------------------------------------------------------------------------------
-# Gamecube SDK and Codewarrior Includes
-#-------------------------------------------------------------------------------
+# If 0, tells the console to chill out. (Quiets the make process.)
+VERBOSE ?= 0
 
-# Import the SDK path variable and set the paths.
-SDK_BASE_PATH := $(SDK_BASE_PATH)
-SDK_LIB_PATH  := $(SDK_BASE_PATH)/HW2/lib
+# If MAPGENFLAG set to 1, tells LDFLAGS to generate a mapfile, which makes linking take several minutes.
+MAPGENFLAG ?= 0
 
-# The Dec 2001 SDK is required for this, which doesn't use /include.
-SDK_INC_PATH  := $(SDK_BASE_PATH)
-
-# Check if SDK is not defined, error if not defined.
-ifeq ($(SDK_BASE_PATH),)
-$(error You have not defined SDK_BASE_PATH. Please ensure the Gamecube SDK is installed and point SDK_BASE_PATH as an environment variable to its location.)
-endif
-
-# Import the Codewarrior GC 1.1 path variable and set the include path as well.
-CW_BASE_PATH := $(CW_BASE_PATH)
-CW_INC_PATH  := $(CW_BASE_PATH)/PowerPC_EABI_Support
-
-# Check if CW is not defined, error if not defined.
-ifeq ($(CW_BASE_PATH),)
-$(error You have not defined CW_BASE_PATH. Please ensure Codewarrior for Gamecube is installed and point CW_BASE_PATH as an environment variable to its location.)
+ifeq ($(VERBOSE),0)
+  QUIET := @
 endif
 
 #-------------------------------------------------------------------------------
 # Files
 #-------------------------------------------------------------------------------
 
-TARGET := sms_jp_r0
+NAME := sms
+VERSION ?= jp.r0
+#VERSION := usa.demo
 
-BUILD_DIR := build/$(TARGET)
+# Overkill epilogue fixup strategy. Set to 1 if necessary.
+EPILOGUE_PROCESS := 0
 
-SRC_DIRS := src                      \
-            src/NPC                  \
-            src/MarioUtil            \
-            src/JSystem              \
-            src/Player               \
-            src/System               \
-            src/MSL_C.PPCEABI.bare.H \
-
-ASM_DIRS := asm                      \
-            asm/JSystem              \
-			asm/Runtime.PPCEABI.H    \
-			asm/MSL_C.PPCEABI.bare.H \
-			asm/TRK_MINNOW_DOLPHIN   \
-			asm/base                 \
-			asm/db                   \
-			asm/os                   \
-			asm/mtx                  \
-			asm/dvd                  \
-			asm/vi                   \
-			asm/pad                  \
-			asm/ai                   \
-			asm/ar                   \
-			asm/dsp                  \
-			asm/card                 \
-			asm/gx                   \
-			asm/OdemuExi2            \
-			asm/amcstubs             \
-			asm/odenotstub           \
-			asm/gd                   \
-			asm/si                   \
-			asm/exi                  \
-			asm/thp                  \
-			asm/THPPlayer            \
-			asm/MarioUtil            \
-			asm/M3DUtil              \
-			asm/System               \
-			asm/Strategic            \
-			asm/Player               \
-			asm/NPC                  \
-			asm/MSound               \
-			asm/MoveBG               \
-			asm/Map                  \
-			asm/GC2D                 \
-			asm/Enemy                \
-			asm/Camera               \
-			asm/Animal               \
+BUILD_DIR := build/$(NAME).$(VERSION)
+ifeq ($(EPILOGUE_PROCESS),1)
+EPILOGUE_DIR := epilogue/$(NAME).$(VERSION)
+endif
 
 # Inputs
 S_FILES := $(wildcard asm/*.s)
@@ -97,53 +40,70 @@ LDSCRIPT := $(BUILD_DIR)/ldscript.lcf
 # Outputs
 DOL     := $(BUILD_DIR)/main.dol
 ELF     := $(DOL:.dol=.elf)
-MAP     := $(BUILD_DIR)/$(TARGET).map
+MAP     := $(BUILD_DIR)/$(NAME).$(VERSION).MAP
+
+ifeq ($(MAPGENFLAG),1)
+  MAPGEN := -map $(MAP)
+endif
 
 include obj_files.mk
+ifeq ($(EPILOGUE_PROCESS),1)
+include e_files.mk
+endif
 
 #-------------------------------------------------------------------------------
 # Tools
 #-------------------------------------------------------------------------------
 
 MWCC_VERSION := GC/1.2.5
+MWLD_VERSION := GC/1.2.5
 
 # Programs
 ifeq ($(WINDOWS),1)
   WINE :=
+  AS      := $(DEVKITPPC)/bin/powerpc-eabi-as.exe
+  CPP     := $(DEVKITPPC)/bin/powerpc-eabi-cpp.exe -P
 else
-  WINE := wine
+  WINE ?= wine
+  AS      := $(DEVKITPPC)/bin/powerpc-eabi-as
+  CPP     := $(DEVKITPPC)/bin/powerpc-eabi-cpp -P
 endif
-
-ifeq ($(NOWINE),1)
-  WINE :=
+CC      = $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwcceppc.exe
+ifeq ($(EPILOGUE_PROCESS),1)
+CC_EPI  = $(WINE) tools/mwcc_compiler/$(MWCC_EPI_VERSION)/$(MWCC_EPI_EXE)
 endif
-
-AS      := $(DEVKITPPC)/bin/powerpc-eabi-as
-CPP     := $(DEVKITPPC)/bin/powerpc-eabi-cpp -P
-CC      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwcceppc.exe
-LD      := $(WINE) tools/mwcc_compiler/$(MWCC_VERSION)/mwldeppc.exe
+LD      := $(WINE) tools/mwcc_compiler/$(MWLD_VERSION)/mwldeppc.exe
 ELF2DOL := tools/elf2dol
 SHA1SUM := sha1sum
 PYTHON  := python3
-POSTPROC := tools/postprocess.py
 
 # Options
-INCLUDES := -i . -I- -i include -i src -ir "$(SDK_INC_PATH)" -ir "$(CW_INC_PATH)"
+INCLUDES := -i include/
+ASM_INCLUDES := -I include/
 
-ASFLAGS := -m750cl -I include
-LDFLAGS := -map $(MAP) -fp hard -nodefaults
-# LDFLAGS := -fp hard -nodefaults
-CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4 -nodefaults -msgstyle gcc $(INCLUDES) -enum int -rostr
+ASFLAGS := -mgekko $(ASM_INCLUDES)
+ifeq ($(VERBOSE),1)
+# this set of LDFLAGS outputs warnings.
+LDFLAGS := $(MAPGEN) -fp hard -nodefaults
+endif
+ifeq ($(VERBOSE),0)
+# this set of LDFLAGS generates no warnings.
+LDFLAGS := $(MAPGEN) -fp hard -nodefaults -w off
+endif
+CFLAGS  := -Cpp_exceptions off -proc gekko -fp hard -O4 -nodefaults -enum int -rostr $(INCLUDES)
 
-# for postprocess.py
-PROCFLAGS := -fsymbol-fixup -fprologue-fixup=old_stack
+ifeq ($(VERBOSE),0)
+# this set of ASFLAGS generates no warnings.
+ASFLAGS += -W
+endif
 
 # hardcoded flags
-$(BUILD_DIR)/src/System/FlagManager.o: FILE_UNIQUE_CFLAGS = -opt all,nostrength -inline all,level=1,deferred
-$(BUILD_DIR)/src/System/ParamInst.o:   FILE_UNIQUE_CFLAGS = -use_lmw_stmw=off
-$(BUILD_DIR)/src/JSystem/%.o:          FILE_UNIQUE_CFLAGS = -use_lmw_stmw=off
-$(BUILD_DIR)/src/JSystem/JDRPlacement.o:          FILE_UNIQUE_CFLAGS += -RTTI off
-$(BUILD_DIR)/src/JSystem/JSUList.o: FILE_UNIQUE_CFLAGS = -inline on,auto -O4,p
+$(BUILD_DIR)/src/System/FlagManager.o:     FILE_UNIQUE_CFLAGS = -opt all,nostrength -inline all,level=1,deferred
+$(BUILD_DIR)/src/System/ParamInst.o:       FILE_UNIQUE_CFLAGS = -use_lmw_stmw=off
+$(BUILD_DIR)/src/JSystem/%.o:              FILE_UNIQUE_CFLAGS = -use_lmw_stmw=off
+$(BUILD_DIR)/src/JSystem/JDRPlacement.o:   FILE_UNIQUE_CFLAGS += -RTTI off
+$(BUILD_DIR)/src/JSystem/JSUList.o:        FILE_UNIQUE_CFLAGS = -inline on,auto -O4,p
+$(BUILD_DIR)/src/os/__start.o:             FILE_UNIQUE_CFLAGS = -inline on,auto -O4,p
 
 #-------------------------------------------------------------------------------
 # Recipes
@@ -155,10 +115,18 @@ default: all
 
 all: $(DOL)
 
-ALL_DIRS := build $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(ASM_DIRS))
+ALL_DIRS := $(sort $(dir $(O_FILES)))
+ifeq ($(EPILOGUE_PROCESS),1)
+EPI_DIRS := $(sort $(dir $(E_FILES)))
+endif
 
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
+
+# ifeq ($(EPILOGUE_PROCESS),1)
+# Make sure profile directory exists before compiling anything
+# DUMMY != mkdir -p $(EPI_DIRS)
+# endif
 
 .PHONY: tools
 
@@ -166,13 +134,18 @@ $(LDSCRIPT): ldscript.lcf
 	$(CPP) -MMD -MP -MT $@ -MF $@.d -I include/ -I . -DBUILD_DIR=$(BUILD_DIR) -o $@ $<
 
 $(DOL): $(ELF) | tools
-	$(ELF2DOL) $< $@
-	$(SHA1SUM) -c $(TARGET).sha1
-	$(PYTHON) calcprogress.py $@
+	$(QUIET) $(ELF2DOL) $< $@
+	$(QUIET) $(SHA1SUM) -c sha1/$(NAME).$(VERSION).sha1
+ifneq ($(findstring -map,$(LDFLAGS)),)
+	$(QUIET) $(PYTHON) tools/calcprogress.py $@
+endif
 clean:
-	rm -fdr build
+	rm -f -d -r build
+	rm -f -d -r epilogue
+	find . -name '*.o' -exec rm {} +
+	find . -name 'ctx.c' -exec rm {} +
+	find ./include -name "*.s" -type f -delete
 	$(MAKE) -C tools clean
-
 tools:
 	$(MAKE) -C tools
 
@@ -181,13 +154,37 @@ $(ELF): $(O_FILES) $(LDSCRIPT)
 	$(LD) $(LDFLAGS) -o $@ -lcf $(LDSCRIPT) @build/o_files
 
 $(BUILD_DIR)/%.o: %.s
-	$(AS) $(ASFLAGS) -o $@ $<
-# 	$(PYTHON) $(POSTPROC) $(PROCFLAGS) $@
-
-$(BUILD_DIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+	@echo Assembling $<
+	$(QUIET) $(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+	@echo "Compiling " $<
+	$(QUIET) $(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/%.o: %.cp
+	@echo "Compiling " $<
+	$(QUIET) $(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+	
+$(BUILD_DIR)/%.o: %.cpp
+	@echo "Compiling " $<
+	$(QUIET) $(CC) $(CFLAGS) $(FILE_UNIQUE_CFLAGS) -c -o $@ $<
+
+ifeq ($(EPILOGUE_PROCESS),1)
+$(EPILOGUE_DIR)/%.o: %.c $(BUILD_DIR)/%.o
+	@echo Frank is fixing $<
+	$(QUIET) $(PYTHON) $(FRANK) $(word 2,$^) $(word 2,$^)
+
+$(EPILOGUE_DIR)/%.o: %.cp $(BUILD_DIR)/%.o
+	@echo Frank is fixing $<
+	$(QUIET) $(PYTHON) $(FRANK) $(word 2,$^) $(word 2,$^)
+
+$(EPILOGUE_DIR)/%.o: %.cpp $(BUILD_DIR)/%.o
+	@echo Frank is fixing $<
+	$(QUIET) $(PYTHON) $(FRANK) $(word 2,$^) $(word 2,$^)
+endif
+# If we need Frank, add the following after the @echo
+# $(QUIET) $(CC_EPI) $(CFLAGS) -c -o $@ $<
+
+### Debug Print ###
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true

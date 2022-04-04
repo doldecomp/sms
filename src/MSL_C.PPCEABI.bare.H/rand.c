@@ -1,4 +1,4 @@
-#include <dolphin.h>
+#include "dolphin.h"
 
 // rand.c from Runtime library
 
