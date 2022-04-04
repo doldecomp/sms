@@ -1,7 +1,7 @@
 #ifndef NPCBASE_HPP
 #define NPCBASE_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 class TBaseNPC {
 	void setKinoActionFlag_();

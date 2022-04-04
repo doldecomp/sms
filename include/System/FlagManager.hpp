@@ -1,7 +1,7 @@
 #ifndef FLAGMANAGER_HPP
 #define FLAGMANAGER_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 #include "JSystem/JKRHeap.hpp"
 #include "JSystem/JSUMemoryStream.hpp"

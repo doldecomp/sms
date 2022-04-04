@@ -1,7 +1,7 @@
 #ifndef RENDERMODEOBJ_HPP
 #define RENDERMODEOBJ_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 
 
