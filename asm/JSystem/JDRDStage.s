@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1
-__ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1:
+.global "__ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT<Us>"
+"__ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT<Us>":
 /* 8004230C 0003F24C  7C 08 02 A6 */	mflr r0
 /* 80042310 0003F250  38 E4 00 00 */	addi r7, r4, 0
 /* 80042314 0003F254  90 01 00 04 */	stw r0, 4(r1)
@@ -18,7 +18,7 @@ __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1:
 /* 8004233C 0003F27C  90 61 00 08 */	stw r3, 8(r1)
 /* 80042340 0003F280  B0 01 00 38 */	sth r0, 0x38(r1)
 /* 80042344 0003F284  80 61 00 08 */	lwz r3, 8(r1)
-/* 80042348 0003F288  48 00 4A ED */	bl __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc
+/* 80042348 0003F288  48 00 4A ED */	bl "__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT<Us>PCc"
 /* 8004234C 0003F28C  3C 80 80 3B */	lis r4, __vt__Q26JDrama11TDStageDisp@ha
 /* 80042350 0003F290  80 61 00 08 */	lwz r3, 8(r1)
 /* 80042354 0003F294  38 04 A5 6C */	addi r0, r4, __vt__Q26JDrama11TDStageDisp@l
@@ -28,8 +28,8 @@ __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1:
 /* 80042364 0003F2A4  7C 7D 1B 79 */	or. r29, r3, r3
 /* 80042368 0003F2A8  41 82 00 74 */	beq lbl_800423DC
 /* 8004236C 0003F2AC  A3 DE 00 00 */	lhz r30, 0(r30)
-/* 80042370 0003F2B0  3C 60 80 37 */	lis r3, $$2881@ha
-/* 80042374 0003F2B4  38 83 0F 10 */	addi r4, r3, $$2881@l
+/* 80042370 0003F2B0  3C 60 80 37 */	lis r3, "@881"@ha
+/* 80042374 0003F2B4  38 83 0F 10 */	addi r4, r3, "@881"@l
 /* 80042378 0003F2B8  93 A1 00 20 */	stw r29, 0x20(r1)
 /* 8004237C 0003F2BC  93 A1 00 28 */	stw r29, 0x28(r1)
 /* 80042380 0003F2C0  80 61 00 20 */	lwz r3, 0x20(r1)
@@ -40,7 +40,7 @@ __ct__Q26JDrama11TDStageDispFPCcQ26JDrama10TFlagT$$0Us$$1:
 /* 80042394 0003F2D4  90 03 00 00 */	stw r0, 0(r3)
 /* 80042398 0003F2D8  38 63 00 0C */	addi r3, r3, 0xc
 /* 8004239C 0003F2DC  38 80 00 00 */	li r4, 0
-/* 800423A0 0003F2E0  4B FF E7 61 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 800423A0 0003F2E0  4B FF E7 61 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 800423A4 0003F2E4  83 E1 00 28 */	lwz r31, 0x28(r1)
 /* 800423A8 0003F2E8  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TEfbCtrl@ha
 /* 800423AC 0003F2EC  38 03 A6 08 */	addi r0, r3, __vt__Q26JDrama8TEfbCtrl@l
@@ -63,8 +63,8 @@ lbl_800423DC:
 /* 800423EC 0003F32C  7C 7D 1B 79 */	or. r29, r3, r3
 /* 800423F0 0003F330  41 82 00 54 */	beq lbl_80042444
 /* 800423F4 0003F334  93 A1 00 1C */	stw r29, 0x1c(r1)
-/* 800423F8 0003F338  3C 60 80 37 */	lis r3, $$2882@ha
-/* 800423FC 0003F33C  38 83 0F 20 */	addi r4, r3, $$2882@l
+/* 800423F8 0003F338  3C 60 80 37 */	lis r3, "@882"@ha
+/* 800423FC 0003F33C  38 83 0F 20 */	addi r4, r3, "@882"@l
 /* 80042400 0003F340  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 80042404 0003F344  80 61 00 1C */	lwz r3, 0x1c(r1)
 /* 80042408 0003F348  4B FF E7 01 */	bl __ct__Q26JDrama8TNameRefFPCc
@@ -74,13 +74,13 @@ lbl_800423DC:
 /* 80042418 0003F358  90 03 00 00 */	stw r0, 0(r3)
 /* 8004241C 0003F35C  38 63 00 0C */	addi r3, r3, 0xc
 /* 80042420 0003F360  38 80 00 00 */	li r4, 0
-/* 80042424 0003F364  4B FF E6 DD */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80042424 0003F364  4B FF E6 DD */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80042428 0003F368  83 E1 00 24 */	lwz r31, 0x24(r1)
 /* 8004242C 0003F36C  38 81 00 18 */	addi r4, r1, 0x18
 /* 80042430 0003F370  38 7F 00 10 */	addi r3, r31, 0x10
-/* 80042434 0003F374  4B FF 1D C9 */	bl __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-/* 80042438 0003F378  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 8004243C 0003F37C  38 03 A5 40 */	addi r0, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 80042434 0003F374  4B FF 1D C9 */	bl "__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+/* 80042438 0003F378  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 8004243C 0003F37C  38 03 A5 40 */	addi r0, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 80042440 0003F380  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80042444:
 /* 80042444 0003F384  80 61 00 08 */	lwz r3, 8(r1)
@@ -166,8 +166,8 @@ getEfbCtrlDisp__Q26JDrama11TDStageDispFv:
 /* 80042550 0003F490  80 63 00 10 */	lwz r3, 0x10(r3)
 /* 80042554 0003F494  4E 80 00 20 */	blr 
 
-.global __dt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-__dt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv:
+.global "__dt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+"__dt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv":
 /* 80042558 0003F498  7C 08 02 A6 */	mflr r0
 /* 8004255C 0003F49C  90 01 00 04 */	stw r0, 4(r1)
 /* 80042560 0003F4A0  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -176,8 +176,8 @@ __dt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
 /* 8004256C 0003F4AC  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80042570 0003F4B0  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80042574 0003F4B4  41 82 00 54 */	beq lbl_800425C8
-/* 80042578 0003F4B8  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 8004257C 0003F4BC  38 63 A5 40 */	addi r3, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 80042578 0003F4B8  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 8004257C 0003F4BC  38 63 A5 40 */	addi r3, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 80042580 0003F4C0  34 1E 00 10 */	addic. r0, r30, 0x10
 /* 80042584 0003F4C4  90 7E 00 00 */	stw r3, 0(r30)
 /* 80042588 0003F4C8  41 82 00 10 */	beq lbl_80042598
@@ -247,25 +247,25 @@ lbl_8004264C:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2881:
+"@881":
 	.incbin "baserom.dol", 0x36DF10, 0x10
-$$2882:
+"@882":
 	.incbin "baserom.dol", 0x36DF20, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1
-__vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1:
+.global "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"
+"__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>":
   .4byte 0
   .4byte 0
-  .4byte __dt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte "__dt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte "load__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-  .4byte searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc
-  .4byte perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
-  .4byte loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
-  .4byte loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte "loadAfter__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+  .4byte "searchF__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUsPCc"
+  .4byte "perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
+  .4byte "loadSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
+  .4byte "loadAfterSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
 .global __vt__Q26JDrama11TDStageDisp
 __vt__Q26JDrama11TDStageDisp:
   .4byte 0

@@ -75,8 +75,8 @@ launchScript__13TEventWatcherFPCc:
 /* 800DC690 000D95D0  38 7D 00 00 */	addi r3, r29, 0
 /* 800DC694 000D95D4  38 9F 00 00 */	addi r4, r31, 0
 /* 800DC698 000D95D8  48 03 F7 F5 */	bl __ct__10TSpcBinaryFPv
-/* 800DC69C 000D95DC  3C 60 80 3B */	lis r3, __vt__32TSpcTypedBinary$$013TEventWatcher$$1@ha
-/* 800DC6A0 000D95E0  38 03 39 7C */	addi r0, r3, __vt__32TSpcTypedBinary$$013TEventWatcher$$1@l
+/* 800DC69C 000D95DC  3C 60 80 3B */	lis r3, "__vt__32TSpcTypedBinary<13TEventWatcher>"@ha
+/* 800DC6A0 000D95E0  38 03 39 7C */	addi r0, r3, "__vt__32TSpcTypedBinary<13TEventWatcher>"@l
 /* 800DC6A4 000D95E4  90 1D 00 04 */	stw r0, 4(r29)
 lbl_800DC6A8:
 /* 800DC6A8 000D95E8  93 BE 00 10 */	stw r29, 0x10(r30)
@@ -94,8 +94,8 @@ lbl_800DC6A8:
 /* 800DC6D8 000D9618  39 00 00 20 */	li r8, 0x20
 /* 800DC6DC 000D961C  39 20 00 20 */	li r9, 0x20
 /* 800DC6E0 000D9620  48 03 B1 BD */	bl __ct__10TSpcInterpFP10TSpcBinaryPviiii
-/* 800DC6E4 000D9624  3C 60 80 3B */	lis r3, __vt__32TSpcTypedInterp$$013TEventWatcher$$1@ha
-/* 800DC6E8 000D9628  38 03 39 68 */	addi r0, r3, __vt__32TSpcTypedInterp$$013TEventWatcher$$1@l
+/* 800DC6E4 000D9624  3C 60 80 3B */	lis r3, "__vt__32TSpcTypedInterp<13TEventWatcher>"@ha
+/* 800DC6E8 000D9628  38 03 39 68 */	addi r0, r3, "__vt__32TSpcTypedInterp<13TEventWatcher>"@l
 /* 800DC6EC 000D962C  90 1D 00 5C */	stw r0, 0x5c(r29)
 lbl_800DC6F0:
 /* 800DC6F0 000D9630  93 BE 00 14 */	stw r29, 0x14(r30)
@@ -180,457 +180,457 @@ __ct__13TEventWatcherFPCc:
 /* 800DC810 000D9750  7C 08 03 A6 */	mtlr r0
 /* 800DC814 000D9754  4E 80 00 20 */	blr 
 
-.global initUserBuiltin__32TSpcTypedBinary$$013TEventWatcher$$1Fv
-initUserBuiltin__32TSpcTypedBinary$$013TEventWatcher$$1Fv:
+.global "initUserBuiltin__32TSpcTypedBinary<13TEventWatcher>Fv"
+"initUserBuiltin__32TSpcTypedBinary<13TEventWatcher>Fv":
 /* 800DC818 000D9758  7C 08 02 A6 */	mflr r0
-/* 800DC81C 000D975C  3C A0 80 37 */	lis r5, $$21490@ha
+/* 800DC81C 000D975C  3C A0 80 37 */	lis r5, "@1490"@ha
 /* 800DC820 000D9760  90 01 00 04 */	stw r0, 4(r1)
-/* 800DC824 000D9764  3C 80 80 0E */	lis r4, evGetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
+/* 800DC824 000D9764  3C 80 80 0E */	lis r4, "evGetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
 /* 800DC828 000D9768  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 800DC82C 000D976C  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 800DC830 000D9770  3B E3 00 00 */	addi r31, r3, 0
 /* 800DC834 000D9774  93 C1 00 10 */	stw r30, 0x10(r1)
-/* 800DC838 000D9778  3B C5 29 90 */	addi r30, r5, $$21490@l
-/* 800DC83C 000D977C  38 A4 64 1C */	addi r5, r4, evGetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC838 000D9778  3B C5 29 90 */	addi r30, r5, "@1490"@l
+/* 800DC83C 000D977C  38 A4 64 1C */	addi r5, r4, "evGetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC840 000D9780  38 9E 01 58 */	addi r4, r30, 0x158
 /* 800DC844 000D9784  48 03 F1 C5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC848 000D9788  3C 60 80 0E */	lis r3, evSetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC84C 000D978C  38 A3 62 30 */	addi r5, r3, evSetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC848 000D9788  3C 60 80 0E */	lis r3, "evSetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC84C 000D978C  38 A3 62 30 */	addi r5, r3, "evSetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC850 000D9790  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC854 000D9794  38 9E 01 68 */	addi r4, r30, 0x168
 /* 800DC858 000D9798  48 03 F1 B1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC85C 000D979C  3C 60 80 0E */	lis r3, evGetNameRefHandle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC860 000D97A0  38 A3 60 E0 */	addi r5, r3, evGetNameRefHandle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC85C 000D979C  3C 60 80 0E */	lis r3, "evGetNameRefHandle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC860 000D97A0  38 A3 60 E0 */	addi r5, r3, "evGetNameRefHandle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC864 000D97A4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC868 000D97A8  38 9E 01 78 */	addi r4, r30, 0x178
 /* 800DC86C 000D97AC  48 03 F1 9D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC870 000D97B0  3C 60 80 0E */	lis r3, evGetNameRefName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC874 000D97B4  38 A3 5F 78 */	addi r5, r3, evGetNameRefName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC870 000D97B0  3C 60 80 0E */	lis r3, "evGetNameRefName__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC874 000D97B4  38 A3 5F 78 */	addi r5, r3, "evGetNameRefName__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC878 000D97B8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC87C 000D97BC  38 9E 01 8C */	addi r4, r30, 0x18c
 /* 800DC880 000D97C0  48 03 F1 89 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC884 000D97C4  3C 60 80 0E */	lis r3, evGetNPCType__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC888 000D97C8  38 A3 5D 98 */	addi r5, r3, evGetNPCType__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC884 000D97C4  3C 60 80 0E */	lis r3, "evGetNPCType__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC888 000D97C8  38 A3 5D 98 */	addi r5, r3, "evGetNPCType__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC88C 000D97CC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC890 000D97D0  38 9E 01 9C */	addi r4, r30, 0x19c
 /* 800DC894 000D97D4  48 03 F1 75 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC898 000D97D8  3C 60 80 0E */	lis r3, evSetFlagNPCDontTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC89C 000D97DC  38 A3 5B 10 */	addi r5, r3, evSetFlagNPCDontTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC898 000D97D8  3C 60 80 0E */	lis r3, "evSetFlagNPCDontTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC89C 000D97DC  38 A3 5B 10 */	addi r5, r3, "evSetFlagNPCDontTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC8A0 000D97E0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC8A4 000D97E4  38 9E 01 A8 */	addi r4, r30, 0x1a8
 /* 800DC8A8 000D97E8  48 03 F1 61 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC8AC 000D97EC  3C 60 80 0E */	lis r3, evSetFlagNPCDontThrow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC8B0 000D97F0  38 A3 58 88 */	addi r5, r3, evSetFlagNPCDontThrow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC8AC 000D97EC  3C 60 80 0E */	lis r3, "evSetFlagNPCDontThrow__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC8B0 000D97F0  38 A3 58 88 */	addi r5, r3, "evSetFlagNPCDontThrow__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC8B4 000D97F4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC8B8 000D97F8  38 9E 01 BC */	addi r4, r30, 0x1bc
 /* 800DC8BC 000D97FC  48 03 F1 4D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC8C0 000D9800  3C 60 80 0E */	lis r3, evSetFlagNPCDead__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC8C4 000D9804  38 A3 56 00 */	addi r5, r3, evSetFlagNPCDead__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC8C0 000D9800  3C 60 80 0E */	lis r3, "evSetFlagNPCDead__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC8C4 000D9804  38 A3 56 00 */	addi r5, r3, "evSetFlagNPCDead__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC8C8 000D9808  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC8CC 000D980C  38 9E 01 D0 */	addi r4, r30, 0x1d0
 /* 800DC8D0 000D9810  48 03 F1 39 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC8D4 000D9814  3C 60 80 0E */	lis r3, evIsNearSameActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC8D8 000D9818  38 A3 50 F8 */	addi r5, r3, evIsNearSameActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC8D4 000D9814  3C 60 80 0E */	lis r3, "evIsNearSameActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC8D8 000D9818  38 A3 50 F8 */	addi r5, r3, "evIsNearSameActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC8DC 000D981C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC8E0 000D9820  38 9E 01 E0 */	addi r4, r30, 0x1e0
 /* 800DC8E4 000D9824  48 03 F1 25 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC8E8 000D9828  3C 60 80 0E */	lis r3, evIsNearActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC8EC 000D982C  38 A3 4D 74 */	addi r5, r3, evIsNearActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC8E8 000D9828  3C 60 80 0E */	lis r3, "evIsNearActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC8EC 000D982C  38 A3 4D 74 */	addi r5, r3, "evIsNearActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC8F0 000D9830  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC8F4 000D9834  38 9E 01 F4 */	addi r4, r30, 0x1f4
 /* 800DC8F8 000D9838  48 03 F1 11 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC8FC 000D983C  3C 60 80 0E */	lis r3, evGetTalkNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC900 000D9840  38 A3 4C CC */	addi r5, r3, evGetTalkNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC8FC 000D983C  3C 60 80 0E */	lis r3, "evGetTalkNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC900 000D9840  38 A3 4C CC */	addi r5, r3, "evGetTalkNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC904 000D9844  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC908 000D9848  38 9E 02 04 */	addi r4, r30, 0x204
 /* 800DC90C 000D984C  48 03 F0 FD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC910 000D9850  3C 60 80 0E */	lis r3, evGetTalkNPCName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC914 000D9854  38 A3 4B 8C */	addi r5, r3, evGetTalkNPCName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC910 000D9850  3C 60 80 0E */	lis r3, "evGetTalkNPCName__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC914 000D9854  38 A3 4B 8C */	addi r5, r3, "evGetTalkNPCName__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC918 000D9858  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC91C 000D985C  38 9E 02 10 */	addi r4, r30, 0x210
 /* 800DC920 000D9860  48 03 F0 E9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC924 000D9864  3C 60 80 0E */	lis r3, evSetTalkMsgID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC928 000D9868  38 A3 49 8C */	addi r5, r3, evSetTalkMsgID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC924 000D9864  3C 60 80 0E */	lis r3, "evSetTalkMsgID__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC928 000D9868  38 A3 49 8C */	addi r5, r3, "evSetTalkMsgID__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC92C 000D986C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC930 000D9870  38 9E 02 20 */	addi r4, r30, 0x220
 /* 800DC934 000D9874  48 03 F0 D5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC938 000D9878  3C 60 80 0E */	lis r3, evGetTalkMode__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC93C 000D987C  38 A3 48 F4 */	addi r5, r3, evGetTalkMode__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC938 000D9878  3C 60 80 0E */	lis r3, "evGetTalkMode__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC93C 000D987C  38 A3 48 F4 */	addi r5, r3, "evGetTalkMode__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC940 000D9880  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC944 000D9884  38 9E 02 30 */	addi r4, r30, 0x230
 /* 800DC948 000D9888  48 03 F0 C1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC94C 000D988C  3C 60 80 0E */	lis r3, evGetTalkSelectedValue__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC950 000D9890  38 A3 48 58 */	addi r5, r3, evGetTalkSelectedValue__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC94C 000D988C  3C 60 80 0E */	lis r3, "evGetTalkSelectedValue__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC950 000D9890  38 A3 48 58 */	addi r5, r3, "evGetTalkSelectedValue__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC954 000D9894  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC958 000D9898  38 9E 02 3C */	addi r4, r30, 0x23c
 /* 800DC95C 000D989C  48 03 F0 AD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC960 000D98A0  3C 60 80 0E */	lis r3, evSetValue2TalkVariable__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC964 000D98A4  38 A3 47 74 */	addi r5, r3, evSetValue2TalkVariable__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC960 000D98A0  3C 60 80 0E */	lis r3, "evSetValue2TalkVariable__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC964 000D98A4  38 A3 47 74 */	addi r5, r3, "evSetValue2TalkVariable__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC968 000D98A8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC96C 000D98AC  38 9E 02 54 */	addi r4, r30, 0x254
 /* 800DC970 000D98B0  48 03 F0 99 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC974 000D98B4  3C 60 80 0E */	lis r3, evIsTalkModeNow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC978 000D98B8  38 A3 46 B0 */	addi r5, r3, evIsTalkModeNow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC974 000D98B4  3C 60 80 0E */	lis r3, "evIsTalkModeNow__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC978 000D98B8  38 A3 46 B0 */	addi r5, r3, "evIsTalkModeNow__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC97C 000D98BC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC980 000D98C0  38 9E 02 6C */	addi r4, r30, 0x26c
 /* 800DC984 000D98C4  48 03 F0 85 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC988 000D98C8  3C 60 80 0E */	lis r3, evSetFlagNPCCanTaken__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC98C 000D98CC  38 A3 44 9C */	addi r5, r3, evSetFlagNPCCanTaken__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC988 000D98C8  3C 60 80 0E */	lis r3, "evSetFlagNPCCanTaken__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC98C 000D98CC  38 A3 44 9C */	addi r5, r3, "evSetFlagNPCCanTaken__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC990 000D98D0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC994 000D98D4  38 9E 02 7C */	addi r4, r30, 0x27c
 /* 800DC998 000D98D8  48 03 F0 71 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC99C 000D98DC  3C 60 80 0E */	lis r3, evPushNerve4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC9A0 000D98E0  38 A3 42 48 */	addi r5, r3, evPushNerve4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC99C 000D98DC  3C 60 80 0E */	lis r3, "evPushNerve4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC9A0 000D98E0  38 A3 42 48 */	addi r5, r3, "evPushNerve4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC9A4 000D98E4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC9A8 000D98E8  38 9E 02 90 */	addi r4, r30, 0x290
 /* 800DC9AC 000D98EC  48 03 F0 5D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC9B0 000D98F0  3C 60 80 0E */	lis r3, evIsOnLiveActorFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC9B4 000D98F4  38 A3 3F E0 */	addi r5, r3, evIsOnLiveActorFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC9B0 000D98F0  3C 60 80 0E */	lis r3, "evIsOnLiveActorFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC9B4 000D98F4  38 A3 3F E0 */	addi r5, r3, "evIsOnLiveActorFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC9B8 000D98F8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC9BC 000D98FC  38 9E 02 A4 */	addi r4, r30, 0x2a4
 /* 800DC9C0 000D9900  48 03 F0 49 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC9C4 000D9904  3C 60 80 0E */	lis r3, evSetHide4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC9C8 000D9908  38 A3 3D B4 */	addi r5, r3, evSetHide4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC9C4 000D9904  3C 60 80 0E */	lis r3, "evSetHide4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC9C8 000D9908  38 A3 3D B4 */	addi r5, r3, "evSetHide4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC9CC 000D990C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC9D0 000D9910  38 9E 02 B8 */	addi r4, r30, 0x2b8
 /* 800DC9D4 000D9914  48 03 F0 35 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC9D8 000D9918  3C 60 80 0E */	lis r3, evSetDead4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC9DC 000D991C  38 A3 3B 88 */	addi r5, r3, evSetDead4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC9D8 000D9918  3C 60 80 0E */	lis r3, "evSetDead4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC9DC 000D991C  38 A3 3B 88 */	addi r5, r3, "evSetDead4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC9E0 000D9920  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC9E4 000D9924  38 9E 02 CC */	addi r4, r30, 0x2cc
 /* 800DC9E8 000D9928  48 03 F0 21 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DC9EC 000D992C  3C 60 80 0E */	lis r3, evSetTimeLimit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DC9F0 000D9930  38 A3 3A 34 */	addi r5, r3, evSetTimeLimit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DC9EC 000D992C  3C 60 80 0E */	lis r3, "evSetTimeLimit__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DC9F0 000D9930  38 A3 3A 34 */	addi r5, r3, "evSetTimeLimit__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DC9F4 000D9934  38 7F 00 00 */	addi r3, r31, 0
 /* 800DC9F8 000D9938  38 9E 02 E0 */	addi r4, r30, 0x2e0
 /* 800DC9FC 000D993C  48 03 F0 0D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA00 000D9940  3C 60 80 0E */	lis r3, evSetAttentionTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA04 000D9944  38 A3 39 7C */	addi r5, r3, evSetAttentionTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA00 000D9940  3C 60 80 0E */	lis r3, "evSetAttentionTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA04 000D9944  38 A3 39 7C */	addi r5, r3, "evSetAttentionTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA08 000D9948  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA0C 000D994C  38 9E 02 F0 */	addi r4, r30, 0x2f0
 /* 800DCA10 000D9950  48 03 EF F9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA14 000D9954  3C 60 80 0E */	lis r3, evSetPollutionIncreaseCount__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA18 000D9958  38 A3 38 C4 */	addi r5, r3, evSetPollutionIncreaseCount__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA14 000D9954  3C 60 80 0E */	lis r3, "evSetPollutionIncreaseCount__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA18 000D9958  38 A3 38 C4 */	addi r5, r3, "evSetPollutionIncreaseCount__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA1C 000D995C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA20 000D9960  38 9E 03 04 */	addi r4, r30, 0x304
 /* 800DCA24 000D9964  48 03 EF E5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA28 000D9968  3C 60 80 0E */	lis r3, evGetRestTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA2C 000D996C  38 A3 37 E8 */	addi r5, r3, evGetRestTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA28 000D9968  3C 60 80 0E */	lis r3, "evGetRestTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA2C 000D996C  38 A3 37 E8 */	addi r5, r3, "evGetRestTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA30 000D9970  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA34 000D9974  38 9E 03 20 */	addi r4, r30, 0x320
 /* 800DCA38 000D9978  48 03 EF D1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA3C 000D997C  3C 60 80 0E */	lis r3, evGetPollutionLevel__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA40 000D9980  38 A3 37 50 */	addi r5, r3, evGetPollutionLevel__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA3C 000D997C  3C 60 80 0E */	lis r3, "evGetPollutionLevel__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA40 000D9980  38 A3 37 50 */	addi r5, r3, "evGetPollutionLevel__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA44 000D9984  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA48 000D9988  38 9E 03 2C */	addi r4, r30, 0x32c
 /* 800DCA4C 000D998C  48 03 EF BD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA50 000D9990  3C 60 80 0E */	lis r3, evSetNextStage__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA54 000D9994  38 A3 35 48 */	addi r5, r3, evSetNextStage__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA50 000D9990  3C 60 80 0E */	lis r3, "evSetNextStage__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA54 000D9994  38 A3 35 48 */	addi r5, r3, "evSetNextStage__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA58 000D9998  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA5C 000D999C  38 9E 03 40 */	addi r4, r30, 0x340
 /* 800DCA60 000D99A0  48 03 EF A9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA64 000D99A4  3C 60 80 0E */	lis r3, evRegisterMovie__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA68 000D99A8  38 A3 34 04 */	addi r5, r3, evRegisterMovie__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA64 000D99A4  3C 60 80 0E */	lis r3, "evRegisterMovie__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA68 000D99A8  38 A3 34 04 */	addi r5, r3, "evRegisterMovie__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA6C 000D99AC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA70 000D99B0  38 9E 03 50 */	addi r4, r30, 0x350
 /* 800DCA74 000D99B4  48 03 EF 95 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA78 000D99B8  3C 60 80 0E */	lis r3, evGameOver__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA7C 000D99BC  38 A3 33 64 */	addi r5, r3, evGameOver__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA78 000D99B8  3C 60 80 0E */	lis r3, "evGameOver__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA7C 000D99BC  38 A3 33 64 */	addi r5, r3, "evGameOver__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA80 000D99C0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA84 000D99C4  38 9E 03 60 */	addi r4, r30, 0x360
 /* 800DCA88 000D99C8  48 03 EF 81 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCA8C 000D99CC  3C 60 80 0E */	lis r3, evIsGraffitoCoverage0__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCA90 000D99D0  38 A3 32 B8 */	addi r5, r3, evIsGraffitoCoverage0__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCA8C 000D99CC  3C 60 80 0E */	lis r3, "evIsGraffitoCoverage0__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCA90 000D99D0  38 A3 32 B8 */	addi r5, r3, "evIsGraffitoCoverage0__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCA94 000D99D4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCA98 000D99D8  38 9E 03 6C */	addi r4, r30, 0x36c
 /* 800DCA9C 000D99DC  48 03 EF 6D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCAA0 000D99E0  3C 60 80 0E */	lis r3, evSetGraffitoMultiplied__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCAA4 000D99E4  38 A3 31 0C */	addi r5, r3, evSetGraffitoMultiplied__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCAA0 000D99E0  3C 60 80 0E */	lis r3, "evSetGraffitoMultiplied__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCAA4 000D99E4  38 A3 31 0C */	addi r5, r3, "evSetGraffitoMultiplied__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCAA8 000D99E8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCAAC 000D99EC  38 9E 03 80 */	addi r4, r30, 0x380
 /* 800DCAB0 000D99F0  48 03 EF 59 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCAB4 000D99F4  3C 60 80 0E */	lis r3, evIsBossDefeated__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCAB8 000D99F8  38 A3 30 60 */	addi r5, r3, evIsBossDefeated__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCAB4 000D99F4  3C 60 80 0E */	lis r3, "evIsBossDefeated__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCAB8 000D99F8  38 A3 30 60 */	addi r5, r3, "evIsBossDefeated__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCABC 000D99FC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCAC0 000D9A00  38 9E 03 98 */	addi r4, r30, 0x398
 /* 800DCAC4 000D9A04  48 03 EF 45 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCAC8 000D9A08  3C 60 80 0E */	lis r3, evLaunchEventClearDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCACC 000D9A0C  38 A3 2F B0 */	addi r5, r3, evLaunchEventClearDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCAC8 000D9A08  3C 60 80 0E */	lis r3, "evLaunchEventClearDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCACC 000D9A0C  38 A3 2F B0 */	addi r5, r3, "evLaunchEventClearDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCAD0 000D9A10  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCAD4 000D9A14  38 9E 03 A8 */	addi r4, r30, 0x3a8
 /* 800DCAD8 000D9A18  48 03 EF 31 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCADC 000D9A1C  3C 60 80 0E */	lis r3, evIsEMarioReachedToGoal__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCAE0 000D9A20  38 A3 2D E8 */	addi r5, r3, evIsEMarioReachedToGoal__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCADC 000D9A1C  3C 60 80 0E */	lis r3, "evIsEMarioReachedToGoal__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCAE0 000D9A20  38 A3 2D E8 */	addi r5, r3, "evIsEMarioReachedToGoal__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCAE4 000D9A24  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCAE8 000D9A28  38 9E 03 C0 */	addi r4, r30, 0x3c0
 /* 800DCAEC 000D9A2C  48 03 EF 1D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCAF0 000D9A30  3C 60 80 0E */	lis r3, evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCAF4 000D9A34  38 A3 2C 20 */	addi r5, r3, evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCAF0 000D9A30  3C 60 80 0E */	lis r3, "evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCAF4 000D9A34  38 A3 2C 20 */	addi r5, r3, "evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCAF8 000D9A38  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCAFC 000D9A3C  38 9E 03 D8 */	addi r4, r30, 0x3d8
 /* 800DCB00 000D9A40  48 03 EF 09 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB04 000D9A44  3C 60 80 0E */	lis r3, evStartEMarioRunAway__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB08 000D9A48  38 A3 2A 5C */	addi r5, r3, evStartEMarioRunAway__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB04 000D9A44  3C 60 80 0E */	lis r3, "evStartEMarioRunAway__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB08 000D9A48  38 A3 2A 5C */	addi r5, r3, "evStartEMarioRunAway__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB0C 000D9A4C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB10 000D9A50  38 9E 03 F4 */	addi r4, r30, 0x3f4
 /* 800DCB14 000D9A54  48 03 EE F5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB18 000D9A58  3C 60 80 0E */	lis r3, evStartEMarioGateDrawing__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB1C 000D9A5C  38 A3 28 98 */	addi r5, r3, evStartEMarioGateDrawing__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB18 000D9A58  3C 60 80 0E */	lis r3, "evStartEMarioGateDrawing__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB1C 000D9A5C  38 A3 28 98 */	addi r5, r3, "evStartEMarioGateDrawing__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB20 000D9A60  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB24 000D9A64  38 9E 04 08 */	addi r4, r30, 0x408
 /* 800DCB28 000D9A68  48 03 EE E1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB2C 000D9A6C  3C 60 80 0E */	lis r3, evStartEMarioDisappear__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB30 000D9A70  38 A3 26 D4 */	addi r5, r3, evStartEMarioDisappear__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB2C 000D9A6C  3C 60 80 0E */	lis r3, "evStartEMarioDisappear__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB30 000D9A70  38 A3 26 D4 */	addi r5, r3, "evStartEMarioDisappear__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB34 000D9A74  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB38 000D9A78  38 9E 04 20 */	addi r4, r30, 0x420
 /* 800DCB3C 000D9A7C  48 03 EE CD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB40 000D9A80  3C 60 80 0E */	lis r3, evStartOpenModelGate__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB44 000D9A84  38 A3 25 10 */	addi r5, r3, evStartOpenModelGate__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB40 000D9A80  3C 60 80 0E */	lis r3, "evStartOpenModelGate__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB44 000D9A84  38 A3 25 10 */	addi r5, r3, "evStartOpenModelGate__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB48 000D9A88  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB4C 000D9A8C  38 9E 04 38 */	addi r4, r30, 0x438
 /* 800DCB50 000D9A90  48 03 EE B9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB54 000D9A94  3C 60 80 0E */	lis r3, evIsMapEventFinishedAll__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB58 000D9A98  38 A3 23 3C */	addi r5, r3, evIsMapEventFinishedAll__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB54 000D9A94  3C 60 80 0E */	lis r3, "evIsMapEventFinishedAll__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB58 000D9A98  38 A3 23 3C */	addi r5, r3, "evIsMapEventFinishedAll__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB5C 000D9A9C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB60 000D9AA0  38 9E 04 4C */	addi r4, r30, 0x44c
 /* 800DCB64 000D9AA4  48 03 EE A5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB68 000D9AA8  3C 60 80 0E */	lis r3, evRaiseBuilding__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB6C 000D9AAC  38 A3 21 AC */	addi r5, r3, evRaiseBuilding__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB68 000D9AA8  3C 60 80 0E */	lis r3, "evRaiseBuilding__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB6C 000D9AAC  38 A3 21 AC */	addi r5, r3, "evRaiseBuilding__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB70 000D9AB0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB74 000D9AB4  38 9E 04 64 */	addi r4, r30, 0x464
 /* 800DCB78 000D9AB8  48 03 EE 91 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB7C 000D9ABC  3C 60 80 0E */	lis r3, evForceCloseTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB80 000D9AC0  38 A3 21 14 */	addi r5, r3, evForceCloseTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB7C 000D9ABC  3C 60 80 0E */	lis r3, "evForceCloseTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB80 000D9AC0  38 A3 21 14 */	addi r5, r3, "evForceCloseTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB84 000D9AC4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB88 000D9AC8  38 9E 04 74 */	addi r4, r30, 0x474
 /* 800DCB8C 000D9ACC  48 03 EE 7D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCB90 000D9AD0  3C 60 80 0E */	lis r3, evInsertTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCB94 000D9AD4  38 A3 1E E0 */	addi r5, r3, evInsertTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCB90 000D9AD0  3C 60 80 0E */	lis r3, "evInsertTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCB94 000D9AD4  38 A3 1E E0 */	addi r5, r3, "evInsertTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCB98 000D9AD8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCB9C 000D9ADC  38 9E 04 84 */	addi r4, r30, 0x484
 /* 800DCBA0 000D9AE0  48 03 EE 69 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCBA4 000D9AE4  3C 60 80 0E */	lis r3, evStartTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCBA8 000D9AE8  38 A3 1D 74 */	addi r5, r3, evStartTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCBA4 000D9AE4  3C 60 80 0E */	lis r3, "evStartTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCBA8 000D9AE8  38 A3 1D 74 */	addi r5, r3, "evStartTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCBAC 000D9AEC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCBB0 000D9AF0  38 9E 04 90 */	addi r4, r30, 0x490
 /* 800DCBB4 000D9AF4  48 03 EE 55 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCBB8 000D9AF8  3C 60 80 0E */	lis r3, evStartMonteman__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCBBC 000D9AFC  38 A3 1B E8 */	addi r5, r3, evStartMonteman__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCBB8 000D9AF8  3C 60 80 0E */	lis r3, "evStartMonteman__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCBBC 000D9AFC  38 A3 1B E8 */	addi r5, r3, "evStartMonteman__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCBC0 000D9B00  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCBC4 000D9B04  38 9E 04 9C */	addi r4, r30, 0x49c
 /* 800DCBC8 000D9B08  48 03 EE 41 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCBCC 000D9B0C  3C 60 80 0E */	lis r3, evStopTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCBD0 000D9B10  38 A3 1B 4C */	addi r5, r3, evStopTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCBCC 000D9B0C  3C 60 80 0E */	lis r3, "evStopTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCBD0 000D9B10  38 A3 1B 4C */	addi r5, r3, "evStopTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCBD4 000D9B14  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCBD8 000D9B18  38 9E 04 AC */	addi r4, r30, 0x4ac
 /* 800DCBDC 000D9B1C  48 03 EE 2D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCBE0 000D9B20  3C 60 80 0E */	lis r3, evMonteManReachFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCBE4 000D9B24  38 A3 1A 60 */	addi r5, r3, evMonteManReachFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCBE0 000D9B20  3C 60 80 0E */	lis r3, "evMonteManReachFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCBE4 000D9B24  38 A3 1A 60 */	addi r5, r3, "evMonteManReachFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCBE8 000D9B28  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCBEC 000D9B2C  38 9E 04 B8 */	addi r4, r30, 0x4b8
 /* 800DCBF0 000D9B30  48 03 EE 19 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCBF4 000D9B34  3C 60 80 0E */	lis r3, evGetTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCBF8 000D9B38  38 A3 19 C4 */	addi r5, r3, evGetTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCBF4 000D9B34  3C 60 80 0E */	lis r3, "evGetTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCBF8 000D9B38  38 A3 19 C4 */	addi r5, r3, "evGetTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCBFC 000D9B3C  38 7F 00 00 */	addi r3, r31, 0
-/* 800DCC00 000D9B40  38 82 8F B0 */	addi r4, r2, $$23756@sda21
+/* 800DCC00 000D9B40  38 82 8F B0 */	addi r4, r2, "@3756"@sda21
 /* 800DCC04 000D9B44  48 03 EE 05 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC08 000D9B48  3C 60 80 0E */	lis r3, evKillShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC0C 000D9B4C  38 A3 17 F4 */	addi r5, r3, evKillShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC08 000D9B48  3C 60 80 0E */	lis r3, "evKillShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC0C 000D9B4C  38 A3 17 F4 */	addi r5, r3, "evKillShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC10 000D9B50  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC14 000D9B54  38 9E 04 CC */	addi r4, r30, 0x4cc
 /* 800DCC18 000D9B58  48 03 ED F1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC1C 000D9B5C  3C 60 80 0E */	lis r3, evKillMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC20 000D9B60  38 A3 15 F8 */	addi r5, r3, evKillMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC1C 000D9B5C  3C 60 80 0E */	lis r3, "evKillMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC20 000D9B60  38 A3 15 F8 */	addi r5, r3, "evKillMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC24 000D9B64  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC28 000D9B68  38 9E 04 D8 */	addi r4, r30, 0x4d8
 /* 800DCC2C 000D9B6C  48 03 ED DD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC30 000D9B70  3C 60 80 0E */	lis r3, evAppearMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC34 000D9B74  38 A3 13 D4 */	addi r5, r3, evAppearMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC30 000D9B70  3C 60 80 0E */	lis r3, "evAppearMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC34 000D9B74  38 A3 13 D4 */	addi r5, r3, "evAppearMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC38 000D9B78  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC3C 000D9B7C  38 9E 04 E8 */	addi r4, r30, 0x4e8
 /* 800DCC40 000D9B80  48 03 ED C9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC44 000D9B84  3C 60 80 0E */	lis r3, evAppearShineFromNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC48 000D9B88  38 A3 10 70 */	addi r5, r3, evAppearShineFromNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC44 000D9B84  3C 60 80 0E */	lis r3, "evAppearShineFromNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC48 000D9B88  38 A3 10 70 */	addi r5, r3, "evAppearShineFromNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC4C 000D9B8C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC50 000D9B90  38 9E 04 FC */	addi r4, r30, 0x4fc
 /* 800DCC54 000D9B94  48 03 ED B5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC58 000D9B98  3C 60 80 0E */	lis r3, evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC5C 000D9B9C  38 A3 0B B8 */	addi r5, r3, evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC58 000D9B98  3C 60 80 0E */	lis r3, "evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC5C 000D9B9C  38 A3 0B B8 */	addi r5, r3, "evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC60 000D9BA0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC64 000D9BA4  38 9E 05 10 */	addi r4, r30, 0x510
 /* 800DCC68 000D9BA8  48 03 ED A1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC6C 000D9BAC  3C 60 80 0E */	lis r3, evAppearShineFromKageMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC70 000D9BB0  38 A3 08 FC */	addi r5, r3, evAppearShineFromKageMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC6C 000D9BAC  3C 60 80 0E */	lis r3, "evAppearShineFromKageMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC70 000D9BB0  38 A3 08 FC */	addi r5, r3, "evAppearShineFromKageMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC74 000D9BB4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC78 000D9BB8  38 9E 05 30 */	addi r4, r30, 0x530
 /* 800DCC7C 000D9BBC  48 03 ED 8D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC80 000D9BC0  3C 60 80 0E */	lis r3, evAppearShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC84 000D9BC4  38 A3 0E 48 */	addi r5, r3, evAppearShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC80 000D9BC0  3C 60 80 0E */	lis r3, "evAppearShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC84 000D9BC4  38 A3 0E 48 */	addi r5, r3, "evAppearShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC88 000D9BC8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCC8C 000D9BCC  38 9E 05 4C */	addi r4, r30, 0x54c
 /* 800DCC90 000D9BD0  48 03 ED 79 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCC94 000D9BD4  3C 60 80 0E */	lis r3, evAppearShineForWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCC98 000D9BD8  38 A3 07 90 */	addi r5, r3, evAppearShineForWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCC94 000D9BD4  3C 60 80 0E */	lis r3, "evAppearShineForWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCC98 000D9BD8  38 A3 07 90 */	addi r5, r3, "evAppearShineForWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCC9C 000D9BDC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCCA0 000D9BE0  38 9E 05 58 */	addi r4, r30, 0x558
 /* 800DCCA4 000D9BE4  48 03 ED 65 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCCA8 000D9BE8  3C 60 80 0E */	lis r3, evChangeNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCCAC 000D9BEC  38 A3 06 34 */	addi r5, r3, evChangeNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCCA8 000D9BE8  3C 60 80 0E */	lis r3, "evChangeNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCCAC 000D9BEC  38 A3 06 34 */	addi r5, r3, "evChangeNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCCB0 000D9BF0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCCB4 000D9BF4  38 9E 05 70 */	addi r4, r30, 0x570
 /* 800DCCB8 000D9BF8  48 03 ED 51 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCCBC 000D9BFC  3C 60 80 0E */	lis r3, evStartMarioTalking__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCCC0 000D9C00  38 A3 05 9C */	addi r5, r3, evStartMarioTalking__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCCBC 000D9BFC  3C 60 80 0E */	lis r3, "evStartMarioTalking__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCCC0 000D9C00  38 A3 05 9C */	addi r5, r3, "evStartMarioTalking__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCCC4 000D9C04  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCCC8 000D9C08  38 9E 05 80 */	addi r4, r30, 0x580
 /* 800DCCCC 000D9C0C  48 03 ED 3D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCCD0 000D9C10  3C 60 80 0E */	lis r3, evIsInsideCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCCD4 000D9C14  38 A3 FC 24 */	addi r5, r3, evIsInsideCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCCD0 000D9C10  3C 60 80 0E */	lis r3, "evIsInsideCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCCD4 000D9C14  38 A3 FC 24 */	addi r5, r3, "evIsInsideCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCCD8 000D9C18  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCCDC 000D9C1C  38 9E 05 94 */	addi r4, r30, 0x594
 /* 800DCCE0 000D9C20  48 03 ED 29 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCCE4 000D9C24  3C 60 80 0E */	lis r3, evSetMarioWaiting__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCCE8 000D9C28  38 A3 FB 7C */	addi r5, r3, evSetMarioWaiting__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCCE4 000D9C24  3C 60 80 0E */	lis r3, "evSetMarioWaiting__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCCE8 000D9C28  38 A3 FB 7C */	addi r5, r3, "evSetMarioWaiting__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCCEC 000D9C2C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCCF0 000D9C30  38 9E 05 A4 */	addi r4, r30, 0x5a4
 /* 800DCCF4 000D9C34  48 03 ED 15 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCCF8 000D9C38  3C 60 80 0E */	lis r3, evSetTransScale__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCCFC 000D9C3C  38 A3 F0 44 */	addi r5, r3, evSetTransScale__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCCF8 000D9C38  3C 60 80 0E */	lis r3, "evSetTransScale__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCCFC 000D9C3C  38 A3 F0 44 */	addi r5, r3, "evSetTransScale__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD00 000D9C40  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD04 000D9C44  38 9E 05 B4 */	addi r4, r30, 0x5b4
 /* 800DCD08 000D9C48  48 03 ED 01 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD0C 000D9C4C  3C 60 80 0E */	lis r3, evSetEventID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD10 000D9C50  38 A3 ED EC */	addi r5, r3, evSetEventID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD0C 000D9C4C  3C 60 80 0E */	lis r3, "evSetEventID__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD10 000D9C50  38 A3 ED EC */	addi r5, r3, "evSetEventID__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD14 000D9C54  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD18 000D9C58  38 9E 05 C4 */	addi r4, r30, 0x5c4
 /* 800DCD1C 000D9C5C  48 03 EC ED */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD20 000D9C60  3C 60 80 0E */	lis r3, evStartBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD24 000D9C64  38 A3 EC 18 */	addi r5, r3, evStartBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD20 000D9C60  3C 60 80 0E */	lis r3, "evStartBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD24 000D9C64  38 A3 EC 18 */	addi r5, r3, "evStartBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD28 000D9C68  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD2C 000D9C6C  38 9E 05 D0 */	addi r4, r30, 0x5d0
 /* 800DCD30 000D9C70  48 03 EC D9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD34 000D9C74  3C 60 80 0E */	lis r3, evStopBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD38 000D9C78  38 A3 E7 3C */	addi r5, r3, evStopBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD34 000D9C74  3C 60 80 0E */	lis r3, "evStopBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD38 000D9C78  38 A3 E7 3C */	addi r5, r3, "evStopBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD3C 000D9C7C  38 7F 00 00 */	addi r3, r31, 0
-/* 800DCD40 000D9C80  38 82 8F B8 */	addi r4, r2, $$23772@sda21
+/* 800DCD40 000D9C80  38 82 8F B8 */	addi r4, r2, "@3772"@sda21
 /* 800DCD44 000D9C84  48 03 EC C5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD48 000D9C88  3C 60 80 0E */	lis r3, evStartMiss__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD4C 000D9C8C  38 A3 E3 B8 */	addi r5, r3, evStartMiss__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD48 000D9C88  3C 60 80 0E */	lis r3, "evStartMiss__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD4C 000D9C8C  38 A3 E3 B8 */	addi r5, r3, "evStartMiss__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD50 000D9C90  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD54 000D9C94  38 9E 05 DC */	addi r4, r30, 0x5dc
 /* 800DCD58 000D9C98  48 03 EC B1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD5C 000D9C9C  3C 60 80 0E */	lis r3, evStartSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD60 000D9CA0  38 A3 E5 D8 */	addi r5, r3, evStartSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD5C 000D9C9C  3C 60 80 0E */	lis r3, "evStartSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD60 000D9CA0  38 A3 E5 D8 */	addi r5, r3, "evStartSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD64 000D9CA4  38 7F 00 00 */	addi r3, r31, 0
-/* 800DCD68 000D9CA8  38 82 8F C0 */	addi r4, r2, $$23774@sda21
+/* 800DCD68 000D9CA8  38 82 8F C0 */	addi r4, r2, "@3774"@sda21
 /* 800DCD6C 000D9CAC  48 03 EC 9D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD70 000D9CB0  3C 60 80 0E */	lis r3, evStartEventSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD74 000D9CB4  38 A3 E4 50 */	addi r5, r3, evStartEventSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD70 000D9CB0  3C 60 80 0E */	lis r3, "evStartEventSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD74 000D9CB4  38 A3 E4 50 */	addi r5, r3, "evStartEventSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD78 000D9CB8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD7C 000D9CBC  38 9E 05 E8 */	addi r4, r30, 0x5e8
 /* 800DCD80 000D9CC0  48 03 EC 89 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD84 000D9CC4  3C 60 80 0E */	lis r3, evChangeSunglass__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD88 000D9CC8  38 A3 E1 C4 */	addi r5, r3, evChangeSunglass__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD84 000D9CC4  3C 60 80 0E */	lis r3, "evChangeSunglass__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD88 000D9CC8  38 A3 E1 C4 */	addi r5, r3, "evChangeSunglass__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCD8C 000D9CCC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCD90 000D9CD0  38 9E 05 F8 */	addi r4, r30, 0x5f8
 /* 800DCD94 000D9CD4  48 03 EC 75 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCD98 000D9CD8  3C 60 80 0E */	lis r3, evSetCollision__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCD9C 000D9CDC  38 A3 DF 50 */	addi r5, r3, evSetCollision__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCD98 000D9CD8  3C 60 80 0E */	lis r3, "evSetCollision__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCD9C 000D9CDC  38 A3 DF 50 */	addi r5, r3, "evSetCollision__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCDA0 000D9CE0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCDA4 000D9CE4  38 9E 06 08 */	addi r4, r30, 0x608
 /* 800DCDA8 000D9CE8  48 03 EC 61 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCDAC 000D9CEC  3C 60 80 0E */	lis r3, evWarpMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCDB0 000D9CF0  38 A3 DB D0 */	addi r5, r3, evWarpMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCDAC 000D9CEC  3C 60 80 0E */	lis r3, "evWarpMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCDB0 000D9CF0  38 A3 DB D0 */	addi r5, r3, "evWarpMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCDB4 000D9CF4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCDB8 000D9CF8  38 9E 06 18 */	addi r4, r30, 0x618
 /* 800DCDBC 000D9CFC  48 03 EC 4D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCDC0 000D9D00  3C 60 80 0E */	lis r3, evStartAppearJetBalloon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCDC4 000D9D04  38 A3 D9 74 */	addi r5, r3, evStartAppearJetBalloon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCDC0 000D9D00  3C 60 80 0E */	lis r3, "evStartAppearJetBalloon__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCDC4 000D9D04  38 A3 D9 74 */	addi r5, r3, "evStartAppearJetBalloon__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCDC8 000D9D08  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCDCC 000D9D0C  38 9E 06 24 */	addi r4, r30, 0x624
 /* 800DCDD0 000D9D10  48 03 EC 39 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCDD4 000D9D14  3C 60 80 0E */	lis r3, evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCDD8 000D9D18  38 A3 D5 28 */	addi r5, r3, evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCDD4 000D9D14  3C 60 80 0E */	lis r3, "evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCDD8 000D9D18  38 A3 D5 28 */	addi r5, r3, "evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCDDC 000D9D1C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCDE0 000D9D20  38 9E 06 3C */	addi r4, r30, 0x63c
 /* 800DCDE4 000D9D24  48 03 EC 25 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCDE8 000D9D28  3C 60 80 0E */	lis r3, evWarpFrontToMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCDEC 000D9D2C  38 A3 D2 D8 */	addi r5, r3, evWarpFrontToMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCDE8 000D9D28  3C 60 80 0E */	lis r3, "evWarpFrontToMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCDEC 000D9D2C  38 A3 D2 D8 */	addi r5, r3, "evWarpFrontToMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCDF0 000D9D30  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCDF4 000D9D34  38 9E 06 54 */	addi r4, r30, 0x654
 /* 800DCDF8 000D9D38  48 03 EC 11 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCDFC 000D9D3C  3C 60 80 0E */	lis r3, evAppearReadyGo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE00 000D9D40  38 A3 D7 10 */	addi r5, r3, evAppearReadyGo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCDFC 000D9D3C  3C 60 80 0E */	lis r3, "evAppearReadyGo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE00 000D9D40  38 A3 D7 10 */	addi r5, r3, "evAppearReadyGo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE04 000D9D44  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE08 000D9D48  38 9E 06 68 */	addi r4, r30, 0x668
 /* 800DCE0C 000D9D4C  48 03 EB FD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE10 000D9D50  3C 60 80 0E */	lis r3, evOnNeutralMarioKey__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE14 000D9D54  38 A3 D2 38 */	addi r5, r3, evOnNeutralMarioKey__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE10 000D9D50  3C 60 80 0E */	lis r3, "evOnNeutralMarioKey__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE14 000D9D54  38 A3 D2 38 */	addi r5, r3, "evOnNeutralMarioKey__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE18 000D9D58  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE1C 000D9D5C  38 9E 06 78 */	addi r4, r30, 0x678
 /* 800DCE20 000D9D60  48 03 EB E9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE24 000D9D64  3C 60 80 0E */	lis r3, evInvalidatePad__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE28 000D9D68  38 A3 D0 F4 */	addi r5, r3, evInvalidatePad__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE24 000D9D64  3C 60 80 0E */	lis r3, "evInvalidatePad__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE28 000D9D68  38 A3 D0 F4 */	addi r5, r3, "evInvalidatePad__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE2C 000D9D6C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE30 000D9D70  38 9E 06 8C */	addi r4, r30, 0x68c
 /* 800DCE34 000D9D74  48 03 EB D5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE38 000D9D78  3C 60 80 0E */	lis r3, evCheckWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE3C 000D9D7C  38 A3 02 F0 */	addi r5, r3, evCheckWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE38 000D9D78  3C 60 80 0E */	lis r3, "evCheckWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE3C 000D9D7C  38 A3 02 F0 */	addi r5, r3, "evCheckWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE40 000D9D80  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE44 000D9D84  38 9E 06 9C */	addi r4, r30, 0x69c
 /* 800DCE48 000D9D88  48 03 EB C1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE4C 000D9D8C  3C 60 80 0E */	lis r3, evRefreshWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE50 000D9D90  38 A3 00 4C */	addi r5, r3, evRefreshWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE4C 000D9D8C  3C 60 80 0E */	lis r3, "evRefreshWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE50 000D9D90  38 A3 00 4C */	addi r5, r3, "evRefreshWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE54 000D9D94  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE58 000D9D98  38 9E 06 AC */	addi r4, r30, 0x6ac
 /* 800DCE5C 000D9D9C  48 03 EB AD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE60 000D9DA0  3C 60 80 0E */	lis r3, evKillWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE64 000D9DA4  38 A3 FD A8 */	addi r5, r3, evKillWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE60 000D9DA0  3C 60 80 0E */	lis r3, "evKillWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE64 000D9DA4  38 A3 FD A8 */	addi r5, r3, "evKillWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE68 000D9DA8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE6C 000D9DAC  38 9E 06 BC */	addi r4, r30, 0x6bc
 /* 800DCE70 000D9DB0  48 03 EB 99 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE74 000D9DB4  3C 60 80 0E */	lis r3, evManiCoinDown__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE78 000D9DB8  38 A3 ED 50 */	addi r5, r3, evManiCoinDown__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE74 000D9DB4  3C 60 80 0E */	lis r3, "evManiCoinDown__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE78 000D9DB8  38 A3 ED 50 */	addi r5, r3, "evManiCoinDown__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE7C 000D9DBC  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE80 000D9DC0  38 9E 06 C8 */	addi r4, r30, 0x6c8
 /* 800DCE84 000D9DC4  48 03 EB 85 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE88 000D9DC8  3C 60 80 0E */	lis r3, evEggYoshiStartFruit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCE8C 000D9DCC  38 A3 EA 48 */	addi r5, r3, evEggYoshiStartFruit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE88 000D9DC8  3C 60 80 0E */	lis r3, "evEggYoshiStartFruit__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCE8C 000D9DCC  38 A3 EA 48 */	addi r5, r3, "evEggYoshiStartFruit__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCE90 000D9DD0  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCE94 000D9DD4  38 9E 06 DC */	addi r4, r30, 0x6dc
 /* 800DCE98 000D9DD8  48 03 EB 71 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCE9C 000D9DDC  3C 60 80 0E */	lis r3, evPutNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCEA0 000D9DE0  38 A3 E8 78 */	addi r5, r3, evPutNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCE9C 000D9DDC  3C 60 80 0E */	lis r3, "evPutNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCEA0 000D9DE0  38 A3 E8 78 */	addi r5, r3, "evPutNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCEA4 000D9DE4  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCEA8 000D9DE8  38 9E 06 F0 */	addi r4, r30, 0x6f0
 /* 800DCEAC 000D9DEC  48 03 EB 5D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCEB0 000D9DF0  3C 60 80 0E */	lis r3, evStartMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCEB4 000D9DF4  38 A3 FA 6C */	addi r5, r3, evStartMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCEB0 000D9DF0  3C 60 80 0E */	lis r3, "evStartMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCEB4 000D9DF4  38 A3 FA 6C */	addi r5, r3, "evStartMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCEB8 000D9DF8  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCEBC 000D9DFC  38 9E 06 FC */	addi r4, r30, 0x6fc
 /* 800DCEC0 000D9E00  48 03 EB 49 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCEC4 000D9E04  3C 60 80 0E */	lis r3, evIsFinishMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCEC8 000D9E08  38 A3 F9 78 */	addi r5, r3, evIsFinishMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCEC4 000D9E04  3C 60 80 0E */	lis r3, "evIsFinishMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCEC8 000D9E08  38 A3 F9 78 */	addi r5, r3, "evIsFinishMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCECC 000D9E0C  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCED0 000D9E10  38 9E 07 10 */	addi r4, r30, 0x710
 /* 800DCED4 000D9E14  48 03 EB 35 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCED8 000D9E18  3C 60 80 0E */	lis r3, evIsInsideFastCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCEDC 000D9E1C  38 A3 F6 B8 */	addi r5, r3, evIsInsideFastCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCED8 000D9E18  3C 60 80 0E */	lis r3, "evIsInsideFastCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCEDC 000D9E1C  38 A3 F6 B8 */	addi r5, r3, "evIsInsideFastCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCEE0 000D9E20  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCEE4 000D9E24  38 9E 07 28 */	addi r4, r30, 0x728
 /* 800DCEE8 000D9E28  48 03 EB 21 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCEEC 000D9E2C  3C 60 80 0E */	lis r3, evSetEventForWaterMelon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCEF0 000D9E30  38 A3 D7 B0 */	addi r5, r3, evSetEventForWaterMelon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCEEC 000D9E2C  3C 60 80 0E */	lis r3, "evSetEventForWaterMelon__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCEF0 000D9E30  38 A3 D7 B0 */	addi r5, r3, "evSetEventForWaterMelon__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCEF4 000D9E34  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCEF8 000D9E38  38 9E 07 3C */	addi r4, r30, 0x73c
 /* 800DCEFC 000D9E3C  48 03 EB 0D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 800DCF00 000D9E40  3C 60 80 0E */	lis r3, evIsWaterMelonIsReached__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@ha
-/* 800DCF04 000D9E44  38 A3 CF 34 */	addi r5, r3, evIsWaterMelonIsReached__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul@l
+/* 800DCF00 000D9E40  3C 60 80 0E */	lis r3, "evIsWaterMelonIsReached__FP32TSpcTypedInterp<13TEventWatcher>Ul"@ha
+/* 800DCF04 000D9E44  38 A3 CF 34 */	addi r5, r3, "evIsWaterMelonIsReached__FP32TSpcTypedInterp<13TEventWatcher>Ul"@l
 /* 800DCF08 000D9E48  38 7F 00 00 */	addi r3, r31, 0
 /* 800DCF0C 000D9E4C  38 9E 07 54 */	addi r4, r30, 0x754
 /* 800DCF10 000D9E50  48 03 EA F9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
 /* 800DCF14 000D9E54  7F E3 FB 78 */	mr r3, r31
-/* 800DCF18 000D9E58  48 09 61 C5 */	bl initNpcBuiltin__9TNpcEventFP32TSpcTypedBinary$$013TEventWatcher$$1
+/* 800DCF18 000D9E58  48 09 61 C5 */	bl "initNpcBuiltin__9TNpcEventFP32TSpcTypedBinary<13TEventWatcher>"
 /* 800DCF1C 000D9E5C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 800DCF20 000D9E60  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 800DCF24 000D9E64  83 C1 00 10 */	lwz r30, 0x10(r1)
@@ -638,8 +638,8 @@ initUserBuiltin__32TSpcTypedBinary$$013TEventWatcher$$1Fv:
 /* 800DCF2C 000D9E6C  38 21 00 18 */	addi r1, r1, 0x18
 /* 800DCF30 000D9E70  4E 80 00 20 */	blr 
 
-.global evIsWaterMelonIsReached__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsWaterMelonIsReached__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsWaterMelonIsReached__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsWaterMelonIsReached__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DCF34 000D9E74  7C 08 02 A6 */	mflr r0
 /* 800DCF38 000D9E78  90 01 00 04 */	stw r0, 4(r1)
 /* 800DCF3C 000D9E7C  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -652,9 +652,9 @@ evIsWaterMelonIsReached__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DCF58 000D9E98  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DCF5C 000D9E9C  2C 03 00 00 */	cmpwi r3, 0
 /* 800DCF60 000D9EA0  41 81 00 38 */	bgt lbl_800DCF98
-/* 800DCF64 000D9EA4  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DCF64 000D9EA4  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DCF68 000D9EA8  4C C6 31 82 */	crclr 6
-/* 800DCF6C 000D9EAC  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DCF6C 000D9EAC  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DCF70 000D9EB0  48 00 01 35 */	bl SpcTrace__FPCce
 /* 800DCF74 000D9EB4  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DCF78 000D9EB8  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -696,15 +696,15 @@ lbl_800DCFE4:
 lbl_800DCFF8:
 /* 800DCFF8 000D9F38  38 60 00 00 */	li r3, 0
 lbl_800DCFFC:
-/* 800DCFFC 000D9F3C  C0 62 8F C8 */	lfs f3, $$23830@sda21(r2)
+/* 800DCFFC 000D9F3C  C0 62 8F C8 */	lfs f3, "@3830"@sda21(r2)
 /* 800DD000 000D9F40  38 80 00 00 */	li r4, 0
 /* 800DD004 000D9F44  C0 23 00 10 */	lfs f1, 0x10(r3)
-/* 800DD008 000D9F48  C0 42 8F CC */	lfs f2, $$23831@sda21(r2)
+/* 800DD008 000D9F48  C0 42 8F CC */	lfs f2, "@3831"@sda21(r2)
 /* 800DD00C 000D9F4C  C0 03 00 18 */	lfs f0, 0x18(r3)
 /* 800DD010 000D9F50  EC 63 08 28 */	fsubs f3, f3, f1
-/* 800DD014 000D9F54  C0 22 8F D0 */	lfs f1, $$23832@sda21(r2)
+/* 800DD014 000D9F54  C0 22 8F D0 */	lfs f1, "@3832"@sda21(r2)
 /* 800DD018 000D9F58  EC 42 00 28 */	fsubs f2, f2, f0
-/* 800DD01C 000D9F5C  C0 02 8F D4 */	lfs f0, $$23833@sda21(r2)
+/* 800DD01C 000D9F5C  C0 02 8F D4 */	lfs f0, "@3833"@sda21(r2)
 /* 800DD020 000D9F60  EC 23 08 FA */	fmadds f1, f3, f3, f1
 /* 800DD024 000D9F64  EC 22 08 BA */	fmadds f1, f2, f2, f1
 /* 800DD028 000D9F68  FC 01 00 40 */	fcmpo cr0, f1, f0
@@ -719,9 +719,9 @@ lbl_800DD038:
 /* 800DD048 000D9F88  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD04C 000D9F8C  7C 03 00 00 */	cmpw r3, r0
 /* 800DD050 000D9F90  41 80 00 18 */	blt lbl_800DD068
-/* 800DD054 000D9F94  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD054 000D9F94  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD058 000D9F98  4C C6 31 82 */	crclr 6
-/* 800DD05C 000D9F9C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD05C 000D9F9C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD060 000D9FA0  48 00 00 45 */	bl SpcTrace__FPCce
 /* 800DD064 000D9FA4  48 00 00 2C */	b lbl_800DD090
 lbl_800DD068:
@@ -766,8 +766,8 @@ lbl_800DD0CC:
 /* 800DD0EC 000DA02C  38 21 00 70 */	addi r1, r1, 0x70
 /* 800DD0F0 000DA030  4E 80 00 20 */	blr 
 
-.global evInvalidatePad__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evInvalidatePad__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evInvalidatePad__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evInvalidatePad__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD0F4 000DA034  7C 08 02 A6 */	mflr r0
 /* 800DD0F8 000DA038  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD0FC 000DA03C  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -780,9 +780,9 @@ evInvalidatePad__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD118 000DA058  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DD11C 000DA05C  2C 03 00 00 */	cmpwi r3, 0
 /* 800DD120 000DA060  41 81 00 38 */	bgt lbl_800DD158
-/* 800DD124 000DA064  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DD124 000DA064  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DD128 000DA068  4C C6 31 82 */	crclr 6
-/* 800DD12C 000DA06C  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DD12C 000DA06C  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DD130 000DA070  4B FF FF 75 */	bl SpcTrace__FPCce
 /* 800DD134 000DA074  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DD138 000DA078  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -835,9 +835,9 @@ lbl_800DD1BC:
 /* 800DD1DC 000DA11C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD1E0 000DA120  7C 03 00 00 */	cmpw r3, r0
 /* 800DD1E4 000DA124  41 80 00 18 */	blt lbl_800DD1FC
-/* 800DD1E8 000DA128  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD1E8 000DA128  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD1EC 000DA12C  4C C6 31 82 */	crclr 6
-/* 800DD1F0 000DA130  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD1F0 000DA130  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD1F4 000DA134  4B FF FE B1 */	bl SpcTrace__FPCce
 /* 800DD1F8 000DA138  48 00 00 2C */	b lbl_800DD224
 lbl_800DD1FC:
@@ -858,8 +858,8 @@ lbl_800DD224:
 /* 800DD230 000DA170  7C 08 03 A6 */	mtlr r0
 /* 800DD234 000DA174  4E 80 00 20 */	blr 
 
-.global evOnNeutralMarioKey__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evOnNeutralMarioKey__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evOnNeutralMarioKey__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evOnNeutralMarioKey__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD238 000DA178  7C 08 02 A6 */	mflr r0
 /* 800DD23C 000DA17C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD240 000DA180  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -880,9 +880,9 @@ evOnNeutralMarioKey__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD27C 000DA1BC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD280 000DA1C0  7C 03 00 00 */	cmpw r3, r0
 /* 800DD284 000DA1C4  41 80 00 18 */	blt lbl_800DD29C
-/* 800DD288 000DA1C8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD288 000DA1C8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD28C 000DA1CC  4C C6 31 82 */	crclr 6
-/* 800DD290 000DA1D0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD290 000DA1D0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD294 000DA1D4  4B FF FE 11 */	bl SpcTrace__FPCce
 /* 800DD298 000DA1D8  48 00 00 2C */	b lbl_800DD2C4
 lbl_800DD29C:
@@ -903,8 +903,8 @@ lbl_800DD2C4:
 /* 800DD2D0 000DA210  7C 08 03 A6 */	mtlr r0
 /* 800DD2D4 000DA214  4E 80 00 20 */	blr 
 
-.global evWarpFrontToMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evWarpFrontToMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evWarpFrontToMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evWarpFrontToMario__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD2D8 000DA218  7C 08 02 A6 */	mflr r0
 /* 800DD2DC 000DA21C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD2E0 000DA220  94 21 FF 50 */	stwu r1, -0xb0(r1)
@@ -919,9 +919,9 @@ evWarpFrontToMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD304 000DA244  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DD308 000DA248  2C 03 00 00 */	cmpwi r3, 0
 /* 800DD30C 000DA24C  41 81 00 38 */	bgt lbl_800DD344
-/* 800DD310 000DA250  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DD310 000DA250  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DD314 000DA254  4C C6 31 82 */	crclr 6
-/* 800DD318 000DA258  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DD318 000DA258  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DD31C 000DA25C  4B FF FD 89 */	bl SpcTrace__FPCce
 /* 800DD320 000DA260  80 1E 00 1C */	lwz r0, 0x1c(r30)
 /* 800DD324 000DA264  80 7E 00 20 */	lwz r3, 0x20(r30)
@@ -965,10 +965,10 @@ lbl_800DD3A4:
 lbl_800DD3A8:
 /* 800DD3A8 000DA2E8  80 AD 98 E4 */	lwz r5, gpMarioAngleY@sda21(r13)
 /* 800DD3AC 000DA2EC  38 61 00 64 */	addi r3, r1, 0x64
-/* 800DD3B0 000DA2F0  C0 22 8F D0 */	lfs f1, $$23832@sda21(r2)
+/* 800DD3B0 000DA2F0  C0 22 8F D0 */	lfs f1, "@3832"@sda21(r2)
 /* 800DD3B4 000DA2F4  38 81 00 84 */	addi r4, r1, 0x84
 /* 800DD3B8 000DA2F8  AB A5 00 00 */	lha r29, 0(r5)
-/* 800DD3BC 000DA2FC  C0 02 8F D8 */	lfs f0, $$23931@sda21(r2)
+/* 800DD3BC 000DA2FC  C0 02 8F D8 */	lfs f0, "@3931"@sda21(r2)
 /* 800DD3C0 000DA300  D0 21 00 84 */	stfs f1, 0x84(r1)
 /* 800DD3C4 000DA304  D0 21 00 88 */	stfs f1, 0x88(r1)
 /* 800DD3C8 000DA308  D0 01 00 8C */	stfs f0, 0x8c(r1)
@@ -994,7 +994,7 @@ lbl_800DD3A8:
 /* 800DD418 000DA358  EC 01 00 32 */	fmuls f0, f1, f0
 /* 800DD41C 000DA35C  EC 03 00 BA */	fmadds f0, f3, f2, f0
 /* 800DD420 000DA360  D0 01 00 8C */	stfs f0, 0x8c(r1)
-/* 800DD424 000DA364  48 00 00 E9 */	bl set__Q29JGeometry8TVec3$$0f$$1FRC3Vec
+/* 800DD424 000DA364  48 00 00 E9 */	bl "set__Q29JGeometry8TVec3<f>FRC3Vec"
 /* 800DD428 000DA368  80 CD 98 DC */	lwz r6, gpMarioPos@sda21(r13)
 /* 800DD42C 000DA36C  38 61 00 44 */	addi r3, r1, 0x44
 /* 800DD430 000DA370  38 81 00 64 */	addi r4, r1, 0x64
@@ -1004,7 +1004,7 @@ lbl_800DD3A8:
 /* 800DD440 000DA380  90 01 00 48 */	stw r0, 0x48(r1)
 /* 800DD444 000DA384  80 06 00 08 */	lwz r0, 8(r6)
 /* 800DD448 000DA388  90 01 00 4C */	stw r0, 0x4c(r1)
-/* 800DD44C 000DA38C  4B FE 4E BD */	bl add__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 800DD44C 000DA38C  4B FE 4E BD */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 800DD450 000DA390  80 61 00 44 */	lwz r3, 0x44(r1)
 /* 800DD454 000DA394  38 1D 80 00 */	addi r0, r29, -32768
 /* 800DD458 000DA398  80 A1 00 48 */	lwz r5, 0x48(r1)
@@ -1019,8 +1019,8 @@ lbl_800DD3A8:
 /* 800DD47C 000DA3BC  90 61 00 98 */	stw r3, 0x98(r1)
 /* 800DD480 000DA3C0  90 9F 00 18 */	stw r4, 0x18(r31)
 /* 800DD484 000DA3C4  C8 01 00 98 */	lfd f0, 0x98(r1)
-/* 800DD488 000DA3C8  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
-/* 800DD48C 000DA3CC  C0 42 8F DC */	lfs f2, $$23932@sda21(r2)
+/* 800DD488 000DA3C8  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
+/* 800DD48C 000DA3CC  C0 42 8F DC */	lfs f2, "@3932"@sda21(r2)
 /* 800DD490 000DA3D0  EC 00 08 28 */	fsubs f0, f0, f1
 /* 800DD494 000DA3D4  EC 02 00 32 */	fmuls f0, f2, f0
 /* 800DD498 000DA3D8  D0 1F 00 34 */	stfs f0, 0x34(r31)
@@ -1030,9 +1030,9 @@ lbl_800DD3A8:
 /* 800DD4A8 000DA3E8  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 800DD4AC 000DA3EC  7C 03 00 00 */	cmpw r3, r0
 /* 800DD4B0 000DA3F0  41 80 00 18 */	blt lbl_800DD4C8
-/* 800DD4B4 000DA3F4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD4B4 000DA3F4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD4B8 000DA3F8  4C C6 31 82 */	crclr 6
-/* 800DD4BC 000DA3FC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD4BC 000DA3FC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD4C0 000DA400  4B FF FB E5 */	bl SpcTrace__FPCce
 /* 800DD4C4 000DA404  48 00 00 2C */	b lbl_800DD4F0
 lbl_800DD4C8:
@@ -1055,8 +1055,8 @@ lbl_800DD4F0:
 /* 800DD504 000DA444  38 21 00 B0 */	addi r1, r1, 0xb0
 /* 800DD508 000DA448  4E 80 00 20 */	blr 
 
-.global set__Q29JGeometry8TVec3$$0f$$1FRC3Vec
-set__Q29JGeometry8TVec3$$0f$$1FRC3Vec:
+.global "set__Q29JGeometry8TVec3<f>FRC3Vec"
+"set__Q29JGeometry8TVec3<f>FRC3Vec":
 /* 800DD50C 000DA44C  C0 04 00 00 */	lfs f0, 0(r4)
 /* 800DD510 000DA450  D0 03 00 00 */	stfs f0, 0(r3)
 /* 800DD514 000DA454  C0 04 00 04 */	lfs f0, 4(r4)
@@ -1065,8 +1065,8 @@ set__Q29JGeometry8TVec3$$0f$$1FRC3Vec:
 /* 800DD520 000DA460  D0 03 00 08 */	stfs f0, 8(r3)
 /* 800DD524 000DA464  4E 80 00 20 */	blr 
 
-.global evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD528 000DA468  7C 08 02 A6 */	mflr r0
 /* 800DD52C 000DA46C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD530 000DA470  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -1078,8 +1078,8 @@ evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD548 000DA488  38 80 00 00 */	li r4, 0
 /* 800DD54C 000DA48C  48 03 9E E5 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DD550 000DA490  80 6D 8E E0 */	lwz r3, instance__Q26JDrama11TNameRefGen@sda21(r13)
-/* 800DD554 000DA494  3C 80 80 37 */	lis r4, $$23988@ha
-/* 800DD558 000DA498  38 04 31 38 */	addi r0, r4, $$23988@l
+/* 800DD554 000DA494  3C 80 80 37 */	lis r4, "@3988"@ha
+/* 800DD558 000DA498  38 04 31 38 */	addi r0, r4, "@3988"@l
 /* 800DD55C 000DA49C  7C 1D 03 78 */	mr r29, r0
 /* 800DD560 000DA4A0  83 C3 00 04 */	lwz r30, 4(r3)
 /* 800DD564 000DA4A4  7F A3 EB 78 */	mr r3, r29
@@ -1093,7 +1093,7 @@ evAppear8RedCoinsAndTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD584 000DA4C4  4E 80 00 21 */	blrl 
 /* 800DD588 000DA4C8  83 83 01 38 */	lwz r28, 0x138(r3)
 /* 800DD58C 000DA4CC  3B 60 00 00 */	li r27, 0
-/* 800DD590 000DA4D0  C3 E2 8F E8 */	lfs f31, $$23989@sda21(r2)
+/* 800DD590 000DA4D0  C3 E2 8F E8 */	lfs f31, "@3989"@sda21(r2)
 /* 800DD594 000DA4D4  3F C0 20 00 */	lis r30, 0x2000000F@ha
 lbl_800DD598:
 /* 800DD598 000DA4D8  80 6D 9A 18 */	lwz r3, gpItemManager@sda21(r13)
@@ -1127,13 +1127,13 @@ lbl_800DD598:
 /* 800DD608 000DA548  38 80 00 E5 */	li r4, 0xe5
 /* 800DD60C 000DA54C  38 C0 00 00 */	li r6, 0
 /* 800DD610 000DA550  38 E0 00 00 */	li r7, 0
-/* 800DD614 000DA554  4B FF E5 09 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 800DD614 000DA554  4B FF E5 09 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 800DD618 000DA558  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 800DD61C 000DA55C  38 BD 00 00 */	addi r5, r29, 0
 /* 800DD620 000DA560  38 80 00 E6 */	li r4, 0xe6
 /* 800DD624 000DA564  38 C0 00 00 */	li r6, 0
 /* 800DD628 000DA568  38 E0 00 00 */	li r7, 0
-/* 800DD62C 000DA56C  4B FF E4 F1 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 800DD62C 000DA56C  4B FF E4 F1 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 800DD630 000DA570  3B 7B 00 01 */	addi r27, r27, 1
 /* 800DD634 000DA574  2C 1B 00 08 */	cmpwi r27, 8
 /* 800DD638 000DA578  41 80 FF 60 */	blt lbl_800DD598
@@ -1141,10 +1141,10 @@ lbl_800DD598:
 /* 800DD640 000DA580  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 800DD644 000DA584  90 01 00 7C */	stw r0, 0x7c(r1)
 /* 800DD648 000DA588  3C 00 43 30 */	lis r0, 0x4330
-/* 800DD64C 000DA58C  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DD64C 000DA58C  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DD650 000DA590  38 80 00 01 */	li r4, 1
 /* 800DD654 000DA594  90 01 00 78 */	stw r0, 0x78(r1)
-/* 800DD658 000DA598  C0 42 8F EC */	lfs f2, $$23990@sda21(r2)
+/* 800DD658 000DA598  C0 42 8F EC */	lfs f2, "@3990"@sda21(r2)
 /* 800DD65C 000DA59C  C8 01 00 78 */	lfd f0, 0x78(r1)
 /* 800DD660 000DA5A0  80 63 00 74 */	lwz r3, 0x74(r3)
 /* 800DD664 000DA5A4  EC 00 08 28 */	fsubs f0, f0, f1
@@ -1169,9 +1169,9 @@ lbl_800DD598:
 /* 800DD6B0 000DA5F0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD6B4 000DA5F4  7C 03 00 00 */	cmpw r3, r0
 /* 800DD6B8 000DA5F8  41 80 00 18 */	blt lbl_800DD6D0
-/* 800DD6BC 000DA5FC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD6BC 000DA5FC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD6C0 000DA600  4C C6 31 82 */	crclr 6
-/* 800DD6C4 000DA604  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD6C4 000DA604  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD6C8 000DA608  4B FF F9 DD */	bl SpcTrace__FPCce
 /* 800DD6CC 000DA60C  48 00 00 2C */	b lbl_800DD6F8
 lbl_800DD6D0:
@@ -1193,8 +1193,8 @@ lbl_800DD6F8:
 /* 800DD708 000DA648  7C 08 03 A6 */	mtlr r0
 /* 800DD70C 000DA64C  4E 80 00 20 */	blr 
 
-.global evAppearReadyGo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearReadyGo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearReadyGo__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearReadyGo__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD710 000DA650  7C 08 02 A6 */	mflr r0
 /* 800DD714 000DA654  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD718 000DA658  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1215,9 +1215,9 @@ evAppearReadyGo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD754 000DA694  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD758 000DA698  7C 03 00 00 */	cmpw r3, r0
 /* 800DD75C 000DA69C  41 80 00 18 */	blt lbl_800DD774
-/* 800DD760 000DA6A0  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD760 000DA6A0  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD764 000DA6A4  4C C6 31 82 */	crclr 6
-/* 800DD768 000DA6A8  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD768 000DA6A8  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD76C 000DA6AC  4B FF F9 39 */	bl SpcTrace__FPCce
 /* 800DD770 000DA6B0  48 00 00 2C */	b lbl_800DD79C
 lbl_800DD774:
@@ -1238,8 +1238,8 @@ lbl_800DD79C:
 /* 800DD7A8 000DA6E8  7C 08 03 A6 */	mtlr r0
 /* 800DD7AC 000DA6EC  4E 80 00 20 */	blr 
 
-.global evSetEventForWaterMelon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetEventForWaterMelon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetEventForWaterMelon__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetEventForWaterMelon__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD7B0 000DA6F0  7C 08 02 A6 */	mflr r0
 /* 800DD7B4 000DA6F4  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD7B8 000DA6F8  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -1254,9 +1254,9 @@ evSetEventForWaterMelon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD7DC 000DA71C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DD7E0 000DA720  2C 03 00 00 */	cmpwi r3, 0
 /* 800DD7E4 000DA724  41 81 00 38 */	bgt lbl_800DD81C
-/* 800DD7E8 000DA728  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DD7E8 000DA728  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DD7EC 000DA72C  4C C6 31 82 */	crclr 6
-/* 800DD7F0 000DA730  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DD7F0 000DA730  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DD7F4 000DA734  4B FF F8 B1 */	bl SpcTrace__FPCce
 /* 800DD7F8 000DA738  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DD7FC 000DA73C  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1301,7 +1301,7 @@ lbl_800DD888:
 /* 800DD888 000DA7C8  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800DD88C 000DA7CC  48 00 00 08 */	b lbl_800DD894
 lbl_800DD890:
-/* 800DD890 000DA7D0  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800DD890 000DA7D0  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800DD894:
 /* 800DD894 000DA7D4  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DD898 000DA7D8  7F C3 F3 78 */	mr r3, r30
@@ -1342,9 +1342,9 @@ lbl_800DD8FC:
 /* 800DD910 000DA850  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DD914 000DA854  7C 03 00 00 */	cmpw r3, r0
 /* 800DD918 000DA858  41 80 00 18 */	blt lbl_800DD930
-/* 800DD91C 000DA85C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DD91C 000DA85C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DD920 000DA860  4C C6 31 82 */	crclr 6
-/* 800DD924 000DA864  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DD924 000DA864  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DD928 000DA868  4B FF F7 7D */	bl SpcTrace__FPCce
 /* 800DD92C 000DA86C  48 00 00 2C */	b lbl_800DD958
 lbl_800DD930:
@@ -1367,8 +1367,8 @@ lbl_800DD958:
 /* 800DD96C 000DA8AC  38 21 00 80 */	addi r1, r1, 0x80
 /* 800DD970 000DA8B0  4E 80 00 20 */	blr 
 
-.global evStartAppearJetBalloon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartAppearJetBalloon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartAppearJetBalloon__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartAppearJetBalloon__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DD974 000DA8B4  7C 08 02 A6 */	mflr r0
 /* 800DD978 000DA8B8  90 01 00 04 */	stw r0, 4(r1)
 /* 800DD97C 000DA8BC  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -1378,8 +1378,8 @@ evStartAppearJetBalloon__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DD98C 000DA8CC  7C 7E 1B 78 */	mr r30, r3
 /* 800DD990 000DA8D0  93 A1 00 9C */	stw r29, 0x9c(r1)
 /* 800DD994 000DA8D4  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DD998 000DA8D8  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DD99C 000DA8DC  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DD998 000DA8D8  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DD99C 000DA8DC  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DD9A0 000DA8E0  38 80 00 02 */	li r4, 2
 /* 800DD9A4 000DA8E4  48 03 9A 8D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DD9A8 000DA8E8  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -1540,8 +1540,8 @@ lbl_800DDBB4:
 /* 800DDBC8 000DAB08  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 800DDBCC 000DAB0C  4E 80 00 20 */	blr 
 
-.global evWarpMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evWarpMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evWarpMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evWarpMario__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DDBD0 000DAB10  7C 08 02 A6 */	mflr r0
 /* 800DDBD4 000DAB14  90 01 00 04 */	stw r0, 4(r1)
 /* 800DDBD8 000DAB18  94 21 FF 20 */	stwu r1, -0xe0(r1)
@@ -1549,8 +1549,8 @@ evWarpMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DDBE0 000DAB20  7C 7B 1B 78 */	mr r27, r3
 /* 800DDBE4 000DAB24  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800DDBE8 000DAB28  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DDBEC 000DAB2C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DDBF0 000DAB30  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DDBEC 000DAB2C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DDBF0 000DAB30  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DDBF4 000DAB34  38 80 00 04 */	li r4, 4
 /* 800DDBF8 000DAB38  48 03 98 39 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DDBFC 000DAB3C  80 7B 00 1C */	lwz r3, 0x1c(r27)
@@ -1738,7 +1738,7 @@ lbl_800DDE78:
 /* 800DDE78 000DADB8  38 00 00 00 */	li r0, 0
 lbl_800DDE7C:
 /* 800DDE7C 000DADBC  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 800DDE80 000DADC0  C8 82 8F E0 */	lfd f4, $$23934@sda21(r2)
+/* 800DDE80 000DADC0  C8 82 8F E0 */	lfd f4, "@3934"@sda21(r2)
 /* 800DDE84 000DADC4  90 01 00 C4 */	stw r0, 0xc4(r1)
 /* 800DDE88 000DADC8  6F 83 80 00 */	xoris r3, r28, 0x8000
 /* 800DDE8C 000DADCC  3C A0 43 30 */	lis r5, 0x4330
@@ -1793,8 +1793,8 @@ lbl_800DDF3C:
 /* 800DDF48 000DAE88  7C 08 03 A6 */	mtlr r0
 /* 800DDF4C 000DAE8C  4E 80 00 20 */	blr 
 
-.global evSetCollision__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetCollision__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetCollision__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetCollision__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DDF50 000DAE90  7C 08 02 A6 */	mflr r0
 /* 800DDF54 000DAE94  90 01 00 04 */	stw r0, 4(r1)
 /* 800DDF58 000DAE98  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -1802,8 +1802,8 @@ evSetCollision__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DDF60 000DAEA0  7C 7D 1B 78 */	mr r29, r3
 /* 800DDF64 000DAEA4  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800DDF68 000DAEA8  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DDF6C 000DAEAC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DDF70 000DAEB0  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DDF6C 000DAEAC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DDF70 000DAEB0  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DDF74 000DAEB4  38 80 00 02 */	li r4, 2
 /* 800DDF78 000DAEB8  48 03 94 B9 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DDF7C 000DAEBC  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -1901,7 +1901,7 @@ lbl_800DE0C4:
 /* 800DE0C4 000DB004  83 81 00 78 */	lwz r28, 0x78(r1)
 /* 800DE0C8 000DB008  48 00 00 08 */	b lbl_800DE0D0
 lbl_800DE0CC:
-/* 800DE0CC 000DB00C  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800DE0CC 000DB00C  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800DE0D0:
 /* 800DE0D0 000DB010  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DE0D4 000DB014  7F 83 E3 78 */	mr r3, r28
@@ -1974,8 +1974,8 @@ lbl_800DE1B0:
 /* 800DE1BC 000DB0FC  7C 08 03 A6 */	mtlr r0
 /* 800DE1C0 000DB100  4E 80 00 20 */	blr 
 
-.global evChangeSunglass__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evChangeSunglass__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evChangeSunglass__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evChangeSunglass__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE1C4 000DB104  7C 08 02 A6 */	mflr r0
 /* 800DE1C8 000DB108  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE1CC 000DB10C  94 21 FF 88 */	stwu r1, -0x78(r1)
@@ -1986,8 +1986,8 @@ evChangeSunglass__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE1E0 000DB120  93 A1 00 6C */	stw r29, 0x6c(r1)
 /* 800DE1E4 000DB124  93 81 00 68 */	stw r28, 0x68(r1)
 /* 800DE1E8 000DB128  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DE1EC 000DB12C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DE1F0 000DB130  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DE1EC 000DB12C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DE1F0 000DB130  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DE1F4 000DB134  38 80 00 01 */	li r4, 1
 /* 800DE1F8 000DB138  48 03 92 39 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DE1FC 000DB13C  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -2112,8 +2112,8 @@ lbl_800DE398:
 /* 800DE3B0 000DB2F0  38 21 00 78 */	addi r1, r1, 0x78
 /* 800DE3B4 000DB2F4  4E 80 00 20 */	blr 
 
-.global evStartMiss__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartMiss__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartMiss__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartMiss__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE3B8 000DB2F8  7C 08 02 A6 */	mflr r0
 /* 800DE3BC 000DB2FC  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE3C0 000DB300  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -2132,9 +2132,9 @@ evStartMiss__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE3F4 000DB334  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DE3F8 000DB338  7C 03 00 00 */	cmpw r3, r0
 /* 800DE3FC 000DB33C  41 80 00 18 */	blt lbl_800DE414
-/* 800DE400 000DB340  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DE400 000DB340  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DE404 000DB344  4C C6 31 82 */	crclr 6
-/* 800DE408 000DB348  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DE408 000DB348  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DE40C 000DB34C  4B FF EC 99 */	bl SpcTrace__FPCce
 /* 800DE410 000DB350  48 00 00 2C */	b lbl_800DE43C
 lbl_800DE414:
@@ -2155,8 +2155,8 @@ lbl_800DE43C:
 /* 800DE448 000DB388  7C 08 03 A6 */	mtlr r0
 /* 800DE44C 000DB38C  4E 80 00 20 */	blr 
 
-.global evStartEventSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartEventSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartEventSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartEventSE__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE450 000DB390  7C 08 02 A6 */	mflr r0
 /* 800DE454 000DB394  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE458 000DB398  94 21 FF A8 */	stwu r1, -0x58(r1)
@@ -2170,9 +2170,9 @@ evStartEventSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE478 000DB3B8  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DE47C 000DB3BC  2C 03 00 00 */	cmpwi r3, 0
 /* 800DE480 000DB3C0  41 81 00 38 */	bgt lbl_800DE4B8
-/* 800DE484 000DB3C4  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DE484 000DB3C4  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DE488 000DB3C8  4C C6 31 82 */	crclr 6
-/* 800DE48C 000DB3CC  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DE48C 000DB3CC  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DE490 000DB3D0  4B FF EC 15 */	bl SpcTrace__FPCce
 /* 800DE494 000DB3D4  80 1E 00 1C */	lwz r0, 0x1c(r30)
 /* 800DE498 000DB3D8  80 7E 00 20 */	lwz r3, 0x20(r30)
@@ -2244,9 +2244,9 @@ lbl_800DE568:
 /* 800DE578 000DB4B8  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 800DE57C 000DB4BC  7C 03 00 00 */	cmpw r3, r0
 /* 800DE580 000DB4C0  41 80 00 18 */	blt lbl_800DE598
-/* 800DE584 000DB4C4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DE584 000DB4C4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DE588 000DB4C8  4C C6 31 82 */	crclr 6
-/* 800DE58C 000DB4CC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DE58C 000DB4CC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DE590 000DB4D0  4B FF EB 15 */	bl SpcTrace__FPCce
 /* 800DE594 000DB4D4  48 00 00 2C */	b lbl_800DE5C0
 lbl_800DE598:
@@ -2268,8 +2268,8 @@ lbl_800DE5C0:
 /* 800DE5D0 000DB510  38 21 00 58 */	addi r1, r1, 0x58
 /* 800DE5D4 000DB514  4E 80 00 20 */	blr 
 
-.global evStartSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartSE__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartSE__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE5D8 000DB518  7C 08 02 A6 */	mflr r0
 /* 800DE5DC 000DB51C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE5E0 000DB520  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -2283,9 +2283,9 @@ evStartSE__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE600 000DB540  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DE604 000DB544  2C 03 00 00 */	cmpwi r3, 0
 /* 800DE608 000DB548  41 81 00 38 */	bgt lbl_800DE640
-/* 800DE60C 000DB54C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DE60C 000DB54C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DE610 000DB550  4C C6 31 82 */	crclr 6
-/* 800DE614 000DB554  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DE614 000DB554  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DE618 000DB558  4B FF EA 8D */	bl SpcTrace__FPCce
 /* 800DE61C 000DB55C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DE620 000DB560  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -2345,9 +2345,9 @@ lbl_800DE6CC:
 /* 800DE6DC 000DB61C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DE6E0 000DB620  7C 03 00 00 */	cmpw r3, r0
 /* 800DE6E4 000DB624  41 80 00 18 */	blt lbl_800DE6FC
-/* 800DE6E8 000DB628  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DE6E8 000DB628  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DE6EC 000DB62C  4C C6 31 82 */	crclr 6
-/* 800DE6F0 000DB630  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DE6F0 000DB630  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DE6F4 000DB634  4B FF E9 B1 */	bl SpcTrace__FPCce
 /* 800DE6F8 000DB638  48 00 00 2C */	b lbl_800DE724
 lbl_800DE6FC:
@@ -2369,8 +2369,8 @@ lbl_800DE724:
 /* 800DE734 000DB674  38 21 00 50 */	addi r1, r1, 0x50
 /* 800DE738 000DB678  4E 80 00 20 */	blr 
 
-.global evStopBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStopBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStopBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStopBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE73C 000DB67C  7C 08 02 A6 */	mflr r0
 /* 800DE740 000DB680  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE744 000DB684  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -2383,9 +2383,9 @@ evStopBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE760 000DB6A0  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DE764 000DB6A4  2C 03 00 00 */	cmpwi r3, 0
 /* 800DE768 000DB6A8  41 81 00 38 */	bgt lbl_800DE7A0
-/* 800DE76C 000DB6AC  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DE76C 000DB6AC  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DE770 000DB6B0  4C C6 31 82 */	crclr 6
-/* 800DE774 000DB6B4  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DE774 000DB6B4  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DE778 000DB6B8  4B FF E9 2D */	bl SpcTrace__FPCce
 /* 800DE77C 000DB6BC  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DE780 000DB6C0  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -2436,9 +2436,9 @@ lbl_800DE804:
 /* 800DE81C 000DB75C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DE820 000DB760  7C 03 00 00 */	cmpw r3, r0
 /* 800DE824 000DB764  41 80 00 18 */	blt lbl_800DE83C
-/* 800DE828 000DB768  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DE828 000DB768  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DE82C 000DB76C  4C C6 31 82 */	crclr 6
-/* 800DE830 000DB770  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DE830 000DB770  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DE834 000DB774  4B FF E8 71 */	bl SpcTrace__FPCce
 /* 800DE838 000DB778  48 00 00 2C */	b lbl_800DE864
 lbl_800DE83C:
@@ -2459,8 +2459,8 @@ lbl_800DE864:
 /* 800DE870 000DB7B0  7C 08 03 A6 */	mtlr r0
 /* 800DE874 000DB7B4  4E 80 00 20 */	blr 
 
-.global evPutNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evPutNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evPutNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evPutNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DE878 000DB7B8  7C 08 02 A6 */	mflr r0
 /* 800DE87C 000DB7BC  90 01 00 04 */	stw r0, 4(r1)
 /* 800DE880 000DB7C0  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -2475,9 +2475,9 @@ evPutNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DE8A4 000DB7E4  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DE8A8 000DB7E8  2C 03 00 00 */	cmpwi r3, 0
 /* 800DE8AC 000DB7EC  41 81 00 38 */	bgt lbl_800DE8E4
-/* 800DE8B0 000DB7F0  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DE8B0 000DB7F0  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DE8B4 000DB7F4  4C C6 31 82 */	crclr 6
-/* 800DE8B8 000DB7F8  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DE8B8 000DB7F8  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DE8BC 000DB7FC  4B FF E7 E9 */	bl SpcTrace__FPCce
 /* 800DE8C0 000DB800  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DE8C4 000DB804  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -2522,7 +2522,7 @@ lbl_800DE950:
 /* 800DE950 000DB890  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800DE954 000DB894  48 00 00 08 */	b lbl_800DE95C
 lbl_800DE958:
-/* 800DE958 000DB898  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800DE958 000DB898  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800DE95C:
 /* 800DE95C 000DB89C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DE960 000DB8A0  7F C3 F3 78 */	mr r3, r30
@@ -2566,9 +2566,9 @@ lbl_800DE9C4:
 /* 800DE9E4 000DB924  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DE9E8 000DB928  7C 03 00 00 */	cmpw r3, r0
 /* 800DE9EC 000DB92C  41 80 00 18 */	blt lbl_800DEA04
-/* 800DE9F0 000DB930  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DE9F0 000DB930  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DE9F4 000DB934  4C C6 31 82 */	crclr 6
-/* 800DE9F8 000DB938  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DE9F8 000DB938  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DE9FC 000DB93C  4B FF E6 A9 */	bl SpcTrace__FPCce
 /* 800DEA00 000DB940  48 00 00 2C */	b lbl_800DEA2C
 lbl_800DEA04:
@@ -2591,8 +2591,8 @@ lbl_800DEA2C:
 /* 800DEA40 000DB980  38 21 00 80 */	addi r1, r1, 0x80
 /* 800DEA44 000DB984  4E 80 00 20 */	blr 
 
-.global evEggYoshiStartFruit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evEggYoshiStartFruit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evEggYoshiStartFruit__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evEggYoshiStartFruit__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DEA48 000DB988  7C 08 02 A6 */	mflr r0
 /* 800DEA4C 000DB98C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DEA50 000DB990  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -2607,9 +2607,9 @@ evEggYoshiStartFruit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DEA74 000DB9B4  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DEA78 000DB9B8  2C 03 00 00 */	cmpwi r3, 0
 /* 800DEA7C 000DB9BC  41 81 00 38 */	bgt lbl_800DEAB4
-/* 800DEA80 000DB9C0  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DEA80 000DB9C0  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DEA84 000DB9C4  4C C6 31 82 */	crclr 6
-/* 800DEA88 000DB9C8  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DEA88 000DB9C8  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DEA8C 000DB9CC  4B FF E6 19 */	bl SpcTrace__FPCce
 /* 800DEA90 000DB9D0  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DEA94 000DB9D4  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -2654,7 +2654,7 @@ lbl_800DEB20:
 /* 800DEB20 000DBA60  83 C1 00 64 */	lwz r30, 0x64(r1)
 /* 800DEB24 000DBA64  48 00 00 08 */	b lbl_800DEB2C
 lbl_800DEB28:
-/* 800DEB28 000DBA68  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800DEB28 000DBA68  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800DEB2C:
 /* 800DEB2C 000DBA6C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DEB30 000DBA70  7F C3 F3 78 */	mr r3, r30
@@ -2699,9 +2699,9 @@ lbl_800DEBA4:
 /* 800DEBB4 000DBAF4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DEBB8 000DBAF8  7C 03 00 00 */	cmpw r3, r0
 /* 800DEBBC 000DBAFC  41 80 00 18 */	blt lbl_800DEBD4
-/* 800DEBC0 000DBB00  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DEBC0 000DBB00  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DEBC4 000DBB04  4C C6 31 82 */	crclr 6
-/* 800DEBC8 000DBB08  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DEBC8 000DBB08  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DEBCC 000DBB0C  4B FF E4 D9 */	bl SpcTrace__FPCce
 /* 800DEBD0 000DBB10  48 00 00 2C */	b lbl_800DEBFC
 lbl_800DEBD4:
@@ -2724,8 +2724,8 @@ lbl_800DEBFC:
 /* 800DEC10 000DBB50  38 21 00 80 */	addi r1, r1, 0x80
 /* 800DEC14 000DBB54  4E 80 00 20 */	blr 
 
-.global evStartBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartBGM__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DEC18 000DBB58  7C 08 02 A6 */	mflr r0
 /* 800DEC1C 000DBB5C  90 01 00 04 */	stw r0, 4(r1)
 /* 800DEC20 000DBB60  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -2738,9 +2738,9 @@ evStartBGM__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DEC3C 000DBB7C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DEC40 000DBB80  2C 03 00 00 */	cmpwi r3, 0
 /* 800DEC44 000DBB84  41 81 00 38 */	bgt lbl_800DEC7C
-/* 800DEC48 000DBB88  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DEC48 000DBB88  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DEC4C 000DBB8C  4C C6 31 82 */	crclr 6
-/* 800DEC50 000DBB90  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DEC50 000DBB90  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DEC54 000DBB94  4B FF E4 51 */	bl SpcTrace__FPCce
 /* 800DEC58 000DBB98  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DEC5C 000DBB9C  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -2790,9 +2790,9 @@ lbl_800DECE0:
 /* 800DECF4 000DBC34  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DECF8 000DBC38  7C 03 00 00 */	cmpw r3, r0
 /* 800DECFC 000DBC3C  41 80 00 18 */	blt lbl_800DED14
-/* 800DED00 000DBC40  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DED00 000DBC40  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DED04 000DBC44  4C C6 31 82 */	crclr 6
-/* 800DED08 000DBC48  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DED08 000DBC48  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DED0C 000DBC4C  4B FF E3 99 */	bl SpcTrace__FPCce
 /* 800DED10 000DBC50  48 00 00 2C */	b lbl_800DED3C
 lbl_800DED14:
@@ -2813,8 +2813,8 @@ lbl_800DED3C:
 /* 800DED48 000DBC88  7C 08 03 A6 */	mtlr r0
 /* 800DED4C 000DBC8C  4E 80 00 20 */	blr 
 
-.global evManiCoinDown__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evManiCoinDown__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evManiCoinDown__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evManiCoinDown__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DED50 000DBC90  7C 08 02 A6 */	mflr r0
 /* 800DED54 000DBC94  90 01 00 04 */	stw r0, 4(r1)
 /* 800DED58 000DBC98  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -2834,9 +2834,9 @@ evManiCoinDown__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DED90 000DBCD0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DED94 000DBCD4  7C 03 00 00 */	cmpw r3, r0
 /* 800DED98 000DBCD8  41 80 00 18 */	blt lbl_800DEDB0
-/* 800DED9C 000DBCDC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DED9C 000DBCDC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DEDA0 000DBCE0  4C C6 31 82 */	crclr 6
-/* 800DEDA4 000DBCE4  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DEDA4 000DBCE4  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DEDA8 000DBCE8  4B FF E2 FD */	bl SpcTrace__FPCce
 /* 800DEDAC 000DBCEC  48 00 00 2C */	b lbl_800DEDD8
 lbl_800DEDB0:
@@ -2857,8 +2857,8 @@ lbl_800DEDD8:
 /* 800DEDE4 000DBD24  7C 08 03 A6 */	mtlr r0
 /* 800DEDE8 000DBD28  4E 80 00 20 */	blr 
 
-.global evSetEventID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetEventID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetEventID__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetEventID__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DEDEC 000DBD2C  7C 08 02 A6 */	mflr r0
 /* 800DEDF0 000DBD30  90 01 00 04 */	stw r0, 4(r1)
 /* 800DEDF4 000DBD34  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -2866,8 +2866,8 @@ evSetEventID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DEDFC 000DBD3C  7C 7D 1B 78 */	mr r29, r3
 /* 800DEE00 000DBD40  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800DEE04 000DBD44  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DEE08 000DBD48  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DEE0C 000DBD4C  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DEE08 000DBD48  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DEE0C 000DBD4C  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DEE10 000DBD50  38 80 00 02 */	li r4, 2
 /* 800DEE14 000DBD54  48 03 86 1D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DEE18 000DBD58  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -2966,7 +2966,7 @@ lbl_800DEF64:
 /* 800DEF64 000DBEA4  83 81 00 78 */	lwz r28, 0x78(r1)
 /* 800DEF68 000DBEA8  48 00 00 08 */	b lbl_800DEF70
 lbl_800DEF6C:
-/* 800DEF6C 000DBEAC  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800DEF6C 000DBEAC  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800DEF70:
 /* 800DEF70 000DBEB0  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DEF74 000DBEB4  7F 83 E3 78 */	mr r3, r28
@@ -3029,8 +3029,8 @@ lbl_800DF030:
 /* 800DF03C 000DBF7C  7C 08 03 A6 */	mtlr r0
 /* 800DF040 000DBF80  4E 80 00 20 */	blr 
 
-.global evSetTransScale__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetTransScale__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetTransScale__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetTransScale__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DF044 000DBF84  7C 08 02 A6 */	mflr r0
 /* 800DF048 000DBF88  90 01 00 04 */	stw r0, 4(r1)
 /* 800DF04C 000DBF8C  94 21 FE 58 */	stwu r1, -0x1a8(r1)
@@ -3047,8 +3047,8 @@ evSetTransScale__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DF078 000DBFB8  93 A1 01 6C */	stw r29, 0x16c(r1)
 /* 800DF07C 000DBFBC  93 81 01 68 */	stw r28, 0x168(r1)
 /* 800DF080 000DBFC0  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DF084 000DBFC4  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DF088 000DBFC8  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DF084 000DBFC4  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DF088 000DBFC8  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DF08C 000DBFCC  38 80 00 07 */	li r4, 7
 /* 800DF090 000DBFD0  48 03 83 A1 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DF094 000DBFD4  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -3088,7 +3088,7 @@ lbl_800DF0F8:
 lbl_800DF114:
 /* 800DF114 000DC054  80 61 01 20 */	lwz r3, 0x120(r1)
 /* 800DF118 000DC058  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF11C 000DC05C  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF11C 000DC05C  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF120 000DC060  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF124 000DC064  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF128 000DC068  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3099,7 +3099,7 @@ lbl_800DF138:
 /* 800DF138 000DC078  C3 E1 01 20 */	lfs f31, 0x120(r1)
 /* 800DF13C 000DC07C  48 00 00 08 */	b lbl_800DF144
 lbl_800DF140:
-/* 800DF140 000DC080  C3 E2 8F D0 */	lfs f31, $$23832@sda21(r2)
+/* 800DF140 000DC080  C3 E2 8F D0 */	lfs f31, "@3832"@sda21(r2)
 lbl_800DF144:
 /* 800DF144 000DC084  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF148 000DC088  2C 03 00 00 */	cmpwi r3, 0
@@ -3138,7 +3138,7 @@ lbl_800DF1A8:
 lbl_800DF1C4:
 /* 800DF1C4 000DC104  80 61 01 18 */	lwz r3, 0x118(r1)
 /* 800DF1C8 000DC108  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF1CC 000DC10C  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF1CC 000DC10C  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF1D0 000DC110  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF1D4 000DC114  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF1D8 000DC118  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3149,7 +3149,7 @@ lbl_800DF1E8:
 /* 800DF1E8 000DC128  C3 C1 01 18 */	lfs f30, 0x118(r1)
 /* 800DF1EC 000DC12C  48 00 00 08 */	b lbl_800DF1F4
 lbl_800DF1F0:
-/* 800DF1F0 000DC130  C3 C2 8F D0 */	lfs f30, $$23832@sda21(r2)
+/* 800DF1F0 000DC130  C3 C2 8F D0 */	lfs f30, "@3832"@sda21(r2)
 lbl_800DF1F4:
 /* 800DF1F4 000DC134  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF1F8 000DC138  2C 03 00 00 */	cmpwi r3, 0
@@ -3188,7 +3188,7 @@ lbl_800DF258:
 lbl_800DF274:
 /* 800DF274 000DC1B4  80 61 01 10 */	lwz r3, 0x110(r1)
 /* 800DF278 000DC1B8  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF27C 000DC1BC  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF27C 000DC1BC  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF280 000DC1C0  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF284 000DC1C4  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF288 000DC1C8  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3199,7 +3199,7 @@ lbl_800DF298:
 /* 800DF298 000DC1D8  C3 A1 01 10 */	lfs f29, 0x110(r1)
 /* 800DF29C 000DC1DC  48 00 00 08 */	b lbl_800DF2A4
 lbl_800DF2A0:
-/* 800DF2A0 000DC1E0  C3 A2 8F D0 */	lfs f29, $$23832@sda21(r2)
+/* 800DF2A0 000DC1E0  C3 A2 8F D0 */	lfs f29, "@3832"@sda21(r2)
 lbl_800DF2A4:
 /* 800DF2A4 000DC1E4  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF2A8 000DC1E8  2C 03 00 00 */	cmpwi r3, 0
@@ -3238,7 +3238,7 @@ lbl_800DF308:
 lbl_800DF324:
 /* 800DF324 000DC264  80 61 01 08 */	lwz r3, 0x108(r1)
 /* 800DF328 000DC268  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF32C 000DC26C  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF32C 000DC26C  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF330 000DC270  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF334 000DC274  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF338 000DC278  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3249,7 +3249,7 @@ lbl_800DF348:
 /* 800DF348 000DC288  C3 81 01 08 */	lfs f28, 0x108(r1)
 /* 800DF34C 000DC28C  48 00 00 08 */	b lbl_800DF354
 lbl_800DF350:
-/* 800DF350 000DC290  C3 82 8F D0 */	lfs f28, $$23832@sda21(r2)
+/* 800DF350 000DC290  C3 82 8F D0 */	lfs f28, "@3832"@sda21(r2)
 lbl_800DF354:
 /* 800DF354 000DC294  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF358 000DC298  2C 03 00 00 */	cmpwi r3, 0
@@ -3288,7 +3288,7 @@ lbl_800DF3B8:
 lbl_800DF3D4:
 /* 800DF3D4 000DC314  80 61 01 00 */	lwz r3, 0x100(r1)
 /* 800DF3D8 000DC318  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF3DC 000DC31C  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF3DC 000DC31C  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF3E0 000DC320  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF3E4 000DC324  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF3E8 000DC328  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3299,7 +3299,7 @@ lbl_800DF3F8:
 /* 800DF3F8 000DC338  C3 61 01 00 */	lfs f27, 0x100(r1)
 /* 800DF3FC 000DC33C  48 00 00 08 */	b lbl_800DF404
 lbl_800DF400:
-/* 800DF400 000DC340  C3 62 8F D0 */	lfs f27, $$23832@sda21(r2)
+/* 800DF400 000DC340  C3 62 8F D0 */	lfs f27, "@3832"@sda21(r2)
 lbl_800DF404:
 /* 800DF404 000DC344  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF408 000DC348  2C 03 00 00 */	cmpwi r3, 0
@@ -3338,7 +3338,7 @@ lbl_800DF468:
 lbl_800DF484:
 /* 800DF484 000DC3C4  80 61 00 F8 */	lwz r3, 0xf8(r1)
 /* 800DF488 000DC3C8  3C 00 43 30 */	lis r0, 0x4330
-/* 800DF48C 000DC3CC  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800DF48C 000DC3CC  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800DF490 000DC3D0  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800DF494 000DC3D4  90 61 01 64 */	stw r3, 0x164(r1)
 /* 800DF498 000DC3D8  90 01 01 60 */	stw r0, 0x160(r1)
@@ -3349,7 +3349,7 @@ lbl_800DF4A8:
 /* 800DF4A8 000DC3E8  C3 41 00 F8 */	lfs f26, 0xf8(r1)
 /* 800DF4AC 000DC3EC  48 00 00 08 */	b lbl_800DF4B4
 lbl_800DF4B0:
-/* 800DF4B0 000DC3F0  C3 42 8F D0 */	lfs f26, $$23832@sda21(r2)
+/* 800DF4B0 000DC3F0  C3 42 8F D0 */	lfs f26, "@3832"@sda21(r2)
 lbl_800DF4B4:
 /* 800DF4B4 000DC3F4  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 800DF4B8 000DC3F8  2C 03 00 00 */	cmpwi r3, 0
@@ -3400,7 +3400,7 @@ lbl_800DF55C:
 /* 800DF55C 000DC49C  83 A1 00 F0 */	lwz r29, 0xf0(r1)
 /* 800DF560 000DC4A0  48 00 00 08 */	b lbl_800DF568
 lbl_800DF564:
-/* 800DF564 000DC4A4  3B A2 8F F0 */	addi r29, r2, $$24053@sda21
+/* 800DF564 000DC4A4  3B A2 8F F0 */	addi r29, r2, "@4053"@sda21
 lbl_800DF568:
 /* 800DF568 000DC4A8  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800DF56C 000DC4AC  7F A3 EB 78 */	mr r3, r29
@@ -3438,7 +3438,7 @@ lbl_800DF5D0:
 /* 800DF5D8 000DC518  81 8C 01 00 */	lwz r12, 0x100(r12)
 /* 800DF5DC 000DC51C  7D 88 03 A6 */	mtlr r12
 /* 800DF5E0 000DC520  4E 80 00 21 */	blrl 
-/* 800DF5E4 000DC524  C0 02 8F D0 */	lfs f0, $$23832@sda21(r2)
+/* 800DF5E4 000DC524  C0 02 8F D0 */	lfs f0, "@3832"@sda21(r2)
 /* 800DF5E8 000DC528  7F 83 E3 78 */	mr r3, r28
 /* 800DF5EC 000DC52C  D3 41 01 3C */	stfs f26, 0x13c(r1)
 /* 800DF5F0 000DC530  38 81 01 3C */	addi r4, r1, 0x13c
@@ -3494,8 +3494,8 @@ lbl_800DF680:
 /* 800DF6B0 000DC5F0  38 21 01 A8 */	addi r1, r1, 0x1a8
 /* 800DF6B4 000DC5F4  4E 80 00 20 */	blr 
 
-.global evIsInsideFastCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsInsideFastCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsInsideFastCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsInsideFastCube__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DF6B8 000DC5F8  7C 08 02 A6 */	mflr r0
 /* 800DF6BC 000DC5FC  90 01 00 04 */	stw r0, 4(r1)
 /* 800DF6C0 000DC600  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -3505,8 +3505,8 @@ evIsInsideFastCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DF6D0 000DC610  93 A1 00 7C */	stw r29, 0x7c(r1)
 /* 800DF6D4 000DC614  7C 7D 1B 78 */	mr r29, r3
 /* 800DF6D8 000DC618  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DF6DC 000DC61C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DF6E0 000DC620  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800DF6DC 000DC61C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DF6E0 000DC620  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800DF6E4 000DC624  38 80 00 02 */	li r4, 2
 /* 800DF6E8 000DC628  48 03 7D 49 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DF6EC 000DC62C  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -3604,7 +3604,7 @@ lbl_800DF82C:
 lbl_800DF830:
 /* 800DF830 000DC770  80 8D 98 B8 */	lwz r4, gpMarioOriginal@sda21(r13)
 /* 800DF834 000DC774  2C 05 00 01 */	cmpwi r5, 1
-/* 800DF838 000DC778  C0 02 8F F4 */	lfs f0, $$24803@sda21(r2)
+/* 800DF838 000DC778  C0 02 8F F4 */	lfs f0, "@4803"@sda21(r2)
 /* 800DF83C 000DC77C  80 64 00 10 */	lwz r3, 0x10(r4)
 /* 800DF840 000DC780  80 04 00 14 */	lwz r0, 0x14(r4)
 /* 800DF844 000DC784  90 61 00 5C */	stw r3, 0x5c(r1)
@@ -3699,8 +3699,8 @@ lbl_800DF95C:
 /* 800DF970 000DC8B0  38 21 00 88 */	addi r1, r1, 0x88
 /* 800DF974 000DC8B4  4E 80 00 20 */	blr 
 
-.global evIsFinishMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsFinishMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsFinishMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsFinishMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DF978 000DC8B8  7C 08 02 A6 */	mflr r0
 /* 800DF97C 000DC8BC  90 01 00 04 */	stw r0, 4(r1)
 /* 800DF980 000DC8C0  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -3710,8 +3710,8 @@ evIsFinishMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DF990 000DC8D0  93 C1 00 40 */	stw r30, 0x40(r1)
 /* 800DF994 000DC8D4  93 A1 00 3C */	stw r29, 0x3c(r1)
 /* 800DF998 000DC8D8  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DF99C 000DC8DC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DF9A0 000DC8E0  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800DF99C 000DC8DC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DF9A0 000DC8E0  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800DF9A4 000DC8E4  38 80 00 00 */	li r4, 0
 /* 800DF9A8 000DC8E8  48 03 7A 89 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DF9AC 000DC8EC  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
@@ -3767,8 +3767,8 @@ lbl_800DFA50:
 /* 800DFA64 000DC9A4  38 21 00 48 */	addi r1, r1, 0x48
 /* 800DFA68 000DC9A8  4E 80 00 20 */	blr 
 
-.global evStartMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartMareBottleDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DFA6C 000DC9AC  7C 08 02 A6 */	mflr r0
 /* 800DFA70 000DC9B0  90 01 00 04 */	stw r0, 4(r1)
 /* 800DFA74 000DC9B4  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -3778,8 +3778,8 @@ evStartMareBottleDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DFA84 000DC9C4  93 C1 00 38 */	stw r30, 0x38(r1)
 /* 800DFA88 000DC9C8  93 A1 00 34 */	stw r29, 0x34(r1)
 /* 800DFA8C 000DC9CC  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DFA90 000DC9D0  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DFA94 000DC9D4  3B A4 29 90 */	addi r29, r4, $$21490@l
+/* 800DFA90 000DC9D0  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DFA94 000DC9D4  3B A4 29 90 */	addi r29, r4, "@1490"@l
 /* 800DFA98 000DC9D8  38 80 00 00 */	li r4, 0
 /* 800DFA9C 000DC9DC  48 03 79 95 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DFAA0 000DC9E0  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
@@ -3840,8 +3840,8 @@ lbl_800DFB60:
 /* 800DFB74 000DCAB4  38 21 00 40 */	addi r1, r1, 0x40
 /* 800DFB78 000DCAB8  4E 80 00 20 */	blr 
 
-.global evSetMarioWaiting__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetMarioWaiting__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetMarioWaiting__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetMarioWaiting__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DFB7C 000DCABC  7C 08 02 A6 */	mflr r0
 /* 800DFB80 000DCAC0  90 01 00 04 */	stw r0, 4(r1)
 /* 800DFB84 000DCAC4  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -3864,9 +3864,9 @@ evSetMarioWaiting__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DFBC8 000DCB08  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DFBCC 000DCB0C  7C 03 00 00 */	cmpw r3, r0
 /* 800DFBD0 000DCB10  41 80 00 18 */	blt lbl_800DFBE8
-/* 800DFBD4 000DCB14  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DFBD4 000DCB14  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DFBD8 000DCB18  4C C6 31 82 */	crclr 6
-/* 800DFBDC 000DCB1C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DFBDC 000DCB1C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DFBE0 000DCB20  4B FF D4 C5 */	bl SpcTrace__FPCce
 /* 800DFBE4 000DCB24  48 00 00 2C */	b lbl_800DFC10
 lbl_800DFBE8:
@@ -3887,8 +3887,8 @@ lbl_800DFC10:
 /* 800DFC1C 000DCB5C  7C 08 03 A6 */	mtlr r0
 /* 800DFC20 000DCB60  4E 80 00 20 */	blr 
 
-.global evIsInsideCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsInsideCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsInsideCube__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsInsideCube__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DFC24 000DCB64  7C 08 02 A6 */	mflr r0
 /* 800DFC28 000DCB68  90 01 00 04 */	stw r0, 4(r1)
 /* 800DFC2C 000DCB6C  94 21 FF A0 */	stwu r1, -0x60(r1)
@@ -3901,9 +3901,9 @@ evIsInsideCube__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DFC48 000DCB88  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800DFC4C 000DCB8C  2C 03 00 00 */	cmpwi r3, 0
 /* 800DFC50 000DCB90  41 81 00 38 */	bgt lbl_800DFC88
-/* 800DFC54 000DCB94  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800DFC54 000DCB94  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800DFC58 000DCB98  4C C6 31 82 */	crclr 6
-/* 800DFC5C 000DCB9C  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800DFC5C 000DCB9C  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800DFC60 000DCBA0  4B FF D4 45 */	bl SpcTrace__FPCce
 /* 800DFC64 000DCBA4  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800DFC68 000DCBA8  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -3947,7 +3947,7 @@ lbl_800DFCE8:
 lbl_800DFCEC:
 /* 800DFCEC 000DCC2C  80 ED 98 B8 */	lwz r7, gpMarioOriginal@sda21(r13)
 /* 800DFCF0 000DCC30  7C 05 03 78 */	mr r5, r0
-/* 800DFCF4 000DCC34  C0 02 8F F4 */	lfs f0, $$24803@sda21(r2)
+/* 800DFCF4 000DCC34  C0 02 8F F4 */	lfs f0, "@4803"@sda21(r2)
 /* 800DFCF8 000DCC38  38 81 00 3C */	addi r4, r1, 0x3c
 /* 800DFCFC 000DCC3C  80 C7 00 10 */	lwz r6, 0x10(r7)
 /* 800DFD00 000DCC40  80 07 00 14 */	lwz r0, 0x14(r7)
@@ -3974,9 +3974,9 @@ lbl_800DFD3C:
 /* 800DFD4C 000DCC8C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800DFD50 000DCC90  7C 03 00 00 */	cmpw r3, r0
 /* 800DFD54 000DCC94  41 80 00 18 */	blt lbl_800DFD6C
-/* 800DFD58 000DCC98  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800DFD58 000DCC98  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800DFD5C 000DCC9C  4C C6 31 82 */	crclr 6
-/* 800DFD60 000DCCA0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800DFD60 000DCCA0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800DFD64 000DCCA4  4B FF D3 41 */	bl SpcTrace__FPCce
 /* 800DFD68 000DCCA8  48 00 00 2C */	b lbl_800DFD94
 lbl_800DFD6C:
@@ -3997,8 +3997,8 @@ lbl_800DFD94:
 /* 800DFDA0 000DCCE0  7C 08 03 A6 */	mtlr r0
 /* 800DFDA4 000DCCE4  4E 80 00 20 */	blr 
 
-.global evKillWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evKillWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evKillWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evKillWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800DFDA8 000DCCE8  7C 08 02 A6 */	mflr r0
 /* 800DFDAC 000DCCEC  90 01 00 04 */	stw r0, 4(r1)
 /* 800DFDB0 000DCCF0  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -4006,8 +4006,8 @@ evKillWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800DFDB8 000DCCF8  7C 7B 1B 78 */	mr r27, r3
 /* 800DFDBC 000DCCFC  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800DFDC0 000DCD00  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800DFDC4 000DCD04  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800DFDC8 000DCD08  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800DFDC4 000DCD04  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800DFDC8 000DCD08  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800DFDCC 000DCD0C  38 80 00 02 */	li r4, 2
 /* 800DFDD0 000DCD10  48 03 76 61 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800DFDD4 000DCD14  80 7B 00 1C */	lwz r3, 0x1c(r27)
@@ -4188,8 +4188,8 @@ lbl_800E0038:
 /* 800E0044 000DCF84  7C 08 03 A6 */	mtlr r0
 /* 800E0048 000DCF88  4E 80 00 20 */	blr 
 
-.global evRefreshWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evRefreshWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evRefreshWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evRefreshWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E004C 000DCF8C  7C 08 02 A6 */	mflr r0
 /* 800E0050 000DCF90  90 01 00 04 */	stw r0, 4(r1)
 /* 800E0054 000DCF94  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -4197,8 +4197,8 @@ evRefreshWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E005C 000DCF9C  7C 7B 1B 78 */	mr r27, r3
 /* 800E0060 000DCFA0  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E0064 000DCFA4  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E0068 000DCFA8  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E006C 000DCFAC  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800E0068 000DCFA8  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E006C 000DCFAC  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800E0070 000DCFB0  38 80 00 02 */	li r4, 2
 /* 800E0074 000DCFB4  48 03 73 BD */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E0078 000DCFB8  80 7B 00 1C */	lwz r3, 0x1c(r27)
@@ -4379,8 +4379,8 @@ lbl_800E02DC:
 /* 800E02E8 000DD228  7C 08 03 A6 */	mtlr r0
 /* 800E02EC 000DD22C  4E 80 00 20 */	blr 
 
-.global evCheckWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evCheckWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evCheckWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evCheckWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E02F0 000DD230  7C 08 02 A6 */	mflr r0
 /* 800E02F4 000DD234  90 01 00 04 */	stw r0, 4(r1)
 /* 800E02F8 000DD238  94 21 FF 50 */	stwu r1, -0xb0(r1)
@@ -4388,8 +4388,8 @@ evCheckWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E0300 000DD240  7C 7A 1B 78 */	mr r26, r3
 /* 800E0304 000DD244  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E0308 000DD248  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E030C 000DD24C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E0310 000DD250  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800E030C 000DD24C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E0310 000DD250  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800E0314 000DD254  38 80 00 02 */	li r4, 2
 /* 800E0318 000DD258  48 03 71 19 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E031C 000DD25C  80 7A 00 1C */	lwz r3, 0x1c(r26)
@@ -4572,8 +4572,8 @@ lbl_800E0588:
 /* 800E0594 000DD4D4  7C 08 03 A6 */	mtlr r0
 /* 800E0598 000DD4D8  4E 80 00 20 */	blr 
 
-.global evStartMarioTalking__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartMarioTalking__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartMarioTalking__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartMarioTalking__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E059C 000DD4DC  7C 08 02 A6 */	mflr r0
 /* 800E05A0 000DD4E0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E05A4 000DD4E4  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -4592,9 +4592,9 @@ evStartMarioTalking__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E05D8 000DD518  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E05DC 000DD51C  7C 03 00 00 */	cmpw r3, r0
 /* 800E05E0 000DD520  41 80 00 18 */	blt lbl_800E05F8
-/* 800E05E4 000DD524  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E05E4 000DD524  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E05E8 000DD528  4C C6 31 82 */	crclr 6
-/* 800E05EC 000DD52C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E05EC 000DD52C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E05F0 000DD530  4B FF CA B5 */	bl SpcTrace__FPCce
 /* 800E05F4 000DD534  48 00 00 2C */	b lbl_800E0620
 lbl_800E05F8:
@@ -4615,8 +4615,8 @@ lbl_800E0620:
 /* 800E062C 000DD56C  7C 08 03 A6 */	mtlr r0
 /* 800E0630 000DD570  4E 80 00 20 */	blr 
 
-.global evChangeNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evChangeNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evChangeNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evChangeNozzle__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E0634 000DD574  7C 08 02 A6 */	mflr r0
 /* 800E0638 000DD578  90 01 00 04 */	stw r0, 4(r1)
 /* 800E063C 000DD57C  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -4629,9 +4629,9 @@ evChangeNozzle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E0658 000DD598  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E065C 000DD59C  2C 03 00 00 */	cmpwi r3, 0
 /* 800E0660 000DD5A0  41 81 00 38 */	bgt lbl_800E0698
-/* 800E0664 000DD5A4  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E0664 000DD5A4  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E0668 000DD5A8  4C C6 31 82 */	crclr 6
-/* 800E066C 000DD5AC  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E066C 000DD5AC  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E0670 000DD5B0  4B FF CA 35 */	bl SpcTrace__FPCce
 /* 800E0674 000DD5B4  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E0678 000DD5B8  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -4692,9 +4692,9 @@ lbl_800E0724:
 /* 800E0734 000DD674  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E0738 000DD678  7C 03 00 00 */	cmpw r3, r0
 /* 800E073C 000DD67C  41 80 00 18 */	blt lbl_800E0754
-/* 800E0740 000DD680  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E0740 000DD680  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E0744 000DD684  4C C6 31 82 */	crclr 6
-/* 800E0748 000DD688  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E0748 000DD688  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E074C 000DD68C  4B FF C9 59 */	bl SpcTrace__FPCce
 /* 800E0750 000DD690  48 00 00 2C */	b lbl_800E077C
 lbl_800E0754:
@@ -4715,8 +4715,8 @@ lbl_800E077C:
 /* 800E0788 000DD6C8  7C 08 03 A6 */	mtlr r0
 /* 800E078C 000DD6CC  4E 80 00 20 */	blr 
 
-.global evAppearShineForWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearShineForWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearShineForWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearShineForWoodBox__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E0790 000DD6D0  7C 08 02 A6 */	mflr r0
 /* 800E0794 000DD6D4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E0798 000DD6D8  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -4725,8 +4725,8 @@ evAppearShineForWoodBox__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E07A4 000DD6E4  93 C1 00 40 */	stw r30, 0x40(r1)
 /* 800E07A8 000DD6E8  7C 7E 1B 78 */	mr r30, r3
 /* 800E07AC 000DD6EC  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E07B0 000DD6F0  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E07B4 000DD6F4  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E07B0 000DD6F0  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E07B4 000DD6F4  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E07B8 000DD6F8  38 80 00 01 */	li r4, 1
 /* 800E07BC 000DD6FC  48 03 6C 75 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E07C0 000DD700  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -4782,11 +4782,11 @@ lbl_800E086C:
 /* 800E086C 000DD7AC  54 00 10 3A */	slwi r0, r0, 2
 /* 800E0870 000DD7B0  80 6D 9A 18 */	lwz r3, gpItemManager@sda21(r13)
 /* 800E0874 000DD7B4  38 8D 84 48 */	addi r4, r13, sShineViewObjName$3431@sda21
-/* 800E0878 000DD7B8  C0 22 8F F8 */	lfs f1, $$25131@sda21(r2)
+/* 800E0878 000DD7B8  C0 22 8F F8 */	lfs f1, "@5131"@sda21(r2)
 /* 800E087C 000DD7BC  7C 84 00 2E */	lwzx r4, r4, r0
 /* 800E0880 000DD7C0  38 BF 07 F0 */	addi r5, r31, 0x7f0
-/* 800E0884 000DD7C4  C0 42 8F FC */	lfs f2, $$25132@sda21(r2)
-/* 800E0888 000DD7C8  C0 62 90 00 */	lfs f3, $$25133@sda21(r2)
+/* 800E0884 000DD7C4  C0 42 8F FC */	lfs f2, "@5132"@sda21(r2)
+/* 800E0888 000DD7C8  C0 62 90 00 */	lfs f3, "@5133"@sda21(r2)
 /* 800E088C 000DD7CC  48 0B 77 45 */	bl makeShineAppearWithDemo__12TItemManagerFPCcPCcfff
 /* 800E0890 000DD7D0  38 00 00 00 */	li r0, 0
 /* 800E0894 000DD7D4  90 01 00 24 */	stw r0, 0x24(r1)
@@ -4818,8 +4818,8 @@ lbl_800E08E4:
 /* 800E08F4 000DD834  38 21 00 48 */	addi r1, r1, 0x48
 /* 800E08F8 000DD838  4E 80 00 20 */	blr 
 
-.global evAppearShineFromKageMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearShineFromKageMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearShineFromKageMario__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearShineFromKageMario__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E08FC 000DD83C  7C 08 02 A6 */	mflr r0
 /* 800E0900 000DD840  90 01 00 04 */	stw r0, 4(r1)
 /* 800E0904 000DD844  94 21 FF 30 */	stwu r1, -0xd0(r1)
@@ -4827,8 +4827,8 @@ evAppearShineFromKageMario__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E090C 000DD84C  7C 7C 1B 78 */	mr r28, r3
 /* 800E0910 000DD850  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E0914 000DD854  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E0918 000DD858  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E091C 000DD85C  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E0918 000DD858  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E091C 000DD85C  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E0920 000DD860  38 80 00 03 */	li r4, 3
 /* 800E0924 000DD864  48 03 6B 0D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E0928 000DD868  80 7C 00 1C */	lwz r3, 0x1c(r28)
@@ -4913,7 +4913,7 @@ lbl_800E0A40:
 /* 800E0A40 000DD980  80 01 00 9C */	lwz r0, 0x9c(r1)
 /* 800E0A44 000DD984  48 00 00 08 */	b lbl_800E0A4C
 lbl_800E0A48:
-/* 800E0A48 000DD988  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E0A48 000DD988  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E0A4C:
 /* 800E0A4C 000DD98C  80 7C 00 1C */	lwz r3, 0x1c(r28)
 /* 800E0A50 000DD990  7C 1D 03 78 */	mr r29, r0
@@ -4951,7 +4951,7 @@ lbl_800E0AC4:
 /* 800E0AC4 000DDA04  80 01 00 94 */	lwz r0, 0x94(r1)
 /* 800E0AC8 000DDA08  48 00 00 08 */	b lbl_800E0AD0
 lbl_800E0ACC:
-/* 800E0ACC 000DDA0C  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E0ACC 000DDA0C  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E0AD0:
 /* 800E0AD0 000DDA10  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E0AD4 000DDA14  7C 1A 03 78 */	mr r26, r0
@@ -5014,8 +5014,8 @@ lbl_800E0BA4:
 /* 800E0BB0 000DDAF0  7C 08 03 A6 */	mtlr r0
 /* 800E0BB4 000DDAF4  4E 80 00 20 */	blr 
 
-.global evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E0BB8 000DDAF8  7C 08 02 A6 */	mflr r0
 /* 800E0BBC 000DDAFC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E0BC0 000DDB00  94 21 FF 50 */	stwu r1, -0xb0(r1)
@@ -5023,8 +5023,8 @@ evAppearShineFromNPCWithoutDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E0BC8 000DDB08  7C 7D 1B 78 */	mr r29, r3
 /* 800E0BCC 000DDB0C  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E0BD0 000DDB10  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E0BD4 000DDB14  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E0BD8 000DDB18  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E0BD4 000DDB14  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E0BD8 000DDB18  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E0BDC 000DDB1C  38 80 00 02 */	li r4, 2
 /* 800E0BE0 000DDB20  48 03 68 51 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E0BE4 000DDB24  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -5090,7 +5090,7 @@ lbl_800E0CC0:
 /* 800E0CC0 000DDC00  80 01 00 78 */	lwz r0, 0x78(r1)
 /* 800E0CC4 000DDC04  48 00 00 08 */	b lbl_800E0CCC
 lbl_800E0CC8:
-/* 800E0CC8 000DDC08  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E0CC8 000DDC08  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E0CCC:
 /* 800E0CCC 000DDC0C  80 61 00 84 */	lwz r3, 0x84(r1)
 /* 800E0CD0 000DDC10  7C 1E 03 78 */	mr r30, r0
@@ -5115,7 +5115,7 @@ lbl_800E0D14:
 /* 800E0D14 000DDC54  83 81 00 70 */	lwz r28, 0x70(r1)
 /* 800E0D18 000DDC58  48 00 00 08 */	b lbl_800E0D20
 lbl_800E0D1C:
-/* 800E0D1C 000DDC5C  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E0D1C 000DDC5C  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E0D20:
 /* 800E0D20 000DDC60  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E0D24 000DDC64  7F 83 E3 78 */	mr r3, r28
@@ -5199,8 +5199,8 @@ lbl_800E0E34:
 /* 800E0E40 000DDD80  7C 08 03 A6 */	mtlr r0
 /* 800E0E44 000DDD84  4E 80 00 20 */	blr 
 
-.global evAppearShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearShine__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E0E48 000DDD88  7C 08 02 A6 */	mflr r0
 /* 800E0E4C 000DDD8C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E0E50 000DDD90  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -5211,8 +5211,8 @@ evAppearShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E0E64 000DDDA4  7C 7D 1B 78 */	mr r29, r3
 /* 800E0E68 000DDDA8  93 81 00 70 */	stw r28, 0x70(r1)
 /* 800E0E6C 000DDDAC  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E0E70 000DDDB0  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E0E74 000DDDB4  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E0E70 000DDDB0  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E0E74 000DDDB4  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E0E78 000DDDB8  38 80 00 02 */	li r4, 2
 /* 800E0E7C 000DDDBC  48 03 65 B5 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E0E80 000DDDC0  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -5250,7 +5250,7 @@ lbl_800E0EF4:
 /* 800E0EF4 000DDE34  80 01 00 6C */	lwz r0, 0x6c(r1)
 /* 800E0EF8 000DDE38  48 00 00 08 */	b lbl_800E0F00
 lbl_800E0EFC:
-/* 800E0EFC 000DDE3C  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E0EFC 000DDE3C  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E0F00:
 /* 800E0F00 000DDE40  80 7D 00 1C */	lwz r3, 0x1c(r29)
 /* 800E0F04 000DDE44  7C 1E 03 78 */	mr r30, r0
@@ -5288,15 +5288,15 @@ lbl_800E0F78:
 /* 800E0F78 000DDEB8  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800E0F7C 000DDEBC  48 00 00 08 */	b lbl_800E0F84
 lbl_800E0F80:
-/* 800E0F80 000DDEC0  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E0F80 000DDEC0  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E0F84:
 /* 800E0F84 000DDEC4  7C 1C 03 78 */	mr r28, r0
 /* 800E0F88 000DDEC8  38 7E 00 00 */	addi r3, r30, 0
-/* 800E0F8C 000DDECC  38 82 8F F0 */	addi r4, r2, $$24053@sda21
+/* 800E0F8C 000DDECC  38 82 8F F0 */	addi r4, r2, "@4053"@sda21
 /* 800E0F90 000DDED0  4B FA 4C CD */	bl strcmp
 /* 800E0F94 000DDED4  2C 03 00 00 */	cmpwi r3, 0
 /* 800E0F98 000DDED8  41 82 00 24 */	beq lbl_800E0FBC
-/* 800E0F9C 000DDEDC  C0 22 8F D0 */	lfs f1, $$23832@sda21(r2)
+/* 800E0F9C 000DDEDC  C0 22 8F D0 */	lfs f1, "@3832"@sda21(r2)
 /* 800E0FA0 000DDEE0  7F 84 E3 78 */	mr r4, r28
 /* 800E0FA4 000DDEE4  80 6D 9A 18 */	lwz r3, gpItemManager@sda21(r13)
 /* 800E0FA8 000DDEE8  7F C5 F3 78 */	mr r5, r30
@@ -5354,8 +5354,8 @@ lbl_800E1050:
 /* 800E1068 000DDFA8  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E106C 000DDFAC  4E 80 00 20 */	blr 
 
-.global evAppearShineFromNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearShineFromNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearShineFromNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearShineFromNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1070 000DDFB0  7C 08 02 A6 */	mflr r0
 /* 800E1074 000DDFB4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1078 000DDFB8  94 21 FF 30 */	stwu r1, -0xd0(r1)
@@ -5363,8 +5363,8 @@ evAppearShineFromNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1080 000DDFC0  7C 7B 1B 78 */	mr r27, r3
 /* 800E1084 000DDFC4  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E1088 000DDFC8  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E108C 000DDFCC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E1090 000DDFD0  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E108C 000DDFCC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E1090 000DDFD0  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E1094 000DDFD4  38 80 00 03 */	li r4, 3
 /* 800E1098 000DDFD8  48 03 63 99 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E109C 000DDFDC  80 7B 00 1C */	lwz r3, 0x1c(r27)
@@ -5402,7 +5402,7 @@ lbl_800E1110:
 /* 800E1110 000DE050  80 01 00 A0 */	lwz r0, 0xa0(r1)
 /* 800E1114 000DE054  48 00 00 08 */	b lbl_800E111C
 lbl_800E1118:
-/* 800E1118 000DE058  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E1118 000DE058  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E111C:
 /* 800E111C 000DE05C  80 7B 00 1C */	lwz r3, 0x1c(r27)
 /* 800E1120 000DE060  7C 1D 03 78 */	mr r29, r0
@@ -5468,7 +5468,7 @@ lbl_800E11FC:
 /* 800E11FC 000DE13C  80 01 00 90 */	lwz r0, 0x90(r1)
 /* 800E1200 000DE140  48 00 00 08 */	b lbl_800E1208
 lbl_800E1204:
-/* 800E1204 000DE144  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E1204 000DE144  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E1208:
 /* 800E1208 000DE148  80 61 00 A4 */	lwz r3, 0xa4(r1)
 /* 800E120C 000DE14C  7C 1C 03 78 */	mr r28, r0
@@ -5493,7 +5493,7 @@ lbl_800E1250:
 /* 800E1250 000DE190  83 C1 00 88 */	lwz r30, 0x88(r1)
 /* 800E1254 000DE194  48 00 00 08 */	b lbl_800E125C
 lbl_800E1258:
-/* 800E1258 000DE198  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E1258 000DE198  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E125C:
 /* 800E125C 000DE19C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E1260 000DE1A0  7F C3 F3 78 */	mr r3, r30
@@ -5528,7 +5528,7 @@ lbl_800E12C4:
 /* 800E12C4 000DE204  3B C0 00 00 */	li r30, 0
 lbl_800E12C8:
 /* 800E12C8 000DE208  38 7D 00 00 */	addi r3, r29, 0
-/* 800E12CC 000DE20C  38 82 8F F0 */	addi r4, r2, $$24053@sda21
+/* 800E12CC 000DE20C  38 82 8F F0 */	addi r4, r2, "@4053"@sda21
 /* 800E12D0 000DE210  4B FA 49 8D */	bl strcmp
 /* 800E12D4 000DE214  2C 03 00 00 */	cmpwi r3, 0
 /* 800E12D8 000DE218  41 82 00 24 */	beq lbl_800E12FC
@@ -5599,8 +5599,8 @@ lbl_800E13C0:
 /* 800E13CC 000DE30C  7C 08 03 A6 */	mtlr r0
 /* 800E13D0 000DE310  4E 80 00 20 */	blr 
 
-.global evAppearMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evAppearMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evAppearMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evAppearMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E13D4 000DE314  7C 08 02 A6 */	mflr r0
 /* 800E13D8 000DE318  90 01 00 04 */	stw r0, 4(r1)
 /* 800E13DC 000DE31C  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -5615,9 +5615,9 @@ evAppearMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1400 000DE340  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E1404 000DE344  2C 03 00 00 */	cmpwi r3, 0
 /* 800E1408 000DE348  41 81 00 38 */	bgt lbl_800E1440
-/* 800E140C 000DE34C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E140C 000DE34C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E1410 000DE350  4C C6 31 82 */	crclr 6
-/* 800E1414 000DE354  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E1414 000DE354  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E1418 000DE358  4B FF BC 8D */	bl SpcTrace__FPCce
 /* 800E141C 000DE35C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E1420 000DE360  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -5662,7 +5662,7 @@ lbl_800E14AC:
 /* 800E14AC 000DE3EC  83 C1 00 68 */	lwz r30, 0x68(r1)
 /* 800E14B0 000DE3F0  48 00 00 08 */	b lbl_800E14B8
 lbl_800E14B4:
-/* 800E14B4 000DE3F4  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E14B4 000DE3F4  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E14B8:
 /* 800E14B8 000DE3F8  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E14BC 000DE3FC  7F C3 F3 78 */	mr r3, r30
@@ -5717,9 +5717,9 @@ lbl_800E1558:
 /* 800E1568 000DE4A8  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E156C 000DE4AC  7C 03 00 00 */	cmpw r3, r0
 /* 800E1570 000DE4B0  41 80 00 18 */	blt lbl_800E1588
-/* 800E1574 000DE4B4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E1574 000DE4B4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1578 000DE4B8  4C C6 31 82 */	crclr 6
-/* 800E157C 000DE4BC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E157C 000DE4BC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E1580 000DE4C0  4B FF BB 25 */	bl SpcTrace__FPCce
 /* 800E1584 000DE4C4  48 00 00 2C */	b lbl_800E15B0
 lbl_800E1588:
@@ -5756,8 +5756,8 @@ appear__11TMapObjBaseFv:
 /* 800E15F0 000DE530  7C 08 03 A6 */	mtlr r0
 /* 800E15F4 000DE534  4E 80 00 20 */	blr 
 
-.global evKillMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evKillMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evKillMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evKillMushroom1up__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E15F8 000DE538  7C 08 02 A6 */	mflr r0
 /* 800E15FC 000DE53C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1600 000DE540  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -5772,9 +5772,9 @@ evKillMushroom1up__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1624 000DE564  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E1628 000DE568  2C 03 00 00 */	cmpwi r3, 0
 /* 800E162C 000DE56C  41 81 00 38 */	bgt lbl_800E1664
-/* 800E1630 000DE570  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E1630 000DE570  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E1634 000DE574  4C C6 31 82 */	crclr 6
-/* 800E1638 000DE578  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E1638 000DE578  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E163C 000DE57C  4B FF BA 69 */	bl SpcTrace__FPCce
 /* 800E1640 000DE580  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E1644 000DE584  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -5819,7 +5819,7 @@ lbl_800E16D0:
 /* 800E16D0 000DE610  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E16D4 000DE614  48 00 00 08 */	b lbl_800E16DC
 lbl_800E16D8:
-/* 800E16D8 000DE618  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E16D8 000DE618  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E16DC:
 /* 800E16DC 000DE61C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E16E0 000DE620  7F C3 F3 78 */	mr r3, r30
@@ -5863,9 +5863,9 @@ lbl_800E1744:
 /* 800E1764 000DE6A4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E1768 000DE6A8  7C 03 00 00 */	cmpw r3, r0
 /* 800E176C 000DE6AC  41 80 00 18 */	blt lbl_800E1784
-/* 800E1770 000DE6B0  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E1770 000DE6B0  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1774 000DE6B4  4C C6 31 82 */	crclr 6
-/* 800E1778 000DE6B8  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E1778 000DE6B8  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E177C 000DE6BC  4B FF B9 29 */	bl SpcTrace__FPCce
 /* 800E1780 000DE6C0  48 00 00 2C */	b lbl_800E17AC
 lbl_800E1784:
@@ -5902,8 +5902,8 @@ kill__11TMapObjBaseFv:
 /* 800E17EC 000DE72C  7C 08 03 A6 */	mtlr r0
 /* 800E17F0 000DE730  4E 80 00 20 */	blr 
 
-.global evKillShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evKillShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evKillShine__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evKillShine__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E17F4 000DE734  7C 08 02 A6 */	mflr r0
 /* 800E17F8 000DE738  90 01 00 04 */	stw r0, 4(r1)
 /* 800E17FC 000DE73C  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -5918,9 +5918,9 @@ evKillShine__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1820 000DE760  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E1824 000DE764  2C 03 00 00 */	cmpwi r3, 0
 /* 800E1828 000DE768  41 81 00 38 */	bgt lbl_800E1860
-/* 800E182C 000DE76C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E182C 000DE76C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E1830 000DE770  4C C6 31 82 */	crclr 6
-/* 800E1834 000DE774  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E1834 000DE774  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E1838 000DE778  4B FF B8 6D */	bl SpcTrace__FPCce
 /* 800E183C 000DE77C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E1840 000DE780  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -5965,7 +5965,7 @@ lbl_800E18CC:
 /* 800E18CC 000DE80C  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E18D0 000DE810  48 00 00 08 */	b lbl_800E18D8
 lbl_800E18D4:
-/* 800E18D4 000DE814  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E18D4 000DE814  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E18D8:
 /* 800E18D8 000DE818  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E18DC 000DE81C  7F C3 F3 78 */	mr r3, r30
@@ -6009,9 +6009,9 @@ lbl_800E1940:
 /* 800E1960 000DE8A0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E1964 000DE8A4  7C 03 00 00 */	cmpw r3, r0
 /* 800E1968 000DE8A8  41 80 00 18 */	blt lbl_800E1980
-/* 800E196C 000DE8AC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E196C 000DE8AC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1970 000DE8B0  4C C6 31 82 */	crclr 6
-/* 800E1974 000DE8B4  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E1974 000DE8B4  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E1978 000DE8B8  4B FF B7 2D */	bl SpcTrace__FPCce
 /* 800E197C 000DE8BC  48 00 00 2C */	b lbl_800E19A8
 lbl_800E1980:
@@ -6034,8 +6034,8 @@ lbl_800E19A8:
 /* 800E19BC 000DE8FC  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E19C0 000DE900  4E 80 00 20 */	blr 
 
-.global evGetTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetTime__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E19C4 000DE904  7C 08 02 A6 */	mflr r0
 /* 800E19C8 000DE908  90 01 00 04 */	stw r0, 4(r1)
 /* 800E19CC 000DE90C  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -6055,9 +6055,9 @@ evGetTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1A04 000DE944  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E1A08 000DE948  7C 03 00 00 */	cmpw r3, r0
 /* 800E1A0C 000DE94C  41 80 00 18 */	blt lbl_800E1A24
-/* 800E1A10 000DE950  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E1A10 000DE950  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1A14 000DE954  4C C6 31 82 */	crclr 6
-/* 800E1A18 000DE958  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E1A18 000DE958  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E1A1C 000DE95C  4B FF B6 89 */	bl SpcTrace__FPCce
 /* 800E1A20 000DE960  48 00 00 2C */	b lbl_800E1A4C
 lbl_800E1A24:
@@ -6078,8 +6078,8 @@ lbl_800E1A4C:
 /* 800E1A58 000DE998  7C 08 03 A6 */	mtlr r0
 /* 800E1A5C 000DE99C  4E 80 00 20 */	blr 
 
-.global evMonteManReachFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evMonteManReachFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evMonteManReachFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evMonteManReachFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1A60 000DE9A0  7C 08 02 A6 */	mflr r0
 /* 800E1A64 000DE9A4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1A68 000DE9A8  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -6091,8 +6091,8 @@ evMonteManReachFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1A80 000DE9C0  93 81 00 30 */	stw r28, 0x30(r1)
 /* 800E1A84 000DE9C4  3B 80 00 00 */	li r28, 0
 /* 800E1A88 000DE9C8  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E1A8C 000DE9CC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E1A90 000DE9D0  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800E1A8C 000DE9CC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E1A90 000DE9D0  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800E1A94 000DE9D4  38 80 00 00 */	li r4, 0
 /* 800E1A98 000DE9D8  48 03 59 99 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E1A9C 000DE9DC  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
@@ -6143,8 +6143,8 @@ lbl_800E1B2C:
 /* 800E1B44 000DEA84  38 21 00 40 */	addi r1, r1, 0x40
 /* 800E1B48 000DEA88  4E 80 00 20 */	blr 
 
-.global evStopTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStopTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStopTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStopTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1B4C 000DEA8C  7C 08 02 A6 */	mflr r0
 /* 800E1B50 000DEA90  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1B54 000DEA94  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -6164,9 +6164,9 @@ evStopTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1B8C 000DEACC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E1B90 000DEAD0  7C 03 00 00 */	cmpw r3, r0
 /* 800E1B94 000DEAD4  41 80 00 18 */	blt lbl_800E1BAC
-/* 800E1B98 000DEAD8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E1B98 000DEAD8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1B9C 000DEADC  4C C6 31 82 */	crclr 6
-/* 800E1BA0 000DEAE0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E1BA0 000DEAE0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E1BA4 000DEAE4  4B FF B5 01 */	bl SpcTrace__FPCce
 /* 800E1BA8 000DEAE8  48 00 00 2C */	b lbl_800E1BD4
 lbl_800E1BAC:
@@ -6187,8 +6187,8 @@ lbl_800E1BD4:
 /* 800E1BE0 000DEB20  7C 08 03 A6 */	mtlr r0
 /* 800E1BE4 000DEB24  4E 80 00 20 */	blr 
 
-.global evStartMonteman__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartMonteman__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartMonteman__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartMonteman__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1BE8 000DEB28  7C 08 02 A6 */	mflr r0
 /* 800E1BEC 000DEB2C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1BF0 000DEB30  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -6198,8 +6198,8 @@ evStartMonteman__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1C00 000DEB40  93 A1 00 64 */	stw r29, 0x64(r1)
 /* 800E1C04 000DEB44  7C 7D 1B 78 */	mr r29, r3
 /* 800E1C08 000DEB48  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E1C0C 000DEB4C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E1C10 000DEB50  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E1C0C 000DEB4C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E1C10 000DEB50  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E1C14 000DEB54  38 80 00 01 */	li r4, 1
 /* 800E1C18 000DEB58  48 03 58 19 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E1C1C 000DEB5C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
@@ -6298,8 +6298,8 @@ lbl_800E1D58:
 /* 800E1D6C 000DECAC  38 21 00 70 */	addi r1, r1, 0x70
 /* 800E1D70 000DECB0  4E 80 00 20 */	blr 
 
-.global evStartTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1D74 000DECB4  7C 08 02 A6 */	mflr r0
 /* 800E1D78 000DECB8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1D7C 000DECBC  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -6314,9 +6314,9 @@ evStartTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1DA0 000DECE0  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E1DA4 000DECE4  2C 03 00 00 */	cmpwi r3, 0
 /* 800E1DA8 000DECE8  41 81 00 38 */	bgt lbl_800E1DE0
-/* 800E1DAC 000DECEC  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E1DAC 000DECEC  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E1DB0 000DECF0  4C C6 31 82 */	crclr 6
-/* 800E1DB4 000DECF4  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E1DB4 000DECF4  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E1DB8 000DECF8  4B FF B2 ED */	bl SpcTrace__FPCce
 /* 800E1DBC 000DECFC  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E1DC0 000DED00  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -6375,9 +6375,9 @@ lbl_800E1E44:
 /* 800E1E7C 000DEDBC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E1E80 000DEDC0  7C 03 00 00 */	cmpw r3, r0
 /* 800E1E84 000DEDC4  41 80 00 18 */	blt lbl_800E1E9C
-/* 800E1E88 000DEDC8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E1E88 000DEDC8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E1E8C 000DEDCC  4C C6 31 82 */	crclr 6
-/* 800E1E90 000DEDD0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E1E90 000DEDD0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E1E94 000DEDD4  4B FF B2 11 */	bl SpcTrace__FPCce
 /* 800E1E98 000DEDD8  48 00 00 2C */	b lbl_800E1EC4
 lbl_800E1E9C:
@@ -6400,8 +6400,8 @@ lbl_800E1EC4:
 /* 800E1ED8 000DEE18  38 21 00 68 */	addi r1, r1, 0x68
 /* 800E1EDC 000DEE1C  4E 80 00 20 */	blr 
 
-.global evInsertTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evInsertTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evInsertTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evInsertTimer__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E1EE0 000DEE20  7C 08 02 A6 */	mflr r0
 /* 800E1EE4 000DEE24  90 01 00 04 */	stw r0, 4(r1)
 /* 800E1EE8 000DEE28  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -6411,8 +6411,8 @@ evInsertTimer__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E1EF8 000DEE38  93 A1 00 94 */	stw r29, 0x94(r1)
 /* 800E1EFC 000DEE3C  7C 7D 1B 78 */	mr r29, r3
 /* 800E1F00 000DEE40  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E1F04 000DEE44  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E1F08 000DEE48  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E1F04 000DEE44  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E1F08 000DEE48  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E1F0C 000DEE4C  38 80 00 02 */	li r4, 2
 /* 800E1F10 000DEE50  48 03 55 21 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E1F14 000DEE54  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -6561,8 +6561,8 @@ lbl_800E20F8:
 /* 800E210C 000DF04C  38 21 00 A0 */	addi r1, r1, 0xa0
 /* 800E2110 000DF050  4E 80 00 20 */	blr 
 
-.global evForceCloseTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evForceCloseTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evForceCloseTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evForceCloseTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2114 000DF054  7C 08 02 A6 */	mflr r0
 /* 800E2118 000DF058  90 01 00 04 */	stw r0, 4(r1)
 /* 800E211C 000DF05C  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -6581,9 +6581,9 @@ evForceCloseTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2150 000DF090  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2154 000DF094  7C 03 00 00 */	cmpw r3, r0
 /* 800E2158 000DF098  41 80 00 18 */	blt lbl_800E2170
-/* 800E215C 000DF09C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E215C 000DF09C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2160 000DF0A0  4C C6 31 82 */	crclr 6
-/* 800E2164 000DF0A4  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2164 000DF0A4  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2168 000DF0A8  4B FF AF 3D */	bl SpcTrace__FPCce
 /* 800E216C 000DF0AC  48 00 00 2C */	b lbl_800E2198
 lbl_800E2170:
@@ -6604,8 +6604,8 @@ lbl_800E2198:
 /* 800E21A4 000DF0E4  7C 08 03 A6 */	mtlr r0
 /* 800E21A8 000DF0E8  4E 80 00 20 */	blr 
 
-.global evRaiseBuilding__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evRaiseBuilding__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evRaiseBuilding__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evRaiseBuilding__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E21AC 000DF0EC  7C 08 02 A6 */	mflr r0
 /* 800E21B0 000DF0F0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E21B4 000DF0F4  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -6616,8 +6616,8 @@ evRaiseBuilding__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E21C8 000DF108  93 A1 00 64 */	stw r29, 0x64(r1)
 /* 800E21CC 000DF10C  93 81 00 60 */	stw r28, 0x60(r1)
 /* 800E21D0 000DF110  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E21D4 000DF114  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E21D8 000DF118  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E21D4 000DF114  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E21D8 000DF118  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E21DC 000DF11C  38 80 00 01 */	li r4, 1
 /* 800E21E0 000DF120  48 03 52 51 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E21E4 000DF124  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -6716,8 +6716,8 @@ lbl_800E231C:
 /* 800E2334 000DF274  38 21 00 70 */	addi r1, r1, 0x70
 /* 800E2338 000DF278  4E 80 00 20 */	blr 
 
-.global evIsMapEventFinishedAll__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsMapEventFinishedAll__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsMapEventFinishedAll__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsMapEventFinishedAll__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E233C 000DF27C  7C 08 02 A6 */	mflr r0
 /* 800E2340 000DF280  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2344 000DF284  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -6732,9 +6732,9 @@ evIsMapEventFinishedAll__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2368 000DF2A8  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E236C 000DF2AC  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2370 000DF2B0  41 81 00 38 */	bgt lbl_800E23A8
-/* 800E2374 000DF2B4  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E2374 000DF2B4  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E2378 000DF2B8  4C C6 31 82 */	crclr 6
-/* 800E237C 000DF2BC  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E237C 000DF2BC  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2380 000DF2C0  4B FF AD 25 */	bl SpcTrace__FPCce
 /* 800E2384 000DF2C4  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E2388 000DF2C8  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -6779,7 +6779,7 @@ lbl_800E2414:
 /* 800E2414 000DF354  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E2418 000DF358  48 00 00 08 */	b lbl_800E2420
 lbl_800E241C:
-/* 800E241C 000DF35C  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E241C 000DF35C  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E2420:
 /* 800E2420 000DF360  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E2424 000DF364  7F C3 F3 78 */	mr r3, r30
@@ -6824,9 +6824,9 @@ lbl_800E2488:
 /* 800E24AC 000DF3EC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E24B0 000DF3F0  7C 03 00 00 */	cmpw r3, r0
 /* 800E24B4 000DF3F4  41 80 00 18 */	blt lbl_800E24CC
-/* 800E24B8 000DF3F8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E24B8 000DF3F8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E24BC 000DF3FC  4C C6 31 82 */	crclr 6
-/* 800E24C0 000DF400  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E24C0 000DF400  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E24C4 000DF404  4B FF AB E1 */	bl SpcTrace__FPCce
 /* 800E24C8 000DF408  48 00 00 2C */	b lbl_800E24F4
 lbl_800E24CC:
@@ -6849,8 +6849,8 @@ lbl_800E24F4:
 /* 800E2508 000DF448  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E250C 000DF44C  4E 80 00 20 */	blr 
 
-.global evStartOpenModelGate__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartOpenModelGate__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartOpenModelGate__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartOpenModelGate__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2510 000DF450  7C 08 02 A6 */	mflr r0
 /* 800E2514 000DF454  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2518 000DF458  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -6865,9 +6865,9 @@ evStartOpenModelGate__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E253C 000DF47C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E2540 000DF480  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2544 000DF484  41 81 00 38 */	bgt lbl_800E257C
-/* 800E2548 000DF488  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E2548 000DF488  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E254C 000DF48C  4C C6 31 82 */	crclr 6
-/* 800E2550 000DF490  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E2550 000DF490  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2554 000DF494  4B FF AB 51 */	bl SpcTrace__FPCce
 /* 800E2558 000DF498  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E255C 000DF49C  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -6912,7 +6912,7 @@ lbl_800E25E8:
 /* 800E25E8 000DF528  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E25EC 000DF52C  48 00 00 08 */	b lbl_800E25F4
 lbl_800E25F0:
-/* 800E25F0 000DF530  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E25F0 000DF530  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E25F4:
 /* 800E25F4 000DF534  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E25F8 000DF538  7F C3 F3 78 */	mr r3, r30
@@ -6953,9 +6953,9 @@ lbl_800E265C:
 /* 800E2670 000DF5B0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2674 000DF5B4  7C 03 00 00 */	cmpw r3, r0
 /* 800E2678 000DF5B8  41 80 00 18 */	blt lbl_800E2690
-/* 800E267C 000DF5BC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E267C 000DF5BC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2680 000DF5C0  4C C6 31 82 */	crclr 6
-/* 800E2684 000DF5C4  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2684 000DF5C4  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2688 000DF5C8  4B FF AA 1D */	bl SpcTrace__FPCce
 /* 800E268C 000DF5CC  48 00 00 2C */	b lbl_800E26B8
 lbl_800E2690:
@@ -6978,8 +6978,8 @@ lbl_800E26B8:
 /* 800E26CC 000DF60C  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E26D0 000DF610  4E 80 00 20 */	blr 
 
-.global evStartEMarioDisappear__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartEMarioDisappear__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartEMarioDisappear__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartEMarioDisappear__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E26D4 000DF614  7C 08 02 A6 */	mflr r0
 /* 800E26D8 000DF618  90 01 00 04 */	stw r0, 4(r1)
 /* 800E26DC 000DF61C  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -6994,9 +6994,9 @@ evStartEMarioDisappear__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2700 000DF640  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E2704 000DF644  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2708 000DF648  41 81 00 38 */	bgt lbl_800E2740
-/* 800E270C 000DF64C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E270C 000DF64C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E2710 000DF650  4C C6 31 82 */	crclr 6
-/* 800E2714 000DF654  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E2714 000DF654  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2718 000DF658  4B FF A9 8D */	bl SpcTrace__FPCce
 /* 800E271C 000DF65C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E2720 000DF660  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7041,7 +7041,7 @@ lbl_800E27AC:
 /* 800E27AC 000DF6EC  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E27B0 000DF6F0  48 00 00 08 */	b lbl_800E27B8
 lbl_800E27B4:
-/* 800E27B4 000DF6F4  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E27B4 000DF6F4  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E27B8:
 /* 800E27B8 000DF6F8  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E27BC 000DF6FC  7F C3 F3 78 */	mr r3, r30
@@ -7082,9 +7082,9 @@ lbl_800E2820:
 /* 800E2834 000DF774  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2838 000DF778  7C 03 00 00 */	cmpw r3, r0
 /* 800E283C 000DF77C  41 80 00 18 */	blt lbl_800E2854
-/* 800E2840 000DF780  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E2840 000DF780  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2844 000DF784  4C C6 31 82 */	crclr 6
-/* 800E2848 000DF788  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2848 000DF788  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E284C 000DF78C  4B FF A8 59 */	bl SpcTrace__FPCce
 /* 800E2850 000DF790  48 00 00 2C */	b lbl_800E287C
 lbl_800E2854:
@@ -7107,8 +7107,8 @@ lbl_800E287C:
 /* 800E2890 000DF7D0  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E2894 000DF7D4  4E 80 00 20 */	blr 
 
-.global evStartEMarioGateDrawing__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartEMarioGateDrawing__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartEMarioGateDrawing__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartEMarioGateDrawing__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2898 000DF7D8  7C 08 02 A6 */	mflr r0
 /* 800E289C 000DF7DC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E28A0 000DF7E0  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -7123,9 +7123,9 @@ evStartEMarioGateDrawing__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E28C4 000DF804  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E28C8 000DF808  2C 03 00 00 */	cmpwi r3, 0
 /* 800E28CC 000DF80C  41 81 00 38 */	bgt lbl_800E2904
-/* 800E28D0 000DF810  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E28D0 000DF810  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E28D4 000DF814  4C C6 31 82 */	crclr 6
-/* 800E28D8 000DF818  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E28D8 000DF818  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E28DC 000DF81C  4B FF A7 C9 */	bl SpcTrace__FPCce
 /* 800E28E0 000DF820  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E28E4 000DF824  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7170,7 +7170,7 @@ lbl_800E2970:
 /* 800E2970 000DF8B0  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E2974 000DF8B4  48 00 00 08 */	b lbl_800E297C
 lbl_800E2978:
-/* 800E2978 000DF8B8  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E2978 000DF8B8  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E297C:
 /* 800E297C 000DF8BC  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E2980 000DF8C0  7F C3 F3 78 */	mr r3, r30
@@ -7211,9 +7211,9 @@ lbl_800E29E4:
 /* 800E29F8 000DF938  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E29FC 000DF93C  7C 03 00 00 */	cmpw r3, r0
 /* 800E2A00 000DF940  41 80 00 18 */	blt lbl_800E2A18
-/* 800E2A04 000DF944  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E2A04 000DF944  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2A08 000DF948  4C C6 31 82 */	crclr 6
-/* 800E2A0C 000DF94C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2A0C 000DF94C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2A10 000DF950  4B FF A6 95 */	bl SpcTrace__FPCce
 /* 800E2A14 000DF954  48 00 00 2C */	b lbl_800E2A40
 lbl_800E2A18:
@@ -7236,8 +7236,8 @@ lbl_800E2A40:
 /* 800E2A54 000DF994  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E2A58 000DF998  4E 80 00 20 */	blr 
 
-.global evStartEMarioRunAway__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evStartEMarioRunAway__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evStartEMarioRunAway__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evStartEMarioRunAway__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2A5C 000DF99C  7C 08 02 A6 */	mflr r0
 /* 800E2A60 000DF9A0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2A64 000DF9A4  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -7252,9 +7252,9 @@ evStartEMarioRunAway__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2A88 000DF9C8  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E2A8C 000DF9CC  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2A90 000DF9D0  41 81 00 38 */	bgt lbl_800E2AC8
-/* 800E2A94 000DF9D4  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E2A94 000DF9D4  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E2A98 000DF9D8  4C C6 31 82 */	crclr 6
-/* 800E2A9C 000DF9DC  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E2A9C 000DF9DC  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2AA0 000DF9E0  4B FF A6 05 */	bl SpcTrace__FPCce
 /* 800E2AA4 000DF9E4  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E2AA8 000DF9E8  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7299,7 +7299,7 @@ lbl_800E2B34:
 /* 800E2B34 000DFA74  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E2B38 000DFA78  48 00 00 08 */	b lbl_800E2B40
 lbl_800E2B3C:
-/* 800E2B3C 000DFA7C  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E2B3C 000DFA7C  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E2B40:
 /* 800E2B40 000DFA80  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E2B44 000DFA84  7F C3 F3 78 */	mr r3, r30
@@ -7340,9 +7340,9 @@ lbl_800E2BA8:
 /* 800E2BBC 000DFAFC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2BC0 000DFB00  7C 03 00 00 */	cmpw r3, r0
 /* 800E2BC4 000DFB04  41 80 00 18 */	blt lbl_800E2BDC
-/* 800E2BC8 000DFB08  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E2BC8 000DFB08  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2BCC 000DFB0C  4C C6 31 82 */	crclr 6
-/* 800E2BD0 000DFB10  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2BD0 000DFB10  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2BD4 000DFB14  4B FF A4 D1 */	bl SpcTrace__FPCce
 /* 800E2BD8 000DFB18  48 00 00 2C */	b lbl_800E2C04
 lbl_800E2BDC:
@@ -7365,8 +7365,8 @@ lbl_800E2C04:
 /* 800E2C18 000DFB58  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E2C1C 000DFB5C  4E 80 00 20 */	blr 
 
-.global evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2C20 000DFB60  7C 08 02 A6 */	mflr r0
 /* 800E2C24 000DFB64  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2C28 000DFB68  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -7381,9 +7381,9 @@ evIsEMarioDownWaitingToTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2C4C 000DFB8C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E2C50 000DFB90  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2C54 000DFB94  41 81 00 38 */	bgt lbl_800E2C8C
-/* 800E2C58 000DFB98  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E2C58 000DFB98  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E2C5C 000DFB9C  4C C6 31 82 */	crclr 6
-/* 800E2C60 000DFBA0  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E2C60 000DFBA0  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2C64 000DFBA4  4B FF A4 41 */	bl SpcTrace__FPCce
 /* 800E2C68 000DFBA8  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E2C6C 000DFBAC  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7428,7 +7428,7 @@ lbl_800E2CF8:
 /* 800E2CF8 000DFC38  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E2CFC 000DFC3C  48 00 00 08 */	b lbl_800E2D04
 lbl_800E2D00:
-/* 800E2D00 000DFC40  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E2D00 000DFC40  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E2D04:
 /* 800E2D04 000DFC44  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E2D08 000DFC48  7F C3 F3 78 */	mr r3, r30
@@ -7470,9 +7470,9 @@ lbl_800E2D6C:
 /* 800E2D84 000DFCC4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2D88 000DFCC8  7C 03 00 00 */	cmpw r3, r0
 /* 800E2D8C 000DFCCC  41 80 00 18 */	blt lbl_800E2DA4
-/* 800E2D90 000DFCD0  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E2D90 000DFCD0  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2D94 000DFCD4  4C C6 31 82 */	crclr 6
-/* 800E2D98 000DFCD8  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2D98 000DFCD8  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2D9C 000DFCDC  4B FF A3 09 */	bl SpcTrace__FPCce
 /* 800E2DA0 000DFCE0  48 00 00 2C */	b lbl_800E2DCC
 lbl_800E2DA4:
@@ -7495,8 +7495,8 @@ lbl_800E2DCC:
 /* 800E2DE0 000DFD20  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E2DE4 000DFD24  4E 80 00 20 */	blr 
 
-.global evIsEMarioReachedToGoal__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsEMarioReachedToGoal__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsEMarioReachedToGoal__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsEMarioReachedToGoal__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2DE8 000DFD28  7C 08 02 A6 */	mflr r0
 /* 800E2DEC 000DFD2C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2DF0 000DFD30  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -7511,9 +7511,9 @@ evIsEMarioReachedToGoal__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E2E14 000DFD54  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E2E18 000DFD58  2C 03 00 00 */	cmpwi r3, 0
 /* 800E2E1C 000DFD5C  41 81 00 38 */	bgt lbl_800E2E54
-/* 800E2E20 000DFD60  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E2E20 000DFD60  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E2E24 000DFD64  4C C6 31 82 */	crclr 6
-/* 800E2E28 000DFD68  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E2E28 000DFD68  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E2E2C 000DFD6C  4B FF A2 79 */	bl SpcTrace__FPCce
 /* 800E2E30 000DFD70  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E2E34 000DFD74  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7558,7 +7558,7 @@ lbl_800E2EC0:
 /* 800E2EC0 000DFE00  83 C1 00 60 */	lwz r30, 0x60(r1)
 /* 800E2EC4 000DFE04  48 00 00 08 */	b lbl_800E2ECC
 lbl_800E2EC8:
-/* 800E2EC8 000DFE08  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E2EC8 000DFE08  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E2ECC:
 /* 800E2ECC 000DFE0C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E2ED0 000DFE10  7F C3 F3 78 */	mr r3, r30
@@ -7600,9 +7600,9 @@ lbl_800E2F34:
 /* 800E2F4C 000DFE8C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E2F50 000DFE90  7C 03 00 00 */	cmpw r3, r0
 /* 800E2F54 000DFE94  41 80 00 18 */	blt lbl_800E2F6C
-/* 800E2F58 000DFE98  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E2F58 000DFE98  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E2F5C 000DFE9C  4C C6 31 82 */	crclr 6
-/* 800E2F60 000DFEA0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E2F60 000DFEA0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E2F64 000DFEA4  4B FF A1 41 */	bl SpcTrace__FPCce
 /* 800E2F68 000DFEA8  48 00 00 2C */	b lbl_800E2F94
 lbl_800E2F6C:
@@ -7625,8 +7625,8 @@ lbl_800E2F94:
 /* 800E2FA8 000DFEE8  38 21 00 80 */	addi r1, r1, 0x80
 /* 800E2FAC 000DFEEC  4E 80 00 20 */	blr 
 
-.global evLaunchEventClearDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evLaunchEventClearDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evLaunchEventClearDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evLaunchEventClearDemo__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E2FB0 000DFEF0  7C 08 02 A6 */	mflr r0
 /* 800E2FB4 000DFEF4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E2FB8 000DFEF8  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -7650,9 +7650,9 @@ evLaunchEventClearDemo__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3000 000DFF40  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 800E3004 000DFF44  7C 03 00 00 */	cmpw r3, r0
 /* 800E3008 000DFF48  41 80 00 18 */	blt lbl_800E3020
-/* 800E300C 000DFF4C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E300C 000DFF4C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E3010 000DFF50  4C C6 31 82 */	crclr 6
-/* 800E3014 000DFF54  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3014 000DFF54  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3018 000DFF58  4B FF A0 8D */	bl SpcTrace__FPCce
 /* 800E301C 000DFF5C  48 00 00 2C */	b lbl_800E3048
 lbl_800E3020:
@@ -7674,8 +7674,8 @@ lbl_800E3048:
 /* 800E3058 000DFF98  38 21 00 30 */	addi r1, r1, 0x30
 /* 800E305C 000DFF9C  4E 80 00 20 */	blr 
 
-.global evIsBossDefeated__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsBossDefeated__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsBossDefeated__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsBossDefeated__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3060 000DFFA0  7C 08 02 A6 */	mflr r0
 /* 800E3064 000DFFA4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3068 000DFFA8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -7701,9 +7701,9 @@ lbl_800E30A0:
 /* 800E30B0 000DFFF0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E30B4 000DFFF4  7C 03 00 00 */	cmpw r3, r0
 /* 800E30B8 000DFFF8  41 80 00 18 */	blt lbl_800E30D0
-/* 800E30BC 000DFFFC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E30BC 000DFFFC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E30C0 000E0000  4C C6 31 82 */	crclr 6
-/* 800E30C4 000E0004  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E30C4 000E0004  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E30C8 000E0008  4B FF 9F DD */	bl SpcTrace__FPCce
 /* 800E30CC 000E000C  48 00 00 2C */	b lbl_800E30F8
 lbl_800E30D0:
@@ -7724,8 +7724,8 @@ lbl_800E30F8:
 /* 800E3104 000E0044  7C 08 03 A6 */	mtlr r0
 /* 800E3108 000E0048  4E 80 00 20 */	blr 
 
-.global evSetGraffitoMultiplied__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetGraffitoMultiplied__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetGraffitoMultiplied__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetGraffitoMultiplied__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E310C 000E004C  7C 08 02 A6 */	mflr r0
 /* 800E3110 000E0050  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3114 000E0054  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -7738,9 +7738,9 @@ evSetGraffitoMultiplied__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3130 000E0070  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E3134 000E0074  2C 03 00 00 */	cmpwi r3, 0
 /* 800E3138 000E0078  41 81 00 34 */	bgt lbl_800E316C
-/* 800E313C 000E007C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E313C 000E007C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E3140 000E0080  4C C6 31 82 */	crclr 6
-/* 800E3144 000E0084  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E3144 000E0084  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E3148 000E0088  4B FF 9F 5D */	bl SpcTrace__FPCce
 /* 800E314C 000E008C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E3150 000E0090  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -7824,9 +7824,9 @@ lbl_800E324C:
 /* 800E325C 000E019C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E3260 000E01A0  7C 03 00 00 */	cmpw r3, r0
 /* 800E3264 000E01A4  41 80 00 18 */	blt lbl_800E327C
-/* 800E3268 000E01A8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E3268 000E01A8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E326C 000E01AC  4C C6 31 82 */	crclr 6
-/* 800E3270 000E01B0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3270 000E01B0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3274 000E01B4  4B FF 9E 31 */	bl SpcTrace__FPCce
 /* 800E3278 000E01B8  48 00 00 2C */	b lbl_800E32A4
 lbl_800E327C:
@@ -7847,8 +7847,8 @@ lbl_800E32A4:
 /* 800E32B0 000E01F0  7C 08 03 A6 */	mtlr r0
 /* 800E32B4 000E01F4  4E 80 00 20 */	blr 
 
-.global evIsGraffitoCoverage0__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsGraffitoCoverage0__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsGraffitoCoverage0__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsGraffitoCoverage0__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E32B8 000E01F8  7C 08 02 A6 */	mflr r0
 /* 800E32BC 000E01FC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E32C0 000E0200  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -7874,9 +7874,9 @@ lbl_800E32F8:
 /* 800E3308 000E0248  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E330C 000E024C  7C 03 00 00 */	cmpw r3, r0
 /* 800E3310 000E0250  41 80 00 18 */	blt lbl_800E3328
-/* 800E3314 000E0254  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E3314 000E0254  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E3318 000E0258  4C C6 31 82 */	crclr 6
-/* 800E331C 000E025C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E331C 000E025C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3320 000E0260  4B FF 9D 85 */	bl SpcTrace__FPCce
 /* 800E3324 000E0264  48 00 00 2C */	b lbl_800E3350
 lbl_800E3328:
@@ -7897,8 +7897,8 @@ lbl_800E3350:
 /* 800E335C 000E029C  7C 08 03 A6 */	mtlr r0
 /* 800E3360 000E02A0  4E 80 00 20 */	blr 
 
-.global evGameOver__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGameOver__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGameOver__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGameOver__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3364 000E02A4  7C 08 02 A6 */	mflr r0
 /* 800E3368 000E02A8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E336C 000E02AC  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -7919,9 +7919,9 @@ evGameOver__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E33A8 000E02E8  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E33AC 000E02EC  7C 03 00 00 */	cmpw r3, r0
 /* 800E33B0 000E02F0  41 80 00 18 */	blt lbl_800E33C8
-/* 800E33B4 000E02F4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E33B4 000E02F4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E33B8 000E02F8  4C C6 31 82 */	crclr 6
-/* 800E33BC 000E02FC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E33BC 000E02FC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E33C0 000E0300  4B FF 9C E5 */	bl SpcTrace__FPCce
 /* 800E33C4 000E0304  48 00 00 2C */	b lbl_800E33F0
 lbl_800E33C8:
@@ -7942,8 +7942,8 @@ lbl_800E33F0:
 /* 800E33FC 000E033C  7C 08 03 A6 */	mtlr r0
 /* 800E3400 000E0340  4E 80 00 20 */	blr 
 
-.global evRegisterMovie__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evRegisterMovie__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evRegisterMovie__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evRegisterMovie__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3404 000E0344  7C 08 02 A6 */	mflr r0
 /* 800E3408 000E0348  90 01 00 04 */	stw r0, 4(r1)
 /* 800E340C 000E034C  94 21 FF A8 */	stwu r1, -0x58(r1)
@@ -7956,9 +7956,9 @@ evRegisterMovie__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3428 000E0368  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E342C 000E036C  2C 03 00 00 */	cmpwi r3, 0
 /* 800E3430 000E0370  41 81 00 34 */	bgt lbl_800E3464
-/* 800E3434 000E0374  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E3434 000E0374  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E3438 000E0378  4C C6 31 82 */	crclr 6
-/* 800E343C 000E037C  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E343C 000E037C  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E3440 000E0380  4B FF 9C 65 */	bl SpcTrace__FPCce
 /* 800E3444 000E0384  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E3448 000E0388  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -8011,9 +8011,9 @@ lbl_800E34D0:
 /* 800E34EC 000E042C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E34F0 000E0430  7C 03 00 00 */	cmpw r3, r0
 /* 800E34F4 000E0434  41 80 00 18 */	blt lbl_800E350C
-/* 800E34F8 000E0438  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E34F8 000E0438  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E34FC 000E043C  4C C6 31 82 */	crclr 6
-/* 800E3500 000E0440  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3500 000E0440  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3504 000E0444  4B FF 9B A1 */	bl SpcTrace__FPCce
 /* 800E3508 000E0448  48 00 00 2C */	b lbl_800E3534
 lbl_800E350C:
@@ -8034,8 +8034,8 @@ lbl_800E3534:
 /* 800E3540 000E0480  7C 08 03 A6 */	mtlr r0
 /* 800E3544 000E0484  4E 80 00 20 */	blr 
 
-.global evSetNextStage__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetNextStage__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetNextStage__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetNextStage__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3548 000E0488  7C 08 02 A6 */	mflr r0
 /* 800E354C 000E048C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3550 000E0490  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -8045,8 +8045,8 @@ evSetNextStage__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3560 000E04A0  7C 7E 1B 78 */	mr r30, r3
 /* 800E3564 000E04A4  93 A1 00 7C */	stw r29, 0x7c(r1)
 /* 800E3568 000E04A8  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E356C 000E04AC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E3570 000E04B0  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E356C 000E04AC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E3570 000E04B0  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E3574 000E04B4  38 80 00 02 */	li r4, 2
 /* 800E3578 000E04B8  48 03 3E B9 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E357C 000E04BC  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -8181,8 +8181,8 @@ lbl_800E3734:
 /* 800E3748 000E0688  38 21 00 88 */	addi r1, r1, 0x88
 /* 800E374C 000E068C  4E 80 00 20 */	blr 
 
-.global evGetPollutionLevel__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetPollutionLevel__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetPollutionLevel__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetPollutionLevel__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3750 000E0690  7C 08 02 A6 */	mflr r0
 /* 800E3754 000E0694  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3758 000E0698  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -8201,9 +8201,9 @@ evGetPollutionLevel__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E378C 000E06CC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E3790 000E06D0  7C 03 00 00 */	cmpw r3, r0
 /* 800E3794 000E06D4  41 80 00 18 */	blt lbl_800E37AC
-/* 800E3798 000E06D8  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E3798 000E06D8  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E379C 000E06DC  4C C6 31 82 */	crclr 6
-/* 800E37A0 000E06E0  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E37A0 000E06E0  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E37A4 000E06E4  4B FF 99 01 */	bl SpcTrace__FPCce
 /* 800E37A8 000E06E8  48 00 00 2C */	b lbl_800E37D4
 lbl_800E37AC:
@@ -8224,8 +8224,8 @@ lbl_800E37D4:
 /* 800E37E0 000E0720  7C 08 03 A6 */	mtlr r0
 /* 800E37E4 000E0724  4E 80 00 20 */	blr 
 
-.global evGetRestTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetRestTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetRestTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetRestTime__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E37E8 000E0728  7C 08 02 A6 */	mflr r0
 /* 800E37EC 000E072C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E37F0 000E0730  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -8260,9 +8260,9 @@ evGetRestTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3864 000E07A4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E3868 000E07A8  7C 03 00 00 */	cmpw r3, r0
 /* 800E386C 000E07AC  41 80 00 18 */	blt lbl_800E3884
-/* 800E3870 000E07B0  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E3870 000E07B0  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E3874 000E07B4  4C C6 31 82 */	crclr 6
-/* 800E3878 000E07B8  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3878 000E07B8  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E387C 000E07BC  4B FF 98 29 */	bl SpcTrace__FPCce
 /* 800E3880 000E07C0  48 00 00 2C */	b lbl_800E38AC
 lbl_800E3884:
@@ -8284,8 +8284,8 @@ lbl_800E38AC:
 /* 800E38BC 000E07FC  38 21 00 30 */	addi r1, r1, 0x30
 /* 800E38C0 000E0800  4E 80 00 20 */	blr 
 
-.global evSetPollutionIncreaseCount__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetPollutionIncreaseCount__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetPollutionIncreaseCount__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetPollutionIncreaseCount__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E38C4 000E0804  7C 08 02 A6 */	mflr r0
 /* 800E38C8 000E0808  90 01 00 04 */	stw r0, 4(r1)
 /* 800E38CC 000E080C  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -8298,9 +8298,9 @@ evSetPollutionIncreaseCount__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E38E8 000E0828  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E38EC 000E082C  2C 03 00 00 */	cmpwi r3, 0
 /* 800E38F0 000E0830  41 81 00 18 */	bgt lbl_800E3908
-/* 800E38F4 000E0834  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E38F4 000E0834  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E38F8 000E0838  4C C6 31 82 */	crclr 6
-/* 800E38FC 000E083C  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E38FC 000E083C  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E3900 000E0840  4B FF 97 A5 */	bl SpcTrace__FPCce
 /* 800E3904 000E0844  48 00 00 0C */	b lbl_800E3910
 lbl_800E3908:
@@ -8314,9 +8314,9 @@ lbl_800E3910:
 /* 800E3920 000E0860  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E3924 000E0864  7C 03 00 00 */	cmpw r3, r0
 /* 800E3928 000E0868  41 80 00 18 */	blt lbl_800E3940
-/* 800E392C 000E086C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E392C 000E086C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E3930 000E0870  4C C6 31 82 */	crclr 6
-/* 800E3934 000E0874  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3934 000E0874  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3938 000E0878  4B FF 97 6D */	bl SpcTrace__FPCce
 /* 800E393C 000E087C  48 00 00 2C */	b lbl_800E3968
 lbl_800E3940:
@@ -8337,8 +8337,8 @@ lbl_800E3968:
 /* 800E3974 000E08B4  7C 08 03 A6 */	mtlr r0
 /* 800E3978 000E08B8  4E 80 00 20 */	blr 
 
-.global evSetAttentionTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetAttentionTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetAttentionTime__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetAttentionTime__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E397C 000E08BC  7C 08 02 A6 */	mflr r0
 /* 800E3980 000E08C0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3984 000E08C4  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -8351,9 +8351,9 @@ evSetAttentionTime__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E39A0 000E08E0  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E39A4 000E08E4  2C 03 00 00 */	cmpwi r3, 0
 /* 800E39A8 000E08E8  41 81 00 18 */	bgt lbl_800E39C0
-/* 800E39AC 000E08EC  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E39AC 000E08EC  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E39B0 000E08F0  4C C6 31 82 */	crclr 6
-/* 800E39B4 000E08F4  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E39B4 000E08F4  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E39B8 000E08F8  4B FF 96 ED */	bl SpcTrace__FPCce
 /* 800E39BC 000E08FC  48 00 00 0C */	b lbl_800E39C8
 lbl_800E39C0:
@@ -8367,9 +8367,9 @@ lbl_800E39C8:
 /* 800E39D8 000E0918  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E39DC 000E091C  7C 03 00 00 */	cmpw r3, r0
 /* 800E39E0 000E0920  41 80 00 18 */	blt lbl_800E39F8
-/* 800E39E4 000E0924  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E39E4 000E0924  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E39E8 000E0928  4C C6 31 82 */	crclr 6
-/* 800E39EC 000E092C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E39EC 000E092C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E39F0 000E0930  4B FF 96 B5 */	bl SpcTrace__FPCce
 /* 800E39F4 000E0934  48 00 00 2C */	b lbl_800E3A20
 lbl_800E39F8:
@@ -8390,8 +8390,8 @@ lbl_800E3A20:
 /* 800E3A2C 000E096C  7C 08 03 A6 */	mtlr r0
 /* 800E3A30 000E0970  4E 80 00 20 */	blr 
 
-.global evSetTimeLimit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetTimeLimit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetTimeLimit__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetTimeLimit__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3A34 000E0974  7C 08 02 A6 */	mflr r0
 /* 800E3A38 000E0978  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3A3C 000E097C  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -8405,9 +8405,9 @@ evSetTimeLimit__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3A5C 000E099C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E3A60 000E09A0  2C 03 00 00 */	cmpwi r3, 0
 /* 800E3A64 000E09A4  41 81 00 34 */	bgt lbl_800E3A98
-/* 800E3A68 000E09A8  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E3A68 000E09A8  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E3A6C 000E09AC  4C C6 31 82 */	crclr 6
-/* 800E3A70 000E09B0  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E3A70 000E09B0  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E3A74 000E09B4  4B FF 96 31 */	bl SpcTrace__FPCce
 /* 800E3A78 000E09B8  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E3A7C 000E09BC  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -8462,9 +8462,9 @@ lbl_800E3B04:
 /* 800E3B28 000E0A68  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E3B2C 000E0A6C  7C 03 00 00 */	cmpw r3, r0
 /* 800E3B30 000E0A70  41 80 00 18 */	blt lbl_800E3B48
-/* 800E3B34 000E0A74  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E3B34 000E0A74  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E3B38 000E0A78  4C C6 31 82 */	crclr 6
-/* 800E3B3C 000E0A7C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E3B3C 000E0A7C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E3B40 000E0A80  4B FF 95 65 */	bl SpcTrace__FPCce
 /* 800E3B44 000E0A84  48 00 00 2C */	b lbl_800E3B70
 lbl_800E3B48:
@@ -8486,8 +8486,8 @@ lbl_800E3B70:
 /* 800E3B80 000E0AC0  38 21 00 68 */	addi r1, r1, 0x68
 /* 800E3B84 000E0AC4  4E 80 00 20 */	blr 
 
-.global evSetDead4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetDead4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetDead4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetDead4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3B88 000E0AC8  7C 08 02 A6 */	mflr r0
 /* 800E3B8C 000E0ACC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3B90 000E0AD0  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -8495,8 +8495,8 @@ evSetDead4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3B98 000E0AD8  7C 7D 1B 78 */	mr r29, r3
 /* 800E3B9C 000E0ADC  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E3BA0 000E0AE0  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E3BA4 000E0AE4  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E3BA8 000E0AE8  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E3BA4 000E0AE4  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E3BA8 000E0AE8  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E3BAC 000E0AEC  38 80 00 02 */	li r4, 2
 /* 800E3BB0 000E0AF0  48 03 38 81 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E3BB4 000E0AF4  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -8581,7 +8581,7 @@ lbl_800E3CCC:
 /* 800E3CCC 000E0C0C  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800E3CD0 000E0C10  48 00 00 08 */	b lbl_800E3CD8
 lbl_800E3CD4:
-/* 800E3CD4 000E0C14  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E3CD4 000E0C14  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E3CD8:
 /* 800E3CD8 000E0C18  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E3CDC 000E0C1C  7C 1B 03 78 */	mr r27, r0
@@ -8643,8 +8643,8 @@ lbl_800E3DA0:
 /* 800E3DAC 000E0CEC  7C 08 03 A6 */	mtlr r0
 /* 800E3DB0 000E0CF0  4E 80 00 20 */	blr 
 
-.global evSetHide4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetHide4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetHide4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetHide4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3DB4 000E0CF4  7C 08 02 A6 */	mflr r0
 /* 800E3DB8 000E0CF8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3DBC 000E0CFC  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -8652,8 +8652,8 @@ evSetHide4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3DC4 000E0D04  7C 7D 1B 78 */	mr r29, r3
 /* 800E3DC8 000E0D08  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E3DCC 000E0D0C  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E3DD0 000E0D10  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E3DD4 000E0D14  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E3DD0 000E0D10  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E3DD4 000E0D14  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E3DD8 000E0D18  38 80 00 02 */	li r4, 2
 /* 800E3DDC 000E0D1C  48 03 36 55 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E3DE0 000E0D20  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -8738,7 +8738,7 @@ lbl_800E3EF8:
 /* 800E3EF8 000E0E38  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800E3EFC 000E0E3C  48 00 00 08 */	b lbl_800E3F04
 lbl_800E3F00:
-/* 800E3F00 000E0E40  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E3F00 000E0E40  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E3F04:
 /* 800E3F04 000E0E44  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E3F08 000E0E48  7C 1B 03 78 */	mr r27, r0
@@ -8800,8 +8800,8 @@ lbl_800E3FCC:
 /* 800E3FD8 000E0F18  7C 08 03 A6 */	mtlr r0
 /* 800E3FDC 000E0F1C  4E 80 00 20 */	blr 
 
-.global evIsOnLiveActorFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsOnLiveActorFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsOnLiveActorFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsOnLiveActorFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E3FE0 000E0F20  7C 08 02 A6 */	mflr r0
 /* 800E3FE4 000E0F24  90 01 00 04 */	stw r0, 4(r1)
 /* 800E3FE8 000E0F28  94 21 FF 50 */	stwu r1, -0xb0(r1)
@@ -8809,8 +8809,8 @@ evIsOnLiveActorFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E3FF0 000E0F30  7C 7D 1B 78 */	mr r29, r3
 /* 800E3FF4 000E0F34  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E3FF8 000E0F38  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E3FFC 000E0F3C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E4000 000E0F40  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E3FFC 000E0F3C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E4000 000E0F40  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E4004 000E0F44  38 80 00 02 */	li r4, 2
 /* 800E4008 000E0F48  48 03 34 29 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E400C 000E0F4C  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -8909,7 +8909,7 @@ lbl_800E4158:
 /* 800E4158 000E1098  83 81 00 7C */	lwz r28, 0x7c(r1)
 /* 800E415C 000E109C  48 00 00 08 */	b lbl_800E4164
 lbl_800E4160:
-/* 800E4160 000E10A0  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E4160 000E10A0  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E4164:
 /* 800E4164 000E10A4  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E4168 000E10A8  7F 83 E3 78 */	mr r3, r28
@@ -8977,8 +8977,8 @@ lbl_800E4234:
 /* 800E4240 000E1180  7C 08 03 A6 */	mtlr r0
 /* 800E4244 000E1184  4E 80 00 20 */	blr 
 
-.global evPushNerve4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evPushNerve4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evPushNerve4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evPushNerve4LiveActor__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4248 000E1188  7C 08 02 A6 */	mflr r0
 /* 800E424C 000E118C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4250 000E1190  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -8986,8 +8986,8 @@ evPushNerve4LiveActor__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E4258 000E1198  7C 7D 1B 78 */	mr r29, r3
 /* 800E425C 000E119C  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E4260 000E11A0  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E4264 000E11A4  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E4268 000E11A8  3B C4 29 90 */	addi r30, r4, $$21490@l
+/* 800E4264 000E11A4  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E4268 000E11A8  3B C4 29 90 */	addi r30, r4, "@1490"@l
 /* 800E426C 000E11AC  38 80 00 02 */	li r4, 2
 /* 800E4270 000E11B0  48 03 31 C1 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E4274 000E11B4  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -9075,7 +9075,7 @@ lbl_800E4398:
 /* 800E4398 000E12D8  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800E439C 000E12DC  48 00 00 08 */	b lbl_800E43A4
 lbl_800E43A0:
-/* 800E43A0 000E12E0  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E43A0 000E12E0  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E43A4:
 /* 800E43A4 000E12E4  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E43A8 000E12E8  7C 1B 03 78 */	mr r27, r0
@@ -9144,8 +9144,8 @@ lbl_800E4488:
 /* 800E4494 000E13D4  7C 08 03 A6 */	mtlr r0
 /* 800E4498 000E13D8  4E 80 00 20 */	blr 
 
-.global evSetFlagNPCCanTaken__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetFlagNPCCanTaken__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetFlagNPCCanTaken__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetFlagNPCCanTaken__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E449C 000E13DC  7C 08 02 A6 */	mflr r0
 /* 800E44A0 000E13E0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E44A4 000E13E4  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -9153,8 +9153,8 @@ evSetFlagNPCCanTaken__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E44AC 000E13EC  7C 7D 1B 78 */	mr r29, r3
 /* 800E44B0 000E13F0  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E44B4 000E13F4  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E44B8 000E13F8  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E44BC 000E13FC  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E44B8 000E13F8  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E44BC 000E13FC  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E44C0 000E1400  38 80 00 02 */	li r4, 2
 /* 800E44C4 000E1404  48 03 2F 6D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E44C8 000E1408  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -9239,7 +9239,7 @@ lbl_800E45E0:
 /* 800E45E0 000E1520  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800E45E4 000E1524  48 00 00 08 */	b lbl_800E45EC
 lbl_800E45E8:
-/* 800E45E8 000E1528  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E45E8 000E1528  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 lbl_800E45EC:
 /* 800E45EC 000E152C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E45F0 000E1530  7C 1B 03 78 */	mr r27, r0
@@ -9295,8 +9295,8 @@ lbl_800E469C:
 /* 800E46A8 000E15E8  7C 08 03 A6 */	mtlr r0
 /* 800E46AC 000E15EC  4E 80 00 20 */	blr 
 
-.global evIsTalkModeNow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsTalkModeNow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsTalkModeNow__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsTalkModeNow__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E46B0 000E15F0  7C 08 02 A6 */	mflr r0
 /* 800E46B4 000E15F4  90 01 00 04 */	stw r0, 4(r1)
 /* 800E46B8 000E15F8  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -9329,9 +9329,9 @@ lbl_800E4708:
 /* 800E4718 000E1658  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E471C 000E165C  7C 03 00 00 */	cmpw r3, r0
 /* 800E4720 000E1660  41 80 00 18 */	blt lbl_800E4738
-/* 800E4724 000E1664  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E4724 000E1664  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E4728 000E1668  4C C6 31 82 */	crclr 6
-/* 800E472C 000E166C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E472C 000E166C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E4730 000E1670  4B FF 89 75 */	bl SpcTrace__FPCce
 /* 800E4734 000E1674  48 00 00 2C */	b lbl_800E4760
 lbl_800E4738:
@@ -9352,8 +9352,8 @@ lbl_800E4760:
 /* 800E476C 000E16AC  7C 08 03 A6 */	mtlr r0
 /* 800E4770 000E16B0  4E 80 00 20 */	blr 
 
-.global evSetValue2TalkVariable__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetValue2TalkVariable__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetValue2TalkVariable__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetValue2TalkVariable__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4774 000E16B4  7C 08 02 A6 */	mflr r0
 /* 800E4778 000E16B8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E477C 000E16BC  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -9362,8 +9362,8 @@ evSetValue2TalkVariable__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E4788 000E16C8  93 C1 00 98 */	stw r30, 0x98(r1)
 /* 800E478C 000E16CC  7C 7E 1B 78 */	mr r30, r3
 /* 800E4790 000E16D0  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E4794 000E16D4  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E4798 000E16D8  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E4794 000E16D4  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E4798 000E16D8  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E479C 000E16DC  38 80 00 02 */	li r4, 2
 /* 800E47A0 000E16E0  48 03 2C 91 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E47A4 000E16E4  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -9418,8 +9418,8 @@ lbl_800E4840:
 /* 800E4850 000E1790  38 21 00 A0 */	addi r1, r1, 0xa0
 /* 800E4854 000E1794  4E 80 00 20 */	blr 
 
-.global evGetTalkSelectedValue__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetTalkSelectedValue__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetTalkSelectedValue__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetTalkSelectedValue__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4858 000E1798  7C 08 02 A6 */	mflr r0
 /* 800E485C 000E179C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4860 000E17A0  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -9439,9 +9439,9 @@ evGetTalkSelectedValue__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E4898 000E17D8  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E489C 000E17DC  7C 03 00 00 */	cmpw r3, r0
 /* 800E48A0 000E17E0  41 80 00 18 */	blt lbl_800E48B8
-/* 800E48A4 000E17E4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E48A4 000E17E4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E48A8 000E17E8  4C C6 31 82 */	crclr 6
-/* 800E48AC 000E17EC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E48AC 000E17EC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E48B0 000E17F0  4B FF 87 F5 */	bl SpcTrace__FPCce
 /* 800E48B4 000E17F4  48 00 00 2C */	b lbl_800E48E0
 lbl_800E48B8:
@@ -9462,8 +9462,8 @@ lbl_800E48E0:
 /* 800E48EC 000E182C  7C 08 03 A6 */	mtlr r0
 /* 800E48F0 000E1830  4E 80 00 20 */	blr 
 
-.global evGetTalkMode__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetTalkMode__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetTalkMode__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetTalkMode__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E48F4 000E1834  7C 08 02 A6 */	mflr r0
 /* 800E48F8 000E1838  90 01 00 04 */	stw r0, 4(r1)
 /* 800E48FC 000E183C  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -9482,9 +9482,9 @@ evGetTalkMode__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E4930 000E1870  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E4934 000E1874  7C 03 00 00 */	cmpw r3, r0
 /* 800E4938 000E1878  41 80 00 18 */	blt lbl_800E4950
-/* 800E493C 000E187C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E493C 000E187C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E4940 000E1880  4C C6 31 82 */	crclr 6
-/* 800E4944 000E1884  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E4944 000E1884  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E4948 000E1888  4B FF 87 5D */	bl SpcTrace__FPCce
 /* 800E494C 000E188C  48 00 00 2C */	b lbl_800E4978
 lbl_800E4950:
@@ -9505,8 +9505,8 @@ lbl_800E4978:
 /* 800E4984 000E18C4  7C 08 03 A6 */	mtlr r0
 /* 800E4988 000E18C8  4E 80 00 20 */	blr 
 
-.global evSetTalkMsgID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetTalkMsgID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetTalkMsgID__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetTalkMsgID__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E498C 000E18CC  7C 08 02 A6 */	mflr r0
 /* 800E4990 000E18D0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4994 000E18D4  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -9516,8 +9516,8 @@ evSetTalkMsgID__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E49A4 000E18E4  93 A1 00 7C */	stw r29, 0x7c(r1)
 /* 800E49A8 000E18E8  7C 7D 1B 78 */	mr r29, r3
 /* 800E49AC 000E18EC  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E49B0 000E18F0  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E49B4 000E18F4  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E49B0 000E18F0  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E49B4 000E18F4  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E49B8 000E18F8  38 80 00 02 */	li r4, 2
 /* 800E49BC 000E18FC  48 03 2A 75 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E49C0 000E1900  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -9650,8 +9650,8 @@ lbl_800E4B70:
 /* 800E4B84 000E1AC4  38 21 00 88 */	addi r1, r1, 0x88
 /* 800E4B88 000E1AC8  4E 80 00 20 */	blr 
 
-.global evGetTalkNPCName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetTalkNPCName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetTalkNPCName__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetTalkNPCName__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4B8C 000E1ACC  7C 08 02 A6 */	mflr r0
 /* 800E4B90 000E1AD0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4B94 000E1AD4  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -9667,7 +9667,7 @@ evGetTalkNPCName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E4BBC 000E1AFC  40 82 00 80 */	bne lbl_800E4C3C
 /* 800E4BC0 000E1B00  38 60 00 00 */	li r3, 0
 /* 800E4BC4 000E1B04  90 61 00 28 */	stw r3, 0x28(r1)
-/* 800E4BC8 000E1B08  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E4BC8 000E1B08  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 /* 800E4BCC 000E1B0C  28 00 00 00 */	cmplwi r0, 0
 /* 800E4BD0 000E1B10  90 61 00 2C */	stw r3, 0x2c(r1)
 /* 800E4BD4 000E1B14  38 60 00 02 */	li r3, 2
@@ -9682,9 +9682,9 @@ lbl_800E4BEC:
 /* 800E4BF0 000E1B30  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E4BF4 000E1B34  7C 03 00 00 */	cmpw r3, r0
 /* 800E4BF8 000E1B38  41 80 00 18 */	blt lbl_800E4C10
-/* 800E4BFC 000E1B3C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E4BFC 000E1B3C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E4C00 000E1B40  4C C6 31 82 */	crclr 6
-/* 800E4C04 000E1B44  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E4C04 000E1B44  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E4C08 000E1B48  4B FF 84 9D */	bl SpcTrace__FPCce
 /* 800E4C0C 000E1B4C  48 00 00 AC */	b lbl_800E4CB8
 lbl_800E4C10:
@@ -9708,7 +9708,7 @@ lbl_800E4C3C:
 /* 800E4C50 000E1B90  90 61 00 24 */	stw r3, 0x24(r1)
 /* 800E4C54 000E1B94  90 01 00 20 */	stw r0, 0x20(r1)
 /* 800E4C58 000E1B98  40 82 00 10 */	bne lbl_800E4C68
-/* 800E4C5C 000E1B9C  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E4C5C 000E1B9C  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 /* 800E4C60 000E1BA0  90 01 00 24 */	stw r0, 0x24(r1)
 /* 800E4C64 000E1BA4  48 00 00 08 */	b lbl_800E4C6C
 lbl_800E4C68:
@@ -9718,9 +9718,9 @@ lbl_800E4C6C:
 /* 800E4C70 000E1BB0  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E4C74 000E1BB4  7C 03 00 00 */	cmpw r3, r0
 /* 800E4C78 000E1BB8  41 80 00 18 */	blt lbl_800E4C90
-/* 800E4C7C 000E1BBC  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E4C7C 000E1BBC  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E4C80 000E1BC0  4C C6 31 82 */	crclr 6
-/* 800E4C84 000E1BC4  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E4C84 000E1BC4  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E4C88 000E1BC8  4B FF 84 1D */	bl SpcTrace__FPCce
 /* 800E4C8C 000E1BCC  48 00 00 2C */	b lbl_800E4CB8
 lbl_800E4C90:
@@ -9741,8 +9741,8 @@ lbl_800E4CB8:
 /* 800E4CC4 000E1C04  7C 08 03 A6 */	mtlr r0
 /* 800E4CC8 000E1C08  4E 80 00 20 */	blr 
 
-.global evGetTalkNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetTalkNPC__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetTalkNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetTalkNPC__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4CCC 000E1C0C  7C 08 02 A6 */	mflr r0
 /* 800E4CD0 000E1C10  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4CD4 000E1C14  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -9767,9 +9767,9 @@ lbl_800E4D10:
 /* 800E4D18 000E1C58  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E4D1C 000E1C5C  7C 03 00 00 */	cmpw r3, r0
 /* 800E4D20 000E1C60  41 80 00 18 */	blt lbl_800E4D38
-/* 800E4D24 000E1C64  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E4D24 000E1C64  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E4D28 000E1C68  4C C6 31 82 */	crclr 6
-/* 800E4D2C 000E1C6C  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E4D2C 000E1C6C  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E4D30 000E1C70  4B FF 83 75 */	bl SpcTrace__FPCce
 /* 800E4D34 000E1C74  48 00 00 2C */	b lbl_800E4D60
 lbl_800E4D38:
@@ -9790,8 +9790,8 @@ lbl_800E4D60:
 /* 800E4D6C 000E1CAC  7C 08 03 A6 */	mtlr r0
 /* 800E4D70 000E1CB0  4E 80 00 20 */	blr 
 
-.global evIsNearActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsNearActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsNearActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsNearActors__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E4D74 000E1CB4  7C 08 02 A6 */	mflr r0
 /* 800E4D78 000E1CB8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E4D7C 000E1CBC  94 21 FF 20 */	stwu r1, -0xe0(r1)
@@ -9829,7 +9829,7 @@ lbl_800E4DF4:
 /* 800E4DF4 000E1D34  83 A1 00 A4 */	lwz r29, 0xa4(r1)
 /* 800E4DF8 000E1D38  48 00 00 08 */	b lbl_800E4E00
 lbl_800E4DFC:
-/* 800E4DFC 000E1D3C  3B A2 8F F0 */	addi r29, r2, $$24053@sda21
+/* 800E4DFC 000E1D3C  3B A2 8F F0 */	addi r29, r2, "@4053"@sda21
 lbl_800E4E00:
 /* 800E4E00 000E1D40  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E4E04 000E1D44  7F A3 EB 78 */	mr r3, r29
@@ -9882,7 +9882,7 @@ lbl_800E4E6C:
 lbl_800E4EAC:
 /* 800E4EAC 000E1DEC  80 63 00 04 */	lwz r3, 4(r3)
 /* 800E4EB0 000E1DF0  3C 00 43 30 */	lis r0, 0x4330
-/* 800E4EB4 000E1DF4  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800E4EB4 000E1DF4  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800E4EB8 000E1DF8  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800E4EBC 000E1DFC  90 61 00 B4 */	stw r3, 0xb4(r1)
 /* 800E4EC0 000E1E00  90 01 00 B0 */	stw r0, 0xb0(r1)
@@ -9893,7 +9893,7 @@ lbl_800E4ED0:
 /* 800E4ED0 000E1E10  C3 E3 00 04 */	lfs f31, 4(r3)
 /* 800E4ED4 000E1E14  48 00 00 08 */	b lbl_800E4EDC
 lbl_800E4ED8:
-/* 800E4ED8 000E1E18  C3 E2 8F D0 */	lfs f31, $$23832@sda21(r2)
+/* 800E4ED8 000E1E18  C3 E2 8F D0 */	lfs f31, "@3832"@sda21(r2)
 lbl_800E4EDC:
 /* 800E4EDC 000E1E1C  3B A0 00 02 */	li r29, 2
 /* 800E4EE0 000E1E20  3B C0 00 01 */	li r30, 1
@@ -9927,7 +9927,7 @@ lbl_800E4F44:
 /* 800E4F44 000E1E84  83 41 00 9C */	lwz r26, 0x9c(r1)
 /* 800E4F48 000E1E88  48 00 00 08 */	b lbl_800E4F50
 lbl_800E4F4C:
-/* 800E4F4C 000E1E8C  3B 42 8F F0 */	addi r26, r2, $$24053@sda21
+/* 800E4F4C 000E1E8C  3B 42 8F F0 */	addi r26, r2, "@4053"@sda21
 lbl_800E4F50:
 /* 800E4F50 000E1E90  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E4F54 000E1E94  7F 43 D3 78 */	mr r3, r26
@@ -9988,7 +9988,7 @@ lbl_800E4FB8:
 /* 800E501C 000E1F5C  EC 42 00 B2 */	fmuls f2, f2, f2
 /* 800E5020 000E1F60  EC 01 00 2A */	fadds f0, f1, f0
 /* 800E5024 000E1F64  EC 22 00 2A */	fadds f1, f2, f0
-/* 800E5028 000E1F68  4B FE B8 89 */	bl sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 800E5028 000E1F68  4B FE B8 89 */	bl "sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 800E502C 000E1F6C  FC 01 F8 40 */	fcmpo cr0, f1, f31
 /* 800E5030 000E1F70  4C 40 13 82 */	cror 2, 0, 2
 /* 800E5034 000E1F74  40 82 00 08 */	bne lbl_800E503C
@@ -9999,8 +9999,8 @@ lbl_800E5040:
 /* 800E5040 000E1F80  7C 1D E0 40 */	cmplw r29, r28
 /* 800E5044 000E1F84  41 80 FE A4 */	blt lbl_800E4EE8
 lbl_800E5048:
-/* 800E5048 000E1F88  3C 60 80 37 */	lis r3, $$23829@ha
-/* 800E504C 000E1F8C  3B A3 30 FC */	addi r29, r3, $$23829@l
+/* 800E5048 000E1F88  3C 60 80 37 */	lis r3, "@3829"@ha
+/* 800E504C 000E1F8C  3B A3 30 FC */	addi r29, r3, "@3829"@l
 /* 800E5050 000E1F90  3B 20 00 00 */	li r25, 0
 /* 800E5054 000E1F94  48 00 00 2C */	b lbl_800E5080
 lbl_800E5058:
@@ -10026,9 +10026,9 @@ lbl_800E5080:
 /* 800E5098 000E1FD8  80 1B 00 18 */	lwz r0, 0x18(r27)
 /* 800E509C 000E1FDC  7C 03 00 00 */	cmpw r3, r0
 /* 800E50A0 000E1FE0  41 80 00 18 */	blt lbl_800E50B8
-/* 800E50A4 000E1FE4  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E50A4 000E1FE4  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E50A8 000E1FE8  4C C6 31 82 */	crclr 6
-/* 800E50AC 000E1FEC  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E50AC 000E1FEC  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E50B0 000E1FF0  4B FF 7F F5 */	bl SpcTrace__FPCce
 /* 800E50B4 000E1FF4  48 00 00 2C */	b lbl_800E50E0
 lbl_800E50B8:
@@ -10050,8 +10050,8 @@ lbl_800E50E0:
 /* 800E50F0 000E2030  7C 08 03 A6 */	mtlr r0
 /* 800E50F4 000E2034  4E 80 00 20 */	blr 
 
-.global evIsNearSameActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evIsNearSameActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evIsNearSameActors__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evIsNearSameActors__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E50F8 000E2038  7C 08 02 A6 */	mflr r0
 /* 800E50FC 000E203C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5100 000E2040  94 21 FE B0 */	stwu r1, -0x150(r1)
@@ -10060,8 +10060,8 @@ evIsNearSameActors__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E510C 000E204C  BF 01 01 28 */	stmw r24, 0x128(r1)
 /* 800E5110 000E2050  7C 7D 1B 78 */	mr r29, r3
 /* 800E5114 000E2054  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E5118 000E2058  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E511C 000E205C  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E5118 000E2058  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E511C 000E205C  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E5120 000E2060  38 80 00 03 */	li r4, 3
 /* 800E5124 000E2064  48 03 23 0D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E5128 000E2068  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -10113,7 +10113,7 @@ lbl_800E51D0:
 /* 800E51D0 000E2110  83 81 01 08 */	lwz r28, 0x108(r1)
 /* 800E51D4 000E2114  48 00 00 08 */	b lbl_800E51DC
 lbl_800E51D8:
-/* 800E51D8 000E2118  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E51D8 000E2118  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E51DC:
 /* 800E51DC 000E211C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E51E0 000E2120  7F 83 E3 78 */	mr r3, r28
@@ -10210,7 +10210,7 @@ lbl_800E530C:
 lbl_800E5328:
 /* 800E5328 000E2268  80 61 00 F8 */	lwz r3, 0xf8(r1)
 /* 800E532C 000E226C  3C 00 43 30 */	lis r0, 0x4330
-/* 800E5330 000E2270  C8 22 8F E0 */	lfd f1, $$23934@sda21(r2)
+/* 800E5330 000E2270  C8 22 8F E0 */	lfd f1, "@3934"@sda21(r2)
 /* 800E5334 000E2274  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800E5338 000E2278  90 61 01 24 */	stw r3, 0x124(r1)
 /* 800E533C 000E227C  90 01 01 20 */	stw r0, 0x120(r1)
@@ -10221,7 +10221,7 @@ lbl_800E534C:
 /* 800E534C 000E228C  C3 E1 00 F8 */	lfs f31, 0xf8(r1)
 /* 800E5350 000E2290  48 00 00 08 */	b lbl_800E5358
 lbl_800E5354:
-/* 800E5354 000E2294  C3 E2 8F D0 */	lfs f31, $$23832@sda21(r2)
+/* 800E5354 000E2294  C3 E2 8F D0 */	lfs f31, "@3832"@sda21(r2)
 lbl_800E5358:
 /* 800E5358 000E2298  80 7D 00 1C */	lwz r3, 0x1c(r29)
 /* 800E535C 000E229C  2C 03 00 00 */	cmpwi r3, 0
@@ -10272,7 +10272,7 @@ lbl_800E5400:
 /* 800E5400 000E2340  83 81 00 F0 */	lwz r28, 0xf0(r1)
 /* 800E5404 000E2344  48 00 00 08 */	b lbl_800E540C
 lbl_800E5408:
-/* 800E5408 000E2348  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E5408 000E2348  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E540C:
 /* 800E540C 000E234C  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E5410 000E2350  7F 83 E3 78 */	mr r3, r28
@@ -10371,7 +10371,7 @@ lbl_800E54F0:
 /* 800E5564 000E24A4  EC 42 00 B2 */	fmuls f2, f2, f2
 /* 800E5568 000E24A8  EC 01 00 2A */	fadds f0, f1, f0
 /* 800E556C 000E24AC  EC 22 00 2A */	fadds f1, f2, f0
-/* 800E5570 000E24B0  4B FE B3 41 */	bl sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 800E5570 000E24B0  4B FE B3 41 */	bl "sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 800E5574 000E24B4  FC 01 F8 40 */	fcmpo cr0, f1, f31
 /* 800E5578 000E24B8  4C 40 13 82 */	cror 2, 0, 2
 /* 800E557C 000E24BC  40 82 00 08 */	bne lbl_800E5584
@@ -10412,8 +10412,8 @@ lbl_800E55E8:
 /* 800E55F8 000E2538  7C 08 03 A6 */	mtlr r0
 /* 800E55FC 000E253C  4E 80 00 20 */	blr 
 
-.global evSetFlagNPCDead__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetFlagNPCDead__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetFlagNPCDead__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetFlagNPCDead__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E5600 000E2540  7C 08 02 A6 */	mflr r0
 /* 800E5604 000E2544  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5608 000E2548  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -10421,8 +10421,8 @@ evSetFlagNPCDead__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E5610 000E2550  7C 7D 1B 78 */	mr r29, r3
 /* 800E5614 000E2554  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E5618 000E2558  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E561C 000E255C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E5620 000E2560  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E561C 000E255C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E5620 000E2560  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E5624 000E2564  38 80 00 02 */	li r4, 2
 /* 800E5628 000E2568  48 03 1E 09 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E562C 000E256C  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -10523,7 +10523,7 @@ lbl_800E5780:
 /* 800E5780 000E26C0  83 81 00 78 */	lwz r28, 0x78(r1)
 /* 800E5784 000E26C4  48 00 00 08 */	b lbl_800E578C
 lbl_800E5788:
-/* 800E5788 000E26C8  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E5788 000E26C8  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E578C:
 /* 800E578C 000E26CC  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E5790 000E26D0  7F 83 E3 78 */	mr r3, r28
@@ -10598,8 +10598,8 @@ lbl_800E5874:
 /* 800E5880 000E27C0  7C 08 03 A6 */	mtlr r0
 /* 800E5884 000E27C4  4E 80 00 20 */	blr 
 
-.global evSetFlagNPCDontThrow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetFlagNPCDontThrow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetFlagNPCDontThrow__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetFlagNPCDontThrow__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E5888 000E27C8  7C 08 02 A6 */	mflr r0
 /* 800E588C 000E27CC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5890 000E27D0  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -10607,8 +10607,8 @@ evSetFlagNPCDontThrow__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E5898 000E27D8  7C 7D 1B 78 */	mr r29, r3
 /* 800E589C 000E27DC  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E58A0 000E27E0  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E58A4 000E27E4  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E58A8 000E27E8  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E58A4 000E27E4  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E58A8 000E27E8  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E58AC 000E27EC  38 80 00 02 */	li r4, 2
 /* 800E58B0 000E27F0  48 03 1B 81 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E58B4 000E27F4  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -10709,7 +10709,7 @@ lbl_800E5A08:
 /* 800E5A08 000E2948  83 81 00 78 */	lwz r28, 0x78(r1)
 /* 800E5A0C 000E294C  48 00 00 08 */	b lbl_800E5A14
 lbl_800E5A10:
-/* 800E5A10 000E2950  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E5A10 000E2950  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E5A14:
 /* 800E5A14 000E2954  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E5A18 000E2958  7F 83 E3 78 */	mr r3, r28
@@ -10784,8 +10784,8 @@ lbl_800E5AFC:
 /* 800E5B08 000E2A48  7C 08 03 A6 */	mtlr r0
 /* 800E5B0C 000E2A4C  4E 80 00 20 */	blr 
 
-.global evSetFlagNPCDontTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetFlagNPCDontTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetFlagNPCDontTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetFlagNPCDontTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E5B10 000E2A50  7C 08 02 A6 */	mflr r0
 /* 800E5B14 000E2A54  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5B18 000E2A58  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -10793,8 +10793,8 @@ evSetFlagNPCDontTalk__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E5B20 000E2A60  7C 7D 1B 78 */	mr r29, r3
 /* 800E5B24 000E2A64  38 A1 00 0C */	addi r5, r1, 0xc
 /* 800E5B28 000E2A68  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E5B2C 000E2A6C  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E5B30 000E2A70  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E5B2C 000E2A6C  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E5B30 000E2A70  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E5B34 000E2A74  38 80 00 02 */	li r4, 2
 /* 800E5B38 000E2A78  48 03 18 F9 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E5B3C 000E2A7C  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -10895,7 +10895,7 @@ lbl_800E5C90:
 /* 800E5C90 000E2BD0  83 81 00 78 */	lwz r28, 0x78(r1)
 /* 800E5C94 000E2BD4  48 00 00 08 */	b lbl_800E5C9C
 lbl_800E5C98:
-/* 800E5C98 000E2BD8  3B 82 8F F0 */	addi r28, r2, $$24053@sda21
+/* 800E5C98 000E2BD8  3B 82 8F F0 */	addi r28, r2, "@4053"@sda21
 lbl_800E5C9C:
 /* 800E5C9C 000E2BDC  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E5CA0 000E2BE0  7F 83 E3 78 */	mr r3, r28
@@ -10970,8 +10970,8 @@ lbl_800E5D84:
 /* 800E5D90 000E2CD0  7C 08 03 A6 */	mtlr r0
 /* 800E5D94 000E2CD4  4E 80 00 20 */	blr 
 
-.global evGetNPCType__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetNPCType__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetNPCType__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetNPCType__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E5D98 000E2CD8  7C 08 02 A6 */	mflr r0
 /* 800E5D9C 000E2CDC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5DA0 000E2CE0  94 21 FF 70 */	stwu r1, -0x90(r1)
@@ -10988,9 +10988,9 @@ evGetNPCType__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E5DCC 000E2D0C  3B E0 FF FF */	li r31, -1
 /* 800E5DD0 000E2D10  2C 03 00 00 */	cmpwi r3, 0
 /* 800E5DD4 000E2D14  41 81 00 38 */	bgt lbl_800E5E0C
-/* 800E5DD8 000E2D18  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E5DD8 000E2D18  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E5DDC 000E2D1C  4C C6 31 82 */	crclr 6
-/* 800E5DE0 000E2D20  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E5DE0 000E2D20  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E5DE4 000E2D24  4B FF 72 C1 */	bl SpcTrace__FPCce
 /* 800E5DE8 000E2D28  80 1E 00 1C */	lwz r0, 0x1c(r30)
 /* 800E5DEC 000E2D2C  80 7E 00 20 */	lwz r3, 0x20(r30)
@@ -11035,7 +11035,7 @@ lbl_800E5E78:
 /* 800E5E78 000E2DB8  83 A1 00 70 */	lwz r29, 0x70(r1)
 /* 800E5E7C 000E2DBC  48 00 00 08 */	b lbl_800E5E84
 lbl_800E5E80:
-/* 800E5E80 000E2DC0  3B A2 8F F0 */	addi r29, r2, $$24053@sda21
+/* 800E5E80 000E2DC0  3B A2 8F F0 */	addi r29, r2, "@4053"@sda21
 lbl_800E5E84:
 /* 800E5E84 000E2DC4  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E5E88 000E2DC8  7F A3 EB 78 */	mr r3, r29
@@ -11081,9 +11081,9 @@ lbl_800E5F00:
 /* 800E5F10 000E2E50  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 800E5F14 000E2E54  7C 03 00 00 */	cmpw r3, r0
 /* 800E5F18 000E2E58  41 80 00 18 */	blt lbl_800E5F30
-/* 800E5F1C 000E2E5C  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E5F1C 000E2E5C  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E5F20 000E2E60  4C C6 31 82 */	crclr 6
-/* 800E5F24 000E2E64  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E5F24 000E2E64  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E5F28 000E2E68  4B FF 71 7D */	bl SpcTrace__FPCce
 /* 800E5F2C 000E2E6C  48 00 00 2C */	b lbl_800E5F58
 lbl_800E5F30:
@@ -11107,8 +11107,8 @@ lbl_800E5F58:
 /* 800E5F70 000E2EB0  38 21 00 90 */	addi r1, r1, 0x90
 /* 800E5F74 000E2EB4  4E 80 00 20 */	blr 
 
-.global evGetNameRefName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetNameRefName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetNameRefName__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetNameRefName__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E5F78 000E2EB8  7C 08 02 A6 */	mflr r0
 /* 800E5F7C 000E2EBC  90 01 00 04 */	stw r0, 4(r1)
 /* 800E5F80 000E2EC0  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -11121,9 +11121,9 @@ evGetNameRefName__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E5F9C 000E2EDC  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E5FA0 000E2EE0  2C 03 00 00 */	cmpwi r3, 0
 /* 800E5FA4 000E2EE4  41 81 00 38 */	bgt lbl_800E5FDC
-/* 800E5FA8 000E2EE8  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E5FA8 000E2EE8  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E5FAC 000E2EEC  4C C6 31 82 */	crclr 6
-/* 800E5FB0 000E2EF0  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E5FB0 000E2EF0  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E5FB4 000E2EF4  4B FF 70 F1 */	bl SpcTrace__FPCce
 /* 800E5FB8 000E2EF8  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E5FBC 000E2EFC  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -11170,7 +11170,7 @@ lbl_800E6040:
 /* 800E6048 000E2F88  80 83 00 04 */	lwz r4, 4(r3)
 /* 800E604C 000E2F8C  48 00 00 08 */	b lbl_800E6054
 lbl_800E6050:
-/* 800E6050 000E2F90  38 82 8F F0 */	addi r4, r2, $$24053@sda21
+/* 800E6050 000E2F90  38 82 8F F0 */	addi r4, r2, "@4053"@sda21
 lbl_800E6054:
 /* 800E6054 000E2F94  38 60 00 00 */	li r3, 0
 /* 800E6058 000E2F98  90 61 00 28 */	stw r3, 0x28(r1)
@@ -11179,7 +11179,7 @@ lbl_800E6054:
 /* 800E6064 000E2FA4  90 61 00 2C */	stw r3, 0x2c(r1)
 /* 800E6068 000E2FA8  90 01 00 28 */	stw r0, 0x28(r1)
 /* 800E606C 000E2FAC  40 82 00 10 */	bne lbl_800E607C
-/* 800E6070 000E2FB0  38 02 8F F0 */	addi r0, r2, $$24053@sda21
+/* 800E6070 000E2FB0  38 02 8F F0 */	addi r0, r2, "@4053"@sda21
 /* 800E6074 000E2FB4  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 800E6078 000E2FB8  48 00 00 08 */	b lbl_800E6080
 lbl_800E607C:
@@ -11189,9 +11189,9 @@ lbl_800E6080:
 /* 800E6084 000E2FC4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E6088 000E2FC8  7C 03 00 00 */	cmpw r3, r0
 /* 800E608C 000E2FCC  41 80 00 18 */	blt lbl_800E60A4
-/* 800E6090 000E2FD0  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E6090 000E2FD0  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E6094 000E2FD4  4C C6 31 82 */	crclr 6
-/* 800E6098 000E2FD8  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E6098 000E2FD8  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E609C 000E2FDC  4B FF 70 09 */	bl SpcTrace__FPCce
 /* 800E60A0 000E2FE0  48 00 00 2C */	b lbl_800E60CC
 lbl_800E60A4:
@@ -11212,8 +11212,8 @@ lbl_800E60CC:
 /* 800E60D8 000E3018  7C 08 03 A6 */	mtlr r0
 /* 800E60DC 000E301C  4E 80 00 20 */	blr 
 
-.global evGetNameRefHandle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetNameRefHandle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetNameRefHandle__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetNameRefHandle__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E60E0 000E3020  7C 08 02 A6 */	mflr r0
 /* 800E60E4 000E3024  90 01 00 04 */	stw r0, 4(r1)
 /* 800E60E8 000E3028  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -11228,9 +11228,9 @@ evGetNameRefHandle__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E610C 000E304C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E6110 000E3050  2C 03 00 00 */	cmpwi r3, 0
 /* 800E6114 000E3054  41 81 00 38 */	bgt lbl_800E614C
-/* 800E6118 000E3058  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E6118 000E3058  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E611C 000E305C  4C C6 31 82 */	crclr 6
-/* 800E6120 000E3060  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E6120 000E3060  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E6124 000E3064  4B FF 6F 81 */	bl SpcTrace__FPCce
 /* 800E6128 000E3068  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E612C 000E306C  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -11261,7 +11261,7 @@ lbl_800E6184:
 /* 800E6184 000E30C4  83 C1 00 50 */	lwz r30, 0x50(r1)
 /* 800E6188 000E30C8  48 00 00 08 */	b lbl_800E6190
 lbl_800E618C:
-/* 800E618C 000E30CC  3B C2 8F F0 */	addi r30, r2, $$24053@sda21
+/* 800E618C 000E30CC  3B C2 8F F0 */	addi r30, r2, "@4053"@sda21
 lbl_800E6190:
 /* 800E6190 000E30D0  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 800E6194 000E30D4  7F C3 F3 78 */	mr r3, r30
@@ -11281,9 +11281,9 @@ lbl_800E6190:
 /* 800E61CC 000E310C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E61D0 000E3110  7C 03 00 00 */	cmpw r3, r0
 /* 800E61D4 000E3114  41 80 00 18 */	blt lbl_800E61EC
-/* 800E61D8 000E3118  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E61D8 000E3118  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E61DC 000E311C  4C C6 31 82 */	crclr 6
-/* 800E61E0 000E3120  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E61E0 000E3120  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E61E4 000E3124  4B FF 6E C1 */	bl SpcTrace__FPCce
 /* 800E61E8 000E3128  48 00 00 2C */	b lbl_800E6214
 lbl_800E61EC:
@@ -11306,8 +11306,8 @@ lbl_800E6214:
 /* 800E6228 000E3168  38 21 00 68 */	addi r1, r1, 0x68
 /* 800E622C 000E316C  4E 80 00 20 */	blr 
 
-.global evSetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evSetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evSetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evSetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E6230 000E3170  7C 08 02 A6 */	mflr r0
 /* 800E6234 000E3174  90 01 00 04 */	stw r0, 4(r1)
 /* 800E6238 000E3178  94 21 FF A8 */	stwu r1, -0x58(r1)
@@ -11317,8 +11317,8 @@ evSetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E6248 000E3188  93 A1 00 4C */	stw r29, 0x4c(r1)
 /* 800E624C 000E318C  7C 7D 1B 78 */	mr r29, r3
 /* 800E6250 000E3190  90 81 00 0C */	stw r4, 0xc(r1)
-/* 800E6254 000E3194  3C 80 80 37 */	lis r4, $$21490@ha
-/* 800E6258 000E3198  3B E4 29 90 */	addi r31, r4, $$21490@l
+/* 800E6254 000E3194  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 800E6258 000E3198  3B E4 29 90 */	addi r31, r4, "@1490"@l
 /* 800E625C 000E319C  38 80 00 02 */	li r4, 2
 /* 800E6260 000E31A0  48 03 11 D1 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 800E6264 000E31A4  80 7D 00 1C */	lwz r3, 0x1c(r29)
@@ -11446,8 +11446,8 @@ lbl_800E6400:
 /* 800E6414 000E3354  38 21 00 58 */	addi r1, r1, 0x58
 /* 800E6418 000E3358  4E 80 00 20 */	blr 
 
-.global evGetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul
-evGetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
+.global "evGetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul"
+"evGetSystemFlag__FP32TSpcTypedInterp<13TEventWatcher>Ul":
 /* 800E641C 000E335C  7C 08 02 A6 */	mflr r0
 /* 800E6420 000E3360  90 01 00 04 */	stw r0, 4(r1)
 /* 800E6424 000E3364  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -11460,9 +11460,9 @@ evGetSystemFlag__FP32TSpcTypedInterp$$013TEventWatcher$$1Ul:
 /* 800E6440 000E3380  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 800E6444 000E3384  2C 03 00 00 */	cmpwi r3, 0
 /* 800E6448 000E3388  41 81 00 34 */	bgt lbl_800E647C
-/* 800E644C 000E338C  3C 60 80 37 */	lis r3, $$23829@ha
+/* 800E644C 000E338C  3C 60 80 37 */	lis r3, "@3829"@ha
 /* 800E6450 000E3390  4C C6 31 82 */	crclr 6
-/* 800E6454 000E3394  38 63 30 FC */	addi r3, r3, $$23829@l
+/* 800E6454 000E3394  38 63 30 FC */	addi r3, r3, "@3829"@l
 /* 800E6458 000E3398  4B FF 6C 4D */	bl SpcTrace__FPCce
 /* 800E645C 000E339C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 800E6460 000E33A0  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -11513,9 +11513,9 @@ lbl_800E64E0:
 /* 800E64FC 000E343C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 800E6500 000E3440  7C 03 00 00 */	cmpw r3, r0
 /* 800E6504 000E3444  41 80 00 18 */	blt lbl_800E651C
-/* 800E6508 000E3448  3C 60 80 37 */	lis r3, $$23834@ha
+/* 800E6508 000E3448  3C 60 80 37 */	lis r3, "@3834"@ha
 /* 800E650C 000E344C  4C C6 31 82 */	crclr 6
-/* 800E6510 000E3450  38 63 31 1C */	addi r3, r3, $$23834@l
+/* 800E6510 000E3450  38 63 31 1C */	addi r3, r3, "@3834"@l
 /* 800E6514 000E3454  4B FF 6B 91 */	bl SpcTrace__FPCce
 /* 800E6518 000E3458  48 00 00 2C */	b lbl_800E6544
 lbl_800E651C:
@@ -11536,8 +11536,8 @@ lbl_800E6544:
 /* 800E6550 000E3490  7C 08 03 A6 */	mtlr r0
 /* 800E6554 000E3494  4E 80 00 20 */	blr 
 
-.global __dt__32TSpcTypedInterp$$013TEventWatcher$$1Fv
-__dt__32TSpcTypedInterp$$013TEventWatcher$$1Fv:
+.global "__dt__32TSpcTypedInterp<13TEventWatcher>Fv"
+"__dt__32TSpcTypedInterp<13TEventWatcher>Fv":
 /* 800E6558 000E3498  7C 08 02 A6 */	mflr r0
 /* 800E655C 000E349C  90 01 00 04 */	stw r0, 4(r1)
 /* 800E6560 000E34A0  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -11546,8 +11546,8 @@ __dt__32TSpcTypedInterp$$013TEventWatcher$$1Fv:
 /* 800E656C 000E34AC  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800E6570 000E34B0  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800E6574 000E34B4  41 82 00 2C */	beq lbl_800E65A0
-/* 800E6578 000E34B8  3C 60 80 3B */	lis r3, __vt__32TSpcTypedInterp$$013TEventWatcher$$1@ha
-/* 800E657C 000E34BC  38 03 39 68 */	addi r0, r3, __vt__32TSpcTypedInterp$$013TEventWatcher$$1@l
+/* 800E6578 000E34B8  3C 60 80 3B */	lis r3, "__vt__32TSpcTypedInterp<13TEventWatcher>"@ha
+/* 800E657C 000E34BC  38 03 39 68 */	addi r0, r3, "__vt__32TSpcTypedInterp<13TEventWatcher>"@l
 /* 800E6580 000E34C0  90 1E 00 5C */	stw r0, 0x5c(r30)
 /* 800E6584 000E34C4  38 7E 00 00 */	addi r3, r30, 0
 /* 800E6588 000E34C8  38 80 00 00 */	li r4, 0
@@ -11565,8 +11565,8 @@ lbl_800E65A0:
 /* 800E65B4 000E34F4  38 21 00 18 */	addi r1, r1, 0x18
 /* 800E65B8 000E34F8  4E 80 00 20 */	blr 
 
-.global __dt__32TSpcTypedBinary$$013TEventWatcher$$1Fv
-__dt__32TSpcTypedBinary$$013TEventWatcher$$1Fv:
+.global "__dt__32TSpcTypedBinary<13TEventWatcher>Fv"
+"__dt__32TSpcTypedBinary<13TEventWatcher>Fv":
 /* 800E65BC 000E34FC  7C 08 02 A6 */	mflr r0
 /* 800E65C0 000E3500  90 01 00 04 */	stw r0, 4(r1)
 /* 800E65C4 000E3504  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -11575,8 +11575,8 @@ __dt__32TSpcTypedBinary$$013TEventWatcher$$1Fv:
 /* 800E65D0 000E3510  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800E65D4 000E3514  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800E65D8 000E3518  41 82 00 2C */	beq lbl_800E6604
-/* 800E65DC 000E351C  3C 60 80 3B */	lis r3, __vt__32TSpcTypedBinary$$013TEventWatcher$$1@ha
-/* 800E65E0 000E3520  38 03 39 7C */	addi r0, r3, __vt__32TSpcTypedBinary$$013TEventWatcher$$1@l
+/* 800E65DC 000E351C  3C 60 80 3B */	lis r3, "__vt__32TSpcTypedBinary<13TEventWatcher>"@ha
+/* 800E65E0 000E3520  38 03 39 7C */	addi r0, r3, "__vt__32TSpcTypedBinary<13TEventWatcher>"@l
 /* 800E65E4 000E3524  90 1E 00 04 */	stw r0, 4(r30)
 /* 800E65E8 000E3528  38 7E 00 00 */	addi r3, r30, 0
 /* 800E65EC 000E352C  38 80 00 00 */	li r4, 0
@@ -11594,8 +11594,8 @@ lbl_800E6604:
 /* 800E6618 000E3558  38 21 00 18 */	addi r1, r1, 0x18
 /* 800E661C 000E355C  4E 80 00 20 */	blr 
 
-.global dispatchBuiltin__32TSpcTypedInterp$$013TEventWatcher$$1FUlUl
-dispatchBuiltin__32TSpcTypedInterp$$013TEventWatcher$$1FUlUl:
+.global "dispatchBuiltin__32TSpcTypedInterp<13TEventWatcher>FUlUl"
+"dispatchBuiltin__32TSpcTypedInterp<13TEventWatcher>FUlUl":
 /* 800E6620 000E3560  7C 08 02 A6 */	mflr r0
 /* 800E6624 000E3564  90 01 00 04 */	stw r0, 4(r1)
 /* 800E6628 000E3568  1C 04 00 14 */	mulli r0, r4, 0x14
@@ -11632,205 +11632,205 @@ lbl_800E6688:
 .global __sinit_EventWatcher_cpp
 __sinit_EventWatcher_cpp:
 /* 800E6698 000E35D8  7C 08 02 A6 */	mflr r0
-/* 800E669C 000E35DC  3C 60 80 3F */	lis r3, $$27636@ha
+/* 800E669C 000E35DC  3C 60 80 3F */	lis r3, "@7636"@ha
 /* 800E66A0 000E35E0  90 01 00 04 */	stw r0, 4(r1)
 /* 800E66A4 000E35E4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800E66A8 000E35E8  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 800E66AC 000E35EC  3B E3 1D D0 */	addi r31, r3, $$27636@l
-/* 800E66B0 000E35F0  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 800E66AC 000E35EC  3B E3 1D D0 */	addi r31, r3, "@7636"@l
+/* 800E66B0 000E35F0  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 800E66B4 000E35F4  7C 00 07 75 */	extsb. r0, r0
 /* 800E66B8 000E35F8  40 82 00 28 */	bne lbl_800E66E0
-/* 800E66BC 000E35FC  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 800E66BC 000E35FC  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 800E66C0 000E3600  4B F2 85 75 */	bl initiate__10JSUPtrListFv
-/* 800E66C4 000E3604  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 800E66C8 000E3608  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 800E66CC 000E360C  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 800E66C4 000E3604  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 800E66C8 000E3608  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 800E66CC 000E360C  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 800E66D0 000E3610  38 BF 00 00 */	addi r5, r31, 0
 /* 800E66D4 000E3614  4B F9 C0 55 */	bl __register_global_object
 /* 800E66D8 000E3618  38 00 00 01 */	li r0, 1
-/* 800E66DC 000E361C  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 800E66DC 000E361C  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_800E66E0:
-/* 800E66E0 000E3620  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 800E66E0 000E3620  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 800E66E4 000E3624  7C 00 07 75 */	extsb. r0, r0
 /* 800E66E8 000E3628  40 82 00 28 */	bne lbl_800E6710
-/* 800E66EC 000E362C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 800E66EC 000E362C  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 800E66F0 000E3630  4B F2 85 45 */	bl initiate__10JSUPtrListFv
-/* 800E66F4 000E3634  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 800E66F8 000E3638  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 800E66FC 000E363C  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 800E66F4 000E3634  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 800E66F8 000E3638  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 800E66FC 000E363C  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 800E6700 000E3640  38 BF 00 0C */	addi r5, r31, 0xc
 /* 800E6704 000E3644  4B F9 C0 25 */	bl __register_global_object
 /* 800E6708 000E3648  38 00 00 01 */	li r0, 1
-/* 800E670C 000E364C  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 800E670C 000E364C  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_800E6710:
-/* 800E6710 000E3650  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 800E6710 000E3650  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 800E6714 000E3654  7C 00 07 75 */	extsb. r0, r0
 /* 800E6718 000E3658  40 82 00 28 */	bne lbl_800E6740
-/* 800E671C 000E365C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 800E671C 000E365C  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 800E6720 000E3660  4B F2 85 15 */	bl initiate__10JSUPtrListFv
-/* 800E6724 000E3664  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 800E6728 000E3668  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 800E672C 000E366C  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 800E6724 000E3664  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 800E6728 000E3668  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 800E672C 000E366C  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 800E6730 000E3670  38 BF 00 18 */	addi r5, r31, 0x18
 /* 800E6734 000E3674  4B F9 BF F5 */	bl __register_global_object
 /* 800E6738 000E3678  38 00 00 01 */	li r0, 1
-/* 800E673C 000E367C  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 800E673C 000E367C  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_800E6740:
-/* 800E6740 000E3680  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 800E6740 000E3680  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 800E6744 000E3684  7C 00 07 75 */	extsb. r0, r0
 /* 800E6748 000E3688  40 82 00 28 */	bne lbl_800E6770
-/* 800E674C 000E368C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 800E674C 000E368C  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 800E6750 000E3690  4B F2 84 E5 */	bl initiate__10JSUPtrListFv
-/* 800E6754 000E3694  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 800E6758 000E3698  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 800E675C 000E369C  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 800E6754 000E3694  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 800E6758 000E3698  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 800E675C 000E369C  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 800E6760 000E36A0  38 BF 00 24 */	addi r5, r31, 0x24
 /* 800E6764 000E36A4  4B F9 BF C5 */	bl __register_global_object
 /* 800E6768 000E36A8  38 00 00 01 */	li r0, 1
-/* 800E676C 000E36AC  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 800E676C 000E36AC  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_800E6770:
-/* 800E6770 000E36B0  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 800E6770 000E36B0  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 800E6774 000E36B4  7C 00 07 75 */	extsb. r0, r0
 /* 800E6778 000E36B8  40 82 00 28 */	bne lbl_800E67A0
-/* 800E677C 000E36BC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 800E677C 000E36BC  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 800E6780 000E36C0  4B F2 84 B5 */	bl initiate__10JSUPtrListFv
-/* 800E6784 000E36C4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 800E6788 000E36C8  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 800E678C 000E36CC  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 800E6784 000E36C4  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 800E6788 000E36C8  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 800E678C 000E36CC  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 800E6790 000E36D0  38 BF 00 30 */	addi r5, r31, 0x30
 /* 800E6794 000E36D4  4B F9 BF 95 */	bl __register_global_object
 /* 800E6798 000E36D8  38 00 00 01 */	li r0, 1
-/* 800E679C 000E36DC  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 800E679C 000E36DC  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_800E67A0:
-/* 800E67A0 000E36E0  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 800E67A0 000E36E0  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 800E67A4 000E36E4  7C 00 07 75 */	extsb. r0, r0
 /* 800E67A8 000E36E8  40 82 00 28 */	bne lbl_800E67D0
-/* 800E67AC 000E36EC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 800E67AC 000E36EC  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 800E67B0 000E36F0  4B F2 84 85 */	bl initiate__10JSUPtrListFv
-/* 800E67B4 000E36F4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 800E67B8 000E36F8  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 800E67BC 000E36FC  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 800E67B4 000E36F4  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 800E67B8 000E36F8  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 800E67BC 000E36FC  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 800E67C0 000E3700  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 800E67C4 000E3704  4B F9 BF 65 */	bl __register_global_object
 /* 800E67C8 000E3708  38 00 00 01 */	li r0, 1
-/* 800E67CC 000E370C  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 800E67CC 000E370C  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_800E67D0:
-/* 800E67D0 000E3710  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 800E67D0 000E3710  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 800E67D4 000E3714  7C 00 07 75 */	extsb. r0, r0
 /* 800E67D8 000E3718  40 82 00 28 */	bne lbl_800E6800
-/* 800E67DC 000E371C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 800E67DC 000E371C  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 800E67E0 000E3720  4B F2 84 55 */	bl initiate__10JSUPtrListFv
-/* 800E67E4 000E3724  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 800E67E8 000E3728  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 800E67EC 000E372C  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 800E67E4 000E3724  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 800E67E8 000E3728  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 800E67EC 000E372C  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 800E67F0 000E3730  38 BF 00 48 */	addi r5, r31, 0x48
 /* 800E67F4 000E3734  4B F9 BF 35 */	bl __register_global_object
 /* 800E67F8 000E3738  38 00 00 01 */	li r0, 1
-/* 800E67FC 000E373C  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 800E67FC 000E373C  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_800E6800:
-/* 800E6800 000E3740  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 800E6800 000E3740  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 800E6804 000E3744  7C 00 07 75 */	extsb. r0, r0
 /* 800E6808 000E3748  40 82 00 28 */	bne lbl_800E6830
-/* 800E680C 000E374C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 800E680C 000E374C  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 800E6810 000E3750  4B F2 84 25 */	bl initiate__10JSUPtrListFv
-/* 800E6814 000E3754  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 800E6818 000E3758  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 800E681C 000E375C  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 800E6814 000E3754  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 800E6818 000E3758  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 800E681C 000E375C  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 800E6820 000E3760  38 BF 00 54 */	addi r5, r31, 0x54
 /* 800E6824 000E3764  4B F9 BF 05 */	bl __register_global_object
 /* 800E6828 000E3768  38 00 00 01 */	li r0, 1
-/* 800E682C 000E376C  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 800E682C 000E376C  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_800E6830:
-/* 800E6830 000E3770  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 800E6830 000E3770  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 800E6834 000E3774  7C 00 07 75 */	extsb. r0, r0
 /* 800E6838 000E3778  40 82 00 28 */	bne lbl_800E6860
-/* 800E683C 000E377C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 800E683C 000E377C  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 800E6840 000E3780  4B F2 83 F5 */	bl initiate__10JSUPtrListFv
-/* 800E6844 000E3784  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 800E6848 000E3788  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 800E684C 000E378C  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 800E6844 000E3784  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 800E6848 000E3788  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 800E684C 000E378C  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 800E6850 000E3790  38 BF 00 60 */	addi r5, r31, 0x60
 /* 800E6854 000E3794  4B F9 BE D5 */	bl __register_global_object
 /* 800E6858 000E3798  38 00 00 01 */	li r0, 1
-/* 800E685C 000E379C  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 800E685C 000E379C  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_800E6860:
-/* 800E6860 000E37A0  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 800E6860 000E37A0  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 800E6864 000E37A4  7C 00 07 75 */	extsb. r0, r0
 /* 800E6868 000E37A8  40 82 00 28 */	bne lbl_800E6890
-/* 800E686C 000E37AC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 800E686C 000E37AC  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 800E6870 000E37B0  4B F2 83 C5 */	bl initiate__10JSUPtrListFv
-/* 800E6874 000E37B4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 800E6878 000E37B8  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 800E687C 000E37BC  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 800E6874 000E37B4  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 800E6878 000E37B8  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 800E687C 000E37BC  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 800E6880 000E37C0  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 800E6884 000E37C4  4B F9 BE A5 */	bl __register_global_object
 /* 800E6888 000E37C8  38 00 00 01 */	li r0, 1
-/* 800E688C 000E37CC  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 800E688C 000E37CC  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_800E6890:
-/* 800E6890 000E37D0  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 800E6890 000E37D0  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 800E6894 000E37D4  7C 00 07 75 */	extsb. r0, r0
 /* 800E6898 000E37D8  40 82 00 28 */	bne lbl_800E68C0
-/* 800E689C 000E37DC  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 800E689C 000E37DC  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 800E68A0 000E37E0  4B F2 83 95 */	bl initiate__10JSUPtrListFv
-/* 800E68A4 000E37E4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 800E68A8 000E37E8  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 800E68AC 000E37EC  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 800E68A4 000E37E4  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 800E68A8 000E37E8  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 800E68AC 000E37EC  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 800E68B0 000E37F0  38 BF 00 78 */	addi r5, r31, 0x78
 /* 800E68B4 000E37F4  4B F9 BE 75 */	bl __register_global_object
 /* 800E68B8 000E37F8  38 00 00 01 */	li r0, 1
-/* 800E68BC 000E37FC  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 800E68BC 000E37FC  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_800E68C0:
-/* 800E68C0 000E3800  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 800E68C0 000E3800  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 800E68C4 000E3804  7C 00 07 75 */	extsb. r0, r0
 /* 800E68C8 000E3808  40 82 00 28 */	bne lbl_800E68F0
-/* 800E68CC 000E380C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 800E68CC 000E380C  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 800E68D0 000E3810  4B F2 83 65 */	bl initiate__10JSUPtrListFv
-/* 800E68D4 000E3814  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 800E68D8 000E3818  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 800E68DC 000E381C  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 800E68D4 000E3814  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 800E68D8 000E3818  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 800E68DC 000E381C  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 800E68E0 000E3820  38 BF 00 84 */	addi r5, r31, 0x84
 /* 800E68E4 000E3824  4B F9 BE 45 */	bl __register_global_object
 /* 800E68E8 000E3828  38 00 00 01 */	li r0, 1
-/* 800E68EC 000E382C  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 800E68EC 000E382C  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_800E68F0:
-/* 800E68F0 000E3830  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 800E68F0 000E3830  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 800E68F4 000E3834  7C 00 07 75 */	extsb. r0, r0
 /* 800E68F8 000E3838  40 82 00 28 */	bne lbl_800E6920
-/* 800E68FC 000E383C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 800E68FC 000E383C  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 800E6900 000E3840  4B F2 83 35 */	bl initiate__10JSUPtrListFv
-/* 800E6904 000E3844  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 800E6908 000E3848  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 800E690C 000E384C  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 800E6904 000E3844  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 800E6908 000E3848  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 800E690C 000E384C  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 800E6910 000E3850  38 BF 00 90 */	addi r5, r31, 0x90
 /* 800E6914 000E3854  4B F9 BE 15 */	bl __register_global_object
 /* 800E6918 000E3858  38 00 00 01 */	li r0, 1
-/* 800E691C 000E385C  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 800E691C 000E385C  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_800E6920:
-/* 800E6920 000E3860  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 800E6920 000E3860  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 800E6924 000E3864  7C 00 07 75 */	extsb. r0, r0
 /* 800E6928 000E3868  40 82 00 28 */	bne lbl_800E6950
-/* 800E692C 000E386C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 800E692C 000E386C  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 800E6930 000E3870  4B F2 83 05 */	bl initiate__10JSUPtrListFv
-/* 800E6934 000E3874  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 800E6938 000E3878  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 800E693C 000E387C  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 800E6934 000E3874  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 800E6938 000E3878  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 800E693C 000E387C  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 800E6940 000E3880  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 800E6944 000E3884  4B F9 BD E5 */	bl __register_global_object
 /* 800E6948 000E3888  38 00 00 01 */	li r0, 1
-/* 800E694C 000E388C  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 800E694C 000E388C  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_800E6950:
-/* 800E6950 000E3890  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 800E6950 000E3890  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 800E6954 000E3894  7C 00 07 75 */	extsb. r0, r0
 /* 800E6958 000E3898  40 82 00 28 */	bne lbl_800E6980
-/* 800E695C 000E389C  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 800E695C 000E389C  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 800E6960 000E38A0  4B F2 82 D5 */	bl initiate__10JSUPtrListFv
-/* 800E6964 000E38A4  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 800E6968 000E38A8  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 800E696C 000E38AC  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 800E6964 000E38A4  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 800E6968 000E38A8  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 800E696C 000E38AC  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 800E6970 000E38B0  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 800E6974 000E38B4  4B F9 BD B5 */	bl __register_global_object
 /* 800E6978 000E38B8  38 00 00 01 */	li r0, 1
-/* 800E697C 000E38BC  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 800E697C 000E38BC  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_800E6980:
 /* 800E6980 000E38C0  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 800E6984 000E38C4  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -11838,8 +11838,8 @@ lbl_800E6980:
 /* 800E698C 000E38CC  7C 08 03 A6 */	mtlr r0
 /* 800E6990 000E38D0  4E 80 00 20 */	blr 
 
-.global __dt__21JSUList$$010MSSetSound$$1Fv
-__dt__21JSUList$$010MSSetSound$$1Fv:
+.global "__dt__21JSUList<10MSSetSound>Fv"
+"__dt__21JSUList<10MSSetSound>Fv":
 /* 800E6994 000E38D4  7C 08 02 A6 */	mflr r0
 /* 800E6998 000E38D8  90 01 00 04 */	stw r0, 4(r1)
 /* 800E699C 000E38DC  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -11864,8 +11864,8 @@ lbl_800E69D0:
 /* 800E69E4 000E3924  38 21 00 18 */	addi r1, r1, 0x18
 /* 800E69E8 000E3928  4E 80 00 20 */	blr 
 
-.global __dt__24JSUList$$013MSSetSoundGrp$$1Fv
-__dt__24JSUList$$013MSSetSoundGrp$$1Fv:
+.global "__dt__24JSUList<13MSSetSoundGrp>Fv"
+"__dt__24JSUList<13MSSetSoundGrp>Fv":
 /* 800E69EC 000E392C  7C 08 02 A6 */	mflr r0
 /* 800E69F0 000E3930  90 01 00 04 */	stw r0, 4(r1)
 /* 800E69F4 000E3934  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -11890,8 +11890,8 @@ lbl_800E6A28:
 /* 800E6A3C 000E397C  38 21 00 18 */	addi r1, r1, 0x18
 /* 800E6A40 000E3980  4E 80 00 20 */	blr 
 
-.global __dt__15JSUList$$05MSBgm$$1Fv
-__dt__15JSUList$$05MSBgm$$1Fv:
+.global "__dt__15JSUList<5MSBgm>Fv"
+"__dt__15JSUList<5MSBgm>Fv":
 /* 800E6A44 000E3984  7C 08 02 A6 */	mflr r0
 /* 800E6A48 000E3988  90 01 00 04 */	stw r0, 4(r1)
 /* 800E6A4C 000E398C  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -11922,223 +11922,223 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21937:
+"@1937":
 	.incbin "baserom.dol", 0x36F99C, 0x14
-$$22200:
+"@2200":
 	.incbin "baserom.dol", 0x36F9B0, 0x30
-$$22201:
+"@2201":
 	.incbin "baserom.dol", 0x36F9E0, 0x38
-$$22202:
+"@2202":
 	.incbin "baserom.dol", 0x36FA18, 0x34
-$$22203:
+"@2203":
 	.incbin "baserom.dol", 0x36FA4C, 0x24
-$$22728:
+"@2728":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22730:
+"@2730":
 	.incbin "baserom.dol", 0x36FA7C, 0xC
-$$23432:
+"@3432":
 	.incbin "baserom.dol", 0x36FA88, 0x18
-$$23433:
+"@3433":
 	.incbin "baserom.dol", 0x36FAA0, 0x18
-$$23441:
+"@3441":
 	.incbin "baserom.dol", 0x36FAB8, 0x10
-$$23457:
+"@3457":
 	.incbin "baserom.dol", 0x36FAC8, 0x10
-$$23471:
+"@3471":
 	.incbin "baserom.dol", 0x36FAD8, 0x10
-$$23708:
+"@3708":
 	.incbin "baserom.dol", 0x36FAE8, 0x10
-$$23709:
+"@3709":
 	.incbin "baserom.dol", 0x36FAF8, 0x10
-$$23710:
+"@3710":
 	.incbin "baserom.dol", 0x36FB08, 0x14
-$$23711:
+"@3711":
 	.incbin "baserom.dol", 0x36FB1C, 0x10
-$$23712:
+"@3712":
 	.incbin "baserom.dol", 0x36FB2C, 0xC
-$$23713:
+"@3713":
 	.incbin "baserom.dol", 0x36FB38, 0x14
-$$23714:
+"@3714":
 	.incbin "baserom.dol", 0x36FB4C, 0x14
-$$23715:
+"@3715":
 	.incbin "baserom.dol", 0x36FB60, 0x10
-$$23716:
+"@3716":
 	.incbin "baserom.dol", 0x36FB70, 0x14
-$$23717:
+"@3717":
 	.incbin "baserom.dol", 0x36FB84, 0x10
-$$23718:
+"@3718":
 	.incbin "baserom.dol", 0x36FB94, 0xC
-$$23719:
+"@3719":
 	.incbin "baserom.dol", 0x36FBA0, 0x10
-$$23720:
+"@3720":
 	.incbin "baserom.dol", 0x36FBB0, 0x10
-$$23721:
+"@3721":
 	.incbin "baserom.dol", 0x36FBC0, 0xC
-$$23722:
+"@3722":
 	.incbin "baserom.dol", 0x36FBCC, 0x18
-$$23723:
+"@3723":
 	.incbin "baserom.dol", 0x36FBE4, 0x18
-$$23724:
+"@3724":
 	.incbin "baserom.dol", 0x36FBFC, 0x10
-$$23725:
+"@3725":
 	.incbin "baserom.dol", 0x36FC0C, 0x14
-$$23726:
+"@3726":
 	.incbin "baserom.dol", 0x36FC20, 0x14
-$$23727:
+"@3727":
 	.incbin "baserom.dol", 0x36FC34, 0x14
-$$23728:
+"@3728":
 	.incbin "baserom.dol", 0x36FC48, 0x14
-$$23729:
+"@3729":
 	.incbin "baserom.dol", 0x36FC5C, 0x14
-$$23730:
+"@3730":
 	.incbin "baserom.dol", 0x36FC70, 0x10
-$$23731:
+"@3731":
 	.incbin "baserom.dol", 0x36FC80, 0x14
-$$23732:
+"@3732":
 	.incbin "baserom.dol", 0x36FC94, 0x1C
-$$23733:
+"@3733":
 	.incbin "baserom.dol", 0x36FCB0, 0xC
-$$23734:
+"@3734":
 	.incbin "baserom.dol", 0x36FCBC, 0x14
-$$23735:
+"@3735":
 	.incbin "baserom.dol", 0x36FCD0, 0x10
-$$23736:
+"@3736":
 	.incbin "baserom.dol", 0x36FCE0, 0x10
-$$23737:
+"@3737":
 	.incbin "baserom.dol", 0x36FCF0, 0xC
-$$23738:
+"@3738":
 	.incbin "baserom.dol", 0x36FCFC, 0x14
-$$23739:
+"@3739":
 	.incbin "baserom.dol", 0x36FD10, 0x18
-$$23740:
+"@3740":
 	.incbin "baserom.dol", 0x36FD28, 0x10
-$$23741:
+"@3741":
 	.incbin "baserom.dol", 0x36FD38, 0x18
-$$23742:
+"@3742":
 	.incbin "baserom.dol", 0x36FD50, 0x18
-$$23743:
+"@3743":
 	.incbin "baserom.dol", 0x36FD68, 0x1C
-$$23744:
+"@3744":
 	.incbin "baserom.dol", 0x36FD84, 0x14
-$$23745:
+"@3745":
 	.incbin "baserom.dol", 0x36FD98, 0x18
-$$23746:
+"@3746":
 	.incbin "baserom.dol", 0x36FDB0, 0x18
-$$23747:
+"@3747":
 	.incbin "baserom.dol", 0x36FDC8, 0x14
-$$23748:
+"@3748":
 	.incbin "baserom.dol", 0x36FDDC, 0x18
-$$23749:
+"@3749":
 	.incbin "baserom.dol", 0x36FDF4, 0x10
-$$23750:
+"@3750":
 	.incbin "baserom.dol", 0x36FE04, 0x10
-$$23751:
+"@3751":
 	.incbin "baserom.dol", 0x36FE14, 0xC
-$$23752:
+"@3752":
 	.incbin "baserom.dol", 0x36FE20, 0xC
-$$23753:
+"@3753":
 	.incbin "baserom.dol", 0x36FE2C, 0x10
-$$23754:
+"@3754":
 	.incbin "baserom.dol", 0x36FE3C, 0xC
-$$23755:
+"@3755":
 	.incbin "baserom.dol", 0x36FE48, 0x14
-$$23757:
+"@3757":
 	.incbin "baserom.dol", 0x36FE5C, 0xC
-$$23758:
+"@3758":
 	.incbin "baserom.dol", 0x36FE68, 0x10
-$$23759:
+"@3759":
 	.incbin "baserom.dol", 0x36FE78, 0x14
-$$23760:
+"@3760":
 	.incbin "baserom.dol", 0x36FE8C, 0x14
-$$23761:
+"@3761":
 	.incbin "baserom.dol", 0x36FEA0, 0x20
-$$23762:
+"@3762":
 	.incbin "baserom.dol", 0x36FEC0, 0x1C
-$$23763:
+"@3763":
 	.incbin "baserom.dol", 0x36FEDC, 0xC
-$$23764:
+"@3764":
 	.incbin "baserom.dol", 0x36FEE8, 0x18
-$$23765:
+"@3765":
 	.incbin "baserom.dol", 0x36FF00, 0x10
-$$23766:
+"@3766":
 	.incbin "baserom.dol", 0x36FF10, 0x14
-$$23767:
+"@3767":
 	.incbin "baserom.dol", 0x36FF24, 0x10
-$$23768:
+"@3768":
 	.incbin "baserom.dol", 0x36FF34, 0x10
-$$23769:
+"@3769":
 	.incbin "baserom.dol", 0x36FF44, 0x10
-$$23770:
+"@3770":
 	.incbin "baserom.dol", 0x36FF54, 0xC
-$$23771:
+"@3771":
 	.incbin "baserom.dol", 0x36FF60, 0xC
-$$23773:
+"@3773":
 	.incbin "baserom.dol", 0x36FF6C, 0xC
-$$23775:
+"@3775":
 	.incbin "baserom.dol", 0x36FF78, 0x10
-$$23776:
+"@3776":
 	.incbin "baserom.dol", 0x36FF88, 0x10
-$$23777:
+"@3777":
 	.incbin "baserom.dol", 0x36FF98, 0x10
-$$23778:
+"@3778":
 	.incbin "baserom.dol", 0x36FFA8, 0xC
-$$23779:
+"@3779":
 	.incbin "baserom.dol", 0x36FFB4, 0x18
-$$23780:
+"@3780":
 	.incbin "baserom.dol", 0x36FFCC, 0x18
-$$23781:
+"@3781":
 	.incbin "baserom.dol", 0x36FFE4, 0x14
-$$23782:
+"@3782":
 	.incbin "baserom.dol", 0x36FFF8, 0x10
-$$23783:
+"@3783":
 	.incbin "baserom.dol", 0x370008, 0x14
-$$23784:
+"@3784":
 	.incbin "baserom.dol", 0x37001C, 0x10
-$$23785:
+"@3785":
 	.incbin "baserom.dol", 0x37002C, 0x10
-$$23786:
+"@3786":
 	.incbin "baserom.dol", 0x37003C, 0x10
-$$23787:
+"@3787":
 	.incbin "baserom.dol", 0x37004C, 0xC
-$$23788:
+"@3788":
 	.incbin "baserom.dol", 0x370058, 0x14
-$$23789:
+"@3789":
 	.incbin "baserom.dol", 0x37006C, 0x14
-$$23790:
+"@3790":
 	.incbin "baserom.dol", 0x370080, 0xC
-$$23791:
+"@3791":
 	.incbin "baserom.dol", 0x37008C, 0x14
-$$23792:
+"@3792":
 	.incbin "baserom.dol", 0x3700A0, 0x18
-$$23793:
+"@3793":
 	.incbin "baserom.dol", 0x3700B8, 0x14
-$$23794:
+"@3794":
 	.incbin "baserom.dol", 0x3700CC, 0x18
-$$23795:
+"@3795":
 	.incbin "baserom.dol", 0x3700E4, 0x18
-$$23829:
+"@3829":
 	.incbin "baserom.dol", 0x3700FC, 0x20
-$$23834:
+"@3834":
 	.incbin "baserom.dol", 0x37011C, 0x1C
-$$23988:
+"@3988":
 	.incbin "baserom.dol", 0x370138, 0x14
-$$24300:
+"@4300":
 	.incbin "baserom.dol", 0x37014C, 0x14
-$$24824:
+"@4824":
 	.incbin "baserom.dol", 0x370160, 0xC
-$$24846:
+"@4846":
 	.incbin "baserom.dol", 0x37016C, 0x14
-$$25130:
+"@5130":
 	.incbin "baserom.dol", 0x370180, 0x1C
-$$25584:
+"@5584":
 	.incbin "baserom.dol", 0x37019C, 0xC
-$$25774:
+"@5774":
 	.incbin "baserom.dol", 0x3701A8, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -12154,111 +12154,111 @@ __vt__13TEventWatcher:
   .4byte searchF__Q26JDrama8TNameRefFUsPCc
   .4byte perform__13TEventWatcherFUlPQ26JDrama9TGraphics
   .4byte launchScript__13TEventWatcherFPCc
-.global __vt__32TSpcTypedInterp$$013TEventWatcher$$1
-__vt__32TSpcTypedInterp$$013TEventWatcher$$1:
+.global "__vt__32TSpcTypedInterp<13TEventWatcher>"
+"__vt__32TSpcTypedInterp<13TEventWatcher>":
   .4byte 0
   .4byte 0
-  .4byte dispatchBuiltin__32TSpcTypedInterp$$013TEventWatcher$$1FUlUl
-  .4byte __dt__32TSpcTypedInterp$$013TEventWatcher$$1Fv
+  .4byte "dispatchBuiltin__32TSpcTypedInterp<13TEventWatcher>FUlUl"
+  .4byte "__dt__32TSpcTypedInterp<13TEventWatcher>Fv"
   .4byte update__10TSpcInterpFv
-.global __vt__32TSpcTypedBinary$$013TEventWatcher$$1
-__vt__32TSpcTypedBinary$$013TEventWatcher$$1:
+.global "__vt__32TSpcTypedBinary<13TEventWatcher>"
+"__vt__32TSpcTypedBinary<13TEventWatcher>":
   .4byte 0
   .4byte 0
-  .4byte __dt__32TSpcTypedBinary$$013TEventWatcher$$1Fv
-  .4byte initUserBuiltin__32TSpcTypedBinary$$013TEventWatcher$$1Fv
+  .4byte "__dt__32TSpcTypedBinary<13TEventWatcher>Fv"
+  .4byte "initUserBuiltin__32TSpcTypedBinary<13TEventWatcher>Fv"
   .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sShineViewObjName$3431:
-  .4byte $$23432
-  .4byte $$23433
+  .4byte "@3432"
+  .4byte "@3433"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$23756:
+"@3756":
 	.incbin "baserom.dol", 0x3E4CB0, 0x8
-$$23772:
+"@3772":
 	.incbin "baserom.dol", 0x3E4CB8, 0x8
-$$23774:
+"@3774":
 	.incbin "baserom.dol", 0x3E4CC0, 0x8
-$$23830:
+"@3830":
 	.incbin "baserom.dol", 0x3E4CC8, 0x4
-$$23831:
+"@3831":
 	.incbin "baserom.dol", 0x3E4CCC, 0x4
-$$23832:
+"@3832":
   .4byte 0
-$$23833:
+"@3833":
 	.incbin "baserom.dol", 0x3E4CD4, 0x4
-$$23931:
+"@3931":
 	.incbin "baserom.dol", 0x3E4CD8, 0x4
-$$23932:
+"@3932":
 	.incbin "baserom.dol", 0x3E4CDC, 0x4
-$$23934:
+"@3934":
 	.incbin "baserom.dol", 0x3E4CE0, 0x8
-$$23989:
+"@3989":
 	.incbin "baserom.dol", 0x3E4CE8, 0x4
-$$23990:
+"@3990":
 	.incbin "baserom.dol", 0x3E4CEC, 0x4
-$$24053:
+"@4053":
   .4byte 0
-$$24803:
+"@4803":
 	.incbin "baserom.dol", 0x3E4CF4, 0x4
-$$25131:
+"@5131":
 	.incbin "baserom.dol", 0x3E4CF8, 0x4
-$$25132:
+"@5132":
 	.incbin "baserom.dol", 0x3E4CFC, 0x4
-$$25133:
+"@5133":
 	.incbin "baserom.dol", 0x3E4D00, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$27636:
+"@7636":
 	.skip 0xC
-$$27637:
+"@7637":
 	.skip 0xC
-$$27638:
+"@7638":
 	.skip 0xC
-$$27639:
+"@7639":
 	.skip 0xC
-$$27640:
+"@7640":
 	.skip 0xC
-$$27641:
+"@7641":
 	.skip 0xC
-$$27642:
+"@7642":
 	.skip 0xC
-$$27643:
+"@7643":
 	.skip 0xC
-$$27644:
+"@7644":
 	.skip 0xC
-$$27645:
+"@7645":
 	.skip 0xC
-$$27646:
+"@7646":
 	.skip 0xC
-$$27647:
+"@7647":
 	.skip 0xC
-$$27648:
+"@7648":
 	.skip 0xC
-$$27649:
+"@7649":
 	.skip 0xC
-$$27650:
+"@7650":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
-.global smList__15JALList$$05MSBgm$$1
-smList__15JALList$$05MSBgm$$1:
+.global "smList__15JALList<5MSBgm>"
+"smList__15JALList<5MSBgm>":
 	.skip 0xC
-.global smList__24JALList$$013MSSetSoundGrp$$1
-smList__24JALList$$013MSSetSoundGrp$$1:
+.global "smList__24JALList<13MSSetSoundGrp>"
+"smList__24JALList<13MSSetSoundGrp>":
 	.skip 0xC
-.global smList__21JALList$$010MSSetSound$$1
-smList__21JALList$$010MSSetSound$$1:
+.global "smList__21JALList<10MSSetSound>"
+"smList__21JALList<10MSSetSound>":
 	.skip 0xC
-.global __init__smList__15JALList$$05MSBgm$$1
-__init__smList__15JALList$$05MSBgm$$1:
+.global "__init__smList__15JALList<5MSBgm>"
+"__init__smList__15JALList<5MSBgm>":
 	.skip 0x1
-.global __init__smList__24JALList$$013MSSetSoundGrp$$1
-__init__smList__24JALList$$013MSSetSoundGrp$$1:
+.global "__init__smList__24JALList<13MSSetSoundGrp>"
+"__init__smList__24JALList<13MSSetSoundGrp>":
 	.skip 0x1
-.global __init__smList__21JALList$$010MSSetSound$$1
-__init__smList__21JALList$$010MSSetSound$$1:
+.global "__init__smList__21JALList<10MSSetSound>"
+"__init__smList__21JALList<10MSSetSound>":
 	.skip 0x2

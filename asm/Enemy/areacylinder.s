@@ -17,12 +17,12 @@ __dt__20TAreaCylinderManagerFv:
 /* 80319298 003161D8  41 82 00 80 */	beq lbl_80319318
 /* 8031929C 003161DC  38 61 00 4C */	addi r3, r1, 0x4c
 /* 803192A0 003161E0  38 9F 00 18 */	addi r4, r31, 0x18
-/* 803192A4 003161E4  48 00 01 41 */	bl __ct__Q37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorFPQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$16TNode_
+/* 803192A4 003161E4  48 00 01 41 */	bl "__ct__Q37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorFPQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>6TNode_"
 /* 803192A8 003161E8  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 803192AC 003161EC  38 61 00 44 */	addi r3, r1, 0x44
 /* 803192B0 003161F0  90 01 00 48 */	stw r0, 0x48(r1)
 /* 803192B4 003161F4  80 9F 00 18 */	lwz r4, 0x18(r31)
-/* 803192B8 003161F8  48 00 01 2D */	bl __ct__Q37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorFPQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$16TNode_
+/* 803192B8 003161F8  48 00 01 2D */	bl "__ct__Q37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorFPQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>6TNode_"
 /* 803192BC 003161FC  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 803192C0 00316200  3B C1 00 30 */	addi r30, r1, 0x30
 /* 803192C4 00316204  3B A1 00 28 */	addi r29, r1, 0x28
@@ -35,7 +35,7 @@ lbl_803192D4:
 /* 803192DC 0031621C  38 61 00 2C */	addi r3, r1, 0x2c
 /* 803192E0 00316220  90 01 00 30 */	stw r0, 0x30(r1)
 /* 803192E4 00316224  38 9F 00 10 */	addi r4, r31, 0x10
-/* 803192E8 00316228  48 00 00 91 */	bl erase__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator
+/* 803192E8 00316228  48 00 00 91 */	bl "erase__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator"
 /* 803192EC 0031622C  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 803192F0 00316230  90 01 00 40 */	stw r0, 0x40(r1)
 lbl_803192F4:
@@ -45,7 +45,7 @@ lbl_803192F4:
 /* 80319300 00316240  7F A4 EB 78 */	mr r4, r29
 /* 80319304 00316244  90 A1 00 28 */	stw r5, 0x28(r1)
 /* 80319308 00316248  90 01 00 24 */	stw r0, 0x24(r1)
-/* 8031930C 0031624C  48 00 00 55 */	bl __eq__7JGadgetFQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator
+/* 8031930C 0031624C  48 00 00 55 */	bl "__eq__7JGadgetFQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator"
 /* 80319310 00316250  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80319314 00316254  41 82 FF C0 */	beq lbl_803192D4
 lbl_80319318:
@@ -70,8 +70,8 @@ lbl_80319348:
 /* 80319358 00316298  7C 08 03 A6 */	mtlr r0
 /* 8031935C 0031629C  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator
-__eq__7JGadgetFQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator"
+"__eq__7JGadgetFQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator":
 /* 80319360 003162A0  80 63 00 00 */	lwz r3, 0(r3)
 /* 80319364 003162A4  80 04 00 00 */	lwz r0, 0(r4)
 /* 80319368 003162A8  7C 03 00 50 */	subf r0, r3, r0
@@ -79,8 +79,8 @@ __eq__7JGadgetFQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P
 /* 80319370 003162B0  54 03 D9 7E */	srwi r3, r0, 5
 /* 80319374 003162B4  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator
-erase__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iterator:
+.global "erase__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator"
+"erase__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iterator":
 /* 80319378 003162B8  7C 08 02 A6 */	mflr r0
 /* 8031937C 003162BC  90 01 00 04 */	stw r0, 4(r1)
 /* 80319380 003162C0  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -109,8 +109,8 @@ erase__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaC
 /* 803193DC 0031631C  38 21 00 28 */	addi r1, r1, 0x28
 /* 803193E0 00316320  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorFPQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$16TNode_
-__ct__Q37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorFPQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$16TNode_:
+.global "__ct__Q37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorFPQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>6TNode_"
+"__ct__Q37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorFPQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>6TNode_":
 /* 803193E4 00316324  90 83 00 00 */	stw r4, 0(r3)
 /* 803193E8 00316328  4E 80 00 20 */	blr 
 
@@ -118,8 +118,8 @@ __ct__Q37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCy
 perform__20TAreaCylinderManagerFUlPQ26JDrama9TGraphics:
 /* 803193EC 0031632C  4E 80 00 20 */	blr 
 
-.global getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3$$0f$$1
-getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3$$0f$$1:
+.global "getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3<f>"
+"getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3<f>":
 /* 803193F0 00316330  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 803193F4 00316334  38 03 00 18 */	addi r0, r3, 0x18
 /* 803193F8 00316338  80 A3 00 18 */	lwz r5, 0x18(r3)
@@ -178,8 +178,8 @@ lbl_803194B0:
 /* 803194B0 003163F0  38 21 00 58 */	addi r1, r1, 0x58
 /* 803194B4 003163F4  4E 80 00 20 */	blr 
 
-.global contain__20TAreaCylinderManagerFRCQ29JGeometry8TVec3$$0f$$1
-contain__20TAreaCylinderManagerFRCQ29JGeometry8TVec3$$0f$$1:
+.global "contain__20TAreaCylinderManagerFRCQ29JGeometry8TVec3<f>"
+"contain__20TAreaCylinderManagerFRCQ29JGeometry8TVec3<f>":
 /* 803194B8 003163F8  94 21 FF B0 */	stwu r1, -0x50(r1)
 /* 803194BC 003163FC  38 03 00 18 */	addi r0, r3, 0x18
 /* 803194C0 00316400  80 A3 00 18 */	lwz r5, 0x18(r3)
@@ -239,8 +239,8 @@ lbl_8031957C:
 /* 8031957C 003164BC  38 21 00 50 */	addi r1, r1, 0x50
 /* 80319580 003164C0  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorRCP13TAreaCylinder
-insert__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorRCP13TAreaCylinder:
+.global "insert__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorRCP13TAreaCylinder"
+"insert__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorRCP13TAreaCylinder":
 /* 80319584 003164C4  7C 08 02 A6 */	mflr r0
 /* 80319588 003164C8  90 01 00 04 */	stw r0, 4(r1)
 /* 8031958C 003164CC  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -347,7 +347,7 @@ load__13TAreaCylinderFR20JSUMemoryInputStream:
 /* 803196F8 00316638  4B CF 4E 99 */	bl read__14JSUInputStreamFPvl
 /* 803196FC 0031663C  C0 1E 00 1C */	lfs f0, 0x1c(r30)
 /* 80319700 00316640  7F E3 FB 78 */	mr r3, r31
-/* 80319704 00316644  C0 22 FB C0 */	lfs f1, $$22137@sda21(r2)
+/* 80319704 00316644  C0 22 FB C0 */	lfs f1, "@2137"@sda21(r2)
 /* 80319708 00316648  EC 00 00 72 */	fmuls f0, f0, f1
 /* 8031970C 0031664C  D0 1E 00 1C */	stfs f0, 0x1c(r30)
 /* 80319710 00316650  C0 1E 00 20 */	lfs f0, 0x20(r30)
@@ -429,16 +429,16 @@ lbl_80319818:
 /* 80319830 00316770  80 01 00 50 */	lwz r0, 0x50(r1)
 /* 80319834 00316774  38 C1 00 60 */	addi r6, r1, 0x60
 /* 80319838 00316778  90 01 00 4C */	stw r0, 0x4c(r1)
-/* 8031983C 0031677C  4B FF FD 49 */	bl insert__Q27JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$1FQ37JGadget64TList$$0P13TAreaCylinder$$4Q27JGadget28TAllocator$$0P13TAreaCylinder$$1$$18iteratorRCP13TAreaCylinder
+/* 8031983C 0031677C  4B FF FD 49 */	bl "insert__Q27JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>FQ37JGadget64TList<P13TAreaCylinder,Q27JGadget28TAllocator<P13TAreaCylinder>>8iteratorRCP13TAreaCylinder"
 /* 80319840 00316780  38 7F 00 00 */	addi r3, r31, 0
 /* 80319844 00316784  38 81 00 5C */	addi r4, r1, 0x5c
 /* 80319848 00316788  38 A0 00 04 */	li r5, 4
 /* 8031984C 0031678C  4B CF 4D 45 */	bl read__14JSUInputStreamFPvl
 /* 80319850 00316790  80 61 00 5C */	lwz r3, 0x5c(r1)
 /* 80319854 00316794  3C 00 43 30 */	lis r0, 0x4330
-/* 80319858 00316798  C8 42 FB C8 */	lfd f2, $$22140@sda21(r2)
+/* 80319858 00316798  C8 42 FB C8 */	lfd f2, "@2140"@sda21(r2)
 /* 8031985C 0031679C  6C 63 80 00 */	xoris r3, r3, 0x8000
-/* 80319860 003167A0  C0 02 FB C4 */	lfs f0, $$22138@sda21(r2)
+/* 80319860 003167A0  C0 02 FB C4 */	lfs f0, "@2138"@sda21(r2)
 /* 80319864 003167A4  90 61 00 8C */	stw r3, 0x8c(r1)
 /* 80319868 003167A8  90 01 00 88 */	stw r0, 0x88(r1)
 /* 8031986C 003167AC  C8 21 00 88 */	lfd f1, 0x88(r1)
@@ -477,7 +477,7 @@ __ct__13TAreaCylinderFPCc:
 /* 803198E4 00316824  38 03 0E 5C */	addi r0, r3, __vt__13TAreaCylinder@l
 /* 803198E8 00316828  38 7F 00 00 */	addi r3, r31, 0
 /* 803198EC 0031682C  90 1F 00 00 */	stw r0, 0(r31)
-/* 803198F0 00316830  C0 02 FB D0 */	lfs f0, $$22149@sda21(r2)
+/* 803198F0 00316830  C0 02 FB D0 */	lfs f0, "@2149"@sda21(r2)
 /* 803198F4 00316834  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 803198F8 00316838  D0 1F 00 14 */	stfs f0, 0x14(r31)
 /* 803198FC 0031683C  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -548,12 +548,12 @@ __vt__13TAreaCylinder:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22137:
+"@2137":
 	.incbin "baserom.dol", 0x3EB8C0, 0x4
-$$22138:
+"@2138":
 	.incbin "baserom.dol", 0x3EB8C4, 0x4
-$$22140:
+"@2140":
 	.incbin "baserom.dol", 0x3EB8C8, 0x8
-$$22149:
+"@2149":
   .4byte 0
   .4byte 0

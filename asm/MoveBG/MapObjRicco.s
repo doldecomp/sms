@@ -42,19 +42,19 @@ lbl_801A4D54:
 .global loadAfter__14TFruitLauncherFv
 loadAfter__14TFruitLauncherFv:
 /* 801A4D70 001A1CB0  7C 08 02 A6 */	mflr r0
-/* 801A4D74 001A1CB4  3C 80 80 39 */	lis r4, $$21490@ha
+/* 801A4D74 001A1CB4  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 801A4D78 001A1CB8  90 01 00 04 */	stw r0, 4(r1)
 /* 801A4D7C 001A1CBC  94 21 FE F8 */	stwu r1, -0x108(r1)
 /* 801A4D80 001A1CC0  93 E1 01 04 */	stw r31, 0x104(r1)
-/* 801A4D84 001A1CC4  3B E4 E3 88 */	addi r31, r4, $$21490@l
+/* 801A4D84 001A1CC4  3B E4 E3 88 */	addi r31, r4, "@1490"@l
 /* 801A4D88 001A1CC8  93 C1 01 00 */	stw r30, 0x100(r1)
 /* 801A4D8C 001A1CCC  3B C3 00 00 */	addi r30, r3, 0
 /* 801A4D90 001A1CD0  93 A1 00 FC */	stw r29, 0xfc(r1)
 /* 801A4D94 001A1CD4  93 81 00 F8 */	stw r28, 0xf8(r1)
 /* 801A4D98 001A1CD8  4B FE 2E 71 */	bl loadAfter__11TMapObjBaseFv
-/* 801A4D9C 001A1CDC  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A4D9C 001A1CDC  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A4DA0 001A1CE0  38 C1 00 D4 */	addi r6, r1, 0xd4
-/* 801A4DA4 001A1CE4  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A4DA4 001A1CE4  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A4DA8 001A1CE8  38 A1 00 E0 */	addi r5, r1, 0xe0
 /* 801A4DAC 001A1CEC  D0 01 00 E0 */	stfs f0, 0xe0(r1)
 /* 801A4DB0 001A1CF0  38 81 00 EC */	addi r4, r1, 0xec
@@ -67,14 +67,14 @@ loadAfter__14TFruitLauncherFv:
 /* 801A4DCC 001A1D0C  D0 21 00 DC */	stfs f1, 0xdc(r1)
 /* 801A4DD0 001A1D10  D0 01 00 E8 */	stfs f0, 0xe8(r1)
 /* 801A4DD4 001A1D14  D0 01 00 F4 */	stfs f0, 0xf4(r1)
-/* 801A4DD8 001A1D18  4B FE 92 C5 */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A4DD8 001A1D18  4B FE 92 C5 */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A4DDC 001A1D1C  3B A0 00 01 */	li r29, 1
 /* 801A4DE0 001A1D20  9B A3 01 A4 */	stb r29, 0x1a4(r3)
 /* 801A4DE4 001A1D24  38 C1 00 B0 */	addi r6, r1, 0xb0
 /* 801A4DE8 001A1D28  38 A1 00 BC */	addi r5, r1, 0xbc
-/* 801A4DEC 001A1D2C  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A4DEC 001A1D2C  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A4DF0 001A1D30  38 81 00 C8 */	addi r4, r1, 0xc8
-/* 801A4DF4 001A1D34  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A4DF4 001A1D34  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A4DF8 001A1D38  38 7F 01 08 */	addi r3, r31, 0x108
 /* 801A4DFC 001A1D3C  D0 01 00 BC */	stfs f0, 0xbc(r1)
 /* 801A4E00 001A1D40  D0 21 00 B0 */	stfs f1, 0xb0(r1)
@@ -85,13 +85,13 @@ loadAfter__14TFruitLauncherFv:
 /* 801A4E14 001A1D54  D0 21 00 B8 */	stfs f1, 0xb8(r1)
 /* 801A4E18 001A1D58  D0 01 00 C4 */	stfs f0, 0xc4(r1)
 /* 801A4E1C 001A1D5C  D0 01 00 D0 */	stfs f0, 0xd0(r1)
-/* 801A4E20 001A1D60  4B FE 92 7D */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A4E20 001A1D60  4B FE 92 7D */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A4E24 001A1D64  9B A3 01 A4 */	stb r29, 0x1a4(r3)
 /* 801A4E28 001A1D68  38 C1 00 8C */	addi r6, r1, 0x8c
 /* 801A4E2C 001A1D6C  38 A1 00 98 */	addi r5, r1, 0x98
-/* 801A4E30 001A1D70  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A4E30 001A1D70  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A4E34 001A1D74  38 81 00 A4 */	addi r4, r1, 0xa4
-/* 801A4E38 001A1D78  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A4E38 001A1D78  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A4E3C 001A1D7C  38 7F 01 14 */	addi r3, r31, 0x114
 /* 801A4E40 001A1D80  D0 01 00 98 */	stfs f0, 0x98(r1)
 /* 801A4E44 001A1D84  D0 21 00 8C */	stfs f1, 0x8c(r1)
@@ -102,13 +102,13 @@ loadAfter__14TFruitLauncherFv:
 /* 801A4E58 001A1D98  D0 21 00 94 */	stfs f1, 0x94(r1)
 /* 801A4E5C 001A1D9C  D0 01 00 A0 */	stfs f0, 0xa0(r1)
 /* 801A4E60 001A1DA0  D0 01 00 AC */	stfs f0, 0xac(r1)
-/* 801A4E64 001A1DA4  4B FE 92 39 */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A4E64 001A1DA4  4B FE 92 39 */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A4E68 001A1DA8  9B A3 01 A4 */	stb r29, 0x1a4(r3)
 /* 801A4E6C 001A1DAC  38 C1 00 68 */	addi r6, r1, 0x68
 /* 801A4E70 001A1DB0  38 A1 00 74 */	addi r5, r1, 0x74
-/* 801A4E74 001A1DB4  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A4E74 001A1DB4  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A4E78 001A1DB8  38 81 00 80 */	addi r4, r1, 0x80
-/* 801A4E7C 001A1DBC  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A4E7C 001A1DBC  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A4E80 001A1DC0  38 7F 01 20 */	addi r3, r31, 0x120
 /* 801A4E84 001A1DC4  D0 01 00 74 */	stfs f0, 0x74(r1)
 /* 801A4E88 001A1DC8  D0 21 00 68 */	stfs f1, 0x68(r1)
@@ -119,13 +119,13 @@ loadAfter__14TFruitLauncherFv:
 /* 801A4E9C 001A1DDC  D0 21 00 70 */	stfs f1, 0x70(r1)
 /* 801A4EA0 001A1DE0  D0 01 00 7C */	stfs f0, 0x7c(r1)
 /* 801A4EA4 001A1DE4  D0 01 00 88 */	stfs f0, 0x88(r1)
-/* 801A4EA8 001A1DE8  4B FE 91 F5 */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A4EA8 001A1DE8  4B FE 91 F5 */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A4EAC 001A1DEC  9B A3 01 A4 */	stb r29, 0x1a4(r3)
 /* 801A4EB0 001A1DF0  38 C1 00 44 */	addi r6, r1, 0x44
 /* 801A4EB4 001A1DF4  38 A1 00 50 */	addi r5, r1, 0x50
-/* 801A4EB8 001A1DF8  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A4EB8 001A1DF8  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A4EBC 001A1DFC  38 81 00 5C */	addi r4, r1, 0x5c
-/* 801A4EC0 001A1E00  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A4EC0 001A1E00  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A4EC4 001A1E04  38 7F 01 2C */	addi r3, r31, 0x12c
 /* 801A4EC8 001A1E08  D0 01 00 50 */	stfs f0, 0x50(r1)
 /* 801A4ECC 001A1E0C  D0 21 00 44 */	stfs f1, 0x44(r1)
@@ -136,7 +136,7 @@ loadAfter__14TFruitLauncherFv:
 /* 801A4EE0 001A1E20  D0 21 00 4C */	stfs f1, 0x4c(r1)
 /* 801A4EE4 001A1E24  D0 01 00 58 */	stfs f0, 0x58(r1)
 /* 801A4EE8 001A1E28  D0 01 00 64 */	stfs f0, 0x64(r1)
-/* 801A4EEC 001A1E2C  4B FE 91 B1 */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A4EEC 001A1E2C  4B FE 91 B1 */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A4EF0 001A1E30  9B A3 01 A4 */	stb r29, 0x1a4(r3)
 /* 801A4EF4 001A1E34  38 7F 01 38 */	addi r3, r31, 0x138
 /* 801A4EF8 001A1E38  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
@@ -207,7 +207,7 @@ fireObj__14TFruitLauncherFv:
 /* 801A4FEC 001A1F2C  38 BF 00 10 */	addi r5, r31, 0x10
 /* 801A4FF0 001A1F30  93 C1 00 60 */	stw r30, 0x60(r1)
 /* 801A4FF4 001A1F34  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 801A4FF8 001A1F38  4B F3 67 D9 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801A4FF8 001A1F38  4B F3 67 D9 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801A4FFC 001A1F3C  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 801A5000 001A1F40  38 80 38 4C */	li r4, 0x384c
 /* 801A5004 001A1F44  4B FD 7A 4D */	bl gateCheck__6MSoundFUl
@@ -252,7 +252,7 @@ lbl_801A507C:
 /* 801A5090 001A1FD0  48 00 05 01 */	bl getMActor__10TLiveActorCFv
 /* 801A5094 001A1FD4  38 80 00 00 */	li r4, 0
 /* 801A5098 001A1FD8  4B F2 F1 8D */	bl getFrameCtrl__6MActorFi
-/* 801A509C 001A1FDC  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A509C 001A1FDC  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A50A0 001A1FE0  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 801A50A4 001A1FE4  7F C3 F3 78 */	mr r3, r30
 /* 801A50A8 001A1FE8  80 1E 00 64 */	lwz r0, 0x64(r30)
@@ -277,14 +277,14 @@ lbl_801A507C:
 /* 801A50F4 001A2034  4E 80 00 21 */	blrl 
 /* 801A50F8 001A2038  4B EE 09 CD */	bl rand
 /* 801A50FC 001A203C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A5100 001A2040  C8 82 C2 90 */	lfd f4, $$23089@sda21(r2)
+/* 801A5100 001A2040  C8 82 C2 90 */	lfd f4, "@3089"@sda21(r2)
 /* 801A5104 001A2044  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 801A5108 001A2048  3C 00 43 30 */	lis r0, 0x4330
-/* 801A510C 001A204C  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
+/* 801A510C 001A204C  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
 /* 801A5110 001A2050  90 01 00 58 */	stw r0, 0x58(r1)
-/* 801A5114 001A2054  C0 22 C2 74 */	lfs f1, $$23081@sda21(r2)
+/* 801A5114 001A2054  C0 22 C2 74 */	lfs f1, "@3081"@sda21(r2)
 /* 801A5118 001A2058  C8 61 00 58 */	lfd f3, 0x58(r1)
-/* 801A511C 001A205C  C0 02 C2 78 */	lfs f0, $$23082@sda21(r2)
+/* 801A511C 001A205C  C0 02 C2 78 */	lfs f0, "@3082"@sda21(r2)
 /* 801A5120 001A2060  EC 63 20 28 */	fsubs f3, f3, f4
 /* 801A5124 001A2064  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 801A5128 001A2068  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -300,7 +300,7 @@ lbl_801A507C:
 /* 801A5150 001A2090  4B FE 9F 41 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A5154 001A2094  48 00 00 B4 */	b lbl_801A5208
 lbl_801A5158:
-/* 801A5158 001A2098  C0 02 C2 7C */	lfs f0, $$23083@sda21(r2)
+/* 801A5158 001A2098  C0 02 C2 7C */	lfs f0, "@3083"@sda21(r2)
 /* 801A515C 001A209C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A5160 001A20A0  40 80 00 28 */	bge lbl_801A5188
 /* 801A5164 001A20A4  3C 80 40 00 */	lis r4, 0x40000391@ha
@@ -313,7 +313,7 @@ lbl_801A5158:
 /* 801A5180 001A20C0  4B FE 9F 11 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A5184 001A20C4  48 00 00 84 */	b lbl_801A5208
 lbl_801A5188:
-/* 801A5188 001A20C8  C0 02 C2 80 */	lfs f0, $$23084@sda21(r2)
+/* 801A5188 001A20C8  C0 02 C2 80 */	lfs f0, "@3084"@sda21(r2)
 /* 801A518C 001A20CC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A5190 001A20D0  40 80 00 28 */	bge lbl_801A51B8
 /* 801A5194 001A20D4  3C 80 40 00 */	lis r4, 0x40000392@ha
@@ -326,7 +326,7 @@ lbl_801A5188:
 /* 801A51B0 001A20F0  4B FE 9E E1 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A51B4 001A20F4  48 00 00 54 */	b lbl_801A5208
 lbl_801A51B8:
-/* 801A51B8 001A20F8  C0 02 C2 84 */	lfs f0, $$23085@sda21(r2)
+/* 801A51B8 001A20F8  C0 02 C2 84 */	lfs f0, "@3085"@sda21(r2)
 /* 801A51BC 001A20FC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A51C0 001A2100  40 80 00 28 */	bge lbl_801A51E8
 /* 801A51C4 001A2104  3C 80 40 00 */	lis r4, 0x40000393@ha
@@ -353,14 +353,14 @@ lbl_801A5208:
 /* 801A5210 001A2150  40 82 01 18 */	bne lbl_801A5328
 /* 801A5214 001A2154  4B EE 08 B1 */	bl rand
 /* 801A5218 001A2158  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A521C 001A215C  C8 82 C2 90 */	lfd f4, $$23089@sda21(r2)
+/* 801A521C 001A215C  C8 82 C2 90 */	lfd f4, "@3089"@sda21(r2)
 /* 801A5220 001A2160  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 801A5224 001A2164  3C 00 43 30 */	lis r0, 0x4330
-/* 801A5228 001A2168  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
+/* 801A5228 001A2168  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
 /* 801A522C 001A216C  90 01 00 58 */	stw r0, 0x58(r1)
-/* 801A5230 001A2170  C0 22 C2 74 */	lfs f1, $$23081@sda21(r2)
+/* 801A5230 001A2170  C0 22 C2 74 */	lfs f1, "@3081"@sda21(r2)
 /* 801A5234 001A2174  C8 61 00 58 */	lfd f3, 0x58(r1)
-/* 801A5238 001A2178  C0 02 C2 78 */	lfs f0, $$23082@sda21(r2)
+/* 801A5238 001A2178  C0 02 C2 78 */	lfs f0, "@3082"@sda21(r2)
 /* 801A523C 001A217C  EC 63 20 28 */	fsubs f3, f3, f4
 /* 801A5240 001A2180  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 801A5244 001A2184  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -376,7 +376,7 @@ lbl_801A5208:
 /* 801A526C 001A21AC  4B FE 9E 25 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A5270 001A21B0  48 00 00 B4 */	b lbl_801A5324
 lbl_801A5274:
-/* 801A5274 001A21B4  C0 02 C2 7C */	lfs f0, $$23083@sda21(r2)
+/* 801A5274 001A21B4  C0 02 C2 7C */	lfs f0, "@3083"@sda21(r2)
 /* 801A5278 001A21B8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A527C 001A21BC  40 80 00 28 */	bge lbl_801A52A4
 /* 801A5280 001A21C0  3C 80 40 00 */	lis r4, 0x40000391@ha
@@ -389,7 +389,7 @@ lbl_801A5274:
 /* 801A529C 001A21DC  4B FE 9D F5 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A52A0 001A21E0  48 00 00 84 */	b lbl_801A5324
 lbl_801A52A4:
-/* 801A52A4 001A21E4  C0 02 C2 80 */	lfs f0, $$23084@sda21(r2)
+/* 801A52A4 001A21E4  C0 02 C2 80 */	lfs f0, "@3084"@sda21(r2)
 /* 801A52A8 001A21E8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A52AC 001A21EC  40 80 00 28 */	bge lbl_801A52D4
 /* 801A52B0 001A21F0  3C 80 40 00 */	lis r4, 0x40000392@ha
@@ -402,7 +402,7 @@ lbl_801A52A4:
 /* 801A52CC 001A220C  4B FE 9D C5 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A52D0 001A2210  48 00 00 54 */	b lbl_801A5324
 lbl_801A52D4:
-/* 801A52D4 001A2214  C0 02 C2 84 */	lfs f0, $$23085@sda21(r2)
+/* 801A52D4 001A2214  C0 02 C2 84 */	lfs f0, "@3085"@sda21(r2)
 /* 801A52D8 001A2218  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A52DC 001A221C  40 80 00 28 */	bge lbl_801A5304
 /* 801A52E0 001A2220  3C 80 40 00 */	lis r4, 0x40000393@ha
@@ -430,14 +430,14 @@ lbl_801A5328:
 /* 801A532C 001A226C  40 82 01 18 */	bne lbl_801A5444
 /* 801A5330 001A2270  4B EE 07 95 */	bl rand
 /* 801A5334 001A2274  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A5338 001A2278  C8 82 C2 90 */	lfd f4, $$23089@sda21(r2)
+/* 801A5338 001A2278  C8 82 C2 90 */	lfd f4, "@3089"@sda21(r2)
 /* 801A533C 001A227C  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 801A5340 001A2280  3C 00 43 30 */	lis r0, 0x4330
-/* 801A5344 001A2284  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
+/* 801A5344 001A2284  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
 /* 801A5348 001A2288  90 01 00 58 */	stw r0, 0x58(r1)
-/* 801A534C 001A228C  C0 22 C2 74 */	lfs f1, $$23081@sda21(r2)
+/* 801A534C 001A228C  C0 22 C2 74 */	lfs f1, "@3081"@sda21(r2)
 /* 801A5350 001A2290  C8 61 00 58 */	lfd f3, 0x58(r1)
-/* 801A5354 001A2294  C0 02 C2 78 */	lfs f0, $$23082@sda21(r2)
+/* 801A5354 001A2294  C0 02 C2 78 */	lfs f0, "@3082"@sda21(r2)
 /* 801A5358 001A2298  EC 63 20 28 */	fsubs f3, f3, f4
 /* 801A535C 001A229C  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 801A5360 001A22A0  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -453,7 +453,7 @@ lbl_801A5328:
 /* 801A5388 001A22C8  4B FE 9D 09 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A538C 001A22CC  48 00 00 B4 */	b lbl_801A5440
 lbl_801A5390:
-/* 801A5390 001A22D0  C0 02 C2 7C */	lfs f0, $$23083@sda21(r2)
+/* 801A5390 001A22D0  C0 02 C2 7C */	lfs f0, "@3083"@sda21(r2)
 /* 801A5394 001A22D4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A5398 001A22D8  40 80 00 28 */	bge lbl_801A53C0
 /* 801A539C 001A22DC  3C 80 40 00 */	lis r4, 0x40000391@ha
@@ -466,7 +466,7 @@ lbl_801A5390:
 /* 801A53B8 001A22F8  4B FE 9C D9 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A53BC 001A22FC  48 00 00 84 */	b lbl_801A5440
 lbl_801A53C0:
-/* 801A53C0 001A2300  C0 02 C2 80 */	lfs f0, $$23084@sda21(r2)
+/* 801A53C0 001A2300  C0 02 C2 80 */	lfs f0, "@3084"@sda21(r2)
 /* 801A53C4 001A2304  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A53C8 001A2308  40 80 00 28 */	bge lbl_801A53F0
 /* 801A53CC 001A230C  3C 80 40 00 */	lis r4, 0x40000392@ha
@@ -479,7 +479,7 @@ lbl_801A53C0:
 /* 801A53E8 001A2328  4B FE 9C A9 */	bl makeObjAppear__18TMapObjBaseManagerFfffUlb
 /* 801A53EC 001A232C  48 00 00 54 */	b lbl_801A5440
 lbl_801A53F0:
-/* 801A53F0 001A2330  C0 02 C2 84 */	lfs f0, $$23085@sda21(r2)
+/* 801A53F0 001A2330  C0 02 C2 84 */	lfs f0, "@3085"@sda21(r2)
 /* 801A53F4 001A2334  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A53F8 001A2338  40 80 00 28 */	bge lbl_801A5420
 /* 801A53FC 001A233C  3C 80 40 00 */	lis r4, 0x40000393@ha
@@ -516,12 +516,12 @@ lbl_801A5444:
 /* 801A546C 001A23AC  C0 0D 86 30 */	lfs f0, mObjSpeedY__14TFruitLauncher@sda21(r13)
 /* 801A5470 001A23B0  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 801A5474 001A23B4  3F E0 43 30 */	lis r31, 0x4330
-/* 801A5478 001A23B8  C8 62 C2 90 */	lfd f3, $$23089@sda21(r2)
+/* 801A5478 001A23B8  C8 62 C2 90 */	lfd f3, "@3089"@sda21(r2)
 /* 801A547C 001A23BC  FF E0 00 50 */	fneg f31, f0
 /* 801A5480 001A23C0  93 E1 00 58 */	stw r31, 0x58(r1)
-/* 801A5484 001A23C4  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
+/* 801A5484 001A23C4  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
 /* 801A5488 001A23C8  C8 21 00 58 */	lfd f1, 0x58(r1)
-/* 801A548C 001A23CC  C0 02 C2 88 */	lfs f0, $$23086@sda21(r2)
+/* 801A548C 001A23CC  C0 02 C2 88 */	lfs f0, "@3086"@sda21(r2)
 /* 801A5490 001A23D0  EC 61 18 28 */	fsubs f3, f1, f3
 /* 801A5494 001A23D4  C0 2D 86 2C */	lfs f1, mObjSpeedXZ__14TFruitLauncher@sda21(r13)
 /* 801A5498 001A23D8  EC 42 00 F2 */	fmuls f2, f2, f3
@@ -529,13 +529,13 @@ lbl_801A5444:
 /* 801A54A0 001A23E0  EF C1 00 32 */	fmuls f30, f1, f0
 /* 801A54A4 001A23E4  4B EE 06 21 */	bl rand
 /* 801A54A8 001A23E8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A54AC 001A23EC  C8 82 C2 90 */	lfd f4, $$23089@sda21(r2)
+/* 801A54AC 001A23EC  C8 82 C2 90 */	lfd f4, "@3089"@sda21(r2)
 /* 801A54B0 001A23F0  90 01 00 54 */	stw r0, 0x54(r1)
-/* 801A54B4 001A23F4  3C 60 80 39 */	lis r3, $$23087@ha
-/* 801A54B8 001A23F8  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
-/* 801A54BC 001A23FC  38 83 E4 F4 */	addi r4, r3, $$23087@l
+/* 801A54B4 001A23F4  3C 60 80 39 */	lis r3, "@3087"@ha
+/* 801A54B8 001A23F8  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
+/* 801A54BC 001A23FC  38 83 E4 F4 */	addi r4, r3, "@3087"@l
 /* 801A54C0 001A2400  93 E1 00 50 */	stw r31, 0x50(r1)
-/* 801A54C4 001A2404  C0 02 C2 88 */	lfs f0, $$23086@sda21(r2)
+/* 801A54C4 001A2404  C0 02 C2 88 */	lfs f0, "@3086"@sda21(r2)
 /* 801A54C8 001A2408  38 00 00 00 */	li r0, 0
 /* 801A54CC 001A240C  C8 61 00 50 */	lfd f3, 0x50(r1)
 /* 801A54D0 001A2410  39 61 00 4C */	addi r11, r1, 0x4c
@@ -559,8 +559,8 @@ lbl_801A5444:
 /* 801A5518 001A2458  80 6D 97 E8 */	lwz r3, gpMarDirector@sda21(r13)
 /* 801A551C 001A245C  B0 01 00 4C */	sth r0, 0x4c(r1)
 /* 801A5520 001A2460  91 61 00 08 */	stw r11, 8(r1)
-/* 801A5524 001A2464  C0 22 C2 68 */	lfs f1, $$22926@sda21(r2)
-/* 801A5528 001A2468  4B F4 82 99 */	bl fireStartDemoCamera__12TMarDirectorFPCcPCQ29JGeometry8TVec3$$0f$$1lfbPFUlUl_lUlPQ26JDrama6TActorQ26JDrama10TFlagT$$0Us$$1
+/* 801A5524 001A2464  C0 22 C2 68 */	lfs f1, "@2926"@sda21(r2)
+/* 801A5528 001A2468  4B F4 82 99 */	bl "fireStartDemoCamera__12TMarDirectorFPCcPCQ29JGeometry8TVec3<f>lfbPFUlUl_lUlPQ26JDrama6TActorQ26JDrama10TFlagT<Us>"
 /* 801A552C 001A246C  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 801A5530 001A2470  38 80 48 49 */	li r4, 0x4849
 /* 801A5534 001A2474  4B FD 75 1D */	bl gateCheck__6MSoundFUl
@@ -603,8 +603,8 @@ receiveMessage__12TFruitSwitchFP9THitActorUl:
 /* 801A55A8 001A24E8  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 801A55AC 001A24EC  3B E3 00 00 */	addi r31, r3, 0
 /* 801A55B0 001A24F0  40 82 00 50 */	bne lbl_801A5600
-/* 801A55B4 001A24F4  3C 60 80 39 */	lis r3, $$22990@ha
-/* 801A55B8 001A24F8  38 83 E4 E8 */	addi r4, r3, $$22990@l
+/* 801A55B4 001A24F4  3C 60 80 39 */	lis r3, "@2990"@ha
+/* 801A55B8 001A24F8  38 83 E4 E8 */	addi r4, r3, "@2990"@l
 /* 801A55BC 001A24FC  38 7F 00 00 */	addi r3, r31, 0
 /* 801A55C0 001A2500  4B FE 3A 21 */	bl startBck__11TMapObjBaseFPCc
 /* 801A55C4 001A2504  80 1F 00 64 */	lwz r0, 0x64(r31)
@@ -635,11 +635,11 @@ lbl_801A5604:
 .global initMapObj__12TSurfGesoObjFv
 initMapObj__12TSurfGesoObjFv:
 /* 801A5618 001A2558  7C 08 02 A6 */	mflr r0
-/* 801A561C 001A255C  3C 80 80 39 */	lis r4, $$21490@ha
+/* 801A561C 001A255C  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 801A5620 001A2560  90 01 00 04 */	stw r0, 4(r1)
 /* 801A5624 001A2564  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 801A5628 001A2568  93 E1 00 24 */	stw r31, 0x24(r1)
-/* 801A562C 001A256C  3B E4 E3 88 */	addi r31, r4, $$21490@l
+/* 801A562C 001A256C  3B E4 E3 88 */	addi r31, r4, "@1490"@l
 /* 801A5630 001A2570  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 801A5634 001A2574  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 801A5638 001A2578  3B A3 00 00 */	addi r29, r3, 0
@@ -721,7 +721,7 @@ __ct__15TRiccoWatermillFPCc:
 /* 801A5750 001A2690  38 00 00 00 */	li r0, 0
 /* 801A5754 001A2694  90 7F 00 20 */	stw r3, 0x20(r31)
 /* 801A5758 001A2698  7F E3 FB 78 */	mr r3, r31
-/* 801A575C 001A269C  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A575C 001A269C  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5760 001A26A0  D0 1F 01 38 */	stfs f0, 0x138(r31)
 /* 801A5764 001A26A4  90 1F 01 3C */	stw r0, 0x13c(r31)
 /* 801A5768 001A26A8  90 1F 01 40 */	stw r0, 0x140(r31)
@@ -739,11 +739,11 @@ __ct__15TRiccoWatermillFPCc:
 .global loadAfter__15TRiccoWatermillFv
 loadAfter__15TRiccoWatermillFv:
 /* 801A5794 001A26D4  7C 08 02 A6 */	mflr r0
-/* 801A5798 001A26D8  3C 80 80 39 */	lis r4, $$21490@ha
+/* 801A5798 001A26D8  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 801A579C 001A26DC  90 01 00 04 */	stw r0, 4(r1)
 /* 801A57A0 001A26E0  94 21 FF B0 */	stwu r1, -0x50(r1)
 /* 801A57A4 001A26E4  93 E1 00 4C */	stw r31, 0x4c(r1)
-/* 801A57A8 001A26E8  3B E4 E3 88 */	addi r31, r4, $$21490@l
+/* 801A57A8 001A26E8  3B E4 E3 88 */	addi r31, r4, "@1490"@l
 /* 801A57AC 001A26EC  93 C1 00 48 */	stw r30, 0x48(r1)
 /* 801A57B0 001A26F0  93 A1 00 44 */	stw r29, 0x44(r1)
 /* 801A57B4 001A26F4  3B A3 00 00 */	addi r29, r3, 0
@@ -846,7 +846,7 @@ lbl_801A5908:
 /* 801A5908 001A2848  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 801A590C 001A284C  41 82 01 48 */	beq lbl_801A5A54
 lbl_801A5910:
-/* 801A5910 001A2850  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5910 001A2850  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5914 001A2854  C0 3F 01 38 */	lfs f1, 0x138(r31)
 /* 801A5918 001A2858  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 801A591C 001A285C  41 82 00 F8 */	beq lbl_801A5A14
@@ -980,26 +980,26 @@ lbl_801A5AF4:
 /* 801A5AF4 001A2A34  88 1F 01 44 */	lbz r0, 0x144(r31)
 /* 801A5AF8 001A2A38  28 00 00 00 */	cmplwi r0, 0
 /* 801A5AFC 001A2A3C  40 82 00 3C */	bne lbl_801A5B38
-/* 801A5B00 001A2A40  C0 22 C2 9C */	lfs f1, $$23306@sda21(r2)
+/* 801A5B00 001A2A40  C0 22 C2 9C */	lfs f1, "@3306"@sda21(r2)
 /* 801A5B04 001A2A44  7F E3 FB 78 */	mr r3, r31
 /* 801A5B08 001A2A48  C0 0D 86 20 */	lfs f0, mSubmarineMaxTransY__15TRiccoWatermill@sda21(r13)
 /* 801A5B0C 001A2A4C  38 A1 00 58 */	addi r5, r1, 0x58
-/* 801A5B10 001A2A50  C0 42 C2 98 */	lfs f2, $$23305@sda21(r2)
+/* 801A5B10 001A2A50  C0 42 C2 98 */	lfs f2, "@3305"@sda21(r2)
 /* 801A5B14 001A2A54  EC 61 00 2A */	fadds f3, f1, f0
-/* 801A5B18 001A2A58  C0 22 C2 78 */	lfs f1, $$23082@sda21(r2)
+/* 801A5B18 001A2A58  C0 22 C2 78 */	lfs f1, "@3082"@sda21(r2)
 /* 801A5B1C 001A2A5C  D0 41 00 58 */	stfs f2, 0x58(r1)
-/* 801A5B20 001A2A60  C0 02 C2 A0 */	lfs f0, $$23307@sda21(r2)
+/* 801A5B20 001A2A60  C0 02 C2 A0 */	lfs f0, "@3307"@sda21(r2)
 /* 801A5B24 001A2A64  FC 40 08 90 */	fmr f2, f1
 /* 801A5B28 001A2A68  D0 61 00 5C */	stfs f3, 0x5c(r1)
 /* 801A5B2C 001A2A6C  D0 01 00 60 */	stfs f0, 0x60(r1)
 /* 801A5B30 001A2A70  80 9F 01 48 */	lwz r4, 0x148(r31)
-/* 801A5B34 001A2A74  4B FE CE 8D */	bl throwObjToFrontFromPoint__11TMapObjBaseCFP11TMapObjBaseRCQ29JGeometry8TVec3$$0f$$1ff
+/* 801A5B34 001A2A74  4B FE CE 8D */	bl "throwObjToFrontFromPoint__11TMapObjBaseCFP11TMapObjBaseRCQ29JGeometry8TVec3<f>ff"
 lbl_801A5B38:
 /* 801A5B38 001A2A78  38 00 00 01 */	li r0, 1
 /* 801A5B3C 001A2A7C  98 1F 01 44 */	stb r0, 0x144(r31)
 lbl_801A5B40:
 /* 801A5B40 001A2A80  C0 3F 01 38 */	lfs f1, 0x138(r31)
-/* 801A5B44 001A2A84  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5B44 001A2A84  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5B48 001A2A88  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801A5B4C 001A2A8C  40 80 01 30 */	bge lbl_801A5C7C
 /* 801A5B50 001A2A90  88 1F 01 44 */	lbz r0, 0x144(r31)
@@ -1023,7 +1023,7 @@ lbl_801A5B74:
 /* 801A5B90 001A2AD0  38 80 00 00 */	li r4, 0
 /* 801A5B94 001A2AD4  80 7F 01 3C */	lwz r3, 0x13c(r31)
 /* 801A5B98 001A2AD8  4B FE 37 AD */	bl setUpMapCollision__11TMapObjBaseFUs
-/* 801A5B9C 001A2ADC  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5B9C 001A2ADC  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5BA0 001A2AE0  38 80 38 32 */	li r4, 0x3832
 /* 801A5BA4 001A2AE4  D0 1F 01 38 */	stfs f0, 0x138(r31)
 /* 801A5BA8 001A2AE8  80 BF 01 3C */	lwz r5, 0x13c(r31)
@@ -1056,7 +1056,7 @@ lbl_801A5BF0:
 /* 801A5C0C 001A2B4C  38 80 00 00 */	li r4, 0
 /* 801A5C10 001A2B50  80 7F 01 3C */	lwz r3, 0x13c(r31)
 /* 801A5C14 001A2B54  4B FE 37 31 */	bl setUpMapCollision__11TMapObjBaseFUs
-/* 801A5C18 001A2B58  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5C18 001A2B58  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5C1C 001A2B5C  38 80 38 33 */	li r4, 0x3833
 /* 801A5C20 001A2B60  D0 1F 01 38 */	stfs f0, 0x138(r31)
 /* 801A5C24 001A2B64  80 7F 01 3C */	lwz r3, 0x13c(r31)
@@ -1154,7 +1154,7 @@ lbl_801A5D60:
 /* 801A5D64 001A2CA4  B0 1F 00 FC */	sth r0, 0xfc(r31)
 /* 801A5D68 001A2CA8  48 00 00 0C */	b lbl_801A5D74
 lbl_801A5D6C:
-/* 801A5D6C 001A2CAC  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5D6C 001A2CAC  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5D70 001A2CB0  D0 1F 01 38 */	stfs f0, 0x138(r31)
 lbl_801A5D74:
 /* 801A5D74 001A2CB4  38 60 00 01 */	li r3, 1
@@ -1190,7 +1190,7 @@ control__11TCraneCargoFv:
 /* 801A5DD0 001A2D10  7C 08 02 A6 */	mflr r0
 /* 801A5DD4 001A2D14  90 01 00 04 */	stw r0, 4(r1)
 /* 801A5DD8 001A2D18  94 21 FF F8 */	stwu r1, -8(r1)
-/* 801A5DDC 001A2D1C  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A5DDC 001A2D1C  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A5DE0 001A2D20  D0 03 01 60 */	stfs f0, 0x160(r3)
 /* 801A5DE4 001A2D24  D0 03 01 5C */	stfs f0, 0x15c(r3)
 /* 801A5DE8 001A2D28  D0 03 01 58 */	stfs f0, 0x158(r3)
@@ -1212,15 +1212,15 @@ initMapObj__12TCraneUpDownFv:
 /* 801A5E1C 001A2D5C  38 80 00 00 */	li r4, 0
 /* 801A5E20 001A2D60  80 63 00 08 */	lwz r3, 8(r3)
 /* 801A5E24 001A2D64  48 03 A2 29 */	bl setAllActor__17TMapCollisionBaseFPC10TLiveActor
-/* 801A5E28 001A2D68  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
-/* 801A5E2C 001A2D6C  3C 60 80 39 */	lis r3, $$23345@ha
-/* 801A5E30 001A2D70  C0 22 C2 6C */	lfs f1, $$22982@sda21(r2)
+/* 801A5E28 001A2D68  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
+/* 801A5E2C 001A2D6C  3C 60 80 39 */	lis r3, "@3345"@ha
+/* 801A5E30 001A2D70  C0 22 C2 6C */	lfs f1, "@2982"@sda21(r2)
 /* 801A5E34 001A2D74  38 C1 00 14 */	addi r6, r1, 0x14
 /* 801A5E38 001A2D78  D0 01 00 20 */	stfs f0, 0x20(r1)
 /* 801A5E3C 001A2D7C  38 A1 00 20 */	addi r5, r1, 0x20
 /* 801A5E40 001A2D80  D0 21 00 14 */	stfs f1, 0x14(r1)
 /* 801A5E44 001A2D84  38 81 00 2C */	addi r4, r1, 0x2c
-/* 801A5E48 001A2D88  38 63 E5 70 */	addi r3, r3, $$23345@l
+/* 801A5E48 001A2D88  38 63 E5 70 */	addi r3, r3, "@3345"@l
 /* 801A5E4C 001A2D8C  D0 01 00 2C */	stfs f0, 0x2c(r1)
 /* 801A5E50 001A2D90  D0 21 00 18 */	stfs f1, 0x18(r1)
 /* 801A5E54 001A2D94  D0 01 00 24 */	stfs f0, 0x24(r1)
@@ -1228,40 +1228,40 @@ initMapObj__12TCraneUpDownFv:
 /* 801A5E5C 001A2D9C  D0 21 00 1C */	stfs f1, 0x1c(r1)
 /* 801A5E60 001A2DA0  D0 01 00 28 */	stfs f0, 0x28(r1)
 /* 801A5E64 001A2DA4  D0 01 00 34 */	stfs f0, 0x34(r1)
-/* 801A5E68 001A2DA8  4B FE 82 35 */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801A5E68 001A2DA8  4B FE 82 35 */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801A5E6C 001A2DAC  90 7F 01 38 */	stw r3, 0x138(r31)
 /* 801A5E70 001A2DB0  80 7F 01 38 */	lwz r3, 0x138(r31)
 /* 801A5E74 001A2DB4  81 83 00 00 */	lwz r12, 0(r3)
 /* 801A5E78 001A2DB8  81 8C 00 FC */	lwz r12, 0xfc(r12)
 /* 801A5E7C 001A2DBC  7D 88 03 A6 */	mtlr r12
 /* 801A5E80 001A2DC0  4E 80 00 21 */	blrl 
-/* 801A5E84 001A2DC4  3C 80 80 39 */	lis r4, $$23346@ha
+/* 801A5E84 001A2DC4  3C 80 80 39 */	lis r4, "@3346"@ha
 /* 801A5E88 001A2DC8  80 7F 00 04 */	lwz r3, 4(r31)
-/* 801A5E8C 001A2DCC  38 84 E5 84 */	addi r4, r4, $$23346@l
+/* 801A5E8C 001A2DCC  38 84 E5 84 */	addi r4, r4, "@3346"@l
 /* 801A5E90 001A2DD0  4B ED FD CD */	bl strcmp
 /* 801A5E94 001A2DD4  2C 03 00 00 */	cmpwi r3, 0
 /* 801A5E98 001A2DD8  40 82 00 20 */	bne lbl_801A5EB8
-/* 801A5E9C 001A2DDC  C0 02 C2 A4 */	lfs f0, $$23347@sda21(r2)
+/* 801A5E9C 001A2DDC  C0 02 C2 A4 */	lfs f0, "@3347"@sda21(r2)
 /* 801A5EA0 001A2DE0  38 00 30 36 */	li r0, 0x3036
 /* 801A5EA4 001A2DE4  D0 1F 01 44 */	stfs f0, 0x144(r31)
-/* 801A5EA8 001A2DE8  C0 02 C2 A8 */	lfs f0, $$23348@sda21(r2)
+/* 801A5EA8 001A2DE8  C0 02 C2 A8 */	lfs f0, "@3348"@sda21(r2)
 /* 801A5EAC 001A2DEC  D0 1F 01 40 */	stfs f0, 0x140(r31)
 /* 801A5EB0 001A2DF0  90 1F 01 3C */	stw r0, 0x13c(r31)
 /* 801A5EB4 001A2DF4  48 00 00 1C */	b lbl_801A5ED0
 lbl_801A5EB8:
-/* 801A5EB8 001A2DF8  C0 02 C2 A4 */	lfs f0, $$23347@sda21(r2)
+/* 801A5EB8 001A2DF8  C0 02 C2 A4 */	lfs f0, "@3347"@sda21(r2)
 /* 801A5EBC 001A2DFC  38 00 30 37 */	li r0, 0x3037
 /* 801A5EC0 001A2E00  D0 1F 01 44 */	stfs f0, 0x144(r31)
-/* 801A5EC4 001A2E04  C0 02 C2 AC */	lfs f0, $$23349@sda21(r2)
+/* 801A5EC4 001A2E04  C0 02 C2 AC */	lfs f0, "@3349"@sda21(r2)
 /* 801A5EC8 001A2E08  D0 1F 01 40 */	stfs f0, 0x140(r31)
 /* 801A5ECC 001A2E0C  90 1F 01 3C */	stw r0, 0x13c(r31)
 lbl_801A5ED0:
 /* 801A5ED0 001A2E10  4B ED FB F5 */	bl rand
 /* 801A5ED4 001A2E14  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A5ED8 001A2E18  C8 62 C2 90 */	lfd f3, $$23089@sda21(r2)
+/* 801A5ED8 001A2E18  C8 62 C2 90 */	lfd f3, "@3089"@sda21(r2)
 /* 801A5EDC 001A2E1C  90 01 00 3C */	stw r0, 0x3c(r1)
 /* 801A5EE0 001A2E20  3C 00 43 30 */	lis r0, 0x4330
-/* 801A5EE4 001A2E24  C0 22 C2 70 */	lfs f1, $$23080@sda21(r2)
+/* 801A5EE4 001A2E24  C0 22 C2 70 */	lfs f1, "@3080"@sda21(r2)
 /* 801A5EE8 001A2E28  90 01 00 38 */	stw r0, 0x38(r1)
 /* 801A5EEC 001A2E2C  C0 9F 01 44 */	lfs f4, 0x144(r31)
 /* 801A5EF0 001A2E30  C8 41 00 38 */	lfd f2, 0x38(r1)
@@ -1356,16 +1356,16 @@ lbl_801A5FF4:
 lbl_801A6024:
 /* 801A6024 001A2F64  80 9F 01 38 */	lwz r4, 0x138(r31)
 /* 801A6028 001A2F68  7F E3 FB 78 */	mr r3, r31
-/* 801A602C 001A2F6C  C0 02 C2 68 */	lfs f0, $$22926@sda21(r2)
+/* 801A602C 001A2F6C  C0 02 C2 68 */	lfs f0, "@2926"@sda21(r2)
 /* 801A6030 001A2F70  D4 04 00 10 */	stfsu f0, 0x10(r4)
 /* 801A6034 001A2F74  D0 04 00 04 */	stfs f0, 4(r4)
-/* 801A6038 001A2F78  C0 02 C2 B0 */	lfs f0, $$23427@sda21(r2)
+/* 801A6038 001A2F78  C0 02 C2 B0 */	lfs f0, "@3427"@sda21(r2)
 /* 801A603C 001A2F7C  D0 04 00 08 */	stfs f0, 8(r4)
 /* 801A6040 001A2F80  4B F6 C2 31 */	bl getModel__10TLiveActorCFv
 /* 801A6044 001A2F84  83 C3 00 58 */	lwz r30, 0x58(r3)
 /* 801A6048 001A2F88  38 61 00 54 */	addi r3, r1, 0x54
 /* 801A604C 001A2F8C  4B EE E2 65 */	bl PSMTXIdentity
-/* 801A6050 001A2F90  C0 62 C2 B4 */	lfs f3, $$23428@sda21(r2)
+/* 801A6050 001A2F90  C0 62 C2 B4 */	lfs f3, "@3428"@sda21(r2)
 /* 801A6054 001A2F94  7F C4 F3 78 */	mr r4, r30
 /* 801A6058 001A2F98  C0 1F 00 30 */	lfs f0, 0x30(r31)
 /* 801A605C 001A2F9C  7F C5 F3 78 */	mr r5, r30
@@ -1374,7 +1374,7 @@ lbl_801A6024:
 /* 801A6068 001A2FA8  81 0D 8D F0 */	lwz r8, jmaSinTable@sda21(r13)
 /* 801A606C 001A2FAC  80 CD 8D F4 */	lwz r6, jmaCosTable@sda21(r13)
 /* 801A6070 001A2FB0  38 61 00 54 */	addi r3, r1, 0x54
-/* 801A6074 001A2FB4  C0 42 C2 6C */	lfs f2, $$22982@sda21(r2)
+/* 801A6074 001A2FB4  C0 42 C2 6C */	lfs f2, "@2982"@sda21(r2)
 /* 801A6078 001A2FB8  FC 00 00 1E */	fctiwz f0, f0
 /* 801A607C 001A2FBC  D8 01 00 90 */	stfd f0, 0x90(r1)
 /* 801A6080 001A2FC0  80 E1 00 94 */	lwz r7, 0x94(r1)
@@ -1385,7 +1385,7 @@ lbl_801A6024:
 /* 801A6094 001A2FD4  7C A6 04 2E */	lfsx f5, r6, r0
 /* 801A6098 001A2FD8  FC 00 20 50 */	fneg f0, f4
 /* 801A609C 001A2FDC  D0 5E 00 00 */	stfs f2, 0(r30)
-/* 801A60A0 001A2FE0  C0 22 C2 68 */	lfs f1, $$22926@sda21(r2)
+/* 801A60A0 001A2FE0  C0 22 C2 68 */	lfs f1, "@2926"@sda21(r2)
 /* 801A60A4 001A2FE4  D0 3E 00 04 */	stfs f1, 4(r30)
 /* 801A60A8 001A2FE8  D0 3E 00 08 */	stfs f1, 8(r30)
 /* 801A60AC 001A2FEC  D0 3E 00 0C */	stfs f1, 0xc(r30)
@@ -1507,16 +1507,16 @@ load__10TCraneRotYFR20JSUMemoryInputStream:
 /* 801A6258 001A3198  D0 1E 01 38 */	stfs f0, 0x138(r30)
 /* 801A625C 001A319C  4B ED F8 69 */	bl rand
 /* 801A6260 001A31A0  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801A6264 001A31A4  C8 82 C2 90 */	lfd f4, $$23089@sda21(r2)
+/* 801A6264 001A31A4  C8 82 C2 90 */	lfd f4, "@3089"@sda21(r2)
 /* 801A6268 001A31A8  90 01 00 14 */	stw r0, 0x14(r1)
 /* 801A626C 001A31AC  3C 00 43 30 */	lis r0, 0x4330
-/* 801A6270 001A31B0  3C 60 80 39 */	lis r3, $$23440@ha
-/* 801A6274 001A31B4  C0 42 C2 70 */	lfs f2, $$23080@sda21(r2)
+/* 801A6270 001A31B0  3C 60 80 39 */	lis r3, "@3440"@ha
+/* 801A6274 001A31B4  C0 42 C2 70 */	lfs f2, "@3080"@sda21(r2)
 /* 801A6278 001A31B8  90 01 00 10 */	stw r0, 0x10(r1)
-/* 801A627C 001A31BC  C0 22 C2 BC */	lfs f1, $$23439@sda21(r2)
-/* 801A6280 001A31C0  38 83 E5 94 */	addi r4, r3, $$23440@l
+/* 801A627C 001A31BC  C0 22 C2 BC */	lfs f1, "@3439"@sda21(r2)
+/* 801A6280 001A31C0  38 83 E5 94 */	addi r4, r3, "@3440"@l
 /* 801A6284 001A31C4  C8 61 00 10 */	lfd f3, 0x10(r1)
-/* 801A6288 001A31C8  C0 02 C2 B8 */	lfs f0, $$23438@sda21(r2)
+/* 801A6288 001A31C8  C0 02 C2 B8 */	lfs f0, "@3438"@sda21(r2)
 /* 801A628C 001A31CC  EC 63 20 28 */	fsubs f3, f3, f4
 /* 801A6290 001A31D0  EC 42 00 F2 */	fmuls f2, f2, f3
 /* 801A6294 001A31D4  EC 01 00 BA */	fmadds f0, f1, f2, f0
@@ -1922,210 +1922,210 @@ __sinit_MapObjRicco_cpp:
 /* 801A67F0 001A3730  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 801A67F4 001A3734  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 801A67F8 001A3738  3B E3 60 40 */	addi r31, r3, submarineCranePos_forSound@l
-/* 801A67FC 001A373C  C0 42 C2 C0 */	lfs f2, $$23654@sda21(r2)
+/* 801A67FC 001A373C  C0 42 C2 C0 */	lfs f2, "@3654"@sda21(r2)
 /* 801A6800 001A3740  D0 5F 00 00 */	stfs f2, 0(r31)
-/* 801A6804 001A3744  C0 02 C2 C4 */	lfs f0, $$23655@sda21(r2)
+/* 801A6804 001A3744  C0 02 C2 C4 */	lfs f0, "@3655"@sda21(r2)
 /* 801A6808 001A3748  D0 1F 00 04 */	stfs f0, 4(r31)
-/* 801A680C 001A374C  C0 22 C2 C8 */	lfs f1, $$23656@sda21(r2)
+/* 801A680C 001A374C  C0 22 C2 C8 */	lfs f1, "@3656"@sda21(r2)
 /* 801A6810 001A3750  D0 3F 00 08 */	stfs f1, 8(r31)
 /* 801A6814 001A3754  D0 5F 00 0C */	stfs f2, 0xc(r31)
-/* 801A6818 001A3758  C0 02 C2 CC */	lfs f0, $$23657@sda21(r2)
+/* 801A6818 001A3758  C0 02 C2 CC */	lfs f0, "@3657"@sda21(r2)
 /* 801A681C 001A375C  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 801A6820 001A3760  D0 3F 00 14 */	stfs f1, 0x14(r31)
-/* 801A6824 001A3764  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 801A6824 001A3764  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 801A6828 001A3768  7C 00 07 75 */	extsb. r0, r0
 /* 801A682C 001A376C  40 82 00 28 */	bne lbl_801A6854
-/* 801A6830 001A3770  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 801A6830 001A3770  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 801A6834 001A3774  4B E6 84 01 */	bl initiate__10JSUPtrListFv
-/* 801A6838 001A3778  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 801A683C 001A377C  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 801A6840 001A3780  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 801A6838 001A3778  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 801A683C 001A377C  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 801A6840 001A3780  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 801A6844 001A3784  38 BF 00 18 */	addi r5, r31, 0x18
 /* 801A6848 001A3788  4B ED BE E1 */	bl __register_global_object
 /* 801A684C 001A378C  38 00 00 01 */	li r0, 1
-/* 801A6850 001A3790  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 801A6850 001A3790  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_801A6854:
-/* 801A6854 001A3794  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 801A6854 001A3794  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 801A6858 001A3798  7C 00 07 75 */	extsb. r0, r0
 /* 801A685C 001A379C  40 82 00 28 */	bne lbl_801A6884
-/* 801A6860 001A37A0  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 801A6860 001A37A0  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 801A6864 001A37A4  4B E6 83 D1 */	bl initiate__10JSUPtrListFv
-/* 801A6868 001A37A8  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 801A686C 001A37AC  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 801A6870 001A37B0  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 801A6868 001A37A8  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 801A686C 001A37AC  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 801A6870 001A37B0  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 801A6874 001A37B4  38 BF 00 24 */	addi r5, r31, 0x24
 /* 801A6878 001A37B8  4B ED BE B1 */	bl __register_global_object
 /* 801A687C 001A37BC  38 00 00 01 */	li r0, 1
-/* 801A6880 001A37C0  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 801A6880 001A37C0  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_801A6884:
-/* 801A6884 001A37C4  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 801A6884 001A37C4  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 801A6888 001A37C8  7C 00 07 75 */	extsb. r0, r0
 /* 801A688C 001A37CC  40 82 00 28 */	bne lbl_801A68B4
-/* 801A6890 001A37D0  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 801A6890 001A37D0  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 801A6894 001A37D4  4B E6 83 A1 */	bl initiate__10JSUPtrListFv
-/* 801A6898 001A37D8  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 801A689C 001A37DC  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 801A68A0 001A37E0  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 801A6898 001A37D8  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 801A689C 001A37DC  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 801A68A0 001A37E0  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 801A68A4 001A37E4  38 BF 00 30 */	addi r5, r31, 0x30
 /* 801A68A8 001A37E8  4B ED BE 81 */	bl __register_global_object
 /* 801A68AC 001A37EC  38 00 00 01 */	li r0, 1
-/* 801A68B0 001A37F0  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 801A68B0 001A37F0  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_801A68B4:
-/* 801A68B4 001A37F4  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801A68B4 001A37F4  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 801A68B8 001A37F8  7C 00 07 75 */	extsb. r0, r0
 /* 801A68BC 001A37FC  40 82 00 28 */	bne lbl_801A68E4
-/* 801A68C0 001A3800  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801A68C0 001A3800  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801A68C4 001A3804  4B E6 83 71 */	bl initiate__10JSUPtrListFv
-/* 801A68C8 001A3808  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 801A68CC 001A380C  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 801A68D0 001A3810  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801A68C8 001A3808  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 801A68CC 001A380C  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 801A68D0 001A3810  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801A68D4 001A3814  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 801A68D8 001A3818  4B ED BE 51 */	bl __register_global_object
 /* 801A68DC 001A381C  38 00 00 01 */	li r0, 1
-/* 801A68E0 001A3820  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801A68E0 001A3820  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_801A68E4:
-/* 801A68E4 001A3824  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 801A68E4 001A3824  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 801A68E8 001A3828  7C 00 07 75 */	extsb. r0, r0
 /* 801A68EC 001A382C  40 82 00 28 */	bne lbl_801A6914
-/* 801A68F0 001A3830  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801A68F0 001A3830  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801A68F4 001A3834  4B E6 83 41 */	bl initiate__10JSUPtrListFv
-/* 801A68F8 001A3838  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 801A68FC 001A383C  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 801A6900 001A3840  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801A68F8 001A3838  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 801A68FC 001A383C  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 801A6900 001A3840  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801A6904 001A3844  38 BF 00 48 */	addi r5, r31, 0x48
 /* 801A6908 001A3848  4B ED BE 21 */	bl __register_global_object
 /* 801A690C 001A384C  38 00 00 01 */	li r0, 1
-/* 801A6910 001A3850  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 801A6910 001A3850  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_801A6914:
-/* 801A6914 001A3854  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 801A6914 001A3854  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 801A6918 001A3858  7C 00 07 75 */	extsb. r0, r0
 /* 801A691C 001A385C  40 82 00 28 */	bne lbl_801A6944
-/* 801A6920 001A3860  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 801A6920 001A3860  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 801A6924 001A3864  4B E6 83 11 */	bl initiate__10JSUPtrListFv
-/* 801A6928 001A3868  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 801A692C 001A386C  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 801A6930 001A3870  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 801A6928 001A3868  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 801A692C 001A386C  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 801A6930 001A3870  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 801A6934 001A3874  38 BF 00 54 */	addi r5, r31, 0x54
 /* 801A6938 001A3878  4B ED BD F1 */	bl __register_global_object
 /* 801A693C 001A387C  38 00 00 01 */	li r0, 1
-/* 801A6940 001A3880  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 801A6940 001A3880  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_801A6944:
-/* 801A6944 001A3884  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 801A6944 001A3884  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 801A6948 001A3888  7C 00 07 75 */	extsb. r0, r0
 /* 801A694C 001A388C  40 82 00 28 */	bne lbl_801A6974
-/* 801A6950 001A3890  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 801A6950 001A3890  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 801A6954 001A3894  4B E6 82 E1 */	bl initiate__10JSUPtrListFv
-/* 801A6958 001A3898  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 801A695C 001A389C  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 801A6960 001A38A0  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 801A6958 001A3898  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 801A695C 001A389C  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 801A6960 001A38A0  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 801A6964 001A38A4  38 BF 00 60 */	addi r5, r31, 0x60
 /* 801A6968 001A38A8  4B ED BD C1 */	bl __register_global_object
 /* 801A696C 001A38AC  38 00 00 01 */	li r0, 1
-/* 801A6970 001A38B0  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 801A6970 001A38B0  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_801A6974:
-/* 801A6974 001A38B4  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 801A6974 001A38B4  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 801A6978 001A38B8  7C 00 07 75 */	extsb. r0, r0
 /* 801A697C 001A38BC  40 82 00 28 */	bne lbl_801A69A4
-/* 801A6980 001A38C0  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 801A6980 001A38C0  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 801A6984 001A38C4  4B E6 82 B1 */	bl initiate__10JSUPtrListFv
-/* 801A6988 001A38C8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 801A698C 001A38CC  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 801A6990 001A38D0  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 801A6988 001A38C8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 801A698C 001A38CC  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 801A6990 001A38D0  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 801A6994 001A38D4  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 801A6998 001A38D8  4B ED BD 91 */	bl __register_global_object
 /* 801A699C 001A38DC  38 00 00 01 */	li r0, 1
-/* 801A69A0 001A38E0  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 801A69A0 001A38E0  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_801A69A4:
-/* 801A69A4 001A38E4  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 801A69A4 001A38E4  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 801A69A8 001A38E8  7C 00 07 75 */	extsb. r0, r0
 /* 801A69AC 001A38EC  40 82 00 28 */	bne lbl_801A69D4
-/* 801A69B0 001A38F0  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801A69B0 001A38F0  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801A69B4 001A38F4  4B E6 82 81 */	bl initiate__10JSUPtrListFv
-/* 801A69B8 001A38F8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 801A69BC 001A38FC  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 801A69C0 001A3900  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801A69B8 001A38F8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 801A69BC 001A38FC  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 801A69C0 001A3900  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801A69C4 001A3904  38 BF 00 78 */	addi r5, r31, 0x78
 /* 801A69C8 001A3908  4B ED BD 61 */	bl __register_global_object
 /* 801A69CC 001A390C  38 00 00 01 */	li r0, 1
-/* 801A69D0 001A3910  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 801A69D0 001A3910  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_801A69D4:
-/* 801A69D4 001A3914  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801A69D4 001A3914  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 801A69D8 001A3918  7C 00 07 75 */	extsb. r0, r0
 /* 801A69DC 001A391C  40 82 00 28 */	bne lbl_801A6A04
-/* 801A69E0 001A3920  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801A69E0 001A3920  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801A69E4 001A3924  4B E6 82 51 */	bl initiate__10JSUPtrListFv
-/* 801A69E8 001A3928  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 801A69EC 001A392C  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 801A69F0 001A3930  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801A69E8 001A3928  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 801A69EC 001A392C  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 801A69F0 001A3930  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801A69F4 001A3934  38 BF 00 84 */	addi r5, r31, 0x84
 /* 801A69F8 001A3938  4B ED BD 31 */	bl __register_global_object
 /* 801A69FC 001A393C  38 00 00 01 */	li r0, 1
-/* 801A6A00 001A3940  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801A6A00 001A3940  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_801A6A04:
-/* 801A6A04 001A3944  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 801A6A04 001A3944  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 801A6A08 001A3948  7C 00 07 75 */	extsb. r0, r0
 /* 801A6A0C 001A394C  40 82 00 28 */	bne lbl_801A6A34
-/* 801A6A10 001A3950  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 801A6A10 001A3950  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 801A6A14 001A3954  4B E6 82 21 */	bl initiate__10JSUPtrListFv
-/* 801A6A18 001A3958  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 801A6A1C 001A395C  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 801A6A20 001A3960  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 801A6A18 001A3958  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 801A6A1C 001A395C  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 801A6A20 001A3960  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 801A6A24 001A3964  38 BF 00 90 */	addi r5, r31, 0x90
 /* 801A6A28 001A3968  4B ED BD 01 */	bl __register_global_object
 /* 801A6A2C 001A396C  38 00 00 01 */	li r0, 1
-/* 801A6A30 001A3970  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 801A6A30 001A3970  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_801A6A34:
-/* 801A6A34 001A3974  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 801A6A34 001A3974  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 801A6A38 001A3978  7C 00 07 75 */	extsb. r0, r0
 /* 801A6A3C 001A397C  40 82 00 28 */	bne lbl_801A6A64
-/* 801A6A40 001A3980  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 801A6A40 001A3980  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 801A6A44 001A3984  4B E6 81 F1 */	bl initiate__10JSUPtrListFv
-/* 801A6A48 001A3988  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 801A6A4C 001A398C  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 801A6A50 001A3990  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 801A6A48 001A3988  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 801A6A4C 001A398C  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 801A6A50 001A3990  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 801A6A54 001A3994  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 801A6A58 001A3998  4B ED BC D1 */	bl __register_global_object
 /* 801A6A5C 001A399C  38 00 00 01 */	li r0, 1
-/* 801A6A60 001A39A0  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 801A6A60 001A39A0  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_801A6A64:
-/* 801A6A64 001A39A4  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 801A6A64 001A39A4  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 801A6A68 001A39A8  7C 00 07 75 */	extsb. r0, r0
 /* 801A6A6C 001A39AC  40 82 00 28 */	bne lbl_801A6A94
-/* 801A6A70 001A39B0  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 801A6A70 001A39B0  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 801A6A74 001A39B4  4B E6 81 C1 */	bl initiate__10JSUPtrListFv
-/* 801A6A78 001A39B8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 801A6A7C 001A39BC  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 801A6A80 001A39C0  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 801A6A78 001A39B8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 801A6A7C 001A39BC  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 801A6A80 001A39C0  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 801A6A84 001A39C4  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 801A6A88 001A39C8  4B ED BC A1 */	bl __register_global_object
 /* 801A6A8C 001A39CC  38 00 00 01 */	li r0, 1
-/* 801A6A90 001A39D0  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 801A6A90 001A39D0  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_801A6A94:
-/* 801A6A94 001A39D4  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 801A6A94 001A39D4  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 801A6A98 001A39D8  7C 00 07 75 */	extsb. r0, r0
 /* 801A6A9C 001A39DC  40 82 00 28 */	bne lbl_801A6AC4
-/* 801A6AA0 001A39E0  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 801A6AA0 001A39E0  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 801A6AA4 001A39E4  4B E6 81 91 */	bl initiate__10JSUPtrListFv
-/* 801A6AA8 001A39E8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 801A6AAC 001A39EC  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 801A6AB0 001A39F0  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 801A6AA8 001A39E8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 801A6AAC 001A39EC  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 801A6AB0 001A39F0  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 801A6AB4 001A39F4  38 BF 00 B4 */	addi r5, r31, 0xb4
 /* 801A6AB8 001A39F8  4B ED BC 71 */	bl __register_global_object
 /* 801A6ABC 001A39FC  38 00 00 01 */	li r0, 1
-/* 801A6AC0 001A3A00  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 801A6AC0 001A3A00  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_801A6AC4:
-/* 801A6AC4 001A3A04  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801A6AC4 001A3A04  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 801A6AC8 001A3A08  7C 00 07 75 */	extsb. r0, r0
 /* 801A6ACC 001A3A0C  40 82 00 28 */	bne lbl_801A6AF4
-/* 801A6AD0 001A3A10  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801A6AD0 001A3A10  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801A6AD4 001A3A14  4B E6 81 61 */	bl initiate__10JSUPtrListFv
-/* 801A6AD8 001A3A18  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 801A6ADC 001A3A1C  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 801A6AE0 001A3A20  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801A6AD8 001A3A18  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 801A6ADC 001A3A1C  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 801A6AE0 001A3A20  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801A6AE4 001A3A24  38 BF 00 C0 */	addi r5, r31, 0xc0
 /* 801A6AE8 001A3A28  4B ED BC 41 */	bl __register_global_object
 /* 801A6AEC 001A3A2C  38 00 00 01 */	li r0, 1
-/* 801A6AF0 001A3A30  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801A6AF0 001A3A30  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_801A6AF4:
 /* 801A6AF4 001A3A34  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 801A6AF8 001A3A38  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -2133,38 +2133,38 @@ lbl_801A6AF4:
 /* 801A6B00 001A3A40  7C 08 03 A6 */	mtlr r0
 /* 801A6B04 001A3A44  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__10TCraneRotYFv
-$$232$$2__dt__10TCraneRotYFv:
+.global "@32@__dt__10TCraneRotYFv"
+"@32@__dt__10TCraneRotYFv":
 /* 801A6B08 001A3A48  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B0C 001A3A4C  4B FF FC 54 */	b __dt__10TCraneRotYFv
 
-.global $$232$$2__dt__12TCraneUpDownFv
-$$232$$2__dt__12TCraneUpDownFv:
+.global "@32@__dt__12TCraneUpDownFv"
+"@32@__dt__12TCraneUpDownFv":
 /* 801A6B10 001A3A50  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B14 001A3A54  4B FF FB C8 */	b __dt__12TCraneUpDownFv
 
-.global $$232$$2__dt__11TCraneCargoFv
-$$232$$2__dt__11TCraneCargoFv:
+.global "@32@__dt__11TCraneCargoFv"
+"@32@__dt__11TCraneCargoFv":
 /* 801A6B18 001A3A58  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B1C 001A3A5C  4B FF FB 24 */	b __dt__11TCraneCargoFv
 
-.global $$232$$2__dt__15TRiccoWatermillFv
-$$232$$2__dt__15TRiccoWatermillFv:
+.global "@32@__dt__15TRiccoWatermillFv"
+"@32@__dt__15TRiccoWatermillFv":
 /* 801A6B20 001A3A60  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B24 001A3A64  4B FF FA 98 */	b __dt__15TRiccoWatermillFv
 
-.global $$232$$2__dt__12TSurfGesoObjFv
-$$232$$2__dt__12TSurfGesoObjFv:
+.global "@32@__dt__12TSurfGesoObjFv"
+"@32@__dt__12TSurfGesoObjFv":
 /* 801A6B28 001A3A68  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B2C 001A3A6C  4B FF F9 F4 */	b __dt__12TSurfGesoObjFv
 
-.global $$232$$2__dt__12TFruitSwitchFv
-$$232$$2__dt__12TFruitSwitchFv:
+.global "@32@__dt__12TFruitSwitchFv"
+"@32@__dt__12TFruitSwitchFv":
 /* 801A6B30 001A3A70  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B34 001A3A74  4B FF F9 68 */	b __dt__12TFruitSwitchFv
 
-.global $$232$$2__dt__14TFruitLauncherFv
-$$232$$2__dt__14TFruitLauncherFv:
+.global "@32@__dt__14TFruitLauncherFv"
+"@32@__dt__14TFruitLauncherFv":
 /* 801A6B38 001A3A78  38 63 FF E0 */	addi r3, r3, -32
 /* 801A6B3C 001A3A7C  4B FF E1 B0 */	b __dt__14TFruitLauncherFv
 
@@ -2174,61 +2174,61 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22111:
+"@2111":
 	.incbin "baserom.dol", 0x38B394, 0x14
-$$22178:
+"@2178":
 	.incbin "baserom.dol", 0x38B3A8, 0x30
-$$22179:
+"@2179":
 	.incbin "baserom.dol", 0x38B3D8, 0x38
-$$22180:
+"@2180":
 	.incbin "baserom.dol", 0x38B410, 0x34
-$$22181:
+"@2181":
 	.incbin "baserom.dol", 0x38B444, 0x24
-$$22738:
+"@2738":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22740:
+"@2740":
 	.incbin "baserom.dol", 0x38B474, 0xC
-$$22983:
+"@2983":
 	.incbin "baserom.dol", 0x38B480, 0x10
-$$22984:
+"@2984":
 	.incbin "baserom.dol", 0x38B490, 0xC
-$$22985:
+"@2985":
 	.incbin "baserom.dol", 0x38B49C, 0xC
-$$22986:
+"@2986":
 	.incbin "baserom.dol", 0x38B4A8, 0xC
-$$22987:
+"@2987":
 	.incbin "baserom.dol", 0x38B4B4, 0xC
-$$22988:
+"@2988":
 	.incbin "baserom.dol", 0x38B4C0, 0x14
-$$22989:
+"@2989":
 	.incbin "baserom.dol", 0x38B4D4, 0x14
-$$22990:
+"@2990":
 	.incbin "baserom.dol", 0x38B4E8, 0xC
-$$23087:
+"@3087":
 	.incbin "baserom.dol", 0x38B4F4, 0x1C
-$$23153:
+"@3153":
 	.incbin "baserom.dol", 0x38B510, 0xC
-$$23154:
+"@3154":
 	.incbin "baserom.dol", 0x38B51C, 0x10
-$$23155:
+"@3155":
 	.incbin "baserom.dol", 0x38B52C, 0x10
-$$23156:
+"@3156":
 	.incbin "baserom.dol", 0x38B53C, 0x10
-$$23184:
+"@3184":
 	.incbin "baserom.dol", 0x38B54C, 0xC
-$$23185:
+"@3185":
 	.incbin "baserom.dol", 0x38B558, 0x18
-$$23345:
+"@3345":
 	.incbin "baserom.dol", 0x38B570, 0x14
-$$23346:
+"@3346":
 	.incbin "baserom.dol", 0x38B584, 0x10
-$$23440:
+"@3440":
 	.incbin "baserom.dol", 0x38B594, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -2245,7 +2245,7 @@ __vt__14TFruitLauncher:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__14TFruitLauncherFv
+  .4byte "@32@__dt__14TFruitLauncherFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2255,12 +2255,12 @@ __vt__14TFruitLauncher:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2277,7 +2277,7 @@ __vt__14TFruitLauncher:
   .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2300,7 +2300,7 @@ __vt__14TFruitLauncher:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2336,7 +2336,7 @@ __vt__12TFruitSwitch:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__12TFruitSwitchFv
+  .4byte "@32@__dt__12TFruitSwitchFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2346,12 +2346,12 @@ __vt__12TFruitSwitch:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2368,7 +2368,7 @@ __vt__12TFruitSwitch:
   .4byte receiveMessage__12TFruitSwitchFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2391,7 +2391,7 @@ __vt__12TFruitSwitch:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2427,7 +2427,7 @@ __vt__12TSurfGesoObj:
   .4byte perform__5TItemFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__12TSurfGesoObjFv
+  .4byte "@32@__dt__12TSurfGesoObjFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2437,12 +2437,12 @@ __vt__12TSurfGesoObj:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2459,7 +2459,7 @@ __vt__12TSurfGesoObj:
   .4byte receiveMessage__5TItemFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__14TMapObjGeneralFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2482,7 +2482,7 @@ __vt__12TSurfGesoObj:
   .4byte appear__5TItemFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2507,7 +2507,7 @@ __vt__12TSurfGesoObj:
   .4byte getDepthAtFloating__11TMapObjBaseFv
   .4byte getLivingTime__14TMapObjGeneralCFv
   .4byte getFlushTime__14TMapObjGeneralCFv
-  .4byte isPollutedGround__14TMapObjGeneralCFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "isPollutedGround__14TMapObjGeneralCFRCQ29JGeometry8TVec3<f>"
   .4byte work__14TMapObjGeneralFv
   .4byte appearing__5TItemFv
   .4byte appeared__5TItemFv
@@ -2529,12 +2529,12 @@ __vt__12TSurfGesoObj:
   .4byte makeObjRecovered__14TMapObjGeneralFv
   .4byte receiveMessageFromPlayer__14TMapObjGeneralFv
   .4byte calcVelocity__14TMapObjGeneralFv
-  .4byte checkGroundCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
-  .4byte touchGround__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
-  .4byte checkWallCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
-  .4byte touchWall__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1P18TBGWallCheckRecord
-  .4byte checkRoofCollision__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
-  .4byte touchRoof__14TMapObjGeneralFPQ29JGeometry8TVec3$$0f$$1
+  .4byte "checkGroundCollision__14TMapObjGeneralFPQ29JGeometry8TVec3<f>"
+  .4byte "touchGround__14TMapObjGeneralFPQ29JGeometry8TVec3<f>"
+  .4byte "checkWallCollision__14TMapObjGeneralFPQ29JGeometry8TVec3<f>"
+  .4byte "touchWall__14TMapObjGeneralFPQ29JGeometry8TVec3<f>P18TBGWallCheckRecord"
+  .4byte "checkRoofCollision__14TMapObjGeneralFPQ29JGeometry8TVec3<f>"
+  .4byte "touchRoof__14TMapObjGeneralFPQ29JGeometry8TVec3<f>"
   .4byte killByTimer__5TItemFi
   .4byte taken__5TItemFP9THitActor
 .global __vt__15TRiccoWatermill
@@ -2550,7 +2550,7 @@ __vt__15TRiccoWatermill:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__15TRiccoWatermillFv
+  .4byte "@32@__dt__15TRiccoWatermillFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2560,12 +2560,12 @@ __vt__15TRiccoWatermill:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2582,7 +2582,7 @@ __vt__15TRiccoWatermill:
   .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2605,7 +2605,7 @@ __vt__15TRiccoWatermill:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2641,7 +2641,7 @@ __vt__11TCraneCargo:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__11TCraneCargoFv
+  .4byte "@32@__dt__11TCraneCargoFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2651,12 +2651,12 @@ __vt__11TCraneCargo:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2673,7 +2673,7 @@ __vt__11TCraneCargo:
   .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2696,7 +2696,7 @@ __vt__11TCraneCargo:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2733,7 +2733,7 @@ __vt__12TCraneUpDown:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__12TCraneUpDownFv
+  .4byte "@32@__dt__12TCraneUpDownFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2743,12 +2743,12 @@ __vt__12TCraneUpDown:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2765,7 +2765,7 @@ __vt__12TCraneUpDown:
   .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2788,7 +2788,7 @@ __vt__12TCraneUpDown:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2824,7 +2824,7 @@ __vt__10TCraneRotY:
   .4byte perform__11TMapObjBaseFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__10TCraneRotYFv
+  .4byte "@32@__dt__10TCraneRotYFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2834,12 +2834,12 @@ __vt__10TCraneRotY:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2856,7 +2856,7 @@ __vt__10TCraneRotY:
   .4byte receiveMessage__11TMapObjBaseFP9THitActorUl
   .4byte getTakingMtx__11TMapObjBaseFv
   .4byte ensureTakeSituation__11TMapObjBaseFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__11TMapObjBaseCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__11TMapObjBaseCFv
@@ -2879,7 +2879,7 @@ __vt__10TCraneRotY:
   .4byte appear__11TMapObjBaseFv
   .4byte makeObjAppeared__11TMapObjBaseFv
   .4byte makeObjDead__11TMapObjBaseFv
-  .4byte changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "changeObjSRT__11TMapObjBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte changeObjMtx__11TMapObjBaseFPA4_f
   .4byte updateObjMtx__11TMapObjBaseFv
   .4byte setUpCurrentMapCollision__11TMapObjBaseFv
@@ -2935,53 +2935,53 @@ mFruitLiveTime__14TFruitLauncher:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22926:
+"@2926":
   .4byte 0
-$$22982:
+"@2982":
 	.incbin "baserom.dol", 0x3E7F6C, 0x4
-$$23080:
+"@3080":
 	.incbin "baserom.dol", 0x3E7F70, 0x4
-$$23081:
+"@3081":
 	.incbin "baserom.dol", 0x3E7F74, 0x4
-$$23082:
+"@3082":
 	.incbin "baserom.dol", 0x3E7F78, 0x4
-$$23083:
+"@3083":
 	.incbin "baserom.dol", 0x3E7F7C, 0x4
-$$23084:
+"@3084":
 	.incbin "baserom.dol", 0x3E7F80, 0x4
-$$23085:
+"@3085":
 	.incbin "baserom.dol", 0x3E7F84, 0x4
-$$23086:
+"@3086":
 	.incbin "baserom.dol", 0x3E7F88, 0x8
-$$23089:
+"@3089":
 	.incbin "baserom.dol", 0x3E7F90, 0x8
-$$23305:
+"@3305":
 	.incbin "baserom.dol", 0x3E7F98, 0x4
-$$23306:
+"@3306":
 	.incbin "baserom.dol", 0x3E7F9C, 0x4
-$$23307:
+"@3307":
 	.incbin "baserom.dol", 0x3E7FA0, 0x4
-$$23347:
+"@3347":
 	.incbin "baserom.dol", 0x3E7FA4, 0x4
-$$23348:
+"@3348":
 	.incbin "baserom.dol", 0x3E7FA8, 0x4
-$$23349:
+"@3349":
 	.incbin "baserom.dol", 0x3E7FAC, 0x4
-$$23427:
+"@3427":
 	.incbin "baserom.dol", 0x3E7FB0, 0x4
-$$23428:
+"@3428":
 	.incbin "baserom.dol", 0x3E7FB4, 0x4
-$$23438:
+"@3438":
 	.incbin "baserom.dol", 0x3E7FB8, 0x4
-$$23439:
+"@3439":
 	.incbin "baserom.dol", 0x3E7FBC, 0x4
-$$23654:
+"@3654":
 	.incbin "baserom.dol", 0x3E7FC0, 0x4
-$$23655:
+"@3655":
 	.incbin "baserom.dol", 0x3E7FC4, 0x4
-$$23656:
+"@3656":
 	.incbin "baserom.dol", 0x3E7FC8, 0x4
-$$23657:
+"@3657":
 	.incbin "baserom.dol", 0x3E7FCC, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
@@ -2989,35 +2989,35 @@ submarineCranePos_forSound:
 	.skip 0xC
 submarineSetWtPos_forSound:
 	.skip 0xC
-$$23529:
+"@3529":
 	.skip 0xC
-$$23530:
+"@3530":
 	.skip 0xC
-$$23531:
+"@3531":
 	.skip 0xC
-$$23532:
+"@3532":
 	.skip 0xC
-$$23533:
+"@3533":
 	.skip 0xC
-$$23534:
+"@3534":
 	.skip 0xC
-$$23535:
+"@3535":
 	.skip 0xC
-$$23536:
+"@3536":
 	.skip 0xC
-$$23537:
+"@3537":
 	.skip 0xC
-$$23538:
+"@3538":
 	.skip 0xC
-$$23539:
+"@3539":
 	.skip 0xC
-$$23540:
+"@3540":
 	.skip 0xC
-$$23541:
+"@3541":
 	.skip 0xC
-$$23542:
+"@3542":
 	.skip 0xC
-$$23543:
+"@3543":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

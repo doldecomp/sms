@@ -11,11 +11,11 @@ SMSGetNpcInitAnmData__FUl:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3814C4, 0x14
 sMonteM_AnmIndex:
 	.incbin "baserom.dol", 0x3814D8, 0x1D0

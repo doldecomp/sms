@@ -10,7 +10,7 @@ __ct__Q28JASystem10TBasicInstFv:
 /* 80058D14 00055C54  38 04 AD D8 */	addi r0, r4, __vt__Q28JASystem10TBasicInst@l
 /* 80058D18 00055C58  90 03 00 00 */	stw r0, 0(r3)
 /* 80058D1C 00055C5C  38 00 00 00 */	li r0, 0
-/* 80058D20 00055C60  C0 02 85 D0 */	lfs f0, $$2294@sda21(r2)
+/* 80058D20 00055C60  C0 02 85 D0 */	lfs f0, "@294"@sda21(r2)
 /* 80058D24 00055C64  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80058D28 00055C68  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80058D2C 00055C6C  90 03 00 0C */	stw r0, 0xc(r3)
@@ -473,5 +473,5 @@ __vt__Q28JASystem5TInst:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2294:
+"@294":
 	.incbin "baserom.dol", 0x3E42D0, 0x8

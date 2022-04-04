@@ -274,43 +274,43 @@ lbl_80082ADC:
 /* 80082AF0 0007FA30  4E 80 00 20 */	blr 
 
 .section extab_, "wa"  # 0x80005540 - 0x800055A0
-$$2152:
+"@152":
 	.incbin "baserom.dol", 0x36CAE0, 0x8
-$$2157:
+"@157":
 	.incbin "baserom.dol", 0x36CAE8, 0x8
-$$2174:
+"@174":
 	.incbin "baserom.dol", 0x36CAF0, 0x14
     .4byte __dt__26__partial_array_destructorFv
-$$2182:
+"@182":
 	.incbin "baserom.dol", 0x36CB08, 0x8
-$$2201:
+"@201":
 	.incbin "baserom.dol", 0x36CB10, 0x14
     .4byte __dt__26__partial_array_destructorFv
 
 .section extabindex_, "wa"  # 0x800055A0 - 0x80005600
-$$2153:
+"@153":
     .4byte __destroy_new_array
     .4byte 0x0000007C
-    .4byte $$2152
-$$2158:
+    .4byte "@152"
+"@158":
     .4byte __destroy_arr
     .4byte 0x00000078
-    .4byte $$2157
-$$2175:
+    .4byte "@157"
+"@175":
     .4byte __construct_array
     .4byte 0x00000100
-    .4byte $$2174
-$$2183:
+    .4byte "@174"
+"@183":
     .4byte __dt__26__partial_array_destructorFv
     .4byte 0x000000B8
-    .4byte $$2182
-$$2202:
+    .4byte "@182"
+"@202":
     .4byte __construct_new_array
     .4byte 0x00000108
-    .4byte $$2201
+    .4byte "@201"
 .global lbl_800055DC
 lbl_800055DC:
-    .4byte $$2153
+    .4byte "@153"
     .4byte lbl_800055DC
     .4byte __destroy_new_array
     .4byte 0x000003B4

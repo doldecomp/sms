@@ -4,11 +4,11 @@
 .global main__Q28JASystem10HardStreamFv
 main__Q28JASystem10HardStreamFv:
 /* 80062938 0005F878  7C 08 02 A6 */	mflr r0
-/* 8006293C 0005F87C  3C 60 80 3E */	lis r3, $$2245@ha
+/* 8006293C 0005F87C  3C 60 80 3E */	lis r3, "@245"@ha
 /* 80062940 0005F880  90 01 00 04 */	stw r0, 4(r1)
 /* 80062944 0005F884  94 21 FF B8 */	stwu r1, -0x48(r1)
 /* 80062948 0005F888  93 E1 00 44 */	stw r31, 0x44(r1)
-/* 8006294C 0005F88C  3B E3 66 28 */	addi r31, r3, $$2245@l
+/* 8006294C 0005F88C  3B E3 66 28 */	addi r31, r3, "@245"@l
 /* 80062950 0005F890  93 C1 00 40 */	stw r30, 0x40(r1)
 /* 80062954 0005F894  93 A1 00 3C */	stw r29, 0x3c(r1)
 /* 80062958 0005F898  93 81 00 38 */	stw r28, 0x38(r1)
@@ -31,8 +31,8 @@ lbl_80062994:
 /* 80062994 0005F8D4  88 0D 91 D0 */	lbz r0, useHardStreaming__Q28JASystem10HardStream@sda21(r13)
 /* 80062998 0005F8D8  28 00 00 00 */	cmplwi r0, 0
 /* 8006299C 0005F8DC  41 82 04 00 */	beq lbl_80062D9C
-/* 800629A0 0005F8E0  3C 60 80 3B */	lis r3, $$2550@ha
-/* 800629A4 0005F8E4  3B 83 B7 E8 */	addi r28, r3, $$2550@l
+/* 800629A0 0005F8E0  3C 60 80 3B */	lis r3, "@550"@ha
+/* 800629A4 0005F8E4  3B 83 B7 E8 */	addi r28, r3, "@550"@l
 /* 800629A8 0005F8E8  3B BF 00 14 */	addi r29, r31, 0x14
 /* 800629AC 0005F8EC  3B DF 00 17 */	addi r30, r31, 0x17
 lbl_800629B0:
@@ -327,11 +327,11 @@ lbl_80062D9C:
 .global firstBgmCallback__Q28JASystem10HardStreamFlP11DVDFileInfo
 firstBgmCallback__Q28JASystem10HardStreamFlP11DVDFileInfo:
 /* 80062DBC 0005FCFC  7C 08 02 A6 */	mflr r0
-/* 80062DC0 0005FD00  3C 60 80 3E */	lis r3, $$2245@ha
+/* 80062DC0 0005FD00  3C 60 80 3E */	lis r3, "@245"@ha
 /* 80062DC4 0005FD04  90 01 00 04 */	stw r0, 4(r1)
 /* 80062DC8 0005FD08  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80062DCC 0005FD0C  93 E1 00 1C */	stw r31, 0x1c(r1)
-/* 80062DD0 0005FD10  3B E3 66 28 */	addi r31, r3, $$2245@l
+/* 80062DD0 0005FD10  3B E3 66 28 */	addi r31, r3, "@245"@l
 /* 80062DD4 0005FD14  38 7F 00 16 */	addi r3, r31, 0x16
 /* 80062DD8 0005FD18  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80062DDC 0005FD1C  88 1F 00 16 */	lbz r0, 0x16(r31)
@@ -375,11 +375,11 @@ secondBgmCallback__Q28JASystem10HardStreamFlP11DVDFileInfo:
 .global getAddrCallback__Q28JASystem10HardStreamFlP15DVDCommandBlock
 getAddrCallback__Q28JASystem10HardStreamFlP15DVDCommandBlock:
 /* 80062E5C 0005FD9C  7C 08 02 A6 */	mflr r0
-/* 80062E60 0005FDA0  3C 80 80 3E */	lis r4, $$2245@ha
+/* 80062E60 0005FDA0  3C 80 80 3E */	lis r4, "@245"@ha
 /* 80062E64 0005FDA4  90 01 00 04 */	stw r0, 4(r1)
 /* 80062E68 0005FDA8  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 80062E6C 0005FDAC  93 E1 00 2C */	stw r31, 0x2c(r1)
-/* 80062E70 0005FDB0  3B E4 66 28 */	addi r31, r4, $$2245@l
+/* 80062E70 0005FDB0  3B E4 66 28 */	addi r31, r4, "@245"@l
 /* 80062E74 0005FDB4  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 80062E78 0005FDB8  3B C3 00 00 */	addi r30, r3, 0
 /* 80062E7C 0005FDBC  88 0D 91 E8 */	lbz r0, init$578@sda21(r13)
@@ -489,9 +489,9 @@ __ct__Q38JASystem10HardStream8TControlFv:
 /* 80062FE8 0005FF28  98 03 00 0A */	stb r0, 0xa(r3)
 /* 80062FEC 0005FF2C  B0 03 00 08 */	sth r0, 8(r3)
 /* 80062FF0 0005FF30  98 03 00 0B */	stb r0, 0xb(r3)
-/* 80062FF4 0005FF34  C0 22 86 E4 */	lfs f1, $$2621@sda21(r2)
+/* 80062FF4 0005FF34  C0 22 86 E4 */	lfs f1, "@621"@sda21(r2)
 /* 80062FF8 0005FF38  D0 23 00 0C */	stfs f1, 0xc(r3)
-/* 80062FFC 0005FF3C  C0 02 86 E0 */	lfs f0, $$2275@sda21(r2)
+/* 80062FFC 0005FF3C  C0 02 86 E0 */	lfs f0, "@275"@sda21(r2)
 /* 80063000 0005FF40  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 80063004 0005FF44  90 03 00 14 */	stw r0, 0x14(r3)
 /* 80063008 0005FF48  90 03 00 18 */	stw r0, 0x18(r3)
@@ -733,13 +733,13 @@ lbl_80063320:
 resetFader__Q38JASystem10HardStream8TControlFv:
 /* 80063334 00060274  38 00 00 00 */	li r0, 0
 /* 80063338 00060278  90 03 00 14 */	stw r0, 0x14(r3)
-/* 8006333C 0006027C  C0 02 86 E0 */	lfs f0, $$2275@sda21(r2)
+/* 8006333C 0006027C  C0 02 86 E0 */	lfs f0, "@275"@sda21(r2)
 /* 80063340 00060280  D0 03 00 20 */	stfs f0, 0x20(r3)
 /* 80063344 00060284  90 03 00 38 */	stw r0, 0x38(r3)
 /* 80063348 00060288  90 03 00 18 */	stw r0, 0x18(r3)
 /* 8006334C 0006028C  D0 03 00 24 */	stfs f0, 0x24(r3)
 /* 80063350 00060290  90 03 00 3C */	stw r0, 0x3c(r3)
-/* 80063354 00060294  C0 02 86 E4 */	lfs f0, $$2621@sda21(r2)
+/* 80063354 00060294  C0 02 86 E4 */	lfs f0, "@621"@sda21(r2)
 /* 80063358 00060298  D0 03 00 30 */	stfs f0, 0x30(r3)
 /* 8006335C 0006029C  D0 03 00 2C */	stfs f0, 0x2c(r3)
 /* 80063360 000602A0  D0 03 00 28 */	stfs f0, 0x28(r3)
@@ -767,7 +767,7 @@ getCurVol__Q38JASystem10HardStream8TControlFv:
 .global calcCurVolume__Q38JASystem10HardStream8TControlFv
 calcCurVolume__Q38JASystem10HardStream8TControlFv:
 /* 800633A8 000602E8  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 800633AC 000602EC  C0 02 86 E4 */	lfs f0, $$2621@sda21(r2)
+/* 800633AC 000602EC  C0 02 86 E4 */	lfs f0, "@621"@sda21(r2)
 /* 800633B0 000602F0  80 83 00 14 */	lwz r4, 0x14(r3)
 /* 800633B4 000602F4  FC C0 00 90 */	fmr f6, f0
 /* 800633B8 000602F8  FC A0 00 90 */	fmr f5, f0
@@ -778,7 +778,7 @@ calcCurVolume__Q38JASystem10HardStream8TControlFv:
 /* 800633CC 0006030C  40 82 00 24 */	bne lbl_800633F0
 /* 800633D0 00060310  90 81 00 14 */	stw r4, 0x14(r1)
 /* 800633D4 00060314  3C 00 43 30 */	lis r0, 0x4330
-/* 800633D8 00060318  C8 42 86 E8 */	lfd f2, $$2738@sda21(r2)
+/* 800633D8 00060318  C8 42 86 E8 */	lfd f2, "@738"@sda21(r2)
 /* 800633DC 0006031C  90 01 00 10 */	stw r0, 0x10(r1)
 /* 800633E0 00060320  C8 21 00 10 */	lfd f1, 0x10(r1)
 /* 800633E4 00060324  EC 21 10 28 */	fsubs f1, f1, f2
@@ -787,11 +787,11 @@ calcCurVolume__Q38JASystem10HardStream8TControlFv:
 lbl_800633F0:
 /* 800633F0 00060330  80 83 00 38 */	lwz r4, 0x38(r3)
 /* 800633F4 00060334  3C 00 43 30 */	lis r0, 0x4330
-/* 800633F8 00060338  C8 62 86 E8 */	lfd f3, $$2738@sda21(r2)
+/* 800633F8 00060338  C8 62 86 E8 */	lfd f3, "@738"@sda21(r2)
 /* 800633FC 0006033C  90 81 00 14 */	stw r4, 0x14(r1)
 /* 80063400 00060340  C0 83 00 20 */	lfs f4, 0x20(r3)
 /* 80063404 00060344  90 01 00 10 */	stw r0, 0x10(r1)
-/* 80063408 00060348  C0 22 86 E4 */	lfs f1, $$2621@sda21(r2)
+/* 80063408 00060348  C0 22 86 E4 */	lfs f1, "@621"@sda21(r2)
 /* 8006340C 0006034C  C8 41 00 10 */	lfd f2, 0x10(r1)
 /* 80063410 00060350  EC 42 18 28 */	fsubs f2, f2, f3
 /* 80063414 00060354  EC 44 00 B2 */	fmuls f2, f4, f2
@@ -802,7 +802,7 @@ lbl_800633F0:
 /* 80063428 00060368  38 00 00 00 */	li r0, 0
 /* 8006342C 0006036C  FC C0 08 90 */	fmr f6, f1
 /* 80063430 00060370  90 03 00 14 */	stw r0, 0x14(r3)
-/* 80063434 00060374  C0 22 86 E0 */	lfs f1, $$2275@sda21(r2)
+/* 80063434 00060374  C0 22 86 E0 */	lfs f1, "@275"@sda21(r2)
 /* 80063438 00060378  D0 23 00 20 */	stfs f1, 0x20(r3)
 /* 8006343C 0006037C  90 03 00 38 */	stw r0, 0x38(r3)
 /* 80063440 00060380  48 00 00 0C */	b lbl_8006344C
@@ -818,9 +818,9 @@ lbl_8006344C:
 /* 80063460 000603A0  40 82 00 28 */	bne lbl_80063488
 /* 80063464 000603A4  90 81 00 14 */	stw r4, 0x14(r1)
 /* 80063468 000603A8  3C 00 43 30 */	lis r0, 0x4330
-/* 8006346C 000603AC  C8 42 86 E8 */	lfd f2, $$2738@sda21(r2)
+/* 8006346C 000603AC  C8 42 86 E8 */	lfd f2, "@738"@sda21(r2)
 /* 80063470 000603B0  90 01 00 10 */	stw r0, 0x10(r1)
-/* 80063474 000603B4  C0 62 86 E4 */	lfs f3, $$2621@sda21(r2)
+/* 80063474 000603B4  C0 62 86 E4 */	lfs f3, "@621"@sda21(r2)
 /* 80063478 000603B8  C8 21 00 10 */	lfd f1, 0x10(r1)
 /* 8006347C 000603BC  EC 21 10 28 */	fsubs f1, f1, f2
 /* 80063480 000603C0  EC 23 08 24 */	fdivs f1, f3, f1
@@ -828,13 +828,13 @@ lbl_8006344C:
 lbl_80063488:
 /* 80063488 000603C8  80 83 00 3C */	lwz r4, 0x3c(r3)
 /* 8006348C 000603CC  3C 00 43 30 */	lis r0, 0x4330
-/* 80063490 000603D0  C8 82 86 E8 */	lfd f4, $$2738@sda21(r2)
+/* 80063490 000603D0  C8 82 86 E8 */	lfd f4, "@738"@sda21(r2)
 /* 80063494 000603D4  90 81 00 14 */	stw r4, 0x14(r1)
 /* 80063498 000603D8  C0 A3 00 24 */	lfs f5, 0x24(r3)
 /* 8006349C 000603DC  90 01 00 10 */	stw r0, 0x10(r1)
-/* 800634A0 000603E0  C0 42 86 E4 */	lfs f2, $$2621@sda21(r2)
+/* 800634A0 000603E0  C0 42 86 E4 */	lfs f2, "@621"@sda21(r2)
 /* 800634A4 000603E4  C8 61 00 10 */	lfd f3, 0x10(r1)
-/* 800634A8 000603E8  C0 22 86 E0 */	lfs f1, $$2275@sda21(r2)
+/* 800634A8 000603E8  C0 22 86 E0 */	lfs f1, "@275"@sda21(r2)
 /* 800634AC 000603EC  EC 63 20 28 */	fsubs f3, f3, f4
 /* 800634B0 000603F0  EC 65 10 FC */	fnmsubs f3, f5, f3, f2
 /* 800634B4 000603F4  FC 03 08 40 */	fcmpo cr0, f3, f1
@@ -893,7 +893,7 @@ lbl_80063558:
 /* 80063578 000604B8  C0 83 00 28 */	lfs f4, 0x28(r3)
 /* 8006357C 000604BC  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80063580 000604C0  C0 63 00 30 */	lfs f3, 0x30(r3)
-/* 80063584 000604C4  C8 42 86 E8 */	lfd f2, $$2738@sda21(r2)
+/* 80063584 000604C4  C8 42 86 E8 */	lfd f2, "@738"@sda21(r2)
 /* 80063588 000604C8  C8 21 00 10 */	lfd f1, 0x10(r1)
 /* 8006358C 000604CC  EC 64 18 28 */	fsubs f3, f4, f3
 /* 80063590 000604D0  EC 21 10 28 */	fsubs f1, f1, f2
@@ -904,7 +904,7 @@ lbl_8006359C:
 /* 800635A0 000604E0  3C 80 43 30 */	lis r4, 0x4330
 /* 800635A4 000604E4  80 03 00 1C */	lwz r0, 0x1c(r3)
 /* 800635A8 000604E8  90 A1 00 14 */	stw r5, 0x14(r1)
-/* 800635AC 000604EC  C8 62 86 E8 */	lfd f3, $$2738@sda21(r2)
+/* 800635AC 000604EC  C8 62 86 E8 */	lfd f3, "@738"@sda21(r2)
 /* 800635B0 000604F0  7C 05 00 40 */	cmplw r5, r0
 /* 800635B4 000604F4  90 81 00 10 */	stw r4, 0x10(r1)
 /* 800635B8 000604F8  C0 83 00 34 */	lfs f4, 0x34(r3)
@@ -920,7 +920,7 @@ lbl_8006359C:
 /* 800635E0 00060520  C0 23 00 30 */	lfs f1, 0x30(r3)
 /* 800635E4 00060524  D0 23 00 28 */	stfs f1, 0x28(r3)
 /* 800635E8 00060528  90 03 00 1C */	stw r0, 0x1c(r3)
-/* 800635EC 0006052C  C0 22 86 E0 */	lfs f1, $$2275@sda21(r2)
+/* 800635EC 0006052C  C0 22 86 E0 */	lfs f1, "@275"@sda21(r2)
 /* 800635F0 00060530  D0 23 00 34 */	stfs f1, 0x34(r3)
 /* 800635F4 00060534  90 03 00 40 */	stw r0, 0x40(r3)
 /* 800635F8 00060538  48 00 00 0C */	b lbl_80063604
@@ -943,17 +943,17 @@ lbl_80063608:
 .global volFloatToU8__Q38JASystem10HardStream8TControlFf
 volFloatToU8__Q38JASystem10HardStream8TControlFf:
 /* 8006362C 0006056C  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 80063630 00060570  C0 02 86 E4 */	lfs f0, $$2621@sda21(r2)
+/* 80063630 00060570  C0 02 86 E4 */	lfs f0, "@621"@sda21(r2)
 /* 80063634 00060574  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80063638 00060578  40 81 00 08 */	ble lbl_80063640
 /* 8006363C 0006057C  FC 20 00 90 */	fmr f1, f0
 lbl_80063640:
-/* 80063640 00060580  C0 02 86 E0 */	lfs f0, $$2275@sda21(r2)
+/* 80063640 00060580  C0 02 86 E0 */	lfs f0, "@275"@sda21(r2)
 /* 80063644 00060584  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80063648 00060588  40 80 00 08 */	bge lbl_80063650
 /* 8006364C 0006058C  FC 20 00 90 */	fmr f1, f0
 lbl_80063650:
-/* 80063650 00060590  C0 02 86 F0 */	lfs f0, $$2754@sda21(r2)
+/* 80063650 00060590  C0 02 86 F0 */	lfs f0, "@754"@sda21(r2)
 /* 80063654 00060594  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80063658 00060598  FC 00 00 1E */	fctiwz f0, f0
 /* 8006365C 0006059C  D8 01 00 18 */	stfd f0, 0x18(r1)
@@ -970,9 +970,9 @@ __sinit_JASHardStream_cpp:
 /* 8006367C 000605BC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80063680 000605C0  4B FF F9 5D */	bl __ct__Q38JASystem10HardStream8TControlFv
 /* 80063684 000605C4  3C 80 80 06 */	lis r4, __dt__Q38JASystem10HardStream8TControlFv@ha
-/* 80063688 000605C8  3C A0 80 3E */	lis r5, $$2245@ha
+/* 80063688 000605C8  3C A0 80 3E */	lis r5, "@245"@ha
 /* 8006368C 000605CC  38 84 36 A8 */	addi r4, r4, __dt__Q38JASystem10HardStream8TControlFv@l
-/* 80063690 000605D0  38 A5 66 28 */	addi r5, r5, $$2245@l
+/* 80063690 000605D0  38 A5 66 28 */	addi r5, r5, "@245"@l
 /* 80063694 000605D4  48 01 F0 95 */	bl __register_global_object
 /* 80063698 000605D8  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8006369C 000605DC  38 21 00 08 */	addi r1, r1, 8
@@ -1013,7 +1013,7 @@ rootDir__Q28JASystem10HardStream:
   .4byte 0
   .4byte 0
   .4byte 0
-$$2550:
+"@550":
     .4byte lbl_80062D9C
     .4byte lbl_800629CC
     .4byte lbl_80062A6C
@@ -1028,17 +1028,17 @@ playListMax__Q28JASystem10HardStream:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2275:
+"@275":
   .4byte 0
-$$2621:
+"@621":
 	.incbin "baserom.dol", 0x3E43E4, 0x4
-$$2738:
+"@738":
 	.incbin "baserom.dol", 0x3E43E8, 0x8
-$$2754:
+"@754":
 	.incbin "baserom.dol", 0x3E43F0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2245:
+"@245":
 	.skip 0xC
 strCtrl__Q28JASystem10HardStream:
 	.skip 0x50

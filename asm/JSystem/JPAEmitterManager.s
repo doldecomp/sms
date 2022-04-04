@@ -20,13 +20,13 @@ __ct__17JPAEmitterManagerFP18JPAResourceManagerlllP7JKRHeap:
 /* 8006F420 0006C360  4B F9 F8 15 */	bl initiate__10JSUPtrListFv
 /* 8006F424 0006C364  38 7A 00 28 */	addi r3, r26, 0x28
 /* 8006F428 0006C368  4B F9 F8 0D */	bl initiate__10JSUPtrListFv
-/* 8006F42C 0006C36C  C0 02 87 F8 */	lfs f0, $$21786@sda21(r2)
-/* 8006F430 0006C370  3C 80 80 07 */	lis r4, __ct__25JSUList$$014JPABaseEmitter$$1Fv@ha
-/* 8006F434 0006C374  3C 60 80 07 */	lis r3, __dt__25JSUList$$014JPABaseEmitter$$1Fv@ha
+/* 8006F42C 0006C36C  C0 02 87 F8 */	lfs f0, "@1786"@sda21(r2)
+/* 8006F430 0006C370  3C 80 80 07 */	lis r4, "__ct__25JSUList<14JPABaseEmitter>Fv"@ha
+/* 8006F434 0006C374  3C 60 80 07 */	lis r3, "__dt__25JSUList<14JPABaseEmitter>Fv"@ha
 /* 8006F438 0006C378  D0 1A 00 3C */	stfs f0, 0x3c(r26)
-/* 8006F43C 0006C37C  38 A3 F6 F0 */	addi r5, r3, __dt__25JSUList$$014JPABaseEmitter$$1Fv@l
-/* 8006F440 0006C380  38 84 F6 C0 */	addi r4, r4, __ct__25JSUList$$014JPABaseEmitter$$1Fv@l
-/* 8006F444 0006C384  C0 02 87 FC */	lfs f0, $$21787@sda21(r2)
+/* 8006F43C 0006C37C  38 A3 F6 F0 */	addi r5, r3, "__dt__25JSUList<14JPABaseEmitter>Fv"@l
+/* 8006F440 0006C380  38 84 F6 C0 */	addi r4, r4, "__ct__25JSUList<14JPABaseEmitter>Fv"@l
+/* 8006F444 0006C384  C0 02 87 FC */	lfs f0, "@1787"@sda21(r2)
 /* 8006F448 0006C388  38 7A 00 44 */	addi r3, r26, 0x44
 /* 8006F44C 0006C38C  38 C0 00 0C */	li r6, 0xc
 /* 8006F450 0006C390  D0 1A 00 40 */	stfs f0, 0x40(r26)
@@ -200,8 +200,8 @@ lbl_8006F61C:
 /* 8006F6B8 0006C5F8  7C 08 03 A6 */	mtlr r0
 /* 8006F6BC 0006C5FC  4E 80 00 20 */	blr 
 
-.global __ct__25JSUList$$014JPABaseEmitter$$1Fv
-__ct__25JSUList$$014JPABaseEmitter$$1Fv:
+.global "__ct__25JSUList<14JPABaseEmitter>Fv"
+"__ct__25JSUList<14JPABaseEmitter>Fv":
 /* 8006F6C0 0006C600  7C 08 02 A6 */	mflr r0
 /* 8006F6C4 0006C604  90 01 00 04 */	stw r0, 4(r1)
 /* 8006F6C8 0006C608  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -215,8 +215,8 @@ __ct__25JSUList$$014JPABaseEmitter$$1Fv:
 /* 8006F6E8 0006C628  7C 08 03 A6 */	mtlr r0
 /* 8006F6EC 0006C62C  4E 80 00 20 */	blr 
 
-.global __dt__25JSUList$$014JPABaseEmitter$$1Fv
-__dt__25JSUList$$014JPABaseEmitter$$1Fv:
+.global "__dt__25JSUList<14JPABaseEmitter>Fv"
+"__dt__25JSUList<14JPABaseEmitter>Fv":
 /* 8006F6F0 0006C630  7C 08 02 A6 */	mflr r0
 /* 8006F6F4 0006C634  90 01 00 04 */	stw r0, 4(r1)
 /* 8006F6F8 0006C638  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -291,7 +291,7 @@ lbl_8006F7DC:
 /* 8006F7EC 0006C72C  EC 01 00 2A */	fadds f0, f1, f0
 /* 8006F7F0 0006C730  D0 1D 00 3C */	stfs f0, 0x3c(r29)
 /* 8006F7F4 0006C734  C0 3D 00 3C */	lfs f1, 0x3c(r29)
-/* 8006F7F8 0006C738  C0 02 87 F8 */	lfs f0, $$21786@sda21(r2)
+/* 8006F7F8 0006C738  C0 02 87 F8 */	lfs f0, "@1786"@sda21(r2)
 /* 8006F7FC 0006C73C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8006F800 0006C740  40 80 00 08 */	bge lbl_8006F808
 /* 8006F804 0006C744  D0 1D 00 3C */	stfs f0, 0x3c(r29)
@@ -447,8 +447,8 @@ lbl_8006F9E4:
 /* 8006F9FC 0006C93C  38 21 00 70 */	addi r1, r1, 0x70
 /* 8006FA00 0006C940  4E 80 00 20 */	blr 
 
-.global createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
-createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
+.global "createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
+"createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>":
 /* 8006FA04 0006C944  7C 08 02 A6 */	mflr r0
 /* 8006FA08 0006C948  90 01 00 04 */	stw r0, 4(r1)
 /* 8006FA0C 0006C94C  54 A0 06 3E */	clrlwi r0, r5, 0x18
@@ -568,8 +568,8 @@ lbl_8006FB9C:
 /* 8006FBA8 0006CAE8  7C 08 03 A6 */	mtlr r0
 /* 8006FBAC 0006CAEC  4E 80 00 20 */	blr 
 
-.global createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
-createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
+.global "createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3<f>lUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
+"createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3<f>lUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>":
 /* 8006FBB0 0006CAF0  7C 08 02 A6 */	mflr r0
 /* 8006FBB4 0006CAF4  90 01 00 04 */	stw r0, 4(r1)
 /* 8006FBB8 0006CAF8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -580,7 +580,7 @@ createSimpleEmitterID__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lUcUcP34JP
 /* 8006FBCC 0006CB0C  38 C7 00 00 */	addi r6, r7, 0
 /* 8006FBD0 0006CB10  38 E8 00 00 */	addi r7, r8, 0
 /* 8006FBD4 0006CB14  39 09 00 00 */	addi r8, r9, 0
-/* 8006FBD8 0006CB18  4B FF FE 2D */	bl createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
+/* 8006FBD8 0006CB18  4B FF FE 2D */	bl "createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
 /* 8006FBDC 0006CB1C  28 03 00 00 */	cmplwi r3, 0
 /* 8006FBE0 0006CB20  41 82 00 20 */	beq lbl_8006FC00
 /* 8006FBE4 0006CB24  C0 1F 00 00 */	lfs f0, 0(r31)
@@ -599,8 +599,8 @@ lbl_8006FC04:
 /* 8006FC10 0006CB50  7C 08 03 A6 */	mtlr r0
 /* 8006FC14 0006CB54  4E 80 00 20 */	blr 
 
-.global createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
-createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
+.global "createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3<f>lP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
+"createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3<f>lP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>":
 /* 8006FC18 0006CB58  7C 08 02 A6 */	mflr r0
 /* 8006FC1C 0006CB5C  39 07 00 00 */	addi r8, r7, 0
 /* 8006FC20 0006CB60  90 01 00 04 */	stw r0, 4(r1)
@@ -613,7 +613,7 @@ createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lP34JPACallBackBas
 /* 8006FC3C 0006CB7C  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 8006FC40 0006CB80  3B C3 00 00 */	addi r30, r3, 0
 /* 8006FC44 0006CB84  38 A0 00 00 */	li r5, 0
-/* 8006FC48 0006CB88  4B FF FD BD */	bl createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
+/* 8006FC48 0006CB88  4B FF FD BD */	bl "createEmitterBase__17JPAEmitterManagerFlUcUcP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
 /* 8006FC4C 0006CB8C  28 03 00 00 */	cmplwi r3, 0
 /* 8006FC50 0006CB90  41 82 00 24 */	beq lbl_8006FC74
 /* 8006FC54 0006CB94  C0 1F 00 00 */	lfs f0, 0(r31)
@@ -703,7 +703,7 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21786:
+"@1786":
   .4byte 0
-$$21787:
+"@1787":
 	.incbin "baserom.dol", 0x3E44FC, 0x4

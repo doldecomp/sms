@@ -104,11 +104,11 @@ lbl_8023DED0:
 /* 8023DEE0 0023AE20  38 63 00 01 */	addi r3, r3, 1
 /* 8023DEE4 0023AE24  90 7C 01 28 */	stw r3, 0x128(r28)
 /* 8023DEE8 0023AE28  80 7C 01 28 */	lwz r3, 0x128(r28)
-/* 8023DEEC 0023AE2C  C8 62 DA 50 */	lfd f3, $$21688@sda21(r2)
+/* 8023DEEC 0023AE2C  C8 62 DA 50 */	lfd f3, "@1688"@sda21(r2)
 /* 8023DEF0 0023AE30  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8023DEF4 0023AE34  C0 3C 01 2C */	lfs f1, 0x12c(r28)
 /* 8023DEF8 0023AE38  90 61 01 E4 */	stw r3, 0x1e4(r1)
-/* 8023DEFC 0023AE3C  C0 02 DA 48 */	lfs f0, $$21684@sda21(r2)
+/* 8023DEFC 0023AE3C  C0 02 DA 48 */	lfs f0, "@1684"@sda21(r2)
 /* 8023DF00 0023AE40  90 01 01 E0 */	stw r0, 0x1e0(r1)
 /* 8023DF04 0023AE44  C8 41 01 E0 */	lfd f2, 0x1e0(r1)
 /* 8023DF08 0023AE48  EC 42 18 28 */	fsubs f2, f2, f3
@@ -119,9 +119,9 @@ lbl_8023DF18:
 /* 8023DF18 0023AE58  88 1C 00 14 */	lbz r0, 0x14(r28)
 /* 8023DF1C 0023AE5C  28 00 00 00 */	cmplwi r0, 0
 /* 8023DF20 0023AE60  40 82 00 28 */	bne lbl_8023DF48
-/* 8023DF24 0023AE64  3C 60 80 39 */	lis r3, $$21685@ha
+/* 8023DF24 0023AE64  3C 60 80 39 */	lis r3, "@1685"@ha
 /* 8023DF28 0023AE68  4C C6 31 82 */	crclr 6
-/* 8023DF2C 0023AE6C  38 A3 44 50 */	addi r5, r3, $$21685@l
+/* 8023DF2C 0023AE6C  38 A3 44 50 */	addi r5, r3, "@1685"@l
 /* 8023DF30 0023AE70  38 7C 00 1C */	addi r3, r28, 0x1c
 /* 8023DF34 0023AE74  38 80 01 00 */	li r4, 0x100
 /* 8023DF38 0023AE78  4B E4 61 8D */	bl snprintf
@@ -129,9 +129,9 @@ lbl_8023DF18:
 /* 8023DF40 0023AE80  4B E5 47 ED */	bl OSSetProgressiveMode
 /* 8023DF44 0023AE84  48 00 00 24 */	b lbl_8023DF68
 lbl_8023DF48:
-/* 8023DF48 0023AE88  3C 60 80 39 */	lis r3, $$21686@ha
+/* 8023DF48 0023AE88  3C 60 80 39 */	lis r3, "@1686"@ha
 /* 8023DF4C 0023AE8C  4C C6 31 82 */	crclr 6
-/* 8023DF50 0023AE90  38 A3 44 C4 */	addi r5, r3, $$21686@l
+/* 8023DF50 0023AE90  38 A3 44 C4 */	addi r5, r3, "@1686"@l
 /* 8023DF54 0023AE94  38 7C 00 1C */	addi r3, r28, 0x1c
 /* 8023DF58 0023AE98  38 80 01 00 */	li r4, 0x100
 /* 8023DF5C 0023AE9C  4B E4 61 69 */	bl snprintf
@@ -281,8 +281,8 @@ __ct__11TProgSelectFUcPCc:
 /* 8023E178 0023B0B8  9B FE 00 16 */	stb r31, 0x16(r30)
 /* 8023E17C 0023B0BC  4B EB D4 D1 */	bl SMSGetVSyncTimesPerSec__Fv
 /* 8023E180 0023B0C0  93 FE 01 28 */	stw r31, 0x128(r30)
-/* 8023E184 0023B0C4  3C 60 80 39 */	lis r3, $$21734@ha
-/* 8023E188 0023B0C8  38 A3 45 38 */	addi r5, r3, $$21734@l
+/* 8023E184 0023B0C4  3C 60 80 39 */	lis r3, "@1734"@ha
+/* 8023E188 0023B0C8  38 A3 45 38 */	addi r5, r3, "@1734"@l
 /* 8023E18C 0023B0CC  4C C6 31 82 */	crclr 6
 /* 8023E190 0023B0D0  D0 3E 01 2C */	stfs f1, 0x12c(r30)
 /* 8023E194 0023B0D4  38 7E 00 1C */	addi r3, r30, 0x1c
@@ -294,7 +294,7 @@ __ct__11TProgSelectFUcPCc:
 /* 8023E1AC 0023B0EC  41 82 00 18 */	beq lbl_8023E1C4
 /* 8023E1B0 0023B0F0  80 8D 97 F8 */	lwz r4, gpSystemFont@sda21(r13)
 /* 8023E1B4 0023B0F4  38 7D 00 00 */	addi r3, r29, 0
-/* 8023E1B8 0023B0F8  38 A2 DA 58 */	addi r5, r2, $$21735@sda21
+/* 8023E1B8 0023B0F8  38 A2 DA 58 */	addi r5, r2, "@1735"@sda21
 /* 8023E1BC 0023B0FC  80 84 00 48 */	lwz r4, 0x48(r4)
 /* 8023E1C0 0023B100  4B DD B1 F1 */	bl __ct__10J2DTextBoxFPC7ResFONTPCc
 lbl_8023E1C4:
@@ -306,7 +306,7 @@ lbl_8023E1C4:
 /* 8023E1D8 0023B118  41 82 00 18 */	beq lbl_8023E1F0
 /* 8023E1DC 0023B11C  80 8D 97 F8 */	lwz r4, gpSystemFont@sda21(r13)
 /* 8023E1E0 0023B120  38 7D 00 00 */	addi r3, r29, 0
-/* 8023E1E4 0023B124  38 A2 DA 60 */	addi r5, r2, $$21736@sda21
+/* 8023E1E4 0023B124  38 A2 DA 60 */	addi r5, r2, "@1736"@sda21
 /* 8023E1E8 0023B128  80 84 00 48 */	lwz r4, 0x48(r4)
 /* 8023E1EC 0023B12C  4B DD B1 C5 */	bl __ct__10J2DTextBoxFPC7ResFONTPCc
 lbl_8023E1F0:
@@ -382,11 +382,11 @@ lbl_8023E2DC:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21685:
+"@1685":
 	.incbin "baserom.dol", 0x391450, 0x74
-$$21686:
+"@1686":
 	.incbin "baserom.dol", 0x3914C4, 0x74
-$$21734:
+"@1734":
 	.incbin "baserom.dol", 0x391538, 0x28
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -405,11 +405,11 @@ __vt__11TProgSelect:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21684:
+"@1684":
 	.incbin "baserom.dol", 0x3E9748, 0x8
-$$21688:
+"@1688":
 	.incbin "baserom.dol", 0x3E9750, 0x8
-$$21735:
+"@1735":
 	.incbin "baserom.dol", 0x3E9758, 0x8
-$$21736:
+"@1736":
 	.incbin "baserom.dol", 0x3E9760, 0x8

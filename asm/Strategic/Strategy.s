@@ -362,7 +362,7 @@ loadSuper__12TIdxGroupObjFR20JSUMemoryInputStream:
 /* 8011CF5C 00119E9C  3B E4 00 00 */	addi r31, r4, 0
 /* 8011CF60 00119EA0  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8011CF64 00119EA4  3B C3 00 00 */	addi r30, r3, 0
-/* 8011CF68 00119EA8  4B FD 70 95 */	bl loadSuper__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+/* 8011CF68 00119EA8  4B FD 70 95 */	bl "loadSuper__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
 /* 8011CF6C 00119EAC  38 7F 00 00 */	addi r3, r31, 0
 /* 8011CF70 00119EB0  38 9E 00 20 */	addi r4, r30, 0x20
 /* 8011CF74 00119EB4  38 A0 00 04 */	li r5, 4
@@ -388,8 +388,8 @@ __dt__12TIdxGroupObjFv:
 /* 8011CFB8 00119EF8  38 03 53 24 */	addi r0, r3, __vt__12TIdxGroupObj@l
 /* 8011CFBC 00119EFC  90 1E 00 00 */	stw r0, 0(r30)
 /* 8011CFC0 00119F00  41 82 00 44 */	beq lbl_8011D004
-/* 8011CFC4 00119F04  3C 60 80 3B */	lis r3, __vt__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1@ha
-/* 8011CFC8 00119F08  38 63 3E 4C */	addi r3, r3, __vt__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1@l
+/* 8011CFC4 00119F04  3C 60 80 3B */	lis r3, "__vt__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>"@ha
+/* 8011CFC8 00119F08  38 63 3E 4C */	addi r3, r3, "__vt__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>"@l
 /* 8011CFCC 00119F0C  34 1E 00 10 */	addic. r0, r30, 0x10
 /* 8011CFD0 00119F10  90 7E 00 00 */	stw r3, 0(r30)
 /* 8011CFD4 00119F14  41 82 00 10 */	beq lbl_8011CFE4
@@ -437,13 +437,13 @@ __vt__12TIdxGroupObj:
   .4byte 0
   .4byte __dt__12TIdxGroupObjFv
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte "load__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
-  .4byte searchF__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUsPCc
-  .4byte perform__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+  .4byte "loadAfter__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>Fv"
+  .4byte "searchF__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>FUsPCc"
+  .4byte "perform__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
   .4byte loadSuper__12TIdxGroupObjFR20JSUMemoryInputStream
-  .4byte loadAfterSuper__Q26JDrama47TViewObjPtrListT$$09THitActor$$4Q26JDrama8TViewObj$$1Fv
+  .4byte "loadAfterSuper__Q26JDrama47TViewObjPtrListT<9THitActor,Q26JDrama8TViewObj>Fv"
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpStrategy

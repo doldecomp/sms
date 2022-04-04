@@ -4,9 +4,9 @@
 .global updateDSP__Q28JASystem6DSPBufFv
 updateDSP__Q28JASystem6DSPBufFv:
 /* 8005EA38 0005B978  7C 08 02 A6 */	mflr r0
-/* 8005EA3C 0005B97C  3C 60 80 37 */	lis r3, $$2119@ha
+/* 8005EA3C 0005B97C  3C 60 80 37 */	lis r3, "@119"@ha
 /* 8005EA40 0005B980  90 01 00 04 */	stw r0, 4(r1)
-/* 8005EA44 0005B984  38 83 12 70 */	addi r4, r3, $$2119@l
+/* 8005EA44 0005B984  38 83 12 70 */	addi r4, r3, "@119"@l
 /* 8005EA48 0005B988  38 60 00 03 */	li r3, 3
 /* 8005EA4C 0005B98C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8005EA50 0005B990  80 AD 91 0C */	lwz r5, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
@@ -164,8 +164,8 @@ lbl_8005EC64:
 /* 8005EC64 0005BBA4  80 6D 81 F4 */	lwz r3, gSubFrames__Q28JASystem6Kernel@sda21(r13)
 /* 8005EC68 0005BBA8  98 8D 91 08 */	stb r4, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005EC6C 0005BBAC  4B FF CD 4D */	bl setDSPSyncCount__Q28JASystem11AudioThreadFUl
-/* 8005EC70 0005BBB0  3C 60 80 37 */	lis r3, $$2211@ha
-/* 8005EC74 0005BBB4  38 83 12 7C */	addi r4, r3, $$2211@l
+/* 8005EC70 0005BBB0  3C 60 80 37 */	lis r3, "@211"@ha
+/* 8005EC74 0005BBB4  38 83 12 7C */	addi r4, r3, "@211"@l
 /* 8005EC78 0005BBB8  38 60 00 07 */	li r3, 7
 /* 8005EC7C 0005BBBC  48 00 51 51 */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005EC80 0005BBC0  88 8D 91 08 */	lbz r4, write_buffer__Q28JASystem6DSPBuf@sda21(r13)
@@ -178,10 +178,10 @@ lbl_8005EC64:
 /* 8005EC9C 0005BBDC  80 8D 91 0C */	lwz r4, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
 /* 8005ECA0 0005BBE0  38 00 00 01 */	li r0, 1
 /* 8005ECA4 0005BBE4  98 0D 91 0A */	stb r0, dspstatus__Q28JASystem6DSPBuf@sda21(r13)
-/* 8005ECA8 0005BBE8  3C 60 80 37 */	lis r3, $$2119@ha
+/* 8005ECA8 0005BBE8  3C 60 80 37 */	lis r3, "@119"@ha
 /* 8005ECAC 0005BBEC  38 04 00 01 */	addi r0, r4, 1
 /* 8005ECB0 0005BBF0  90 0D 91 0C */	stw r0, dac_sync_counter__Q28JASystem6DSPBuf@sda21(r13)
-/* 8005ECB4 0005BBF4  38 83 12 70 */	addi r4, r3, $$2119@l
+/* 8005ECB4 0005BBF4  38 83 12 70 */	addi r4, r3, "@119"@l
 /* 8005ECB8 0005BBF8  38 60 00 03 */	li r3, 3
 /* 8005ECBC 0005BBFC  48 00 51 11 */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005ECC0 0005BC00  48 00 0B 41 */	bl invalChannelAll__Q28JASystem12DSPInterfaceFv
@@ -359,9 +359,9 @@ lbl_8005EF24:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2119:
+"@119":
 	.incbin "baserom.dol", 0x36E270, 0xC
-$$2211:
+"@211":
 	.incbin "baserom.dol", 0x36E27C, 0xC
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

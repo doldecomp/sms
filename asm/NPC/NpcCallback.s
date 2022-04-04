@@ -67,7 +67,7 @@ lbl_8016D060:
 /* 8016D060 00169FA0  57 A0 06 3F */	clrlwi. r0, r29, 0x18
 /* 8016D064 00169FA4  41 82 01 98 */	beq lbl_8016D1FC
 /* 8016D068 00169FA8  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
-/* 8016D06C 00169FAC  C0 02 A6 38 */	lfs f0, $$22197@sda21(r2)
+/* 8016D06C 00169FAC  C0 02 A6 38 */	lfs f0, "@2197"@sda21(r2)
 /* 8016D070 00169FB0  80 64 00 00 */	lwz r3, 0(r4)
 /* 8016D074 00169FB4  80 04 00 04 */	lwz r0, 4(r4)
 /* 8016D078 00169FB8  90 61 01 3C */	stw r3, 0x13c(r1)
@@ -95,7 +95,7 @@ lbl_8016D060:
 /* 8016D0D0 0016A010  EC 41 00 72 */	fmuls f2, f1, f1
 /* 8016D0D4 0016A014  EC 63 00 F2 */	fmuls f3, f3, f3
 /* 8016D0D8 0016A018  EC 20 00 32 */	fmuls f1, f0, f0
-/* 8016D0DC 0016A01C  C0 02 A6 3C */	lfs f0, $$22198@sda21(r2)
+/* 8016D0DC 0016A01C  C0 02 A6 3C */	lfs f0, "@2198"@sda21(r2)
 /* 8016D0E0 0016A020  EC 22 08 2A */	fadds f1, f2, f1
 /* 8016D0E4 0016A024  EF C3 08 2A */	fadds f30, f3, f1
 /* 8016D0E8 0016A028  FC 1E 00 40 */	fcmpo cr0, f30, f0
@@ -103,7 +103,7 @@ lbl_8016D060:
 /* 8016D0F0 0016A030  80 6D 99 28 */	lwz r3, gpCurrentNpc@sda21(r13)
 /* 8016D0F4 0016A034  80 63 02 28 */	lwz r3, 0x228(r3)
 /* 8016D0F8 0016A038  C0 23 01 E4 */	lfs f1, 0x1e4(r3)
-/* 8016D0FC 0016A03C  4B FF FB 49 */	bl CLBSquared$$0f$$1__Ff
+/* 8016D0FC 0016A03C  4B FF FB 49 */	bl "CLBSquared<f>__Ff"
 /* 8016D100 0016A040  FC 1E 08 40 */	fcmpo cr0, f30, f1
 /* 8016D104 0016A044  40 80 00 A0 */	bge lbl_8016D1A4
 /* 8016D108 0016A048  C0 1F 00 1C */	lfs f0, 0x1c(r31)
@@ -125,10 +125,10 @@ lbl_8016D060:
 /* 8016D148 0016A088  4B F5 86 B1 */	bl MsVECNormalize__FP3VecP3Vec
 /* 8016D14C 0016A08C  38 61 00 CC */	addi r3, r1, 0xcc
 /* 8016D150 0016A090  38 81 01 20 */	addi r4, r1, 0x120
-/* 8016D154 0016A094  4B F5 8E 3D */	bl MsGetRotFromZaxis__FRCQ29JGeometry8TVec3$$0f$$1
+/* 8016D154 0016A094  4B F5 8E 3D */	bl "MsGetRotFromZaxis__FRCQ29JGeometry8TVec3<f>"
 /* 8016D158 0016A098  38 61 00 D8 */	addi r3, r1, 0xd8
 /* 8016D15C 0016A09C  38 81 01 30 */	addi r4, r1, 0x130
-/* 8016D160 0016A0A0  4B F5 8E 31 */	bl MsGetRotFromZaxis__FRCQ29JGeometry8TVec3$$0f$$1
+/* 8016D160 0016A0A0  4B F5 8E 31 */	bl "MsGetRotFromZaxis__FRCQ29JGeometry8TVec3<f>"
 /* 8016D164 0016A0A4  80 A1 00 D8 */	lwz r5, 0xd8(r1)
 /* 8016D168 0016A0A8  38 61 00 78 */	addi r3, r1, 0x78
 /* 8016D16C 0016A0AC  80 01 00 DC */	lwz r0, 0xdc(r1)
@@ -137,7 +137,7 @@ lbl_8016D060:
 /* 8016D178 0016A0B8  90 01 00 7C */	stw r0, 0x7c(r1)
 /* 8016D17C 0016A0BC  80 01 00 E0 */	lwz r0, 0xe0(r1)
 /* 8016D180 0016A0C0  90 01 00 80 */	stw r0, 0x80(r1)
-/* 8016D184 0016A0C4  4B F5 4F 05 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 8016D184 0016A0C4  4B F5 4F 05 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 8016D188 0016A0C8  80 01 00 78 */	lwz r0, 0x78(r1)
 /* 8016D18C 0016A0CC  80 61 00 7C */	lwz r3, 0x7c(r1)
 /* 8016D190 0016A0D0  90 01 01 48 */	stw r0, 0x148(r1)
@@ -146,15 +146,15 @@ lbl_8016D060:
 /* 8016D19C 0016A0DC  90 01 01 50 */	stw r0, 0x150(r1)
 /* 8016D1A0 0016A0E0  48 00 00 14 */	b lbl_8016D1B4
 lbl_8016D1A4:
-/* 8016D1A4 0016A0E4  C0 02 A6 40 */	lfs f0, $$22199@sda21(r2)
+/* 8016D1A4 0016A0E4  C0 02 A6 40 */	lfs f0, "@2199"@sda21(r2)
 /* 8016D1A8 0016A0E8  D0 01 01 50 */	stfs f0, 0x150(r1)
 /* 8016D1AC 0016A0EC  D0 01 01 4C */	stfs f0, 0x14c(r1)
 /* 8016D1B0 0016A0F0  D0 01 01 48 */	stfs f0, 0x148(r1)
 lbl_8016D1B4:
 /* 8016D1B4 0016A0F4  C0 21 01 4C */	lfs f1, 0x14c(r1)
-/* 8016D1B8 0016A0F8  C0 02 A6 44 */	lfs f0, $$22200@sda21(r2)
+/* 8016D1B8 0016A0F8  C0 02 A6 44 */	lfs f0, "@2200"@sda21(r2)
 /* 8016D1BC 0016A0FC  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8016D1C0 0016A100  4B FF FA 8D */	bl CLBRoundf$$0s$$1__Ff
+/* 8016D1C0 0016A100  4B FF FA 8D */	bl "CLBRoundf<s>__Ff"
 /* 8016D1C4 0016A104  80 8D 99 28 */	lwz r4, gpCurrentNpc@sda21(r13)
 /* 8016D1C8 0016A108  80 A4 02 28 */	lwz r5, 0x228(r4)
 /* 8016D1CC 0016A10C  7C 64 07 34 */	extsh r4, r3
@@ -176,17 +176,17 @@ lbl_8016D1FC:
 /* 8016D200 0016A140  80 63 02 28 */	lwz r3, 0x228(r3)
 /* 8016D204 0016A144  38 63 03 88 */	addi r3, r3, 0x388
 /* 8016D208 0016A148  A8 63 00 00 */	lha r3, 0(r3)
-/* 8016D20C 0016A14C  48 00 03 29 */	bl CLBPalIntSpeed$$0s$$1__Fs
+/* 8016D20C 0016A14C  48 00 03 29 */	bl "CLBPalIntSpeed<s>__Fs"
 /* 8016D210 0016A150  38 A3 00 00 */	addi r5, r3, 0
 /* 8016D214 0016A154  38 9C 00 00 */	addi r4, r28, 0
 /* 8016D218 0016A158  38 61 01 54 */	addi r3, r1, 0x154
-/* 8016D21C 0016A15C  48 00 02 9D */	bl CLBChaseGeneralConstantSpecifySpeed$$0s$$1__FPsss
+/* 8016D21C 0016A15C  48 00 02 9D */	bl "CLBChaseGeneralConstantSpecifySpeed<s>__FPsss"
 /* 8016D220 0016A160  57 A0 06 3F */	clrlwi. r0, r29, 0x18
 /* 8016D224 0016A164  41 82 00 B0 */	beq lbl_8016D2D4
 /* 8016D228 0016A168  C0 21 01 48 */	lfs f1, 0x148(r1)
-/* 8016D22C 0016A16C  C0 02 A6 44 */	lfs f0, $$22200@sda21(r2)
+/* 8016D22C 0016A16C  C0 02 A6 44 */	lfs f0, "@2200"@sda21(r2)
 /* 8016D230 0016A170  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8016D234 0016A174  4B FF FA 19 */	bl CLBRoundf$$0s$$1__Ff
+/* 8016D234 0016A174  4B FF FA 19 */	bl "CLBRoundf<s>__Ff"
 /* 8016D238 0016A178  80 8D 99 28 */	lwz r4, gpCurrentNpc@sda21(r13)
 /* 8016D23C 0016A17C  7C 60 07 34 */	extsh r0, r3
 /* 8016D240 0016A180  80 C4 02 28 */	lwz r6, 0x228(r4)
@@ -213,11 +213,11 @@ lbl_8016D284:
 /* 8016D284 0016A1C4  38 66 03 60 */	addi r3, r6, 0x360
 /* 8016D288 0016A1C8  A8 63 00 00 */	lha r3, 0(r3)
 /* 8016D28C 0016A1CC  38 80 00 00 */	li r4, 0
-/* 8016D290 0016A1D0  48 00 01 CD */	bl CLBCalcRatio$$0i$$1__Fiii
+/* 8016D290 0016A1D0  48 00 01 CD */	bl "CLBCalcRatio<i>__Fiii"
 /* 8016D294 0016A1D4  7F A0 07 34 */	extsh r0, r29
-/* 8016D298 0016A1D8  C8 42 A6 50 */	lfd f2, $$22204@sda21(r2)
+/* 8016D298 0016A1D8  C8 42 A6 50 */	lfd f2, "@2204"@sda21(r2)
 /* 8016D29C 0016A1DC  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8016D2A0 0016A1E0  C0 62 A6 48 */	lfs f3, $$22201@sda21(r2)
+/* 8016D2A0 0016A1E0  C0 62 A6 48 */	lfs f3, "@2201"@sda21(r2)
 /* 8016D2A4 0016A1E4  90 01 01 6C */	stw r0, 0x16c(r1)
 /* 8016D2A8 0016A1E8  3C 00 43 30 */	lis r0, 0x4330
 /* 8016D2AC 0016A1EC  7F A4 EB 78 */	mr r4, r29
@@ -228,18 +228,18 @@ lbl_8016D284:
 /* 8016D2C0 0016A200  FC 00 00 1E */	fctiwz f0, f0
 /* 8016D2C4 0016A204  D8 01 01 60 */	stfd f0, 0x160(r1)
 /* 8016D2C8 0016A208  80 61 01 64 */	lwz r3, 0x164(r1)
-/* 8016D2CC 0016A20C  48 00 00 E1 */	bl CLBEaseOutInbetween$$0s$$1__Fssf
+/* 8016D2CC 0016A20C  48 00 00 E1 */	bl "CLBEaseOutInbetween<s>__Fssf"
 /* 8016D2D0 0016A210  7C 7E 1B 78 */	mr r30, r3
 lbl_8016D2D4:
 /* 8016D2D4 0016A214  80 6D 99 28 */	lwz r3, gpCurrentNpc@sda21(r13)
 /* 8016D2D8 0016A218  80 63 02 28 */	lwz r3, 0x228(r3)
 /* 8016D2DC 0016A21C  38 63 03 74 */	addi r3, r3, 0x374
 /* 8016D2E0 0016A220  A8 63 00 00 */	lha r3, 0(r3)
-/* 8016D2E4 0016A224  48 00 02 51 */	bl CLBPalIntSpeed$$0s$$1__Fs
+/* 8016D2E4 0016A224  48 00 02 51 */	bl "CLBPalIntSpeed<s>__Fs"
 /* 8016D2E8 0016A228  38 A3 00 00 */	addi r5, r3, 0
 /* 8016D2EC 0016A22C  38 9E 00 00 */	addi r4, r30, 0
 /* 8016D2F0 0016A230  38 61 01 56 */	addi r3, r1, 0x156
-/* 8016D2F4 0016A234  48 00 01 C5 */	bl CLBChaseGeneralConstantSpecifySpeed$$0s$$1__FPsss
+/* 8016D2F4 0016A234  48 00 01 C5 */	bl "CLBChaseGeneralConstantSpecifySpeed<s>__FPsss"
 /* 8016D2F8 0016A238  80 AD 99 28 */	lwz r5, gpCurrentNpc@sda21(r13)
 /* 8016D2FC 0016A23C  3C 80 43 30 */	lis r4, 0x4330
 /* 8016D300 0016A240  A8 C1 01 54 */	lha r6, 0x154(r1)
@@ -251,12 +251,12 @@ lbl_8016D2D4:
 /* 8016D318 0016A258  A8 A1 01 56 */	lha r5, 0x156(r1)
 /* 8016D31C 0016A25C  A8 01 01 54 */	lha r0, 0x154(r1)
 /* 8016D320 0016A260  6C A5 80 00 */	xoris r5, r5, 0x8000
-/* 8016D324 0016A264  C8 62 A6 50 */	lfd f3, $$22204@sda21(r2)
+/* 8016D324 0016A264  C8 62 A6 50 */	lfd f3, "@2204"@sda21(r2)
 /* 8016D328 0016A268  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8016D32C 0016A26C  90 A1 01 64 */	stw r5, 0x164(r1)
-/* 8016D330 0016A270  C0 82 A6 4C */	lfs f4, $$22202@sda21(r2)
+/* 8016D330 0016A270  C0 82 A6 4C */	lfs f4, "@2202"@sda21(r2)
 /* 8016D334 0016A274  90 01 01 6C */	stw r0, 0x16c(r1)
-/* 8016D338 0016A278  C0 42 A6 40 */	lfs f2, $$22199@sda21(r2)
+/* 8016D338 0016A278  C0 42 A6 40 */	lfs f2, "@2199"@sda21(r2)
 /* 8016D33C 0016A27C  90 81 01 60 */	stw r4, 0x160(r1)
 /* 8016D340 0016A280  90 81 01 68 */	stw r4, 0x168(r1)
 /* 8016D344 0016A284  C8 21 01 60 */	lfd f1, 0x160(r1)
@@ -288,8 +288,8 @@ lbl_8016D384:
 /* 8016D3A4 0016A2E4  38 21 01 90 */	addi r1, r1, 0x190
 /* 8016D3A8 0016A2E8  4E 80 00 20 */	blr 
 
-.global CLBEaseOutInbetween$$0s$$1__Fssf
-CLBEaseOutInbetween$$0s$$1__Fssf:
+.global "CLBEaseOutInbetween<s>__Fssf"
+"CLBEaseOutInbetween<s>__Fssf":
 /* 8016D3AC 0016A2EC  7C 08 02 A6 */	mflr r0
 /* 8016D3B0 0016A2F0  7C 85 07 34 */	extsh r5, r4
 /* 8016D3B4 0016A2F4  90 01 00 04 */	stw r0, 4(r1)
@@ -299,24 +299,24 @@ CLBEaseOutInbetween$$0s$$1__Fssf:
 /* 8016D3C4 0016A304  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8016D3C8 0016A308  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8016D3CC 0016A30C  3C 00 43 30 */	lis r0, 0x4330
-/* 8016D3D0 0016A310  C8 42 A6 50 */	lfd f2, $$22204@sda21(r2)
+/* 8016D3D0 0016A310  C8 42 A6 50 */	lfd f2, "@2204"@sda21(r2)
 /* 8016D3D4 0016A314  90 01 00 10 */	stw r0, 0x10(r1)
 /* 8016D3D8 0016A318  C8 01 00 10 */	lfd f0, 0x10(r1)
 /* 8016D3DC 0016A31C  EC 40 10 28 */	fsubs f2, f0, f2
-/* 8016D3E0 0016A320  48 00 00 15 */	bl CLBTwoDegreeGeneralInbetween$$0s$$1__Fssff
+/* 8016D3E0 0016A320  48 00 00 15 */	bl "CLBTwoDegreeGeneralInbetween<s>__Fssff"
 /* 8016D3E4 0016A324  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016D3E8 0016A328  38 21 00 18 */	addi r1, r1, 0x18
 /* 8016D3EC 0016A32C  7C 08 03 A6 */	mtlr r0
 /* 8016D3F0 0016A330  4E 80 00 20 */	blr 
 
-.global CLBTwoDegreeGeneralInbetween$$0s$$1__Fssff
-CLBTwoDegreeGeneralInbetween$$0s$$1__Fssff:
+.global "CLBTwoDegreeGeneralInbetween<s>__Fssff"
+"CLBTwoDegreeGeneralInbetween<s>__Fssff":
 /* 8016D3F4 0016A334  7C 63 07 34 */	extsh r3, r3
 /* 8016D3F8 0016A338  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8016D3FC 0016A33C  7C 80 07 34 */	extsh r0, r4
 /* 8016D400 0016A340  EC 62 00 72 */	fmuls f3, f2, f1
 /* 8016D404 0016A344  7C 03 00 50 */	subf r0, r3, r0
-/* 8016D408 0016A348  C8 82 A6 50 */	lfd f4, $$22204@sda21(r2)
+/* 8016D408 0016A348  C8 82 A6 50 */	lfd f4, "@2204"@sda21(r2)
 /* 8016D40C 0016A34C  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8016D410 0016A350  90 01 00 24 */	stw r0, 0x24(r1)
 /* 8016D414 0016A354  3C 00 43 30 */	lis r0, 0x4330
@@ -338,16 +338,16 @@ CLBTwoDegreeGeneralInbetween$$0s$$1__Fssff:
 /* 8016D454 0016A394  38 21 00 30 */	addi r1, r1, 0x30
 /* 8016D458 0016A398  4E 80 00 20 */	blr 
 
-.global CLBCalcRatio$$0i$$1__Fiii
-CLBCalcRatio$$0i$$1__Fiii:
+.global "CLBCalcRatio<i>__Fiii"
+"CLBCalcRatio<i>__Fiii":
 /* 8016D45C 0016A39C  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 8016D460 0016A3A0  7C 03 20 00 */	cmpw r3, r4
-/* 8016D464 0016A3A4  C0 22 A6 40 */	lfs f1, $$22199@sda21(r2)
+/* 8016D464 0016A3A4  C0 22 A6 40 */	lfs f1, "@2199"@sda21(r2)
 /* 8016D468 0016A3A8  41 82 00 48 */	beq lbl_8016D4B0
 /* 8016D46C 0016A3AC  7C 03 20 50 */	subf r0, r3, r4
-/* 8016D470 0016A3B0  C8 42 A6 50 */	lfd f2, $$22204@sda21(r2)
+/* 8016D470 0016A3B0  C8 42 A6 50 */	lfd f2, "@2204"@sda21(r2)
 /* 8016D474 0016A3B4  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8016D478 0016A3B8  C0 22 A6 58 */	lfs f1, $$22216@sda21(r2)
+/* 8016D478 0016A3B8  C0 22 A6 58 */	lfs f1, "@2216"@sda21(r2)
 /* 8016D47C 0016A3BC  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8016D480 0016A3C0  3C 00 43 30 */	lis r0, 0x4330
 /* 8016D484 0016A3C4  7C 63 28 50 */	subf r3, r3, r5
@@ -365,8 +365,8 @@ lbl_8016D4B0:
 /* 8016D4B0 0016A3F0  38 21 00 28 */	addi r1, r1, 0x28
 /* 8016D4B4 0016A3F4  4E 80 00 20 */	blr 
 
-.global CLBChaseGeneralConstantSpecifySpeed$$0s$$1__FPsss
-CLBChaseGeneralConstantSpecifySpeed$$0s$$1__FPsss:
+.global "CLBChaseGeneralConstantSpecifySpeed<s>__FPsss"
+"CLBChaseGeneralConstantSpecifySpeed<s>__FPsss":
 /* 8016D4B8 0016A3F8  A8 C3 00 00 */	lha r6, 0(r3)
 /* 8016D4BC 0016A3FC  7C A0 07 35 */	extsh. r0, r5
 /* 8016D4C0 0016A400  7C 87 07 34 */	extsh r7, r4
@@ -405,8 +405,8 @@ lbl_8016D52C:
 /* 8016D52C 0016A46C  38 60 00 01 */	li r3, 1
 /* 8016D530 0016A470  4E 80 00 20 */	blr 
 
-.global CLBPalIntSpeed$$0s$$1__Fs
-CLBPalIntSpeed$$0s$$1__Fs:
+.global "CLBPalIntSpeed<s>__Fs"
+"CLBPalIntSpeed<s>__Fs":
 /* 8016D534 0016A474  7C 08 02 A6 */	mflr r0
 /* 8016D538 0016A478  90 01 00 04 */	stw r0, 4(r1)
 /* 8016D53C 0016A47C  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -414,7 +414,7 @@ CLBPalIntSpeed$$0s$$1__Fs:
 /* 8016D544 0016A484  7C 7F 1B 78 */	mr r31, r3
 /* 8016D548 0016A488  4B F8 E0 95 */	bl SMSGetAnmFrameRate__Fv
 /* 8016D54C 0016A48C  7F E0 07 34 */	extsh r0, r31
-/* 8016D550 0016A490  C8 42 A6 50 */	lfd f2, $$22204@sda21(r2)
+/* 8016D550 0016A490  C8 42 A6 50 */	lfd f2, "@2204"@sda21(r2)
 /* 8016D554 0016A494  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8016D558 0016A498  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8016D55C 0016A49C  3C 00 43 30 */	lis r0, 0x4330
@@ -422,7 +422,7 @@ CLBPalIntSpeed$$0s$$1__Fs:
 /* 8016D564 0016A4A4  C8 01 00 10 */	lfd f0, 0x10(r1)
 /* 8016D568 0016A4A8  EC 00 10 28 */	fsubs f0, f0, f2
 /* 8016D56C 0016A4AC  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8016D570 0016A4B0  4B FF F6 DD */	bl CLBRoundf$$0s$$1__Ff
+/* 8016D570 0016A4B0  4B FF F6 DD */	bl "CLBRoundf<s>__Ff"
 /* 8016D574 0016A4B4  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 8016D578 0016A4B8  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 8016D57C 0016A4BC  38 21 00 20 */	addi r1, r1, 0x20
@@ -431,19 +431,19 @@ CLBPalIntSpeed$$0s$$1__Fs:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22197:
+"@2197":
 	.incbin "baserom.dol", 0x3E6338, 0x4
-$$22198:
+"@2198":
 	.incbin "baserom.dol", 0x3E633C, 0x4
-$$22199:
+"@2199":
   .4byte 0
-$$22200:
+"@2200":
 	.incbin "baserom.dol", 0x3E6344, 0x4
-$$22201:
+"@2201":
 	.incbin "baserom.dol", 0x3E6348, 0x4
-$$22202:
+"@2202":
 	.incbin "baserom.dol", 0x3E634C, 0x4
-$$22204:
+"@2204":
 	.incbin "baserom.dol", 0x3E6350, 0x8
-$$22216:
+"@2216":
 	.incbin "baserom.dol", 0x3E6358, 0x8

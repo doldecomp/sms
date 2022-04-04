@@ -17,9 +17,9 @@ DBInit:
 .global __DBExceptionDestinationAux
 __DBExceptionDestinationAux:
 /* 8008C464 000893A4  7C 08 02 A6 */	mflr r0
-/* 8008C468 000893A8  3C 60 80 3B */	lis r3, $$27@ha
+/* 8008C468 000893A8  3C 60 80 3B */	lis r3, "@7"@ha
 /* 8008C46C 000893AC  90 01 00 04 */	stw r0, 4(r1)
-/* 8008C470 000893B0  38 63 F0 A8 */	addi r3, r3, $$27@l
+/* 8008C470 000893B0  38 63 F0 A8 */	addi r3, r3, "@7"@l
 /* 8008C474 000893B4  4C C6 31 82 */	crclr 6
 /* 8008C478 000893B8  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8008C47C 000893BC  93 E1 00 14 */	stw r31, 0x14(r1)
@@ -77,7 +77,7 @@ lbl_8008C500:
 /* 8008C524 00089464  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$27:
+"@7":
 	.incbin "baserom.dol", 0x3AC0A8, 0x18
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -141,12 +141,12 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80040ECC 0003DE0C  C0 1C 00 2C */	lfs f0, 0x2c(r28)
 /* 80040ED0 0003DE10  D0 1E 00 EC */	stfs f0, 0xec(r30)
 /* 80040ED4 0003DE14  C0 1C 00 40 */	lfs f0, 0x40(r28)
-/* 80040ED8 0003DE18  C3 E2 83 98 */	lfs f31, $$2877@sda21(r2)
+/* 80040ED8 0003DE18  C3 E2 83 98 */	lfs f31, "@877"@sda21(r2)
 /* 80040EDC 0003DE1C  FC 00 00 50 */	fneg f0, f0
-/* 80040EE0 0003DE20  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
+/* 80040EE0 0003DE20  C0 22 83 A0 */	lfs f1, "@879"@sda21(r2)
 /* 80040EE4 0003DE24  C0 5C 00 44 */	lfs f2, 0x44(r28)
 /* 80040EE8 0003DE28  FF C0 F8 90 */	fmr f30, f31
-/* 80040EEC 0003DE2C  C3 A2 83 9C */	lfs f29, $$2878@sda21(r2)
+/* 80040EEC 0003DE2C  C3 A2 83 9C */	lfs f29, "@878"@sda21(r2)
 /* 80040EF0 0003DE30  EE E1 00 32 */	fmuls f23, f1, f0
 /* 80040EF4 0003DE34  FF 80 10 50 */	fneg f28, f2
 /* 80040EF8 0003DE38  FC 20 B8 90 */	fmr f1, f23
@@ -160,9 +160,9 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80040F18 0003DE58  D0 01 00 D8 */	stfs f0, 0xd8(r1)
 /* 80040F1C 0003DE5C  D2 C1 00 E4 */	stfs f22, 0xe4(r1)
 /* 80040F20 0003DE60  D0 21 00 E8 */	stfs f1, 0xe8(r1)
-/* 80040F24 0003DE64  C0 22 83 9C */	lfs f1, $$2878@sda21(r2)
+/* 80040F24 0003DE64  C0 22 83 9C */	lfs f1, "@878"@sda21(r2)
 /* 80040F28 0003DE68  D0 21 00 FC */	stfs f1, 0xfc(r1)
-/* 80040F2C 0003DE6C  C0 02 83 98 */	lfs f0, $$2877@sda21(r2)
+/* 80040F2C 0003DE6C  C0 02 83 98 */	lfs f0, "@877"@sda21(r2)
 /* 80040F30 0003DE70  D0 01 00 F8 */	stfs f0, 0xf8(r1)
 /* 80040F34 0003DE74  D0 01 00 EC */	stfs f0, 0xec(r1)
 /* 80040F38 0003DE78  D0 01 00 F4 */	stfs f0, 0xf4(r1)
@@ -221,9 +221,9 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 8004100C 0003DF4C  EC DF 51 BA */	fmadds f6, f31, f6, f10
 /* 80041010 0003DF50  EC FF 49 FA */	fmadds f7, f31, f7, f9
 /* 80041014 0003DF54  ED 00 40 2A */	fadds f8, f0, f8
-/* 80041018 0003DF58  48 00 02 75 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 80041018 0003DF58  48 00 02 75 */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
 /* 8004101C 0003DF5C  C0 1C 00 3C */	lfs f0, 0x3c(r28)
-/* 80041020 0003DF60  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
+/* 80041020 0003DF60  C0 22 83 A0 */	lfs f1, "@879"@sda21(r2)
 /* 80041024 0003DF64  FC 00 00 50 */	fneg f0, f0
 /* 80041028 0003DF68  EE C1 00 32 */	fmuls f22, f1, f0
 /* 8004102C 0003DF6C  FC 20 B0 90 */	fmr f1, f22
@@ -231,7 +231,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041034 0003DF74  FF E0 08 90 */	fmr f31, f1
 /* 80041038 0003DF78  FC 20 B0 90 */	fmr f1, f22
 /* 8004103C 0003DF7C  48 04 5F 35 */	bl cosf
-/* 80041040 0003DF80  C1 42 83 98 */	lfs f10, $$2877@sda21(r2)
+/* 80041040 0003DF80  C1 42 83 98 */	lfs f10, "@877"@sda21(r2)
 /* 80041044 0003DF84  FC 00 08 90 */	fmr f0, f1
 /* 80041048 0003DF88  C0 41 00 C8 */	lfs f2, 0xc8(r1)
 /* 8004104C 0003DF8C  FE A0 F8 50 */	fneg f21, f31
@@ -240,7 +240,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041058 0003DF98  C1 01 00 C4 */	lfs f8, 0xc4(r1)
 /* 8004105C 0003DF9C  EC 22 00 32 */	fmuls f1, f2, f0
 /* 80041060 0003DFA0  EC 82 05 72 */	fmuls f4, f2, f21
-/* 80041064 0003DFA4  C0 42 83 9C */	lfs f2, $$2878@sda21(r2)
+/* 80041064 0003DFA4  C0 42 83 9C */	lfs f2, "@878"@sda21(r2)
 /* 80041068 0003DFA8  C1 81 00 B8 */	lfs f12, 0xb8(r1)
 /* 8004106C 0003DFAC  EE E8 0A BA */	fmadds f23, f8, f10, f1
 /* 80041070 0003DFB0  C0 61 00 CC */	lfs f3, 0xcc(r1)
@@ -288,8 +288,8 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041118 0003E058  EC C7 37 FA */	fmadds f6, f7, f31, f6
 /* 8004111C 0003E05C  EC E7 60 3A */	fmadds f7, f7, f0, f12
 /* 80041120 0003E060  ED 08 58 2A */	fadds f8, f8, f11
-/* 80041124 0003E064  48 00 01 69 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
-/* 80041128 0003E068  C0 22 83 A0 */	lfs f1, $$2879@sda21(r2)
+/* 80041124 0003E064  48 00 01 69 */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
+/* 80041128 0003E068  C0 22 83 A0 */	lfs f1, "@879"@sda21(r2)
 /* 8004112C 0003E06C  C0 1C 00 38 */	lfs f0, 0x38(r28)
 /* 80041130 0003E070  EE C1 00 32 */	fmuls f22, f1, f0
 /* 80041134 0003E074  FC 20 B0 90 */	fmr f1, f22
@@ -299,7 +299,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041144 0003E084  48 04 5E 2D */	bl cosf
 /* 80041148 0003E088  C0 41 00 F8 */	lfs f2, 0xf8(r1)
 /* 8004114C 0003E08C  FC 80 F8 50 */	fneg f4, f31
-/* 80041150 0003E090  C0 C2 83 98 */	lfs f6, $$2877@sda21(r2)
+/* 80041150 0003E090  C0 C2 83 98 */	lfs f6, "@877"@sda21(r2)
 /* 80041154 0003E094  38 61 00 A4 */	addi r3, r1, 0xa4
 /* 80041158 0003E098  C1 81 00 E8 */	lfs f12, 0xe8(r1)
 /* 8004115C 0003E09C  EC 62 07 F2 */	fmuls f3, f2, f31
@@ -318,7 +318,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041190 0003E0D0  C0 01 01 00 */	lfs f0, 0x100(r1)
 /* 80041194 0003E0D4  EF C9 07 F2 */	fmuls f30, f9, f31
 /* 80041198 0003E0D8  ED 76 29 BA */	fmadds f11, f22, f6, f5
-/* 8004119C 0003E0DC  C0 E2 83 9C */	lfs f7, $$2878@sda21(r2)
+/* 8004119C 0003E0DC  C0 E2 83 9C */	lfs f7, "@878"@sda21(r2)
 /* 800411A0 0003E0E0  EC AC 00 72 */	fmuls f5, f12, f1
 /* 800411A4 0003E0E4  C1 01 00 F0 */	lfs f8, 0xf0(r1)
 /* 800411A8 0003E0E8  EF E2 D9 BA */	fmadds f31, f2, f6, f27
@@ -350,7 +350,7 @@ perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics:
 /* 80041210 0003E150  EC C9 61 BA */	fmadds f6, f9, f6, f12
 /* 80041214 0003E154  EC E9 59 FA */	fmadds f7, f9, f7, f11
 /* 80041218 0003E158  ED 08 50 2A */	fadds f8, f8, f10
-/* 8004121C 0003E15C  48 00 00 71 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 8004121C 0003E15C  48 00 00 71 */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
 /* 80041220 0003E160  38 9E 00 B4 */	addi r4, r30, 0xb4
 /* 80041224 0003E164  38 61 00 A4 */	addi r3, r1, 0xa4
 /* 80041228 0003E168  48 05 30 B5 */	bl PSMTXCopy
@@ -380,8 +380,8 @@ lbl_80041240:
 /* 80041284 0003E1C4  38 21 01 A0 */	addi r1, r1, 0x1a0
 /* 80041288 0003E1C8  4E 80 00 20 */	blr 
 
-.global set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
-set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff:
+.global "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
+"set__Q29JGeometry13SMatrix34C<f>Fffffffffffff":
 /* 8004128C 0003E1CC  94 21 FF A0 */	stwu r1, -0x60(r1)
 /* 80041290 0003E1D0  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80041294 0003E1D4  C1 21 00 68 */	lfs f9, 0x68(r1)
@@ -833,163 +833,163 @@ lbl_800417FC:
 /* 80041810 0003E750  38 21 00 18 */	addi r1, r1, 0x18
 /* 80041814 0003E754  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__Q26JDrama7TCameraFv
-$$232$$2__dt__Q26JDrama7TCameraFv:
+.global "@32@__dt__Q26JDrama7TCameraFv"
+"@32@__dt__Q26JDrama7TCameraFv":
 /* 80041818 0003E758  38 63 FF E0 */	addi r3, r3, -32
 /* 8004181C 0003E75C  4B FF F4 FC */	b __dt__Q26JDrama7TCameraFv
 
-.global $$232$$2JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
-$$232$$2JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf:
+.global "@32@JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf"
+"@32@JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf":
 /* 80041820 0003E760  38 63 FF E0 */	addi r3, r3, -32
 /* 80041824 0003E764  4B FF FA D8 */	b JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
 
-.global $$232$$2JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
-$$232$$2JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv:
+.global "@32@JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv"
+"@32@JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv":
 /* 80041828 0003E768  38 63 FF E0 */	addi r3, r3, -32
 /* 8004182C 0003E76C  4B FF FA C8 */	b JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
 
-.global $$232$$2JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
-$$232$$2JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf:
+.global "@32@JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf"
+"@32@JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf":
 /* 80041830 0003E770  38 63 FF E0 */	addi r3, r3, -32
 /* 80041834 0003E774  4B FF FA B8 */	b JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
 
-.global $$232$$2JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
-$$232$$2JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv:
+.global "@32@JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv"
+"@32@JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv":
 /* 80041838 0003E778  38 63 FF E0 */	addi r3, r3, -32
 /* 8004183C 0003E77C  4B FF FA A8 */	b JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
 
-.global $$232$$2JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
-$$232$$2JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection:
+.global "@32@JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection"
+"@32@JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection":
 /* 80041840 0003E780  38 63 FF E0 */	addi r3, r3, -32
 /* 80041844 0003E784  4B FF FA 9C */	b JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
 
-.global $$232$$2JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
-$$232$$2JSGGetProjectionType__Q26JDrama12TPolarCameraCFv:
+.global "@32@JSGGetProjectionType__Q26JDrama12TPolarCameraCFv"
+"@32@JSGGetProjectionType__Q26JDrama12TPolarCameraCFv":
 /* 80041848 0003E788  38 63 FF E0 */	addi r3, r3, -32
 /* 8004184C 0003E78C  4B FF FA 8C */	b JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
 
-.global $$232$$2__dt__Q26JDrama12TPolarCameraFv
-$$232$$2__dt__Q26JDrama12TPolarCameraFv:
+.global "@32@__dt__Q26JDrama12TPolarCameraFv"
+"@32@__dt__Q26JDrama12TPolarCameraFv":
 /* 80041850 0003E790  38 63 FF E0 */	addi r3, r3, -32
 /* 80041854 0003E794  4B FF FF 10 */	b __dt__Q26JDrama12TPolarCameraFv
 
-.global $$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
-$$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+.global "@32@JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec"
+"@32@JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec":
 /* 80041858 0003E798  38 63 FF E0 */	addi r3, r3, -32
 /* 8004185C 0003E79C  4B FF FC 04 */	b JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
 
-.global $$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
-$$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+.global "@32@JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec"
+"@32@JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec":
 /* 80041860 0003E7A0  38 63 FF E0 */	addi r3, r3, -32
 /* 80041864 0003E7A4  4B FF FB E0 */	b JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
 
-.global $$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
-$$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec:
+.global "@32@JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec"
+"@32@JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec":
 /* 80041868 0003E7A8  38 63 FF E0 */	addi r3, r3, -32
 /* 8004186C 0003E7AC  4B FF FB BC */	b JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
 
-.global $$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
-$$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec:
+.global "@32@JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec"
+"@32@JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec":
 /* 80041870 0003E7B0  38 63 FF E0 */	addi r3, r3, -32
 /* 80041874 0003E7B4  4B FF FB 98 */	b JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
 
-.global $$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
-$$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec:
+.global "@32@JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec"
+"@32@JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec":
 /* 80041878 0003E7B8  38 63 FF E0 */	addi r3, r3, -32
 /* 8004187C 0003E7BC  4B FF FB 74 */	b JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
 
-.global $$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
-$$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec:
+.global "@32@JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec"
+"@32@JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec":
 /* 80041880 0003E7C0  38 63 FF E0 */	addi r3, r3, -32
 /* 80041884 0003E7C4  4B FF FB 50 */	b JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
 
-.global $$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
-$$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf:
+.global "@32@JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf"
+"@32@JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf":
 /* 80041888 0003E7C8  38 63 FF E0 */	addi r3, r3, -32
 /* 8004188C 0003E7CC  4B FF FB 40 */	b JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
 
-.global $$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
-$$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv:
+.global "@32@JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv"
+"@32@JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv":
 /* 80041890 0003E7D0  38 63 FF E0 */	addi r3, r3, -32
 /* 80041894 0003E7D4  4B FF FB 30 */	b JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
 
-.global $$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
-$$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf:
+.global "@32@JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf"
+"@32@JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf":
 /* 80041898 0003E7D8  38 63 FF E0 */	addi r3, r3, -32
 /* 8004189C 0003E7DC  4B FF FB 20 */	b JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
 
-.global $$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
-$$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv:
+.global "@32@JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv"
+"@32@JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv":
 /* 800418A0 0003E7E0  38 63 FF E0 */	addi r3, r3, -32
 /* 800418A4 0003E7E4  4B FF FB 10 */	b JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
 
-.global $$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
-$$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection:
+.global "@32@JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection"
+"@32@JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection":
 /* 800418A8 0003E7E8  38 63 FF E0 */	addi r3, r3, -32
 /* 800418AC 0003E7EC  4B FF FB 04 */	b JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
 
-.global $$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
-$$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv:
+.global "@32@JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv"
+"@32@JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv":
 /* 800418B0 0003E7F0  38 63 FF E0 */	addi r3, r3, -32
 /* 800418B4 0003E7F4  4B FF FA F4 */	b JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
 
-.global $$232$$2__dt__Q26JDrama13TLookAtCameraFv
-$$232$$2__dt__Q26JDrama13TLookAtCameraFv:
+.global "@32@__dt__Q26JDrama13TLookAtCameraFv"
+"@32@__dt__Q26JDrama13TLookAtCameraFv":
 /* 800418B8 0003E7F8  38 63 FF E0 */	addi r3, r3, -32
 /* 800418BC 0003E7FC  4B FF FD F4 */	b __dt__Q26JDrama13TLookAtCameraFv
 
-.global $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
-$$232$$2JSGSetFlag__Q26JDrama7TCameraFUl:
+.global "@32@JSGSetFlag__Q26JDrama7TCameraFUl"
+"@32@JSGSetFlag__Q26JDrama7TCameraFUl":
 /* 800418C0 0003E800  38 63 FF E0 */	addi r3, r3, -32
 /* 800418C4 0003E804  4B FF F4 F8 */	b JSGSetFlag__Q26JDrama7TCameraFUl
 
-.global $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
-$$232$$2JSGGetFlag__Q26JDrama7TCameraCFv:
+.global "@32@JSGGetFlag__Q26JDrama7TCameraCFv"
+"@32@JSGGetFlag__Q26JDrama7TCameraCFv":
 /* 800418C8 0003E808  38 63 FF E0 */	addi r3, r3, -32
 /* 800418CC 0003E80C  4B FF F4 E8 */	b JSGGetFlag__Q26JDrama7TCameraCFv
 
-.global $$232$$2JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
-$$232$$2JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf:
+.global "@32@JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf"
+"@32@JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf":
 /* 800418D0 0003E810  38 63 FF E0 */	addi r3, r3, -32
 /* 800418D4 0003E814  4B FF FC FC */	b JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
 
-.global $$232$$2JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
-$$232$$2JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf:
+.global "@32@JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf"
+"@32@JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf":
 /* 800418D8 0003E818  38 63 FF E0 */	addi r3, r3, -32
 /* 800418DC 0003E81C  4B FF FC D0 */	b JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
 
-.global $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
-$$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf:
+.global "@32@JSGSetProjectionFar__Q26JDrama7TCameraFf"
+"@32@JSGSetProjectionFar__Q26JDrama7TCameraFf":
 /* 800418E0 0003E820  38 63 FF E0 */	addi r3, r3, -32
 /* 800418E4 0003E824  4B FF F4 F8 */	b JSGSetProjectionFar__Q26JDrama7TCameraFf
 
-.global $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
-$$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv:
+.global "@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv"
+"@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv":
 /* 800418E8 0003E828  38 63 FF E0 */	addi r3, r3, -32
 /* 800418EC 0003E82C  4B FF F4 E8 */	b JSGGetProjectionFar__Q26JDrama7TCameraCFv
 
-.global $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
-$$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf:
+.global "@32@JSGSetProjectionNear__Q26JDrama7TCameraFf"
+"@32@JSGSetProjectionNear__Q26JDrama7TCameraFf":
 /* 800418F0 0003E830  38 63 FF E0 */	addi r3, r3, -32
 /* 800418F4 0003E834  4B FF F4 D8 */	b JSGSetProjectionNear__Q26JDrama7TCameraFf
 
-.global $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
-$$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv:
+.global "@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv"
+"@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv":
 /* 800418F8 0003E838  38 63 FF E0 */	addi r3, r3, -32
 /* 800418FC 0003E83C  4B FF F4 C8 */	b JSGGetProjectionNear__Q26JDrama7TCameraCFv
 
-.global $$232$$2JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
-$$232$$2JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection:
+.global "@32@JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection"
+"@32@JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection":
 /* 80041900 0003E840  38 63 FF E0 */	addi r3, r3, -32
 /* 80041904 0003E844  4B FF FC A4 */	b JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
 
-.global $$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
-$$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv:
+.global "@32@JSGGetProjectionType__Q26JDrama10TOrthoProjCFv"
+"@32@JSGGetProjectionType__Q26JDrama10TOrthoProjCFv":
 /* 80041908 0003E848  38 63 FF E0 */	addi r3, r3, -32
 /* 8004190C 0003E84C  4B FF FC 94 */	b JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
 
-.global $$232$$2__dt__Q26JDrama10TOrthoProjFv
-$$232$$2__dt__Q26JDrama10TOrthoProjFv:
+.global "@32@__dt__Q26JDrama10TOrthoProjFv"
+"@32@__dt__Q26JDrama10TOrthoProjFv":
 /* 80041910 0003E850  38 63 FF E0 */	addi r3, r3, -32
 /* 80041914 0003E854  4B FF FC E0 */	b __dt__Q26JDrama10TOrthoProjFv
 
@@ -1007,28 +1007,28 @@ __vt__Q26JDrama10TOrthoProj:
   .4byte perform__Q26JDrama10TOrthoProjFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama10TOrthoProjFv
+  .4byte "@32@__dt__Q26JDrama10TOrthoProjFv"
   .4byte JSGFGetType__Q26JStage7TCameraCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
-  .4byte $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte "@32@JSGGetFlag__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetFlag__Q26JDrama7TCameraFUl"
   .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
   .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetProjectionType__Q26JDrama10TOrthoProjCFv
-  .4byte $$232$$2JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection
-  .4byte $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
+  .4byte "@32@JSGGetProjectionType__Q26JDrama10TOrthoProjCFv"
+  .4byte "@32@JSGSetProjectionType__Q26JDrama10TOrthoProjFQ26JStage18TECameraProjection"
+  .4byte "@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionNear__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionFar__Q26JDrama7TCameraFf"
   .4byte JSGGetProjectionFovy__Q26JStage7TCameraCFv
   .4byte JSGSetProjectionFovy__Q26JStage7TCameraFf
   .4byte JSGGetProjectionAspect__Q26JStage7TCameraCFv
   .4byte JSGSetProjectionAspect__Q26JStage7TCameraFf
-  .4byte $$232$$2JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf
-  .4byte $$232$$2JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf
+  .4byte "@32@JSGGetProjectionField__Q26JDrama10TOrthoProjCFPf"
+  .4byte "@32@JSGSetProjectionField__Q26JDrama10TOrthoProjFPCf"
   .4byte JSGGetViewType__Q26JStage7TCameraCFv
   .4byte JSGSetViewType__Q26JStage7TCameraFQ26JStage12TECameraView
   .4byte JSGGetViewPosition__Q26JStage7TCameraCFP3Vec
@@ -1062,36 +1062,36 @@ __vt__Q26JDrama13TLookAtCamera:
   .4byte perform__Q26JDrama13TLookAtCameraFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama13TLookAtCameraFv
+  .4byte "@32@__dt__Q26JDrama13TLookAtCameraFv"
   .4byte JSGFGetType__Q26JStage7TCameraCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
-  .4byte $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte "@32@JSGGetFlag__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetFlag__Q26JDrama7TCameraFUl"
   .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
   .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv
-  .4byte $$232$$2JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection
-  .4byte $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv
-  .4byte $$232$$2JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf
-  .4byte $$232$$2JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv
-  .4byte $$232$$2JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf
+  .4byte "@32@JSGGetProjectionType__Q26JDrama13TLookAtCameraCFv"
+  .4byte "@32@JSGSetProjectionType__Q26JDrama13TLookAtCameraFQ26JStage18TECameraProjection"
+  .4byte "@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionNear__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionFar__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFovy__Q26JDrama13TLookAtCameraCFv"
+  .4byte "@32@JSGSetProjectionFovy__Q26JDrama13TLookAtCameraFf"
+  .4byte "@32@JSGGetProjectionAspect__Q26JDrama13TLookAtCameraCFv"
+  .4byte "@32@JSGSetProjectionAspect__Q26JDrama13TLookAtCameraFf"
   .4byte JSGGetProjectionField__Q26JStage7TCameraCFPf
   .4byte JSGSetProjectionField__Q26JStage7TCameraFPCf
   .4byte JSGGetViewType__Q26JStage7TCameraCFv
   .4byte JSGSetViewType__Q26JStage7TCameraFQ26JStage12TECameraView
-  .4byte $$232$$2JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec
-  .4byte $$232$$2JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec
-  .4byte $$232$$2JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec
-  .4byte $$232$$2JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec
-  .4byte $$232$$2JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec
-  .4byte $$232$$2JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec
+  .4byte "@32@JSGGetViewPosition__Q26JDrama13TLookAtCameraCFP3Vec"
+  .4byte "@32@JSGSetViewPosition__Q26JDrama13TLookAtCameraFRC3Vec"
+  .4byte "@32@JSGGetViewUpVector__Q26JDrama13TLookAtCameraCFP3Vec"
+  .4byte "@32@JSGSetViewUpVector__Q26JDrama13TLookAtCameraFRC3Vec"
+  .4byte "@32@JSGGetViewTargetPosition__Q26JDrama13TLookAtCameraCFP3Vec"
+  .4byte "@32@JSGSetViewTargetPosition__Q26JDrama13TLookAtCameraFRC3Vec"
   .4byte JSGGetViewRoll__Q26JStage7TCameraCFv
   .4byte JSGSetViewRoll__Q26JStage7TCameraFf
   .4byte JSGGetFlag__Q26JDrama7TCameraCFv
@@ -1125,26 +1125,26 @@ __vt__Q26JDrama12TPolarCamera:
   .4byte perform__Q26JDrama12TPolarCameraFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama12TPolarCameraFv
+  .4byte "@32@__dt__Q26JDrama12TPolarCameraFv"
   .4byte JSGFGetType__Q26JStage7TCameraCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
-  .4byte $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte "@32@JSGGetFlag__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetFlag__Q26JDrama7TCameraFUl"
   .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
   .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetProjectionType__Q26JDrama12TPolarCameraCFv
-  .4byte $$232$$2JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection
-  .4byte $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv
-  .4byte $$232$$2JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf
-  .4byte $$232$$2JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv
-  .4byte $$232$$2JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf
+  .4byte "@32@JSGGetProjectionType__Q26JDrama12TPolarCameraCFv"
+  .4byte "@32@JSGSetProjectionType__Q26JDrama12TPolarCameraFQ26JStage18TECameraProjection"
+  .4byte "@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionNear__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionFar__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFovy__Q26JDrama12TPolarCameraCFv"
+  .4byte "@32@JSGSetProjectionFovy__Q26JDrama12TPolarCameraFf"
+  .4byte "@32@JSGGetProjectionAspect__Q26JDrama12TPolarCameraCFv"
+  .4byte "@32@JSGSetProjectionAspect__Q26JDrama12TPolarCameraFf"
   .4byte JSGGetProjectionField__Q26JStage7TCameraCFPf
   .4byte JSGSetProjectionField__Q26JStage7TCameraFPCf
   .4byte JSGGetViewType__Q26JStage7TCameraCFv
@@ -1182,11 +1182,11 @@ __vt__Q26JDrama7TCamera:
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama7TCameraFv
+  .4byte "@32@__dt__Q26JDrama7TCameraFv"
   .4byte JSGFGetType__Q26JStage7TCameraCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
-  .4byte $$232$$2JSGGetFlag__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetFlag__Q26JDrama7TCameraFUl
+  .4byte "@32@JSGGetFlag__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetFlag__Q26JDrama7TCameraFUl"
   .4byte JSGGetData__Q26JStage7TObjectCFUlPvUl
   .4byte JSGSetData__Q26JStage7TObjectFUlPCvUl
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
@@ -1194,10 +1194,10 @@ __vt__Q26JDrama7TCamera:
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
   .4byte JSGGetProjectionType__Q26JStage7TCameraCFv
   .4byte JSGSetProjectionType__Q26JStage7TCameraFQ26JStage18TECameraProjection
-  .4byte $$232$$2JSGGetProjectionNear__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionNear__Q26JDrama7TCameraFf
-  .4byte $$232$$2JSGGetProjectionFar__Q26JDrama7TCameraCFv
-  .4byte $$232$$2JSGSetProjectionFar__Q26JDrama7TCameraFf
+  .4byte "@32@JSGGetProjectionNear__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionNear__Q26JDrama7TCameraFf"
+  .4byte "@32@JSGGetProjectionFar__Q26JDrama7TCameraCFv"
+  .4byte "@32@JSGSetProjectionFar__Q26JDrama7TCameraFf"
   .4byte JSGGetProjectionFovy__Q26JStage7TCameraCFv
   .4byte JSGSetProjectionFovy__Q26JStage7TCameraFf
   .4byte JSGGetProjectionAspect__Q26JStage7TCameraCFv
@@ -1223,9 +1223,9 @@ __vt__Q26JDrama7TCamera:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2877:
+"@877":
   .4byte 0
-$$2878:
+"@878":
 	.incbin "baserom.dol", 0x3E409C, 0x4
-$$2879:
+"@879":
 	.incbin "baserom.dol", 0x3E40A0, 0x8

@@ -30,10 +30,10 @@ sinkInSandEffect__6TMarioFv:
 /* 801420F8 0013F038  38 C0 00 00 */	li r6, 0
 /* 801420FC 0013F03C  38 E0 00 00 */	li r7, 0
 /* 80142100 0013F040  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142104 0013F044  4B F9 9A 19 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142104 0013F044  4B F9 9A 19 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142108 0013F048  28 03 00 00 */	cmplwi r3, 0
 /* 8014210C 0013F04C  41 82 00 20 */	beq lbl_8014212C
-/* 80142110 0013F050  C0 02 9F 18 */	lfs f0, $$22884@sda21(r2)
+/* 80142110 0013F050  C0 02 9F 18 */	lfs f0, "@2884"@sda21(r2)
 /* 80142114 0013F054  D0 03 01 54 */	stfs f0, 0x154(r3)
 /* 80142118 0013F058  D0 03 01 58 */	stfs f0, 0x158(r3)
 /* 8014211C 0013F05C  D0 03 01 5C */	stfs f0, 0x15c(r3)
@@ -58,10 +58,10 @@ kickFruitEffect__6TMarioFv:
 /* 80142158 0013F098  7C 7F 1B 78 */	mr r31, r3
 /* 8014215C 0013F09C  38 BF 00 10 */	addi r5, r31, 0x10
 /* 80142160 0013F0A0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142164 0013F0A4  4B F9 99 B9 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142164 0013F0A4  4B F9 99 B9 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142168 0013F0A8  28 03 00 00 */	cmplwi r3, 0
 /* 8014216C 0013F0AC  41 82 00 60 */	beq lbl_801421CC
-/* 80142170 0013F0B0  C0 02 9F 1C */	lfs f0, $$22899@sda21(r2)
+/* 80142170 0013F0B0  C0 02 9F 1C */	lfs f0, "@2899"@sda21(r2)
 /* 80142174 0013F0B4  D0 03 01 54 */	stfs f0, 0x154(r3)
 /* 80142178 0013F0B8  D0 03 01 58 */	stfs f0, 0x158(r3)
 /* 8014217C 0013F0BC  D0 03 01 5C */	stfs f0, 0x15c(r3)
@@ -70,7 +70,7 @@ kickFruitEffect__6TMarioFv:
 /* 80142188 0013F0C8  D0 03 01 7C */	stfs f0, 0x17c(r3)
 /* 8014218C 0013F0CC  80 9F 00 10 */	lwz r4, 0x10(r31)
 /* 80142190 0013F0D0  80 1F 00 14 */	lwz r0, 0x14(r31)
-/* 80142194 0013F0D4  C0 02 9F 20 */	lfs f0, $$22900@sda21(r2)
+/* 80142194 0013F0D4  C0 02 9F 20 */	lfs f0, "@2900"@sda21(r2)
 /* 80142198 0013F0D8  90 81 00 18 */	stw r4, 0x18(r1)
 /* 8014219C 0013F0DC  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 801421A0 0013F0E0  80 1F 00 18 */	lwz r0, 0x18(r31)
@@ -131,7 +131,7 @@ toroccoEffect__6TMarioFv:
 /* 8014226C 0013F1AC  EC 42 00 B2 */	fmuls f2, f2, f2
 /* 80142270 0013F1B0  EC 01 00 2A */	fadds f0, f1, f0
 /* 80142274 0013F1B4  EC 22 00 2A */	fadds f1, f2, f0
-/* 80142278 0013F1B8  4B F8 E6 39 */	bl sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 80142278 0013F1B8  4B F8 E6 39 */	bl "sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 8014227C 0013F1BC  80 9F 03 F8 */	lwz r4, 0x3f8(r31)
 /* 80142280 0013F1C0  FF E0 08 90 */	fmr f31, f1
 /* 80142284 0013F1C4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
@@ -178,7 +178,7 @@ sleepingEffectKill__6TMarioFv:
 /* 80142314 0013F254  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80142318 0013F258  38 C0 00 01 */	li r6, 1
 /* 8014231C 0013F25C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142320 0013F260  4B F9 94 B1 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142320 0013F260  4B F9 94 B1 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142324 0013F264  28 03 00 00 */	cmplwi r3, 0
 /* 80142328 0013F268  41 82 00 08 */	beq lbl_80142330
 /* 8014232C 0013F26C  4B F2 A3 89 */	bl deleteAllParticle__14JPABaseEmitterFv
@@ -198,7 +198,7 @@ sleepingEffect__6TMarioFv:
 /* 80142354 0013F294  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80142358 0013F298  38 C0 00 01 */	li r6, 1
 /* 8014235C 0013F29C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142360 0013F2A0  4B F9 94 71 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142360 0013F2A0  4B F9 94 71 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142364 0013F2A4  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80142368 0013F2A8  38 21 00 08 */	addi r1, r1, 8
 /* 8014236C 0013F2AC  7C 08 03 A6 */	mtlr r0
@@ -212,7 +212,7 @@ kickRoofEffect__6TMarioFv:
 /* 80142380 0013F2C0  93 E1 00 34 */	stw r31, 0x34(r1)
 /* 80142384 0013F2C4  7C 7F 1B 78 */	mr r31, r3
 /* 80142388 0013F2C8  4B FE 4D D9 */	bl getMotionFrameCtrl__6TMarioFv
-/* 8014238C 0013F2CC  C0 22 9F 28 */	lfs f1, $$22957@sda21(r2)
+/* 8014238C 0013F2CC  C0 22 9F 28 */	lfs f1, "@2957"@sda21(r2)
 /* 80142390 0013F2D0  4B EE 89 35 */	bl checkPass__12J3DFrameCtrlFf
 /* 80142394 0013F2D4  2C 03 00 00 */	cmpwi r3, 0
 /* 80142398 0013F2D8  41 82 00 5C */	beq lbl_801423F4
@@ -233,7 +233,7 @@ kickRoofEffect__6TMarioFv:
 /* 801423D4 0013F314  C0 03 00 2C */	lfs f0, 0x2c(r3)
 /* 801423D8 0013F318  D0 1F 01 B0 */	stfs f0, 0x1b0(r31)
 /* 801423DC 0013F31C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 801423E0 0013F320  4B F9 97 3D */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801423E0 0013F320  4B F9 97 3D */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801423E4 0013F324  A8 BF 27 F8 */	lha r5, 0x27f8(r31)
 /* 801423E8 0013F328  38 7F 00 00 */	addi r3, r31, 0
 /* 801423EC 0013F32C  38 80 00 15 */	li r4, 0x15
@@ -255,7 +255,7 @@ elecEndEffect__6TMarioFv:
 /* 8014241C 0013F35C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80142420 0013F360  38 C0 00 00 */	li r6, 0
 /* 80142424 0013F364  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142428 0013F368  4B F9 93 A9 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142428 0013F368  4B F9 93 A9 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8014242C 0013F36C  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80142430 0013F370  38 21 00 08 */	addi r1, r1, 8
 /* 80142434 0013F374  7C 08 03 A6 */	mtlr r0
@@ -273,19 +273,19 @@ elecEffect__6TMarioFv:
 /* 80142458 0013F398  38 FF 00 00 */	addi r7, r31, 0
 /* 8014245C 0013F39C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142460 0013F3A0  38 BF 01 78 */	addi r5, r31, 0x178
-/* 80142464 0013F3A4  4B F9 93 6D */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142464 0013F3A4  4B F9 93 6D */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142468 0013F3A8  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8014246C 0013F3AC  38 FF 00 00 */	addi r7, r31, 0
 /* 80142470 0013F3B0  38 BF 01 78 */	addi r5, r31, 0x178
 /* 80142474 0013F3B4  38 80 01 18 */	li r4, 0x118
 /* 80142478 0013F3B8  38 C0 00 01 */	li r6, 1
-/* 8014247C 0013F3BC  4B F9 93 55 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 8014247C 0013F3BC  4B F9 93 55 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142480 0013F3C0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142484 0013F3C4  38 FF 00 00 */	addi r7, r31, 0
 /* 80142488 0013F3C8  38 BF 01 78 */	addi r5, r31, 0x178
 /* 8014248C 0013F3CC  38 80 01 17 */	li r4, 0x117
 /* 80142490 0013F3D0  38 C0 00 01 */	li r6, 1
-/* 80142494 0013F3D4  4B F9 93 3D */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142494 0013F3D4  4B F9 93 3D */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142498 0013F3D8  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8014249C 0013F3DC  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 801424A0 0013F3E0  38 21 00 18 */	addi r1, r1, 0x18
@@ -304,19 +304,19 @@ rocketEffectStart__6TMarioFv:
 /* 801424C8 0013F408  7C 7F 1B 78 */	mr r31, r3
 /* 801424CC 0013F40C  38 BF 00 10 */	addi r5, r31, 0x10
 /* 801424D0 0013F410  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 801424D4 0013F414  4B F9 96 49 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801424D4 0013F414  4B F9 96 49 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801424D8 0013F418  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 801424DC 0013F41C  38 BF 00 10 */	addi r5, r31, 0x10
 /* 801424E0 0013F420  38 80 00 04 */	li r4, 4
 /* 801424E4 0013F424  38 C0 00 00 */	li r6, 0
 /* 801424E8 0013F428  38 E0 00 00 */	li r7, 0
-/* 801424EC 0013F42C  4B F9 96 31 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801424EC 0013F42C  4B F9 96 31 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801424F0 0013F430  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 801424F4 0013F434  38 BF 00 10 */	addi r5, r31, 0x10
 /* 801424F8 0013F438  38 80 00 12 */	li r4, 0x12
 /* 801424FC 0013F43C  38 C0 00 00 */	li r6, 0
 /* 80142500 0013F440  38 E0 00 00 */	li r7, 0
-/* 80142504 0013F444  4B F9 96 19 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142504 0013F444  4B F9 96 19 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142508 0013F448  80 7F 03 E4 */	lwz r3, 0x3e4(r31)
 /* 8014250C 0013F44C  28 03 00 00 */	cmplwi r3, 0
 /* 80142510 0013F450  41 82 00 54 */	beq lbl_80142564
@@ -325,21 +325,21 @@ rocketEffectStart__6TMarioFv:
 /* 8014251C 0013F45C  38 FF 00 00 */	addi r7, r31, 0
 /* 80142520 0013F460  38 80 00 01 */	li r4, 1
 /* 80142524 0013F464  38 C0 00 00 */	li r6, 0
-/* 80142528 0013F468  4B F9 92 A9 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142528 0013F468  4B F9 92 A9 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8014252C 0013F46C  80 BF 03 E4 */	lwz r5, 0x3e4(r31)
 /* 80142530 0013F470  7F E7 FB 78 */	mr r7, r31
 /* 80142534 0013F474  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142538 0013F478  38 80 00 02 */	li r4, 2
 /* 8014253C 0013F47C  38 A5 1C 90 */	addi r5, r5, 0x1c90
 /* 80142540 0013F480  38 C0 00 00 */	li r6, 0
-/* 80142544 0013F484  4B F9 92 8D */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142544 0013F484  4B F9 92 8D */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142548 0013F488  80 BF 03 E4 */	lwz r5, 0x3e4(r31)
 /* 8014254C 0013F48C  7F E7 FB 78 */	mr r7, r31
 /* 80142550 0013F490  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142554 0013F494  38 80 00 03 */	li r4, 3
 /* 80142558 0013F498  38 A5 1C 90 */	addi r5, r5, 0x1c90
 /* 8014255C 0013F49C  38 C0 00 00 */	li r6, 0
-/* 80142560 0013F4A0  4B F9 92 71 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142560 0013F4A0  4B F9 92 71 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_80142564:
 /* 80142564 0013F4A4  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 80142568 0013F4A8  83 E1 00 2C */	lwz r31, 0x2c(r1)
@@ -354,7 +354,7 @@ meltInWaterEffect__6TMarioFv:
 /* 80142580 0013F4C0  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 80142584 0013F4C4  93 E1 00 34 */	stw r31, 0x34(r1)
 /* 80142588 0013F4C8  7C 7F 1B 78 */	mr r31, r3
-/* 8014258C 0013F4CC  C0 02 9F 24 */	lfs f0, $$22939@sda21(r2)
+/* 8014258C 0013F4CC  C0 02 9F 24 */	lfs f0, "@2939"@sda21(r2)
 /* 80142590 0013F4D0  C0 23 01 34 */	lfs f1, 0x134(r3)
 /* 80142594 0013F4D4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80142598 0013F4D8  40 81 00 78 */	ble lbl_80142610
@@ -368,7 +368,7 @@ meltInWaterEffect__6TMarioFv:
 /* 801425B8 0013F4F8  41 82 00 58 */	beq lbl_80142610
 /* 801425BC 0013F4FC  C0 3F 01 34 */	lfs f1, 0x134(r31)
 /* 801425C0 0013F500  C0 1F 28 14 */	lfs f0, 0x2814(r31)
-/* 801425C4 0013F504  C0 42 9F 2C */	lfs f2, $$23006@sda21(r2)
+/* 801425C4 0013F504  C0 42 9F 2C */	lfs f2, "@3006"@sda21(r2)
 /* 801425C8 0013F508  EC 01 00 32 */	fmuls f0, f1, f0
 /* 801425CC 0013F50C  EC 02 00 32 */	fmuls f0, f2, f0
 /* 801425D0 0013F510  D0 03 01 B0 */	stfs f0, 0x1b0(r3)
@@ -382,7 +382,7 @@ lbl_801425E8:
 lbl_801425EC:
 /* 801425EC 0013F52C  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 801425F0 0013F530  41 82 00 20 */	beq lbl_80142610
-/* 801425F4 0013F534  C0 02 9F 30 */	lfs f0, $$23007@sda21(r2)
+/* 801425F4 0013F534  C0 02 9F 30 */	lfs f0, "@3007"@sda21(r2)
 /* 801425F8 0013F538  D0 03 01 54 */	stfs f0, 0x154(r3)
 /* 801425FC 0013F53C  D0 03 01 58 */	stfs f0, 0x158(r3)
 /* 80142600 0013F540  D0 03 01 5C */	stfs f0, 0x15c(r3)
@@ -443,7 +443,7 @@ emitFootPrintWithEffect__6TMarioFii:
 /* 801426B4 0013F5F4  41 82 00 58 */	beq lbl_8014270C
 /* 801426B8 0013F5F8  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 801426BC 0013F5FC  48 00 E2 65 */	bl getFrameCtrl__6TYoshiCFv
-/* 801426C0 0013F600  C0 22 9F 34 */	lfs f1, $$23064@sda21(r2)
+/* 801426C0 0013F600  C0 22 9F 34 */	lfs f1, "@3064"@sda21(r2)
 /* 801426C4 0013F604  4B EE 86 01 */	bl checkPass__12J3DFrameCtrlFf
 /* 801426C8 0013F608  2C 03 00 00 */	cmpwi r3, 0
 /* 801426CC 0013F60C  41 82 00 14 */	beq lbl_801426E0
@@ -454,7 +454,7 @@ emitFootPrintWithEffect__6TMarioFii:
 lbl_801426E0:
 /* 801426E0 0013F620  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 801426E4 0013F624  48 00 E2 3D */	bl getFrameCtrl__6TYoshiCFv
-/* 801426E8 0013F628  C0 22 9F 38 */	lfs f1, $$23065@sda21(r2)
+/* 801426E8 0013F628  C0 22 9F 38 */	lfs f1, "@3065"@sda21(r2)
 /* 801426EC 0013F62C  4B EE 85 D9 */	bl checkPass__12J3DFrameCtrlFf
 /* 801426F0 0013F630  2C 03 00 00 */	cmpwi r3, 0
 /* 801426F4 0013F634  41 82 00 80 */	beq lbl_80142774
@@ -466,7 +466,7 @@ lbl_801426E0:
 lbl_8014270C:
 /* 8014270C 0013F64C  7F A3 EB 78 */	mr r3, r29
 /* 80142710 0013F650  4B FE 4A 51 */	bl getMotionFrameCtrl__6TMarioFv
-/* 80142714 0013F654  C0 22 9F 3C */	lfs f1, $$23066@sda21(r2)
+/* 80142714 0013F654  C0 22 9F 3C */	lfs f1, "@3066"@sda21(r2)
 /* 80142718 0013F658  4B EE 85 AD */	bl checkPass__12J3DFrameCtrlFf
 /* 8014271C 0013F65C  2C 03 00 00 */	cmpwi r3, 0
 /* 80142720 0013F660  41 82 00 20 */	beq lbl_80142740
@@ -480,7 +480,7 @@ lbl_8014270C:
 lbl_80142740:
 /* 80142740 0013F680  7F A3 EB 78 */	mr r3, r29
 /* 80142744 0013F684  4B FE 4A 1D */	bl getMotionFrameCtrl__6TMarioFv
-/* 80142748 0013F688  C0 22 9F 28 */	lfs f1, $$22957@sda21(r2)
+/* 80142748 0013F688  C0 22 9F 28 */	lfs f1, "@2957"@sda21(r2)
 /* 8014274C 0013F68C  4B EE 85 79 */	bl checkPass__12J3DFrameCtrlFf
 /* 80142750 0013F690  2C 03 00 00 */	cmpwi r3, 0
 /* 80142754 0013F694  41 82 00 20 */	beq lbl_80142774
@@ -502,19 +502,19 @@ lbl_80142774:
 /* 80142790 0013F6D0  41 82 00 B4 */	beq lbl_80142844
 /* 80142794 0013F6D4  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 80142798 0013F6D8  48 00 E1 89 */	bl getFrameCtrl__6TYoshiCFv
-/* 8014279C 0013F6DC  C0 22 9F 40 */	lfs f1, $$23067@sda21(r2)
+/* 8014279C 0013F6DC  C0 22 9F 40 */	lfs f1, "@3067"@sda21(r2)
 /* 801427A0 0013F6E0  4B EE 85 25 */	bl checkPass__12J3DFrameCtrlFf
 /* 801427A4 0013F6E4  2C 03 00 00 */	cmpwi r3, 0
 /* 801427A8 0013F6E8  40 82 00 34 */	bne lbl_801427DC
 /* 801427AC 0013F6EC  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 801427B0 0013F6F0  48 00 E1 71 */	bl getFrameCtrl__6TYoshiCFv
-/* 801427B4 0013F6F4  C0 22 9F 44 */	lfs f1, $$23068@sda21(r2)
+/* 801427B4 0013F6F4  C0 22 9F 44 */	lfs f1, "@3068"@sda21(r2)
 /* 801427B8 0013F6F8  4B EE 85 0D */	bl checkPass__12J3DFrameCtrlFf
 /* 801427BC 0013F6FC  2C 03 00 00 */	cmpwi r3, 0
 /* 801427C0 0013F700  40 82 00 1C */	bne lbl_801427DC
 /* 801427C4 0013F704  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 801427C8 0013F708  48 00 E1 59 */	bl getFrameCtrl__6TYoshiCFv
-/* 801427CC 0013F70C  C0 22 9F 48 */	lfs f1, $$23069@sda21(r2)
+/* 801427CC 0013F70C  C0 22 9F 48 */	lfs f1, "@3069"@sda21(r2)
 /* 801427D0 0013F710  4B EE 84 F5 */	bl checkPass__12J3DFrameCtrlFf
 /* 801427D4 0013F714  2C 03 00 00 */	cmpwi r3, 0
 /* 801427D8 0013F718  41 82 00 14 */	beq lbl_801427EC
@@ -526,19 +526,19 @@ lbl_801427DC:
 lbl_801427EC:
 /* 801427EC 0013F72C  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 801427F0 0013F730  48 00 E1 31 */	bl getFrameCtrl__6TYoshiCFv
-/* 801427F4 0013F734  C0 22 9F 4C */	lfs f1, $$23070@sda21(r2)
+/* 801427F4 0013F734  C0 22 9F 4C */	lfs f1, "@3070"@sda21(r2)
 /* 801427F8 0013F738  4B EE 84 CD */	bl checkPass__12J3DFrameCtrlFf
 /* 801427FC 0013F73C  2C 03 00 00 */	cmpwi r3, 0
 /* 80142800 0013F740  40 82 00 34 */	bne lbl_80142834
 /* 80142804 0013F744  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 80142808 0013F748  48 00 E1 19 */	bl getFrameCtrl__6TYoshiCFv
-/* 8014280C 0013F74C  C0 22 9F 50 */	lfs f1, $$23071@sda21(r2)
+/* 8014280C 0013F74C  C0 22 9F 50 */	lfs f1, "@3071"@sda21(r2)
 /* 80142810 0013F750  4B EE 84 B5 */	bl checkPass__12J3DFrameCtrlFf
 /* 80142814 0013F754  2C 03 00 00 */	cmpwi r3, 0
 /* 80142818 0013F758  40 82 00 1C */	bne lbl_80142834
 /* 8014281C 0013F75C  80 7D 03 F0 */	lwz r3, 0x3f0(r29)
 /* 80142820 0013F760  48 00 E1 01 */	bl getFrameCtrl__6TYoshiCFv
-/* 80142824 0013F764  C0 22 9F 48 */	lfs f1, $$23069@sda21(r2)
+/* 80142824 0013F764  C0 22 9F 48 */	lfs f1, "@3069"@sda21(r2)
 /* 80142828 0013F768  4B EE 84 9D */	bl checkPass__12J3DFrameCtrlFf
 /* 8014282C 0013F76C  2C 03 00 00 */	cmpwi r3, 0
 /* 80142830 0013F770  41 82 00 14 */	beq lbl_80142844
@@ -565,7 +565,7 @@ lbl_80142844:
 /* 8014287C 0013F7BC  C0 1B 00 2C */	lfs f0, 0x2c(r27)
 /* 80142880 0013F7C0  D0 1D 01 B0 */	stfs f0, 0x1b0(r29)
 /* 80142884 0013F7C4  C0 3D 00 B0 */	lfs f1, 0xb0(r29)
-/* 80142888 0013F7C8  C0 02 9F 40 */	lfs f0, $$23067@sda21(r2)
+/* 80142888 0013F7C8  C0 02 9F 40 */	lfs f0, "@3067"@sda21(r2)
 /* 8014288C 0013F7CC  80 7D 00 7C */	lwz r3, 0x7c(r29)
 /* 80142890 0013F7D0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80142894 0013F7D4  3C 03 FC 00 */	addis r0, r3, 0xfc00
@@ -582,13 +582,13 @@ lbl_80142844:
 /* 801428C0 0013F800  38 BD 01 A8 */	addi r5, r29, 0x1a8
 /* 801428C4 0013F804  38 C0 00 00 */	li r6, 0
 /* 801428C8 0013F808  38 E0 00 00 */	li r7, 0
-/* 801428CC 0013F80C  4B F9 92 51 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801428CC 0013F80C  4B F9 92 51 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_801428D0:
 /* 801428D0 0013F810  2C 1E 00 00 */	cmpwi r30, 0
 /* 801428D4 0013F814  40 81 00 28 */	ble lbl_801428FC
 /* 801428D8 0013F818  38 7D 00 00 */	addi r3, r29, 0
 /* 801428DC 0013F81C  38 9D 01 A8 */	addi r4, r29, 0x1a8
-/* 801428E0 0013F820  4B FE CA 71 */	bl calcGroundMtx__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
+/* 801428E0 0013F820  4B FE CA 71 */	bl "calcGroundMtx__6TMarioFRCQ29JGeometry8TVec3<f>"
 /* 801428E4 0013F824  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 801428E8 0013F828  38 9E 00 00 */	addi r4, r30, 0
 /* 801428EC 0013F82C  38 BD 02 50 */	addi r5, r29, 0x250
@@ -614,13 +614,13 @@ emitRotateShootEffect__6TMarioFv:
 /* 8014292C 0013F86C  38 FF 00 00 */	addi r7, r31, 0
 /* 80142930 0013F870  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142934 0013F874  38 BF 01 78 */	addi r5, r31, 0x178
-/* 80142938 0013F878  4B F9 8E 99 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142938 0013F878  4B F9 8E 99 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8014293C 0013F87C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142940 0013F880  38 FF 00 00 */	addi r7, r31, 0
 /* 80142944 0013F884  38 BF 01 78 */	addi r5, r31, 0x178
 /* 80142948 0013F888  38 80 01 15 */	li r4, 0x115
 /* 8014294C 0013F88C  38 C0 00 01 */	li r6, 1
-/* 80142950 0013F890  4B F9 8E 81 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142950 0013F890  4B F9 8E 81 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142954 0013F894  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80142958 0013F898  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 8014295C 0013F89C  38 21 00 18 */	addi r1, r1, 0x18
@@ -650,7 +650,7 @@ emitBlurSpinJump__6TMarioFv:
 /* 801429B0 0013F8F0  38 C0 00 01 */	li r6, 1
 /* 801429B4 0013F8F4  4B F9 8B D9 */	bl emitAndBindToMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv
 /* 801429B8 0013F8F8  C0 3F 01 34 */	lfs f1, 0x134(r31)
-/* 801429BC 0013F8FC  C0 02 9F 24 */	lfs f0, $$22939@sda21(r2)
+/* 801429BC 0013F8FC  C0 02 9F 24 */	lfs f0, "@2939"@sda21(r2)
 /* 801429C0 0013F900  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801429C4 0013F904  40 81 00 44 */	ble lbl_80142A08
 /* 801429C8 0013F908  7F E3 FB 78 */	mr r3, r31
@@ -663,9 +663,9 @@ emitBlurSpinJump__6TMarioFv:
 /* 801429E4 0013F924  4B F9 8B A9 */	bl emitAndBindToMtxPtr__21TMarioParticleManagerFlPA4_fUcPCv
 /* 801429E8 0013F928  28 03 00 00 */	cmplwi r3, 0
 /* 801429EC 0013F92C  41 82 00 1C */	beq lbl_80142A08
-/* 801429F0 0013F930  C0 22 9F 54 */	lfs f1, $$23079@sda21(r2)
+/* 801429F0 0013F930  C0 22 9F 54 */	lfs f1, "@3079"@sda21(r2)
 /* 801429F4 0013F934  C0 1F 01 34 */	lfs f0, 0x134(r31)
-/* 801429F8 0013F938  C0 42 9F 2C */	lfs f2, $$23006@sda21(r2)
+/* 801429F8 0013F938  C0 42 9F 2C */	lfs f2, "@3006"@sda21(r2)
 /* 801429FC 0013F93C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80142A00 0013F940  EC 02 00 32 */	fmuls f0, f2, f0
 /* 80142A04 0013F944  D0 03 01 B0 */	stfs f0, 0x1b0(r3)
@@ -755,7 +755,7 @@ warpOutEffect__6TMarioFif:
 /* 80142B2C 0013FA6C  48 00 00 78 */	b lbl_80142BA4
 /* 80142B30 0013FA70  48 00 00 74 */	b lbl_80142BA4
 lbl_80142B34:
-/* 80142B34 0013FA74  C0 02 9F 58 */	lfs f0, $$23168@sda21(r2)
+/* 80142B34 0013FA74  C0 02 9F 58 */	lfs f0, "@3168"@sda21(r2)
 /* 80142B38 0013FA78  7F EA FB 78 */	mr r10, r31
 /* 80142B3C 0013FA7C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142B40 0013FA80  38 BF 00 10 */	addi r5, r31, 0x10
@@ -767,10 +767,10 @@ lbl_80142B34:
 /* 80142B58 0013FA98  39 20 00 00 */	li r9, 0
 /* 80142B5C 0013FA9C  D8 01 01 10 */	stfd f0, 0x110(r1)
 /* 80142B60 0013FAA0  80 E1 01 14 */	lwz r7, 0x114(r1)
-/* 80142B64 0013FAA4  4B F9 8E 99 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80142B64 0013FAA4  4B F9 8E 99 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 /* 80142B68 0013FAA8  48 00 02 14 */	b lbl_80142D7C
 lbl_80142B6C:
-/* 80142B6C 0013FAAC  C0 02 9F 58 */	lfs f0, $$23168@sda21(r2)
+/* 80142B6C 0013FAAC  C0 02 9F 58 */	lfs f0, "@3168"@sda21(r2)
 /* 80142B70 0013FAB0  7F EA FB 78 */	mr r10, r31
 /* 80142B74 0013FAB4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80142B78 0013FAB8  38 BF 00 10 */	addi r5, r31, 0x10
@@ -782,7 +782,7 @@ lbl_80142B6C:
 /* 80142B90 0013FAD0  39 20 00 00 */	li r9, 0
 /* 80142B94 0013FAD4  D8 01 01 10 */	stfd f0, 0x110(r1)
 /* 80142B98 0013FAD8  80 E1 01 14 */	lwz r7, 0x114(r1)
-/* 80142B9C 0013FADC  4B F9 8E 61 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80142B9C 0013FADC  4B F9 8E 61 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 /* 80142BA0 0013FAE0  48 00 01 DC */	b lbl_80142D7C
 lbl_80142BA4:
 /* 80142BA4 0013FAE4  80 7F 03 A8 */	lwz r3, 0x3a8(r31)
@@ -922,7 +922,7 @@ warpInLight__6TMarioFv:
 /* 80142DA4 0013FCE4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80142DA8 0013FCE8  38 C0 00 00 */	li r6, 0
 /* 80142DAC 0013FCEC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80142DB0 0013FCF0  4B F9 8A 21 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80142DB0 0013FCF0  4B F9 8A 21 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80142DB4 0013FCF4  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80142DB8 0013FCF8  38 21 00 08 */	addi r1, r1, 8
 /* 80142DBC 0013FCFC  7C 08 03 A6 */	mtlr r0
@@ -931,13 +931,13 @@ warpInLight__6TMarioFv:
 .global warpInEffect__6TMarioFv
 warpInEffect__6TMarioFv:
 /* 80142DC4 0013FD04  7C 08 02 A6 */	mflr r0
-/* 80142DC8 0013FD08  3C 80 80 3B */	lis r4, $$23223@ha
+/* 80142DC8 0013FD08  3C 80 80 3B */	lis r4, "@3223"@ha
 /* 80142DCC 0013FD0C  90 01 00 04 */	stw r0, 4(r1)
 /* 80142DD0 0013FD10  94 21 FF 98 */	stwu r1, -0x68(r1)
 /* 80142DD4 0013FD14  BF 41 00 50 */	stmw r26, 0x50(r1)
 /* 80142DD8 0013FD18  3B A3 00 00 */	addi r29, r3, 0
 /* 80142DDC 0013FD1C  3C 60 80 38 */	lis r3, warpInEffectIDs@ha
-/* 80142DE0 0013FD20  3B E4 68 3C */	addi r31, r4, $$23223@l
+/* 80142DE0 0013FD20  3B E4 68 3C */	addi r31, r4, "@3223"@l
 /* 80142DE4 0013FD24  3B 43 B7 D8 */	addi r26, r3, warpInEffectIDs@l
 /* 80142DE8 0013FD28  3B 7D 04 5C */	addi r27, r29, 0x45c
 /* 80142DEC 0013FD2C  3B C0 00 00 */	li r30, 0
@@ -1062,30 +1062,30 @@ execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle:
 /* 80142F7C 0013FEBC  80 A4 01 20 */	lwz r5, 0x120(r4)
 /* 80142F80 0013FEC0  90 01 00 D8 */	stw r0, 0xd8(r1)
 /* 80142F84 0013FEC4  A0 83 00 86 */	lhz r4, 0x86(r3)
-/* 80142F88 0013FEC8  C8 42 9F 68 */	lfd f2, $$23270@sda21(r2)
+/* 80142F88 0013FEC8  C8 42 9F 68 */	lfd f2, "@3270"@sda21(r2)
 /* 80142F8C 0013FECC  90 81 00 D4 */	stw r4, 0xd4(r1)
 /* 80142F90 0013FED0  C8 01 00 D8 */	lfd f0, 0xd8(r1)
 /* 80142F94 0013FED4  C0 23 04 68 */	lfs f1, 0x468(r3)
 /* 80142F98 0013FED8  38 61 00 6C */	addi r3, r1, 0x6c
 /* 80142F9C 0013FEDC  EC 00 10 28 */	fsubs f0, f0, f2
-/* 80142FA0 0013FEE0  C0 42 9F 5C */	lfs f2, $$23267@sda21(r2)
+/* 80142FA0 0013FEE0  C0 42 9F 5C */	lfs f2, "@3267"@sda21(r2)
 /* 80142FA4 0013FEE4  90 01 00 D0 */	stw r0, 0xd0(r1)
 /* 80142FA8 0013FEE8  C3 DF 00 14 */	lfs f30, 0x14(r31)
 /* 80142FAC 0013FEEC  EF 62 00 32 */	fmuls f27, f2, f0
-/* 80142FB0 0013FEF0  C0 02 9F 60 */	lfs f0, $$23268@sda21(r2)
+/* 80142FB0 0013FEF0  C0 02 9F 60 */	lfs f0, "@3268"@sda21(r2)
 /* 80142FB4 0013FEF4  C3 BF 00 18 */	lfs f29, 0x18(r31)
 /* 80142FB8 0013FEF8  EF 7B 00 2A */	fadds f27, f27, f0
 /* 80142FBC 0013FEFC  C3 9F 00 1C */	lfs f28, 0x1c(r31)
 /* 80142FC0 0013FF00  80 85 00 00 */	lwz r4, 0(r5)
 /* 80142FC4 0013FF04  80 05 00 04 */	lwz r0, 4(r5)
-/* 80142FC8 0013FF08  C8 42 9F 70 */	lfd f2, $$23272@sda21(r2)
+/* 80142FC8 0013FF08  C8 42 9F 70 */	lfd f2, "@3272"@sda21(r2)
 /* 80142FCC 0013FF0C  90 81 00 6C */	stw r4, 0x6c(r1)
 /* 80142FD0 0013FF10  C8 01 00 D0 */	lfd f0, 0xd0(r1)
 /* 80142FD4 0013FF14  90 01 00 70 */	stw r0, 0x70(r1)
 /* 80142FD8 0013FF18  EF E0 10 28 */	fsubs f31, f0, f2
 /* 80142FDC 0013FF1C  80 05 00 08 */	lwz r0, 8(r5)
 /* 80142FE0 0013FF20  90 01 00 74 */	stw r0, 0x74(r1)
-/* 80142FE4 0013FF24  4B F8 35 35 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 80142FE4 0013FF24  4B F8 35 35 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80142FE8 0013FF28  80 01 00 6C */	lwz r0, 0x6c(r1)
 /* 80142FEC 0013FF2C  FC 20 F8 90 */	fmr f1, f31
 /* 80142FF0 0013FF30  80 81 00 70 */	lwz r4, 0x70(r1)
@@ -1100,7 +1100,7 @@ execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle:
 /* 80143014 0013FF54  80 01 00 94 */	lwz r0, 0x94(r1)
 /* 80143018 0013FF58  90 81 00 60 */	stw r4, 0x60(r1)
 /* 8014301C 0013FF5C  90 01 00 64 */	stw r0, 0x64(r1)
-/* 80143020 0013FF60  4B F8 34 F9 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 80143020 0013FF60  4B F8 34 F9 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80143024 0013FF64  80 01 00 5C */	lwz r0, 0x5c(r1)
 /* 80143028 0013FF68  FC 20 D8 90 */	fmr f1, f27
 /* 8014302C 0013FF6C  80 81 00 60 */	lwz r4, 0x60(r1)
@@ -1115,7 +1115,7 @@ execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle:
 /* 80143050 0013FF90  80 01 00 A0 */	lwz r0, 0xa0(r1)
 /* 80143054 0013FF94  90 81 00 84 */	stw r4, 0x84(r1)
 /* 80143058 0013FF98  90 01 00 88 */	stw r0, 0x88(r1)
-/* 8014305C 0013FF9C  4B F8 34 BD */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 8014305C 0013FF9C  4B F8 34 BD */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80143060 0013FFA0  80 01 00 80 */	lwz r0, 0x80(r1)
 /* 80143064 0013FFA4  80 61 00 84 */	lwz r3, 0x84(r1)
 /* 80143068 0013FFA8  90 01 00 B0 */	stw r0, 0xb0(r1)
@@ -1153,7 +1153,7 @@ surfingEffect__6TMarioFv:
 /* 801430DC 0014001C  DB 81 00 40 */	stfd f28, 0x40(r1)
 /* 801430E0 00140020  93 E1 00 3C */	stw r31, 0x3c(r1)
 /* 801430E4 00140024  7C 7F 1B 78 */	mr r31, r3
-/* 801430E8 00140028  C3 E2 9F 60 */	lfs f31, $$23268@sda21(r2)
+/* 801430E8 00140028  C3 E2 9F 60 */	lfs f31, "@3268"@sda21(r2)
 /* 801430EC 0014002C  4B FF 7B B5 */	bl getSurfingParamsWater__6TMarioFv
 /* 801430F0 00140030  C3 C3 01 44 */	lfs f30, 0x144(r3)
 /* 801430F4 00140034  7F E3 FB 78 */	mr r3, r31
@@ -1334,7 +1334,7 @@ lbl_80143368:
 /* 8014336C 001402AC  41 82 00 44 */	beq lbl_801433B0
 /* 80143370 001402B0  38 7F 00 00 */	addi r3, r31, 0
 /* 80143374 001402B4  38 9F 01 78 */	addi r4, r31, 0x178
-/* 80143378 001402B8  4B FE BF D9 */	bl calcGroundMtx__6TMarioFRCQ29JGeometry8TVec3$$0f$$1
+/* 80143378 001402B8  4B FE BF D9 */	bl "calcGroundMtx__6TMarioFRCQ29JGeometry8TVec3<f>"
 /* 8014337C 001402BC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143380 001402C0  38 FF 00 00 */	addi r7, r31, 0
 /* 80143384 001402C4  38 BF 02 50 */	addi r5, r31, 0x250
@@ -1346,7 +1346,7 @@ lbl_80143368:
 /* 8014339C 001402DC  38 BF 01 78 */	addi r5, r31, 0x178
 /* 801433A0 001402E0  38 80 01 0F */	li r4, 0x10f
 /* 801433A4 001402E4  38 C0 00 01 */	li r6, 1
-/* 801433A8 001402E8  4B F9 84 29 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801433A8 001402E8  4B F9 84 29 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801433AC 001402EC  48 00 00 24 */	b lbl_801433D0
 lbl_801433B0:
 /* 801433B0 001402F0  80 BF 03 A8 */	lwz r5, 0x3a8(r31)
@@ -1384,7 +1384,7 @@ treeSlipEffect__6TMarioFv:
 /* 80143420 00140360  88 0D 98 C8 */	lbz r0, init$2744@sda21(r13)
 /* 80143424 00140364  7C 00 07 75 */	extsb. r0, r0
 /* 80143428 00140368  40 82 00 1C */	bne lbl_80143444
-/* 8014342C 0014036C  C0 02 9F 78 */	lfs f0, $$23362@sda21(r2)
+/* 8014342C 0014036C  C0 02 9F 78 */	lfs f0, "@3362"@sda21(r2)
 /* 80143430 00140370  38 00 00 01 */	li r0, 1
 /* 80143434 00140374  D0 1F 00 0C */	stfs f0, 0xc(r31)
 /* 80143438 00140378  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -1423,7 +1423,7 @@ wallSlipEffect__6TMarioFv:
 /* 801434A8 001403E8  94 21 FF F8 */	stwu r1, -8(r1)
 /* 801434AC 001403EC  38 C0 00 01 */	li r6, 1
 /* 801434B0 001403F0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 801434B4 001403F4  4B F9 83 1D */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801434B4 001403F4  4B F9 83 1D */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801434B8 001403F8  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 801434BC 001403FC  38 21 00 08 */	addi r1, r1, 8
 /* 801434C0 00140400  7C 08 03 A6 */	mtlr r0
@@ -1455,7 +1455,7 @@ runningRippleEffect__6TMarioFv:
 /* 80143510 00140450  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80143514 00140454  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80143518 00140458  7C 7F 1B 78 */	mr r31, r3
-/* 8014351C 0014045C  C0 02 9F 20 */	lfs f0, $$22900@sda21(r2)
+/* 8014351C 0014045C  C0 02 9F 20 */	lfs f0, "@2900"@sda21(r2)
 /* 80143520 00140460  C0 23 00 B0 */	lfs f1, 0xb0(r3)
 /* 80143524 00140464  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80143528 00140468  40 81 00 1C */	ble lbl_80143544
@@ -1464,10 +1464,10 @@ runningRippleEffect__6TMarioFv:
 /* 80143534 00140474  38 80 00 34 */	li r4, 0x34
 /* 80143538 00140478  38 C0 00 00 */	li r6, 0
 /* 8014353C 0014047C  38 E0 00 00 */	li r7, 0
-/* 80143540 00140480  4B F9 85 DD */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143540 00140480  4B F9 85 DD */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_80143544:
 /* 80143544 00140484  38 7F 01 90 */	addi r3, r31, 0x190
-/* 80143548 00140488  4B F8 B9 9D */	bl SMS_EmitRippleTiny__FPQ29JGeometry8TVec3$$0f$$1
+/* 80143548 00140488  4B F8 B9 9D */	bl "SMS_EmitRippleTiny__FPQ29JGeometry8TVec3<f>"
 /* 8014354C 0014048C  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80143550 00140490  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 80143554 00140494  38 21 00 18 */	addi r1, r1, 0x18
@@ -1512,7 +1512,7 @@ lbl_8014359C:
 /* 801435DC 0014051C  38 80 01 0C */	li r4, 0x10c
 /* 801435E0 00140520  38 C0 00 01 */	li r6, 1
 /* 801435E4 00140524  38 ED 98 C4 */	addi r7, r13, bubbleCallBack@sda21
-/* 801435E8 00140528  4B F9 7A CD */	bl emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcP54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1PCv
+/* 801435E8 00140528  4B F9 7A CD */	bl "emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcP54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>PCv"
 /* 801435EC 0014052C  28 03 00 00 */	cmplwi r3, 0
 /* 801435F0 00140530  41 82 00 0C */	beq lbl_801435FC
 /* 801435F4 00140534  38 9E 01 C0 */	addi r4, r30, 0x1c0
@@ -1548,11 +1548,11 @@ bubbleFromBody__6TMarioFv:
 /* 80143658 00140598  41 82 00 84 */	beq lbl_801436DC
 /* 8014365C 0014059C  C0 1E 28 78 */	lfs f0, 0x2878(r30)
 /* 80143660 001405A0  C0 3E 00 B0 */	lfs f1, 0xb0(r30)
-/* 80143664 001405A4  C0 42 9F 24 */	lfs f2, $$22939@sda21(r2)
+/* 80143664 001405A4  C0 42 9F 24 */	lfs f2, "@2939"@sda21(r2)
 /* 80143668 001405A8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8014366C 001405AC  C0 7E 28 64 */	lfs f3, 0x2864(r30)
 /* 80143670 001405B0  40 81 00 0C */	ble lbl_8014367C
-/* 80143674 001405B4  C0 42 9F 60 */	lfs f2, $$23268@sda21(r2)
+/* 80143674 001405B4  C0 42 9F 60 */	lfs f2, "@3268"@sda21(r2)
 /* 80143678 001405B8  48 00 00 18 */	b lbl_80143690
 lbl_8014367C:
 /* 8014367C 001405BC  FC 01 18 40 */	fcmpo cr0, f1, f3
@@ -1571,7 +1571,7 @@ lbl_80143690:
 /* 801436AC 001405EC  38 C0 00 01 */	li r6, 1
 /* 801436B0 001405F0  38 ED 98 C4 */	addi r7, r13, bubbleCallBack@sda21
 /* 801436B4 001405F4  EF E2 08 3A */	fmadds f31, f2, f0, f1
-/* 801436B8 001405F8  4B F9 79 FD */	bl emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcP54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1PCv
+/* 801436B8 001405F8  4B F9 79 FD */	bl "emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcP54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>PCv"
 /* 801436BC 001405FC  7C 7F 1B 79 */	or. r31, r3, r3
 /* 801436C0 00140600  41 82 00 1C */	beq lbl_801436DC
 /* 801436C4 00140604  7F C3 F3 78 */	mr r3, r30
@@ -1608,7 +1608,7 @@ bubbleFromMouth__6TMarioFi:
 /* 80143730 00140670  38 80 01 0C */	li r4, 0x10c
 /* 80143734 00140674  38 C0 00 01 */	li r6, 1
 /* 80143738 00140678  38 ED 98 C4 */	addi r7, r13, bubbleCallBack@sda21
-/* 8014373C 0014067C  4B F9 79 79 */	bl emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcP54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1PCv
+/* 8014373C 0014067C  4B F9 79 79 */	bl "emitParticleCallBack__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcP54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>PCv"
 /* 80143740 00140680  28 03 00 00 */	cmplwi r3, 0
 /* 80143744 00140684  41 82 00 0C */	beq lbl_80143750
 /* 80143748 00140688  38 9E 01 C0 */	addi r4, r30, 0x1c0
@@ -1641,7 +1641,7 @@ lbl_80143798:
 /* 8014379C 001406DC  40 82 00 5C */	bne lbl_801437F8
 /* 801437A0 001406E0  38 7F 00 00 */	addi r3, r31, 0
 /* 801437A4 001406E4  38 81 00 30 */	addi r4, r1, 0x30
-/* 801437A8 001406E8  4B F2 FF 15 */	bl getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3$$0f$$1
+/* 801437A8 001406E8  4B F2 FF 15 */	bl "getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3<f>"
 /* 801437AC 001406EC  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
 /* 801437B0 001406F0  C0 21 00 34 */	lfs f1, 0x34(r1)
 /* 801437B4 001406F4  C0 03 00 F0 */	lfs f0, 0xf0(r3)
@@ -1651,7 +1651,7 @@ lbl_80143798:
 /* 801437C4 00140704  60 00 00 02 */	ori r0, r0, 2
 /* 801437C8 00140708  90 1F 00 10 */	stw r0, 0x10(r31)
 /* 801437CC 0014070C  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
-/* 801437D0 00140710  C0 02 9F 24 */	lfs f0, $$22939@sda21(r2)
+/* 801437D0 00140710  C0 02 9F 24 */	lfs f0, "@2939"@sda21(r2)
 /* 801437D4 00140714  C0 23 28 B4 */	lfs f1, 0x28b4(r3)
 /* 801437D8 00140718  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 801437DC 0014071C  41 82 00 1C */	beq lbl_801437F8
@@ -1660,7 +1660,7 @@ lbl_80143798:
 /* 801437E8 00140728  38 80 00 33 */	li r4, 0x33
 /* 801437EC 0014072C  38 C0 00 00 */	li r6, 0
 /* 801437F0 00140730  38 E0 00 00 */	li r7, 0
-/* 801437F4 00140734  4B F9 83 29 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801437F4 00140734  4B F9 83 29 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_801437F8:
 /* 801437F8 00140738  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 801437FC 0014073C  83 E1 00 44 */	lwz r31, 0x44(r1)
@@ -1711,13 +1711,13 @@ lbl_80143880:
 /* 80143890 001407D0  38 80 00 31 */	li r4, 0x31
 /* 80143894 001407D4  38 C0 00 00 */	li r6, 0
 /* 80143898 001407D8  38 E0 00 00 */	li r7, 0
-/* 8014389C 001407DC  4B F9 82 81 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 8014389C 001407DC  4B F9 82 81 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 801438A0 001407E0  48 00 01 10 */	b lbl_801439B0
 lbl_801438A4:
 /* 801438A4 001407E4  80 7F 04 24 */	lwz r3, 0x424(r31)
 /* 801438A8 001407E8  48 00 D9 29 */	bl setJumpIntoWaterEffect__12TMarioEffectFv
 /* 801438AC 001407EC  C0 3F 00 A8 */	lfs f1, 0xa8(r31)
-/* 801438B0 001407F0  C0 02 9F 24 */	lfs f0, $$22939@sda21(r2)
+/* 801438B0 001407F0  C0 02 9F 24 */	lfs f0, "@2939"@sda21(r2)
 /* 801438B4 001407F4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 801438B8 001407F8  40 80 00 08 */	bge lbl_801438C0
 /* 801438BC 001407FC  FC 20 08 50 */	fneg f1, f1
@@ -1744,20 +1744,20 @@ lbl_801438F4:
 /* 80143904 00140844  38 80 00 2F */	li r4, 0x2f
 /* 80143908 00140848  38 C0 00 00 */	li r6, 0
 /* 8014390C 0014084C  38 E0 00 00 */	li r7, 0
-/* 80143910 00140850  4B F9 82 0D */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143910 00140850  4B F9 82 0D */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_80143914:
 /* 80143914 00140854  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143918 00140858  38 A1 00 1C */	addi r5, r1, 0x1c
 /* 8014391C 0014085C  38 80 00 30 */	li r4, 0x30
 /* 80143920 00140860  38 C0 00 00 */	li r6, 0
 /* 80143924 00140864  38 E0 00 00 */	li r7, 0
-/* 80143928 00140868  4B F9 81 F5 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143928 00140868  4B F9 81 F5 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8014392C 0014086C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143930 00140870  38 A1 00 1C */	addi r5, r1, 0x1c
 /* 80143934 00140874  38 80 01 D4 */	li r4, 0x1d4
 /* 80143938 00140878  38 C0 00 02 */	li r6, 2
 /* 8014393C 0014087C  38 E0 00 00 */	li r7, 0
-/* 80143940 00140880  4B F9 81 DD */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143940 00140880  4B F9 81 DD */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143944 00140884  48 00 00 6C */	b lbl_801439B0
 lbl_80143948:
 /* 80143948 00140888  80 1F 00 7C */	lwz r0, 0x7c(r31)
@@ -1775,20 +1775,20 @@ lbl_80143960:
 /* 80143970 001408B0  38 80 00 31 */	li r4, 0x31
 /* 80143974 001408B4  38 C0 00 00 */	li r6, 0
 /* 80143978 001408B8  38 E0 00 00 */	li r7, 0
-/* 8014397C 001408BC  4B F9 81 A1 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 8014397C 001408BC  4B F9 81 A1 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_80143980:
 /* 80143980 001408C0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143984 001408C4  38 A1 00 1C */	addi r5, r1, 0x1c
 /* 80143988 001408C8  38 80 00 32 */	li r4, 0x32
 /* 8014398C 001408CC  38 C0 00 00 */	li r6, 0
 /* 80143990 001408D0  38 E0 00 00 */	li r7, 0
-/* 80143994 001408D4  4B F9 81 89 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143994 001408D4  4B F9 81 89 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143998 001408D8  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 8014399C 001408DC  38 A1 00 1C */	addi r5, r1, 0x1c
 /* 801439A0 001408E0  38 80 01 D5 */	li r4, 0x1d5
 /* 801439A4 001408E4  38 C0 00 02 */	li r6, 2
 /* 801439A8 001408E8  38 E0 00 00 */	li r7, 0
-/* 801439AC 001408EC  4B F9 81 71 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801439AC 001408EC  4B F9 81 71 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_801439B0:
 /* 801439B0 001408F0  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 801439B4 001408F4  83 E1 00 2C */	lwz r31, 0x2c(r1)
@@ -1858,11 +1858,11 @@ smallTouchDownEffect__6TMarioFv:
 /* 80143A84 001409C4  3B E4 36 60 */	addi r31, r4, scale$2692@l
 /* 80143A88 001409C8  38 80 00 11 */	li r4, 0x11
 /* 80143A8C 001409CC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80143A90 001409D0  4B F9 80 8D */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143A90 001409D0  4B F9 80 8D */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143A94 001409D4  88 0D 98 C0 */	lbz r0, init$2693@sda21(r13)
 /* 80143A98 001409D8  7C 00 07 75 */	extsb. r0, r0
 /* 80143A9C 001409DC  40 82 00 1C */	bne lbl_80143AB8
-/* 80143AA0 001409E0  C0 02 9F 7C */	lfs f0, $$23484@sda21(r2)
+/* 80143AA0 001409E0  C0 02 9F 7C */	lfs f0, "@3484"@sda21(r2)
 /* 80143AA4 001409E4  38 00 00 01 */	li r0, 1
 /* 80143AA8 001409E8  D0 1F 00 00 */	stfs f0, 0(r31)
 /* 80143AAC 001409EC  D0 1F 00 04 */	stfs f0, 4(r31)
@@ -1905,7 +1905,7 @@ strongTouchDownEffect__6TMarioFv:
 /* 80143B2C 00140A6C  38 BF 00 10 */	addi r5, r31, 0x10
 /* 80143B30 00140A70  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143B34 00140A74  A8 FF 00 96 */	lha r7, 0x96(r31)
-/* 80143B38 00140A78  4B F9 7E C5 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80143B38 00140A78  4B F9 7E C5 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 /* 80143B3C 00140A7C  A8 FF 00 96 */	lha r7, 0x96(r31)
 /* 80143B40 00140A80  38 BF 00 10 */	addi r5, r31, 0x10
 /* 80143B44 00140A84  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
@@ -1914,15 +1914,15 @@ strongTouchDownEffect__6TMarioFv:
 /* 80143B50 00140A90  39 00 00 00 */	li r8, 0
 /* 80143B54 00140A94  39 20 00 00 */	li r9, 0
 /* 80143B58 00140A98  39 40 00 00 */	li r10, 0
-/* 80143B5C 00140A9C  4B F9 7E A1 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80143B5C 00140A9C  4B F9 7E A1 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 /* 80143B60 00140AA0  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80143B64 00140AA4  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 80143B68 00140AA8  38 21 00 18 */	addi r1, r1, 0x18
 /* 80143B6C 00140AAC  7C 08 03 A6 */	mtlr r0
 /* 80143B70 00140AB0  4E 80 00 20 */	blr 
 
-.global emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3$$0f$$1
-emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3$$0f$$1:
+.global "emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3<f>"
+"emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3<f>":
 /* 80143B74 00140AB4  7C 08 02 A6 */	mflr r0
 /* 80143B78 00140AB8  38 C0 00 00 */	li r6, 0
 /* 80143B7C 00140ABC  90 01 00 04 */	stw r0, 4(r1)
@@ -1933,13 +1933,13 @@ emitGetCoinEffect__6TMarioFPQ29JGeometry8TVec3$$0f$$1:
 /* 80143B90 00140AD0  38 BF 00 00 */	addi r5, r31, 0
 /* 80143B94 00140AD4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143B98 00140AD8  38 80 00 37 */	li r4, 0x37
-/* 80143B9C 00140ADC  4B F9 7F 81 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143B9C 00140ADC  4B F9 7F 81 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143BA0 00140AE0  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143BA4 00140AE4  38 BF 00 00 */	addi r5, r31, 0
 /* 80143BA8 00140AE8  38 80 00 38 */	li r4, 0x38
 /* 80143BAC 00140AEC  38 C0 00 00 */	li r6, 0
 /* 80143BB0 00140AF0  38 E0 00 00 */	li r7, 0
-/* 80143BB4 00140AF4  4B F9 7F 69 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143BB4 00140AF4  4B F9 7F 69 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143BB8 00140AF8  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80143BBC 00140AFC  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 80143BC0 00140B00  38 21 00 18 */	addi r1, r1, 0x18
@@ -1956,7 +1956,7 @@ emitGetWaterEffect__6TMarioFv:
 /* 80143BE0 00140B20  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80143BE4 00140B24  38 E0 00 00 */	li r7, 0
 /* 80143BE8 00140B28  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80143BEC 00140B2C  4B F9 7B E5 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143BEC 00140B2C  4B F9 7B E5 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143BF0 00140B30  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80143BF4 00140B34  38 21 00 08 */	addi r1, r1, 8
 /* 80143BF8 00140B38  7C 08 03 A6 */	mtlr r0
@@ -1974,7 +1974,7 @@ emitGetEffect__6TMarioFv:
 /* 80143C1C 00140B5C  7C 7F 1B 78 */	mr r31, r3
 /* 80143C20 00140B60  38 BF 01 60 */	addi r5, r31, 0x160
 /* 80143C24 00140B64  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80143C28 00140B68  4B F9 7B A9 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143C28 00140B68  4B F9 7B A9 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143C2C 00140B6C  38 7F 00 00 */	addi r3, r31, 0
 /* 80143C30 00140B70  38 80 19 89 */	li r4, 0x1989
 /* 80143C34 00140B74  48 02 0A 89 */	bl startSoundActor__6TMarioFUl
@@ -2053,7 +2053,7 @@ lbl_80143CD0:
 /* 80143D2C 00140C6C  D0 01 00 34 */	stfs f0, 0x34(r1)
 /* 80143D30 00140C70  C0 0B 00 2C */	lfs f0, 0x2c(r11)
 /* 80143D34 00140C74  D0 01 00 38 */	stfs f0, 0x38(r1)
-/* 80143D38 00140C78  4B F9 7C C5 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80143D38 00140C78  4B F9 7C C5 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 lbl_80143D3C:
 /* 80143D3C 00140C7C  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 80143D40 00140C80  83 E1 00 44 */	lwz r31, 0x44(r1)
@@ -2092,7 +2092,7 @@ lbl_80143D90:
 /* 80143DAC 00140CEC  39 00 00 00 */	li r8, 0
 /* 80143DB0 00140CF0  39 20 00 00 */	li r9, 0
 /* 80143DB4 00140CF4  39 40 00 00 */	li r10, 0
-/* 80143DB8 00140CF8  4B F9 7C 45 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80143DB8 00140CF8  4B F9 7C 45 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 lbl_80143DBC:
 /* 80143DBC 00140CFC  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80143DC0 00140D00  38 21 00 08 */	addi r1, r1, 8
@@ -2112,7 +2112,7 @@ emitParticle__6TMarioFis:
 /* 80143DEC 00140D2C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
 /* 80143DF0 00140D30  39 20 00 00 */	li r9, 0
 /* 80143DF4 00140D34  39 40 00 00 */	li r10, 0
-/* 80143DF8 00140D38  4B F9 7C 05 */	bl emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1sssUcPCv
+/* 80143DF8 00140D38  4B F9 7C 05 */	bl "emitWithRotate__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>sssUcPCv"
 /* 80143DFC 00140D3C  28 03 00 00 */	cmplwi r3, 0
 /* 80143E00 00140D40  40 82 00 0C */	bne lbl_80143E0C
 /* 80143E04 00140D44  38 60 00 00 */	li r3, 0
@@ -2125,15 +2125,15 @@ lbl_80143E10:
 /* 80143E18 00140D58  7C 08 03 A6 */	mtlr r0
 /* 80143E1C 00140D5C  4E 80 00 20 */	blr 
 
-.global emitParticle__6TMarioFiPCQ29JGeometry8TVec3$$0f$$1
-emitParticle__6TMarioFiPCQ29JGeometry8TVec3$$0f$$1:
+.global "emitParticle__6TMarioFiPCQ29JGeometry8TVec3<f>"
+"emitParticle__6TMarioFiPCQ29JGeometry8TVec3<f>":
 /* 80143E20 00140D60  7C 08 02 A6 */	mflr r0
 /* 80143E24 00140D64  38 C0 00 00 */	li r6, 0
 /* 80143E28 00140D68  90 01 00 04 */	stw r0, 4(r1)
 /* 80143E2C 00140D6C  38 E0 00 00 */	li r7, 0
 /* 80143E30 00140D70  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80143E34 00140D74  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80143E38 00140D78  4B F9 7C E5 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143E38 00140D78  4B F9 7C E5 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143E3C 00140D7C  28 03 00 00 */	cmplwi r3, 0
 /* 80143E40 00140D80  40 82 00 0C */	bne lbl_80143E4C
 /* 80143E44 00140D84  38 60 00 00 */	li r3, 0
@@ -2156,7 +2156,7 @@ emitParticle__6TMarioFi:
 /* 80143E74 00140DB4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80143E78 00140DB8  38 E0 00 00 */	li r7, 0
 /* 80143E7C 00140DBC  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80143E80 00140DC0  4B F9 7C 9D */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80143E80 00140DC0  4B F9 7C 9D */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80143E84 00140DC4  28 03 00 00 */	cmplwi r3, 0
 /* 80143E88 00140DC8  40 82 00 0C */	bne lbl_80143E94
 /* 80143E8C 00140DCC  38 60 00 00 */	li r3, 0
@@ -2270,204 +2270,204 @@ __sinit_MarioParticle_cpp:
 /* 80144000 00140F40  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80144004 00140F44  38 63 68 2C */	addi r3, r3, __vt__15TWarpInCallBack@l
 /* 80144008 00140F48  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 8014400C 00140F4C  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 8014400C 00140F4C  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 80144010 00140F50  90 8D 98 C4 */	stw r4, bubbleCallBack@sda21(r13)
 /* 80144014 00140F54  3C 80 80 3F */	lis r4, scale$2692@ha
 /* 80144018 00140F58  7C 00 07 75 */	extsb. r0, r0
 /* 8014401C 00140F5C  90 6D 98 CC */	stw r3, warpInCallBack@sda21(r13)
 /* 80144020 00140F60  3B E4 36 60 */	addi r31, r4, scale$2692@l
 /* 80144024 00140F64  40 82 00 28 */	bne lbl_8014404C
-/* 80144028 00140F68  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 80144028 00140F68  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8014402C 00140F6C  4B EC AC 09 */	bl initiate__10JSUPtrListFv
-/* 80144030 00140F70  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 80144034 00140F74  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 80144038 00140F78  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 80144030 00140F70  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 80144034 00140F74  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 80144038 00140F78  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8014403C 00140F7C  38 BF 00 18 */	addi r5, r31, 0x18
 /* 80144040 00140F80  4B F3 E6 E9 */	bl __register_global_object
 /* 80144044 00140F84  38 00 00 01 */	li r0, 1
-/* 80144048 00140F88  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 80144048 00140F88  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_8014404C:
-/* 8014404C 00140F8C  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 8014404C 00140F8C  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 80144050 00140F90  7C 00 07 75 */	extsb. r0, r0
 /* 80144054 00140F94  40 82 00 28 */	bne lbl_8014407C
-/* 80144058 00140F98  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 80144058 00140F98  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 8014405C 00140F9C  4B EC AB D9 */	bl initiate__10JSUPtrListFv
-/* 80144060 00140FA0  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 80144064 00140FA4  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 80144068 00140FA8  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 80144060 00140FA0  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 80144064 00140FA4  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 80144068 00140FA8  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 8014406C 00140FAC  38 BF 00 24 */	addi r5, r31, 0x24
 /* 80144070 00140FB0  4B F3 E6 B9 */	bl __register_global_object
 /* 80144074 00140FB4  38 00 00 01 */	li r0, 1
-/* 80144078 00140FB8  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 80144078 00140FB8  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_8014407C:
-/* 8014407C 00140FBC  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 8014407C 00140FBC  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 80144080 00140FC0  7C 00 07 75 */	extsb. r0, r0
 /* 80144084 00140FC4  40 82 00 28 */	bne lbl_801440AC
-/* 80144088 00140FC8  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 80144088 00140FC8  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 8014408C 00140FCC  4B EC AB A9 */	bl initiate__10JSUPtrListFv
-/* 80144090 00140FD0  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 80144094 00140FD4  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 80144098 00140FD8  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 80144090 00140FD0  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 80144094 00140FD4  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 80144098 00140FD8  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 8014409C 00140FDC  38 BF 00 30 */	addi r5, r31, 0x30
 /* 801440A0 00140FE0  4B F3 E6 89 */	bl __register_global_object
 /* 801440A4 00140FE4  38 00 00 01 */	li r0, 1
-/* 801440A8 00140FE8  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 801440A8 00140FE8  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_801440AC:
-/* 801440AC 00140FEC  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801440AC 00140FEC  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 801440B0 00140FF0  7C 00 07 75 */	extsb. r0, r0
 /* 801440B4 00140FF4  40 82 00 28 */	bne lbl_801440DC
-/* 801440B8 00140FF8  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801440B8 00140FF8  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801440BC 00140FFC  4B EC AB 79 */	bl initiate__10JSUPtrListFv
-/* 801440C0 00141000  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 801440C4 00141004  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 801440C8 00141008  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801440C0 00141000  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 801440C4 00141004  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 801440C8 00141008  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801440CC 0014100C  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 801440D0 00141010  4B F3 E6 59 */	bl __register_global_object
 /* 801440D4 00141014  38 00 00 01 */	li r0, 1
-/* 801440D8 00141018  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801440D8 00141018  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_801440DC:
-/* 801440DC 0014101C  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 801440DC 0014101C  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 801440E0 00141020  7C 00 07 75 */	extsb. r0, r0
 /* 801440E4 00141024  40 82 00 28 */	bne lbl_8014410C
-/* 801440E8 00141028  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801440E8 00141028  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801440EC 0014102C  4B EC AB 49 */	bl initiate__10JSUPtrListFv
-/* 801440F0 00141030  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 801440F4 00141034  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 801440F8 00141038  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801440F0 00141030  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 801440F4 00141034  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 801440F8 00141038  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801440FC 0014103C  38 BF 00 48 */	addi r5, r31, 0x48
 /* 80144100 00141040  4B F3 E6 29 */	bl __register_global_object
 /* 80144104 00141044  38 00 00 01 */	li r0, 1
-/* 80144108 00141048  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 80144108 00141048  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_8014410C:
-/* 8014410C 0014104C  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 8014410C 0014104C  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 80144110 00141050  7C 00 07 75 */	extsb. r0, r0
 /* 80144114 00141054  40 82 00 28 */	bne lbl_8014413C
-/* 80144118 00141058  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 80144118 00141058  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8014411C 0014105C  4B EC AB 19 */	bl initiate__10JSUPtrListFv
-/* 80144120 00141060  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 80144124 00141064  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 80144128 00141068  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 80144120 00141060  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 80144124 00141064  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 80144128 00141068  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8014412C 0014106C  38 BF 00 54 */	addi r5, r31, 0x54
 /* 80144130 00141070  4B F3 E5 F9 */	bl __register_global_object
 /* 80144134 00141074  38 00 00 01 */	li r0, 1
-/* 80144138 00141078  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 80144138 00141078  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_8014413C:
-/* 8014413C 0014107C  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 8014413C 0014107C  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 80144140 00141080  7C 00 07 75 */	extsb. r0, r0
 /* 80144144 00141084  40 82 00 28 */	bne lbl_8014416C
-/* 80144148 00141088  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 80144148 00141088  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8014414C 0014108C  4B EC AA E9 */	bl initiate__10JSUPtrListFv
-/* 80144150 00141090  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 80144154 00141094  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 80144158 00141098  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 80144150 00141090  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 80144154 00141094  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 80144158 00141098  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8014415C 0014109C  38 BF 00 60 */	addi r5, r31, 0x60
 /* 80144160 001410A0  4B F3 E5 C9 */	bl __register_global_object
 /* 80144164 001410A4  38 00 00 01 */	li r0, 1
-/* 80144168 001410A8  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 80144168 001410A8  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_8014416C:
-/* 8014416C 001410AC  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 8014416C 001410AC  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 80144170 001410B0  7C 00 07 75 */	extsb. r0, r0
 /* 80144174 001410B4  40 82 00 28 */	bne lbl_8014419C
-/* 80144178 001410B8  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 80144178 001410B8  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 8014417C 001410BC  4B EC AA B9 */	bl initiate__10JSUPtrListFv
-/* 80144180 001410C0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 80144184 001410C4  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 80144188 001410C8  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 80144180 001410C0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 80144184 001410C4  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 80144188 001410C8  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 8014418C 001410CC  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 80144190 001410D0  4B F3 E5 99 */	bl __register_global_object
 /* 80144194 001410D4  38 00 00 01 */	li r0, 1
-/* 80144198 001410D8  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 80144198 001410D8  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_8014419C:
-/* 8014419C 001410DC  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 8014419C 001410DC  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 801441A0 001410E0  7C 00 07 75 */	extsb. r0, r0
 /* 801441A4 001410E4  40 82 00 28 */	bne lbl_801441CC
-/* 801441A8 001410E8  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801441A8 001410E8  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801441AC 001410EC  4B EC AA 89 */	bl initiate__10JSUPtrListFv
-/* 801441B0 001410F0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 801441B4 001410F4  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 801441B8 001410F8  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801441B0 001410F0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 801441B4 001410F4  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 801441B8 001410F8  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801441BC 001410FC  38 BF 00 78 */	addi r5, r31, 0x78
 /* 801441C0 00141100  4B F3 E5 69 */	bl __register_global_object
 /* 801441C4 00141104  38 00 00 01 */	li r0, 1
-/* 801441C8 00141108  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 801441C8 00141108  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_801441CC:
-/* 801441CC 0014110C  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801441CC 0014110C  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 801441D0 00141110  7C 00 07 75 */	extsb. r0, r0
 /* 801441D4 00141114  40 82 00 28 */	bne lbl_801441FC
-/* 801441D8 00141118  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801441D8 00141118  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801441DC 0014111C  4B EC AA 59 */	bl initiate__10JSUPtrListFv
-/* 801441E0 00141120  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 801441E4 00141124  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 801441E8 00141128  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801441E0 00141120  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 801441E4 00141124  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 801441E8 00141128  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801441EC 0014112C  38 BF 00 84 */	addi r5, r31, 0x84
 /* 801441F0 00141130  4B F3 E5 39 */	bl __register_global_object
 /* 801441F4 00141134  38 00 00 01 */	li r0, 1
-/* 801441F8 00141138  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801441F8 00141138  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_801441FC:
-/* 801441FC 0014113C  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 801441FC 0014113C  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 80144200 00141140  7C 00 07 75 */	extsb. r0, r0
 /* 80144204 00141144  40 82 00 28 */	bne lbl_8014422C
-/* 80144208 00141148  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 80144208 00141148  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8014420C 0014114C  4B EC AA 29 */	bl initiate__10JSUPtrListFv
-/* 80144210 00141150  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 80144214 00141154  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 80144218 00141158  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 80144210 00141150  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 80144214 00141154  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 80144218 00141158  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8014421C 0014115C  38 BF 00 90 */	addi r5, r31, 0x90
 /* 80144220 00141160  4B F3 E5 09 */	bl __register_global_object
 /* 80144224 00141164  38 00 00 01 */	li r0, 1
-/* 80144228 00141168  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 80144228 00141168  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_8014422C:
-/* 8014422C 0014116C  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 8014422C 0014116C  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 80144230 00141170  7C 00 07 75 */	extsb. r0, r0
 /* 80144234 00141174  40 82 00 28 */	bne lbl_8014425C
-/* 80144238 00141178  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 80144238 00141178  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8014423C 0014117C  4B EC A9 F9 */	bl initiate__10JSUPtrListFv
-/* 80144240 00141180  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 80144244 00141184  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 80144248 00141188  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 80144240 00141180  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 80144244 00141184  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 80144248 00141188  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8014424C 0014118C  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 80144250 00141190  4B F3 E4 D9 */	bl __register_global_object
 /* 80144254 00141194  38 00 00 01 */	li r0, 1
-/* 80144258 00141198  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 80144258 00141198  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_8014425C:
-/* 8014425C 0014119C  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 8014425C 0014119C  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 80144260 001411A0  7C 00 07 75 */	extsb. r0, r0
 /* 80144264 001411A4  40 82 00 28 */	bne lbl_8014428C
-/* 80144268 001411A8  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 80144268 001411A8  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 8014426C 001411AC  4B EC A9 C9 */	bl initiate__10JSUPtrListFv
-/* 80144270 001411B0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 80144274 001411B4  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 80144278 001411B8  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 80144270 001411B0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 80144274 001411B4  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 80144278 001411B8  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 8014427C 001411BC  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 80144280 001411C0  4B F3 E4 A9 */	bl __register_global_object
 /* 80144284 001411C4  38 00 00 01 */	li r0, 1
-/* 80144288 001411C8  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 80144288 001411C8  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_8014428C:
-/* 8014428C 001411CC  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 8014428C 001411CC  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 80144290 001411D0  7C 00 07 75 */	extsb. r0, r0
 /* 80144294 001411D4  40 82 00 28 */	bne lbl_801442BC
-/* 80144298 001411D8  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 80144298 001411D8  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 8014429C 001411DC  4B EC A9 99 */	bl initiate__10JSUPtrListFv
-/* 801442A0 001411E0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 801442A4 001411E4  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 801442A8 001411E8  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 801442A0 001411E0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 801442A4 001411E4  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 801442A8 001411E8  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 801442AC 001411EC  38 BF 00 B4 */	addi r5, r31, 0xb4
 /* 801442B0 001411F0  4B F3 E4 79 */	bl __register_global_object
 /* 801442B4 001411F4  38 00 00 01 */	li r0, 1
-/* 801442B8 001411F8  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 801442B8 001411F8  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_801442BC:
-/* 801442BC 001411FC  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801442BC 001411FC  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 801442C0 00141200  7C 00 07 75 */	extsb. r0, r0
 /* 801442C4 00141204  40 82 00 28 */	bne lbl_801442EC
-/* 801442C8 00141208  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801442C8 00141208  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801442CC 0014120C  4B EC A9 69 */	bl initiate__10JSUPtrListFv
-/* 801442D0 00141210  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 801442D4 00141214  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 801442D8 00141218  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801442D0 00141210  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 801442D4 00141214  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 801442D8 00141218  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801442DC 0014121C  38 BF 00 C0 */	addi r5, r31, 0xc0
 /* 801442E0 00141220  4B F3 E4 49 */	bl __register_global_object
 /* 801442E4 00141224  38 00 00 01 */	li r0, 1
-/* 801442E8 00141228  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801442E8 00141228  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_801442EC:
 /* 801442EC 0014122C  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 801442F0 00141230  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -2481,29 +2481,29 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22110:
+"@2110":
 	.incbin "baserom.dol", 0x37864C, 0x14
 cDirtyFileName:
 	.incbin "baserom.dol", 0x378660, 0x24
 cDirtyTexName:
 	.incbin "baserom.dol", 0x378684, 0x10
-$$22565:
+"@2565":
 	.incbin "baserom.dol", 0x378694, 0x30
-$$22566:
+"@2566":
 	.incbin "baserom.dol", 0x3786C4, 0x38
-$$22567:
+"@2567":
 	.incbin "baserom.dol", 0x3786FC, 0x34
-$$22568:
+"@2568":
 	.incbin "baserom.dol", 0x378730, 0x24
-$$22659:
+"@2659":
 	.incbin "baserom.dol", 0x378754, 0x28
-$$22660:
+"@2660":
 	.incbin "baserom.dol", 0x37877C, 0x28
-$$22661:
+"@2661":
 	.incbin "baserom.dol", 0x3787A4, 0x28
 cParticleIDs:
 	.incbin "baserom.dol", 0x3787CC, 0xC
@@ -2512,16 +2512,16 @@ warpInEffectIDs:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 cParticleFileNames:
-  .4byte $$22659
-  .4byte $$22660
-  .4byte $$22661
+  .4byte "@2659"
+  .4byte "@2660"
+  .4byte "@2661"
 .global __vt__15TWarpInCallBack
 __vt__15TWarpInCallBack:
   .4byte 0
   .4byte 0
   .4byte execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle
-  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
-$$23223:
+  .4byte "draw__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
+"@3223":
     .4byte lbl_80142E08
     .4byte lbl_80142E10
     .4byte lbl_80142E18
@@ -2537,62 +2537,62 @@ __vt__15TBubbleCallBack:
   .4byte 0
   .4byte 0
   .4byte execute__15TBubbleCallBackFP14JPABaseEmitterP15JPABaseParticle
-  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
-.global __vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
-__vt__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1:
+  .4byte "draw__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
+.global "__vt__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
+"__vt__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>":
   .4byte 0
   .4byte 0
-  .4byte execute__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
-  .4byte draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
+  .4byte "execute__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
+  .4byte "draw__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22884:
+"@2884":
 	.incbin "baserom.dol", 0x3E5C18, 0x4
-$$22899:
+"@2899":
 	.incbin "baserom.dol", 0x3E5C1C, 0x4
-$$22900:
+"@2900":
 	.incbin "baserom.dol", 0x3E5C20, 0x4
-$$22939:
+"@2939":
   .4byte 0
-$$22957:
+"@2957":
 	.incbin "baserom.dol", 0x3E5C28, 0x4
-$$23006:
+"@3006":
 	.incbin "baserom.dol", 0x3E5C2C, 0x4
-$$23007:
+"@3007":
 	.incbin "baserom.dol", 0x3E5C30, 0x4
-$$23064:
+"@3064":
 	.incbin "baserom.dol", 0x3E5C34, 0x4
-$$23065:
+"@3065":
 	.incbin "baserom.dol", 0x3E5C38, 0x4
-$$23066:
+"@3066":
 	.incbin "baserom.dol", 0x3E5C3C, 0x4
-$$23067:
+"@3067":
 	.incbin "baserom.dol", 0x3E5C40, 0x4
-$$23068:
+"@3068":
 	.incbin "baserom.dol", 0x3E5C44, 0x4
-$$23069:
+"@3069":
 	.incbin "baserom.dol", 0x3E5C48, 0x4
-$$23070:
+"@3070":
 	.incbin "baserom.dol", 0x3E5C4C, 0x4
-$$23071:
+"@3071":
 	.incbin "baserom.dol", 0x3E5C50, 0x4
-$$23079:
+"@3079":
 	.incbin "baserom.dol", 0x3E5C54, 0x4
-$$23168:
+"@3168":
 	.incbin "baserom.dol", 0x3E5C58, 0x4
-$$23267:
+"@3267":
 	.incbin "baserom.dol", 0x3E5C5C, 0x4
-$$23268:
+"@3268":
 	.incbin "baserom.dol", 0x3E5C60, 0x8
-$$23270:
+"@3270":
 	.incbin "baserom.dol", 0x3E5C68, 0x8
-$$23272:
+"@3272":
 	.incbin "baserom.dol", 0x3E5C70, 0x8
-$$23362:
+"@3362":
 	.incbin "baserom.dol", 0x3E5C78, 0x4
-$$23484:
+"@3484":
 	.incbin "baserom.dol", 0x3E5C7C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
@@ -2600,35 +2600,35 @@ scale$2692:
 	.skip 0xC
 scale$2743:
 	.skip 0xC
-$$23608:
+"@3608":
 	.skip 0xC
-$$23609:
+"@3609":
 	.skip 0xC
-$$23610:
+"@3610":
 	.skip 0xC
-$$23611:
+"@3611":
 	.skip 0xC
-$$23612:
+"@3612":
 	.skip 0xC
-$$23613:
+"@3613":
 	.skip 0xC
-$$23614:
+"@3614":
 	.skip 0xC
-$$23615:
+"@3615":
 	.skip 0xC
-$$23616:
+"@3616":
 	.skip 0xC
-$$23617:
+"@3617":
 	.skip 0xC
-$$23618:
+"@3618":
 	.skip 0xC
-$$23619:
+"@3619":
 	.skip 0xC
-$$23620:
+"@3620":
 	.skip 0xC
-$$23621:
+"@3621":
 	.skip 0xC
-$$23622:
+"@3622":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

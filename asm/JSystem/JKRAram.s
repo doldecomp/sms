@@ -215,11 +215,11 @@ mainRamToAram__7JKRAramFPUcUlUl15JKRExpandSwitchUlP7JKRHeapi:
 /* 80006CD4 00003C14  41 82 00 28 */	beq lbl_80006CFC
 /* 80006CD8 00003C18  57 20 06 FF */	clrlwi. r0, r25, 0x1b
 /* 80006CDC 00003C1C  41 82 00 20 */	beq lbl_80006CFC
-/* 80006CE0 00003C20  3C 60 80 37 */	lis r3, $$2114@ha
+/* 80006CE0 00003C20  3C 60 80 37 */	lis r3, "@114"@ha
 /* 80006CE4 00003C24  4C C6 31 82 */	crclr 6
-/* 80006CE8 00003C28  3C 80 80 37 */	lis r4, $$2115@ha
-/* 80006CEC 00003C2C  38 A4 FF DC */	addi r5, r4, $$2115@l
-/* 80006CF0 00003C30  38 63 FF D0 */	addi r3, r3, $$2114@l
+/* 80006CE8 00003C28  3C 80 80 37 */	lis r4, "@115"@ha
+/* 80006CEC 00003C2C  38 A4 FF DC */	addi r5, r4, "@115"@l
+/* 80006CF0 00003C30  38 63 FF D0 */	addi r3, r3, "@114"@l
 /* 80006CF4 00003C34  38 80 00 E1 */	li r4, 0xe1
 /* 80006CF8 00003C38  48 08 82 ED */	bl OSPanic
 lbl_80006CFC:
@@ -406,11 +406,11 @@ lbl_80006F58:
 /* 80006F5C 00003E9C  41 82 00 28 */	beq lbl_80006F84
 /* 80006F60 00003EA0  57 80 06 FF */	clrlwi. r0, r28, 0x1b
 /* 80006F64 00003EA4  41 82 00 20 */	beq lbl_80006F84
-/* 80006F68 00003EA8  3C 60 80 37 */	lis r3, $$2114@ha
+/* 80006F68 00003EA8  3C 60 80 37 */	lis r3, "@114"@ha
 /* 80006F6C 00003EAC  4C C6 31 82 */	crclr 6
-/* 80006F70 00003EB0  3C 80 80 37 */	lis r4, $$2115@ha
-/* 80006F74 00003EB4  38 A4 FF DC */	addi r5, r4, $$2115@l
-/* 80006F78 00003EB8  38 63 FF D0 */	addi r3, r3, $$2114@l
+/* 80006F70 00003EB0  3C 80 80 37 */	lis r4, "@115"@ha
+/* 80006F74 00003EB4  38 A4 FF DC */	addi r5, r4, "@115"@l
+/* 80006F78 00003EB8  38 63 FF D0 */	addi r3, r3, "@114"@l
 /* 80006F7C 00003EBC  38 80 00 E1 */	li r4, 0xe1
 /* 80006F80 00003EC0  48 08 80 65 */	bl OSPanic
 lbl_80006F84:
@@ -598,11 +598,11 @@ lbl_800071F4:
 .global aramToMainRam__7JKRAramFP12JKRAramBlockPUcUlUl15JKRExpandSwitchUlP7JKRHeapiPUl
 aramToMainRam__7JKRAramFP12JKRAramBlockPUcUlUl15JKRExpandSwitchUlP7JKRHeapiPUl:
 /* 80007208 00004148  7C 08 02 A6 */	mflr r0
-/* 8000720C 0000414C  3D 60 80 37 */	lis r11, $$2114@ha
+/* 8000720C 0000414C  3D 60 80 37 */	lis r11, "@114"@ha
 /* 80007210 00004150  90 01 00 04 */	stw r0, 4(r1)
 /* 80007214 00004154  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 80007218 00004158  BE C1 00 30 */	stmw r22, 0x30(r1)
-/* 8000721C 0000415C  3A EB FF D0 */	addi r23, r11, $$2114@l
+/* 8000721C 0000415C  3A EB FF D0 */	addi r23, r11, "@114"@l
 /* 80007220 00004160  83 E1 00 60 */	lwz r31, 0x60(r1)
 /* 80007224 00004164  3B 03 00 00 */	addi r24, r3, 0
 /* 80007228 00004168  3B 24 00 00 */	addi r25, r4, 0
@@ -1054,10 +1054,10 @@ __sinit_JKRAram_cpp:
 /* 80007848 00004788  3B E3 0B 98 */	addi r31, r3, sAramCommandList__7JKRAram@l
 /* 8000784C 0000478C  38 7F 00 00 */	addi r3, r31, 0
 /* 80007850 00004790  48 00 73 E5 */	bl initiate__10JSUPtrListFv
-/* 80007854 00004794  3C 80 80 00 */	lis r4, __dt__23JSUList$$012JKRAMCommand$$1Fv@ha
-/* 80007858 00004798  3C 60 80 3E */	lis r3, $$260@ha
-/* 8000785C 0000479C  38 A3 60 60 */	addi r5, r3, $$260@l
-/* 80007860 000047A0  38 84 78 80 */	addi r4, r4, __dt__23JSUList$$012JKRAMCommand$$1Fv@l
+/* 80007854 00004794  3C 80 80 00 */	lis r4, "__dt__23JSUList<12JKRAMCommand>Fv"@ha
+/* 80007858 00004798  3C 60 80 3E */	lis r3, "@60"@ha
+/* 8000785C 0000479C  38 A3 60 60 */	addi r5, r3, "@60"@l
+/* 80007860 000047A0  38 84 78 80 */	addi r4, r4, "__dt__23JSUList<12JKRAMCommand>Fv"@l
 /* 80007864 000047A4  38 7F 00 00 */	addi r3, r31, 0
 /* 80007868 000047A8  48 07 AE C1 */	bl __register_global_object
 /* 8000786C 000047AC  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -1066,8 +1066,8 @@ __sinit_JKRAram_cpp:
 /* 80007878 000047B8  7C 08 03 A6 */	mtlr r0
 /* 8000787C 000047BC  4E 80 00 20 */	blr 
 
-.global __dt__23JSUList$$012JKRAMCommand$$1Fv
-__dt__23JSUList$$012JKRAMCommand$$1Fv:
+.global "__dt__23JSUList<12JKRAMCommand>Fv"
+"__dt__23JSUList<12JKRAMCommand>Fv":
 /* 80007880 000047C0  7C 08 02 A6 */	mflr r0
 /* 80007884 000047C4  90 01 00 04 */	stw r0, 4(r1)
 /* 80007888 000047C8  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -1098,16 +1098,16 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2114:
+"@114":
 	.incbin "baserom.dol", 0x36CFD0, 0xC
-$$2115:
+"@115":
 	.incbin "baserom.dol", 0x36CFDC, 0x20
-$$2447:
+"@447":
 	.incbin "baserom.dol", 0x36CFFC, 0x8
 .global lbl_80370004
 lbl_80370004:
 	.incbin "baserom.dol", 0x36D004, 0x18
-$$2548:
+"@548":
 	.incbin "baserom.dol", 0x36D01C, 0x44
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1134,7 +1134,7 @@ __vt__7JKRAram:
   .4byte run__7JKRAramFv
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$260:
+"@60":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -63,8 +63,8 @@ lbl_8008F024:
 /* 8008F034 0008BF74  3B A5 00 00 */	addi r29, r5, 0
 /* 8008F038 0008BF78  90 A1 00 10 */	stw r5, 0x10(r1)
 /* 8008F03C 0008BF7C  90 C1 00 14 */	stw r6, 0x14(r1)
-/* 8008F040 0008BF80  3C C0 80 3B */	lis r6, $$210@ha
-/* 8008F044 0008BF84  3B E6 FA A0 */	addi r31, r6, $$210@l
+/* 8008F040 0008BF80  3C C0 80 3B */	lis r6, "@10"@ha
+/* 8008F044 0008BF84  3B E6 FA A0 */	addi r31, r6, "@10"@l
 /* 8008F048 0008BF88  90 E1 00 18 */	stw r7, 0x18(r1)
 /* 8008F04C 0008BF8C  91 01 00 1C */	stw r8, 0x1c(r1)
 /* 8008F050 0008BF90  91 21 00 20 */	stw r9, 0x20(r1)
@@ -140,8 +140,8 @@ __OSUnhandledException:
 /* 8008F144 0008C084  3B 45 00 00 */	addi r26, r5, 0
 /* 8008F148 0008C088  3B 66 00 00 */	addi r27, r6, 0
 /* 8008F14C 0008C08C  80 04 01 9C */	lwz r0, 0x19c(r4)
-/* 8008F150 0008C090  3C 80 80 3B */	lis r4, $$210@ha
-/* 8008F154 0008C094  3B A4 FA A0 */	addi r29, r4, $$210@l
+/* 8008F150 0008C090  3C 80 80 3B */	lis r4, "@10"@ha
+/* 8008F154 0008C094  3B A4 FA A0 */	addi r29, r4, "@10"@l
 /* 8008F158 0008C098  54 00 07 BD */	rlwinm. r0, r0, 0, 0x1e, 0x1e
 /* 8008F15C 0008C09C  40 82 00 18 */	bne lbl_8008F174
 /* 8008F160 0008C0A0  38 7D 00 5C */	addi r3, r29, 0x5c
@@ -183,7 +183,7 @@ lbl_8008F1DC:
 /* 8008F1E4 0008C124  57 24 06 3E */	clrlwi r4, r25, 0x18
 /* 8008F1E8 0008C128  4B FF FD 7D */	bl OSReport
 lbl_8008F1EC:
-/* 8008F1EC 0008C12C  38 6D 82 50 */	addi r3, r13, $$232@sda21
+/* 8008F1EC 0008C12C  38 6D 82 50 */	addi r3, r13, "@32"@sda21
 /* 8008F1F0 0008C130  4C C6 31 82 */	crclr 6
 /* 8008F1F4 0008C134  4B FF FD 71 */	bl OSReport
 /* 8008F1F8 0008C138  7F E3 FB 78 */	mr r3, r31
@@ -202,8 +202,8 @@ lbl_8008F1EC:
 /* 8008F22C 0008C16C  57 20 06 3E */	clrlwi r0, r25, 0x18
 /* 8008F230 0008C170  28 00 00 0F */	cmplwi r0, 0xf
 /* 8008F234 0008C174  41 81 00 C4 */	bgt lbl_8008F2F8
-/* 8008F238 0008C178  3C 60 80 3B */	lis r3, $$243@ha
-/* 8008F23C 0008C17C  38 63 FD 7C */	addi r3, r3, $$243@l
+/* 8008F238 0008C178  3C 60 80 3B */	lis r3, "@43"@ha
+/* 8008F23C 0008C17C  38 63 FD 7C */	addi r3, r3, "@43"@l
 /* 8008F240 0008C180  54 00 10 3A */	slwi r0, r0, 2
 /* 8008F244 0008C184  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8008F248 0008C188  7C 09 03 A6 */	mtctr r0
@@ -236,7 +236,7 @@ lbl_8008F294:
 /* 8008F2A4 0008C1E4  4B FF FC C1 */	bl OSReport
 /* 8008F2A8 0008C1E8  48 00 00 50 */	b lbl_8008F2F8
 lbl_8008F2AC:
-/* 8008F2AC 0008C1EC  38 6D 82 50 */	addi r3, r13, $$232@sda21
+/* 8008F2AC 0008C1EC  38 6D 82 50 */	addi r3, r13, "@32"@sda21
 /* 8008F2B0 0008C1F0  4C C6 31 82 */	crclr 6
 /* 8008F2B4 0008C1F4  4B FF FC B1 */	bl OSReport
 /* 8008F2B8 0008C1F8  3F C0 CC 00 */	lis r30, 0xCC005000@ha
@@ -271,37 +271,37 @@ lbl_8008F2F8:
 /* 8008F328 0008C268  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$210:
+"@10":
 	.incbin "baserom.dol", 0x3ACAA0, 0x18
-$$211:
+"@11":
 	.incbin "baserom.dol", 0x3ACAB8, 0x28
-$$212:
+"@12":
 	.incbin "baserom.dol", 0x3ACAE0, 0x1C
-$$230:
+"@30":
 	.incbin "baserom.dol", 0x3ACAFC, 0x20
-$$231:
+"@31":
 	.incbin "baserom.dol", 0x3ACB1C, 0x18
-$$233:
+"@33":
 	.incbin "baserom.dol", 0x3ACB34, 0x34
-$$234:
+"@34":
 	.incbin "baserom.dol", 0x3ACB68, 0x10
-$$235:
+"@35":
 	.incbin "baserom.dol", 0x3ACB78, 0x60
-$$236:
+"@36":
 	.incbin "baserom.dol", 0x3ACBD8, 0x4C
-$$237:
+"@37":
 	.incbin "baserom.dol", 0x3ACC24, 0x64
-$$238:
+"@38":
 	.incbin "baserom.dol", 0x3ACC88, 0x60
-$$239:
+"@39":
 	.incbin "baserom.dol", 0x3ACCE8, 0x20
-$$240:
+"@40":
 	.incbin "baserom.dol", 0x3ACD08, 0x20
-$$241:
+"@41":
 	.incbin "baserom.dol", 0x3ACD28, 0x1C
-$$242:
+"@42":
 	.incbin "baserom.dol", 0x3ACD44, 0x38
-$$243:
+"@43":
     .4byte lbl_8008F2F8
     .4byte lbl_8008F2F8
     .4byte lbl_8008F250
@@ -319,7 +319,7 @@ $$243:
     .4byte lbl_8008F2F8
     .4byte lbl_8008F2AC
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-$$232:
+"@32":
 	.incbin "baserom.dol", 0x3E3250, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

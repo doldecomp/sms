@@ -71,7 +71,7 @@ lbl_800AB418:
 lbl_800AB420:
 /* 800AB420 000A8360  38 00 00 00 */	li r0, 0
 lbl_800AB424:
-/* 800AB424 000A8364  C0 42 8B 50 */	lfs f2, $$245@sda21(r2)
+/* 800AB424 000A8364  C0 42 8B 50 */	lfs f2, "@45"@sda21(r2)
 /* 800AB428 000A8368  1C 60 00 03 */	mulli r3, r0, 3
 /* 800AB42C 000A836C  C0 24 00 00 */	lfs f1, 0(r4)
 /* 800AB430 000A8370  C0 04 00 0C */	lfs f0, 0xc(r4)
@@ -496,5 +496,5 @@ __GXFlushTextureState:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$245:
+"@45":
 	.incbin "baserom.dol", 0x3E4850, 0x8

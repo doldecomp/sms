@@ -41,9 +41,9 @@ __ct__13J2DOrthoGraphFRC7JUTRect:
 /* 80036BC4 00033B04  80 01 00 28 */	lwz r0, 0x28(r1)
 /* 80036BC8 00033B08  90 9F 00 E0 */	stw r4, 0xe0(r31)
 /* 80036BCC 00033B0C  90 1F 00 E4 */	stw r0, 0xe4(r31)
-/* 80036BD0 00033B10  C0 02 82 B0 */	lfs f0, $$2123@sda21(r2)
+/* 80036BD0 00033B10  C0 02 82 B0 */	lfs f0, "@123"@sda21(r2)
 /* 80036BD4 00033B14  D0 1F 00 E8 */	stfs f0, 0xe8(r31)
-/* 80036BD8 00033B18  C0 02 82 B4 */	lfs f0, $$2124@sda21(r2)
+/* 80036BD8 00033B18  C0 02 82 B4 */	lfs f0, "@124"@sda21(r2)
 /* 80036BDC 00033B1C  D0 1F 00 EC */	stfs f0, 0xec(r31)
 /* 80036BE0 00033B20  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80036BE4 00033B24  81 8C 00 20 */	lwz r12, 0x20(r12)
@@ -97,9 +97,9 @@ __ct__13J2DOrthoGraphFiiii:
 /* 80036C98 00033BD8  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80036C9C 00033BDC  90 9F 00 E0 */	stw r4, 0xe0(r31)
 /* 80036CA0 00033BE0  90 1F 00 E4 */	stw r0, 0xe4(r31)
-/* 80036CA4 00033BE4  C0 02 82 B0 */	lfs f0, $$2123@sda21(r2)
+/* 80036CA4 00033BE4  C0 02 82 B0 */	lfs f0, "@123"@sda21(r2)
 /* 80036CA8 00033BE8  D0 1F 00 E8 */	stfs f0, 0xe8(r31)
-/* 80036CAC 00033BEC  C0 02 82 B4 */	lfs f0, $$2124@sda21(r2)
+/* 80036CAC 00033BEC  C0 02 82 B4 */	lfs f0, "@124"@sda21(r2)
 /* 80036CB0 00033BF0  D0 1F 00 EC */	stfs f0, 0xec(r31)
 /* 80036CB4 00033BF4  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80036CB8 00033BF8  81 8C 00 20 */	lwz r12, 0x20(r12)
@@ -136,12 +136,12 @@ setPort__13J2DOrthoGraphFv:
 /* 80036D28 00033C68  90 A1 00 20 */	stw r5, 0x20(r1)
 /* 80036D2C 00033C6C  6C 84 80 00 */	xoris r4, r4, 0x8000
 /* 80036D30 00033C70  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80036D34 00033C74  C8 82 82 C0 */	lfd f4, $$2132@sda21(r2)
+/* 80036D34 00033C74  C8 82 82 C0 */	lfd f4, "@132"@sda21(r2)
 /* 80036D38 00033C78  90 C1 00 2C */	stw r6, 0x2c(r1)
 /* 80036D3C 00033C7C  C8 01 00 20 */	lfd f0, 0x20(r1)
 /* 80036D40 00033C80  90 81 00 1C */	stw r4, 0x1c(r1)
 /* 80036D44 00033C84  EC 00 20 28 */	fsubs f0, f0, f4
-/* 80036D48 00033C88  C0 22 82 B8 */	lfs f1, $$2130@sda21(r2)
+/* 80036D48 00033C88  C0 22 82 B8 */	lfs f1, "@130"@sda21(r2)
 /* 80036D4C 00033C8C  90 01 00 14 */	stw r0, 0x14(r1)
 /* 80036D50 00033C90  C0 BF 00 E8 */	lfs f5, 0xe8(r31)
 /* 80036D54 00033C94  90 A1 00 28 */	stw r5, 0x28(r1)
@@ -199,11 +199,11 @@ scissorBounds__13J2DOrthoGraphFP7JUTRectP7JUTRect:
 /* 80036E0C 00033D4C  6C C6 80 00 */	xoris r6, r6, 0x8000
 /* 80036E10 00033D50  80 E5 00 00 */	lwz r7, 0(r5)
 /* 80036E14 00033D54  90 C1 00 CC */	stw r6, 0xcc(r1)
-/* 80036E18 00033D58  C8 22 82 C0 */	lfd f1, $$2132@sda21(r2)
+/* 80036E18 00033D58  C8 22 82 C0 */	lfd f1, "@132"@sda21(r2)
 /* 80036E1C 00033D5C  7C C9 38 50 */	subf r6, r9, r7
 /* 80036E20 00033D60  90 01 00 D0 */	stw r0, 0xd0(r1)
 /* 80036E24 00033D64  6C C6 80 00 */	xoris r6, r6, 0x8000
-/* 80036E28 00033D68  C0 42 82 C8 */	lfs f2, $$2164@sda21(r2)
+/* 80036E28 00033D68  C0 42 82 C8 */	lfs f2, "@164"@sda21(r2)
 /* 80036E2C 00033D6C  90 01 00 C8 */	stw r0, 0xc8(r1)
 /* 80036E30 00033D70  C8 61 00 D0 */	lfd f3, 0xd0(r1)
 /* 80036E34 00033D74  C8 01 00 C8 */	lfd f0, 0xc8(r1)
@@ -238,7 +238,7 @@ scissorBounds__13J2DOrthoGraphFP7JUTRectP7JUTRect:
 /* 80036EA8 00033DE8  80 E5 00 08 */	lwz r7, 8(r5)
 /* 80036EAC 00033DEC  90 C1 00 A4 */	stw r6, 0xa4(r1)
 /* 80036EB0 00033DF0  7C C9 38 50 */	subf r6, r9, r7
-/* 80036EB4 00033DF4  C0 02 82 CC */	lfs f0, $$2165@sda21(r2)
+/* 80036EB4 00033DF4  C0 02 82 CC */	lfs f0, "@165"@sda21(r2)
 /* 80036EB8 00033DF8  90 01 00 A8 */	stw r0, 0xa8(r1)
 /* 80036EBC 00033DFC  6C C6 80 00 */	xoris r6, r6, 0x8000
 /* 80036EC0 00033E00  90 01 00 A0 */	stw r0, 0xa0(r1)
@@ -440,15 +440,15 @@ __vt__13J2DOrthoGraph:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2123:
+"@123":
 	.incbin "baserom.dol", 0x3E3FB0, 0x4
-$$2124:
+"@124":
 	.incbin "baserom.dol", 0x3E3FB4, 0x4
-$$2130:
+"@130":
 	.incbin "baserom.dol", 0x3E3FB8, 0x8
-$$2132:
+"@132":
 	.incbin "baserom.dol", 0x3E3FC0, 0x8
-$$2164:
+"@164":
 	.incbin "baserom.dol", 0x3E3FC8, 0x4
-$$2165:
+"@165":
 	.incbin "baserom.dol", 0x3E3FCC, 0x4

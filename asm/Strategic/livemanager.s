@@ -127,7 +127,7 @@ setFlagOutOfCube__12TLiveManagerFv:
 /* 801147C4 00111704  3B A0 00 00 */	li r29, 0
 /* 801147C8 00111708  93 81 00 28 */	stw r28, 0x28(r1)
 /* 801147CC 0011170C  3B 83 00 00 */	addi r28, r3, 0
-/* 801147D0 00111710  C3 E2 96 D0 */	lfs f31, $$22101@sda21(r2)
+/* 801147D0 00111710  C3 E2 96 D0 */	lfs f31, "@2101"@sda21(r2)
 /* 801147D4 00111714  48 00 00 68 */	b lbl_8011483C
 lbl_801147D8:
 /* 801147D8 00111718  80 BC 00 18 */	lwz r5, 0x18(r28)
@@ -176,8 +176,8 @@ clipActors__12TLiveManagerFPQ26JDrama9TGraphics:
 /* 8011486C 001117AC  7C 08 02 A6 */	mflr r0
 /* 80114870 001117B0  90 01 00 04 */	stw r0, 4(r1)
 /* 80114874 001117B4  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80114878 001117B8  C0 22 96 D4 */	lfs f1, $$22103@sda21(r2)
-/* 8011487C 001117BC  C0 42 96 D8 */	lfs f2, $$22104@sda21(r2)
+/* 80114878 001117B8  C0 22 96 D4 */	lfs f1, "@2103"@sda21(r2)
+/* 8011487C 001117BC  C0 42 96 D8 */	lfs f2, "@2104"@sda21(r2)
 /* 80114880 001117C0  48 00 00 15 */	bl clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff
 /* 80114884 001117C4  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80114888 001117C8  38 21 00 08 */	addi r1, r1, 8
@@ -202,7 +202,7 @@ clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff:
 /* 801148C8 00111808  C0 25 00 48 */	lfs f1, 0x48(r5)
 /* 801148CC 0011180C  FC 40 00 90 */	fmr f2, f0
 /* 801148D0 00111810  4B FA CB 45 */	bl SetViewFrustumClipCheckPerspective__Fffff
-/* 801148D4 00111814  C3 E2 96 D0 */	lfs f31, $$22101@sda21(r2)
+/* 801148D4 00111814  C3 E2 96 D0 */	lfs f31, "@2101"@sda21(r2)
 /* 801148D8 00111818  3B C0 00 00 */	li r30, 0
 /* 801148DC 0011181C  3B 60 00 00 */	li r27, 0
 /* 801148E0 00111820  48 00 00 B4 */	b lbl_80114994
@@ -303,9 +303,9 @@ load__12TLiveManagerFR20JSUMemoryInputStream:
 .global createSpcBinary__12TLiveManagerFv
 createSpcBinary__12TLiveManagerFv:
 /* 80114A28 00111968  7C 08 02 A6 */	mflr r0
-/* 80114A2C 0011196C  3C 80 80 38 */	lis r4, $$22148@ha
+/* 80114A2C 0011196C  3C 80 80 38 */	lis r4, "@2148"@ha
 /* 80114A30 00111970  90 01 00 04 */	stw r0, 4(r1)
-/* 80114A34 00111974  38 84 A1 08 */	addi r4, r4, $$22148@l
+/* 80114A34 00111974  38 84 A1 08 */	addi r4, r4, "@2148"@l
 /* 80114A38 00111978  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80114A3C 0011197C  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 80114A40 00111980  93 C1 00 18 */	stw r30, 0x18(r1)
@@ -322,8 +322,8 @@ createSpcBinary__12TLiveManagerFv:
 /* 80114A6C 001119AC  38 7D 00 00 */	addi r3, r29, 0
 /* 80114A70 001119B0  38 9F 00 00 */	addi r4, r31, 0
 /* 80114A74 001119B4  48 00 74 19 */	bl __ct__10TSpcBinaryFPv
-/* 80114A78 001119B8  3C 60 80 3B */	lis r3, __vt__29TSpcTypedBinary$$010TLiveActor$$1@ha
-/* 80114A7C 001119BC  38 03 4E 98 */	addi r0, r3, __vt__29TSpcTypedBinary$$010TLiveActor$$1@l
+/* 80114A78 001119B8  3C 60 80 3B */	lis r3, "__vt__29TSpcTypedBinary<10TLiveActor>"@ha
+/* 80114A7C 001119BC  38 03 4E 98 */	addi r0, r3, "__vt__29TSpcTypedBinary<10TLiveActor>"@l
 /* 80114A80 001119C0  90 1D 00 04 */	stw r0, 4(r29)
 lbl_80114A84:
 /* 80114A84 001119C4  93 BE 00 34 */	stw r29, 0x34(r30)
@@ -402,8 +402,8 @@ lbl_80114B70:
 /* 80114B84 00111AC4  38 21 00 18 */	addi r1, r1, 0x18
 /* 80114B88 00111AC8  4E 80 00 20 */	blr 
 
-.global __dt__29TSpcTypedBinary$$010TLiveActor$$1Fv
-__dt__29TSpcTypedBinary$$010TLiveActor$$1Fv:
+.global "__dt__29TSpcTypedBinary<10TLiveActor>Fv"
+"__dt__29TSpcTypedBinary<10TLiveActor>Fv":
 /* 80114B8C 00111ACC  7C 08 02 A6 */	mflr r0
 /* 80114B90 00111AD0  90 01 00 04 */	stw r0, 4(r1)
 /* 80114B94 00111AD4  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -412,8 +412,8 @@ __dt__29TSpcTypedBinary$$010TLiveActor$$1Fv:
 /* 80114BA0 00111AE0  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80114BA4 00111AE4  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80114BA8 00111AE8  41 82 00 2C */	beq lbl_80114BD4
-/* 80114BAC 00111AEC  3C 60 80 3B */	lis r3, __vt__29TSpcTypedBinary$$010TLiveActor$$1@ha
-/* 80114BB0 00111AF0  38 03 4E 98 */	addi r0, r3, __vt__29TSpcTypedBinary$$010TLiveActor$$1@l
+/* 80114BAC 00111AEC  3C 60 80 3B */	lis r3, "__vt__29TSpcTypedBinary<10TLiveActor>"@ha
+/* 80114BB0 00111AF0  38 03 4E 98 */	addi r0, r3, "__vt__29TSpcTypedBinary<10TLiveActor>"@l
 /* 80114BB4 00111AF4  90 1E 00 04 */	stw r0, 4(r30)
 /* 80114BB8 00111AF8  38 7E 00 00 */	addi r3, r30, 0
 /* 80114BBC 00111AFC  38 80 00 00 */	li r4, 0
@@ -433,7 +433,7 @@ lbl_80114BD4:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$22148:
+"@2148":
 	.incbin "baserom.dol", 0x377108, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -456,18 +456,18 @@ __vt__12TLiveManager:
   .4byte setFlagOutOfCube__12TLiveManagerFv
   .4byte createSpcBinary__12TLiveManagerFv
   .4byte hasMapCollision__12TLiveManagerCFv
-.global __vt__29TSpcTypedBinary$$010TLiveActor$$1
-__vt__29TSpcTypedBinary$$010TLiveActor$$1:
+.global "__vt__29TSpcTypedBinary<10TLiveActor>"
+"__vt__29TSpcTypedBinary<10TLiveActor>":
   .4byte 0
   .4byte 0
-  .4byte __dt__29TSpcTypedBinary$$010TLiveActor$$1Fv
-  .4byte initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv
+  .4byte "__dt__29TSpcTypedBinary<10TLiveActor>Fv"
+  .4byte "initUserBuiltin__29TSpcTypedBinary<10TLiveActor>Fv"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22101:
+"@2101":
 	.incbin "baserom.dol", 0x3E53D0, 0x4
-$$22103:
+"@2103":
 	.incbin "baserom.dol", 0x3E53D4, 0x4
-$$22104:
+"@2104":
 	.incbin "baserom.dol", 0x3E53D8, 0x8

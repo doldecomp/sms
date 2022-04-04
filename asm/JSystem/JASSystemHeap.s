@@ -119,9 +119,9 @@ __sinit_JASSystemHeap_cpp:
 /* 80063F5C 00060E9C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80063F60 00060EA0  4B FF FC C5 */	bl __ct__Q38JASystem6Kernel10TSolidHeapFv
 /* 80063F64 00060EA4  3C 80 80 05 */	lis r4, __dt__Q38JASystem6Kernel10TSolidHeapFv@ha
-/* 80063F68 00060EA8  3C A0 80 3E */	lis r5, $$2241@ha
+/* 80063F68 00060EA8  3C A0 80 3E */	lis r5, "@241"@ha
 /* 80063F6C 00060EAC  38 84 4A A0 */	addi r4, r4, __dt__Q38JASystem6Kernel10TSolidHeapFv@l
-/* 80063F70 00060EB0  38 A5 6A 98 */	addi r5, r5, $$2241@l
+/* 80063F70 00060EB0  38 A5 6A 98 */	addi r5, r5, "@241"@l
 /* 80063F74 00060EB4  48 01 E7 B5 */	bl __register_global_object
 /* 80063F78 00060EB8  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 80063F7C 00060EBC  38 21 00 08 */	addi r1, r1, 8
@@ -139,7 +139,7 @@ audioAramSize__Q28JASystem6Kernel:
 	.incbin "baserom.dol", 0x3E3204, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2241:
+"@241":
 	.skip 0xC
 audioAramHeap__Q28JASystem6Kernel:
 	.skip 0x14

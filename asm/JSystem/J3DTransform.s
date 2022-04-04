@@ -216,13 +216,13 @@ J3DGetTextureMtx__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BDC4 00018D04  EC 06 00 2A */	fadds f0, f6, f0
 /* 8001BDC8 00018D08  EC 03 00 2A */	fadds f0, f3, f0
 /* 8001BDCC 00018D0C  D0 05 00 18 */	stfs f0, 0x18(r5)
-/* 8001BDD0 00018D10  C0 02 81 A8 */	lfs f0, $$2871@sda21(r2)
+/* 8001BDD0 00018D10  C0 02 81 A8 */	lfs f0, "@871"@sda21(r2)
 /* 8001BDD4 00018D14  D0 05 00 2C */	stfs f0, 0x2c(r5)
 /* 8001BDD8 00018D18  D0 05 00 24 */	stfs f0, 0x24(r5)
 /* 8001BDDC 00018D1C  D0 05 00 20 */	stfs f0, 0x20(r5)
 /* 8001BDE0 00018D20  D0 05 00 1C */	stfs f0, 0x1c(r5)
 /* 8001BDE4 00018D24  D0 05 00 0C */	stfs f0, 0xc(r5)
-/* 8001BDE8 00018D28  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
+/* 8001BDE8 00018D28  C0 02 81 AC */	lfs f0, "@872"@sda21(r2)
 /* 8001BDEC 00018D2C  D0 05 00 28 */	stfs f0, 0x28(r5)
 /* 8001BDF0 00018D30  4E 80 00 20 */	blr 
 
@@ -273,13 +273,13 @@ J3DGetTextureMtxOld__FRC17J3DTextureSRTInfo3VecPA4_f:
 /* 8001BE9C 00018DDC  EC 06 00 2A */	fadds f0, f6, f0
 /* 8001BEA0 00018DE0  EC 03 00 2A */	fadds f0, f3, f0
 /* 8001BEA4 00018DE4  D0 05 00 1C */	stfs f0, 0x1c(r5)
-/* 8001BEA8 00018DE8  C0 02 81 A8 */	lfs f0, $$2871@sda21(r2)
+/* 8001BEA8 00018DE8  C0 02 81 A8 */	lfs f0, "@871"@sda21(r2)
 /* 8001BEAC 00018DEC  D0 05 00 2C */	stfs f0, 0x2c(r5)
 /* 8001BEB0 00018DF0  D0 05 00 24 */	stfs f0, 0x24(r5)
 /* 8001BEB4 00018DF4  D0 05 00 20 */	stfs f0, 0x20(r5)
 /* 8001BEB8 00018DF8  D0 05 00 18 */	stfs f0, 0x18(r5)
 /* 8001BEBC 00018DFC  D0 05 00 08 */	stfs f0, 8(r5)
-/* 8001BEC0 00018E00  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
+/* 8001BEC0 00018E00  C0 02 81 AC */	lfs f0, "@872"@sda21(r2)
 /* 8001BEC4 00018E04  D0 05 00 28 */	stfs f0, 0x28(r5)
 /* 8001BEC8 00018E08  4E 80 00 20 */	blr 
 
@@ -303,7 +303,7 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BF08 00018E48  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001BF0C 00018E4C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001BF10 00018E50  D0 04 00 04 */	stfs f0, 4(r4)
-/* 8001BF14 00018E54  C0 82 81 B0 */	lfs f4, $$2912@sda21(r2)
+/* 8001BF14 00018E54  C0 82 81 B0 */	lfs f4, "@912"@sda21(r2)
 /* 8001BF18 00018E58  C0 03 00 10 */	lfs f0, 0x10(r3)
 /* 8001BF1C 00018E5C  A0 A3 00 08 */	lhz r5, 8(r3)
 /* 8001BF20 00018E60  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
@@ -322,7 +322,7 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001BF54 00018E94  EC 02 00 78 */	fmsubs f0, f2, f1, f0
 /* 8001BF58 00018E98  EC 04 00 2A */	fadds f0, f4, f0
 /* 8001BF5C 00018E9C  D0 04 00 08 */	stfs f0, 8(r4)
-/* 8001BF60 00018EA0  C0 62 81 A8 */	lfs f3, $$2871@sda21(r2)
+/* 8001BF60 00018EA0  C0 62 81 A8 */	lfs f3, "@871"@sda21(r2)
 /* 8001BF64 00018EA4  D0 64 00 0C */	stfs f3, 0xc(r4)
 /* 8001BF68 00018EA8  C0 03 00 00 */	lfs f0, 0(r3)
 /* 8001BF6C 00018EAC  A0 A3 00 08 */	lhz r5, 8(r3)
@@ -365,7 +365,7 @@ J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C000 00018F40  D0 64 00 1C */	stfs f3, 0x1c(r4)
 /* 8001C004 00018F44  D0 64 00 20 */	stfs f3, 0x20(r4)
 /* 8001C008 00018F48  D0 64 00 24 */	stfs f3, 0x24(r4)
-/* 8001C00C 00018F4C  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
+/* 8001C00C 00018F4C  C0 02 81 AC */	lfs f0, "@872"@sda21(r2)
 /* 8001C010 00018F50  D0 04 00 28 */	stfs f0, 0x28(r4)
 /* 8001C014 00018F54  D0 64 00 2C */	stfs f3, 0x2c(r4)
 /* 8001C018 00018F58  4E 80 00 20 */	blr 
@@ -390,9 +390,9 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C058 00018F98  7C 06 04 2E */	lfsx f0, r6, r0
 /* 8001C05C 00018F9C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 8001C060 00018FA0  D0 04 00 04 */	stfs f0, 4(r4)
-/* 8001C064 00018FA4  C0 82 81 A8 */	lfs f4, $$2871@sda21(r2)
+/* 8001C064 00018FA4  C0 82 81 A8 */	lfs f4, "@871"@sda21(r2)
 /* 8001C068 00018FA8  D0 84 00 08 */	stfs f4, 8(r4)
-/* 8001C06C 00018FAC  C0 62 81 B0 */	lfs f3, $$2912@sda21(r2)
+/* 8001C06C 00018FAC  C0 62 81 B0 */	lfs f3, "@912"@sda21(r2)
 /* 8001C070 00018FB0  C0 03 00 10 */	lfs f0, 0x10(r3)
 /* 8001C074 00018FB4  A0 A3 00 08 */	lhz r5, 8(r3)
 /* 8001C078 00018FB8  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
@@ -452,7 +452,7 @@ J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f:
 /* 8001C150 00019090  D0 04 00 1C */	stfs f0, 0x1c(r4)
 /* 8001C154 00019094  D0 84 00 20 */	stfs f4, 0x20(r4)
 /* 8001C158 00019098  D0 84 00 24 */	stfs f4, 0x24(r4)
-/* 8001C15C 0001909C  C0 02 81 AC */	lfs f0, $$2872@sda21(r2)
+/* 8001C15C 0001909C  C0 02 81 AC */	lfs f0, "@872"@sda21(r2)
 /* 8001C160 000190A0  D0 04 00 28 */	stfs f0, 0x28(r4)
 /* 8001C164 000190A4  D0 84 00 2C */	stfs f4, 0x2c(r4)
 /* 8001C168 000190A8  4E 80 00 20 */	blr 
@@ -768,9 +768,9 @@ Unit01:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2871:
+"@871":
   .4byte 0
-$$2872:
+"@872":
 	.incbin "baserom.dol", 0x3E3EAC, 0x4
-$$2912:
+"@912":
 	.incbin "baserom.dol", 0x3E3EB0, 0x8

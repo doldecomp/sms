@@ -945,10 +945,10 @@ __sinit_JKRDvdAramRipper_cpp:
 /* 800363FC 0003333C  3B E3 11 18 */	addi r31, r3, sDvdAramAsyncList__16JKRDvdAramRipper@l
 /* 80036400 00033340  38 7F 00 00 */	addi r3, r31, 0
 /* 80036404 00033344  4B FD 88 31 */	bl initiate__10JSUPtrListFv
-/* 80036408 00033348  3C 80 80 03 */	lis r4, __dt__23JSUList$$012JKRADCommand$$1Fv@ha
-/* 8003640C 0003334C  3C 60 80 3E */	lis r3, $$256@ha
-/* 80036410 00033350  38 A3 60 E0 */	addi r5, r3, $$256@l
-/* 80036414 00033354  38 84 64 34 */	addi r4, r4, __dt__23JSUList$$012JKRADCommand$$1Fv@l
+/* 80036408 00033348  3C 80 80 03 */	lis r4, "__dt__23JSUList<12JKRADCommand>Fv"@ha
+/* 8003640C 0003334C  3C 60 80 3E */	lis r3, "@56"@ha
+/* 80036410 00033350  38 A3 60 E0 */	addi r5, r3, "@56"@l
+/* 80036414 00033354  38 84 64 34 */	addi r4, r4, "__dt__23JSUList<12JKRADCommand>Fv"@l
 /* 80036418 00033358  38 7F 00 00 */	addi r3, r31, 0
 /* 8003641C 0003335C  48 04 C3 0D */	bl __register_global_object
 /* 80036420 00033360  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -957,8 +957,8 @@ __sinit_JKRDvdAramRipper_cpp:
 /* 8003642C 0003336C  7C 08 03 A6 */	mtlr r0
 /* 80036430 00033370  4E 80 00 20 */	blr 
 
-.global __dt__23JSUList$$012JKRADCommand$$1Fv
-__dt__23JSUList$$012JKRADCommand$$1Fv:
+.global "__dt__23JSUList<12JKRADCommand>Fv"
+"__dt__23JSUList<12JKRADCommand>Fv":
 /* 80036434 00033374  7C 08 02 A6 */	mflr r0
 /* 80036438 00033378  90 01 00 04 */	stw r0, 4(r1)
 /* 8003643C 0003337C  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -995,7 +995,7 @@ szpBufferSize__16JKRDvdAramRipper:
 	.incbin "baserom.dol", 0x3E3034, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$256:
+"@56":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -91,7 +91,7 @@ perform__9TMarioCapFUlPQ26JDrama9TGraphics:
 /* 80120BF8 0011DB38  40 82 01 20 */	bne lbl_80120D18
 /* 80120BFC 0011DB3C  48 00 65 65 */	bl getMotionFrameCtrl__6TMarioFv
 /* 80120C00 0011DB40  C0 23 00 10 */	lfs f1, 0x10(r3)
-/* 80120C04 0011DB44  C0 02 98 10 */	lfs f0, $$22278@sda21(r2)
+/* 80120C04 0011DB44  C0 02 98 10 */	lfs f0, "@2278"@sda21(r2)
 /* 80120C08 0011DB48  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120C0C 0011DB4C  40 80 00 88 */	bge lbl_80120C94
 /* 80120C10 0011DB50  80 1D 00 14 */	lwz r0, 0x14(r29)
@@ -250,13 +250,13 @@ lbl_80120DA8:
 /* 80120E34 0011DD74  EC 42 00 B2 */	fmuls f2, f2, f2
 /* 80120E38 0011DD78  EC 01 00 2A */	fadds f0, f1, f0
 /* 80120E3C 0011DD7C  EC 22 00 2A */	fadds f1, f2, f0
-/* 80120E40 0011DD80  4B FA FA 71 */	bl sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 80120E40 0011DD80  4B FA FA 71 */	bl "sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 80120E44 0011DD84  80 7D 00 08 */	lwz r3, 8(r29)
 /* 80120E48 0011DD88  80 63 00 7C */	lwz r3, 0x7c(r3)
 /* 80120E4C 0011DD8C  3C 03 FF 7F */	addis r0, r3, 0xff7f
 /* 80120E50 0011DD90  28 00 04 46 */	cmplwi r0, 0x446
 /* 80120E54 0011DD94  40 82 00 14 */	bne lbl_80120E68
-/* 80120E58 0011DD98  C0 02 98 14 */	lfs f0, $$22279@sda21(r2)
+/* 80120E58 0011DD98  C0 02 98 14 */	lfs f0, "@2279"@sda21(r2)
 /* 80120E5C 0011DD9C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120E60 0011DDA0  40 81 00 08 */	ble lbl_80120E68
 /* 80120E64 0011DDA4  3B E0 00 01 */	li r31, 1
@@ -280,7 +280,7 @@ lbl_80120E98:
 lbl_80120E9C:
 /* 80120E9C 0011DDDC  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80120EA0 0011DDE0  41 82 00 14 */	beq lbl_80120EB4
-/* 80120EA4 0011DDE4  C0 02 98 14 */	lfs f0, $$22279@sda21(r2)
+/* 80120EA4 0011DDE4  C0 02 98 14 */	lfs f0, "@2279"@sda21(r2)
 /* 80120EA8 0011DDE8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80120EAC 0011DDEC  40 81 00 08 */	ble lbl_80120EB4
 /* 80120EB0 0011DDF0  3B E0 00 01 */	li r31, 1
@@ -298,7 +298,7 @@ lbl_80120EC0:
 /* 80120ED8 0011DE18  48 00 00 94 */	b lbl_80120F6C
 lbl_80120EDC:
 /* 80120EDC 0011DE1C  80 7D 00 30 */	lwz r3, 0x30(r29)
-/* 80120EE0 0011DE20  C0 22 98 18 */	lfs f1, $$22280@sda21(r2)
+/* 80120EE0 0011DE20  C0 22 98 18 */	lfs f1, "@2280"@sda21(r2)
 /* 80120EE4 0011DE24  4B FA 12 0D */	bl clash__19TTrembleModelEffectFf
 /* 80120EE8 0011DE28  48 00 00 84 */	b lbl_80120F6C
 lbl_80120EEC:
@@ -558,12 +558,12 @@ lbl_8012122C:
 .global createMirrorCap__9TMarioCapFv
 createMirrorCap__9TMarioCapFv:
 /* 80121248 0011E188  7C 08 02 A6 */	mflr r0
-/* 8012124C 0011E18C  3C 80 80 38 */	lis r4, $$22316@ha
+/* 8012124C 0011E18C  3C 80 80 38 */	lis r4, "@2316"@ha
 /* 80121250 0011E190  90 01 00 04 */	stw r0, 4(r1)
 /* 80121254 0011E194  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 80121258 0011E198  BF 61 00 14 */	stmw r27, 0x14(r1)
 /* 8012125C 0011E19C  3B 83 00 00 */	addi r28, r3, 0
-/* 80121260 0011E1A0  3B C4 A7 8C */	addi r30, r4, $$22316@l
+/* 80121260 0011E1A0  3B C4 A7 8C */	addi r30, r4, "@2316"@l
 /* 80121264 0011E1A4  3B A0 00 00 */	li r29, 0
 /* 80121268 0011E1A8  3B E0 00 00 */	li r31, 0
 lbl_8012126C:
@@ -602,8 +602,8 @@ __ct__9TMarioCapFP6TMario:
 /* 801212DC 0011E21C  BF 61 01 6C */	stmw r27, 0x16c(r1)
 /* 801212E0 0011E220  3B E3 00 00 */	addi r31, r3, 0
 /* 801212E4 0011E224  90 03 00 00 */	stw r0, 0(r3)
-/* 801212E8 0011E228  3C 60 80 38 */	lis r3, $$21490@ha
-/* 801212EC 0011E22C  3B C3 A7 38 */	addi r30, r3, $$21490@l
+/* 801212E8 0011E228  3C 60 80 38 */	lis r3, "@1490"@ha
+/* 801212EC 0011E22C  3B C3 A7 38 */	addi r30, r3, "@1490"@l
 /* 801212F0 0011E230  90 9F 00 08 */	stw r4, 8(r31)
 /* 801212F4 0011E234  38 7E 00 64 */	addi r3, r30, 0x64
 /* 801212F8 0011E238  4B EE A9 C5 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -864,7 +864,7 @@ lbl_80121560:
 /* 801216DC 0011E61C  80 64 00 30 */	lwz r3, 0x30(r4)
 /* 801216E0 0011E620  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 801216E4 0011E624  4B FA 10 51 */	bl init__19TTrembleModelEffectFP8J3DModel
-/* 801216E8 0011E628  C0 02 98 1C */	lfs f0, $$22485@sda21(r2)
+/* 801216E8 0011E628  C0 02 98 1C */	lfs f0, "@2485"@sda21(r2)
 /* 801216EC 0011E62C  3B 60 00 00 */	li r27, 0
 /* 801216F0 0011E630  3B A0 00 00 */	li r29, 0
 /* 801216F4 0011E634  D0 1F 00 34 */	stfs f0, 0x34(r31)
@@ -898,29 +898,29 @@ lbl_80121718:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21763:
+"@1763":
 	.incbin "baserom.dol", 0x377744, 0x14
 cDirtyFileName:
 	.incbin "baserom.dol", 0x377758, 0x24
 cDirtyTexName:
 	.incbin "baserom.dol", 0x37777C, 0x10
-$$22316:
+"@2316":
 	.incbin "baserom.dol", 0x37778C, 0x10
-$$22479:
+"@2479":
 	.incbin "baserom.dol", 0x37779C, 0x18
-$$22480:
+"@2480":
 	.incbin "baserom.dol", 0x3777B4, 0x18
-$$22481:
+"@2481":
 	.incbin "baserom.dol", 0x3777CC, 0x28
-$$22482:
+"@2482":
 	.incbin "baserom.dol", 0x3777F4, 0x1C
-$$22483:
+"@2483":
 	.incbin "baserom.dol", 0x377810, 0x10
-$$22484:
+"@2484":
 	.incbin "baserom.dol", 0x377820, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -933,11 +933,11 @@ __vt__9TMarioCap:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22278:
+"@2278":
 	.incbin "baserom.dol", 0x3E5510, 0x4
-$$22279:
+"@2279":
 	.incbin "baserom.dol", 0x3E5514, 0x4
-$$22280:
+"@2280":
   .4byte 0
-$$22485:
+"@2485":
 	.incbin "baserom.dol", 0x3E551C, 0x4

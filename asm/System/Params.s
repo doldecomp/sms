@@ -79,7 +79,7 @@ lbl_800F80AC:
 /* 800F80B0 000F4FF0  28 03 00 00 */	cmplwi r3, 0
 /* 800F80B4 000F4FF4  41 82 00 C8 */	beq lbl_800F817C
 /* 800F80B8 000F4FF8  81 83 00 00 */	lwz r12, 0(r3)
-/* 800F80BC 000F4FFC  38 82 91 D0 */	addi r4, r2, $$21607@sda21
+/* 800F80BC 000F4FFC  38 82 91 D0 */	addi r4, r2, "@1607"@sda21
 /* 800F80C0 000F5000  81 8C 00 10 */	lwz r12, 0x10(r12)
 /* 800F80C4 000F5004  7D 88 03 A6 */	mtlr r12
 /* 800F80C8 000F5008  4E 80 00 21 */	blrl 
@@ -145,12 +145,12 @@ finalize__7TParamsFv:
 .global init__7TParamsFv
 init__7TParamsFv:
 /* 800F81A4 000F50E4  7C 08 02 A6 */	mflr r0
-/* 800F81A8 000F50E8  38 62 91 D4 */	addi r3, r2, $$21618@sda21
+/* 800F81A8 000F50E8  38 62 91 D4 */	addi r3, r2, "@1618"@sda21
 /* 800F81AC 000F50EC  90 01 00 04 */	stw r0, 4(r1)
 /* 800F81B0 000F50F0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800F81B4 000F50F4  4B F1 3A 59 */	bl getVolume__13JKRFileLoaderFPCc
 /* 800F81B8 000F50F8  90 6D 97 E0 */	stw r3, mArc__7TParams@sda21(r13)
-/* 800F81BC 000F50FC  38 62 91 DC */	addi r3, r2, $$21619@sda21
+/* 800F81BC 000F50FC  38 62 91 DC */	addi r3, r2, "@1619"@sda21
 /* 800F81C0 000F5100  4B F1 3A 4D */	bl getVolume__13JKRFileLoaderFPCc
 /* 800F81C4 000F5104  90 6D 97 E4 */	stw r3, mSceneArc__7TParams@sda21(r13)
 /* 800F81C8 000F5108  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -241,11 +241,11 @@ SceneParamsDir:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21607:
+"@1607":
 	.incbin "baserom.dol", 0x3E4ED0, 0x4
-$$21618:
+"@1618":
 	.incbin "baserom.dol", 0x3E4ED4, 0x8
-$$21619:
+"@1619":
 	.incbin "baserom.dol", 0x3E4EDC, 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

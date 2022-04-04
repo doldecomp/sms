@@ -30,8 +30,8 @@ lbl_80326360:
 /* 80326374 003232B4  38 21 00 18 */	addi r1, r1, 0x18
 /* 80326378 003232B8  4E 80 00 20 */	blr 
 
-.global isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f
-isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3<f>f"
+"isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3<f>f":
 /* 8032637C 003232BC  7C 08 02 A6 */	mflr r0
 /* 80326380 003232C0  90 01 00 04 */	stw r0, 4(r1)
 /* 80326384 003232C4  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -42,14 +42,14 @@ isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f:
 /* 80326398 003232D8  80 65 00 18 */	lwz r3, 0x18(r5)
 /* 8032639C 003232DC  54 00 10 3A */	slwi r0, r0, 2
 /* 803263A0 003232E0  7C 63 00 2E */	lwzx r3, r3, r0
-/* 803263A4 003232E4  4B EC 2E 21 */	bl getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3$$0f$$1
-/* 803263A8 003232E8  C0 02 FD D8 */	lfs f0, $$21946@sda21(r2)
+/* 803263A4 003232E4  4B EC 2E 21 */	bl "getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f>"
+/* 803263A8 003232E8  C0 02 FD D8 */	lfs f0, "@1946"@sda21(r2)
 /* 803263AC 003232EC  FC 00 F8 40 */	fcmpo cr0, f0, f31
 /* 803263B0 003232F0  40 80 00 08 */	bge lbl_803263B8
-/* 803263B4 003232F4  C0 02 FD DC */	lfs f0, $$21947@sda21(r2)
+/* 803263B4 003232F4  C0 02 FD DC */	lfs f0, "@1947"@sda21(r2)
 lbl_803263B8:
 /* 803263B8 003232F8  EC 21 00 28 */	fsubs f1, f1, f0
-/* 803263BC 003232FC  C0 02 FD E0 */	lfs f0, $$21966@sda21(r2)
+/* 803263BC 003232FC  C0 02 FD E0 */	lfs f0, "@1966"@sda21(r2)
 /* 803263C0 00323300  FC 20 0A 10 */	fabs f1, f1
 /* 803263C4 00323304  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 803263C8 00323308  7C 00 00 26 */	mfcr r0
@@ -60,14 +60,14 @@ lbl_803263B8:
 /* 803263DC 0032331C  7C 08 03 A6 */	mtlr r0
 /* 803263E0 00323320  4E 80 00 20 */	blr 
 
-.global isOnWire__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1
-isOnWire__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1:
+.global "isOnWire__11TWireBinderFRCQ29JGeometry8TVec3<f>"
+"isOnWire__11TWireBinderFRCQ29JGeometry8TVec3<f>":
 /* 803263E4 00323324  7C 08 02 A6 */	mflr r0
 /* 803263E8 00323328  7C 64 1B 78 */	mr r4, r3
 /* 803263EC 0032332C  90 01 00 04 */	stw r0, 4(r1)
 /* 803263F0 00323330  94 21 FF F8 */	stwu r1, -8(r1)
 /* 803263F4 00323334  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
-/* 803263F8 00323338  4B EC 47 C9 */	bl getWireNo__15TMapWireManagerCFRCQ29JGeometry8TVec3$$0f$$1
+/* 803263F8 00323338  4B EC 47 C9 */	bl "getWireNo__15TMapWireManagerCFRCQ29JGeometry8TVec3<f>"
 /* 803263FC 0032333C  20 63 FF FF */	subfic r3, r3, -1
 /* 80326400 00323340  30 03 FF FF */	addic r0, r3, -1
 /* 80326404 00323344  7C 60 19 10 */	subfe r3, r0, r3
@@ -76,8 +76,8 @@ isOnWire__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1:
 /* 80326410 00323350  7C 08 03 A6 */	mtlr r0
 /* 80326414 00323354  4E 80 00 20 */	blr 
 
-.global getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "getPoint__11TWireBinderCFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"getPoint__11TWireBinderCFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 80326418 00323358  7C 08 02 A6 */	mflr r0
 /* 8032641C 0032335C  90 01 00 04 */	stw r0, 4(r1)
 /* 80326420 00323360  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -91,14 +91,14 @@ getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
 /* 80326440 00323380  80 63 00 18 */	lwz r3, 0x18(r3)
 /* 80326444 00323384  54 00 10 3A */	slwi r0, r0, 2
 /* 80326448 00323388  7C 63 00 2E */	lwzx r3, r3, r0
-/* 8032644C 0032338C  4B EC 2D 79 */	bl getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3$$0f$$1
+/* 8032644C 0032338C  4B EC 2D 79 */	bl "getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f>"
 /* 80326450 00323390  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
 /* 80326454 00323394  7F E4 FB 78 */	mr r4, r31
 /* 80326458 00323398  80 1E 00 04 */	lwz r0, 4(r30)
 /* 8032645C 0032339C  80 63 00 18 */	lwz r3, 0x18(r3)
 /* 80326460 003233A0  54 00 10 3A */	slwi r0, r0, 2
 /* 80326464 003233A4  7C 63 00 2E */	lwzx r3, r3, r0
-/* 80326468 003233A8  4B EC 2B CD */	bl getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3$$0f$$1
+/* 80326468 003233A8  4B EC 2B CD */	bl "getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>"
 /* 8032646C 003233AC  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 80326470 003233B0  83 E1 00 3C */	lwz r31, 0x3c(r1)
 /* 80326474 003233B4  83 C1 00 38 */	lwz r30, 0x38(r1)
@@ -106,8 +106,8 @@ getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
 /* 8032647C 003233BC  38 21 00 40 */	addi r1, r1, 0x40
 /* 80326480 003233C0  4E 80 00 20 */	blr 
 
-.global getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1f
-getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1f:
+.global "getPoint__11TWireBinderCFPQ29JGeometry8TVec3<f>f"
+"getPoint__11TWireBinderCFPQ29JGeometry8TVec3<f>f":
 /* 80326484 003233C4  7C 08 02 A6 */	mflr r0
 /* 80326488 003233C8  90 01 00 04 */	stw r0, 4(r1)
 /* 8032648C 003233CC  94 21 FF F8 */	stwu r1, -8(r1)
@@ -116,14 +116,14 @@ getPoint__11TWireBinderCFPQ29JGeometry8TVec3$$0f$$1f:
 /* 80326498 003233D8  80 65 00 18 */	lwz r3, 0x18(r5)
 /* 8032649C 003233DC  54 00 10 3A */	slwi r0, r0, 2
 /* 803264A0 003233E0  7C 63 00 2E */	lwzx r3, r3, r0
-/* 803264A4 003233E4  4B EC 2B 91 */	bl getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3$$0f$$1
+/* 803264A4 003233E4  4B EC 2B 91 */	bl "getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>"
 /* 803264A8 003233E8  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 803264AC 003233EC  38 21 00 08 */	addi r1, r1, 8
 /* 803264B0 003233F0  7C 08 03 A6 */	mtlr r0
 /* 803264B4 003233F4  4E 80 00 20 */	blr 
 
-.global getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f
-getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3<f>f"
+"getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3<f>f":
 /* 803264B8 003233F8  7C 08 02 A6 */	mflr r0
 /* 803264BC 003233FC  90 01 00 04 */	stw r0, 4(r1)
 /* 803264C0 00323400  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -141,29 +141,29 @@ getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3$$0f$$1f:
 /* 803264F0 00323430  7C 04 00 2E */	lwzx r0, r4, r0
 /* 803264F4 00323434  38 85 00 00 */	addi r4, r5, 0
 /* 803264F8 00323438  7C 03 03 78 */	mr r3, r0
-/* 803264FC 0032343C  4B EC 2C C9 */	bl getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3$$0f$$1
-/* 80326500 00323440  C0 02 FD E4 */	lfs f0, $$22039@sda21(r2)
+/* 803264FC 0032343C  4B EC 2C C9 */	bl "getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f>"
+/* 80326500 00323440  C0 02 FD E4 */	lfs f0, "@2039"@sda21(r2)
 /* 80326504 00323444  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80326508 00323448  4C 40 13 82 */	cror 2, 0, 2
 /* 8032650C 0032344C  40 82 00 10 */	bne lbl_8032651C
-/* 80326510 00323450  C0 02 FD D8 */	lfs f0, $$21946@sda21(r2)
+/* 80326510 00323450  C0 02 FD D8 */	lfs f0, "@1946"@sda21(r2)
 /* 80326514 00323454  FC 1E 00 40 */	fcmpo cr0, f30, f0
 /* 80326518 00323458  41 80 00 20 */	blt lbl_80326538
 lbl_8032651C:
-/* 8032651C 0032345C  C0 02 FD E8 */	lfs f0, $$22040@sda21(r2)
+/* 8032651C 0032345C  C0 02 FD E8 */	lfs f0, "@2040"@sda21(r2)
 /* 80326520 00323460  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 80326524 00323464  4C 40 13 82 */	cror 2, 0, 2
 /* 80326528 00323468  40 82 00 20 */	bne lbl_80326548
-/* 8032652C 0032346C  C0 02 FD D8 */	lfs f0, $$21946@sda21(r2)
+/* 8032652C 0032346C  C0 02 FD D8 */	lfs f0, "@1946"@sda21(r2)
 /* 80326530 00323470  FC 00 F0 40 */	fcmpo cr0, f0, f30
 /* 80326534 00323474  40 80 00 14 */	bge lbl_80326548
 lbl_80326538:
-/* 80326538 00323478  C0 02 FD E4 */	lfs f0, $$22039@sda21(r2)
+/* 80326538 00323478  C0 02 FD E4 */	lfs f0, "@2039"@sda21(r2)
 /* 8032653C 0032347C  FF E0 08 90 */	fmr f31, f1
 /* 80326540 00323480  EC 20 0F BC */	fnmsubs f1, f0, f30, f1
 /* 80326544 00323484  48 00 00 0C */	b lbl_80326550
 lbl_80326548:
-/* 80326548 00323488  C0 02 FD E4 */	lfs f0, $$22039@sda21(r2)
+/* 80326548 00323488  C0 02 FD E4 */	lfs f0, "@2039"@sda21(r2)
 /* 8032654C 0032348C  EF E0 0F BA */	fmadds f31, f0, f30, f1
 lbl_80326550:
 /* 80326550 00323490  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
@@ -172,7 +172,7 @@ lbl_80326550:
 /* 8032655C 0032349C  80 63 00 18 */	lwz r3, 0x18(r3)
 /* 80326560 003234A0  54 00 10 3A */	slwi r0, r0, 2
 /* 80326564 003234A4  7C 63 00 2E */	lwzx r3, r3, r0
-/* 80326568 003234A8  4B EC 2A CD */	bl getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3$$0f$$1
+/* 80326568 003234A8  4B EC 2A CD */	bl "getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>"
 /* 8032656C 003234AC  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
 /* 80326570 003234B0  FC 20 F8 90 */	fmr f1, f31
 /* 80326574 003234B4  80 1F 00 04 */	lwz r0, 4(r31)
@@ -180,7 +180,7 @@ lbl_80326550:
 /* 8032657C 003234BC  80 63 00 18 */	lwz r3, 0x18(r3)
 /* 80326580 003234C0  54 00 10 3A */	slwi r0, r0, 2
 /* 80326584 003234C4  7C 63 00 2E */	lwzx r3, r3, r0
-/* 80326588 003234C8  4B EC 2A AD */	bl getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3$$0f$$1
+/* 80326588 003234C8  4B EC 2A AD */	bl "getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>"
 /* 8032658C 003234CC  C0 41 00 50 */	lfs f2, 0x50(r1)
 /* 80326590 003234D0  C0 01 00 5C */	lfs f0, 0x5c(r1)
 /* 80326594 003234D4  C0 21 00 60 */	lfs f1, 0x60(r1)
@@ -257,14 +257,14 @@ bind__11TWireBinderFP10TLiveActor:
 /* 803266A4 003235E4  80 9E 00 04 */	lwz r4, 4(r30)
 /* 803266A8 003235E8  48 00 02 05 */	bl getWire__15TMapWireManagerCFi
 /* 803266AC 003235EC  38 81 00 64 */	addi r4, r1, 0x64
-/* 803266B0 003235F0  4B EC 2B 15 */	bl getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3$$0f$$1
+/* 803266B0 003235F0  4B EC 2B 15 */	bl "getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f>"
 /* 803266B4 003235F4  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
 /* 803266B8 003235F8  38 81 00 58 */	addi r4, r1, 0x58
 /* 803266BC 003235FC  80 1E 00 04 */	lwz r0, 4(r30)
 /* 803266C0 00323600  80 63 00 18 */	lwz r3, 0x18(r3)
 /* 803266C4 00323604  54 00 10 3A */	slwi r0, r0, 2
 /* 803266C8 00323608  7C 63 00 2E */	lwzx r3, r3, r0
-/* 803266CC 0032360C  4B EC 29 69 */	bl getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3$$0f$$1
+/* 803266CC 0032360C  4B EC 29 69 */	bl "getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>"
 /* 803266D0 00323610  C0 01 00 58 */	lfs f0, 0x58(r1)
 /* 803266D4 00323614  3C 00 7F 80 */	lis r0, 0x7f80
 /* 803266D8 00323618  D0 01 00 38 */	stfs f0, 0x38(r1)
@@ -369,7 +369,7 @@ lbl_80326808:
 /* 80326818 00323758  C0 1F 00 18 */	lfs f0, 0x18(r31)
 /* 8032681C 0032375C  D0 01 00 60 */	stfs f0, 0x60(r1)
 lbl_80326820:
-/* 80326820 00323760  C0 22 FD EC */	lfs f1, $$22119@sda21(r2)
+/* 80326820 00323760  C0 22 FD EC */	lfs f1, "@2119"@sda21(r2)
 /* 80326824 00323764  C0 01 00 5C */	lfs f0, 0x5c(r1)
 /* 80326828 00323768  C0 41 00 68 */	lfs f2, 0x68(r1)
 /* 8032682C 0032376C  EC 01 00 2A */	fadds f0, f1, f0
@@ -393,7 +393,7 @@ lbl_80326858:
 /* 8032686C 003237AC  80 01 00 60 */	lwz r0, 0x60(r1)
 /* 80326870 003237B0  90 A1 00 28 */	stw r5, 0x28(r1)
 /* 80326874 003237B4  90 01 00 2C */	stw r0, 0x2c(r1)
-/* 80326878 003237B8  4B D9 B8 11 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 80326878 003237B8  4B D9 B8 11 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 8032687C 003237BC  80 61 00 24 */	lwz r3, 0x24(r1)
 /* 80326880 003237C0  80 01 00 28 */	lwz r0, 0x28(r1)
 /* 80326884 003237C4  90 7F 00 94 */	stw r3, 0x94(r31)
@@ -414,8 +414,8 @@ getWire__15TMapWireManagerCFi:
 /* 803268B4 003237F4  7C 63 00 2E */	lwzx r3, r3, r0
 /* 803268B8 003237F8  4E 80 00 20 */	blr 
 
-.global init__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1
-init__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1:
+.global "init__11TWireBinderFRCQ29JGeometry8TVec3<f>"
+"init__11TWireBinderFRCQ29JGeometry8TVec3<f>":
 /* 803268BC 003237FC  7C 08 02 A6 */	mflr r0
 /* 803268C0 00323800  90 01 00 04 */	stw r0, 4(r1)
 /* 803268C4 00323804  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -423,7 +423,7 @@ init__11TWireBinderFRCQ29JGeometry8TVec3$$0f$$1:
 /* 803268CC 0032380C  93 E1 00 44 */	stw r31, 0x44(r1)
 /* 803268D0 00323810  7C 7F 1B 78 */	mr r31, r3
 /* 803268D4 00323814  80 6D 9A D0 */	lwz r3, gpMapWireManager@sda21(r13)
-/* 803268D8 00323818  4B EC 42 E9 */	bl getWireNo__15TMapWireManagerCFRCQ29JGeometry8TVec3$$0f$$1
+/* 803268D8 00323818  4B EC 42 E9 */	bl "getWireNo__15TMapWireManagerCFRCQ29JGeometry8TVec3<f>"
 /* 803268DC 0032381C  90 7F 00 04 */	stw r3, 4(r31)
 /* 803268E0 00323820  80 1F 00 04 */	lwz r0, 4(r31)
 /* 803268E4 00323824  2C 00 FF FF */	cmpwi r0, -1
@@ -434,7 +434,7 @@ lbl_803268F4:
 /* 803268F4 00323834  80 8D 9A D0 */	lwz r4, gpMapWireManager@sda21(r13)
 /* 803268F8 00323838  38 61 00 30 */	addi r3, r1, 0x30
 /* 803268FC 0032383C  54 00 10 3A */	slwi r0, r0, 2
-/* 80326900 00323840  C3 E2 FD DC */	lfs f31, $$21947@sda21(r2)
+/* 80326900 00323840  C3 E2 FD DC */	lfs f31, "@1947"@sda21(r2)
 /* 80326904 00323844  80 A4 00 18 */	lwz r5, 0x18(r4)
 /* 80326908 00323848  7C 64 1B 78 */	mr r4, r3
 /* 8032690C 0032384C  7C C5 00 2E */	lwzx r6, r5, r0
@@ -462,22 +462,22 @@ lbl_803268F4:
 /* 80326964 003238A4  C0 21 00 38 */	lfs f1, 0x38(r1)
 /* 80326968 003238A8  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8032696C 003238AC  D0 01 00 38 */	stfs f0, 0x38(r1)
-/* 80326970 003238B0  4B DF B5 E1 */	bl dot__Q29JGeometry8TVec3$$0f$$1CFRCQ29JGeometry8TVec3$$0f$$1
-/* 80326974 003238B4  C0 02 FD F0 */	lfs f0, $$22152@sda21(r2)
+/* 80326970 003238B0  4B DF B5 E1 */	bl "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>"
+/* 80326974 003238B4  C0 02 FD F0 */	lfs f0, "@2152"@sda21(r2)
 /* 80326978 003238B8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8032697C 003238BC  4C 40 13 82 */	cror 2, 0, 2
 /* 80326980 003238C0  40 82 00 18 */	bne lbl_80326998
-/* 80326984 003238C4  C0 02 FD D8 */	lfs f0, $$21946@sda21(r2)
+/* 80326984 003238C4  C0 02 FD D8 */	lfs f0, "@1946"@sda21(r2)
 /* 80326988 003238C8  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 8032698C 003238CC  D0 1F 00 0C */	stfs f0, 0xc(r31)
 /* 80326990 003238D0  D0 1F 00 08 */	stfs f0, 8(r31)
 /* 80326994 003238D4  48 00 00 18 */	b lbl_803269AC
 lbl_80326998:
-/* 80326998 003238D8  4B D4 63 D9 */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 80326998 003238D8  4B D4 63 D9 */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 8032699C 003238DC  EC 3F 00 72 */	fmuls f1, f31, f1
 /* 803269A0 003238E0  38 7F 00 08 */	addi r3, r31, 8
 /* 803269A4 003238E4  38 81 00 30 */	addi r4, r1, 0x30
-/* 803269A8 003238E8  4B DF B5 81 */	bl scale__Q29JGeometry8TVec3$$0f$$1FfRCQ29JGeometry8TVec3$$0f$$1
+/* 803269A8 003238E8  4B DF B5 81 */	bl "scale__Q29JGeometry8TVec3<f>FfRCQ29JGeometry8TVec3<f>"
 lbl_803269AC:
 /* 803269AC 003238EC  38 60 00 01 */	li r3, 1
 lbl_803269B0:
@@ -498,17 +498,17 @@ __vt__11TWireBinder:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21946:
+"@1946":
   .4byte 0
-$$21947:
+"@1947":
 	.incbin "baserom.dol", 0x3EBADC, 0x4
-$$21966:
+"@1966":
 	.incbin "baserom.dol", 0x3EBAE0, 0x4
-$$22039:
+"@2039":
 	.incbin "baserom.dol", 0x3EBAE4, 0x4
-$$22040:
+"@2040":
 	.incbin "baserom.dol", 0x3EBAE8, 0x4
-$$22119:
+"@2119":
 	.incbin "baserom.dol", 0x3EBAEC, 0x4
-$$22152:
+"@2152":
 	.incbin "baserom.dol", 0x3EBAF0, 0x8

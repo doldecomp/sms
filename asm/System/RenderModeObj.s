@@ -84,10 +84,10 @@ SMSSetupGameRenderingInfo__FPQ26JDrama8TDisplayb:
 /* 800F8A1C 000F595C  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 800F8A20 000F5960  BF 41 00 20 */	stmw r26, 0x20(r1)
 /* 800F8A24 000F5964  3B 43 00 00 */	addi r26, r3, 0
-/* 800F8A28 000F5968  3C 60 80 3B */	lis r3, $$21431@ha
+/* 800F8A28 000F5968  3C 60 80 3B */	lis r3, "@1431"@ha
 /* 800F8A2C 000F596C  3B FA 00 10 */	addi r31, r26, 0x10
 /* 800F8A30 000F5970  3B C4 00 00 */	addi r30, r4, 0
-/* 800F8A34 000F5974  3B A3 3F 40 */	addi r29, r3, $$21431@l
+/* 800F8A34 000F5974  3B A3 3F 40 */	addi r29, r3, "@1431"@l
 /* 800F8A38 000F5978  3B 80 00 00 */	li r28, 0
 /* 800F8A3C 000F597C  4B FA 25 81 */	bl VIGetTvFormat
 /* 800F8A40 000F5980  28 03 00 00 */	cmplwi r3, 0
@@ -176,9 +176,9 @@ SMSSetupTitleRenderingInfo__FPQ26JDrama8TDisplay:
 /* 800F8B58 000F5A98  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800F8B5C 000F5A9C  BF 61 00 1C */	stmw r27, 0x1c(r1)
 /* 800F8B60 000F5AA0  3B 63 00 00 */	addi r27, r3, 0
-/* 800F8B64 000F5AA4  3C 60 80 3B */	lis r3, $$21431@ha
+/* 800F8B64 000F5AA4  3C 60 80 3B */	lis r3, "@1431"@ha
 /* 800F8B68 000F5AA8  3B DB 00 10 */	addi r30, r27, 0x10
-/* 800F8B6C 000F5AAC  3B E3 3F 40 */	addi r31, r3, $$21431@l
+/* 800F8B6C 000F5AAC  3B E3 3F 40 */	addi r31, r3, "@1431"@l
 /* 800F8B70 000F5AB0  3B A0 00 00 */	li r29, 0
 /* 800F8B74 000F5AB4  4B FA 24 49 */	bl VIGetTvFormat
 /* 800F8B78 000F5AB8  28 03 00 00 */	cmplwi r3, 0
@@ -248,11 +248,11 @@ lbl_800F8C30:
 .global SMSSetupTitleRenderMode__FP16_GXRenderModeObj
 SMSSetupTitleRenderMode__FP16_GXRenderModeObj:
 /* 800F8C58 000F5B98  7C 08 02 A6 */	mflr r0
-/* 800F8C5C 000F5B9C  3C 80 80 3B */	lis r4, $$21431@ha
+/* 800F8C5C 000F5B9C  3C 80 80 3B */	lis r4, "@1431"@ha
 /* 800F8C60 000F5BA0  90 01 00 04 */	stw r0, 4(r1)
 /* 800F8C64 000F5BA4  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800F8C68 000F5BA8  93 E1 00 1C */	stw r31, 0x1c(r1)
-/* 800F8C6C 000F5BAC  3B E4 3F 40 */	addi r31, r4, $$21431@l
+/* 800F8C6C 000F5BAC  3B E4 3F 40 */	addi r31, r4, "@1431"@l
 /* 800F8C70 000F5BB0  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 800F8C74 000F5BB4  3B C0 00 00 */	li r30, 0
 /* 800F8C78 000F5BB8  93 A1 00 14 */	stw r29, 0x14(r1)
@@ -397,11 +397,11 @@ SMSGetRederRect_Game__Fv:
 /* 800F8E70 000F5DB0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x3B0F40, 0xC
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x3B0F4C, 0xC
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x3B0F58, 0x10
 SMSAASamplePattern_non:
 	.incbin "baserom.dol", 0x3B0F68, 0x18

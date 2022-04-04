@@ -20,10 +20,10 @@ lbl_8005A974:
 /* 8005A974 000578B4  3C 60 00 19 */	lis r3, 0x0019660D@ha
 /* 8005A978 000578B8  80 8D 90 A4 */	lwz r4, oRandom$331@sda21(r13)
 /* 8005A97C 000578BC  38 03 66 0D */	addi r0, r3, 0x0019660D@l
-/* 8005A980 000578C0  C0 02 86 0C */	lfs f0, $$2346@sda21(r2)
+/* 8005A980 000578C0  C0 02 86 0C */	lfs f0, "@346"@sda21(r2)
 /* 8005A984 000578C4  7C 64 01 D6 */	mullw r3, r4, r0
-/* 8005A988 000578C8  C0 82 86 08 */	lfs f4, $$2345@sda21(r2)
-/* 8005A98C 000578CC  C0 22 86 10 */	lfs f1, $$2347@sda21(r2)
+/* 8005A988 000578C8  C0 82 86 08 */	lfs f4, "@345"@sda21(r2)
+/* 8005A98C 000578CC  C0 22 86 10 */	lfs f1, "@347"@sda21(r2)
 /* 8005A990 000578D0  3C 63 3C 6F */	addis r3, r3, 0x3c6f
 /* 8005A994 000578D4  38 03 F3 5F */	addi r0, r3, -3233
 /* 8005A998 000578D8  90 0D 90 A4 */	stw r0, oRandom$331@sda21(r13)
@@ -55,11 +55,11 @@ __vt__Q28JASystem9TInstRand:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2345:
+"@345":
 	.incbin "baserom.dol", 0x3E4308, 0x4
-$$2346:
+"@346":
 	.incbin "baserom.dol", 0x3E430C, 0x4
-$$2347:
+"@347":
 	.incbin "baserom.dol", 0x3E4310, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

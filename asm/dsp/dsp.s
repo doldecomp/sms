@@ -54,9 +54,9 @@ DSPAssertInt:
 .global DSPInit
 DSPInit:
 /* 8009E6E4 0009B624  7C 08 02 A6 */	mflr r0
-/* 8009E6E8 0009B628  3C 60 80 3B */	lis r3, $$216@ha
+/* 8009E6E8 0009B628  3C 60 80 3B */	lis r3, "@16"@ha
 /* 8009E6EC 0009B62C  90 01 00 04 */	stw r0, 4(r1)
-/* 8009E6F0 0009B630  38 63 12 08 */	addi r3, r3, $$216@l
+/* 8009E6F0 0009B630  38 63 12 08 */	addi r3, r3, "@16"@l
 /* 8009E6F4 0009B634  4C C6 31 82 */	crclr 6
 /* 8009E6F8 0009B638  38 83 00 20 */	addi r4, r3, 0x20
 /* 8009E6FC 0009B63C  94 21 FF F0 */	stwu r1, -0x10(r1)
@@ -102,11 +102,11 @@ lbl_8009E788:
 /* 8009E798 0009B6D8  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$216:
+"@16":
 	.incbin "baserom.dol", 0x3AE208, 0x20
-$$217:
+"@17":
 	.incbin "baserom.dol", 0x3AE228, 0xC
-$$218:
+"@18":
 	.incbin "baserom.dol", 0x3AE234, 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

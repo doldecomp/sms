@@ -272,9 +272,9 @@ addCheckDataToGrid__17TMapCollisionDataFP12TBGCheckDatai:
 /* 801E403C 001E0F7C  41 82 04 F0 */	beq lbl_801E452C
 /* 801E4040 001E0F80  1F 1A 00 0C */	mulli r24, r26, 0xc
 /* 801E4044 001E0F84  83 21 00 54 */	lwz r25, 0x54(r1)
-/* 801E4048 001E0F88  CB C2 CE 50 */	lfd f30, $$22091@sda21(r2)
-/* 801E404C 001E0F8C  C3 E2 CE 48 */	lfs f31, $$22088@sda21(r2)
-/* 801E4050 001E0F90  C3 62 CE 4C */	lfs f27, $$22089@sda21(r2)
+/* 801E4048 001E0F88  CB C2 CE 50 */	lfd f30, "@2091"@sda21(r2)
+/* 801E404C 001E0F8C  C3 E2 CE 48 */	lfs f31, "@2088"@sda21(r2)
+/* 801E4050 001E0F90  C3 62 CE 4C */	lfs f27, "@2089"@sda21(r2)
 /* 801E4054 001E0F94  3F 60 43 30 */	lis r27, 0x4330
 /* 801E4058 001E0F98  48 00 04 C8 */	b lbl_801E4520
 lbl_801E405C:
@@ -713,14 +713,14 @@ lbl_801E4630:
 lbl_801E4638:
 /* 801E4638 001E1578  2C 05 00 02 */	cmpwi r5, 2
 /* 801E463C 001E157C  40 82 00 18 */	bne lbl_801E4654
-/* 801E4640 001E1580  C0 02 CE 4C */	lfs f0, $$22089@sda21(r2)
+/* 801E4640 001E1580  C0 02 CE 4C */	lfs f0, "@2089"@sda21(r2)
 /* 801E4644 001E1584  EC 21 00 28 */	fsubs f1, f1, f0
 /* 801E4648 001E1588  EC 42 00 28 */	fsubs f2, f2, f0
 /* 801E464C 001E158C  ED 08 00 2A */	fadds f8, f8, f0
 /* 801E4650 001E1590  EC A5 00 2A */	fadds f5, f5, f0
 lbl_801E4654:
 /* 801E4654 001E1594  EC 01 18 2A */	fadds f0, f1, f3
-/* 801E4658 001E1598  C0 22 CE 58 */	lfs f1, $$22207@sda21(r2)
+/* 801E4658 001E1598  C0 22 CE 58 */	lfs f1, "@2207"@sda21(r2)
 /* 801E465C 001E159C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 801E4660 001E15A0  FC 00 00 1E */	fctiwz f0, f0
 /* 801E4664 001E15A4  D8 01 00 D8 */	stfd f0, 0xd8(r1)
@@ -733,7 +733,7 @@ lbl_801E4654:
 /* 801E4680 001E15C0  90 06 00 00 */	stw r0, 0(r6)
 lbl_801E4684:
 /* 801E4684 001E15C4  C0 03 00 00 */	lfs f0, 0(r3)
-/* 801E4688 001E15C8  C0 22 CE 58 */	lfs f1, $$22207@sda21(r2)
+/* 801E4688 001E15C8  C0 22 CE 58 */	lfs f1, "@2207"@sda21(r2)
 /* 801E468C 001E15CC  EC 08 00 2A */	fadds f0, f8, f0
 /* 801E4690 001E15D0  EC 01 00 32 */	fmuls f0, f1, f0
 /* 801E4694 001E15D4  FC 00 00 1E */	fctiwz f0, f0
@@ -748,7 +748,7 @@ lbl_801E4684:
 /* 801E46B8 001E15F8  90 08 00 00 */	stw r0, 0(r8)
 lbl_801E46BC:
 /* 801E46BC 001E15FC  C0 03 00 04 */	lfs f0, 4(r3)
-/* 801E46C0 001E1600  C0 22 CE 58 */	lfs f1, $$22207@sda21(r2)
+/* 801E46C0 001E1600  C0 22 CE 58 */	lfs f1, "@2207"@sda21(r2)
 /* 801E46C4 001E1604  EC 02 00 2A */	fadds f0, f2, f0
 /* 801E46C8 001E1608  EC 01 00 32 */	fmuls f0, f1, f0
 /* 801E46CC 001E160C  FC 00 00 1E */	fctiwz f0, f0
@@ -762,7 +762,7 @@ lbl_801E46BC:
 /* 801E46EC 001E162C  90 07 00 00 */	stw r0, 0(r7)
 lbl_801E46F0:
 /* 801E46F0 001E1630  C0 03 00 04 */	lfs f0, 4(r3)
-/* 801E46F4 001E1634  C0 22 CE 58 */	lfs f1, $$22207@sda21(r2)
+/* 801E46F4 001E1634  C0 22 CE 58 */	lfs f1, "@2207"@sda21(r2)
 /* 801E46F8 001E1638  EC 05 00 2A */	fadds f0, f5, f0
 /* 801E46FC 001E163C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 801E4700 001E1640  FC 00 00 1E */	fctiwz f0, f0
@@ -961,11 +961,11 @@ allocCheckData__17TMapCollisionDataFUl:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22088:
+"@2088":
 	.incbin "baserom.dol", 0x3E8B48, 0x4
-$$22089:
+"@2089":
 	.incbin "baserom.dol", 0x3E8B4C, 0x4
-$$22091:
+"@2091":
 	.incbin "baserom.dol", 0x3E8B50, 0x8
-$$22207:
+"@2207":
 	.incbin "baserom.dol", 0x3E8B58, 0x8

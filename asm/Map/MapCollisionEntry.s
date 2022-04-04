@@ -23,7 +23,7 @@ __ct__17TMapCollisionWarpFv:
 /* 801DF80C 001DC74C  93 FE 00 1C */	stw r31, 0x1c(r30)
 /* 801DF810 001DC750  B3 FE 00 5C */	sth r31, 0x5c(r30)
 /* 801DF814 001DC754  4B EB 4A 9D */	bl PSMTXIdentity
-/* 801DF818 001DC758  C0 02 CD E0 */	lfs f0, $$21871@sda21(r2)
+/* 801DF818 001DC758  C0 02 CD E0 */	lfs f0, "@1871"@sda21(r2)
 /* 801DF81C 001DC75C  3C 60 80 3D */	lis r3, __vt__17TMapCollisionWarp@ha
 /* 801DF820 001DC760  38 03 FC 88 */	addi r0, r3, __vt__17TMapCollisionWarp@l
 /* 801DF824 001DC764  D0 1E 00 50 */	stfs f0, 0x50(r30)
@@ -106,8 +106,8 @@ lbl_801DF924:
 /* 801DF92C 001DC86C  7C 08 03 A6 */	mtlr r0
 /* 801DF930 001DC870  4E 80 00 20 */	blr 
 
-.global setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3$$0f$$1
-setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3$$0f$$1:
+.global "setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3<f>"
+"setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3<f>":
 /* 801DF934 001DC874  7C 08 02 A6 */	mflr r0
 /* 801DF938 001DC878  90 01 00 04 */	stw r0, 4(r1)
 /* 801DF93C 001DC87C  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -133,7 +133,7 @@ lbl_801DF968:
 /* 801DF984 001DC8C4  B0 7E 00 60 */	sth r3, 0x60(r30)
 /* 801DF988 001DC8C8  38 7E 00 00 */	addi r3, r30, 0
 /* 801DF98C 001DC8CC  38 9F 00 00 */	addi r4, r31, 0
-/* 801DF990 001DC8D0  48 00 39 C9 */	bl updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+/* 801DF990 001DC8D0  48 00 39 C9 */	bl "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
 /* 801DF994 001DC8D4  A0 1E 00 60 */	lhz r0, 0x60(r30)
 /* 801DF998 001DC8D8  80 8D 9A B8 */	lwz r4, gpMapCollisionData@sda21(r13)
 /* 801DF99C 001DC8DC  54 00 08 3C */	slwi r0, r0, 1
@@ -191,7 +191,7 @@ lbl_801DFA30:
 /* 801DFA4C 001DC98C  D0 01 00 20 */	stfs f0, 0x20(r1)
 /* 801DFA50 001DC990  D0 21 00 24 */	stfs f1, 0x24(r1)
 /* 801DFA54 001DC994  D0 41 00 28 */	stfs f2, 0x28(r1)
-/* 801DFA58 001DC998  48 00 39 01 */	bl updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+/* 801DFA58 001DC998  48 00 39 01 */	bl "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
 /* 801DFA5C 001DC99C  48 00 00 0C */	b lbl_801DFA68
 lbl_801DFA60:
 /* 801DFA60 001DC9A0  7F E3 FB 78 */	mr r3, r31
@@ -233,7 +233,7 @@ __ct__17TMapCollisionMoveFv:
 /* 801DFADC 001DCA1C  90 1F 00 1C */	stw r0, 0x1c(r31)
 /* 801DFAE0 001DCA20  B0 1F 00 5C */	sth r0, 0x5c(r31)
 /* 801DFAE4 001DCA24  4B EB 47 CD */	bl PSMTXIdentity
-/* 801DFAE8 001DCA28  C0 02 CD E0 */	lfs f0, $$21871@sda21(r2)
+/* 801DFAE8 001DCA28  C0 02 CD E0 */	lfs f0, "@1871"@sda21(r2)
 /* 801DFAEC 001DCA2C  3C 60 80 3D */	lis r3, __vt__17TMapCollisionMove@ha
 /* 801DFAF0 001DCA30  38 03 FC AC */	addi r0, r3, __vt__17TMapCollisionMove@l
 /* 801DFAF4 001DCA34  D0 1F 00 50 */	stfs f0, 0x50(r31)
@@ -324,8 +324,8 @@ lbl_801DFC04:
 /* 801DFC28 001DCB68  38 21 00 38 */	addi r1, r1, 0x38
 /* 801DFC2C 001DCB6C  4E 80 00 20 */	blr 
 
-.global moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1
-moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1:
+.global "moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>"
+"moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>":
 /* 801DFC30 001DCB70  7C 08 02 A6 */	mflr r0
 /* 801DFC34 001DCB74  90 01 00 04 */	stw r0, 4(r1)
 /* 801DFC38 001DCB78  94 21 FF F8 */	stwu r1, -8(r1)
@@ -351,7 +351,7 @@ lbl_801DFC70:
 /* 801DFC78 001DCBB8  48 00 3A DD */	bl setList__17TMapCollisionMoveFv
 /* 801DFC7C 001DCBBC  48 00 00 08 */	b lbl_801DFC84
 lbl_801DFC80:
-/* 801DFC80 001DCBC0  48 00 36 D9 */	bl updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+/* 801DFC80 001DCBC0  48 00 36 D9 */	bl "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
 lbl_801DFC84:
 /* 801DFC84 001DCBC4  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 801DFC88 001DCBC8  38 21 00 08 */	addi r1, r1, 8
@@ -401,7 +401,7 @@ lbl_801DFCF8:
 /* 801DFD10 001DCC50  D0 01 00 10 */	stfs f0, 0x10(r1)
 /* 801DFD14 001DCC54  C0 03 00 4C */	lfs f0, 0x4c(r3)
 /* 801DFD18 001DCC58  D0 01 00 14 */	stfs f0, 0x14(r1)
-/* 801DFD1C 001DCC5C  48 00 36 3D */	bl updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+/* 801DFD1C 001DCC5C  48 00 36 3D */	bl "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
 /* 801DFD20 001DCC60  48 00 00 08 */	b lbl_801DFD28
 lbl_801DFD24:
 /* 801DFD24 001DCC64  48 00 35 A1 */	bl update__17TMapCollisionBaseFv
@@ -433,7 +433,7 @@ __ct__19TMapCollisionStaticFv:
 /* 801DFD7C 001DCCBC  93 FE 00 1C */	stw r31, 0x1c(r30)
 /* 801DFD80 001DCCC0  B3 FE 00 5C */	sth r31, 0x5c(r30)
 /* 801DFD84 001DCCC4  4B EB 45 2D */	bl PSMTXIdentity
-/* 801DFD88 001DCCC8  C0 02 CD E0 */	lfs f0, $$21871@sda21(r2)
+/* 801DFD88 001DCCC8  C0 02 CD E0 */	lfs f0, "@1871"@sda21(r2)
 /* 801DFD8C 001DCCCC  3C 60 80 3D */	lis r3, __vt__19TMapCollisionStatic@ha
 /* 801DFD90 001DCCD0  38 03 FC D0 */	addi r0, r3, __vt__19TMapCollisionStatic@l
 /* 801DFD94 001DCCD4  D0 1E 00 50 */	stfs f0, 0x50(r30)
@@ -521,12 +521,12 @@ init__17TMapCollisionBaseFPCcUsPC10TLiveActor:
 /* 801DFEA8 001DCDE8  93 C1 01 28 */	stw r30, 0x128(r1)
 /* 801DFEAC 001DCDEC  93 A1 01 24 */	stw r29, 0x124(r1)
 /* 801DFEB0 001DCDF0  3B A4 00 00 */	addi r29, r4, 0
-/* 801DFEB4 001DCDF4  3C 80 80 39 */	lis r4, $$21490@ha
+/* 801DFEB4 001DCDF4  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 801DFEB8 001DCDF8  93 81 01 20 */	stw r28, 0x120(r1)
-/* 801DFEBC 001DCDFC  3B C4 17 70 */	addi r30, r4, $$21490@l
+/* 801DFEBC 001DCDFC  3B C4 17 70 */	addi r30, r4, "@1490"@l
 /* 801DFEC0 001DCE00  3B 85 00 00 */	addi r28, r5, 0
 /* 801DFEC4 001DCE04  38 7D 00 00 */	addi r3, r29, 0
-/* 801DFEC8 001DCE08  38 82 CD E4 */	addi r4, r2, $$22017@sda21
+/* 801DFEC8 001DCE08  38 82 CD E4 */	addi r4, r2, "@2017"@sda21
 /* 801DFECC 001DCE0C  4B EA 5C AD */	bl strstr
 /* 801DFED0 001DCE10  28 03 00 00 */	cmplwi r3, 0
 /* 801DFED4 001DCE14  40 82 00 44 */	bne lbl_801DFF18
@@ -683,8 +683,8 @@ lbl_801E00C8:
 /* 801E00D0 001DD010  41 80 FF E8 */	blt lbl_801E00B8
 /* 801E00D4 001DD014  4E 80 00 20 */	blr 
 
-.global setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 801E00D8 001DD018  7C 08 02 A6 */	mflr r0
 /* 801E00DC 001DD01C  90 01 00 04 */	stw r0, 4(r1)
 /* 801E00E0 001DD020  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -697,7 +697,7 @@ setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8T
 /* 801E00FC 001DD03C  38 A6 00 00 */	addi r5, r6, 0
 /* 801E0100 001DD040  38 C7 00 00 */	addi r6, r7, 0
 /* 801E0104 001DD044  7C 60 FA 14 */	add r3, r0, r31
-/* 801E0108 001DD048  48 00 36 B1 */	bl setVertex__12TBGCheckDataFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 801E0108 001DD048  48 00 36 B1 */	bl "setVertex__12TBGCheckDataFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 801E010C 001DD04C  80 1E 00 04 */	lwz r0, 4(r30)
 /* 801E0110 001DD050  80 BE 00 08 */	lwz r5, 8(r30)
 /* 801E0114 001DD054  80 6D 9A B8 */	lwz r3, gpMapCollisionData@sda21(r13)
@@ -710,8 +710,8 @@ setVertexData__17TMapCollisionBaseFUlRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8T
 /* 801E0130 001DD070  38 21 00 28 */	addi r1, r1, 0x28
 /* 801E0134 001DD074  4E 80 00 20 */	blr 
 
-.global moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 801E0138 001DD078  7C 08 02 A6 */	mflr r0
 /* 801E013C 001DD07C  90 01 00 04 */	stw r0, 4(r1)
 /* 801E0140 001DD080  94 21 FF C8 */	stwu r1, -0x38(r1)
@@ -769,7 +769,7 @@ lbl_801E01D8:
 /* 801E01F4 001DD134  D0 01 00 28 */	stfs f0, 0x28(r1)
 /* 801E01F8 001DD138  C0 1F 00 4C */	lfs f0, 0x4c(r31)
 /* 801E01FC 001DD13C  D0 01 00 2C */	stfs f0, 0x2c(r1)
-/* 801E0200 001DD140  48 00 31 59 */	bl updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+/* 801E0200 001DD140  48 00 31 59 */	bl "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
 /* 801E0204 001DD144  48 00 00 0C */	b lbl_801E0210
 lbl_801E0208:
 /* 801E0208 001DD148  7F E3 FB 78 */	mr r3, r31
@@ -781,15 +781,15 @@ lbl_801E0210:
 /* 801E021C 001DD15C  7C 08 03 A6 */	mtlr r0
 /* 801E0220 001DD160  4E 80 00 20 */	blr 
 
-.global setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
-setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1:
+.global "setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
+"setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>":
 /* 801E0224 001DD164  7C 08 02 A6 */	mflr r0
-/* 801E0228 001DD168  3C A0 80 39 */	lis r5, $$21768@ha
+/* 801E0228 001DD168  3C A0 80 39 */	lis r5, "@1768"@ha
 /* 801E022C 001DD16C  90 01 00 04 */	stw r0, 4(r1)
-/* 801E0230 001DD170  39 05 17 9C */	addi r8, r5, $$21768@l
-/* 801E0234 001DD174  3C A0 80 39 */	lis r5, $$21766@ha
+/* 801E0230 001DD170  39 05 17 9C */	addi r8, r5, "@1768"@l
+/* 801E0234 001DD174  3C A0 80 39 */	lis r5, "@1766"@ha
 /* 801E0238 001DD178  94 21 FF B0 */	stwu r1, -0x50(r1)
-/* 801E023C 001DD17C  38 C5 17 90 */	addi r6, r5, $$21766@l
+/* 801E023C 001DD17C  38 C5 17 90 */	addi r6, r5, "@1766"@l
 /* 801E0240 001DD180  93 E1 00 4C */	stw r31, 0x4c(r1)
 /* 801E0244 001DD184  3B E3 00 00 */	addi r31, r3, 0
 /* 801E0248 001DD188  38 7F 00 20 */	addi r3, r31, 0x20
@@ -833,23 +833,23 @@ remove__19TMapCollisionStaticFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x38E77C, 0x14
-$$21766:
+"@1766":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21768:
+"@1768":
 	.incbin "baserom.dol", 0x38E79C, 0xC
-$$22018:
+"@2018":
 	.incbin "baserom.dol", 0x38E7A8, 0x10
-$$22019:
+"@2019":
 	.incbin "baserom.dol", 0x38E7B8, 0x10
-$$22020:
+"@2020":
 	.incbin "baserom.dol", 0x38E7C8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -858,49 +858,49 @@ __vt__17TMapCollisionWarp:
   .4byte 0
   .4byte 0
   .4byte init__17TMapCollisionWarpFPCcUsPC10TLiveActor
-  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+  .4byte "moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte moveMtx__17TMapCollisionBaseFPA4_f
   .4byte setUp__17TMapCollisionWarpFv
-  .4byte setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "setUpTrans__17TMapCollisionWarpFRCQ29JGeometry8TVec3<f>"
   .4byte remove__17TMapCollisionWarpFv
 .global __vt__17TMapCollisionMove
 __vt__17TMapCollisionMove:
   .4byte 0
   .4byte 0
   .4byte init__17TMapCollisionMoveFPCcUsPC10TLiveActor
-  .4byte moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-  .4byte moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+  .4byte "moveTrans__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>"
   .4byte moveMtx__17TMapCollisionMoveFPA4_f
   .4byte setUp__17TMapCollisionBaseFv
-  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte remove__17TMapCollisionBaseFv
 .global __vt__19TMapCollisionStatic
 __vt__19TMapCollisionStatic:
   .4byte 0
   .4byte 0
   .4byte init__19TMapCollisionStaticFPCcUsPC10TLiveActor
-  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+  .4byte "moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte moveMtx__17TMapCollisionBaseFPA4_f
   .4byte setUp__19TMapCollisionStaticFv
-  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte remove__19TMapCollisionStaticFv
 .global __vt__17TMapCollisionBase
 __vt__17TMapCollisionBase:
   .4byte 0
   .4byte 0
   .4byte init__17TMapCollisionBaseFPCcUsPC10TLiveActor
-  .4byte moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-  .4byte moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveSRT__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+  .4byte "moveTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte moveMtx__17TMapCollisionBaseFPA4_f
   .4byte setUp__17TMapCollisionBaseFv
-  .4byte setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "setUpTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>"
   .4byte remove__17TMapCollisionBaseFv
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21871:
+"@1871":
   .4byte 0
-$$22017:
+"@2017":
 	.incbin "baserom.dol", 0x3E8AE4, 0xC

@@ -235,9 +235,9 @@ lbl_80060930:
 .global mixMonoTrack__Q28JASystem6KernelFPslPFl_Ps
 mixMonoTrack__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060940 0005D880  7C 08 02 A6 */	mflr r0
-/* 80060944 0005D884  3C C0 80 37 */	lis r6, $$2197@ha
+/* 80060944 0005D884  3C C0 80 37 */	lis r6, "@197"@ha
 /* 80060948 0005D888  90 01 00 04 */	stw r0, 4(r1)
-/* 8006094C 0005D88C  38 06 13 58 */	addi r0, r6, $$2197@l
+/* 8006094C 0005D88C  38 06 13 58 */	addi r0, r6, "@197"@l
 /* 80060950 0005D890  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 80060954 0005D894  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 80060958 0005D898  3B E5 00 00 */	addi r31, r5, 0
@@ -309,9 +309,9 @@ lbl_80060A20:
 .global mixMonoTrackWide__Q28JASystem6KernelFPslPFl_Ps
 mixMonoTrackWide__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060A3C 0005D97C  7C 08 02 A6 */	mflr r0
-/* 80060A40 0005D980  3C C0 80 37 */	lis r6, $$2216@ha
+/* 80060A40 0005D980  3C C0 80 37 */	lis r6, "@216"@ha
 /* 80060A44 0005D984  90 01 00 04 */	stw r0, 4(r1)
-/* 80060A48 0005D988  38 06 13 64 */	addi r0, r6, $$2216@l
+/* 80060A48 0005D988  38 06 13 64 */	addi r0, r6, "@216"@l
 /* 80060A4C 0005D98C  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 80060A50 0005D990  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 80060A54 0005D994  3B E5 00 00 */	addi r31, r5, 0
@@ -389,7 +389,7 @@ mixExtraTrack__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060B48 0005DA88  3B E5 00 00 */	addi r31, r5, 0
 /* 80060B4C 0005DA8C  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80060B50 0005DA90  3B C4 00 00 */	addi r30, r4, 0
-/* 80060B54 0005DA94  38 82 86 B0 */	addi r4, r2, $$2236@sda21
+/* 80060B54 0005DA94  38 82 86 B0 */	addi r4, r2, "@236"@sda21
 /* 80060B58 0005DA98  93 A1 00 1C */	stw r29, 0x1c(r1)
 /* 80060B5C 0005DA9C  3B A3 00 00 */	addi r29, r3, 0
 /* 80060B60 0005DAA0  38 60 00 05 */	li r3, 5
@@ -403,7 +403,7 @@ mixExtraTrack__Q28JASystem6KernelFPslPFl_Ps:
 /* 80060B80 0005DAC0  38 60 00 05 */	li r3, 5
 /* 80060B84 0005DAC4  48 00 32 4D */	bl probeFinish__Q28JASystem6KernelFl
 /* 80060B88 0005DAC8  38 60 00 06 */	li r3, 6
-/* 80060B8C 0005DACC  38 82 86 B8 */	addi r4, r2, $$2237@sda21
+/* 80060B8C 0005DACC  38 82 86 B8 */	addi r4, r2, "@237"@sda21
 /* 80060B90 0005DAD0  48 00 32 3D */	bl probeStart__Q28JASystem6KernelFlPc
 /* 80060B94 0005DAD4  7F C3 F3 79 */	or. r3, r30, r30
 /* 80060B98 0005DAD8  80 0D 81 F8 */	lwz r0, gFrameSamples__Q28JASystem6Kernel@sda21(r13)
@@ -511,16 +511,16 @@ lbl_80060CD4:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2197:
+"@197":
 	.incbin "baserom.dol", 0x36E358, 0xC
-$$2216:
+"@216":
 	.incbin "baserom.dol", 0x36E364, 0xC
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2236:
+"@236":
 	.incbin "baserom.dol", 0x3E43B0, 0x8
-$$2237:
+"@237":
 	.incbin "baserom.dol", 0x3E43B8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

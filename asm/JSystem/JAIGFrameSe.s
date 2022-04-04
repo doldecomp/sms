@@ -17,20 +17,20 @@ checkNextFrameSe__8JAIBasicFv:
 /* 8004FAF8 0004CA38  38 61 00 D0 */	addi r3, r1, 0xd0
 /* 8004FAFC 0004CA3C  48 00 51 55 */	bl __ct__8JAISoundFv
 /* 8004FB00 0004CA40  C0 4D 81 50 */	lfs f2, distanceMax__18JAIGlobalParameter@sda21(r13)
-/* 8004FB04 0004CA44  C0 22 84 A0 */	lfs f1, $$2587@sda21(r2)
-/* 8004FB08 0004CA48  C0 02 84 A4 */	lfs f0, $$2588@sda21(r2)
+/* 8004FB04 0004CA44  C0 22 84 A0 */	lfs f1, "@587"@sda21(r2)
+/* 8004FB08 0004CA48  C0 02 84 A4 */	lfs f0, "@588"@sda21(r2)
 /* 8004FB0C 0004CA4C  EF E2 00 B2 */	fmuls f31, f2, f2
 /* 8004FB10 0004CA50  EC 22 08 24 */	fdivs f1, f2, f1
 /* 8004FB14 0004CA54  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8004FB18 0004CA58  FF C0 08 90 */	fmr f30, f1
 /* 8004FB1C 0004CA5C  40 82 00 08 */	bne lbl_8004FB24
-/* 8004FB20 0004CA60  C3 C2 84 A8 */	lfs f30, $$2589@sda21(r2)
+/* 8004FB20 0004CA60  C3 C2 84 A8 */	lfs f30, "@589"@sda21(r2)
 lbl_8004FB24:
 /* 8004FB24 0004CA64  3C 60 80 3B */	lis r3, dummyZeroVec__8JAIConst@ha
-/* 8004FB28 0004CA68  C3 82 84 B0 */	lfs f28, $$2591@sda21(r2)
+/* 8004FB28 0004CA68  C3 82 84 B0 */	lfs f28, "@591"@sda21(r2)
 /* 8004FB2C 0004CA6C  3C 80 80 00 */	lis r4, 0x7FFFFFFF@ha
-/* 8004FB30 0004CA70  CB 42 84 B8 */	lfd f26, $$2594@sda21(r2)
-/* 8004FB34 0004CA74  C3 62 84 A4 */	lfs f27, $$2588@sda21(r2)
+/* 8004FB30 0004CA70  CB 42 84 B8 */	lfd f26, "@594"@sda21(r2)
+/* 8004FB34 0004CA74  C3 62 84 A4 */	lfs f27, "@588"@sda21(r2)
 /* 8004FB38 0004CA78  3B E1 00 10 */	addi r31, r1, 0x10
 /* 8004FB3C 0004CA7C  3B A3 AC A0 */	addi r29, r3, dummyZeroVec__8JAIConst@l
 /* 8004FB40 0004CA80  3B 84 FF FF */	addi r28, r4, 0x7FFFFFFF@l
@@ -108,7 +108,7 @@ lbl_8004FC40:
 /* 8004FC44 0004CB84  28 00 00 00 */	cmplwi r0, 0
 /* 8004FC48 0004CB88  41 82 03 34 */	beq lbl_8004FF7C
 /* 8004FC4C 0004CB8C  88 72 00 04 */	lbz r3, 4(r18)
-/* 8004FC50 0004CB90  C3 A2 84 AC */	lfs f29, $$2590@sda21(r2)
+/* 8004FC50 0004CB90  C3 A2 84 AC */	lfs f29, "@590"@sda21(r2)
 /* 8004FC54 0004CB94  28 03 00 04 */	cmplwi r3, 4
 /* 8004FC58 0004CB98  40 82 00 14 */	bne lbl_8004FC6C
 /* 8004FC5C 0004CB9C  80 0D 81 70 */	lwz r0, audioCameraMax__18JAIGlobalParameter@sda21(r13)
@@ -231,7 +231,7 @@ lbl_8004FDF0:
 /* 8004FE00 0004CD40  FC 00 F8 90 */	fmr f0, f31
 /* 8004FE04 0004CD44  48 00 00 08 */	b lbl_8004FE0C
 lbl_8004FE08:
-/* 8004FE08 0004CD48  C0 02 84 B4 */	lfs f0, $$2592@sda21(r2)
+/* 8004FE08 0004CD48  C0 02 84 B4 */	lfs f0, "@592"@sda21(r2)
 lbl_8004FE0C:
 /* 8004FE0C 0004CD4C  FC 1D 00 40 */	fcmpo cr0, f29, f0
 /* 8004FE10 0004CD50  40 81 00 80 */	ble lbl_8004FE90
@@ -547,11 +547,11 @@ sendPlayingSeCommand__8JAIBasicFv:
 /* 80050250 0004D190  3B A4 66 0D */	addi r29, r4, 0x0019660D@l
 /* 80050254 0004D194  3A E0 00 00 */	li r23, 0
 /* 80050258 0004D198  3A C0 00 00 */	li r22, 0
-/* 8005025C 0004D19C  C3 A2 84 A4 */	lfs f29, $$2588@sda21(r2)
-/* 80050260 0004D1A0  CB C2 84 C0 */	lfd f30, $$2760@sda21(r2)
-/* 80050264 0004D1A4  CB E2 84 C8 */	lfd f31, $$2761@sda21(r2)
-/* 80050268 0004D1A8  C3 62 84 D0 */	lfs f27, $$2762@sda21(r2)
-/* 8005026C 0004D1AC  C3 82 84 A8 */	lfs f28, $$2589@sda21(r2)
+/* 8005025C 0004D19C  C3 A2 84 A4 */	lfs f29, "@588"@sda21(r2)
+/* 80050260 0004D1A0  CB C2 84 C0 */	lfd f30, "@760"@sda21(r2)
+/* 80050264 0004D1A4  CB E2 84 C8 */	lfd f31, "@761"@sda21(r2)
+/* 80050268 0004D1A8  C3 62 84 D0 */	lfs f27, "@762"@sda21(r2)
+/* 8005026C 0004D1AC  C3 82 84 A8 */	lfs f28, "@589"@sda21(r2)
 /* 80050270 0004D1B0  48 00 04 F8 */	b lbl_80050768
 lbl_80050274:
 /* 80050274 0004D1B4  56 DC 15 BA */	rlwinm r28, r22, 2, 0x16, 0x1d
@@ -721,13 +721,13 @@ lbl_80050494:
 /* 800504CC 0004D40C  80 18 00 10 */	lwz r0, 0x10(r24)
 /* 800504D0 0004D410  28 00 00 01 */	cmplwi r0, 1
 /* 800504D4 0004D414  40 81 00 3C */	ble lbl_80050510
-/* 800504D8 0004D418  C0 22 84 A4 */	lfs f1, $$2588@sda21(r2)
+/* 800504D8 0004D418  C0 22 84 A4 */	lfs f1, "@588"@sda21(r2)
 /* 800504DC 0004D41C  38 78 00 00 */	addi r3, r24, 0
 /* 800504E0 0004D420  38 80 00 06 */	li r4, 6
 /* 800504E4 0004D424  38 A0 00 00 */	li r5, 0
 /* 800504E8 0004D428  38 C0 00 00 */	li r6, 0
 /* 800504EC 0004D42C  48 00 5A DD */	bl setSeInterVolume__8JAISoundFUcfUlUc
-/* 800504F0 0004D430  C0 22 84 D4 */	lfs f1, $$2763@sda21(r2)
+/* 800504F0 0004D430  C0 22 84 D4 */	lfs f1, "@763"@sda21(r2)
 /* 800504F4 0004D434  7F 03 C3 78 */	mr r3, r24
 /* 800504F8 0004D438  80 B8 00 10 */	lwz r5, 0x10(r24)
 /* 800504FC 0004D43C  38 80 00 06 */	li r4, 6
@@ -929,8 +929,8 @@ setSeqMuteFromSeStart__8JAIBasicFP8JAISound:
 /* 800507C4 0004D704  3B E0 00 00 */	li r31, 0
 /* 800507C8 0004D708  3B 80 00 00 */	li r28, 0
 /* 800507CC 0004D70C  3F 60 43 30 */	lis r27, 0x4330
-/* 800507D0 0004D710  CB C2 84 D8 */	lfd f30, $$2777@sda21(r2)
-/* 800507D4 0004D714  C3 E2 84 D4 */	lfs f31, $$2763@sda21(r2)
+/* 800507D0 0004D710  CB C2 84 D8 */	lfd f30, "@777"@sda21(r2)
+/* 800507D4 0004D714  C3 E2 84 D4 */	lfs f31, "@763"@sda21(r2)
 /* 800507D8 0004D718  48 00 00 84 */	b lbl_8005085C
 lbl_800507DC:
 /* 800507DC 0004D71C  80 7D 00 38 */	lwz r3, 0x38(r29)
@@ -1082,7 +1082,7 @@ sendSeAllParameter__8JAIBasicFP8JAISound:
 /* 800509EC 0004D92C  7F C4 02 14 */	add r30, r4, r0
 /* 800509F0 0004D930  48 00 6F C5 */	bl getSeParameter__8JAISoundFv
 /* 800509F4 0004D934  7C 7F 1B 78 */	mr r31, r3
-/* 800509F8 0004D938  C0 02 84 E0 */	lfs f0, $$2934@sda21(r2)
+/* 800509F8 0004D938  C0 02 84 E0 */	lfs f0, "@934"@sda21(r2)
 /* 800509FC 0004D93C  C0 23 01 98 */	lfs f1, 0x198(r3)
 /* 80050A00 0004D940  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80050A04 0004D944  40 82 00 58 */	bne lbl_80050A5C
@@ -1092,7 +1092,7 @@ sendSeAllParameter__8JAIBasicFP8JAISound:
 /* 80050A14 0004D954  C0 03 00 00 */	lfs f0, 0(r3)
 /* 80050A18 0004D958  D0 1F 01 28 */	stfs f0, 0x128(r31)
 lbl_80050A1C:
-/* 80050A1C 0004D95C  C3 E2 84 A8 */	lfs f31, $$2589@sda21(r2)
+/* 80050A1C 0004D95C  C3 E2 84 A8 */	lfs f31, "@589"@sda21(r2)
 /* 80050A20 0004D960  C0 3F 01 28 */	lfs f1, 0x128(r31)
 /* 80050A24 0004D964  C0 1F 01 38 */	lfs f0, 0x138(r31)
 /* 80050A28 0004D968  EF FF 00 72 */	fmuls f31, f31, f1
@@ -1147,7 +1147,7 @@ lbl_80050A60:
 /* 80050AE4 0004DA24  7C 63 02 14 */	add r3, r3, r0
 /* 80050AE8 0004DA28  48 00 70 F5 */	bl setSeqPortargsF32__18JAISystemInterfaceFP16JAISeqUpdateDataUlUcf
 lbl_80050AEC:
-/* 80050AEC 0004DA2C  C0 02 84 E0 */	lfs f0, $$2934@sda21(r2)
+/* 80050AEC 0004DA2C  C0 02 84 E0 */	lfs f0, "@934"@sda21(r2)
 /* 80050AF0 0004DA30  C0 3F 02 18 */	lfs f1, 0x218(r31)
 /* 80050AF4 0004DA34  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80050AF8 0004DA38  40 82 00 D8 */	bne lbl_80050BD0
@@ -1157,9 +1157,9 @@ lbl_80050AEC:
 /* 80050B08 0004DA48  C0 03 00 00 */	lfs f0, 0(r3)
 /* 80050B0C 0004DA4C  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 lbl_80050B10:
-/* 80050B10 0004DA50  C0 42 84 E4 */	lfs f2, $$2935@sda21(r2)
+/* 80050B10 0004DA50  C0 42 84 E4 */	lfs f2, "@935"@sda21(r2)
 /* 80050B14 0004DA54  C0 1F 01 A8 */	lfs f0, 0x1a8(r31)
-/* 80050B18 0004DA58  C0 22 84 A4 */	lfs f1, $$2588@sda21(r2)
+/* 80050B18 0004DA58  C0 22 84 A4 */	lfs f1, "@588"@sda21(r2)
 /* 80050B1C 0004DA5C  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 80050B20 0004DA60  41 82 00 0C */	beq lbl_80050B2C
 /* 80050B24 0004DA64  EC 00 10 28 */	fsubs f0, f0, f2
@@ -1201,15 +1201,15 @@ lbl_80050B90:
 /* 80050B9C 0004DADC  EC 00 10 28 */	fsubs f0, f0, f2
 /* 80050BA0 0004DAE0  EC 21 00 2A */	fadds f1, f1, f0
 lbl_80050BA4:
-/* 80050BA4 0004DAE4  C0 42 84 E4 */	lfs f2, $$2935@sda21(r2)
-/* 80050BA8 0004DAE8  C0 02 84 A4 */	lfs f0, $$2588@sda21(r2)
+/* 80050BA4 0004DAE4  C0 42 84 E4 */	lfs f2, "@935"@sda21(r2)
+/* 80050BA8 0004DAE8  C0 02 84 A4 */	lfs f0, "@588"@sda21(r2)
 /* 80050BAC 0004DAEC  EC 21 10 2A */	fadds f1, f1, f2
 /* 80050BB0 0004DAF0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80050BB4 0004DAF4  40 80 00 0C */	bge lbl_80050BC0
 /* 80050BB8 0004DAF8  FC 20 00 90 */	fmr f1, f0
 /* 80050BBC 0004DAFC  48 00 00 14 */	b lbl_80050BD0
 lbl_80050BC0:
-/* 80050BC0 0004DB00  C0 02 84 A8 */	lfs f0, $$2589@sda21(r2)
+/* 80050BC0 0004DB00  C0 02 84 A8 */	lfs f0, "@589"@sda21(r2)
 /* 80050BC4 0004DB04  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80050BC8 0004DB08  40 81 00 08 */	ble lbl_80050BD0
 /* 80050BCC 0004DB0C  FC 20 00 90 */	fmr f1, f0
@@ -1243,7 +1243,7 @@ lbl_80050BD0:
 /* 80050C38 0004DB78  7C 63 02 14 */	add r3, r3, r0
 /* 80050C3C 0004DB7C  48 00 6F A1 */	bl setSeqPortargsF32__18JAISystemInterfaceFP16JAISeqUpdateDataUlUcf
 lbl_80050C40:
-/* 80050C40 0004DB80  C0 02 84 E0 */	lfs f0, $$2934@sda21(r2)
+/* 80050C40 0004DB80  C0 02 84 E0 */	lfs f0, "@934"@sda21(r2)
 /* 80050C44 0004DB84  C0 3F 02 98 */	lfs f1, 0x298(r31)
 /* 80050C48 0004DB88  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80050C4C 0004DB8C  40 82 00 54 */	bne lbl_80050CA0
@@ -1253,7 +1253,7 @@ lbl_80050C40:
 /* 80050C5C 0004DB9C  C0 03 00 00 */	lfs f0, 0(r3)
 /* 80050C60 0004DBA0  D0 1F 02 28 */	stfs f0, 0x228(r31)
 lbl_80050C64:
-/* 80050C64 0004DBA4  C0 22 84 A8 */	lfs f1, $$2589@sda21(r2)
+/* 80050C64 0004DBA4  C0 22 84 A8 */	lfs f1, "@589"@sda21(r2)
 /* 80050C68 0004DBA8  C0 5F 02 28 */	lfs f2, 0x228(r31)
 /* 80050C6C 0004DBAC  C0 1F 02 38 */	lfs f0, 0x238(r31)
 /* 80050C70 0004DBB0  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -1298,7 +1298,7 @@ lbl_80050CA0:
 /* 80050D08 0004DC48  7C 63 02 14 */	add r3, r3, r0
 /* 80050D0C 0004DC4C  48 00 6E D1 */	bl setSeqPortargsF32__18JAISystemInterfaceFP16JAISeqUpdateDataUlUcf
 lbl_80050D10:
-/* 80050D10 0004DC50  C0 02 84 E0 */	lfs f0, $$2934@sda21(r2)
+/* 80050D10 0004DC50  C0 02 84 E0 */	lfs f0, "@934"@sda21(r2)
 /* 80050D14 0004DC54  C0 3F 03 18 */	lfs f1, 0x318(r31)
 /* 80050D18 0004DC58  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80050D1C 0004DC5C  40 82 00 54 */	bne lbl_80050D70
@@ -1308,7 +1308,7 @@ lbl_80050D10:
 /* 80050D2C 0004DC6C  C0 03 00 00 */	lfs f0, 0(r3)
 /* 80050D30 0004DC70  D0 1F 02 A8 */	stfs f0, 0x2a8(r31)
 lbl_80050D34:
-/* 80050D34 0004DC74  C0 22 84 A4 */	lfs f1, $$2588@sda21(r2)
+/* 80050D34 0004DC74  C0 22 84 A4 */	lfs f1, "@588"@sda21(r2)
 /* 80050D38 0004DC78  C0 5F 02 A8 */	lfs f2, 0x2a8(r31)
 /* 80050D3C 0004DC7C  C0 1F 02 B8 */	lfs f0, 0x2b8(r31)
 /* 80050D40 0004DC80  EC 21 10 2A */	fadds f1, f1, f2
@@ -1353,7 +1353,7 @@ lbl_80050D70:
 /* 80050DD8 0004DD18  7C 63 02 14 */	add r3, r3, r0
 /* 80050DDC 0004DD1C  48 00 6E 01 */	bl setSeqPortargsF32__18JAISystemInterfaceFP16JAISeqUpdateDataUlUcf
 lbl_80050DE0:
-/* 80050DE0 0004DD20  C0 02 84 E0 */	lfs f0, $$2934@sda21(r2)
+/* 80050DE0 0004DD20  C0 02 84 E0 */	lfs f0, "@934"@sda21(r2)
 /* 80050DE4 0004DD24  C0 3F 04 18 */	lfs f1, 0x418(r31)
 /* 80050DE8 0004DD28  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 80050DEC 0004DD2C  40 82 00 A4 */	bne lbl_80050E90
@@ -1364,7 +1364,7 @@ lbl_80050DE0:
 /* 80050E00 0004DD40  D0 1F 03 A8 */	stfs f0, 0x3a8(r31)
 lbl_80050E04:
 /* 80050E04 0004DD44  C0 4D 81 58 */	lfs f2, seDolbyCenterValue__18JAIGlobalParameter@sda21(r13)
-/* 80050E08 0004DD48  C0 02 84 D4 */	lfs f0, $$2763@sda21(r2)
+/* 80050E08 0004DD48  C0 02 84 D4 */	lfs f0, "@763"@sda21(r2)
 /* 80050E0C 0004DD4C  C0 3F 03 A8 */	lfs f1, 0x3a8(r31)
 /* 80050E10 0004DD50  ED 22 00 24 */	fdivs f9, f2, f0
 /* 80050E14 0004DD54  C0 1F 03 B8 */	lfs f0, 0x3b8(r31)
@@ -1372,12 +1372,12 @@ lbl_80050E04:
 /* 80050E1C 0004DD5C  C0 BF 03 D8 */	lfs f5, 0x3d8(r31)
 /* 80050E20 0004DD60  C0 9F 03 E8 */	lfs f4, 0x3e8(r31)
 /* 80050E24 0004DD64  ED 01 48 28 */	fsubs f8, f1, f9
-/* 80050E28 0004DD68  C0 22 84 A4 */	lfs f1, $$2588@sda21(r2)
+/* 80050E28 0004DD68  C0 22 84 A4 */	lfs f1, "@588"@sda21(r2)
 /* 80050E2C 0004DD6C  EC E0 48 28 */	fsubs f7, f0, f9
 /* 80050E30 0004DD70  C0 7F 03 F8 */	lfs f3, 0x3f8(r31)
 /* 80050E34 0004DD74  C0 5F 04 08 */	lfs f2, 0x408(r31)
 /* 80050E38 0004DD78  EC 21 40 2A */	fadds f1, f1, f8
-/* 80050E3C 0004DD7C  C0 02 84 A4 */	lfs f0, $$2588@sda21(r2)
+/* 80050E3C 0004DD7C  C0 02 84 A4 */	lfs f0, "@588"@sda21(r2)
 /* 80050E40 0004DD80  EC C6 48 28 */	fsubs f6, f6, f9
 /* 80050E44 0004DD84  EC A5 48 28 */	fsubs f5, f5, f9
 /* 80050E48 0004DD88  EC 21 38 2A */	fadds f1, f1, f7
@@ -1395,7 +1395,7 @@ lbl_80050E04:
 /* 80050E78 0004DDB8  FC 20 00 90 */	fmr f1, f0
 /* 80050E7C 0004DDBC  48 00 00 14 */	b lbl_80050E90
 lbl_80050E80:
-/* 80050E80 0004DDC0  C0 02 84 A8 */	lfs f0, $$2589@sda21(r2)
+/* 80050E80 0004DDC0  C0 02 84 A8 */	lfs f0, "@589"@sda21(r2)
 /* 80050E84 0004DDC4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80050E88 0004DDC8  40 81 00 08 */	ble lbl_80050E90
 /* 80050E8C 0004DDCC  FC 20 00 90 */	fmr f1, f0
@@ -1540,7 +1540,7 @@ lbl_80051040:
 /* 80051098 0004DFD8  80 1D 00 30 */	lwz r0, 0x30(r29)
 /* 8005109C 0004DFDC  28 00 00 00 */	cmplwi r0, 0
 /* 800510A0 0004DFE0  40 82 00 18 */	bne lbl_800510B8
-/* 800510A4 0004DFE4  C0 22 84 A8 */	lfs f1, $$2589@sda21(r2)
+/* 800510A4 0004DFE4  C0 22 84 A8 */	lfs f1, "@589"@sda21(r2)
 /* 800510A8 0004DFE8  7F 63 DB 78 */	mr r3, r27
 /* 800510AC 0004DFEC  80 AD 81 6C */	lwz r5, seqMuteMoveSpeedSePlay__18JAIGlobalParameter@sda21(r13)
 /* 800510B0 0004DFF0  38 80 00 09 */	li r4, 9
@@ -1612,31 +1612,31 @@ lbl_80051140:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2587:
+"@587":
 	.incbin "baserom.dol", 0x3E41A0, 0x4
-$$2588:
+"@588":
   .4byte 0
-$$2589:
+"@589":
 	.incbin "baserom.dol", 0x3E41A8, 0x4
-$$2590:
+"@590":
 	.incbin "baserom.dol", 0x3E41AC, 0x4
-$$2591:
+"@591":
 	.incbin "baserom.dol", 0x3E41B0, 0x4
-$$2592:
+"@592":
 	.incbin "baserom.dol", 0x3E41B4, 0x4
-$$2594:
+"@594":
 	.incbin "baserom.dol", 0x3E41B8, 0x8
-$$2760:
+"@760":
 	.incbin "baserom.dol", 0x3E41C0, 0x8
-$$2761:
+"@761":
 	.incbin "baserom.dol", 0x3E41C8, 0x8
-$$2762:
+"@762":
 	.incbin "baserom.dol", 0x3E41D0, 0x4
-$$2763:
+"@763":
 	.incbin "baserom.dol", 0x3E41D4, 0x4
-$$2777:
+"@777":
 	.incbin "baserom.dol", 0x3E41D8, 0x8
-$$2934:
+"@934":
 	.incbin "baserom.dol", 0x3E41E0, 0x4
-$$2935:
+"@935":
 	.incbin "baserom.dol", 0x3E41E4, 0x4

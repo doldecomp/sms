@@ -80,9 +80,9 @@ direct__Q26JDrama9TDirectorFv:
 /* 80041BE0 0003EB20  38 E0 00 00 */	li r7, 0
 /* 80041BE4 0003EB24  4B FD 16 39 */	bl set__7JUTRectFiiii
 /* 80041BE8 0003EB28  38 61 00 80 */	addi r3, r1, 0x80
-/* 80041BEC 0003EB2C  48 00 00 69 */	bl __ct__Q29JGeometry38TMatrix44$$0Q29JGeometry13SMatrix44C$$0f$$1$$1Fv
+/* 80041BEC 0003EB2C  48 00 00 69 */	bl "__ct__Q29JGeometry38TMatrix44<Q29JGeometry13SMatrix44C<f>>Fv"
 /* 80041BF0 0003EB30  38 61 00 C0 */	addi r3, r1, 0xc0
-/* 80041BF4 0003EB34  48 00 00 5D */	bl __ct__Q29JGeometry13SMatrix34C$$0f$$1Fv
+/* 80041BF4 0003EB34  48 00 00 5D */	bl "__ct__Q29JGeometry13SMatrix34C<f>Fv"
 /* 80041BF8 0003EB38  38 00 FF FF */	li r0, -1
 /* 80041BFC 0003EB3C  90 01 01 00 */	stw r0, 0x100(r1)
 /* 80041C00 0003EB40  3B E0 00 00 */	li r31, 0
@@ -106,12 +106,12 @@ direct__Q26JDrama9TDirectorFv:
 /* 80041C48 0003EB88  38 21 01 18 */	addi r1, r1, 0x118
 /* 80041C4C 0003EB8C  4E 80 00 20 */	blr 
 
-.global __ct__Q29JGeometry13SMatrix34C$$0f$$1Fv
-__ct__Q29JGeometry13SMatrix34C$$0f$$1Fv:
+.global "__ct__Q29JGeometry13SMatrix34C<f>Fv"
+"__ct__Q29JGeometry13SMatrix34C<f>Fv":
 /* 80041C50 0003EB90  4E 80 00 20 */	blr 
 
-.global __ct__Q29JGeometry38TMatrix44$$0Q29JGeometry13SMatrix44C$$0f$$1$$1Fv
-__ct__Q29JGeometry38TMatrix44$$0Q29JGeometry13SMatrix44C$$0f$$1$$1Fv:
+.global "__ct__Q29JGeometry38TMatrix44<Q29JGeometry13SMatrix44C<f>>Fv"
+"__ct__Q29JGeometry38TMatrix44<Q29JGeometry13SMatrix44C<f>>Fv":
 /* 80041C54 0003EB94  4E 80 00 20 */	blr 
 
 .global JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
@@ -202,13 +202,13 @@ lbl_80041D68:
 /* 80041D7C 0003ECBC  38 21 00 18 */	addi r1, r1, 0x18
 /* 80041D80 0003ECC0  4E 80 00 20 */	blr 
 
-.global $$212$$2JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
-$$212$$2JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject:
+.global "@12@JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject"
+"@12@JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject":
 /* 80041D84 0003ECC4  38 63 FF F4 */	addi r3, r3, -12
 /* 80041D88 0003ECC8  4B FF FE D0 */	b JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
 
-.global $$212$$2__dt__Q26JDrama9TDirectorFv
-$$212$$2__dt__Q26JDrama9TDirectorFv:
+.global "@12@__dt__Q26JDrama9TDirectorFv"
+"@12@__dt__Q26JDrama9TDirectorFv":
 /* 80041D8C 0003ECCC  38 63 FF F4 */	addi r3, r3, -12
 /* 80041D90 0003ECD0  4B FF FF 7C */	b __dt__Q26JDrama9TDirectorFv
 
@@ -225,7 +225,7 @@ __vt__Q26JDrama9TDirector:
   .4byte searchF__Q26JDrama9TDirectorFUsPCc
   .4byte 0
   .4byte 0
-  .4byte $$212$$2__dt__Q26JDrama9TDirectorFv
+  .4byte "@12@__dt__Q26JDrama9TDirectorFv"
   .4byte JSGFGetType__Q26JStage7TSystemCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -235,7 +235,7 @@ __vt__Q26JDrama9TDirector:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$212$$2JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject
+  .4byte "@12@JSGFindObject__Q26JDrama9TDirectorCFPCcQ26JStage8TEObject"
   .4byte JSGCreateObject__Q26JStage7TSystemFPCcQ26JStage8TEObjectUl
   .4byte JSGDestroyObject__Q26JStage7TSystemFPQ26JStage7TObject
   .4byte JSGGetSystemData__Q26JStage7TSystemFUl

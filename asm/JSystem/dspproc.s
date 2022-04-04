@@ -78,7 +78,7 @@ lbl_80081CC8:
 .global DsetMixerLevel__Ff
 DsetMixerLevel__Ff:
 /* 80081D00 0007EC40  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081D04 0007EC44  C0 02 89 50 */	lfs f0, $$271@sda21(r2)
+/* 80081D04 0007EC44  C0 02 89 50 */	lfs f0, "@71"@sda21(r2)
 /* 80081D08 0007EC48  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80081D0C 0007EC4C  FC 00 00 1E */	fctiwz f0, f0
 /* 80081D10 0007EC50  D8 01 00 10 */	stfd f0, 0x10(r1)
@@ -127,7 +127,7 @@ DSP_MIXERLEVEL:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$271:
+"@71":
 	.incbin "baserom.dol", 0x3E4650, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

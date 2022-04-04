@@ -13,8 +13,8 @@ __dt__24TNerveTypicalGraphWanderFv:
 /* 802823F0 0027F330  38 03 6D F0 */	addi r0, r3, __vt__24TNerveTypicalGraphWander@l
 /* 802823F4 0027F334  90 1F 00 00 */	stw r0, 0(r31)
 /* 802823F8 0027F338  41 82 00 10 */	beq lbl_80282408
-/* 802823FC 0027F33C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80282400 0027F340  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802823FC 0027F33C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80282400 0027F340  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80282404 0027F344  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80282408:
 /* 80282408 0027F348  7C 80 07 35 */	extsh. r0, r4
@@ -29,8 +29,8 @@ lbl_80282418:
 /* 80282428 0027F368  7C 08 03 A6 */	mtlr r0
 /* 8028242C 0027F36C  4E 80 00 20 */	blr 
 
-.global execute__24TNerveTypicalGraphWanderCFP24TSpineBase$$010TLiveActor$$1
-execute__24TNerveTypicalGraphWanderCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__24TNerveTypicalGraphWanderCFP24TSpineBase<10TLiveActor>"
+"execute__24TNerveTypicalGraphWanderCFP24TSpineBase<10TLiveActor>":
 /* 80282430 0027F370  7C 08 02 A6 */	mflr r0
 /* 80282434 0027F374  90 01 00 04 */	stw r0, 4(r1)
 /* 80282438 0027F378  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -54,15 +54,15 @@ lbl_80282460:
 /* 8028247C 0027F3BC  88 0D 9E 60 */	lbz r0, init$2168@sda21(r13)
 /* 80282480 0027F3C0  7C 00 07 75 */	extsb. r0, r0
 /* 80282484 0027F3C4  40 82 00 3C */	bne lbl_802824C0
-/* 80282488 0027F3C8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8028248C 0027F3CC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80282488 0027F3C8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8028248C 0027F3CC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80282490 0027F3D0  3C 60 80 3D */	lis r3, __vt__24TNerveTypicalGraphWander@ha
 /* 80282494 0027F3D4  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
 /* 80282498 0027F3D8  38 03 6D F0 */	addi r0, r3, __vt__24TNerveTypicalGraphWander@l
 /* 8028249C 0027F3DC  3C 80 80 28 */	lis r4, __dt__24TNerveTypicalGraphWanderFv@ha
 /* 802824A0 0027F3E0  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
-/* 802824A4 0027F3E4  3C 60 80 40 */	lis r3, $$22167@ha
-/* 802824A8 0027F3E8  38 A3 D3 88 */	addi r5, r3, $$22167@l
+/* 802824A4 0027F3E4  3C 60 80 40 */	lis r3, "@2167"@ha
+/* 802824A8 0027F3E8  38 A3 D3 88 */	addi r5, r3, "@2167"@l
 /* 802824AC 0027F3EC  38 84 23 D4 */	addi r4, r4, __dt__24TNerveTypicalGraphWanderFv@l
 /* 802824B0 0027F3F0  38 6D 9E 64 */	addi r3, r13, instance$2166@sda21
 /* 802824B4 0027F3F4  4B E0 02 75 */	bl __register_global_object
@@ -89,7 +89,7 @@ lbl_802824FC:
 /* 802824FC 0027F43C  C0 5E 01 44 */	lfs f2, 0x144(r30)
 /* 80282500 0027F440  7F C3 F3 78 */	mr r3, r30
 /* 80282504 0027F444  C0 3E 01 40 */	lfs f1, 0x140(r30)
-/* 80282508 0027F448  C0 62 E6 08 */	lfs f3, $$22202@sda21(r2)
+/* 80282508 0027F448  C0 62 E6 08 */	lfs f3, "@2202"@sda21(r2)
 /* 8028250C 0027F44C  4B FC C0 D5 */	bl walkToCurPathNode__11TSpineEnemyFfff
 /* 80282510 0027F450  7F C3 F3 78 */	mr r3, r30
 /* 80282514 0027F454  4B FC B8 7D */	bl doShortCut__11TSpineEnemyFv
@@ -110,15 +110,15 @@ theNerve__24TNerveTypicalGraphWanderFv:
 /* 80282540 0027F480  88 0D 9E 60 */	lbz r0, init$2168@sda21(r13)
 /* 80282544 0027F484  7C 00 07 75 */	extsb. r0, r0
 /* 80282548 0027F488  40 82 00 3C */	bne lbl_80282584
-/* 8028254C 0027F48C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80282550 0027F490  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8028254C 0027F48C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80282550 0027F490  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80282554 0027F494  3C 60 80 3D */	lis r3, __vt__24TNerveTypicalGraphWander@ha
 /* 80282558 0027F498  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
 /* 8028255C 0027F49C  38 03 6D F0 */	addi r0, r3, __vt__24TNerveTypicalGraphWander@l
 /* 80282560 0027F4A0  3C 80 80 28 */	lis r4, __dt__24TNerveTypicalGraphWanderFv@ha
 /* 80282564 0027F4A4  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
-/* 80282568 0027F4A8  3C 60 80 40 */	lis r3, $$22167@ha
-/* 8028256C 0027F4AC  38 A3 D3 88 */	addi r5, r3, $$22167@l
+/* 80282568 0027F4A8  3C 60 80 40 */	lis r3, "@2167"@ha
+/* 8028256C 0027F4AC  38 A3 D3 88 */	addi r5, r3, "@2167"@l
 /* 80282570 0027F4B0  38 84 23 D4 */	addi r4, r4, __dt__24TNerveTypicalGraphWanderFv@l
 /* 80282574 0027F4B4  38 6D 9E 64 */	addi r3, r13, instance$2166@sda21
 /* 80282578 0027F4B8  4B E0 01 B1 */	bl __register_global_object
@@ -143,7 +143,7 @@ createEnemyInstance__15TTypicalManagerFv:
 /* 802825B4 0027F4F4  7C 7F 1B 79 */	or. r31, r3, r3
 /* 802825B8 0027F4F8  41 82 00 4C */	beq lbl_80282604
 /* 802825BC 0027F4FC  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 802825C0 0027F500  38 82 E6 0C */	addi r4, r2, $$22245@sda21
+/* 802825C0 0027F500  38 82 E6 0C */	addi r4, r2, "@2245"@sda21
 /* 802825C4 0027F504  80 61 00 0C */	lwz r3, 0xc(r1)
 /* 802825C8 0027F508  4B FC DC 71 */	bl __ct__11TSpineEnemyFPCc
 /* 802825CC 0027F50C  3C 60 80 3D */	lis r3, __vt__13TTypicalEnemy@ha
@@ -173,11 +173,11 @@ lbl_80282604:
 .global load__15TTypicalManagerFR20JSUMemoryInputStream
 load__15TTypicalManagerFR20JSUMemoryInputStream:
 /* 80282620 0027F560  7C 08 02 A6 */	mflr r0
-/* 80282624 0027F564  3C A0 80 39 */	lis r5, $$21490@ha
+/* 80282624 0027F564  3C A0 80 39 */	lis r5, "@1490"@ha
 /* 80282628 0027F568  90 01 00 04 */	stw r0, 4(r1)
 /* 8028262C 0027F56C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80282630 0027F570  93 E1 00 1C */	stw r31, 0x1c(r1)
-/* 80282634 0027F574  3B E5 7F C0 */	addi r31, r5, $$21490@l
+/* 80282634 0027F574  3B E5 7F C0 */	addi r31, r5, "@1490"@l
 /* 80282638 0027F578  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 8028263C 0027F57C  3B C4 00 00 */	addi r30, r4, 0
 /* 80282640 0027F580  93 A1 00 14 */	stw r29, 0x14(r1)
@@ -197,12 +197,12 @@ load__15TTypicalManagerFR20JSUMemoryInputStream:
 /* 80282678 0027F5B8  38 7C 00 A8 */	addi r3, r28, 0xa8
 /* 8028267C 0027F5BC  38 DF 00 F4 */	addi r6, r31, 0xf4
 /* 80282680 0027F5C0  4B E5 85 75 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80282684 0027F5C4  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80282688 0027F5C8  38 03 29 B8 */	addi r0, r3, __vt__10TParamT$$0f$$1@l
+/* 80282684 0027F5C4  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80282688 0027F5C8  38 03 29 B8 */	addi r0, r3, "__vt__10TParamT<f>"@l
 /* 8028268C 0027F5CC  90 1C 00 A8 */	stw r0, 0xa8(r28)
-/* 80282690 0027F5D0  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80282694 0027F5D4  38 03 29 F4 */	addi r0, r3, __vt__11TParamRT$$0f$$1@l
-/* 80282698 0027F5D8  C0 02 E6 14 */	lfs f0, $$22254@sda21(r2)
+/* 80282690 0027F5D0  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80282694 0027F5D4  38 03 29 F4 */	addi r0, r3, "__vt__11TParamRT<f>"@l
+/* 80282698 0027F5D8  C0 02 E6 14 */	lfs f0, "@2254"@sda21(r2)
 /* 8028269C 0027F5DC  7F 83 E3 78 */	mr r3, r28
 /* 802826A0 0027F5E0  D0 1C 00 B8 */	stfs f0, 0xb8(r28)
 /* 802826A4 0027F5E4  90 1C 00 A8 */	stw r0, 0xa8(r28)
@@ -249,22 +249,22 @@ init__13TTypicalEnemyFP12TLiveManager:
 /* 8028272C 0027F66C  7C 7F 1B 78 */	mr r31, r3
 /* 80282730 0027F670  4B FC DA 19 */	bl init__11TSpineEnemyFP12TLiveManager
 /* 80282734 0027F674  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
-/* 80282738 0027F678  38 82 E6 18 */	addi r4, r2, $$22280@sda21
+/* 80282738 0027F678  38 82 E6 18 */	addi r4, r2, "@2280"@sda21
 /* 8028273C 0027F67C  4B FC 66 0D */	bl getGraphByName__10TConductorFPCc
 /* 80282740 0027F680  80 9F 01 24 */	lwz r4, 0x124(r31)
 /* 80282744 0027F684  90 64 00 00 */	stw r3, 0(r4)
 /* 80282748 0027F688  88 0D 9E 60 */	lbz r0, init$2168@sda21(r13)
 /* 8028274C 0027F68C  7C 00 07 75 */	extsb. r0, r0
 /* 80282750 0027F690  40 82 00 3C */	bne lbl_8028278C
-/* 80282754 0027F694  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80282758 0027F698  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80282754 0027F694  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80282758 0027F698  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8028275C 0027F69C  3C 60 80 3D */	lis r3, __vt__24TNerveTypicalGraphWander@ha
 /* 80282760 0027F6A0  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
 /* 80282764 0027F6A4  38 03 6D F0 */	addi r0, r3, __vt__24TNerveTypicalGraphWander@l
 /* 80282768 0027F6A8  3C 80 80 28 */	lis r4, __dt__24TNerveTypicalGraphWanderFv@ha
 /* 8028276C 0027F6AC  90 0D 9E 64 */	stw r0, instance$2166@sda21(r13)
-/* 80282770 0027F6B0  3C 60 80 40 */	lis r3, $$22167@ha
-/* 80282774 0027F6B4  38 A3 D3 88 */	addi r5, r3, $$22167@l
+/* 80282770 0027F6B0  3C 60 80 40 */	lis r3, "@2167"@ha
+/* 80282774 0027F6B4  38 A3 D3 88 */	addi r5, r3, "@2167"@l
 /* 80282778 0027F6B8  38 84 23 D4 */	addi r4, r4, __dt__24TNerveTypicalGraphWanderFv@l
 /* 8028277C 0027F6BC  38 6D 9E 64 */	addi r3, r13, instance$2166@sda21
 /* 80282780 0027F6C0  4B DF FF A9 */	bl __register_global_object
@@ -380,30 +380,30 @@ lbl_802828F0:
 /* 80282904 0027F844  38 21 00 18 */	addi r1, r1, 0x18
 /* 80282908 0027F848  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__13TTypicalEnemyFv
-$$232$$2__dt__13TTypicalEnemyFv:
+.global "@32@__dt__13TTypicalEnemyFv"
+"@32@__dt__13TTypicalEnemyFv":
 /* 8028290C 0027F84C  38 63 FF E0 */	addi r3, r3, -32
 /* 80282910 0027F850  4B FF FF 90 */	b __dt__13TTypicalEnemyFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x394FCC, 0x14
-$$21604:
+"@1604":
 	.incbin "baserom.dol", 0x394FE0, 0x30
-$$21605:
+"@1605":
 	.incbin "baserom.dol", 0x395010, 0x38
-$$21606:
+"@1606":
 	.incbin "baserom.dol", 0x395048, 0x34
-$$21607:
+"@1607":
 	.incbin "baserom.dol", 0x39507C, 0x24
-$$22252:
+"@2252":
 	.incbin "baserom.dol", 0x3950A0, 0x14
-$$22253:
+"@2253":
 	.incbin "baserom.dol", 0x3950B4, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -412,7 +412,7 @@ __vt__24TNerveTypicalGraphWander:
   .4byte 0
   .4byte 0
   .4byte __dt__24TNerveTypicalGraphWanderFv
-  .4byte execute__24TNerveTypicalGraphWanderCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__24TNerveTypicalGraphWanderCFP24TSpineBase<10TLiveActor>"
 .global __vt__15TTypicalManager
 __vt__15TTypicalManager:
   .4byte 0
@@ -449,7 +449,7 @@ __vt__13TTypicalEnemy:
   .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__13TTypicalEnemyFv
+  .4byte "@32@__dt__13TTypicalEnemyFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -459,12 +459,12 @@ __vt__13TTypicalEnemy:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -481,7 +481,7 @@ __vt__13TTypicalEnemy:
   .4byte receiveMessage__11TSpineEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -502,25 +502,25 @@ __vt__13TTypicalEnemy:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22202:
+"@2202":
   .4byte 0
-$$22245:
+"@2245":
 	.incbin "baserom.dol", 0x3EA30C, 0x8
-$$22254:
+"@2254":
 	.incbin "baserom.dol", 0x3EA314, 0x4
-$$22280:
+"@2280":
 	.incbin "baserom.dol", 0x3EA318, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22167:
+"@2167":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -134,7 +134,7 @@ lbl_80282AE8:
 /* 80282AF0 0027FA30  40 82 00 2C */	bne lbl_80282B1C
 /* 80282AF4 0027FA34  80 7E 00 AC */	lwz r3, 0xac(r30)
 /* 80282AF8 0027FA38  80 1E 00 B0 */	lwz r0, 0xb0(r30)
-/* 80282AFC 0027FA3C  C0 02 E6 20 */	lfs f0, $$22687@sda21(r2)
+/* 80282AFC 0027FA3C  C0 02 E6 20 */	lfs f0, "@2687"@sda21(r2)
 /* 80282B00 0027FA40  90 61 02 9C */	stw r3, 0x29c(r1)
 /* 80282B04 0027FA44  90 01 02 A0 */	stw r0, 0x2a0(r1)
 /* 80282B08 0027FA48  80 1E 00 B4 */	lwz r0, 0xb4(r30)
@@ -172,13 +172,13 @@ lbl_80282B58:
 /* 80282B80 0027FAC0  FF E0 08 90 */	fmr f31, f1
 lbl_80282B84:
 /* 80282B84 0027FAC4  88 1C 00 30 */	lbz r0, 0x30(r28)
-/* 80282B88 0027FAC8  C0 02 E6 24 */	lfs f0, $$22688@sda21(r2)
+/* 80282B88 0027FAC8  C0 02 E6 24 */	lfs f0, "@2688"@sda21(r2)
 /* 80282B8C 0027FACC  2C 00 00 02 */	cmpwi r0, 2
 /* 80282B90 0027FAD0  EF FF 00 2A */	fadds f31, f31, f0
 /* 80282B94 0027FAD4  40 82 00 DC */	bne lbl_80282C70
 /* 80282B98 0027FAD8  C0 5E 00 14 */	lfs f2, 0x14(r30)
 /* 80282B9C 0027FADC  C0 21 03 34 */	lfs f1, 0x334(r1)
-/* 80282BA0 0027FAE0  C0 02 E6 20 */	lfs f0, $$22687@sda21(r2)
+/* 80282BA0 0027FAE0  C0 02 E6 20 */	lfs f0, "@2687"@sda21(r2)
 /* 80282BA4 0027FAE4  EC 22 08 28 */	fsubs f1, f2, f1
 /* 80282BA8 0027FAE8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80282BAC 0027FAEC  40 81 00 C4 */	ble lbl_80282C70
@@ -230,7 +230,7 @@ lbl_80282C30:
 /* 80282C4C 0027FB8C  EC 42 00 2A */	fadds f2, f2, f0
 /* 80282C50 0027FB90  4B F5 8A E9 */	bl checkGround__4TMapCFfffPPC12TBGCheckData
 lbl_80282C54:
-/* 80282C54 0027FB94  C0 02 E6 24 */	lfs f0, $$22688@sda21(r2)
+/* 80282C54 0027FB94  C0 02 E6 24 */	lfs f0, "@2688"@sda21(r2)
 /* 80282C58 0027FB98  EC 21 00 2A */	fadds f1, f1, f0
 /* 80282C5C 0027FB9C  FC 01 F8 40 */	fcmpo cr0, f1, f31
 /* 80282C60 0027FBA0  40 81 00 10 */	ble lbl_80282C70
@@ -270,7 +270,7 @@ lbl_80282CD4:
 /* 80282CD4 0027FC14  38 00 00 1E */	li r0, 0x1e
 /* 80282CD8 0027FC18  90 1C 00 20 */	stw r0, 0x20(r28)
 lbl_80282CDC:
-/* 80282CDC 0027FC1C  C0 02 E6 28 */	lfs f0, $$22689@sda21(r2)
+/* 80282CDC 0027FC1C  C0 02 E6 28 */	lfs f0, "@2689"@sda21(r2)
 /* 80282CE0 0027FC20  C0 21 03 34 */	lfs f1, 0x334(r1)
 /* 80282CE4 0027FC24  EC 00 F8 2A */	fadds f0, f0, f31
 /* 80282CE8 0027FC28  FC 01 00 40 */	fcmpo cr0, f1, f0
@@ -301,7 +301,7 @@ lbl_80282D38:
 /* 80282D38 0027FC78  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80282D3C 0027FC7C  40 82 00 4C */	bne lbl_80282D88
 /* 80282D40 0027FC80  D3 E1 03 34 */	stfs f31, 0x334(r1)
-/* 80282D44 0027FC84  C0 02 E6 20 */	lfs f0, $$22687@sda21(r2)
+/* 80282D44 0027FC84  C0 02 E6 20 */	lfs f0, "@2687"@sda21(r2)
 /* 80282D48 0027FC88  D0 01 02 90 */	stfs f0, 0x290(r1)
 /* 80282D4C 0027FC8C  D0 01 02 94 */	stfs f0, 0x294(r1)
 /* 80282D50 0027FC90  D0 01 02 98 */	stfs f0, 0x298(r1)
@@ -451,9 +451,9 @@ lbl_80282F1C:
 lbl_80282F44:
 /* 80282F44 0027FE84  80 7D 00 34 */	lwz r3, 0x34(r29)
 /* 80282F48 0027FE88  80 1D 00 38 */	lwz r0, 0x38(r29)
-/* 80282F4C 0027FE8C  C0 82 E6 20 */	lfs f4, $$22687@sda21(r2)
+/* 80282F4C 0027FE8C  C0 82 E6 20 */	lfs f4, "@2687"@sda21(r2)
 /* 80282F50 0027FE90  90 61 02 E4 */	stw r3, 0x2e4(r1)
-/* 80282F54 0027FE94  C0 42 E6 24 */	lfs f2, $$22688@sda21(r2)
+/* 80282F54 0027FE94  C0 42 E6 24 */	lfs f2, "@2688"@sda21(r2)
 /* 80282F58 0027FE98  90 01 02 E8 */	stw r0, 0x2e8(r1)
 /* 80282F5C 0027FE9C  80 1D 00 3C */	lwz r0, 0x3c(r29)
 /* 80282F60 0027FEA0  90 01 02 EC */	stw r0, 0x2ec(r1)
@@ -475,7 +475,7 @@ lbl_80282F44:
 /* 80282FA0 0027FEE0  EC 41 00 72 */	fmuls f2, f1, f1
 /* 80282FA4 0027FEE4  C0 61 02 D4 */	lfs f3, 0x2d4(r1)
 /* 80282FA8 0027FEE8  EC 20 00 32 */	fmuls f1, f0, f0
-/* 80282FAC 0027FEEC  C0 02 E6 2C */	lfs f0, $$22690@sda21(r2)
+/* 80282FAC 0027FEEC  C0 02 E6 2C */	lfs f0, "@2690"@sda21(r2)
 /* 80282FB0 0027FEF0  EC 63 00 F2 */	fmuls f3, f3, f3
 /* 80282FB4 0027FEF4  EC 22 08 2A */	fadds f1, f2, f1
 /* 80282FB8 0027FEF8  EC 23 08 2A */	fadds f1, f3, f1
@@ -487,8 +487,8 @@ lbl_80282F44:
 /* 80282FD0 0027FF10  D0 81 02 CC */	stfs f4, 0x2cc(r1)
 /* 80282FD4 0027FF14  48 00 00 34 */	b lbl_80283008
 lbl_80282FD8:
-/* 80282FD8 0027FF18  4B DE 9D 99 */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 80282FDC 0027FF1C  C0 42 E6 24 */	lfs f2, $$22688@sda21(r2)
+/* 80282FD8 0027FF18  4B DE 9D 99 */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
+/* 80282FDC 0027FF1C  C0 42 E6 24 */	lfs f2, "@2688"@sda21(r2)
 /* 80282FE0 0027FF20  C0 01 02 CC */	lfs f0, 0x2cc(r1)
 /* 80282FE4 0027FF24  EC 22 00 72 */	fmuls f1, f2, f1
 /* 80282FE8 0027FF28  EC 00 00 72 */	fmuls f0, f0, f1
@@ -509,7 +509,7 @@ lbl_80283008:
 /* 80283020 0027FF60  90 01 02 C0 */	stw r0, 0x2c0(r1)
 /* 80283024 0027FF64  80 01 03 44 */	lwz r0, 0x344(r1)
 /* 80283028 0027FF68  90 61 02 C4 */	stw r3, 0x2c4(r1)
-/* 8028302C 0027FF6C  C0 82 E6 20 */	lfs f4, $$22687@sda21(r2)
+/* 8028302C 0027FF6C  C0 82 E6 20 */	lfs f4, "@2687"@sda21(r2)
 /* 80283030 0027FF70  90 01 02 C8 */	stw r0, 0x2c8(r1)
 /* 80283034 0027FF74  D0 81 02 C4 */	stfs f4, 0x2c4(r1)
 /* 80283038 0027FF78  C0 21 02 C4 */	lfs f1, 0x2c4(r1)
@@ -541,20 +541,20 @@ lbl_80283098:
 /* 80283098 0027FFD8  38 7D 00 00 */	addi r3, r29, 0
 /* 8028309C 0027FFDC  38 9E 00 10 */	addi r4, r30, 0x10
 /* 802830A0 0027FFE0  38 A1 02 CC */	addi r5, r1, 0x2cc
-/* 802830A4 0027FFE4  48 00 06 E1 */	bl calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 802830A4 0027FFE4  48 00 06 E1 */	bl "calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 802830A8 0027FFE8  C0 5E 01 48 */	lfs f2, 0x148(r30)
 /* 802830AC 0027FFEC  38 61 01 3C */	addi r3, r1, 0x13c
 /* 802830B0 0027FFF0  C0 1E 01 4C */	lfs f0, 0x14c(r30)
 /* 802830B4 0027FFF4  80 01 02 CC */	lwz r0, 0x2cc(r1)
 /* 802830B8 0027FFF8  EC 02 00 32 */	fmuls f0, f2, f0
-/* 802830BC 0027FFFC  C0 42 E6 30 */	lfs f2, $$22691@sda21(r2)
+/* 802830BC 0027FFFC  C0 42 E6 30 */	lfs f2, "@2691"@sda21(r2)
 /* 802830C0 00280000  90 01 01 3C */	stw r0, 0x13c(r1)
 /* 802830C4 00280004  80 01 02 D0 */	lwz r0, 0x2d0(r1)
 /* 802830C8 00280008  EC 22 08 3A */	fmadds f1, f2, f0, f1
 /* 802830CC 0028000C  90 01 01 40 */	stw r0, 0x140(r1)
 /* 802830D0 00280010  80 01 02 D4 */	lwz r0, 0x2d4(r1)
 /* 802830D4 00280014  90 01 01 44 */	stw r0, 0x144(r1)
-/* 802830D8 00280018  4B E4 34 41 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802830D8 00280018  4B E4 34 41 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802830DC 0028001C  80 01 01 3C */	lwz r0, 0x13c(r1)
 /* 802830E0 00280020  38 61 01 80 */	addi r3, r1, 0x180
 /* 802830E4 00280024  80 A1 01 40 */	lwz r5, 0x140(r1)
@@ -569,7 +569,7 @@ lbl_80283098:
 /* 80283108 00280048  90 01 01 84 */	stw r0, 0x184(r1)
 /* 8028310C 0028004C  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 80283110 00280050  90 01 01 88 */	stw r0, 0x188(r1)
-/* 80283114 00280054  4B E3 F1 F5 */	bl add__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 80283114 00280054  4B E3 F1 F5 */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80283118 00280058  80 01 01 80 */	lwz r0, 0x180(r1)
 /* 8028311C 0028005C  7F E5 FB 78 */	mr r5, r31
 /* 80283120 00280060  80 61 01 84 */	lwz r3, 0x184(r1)
@@ -607,20 +607,20 @@ lbl_80283098:
 /* 802831A0 002800E0  C0 01 02 BC */	lfs f0, 0x2bc(r1)
 /* 802831A4 002800E4  FC 00 00 50 */	fneg f0, f0
 /* 802831A8 002800E8  D0 01 02 BC */	stfs f0, 0x2bc(r1)
-/* 802831AC 002800EC  48 00 05 D9 */	bl calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 802831AC 002800EC  48 00 05 D9 */	bl "calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 802831B0 002800F0  C0 5E 01 48 */	lfs f2, 0x148(r30)
 /* 802831B4 002800F4  38 61 01 30 */	addi r3, r1, 0x130
 /* 802831B8 002800F8  C0 1E 01 4C */	lfs f0, 0x14c(r30)
 /* 802831BC 002800FC  80 01 02 B4 */	lwz r0, 0x2b4(r1)
 /* 802831C0 00280100  EC 02 00 32 */	fmuls f0, f2, f0
-/* 802831C4 00280104  C0 42 E6 30 */	lfs f2, $$22691@sda21(r2)
+/* 802831C4 00280104  C0 42 E6 30 */	lfs f2, "@2691"@sda21(r2)
 /* 802831C8 00280108  90 01 01 30 */	stw r0, 0x130(r1)
 /* 802831CC 0028010C  80 01 02 B8 */	lwz r0, 0x2b8(r1)
 /* 802831D0 00280110  EC 22 08 3A */	fmadds f1, f2, f0, f1
 /* 802831D4 00280114  90 01 01 34 */	stw r0, 0x134(r1)
 /* 802831D8 00280118  80 01 02 BC */	lwz r0, 0x2bc(r1)
 /* 802831DC 0028011C  90 01 01 38 */	stw r0, 0x138(r1)
-/* 802831E0 00280120  4B E4 33 39 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802831E0 00280120  4B E4 33 39 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802831E4 00280124  80 01 01 30 */	lwz r0, 0x130(r1)
 /* 802831E8 00280128  38 61 01 74 */	addi r3, r1, 0x174
 /* 802831EC 0028012C  80 A1 01 34 */	lwz r5, 0x134(r1)
@@ -635,7 +635,7 @@ lbl_80283098:
 /* 80283210 00280150  90 01 01 78 */	stw r0, 0x178(r1)
 /* 80283214 00280154  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 80283218 00280158  90 01 01 7C */	stw r0, 0x17c(r1)
-/* 8028321C 0028015C  4B E3 F0 ED */	bl add__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 8028321C 0028015C  4B E3 F0 ED */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80283220 00280160  80 01 01 74 */	lwz r0, 0x174(r1)
 /* 80283224 00280164  7F E5 FB 78 */	mr r5, r31
 /* 80283228 00280168  80 61 01 78 */	lwz r3, 0x178(r1)
@@ -681,12 +681,12 @@ lbl_802832C0:
 /* 802832C0 00280200  38 7D 00 00 */	addi r3, r29, 0
 /* 802832C4 00280204  38 9E 00 10 */	addi r4, r30, 0x10
 /* 802832C8 00280208  38 A1 02 CC */	addi r5, r1, 0x2cc
-/* 802832CC 0028020C  48 00 04 B9 */	bl calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 802832CC 0028020C  48 00 04 B9 */	bl "calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 802832D0 00280210  C0 5E 01 48 */	lfs f2, 0x148(r30)
 /* 802832D4 00280214  C0 1E 01 4C */	lfs f0, 0x14c(r30)
 /* 802832D8 00280218  80 1E 01 18 */	lwz r0, 0x118(r30)
 /* 802832DC 0028021C  EC 02 00 32 */	fmuls f0, f2, f0
-/* 802832E0 00280220  C0 42 E6 30 */	lfs f2, $$22691@sda21(r2)
+/* 802832E0 00280220  C0 42 E6 30 */	lfs f2, "@2691"@sda21(r2)
 /* 802832E4 00280224  2C 00 00 00 */	cmpwi r0, 0
 /* 802832E8 00280228  EC 22 08 3A */	fmadds f1, f2, f0, f1
 /* 802832EC 0028022C  40 82 01 6C */	bne lbl_80283458
@@ -697,7 +697,7 @@ lbl_802832C0:
 /* 80283300 00280240  80 01 02 D4 */	lwz r0, 0x2d4(r1)
 /* 80283304 00280244  90 81 01 28 */	stw r4, 0x128(r1)
 /* 80283308 00280248  90 01 01 2C */	stw r0, 0x12c(r1)
-/* 8028330C 0028024C  4B E4 32 0D */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 8028330C 0028024C  4B E4 32 0D */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80283310 00280250  80 01 01 24 */	lwz r0, 0x124(r1)
 /* 80283314 00280254  38 61 01 18 */	addi r3, r1, 0x118
 /* 80283318 00280258  80 81 01 28 */	lwz r4, 0x128(r1)
@@ -714,7 +714,7 @@ lbl_802832C0:
 /* 80283344 00280284  EC 21 00 32 */	fmuls f1, f1, f0
 /* 80283348 00280288  90 81 01 1C */	stw r4, 0x11c(r1)
 /* 8028334C 0028028C  90 01 01 20 */	stw r0, 0x120(r1)
-/* 80283350 00280290  4B E4 31 C9 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 80283350 00280290  4B E4 31 C9 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80283354 00280294  80 01 01 18 */	lwz r0, 0x118(r1)
 /* 80283358 00280298  38 61 01 0C */	addi r3, r1, 0x10c
 /* 8028335C 0028029C  80 A1 01 1C */	lwz r5, 0x11c(r1)
@@ -729,7 +729,7 @@ lbl_802832C0:
 /* 80283380 002802C0  90 01 01 10 */	stw r0, 0x110(r1)
 /* 80283384 002802C4  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 80283388 002802C8  90 01 01 14 */	stw r0, 0x114(r1)
-/* 8028338C 002802CC  4B E3 EC FD */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 8028338C 002802CC  4B E3 EC FD */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80283390 002802D0  80 01 01 0C */	lwz r0, 0x10c(r1)
 /* 80283394 002802D4  38 61 01 68 */	addi r3, r1, 0x168
 /* 80283398 002802D8  80 A1 01 10 */	lwz r5, 0x110(r1)
@@ -744,7 +744,7 @@ lbl_802832C0:
 /* 802833BC 002802FC  80 01 02 50 */	lwz r0, 0x250(r1)
 /* 802833C0 00280300  90 A1 01 6C */	stw r5, 0x16c(r1)
 /* 802833C4 00280304  90 01 01 70 */	stw r0, 0x170(r1)
-/* 802833C8 00280308  4B E3 EF 41 */	bl add__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 802833C8 00280308  4B E3 EF 41 */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 802833CC 0028030C  38 00 00 00 */	li r0, 0
 /* 802833D0 00280310  80 61 01 68 */	lwz r3, 0x168(r1)
 /* 802833D4 00280314  90 01 02 20 */	stw r0, 0x220(r1)
@@ -789,7 +789,7 @@ lbl_80283458:
 /* 80283468 002803A8  80 01 02 D4 */	lwz r0, 0x2d4(r1)
 /* 8028346C 002803AC  90 81 01 04 */	stw r4, 0x104(r1)
 /* 80283470 002803B0  90 01 01 08 */	stw r0, 0x108(r1)
-/* 80283474 002803B4  4B E4 30 A5 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 80283474 002803B4  4B E4 30 A5 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80283478 002803B8  80 01 01 00 */	lwz r0, 0x100(r1)
 /* 8028347C 002803BC  38 61 00 F4 */	addi r3, r1, 0xf4
 /* 80283480 002803C0  80 81 01 04 */	lwz r4, 0x104(r1)
@@ -806,7 +806,7 @@ lbl_80283458:
 /* 802834AC 002803EC  EC 21 00 32 */	fmuls f1, f1, f0
 /* 802834B0 002803F0  90 81 00 F8 */	stw r4, 0xf8(r1)
 /* 802834B4 002803F4  90 01 00 FC */	stw r0, 0xfc(r1)
-/* 802834B8 002803F8  4B E4 30 61 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802834B8 002803F8  4B E4 30 61 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802834BC 002803FC  80 01 00 F4 */	lwz r0, 0xf4(r1)
 /* 802834C0 00280400  38 61 00 E8 */	addi r3, r1, 0xe8
 /* 802834C4 00280404  80 A1 00 F8 */	lwz r5, 0xf8(r1)
@@ -821,7 +821,7 @@ lbl_80283458:
 /* 802834E8 00280428  90 01 00 EC */	stw r0, 0xec(r1)
 /* 802834EC 0028042C  80 1E 00 18 */	lwz r0, 0x18(r30)
 /* 802834F0 00280430  90 01 00 F0 */	stw r0, 0xf0(r1)
-/* 802834F4 00280434  4B E3 EB 95 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 802834F4 00280434  4B E3 EB 95 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 802834F8 00280438  80 01 00 E8 */	lwz r0, 0xe8(r1)
 /* 802834FC 0028043C  38 61 01 58 */	addi r3, r1, 0x158
 /* 80283500 00280440  80 A1 00 EC */	lwz r5, 0xec(r1)
@@ -836,7 +836,7 @@ lbl_80283458:
 /* 80283524 00280464  80 01 02 10 */	lwz r0, 0x210(r1)
 /* 80283528 00280468  90 A1 01 5C */	stw r5, 0x15c(r1)
 /* 8028352C 0028046C  90 01 01 60 */	stw r0, 0x160(r1)
-/* 80283530 00280470  4B E3 ED D9 */	bl add__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 80283530 00280470  4B E3 ED D9 */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80283534 00280474  38 00 00 00 */	li r0, 0
 /* 80283538 00280478  80 61 01 58 */	lwz r3, 0x158(r1)
 /* 8028353C 0028047C  90 01 01 E0 */	stw r0, 0x1e0(r1)
@@ -866,7 +866,7 @@ lbl_80283574:
 /* 80283598 002804D8  80 01 03 38 */	lwz r0, 0x338(r1)
 /* 8028359C 002804DC  90 A1 01 4C */	stw r5, 0x14c(r1)
 /* 802835A0 002804E0  90 01 01 50 */	stw r0, 0x150(r1)
-/* 802835A4 002804E4  4B E3 EA E5 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 802835A4 002804E4  4B E3 EA E5 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 802835A8 002804E8  80 61 01 48 */	lwz r3, 0x148(r1)
 /* 802835AC 002804EC  80 01 01 4C */	lwz r0, 0x14c(r1)
 /* 802835B0 002804F0  90 7E 00 94 */	stw r3, 0x94(r30)
@@ -910,8 +910,8 @@ __dt__7TWalkerFv:
 /* 8028362C 0028056C  34 1E 00 04 */	addic. r0, r30, 4
 /* 80283630 00280570  90 7E 00 00 */	stw r3, 0(r30)
 /* 80283634 00280574  41 82 00 10 */	beq lbl_80283644
-/* 80283638 00280578  3C 60 80 3D */	lis r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@ha
-/* 8028363C 0028057C  38 03 6F 78 */	addi r0, r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@l
+/* 80283638 00280578  3C 60 80 3D */	lis r3, "__vt__29TSolidStack<PC12TBGCheckData>"@ha
+/* 8028363C 0028057C  38 03 6F 78 */	addi r0, r3, "__vt__29TSolidStack<PC12TBGCheckData>"@l
 /* 80283640 00280580  90 1E 00 10 */	stw r0, 0x10(r30)
 lbl_80283644:
 /* 80283644 00280584  38 7E 00 00 */	addi r3, r30, 0
@@ -943,9 +943,9 @@ __ct__7TWalkerFv:
 /* 8028369C 002805DC  3C 60 80 3D */	lis r3, __vt__7TWalker@ha
 /* 802836A0 002805E0  83 C1 00 08 */	lwz r30, 8(r1)
 /* 802836A4 002805E4  38 03 6F 68 */	addi r0, r3, __vt__7TWalker@l
-/* 802836A8 002805E8  3C 60 80 3D */	lis r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@ha
+/* 802836A8 002805E8  3C 60 80 3D */	lis r3, "__vt__29TSolidStack<PC12TBGCheckData>"@ha
 /* 802836AC 002805EC  90 1E 00 00 */	stw r0, 0(r30)
-/* 802836B0 002805F0  38 03 6F 78 */	addi r0, r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@l
+/* 802836B0 002805F0  38 03 6F 78 */	addi r0, r3, "__vt__29TSolidStack<PC12TBGCheckData>"@l
 /* 802836B4 002805F4  90 1E 00 10 */	stw r0, 0x10(r30)
 /* 802836B8 002805F8  38 00 00 04 */	li r0, 4
 /* 802836BC 002805FC  3B E0 00 00 */	li r31, 0
@@ -960,7 +960,7 @@ __ct__7TWalkerFv:
 /* 802836E0 00280620  38 00 00 1E */	li r0, 0x1e
 /* 802836E4 00280624  93 FE 00 14 */	stw r31, 0x14(r30)
 /* 802836E8 00280628  7F C3 F3 78 */	mr r3, r30
-/* 802836EC 0028062C  C0 02 E6 24 */	lfs f0, $$22688@sda21(r2)
+/* 802836EC 0028062C  C0 02 E6 24 */	lfs f0, "@2688"@sda21(r2)
 /* 802836F0 00280630  D0 1E 00 18 */	stfs f0, 0x18(r30)
 /* 802836F4 00280634  93 FE 00 1C */	stw r31, 0x1c(r30)
 /* 802836F8 00280638  93 FE 00 20 */	stw r31, 0x20(r30)
@@ -980,16 +980,16 @@ __ct__7TWalkerFv:
 /* 80283730 00280670  7C 08 03 A6 */	mtlr r0
 /* 80283734 00280674  4E 80 00 20 */	blr 
 
-.global __dt__29TSolidStack$$0PC12TBGCheckData$$1Fv
-__dt__29TSolidStack$$0PC12TBGCheckData$$1Fv:
+.global "__dt__29TSolidStack<PC12TBGCheckData>Fv"
+"__dt__29TSolidStack<PC12TBGCheckData>Fv":
 /* 80283738 00280678  7C 08 02 A6 */	mflr r0
 /* 8028373C 0028067C  90 01 00 04 */	stw r0, 4(r1)
 /* 80283740 00280680  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80283744 00280684  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80283748 00280688  7C 7F 1B 79 */	or. r31, r3, r3
 /* 8028374C 0028068C  41 82 00 20 */	beq lbl_8028376C
-/* 80283750 00280690  3C 60 80 3D */	lis r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@ha
-/* 80283754 00280694  38 63 6F 78 */	addi r3, r3, __vt__29TSolidStack$$0PC12TBGCheckData$$1@l
+/* 80283750 00280690  3C 60 80 3D */	lis r3, "__vt__29TSolidStack<PC12TBGCheckData>"@ha
+/* 80283754 00280694  38 63 6F 78 */	addi r3, r3, "__vt__29TSolidStack<PC12TBGCheckData>"@l
 /* 80283758 00280698  7C 80 07 35 */	extsh. r0, r4
 /* 8028375C 0028069C  90 7F 00 0C */	stw r3, 0xc(r31)
 /* 80283760 002806A0  40 81 00 0C */	ble lbl_8028376C
@@ -1003,13 +1003,13 @@ lbl_8028376C:
 /* 8028377C 002806BC  7C 08 03 A6 */	mtlr r0
 /* 80283780 002806C0  4E 80 00 20 */	blr 
 
-.global calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"calcFarthestVertex__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 80283784 002806C4  94 21 FF 90 */	stwu r1, -0x70(r1)
 /* 80283788 002806C8  38 00 00 01 */	li r0, 1
 /* 8028378C 002806CC  C0 23 00 10 */	lfs f1, 0x10(r3)
 /* 80283790 002806D0  C0 04 00 00 */	lfs f0, 0(r4)
-/* 80283794 002806D4  C0 82 E6 20 */	lfs f4, $$22687@sda21(r2)
+/* 80283794 002806D4  C0 82 E6 20 */	lfs f4, "@2687"@sda21(r2)
 /* 80283798 002806D8  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8028379C 002806DC  C0 43 00 18 */	lfs f2, 0x18(r3)
 /* 802837A0 002806E0  C0 24 00 08 */	lfs f1, 8(r4)
@@ -1116,7 +1116,7 @@ lbl_80283908:
 lbl_80283920:
 /* 80283920 00280860  2C 00 00 00 */	cmpwi r0, 0
 /* 80283924 00280864  41 82 00 0C */	beq lbl_80283930
-/* 80283928 00280868  C0 22 E6 20 */	lfs f1, $$22687@sda21(r2)
+/* 80283928 00280868  C0 22 E6 20 */	lfs f1, "@2687"@sda21(r2)
 /* 8028392C 0028086C  48 00 00 18 */	b lbl_80283944
 lbl_80283930:
 /* 80283930 00280870  FC 00 38 34 */	frsqrte f0, f7
@@ -1135,22 +1135,22 @@ __vt__7TWalker:
   .4byte 0
   .4byte __dt__7TWalkerFv
   .4byte bind__7TWalkerFP10TLiveActor
-.global __vt__29TSolidStack$$0PC12TBGCheckData$$1
-__vt__29TSolidStack$$0PC12TBGCheckData$$1:
+.global "__vt__29TSolidStack<PC12TBGCheckData>"
+"__vt__29TSolidStack<PC12TBGCheckData>":
   .4byte 0
   .4byte 0
-  .4byte __dt__29TSolidStack$$0PC12TBGCheckData$$1Fv
+  .4byte "__dt__29TSolidStack<PC12TBGCheckData>Fv"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22687:
+"@2687":
   .4byte 0
-$$22688:
+"@2688":
 	.incbin "baserom.dol", 0x3EA324, 0x4
-$$22689:
+"@2689":
 	.incbin "baserom.dol", 0x3EA328, 0x4
-$$22690:
+"@2690":
 	.incbin "baserom.dol", 0x3EA32C, 0x4
-$$22691:
+"@2691":
 	.incbin "baserom.dol", 0x3EA330, 0x8

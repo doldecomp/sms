@@ -52,7 +52,7 @@ perform__11TMarineSnowFUlPQ26JDrama9TGraphics:
 /* 801F4A44 001F1984  C0 08 00 08 */	lfs f0, 8(r8)
 /* 801F4A48 001F1988  D0 03 00 18 */	stfs f0, 0x18(r3)
 /* 801F4A4C 001F198C  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 801F4A50 001F1990  4B EE 6D 81 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 801F4A50 001F1990  4B EE 6D 81 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_801F4A54:
 /* 801F4A54 001F1994  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 801F4A58 001F1998  38 21 00 08 */	addi r1, r1, 8
@@ -71,9 +71,9 @@ loadAfter__11TMarineSnowFv:
 /* 801F4A80 001F19C0  88 03 01 4B */	lbz r0, 0x14b(r3)
 /* 801F4A84 001F19C4  28 00 00 00 */	cmplwi r0, 0
 /* 801F4A88 001F19C8  40 82 00 20 */	bne lbl_801F4AA8
-/* 801F4A8C 001F19CC  3C 80 80 39 */	lis r4, $$21974@ha
+/* 801F4A8C 001F19CC  3C 80 80 39 */	lis r4, "@1974"@ha
 /* 801F4A90 001F19D0  80 6D 98 50 */	lwz r3, gpResourceManager@sda21(r13)
-/* 801F4A94 001F19D4  38 84 2C A0 */	addi r4, r4, $$21974@l
+/* 801F4A94 001F19D4  38 84 2C A0 */	addi r4, r4, "@1974"@l
 /* 801F4A98 001F19D8  38 A0 01 4B */	li r5, 0x14b
 /* 801F4A9C 001F19DC  4B E8 C5 91 */	bl load__18JPAResourceManagerFPCcUs
 /* 801F4AA0 001F19E0  38 00 00 01 */	li r0, 1
@@ -103,16 +103,16 @@ __ct__11TMarineSnowFPCc:
 /* 801F4AF0 001F1A30  90 03 00 00 */	stw r0, 0(r3)
 /* 801F4AF4 001F1A34  38 63 00 0C */	addi r3, r3, 0xc
 /* 801F4AF8 001F1A38  38 80 00 00 */	li r4, 0
-/* 801F4AFC 001F1A3C  4B E4 C0 05 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 801F4AFC 001F1A3C  4B E4 C0 05 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 801F4B00 001F1A40  83 C1 00 14 */	lwz r30, 0x14(r1)
 /* 801F4B04 001F1A44  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
 /* 801F4B08 001F1A48  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 801F4B0C 001F1A4C  90 1E 00 00 */	stw r0, 0(r30)
 /* 801F4B10 001F1A50  38 7E 00 10 */	addi r3, r30, 0x10
-/* 801F4B14 001F1A54  C0 22 D1 20 */	lfs f1, $$21992@sda21(r2)
+/* 801F4B14 001F1A54  C0 22 D1 20 */	lfs f1, "@1992"@sda21(r2)
 /* 801F4B18 001F1A58  FC 40 08 90 */	fmr f2, f1
 /* 801F4B1C 001F1A5C  FC 60 08 90 */	fmr f3, f1
-/* 801F4B20 001F1A60  48 00 00 91 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+/* 801F4B20 001F1A60  48 00 00 91 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff"
 /* 801F4B24 001F1A64  38 A0 00 00 */	li r5, 0
 /* 801F4B28 001F1A68  3C 60 80 3B */	lis r3, __vt__Q26JStage7TObject@ha
 /* 801F4B2C 001F1A6C  B0 BE 00 1C */	sth r5, 0x1c(r30)
@@ -129,12 +129,12 @@ __ct__11TMarineSnowFPCc:
 /* 801F4B58 001F1A98  90 1F 00 20 */	stw r0, 0x20(r31)
 /* 801F4B5C 001F1A9C  38 83 08 F0 */	addi r4, r3, __vt__11TMarineSnow@l
 /* 801F4B60 001F1AA0  38 04 00 24 */	addi r0, r4, 0x24
-/* 801F4B64 001F1AA4  C0 02 D1 24 */	lfs f0, $$21993@sda21(r2)
+/* 801F4B64 001F1AA4  C0 02 D1 24 */	lfs f0, "@1993"@sda21(r2)
 /* 801F4B68 001F1AA8  7F E3 FB 78 */	mr r3, r31
 /* 801F4B6C 001F1AAC  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 801F4B70 001F1AB0  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 801F4B74 001F1AB4  D0 1F 00 2C */	stfs f0, 0x2c(r31)
-/* 801F4B78 001F1AB8  C0 02 D1 20 */	lfs f0, $$21992@sda21(r2)
+/* 801F4B78 001F1AB8  C0 02 D1 20 */	lfs f0, "@1992"@sda21(r2)
 /* 801F4B7C 001F1ABC  D0 1F 00 30 */	stfs f0, 0x30(r31)
 /* 801F4B80 001F1AC0  D0 1F 00 34 */	stfs f0, 0x34(r31)
 /* 801F4B84 001F1AC4  D0 1F 00 38 */	stfs f0, 0x38(r31)
@@ -149,20 +149,20 @@ __ct__11TMarineSnowFPCc:
 /* 801F4BA8 001F1AE8  38 21 00 28 */	addi r1, r1, 0x28
 /* 801F4BAC 001F1AEC  4E 80 00 20 */	blr 
 
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
+"set<f>__Q29JGeometry8TVec3<f>Ffff":
 /* 801F4BB0 001F1AF0  D0 23 00 00 */	stfs f1, 0(r3)
 /* 801F4BB4 001F1AF4  D0 43 00 04 */	stfs f2, 4(r3)
 /* 801F4BB8 001F1AF8  D0 63 00 08 */	stfs f3, 8(r3)
 /* 801F4BBC 001F1AFC  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__11TMarineSnowFv
-$$232$$2__dt__11TMarineSnowFv:
+.global "@32@__dt__11TMarineSnowFv"
+"@32@__dt__11TMarineSnowFv":
 /* 801F4BC0 001F1B00  38 63 FF E0 */	addi r3, r3, -32
 /* 801F4BC4 001F1B04  4B FF FD D8 */	b __dt__11TMarineSnowFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21974:
+"@1974":
 	.incbin "baserom.dol", 0x38FCA0, 0x30
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -179,7 +179,7 @@ __vt__11TMarineSnow:
   .4byte perform__11TMarineSnowFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__11TMarineSnowFv
+  .4byte "@32@__dt__11TMarineSnowFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -189,12 +189,12 @@ __vt__11TMarineSnow:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -211,7 +211,7 @@ __vt__11TMarineSnow:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21992:
+"@1992":
   .4byte 0
-$$21993:
+"@1993":
 	.incbin "baserom.dol", 0x3E8E24, 0x4

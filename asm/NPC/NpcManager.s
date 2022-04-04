@@ -152,10 +152,10 @@ createModelData__17TMareWBaseManagerFv:
 /* 8016D770 0016A6B0  7C 08 02 A6 */	mflr r0
 /* 8016D774 0016A6B4  3C 80 80 38 */	lis r4, entry$2359@ha
 /* 8016D778 0016A6B8  90 01 00 04 */	stw r0, 4(r1)
-/* 8016D77C 0016A6BC  3C A0 80 38 */	lis r5, $$22225@ha
+/* 8016D77C 0016A6BC  3C A0 80 38 */	lis r5, "@2225"@ha
 /* 8016D780 0016A6C0  38 84 ED EC */	addi r4, r4, entry$2359@l
 /* 8016D784 0016A6C4  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016D788 0016A6C8  38 A5 EA C8 */	addi r5, r5, $$22225@l
+/* 8016D788 0016A6C8  38 A5 EA C8 */	addi r5, r5, "@2225"@l
 /* 8016D78C 0016A6CC  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016D790 0016A6D0  3B E3 00 00 */	addi r31, r3, 0
 /* 8016D794 0016A6D4  4B FA 86 39 */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -183,10 +183,10 @@ createModelData__17TMareMBaseManagerFv:
 /* 8016D7DC 0016A71C  7C 08 02 A6 */	mflr r0
 /* 8016D7E0 0016A720  3C 80 80 38 */	lis r4, entry$2357@ha
 /* 8016D7E4 0016A724  90 01 00 04 */	stw r0, 4(r1)
-/* 8016D7E8 0016A728  3C A0 80 38 */	lis r5, $$22224@ha
+/* 8016D7E8 0016A728  3C A0 80 38 */	lis r5, "@2224"@ha
 /* 8016D7EC 0016A72C  38 84 ED C8 */	addi r4, r4, entry$2357@l
 /* 8016D7F0 0016A730  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016D7F4 0016A734  38 A5 EA B8 */	addi r5, r5, $$22224@l
+/* 8016D7F4 0016A734  38 A5 EA B8 */	addi r5, r5, "@2224"@l
 /* 8016D7F8 0016A738  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016D7FC 0016A73C  3B E3 00 00 */	addi r31, r3, 0
 /* 8016D800 0016A740  4B FA 85 CD */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -214,10 +214,10 @@ createModelData__15TMonteWCManagerFv:
 /* 8016D848 0016A788  7C 08 02 A6 */	mflr r0
 /* 8016D84C 0016A78C  3C 80 80 38 */	lis r4, entry$2356@ha
 /* 8016D850 0016A790  90 01 00 04 */	stw r0, 4(r1)
-/* 8016D854 0016A794  3C A0 80 38 */	lis r5, $$22416@ha
+/* 8016D854 0016A794  3C A0 80 38 */	lis r5, "@2416"@ha
 /* 8016D858 0016A798  38 84 ED A4 */	addi r4, r4, entry$2356@l
 /* 8016D85C 0016A79C  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016D860 0016A7A0  38 A5 EE F4 */	addi r5, r5, $$22416@l
+/* 8016D860 0016A7A0  38 A5 EE F4 */	addi r5, r5, "@2416"@l
 /* 8016D864 0016A7A4  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016D868 0016A7A8  3B E3 00 00 */	addi r31, r3, 0
 /* 8016D86C 0016A7AC  4B FA 85 61 */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -363,10 +363,10 @@ createModelData__15TMonteMHManagerFv:
 /* 8016DA64 0016A9A4  7C 08 02 A6 */	mflr r0
 /* 8016DA68 0016A9A8  3C 80 80 38 */	lis r4, entry$2349@ha
 /* 8016DA6C 0016A9AC  90 01 00 04 */	stw r0, 4(r1)
-/* 8016DA70 0016A9B0  3C A0 80 38 */	lis r5, $$22459@ha
+/* 8016DA70 0016A9B0  3C A0 80 38 */	lis r5, "@2459"@ha
 /* 8016DA74 0016A9B4  38 84 ED 14 */	addi r4, r4, entry$2349@l
 /* 8016DA78 0016A9B8  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016DA7C 0016A9BC  38 A5 EF 04 */	addi r5, r5, $$22459@l
+/* 8016DA7C 0016A9BC  38 A5 EF 04 */	addi r5, r5, "@2459"@l
 /* 8016DA80 0016A9C0  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016DA84 0016A9C4  3B E3 00 00 */	addi r31, r3, 0
 /* 8016DA88 0016A9C8  4B FA 83 45 */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -392,10 +392,10 @@ createModelData__15TMonteMGManagerFv:
 /* 8016DACC 0016AA0C  7C 08 02 A6 */	mflr r0
 /* 8016DAD0 0016AA10  3C 80 80 38 */	lis r4, entry$2348@ha
 /* 8016DAD4 0016AA14  90 01 00 04 */	stw r0, 4(r1)
-/* 8016DAD8 0016AA18  3C A0 80 38 */	lis r5, $$22467@ha
+/* 8016DAD8 0016AA18  3C A0 80 38 */	lis r5, "@2467"@ha
 /* 8016DADC 0016AA1C  38 84 EC FC */	addi r4, r4, entry$2348@l
 /* 8016DAE0 0016AA20  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016DAE4 0016AA24  38 A5 EF 14 */	addi r5, r5, $$22467@l
+/* 8016DAE4 0016AA24  38 A5 EF 14 */	addi r5, r5, "@2467"@l
 /* 8016DAE8 0016AA28  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016DAEC 0016AA2C  3B E3 00 00 */	addi r31, r3, 0
 /* 8016DAF0 0016AA30  4B FA 82 DD */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -421,10 +421,10 @@ createModelData__15TMonteMFManagerFv:
 /* 8016DB34 0016AA74  7C 08 02 A6 */	mflr r0
 /* 8016DB38 0016AA78  3C 80 80 38 */	lis r4, entry$2347@ha
 /* 8016DB3C 0016AA7C  90 01 00 04 */	stw r0, 4(r1)
-/* 8016DB40 0016AA80  3C A0 80 38 */	lis r5, $$22475@ha
+/* 8016DB40 0016AA80  3C A0 80 38 */	lis r5, "@2475"@ha
 /* 8016DB44 0016AA84  38 84 EC E4 */	addi r4, r4, entry$2347@l
 /* 8016DB48 0016AA88  94 21 FF E0 */	stwu r1, -0x20(r1)
-/* 8016DB4C 0016AA8C  38 A5 EF 24 */	addi r5, r5, $$22475@l
+/* 8016DB4C 0016AA8C  38 A5 EF 24 */	addi r5, r5, "@2475"@l
 /* 8016DB50 0016AA90  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8016DB54 0016AA94  3B E3 00 00 */	addi r31, r3, 0
 /* 8016DB58 0016AA98  4B FA 82 75 */	bl createModelDataArrayBase__11TObjManagerFPC19TModelDataLoadEntryPCc
@@ -664,9 +664,9 @@ load__18TSunflowerLManagerFR20JSUMemoryInputStream:
 /* 8016DEA0 0016ADE0  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8016DEA4 0016ADE4  7C 7F 1B 78 */	mr r31, r3
 /* 8016DEA8 0016ADE8  48 0E 49 5D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DEAC 0016ADEC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016DEAC 0016ADEC  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016DEB0 0016ADF0  D0 1F 00 3C */	stfs f0, 0x3c(r31)
-/* 8016DEB4 0016ADF4  C0 02 A6 64 */	lfs f0, $$22536@sda21(r2)
+/* 8016DEB4 0016ADF4  C0 02 A6 64 */	lfs f0, "@2536"@sda21(r2)
 /* 8016DEB8 0016ADF8  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DEBC 0016ADFC  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016DEC0 0016AE00  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -683,7 +683,7 @@ load__18TRaccoonDogManagerFR20JSUMemoryInputStream:
 /* 8016DEE0 0016AE20  7C 7F 1B 78 */	mr r31, r3
 /* 8016DEE4 0016AE24  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DEE8 0016AE28  48 0E 49 1D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DEEC 0016AE2C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016DEEC 0016AE2C  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016DEF0 0016AE30  38 60 00 14 */	li r3, 0x14
 /* 8016DEF4 0016AE34  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DEF8 0016AE38  4B E9 E9 B9 */	bl __nw__FUl
@@ -716,7 +716,7 @@ load__13TPeachManagerFR20JSUMemoryInputStream:
 /* 8016DF54 0016AE94  7C 7F 1B 78 */	mr r31, r3
 /* 8016DF58 0016AE98  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DF5C 0016AE9C  48 0E 48 A9 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DF60 0016AEA0  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016DF60 0016AEA0  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016DF64 0016AEA4  38 60 00 14 */	li r3, 0x14
 /* 8016DF68 0016AEA8  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DF6C 0016AEAC  4B E9 E9 45 */	bl __nw__FUl
@@ -749,7 +749,7 @@ load__15TKinojiiManagerFR20JSUMemoryInputStream:
 /* 8016DFC8 0016AF08  7C 7F 1B 78 */	mr r31, r3
 /* 8016DFCC 0016AF0C  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016DFD0 0016AF10  48 0E 48 35 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016DFD4 0016AF14  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016DFD4 0016AF14  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016DFD8 0016AF18  38 60 00 14 */	li r3, 0x14
 /* 8016DFDC 0016AF1C  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016DFE0 0016AF20  4B E9 E8 D1 */	bl __nw__FUl
@@ -782,7 +782,7 @@ load__15TKinopioManagerFR20JSUMemoryInputStream:
 /* 8016E03C 0016AF7C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E040 0016AF80  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E044 0016AF84  48 0E 47 C1 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E048 0016AF88  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E048 0016AF88  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E04C 0016AF8C  38 60 00 14 */	li r3, 0x14
 /* 8016E050 0016AF90  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E054 0016AF94  4B E9 E8 5D */	bl __nw__FUl
@@ -815,7 +815,7 @@ load__14TMareWBManagerFR20JSUMemoryInputStream:
 /* 8016E0B0 0016AFF0  7C 7F 1B 78 */	mr r31, r3
 /* 8016E0B4 0016AFF4  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E0B8 0016AFF8  48 0E 47 4D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E0BC 0016AFFC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E0BC 0016AFFC  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E0C0 0016B000  38 60 00 14 */	li r3, 0x14
 /* 8016E0C4 0016B004  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E0C8 0016B008  4B E9 E7 E9 */	bl __nw__FUl
@@ -848,7 +848,7 @@ load__14TMareWAManagerFR20JSUMemoryInputStream:
 /* 8016E124 0016B064  7C 7F 1B 78 */	mr r31, r3
 /* 8016E128 0016B068  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E12C 0016B06C  48 0E 46 D9 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E130 0016B070  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E130 0016B070  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E134 0016B074  38 60 00 14 */	li r3, 0x14
 /* 8016E138 0016B078  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E13C 0016B07C  4B E9 E7 75 */	bl __nw__FUl
@@ -881,7 +881,7 @@ load__14TMareMDManagerFR20JSUMemoryInputStream:
 /* 8016E198 0016B0D8  7C 7F 1B 78 */	mr r31, r3
 /* 8016E19C 0016B0DC  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E1A0 0016B0E0  48 0E 46 65 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E1A4 0016B0E4  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E1A4 0016B0E4  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E1A8 0016B0E8  38 60 00 14 */	li r3, 0x14
 /* 8016E1AC 0016B0EC  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E1B0 0016B0F0  4B E9 E7 01 */	bl __nw__FUl
@@ -914,7 +914,7 @@ load__14TMareMCManagerFR20JSUMemoryInputStream:
 /* 8016E20C 0016B14C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E210 0016B150  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E214 0016B154  48 0E 45 F1 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E218 0016B158  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E218 0016B158  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E21C 0016B15C  38 60 00 14 */	li r3, 0x14
 /* 8016E220 0016B160  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E224 0016B164  4B E9 E6 8D */	bl __nw__FUl
@@ -947,7 +947,7 @@ load__14TMareMBManagerFR20JSUMemoryInputStream:
 /* 8016E280 0016B1C0  7C 7F 1B 78 */	mr r31, r3
 /* 8016E284 0016B1C4  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E288 0016B1C8  48 0E 45 7D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E28C 0016B1CC  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E28C 0016B1CC  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E290 0016B1D0  38 60 00 14 */	li r3, 0x14
 /* 8016E294 0016B1D4  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E298 0016B1D8  4B E9 E6 19 */	bl __nw__FUl
@@ -980,7 +980,7 @@ load__14TMareMAManagerFR20JSUMemoryInputStream:
 /* 8016E2F4 0016B234  7C 7F 1B 78 */	mr r31, r3
 /* 8016E2F8 0016B238  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E2FC 0016B23C  48 0E 45 09 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E300 0016B240  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E300 0016B240  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E304 0016B244  38 60 00 14 */	li r3, 0x14
 /* 8016E308 0016B248  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E30C 0016B24C  4B E9 E5 A5 */	bl __nw__FUl
@@ -1013,7 +1013,7 @@ load__15TMonteWCManagerFR20JSUMemoryInputStream:
 /* 8016E368 0016B2A8  7C 7F 1B 78 */	mr r31, r3
 /* 8016E36C 0016B2AC  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E370 0016B2B0  48 0E 44 95 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E374 0016B2B4  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E374 0016B2B4  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E378 0016B2B8  38 60 00 14 */	li r3, 0x14
 /* 8016E37C 0016B2BC  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E380 0016B2C0  4B E9 E5 31 */	bl __nw__FUl
@@ -1046,7 +1046,7 @@ load__15TMonteMHManagerFR20JSUMemoryInputStream:
 /* 8016E3DC 0016B31C  7C 7F 1B 78 */	mr r31, r3
 /* 8016E3E0 0016B320  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E3E4 0016B324  48 0E 44 21 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E3E8 0016B328  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E3E8 0016B328  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E3EC 0016B32C  38 60 00 14 */	li r3, 0x14
 /* 8016E3F0 0016B330  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E3F4 0016B334  4B E9 E4 BD */	bl __nw__FUl
@@ -1079,7 +1079,7 @@ load__15TMonteMGManagerFR20JSUMemoryInputStream:
 /* 8016E450 0016B390  7C 7F 1B 78 */	mr r31, r3
 /* 8016E454 0016B394  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E458 0016B398  48 0E 43 AD */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E45C 0016B39C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E45C 0016B39C  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E460 0016B3A0  38 60 00 14 */	li r3, 0x14
 /* 8016E464 0016B3A4  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E468 0016B3A8  4B E9 E4 49 */	bl __nw__FUl
@@ -1112,7 +1112,7 @@ load__15TMonteMFManagerFR20JSUMemoryInputStream:
 /* 8016E4C4 0016B404  7C 7F 1B 78 */	mr r31, r3
 /* 8016E4C8 0016B408  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8016E4CC 0016B40C  48 0E 43 39 */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016E4D0 0016B410  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016E4D0 0016B410  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016E4D4 0016B414  38 60 00 14 */	li r3, 0x14
 /* 8016E4D8 0016B418  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016E4DC 0016B41C  4B E9 E3 D5 */	bl __nw__FUl
@@ -1641,7 +1641,7 @@ lbl_8016EBD4:
 /* 8016EC0C 0016BB4C  2C 00 00 13 */	cmpwi r0, 0x13
 /* 8016EC10 0016BB50  40 82 00 14 */	bne lbl_8016EC24
 lbl_8016EC14:
-/* 8016EC14 0016BB54  C0 02 A6 68 */	lfs f0, $$22804@sda21(r2)
+/* 8016EC14 0016BB54  C0 02 A6 68 */	lfs f0, "@2804"@sda21(r2)
 /* 8016EC18 0016BB58  FC 1E 00 40 */	fcmpo cr0, f30, f0
 /* 8016EC1C 0016BB5C  40 80 00 08 */	bge lbl_8016EC24
 /* 8016EC20 0016BB60  FF C0 00 90 */	fmr f30, f0
@@ -1654,7 +1654,7 @@ lbl_8016EC24:
 /* 8016EC38 0016BB78  4B F5 27 DD */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 8016EC3C 0016BB7C  83 FB 00 14 */	lwz r31, 0x14(r27)
 /* 8016EC40 0016BB80  3B A0 00 00 */	li r29, 0
-/* 8016EC44 0016BB84  C3 E2 A6 6C */	lfs f31, $$22805@sda21(r2)
+/* 8016EC44 0016BB84  C3 E2 A6 6C */	lfs f31, "@2805"@sda21(r2)
 /* 8016EC48 0016BB88  3B 40 00 00 */	li r26, 0
 /* 8016EC4C 0016BB8C  48 00 00 98 */	b lbl_8016ECE4
 lbl_8016EC50:
@@ -1786,7 +1786,7 @@ lbl_8016EDE4:
 /* 8016EDFC 0016BD3C  38 61 00 20 */	addi r3, r1, 0x20
 /* 8016EE00 0016BD40  4C C6 31 82 */	crclr 6
 /* 8016EE04 0016BD44  38 80 01 00 */	li r4, 0x100
-/* 8016EE08 0016BD48  38 A2 A6 70 */	addi r5, r2, $$22860@sda21
+/* 8016EE08 0016BD48  38 A2 A6 70 */	addi r5, r2, "@2860"@sda21
 /* 8016EE0C 0016BD4C  4B F1 52 B9 */	bl snprintf
 /* 8016EE10 0016BD50  38 61 00 20 */	addi r3, r1, 0x20
 /* 8016EE14 0016BD54  4B E9 CE A9 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -1849,7 +1849,7 @@ load__11TNPCManagerFR20JSUMemoryInputStream:
 /* 8016EEE0 0016BE20  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8016EEE4 0016BE24  7C 7F 1B 78 */	mr r31, r3
 /* 8016EEE8 0016BE28  48 0E 39 1D */	bl load__13TEnemyManagerFR20JSUMemoryInputStream
-/* 8016EEEC 0016BE2C  C0 02 A6 60 */	lfs f0, $$22535@sda21(r2)
+/* 8016EEEC 0016BE2C  C0 02 A6 60 */	lfs f0, "@2535"@sda21(r2)
 /* 8016EEF0 0016BE30  D0 1F 00 3C */	stfs f0, 0x3c(r31)
 /* 8016EEF4 0016BE34  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 8016EEF8 0016BE38  83 E1 00 14 */	lwz r31, 0x14(r1)
@@ -1869,7 +1869,7 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF24 0016BE64  38 03 91 88 */	addi r0, r3, __vt__11TNPCManager@l
 /* 8016EF28 0016BE68  90 1F 00 00 */	stw r0, 0(r31)
 /* 8016EF2C 0016BE6C  38 00 00 00 */	li r0, 0
-/* 8016EF30 0016BE70  C0 02 A6 78 */	lfs f0, $$22898@sda21(r2)
+/* 8016EF30 0016BE70  C0 02 A6 78 */	lfs f0, "@2898"@sda21(r2)
 /* 8016EF34 0016BE74  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 8016EF38 0016BE78  90 1F 00 58 */	stw r0, 0x58(r31)
 /* 8016EF3C 0016BE7C  90 1F 00 5C */	stw r0, 0x5c(r31)
@@ -1881,8 +1881,8 @@ __ct__11TNPCManagerFPCc:
 /* 8016EF54 0016BE94  28 00 00 0D */	cmplwi r0, 0xd
 /* 8016EF58 0016BE98  80 83 00 00 */	lwz r4, 0(r3)
 /* 8016EF5C 0016BE9C  41 81 00 AC */	bgt lbl_8016F008
-/* 8016EF60 0016BEA0  3C 60 80 3C */	lis r3, $$22899@ha
-/* 8016EF64 0016BEA4  38 63 86 A8 */	addi r3, r3, $$22899@l
+/* 8016EF60 0016BEA0  3C 60 80 3C */	lis r3, "@2899"@ha
+/* 8016EF64 0016BEA4  38 63 86 A8 */	addi r3, r3, "@2899"@l
 /* 8016EF68 0016BEA8  54 00 10 3A */	slwi r0, r0, 2
 /* 8016EF6C 0016BEAC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8016EF70 0016BEB0  7C 09 03 A6 */	mtctr r0
@@ -2051,7 +2051,7 @@ clipActors__16TBoardNpcManagerFPQ26JDrama9TGraphics:
 /* 8016F180 0016C0C0  90 01 00 04 */	stw r0, 4(r1)
 /* 8016F184 0016C0C4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8016F188 0016C0C8  80 AD 9C 28 */	lwz r5, gpConductor@sda21(r13)
-/* 8016F18C 0016C0CC  C0 42 A6 7C */	lfs f2, $$22934@sda21(r2)
+/* 8016F18C 0016C0CC  C0 42 A6 7C */	lfs f2, "@2934"@sda21(r2)
 /* 8016F190 0016C0D0  C0 25 00 9C */	lfs f1, 0x9c(r5)
 /* 8016F194 0016C0D4  4B FA 57 01 */	bl clipActorsAux__12TLiveManagerFPQ26JDrama9TGraphicsff
 /* 8016F198 0016C0D8  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -3077,285 +3077,285 @@ lbl_8016FF64:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x37B8A4, 0x14
-$$22050:
+"@2050":
 	.incbin "baserom.dol", 0x37B8B8, 0x30
-$$22051:
+"@2051":
 	.incbin "baserom.dol", 0x37B8E8, 0x38
-$$22052:
+"@2052":
 	.incbin "baserom.dol", 0x37B920, 0x34
-$$22053:
+"@2053":
 	.incbin "baserom.dol", 0x37B954, 0x24
-$$22207:
+"@2207":
 	.incbin "baserom.dol", 0x37B978, 0x10
-$$22212:
+"@2212":
 	.incbin "baserom.dol", 0x37B988, 0x10
-$$22213:
+"@2213":
 	.incbin "baserom.dol", 0x37B998, 0x24
-$$22214:
+"@2214":
 	.incbin "baserom.dol", 0x37B9BC, 0x14
-$$22215:
+"@2215":
 	.incbin "baserom.dol", 0x37B9D0, 0x14
-$$22216:
+"@2216":
 	.incbin "baserom.dol", 0x37B9E4, 0x28
-$$22217:
+"@2217":
 	.incbin "baserom.dol", 0x37BA0C, 0x28
-$$22218:
+"@2218":
 	.incbin "baserom.dol", 0x37BA34, 0x18
-$$22219:
+"@2219":
 	.incbin "baserom.dol", 0x37BA4C, 0xC
-$$22220:
+"@2220":
 	.incbin "baserom.dol", 0x37BA58, 0x14
-$$22221:
+"@2221":
 	.incbin "baserom.dol", 0x37BA6C, 0x24
-$$22222:
+"@2222":
 	.incbin "baserom.dol", 0x37BA90, 0x14
-$$22223:
+"@2223":
 	.incbin "baserom.dol", 0x37BAA4, 0x14
-$$22224:
+"@2224":
 	.incbin "baserom.dol", 0x37BAB8, 0x10
-$$22225:
+"@2225":
 	.incbin "baserom.dol", 0x37BAC8, 0x10
-$$22226:
+"@2226":
 	.incbin "baserom.dol", 0x37BAD8, 0x1C
-$$22227:
+"@2227":
 	.incbin "baserom.dol", 0x37BAF4, 0x24
-$$22230:
+"@2230":
 	.incbin "baserom.dol", 0x37BB18, 0x10
 entry$2229:
-  .4byte $$22230
+  .4byte "@2230"
   .4byte 0x10220000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22232:
+"@2232":
 	.incbin "baserom.dol", 0x37BB40, 0x10
-$$22233:
+"@2233":
 	.incbin "baserom.dol", 0x37BB50, 0x10
-$$22234:
+"@2234":
 	.incbin "baserom.dol", 0x37BB60, 0x10
-$$22235:
+"@2235":
 	.incbin "baserom.dol", 0x37BB70, 0x10
-$$22236:
+"@2236":
 	.incbin "baserom.dol", 0x37BB80, 0x10
-$$22237:
+"@2237":
 	.incbin "baserom.dol", 0x37BB90, 0x10
 entry$2231:
-  .4byte $$22232
+  .4byte "@2232"
   .4byte 0x11240000
   .4byte 0
-  .4byte $$22233
+  .4byte "@2233"
   .4byte 0x11240000
   .4byte 0
-  .4byte $$22234
+  .4byte "@2234"
   .4byte 0x11240000
   .4byte 0
-  .4byte $$22235
+  .4byte "@2235"
   .4byte 0x11240000
   .4byte 0
-  .4byte $$22236
+  .4byte "@2236"
   .4byte 0x11240000
   .4byte 0
-  .4byte $$22237
+  .4byte "@2237"
   .4byte 0x11240000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22336:
+"@2336":
 	.incbin "baserom.dol", 0x37BBF4, 0x10
 entry$2335:
-  .4byte $$22336
+  .4byte "@2336"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22338:
+"@2338":
 	.incbin "baserom.dol", 0x37BC1C, 0x10
 entry$2337:
-  .4byte $$22338
+  .4byte "@2338"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22340:
+"@2340":
 	.incbin "baserom.dol", 0x37BC44, 0x10
 entry$2339:
-  .4byte $$22340
+  .4byte "@2340"
   .4byte 0x10210000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22342:
+"@2342":
 	.incbin "baserom.dol", 0x37BC6C, 0x10
 entry$2341:
-  .4byte $$22342
+  .4byte "@2342"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22344:
+"@2344":
 	.incbin "baserom.dol", 0x37BC94, 0x10
 entry$2343:
-  .4byte $$22344
+  .4byte "@2344"
   .4byte 0x10210000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22346:
+"@2346":
 	.incbin "baserom.dol", 0x37BCBC, 0x10
 entry$2345:
-  .4byte $$22346
+  .4byte "@2346"
   .4byte 0x10010000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
 entry$2347:
-  .4byte $$22336
+  .4byte "@2336"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
 entry$2348:
-  .4byte $$22342
+  .4byte "@2342"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
 entry$2349:
-  .4byte $$22338
+  .4byte "@2338"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22351:
+"@2351":
 	.incbin "baserom.dol", 0x37BD2C, 0x10
 entry$2350:
-  .4byte $$22351
+  .4byte "@2351"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22353:
+"@2353":
 	.incbin "baserom.dol", 0x37BD54, 0x10
 entry$2352:
-  .4byte $$22353
+  .4byte "@2353"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22355:
+"@2355":
 	.incbin "baserom.dol", 0x37BD7C, 0x10
 entry$2354:
-  .4byte $$22355
+  .4byte "@2355"
   .4byte 0x10210000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
 entry$2356:
-  .4byte $$22351
+  .4byte "@2351"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22358:
+"@2358":
 	.incbin "baserom.dol", 0x37BDBC, 0xC
 entry$2357:
-  .4byte $$22358
+  .4byte "@2358"
   .4byte 0x10300000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22360:
+"@2360":
 	.incbin "baserom.dol", 0x37BDE0, 0xC
 entry$2359:
-  .4byte $$22360
+  .4byte "@2360"
   .4byte 0x10300000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22362:
+"@2362":
 	.incbin "baserom.dol", 0x37BE04, 0x14
 entry$2361:
-  .4byte $$22362
+  .4byte "@2362"
   .4byte 0x10300000
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte 0
-$$22364:
+"@2364":
 	.incbin "baserom.dol", 0x37BE30, 0x10
 entry$2363:
-  .4byte $$22364
+  .4byte "@2364"
   .4byte 0x10010000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22366:
+"@2366":
 	.incbin "baserom.dol", 0x37BE58, 0x10
 entry$2365:
-  .4byte $$22366
+  .4byte "@2366"
   .4byte 0x10010000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22368:
+"@2368":
 	.incbin "baserom.dol", 0x37BE80, 0xC
 entry$2367:
-  .4byte $$22368
+  .4byte "@2368"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22370:
+"@2370":
 	.incbin "baserom.dol", 0x37BEA4, 0x10
 entry$2369:
-  .4byte $$22370
+  .4byte "@2370"
   .4byte 0x10020000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22372:
+"@2372":
 	.incbin "baserom.dol", 0x37BECC, 0x10
 entry$2371:
-  .4byte $$22372
+  .4byte "@2372"
   .4byte 0x10220000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22416:
+"@2416":
 	.incbin "baserom.dol", 0x37BEF4, 0x10
-$$22459:
+"@2459":
 	.incbin "baserom.dol", 0x37BF04, 0x10
-$$22467:
+"@2467":
 	.incbin "baserom.dol", 0x37BF14, 0x10
-$$22475:
+"@2475":
 	.incbin "baserom.dol", 0x37BF24, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -3384,7 +3384,7 @@ __vt__18TSunflowerSManager:
   .4byte createEnemies__13TEnemyManagerFi
   .4byte changeDrawBuffer__13TEnemyManagerFUl
   .4byte getBmt___11TNPCManagerFb
-$$22899:
+"@2899":
     .4byte lbl_8016EF78
     .4byte lbl_8016EF84
     .4byte lbl_8016EF90
@@ -4202,53 +4202,53 @@ __vt__16TBoardNpcManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cDummyPollutionTexName:
-  .4byte $$22212
+  .4byte "@2212"
 cRealPollutionTexName:
-  .4byte $$22213
+  .4byte "@2213"
 cMonteMDummyStrawTexName:
-  .4byte $$22214
+  .4byte "@2214"
 cMonteWDummyStrawTexName:
-  .4byte $$22215
+  .4byte "@2215"
 cMonteMRealStrawTexName:
-  .4byte $$22216
+  .4byte "@2216"
 cMonteWRealStrawTexName:
-  .4byte $$22217
+  .4byte "@2217"
 cScreenTexViewObjName:
-  .4byte $$22218
+  .4byte "@2218"
 cJellyFishDummyScreenTexName:
-  .4byte $$22219
+  .4byte "@2219"
 cJellyFishDummyTexName:
-  .4byte $$22220
+  .4byte "@2220"
 cJellyFishRealTexName:
-  .4byte $$22221
+  .4byte "@2221"
 cMonteMCommonVolumeName:
-  .4byte $$22222
+  .4byte "@2222"
 cMonteWCommonVolumeName:
-  .4byte $$22223
+  .4byte "@2223"
 cMareMCommonVolumeName:
-  .4byte $$22224
+  .4byte "@2224"
 cMareWCommonVolumeName:
-  .4byte $$22225
+  .4byte "@2225"
 cMareCommonNormalBmtName:
-  .4byte $$22226
+  .4byte "@2226"
 cMareCommonPollutionBmtName:
-  .4byte $$22227
+  .4byte "@2227"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22535:
+"@2535":
 	.incbin "baserom.dol", 0x3E6360, 0x4
-$$22536:
+"@2536":
 	.incbin "baserom.dol", 0x3E6364, 0x4
-$$22804:
+"@2804":
 	.incbin "baserom.dol", 0x3E6368, 0x4
-$$22805:
+"@2805":
 	.incbin "baserom.dol", 0x3E636C, 0x4
-$$22860:
+"@2860":
 	.incbin "baserom.dol", 0x3E6370, 0x8
-$$22898:
+"@2898":
 	.incbin "baserom.dol", 0x3E6378, 0x4
-$$22934:
+"@2934":
 	.incbin "baserom.dol", 0x3E637C, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

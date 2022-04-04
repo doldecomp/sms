@@ -27,16 +27,16 @@ GXInitLightAttnK:
 
 .global GXInitLightDistAttn
 GXInitLightDistAttn:
-/* 800A9980 000A68C0  C0 02 8B 00 */	lfs f0, $$2121@sda21(r2)
+/* 800A9980 000A68C0  C0 02 8B 00 */	lfs f0, "@121"@sda21(r2)
 /* 800A9984 000A68C4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800A9988 000A68C8  40 80 00 08 */	bge lbl_800A9990
 /* 800A998C 000A68CC  38 80 00 00 */	li r4, 0
 lbl_800A9990:
-/* 800A9990 000A68D0  C0 02 8B 00 */	lfs f0, $$2121@sda21(r2)
+/* 800A9990 000A68D0  C0 02 8B 00 */	lfs f0, "@121"@sda21(r2)
 /* 800A9994 000A68D4  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 800A9998 000A68D8  4C 40 13 82 */	cror 2, 0, 2
 /* 800A999C 000A68DC  41 82 00 14 */	beq lbl_800A99B0
-/* 800A99A0 000A68E0  C0 02 8B 04 */	lfs f0, $$2127@sda21(r2)
+/* 800A99A0 000A68E0  C0 02 8B 04 */	lfs f0, "@127"@sda21(r2)
 /* 800A99A4 000A68E4  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 800A99A8 000A68E8  4C 41 13 82 */	cror 2, 1, 2
 /* 800A99AC 000A68EC  40 82 00 08 */	bne lbl_800A99B4
@@ -55,16 +55,16 @@ lbl_800A99D0:
 /* 800A99D4 000A6914  40 80 00 60 */	bge lbl_800A9A34
 /* 800A99D8 000A6918  48 00 00 40 */	b lbl_800A9A18
 lbl_800A99DC:
-/* 800A99DC 000A691C  C0 A2 8B 04 */	lfs f5, $$2127@sda21(r2)
+/* 800A99DC 000A691C  C0 A2 8B 04 */	lfs f5, "@127"@sda21(r2)
 /* 800A99E0 000A6920  EC 02 00 72 */	fmuls f0, f2, f1
-/* 800A99E4 000A6924  C0 82 8B 00 */	lfs f4, $$2121@sda21(r2)
+/* 800A99E4 000A6924  C0 82 8B 00 */	lfs f4, "@121"@sda21(r2)
 /* 800A99E8 000A6928  EC 25 10 28 */	fsubs f1, f5, f2
 /* 800A99EC 000A692C  EC 61 00 24 */	fdivs f3, f1, f0
 /* 800A99F0 000A6930  48 00 00 50 */	b lbl_800A9A40
 lbl_800A99F4:
-/* 800A99F4 000A6934  C0 A2 8B 04 */	lfs f5, $$2127@sda21(r2)
+/* 800A99F4 000A6934  C0 A2 8B 04 */	lfs f5, "@127"@sda21(r2)
 /* 800A99F8 000A6938  EC 82 00 72 */	fmuls f4, f2, f1
-/* 800A99FC 000A693C  C0 62 8B 08 */	lfs f3, $$2148@sda21(r2)
+/* 800A99FC 000A693C  C0 62 8B 08 */	lfs f3, "@148"@sda21(r2)
 /* 800A9A00 000A6940  EC 45 10 28 */	fsubs f2, f5, f2
 /* 800A9A04 000A6944  EC 01 01 32 */	fmuls f0, f1, f4
 /* 800A9A08 000A6948  EC 23 00 B2 */	fmuls f1, f3, f2
@@ -73,15 +73,15 @@ lbl_800A99F4:
 /* 800A9A14 000A6954  48 00 00 2C */	b lbl_800A9A40
 lbl_800A9A18:
 /* 800A9A18 000A6958  EC 02 00 72 */	fmuls f0, f2, f1
-/* 800A9A1C 000A695C  C0 A2 8B 04 */	lfs f5, $$2127@sda21(r2)
-/* 800A9A20 000A6960  C0 62 8B 00 */	lfs f3, $$2121@sda21(r2)
+/* 800A9A1C 000A695C  C0 A2 8B 04 */	lfs f5, "@127"@sda21(r2)
+/* 800A9A20 000A6960  C0 62 8B 00 */	lfs f3, "@121"@sda21(r2)
 /* 800A9A24 000A6964  EC 45 10 28 */	fsubs f2, f5, f2
 /* 800A9A28 000A6968  EC 01 00 32 */	fmuls f0, f1, f0
 /* 800A9A2C 000A696C  EC 82 00 24 */	fdivs f4, f2, f0
 /* 800A9A30 000A6970  48 00 00 10 */	b lbl_800A9A40
 lbl_800A9A34:
-/* 800A9A34 000A6974  C0 62 8B 00 */	lfs f3, $$2121@sda21(r2)
-/* 800A9A38 000A6978  C0 A2 8B 04 */	lfs f5, $$2127@sda21(r2)
+/* 800A9A34 000A6974  C0 62 8B 00 */	lfs f3, "@121"@sda21(r2)
+/* 800A9A38 000A6978  C0 A2 8B 04 */	lfs f5, "@127"@sda21(r2)
 /* 800A9A3C 000A697C  FC 80 18 90 */	fmr f4, f3
 lbl_800A9A40:
 /* 800A9A40 000A6980  D0 A3 00 1C */	stfs f5, 0x1c(r3)
@@ -101,9 +101,9 @@ GXInitSpecularDir:
 /* 800A9A60 000A69A0  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800A9A64 000A69A4  FC 00 08 50 */	fneg f0, f1
 /* 800A9A68 000A69A8  FC 20 10 50 */	fneg f1, f2
-/* 800A9A6C 000A69AC  C0 A2 8B 04 */	lfs f5, $$2127@sda21(r2)
+/* 800A9A6C 000A69AC  C0 A2 8B 04 */	lfs f5, "@127"@sda21(r2)
 /* 800A9A70 000A69B0  EC C0 00 32 */	fmuls f6, f0, f0
-/* 800A9A74 000A69B4  C0 82 8B 00 */	lfs f4, $$2121@sda21(r2)
+/* 800A9A74 000A69B4  C0 82 8B 00 */	lfs f4, "@121"@sda21(r2)
 /* 800A9A78 000A69B8  EC 45 18 28 */	fsubs f2, f5, f3
 /* 800A9A7C 000A69BC  EC A1 00 72 */	fmuls f5, f1, f1
 /* 800A9A80 000A69C0  EC E2 00 B2 */	fmuls f7, f2, f2
@@ -112,8 +112,8 @@ GXInitSpecularDir:
 /* 800A9A8C 000A69CC  FC 08 20 40 */	fcmpo cr0, f8, f4
 /* 800A9A90 000A69D0  40 81 00 5C */	ble lbl_800A9AEC
 /* 800A9A94 000A69D4  FC A0 40 34 */	frsqrte f5, f8
-/* 800A9A98 000A69D8  C8 E2 8B 10 */	lfd f7, $$2165@sda21(r2)
-/* 800A9A9C 000A69DC  C8 C2 8B 18 */	lfd f6, $$2166@sda21(r2)
+/* 800A9A98 000A69D8  C8 E2 8B 10 */	lfd f7, "@165"@sda21(r2)
+/* 800A9A9C 000A69DC  C8 C2 8B 18 */	lfd f6, "@166"@sda21(r2)
 /* 800A9AA0 000A69E0  FC 85 01 72 */	fmul f4, f5, f5
 /* 800A9AA4 000A69E4  FC A7 01 72 */	fmul f5, f7, f5
 /* 800A9AA8 000A69E8  FC 88 01 32 */	fmul f4, f8, f4
@@ -134,7 +134,7 @@ GXInitSpecularDir:
 /* 800A9AE4 000A6A24  D0 81 00 18 */	stfs f4, 0x18(r1)
 /* 800A9AE8 000A6A28  C1 01 00 18 */	lfs f8, 0x18(r1)
 lbl_800A9AEC:
-/* 800A9AEC 000A6A2C  C0 82 8B 04 */	lfs f4, $$2127@sda21(r2)
+/* 800A9AEC 000A6A2C  C0 82 8B 04 */	lfs f4, "@127"@sda21(r2)
 /* 800A9AF0 000A6A30  FC 60 18 50 */	fneg f3, f3
 /* 800A9AF4 000A6A34  EC C4 40 24 */	fdivs f6, f4, f8
 /* 800A9AF8 000A6A38  EC A0 01 B2 */	fmuls f5, f0, f6
@@ -143,7 +143,7 @@ lbl_800A9AEC:
 /* 800A9B04 000A6A44  D0 A3 00 34 */	stfs f5, 0x34(r3)
 /* 800A9B08 000A6A48  D0 83 00 38 */	stfs f4, 0x38(r3)
 /* 800A9B0C 000A6A4C  D0 43 00 3C */	stfs f2, 0x3c(r3)
-/* 800A9B10 000A6A50  C0 82 8B 20 */	lfs f4, $$2167@sda21(r2)
+/* 800A9B10 000A6A50  C0 82 8B 20 */	lfs f4, "@167"@sda21(r2)
 /* 800A9B14 000A6A54  EC 44 00 32 */	fmuls f2, f4, f0
 /* 800A9B18 000A6A58  EC 24 00 72 */	fmuls f1, f4, f1
 /* 800A9B1C 000A6A5C  EC 04 00 F2 */	fmuls f0, f4, f3
@@ -635,15 +635,15 @@ lbl_800AA1BC:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2121:
+"@121":
   .4byte 0
-$$2127:
+"@127":
 	.incbin "baserom.dol", 0x3E4804, 0x4
-$$2148:
+"@148":
 	.incbin "baserom.dol", 0x3E4808, 0x8
-$$2165:
+"@165":
 	.incbin "baserom.dol", 0x3E4810, 0x8
-$$2166:
+"@166":
 	.incbin "baserom.dol", 0x3E4818, 0x8
-$$2167:
+"@167":
 	.incbin "baserom.dol", 0x3E4820, 0x8

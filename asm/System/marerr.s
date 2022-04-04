@@ -17,8 +17,8 @@ MarErrInit__Fv:
 /* 800F04FC 000ED43C  4B F1 C4 B5 */	bl __nwa__FUl
 /* 800F0500 000ED440  38 80 14 00 */	li r4, 0x1400
 /* 800F0504 000ED444  4B F2 0A E9 */	bl createConsole__12JUTExceptionFPvUl
-/* 800F0508 000ED448  3C 60 80 37 */	lis r3, $$21503@ha
-/* 800F050C 000ED44C  38 63 3D 68 */	addi r3, r3, $$21503@l
+/* 800F0508 000ED448  3C 60 80 37 */	lis r3, "@1503"@ha
+/* 800F050C 000ED44C  38 63 3D 68 */	addi r3, r3, "@1503"@l
 /* 800F0510 000ED450  4B F2 06 05 */	bl appendMapFile__12JUTExceptionFPc
 /* 800F0514 000ED454  3C 60 80 0F */	lis r3, MarErrException__FUsP9OSContextUlUl@ha
 /* 800F0518 000ED458  38 63 05 50 */	addi r3, r3, MarErrException__FUsP9OSContextUlUl@l
@@ -39,11 +39,11 @@ MarErrInit__Fv:
 .global MarErrException__FUsP9OSContextUlUl
 MarErrException__FUsP9OSContextUlUl:
 /* 800F0550 000ED490  7C 08 02 A6 */	mflr r0
-/* 800F0554 000ED494  3C 60 80 37 */	lis r3, cDispExceptionCommand__9$$2unnamed$$2@ha
+/* 800F0554 000ED494  3C 60 80 37 */	lis r3, "cDispExceptionCommand__9@unnamed@"@ha
 /* 800F0558 000ED498  90 01 00 04 */	stw r0, 4(r1)
 /* 800F055C 000ED49C  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800F0560 000ED4A0  93 E1 00 2C */	stw r31, 0x2c(r1)
-/* 800F0564 000ED4A4  3B E3 3D 50 */	addi r31, r3, cDispExceptionCommand__9$$2unnamed$$2@l
+/* 800F0564 000ED4A4  3B E3 3D 50 */	addi r31, r3, "cDispExceptionCommand__9@unnamed@"@l
 /* 800F0568 000ED4A8  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 800F056C 000ED4AC  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 800F0570 000ED4B0  3B A0 00 00 */	li r29, 0
@@ -84,7 +84,7 @@ lbl_800F05BC:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-cDispExceptionCommand__9$$2unnamed$$2:
+"cDispExceptionCommand__9@unnamed@":
 	.incbin "baserom.dol", 0x370D50, 0x18
-$$21503:
+"@1503":
 	.incbin "baserom.dol", 0x370D68, 0x10

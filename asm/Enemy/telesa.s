@@ -13,8 +13,8 @@ __dt__25TNerveKageMarioModokiWaitFv:
 /* 80293420 00290360  38 03 7B 34 */	addi r0, r3, __vt__25TNerveKageMarioModokiWait@l
 /* 80293424 00290364  90 1F 00 00 */	stw r0, 0(r31)
 /* 80293428 00290368  41 82 00 10 */	beq lbl_80293438
-/* 8029342C 0029036C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80293430 00290370  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8029342C 0029036C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80293430 00290370  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80293434 00290374  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80293438:
 /* 80293438 00290378  7C 80 07 35 */	extsh. r0, r4
@@ -29,8 +29,8 @@ lbl_80293448:
 /* 80293458 00290398  7C 08 03 A6 */	mtlr r0
 /* 8029345C 0029039C  4E 80 00 20 */	blr 
 
-.global execute__25TNerveKageMarioModokiWaitCFP24TSpineBase$$010TLiveActor$$1
-execute__25TNerveKageMarioModokiWaitCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__25TNerveKageMarioModokiWaitCFP24TSpineBase<10TLiveActor>"
+"execute__25TNerveKageMarioModokiWaitCFP24TSpineBase<10TLiveActor>":
 /* 80293460 002903A0  7C 08 02 A6 */	mflr r0
 /* 80293464 002903A4  90 01 00 04 */	stw r0, 4(r1)
 /* 80293468 002903A8  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -41,7 +41,7 @@ execute__25TNerveKageMarioModokiWaitCFP24TSpineBase$$010TLiveActor$$1:
 /* 8029347C 002903BC  2C 00 00 00 */	cmpwi r0, 0
 /* 80293480 002903C0  40 82 00 78 */	bne lbl_802934F8
 /* 80293484 002903C4  80 7F 00 74 */	lwz r3, 0x74(r31)
-/* 80293488 002903C8  38 82 E8 0C */	addi r4, r2, $$23470@sda21
+/* 80293488 002903C8  38 82 E8 0C */	addi r4, r2, "@3470"@sda21
 /* 8029348C 002903CC  4B E4 0C D1 */	bl setBck__6MActorFPCc
 /* 80293490 002903D0  38 A0 00 00 */	li r5, 0
 /* 80293494 002903D4  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
@@ -74,7 +74,7 @@ lbl_802934F8:
 /* 802934FC 0029043C  54 00 07 FF */	clrlwi. r0, r0, 0x1f
 /* 80293500 00290440  40 82 00 C4 */	bne lbl_802935C4
 /* 80293504 00290444  7F E3 FB 78 */	mr r3, r31
-/* 80293508 00290448  C0 22 E8 14 */	lfs f1, $$23471@sda21(r2)
+/* 80293508 00290448  C0 22 E8 14 */	lfs f1, "@3471"@sda21(r2)
 /* 8029350C 0029044C  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80293510 00290450  81 8C 01 A4 */	lwz r12, 0x1a4(r12)
 /* 80293514 00290454  7D 88 03 A6 */	mtlr r12
@@ -86,10 +86,10 @@ lbl_802934F8:
 /* 8029352C 0029046C  38 80 00 CD */	li r4, 0xcd
 /* 80293530 00290470  38 C0 00 00 */	li r6, 0
 /* 80293534 00290474  38 E0 00 00 */	li r7, 0
-/* 80293538 00290478  4B E4 82 99 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80293538 00290478  4B E4 82 99 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8029353C 0029047C  28 03 00 00 */	cmplwi r3, 0
 /* 80293540 00290480  41 82 00 20 */	beq lbl_80293560
-/* 80293544 00290484  C0 02 E8 18 */	lfs f0, $$23472@sda21(r2)
+/* 80293544 00290484  C0 02 E8 18 */	lfs f0, "@3472"@sda21(r2)
 /* 80293548 00290488  D0 03 01 54 */	stfs f0, 0x154(r3)
 /* 8029354C 0029048C  D0 03 01 58 */	stfs f0, 0x158(r3)
 /* 80293550 00290490  D0 03 01 5C */	stfs f0, 0x15c(r3)
@@ -98,8 +98,8 @@ lbl_802934F8:
 /* 8029355C 0029049C  D0 03 01 7C */	stfs f0, 0x17c(r3)
 lbl_80293560:
 /* 80293560 002904A0  80 1F 00 F0 */	lwz r0, 0xf0(r31)
-/* 80293564 002904A4  3C 60 80 3A */	lis r3, $$23473@ha
-/* 80293568 002904A8  38 A3 91 E4 */	addi r5, r3, $$23473@l
+/* 80293564 002904A4  3C 60 80 3A */	lis r3, "@3473"@ha
+/* 80293568 002904A8  38 A3 91 E4 */	addi r5, r3, "@3473"@l
 /* 8029356C 002904AC  60 00 00 01 */	ori r0, r0, 1
 /* 80293570 002904B0  90 1F 00 F0 */	stw r0, 0xf0(r31)
 /* 80293574 002904B4  38 9F 00 10 */	addi r4, r31, 0x10
@@ -108,7 +108,7 @@ lbl_80293560:
 /* 80293580 002904C0  60 00 00 01 */	ori r0, r0, 1
 /* 80293584 002904C4  90 1F 00 64 */	stw r0, 0x64(r31)
 /* 80293588 002904C8  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
-/* 8029358C 002904CC  4B FB 51 61 */	bl makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3$$0f$$1PCci
+/* 8029358C 002904CC  4B FB 51 61 */	bl "makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3<f>PCci"
 /* 80293590 002904D0  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80293594 002904D4  41 82 00 28 */	beq lbl_802935BC
 /* 80293598 002904D8  7F C3 F3 78 */	mr r3, r30
@@ -125,7 +125,7 @@ lbl_802935BC:
 /* 802935C0 00290500  48 00 00 24 */	b lbl_802935E4
 lbl_802935C4:
 /* 802935C4 00290504  7F E3 FB 78 */	mr r3, r31
-/* 802935C8 00290508  C0 22 E8 14 */	lfs f1, $$23471@sda21(r2)
+/* 802935C8 00290508  C0 22 E8 14 */	lfs f1, "@3471"@sda21(r2)
 /* 802935CC 0029050C  81 9F 00 00 */	lwz r12, 0(r31)
 /* 802935D0 00290510  38 80 00 03 */	li r4, 3
 /* 802935D4 00290514  81 8C 01 AC */	lwz r12, 0x1ac(r12)
@@ -143,11 +143,11 @@ lbl_802935E4:
 .global init__16TKageMarioModokiFP12TLiveManager
 init__16TKageMarioModokiFP12TLiveManager:
 /* 802935FC 0029053C  7C 08 02 A6 */	mflr r0
-/* 80293600 00290540  3C A0 80 3A */	lis r5, $$21490@ha
+/* 80293600 00290540  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 80293604 00290544  90 01 00 04 */	stw r0, 4(r1)
 /* 80293608 00290548  94 21 FF 88 */	stwu r1, -0x78(r1)
 /* 8029360C 0029054C  93 E1 00 74 */	stw r31, 0x74(r1)
-/* 80293610 00290550  3B E5 90 70 */	addi r31, r5, $$21490@l
+/* 80293610 00290550  3B E5 90 70 */	addi r31, r5, "@1490"@l
 /* 80293614 00290554  93 C1 00 70 */	stw r30, 0x70(r1)
 /* 80293618 00290558  3B C3 00 00 */	addi r30, r3, 0
 /* 8029361C 0029055C  93 A1 00 6C */	stw r29, 0x6c(r1)
@@ -155,15 +155,15 @@ init__16TKageMarioModokiFP12TLiveManager:
 /* 80293624 00290564  88 0D 9F 50 */	lbz r0, init$3406@sda21(r13)
 /* 80293628 00290568  7C 00 07 75 */	extsb. r0, r0
 /* 8029362C 0029056C  40 82 00 3C */	bne lbl_80293668
-/* 80293630 00290570  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80293634 00290574  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80293630 00290570  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80293634 00290574  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80293638 00290578  3C 60 80 3D */	lis r3, __vt__25TNerveKageMarioModokiWait@ha
 /* 8029363C 0029057C  90 0D 9F 54 */	stw r0, instance$3404@sda21(r13)
 /* 80293640 00290580  38 03 7B 34 */	addi r0, r3, __vt__25TNerveKageMarioModokiWait@l
 /* 80293644 00290584  3C 80 80 29 */	lis r4, __dt__25TNerveKageMarioModokiWaitFv@ha
 /* 80293648 00290588  90 0D 9F 54 */	stw r0, instance$3404@sda21(r13)
-/* 8029364C 0029058C  3C 60 80 40 */	lis r3, $$23405@ha
-/* 80293650 00290590  38 A3 D7 14 */	addi r5, r3, $$23405@l
+/* 8029364C 0029058C  3C 60 80 40 */	lis r3, "@3405"@ha
+/* 80293650 00290590  38 A3 D7 14 */	addi r5, r3, "@3405"@l
 /* 80293654 00290594  38 84 34 04 */	addi r4, r4, __dt__25TNerveKageMarioModokiWaitFv@l
 /* 80293658 00290598  38 6D 9F 54 */	addi r3, r13, instance$3404@sda21
 /* 8029365C 0029059C  4B DE F0 CD */	bl __register_global_object
@@ -254,9 +254,9 @@ createEnemyInstance__23TKageMarioModokiManagerFv:
 /* 80293788 002906C8  4B D7 91 29 */	bl __nw__FUl
 /* 8029378C 002906CC  7C 7F 1B 79 */	or. r31, r3, r3
 /* 80293790 002906D0  41 82 00 28 */	beq lbl_802937B8
-/* 80293794 002906D4  3C 80 80 3A */	lis r4, $$23528@ha
+/* 80293794 002906D4  3C 80 80 3A */	lis r4, "@3528"@ha
 /* 80293798 002906D8  38 7F 00 00 */	addi r3, r31, 0
-/* 8029379C 002906DC  38 84 92 24 */	addi r4, r4, $$23528@l
+/* 8029379C 002906DC  38 84 92 24 */	addi r4, r4, "@3528"@l
 /* 802937A0 002906E0  4B FF 1A 4D */	bl __ct__12TWalkerEnemyFPCc
 /* 802937A4 002906E4  3C 60 80 3D */	lis r3, __vt__16TKageMarioModoki@ha
 /* 802937A8 002906E8  38 63 7B 78 */	addi r3, r3, __vt__16TKageMarioModoki@l
@@ -285,8 +285,8 @@ load__23TKageMarioModokiManagerFR20JSUMemoryInputStream:
 /* 802937F4 00290734  4B D7 90 BD */	bl __nw__FUl
 /* 802937F8 00290738  7C 7D 1B 79 */	or. r29, r3, r3
 /* 802937FC 0029073C  41 82 00 14 */	beq lbl_80293810
-/* 80293800 00290740  3C 60 80 3A */	lis r3, $$23535@ha
-/* 80293804 00290744  38 83 92 38 */	addi r4, r3, $$23535@l
+/* 80293800 00290740  3C 60 80 3A */	lis r3, "@3535"@ha
+/* 80293804 00290744  38 83 92 38 */	addi r4, r3, "@3535"@l
 /* 80293808 00290748  38 7D 00 00 */	addi r3, r29, 0
 /* 8029380C 0029074C  4B FF 1A 25 */	bl __ct__18TWalkerEnemyParamsFPCc
 lbl_80293810:
@@ -302,8 +302,8 @@ lbl_80293810:
 /* 80293834 00290774  38 21 00 20 */	addi r1, r1, 0x20
 /* 80293838 00290778  4E 80 00 20 */	blr 
 
-.global execute__19TNerveTelesaTrampleCFP24TSpineBase$$010TLiveActor$$1
-execute__19TNerveTelesaTrampleCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__19TNerveTelesaTrampleCFP24TSpineBase<10TLiveActor>"
+"execute__19TNerveTelesaTrampleCFP24TSpineBase<10TLiveActor>":
 /* 8029383C 0029077C  7C 08 02 A6 */	mflr r0
 /* 80293840 00290780  90 01 00 04 */	stw r0, 4(r1)
 /* 80293844 00290784  94 21 FF F8 */	stwu r1, -8(r1)
@@ -344,8 +344,8 @@ __dt__19TNerveTelesaTrampleFv:
 /* 802938B8 002907F8  38 03 7D 88 */	addi r0, r3, __vt__19TNerveTelesaTrample@l
 /* 802938BC 002907FC  90 1F 00 00 */	stw r0, 0(r31)
 /* 802938C0 00290800  41 82 00 10 */	beq lbl_802938D0
-/* 802938C4 00290804  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802938C8 00290808  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802938C4 00290804  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802938C8 00290808  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802938CC 0029080C  90 1F 00 00 */	stw r0, 0(r31)
 lbl_802938D0:
 /* 802938D0 00290810  7C 80 07 35 */	extsh. r0, r4
@@ -360,8 +360,8 @@ lbl_802938E0:
 /* 802938F0 00290830  7C 08 03 A6 */	mtlr r0
 /* 802938F4 00290834  4E 80 00 20 */	blr 
 
-.global execute__23TNerveTelesaAttackMarioCFP24TSpineBase$$010TLiveActor$$1
-execute__23TNerveTelesaAttackMarioCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__23TNerveTelesaAttackMarioCFP24TSpineBase<10TLiveActor>"
+"execute__23TNerveTelesaAttackMarioCFP24TSpineBase<10TLiveActor>":
 /* 802938F8 00290838  7C 08 02 A6 */	mflr r0
 /* 802938FC 0029083C  90 01 00 04 */	stw r0, 4(r1)
 /* 80293900 00290840  94 21 FF 08 */	stwu r1, -0xf8(r1)
@@ -382,17 +382,17 @@ execute__23TNerveTelesaAttackMarioCFP24TSpineBase$$010TLiveActor$$1:
 /* 8029393C 0029087C  7D 88 03 A6 */	mtlr r12
 /* 80293940 00290880  4E 80 00 21 */	blrl 
 /* 80293944 00290884  38 61 00 80 */	addi r3, r1, 0x80
-/* 80293948 00290888  4B DA E3 09 */	bl __ct__Q29JGeometry13SMatrix34C$$0f$$1Fv
+/* 80293948 00290888  4B DA E3 09 */	bl "__ct__Q29JGeometry13SMatrix34C<f>Fv"
 /* 8029394C 0029088C  88 1F 01 84 */	lbz r0, 0x184(r31)
 /* 80293950 00290890  28 00 00 00 */	cmplwi r0, 0
 /* 80293954 00290894  41 82 00 34 */	beq lbl_80293988
 /* 80293958 00290898  A8 7F 00 7C */	lha r3, 0x7c(r31)
 /* 8029395C 0029089C  3C 00 43 30 */	lis r0, 0x4330
-/* 80293960 002908A0  C8 42 E8 38 */	lfd f2, $$23633@sda21(r2)
+/* 80293960 002908A0  C8 42 E8 38 */	lfd f2, "@3633"@sda21(r2)
 /* 80293964 002908A4  6C 63 80 00 */	xoris r3, r3, 0x8000
-/* 80293968 002908A8  C0 62 E8 20 */	lfs f3, $$23626@sda21(r2)
+/* 80293968 002908A8  C0 62 E8 20 */	lfs f3, "@3626"@sda21(r2)
 /* 8029396C 002908AC  90 61 00 D4 */	stw r3, 0xd4(r1)
-/* 80293970 002908B0  C0 02 E8 1C */	lfs f0, $$23625@sda21(r2)
+/* 80293970 002908B0  C0 02 E8 1C */	lfs f0, "@3625"@sda21(r2)
 /* 80293974 002908B4  90 01 00 D0 */	stw r0, 0xd0(r1)
 /* 80293978 002908B8  C8 21 00 D0 */	lfd f1, 0xd0(r1)
 /* 8029397C 002908BC  EC 21 10 28 */	fsubs f1, f1, f2
@@ -402,13 +402,13 @@ lbl_80293988:
 /* 80293988 002908C8  80 1F 00 10 */	lwz r0, 0x10(r31)
 /* 8029398C 002908CC  38 80 00 00 */	li r4, 0
 /* 80293990 002908D0  80 7F 00 14 */	lwz r3, 0x14(r31)
-/* 80293994 002908D4  C0 62 E8 24 */	lfs f3, $$23627@sda21(r2)
+/* 80293994 002908D4  C0 62 E8 24 */	lfs f3, "@3627"@sda21(r2)
 /* 80293998 002908D8  90 01 00 B0 */	stw r0, 0xb0(r1)
 /* 8029399C 002908DC  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 802939A0 002908E0  90 61 00 B4 */	stw r3, 0xb4(r1)
 /* 802939A4 002908E4  80 CD 8D F0 */	lwz r6, jmaSinTable@sda21(r13)
 /* 802939A8 002908E8  80 7F 00 18 */	lwz r3, 0x18(r31)
-/* 802939AC 002908EC  C0 42 E8 28 */	lfs f2, $$23628@sda21(r2)
+/* 802939AC 002908EC  C0 42 E8 28 */	lfs f2, "@3628"@sda21(r2)
 /* 802939B0 002908F0  90 61 00 B8 */	stw r3, 0xb8(r1)
 /* 802939B4 002908F4  80 6D 8D F4 */	lwz r3, jmaCosTable@sda21(r13)
 /* 802939B8 002908F8  C0 3F 00 34 */	lfs f1, 0x34(r31)
@@ -467,9 +467,9 @@ lbl_80293A70:
 /* 80293A84 002909C4  80 1F 00 14 */	lwz r0, 0x14(r31)
 /* 80293A88 002909C8  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
 /* 80293A8C 002909CC  90 61 00 4C */	stw r3, 0x4c(r1)
-/* 80293A90 002909D0  C0 22 E8 2C */	lfs f1, $$23629@sda21(r2)
+/* 80293A90 002909D0  C0 22 E8 2C */	lfs f1, "@3629"@sda21(r2)
 /* 80293A94 002909D4  90 01 00 50 */	stw r0, 0x50(r1)
-/* 80293A98 002909D8  C0 02 E8 30 */	lfs f0, $$23630@sda21(r2)
+/* 80293A98 002909D8  C0 02 E8 30 */	lfs f0, "@3630"@sda21(r2)
 /* 80293A9C 002909DC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80293AA0 002909E0  90 01 00 54 */	stw r0, 0x54(r1)
 /* 80293AA4 002909E4  C0 A4 00 00 */	lfs f5, 0(r4)
@@ -485,11 +485,11 @@ lbl_80293A70:
 /* 80293ACC 00290A0C  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80293AD0 00290A10  4B DF 1F F5 */	bl rand
 /* 80293AD4 00290A14  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80293AD8 00290A18  C8 82 E8 38 */	lfd f4, $$23633@sda21(r2)
+/* 80293AD8 00290A18  C8 82 E8 38 */	lfd f4, "@3633"@sda21(r2)
 /* 80293ADC 00290A1C  90 01 00 D4 */	stw r0, 0xd4(r1)
 /* 80293AE0 00290A20  3C 00 43 30 */	lis r0, 0x4330
 /* 80293AE4 00290A24  38 80 00 00 */	li r4, 0
-/* 80293AE8 00290A28  C0 22 E8 34 */	lfs f1, $$23631@sda21(r2)
+/* 80293AE8 00290A28  C0 22 E8 34 */	lfs f1, "@3631"@sda21(r2)
 /* 80293AEC 00290A2C  90 01 00 D0 */	stw r0, 0xd0(r1)
 /* 80293AF0 00290A30  C0 41 00 64 */	lfs f2, 0x64(r1)
 /* 80293AF4 00290A34  C8 61 00 D0 */	lfd f3, 0xd0(r1)
@@ -529,7 +529,7 @@ lbl_80293A70:
 /* 80293B7C 00290ABC  90 9F 01 18 */	stw r4, 0x118(r31)
 lbl_80293B80:
 /* 80293B80 00290AC0  7F E3 FB 78 */	mr r3, r31
-/* 80293B84 00290AC4  C0 22 E8 18 */	lfs f1, $$23472@sda21(r2)
+/* 80293B84 00290AC4  C0 22 E8 18 */	lfs f1, "@3472"@sda21(r2)
 /* 80293B88 00290AC8  81 9F 00 00 */	lwz r12, 0(r31)
 /* 80293B8C 00290ACC  38 80 00 02 */	li r4, 2
 /* 80293B90 00290AD0  81 8C 01 AC */	lwz r12, 0x1ac(r12)
@@ -558,8 +558,8 @@ __dt__23TNerveTelesaAttackMarioFv:
 /* 80293BE0 00290B20  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80293BE4 00290B24  90 1F 00 00 */	stw r0, 0(r31)
 /* 80293BE8 00290B28  41 82 00 10 */	beq lbl_80293BF8
-/* 80293BEC 00290B2C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80293BF0 00290B30  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80293BEC 00290B2C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80293BF0 00290B30  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80293BF4 00290B34  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80293BF8:
 /* 80293BF8 00290B38  7C 80 07 35 */	extsh. r0, r4
@@ -574,8 +574,8 @@ lbl_80293C08:
 /* 80293C18 00290B58  7C 08 03 A6 */	mtlr r0
 /* 80293C1C 00290B5C  4E 80 00 20 */	blr 
 
-.global execute__18TNerveTelesaFreezeCFP24TSpineBase$$010TLiveActor$$1
-execute__18TNerveTelesaFreezeCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__18TNerveTelesaFreezeCFP24TSpineBase<10TLiveActor>"
+"execute__18TNerveTelesaFreezeCFP24TSpineBase<10TLiveActor>":
 /* 80293C20 00290B60  7C 08 02 A6 */	mflr r0
 /* 80293C24 00290B64  90 01 00 04 */	stw r0, 4(r1)
 /* 80293C28 00290B68  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -591,7 +591,7 @@ execute__18TNerveTelesaFreezeCFP24TSpineBase$$010TLiveActor$$1:
 /* 80293C50 00290B90  7D 88 03 A6 */	mtlr r12
 /* 80293C54 00290B94  4E 80 00 21 */	blrl 
 /* 80293C58 00290B98  80 6D 98 D8 */	lwz r3, gpMarioAddress@sda21(r13)
-/* 80293C5C 00290B9C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80293C5C 00290B9C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80293C60 00290BA0  90 61 00 24 */	stw r3, 0x24(r1)
 /* 80293C64 00290BA4  28 03 00 00 */	cmplwi r3, 0
 /* 80293C68 00290BA8  D0 01 00 28 */	stfs f0, 0x28(r1)
@@ -640,7 +640,7 @@ lbl_80293D04:
 lbl_80293D08:
 /* 80293D08 00290C48  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 80293D0C 00290C4C  41 82 00 88 */	beq lbl_80293D94
-/* 80293D10 00290C50  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80293D10 00290C50  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80293D14 00290C54  C0 1F 01 98 */	lfs f0, 0x198(r31)
 /* 80293D18 00290C58  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 80293D1C 00290C5C  41 82 00 0C */	beq lbl_80293D28
@@ -716,10 +716,10 @@ lbl_80293DEC:
 lbl_80293E04:
 /* 80293E04 00290D44  7F E3 FB 78 */	mr r3, r31
 /* 80293E08 00290D48  48 00 1E 85 */	bl reduceFlyForce__7TTelesaFv
-/* 80293E0C 00290D4C  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80293E0C 00290D4C  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80293E10 00290D50  7F E3 FB 78 */	mr r3, r31
 /* 80293E14 00290D54  C0 5F 01 44 */	lfs f2, 0x144(r31)
-/* 80293E18 00290D58  C0 02 E8 44 */	lfs f0, $$23706@sda21(r2)
+/* 80293E18 00290D58  C0 02 E8 44 */	lfs f0, "@3706"@sda21(r2)
 /* 80293E1C 00290D5C  FC 60 08 90 */	fmr f3, f1
 /* 80293E20 00290D60  EC 40 00 B2 */	fmuls f2, f0, f2
 /* 80293E24 00290D64  4B FB A7 BD */	bl walkToCurPathNode__11TSpineEnemyFfff
@@ -743,8 +743,8 @@ __dt__18TNerveTelesaFreezeFv:
 /* 80293E5C 00290D9C  38 03 7D A8 */	addi r0, r3, __vt__18TNerveTelesaFreeze@l
 /* 80293E60 00290DA0  90 1F 00 00 */	stw r0, 0(r31)
 /* 80293E64 00290DA4  41 82 00 10 */	beq lbl_80293E74
-/* 80293E68 00290DA8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80293E6C 00290DAC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80293E68 00290DA8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80293E6C 00290DAC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80293E70 00290DB0  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80293E74:
 /* 80293E74 00290DB4  7C 80 07 35 */	extsh. r0, r4
@@ -759,8 +759,8 @@ lbl_80293E84:
 /* 80293E94 00290DD4  7C 08 03 A6 */	mtlr r0
 /* 80293E98 00290DD8  4E 80 00 20 */	blr 
 
-.global execute__15TNerveTelesaDieCFP24TSpineBase$$010TLiveActor$$1
-execute__15TNerveTelesaDieCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__15TNerveTelesaDieCFP24TSpineBase<10TLiveActor>"
+"execute__15TNerveTelesaDieCFP24TSpineBase<10TLiveActor>":
 /* 80293E9C 00290DDC  7C 08 02 A6 */	mflr r0
 /* 80293EA0 00290DE0  90 01 00 04 */	stw r0, 4(r1)
 /* 80293EA4 00290DE4  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -802,7 +802,7 @@ lbl_80293F10:
 /* 80293F24 00290E64  38 80 00 CD */	li r4, 0xcd
 /* 80293F28 00290E68  38 C0 00 00 */	li r6, 0
 /* 80293F2C 00290E6C  38 E0 00 00 */	li r7, 0
-/* 80293F30 00290E70  4B E4 7B ED */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80293F30 00290E70  4B E4 7B ED */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80293F34 00290E74  48 00 00 1C */	b lbl_80293F50
 lbl_80293F38:
 /* 80293F38 00290E78  7F E3 FB 78 */	mr r3, r31
@@ -843,15 +843,15 @@ lbl_80293F78:
 /* 80293FBC 00290EFC  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 80293FC0 00290F00  7C 00 07 75 */	extsb. r0, r0
 /* 80293FC4 00290F04  40 82 00 3C */	bne lbl_80294000
-/* 80293FC8 00290F08  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80293FCC 00290F0C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80293FC8 00290F08  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80293FCC 00290F0C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80293FD0 00290F10  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 80293FD4 00290F14  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 80293FD8 00290F18  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 80293FDC 00290F1C  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 80293FE0 00290F20  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 80293FE4 00290F24  3C 60 80 40 */	lis r3, $$23333@ha
-/* 80293FE8 00290F28  38 A3 D6 E4 */	addi r5, r3, $$23333@l
+/* 80293FE4 00290F24  3C 60 80 40 */	lis r3, "@3333"@ha
+/* 80293FE8 00290F28  38 A3 D6 E4 */	addi r5, r3, "@3333"@l
 /* 80293FEC 00290F2C  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
 /* 80293FF0 00290F30  38 6D 9F 34 */	addi r3, r13, instance$3332@sda21
 /* 80293FF4 00290F34  4B DE E7 35 */	bl __register_global_object
@@ -900,7 +900,7 @@ lbl_80294054:
 /* 80294094 00290FD4  98 04 00 61 */	stb r0, 0x61(r4)
 /* 80294098 00290FD8  3C 60 20 00 */	lis r3, 0x20000002@ha
 /* 8029409C 00290FDC  38 83 00 02 */	addi r4, r3, 0x20000002@l
-/* 802940A0 00290FE0  C0 22 E8 48 */	lfs f1, $$23769@sda21(r2)
+/* 802940A0 00290FE0  C0 22 E8 48 */	lfs f1, "@3769"@sda21(r2)
 /* 802940A4 00290FE4  38 A0 00 01 */	li r5, 1
 /* 802940A8 00290FE8  C0 1F 00 14 */	lfs f0, 0x14(r31)
 /* 802940AC 00290FEC  80 6D 9A 18 */	lwz r3, gpItemManager@sda21(r13)
@@ -914,7 +914,7 @@ lbl_802940C0:
 /* 802940C8 00291008  38 80 00 CE */	li r4, 0xce
 /* 802940CC 0029100C  38 C0 00 00 */	li r6, 0
 /* 802940D0 00291010  38 E0 00 00 */	li r7, 0
-/* 802940D4 00291014  4B E4 76 FD */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 802940D4 00291014  4B E4 76 FD */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 lbl_802940D8:
 /* 802940D8 00291018  38 60 00 01 */	li r3, 1
 /* 802940DC 0029101C  48 00 00 08 */	b lbl_802940E4
@@ -941,8 +941,8 @@ __dt__15TNerveTelesaDieFv:
 /* 8029411C 0029105C  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 80294120 00291060  90 1F 00 00 */	stw r0, 0(r31)
 /* 80294124 00291064  41 82 00 10 */	beq lbl_80294134
-/* 80294128 00291068  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8029412C 0029106C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80294128 00291068  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8029412C 0029106C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80294130 00291070  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80294134:
 /* 80294134 00291074  7C 80 07 35 */	extsh. r0, r4
@@ -957,8 +957,8 @@ lbl_80294144:
 /* 80294154 00291094  7C 08 03 A6 */	mtlr r0
 /* 80294158 00291098  4E 80 00 20 */	blr 
 
-.global execute__19TNerveTelesaImitateCFP24TSpineBase$$010TLiveActor$$1
-execute__19TNerveTelesaImitateCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__19TNerveTelesaImitateCFP24TSpineBase<10TLiveActor>"
+"execute__19TNerveTelesaImitateCFP24TSpineBase<10TLiveActor>":
 /* 8029415C 0029109C  7C 08 02 A6 */	mflr r0
 /* 80294160 002910A0  3C 60 80 3E */	lis r3, gpApplication@ha
 /* 80294164 002910A4  90 01 00 04 */	stw r0, 4(r1)
@@ -1008,7 +1008,7 @@ lbl_80294204:
 /* 80294208 00291148  48 00 02 E0 */	b lbl_802944E8
 lbl_8029420C:
 /* 8029420C 0029114C  7F C3 F3 78 */	mr r3, r30
-/* 80294210 00291150  C0 22 E8 14 */	lfs f1, $$23471@sda21(r2)
+/* 80294210 00291150  C0 22 E8 14 */	lfs f1, "@3471"@sda21(r2)
 /* 80294214 00291154  81 9E 00 00 */	lwz r12, 0(r30)
 /* 80294218 00291158  38 80 00 03 */	li r4, 3
 /* 8029421C 0029115C  81 8C 01 AC */	lwz r12, 0x1ac(r12)
@@ -1018,7 +1018,7 @@ lbl_8029420C:
 /* 8029422C 0029116C  2C 00 00 0A */	cmpwi r0, 0xa
 /* 80294230 00291170  40 82 00 C0 */	bne lbl_802942F0
 /* 80294234 00291174  80 6D 98 D8 */	lwz r3, gpMarioAddress@sda21(r13)
-/* 80294238 00291178  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294238 00291178  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 8029423C 0029117C  90 61 00 68 */	stw r3, 0x68(r1)
 /* 80294240 00291180  28 03 00 00 */	cmplwi r3, 0
 /* 80294244 00291184  D0 01 00 6C */	stfs f0, 0x6c(r1)
@@ -1085,11 +1085,11 @@ lbl_802942F0:
 lbl_80294328:
 /* 80294328 00291268  28 03 00 00 */	cmplwi r3, 0
 /* 8029432C 0029126C  40 82 00 20 */	bne lbl_8029434C
-/* 80294330 00291270  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80294330 00291270  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80294334 00291274  7F C3 F3 78 */	mr r3, r30
 /* 80294338 00291278  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
 /* 8029433C 0029127C  FC 40 08 90 */	fmr f2, f1
-/* 80294340 00291280  4B FB B3 91 */	bl isInSight__11TSpineEnemyCFRCQ29JGeometry8TVec3$$0f$$1fff
+/* 80294340 00291280  4B FB B3 91 */	bl "isInSight__11TSpineEnemyCFRCQ29JGeometry8TVec3<f>fff"
 /* 80294344 00291284  2C 03 00 00 */	cmpwi r3, 0
 /* 80294348 00291288  41 82 01 9C */	beq lbl_802944E4
 lbl_8029434C:
@@ -1098,7 +1098,7 @@ lbl_8029434C:
 /* 80294354 00291294  38 80 00 CD */	li r4, 0xcd
 /* 80294358 00291298  38 C0 00 00 */	li r6, 0
 /* 8029435C 0029129C  38 E0 00 00 */	li r7, 0
-/* 80294360 002912A0  4B E4 74 71 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80294360 002912A0  4B E4 74 71 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80294364 002912A4  38 00 00 00 */	li r0, 0
 /* 80294368 002912A8  90 1E 01 C4 */	stw r0, 0x1c4(r30)
 /* 8029436C 002912AC  80 7E 01 94 */	lwz r3, 0x194(r30)
@@ -1108,10 +1108,10 @@ lbl_8029434C:
 /* 8029437C 002912BC  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80294380 002912C0  4B DF 17 45 */	bl rand
 /* 80294384 002912C4  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80294388 002912C8  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80294388 002912C8  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 8029438C 002912CC  90 01 00 94 */	stw r0, 0x94(r1)
 /* 80294390 002912D0  3F E0 43 30 */	lis r31, 0x4330
-/* 80294394 002912D4  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80294394 002912D4  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80294398 002912D8  93 E1 00 90 */	stw r31, 0x90(r1)
 /* 8029439C 002912DC  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 802943A0 002912E0  C8 41 00 90 */	lfd f2, 0x90(r1)
@@ -1121,10 +1121,10 @@ lbl_8029434C:
 /* 802943B0 002912F0  EC 01 00 2A */	fadds f0, f1, f0
 /* 802943B4 002912F4  D0 1E 01 9C */	stfs f0, 0x19c(r30)
 /* 802943B8 002912F8  C0 3E 01 9C */	lfs f1, 0x19c(r30)
-/* 802943BC 002912FC  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 802943BC 002912FC  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 802943C0 00291300  EC 01 00 32 */	fmuls f0, f1, f0
 /* 802943C4 00291304  D0 1E 01 9C */	stfs f0, 0x19c(r30)
-/* 802943C8 00291308  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 802943C8 00291308  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 802943CC 0029130C  D0 1E 01 98 */	stfs f0, 0x198(r30)
 /* 802943D0 00291310  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 802943D4 00291314  3B 83 04 60 */	addi r28, r3, 0x460
@@ -1133,9 +1133,9 @@ lbl_8029434C:
 /* 802943E0 00291320  EF E1 00 28 */	fsubs f31, f1, f0
 /* 802943E4 00291324  4B DF 16 E1 */	bl rand
 /* 802943E8 00291328  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802943EC 0029132C  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 802943EC 0029132C  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 802943F0 00291330  90 01 00 8C */	stw r0, 0x8c(r1)
-/* 802943F4 00291334  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 802943F4 00291334  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 802943F8 00291338  93 E1 00 88 */	stw r31, 0x88(r1)
 /* 802943FC 0029133C  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80294400 00291340  C8 41 00 88 */	lfd f2, 0x88(r1)
@@ -1145,10 +1145,10 @@ lbl_8029434C:
 /* 80294410 00291350  EC 01 00 2A */	fadds f0, f1, f0
 /* 80294414 00291354  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
 /* 80294418 00291358  C0 3E 01 A4 */	lfs f1, 0x1a4(r30)
-/* 8029441C 0029135C  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 8029441C 0029135C  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80294420 00291360  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80294424 00291364  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
-/* 80294428 00291368  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294428 00291368  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 8029442C 0029136C  D0 1E 01 A8 */	stfs f0, 0x1a8(r30)
 /* 80294430 00291370  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 80294434 00291374  3B 83 04 68 */	addi r28, r3, 0x468
@@ -1157,9 +1157,9 @@ lbl_8029434C:
 /* 80294440 00291380  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80294444 00291384  4B DF 16 81 */	bl rand
 /* 80294448 00291388  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8029444C 0029138C  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 8029444C 0029138C  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80294450 00291390  90 01 00 84 */	stw r0, 0x84(r1)
-/* 80294454 00291394  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80294454 00291394  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80294458 00291398  93 E1 00 80 */	stw r31, 0x80(r1)
 /* 8029445C 0029139C  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80294460 002913A0  C8 41 00 80 */	lfd f2, 0x80(r1)
@@ -1222,8 +1222,8 @@ __dt__19TNerveTelesaImitateFv:
 /* 80294528 00291468  38 03 7D C8 */	addi r0, r3, __vt__19TNerveTelesaImitate@l
 /* 8029452C 0029146C  90 1F 00 00 */	stw r0, 0(r31)
 /* 80294530 00291470  41 82 00 10 */	beq lbl_80294540
-/* 80294534 00291474  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80294538 00291478  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80294534 00291474  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80294538 00291478  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8029453C 0029147C  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80294540:
 /* 80294540 00291480  7C 80 07 35 */	extsh. r0, r4
@@ -1249,15 +1249,15 @@ init__18TMarioModokiTelesaFP12TLiveManager:
 /* 80294580 002914C0  88 0D 9F 28 */	lbz r0, init$3308@sda21(r13)
 /* 80294584 002914C4  7C 00 07 75 */	extsb. r0, r0
 /* 80294588 002914C8  40 82 00 3C */	bne lbl_802945C4
-/* 8029458C 002914CC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80294590 002914D0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8029458C 002914CC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80294590 002914D0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80294594 002914D4  3C 60 80 3D */	lis r3, __vt__19TNerveTelesaImitate@ha
 /* 80294598 002914D8  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
 /* 8029459C 002914DC  38 03 7D C8 */	addi r0, r3, __vt__19TNerveTelesaImitate@l
 /* 802945A0 002914E0  3C 80 80 29 */	lis r4, __dt__19TNerveTelesaImitateFv@ha
 /* 802945A4 002914E4  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
-/* 802945A8 002914E8  3C 60 80 40 */	lis r3, $$23307@ha
-/* 802945AC 002914EC  38 A3 D6 D8 */	addi r5, r3, $$23307@l
+/* 802945A8 002914E8  3C 60 80 40 */	lis r3, "@3307"@ha
+/* 802945AC 002914EC  38 A3 D6 D8 */	addi r5, r3, "@3307"@l
 /* 802945B0 002914F0  38 84 45 0C */	addi r4, r4, __dt__19TNerveTelesaImitateFv@l
 /* 802945B4 002914F4  38 6D 9F 2C */	addi r3, r13, instance$3306@sda21
 /* 802945B8 002914F8  4B DE E1 71 */	bl __register_global_object
@@ -1282,13 +1282,13 @@ lbl_802945C4:
 .global load__18TMarioModokiTelesaFR20JSUMemoryInputStream
 load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 802945FC 0029153C  7C 08 02 A6 */	mflr r0
-/* 80294600 00291540  3C A0 80 3A */	lis r5, $$21490@ha
+/* 80294600 00291540  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 80294604 00291544  90 01 00 04 */	stw r0, 4(r1)
 /* 80294608 00291548  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8029460C 0029154C  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 80294610 00291550  3B E3 00 00 */	addi r31, r3, 0
 /* 80294614 00291554  93 C1 00 28 */	stw r30, 0x28(r1)
-/* 80294618 00291558  3B C5 90 70 */	addi r30, r5, $$21490@l
+/* 80294618 00291558  3B C5 90 70 */	addi r30, r5, "@1490"@l
 /* 8029461C 0029155C  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 80294620 00291560  93 81 00 20 */	stw r28, 0x20(r1)
 /* 80294624 00291564  3B 84 00 00 */	addi r28, r4, 0
@@ -1302,8 +1302,8 @@ load__18TMarioModokiTelesaFR20JSUMemoryInputStream:
 /* 80294644 00291584  28 00 00 0C */	cmplwi r0, 0xc
 /* 80294648 00291588  83 A3 00 64 */	lwz r29, 0x64(r3)
 /* 8029464C 0029158C  41 81 02 E8 */	bgt lbl_80294934
-/* 80294650 00291590  3C 60 80 3D */	lis r3, $$24007@ha
-/* 80294654 00291594  38 63 7B 44 */	addi r3, r3, $$24007@l
+/* 80294650 00291590  3C 60 80 3D */	lis r3, "@4007"@ha
+/* 80294654 00291594  38 63 7B 44 */	addi r3, r3, "@4007"@l
 /* 80294658 00291598  54 00 10 3A */	slwi r0, r0, 2
 /* 8029465C 0029159C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80294660 002915A0  7C 09 03 A6 */	mtctr r0
@@ -1611,15 +1611,15 @@ isHitValid__10TBoxTelesaFUl:
 /* 80294AB4 002919F4  88 0D 9F 48 */	lbz r0, init$3388@sda21(r13)
 /* 80294AB8 002919F8  7C 00 07 75 */	extsb. r0, r0
 /* 80294ABC 002919FC  40 82 00 3C */	bne lbl_80294AF8
-/* 80294AC0 00291A00  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80294AC4 00291A04  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80294AC0 00291A00  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80294AC4 00291A04  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80294AC8 00291A08  3C 60 80 3D */	lis r3, __vt__19TNerveTelesaTrample@ha
 /* 80294ACC 00291A0C  90 0D 9F 4C */	stw r0, instance$3386@sda21(r13)
 /* 80294AD0 00291A10  38 03 7D 88 */	addi r0, r3, __vt__19TNerveTelesaTrample@l
 /* 80294AD4 00291A14  3C 80 80 29 */	lis r4, __dt__19TNerveTelesaTrampleFv@ha
 /* 80294AD8 00291A18  90 0D 9F 4C */	stw r0, instance$3386@sda21(r13)
-/* 80294ADC 00291A1C  3C 60 80 40 */	lis r3, $$23387@ha
-/* 80294AE0 00291A20  38 A3 D7 08 */	addi r5, r3, $$23387@l
+/* 80294ADC 00291A1C  3C 60 80 40 */	lis r3, "@3387"@ha
+/* 80294AE0 00291A20  38 A3 D7 08 */	addi r5, r3, "@3387"@l
 /* 80294AE4 00291A24  38 84 38 9C */	addi r4, r4, __dt__19TNerveTelesaTrampleFv@l
 /* 80294AE8 00291A28  38 6D 9F 4C */	addi r3, r13, instance$3386@sda21
 /* 80294AEC 00291A2C  4B DE DC 3D */	bl __register_global_object
@@ -1634,16 +1634,16 @@ lbl_80294AF8:
 /* 80294B0C 00291A4C  88 0D 9F 48 */	lbz r0, init$3388@sda21(r13)
 /* 80294B10 00291A50  7C 00 07 75 */	extsb. r0, r0
 /* 80294B14 00291A54  40 82 00 38 */	bne lbl_80294B4C
-/* 80294B18 00291A58  3C 80 80 3C */	lis r4, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80294B1C 00291A5C  38 04 92 60 */	addi r0, r4, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80294B18 00291A58  3C 80 80 3C */	lis r4, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80294B1C 00291A5C  38 04 92 60 */	addi r0, r4, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80294B20 00291A60  3C 80 80 3D */	lis r4, __vt__19TNerveTelesaTrample@ha
 /* 80294B24 00291A64  90 0D 9F 4C */	stw r0, instance$3386@sda21(r13)
 /* 80294B28 00291A68  38 04 7D 88 */	addi r0, r4, __vt__19TNerveTelesaTrample@l
 /* 80294B2C 00291A6C  3C 80 80 29 */	lis r4, __dt__19TNerveTelesaTrampleFv@ha
 /* 80294B30 00291A70  90 0D 9F 4C */	stw r0, instance$3386@sda21(r13)
-/* 80294B34 00291A74  3C A0 80 40 */	lis r5, $$23387@ha
+/* 80294B34 00291A74  3C A0 80 40 */	lis r5, "@3387"@ha
 /* 80294B38 00291A78  38 84 38 9C */	addi r4, r4, __dt__19TNerveTelesaTrampleFv@l
-/* 80294B3C 00291A7C  38 A5 D7 08 */	addi r5, r5, $$23387@l
+/* 80294B3C 00291A7C  38 A5 D7 08 */	addi r5, r5, "@3387"@l
 /* 80294B40 00291A80  4B DE DB E9 */	bl __register_global_object
 /* 80294B44 00291A84  38 00 00 01 */	li r0, 1
 /* 80294B48 00291A88  98 0D 9F 48 */	stb r0, init$3388@sda21(r13)
@@ -1712,10 +1712,10 @@ reset__10TBoxTelesaFv:
 /* 80294C28 00291B68  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80294C2C 00291B6C  4B DF 0E 99 */	bl rand
 /* 80294C30 00291B70  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80294C34 00291B74  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80294C34 00291B74  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80294C38 00291B78  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 80294C3C 00291B7C  3F A0 43 30 */	lis r29, 0x4330
-/* 80294C40 00291B80  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80294C40 00291B80  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80294C44 00291B84  93 A1 00 48 */	stw r29, 0x48(r1)
 /* 80294C48 00291B88  C0 3E 00 00 */	lfs f1, 0(r30)
 /* 80294C4C 00291B8C  C8 41 00 48 */	lfd f2, 0x48(r1)
@@ -1725,10 +1725,10 @@ reset__10TBoxTelesaFv:
 /* 80294C5C 00291B9C  EC 01 00 2A */	fadds f0, f1, f0
 /* 80294C60 00291BA0  D0 1F 01 9C */	stfs f0, 0x19c(r31)
 /* 80294C64 00291BA4  C0 3F 01 9C */	lfs f1, 0x19c(r31)
-/* 80294C68 00291BA8  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80294C68 00291BA8  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80294C6C 00291BAC  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80294C70 00291BB0  D0 1F 01 9C */	stfs f0, 0x19c(r31)
-/* 80294C74 00291BB4  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294C74 00291BB4  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80294C78 00291BB8  D0 1F 01 98 */	stfs f0, 0x198(r31)
 /* 80294C7C 00291BBC  80 7F 01 94 */	lwz r3, 0x194(r31)
 /* 80294C80 00291BC0  3B C3 04 60 */	addi r30, r3, 0x460
@@ -1737,9 +1737,9 @@ reset__10TBoxTelesaFv:
 /* 80294C8C 00291BCC  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80294C90 00291BD0  4B DF 0E 35 */	bl rand
 /* 80294C94 00291BD4  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80294C98 00291BD8  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80294C98 00291BD8  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80294C9C 00291BDC  90 01 00 44 */	stw r0, 0x44(r1)
-/* 80294CA0 00291BE0  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80294CA0 00291BE0  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80294CA4 00291BE4  93 A1 00 40 */	stw r29, 0x40(r1)
 /* 80294CA8 00291BE8  C0 3E 00 00 */	lfs f1, 0(r30)
 /* 80294CAC 00291BEC  C8 41 00 40 */	lfd f2, 0x40(r1)
@@ -1749,10 +1749,10 @@ reset__10TBoxTelesaFv:
 /* 80294CBC 00291BFC  EC 01 00 2A */	fadds f0, f1, f0
 /* 80294CC0 00291C00  D0 1F 01 A4 */	stfs f0, 0x1a4(r31)
 /* 80294CC4 00291C04  C0 3F 01 A4 */	lfs f1, 0x1a4(r31)
-/* 80294CC8 00291C08  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80294CC8 00291C08  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80294CCC 00291C0C  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80294CD0 00291C10  D0 1F 01 A4 */	stfs f0, 0x1a4(r31)
-/* 80294CD4 00291C14  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294CD4 00291C14  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80294CD8 00291C18  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 /* 80294CDC 00291C1C  80 7F 01 94 */	lwz r3, 0x194(r31)
 /* 80294CE0 00291C20  3B 83 04 68 */	addi r28, r3, 0x468
@@ -1761,10 +1761,10 @@ reset__10TBoxTelesaFv:
 /* 80294CEC 00291C2C  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80294CF0 00291C30  4B DF 0D D5 */	bl rand
 /* 80294CF4 00291C34  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80294CF8 00291C38  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80294CF8 00291C38  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80294CFC 00291C3C  90 01 00 3C */	stw r0, 0x3c(r1)
 /* 80294D00 00291C40  3B C0 00 00 */	li r30, 0
-/* 80294D04 00291C44  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80294D04 00291C44  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80294D08 00291C48  93 A1 00 38 */	stw r29, 0x38(r1)
 /* 80294D0C 00291C4C  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80294D10 00291C50  C8 41 00 38 */	lfd f2, 0x38(r1)
@@ -1774,7 +1774,7 @@ reset__10TBoxTelesaFv:
 /* 80294D20 00291C60  EC 01 00 2A */	fadds f0, f1, f0
 /* 80294D24 00291C64  D0 1F 01 AC */	stfs f0, 0x1ac(r31)
 /* 80294D28 00291C68  9B DF 01 B8 */	stb r30, 0x1b8(r31)
-/* 80294D2C 00291C6C  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 80294D2C 00291C6C  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 80294D30 00291C70  D0 1F 00 C0 */	stfs f0, 0xc0(r31)
 /* 80294D34 00291C74  80 1F 00 64 */	lwz r0, 0x64(r31)
 /* 80294D38 00291C78  54 00 01 44 */	rlwinm r0, r0, 0, 5, 2
@@ -1786,13 +1786,13 @@ reset__10TBoxTelesaFv:
 /* 80294D50 00291C90  7C 00 07 75 */	extsb. r0, r0
 /* 80294D54 00291C94  40 82 00 38 */	bne lbl_80294D8C
 /* 80294D58 00291C98  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
-/* 80294D5C 00291C9C  4B FC 5D 31 */	bl __ct__24TNerveBase$$010TLiveActor$$1Fv
+/* 80294D5C 00291C9C  4B FC 5D 31 */	bl "__ct__24TNerveBase<10TLiveActor>Fv"
 /* 80294D60 00291CA0  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 80294D64 00291CA4  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80294D68 00291CA8  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 80294D6C 00291CAC  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 80294D70 00291CB0  3C 60 80 40 */	lis r3, $$23375@ha
-/* 80294D74 00291CB4  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 80294D70 00291CB0  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 80294D74 00291CB4  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 80294D78 00291CB8  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 80294D7C 00291CBC  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 80294D80 00291CC0  4B DE D9 A9 */	bl __register_global_object
@@ -1824,13 +1824,13 @@ lbl_80294DCC:
 /* 80294DDC 00291D1C  7C 00 07 75 */	extsb. r0, r0
 /* 80294DE0 00291D20  40 82 00 38 */	bne lbl_80294E18
 /* 80294DE4 00291D24  38 6D 9F 2C */	addi r3, r13, instance$3306@sda21
-/* 80294DE8 00291D28  4B FC 5C A5 */	bl __ct__24TNerveBase$$010TLiveActor$$1Fv
+/* 80294DE8 00291D28  4B FC 5C A5 */	bl "__ct__24TNerveBase<10TLiveActor>Fv"
 /* 80294DEC 00291D2C  3C 60 80 3D */	lis r3, __vt__19TNerveTelesaImitate@ha
 /* 80294DF0 00291D30  38 03 7D C8 */	addi r0, r3, __vt__19TNerveTelesaImitate@l
 /* 80294DF4 00291D34  3C 80 80 29 */	lis r4, __dt__19TNerveTelesaImitateFv@ha
 /* 80294DF8 00291D38  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
-/* 80294DFC 00291D3C  3C 60 80 40 */	lis r3, $$23307@ha
-/* 80294E00 00291D40  38 A3 D6 D8 */	addi r5, r3, $$23307@l
+/* 80294DFC 00291D3C  3C 60 80 40 */	lis r3, "@3307"@ha
+/* 80294E00 00291D40  38 A3 D6 D8 */	addi r5, r3, "@3307"@l
 /* 80294E04 00291D44  38 84 45 0C */	addi r4, r4, __dt__19TNerveTelesaImitateFv@l
 /* 80294E08 00291D48  38 6D 9F 2C */	addi r3, r13, instance$3306@sda21
 /* 80294E0C 00291D4C  4B DE D9 1D */	bl __register_global_object
@@ -1899,14 +1899,14 @@ load__10TBoxTelesaFR20JSUMemoryInputStream:
 /* 80294EF4 00291E34  4B E3 FA 3D */	bl setLightType__6MActorFi
 /* 80294EF8 00291E38  38 00 00 40 */	li r0, 0x40
 /* 80294EFC 00291E3C  90 1F 01 50 */	stw r0, 0x150(r31)
-/* 80294F00 00291E40  3C 60 80 3A */	lis r3, $$24114@ha
+/* 80294F00 00291E40  3C 60 80 3A */	lis r3, "@4114"@ha
 /* 80294F04 00291E44  38 C1 00 14 */	addi r6, r1, 0x14
-/* 80294F08 00291E48  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294F08 00291E48  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80294F0C 00291E4C  38 A1 00 20 */	addi r5, r1, 0x20
-/* 80294F10 00291E50  C0 22 E8 14 */	lfs f1, $$23471@sda21(r2)
+/* 80294F10 00291E50  C0 22 E8 14 */	lfs f1, "@3471"@sda21(r2)
 /* 80294F14 00291E54  38 81 00 2C */	addi r4, r1, 0x2c
 /* 80294F18 00291E58  D0 01 00 20 */	stfs f0, 0x20(r1)
-/* 80294F1C 00291E5C  38 63 93 C8 */	addi r3, r3, $$24114@l
+/* 80294F1C 00291E5C  38 63 93 C8 */	addi r3, r3, "@4114"@l
 /* 80294F20 00291E60  D0 21 00 14 */	stfs f1, 0x14(r1)
 /* 80294F24 00291E64  D0 01 00 2C */	stfs f0, 0x2c(r1)
 /* 80294F28 00291E68  D0 21 00 18 */	stfs f1, 0x18(r1)
@@ -1915,17 +1915,17 @@ load__10TBoxTelesaFR20JSUMemoryInputStream:
 /* 80294F34 00291E74  D0 21 00 1C */	stfs f1, 0x1c(r1)
 /* 80294F38 00291E78  D0 01 00 28 */	stfs f0, 0x28(r1)
 /* 80294F3C 00291E7C  D0 01 00 34 */	stfs f0, 0x34(r1)
-/* 80294F40 00291E80  4B EF 91 5D */	bl newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+/* 80294F40 00291E80  4B EF 91 5D */	bl "newAndRegisterObj__18TMapObjBaseManagerFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
 /* 80294F44 00291E84  28 03 00 00 */	cmplwi r3, 0
 /* 80294F48 00291E88  41 82 00 30 */	beq lbl_80294F78
 /* 80294F4C 00291E8C  80 03 00 F0 */	lwz r0, 0xf0(r3)
 /* 80294F50 00291E90  60 00 00 01 */	ori r0, r0, 1
 /* 80294F54 00291E94  90 03 00 F0 */	stw r0, 0xf0(r3)
-/* 80294F58 00291E98  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80294F58 00291E98  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80294F5C 00291E9C  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 80294F60 00291EA0  D0 03 00 14 */	stfs f0, 0x14(r3)
 /* 80294F64 00291EA4  D0 03 00 18 */	stfs f0, 0x18(r3)
-/* 80294F68 00291EA8  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80294F68 00291EA8  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80294F6C 00291EAC  D0 03 00 24 */	stfs f0, 0x24(r3)
 /* 80294F70 00291EB0  D0 03 00 28 */	stfs f0, 0x28(r3)
 /* 80294F74 00291EB4  D0 03 00 2C */	stfs f0, 0x2c(r3)
@@ -2094,15 +2094,15 @@ lbl_8029518C:
 /* 802951B0 002920F0  88 0D 9F 38 */	lbz r0, init$3355@sda21(r13)
 /* 802951B4 002920F4  7C 00 07 75 */	extsb. r0, r0
 /* 802951B8 002920F8  40 82 00 3C */	bne lbl_802951F4
-/* 802951BC 002920FC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802951C0 00292100  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802951BC 002920FC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802951C0 00292100  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802951C4 00292104  3C 60 80 3D */	lis r3, __vt__18TNerveTelesaFreeze@ha
 /* 802951C8 00292108  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
 /* 802951CC 0029210C  38 03 7D A8 */	addi r0, r3, __vt__18TNerveTelesaFreeze@l
 /* 802951D0 00292110  3C 80 80 29 */	lis r4, __dt__18TNerveTelesaFreezeFv@ha
 /* 802951D4 00292114  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
-/* 802951D8 00292118  3C 60 80 40 */	lis r3, $$23354@ha
-/* 802951DC 0029211C  38 A3 D6 F0 */	addi r5, r3, $$23354@l
+/* 802951D8 00292118  3C 60 80 40 */	lis r3, "@3354"@ha
+/* 802951DC 0029211C  38 A3 D6 F0 */	addi r5, r3, "@3354"@l
 /* 802951E0 00292120  38 84 3E 40 */	addi r4, r4, __dt__18TNerveTelesaFreezeFv@l
 /* 802951E4 00292124  38 6D 9F 3C */	addi r3, r13, instance$3353@sda21
 /* 802951E8 00292128  4B DE D5 41 */	bl __register_global_object
@@ -2256,15 +2256,15 @@ setAttacker__7TTelesaFv:
 /* 802953F8 00292338  88 0D 9F 40 */	lbz r0, init$3376@sda21(r13)
 /* 802953FC 0029233C  7C 00 07 75 */	extsb. r0, r0
 /* 80295400 00292340  40 82 00 38 */	bne lbl_80295438
-/* 80295404 00292344  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80295408 00292348  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80295404 00292344  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80295408 00292348  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8029540C 0029234C  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 80295410 00292350  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
 /* 80295414 00292354  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80295418 00292358  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 8029541C 0029235C  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 80295420 00292360  3C 60 80 40 */	lis r3, $$23375@ha
-/* 80295424 00292364  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 80295420 00292360  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 80295424 00292364  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 80295428 00292368  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 8029542C 0029236C  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 80295430 00292370  4B DE D2 F9 */	bl __register_global_object
@@ -2351,15 +2351,15 @@ initItemAttacker__7TTelesaFP9THitActor:
 /* 80295564 002924A4  88 0D 9F 40 */	lbz r0, init$3376@sda21(r13)
 /* 80295568 002924A8  7C 00 07 75 */	extsb. r0, r0
 /* 8029556C 002924AC  40 82 00 38 */	bne lbl_802955A4
-/* 80295570 002924B0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80295574 002924B4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80295570 002924B0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80295574 002924B4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80295578 002924B8  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 8029557C 002924BC  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
 /* 80295580 002924C0  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80295584 002924C4  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 80295588 002924C8  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 8029558C 002924CC  3C 60 80 40 */	lis r3, $$23375@ha
-/* 80295590 002924D0  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 8029558C 002924CC  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 80295590 002924D0  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 80295594 002924D4  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 80295598 002924D8  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 8029559C 002924DC  4B DE D1 8D */	bl __register_global_object
@@ -2374,7 +2374,7 @@ lbl_802955A4:
 /* 802955BC 002924FC  90 04 00 18 */	stw r0, 0x18(r4)
 /* 802955C0 00292500  90 64 00 1C */	stw r3, 0x1c(r4)
 /* 802955C4 00292504  4B EB D6 59 */	bl SMS_GetMarioGrLevel__Fv
-/* 802955C8 00292508  C0 02 E8 50 */	lfs f0, $$24397@sda21(r2)
+/* 802955C8 00292508  C0 02 E8 50 */	lfs f0, "@4397"@sda21(r2)
 /* 802955CC 0029250C  EC 01 00 28 */	fsubs f0, f1, f0
 /* 802955D0 00292510  D0 1E 01 B0 */	stfs f0, 0x1b0(r30)
 /* 802955D4 00292514  80 7F 00 30 */	lwz r3, 0x30(r31)
@@ -2390,10 +2390,10 @@ lbl_802955A4:
 /* 802955FC 0029253C  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80295600 00292540  4B DF 04 C5 */	bl rand
 /* 80295604 00292544  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80295608 00292548  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80295608 00292548  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 8029560C 0029254C  90 01 00 54 */	stw r0, 0x54(r1)
 /* 80295610 00292550  3F E0 43 30 */	lis r31, 0x4330
-/* 80295614 00292554  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80295614 00292554  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80295618 00292558  93 E1 00 50 */	stw r31, 0x50(r1)
 /* 8029561C 0029255C  C0 3D 00 00 */	lfs f1, 0(r29)
 /* 80295620 00292560  C8 41 00 50 */	lfd f2, 0x50(r1)
@@ -2403,10 +2403,10 @@ lbl_802955A4:
 /* 80295630 00292570  EC 01 00 2A */	fadds f0, f1, f0
 /* 80295634 00292574  D0 1E 01 9C */	stfs f0, 0x19c(r30)
 /* 80295638 00292578  C0 3E 01 9C */	lfs f1, 0x19c(r30)
-/* 8029563C 0029257C  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 8029563C 0029257C  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80295640 00292580  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80295644 00292584  D0 1E 01 9C */	stfs f0, 0x19c(r30)
-/* 80295648 00292588  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295648 00292588  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 8029564C 0029258C  D0 1E 01 98 */	stfs f0, 0x198(r30)
 /* 80295650 00292590  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 80295654 00292594  3B A3 04 60 */	addi r29, r3, 0x460
@@ -2415,9 +2415,9 @@ lbl_802955A4:
 /* 80295660 002925A0  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80295664 002925A4  4B DF 04 61 */	bl rand
 /* 80295668 002925A8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8029566C 002925AC  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 8029566C 002925AC  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80295670 002925B0  90 01 00 4C */	stw r0, 0x4c(r1)
-/* 80295674 002925B4  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80295674 002925B4  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80295678 002925B8  93 E1 00 48 */	stw r31, 0x48(r1)
 /* 8029567C 002925BC  C0 3D 00 00 */	lfs f1, 0(r29)
 /* 80295680 002925C0  C8 41 00 48 */	lfd f2, 0x48(r1)
@@ -2427,10 +2427,10 @@ lbl_802955A4:
 /* 80295690 002925D0  EC 01 00 2A */	fadds f0, f1, f0
 /* 80295694 002925D4  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
 /* 80295698 002925D8  C0 3E 01 A4 */	lfs f1, 0x1a4(r30)
-/* 8029569C 002925DC  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 8029569C 002925DC  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 802956A0 002925E0  EC 01 00 32 */	fmuls f0, f1, f0
 /* 802956A4 002925E4  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
-/* 802956A8 002925E8  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 802956A8 002925E8  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 802956AC 002925EC  D0 1E 01 A8 */	stfs f0, 0x1a8(r30)
 /* 802956B0 002925F0  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 802956B4 002925F4  3B A3 04 68 */	addi r29, r3, 0x468
@@ -2439,10 +2439,10 @@ lbl_802955A4:
 /* 802956C0 00292600  EF E1 00 28 */	fsubs f31, f1, f0
 /* 802956C4 00292604  4B DF 04 01 */	bl rand
 /* 802956C8 00292608  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802956CC 0029260C  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 802956CC 0029260C  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 802956D0 00292610  90 01 00 44 */	stw r0, 0x44(r1)
 /* 802956D4 00292614  38 80 00 00 */	li r4, 0
-/* 802956D8 00292618  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 802956D8 00292618  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 802956DC 0029261C  93 E1 00 40 */	stw r31, 0x40(r1)
 /* 802956E0 00292620  C0 3D 00 00 */	lfs f1, 0(r29)
 /* 802956E4 00292624  C8 41 00 40 */	lfd f2, 0x40(r1)
@@ -2456,10 +2456,10 @@ lbl_802955A4:
 /* 80295704 00292644  90 1E 01 50 */	stw r0, 0x150(r30)
 /* 80295708 00292648  80 7E 00 74 */	lwz r3, 0x74(r30)
 /* 8029570C 0029264C  4B E3 EB 19 */	bl getFrameCtrl__6MActorFi
-/* 80295710 00292650  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295710 00292650  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295714 00292654  38 80 28 D8 */	li r4, 0x28d8
 /* 80295718 00292658  D0 03 00 10 */	stfs f0, 0x10(r3)
-/* 8029571C 0029265C  C0 02 E8 54 */	lfs f0, $$24398@sda21(r2)
+/* 8029571C 0029265C  C0 02 E8 54 */	lfs f0, "@4398"@sda21(r2)
 /* 80295720 00292660  D0 1E 00 C0 */	stfs f0, 0xc0(r30)
 /* 80295724 00292664  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 80295728 00292668  4B EE 73 29 */	bl gateCheck__6MSoundFUl
@@ -2517,15 +2517,15 @@ initAttacker__7TTelesaFP9THitActor:
 /* 802957E8 00292728  88 0D 9F 40 */	lbz r0, init$3376@sda21(r13)
 /* 802957EC 0029272C  7C 00 07 75 */	extsb. r0, r0
 /* 802957F0 00292730  40 82 00 38 */	bne lbl_80295828
-/* 802957F4 00292734  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802957F8 00292738  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802957F4 00292734  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802957F8 00292738  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802957FC 0029273C  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 80295800 00292740  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
 /* 80295804 00292744  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80295808 00292748  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 8029580C 0029274C  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 80295810 00292750  3C 60 80 40 */	lis r3, $$23375@ha
-/* 80295814 00292754  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 80295810 00292750  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 80295814 00292754  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 80295818 00292758  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 8029581C 0029275C  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 80295820 00292760  4B DE CF 09 */	bl __register_global_object
@@ -2542,7 +2542,7 @@ lbl_80295828:
 /* 80295848 00292788  93 E4 00 1C */	stw r31, 0x1c(r4)
 /* 8029584C 0029278C  4B E7 CA 25 */	bl getModel__10TLiveActorCFv
 /* 80295850 00292790  80 63 00 58 */	lwz r3, 0x58(r3)
-/* 80295854 00292794  C0 22 E8 58 */	lfs f1, $$24454@sda21(r2)
+/* 80295854 00292794  C0 22 E8 58 */	lfs f1, "@4454"@sda21(r2)
 /* 80295858 00292798  38 63 00 F0 */	addi r3, r3, 0xf0
 /* 8029585C 0029279C  C0 43 00 1C */	lfs f2, 0x1c(r3)
 /* 80295860 002927A0  C0 63 00 2C */	lfs f3, 0x2c(r3)
@@ -2553,9 +2553,9 @@ lbl_80295828:
 /* 80295874 002927B4  D0 7D 00 18 */	stfs f3, 0x18(r29)
 /* 80295878 002927B8  C0 1D 00 14 */	lfs f0, 0x14(r29)
 /* 8029587C 002927BC  D0 1D 01 B0 */	stfs f0, 0x1b0(r29)
-/* 80295880 002927C0  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80295880 002927C0  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80295884 002927C4  D0 3D 00 AC */	stfs f1, 0xac(r29)
-/* 80295888 002927C8  C0 02 E8 5C */	lfs f0, $$24455@sda21(r2)
+/* 80295888 002927C8  C0 02 E8 5C */	lfs f0, "@4455"@sda21(r2)
 /* 8029588C 002927CC  D0 1D 00 B0 */	stfs f0, 0xb0(r29)
 /* 80295890 002927D0  D0 3D 00 B4 */	stfs f1, 0xb4(r29)
 /* 80295894 002927D4  80 7E 00 30 */	lwz r3, 0x30(r30)
@@ -2572,10 +2572,10 @@ lbl_80295828:
 /* 802958C0 00292800  EF E1 00 28 */	fsubs f31, f1, f0
 /* 802958C4 00292804  4B DF 02 01 */	bl rand
 /* 802958C8 00292808  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802958CC 0029280C  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 802958CC 0029280C  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 802958D0 00292810  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 802958D4 00292814  3F C0 43 30 */	lis r30, 0x4330
-/* 802958D8 00292818  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 802958D8 00292818  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 802958DC 0029281C  93 C1 00 58 */	stw r30, 0x58(r1)
 /* 802958E0 00292820  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 802958E4 00292824  C8 41 00 58 */	lfd f2, 0x58(r1)
@@ -2585,10 +2585,10 @@ lbl_80295828:
 /* 802958F4 00292834  EC 01 00 2A */	fadds f0, f1, f0
 /* 802958F8 00292838  D0 1D 01 9C */	stfs f0, 0x19c(r29)
 /* 802958FC 0029283C  C0 3D 01 9C */	lfs f1, 0x19c(r29)
-/* 80295900 00292840  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80295900 00292840  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80295904 00292844  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80295908 00292848  D0 1D 01 9C */	stfs f0, 0x19c(r29)
-/* 8029590C 0029284C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 8029590C 0029284C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295910 00292850  D0 1D 01 98 */	stfs f0, 0x198(r29)
 /* 80295914 00292854  80 7D 01 94 */	lwz r3, 0x194(r29)
 /* 80295918 00292858  3B 83 04 60 */	addi r28, r3, 0x460
@@ -2597,9 +2597,9 @@ lbl_80295828:
 /* 80295924 00292864  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80295928 00292868  4B DF 01 9D */	bl rand
 /* 8029592C 0029286C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80295930 00292870  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80295930 00292870  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80295934 00292874  90 01 00 54 */	stw r0, 0x54(r1)
-/* 80295938 00292878  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80295938 00292878  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 8029593C 0029287C  93 C1 00 50 */	stw r30, 0x50(r1)
 /* 80295940 00292880  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80295944 00292884  C8 41 00 50 */	lfd f2, 0x50(r1)
@@ -2609,10 +2609,10 @@ lbl_80295828:
 /* 80295954 00292894  EC 01 00 2A */	fadds f0, f1, f0
 /* 80295958 00292898  D0 1D 01 A4 */	stfs f0, 0x1a4(r29)
 /* 8029595C 0029289C  C0 3D 01 A4 */	lfs f1, 0x1a4(r29)
-/* 80295960 002928A0  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80295960 002928A0  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80295964 002928A4  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80295968 002928A8  D0 1D 01 A4 */	stfs f0, 0x1a4(r29)
-/* 8029596C 002928AC  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 8029596C 002928AC  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295970 002928B0  D0 1D 01 A8 */	stfs f0, 0x1a8(r29)
 /* 80295974 002928B4  80 7D 01 94 */	lwz r3, 0x194(r29)
 /* 80295978 002928B8  3B 83 04 68 */	addi r28, r3, 0x468
@@ -2621,10 +2621,10 @@ lbl_80295828:
 /* 80295984 002928C4  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80295988 002928C8  4B DF 01 3D */	bl rand
 /* 8029598C 002928CC  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80295990 002928D0  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80295990 002928D0  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80295994 002928D4  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 80295998 002928D8  38 80 00 00 */	li r4, 0
-/* 8029599C 002928DC  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 8029599C 002928DC  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 802959A0 002928E0  93 C1 00 48 */	stw r30, 0x48(r1)
 /* 802959A4 002928E4  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 802959A8 002928E8  C8 41 00 48 */	lfd f2, 0x48(r1)
@@ -2645,10 +2645,10 @@ lbl_80295828:
 /* 802959E4 00292924  90 1D 00 F0 */	stw r0, 0xf0(r29)
 /* 802959E8 00292928  80 7D 00 74 */	lwz r3, 0x74(r29)
 /* 802959EC 0029292C  4B E3 E8 39 */	bl getFrameCtrl__6MActorFi
-/* 802959F0 00292930  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 802959F0 00292930  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 802959F4 00292934  38 80 28 D8 */	li r4, 0x28d8
 /* 802959F8 00292938  D0 03 00 10 */	stfs f0, 0x10(r3)
-/* 802959FC 0029293C  C0 02 E8 54 */	lfs f0, $$24398@sda21(r2)
+/* 802959FC 0029293C  C0 02 E8 54 */	lfs f0, "@4398"@sda21(r2)
 /* 80295A00 00292940  D0 1D 00 C0 */	stfs f0, 0xc0(r29)
 /* 80295A04 00292944  80 6D 97 EC */	lwz r3, gpMSound@sda21(r13)
 /* 80295A08 00292948  4B EE 70 49 */	bl gateCheck__6MSoundFUl
@@ -2688,15 +2688,15 @@ kill__7TTelesaFv:
 /* 80295A80 002929C0  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 80295A84 002929C4  7C 00 07 75 */	extsb. r0, r0
 /* 80295A88 002929C8  40 82 00 3C */	bne lbl_80295AC4
-/* 80295A8C 002929CC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80295A90 002929D0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80295A8C 002929CC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80295A90 002929D0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80295A94 002929D4  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 80295A98 002929D8  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 80295A9C 002929DC  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 80295AA0 002929E0  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 80295AA4 002929E4  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 80295AA8 002929E8  3C 60 80 40 */	lis r3, $$23333@ha
-/* 80295AAC 002929EC  38 A3 D6 E4 */	addi r5, r3, $$23333@l
+/* 80295AA8 002929E8  3C 60 80 40 */	lis r3, "@3333"@ha
+/* 80295AAC 002929EC  38 A3 D6 E4 */	addi r5, r3, "@3333"@l
 /* 80295AB0 002929F0  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
 /* 80295AB4 002929F4  38 6D 9F 34 */	addi r3, r13, instance$3332@sda21
 /* 80295AB8 002929F8  4B DE CC 71 */	bl __register_global_object
@@ -2711,16 +2711,16 @@ lbl_80295AC4:
 /* 80295AD8 00292A18  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 80295ADC 00292A1C  7C 00 07 75 */	extsb. r0, r0
 /* 80295AE0 00292A20  40 82 00 38 */	bne lbl_80295B18
-/* 80295AE4 00292A24  3C 80 80 3C */	lis r4, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80295AE8 00292A28  38 04 92 60 */	addi r0, r4, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80295AE4 00292A24  3C 80 80 3C */	lis r4, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80295AE8 00292A28  38 04 92 60 */	addi r0, r4, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80295AEC 00292A2C  3C 80 80 3D */	lis r4, __vt__15TNerveTelesaDie@ha
 /* 80295AF0 00292A30  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 80295AF4 00292A34  38 04 7D B8 */	addi r0, r4, __vt__15TNerveTelesaDie@l
 /* 80295AF8 00292A38  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 80295AFC 00292A3C  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 80295B00 00292A40  3C A0 80 40 */	lis r5, $$23333@ha
+/* 80295B00 00292A40  3C A0 80 40 */	lis r5, "@3333"@ha
 /* 80295B04 00292A44  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
-/* 80295B08 00292A48  38 A5 D6 E4 */	addi r5, r5, $$23333@l
+/* 80295B08 00292A48  38 A5 D6 E4 */	addi r5, r5, "@3333"@l
 /* 80295B0C 00292A4C  4B DE CC 1D */	bl __register_global_object
 /* 80295B10 00292A50  38 00 00 01 */	li r0, 1
 /* 80295B14 00292A54  98 0D 9F 30 */	stb r0, init$3334@sda21(r13)
@@ -2798,15 +2798,15 @@ lbl_80295BF8:
 /* 80295C00 00292B40  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 80295C04 00292B44  7C 00 07 75 */	extsb. r0, r0
 /* 80295C08 00292B48  40 82 00 3C */	bne lbl_80295C44
-/* 80295C0C 00292B4C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80295C10 00292B50  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80295C0C 00292B4C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80295C10 00292B50  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80295C14 00292B54  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 80295C18 00292B58  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 80295C1C 00292B5C  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 80295C20 00292B60  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 80295C24 00292B64  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 80295C28 00292B68  3C 60 80 40 */	lis r3, $$23333@ha
-/* 80295C2C 00292B6C  38 A3 D6 E4 */	addi r5, r3, $$23333@l
+/* 80295C28 00292B68  3C 60 80 40 */	lis r3, "@3333"@ha
+/* 80295C2C 00292B6C  38 A3 D6 E4 */	addi r5, r3, "@3333"@l
 /* 80295C30 00292B70  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
 /* 80295C34 00292B74  38 6D 9F 34 */	addi r3, r13, instance$3332@sda21
 /* 80295C38 00292B78  4B DE CA F1 */	bl __register_global_object
@@ -2840,10 +2840,10 @@ lbl_80295C80:
 .global reduceFlyForce__7TTelesaFv
 reduceFlyForce__7TTelesaFv:
 /* 80295C8C 00292BCC  C0 23 01 98 */	lfs f1, 0x198(r3)
-/* 80295C90 00292BD0  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295C90 00292BD0  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295C94 00292BD4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80295C98 00292BD8  40 81 00 14 */	ble lbl_80295CAC
-/* 80295C9C 00292BDC  C0 02 E8 60 */	lfs f0, $$24544@sda21(r2)
+/* 80295C9C 00292BDC  C0 02 E8 60 */	lfs f0, "@4544"@sda21(r2)
 /* 80295CA0 00292BE0  EC 01 00 28 */	fsubs f0, f1, f0
 /* 80295CA4 00292BE4  D0 03 01 98 */	stfs f0, 0x198(r3)
 /* 80295CA8 00292BE8  48 00 00 08 */	b lbl_80295CB0
@@ -2851,10 +2851,10 @@ lbl_80295CAC:
 /* 80295CAC 00292BEC  D0 03 01 98 */	stfs f0, 0x198(r3)
 lbl_80295CB0:
 /* 80295CB0 00292BF0  C0 43 01 A0 */	lfs f2, 0x1a0(r3)
-/* 80295CB4 00292BF4  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80295CB4 00292BF4  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80295CB8 00292BF8  FC 02 08 40 */	fcmpo cr0, f2, f1
 /* 80295CBC 00292BFC  40 81 00 20 */	ble lbl_80295CDC
-/* 80295CC0 00292C00  C0 02 E8 60 */	lfs f0, $$24544@sda21(r2)
+/* 80295CC0 00292C00  C0 02 E8 60 */	lfs f0, "@4544"@sda21(r2)
 /* 80295CC4 00292C04  EC 02 00 28 */	fsubs f0, f2, f0
 /* 80295CC8 00292C08  D0 03 01 A0 */	stfs f0, 0x1a0(r3)
 /* 80295CCC 00292C0C  C0 03 01 A0 */	lfs f0, 0x1a0(r3)
@@ -2863,10 +2863,10 @@ lbl_80295CB0:
 /* 80295CD8 00292C18  D0 23 01 A0 */	stfs f1, 0x1a0(r3)
 lbl_80295CDC:
 /* 80295CDC 00292C1C  C0 43 01 A0 */	lfs f2, 0x1a0(r3)
-/* 80295CE0 00292C20  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80295CE0 00292C20  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80295CE4 00292C24  FC 02 08 40 */	fcmpo cr0, f2, f1
 /* 80295CE8 00292C28  40 80 00 20 */	bge lbl_80295D08
-/* 80295CEC 00292C2C  C0 02 E8 60 */	lfs f0, $$24544@sda21(r2)
+/* 80295CEC 00292C2C  C0 02 E8 60 */	lfs f0, "@4544"@sda21(r2)
 /* 80295CF0 00292C30  EC 02 00 2A */	fadds f0, f2, f0
 /* 80295CF4 00292C34  D0 03 01 A0 */	stfs f0, 0x1a0(r3)
 /* 80295CF8 00292C38  C0 03 01 A0 */	lfs f0, 0x1a0(r3)
@@ -2875,7 +2875,7 @@ lbl_80295CDC:
 /* 80295D04 00292C44  D0 23 01 A0 */	stfs f1, 0x1a0(r3)
 lbl_80295D08:
 /* 80295D08 00292C48  C0 03 01 A8 */	lfs f0, 0x1a8(r3)
-/* 80295D0C 00292C4C  C0 22 E8 64 */	lfs f1, $$24545@sda21(r2)
+/* 80295D0C 00292C4C  C0 22 E8 64 */	lfs f1, "@4545"@sda21(r2)
 /* 80295D10 00292C50  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80295D14 00292C54  D0 03 01 A8 */	stfs f0, 0x1a8(r3)
 /* 80295D18 00292C58  C0 03 00 30 */	lfs f0, 0x30(r3)
@@ -2924,7 +2924,7 @@ lbl_80295D90:
 /* 80295DA4 00292CE4  81 8C 01 90 */	lwz r12, 0x190(r12)
 /* 80295DA8 00292CE8  7D 88 03 A6 */	mtlr r12
 /* 80295DAC 00292CEC  4E 80 00 21 */	blrl 
-/* 80295DB0 00292CF0  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295DB0 00292CF0  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295DB4 00292CF4  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 lbl_80295DB8:
 /* 80295DB8 00292CF8  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -2978,7 +2978,7 @@ lbl_80295E2C:
 /* 80295E5C 00292D9C  80 08 00 18 */	lwz r0, 0x18(r8)
 /* 80295E60 00292DA0  90 1E 00 18 */	stw r0, 0x18(r30)
 /* 80295E64 00292DA4  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 80295E68 00292DA8  4B E4 59 69 */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 80295E68 00292DA8  4B E4 59 69 */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 80295E6C 00292DAC  83 FE 00 74 */	lwz r31, 0x74(r30)
 /* 80295E70 00292DB0  4B E6 57 6D */	bl SMSGetAnmFrameRate__Fv
 /* 80295E74 00292DB4  38 7F 00 00 */	addi r3, r31, 0
@@ -3001,7 +3001,7 @@ lbl_80295E2C:
 .global scalingChangeActor__7TTelesaFv
 scalingChangeActor__7TTelesaFv:
 /* 80295EB4 00292DF4  80 83 01 78 */	lwz r4, 0x178(r3)
-/* 80295EB8 00292DF8  C0 22 E8 68 */	lfs f1, $$24589@sda21(r2)
+/* 80295EB8 00292DF8  C0 22 E8 68 */	lfs f1, "@4589"@sda21(r2)
 /* 80295EBC 00292DFC  C0 04 01 40 */	lfs f0, 0x140(r4)
 /* 80295EC0 00292E00  C0 4D 89 28 */	lfs f2, mBlockXZScale__18TSmallEnemyManager@sda21(r13)
 /* 80295EC4 00292E04  EC 21 00 2A */	fadds f1, f1, f0
@@ -3010,7 +3010,7 @@ scalingChangeActor__7TTelesaFv:
 /* 80295ED0 00292E10  FC 20 10 90 */	fmr f1, f2
 /* 80295ED4 00292E14  48 00 00 14 */	b lbl_80295EE8
 lbl_80295ED8:
-/* 80295ED8 00292E18  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295ED8 00292E18  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295EDC 00292E1C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80295EE0 00292E20  40 80 00 08 */	bge lbl_80295EE8
 /* 80295EE4 00292E24  FC 20 00 90 */	fmr f1, f0
@@ -3019,7 +3019,7 @@ lbl_80295EE8:
 /* 80295EEC 00292E2C  80 83 01 78 */	lwz r4, 0x178(r3)
 /* 80295EF0 00292E30  D0 24 01 40 */	stfs f1, 0x140(r4)
 /* 80295EF4 00292E34  80 63 01 78 */	lwz r3, 0x178(r3)
-/* 80295EF8 00292E38  C0 22 E8 6C */	lfs f1, $$24590@sda21(r2)
+/* 80295EF8 00292E38  C0 22 E8 6C */	lfs f1, "@4590"@sda21(r2)
 /* 80295EFC 00292E3C  C4 03 01 44 */	lfsu f0, 0x144(r3)
 /* 80295F00 00292E40  C0 4D 89 2C */	lfs f2, mBlockYScale__18TSmallEnemyManager@sda21(r13)
 /* 80295F04 00292E44  EC 21 00 2A */	fadds f1, f1, f0
@@ -3028,7 +3028,7 @@ lbl_80295EE8:
 /* 80295F10 00292E50  FC 20 10 90 */	fmr f1, f2
 /* 80295F14 00292E54  48 00 00 14 */	b lbl_80295F28
 lbl_80295F18:
-/* 80295F18 00292E58  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80295F18 00292E58  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80295F1C 00292E5C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80295F20 00292E60  40 80 00 08 */	bge lbl_80295F28
 /* 80295F24 00292E64  FC 20 00 90 */	fmr f1, f0
@@ -3067,12 +3067,12 @@ lbl_80295F64:
 /* 80295F94 00292ED4  38 60 00 00 */	li r3, 0
 /* 80295F98 00292ED8  48 00 01 A4 */	b lbl_8029613C
 lbl_80295F9C:
-/* 80295F9C 00292EDC  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80295F9C 00292EDC  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80295FA0 00292EE0  D4 03 00 24 */	stfsu f0, 0x24(r3)
 /* 80295FA4 00292EE4  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80295FA8 00292EE8  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80295FAC 00292EEC  80 7F 01 78 */	lwz r3, 0x178(r31)
-/* 80295FB0 00292EF0  C0 02 E8 70 */	lfs f0, $$24642@sda21(r2)
+/* 80295FB0 00292EF0  C0 02 E8 70 */	lfs f0, "@4642"@sda21(r2)
 /* 80295FB4 00292EF4  D4 03 01 40 */	stfsu f0, 0x140(r3)
 /* 80295FB8 00292EF8  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80295FBC 00292EFC  D0 03 00 08 */	stfs f0, 8(r3)
@@ -3116,15 +3116,15 @@ lbl_8029604C:
 /* 8029604C 00292F8C  88 0D 9F 38 */	lbz r0, init$3355@sda21(r13)
 /* 80296050 00292F90  7C 00 07 75 */	extsb. r0, r0
 /* 80296054 00292F94  40 82 00 3C */	bne lbl_80296090
-/* 80296058 00292F98  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8029605C 00292F9C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296058 00292F98  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8029605C 00292F9C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80296060 00292FA0  3C 60 80 3D */	lis r3, __vt__18TNerveTelesaFreeze@ha
 /* 80296064 00292FA4  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
 /* 80296068 00292FA8  38 03 7D A8 */	addi r0, r3, __vt__18TNerveTelesaFreeze@l
 /* 8029606C 00292FAC  3C 80 80 29 */	lis r4, __dt__18TNerveTelesaFreezeFv@ha
 /* 80296070 00292FB0  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
-/* 80296074 00292FB4  3C 60 80 40 */	lis r3, $$23354@ha
-/* 80296078 00292FB8  38 A3 D6 F0 */	addi r5, r3, $$23354@l
+/* 80296074 00292FB4  3C 60 80 40 */	lis r3, "@3354"@ha
+/* 80296078 00292FB8  38 A3 D6 F0 */	addi r5, r3, "@3354"@l
 /* 8029607C 00292FBC  38 84 3E 40 */	addi r4, r4, __dt__18TNerveTelesaFreezeFv@l
 /* 80296080 00292FC0  38 6D 9F 3C */	addi r3, r13, instance$3353@sda21
 /* 80296084 00292FC4  4B DE C6 A5 */	bl __register_global_object
@@ -3217,7 +3217,7 @@ lbl_80296178:
 /* 802961B4 002930F4  C0 03 00 18 */	lfs f0, 0x18(r3)
 /* 802961B8 002930F8  EC 01 00 28 */	fsubs f0, f1, f0
 /* 802961BC 002930FC  D0 01 00 1C */	stfs f0, 0x1c(r1)
-/* 802961C0 00293100  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 802961C0 00293100  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 802961C4 00293104  D0 21 00 18 */	stfs f1, 0x18(r1)
 /* 802961C8 00293108  C0 01 00 14 */	lfs f0, 0x14(r1)
 /* 802961CC 0029310C  FC 01 00 00 */	fcmpu cr0, f1, f0
@@ -3230,7 +3230,7 @@ lbl_80296178:
 lbl_802961E8:
 /* 802961E8 00293128  38 61 00 14 */	addi r3, r1, 0x14
 /* 802961EC 0029312C  4B E2 F5 E5 */	bl MsVECMag2__FP3Vec
-/* 802961F0 00293130  C0 02 E8 74 */	lfs f0, $$24658@sda21(r2)
+/* 802961F0 00293130  C0 02 E8 74 */	lfs f0, "@4658"@sda21(r2)
 /* 802961F4 00293134  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 802961F8 00293138  40 80 00 0C */	bge lbl_80296204
 /* 802961FC 0029313C  38 60 00 01 */	li r3, 1
@@ -3252,8 +3252,8 @@ bind__7TTelesaFv:
 /* 80296228 00293168  93 C1 00 C8 */	stw r30, 0xc8(r1)
 /* 8029622C 0029316C  7C 7E 1B 78 */	mr r30, r3
 /* 80296230 00293170  80 03 00 F0 */	lwz r0, 0xf0(r3)
-/* 80296234 00293174  3C 60 80 40 */	lis r3, $$23307@ha
-/* 80296238 00293178  3B E3 D6 D8 */	addi r31, r3, $$23307@l
+/* 80296234 00293174  3C 60 80 40 */	lis r3, "@3307"@ha
+/* 80296238 00293178  3B E3 D6 D8 */	addi r31, r3, "@3307"@l
 /* 8029623C 0029317C  54 00 06 F7 */	rlwinm. r0, r0, 0, 0x1b, 0x1b
 /* 80296240 00293180  40 82 03 04 */	bne lbl_80296544
 /* 80296244 00293184  80 9E 00 10 */	lwz r4, 0x10(r30)
@@ -3306,15 +3306,15 @@ bind__7TTelesaFv:
 /* 80296300 00293240  40 80 00 08 */	bge lbl_80296308
 /* 80296304 00293244  D0 3E 00 B0 */	stfs f1, 0xb0(r30)
 lbl_80296308:
-/* 80296308 00293248  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80296308 00293248  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 8029630C 0029324C  C0 1E 01 B4 */	lfs f0, 0x1b4(r30)
 /* 80296310 00293250  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 80296314 00293254  41 82 00 58 */	beq lbl_8029636C
 /* 80296318 00293258  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 8029631C 0029325C  7C 00 07 75 */	extsb. r0, r0
 /* 80296320 00293260  40 82 00 38 */	bne lbl_80296358
-/* 80296324 00293264  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80296328 00293268  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296324 00293264  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80296328 00293268  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8029632C 0029326C  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 80296330 00293270  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 80296334 00293274  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
@@ -3336,7 +3336,7 @@ lbl_8029636C:
 /* 8029636C 002932AC  C0 21 00 BC */	lfs f1, 0xbc(r1)
 /* 80296370 002932B0  38 9E 00 C4 */	addi r4, r30, 0xc4
 /* 80296374 002932B4  C0 1E 00 C0 */	lfs f0, 0xc0(r30)
-/* 80296378 002932B8  C0 42 E8 74 */	lfs f2, $$24658@sda21(r2)
+/* 80296378 002932B8  C0 42 E8 74 */	lfs f2, "@4658"@sda21(r2)
 /* 8029637C 002932BC  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296380 002932C0  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 80296384 002932C4  C0 21 00 B8 */	lfs f1, 0xb8(r1)
@@ -3350,8 +3350,8 @@ lbl_8029636C:
 /* 802963A4 002932E4  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 802963A8 002932E8  7C 00 07 75 */	extsb. r0, r0
 /* 802963AC 002932EC  40 82 00 38 */	bne lbl_802963E4
-/* 802963B0 002932F0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802963B4 002932F4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802963B0 002932F0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802963B4 002932F4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802963B8 002932F8  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 802963BC 002932FC  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 802963C0 00293300  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
@@ -3388,11 +3388,11 @@ lbl_802963E4:
 /* 80296438 00293378  D0 1E 00 C8 */	stfs f0, 0xc8(r30)
 lbl_8029643C:
 /* 8029643C 0029337C  C0 3E 00 C8 */	lfs f1, 0xc8(r30)
-/* 80296440 00293380  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296440 00293380  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80296444 00293384  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296448 00293388  D0 1E 00 C8 */	stfs f0, 0xc8(r30)
 lbl_8029644C:
-/* 8029644C 0029338C  C0 22 E8 78 */	lfs f1, $$24762@sda21(r2)
+/* 8029644C 0029338C  C0 22 E8 78 */	lfs f1, "@4762"@sda21(r2)
 /* 80296450 00293390  C0 1E 00 C8 */	lfs f0, 0xc8(r30)
 /* 80296454 00293394  C0 41 00 BC */	lfs f2, 0xbc(r1)
 /* 80296458 00293398  EC 01 00 2A */	fadds f0, f1, f0
@@ -3402,15 +3402,15 @@ lbl_8029644C:
 /* 80296468 002933A8  80 1E 00 F0 */	lwz r0, 0xf0(r30)
 /* 8029646C 002933AC  54 00 06 6E */	rlwinm r0, r0, 0, 0x19, 0x17
 /* 80296470 002933B0  90 1E 00 F0 */	stw r0, 0xf0(r30)
-/* 80296474 002933B4  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80296474 002933B4  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80296478 002933B8  D0 1E 00 AC */	stfs f0, 0xac(r30)
 /* 8029647C 002933BC  D0 1E 00 B0 */	stfs f0, 0xb0(r30)
 /* 80296480 002933C0  D0 1E 00 B4 */	stfs f0, 0xb4(r30)
 /* 80296484 002933C4  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 80296488 002933C8  7C 00 07 75 */	extsb. r0, r0
 /* 8029648C 002933CC  40 82 00 38 */	bne lbl_802964C4
-/* 80296490 002933D0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80296494 002933D4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296490 002933D0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80296494 002933D4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80296498 002933D8  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 8029649C 002933DC  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 802964A0 002933E0  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
@@ -3444,7 +3444,7 @@ lbl_802964F0:
 /* 80296504 00293444  80 01 00 C0 */	lwz r0, 0xc0(r1)
 /* 80296508 00293448  90 A1 00 54 */	stw r5, 0x54(r1)
 /* 8029650C 0029344C  90 01 00 58 */	stw r0, 0x58(r1)
-/* 80296510 00293450  4B E2 BB 79 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 80296510 00293450  4B E2 BB 79 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80296514 00293454  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 80296518 00293458  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 8029651C 0029345C  90 7E 00 94 */	stw r3, 0x94(r30)
@@ -3498,15 +3498,15 @@ calcRootMatrix__7TTelesaFv:
 /* 802965C0 00293500  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 802965C4 00293504  7C 00 07 75 */	extsb. r0, r0
 /* 802965C8 00293508  40 82 00 3C */	bne lbl_80296604
-/* 802965CC 0029350C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802965D0 00293510  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802965CC 0029350C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802965D0 00293510  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802965D4 00293514  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 802965D8 00293518  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 802965DC 0029351C  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 802965E0 00293520  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 802965E4 00293524  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 802965E8 00293528  3C 60 80 40 */	lis r3, $$23333@ha
-/* 802965EC 0029352C  38 A3 D6 E4 */	addi r5, r3, $$23333@l
+/* 802965E8 00293528  3C 60 80 40 */	lis r3, "@3333"@ha
+/* 802965EC 0029352C  38 A3 D6 E4 */	addi r5, r3, "@3333"@l
 /* 802965F0 00293530  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
 /* 802965F4 00293534  38 6D 9F 34 */	addi r3, r13, instance$3332@sda21
 /* 802965F8 00293538  4B DE C1 31 */	bl __register_global_object
@@ -3580,7 +3580,7 @@ lbl_802966E0:
 /* 802966F4 00293634  C3 DF 00 14 */	lfs f30, 0x14(r31)
 /* 802966F8 00293638  C3 FF 00 10 */	lfs f31, 0x10(r31)
 /* 802966FC 0029363C  4B E7 BB 75 */	bl getModel__10TLiveActorCFv
-/* 80296700 00293640  C0 02 E8 24 */	lfs f0, $$23627@sda21(r2)
+/* 80296700 00293640  C0 02 E8 24 */	lfs f0, "@3627"@sda21(r2)
 /* 80296704 00293644  FC 20 F8 90 */	fmr f1, f31
 /* 80296708 00293648  38 63 00 20 */	addi r3, r3, 0x20
 /* 8029670C 0029364C  EC 60 07 32 */	fmuls f3, f0, f28
@@ -3630,15 +3630,15 @@ walkBehavior__7TTelesaFif:
 /* 802967B0 002936F0  88 0D 9F 30 */	lbz r0, init$3334@sda21(r13)
 /* 802967B4 002936F4  7C 00 07 75 */	extsb. r0, r0
 /* 802967B8 002936F8  40 82 00 3C */	bne lbl_802967F4
-/* 802967BC 002936FC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802967C0 00293700  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802967BC 002936FC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802967C0 00293700  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802967C4 00293704  3C 60 80 3D */	lis r3, __vt__15TNerveTelesaDie@ha
 /* 802967C8 00293708  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
 /* 802967CC 0029370C  38 03 7D B8 */	addi r0, r3, __vt__15TNerveTelesaDie@l
 /* 802967D0 00293710  3C 80 80 29 */	lis r4, __dt__15TNerveTelesaDieFv@ha
 /* 802967D4 00293714  90 0D 9F 34 */	stw r0, instance$3332@sda21(r13)
-/* 802967D8 00293718  3C 60 80 40 */	lis r3, $$23333@ha
-/* 802967DC 0029371C  38 A3 D6 E4 */	addi r5, r3, $$23333@l
+/* 802967D8 00293718  3C 60 80 40 */	lis r3, "@3333"@ha
+/* 802967DC 0029371C  38 A3 D6 E4 */	addi r5, r3, "@3333"@l
 /* 802967E0 00293720  38 84 41 00 */	addi r4, r4, __dt__15TNerveTelesaDieFv@l
 /* 802967E4 00293724  38 6D 9F 34 */	addi r3, r13, instance$3332@sda21
 /* 802967E8 00293728  4B DE BF 41 */	bl __register_global_object
@@ -3654,7 +3654,7 @@ lbl_802967F4:
 /* 8029680C 0029374C  C0 1F 01 9C */	lfs f0, 0x19c(r31)
 /* 80296810 00293750  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80296814 00293754  40 80 00 10 */	bge lbl_80296824
-/* 80296818 00293758  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296818 00293758  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 8029681C 0029375C  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296820 00293760  D0 1F 01 98 */	stfs f0, 0x198(r31)
 lbl_80296824:
@@ -3662,20 +3662,20 @@ lbl_80296824:
 /* 80296828 00293768  C0 7F 00 C8 */	lfs f3, 0xc8(r31)
 /* 8029682C 0029376C  28 00 00 00 */	cmplwi r0, 0
 /* 80296830 00293770  41 82 00 08 */	beq lbl_80296838
-/* 80296834 00293774  C0 62 E8 7C */	lfs f3, $$24896@sda21(r2)
+/* 80296834 00293774  C0 62 E8 7C */	lfs f3, "@4896"@sda21(r2)
 lbl_80296838:
-/* 80296838 00293778  C0 42 E8 40 */	lfs f2, $$23705@sda21(r2)
+/* 80296838 00293778  C0 42 E8 40 */	lfs f2, "@3705"@sda21(r2)
 /* 8029683C 0029377C  C0 1F 01 B4 */	lfs f0, 0x1b4(r31)
 /* 80296840 00293780  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 80296844 00293784  40 82 00 84 */	bne lbl_802968C8
 /* 80296848 00293788  C0 3F 01 B0 */	lfs f1, 0x1b0(r31)
-/* 8029684C 0029378C  C0 02 E8 80 */	lfs f0, $$24897@sda21(r2)
+/* 8029684C 0029378C  C0 02 E8 80 */	lfs f0, "@4897"@sda21(r2)
 /* 80296850 00293790  EC 21 18 28 */	fsubs f1, f1, f3
 /* 80296854 00293794  FC 20 0A 10 */	fabs f1, f1
 /* 80296858 00293798  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8029685C 0029379C  40 81 00 6C */	ble lbl_802968C8
 /* 80296860 002937A0  C0 3F 00 C8 */	lfs f1, 0xc8(r31)
-/* 80296864 002937A4  C0 02 E8 84 */	lfs f0, $$24898@sda21(r2)
+/* 80296864 002937A4  C0 02 E8 84 */	lfs f0, "@4898"@sda21(r2)
 /* 80296868 002937A8  EC 21 18 28 */	fsubs f1, f1, f3
 /* 8029686C 002937AC  EC 01 00 24 */	fdivs f0, f1, f0
 /* 80296870 002937B0  D0 1F 01 B4 */	stfs f0, 0x1b4(r31)
@@ -3683,13 +3683,13 @@ lbl_80296838:
 /* 80296878 002937B8  28 00 00 00 */	cmplwi r0, 0
 /* 8029687C 002937BC  41 82 00 34 */	beq lbl_802968B0
 /* 80296880 002937C0  C0 3F 01 B4 */	lfs f1, 0x1b4(r31)
-/* 80296884 002937C4  C0 02 E8 18 */	lfs f0, $$23472@sda21(r2)
+/* 80296884 002937C4  C0 02 E8 18 */	lfs f0, "@3472"@sda21(r2)
 /* 80296888 002937C8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8029688C 002937CC  40 81 00 0C */	ble lbl_80296898
 /* 80296890 002937D0  FC 20 00 90 */	fmr f1, f0
 /* 80296894 002937D4  48 00 00 14 */	b lbl_802968A8
 lbl_80296898:
-/* 80296898 002937D8  C0 02 E8 88 */	lfs f0, $$24899@sda21(r2)
+/* 80296898 002937D8  C0 02 E8 88 */	lfs f0, "@4899"@sda21(r2)
 /* 8029689C 002937DC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 802968A0 002937E0  40 80 00 08 */	bge lbl_802968A8
 /* 802968A4 002937E4  FC 20 00 90 */	fmr f1, f0
@@ -3698,14 +3698,14 @@ lbl_802968A8:
 /* 802968AC 002937EC  48 00 00 1C */	b lbl_802968C8
 lbl_802968B0:
 /* 802968B0 002937F0  C0 3F 01 B4 */	lfs f1, 0x1b4(r31)
-/* 802968B4 002937F4  C0 02 E8 8C */	lfs f0, $$24900@sda21(r2)
+/* 802968B4 002937F4  C0 02 E8 8C */	lfs f0, "@4900"@sda21(r2)
 /* 802968B8 002937F8  FC 20 0A 10 */	fabs f1, f1
 /* 802968BC 002937FC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 802968C0 00293800  40 81 00 08 */	ble lbl_802968C8
 /* 802968C4 00293804  D0 5F 01 B4 */	stfs f2, 0x1b4(r31)
 lbl_802968C8:
 /* 802968C8 00293808  C0 5F 01 B4 */	lfs f2, 0x1b4(r31)
-/* 802968CC 0029380C  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 802968CC 0029380C  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 802968D0 00293810  FC 02 08 40 */	fcmpo cr0, f2, f1
 /* 802968D4 00293814  40 81 00 20 */	ble lbl_802968F4
 /* 802968D8 00293818  C0 1F 01 B0 */	lfs f0, 0x1b0(r31)
@@ -3717,7 +3717,7 @@ lbl_802968C8:
 /* 802968F0 00293830  D0 3F 01 B4 */	stfs f1, 0x1b4(r31)
 lbl_802968F4:
 /* 802968F4 00293834  C0 5F 01 B4 */	lfs f2, 0x1b4(r31)
-/* 802968F8 00293838  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 802968F8 00293838  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 802968FC 0029383C  FC 02 08 40 */	fcmpo cr0, f2, f1
 /* 80296900 00293840  40 80 00 2C */	bge lbl_8029692C
 /* 80296904 00293844  C0 1F 01 B0 */	lfs f0, 0x1b0(r31)
@@ -3727,7 +3727,7 @@ lbl_802968F4:
 /* 80296914 00293854  FC 00 18 40 */	fcmpo cr0, f0, f3
 /* 80296918 00293858  40 80 00 14 */	bge lbl_8029692C
 /* 8029691C 0029385C  D0 3F 01 B4 */	stfs f1, 0x1b4(r31)
-/* 80296920 00293860  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296920 00293860  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80296924 00293864  EC 00 18 2A */	fadds f0, f0, f3
 /* 80296928 00293868  D0 1F 01 B0 */	stfs f0, 0x1b0(r31)
 lbl_8029692C:
@@ -3754,13 +3754,13 @@ behaveToWater__7TTelesaFP9THitActor:
 /* 80296970 002938B0  93 A1 00 8C */	stw r29, 0x8c(r1)
 /* 80296974 002938B4  3B A0 00 01 */	li r29, 1
 /* 80296978 002938B8  9B A3 01 65 */	stb r29, 0x165(r3)
-/* 8029697C 002938BC  3C 60 80 40 */	lis r3, $$23307@ha
-/* 80296980 002938C0  3B E3 D6 D8 */	addi r31, r3, $$23307@l
+/* 8029697C 002938BC  3C 60 80 40 */	lis r3, "@3307"@ha
+/* 80296980 002938C0  3B E3 D6 D8 */	addi r31, r3, "@3307"@l
 /* 80296984 002938C4  88 0D 9F 38 */	lbz r0, init$3355@sda21(r13)
 /* 80296988 002938C8  7C 00 07 75 */	extsb. r0, r0
 /* 8029698C 002938CC  40 82 00 34 */	bne lbl_802969C0
-/* 80296990 002938D0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80296994 002938D4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296990 002938D0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80296994 002938D4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80296998 002938D8  3C 60 80 3D */	lis r3, __vt__18TNerveTelesaFreeze@ha
 /* 8029699C 002938DC  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
 /* 802969A0 002938E0  38 03 7D A8 */	addi r0, r3, __vt__18TNerveTelesaFreeze@l
@@ -3780,8 +3780,8 @@ lbl_802969C0:
 /* 802969D4 00293914  88 0D 9F 28 */	lbz r0, init$3308@sda21(r13)
 /* 802969D8 00293918  7C 00 07 75 */	extsb. r0, r0
 /* 802969DC 0029391C  40 82 00 38 */	bne lbl_80296A14
-/* 802969E0 00293920  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802969E4 00293924  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802969E0 00293920  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802969E4 00293924  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802969E8 00293928  3C 60 80 3D */	lis r3, __vt__19TNerveTelesaImitate@ha
 /* 802969EC 0029392C  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
 /* 802969F0 00293930  38 03 7D C8 */	addi r0, r3, __vt__19TNerveTelesaImitate@l
@@ -3800,10 +3800,10 @@ lbl_80296A14:
 /* 80296A20 00293960  7C 03 00 40 */	cmplw r3, r0
 /* 80296A24 00293964  41 82 01 A8 */	beq lbl_80296BCC
 /* 80296A28 00293968  88 1E 01 84 */	lbz r0, 0x184(r30)
-/* 80296A2C 0029396C  C0 82 E8 18 */	lfs f4, $$23472@sda21(r2)
+/* 80296A2C 0029396C  C0 82 E8 18 */	lfs f4, "@3472"@sda21(r2)
 /* 80296A30 00293970  28 00 00 00 */	cmplwi r0, 0
 /* 80296A34 00293974  41 82 00 08 */	beq lbl_80296A3C
-/* 80296A38 00293978  C0 82 E8 90 */	lfs f4, $$24974@sda21(r2)
+/* 80296A38 00293978  C0 82 E8 90 */	lfs f4, "@4974"@sda21(r2)
 lbl_80296A3C:
 /* 80296A3C 0029397C  80 AD 98 DC */	lwz r5, gpMarioPos@sda21(r13)
 /* 80296A40 00293980  38 61 00 78 */	addi r3, r1, 0x78
@@ -3813,7 +3813,7 @@ lbl_80296A3C:
 /* 80296A50 00293990  C0 7E 00 18 */	lfs f3, 0x18(r30)
 /* 80296A54 00293994  EC 21 00 28 */	fsubs f1, f1, f0
 /* 80296A58 00293998  C0 45 00 08 */	lfs f2, 8(r5)
-/* 80296A5C 0029399C  C0 02 E8 18 */	lfs f0, $$23472@sda21(r2)
+/* 80296A5C 0029399C  C0 02 E8 18 */	lfs f0, "@3472"@sda21(r2)
 /* 80296A60 002939A0  EC 43 10 28 */	fsubs f2, f3, f2
 /* 80296A64 002939A4  D0 21 00 78 */	stfs f1, 0x78(r1)
 /* 80296A68 002939A8  D0 81 00 7C */	stfs f4, 0x7c(r1)
@@ -3823,11 +3823,11 @@ lbl_80296A3C:
 /* 80296A78 002939B8  D0 1E 00 14 */	stfs f0, 0x14(r30)
 /* 80296A7C 002939BC  4B E2 ED 7D */	bl MsVECNormalize__FP3VecP3Vec
 /* 80296A80 002939C0  88 1E 01 84 */	lbz r0, 0x184(r30)
-/* 80296A84 002939C4  C0 22 E8 80 */	lfs f1, $$24897@sda21(r2)
+/* 80296A84 002939C4  C0 22 E8 80 */	lfs f1, "@4897"@sda21(r2)
 /* 80296A88 002939C8  28 00 00 00 */	cmplwi r0, 0
 /* 80296A8C 002939CC  41 82 00 1C */	beq lbl_80296AA8
 /* 80296A90 002939D0  C0 3E 00 14 */	lfs f1, 0x14(r30)
-/* 80296A94 002939D4  C0 02 E8 90 */	lfs f0, $$24974@sda21(r2)
+/* 80296A94 002939D4  C0 02 E8 90 */	lfs f0, "@4974"@sda21(r2)
 /* 80296A98 002939D8  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 80296A9C 002939DC  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296AA0 002939E0  C0 23 04 2C */	lfs f1, 0x42c(r3)
@@ -3840,7 +3840,7 @@ lbl_80296AA8:
 /* 80296AB8 002939F8  80 01 00 80 */	lwz r0, 0x80(r1)
 /* 80296ABC 002939FC  90 81 00 3C */	stw r4, 0x3c(r1)
 /* 80296AC0 00293A00  90 01 00 40 */	stw r0, 0x40(r1)
-/* 80296AC4 00293A04  4B E2 FA 55 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 80296AC4 00293A04  4B E2 FA 55 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 80296AC8 00293A08  80 01 00 38 */	lwz r0, 0x38(r1)
 /* 80296ACC 00293A0C  80 61 00 3C */	lwz r3, 0x3c(r1)
 /* 80296AD0 00293A10  90 01 00 78 */	stw r0, 0x78(r1)
@@ -3867,8 +3867,8 @@ lbl_80296B20:
 /* 80296B20 00293A60  88 0D 9F 38 */	lbz r0, init$3355@sda21(r13)
 /* 80296B24 00293A64  7C 00 07 75 */	extsb. r0, r0
 /* 80296B28 00293A68  40 82 00 38 */	bne lbl_80296B60
-/* 80296B2C 00293A6C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80296B30 00293A70  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296B2C 00293A6C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80296B30 00293A70  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80296B34 00293A74  3C 60 80 3D */	lis r3, __vt__18TNerveTelesaFreeze@ha
 /* 80296B38 00293A78  90 0D 9F 3C */	stw r0, instance$3353@sda21(r13)
 /* 80296B3C 00293A7C  38 03 7D A8 */	addi r0, r3, __vt__18TNerveTelesaFreeze@l
@@ -3933,7 +3933,7 @@ attackToMario__7TTelesaFv:
 /* 80296C0C 00293B4C  C0 1F 00 54 */	lfs f0, 0x54(r31)
 /* 80296C10 00293B50  80 6D 98 DC */	lwz r3, gpMarioPos@sda21(r13)
 /* 80296C14 00293B54  EC 41 00 2A */	fadds f2, f1, f0
-/* 80296C18 00293B58  C0 22 E8 50 */	lfs f1, $$24397@sda21(r2)
+/* 80296C18 00293B58  C0 22 E8 50 */	lfs f1, "@4397"@sda21(r2)
 /* 80296C1C 00293B5C  C0 03 00 04 */	lfs f0, 4(r3)
 /* 80296C20 00293B60  EC 22 08 28 */	fsubs f1, f2, f1
 /* 80296C24 00293B64  FC 01 00 40 */	fcmpo cr0, f1, f0
@@ -3976,15 +3976,15 @@ setBehavior__7TTelesaFv:
 /* 80296CA4 00293BE4  88 0D 9F 40 */	lbz r0, init$3376@sda21(r13)
 /* 80296CA8 00293BE8  7C 00 07 75 */	extsb. r0, r0
 /* 80296CAC 00293BEC  40 82 00 3C */	bne lbl_80296CE8
-/* 80296CB0 00293BF0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80296CB4 00293BF4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80296CB0 00293BF0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80296CB4 00293BF4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80296CB8 00293BF8  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 80296CBC 00293BFC  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
 /* 80296CC0 00293C00  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 80296CC4 00293C04  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 80296CC8 00293C08  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 80296CCC 00293C0C  3C 60 80 40 */	lis r3, $$23375@ha
-/* 80296CD0 00293C10  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 80296CCC 00293C0C  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 80296CD0 00293C10  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 80296CD4 00293C14  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 80296CD8 00293C18  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 80296CDC 00293C1C  4B DE BA 4D */	bl __register_global_object
@@ -3998,21 +3998,21 @@ lbl_80296CE8:
 /* 80296CF8 00293C38  40 82 00 B8 */	bne lbl_80296DB0
 lbl_80296CFC:
 /* 80296CFC 00293C3C  C0 3F 01 A8 */	lfs f1, 0x1a8(r31)
-/* 80296D00 00293C40  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296D00 00293C40  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80296D04 00293C44  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296D08 00293C48  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 /* 80296D0C 00293C4C  C0 3F 01 A8 */	lfs f1, 0x1a8(r31)
 /* 80296D10 00293C50  C0 1F 01 AC */	lfs f0, 0x1ac(r31)
 /* 80296D14 00293C54  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80296D18 00293C58  40 81 00 0C */	ble lbl_80296D24
-/* 80296D1C 00293C5C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80296D1C 00293C5C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80296D20 00293C60  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 lbl_80296D24:
-/* 80296D24 00293C64  C0 42 E8 94 */	lfs f2, $$25015@sda21(r2)
+/* 80296D24 00293C64  C0 42 E8 94 */	lfs f2, "@5015"@sda21(r2)
 /* 80296D28 00293C68  C0 3F 01 A8 */	lfs f1, 0x1a8(r31)
 /* 80296D2C 00293C6C  C0 1F 01 AC */	lfs f0, 0x1ac(r31)
 /* 80296D30 00293C70  EC 22 00 72 */	fmuls f1, f2, f1
-/* 80296D34 00293C74  C0 42 E8 24 */	lfs f2, $$23627@sda21(r2)
+/* 80296D34 00293C74  C0 42 E8 24 */	lfs f2, "@3627"@sda21(r2)
 /* 80296D38 00293C78  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 80296D3C 00293C7C  80 8D 8D F0 */	lwz r4, jmaSinTable@sda21(r13)
 /* 80296D40 00293C80  EC 01 00 24 */	fdivs f0, f1, f0
@@ -4032,11 +4032,11 @@ lbl_80296D24:
 /* 80296D78 00293CB8  7C A0 06 30 */	sraw r0, r5, r0
 /* 80296D7C 00293CBC  C0 6D 89 48 */	lfs f3, mFlyAngMax__7TTelesa@sda21(r13)
 /* 80296D80 00293CC0  54 00 10 3A */	slwi r0, r0, 2
-/* 80296D84 00293CC4  C0 02 E8 8C */	lfs f0, $$24900@sda21(r2)
+/* 80296D84 00293CC4  C0 02 E8 8C */	lfs f0, "@4900"@sda21(r2)
 /* 80296D88 00293CC8  7C 43 04 2E */	lfsx f2, r3, r0
 /* 80296D8C 00293CCC  C0 3F 00 30 */	lfs f1, 0x30(r31)
 /* 80296D90 00293CD0  EC 63 00 BC */	fnmsubs f3, f3, f2, f0
-/* 80296D94 00293CD4  C0 02 E8 80 */	lfs f0, $$24897@sda21(r2)
+/* 80296D94 00293CD4  C0 02 E8 80 */	lfs f0, "@4897"@sda21(r2)
 /* 80296D98 00293CD8  EC 43 08 28 */	fsubs f2, f3, f1
 /* 80296D9C 00293CDC  FC 40 12 10 */	fabs f2, f2
 /* 80296DA0 00293CE0  FC 02 00 40 */	fcmpo cr0, f2, f0
@@ -4096,7 +4096,7 @@ perform__7TTelesaFUlPQ26JDrama9TGraphics:
 /* 80296E54 00293D94  4B F4 48 E5 */	bl checkGround__4TMapCFfffPPC12TBGCheckData
 /* 80296E58 00293D98  C0 BD 00 38 */	lfs f5, 0x38(r29)
 /* 80296E5C 00293D9C  3B 81 00 68 */	addi r28, r1, 0x68
-/* 80296E60 00293DA0  C0 02 E8 24 */	lfs f0, $$23627@sda21(r2)
+/* 80296E60 00293DA0  C0 02 E8 24 */	lfs f0, "@3627"@sda21(r2)
 /* 80296E64 00293DA4  7F 83 E3 78 */	mr r3, r28
 /* 80296E68 00293DA8  C0 5D 00 34 */	lfs f2, 0x34(r29)
 /* 80296E6C 00293DAC  C0 9D 00 30 */	lfs f4, 0x30(r29)
@@ -4123,7 +4123,7 @@ perform__7TTelesaFUlPQ26JDrama9TGraphics:
 /* 80296EC0 00293E00  80 84 00 04 */	lwz r4, 4(r4)
 /* 80296EC4 00293E04  38 84 00 20 */	addi r4, r4, 0x20
 /* 80296EC8 00293E08  4B DF D4 15 */	bl PSMTXCopy
-/* 80296ECC 00293E0C  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296ECC 00293E0C  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80296ED0 00293E10  D0 01 00 58 */	stfs f0, 0x58(r1)
 /* 80296ED4 00293E14  D0 01 00 5C */	stfs f0, 0x5c(r1)
 /* 80296ED8 00293E18  D0 01 00 60 */	stfs f0, 0x60(r1)
@@ -4143,7 +4143,7 @@ lbl_80296F00:
 /* 80296F0C 00293E4C  38 BD 00 10 */	addi r5, r29, 0x10
 /* 80296F10 00293E50  80 9D 00 C4 */	lwz r4, 0xc4(r29)
 /* 80296F14 00293E54  80 63 00 18 */	lwz r3, 0x18(r3)
-/* 80296F18 00293E58  4B E3 DA 39 */	bl setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1
+/* 80296F18 00293E58  4B E3 DA 39 */	bl "setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3<f>"
 lbl_80296F1C:
 /* 80296F1C 00293E5C  80 7D 01 C4 */	lwz r3, 0x1c4(r29)
 /* 80296F20 00293E60  38 9E 00 00 */	addi r4, r30, 0
@@ -4185,10 +4185,10 @@ reset__7TTelesaFv:
 /* 80296FA0 00293EE0  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80296FA4 00293EE4  4B DE EB 21 */	bl rand
 /* 80296FA8 00293EE8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80296FAC 00293EEC  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80296FAC 00293EEC  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80296FB0 00293EF0  90 01 00 54 */	stw r0, 0x54(r1)
 /* 80296FB4 00293EF4  3F A0 43 30 */	lis r29, 0x4330
-/* 80296FB8 00293EF8  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80296FB8 00293EF8  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80296FBC 00293EFC  93 A1 00 50 */	stw r29, 0x50(r1)
 /* 80296FC0 00293F00  C0 3E 00 00 */	lfs f1, 0(r30)
 /* 80296FC4 00293F04  C8 41 00 50 */	lfd f2, 0x50(r1)
@@ -4198,10 +4198,10 @@ reset__7TTelesaFv:
 /* 80296FD4 00293F14  EC 01 00 2A */	fadds f0, f1, f0
 /* 80296FD8 00293F18  D0 1F 01 9C */	stfs f0, 0x19c(r31)
 /* 80296FDC 00293F1C  C0 3F 01 9C */	lfs f1, 0x19c(r31)
-/* 80296FE0 00293F20  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80296FE0 00293F20  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80296FE4 00293F24  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80296FE8 00293F28  D0 1F 01 9C */	stfs f0, 0x19c(r31)
-/* 80296FEC 00293F2C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 80296FEC 00293F2C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80296FF0 00293F30  D0 1F 01 98 */	stfs f0, 0x198(r31)
 /* 80296FF4 00293F34  80 7F 01 94 */	lwz r3, 0x194(r31)
 /* 80296FF8 00293F38  3B C3 04 60 */	addi r30, r3, 0x460
@@ -4210,9 +4210,9 @@ reset__7TTelesaFv:
 /* 80297004 00293F44  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80297008 00293F48  4B DE EA BD */	bl rand
 /* 8029700C 00293F4C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80297010 00293F50  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80297010 00293F50  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80297014 00293F54  90 01 00 4C */	stw r0, 0x4c(r1)
-/* 80297018 00293F58  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80297018 00293F58  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 8029701C 00293F5C  93 A1 00 48 */	stw r29, 0x48(r1)
 /* 80297020 00293F60  C0 3E 00 00 */	lfs f1, 0(r30)
 /* 80297024 00293F64  C8 41 00 48 */	lfd f2, 0x48(r1)
@@ -4222,10 +4222,10 @@ reset__7TTelesaFv:
 /* 80297034 00293F74  EC 01 00 2A */	fadds f0, f1, f0
 /* 80297038 00293F78  D0 1F 01 A4 */	stfs f0, 0x1a4(r31)
 /* 8029703C 00293F7C  C0 3F 01 A4 */	lfs f1, 0x1a4(r31)
-/* 80297040 00293F80  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80297040 00293F80  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80297044 00293F84  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80297048 00293F88  D0 1F 01 A4 */	stfs f0, 0x1a4(r31)
-/* 8029704C 00293F8C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 8029704C 00293F8C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80297050 00293F90  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 /* 80297054 00293F94  80 7F 01 94 */	lwz r3, 0x194(r31)
 /* 80297058 00293F98  3B 83 04 68 */	addi r28, r3, 0x468
@@ -4234,10 +4234,10 @@ reset__7TTelesaFv:
 /* 80297064 00293FA4  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80297068 00293FA8  4B DE EA 5D */	bl rand
 /* 8029706C 00293FAC  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80297070 00293FB0  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80297070 00293FB0  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80297074 00293FB4  90 01 00 44 */	stw r0, 0x44(r1)
 /* 80297078 00293FB8  3B C0 00 00 */	li r30, 0
-/* 8029707C 00293FBC  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 8029707C 00293FBC  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 80297080 00293FC0  93 A1 00 40 */	stw r29, 0x40(r1)
 /* 80297084 00293FC4  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80297088 00293FC8  C8 41 00 40 */	lfd f2, 0x40(r1)
@@ -4247,7 +4247,7 @@ reset__7TTelesaFv:
 /* 80297098 00293FD8  EC 01 00 2A */	fadds f0, f1, f0
 /* 8029709C 00293FDC  D0 1F 01 AC */	stfs f0, 0x1ac(r31)
 /* 802970A0 00293FE0  9B DF 01 B8 */	stb r30, 0x1b8(r31)
-/* 802970A4 00293FE4  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 802970A4 00293FE4  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 802970A8 00293FE8  D0 1F 00 C0 */	stfs f0, 0xc0(r31)
 /* 802970AC 00293FEC  80 1F 00 64 */	lwz r0, 0x64(r31)
 /* 802970B0 00293FF0  54 00 01 44 */	rlwinm r0, r0, 0, 5, 2
@@ -4258,15 +4258,15 @@ reset__7TTelesaFv:
 /* 802970C4 00294004  88 0D 9F 40 */	lbz r0, init$3376@sda21(r13)
 /* 802970C8 00294008  7C 00 07 75 */	extsb. r0, r0
 /* 802970CC 0029400C  40 82 00 3C */	bne lbl_80297108
-/* 802970D0 00294010  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802970D4 00294014  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802970D0 00294010  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802970D4 00294014  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802970D8 00294018  3C 60 80 3D */	lis r3, __vt__23TNerveTelesaAttackMario@ha
 /* 802970DC 0029401C  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
 /* 802970E0 00294020  38 03 7D 98 */	addi r0, r3, __vt__23TNerveTelesaAttackMario@l
 /* 802970E4 00294024  3C 80 80 29 */	lis r4, __dt__23TNerveTelesaAttackMarioFv@ha
 /* 802970E8 00294028  90 0D 9F 44 */	stw r0, instance$3374@sda21(r13)
-/* 802970EC 0029402C  3C 60 80 40 */	lis r3, $$23375@ha
-/* 802970F0 00294030  38 A3 D6 FC */	addi r5, r3, $$23375@l
+/* 802970EC 0029402C  3C 60 80 40 */	lis r3, "@3375"@ha
+/* 802970F0 00294030  38 A3 D6 FC */	addi r5, r3, "@3375"@l
 /* 802970F4 00294034  38 84 3B C4 */	addi r4, r4, __dt__23TNerveTelesaAttackMarioFv@l
 /* 802970F8 00294038  38 6D 9F 44 */	addi r3, r13, instance$3374@sda21
 /* 802970FC 0029403C  4B DE B6 2D */	bl __register_global_object
@@ -4297,15 +4297,15 @@ lbl_80297148:
 /* 80297154 00294094  88 0D 9F 28 */	lbz r0, init$3308@sda21(r13)
 /* 80297158 00294098  7C 00 07 75 */	extsb. r0, r0
 /* 8029715C 0029409C  40 82 00 3C */	bne lbl_80297198
-/* 80297160 002940A0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80297164 002940A4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80297160 002940A0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80297164 002940A4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80297168 002940A8  3C 60 80 3D */	lis r3, __vt__19TNerveTelesaImitate@ha
 /* 8029716C 002940AC  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
 /* 80297170 002940B0  38 03 7D C8 */	addi r0, r3, __vt__19TNerveTelesaImitate@l
 /* 80297174 002940B4  3C 80 80 29 */	lis r4, __dt__19TNerveTelesaImitateFv@ha
 /* 80297178 002940B8  90 0D 9F 2C */	stw r0, instance$3306@sda21(r13)
-/* 8029717C 002940BC  3C 60 80 40 */	lis r3, $$23307@ha
-/* 80297180 002940C0  38 A3 D6 D8 */	addi r5, r3, $$23307@l
+/* 8029717C 002940BC  3C 60 80 40 */	lis r3, "@3307"@ha
+/* 80297180 002940C0  38 A3 D6 D8 */	addi r5, r3, "@3307"@l
 /* 80297184 002940C4  38 84 45 0C */	addi r4, r4, __dt__19TNerveTelesaImitateFv@l
 /* 80297188 002940C8  38 6D 9F 2C */	addi r3, r13, instance$3306@sda21
 /* 8029718C 002940CC  4B DE B5 9D */	bl __register_global_object
@@ -4355,8 +4355,8 @@ setMActorAndKeeper__7TTelesaFv:
 /* 80297228 00294168  4B E7 F1 11 */	bl __ct__13TMActorKeeperFP12TLiveManagerUs
 lbl_8029722C:
 /* 8029722C 0029416C  93 DF 00 78 */	stw r30, 0x78(r31)
-/* 80297230 00294170  3C 60 80 3A */	lis r3, $$22993@ha
-/* 80297234 00294174  38 83 91 CC */	addi r4, r3, $$22993@l
+/* 80297230 00294170  3C 60 80 3A */	lis r3, "@2993"@ha
+/* 80297234 00294174  38 83 91 CC */	addi r4, r3, "@2993"@l
 /* 80297238 00294178  80 7F 00 78 */	lwz r3, 0x78(r31)
 /* 8029723C 0029417C  38 A0 00 03 */	li r5, 3
 /* 80297240 00294180  4B E7 F2 C9 */	bl createMActor__13TMActorKeeperFPCcUl
@@ -4371,12 +4371,12 @@ lbl_8029722C:
 .global init__7TTelesaFP12TLiveManager
 init__7TTelesaFP12TLiveManager:
 /* 80297260 002941A0  7C 08 02 A6 */	mflr r0
-/* 80297264 002941A4  3C A0 80 3A */	lis r5, $$21490@ha
+/* 80297264 002941A4  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 80297268 002941A8  90 01 00 04 */	stw r0, 4(r1)
 /* 8029726C 002941AC  94 21 FF 40 */	stwu r1, -0xc0(r1)
 /* 80297270 002941B0  DB E1 00 B8 */	stfd f31, 0xb8(r1)
 /* 80297274 002941B4  93 E1 00 B4 */	stw r31, 0xb4(r1)
-/* 80297278 002941B8  3B E5 90 70 */	addi r31, r5, $$21490@l
+/* 80297278 002941B8  3B E5 90 70 */	addi r31, r5, "@1490"@l
 /* 8029727C 002941BC  93 C1 00 B0 */	stw r30, 0xb0(r1)
 /* 80297280 002941C0  3B C3 00 00 */	addi r30, r3, 0
 /* 80297284 002941C4  93 A1 00 AC */	stw r29, 0xac(r1)
@@ -4417,10 +4417,10 @@ init__7TTelesaFP12TLiveManager:
 /* 80297310 00294250  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80297314 00294254  4B DE E7 B1 */	bl rand
 /* 80297318 00294258  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8029731C 0029425C  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 8029731C 0029425C  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80297320 00294260  90 01 00 A4 */	stw r0, 0xa4(r1)
 /* 80297324 00294264  3F A0 43 30 */	lis r29, 0x4330
-/* 80297328 00294268  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80297328 00294268  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 8029732C 0029426C  93 A1 00 A0 */	stw r29, 0xa0(r1)
 /* 80297330 00294270  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80297334 00294274  C8 41 00 A0 */	lfd f2, 0xa0(r1)
@@ -4430,10 +4430,10 @@ init__7TTelesaFP12TLiveManager:
 /* 80297344 00294284  EC 01 00 2A */	fadds f0, f1, f0
 /* 80297348 00294288  D0 1E 01 9C */	stfs f0, 0x19c(r30)
 /* 8029734C 0029428C  C0 3E 01 9C */	lfs f1, 0x19c(r30)
-/* 80297350 00294290  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80297350 00294290  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80297354 00294294  EC 01 00 32 */	fmuls f0, f1, f0
 /* 80297358 00294298  D0 1E 01 9C */	stfs f0, 0x19c(r30)
-/* 8029735C 0029429C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 8029735C 0029429C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 80297360 002942A0  D0 1E 01 98 */	stfs f0, 0x198(r30)
 /* 80297364 002942A4  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 80297368 002942A8  3B 83 04 60 */	addi r28, r3, 0x460
@@ -4442,9 +4442,9 @@ init__7TTelesaFP12TLiveManager:
 /* 80297374 002942B4  EF E1 00 28 */	fsubs f31, f1, f0
 /* 80297378 002942B8  4B DE E7 4D */	bl rand
 /* 8029737C 002942BC  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80297380 002942C0  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 80297380 002942C0  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 80297384 002942C4  90 01 00 9C */	stw r0, 0x9c(r1)
-/* 80297388 002942C8  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 80297388 002942C8  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 8029738C 002942CC  93 A1 00 98 */	stw r29, 0x98(r1)
 /* 80297390 002942D0  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 80297394 002942D4  C8 41 00 98 */	lfd f2, 0x98(r1)
@@ -4454,10 +4454,10 @@ init__7TTelesaFP12TLiveManager:
 /* 802973A4 002942E4  EC 01 00 2A */	fadds f0, f1, f0
 /* 802973A8 002942E8  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
 /* 802973AC 002942EC  C0 3E 01 A4 */	lfs f1, 0x1a4(r30)
-/* 802973B0 002942F0  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 802973B0 002942F0  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 802973B4 002942F4  EC 01 00 32 */	fmuls f0, f1, f0
 /* 802973B8 002942F8  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
-/* 802973BC 002942FC  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 802973BC 002942FC  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 802973C0 00294300  D0 1E 01 A8 */	stfs f0, 0x1a8(r30)
 /* 802973C4 00294304  80 7E 01 94 */	lwz r3, 0x194(r30)
 /* 802973C8 00294308  3B 83 04 68 */	addi r28, r3, 0x468
@@ -4466,10 +4466,10 @@ init__7TTelesaFP12TLiveManager:
 /* 802973D4 00294314  EF E1 00 28 */	fsubs f31, f1, f0
 /* 802973D8 00294318  4B DE E6 ED */	bl rand
 /* 802973DC 0029431C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802973E0 00294320  C8 62 E8 38 */	lfd f3, $$23633@sda21(r2)
+/* 802973E0 00294320  C8 62 E8 38 */	lfd f3, "@3633"@sda21(r2)
 /* 802973E4 00294324  90 01 00 94 */	stw r0, 0x94(r1)
 /* 802973E8 00294328  38 7F 01 88 */	addi r3, r31, 0x188
-/* 802973EC 0029432C  C0 02 E8 34 */	lfs f0, $$23631@sda21(r2)
+/* 802973EC 0029432C  C0 02 E8 34 */	lfs f0, "@3631"@sda21(r2)
 /* 802973F0 00294330  93 A1 00 90 */	stw r29, 0x90(r1)
 /* 802973F4 00294334  C0 3C 00 00 */	lfs f1, 0(r28)
 /* 802973F8 00294338  C8 41 00 90 */	lfd f2, 0x90(r1)
@@ -4529,7 +4529,7 @@ lbl_802974B0:
 /* 802974C4 00294404  7C 04 00 00 */	cmpw r4, r0
 /* 802974C8 00294408  41 80 FF E4 */	blt lbl_802974AC
 lbl_802974CC:
-/* 802974CC 0029440C  C0 02 E8 40 */	lfs f0, $$23705@sda21(r2)
+/* 802974CC 0029440C  C0 02 E8 40 */	lfs f0, "@3705"@sda21(r2)
 /* 802974D0 00294410  D0 1E 01 88 */	stfs f0, 0x188(r30)
 /* 802974D4 00294414  80 01 00 C4 */	lwz r0, 0xc4(r1)
 /* 802974D8 00294418  CB E1 00 B8 */	lfd f31, 0xb8(r1)
@@ -4583,10 +4583,10 @@ __ct__7TTelesaFPCc:
 /* 80297580 002944C0  38 00 00 00 */	li r0, 0
 /* 80297584 002944C4  90 7F 00 20 */	stw r3, 0x20(r31)
 /* 80297588 002944C8  7F E3 FB 78 */	mr r3, r31
-/* 8029758C 002944CC  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 8029758C 002944CC  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80297590 002944D0  D0 3F 01 98 */	stfs f1, 0x198(r31)
 /* 80297594 002944D4  D0 3F 01 9C */	stfs f1, 0x19c(r31)
-/* 80297598 002944D8  C0 02 E8 50 */	lfs f0, $$24397@sda21(r2)
+/* 80297598 002944D8  C0 02 E8 50 */	lfs f0, "@4397"@sda21(r2)
 /* 8029759C 002944DC  D0 1F 01 A0 */	stfs f0, 0x1a0(r31)
 /* 802975A0 002944E0  D0 1F 01 A4 */	stfs f0, 0x1a4(r31)
 /* 802975A4 002944E4  D0 3F 01 A8 */	stfs f1, 0x1a8(r31)
@@ -4624,7 +4624,7 @@ setFlagOutOfCube__14TTelesaManagerFv:
 /* 80297618 00294558  3B A0 00 00 */	li r29, 0
 /* 8029761C 0029455C  93 81 00 28 */	stw r28, 0x28(r1)
 /* 80297620 00294560  3B 83 00 00 */	addi r28, r3, 0
-/* 80297624 00294564  C3 E2 E8 98 */	lfs f31, $$25234@sda21(r2)
+/* 80297624 00294564  C3 E2 E8 98 */	lfs f31, "@5234"@sda21(r2)
 /* 80297628 00294568  48 00 00 74 */	b lbl_8029769C
 lbl_8029762C:
 /* 8029762C 0029456C  80 7C 00 18 */	lwz r3, 0x18(r28)
@@ -4753,8 +4753,8 @@ createEnemies__14TTelesaManagerFi:
 /* 802977D8 00294718  7C 7F 1B 78 */	mr r31, r3
 /* 802977DC 0029471C  4B FB AE CD */	bl createEnemies__13TEnemyManagerFi
 /* 802977E0 00294720  80 BF 00 18 */	lwz r5, 0x18(r31)
-/* 802977E4 00294724  3C 60 80 3A */	lis r3, $$25299@ha
-/* 802977E8 00294728  38 83 93 E4 */	addi r4, r3, $$25299@l
+/* 802977E4 00294724  3C 60 80 3A */	lis r3, "@5299"@ha
+/* 802977E8 00294728  38 83 93 E4 */	addi r4, r3, "@5299"@l
 /* 802977EC 0029472C  80 65 00 00 */	lwz r3, 0(r5)
 /* 802977F0 00294730  80 63 00 74 */	lwz r3, 0x74(r3)
 /* 802977F4 00294734  80 63 00 04 */	lwz r3, 4(r3)
@@ -4820,7 +4820,7 @@ createEnemyInstance__14TTelesaManagerFv:
 /* 802978C0 00294800  7C 7F 1B 79 */	or. r31, r3, r3
 /* 802978C4 00294804  41 82 00 10 */	beq lbl_802978D4
 /* 802978C8 00294808  38 7F 00 00 */	addi r3, r31, 0
-/* 802978CC 0029480C  38 82 E8 9C */	addi r4, r2, $$25303@sda21
+/* 802978CC 0029480C  38 82 E8 9C */	addi r4, r2, "@5303"@sda21
 /* 802978D0 00294810  4B FF FC 89 */	bl __ct__7TTelesaFPCc
 lbl_802978D4:
 /* 802978D4 00294814  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -4845,14 +4845,14 @@ load__14TTelesaManagerFR20JSUMemoryInputStream:
 /* 80297914 00294854  4B D7 4F 9D */	bl __nw__FUl
 /* 80297918 00294858  7C 7F 1B 79 */	or. r31, r3, r3
 /* 8029791C 0029485C  41 82 00 14 */	beq lbl_80297930
-/* 80297920 00294860  3C 60 80 3A */	lis r3, $$25307@ha
-/* 80297924 00294864  38 83 93 F0 */	addi r4, r3, $$25307@l
+/* 80297920 00294860  3C 60 80 3A */	lis r3, "@5307"@ha
+/* 80297924 00294864  38 83 93 F0 */	addi r4, r3, "@5307"@l
 /* 80297928 00294868  38 7F 00 00 */	addi r3, r31, 0
 /* 8029792C 0029486C  48 00 00 BD */	bl __ct__21TTelesaSaveLoadParamsFPCc
 lbl_80297930:
-/* 80297930 00294870  3C 60 80 3A */	lis r3, $$25308@ha
+/* 80297930 00294870  3C 60 80 3A */	lis r3, "@5308"@ha
 /* 80297934 00294874  93 FD 00 38 */	stw r31, 0x38(r29)
-/* 80297938 00294878  38 63 94 04 */	addi r3, r3, $$25308@l
+/* 80297938 00294878  38 63 94 04 */	addi r3, r3, "@5308"@l
 /* 8029793C 0029487C  4B D7 43 81 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80297940 00294880  3B E3 00 00 */	addi r31, r3, 0
 /* 80297944 00294884  38 60 00 1C */	li r3, 0x1c
@@ -4904,11 +4904,11 @@ __ct__14TTelesaManagerFPCc:
 .global __ct__21TTelesaSaveLoadParamsFPCc
 __ct__21TTelesaSaveLoadParamsFPCc:
 /* 802979E8 00294928  7C 08 02 A6 */	mflr r0
-/* 802979EC 0029492C  3C A0 80 3A */	lis r5, $$21490@ha
+/* 802979EC 0029492C  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 802979F0 00294930  90 01 00 04 */	stw r0, 4(r1)
 /* 802979F4 00294934  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 802979F8 00294938  BF 41 00 28 */	stmw r26, 0x28(r1)
-/* 802979FC 0029493C  3B C5 90 70 */	addi r30, r5, $$21490@l
+/* 802979FC 0029493C  3B C5 90 70 */	addi r30, r5, "@1490"@l
 /* 80297A00 00294940  90 61 00 08 */	stw r3, 8(r1)
 /* 80297A04 00294944  80 61 00 08 */	lwz r3, 8(r1)
 /* 80297A08 00294948  4B FE D8 29 */	bl __ct__18TWalkerEnemyParamsFPCc
@@ -4920,13 +4920,13 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297A20 00294960  38 9F 00 00 */	addi r4, r31, 0
 /* 80297A24 00294964  38 7F 03 2C */	addi r3, r31, 0x32c
 /* 80297A28 00294968  4B E4 31 CD */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80297A2C 0029496C  3C 60 80 3B */	lis r3, __vt__10TParamT$$0l$$1@ha
-/* 80297A30 00294970  3B 63 6A 7C */	addi r27, r3, __vt__10TParamT$$0l$$1@l
+/* 80297A2C 0029496C  3C 60 80 3B */	lis r3, "__vt__10TParamT<l>"@ha
+/* 80297A30 00294970  3B 63 6A 7C */	addi r27, r3, "__vt__10TParamT<l>"@l
 /* 80297A34 00294974  93 7F 03 2C */	stw r27, 0x32c(r31)
 /* 80297A38 00294978  3B 80 00 3C */	li r28, 0x3c
-/* 80297A3C 0029497C  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0l$$1@ha
+/* 80297A3C 0029497C  3C 60 80 3B */	lis r3, "__vt__11TParamRT<l>"@ha
 /* 80297A40 00294980  93 9F 03 3C */	stw r28, 0x33c(r31)
-/* 80297A44 00294984  3B 43 6A 70 */	addi r26, r3, __vt__11TParamRT$$0l$$1@l
+/* 80297A44 00294984  3B 43 6A 70 */	addi r26, r3, "__vt__11TParamRT<l>"@l
 /* 80297A48 00294988  38 7E 03 C0 */	addi r3, r30, 0x3c0
 /* 80297A4C 0029498C  93 5F 03 2C */	stw r26, 0x32c(r31)
 /* 80297A50 00294990  4B DA CC 3D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -4955,12 +4955,12 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297AAC 002949EC  38 7F 03 68 */	addi r3, r31, 0x368
 /* 80297AB0 002949F0  38 DE 03 E0 */	addi r6, r30, 0x3e0
 /* 80297AB4 002949F4  4B E4 31 41 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80297AB8 002949F8  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80297ABC 002949FC  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80297AB8 002949F8  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80297ABC 002949FC  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 80297AC0 00294A00  93 BF 03 68 */	stw r29, 0x368(r31)
-/* 80297AC4 00294A04  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80297AC8 00294A08  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80297ACC 00294A0C  C0 02 E8 74 */	lfs f0, $$24658@sda21(r2)
+/* 80297AC4 00294A04  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80297AC8 00294A08  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80297ACC 00294A0C  C0 02 E8 74 */	lfs f0, "@4658"@sda21(r2)
 /* 80297AD0 00294A10  38 7E 03 F0 */	addi r3, r30, 0x3f0
 /* 80297AD4 00294A14  D0 1F 03 78 */	stfs f0, 0x378(r31)
 /* 80297AD8 00294A18  93 9F 03 68 */	stw r28, 0x368(r31)
@@ -4972,7 +4972,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297AF0 00294A30  4B E4 31 05 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297AF4 00294A34  93 BF 03 7C */	stw r29, 0x37c(r31)
 /* 80297AF8 00294A38  38 7E 04 00 */	addi r3, r30, 0x400
-/* 80297AFC 00294A3C  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 80297AFC 00294A3C  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 80297B00 00294A40  D0 1F 03 8C */	stfs f0, 0x38c(r31)
 /* 80297B04 00294A44  93 9F 03 7C */	stw r28, 0x37c(r31)
 /* 80297B08 00294A48  4B DA CB 85 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -4983,7 +4983,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297B1C 00294A5C  4B E4 30 D9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297B20 00294A60  93 BF 03 90 */	stw r29, 0x390(r31)
 /* 80297B24 00294A64  38 7E 04 14 */	addi r3, r30, 0x414
-/* 80297B28 00294A68  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 80297B28 00294A68  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 80297B2C 00294A6C  D0 1F 03 A0 */	stfs f0, 0x3a0(r31)
 /* 80297B30 00294A70  93 9F 03 90 */	stw r28, 0x390(r31)
 /* 80297B34 00294A74  4B DA CB 59 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -4994,7 +4994,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297B48 00294A88  4B E4 30 AD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297B4C 00294A8C  93 BF 03 A4 */	stw r29, 0x3a4(r31)
 /* 80297B50 00294A90  38 7E 04 28 */	addi r3, r30, 0x428
-/* 80297B54 00294A94  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 80297B54 00294A94  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 80297B58 00294A98  D0 1F 03 B4 */	stfs f0, 0x3b4(r31)
 /* 80297B5C 00294A9C  93 9F 03 A4 */	stw r28, 0x3a4(r31)
 /* 80297B60 00294AA0  4B DA CB 2D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5005,7 +5005,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297B74 00294AB4  4B E4 30 81 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297B78 00294AB8  93 BF 03 B8 */	stw r29, 0x3b8(r31)
 /* 80297B7C 00294ABC  38 7E 04 3C */	addi r3, r30, 0x43c
-/* 80297B80 00294AC0  C0 02 E8 74 */	lfs f0, $$24658@sda21(r2)
+/* 80297B80 00294AC0  C0 02 E8 74 */	lfs f0, "@4658"@sda21(r2)
 /* 80297B84 00294AC4  D0 1F 03 C8 */	stfs f0, 0x3c8(r31)
 /* 80297B88 00294AC8  93 9F 03 B8 */	stw r28, 0x3b8(r31)
 /* 80297B8C 00294ACC  4B DA CB 01 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5016,7 +5016,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297BA0 00294AE0  4B E4 30 55 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297BA4 00294AE4  93 BF 03 CC */	stw r29, 0x3cc(r31)
 /* 80297BA8 00294AE8  38 7E 04 50 */	addi r3, r30, 0x450
-/* 80297BAC 00294AEC  C0 02 E8 4C */	lfs f0, $$24092@sda21(r2)
+/* 80297BAC 00294AEC  C0 02 E8 4C */	lfs f0, "@4092"@sda21(r2)
 /* 80297BB0 00294AF0  D0 1F 03 DC */	stfs f0, 0x3dc(r31)
 /* 80297BB4 00294AF4  93 9F 03 CC */	stw r28, 0x3cc(r31)
 /* 80297BB8 00294AF8  4B DA CA D5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5027,7 +5027,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297BCC 00294B0C  4B E4 30 29 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297BD0 00294B10  93 BF 03 E0 */	stw r29, 0x3e0(r31)
 /* 80297BD4 00294B14  38 7E 04 64 */	addi r3, r30, 0x464
-/* 80297BD8 00294B18  C0 02 E8 70 */	lfs f0, $$24642@sda21(r2)
+/* 80297BD8 00294B18  C0 02 E8 70 */	lfs f0, "@4642"@sda21(r2)
 /* 80297BDC 00294B1C  D0 1F 03 F0 */	stfs f0, 0x3f0(r31)
 /* 80297BE0 00294B20  93 9F 03 E0 */	stw r28, 0x3e0(r31)
 /* 80297BE4 00294B24  4B DA CA A9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5049,7 +5049,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297C24 00294B64  4B E4 2F D1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297C28 00294B68  93 BF 04 08 */	stw r29, 0x408(r31)
 /* 80297C2C 00294B6C  38 7E 04 90 */	addi r3, r30, 0x490
-/* 80297C30 00294B70  C0 02 E8 6C */	lfs f0, $$24590@sda21(r2)
+/* 80297C30 00294B70  C0 02 E8 6C */	lfs f0, "@4590"@sda21(r2)
 /* 80297C34 00294B74  D0 1F 04 18 */	stfs f0, 0x418(r31)
 /* 80297C38 00294B78  93 9F 04 08 */	stw r28, 0x408(r31)
 /* 80297C3C 00294B7C  4B DA CA 51 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5060,7 +5060,7 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297C50 00294B90  4B E4 2F A5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80297C54 00294B94  93 BF 04 1C */	stw r29, 0x41c(r31)
 /* 80297C58 00294B98  38 7E 04 A8 */	addi r3, r30, 0x4a8
-/* 80297C5C 00294B9C  C0 02 E8 A4 */	lfs f0, $$25423@sda21(r2)
+/* 80297C5C 00294B9C  C0 02 E8 A4 */	lfs f0, "@5423"@sda21(r2)
 /* 80297C60 00294BA0  D0 1F 04 2C */	stfs f0, 0x42c(r31)
 /* 80297C64 00294BA4  93 9F 04 1C */	stw r28, 0x41c(r31)
 /* 80297C68 00294BA8  4B DA CA 25 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -5084,9 +5084,9 @@ __ct__21TTelesaSaveLoadParamsFPCc:
 /* 80297CB0 00294BF0  7F E3 FB 78 */	mr r3, r31
 /* 80297CB4 00294BF4  93 9F 04 54 */	stw r28, 0x454(r31)
 /* 80297CB8 00294BF8  93 5F 04 44 */	stw r26, 0x444(r31)
-/* 80297CBC 00294BFC  C0 22 E8 40 */	lfs f1, $$23705@sda21(r2)
+/* 80297CBC 00294BFC  C0 22 E8 40 */	lfs f1, "@3705"@sda21(r2)
 /* 80297CC0 00294C00  D0 3F 04 58 */	stfs f1, 0x458(r31)
-/* 80297CC4 00294C04  C0 02 E8 14 */	lfs f0, $$23471@sda21(r2)
+/* 80297CC4 00294C04  C0 02 E8 14 */	lfs f0, "@3471"@sda21(r2)
 /* 80297CC8 00294C08  D0 1F 04 5C */	stfs f0, 0x45c(r31)
 /* 80297CCC 00294C0C  D0 3F 04 60 */	stfs f1, 0x460(r31)
 /* 80297CD0 00294C10  D0 1F 04 64 */	stfs f0, 0x464(r31)
@@ -5428,205 +5428,205 @@ lbl_80298128:
 .global __sinit_telesa_cpp
 __sinit_telesa_cpp:
 /* 80298144 00295084  7C 08 02 A6 */	mflr r0
-/* 80298148 00295088  3C 60 80 40 */	lis r3, $$23307@ha
+/* 80298148 00295088  3C 60 80 40 */	lis r3, "@3307"@ha
 /* 8029814C 0029508C  90 01 00 04 */	stw r0, 4(r1)
 /* 80298150 00295090  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80298154 00295094  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 80298158 00295098  3B E3 D6 D8 */	addi r31, r3, $$23307@l
-/* 8029815C 0029509C  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 80298158 00295098  3B E3 D6 D8 */	addi r31, r3, "@3307"@l
+/* 8029815C 0029509C  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 80298160 002950A0  7C 00 07 75 */	extsb. r0, r0
 /* 80298164 002950A4  40 82 00 28 */	bne lbl_8029818C
-/* 80298168 002950A8  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 80298168 002950A8  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8029816C 002950AC  4B D7 6A C9 */	bl initiate__10JSUPtrListFv
-/* 80298170 002950B0  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 80298174 002950B4  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 80298178 002950B8  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 80298170 002950B0  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 80298174 002950B4  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 80298178 002950B8  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8029817C 002950BC  38 BF 00 48 */	addi r5, r31, 0x48
 /* 80298180 002950C0  4B DE A5 A9 */	bl __register_global_object
 /* 80298184 002950C4  38 00 00 01 */	li r0, 1
-/* 80298188 002950C8  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 80298188 002950C8  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_8029818C:
-/* 8029818C 002950CC  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 8029818C 002950CC  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 80298190 002950D0  7C 00 07 75 */	extsb. r0, r0
 /* 80298194 002950D4  40 82 00 28 */	bne lbl_802981BC
-/* 80298198 002950D8  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 80298198 002950D8  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 8029819C 002950DC  4B D7 6A 99 */	bl initiate__10JSUPtrListFv
-/* 802981A0 002950E0  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 802981A4 002950E4  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 802981A8 002950E8  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 802981A0 002950E0  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 802981A4 002950E4  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 802981A8 002950E8  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 802981AC 002950EC  38 BF 00 54 */	addi r5, r31, 0x54
 /* 802981B0 002950F0  4B DE A5 79 */	bl __register_global_object
 /* 802981B4 002950F4  38 00 00 01 */	li r0, 1
-/* 802981B8 002950F8  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 802981B8 002950F8  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_802981BC:
-/* 802981BC 002950FC  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 802981BC 002950FC  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 802981C0 00295100  7C 00 07 75 */	extsb. r0, r0
 /* 802981C4 00295104  40 82 00 28 */	bne lbl_802981EC
-/* 802981C8 00295108  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 802981C8 00295108  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 802981CC 0029510C  4B D7 6A 69 */	bl initiate__10JSUPtrListFv
-/* 802981D0 00295110  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 802981D4 00295114  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 802981D8 00295118  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 802981D0 00295110  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 802981D4 00295114  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 802981D8 00295118  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 802981DC 0029511C  38 BF 00 60 */	addi r5, r31, 0x60
 /* 802981E0 00295120  4B DE A5 49 */	bl __register_global_object
 /* 802981E4 00295124  38 00 00 01 */	li r0, 1
-/* 802981E8 00295128  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 802981E8 00295128  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_802981EC:
-/* 802981EC 0029512C  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 802981EC 0029512C  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 802981F0 00295130  7C 00 07 75 */	extsb. r0, r0
 /* 802981F4 00295134  40 82 00 28 */	bne lbl_8029821C
-/* 802981F8 00295138  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 802981F8 00295138  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 802981FC 0029513C  4B D7 6A 39 */	bl initiate__10JSUPtrListFv
-/* 80298200 00295140  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 80298204 00295144  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 80298208 00295148  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 80298200 00295140  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 80298204 00295144  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 80298208 00295148  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 8029820C 0029514C  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 80298210 00295150  4B DE A5 19 */	bl __register_global_object
 /* 80298214 00295154  38 00 00 01 */	li r0, 1
-/* 80298218 00295158  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 80298218 00295158  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_8029821C:
-/* 8029821C 0029515C  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 8029821C 0029515C  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 80298220 00295160  7C 00 07 75 */	extsb. r0, r0
 /* 80298224 00295164  40 82 00 28 */	bne lbl_8029824C
-/* 80298228 00295168  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 80298228 00295168  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 8029822C 0029516C  4B D7 6A 09 */	bl initiate__10JSUPtrListFv
-/* 80298230 00295170  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 80298234 00295174  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 80298238 00295178  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 80298230 00295170  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 80298234 00295174  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 80298238 00295178  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 8029823C 0029517C  38 BF 00 78 */	addi r5, r31, 0x78
 /* 80298240 00295180  4B DE A4 E9 */	bl __register_global_object
 /* 80298244 00295184  38 00 00 01 */	li r0, 1
-/* 80298248 00295188  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 80298248 00295188  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_8029824C:
-/* 8029824C 0029518C  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 8029824C 0029518C  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 80298250 00295190  7C 00 07 75 */	extsb. r0, r0
 /* 80298254 00295194  40 82 00 28 */	bne lbl_8029827C
-/* 80298258 00295198  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 80298258 00295198  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8029825C 0029519C  4B D7 69 D9 */	bl initiate__10JSUPtrListFv
-/* 80298260 002951A0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 80298264 002951A4  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 80298268 002951A8  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 80298260 002951A0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 80298264 002951A4  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 80298268 002951A8  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8029826C 002951AC  38 BF 00 84 */	addi r5, r31, 0x84
 /* 80298270 002951B0  4B DE A4 B9 */	bl __register_global_object
 /* 80298274 002951B4  38 00 00 01 */	li r0, 1
-/* 80298278 002951B8  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 80298278 002951B8  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_8029827C:
-/* 8029827C 002951BC  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 8029827C 002951BC  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 80298280 002951C0  7C 00 07 75 */	extsb. r0, r0
 /* 80298284 002951C4  40 82 00 28 */	bne lbl_802982AC
-/* 80298288 002951C8  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 80298288 002951C8  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8029828C 002951CC  4B D7 69 A9 */	bl initiate__10JSUPtrListFv
-/* 80298290 002951D0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 80298294 002951D4  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 80298298 002951D8  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 80298290 002951D0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 80298294 002951D4  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 80298298 002951D8  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8029829C 002951DC  38 BF 00 90 */	addi r5, r31, 0x90
 /* 802982A0 002951E0  4B DE A4 89 */	bl __register_global_object
 /* 802982A4 002951E4  38 00 00 01 */	li r0, 1
-/* 802982A8 002951E8  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 802982A8 002951E8  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_802982AC:
-/* 802982AC 002951EC  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 802982AC 002951EC  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 802982B0 002951F0  7C 00 07 75 */	extsb. r0, r0
 /* 802982B4 002951F4  40 82 00 28 */	bne lbl_802982DC
-/* 802982B8 002951F8  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 802982B8 002951F8  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 802982BC 002951FC  4B D7 69 79 */	bl initiate__10JSUPtrListFv
-/* 802982C0 00295200  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 802982C4 00295204  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 802982C8 00295208  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 802982C0 00295200  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 802982C4 00295204  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 802982C8 00295208  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 802982CC 0029520C  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 802982D0 00295210  4B DE A4 59 */	bl __register_global_object
 /* 802982D4 00295214  38 00 00 01 */	li r0, 1
-/* 802982D8 00295218  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 802982D8 00295218  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_802982DC:
-/* 802982DC 0029521C  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 802982DC 0029521C  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 802982E0 00295220  7C 00 07 75 */	extsb. r0, r0
 /* 802982E4 00295224  40 82 00 28 */	bne lbl_8029830C
-/* 802982E8 00295228  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 802982E8 00295228  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 802982EC 0029522C  4B D7 69 49 */	bl initiate__10JSUPtrListFv
-/* 802982F0 00295230  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 802982F4 00295234  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 802982F8 00295238  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 802982F0 00295230  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 802982F4 00295234  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 802982F8 00295238  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 802982FC 0029523C  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 80298300 00295240  4B DE A4 29 */	bl __register_global_object
 /* 80298304 00295244  38 00 00 01 */	li r0, 1
-/* 80298308 00295248  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 80298308 00295248  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_8029830C:
-/* 8029830C 0029524C  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 8029830C 0029524C  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 80298310 00295250  7C 00 07 75 */	extsb. r0, r0
 /* 80298314 00295254  40 82 00 28 */	bne lbl_8029833C
-/* 80298318 00295258  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 80298318 00295258  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 8029831C 0029525C  4B D7 69 19 */	bl initiate__10JSUPtrListFv
-/* 80298320 00295260  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 80298324 00295264  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 80298328 00295268  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 80298320 00295260  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 80298324 00295264  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 80298328 00295268  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 8029832C 0029526C  38 BF 00 B4 */	addi r5, r31, 0xb4
 /* 80298330 00295270  4B DE A3 F9 */	bl __register_global_object
 /* 80298334 00295274  38 00 00 01 */	li r0, 1
-/* 80298338 00295278  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 80298338 00295278  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_8029833C:
-/* 8029833C 0029527C  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 8029833C 0029527C  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 80298340 00295280  7C 00 07 75 */	extsb. r0, r0
 /* 80298344 00295284  40 82 00 28 */	bne lbl_8029836C
-/* 80298348 00295288  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 80298348 00295288  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8029834C 0029528C  4B D7 68 E9 */	bl initiate__10JSUPtrListFv
-/* 80298350 00295290  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 80298354 00295294  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 80298358 00295298  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 80298350 00295290  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 80298354 00295294  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 80298358 00295298  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8029835C 0029529C  38 BF 00 C0 */	addi r5, r31, 0xc0
 /* 80298360 002952A0  4B DE A3 C9 */	bl __register_global_object
 /* 80298364 002952A4  38 00 00 01 */	li r0, 1
-/* 80298368 002952A8  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 80298368 002952A8  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_8029836C:
-/* 8029836C 002952AC  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 8029836C 002952AC  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 80298370 002952B0  7C 00 07 75 */	extsb. r0, r0
 /* 80298374 002952B4  40 82 00 28 */	bne lbl_8029839C
-/* 80298378 002952B8  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 80298378 002952B8  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8029837C 002952BC  4B D7 68 B9 */	bl initiate__10JSUPtrListFv
-/* 80298380 002952C0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 80298384 002952C4  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 80298388 002952C8  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 80298380 002952C0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 80298384 002952C4  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 80298388 002952C8  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8029838C 002952CC  38 BF 00 CC */	addi r5, r31, 0xcc
 /* 80298390 002952D0  4B DE A3 99 */	bl __register_global_object
 /* 80298394 002952D4  38 00 00 01 */	li r0, 1
-/* 80298398 002952D8  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 80298398 002952D8  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_8029839C:
-/* 8029839C 002952DC  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 8029839C 002952DC  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 802983A0 002952E0  7C 00 07 75 */	extsb. r0, r0
 /* 802983A4 002952E4  40 82 00 28 */	bne lbl_802983CC
-/* 802983A8 002952E8  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 802983A8 002952E8  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 802983AC 002952EC  4B D7 68 89 */	bl initiate__10JSUPtrListFv
-/* 802983B0 002952F0  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 802983B4 002952F4  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 802983B8 002952F8  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 802983B0 002952F0  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 802983B4 002952F4  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 802983B8 002952F8  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 802983BC 002952FC  38 BF 00 D8 */	addi r5, r31, 0xd8
 /* 802983C0 00295300  4B DE A3 69 */	bl __register_global_object
 /* 802983C4 00295304  38 00 00 01 */	li r0, 1
-/* 802983C8 00295308  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 802983C8 00295308  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_802983CC:
-/* 802983CC 0029530C  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 802983CC 0029530C  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 802983D0 00295310  7C 00 07 75 */	extsb. r0, r0
 /* 802983D4 00295314  40 82 00 28 */	bne lbl_802983FC
-/* 802983D8 00295318  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 802983D8 00295318  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 802983DC 0029531C  4B D7 68 59 */	bl initiate__10JSUPtrListFv
-/* 802983E0 00295320  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 802983E4 00295324  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 802983E8 00295328  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 802983E0 00295320  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 802983E4 00295324  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 802983E8 00295328  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 802983EC 0029532C  38 BF 00 E4 */	addi r5, r31, 0xe4
 /* 802983F0 00295330  4B DE A3 39 */	bl __register_global_object
 /* 802983F4 00295334  38 00 00 01 */	li r0, 1
-/* 802983F8 00295338  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 802983F8 00295338  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_802983FC:
-/* 802983FC 0029533C  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 802983FC 0029533C  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 80298400 00295340  7C 00 07 75 */	extsb. r0, r0
 /* 80298404 00295344  40 82 00 28 */	bne lbl_8029842C
-/* 80298408 00295348  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 80298408 00295348  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 8029840C 0029534C  4B D7 68 29 */	bl initiate__10JSUPtrListFv
-/* 80298410 00295350  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 80298414 00295354  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 80298418 00295358  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 80298410 00295350  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 80298414 00295354  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 80298418 00295358  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 8029841C 0029535C  38 BF 00 F0 */	addi r5, r31, 0xf0
 /* 80298420 00295360  4B DE A3 09 */	bl __register_global_object
 /* 80298424 00295364  38 00 00 01 */	li r0, 1
-/* 80298428 00295368  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 80298428 00295368  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_8029842C:
 /* 8029842C 0029536C  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 80298430 00295370  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -5634,33 +5634,33 @@ lbl_8029842C:
 /* 80298438 00295378  7C 08 03 A6 */	mtlr r0
 /* 8029843C 0029537C  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__7TTelesaFv
-$$232$$2__dt__7TTelesaFv:
+.global "@32@__dt__7TTelesaFv"
+"@32@__dt__7TTelesaFv":
 /* 80298440 00295380  38 63 FF E0 */	addi r3, r3, -32
 /* 80298444 00295384  4B FF C5 C0 */	b __dt__7TTelesaFv
 
-.global $$232$$2__dt__10TSeeTelesaFv
-$$232$$2__dt__10TSeeTelesaFv:
+.global "@32@__dt__10TSeeTelesaFv"
+"@32@__dt__10TSeeTelesaFv":
 /* 80298448 00295388  38 63 FF E0 */	addi r3, r3, -32
 /* 8029844C 0029538C  4B FF FB E8 */	b __dt__10TSeeTelesaFv
 
-.global $$232$$2__dt__11TLoopTelesaFv
-$$232$$2__dt__11TLoopTelesaFv:
+.global "@32@__dt__11TLoopTelesaFv"
+"@32@__dt__11TLoopTelesaFv":
 /* 80298450 00295390  38 63 FF E0 */	addi r3, r3, -32
 /* 80298454 00295394  4B FF FB 44 */	b __dt__11TLoopTelesaFv
 
-.global $$232$$2__dt__10TBoxTelesaFv
-$$232$$2__dt__10TBoxTelesaFv:
+.global "@32@__dt__10TBoxTelesaFv"
+"@32@__dt__10TBoxTelesaFv":
 /* 80298458 00295398  38 63 FF E0 */	addi r3, r3, -32
 /* 8029845C 0029539C  4B FF FA A0 */	b __dt__10TBoxTelesaFv
 
-.global $$232$$2__dt__18TMarioModokiTelesaFv
-$$232$$2__dt__18TMarioModokiTelesaFv:
+.global "@32@__dt__18TMarioModokiTelesaFv"
+"@32@__dt__18TMarioModokiTelesaFv":
 /* 80298460 002953A0  38 63 FF E0 */	addi r3, r3, -32
 /* 80298464 002953A4  4B FF F9 F4 */	b __dt__18TMarioModokiTelesaFv
 
-.global $$232$$2__dt__16TKageMarioModokiFv
-$$232$$2__dt__16TKageMarioModokiFv:
+.global "@32@__dt__16TKageMarioModokiFv"
+"@32@__dt__16TKageMarioModokiFv":
 /* 80298468 002953A8  38 63 FF E0 */	addi r3, r3, -32
 /* 8029846C 002953AC  4B FF F8 C0 */	b __dt__16TKageMarioModokiFv
 
@@ -5670,127 +5670,127 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22151:
+"@2151":
 	.incbin "baserom.dol", 0x39607C, 0x14
-$$22390:
+"@2390":
 	.incbin "baserom.dol", 0x396090, 0x30
-$$22391:
+"@2391":
 	.incbin "baserom.dol", 0x3960C0, 0x38
-$$22392:
+"@2392":
 	.incbin "baserom.dol", 0x3960F8, 0x34
-$$22393:
+"@2393":
 	.incbin "baserom.dol", 0x39612C, 0x24
-$$22961:
+"@2961":
 	.incbin "baserom.dol", 0x396150, 0x24
-$$22962:
+"@2962":
 	.incbin "baserom.dol", 0x396174, 0x24
-$$22963:
+"@2963":
 	.incbin "baserom.dol", 0x396198, 0x24
 cTelesaColor:
 	.incbin "baserom.dol", 0x3961BC, 0x10
-$$22993:
+"@2993":
 	.incbin "baserom.dol", 0x3961CC, 0xC
-$$23403:
+"@3403":
 	.incbin "baserom.dol", 0x3961D8, 0xC
-$$23473:
+"@3473":
 	.incbin "baserom.dol", 0x3961E4, 0x14
-$$23519:
+"@3519":
 	.incbin "baserom.dol", 0x3961F8, 0x18
-$$23520:
+"@3520":
 	.incbin "baserom.dol", 0x396210, 0x14
-$$23528:
+"@3528":
 	.incbin "baserom.dol", 0x396224, 0x14
-$$23535:
+"@3535":
 	.incbin "baserom.dol", 0x396238, 0x1C
-$$23994:
+"@3994":
 	.incbin "baserom.dol", 0x396254, 0x18
-$$23995:
+"@3995":
 	.incbin "baserom.dol", 0x39626C, 0x1C
-$$23996:
+"@3996":
 	.incbin "baserom.dol", 0x396288, 0x1C
-$$23997:
+"@3997":
 	.incbin "baserom.dol", 0x3962A4, 0x20
-$$23998:
+"@3998":
 	.incbin "baserom.dol", 0x3962C4, 0x20
-$$23999:
+"@3999":
 	.incbin "baserom.dol", 0x3962E4, 0x20
-$$24000:
+"@4000":
 	.incbin "baserom.dol", 0x396304, 0x1C
-$$24001:
+"@4001":
 	.incbin "baserom.dol", 0x396320, 0x20
-$$24002:
+"@4002":
 	.incbin "baserom.dol", 0x396340, 0x20
-$$24003:
+"@4003":
 	.incbin "baserom.dol", 0x396360, 0x1C
-$$24004:
+"@4004":
 	.incbin "baserom.dol", 0x39637C, 0x20
-$$24005:
+"@4005":
 	.incbin "baserom.dol", 0x39639C, 0x1C
-$$24006:
+"@4006":
 	.incbin "baserom.dol", 0x3963B8, 0x10
-$$24114:
+"@4114":
 	.incbin "baserom.dol", 0x3963C8, 0xC
-$$25210:
+"@5210":
 	.incbin "baserom.dol", 0x3963D4, 0x10
-$$25299:
+"@5299":
 	.incbin "baserom.dol", 0x3963E4, 0xC
-$$25307:
+"@5307":
 	.incbin "baserom.dol", 0x3963F0, 0x14
-$$25308:
+"@5308":
 	.incbin "baserom.dol", 0x396404, 0x1C
-$$25410:
+"@5410":
 	.incbin "baserom.dol", 0x396420, 0x10
-$$25411:
+"@5411":
 	.incbin "baserom.dol", 0x396430, 0x10
-$$25412:
+"@5412":
 	.incbin "baserom.dol", 0x396440, 0x10
-$$25413:
+"@5413":
 	.incbin "baserom.dol", 0x396450, 0x10
-$$25414:
+"@5414":
 	.incbin "baserom.dol", 0x396460, 0x10
-$$25415:
+"@5415":
 	.incbin "baserom.dol", 0x396470, 0x14
-$$25416:
+"@5416":
 	.incbin "baserom.dol", 0x396484, 0x14
-$$25417:
+"@5417":
 	.incbin "baserom.dol", 0x396498, 0x14
-$$25418:
+"@5418":
 	.incbin "baserom.dol", 0x3964AC, 0x14
-$$25419:
+"@5419":
 	.incbin "baserom.dol", 0x3964C0, 0x14
-$$25420:
+"@5420":
 	.incbin "baserom.dol", 0x3964D4, 0x14
-$$25421:
+"@5421":
 	.incbin "baserom.dol", 0x3964E8, 0x18
-$$25422:
+"@5422":
 	.incbin "baserom.dol", 0x396500, 0x18
-$$25424:
+"@5424":
 	.incbin "baserom.dol", 0x396518, 0x14
-$$25425:
+"@5425":
 	.incbin "baserom.dol", 0x39652C, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 telesa_bastable:
   .4byte 0
-  .4byte $$22961
-  .4byte $$22962
+  .4byte "@2961"
+  .4byte "@2962"
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22963
+  .4byte "@2963"
 entry$2992:
-  .4byte $$22993
+  .4byte "@2993"
   .4byte 0x15240000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
 entry$3402:
-  .4byte $$23403
+  .4byte "@3403"
   .4byte 0x11020000
   .4byte 0
   .4byte 0
@@ -5801,8 +5801,8 @@ __vt__25TNerveKageMarioModokiWait:
   .4byte 0
   .4byte 0
   .4byte __dt__25TNerveKageMarioModokiWaitFv
-  .4byte execute__25TNerveKageMarioModokiWaitCFP24TSpineBase$$010TLiveActor$$1
-$$24007:
+  .4byte "execute__25TNerveKageMarioModokiWaitCFP24TSpineBase<10TLiveActor>"
+"@4007":
     .4byte lbl_80294934
     .4byte lbl_80294668
     .4byte lbl_802946A4
@@ -5830,7 +5830,7 @@ __vt__16TKageMarioModoki:
   .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__16TKageMarioModokiFv
+  .4byte "@32@__dt__16TKageMarioModokiFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -5840,12 +5840,12 @@ __vt__16TKageMarioModoki:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -5862,7 +5862,7 @@ __vt__16TKageMarioModoki:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -5883,8 +5883,8 @@ __vt__16TKageMarioModoki:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__12TWalkerEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -5958,31 +5958,31 @@ __vt__19TNerveTelesaTrample:
   .4byte 0
   .4byte 0
   .4byte __dt__19TNerveTelesaTrampleFv
-  .4byte execute__19TNerveTelesaTrampleCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__19TNerveTelesaTrampleCFP24TSpineBase<10TLiveActor>"
 .global __vt__23TNerveTelesaAttackMario
 __vt__23TNerveTelesaAttackMario:
   .4byte 0
   .4byte 0
   .4byte __dt__23TNerveTelesaAttackMarioFv
-  .4byte execute__23TNerveTelesaAttackMarioCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__23TNerveTelesaAttackMarioCFP24TSpineBase<10TLiveActor>"
 .global __vt__18TNerveTelesaFreeze
 __vt__18TNerveTelesaFreeze:
   .4byte 0
   .4byte 0
   .4byte __dt__18TNerveTelesaFreezeFv
-  .4byte execute__18TNerveTelesaFreezeCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__18TNerveTelesaFreezeCFP24TSpineBase<10TLiveActor>"
 .global __vt__15TNerveTelesaDie
 __vt__15TNerveTelesaDie:
   .4byte 0
   .4byte 0
   .4byte __dt__15TNerveTelesaDieFv
-  .4byte execute__15TNerveTelesaDieCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__15TNerveTelesaDieCFP24TSpineBase<10TLiveActor>"
 .global __vt__19TNerveTelesaImitate
 __vt__19TNerveTelesaImitate:
   .4byte 0
   .4byte 0
   .4byte __dt__19TNerveTelesaImitateFv
-  .4byte execute__19TNerveTelesaImitateCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__19TNerveTelesaImitateCFP24TSpineBase<10TLiveActor>"
 .global __vt__18TMarioModokiTelesa
 __vt__18TMarioModokiTelesa:
   .4byte 0
@@ -5996,7 +5996,7 @@ __vt__18TMarioModokiTelesa:
   .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__18TMarioModokiTelesaFv
+  .4byte "@32@__dt__18TMarioModokiTelesaFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -6006,12 +6006,12 @@ __vt__18TMarioModokiTelesa:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -6028,7 +6028,7 @@ __vt__18TMarioModokiTelesa:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -6049,8 +6049,8 @@ __vt__18TMarioModokiTelesa:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TTelesaCFv
   .4byte reset__7TTelesaFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__7TTelesaCFv
@@ -6108,7 +6108,7 @@ __vt__10TBoxTelesa:
   .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__10TBoxTelesaFv
+  .4byte "@32@__dt__10TBoxTelesaFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -6118,12 +6118,12 @@ __vt__10TBoxTelesa:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -6140,7 +6140,7 @@ __vt__10TBoxTelesa:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -6161,8 +6161,8 @@ __vt__10TBoxTelesa:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TTelesaCFv
   .4byte reset__10TBoxTelesaFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__7TTelesaCFv
@@ -6220,7 +6220,7 @@ __vt__11TLoopTelesa:
   .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__11TLoopTelesaFv
+  .4byte "@32@__dt__11TLoopTelesaFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -6230,12 +6230,12 @@ __vt__11TLoopTelesa:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -6252,7 +6252,7 @@ __vt__11TLoopTelesa:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -6273,8 +6273,8 @@ __vt__11TLoopTelesa:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TTelesaCFv
   .4byte reset__7TTelesaFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__7TTelesaCFv
@@ -6332,7 +6332,7 @@ __vt__10TSeeTelesa:
   .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__10TSeeTelesaFv
+  .4byte "@32@__dt__10TSeeTelesaFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -6342,12 +6342,12 @@ __vt__10TSeeTelesa:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -6364,7 +6364,7 @@ __vt__10TSeeTelesa:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -6385,8 +6385,8 @@ __vt__10TSeeTelesa:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TTelesaCFv
   .4byte reset__7TTelesaFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__7TTelesaCFv
@@ -6444,7 +6444,7 @@ __vt__7TTelesa:
   .4byte perform__7TTelesaFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__7TTelesaFv
+  .4byte "@32@__dt__7TTelesaFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -6454,12 +6454,12 @@ __vt__7TTelesa:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -6476,7 +6476,7 @@ __vt__7TTelesa:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -6497,8 +6497,8 @@ __vt__7TTelesa:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TTelesaCFv
   .4byte reset__7TTelesaFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__7TTelesaCFv
@@ -6576,121 +6576,121 @@ mFlyAngMax__7TTelesa:
 .balign 8
 cTelesaColorStart:
   .4byte 0
-$$23470:
+"@3470":
 	.incbin "baserom.dol", 0x3EA50C, 0x8
-$$23471:
+"@3471":
 	.incbin "baserom.dol", 0x3EA514, 0x4
-$$23472:
+"@3472":
 	.incbin "baserom.dol", 0x3EA518, 0x4
-$$23625:
+"@3625":
 	.incbin "baserom.dol", 0x3EA51C, 0x4
-$$23626:
+"@3626":
 	.incbin "baserom.dol", 0x3EA520, 0x4
-$$23627:
+"@3627":
 	.incbin "baserom.dol", 0x3EA524, 0x4
-$$23628:
+"@3628":
 	.incbin "baserom.dol", 0x3EA528, 0x4
-$$23629:
+"@3629":
 	.incbin "baserom.dol", 0x3EA52C, 0x4
-$$23630:
+"@3630":
 	.incbin "baserom.dol", 0x3EA530, 0x4
-$$23631:
+"@3631":
 	.incbin "baserom.dol", 0x3EA534, 0x4
-$$23633:
+"@3633":
 	.incbin "baserom.dol", 0x3EA538, 0x8
-$$23705:
+"@3705":
   .4byte 0
-$$23706:
+"@3706":
 	.incbin "baserom.dol", 0x3EA544, 0x4
-$$23769:
+"@3769":
 	.incbin "baserom.dol", 0x3EA548, 0x4
-$$24092:
+"@4092":
 	.incbin "baserom.dol", 0x3EA54C, 0x4
-$$24397:
+"@4397":
 	.incbin "baserom.dol", 0x3EA550, 0x4
-$$24398:
+"@4398":
 	.incbin "baserom.dol", 0x3EA554, 0x4
-$$24454:
+"@4454":
 	.incbin "baserom.dol", 0x3EA558, 0x4
-$$24455:
+"@4455":
 	.incbin "baserom.dol", 0x3EA55C, 0x4
-$$24544:
+"@4544":
 	.incbin "baserom.dol", 0x3EA560, 0x4
-$$24545:
+"@4545":
 	.incbin "baserom.dol", 0x3EA564, 0x4
-$$24589:
+"@4589":
 	.incbin "baserom.dol", 0x3EA568, 0x4
-$$24590:
+"@4590":
 	.incbin "baserom.dol", 0x3EA56C, 0x4
-$$24642:
+"@4642":
 	.incbin "baserom.dol", 0x3EA570, 0x4
-$$24658:
+"@4658":
 	.incbin "baserom.dol", 0x3EA574, 0x4
-$$24762:
+"@4762":
 	.incbin "baserom.dol", 0x3EA578, 0x4
-$$24896:
+"@4896":
 	.incbin "baserom.dol", 0x3EA57C, 0x4
-$$24897:
+"@4897":
 	.incbin "baserom.dol", 0x3EA580, 0x4
-$$24898:
+"@4898":
 	.incbin "baserom.dol", 0x3EA584, 0x4
-$$24899:
+"@4899":
 	.incbin "baserom.dol", 0x3EA588, 0x4
-$$24900:
+"@4900":
 	.incbin "baserom.dol", 0x3EA58C, 0x4
-$$24974:
+"@4974":
 	.incbin "baserom.dol", 0x3EA590, 0x4
-$$25015:
+"@5015":
 	.incbin "baserom.dol", 0x3EA594, 0x4
-$$25234:
+"@5234":
 	.incbin "baserom.dol", 0x3EA598, 0x4
-$$25303:
+"@5303":
 	.incbin "baserom.dol", 0x3EA59C, 0x8
-$$25423:
+"@5423":
 	.incbin "baserom.dol", 0x3EA5A4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$23307:
+"@3307":
 	.skip 0xC
-$$23333:
+"@3333":
 	.skip 0xC
-$$23354:
+"@3354":
 	.skip 0xC
-$$23375:
+"@3375":
 	.skip 0xC
-$$23387:
+"@3387":
 	.skip 0xC
-$$23405:
+"@3405":
 	.skip 0xC
-$$25543:
+"@5543":
 	.skip 0xC
-$$25544:
+"@5544":
 	.skip 0xC
-$$25545:
+"@5545":
 	.skip 0xC
-$$25546:
+"@5546":
 	.skip 0xC
-$$25547:
+"@5547":
 	.skip 0xC
-$$25548:
+"@5548":
 	.skip 0xC
-$$25549:
+"@5549":
 	.skip 0xC
-$$25550:
+"@5550":
 	.skip 0xC
-$$25551:
+"@5551":
 	.skip 0xC
-$$25552:
+"@5552":
 	.skip 0xC
-$$25553:
+"@5553":
 	.skip 0xC
-$$25554:
+"@5554":
 	.skip 0xC
-$$25555:
+"@5555":
 	.skip 0xC
-$$25556:
+"@5556":
 	.skip 0xC
-$$25557:
+"@5557":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

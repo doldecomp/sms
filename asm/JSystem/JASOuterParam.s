@@ -6,7 +6,7 @@ __ct__Q38JASystem6TTrack11TOuterParamFv:
 /* 80064530 00061470  38 00 00 00 */	li r0, 0
 /* 80064534 00061474  B0 03 00 00 */	sth r0, 0(r3)
 /* 80064538 00061478  B0 03 00 02 */	sth r0, 2(r3)
-/* 8006453C 0006147C  C0 02 87 00 */	lfs f0, $$2127@sda21(r2)
+/* 8006453C 0006147C  C0 02 87 00 */	lfs f0, "@127"@sda21(r2)
 /* 80064540 00061480  D0 03 00 04 */	stfs f0, 4(r3)
 /* 80064544 00061484  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80064548 00061488  D0 03 00 0C */	stfs f0, 0xc(r3)
@@ -152,6 +152,6 @@ setFirFilter__Q38JASystem6TTrack11TOuterParamFPs:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2127:
+"@127":
   .4byte 0
   .4byte 0

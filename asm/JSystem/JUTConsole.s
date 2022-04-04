@@ -212,7 +212,7 @@ lbl_8003F4CC:
 lbl_8003F4E8:
 /* 8003F4E8 0003C428  3B E0 00 00 */	li r31, 0
 lbl_8003F4EC:
-/* 8003F4EC 0003C42C  C0 22 83 78 */	lfs f1, $$21718@sda21(r2)
+/* 8003F4EC 0003C42C  C0 22 83 78 */	lfs f1, "@1718"@sda21(r2)
 /* 8003F4F0 0003C430  2C 1D 00 02 */	cmpwi r29, 2
 /* 8003F4F4 0003C434  C0 1C 00 54 */	lfs f0, 0x54(r28)
 /* 8003F4F8 0003C438  EF E1 00 2A */	fadds f31, f1, f0
@@ -261,10 +261,10 @@ lbl_8003F594:
 lbl_8003F598:
 /* 8003F598 0003C4D8  80 03 00 00 */	lwz r0, 0(r3)
 /* 8003F59C 0003C4DC  3C 80 43 30 */	lis r4, 0x4330
-/* 8003F5A0 0003C4E0  C8 A2 83 80 */	lfd f5, $$21721@sda21(r2)
+/* 8003F5A0 0003C4E0  C8 A2 83 80 */	lfd f5, "@1721"@sda21(r2)
 /* 8003F5A4 0003C4E4  38 E1 01 2C */	addi r7, r1, 0x12c
 /* 8003F5A8 0003C4E8  90 01 01 2C */	stw r0, 0x12c(r1)
-/* 8003F5AC 0003C4EC  C8 62 83 88 */	lfd f3, $$21724@sda21(r2)
+/* 8003F5AC 0003C4EC  C8 62 83 88 */	lfd f3, "@1724"@sda21(r2)
 /* 8003F5B0 0003C4F0  80 BC 00 44 */	lwz r5, 0x44(r28)
 /* 8003F5B4 0003C4F4  80 7C 00 20 */	lwz r3, 0x20(r28)
 /* 8003F5B8 0003C4F8  6C A5 80 00 */	xoris r5, r5, 0x8000
@@ -274,7 +274,7 @@ lbl_8003F598:
 /* 8003F5C8 0003C508  90 61 03 84 */	stw r3, 0x384(r1)
 /* 8003F5CC 0003C50C  80 BC 00 40 */	lwz r5, 0x40(r28)
 /* 8003F5D0 0003C510  90 01 03 74 */	stw r0, 0x374(r1)
-/* 8003F5D4 0003C514  C0 22 83 7C */	lfs f1, $$21719@sda21(r2)
+/* 8003F5D4 0003C514  C0 22 83 7C */	lfs f1, "@1719"@sda21(r2)
 /* 8003F5D8 0003C518  38 65 FF FE */	addi r3, r5, -2
 /* 8003F5DC 0003C51C  90 81 03 90 */	stw r4, 0x390(r1)
 /* 8003F5E0 0003C520  90 81 03 80 */	stw r4, 0x380(r1)
@@ -378,7 +378,7 @@ lbl_8003F744:
 /* 8003F750 0003C690  90 01 03 68 */	stw r0, 0x368(r1)
 /* 8003F754 0003C694  1C C3 00 06 */	mulli r6, r3, 6
 /* 8003F758 0003C698  80 9C 00 40 */	lwz r4, 0x40(r28)
-/* 8003F75C 0003C69C  C8 22 83 88 */	lfd f1, $$21724@sda21(r2)
+/* 8003F75C 0003C69C  C8 22 83 88 */	lfd f1, "@1724"@sda21(r2)
 /* 8003F760 0003C6A0  C8 01 03 68 */	lfd f0, 0x368(r1)
 /* 8003F764 0003C6A4  80 BC 00 44 */	lwz r5, 0x44(r28)
 /* 8003F768 0003C6A8  EC 00 08 28 */	fsubs f0, f0, f1
@@ -395,7 +395,7 @@ lbl_8003F744:
 lbl_8003F794:
 /* 8003F794 0003C6D4  83 FC 00 30 */	lwz r31, 0x30(r28)
 /* 8003F798 0003C6D8  3B C0 00 00 */	li r30, 0
-/* 8003F79C 0003C6DC  CB C2 83 80 */	lfd f30, $$21721@sda21(r2)
+/* 8003F79C 0003C6DC  CB C2 83 80 */	lfd f30, "@1721"@sda21(r2)
 /* 8003F7A0 0003C6E0  3F 60 43 30 */	lis r27, 0x4330
 lbl_8003F7A4:
 /* 8003F7A4 0003C6E4  80 7C 00 20 */	lwz r3, 0x20(r28)
@@ -958,8 +958,8 @@ end__Q27JGadget13TNodeLinkListFv:
 /* 8003FF04 0003CE44  90 03 00 00 */	stw r0, 0(r3)
 /* 8003FF08 0003CE48  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget27TLinkList$$010JUTConsole$$4$$524$$18iteratorFQ37JGadget13TNodeLinkList8iterator
-__ct__Q37JGadget27TLinkList$$010JUTConsole$$4$$524$$18iteratorFQ37JGadget13TNodeLinkList8iterator:
+.global "__ct__Q37JGadget27TLinkList<10JUTConsole,-24>8iteratorFQ37JGadget13TNodeLinkList8iterator"
+"__ct__Q37JGadget27TLinkList<10JUTConsole,-24>8iteratorFQ37JGadget13TNodeLinkList8iterator":
 /* 8003FF0C 0003CE4C  80 04 00 00 */	lwz r0, 0(r4)
 /* 8003FF10 0003CE50  90 03 00 00 */	stw r0, 0(r3)
 /* 8003FF14 0003CE54  4E 80 00 20 */	blr 
@@ -1023,14 +1023,14 @@ setDirectConsole__17JUTConsoleManagerFP10JUTConsole:
 /* 8003FFD8 0003CF18  38 81 00 78 */	addi r4, r1, 0x78
 /* 8003FFDC 0003CF1C  38 61 00 B8 */	addi r3, r1, 0xb8
 /* 8003FFE0 0003CF20  90 01 00 78 */	stw r0, 0x78(r1)
-/* 8003FFE4 0003CF24  4B FF FF 29 */	bl __ct__Q37JGadget27TLinkList$$010JUTConsole$$4$$524$$18iteratorFQ37JGadget13TNodeLinkList8iterator
+/* 8003FFE4 0003CF24  4B FF FF 29 */	bl "__ct__Q37JGadget27TLinkList<10JUTConsole,-24>8iteratorFQ37JGadget13TNodeLinkList8iterator"
 /* 8003FFE8 0003CF28  80 01 00 B8 */	lwz r0, 0xb8(r1)
 /* 8003FFEC 0003CF2C  38 7C 00 00 */	addi r3, r28, 0
 /* 8003FFF0 0003CF30  3B A1 00 A0 */	addi r29, r1, 0xa0
 /* 8003FFF4 0003CF34  90 01 00 B4 */	stw r0, 0xb4(r1)
 /* 8003FFF8 0003CF38  80 01 00 B4 */	lwz r0, 0xb4(r1)
 /* 8003FFFC 0003CF3C  90 01 00 A0 */	stw r0, 0xa0(r1)
-/* 80040000 0003CF40  48 00 01 69 */	bl Element_getNode__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FP10JUTConsole
+/* 80040000 0003CF40  48 00 01 69 */	bl "Element_getNode__Q27JGadget27TLinkList<10JUTConsole,-24>FP10JUTConsole"
 /* 80040004 0003CF44  38 C3 00 00 */	addi r6, r3, 0
 /* 80040008 0003CF48  38 9E 00 00 */	addi r4, r30, 0
 /* 8004000C 0003CF4C  38 BD 00 00 */	addi r5, r29, 0
@@ -1072,7 +1072,7 @@ lbl_80040068:
 /* 80040094 0003CFD4  90 61 00 AC */	stw r3, 0xac(r1)
 /* 80040098 0003CFD8  7F A3 EB 78 */	mr r3, r29
 /* 8004009C 0003CFDC  48 00 00 BD */	bl __rf__Q37JGadget13TNodeLinkList8iteratorCFv
-/* 800400A0 0003CFE0  48 00 00 B1 */	bl Element_getValue__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FPQ27JGadget13TLinkListNode
+/* 800400A0 0003CFE0  48 00 00 B1 */	bl "Element_getValue__Q27JGadget27TLinkList<10JUTConsole,-24>FPQ27JGadget13TLinkListNode"
 /* 800400A4 0003CFE4  7C 1F 18 40 */	cmplw r31, r3
 /* 800400A8 0003CFE8  41 82 00 10 */	beq lbl_800400B8
 /* 800400AC 0003CFEC  80 7F 00 18 */	lwz r3, 0x18(r31)
@@ -1091,7 +1091,7 @@ lbl_800400B8:
 /* 800400DC 0003D01C  4B FF FD 39 */	bl __ct__Q37JGadget13TNodeLinkList8iteratorFRCQ37JGadget13TNodeLinkList8iterator
 /* 800400E0 0003D020  38 61 00 A4 */	addi r3, r1, 0xa4
 /* 800400E4 0003D024  48 00 00 75 */	bl __rf__Q37JGadget13TNodeLinkList8iteratorCFv
-/* 800400E8 0003D028  48 00 00 69 */	bl Element_getValue__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FPQ27JGadget13TLinkListNode
+/* 800400E8 0003D028  48 00 00 69 */	bl "Element_getValue__Q27JGadget27TLinkList<10JUTConsole,-24>FPQ27JGadget13TLinkListNode"
 lbl_800400EC:
 /* 800400EC 0003D02C  90 7E 00 0C */	stw r3, 0xc(r30)
 lbl_800400F0:
@@ -1126,8 +1126,8 @@ getNext__Q27JGadget13TLinkListNodeCFv:
 /* 80040148 0003D088  80 63 00 00 */	lwz r3, 0(r3)
 /* 8004014C 0003D08C  4E 80 00 20 */	blr 
 
-.global Element_getValue__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FPQ27JGadget13TLinkListNode
-Element_getValue__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FPQ27JGadget13TLinkListNode:
+.global "Element_getValue__Q27JGadget27TLinkList<10JUTConsole,-24>FPQ27JGadget13TLinkListNode"
+"Element_getValue__Q27JGadget27TLinkList<10JUTConsole,-24>FPQ27JGadget13TLinkListNode":
 /* 80040150 0003D090  38 63 FF E8 */	addi r3, r3, -24
 /* 80040154 0003D094  4E 80 00 20 */	blr 
 
@@ -1141,8 +1141,8 @@ getPrev__Q27JGadget13TLinkListNodeCFv:
 /* 80040160 0003D0A0  80 63 00 04 */	lwz r3, 4(r3)
 /* 80040164 0003D0A4  4E 80 00 20 */	blr 
 
-.global Element_getNode__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FP10JUTConsole
-Element_getNode__Q27JGadget27TLinkList$$010JUTConsole$$4$$524$$1FP10JUTConsole:
+.global "Element_getNode__Q27JGadget27TLinkList<10JUTConsole,-24>FP10JUTConsole"
+"Element_getNode__Q27JGadget27TLinkList<10JUTConsole,-24>FP10JUTConsole":
 /* 80040168 0003D0A8  38 63 00 18 */	addi r3, r3, 0x18
 /* 8004016C 0003D0AC  4E 80 00 20 */	blr 
 
@@ -1227,7 +1227,7 @@ JUTReportConsole:
 /* 80040258 0003D198  38 83 00 00 */	addi r4, r3, 0
 /* 8004025C 0003D19C  90 01 00 04 */	stw r0, 4(r1)
 /* 80040260 0003D1A0  4C C6 31 82 */	crclr 6
-/* 80040264 0003D1A4  38 62 83 90 */	addi r3, r2, $$22338@sda21
+/* 80040264 0003D1A4  38 62 83 90 */	addi r3, r2, "@2338"@sda21
 /* 80040268 0003D1A8  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8004026C 0003D1AC  4B FF FF 25 */	bl JUTReportConsole_f
 /* 80040270 0003D1B0  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1296,7 +1296,7 @@ JUTWarningConsole:
 /* 80040348 0003D288  38 83 00 00 */	addi r4, r3, 0
 /* 8004034C 0003D28C  90 01 00 04 */	stw r0, 4(r1)
 /* 80040350 0003D290  4C C6 31 82 */	crclr 6
-/* 80040354 0003D294  38 62 83 90 */	addi r3, r2, $$22338@sda21
+/* 80040354 0003D294  38 62 83 90 */	addi r3, r2, "@2338"@sda21
 /* 80040358 0003D298  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8004035C 0003D29C  4B FF FE 35 */	bl JUTReportConsole_f
 /* 80040360 0003D2A0  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1314,15 +1314,15 @@ __vt__10JUTConsole:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21718:
+"@1718":
 	.incbin "baserom.dol", 0x3E4078, 0x4
-$$21719:
+"@1719":
 	.incbin "baserom.dol", 0x3E407C, 0x4
-$$21721:
+"@1721":
 	.incbin "baserom.dol", 0x3E4080, 0x8
-$$21724:
+"@1724":
 	.incbin "baserom.dol", 0x3E4088, 0x8
-$$22338:
+"@2338":
 	.incbin "baserom.dol", 0x3E4090, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

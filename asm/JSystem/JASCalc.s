@@ -25,10 +25,10 @@ initSinfT__Q28JASystem4CalcFv:
 /* 80060D38 0005DC78  4B FA BD 0D */	bl __nwa__FUlP7JKRHeapi
 /* 80060D3C 0005DC7C  90 6D 91 5C */	stw r3, JASC_DOL2TABLE__Q28JASystem4Calc@sda21(r13)
 /* 80060D40 0005DC80  3B A0 00 00 */	li r29, 0
-/* 80060D44 0005DC84  C3 A2 86 C0 */	lfs f29, $$2525@sda21(r2)
+/* 80060D44 0005DC84  C3 A2 86 C0 */	lfs f29, "@525"@sda21(r2)
 /* 80060D48 0005DC88  3B E0 00 00 */	li r31, 0
-/* 80060D4C 0005DC8C  CB 82 86 D0 */	lfd f28, $$2530@sda21(r2)
-/* 80060D50 0005DC90  C3 62 86 C4 */	lfs f27, $$2526@sda21(r2)
+/* 80060D4C 0005DC8C  CB 82 86 D0 */	lfd f28, "@530"@sda21(r2)
+/* 80060D50 0005DC90  C3 62 86 C4 */	lfs f27, "@526"@sda21(r2)
 /* 80060D54 0005DC94  3F C0 43 30 */	lis r30, 0x4330
 lbl_80060D58:
 /* 80060D58 0005DC98  93 A1 00 0C */	stw r29, 0xc(r1)
@@ -44,14 +44,14 @@ lbl_80060D58:
 /* 80060D80 0005DCC0  7C 23 FD 2E */	stfsx f1, r3, r31
 /* 80060D84 0005DCC4  3B FF 00 04 */	addi r31, r31, 4
 /* 80060D88 0005DCC8  41 80 FF D0 */	blt lbl_80060D58
-/* 80060D8C 0005DCCC  C3 62 86 C0 */	lfs f27, $$2525@sda21(r2)
+/* 80060D8C 0005DCCC  C3 62 86 C0 */	lfs f27, "@525"@sda21(r2)
 /* 80060D90 0005DCD0  3B A0 00 00 */	li r29, 0
-/* 80060D94 0005DCD4  C3 82 86 CC */	lfs f28, $$2528@sda21(r2)
+/* 80060D94 0005DCD4  C3 82 86 CC */	lfs f28, "@528"@sda21(r2)
 /* 80060D98 0005DCD8  3B E0 00 00 */	li r31, 0
-/* 80060D9C 0005DCDC  CB A2 86 D0 */	lfd f29, $$2530@sda21(r2)
-/* 80060DA0 0005DCE0  C3 C2 86 C4 */	lfs f30, $$2526@sda21(r2)
+/* 80060D9C 0005DCDC  CB A2 86 D0 */	lfd f29, "@530"@sda21(r2)
+/* 80060DA0 0005DCE0  C3 C2 86 C4 */	lfs f30, "@526"@sda21(r2)
 /* 80060DA4 0005DCE4  3F C0 43 30 */	lis r30, 0x4330
-/* 80060DA8 0005DCE8  C3 E2 86 C8 */	lfs f31, $$2527@sda21(r2)
+/* 80060DA8 0005DCE8  C3 E2 86 C8 */	lfs f31, "@527"@sda21(r2)
 lbl_80060DAC:
 /* 80060DAC 0005DCEC  93 A1 00 0C */	stw r29, 0xc(r1)
 /* 80060DB0 0005DCF0  93 C1 00 08 */	stw r30, 8(r1)
@@ -83,7 +83,7 @@ lbl_80060DAC:
 .global sinfT__Q28JASystem4CalcFf
 sinfT__Q28JASystem4CalcFf:
 /* 80060E14 0005DD54  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80060E18 0005DD58  C0 02 86 D8 */	lfs f0, $$2532@sda21(r2)
+/* 80060E18 0005DD58  C0 02 86 D8 */	lfs f0, "@532"@sda21(r2)
 /* 80060E1C 0005DD5C  80 6D 91 58 */	lwz r3, JASC_SINTABLE__Q28JASystem4Calc@sda21(r13)
 /* 80060E20 0005DD60  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80060E24 0005DD64  FC 00 00 1E */	fctiwz f0, f0
@@ -97,7 +97,7 @@ sinfT__Q28JASystem4CalcFf:
 .global sinfDolby2__Q28JASystem4CalcFf
 sinfDolby2__Q28JASystem4CalcFf:
 /* 80060E40 0005DD80  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80060E44 0005DD84  C0 02 86 D8 */	lfs f0, $$2532@sda21(r2)
+/* 80060E44 0005DD84  C0 02 86 D8 */	lfs f0, "@532"@sda21(r2)
 /* 80060E48 0005DD88  80 6D 91 5C */	lwz r3, JASC_DOL2TABLE__Q28JASystem4Calc@sda21(r13)
 /* 80060E4C 0005DD8C  EC 00 00 72 */	fmuls f0, f0, f1
 /* 80060E50 0005DD90  FC 00 00 1E */	fctiwz f0, f0
@@ -552,17 +552,17 @@ lbl_80061474:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2525:
+"@525":
 	.incbin "baserom.dol", 0x3E43C0, 0x4
-$$2526:
+"@526":
 	.incbin "baserom.dol", 0x3E43C4, 0x4
-$$2527:
+"@527":
 	.incbin "baserom.dol", 0x3E43C8, 0x4
-$$2528:
+"@528":
 	.incbin "baserom.dol", 0x3E43CC, 0x4
-$$2530:
+"@530":
 	.incbin "baserom.dol", 0x3E43D0, 0x8
-$$2532:
+"@532":
 	.incbin "baserom.dol", 0x3E43D8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

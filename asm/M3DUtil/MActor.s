@@ -281,8 +281,8 @@ lbl_800D3424:
 /* 800D3430 000D0370  7C 08 03 A6 */	mtlr r0
 /* 800D3434 000D0374  4E 80 00 20 */	blr 
 
-.global setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs
-setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs:
+.global "setAnmFromIndex__35MActorAnmMatEach<15J3DAnmTevRegKey>FiPUs"
+"setAnmFromIndex__35MActorAnmMatEach<15J3DAnmTevRegKey>FiPUs":
 /* 800D3438 000D0378  7C 08 02 A6 */	mflr r0
 /* 800D343C 000D037C  2C 04 00 00 */	cmpwi r4, 0
 /* 800D3440 000D0380  90 01 00 04 */	stw r0, 4(r1)
@@ -363,8 +363,8 @@ lbl_800D353C:
 /* 800D3548 000D0488  7C 08 03 A6 */	mtlr r0
 /* 800D354C 000D048C  4E 80 00 20 */	blr 
 
-.global setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
-setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs:
+.global "setAnm__32MActorAnmEach<15J3DAnmTevRegKey>FPCcPUs"
+"setAnm__32MActorAnmEach<15J3DAnmTevRegKey>FPCcPUs":
 /* 800D3550 000D0490  7C 08 02 A6 */	mflr r0
 /* 800D3554 000D0494  90 01 00 04 */	stw r0, 4(r1)
 /* 800D3558 000D0498  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -473,8 +473,8 @@ lbl_800D36B8:
 /* 800D36C4 000D0604  7C 08 03 A6 */	mtlr r0
 /* 800D36C8 000D0608  4E 80 00 20 */	blr 
 
-.global setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs
-setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs:
+.global "setAnm__33MActorAnmEach<16J3DAnmClusterKey>FPCcPUs"
+"setAnm__33MActorAnmEach<16J3DAnmClusterKey>FPCcPUs":
 /* 800D36CC 000D060C  7C 08 02 A6 */	mflr r0
 /* 800D36D0 000D0610  90 01 00 04 */	stw r0, 4(r1)
 /* 800D36D4 000D0614  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -583,8 +583,8 @@ lbl_800D3834:
 /* 800D3840 000D0780  7C 08 03 A6 */	mtlr r0
 /* 800D3844 000D0784  4E 80 00 20 */	blr 
 
-.global setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs
-setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs:
+.global "setAnmFromIndex__39MActorAnmMatEach<19J3DAnmTextureSRTKey>FiPUs"
+"setAnmFromIndex__39MActorAnmMatEach<19J3DAnmTextureSRTKey>FiPUs":
 /* 800D3848 000D0788  7C 08 02 A6 */	mflr r0
 /* 800D384C 000D078C  2C 04 00 00 */	cmpwi r4, 0
 /* 800D3850 000D0790  90 01 00 04 */	stw r0, 4(r1)
@@ -665,8 +665,8 @@ lbl_800D394C:
 /* 800D3958 000D0898  7C 08 03 A6 */	mtlr r0
 /* 800D395C 000D089C  4E 80 00 20 */	blr 
 
-.global setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
-setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs:
+.global "setAnm__36MActorAnmEach<19J3DAnmTextureSRTKey>FPCcPUs"
+"setAnm__36MActorAnmEach<19J3DAnmTextureSRTKey>FPCcPUs":
 /* 800D3960 000D08A0  7C 08 02 A6 */	mflr r0
 /* 800D3964 000D08A4  90 01 00 04 */	stw r0, 4(r1)
 /* 800D3968 000D08A8  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -780,8 +780,8 @@ lbl_800D3AD8:
 /* 800D3AE4 000D0A24  7C 08 03 A6 */	mtlr r0
 /* 800D3AE8 000D0A28  4E 80 00 20 */	blr 
 
-.global setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs
-setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs:
+.global "setAnmFromIndex__36MActorAnmMatEach<16J3DAnmTexPattern>FiPUs"
+"setAnmFromIndex__36MActorAnmMatEach<16J3DAnmTexPattern>FiPUs":
 /* 800D3AEC 000D0A2C  7C 08 02 A6 */	mflr r0
 /* 800D3AF0 000D0A30  2C 04 00 00 */	cmpwi r4, 0
 /* 800D3AF4 000D0A34  90 01 00 04 */	stw r0, 4(r1)
@@ -862,8 +862,8 @@ lbl_800D3BF0:
 /* 800D3BFC 000D0B3C  7C 08 03 A6 */	mtlr r0
 /* 800D3C00 000D0B40  4E 80 00 20 */	blr 
 
-.global setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
-setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs:
+.global "setAnm__33MActorAnmEach<16J3DAnmTexPattern>FPCcPUs"
+"setAnm__33MActorAnmEach<16J3DAnmTexPattern>FPCcPUs":
 /* 800D3C04 000D0B44  7C 08 02 A6 */	mflr r0
 /* 800D3C08 000D0B48  90 01 00 04 */	stw r0, 4(r1)
 /* 800D3C0C 000D0B4C  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -972,8 +972,8 @@ lbl_800D3D6C:
 /* 800D3D78 000D0CB8  7C 08 03 A6 */	mtlr r0
 /* 800D3D7C 000D0CBC  4E 80 00 20 */	blr 
 
-.global setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs
-setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs:
+.global "setAnmFromIndex__34MActorAnmMatEach<14J3DAnmColorKey>FiPUs"
+"setAnmFromIndex__34MActorAnmMatEach<14J3DAnmColorKey>FiPUs":
 /* 800D3D80 000D0CC0  7C 08 02 A6 */	mflr r0
 /* 800D3D84 000D0CC4  2C 04 00 00 */	cmpwi r4, 0
 /* 800D3D88 000D0CC8  90 01 00 04 */	stw r0, 4(r1)
@@ -1054,8 +1054,8 @@ lbl_800D3E84:
 /* 800D3E90 000D0DD0  7C 08 03 A6 */	mtlr r0
 /* 800D3E94 000D0DD4  4E 80 00 20 */	blr 
 
-.global setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
-setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs:
+.global "setAnm__31MActorAnmEach<14J3DAnmColorKey>FPCcPUs"
+"setAnm__31MActorAnmEach<14J3DAnmColorKey>FPCcPUs":
 /* 800D3E98 000D0DD8  7C 08 02 A6 */	mflr r0
 /* 800D3E9C 000D0DDC  90 01 00 04 */	stw r0, 4(r1)
 /* 800D3EA0 000D0DE0  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -1140,8 +1140,8 @@ lbl_800D3F94:
 /* 800D3FBC 000D0EFC  7C 08 03 A6 */	mtlr r0
 /* 800D3FC0 000D0F00  4E 80 00 20 */	blr 
 
-.global setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs
-setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs:
+.global "setAnm__35MActorAnmEach<18J3DAnmTransformKey>FPCcPUs"
+"setAnm__35MActorAnmEach<18J3DAnmTransformKey>FPCcPUs":
 /* 800D3FC4 000D0F04  7C 08 02 A6 */	mflr r0
 /* 800D3FC8 000D0F08  90 01 00 04 */	stw r0, 4(r1)
 /* 800D3FCC 000D0F0C  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -1864,8 +1864,8 @@ setLightType__6MActorFi:
 /* 800D4948 000D1888  98 83 00 20 */	stb r4, 0x20(r3)
 /* 800D494C 000D188C  4E 80 00 20 */	blr 
 
-.global setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1
-setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3$$0f$$1:
+.global "setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3<f>"
+"setLightData__6MActorFPC12TBGCheckDataRCQ29JGeometry8TVec3<f>":
 /* 800D4950 000D1890  7C 08 02 A6 */	mflr r0
 /* 800D4954 000D1894  90 01 00 04 */	stw r0, 4(r1)
 /* 800D4958 000D1898  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -2509,9 +2509,9 @@ lbl_800D51DC:
 /* 800D51FC 000D213C  C0 06 00 10 */	lfs f0, 0x10(r6)
 /* 800D5200 000D2140  90 61 00 44 */	stw r3, 0x44(r1)
 /* 800D5204 000D2144  EC 41 00 2A */	fadds f2, f1, f0
-/* 800D5208 000D2148  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
+/* 800D5208 000D2148  C0 62 8E F8 */	lfs f3, "@3554"@sda21(r2)
 /* 800D520C 000D214C  90 01 00 40 */	stw r0, 0x40(r1)
-/* 800D5210 000D2150  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
+/* 800D5210 000D2150  C8 22 8F 00 */	lfd f1, "@3556"@sda21(r2)
 /* 800D5214 000D2154  C8 01 00 40 */	lfd f0, 0x40(r1)
 /* 800D5218 000D2158  EC 43 10 2A */	fadds f2, f3, f2
 /* 800D521C 000D215C  EC 00 08 28 */	fsubs f0, f0, f1
@@ -2536,9 +2536,9 @@ lbl_800D5250:
 /* 800D525C 000D219C  80 9F 00 10 */	lwz r4, 0x10(r31)
 /* 800D5260 000D21A0  54 63 10 3A */	slwi r3, r3, 2
 /* 800D5264 000D21A4  3C 00 43 30 */	lis r0, 0x4330
-/* 800D5268 000D21A8  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
+/* 800D5268 000D21A8  C0 62 8E F8 */	lfs f3, "@3554"@sda21(r2)
 /* 800D526C 000D21AC  7C 84 18 2E */	lwzx r4, r4, r3
-/* 800D5270 000D21B0  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
+/* 800D5270 000D21B0  C8 22 8F 00 */	lfd f1, "@3556"@sda21(r2)
 /* 800D5274 000D21B4  A8 64 00 0C */	lha r3, 0xc(r4)
 /* 800D5278 000D21B8  C0 44 00 14 */	lfs f2, 0x14(r4)
 /* 800D527C 000D21BC  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -2565,9 +2565,9 @@ lbl_800D52B8:
 /* 800D52C8 000D2208  C0 06 00 10 */	lfs f0, 0x10(r6)
 /* 800D52CC 000D220C  90 61 00 44 */	stw r3, 0x44(r1)
 /* 800D52D0 000D2210  EC 41 00 2A */	fadds f2, f1, f0
-/* 800D52D4 000D2214  C0 62 8E F8 */	lfs f3, $$23554@sda21(r2)
+/* 800D52D4 000D2214  C0 62 8E F8 */	lfs f3, "@3554"@sda21(r2)
 /* 800D52D8 000D2218  90 01 00 40 */	stw r0, 0x40(r1)
-/* 800D52DC 000D221C  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
+/* 800D52DC 000D221C  C8 22 8F 00 */	lfd f1, "@3556"@sda21(r2)
 /* 800D52E0 000D2220  C8 01 00 40 */	lfd f0, 0x40(r1)
 /* 800D52E4 000D2224  EC 43 10 2A */	fadds f2, f3, f2
 /* 800D52E8 000D2228  EC 00 08 28 */	fsubs f0, f0, f1
@@ -2628,11 +2628,11 @@ lbl_800D5390:
 /* 800D5394 000D22D4  40 82 00 40 */	bne lbl_800D53D4
 /* 800D5398 000D22D8  A8 64 00 08 */	lha r3, 8(r4)
 /* 800D539C 000D22DC  3C 00 43 30 */	lis r0, 0x4330
-/* 800D53A0 000D22E0  C0 42 8E F8 */	lfs f2, $$23554@sda21(r2)
+/* 800D53A0 000D22E0  C0 42 8E F8 */	lfs f2, "@3554"@sda21(r2)
 /* 800D53A4 000D22E4  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 800D53A8 000D22E8  C0 04 00 10 */	lfs f0, 0x10(r4)
 /* 800D53AC 000D22EC  90 61 00 34 */	stw r3, 0x34(r1)
-/* 800D53B0 000D22F0  C8 22 8F 00 */	lfd f1, $$23556@sda21(r2)
+/* 800D53B0 000D22F0  C8 22 8F 00 */	lfd f1, "@3556"@sda21(r2)
 /* 800D53B4 000D22F4  EC 42 00 2A */	fadds f2, f2, f0
 /* 800D53B8 000D22F8  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800D53BC 000D22FC  C8 01 00 30 */	lfd f0, 0x30(r1)
@@ -2929,10 +2929,10 @@ __ct__6MActorFP13MActorAnmData:
 /* 800D57D0 000D2710  38 80 00 00 */	li r4, 0
 /* 800D57D4 000D2714  4B F5 54 C1 */	bl init__12J3DFrameCtrlFs
 /* 800D57D8 000D2718  93 79 00 18 */	stw r27, 0x18(r25)
-/* 800D57DC 000D271C  3C 80 80 3B */	lis r4, __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1@ha
+/* 800D57DC 000D271C  3C 80 80 3B */	lis r4, "__vt__35MActorAnmEach<18J3DAnmTransformKey>"@ha
 /* 800D57E0 000D2720  3C 60 80 3B */	lis r3, __vt__12MActorAnmBck@ha
 /* 800D57E4 000D2724  93 79 00 1C */	stw r27, 0x1c(r25)
-/* 800D57E8 000D2728  38 84 36 78 */	addi r4, r4, __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1@l
+/* 800D57E8 000D2728  38 84 36 78 */	addi r4, r4, "__vt__35MActorAnmEach<18J3DAnmTransformKey>"@l
 /* 800D57EC 000D272C  38 03 37 68 */	addi r0, r3, __vt__12MActorAnmBck@l
 /* 800D57F0 000D2730  90 99 00 20 */	stw r4, 0x20(r25)
 /* 800D57F4 000D2734  93 79 00 24 */	stw r27, 0x24(r25)
@@ -2961,13 +2961,13 @@ lbl_800D5830:
 /* 800D5848 000D2788  41 82 00 3C */	beq lbl_800D5884
 /* 800D584C 000D278C  7F 23 CB 78 */	mr r3, r25
 /* 800D5850 000D2790  48 00 03 81 */	bl __ct__13MActorAnmBaseFv
-/* 800D5854 000D2794  3C 60 80 3B */	lis r3, __vt__31MActorAnmEach$$014J3DAnmColorKey$$1@ha
-/* 800D5858 000D2798  38 03 36 50 */	addi r0, r3, __vt__31MActorAnmEach$$014J3DAnmColorKey$$1@l
+/* 800D5854 000D2794  3C 60 80 3B */	lis r3, "__vt__31MActorAnmEach<14J3DAnmColorKey>"@ha
+/* 800D5858 000D2798  38 03 36 50 */	addi r0, r3, "__vt__31MActorAnmEach<14J3DAnmColorKey>"@l
 /* 800D585C 000D279C  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D5860 000D27A0  38 80 00 00 */	li r4, 0
-/* 800D5864 000D27A4  3C 60 80 3B */	lis r3, __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1@ha
+/* 800D5864 000D27A4  3C 60 80 3B */	lis r3, "__vt__34MActorAnmMatEach<14J3DAnmColorKey>"@ha
 /* 800D5868 000D27A8  90 99 00 24 */	stw r4, 0x24(r25)
-/* 800D586C 000D27AC  38 03 36 28 */	addi r0, r3, __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1@l
+/* 800D586C 000D27AC  38 03 36 28 */	addi r0, r3, "__vt__34MActorAnmMatEach<14J3DAnmColorKey>"@l
 /* 800D5870 000D27B0  3C 60 80 3B */	lis r3, __vt__12MActorAnmBpk@ha
 /* 800D5874 000D27B4  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D5878 000D27B8  38 03 36 F0 */	addi r0, r3, __vt__12MActorAnmBpk@l
@@ -2993,13 +2993,13 @@ lbl_800D58A8:
 /* 800D58C0 000D2800  41 82 00 3C */	beq lbl_800D58FC
 /* 800D58C4 000D2804  7F 23 CB 78 */	mr r3, r25
 /* 800D58C8 000D2808  48 00 03 09 */	bl __ct__13MActorAnmBaseFv
-/* 800D58CC 000D280C  3C 60 80 3B */	lis r3, __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1@ha
-/* 800D58D0 000D2810  38 03 36 00 */	addi r0, r3, __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1@l
+/* 800D58CC 000D280C  3C 60 80 3B */	lis r3, "__vt__33MActorAnmEach<16J3DAnmTexPattern>"@ha
+/* 800D58D0 000D2810  38 03 36 00 */	addi r0, r3, "__vt__33MActorAnmEach<16J3DAnmTexPattern>"@l
 /* 800D58D4 000D2814  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D58D8 000D2818  38 80 00 00 */	li r4, 0
-/* 800D58DC 000D281C  3C 60 80 3B */	lis r3, __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1@ha
+/* 800D58DC 000D281C  3C 60 80 3B */	lis r3, "__vt__36MActorAnmMatEach<16J3DAnmTexPattern>"@ha
 /* 800D58E0 000D2820  90 99 00 24 */	stw r4, 0x24(r25)
-/* 800D58E4 000D2824  38 03 35 D8 */	addi r0, r3, __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1@l
+/* 800D58E4 000D2824  38 03 35 D8 */	addi r0, r3, "__vt__36MActorAnmMatEach<16J3DAnmTexPattern>"@l
 /* 800D58E8 000D2828  3C 60 80 3B */	lis r3, __vt__12MActorAnmBtp@ha
 /* 800D58EC 000D282C  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D58F0 000D2830  38 03 37 40 */	addi r0, r3, __vt__12MActorAnmBtp@l
@@ -3025,13 +3025,13 @@ lbl_800D5920:
 /* 800D5938 000D2878  41 82 00 3C */	beq lbl_800D5974
 /* 800D593C 000D287C  7F 23 CB 78 */	mr r3, r25
 /* 800D5940 000D2880  48 00 02 91 */	bl __ct__13MActorAnmBaseFv
-/* 800D5944 000D2884  3C 60 80 3B */	lis r3, __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1@ha
-/* 800D5948 000D2888  38 03 35 B0 */	addi r0, r3, __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1@l
+/* 800D5944 000D2884  3C 60 80 3B */	lis r3, "__vt__36MActorAnmEach<19J3DAnmTextureSRTKey>"@ha
+/* 800D5948 000D2888  38 03 35 B0 */	addi r0, r3, "__vt__36MActorAnmEach<19J3DAnmTextureSRTKey>"@l
 /* 800D594C 000D288C  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D5950 000D2890  38 80 00 00 */	li r4, 0
-/* 800D5954 000D2894  3C 60 80 3B */	lis r3, __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1@ha
+/* 800D5954 000D2894  3C 60 80 3B */	lis r3, "__vt__39MActorAnmMatEach<19J3DAnmTextureSRTKey>"@ha
 /* 800D5958 000D2898  90 99 00 24 */	stw r4, 0x24(r25)
-/* 800D595C 000D289C  38 03 35 88 */	addi r0, r3, __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1@l
+/* 800D595C 000D289C  38 03 35 88 */	addi r0, r3, "__vt__39MActorAnmMatEach<19J3DAnmTextureSRTKey>"@l
 /* 800D5960 000D28A0  3C 60 80 3B */	lis r3, __vt__12MActorAnmBtk@ha
 /* 800D5964 000D28A4  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D5968 000D28A8  38 03 37 18 */	addi r0, r3, __vt__12MActorAnmBtk@l
@@ -3057,13 +3057,13 @@ lbl_800D5998:
 /* 800D59B0 000D28F0  41 82 00 38 */	beq lbl_800D59E8
 /* 800D59B4 000D28F4  7F 23 CB 78 */	mr r3, r25
 /* 800D59B8 000D28F8  48 00 02 19 */	bl __ct__13MActorAnmBaseFv
-/* 800D59BC 000D28FC  3C 60 80 3B */	lis r3, __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1@ha
-/* 800D59C0 000D2900  38 03 35 60 */	addi r0, r3, __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1@l
+/* 800D59BC 000D28FC  3C 60 80 3B */	lis r3, "__vt__32MActorAnmEach<15J3DAnmTevRegKey>"@ha
+/* 800D59C0 000D2900  38 03 35 60 */	addi r0, r3, "__vt__32MActorAnmEach<15J3DAnmTevRegKey>"@l
 /* 800D59C4 000D2904  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D59C8 000D2908  38 00 00 00 */	li r0, 0
-/* 800D59CC 000D290C  3C 60 80 3B */	lis r3, __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1@ha
+/* 800D59CC 000D290C  3C 60 80 3B */	lis r3, "__vt__35MActorAnmMatEach<15J3DAnmTevRegKey>"@ha
 /* 800D59D0 000D2910  90 19 00 24 */	stw r0, 0x24(r25)
-/* 800D59D4 000D2914  38 03 35 38 */	addi r0, r3, __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1@l
+/* 800D59D4 000D2914  38 03 35 38 */	addi r0, r3, "__vt__35MActorAnmMatEach<15J3DAnmTevRegKey>"@l
 /* 800D59D8 000D2918  3C 60 80 3B */	lis r3, __vt__12MActorAnmBrk@ha
 /* 800D59DC 000D291C  90 19 00 20 */	stw r0, 0x20(r25)
 /* 800D59E0 000D2920  38 03 36 C8 */	addi r0, r3, __vt__12MActorAnmBrk@l
@@ -3102,10 +3102,10 @@ lbl_800D5A14:
 /* 800D5A5C 000D299C  4B F5 52 39 */	bl init__12J3DFrameCtrlFs
 /* 800D5A60 000D29A0  38 A0 00 00 */	li r5, 0
 /* 800D5A64 000D29A4  90 B9 00 18 */	stw r5, 0x18(r25)
-/* 800D5A68 000D29A8  3C 80 80 3B */	lis r4, __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1@ha
+/* 800D5A68 000D29A8  3C 80 80 3B */	lis r4, "__vt__33MActorAnmEach<16J3DAnmClusterKey>"@ha
 /* 800D5A6C 000D29AC  3C 60 80 3B */	lis r3, __vt__12MActorAnmBlk@ha
 /* 800D5A70 000D29B0  90 B9 00 1C */	stw r5, 0x1c(r25)
-/* 800D5A74 000D29B4  38 84 35 10 */	addi r4, r4, __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1@l
+/* 800D5A74 000D29B4  38 84 35 10 */	addi r4, r4, "__vt__33MActorAnmEach<16J3DAnmClusterKey>"@l
 /* 800D5A78 000D29B8  38 03 36 A0 */	addi r0, r3, __vt__12MActorAnmBlk@l
 /* 800D5A7C 000D29BC  90 99 00 20 */	stw r4, 0x20(r25)
 /* 800D5A80 000D29C0  90 B9 00 24 */	stw r5, 0x24(r25)
@@ -3129,13 +3129,13 @@ lbl_800D5AA8:
 /* 800D5AC0 000D2A00  3C C0 80 3B */	lis r6, __vt__13MActorAnmBase@ha
 /* 800D5AC4 000D2A04  3C A0 80 3B */	lis r5, __vt__12J3DFrameCtrl@ha
 /* 800D5AC8 000D2A08  80 FE 00 00 */	lwz r7, 0(r30)
-/* 800D5ACC 000D2A0C  3C 80 80 3B */	lis r4, __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1@ha
+/* 800D5ACC 000D2A0C  3C 80 80 3B */	lis r4, "__vt__35MActorAnmEach<18J3DAnmTransformKey>"@ha
 /* 800D5AD0 000D2A10  84 07 00 24 */	lwzu r0, 0x24(r7)
 /* 800D5AD4 000D2A14  3C 60 80 3B */	lis r3, __vt__12MActorAnmBck@ha
 /* 800D5AD8 000D2A18  3B 46 37 90 */	addi r26, r6, __vt__13MActorAnmBase@l
 /* 800D5ADC 000D2A1C  90 01 00 E0 */	stw r0, 0xe0(r1)
 /* 800D5AE0 000D2A20  3B 65 A9 C0 */	addi r27, r5, __vt__12J3DFrameCtrl@l
-/* 800D5AE4 000D2A24  3B 84 36 78 */	addi r28, r4, __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1@l
+/* 800D5AE4 000D2A24  3B 84 36 78 */	addi r28, r4, "__vt__35MActorAnmEach<18J3DAnmTransformKey>"@l
 /* 800D5AE8 000D2A28  90 E1 00 DC */	stw r7, 0xdc(r1)
 /* 800D5AEC 000D2A2C  3B A3 37 68 */	addi r29, r3, __vt__12MActorAnmBck@l
 /* 800D5AF0 000D2A30  3B 20 00 00 */	li r25, 0
@@ -3228,8 +3228,8 @@ __ct__13MActorAnmBaseFv:
 /* 800D5C30 000D2B70  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1
-__vt__33MActorAnmEach$$016J3DAnmClusterKey$$1:
+.global "__vt__33MActorAnmEach<16J3DAnmClusterKey>"
+"__vt__33MActorAnmEach<16J3DAnmClusterKey>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3238,22 +3238,10 @@ __vt__33MActorAnmEach$$016J3DAnmClusterKey$$1:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte 0
-  .4byte setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs
+  .4byte "setAnm__33MActorAnmEach<16J3DAnmClusterKey>FPCcPUs"
   .4byte 0
-.global __vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1
-__vt__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1:
-  .4byte 0
-  .4byte 0
-  .4byte setModel__13MActorAnmBaseFP8J3DModel
-  .4byte updateIn__13MActorAnmBaseFv
-  .4byte updateOut__13MActorAnmBaseFv
-  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
-  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
-  .4byte setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs
-  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
-  .4byte 0
-.global __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1
-__vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1:
+.global "__vt__35MActorAnmMatEach<15J3DAnmTevRegKey>"
+"__vt__35MActorAnmMatEach<15J3DAnmTevRegKey>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3261,23 +3249,11 @@ __vt__32MActorAnmEach$$015J3DAnmTevRegKey$$1:
   .4byte updateOut__13MActorAnmBaseFv
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte "setAnmFromIndex__35MActorAnmMatEach<15J3DAnmTevRegKey>FiPUs"
+  .4byte "setAnm__32MActorAnmEach<15J3DAnmTevRegKey>FPCcPUs"
   .4byte 0
-  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
-  .4byte 0
-.global __vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1
-__vt__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1:
-  .4byte 0
-  .4byte 0
-  .4byte setModel__13MActorAnmBaseFP8J3DModel
-  .4byte updateIn__13MActorAnmBaseFv
-  .4byte updateOut__13MActorAnmBaseFv
-  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
-  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
-  .4byte setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs
-  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
-  .4byte 0
-.global __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1
-__vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1:
+.global "__vt__32MActorAnmEach<15J3DAnmTevRegKey>"
+"__vt__32MActorAnmEach<15J3DAnmTevRegKey>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3286,22 +3262,10 @@ __vt__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte 0
-  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
+  .4byte "setAnm__32MActorAnmEach<15J3DAnmTevRegKey>FPCcPUs"
   .4byte 0
-.global __vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1
-__vt__36MActorAnmMatEach$$016J3DAnmTexPattern$$1:
-  .4byte 0
-  .4byte 0
-  .4byte setModel__13MActorAnmBaseFP8J3DModel
-  .4byte updateIn__13MActorAnmBaseFv
-  .4byte updateOut__13MActorAnmBaseFv
-  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
-  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
-  .4byte setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs
-  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
-  .4byte 0
-.global __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1
-__vt__33MActorAnmEach$$016J3DAnmTexPattern$$1:
+.global "__vt__39MActorAnmMatEach<19J3DAnmTextureSRTKey>"
+"__vt__39MActorAnmMatEach<19J3DAnmTextureSRTKey>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3309,23 +3273,11 @@ __vt__33MActorAnmEach$$016J3DAnmTexPattern$$1:
   .4byte updateOut__13MActorAnmBaseFv
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte "setAnmFromIndex__39MActorAnmMatEach<19J3DAnmTextureSRTKey>FiPUs"
+  .4byte "setAnm__36MActorAnmEach<19J3DAnmTextureSRTKey>FPCcPUs"
   .4byte 0
-  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
-  .4byte 0
-.global __vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1
-__vt__34MActorAnmMatEach$$014J3DAnmColorKey$$1:
-  .4byte 0
-  .4byte 0
-  .4byte setModel__13MActorAnmBaseFP8J3DModel
-  .4byte updateIn__13MActorAnmBaseFv
-  .4byte updateOut__13MActorAnmBaseFv
-  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
-  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
-  .4byte setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs
-  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
-  .4byte 0
-.global __vt__31MActorAnmEach$$014J3DAnmColorKey$$1
-__vt__31MActorAnmEach$$014J3DAnmColorKey$$1:
+.global "__vt__36MActorAnmEach<19J3DAnmTextureSRTKey>"
+"__vt__36MActorAnmEach<19J3DAnmTextureSRTKey>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3334,10 +3286,22 @@ __vt__31MActorAnmEach$$014J3DAnmColorKey$$1:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte 0
-  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
+  .4byte "setAnm__36MActorAnmEach<19J3DAnmTextureSRTKey>FPCcPUs"
   .4byte 0
-.global __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1
-__vt__35MActorAnmEach$$018J3DAnmTransformKey$$1:
+.global "__vt__36MActorAnmMatEach<16J3DAnmTexPattern>"
+"__vt__36MActorAnmMatEach<16J3DAnmTexPattern>":
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte "setAnmFromIndex__36MActorAnmMatEach<16J3DAnmTexPattern>FiPUs"
+  .4byte "setAnm__33MActorAnmEach<16J3DAnmTexPattern>FPCcPUs"
+  .4byte 0
+.global "__vt__33MActorAnmEach<16J3DAnmTexPattern>"
+"__vt__33MActorAnmEach<16J3DAnmTexPattern>":
   .4byte 0
   .4byte 0
   .4byte setModel__13MActorAnmBaseFP8J3DModel
@@ -3346,12 +3310,48 @@ __vt__35MActorAnmEach$$018J3DAnmTransformKey$$1:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte 0
-  .4byte setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs
+  .4byte "setAnm__33MActorAnmEach<16J3DAnmTexPattern>FPCcPUs"
+  .4byte 0
+.global "__vt__34MActorAnmMatEach<14J3DAnmColorKey>"
+"__vt__34MActorAnmMatEach<14J3DAnmColorKey>":
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte "setAnmFromIndex__34MActorAnmMatEach<14J3DAnmColorKey>FiPUs"
+  .4byte "setAnm__31MActorAnmEach<14J3DAnmColorKey>FPCcPUs"
+  .4byte 0
+.global "__vt__31MActorAnmEach<14J3DAnmColorKey>"
+"__vt__31MActorAnmEach<14J3DAnmColorKey>":
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte "setAnm__31MActorAnmEach<14J3DAnmColorKey>FPCcPUs"
+  .4byte 0
+.global "__vt__35MActorAnmEach<18J3DAnmTransformKey>"
+"__vt__35MActorAnmEach<18J3DAnmTransformKey>":
+  .4byte 0
+  .4byte 0
+  .4byte setModel__13MActorAnmBaseFP8J3DModel
+  .4byte updateIn__13MActorAnmBaseFv
+  .4byte updateOut__13MActorAnmBaseFv
+  .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
+  .4byte checkUseMaterialID__13MActorAnmBaseFPUs
+  .4byte 0
+  .4byte "setAnm__35MActorAnmEach<18J3DAnmTransformKey>FPCcPUs"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$23554:
+"@3554":
 	.incbin "baserom.dol", 0x3E4BF8, 0x8
-$$23556:
+"@3556":
 	.incbin "baserom.dol", 0x3E4C00, 0x8

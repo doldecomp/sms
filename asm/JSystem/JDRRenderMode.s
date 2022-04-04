@@ -103,7 +103,7 @@ GetRenderModeYScale__6JDramaFRC16_GXRenderModeObj:
 /* 80045BE0 00042B20  DB E1 00 10 */	stfd f31, 0x10(r1)
 /* 80045BE4 00042B24  88 03 00 19 */	lbz r0, 0x19(r3)
 /* 80045BE8 00042B28  38 60 00 00 */	li r3, 0
-/* 80045BEC 00042B2C  C3 E2 83 F0 */	lfs f31, $$248@sda21(r2)
+/* 80045BEC 00042B2C  C3 E2 83 F0 */	lfs f31, "@48"@sda21(r2)
 /* 80045BF0 00042B30  28 00 00 01 */	cmplwi r0, 1
 /* 80045BF4 00042B34  40 82 00 30 */	bne lbl_80045C24
 /* 80045BF8 00042B38  80 05 00 14 */	lwz r0, 0x14(r5)
@@ -121,11 +121,11 @@ lbl_80045C18:
 lbl_80045C24:
 /* 80045C24 00042B64  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80045C28 00042B68  41 82 00 24 */	beq lbl_80045C4C
-/* 80045C2C 00042B6C  3C 60 80 37 */	lis r3, $$249@ha
+/* 80045C2C 00042B6C  3C 60 80 37 */	lis r3, "@49"@ha
 /* 80045C30 00042B70  4C C6 31 82 */	crclr 6
-/* 80045C34 00042B74  3C 80 80 37 */	lis r4, $$250@ha
-/* 80045C38 00042B78  38 A4 10 AC */	addi r5, r4, $$250@l
-/* 80045C3C 00042B7C  38 63 10 98 */	addi r3, r3, $$249@l
+/* 80045C34 00042B74  3C 80 80 37 */	lis r4, "@50"@ha
+/* 80045C38 00042B78  38 A4 10 AC */	addi r5, r4, "@50"@l
+/* 80045C3C 00042B7C  38 63 10 98 */	addi r3, r3, "@49"@l
 /* 80045C40 00042B80  38 80 00 37 */	li r4, 0x37
 /* 80045C44 00042B84  48 04 93 A1 */	bl OSPanic
 /* 80045C48 00042B88  48 00 00 14 */	b lbl_80045C5C
@@ -171,11 +171,11 @@ lbl_80045CC4:
 lbl_80045CD0:
 /* 80045CD0 00042C10  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80045CD4 00042C14  41 82 00 20 */	beq lbl_80045CF4
-/* 80045CD8 00042C18  3C 60 80 37 */	lis r3, $$249@ha
+/* 80045CD8 00042C18  3C 60 80 37 */	lis r3, "@49"@ha
 /* 80045CDC 00042C1C  4C C6 31 82 */	crclr 6
-/* 80045CE0 00042C20  3C 80 80 37 */	lis r4, $$261@ha
-/* 80045CE4 00042C24  38 A4 10 C4 */	addi r5, r4, $$261@l
-/* 80045CE8 00042C28  38 63 10 98 */	addi r3, r3, $$249@l
+/* 80045CE0 00042C20  3C 80 80 37 */	lis r4, "@61"@ha
+/* 80045CE4 00042C24  38 A4 10 C4 */	addi r5, r4, "@61"@l
+/* 80045CE8 00042C28  38 63 10 98 */	addi r3, r3, "@49"@l
 /* 80045CEC 00042C2C  38 80 00 48 */	li r4, 0x48
 /* 80045CF0 00042C30  48 04 92 F5 */	bl OSPanic
 lbl_80045CF4:
@@ -274,14 +274,14 @@ CopyRenderModeVFilter__6JDramaFP16_GXRenderModeObjPCUc:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$249:
+"@49":
 	.incbin "baserom.dol", 0x36E098, 0x14
-$$250:
+"@50":
 	.incbin "baserom.dol", 0x36E0AC, 0x18
-$$261:
+"@61":
 	.incbin "baserom.dol", 0x36E0C4, 0x1C
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$248:
+"@48":
 	.incbin "baserom.dol", 0x3E40F0, 0x8

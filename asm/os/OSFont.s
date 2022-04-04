@@ -387,7 +387,7 @@ lbl_8008F844:
 /* 8008F844 0008C784  54 80 04 3E */	clrlwi r0, r4, 0x10
 /* 8008F848 0008C788  28 00 00 01 */	cmplwi r0, 1
 /* 8008F84C 0008C78C  40 82 01 E8 */	bne lbl_8008FA34
-/* 8008F850 0008C790  80 82 8A 90 */	lwz r4, $$2153@sda21(r2)
+/* 8008F850 0008C790  80 82 8A 90 */	lwz r4, "@153"@sda21(r2)
 /* 8008F854 0008C794  38 60 00 54 */	li r3, 0x54
 /* 8008F858 0008C798  80 02 8A 94 */	lwz r0, lbl_8040BEF4@sda21(r2)
 /* 8008F85C 0008C79C  90 81 00 1C */	stw r4, 0x1c(r1)
@@ -1068,7 +1068,7 @@ fontEncode$80:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2153:
+"@153":
 	.incbin "baserom.dol", 0x3E4790, 0x4
 lbl_8040BEF4:
 	.incbin "baserom.dol", 0x3E4794, 0x4

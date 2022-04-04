@@ -116,7 +116,7 @@ lbl_800D9E3C:
 /* 800D9F0C 000D6E4C  81 8C 00 40 */	lwz r12, 0x40(r12)
 /* 800D9F10 000D6E50  7D 88 03 A6 */	mtlr r12
 /* 800D9F14 000D6E54  4E 80 00 21 */	blrl 
-/* 800D9F18 000D6E58  80 0D 84 40 */	lwz r0, $$21211@sda21(r13)
+/* 800D9F18 000D6E58  80 0D 84 40 */	lwz r0, "@1211"@sda21(r13)
 /* 800D9F1C 000D6E5C  3B DE 00 01 */	addi r30, r30, 1
 /* 800D9F20 000D6E60  90 01 00 90 */	stw r0, 0x90(r1)
 /* 800D9F24 000D6E64  A0 03 00 00 */	lhz r0, 0(r3)
@@ -463,5 +463,5 @@ __vt__15SampleCtrlShape:
   .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
-$$21211:
+"@1211":
 	.incbin "baserom.dol", 0x3E3440, 0x8

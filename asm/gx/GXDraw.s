@@ -35,10 +35,10 @@ GXDrawSphere:
 /* 800ACBFC 000A9B3C  38 60 00 0D */	li r3, 0xd
 /* 800ACC00 000A9B40  C8 41 00 30 */	lfd f2, 0x30(r1)
 /* 800ACC04 000A9B44  C8 01 00 28 */	lfd f0, 0x28(r1)
-/* 800ACC08 000A9B48  C8 62 8B A0 */	lfd f3, $$2364@sda21(r2)
-/* 800ACC0C 000A9B4C  C0 82 8B 90 */	lfs f4, $$2358@sda21(r2)
+/* 800ACC08 000A9B48  C8 62 8B A0 */	lfd f3, "@364"@sda21(r2)
+/* 800ACC0C 000A9B4C  C0 82 8B 90 */	lfs f4, "@358"@sda21(r2)
 /* 800ACC10 000A9B50  EC 42 18 28 */	fsubs f2, f2, f3
-/* 800ACC14 000A9B54  C0 22 8B A8 */	lfs f1, $$2405@sda21(r2)
+/* 800ACC14 000A9B54  C0 22 8B A8 */	lfs f1, "@405"@sda21(r2)
 /* 800ACC18 000A9B58  EC 00 18 28 */	fsubs f0, f0, f3
 /* 800ACC1C 000A9B5C  EF 24 10 24 */	fdivs f25, f4, f2
 /* 800ACC20 000A9B60  EF 01 00 24 */	fdivs f24, f1, f0
@@ -81,10 +81,10 @@ GXDrawSphere:
 /* 800ACCB4 000A9BF4  4B FF A7 01 */	bl GXSetVtxAttrFmt
 lbl_800ACCB8:
 /* 800ACCB8 000A9BF8  56 B7 06 3E */	clrlwi r23, r21, 0x18
-/* 800ACCBC 000A9BFC  CB 42 8B 98 */	lfd f26, $$2362@sda21(r2)
+/* 800ACCBC 000A9BFC  CB 42 8B 98 */	lfd f26, "@362"@sda21(r2)
 /* 800ACCC0 000A9C00  38 17 00 01 */	addi r0, r23, 1
-/* 800ACCC4 000A9C04  C3 82 8B 8C */	lfs f28, $$2357@sda21(r2)
-/* 800ACCC8 000A9C08  CB C2 8B A0 */	lfd f30, $$2364@sda21(r2)
+/* 800ACCC4 000A9C04  C3 82 8B 8C */	lfs f28, "@357"@sda21(r2)
+/* 800ACCC8 000A9C08  CB C2 8B A0 */	lfd f30, "@364"@sda21(r2)
 /* 800ACCCC 000A9C0C  54 19 08 3C */	slwi r25, r0, 1
 /* 800ACCD0 000A9C10  56 D8 06 3E */	clrlwi r24, r22, 0x18
 /* 800ACCD4 000A9C14  3A C0 00 00 */	li r22, 0
@@ -251,7 +251,7 @@ GXDrawCubeFace:
 /* 800ACF34 000A9E74  DB 81 00 38 */	stfd f28, 0x38(r1)
 /* 800ACF38 000A9E78  ED 8B 50 2A */	fadds f12, f11, f10
 /* 800ACF3C 000A9E7C  DB 61 00 30 */	stfd f27, 0x30(r1)
-/* 800ACF40 000A9E80  C3 E2 8B AC */	lfs f31, $$2493@sda21(r2)
+/* 800ACF40 000A9E80  C3 E2 8B AC */	lfs f31, "@493"@sda21(r2)
 /* 800ACF44 000A9E84  EF DF 07 B2 */	fmuls f30, f31, f30
 /* 800ACF48 000A9E88  ED BF 03 72 */	fmuls f13, f31, f13
 /* 800ACF4C 000A9E8C  ED 9F 03 32 */	fmuls f12, f31, f12
@@ -277,7 +277,7 @@ lbl_800ACF84:
 /* 800ACF98 000A9ED8  98 05 80 00 */	stb r0, -0x8000(r5)
 lbl_800ACF9C:
 /* 800ACF9C 000A9EDC  EF A1 20 28 */	fsubs f29, f1, f4
-/* 800ACFA0 000A9EE0  C3 E2 8B AC */	lfs f31, $$2493@sda21(r2)
+/* 800ACFA0 000A9EE0  C3 E2 8B AC */	lfs f31, "@493"@sda21(r2)
 /* 800ACFA4 000A9EE4  EF 82 28 28 */	fsubs f28, f2, f5
 /* 800ACFA8 000A9EE8  3C A0 CC 01 */	lis r5, 0xCC008000@ha
 /* 800ACFAC 000A9EEC  EF 63 30 28 */	fsubs f27, f3, f6
@@ -311,7 +311,7 @@ lbl_800AD000:
 /* 800AD018 000A9F58  98 05 80 00 */	stb r0, -0x8000(r5)
 lbl_800AD01C:
 /* 800AD01C 000A9F5C  EF FD 38 28 */	fsubs f31, f29, f7
-/* 800AD020 000A9F60  C3 C2 8B AC */	lfs f30, $$2493@sda21(r2)
+/* 800AD020 000A9F60  C3 C2 8B AC */	lfs f30, "@493"@sda21(r2)
 /* 800AD024 000A9F64  ED BC 40 28 */	fsubs f13, f28, f8
 /* 800AD028 000A9F68  3C A0 CC 01 */	lis r5, 0xCC008000@ha
 /* 800AD02C 000A9F6C  ED 9B 58 28 */	fsubs f12, f27, f11
@@ -341,7 +341,7 @@ lbl_800AD074:
 /* 800AD088 000A9FC8  98 05 80 00 */	stb r0, -0x8000(r5)
 lbl_800AD08C:
 /* 800AD08C 000A9FCC  ED 80 38 28 */	fsubs f12, f0, f7
-/* 800AD090 000A9FD0  C1 A2 8B AC */	lfs f13, $$2493@sda21(r2)
+/* 800AD090 000A9FD0  C1 A2 8B AC */	lfs f13, "@493"@sda21(r2)
 /* 800AD094 000A9FD4  ED 29 40 28 */	fsubs f9, f9, f8
 /* 800AD098 000A9FD8  3C A0 CC 01 */	lis r5, 0xCC008000@ha
 /* 800AD09C 000A9FDC  EC 0A 58 28 */	fsubs f0, f10, f11
@@ -447,22 +447,22 @@ lbl_800AD20C:
 /* 800AD210 000AA150  38 80 00 03 */	li r4, 3
 /* 800AD214 000AA154  38 A0 00 18 */	li r5, 0x18
 /* 800AD218 000AA158  4B FF B6 91 */	bl GXBegin
-/* 800AD21C 000AA15C  C0 42 8B 88 */	lfs f2, $$2133@sda21(r2)
+/* 800AD21C 000AA15C  C0 42 8B 88 */	lfs f2, "@133"@sda21(r2)
 /* 800AD220 000AA160  D0 41 00 08 */	stfs f2, 8(r1)
 /* 800AD224 000AA164  FC 60 10 90 */	fmr f3, f2
 /* 800AD228 000AA168  FC 80 10 90 */	fmr f4, f2
-/* 800AD22C 000AA16C  C0 22 8B 94 */	lfs f1, $$2360@sda21(r2)
+/* 800AD22C 000AA16C  C0 22 8B 94 */	lfs f1, "@360"@sda21(r2)
 /* 800AD230 000AA170  FC A0 10 90 */	fmr f5, f2
 /* 800AD234 000AA174  FC E0 10 90 */	fmr f7, f2
 /* 800AD238 000AA178  FC C0 08 90 */	fmr f6, f1
-/* 800AD23C 000AA17C  C1 02 8B 8C */	lfs f8, $$2357@sda21(r2)
+/* 800AD23C 000AA17C  C1 02 8B 8C */	lfs f8, "@357"@sda21(r2)
 /* 800AD240 000AA180  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD244 000AA184  80 81 00 10 */	lwz r4, 0x10(r1)
 /* 800AD248 000AA188  4B FF FC BD */	bl GXDrawCubeFace
-/* 800AD24C 000AA18C  C0 02 8B 94 */	lfs f0, $$2360@sda21(r2)
+/* 800AD24C 000AA18C  C0 02 8B 94 */	lfs f0, "@360"@sda21(r2)
 /* 800AD250 000AA190  D0 01 00 08 */	stfs f0, 8(r1)
-/* 800AD254 000AA194  C0 42 8B 88 */	lfs f2, $$2133@sda21(r2)
-/* 800AD258 000AA198  C0 22 8B 8C */	lfs f1, $$2357@sda21(r2)
+/* 800AD254 000AA194  C0 42 8B 88 */	lfs f2, "@133"@sda21(r2)
+/* 800AD258 000AA198  C0 22 8B 8C */	lfs f1, "@357"@sda21(r2)
 /* 800AD25C 000AA19C  FC 60 10 90 */	fmr f3, f2
 /* 800AD260 000AA1A0  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD264 000AA1A4  FC 80 10 90 */	fmr f4, f2
@@ -472,10 +472,10 @@ lbl_800AD20C:
 /* 800AD274 000AA1B4  FC E0 10 90 */	fmr f7, f2
 /* 800AD278 000AA1B8  FD 00 10 90 */	fmr f8, f2
 /* 800AD27C 000AA1BC  4B FF FC 89 */	bl GXDrawCubeFace
-/* 800AD280 000AA1C0  C0 02 8B 8C */	lfs f0, $$2357@sda21(r2)
+/* 800AD280 000AA1C0  C0 02 8B 8C */	lfs f0, "@357"@sda21(r2)
 /* 800AD284 000AA1C4  D0 01 00 08 */	stfs f0, 8(r1)
-/* 800AD288 000AA1C8  C0 22 8B 88 */	lfs f1, $$2133@sda21(r2)
-/* 800AD28C 000AA1CC  C0 42 8B 94 */	lfs f2, $$2360@sda21(r2)
+/* 800AD288 000AA1C8  C0 22 8B 88 */	lfs f1, "@133"@sda21(r2)
+/* 800AD28C 000AA1CC  C0 42 8B 94 */	lfs f2, "@360"@sda21(r2)
 /* 800AD290 000AA1D0  FC 60 08 90 */	fmr f3, f1
 /* 800AD294 000AA1D4  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD298 000AA1D8  FC 80 10 90 */	fmr f4, f2
@@ -485,39 +485,39 @@ lbl_800AD20C:
 /* 800AD2A8 000AA1E8  FC E0 08 90 */	fmr f7, f1
 /* 800AD2AC 000AA1EC  FD 00 08 90 */	fmr f8, f1
 /* 800AD2B0 000AA1F0  4B FF FC 55 */	bl GXDrawCubeFace
-/* 800AD2B4 000AA1F4  C0 22 8B 88 */	lfs f1, $$2133@sda21(r2)
+/* 800AD2B4 000AA1F4  C0 22 8B 88 */	lfs f1, "@133"@sda21(r2)
 /* 800AD2B8 000AA1F8  D0 21 00 08 */	stfs f1, 8(r1)
 /* 800AD2BC 000AA1FC  FC 60 08 90 */	fmr f3, f1
 /* 800AD2C0 000AA200  FC 80 08 90 */	fmr f4, f1
-/* 800AD2C4 000AA204  C0 42 8B 8C */	lfs f2, $$2357@sda21(r2)
+/* 800AD2C4 000AA204  C0 42 8B 8C */	lfs f2, "@357"@sda21(r2)
 /* 800AD2C8 000AA208  FC A0 08 90 */	fmr f5, f1
 /* 800AD2CC 000AA20C  FD 00 08 90 */	fmr f8, f1
 /* 800AD2D0 000AA210  FC C0 10 90 */	fmr f6, f2
-/* 800AD2D4 000AA214  C0 E2 8B 94 */	lfs f7, $$2360@sda21(r2)
+/* 800AD2D4 000AA214  C0 E2 8B 94 */	lfs f7, "@360"@sda21(r2)
 /* 800AD2D8 000AA218  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD2DC 000AA21C  80 81 00 10 */	lwz r4, 0x10(r1)
 /* 800AD2E0 000AA220  4B FF FC 25 */	bl GXDrawCubeFace
-/* 800AD2E4 000AA224  C0 22 8B 88 */	lfs f1, $$2133@sda21(r2)
+/* 800AD2E4 000AA224  C0 22 8B 88 */	lfs f1, "@133"@sda21(r2)
 /* 800AD2E8 000AA228  D0 21 00 08 */	stfs f1, 8(r1)
 /* 800AD2EC 000AA22C  FC 40 08 90 */	fmr f2, f1
 /* 800AD2F0 000AA230  FC 80 08 90 */	fmr f4, f1
-/* 800AD2F4 000AA234  C0 62 8B 94 */	lfs f3, $$2360@sda21(r2)
+/* 800AD2F4 000AA234  C0 62 8B 94 */	lfs f3, "@360"@sda21(r2)
 /* 800AD2F8 000AA238  FC C0 08 90 */	fmr f6, f1
 /* 800AD2FC 000AA23C  FD 00 08 90 */	fmr f8, f1
 /* 800AD300 000AA240  FC A0 18 90 */	fmr f5, f3
-/* 800AD304 000AA244  C0 E2 8B 8C */	lfs f7, $$2357@sda21(r2)
+/* 800AD304 000AA244  C0 E2 8B 8C */	lfs f7, "@357"@sda21(r2)
 /* 800AD308 000AA248  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD30C 000AA24C  80 81 00 10 */	lwz r4, 0x10(r1)
 /* 800AD310 000AA250  4B FF FB F5 */	bl GXDrawCubeFace
-/* 800AD314 000AA254  C0 22 8B 88 */	lfs f1, $$2133@sda21(r2)
+/* 800AD314 000AA254  C0 22 8B 88 */	lfs f1, "@133"@sda21(r2)
 /* 800AD318 000AA258  D0 21 00 08 */	stfs f1, 8(r1)
 /* 800AD31C 000AA25C  FC 40 08 90 */	fmr f2, f1
 /* 800AD320 000AA260  FC A0 08 90 */	fmr f5, f1
-/* 800AD324 000AA264  C0 62 8B 8C */	lfs f3, $$2357@sda21(r2)
+/* 800AD324 000AA264  C0 62 8B 8C */	lfs f3, "@357"@sda21(r2)
 /* 800AD328 000AA268  FC C0 08 90 */	fmr f6, f1
 /* 800AD32C 000AA26C  FC E0 08 90 */	fmr f7, f1
 /* 800AD330 000AA270  FC 80 18 90 */	fmr f4, f3
-/* 800AD334 000AA274  C1 02 8B 94 */	lfs f8, $$2360@sda21(r2)
+/* 800AD334 000AA274  C1 02 8B 94 */	lfs f8, "@360"@sda21(r2)
 /* 800AD338 000AA278  80 61 00 14 */	lwz r3, 0x14(r1)
 /* 800AD33C 000AA27C  80 81 00 10 */	lwz r4, 0x10(r1)
 /* 800AD340 000AA280  4B FF FB C5 */	bl GXDrawCubeFace
@@ -534,21 +534,21 @@ lbl_800AD20C:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2133:
+"@133":
   .4byte 0
-$$2357:
+"@357":
 	.incbin "baserom.dol", 0x3E488C, 0x4
-$$2358:
+"@358":
 	.incbin "baserom.dol", 0x3E4890, 0x4
-$$2360:
+"@360":
 	.incbin "baserom.dol", 0x3E4894, 0x4
-$$2362:
+"@362":
 	.incbin "baserom.dol", 0x3E4898, 0x8
-$$2364:
+"@364":
 	.incbin "baserom.dol", 0x3E48A0, 0x8
-$$2405:
+"@405":
 	.incbin "baserom.dol", 0x3E48A8, 0x4
-$$2493:
+"@493":
 	.incbin "baserom.dol", 0x3E48AC, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

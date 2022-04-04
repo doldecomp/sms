@@ -117,8 +117,8 @@ lbl_802F0D60:
 /* 802F0D74 002EDCB4  38 21 00 28 */	addi r1, r1, 0x28
 /* 802F0D78 002EDCB8  4E 80 00 20 */	blr 
 
-.global requestCone__12TBeamManagerFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fbbb
-requestCone__12TBeamManagerFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fbbb:
+.global "requestCone__12TBeamManagerFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fbbb"
+"requestCone__12TBeamManagerFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fbbb":
 /* 802F0D7C 002EDCBC  7C 08 02 A6 */	mflr r0
 /* 802F0D80 002EDCC0  90 01 00 04 */	stw r0, 4(r1)
 /* 802F0D84 002EDCC4  55 00 06 3F */	clrlwi. r0, r8, 0x18
@@ -145,7 +145,7 @@ requestCone__12TBeamManagerFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$
 /* 802F0DD8 002EDD18  38 BC 00 00 */	addi r5, r28, 0
 /* 802F0DDC 002EDD1C  38 E1 00 1C */	addi r7, r1, 0x1c
 /* 802F0DE0 002EDD20  38 C0 00 00 */	li r6, 0
-/* 802F0DE4 002EDD24  4B EE AC 85 */	bl intersectLine__4TMapCFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1bPQ29JGeometry8TVec3$$0f$$1
+/* 802F0DE4 002EDD24  4B EE AC 85 */	bl "intersectLine__4TMapCFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>bPQ29JGeometry8TVec3<f>"
 /* 802F0DE8 002EDD28  7C 65 1B 78 */	mr r5, r3
 /* 802F0DEC 002EDD2C  48 00 00 08 */	b lbl_802F0DF4
 lbl_802F0DF0:
@@ -273,7 +273,7 @@ __ct__12TBeamManagerFPCc:
 /* 802F0FB4 002EDEF4  38 C0 00 B8 */	li r6, 0xb8
 /* 802F0FB8 002EDEF8  38 E0 00 05 */	li r7, 5
 /* 802F0FBC 002EDEFC  4B D9 18 79 */	bl __construct_array
-/* 802F0FC0 002EDF00  80 82 F4 B0 */	lwz r4, $$21801@sda21(r2)
+/* 802F0FC0 002EDF00  80 82 F4 B0 */	lwz r4, "@1801"@sda21(r2)
 /* 802F0FC4 002EDF04  38 00 00 0A */	li r0, 0xa
 /* 802F0FC8 002EDF08  38 7E 00 00 */	addi r3, r30, 0
 /* 802F0FCC 002EDF0C  90 81 00 14 */	stw r4, 0x14(r1)
@@ -403,8 +403,8 @@ calcVertices__9TConeBeamFi:
 /* 802F11A0 002EE0E0  DA E1 01 80 */	stfd f23, 0x180(r1)
 /* 802F11A4 002EE0E4  BF 61 01 6C */	stmw r27, 0x16c(r1)
 /* 802F11A8 002EE0E8  7C 7C 1B 78 */	mr r28, r3
-/* 802F11AC 002EE0EC  C0 A2 F4 B4 */	lfs f5, $$22019@sda21(r2)
-/* 802F11B0 002EE0F0  C0 82 F4 B8 */	lfs f4, $$22020@sda21(r2)
+/* 802F11AC 002EE0EC  C0 A2 F4 B4 */	lfs f5, "@2019"@sda21(r2)
+/* 802F11B0 002EE0F0  C0 82 F4 B8 */	lfs f4, "@2020"@sda21(r2)
 /* 802F11B4 002EE0F4  D0 A1 01 34 */	stfs f5, 0x134(r1)
 /* 802F11B8 002EE0F8  D0 81 01 38 */	stfs f4, 0x138(r1)
 /* 802F11BC 002EE0FC  D0 A1 01 3C */	stfs f5, 0x13c(r1)
@@ -447,7 +447,7 @@ calcVertices__9TConeBeamFi:
 /* 802F1250 002EE190  C1 61 01 48 */	lfs f11, 0x148(r1)
 /* 802F1254 002EE194  EC 4A 02 B2 */	fmuls f2, f10, f10
 /* 802F1258 002EE198  EC 28 02 32 */	fmuls f1, f8, f8
-/* 802F125C 002EE19C  C0 02 F4 BC */	lfs f0, $$22021@sda21(r2)
+/* 802F125C 002EE19C  C0 02 F4 BC */	lfs f0, "@2021"@sda21(r2)
 /* 802F1260 002EE1A0  EC 6B 02 F2 */	fmuls f3, f11, f11
 /* 802F1264 002EE1A4  EC 22 08 2A */	fadds f1, f2, f1
 /* 802F1268 002EE1A8  EC 23 08 2A */	fadds f1, f3, f1
@@ -481,14 +481,14 @@ lbl_802F12D0:
 /* 802F12D0 002EE210  80 7C 00 20 */	lwz r3, 0x20(r28)
 /* 802F12D4 002EE214  28 03 00 00 */	cmplwi r3, 0
 /* 802F12D8 002EE218  40 82 01 E0 */	bne lbl_802F14B8
-/* 802F12DC 002EE21C  C3 62 F4 C0 */	lfs f27, $$22022@sda21(r2)
+/* 802F12DC 002EE21C  C3 62 F4 C0 */	lfs f27, "@2022"@sda21(r2)
 /* 802F12E0 002EE220  3B C0 00 00 */	li r30, 0
-/* 802F12E4 002EE224  C3 E2 F4 C4 */	lfs f31, $$22023@sda21(r2)
+/* 802F12E4 002EE224  C3 E2 F4 C4 */	lfs f31, "@2023"@sda21(r2)
 /* 802F12E8 002EE228  3B 60 00 00 */	li r27, 0
-/* 802F12EC 002EE22C  CB C2 F4 D0 */	lfd f30, $$22027@sda21(r2)
-/* 802F12F0 002EE230  C3 A2 F4 C8 */	lfs f29, $$22024@sda21(r2)
+/* 802F12EC 002EE22C  CB C2 F4 D0 */	lfd f30, "@2027"@sda21(r2)
+/* 802F12F0 002EE230  C3 A2 F4 C8 */	lfs f29, "@2024"@sda21(r2)
 /* 802F12F4 002EE234  3F E0 43 30 */	lis r31, 0x4330
-/* 802F12F8 002EE238  C3 82 F4 B4 */	lfs f28, $$22019@sda21(r2)
+/* 802F12F8 002EE238  C3 82 F4 B4 */	lfs f28, "@2019"@sda21(r2)
 /* 802F12FC 002EE23C  48 00 01 AC */	b lbl_802F14A8
 lbl_802F1300:
 /* 802F1300 002EE240  6C 03 80 00 */	xoris r3, r0, 0x8000
@@ -530,7 +530,7 @@ lbl_802F1300:
 /* 802F1390 002EE2D0  90 81 00 88 */	stw r4, 0x88(r1)
 /* 802F1394 002EE2D4  D3 81 01 1C */	stfs f28, 0x11c(r1)
 /* 802F1398 002EE2D8  90 01 00 8C */	stw r0, 0x8c(r1)
-/* 802F139C 002EE2DC  4B DD 51 7D */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802F139C 002EE2DC  4B DD 51 7D */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802F13A0 002EE2E0  80 01 00 84 */	lwz r0, 0x84(r1)
 /* 802F13A4 002EE2E4  FC 20 C0 90 */	fmr f1, f24
 /* 802F13A8 002EE2E8  80 81 00 88 */	lwz r4, 0x88(r1)
@@ -557,7 +557,7 @@ lbl_802F1300:
 /* 802F13FC 002EE33C  80 01 01 3C */	lwz r0, 0x13c(r1)
 /* 802F1400 002EE340  90 81 00 7C */	stw r4, 0x7c(r1)
 /* 802F1404 002EE344  90 01 00 80 */	stw r0, 0x80(r1)
-/* 802F1408 002EE348  4B DD 51 11 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802F1408 002EE348  4B DD 51 11 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802F140C 002EE34C  80 01 00 78 */	lwz r0, 0x78(r1)
 /* 802F1410 002EE350  7C 9C DA 14 */	add r4, r28, r27
 /* 802F1414 002EE354  80 61 00 7C */	lwz r3, 0x7c(r1)
@@ -613,9 +613,9 @@ lbl_802F14B8:
 /* 802F14D4 002EE414  C0 5C 00 18 */	lfs f2, 0x18(r28)
 /* 802F14D8 002EE418  4B DD 4C ED */	bl matan__Fff
 /* 802F14DC 002EE41C  7C 60 07 34 */	extsh r0, r3
-/* 802F14E0 002EE420  C8 42 F4 D0 */	lfd f2, $$22027@sda21(r2)
+/* 802F14E0 002EE420  C8 42 F4 D0 */	lfd f2, "@2027"@sda21(r2)
 /* 802F14E4 002EE424  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 802F14E8 002EE428  C0 02 F4 CC */	lfs f0, $$22025@sda21(r2)
+/* 802F14E8 002EE428  C0 02 F4 CC */	lfs f0, "@2025"@sda21(r2)
 /* 802F14EC 002EE42C  90 01 01 54 */	stw r0, 0x154(r1)
 /* 802F14F0 002EE430  3F E0 43 30 */	lis r31, 0x4330
 /* 802F14F4 002EE434  38 61 01 28 */	addi r3, r1, 0x128
@@ -625,13 +625,13 @@ lbl_802F14B8:
 /* 802F1504 002EE444  EC 21 10 28 */	fsubs f1, f1, f2
 /* 802F1508 002EE448  EF C0 00 72 */	fmuls f30, f0, f1
 /* 802F150C 002EE44C  4B DA 39 E5 */	bl PSVECNormalize
-/* 802F1510 002EE450  C3 82 F4 C4 */	lfs f28, $$22023@sda21(r2)
+/* 802F1510 002EE450  C3 82 F4 C4 */	lfs f28, "@2023"@sda21(r2)
 /* 802F1514 002EE454  3B A0 00 00 */	li r29, 0
-/* 802F1518 002EE458  CB A2 F4 D0 */	lfd f29, $$22027@sda21(r2)
+/* 802F1518 002EE458  CB A2 F4 D0 */	lfd f29, "@2027"@sda21(r2)
 /* 802F151C 002EE45C  3B 60 00 00 */	li r27, 0
 /* 802F1520 002EE460  EC 1C 07 B2 */	fmuls f0, f28, f30
-/* 802F1524 002EE464  C3 C2 F4 C8 */	lfs f30, $$22024@sda21(r2)
-/* 802F1528 002EE468  C3 E2 F4 B4 */	lfs f31, $$22019@sda21(r2)
+/* 802F1524 002EE464  C3 C2 F4 C8 */	lfs f30, "@2024"@sda21(r2)
+/* 802F1528 002EE468  C3 E2 F4 B4 */	lfs f31, "@2019"@sda21(r2)
 /* 802F152C 002EE46C  FC 00 00 1E */	fctiwz f0, f0
 /* 802F1530 002EE470  D8 01 01 58 */	stfd f0, 0x158(r1)
 /* 802F1534 002EE474  80 01 01 5C */	lwz r0, 0x15c(r1)
@@ -672,7 +672,7 @@ lbl_802F1540:
 /* 802F15BC 002EE4FC  90 81 00 68 */	stw r4, 0x68(r1)
 /* 802F15C0 002EE500  D3 E1 00 EC */	stfs f31, 0xec(r1)
 /* 802F15C4 002EE504  90 01 00 6C */	stw r0, 0x6c(r1)
-/* 802F15C8 002EE508  4B DD 4F 51 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802F15C8 002EE508  4B DD 4F 51 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802F15CC 002EE50C  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 802F15D0 002EE510  FC 20 B8 90 */	fmr f1, f23
 /* 802F15D4 002EE514  80 81 00 68 */	lwz r4, 0x68(r1)
@@ -699,7 +699,7 @@ lbl_802F1540:
 /* 802F1628 002EE568  80 01 01 3C */	lwz r0, 0x13c(r1)
 /* 802F162C 002EE56C  90 81 00 5C */	stw r4, 0x5c(r1)
 /* 802F1630 002EE570  90 01 00 60 */	stw r0, 0x60(r1)
-/* 802F1634 002EE574  4B DD 4E E5 */	bl scale__Q29JGeometry8TVec3$$0f$$1Ff
+/* 802F1634 002EE574  4B DD 4E E5 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
 /* 802F1638 002EE578  80 01 00 58 */	lwz r0, 0x58(r1)
 /* 802F163C 002EE57C  7C BC DA 14 */	add r5, r28, r27
 /* 802F1640 002EE580  80 61 00 5C */	lwz r3, 0x5c(r1)
@@ -953,16 +953,16 @@ __ct__9TConeBeamFv:
 /* 802F19E8 002EE928  38 E0 00 0C */	li r7, 0xc
 /* 802F19EC 002EE92C  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 802F19F0 002EE930  3B E3 00 00 */	addi r31, r3, 0
-/* 802F19F4 002EE934  3C 60 80 0C */	lis r3, __ct__Q29JGeometry8TVec3$$0f$$1Fv@ha
-/* 802F19F8 002EE938  C0 02 F4 B4 */	lfs f0, $$22019@sda21(r2)
-/* 802F19FC 002EE93C  38 83 2C BC */	addi r4, r3, __ct__Q29JGeometry8TVec3$$0f$$1Fv@l
+/* 802F19F4 002EE934  3C 60 80 0C */	lis r3, "__ct__Q29JGeometry8TVec3<f>Fv"@ha
+/* 802F19F8 002EE938  C0 02 F4 B4 */	lfs f0, "@2019"@sda21(r2)
+/* 802F19FC 002EE93C  38 83 2C BC */	addi r4, r3, "__ct__Q29JGeometry8TVec3<f>Fv"@l
 /* 802F1A00 002EE940  38 7F 00 24 */	addi r3, r31, 0x24
 /* 802F1A04 002EE944  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 802F1A08 002EE948  98 1F 00 1C */	stb r0, 0x1c(r31)
 /* 802F1A0C 002EE94C  38 00 00 01 */	li r0, 1
 /* 802F1A10 002EE950  98 1F 00 1D */	stb r0, 0x1d(r31)
 /* 802F1A14 002EE954  4B D9 0E 21 */	bl __construct_array
-/* 802F1A18 002EE958  C0 02 F4 B4 */	lfs f0, $$22019@sda21(r2)
+/* 802F1A18 002EE958  C0 02 F4 B4 */	lfs f0, "@2019"@sda21(r2)
 /* 802F1A1C 002EE95C  7F E3 FB 78 */	mr r3, r31
 /* 802F1A20 002EE960  D0 1F 00 08 */	stfs f0, 8(r31)
 /* 802F1A24 002EE964  D0 1F 00 04 */	stfs f0, 4(r31)
@@ -993,23 +993,23 @@ __vt__12TBeamManager:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21801:
+"@1801":
   .4byte 0x808040FF
-$$22019:
+"@2019":
   .4byte 0
-$$22020:
+"@2020":
 	.incbin "baserom.dol", 0x3EB1B8, 0x4
-$$22021:
+"@2021":
 	.incbin "baserom.dol", 0x3EB1BC, 0x4
-$$22022:
+"@2022":
 	.incbin "baserom.dol", 0x3EB1C0, 0x4
-$$22023:
+"@2023":
 	.incbin "baserom.dol", 0x3EB1C4, 0x4
-$$22024:
+"@2024":
 	.incbin "baserom.dol", 0x3EB1C8, 0x4
-$$22025:
+"@2025":
 	.incbin "baserom.dol", 0x3EB1CC, 0x4
-$$22027:
+"@2027":
 	.incbin "baserom.dol", 0x3EB1D0, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

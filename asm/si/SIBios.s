@@ -1639,27 +1639,27 @@ Si:
   .4byte 0
 Type:
 	.incbin "baserom.dol", 0x3AED1C, 0x10
-$$2456:
+"@456":
 	.incbin "baserom.dol", 0x3AED2C, 0xC
-$$2458:
+"@458":
 	.incbin "baserom.dol", 0x3AED38, 0x10
-$$2459:
+"@459":
 	.incbin "baserom.dol", 0x3AED48, 0x10
-$$2460:
+"@460":
 	.incbin "baserom.dol", 0x3AED58, 0x10
-$$2461:
+"@461":
 	.incbin "baserom.dol", 0x3AED68, 0xC
-$$2462:
+"@462":
 	.incbin "baserom.dol", 0x3AED74, 0x10
-$$2463:
+"@463":
 	.incbin "baserom.dol", 0x3AED84, 0x14
-$$2464:
+"@464":
 	.incbin "baserom.dol", 0x3AED98, 0x14
-$$2465:
+"@465":
 	.incbin "baserom.dol", 0x3AEDAC, 0x14
-$$2466:
+"@466":
 	.incbin "baserom.dol", 0x3AEDC0, 0xC
-$$2467:
+"@467":
 	.incbin "baserom.dol", 0x3AEDCC, 0xC
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

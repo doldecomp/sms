@@ -6,7 +6,7 @@ verifySuffix__12MActorAnmBlkFPCc:
 /* 800D5C34 000D2B74  7C 08 02 A6 */	mflr r0
 /* 800D5C38 000D2B78  38 64 00 00 */	addi r3, r4, 0
 /* 800D5C3C 000D2B7C  90 01 00 04 */	stw r0, 4(r1)
-/* 800D5C40 000D2B80  38 82 8F 08 */	addi r4, r2, $$21875@sda21
+/* 800D5C40 000D2B80  38 82 8F 08 */	addi r4, r2, "@1875"@sda21
 /* 800D5C44 000D2B84  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D5C48 000D2B88  4B FA FF 31 */	bl strstr
 /* 800D5C4C 000D2B8C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -73,11 +73,11 @@ updateIn__12MActorAnmBlkFv:
 /* 800D5D10 000D2C50  3C 00 43 30 */	lis r0, 0x4330
 /* 800D5D14 000D2C54  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800D5D18 000D2C58  80 63 00 24 */	lwz r3, 0x24(r3)
-/* 800D5D1C 000D2C5C  C0 42 8F 10 */	lfs f2, $$21908@sda21(r2)
+/* 800D5D1C 000D2C5C  C0 42 8F 10 */	lfs f2, "@1908"@sda21(r2)
 /* 800D5D20 000D2C60  A8 63 00 02 */	lha r3, 2(r3)
 /* 800D5D24 000D2C64  C0 04 00 14 */	lfs f0, 0x14(r4)
 /* 800D5D28 000D2C68  6C 63 80 00 */	xoris r3, r3, 0x8000
-/* 800D5D2C 000D2C6C  C8 22 8F 18 */	lfd f1, $$21911@sda21(r2)
+/* 800D5D2C 000D2C6C  C8 22 8F 18 */	lfd f1, "@1911"@sda21(r2)
 /* 800D5D30 000D2C70  90 61 00 2C */	stw r3, 0x2c(r1)
 /* 800D5D34 000D2C74  EC 42 00 2A */	fadds f2, f2, f0
 /* 800D5D38 000D2C78  90 01 00 28 */	stw r0, 0x28(r1)
@@ -86,7 +86,7 @@ updateIn__12MActorAnmBlkFv:
 /* 800D5D44 000D2C84  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 800D5D48 000D2C88  4C 41 13 82 */	cror 2, 1, 2
 /* 800D5D4C 000D2C8C  40 82 00 0C */	bne lbl_800D5D58
-/* 800D5D50 000D2C90  C0 02 8F 14 */	lfs f0, $$21909@sda21(r2)
+/* 800D5D50 000D2C90  C0 02 8F 14 */	lfs f0, "@1909"@sda21(r2)
 /* 800D5D54 000D2C94  D0 04 00 14 */	stfs f0, 0x14(r4)
 lbl_800D5D58:
 /* 800D5D58 000D2C98  C0 04 00 14 */	lfs f0, 0x14(r4)
@@ -1408,7 +1408,7 @@ lbl_800D6E1C:
 /* 800D6E60 000D3DA0  7C E9 40 50 */	subf r7, r9, r8
 /* 800D6E64 000D3DA4  90 E9 00 04 */	stw r7, 4(r9)
 /* 800D6E68 000D3DA8  90 DE 00 58 */	stw r6, 0x58(r30)
-/* 800D6E6C 000D3DAC  C0 02 8F 10 */	lfs f0, $$21908@sda21(r2)
+/* 800D6E6C 000D3DAC  C0 02 8F 10 */	lfs f0, "@1908"@sda21(r2)
 /* 800D6E70 000D3DB0  D0 1E 00 60 */	stfs f0, 0x60(r30)
 /* 800D6E74 000D3DB4  90 DE 00 5C */	stw r6, 0x5c(r30)
 /* 800D6E78 000D3DB8  D0 1E 00 64 */	stfs f0, 0x64(r30)
@@ -1475,7 +1475,7 @@ lbl_800D6EF0:
 /* 800D6F5C 000D3E9C  7C E9 40 50 */	subf r7, r9, r8
 /* 800D6F60 000D3EA0  90 E9 00 04 */	stw r7, 4(r9)
 /* 800D6F64 000D3EA4  90 DE 00 58 */	stw r6, 0x58(r30)
-/* 800D6F68 000D3EA8  C0 02 8F 10 */	lfs f0, $$21908@sda21(r2)
+/* 800D6F68 000D3EA8  C0 02 8F 10 */	lfs f0, "@1908"@sda21(r2)
 /* 800D6F6C 000D3EAC  D0 1E 00 60 */	stfs f0, 0x60(r30)
 /* 800D6F70 000D3EB0  90 DE 00 5C */	stw r6, 0x5c(r30)
 /* 800D6F74 000D3EB4  D0 1E 00 64 */	stfs f0, 0x64(r30)
@@ -1505,7 +1505,7 @@ getOldMotionBlendFrame__12MActorAnmBckCFv:
 /* 800D6FC8 000D3F08  48 00 37 3D */	bl getOldMotionBlendFrame__16TMotionBlendCtrlCFv
 /* 800D6FCC 000D3F0C  48 00 00 08 */	b lbl_800D6FD4
 lbl_800D6FD0:
-/* 800D6FD0 000D3F10  C0 22 8F 14 */	lfs f1, $$21909@sda21(r2)
+/* 800D6FD0 000D3F10  C0 22 8F 14 */	lfs f1, "@1909"@sda21(r2)
 lbl_800D6FD4:
 /* 800D6FD4 000D3F14  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800D6FD8 000D3F18  38 21 00 08 */	addi r1, r1, 8
@@ -1568,7 +1568,7 @@ getMotionBlendRatio__12MActorAnmBckCFv:
 /* 800D707C 000D3FBC  80 63 00 34 */	lwz r3, 0x34(r3)
 /* 800D7080 000D3FC0  28 03 00 00 */	cmplwi r3, 0
 /* 800D7084 000D3FC4  40 82 00 0C */	bne lbl_800D7090
-/* 800D7088 000D3FC8  C0 22 8F 14 */	lfs f1, $$21909@sda21(r2)
+/* 800D7088 000D3FC8  C0 22 8F 14 */	lfs f1, "@1909"@sda21(r2)
 /* 800D708C 000D3FCC  48 00 00 08 */	b lbl_800D7094
 lbl_800D7090:
 /* 800D7090 000D3FD0  48 00 36 DD */	bl getMotionBlendRatio__16TMotionBlendCtrlCFv
@@ -1671,7 +1671,7 @@ verifySuffix__12MActorAnmBrkFPCc:
 /* 800D71BC 000D40FC  7C 08 02 A6 */	mflr r0
 /* 800D71C0 000D4100  38 64 00 00 */	addi r3, r4, 0
 /* 800D71C4 000D4104  90 01 00 04 */	stw r0, 4(r1)
-/* 800D71C8 000D4108  38 82 8F 20 */	addi r4, r2, $$22660@sda21
+/* 800D71C8 000D4108  38 82 8F 20 */	addi r4, r2, "@2660"@sda21
 /* 800D71CC 000D410C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D71D0 000D4110  4B FA E9 A9 */	bl strstr
 /* 800D71D4 000D4114  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1684,7 +1684,7 @@ verifySuffix__12MActorAnmBpkFPCc:
 /* 800D71E4 000D4124  7C 08 02 A6 */	mflr r0
 /* 800D71E8 000D4128  38 64 00 00 */	addi r3, r4, 0
 /* 800D71EC 000D412C  90 01 00 04 */	stw r0, 4(r1)
-/* 800D71F0 000D4130  38 82 8F 28 */	addi r4, r2, $$22663@sda21
+/* 800D71F0 000D4130  38 82 8F 28 */	addi r4, r2, "@2663"@sda21
 /* 800D71F4 000D4134  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D71F8 000D4138  4B FA E9 81 */	bl strstr
 /* 800D71FC 000D413C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1697,7 +1697,7 @@ verifySuffix__12MActorAnmBtkFPCc:
 /* 800D720C 000D414C  7C 08 02 A6 */	mflr r0
 /* 800D7210 000D4150  38 64 00 00 */	addi r3, r4, 0
 /* 800D7214 000D4154  90 01 00 04 */	stw r0, 4(r1)
-/* 800D7218 000D4158  38 82 8F 30 */	addi r4, r2, $$22666@sda21
+/* 800D7218 000D4158  38 82 8F 30 */	addi r4, r2, "@2666"@sda21
 /* 800D721C 000D415C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D7220 000D4160  4B FA E9 59 */	bl strstr
 /* 800D7224 000D4164  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1710,7 +1710,7 @@ verifySuffix__12MActorAnmBtpFPCc:
 /* 800D7234 000D4174  7C 08 02 A6 */	mflr r0
 /* 800D7238 000D4178  38 64 00 00 */	addi r3, r4, 0
 /* 800D723C 000D417C  90 01 00 04 */	stw r0, 4(r1)
-/* 800D7240 000D4180  38 82 8F 38 */	addi r4, r2, $$22669@sda21
+/* 800D7240 000D4180  38 82 8F 38 */	addi r4, r2, "@2669"@sda21
 /* 800D7244 000D4184  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D7248 000D4188  4B FA E9 31 */	bl strstr
 /* 800D724C 000D418C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1723,7 +1723,7 @@ verifySuffix__12MActorAnmBckFPCc:
 /* 800D725C 000D419C  7C 08 02 A6 */	mflr r0
 /* 800D7260 000D41A0  38 64 00 00 */	addi r3, r4, 0
 /* 800D7264 000D41A4  90 01 00 04 */	stw r0, 4(r1)
-/* 800D7268 000D41A8  38 82 8F 40 */	addi r4, r2, $$22672@sda21
+/* 800D7268 000D41A8  38 82 8F 40 */	addi r4, r2, "@2672"@sda21
 /* 800D726C 000D41AC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D7270 000D41B0  4B FA E9 09 */	bl strstr
 /* 800D7274 000D41B4  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -1742,7 +1742,7 @@ __vt__12MActorAnmBlk:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte setAnmFromIndex__12MActorAnmBlkFiPUs
-  .4byte setAnm__33MActorAnmEach$$016J3DAnmClusterKey$$1FPCcPUs
+  .4byte "setAnm__33MActorAnmEach<16J3DAnmClusterKey>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBlkFPCc
 .global __vt__12MActorAnmBrk
 __vt__12MActorAnmBrk:
@@ -1753,8 +1753,8 @@ __vt__12MActorAnmBrk:
   .4byte updateOut__12MActorAnmBrkFv
   .4byte checkUseMaterialIDInit__12MActorAnmBrkFPUs
   .4byte checkUseMaterialID__12MActorAnmBrkFPUs
-  .4byte setAnmFromIndex__35MActorAnmMatEach$$015J3DAnmTevRegKey$$1FiPUs
-  .4byte setAnm__32MActorAnmEach$$015J3DAnmTevRegKey$$1FPCcPUs
+  .4byte "setAnmFromIndex__35MActorAnmMatEach<15J3DAnmTevRegKey>FiPUs"
+  .4byte "setAnm__32MActorAnmEach<15J3DAnmTevRegKey>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBrkFPCc
 .global __vt__12MActorAnmBpk
 __vt__12MActorAnmBpk:
@@ -1765,8 +1765,8 @@ __vt__12MActorAnmBpk:
   .4byte updateOut__12MActorAnmBpkFv
   .4byte checkUseMaterialIDInit__12MActorAnmBpkFPUs
   .4byte checkUseMaterialID__12MActorAnmBpkFPUs
-  .4byte setAnmFromIndex__34MActorAnmMatEach$$014J3DAnmColorKey$$1FiPUs
-  .4byte setAnm__31MActorAnmEach$$014J3DAnmColorKey$$1FPCcPUs
+  .4byte "setAnmFromIndex__34MActorAnmMatEach<14J3DAnmColorKey>FiPUs"
+  .4byte "setAnm__31MActorAnmEach<14J3DAnmColorKey>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBpkFPCc
 .global __vt__12MActorAnmBtk
 __vt__12MActorAnmBtk:
@@ -1777,8 +1777,8 @@ __vt__12MActorAnmBtk:
   .4byte updateOut__12MActorAnmBtkFv
   .4byte checkUseMaterialIDInit__12MActorAnmBtkFPUs
   .4byte checkUseMaterialID__12MActorAnmBtkFPUs
-  .4byte setAnmFromIndex__39MActorAnmMatEach$$019J3DAnmTextureSRTKey$$1FiPUs
-  .4byte setAnm__36MActorAnmEach$$019J3DAnmTextureSRTKey$$1FPCcPUs
+  .4byte "setAnmFromIndex__39MActorAnmMatEach<19J3DAnmTextureSRTKey>FiPUs"
+  .4byte "setAnm__36MActorAnmEach<19J3DAnmTextureSRTKey>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBtkFPCc
 .global __vt__12MActorAnmBtp
 __vt__12MActorAnmBtp:
@@ -1789,8 +1789,8 @@ __vt__12MActorAnmBtp:
   .4byte updateOut__12MActorAnmBtpFv
   .4byte checkUseMaterialIDInit__12MActorAnmBtpFPUs
   .4byte checkUseMaterialID__12MActorAnmBtpFPUs
-  .4byte setAnmFromIndex__36MActorAnmMatEach$$016J3DAnmTexPattern$$1FiPUs
-  .4byte setAnm__33MActorAnmEach$$016J3DAnmTexPattern$$1FPCcPUs
+  .4byte "setAnmFromIndex__36MActorAnmMatEach<16J3DAnmTexPattern>FiPUs"
+  .4byte "setAnm__33MActorAnmEach<16J3DAnmTexPattern>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBtpFPCc
 .global __vt__12MActorAnmBck
 __vt__12MActorAnmBck:
@@ -1802,7 +1802,7 @@ __vt__12MActorAnmBck:
   .4byte checkUseMaterialIDInit__13MActorAnmBaseFPUs
   .4byte checkUseMaterialID__13MActorAnmBaseFPUs
   .4byte setAnmFromIndex__12MActorAnmBckFiPUs
-  .4byte setAnm__35MActorAnmEach$$018J3DAnmTransformKey$$1FPCcPUs
+  .4byte "setAnm__35MActorAnmEach<18J3DAnmTransformKey>FPCcPUs"
   .4byte verifySuffix__12MActorAnmBckFPCc
 .global __vt__13MActorAnmBase
 __vt__13MActorAnmBase:
@@ -1819,21 +1819,21 @@ __vt__13MActorAnmBase:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21875:
+"@1875":
 	.incbin "baserom.dol", 0x3E4C08, 0x8
-$$21908:
+"@1908":
 	.incbin "baserom.dol", 0x3E4C10, 0x4
-$$21909:
+"@1909":
   .4byte 0
-$$21911:
+"@1911":
 	.incbin "baserom.dol", 0x3E4C18, 0x8
-$$22660:
+"@2660":
 	.incbin "baserom.dol", 0x3E4C20, 0x8
-$$22663:
+"@2663":
 	.incbin "baserom.dol", 0x3E4C28, 0x8
-$$22666:
+"@2666":
 	.incbin "baserom.dol", 0x3E4C30, 0x8
-$$22669:
+"@2669":
 	.incbin "baserom.dol", 0x3E4C38, 0x8
-$$22672:
+"@2672":
 	.incbin "baserom.dol", 0x3E4C40, 0x8

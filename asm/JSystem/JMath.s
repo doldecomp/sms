@@ -80,9 +80,9 @@ lbl_80013BB0:
 /* 80013BD8 00010B18  38 60 00 00 */	li r3, 0
 /* 80013BDC 00010B1C  48 00 00 88 */	b lbl_80013C64
 lbl_80013BE0:
-/* 80013BE0 00010B20  C3 C2 80 F0 */	lfs f30, $$2151@sda21(r2)
+/* 80013BE0 00010B20  C3 C2 80 F0 */	lfs f30, "@151"@sda21(r2)
 /* 80013BE4 00010B24  3B A0 00 00 */	li r29, 0
-/* 80013BE8 00010B28  CB E2 80 F8 */	lfd f31, $$2153@sda21(r2)
+/* 80013BE8 00010B28  CB E2 80 F8 */	lfd f31, "@153"@sda21(r2)
 /* 80013BEC 00010B2C  3F C0 43 30 */	lis r30, 0x4330
 /* 80013BF0 00010B30  48 00 00 44 */	b lbl_80013C34
 lbl_80013BF4:
@@ -188,7 +188,7 @@ JMAQuatLerp__FP10QuaternionP10QuaternionfP10Quaternion:
 /* 80013D60 00010CA0  C0 63 00 0C */	lfs f3, 0xc(r3)
 /* 80013D64 00010CA4  C0 E4 00 0C */	lfs f7, 0xc(r4)
 /* 80013D68 00010CA8  EC 42 01 BA */	fmadds f2, f2, f6, f0
-/* 80013D6C 00010CAC  C8 02 81 00 */	lfd f0, $$2182@sda21(r2)
+/* 80013D6C 00010CAC  C8 02 81 00 */	lfd f0, "@182"@sda21(r2)
 /* 80013D70 00010CB0  EC 43 11 FA */	fmadds f2, f3, f7, f2
 /* 80013D74 00010CB4  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80013D78 00010CB8  40 80 00 14 */	bge lbl_80013D8C
@@ -197,7 +197,7 @@ JMAQuatLerp__FP10QuaternionP10QuaternionfP10Quaternion:
 /* 80013D84 00010CC4  FC C0 30 50 */	fneg f6, f6
 /* 80013D88 00010CC8  FC E0 38 50 */	fneg f7, f7
 lbl_80013D8C:
-/* 80013D8C 00010CCC  C8 42 81 08 */	lfd f2, $$2183@sda21(r2)
+/* 80013D8C 00010CCC  C8 42 81 08 */	lfd f2, "@183"@sda21(r2)
 /* 80013D90 00010CD0  FC 01 01 32 */	fmul f0, f1, f4
 /* 80013D94 00010CD4  FD 22 08 28 */	fsub f9, f2, f1
 /* 80013D98 00010CD8  FC 61 01 72 */	fmul f3, f1, f5
@@ -226,12 +226,12 @@ JMAHermiteInterpolation__Ffffffff:
 /* 80013DE8 00010D28  EC 05 10 28 */	fsubs f0, f5, f2
 /* 80013DEC 00010D2C  ED 61 10 28 */	fsubs f11, f1, f2
 /* 80013DF0 00010D30  DB E1 00 28 */	stfd f31, 0x28(r1)
-/* 80013DF4 00010D34  C1 22 81 10 */	lfs f9, $$2186@sda21(r2)
+/* 80013DF4 00010D34  C1 22 81 10 */	lfs f9, "@186"@sda21(r2)
 /* 80013DF8 00010D38  EC 4B 02 F2 */	fmuls f2, f11, f11
-/* 80013DFC 00010D3C  C0 22 81 18 */	lfs f1, $$2188@sda21(r2)
+/* 80013DFC 00010D3C  C0 22 81 18 */	lfs f1, "@188"@sda21(r2)
 /* 80013E00 00010D40  ED 09 00 24 */	fdivs f8, f9, f0
-/* 80013E04 00010D44  C0 A2 81 14 */	lfs f5, $$2187@sda21(r2)
-/* 80013E08 00010D48  C0 02 81 1C */	lfs f0, $$2189@sda21(r2)
+/* 80013E04 00010D44  C0 A2 81 14 */	lfs f5, "@187"@sda21(r2)
+/* 80013E08 00010D48  C0 02 81 1C */	lfs f0, "@189"@sda21(r2)
 /* 80013E0C 00010D4C  ED 88 00 B2 */	fmuls f12, f8, f2
 /* 80013E10 00010D50  EC 4C 02 32 */	fmuls f2, f12, f8
 /* 80013E14 00010D54  ED AB 00 B2 */	fmuls f13, f11, f2
@@ -253,22 +253,22 @@ JMAHermiteInterpolation__Ffffffff:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2151:
+"@151":
 	.incbin "baserom.dol", 0x3E3DF0, 0x8
-$$2153:
+"@153":
 	.incbin "baserom.dol", 0x3E3DF8, 0x8
-$$2182:
+"@182":
   .4byte 0
   .4byte 0
-$$2183:
+"@183":
 	.incbin "baserom.dol", 0x3E3E08, 0x8
-$$2186:
+"@186":
 	.incbin "baserom.dol", 0x3E3E10, 0x4
-$$2187:
+"@187":
 	.incbin "baserom.dol", 0x3E3E14, 0x4
-$$2188:
+"@188":
 	.incbin "baserom.dol", 0x3E3E18, 0x4
-$$2189:
+"@189":
 	.incbin "baserom.dol", 0x3E3E1C, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

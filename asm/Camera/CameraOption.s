@@ -43,8 +43,8 @@ moveToLoadFromTitle__13TCameraOptionFv:
 /* 80361984 0035E8C4  98 03 00 00 */	stb r0, 0(r3)
 /* 80361988 0035E8C8  4E 80 00 20 */	blr 
 
-.global __ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
-__ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
+.global "__ct__13TCameraOptionFQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+"__ct__13TCameraOptionFQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>":
 /* 8036198C 0035E8CC  7C 08 02 A6 */	mflr r0
 /* 80361990 0035E8D0  39 00 01 2C */	li r8, 0x12c
 /* 80361994 0035E8D4  90 01 00 04 */	stw r0, 4(r1)
@@ -62,7 +62,7 @@ __ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
 /* 803619C4 0035E904  98 03 00 00 */	stb r0, 0(r3)
 /* 803619C8 0035E908  38 60 00 50 */	li r3, 0x50
 /* 803619CC 0035E90C  38 00 00 3C */	li r0, 0x3c
-/* 803619D0 0035E910  C0 02 08 70 */	lfs f0, $$21704@sda21(r2)
+/* 803619D0 0035E910  C0 02 08 70 */	lfs f0, "@1704"@sda21(r2)
 /* 803619D4 0035E914  D0 1F 00 04 */	stfs f0, 4(r31)
 /* 803619D8 0035E918  B1 1F 00 08 */	sth r8, 8(r31)
 /* 803619DC 0035E91C  B1 1F 00 0A */	sth r8, 0xa(r31)
@@ -72,7 +72,7 @@ __ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
 /* 803619EC 0035E92C  B0 DF 00 12 */	sth r6, 0x12(r31)
 /* 803619F0 0035E930  B0 1F 00 14 */	sth r0, 0x14(r31)
 /* 803619F4 0035E934  B0 DF 00 16 */	sth r6, 0x16(r31)
-/* 803619F8 0035E938  C0 02 08 74 */	lfs f0, $$21705@sda21(r2)
+/* 803619F8 0035E938  C0 02 08 74 */	lfs f0, "@1705"@sda21(r2)
 /* 803619FC 0035E93C  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80361A00 0035E940  D0 1F 00 1C */	stfs f0, 0x1c(r31)
 /* 80361A04 0035E944  D0 1F 00 20 */	stfs f0, 0x20(r31)
@@ -83,12 +83,12 @@ __ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
 /* 80361A18 0035E958  D0 1F 00 34 */	stfs f0, 0x34(r31)
 /* 80361A1C 0035E95C  D0 1F 00 38 */	stfs f0, 0x38(r31)
 /* 80361A20 0035E960  93 BF 00 3C */	stw r29, 0x3c(r31)
-/* 80361A24 0035E964  C0 22 08 78 */	lfs f1, $$21706@sda21(r2)
-/* 80361A28 0035E968  4B E0 B2 25 */	bl CLBRoundf$$0s$$1__Ff
-/* 80361A2C 0035E96C  C0 22 08 7C */	lfs f1, $$21707@sda21(r2)
+/* 80361A24 0035E964  C0 22 08 78 */	lfs f1, "@1706"@sda21(r2)
+/* 80361A28 0035E968  4B E0 B2 25 */	bl "CLBRoundf<s>__Ff"
+/* 80361A2C 0035E96C  C0 22 08 7C */	lfs f1, "@1707"@sda21(r2)
 /* 80361A30 0035E970  7C 7E 1B 78 */	mr r30, r3
-/* 80361A34 0035E974  4B E0 B2 19 */	bl CLBRoundf$$0s$$1__Ff
-/* 80361A38 0035E978  C0 22 08 80 */	lfs f1, $$21708@sda21(r2)
+/* 80361A34 0035E974  4B E0 B2 19 */	bl "CLBRoundf<s>__Ff"
+/* 80361A38 0035E978  C0 22 08 80 */	lfs f1, "@1708"@sda21(r2)
 /* 80361A3C 0035E97C  38 A3 00 00 */	addi r5, r3, 0
 /* 80361A40 0035E980  38 7C 00 00 */	addi r3, r28, 0
 /* 80361A44 0035E984  38 DE 00 00 */	addi r6, r30, 0
@@ -115,15 +115,15 @@ __ct__13TCameraOptionFQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
 /* 80361A98 0035E9D8  38 7E 00 00 */	addi r3, r30, 0
 /* 80361A9C 0035E9DC  38 81 00 18 */	addi r4, r1, 0x18
 /* 80361AA0 0035E9E0  38 BF 00 24 */	addi r5, r31, 0x24
-/* 80361AA4 0035E9E4  4B FF DF B9 */	bl calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
+/* 80361AA4 0035E9E4  4B FF DF B9 */	bl "calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
 /* 80361AA8 0035E9E8  C0 3E 00 1C */	lfs f1, 0x1c(r30)
-/* 80361AAC 0035E9EC  C0 02 08 84 */	lfs f0, $$21709@sda21(r2)
+/* 80361AAC 0035E9EC  C0 02 08 84 */	lfs f0, "@1709"@sda21(r2)
 /* 80361AB0 0035E9F0  EC 20 00 72 */	fmuls f1, f0, f1
-/* 80361AB4 0035E9F4  4B E0 B1 99 */	bl CLBRoundf$$0s$$1__Ff
-/* 80361AB8 0035E9F8  C0 22 08 88 */	lfs f1, $$21710@sda21(r2)
+/* 80361AB4 0035E9F4  4B E0 B1 99 */	bl "CLBRoundf<s>__Ff"
+/* 80361AB8 0035E9F8  C0 22 08 88 */	lfs f1, "@1710"@sda21(r2)
 /* 80361ABC 0035E9FC  7C 7E 1B 78 */	mr r30, r3
-/* 80361AC0 0035EA00  4B E0 B1 8D */	bl CLBRoundf$$0s$$1__Ff
-/* 80361AC4 0035EA04  C0 22 08 80 */	lfs f1, $$21708@sda21(r2)
+/* 80361AC0 0035EA00  4B E0 B1 8D */	bl "CLBRoundf<s>__Ff"
+/* 80361AC4 0035EA04  C0 22 08 80 */	lfs f1, "@1708"@sda21(r2)
 /* 80361AC8 0035EA08  38 A3 00 00 */	addi r5, r3, 0
 /* 80361ACC 0035EA0C  38 DE 00 00 */	addi r6, r30, 0
 /* 80361AD0 0035EA10  38 61 00 18 */	addi r3, r1, 0x18
@@ -153,7 +153,7 @@ ctrlOptionCamera___15CPolarSubCameraFv:
 /* 80361B20 0035EA60  7C 60 07 35 */	extsh. r0, r3
 /* 80361B24 0035EA64  40 81 00 94 */	ble lbl_80361BB8
 /* 80361B28 0035EA68  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80361B2C 0035EA6C  C8 42 08 90 */	lfd f2, $$21767@sda21(r2)
+/* 80361B2C 0035EA6C  C8 42 08 90 */	lfd f2, "@1767"@sda21(r2)
 /* 80361B30 0035EA70  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 80361B34 0035EA74  3C 00 43 30 */	lis r0, 0x4330
 /* 80361B38 0035EA78  C0 3F 00 80 */	lfs f1, 0x80(r31)
@@ -162,27 +162,27 @@ ctrlOptionCamera___15CPolarSubCameraFv:
 /* 80361B44 0035EA84  C8 01 00 58 */	lfd f0, 0x58(r1)
 /* 80361B48 0035EA88  EF E0 10 28 */	fsubs f31, f0, f2
 /* 80361B4C 0035EA8C  FC 40 F8 90 */	fmr f2, f31
-/* 80361B50 0035EA90  4B E0 8B 19 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361B50 0035EA90  4B E0 8B 19 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361B54 0035EA94  FC 40 F8 90 */	fmr f2, f31
 /* 80361B58 0035EA98  C0 3F 00 84 */	lfs f1, 0x84(r31)
 /* 80361B5C 0035EA9C  38 7F 00 14 */	addi r3, r31, 0x14
-/* 80361B60 0035EAA0  4B E0 8B 09 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361B60 0035EAA0  4B E0 8B 09 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361B64 0035EAA4  FC 40 F8 90 */	fmr f2, f31
 /* 80361B68 0035EAA8  C0 3F 00 88 */	lfs f1, 0x88(r31)
 /* 80361B6C 0035EAAC  38 7F 00 18 */	addi r3, r31, 0x18
-/* 80361B70 0035EAB0  4B E0 8A F9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361B70 0035EAB0  4B E0 8A F9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361B74 0035EAB4  FC 40 F8 90 */	fmr f2, f31
 /* 80361B78 0035EAB8  C0 3F 00 8C */	lfs f1, 0x8c(r31)
 /* 80361B7C 0035EABC  38 7F 00 3C */	addi r3, r31, 0x3c
-/* 80361B80 0035EAC0  4B E0 8A E9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361B80 0035EAC0  4B E0 8A E9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361B84 0035EAC4  FC 40 F8 90 */	fmr f2, f31
 /* 80361B88 0035EAC8  C0 3F 00 90 */	lfs f1, 0x90(r31)
 /* 80361B8C 0035EACC  38 7F 00 40 */	addi r3, r31, 0x40
-/* 80361B90 0035EAD0  4B E0 8A D9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361B90 0035EAD0  4B E0 8A D9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361B94 0035EAD4  FC 40 F8 90 */	fmr f2, f31
 /* 80361B98 0035EAD8  C0 3F 00 94 */	lfs f1, 0x94(r31)
 /* 80361B9C 0035EADC  38 7F 00 44 */	addi r3, r31, 0x44
-/* 80361BA0 0035EAE0  4B E0 8A C9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361BA0 0035EAE0  4B E0 8A C9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361BA4 0035EAE4  80 8D A9 10 */	lwz r4, gpCameraOption@sda21(r13)
 /* 80361BA8 0035EAE8  A8 64 00 0A */	lha r3, 0xa(r4)
 /* 80361BAC 0035EAEC  38 03 FF FF */	addi r0, r3, -1
@@ -193,7 +193,7 @@ lbl_80361BB8:
 /* 80361BBC 0035EAFC  7C 60 07 35 */	extsh. r0, r3
 /* 80361BC0 0035EB00  40 81 00 94 */	ble lbl_80361C54
 /* 80361BC4 0035EB04  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80361BC8 0035EB08  C8 42 08 90 */	lfd f2, $$21767@sda21(r2)
+/* 80361BC8 0035EB08  C8 42 08 90 */	lfd f2, "@1767"@sda21(r2)
 /* 80361BCC 0035EB0C  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 80361BD0 0035EB10  3C 00 43 30 */	lis r0, 0x4330
 /* 80361BD4 0035EB14  C0 3F 00 80 */	lfs f1, 0x80(r31)
@@ -202,27 +202,27 @@ lbl_80361BB8:
 /* 80361BE0 0035EB20  C8 01 00 58 */	lfd f0, 0x58(r1)
 /* 80361BE4 0035EB24  EF E0 10 28 */	fsubs f31, f0, f2
 /* 80361BE8 0035EB28  FC 40 F8 90 */	fmr f2, f31
-/* 80361BEC 0035EB2C  4B E0 8A 7D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361BEC 0035EB2C  4B E0 8A 7D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361BF0 0035EB30  FC 40 F8 90 */	fmr f2, f31
 /* 80361BF4 0035EB34  C0 3F 00 84 */	lfs f1, 0x84(r31)
 /* 80361BF8 0035EB38  38 7F 00 14 */	addi r3, r31, 0x14
-/* 80361BFC 0035EB3C  4B E0 8A 6D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361BFC 0035EB3C  4B E0 8A 6D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361C00 0035EB40  FC 40 F8 90 */	fmr f2, f31
 /* 80361C04 0035EB44  C0 3F 00 88 */	lfs f1, 0x88(r31)
 /* 80361C08 0035EB48  38 7F 00 18 */	addi r3, r31, 0x18
-/* 80361C0C 0035EB4C  4B E0 8A 5D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361C0C 0035EB4C  4B E0 8A 5D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361C10 0035EB50  FC 40 F8 90 */	fmr f2, f31
 /* 80361C14 0035EB54  C0 3F 00 8C */	lfs f1, 0x8c(r31)
 /* 80361C18 0035EB58  38 7F 00 3C */	addi r3, r31, 0x3c
-/* 80361C1C 0035EB5C  4B E0 8A 4D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361C1C 0035EB5C  4B E0 8A 4D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361C20 0035EB60  FC 40 F8 90 */	fmr f2, f31
 /* 80361C24 0035EB64  C0 3F 00 90 */	lfs f1, 0x90(r31)
 /* 80361C28 0035EB68  38 7F 00 40 */	addi r3, r31, 0x40
-/* 80361C2C 0035EB6C  4B E0 8A 3D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361C2C 0035EB6C  4B E0 8A 3D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361C30 0035EB70  FC 40 F8 90 */	fmr f2, f31
 /* 80361C34 0035EB74  C0 3F 00 94 */	lfs f1, 0x94(r31)
 /* 80361C38 0035EB78  38 7F 00 44 */	addi r3, r31, 0x44
-/* 80361C3C 0035EB7C  4B E0 8A 2D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361C3C 0035EB7C  4B E0 8A 2D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361C40 0035EB80  80 8D A9 10 */	lwz r4, gpCameraOption@sda21(r13)
 /* 80361C44 0035EB84  A8 64 00 0E */	lha r3, 0xe(r4)
 /* 80361C48 0035EB88  38 03 FF FF */	addi r0, r3, -1
@@ -234,7 +234,7 @@ lbl_80361C54:
 /* 80361C5C 0035EB9C  40 82 01 D8 */	bne lbl_80361E34
 /* 80361C60 0035EBA0  80 CD 98 DC */	lwz r6, gpMarioPos@sda21(r13)
 /* 80361C64 0035EBA4  38 81 00 48 */	addi r4, r1, 0x48
-/* 80361C68 0035EBA8  C0 02 08 8C */	lfs f0, $$21765@sda21(r2)
+/* 80361C68 0035EBA8  C0 02 08 8C */	lfs f0, "@1765"@sda21(r2)
 /* 80361C6C 0035EBAC  80 A6 00 00 */	lwz r5, 0(r6)
 /* 80361C70 0035EBB0  80 06 00 04 */	lwz r0, 4(r6)
 /* 80361C74 0035EBB4  80 6D A8 D8 */	lwz r3, gpCubeCamera@sda21(r13)
@@ -267,7 +267,7 @@ lbl_80361C54:
 /* 80361CE0 0035EC20  98 03 00 00 */	stb r0, 0(r3)
 /* 80361CE4 0035EC24  90 DF 00 70 */	stw r6, 0x70(r31)
 /* 80361CE8 0035EC28  80 7F 00 70 */	lwz r3, 0x70(r31)
-/* 80361CEC 0035EC2C  4B FF DD 71 */	bl calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
+/* 80361CEC 0035EC2C  4B FF DD 71 */	bl "calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
 /* 80361CF0 0035EC30  80 6D A9 10 */	lwz r3, gpCameraOption@sda21(r13)
 /* 80361CF4 0035EC34  A8 03 00 10 */	lha r0, 0x10(r3)
 /* 80361CF8 0035EC38  B0 03 00 12 */	sth r0, 0x12(r3)
@@ -277,7 +277,7 @@ lbl_80361CFC:
 /* 80361D04 0035EC44  7C 60 07 35 */	extsh. r0, r3
 /* 80361D08 0035EC48  40 81 00 94 */	ble lbl_80361D9C
 /* 80361D0C 0035EC4C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80361D10 0035EC50  C8 42 08 90 */	lfd f2, $$21767@sda21(r2)
+/* 80361D10 0035EC50  C8 42 08 90 */	lfd f2, "@1767"@sda21(r2)
 /* 80361D14 0035EC54  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 80361D18 0035EC58  3C 00 43 30 */	lis r0, 0x4330
 /* 80361D1C 0035EC5C  C0 3F 00 80 */	lfs f1, 0x80(r31)
@@ -286,27 +286,27 @@ lbl_80361CFC:
 /* 80361D28 0035EC68  C8 01 00 58 */	lfd f0, 0x58(r1)
 /* 80361D2C 0035EC6C  EF E0 10 28 */	fsubs f31, f0, f2
 /* 80361D30 0035EC70  FC 40 F8 90 */	fmr f2, f31
-/* 80361D34 0035EC74  4B E0 89 35 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D34 0035EC74  4B E0 89 35 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D38 0035EC78  FC 40 F8 90 */	fmr f2, f31
 /* 80361D3C 0035EC7C  C0 3F 00 84 */	lfs f1, 0x84(r31)
 /* 80361D40 0035EC80  38 7F 00 14 */	addi r3, r31, 0x14
-/* 80361D44 0035EC84  4B E0 89 25 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D44 0035EC84  4B E0 89 25 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D48 0035EC88  FC 40 F8 90 */	fmr f2, f31
 /* 80361D4C 0035EC8C  C0 3F 00 88 */	lfs f1, 0x88(r31)
 /* 80361D50 0035EC90  38 7F 00 18 */	addi r3, r31, 0x18
-/* 80361D54 0035EC94  4B E0 89 15 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D54 0035EC94  4B E0 89 15 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D58 0035EC98  FC 40 F8 90 */	fmr f2, f31
 /* 80361D5C 0035EC9C  C0 3F 00 8C */	lfs f1, 0x8c(r31)
 /* 80361D60 0035ECA0  38 7F 00 3C */	addi r3, r31, 0x3c
-/* 80361D64 0035ECA4  4B E0 89 05 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D64 0035ECA4  4B E0 89 05 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D68 0035ECA8  FC 40 F8 90 */	fmr f2, f31
 /* 80361D6C 0035ECAC  C0 3F 00 90 */	lfs f1, 0x90(r31)
 /* 80361D70 0035ECB0  38 7F 00 40 */	addi r3, r31, 0x40
-/* 80361D74 0035ECB4  4B E0 88 F5 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D74 0035ECB4  4B E0 88 F5 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D78 0035ECB8  FC 40 F8 90 */	fmr f2, f31
 /* 80361D7C 0035ECBC  C0 3F 00 94 */	lfs f1, 0x94(r31)
 /* 80361D80 0035ECC0  38 7F 00 44 */	addi r3, r31, 0x44
-/* 80361D84 0035ECC4  4B E0 88 E5 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361D84 0035ECC4  4B E0 88 E5 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361D88 0035ECC8  80 8D A9 10 */	lwz r4, gpCameraOption@sda21(r13)
 /* 80361D8C 0035ECCC  A8 64 00 12 */	lha r3, 0x12(r4)
 /* 80361D90 0035ECD0  38 03 FF FF */	addi r0, r3, -1
@@ -317,7 +317,7 @@ lbl_80361D9C:
 /* 80361DA0 0035ECE0  7C 60 07 35 */	extsh. r0, r3
 /* 80361DA4 0035ECE4  40 81 00 90 */	ble lbl_80361E34
 /* 80361DA8 0035ECE8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80361DAC 0035ECEC  C8 42 08 90 */	lfd f2, $$21767@sda21(r2)
+/* 80361DAC 0035ECEC  C8 42 08 90 */	lfd f2, "@1767"@sda21(r2)
 /* 80361DB0 0035ECF0  90 01 00 5C */	stw r0, 0x5c(r1)
 /* 80361DB4 0035ECF4  3C 00 43 30 */	lis r0, 0x4330
 /* 80361DB8 0035ECF8  C0 3F 00 80 */	lfs f1, 0x80(r31)
@@ -326,27 +326,27 @@ lbl_80361D9C:
 /* 80361DC4 0035ED04  C8 01 00 58 */	lfd f0, 0x58(r1)
 /* 80361DC8 0035ED08  EF E0 10 28 */	fsubs f31, f0, f2
 /* 80361DCC 0035ED0C  FC 40 F8 90 */	fmr f2, f31
-/* 80361DD0 0035ED10  4B E0 88 99 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361DD0 0035ED10  4B E0 88 99 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361DD4 0035ED14  FC 40 F8 90 */	fmr f2, f31
 /* 80361DD8 0035ED18  C0 3F 00 84 */	lfs f1, 0x84(r31)
 /* 80361DDC 0035ED1C  38 7F 00 14 */	addi r3, r31, 0x14
-/* 80361DE0 0035ED20  4B E0 88 89 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361DE0 0035ED20  4B E0 88 89 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361DE4 0035ED24  FC 40 F8 90 */	fmr f2, f31
 /* 80361DE8 0035ED28  C0 3F 00 88 */	lfs f1, 0x88(r31)
 /* 80361DEC 0035ED2C  38 7F 00 18 */	addi r3, r31, 0x18
-/* 80361DF0 0035ED30  4B E0 88 79 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361DF0 0035ED30  4B E0 88 79 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361DF4 0035ED34  FC 40 F8 90 */	fmr f2, f31
 /* 80361DF8 0035ED38  C0 3F 00 8C */	lfs f1, 0x8c(r31)
 /* 80361DFC 0035ED3C  38 7F 00 3C */	addi r3, r31, 0x3c
-/* 80361E00 0035ED40  4B E0 88 69 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361E00 0035ED40  4B E0 88 69 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361E04 0035ED44  FC 40 F8 90 */	fmr f2, f31
 /* 80361E08 0035ED48  C0 3F 00 90 */	lfs f1, 0x90(r31)
 /* 80361E0C 0035ED4C  38 7F 00 40 */	addi r3, r31, 0x40
-/* 80361E10 0035ED50  4B E0 88 59 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361E10 0035ED50  4B E0 88 59 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361E14 0035ED54  FC 40 F8 90 */	fmr f2, f31
 /* 80361E18 0035ED58  C0 3F 00 94 */	lfs f1, 0x94(r31)
 /* 80361E1C 0035ED5C  38 7F 00 44 */	addi r3, r31, 0x44
-/* 80361E20 0035ED60  4B E0 88 49 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80361E20 0035ED60  4B E0 88 49 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80361E24 0035ED64  80 8D A9 10 */	lwz r4, gpCameraOption@sda21(r13)
 /* 80361E28 0035ED68  A8 64 00 16 */	lha r3, 0x16(r4)
 /* 80361E2C 0035ED6C  38 03 FF FF */	addi r0, r3, -1
@@ -376,38 +376,38 @@ lbl_80361E34:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A3CE4, 0x14
-$$21650:
+"@1650":
 	.incbin "baserom.dol", 0x3A3CF8, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cLoadCamName:
-  .4byte $$21650
+  .4byte "@1650"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21704:
+"@1704":
 	.incbin "baserom.dol", 0x3EC570, 0x4
-$$21705:
+"@1705":
   .4byte 0
-$$21706:
+"@1706":
 	.incbin "baserom.dol", 0x3EC578, 0x4
-$$21707:
+"@1707":
 	.incbin "baserom.dol", 0x3EC57C, 0x4
-$$21708:
+"@1708":
 	.incbin "baserom.dol", 0x3EC580, 0x4
-$$21709:
+"@1709":
 	.incbin "baserom.dol", 0x3EC584, 0x4
-$$21710:
+"@1710":
 	.incbin "baserom.dol", 0x3EC588, 0x4
-$$21765:
+"@1765":
 	.incbin "baserom.dol", 0x3EC58C, 0x4
-$$21767:
+"@1767":
 	.incbin "baserom.dol", 0x3EC590, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

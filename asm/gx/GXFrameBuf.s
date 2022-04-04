@@ -277,7 +277,7 @@ GXGetNumXfbLines:
 /* 800A8FCC 000A5F0C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800A8FD0 000A5F10  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 800A8FD4 000A5F14  7C 7F 1B 78 */	mr r31, r3
-/* 800A8FD8 000A5F18  C0 02 8A F0 */	lfs f0, $$283@sda21(r2)
+/* 800A8FD8 000A5F18  C0 02 8A F0 */	lfs f0, "@83"@sda21(r2)
 /* 800A8FDC 000A5F1C  EC 20 08 24 */	fdivs f1, f0, f1
 /* 800A8FE0 000A5F20  4B FD 9B DD */	bl __cvt_fp2unsigned
 /* 800A8FE4 000A5F24  57 E5 04 3E */	clrlwi r5, r31, 0x10
@@ -332,11 +332,11 @@ GXGetYScaleFactor:
 /* 800A908C 000A5FCC  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 800A9090 000A5FD0  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800A9094 000A5FD4  90 01 00 28 */	stw r0, 0x28(r1)
-/* 800A9098 000A5FD8  C8 62 8A F8 */	lfd f3, $$2138@sda21(r2)
+/* 800A9098 000A5FD8  C8 62 8A F8 */	lfd f3, "@138"@sda21(r2)
 /* 800A909C 000A5FDC  C8 41 00 30 */	lfd f2, 0x30(r1)
 /* 800A90A0 000A5FE0  C8 21 00 28 */	lfd f1, 0x28(r1)
 /* 800A90A4 000A5FE4  EC 42 18 28 */	fsubs f2, f2, f3
-/* 800A90A8 000A5FE8  C0 02 8A F0 */	lfs f0, $$283@sda21(r2)
+/* 800A90A8 000A5FE8  C0 02 8A F0 */	lfs f0, "@83"@sda21(r2)
 /* 800A90AC 000A5FEC  EC 21 18 28 */	fsubs f1, f1, f3
 /* 800A90B0 000A5FF0  EC 42 08 24 */	fdivs f2, f2, f1
 /* 800A90B4 000A5FF4  EC 20 10 24 */	fdivs f1, f0, f2
@@ -367,9 +367,9 @@ lbl_800A9108:
 /* 800A910C 000A604C  40 81 00 08 */	ble lbl_800A9114
 /* 800A9110 000A6050  38 60 04 00 */	li r3, 0x400
 lbl_800A9114:
-/* 800A9114 000A6054  CB E2 8A F8 */	lfd f31, $$2138@sda21(r2)
+/* 800A9114 000A6054  CB E2 8A F8 */	lfd f31, "@138"@sda21(r2)
 /* 800A9118 000A6058  7C 60 1B 78 */	mr r0, r3
-/* 800A911C 000A605C  C3 C2 8A F0 */	lfs f30, $$283@sda21(r2)
+/* 800A911C 000A605C  C3 C2 8A F0 */	lfs f30, "@83"@sda21(r2)
 /* 800A9120 000A6060  57 3D 04 3E */	clrlwi r29, r25, 0x10
 /* 800A9124 000A6064  57 7A 04 3E */	clrlwi r26, r27, 0x10
 /* 800A9128 000A6068  3F 20 43 30 */	lis r25, 0x4330
@@ -416,8 +416,8 @@ lbl_800A91B4:
 /* 800A91B4 000A60F4  7C 00 E8 40 */	cmplw r0, r29
 /* 800A91B8 000A60F8  41 81 FF 78 */	bgt lbl_800A9130
 /* 800A91BC 000A60FC  FF A0 E0 90 */	fmr f29, f28
-/* 800A91C0 000A6100  CB C2 8A F8 */	lfd f30, $$2138@sda21(r2)
-/* 800A91C4 000A6104  C3 E2 8A F0 */	lfs f31, $$283@sda21(r2)
+/* 800A91C0 000A6100  CB C2 8A F8 */	lfd f30, "@138"@sda21(r2)
+/* 800A91C4 000A6104  C3 E2 8A F0 */	lfs f31, "@83"@sda21(r2)
 /* 800A91C8 000A6108  57 7B 04 3E */	clrlwi r27, r27, 0x10
 /* 800A91CC 000A610C  3F 40 43 30 */	lis r26, 0x4330
 /* 800A91D0 000A6110  48 00 00 8C */	b lbl_800A925C
@@ -479,7 +479,7 @@ GXSetDispCopyYScale:
 /* 800A928C 000A61CC  7C 08 02 A6 */	mflr r0
 /* 800A9290 000A61D0  90 01 00 04 */	stw r0, 4(r1)
 /* 800A9294 000A61D4  94 21 FF F8 */	stwu r1, -8(r1)
-/* 800A9298 000A61D8  C0 02 8A F0 */	lfs f0, $$283@sda21(r2)
+/* 800A9298 000A61D8  C0 02 8A F0 */	lfs f0, "@83"@sda21(r2)
 /* 800A929C 000A61DC  EC 20 08 24 */	fdivs f1, f0, f1
 /* 800A92A0 000A61E0  4B FD 99 1D */	bl __cvt_fp2unsigned
 /* 800A92A4 000A61E4  54 66 05 FE */	clrlwi r6, r3, 0x17
@@ -965,7 +965,7 @@ GXEurgb60Hz480IntDf:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$283:
+"@83":
 	.incbin "baserom.dol", 0x3E47F0, 0x8
-$$2138:
+"@138":
 	.incbin "baserom.dol", 0x3E47F8, 0x8

@@ -383,7 +383,7 @@ getRes__9TObjCharaCFPCc:
 /* 80116174 001130B4  4C C6 31 82 */	crclr 6
 /* 80116178 001130B8  38 80 01 00 */	li r4, 0x100
 /* 8011617C 001130BC  94 21 FE F0 */	stwu r1, -0x110(r1)
-/* 80116180 001130C0  38 A2 96 E8 */	addi r5, r2, $$21841@sda21
+/* 80116180 001130C0  38 A2 96 E8 */	addi r5, r2, "@1841"@sda21
 /* 80116184 001130C4  80 C3 00 0C */	lwz r6, 0xc(r3)
 /* 80116188 001130C8  38 61 00 10 */	addi r3, r1, 0x10
 /* 8011618C 001130CC  4B F6 DF 39 */	bl snprintf
@@ -450,24 +450,24 @@ load__9TObjCharaFR20JSUMemoryInputStream:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x377124, 0x14
-$$21598:
+"@1598":
 	.incbin "baserom.dol", 0x377138, 0x30
-$$21599:
+"@1599":
 	.incbin "baserom.dol", 0x377168, 0x38
-$$21600:
+"@1600":
 	.incbin "baserom.dol", 0x3771A0, 0x34
-$$21601:
+"@1601":
 	.incbin "baserom.dol", 0x3771D4, 0x24
-$$21735:
+"@1735":
 	.incbin "baserom.dol", 0x3771F8, 0xC
 entry$1734:
-  .4byte $$21735
+  .4byte "@1735"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
@@ -505,5 +505,5 @@ __vt__9TObjChara:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21841:
+"@1841":
 	.incbin "baserom.dol", 0x3E53E8, 0x8

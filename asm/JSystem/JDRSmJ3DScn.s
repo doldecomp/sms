@@ -29,9 +29,9 @@ __ct__Q26JDrama9TSmJ3DScnFPCcl:
 /* 80046874 000437B4  B3 DD 00 0C */	sth r30, 0xc(r29)
 /* 80046878 000437B8  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 8004687C 000437BC  38 7F 00 10 */	addi r3, r31, 0x10
-/* 80046880 000437C0  4B FE D9 7D */	bl __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-/* 80046884 000437C4  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 80046888 000437C8  38 03 A5 40 */	addi r0, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 80046880 000437C0  4B FE D9 7D */	bl "__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+/* 80046884 000437C4  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 80046888 000437C8  38 03 A5 40 */	addi r0, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 8004688C 000437CC  3C 60 80 3B */	lis r3, __vt__Q26JDrama9TSmJ3DScn@ha
 /* 80046890 000437D0  90 1F 00 00 */	stw r0, 0(r31)
 /* 80046894 000437D4  38 03 A9 D0 */	addi r0, r3, __vt__Q26JDrama9TSmJ3DScn@l
@@ -86,7 +86,7 @@ perform__Q26JDrama9TSmJ3DScnFUlPQ26JDrama9TGraphics:
 /* 80046940 00043880  38 7F 00 00 */	addi r3, r31, 0
 /* 80046944 00043884  38 9B 00 00 */	addi r4, r27, 0
 /* 80046948 00043888  38 BC 00 00 */	addi r5, r28, 0
-/* 8004694C 0004388C  4B FF E2 F1 */	bl perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+/* 8004694C 0004388C  4B FF E2 F1 */	bl "perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
 lbl_80046950:
 /* 80046950 00043890  57 60 07 39 */	rlwinm. r0, r27, 0, 0x1c, 0x1c
 /* 80046954 00043894  41 82 00 C8 */	beq lbl_80046A1C
@@ -131,7 +131,7 @@ lbl_800469B8:
 /* 800469E4 00043924  80 DF 00 24 */	lwz r6, 0x24(r31)
 /* 800469E8 00043928  80 06 00 04 */	lwz r0, 4(r6)
 /* 800469EC 0004392C  90 1E 00 48 */	stw r0, 0x48(r30)
-/* 800469F0 00043930  4B FF E2 4D */	bl perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+/* 800469F0 00043930  4B FF E2 4D */	bl "perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
 /* 800469F4 00043934  38 00 00 03 */	li r0, 3
 /* 800469F8 00043938  94 1E 00 4C */	stwu r0, 0x4c(r30)
 /* 800469FC 0004393C  80 7F 00 24 */	lwz r3, 0x24(r31)
@@ -159,14 +159,14 @@ loadSuper__Q26JDrama9TSmJ3DScnFR20JSUMemoryInputStream:
 /* 80046A44 00043984  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80046A48 00043988  3B C3 00 00 */	addi r30, r3, 0
 /* 80046A4C 0004398C  93 A1 00 1C */	stw r29, 0x1c(r1)
-/* 80046A50 00043990  4B FF DE D1 */	bl loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+/* 80046A50 00043990  4B FF DE D1 */	bl "loadSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
 /* 80046A54 00043994  38 60 00 18 */	li r3, 0x18
 /* 80046A58 00043998  4B FC 5E 59 */	bl __nw__FUl
 /* 80046A5C 0004399C  7C 7D 1B 79 */	or. r29, r3, r3
 /* 80046A60 000439A0  41 82 00 4C */	beq lbl_80046AAC
 /* 80046A64 000439A4  93 A1 00 10 */	stw r29, 0x10(r1)
-/* 80046A68 000439A8  3C 60 80 37 */	lis r3, $$21578@ha
-/* 80046A6C 000439AC  38 83 11 20 */	addi r4, r3, $$21578@l
+/* 80046A68 000439A8  3C 60 80 37 */	lis r3, "@1578"@ha
+/* 80046A6C 000439AC  38 83 11 20 */	addi r4, r3, "@1578"@l
 /* 80046A70 000439B0  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 80046A74 000439B4  4B FF A0 95 */	bl __ct__Q26JDrama8TNameRefFPCc
 /* 80046A78 000439B8  80 61 00 10 */	lwz r3, 0x10(r1)
@@ -175,7 +175,7 @@ loadSuper__Q26JDrama9TSmJ3DScnFR20JSUMemoryInputStream:
 /* 80046A84 000439C4  90 03 00 00 */	stw r0, 0(r3)
 /* 80046A88 000439C8  38 63 00 0C */	addi r3, r3, 0xc
 /* 80046A8C 000439CC  38 80 00 00 */	li r4, 0
-/* 80046A90 000439D0  4B FF A0 71 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80046A90 000439D0  4B FF A0 71 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80046A94 000439D4  3C 60 80 3B */	lis r3, __vt__Q26JDrama9TLightMap@ha
 /* 80046A98 000439D8  38 03 A6 58 */	addi r0, r3, __vt__Q26JDrama9TLightMap@l
 /* 80046A9C 000439DC  90 1D 00 00 */	stw r0, 0(r29)
@@ -212,8 +212,8 @@ __dt__Q26JDrama9TSmJ3DScnFv:
 /* 80046B08 00043A48  38 03 A9 D0 */	addi r0, r3, __vt__Q26JDrama9TSmJ3DScn@l
 /* 80046B0C 00043A4C  90 1E 00 00 */	stw r0, 0(r30)
 /* 80046B10 00043A50  41 82 00 44 */	beq lbl_80046B54
-/* 80046B14 00043A54  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 80046B18 00043A58  38 63 A5 40 */	addi r3, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 80046B14 00043A54  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 80046B18 00043A58  38 63 A5 40 */	addi r3, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 80046B1C 00043A5C  34 1E 00 10 */	addic. r0, r30, 0x10
 /* 80046B20 00043A60  90 7E 00 00 */	stw r3, 0(r30)
 /* 80046B24 00043A64  41 82 00 10 */	beq lbl_80046B34
@@ -245,7 +245,7 @@ lbl_80046B64:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21578:
+"@1578":
 	.incbin "baserom.dol", 0x36E120, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -255,11 +255,11 @@ __vt__Q26JDrama9TSmJ3DScn:
   .4byte 0
   .4byte __dt__Q26JDrama9TSmJ3DScnFv
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte "load__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-  .4byte searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc
+  .4byte "loadAfter__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+  .4byte "searchF__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUsPCc"
   .4byte perform__Q26JDrama9TSmJ3DScnFUlPQ26JDrama9TGraphics
   .4byte loadSuper__Q26JDrama9TSmJ3DScnFR20JSUMemoryInputStream
-  .4byte loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte "loadAfterSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
   .4byte 0

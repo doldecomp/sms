@@ -49,7 +49,7 @@ perform__16TQuestionManagerFUlPQ26JDrama9TGraphics:
 /* 8011D0C8 0011A008  3B A3 00 00 */	addi r29, r3, 0
 /* 8011D0CC 0011A00C  41 82 00 70 */	beq lbl_8011D13C
 /* 8011D0D0 0011A010  80 6D 97 48 */	lwz r3, gpSilhouetteManager@sda21(r13)
-/* 8011D0D4 0011A014  C0 02 97 60 */	lfs f0, $$21772@sda21(r2)
+/* 8011D0D4 0011A014  C0 02 97 60 */	lfs f0, "@1772"@sda21(r2)
 /* 8011D0D8 0011A018  C0 23 00 48 */	lfs f1, 0x48(r3)
 /* 8011D0DC 0011A01C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8011D0E0 0011A020  40 81 00 0C */	ble lbl_8011D0EC
@@ -83,7 +83,7 @@ lbl_8011D13C:
 /* 8011D13C 0011A07C  57 C0 07 39 */	rlwinm. r0, r30, 0, 0x1c, 0x1c
 /* 8011D140 0011A080  41 82 00 40 */	beq lbl_8011D180
 /* 8011D144 0011A084  80 6D 97 48 */	lwz r3, gpSilhouetteManager@sda21(r13)
-/* 8011D148 0011A088  C0 02 97 60 */	lfs f0, $$21772@sda21(r2)
+/* 8011D148 0011A088  C0 02 97 60 */	lfs f0, "@1772"@sda21(r2)
 /* 8011D14C 0011A08C  C0 23 00 48 */	lfs f1, 0x48(r3)
 /* 8011D150 0011A090  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8011D154 0011A094  40 81 00 0C */	ble lbl_8011D160
@@ -283,8 +283,8 @@ lbl_8011D3F4:
 /* 8011D430 0011A370  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 8011D434 0011A374  4E 80 00 20 */	blr 
 
-.global request__16TQuestionManagerFQ29JGeometry8TVec3$$0f$$1f
-request__16TQuestionManagerFQ29JGeometry8TVec3$$0f$$1f:
+.global "request__16TQuestionManagerFQ29JGeometry8TVec3<f>f"
+"request__16TQuestionManagerFQ29JGeometry8TVec3<f>f":
 /* 8011D438 0011A378  A0 03 00 12 */	lhz r0, 0x12(r3)
 /* 8011D43C 0011A37C  28 00 00 20 */	cmplwi r0, 0x20
 /* 8011D440 0011A380  40 80 00 84 */	bge lbl_8011D4C4
@@ -337,10 +337,10 @@ load__16TQuestionManagerFR20JSUMemoryInputStream:
 /* 8011D4EC 0011A42C  4B F2 73 65 */	bl load__Q26JDrama8TNameRefFR20JSUMemoryInputStream
 /* 8011D4F0 0011A430  3B E0 00 00 */	li r31, 0
 /* 8011D4F4 0011A434  B3 FD 00 10 */	sth r31, 0x10(r29)
-/* 8011D4F8 0011A438  3C 60 80 38 */	lis r3, $$21826@ha
-/* 8011D4FC 0011A43C  38 63 A5 F0 */	addi r3, r3, $$21826@l
+/* 8011D4F8 0011A438  3C 60 80 38 */	lis r3, "@1826"@ha
+/* 8011D4FC 0011A43C  38 63 A5 F0 */	addi r3, r3, "@1826"@l
 /* 8011D500 0011A440  B3 FD 00 12 */	sth r31, 0x12(r29)
-/* 8011D504 0011A444  C0 02 97 64 */	lfs f0, $$21825@sda21(r2)
+/* 8011D504 0011A444  C0 02 97 64 */	lfs f0, "@1825"@sda21(r2)
 /* 8011D508 0011A448  D0 1D 00 14 */	stfs f0, 0x14(r29)
 /* 8011D50C 0011A44C  4B EE E7 B1 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 8011D510 0011A450  3B C3 00 00 */	addi r30, r3, 0
@@ -395,7 +395,7 @@ __ct__16TQuestionRequestFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21826:
+"@1826":
 	.incbin "baserom.dol", 0x3775F0, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -414,9 +414,9 @@ __vt__16TQuestionManager:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21772:
+"@1772":
   .4byte 0
-$$21825:
+"@1825":
 	.incbin "baserom.dol", 0x3E5464, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

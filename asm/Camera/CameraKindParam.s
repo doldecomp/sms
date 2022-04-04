@@ -14,39 +14,39 @@ inbetweenData__16TCameraKindParamFRC16TCameraKindParamf:
 /* 80356AA0 003539E0  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80356AA4 003539E4  3B C3 00 00 */	addi r30, r3, 0
 /* 80356AA8 003539E8  C0 24 00 00 */	lfs f1, 0(r4)
-/* 80356AAC 003539EC  4B E1 3B BD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356AAC 003539EC  4B E1 3B BD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356AB0 003539F0  FC 40 F8 90 */	fmr f2, f31
 /* 80356AB4 003539F4  C0 3F 00 04 */	lfs f1, 4(r31)
 /* 80356AB8 003539F8  38 7E 00 04 */	addi r3, r30, 4
-/* 80356ABC 003539FC  4B E1 3B AD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356ABC 003539FC  4B E1 3B AD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356AC0 00353A00  FC 40 F8 90 */	fmr f2, f31
 /* 80356AC4 00353A04  C0 3F 00 08 */	lfs f1, 8(r31)
 /* 80356AC8 00353A08  38 7E 00 08 */	addi r3, r30, 8
-/* 80356ACC 00353A0C  4B E1 3B 9D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356ACC 00353A0C  4B E1 3B 9D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356AD0 00353A10  FC 40 F8 90 */	fmr f2, f31
 /* 80356AD4 00353A14  C0 3F 00 0C */	lfs f1, 0xc(r31)
 /* 80356AD8 00353A18  38 7E 00 0C */	addi r3, r30, 0xc
-/* 80356ADC 00353A1C  4B E1 3B 8D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356ADC 00353A1C  4B E1 3B 8D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356AE0 00353A20  FC 40 F8 90 */	fmr f2, f31
 /* 80356AE4 00353A24  C0 3F 00 10 */	lfs f1, 0x10(r31)
 /* 80356AE8 00353A28  38 7E 00 10 */	addi r3, r30, 0x10
-/* 80356AEC 00353A2C  4B E1 3B 7D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356AEC 00353A2C  4B E1 3B 7D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356AF0 00353A30  FC 40 F8 90 */	fmr f2, f31
 /* 80356AF4 00353A34  C0 3F 00 14 */	lfs f1, 0x14(r31)
 /* 80356AF8 00353A38  38 7E 00 14 */	addi r3, r30, 0x14
-/* 80356AFC 00353A3C  4B E1 3B 6D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 80356B00 00353A40  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356AFC 00353A3C  4B E1 3B 6D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 80356B00 00353A40  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356B04 00353A44  A8 9F 00 18 */	lha r4, 0x18(r31)
 /* 80356B08 00353A48  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356B0C 00353A4C  40 80 00 0C */	bge lbl_80356B18
 /* 80356B10 00353A50  B0 9E 00 18 */	sth r4, 0x18(r30)
 /* 80356B14 00353A54  48 00 00 48 */	b lbl_80356B5C
 lbl_80356B18:
-/* 80356B18 00353A58  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356B18 00353A58  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356B1C 00353A5C  3C 00 43 30 */	lis r0, 0x4330
 /* 80356B20 00353A60  A8 7E 00 18 */	lha r3, 0x18(r30)
 /* 80356B24 00353A64  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356B28 00353A68  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356B28 00353A68  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356B2C 00353A6C  7C 63 20 50 */	subf r3, r3, r4
 /* 80356B30 00353A70  7C 63 07 34 */	extsh r3, r3
 /* 80356B34 00353A74  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -55,23 +55,23 @@ lbl_80356B18:
 /* 80356B40 00353A80  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356B44 00353A84  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356B48 00353A88  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356B4C 00353A8C  4B E1 61 01 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356B4C 00353A8C  4B E1 61 01 */	bl "CLBRoundf<s>__Ff"
 /* 80356B50 00353A90  A8 1E 00 18 */	lha r0, 0x18(r30)
 /* 80356B54 00353A94  7C 00 1A 14 */	add r0, r0, r3
 /* 80356B58 00353A98  B0 1E 00 18 */	sth r0, 0x18(r30)
 lbl_80356B5C:
-/* 80356B5C 00353A9C  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356B5C 00353A9C  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356B60 00353AA0  A8 9F 00 1A */	lha r4, 0x1a(r31)
 /* 80356B64 00353AA4  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356B68 00353AA8  40 80 00 0C */	bge lbl_80356B74
 /* 80356B6C 00353AAC  B0 9E 00 1A */	sth r4, 0x1a(r30)
 /* 80356B70 00353AB0  48 00 00 48 */	b lbl_80356BB8
 lbl_80356B74:
-/* 80356B74 00353AB4  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356B74 00353AB4  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356B78 00353AB8  3C 00 43 30 */	lis r0, 0x4330
 /* 80356B7C 00353ABC  A8 7E 00 1A */	lha r3, 0x1a(r30)
 /* 80356B80 00353AC0  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356B84 00353AC4  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356B84 00353AC4  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356B88 00353AC8  7C 63 20 50 */	subf r3, r3, r4
 /* 80356B8C 00353ACC  7C 63 07 34 */	extsh r3, r3
 /* 80356B90 00353AD0  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -80,7 +80,7 @@ lbl_80356B74:
 /* 80356B9C 00353ADC  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356BA0 00353AE0  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356BA4 00353AE4  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356BA8 00353AE8  4B E1 60 A5 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356BA8 00353AE8  4B E1 60 A5 */	bl "CLBRoundf<s>__Ff"
 /* 80356BAC 00353AEC  A8 1E 00 1A */	lha r0, 0x1a(r30)
 /* 80356BB0 00353AF0  7C 00 1A 14 */	add r0, r0, r3
 /* 80356BB4 00353AF4  B0 1E 00 1A */	sth r0, 0x1a(r30)
@@ -88,19 +88,19 @@ lbl_80356BB8:
 /* 80356BB8 00353AF8  FC 40 F8 90 */	fmr f2, f31
 /* 80356BBC 00353AFC  C0 3F 00 1C */	lfs f1, 0x1c(r31)
 /* 80356BC0 00353B00  38 7E 00 1C */	addi r3, r30, 0x1c
-/* 80356BC4 00353B04  4B E1 3A A5 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 80356BC8 00353B08  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356BC4 00353B04  4B E1 3A A5 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 80356BC8 00353B08  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356BCC 00353B0C  A8 9F 00 20 */	lha r4, 0x20(r31)
 /* 80356BD0 00353B10  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356BD4 00353B14  40 80 00 0C */	bge lbl_80356BE0
 /* 80356BD8 00353B18  B0 9E 00 20 */	sth r4, 0x20(r30)
 /* 80356BDC 00353B1C  48 00 00 48 */	b lbl_80356C24
 lbl_80356BE0:
-/* 80356BE0 00353B20  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356BE0 00353B20  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356BE4 00353B24  3C 00 43 30 */	lis r0, 0x4330
 /* 80356BE8 00353B28  A8 7E 00 20 */	lha r3, 0x20(r30)
 /* 80356BEC 00353B2C  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356BF0 00353B30  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356BF0 00353B30  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356BF4 00353B34  7C 63 20 50 */	subf r3, r3, r4
 /* 80356BF8 00353B38  7C 63 07 34 */	extsh r3, r3
 /* 80356BFC 00353B3C  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -109,23 +109,23 @@ lbl_80356BE0:
 /* 80356C08 00353B48  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356C0C 00353B4C  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356C10 00353B50  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356C14 00353B54  4B E1 60 39 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356C14 00353B54  4B E1 60 39 */	bl "CLBRoundf<s>__Ff"
 /* 80356C18 00353B58  A8 1E 00 20 */	lha r0, 0x20(r30)
 /* 80356C1C 00353B5C  7C 00 1A 14 */	add r0, r0, r3
 /* 80356C20 00353B60  B0 1E 00 20 */	sth r0, 0x20(r30)
 lbl_80356C24:
-/* 80356C24 00353B64  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356C24 00353B64  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356C28 00353B68  A8 9F 00 22 */	lha r4, 0x22(r31)
 /* 80356C2C 00353B6C  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356C30 00353B70  40 80 00 0C */	bge lbl_80356C3C
 /* 80356C34 00353B74  B0 9E 00 22 */	sth r4, 0x22(r30)
 /* 80356C38 00353B78  48 00 00 48 */	b lbl_80356C80
 lbl_80356C3C:
-/* 80356C3C 00353B7C  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356C3C 00353B7C  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356C40 00353B80  3C 00 43 30 */	lis r0, 0x4330
 /* 80356C44 00353B84  A8 7E 00 22 */	lha r3, 0x22(r30)
 /* 80356C48 00353B88  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356C4C 00353B8C  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356C4C 00353B8C  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356C50 00353B90  7C 63 20 50 */	subf r3, r3, r4
 /* 80356C54 00353B94  7C 63 07 34 */	extsh r3, r3
 /* 80356C58 00353B98  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -134,7 +134,7 @@ lbl_80356C3C:
 /* 80356C64 00353BA4  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356C68 00353BA8  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356C6C 00353BAC  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356C70 00353BB0  4B E1 5F DD */	bl CLBRoundf$$0s$$1__Ff
+/* 80356C70 00353BB0  4B E1 5F DD */	bl "CLBRoundf<s>__Ff"
 /* 80356C74 00353BB4  A8 1E 00 22 */	lha r0, 0x22(r30)
 /* 80356C78 00353BB8  7C 00 1A 14 */	add r0, r0, r3
 /* 80356C7C 00353BBC  B0 1E 00 22 */	sth r0, 0x22(r30)
@@ -142,63 +142,63 @@ lbl_80356C80:
 /* 80356C80 00353BC0  FC 40 F8 90 */	fmr f2, f31
 /* 80356C84 00353BC4  C0 3F 00 24 */	lfs f1, 0x24(r31)
 /* 80356C88 00353BC8  38 7E 00 24 */	addi r3, r30, 0x24
-/* 80356C8C 00353BCC  4B E1 39 DD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356C8C 00353BCC  4B E1 39 DD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356C90 00353BD0  FC 40 F8 90 */	fmr f2, f31
 /* 80356C94 00353BD4  C0 3F 00 28 */	lfs f1, 0x28(r31)
 /* 80356C98 00353BD8  38 7E 00 28 */	addi r3, r30, 0x28
-/* 80356C9C 00353BDC  4B E1 39 CD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356C9C 00353BDC  4B E1 39 CD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CA0 00353BE0  FC 40 F8 90 */	fmr f2, f31
 /* 80356CA4 00353BE4  C0 3F 00 2C */	lfs f1, 0x2c(r31)
 /* 80356CA8 00353BE8  38 7E 00 2C */	addi r3, r30, 0x2c
-/* 80356CAC 00353BEC  4B E1 39 BD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CAC 00353BEC  4B E1 39 BD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CB0 00353BF0  FC 40 F8 90 */	fmr f2, f31
 /* 80356CB4 00353BF4  C0 3F 00 30 */	lfs f1, 0x30(r31)
 /* 80356CB8 00353BF8  38 7E 00 30 */	addi r3, r30, 0x30
-/* 80356CBC 00353BFC  4B E1 39 AD */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CBC 00353BFC  4B E1 39 AD */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CC0 00353C00  FC 40 F8 90 */	fmr f2, f31
 /* 80356CC4 00353C04  C0 3F 00 34 */	lfs f1, 0x34(r31)
 /* 80356CC8 00353C08  38 7E 00 34 */	addi r3, r30, 0x34
-/* 80356CCC 00353C0C  4B E1 39 9D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CCC 00353C0C  4B E1 39 9D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CD0 00353C10  FC 40 F8 90 */	fmr f2, f31
 /* 80356CD4 00353C14  C0 3F 00 38 */	lfs f1, 0x38(r31)
 /* 80356CD8 00353C18  38 7E 00 38 */	addi r3, r30, 0x38
-/* 80356CDC 00353C1C  4B E1 39 8D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CDC 00353C1C  4B E1 39 8D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CE0 00353C20  FC 40 F8 90 */	fmr f2, f31
 /* 80356CE4 00353C24  C0 3F 00 3C */	lfs f1, 0x3c(r31)
 /* 80356CE8 00353C28  38 7E 00 3C */	addi r3, r30, 0x3c
-/* 80356CEC 00353C2C  4B E1 39 7D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CEC 00353C2C  4B E1 39 7D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356CF0 00353C30  FC 40 F8 90 */	fmr f2, f31
 /* 80356CF4 00353C34  C0 3F 00 40 */	lfs f1, 0x40(r31)
 /* 80356CF8 00353C38  38 7E 00 40 */	addi r3, r30, 0x40
-/* 80356CFC 00353C3C  4B E1 39 6D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356CFC 00353C3C  4B E1 39 6D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356D00 00353C40  FC 40 F8 90 */	fmr f2, f31
 /* 80356D04 00353C44  C0 3F 00 44 */	lfs f1, 0x44(r31)
 /* 80356D08 00353C48  38 7E 00 44 */	addi r3, r30, 0x44
-/* 80356D0C 00353C4C  4B E1 39 5D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356D0C 00353C4C  4B E1 39 5D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356D10 00353C50  FC 40 F8 90 */	fmr f2, f31
 /* 80356D14 00353C54  C0 3F 00 48 */	lfs f1, 0x48(r31)
 /* 80356D18 00353C58  38 7E 00 48 */	addi r3, r30, 0x48
-/* 80356D1C 00353C5C  4B E1 39 4D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356D1C 00353C5C  4B E1 39 4D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356D20 00353C60  FC 40 F8 90 */	fmr f2, f31
 /* 80356D24 00353C64  C0 3F 00 4C */	lfs f1, 0x4c(r31)
 /* 80356D28 00353C68  38 7E 00 4C */	addi r3, r30, 0x4c
-/* 80356D2C 00353C6C  4B E1 39 3D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356D2C 00353C6C  4B E1 39 3D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356D30 00353C70  FC 40 F8 90 */	fmr f2, f31
 /* 80356D34 00353C74  C0 3F 00 50 */	lfs f1, 0x50(r31)
 /* 80356D38 00353C78  38 7E 00 50 */	addi r3, r30, 0x50
-/* 80356D3C 00353C7C  4B E1 39 2D */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 80356D40 00353C80  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356D3C 00353C7C  4B E1 39 2D */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 80356D40 00353C80  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356D44 00353C84  A8 9F 00 54 */	lha r4, 0x54(r31)
 /* 80356D48 00353C88  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356D4C 00353C8C  40 80 00 0C */	bge lbl_80356D58
 /* 80356D50 00353C90  B0 9E 00 54 */	sth r4, 0x54(r30)
 /* 80356D54 00353C94  48 00 00 48 */	b lbl_80356D9C
 lbl_80356D58:
-/* 80356D58 00353C98  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356D58 00353C98  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356D5C 00353C9C  3C 00 43 30 */	lis r0, 0x4330
 /* 80356D60 00353CA0  A8 7E 00 54 */	lha r3, 0x54(r30)
 /* 80356D64 00353CA4  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356D68 00353CA8  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356D68 00353CA8  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356D6C 00353CAC  7C 63 20 50 */	subf r3, r3, r4
 /* 80356D70 00353CB0  7C 63 07 34 */	extsh r3, r3
 /* 80356D74 00353CB4  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -207,23 +207,23 @@ lbl_80356D58:
 /* 80356D80 00353CC0  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356D84 00353CC4  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356D88 00353CC8  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356D8C 00353CCC  4B E1 5E C1 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356D8C 00353CCC  4B E1 5E C1 */	bl "CLBRoundf<s>__Ff"
 /* 80356D90 00353CD0  A8 1E 00 54 */	lha r0, 0x54(r30)
 /* 80356D94 00353CD4  7C 00 1A 14 */	add r0, r0, r3
 /* 80356D98 00353CD8  B0 1E 00 54 */	sth r0, 0x54(r30)
 lbl_80356D9C:
-/* 80356D9C 00353CDC  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356D9C 00353CDC  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356DA0 00353CE0  A8 9F 00 56 */	lha r4, 0x56(r31)
 /* 80356DA4 00353CE4  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356DA8 00353CE8  40 80 00 0C */	bge lbl_80356DB4
 /* 80356DAC 00353CEC  B0 9E 00 56 */	sth r4, 0x56(r30)
 /* 80356DB0 00353CF0  48 00 00 48 */	b lbl_80356DF8
 lbl_80356DB4:
-/* 80356DB4 00353CF4  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356DB4 00353CF4  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356DB8 00353CF8  3C 00 43 30 */	lis r0, 0x4330
 /* 80356DBC 00353CFC  A8 7E 00 56 */	lha r3, 0x56(r30)
 /* 80356DC0 00353D00  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356DC4 00353D04  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356DC4 00353D04  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356DC8 00353D08  7C 63 20 50 */	subf r3, r3, r4
 /* 80356DCC 00353D0C  7C 63 07 34 */	extsh r3, r3
 /* 80356DD0 00353D10  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -232,7 +232,7 @@ lbl_80356DB4:
 /* 80356DDC 00353D1C  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356DE0 00353D20  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356DE4 00353D24  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356DE8 00353D28  4B E1 5E 65 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356DE8 00353D28  4B E1 5E 65 */	bl "CLBRoundf<s>__Ff"
 /* 80356DEC 00353D2C  A8 1E 00 56 */	lha r0, 0x56(r30)
 /* 80356DF0 00353D30  7C 00 1A 14 */	add r0, r0, r3
 /* 80356DF4 00353D34  B0 1E 00 56 */	sth r0, 0x56(r30)
@@ -244,19 +244,19 @@ lbl_80356DF8:
 /* 80356E08 00353D48  A8 1F 00 5A */	lha r0, 0x5a(r31)
 /* 80356E0C 00353D4C  B0 1E 00 5A */	sth r0, 0x5a(r30)
 /* 80356E10 00353D50  C0 3F 00 5C */	lfs f1, 0x5c(r31)
-/* 80356E14 00353D54  4B E1 38 55 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 80356E18 00353D58  C0 02 05 40 */	lfs f0, $$21659@sda21(r2)
+/* 80356E14 00353D54  4B E1 38 55 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 80356E18 00353D58  C0 02 05 40 */	lfs f0, "@1659"@sda21(r2)
 /* 80356E1C 00353D5C  A8 9F 00 60 */	lha r4, 0x60(r31)
 /* 80356E20 00353D60  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356E24 00353D64  40 80 00 0C */	bge lbl_80356E30
 /* 80356E28 00353D68  B0 9E 00 60 */	sth r4, 0x60(r30)
 /* 80356E2C 00353D6C  48 00 00 48 */	b lbl_80356E74
 lbl_80356E30:
-/* 80356E30 00353D70  C0 02 05 44 */	lfs f0, $$21660@sda21(r2)
+/* 80356E30 00353D70  C0 02 05 44 */	lfs f0, "@1660"@sda21(r2)
 /* 80356E34 00353D74  3C 00 43 30 */	lis r0, 0x4330
 /* 80356E38 00353D78  A8 7E 00 60 */	lha r3, 0x60(r30)
 /* 80356E3C 00353D7C  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356E40 00353D80  C8 22 05 48 */	lfd f1, $$21662@sda21(r2)
+/* 80356E40 00353D80  C8 22 05 48 */	lfd f1, "@1662"@sda21(r2)
 /* 80356E44 00353D84  7C 63 20 50 */	subf r3, r3, r4
 /* 80356E48 00353D88  7C 63 07 34 */	extsh r3, r3
 /* 80356E4C 00353D8C  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -265,7 +265,7 @@ lbl_80356E30:
 /* 80356E58 00353D98  C8 01 00 18 */	lfd f0, 0x18(r1)
 /* 80356E5C 00353D9C  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356E60 00353DA0  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356E64 00353DA4  4B E1 5D E9 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356E64 00353DA4  4B E1 5D E9 */	bl "CLBRoundf<s>__Ff"
 /* 80356E68 00353DA8  A8 1E 00 60 */	lha r0, 0x60(r30)
 /* 80356E6C 00353DAC  7C 00 1A 14 */	add r0, r0, r3
 /* 80356E70 00353DB0  B0 1E 00 60 */	sth r0, 0x60(r30)
@@ -277,67 +277,67 @@ lbl_80356E74:
 /* 80356E84 00353DC4  80 1F 00 68 */	lwz r0, 0x68(r31)
 /* 80356E88 00353DC8  90 1E 00 68 */	stw r0, 0x68(r30)
 /* 80356E8C 00353DCC  C0 3F 00 6C */	lfs f1, 0x6c(r31)
-/* 80356E90 00353DD0  4B E1 37 D9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356E90 00353DD0  4B E1 37 D9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356E94 00353DD4  FC 40 F8 90 */	fmr f2, f31
 /* 80356E98 00353DD8  C0 3F 00 70 */	lfs f1, 0x70(r31)
 /* 80356E9C 00353DDC  38 7E 00 70 */	addi r3, r30, 0x70
-/* 80356EA0 00353DE0  4B E1 37 C9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356EA0 00353DE0  4B E1 37 C9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356EA4 00353DE4  FC 40 F8 90 */	fmr f2, f31
 /* 80356EA8 00353DE8  C0 3F 00 74 */	lfs f1, 0x74(r31)
 /* 80356EAC 00353DEC  38 7E 00 74 */	addi r3, r30, 0x74
-/* 80356EB0 00353DF0  4B E1 37 B9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356EB0 00353DF0  4B E1 37 B9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356EB4 00353DF4  FC 40 F8 90 */	fmr f2, f31
 /* 80356EB8 00353DF8  C0 3F 00 78 */	lfs f1, 0x78(r31)
 /* 80356EBC 00353DFC  38 7E 00 78 */	addi r3, r30, 0x78
-/* 80356EC0 00353E00  4B E1 37 A9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356EC0 00353E00  4B E1 37 A9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356EC4 00353E04  FC 40 F8 90 */	fmr f2, f31
 /* 80356EC8 00353E08  C0 3F 00 7C */	lfs f1, 0x7c(r31)
 /* 80356ECC 00353E0C  38 7E 00 7C */	addi r3, r30, 0x7c
-/* 80356ED0 00353E10  4B E1 37 99 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356ED0 00353E10  4B E1 37 99 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356ED4 00353E14  FC 40 F8 90 */	fmr f2, f31
 /* 80356ED8 00353E18  C0 3F 00 80 */	lfs f1, 0x80(r31)
 /* 80356EDC 00353E1C  38 7E 00 80 */	addi r3, r30, 0x80
-/* 80356EE0 00353E20  4B E1 37 89 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356EE0 00353E20  4B E1 37 89 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356EE4 00353E24  FC 40 F8 90 */	fmr f2, f31
 /* 80356EE8 00353E28  C0 3F 00 84 */	lfs f1, 0x84(r31)
 /* 80356EEC 00353E2C  38 7E 00 84 */	addi r3, r30, 0x84
-/* 80356EF0 00353E30  4B E1 37 79 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356EF0 00353E30  4B E1 37 79 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356EF4 00353E34  FC 40 F8 90 */	fmr f2, f31
 /* 80356EF8 00353E38  C0 3F 00 88 */	lfs f1, 0x88(r31)
 /* 80356EFC 00353E3C  38 7E 00 88 */	addi r3, r30, 0x88
-/* 80356F00 00353E40  4B E1 37 69 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F00 00353E40  4B E1 37 69 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F04 00353E44  FC 40 F8 90 */	fmr f2, f31
 /* 80356F08 00353E48  C0 3F 00 8C */	lfs f1, 0x8c(r31)
 /* 80356F0C 00353E4C  38 7E 00 8C */	addi r3, r30, 0x8c
-/* 80356F10 00353E50  4B E1 37 59 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F10 00353E50  4B E1 37 59 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F14 00353E54  FC 40 F8 90 */	fmr f2, f31
 /* 80356F18 00353E58  C0 3F 00 90 */	lfs f1, 0x90(r31)
 /* 80356F1C 00353E5C  38 7E 00 90 */	addi r3, r30, 0x90
-/* 80356F20 00353E60  4B E1 37 49 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F20 00353E60  4B E1 37 49 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F24 00353E64  FC 40 F8 90 */	fmr f2, f31
 /* 80356F28 00353E68  C0 3F 00 94 */	lfs f1, 0x94(r31)
 /* 80356F2C 00353E6C  38 7E 00 94 */	addi r3, r30, 0x94
-/* 80356F30 00353E70  4B E1 37 39 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F30 00353E70  4B E1 37 39 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F34 00353E74  FC 40 F8 90 */	fmr f2, f31
 /* 80356F38 00353E78  C0 3F 00 98 */	lfs f1, 0x98(r31)
 /* 80356F3C 00353E7C  38 7E 00 98 */	addi r3, r30, 0x98
-/* 80356F40 00353E80  4B E1 37 29 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F40 00353E80  4B E1 37 29 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F44 00353E84  FC 40 F8 90 */	fmr f2, f31
 /* 80356F48 00353E88  C0 3F 00 9C */	lfs f1, 0x9c(r31)
 /* 80356F4C 00353E8C  38 7E 00 9C */	addi r3, r30, 0x9c
-/* 80356F50 00353E90  4B E1 37 19 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F50 00353E90  4B E1 37 19 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F54 00353E94  FC 40 F8 90 */	fmr f2, f31
 /* 80356F58 00353E98  C0 3F 00 A0 */	lfs f1, 0xa0(r31)
 /* 80356F5C 00353E9C  38 7E 00 A0 */	addi r3, r30, 0xa0
-/* 80356F60 00353EA0  4B E1 37 09 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F60 00353EA0  4B E1 37 09 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F64 00353EA4  FC 40 F8 90 */	fmr f2, f31
 /* 80356F68 00353EA8  C0 3F 00 A4 */	lfs f1, 0xa4(r31)
 /* 80356F6C 00353EAC  38 7E 00 A4 */	addi r3, r30, 0xa4
-/* 80356F70 00353EB0  4B E1 36 F9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F70 00353EB0  4B E1 36 F9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F74 00353EB4  FC 40 F8 90 */	fmr f2, f31
 /* 80356F78 00353EB8  C0 3F 00 A8 */	lfs f1, 0xa8(r31)
 /* 80356F7C 00353EBC  38 7E 00 A8 */	addi r3, r30, 0xa8
-/* 80356F80 00353EC0  4B E1 36 E9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 80356F80 00353EC0  4B E1 36 E9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 /* 80356F84 00353EC4  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 80356F88 00353EC8  CB E1 00 28 */	lfd f31, 0x28(r1)
 /* 80356F8C 00353ECC  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -446,9 +446,9 @@ copySaveParam__16TCameraKindParamFRC17TCamSaveKindParam:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21659:
+"@1659":
 	.incbin "baserom.dol", 0x3EC240, 0x4
-$$21660:
+"@1660":
 	.incbin "baserom.dol", 0x3EC244, 0x4
-$$21662:
+"@1662":
 	.incbin "baserom.dol", 0x3EC248, 0x8

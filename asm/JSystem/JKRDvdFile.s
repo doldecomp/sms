@@ -239,11 +239,11 @@ close__10JKRDvdFileFv:
 /* 80009A14 00006954  48 00 55 89 */	bl remove__10JSUPtrListFP10JSUPtrLink
 /* 80009A18 00006958  48 00 00 20 */	b lbl_80009A38
 lbl_80009A1C:
-/* 80009A1C 0000695C  3C 60 80 37 */	lis r3, $$2302@ha
+/* 80009A1C 0000695C  3C 60 80 37 */	lis r3, "@302"@ha
 /* 80009A20 00006960  4C C6 31 82 */	crclr 6
-/* 80009A24 00006964  3C 80 80 37 */	lis r4, $$2303@ha
-/* 80009A28 00006968  38 A4 01 40 */	addi r5, r4, $$2303@l
-/* 80009A2C 0000696C  38 63 01 30 */	addi r3, r3, $$2302@l
+/* 80009A24 00006964  3C 80 80 37 */	lis r4, "@303"@ha
+/* 80009A28 00006968  38 A4 01 40 */	addi r5, r4, "@303"@l
+/* 80009A2C 0000696C  38 63 01 30 */	addi r3, r3, "@302"@l
 /* 80009A30 00006970  38 80 00 D4 */	li r4, 0xd4
 /* 80009A34 00006974  48 08 55 B1 */	bl OSPanic
 lbl_80009A38:
@@ -368,10 +368,10 @@ __sinit_JKRDvdFile_cpp:
 /* 80009BBC 00006AFC  3B E3 0B A4 */	addi r31, r3, sDvdList__10JKRDvdFile@l
 /* 80009BC0 00006B00  38 7F 00 00 */	addi r3, r31, 0
 /* 80009BC4 00006B04  48 00 50 71 */	bl initiate__10JSUPtrListFv
-/* 80009BC8 00006B08  3C 80 80 01 */	lis r4, __dt__21JSUList$$010JKRDvdFile$$1Fv@ha
-/* 80009BCC 00006B0C  3C 60 80 3E */	lis r3, $$2237@ha
-/* 80009BD0 00006B10  38 A3 60 70 */	addi r5, r3, $$2237@l
-/* 80009BD4 00006B14  38 84 9B F4 */	addi r4, r4, __dt__21JSUList$$010JKRDvdFile$$1Fv@l
+/* 80009BC8 00006B08  3C 80 80 01 */	lis r4, "__dt__21JSUList<10JKRDvdFile>Fv"@ha
+/* 80009BCC 00006B0C  3C 60 80 3E */	lis r3, "@237"@ha
+/* 80009BD0 00006B10  38 A3 60 70 */	addi r5, r3, "@237"@l
+/* 80009BD4 00006B14  38 84 9B F4 */	addi r4, r4, "__dt__21JSUList<10JKRDvdFile>Fv"@l
 /* 80009BD8 00006B18  38 7F 00 00 */	addi r3, r31, 0
 /* 80009BDC 00006B1C  48 07 8B 4D */	bl __register_global_object
 /* 80009BE0 00006B20  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -380,8 +380,8 @@ __sinit_JKRDvdFile_cpp:
 /* 80009BEC 00006B2C  7C 08 03 A6 */	mtlr r0
 /* 80009BF0 00006B30  4E 80 00 20 */	blr 
 
-.global __dt__21JSUList$$010JKRDvdFile$$1Fv
-__dt__21JSUList$$010JKRDvdFile$$1Fv:
+.global "__dt__21JSUList<10JKRDvdFile>Fv"
+"__dt__21JSUList<10JKRDvdFile>Fv":
 /* 80009BF4 00006B34  7C 08 02 A6 */	mflr r0
 /* 80009BF8 00006B38  90 01 00 04 */	stw r0, 4(r1)
 /* 80009BFC 00006B3C  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -412,9 +412,9 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2302:
+"@302":
 	.incbin "baserom.dol", 0x36D130, 0x10
-$$2303:
+"@303":
 	.incbin "baserom.dol", 0x36D140, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -432,5 +432,5 @@ __vt__10JKRDvdFile:
   .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2237:
+"@237":
 	.skip 0x10

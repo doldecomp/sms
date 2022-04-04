@@ -88,8 +88,8 @@ lbl_800ADD0C:
 /* 800ADD18 000AAC58  80 03 04 E4 */	lwz r0, 0x4e4(r3)
 /* 800ADD1C 000AAC5C  28 00 00 23 */	cmplwi r0, 0x23
 /* 800ADD20 000AAC60  41 81 04 1C */	bgt lbl_800AE13C
-/* 800ADD24 000AAC64  3C 60 80 3B */	lis r3, $$2241@ha
-/* 800ADD28 000AAC68  38 63 1B B4 */	addi r3, r3, $$2241@l
+/* 800ADD24 000AAC64  3C 60 80 3B */	lis r3, "@241"@ha
+/* 800ADD28 000AAC68  38 63 1B B4 */	addi r3, r3, "@241"@l
 /* 800ADD2C 000AAC6C  54 00 10 3A */	slwi r0, r0, 2
 /* 800ADD30 000AAC70  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800ADD34 000AAC74  7C 09 03 A6 */	mtctr r0
@@ -392,8 +392,8 @@ lbl_800AE13C:
 /* 800AE148 000AB088  80 04 04 E8 */	lwz r0, 0x4e8(r4)
 /* 800AE14C 000AB08C  28 00 00 16 */	cmplwi r0, 0x16
 /* 800AE150 000AB090  41 81 03 30 */	bgt lbl_800AE480
-/* 800AE154 000AB094  3C 60 80 3B */	lis r3, $$2242@ha
-/* 800AE158 000AB098  38 63 1B 58 */	addi r3, r3, $$2242@l
+/* 800AE154 000AB094  3C 60 80 3B */	lis r3, "@242"@ha
+/* 800AE158 000AB098  38 63 1B 58 */	addi r3, r3, "@242"@l
 /* 800AE15C 000AB09C  54 00 10 3A */	slwi r0, r0, 2
 /* 800AE160 000AB0A0  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800AE164 000AB0A4  7C 09 03 A6 */	mtctr r0
@@ -685,7 +685,7 @@ GXClearPixMetric:
 /* 800AE55C 000AB49C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2242:
+"@242":
     .4byte lbl_800AE16C
     .4byte lbl_800AE188
     .4byte lbl_800AE1A4
@@ -709,7 +709,7 @@ $$2242:
     .4byte lbl_800AE474
     .4byte lbl_800AE1F8
     .4byte lbl_800AE480
-$$2241:
+"@241":
     .4byte lbl_800ADD3C
     .4byte lbl_800ADD5C
     .4byte lbl_800ADD7C

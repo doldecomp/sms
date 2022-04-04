@@ -121,9 +121,9 @@ lbl_8000DD14:
 /* 8000DD18 0000AC58  48 07 F8 C5 */	bl OSAllocFromHeap
 /* 8000DD1C 0000AC5C  7C 7F 1B 79 */	or. r31, r3, r3
 /* 8000DD20 0000AC60  40 82 00 44 */	bne lbl_8000DD64
-/* 8000DD24 0000AC64  3C 60 80 37 */	lis r3, $$21545@ha
+/* 8000DD24 0000AC64  3C 60 80 37 */	lis r3, "@1545"@ha
 /* 8000DD28 0000AC68  4C C6 31 82 */	crclr 6
-/* 8000DD2C 0000AC6C  38 63 06 E8 */	addi r3, r3, $$21545@l
+/* 8000DD2C 0000AC6C  38 63 06 E8 */	addi r3, r3, "@1545"@l
 /* 8000DD30 0000AC70  38 9D 00 00 */	addi r4, r29, 0
 /* 8000DD34 0000AC74  48 03 25 4D */	bl JUTWarningConsole_f
 /* 8000DD38 0000AC78  88 1C 00 64 */	lbz r0, 0x64(r28)
@@ -199,9 +199,9 @@ lbl_8000DE10:
 .global freeTail__10JKRStdHeapFv
 freeTail__10JKRStdHeapFv:
 /* 8000DE24 0000AD64  7C 08 02 A6 */	mflr r0
-/* 8000DE28 0000AD68  3C 60 80 37 */	lis r3, $$21558@ha
+/* 8000DE28 0000AD68  3C 60 80 37 */	lis r3, "@1558"@ha
 /* 8000DE2C 0000AD6C  90 01 00 04 */	stw r0, 4(r1)
-/* 8000DE30 0000AD70  38 63 07 14 */	addi r3, r3, $$21558@l
+/* 8000DE30 0000AD70  38 63 07 14 */	addi r3, r3, "@1558"@l
 /* 8000DE34 0000AD74  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000DE38 0000AD78  48 03 25 0D */	bl JUTWarningConsole
 /* 8000DE3C 0000AD7C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -212,10 +212,10 @@ freeTail__10JKRStdHeapFv:
 .global resize__10JKRStdHeapFPvUl
 resize__10JKRStdHeapFPvUl:
 /* 8000DE4C 0000AD8C  7C 08 02 A6 */	mflr r0
-/* 8000DE50 0000AD90  3C 60 80 37 */	lis r3, $$21560@ha
+/* 8000DE50 0000AD90  3C 60 80 37 */	lis r3, "@1560"@ha
 /* 8000DE54 0000AD94  90 01 00 04 */	stw r0, 4(r1)
 /* 8000DE58 0000AD98  4C C6 31 82 */	crclr 6
-/* 8000DE5C 0000AD9C  38 63 07 38 */	addi r3, r3, $$21560@l
+/* 8000DE5C 0000AD9C  38 63 07 38 */	addi r3, r3, "@1560"@l
 /* 8000DE60 0000ADA0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000DE64 0000ADA4  48 03 24 1D */	bl JUTWarningConsole_f
 /* 8000DE68 0000ADA8  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -227,9 +227,9 @@ resize__10JKRStdHeapFPvUl:
 .global getFreeSize__10JKRStdHeapFv
 getFreeSize__10JKRStdHeapFv:
 /* 8000DE7C 0000ADBC  7C 08 02 A6 */	mflr r0
-/* 8000DE80 0000ADC0  3C 60 80 37 */	lis r3, $$21562@ha
+/* 8000DE80 0000ADC0  3C 60 80 37 */	lis r3, "@1562"@ha
 /* 8000DE84 0000ADC4  90 01 00 04 */	stw r0, 4(r1)
-/* 8000DE88 0000ADC8  38 63 07 68 */	addi r3, r3, $$21562@l
+/* 8000DE88 0000ADC8  38 63 07 68 */	addi r3, r3, "@1562"@l
 /* 8000DE8C 0000ADCC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000DE90 0000ADD0  48 03 24 B5 */	bl JUTWarningConsole
 /* 8000DE94 0000ADD4  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -331,13 +331,13 @@ dump__10JKRStdHeapFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21545:
+"@1545":
 	.incbin "baserom.dol", 0x36D6E8, 0x2C
-$$21558:
+"@1558":
 	.incbin "baserom.dol", 0x36D714, 0x24
-$$21560:
+"@1560":
 	.incbin "baserom.dol", 0x36D738, 0x30
-$$21562:
+"@1562":
 	.incbin "baserom.dol", 0x36D768, 0x28
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

@@ -13,7 +13,7 @@ ctrlNormalOrTowerCamera___15CPolarSubCameraFv:
 /* 80359900 00356840  93 C1 00 90 */	stw r30, 0x90(r1)
 /* 80359904 00356844  7C 7E 1B 78 */	mr r30, r3
 /* 80359908 00356848  80 63 01 20 */	lwz r3, 0x120(r3)
-/* 8035990C 0035684C  C0 02 05 D8 */	lfs f0, $$22326@sda21(r2)
+/* 8035990C 0035684C  C0 02 05 D8 */	lfs f0, "@2326"@sda21(r2)
 /* 80359910 00356850  C3 A3 00 C0 */	lfs f29, 0xc0(r3)
 /* 80359914 00356854  C3 E3 00 C4 */	lfs f31, 0xc4(r3)
 /* 80359918 00356858  D0 1E 02 50 */	stfs f0, 0x250(r30)
@@ -58,7 +58,7 @@ lbl_803599A4:
 /* 803599AC 003568EC  48 00 97 65 */	bl isTowerCameraSpecifyMode__15CPolarSubCameraCFi
 /* 803599B0 003568F0  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 803599B4 003568F4  41 82 00 6C */	beq lbl_80359A20
-/* 803599B8 003568F8  C0 02 05 D8 */	lfs f0, $$22326@sda21(r2)
+/* 803599B8 003568F8  C0 02 05 D8 */	lfs f0, "@2326"@sda21(r2)
 /* 803599BC 003568FC  FC 00 E8 00 */	fcmpu cr0, f0, f29
 /* 803599C0 00356900  41 82 00 28 */	beq lbl_803599E8
 /* 803599C4 00356904  7F C3 F3 78 */	mr r3, r30
@@ -86,7 +86,7 @@ lbl_803599E8:
 /* 80359A18 00356958  4B FF F6 69 */	bl calcNoticeTargetYrot___15CPolarSubCameraFRC3Vec
 /* 80359A1C 0035695C  48 00 03 44 */	b lbl_80359D60
 lbl_80359A20:
-/* 80359A20 00356960  C0 02 05 D8 */	lfs f0, $$22326@sda21(r2)
+/* 80359A20 00356960  C0 02 05 D8 */	lfs f0, "@2326"@sda21(r2)
 /* 80359A24 00356964  FC 00 E8 00 */	fcmpu cr0, f0, f29
 /* 80359A28 00356968  41 82 00 1C */	beq lbl_80359A44
 /* 80359A2C 0035696C  7F C3 F3 78 */	mr r3, r30
@@ -130,7 +130,7 @@ lbl_80359AA8:
 /* 80359AB8 003569F8  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
 /* 80359ABC 003569FC  C0 23 00 74 */	lfs f1, 0x74(r3)
 /* 80359AC0 00356A00  C0 43 00 78 */	lfs f2, 0x78(r3)
-/* 80359AC4 00356A04  4B E1 0B 71 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 80359AC4 00356A04  4B E1 0B 71 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 80359AC8 00356A08  D0 3E 02 50 */	stfs f1, 0x250(r30)
 /* 80359ACC 00356A0C  48 00 00 1C */	b lbl_80359AE8
 lbl_80359AD0:
@@ -138,7 +138,7 @@ lbl_80359AD0:
 /* 80359AD4 00356A14  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
 /* 80359AD8 00356A18  C0 23 00 6C */	lfs f1, 0x6c(r3)
 /* 80359ADC 00356A1C  C0 43 00 70 */	lfs f2, 0x70(r3)
-/* 80359AE0 00356A20  4B E1 0B 55 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 80359AE0 00356A20  4B E1 0B 55 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 80359AE4 00356A24  D0 3E 02 50 */	stfs f1, 0x250(r30)
 lbl_80359AE8:
 /* 80359AE8 00356A28  7F C3 F3 78 */	mr r3, r30
@@ -174,19 +174,19 @@ lbl_80359B1C:
 /* 80359B5C 00356A9C  4B FF 7F 91 */	bl isChangeToParallelCameraCByMoveBG___15CPolarSubCameraCFv
 /* 80359B60 00356AA0  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80359B64 00356AA4  40 82 00 54 */	bne lbl_80359BB8
-/* 80359B68 00356AA8  C0 22 05 D8 */	lfs f1, $$22326@sda21(r2)
+/* 80359B68 00356AA8  C0 22 05 D8 */	lfs f1, "@2326"@sda21(r2)
 /* 80359B6C 00356AAC  C0 1E 02 88 */	lfs f0, 0x288(r30)
 /* 80359B70 00356AB0  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 80359B74 00356AB4  41 82 01 EC */	beq lbl_80359D60
-/* 80359B78 00356AB8  C0 42 05 DC */	lfs f2, $$22327@sda21(r2)
+/* 80359B78 00356AB8  C0 42 05 DC */	lfs f2, "@2327"@sda21(r2)
 /* 80359B7C 00356ABC  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
-/* 80359B80 00356AC0  4B FF C4 0D */	bl CLBEaseInInbetween$$0f$$1__Ffff
+/* 80359B80 00356AC0  4B FF C4 0D */	bl "CLBEaseInInbetween<f>__Ffff"
 /* 80359B84 00356AC4  80 7E 02 D4 */	lwz r3, 0x2d4(r30)
 /* 80359B88 00356AC8  38 83 01 A8 */	addi r4, r3, 0x1a8
 /* 80359B8C 00356ACC  38 63 01 94 */	addi r3, r3, 0x194
 /* 80359B90 00356AD0  A8 84 00 00 */	lha r4, 0(r4)
 /* 80359B94 00356AD4  A8 63 00 00 */	lha r3, 0(r3)
-/* 80359B98 00356AD8  48 00 03 29 */	bl CLBEaseInInbetween$$0s$$1__Fssf
+/* 80359B98 00356AD8  48 00 03 29 */	bl "CLBEaseInInbetween<s>__Fssf"
 /* 80359B9C 00356ADC  80 8D 98 E4 */	lwz r4, gpMarioAngleY@sda21(r13)
 /* 80359BA0 00356AE0  38 A3 00 00 */	addi r5, r3, 0
 /* 80359BA4 00356AE4  38 7E 00 A6 */	addi r3, r30, 0xa6
@@ -218,10 +218,10 @@ lbl_80359BFC:
 /* 80359C00 00356B40  7C 00 00 D0 */	neg r0, r0
 lbl_80359C04:
 /* 80359C04 00356B44  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80359C08 00356B48  C8 22 05 F0 */	lfd f1, $$22333@sda21(r2)
+/* 80359C08 00356B48  C8 22 05 F0 */	lfd f1, "@2333"@sda21(r2)
 /* 80359C0C 00356B4C  90 01 00 8C */	stw r0, 0x8c(r1)
 /* 80359C10 00356B50  3C 00 43 30 */	lis r0, 0x4330
-/* 80359C14 00356B54  C0 42 05 E0 */	lfs f2, $$22328@sda21(r2)
+/* 80359C14 00356B54  C0 42 05 E0 */	lfs f2, "@2328"@sda21(r2)
 /* 80359C18 00356B58  90 01 00 88 */	stw r0, 0x88(r1)
 /* 80359C1C 00356B5C  C8 01 00 88 */	lfd f0, 0x88(r1)
 /* 80359C20 00356B60  EC 00 08 28 */	fsubs f0, f0, f1
@@ -233,23 +233,23 @@ lbl_80359C2C:
 /* 80359C34 00356B74  7C 63 F8 50 */	subf r3, r3, r31
 /* 80359C38 00356B78  80 8D 8D F4 */	lwz r4, jmaCosTable@sda21(r13)
 /* 80359C3C 00356B7C  54 63 0C 3C */	rlwinm r3, r3, 1, 0x10, 0x1e
-/* 80359C40 00356B80  C0 22 05 DC */	lfs f1, $$22327@sda21(r2)
+/* 80359C40 00356B80  C0 22 05 DC */	lfs f1, "@2327"@sda21(r2)
 /* 80359C44 00356B84  7C 60 06 30 */	sraw r0, r3, r0
-/* 80359C48 00356B88  C0 42 05 E4 */	lfs f2, $$22329@sda21(r2)
+/* 80359C48 00356B88  C0 42 05 E4 */	lfs f2, "@2329"@sda21(r2)
 /* 80359C4C 00356B8C  54 00 10 3A */	slwi r0, r0, 2
 /* 80359C50 00356B90  7C 04 04 2E */	lfsx f0, r4, r0
 /* 80359C54 00356B94  EC 01 00 28 */	fsubs f0, f1, f0
 /* 80359C58 00356B98  EF A2 00 32 */	fmuls f29, f2, f0
 lbl_80359C5C:
 /* 80359C5C 00356B9C  A8 1E 02 CA */	lha r0, 0x2ca(r30)
-/* 80359C60 00356BA0  C3 C2 05 DC */	lfs f30, $$22327@sda21(r2)
+/* 80359C60 00356BA0  C3 C2 05 DC */	lfs f30, "@2327"@sda21(r2)
 /* 80359C64 00356BA4  2C 00 FF FF */	cmpwi r0, -1
 /* 80359C68 00356BA8  41 82 00 20 */	beq lbl_80359C88
 /* 80359C6C 00356BAC  80 7E 00 68 */	lwz r3, 0x68(r30)
 /* 80359C70 00356BB0  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
 /* 80359C74 00356BB4  C0 23 00 84 */	lfs f1, 0x84(r3)
 /* 80359C78 00356BB8  C0 43 00 88 */	lfs f2, 0x88(r3)
-/* 80359C7C 00356BBC  4B E1 09 B9 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 80359C7C 00356BBC  4B E1 09 B9 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 80359C80 00356BC0  FF C0 08 90 */	fmr f30, f1
 /* 80359C84 00356BC4  48 00 00 40 */	b lbl_80359CC4
 lbl_80359C88:
@@ -268,7 +268,7 @@ lbl_80359CA4:
 /* 80359CB0 00356BF0  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
 /* 80359CB4 00356BF4  C0 23 00 7C */	lfs f1, 0x7c(r3)
 /* 80359CB8 00356BF8  C0 43 00 80 */	lfs f2, 0x80(r3)
-/* 80359CBC 00356BFC  4B E1 09 79 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 80359CBC 00356BFC  4B E1 09 79 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 80359CC0 00356C00  FF C0 08 90 */	fmr f30, f1
 lbl_80359CC4:
 /* 80359CC4 00356C04  80 7E 01 20 */	lwz r3, 0x120(r30)
@@ -282,7 +282,7 @@ lbl_80359CC4:
 /* 80359CE4 00356C24  C0 7E 00 A8 */	lfs f3, 0xa8(r30)
 /* 80359CE8 00356C28  C0 23 00 8C */	lfs f1, 0x8c(r3)
 /* 80359CEC 00356C2C  C0 43 00 90 */	lfs f2, 0x90(r3)
-/* 80359CF0 00356C30  4B E1 09 45 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 80359CF0 00356C30  4B E1 09 45 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 80359CF4 00356C34  EF DE 00 72 */	fmuls f30, f30, f1
 lbl_80359CF8:
 /* 80359CF8 00356C38  80 1E 00 50 */	lwz r0, 0x50(r30)
@@ -293,7 +293,7 @@ lbl_80359CF8:
 /* 80359D0C 00356C4C  41 82 00 08 */	beq lbl_80359D14
 /* 80359D10 00356C50  48 00 00 0C */	b lbl_80359D1C
 lbl_80359D14:
-/* 80359D14 00356C54  C0 62 05 E8 */	lfs f3, $$22330@sda21(r2)
+/* 80359D14 00356C54  C0 62 05 E8 */	lfs f3, "@2330"@sda21(r2)
 /* 80359D18 00356C58  48 00 00 0C */	b lbl_80359D24
 lbl_80359D1C:
 /* 80359D1C 00356C5C  80 6D A8 B8 */	lwz r3, gpCameraMario@sda21(r13)
@@ -302,7 +302,7 @@ lbl_80359D24:
 /* 80359D24 00356C64  C0 1E 02 50 */	lfs f0, 0x250(r30)
 /* 80359D28 00356C68  C0 5E 02 88 */	lfs f2, 0x288(r30)
 /* 80359D2C 00356C6C  EC 20 07 72 */	fmuls f1, f0, f29
-/* 80359D30 00356C70  C0 02 05 EC */	lfs f0, $$22331@sda21(r2)
+/* 80359D30 00356C70  C0 02 05 EC */	lfs f0, "@2331"@sda21(r2)
 /* 80359D34 00356C74  EC 3E 00 72 */	fmuls f1, f30, f1
 /* 80359D38 00356C78  EC 23 00 72 */	fmuls f1, f3, f1
 /* 80359D3C 00356C7C  EC 22 00 72 */	fmuls f1, f2, f1
@@ -310,11 +310,11 @@ lbl_80359D24:
 /* 80359D44 00356C84  40 81 00 08 */	ble lbl_80359D4C
 /* 80359D48 00356C88  FC 20 00 90 */	fmr f1, f0
 lbl_80359D4C:
-/* 80359D4C 00356C8C  4B E1 2F 01 */	bl CLBRoundf$$0s$$1__Ff
+/* 80359D4C 00356C8C  4B E1 2F 01 */	bl "CLBRoundf<s>__Ff"
 /* 80359D50 00356C90  38 A3 00 00 */	addi r5, r3, 0
 /* 80359D54 00356C94  38 9F 00 00 */	addi r4, r31, 0
 /* 80359D58 00356C98  38 7E 00 A6 */	addi r3, r30, 0xa6
-/* 80359D5C 00356C9C  4B E1 37 5D */	bl CLBChaseGeneralConstantSpecifySpeed$$0s$$1__FPsss
+/* 80359D5C 00356C9C  4B E1 37 5D */	bl "CLBChaseGeneralConstantSpecifySpeed<s>__FPsss"
 lbl_80359D60:
 /* 80359D60 00356CA0  7F C3 F3 78 */	mr r3, r30
 /* 80359D64 00356CA4  FC 20 F8 90 */	fmr f1, f31
@@ -383,7 +383,7 @@ lbl_80359E2C:
 /* 80359E34 00356D74  83 E3 00 10 */	lwz r31, 0x10(r3)
 /* 80359E38 00356D78  48 00 00 18 */	b lbl_80359E50
 lbl_80359E3C:
-/* 80359E3C 00356D7C  C0 02 05 D8 */	lfs f0, $$22326@sda21(r2)
+/* 80359E3C 00356D7C  C0 02 05 D8 */	lfs f0, "@2326"@sda21(r2)
 /* 80359E40 00356D80  D0 1E 00 00 */	stfs f0, 0(r30)
 /* 80359E44 00356D84  D0 1E 00 04 */	stfs f0, 4(r30)
 /* 80359E48 00356D88  D0 1E 00 08 */	stfs f0, 8(r30)
@@ -408,7 +408,7 @@ lbl_80359E50:
 /* 80359E90 00356DD0  90 1E 00 08 */	stw r0, 8(r30)
 /* 80359E94 00356DD4  48 00 00 14 */	b lbl_80359EA8
 lbl_80359E98:
-/* 80359E98 00356DD8  C0 02 05 D8 */	lfs f0, $$22326@sda21(r2)
+/* 80359E98 00356DD8  C0 02 05 D8 */	lfs f0, "@2326"@sda21(r2)
 /* 80359E9C 00356DDC  D0 1E 00 00 */	stfs f0, 0(r30)
 /* 80359EA0 00356DE0  D0 1E 00 04 */	stfs f0, 4(r30)
 /* 80359EA4 00356DE4  D0 1E 00 08 */	stfs f0, 8(r30)
@@ -420,8 +420,8 @@ lbl_80359EA8:
 /* 80359EB8 00356DF8  38 21 00 20 */	addi r1, r1, 0x20
 /* 80359EBC 00356DFC  4E 80 00 20 */	blr 
 
-.global CLBEaseInInbetween$$0s$$1__Fssf
-CLBEaseInInbetween$$0s$$1__Fssf:
+.global "CLBEaseInInbetween<s>__Fssf"
+"CLBEaseInInbetween<s>__Fssf":
 /* 80359EC0 00356E00  7C 08 02 A6 */	mflr r0
 /* 80359EC4 00356E04  7C 65 07 34 */	extsh r5, r3
 /* 80359EC8 00356E08  90 01 00 04 */	stw r0, 4(r1)
@@ -431,11 +431,11 @@ CLBEaseInInbetween$$0s$$1__Fssf:
 /* 80359ED8 00356E18  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 80359EDC 00356E1C  90 01 00 14 */	stw r0, 0x14(r1)
 /* 80359EE0 00356E20  3C 00 43 30 */	lis r0, 0x4330
-/* 80359EE4 00356E24  C8 42 05 F0 */	lfd f2, $$22333@sda21(r2)
+/* 80359EE4 00356E24  C8 42 05 F0 */	lfd f2, "@2333"@sda21(r2)
 /* 80359EE8 00356E28  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80359EEC 00356E2C  C8 01 00 10 */	lfd f0, 0x10(r1)
 /* 80359EF0 00356E30  EC 40 10 28 */	fsubs f2, f0, f2
-/* 80359EF4 00356E34  4B E1 35 01 */	bl CLBTwoDegreeGeneralInbetween$$0s$$1__Fssff
+/* 80359EF4 00356E34  4B E1 35 01 */	bl "CLBTwoDegreeGeneralInbetween<s>__Fssff"
 /* 80359EF8 00356E38  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80359EFC 00356E3C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80359F00 00356E40  7C 08 03 A6 */	mtlr r0
@@ -443,53 +443,53 @@ CLBEaseInInbetween$$0s$$1__Fssf:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A2AE4, 0x14
-$$21857:
+"@1857":
 	.incbin "baserom.dol", 0x3A2AF8, 0x30
-$$21858:
+"@1858":
 	.incbin "baserom.dol", 0x3A2B28, 0x38
-$$21859:
+"@1859":
 	.incbin "baserom.dol", 0x3A2B60, 0x34
-$$21860:
+"@1860":
 	.incbin "baserom.dol", 0x3A2B94, 0x24
-$$22176:
+"@2176":
 	.incbin "baserom.dol", 0x3A2BB8, 0x10
-$$22177:
+"@2177":
 	.incbin "baserom.dol", 0x3A2BC8, 0x10
-$$22178:
+"@2178":
 	.incbin "baserom.dol", 0x3A2BD8, 0x10
-$$22179:
+"@2179":
 	.incbin "baserom.dol", 0x3A2BE8, 0x10
-$$22180:
+"@2180":
 	.incbin "baserom.dol", 0x3A2BF8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec:
-  .4byte $$22176
-  .4byte $$22177
-  .4byte $$22178
-  .4byte $$22179
-  .4byte $$22180
+  .4byte "@2176"
+  .4byte "@2177"
+  .4byte "@2178"
+  .4byte "@2179"
+  .4byte "@2180"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22326:
+"@2326":
   .4byte 0
-$$22327:
+"@2327":
 	.incbin "baserom.dol", 0x3EC2DC, 0x4
-$$22328:
+"@2328":
 	.incbin "baserom.dol", 0x3EC2E0, 0x4
-$$22329:
+"@2329":
 	.incbin "baserom.dol", 0x3EC2E4, 0x4
-$$22330:
+"@2330":
 	.incbin "baserom.dol", 0x3EC2E8, 0x4
-$$22331:
+"@2331":
 	.incbin "baserom.dol", 0x3EC2EC, 0x4
-$$22333:
+"@2333":
 	.incbin "baserom.dol", 0x3EC2F0, 0x8

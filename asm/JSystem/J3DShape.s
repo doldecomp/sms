@@ -312,7 +312,7 @@ initialize__8J3DShapeFv:
 /* 800299F4 00026934  38 0D 8E 10 */	addi r0, r13, j3dDefaultViewNo@sda21
 /* 800299F8 00026938  B0 A3 00 06 */	sth r5, 6(r3)
 /* 800299FC 0002693C  90 A3 00 08 */	stw r5, 8(r3)
-/* 80029A00 00026940  C0 02 82 48 */	lfs f0, $$2994@sda21(r2)
+/* 80029A00 00026940  C0 02 82 48 */	lfs f0, "@994"@sda21(r2)
 /* 80029A04 00026944  D0 03 00 0C */	stfs f0, 0xc(r3)
 /* 80029A08 00026948  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 80029A0C 0002694C  D0 03 00 14 */	stfs f0, 0x14(r3)
@@ -870,8 +870,8 @@ getType__11J3DShapeMtxCFv:
 
 .global __sinit_J3DShape_cpp
 __sinit_J3DShape_cpp:
-/* 8002A164 000270A4  3C 60 80 3B */	lis r3, $$2952@ha
-/* 8002A168 000270A8  38 83 98 A0 */	addi r4, r3, $$2952@l
+/* 8002A164 000270A4  3C 60 80 3B */	lis r3, "@952"@ha
+/* 8002A168 000270A8  38 83 98 A0 */	addi r4, r3, "@952"@l
 /* 8002A16C 000270AC  80 64 00 00 */	lwz r3, 0(r4)
 /* 8002A170 000270B0  80 04 00 04 */	lwz r0, 4(r4)
 /* 8002A174 000270B4  90 64 00 30 */	stw r3, 0x30(r4)
@@ -903,19 +903,19 @@ lbl_constructor:
   .4byte __sinit_J3DShape_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2952:
+"@952":
   .4byte 0
   .4byte -1
   .4byte loadMtxIndx_PNGP__11J3DShapeMtxCFiUs
-$$2953:
+"@953":
   .4byte 0
   .4byte -1
   .4byte loadMtxIndx_PCPU__11J3DShapeMtxCFiUs
-$$2954:
+"@954":
   .4byte 0
   .4byte -1
   .4byte loadMtxIndx_NCPU__11J3DShapeMtxCFiUs
-$$2955:
+"@955":
   .4byte 0
   .4byte -1
   .4byte loadMtxIndx_PNCPU__11J3DShapeMtxCFiUs
@@ -975,7 +975,7 @@ __vt__11J3DShapeMtx:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2994:
+"@994":
   .4byte 0
   .4byte 0
 

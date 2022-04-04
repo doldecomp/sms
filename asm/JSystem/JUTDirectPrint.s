@@ -289,7 +289,7 @@ drawString__14JUTDirectPrintFUsUsPc:
 /* 800115B0 0000E4F0  38 E6 00 00 */	addi r7, r6, 0
 /* 800115B4 0000E4F4  90 01 00 04 */	stw r0, 4(r1)
 /* 800115B8 0000E4F8  4C C6 31 82 */	crclr 6
-/* 800115BC 0000E4FC  38 C2 80 88 */	addi r6, r2, $$2192@sda21
+/* 800115BC 0000E4FC  38 C2 80 88 */	addi r6, r2, "@192"@sda21
 /* 800115C0 0000E500  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800115C4 0000E504  48 00 00 15 */	bl drawString_f__14JUTDirectPrintFUsUsPCce
 /* 800115C8 0000E508  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -418,7 +418,7 @@ sFontData2__14JUTDirectPrint:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2192:
+"@192":
 	.incbin "baserom.dol", 0x3E3D88, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

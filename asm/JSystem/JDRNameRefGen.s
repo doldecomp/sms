@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
-loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream:
+.global "loadSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
+"loadSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream":
 /* 80044920 00041860  7C 08 02 A6 */	mflr r0
 /* 80044924 00041864  90 01 00 04 */	stw r0, 4(r1)
 /* 80044928 00041868  94 21 FF F8 */	stwu r1, -8(r1)
@@ -12,8 +12,8 @@ loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj
 /* 80044938 00041878  7C 08 03 A6 */	mtlr r0
 /* 8004493C 0004187C  4E 80 00 20 */	blr 
 
-.global loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv:
+.global "loadAfterSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+"loadAfterSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv":
 /* 80044940 00041880  7C 08 02 A6 */	mflr r0
 /* 80044944 00041884  90 01 00 04 */	stw r0, 4(r1)
 /* 80044948 00041888  94 21 FF F8 */	stwu r1, -8(r1)
@@ -23,8 +23,8 @@ loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TVi
 /* 80044958 00041898  7C 08 03 A6 */	mtlr r0
 /* 8004495C 0004189C  4E 80 00 20 */	blr 
 
-.global searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FUsPCc
-searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FUsPCc:
+.global "searchF__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FUsPCc"
+"searchF__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FUsPCc":
 /* 80044960 000418A0  7C 08 02 A6 */	mflr r0
 /* 80044964 000418A4  90 01 00 04 */	stw r0, 4(r1)
 /* 80044968 000418A8  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -41,7 +41,7 @@ searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$
 lbl_80044994:
 /* 80044994 000418D4  80 9D 00 14 */	lwz r4, 0x14(r29)
 /* 80044998 000418D8  38 61 00 54 */	addi r3, r1, 0x54
-/* 8004499C 000418DC  4B FE F9 C9 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 8004499C 000418DC  4B FE F9 C9 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 800449A0 000418E0  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 800449A4 000418E4  3B BD 00 14 */	addi r29, r29, 0x14
 /* 800449A8 000418E8  90 01 00 50 */	stw r0, 0x50(r1)
@@ -89,8 +89,8 @@ lbl_80044A2C:
 /* 80044A40 00041980  38 21 00 88 */	addi r1, r1, 0x88
 /* 80044A44 00041984  4E 80 00 20 */	blr 
 
-.global loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
-loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv:
+.global "loadAfter__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv"
+"loadAfter__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv":
 /* 80044A48 00041988  7C 08 02 A6 */	mflr r0
 /* 80044A4C 0004198C  90 01 00 04 */	stw r0, 4(r1)
 /* 80044A50 00041990  94 21 FF 88 */	stwu r1, -0x78(r1)
@@ -99,7 +99,7 @@ loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef
 /* 80044A5C 0004199C  4B FF FE 51 */	bl loadAfter__Q26JDrama8TNameRefFv
 /* 80044A60 000419A0  80 9F 00 14 */	lwz r4, 0x14(r31)
 /* 80044A64 000419A4  38 61 00 4C */	addi r3, r1, 0x4c
-/* 80044A68 000419A8  4B FE F8 FD */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044A68 000419A8  4B FE F8 FD */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044A6C 000419AC  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 80044A70 000419B0  3B FF 00 14 */	addi r31, r31, 0x14
 /* 80044A74 000419B4  90 01 00 48 */	stw r0, 0x48(r1)
@@ -137,8 +137,8 @@ lbl_80044AAC:
 /* 80044AEC 00041A2C  7C 08 03 A6 */	mtlr r0
 /* 80044AF0 00041A30  4E 80 00 20 */	blr 
 
-.global load__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
-load__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream:
+.global "load__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FR20JSUMemoryInputStream"
+"load__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FR20JSUMemoryInputStream":
 /* 80044AF4 00041A34  7C 08 02 A6 */	mflr r0
 /* 80044AF8 00041A38  90 01 00 04 */	stw r0, 4(r1)
 /* 80044AFC 00041A3C  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -185,12 +185,12 @@ lbl_80044B58:
 /* 80044B9C 00041ADC  41 82 00 60 */	beq lbl_80044BFC
 /* 80044BA0 00041AE0  38 61 00 2C */	addi r3, r1, 0x2c
 /* 80044BA4 00041AE4  38 9D 00 08 */	addi r4, r29, 8
-/* 80044BA8 00041AE8  4B FE F7 BD */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044BA8 00041AE8  4B FE F7 BD */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044BAC 00041AEC  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80044BB0 00041AF0  38 61 00 48 */	addi r3, r1, 0x48
 /* 80044BB4 00041AF4  38 81 00 28 */	addi r4, r1, 0x28
 /* 80044BB8 00041AF8  90 01 00 28 */	stw r0, 0x28(r1)
-/* 80044BBC 00041AFC  48 00 00 75 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 80044BBC 00041AFC  48 00 00 75 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 80044BC0 00041B00  80 01 00 48 */	lwz r0, 0x48(r1)
 /* 80044BC4 00041B04  38 9D 00 00 */	addi r4, r29, 0
 /* 80044BC8 00041B08  38 BB 00 00 */	addi r5, r27, 0
@@ -199,7 +199,7 @@ lbl_80044B58:
 /* 80044BD4 00041B14  38 C1 00 54 */	addi r6, r1, 0x54
 /* 80044BD8 00041B18  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 80044BDC 00041B1C  90 01 00 3C */	stw r0, 0x3c(r1)
-/* 80044BE0 00041B20  4B FE F7 8D */	bl insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv
+/* 80044BE0 00041B20  4B FE F7 8D */	bl "insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv"
 /* 80044BE4 00041B24  80 61 00 54 */	lwz r3, 0x54(r1)
 /* 80044BE8 00041B28  7F C4 F3 78 */	mr r4, r30
 /* 80044BEC 00041B2C  81 83 00 00 */	lwz r12, 0(r3)
@@ -222,14 +222,14 @@ lbl_80044C14:
 /* 80044C28 00041B68  7C 08 03 A6 */	mtlr r0
 /* 80044C2C 00041B6C  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
-__ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator:
+.global "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
+"__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator":
 /* 80044C30 00041B70  80 04 00 00 */	lwz r0, 0(r4)
 /* 80044C34 00041B74  90 03 00 00 */	stw r0, 0(r3)
 /* 80044C38 00041B78  4E 80 00 20 */	blr 
 
-.global perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
-perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics:
+.global "perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
+"perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics":
 /* 80044C3C 00041B7C  7C 08 02 A6 */	mflr r0
 /* 80044C40 00041B80  90 01 00 04 */	stw r0, 4(r1)
 /* 80044C44 00041B84  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -241,7 +241,7 @@ perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$
 /* 80044C5C 00041B9C  3B A4 00 00 */	addi r29, r4, 0
 /* 80044C60 00041BA0  80 83 00 18 */	lwz r4, 0x18(r3)
 /* 80044C64 00041BA4  38 61 00 54 */	addi r3, r1, 0x54
-/* 80044C68 00041BA8  4B FE F6 FD */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044C68 00041BA8  4B FE F6 FD */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044C6C 00041BAC  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 80044C70 00041BB0  3B FF 00 18 */	addi r31, r31, 0x18
 /* 80044C74 00041BB4  90 01 00 50 */	stw r0, 0x50(r1)
@@ -280,8 +280,8 @@ lbl_80044CA8:
 /* 80044CF0 00041C30  38 21 00 88 */	addi r1, r1, 0x88
 /* 80044CF4 00041C34  4E 80 00 20 */	blr 
 
-.global searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc
-searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc:
+.global "searchF__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUsPCc"
+"searchF__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUsPCc":
 /* 80044CF8 00041C38  7C 08 02 A6 */	mflr r0
 /* 80044CFC 00041C3C  90 01 00 04 */	stw r0, 4(r1)
 /* 80044D00 00041C40  94 21 FF 78 */	stwu r1, -0x88(r1)
@@ -298,7 +298,7 @@ searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$
 lbl_80044D2C:
 /* 80044D2C 00041C6C  80 9D 00 18 */	lwz r4, 0x18(r29)
 /* 80044D30 00041C70  38 61 00 54 */	addi r3, r1, 0x54
-/* 80044D34 00041C74  4B FE F6 31 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044D34 00041C74  4B FE F6 31 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044D38 00041C78  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 80044D3C 00041C7C  3B BD 00 18 */	addi r29, r29, 0x18
 /* 80044D40 00041C80  90 01 00 50 */	stw r0, 0x50(r1)
@@ -346,8 +346,8 @@ lbl_80044DC4:
 /* 80044DD8 00041D18  38 21 00 88 */	addi r1, r1, 0x88
 /* 80044DDC 00041D1C  4E 80 00 20 */	blr 
 
-.global loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv:
+.global "loadAfter__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+"loadAfter__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv":
 /* 80044DE0 00041D20  7C 08 02 A6 */	mflr r0
 /* 80044DE4 00041D24  90 01 00 04 */	stw r0, 4(r1)
 /* 80044DE8 00041D28  94 21 FF 88 */	stwu r1, -0x78(r1)
@@ -359,7 +359,7 @@ loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj
 /* 80044E00 00041D40  4E 80 00 21 */	blrl 
 /* 80044E04 00041D44  80 9F 00 18 */	lwz r4, 0x18(r31)
 /* 80044E08 00041D48  38 61 00 4C */	addi r3, r1, 0x4c
-/* 80044E0C 00041D4C  4B FE F5 59 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044E0C 00041D4C  4B FE F5 59 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044E10 00041D50  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 80044E14 00041D54  3B FF 00 18 */	addi r31, r31, 0x18
 /* 80044E18 00041D58  90 01 00 48 */	stw r0, 0x48(r1)
@@ -397,8 +397,8 @@ lbl_80044E50:
 /* 80044E90 00041DD0  7C 08 03 A6 */	mtlr r0
 /* 80044E94 00041DD4  4E 80 00 20 */	blr 
 
-.global load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
-load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream:
+.global "load__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
+"load__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream":
 /* 80044E98 00041DD8  7C 08 02 A6 */	mflr r0
 /* 80044E9C 00041DDC  90 01 00 04 */	stw r0, 4(r1)
 /* 80044EA0 00041DE0  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -448,12 +448,12 @@ lbl_80044F08:
 /* 80044F4C 00041E8C  41 82 00 60 */	beq lbl_80044FAC
 /* 80044F50 00041E90  38 61 00 2C */	addi r3, r1, 0x2c
 /* 80044F54 00041E94  38 9D 00 08 */	addi r4, r29, 8
-/* 80044F58 00041E98  4B FE F4 0D */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 80044F58 00041E98  4B FE F4 0D */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 80044F5C 00041E9C  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 80044F60 00041EA0  38 61 00 48 */	addi r3, r1, 0x48
 /* 80044F64 00041EA4  38 81 00 28 */	addi r4, r1, 0x28
 /* 80044F68 00041EA8  90 01 00 28 */	stw r0, 0x28(r1)
-/* 80044F6C 00041EAC  4B FF FC C5 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 80044F6C 00041EAC  4B FF FC C5 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 80044F70 00041EB0  80 01 00 48 */	lwz r0, 0x48(r1)
 /* 80044F74 00041EB4  38 9D 00 00 */	addi r4, r29, 0
 /* 80044F78 00041EB8  38 BB 00 00 */	addi r5, r27, 0
@@ -462,7 +462,7 @@ lbl_80044F08:
 /* 80044F84 00041EC4  38 C1 00 54 */	addi r6, r1, 0x54
 /* 80044F88 00041EC8  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 80044F8C 00041ECC  90 01 00 3C */	stw r0, 0x3c(r1)
-/* 80044F90 00041ED0  4B FE F3 DD */	bl insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv
+/* 80044F90 00041ED0  4B FE F3 DD */	bl "insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv"
 /* 80044F94 00041ED4  80 61 00 54 */	lwz r3, 0x54(r1)
 /* 80044F98 00041ED8  7F C4 F3 78 */	mr r4, r30
 /* 80044F9C 00041EDC  81 83 00 00 */	lwz r12, 0(r3)
@@ -551,11 +551,11 @@ lbl_80045084:
 .global getNameRef__Q26JDrama11TNameRefGenCFPCc
 getNameRef__Q26JDrama11TNameRefGenCFPCc:
 /* 800450CC 0004200C  7C 08 02 A6 */	mflr r0
-/* 800450D0 00042010  3C 60 80 37 */	lis r3, $$2855@ha
+/* 800450D0 00042010  3C 60 80 37 */	lis r3, "@855"@ha
 /* 800450D4 00042014  90 01 00 04 */	stw r0, 4(r1)
 /* 800450D8 00042018  94 21 FF 88 */	stwu r1, -0x78(r1)
 /* 800450DC 0004201C  93 E1 00 74 */	stw r31, 0x74(r1)
-/* 800450E0 00042020  3B E3 0F 50 */	addi r31, r3, $$2855@l
+/* 800450E0 00042020  3B E3 0F 50 */	addi r31, r3, "@855"@l
 /* 800450E4 00042024  93 C1 00 70 */	stw r30, 0x70(r1)
 /* 800450E8 00042028  3B C4 00 00 */	addi r30, r4, 0
 /* 800450EC 0004202C  38 7E 00 00 */	addi r3, r30, 0
@@ -578,13 +578,13 @@ getNameRef__Q26JDrama11TNameRefGenCFPCc:
 /* 80045130 00042070  90 03 00 00 */	stw r0, 0(r3)
 /* 80045134 00042074  38 63 00 0C */	addi r3, r3, 0xc
 /* 80045138 00042078  38 80 00 00 */	li r4, 0
-/* 8004513C 0004207C  4B FF B9 C5 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 8004513C 0004207C  4B FF B9 C5 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80045140 00042080  83 E1 00 54 */	lwz r31, 0x54(r1)
 /* 80045144 00042084  38 81 00 30 */	addi r4, r1, 0x30
 /* 80045148 00042088  38 7F 00 10 */	addi r3, r31, 0x10
-/* 8004514C 0004208C  4B FE F0 B1 */	bl __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-/* 80045150 00042090  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 80045154 00042094  38 03 A5 40 */	addi r0, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 8004514C 0004208C  4B FE F0 B1 */	bl "__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+/* 80045150 00042090  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 80045154 00042094  38 03 A5 40 */	addi r0, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 80045158 00042098  90 1F 00 00 */	stw r0, 0(r31)
 lbl_8004515C:
 /* 8004515C 0004209C  7F C3 F3 78 */	mr r3, r30
@@ -616,9 +616,9 @@ lbl_800451A0:
 /* 800451B8 000420F8  4B FC 76 F9 */	bl __nw__FUl
 /* 800451BC 000420FC  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800451C0 00042100  41 82 00 58 */	beq lbl_80045218
-/* 800451C4 00042104  C0 22 83 B8 */	lfs f1, $$21466@sda21(r2)
+/* 800451C4 00042104  C0 22 83 B8 */	lfs f1, "@1466"@sda21(r2)
 /* 800451C8 00042108  7F C3 F3 78 */	mr r3, r30
-/* 800451CC 0004210C  C0 42 83 BC */	lfs f2, $$21467@sda21(r2)
+/* 800451CC 0004210C  C0 42 83 BC */	lfs f2, "@1467"@sda21(r2)
 /* 800451D0 00042110  38 9F 00 50 */	addi r4, r31, 0x50
 /* 800451D4 00042114  48 00 07 15 */	bl __ct__Q26JDrama7TCameraFffPCc
 /* 800451D8 00042118  3C 60 80 3B */	lis r3, __vt__Q26JDrama12TPolarCamera@ha
@@ -626,16 +626,16 @@ lbl_800451A0:
 /* 800451E0 00042120  90 7E 00 00 */	stw r3, 0(r30)
 /* 800451E4 00042124  38 03 00 24 */	addi r0, r3, 0x24
 /* 800451E8 00042128  90 1E 00 20 */	stw r0, 0x20(r30)
-/* 800451EC 0004212C  C0 02 83 C0 */	lfs f0, $$21469@sda21(r2)
+/* 800451EC 0004212C  C0 02 83 C0 */	lfs f0, "@1469"@sda21(r2)
 /* 800451F0 00042130  D0 1E 00 30 */	stfs f0, 0x30(r30)
-/* 800451F4 00042134  C0 02 83 C4 */	lfs f0, $$21470@sda21(r2)
+/* 800451F4 00042134  C0 02 83 C4 */	lfs f0, "@1470"@sda21(r2)
 /* 800451F8 00042138  D0 1E 00 34 */	stfs f0, 0x34(r30)
-/* 800451FC 0004213C  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
+/* 800451FC 0004213C  C0 22 83 C8 */	lfs f1, "@1471"@sda21(r2)
 /* 80045200 00042140  D0 3E 00 38 */	stfs f1, 0x38(r30)
 /* 80045204 00042144  FC 00 08 90 */	fmr f0, f1
 /* 80045208 00042148  D0 3E 00 3C */	stfs f1, 0x3c(r30)
 /* 8004520C 0004214C  D0 1E 00 40 */	stfs f0, 0x40(r30)
-/* 80045210 00042150  C0 02 83 CC */	lfs f0, $$21472@sda21(r2)
+/* 80045210 00042150  C0 02 83 CC */	lfs f0, "@1472"@sda21(r2)
 /* 80045214 00042154  D0 1E 00 44 */	stfs f0, 0x44(r30)
 lbl_80045218:
 /* 80045218 00042158  7F C3 F3 78 */	mr r3, r30
@@ -693,7 +693,7 @@ lbl_800452D4:
 /* 800452D8 00042218  48 00 04 24 */	b lbl_800456FC
 lbl_800452DC:
 /* 800452DC 0004221C  38 7E 00 00 */	addi r3, r30, 0
-/* 800452E0 00042220  38 82 83 D0 */	addi r4, r2, $$21477@sda21
+/* 800452E0 00042220  38 82 83 D0 */	addi r4, r2, "@1477"@sda21
 /* 800452E4 00042224  48 04 09 79 */	bl strcmp
 /* 800452E8 00042228  2C 03 00 00 */	cmpwi r3, 0
 /* 800452EC 0004222C  40 82 00 E0 */	bne lbl_800453CC
@@ -702,7 +702,7 @@ lbl_800452DC:
 /* 800452F8 00042238  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800452FC 0004223C  41 82 00 C8 */	beq lbl_800453C4
 /* 80045300 00042240  93 C1 00 2C */	stw r30, 0x2c(r1)
-/* 80045304 00042244  38 82 83 D8 */	addi r4, r2, $$21478@sda21
+/* 80045304 00042244  38 82 83 D8 */	addi r4, r2, "@1478"@sda21
 /* 80045308 00042248  93 C1 00 48 */	stw r30, 0x48(r1)
 /* 8004530C 0004224C  80 61 00 2C */	lwz r3, 0x2c(r1)
 /* 80045310 00042250  4B FF EB 5D */	bl __ct__Q26JDrama8TViewObjFPCc
@@ -711,10 +711,10 @@ lbl_800452DC:
 /* 8004531C 0004225C  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 80045320 00042260  90 1F 00 00 */	stw r0, 0(r31)
 /* 80045324 00042264  38 7F 00 10 */	addi r3, r31, 0x10
-/* 80045328 00042268  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
+/* 80045328 00042268  C0 22 83 C8 */	lfs f1, "@1471"@sda21(r2)
 /* 8004532C 0004226C  FC 40 08 90 */	fmr f2, f1
 /* 80045330 00042270  FC 60 08 90 */	fmr f3, f1
-/* 80045334 00042274  48 00 04 D9 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+/* 80045334 00042274  48 00 04 D9 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff"
 /* 80045338 00042278  38 00 00 00 */	li r0, 0
 /* 8004533C 0004227C  B0 1F 00 1C */	sth r0, 0x1c(r31)
 /* 80045340 00042280  3C C0 80 3B */	lis r6, __vt__Q26JStage7TObject@ha
@@ -732,8 +732,8 @@ lbl_800452DC:
 /* 80045370 000422B0  38 7F 00 24 */	addi r3, r31, 0x24
 /* 80045374 000422B4  90 9F 00 20 */	stw r4, 0x20(r31)
 /* 80045378 000422B8  90 1F 00 64 */	stw r0, 0x64(r31)
-/* 8004537C 000422BC  C0 42 83 C8 */	lfs f2, $$21471@sda21(r2)
-/* 80045380 000422C0  C0 22 83 E0 */	lfs f1, $$21479@sda21(r2)
+/* 8004537C 000422BC  C0 42 83 C8 */	lfs f2, "@1471"@sda21(r2)
+/* 80045380 000422C0  C0 22 83 E0 */	lfs f1, "@1479"@sda21(r2)
 /* 80045384 000422C4  FC 60 10 90 */	fmr f3, f2
 /* 80045388 000422C8  FC 80 08 90 */	fmr f4, f1
 /* 8004538C 000422CC  FC A0 10 90 */	fmr f5, f2
@@ -797,7 +797,7 @@ lbl_80045420:
 /* 80045464 000423A4  90 03 00 00 */	stw r0, 0(r3)
 /* 80045468 000423A8  38 63 00 0C */	addi r3, r3, 0xc
 /* 8004546C 000423AC  38 80 00 00 */	li r4, 0
-/* 80045470 000423B0  4B FF B6 91 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80045470 000423B0  4B FF B6 91 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80045474 000423B4  3C 80 80 3B */	lis r4, __vt__Q26JDrama9TLightAry@ha
 /* 80045478 000423B8  80 61 00 44 */	lwz r3, 0x44(r1)
 /* 8004547C 000423BC  38 04 A7 A0 */	addi r0, r4, __vt__Q26JDrama9TLightAry@l
@@ -831,7 +831,7 @@ lbl_800454A0:
 /* 800454E4 00042424  90 03 00 00 */	stw r0, 0(r3)
 /* 800454E8 00042428  38 63 00 0C */	addi r3, r3, 0xc
 /* 800454EC 0004242C  38 80 00 00 */	li r4, 0
-/* 800454F0 00042430  4B FF B6 11 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 800454F0 00042430  4B FF B6 11 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 800454F4 00042434  3C 80 80 3B */	lis r4, __vt__Q26JStage7TObject@ha
 /* 800454F8 00042438  80 A1 00 40 */	lwz r5, 0x40(r1)
 /* 800454FC 0004243C  38 04 CE 98 */	addi r0, r4, __vt__Q26JStage7TObject@l
@@ -855,7 +855,7 @@ lbl_8004553C:
 /* 80045540 00042480  48 00 01 BC */	b lbl_800456FC
 lbl_80045544:
 /* 80045544 00042484  38 7E 00 00 */	addi r3, r30, 0
-/* 80045548 00042488  38 82 83 E4 */	addi r4, r2, $$21486@sda21
+/* 80045548 00042488  38 82 83 E4 */	addi r4, r2, "@1486"@sda21
 /* 8004554C 0004248C  48 04 07 11 */	bl strcmp
 /* 80045550 00042490  2C 03 00 00 */	cmpwi r3, 0
 /* 80045554 00042494  40 82 00 70 */	bne lbl_800455C4
@@ -874,7 +874,7 @@ lbl_80045544:
 /* 80045588 000424C8  90 03 00 00 */	stw r0, 0(r3)
 /* 8004558C 000424CC  38 63 00 0C */	addi r3, r3, 0xc
 /* 80045590 000424D0  38 80 00 00 */	li r4, 0
-/* 80045594 000424D4  4B FF B5 6D */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80045594 000424D4  4B FF B5 6D */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80045598 000424D8  3C 80 80 3B */	lis r4, __vt__Q26JDrama7TAmbAry@ha
 /* 8004559C 000424DC  80 61 00 3C */	lwz r3, 0x3c(r1)
 /* 800455A0 000424E0  38 04 A6 7C */	addi r0, r4, __vt__Q26JDrama7TAmbAry@l
@@ -908,9 +908,9 @@ lbl_800455C4:
 /* 80045608 00042548  B0 7F 00 08 */	sth r3, 8(r31)
 /* 8004560C 0004254C  38 7F 00 0C */	addi r3, r31, 0xc
 /* 80045610 00042550  38 81 00 18 */	addi r4, r1, 0x18
-/* 80045614 00042554  4B FE EB E9 */	bl __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-/* 80045618 00042558  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1@ha
-/* 8004561C 0004255C  38 03 A8 80 */	addi r0, r3, __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1@l
+/* 80045614 00042554  4B FE EB E9 */	bl "__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+/* 80045618 00042558  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"@ha
+/* 8004561C 0004255C  38 03 A8 80 */	addi r0, r3, "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"@l
 /* 80045620 00042560  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80045624:
 /* 80045624 00042564  7F C3 F3 78 */	mr r3, r30
@@ -945,7 +945,7 @@ lbl_80045660:
 /* 8004568C 000425CC  38 A1 00 68 */	addi r5, r1, 0x68
 /* 80045690 000425D0  38 7E 00 00 */	addi r3, r30, 0
 /* 80045694 000425D4  38 9F 01 20 */	addi r4, r31, 0x120
-/* 80045698 000425D8  4B FF D4 21 */	bl __ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT$$0Us$$1
+/* 80045698 000425D8  4B FF D4 21 */	bl "__ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT<Us>"
 lbl_8004569C:
 /* 8004569C 000425DC  7F C3 F3 78 */	mr r3, r30
 /* 800456A0 000425E0  48 00 00 5C */	b lbl_800456FC
@@ -1008,7 +1008,7 @@ __ct__Q26JDrama6TLightFPCc:
 /* 80045768 000426A8  90 1F 00 00 */	stw r0, 0(r31)
 /* 8004576C 000426AC  3C 60 80 3B */	lis r3, __vt__Q26JDrama6TLight@ha
 /* 80045770 000426B0  38 A3 A7 C4 */	addi r5, r3, __vt__Q26JDrama6TLight@l
-/* 80045774 000426B4  C0 62 83 C8 */	lfs f3, $$21471@sda21(r2)
+/* 80045774 000426B4  C0 62 83 C8 */	lfs f3, "@1471"@sda21(r2)
 /* 80045778 000426B8  38 E6 CE 98 */	addi r7, r6, __vt__Q26JStage7TObject@l
 /* 8004577C 000426BC  3C 80 80 3B */	lis r4, __vt__Q26JStage6TLight@ha
 /* 80045780 000426C0  D0 7F 00 10 */	stfs f3, 0x10(r31)
@@ -1027,7 +1027,7 @@ __ct__Q26JDrama6TLightFPCc:
 /* 800457B4 000426F4  90 BF 00 00 */	stw r5, 0(r31)
 /* 800457B8 000426F8  90 9F 00 20 */	stw r4, 0x20(r31)
 /* 800457BC 000426FC  90 1F 00 64 */	stw r0, 0x64(r31)
-/* 800457C0 00042700  C0 22 83 E0 */	lfs f1, $$21479@sda21(r2)
+/* 800457C0 00042700  C0 22 83 E0 */	lfs f1, "@1479"@sda21(r2)
 /* 800457C4 00042704  FC 80 08 90 */	fmr f4, f1
 /* 800457C8 00042708  48 06 41 7D */	bl GXInitLightAttn
 /* 800457CC 0004270C  38 00 00 FF */	li r0, 0xff
@@ -1047,7 +1047,7 @@ __ct__Q26JDrama6TLightFPCc:
 /* 80045804 00042744  7C 08 03 A6 */	mtlr r0
 /* 80045808 00042748  4E 80 00 20 */	blr 
 
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
+"set<f>__Q29JGeometry8TVec3<f>Ffff":
 /* 8004580C 0004274C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80045810 00042750  D0 43 00 04 */	stfs f2, 4(r3)
 /* 80045814 00042754  D0 63 00 08 */	stfs f3, 8(r3)
@@ -1078,7 +1078,7 @@ __ct__Q26JDrama6TActorFPCc:
 /* 8004586C 000427AC  90 1F 00 00 */	stw r0, 0(r31)
 /* 80045870 000427B0  3C A0 80 3B */	lis r5, __vt__Q26JStage6TActor@ha
 /* 80045874 000427B4  3C 60 80 3B */	lis r3, __vt__Q26JDrama6TActor@ha
-/* 80045878 000427B8  C0 22 83 C8 */	lfs f1, $$21471@sda21(r2)
+/* 80045878 000427B8  C0 22 83 C8 */	lfs f1, "@1471"@sda21(r2)
 /* 8004587C 000427BC  38 83 A0 20 */	addi r4, r3, __vt__Q26JDrama6TActor@l
 /* 80045880 000427C0  38 C6 CE 98 */	addi r6, r6, __vt__Q26JStage7TObject@l
 /* 80045884 000427C4  D0 3F 00 10 */	stfs f1, 0x10(r31)
@@ -1092,7 +1092,7 @@ __ct__Q26JDrama6TActorFPCc:
 /* 800458A4 000427E4  90 BF 00 20 */	stw r5, 0x20(r31)
 /* 800458A8 000427E8  90 9F 00 00 */	stw r4, 0(r31)
 /* 800458AC 000427EC  90 1F 00 20 */	stw r0, 0x20(r31)
-/* 800458B0 000427F0  C0 02 83 E0 */	lfs f0, $$21479@sda21(r2)
+/* 800458B0 000427F0  C0 02 83 E0 */	lfs f0, "@1479"@sda21(r2)
 /* 800458B4 000427F4  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 800458B8 000427F8  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 800458BC 000427FC  D0 1F 00 2C */	stfs f0, 0x2c(r31)
@@ -1136,7 +1136,7 @@ __ct__Q26JDrama7TCameraFffPCc:
 /* 80045948 00042888  90 1F 00 00 */	stw r0, 0(r31)
 /* 8004594C 0004288C  3C A0 80 3B */	lis r5, __vt__Q26JStage7TCamera@ha
 /* 80045950 00042890  3C 60 80 3B */	lis r3, __vt__Q26JDrama7TCamera@ha
-/* 80045954 00042894  C0 02 83 C8 */	lfs f0, $$21471@sda21(r2)
+/* 80045954 00042894  C0 02 83 C8 */	lfs f0, "@1471"@sda21(r2)
 /* 80045958 00042898  38 83 A3 8C */	addi r4, r3, __vt__Q26JDrama7TCamera@l
 /* 8004595C 0004289C  38 C6 CE 98 */	addi r6, r6, __vt__Q26JStage7TObject@l
 /* 80045960 000428A0  D0 1F 00 10 */	stfs f0, 0x10(r31)
@@ -1161,8 +1161,8 @@ __ct__Q26JDrama7TCameraFffPCc:
 /* 800459AC 000428EC  38 21 00 38 */	addi r1, r1, 0x38
 /* 800459B0 000428F0  4E 80 00 20 */	blr 
 
-.global __dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
-__dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv:
+.global "__dt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv"
+"__dt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv":
 /* 800459B4 000428F4  7C 08 02 A6 */	mflr r0
 /* 800459B8 000428F8  90 01 00 04 */	stw r0, 4(r1)
 /* 800459BC 000428FC  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -1171,8 +1171,8 @@ __dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
 /* 800459C8 00042908  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800459CC 0004290C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800459D0 00042910  41 82 00 40 */	beq lbl_80045A10
-/* 800459D4 00042914  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1@ha
-/* 800459D8 00042918  38 63 A8 80 */	addi r3, r3, __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1@l
+/* 800459D4 00042914  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"@ha
+/* 800459D8 00042918  38 63 A8 80 */	addi r3, r3, "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"@l
 /* 800459DC 0004291C  34 1E 00 0C */	addic. r0, r30, 0xc
 /* 800459E0 00042920  90 7E 00 00 */	stw r3, 0(r30)
 /* 800459E4 00042924  41 82 00 10 */	beq lbl_800459F4
@@ -1198,70 +1198,70 @@ lbl_80045A10:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2855:
+"@855":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21461:
+"@1461":
 	.incbin "baserom.dol", 0x36DF5C, 0xC
-$$21462:
+"@1462":
 	.incbin "baserom.dol", 0x36DF68, 0x14
-$$21463:
+"@1463":
 	.incbin "baserom.dol", 0x36DF7C, 0xC
-$$21464:
+"@1464":
 	.incbin "baserom.dol", 0x36DF88, 0xC
-$$21465:
+"@1465":
 	.incbin "baserom.dol", 0x36DF94, 0xC
-$$21468:
+"@1468":
 	.incbin "baserom.dol", 0x36DFA0, 0x10
-$$21473:
+"@1473":
 	.incbin "baserom.dol", 0x36DFB0, 0xC
-$$21474:
+"@1474":
 	.incbin "baserom.dol", 0x36DFBC, 0xC
-$$21475:
+"@1475":
 	.incbin "baserom.dol", 0x36DFC8, 0xC
-$$21476:
+"@1476":
 	.incbin "baserom.dol", 0x36DFD4, 0x10
-$$21480:
+"@1480":
 	.incbin "baserom.dol", 0x36DFE4, 0xC
-$$21481:
+"@1481":
 	.incbin "baserom.dol", 0x36DFF0, 0xC
-$$21482:
+"@1482":
 	.incbin "baserom.dol", 0x36DFFC, 0xC
-$$21483:
+"@1483":
 	.incbin "baserom.dol", 0x36E008, 0xC
-$$21484:
+"@1484":
 	.incbin "baserom.dol", 0x36E014, 0xC
-$$21485:
+"@1485":
 	.incbin "baserom.dol", 0x36E020, 0xC
-$$21487:
+"@1487":
 	.incbin "baserom.dol", 0x36E02C, 0xC
-$$21488:
+"@1488":
 	.incbin "baserom.dol", 0x36E038, 0xC
-$$21489:
+"@1489":
 	.incbin "baserom.dol", 0x36E044, 0x14
-$$21490:
+"@1490":
 	.incbin "baserom.dol", 0x36E058, 0xC
-$$21491:
+"@1491":
 	.incbin "baserom.dol", 0x36E064, 0xC
-$$21492:
+"@1492":
 	.incbin "baserom.dol", 0x36E070, 0x10
-$$21493:
+"@1493":
 	.incbin "baserom.dol", 0x36E080, 0xC
-$$21494:
+"@1494":
 	.incbin "baserom.dol", 0x36E08C, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-.global __vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1
-__vt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1:
+.global "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"
+"__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>":
   .4byte 0
   .4byte 0
-  .4byte __dt__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
+  .4byte "__dt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv"
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte "load__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1Fv
-  .4byte searchF__Q26JDrama55TNameRefPtrListT$$0Q26JDrama8TNameRef$$4Q26JDrama8TNameRef$$1FUsPCc
+  .4byte "loadAfter__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>Fv"
+  .4byte "searchF__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>FUsPCc"
 .global __vt__Q26JDrama11TNameRefGen
 __vt__Q26JDrama11TNameRefGen:
   .4byte 0
@@ -1271,25 +1271,25 @@ __vt__Q26JDrama11TNameRefGen:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21466:
+"@1466":
 	.incbin "baserom.dol", 0x3E40B8, 0x4
-$$21467:
+"@1467":
 	.incbin "baserom.dol", 0x3E40BC, 0x4
-$$21469:
+"@1469":
 	.incbin "baserom.dol", 0x3E40C0, 0x4
-$$21470:
+"@1470":
 	.incbin "baserom.dol", 0x3E40C4, 0x4
-$$21471:
+"@1471":
   .4byte 0
-$$21472:
+"@1472":
 	.incbin "baserom.dol", 0x3E40CC, 0x4
-$$21477:
+"@1477":
 	.incbin "baserom.dol", 0x3E40D0, 0x8
-$$21478:
+"@1478":
 	.incbin "baserom.dol", 0x3E40D8, 0x8
-$$21479:
+"@1479":
 	.incbin "baserom.dol", 0x3E40E0, 0x4
-$$21486:
+"@1486":
 	.incbin "baserom.dol", 0x3E40E4, 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

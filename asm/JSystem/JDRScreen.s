@@ -62,7 +62,7 @@ __ct__Q26JDrama7TScreenFRCQ26JDrama5TRectPCc:
 /* 80045FBC 00042EFC  90 61 00 08 */	stw r3, 8(r1)
 /* 80045FC0 00042F00  B0 01 00 18 */	sth r0, 0x18(r1)
 /* 80045FC4 00042F04  80 61 00 08 */	lwz r3, 8(r1)
-/* 80045FC8 00042F08  48 00 0E 6D */	bl __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc
+/* 80045FC8 00042F08  48 00 0E 6D */	bl "__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT<Us>PCc"
 /* 80045FCC 00042F0C  3C 80 80 3B */	lis r4, __vt__Q26JDrama7TScreen@ha
 /* 80045FD0 00042F10  80 61 00 08 */	lwz r3, 8(r1)
 /* 80045FD4 00042F14  38 04 A8 D8 */	addi r0, r4, __vt__Q26JDrama7TScreen@l
@@ -71,8 +71,8 @@ __ct__Q26JDrama7TScreenFRCQ26JDrama5TRectPCc:
 /* 80045FE0 00042F20  4B FC 68 D1 */	bl __nw__FUl
 /* 80045FE4 00042F24  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80045FE8 00042F28  41 82 00 18 */	beq lbl_80046000
-/* 80045FEC 00042F2C  3C 60 80 37 */	lis r3, $$2293@ha
-/* 80045FF0 00042F30  38 A3 10 E0 */	addi r5, r3, $$2293@l
+/* 80045FEC 00042F2C  3C 60 80 37 */	lis r3, "@293"@ha
+/* 80045FF0 00042F30  38 A3 10 E0 */	addi r5, r3, "@293"@l
 /* 80045FF4 00042F34  38 7E 00 00 */	addi r3, r30, 0
 /* 80045FF8 00042F38  38 9F 00 00 */	addi r4, r31, 0
 /* 80045FFC 00042F3C  48 00 0F D9 */	bl __ct__Q26JDrama9TViewportFRCQ26JDrama5TRectPCc
@@ -84,14 +84,14 @@ lbl_80046000:
 /* 80046010 00042F50  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80046014 00042F54  41 82 00 34 */	beq lbl_80046048
 /* 80046018 00042F58  38 00 00 00 */	li r0, 0
-/* 8004601C 00042F5C  3C 80 80 37 */	lis r4, $$2294@ha
+/* 8004601C 00042F5C  3C 80 80 37 */	lis r4, "@294"@ha
 /* 80046020 00042F60  B0 01 00 14 */	sth r0, 0x14(r1)
-/* 80046024 00042F64  38 E4 10 EC */	addi r7, r4, $$2294@l
+/* 80046024 00042F64  38 E4 10 EC */	addi r7, r4, "@294"@l
 /* 80046028 00042F68  38 7E 00 00 */	addi r3, r30, 0
 /* 8004602C 00042F6C  38 C1 00 14 */	addi r6, r1, 0x14
 /* 80046030 00042F70  38 80 00 00 */	li r4, 0
 /* 80046034 00042F74  38 A0 00 00 */	li r5, 0
-/* 80046038 00042F78  48 00 0D FD */	bl __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc
+/* 80046038 00042F78  48 00 0D FD */	bl "__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT<Us>PCc"
 /* 8004603C 00042F7C  3C 60 80 3B */	lis r3, __vt__13TCamConnecter@ha
 /* 80046040 00042F80  38 03 A8 FC */	addi r0, r3, __vt__13TCamConnecter@l
 /* 80046044 00042F84  90 1E 00 00 */	stw r0, 0(r30)
@@ -195,9 +195,9 @@ lbl_8004616C:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2293:
+"@293":
 	.incbin "baserom.dol", 0x36E0E0, 0xC
-$$2294:
+"@294":
 	.incbin "baserom.dol", 0x36E0EC, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

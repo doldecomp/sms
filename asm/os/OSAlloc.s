@@ -244,9 +244,9 @@ OSDestroyHeap:
 .global OSCheckHeap
 OSCheckHeap:
 /* 8008D844 0008A784  7C 08 02 A6 */	mflr r0
-/* 8008D848 0008A788  3C 80 80 3B */	lis r4, $$2352@ha
+/* 8008D848 0008A788  3C 80 80 3B */	lis r4, "@352"@ha
 /* 8008D84C 0008A78C  90 01 00 04 */	stw r0, 4(r1)
-/* 8008D850 0008A790  38 C4 F2 80 */	addi r6, r4, $$2352@l
+/* 8008D850 0008A790  38 C4 F2 80 */	addi r6, r4, "@352"@l
 /* 8008D854 0008A794  38 00 00 00 */	li r0, 0
 /* 8008D858 0008A798  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8008D85C 0008A79C  38 80 00 00 */	li r4, 0
@@ -497,12 +497,12 @@ OSReferentSize:
 .global OSDumpHeap
 OSDumpHeap:
 /* 8008DBB0 0008AAF0  7C 08 02 A6 */	mflr r0
-/* 8008DBB4 0008AAF4  3C 80 80 3B */	lis r4, $$2352@ha
+/* 8008DBB4 0008AAF4  3C 80 80 3B */	lis r4, "@352"@ha
 /* 8008DBB8 0008AAF8  90 01 00 04 */	stw r0, 4(r1)
 /* 8008DBBC 0008AAFC  4C C6 31 82 */	crclr 6
 /* 8008DBC0 0008AB00  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8008DBC4 0008AB04  93 E1 00 1C */	stw r31, 0x1c(r1)
-/* 8008DBC8 0008AB08  3B E4 F2 80 */	addi r31, r4, $$2352@l
+/* 8008DBC8 0008AB08  3B E4 F2 80 */	addi r31, r4, "@352"@l
 /* 8008DBCC 0008AB0C  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 8008DBD0 0008AB10  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 8008DBD4 0008AB14  3B A3 00 00 */	addi r29, r3, 0
@@ -569,43 +569,43 @@ lbl_8008DC98:
 /* 8008DCB0 0008ABF0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2352:
+"@352":
 	.incbin "baserom.dol", 0x3AC280, 0x24
-$$2353:
+"@353":
 	.incbin "baserom.dol", 0x3AC2A4, 0x38
-$$2354:
+"@354":
 	.incbin "baserom.dol", 0x3AC2DC, 0x28
-$$2355:
+"@355":
 	.incbin "baserom.dol", 0x3AC304, 0x50
-$$2356:
+"@356":
 	.incbin "baserom.dol", 0x3AC354, 0x40
-$$2357:
+"@357":
 	.incbin "baserom.dol", 0x3AC394, 0x38
-$$2358:
+"@358":
 	.incbin "baserom.dol", 0x3AC3CC, 0x4C
-$$2359:
+"@359":
 	.incbin "baserom.dol", 0x3AC418, 0x34
-$$2360:
+"@360":
 	.incbin "baserom.dol", 0x3AC44C, 0x40
-$$2361:
+"@361":
 	.incbin "baserom.dol", 0x3AC48C, 0x3C
-$$2362:
+"@362":
 	.incbin "baserom.dol", 0x3AC4C8, 0x48
-$$2363:
+"@363":
 	.incbin "baserom.dol", 0x3AC510, 0x60
-$$2364:
+"@364":
 	.incbin "baserom.dol", 0x3AC570, 0x2C
-$$2383:
+"@383":
 	.incbin "baserom.dol", 0x3AC59C, 0x14
-$$2384:
+"@384":
 	.incbin "baserom.dol", 0x3AC5B0, 0x14
-$$2385:
+"@385":
 	.incbin "baserom.dol", 0x3AC5C4, 0x1C
-$$2386:
+"@386":
 	.incbin "baserom.dol", 0x3AC5E0, 0x14
-$$2387:
+"@387":
 	.incbin "baserom.dol", 0x3AC5F4, 0x10
-$$2388:
+"@388":
 	.incbin "baserom.dol", 0x3AC604, 0x14
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0

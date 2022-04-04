@@ -132,11 +132,11 @@ lbl_8009E974:
 .global __DSP_boot_task
 __DSP_boot_task:
 /* 8009E98C 0009B8CC  7C 08 02 A6 */	mflr r0
-/* 8009E990 0009B8D0  3C 80 80 3B */	lis r4, $$2264@ha
+/* 8009E990 0009B8D0  3C 80 80 3B */	lis r4, "@264"@ha
 /* 8009E994 0009B8D4  90 01 00 04 */	stw r0, 4(r1)
 /* 8009E998 0009B8D8  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8009E99C 0009B8DC  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 8009E9A0 0009B8E0  3B E4 12 40 */	addi r31, r4, $$2264@l
+/* 8009E9A0 0009B8E0  3B E4 12 40 */	addi r31, r4, "@264"@l
 /* 8009E9A4 0009B8E4  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8009E9A8 0009B8E8  3B C3 00 00 */	addi r30, r3, 0
 lbl_8009E9AC:
@@ -335,19 +335,19 @@ lbl_8009EC28:
 /* 8009EC48 0009BB88  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2264:
+"@264":
 	.incbin "baserom.dol", 0x3AE240, 0x20
-$$2265:
+"@265":
 	.incbin "baserom.dol", 0x3AE260, 0x30
-$$2266:
+"@266":
 	.incbin "baserom.dol", 0x3AE290, 0x30
-$$2267:
+"@267":
 	.incbin "baserom.dol", 0x3AE2C0, 0x30
-$$2268:
+"@268":
 	.incbin "baserom.dol", 0x3AE2F0, 0x30
-$$2269:
+"@269":
 	.incbin "baserom.dol", 0x3AE320, 0x30
-$$2292:
+"@292":
 	.incbin "baserom.dol", 0x3AE350, 0x30
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

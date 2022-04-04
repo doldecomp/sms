@@ -189,7 +189,7 @@ initSeqParameter__7JAIDataFP15JAISeqParameter:
 /* 8004DD88 0004ACC8  90 04 17 58 */	stw r0, 0x1758(r4)
 /* 8004DD8C 0004ACCC  38 00 00 00 */	li r0, 0
 /* 8004DD90 0004ACD0  38 C0 00 00 */	li r6, 0
-/* 8004DD94 0004ACD4  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
+/* 8004DD94 0004ACD4  C0 42 84 80 */	lfs f2, "@494"@sda21(r2)
 /* 8004DD98 0004ACD8  D0 44 00 08 */	stfs f2, 8(r4)
 /* 8004DD9C 0004ACDC  90 04 00 10 */	stw r0, 0x10(r4)
 /* 8004DDA0 0004ACE0  98 04 17 55 */	stb r0, 0x1755(r4)
@@ -207,8 +207,8 @@ initSeqParameter__7JAIDataFP15JAISeqParameter:
 /* 8004DDD0 0004AD10  90 04 17 84 */	stw r0, 0x1784(r4)
 /* 8004DDD4 0004AD14  90 04 17 88 */	stw r0, 0x1788(r4)
 /* 8004DDD8 0004AD18  90 04 17 8C */	stw r0, 0x178c(r4)
-/* 8004DDDC 0004AD1C  C0 22 84 84 */	lfs f1, $$2495@sda21(r2)
-/* 8004DDE0 0004AD20  C0 02 84 88 */	lfs f0, $$2496@sda21(r2)
+/* 8004DDDC 0004AD1C  C0 22 84 84 */	lfs f1, "@495"@sda21(r2)
+/* 8004DDE0 0004AD20  C0 02 84 88 */	lfs f0, "@496"@sda21(r2)
 /* 8004DDE4 0004AD24  48 00 00 D0 */	b lbl_8004DEB4
 lbl_8004DDE8:
 /* 8004DDE8 0004AD28  7C E4 32 14 */	add r7, r4, r6
@@ -266,7 +266,7 @@ lbl_8004DEB4:
 /* 8004DEB4 0004ADF4  80 0D 81 04 */	lwz r0, seqTrackMax__18JAIGlobalParameter@sda21(r13)
 /* 8004DEB8 0004ADF8  7C 1F 00 40 */	cmplw r31, r0
 /* 8004DEBC 0004ADFC  41 80 FF 2C */	blt lbl_8004DDE8
-/* 8004DEC0 0004AE00  C0 42 84 88 */	lfs f2, $$2496@sda21(r2)
+/* 8004DEC0 0004AE00  C0 42 84 88 */	lfs f2, "@496"@sda21(r2)
 /* 8004DEC4 0004AE04  38 C0 00 00 */	li r6, 0
 /* 8004DEC8 0004AE08  38 E0 00 00 */	li r7, 0
 /* 8004DECC 0004AE0C  D0 44 00 18 */	stfs f2, 0x18(r4)
@@ -302,8 +302,8 @@ lbl_8004DEB4:
 /* 8004DF44 0004AE84  90 C4 01 00 */	stw r6, 0x100(r4)
 /* 8004DF48 0004AE88  D0 44 01 08 */	stfs f2, 0x108(r4)
 /* 8004DF4C 0004AE8C  90 C4 01 10 */	stw r6, 0x110(r4)
-/* 8004DF50 0004AE90  C0 22 84 80 */	lfs f1, $$2494@sda21(r2)
-/* 8004DF54 0004AE94  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004DF50 0004AE90  C0 22 84 80 */	lfs f1, "@494"@sda21(r2)
+/* 8004DF54 0004AE94  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 /* 8004DF58 0004AE98  48 00 00 4C */	b lbl_8004DFA4
 lbl_8004DF5C:
 /* 8004DF5C 0004AE9C  7C A4 1A 14 */	add r5, r4, r3
@@ -337,14 +337,14 @@ lbl_8004DFA4:
 initSePara__7JAIDataFP14JAISeParameter:
 /* 8004DFC0 0004AF00  C0 2D 81 58 */	lfs f1, seDolbyCenterValue__18JAIGlobalParameter@sda21(r13)
 /* 8004DFC4 0004AF04  38 60 00 00 */	li r3, 0
-/* 8004DFC8 0004AF08  C0 02 84 8C */	lfs f0, $$2516@sda21(r2)
+/* 8004DFC8 0004AF08  C0 02 84 8C */	lfs f0, "@516"@sda21(r2)
 /* 8004DFCC 0004AF0C  38 00 00 02 */	li r0, 2
 /* 8004DFD0 0004AF10  7C 09 03 A6 */	mtctr r0
 /* 8004DFD4 0004AF14  EC 61 00 24 */	fdivs f3, f1, f0
-/* 8004DFD8 0004AF18  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
-/* 8004DFDC 0004AF1C  C0 22 84 84 */	lfs f1, $$2495@sda21(r2)
+/* 8004DFD8 0004AF18  C0 42 84 80 */	lfs f2, "@494"@sda21(r2)
+/* 8004DFDC 0004AF1C  C0 22 84 84 */	lfs f1, "@495"@sda21(r2)
 /* 8004DFE0 0004AF20  7C 69 1B 78 */	mr r9, r3
-/* 8004DFE4 0004AF24  C0 02 84 88 */	lfs f0, $$2496@sda21(r2)
+/* 8004DFE4 0004AF24  C0 02 84 88 */	lfs f0, "@496"@sda21(r2)
 /* 8004DFE8 0004AF28  39 03 00 00 */	addi r8, r3, 0
 /* 8004DFEC 0004AF2C  38 E3 00 00 */	addi r7, r3, 0
 /* 8004DFF0 0004AF30  38 C3 00 00 */	addi r6, r3, 0
@@ -408,7 +408,7 @@ lbl_8004DFFC:
 /* 8004E0D4 0004B014  90 AA 03 30 */	stw r5, 0x330(r10)
 /* 8004E0D8 0004B018  90 0A 03 B0 */	stw r0, 0x3b0(r10)
 /* 8004E0DC 0004B01C  42 00 FF 20 */	bdnz lbl_8004DFFC
-/* 8004E0E0 0004B020  C0 02 84 90 */	lfs f0, $$2517@sda21(r2)
+/* 8004E0E0 0004B020  C0 02 84 90 */	lfs f0, "@517"@sda21(r2)
 /* 8004E0E4 0004B024  38 00 00 00 */	li r0, 0
 /* 8004E0E8 0004B028  D0 04 01 98 */	stfs f0, 0x198(r4)
 /* 8004E0EC 0004B02C  D0 04 02 18 */	stfs f0, 0x218(r4)
@@ -509,8 +509,8 @@ initStreamParameter__7JAIDataFP18JAIStreamParameter:
 /* 8004E240 0004B180  90 A4 00 04 */	stw r5, 4(r4)
 /* 8004E244 0004B184  90 A4 00 08 */	stw r5, 8(r4)
 /* 8004E248 0004B188  90 A4 00 0C */	stw r5, 0xc(r4)
-/* 8004E24C 0004B18C  C0 22 84 80 */	lfs f1, $$2494@sda21(r2)
-/* 8004E250 0004B190  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004E24C 0004B18C  C0 22 84 80 */	lfs f1, "@494"@sda21(r2)
+/* 8004E250 0004B190  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 lbl_8004E254:
 /* 8004E254 0004B194  7C C4 1A 14 */	add r6, r4, r3
 /* 8004E258 0004B198  D0 26 00 18 */	stfs f1, 0x18(r6)
@@ -530,20 +530,20 @@ lbl_8004E254:
 initSeqTrackInfoParameter__7JAIDataFUl:
 /* 8004E288 0004B1C8  1C 84 00 50 */	mulli r4, r4, 0x50
 /* 8004E28C 0004B1CC  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E290 0004B1D0  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
+/* 8004E290 0004B1D0  C0 42 84 80 */	lfs f2, "@494"@sda21(r2)
 /* 8004E294 0004B1D4  7C A0 22 14 */	add r5, r0, r4
 /* 8004E298 0004B1D8  D0 45 00 0C */	stfs f2, 0xc(r5)
 /* 8004E29C 0004B1DC  38 A0 00 00 */	li r5, 0
 /* 8004E2A0 0004B1E0  38 C0 00 00 */	li r6, 0
 /* 8004E2A4 0004B1E4  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E2A8 0004B1E8  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004E2A8 0004B1E8  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 /* 8004E2AC 0004B1EC  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2B0 0004B1F0  D0 07 00 18 */	stfs f0, 0x18(r7)
 /* 8004E2B4 0004B1F4  80 03 01 80 */	lwz r0, 0x180(r3)
 /* 8004E2B8 0004B1F8  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2BC 0004B1FC  D0 47 00 10 */	stfs f2, 0x10(r7)
 /* 8004E2C0 0004B200  80 03 01 80 */	lwz r0, 0x180(r3)
-/* 8004E2C4 0004B204  C0 22 84 88 */	lfs f1, $$2496@sda21(r2)
+/* 8004E2C4 0004B204  C0 22 84 88 */	lfs f1, "@496"@sda21(r2)
 /* 8004E2C8 0004B208  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2CC 0004B20C  D0 27 00 14 */	stfs f1, 0x14(r7)
 /* 8004E2D0 0004B210  80 03 01 80 */	lwz r0, 0x180(r3)
@@ -552,7 +552,7 @@ initSeqTrackInfoParameter__7JAIDataFUl:
 /* 8004E2DC 0004B21C  80 03 01 80 */	lwz r0, 0x180(r3)
 /* 8004E2E0 0004B220  7C E0 22 14 */	add r7, r0, r4
 /* 8004E2E4 0004B224  D0 47 00 20 */	stfs f2, 0x20(r7)
-/* 8004E2E8 0004B228  C0 02 84 94 */	lfs f0, $$2551@sda21(r2)
+/* 8004E2E8 0004B228  C0 02 84 94 */	lfs f0, "@551"@sda21(r2)
 /* 8004E2EC 0004B22C  48 00 00 70 */	b lbl_8004E35C
 lbl_8004E2F0:
 /* 8004E2F0 0004B230  80 E3 01 80 */	lwz r7, 0x180(r3)
@@ -597,12 +597,12 @@ initStreamUpdateParameter__7JAIDataFv:
 /* 8004E37C 0004B2BC  98 04 00 01 */	stb r0, 1(r4)
 /* 8004E380 0004B2C0  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E384 0004B2C4  98 04 00 02 */	stb r0, 2(r4)
-/* 8004E388 0004B2C8  C0 02 84 80 */	lfs f0, $$2494@sda21(r2)
+/* 8004E388 0004B2C8  C0 02 84 80 */	lfs f0, "@494"@sda21(r2)
 /* 8004E38C 0004B2CC  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E390 0004B2D0  D0 04 00 04 */	stfs f0, 4(r4)
 /* 8004E394 0004B2D4  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E398 0004B2D8  D0 04 00 08 */	stfs f0, 8(r4)
-/* 8004E39C 0004B2DC  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004E39C 0004B2DC  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 /* 8004E3A0 0004B2E0  80 83 01 84 */	lwz r4, 0x184(r3)
 /* 8004E3A4 0004B2E4  D0 04 00 0C */	stfs f0, 0xc(r4)
 /* 8004E3A8 0004B2E8  80 83 01 84 */	lwz r4, 0x184(r3)
@@ -1156,10 +1156,10 @@ lbl_8004EADC:
 /* 8004EAF8 0004BA38  90 7E 00 00 */	stw r3, 0(r30)
 /* 8004EAFC 0004BA3C  38 A0 00 00 */	li r5, 0
 /* 8004EB00 0004BA40  38 60 00 00 */	li r3, 0
-/* 8004EB04 0004BA44  C0 42 84 80 */	lfs f2, $$2494@sda21(r2)
+/* 8004EB04 0004BA44  C0 42 84 80 */	lfs f2, "@494"@sda21(r2)
 /* 8004EB08 0004BA48  38 80 00 FF */	li r4, 0xff
-/* 8004EB0C 0004BA4C  C0 22 84 88 */	lfs f1, $$2496@sda21(r2)
-/* 8004EB10 0004BA50  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004EB0C 0004BA4C  C0 22 84 88 */	lfs f1, "@496"@sda21(r2)
+/* 8004EB10 0004BA50  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 /* 8004EB14 0004BA54  48 00 00 2C */	b lbl_8004EB40
 lbl_8004EB18:
 /* 8004EB18 0004BA58  80 1E 00 00 */	lwz r0, 0(r30)
@@ -1445,12 +1445,12 @@ lbl_8004EF20:
 /* 8004EF4C 0004BE8C  98 03 00 01 */	stb r0, 1(r3)
 /* 8004EF50 0004BE90  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF54 0004BE94  98 03 00 02 */	stb r0, 2(r3)
-/* 8004EF58 0004BE98  C0 02 84 80 */	lfs f0, $$2494@sda21(r2)
+/* 8004EF58 0004BE98  C0 02 84 80 */	lfs f0, "@494"@sda21(r2)
 /* 8004EF5C 0004BE9C  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF60 0004BEA0  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8004EF64 0004BEA4  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF68 0004BEA8  D0 03 00 08 */	stfs f0, 8(r3)
-/* 8004EF6C 0004BEAC  C0 02 84 84 */	lfs f0, $$2495@sda21(r2)
+/* 8004EF6C 0004BEAC  C0 02 84 84 */	lfs f0, "@495"@sda21(r2)
 /* 8004EF70 0004BEB0  80 7E 01 84 */	lwz r3, 0x184(r30)
 /* 8004EF74 0004BEB4  D0 03 00 0C */	stfs f0, 0xc(r3)
 /* 8004EF78 0004BEB8  80 7E 01 84 */	lwz r3, 0x184(r30)
@@ -1639,15 +1639,15 @@ lbl_8004F1E8:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2494:
+"@494":
 	.incbin "baserom.dol", 0x3E4180, 0x4
-$$2495:
+"@495":
 	.incbin "baserom.dol", 0x3E4184, 0x4
-$$2496:
+"@496":
   .4byte 0
-$$2516:
+"@516":
 	.incbin "baserom.dol", 0x3E418C, 0x4
-$$2517:
+"@517":
 	.incbin "baserom.dol", 0x3E4190, 0x4
-$$2551:
+"@551":
 	.incbin "baserom.dol", 0x3E4194, 0x4

@@ -566,8 +566,8 @@ ShapePacketCallBackFunc__FP17J3DCallBackPacketi:
 /* 800D1180 000CE0C0  80 05 00 00 */	lwz r0, 0(r5)
 /* 800D1184 000CE0C4  28 00 00 0A */	cmplwi r0, 0xa
 /* 800D1188 000CE0C8  41 81 07 54 */	bgt lbl_800D18DC
-/* 800D118C 000CE0CC  3C 60 80 3B */	lis r3, $$22227@ha
-/* 800D1190 000CE0D0  38 63 34 30 */	addi r3, r3, $$22227@l
+/* 800D118C 000CE0CC  3C 60 80 3B */	lis r3, "@2227"@ha
+/* 800D1190 000CE0D0  38 63 34 30 */	addi r3, r3, "@2227"@l
 /* 800D1194 000CE0D4  54 00 10 3A */	slwi r0, r0, 2
 /* 800D1198 000CE0D8  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800D119C 000CE0DC  7C 09 03 A6 */	mtctr r0
@@ -1038,7 +1038,7 @@ lbl_800D1894:
 /* 800D18B0 000CE7F0  41 82 00 08 */	beq lbl_800D18B8
 /* 800D18B4 000CE7F4  48 00 00 28 */	b lbl_800D18DC
 lbl_800D18B8:
-/* 800D18B8 000CE7F8  C0 22 8E AC */	lfs f1, $$22226@sda21(r2)
+/* 800D18B8 000CE7F8  C0 22 8E AC */	lfs f1, "@2226"@sda21(r2)
 /* 800D18BC 000CE7FC  38 81 01 00 */	addi r4, r1, 0x100
 /* 800D18C0 000CE800  80 02 8E A8 */	lwz r0, sFogOffColor$1583@sda21(r2)
 /* 800D18C4 000CE804  38 60 00 00 */	li r3, 0
@@ -1068,8 +1068,8 @@ FifoSetFog__F10_GXFogTypeffff8_GXColor:
 /* 800D1914 000CE854  FC 02 08 00 */	fcmpu cr0, f2, f1
 /* 800D1918 000CE858  40 82 00 14 */	bne lbl_800D192C
 lbl_800D191C:
-/* 800D191C 000CE85C  C0 62 8E AC */	lfs f3, $$22226@sda21(r2)
-/* 800D1920 000CE860  C0 82 8E B0 */	lfs f4, $$22278@sda21(r2)
+/* 800D191C 000CE85C  C0 62 8E AC */	lfs f3, "@2226"@sda21(r2)
+/* 800D1920 000CE860  C0 82 8E B0 */	lfs f4, "@2278"@sda21(r2)
 /* 800D1924 000CE864  D0 61 00 28 */	stfs f3, 0x28(r1)
 /* 800D1928 000CE868  48 00 00 24 */	b lbl_800D194C
 lbl_800D192C:
@@ -1082,9 +1082,9 @@ lbl_800D192C:
 /* 800D1944 000CE884  EC 63 10 24 */	fdivs f3, f3, f2
 /* 800D1948 000CE888  D0 01 00 28 */	stfs f0, 0x28(r1)
 lbl_800D194C:
-/* 800D194C 000CE88C  C0 22 8E B0 */	lfs f1, $$22278@sda21(r2)
+/* 800D194C 000CE88C  C0 22 8E B0 */	lfs f1, "@2278"@sda21(r2)
 /* 800D1950 000CE890  3B 80 00 01 */	li r28, 1
-/* 800D1954 000CE894  C8 02 8E B8 */	lfd f0, $$22279@sda21(r2)
+/* 800D1954 000CE894  C8 02 8E B8 */	lfd f0, "@2279"@sda21(r2)
 /* 800D1958 000CE898  48 00 00 0C */	b lbl_800D1964
 lbl_800D195C:
 /* 800D195C 000CE89C  EC 84 00 72 */	fmuls f4, f4, f1
@@ -1092,9 +1092,9 @@ lbl_800D195C:
 lbl_800D1964:
 /* 800D1964 000CE8A4  FC 04 00 40 */	fcmpo cr0, f4, f0
 /* 800D1968 000CE8A8  41 81 FF F4 */	bgt lbl_800D195C
-/* 800D196C 000CE8AC  C8 02 8E C8 */	lfd f0, $$22281@sda21(r2)
-/* 800D1970 000CE8B0  C0 42 8E C0 */	lfs f2, $$22280@sda21(r2)
-/* 800D1974 000CE8B4  C0 22 8E AC */	lfs f1, $$22226@sda21(r2)
+/* 800D196C 000CE8AC  C8 02 8E C8 */	lfd f0, "@2281"@sda21(r2)
+/* 800D1970 000CE8B0  C0 42 8E C0 */	lfs f2, "@2280"@sda21(r2)
+/* 800D1974 000CE8B4  C0 22 8E AC */	lfs f1, "@2226"@sda21(r2)
 /* 800D1978 000CE8B8  48 00 00 0C */	b lbl_800D1984
 lbl_800D197C:
 /* 800D197C 000CE8BC  EC 84 00 B2 */	fmuls f4, f4, f2
@@ -1106,9 +1106,9 @@ lbl_800D1984:
 /* 800D1990 000CE8D0  41 80 FF EC */	blt lbl_800D197C
 lbl_800D1994:
 /* 800D1994 000CE8D4  38 00 00 01 */	li r0, 1
-/* 800D1998 000CE8D8  C0 02 8E D0 */	lfs f0, $$22282@sda21(r2)
+/* 800D1998 000CE8D8  C0 02 8E D0 */	lfs f0, "@2282"@sda21(r2)
 /* 800D199C 000CE8DC  7C 00 E0 30 */	slw r0, r0, r28
-/* 800D19A0 000CE8E0  C8 42 8E D8 */	lfd f2, $$22284@sda21(r2)
+/* 800D19A0 000CE8E0  C8 42 8E D8 */	lfd f2, "@2284"@sda21(r2)
 /* 800D19A4 000CE8E4  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 800D19A8 000CE8E8  EC 20 01 32 */	fmuls f1, f0, f4
 /* 800D19AC 000CE8EC  90 01 00 34 */	stw r0, 0x34(r1)
@@ -1235,7 +1235,7 @@ lbl_800D1B5C:
 /* 800D1B80 000CEAC0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$22227:
+"@2227":
     .4byte lbl_800D11A4
     .4byte lbl_800D11FC
     .4byte lbl_800D1274
@@ -1252,17 +1252,17 @@ $$22227:
 .balign 8
 sFogOffColor$1583:
   .4byte 0
-$$22226:
+"@2226":
   .4byte 0
-$$22278:
+"@2278":
 	.incbin "baserom.dol", 0x3E4BB0, 0x8
-$$22279:
+"@2279":
 	.incbin "baserom.dol", 0x3E4BB8, 0x8
-$$22280:
+"@2280":
 	.incbin "baserom.dol", 0x3E4BC0, 0x8
-$$22281:
+"@2281":
 	.incbin "baserom.dol", 0x3E4BC8, 0x8
-$$22282:
+"@2282":
 	.incbin "baserom.dol", 0x3E4BD0, 0x8
-$$22284:
+"@2284":
 	.incbin "baserom.dol", 0x3E4BD8, 0x8

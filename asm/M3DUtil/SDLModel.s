@@ -188,7 +188,7 @@ lbl_800D8A7C:
 /* 800D8AB0 000D59F0  93 81 00 64 */	stw r28, 0x64(r1)
 /* 800D8AB4 000D59F4  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 800D8AB8 000D59F8  90 01 00 60 */	stw r0, 0x60(r1)
-/* 800D8ABC 000D59FC  48 00 00 19 */	bl insert__Q27JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$1FQ37JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$18iteratorRCP15SDLDrawBufToken
+/* 800D8ABC 000D59FC  48 00 00 19 */	bl "insert__Q27JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>FQ37JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>8iteratorRCP15SDLDrawBufToken"
 lbl_800D8AC0:
 /* 800D8AC0 000D5A00  BB 61 00 A4 */	lmw r27, 0xa4(r1)
 /* 800D8AC4 000D5A04  80 01 00 BC */	lwz r0, 0xbc(r1)
@@ -196,8 +196,8 @@ lbl_800D8AC0:
 /* 800D8ACC 000D5A0C  7C 08 03 A6 */	mtlr r0
 /* 800D8AD0 000D5A10  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$1FQ37JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$18iteratorRCP15SDLDrawBufToken
-insert__Q27JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$1FQ37JGadget68TList$$0P15SDLDrawBufToken$$4Q27JGadget30TAllocator$$0P15SDLDrawBufToken$$1$$18iteratorRCP15SDLDrawBufToken:
+.global "insert__Q27JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>FQ37JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>8iteratorRCP15SDLDrawBufToken"
+"insert__Q27JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>FQ37JGadget68TList<P15SDLDrawBufToken,Q27JGadget30TAllocator<P15SDLDrawBufToken>>8iteratorRCP15SDLDrawBufToken":
 /* 800D8AD4 000D5A14  7C 08 02 A6 */	mflr r0
 /* 800D8AD8 000D5A18  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8ADC 000D5A1C  94 21 FF B8 */	stwu r1, -0x48(r1)

@@ -8,14 +8,14 @@ SMS_GetSandRiseUpRatio__FPC10TLiveActor:
 /* 800D1FC0 000CEF00  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800D1FC4 000CEF04  48 04 02 AD */	bl getModel__10TLiveActorCFv
 /* 800D1FC8 000CEF08  80 63 00 58 */	lwz r3, 0x58(r3)
-/* 800D1FCC 000CEF0C  C0 02 8E E0 */	lfs f0, $$21941@sda21(r2)
+/* 800D1FCC 000CEF0C  C0 02 8E E0 */	lfs f0, "@1941"@sda21(r2)
 /* 800D1FD0 000CEF10  C0 23 00 14 */	lfs f1, 0x14(r3)
 /* 800D1FD4 000CEF14  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800D1FD8 000CEF18  40 81 00 0C */	ble lbl_800D1FE4
 /* 800D1FDC 000CEF1C  FC 20 00 90 */	fmr f1, f0
 /* 800D1FE0 000CEF20  48 00 00 14 */	b lbl_800D1FF4
 lbl_800D1FE4:
-/* 800D1FE4 000CEF24  C0 02 8E E4 */	lfs f0, $$21942@sda21(r2)
+/* 800D1FE4 000CEF24  C0 02 8E E4 */	lfs f0, "@1942"@sda21(r2)
 /* 800D1FE8 000CEF28  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800D1FEC 000CEF2C  40 80 00 08 */	bge lbl_800D1FF4
 /* 800D1FF0 000CEF30  FC 20 00 90 */	fmr f1, f0
@@ -76,7 +76,7 @@ lbl_800D2094:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21941:
+"@1941":
 	.incbin "baserom.dol", 0x3E4BE0, 0x4
-$$21942:
+"@1942":
   .4byte 0

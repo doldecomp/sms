@@ -10,10 +10,10 @@ setUp__17TMapCollisionBaseFv:
 
 .global __sinit_Atom_cpp
 __sinit_Atom_cpp:
-/* 8011E7D8 0011B718  C0 22 97 80 */	lfs f1, $$21908@sda21(r2)
+/* 8011E7D8 0011B718  C0 22 97 80 */	lfs f1, "@1908"@sda21(r2)
 /* 8011E7DC 0011B71C  3C 60 80 3F */	lis r3, cDeformedTerrainCenter@ha
 /* 8011E7E0 0011B720  D4 23 2E 60 */	stfsu f1, cDeformedTerrainCenter@l(r3)
-/* 8011E7E4 0011B724  C0 02 97 84 */	lfs f0, $$22110@sda21(r2)
+/* 8011E7E4 0011B724  C0 02 97 84 */	lfs f0, "@2110"@sda21(r2)
 /* 8011E7E8 0011B728  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8011E7EC 0011B72C  D0 23 00 08 */	stfs f1, 8(r3)
 /* 8011E7F0 0011B730  4E 80 00 20 */	blr 
@@ -24,9 +24,9 @@ lbl_constructor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21908:
+"@1908":
   .4byte 0
-$$22110:
+"@2110":
 	.incbin "baserom.dol", 0x3E5484, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

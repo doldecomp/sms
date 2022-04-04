@@ -62,14 +62,14 @@ lbl_80243368:
 /* 80243380 002402C0  4C C6 31 82 */	crclr 6
 /* 80243384 002402C4  38 DF 00 00 */	addi r6, r31, 0
 /* 80243388 002402C8  38 80 01 00 */	li r4, 0x100
-/* 8024338C 002402CC  38 A2 DB B0 */	addi r5, r2, $$21605@sda21
+/* 8024338C 002402CC  38 A2 DB B0 */	addi r5, r2, "@1605"@sda21
 /* 80243390 002402D0  4B E4 0D 35 */	bl snprintf
 /* 80243394 002402D4  80 7E 00 1C */	lwz r3, 0x1c(r30)
 /* 80243398 002402D8  4B DD 69 85 */	bl getStringPtr__10J2DTextBoxCFv
 /* 8024339C 002402DC  4C C6 31 82 */	crclr 6
 /* 802433A0 002402E0  38 DF 00 00 */	addi r6, r31, 0
 /* 802433A4 002402E4  38 80 01 00 */	li r4, 0x100
-/* 802433A8 002402E8  38 A2 DB B0 */	addi r5, r2, $$21605@sda21
+/* 802433A8 002402E8  38 A2 DB B0 */	addi r5, r2, "@1605"@sda21
 /* 802433AC 002402EC  4B E4 0D 19 */	bl snprintf
 /* 802433B0 002402F0  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 802433B4 002402F4  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -199,15 +199,15 @@ setupResource__14TMovieSubTitleFPCcP10JKRArchive:
 /* 80243560 002404A0  3C C0 80 3E */	lis r6, gpApplication@ha
 /* 80243564 002404A4  90 01 00 04 */	stw r0, 4(r1)
 /* 80243568 002404A8  38 C6 60 00 */	addi r6, r6, gpApplication@l
-/* 8024356C 002404AC  3C E0 80 39 */	lis r7, $$21490@ha
+/* 8024356C 002404AC  3C E0 80 39 */	lis r7, "@1490"@ha
 /* 80243570 002404B0  94 21 FE C0 */	stwu r1, -0x140(r1)
 /* 80243574 002404B4  BF 61 01 2C */	stmw r27, 0x12c(r1)
 /* 80243578 002404B8  3B E3 00 00 */	addi r31, r3, 0
 /* 8024357C 002404BC  3B 64 00 00 */	addi r27, r4, 0
 /* 80243580 002404C0  3B A5 00 00 */	addi r29, r5, 0
-/* 80243584 002404C4  3B 87 45 90 */	addi r28, r7, $$21490@l
+/* 80243584 002404C4  3B 87 45 90 */	addi r28, r7, "@1490"@l
 /* 80243588 002404C8  81 06 00 18 */	lwz r8, 0x18(r6)
-/* 8024358C 002404CC  38 C2 DB A0 */	addi r6, r2, cLongHeightMovieIdList__9$$2unnamed$$2@sda21
+/* 8024358C 002404CC  38 C2 DB A0 */	addi r6, r2, "cLongHeightMovieIdList__9@unnamed@"@sda21
 /* 80243590 002404D0  38 66 00 08 */	addi r3, r6, 8
 /* 80243594 002404D4  48 00 00 08 */	b lbl_8024359C
 lbl_80243598:
@@ -292,7 +292,7 @@ lbl_8024369C:
 /* 802436B4 002405F4  38 61 00 28 */	addi r3, r1, 0x28
 /* 802436B8 002405F8  38 80 00 2E */	li r4, 0x2e
 /* 802436BC 002405FC  4B E4 25 29 */	bl strrchr
-/* 802436C0 00240600  38 82 DB A8 */	addi r4, r2, $$21592@sda21
+/* 802436C0 00240600  38 82 DB A8 */	addi r4, r2, "@1592"@sda21
 /* 802436C4 00240604  4B E4 27 2D */	bl strcpy
 /* 802436C8 00240608  80 7F 00 20 */	lwz r3, 0x20(r31)
 /* 802436CC 0024060C  38 81 00 28 */	addi r4, r1, 0x28
@@ -316,9 +316,9 @@ __ct__14TMovieSubTitleFPC10TTHPRender:
 /* 80243708 00240648  7C 9F 23 78 */	mr r31, r4
 /* 8024370C 0024064C  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80243710 00240650  3B C3 00 00 */	addi r30, r3, 0
-/* 80243714 00240654  3C 60 80 39 */	lis r3, $$21851@ha
+/* 80243714 00240654  3C 60 80 39 */	lis r3, "@1851"@ha
 /* 80243718 00240658  90 1E 00 00 */	stw r0, 0(r30)
-/* 8024371C 0024065C  38 63 45 D8 */	addi r3, r3, $$21851@l
+/* 8024371C 0024065C  38 63 45 D8 */	addi r3, r3, "@1851"@l
 /* 80243720 00240660  90 7E 00 04 */	stw r3, 4(r30)
 /* 80243724 00240664  4B E0 0F 69 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 80243728 00240668  B0 7E 00 08 */	sth r3, 8(r30)
@@ -344,19 +344,19 @@ __ct__14TMovieSubTitleFPC10TTHPRender:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x39159C, 0x14
-$$21591:
+"@1591":
 	.incbin "baserom.dol", 0x3915B0, 0x10
-$$21842:
+"@1842":
 	.incbin "baserom.dol", 0x3915C0, 0xC
-$$21843:
+"@1843":
 	.incbin "baserom.dol", 0x3915CC, 0xC
-$$21851:
+"@1851":
 	.incbin "baserom.dol", 0x3915D8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -375,9 +375,9 @@ __vt__14TMovieSubTitle:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-cLongHeightMovieIdList__9$$2unnamed$$2:
+"cLongHeightMovieIdList__9@unnamed@":
 	.incbin "baserom.dol", 0x3E98A0, 0x8
-$$21592:
+"@1592":
 	.incbin "baserom.dol", 0x3E98A8, 0x8
-$$21605:
+"@1605":
 	.incbin "baserom.dol", 0x3E98B0, 0x8

@@ -274,18 +274,18 @@ getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv:
 /* 8005AE94 00057DD4  38 63 00 40 */	addi r3, r3, 0x40
 /* 8005AE98 00057DD8  4E 80 00 20 */	blr 
 
-.global $$24$$2getHeap__Q28JASystem15TSimpleWaveBankFv
-$$24$$2getHeap__Q28JASystem15TSimpleWaveBankFv:
+.global "@4@getHeap__Q28JASystem15TSimpleWaveBankFv"
+"@4@getHeap__Q28JASystem15TSimpleWaveBankFv":
 /* 8005AE9C 00057DDC  38 63 FF FC */	addi r3, r3, -4
 /* 8005AEA0 00057DE0  4B FF FF E4 */	b getHeap__Q28JASystem15TSimpleWaveBankFv
 
-.global $$24$$2getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
-$$24$$2getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv:
+.global "@4@getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv"
+"@4@getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv":
 /* 8005AEA4 00057DE4  38 63 FF FC */	addi r3, r3, -4
 /* 8005AEA8 00057DE8  4B FF FF E4 */	b getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
 
-.global $$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
-$$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv:
+.global "@4@getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv"
+"@4@getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv":
 /* 8005AEAC 00057DEC  38 63 FF FC */	addi r3, r3, -4
 /* 8005AEB0 00057DF0  4B FF FF E4 */	b getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
 
@@ -306,9 +306,9 @@ __vt__Q28JASystem15TSimpleWaveBank:
   .4byte getType__Q28JASystem15TSimpleWaveBankCFv
   .4byte 0
   .4byte 0
-  .4byte $$24$$2getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
-  .4byte $$24$$2getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
-  .4byte $$24$$2getHeap__Q28JASystem15TSimpleWaveBankFv
+  .4byte "@4@getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv"
+  .4byte "@4@getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv"
+  .4byte "@4@getHeap__Q28JASystem15TSimpleWaveBankFv"
   .4byte getLoadFlagPtr__Q28JASystem15TSimpleWaveBankFv
   .4byte getWaveArcFileName__Q28JASystem15TSimpleWaveBankCFv
   .4byte getHeap__Q28JASystem15TSimpleWaveBankFv

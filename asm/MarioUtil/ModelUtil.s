@@ -71,8 +71,8 @@ lbl_800CF038:
 /* 800CF050 000CBF90  38 21 00 28 */	addi r1, r1, 0x28
 /* 800CF054 000CBF94  4E 80 00 20 */	blr 
 
-.global SMS_RideMoveCalcLocalPos__FP11TRidingInfoRCQ29JGeometry8TVec3$$0f$$1
-SMS_RideMoveCalcLocalPos__FP11TRidingInfoRCQ29JGeometry8TVec3$$0f$$1:
+.global "SMS_RideMoveCalcLocalPos__FP11TRidingInfoRCQ29JGeometry8TVec3<f>"
+"SMS_RideMoveCalcLocalPos__FP11TRidingInfoRCQ29JGeometry8TVec3<f>":
 /* 800CF058 000CBF98  7C 08 02 A6 */	mflr r0
 /* 800CF05C 000CBF9C  90 01 00 04 */	stw r0, 4(r1)
 /* 800CF060 000CBFA0  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -117,8 +117,8 @@ lbl_800CF0E0:
 /* 800CF0F0 000CC030  38 21 00 48 */	addi r1, r1, 0x48
 /* 800CF0F4 000CC034  4E 80 00 20 */	blr 
 
-.global SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3$$0f$$1Pf
-SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3$$0f$$1Pf:
+.global "SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3<f>Pf"
+"SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3<f>Pf":
 /* 800CF0F8 000CC038  7C 08 02 A6 */	mflr r0
 /* 800CF0FC 000CC03C  90 01 00 04 */	stw r0, 4(r1)
 /* 800CF100 000CC040  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -128,7 +128,7 @@ SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3$$0f$$1Pf:
 /* 800CF110 000CC050  7C 9E 23 78 */	mr r30, r4
 /* 800CF114 000CC054  93 A1 00 94 */	stw r29, 0x94(r1)
 /* 800CF118 000CC058  7C 7D 1B 78 */	mr r29, r3
-/* 800CF11C 000CC05C  C0 22 8E 80 */	lfs f1, $$22232@sda21(r2)
+/* 800CF11C 000CC05C  C0 22 8E 80 */	lfs f1, "@2232"@sda21(r2)
 /* 800CF120 000CC060  C0 04 00 04 */	lfs f0, 4(r4)
 /* 800CF124 000CC064  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 800CF128 000CC068  EC 41 00 2A */	fadds f2, f1, f0
@@ -141,7 +141,7 @@ SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3$$0f$$1Pf:
 /* 800CF144 000CC084  28 00 00 00 */	cmplwi r0, 0
 /* 800CF148 000CC088  41 82 01 20 */	beq lbl_800CF268
 /* 800CF14C 000CC08C  C0 5E 00 04 */	lfs f2, 4(r30)
-/* 800CF150 000CC090  C0 02 8E 84 */	lfs f0, $$22233@sda21(r2)
+/* 800CF150 000CC090  C0 02 8E 84 */	lfs f0, "@2233"@sda21(r2)
 /* 800CF154 000CC094  EC 22 08 28 */	fsubs f1, f2, f1
 /* 800CF158 000CC098  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800CF15C 000CC09C  40 80 01 0C */	bge lbl_800CF268
@@ -328,7 +328,7 @@ lbl_800CF3BC:
 /* 800CF3E0 000CC320  A8 84 00 02 */	lha r4, 2(r4)
 /* 800CF3E4 000CC324  7C 83 03 2E */	sthx r4, r3, r0
 /* 800CF3E8 000CC328  48 02 C1 F5 */	bl SMSGetAnmFrameRate__Fv
-/* 800CF3EC 000CC32C  C0 02 8E 88 */	lfs f0, $$22278@sda21(r2)
+/* 800CF3EC 000CC32C  C0 02 8E 88 */	lfs f0, "@2278"@sda21(r2)
 /* 800CF3F0 000CC330  38 1B 00 0C */	addi r0, r27, 0xc
 /* 800CF3F4 000CC334  80 7D 00 0C */	lwz r3, 0xc(r29)
 /* 800CF3F8 000CC338  EC 00 00 72 */	fmuls f0, f0, f1
@@ -396,9 +396,9 @@ __ct__12J3DFrameCtrlFv:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22232:
+"@2232":
 	.incbin "baserom.dol", 0x3E4B80, 0x4
-$$22233:
+"@2233":
 	.incbin "baserom.dol", 0x3E4B84, 0x4
-$$22278:
+"@2278":
 	.incbin "baserom.dol", 0x3E4B88, 0x8

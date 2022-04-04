@@ -79,7 +79,7 @@ JSGSetAnimation__Q26JStage6TActorFUl:
 
 .global JSGGetAnimationFrame__Q26JStage6TActorCFv
 JSGGetAnimationFrame__Q26JStage6TActorCFv:
-/* 80081A1C 0007E95C  C0 22 89 40 */	lfs f1, $$2126@sda21(r2)
+/* 80081A1C 0007E95C  C0 22 89 40 */	lfs f1, "@126"@sda21(r2)
 /* 80081A20 0007E960  4E 80 00 20 */	blr 
 
 .global JSGSetAnimationFrame__Q26JStage6TActorFf
@@ -88,7 +88,7 @@ JSGSetAnimationFrame__Q26JStage6TActorFf:
 
 .global JSGGetAnimationFrameMax__Q26JStage6TActorCFv
 JSGGetAnimationFrameMax__Q26JStage6TActorCFv:
-/* 80081A28 0007E968  C0 22 89 40 */	lfs f1, $$2126@sda21(r2)
+/* 80081A28 0007E968  C0 22 89 40 */	lfs f1, "@126"@sda21(r2)
 /* 80081A2C 0007E96C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -123,6 +123,6 @@ __vt__Q26JStage6TActor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2126:
+"@126":
   .4byte 0
   .4byte 0

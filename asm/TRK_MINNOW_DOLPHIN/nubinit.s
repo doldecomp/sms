@@ -79,9 +79,9 @@ TRKTerminateNub:
 .global TRKNubWelcome
 TRKNubWelcome:
 /* 80087FBC 00084EFC  7C 08 02 A6 */	mflr r0
-/* 80087FC0 00084F00  3C 60 80 37 */	lis r3, $$240@ha
+/* 80087FC0 00084F00  3C 60 80 37 */	lis r3, "@40"@ha
 /* 80087FC4 00084F04  90 01 00 04 */	stw r0, 4(r1)
-/* 80087FC8 00084F08  38 63 21 F0 */	addi r3, r3, $$240@l
+/* 80087FC8 00084F08  38 63 21 F0 */	addi r3, r3, "@40"@l
 /* 80087FCC 00084F0C  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80087FD0 00084F10  48 00 43 79 */	bl TRK_board_display
 /* 80087FD4 00084F14  38 21 00 08 */	addi r1, r1, 8
@@ -126,7 +126,7 @@ lbl_80088050:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$240:
+"@40":
 	.asciz "MetroTRK for Dolphin v0.8"
 .balign 8
 

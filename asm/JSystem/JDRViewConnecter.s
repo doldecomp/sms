@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global __ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc
-__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT$$0Us$$1PCc:
+.global "__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT<Us>PCc"
+"__ct__Q26JDrama14TViewConnecterFPQ26JDrama8TViewObjPQ26JDrama8TViewObjQ26JDrama10TFlagT<Us>PCc":
 /* 80046E34 00043D74  7C 08 02 A6 */	mflr r0
 /* 80046E38 00043D78  3D 00 80 3B */	lis r8, __vt__Q26JDrama8TNameRef@ha
 /* 80046E3C 00043D7C  90 01 00 04 */	stw r0, 4(r1)

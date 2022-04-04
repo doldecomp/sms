@@ -58,9 +58,9 @@ lbl_801754A4:
 /* 80175524 00172464  41 82 00 64 */	beq lbl_80175588
 /* 80175528 00172468  A8 01 01 7C */	lha r0, 0x17c(r1)
 /* 8017552C 0017246C  3C 80 43 30 */	lis r4, 0x4330
-/* 80175530 00172470  C8 22 A8 C0 */	lfd f1, $$22537@sda21(r2)
+/* 80175530 00172470  C8 22 A8 C0 */	lfd f1, "@2537"@sda21(r2)
 /* 80175534 00172474  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80175538 00172478  C0 42 A8 B0 */	lfs f2, $$22532@sda21(r2)
+/* 80175538 00172478  C0 42 A8 B0 */	lfs f2, "@2532"@sda21(r2)
 /* 8017553C 0017247C  90 01 01 9C */	stw r0, 0x19c(r1)
 /* 80175540 00172480  90 81 01 98 */	stw r4, 0x198(r1)
 /* 80175544 00172484  C8 01 01 98 */	lfd f0, 0x198(r1)
@@ -68,7 +68,7 @@ lbl_801754A4:
 /* 8017554C 0017248C  EC 02 00 32 */	fmuls f0, f2, f0
 /* 80175550 00172490  D0 1F 01 78 */	stfs f0, 0x178(r31)
 /* 80175554 00172494  80 7F 02 28 */	lwz r3, 0x228(r31)
-/* 80175558 00172498  C8 22 A8 C8 */	lfd f1, $$22539@sda21(r2)
+/* 80175558 00172498  C8 22 A8 C8 */	lfd f1, "@2539"@sda21(r2)
 /* 8017555C 0017249C  88 03 03 10 */	lbz r0, 0x310(r3)
 /* 80175560 001724A0  C0 5F 01 78 */	lfs f2, 0x178(r31)
 /* 80175564 001724A4  90 01 01 94 */	stw r0, 0x194(r1)
@@ -103,7 +103,7 @@ lbl_80175588:
 /* 801755D4 00172514  4B E9 8F BD */	bl read__14JSUInputStreamFPvl
 /* 801755D8 00172518  80 01 01 50 */	lwz r0, 0x150(r1)
 /* 801755DC 0017251C  3E 60 43 30 */	lis r19, 0x4330
-/* 801755E0 00172520  C8 22 A8 C0 */	lfd f1, $$22537@sda21(r2)
+/* 801755E0 00172520  C8 22 A8 C0 */	lfd f1, "@2537"@sda21(r2)
 /* 801755E4 00172524  38 72 00 00 */	addi r3, r18, 0
 /* 801755E8 00172528  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 801755EC 0017252C  90 01 01 8C */	stw r0, 0x18c(r1)
@@ -115,7 +115,7 @@ lbl_80175588:
 /* 80175604 00172544  4B E9 8F 8D */	bl read__14JSUInputStreamFPvl
 /* 80175608 00172548  80 01 01 4C */	lwz r0, 0x14c(r1)
 /* 8017560C 0017254C  7E 43 93 78 */	mr r3, r18
-/* 80175610 00172550  C8 22 A8 C0 */	lfd f1, $$22537@sda21(r2)
+/* 80175610 00172550  C8 22 A8 C0 */	lfd f1, "@2537"@sda21(r2)
 /* 80175614 00172554  38 81 01 48 */	addi r4, r1, 0x148
 /* 80175618 00172558  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8017561C 0017255C  90 01 01 94 */	stw r0, 0x194(r1)
@@ -435,12 +435,12 @@ lbl_80175A44:
 lbl_80175A84:
 /* 80175A84 001729C4  4B F1 00 41 */	bl rand
 /* 80175A88 001729C8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80175A8C 001729CC  C8 62 A8 C0 */	lfd f3, $$22537@sda21(r2)
+/* 80175A8C 001729CC  C8 62 A8 C0 */	lfd f3, "@2537"@sda21(r2)
 /* 80175A90 001729D0  90 01 01 8C */	stw r0, 0x18c(r1)
 /* 80175A94 001729D4  3C 00 43 30 */	lis r0, 0x4330
-/* 80175A98 001729D8  C0 22 A8 B4 */	lfs f1, $$22533@sda21(r2)
+/* 80175A98 001729D8  C0 22 A8 B4 */	lfs f1, "@2533"@sda21(r2)
 /* 80175A9C 001729DC  90 01 01 88 */	stw r0, 0x188(r1)
-/* 80175AA0 001729E0  C0 02 A8 B8 */	lfs f0, $$22534@sda21(r2)
+/* 80175AA0 001729E0  C0 02 A8 B8 */	lfs f0, "@2534"@sda21(r2)
 /* 80175AA4 001729E4  C8 41 01 88 */	lfd f2, 0x188(r1)
 /* 80175AA8 001729E8  EC 42 18 28 */	fsubs f2, f2, f3
 /* 80175AAC 001729EC  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -477,12 +477,12 @@ lbl_80175AFC:
 lbl_80175B20:
 /* 80175B20 00172A60  4B F0 FF A5 */	bl rand
 /* 80175B24 00172A64  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80175B28 00172A68  C8 62 A8 C0 */	lfd f3, $$22537@sda21(r2)
+/* 80175B28 00172A68  C8 62 A8 C0 */	lfd f3, "@2537"@sda21(r2)
 /* 80175B2C 00172A6C  90 01 01 8C */	stw r0, 0x18c(r1)
 /* 80175B30 00172A70  3C 00 43 30 */	lis r0, 0x4330
-/* 80175B34 00172A74  C0 22 A8 B4 */	lfs f1, $$22533@sda21(r2)
+/* 80175B34 00172A74  C0 22 A8 B4 */	lfs f1, "@2533"@sda21(r2)
 /* 80175B38 00172A78  90 01 01 88 */	stw r0, 0x188(r1)
-/* 80175B3C 00172A7C  C0 02 A8 BC */	lfs f0, $$22535@sda21(r2)
+/* 80175B3C 00172A7C  C0 02 A8 BC */	lfs f0, "@2535"@sda21(r2)
 /* 80175B40 00172A80  C8 41 01 88 */	lfd f2, 0x188(r1)
 /* 80175B44 00172A84  EC 42 18 28 */	fsubs f2, f2, f3
 /* 80175B48 00172A88  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -655,7 +655,7 @@ init__8TBaseNPCFP12TLiveManager:
 /* 80175D8C 00172CCC  60 00 00 01 */	ori r0, r0, 1
 /* 80175D90 00172CD0  90 1F 00 F0 */	stw r0, 0xf0(r31)
 /* 80175D94 00172CD4  38 C0 00 00 */	li r6, 0
-/* 80175D98 00172CD8  C0 22 A8 D0 */	lfs f1, $$22754@sda21(r2)
+/* 80175D98 00172CD8  C0 22 A8 D0 */	lfs f1, "@2754"@sda21(r2)
 /* 80175D9C 00172CDC  80 9F 00 4C */	lwz r4, 0x4c(r31)
 /* 80175DA0 00172CE0  FC 40 08 90 */	fmr f2, f1
 /* 80175DA4 00172CE4  FC 60 08 90 */	fmr f3, f1
@@ -718,11 +718,11 @@ lbl_80175E74:
 /* 80175E78 00172DB8  80 63 00 08 */	lwz r3, 8(r3)
 /* 80175E7C 00172DBC  80 03 00 00 */	lwz r0, 0(r3)
 /* 80175E80 00172DC0  90 1F 00 74 */	stw r0, 0x74(r31)
-/* 80175E84 00172DC4  C0 02 A8 D4 */	lfs f0, $$22755@sda21(r2)
+/* 80175E84 00172DC4  C0 02 A8 D4 */	lfs f0, "@2755"@sda21(r2)
 /* 80175E88 00172DC8  D0 1F 01 48 */	stfs f0, 0x148(r31)
-/* 80175E8C 00172DCC  C0 02 A8 D8 */	lfs f0, $$22756@sda21(r2)
+/* 80175E8C 00172DCC  C0 02 A8 D8 */	lfs f0, "@2756"@sda21(r2)
 /* 80175E90 00172DD0  D0 1F 00 BC */	stfs f0, 0xbc(r31)
-/* 80175E94 00172DD4  C0 02 A8 D0 */	lfs f0, $$22754@sda21(r2)
+/* 80175E94 00172DD4  C0 02 A8 D0 */	lfs f0, "@2754"@sda21(r2)
 /* 80175E98 00172DD8  D0 1F 01 40 */	stfs f0, 0x140(r31)
 /* 80175E9C 00172DDC  C0 3E 00 44 */	lfs f1, 0x44(r30)
 /* 80175EA0 00172DE0  C0 1F 00 24 */	lfs f0, 0x24(r31)
@@ -758,14 +758,14 @@ lbl_80175E74:
 /* 80175F18 00172E58  90 65 00 14 */	stw r3, 0x14(r5)
 /* 80175F1C 00172E5C  90 65 00 18 */	stw r3, 0x18(r5)
 /* 80175F20 00172E60  90 05 00 1C */	stw r0, 0x1c(r5)
-/* 80175F24 00172E64  C0 02 A8 D0 */	lfs f0, $$22754@sda21(r2)
+/* 80175F24 00172E64  C0 02 A8 D0 */	lfs f0, "@2754"@sda21(r2)
 /* 80175F28 00172E68  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 80175F2C 00172E6C  80 7F 00 74 */	lwz r3, 0x74(r31)
 /* 80175F30 00172E70  4B F5 EA 01 */	bl setLightType__6MActorFi
 /* 80175F34 00172E74  80 1F 00 F0 */	lwz r0, 0xf0(r31)
 /* 80175F38 00172E78  54 00 06 F7 */	rlwinm. r0, r0, 0, 0x1b, 0x1b
 /* 80175F3C 00172E7C  41 82 05 00 */	beq lbl_8017643C
-/* 80175F40 00172E80  C0 22 A8 D8 */	lfs f1, $$22756@sda21(r2)
+/* 80175F40 00172E80  C0 22 A8 D8 */	lfs f1, "@2756"@sda21(r2)
 /* 80175F44 00172E84  38 9F 00 C4 */	addi r4, r31, 0xc4
 /* 80175F48 00172E88  C0 1F 00 14 */	lfs f0, 0x14(r31)
 /* 80175F4C 00172E8C  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
@@ -848,7 +848,7 @@ lbl_8017603C:
 /* 80176064 00172FA4  98 0D 99 E4 */	stb r0, init$localstatic1$initSinkNpc___8TBaseNPCFv@sda21(r13)
 lbl_80176068:
 /* 80176068 00172FA8  38 60 00 1E */	li r3, 0x1e
-/* 8017606C 00172FAC  4B F6 48 85 */	bl CLBPalFrame$$0i$$1__Fi
+/* 8017606C 00172FAC  4B F6 48 85 */	bl "CLBPalFrame<i>__Fi"
 /* 80176070 00172FB0  3A E3 00 00 */	addi r23, r3, 0
 /* 80176074 00172FB4  38 60 00 08 */	li r3, 8
 /* 80176078 00172FB8  4B E9 68 39 */	bl __nw__FUl
@@ -1067,17 +1067,17 @@ lbl_8017636C:
 /* 80176384 001732C4  80 6D 99 20 */	lwz r3, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80176388 001732C8  38 63 01 A8 */	addi r3, r3, 0x1a8
 /* 8017638C 001732CC  80 63 00 00 */	lwz r3, 0(r3)
-/* 80176390 001732D0  4B FF 43 85 */	bl CLBPalFrame$$0l$$1__Fl
+/* 80176390 001732D0  4B FF 43 85 */	bl "CLBPalFrame<l>__Fl"
 /* 80176394 001732D4  80 8D 99 20 */	lwz r4, mPtrSaveNormal__8TBaseNPC@sda21(r13)
 /* 80176398 001732D8  3B 23 00 00 */	addi r25, r3, 0
 /* 8017639C 001732DC  38 64 01 F8 */	addi r3, r4, 0x1f8
 /* 801763A0 001732E0  80 63 00 00 */	lwz r3, 0(r3)
-/* 801763A4 001732E4  4B FF 43 71 */	bl CLBPalFrame$$0l$$1__Fl
+/* 801763A4 001732E4  4B FF 43 71 */	bl "CLBPalFrame<l>__Fl"
 /* 801763A8 001732E8  90 75 00 00 */	stw r3, 0(r21)
 /* 801763AC 001732EC  38 00 00 00 */	li r0, 0
 /* 801763B0 001732F0  93 35 00 04 */	stw r25, 4(r21)
 /* 801763B4 001732F4  90 15 00 08 */	stw r0, 8(r21)
-/* 801763B8 001732F8  C0 02 A8 D0 */	lfs f0, $$22754@sda21(r2)
+/* 801763B8 001732F8  C0 02 A8 D0 */	lfs f0, "@2754"@sda21(r2)
 /* 801763BC 001732FC  D0 15 00 0C */	stfs f0, 0xc(r21)
 /* 801763C0 00173300  D0 15 00 10 */	stfs f0, 0x10(r21)
 /* 801763C4 00173304  D0 15 00 14 */	stfs f0, 0x14(r21)
@@ -1102,7 +1102,7 @@ lbl_801763DC:
 /* 8017640C 0017334C  80 1F 00 F0 */	lwz r0, 0xf0(r31)
 /* 80176410 00173350  54 00 06 F7 */	rlwinm. r0, r0, 0, 0x1b, 0x1b
 /* 80176414 00173354  41 82 00 28 */	beq lbl_8017643C
-/* 80176418 00173358  C0 22 A8 D8 */	lfs f1, $$22756@sda21(r2)
+/* 80176418 00173358  C0 22 A8 D8 */	lfs f1, "@2756"@sda21(r2)
 /* 8017641C 0017335C  38 9F 00 C4 */	addi r4, r31, 0xc4
 /* 80176420 00173360  C0 1F 00 14 */	lfs f0, 0x14(r31)
 /* 80176424 00173364  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
@@ -1120,94 +1120,94 @@ lbl_8017643C:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x37F35C, 0x14
-$$21962:
+"@1962":
 	.incbin "baserom.dol", 0x37F370, 0x30
-$$21963:
+"@1963":
 	.incbin "baserom.dol", 0x37F3A0, 0x38
-$$21964:
+"@1964":
 	.incbin "baserom.dol", 0x37F3D8, 0x34
-$$21965:
+"@1965":
 	.incbin "baserom.dol", 0x37F40C, 0x24
-$$22082:
+"@2082":
 	.incbin "baserom.dol", 0x37F430, 0x10
-$$22105:
+"@2105":
 	.incbin "baserom.dol", 0x37F440, 0x10
-$$22106:
+"@2106":
 	.incbin "baserom.dol", 0x37F450, 0x10
-$$22107:
+"@2107":
 	.incbin "baserom.dol", 0x37F460, 0xC
-$$22108:
+"@2108":
 	.incbin "baserom.dol", 0x37F46C, 0xC
-$$22109:
+"@2109":
 	.incbin "baserom.dol", 0x37F478, 0xC
-$$22110:
+"@2110":
 	.incbin "baserom.dol", 0x37F484, 0xC
-$$22112:
+"@2112":
 	.incbin "baserom.dol", 0x37F490, 0xC
-$$22114:
+"@2114":
 	.incbin "baserom.dol", 0x37F49C, 0xC
-$$22115:
+"@2115":
 	.incbin "baserom.dol", 0x37F4A8, 0xC
-$$22116:
+"@2116":
 	.incbin "baserom.dol", 0x37F4B4, 0xC
 sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv:
   .4byte 0x4000001
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000002
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000003
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000004
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000005
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000007
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000008
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x4000009
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22114
+  .4byte "@2114"
   .4byte 0x10000
   .4byte 0x400000a
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22115
+  .4byte "@2115"
   .4byte 0x10000
   .4byte 0x400000b
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22115
+  .4byte "@2115"
   .4byte 0x10000
   .4byte 0x400000c
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22115
+  .4byte "@2115"
   .4byte 0x10000
   .4byte 0x400000d
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22115
+  .4byte "@2115"
   .4byte 0x10000
   .4byte 0x4000018
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
-  .4byte $$22116
+  .4byte "@2116"
   .4byte 0x10000
   .4byte 0
   .4byte 0
@@ -1238,44 +1238,44 @@ sIndividualMareMA1Btp$localstatic5$initIndividualAnm___8TBaseNPCFv:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cManiyaParentViewObjName:
-  .4byte $$22105
+  .4byte "@2105"
 cManiyaChildViewObjName:
-  .4byte $$22106
+  .4byte "@2106"
 cNotUseFastCubeViewObjName0:
-  .4byte $$22107
+  .4byte "@2107"
 cNotUseFastCubeViewObjName1:
-  .4byte $$22108
+  .4byte "@2108"
 cEyeMaterialName:
-  .4byte $$22109
+  .4byte "@2109"
 cNeckJointName:
-  .4byte $$22111
+  .4byte "@2111"
 sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv:
-  .4byte $$22112
+  .4byte "@2112"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22111:
+"@2111":
 	.incbin "baserom.dol", 0x3E65A0, 0x8
 sIndividualMareWA0Bck$localstatic6$initIndividualAnm___8TBaseNPCFv:
 	.incbin "baserom.dol", 0x3E65A8, 0x8
-$$22532:
+"@2532":
 	.incbin "baserom.dol", 0x3E65B0, 0x4
-$$22533:
+"@2533":
 	.incbin "baserom.dol", 0x3E65B4, 0x4
-$$22534:
+"@2534":
 	.incbin "baserom.dol", 0x3E65B8, 0x4
-$$22535:
+"@2535":
 	.incbin "baserom.dol", 0x3E65BC, 0x4
-$$22537:
+"@2537":
 	.incbin "baserom.dol", 0x3E65C0, 0x8
-$$22539:
+"@2539":
 	.incbin "baserom.dol", 0x3E65C8, 0x8
-$$22754:
+"@2754":
   .4byte 0
-$$22755:
+"@2755":
 	.incbin "baserom.dol", 0x3E65D4, 0x4
-$$22756:
+"@2756":
 	.incbin "baserom.dol", 0x3E65D8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

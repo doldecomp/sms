@@ -109,16 +109,16 @@ lbl_8023D5A4:
 /* 8023D5B4 0023A4F4  98 1E 00 28 */	stb r0, 0x28(r30)
 /* 8023D5B8 0023A4F8  38 81 00 1C */	addi r4, r1, 0x1c
 /* 8023D5BC 0023A4FC  38 A0 02 00 */	li r5, 0x200
-/* 8023D5C0 0023A500  C0 02 DA 20 */	lfs f0, $$21842@sda21(r2)
+/* 8023D5C0 0023A500  C0 02 DA 20 */	lfs f0, "@1842"@sda21(r2)
 /* 8023D5C4 0023A504  38 C0 00 00 */	li r6, 0
-/* 8023D5C8 0023A508  C0 22 DA 24 */	lfs f1, $$21843@sda21(r2)
+/* 8023D5C8 0023A508  C0 22 DA 24 */	lfs f1, "@1843"@sda21(r2)
 /* 8023D5CC 0023A50C  38 E0 00 00 */	li r7, 0
 /* 8023D5D0 0023A510  D0 01 00 1C */	stfs f0, 0x1c(r1)
-/* 8023D5D4 0023A514  C0 02 DA 28 */	lfs f0, $$21844@sda21(r2)
+/* 8023D5D4 0023A514  C0 02 DA 28 */	lfs f0, "@1844"@sda21(r2)
 /* 8023D5D8 0023A518  D0 21 00 20 */	stfs f1, 0x20(r1)
 /* 8023D5DC 0023A51C  80 6D 98 54 */	lwz r3, gpEmitterManager4D2@sda21(r13)
 /* 8023D5E0 0023A520  D0 01 00 24 */	stfs f0, 0x24(r1)
-/* 8023D5E4 0023A524  4B E3 26 35 */	bl createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3$$0f$$1lP34JPACallBackBase$$0P14JPABaseEmitter$$1P54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1
+/* 8023D5E4 0023A524  4B E3 26 35 */	bl "createEmitter__17JPAEmitterManagerFRCQ29JGeometry8TVec3<f>lP34JPACallBackBase<P14JPABaseEmitter>P54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>"
 lbl_8023D5E8:
 /* 8023D5E8 0023A528  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 8023D5EC 0023A52C  83 E1 00 2C */	lwz r31, 0x2c(r1)
@@ -161,16 +161,16 @@ loadAfter__9TSunGlassFv:
 /* 8023D668 0023A5A8  3C 80 00 04 */	lis r4, 4
 /* 8023D66C 0023A5AC  4B EA AC 9D */	bl getFlag__12TFlagManagerCFUl
 /* 8023D670 0023A5B0  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8023D674 0023A5B4  C8 62 DA 38 */	lfd f3, $$21865@sda21(r2)
+/* 8023D674 0023A5B4  C8 62 DA 38 */	lfd f3, "@1865"@sda21(r2)
 /* 8023D678 0023A5B8  90 01 00 34 */	stw r0, 0x34(r1)
 /* 8023D67C 0023A5BC  3C 80 43 30 */	lis r4, 0x4330
-/* 8023D680 0023A5C0  C0 02 DA 30 */	lfs f0, $$21863@sda21(r2)
+/* 8023D680 0023A5C0  C0 02 DA 30 */	lfs f0, "@1863"@sda21(r2)
 /* 8023D684 0023A5C4  90 81 00 30 */	stw r4, 0x30(r1)
 /* 8023D688 0023A5C8  88 7F 00 1F */	lbz r3, 0x1f(r31)
 /* 8023D68C 0023A5CC  C8 21 00 30 */	lfd f1, 0x30(r1)
 /* 8023D690 0023A5D0  88 1F 00 1E */	lbz r0, 0x1e(r31)
 /* 8023D694 0023A5D4  EC 41 18 28 */	fsubs f2, f1, f3
-/* 8023D698 0023A5D8  C0 22 DA 2C */	lfs f1, $$21862@sda21(r2)
+/* 8023D698 0023A5D8  C0 22 DA 2C */	lfs f1, "@1862"@sda21(r2)
 /* 8023D69C 0023A5DC  7C 03 00 50 */	subf r0, r3, r0
 /* 8023D6A0 0023A5E0  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8023D6A4 0023A5E4  EC 42 00 24 */	fdivs f2, f2, f0
@@ -209,9 +209,9 @@ perform__9TSunGlassFUlPQ26JDrama9TGraphics:
 /* 8023D718 0023A658  A8 03 00 22 */	lha r0, 0x22(r3)
 /* 8023D71C 0023A65C  7C C7 31 D6 */	mullw r6, r7, r6
 /* 8023D720 0023A660  91 21 00 34 */	stw r9, 0x34(r1)
-/* 8023D724 0023A664  C8 42 DA 38 */	lfd f2, $$21865@sda21(r2)
+/* 8023D724 0023A664  C8 42 DA 38 */	lfd f2, "@1865"@sda21(r2)
 /* 8023D728 0023A668  91 01 00 30 */	stw r8, 0x30(r1)
-/* 8023D72C 0023A66C  C8 22 DA 40 */	lfd f1, $$21890@sda21(r2)
+/* 8023D72C 0023A66C  C8 22 DA 40 */	lfd f1, "@1890"@sda21(r2)
 /* 8023D730 0023A670  6C C6 80 00 */	xoris r6, r6, 0x8000
 /* 8023D734 0023A674  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 8023D738 0023A678  6C 00 80 00 */	xoris r0, r0, 0x8000
@@ -289,7 +289,7 @@ draw__9TSunGlassFRCQ26JDrama5TRectQ28JUtility6TColor:
 /* 8023D840 0023A780  39 00 00 00 */	li r8, 0
 /* 8023D844 0023A784  39 20 00 02 */	li r9, 2
 /* 8023D848 0023A788  4B E6 C7 A9 */	bl GXSetChanCtrl
-/* 8023D84C 0023A78C  C0 22 DA 28 */	lfs f1, $$21844@sda21(r2)
+/* 8023D84C 0023A78C  C0 22 DA 28 */	lfs f1, "@1844"@sda21(r2)
 /* 8023D850 0023A790  38 61 00 20 */	addi r3, r1, 0x20
 /* 8023D854 0023A794  FC 40 08 90 */	fmr f2, f1
 /* 8023D858 0023A798  FC 60 08 90 */	fmr f3, f1
@@ -425,16 +425,16 @@ startFade__9TSunGlassFib:
 /* 8023DA48 0023A988  3C 80 00 04 */	lis r4, 4
 /* 8023DA4C 0023A98C  4B EA A8 BD */	bl getFlag__12TFlagManagerCFUl
 /* 8023DA50 0023A990  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8023DA54 0023A994  C8 62 DA 38 */	lfd f3, $$21865@sda21(r2)
+/* 8023DA54 0023A994  C8 62 DA 38 */	lfd f3, "@1865"@sda21(r2)
 /* 8023DA58 0023A998  90 01 00 54 */	stw r0, 0x54(r1)
 /* 8023DA5C 0023A99C  3C 80 43 30 */	lis r4, 0x4330
-/* 8023DA60 0023A9A0  C0 02 DA 30 */	lfs f0, $$21863@sda21(r2)
+/* 8023DA60 0023A9A0  C0 02 DA 30 */	lfs f0, "@1863"@sda21(r2)
 /* 8023DA64 0023A9A4  90 81 00 50 */	stw r4, 0x50(r1)
 /* 8023DA68 0023A9A8  88 7E 00 1F */	lbz r3, 0x1f(r30)
 /* 8023DA6C 0023A9AC  C8 21 00 50 */	lfd f1, 0x50(r1)
 /* 8023DA70 0023A9B0  88 1E 00 1E */	lbz r0, 0x1e(r30)
 /* 8023DA74 0023A9B4  EC 41 18 28 */	fsubs f2, f1, f3
-/* 8023DA78 0023A9B8  C0 22 DA 2C */	lfs f1, $$21862@sda21(r2)
+/* 8023DA78 0023A9B8  C0 22 DA 2C */	lfs f1, "@1862"@sda21(r2)
 /* 8023DA7C 0023A9BC  7C 03 00 50 */	subf r0, r3, r0
 /* 8023DA80 0023A9C0  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8023DA84 0023A9C4  EC 42 00 24 */	fdivs f2, f2, f0
@@ -464,16 +464,16 @@ lbl_8023DABC:
 /* 8023DADC 0023AA1C  3C 80 00 04 */	lis r4, 4
 /* 8023DAE0 0023AA20  4B EA A8 29 */	bl getFlag__12TFlagManagerCFUl
 /* 8023DAE4 0023AA24  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8023DAE8 0023AA28  C8 62 DA 38 */	lfd f3, $$21865@sda21(r2)
+/* 8023DAE8 0023AA28  C8 62 DA 38 */	lfd f3, "@1865"@sda21(r2)
 /* 8023DAEC 0023AA2C  90 01 00 44 */	stw r0, 0x44(r1)
 /* 8023DAF0 0023AA30  3C 80 43 30 */	lis r4, 0x4330
-/* 8023DAF4 0023AA34  C0 02 DA 30 */	lfs f0, $$21863@sda21(r2)
+/* 8023DAF4 0023AA34  C0 02 DA 30 */	lfs f0, "@1863"@sda21(r2)
 /* 8023DAF8 0023AA38  90 81 00 40 */	stw r4, 0x40(r1)
 /* 8023DAFC 0023AA3C  88 7E 00 1F */	lbz r3, 0x1f(r30)
 /* 8023DB00 0023AA40  C8 21 00 40 */	lfd f1, 0x40(r1)
 /* 8023DB04 0023AA44  88 1E 00 1E */	lbz r0, 0x1e(r30)
 /* 8023DB08 0023AA48  EC 41 18 28 */	fsubs f2, f1, f3
-/* 8023DB0C 0023AA4C  C0 22 DA 2C */	lfs f1, $$21862@sda21(r2)
+/* 8023DB0C 0023AA4C  C0 22 DA 2C */	lfs f1, "@1862"@sda21(r2)
 /* 8023DB10 0023AA50  7C 03 00 50 */	subf r0, r3, r0
 /* 8023DB14 0023AA54  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8023DB18 0023AA58  EC 42 00 24 */	fdivs f2, f2, f0
@@ -529,17 +529,17 @@ __vt__9TSunGlass:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21842:
+"@1842":
 	.incbin "baserom.dol", 0x3E9720, 0x4
-$$21843:
+"@1843":
 	.incbin "baserom.dol", 0x3E9724, 0x4
-$$21844:
+"@1844":
   .4byte 0
-$$21862:
+"@1862":
 	.incbin "baserom.dol", 0x3E972C, 0x4
-$$21863:
+"@1863":
 	.incbin "baserom.dol", 0x3E9730, 0x8
-$$21865:
+"@1865":
 	.incbin "baserom.dol", 0x3E9738, 0x8
-$$21890:
+"@1890":
 	.incbin "baserom.dol", 0x3E9740, 0x8

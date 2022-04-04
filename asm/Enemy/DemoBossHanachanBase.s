@@ -37,17 +37,17 @@ lbl_802FC9C4:
 /* 802FC9D4 002F9914  4B E1 9D 89 */	bl createMActorFromNthData__13TMActorKeeperFiUl
 /* 802FC9D8 002F9918  90 7D 00 74 */	stw r3, 0x74(r29)
 /* 802FC9DC 002F991C  38 9D 00 C4 */	addi r4, r29, 0xc4
-/* 802FC9E0 002F9920  C0 02 F6 3C */	lfs f0, $$22009@sda21(r2)
+/* 802FC9E0 002F9920  C0 02 F6 3C */	lfs f0, "@2009"@sda21(r2)
 /* 802FC9E4 002F9924  D0 1D 01 48 */	stfs f0, 0x148(r29)
-/* 802FC9E8 002F9928  C0 02 F6 40 */	lfs f0, $$22010@sda21(r2)
+/* 802FC9E8 002F9928  C0 02 F6 40 */	lfs f0, "@2010"@sda21(r2)
 /* 802FC9EC 002F992C  D0 1D 00 BC */	stfs f0, 0xbc(r29)
 /* 802FC9F0 002F9930  C0 1D 00 BC */	lfs f0, 0xbc(r29)
 /* 802FC9F4 002F9934  D0 1D 01 4C */	stfs f0, 0x14c(r29)
-/* 802FC9F8 002F9938  C0 02 F6 44 */	lfs f0, $$22011@sda21(r2)
+/* 802FC9F8 002F9938  C0 02 F6 44 */	lfs f0, "@2011"@sda21(r2)
 /* 802FC9FC 002F993C  D0 1D 00 C0 */	stfs f0, 0xc0(r29)
-/* 802FCA00 002F9940  C0 02 F6 38 */	lfs f0, $$21955@sda21(r2)
+/* 802FCA00 002F9940  C0 02 F6 38 */	lfs f0, "@1955"@sda21(r2)
 /* 802FCA04 002F9944  D0 1D 01 40 */	stfs f0, 0x140(r29)
-/* 802FCA08 002F9948  C0 02 F6 48 */	lfs f0, $$22012@sda21(r2)
+/* 802FCA08 002F9948  C0 02 F6 48 */	lfs f0, "@2012"@sda21(r2)
 /* 802FCA0C 002F994C  D0 1D 00 B8 */	stfs f0, 0xb8(r29)
 /* 802FCA10 002F9950  80 1D 00 F0 */	lwz r0, 0xf0(r29)
 /* 802FCA14 002F9954  60 00 00 18 */	ori r0, r0, 0x18
@@ -100,8 +100,8 @@ __ct__27TDemoBossHanachanSaveParamsFPCc:
 /* 802FCAB8 002F99F8  93 81 00 10 */	stw r28, 0x10(r1)
 /* 802FCABC 002F99FC  7C 7C 1B 78 */	mr r28, r3
 /* 802FCAC0 002F9A00  90 83 00 00 */	stw r4, 0(r3)
-/* 802FCAC4 002F9A04  3C 60 80 3A */	lis r3, $$21490@ha
-/* 802FCAC8 002F9A08  3B A3 F9 18 */	addi r29, r3, $$21490@l
+/* 802FCAC4 002F9A04  3C 60 80 3A */	lis r3, "@1490"@ha
+/* 802FCAC8 002F9A08  3B A3 F9 18 */	addi r29, r3, "@1490"@l
 /* 802FCACC 002F9A0C  90 1C 00 04 */	stw r0, 4(r28)
 /* 802FCAD0 002F9A10  38 7D 00 E0 */	addi r3, r29, 0xe0
 /* 802FCAD4 002F9A14  4B D4 7B B9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -110,12 +110,12 @@ __ct__27TDemoBossHanachanSaveParamsFPCc:
 /* 802FCAE0 002F9A20  38 7C 00 08 */	addi r3, r28, 8
 /* 802FCAE4 002F9A24  38 DD 00 E0 */	addi r6, r29, 0xe0
 /* 802FCAE8 002F9A28  4B DD E1 0D */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 802FCAEC 002F9A2C  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 802FCAF0 002F9A30  3B C3 29 B8 */	addi r30, r3, __vt__10TParamT$$0f$$1@l
+/* 802FCAEC 002F9A2C  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 802FCAF0 002F9A30  3B C3 29 B8 */	addi r30, r3, "__vt__10TParamT<f>"@l
 /* 802FCAF4 002F9A34  93 DC 00 08 */	stw r30, 8(r28)
-/* 802FCAF8 002F9A38  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 802FCAFC 002F9A3C  3B E3 29 F4 */	addi r31, r3, __vt__11TParamRT$$0f$$1@l
-/* 802FCB00 002F9A40  C0 02 F6 4C */	lfs f0, $$22030@sda21(r2)
+/* 802FCAF8 002F9A38  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 802FCAFC 002F9A3C  3B E3 29 F4 */	addi r31, r3, "__vt__11TParamRT<f>"@l
+/* 802FCB00 002F9A40  C0 02 F6 4C */	lfs f0, "@2030"@sda21(r2)
 /* 802FCB04 002F9A44  38 7D 00 F0 */	addi r3, r29, 0xf0
 /* 802FCB08 002F9A48  D0 1C 00 18 */	stfs f0, 0x18(r28)
 /* 802FCB0C 002F9A4C  93 FC 00 08 */	stw r31, 8(r28)
@@ -127,7 +127,7 @@ __ct__27TDemoBossHanachanSaveParamsFPCc:
 /* 802FCB24 002F9A64  4B DD E0 D1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 802FCB28 002F9A68  93 DC 00 1C */	stw r30, 0x1c(r28)
 /* 802FCB2C 002F9A6C  7F 83 E3 78 */	mr r3, r28
-/* 802FCB30 002F9A70  C0 02 F6 50 */	lfs f0, $$22032@sda21(r2)
+/* 802FCB30 002F9A70  C0 02 F6 50 */	lfs f0, "@2032"@sda21(r2)
 /* 802FCB34 002F9A74  D0 1C 00 2C */	stfs f0, 0x2c(r28)
 /* 802FCB38 002F9A78  93 FC 00 1C */	stw r31, 0x1c(r28)
 /* 802FCB3C 002F9A7C  80 9C 00 00 */	lwz r4, 0(r28)
@@ -142,30 +142,30 @@ __ct__27TDemoBossHanachanSaveParamsFPCc:
 /* 802FCB60 002F9AA0  38 21 00 20 */	addi r1, r1, 0x20
 /* 802FCB64 002F9AA4  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__17TDemoBossHanachanFv
-$$232$$2__dt__17TDemoBossHanachanFv:
+.global "@32@__dt__17TDemoBossHanachanFv"
+"@32@__dt__17TDemoBossHanachanFv":
 /* 802FCB68 002F9AA8  38 63 FF E0 */	addi r3, r3, -32
 /* 802FCB6C 002F9AAC  4B E0 13 EC */	b __dt__17TDemoBossHanachanFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x39C924, 0x14
-$$21597:
+"@1597":
 	.incbin "baserom.dol", 0x39C938, 0x30
-$$21598:
+"@1598":
 	.incbin "baserom.dol", 0x39C968, 0x38
-$$21599:
+"@1599":
 	.incbin "baserom.dol", 0x39C9A0, 0x34
-$$21600:
+"@1600":
 	.incbin "baserom.dol", 0x39C9D4, 0x24
-$$22029:
+"@2029":
 	.incbin "baserom.dol", 0x39C9F8, 0x10
-$$22031:
+"@2031":
 	.incbin "baserom.dol", 0x39CA08, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -182,7 +182,7 @@ __vt__17TDemoBossHanachan:
   .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__17TDemoBossHanachanFv
+  .4byte "@32@__dt__17TDemoBossHanachanFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -192,12 +192,12 @@ __vt__17TDemoBossHanachan:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -214,7 +214,7 @@ __vt__17TDemoBossHanachan:
   .4byte receiveMessage__17TDemoBossHanachanFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -235,8 +235,8 @@ __vt__17TDemoBossHanachan:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -266,17 +266,17 @@ __vt__24TDemoBossHanachanManager:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21955:
+"@1955":
   .4byte 0
-$$22009:
+"@2009":
 	.incbin "baserom.dol", 0x3EB33C, 0x4
-$$22010:
+"@2010":
 	.incbin "baserom.dol", 0x3EB340, 0x4
-$$22011:
+"@2011":
 	.incbin "baserom.dol", 0x3EB344, 0x4
-$$22012:
+"@2012":
 	.incbin "baserom.dol", 0x3EB348, 0x4
-$$22030:
+"@2030":
 	.incbin "baserom.dol", 0x3EB34C, 0x4
-$$22032:
+"@2032":
 	.incbin "baserom.dol", 0x3EB350, 0x8

@@ -163,8 +163,8 @@ lbl_800C03D8:
 /* 800C0454 000BD394  7C 08 03 A6 */	mtlr r0
 /* 800C0458 000BD398  4E 80 00 20 */	blr 
 
-.global requestCol__15TDLColorTexQuadFPCQ29JGeometry8TVec3$$0f$$18_GXColori
-requestCol__15TDLColorTexQuadFPCQ29JGeometry8TVec3$$0f$$18_GXColori:
+.global "requestCol__15TDLColorTexQuadFPCQ29JGeometry8TVec3<f>8_GXColori"
+"requestCol__15TDLColorTexQuadFPCQ29JGeometry8TVec3<f>8_GXColori":
 /* 800C045C 000BD39C  A1 03 00 08 */	lhz r8, 8(r3)
 /* 800C0460 000BD3A0  A0 03 00 06 */	lhz r0, 6(r3)
 /* 800C0464 000BD3A4  7C 08 00 40 */	cmplw r8, r0
@@ -515,8 +515,8 @@ lbl_800C093C:
 /* 800C0984 000BD8C4  7C 08 03 A6 */	mtlr r0
 /* 800C0988 000BD8C8  4E 80 00 20 */	blr 
 
-.global request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1
-request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1:
+.global "request__10TDLTexQuadFPCQ29JGeometry8TVec3<f>"
+"request__10TDLTexQuadFPCQ29JGeometry8TVec3<f>":
 /* 800C098C 000BD8CC  A0 C3 00 08 */	lhz r6, 8(r3)
 /* 800C0990 000BD8D0  A0 03 00 06 */	lhz r0, 6(r3)
 /* 800C0994 000BD8D4  7C 06 00 40 */	cmplw r6, r0
@@ -724,7 +724,7 @@ __vt__15TDLColorTexQuad:
   .4byte createDLBuffer__10TDLTexQuadFUs
   .4byte createBuffer__15TDLColorTexQuadFUs
   .4byte reset__10TDLTexQuadFv
-  .4byte request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1
+  .4byte "request__10TDLTexQuadFPCQ29JGeometry8TVec3<f>"
   .4byte setEnd__15TDLColorTexQuadFv
   .4byte draw__15TDLColorTexQuadFv
 .global __vt__10TDLTexQuad
@@ -734,7 +734,7 @@ __vt__10TDLTexQuad:
   .4byte createDLBuffer__10TDLTexQuadFUs
   .4byte createBuffer__10TDLTexQuadFUs
   .4byte reset__10TDLTexQuadFv
-  .4byte request__10TDLTexQuadFPCQ29JGeometry8TVec3$$0f$$1
+  .4byte "request__10TDLTexQuadFPCQ29JGeometry8TVec3<f>"
   .4byte setEnd__10TDLTexQuadFv
   .4byte 0
 

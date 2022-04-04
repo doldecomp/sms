@@ -117,8 +117,8 @@ lbl_800A68AC:
 GXSetVtxDesc:
 /* 800A68E8 000A3828  28 03 00 19 */	cmplwi r3, 0x19
 /* 800A68EC 000A382C  41 81 03 00 */	bgt lbl_800A6BEC
-/* 800A68F0 000A3830  3C A0 80 3B */	lis r5, $$2128@ha
-/* 800A68F4 000A3834  38 A5 15 40 */	addi r5, r5, $$2128@l
+/* 800A68F0 000A3830  3C A0 80 3B */	lis r5, "@128"@ha
+/* 800A68F4 000A3834  38 A5 15 40 */	addi r5, r5, "@128"@l
 /* 800A68F8 000A3838  54 60 10 3A */	slwi r0, r3, 2
 /* 800A68FC 000A383C  7C 05 00 2E */	lwzx r0, r5, r0
 /* 800A6900 000A3840  7C 09 03 A6 */	mtctr r0
@@ -362,8 +362,8 @@ lbl_800A6C34:
 
 .global GXSetVtxDescv
 GXSetVtxDescv:
-/* 800A6C48 000A3B88  3C 80 80 3B */	lis r4, $$2189@ha
-/* 800A6C4C 000A3B8C  38 84 15 A8 */	addi r4, r4, $$2189@l
+/* 800A6C48 000A3B88  3C 80 80 3B */	lis r4, "@189"@ha
+/* 800A6C4C 000A3B8C  38 84 15 A8 */	addi r4, r4, "@189"@l
 /* 800A6C50 000A3B90  48 00 03 14 */	b lbl_800A6F64
 lbl_800A6C54:
 /* 800A6C54 000A3B94  80 A3 00 00 */	lwz r5, 0(r3)
@@ -724,8 +724,8 @@ lbl_800A70A8:
 GXGetVtxDesc:
 /* 800A7144 000A4084  28 03 00 19 */	cmplwi r3, 0x19
 /* 800A7148 000A4088  41 81 01 A4 */	bgt lbl_800A72EC
-/* 800A714C 000A408C  3C A0 80 3B */	lis r5, $$2256@ha
-/* 800A7150 000A4090  38 A5 16 10 */	addi r5, r5, $$2256@l
+/* 800A714C 000A408C  3C A0 80 3B */	lis r5, "@256"@ha
+/* 800A7150 000A4090  38 A5 16 10 */	addi r5, r5, "@256"@l
 /* 800A7154 000A4094  54 60 10 3A */	slwi r0, r3, 2
 /* 800A7158 000A4098  7C 05 00 2E */	lwzx r0, r5, r0
 /* 800A715C 000A409C  7C 09 03 A6 */	mtctr r0
@@ -923,8 +923,8 @@ GXSetVtxAttrFmt:
 /* 800A73CC 000A430C  39 09 00 3C */	addi r8, r9, 0x3c
 /* 800A73D0 000A4310  39 29 00 5C */	addi r9, r9, 0x5c
 /* 800A73D4 000A4314  41 81 03 08 */	bgt lbl_800A76DC
-/* 800A73D8 000A4318  3D 40 80 3B */	lis r10, $$2302@ha
-/* 800A73DC 000A431C  39 4A 16 78 */	addi r10, r10, $$2302@l
+/* 800A73D8 000A4318  3D 40 80 3B */	lis r10, "@302"@ha
+/* 800A73DC 000A431C  39 4A 16 78 */	addi r10, r10, "@302"@l
 /* 800A73E0 000A4320  54 00 10 3A */	slwi r0, r0, 2
 /* 800A73E4 000A4324  7C 0A 00 2E */	lwzx r0, r10, r0
 /* 800A73E8 000A4328  7C 09 03 A6 */	mtctr r0
@@ -1148,12 +1148,12 @@ lbl_800A76DC:
 GXSetVtxAttrFmtv:
 /* 800A7710 000A4650  80 CD 82 C8 */	lwz r6, gx@sda21(r13)
 /* 800A7714 000A4654  54 60 10 3A */	slwi r0, r3, 2
-/* 800A7718 000A4658  3C A0 80 3B */	lis r5, $$2329@ha
+/* 800A7718 000A4658  3C A0 80 3B */	lis r5, "@329"@ha
 /* 800A771C 000A465C  7C C6 02 14 */	add r6, r6, r0
 /* 800A7720 000A4660  39 06 00 1C */	addi r8, r6, 0x1c
 /* 800A7724 000A4664  39 26 00 3C */	addi r9, r6, 0x3c
 /* 800A7728 000A4668  39 46 00 5C */	addi r10, r6, 0x5c
-/* 800A772C 000A466C  38 A5 16 BC */	addi r5, r5, $$2329@l
+/* 800A772C 000A466C  38 A5 16 BC */	addi r5, r5, "@329"@l
 /* 800A7730 000A4670  48 00 03 1C */	b lbl_800A7A4C
 lbl_800A7734:
 /* 800A7734 000A4674  80 C4 00 00 */	lwz r6, 0(r4)
@@ -1442,8 +1442,8 @@ GXGetVtxAttrFmt:
 /* 800A7B40 000A4A80  39 04 00 3C */	addi r8, r4, 0x3c
 /* 800A7B44 000A4A84  39 24 00 5C */	addi r9, r4, 0x5c
 /* 800A7B48 000A4A88  41 81 02 10 */	bgt lbl_800A7D58
-/* 800A7B4C 000A4A8C  3C 80 80 3B */	lis r4, $$2393@ha
-/* 800A7B50 000A4A90  38 84 17 00 */	addi r4, r4, $$2393@l
+/* 800A7B4C 000A4A8C  3C 80 80 3B */	lis r4, "@393"@ha
+/* 800A7B50 000A4A90  38 84 17 00 */	addi r4, r4, "@393"@l
 /* 800A7B54 000A4A94  54 00 10 3A */	slwi r0, r0, 2
 /* 800A7B58 000A4A98  7C 04 00 2E */	lwzx r0, r4, r0
 /* 800A7B5C 000A4A9C  7C 09 03 A6 */	mtctr r0
@@ -1684,8 +1684,8 @@ GXSetTexCoordGen2:
 /* 800A7E94 000A4DD4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800A7E98 000A4DD8  39 40 00 05 */	li r10, 5
 /* 800A7E9C 000A4DDC  41 81 00 98 */	bgt lbl_800A7F34
-/* 800A7EA0 000A4DE0  3D 20 80 3B */	lis r9, $$2498@ha
-/* 800A7EA4 000A4DE4  39 29 17 60 */	addi r9, r9, $$2498@l
+/* 800A7EA0 000A4DE0  3D 20 80 3B */	lis r9, "@498"@ha
+/* 800A7EA4 000A4DE4  39 29 17 60 */	addi r9, r9, "@498"@l
 /* 800A7EA8 000A4DE8  54 A0 10 3A */	slwi r0, r5, 2
 /* 800A7EAC 000A4DEC  7C 09 00 2E */	lwzx r0, r9, r0
 /* 800A7EB0 000A4DF0  7C 09 03 A6 */	mtctr r0
@@ -1806,8 +1806,8 @@ lbl_800A7FEC:
 /* 800A8020 000A4F60  90 09 80 00 */	stw r0, -0x8000(r9)
 /* 800A8024 000A4F64  90 89 80 00 */	stw r4, -0x8000(r9)
 /* 800A8028 000A4F68  41 81 00 F4 */	bgt lbl_800A811C
-/* 800A802C 000A4F6C  3C 80 80 3B */	lis r4, $$2499@ha
-/* 800A8030 000A4F70  38 84 17 44 */	addi r4, r4, $$2499@l
+/* 800A802C 000A4F6C  3C 80 80 3B */	lis r4, "@499"@ha
+/* 800A8030 000A4F70  38 84 17 44 */	addi r4, r4, "@499"@l
 /* 800A8034 000A4F74  54 60 10 3A */	slwi r0, r3, 2
 /* 800A8038 000A4F78  7C 04 00 2E */	lwzx r0, r4, r0
 /* 800A803C 000A4F7C  7C 09 03 A6 */	mtctr r0
@@ -1911,7 +1911,7 @@ GXSetNumTexGens:
 /* 800A8194 000A50D4  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2128:
+"@128":
     .4byte lbl_800A6908
     .4byte lbl_800A6920
     .4byte lbl_800A6940
@@ -1938,7 +1938,7 @@ $$2128:
     .4byte lbl_800A6BEC
     .4byte lbl_800A6BEC
     .4byte lbl_800A6A7C
-$$2189:
+"@189":
     .4byte lbl_800A6C74
     .4byte lbl_800A6C90
     .4byte lbl_800A6CB0
@@ -1965,7 +1965,7 @@ $$2189:
     .4byte lbl_800A6F60
     .4byte lbl_800A6F60
     .4byte lbl_800A6DEC
-$$2256:
+"@256":
     .4byte lbl_800A7164
     .4byte lbl_800A7174
     .4byte lbl_800A7184
@@ -1992,7 +1992,7 @@ $$2256:
     .4byte lbl_800A72EC
     .4byte lbl_800A72EC
     .4byte lbl_800A7228
-$$2302:
+"@302":
     .4byte lbl_800A73F0
     .4byte lbl_800A742C
     .4byte lbl_800A7490
@@ -2010,7 +2010,7 @@ $$2302:
     .4byte lbl_800A76DC
     .4byte lbl_800A76DC
     .4byte lbl_800A742C
-$$2329:
+"@329":
     .4byte lbl_800A7760
     .4byte lbl_800A779C
     .4byte lbl_800A7800
@@ -2028,7 +2028,7 @@ $$2329:
     .4byte lbl_800A7A48
     .4byte lbl_800A7A48
     .4byte lbl_800A779C
-$$2393:
+"@393":
     .4byte lbl_800A7B64
     .4byte lbl_800A7B8C
     .4byte lbl_800A7BD0
@@ -2046,7 +2046,7 @@ $$2393:
     .4byte lbl_800A7D58
     .4byte lbl_800A7D58
     .4byte lbl_800A7B8C
-$$2499:
+"@499":
     .4byte lbl_800A8044
     .4byte lbl_800A8064
     .4byte lbl_800A8084
@@ -2054,7 +2054,7 @@ $$2499:
     .4byte lbl_800A80C4
     .4byte lbl_800A80DC
     .4byte lbl_800A80FC
-$$2498:
+"@498":
     .4byte lbl_800A7EB8
     .4byte lbl_800A7EC4
     .4byte lbl_800A7ED0

@@ -124,12 +124,12 @@ SMS_FillScreenAlpha__FUc:
 /* 800C8714 000C5654  38 80 00 00 */	li r4, 0
 /* 800C8718 000C5658  38 A0 00 04 */	li r5, 4
 /* 800C871C 000C565C  4B FE 01 8D */	bl GXBegin
-/* 800C8720 000C5660  C0 42 8D A0 */	lfs f2, $$21629@sda21(r2)
+/* 800C8720 000C5660  C0 42 8D A0 */	lfs f2, "@1629"@sda21(r2)
 /* 800C8724 000C5664  3C 80 CC 01 */	lis r4, 0xCC008000@ha
-/* 800C8728 000C5668  C0 22 8D A4 */	lfs f1, $$21630@sda21(r2)
+/* 800C8728 000C5668  C0 22 8D A4 */	lfs f1, "@1630"@sda21(r2)
 /* 800C872C 000C566C  38 60 00 01 */	li r3, 1
 /* 800C8730 000C5670  D0 44 80 00 */	stfs f2, 0xCC008000@l(r4)
-/* 800C8734 000C5674  C0 02 8D A8 */	lfs f0, $$21631@sda21(r2)
+/* 800C8734 000C5674  C0 02 8D A8 */	lfs f0, "@1631"@sda21(r2)
 /* 800C8738 000C5678  D0 24 80 00 */	stfs f1, -0x8000(r4)
 /* 800C873C 000C567C  D0 04 80 00 */	stfs f0, -0x8000(r4)
 /* 800C8740 000C5680  D0 24 80 00 */	stfs f1, -0x8000(r4)
@@ -306,10 +306,10 @@ lbl_800C8998:
 /* 800C89B4 000C58F4  98 1C 00 16 */	stb r0, 0x16(r28)
 /* 800C89B8 000C58F8  98 1C 00 17 */	stb r0, 0x17(r28)
 /* 800C89BC 000C58FC  98 1C 00 18 */	stb r0, 0x18(r28)
-/* 800C89C0 000C5900  C0 02 8D AC */	lfs f0, $$21800@sda21(r2)
+/* 800C89C0 000C5900  C0 02 8D AC */	lfs f0, "@1800"@sda21(r2)
 /* 800C89C4 000C5904  D0 1C 00 28 */	stfs f0, 0x28(r28)
 /* 800C89C8 000C5908  D0 1C 00 2C */	stfs f0, 0x2c(r28)
-/* 800C89CC 000C590C  C0 02 8D B0 */	lfs f0, $$21801@sda21(r2)
+/* 800C89CC 000C590C  C0 02 8D B0 */	lfs f0, "@1801"@sda21(r2)
 /* 800C89D0 000C5910  D0 1C 00 30 */	stfs f0, 0x30(r28)
 /* 800C89D4 000C5914  D0 1C 00 34 */	stfs f0, 0x34(r28)
 /* 800C89D8 000C5918  48 00 00 18 */	b lbl_800C89F0
@@ -321,7 +321,7 @@ lbl_800C89DC:
 /* 800C89EC 000C592C  98 1C 00 14 */	stb r0, 0x14(r28)
 lbl_800C89F0:
 /* 800C89F0 000C5930  3B E0 00 00 */	li r31, 0
-/* 800C89F4 000C5934  C8 62 8D C0 */	lfd f3, $$21805@sda21(r2)
+/* 800C89F4 000C5934  C8 62 8D C0 */	lfd f3, "@1805"@sda21(r2)
 /* 800C89F8 000C5938  9B E1 00 40 */	stb r31, 0x40(r1)
 /* 800C89FC 000C593C  3C 60 43 30 */	lis r3, 0x4330
 /* 800C8A00 000C5940  3B DD 00 54 */	addi r30, r29, 0x54
@@ -490,11 +490,11 @@ lbl_800C89F0:
 /* 800C8C8C 000C5BCC  38 A0 00 05 */	li r5, 5
 /* 800C8C90 000C5BD0  38 C0 00 05 */	li r6, 5
 /* 800C8C94 000C5BD4  4B FE 3A 5D */	bl GXSetBlendMode
-/* 800C8C98 000C5BD8  C0 22 8D B8 */	lfs f1, $$21803@sda21(r2)
+/* 800C8C98 000C5BD8  C0 22 8D B8 */	lfs f1, "@1803"@sda21(r2)
 /* 800C8C9C 000C5BDC  38 60 00 A0 */	li r3, 0xa0
 /* 800C8CA0 000C5BE0  C0 5C 00 40 */	lfs f2, 0x40(r28)
 /* 800C8CA4 000C5BE4  38 80 00 00 */	li r4, 0
-/* 800C8CA8 000C5BE8  C0 A2 8D B4 */	lfs f5, $$21802@sda21(r2)
+/* 800C8CA8 000C5BE8  C0 A2 8D B4 */	lfs f5, "@1802"@sda21(r2)
 /* 800C8CAC 000C5BEC  C1 1C 00 44 */	lfs f8, 0x44(r28)
 /* 800C8CB0 000C5BF0  38 A0 00 08 */	li r5, 8
 /* 800C8CB4 000C5BF4  C0 1D 00 E8 */	lfs f0, 0xe8(r29)
@@ -774,11 +774,11 @@ lbl_800C9090:
 .global calcDashBlurValue__12TAfterEffectFv
 calcDashBlurValue__12TAfterEffectFv:
 /* 800C90C8 000C6008  C0 23 00 50 */	lfs f1, 0x50(r3)
-/* 800C90CC 000C600C  C0 02 8D AC */	lfs f0, $$21800@sda21(r2)
+/* 800C90CC 000C600C  C0 02 8D AC */	lfs f0, "@1800"@sda21(r2)
 /* 800C90D0 000C6010  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800C90D4 000C6014  40 81 00 7C */	ble lbl_800C9150
 /* 800C90D8 000C6018  C0 03 00 5C */	lfs f0, 0x5c(r3)
-/* 800C90DC 000C601C  C0 42 8D B4 */	lfs f2, $$21802@sda21(r2)
+/* 800C90DC 000C601C  C0 42 8D B4 */	lfs f2, "@1802"@sda21(r2)
 /* 800C90E0 000C6020  EC 00 00 72 */	fmuls f0, f0, f1
 /* 800C90E4 000C6024  EC 02 00 32 */	fmuls f0, f2, f0
 /* 800C90E8 000C6028  D0 03 00 28 */	stfs f0, 0x28(r3)
@@ -790,7 +790,7 @@ calcDashBlurValue__12TAfterEffectFv:
 /* 800C9100 000C6040  D0 03 00 2C */	stfs f0, 0x2c(r3)
 /* 800C9104 000C6044  C0 23 00 64 */	lfs f1, 0x64(r3)
 /* 800C9108 000C6048  C0 03 00 50 */	lfs f0, 0x50(r3)
-/* 800C910C 000C604C  C0 42 8D B0 */	lfs f2, $$21801@sda21(r2)
+/* 800C910C 000C604C  C0 42 8D B0 */	lfs f2, "@1801"@sda21(r2)
 /* 800C9110 000C6050  EC 01 10 3A */	fmadds f0, f1, f0, f2
 /* 800C9114 000C6054  D0 03 00 30 */	stfs f0, 0x30(r3)
 /* 800C9118 000C6058  C0 23 00 64 */	lfs f1, 0x64(r3)
@@ -816,7 +816,7 @@ lbl_800C9150:
 /* 800C9164 000C60A4  98 03 00 58 */	stb r0, 0x58(r3)
 /* 800C9168 000C60A8  D0 03 00 28 */	stfs f0, 0x28(r3)
 /* 800C916C 000C60AC  D0 03 00 2C */	stfs f0, 0x2c(r3)
-/* 800C9170 000C60B0  C0 02 8D B0 */	lfs f0, $$21801@sda21(r2)
+/* 800C9170 000C60B0  C0 02 8D B0 */	lfs f0, "@1801"@sda21(r2)
 /* 800C9174 000C60B4  D0 03 00 30 */	stfs f0, 0x30(r3)
 /* 800C9178 000C60B8  D0 03 00 34 */	stfs f0, 0x34(r3)
 /* 800C917C 000C60BC  88 03 00 14 */	lbz r0, 0x14(r3)
@@ -834,11 +834,11 @@ lbl_800C918C:
 .global loadAfter__12TAfterEffectFv
 loadAfter__12TAfterEffectFv:
 /* 800C91A4 000C60E4  7C 08 02 A6 */	mflr r0
-/* 800C91A8 000C60E8  3C 80 80 37 */	lis r4, $$21831@ha
+/* 800C91A8 000C60E8  3C 80 80 37 */	lis r4, "@1831"@ha
 /* 800C91AC 000C60EC  90 01 00 04 */	stw r0, 4(r1)
 /* 800C91B0 000C60F0  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 800C91B4 000C60F4  93 E1 00 3C */	stw r31, 0x3c(r1)
-/* 800C91B8 000C60F8  3B E4 25 B8 */	addi r31, r4, $$21831@l
+/* 800C91B8 000C60F8  3B E4 25 B8 */	addi r31, r4, "@1831"@l
 /* 800C91BC 000C60FC  93 C1 00 38 */	stw r30, 0x38(r1)
 /* 800C91C0 000C6100  93 A1 00 34 */	stw r29, 0x34(r1)
 /* 800C91C4 000C6104  3B A3 00 00 */	addi r29, r3, 0
@@ -886,7 +886,7 @@ load__12TAfterEffectFR20JSUMemoryInputStream:
 /* 800C9260 000C61A0  88 7F 00 1A */	lbz r3, 0x1a(r31)
 /* 800C9264 000C61A4  98 7F 00 1C */	stb r3, 0x1c(r31)
 /* 800C9268 000C61A8  88 7F 00 1B */	lbz r3, 0x1b(r31)
-/* 800C926C 000C61AC  C8 22 8D C0 */	lfd f1, $$21805@sda21(r2)
+/* 800C926C 000C61AC  C8 22 8D C0 */	lfd f1, "@1805"@sda21(r2)
 /* 800C9270 000C61B0  90 61 00 1C */	stw r3, 0x1c(r1)
 /* 800C9274 000C61B4  90 81 00 18 */	stw r4, 0x18(r1)
 /* 800C9278 000C61B8  C8 01 00 18 */	lfd f0, 0x18(r1)
@@ -901,10 +901,10 @@ load__12TAfterEffectFR20JSUMemoryInputStream:
 /* 800C929C 000C61DC  98 1F 00 16 */	stb r0, 0x16(r31)
 /* 800C92A0 000C61E0  98 1F 00 17 */	stb r0, 0x17(r31)
 /* 800C92A4 000C61E4  98 1F 00 18 */	stb r0, 0x18(r31)
-/* 800C92A8 000C61E8  C0 22 8D AC */	lfs f1, $$21800@sda21(r2)
+/* 800C92A8 000C61E8  C0 22 8D AC */	lfs f1, "@1800"@sda21(r2)
 /* 800C92AC 000C61EC  D0 3F 00 28 */	stfs f1, 0x28(r31)
 /* 800C92B0 000C61F0  D0 3F 00 2C */	stfs f1, 0x2c(r31)
-/* 800C92B4 000C61F4  C0 02 8D B0 */	lfs f0, $$21801@sda21(r2)
+/* 800C92B4 000C61F4  C0 02 8D B0 */	lfs f0, "@1801"@sda21(r2)
 /* 800C92B8 000C61F8  D0 1F 00 30 */	stfs f0, 0x30(r31)
 /* 800C92BC 000C61FC  D0 1F 00 34 */	stfs f0, 0x34(r31)
 /* 800C92C0 000C6200  C0 1F 00 28 */	lfs f0, 0x28(r31)
@@ -915,10 +915,10 @@ load__12TAfterEffectFR20JSUMemoryInputStream:
 /* 800C92D4 000C6214  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 800C92D8 000C6218  C0 1F 00 34 */	lfs f0, 0x34(r31)
 /* 800C92DC 000C621C  D0 1F 00 44 */	stfs f0, 0x44(r31)
-/* 800C92E0 000C6220  C0 02 8D C8 */	lfs f0, $$21833@sda21(r2)
+/* 800C92E0 000C6220  C0 02 8D C8 */	lfs f0, "@1833"@sda21(r2)
 /* 800C92E4 000C6224  D0 1F 00 48 */	stfs f0, 0x48(r31)
 /* 800C92E8 000C6228  D0 3F 00 50 */	stfs f1, 0x50(r31)
-/* 800C92EC 000C622C  C0 02 8D CC */	lfs f0, $$21834@sda21(r2)
+/* 800C92EC 000C622C  C0 02 8D CC */	lfs f0, "@1834"@sda21(r2)
 /* 800C92F0 000C6230  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 800C92F4 000C6234  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 800C92F8 000C6238  83 E1 00 24 */	lwz r31, 0x24(r1)
@@ -962,7 +962,7 @@ lbl_800C9360:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21831:
+"@1831":
 	.incbin "baserom.dol", 0x36F5B8, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -991,25 +991,25 @@ __vt__12TAfterEffect:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21629:
+"@1629":
 	.incbin "baserom.dol", 0x3E4AA0, 0x4
-$$21630:
+"@1630":
 	.incbin "baserom.dol", 0x3E4AA4, 0x4
-$$21631:
+"@1631":
 	.incbin "baserom.dol", 0x3E4AA8, 0x4
-$$21800:
+"@1800":
   .4byte 0
-$$21801:
+"@1801":
 	.incbin "baserom.dol", 0x3E4AB0, 0x4
-$$21802:
+"@1802":
 	.incbin "baserom.dol", 0x3E4AB4, 0x4
-$$21803:
+"@1803":
 	.incbin "baserom.dol", 0x3E4AB8, 0x8
-$$21805:
+"@1805":
 	.incbin "baserom.dol", 0x3E4AC0, 0x8
-$$21833:
+"@1833":
 	.incbin "baserom.dol", 0x3E4AC8, 0x4
-$$21834:
+"@1834":
 	.incbin "baserom.dol", 0x3E4ACC, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

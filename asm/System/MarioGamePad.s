@@ -74,7 +74,7 @@ lbl_800FBB38:
 /* 800FBB38 000F8A78  54 80 07 FF */	clrlwi. r0, r4, 0x1f
 /* 800FBB3C 000F8A7C  41 82 00 24 */	beq lbl_800FBB60
 /* 800FBB40 000F8A80  C0 3E 00 2C */	lfs f1, 0x2c(r30)
-/* 800FBB44 000F8A84  C0 02 92 50 */	lfs f0, $$22115@sda21(r2)
+/* 800FBB44 000F8A84  C0 02 92 50 */	lfs f0, "@2115"@sda21(r2)
 /* 800FBB48 000F8A88  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800FBB4C 000F8A8C  40 81 00 30 */	ble lbl_800FBB7C
 /* 800FBB50 000F8A90  A0 1E 00 DC */	lhz r0, 0xdc(r30)
@@ -83,7 +83,7 @@ lbl_800FBB38:
 /* 800FBB5C 000F8A9C  48 00 00 20 */	b lbl_800FBB7C
 lbl_800FBB60:
 /* 800FBB60 000F8AA0  C0 3E 00 2C */	lfs f1, 0x2c(r30)
-/* 800FBB64 000F8AA4  C0 02 92 54 */	lfs f0, $$22116@sda21(r2)
+/* 800FBB64 000F8AA4  C0 02 92 54 */	lfs f0, "@2116"@sda21(r2)
 /* 800FBB68 000F8AA8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800FBB6C 000F8AAC  40 81 00 10 */	ble lbl_800FBB7C
 /* 800FBB70 000F8AB0  A0 1E 00 DC */	lhz r0, 0xdc(r30)
@@ -101,7 +101,7 @@ lbl_800FBB7C:
 /* 800FBB9C 000F8ADC  A0 1E 00 DC */	lhz r0, 0xdc(r30)
 /* 800FBBA0 000F8AE0  7C 80 00 78 */	andc r0, r4, r0
 /* 800FBBA4 000F8AE4  B0 1E 00 E0 */	sth r0, 0xe0(r30)
-/* 800FBBA8 000F8AE8  C0 02 92 4C */	lfs f0, $$21807@sda21(r2)
+/* 800FBBA8 000F8AE8  C0 02 92 4C */	lfs f0, "@1807"@sda21(r2)
 /* 800FBBAC 000F8AEC  D0 1E 00 A8 */	stfs f0, 0xa8(r30)
 /* 800FBBB0 000F8AF0  D0 1E 00 AC */	stfs f0, 0xac(r30)
 /* 800FBBB4 000F8AF4  D0 1E 00 B0 */	stfs f0, 0xb0(r30)
@@ -283,7 +283,7 @@ lbl_800FBE10:
 lbl_800FBE1C:
 /* 800FBE1C 000F8D5C  88 1E 00 26 */	lbz r0, 0x26(r30)
 /* 800FBE20 000F8D60  3C 60 43 30 */	lis r3, 0x4330
-/* 800FBE24 000F8D64  C8 22 92 58 */	lfd f1, $$22118@sda21(r2)
+/* 800FBE24 000F8D64  C8 22 92 58 */	lfd f1, "@2118"@sda21(r2)
 /* 800FBE28 000F8D68  90 01 01 7C */	stw r0, 0x17c(r1)
 /* 800FBE2C 000F8D6C  90 61 01 78 */	stw r3, 0x178(r1)
 /* 800FBE30 000F8D70  C8 01 01 78 */	lfd f0, 0x178(r1)
@@ -347,7 +347,7 @@ lbl_800FBEDC:
 /* 800FBF00 000F8E40  41 82 01 B0 */	beq lbl_800FC0B0
 /* 800FBF04 000F8E44  88 1E 00 26 */	lbz r0, 0x26(r30)
 /* 800FBF08 000F8E48  3C 60 43 30 */	lis r3, 0x4330
-/* 800FBF0C 000F8E4C  C8 22 92 58 */	lfd f1, $$22118@sda21(r2)
+/* 800FBF0C 000F8E4C  C8 22 92 58 */	lfd f1, "@2118"@sda21(r2)
 /* 800FBF10 000F8E50  90 01 01 74 */	stw r0, 0x174(r1)
 /* 800FBF14 000F8E54  90 61 01 70 */	stw r3, 0x170(r1)
 /* 800FBF18 000F8E58  C8 01 01 70 */	lfd f0, 0x170(r1)
@@ -470,7 +470,7 @@ lbl_800FC0A0:
 lbl_800FC0B0:
 /* 800FC0B0 000F8FF0  A8 7E 00 E4 */	lha r3, 0xe4(r30)
 /* 800FC0B4 000F8FF4  3B A0 00 00 */	li r29, 0
-/* 800FC0B8 000F8FF8  C0 22 92 48 */	lfs f1, $$21806@sda21(r2)
+/* 800FC0B8 000F8FF8  C0 22 92 48 */	lfs f1, "@1806"@sda21(r2)
 /* 800FC0BC 000F8FFC  2C 03 00 00 */	cmpwi r3, 0
 /* 800FC0C0 000F9000  40 81 00 0C */	ble lbl_800FC0CC
 /* 800FC0C4 000F9004  38 03 FF FF */	addi r0, r3, -1
@@ -484,12 +484,12 @@ lbl_800FC0CC:
 /* 800FC0E0 000F9020  2C 05 00 28 */	cmpwi r5, 0x28
 /* 800FC0E4 000F9024  3B A0 00 01 */	li r29, 1
 /* 800FC0E8 000F9028  41 81 00 0C */	bgt lbl_800FC0F4
-/* 800FC0EC 000F902C  C0 22 92 4C */	lfs f1, $$21807@sda21(r2)
+/* 800FC0EC 000F902C  C0 22 92 4C */	lfs f1, "@1807"@sda21(r2)
 /* 800FC0F0 000F9030  48 00 00 10 */	b lbl_800FC100
 lbl_800FC0F4:
 /* 800FC0F4 000F9034  38 60 00 28 */	li r3, 0x28
 /* 800FC0F8 000F9038  38 80 00 3C */	li r4, 0x3c
-/* 800FC0FC 000F903C  48 00 02 FD */	bl CLBCalcRatio$$0s$$1__Fsss
+/* 800FC0FC 000F903C  48 00 02 FD */	bl "CLBCalcRatio<s>__Fsss"
 lbl_800FC100:
 /* 800FC100 000F9040  57 A0 06 3F */	clrlwi. r0, r29, 0x18
 /* 800FC104 000F9044  41 82 00 20 */	beq lbl_800FC124
@@ -508,7 +508,7 @@ lbl_800FC124:
 lbl_800FC134:
 /* 800FC134 000F9074  88 1E 00 26 */	lbz r0, 0x26(r30)
 /* 800FC138 000F9078  3C 60 43 30 */	lis r3, 0x4330
-/* 800FC13C 000F907C  C8 22 92 58 */	lfd f1, $$22118@sda21(r2)
+/* 800FC13C 000F907C  C8 22 92 58 */	lfd f1, "@2118"@sda21(r2)
 /* 800FC140 000F9080  90 01 01 74 */	stw r0, 0x174(r1)
 /* 800FC144 000F9084  90 61 01 70 */	stw r3, 0x170(r1)
 /* 800FC148 000F9088  C8 01 01 70 */	lfd f0, 0x170(r1)
@@ -683,12 +683,12 @@ reset__13TMarioGamePadFv:
 /* 800FC390 000F92D0  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 800FC394 000F92D4  7C 7E 1B 78 */	mr r30, r3
 /* 800FC398 000F92D8  4B FF F2 45 */	bl SMSGetAnmFrameRate__Fv
-/* 800FC39C 000F92DC  C0 02 92 64 */	lfs f0, $$22122@sda21(r2)
+/* 800FC39C 000F92DC  C0 02 92 64 */	lfs f0, "@2122"@sda21(r2)
 /* 800FC3A0 000F92E0  EC 20 08 24 */	fdivs f1, f0, f1
 /* 800FC3A4 000F92E4  4B F8 68 19 */	bl __cvt_fp2unsigned
 /* 800FC3A8 000F92E8  7C 7F 1B 78 */	mr r31, r3
 /* 800FC3AC 000F92EC  4B FF F2 31 */	bl SMSGetAnmFrameRate__Fv
-/* 800FC3B0 000F92F0  C0 02 92 60 */	lfs f0, $$22121@sda21(r2)
+/* 800FC3B0 000F92F0  C0 02 92 60 */	lfs f0, "@2121"@sda21(r2)
 /* 800FC3B4 000F92F4  EC 20 08 24 */	fdivs f1, f0, f1
 /* 800FC3B8 000F92F8  4B F8 68 05 */	bl __cvt_fp2unsigned
 /* 800FC3BC 000F92FC  3C 80 0F 00 */	lis r4, 0x0F00000F@ha
@@ -707,18 +707,18 @@ reset__13TMarioGamePadFv:
 /* 800FC3F0 000F9330  7C 08 03 A6 */	mtlr r0
 /* 800FC3F4 000F9334  4E 80 00 20 */	blr 
 
-.global CLBCalcRatio$$0s$$1__Fsss
-CLBCalcRatio$$0s$$1__Fsss:
+.global "CLBCalcRatio<s>__Fsss"
+"CLBCalcRatio<s>__Fsss":
 /* 800FC3F8 000F9338  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FC3FC 000F933C  7C 66 07 34 */	extsh r6, r3
 /* 800FC400 000F9340  7C 80 07 34 */	extsh r0, r4
 /* 800FC404 000F9344  7C 06 00 00 */	cmpw r6, r0
-/* 800FC408 000F9348  C0 22 92 4C */	lfs f1, $$21807@sda21(r2)
+/* 800FC408 000F9348  C0 22 92 4C */	lfs f1, "@1807"@sda21(r2)
 /* 800FC40C 000F934C  41 82 00 4C */	beq lbl_800FC458
 /* 800FC410 000F9350  7C 06 00 50 */	subf r0, r6, r0
-/* 800FC414 000F9354  C8 42 92 68 */	lfd f2, $$22128@sda21(r2)
+/* 800FC414 000F9354  C8 42 92 68 */	lfd f2, "@2128"@sda21(r2)
 /* 800FC418 000F9358  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 800FC41C 000F935C  C0 22 92 48 */	lfs f1, $$21806@sda21(r2)
+/* 800FC41C 000F935C  C0 22 92 48 */	lfs f1, "@1806"@sda21(r2)
 /* 800FC420 000F9360  90 01 00 14 */	stw r0, 0x14(r1)
 /* 800FC424 000F9364  3C 00 43 30 */	lis r0, 0x4330
 /* 800FC428 000F9368  7C A3 07 34 */	extsh r3, r5
@@ -749,21 +749,21 @@ lbl_constructor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21806:
+"@1806":
 	.incbin "baserom.dol", 0x3E4F48, 0x4
-$$21807:
+"@1807":
   .4byte 0
-$$22115:
+"@2115":
 	.incbin "baserom.dol", 0x3E4F50, 0x4
-$$22116:
+"@2116":
 	.incbin "baserom.dol", 0x3E4F54, 0x4
-$$22118:
+"@2118":
 	.incbin "baserom.dol", 0x3E4F58, 0x8
-$$22121:
+"@2121":
 	.incbin "baserom.dol", 0x3E4F60, 0x4
-$$22122:
+"@2122":
 	.incbin "baserom.dol", 0x3E4F64, 0x4
-$$22128:
+"@2128":
 	.incbin "baserom.dol", 0x3E4F68, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

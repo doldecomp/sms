@@ -13,15 +13,15 @@ reset__17TMarioInputReplayFv:
 /* 80137300 00134240  38 7F 00 10 */	addi r3, r31, 0x10
 /* 80137304 00134244  B0 1F 00 04 */	sth r0, 4(r31)
 /* 80137308 00134248  90 1F 00 08 */	stw r0, 8(r31)
-/* 8013730C 0013424C  48 00 03 75 */	bl reset__22TRecordValueManager$$0f$$1Fv
+/* 8013730C 0013424C  48 00 03 75 */	bl "reset__22TRecordValueManager<f>Fv"
 /* 80137310 00134250  38 7F 00 2C */	addi r3, r31, 0x2c
-/* 80137314 00134254  48 00 02 F5 */	bl reset__22TRecordValueManager$$0s$$1Fv
+/* 80137314 00134254  48 00 02 F5 */	bl "reset__22TRecordValueManager<s>Fv"
 /* 80137318 00134258  38 7F 00 48 */	addi r3, r31, 0x48
-/* 8013731C 0013425C  48 00 02 75 */	bl reset__23TRecordValueManager$$0Us$$1Fv
+/* 8013731C 0013425C  48 00 02 75 */	bl "reset__23TRecordValueManager<Us>Fv"
 /* 80137320 00134260  38 7F 00 64 */	addi r3, r31, 0x64
-/* 80137324 00134264  48 00 01 F5 */	bl reset__23TRecordValueManager$$0Uc$$1Fv
+/* 80137324 00134264  48 00 01 F5 */	bl "reset__23TRecordValueManager<Uc>Fv"
 /* 80137328 00134268  38 7F 00 80 */	addi r3, r31, 0x80
-/* 8013732C 0013426C  48 00 01 ED */	bl reset__23TRecordValueManager$$0Uc$$1Fv
+/* 8013732C 0013426C  48 00 01 ED */	bl "reset__23TRecordValueManager<Uc>Fv"
 /* 80137330 00134270  80 01 00 1C */	lwz r0, 0x1c(r1)
 /* 80137334 00134274  83 E1 00 14 */	lwz r31, 0x14(r1)
 /* 80137338 00134278  38 21 00 18 */	addi r1, r1, 0x18
@@ -48,13 +48,13 @@ play__17TMarioInputReplayFPfPsPUlPUlPUcPUc:
 /* 80137380 001342C0  7C 03 00 40 */	cmplw r3, r0
 /* 80137384 001342C4  40 80 00 84 */	bge lbl_80137408
 /* 80137388 001342C8  38 7F 00 10 */	addi r3, r31, 0x10
-/* 8013738C 001342CC  48 00 03 15 */	bl get__22TRecordValueManager$$0f$$1FPf
+/* 8013738C 001342CC  48 00 03 15 */	bl "get__22TRecordValueManager<f>FPf"
 /* 80137390 001342D0  38 7F 00 2C */	addi r3, r31, 0x2c
 /* 80137394 001342D4  38 9A 00 00 */	addi r4, r26, 0
-/* 80137398 001342D8  48 00 02 91 */	bl get__22TRecordValueManager$$0s$$1FPs
+/* 80137398 001342D8  48 00 02 91 */	bl "get__22TRecordValueManager<s>FPs"
 /* 8013739C 001342DC  38 7F 00 48 */	addi r3, r31, 0x48
 /* 801373A0 001342E0  38 81 00 24 */	addi r4, r1, 0x24
-/* 801373A4 001342E4  48 00 02 0D */	bl get__23TRecordValueManager$$0Us$$1FPUs
+/* 801373A4 001342E4  48 00 02 0D */	bl "get__23TRecordValueManager<Us>FPUs"
 /* 801373A8 001342E8  A0 A1 00 24 */	lhz r5, 0x24(r1)
 /* 801373AC 001342EC  7F A4 EB 78 */	mr r4, r29
 /* 801373B0 001342F0  A0 1F 00 04 */	lhz r0, 4(r31)
@@ -70,10 +70,10 @@ play__17TMarioInputReplayFPfPsPUlPUlPUcPUc:
 /* 801373D8 00134318  54 00 00 1E */	rlwinm r0, r0, 0, 0, 0xf
 /* 801373DC 0013431C  50 C0 04 3E */	rlwimi r0, r6, 0, 0x10, 0x1f
 /* 801373E0 00134320  90 1C 00 00 */	stw r0, 0(r28)
-/* 801373E4 00134324  48 00 01 55 */	bl get__23TRecordValueManager$$0Uc$$1FPUc
+/* 801373E4 00134324  48 00 01 55 */	bl "get__23TRecordValueManager<Uc>FPUc"
 /* 801373E8 00134328  38 7F 00 80 */	addi r3, r31, 0x80
 /* 801373EC 0013432C  38 9E 00 00 */	addi r4, r30, 0
-/* 801373F0 00134330  48 00 01 49 */	bl get__23TRecordValueManager$$0Uc$$1FPUc
+/* 801373F0 00134330  48 00 01 49 */	bl "get__23TRecordValueManager<Uc>FPUc"
 /* 801373F4 00134334  80 9F 00 08 */	lwz r4, 8(r31)
 /* 801373F8 00134338  38 60 00 01 */	li r3, 1
 /* 801373FC 0013433C  38 04 00 01 */	addi r0, r4, 1
@@ -114,7 +114,7 @@ init__17TMarioInputReplayFPUc:
 /* 80137470 001343B0  80 04 00 18 */	lwz r0, 0x18(r4)
 /* 80137474 001343B4  7C 1F 02 14 */	add r0, r31, r0
 /* 80137478 001343B8  90 1E 00 14 */	stw r0, 0x14(r30)
-/* 8013747C 001343BC  48 00 02 05 */	bl reset__22TRecordValueManager$$0f$$1Fv
+/* 8013747C 001343BC  48 00 02 05 */	bl "reset__22TRecordValueManager<f>Fv"
 /* 80137480 001343C0  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 80137484 001343C4  38 7E 00 2C */	addi r3, r30, 0x2c
 /* 80137488 001343C8  7C 1F 02 14 */	add r0, r31, r0
@@ -122,7 +122,7 @@ init__17TMarioInputReplayFPUc:
 /* 80137490 001343D0  80 1F 00 20 */	lwz r0, 0x20(r31)
 /* 80137494 001343D4  7C 1F 02 14 */	add r0, r31, r0
 /* 80137498 001343D8  90 1E 00 30 */	stw r0, 0x30(r30)
-/* 8013749C 001343DC  48 00 01 6D */	bl reset__22TRecordValueManager$$0s$$1Fv
+/* 8013749C 001343DC  48 00 01 6D */	bl "reset__22TRecordValueManager<s>Fv"
 /* 801374A0 001343E0  80 1F 00 24 */	lwz r0, 0x24(r31)
 /* 801374A4 001343E4  38 7E 00 48 */	addi r3, r30, 0x48
 /* 801374A8 001343E8  7C 1F 02 14 */	add r0, r31, r0
@@ -130,7 +130,7 @@ init__17TMarioInputReplayFPUc:
 /* 801374B0 001343F0  80 1F 00 28 */	lwz r0, 0x28(r31)
 /* 801374B4 001343F4  7C 1F 02 14 */	add r0, r31, r0
 /* 801374B8 001343F8  90 1E 00 4C */	stw r0, 0x4c(r30)
-/* 801374BC 001343FC  48 00 00 D5 */	bl reset__23TRecordValueManager$$0Us$$1Fv
+/* 801374BC 001343FC  48 00 00 D5 */	bl "reset__23TRecordValueManager<Us>Fv"
 /* 801374C0 00134400  80 1F 00 2C */	lwz r0, 0x2c(r31)
 /* 801374C4 00134404  38 7E 00 64 */	addi r3, r30, 0x64
 /* 801374C8 00134408  7C 1F 02 14 */	add r0, r31, r0
@@ -138,7 +138,7 @@ init__17TMarioInputReplayFPUc:
 /* 801374D0 00134410  80 1F 00 30 */	lwz r0, 0x30(r31)
 /* 801374D4 00134414  7C 1F 02 14 */	add r0, r31, r0
 /* 801374D8 00134418  90 1E 00 68 */	stw r0, 0x68(r30)
-/* 801374DC 0013441C  48 00 00 3D */	bl reset__23TRecordValueManager$$0Uc$$1Fv
+/* 801374DC 0013441C  48 00 00 3D */	bl "reset__23TRecordValueManager<Uc>Fv"
 /* 801374E0 00134420  80 1F 00 34 */	lwz r0, 0x34(r31)
 /* 801374E4 00134424  38 7E 00 80 */	addi r3, r30, 0x80
 /* 801374E8 00134428  7C 1F 02 14 */	add r0, r31, r0
@@ -146,7 +146,7 @@ init__17TMarioInputReplayFPUc:
 /* 801374F0 00134430  80 1F 00 38 */	lwz r0, 0x38(r31)
 /* 801374F4 00134434  7C 1F 02 14 */	add r0, r31, r0
 /* 801374F8 00134438  90 1E 00 84 */	stw r0, 0x84(r30)
-/* 801374FC 0013443C  48 00 00 1D */	bl reset__23TRecordValueManager$$0Uc$$1Fv
+/* 801374FC 0013443C  48 00 00 1D */	bl "reset__23TRecordValueManager<Uc>Fv"
 /* 80137500 00134440  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80137504 00134444  83 E1 00 1C */	lwz r31, 0x1c(r1)
 /* 80137508 00134448  83 C1 00 18 */	lwz r30, 0x18(r1)
@@ -154,8 +154,8 @@ init__17TMarioInputReplayFPUc:
 /* 80137510 00134450  38 21 00 20 */	addi r1, r1, 0x20
 /* 80137514 00134454  4E 80 00 20 */	blr 
 
-.global reset__23TRecordValueManager$$0Uc$$1Fv
-reset__23TRecordValueManager$$0Uc$$1Fv:
+.global "reset__23TRecordValueManager<Uc>Fv"
+"reset__23TRecordValueManager<Uc>Fv":
 /* 80137518 00134458  80 83 00 00 */	lwz r4, 0(r3)
 /* 8013751C 0013445C  38 00 00 00 */	li r0, 0
 /* 80137520 00134460  90 83 00 08 */	stw r4, 8(r3)
@@ -165,8 +165,8 @@ reset__23TRecordValueManager$$0Uc$$1Fv:
 /* 80137530 00134470  90 03 00 14 */	stw r0, 0x14(r3)
 /* 80137534 00134474  4E 80 00 20 */	blr 
 
-.global get__23TRecordValueManager$$0Uc$$1FPUc
-get__23TRecordValueManager$$0Uc$$1FPUc:
+.global "get__23TRecordValueManager<Uc>FPUc"
+"get__23TRecordValueManager<Uc>FPUc":
 /* 80137538 00134478  80 A3 00 0C */	lwz r5, 0xc(r3)
 /* 8013753C 0013447C  88 05 00 00 */	lbz r0, 0(r5)
 /* 80137540 00134480  98 04 00 00 */	stb r0, 0(r4)
@@ -191,8 +191,8 @@ lbl_80137588:
 /* 80137588 001344C8  38 60 00 00 */	li r3, 0
 /* 8013758C 001344CC  4E 80 00 20 */	blr 
 
-.global reset__23TRecordValueManager$$0Us$$1Fv
-reset__23TRecordValueManager$$0Us$$1Fv:
+.global "reset__23TRecordValueManager<Us>Fv"
+"reset__23TRecordValueManager<Us>Fv":
 /* 80137590 001344D0  80 83 00 00 */	lwz r4, 0(r3)
 /* 80137594 001344D4  38 00 00 00 */	li r0, 0
 /* 80137598 001344D8  90 83 00 08 */	stw r4, 8(r3)
@@ -202,8 +202,8 @@ reset__23TRecordValueManager$$0Us$$1Fv:
 /* 801375A8 001344E8  90 03 00 14 */	stw r0, 0x14(r3)
 /* 801375AC 001344EC  4E 80 00 20 */	blr 
 
-.global get__23TRecordValueManager$$0Us$$1FPUs
-get__23TRecordValueManager$$0Us$$1FPUs:
+.global "get__23TRecordValueManager<Us>FPUs"
+"get__23TRecordValueManager<Us>FPUs":
 /* 801375B0 001344F0  80 A3 00 0C */	lwz r5, 0xc(r3)
 /* 801375B4 001344F4  A0 05 00 00 */	lhz r0, 0(r5)
 /* 801375B8 001344F8  B0 04 00 00 */	sth r0, 0(r4)
@@ -228,8 +228,8 @@ lbl_80137600:
 /* 80137600 00134540  38 60 00 00 */	li r3, 0
 /* 80137604 00134544  4E 80 00 20 */	blr 
 
-.global reset__22TRecordValueManager$$0s$$1Fv
-reset__22TRecordValueManager$$0s$$1Fv:
+.global "reset__22TRecordValueManager<s>Fv"
+"reset__22TRecordValueManager<s>Fv":
 /* 80137608 00134548  80 83 00 00 */	lwz r4, 0(r3)
 /* 8013760C 0013454C  38 00 00 00 */	li r0, 0
 /* 80137610 00134550  90 83 00 08 */	stw r4, 8(r3)
@@ -239,8 +239,8 @@ reset__22TRecordValueManager$$0s$$1Fv:
 /* 80137620 00134560  90 03 00 14 */	stw r0, 0x14(r3)
 /* 80137624 00134564  4E 80 00 20 */	blr 
 
-.global get__22TRecordValueManager$$0s$$1FPs
-get__22TRecordValueManager$$0s$$1FPs:
+.global "get__22TRecordValueManager<s>FPs"
+"get__22TRecordValueManager<s>FPs":
 /* 80137628 00134568  80 A3 00 0C */	lwz r5, 0xc(r3)
 /* 8013762C 0013456C  A8 05 00 00 */	lha r0, 0(r5)
 /* 80137630 00134570  B0 04 00 00 */	sth r0, 0(r4)
@@ -265,8 +265,8 @@ lbl_80137678:
 /* 80137678 001345B8  38 60 00 00 */	li r3, 0
 /* 8013767C 001345BC  4E 80 00 20 */	blr 
 
-.global reset__22TRecordValueManager$$0f$$1Fv
-reset__22TRecordValueManager$$0f$$1Fv:
+.global "reset__22TRecordValueManager<f>Fv"
+"reset__22TRecordValueManager<f>Fv":
 /* 80137680 001345C0  80 83 00 00 */	lwz r4, 0(r3)
 /* 80137684 001345C4  38 00 00 00 */	li r0, 0
 /* 80137688 001345C8  90 83 00 08 */	stw r4, 8(r3)
@@ -276,8 +276,8 @@ reset__22TRecordValueManager$$0f$$1Fv:
 /* 80137698 001345D8  90 03 00 14 */	stw r0, 0x14(r3)
 /* 8013769C 001345DC  4E 80 00 20 */	blr 
 
-.global get__22TRecordValueManager$$0f$$1FPf
-get__22TRecordValueManager$$0f$$1FPf:
+.global "get__22TRecordValueManager<f>FPf"
+"get__22TRecordValueManager<f>FPf":
 /* 801376A0 001345E0  80 A3 00 0C */	lwz r5, 0xc(r3)
 /* 801376A4 001345E4  C0 05 00 00 */	lfs f0, 0(r5)
 /* 801376A8 001345E8  D0 04 00 00 */	stfs f0, 0(r4)

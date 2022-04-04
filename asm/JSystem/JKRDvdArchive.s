@@ -394,9 +394,9 @@ fetchResource_subroutine__13JKRDvdArchiveFlUlUlPUcUlii:
 /* 80009308 00006248  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 8000930C 0000624C  BF 41 00 28 */	stmw r26, 0x28(r1)
 /* 80009310 00006250  3B 45 00 00 */	addi r26, r5, 0
-/* 80009314 00006254  3C A0 80 37 */	lis r5, $$2438@ha
+/* 80009314 00006254  3C A0 80 37 */	lis r5, "@438"@ha
 /* 80009318 00006258  38 1A 00 1F */	addi r0, r26, 0x1f
-/* 8000931C 0000625C  38 A5 00 D8 */	addi r5, r5, $$2438@l
+/* 8000931C 0000625C  38 A5 00 D8 */	addi r5, r5, "@438"@l
 /* 80009320 00006260  3B 83 00 00 */	addi r28, r3, 0
 /* 80009324 00006264  3B A4 00 00 */	addi r29, r4, 0
 /* 80009328 00006268  3B C6 00 00 */	addi r30, r6, 0
@@ -529,9 +529,9 @@ fetchResource_subroutine__13JKRDvdArchiveFlUlUlP7JKRHeapiiPPUc:
 /* 800094EC 0000642C  94 21 FF B8 */	stwu r1, -0x48(r1)
 /* 800094F0 00006430  BF 21 00 2C */	stmw r25, 0x2c(r1)
 /* 800094F4 00006434  3B 25 00 00 */	addi r25, r5, 0
-/* 800094F8 00006438  3C A0 80 37 */	lis r5, $$2438@ha
+/* 800094F8 00006438  3C A0 80 37 */	lis r5, "@438"@ha
 /* 800094FC 0000643C  38 19 00 1F */	addi r0, r25, 0x1f
-/* 80009500 00006440  38 A5 00 D8 */	addi r5, r5, $$2438@l
+/* 80009500 00006440  38 A5 00 D8 */	addi r5, r5, "@438"@l
 /* 80009504 00006444  3B 83 00 00 */	addi r28, r3, 0
 /* 80009508 00006448  3B A4 00 00 */	addi r29, r4, 0
 /* 8000950C 0000644C  3B C6 00 00 */	addi r30, r6, 0
@@ -657,11 +657,11 @@ lbl_800096B8:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2438:
+"@438":
 	.incbin "baserom.dol", 0x36D0D8, 0x14
-$$2439:
+"@439":
 	.incbin "baserom.dol", 0x36D0EC, 0x28
-$$2440:
+"@440":
 	.incbin "baserom.dol", 0x36D114, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

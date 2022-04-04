@@ -47,7 +47,7 @@ associateNPC__11TTalkCursorFP8TBaseNPC:
 /* 800F905C 000F5F9C  38 61 00 30 */	addi r3, r1, 0x30
 /* 800F9060 000F5FA0  48 07 2E B1 */	bl getCursorPos__8TBaseNPCCFv
 /* 800F9064 000F5FA4  38 61 00 3C */	addi r3, r1, 0x3c
-/* 800F9068 000F5FA8  4B FC 7D DD */	bl identity33__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 800F9068 000F5FA8  4B FC 7D DD */	bl "identity33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 800F906C 000F5FAC  C0 01 00 30 */	lfs f0, 0x30(r1)
 /* 800F9070 000F5FB0  38 61 00 3C */	addi r3, r1, 0x3c
 /* 800F9074 000F5FB4  C0 21 00 34 */	lfs f1, 0x34(r1)
@@ -99,12 +99,12 @@ lbl_800F90FC:
 .global loadAfter__11TTalkCursorFv
 loadAfter__11TTalkCursorFv:
 /* 800F910C 000F604C  7C 08 02 A6 */	mflr r0
-/* 800F9110 000F6050  3C 80 80 37 */	lis r4, $$21490@ha
+/* 800F9110 000F6050  3C 80 80 37 */	lis r4, "@1490"@ha
 /* 800F9114 000F6054  90 01 00 04 */	stw r0, 4(r1)
 /* 800F9118 000F6058  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800F911C 000F605C  BF 61 00 1C */	stmw r27, 0x1c(r1)
 /* 800F9120 000F6060  3B 83 00 00 */	addi r28, r3, 0
-/* 800F9124 000F6064  3B E4 4B 70 */	addi r31, r4, $$21490@l
+/* 800F9124 000F6064  3B E4 4B 70 */	addi r31, r4, "@1490"@l
 /* 800F9128 000F6068  38 60 00 4C */	li r3, 0x4c
 /* 800F912C 000F606C  4B F1 37 85 */	bl __nw__FUl
 /* 800F9130 000F6070  7C 7D 1B 79 */	or. r29, r3, r3
@@ -164,27 +164,27 @@ lbl_800F91B4:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21525:
+"@1525":
 	.incbin "baserom.dol", 0x371B7C, 0x14
-$$21582:
+"@1582":
 	.incbin "baserom.dol", 0x371B90, 0x30
-$$21583:
+"@1583":
 	.incbin "baserom.dol", 0x371BC0, 0x38
-$$21584:
+"@1584":
 	.incbin "baserom.dol", 0x371BF8, 0x34
-$$21585:
+"@1585":
 	.incbin "baserom.dol", 0x371C2C, 0x24
-$$22003:
+"@2003":
 	.incbin "baserom.dol", 0x371C50, 0x14
-$$22004:
+"@2004":
 	.incbin "baserom.dol", 0x371C64, 0x20
-$$22005:
+"@2005":
 	.incbin "baserom.dol", 0x371C84, 0xC
-$$22006:
+"@2006":
 	.incbin "baserom.dol", 0x371C90, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

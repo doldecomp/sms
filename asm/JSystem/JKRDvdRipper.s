@@ -100,12 +100,12 @@ lbl_800345AC:
 .global loadToMainRAM__12JKRDvdRipperFP10JKRDvdFilePUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
 loadToMainRAM__12JKRDvdRipperFP10JKRDvdFilePUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi:
 /* 800345C0 00031500  7C 08 02 A6 */	mflr r0
-/* 800345C4 00031504  3D 60 80 37 */	lis r11, $$2177@ha
+/* 800345C4 00031504  3D 60 80 37 */	lis r11, "@177"@ha
 /* 800345C8 00031508  90 01 00 04 */	stw r0, 4(r1)
 /* 800345CC 0003150C  94 21 FF 10 */	stwu r1, -0xf0(r1)
 /* 800345D0 00031510  BE 41 00 B8 */	stmw r18, 0xb8(r1)
 /* 800345D4 00031514  7C 7C 1B 78 */	mr r28, r3
-/* 800345D8 00031518  3A CB 0C 80 */	addi r22, r11, $$2177@l
+/* 800345D8 00031518  3A CB 0C 80 */	addi r22, r11, "@177"@l
 /* 800345DC 0003151C  3B 44 00 00 */	addi r26, r4, 0
 /* 800345E0 00031520  3B 05 00 00 */	addi r24, r5, 0
 /* 800345E4 00031524  3B A6 00 00 */	addi r29, r6, 0
@@ -799,10 +799,10 @@ __sinit_JKRDvdRipper_cpp:
 /* 80034F3C 00031E7C  3B E3 11 0C */	addi r31, r3, sDvdAsyncList__12JKRDvdRipper@l
 /* 80034F40 00031E80  38 7F 00 00 */	addi r3, r31, 0
 /* 80034F44 00031E84  4B FD 9C F1 */	bl initiate__10JSUPtrListFv
-/* 80034F48 00031E88  3C 80 80 03 */	lis r4, __dt__23JSUList$$012JKRDMCommand$$1Fv@ha
-/* 80034F4C 00031E8C  3C 60 80 3E */	lis r3, $$256@ha
-/* 80034F50 00031E90  38 A3 60 D0 */	addi r5, r3, $$256@l
-/* 80034F54 00031E94  38 84 4F 74 */	addi r4, r4, __dt__23JSUList$$012JKRDMCommand$$1Fv@l
+/* 80034F48 00031E88  3C 80 80 03 */	lis r4, "__dt__23JSUList<12JKRDMCommand>Fv"@ha
+/* 80034F4C 00031E8C  3C 60 80 3E */	lis r3, "@56"@ha
+/* 80034F50 00031E90  38 A3 60 D0 */	addi r5, r3, "@56"@l
+/* 80034F54 00031E94  38 84 4F 74 */	addi r4, r4, "__dt__23JSUList<12JKRDMCommand>Fv"@l
 /* 80034F58 00031E98  38 7F 00 00 */	addi r3, r31, 0
 /* 80034F5C 00031E9C  48 04 D7 CD */	bl __register_global_object
 /* 80034F60 00031EA0  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -811,8 +811,8 @@ __sinit_JKRDvdRipper_cpp:
 /* 80034F6C 00031EAC  7C 08 03 A6 */	mtlr r0
 /* 80034F70 00031EB0  4E 80 00 20 */	blr 
 
-.global __dt__23JSUList$$012JKRDMCommand$$1Fv
-__dt__23JSUList$$012JKRDMCommand$$1Fv:
+.global "__dt__23JSUList<12JKRDMCommand>Fv"
+"__dt__23JSUList<12JKRDMCommand>Fv":
 /* 80034F74 00031EB4  7C 08 02 A6 */	mflr r0
 /* 80034F78 00031EB8  90 01 00 04 */	stw r0, 4(r1)
 /* 80034F7C 00031EBC  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -843,11 +843,11 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2177:
+"@177":
 	.incbin "baserom.dol", 0x36DC80, 0x14
-$$2178:
+"@178":
 	.incbin "baserom.dol", 0x36DC94, 0x28
-$$2179:
+"@179":
 	.incbin "baserom.dol", 0x36DCBC, 0x24
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
@@ -858,7 +858,7 @@ szpBufferSize__12JKRDvdRipper:
 	.incbin "baserom.dol", 0x3E302C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$256:
+"@56":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

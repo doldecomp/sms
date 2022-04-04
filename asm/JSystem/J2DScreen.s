@@ -38,9 +38,9 @@ makeHiearachyPanes__9J2DScreenFP7J2DPaneP20JSURandomInputStreambbbPl:
 /* 80018810 00015750  94 21 FF 08 */	stwu r1, -0xf8(r1)
 /* 80018814 00015754  BD C1 00 B0 */	stmw r14, 0xb0(r1)
 /* 80018818 00015758  3A C7 00 00 */	addi r22, r7, 0
-/* 8001881C 0001575C  3C E0 80 37 */	lis r7, $$2321@ha
+/* 8001881C 0001575C  3C E0 80 37 */	lis r7, "@321"@ha
 /* 80018820 00015760  3B 84 00 00 */	addi r28, r4, 0
-/* 80018824 00015764  3B 47 0B 90 */	addi r26, r7, $$2321@l
+/* 80018824 00015764  3B 47 0B 90 */	addi r26, r7, "@321"@l
 /* 80018828 00015768  3B C3 00 00 */	addi r30, r3, 0
 /* 8001882C 0001576C  3B E5 00 00 */	addi r31, r5, 0
 /* 80018830 00015770  3B 06 00 00 */	addi r24, r6, 0
@@ -136,7 +136,7 @@ lbl_80018870:
 /* 80018990 000158D0  90 1E 00 F0 */	stw r0, 0xf0(r30)
 lbl_80018994:
 /* 80018994 000158D4  56 C0 06 3E */	clrlwi r0, r22, 0x18
-/* 80018998 000158D8  3C 60 80 3B */	lis r3, $$2323@ha
+/* 80018998 000158D8  3C 60 80 3B */	lis r3, "@323"@ha
 /* 8001899C 000158DC  90 01 00 AC */	stw r0, 0xac(r1)
 /* 800189A0 000158E0  3C 80 45 58 */	lis r4, 0x45585431@ha
 /* 800189A4 000158E4  3C A0 50 49 */	lis r5, 0x50494331@ha
@@ -146,7 +146,7 @@ lbl_80018994:
 /* 800189B4 000158F4  3D 20 45 4E */	lis r9, 0x454E4431@ha
 /* 800189B8 000158F8  3D 40 42 47 */	lis r10, 0x42474E31@ha
 /* 800189BC 000158FC  57 17 06 3E */	clrlwi r23, r24, 0x18
-/* 800189C0 00015900  39 C3 8C 90 */	addi r14, r3, $$2323@l
+/* 800189C0 00015900  39 C3 8C 90 */	addi r14, r3, "@323"@l
 /* 800189C4 00015904  3A 44 54 31 */	addi r18, r4, 0x45585431@l
 /* 800189C8 00015908  3A 05 43 31 */	addi r16, r5, 0x50494331@l
 /* 800189CC 0001590C  3A 26 58 31 */	addi r17, r6, 0x54425831@l
@@ -443,13 +443,13 @@ lbl_80018DD0:
 .global makeUserPane__9J2DScreenFUsP7J2DPaneP20JSURandomInputStream
 makeUserPane__9J2DScreenFUsP7J2DPaneP20JSURandomInputStream:
 /* 80018DE4 00015D24  7C 08 02 A6 */	mflr r0
-/* 80018DE8 00015D28  3C 60 80 37 */	lis r3, $$2321@ha
+/* 80018DE8 00015D28  3C 60 80 37 */	lis r3, "@321"@ha
 /* 80018DEC 00015D2C  90 01 00 04 */	stw r0, 4(r1)
-/* 80018DF0 00015D30  3C 80 80 37 */	lis r4, $$2326@ha
-/* 80018DF4 00015D34  38 A4 0B BC */	addi r5, r4, $$2326@l
+/* 80018DF0 00015D30  3C 80 80 37 */	lis r4, "@326"@ha
+/* 80018DF4 00015D34  38 A4 0B BC */	addi r5, r4, "@326"@l
 /* 80018DF8 00015D38  4C C6 31 82 */	crclr 6
 /* 80018DFC 00015D3C  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80018E00 00015D40  38 63 0B 90 */	addi r3, r3, $$2321@l
+/* 80018E00 00015D40  38 63 0B 90 */	addi r3, r3, "@321"@l
 /* 80018E04 00015D44  38 80 01 0E */	li r4, 0x10e
 /* 80018E08 00015D48  48 07 61 DD */	bl OSPanic
 /* 80018E0C 00015D4C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -466,13 +466,13 @@ makeUserPane__9J2DScreenFUlP7J2DPaneP20JSURandomInputStream:
 .global stop__9J2DScreenFv
 stop__9J2DScreenFv:
 /* 80018E28 00015D68  7C 08 02 A6 */	mflr r0
-/* 80018E2C 00015D6C  3C 60 80 37 */	lis r3, $$2321@ha
+/* 80018E2C 00015D6C  3C 60 80 37 */	lis r3, "@321"@ha
 /* 80018E30 00015D70  90 01 00 04 */	stw r0, 4(r1)
-/* 80018E34 00015D74  3C 80 80 37 */	lis r4, $$2326@ha
-/* 80018E38 00015D78  38 A4 0B BC */	addi r5, r4, $$2326@l
+/* 80018E34 00015D74  3C 80 80 37 */	lis r4, "@326"@ha
+/* 80018E38 00015D78  38 A4 0B BC */	addi r5, r4, "@326"@l
 /* 80018E3C 00015D7C  4C C6 31 82 */	crclr 6
 /* 80018E40 00015D80  94 21 FF F8 */	stwu r1, -8(r1)
-/* 80018E44 00015D84  38 63 0B 90 */	addi r3, r3, $$2321@l
+/* 80018E44 00015D84  38 63 0B 90 */	addi r3, r3, "@321"@l
 /* 80018E48 00015D88  38 80 01 37 */	li r4, 0x137
 /* 80018E4C 00015D8C  48 07 61 99 */	bl OSPanic
 /* 80018E50 00015D90  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -844,15 +844,15 @@ lbl_80019394:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2321:
+"@321":
 	.incbin "baserom.dol", 0x36DB90, 0x10
-$$2322:
+"@322":
 	.incbin "baserom.dol", 0x36DBA0, 0x1C
-$$2326:
+"@326":
 	.incbin "baserom.dol", 0x36DBBC, 0x2C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2323:
+"@323":
     .4byte lbl_80018C48
     .4byte lbl_80018C4C
     .4byte lbl_80018C88

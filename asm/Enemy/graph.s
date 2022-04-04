@@ -62,7 +62,7 @@ lbl_8025E2C8:
 /* 8025E2D0 0025B210  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 8025E2D4 0025B214  7C 83 04 2E */	lfsx f4, r3, r0
 lbl_8025E2D8:
-/* 8025E2D8 0025B218  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025E2D8 0025B218  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025E2DC 0025B21C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8025E2E0 0025B220  4C 41 13 82 */	cror 2, 1, 2
 /* 8025E2E4 0025B224  40 82 00 1C */	bne lbl_8025E300
@@ -73,7 +73,7 @@ lbl_8025E2D8:
 /* 8025E2F8 0025B238  4C 40 13 82 */	cror 2, 0, 2
 /* 8025E2FC 0025B23C  41 82 00 28 */	beq lbl_8025E324
 lbl_8025E300:
-/* 8025E300 0025B240  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025E300 0025B240  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025E304 0025B244  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8025E308 0025B248  40 80 00 24 */	bge lbl_8025E32C
 /* 8025E30C 0025B24C  FC 03 20 40 */	fcmpo cr0, f3, f4
@@ -98,7 +98,7 @@ lbl_8025E330:
 /* 8025E34C 0025B28C  54 00 10 3A */	slwi r0, r0, 2
 /* 8025E350 0025B290  C0 44 00 04 */	lfs f2, 4(r4)
 /* 8025E354 0025B294  7C 64 04 2E */	lfsx f3, r4, r0
-/* 8025E358 0025B298  48 00 00 25 */	bl MsWrap$$0f$$1__Ffff
+/* 8025E358 0025B298  48 00 00 25 */	bl "MsWrap<f>__Ffff"
 lbl_8025E35C:
 /* 8025E35C 0025B29C  D0 3F 00 14 */	stfs f1, 0x14(r31)
 /* 8025E360 0025B2A0  7F C3 F3 78 */	mr r3, r30
@@ -110,7 +110,7 @@ lbl_8025E364:
 /* 8025E374 0025B2B4  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 8025E378 0025B2B8  4E 80 00 20 */	blr 
 
-MsWrap$$0f$$1__Ffff:
+"MsWrap<f>__Ffff":
 /* 8025E37C 0025B2BC  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 8025E380 0025B2C0  4C 41 13 82 */	cror 2, 1, 2
 /* 8025E384 0025B2C4  40 82 00 34 */	bne lbl_8025E3B8
@@ -148,13 +148,13 @@ calcSplineSpeed__12TGraphTracerFf:
 /* 8025E3E4 0025B324  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 8025E3E8 0025B328  28 00 00 00 */	cmplwi r0, 0
 /* 8025E3EC 0025B32C  40 82 00 0C */	bne lbl_8025E3F8
-/* 8025E3F0 0025B330  C0 22 E2 0C */	lfs f1, $$22890@sda21(r2)
+/* 8025E3F0 0025B330  C0 22 E2 0C */	lfs f1, "@2890"@sda21(r2)
 /* 8025E3F4 0025B334  48 00 02 28 */	b lbl_8025E61C
 lbl_8025E3F8:
 /* 8025E3F8 0025B338  80 1F 00 08 */	lwz r0, 8(r31)
 /* 8025E3FC 0025B33C  2C 00 00 00 */	cmpwi r0, 0
 /* 8025E400 0025B340  40 80 00 0C */	bge lbl_8025E40C
-/* 8025E404 0025B344  C0 22 E2 0C */	lfs f1, $$22890@sda21(r2)
+/* 8025E404 0025B344  C0 22 E2 0C */	lfs f1, "@2890"@sda21(r2)
 /* 8025E408 0025B348  48 00 02 14 */	b lbl_8025E61C
 lbl_8025E40C:
 /* 8025E40C 0025B34C  80 1F 00 04 */	lwz r0, 4(r31)
@@ -163,7 +163,7 @@ lbl_8025E40C:
 /* 8025E418 0025B358  38 61 01 0C */	addi r3, r1, 0x10c
 /* 8025E41C 0025B35C  54 00 20 36 */	slwi r0, r0, 4
 /* 8025E420 0025B360  7C 84 00 2E */	lwzx r4, r4, r0
-/* 8025E424 0025B364  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 8025E424 0025B364  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 8025E428 0025B368  A8 04 00 00 */	lha r0, 0(r4)
 /* 8025E42C 0025B36C  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8025E430 0025B370  90 01 01 44 */	stw r0, 0x144(r1)
@@ -319,9 +319,9 @@ lbl_8025E648:
 /* 8025E660 0025B5A0  80 C3 00 00 */	lwz r6, 0(r3)
 /* 8025E664 0025B5A4  54 05 20 36 */	slwi r5, r0, 4
 /* 8025E668 0025B5A8  3C 00 43 30 */	lis r0, 0x4330
-/* 8025E66C 0025B5AC  C8 22 E2 20 */	lfd f1, $$22926@sda21(r2)
+/* 8025E66C 0025B5AC  C8 22 E2 20 */	lfd f1, "@2926"@sda21(r2)
 /* 8025E670 0025B5B0  80 C6 00 00 */	lwz r6, 0(r6)
-/* 8025E674 0025B5B4  C0 42 E2 18 */	lfs f2, $$22923@sda21(r2)
+/* 8025E674 0025B5B4  C0 42 E2 18 */	lfs f2, "@2923"@sda21(r2)
 /* 8025E678 0025B5B8  7C A6 28 2E */	lwzx r5, r6, r5
 /* 8025E67C 0025B5BC  A0 A5 00 0C */	lhz r5, 0xc(r5)
 /* 8025E680 0025B5C0  90 A1 00 5C */	stw r5, 0x5c(r1)
@@ -332,7 +332,7 @@ lbl_8025E648:
 /* 8025E694 0025B5D4  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8025E698 0025B5D8  48 00 00 0C */	b lbl_8025E6A4
 lbl_8025E69C:
-/* 8025E69C 0025B5DC  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025E69C 0025B5DC  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025E6A0 0025B5E0  D0 03 00 10 */	stfs f0, 0x10(r3)
 lbl_8025E6A4:
 /* 8025E6A4 0025B5E4  80 03 00 08 */	lwz r0, 8(r3)
@@ -341,9 +341,9 @@ lbl_8025E6A4:
 /* 8025E6B0 0025B5F0  80 C3 00 00 */	lwz r6, 0(r3)
 /* 8025E6B4 0025B5F4  54 05 20 36 */	slwi r5, r0, 4
 /* 8025E6B8 0025B5F8  3C 00 43 30 */	lis r0, 0x4330
-/* 8025E6BC 0025B5FC  C8 22 E2 20 */	lfd f1, $$22926@sda21(r2)
+/* 8025E6BC 0025B5FC  C8 22 E2 20 */	lfd f1, "@2926"@sda21(r2)
 /* 8025E6C0 0025B600  80 C6 00 00 */	lwz r6, 0(r6)
-/* 8025E6C4 0025B604  C0 42 E2 1C */	lfs f2, $$22924@sda21(r2)
+/* 8025E6C4 0025B604  C0 42 E2 1C */	lfs f2, "@2924"@sda21(r2)
 /* 8025E6C8 0025B608  7C A6 28 2E */	lwzx r5, r6, r5
 /* 8025E6CC 0025B60C  A0 A5 00 0E */	lhz r5, 0xe(r5)
 /* 8025E6D0 0025B610  90 A1 00 5C */	stw r5, 0x5c(r1)
@@ -370,9 +370,9 @@ setTo__12TGraphTracerFi:
 /* 8025E710 0025B650  80 A3 00 00 */	lwz r5, 0(r3)
 /* 8025E714 0025B654  54 04 20 36 */	slwi r4, r0, 4
 /* 8025E718 0025B658  3C 00 43 30 */	lis r0, 0x4330
-/* 8025E71C 0025B65C  C8 22 E2 20 */	lfd f1, $$22926@sda21(r2)
+/* 8025E71C 0025B65C  C8 22 E2 20 */	lfd f1, "@2926"@sda21(r2)
 /* 8025E720 0025B660  80 A5 00 00 */	lwz r5, 0(r5)
-/* 8025E724 0025B664  C0 42 E2 18 */	lfs f2, $$22923@sda21(r2)
+/* 8025E724 0025B664  C0 42 E2 18 */	lfs f2, "@2923"@sda21(r2)
 /* 8025E728 0025B668  7C 85 20 2E */	lwzx r4, r5, r4
 /* 8025E72C 0025B66C  A0 84 00 0C */	lhz r4, 0xc(r4)
 /* 8025E730 0025B670  90 81 00 5C */	stw r4, 0x5c(r1)
@@ -383,7 +383,7 @@ setTo__12TGraphTracerFi:
 /* 8025E744 0025B684  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8025E748 0025B688  48 00 00 0C */	b lbl_8025E754
 lbl_8025E74C:
-/* 8025E74C 0025B68C  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025E74C 0025B68C  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025E750 0025B690  D0 03 00 10 */	stfs f0, 0x10(r3)
 lbl_8025E754:
 /* 8025E754 0025B694  80 03 00 08 */	lwz r0, 8(r3)
@@ -392,9 +392,9 @@ lbl_8025E754:
 /* 8025E760 0025B6A0  80 A3 00 00 */	lwz r5, 0(r3)
 /* 8025E764 0025B6A4  54 04 20 36 */	slwi r4, r0, 4
 /* 8025E768 0025B6A8  3C 00 43 30 */	lis r0, 0x4330
-/* 8025E76C 0025B6AC  C8 22 E2 20 */	lfd f1, $$22926@sda21(r2)
+/* 8025E76C 0025B6AC  C8 22 E2 20 */	lfd f1, "@2926"@sda21(r2)
 /* 8025E770 0025B6B0  80 A5 00 00 */	lwz r5, 0(r5)
-/* 8025E774 0025B6B4  C0 42 E2 1C */	lfs f2, $$22924@sda21(r2)
+/* 8025E774 0025B6B4  C0 42 E2 1C */	lfs f2, "@2924"@sda21(r2)
 /* 8025E778 0025B6B8  7C 85 20 2E */	lwzx r4, r5, r4
 /* 8025E77C 0025B6BC  A0 84 00 0E */	lhz r4, 0xe(r4)
 /* 8025E780 0025B6C0  90 81 00 5C */	stw r4, 0x5c(r1)
@@ -414,11 +414,11 @@ __ct__12TGraphTracerFv:
 /* 8025E7A8 0025B6E8  38 00 FF FF */	li r0, -1
 /* 8025E7AC 0025B6EC  90 03 00 04 */	stw r0, 4(r3)
 /* 8025E7B0 0025B6F0  90 03 00 08 */	stw r0, 8(r3)
-/* 8025E7B4 0025B6F4  C0 02 E2 28 */	lfs f0, $$22972@sda21(r2)
+/* 8025E7B4 0025B6F4  C0 02 E2 28 */	lfs f0, "@2972"@sda21(r2)
 /* 8025E7B8 0025B6F8  D0 03 00 0C */	stfs f0, 0xc(r3)
-/* 8025E7BC 0025B6FC  C0 02 E2 2C */	lfs f0, $$22973@sda21(r2)
+/* 8025E7BC 0025B6FC  C0 02 E2 2C */	lfs f0, "@2973"@sda21(r2)
 /* 8025E7C0 0025B700  D0 03 00 10 */	stfs f0, 0x10(r3)
-/* 8025E7C4 0025B704  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025E7C4 0025B704  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025E7C8 0025B708  D0 03 00 14 */	stfs f0, 0x14(r3)
 /* 8025E7CC 0025B70C  4E 80 00 20 */	blr 
 
@@ -512,8 +512,8 @@ initGraphGroup__11TGraphGroupFv:
 /* 8025E8EC 0025B82C  3B 40 00 00 */	li r26, 0
 /* 8025E8F0 0025B830  3B 00 00 00 */	li r24, 0
 /* 8025E8F4 0025B834  3F E0 43 30 */	lis r31, 0x4330
-/* 8025E8F8 0025B838  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
-/* 8025E8FC 0025B83C  C3 C2 E2 08 */	lfs f30, $$22783@sda21(r2)
+/* 8025E8F8 0025B838  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
+/* 8025E8FC 0025B83C  C3 C2 E2 08 */	lfs f30, "@2783"@sda21(r2)
 /* 8025E900 0025B840  48 00 01 88 */	b lbl_8025EA88
 lbl_8025E904:
 /* 8025E904 0025B844  80 79 00 08 */	lwz r3, 8(r25)
@@ -527,7 +527,7 @@ lbl_8025E904:
 /* 8025E924 0025B864  D3 C1 00 58 */	stfs f30, 0x58(r1)
 /* 8025E928 0025B868  38 A0 FF FF */	li r5, -1
 /* 8025E92C 0025B86C  D3 C1 00 5C */	stfs f30, 0x5c(r1)
-/* 8025E930 0025B870  48 00 0A E1 */	bl findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1Ul
+/* 8025E930 0025B870  48 00 0A E1 */	bl "findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>Ul"
 /* 8025E934 0025B874  38 C0 00 00 */	li r6, 0
 /* 8025E938 0025B878  90 7D 00 10 */	stw r3, 0x10(r29)
 /* 8025E93C 0025B87C  38 66 00 00 */	addi r3, r6, 0
@@ -593,7 +593,7 @@ lbl_8025E9B8:
 /* 8025EA20 0025B960  D0 21 00 48 */	stfs f1, 0x48(r1)
 /* 8025EA24 0025B964  D0 01 00 4C */	stfs f0, 0x4c(r1)
 /* 8025EA28 0025B968  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
-/* 8025EA2C 0025B96C  4B F7 CD 39 */	bl checkGround__4TMapCFRCQ29JGeometry8TVec3$$0f$$1PPC12TBGCheckData
+/* 8025EA2C 0025B96C  4B F7 CD 39 */	bl "checkGround__4TMapCFRCQ29JGeometry8TVec3<f>PPC12TBGCheckData"
 /* 8025EA30 0025B970  D0 21 00 48 */	stfs f1, 0x48(r1)
 /* 8025EA34 0025B974  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 8025EA38 0025B978  A0 03 00 04 */	lhz r0, 4(r3)
@@ -651,8 +651,8 @@ __ct__11TGraphGroupFPv:
 /* 8025EAE4 0025BA24  4B DA DD CD */	bl __nw__FUl
 /* 8025EAE8 0025BA28  7C 7C 1B 79 */	or. r28, r3, r3
 /* 8025EAEC 0025BA2C  41 82 00 1C */	beq lbl_8025EB08
-/* 8025EAF0 0025BA30  3C 60 80 39 */	lis r3, $$23085@ha
-/* 8025EAF4 0025BA34  38 A3 63 18 */	addi r5, r3, $$23085@l
+/* 8025EAF0 0025BA30  3C 60 80 39 */	lis r3, "@3085"@ha
+/* 8025EAF4 0025BA34  38 A3 63 18 */	addi r5, r3, "@3085"@l
 /* 8025EAF8 0025BA38  38 7C 00 00 */	addi r3, r28, 0
 /* 8025EAFC 0025BA3C  38 80 00 00 */	li r4, 0
 /* 8025EB00 0025BA40  38 C0 FF FF */	li r6, -1
@@ -713,8 +713,8 @@ lbl_8025EBB8:
 /* 8025EBBC 0025BAFC  4B DA DC F5 */	bl __nw__FUl
 /* 8025EBC0 0025BB00  7C 7B 1B 79 */	or. r27, r3, r3
 /* 8025EBC4 0025BB04  41 82 00 1C */	beq lbl_8025EBE0
-/* 8025EBC8 0025BB08  3C 60 80 39 */	lis r3, $$23085@ha
-/* 8025EBCC 0025BB0C  38 A3 63 18 */	addi r5, r3, $$23085@l
+/* 8025EBC8 0025BB08  3C 60 80 39 */	lis r3, "@3085"@ha
+/* 8025EBCC 0025BB0C  38 A3 63 18 */	addi r5, r3, "@3085"@l
 /* 8025EBD0 0025BB10  38 7B 00 00 */	addi r3, r27, 0
 /* 8025EBD4 0025BB14  38 80 00 00 */	li r4, 0
 /* 8025EBD8 0025BB18  38 C0 FF FF */	li r6, -1
@@ -771,11 +771,11 @@ lbl_8025EC74:
 lbl_8025EC84:
 /* 8025EC84 0025BBC4  4B E2 6E 41 */	bl rand
 /* 8025EC88 0025BBC8  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8025EC8C 0025BBCC  C8 62 E2 10 */	lfd f3, $$22892@sda21(r2)
+/* 8025EC8C 0025BBCC  C8 62 E2 10 */	lfd f3, "@2892"@sda21(r2)
 /* 8025EC90 0025BBD0  90 01 00 6C */	stw r0, 0x6c(r1)
 /* 8025EC94 0025BBD4  3C 80 43 30 */	lis r4, 0x43300008@ha
 /* 8025EC98 0025BBD8  6F E0 80 00 */	xoris r0, r31, 0x8000
-/* 8025EC9C 0025BBDC  C0 22 E2 30 */	lfs f1, $$23127@sda21(r2)
+/* 8025EC9C 0025BBDC  C0 22 E2 30 */	lfs f1, "@3127"@sda21(r2)
 /* 8025ECA0 0025BBE0  90 81 00 68 */	stw r4, 0x68(r1)
 /* 8025ECA4 0025BBE4  38 61 00 30 */	addi r3, r1, 0x30
 /* 8025ECA8 0025BBE8  90 01 00 64 */	stw r0, 0x64(r1)
@@ -798,8 +798,8 @@ lbl_8025ECDC:
 /* 8025ECE8 0025BC28  7C 08 03 A6 */	mtlr r0
 /* 8025ECEC 0025BC2C  4E 80 00 20 */	blr 
 
-.global getNearestPosOnGraphLink__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1
-getNearestPosOnGraphLink__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1:
+.global "getNearestPosOnGraphLink__9TGraphWebCFRCQ29JGeometry8TVec3<f>"
+"getNearestPosOnGraphLink__9TGraphWebCFRCQ29JGeometry8TVec3<f>":
 /* 8025ECF0 0025BC30  94 21 FF 60 */	stwu r1, -0xa0(r1)
 /* 8025ECF4 0025BC34  39 00 00 01 */	li r8, 1
 /* 8025ECF8 0025BC38  39 20 00 00 */	li r9, 0
@@ -812,11 +812,11 @@ getNearestPosOnGraphLink__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1:
 /* 8025ED14 0025BC54  93 A1 00 84 */	stw r29, 0x84(r1)
 /* 8025ED18 0025BC58  80 C5 00 00 */	lwz r6, 0(r5)
 /* 8025ED1C 0025BC5C  80 05 00 04 */	lwz r0, 4(r5)
-/* 8025ED20 0025BC60  C8 42 E2 10 */	lfd f2, $$22892@sda21(r2)
+/* 8025ED20 0025BC60  C8 42 E2 10 */	lfd f2, "@2892"@sda21(r2)
 /* 8025ED24 0025BC64  90 C1 00 58 */	stw r6, 0x58(r1)
-/* 8025ED28 0025BC68  C0 22 E2 08 */	lfs f1, $$22783@sda21(r2)
+/* 8025ED28 0025BC68  C0 22 E2 08 */	lfs f1, "@2783"@sda21(r2)
 /* 8025ED2C 0025BC6C  90 01 00 5C */	stw r0, 0x5c(r1)
-/* 8025ED30 0025BC70  C0 02 E2 2C */	lfs f0, $$22973@sda21(r2)
+/* 8025ED30 0025BC70  C0 02 E2 2C */	lfs f0, "@2973"@sda21(r2)
 /* 8025ED34 0025BC74  80 05 00 08 */	lwz r0, 8(r5)
 /* 8025ED38 0025BC78  90 01 00 60 */	stw r0, 0x60(r1)
 /* 8025ED3C 0025BC7C  80 04 00 08 */	lwz r0, 0x43300008@l(r4)
@@ -1006,7 +1006,7 @@ indexToPoint__9TGraphWebCFi:
 /* 8025EFE0 0025BF20  54 A0 20 36 */	slwi r0, r5, 4
 /* 8025EFE4 0025BF24  80 C4 00 00 */	lwz r6, 0(r4)
 /* 8025EFE8 0025BF28  3C 80 43 30 */	lis r4, 0x4330
-/* 8025EFEC 0025BF2C  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 8025EFEC 0025BF2C  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 8025EFF0 0025BF30  7C A6 00 2E */	lwzx r5, r6, r0
 /* 8025EFF4 0025BF34  A8 05 00 00 */	lha r0, 0(r5)
 /* 8025EFF8 0025BF38  6C 00 80 00 */	xoris r0, r0, 0x8000
@@ -1091,7 +1091,7 @@ initGoalIndex__9TGraphWebFRC3Vec:
 /* 8025F10C 0025C04C  D0 01 00 28 */	stfs f0, 0x28(r1)
 /* 8025F110 0025C050  D0 21 00 2C */	stfs f1, 0x2c(r1)
 /* 8025F114 0025C054  D0 41 00 30 */	stfs f2, 0x30(r1)
-/* 8025F118 0025C058  48 00 02 F9 */	bl findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1Ul
+/* 8025F118 0025C058  48 00 02 F9 */	bl "findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>Ul"
 /* 8025F11C 0025C05C  38 80 00 00 */	li r4, 0
 /* 8025F120 0025C060  90 7F 00 10 */	stw r3, 0x10(r31)
 /* 8025F124 0025C064  38 A4 00 00 */	addi r5, r4, 0
@@ -1116,7 +1116,7 @@ lbl_8025F144:
 /* 8025F168 0025C0A8  38 04 00 01 */	addi r0, r4, 1
 /* 8025F16C 0025C0AC  7C 06 29 2E */	stwx r0, r6, r5
 /* 8025F170 0025C0B0  80 1F 00 10 */	lwz r0, 0x10(r31)
-/* 8025F174 0025C0B4  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025F174 0025C0B4  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025F178 0025C0B8  54 04 20 36 */	slwi r4, r0, 4
 /* 8025F17C 0025C0BC  80 BF 00 00 */	lwz r5, 0(r31)
 /* 8025F180 0025C0C0  38 04 00 08 */	addi r0, r4, 8
@@ -1181,8 +1181,8 @@ lbl_8025F238:
 /* 8025F250 0025C190  7C 08 03 A6 */	mtlr r0
 /* 8025F254 0025C194  4E 80 00 20 */	blr 
 
-.global findNearestVisibleIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1fffUl
-findNearestVisibleIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1fffUl:
+.global "findNearestVisibleIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>fffUl"
+"findNearestVisibleIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>fffUl":
 /* 8025F258 0025C198  7C 08 02 A6 */	mflr r0
 /* 8025F25C 0025C19C  90 01 00 04 */	stw r0, 4(r1)
 /* 8025F260 0025C1A0  94 21 FF 58 */	stwu r1, -0xa8(r1)
@@ -1204,9 +1204,9 @@ findNearestVisibleIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1fffUl:
 /* 8025F2A0 0025C1E0  3B C0 00 00 */	li r30, 0
 /* 8025F2A4 0025C1E4  3B 20 00 00 */	li r25, 0
 /* 8025F2A8 0025C1E8  3F 00 43 30 */	lis r24, 0x4330
-/* 8025F2AC 0025C1EC  C3 C2 E2 34 */	lfs f30, $$23419@sda21(r2)
-/* 8025F2B0 0025C1F0  C3 42 E2 08 */	lfs f26, $$22783@sda21(r2)
-/* 8025F2B4 0025C1F4  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
+/* 8025F2AC 0025C1EC  C3 C2 E2 34 */	lfs f30, "@3419"@sda21(r2)
+/* 8025F2B0 0025C1F0  C3 42 E2 08 */	lfs f26, "@2783"@sda21(r2)
+/* 8025F2B4 0025C1F4  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
 /* 8025F2B8 0025C1F8  48 00 01 1C */	b lbl_8025F3D4
 lbl_8025F2BC:
 /* 8025F2BC 0025C1FC  28 1F FF FF */	cmplwi r31, 0xffff
@@ -1248,8 +1248,8 @@ lbl_8025F2D8:
 /* 8025F348 0025C288  C8 01 00 40 */	lfd f0, 0x40(r1)
 /* 8025F34C 0025C28C  EC 00 F8 28 */	fsubs f0, f0, f31
 /* 8025F350 0025C290  D0 01 00 38 */	stfs f0, 0x38(r1)
-/* 8025F354 0025C294  C0 82 E2 08 */	lfs f4, $$22783@sda21(r2)
-/* 8025F358 0025C298  4B E6 67 59 */	bl MsIsInSight__FRCQ29JGeometry8TVec3$$0f$$1fRCQ29JGeometry8TVec3$$0f$$1fff
+/* 8025F354 0025C294  C0 82 E2 08 */	lfs f4, "@2783"@sda21(r2)
+/* 8025F358 0025C298  4B E6 67 59 */	bl "MsIsInSight__FRCQ29JGeometry8TVec3<f>fRCQ29JGeometry8TVec3<f>fff"
 /* 8025F35C 0025C29C  2C 03 00 00 */	cmpwi r3, 0
 /* 8025F360 0025C2A0  41 82 00 6C */	beq lbl_8025F3CC
 /* 8025F364 0025C2A4  C0 21 00 30 */	lfs f1, 0x30(r1)
@@ -1299,8 +1299,8 @@ lbl_8025F3D4:
 /* 8025F408 0025C348  38 21 00 A8 */	addi r1, r1, 0xa8
 /* 8025F40C 0025C34C  4E 80 00 20 */	blr 
 
-.global findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1Ul
-findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1Ul:
+.global "findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>Ul"
+"findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3<f>Ul":
 /* 8025F410 0025C350  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 8025F414 0025C354  3D 45 00 01 */	addis r10, r5, 1
 /* 8025F418 0025C358  39 80 00 00 */	li r12, 0
@@ -1309,11 +1309,11 @@ findNearestNodeIndex__9TGraphWebCFRCQ29JGeometry8TVec3$$0f$$1Ul:
 /* 8025F424 0025C364  38 C0 00 00 */	li r6, 0
 /* 8025F428 0025C368  80 03 00 08 */	lwz r0, 8(r3)
 /* 8025F42C 0025C36C  3D 00 43 30 */	lis r8, 0x4330
-/* 8025F430 0025C370  C1 02 E2 34 */	lfs f8, $$23419@sda21(r2)
+/* 8025F430 0025C370  C1 02 E2 34 */	lfs f8, "@3419"@sda21(r2)
 /* 8025F434 0025C374  2C 00 00 00 */	cmpwi r0, 0
 /* 8025F438 0025C378  7C 09 03 A6 */	mtctr r0
-/* 8025F43C 0025C37C  C8 A2 E2 10 */	lfd f5, $$22892@sda21(r2)
-/* 8025F440 0025C380  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8025F43C 0025C37C  C8 A2 E2 10 */	lfd f5, "@2892"@sda21(r2)
+/* 8025F440 0025C380  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 8025F444 0025C384  40 81 00 B8 */	ble lbl_8025F4FC
 lbl_8025F448:
 /* 8025F448 0025C388  28 0A FF FF */	cmplwi r10, 0xffff
@@ -1370,8 +1370,8 @@ lbl_8025F4FC:
 /* 8025F504 0025C444  38 21 00 58 */	addi r1, r1, 0x58
 /* 8025F508 0025C448  4E 80 00 20 */	blr 
 
-.global getEscapeDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fUl
-getEscapeDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fUl:
+.global "getEscapeDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUl"
+"getEscapeDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUl":
 /* 8025F50C 0025C44C  7C 08 02 A6 */	mflr r0
 /* 8025F510 0025C450  90 01 00 04 */	stw r0, 4(r1)
 /* 8025F514 0025C454  3C 08 00 01 */	addis r0, r8, 1
@@ -1458,9 +1458,9 @@ lbl_8025F5D0:
 /* 8025F640 0025C580  EC 01 00 28 */	fsubs f0, f1, f0
 /* 8025F644 0025C584  D0 01 00 84 */	stfs f0, 0x84(r1)
 /* 8025F648 0025C588  4B E6 61 B1 */	bl MsVECNormalize__FP3VecP3Vec
-/* 8025F64C 0025C58C  CB C2 E2 10 */	lfd f30, $$22892@sda21(r2)
+/* 8025F64C 0025C58C  CB C2 E2 10 */	lfd f30, "@2892"@sda21(r2)
 /* 8025F650 0025C590  3B 80 FF FF */	li r28, -1
-/* 8025F654 0025C594  C3 E2 E2 38 */	lfs f31, $$23607@sda21(r2)
+/* 8025F654 0025C594  C3 E2 E2 38 */	lfs f31, "@3607"@sda21(r2)
 /* 8025F658 0025C598  3B 60 00 00 */	li r27, 0
 /* 8025F65C 0025C59C  3A E0 00 00 */	li r23, 0
 /* 8025F660 0025C5A0  3F E0 43 30 */	lis r31, 0x4330
@@ -1586,7 +1586,7 @@ lbl_8025F81C:
 /* 8025F830 0025C770  7F 83 E3 78 */	mr r3, r28
 /* 8025F834 0025C774  48 00 01 2C */	b lbl_8025F960
 lbl_8025F838:
-/* 8025F838 0025C778  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
+/* 8025F838 0025C778  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
 /* 8025F83C 0025C77C  3B E0 FF FF */	li r31, -1
 /* 8025F840 0025C780  3B 60 00 00 */	li r27, 0
 /* 8025F844 0025C784  3B 80 00 00 */	li r28, 0
@@ -1676,8 +1676,8 @@ lbl_8025F960:
 /* 8025F980 0025C8C0  38 21 01 48 */	addi r1, r1, 0x148
 /* 8025F984 0025C8C4  4E 80 00 20 */	blr 
 
-.global getRandomButDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fUl
-getRandomButDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fUl:
+.global "getRandomButDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUl"
+"getRandomButDirLimited__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUl":
 /* 8025F988 0025C8C8  7C 08 02 A6 */	mflr r0
 /* 8025F98C 0025C8CC  90 01 00 04 */	stw r0, 4(r1)
 /* 8025F990 0025C8D0  3C 08 00 01 */	addis r0, r8, 1
@@ -1743,12 +1743,12 @@ lbl_8025FA50:
 /* 8025FA68 0025C9A8  80 16 00 08 */	lwz r0, 8(r22)
 /* 8025FA6C 0025C9AC  90 01 00 74 */	stw r0, 0x74(r1)
 /* 8025FA70 0025C9B0  4B E6 5D 89 */	bl MsVECNormalize__FP3VecP3Vec
-/* 8025FA74 0025C9B4  CB 82 E2 10 */	lfd f28, $$22892@sda21(r2)
+/* 8025FA74 0025C9B4  CB 82 E2 10 */	lfd f28, "@2892"@sda21(r2)
 /* 8025FA78 0025C9B8  3B 80 00 00 */	li r28, 0
-/* 8025FA7C 0025C9BC  C3 A2 E2 30 */	lfs f29, $$23127@sda21(r2)
+/* 8025FA7C 0025C9BC  C3 A2 E2 30 */	lfs f29, "@3127"@sda21(r2)
 /* 8025FA80 0025C9C0  3B C0 FF FF */	li r30, -1
-/* 8025FA84 0025C9C4  C3 E2 E2 2C */	lfs f31, $$22973@sda21(r2)
-/* 8025FA88 0025C9C8  C3 62 E2 38 */	lfs f27, $$23607@sda21(r2)
+/* 8025FA84 0025C9C4  C3 E2 E2 2C */	lfs f31, "@2973"@sda21(r2)
+/* 8025FA88 0025C9C8  C3 62 E2 38 */	lfs f27, "@3607"@sda21(r2)
 /* 8025FA8C 0025C9CC  3B 60 00 00 */	li r27, 0
 /* 8025FA90 0025C9D0  3A E0 00 00 */	li r23, 0
 /* 8025FA94 0025C9D4  3E C0 43 30 */	lis r22, 0x4330
@@ -1871,9 +1871,9 @@ lbl_8025FC40:
 /* 8025FC54 0025CB94  7F C3 F3 78 */	mr r3, r30
 /* 8025FC58 0025CB98  48 00 01 30 */	b lbl_8025FD88
 lbl_8025FC5C:
-/* 8025FC5C 0025CB9C  C3 C2 E2 08 */	lfs f30, $$22783@sda21(r2)
+/* 8025FC5C 0025CB9C  C3 C2 E2 08 */	lfs f30, "@2783"@sda21(r2)
 /* 8025FC60 0025CBA0  3B C0 FF FF */	li r30, -1
-/* 8025FC64 0025CBA4  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
+/* 8025FC64 0025CBA4  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
 /* 8025FC68 0025CBA8  3B 60 00 00 */	li r27, 0
 /* 8025FC6C 0025CBAC  3B 80 00 00 */	li r28, 0
 /* 8025FC70 0025CBB0  3E E0 43 30 */	lis r23, 0x4330
@@ -1963,8 +1963,8 @@ lbl_8025FD88:
 /* 8025FDAC 0025CCEC  38 21 01 38 */	addi r1, r1, 0x138
 /* 8025FDB0 0025CCF0  4E 80 00 20 */	blr 
 
-.global getAimToDirNextIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1Ul
-getAimToDirNextIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1Ul:
+.global "getAimToDirNextIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul"
+"getAimToDirNextIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul":
 /* 8025FDB4 0025CCF4  7C 08 02 A6 */	mflr r0
 /* 8025FDB8 0025CCF8  90 01 00 04 */	stw r0, 4(r1)
 /* 8025FDBC 0025CCFC  3C 08 00 01 */	addis r0, r8, 1
@@ -2025,9 +2025,9 @@ lbl_8025FE68:
 /* 8025FE80 0025CDC0  80 17 00 08 */	lwz r0, 8(r23)
 /* 8025FE84 0025CDC4  90 01 00 3C */	stw r0, 0x3c(r1)
 /* 8025FE88 0025CDC8  4B E6 59 71 */	bl MsVECNormalize__FP3VecP3Vec
-/* 8025FE8C 0025CDCC  C3 C2 E2 08 */	lfs f30, $$22783@sda21(r2)
+/* 8025FE8C 0025CDCC  C3 C2 E2 08 */	lfs f30, "@2783"@sda21(r2)
 /* 8025FE90 0025CDD0  3B A0 FF FF */	li r29, -1
-/* 8025FE94 0025CDD4  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
+/* 8025FE94 0025CDD4  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
 /* 8025FE98 0025CDD8  3B 80 00 00 */	li r28, 0
 /* 8025FE9C 0025CDDC  3B 00 00 00 */	li r24, 0
 /* 8025FEA0 0025CDE0  3E E0 43 30 */	lis r23, 0x4330
@@ -2113,8 +2113,8 @@ lbl_8025FFB8:
 /* 8025FFCC 0025CF0C  38 21 00 D8 */	addi r1, r1, 0xd8
 /* 8025FFD0 0025CF10  4E 80 00 20 */	blr 
 
-.global getEscapeFromMarioIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1Ul
-getEscapeFromMarioIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3$$0f$$1Ul:
+.global "getEscapeFromMarioIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>Ul"
+"getEscapeFromMarioIndex__9TGraphWebCFiiRCQ29JGeometry8TVec3<f>Ul":
 /* 8025FFD4 0025CF14  7C 08 02 A6 */	mflr r0
 /* 8025FFD8 0025CF18  90 01 00 04 */	stw r0, 4(r1)
 /* 8025FFDC 0025CF1C  3C 07 00 01 */	addis r0, r7, 1
@@ -2187,9 +2187,9 @@ lbl_80260084:
 /* 802600D0 0025D010  EC 01 00 28 */	fsubs f0, f1, f0
 /* 802600D4 0025D014  D0 01 00 48 */	stfs f0, 0x48(r1)
 /* 802600D8 0025D018  4B E6 57 21 */	bl MsVECNormalize__FP3VecP3Vec
-/* 802600DC 0025D01C  C3 C2 E2 08 */	lfs f30, $$22783@sda21(r2)
+/* 802600DC 0025D01C  C3 C2 E2 08 */	lfs f30, "@2783"@sda21(r2)
 /* 802600E0 0025D020  3B A0 FF FF */	li r29, -1
-/* 802600E4 0025D024  CB E2 E2 10 */	lfd f31, $$22892@sda21(r2)
+/* 802600E4 0025D024  CB E2 E2 10 */	lfd f31, "@2892"@sda21(r2)
 /* 802600E8 0025D028  3B 80 00 00 */	li r28, 0
 /* 802600EC 0025D02C  3B 00 00 00 */	li r24, 0
 /* 802600F0 0025D030  3E E0 43 30 */	lis r23, 0x4330
@@ -2328,11 +2328,11 @@ lbl_802602C8:
 lbl_802602D0:
 /* 802602D0 0025D210  4B E2 57 F5 */	bl rand
 /* 802602D4 0025D214  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802602D8 0025D218  C8 62 E2 10 */	lfd f3, $$22892@sda21(r2)
+/* 802602D8 0025D218  C8 62 E2 10 */	lfd f3, "@2892"@sda21(r2)
 /* 802602DC 0025D21C  90 01 00 7C */	stw r0, 0x7c(r1)
 /* 802602E0 0025D220  3C 60 43 30 */	lis r3, 0x4330
 /* 802602E4 0025D224  6F C0 80 00 */	xoris r0, r30, 0x8000
-/* 802602E8 0025D228  C0 22 E2 30 */	lfs f1, $$23127@sda21(r2)
+/* 802602E8 0025D228  C0 22 E2 30 */	lfs f1, "@3127"@sda21(r2)
 /* 802602EC 0025D22C  90 61 00 78 */	stw r3, 0x78(r1)
 /* 802602F0 0025D230  90 01 00 74 */	stw r0, 0x74(r1)
 /* 802602F4 0025D234  C8 01 00 78 */	lfd f0, 0x78(r1)
@@ -2428,7 +2428,7 @@ lbl_80260428:
 lbl_80260430:
 /* 80260430 0025D370  80 FD 00 00 */	lwz r7, 0(r29)
 /* 80260434 0025D374  3D 00 43 30 */	lis r8, 0x4330
-/* 80260438 0025D378  C8 42 E2 10 */	lfd f2, $$22892@sda21(r2)
+/* 80260438 0025D378  C8 42 E2 10 */	lfd f2, "@2892"@sda21(r2)
 /* 8026043C 0025D37C  2C 06 00 00 */	cmpwi r6, 0
 /* 80260440 0025D380  A8 A7 00 00 */	lha r5, 0(r7)
 /* 80260444 0025D384  A8 67 00 02 */	lha r3, 2(r7)
@@ -2438,7 +2438,7 @@ lbl_80260430:
 /* 80260454 0025D394  6C 65 80 00 */	xoris r5, r3, 0x8000
 /* 80260458 0025D398  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8026045C 0025D39C  90 C1 00 94 */	stw r6, 0x94(r1)
-/* 80260460 0025D3A0  C1 02 E2 08 */	lfs f8, $$22783@sda21(r2)
+/* 80260460 0025D3A0  C1 02 E2 08 */	lfs f8, "@2783"@sda21(r2)
 /* 80260464 0025D3A4  38 60 FF FF */	li r3, -1
 /* 80260468 0025D3A8  90 A1 00 8C */	stw r5, 0x8c(r1)
 /* 8026046C 0025D3AC  38 A0 00 00 */	li r5, 0
@@ -2769,9 +2769,9 @@ lbl_802608CC:
 .global __ct__9TGraphWebFP9TRailNodePCci
 __ct__9TGraphWebFP9TRailNodePCci:
 /* 802608E4 0025D824  7C 08 02 A6 */	mflr r0
-/* 802608E8 0025D828  3C E0 80 3D */	lis r7, $$21431@ha
+/* 802608E8 0025D828  3C E0 80 3D */	lis r7, "@1431"@ha
 /* 802608EC 0025D82C  90 01 00 04 */	stw r0, 4(r1)
-/* 802608F0 0025D830  38 E7 43 58 */	addi r7, r7, $$21431@l
+/* 802608F0 0025D830  38 E7 43 58 */	addi r7, r7, "@1431"@l
 /* 802608F4 0025D834  38 07 01 04 */	addi r0, r7, 0x104
 /* 802608F8 0025D838  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 802608FC 0025D83C  93 E1 00 34 */	stw r31, 0x34(r1)
@@ -2867,8 +2867,8 @@ lbl_80260A24:
 /* 80260A40 0025D980  38 21 00 38 */	addi r1, r1, 0x38
 /* 80260A44 0025D984  4E 80 00 20 */	blr 
 
-.global getPosAndRot__11TSplineRailFfPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
-getPosAndRot__11TSplineRailFfPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
+.global "getPosAndRot__11TSplineRailFfPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+"getPosAndRot__11TSplineRailFfPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>":
 /* 80260A48 0025D988  7C 08 02 A6 */	mflr r0
 /* 80260A4C 0025D98C  90 01 00 04 */	stw r0, 4(r1)
 /* 80260A50 0025D990  94 21 FF 08 */	stwu r1, -0xf8(r1)
@@ -2894,13 +2894,13 @@ getPosAndRot__11TSplineRailFfPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$
 /* 80260AA0 0025D9E0  54 00 10 3A */	slwi r0, r0, 2
 /* 80260AA4 0025D9E4  C0 44 00 04 */	lfs f2, 4(r4)
 /* 80260AA8 0025D9E8  7C 64 04 2E */	lfsx f3, r4, r0
-/* 80260AAC 0025D9EC  4B FF D8 D1 */	bl MsWrap$$0f$$1__Ffff
+/* 80260AAC 0025D9EC  4B FF D8 D1 */	bl "MsWrap<f>__Ffff"
 lbl_80260AB0:
 /* 80260AB0 0025D9F0  FF C0 08 90 */	fmr f30, f1
-/* 80260AB4 0025D9F4  C3 E2 E2 1C */	lfs f31, $$22924@sda21(r2)
-/* 80260AB8 0025D9F8  C3 62 E2 3C */	lfs f27, $$24077@sda21(r2)
-/* 80260ABC 0025D9FC  C3 82 E2 40 */	lfs f28, $$24078@sda21(r2)
-/* 80260AC0 0025DA00  C3 A2 E2 2C */	lfs f29, $$22973@sda21(r2)
+/* 80260AB4 0025D9F4  C3 E2 E2 1C */	lfs f31, "@2924"@sda21(r2)
+/* 80260AB8 0025D9F8  C3 62 E2 3C */	lfs f27, "@4077"@sda21(r2)
+/* 80260ABC 0025D9FC  C3 82 E2 40 */	lfs f28, "@4078"@sda21(r2)
+/* 80260AC0 0025DA00  C3 A2 E2 2C */	lfs f29, "@2973"@sda21(r2)
 lbl_80260AC4:
 /* 80260AC4 0025DA04  EC 1E F8 2A */	fadds f0, f30, f31
 /* 80260AC8 0025DA08  FC 00 E8 40 */	fcmpo cr0, f0, f29
@@ -2918,7 +2918,7 @@ lbl_80260AD4:
 /* 80260AF4 0025DA34  54 00 10 3A */	slwi r0, r0, 2
 /* 80260AF8 0025DA38  C0 44 00 04 */	lfs f2, 4(r4)
 /* 80260AFC 0025DA3C  7C 64 04 2E */	lfsx f3, r4, r0
-/* 80260B00 0025DA40  4B FF D8 7D */	bl MsWrap$$0f$$1__Ffff
+/* 80260B00 0025DA40  4B FF D8 7D */	bl "MsWrap<f>__Ffff"
 lbl_80260B04:
 /* 80260B04 0025DA44  80 9D 00 00 */	lwz r4, 0(r29)
 /* 80260B08 0025DA48  38 61 00 98 */	addi r3, r1, 0x98
@@ -2940,7 +2940,7 @@ lbl_80260B04:
 /* 80260B48 0025DA88  54 00 10 3A */	slwi r0, r0, 2
 /* 80260B4C 0025DA8C  C0 44 00 04 */	lfs f2, 4(r4)
 /* 80260B50 0025DA90  7C 64 04 2E */	lfsx f3, r4, r0
-/* 80260B54 0025DA94  4B FF D8 29 */	bl MsWrap$$0f$$1__Ffff
+/* 80260B54 0025DA94  4B FF D8 29 */	bl "MsWrap<f>__Ffff"
 lbl_80260B58:
 /* 80260B58 0025DA98  80 9D 00 00 */	lwz r4, 0(r29)
 /* 80260B5C 0025DA9C  38 61 00 8C */	addi r3, r1, 0x8c
@@ -2983,7 +2983,7 @@ lbl_80260B58:
 /* 80260BF0 0025DB30  90 1E 00 04 */	stw r0, 4(r30)
 /* 80260BF4 0025DB34  80 01 00 B8 */	lwz r0, 0xb8(r1)
 /* 80260BF8 0025DB38  90 1E 00 08 */	stw r0, 8(r30)
-/* 80260BFC 0025DB3C  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 80260BFC 0025DB3C  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 80260C00 0025DB40  D0 1F 00 00 */	stfs f0, 0(r31)
 /* 80260C04 0025DB44  D0 1F 00 04 */	stfs f0, 4(r31)
 /* 80260C08 0025DB48  D0 1F 00 08 */	stfs f0, 8(r31)
@@ -2997,7 +2997,7 @@ lbl_80260C10:
 /* 80260C24 0025DB64  90 1E 00 04 */	stw r0, 4(r30)
 /* 80260C28 0025DB68  80 01 00 B8 */	lwz r0, 0xb8(r1)
 /* 80260C2C 0025DB6C  90 1E 00 08 */	stw r0, 8(r30)
-/* 80260C30 0025DB70  4B E6 53 61 */	bl MsGetRotFromZaxis__FRCQ29JGeometry8TVec3$$0f$$1
+/* 80260C30 0025DB70  4B E6 53 61 */	bl "MsGetRotFromZaxis__FRCQ29JGeometry8TVec3<f>"
 /* 80260C34 0025DB74  80 61 00 80 */	lwz r3, 0x80(r1)
 /* 80260C38 0025DB78  80 01 00 84 */	lwz r0, 0x84(r1)
 /* 80260C3C 0025DB7C  90 7F 00 00 */	stw r3, 0(r31)
@@ -3037,12 +3037,12 @@ getPoint__11TSplinePathFf:
 /* 80260CB4 0025DBF4  7F E3 FB 78 */	mr r3, r31
 /* 80260CB8 0025DBF8  48 02 11 41 */	bl calcTable__11TSplinePathFv
 lbl_80260CBC:
-/* 80260CBC 0025DBFC  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 80260CBC 0025DBFC  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 80260CC0 0025DC00  FC 1D 00 40 */	fcmpo cr0, f29, f0
 /* 80260CC4 0025DC04  40 80 00 08 */	bge lbl_80260CCC
 /* 80260CC8 0025DC08  FF A0 00 90 */	fmr f29, f0
 lbl_80260CCC:
-/* 80260CCC 0025DC0C  C0 02 E2 2C */	lfs f0, $$22973@sda21(r2)
+/* 80260CCC 0025DC0C  C0 02 E2 2C */	lfs f0, "@2973"@sda21(r2)
 /* 80260CD0 0025DC10  FC 00 E8 40 */	fcmpo cr0, f0, f29
 /* 80260CD4 0025DC14  40 80 00 08 */	bge lbl_80260CDC
 /* 80260CD8 0025DC18  FF A0 00 90 */	fmr f29, f0
@@ -3146,7 +3146,7 @@ lbl_80260E30:
 /* 80260E38 0025DD78  80 9F 00 08 */	lwz r4, 8(r31)
 /* 80260E3C 0025DD7C  80 BF 00 00 */	lwz r5, 0(r31)
 /* 80260E40 0025DD80  38 04 FF FF */	addi r0, r4, -1
-/* 80260E44 0025DD84  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 80260E44 0025DD84  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 80260E48 0025DD88  54 00 20 36 */	slwi r0, r0, 4
 /* 80260E4C 0025DD8C  7C 85 00 2E */	lwzx r4, r5, r0
 /* 80260E50 0025DD90  A8 04 00 00 */	lha r0, 0(r4)
@@ -3192,7 +3192,7 @@ lbl_80260E30:
 /* 80260EF0 0025DE30  D0 03 00 00 */	stfs f0, 0(r3)
 /* 80260EF4 0025DE34  90 04 00 28 */	stw r0, 0x28(r4)
 lbl_80260EF8:
-/* 80260EF8 0025DE38  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 80260EF8 0025DE38  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 80260EFC 0025DE3C  39 20 00 00 */	li r9, 0
 /* 80260F00 0025DE40  38 60 00 00 */	li r3, 0
 /* 80260F04 0025DE44  38 80 00 00 */	li r4, 0
@@ -3257,7 +3257,7 @@ lbl_80260FDC:
 /* 80260FE4 0025DF24  41 80 FF 2C */	blt lbl_80260F10
 /* 80260FE8 0025DF28  80 9F 00 00 */	lwz r4, 0(r31)
 /* 80260FEC 0025DF2C  3C 60 43 30 */	lis r3, 0x4330
-/* 80260FF0 0025DF30  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 80260FF0 0025DF30  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 80260FF4 0025DF34  34 A5 00 01 */	addic. r5, r5, 1
 /* 80260FF8 0025DF38  80 84 00 00 */	lwz r4, 0(r4)
 /* 80260FFC 0025DF3C  A8 04 00 00 */	lha r0, 0(r4)
@@ -3307,7 +3307,7 @@ lbl_80260FDC:
 lbl_802610AC:
 /* 802610AC 0025DFEC  80 9F 00 00 */	lwz r4, 0(r31)
 /* 802610B0 0025DFF0  3C 60 43 30 */	lis r3, 0x4330
-/* 802610B4 0025DFF4  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 802610B4 0025DFF4  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 802610B8 0025DFF8  80 84 00 10 */	lwz r4, 0x10(r4)
 /* 802610BC 0025DFFC  A8 04 00 00 */	lha r0, 0(r4)
 /* 802610C0 0025E000  6C 00 80 00 */	xoris r0, r0, 0x8000
@@ -3368,7 +3368,7 @@ lbl_80261194:
 /* 80261194 0025E0D4  93 BE 00 00 */	stw r29, 0(r30)
 /* 80261198 0025E0D8  39 00 00 00 */	li r8, 0
 /* 8026119C 0025E0DC  38 60 00 00 */	li r3, 0
-/* 802611A0 0025E0E0  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 802611A0 0025E0E0  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 802611A4 0025E0E4  38 80 00 00 */	li r4, 0
 /* 802611A8 0025E0E8  3C C0 43 30 */	lis r6, 0x4330
 /* 802611AC 0025E0EC  48 00 00 C8 */	b lbl_80261274
@@ -3429,7 +3429,7 @@ lbl_80261274:
 /* 8026127C 0025E1BC  41 80 FF 34 */	blt lbl_802611B0
 lbl_80261280:
 /* 80261280 0025E1C0  83 FE 00 00 */	lwz r31, 0(r30)
-/* 80261284 0025E1C4  C3 E2 E2 08 */	lfs f31, $$22783@sda21(r2)
+/* 80261284 0025E1C4  C3 E2 E2 08 */	lfs f31, "@2783"@sda21(r2)
 /* 80261288 0025E1C8  80 1F 00 28 */	lwz r0, 0x28(r31)
 /* 8026128C 0025E1CC  2C 00 00 00 */	cmpwi r0, 0
 /* 80261290 0025E1D0  40 82 00 0C */	bne lbl_8026129C
@@ -3469,7 +3469,7 @@ getPoint__10TGraphNodeCFP3Vec:
 /* 80261308 0025E248  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 8026130C 0025E24C  3C C0 43 30 */	lis r6, 0x4330
 /* 80261310 0025E250  80 A3 00 00 */	lwz r5, 0(r3)
-/* 80261314 0025E254  C8 22 E2 10 */	lfd f1, $$22892@sda21(r2)
+/* 80261314 0025E254  C8 22 E2 10 */	lfd f1, "@2892"@sda21(r2)
 /* 80261318 0025E258  A8 05 00 00 */	lha r0, 0(r5)
 /* 8026131C 0025E25C  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 80261320 0025E260  90 01 00 24 */	stw r0, 0x24(r1)
@@ -3502,42 +3502,42 @@ __ct__10TGraphNodeFv:
 /* 80261380 0025E2C0  90 83 00 00 */	stw r4, 0(r3)
 /* 80261384 0025E2C4  38 00 80 01 */	li r0, -32767
 /* 80261388 0025E2C8  90 83 00 04 */	stw r4, 4(r3)
-/* 8026138C 0025E2CC  C0 02 E2 08 */	lfs f0, $$22783@sda21(r2)
+/* 8026138C 0025E2CC  C0 02 E2 08 */	lfs f0, "@2783"@sda21(r2)
 /* 80261390 0025E2D0  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80261394 0025E2D4  B0 03 00 0C */	sth r0, 0xc(r3)
 /* 80261398 0025E2D8  4E 80 00 20 */	blr 
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x393244, 0x14
-$$21961:
+"@1961":
 	.incbin "baserom.dol", 0x393258, 0x30
-$$21962:
+"@1962":
 	.incbin "baserom.dol", 0x393288, 0x38
-$$21963:
+"@1963":
 	.incbin "baserom.dol", 0x3932C0, 0x34
-$$21964:
+"@1964":
 	.incbin "baserom.dol", 0x3932F4, 0x24
-$$23085:
+"@3085":
 	.incbin "baserom.dol", 0x393318, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x3D1358, 0xC
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x3D1364, 0xC
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x3D1370, 0x10
 MtxCalcTypeName:
-  .4byte $$21961
-  .4byte $$21962
-  .4byte $$21963
-  .4byte $$21964
+  .4byte "@1961"
+  .4byte "@1962"
+  .4byte "@1963"
+  .4byte "@1964"
 grDummyRail:
 	.incbin "baserom.dol", 0x3D1390, 0xCC
 .global __vt__9TGraphWeb
@@ -3548,29 +3548,29 @@ __vt__9TGraphWeb:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22783:
+"@2783":
   .4byte 0
-$$22890:
+"@2890":
 	.incbin "baserom.dol", 0x3E9F0C, 0x4
-$$22892:
+"@2892":
 	.incbin "baserom.dol", 0x3E9F10, 0x8
-$$22923:
+"@2923":
 	.incbin "baserom.dol", 0x3E9F18, 0x4
-$$22924:
+"@2924":
 	.incbin "baserom.dol", 0x3E9F1C, 0x4
-$$22926:
+"@2926":
 	.incbin "baserom.dol", 0x3E9F20, 0x8
-$$22972:
+"@2972":
 	.incbin "baserom.dol", 0x3E9F28, 0x4
-$$22973:
+"@2973":
 	.incbin "baserom.dol", 0x3E9F2C, 0x4
-$$23127:
+"@3127":
 	.incbin "baserom.dol", 0x3E9F30, 0x4
-$$23419:
+"@3419":
 	.incbin "baserom.dol", 0x3E9F34, 0x4
-$$23607:
+"@3607":
 	.incbin "baserom.dol", 0x3E9F38, 0x4
-$$24077:
+"@4077":
 	.incbin "baserom.dol", 0x3E9F3C, 0x4
-$$24078:
+"@4078":
 	.incbin "baserom.dol", 0x3E9F40, 0x8

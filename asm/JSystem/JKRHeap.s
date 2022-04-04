@@ -195,9 +195,9 @@ lbl_8000C384:
 /* 8000C3A4 000092E4  93 ED 8D 7C */	stw r31, mCodeEnd__7JKRHeap@sda21(r13)
 /* 8000C3A8 000092E8  3C E0 80 00 */	lis r7, 0x80000028@ha
 /* 8000C3AC 000092EC  90 ED 8D 78 */	stw r7, mCodeStart__7JKRHeap@sda21(r13)
-/* 8000C3B0 000092F0  3C 60 80 37 */	lis r3, $$2149@ha
+/* 8000C3B0 000092F0  3C 60 80 37 */	lis r3, "@149"@ha
 /* 8000C3B4 000092F4  80 AD 8D 7C */	lwz r5, mCodeEnd__7JKRHeap@sda21(r13)
-/* 8000C3B8 000092F8  38 63 04 E8 */	addi r3, r3, $$2149@l
+/* 8000C3B8 000092F8  38 63 04 E8 */	addi r3, r3, "@149"@l
 /* 8000C3BC 000092FC  93 ED 8D 80 */	stw r31, mUserRamStart__7JKRHeap@sda21(r13)
 /* 8000C3C0 00009300  80 8D 8D 78 */	lwz r4, mCodeStart__7JKRHeap@sda21(r13)
 /* 8000C3C4 00009304  93 CD 8D 84 */	stw r30, mUserRamEnd__7JKRHeap@sda21(r13)
@@ -213,10 +213,10 @@ lbl_8000C384:
 /* 8000C3EC 0000932C  48 08 18 D9 */	bl OSSetArenaHi
 /* 8000C3F0 00009330  93 FB 00 00 */	stw r31, 0(r27)
 /* 8000C3F4 00009334  7C 1F F0 50 */	subf r0, r31, r30
-/* 8000C3F8 00009338  3C 60 80 37 */	lis r3, $$2150@ha
+/* 8000C3F8 00009338  3C 60 80 37 */	lis r3, "@150"@ha
 /* 8000C3FC 0000933C  4C C6 31 82 */	crclr 6
 /* 8000C400 00009340  90 1C 00 00 */	stw r0, 0(r28)
-/* 8000C404 00009344  38 63 04 F8 */	addi r3, r3, $$2150@l
+/* 8000C404 00009344  38 63 04 F8 */	addi r3, r3, "@150"@l
 /* 8000C408 00009348  38 9F 00 00 */	addi r4, r31, 0
 /* 8000C40C 0000934C  38 BE 00 00 */	addi r5, r30, 0
 /* 8000C410 00009350  48 08 2B 55 */	bl OSReport
@@ -572,13 +572,13 @@ lbl_8000C864:
 .global JKRDefaultMemoryErrorRoutine__FPvUli
 JKRDefaultMemoryErrorRoutine__FPvUli:
 /* 8000C87C 000097BC  7C 08 02 A6 */	mflr r0
-/* 8000C880 000097C0  3C 60 80 37 */	lis r3, $$2369@ha
+/* 8000C880 000097C0  3C 60 80 37 */	lis r3, "@369"@ha
 /* 8000C884 000097C4  90 01 00 04 */	stw r0, 4(r1)
 /* 8000C888 000097C8  4C C6 31 82 */	crclr 6
-/* 8000C88C 000097CC  38 63 05 10 */	addi r3, r3, $$2369@l
+/* 8000C88C 000097CC  38 63 05 10 */	addi r3, r3, "@369"@l
 /* 8000C890 000097D0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000C894 000097D4  38 80 02 B6 */	li r4, 0x2b6
-/* 8000C898 000097D8  38 A2 80 38 */	addi r5, r2, $$2370@sda21
+/* 8000C898 000097D8  38 A2 80 38 */	addi r5, r2, "@370"@sda21
 /* 8000C89C 000097DC  48 08 27 49 */	bl OSPanic
 /* 8000C8A0 000097E0  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8000C8A4 000097E4  38 21 00 08 */	addi r1, r1, 8
@@ -835,11 +835,11 @@ getCurrentGroupId__7JKRHeapFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2149:
+"@149":
 	.incbin "baserom.dol", 0x36D4E8, 0x10
-$$2150:
+"@150":
 	.incbin "baserom.dol", 0x36D4F8, 0x18
-$$2369:
+"@369":
 	.incbin "baserom.dol", 0x36D510, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -868,7 +868,7 @@ __vt__7JKRHeap:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2370:
+"@370":
 	.incbin "baserom.dol", 0x3E3D38, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

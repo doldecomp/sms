@@ -172,15 +172,15 @@ getParamMaxVolumeDistance__18JAIGlobalParameterFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2530:
+"@530":
 	.incbin "baserom.dol", 0x36E1F8, 0x14
-$$2531:
+"@531":
 	.incbin "baserom.dol", 0x36E20C, 0x14
-$$2532:
+"@532":
 	.incbin "baserom.dol", 0x36E220, 0x14
-$$2533:
+"@533":
 	.incbin "baserom.dol", 0x36E234, 0xC
-$$2537:
+"@537":
 	.incbin "baserom.dol", 0x36E240, 0x10
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
@@ -237,28 +237,28 @@ stayHeapSize__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3124, 0x4
 .global seInfoFileName__18JAIGlobalParameter
 seInfoFileName__18JAIGlobalParameter:
-  .4byte $$2530
+  .4byte "@530"
 .global seqInfoFileName__18JAIGlobalParameter
 seqInfoFileName__18JAIGlobalParameter:
-  .4byte $$2531
+  .4byte "@531"
 .global streamInfoFileName__18JAIGlobalParameter
 streamInfoFileName__18JAIGlobalParameter:
-  .4byte $$2532
+  .4byte "@532"
 .global initDataFileName__18JAIGlobalParameter
 initDataFileName__18JAIGlobalParameter:
-  .4byte $$2533
+  .4byte "@533"
 .global wavePath__18JAIGlobalParameter
 wavePath__18JAIGlobalParameter:
-  .4byte $$2534
+  .4byte "@534"
 .global sequenceArchivesPath__18JAIGlobalParameter
 sequenceArchivesPath__18JAIGlobalParameter:
-  .4byte $$2535
+  .4byte "@535"
 .global streamPath__18JAIGlobalParameter
 streamPath__18JAIGlobalParameter:
-  .4byte $$2536
+  .4byte "@536"
 .global sequenceArchivesFileName__18JAIGlobalParameter
 sequenceArchivesFileName__18JAIGlobalParameter:
-  .4byte $$2537
+  .4byte "@537"
 .global inputGainDown__18JAIGlobalParameter
 inputGainDown__18JAIGlobalParameter:
 	.incbin "baserom.dol", 0x3E3148, 0x4
@@ -322,11 +322,11 @@ seDistancepitchMax__18JAIGlobalParameter:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2534:
+"@534":
 	.incbin "baserom.dol", 0x3E4240, 0x8
-$$2535:
+"@535":
 	.incbin "baserom.dol", 0x3E4248, 0x8
-$$2536:
+"@536":
 	.incbin "baserom.dol", 0x3E4250, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

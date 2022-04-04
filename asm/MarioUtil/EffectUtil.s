@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1b
-SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1b:
+.global "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b"
+"SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b":
 /* 800CEB9C 000CBADC  7C 08 02 A6 */	mflr r0
 /* 800CEBA0 000CBAE0  3C C0 66 66 */	lis r6, 0x66666667@ha
 /* 800CEBA4 000CBAE4  90 01 00 04 */	stw r0, 4(r1)
@@ -30,14 +30,14 @@ SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$
 /* 800CEBFC 000CBB3C  1C 00 00 14 */	mulli r0, r0, 0x14
 /* 800CEC00 000CBB40  7C 00 30 51 */	subf. r0, r0, r6
 /* 800CEC04 000CBB44  40 82 01 48 */	bne lbl_800CED4C
-/* 800CEC08 000CBB48  C3 82 8E 70 */	lfs f28, $$21799@sda21(r2)
+/* 800CEC08 000CBB48  C3 82 8E 70 */	lfs f28, "@1799"@sda21(r2)
 /* 800CEC0C 000CBB4C  C0 DE 00 00 */	lfs f6, 0(r30)
 /* 800CEC10 000CBB50  C0 BE 00 04 */	lfs f5, 4(r30)
 /* 800CEC14 000CBB54  EC 7C 01 B2 */	fmuls f3, f28, f6
-/* 800CEC18 000CBB58  C0 22 8E 74 */	lfs f1, $$21800@sda21(r2)
+/* 800CEC18 000CBB58  C0 22 8E 74 */	lfs f1, "@1800"@sda21(r2)
 /* 800CEC1C 000CBB5C  C0 9E 00 08 */	lfs f4, 8(r30)
 /* 800CEC20 000CBB60  EC 5C 01 72 */	fmuls f2, f28, f5
-/* 800CEC24 000CBB64  C0 02 8E 78 */	lfs f0, $$21801@sda21(r2)
+/* 800CEC24 000CBB64  C0 02 8E 78 */	lfs f0, "@1801"@sda21(r2)
 /* 800CEC28 000CBB68  EF A1 19 78 */	fmsubs f29, f1, f5, f3
 /* 800CEC2C 000CBB6C  EF FC 11 38 */	fmsubs f31, f28, f4, f2
 /* 800CEC30 000CBB70  EF C1 19 3C */	fnmsubs f30, f1, f4, f3
@@ -57,27 +57,27 @@ SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$
 /* 800CEC68 000CBBA8  FF 60 D0 90 */	fmr f27, f26
 /* 800CEC6C 000CBBAC  48 00 00 1C */	b lbl_800CEC88
 lbl_800CEC70:
-/* 800CEC70 000CBBB0  4B F9 E1 01 */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 800CEC74 000CBBB4  C0 02 8E 74 */	lfs f0, $$21800@sda21(r2)
+/* 800CEC70 000CBBB0  4B F9 E1 01 */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
+/* 800CEC74 000CBBB4  C0 02 8E 74 */	lfs f0, "@1800"@sda21(r2)
 /* 800CEC78 000CBBB8  EC 00 00 72 */	fmuls f0, f0, f1
 /* 800CEC7C 000CBBBC  EF 7B 00 32 */	fmuls f27, f27, f0
 /* 800CEC80 000CBBC0  EF 5A 00 32 */	fmuls f26, f26, f0
 /* 800CEC84 000CBBC4  EF 99 00 32 */	fmuls f28, f25, f0
 lbl_800CEC88:
 /* 800CEC88 000CBBC8  EC 3E 07 B2 */	fmuls f1, f30, f30
-/* 800CEC8C 000CBBCC  C0 02 8E 78 */	lfs f0, $$21801@sda21(r2)
+/* 800CEC8C 000CBBCC  C0 02 8E 78 */	lfs f0, "@1801"@sda21(r2)
 /* 800CEC90 000CBBD0  EC 3F 0F FA */	fmadds f1, f31, f31, f1
 /* 800CEC94 000CBBD4  EC 3D 0F 7A */	fmadds f1, f29, f29, f1
 /* 800CEC98 000CBBD8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800CEC9C 000CBBDC  4C 40 13 82 */	cror 2, 0, 2
 /* 800CECA0 000CBBE0  40 82 00 14 */	bne lbl_800CECB4
-/* 800CECA4 000CBBE4  C0 62 8E 70 */	lfs f3, $$21799@sda21(r2)
+/* 800CECA4 000CBBE4  C0 62 8E 70 */	lfs f3, "@1799"@sda21(r2)
 /* 800CECA8 000CBBE8  FC 40 18 90 */	fmr f2, f3
 /* 800CECAC 000CBBEC  FC 20 10 90 */	fmr f1, f2
 /* 800CECB0 000CBBF0  48 00 00 1C */	b lbl_800CECCC
 lbl_800CECB4:
-/* 800CECB4 000CBBF4  4B F9 E0 BD */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
-/* 800CECB8 000CBBF8  C0 02 8E 74 */	lfs f0, $$21800@sda21(r2)
+/* 800CECB4 000CBBF4  4B F9 E0 BD */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
+/* 800CECB8 000CBBF8  C0 02 8E 74 */	lfs f0, "@1800"@sda21(r2)
 /* 800CECBC 000CBBFC  EC 00 00 72 */	fmuls f0, f0, f1
 /* 800CECC0 000CBC00  EC 3F 00 32 */	fmuls f1, f31, f0
 /* 800CECC4 000CBC04  EC 5E 00 32 */	fmuls f2, f30, f0
@@ -232,8 +232,8 @@ lbl_800CEEC4:
 /* 800CEEDC 000CBE1C  38 21 00 20 */	addi r1, r1, 0x20
 /* 800CEEE0 000CBE20  4E 80 00 20 */	blr 
 
-.global SMS_EmitRippleTiny__FPQ29JGeometry8TVec3$$0f$$1
-SMS_EmitRippleTiny__FPQ29JGeometry8TVec3$$0f$$1:
+.global "SMS_EmitRippleTiny__FPQ29JGeometry8TVec3<f>"
+"SMS_EmitRippleTiny__FPQ29JGeometry8TVec3<f>":
 /* 800CEEE4 000CBE24  7C 08 02 A6 */	mflr r0
 /* 800CEEE8 000CBE28  38 80 00 35 */	li r4, 0x35
 /* 800CEEEC 000CBE2C  90 01 00 04 */	stw r0, 4(r1)
@@ -246,7 +246,7 @@ SMS_EmitRippleTiny__FPQ29JGeometry8TVec3$$0f$$1:
 /* 800CEF08 000CBE48  7C 7E 1B 78 */	mr r30, r3
 /* 800CEF0C 000CBE4C  38 BE 00 00 */	addi r5, r30, 0
 /* 800CEF10 000CBE50  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 800CEF14 000CBE54  48 00 CC 09 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 800CEF14 000CBE54  48 00 CC 09 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 800CEF18 000CBE58  28 03 00 00 */	cmplwi r3, 0
 /* 800CEF1C 000CBE5C  40 82 00 08 */	bne lbl_800CEF24
 /* 800CEF20 000CBE60  3B E0 00 00 */	li r31, 0
@@ -256,7 +256,7 @@ lbl_800CEF24:
 /* 800CEF2C 000CBE6C  38 80 00 36 */	li r4, 0x36
 /* 800CEF30 000CBE70  38 C0 00 00 */	li r6, 0
 /* 800CEF34 000CBE74  38 E0 00 00 */	li r7, 0
-/* 800CEF38 000CBE78  48 00 CB E5 */	bl emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 800CEF38 000CBE78  48 00 CB E5 */	bl "emit__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 800CEF3C 000CBE7C  28 03 00 00 */	cmplwi r3, 0
 /* 800CEF40 000CBE80  40 82 00 08 */	bne lbl_800CEF48
 /* 800CEF44 000CBE84  3B E0 00 00 */	li r31, 0
@@ -271,9 +271,9 @@ lbl_800CEF48:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21799:
+"@1799":
   .4byte 0
-$$21800:
+"@1800":
 	.incbin "baserom.dol", 0x3E4B74, 0x4
-$$21801:
+"@1801":
 	.incbin "baserom.dol", 0x3E4B78, 0x8
