@@ -4,9 +4,9 @@
 .global GDSetVtxDescv
 GDSetVtxDescv:
 /* 800AF18C 000AC0CC  7C 08 02 A6 */	mflr r0
-/* 800AF190 000AC0D0  3C 80 80 3B */	lis r4, $$2121@ha
+/* 800AF190 000AC0D0  3C 80 80 3B */	lis r4, "@121"@ha
 /* 800AF194 000AC0D4  90 01 00 04 */	stw r0, 4(r1)
-/* 800AF198 000AC0D8  38 84 1C 48 */	addi r4, r4, $$2121@l
+/* 800AF198 000AC0D8  38 84 1C 48 */	addi r4, r4, "@121"@l
 /* 800AF19C 000AC0DC  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 800AF1A0 000AC0E0  BD E1 00 14 */	stmw r15, 0x14(r1)
 /* 800AF1A4 000AC0E4  3B E0 00 00 */	li r31, 0
@@ -425,7 +425,7 @@ lbl_800AF708:
 .global GDSetVtxAttrFmtv
 GDSetVtxAttrFmtv:
 /* 800AF788 000AC6C8  7C 08 02 A6 */	mflr r0
-/* 800AF78C 000AC6CC  3C A0 80 3B */	lis r5, $$2207@ha
+/* 800AF78C 000AC6CC  3C A0 80 3B */	lis r5, "@207"@ha
 /* 800AF790 000AC6D0  90 01 00 04 */	stw r0, 4(r1)
 /* 800AF794 000AC6D4  38 00 00 01 */	li r0, 1
 /* 800AF798 000AC6D8  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -478,7 +478,7 @@ GDSetVtxAttrFmtv:
 /* 800AF854 000AC794  38 00 00 04 */	li r0, 4
 /* 800AF858 000AC798  3B 80 00 04 */	li r28, 4
 /* 800AF85C 000AC79C  90 61 00 10 */	stw r3, 0x10(r1)
-/* 800AF860 000AC7A0  38 65 1C B0 */	addi r3, r5, $$2207@l
+/* 800AF860 000AC7A0  38 65 1C B0 */	addi r3, r5, "@207"@l
 /* 800AF864 000AC7A4  3B A0 00 00 */	li r29, 0
 /* 800AF868 000AC7A8  90 01 00 14 */	stw r0, 0x14(r1)
 /* 800AF86C 000AC7AC  48 00 01 30 */	b lbl_800AF99C
@@ -1519,7 +1519,7 @@ lbl_800B071C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
-$$2121:
+"@121":
     .4byte lbl_800AF204
     .4byte lbl_800AF20C
     .4byte lbl_800AF21C
@@ -1546,7 +1546,7 @@ $$2121:
     .4byte lbl_800AF3F4
     .4byte lbl_800AF3F4
     .4byte lbl_800AF2C8
-$$2207:
+"@207":
     .4byte lbl_800AF88C
     .4byte lbl_800AF8A8
     .4byte lbl_800AF8D4

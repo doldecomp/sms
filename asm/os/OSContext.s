@@ -360,9 +360,9 @@ OSDumpContext:
 /* 8008EACC 0008BA0C  94 21 FD 08 */	stwu r1, -0x2f8(r1)
 /* 8008EAD0 0008BA10  BF 21 02 DC */	stmw r25, 0x2dc(r1)
 /* 8008EAD4 0008BA14  7C 7C 1B 78 */	mr r28, r3
-/* 8008EAD8 0008BA18  3C 60 80 3B */	lis r3, $$259@ha
+/* 8008EAD8 0008BA18  3C 60 80 3B */	lis r3, "@59"@ha
 /* 8008EADC 0008BA1C  4C C6 31 82 */	crclr 6
-/* 8008EAE0 0008BA20  3B E3 F8 C8 */	addi r31, r3, $$259@l
+/* 8008EAE0 0008BA20  3B E3 F8 C8 */	addi r31, r3, "@59"@l
 /* 8008EAE4 0008BA24  7F E3 FB 78 */	mr r3, r31
 /* 8008EAE8 0008BA28  7F 84 E3 78 */	mr r4, r28
 /* 8008EAEC 0008BA2C  48 00 04 79 */	bl OSReport
@@ -596,9 +596,9 @@ __OSContextInit:
 /* 8008EE0C 0008BD4C  38 00 00 00 */	li r0, 0
 /* 8008EE10 0008BD50  4C C6 31 82 */	crclr 6
 /* 8008EE14 0008BD54  3C 80 80 00 */	lis r4, 0x800000D8@ha
-/* 8008EE18 0008BD58  3C 60 80 3B */	lis r3, $$274@ha
+/* 8008EE18 0008BD58  3C 60 80 3B */	lis r3, "@74"@ha
 /* 8008EE1C 0008BD5C  90 04 00 D8 */	stw r0, 0x800000D8@l(r4)
-/* 8008EE20 0008BD60  38 63 FA 7C */	addi r3, r3, $$274@l
+/* 8008EE20 0008BD60  38 63 FA 7C */	addi r3, r3, "@74"@l
 /* 8008EE24 0008BD64  4B FF D6 B5 */	bl DBPrintf
 /* 8008EE28 0008BD68  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8008EE2C 0008BD6C  38 21 00 08 */	addi r1, r1, 8
@@ -685,29 +685,29 @@ lbl_8008EF60:
 /* 8008EF60 0008BEA0  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$259:
+"@59":
 	.incbin "baserom.dol", 0x3AC8C8, 0x44
-$$260:
+"@60":
 	.incbin "baserom.dol", 0x3AC90C, 0x30
-$$261:
+"@61":
 	.incbin "baserom.dol", 0x3AC93C, 0x30
-$$262:
+"@62":
 	.incbin "baserom.dol", 0x3AC96C, 0x30
-$$263:
+"@63":
 	.incbin "baserom.dol", 0x3AC99C, 0x14
-$$264:
+"@64":
 	.incbin "baserom.dol", 0x3AC9B0, 0x24
-$$265:
+"@65":
 	.incbin "baserom.dol", 0x3AC9D4, 0x14
-$$266:
+"@66":
 	.incbin "baserom.dol", 0x3AC9E8, 0x1C
-$$267:
+"@67":
 	.incbin "baserom.dol", 0x3ACA04, 0x14
-$$268:
+"@68":
 	.incbin "baserom.dol", 0x3ACA18, 0x20
-$$269:
+"@69":
 	.incbin "baserom.dol", 0x3ACA38, 0x28
-$$270:
+"@70":
 	.incbin "baserom.dol", 0x3ACA60, 0x1C
-$$274:
+"@74":
 	.incbin "baserom.dol", 0x3ACA7C, 0x24

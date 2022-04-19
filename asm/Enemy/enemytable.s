@@ -65,11 +65,11 @@ lbl_802A1D98:
 lbl_802A1DB0:
 /* 802A1DB0 0029ECF0  4B DE 3D 15 */	bl rand
 /* 802A1DB4 0029ECF4  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, $$21698@sda21(r2)
+/* 802A1DB8 0029ECF8  C8 62 E9 C0 */	lfd f3, "@1698"@sda21(r2)
 /* 802A1DBC 0029ECFC  90 01 00 8C */	stw r0, 0x8c(r1)
 /* 802A1DC0 0029ED00  3C 60 43 30 */	lis r3, 0x4330
 /* 802A1DC4 0029ED04  6F 80 80 00 */	xoris r0, r28, 0x8000
-/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, $$21696@sda21(r2)
+/* 802A1DC8 0029ED08  C0 22 E9 B8 */	lfs f1, "@1696"@sda21(r2)
 /* 802A1DCC 0029ED0C  90 61 00 88 */	stw r3, 0x88(r1)
 /* 802A1DD0 0029ED10  80 DE 00 00 */	lwz r6, 0(r30)
 /* 802A1DD4 0029ED14  90 01 00 84 */	stw r0, 0x84(r1)
@@ -130,9 +130,9 @@ __ct__20TStageEnemyInfoTableFPCc:
 /* 802A1E94 0029EDD4  B0 7F 00 08 */	sth r3, 8(r31)
 /* 802A1E98 0029EDD8  38 7F 00 0C */	addi r3, r31, 0xc
 /* 802A1E9C 0029EDDC  38 81 00 10 */	addi r4, r1, 0x10
-/* 802A1EA0 0029EDE0  4B D9 7C 99 */	bl __ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-/* 802A1EA4 0029EDE4  3C 60 80 3E */	lis r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@ha
-/* 802A1EA8 0029EDE8  38 03 8A B8 */	addi r0, r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@l
+/* 802A1EA0 0029EDE0  4B D9 7C 99 */	bl "__ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+/* 802A1EA4 0029EDE4  3C 60 80 3E */	lis r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@ha
+/* 802A1EA8 0029EDE8  38 03 8A B8 */	addi r0, r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@l
 /* 802A1EAC 0029EDEC  3C 60 80 3E */	lis r3, __vt__20TStageEnemyInfoTable@ha
 /* 802A1EB0 0029EDF0  90 1F 00 00 */	stw r0, 0(r31)
 /* 802A1EB4 0029EDF4  38 03 8A 98 */	addi r0, r3, __vt__20TStageEnemyInfoTable@l
@@ -148,8 +148,8 @@ __ct__20TStageEnemyInfoTableFPCc:
 /* 802A1EDC 0029EE1C  38 21 00 20 */	addi r1, r1, 0x20
 /* 802A1EE0 0029EE20  4E 80 00 20 */	blr 
 
-.global __dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
-__dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv:
+.global "__dt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv"
+"__dt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv":
 /* 802A1EE4 0029EE24  7C 08 02 A6 */	mflr r0
 /* 802A1EE8 0029EE28  90 01 00 04 */	stw r0, 4(r1)
 /* 802A1EEC 0029EE2C  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -158,8 +158,8 @@ __dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv:
 /* 802A1EF8 0029EE38  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 802A1EFC 0029EE3C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 802A1F00 0029EE40  41 82 00 40 */	beq lbl_802A1F40
-/* 802A1F04 0029EE44  3C 60 80 3E */	lis r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@ha
-/* 802A1F08 0029EE48  38 63 8A B8 */	addi r3, r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@l
+/* 802A1F04 0029EE44  3C 60 80 3E */	lis r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@ha
+/* 802A1F08 0029EE48  38 63 8A B8 */	addi r3, r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@l
 /* 802A1F0C 0029EE4C  34 1E 00 0C */	addic. r0, r30, 0xc
 /* 802A1F10 0029EE50  90 7E 00 00 */	stw r3, 0(r30)
 /* 802A1F14 0029EE54  41 82 00 10 */	beq lbl_802A1F24
@@ -235,8 +235,8 @@ __dt__20TStageEnemyInfoTableFv:
 /* 802A200C 0029EF4C  38 03 8A 98 */	addi r0, r3, __vt__20TStageEnemyInfoTable@l
 /* 802A2010 0029EF50  90 1E 00 00 */	stw r0, 0(r30)
 /* 802A2014 0029EF54  41 82 00 30 */	beq lbl_802A2044
-/* 802A2018 0029EF58  3C 60 80 3E */	lis r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@ha
-/* 802A201C 0029EF5C  38 63 8A B8 */	addi r3, r3, __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1@l
+/* 802A2018 0029EF58  3C 60 80 3E */	lis r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@ha
+/* 802A201C 0029EF5C  38 63 8A B8 */	addi r3, r3, "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"@l
 /* 802A2020 0029EF60  34 1E 00 0C */	addic. r0, r30, 0xc
 /* 802A2024 0029EF64  90 7E 00 00 */	stw r3, 0(r30)
 /* 802A2028 0029EF68  41 82 00 10 */	beq lbl_802A2038
@@ -261,8 +261,8 @@ lbl_802A2054:
 /* 802A2068 0029EFA8  38 21 00 18 */	addi r1, r1, 0x18
 /* 802A206C 0029EFAC  4E 80 00 20 */	blr 
 
-.global loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
-loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv:
+.global "loadAfter__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv"
+"loadAfter__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv":
 /* 802A2070 0029EFB0  7C 08 02 A6 */	mflr r0
 /* 802A2074 0029EFB4  90 01 00 04 */	stw r0, 4(r1)
 /* 802A2078 0029EFB8  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -290,8 +290,8 @@ lbl_802A20AC:
 /* 802A20C8 0029F008  38 21 00 40 */	addi r1, r1, 0x40
 /* 802A20CC 0029F00C  4E 80 00 20 */	blr 
 
-.global searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
-searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc:
+.global "searchF__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FUsPCc"
+"searchF__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FUsPCc":
 /* 802A20D0 0029F010  7C 08 02 A6 */	mflr r0
 /* 802A20D4 0029F014  90 01 00 04 */	stw r0, 4(r1)
 /* 802A20D8 0029F018  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -337,8 +337,8 @@ lbl_802A214C:
 /* 802A2164 0029F0A4  38 21 00 50 */	addi r1, r1, 0x50
 /* 802A2168 0029F0A8  4E 80 00 20 */	blr 
 
-.global load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
-load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream:
+.global "load__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FR20JSUMemoryInputStream"
+"load__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FR20JSUMemoryInputStream":
 /* 802A216C 0029F0AC  7C 08 02 A6 */	mflr r0
 /* 802A2170 0029F0B0  90 01 00 04 */	stw r0, 4(r1)
 /* 802A2174 0029F0B4  94 21 FF A0 */	stwu r1, -0x60(r1)
@@ -428,24 +428,24 @@ __vt__20TStageEnemyInfoTable:
   .4byte 0
   .4byte __dt__20TStageEnemyInfoTableFv
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte "load__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
-  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
-.global __vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1
-__vt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1:
+  .4byte "loadAfter__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv"
+  .4byte "searchF__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FUsPCc"
+.global "__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>"
+"__vt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>":
   .4byte 0
   .4byte 0
-  .4byte __dt__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
+  .4byte "__dt__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv"
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FR20JSUMemoryInputStream
+  .4byte "load__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1Fv
-  .4byte searchF__53TNameRefPtrAryT$$015TStageEnemyInfo$$4Q26JDrama8TNameRef$$1FUsPCc
+  .4byte "loadAfter__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>Fv"
+  .4byte "searchF__53TNameRefPtrAryT<15TStageEnemyInfo,Q26JDrama8TNameRef>FUsPCc"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21696:
+"@1696":
 	.incbin "baserom.dol", 0x3EA6B8, 0x8
-$$21698:
+"@1698":
 	.incbin "baserom.dol", 0x3EA6C0, 0x8

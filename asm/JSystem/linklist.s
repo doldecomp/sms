@@ -44,14 +44,14 @@ Remove__Q27JGadget13TNodeLinkListFPQ27JGadget13TLinkListNode:
 /* 80040794 0003D6D4  90 C1 00 1C */	stw r6, 0x1c(r1)
 /* 80040798 0003D6D8  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 8004079C 0003D6DC  90 01 00 20 */	stw r0, 0x20(r1)
-/* 800407A0 0003D6E0  48 00 00 15 */	bl Remove_if$$0Q37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1$$1__Q27JGadget13TNodeLinkListFQ37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1RQ27JGadget13TNodeLinkList
+/* 800407A0 0003D6E0  48 00 00 15 */	bl "Remove_if<Q37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>>__Q27JGadget13TNodeLinkListFQ37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>RQ27JGadget13TNodeLinkList"
 /* 800407A4 0003D6E4  80 01 00 34 */	lwz r0, 0x34(r1)
 /* 800407A8 0003D6E8  38 21 00 30 */	addi r1, r1, 0x30
 /* 800407AC 0003D6EC  7C 08 03 A6 */	mtlr r0
 /* 800407B0 0003D6F0  4E 80 00 20 */	blr 
 
-.global Remove_if$$0Q37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1$$1__Q27JGadget13TNodeLinkListFQ37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1RQ27JGadget13TNodeLinkList
-Remove_if$$0Q37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1$$1__Q27JGadget13TNodeLinkListFQ37JGadget9$$2unnamed$$246TPRIsEqual_pointer_$$0Q27JGadget13TLinkListNode$$1RQ27JGadget13TNodeLinkList:
+.global "Remove_if<Q37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>>__Q27JGadget13TNodeLinkListFQ37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>RQ27JGadget13TNodeLinkList"
+"Remove_if<Q37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>>__Q27JGadget13TNodeLinkListFQ37JGadget9@unnamed@46TPRIsEqual_pointer_<Q27JGadget13TLinkListNode>RQ27JGadget13TNodeLinkList":
 /* 800407B4 0003D6F4  7C 08 02 A6 */	mflr r0
 /* 800407B8 0003D6F8  90 01 00 04 */	stw r0, 4(r1)
 /* 800407BC 0003D6FC  94 21 FF 40 */	stwu r1, -0xc0(r1)

@@ -9,10 +9,10 @@ getNameRef_Map__14TMarNameRefGenCFPCc:
 /* 80100BB0 000FDAF0  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 80100BB4 000FDAF4  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 80100BB8 000FDAF8  3B C4 00 00 */	addi r30, r4, 0
-/* 80100BBC 000FDAFC  3C 80 80 37 */	lis r4, $$21490@ha
-/* 80100BC0 000FDB00  3B E4 68 F0 */	addi r31, r4, $$21490@l
+/* 80100BBC 000FDAFC  3C 80 80 37 */	lis r4, "@1490"@ha
+/* 80100BC0 000FDB00  3B E4 68 F0 */	addi r31, r4, "@1490"@l
 /* 80100BC4 000FDB04  38 7E 00 00 */	addi r3, r30, 0
-/* 80100BC8 000FDB08  38 82 93 C0 */	addi r4, r2, $$22088@sda21
+/* 80100BC8 000FDB08  38 82 93 C0 */	addi r4, r2, "@2088"@sda21
 /* 80100BCC 000FDB0C  4B F8 50 91 */	bl strcmp
 /* 80100BD0 000FDB10  2C 03 00 00 */	cmpwi r3, 0
 /* 80100BD4 000FDB14  40 82 00 28 */	bne lbl_80100BFC
@@ -21,7 +21,7 @@ getNameRef_Map__14TMarNameRefGenCFPCc:
 /* 80100BE0 000FDB20  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80100BE4 000FDB24  41 82 00 10 */	beq lbl_80100BF4
 /* 80100BE8 000FDB28  38 7E 00 00 */	addi r3, r30, 0
-/* 80100BEC 000FDB2C  38 82 93 C4 */	addi r4, r2, $$22089@sda21
+/* 80100BEC 000FDB2C  38 82 93 C4 */	addi r4, r2, "@2089"@sda21
 /* 80100BF0 000FDB30  48 0D A8 95 */	bl __ct__4TMapFPCc
 lbl_80100BF4:
 /* 80100BF4 000FDB34  7F C3 F3 78 */	mr r3, r30
@@ -44,7 +44,7 @@ lbl_80100C2C:
 /* 80100C30 000FDB70  48 00 02 94 */	b lbl_80100EC4
 lbl_80100C34:
 /* 80100C34 000FDB74  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C38 000FDB78  38 82 93 CC */	addi r4, r2, $$22092@sda21
+/* 80100C38 000FDB78  38 82 93 CC */	addi r4, r2, "@2092"@sda21
 /* 80100C3C 000FDB7C  4B F8 50 21 */	bl strcmp
 /* 80100C40 000FDB80  2C 03 00 00 */	cmpwi r3, 0
 /* 80100C44 000FDB84  40 82 00 28 */	bne lbl_80100C6C
@@ -53,14 +53,14 @@ lbl_80100C34:
 /* 80100C50 000FDB90  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80100C54 000FDB94  41 82 00 10 */	beq lbl_80100C64
 /* 80100C58 000FDB98  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C5C 000FDB9C  38 82 93 D0 */	addi r4, r2, $$22093@sda21
+/* 80100C5C 000FDB9C  38 82 93 D0 */	addi r4, r2, "@2093"@sda21
 /* 80100C60 000FDBA0  48 0F 0D 6D */	bl __ct__4TSkyFPCc
 lbl_80100C64:
 /* 80100C64 000FDBA4  7F C3 F3 78 */	mr r3, r30
 /* 80100C68 000FDBA8  48 00 02 5C */	b lbl_80100EC4
 lbl_80100C6C:
 /* 80100C6C 000FDBAC  38 7E 00 00 */	addi r3, r30, 0
-/* 80100C70 000FDBB0  38 82 93 D4 */	addi r4, r2, $$22094@sda21
+/* 80100C70 000FDBB0  38 82 93 D4 */	addi r4, r2, "@2094"@sda21
 /* 80100C74 000FDBB4  4B F8 4F E9 */	bl strcmp
 /* 80100C78 000FDBB8  2C 03 00 00 */	cmpwi r3, 0
 /* 80100C7C 000FDBBC  40 82 00 28 */	bne lbl_80100CA4
@@ -110,7 +110,7 @@ lbl_80100CDC:
 /* 80100D1C 000FDC5C  90 03 00 00 */	stw r0, 0(r3)
 /* 80100D20 000FDC60  38 63 00 0C */	addi r3, r3, 0xc
 /* 80100D24 000FDC64  38 80 00 00 */	li r4, 0
-/* 80100D28 000FDC68  4B F3 FD D9 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80100D28 000FDC68  4B F3 FD D9 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80100D2C 000FDC6C  3C 60 80 3D */	lis r3, __vt__14TPollutionTest@ha
 /* 80100D30 000FDC70  38 03 08 C8 */	addi r0, r3, __vt__14TPollutionTest@l
 /* 80100D34 000FDC74  90 1E 00 00 */	stw r0, 0(r30)
@@ -119,7 +119,7 @@ lbl_80100D38:
 /* 80100D3C 000FDC7C  48 00 01 88 */	b lbl_80100EC4
 lbl_80100D40:
 /* 80100D40 000FDC80  38 7E 00 00 */	addi r3, r30, 0
-/* 80100D44 000FDC84  38 82 93 DC */	addi r4, r2, $$22100@sda21
+/* 80100D44 000FDC84  38 82 93 DC */	addi r4, r2, "@2100"@sda21
 /* 80100D48 000FDC88  4B F8 4F 15 */	bl strcmp
 /* 80100D4C 000FDC8C  2C 03 00 00 */	cmpwi r3, 0
 /* 80100D50 000FDC90  40 82 00 28 */	bne lbl_80100D78
@@ -203,7 +203,7 @@ lbl_80100E28:
 /* 80100E68 000FDDA8  90 03 00 00 */	stw r0, 0(r3)
 /* 80100E6C 000FDDAC  38 63 00 0C */	addi r3, r3, 0xc
 /* 80100E70 000FDDB0  38 80 00 00 */	li r4, 0
-/* 80100E74 000FDDB4  4B F3 FC 8D */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80100E74 000FDDB4  4B F3 FC 8D */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80100E78 000FDDB8  3C 60 80 3D */	lis r3, __vt__19TStickyStainManager@ha
 /* 80100E7C 000FDDBC  38 03 0E 50 */	addi r0, r3, __vt__19TStickyStainManager@l
 /* 80100E80 000FDDC0  90 1E 00 00 */	stw r0, 0(r30)
@@ -237,74 +237,74 @@ lbl_80100EC4:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21723:
+"@1723":
 	.incbin "baserom.dol", 0x3738FC, 0x14
-$$21779:
+"@1779":
 	.incbin "baserom.dol", 0x373910, 0x30
-$$21780:
+"@1780":
 	.incbin "baserom.dol", 0x373940, 0x38
-$$21781:
+"@1781":
 	.incbin "baserom.dol", 0x373978, 0x34
-$$21782:
+"@1782":
 	.incbin "baserom.dol", 0x3739AC, 0x24
-$$21956:
+"@1956":
 	.incbin "baserom.dol", 0x3739D0, 0xC
-$$21957:
+"@1957":
 	.incbin "baserom.dol", 0x3739DC, 0x10
-$$22090:
+"@2090":
 	.incbin "baserom.dol", 0x3739EC, 0xC
-$$22091:
+"@2091":
 	.incbin "baserom.dol", 0x3739F8, 0x14
-$$22095:
+"@2095":
 	.incbin "baserom.dol", 0x373A0C, 0xC
-$$22096:
+"@2096":
 	.incbin "baserom.dol", 0x373A18, 0xC
-$$22097:
+"@2097":
 	.incbin "baserom.dol", 0x373A24, 0xC
-$$22098:
+"@2098":
 	.incbin "baserom.dol", 0x373A30, 0x10
-$$22099:
+"@2099":
 	.incbin "baserom.dol", 0x373A40, 0x10
-$$22101:
+"@2101":
 	.incbin "baserom.dol", 0x373A50, 0xC
-$$22102:
+"@2102":
 	.incbin "baserom.dol", 0x373A5C, 0xC
-$$22103:
+"@2103":
 	.incbin "baserom.dol", 0x373A68, 0xC
-$$22104:
+"@2104":
 	.incbin "baserom.dol", 0x373A74, 0xC
-$$22105:
+"@2105":
 	.incbin "baserom.dol", 0x373A80, 0xC
-$$22106:
+"@2106":
 	.incbin "baserom.dol", 0x373A8C, 0xC
-$$22107:
+"@2107":
 	.incbin "baserom.dol", 0x373A98, 0xC
-$$22108:
+"@2108":
 	.incbin "baserom.dol", 0x373AA4, 0xC
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cSunVolumeName
 cSunVolumeName:
-  .4byte $$21956
+  .4byte "@1956"
 .global cSunsetVolumeName
 cSunsetVolumeName:
-  .4byte $$21957
+  .4byte "@1957"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22088:
+"@2088":
 	.incbin "baserom.dol", 0x3E50C0, 0x4
-$$22089:
+"@2089":
 	.incbin "baserom.dol", 0x3E50C4, 0x8
-$$22092:
+"@2092":
 	.incbin "baserom.dol", 0x3E50CC, 0x4
-$$22093:
+"@2093":
 	.incbin "baserom.dol", 0x3E50D0, 0x4
-$$22094:
+"@2094":
 	.incbin "baserom.dol", 0x3E50D4, 0x8
-$$22100:
+"@2100":
 	.incbin "baserom.dol", 0x3E50DC, 0xC

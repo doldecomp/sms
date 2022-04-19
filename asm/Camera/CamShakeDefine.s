@@ -2,138 +2,138 @@
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A44C4, 0x14
-$$21536:
+"@1536":
 	.incbin "baserom.dol", 0x3A44D8, 0x1C
-$$21537:
+"@1537":
 	.incbin "baserom.dol", 0x3A44F4, 0x1C
-$$21538:
+"@1538":
 	.incbin "baserom.dol", 0x3A4510, 0x18
-$$21539:
+"@1539":
 	.incbin "baserom.dol", 0x3A4528, 0x18
-$$21540:
+"@1540":
 	.incbin "baserom.dol", 0x3A4540, 0x18
-$$21541:
+"@1541":
 	.incbin "baserom.dol", 0x3A4558, 0x20
-$$21542:
+"@1542":
 	.incbin "baserom.dol", 0x3A4578, 0x18
-$$21543:
+"@1543":
 	.incbin "baserom.dol", 0x3A4590, 0x1C
-$$21544:
+"@1544":
 	.incbin "baserom.dol", 0x3A45AC, 0x20
-$$21545:
+"@1545":
 	.incbin "baserom.dol", 0x3A45CC, 0x1C
-$$21546:
+"@1546":
 	.incbin "baserom.dol", 0x3A45E8, 0x1C
-$$21547:
+"@1547":
 	.incbin "baserom.dol", 0x3A4604, 0x1C
-$$21548:
+"@1548":
 	.incbin "baserom.dol", 0x3A4620, 0x1C
-$$21549:
+"@1549":
 	.incbin "baserom.dol", 0x3A463C, 0x20
-$$21550:
+"@1550":
 	.incbin "baserom.dol", 0x3A465C, 0x1C
-$$21551:
+"@1551":
 	.incbin "baserom.dol", 0x3A4678, 0x1C
-$$21552:
+"@1552":
 	.incbin "baserom.dol", 0x3A4694, 0x1C
-$$21553:
+"@1553":
 	.incbin "baserom.dol", 0x3A46B0, 0x20
-$$21554:
+"@1554":
 	.incbin "baserom.dol", 0x3A46D0, 0x20
-$$21555:
+"@1555":
 	.incbin "baserom.dol", 0x3A46F0, 0x1C
-$$21556:
+"@1556":
 	.incbin "baserom.dol", 0x3A470C, 0x1C
-$$21557:
+"@1557":
 	.incbin "baserom.dol", 0x3A4728, 0x1C
-$$21558:
+"@1558":
 	.incbin "baserom.dol", 0x3A4744, 0x1C
-$$21559:
+"@1559":
 	.incbin "baserom.dol", 0x3A4760, 0x1C
-$$21560:
+"@1560":
 	.incbin "baserom.dol", 0x3A477C, 0x1C
-$$21561:
+"@1561":
 	.incbin "baserom.dol", 0x3A4798, 0x1C
-$$21562:
+"@1562":
 	.incbin "baserom.dol", 0x3A47B4, 0x20
-$$21563:
+"@1563":
 	.incbin "baserom.dol", 0x3A47D4, 0x20
-$$21564:
+"@1564":
 	.incbin "baserom.dol", 0x3A47F4, 0x20
-$$21565:
+"@1565":
 	.incbin "baserom.dol", 0x3A4814, 0x20
-$$21566:
+"@1566":
 	.incbin "baserom.dol", 0x3A4834, 0x1C
-$$21567:
+"@1567":
 	.incbin "baserom.dol", 0x3A4850, 0x20
-$$21568:
+"@1568":
 	.incbin "baserom.dol", 0x3A4870, 0x1C
-$$21569:
+"@1569":
 	.incbin "baserom.dol", 0x3A488C, 0x20
-$$21570:
+"@1570":
 	.incbin "baserom.dol", 0x3A48AC, 0x20
-$$21571:
+"@1571":
 	.incbin "baserom.dol", 0x3A48CC, 0x20
-$$21572:
+"@1572":
 	.incbin "baserom.dol", 0x3A48EC, 0x1C
-$$21573:
+"@1573":
 	.incbin "baserom.dol", 0x3A4908, 0x28
-$$21574:
+"@1574":
 	.incbin "baserom.dol", 0x3A4930, 0x28
-$$21575:
+"@1575":
 	.incbin "baserom.dol", 0x3A4958, 0x20
-$$21576:
+"@1576":
 	.incbin "baserom.dol", 0x3A4978, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
 .global mCamShakeNameSave__12TCameraShake
 mCamShakeNameSave__12TCameraShake:
-  .4byte $$21536
-  .4byte $$21537
-  .4byte $$21538
-  .4byte $$21539
-  .4byte $$21540
-  .4byte $$21541
-  .4byte $$21542
-  .4byte $$21543
-  .4byte $$21544
-  .4byte $$21545
-  .4byte $$21546
-  .4byte $$21547
-  .4byte $$21548
-  .4byte $$21549
-  .4byte $$21550
-  .4byte $$21551
-  .4byte $$21552
-  .4byte $$21553
-  .4byte $$21554
-  .4byte $$21555
-  .4byte $$21556
-  .4byte $$21557
-  .4byte $$21558
-  .4byte $$21559
-  .4byte $$21560
-  .4byte $$21561
-  .4byte $$21562
-  .4byte $$21563
-  .4byte $$21564
-  .4byte $$21565
-  .4byte $$21566
-  .4byte $$21567
-  .4byte $$21568
-  .4byte $$21569
-  .4byte $$21570
-  .4byte $$21571
-  .4byte $$21572
-  .4byte $$21573
-  .4byte $$21574
-  .4byte $$21575
-  .4byte $$21576
+  .4byte "@1536"
+  .4byte "@1537"
+  .4byte "@1538"
+  .4byte "@1539"
+  .4byte "@1540"
+  .4byte "@1541"
+  .4byte "@1542"
+  .4byte "@1543"
+  .4byte "@1544"
+  .4byte "@1545"
+  .4byte "@1546"
+  .4byte "@1547"
+  .4byte "@1548"
+  .4byte "@1549"
+  .4byte "@1550"
+  .4byte "@1551"
+  .4byte "@1552"
+  .4byte "@1553"
+  .4byte "@1554"
+  .4byte "@1555"
+  .4byte "@1556"
+  .4byte "@1557"
+  .4byte "@1558"
+  .4byte "@1559"
+  .4byte "@1560"
+  .4byte "@1561"
+  .4byte "@1562"
+  .4byte "@1563"
+  .4byte "@1564"
+  .4byte "@1565"
+  .4byte "@1566"
+  .4byte "@1567"
+  .4byte "@1568"
+  .4byte "@1569"
+  .4byte "@1570"
+  .4byte "@1571"
+  .4byte "@1572"
+  .4byte "@1573"
+  .4byte "@1574"
+  .4byte "@1575"
+  .4byte "@1576"
   .4byte 0

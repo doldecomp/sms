@@ -39,7 +39,7 @@ addFileTable__13MActorAnmDataFPCc:
 /* 800D72F8 000D4238  3B C4 00 00 */	addi r30, r4, 0
 /* 800D72FC 000D423C  38 7E 00 00 */	addi r3, r30, 0
 /* 800D7300 000D4240  93 A1 00 CC */	stw r29, 0xcc(r1)
-/* 800D7304 000D4244  38 82 8F 48 */	addi r4, r2, $$22019@sda21
+/* 800D7304 000D4244  38 82 8F 48 */	addi r4, r2, "@2019"@sda21
 /* 800D7308 000D4248  93 81 00 C8 */	stw r28, 0xc8(r1)
 /* 800D730C 000D424C  4B FA E8 6D */	bl strstr
 /* 800D7310 000D4250  28 03 00 00 */	cmplwi r3, 0
@@ -59,7 +59,7 @@ addFileTable__13MActorAnmDataFPCc:
 /* 800D7348 000D4288  3B 83 00 00 */	addi r28, r3, 0
 /* 800D734C 000D428C  38 9D 00 00 */	addi r4, r29, 0
 /* 800D7350 000D4290  38 DE 00 00 */	addi r6, r30, 0
-/* 800D7354 000D4294  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D7354 000D4294  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D7358 000D4298  4B FA CD 6D */	bl snprintf
 /* 800D735C 000D429C  80 7F 00 2C */	lwz r3, 0x2c(r31)
 /* 800D7360 000D42A0  38 80 00 00 */	li r4, 0
@@ -88,7 +88,7 @@ lbl_800D738C:
 /* 800D73B4 000D42F4  90 1F 00 04 */	stw r0, 4(r31)
 lbl_800D73B8:
 /* 800D73B8 000D42F8  38 7E 00 00 */	addi r3, r30, 0
-/* 800D73BC 000D42FC  38 82 8F 54 */	addi r4, r2, $$22021@sda21
+/* 800D73BC 000D42FC  38 82 8F 54 */	addi r4, r2, "@2021"@sda21
 /* 800D73C0 000D4300  4B FA E7 B9 */	bl strstr
 /* 800D73C4 000D4304  28 03 00 00 */	cmplwi r3, 0
 /* 800D73C8 000D4308  41 82 00 A4 */	beq lbl_800D746C
@@ -107,7 +107,7 @@ lbl_800D73B8:
 /* 800D73FC 000D433C  3B 83 00 00 */	addi r28, r3, 0
 /* 800D7400 000D4340  38 9D 00 00 */	addi r4, r29, 0
 /* 800D7404 000D4344  38 DE 00 00 */	addi r6, r30, 0
-/* 800D7408 000D4348  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D7408 000D4348  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D740C 000D434C  4B FA CC B9 */	bl snprintf
 /* 800D7410 000D4350  80 7F 00 30 */	lwz r3, 0x30(r31)
 /* 800D7414 000D4354  38 80 00 00 */	li r4, 0
@@ -136,7 +136,7 @@ lbl_800D7440:
 /* 800D7468 000D43A8  90 1F 00 0C */	stw r0, 0xc(r31)
 lbl_800D746C:
 /* 800D746C 000D43AC  38 7E 00 00 */	addi r3, r30, 0
-/* 800D7470 000D43B0  38 82 8F 5C */	addi r4, r2, $$22022@sda21
+/* 800D7470 000D43B0  38 82 8F 5C */	addi r4, r2, "@2022"@sda21
 /* 800D7474 000D43B4  4B FA E7 05 */	bl strstr
 /* 800D7478 000D43B8  28 03 00 00 */	cmplwi r3, 0
 /* 800D747C 000D43BC  41 82 00 A4 */	beq lbl_800D7520
@@ -155,7 +155,7 @@ lbl_800D746C:
 /* 800D74B0 000D43F0  3B 83 00 00 */	addi r28, r3, 0
 /* 800D74B4 000D43F4  38 9D 00 00 */	addi r4, r29, 0
 /* 800D74B8 000D43F8  38 DE 00 00 */	addi r6, r30, 0
-/* 800D74BC 000D43FC  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D74BC 000D43FC  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D74C0 000D4400  4B FA CC 05 */	bl snprintf
 /* 800D74C4 000D4404  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 800D74C8 000D4408  38 80 00 00 */	li r4, 0
@@ -184,7 +184,7 @@ lbl_800D74F4:
 /* 800D751C 000D445C  90 1F 00 10 */	stw r0, 0x10(r31)
 lbl_800D7520:
 /* 800D7520 000D4460  38 7E 00 00 */	addi r3, r30, 0
-/* 800D7524 000D4464  38 82 8F 64 */	addi r4, r2, $$22023@sda21
+/* 800D7524 000D4464  38 82 8F 64 */	addi r4, r2, "@2023"@sda21
 /* 800D7528 000D4468  4B FA E6 51 */	bl strstr
 /* 800D752C 000D446C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7530 000D4470  41 82 00 A4 */	beq lbl_800D75D4
@@ -203,7 +203,7 @@ lbl_800D7520:
 /* 800D7564 000D44A4  3B 83 00 00 */	addi r28, r3, 0
 /* 800D7568 000D44A8  38 9D 00 00 */	addi r4, r29, 0
 /* 800D756C 000D44AC  38 DE 00 00 */	addi r6, r30, 0
-/* 800D7570 000D44B0  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D7570 000D44B0  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D7574 000D44B4  4B FA CB 51 */	bl snprintf
 /* 800D7578 000D44B8  80 7F 00 38 */	lwz r3, 0x38(r31)
 /* 800D757C 000D44BC  38 80 00 00 */	li r4, 0
@@ -232,7 +232,7 @@ lbl_800D75A8:
 /* 800D75D0 000D4510  90 1F 00 14 */	stw r0, 0x14(r31)
 lbl_800D75D4:
 /* 800D75D4 000D4514  38 7E 00 00 */	addi r3, r30, 0
-/* 800D75D8 000D4518  38 82 8F 6C */	addi r4, r2, $$22024@sda21
+/* 800D75D8 000D4518  38 82 8F 6C */	addi r4, r2, "@2024"@sda21
 /* 800D75DC 000D451C  4B FA E5 9D */	bl strstr
 /* 800D75E0 000D4520  28 03 00 00 */	cmplwi r3, 0
 /* 800D75E4 000D4524  41 82 00 A4 */	beq lbl_800D7688
@@ -251,7 +251,7 @@ lbl_800D75D4:
 /* 800D7618 000D4558  3B 83 00 00 */	addi r28, r3, 0
 /* 800D761C 000D455C  38 9D 00 00 */	addi r4, r29, 0
 /* 800D7620 000D4560  38 DE 00 00 */	addi r6, r30, 0
-/* 800D7624 000D4564  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D7624 000D4564  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D7628 000D4568  4B FA CA 9D */	bl snprintf
 /* 800D762C 000D456C  80 7F 00 3C */	lwz r3, 0x3c(r31)
 /* 800D7630 000D4570  38 80 00 00 */	li r4, 0
@@ -280,7 +280,7 @@ lbl_800D765C:
 /* 800D7684 000D45C4  90 1F 00 18 */	stw r0, 0x18(r31)
 lbl_800D7688:
 /* 800D7688 000D45C8  38 7E 00 00 */	addi r3, r30, 0
-/* 800D768C 000D45CC  38 82 8F 74 */	addi r4, r2, $$22025@sda21
+/* 800D768C 000D45CC  38 82 8F 74 */	addi r4, r2, "@2025"@sda21
 /* 800D7690 000D45D0  4B FA E4 E9 */	bl strstr
 /* 800D7694 000D45D4  28 03 00 00 */	cmplwi r3, 0
 /* 800D7698 000D45D8  41 82 00 A4 */	beq lbl_800D773C
@@ -299,7 +299,7 @@ lbl_800D7688:
 /* 800D76CC 000D460C  3B 83 00 00 */	addi r28, r3, 0
 /* 800D76D0 000D4610  38 9D 00 00 */	addi r4, r29, 0
 /* 800D76D4 000D4614  38 DE 00 00 */	addi r6, r30, 0
-/* 800D76D8 000D4618  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D76D8 000D4618  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D76DC 000D461C  4B FA C9 E9 */	bl snprintf
 /* 800D76E0 000D4620  80 7F 00 40 */	lwz r3, 0x40(r31)
 /* 800D76E4 000D4624  38 80 00 00 */	li r4, 0
@@ -351,8 +351,8 @@ init__13MActorAnmDataFPCcPPCc:
 /* 800D7784 000D46C4  4C C6 31 82 */	crclr 6
 /* 800D7788 000D46C8  38 61 01 38 */	addi r3, r1, 0x138
 /* 800D778C 000D46CC  38 80 00 FF */	li r4, 0xff
-/* 800D7790 000D46D0  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
-/* 800D7794 000D46D4  38 C2 8F 84 */	addi r6, r2, $$22162@sda21
+/* 800D7790 000D46D0  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
+/* 800D7794 000D46D4  38 C2 8F 84 */	addi r6, r2, "@2162"@sda21
 /* 800D7798 000D46D8  4B FA C9 2D */	bl snprintf
 /* 800D779C 000D46DC  48 00 00 1C */	b lbl_800D77B8
 lbl_800D77A0:
@@ -360,7 +360,7 @@ lbl_800D77A0:
 /* 800D77A4 000D46E4  4C C6 31 82 */	crclr 6
 /* 800D77A8 000D46E8  38 61 01 38 */	addi r3, r1, 0x138
 /* 800D77AC 000D46EC  38 80 00 FF */	li r4, 0xff
-/* 800D77B0 000D46F0  38 A2 8F 50 */	addi r5, r2, $$22020@sda21
+/* 800D77B0 000D46F0  38 A2 8F 50 */	addi r5, r2, "@2020"@sda21
 /* 800D77B4 000D46F4  4B FA C9 11 */	bl snprintf
 lbl_800D77B8:
 /* 800D77B8 000D46F8  2C 03 00 00 */	cmpwi r3, 0
@@ -373,8 +373,8 @@ lbl_800D77CC:
 /* 800D77D0 000D4710  4C C6 31 82 */	crclr 6
 /* 800D77D4 000D4714  38 C1 01 38 */	addi r6, r1, 0x138
 /* 800D77D8 000D4718  38 80 00 FF */	li r4, 0xff
-/* 800D77DC 000D471C  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
-/* 800D77E0 000D4720  38 E2 8F 84 */	addi r7, r2, $$22162@sda21
+/* 800D77DC 000D471C  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
+/* 800D77E0 000D4720  38 E2 8F 84 */	addi r7, r2, "@2162"@sda21
 /* 800D77E4 000D4724  4B FA C8 E1 */	bl snprintf
 /* 800D77E8 000D4728  38 61 01 38 */	addi r3, r1, 0x138
 /* 800D77EC 000D472C  4B F3 46 D1 */	bl findFirstFile__13JKRFileLoaderFPCc
@@ -382,7 +382,7 @@ lbl_800D77CC:
 /* 800D77F4 000D4734  3B 5D 00 00 */	addi r26, r29, 0
 lbl_800D77F8:
 /* 800D77F8 000D4738  83 7D 00 00 */	lwz r27, 0(r29)
-/* 800D77FC 000D473C  38 82 8F 48 */	addi r4, r2, $$22019@sda21
+/* 800D77FC 000D473C  38 82 8F 48 */	addi r4, r2, "@2019"@sda21
 /* 800D7800 000D4740  38 7B 00 00 */	addi r3, r27, 0
 /* 800D7804 000D4744  4B FA E3 75 */	bl strstr
 /* 800D7808 000D4748  28 03 00 00 */	cmplwi r3, 0
@@ -392,7 +392,7 @@ lbl_800D77F8:
 /* 800D7818 000D4758  90 1F 00 04 */	stw r0, 4(r31)
 lbl_800D781C:
 /* 800D781C 000D475C  38 7B 00 00 */	addi r3, r27, 0
-/* 800D7820 000D4760  38 82 8F 54 */	addi r4, r2, $$22021@sda21
+/* 800D7820 000D4760  38 82 8F 54 */	addi r4, r2, "@2021"@sda21
 /* 800D7824 000D4764  4B FA E3 55 */	bl strstr
 /* 800D7828 000D4768  28 03 00 00 */	cmplwi r3, 0
 /* 800D782C 000D476C  41 82 00 10 */	beq lbl_800D783C
@@ -401,7 +401,7 @@ lbl_800D781C:
 /* 800D7838 000D4778  90 1F 00 0C */	stw r0, 0xc(r31)
 lbl_800D783C:
 /* 800D783C 000D477C  38 7B 00 00 */	addi r3, r27, 0
-/* 800D7840 000D4780  38 82 8F 5C */	addi r4, r2, $$22022@sda21
+/* 800D7840 000D4780  38 82 8F 5C */	addi r4, r2, "@2022"@sda21
 /* 800D7844 000D4784  4B FA E3 35 */	bl strstr
 /* 800D7848 000D4788  28 03 00 00 */	cmplwi r3, 0
 /* 800D784C 000D478C  41 82 00 10 */	beq lbl_800D785C
@@ -410,7 +410,7 @@ lbl_800D783C:
 /* 800D7858 000D4798  90 1F 00 10 */	stw r0, 0x10(r31)
 lbl_800D785C:
 /* 800D785C 000D479C  38 7B 00 00 */	addi r3, r27, 0
-/* 800D7860 000D47A0  38 82 8F 64 */	addi r4, r2, $$22023@sda21
+/* 800D7860 000D47A0  38 82 8F 64 */	addi r4, r2, "@2023"@sda21
 /* 800D7864 000D47A4  4B FA E3 15 */	bl strstr
 /* 800D7868 000D47A8  28 03 00 00 */	cmplwi r3, 0
 /* 800D786C 000D47AC  41 82 00 10 */	beq lbl_800D787C
@@ -419,7 +419,7 @@ lbl_800D785C:
 /* 800D7878 000D47B8  90 1F 00 14 */	stw r0, 0x14(r31)
 lbl_800D787C:
 /* 800D787C 000D47BC  38 7B 00 00 */	addi r3, r27, 0
-/* 800D7880 000D47C0  38 82 8F 6C */	addi r4, r2, $$22024@sda21
+/* 800D7880 000D47C0  38 82 8F 6C */	addi r4, r2, "@2024"@sda21
 /* 800D7884 000D47C4  4B FA E2 F5 */	bl strstr
 /* 800D7888 000D47C8  28 03 00 00 */	cmplwi r3, 0
 /* 800D788C 000D47CC  41 82 00 10 */	beq lbl_800D789C
@@ -428,7 +428,7 @@ lbl_800D787C:
 /* 800D7898 000D47D8  90 1F 00 18 */	stw r0, 0x18(r31)
 lbl_800D789C:
 /* 800D789C 000D47DC  38 7B 00 00 */	addi r3, r27, 0
-/* 800D78A0 000D47E0  38 82 8F 74 */	addi r4, r2, $$22025@sda21
+/* 800D78A0 000D47E0  38 82 8F 74 */	addi r4, r2, "@2025"@sda21
 /* 800D78A4 000D47E4  4B FA E2 D5 */	bl strstr
 /* 800D78A8 000D47E8  28 03 00 00 */	cmplwi r3, 0
 /* 800D78AC 000D47EC  41 82 00 10 */	beq lbl_800D78BC
@@ -450,7 +450,7 @@ lbl_800D78BC:
 /* 800D78E8 000D4828  48 00 00 D0 */	b lbl_800D79B8
 lbl_800D78EC:
 /* 800D78EC 000D482C  7F 5E D8 2E */	lwzx r26, r30, r27
-/* 800D78F0 000D4830  38 82 8F 48 */	addi r4, r2, $$22019@sda21
+/* 800D78F0 000D4830  38 82 8F 48 */	addi r4, r2, "@2019"@sda21
 /* 800D78F4 000D4834  38 7A 00 00 */	addi r3, r26, 0
 /* 800D78F8 000D4838  4B FA E2 81 */	bl strstr
 /* 800D78FC 000D483C  28 03 00 00 */	cmplwi r3, 0
@@ -460,7 +460,7 @@ lbl_800D78EC:
 /* 800D790C 000D484C  90 1F 00 04 */	stw r0, 4(r31)
 lbl_800D7910:
 /* 800D7910 000D4850  38 7A 00 00 */	addi r3, r26, 0
-/* 800D7914 000D4854  38 82 8F 54 */	addi r4, r2, $$22021@sda21
+/* 800D7914 000D4854  38 82 8F 54 */	addi r4, r2, "@2021"@sda21
 /* 800D7918 000D4858  4B FA E2 61 */	bl strstr
 /* 800D791C 000D485C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7920 000D4860  41 82 00 10 */	beq lbl_800D7930
@@ -469,7 +469,7 @@ lbl_800D7910:
 /* 800D792C 000D486C  90 1F 00 0C */	stw r0, 0xc(r31)
 lbl_800D7930:
 /* 800D7930 000D4870  38 7A 00 00 */	addi r3, r26, 0
-/* 800D7934 000D4874  38 82 8F 5C */	addi r4, r2, $$22022@sda21
+/* 800D7934 000D4874  38 82 8F 5C */	addi r4, r2, "@2022"@sda21
 /* 800D7938 000D4878  4B FA E2 41 */	bl strstr
 /* 800D793C 000D487C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7940 000D4880  41 82 00 10 */	beq lbl_800D7950
@@ -478,7 +478,7 @@ lbl_800D7930:
 /* 800D794C 000D488C  90 1F 00 10 */	stw r0, 0x10(r31)
 lbl_800D7950:
 /* 800D7950 000D4890  38 7A 00 00 */	addi r3, r26, 0
-/* 800D7954 000D4894  38 82 8F 64 */	addi r4, r2, $$22023@sda21
+/* 800D7954 000D4894  38 82 8F 64 */	addi r4, r2, "@2023"@sda21
 /* 800D7958 000D4898  4B FA E2 21 */	bl strstr
 /* 800D795C 000D489C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7960 000D48A0  41 82 00 10 */	beq lbl_800D7970
@@ -487,7 +487,7 @@ lbl_800D7950:
 /* 800D796C 000D48AC  90 1F 00 14 */	stw r0, 0x14(r31)
 lbl_800D7970:
 /* 800D7970 000D48B0  38 7A 00 00 */	addi r3, r26, 0
-/* 800D7974 000D48B4  38 82 8F 6C */	addi r4, r2, $$22024@sda21
+/* 800D7974 000D48B4  38 82 8F 6C */	addi r4, r2, "@2024"@sda21
 /* 800D7978 000D48B8  4B FA E2 01 */	bl strstr
 /* 800D797C 000D48BC  28 03 00 00 */	cmplwi r3, 0
 /* 800D7980 000D48C0  41 82 00 10 */	beq lbl_800D7990
@@ -496,7 +496,7 @@ lbl_800D7970:
 /* 800D798C 000D48CC  90 1F 00 18 */	stw r0, 0x18(r31)
 lbl_800D7990:
 /* 800D7990 000D48D0  38 7A 00 00 */	addi r3, r26, 0
-/* 800D7994 000D48D4  38 82 8F 74 */	addi r4, r2, $$22025@sda21
+/* 800D7994 000D48D4  38 82 8F 74 */	addi r4, r2, "@2025"@sda21
 /* 800D7998 000D48D8  4B FA E1 E1 */	bl strstr
 /* 800D799C 000D48DC  28 03 00 00 */	cmplwi r3, 0
 /* 800D79A0 000D48E0  41 82 00 10 */	beq lbl_800D79B0
@@ -666,7 +666,7 @@ lbl_800D7BCC:
 /* 800D7BF0 000D4B30  7C 7A 1B 78 */	mr r26, r3
 lbl_800D7BF4:
 /* 800D7BF4 000D4B34  80 7A 00 00 */	lwz r3, 0(r26)
-/* 800D7BF8 000D4B38  38 82 8F 88 */	addi r4, r2, $$22163@sda21
+/* 800D7BF8 000D4B38  38 82 8F 88 */	addi r4, r2, "@2163"@sda21
 /* 800D7BFC 000D4B3C  4B FA DF 7D */	bl strstr
 /* 800D7C00 000D4B40  7F E3 FB 78 */	mr r3, r31
 /* 800D7C04 000D4B44  80 9A 00 00 */	lwz r4, 0(r26)
@@ -712,43 +712,43 @@ lbl_800D7C90:
 /* 800D7C94 000D4BD4  28 03 00 00 */	cmplwi r3, 0
 /* 800D7C98 000D4BD8  41 82 00 10 */	beq lbl_800D7CA8
 /* 800D7C9C 000D4BDC  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7CA0 000D4BE0  38 A2 8F 48 */	addi r5, r2, $$22019@sda21
-/* 800D7CA4 000D4BE4  48 00 0A 85 */	bl loadAnmPtrArray__39MActorAnmDataEach$$018J3DAnmTransformKey$$1FPCcPCc
+/* 800D7CA0 000D4BE0  38 A2 8F 48 */	addi r5, r2, "@2019"@sda21
+/* 800D7CA4 000D4BE4  48 00 0A 85 */	bl "loadAnmPtrArray__39MActorAnmDataEach<18J3DAnmTransformKey>FPCcPCc"
 lbl_800D7CA8:
 /* 800D7CA8 000D4BE8  80 7F 00 30 */	lwz r3, 0x30(r31)
 /* 800D7CAC 000D4BEC  28 03 00 00 */	cmplwi r3, 0
 /* 800D7CB0 000D4BF0  41 82 00 10 */	beq lbl_800D7CC0
 /* 800D7CB4 000D4BF4  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7CB8 000D4BF8  38 A2 8F 54 */	addi r5, r2, $$22021@sda21
-/* 800D7CBC 000D4BFC  48 00 09 7D */	bl loadAnmPtrArray__35MActorAnmDataEach$$014J3DAnmColorKey$$1FPCcPCc
+/* 800D7CB8 000D4BF8  38 A2 8F 54 */	addi r5, r2, "@2021"@sda21
+/* 800D7CBC 000D4BFC  48 00 09 7D */	bl "loadAnmPtrArray__35MActorAnmDataEach<14J3DAnmColorKey>FPCcPCc"
 lbl_800D7CC0:
 /* 800D7CC0 000D4C00  80 7F 00 34 */	lwz r3, 0x34(r31)
 /* 800D7CC4 000D4C04  28 03 00 00 */	cmplwi r3, 0
 /* 800D7CC8 000D4C08  41 82 00 10 */	beq lbl_800D7CD8
 /* 800D7CCC 000D4C0C  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7CD0 000D4C10  38 A2 8F 5C */	addi r5, r2, $$22022@sda21
-/* 800D7CD4 000D4C14  48 00 08 75 */	bl loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmTexPattern$$1FPCcPCc
+/* 800D7CD0 000D4C10  38 A2 8F 5C */	addi r5, r2, "@2022"@sda21
+/* 800D7CD4 000D4C14  48 00 08 75 */	bl "loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmTexPattern>FPCcPCc"
 lbl_800D7CD8:
 /* 800D7CD8 000D4C18  80 7F 00 38 */	lwz r3, 0x38(r31)
 /* 800D7CDC 000D4C1C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7CE0 000D4C20  41 82 00 10 */	beq lbl_800D7CF0
 /* 800D7CE4 000D4C24  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7CE8 000D4C28  38 A2 8F 64 */	addi r5, r2, $$22023@sda21
-/* 800D7CEC 000D4C2C  48 00 07 6D */	bl loadAnmPtrArray__40MActorAnmDataEach$$019J3DAnmTextureSRTKey$$1FPCcPCc
+/* 800D7CE8 000D4C28  38 A2 8F 64 */	addi r5, r2, "@2023"@sda21
+/* 800D7CEC 000D4C2C  48 00 07 6D */	bl "loadAnmPtrArray__40MActorAnmDataEach<19J3DAnmTextureSRTKey>FPCcPCc"
 lbl_800D7CF0:
 /* 800D7CF0 000D4C30  80 7F 00 3C */	lwz r3, 0x3c(r31)
 /* 800D7CF4 000D4C34  28 03 00 00 */	cmplwi r3, 0
 /* 800D7CF8 000D4C38  41 82 00 10 */	beq lbl_800D7D08
 /* 800D7CFC 000D4C3C  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7D00 000D4C40  38 A2 8F 6C */	addi r5, r2, $$22024@sda21
-/* 800D7D04 000D4C44  48 00 06 65 */	bl loadAnmPtrArray__36MActorAnmDataEach$$015J3DAnmTevRegKey$$1FPCcPCc
+/* 800D7D00 000D4C40  38 A2 8F 6C */	addi r5, r2, "@2024"@sda21
+/* 800D7D04 000D4C44  48 00 06 65 */	bl "loadAnmPtrArray__36MActorAnmDataEach<15J3DAnmTevRegKey>FPCcPCc"
 lbl_800D7D08:
 /* 800D7D08 000D4C48  80 7F 00 40 */	lwz r3, 0x40(r31)
 /* 800D7D0C 000D4C4C  28 03 00 00 */	cmplwi r3, 0
 /* 800D7D10 000D4C50  41 82 00 10 */	beq lbl_800D7D20
 /* 800D7D14 000D4C54  38 81 00 38 */	addi r4, r1, 0x38
-/* 800D7D18 000D4C58  38 A2 8F 74 */	addi r5, r2, $$22025@sda21
-/* 800D7D1C 000D4C5C  48 00 05 5D */	bl loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmClusterKey$$1FPCcPCc
+/* 800D7D18 000D4C58  38 A2 8F 74 */	addi r5, r2, "@2025"@sda21
+/* 800D7D1C 000D4C5C  48 00 05 5D */	bl "loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmClusterKey>FPCcPCc"
 lbl_800D7D20:
 /* 800D7D20 000D4C60  BB 41 02 38 */	lmw r26, 0x238(r1)
 /* 800D7D24 000D4C64  80 01 02 54 */	lwz r0, 0x254(r1)
@@ -848,8 +848,8 @@ __ct__13MActorAnmDataFv:
 /* 800D7E60 000D4DA0  90 83 00 18 */	stw r4, 0x18(r3)
 /* 800D7E64 000D4DA4  4E 80 00 20 */	blr 
 
-.global __dt__Q27JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$1Fv
-__dt__Q27JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$1Fv:
+.global "__dt__Q27JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>Fv"
+"__dt__Q27JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>Fv":
 /* 800D7E68 000D4DA8  7C 08 02 A6 */	mflr r0
 /* 800D7E6C 000D4DAC  90 01 00 04 */	stw r0, 4(r1)
 /* 800D7E70 000D4DB0  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -875,7 +875,7 @@ lbl_800D7EB4:
 /* 800D7EBC 000D4DFC  38 BF 00 00 */	addi r5, r31, 0
 /* 800D7EC0 000D4E00  90 01 00 34 */	stw r0, 0x34(r1)
 /* 800D7EC4 000D4E04  38 61 00 30 */	addi r3, r1, 0x30
-/* 800D7EC8 000D4E08  48 00 00 5D */	bl erase__Q27JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$1FQ37JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$18iterator
+/* 800D7EC8 000D4E08  48 00 00 5D */	bl "erase__Q27JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>FQ37JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>8iterator"
 /* 800D7ECC 000D4E0C  80 01 00 30 */	lwz r0, 0x30(r1)
 /* 800D7ED0 000D4E10  90 01 00 44 */	stw r0, 0x44(r1)
 lbl_800D7ED4:
@@ -901,8 +901,8 @@ lbl_800D7F04:
 /* 800D7F1C 000D4E5C  38 21 00 68 */	addi r1, r1, 0x68
 /* 800D7F20 000D4E60  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$1FQ37JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$18iterator
-erase__Q27JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$1FQ37JGadget68TList$$016MActorSubAnmInfo$$4Q27JGadget30TAllocator$$016MActorSubAnmInfo$$1$$18iterator:
+.global "erase__Q27JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>FQ37JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>8iterator"
+"erase__Q27JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>FQ37JGadget68TList<16MActorSubAnmInfo,Q27JGadget30TAllocator<16MActorSubAnmInfo>>8iterator":
 /* 800D7F24 000D4E64  7C 08 02 A6 */	mflr r0
 /* 800D7F28 000D4E68  90 01 00 04 */	stw r0, 4(r1)
 /* 800D7F2C 000D4E6C  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -1158,8 +1158,8 @@ lbl_800D826C:
 /* 800D8270 000D51B0  42 00 FF 54 */	bdnz lbl_800D81C4
 /* 800D8274 000D51B4  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmClusterKey$$1FPCcPCc
-loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmClusterKey$$1FPCcPCc:
+.global "loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmClusterKey>FPCcPCc"
+"loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmClusterKey>FPCcPCc":
 /* 800D8278 000D51B8  7C 08 02 A6 */	mflr r0
 /* 800D827C 000D51BC  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8280 000D51C0  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1184,14 +1184,14 @@ lbl_800D82B0:
 /* 800D82C8 000D5208  4C C6 31 82 */	crclr 6
 /* 800D82CC 000D520C  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D82D0 000D5210  38 80 00 FF */	li r4, 0xff
-/* 800D82D4 000D5214  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D82D4 000D5214  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D82D8 000D5218  4B FA BD ED */	bl snprintf
 /* 800D82DC 000D521C  38 FD 00 00 */	addi r7, r29, 0
 /* 800D82E0 000D5220  4C C6 31 82 */	crclr 6
 /* 800D82E4 000D5224  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D82E8 000D5228  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D82EC 000D522C  38 80 00 FF */	li r4, 0xff
-/* 800D82F0 000D5230  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D82F0 000D5230  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D82F4 000D5234  4B FA BD D1 */	bl snprintf
 /* 800D82F8 000D5238  48 00 00 20 */	b lbl_800D8318
 lbl_800D82FC:
@@ -1200,7 +1200,7 @@ lbl_800D82FC:
 /* 800D8304 000D5244  38 FD 00 00 */	addi r7, r29, 0
 /* 800D8308 000D5248  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D830C 000D524C  38 80 00 FF */	li r4, 0xff
-/* 800D8310 000D5250  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D8310 000D5250  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D8314 000D5254  4B FA BD B1 */	bl snprintf
 lbl_800D8318:
 /* 800D8318 000D5258  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1226,8 +1226,8 @@ lbl_800D833C:
 /* 800D8360 000D52A0  7C 08 03 A6 */	mtlr r0
 /* 800D8364 000D52A4  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__36MActorAnmDataEach$$015J3DAnmTevRegKey$$1FPCcPCc
-loadAnmPtrArray__36MActorAnmDataEach$$015J3DAnmTevRegKey$$1FPCcPCc:
+.global "loadAnmPtrArray__36MActorAnmDataEach<15J3DAnmTevRegKey>FPCcPCc"
+"loadAnmPtrArray__36MActorAnmDataEach<15J3DAnmTevRegKey>FPCcPCc":
 /* 800D8368 000D52A8  7C 08 02 A6 */	mflr r0
 /* 800D836C 000D52AC  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8370 000D52B0  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1252,14 +1252,14 @@ lbl_800D83A0:
 /* 800D83B8 000D52F8  4C C6 31 82 */	crclr 6
 /* 800D83BC 000D52FC  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D83C0 000D5300  38 80 00 FF */	li r4, 0xff
-/* 800D83C4 000D5304  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D83C4 000D5304  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D83C8 000D5308  4B FA BC FD */	bl snprintf
 /* 800D83CC 000D530C  38 FD 00 00 */	addi r7, r29, 0
 /* 800D83D0 000D5310  4C C6 31 82 */	crclr 6
 /* 800D83D4 000D5314  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D83D8 000D5318  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D83DC 000D531C  38 80 00 FF */	li r4, 0xff
-/* 800D83E0 000D5320  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D83E0 000D5320  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D83E4 000D5324  4B FA BC E1 */	bl snprintf
 /* 800D83E8 000D5328  48 00 00 20 */	b lbl_800D8408
 lbl_800D83EC:
@@ -1268,7 +1268,7 @@ lbl_800D83EC:
 /* 800D83F4 000D5334  38 FD 00 00 */	addi r7, r29, 0
 /* 800D83F8 000D5338  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D83FC 000D533C  38 80 00 FF */	li r4, 0xff
-/* 800D8400 000D5340  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D8400 000D5340  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D8404 000D5344  4B FA BC C1 */	bl snprintf
 lbl_800D8408:
 /* 800D8408 000D5348  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1294,8 +1294,8 @@ lbl_800D842C:
 /* 800D8450 000D5390  7C 08 03 A6 */	mtlr r0
 /* 800D8454 000D5394  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__40MActorAnmDataEach$$019J3DAnmTextureSRTKey$$1FPCcPCc
-loadAnmPtrArray__40MActorAnmDataEach$$019J3DAnmTextureSRTKey$$1FPCcPCc:
+.global "loadAnmPtrArray__40MActorAnmDataEach<19J3DAnmTextureSRTKey>FPCcPCc"
+"loadAnmPtrArray__40MActorAnmDataEach<19J3DAnmTextureSRTKey>FPCcPCc":
 /* 800D8458 000D5398  7C 08 02 A6 */	mflr r0
 /* 800D845C 000D539C  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8460 000D53A0  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1320,14 +1320,14 @@ lbl_800D8490:
 /* 800D84A8 000D53E8  4C C6 31 82 */	crclr 6
 /* 800D84AC 000D53EC  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D84B0 000D53F0  38 80 00 FF */	li r4, 0xff
-/* 800D84B4 000D53F4  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D84B4 000D53F4  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D84B8 000D53F8  4B FA BC 0D */	bl snprintf
 /* 800D84BC 000D53FC  38 FD 00 00 */	addi r7, r29, 0
 /* 800D84C0 000D5400  4C C6 31 82 */	crclr 6
 /* 800D84C4 000D5404  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D84C8 000D5408  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D84CC 000D540C  38 80 00 FF */	li r4, 0xff
-/* 800D84D0 000D5410  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D84D0 000D5410  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D84D4 000D5414  4B FA BB F1 */	bl snprintf
 /* 800D84D8 000D5418  48 00 00 20 */	b lbl_800D84F8
 lbl_800D84DC:
@@ -1336,7 +1336,7 @@ lbl_800D84DC:
 /* 800D84E4 000D5424  38 FD 00 00 */	addi r7, r29, 0
 /* 800D84E8 000D5428  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D84EC 000D542C  38 80 00 FF */	li r4, 0xff
-/* 800D84F0 000D5430  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D84F0 000D5430  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D84F4 000D5434  4B FA BB D1 */	bl snprintf
 lbl_800D84F8:
 /* 800D84F8 000D5438  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1362,8 +1362,8 @@ lbl_800D851C:
 /* 800D8540 000D5480  7C 08 03 A6 */	mtlr r0
 /* 800D8544 000D5484  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmTexPattern$$1FPCcPCc
-loadAnmPtrArray__37MActorAnmDataEach$$016J3DAnmTexPattern$$1FPCcPCc:
+.global "loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmTexPattern>FPCcPCc"
+"loadAnmPtrArray__37MActorAnmDataEach<16J3DAnmTexPattern>FPCcPCc":
 /* 800D8548 000D5488  7C 08 02 A6 */	mflr r0
 /* 800D854C 000D548C  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8550 000D5490  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1388,14 +1388,14 @@ lbl_800D8580:
 /* 800D8598 000D54D8  4C C6 31 82 */	crclr 6
 /* 800D859C 000D54DC  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D85A0 000D54E0  38 80 00 FF */	li r4, 0xff
-/* 800D85A4 000D54E4  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D85A4 000D54E4  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D85A8 000D54E8  4B FA BB 1D */	bl snprintf
 /* 800D85AC 000D54EC  38 FD 00 00 */	addi r7, r29, 0
 /* 800D85B0 000D54F0  4C C6 31 82 */	crclr 6
 /* 800D85B4 000D54F4  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D85B8 000D54F8  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D85BC 000D54FC  38 80 00 FF */	li r4, 0xff
-/* 800D85C0 000D5500  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D85C0 000D5500  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D85C4 000D5504  4B FA BB 01 */	bl snprintf
 /* 800D85C8 000D5508  48 00 00 20 */	b lbl_800D85E8
 lbl_800D85CC:
@@ -1404,7 +1404,7 @@ lbl_800D85CC:
 /* 800D85D4 000D5514  38 FD 00 00 */	addi r7, r29, 0
 /* 800D85D8 000D5518  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D85DC 000D551C  38 80 00 FF */	li r4, 0xff
-/* 800D85E0 000D5520  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D85E0 000D5520  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D85E4 000D5524  4B FA BA E1 */	bl snprintf
 lbl_800D85E8:
 /* 800D85E8 000D5528  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1430,8 +1430,8 @@ lbl_800D860C:
 /* 800D8630 000D5570  7C 08 03 A6 */	mtlr r0
 /* 800D8634 000D5574  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__35MActorAnmDataEach$$014J3DAnmColorKey$$1FPCcPCc
-loadAnmPtrArray__35MActorAnmDataEach$$014J3DAnmColorKey$$1FPCcPCc:
+.global "loadAnmPtrArray__35MActorAnmDataEach<14J3DAnmColorKey>FPCcPCc"
+"loadAnmPtrArray__35MActorAnmDataEach<14J3DAnmColorKey>FPCcPCc":
 /* 800D8638 000D5578  7C 08 02 A6 */	mflr r0
 /* 800D863C 000D557C  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8640 000D5580  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1456,14 +1456,14 @@ lbl_800D8670:
 /* 800D8688 000D55C8  4C C6 31 82 */	crclr 6
 /* 800D868C 000D55CC  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D8690 000D55D0  38 80 00 FF */	li r4, 0xff
-/* 800D8694 000D55D4  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D8694 000D55D4  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D8698 000D55D8  4B FA BA 2D */	bl snprintf
 /* 800D869C 000D55DC  38 FD 00 00 */	addi r7, r29, 0
 /* 800D86A0 000D55E0  4C C6 31 82 */	crclr 6
 /* 800D86A4 000D55E4  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D86A8 000D55E8  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D86AC 000D55EC  38 80 00 FF */	li r4, 0xff
-/* 800D86B0 000D55F0  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D86B0 000D55F0  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D86B4 000D55F4  4B FA BA 11 */	bl snprintf
 /* 800D86B8 000D55F8  48 00 00 20 */	b lbl_800D86D8
 lbl_800D86BC:
@@ -1472,7 +1472,7 @@ lbl_800D86BC:
 /* 800D86C4 000D5604  38 FD 00 00 */	addi r7, r29, 0
 /* 800D86C8 000D5608  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D86CC 000D560C  38 80 00 FF */	li r4, 0xff
-/* 800D86D0 000D5610  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D86D0 000D5610  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D86D4 000D5614  4B FA B9 F1 */	bl snprintf
 lbl_800D86D8:
 /* 800D86D8 000D5618  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1498,8 +1498,8 @@ lbl_800D86FC:
 /* 800D8720 000D5660  7C 08 03 A6 */	mtlr r0
 /* 800D8724 000D5664  4E 80 00 20 */	blr 
 
-.global loadAnmPtrArray__39MActorAnmDataEach$$018J3DAnmTransformKey$$1FPCcPCc
-loadAnmPtrArray__39MActorAnmDataEach$$018J3DAnmTransformKey$$1FPCcPCc:
+.global "loadAnmPtrArray__39MActorAnmDataEach<18J3DAnmTransformKey>FPCcPCc"
+"loadAnmPtrArray__39MActorAnmDataEach<18J3DAnmTransformKey>FPCcPCc":
 /* 800D8728 000D5668  7C 08 02 A6 */	mflr r0
 /* 800D872C 000D566C  90 01 00 04 */	stw r0, 4(r1)
 /* 800D8730 000D5670  94 21 FD C8 */	stwu r1, -0x238(r1)
@@ -1524,14 +1524,14 @@ lbl_800D8760:
 /* 800D8778 000D56B8  4C C6 31 82 */	crclr 6
 /* 800D877C 000D56BC  38 61 00 1C */	addi r3, r1, 0x1c
 /* 800D8780 000D56C0  38 80 00 FF */	li r4, 0xff
-/* 800D8784 000D56C4  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D8784 000D56C4  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D8788 000D56C8  4B FA B9 3D */	bl snprintf
 /* 800D878C 000D56CC  38 FD 00 00 */	addi r7, r29, 0
 /* 800D8790 000D56D0  4C C6 31 82 */	crclr 6
 /* 800D8794 000D56D4  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D8798 000D56D8  38 C1 00 1C */	addi r6, r1, 0x1c
 /* 800D879C 000D56DC  38 80 00 FF */	li r4, 0xff
-/* 800D87A0 000D56E0  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D87A0 000D56E0  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D87A4 000D56E4  4B FA B9 21 */	bl snprintf
 /* 800D87A8 000D56E8  48 00 00 20 */	b lbl_800D87C8
 lbl_800D87AC:
@@ -1540,7 +1540,7 @@ lbl_800D87AC:
 /* 800D87B4 000D56F4  38 FD 00 00 */	addi r7, r29, 0
 /* 800D87B8 000D56F8  38 61 01 1C */	addi r3, r1, 0x11c
 /* 800D87BC 000D56FC  38 80 00 FF */	li r4, 0xff
-/* 800D87C0 000D5700  38 A2 8F 7C */	addi r5, r2, $$22161@sda21
+/* 800D87C0 000D5700  38 A2 8F 7C */	addi r5, r2, "@2161"@sda21
 /* 800D87C4 000D5704  4B FA B9 01 */	bl snprintf
 lbl_800D87C8:
 /* 800D87C8 000D5708  38 61 01 1C */	addi r3, r1, 0x11c
@@ -1568,23 +1568,23 @@ lbl_800D87EC:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22019:
+"@2019":
 	.incbin "baserom.dol", 0x3E4C48, 0x8
-$$22020:
+"@2020":
 	.incbin "baserom.dol", 0x3E4C50, 0x4
-$$22021:
+"@2021":
 	.incbin "baserom.dol", 0x3E4C54, 0x8
-$$22022:
+"@2022":
 	.incbin "baserom.dol", 0x3E4C5C, 0x8
-$$22023:
+"@2023":
 	.incbin "baserom.dol", 0x3E4C64, 0x8
-$$22024:
+"@2024":
 	.incbin "baserom.dol", 0x3E4C6C, 0x8
-$$22025:
+"@2025":
 	.incbin "baserom.dol", 0x3E4C74, 0x8
-$$22161:
+"@2161":
 	.incbin "baserom.dol", 0x3E4C7C, 0x8
-$$22162:
+"@2162":
 	.incbin "baserom.dol", 0x3E4C84, 0x4
-$$22163:
+"@2163":
 	.incbin "baserom.dol", 0x3E4C88, 0x8

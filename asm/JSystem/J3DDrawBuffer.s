@@ -20,9 +20,9 @@ __ct__13J3DDrawBufferFUl:
 /* 80039168 000360A8  7F C3 F3 78 */	mr r3, r30
 /* 8003916C 000360AC  90 9E 00 08 */	stw r4, 8(r30)
 /* 80039170 000360B0  90 9E 00 0C */	stw r4, 0xc(r30)
-/* 80039174 000360B4  C0 02 82 E8 */	lfs f0, $$2824@sda21(r2)
+/* 80039174 000360B4  C0 02 82 E8 */	lfs f0, "@824"@sda21(r2)
 /* 80039178 000360B8  D0 1E 00 10 */	stfs f0, 0x10(r30)
-/* 8003917C 000360BC  C0 02 82 EC */	lfs f0, $$2825@sda21(r2)
+/* 8003917C 000360BC  C0 02 82 EC */	lfs f0, "@825"@sda21(r2)
 /* 80039180 000360C0  D0 1E 00 14 */	stfs f0, 0x14(r30)
 /* 80039184 000360C4  90 9E 00 1C */	stw r4, 0x1c(r30)
 /* 80039188 000360C8  90 9E 00 20 */	stw r4, 0x20(r30)
@@ -31,7 +31,7 @@ __ct__13J3DDrawBufferFUl:
 /* 80039194 000360D4  90 81 00 14 */	stw r4, 0x14(r1)
 /* 80039198 000360D8  C0 1E 00 10 */	lfs f0, 0x10(r30)
 /* 8003919C 000360DC  90 01 00 10 */	stw r0, 0x10(r1)
-/* 800391A0 000360E0  C8 22 82 F0 */	lfd f1, $$2827@sda21(r2)
+/* 800391A0 000360E0  C8 22 82 F0 */	lfd f1, "@827"@sda21(r2)
 /* 800391A4 000360E4  EC 42 00 28 */	fsubs f2, f2, f0
 /* 800391A8 000360E8  C8 01 00 10 */	lfd f0, 0x10(r1)
 /* 800391AC 000360EC  EC 00 08 28 */	fsubs f0, f0, f1
@@ -477,8 +477,8 @@ lbl_80039764:
 
 .global __sinit_J3DDrawBuffer_cpp
 __sinit_J3DDrawBuffer_cpp:
-/* 8003978C 000366CC  3C 60 80 3B */	lis r3, $$2814@ha
-/* 80039790 000366D0  38 83 9D D8 */	addi r4, r3, $$2814@l
+/* 8003978C 000366CC  3C 60 80 3B */	lis r3, "@814"@ha
+/* 80039790 000366D0  38 83 9D D8 */	addi r4, r3, "@814"@l
 /* 80039794 000366D4  80 64 00 00 */	lwz r3, 0(r4)
 /* 80039798 000366D8  80 04 00 04 */	lwz r0, 4(r4)
 /* 8003979C 000366DC  90 64 00 48 */	stw r3, 0x48(r4)
@@ -534,27 +534,27 @@ lbl_constructor:
   .4byte __sinit_J3DDrawBuffer_cpp
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2814:
+"@814":
   .4byte 0
   .4byte -1
   .4byte entryMatSort__13J3DDrawBufferFP12J3DMatPacket
-$$2815:
+"@815":
   .4byte 0
   .4byte -1
   .4byte entryMatAnmSort__13J3DDrawBufferFP12J3DMatPacket
-$$2816:
+"@816":
   .4byte 0
   .4byte -1
   .4byte entryZSort__13J3DDrawBufferFP12J3DMatPacket
-$$2817:
+"@817":
   .4byte 0
   .4byte -1
   .4byte entryModelSort__13J3DDrawBufferFP12J3DMatPacket
-$$2818:
+"@818":
   .4byte 0
   .4byte -1
   .4byte entryInvalidSort__13J3DDrawBufferFP12J3DMatPacket
-$$2819:
+"@819":
   .4byte 0
   .4byte -1
   .4byte entryNonSort__13J3DDrawBufferFP12J3DMatPacket
@@ -578,11 +578,11 @@ sortFuncTable__13J3DDrawBuffer:
   .4byte 0
   .4byte 0
   .4byte 0
-$$2820:
+"@820":
   .4byte 0
   .4byte -1
   .4byte drawHead__13J3DDrawBufferCFv
-$$2821:
+"@821":
   .4byte 0
   .4byte -1
   .4byte drawTail__13J3DDrawBufferCFv
@@ -596,11 +596,11 @@ drawFuncTable__13J3DDrawBuffer:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2824:
+"@824":
 	.incbin "baserom.dol", 0x3E3FE8, 0x4
-$$2825:
+"@825":
 	.incbin "baserom.dol", 0x3E3FEC, 0x4
-$$2827:
+"@827":
 	.incbin "baserom.dol", 0x3E3FF0, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -38,7 +38,7 @@ JSGFGetType__Q26JStage13TAmbientLightCFv:
 .global JSGGetColor__Q26JStage13TAmbientLightCFv
 JSGGetColor__Q26JStage13TAmbientLightCFv:
 /* 80081884 0007E7C4  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081888 0007E7C8  80 02 89 30 */	lwz r0, $$2115@sda21(r2)
+/* 80081888 0007E7C8  80 02 89 30 */	lwz r0, "@115"@sda21(r2)
 /* 8008188C 0007E7CC  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80081890 0007E7D0  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 80081894 0007E7D4  38 21 00 18 */	addi r1, r1, 0x18
@@ -68,6 +68,6 @@ __vt__Q26JStage13TAmbientLight:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2115:
+"@115":
   .4byte -1
   .4byte 0

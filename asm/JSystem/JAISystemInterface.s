@@ -350,35 +350,35 @@ lbl_80057E90:
 /* 80057ECC 00054E0C  57 A0 07 FF */	clrlwi. r0, r29, 0x1f
 /* 80057ED0 00054E10  57 BB 04 3E */	clrlwi r27, r29, 0x10
 /* 80057ED4 00054E14  40 82 00 14 */	bne lbl_80057EE8
-/* 80057ED8 00054E18  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
+/* 80057ED8 00054E18  C0 22 85 A8 */	lfs f1, "@509"@sda21(r2)
 /* 80057EDC 00054E1C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057EE0 00054E20  38 80 00 01 */	li r4, 1
 /* 80057EE4 00054E24  48 00 C6 F1 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057EE8:
 /* 80057EE8 00054E28  57 60 07 BD */	rlwinm. r0, r27, 0, 0x1e, 0x1e
 /* 80057EEC 00054E2C  40 82 00 14 */	bne lbl_80057F00
-/* 80057EF0 00054E30  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
+/* 80057EF0 00054E30  C0 22 85 A8 */	lfs f1, "@509"@sda21(r2)
 /* 80057EF4 00054E34  38 7E 00 00 */	addi r3, r30, 0
 /* 80057EF8 00054E38  38 80 00 02 */	li r4, 2
 /* 80057EFC 00054E3C  48 00 C6 D9 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F00:
 /* 80057F00 00054E40  57 60 07 7B */	rlwinm. r0, r27, 0, 0x1d, 0x1d
 /* 80057F04 00054E44  40 82 00 14 */	bne lbl_80057F18
-/* 80057F08 00054E48  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
+/* 80057F08 00054E48  C0 22 85 A8 */	lfs f1, "@509"@sda21(r2)
 /* 80057F0C 00054E4C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F10 00054E50  38 80 00 04 */	li r4, 4
 /* 80057F14 00054E54  48 00 C6 C1 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F18:
 /* 80057F18 00054E58  57 60 07 39 */	rlwinm. r0, r27, 0, 0x1c, 0x1c
 /* 80057F1C 00054E5C  40 82 00 14 */	bne lbl_80057F30
-/* 80057F20 00054E60  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
+/* 80057F20 00054E60  C0 22 85 A8 */	lfs f1, "@509"@sda21(r2)
 /* 80057F24 00054E64  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F28 00054E68  38 80 00 08 */	li r4, 8
 /* 80057F2C 00054E6C  48 00 C6 A9 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
 lbl_80057F30:
 /* 80057F30 00054E70  57 60 06 F7 */	rlwinm. r0, r27, 0, 0x1b, 0x1b
 /* 80057F34 00054E74  40 82 00 14 */	bne lbl_80057F48
-/* 80057F38 00054E78  C0 22 85 A8 */	lfs f1, $$2509@sda21(r2)
+/* 80057F38 00054E78  C0 22 85 A8 */	lfs f1, "@509"@sda21(r2)
 /* 80057F3C 00054E7C  38 7E 00 00 */	addi r3, r30, 0
 /* 80057F40 00054E80  38 80 00 10 */	li r4, 0x10
 /* 80057F44 00054E84  48 00 C6 91 */	bl setParam__Q38JASystem6TTrack11TOuterParamFUcf
@@ -642,9 +642,9 @@ __sinit_JAISystemInterface_cpp:
 /* 800582A0 000551E0  94 21 FF F8 */	stwu r1, -8(r1)
 /* 800582A4 000551E4  48 00 94 D5 */	bl __ct__Q38JASystem6Kernel8TPortCmdFv
 /* 800582A8 000551E8  3C 80 80 06 */	lis r4, __dt__Q38JASystem6Kernel8TPortCmdFv@ha
-/* 800582AC 000551EC  3C A0 80 3E */	lis r5, $$2557@ha
+/* 800582AC 000551EC  3C A0 80 3E */	lis r5, "@557"@ha
 /* 800582B0 000551F0  38 84 82 CC */	addi r4, r4, __dt__Q38JASystem6Kernel8TPortCmdFv@l
-/* 800582B4 000551F4  38 A5 63 00 */	addi r5, r5, $$2557@l
+/* 800582B4 000551F4  38 A5 63 00 */	addi r5, r5, "@557"@l
 /* 800582B8 000551F8  48 02 A4 71 */	bl __register_global_object
 /* 800582BC 000551FC  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 800582C0 00055200  38 21 00 08 */	addi r1, r1, 8
@@ -677,10 +677,10 @@ lbl_constructor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2509:
+"@509":
   .4byte 0
   .4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2557:
+"@557":
 	.skip 0x10

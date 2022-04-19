@@ -78,7 +78,7 @@ createRealoidActor__8TFishoidFP6MActor:
 /* 80364BC0 00361B00  41 82 00 70 */	beq lbl_80364C30
 /* 80364BC4 00361B04  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80364BC8 00361B08  7F C3 F3 78 */	mr r3, r30
-/* 80364BCC 00361B0C  38 82 09 58 */	addi r4, r2, $$22339@sda21
+/* 80364BCC 00361B0C  38 82 09 58 */	addi r4, r2, "@2339"@sda21
 /* 80364BD0 00361B10  4B DB 8A FD */	bl __ct__9THitActorFPCc
 /* 80364BD4 00361B14  3C 60 80 3B */	lis r3, __vt__10TTakeActor@ha
 /* 80364BD8 00361B18  38 63 46 8C */	addi r3, r3, __vt__10TTakeActor@l
@@ -97,7 +97,7 @@ createRealoidActor__8TFishoidFP6MActor:
 /* 80364C0C 00361B4C  90 04 00 20 */	stw r0, 0x20(r4)
 /* 80364C10 00361B50  93 E4 00 70 */	stw r31, 0x70(r4)
 /* 80364C14 00361B54  90 A4 00 74 */	stw r5, 0x74(r4)
-/* 80364C18 00361B58  4B EF 00 21 */	bl __ct__Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1Fv
+/* 80364C18 00361B58  4B EF 00 21 */	bl "__ct__Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>Fv"
 /* 80364C1C 00361B5C  3C 60 80 3E */	lis r3, __vt__5TFish@ha
 /* 80364C20 00361B60  38 63 54 C4 */	addi r3, r3, __vt__5TFish@l
 /* 80364C24 00361B64  90 7E 00 00 */	stw r3, 0(r30)
@@ -169,9 +169,9 @@ load__8TFishoidFR20JSUMemoryInputStream:
 /* 80364D08 00361C48  93 81 00 C0 */	stw r28, 0xc0(r1)
 /* 80364D0C 00361C4C  3B 84 00 00 */	addi r28, r4, 0
 /* 80364D10 00361C50  80 03 01 58 */	lwz r0, 0x158(r3)
-/* 80364D14 00361C54  3C 60 80 3A */	lis r3, cFishoidMdlNames__9$$2unnamed$$2@ha
+/* 80364D14 00361C54  3C 60 80 3A */	lis r3, "cFishoidMdlNames__9@unnamed@"@ha
 /* 80364D18 00361C58  54 04 10 3A */	slwi r4, r0, 2
-/* 80364D1C 00361C5C  38 03 7A A8 */	addi r0, r3, cFishoidMdlNames__9$$2unnamed$$2@l
+/* 80364D1C 00361C5C  38 03 7A A8 */	addi r0, r3, "cFishoidMdlNames__9@unnamed@"@l
 /* 80364D20 00361C60  7C 60 22 14 */	add r3, r0, r4
 /* 80364D24 00361C64  80 A3 00 00 */	lwz r5, 0(r3)
 /* 80364D28 00361C68  38 7E 00 00 */	addi r3, r30, 0
@@ -182,7 +182,7 @@ load__8TFishoidFR20JSUMemoryInputStream:
 /* 80364D3C 00361C7C  38 A0 00 04 */	li r5, 4
 /* 80364D40 00361C80  4B CA 98 51 */	bl read__14JSUInputStreamFPvl
 /* 80364D44 00361C84  80 61 00 AC */	lwz r3, 0xac(r1)
-/* 80364D48 00361C88  38 82 09 60 */	addi r4, r2, $$22362@sda21
+/* 80364D48 00361C88  38 82 09 60 */	addi r4, r2, "@2362"@sda21
 /* 80364D4C 00361C8C  4B E2 8C DD */	bl newAndRegisterObjByEventID__18TMapObjBaseManagerFUlPCc
 /* 80364D50 00361C90  90 7E 01 5C */	stw r3, 0x15c(r30)
 /* 80364D54 00361C94  80 7E 01 5C */	lwz r3, 0x15c(r30)
@@ -203,25 +203,25 @@ lbl_80364D7C:
 /* 80364D88 00361CC8  4B E3 2F 8D */	bl newAndRegisterCoinReal__12TItemManagerFv
 /* 80364D8C 00361CCC  90 7E 01 5C */	stw r3, 0x15c(r30)
 lbl_80364D90:
-/* 80364D90 00361CD0  C0 02 09 64 */	lfs f0, $$22450@sda21(r2)
+/* 80364D90 00361CD0  C0 02 09 64 */	lfs f0, "@2450"@sda21(r2)
 /* 80364D94 00361CD4  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364D98 00361CD8  D0 03 00 20 */	stfs f0, 0x20(r3)
-/* 80364D9C 00361CDC  C0 02 09 68 */	lfs f0, $$22451@sda21(r2)
+/* 80364D9C 00361CDC  C0 02 09 68 */	lfs f0, "@2451"@sda21(r2)
 /* 80364DA0 00361CE0  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364DA4 00361CE4  D0 03 00 24 */	stfs f0, 0x24(r3)
-/* 80364DA8 00361CE8  C0 02 09 6C */	lfs f0, $$22452@sda21(r2)
+/* 80364DA8 00361CE8  C0 02 09 6C */	lfs f0, "@2452"@sda21(r2)
 /* 80364DAC 00361CEC  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364DB0 00361CF0  D0 03 00 28 */	stfs f0, 0x28(r3)
-/* 80364DB4 00361CF4  C0 22 09 70 */	lfs f1, $$22453@sda21(r2)
+/* 80364DB4 00361CF4  C0 22 09 70 */	lfs f1, "@2453"@sda21(r2)
 /* 80364DB8 00361CF8  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364DBC 00361CFC  D0 23 00 2C */	stfs f1, 0x2c(r3)
-/* 80364DC0 00361D00  C0 02 09 74 */	lfs f0, $$22454@sda21(r2)
+/* 80364DC0 00361D00  C0 02 09 74 */	lfs f0, "@2454"@sda21(r2)
 /* 80364DC4 00361D04  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364DC8 00361D08  D0 03 00 30 */	stfs f0, 0x30(r3)
 /* 80364DCC 00361D0C  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364DD0 00361D10  D0 23 00 34 */	stfs f1, 0x34(r3)
 /* 80364DD4 00361D14  80 6D 98 D8 */	lwz r3, gpMarioAddress@sda21(r13)
-/* 80364DD8 00361D18  C0 02 09 78 */	lfs f0, $$22455@sda21(r2)
+/* 80364DD8 00361D18  C0 02 09 78 */	lfs f0, "@2455"@sda21(r2)
 /* 80364DDC 00361D1C  90 61 00 B0 */	stw r3, 0xb0(r1)
 /* 80364DE0 00361D20  28 03 00 00 */	cmplwi r3, 0
 /* 80364DE4 00361D24  D0 01 00 B4 */	stfs f0, 0xb4(r1)
@@ -236,9 +236,9 @@ lbl_80364D90:
 /* 80364E08 00361D48  D0 41 00 BC */	stfs f2, 0xbc(r1)
 lbl_80364E0C:
 /* 80364E0C 00361D4C  80 9E 01 50 */	lwz r4, 0x150(r30)
-/* 80364E10 00361D50  3C 60 80 3A */	lis r3, $$22458@ha
+/* 80364E10 00361D50  3C 60 80 3A */	lis r3, "@2458"@ha
 /* 80364E14 00361D54  80 01 00 B0 */	lwz r0, 0xb0(r1)
-/* 80364E18 00361D58  3B 83 7A F4 */	addi r28, r3, $$22458@l
+/* 80364E18 00361D58  3B 83 7A F4 */	addi r28, r3, "@2458"@l
 /* 80364E1C 00361D5C  3B E0 00 00 */	li r31, 0
 /* 80364E20 00361D60  90 04 00 5C */	stw r0, 0x5c(r4)
 /* 80364E24 00361D64  3B A0 00 00 */	li r29, 0
@@ -248,10 +248,10 @@ lbl_80364E0C:
 /* 80364E34 00361D74  90 04 00 64 */	stw r0, 0x64(r4)
 /* 80364E38 00361D78  80 01 00 BC */	lwz r0, 0xbc(r1)
 /* 80364E3C 00361D7C  90 04 00 68 */	stw r0, 0x68(r4)
-/* 80364E40 00361D80  C0 02 09 7C */	lfs f0, $$22456@sda21(r2)
+/* 80364E40 00361D80  C0 02 09 7C */	lfs f0, "@2456"@sda21(r2)
 /* 80364E44 00361D84  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364E48 00361D88  D0 03 00 6C */	stfs f0, 0x6c(r3)
-/* 80364E4C 00361D8C  C0 02 09 80 */	lfs f0, $$22457@sda21(r2)
+/* 80364E4C 00361D8C  C0 02 09 80 */	lfs f0, "@2457"@sda21(r2)
 /* 80364E50 00361D90  80 7E 01 50 */	lwz r3, 0x150(r30)
 /* 80364E54 00361D94  D0 03 00 70 */	stfs f0, 0x70(r3)
 /* 80364E58 00361D98  80 7E 01 50 */	lwz r3, 0x150(r30)
@@ -315,27 +315,27 @@ init__8TFishoidFP12TLiveManager:
 /* 80364F28 00361E68  7F E4 FB 78 */	mr r4, r31
 /* 80364F2C 00361E6C  80 63 00 70 */	lwz r3, 0x70(r3)
 /* 80364F30 00361E70  4B DA FA 8D */	bl manageActor__12TLiveManagerFP10TLiveActor
-/* 80364F34 00361E74  88 0D A1 10 */	lbz r0, init$localstatic1$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21(r13)
+/* 80364F34 00361E74  88 0D A1 10 */	lbz r0, "init$localstatic1$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21(r13)
 /* 80364F38 00361E78  7C 00 07 75 */	extsb. r0, r0
 /* 80364F3C 00361E7C  40 82 00 3C */	bne lbl_80364F78
-/* 80364F40 00361E80  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80364F44 00361E84  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
-/* 80364F48 00361E88  3C 60 80 3E */	lis r3, __vt__31TNerveWaitForever$$010TLiveActor$$1@ha
-/* 80364F4C 00361E8C  90 0D A1 14 */	stw r0, instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21(r13)
-/* 80364F50 00361E90  38 03 A4 5C */	addi r0, r3, __vt__31TNerveWaitForever$$010TLiveActor$$1@l
-/* 80364F54 00361E94  3C 80 80 2B */	lis r4, __dt__31TNerveWaitForever$$010TLiveActor$$1Fv@ha
-/* 80364F58 00361E98  90 0D A1 14 */	stw r0, instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21(r13)
-/* 80364F5C 00361E9C  3C 60 80 40 */	lis r3, $$22300@ha
-/* 80364F60 00361EA0  38 A3 07 D0 */	addi r5, r3, $$22300@l
-/* 80364F64 00361EA4  38 84 5E 7C */	addi r4, r4, __dt__31TNerveWaitForever$$010TLiveActor$$1Fv@l
-/* 80364F68 00361EA8  38 6D A1 14 */	addi r3, r13, instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21
+/* 80364F40 00361E80  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80364F44 00361E84  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
+/* 80364F48 00361E88  3C 60 80 3E */	lis r3, "__vt__31TNerveWaitForever<10TLiveActor>"@ha
+/* 80364F4C 00361E8C  90 0D A1 14 */	stw r0, "instance$localstatic0$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21(r13)
+/* 80364F50 00361E90  38 03 A4 5C */	addi r0, r3, "__vt__31TNerveWaitForever<10TLiveActor>"@l
+/* 80364F54 00361E94  3C 80 80 2B */	lis r4, "__dt__31TNerveWaitForever<10TLiveActor>Fv"@ha
+/* 80364F58 00361E98  90 0D A1 14 */	stw r0, "instance$localstatic0$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21(r13)
+/* 80364F5C 00361E9C  3C 60 80 40 */	lis r3, "@2300"@ha
+/* 80364F60 00361EA0  38 A3 07 D0 */	addi r5, r3, "@2300"@l
+/* 80364F64 00361EA4  38 84 5E 7C */	addi r4, r4, "__dt__31TNerveWaitForever<10TLiveActor>Fv"@l
+/* 80364F68 00361EA8  38 6D A1 14 */	addi r3, r13, "instance$localstatic0$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21
 /* 80364F6C 00361EAC  4B D1 D7 BD */	bl __register_global_object
 /* 80364F70 00361EB0  38 00 00 01 */	li r0, 1
-/* 80364F74 00361EB4  98 0D A1 10 */	stb r0, init$localstatic1$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21(r13)
+/* 80364F74 00361EB4  98 0D A1 10 */	stb r0, "init$localstatic1$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21(r13)
 lbl_80364F78:
 /* 80364F78 00361EB8  81 1F 00 8C */	lwz r8, 0x8c(r31)
 /* 80364F7C 00361EBC  38 E0 00 00 */	li r7, 0
-/* 80364F80 00361EC0  38 0D A1 14 */	addi r0, r13, instance$localstatic0$theNerve__31TNerveWaitForever$$010TLiveActor$$1Fv@sda21
+/* 80364F80 00361EC0  38 0D A1 14 */	addi r0, r13, "instance$localstatic0$theNerve__31TNerveWaitForever<10TLiveActor>Fv"@sda21
 /* 80364F84 00361EC4  90 E8 00 08 */	stw r7, 8(r8)
 /* 80364F88 00361EC8  38 7F 00 00 */	addi r3, r31, 0
 /* 80364F8C 00361ECC  38 80 00 00 */	li r4, 0
@@ -345,7 +345,7 @@ lbl_80364F78:
 /* 80364F9C 00361EDC  90 08 00 14 */	stw r0, 0x14(r8)
 /* 80364FA0 00361EE0  90 08 00 18 */	stw r0, 0x18(r8)
 /* 80364FA4 00361EE4  90 E8 00 1C */	stw r7, 0x1c(r8)
-/* 80364FA8 00361EE8  C0 22 09 78 */	lfs f1, $$22455@sda21(r2)
+/* 80364FA8 00361EE8  C0 22 09 78 */	lfs f1, "@2455"@sda21(r2)
 /* 80364FAC 00361EEC  FC 40 08 90 */	fmr f2, f1
 /* 80364FB0 00361EF0  FC 60 08 90 */	fmr f3, f1
 /* 80364FB4 00361EF4  FC 80 08 90 */	fmr f4, f1
@@ -416,7 +416,7 @@ lbl_80365094:
 /* 80365098 00361FD8  80 03 00 10 */	lwz r0, 0x10(r3)
 /* 8036509C 00361FDC  7C 1C 00 00 */	cmpw r28, r0
 /* 803650A0 00361FE0  41 80 FF CC */	blt lbl_8036506C
-/* 803650A4 00361FE4  C0 02 09 78 */	lfs f0, $$22455@sda21(r2)
+/* 803650A4 00361FE4  C0 02 09 78 */	lfs f0, "@2455"@sda21(r2)
 /* 803650A8 00361FE8  38 C0 00 00 */	li r6, 0
 /* 803650AC 00361FEC  38 60 00 00 */	li r3, 0
 /* 803650B0 00361FF0  48 00 00 54 */	b lbl_80365104
@@ -563,7 +563,7 @@ perform__8TRealoidFUlPQ26JDrama9TGraphics:
 /* 803652A0 003621E0  C0 7E 00 E8 */	lfs f3, 0xe8(r30)
 /* 803652A4 003621E4  C0 43 00 4C */	lfs f2, 0x4c(r3)
 /* 803652A8 003621E8  C0 23 00 48 */	lfs f1, 0x48(r3)
-/* 803652AC 003621EC  C0 82 09 84 */	lfs f4, $$22627@sda21(r2)
+/* 803652AC 003621EC  C0 82 09 84 */	lfs f4, "@2627"@sda21(r2)
 /* 803652B0 003621F0  4B D5 C1 65 */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 803652B4 003621F4  3B E0 00 00 */	li r31, 0
 /* 803652B8 003621F8  3B 5F 00 00 */	addi r26, r31, 0
@@ -572,7 +572,7 @@ perform__8TRealoidFUlPQ26JDrama9TGraphics:
 lbl_803652C4:
 /* 803652C4 00362204  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 803652C8 00362208  7F C3 F3 78 */	mr r3, r30
-/* 803652CC 0036220C  C0 22 09 88 */	lfs f1, $$22628@sda21(r2)
+/* 803652CC 0036220C  C0 22 09 88 */	lfs f1, "@2628"@sda21(r2)
 /* 803652D0 00362210  38 81 00 74 */	addi r4, r1, 0x74
 /* 803652D4 00362214  7C C0 D2 14 */	add r6, r0, r26
 /* 803652D8 00362218  80 A6 00 00 */	lwz r5, 0(r6)
@@ -661,7 +661,7 @@ clipBoids__8TRealoidFPQ26JDrama9TGraphics:
 /* 803653F8 00362338  C0 64 00 E8 */	lfs f3, 0xe8(r4)
 /* 803653FC 0036233C  C0 45 00 4C */	lfs f2, 0x4c(r5)
 /* 80365400 00362340  C0 25 00 48 */	lfs f1, 0x48(r5)
-/* 80365404 00362344  C0 82 09 84 */	lfs f4, $$22627@sda21(r2)
+/* 80365404 00362344  C0 82 09 84 */	lfs f4, "@2627"@sda21(r2)
 /* 80365408 00362348  4B D5 C0 0D */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 8036540C 0036234C  3B E0 00 00 */	li r31, 0
 /* 80365410 00362350  3B 80 00 00 */	li r28, 0
@@ -670,7 +670,7 @@ clipBoids__8TRealoidFPQ26JDrama9TGraphics:
 lbl_8036541C:
 /* 8036541C 0036235C  80 03 00 14 */	lwz r0, 0x14(r3)
 /* 80365420 00362360  7F C3 F3 78 */	mr r3, r30
-/* 80365424 00362364  C0 22 09 88 */	lfs f1, $$22628@sda21(r2)
+/* 80365424 00362364  C0 22 09 88 */	lfs f1, "@2628"@sda21(r2)
 /* 80365428 00362368  38 81 00 44 */	addi r4, r1, 0x44
 /* 8036542C 0036236C  7C C0 DA 14 */	add r6, r0, r27
 /* 80365430 00362370  80 A6 00 00 */	lwz r5, 0(r6)
@@ -740,9 +740,9 @@ lbl_8036550C:
 /* 80365514 00362454  4B CA 73 9D */	bl __nw__FUl
 /* 80365518 00362458  7C 7A 1B 79 */	or. r26, r3, r3
 /* 8036551C 0036245C  41 82 00 18 */	beq lbl_80365534
-/* 80365520 00362460  3C 60 80 3A */	lis r3, $$22688@ha
+/* 80365520 00362460  3C 60 80 3A */	lis r3, "@2688"@ha
 /* 80365524 00362464  80 81 00 54 */	lwz r4, 0x54(r1)
-/* 80365528 00362468  38 A3 7B 00 */	addi r5, r3, $$22688@l
+/* 80365528 00362468  38 A3 7B 00 */	addi r5, r3, "@2688"@l
 /* 8036552C 0036246C  38 7A 00 00 */	addi r3, r26, 0
 /* 80365530 00362470  4B FF F3 9D */	bl __ct__11TBoidLeaderFiPCc
 lbl_80365534:
@@ -768,7 +768,7 @@ lbl_80365534:
 /* 80365580 003624C0  80 9B 01 24 */	lwz r4, 0x124(r27)
 /* 80365584 003624C4  80 7B 01 50 */	lwz r3, 0x150(r27)
 /* 80365588 003624C8  80 84 00 00 */	lwz r4, 0(r4)
-/* 8036558C 003624CC  4B FF E9 5D */	bl setGraph__11TBoidLeaderFP9TGraphWebRCQ29JGeometry8TVec3$$0f$$1
+/* 8036558C 003624CC  4B FF E9 5D */	bl "setGraph__11TBoidLeaderFP9TGraphWebRCQ29JGeometry8TVec3<f>"
 /* 80365590 003624D0  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 80365594 003624D4  54 03 10 3A */	slwi r3, r0, 2
 /* 80365598 003624D8  4B CA 74 19 */	bl __nwa__FUl
@@ -778,7 +778,7 @@ lbl_80365534:
 /* 803655A8 003624E8  83 DB 00 78 */	lwz r30, 0x78(r27)
 /* 803655AC 003624EC  80 7B 00 10 */	lwz r3, 0x10(r27)
 /* 803655B0 003624F0  80 1B 00 14 */	lwz r0, 0x14(r27)
-/* 803655B4 003624F4  C3 E2 09 8C */	lfs f31, $$22689@sda21(r2)
+/* 803655B4 003624F4  C3 E2 09 8C */	lfs f31, "@2689"@sda21(r2)
 /* 803655B8 003624F8  90 61 00 48 */	stw r3, 0x48(r1)
 /* 803655BC 003624FC  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 803655C0 00362500  80 1B 00 18 */	lwz r0, 0x18(r27)
@@ -957,9 +957,9 @@ lbl_80365808:
 /* 80365824 00362764  90 1E 00 18 */	stw r0, 0x18(r30)
 /* 80365828 00362768  80 BF 00 00 */	lwz r5, 0(r31)
 /* 8036582C 0036276C  80 1F 00 04 */	lwz r0, 4(r31)
-/* 80365830 00362770  C0 22 09 78 */	lfs f1, $$22455@sda21(r2)
+/* 80365830 00362770  C0 22 09 78 */	lfs f1, "@2455"@sda21(r2)
 /* 80365834 00362774  90 A1 00 BC */	stw r5, 0xbc(r1)
-/* 80365838 00362778  C0 02 09 6C */	lfs f0, $$22452@sda21(r2)
+/* 80365838 00362778  C0 02 09 6C */	lfs f0, "@2452"@sda21(r2)
 /* 8036583C 0036277C  90 01 00 C0 */	stw r0, 0xc0(r1)
 /* 80365840 00362780  80 1F 00 08 */	lwz r0, 8(r31)
 /* 80365844 00362784  90 01 00 C4 */	stw r0, 0xc4(r1)
@@ -1103,7 +1103,7 @@ __ct__13TRealoidActorFP6MActor:
 /* 80365A4C 0036298C  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80365A50 00362990  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80365A54 00362994  3B E4 00 00 */	addi r31, r4, 0
-/* 80365A58 00362998  38 82 09 58 */	addi r4, r2, $$22339@sda21
+/* 80365A58 00362998  38 82 09 58 */	addi r4, r2, "@2339"@sda21
 /* 80365A5C 0036299C  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 80365A60 003629A0  3B C3 00 00 */	addi r30, r3, 0
 /* 80365A64 003629A4  4B DB 7C 69 */	bl __ct__9THitActorFPCc
@@ -1212,74 +1212,74 @@ lbl_80365BC4:
 /* 80365BD8 00362B18  38 21 00 18 */	addi r1, r1, 0x18
 /* 80365BDC 00362B1C  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__13TRealoidActorFv
-$$232$$2__dt__13TRealoidActorFv:
+.global "@32@__dt__13TRealoidActorFv"
+"@32@__dt__13TRealoidActorFv":
 /* 80365BE0 00362B20  38 63 FF E0 */	addi r3, r3, -32
 /* 80365BE4 00362B24  4B FF F0 68 */	b __dt__13TRealoidActorFv
 
-.global $$232$$2__dt__8TRealoidFv
-$$232$$2__dt__8TRealoidFv:
+.global "@32@__dt__8TRealoidFv"
+"@32@__dt__8TRealoidFv":
 /* 80365BE8 00362B28  38 63 FF E0 */	addi r3, r3, -32
 /* 80365BEC 00362B2C  4B FF F5 FC */	b __dt__8TRealoidFv
 
-.global $$232$$2__dt__5TFishFv
-$$232$$2__dt__5TFishFv:
+.global "@32@__dt__5TFishFv"
+"@32@__dt__5TFishFv":
 /* 80365BF0 00362B30  38 63 FF E0 */	addi r3, r3, -32
 /* 80365BF4 00362B34  4B FF FF 50 */	b __dt__5TFishFv
 
-.global $$232$$2__dt__8TFishoidFv
-$$232$$2__dt__8TFishoidFv:
+.global "@32@__dt__8TFishoidFv"
+"@32@__dt__8TFishoidFv":
 /* 80365BF8 00362B38  38 63 FF E0 */	addi r3, r3, -32
 /* 80365BFC 00362B3C  4B FF FE C4 */	b __dt__8TFishoidFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A49A4, 0x14
-$$21585:
+"@1585":
 	.incbin "baserom.dol", 0x3A49B8, 0x30
-$$21586:
+"@1586":
 	.incbin "baserom.dol", 0x3A49E8, 0x38
-$$21587:
+"@1587":
 	.incbin "baserom.dol", 0x3A4A20, 0x34
-$$21588:
+"@1588":
 	.incbin "baserom.dol", 0x3A4A54, 0x24
-$$22230:
+"@2230":
 	.incbin "baserom.dol", 0x3A4A78, 0xC
-$$22231:
+"@2231":
 	.incbin "baserom.dol", 0x3A4A84, 0xC
-$$22232:
+"@2232":
 	.incbin "baserom.dol", 0x3A4A90, 0xC
-$$22233:
+"@2233":
 	.incbin "baserom.dol", 0x3A4A9C, 0xC
-cFishoidMdlNames__9$$2unnamed$$2:
-  .4byte $$22230
-  .4byte $$22231
-  .4byte $$22232
-  .4byte $$22233
+"cFishoidMdlNames__9@unnamed@":
+  .4byte "@2230"
+  .4byte "@2231"
+  .4byte "@2232"
+  .4byte "@2233"
 entry$2319:
-    .4byte $$22230
+    .4byte "@2230"
     .4byte 0x10210000
     .4byte 0
-    .4byte $$22231
+    .4byte "@2231"
     .4byte 0x10210000
     .4byte 0
-    .4byte $$22232
+    .4byte "@2232"
     .4byte 0x10210000
     .4byte 0
-    .4byte $$22233
+    .4byte "@2233"
     .4byte 0x10210000
     .4byte 0
     .4byte 0
     .4byte 0
     .4byte 0
-$$22458:
+"@2458":
 	.incbin "baserom.dol", 0x3A4AF4, 0xC
-$$22688:
+"@2688":
 	.incbin "baserom.dol", 0x3A4B00, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1319,7 +1319,7 @@ __vt__8TFishoid:
   .4byte perform__8TFishoidFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__8TFishoidFv
+  .4byte "@32@__dt__8TFishoidFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1329,12 +1329,12 @@ __vt__8TFishoid:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1351,7 +1351,7 @@ __vt__8TFishoid:
   .4byte receiveMessage__11TSpineEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -1372,8 +1372,8 @@ __vt__8TFishoid:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -1391,7 +1391,7 @@ __vt__5TFish:
   .4byte perform__13TRealoidActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__5TFishFv
+  .4byte "@32@__dt__5TFishFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1401,12 +1401,12 @@ __vt__5TFish:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1423,7 +1423,7 @@ __vt__5TFish:
   .4byte receiveMessage__9THitActorFP9THitActorUl
   .4byte getTakingMtx__13TRealoidActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte init__5TFishFv
 .global __vt__8TRealoid
@@ -1439,7 +1439,7 @@ __vt__8TRealoid:
   .4byte perform__8TRealoidFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__8TRealoidFv
+  .4byte "@32@__dt__8TRealoidFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1449,12 +1449,12 @@ __vt__8TRealoid:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1471,7 +1471,7 @@ __vt__8TRealoid:
   .4byte receiveMessage__11TSpineEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -1492,8 +1492,8 @@ __vt__8TRealoid:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -1511,7 +1511,7 @@ __vt__13TRealoidActor:
   .4byte perform__13TRealoidActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__13TRealoidActorFv
+  .4byte "@32@__dt__13TRealoidActorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1521,12 +1521,12 @@ __vt__13TRealoidActor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1543,40 +1543,40 @@ __vt__13TRealoidActor:
   .4byte receiveMessage__9THitActorFP9THitActorUl
   .4byte getTakingMtx__13TRealoidActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte 0
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22339:
+"@2339":
 	.incbin "baserom.dol", 0x3EC658, 0x8
-$$22362:
+"@2362":
   .4byte 0
-$$22450:
+"@2450":
 	.incbin "baserom.dol", 0x3EC664, 0x4
-$$22451:
+"@2451":
 	.incbin "baserom.dol", 0x3EC668, 0x4
-$$22452:
+"@2452":
 	.incbin "baserom.dol", 0x3EC66C, 0x4
-$$22453:
+"@2453":
 	.incbin "baserom.dol", 0x3EC670, 0x4
-$$22454:
+"@2454":
 	.incbin "baserom.dol", 0x3EC674, 0x4
-$$22455:
+"@2455":
   .4byte 0
-$$22456:
+"@2456":
 	.incbin "baserom.dol", 0x3EC67C, 0x4
-$$22457:
+"@2457":
 	.incbin "baserom.dol", 0x3EC680, 0x4
-$$22627:
+"@2627":
 	.incbin "baserom.dol", 0x3EC684, 0x4
-$$22628:
+"@2628":
 	.incbin "baserom.dol", 0x3EC688, 0x4
-$$22689:
+"@2689":
 	.incbin "baserom.dol", 0x3EC68C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22300:
+"@2300":
 	.skip 0x10

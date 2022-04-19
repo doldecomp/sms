@@ -1,62 +1,62 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv
-initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv:
+.global "initUserBuiltin__29TSpcTypedBinary<10TLiveActor>Fv"
+"initUserBuiltin__29TSpcTypedBinary<10TLiveActor>Fv":
 /* 80112AC4 0010FA04  7C 08 02 A6 */	mflr r0
-/* 80112AC8 0010FA08  3C 80 80 38 */	lis r4, $$22725@ha
+/* 80112AC8 0010FA08  3C 80 80 38 */	lis r4, "@2725"@ha
 /* 80112ACC 0010FA0C  90 01 00 04 */	stw r0, 4(r1)
-/* 80112AD0 0010FA10  3C A0 80 11 */	lis r5, linPushNerve__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112AD4 0010FA14  38 84 A0 B0 */	addi r4, r4, $$22725@l
+/* 80112AD0 0010FA10  3C A0 80 11 */	lis r5, "linPushNerve__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112AD4 0010FA14  38 84 A0 B0 */	addi r4, r4, "@2725"@l
 /* 80112AD8 0010FA18  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80112ADC 0010FA1C  38 A5 2B B8 */	addi r5, r5, linPushNerve__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112ADC 0010FA1C  38 A5 2B B8 */	addi r5, r5, "linPushNerve__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112AE0 0010FA20  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80112AE4 0010FA24  3B E3 00 00 */	addi r31, r3, 0
 /* 80112AE8 0010FA28  48 00 8F 21 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112AEC 0010FA2C  3C 60 80 11 */	lis r3, linSetBck__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112AF0 0010FA30  38 A3 41 60 */	addi r5, r3, linSetBck__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112AEC 0010FA2C  3C 60 80 11 */	lis r3, "linSetBck__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112AF0 0010FA30  38 A3 41 60 */	addi r5, r3, "linSetBck__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112AF4 0010FA34  38 7F 00 00 */	addi r3, r31, 0
-/* 80112AF8 0010FA38  38 82 96 78 */	addi r4, r2, $$22726@sda21
+/* 80112AF8 0010FA38  38 82 96 78 */	addi r4, r2, "@2726"@sda21
 /* 80112AFC 0010FA3C  48 00 8F 0D */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B00 0010FA40  3C 60 80 11 */	lis r3, linSetBpk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B04 0010FA44  38 A3 40 38 */	addi r5, r3, linSetBpk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B00 0010FA40  3C 60 80 11 */	lis r3, "linSetBpk__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B04 0010FA44  38 A3 40 38 */	addi r5, r3, "linSetBpk__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B08 0010FA48  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B0C 0010FA4C  38 82 96 80 */	addi r4, r2, $$22727@sda21
+/* 80112B0C 0010FA4C  38 82 96 80 */	addi r4, r2, "@2727"@sda21
 /* 80112B10 0010FA50  48 00 8E F9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B14 0010FA54  3C 60 80 11 */	lis r3, linSetBtp__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B18 0010FA58  38 A3 3F 10 */	addi r5, r3, linSetBtp__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B14 0010FA54  3C 60 80 11 */	lis r3, "linSetBtp__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B18 0010FA58  38 A3 3F 10 */	addi r5, r3, "linSetBtp__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B1C 0010FA5C  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B20 0010FA60  38 82 96 88 */	addi r4, r2, $$22728@sda21
+/* 80112B20 0010FA60  38 82 96 88 */	addi r4, r2, "@2728"@sda21
 /* 80112B24 0010FA64  48 00 8E E5 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B28 0010FA68  3C 60 80 11 */	lis r3, linSetBtk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B2C 0010FA6C  38 A3 3D E8 */	addi r5, r3, linSetBtk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B28 0010FA68  3C 60 80 11 */	lis r3, "linSetBtk__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B2C 0010FA6C  38 A3 3D E8 */	addi r5, r3, "linSetBtk__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B30 0010FA70  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B34 0010FA74  38 82 96 90 */	addi r4, r2, $$22729@sda21
+/* 80112B34 0010FA74  38 82 96 90 */	addi r4, r2, "@2729"@sda21
 /* 80112B38 0010FA78  48 00 8E D1 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B3C 0010FA7C  3C 60 80 11 */	lis r3, linSetBlk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B40 0010FA80  38 A3 3C C0 */	addi r5, r3, linSetBlk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B3C 0010FA7C  3C 60 80 11 */	lis r3, "linSetBlk__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B40 0010FA80  38 A3 3C C0 */	addi r5, r3, "linSetBlk__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B44 0010FA84  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B48 0010FA88  38 82 96 98 */	addi r4, r2, $$22730@sda21
+/* 80112B48 0010FA88  38 82 96 98 */	addi r4, r2, "@2730"@sda21
 /* 80112B4C 0010FA8C  48 00 8E BD */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B50 0010FA90  3C 60 80 11 */	lis r3, linSetBls__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B54 0010FA94  38 A3 3B AC */	addi r5, r3, linSetBls__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B50 0010FA90  3C 60 80 11 */	lis r3, "linSetBls__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B54 0010FA94  38 A3 3B AC */	addi r5, r3, "linSetBls__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B58 0010FA98  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B5C 0010FA9C  38 82 96 A0 */	addi r4, r2, $$22731@sda21
+/* 80112B5C 0010FA9C  38 82 96 A0 */	addi r4, r2, "@2731"@sda21
 /* 80112B60 0010FAA0  48 00 8E A9 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B64 0010FAA4  3C 60 80 11 */	lis r3, linSetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B68 0010FAA8  38 A3 2D B0 */	addi r5, r3, linSetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B64 0010FAA4  3C 60 80 11 */	lis r3, "linSetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B68 0010FAA8  38 A3 2D B0 */	addi r5, r3, "linSetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B6C 0010FAAC  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B70 0010FAB0  38 82 96 A8 */	addi r4, r2, $$22732@sda21
+/* 80112B70 0010FAB0  38 82 96 A8 */	addi r4, r2, "@2732"@sda21
 /* 80112B74 0010FAB4  48 00 8E 95 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B78 0010FAB8  3C 60 80 11 */	lis r3, linGetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B7C 0010FABC  38 A3 31 A0 */	addi r5, r3, linGetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
+/* 80112B78 0010FAB8  3C 60 80 11 */	lis r3, "linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B7C 0010FABC  38 A3 31 A0 */	addi r5, r3, "linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
 /* 80112B80 0010FAC0  38 7F 00 00 */	addi r3, r31, 0
-/* 80112B84 0010FAC4  38 82 96 B0 */	addi r4, r2, $$22733@sda21
+/* 80112B84 0010FAC4  38 82 96 B0 */	addi r4, r2, "@2733"@sda21
 /* 80112B88 0010FAC8  48 00 8E 81 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
-/* 80112B8C 0010FACC  3C 80 80 38 */	lis r4, $$22734@ha
-/* 80112B90 0010FAD0  3C 60 80 11 */	lis r3, linSetAnmRate__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@ha
-/* 80112B94 0010FAD4  38 A3 39 38 */	addi r5, r3, linSetAnmRate__FP29TSpcTypedInterp$$010TLiveActor$$1Ul@l
-/* 80112B98 0010FAD8  38 84 A0 BC */	addi r4, r4, $$22734@l
+/* 80112B8C 0010FACC  3C 80 80 38 */	lis r4, "@2734"@ha
+/* 80112B90 0010FAD0  3C 60 80 11 */	lis r3, "linSetAnmRate__FP29TSpcTypedInterp<10TLiveActor>Ul"@ha
+/* 80112B94 0010FAD4  38 A3 39 38 */	addi r5, r3, "linSetAnmRate__FP29TSpcTypedInterp<10TLiveActor>Ul"@l
+/* 80112B98 0010FAD8  38 84 A0 BC */	addi r4, r4, "@2734"@l
 /* 80112B9C 0010FADC  38 7F 00 00 */	addi r3, r31, 0
 /* 80112BA0 0010FAE0  48 00 8E 69 */	bl bindSystemDataToSymbol__10TSpcBinaryFPCcUl
 /* 80112BA4 0010FAE4  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -65,8 +65,8 @@ initUserBuiltin__29TSpcTypedBinary$$010TLiveActor$$1Fv:
 /* 80112BB0 0010FAF0  7C 08 03 A6 */	mtlr r0
 /* 80112BB4 0010FAF4  4E 80 00 20 */	blr 
 
-.global linPushNerve__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linPushNerve__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linPushNerve__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linPushNerve__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80112BB8 0010FAF8  7C 08 02 A6 */	mflr r0
 /* 80112BBC 0010FAFC  90 01 00 04 */	stw r0, 4(r1)
 /* 80112BC0 0010FB00  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -76,8 +76,8 @@ linPushNerve__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80112BD0 0010FB10  7C 7E 1B 78 */	mr r30, r3
 /* 80112BD4 0010FB14  93 A1 00 44 */	stw r29, 0x44(r1)
 /* 80112BD8 0010FB18  90 81 00 0C */	stw r4, 0xc(r1)
-/* 80112BDC 0010FB1C  3C 80 80 38 */	lis r4, $$21490@ha
-/* 80112BE0 0010FB20  3B E4 9F D0 */	addi r31, r4, $$21490@l
+/* 80112BDC 0010FB1C  3C 80 80 38 */	lis r4, "@1490"@ha
+/* 80112BE0 0010FB20  3B E4 9F D0 */	addi r31, r4, "@1490"@l
 /* 80112BE4 0010FB24  38 80 00 01 */	li r4, 1
 /* 80112BE8 0010FB28  48 00 48 49 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 80112BEC 0010FB2C  80 7E 00 1C */	lwz r3, 0x1c(r30)
@@ -206,8 +206,8 @@ lbl_80112D94:
 /* 80112DA8 0010FCE8  38 21 00 50 */	addi r1, r1, 0x50
 /* 80112DAC 0010FCEC  4E 80 00 20 */	blr 
 
-.global linSetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80112DB0 0010FCF0  7C 08 02 A6 */	mflr r0
 /* 80112DB4 0010FCF4  90 01 00 04 */	stw r0, 4(r1)
 /* 80112DB8 0010FCF8  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -215,8 +215,8 @@ linSetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80112DC0 0010FD00  7C 7B 1B 78 */	mr r27, r3
 /* 80112DC4 0010FD04  38 A1 00 0C */	addi r5, r1, 0xc
 /* 80112DC8 0010FD08  90 81 00 0C */	stw r4, 0xc(r1)
-/* 80112DCC 0010FD0C  3C 80 80 38 */	lis r4, $$21490@ha
-/* 80112DD0 0010FD10  3B E4 9F D0 */	addi r31, r4, $$21490@l
+/* 80112DCC 0010FD0C  3C 80 80 38 */	lis r4, "@1490"@ha
+/* 80112DD0 0010FD10  3B E4 9F D0 */	addi r31, r4, "@1490"@l
 /* 80112DD4 0010FD14  38 80 00 03 */	li r4, 3
 /* 80112DD8 0010FD18  48 00 46 59 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 80112DDC 0010FD1C  80 7B 00 1C */	lwz r3, 0x1c(r27)
@@ -310,7 +310,7 @@ lbl_80112F04:
 lbl_80112F24:
 /* 80112F24 0010FE64  80 61 00 58 */	lwz r3, 0x58(r1)
 /* 80112F28 0010FE68  3C 00 43 30 */	lis r0, 0x4330
-/* 80112F2C 0010FE6C  C8 22 96 C0 */	lfd f1, $$22878@sda21(r2)
+/* 80112F2C 0010FE6C  C8 22 96 C0 */	lfd f1, "@2878"@sda21(r2)
 /* 80112F30 0010FE70  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 80112F34 0010FE74  90 61 00 64 */	stw r3, 0x64(r1)
 /* 80112F38 0010FE78  90 01 00 60 */	stw r0, 0x60(r1)
@@ -321,7 +321,7 @@ lbl_80112F48:
 /* 80112F48 0010FE88  C0 41 00 58 */	lfs f2, 0x58(r1)
 /* 80112F4C 0010FE8C  48 00 00 08 */	b lbl_80112F54
 lbl_80112F50:
-/* 80112F50 0010FE90  C0 42 96 B8 */	lfs f2, $$22875@sda21(r2)
+/* 80112F50 0010FE90  C0 42 96 B8 */	lfs f2, "@2875"@sda21(r2)
 lbl_80112F54:
 /* 80112F54 0010FE94  2C 04 00 01 */	cmpwi r4, 1
 /* 80112F58 0010FE98  41 82 00 1C */	beq lbl_80112F74
@@ -352,7 +352,7 @@ lbl_80112FA4:
 /* 80112FA8 0010FEE8  40 80 01 90 */	bge lbl_80113138
 /* 80112FAC 0010FEEC  48 00 01 1C */	b lbl_801130C8
 lbl_80112FB0:
-/* 80112FB0 0010FEF0  C0 02 96 BC */	lfs f0, $$22876@sda21(r2)
+/* 80112FB0 0010FEF0  C0 02 96 BC */	lfs f0, "@2876"@sda21(r2)
 /* 80112FB4 0010FEF4  48 00 00 08 */	b lbl_80112FBC
 lbl_80112FB8:
 /* 80112FB8 0010FEF8  EC 42 00 28 */	fsubs f2, f2, f0
@@ -360,8 +360,8 @@ lbl_80112FBC:
 /* 80112FBC 0010FEFC  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80112FC0 0010FF00  4C 41 13 82 */	cror 2, 1, 2
 /* 80112FC4 0010FF04  41 82 FF F4 */	beq lbl_80112FB8
-/* 80112FC8 0010FF08  C0 22 96 BC */	lfs f1, $$22876@sda21(r2)
-/* 80112FCC 0010FF0C  C0 02 96 B8 */	lfs f0, $$22875@sda21(r2)
+/* 80112FC8 0010FF08  C0 22 96 BC */	lfs f1, "@2876"@sda21(r2)
+/* 80112FCC 0010FF0C  C0 02 96 B8 */	lfs f0, "@2875"@sda21(r2)
 /* 80112FD0 0010FF10  48 00 00 08 */	b lbl_80112FD8
 lbl_80112FD4:
 /* 80112FD4 0010FF14  EC 42 08 2A */	fadds f2, f2, f1
@@ -510,8 +510,8 @@ lbl_8011318C:
 /* 80113198 001100D8  7C 08 03 A6 */	mtlr r0
 /* 8011319C 001100DC  4E 80 00 20 */	blr 
 
-.global linGetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linGetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 801131A0 001100E0  7C 08 02 A6 */	mflr r0
 /* 801131A4 001100E4  90 01 00 04 */	stw r0, 4(r1)
 /* 801131A8 001100E8  94 21 FF 20 */	stwu r1, -0xe0(r1)
@@ -522,8 +522,8 @@ linGetSRT__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 801131BC 001100FC  93 81 00 D0 */	stw r28, 0xd0(r1)
 /* 801131C0 00110100  7C 7C 1B 78 */	mr r28, r3
 /* 801131C4 00110104  90 81 00 0C */	stw r4, 0xc(r1)
-/* 801131C8 00110108  3C 80 80 38 */	lis r4, $$21490@ha
-/* 801131CC 0011010C  3B E4 9F D0 */	addi r31, r4, $$21490@l
+/* 801131C8 00110108  3C 80 80 38 */	lis r4, "@1490"@ha
+/* 801131CC 0011010C  3B E4 9F D0 */	addi r31, r4, "@1490"@l
 /* 801131D0 00110110  38 80 00 02 */	li r4, 2
 /* 801131D4 00110114  48 00 42 5D */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 801131D8 00110118  80 7C 00 1C */	lwz r3, 0x1c(r28)
@@ -1053,8 +1053,8 @@ lbl_80113918:
 /* 80113930 00110870  38 21 00 E0 */	addi r1, r1, 0xe0
 /* 80113934 00110874  4E 80 00 20 */	blr 
 
-.global linSetAnmRate__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetAnmRate__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetAnmRate__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetAnmRate__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80113938 00110878  7C 08 02 A6 */	mflr r0
 /* 8011393C 0011087C  90 01 00 04 */	stw r0, 4(r1)
 /* 80113940 00110880  94 21 FF A0 */	stwu r1, -0x60(r1)
@@ -1065,8 +1065,8 @@ linSetAnmRate__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80113954 00110894  93 81 00 50 */	stw r28, 0x50(r1)
 /* 80113958 00110898  7C 7C 1B 78 */	mr r28, r3
 /* 8011395C 0011089C  90 81 00 0C */	stw r4, 0xc(r1)
-/* 80113960 001108A0  3C 80 80 38 */	lis r4, $$21490@ha
-/* 80113964 001108A4  3B E4 9F D0 */	addi r31, r4, $$21490@l
+/* 80113960 001108A0  3C 80 80 38 */	lis r4, "@1490"@ha
+/* 80113964 001108A4  3B E4 9F D0 */	addi r31, r4, "@1490"@l
 /* 80113968 001108A8  38 80 00 02 */	li r4, 2
 /* 8011396C 001108AC  48 00 3A C5 */	bl verifyArgNum__10TSpcInterpFUlPUl
 /* 80113970 001108B0  80 7C 00 1C */	lwz r3, 0x1c(r28)
@@ -1158,7 +1158,7 @@ lbl_80113A8C:
 lbl_80113AA4:
 /* 80113AA4 001109E4  80 61 00 3C */	lwz r3, 0x3c(r1)
 /* 80113AA8 001109E8  3C 00 43 30 */	lis r0, 0x4330
-/* 80113AAC 001109EC  C8 22 96 C0 */	lfd f1, $$22878@sda21(r2)
+/* 80113AAC 001109EC  C8 22 96 C0 */	lfd f1, "@2878"@sda21(r2)
 /* 80113AB0 001109F0  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 80113AB4 001109F4  90 61 00 4C */	stw r3, 0x4c(r1)
 /* 80113AB8 001109F8  90 01 00 48 */	stw r0, 0x48(r1)
@@ -1169,7 +1169,7 @@ lbl_80113AC8:
 /* 80113AC8 00110A08  C0 21 00 3C */	lfs f1, 0x3c(r1)
 /* 80113ACC 00110A0C  48 00 00 08 */	b lbl_80113AD4
 lbl_80113AD0:
-/* 80113AD0 00110A10  C0 22 96 B8 */	lfs f1, $$22875@sda21(r2)
+/* 80113AD0 00110A10  C0 22 96 B8 */	lfs f1, "@2875"@sda21(r2)
 lbl_80113AD4:
 /* 80113AD4 00110A14  80 7E 00 74 */	lwz r3, 0x74(r30)
 /* 80113AD8 00110A18  38 80 00 00 */	li r4, 0
@@ -1185,7 +1185,7 @@ lbl_80113AE4:
 lbl_80113AFC:
 /* 80113AFC 00110A3C  80 61 00 3C */	lwz r3, 0x3c(r1)
 /* 80113B00 00110A40  3C 00 43 30 */	lis r0, 0x4330
-/* 80113B04 00110A44  C8 22 96 C0 */	lfd f1, $$22878@sda21(r2)
+/* 80113B04 00110A44  C8 22 96 C0 */	lfd f1, "@2878"@sda21(r2)
 /* 80113B08 00110A48  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 80113B0C 00110A4C  90 61 00 4C */	stw r3, 0x4c(r1)
 /* 80113B10 00110A50  90 01 00 48 */	stw r0, 0x48(r1)
@@ -1196,7 +1196,7 @@ lbl_80113B20:
 /* 80113B20 00110A60  C0 21 00 3C */	lfs f1, 0x3c(r1)
 /* 80113B24 00110A64  48 00 00 08 */	b lbl_80113B2C
 lbl_80113B28:
-/* 80113B28 00110A68  C0 22 96 B8 */	lfs f1, $$22875@sda21(r2)
+/* 80113B28 00110A68  C0 22 96 B8 */	lfs f1, "@2875"@sda21(r2)
 lbl_80113B2C:
 /* 80113B2C 00110A6C  80 7E 00 74 */	lwz r3, 0x74(r30)
 /* 80113B30 00110A70  38 80 00 03 */	li r4, 3
@@ -1234,8 +1234,8 @@ lbl_80113B8C:
 /* 80113BA4 00110AE4  38 21 00 60 */	addi r1, r1, 0x60
 /* 80113BA8 00110AE8  4E 80 00 20 */	blr 
 
-.global linSetBls__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBls__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBls__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBls__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80113BAC 00110AEC  7C 08 02 A6 */	mflr r0
 /* 80113BB0 00110AF0  90 01 00 04 */	stw r0, 4(r1)
 /* 80113BB4 00110AF4  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1248,9 +1248,9 @@ linSetBls__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80113BD0 00110B10  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80113BD4 00110B14  2C 03 00 00 */	cmpwi r3, 0
 /* 80113BD8 00110B18  41 81 00 34 */	bgt lbl_80113C0C
-/* 80113BDC 00110B1C  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80113BDC 00110B1C  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 80113BE0 00110B20  4C C6 31 82 */	crclr 6
-/* 80113BE4 00110B24  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80113BE4 00110B24  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 80113BE8 00110B28  4B FC 94 BD */	bl SpcTrace__FPCce
 /* 80113BEC 00110B2C  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 80113BF0 00110B30  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1288,9 +1288,9 @@ lbl_80113C54:
 /* 80113C64 00110BA4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80113C68 00110BA8  7C 03 00 00 */	cmpw r3, r0
 /* 80113C6C 00110BAC  41 80 00 18 */	blt lbl_80113C84
-/* 80113C70 00110BB0  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80113C70 00110BB0  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 80113C74 00110BB4  4C C6 31 82 */	crclr 6
-/* 80113C78 00110BB8  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80113C78 00110BB8  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 80113C7C 00110BBC  4B FC 94 29 */	bl SpcTrace__FPCce
 /* 80113C80 00110BC0  48 00 00 2C */	b lbl_80113CAC
 lbl_80113C84:
@@ -1311,8 +1311,8 @@ lbl_80113CAC:
 /* 80113CB8 00110BF8  7C 08 03 A6 */	mtlr r0
 /* 80113CBC 00110BFC  4E 80 00 20 */	blr 
 
-.global linSetBlk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBlk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBlk__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBlk__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80113CC0 00110C00  7C 08 02 A6 */	mflr r0
 /* 80113CC4 00110C04  90 01 00 04 */	stw r0, 4(r1)
 /* 80113CC8 00110C08  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1325,9 +1325,9 @@ linSetBlk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80113CE4 00110C24  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80113CE8 00110C28  2C 03 00 00 */	cmpwi r3, 0
 /* 80113CEC 00110C2C  41 81 00 34 */	bgt lbl_80113D20
-/* 80113CF0 00110C30  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80113CF0 00110C30  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 80113CF4 00110C34  4C C6 31 82 */	crclr 6
-/* 80113CF8 00110C38  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80113CF8 00110C38  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 80113CFC 00110C3C  4B FC 93 A9 */	bl SpcTrace__FPCce
 /* 80113D00 00110C40  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 80113D04 00110C44  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1362,7 +1362,7 @@ lbl_80113D6C:
 /* 80113D6C 00110CAC  80 81 00 34 */	lwz r4, 0x34(r1)
 /* 80113D70 00110CB0  48 00 00 08 */	b lbl_80113D78
 lbl_80113D74:
-/* 80113D74 00110CB4  38 82 96 C8 */	addi r4, r2, $$23178@sda21
+/* 80113D74 00110CB4  38 82 96 C8 */	addi r4, r2, "@3178"@sda21
 lbl_80113D78:
 /* 80113D78 00110CB8  4B FB F9 05 */	bl setBlk__6MActorFPCc
 lbl_80113D7C:
@@ -1373,9 +1373,9 @@ lbl_80113D7C:
 /* 80113D8C 00110CCC  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80113D90 00110CD0  7C 03 00 00 */	cmpw r3, r0
 /* 80113D94 00110CD4  41 80 00 18 */	blt lbl_80113DAC
-/* 80113D98 00110CD8  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80113D98 00110CD8  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 80113D9C 00110CDC  4C C6 31 82 */	crclr 6
-/* 80113DA0 00110CE0  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80113DA0 00110CE0  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 80113DA4 00110CE4  4B FC 93 01 */	bl SpcTrace__FPCce
 /* 80113DA8 00110CE8  48 00 00 2C */	b lbl_80113DD4
 lbl_80113DAC:
@@ -1396,8 +1396,8 @@ lbl_80113DD4:
 /* 80113DE0 00110D20  7C 08 03 A6 */	mtlr r0
 /* 80113DE4 00110D24  4E 80 00 20 */	blr 
 
-.global linSetBtk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBtk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBtk__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBtk__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80113DE8 00110D28  7C 08 02 A6 */	mflr r0
 /* 80113DEC 00110D2C  90 01 00 04 */	stw r0, 4(r1)
 /* 80113DF0 00110D30  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1410,9 +1410,9 @@ linSetBtk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80113E0C 00110D4C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80113E10 00110D50  2C 03 00 00 */	cmpwi r3, 0
 /* 80113E14 00110D54  41 81 00 34 */	bgt lbl_80113E48
-/* 80113E18 00110D58  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80113E18 00110D58  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 80113E1C 00110D5C  4C C6 31 82 */	crclr 6
-/* 80113E20 00110D60  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80113E20 00110D60  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 80113E24 00110D64  4B FC 92 81 */	bl SpcTrace__FPCce
 /* 80113E28 00110D68  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 80113E2C 00110D6C  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1447,7 +1447,7 @@ lbl_80113E94:
 /* 80113E94 00110DD4  80 81 00 34 */	lwz r4, 0x34(r1)
 /* 80113E98 00110DD8  48 00 00 08 */	b lbl_80113EA0
 lbl_80113E9C:
-/* 80113E9C 00110DDC  38 82 96 C8 */	addi r4, r2, $$23178@sda21
+/* 80113E9C 00110DDC  38 82 96 C8 */	addi r4, r2, "@3178"@sda21
 lbl_80113EA0:
 /* 80113EA0 00110DE0  4B FB FA 71 */	bl setBtk__6MActorFPCc
 lbl_80113EA4:
@@ -1458,9 +1458,9 @@ lbl_80113EA4:
 /* 80113EB4 00110DF4  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80113EB8 00110DF8  7C 03 00 00 */	cmpw r3, r0
 /* 80113EBC 00110DFC  41 80 00 18 */	blt lbl_80113ED4
-/* 80113EC0 00110E00  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80113EC0 00110E00  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 80113EC4 00110E04  4C C6 31 82 */	crclr 6
-/* 80113EC8 00110E08  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80113EC8 00110E08  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 80113ECC 00110E0C  4B FC 91 D9 */	bl SpcTrace__FPCce
 /* 80113ED0 00110E10  48 00 00 2C */	b lbl_80113EFC
 lbl_80113ED4:
@@ -1481,8 +1481,8 @@ lbl_80113EFC:
 /* 80113F08 00110E48  7C 08 03 A6 */	mtlr r0
 /* 80113F0C 00110E4C  4E 80 00 20 */	blr 
 
-.global linSetBtp__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBtp__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBtp__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBtp__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80113F10 00110E50  7C 08 02 A6 */	mflr r0
 /* 80113F14 00110E54  90 01 00 04 */	stw r0, 4(r1)
 /* 80113F18 00110E58  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1495,9 +1495,9 @@ linSetBtp__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80113F34 00110E74  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80113F38 00110E78  2C 03 00 00 */	cmpwi r3, 0
 /* 80113F3C 00110E7C  41 81 00 34 */	bgt lbl_80113F70
-/* 80113F40 00110E80  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80113F40 00110E80  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 80113F44 00110E84  4C C6 31 82 */	crclr 6
-/* 80113F48 00110E88  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80113F48 00110E88  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 80113F4C 00110E8C  4B FC 91 59 */	bl SpcTrace__FPCce
 /* 80113F50 00110E90  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 80113F54 00110E94  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1532,7 +1532,7 @@ lbl_80113FBC:
 /* 80113FBC 00110EFC  80 81 00 34 */	lwz r4, 0x34(r1)
 /* 80113FC0 00110F00  48 00 00 08 */	b lbl_80113FC8
 lbl_80113FC4:
-/* 80113FC4 00110F04  38 82 96 C8 */	addi r4, r2, $$23178@sda21
+/* 80113FC4 00110F04  38 82 96 C8 */	addi r4, r2, "@3178"@sda21
 lbl_80113FC8:
 /* 80113FC8 00110F08  4B FB FB ED */	bl setBtp__6MActorFPCc
 lbl_80113FCC:
@@ -1543,9 +1543,9 @@ lbl_80113FCC:
 /* 80113FDC 00110F1C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80113FE0 00110F20  7C 03 00 00 */	cmpw r3, r0
 /* 80113FE4 00110F24  41 80 00 18 */	blt lbl_80113FFC
-/* 80113FE8 00110F28  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80113FE8 00110F28  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 80113FEC 00110F2C  4C C6 31 82 */	crclr 6
-/* 80113FF0 00110F30  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80113FF0 00110F30  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 80113FF4 00110F34  4B FC 90 B1 */	bl SpcTrace__FPCce
 /* 80113FF8 00110F38  48 00 00 2C */	b lbl_80114024
 lbl_80113FFC:
@@ -1566,8 +1566,8 @@ lbl_80114024:
 /* 80114030 00110F70  7C 08 03 A6 */	mtlr r0
 /* 80114034 00110F74  4E 80 00 20 */	blr 
 
-.global linSetBpk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBpk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBpk__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBpk__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80114038 00110F78  7C 08 02 A6 */	mflr r0
 /* 8011403C 00110F7C  90 01 00 04 */	stw r0, 4(r1)
 /* 80114040 00110F80  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1580,9 +1580,9 @@ linSetBpk__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 8011405C 00110F9C  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80114060 00110FA0  2C 03 00 00 */	cmpwi r3, 0
 /* 80114064 00110FA4  41 81 00 34 */	bgt lbl_80114098
-/* 80114068 00110FA8  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80114068 00110FA8  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 8011406C 00110FAC  4C C6 31 82 */	crclr 6
-/* 80114070 00110FB0  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80114070 00110FB0  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 80114074 00110FB4  4B FC 90 31 */	bl SpcTrace__FPCce
 /* 80114078 00110FB8  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 8011407C 00110FBC  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1617,7 +1617,7 @@ lbl_801140E4:
 /* 801140E4 00111024  80 81 00 34 */	lwz r4, 0x34(r1)
 /* 801140E8 00111028  48 00 00 08 */	b lbl_801140F0
 lbl_801140EC:
-/* 801140EC 0011102C  38 82 96 C8 */	addi r4, r2, $$23178@sda21
+/* 801140EC 0011102C  38 82 96 C8 */	addi r4, r2, "@3178"@sda21
 lbl_801140F0:
 /* 801140F0 00111030  4B FB FD 59 */	bl setBpk__6MActorFPCc
 lbl_801140F4:
@@ -1628,9 +1628,9 @@ lbl_801140F4:
 /* 80114104 00111044  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80114108 00111048  7C 03 00 00 */	cmpw r3, r0
 /* 8011410C 0011104C  41 80 00 18 */	blt lbl_80114124
-/* 80114110 00111050  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80114110 00111050  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 80114114 00111054  4C C6 31 82 */	crclr 6
-/* 80114118 00111058  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80114118 00111058  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 8011411C 0011105C  4B FC 8F 89 */	bl SpcTrace__FPCce
 /* 80114120 00111060  48 00 00 2C */	b lbl_8011414C
 lbl_80114124:
@@ -1651,8 +1651,8 @@ lbl_8011414C:
 /* 80114158 00111098  7C 08 03 A6 */	mtlr r0
 /* 8011415C 0011109C  4E 80 00 20 */	blr 
 
-.global linSetBck__FP29TSpcTypedInterp$$010TLiveActor$$1Ul
-linSetBck__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
+.global "linSetBck__FP29TSpcTypedInterp<10TLiveActor>Ul"
+"linSetBck__FP29TSpcTypedInterp<10TLiveActor>Ul":
 /* 80114160 001110A0  7C 08 02 A6 */	mflr r0
 /* 80114164 001110A4  90 01 00 04 */	stw r0, 4(r1)
 /* 80114168 001110A8  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1665,9 +1665,9 @@ linSetBck__FP29TSpcTypedInterp$$010TLiveActor$$1Ul:
 /* 80114184 001110C4  80 7F 00 1C */	lwz r3, 0x1c(r31)
 /* 80114188 001110C8  2C 03 00 00 */	cmpwi r3, 0
 /* 8011418C 001110CC  41 81 00 34 */	bgt lbl_801141C0
-/* 80114190 001110D0  3C 60 80 38 */	lis r3, $$22777@ha
+/* 80114190 001110D0  3C 60 80 38 */	lis r3, "@2777"@ha
 /* 80114194 001110D4  4C C6 31 82 */	crclr 6
-/* 80114198 001110D8  38 63 A0 C8 */	addi r3, r3, $$22777@l
+/* 80114198 001110D8  38 63 A0 C8 */	addi r3, r3, "@2777"@l
 /* 8011419C 001110DC  4B FC 8F 09 */	bl SpcTrace__FPCce
 /* 801141A0 001110E0  80 1F 00 1C */	lwz r0, 0x1c(r31)
 /* 801141A4 001110E4  80 7F 00 20 */	lwz r3, 0x20(r31)
@@ -1702,7 +1702,7 @@ lbl_8011420C:
 /* 8011420C 0011114C  80 81 00 34 */	lwz r4, 0x34(r1)
 /* 80114210 00111150  48 00 00 08 */	b lbl_80114218
 lbl_80114214:
-/* 80114214 00111154  38 82 96 C8 */	addi r4, r2, $$23178@sda21
+/* 80114214 00111154  38 82 96 C8 */	addi r4, r2, "@3178"@sda21
 lbl_80114218:
 /* 80114218 00111158  4B FB FF 45 */	bl setBck__6MActorFPCc
 lbl_8011421C:
@@ -1713,9 +1713,9 @@ lbl_8011421C:
 /* 8011422C 0011116C  80 1F 00 18 */	lwz r0, 0x18(r31)
 /* 80114230 00111170  7C 03 00 00 */	cmpw r3, r0
 /* 80114234 00111174  41 80 00 18 */	blt lbl_8011424C
-/* 80114238 00111178  3C 60 80 38 */	lis r3, $$22778@ha
+/* 80114238 00111178  3C 60 80 38 */	lis r3, "@2778"@ha
 /* 8011423C 0011117C  4C C6 31 82 */	crclr 6
-/* 80114240 00111180  38 63 A0 E8 */	addi r3, r3, $$22778@l
+/* 80114240 00111180  38 63 A0 E8 */	addi r3, r3, "@2778"@l
 /* 80114244 00111184  4B FC 8E 61 */	bl SpcTrace__FPCce
 /* 80114248 00111188  48 00 00 2C */	b lbl_80114274
 lbl_8011424C:
@@ -1743,8 +1743,8 @@ NerveGetByIndex__Fi:
 /* 80114290 001111D0  90 01 00 04 */	stw r0, 4(r1)
 /* 80114294 001111D4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 80114298 001111D8  41 81 03 74 */	bgt lbl_8011460C
-/* 8011429C 001111DC  3C 80 80 3B */	lis r4, $$23444@ha
-/* 801142A0 001111E0  38 84 4C A8 */	addi r4, r4, $$23444@l
+/* 8011429C 001111DC  3C 80 80 3B */	lis r4, "@3444"@ha
+/* 801142A0 001111E0  38 84 4C A8 */	addi r4, r4, "@3444"@l
 /* 801142A4 001111E4  54 60 10 3A */	slwi r0, r3, 2
 /* 801142A8 001111E8  7C 04 00 2E */	lwzx r0, r4, r0
 /* 801142AC 001111EC  7C 09 03 A6 */	mtctr r0
@@ -2080,31 +2080,31 @@ lbl_80114610:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x376FDC, 0x14
-$$21582:
+"@1582":
 	.incbin "baserom.dol", 0x376FF0, 0x30
-$$21583:
+"@1583":
 	.incbin "baserom.dol", 0x377020, 0x38
-$$21584:
+"@1584":
 	.incbin "baserom.dol", 0x377058, 0x34
-$$21585:
+"@1585":
 	.incbin "baserom.dol", 0x37708C, 0x24
-$$22725:
+"@2725":
 	.incbin "baserom.dol", 0x3770B0, 0xC
-$$22734:
+"@2734":
 	.incbin "baserom.dol", 0x3770BC, 0xC
-$$22777:
+"@2777":
 	.incbin "baserom.dol", 0x3770C8, 0x20
-$$22778:
+"@2778":
 	.incbin "baserom.dol", 0x3770E8, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$23444:
+"@3444":
     .4byte lbl_801142B4
     .4byte lbl_801142BC
     .4byte lbl_801142C4
@@ -2215,28 +2215,28 @@ $$23444:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22726:
+"@2726":
 	.incbin "baserom.dol", 0x3E5378, 0x8
-$$22727:
+"@2727":
 	.incbin "baserom.dol", 0x3E5380, 0x8
-$$22728:
+"@2728":
 	.incbin "baserom.dol", 0x3E5388, 0x8
-$$22729:
+"@2729":
 	.incbin "baserom.dol", 0x3E5390, 0x8
-$$22730:
+"@2730":
 	.incbin "baserom.dol", 0x3E5398, 0x8
-$$22731:
+"@2731":
 	.incbin "baserom.dol", 0x3E53A0, 0x8
-$$22732:
+"@2732":
 	.incbin "baserom.dol", 0x3E53A8, 0x8
-$$22733:
+"@2733":
 	.incbin "baserom.dol", 0x3E53B0, 0x8
-$$22875:
+"@2875":
   .4byte 0
-$$22876:
+"@2876":
 	.incbin "baserom.dol", 0x3E53BC, 0x4
-$$22878:
+"@2878":
 	.incbin "baserom.dol", 0x3E53C0, 0x8
-$$23178:
+"@3178":
   .4byte 0
   .4byte 0

@@ -54,9 +54,9 @@ lbl_8005B9EC:
 /* 8005B9FC 0005893C  48 00 83 D5 */	bl probeFinish__Q28JASystem6KernelFl
 lbl_8005BA00:
 /* 8005BA00 00058940  38 00 00 00 */	li r0, 0
-/* 8005BA04 00058944  3C 60 80 37 */	lis r3, $$2128@ha
+/* 8005BA04 00058944  3C 60 80 37 */	lis r3, "@128"@ha
 /* 8005BA08 00058948  90 0D 90 D8 */	stw r0, first$120@sda21(r13)
-/* 8005BA0C 0005894C  38 83 12 50 */	addi r4, r3, $$2128@l
+/* 8005BA0C 0005894C  38 83 12 50 */	addi r4, r3, "@128"@l
 /* 8005BA10 00058950  38 60 00 04 */	li r3, 4
 /* 8005BA14 00058954  48 00 83 B9 */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005BA18 00058958  80 0D 90 C4 */	lwz r0, audioproc_mq_init__Q28JASystem11AudioThread@sda21(r13)
@@ -155,7 +155,7 @@ lbl_8005BB40:
 /* 8005BB64 00058AA4  4B FF FF 84 */	b lbl_8005BAE8
 lbl_8005BB68:
 /* 8005BB68 00058AA8  38 60 00 02 */	li r3, 2
-/* 8005BB6C 00058AAC  38 82 86 30 */	addi r4, r2, $$2148@sda21
+/* 8005BB6C 00058AAC  38 82 86 30 */	addi r4, r2, "@148"@sda21
 /* 8005BB70 00058AB0  48 00 82 5D */	bl probeStart__Q28JASystem6KernelFlPc
 /* 8005BB74 00058AB4  48 00 2E C5 */	bl updateDSP__Q28JASystem6DSPBufFv
 /* 8005BB78 00058AB8  38 60 00 02 */	li r3, 2
@@ -328,12 +328,12 @@ lbl_8005BD9C:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2128:
+"@128":
 	.incbin "baserom.dol", 0x36E250, 0x10
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2148:
+"@148":
 	.incbin "baserom.dol", 0x3E4330, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

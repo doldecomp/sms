@@ -47,7 +47,7 @@ JSGSetLightType__Q26JStage6TLightFQ26JStage7TELight:
 .global JSGGetColor__Q26JStage6TLightCFv
 JSGGetColor__Q26JStage6TLightCFv:
 /* 80081AA8 0007E9E8  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 80081AAC 0007E9EC  80 02 89 48 */	lwz r0, $$2118@sda21(r2)
+/* 80081AAC 0007E9EC  80 02 89 48 */	lwz r0, "@118"@sda21(r2)
 /* 80081AB0 0007E9F0  90 01 00 10 */	stw r0, 0x10(r1)
 /* 80081AB4 0007E9F4  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 80081AB8 0007E9F8  38 21 00 18 */	addi r1, r1, 0x18
@@ -119,6 +119,6 @@ __vt__Q26JStage6TLight:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2118:
+"@118":
   .4byte -1
   .4byte 0

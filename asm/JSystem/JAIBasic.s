@@ -114,7 +114,7 @@ initInterfaceMain__8JAIBasicFv:
 /* 8004B44C 0004838C  7C 7E 1B 78 */	mr r30, r3
 /* 8004B450 00048390  80 CD 81 38 */	lwz r6, wavePath__18JAIGlobalParameter@sda21(r13)
 /* 8004B454 00048394  4C C6 31 82 */	crclr 6
-/* 8004B458 00048398  38 82 84 60 */	addi r4, r2, $$2413@sda21
+/* 8004B458 00048398  38 82 84 60 */	addi r4, r2, "@413"@sda21
 /* 8004B45C 0004839C  38 E0 00 00 */	li r7, 0
 /* 8004B460 000483A0  48 03 8B 91 */	bl sprintf
 /* 8004B464 000483A4  93 CD 81 38 */	stw r30, wavePath__18JAIGlobalParameter@sda21(r13)
@@ -136,7 +136,7 @@ initInterfaceMain__8JAIBasicFv:
 /* 8004B4A4 000483E4  7C 7E 1B 78 */	mr r30, r3
 /* 8004B4A8 000483E8  80 CD 81 40 */	lwz r6, streamPath__18JAIGlobalParameter@sda21(r13)
 /* 8004B4AC 000483EC  4C C6 31 82 */	crclr 6
-/* 8004B4B0 000483F0  38 82 84 60 */	addi r4, r2, $$2413@sda21
+/* 8004B4B0 000483F0  38 82 84 60 */	addi r4, r2, "@413"@sda21
 /* 8004B4B4 000483F4  38 E0 00 00 */	li r7, 0
 /* 8004B4B8 000483F8  48 03 8B 39 */	bl sprintf
 /* 8004B4BC 000483FC  93 CD 81 40 */	stw r30, streamPath__18JAIGlobalParameter@sda21(r13)
@@ -315,11 +315,11 @@ lbl_8004B6F8:
 .global checkInitListFile__8JAIBasicFv
 checkInitListFile__8JAIBasicFv:
 /* 8004B70C 0004864C  7C 08 02 A6 */	mflr r0
-/* 8004B710 00048650  3C 80 80 37 */	lis r4, $$2463@ha
+/* 8004B710 00048650  3C 80 80 37 */	lis r4, "@463"@ha
 /* 8004B714 00048654  90 01 00 04 */	stw r0, 4(r1)
 /* 8004B718 00048658  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 8004B71C 0004865C  93 E1 00 14 */	stw r31, 0x14(r1)
-/* 8004B720 00048660  3B E4 11 E8 */	addi r31, r4, $$2463@l
+/* 8004B720 00048660  3B E4 11 E8 */	addi r31, r4, "@463"@l
 /* 8004B724 00048664  93 C1 00 10 */	stw r30, 0x10(r1)
 /* 8004B728 00048668  3B C3 00 00 */	addi r30, r3, 0
 /* 8004B72C 0004866C  38 7F 00 00 */	addi r3, r31, 0
@@ -416,14 +416,14 @@ lbl_8004B854:
 .global checkInitDataOnMemory__8JAIBasicFv
 checkInitDataOnMemory__8JAIBasicFv:
 /* 8004B868 000487A8  7C 08 02 A6 */	mflr r0
-/* 8004B86C 000487AC  3C 80 80 3B */	lis r4, $$2547@ha
+/* 8004B86C 000487AC  3C 80 80 3B */	lis r4, "@547"@ha
 /* 8004B870 000487B0  90 01 00 04 */	stw r0, 4(r1)
 /* 8004B874 000487B4  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8004B878 000487B8  BF 21 00 14 */	stmw r25, 0x14(r1)
 /* 8004B87C 000487BC  3B 63 00 00 */	addi r27, r3, 0
 /* 8004B880 000487C0  3C 60 AA AB */	lis r3, 0xAAAAAAAB@ha
 /* 8004B884 000487C4  3B E3 AA AB */	addi r31, r3, 0xAAAAAAAB@l
-/* 8004B888 000487C8  3B 44 AC 40 */	addi r26, r4, $$2547@l
+/* 8004B888 000487C8  3B 44 AC 40 */	addi r26, r4, "@547"@l
 /* 8004B88C 000487CC  3B C0 00 00 */	li r30, 0
 /* 8004B890 000487D0  3B A0 00 01 */	li r29, 1
 /* 8004B894 000487D4  83 9B 00 00 */	lwz r28, 0(r27)
@@ -1112,14 +1112,14 @@ initNullData__8JAIBasicFv:
 /* 8004C204 00049144  93 81 00 28 */	stw r28, 0x28(r1)
 /* 8004C208 00049148  3B 84 3E 4C */	addi r28, r4, camMtx__8JAIConst@l
 /* 8004C20C 0004914C  38 7C 00 00 */	addi r3, r28, 0
-/* 8004C210 00049150  C0 22 84 68 */	lfs f1, $$2694@sda21(r2)
+/* 8004C210 00049150  C0 22 84 68 */	lfs f1, "@694"@sda21(r2)
 /* 8004C214 00049154  80 DF 00 00 */	lwz r6, 0(r31)
 /* 8004C218 00049158  D0 26 00 00 */	stfs f1, 0(r6)
 /* 8004C21C 0004915C  38 C1 00 0C */	addi r6, r1, 0xc
 /* 8004C220 00049160  80 BF 00 00 */	lwz r5, 0(r31)
 /* 8004C224 00049164  D0 25 00 04 */	stfs f1, 4(r5)
 /* 8004C228 00049168  38 A1 00 18 */	addi r5, r1, 0x18
-/* 8004C22C 0004916C  C0 02 84 6C */	lfs f0, $$2695@sda21(r2)
+/* 8004C22C 0004916C  C0 02 84 6C */	lfs f0, "@695"@sda21(r2)
 /* 8004C230 00049170  80 9F 00 00 */	lwz r4, 0(r31)
 /* 8004C234 00049174  D0 04 00 08 */	stfs f0, 8(r4)
 /* 8004C238 00049178  80 9F 00 04 */	lwz r4, 4(r31)
@@ -1129,7 +1129,7 @@ initNullData__8JAIBasicFv:
 /* 8004C248 00049188  80 9F 00 04 */	lwz r4, 4(r31)
 /* 8004C24C 0004918C  D0 04 00 08 */	stfs f0, 8(r4)
 /* 8004C250 00049190  D0 21 00 18 */	stfs f1, 0x18(r1)
-/* 8004C254 00049194  C0 02 84 70 */	lfs f0, $$2696@sda21(r2)
+/* 8004C254 00049194  C0 02 84 70 */	lfs f0, "@696"@sda21(r2)
 /* 8004C258 00049198  D0 01 00 1C */	stfs f0, 0x1c(r1)
 /* 8004C25C 0004919C  D0 21 00 20 */	stfs f1, 0x20(r1)
 /* 8004C260 000491A0  80 87 00 00 */	lwz r4, 0(r7)
@@ -1248,7 +1248,7 @@ initAllocParameter__8JAIBasicFv:
 /* 8004C3F0 00049330  90 7C 00 08 */	stw r3, 8(r28)
 /* 8004C3F4 00049334  3B E0 00 00 */	li r31, 0
 /* 8004C3F8 00049338  3B DF 00 00 */	addi r30, r31, 0
-/* 8004C3FC 0004933C  C3 E2 84 70 */	lfs f31, $$2696@sda21(r2)
+/* 8004C3FC 0004933C  C3 E2 84 70 */	lfs f31, "@696"@sda21(r2)
 /* 8004C400 00049340  3B A0 00 00 */	li r29, 0
 /* 8004C404 00049344  48 00 00 1C */	b lbl_8004C420
 lbl_8004C408:
@@ -1847,7 +1847,7 @@ lbl_8004CC20:
 /* 8004CC20 00049B60  93 FE 00 10 */	stw r31, 0x10(r30)
 /* 8004CC24 00049B64  38 7E 00 00 */	addi r3, r30, 0
 /* 8004CC28 00049B68  38 BF 00 00 */	addi r5, r31, 0
-/* 8004CC2C 00049B6C  C0 22 84 68 */	lfs f1, $$2694@sda21(r2)
+/* 8004CC2C 00049B6C  C0 22 84 68 */	lfs f1, "@694"@sda21(r2)
 /* 8004CC30 00049B70  38 80 00 06 */	li r4, 6
 /* 8004CC34 00049B74  38 C0 00 00 */	li r6, 0
 /* 8004CC38 00049B78  48 00 93 91 */	bl setSeInterVolume__8JAISoundFUcfUlUc
@@ -2268,10 +2268,10 @@ lbl_8004D17C:
 getMapInfoFxParameter__8JAIBasicFUl:
 /* 8004D184 0004A0C4  28 04 00 00 */	cmplwi r4, 0
 /* 8004D188 0004A0C8  40 82 00 0C */	bne lbl_8004D194
-/* 8004D18C 0004A0CC  C0 22 84 68 */	lfs f1, $$2694@sda21(r2)
+/* 8004D18C 0004A0CC  C0 22 84 68 */	lfs f1, "@694"@sda21(r2)
 /* 8004D190 0004A0D0  4E 80 00 20 */	blr 
 lbl_8004D194:
-/* 8004D194 0004A0D4  C0 22 84 70 */	lfs f1, $$2696@sda21(r2)
+/* 8004D194 0004A0D4  C0 22 84 70 */	lfs f1, "@696"@sda21(r2)
 /* 8004D198 0004A0D8  4E 80 00 20 */	blr 
 
 .global getInfoPointerFromID__8JAIBasicFUl
@@ -2347,10 +2347,10 @@ setSeCategoryVolume__8JAIBasicFUcUc:
 /* 8004D270 0004A1B0  54 A0 06 3E */	clrlwi r0, r5, 0x18
 /* 8004D274 0004A1B4  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D278 0004A1B8  3C 00 43 30 */	lis r0, 0x4330
-/* 8004D27C 0004A1BC  C8 42 84 78 */	lfd f2, $$21289@sda21(r2)
+/* 8004D27C 0004A1BC  C8 42 84 78 */	lfd f2, "@1289"@sda21(r2)
 /* 8004D280 0004A1C0  90 01 00 10 */	stw r0, 0x10(r1)
 /* 8004D284 0004A1C4  54 80 15 BA */	rlwinm r0, r4, 2, 0x16, 0x1d
-/* 8004D288 0004A1C8  C0 02 84 74 */	lfs f0, $$21287@sda21(r2)
+/* 8004D288 0004A1C8  C0 02 84 74 */	lfs f0, "@1287"@sda21(r2)
 /* 8004D28C 0004A1CC  C8 21 00 10 */	lfd f1, 0x10(r1)
 /* 8004D290 0004A1D0  38 21 00 18 */	addi r1, r1, 0x18
 /* 8004D294 0004A1D4  80 63 00 28 */	lwz r3, 0x28(r3)
@@ -2465,7 +2465,7 @@ lbl_8004D3C0:
 /* 8004D424 0004A364  88 03 00 14 */	lbz r0, 0x14(r3)
 /* 8004D428 0004A368  28 00 00 02 */	cmplwi r0, 2
 /* 8004D42C 0004A36C  41 82 00 0C */	beq lbl_8004D438
-/* 8004D430 0004A370  C0 22 84 68 */	lfs f1, $$2694@sda21(r2)
+/* 8004D430 0004A370  C0 22 84 68 */	lfs f1, "@694"@sda21(r2)
 /* 8004D434 0004A374  48 00 00 08 */	b lbl_8004D43C
 lbl_8004D438:
 /* 8004D438 0004A378  C0 3C 00 14 */	lfs f1, 0x14(r28)
@@ -2595,10 +2595,10 @@ lbl_8004D5AC:
 /* 8004D5B4 0004A4F4  41 82 00 3C */	beq lbl_8004D5F0
 /* 8004D5B8 0004A4F8  80 9F 00 3C */	lwz r4, 0x3c(r31)
 /* 8004D5BC 0004A4FC  3C 00 43 30 */	lis r0, 0x4330
-/* 8004D5C0 0004A500  C8 42 84 78 */	lfd f2, $$21289@sda21(r2)
+/* 8004D5C0 0004A500  C8 42 84 78 */	lfd f2, "@1289"@sda21(r2)
 /* 8004D5C4 0004A504  7F E3 FB 78 */	mr r3, r31
 /* 8004D5C8 0004A508  88 A4 00 0C */	lbz r5, 0xc(r4)
-/* 8004D5CC 0004A50C  C0 02 84 74 */	lfs f0, $$21287@sda21(r2)
+/* 8004D5CC 0004A50C  C0 02 84 74 */	lfs f0, "@1287"@sda21(r2)
 /* 8004D5D0 0004A510  38 80 00 00 */	li r4, 0
 /* 8004D5D4 0004A514  90 A1 00 24 */	stw r5, 0x24(r1)
 /* 8004D5D8 0004A518  38 A0 00 01 */	li r5, 1
@@ -2612,10 +2612,10 @@ lbl_8004D5F0:
 /* 8004D5F4 0004A534  41 82 00 3C */	beq lbl_8004D630
 /* 8004D5F8 0004A538  80 9F 00 3C */	lwz r4, 0x3c(r31)
 /* 8004D5FC 0004A53C  3C 00 43 30 */	lis r0, 0x4330
-/* 8004D600 0004A540  C8 42 84 78 */	lfd f2, $$21289@sda21(r2)
+/* 8004D600 0004A540  C8 42 84 78 */	lfd f2, "@1289"@sda21(r2)
 /* 8004D604 0004A544  7F E3 FB 78 */	mr r3, r31
 /* 8004D608 0004A548  88 A4 00 0D */	lbz r5, 0xd(r4)
-/* 8004D60C 0004A54C  C0 02 84 74 */	lfs f0, $$21287@sda21(r2)
+/* 8004D60C 0004A54C  C0 02 84 74 */	lfs f0, "@1287"@sda21(r2)
 /* 8004D610 0004A550  38 80 00 00 */	li r4, 0
 /* 8004D614 0004A554  90 A1 00 24 */	stw r5, 0x24(r1)
 /* 8004D618 0004A558  38 A0 00 01 */	li r5, 1
@@ -2968,11 +2968,11 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2463:
+"@463":
 	.incbin "baserom.dol", 0x36E1E8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$2547:
+"@547":
     .4byte lbl_8004B8C4
     .4byte lbl_8004B8CC
     .4byte lbl_8004B9D4
@@ -3002,17 +3002,17 @@ __vt__8JAIBasic:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2413:
+"@413":
 	.incbin "baserom.dol", 0x3E4160, 0x8
-$$2694:
+"@694":
   .4byte 0
-$$2695:
+"@695":
 	.incbin "baserom.dol", 0x3E416C, 0x4
-$$2696:
+"@696":
 	.incbin "baserom.dol", 0x3E4170, 0x4
-$$21287:
+"@1287":
 	.incbin "baserom.dol", 0x3E4174, 0x4
-$$21289:
+"@1289":
 	.incbin "baserom.dol", 0x3E4178, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

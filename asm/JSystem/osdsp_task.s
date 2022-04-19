@@ -6,12 +6,12 @@ __DSPHandler:
 /* 800821A0 0007F0E0  7C 08 02 A6 */	mflr r0
 /* 800821A4 0007F0E4  3C 60 CC 00 */	lis r3, 0xCC005000@ha
 /* 800821A8 0007F0E8  90 01 00 04 */	stw r0, 4(r1)
-/* 800821AC 0007F0EC  3C 80 80 37 */	lis r4, $$2440@ha
+/* 800821AC 0007F0EC  3C 80 80 37 */	lis r4, "@440"@ha
 /* 800821B0 0007F0F0  38 63 50 00 */	addi r3, r3, 0xCC005000@l
 /* 800821B4 0007F0F4  38 00 FF D7 */	li r0, -41
 /* 800821B8 0007F0F8  94 21 FD 10 */	stwu r1, -0x2f0(r1)
 /* 800821BC 0007F0FC  93 E1 02 EC */	stw r31, 0x2ec(r1)
-/* 800821C0 0007F100  3B E4 14 B0 */	addi r31, r4, $$2440@l
+/* 800821C0 0007F100  3B E4 14 B0 */	addi r31, r4, "@440"@l
 /* 800821C4 0007F104  A0 83 00 0A */	lhz r4, 0xa(r3)
 /* 800821C8 0007F108  7C 80 00 38 */	and r0, r4, r0
 /* 800821CC 0007F10C  60 00 00 80 */	ori r0, r0, 0x80
@@ -250,8 +250,8 @@ DsyncFrame2__FUlUlUl:
 /* 80082504 0007F444  88 0D 92 78 */	lbz r0, DSP_prior_yield@sda21(r13)
 /* 80082508 0007F448  28 00 00 01 */	cmplwi r0, 1
 /* 8008250C 0007F44C  41 82 00 2C */	beq lbl_80082538
-/* 80082510 0007F450  3C 60 80 37 */	lis r3, $$2451@ha
-/* 80082514 0007F454  38 63 15 60 */	addi r3, r3, $$2451@l
+/* 80082510 0007F450  3C 60 80 37 */	lis r3, "@451"@ha
+/* 80082514 0007F454  38 63 15 60 */	addi r3, r3, "@451"@l
 /* 80082518 0007F458  4C C6 31 82 */	crclr 6
 /* 8008251C 0007F45C  4B FD 94 4D */	bl Console_printf
 /* 80082520 0007F460  93 9F 00 00 */	stw r28, 0(r31)
@@ -321,21 +321,21 @@ Dsp_Running_Start__Fv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2440:
+"@440":
 	.incbin "baserom.dol", 0x36E4B0, 0x10
-$$2441:
+"@441":
 	.incbin "baserom.dol", 0x36E4C0, 0x10
-$$2442:
+"@442":
 	.incbin "baserom.dol", 0x36E4D0, 0x14
-$$2443:
+"@443":
 	.incbin "baserom.dol", 0x36E4E4, 0x14
-$$2444:
+"@444":
 	.incbin "baserom.dol", 0x36E4F8, 0x14
-$$2445:
+"@445":
 	.incbin "baserom.dol", 0x36E50C, 0x10
-$$2446:
+"@446":
 	.incbin "baserom.dol", 0x36E51C, 0x44
-$$2451:
+"@451":
 	.incbin "baserom.dol", 0x36E560, 0x10
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

@@ -7,8 +7,8 @@ isSlopeCameraMode__15CPolarSubCameraCFv:
 /* 80362F98 0035FED8  38 60 00 00 */	li r3, 0
 /* 80362F9C 0035FEDC  28 00 00 48 */	cmplwi r0, 0x48
 /* 80362FA0 0035FEE0  4D 81 00 20 */	bgtlr 
-/* 80362FA4 0035FEE4  3C 80 80 3E */	lis r4, $$21781@ha
-/* 80362FA8 0035FEE8  38 84 4E 14 */	addi r4, r4, $$21781@l
+/* 80362FA4 0035FEE4  3C 80 80 3E */	lis r4, "@1781"@ha
+/* 80362FA8 0035FEE8  38 84 4E 14 */	addi r4, r4, "@1781"@l
 /* 80362FAC 0035FEEC  54 00 10 3A */	slwi r0, r0, 2
 /* 80362FB0 0035FEF0  7C 04 00 2E */	lwzx r0, r4, r0
 /* 80362FB4 0035FEF4  7C 09 03 A6 */	mtctr r0
@@ -49,8 +49,8 @@ lbl_80363024:
 /* 80363024 0035FF64  38 1D FF F8 */	addi r0, r29, -8
 /* 80363028 0035FF68  28 00 00 40 */	cmplwi r0, 0x40
 /* 8036302C 0035FF6C  41 81 00 20 */	bgt lbl_8036304C
-/* 80363030 0035FF70  3C 60 80 3E */	lis r3, $$21809@ha
-/* 80363034 0035FF74  38 63 4F 38 */	addi r3, r3, $$21809@l
+/* 80363030 0035FF70  3C 60 80 3E */	lis r3, "@1809"@ha
+/* 80363034 0035FF74  38 63 4F 38 */	addi r3, r3, "@1809"@l
 /* 80363038 0035FF78  54 00 10 3A */	slwi r0, r0, 2
 /* 8036303C 0035FF7C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 80363040 0035FF80  7C 09 03 A6 */	mtctr r0
@@ -164,8 +164,8 @@ isNormalCameraCompletely__15CPolarSubCameraCFv:
 /* 80363184 003600C4  38 80 00 00 */	li r4, 0
 /* 80363188 003600C8  28 00 00 48 */	cmplwi r0, 0x48
 /* 8036318C 003600CC  41 81 00 20 */	bgt lbl_803631AC
-/* 80363190 003600D0  3C 60 80 3E */	lis r3, $$21895@ha
-/* 80363194 003600D4  38 63 50 3C */	addi r3, r3, $$21895@l
+/* 80363190 003600D0  3C 60 80 3E */	lis r3, "@1895"@ha
+/* 80363194 003600D4  38 63 50 3C */	addi r3, r3, "@1895"@l
 /* 80363198 003600D8  54 00 10 3A */	slwi r0, r0, 2
 /* 8036319C 003600DC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 803631A0 003600E0  7C 09 03 A6 */	mtctr r0
@@ -191,8 +191,8 @@ isNormalCameraSpecifyMode__15CPolarSubCameraCFi:
 /* 803631D4 00360114  28 04 00 48 */	cmplwi r4, 0x48
 /* 803631D8 00360118  38 60 00 00 */	li r3, 0
 /* 803631DC 0036011C  4D 81 00 20 */	bgtlr 
-/* 803631E0 00360120  3C A0 80 3E */	lis r5, $$21939@ha
-/* 803631E4 00360124  38 A5 51 60 */	addi r5, r5, $$21939@l
+/* 803631E0 00360120  3C A0 80 3E */	lis r5, "@1939"@ha
+/* 803631E4 00360124  38 A5 51 60 */	addi r5, r5, "@1939"@l
 /* 803631E8 00360128  54 80 10 3A */	slwi r0, r4, 2
 /* 803631EC 0036012C  7C 05 00 2E */	lwzx r0, r5, r0
 /* 803631F0 00360130  7C 09 03 A6 */	mtctr r0
@@ -372,236 +372,236 @@ isLButtonCameraSpecifyMode__15CPolarSubCameraCFi:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A3D2C, 0x14
-$$21535:
+"@1535":
 	.incbin "baserom.dol", 0x3A3D40, 0x18
-$$21536:
+"@1536":
 	.incbin "baserom.dol", 0x3A3D58, 0x1C
-$$21537:
+"@1537":
 	.incbin "baserom.dol", 0x3A3D74, 0x1C
-$$21538:
+"@1538":
 	.incbin "baserom.dol", 0x3A3D90, 0x1C
-$$21539:
+"@1539":
 	.incbin "baserom.dol", 0x3A3DAC, 0x1C
-$$21540:
+"@1540":
 	.incbin "baserom.dol", 0x3A3DC8, 0x1C
-$$21541:
+"@1541":
 	.incbin "baserom.dol", 0x3A3DE4, 0x18
-$$21542:
+"@1542":
 	.incbin "baserom.dol", 0x3A3DFC, 0x18
-$$21543:
+"@1543":
 	.incbin "baserom.dol", 0x3A3E14, 0x20
-$$21544:
+"@1544":
 	.incbin "baserom.dol", 0x3A3E34, 0x1C
-$$21545:
+"@1545":
 	.incbin "baserom.dol", 0x3A3E50, 0x18
-$$21546:
+"@1546":
 	.incbin "baserom.dol", 0x3A3E68, 0x1C
-$$21547:
+"@1547":
 	.incbin "baserom.dol", 0x3A3E84, 0x18
-$$21548:
+"@1548":
 	.incbin "baserom.dol", 0x3A3E9C, 0x1C
-$$21549:
+"@1549":
 	.incbin "baserom.dol", 0x3A3EB8, 0x18
-$$21550:
+"@1550":
 	.incbin "baserom.dol", 0x3A3ED0, 0x18
-$$21551:
+"@1551":
 	.incbin "baserom.dol", 0x3A3EE8, 0x1C
-$$21552:
+"@1552":
 	.incbin "baserom.dol", 0x3A3F04, 0x1C
-$$21553:
+"@1553":
 	.incbin "baserom.dol", 0x3A3F20, 0x1C
-$$21554:
+"@1554":
 	.incbin "baserom.dol", 0x3A3F3C, 0x1C
-$$21555:
+"@1555":
 	.incbin "baserom.dol", 0x3A3F58, 0x18
-$$21556:
+"@1556":
 	.incbin "baserom.dol", 0x3A3F70, 0x18
-$$21557:
+"@1557":
 	.incbin "baserom.dol", 0x3A3F88, 0x18
-$$21558:
+"@1558":
 	.incbin "baserom.dol", 0x3A3FA0, 0x18
-$$21559:
+"@1559":
 	.incbin "baserom.dol", 0x3A3FB8, 0x18
-$$21560:
+"@1560":
 	.incbin "baserom.dol", 0x3A3FD0, 0x18
-$$21561:
+"@1561":
 	.incbin "baserom.dol", 0x3A3FE8, 0x18
-$$21562:
+"@1562":
 	.incbin "baserom.dol", 0x3A4000, 0x18
-$$21563:
+"@1563":
 	.incbin "baserom.dol", 0x3A4018, 0x18
-$$21564:
+"@1564":
 	.incbin "baserom.dol", 0x3A4030, 0x18
-$$21565:
+"@1565":
 	.incbin "baserom.dol", 0x3A4048, 0x1C
-$$21566:
+"@1566":
 	.incbin "baserom.dol", 0x3A4064, 0x1C
-$$21567:
+"@1567":
 	.incbin "baserom.dol", 0x3A4080, 0x1C
-$$21568:
+"@1568":
 	.incbin "baserom.dol", 0x3A409C, 0x1C
-$$21569:
+"@1569":
 	.incbin "baserom.dol", 0x3A40B8, 0x1C
-$$21570:
+"@1570":
 	.incbin "baserom.dol", 0x3A40D4, 0x1C
-$$21571:
+"@1571":
 	.incbin "baserom.dol", 0x3A40F0, 0x1C
-$$21572:
+"@1572":
 	.incbin "baserom.dol", 0x3A410C, 0x1C
-$$21573:
+"@1573":
 	.incbin "baserom.dol", 0x3A4128, 0x18
-$$21574:
+"@1574":
 	.incbin "baserom.dol", 0x3A4140, 0x18
-$$21575:
+"@1575":
 	.incbin "baserom.dol", 0x3A4158, 0x18
-$$21576:
+"@1576":
 	.incbin "baserom.dol", 0x3A4170, 0x18
-$$21577:
+"@1577":
 	.incbin "baserom.dol", 0x3A4188, 0x18
-$$21578:
+"@1578":
 	.incbin "baserom.dol", 0x3A41A0, 0x18
-$$21579:
+"@1579":
 	.incbin "baserom.dol", 0x3A41B8, 0x18
-$$21580:
+"@1580":
 	.incbin "baserom.dol", 0x3A41D0, 0x18
-$$21581:
+"@1581":
 	.incbin "baserom.dol", 0x3A41E8, 0x1C
-$$21582:
+"@1582":
 	.incbin "baserom.dol", 0x3A4204, 0x1C
-$$21583:
+"@1583":
 	.incbin "baserom.dol", 0x3A4220, 0x18
-$$21584:
+"@1584":
 	.incbin "baserom.dol", 0x3A4238, 0x1C
-$$21585:
+"@1585":
 	.incbin "baserom.dol", 0x3A4254, 0x1C
-$$21586:
+"@1586":
 	.incbin "baserom.dol", 0x3A4270, 0x1C
-$$21587:
+"@1587":
 	.incbin "baserom.dol", 0x3A428C, 0x1C
-$$21588:
+"@1588":
 	.incbin "baserom.dol", 0x3A42A8, 0x18
-$$21589:
+"@1589":
 	.incbin "baserom.dol", 0x3A42C0, 0x18
-$$21590:
+"@1590":
 	.incbin "baserom.dol", 0x3A42D8, 0x18
-$$21591:
+"@1591":
 	.incbin "baserom.dol", 0x3A42F0, 0x20
-$$21592:
+"@1592":
 	.incbin "baserom.dol", 0x3A4310, 0x1C
-$$21593:
+"@1593":
 	.incbin "baserom.dol", 0x3A432C, 0x18
-$$21594:
+"@1594":
 	.incbin "baserom.dol", 0x3A4344, 0x1C
-$$21595:
+"@1595":
 	.incbin "baserom.dol", 0x3A4360, 0x18
-$$21596:
+"@1596":
 	.incbin "baserom.dol", 0x3A4378, 0x1C
-$$21597:
+"@1597":
 	.incbin "baserom.dol", 0x3A4394, 0x1C
-$$21598:
+"@1598":
 	.incbin "baserom.dol", 0x3A43B0, 0x18
-$$21599:
+"@1599":
 	.incbin "baserom.dol", 0x3A43C8, 0x18
-$$21600:
+"@1600":
 	.incbin "baserom.dol", 0x3A43E0, 0x18
-$$21601:
+"@1601":
 	.incbin "baserom.dol", 0x3A43F8, 0x1C
-$$21602:
+"@1602":
 	.incbin "baserom.dol", 0x3A4414, 0x18
-$$21603:
+"@1603":
 	.incbin "baserom.dol", 0x3A442C, 0x20
-$$21604:
+"@1604":
 	.incbin "baserom.dol", 0x3A444C, 0x18
-$$21605:
+"@1605":
 	.incbin "baserom.dol", 0x3A4464, 0x18
-$$21606:
+"@1606":
 	.incbin "baserom.dol", 0x3A447C, 0x1C
-$$21607:
+"@1607":
 	.incbin "baserom.dol", 0x3A4498, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global mCamKindNameSaveFile__15CPolarSubCamera
 mCamKindNameSaveFile__15CPolarSubCamera:
-  .4byte $$21535
-  .4byte $$21536
-  .4byte $$21537
-  .4byte $$21538
-  .4byte $$21539
-  .4byte $$21540
-  .4byte $$21541
-  .4byte $$21542
-  .4byte $$21543
-  .4byte $$21544
-  .4byte $$21545
-  .4byte $$21546
-  .4byte $$21547
-  .4byte $$21548
-  .4byte $$21549
-  .4byte $$21550
-  .4byte $$21551
-  .4byte $$21552
-  .4byte $$21553
-  .4byte $$21554
-  .4byte $$21555
-  .4byte $$21556
-  .4byte $$21557
-  .4byte $$21558
-  .4byte $$21559
-  .4byte $$21560
-  .4byte $$21561
-  .4byte $$21562
-  .4byte $$21563
-  .4byte $$21564
-  .4byte $$21565
-  .4byte $$21566
-  .4byte $$21567
-  .4byte $$21568
-  .4byte $$21569
-  .4byte $$21570
-  .4byte $$21571
-  .4byte $$21572
-  .4byte $$21573
-  .4byte $$21574
-  .4byte $$21575
-  .4byte $$21576
-  .4byte $$21577
-  .4byte $$21578
-  .4byte $$21579
-  .4byte $$21580
-  .4byte $$21581
-  .4byte $$21582
-  .4byte $$21583
-  .4byte $$21584
-  .4byte $$21585
-  .4byte $$21586
-  .4byte $$21587
-  .4byte $$21588
-  .4byte $$21589
-  .4byte $$21590
-  .4byte $$21591
-  .4byte $$21592
-  .4byte $$21593
-  .4byte $$21594
-  .4byte $$21595
-  .4byte $$21596
-  .4byte $$21597
-  .4byte $$21598
-  .4byte $$21599
-  .4byte $$21600
-  .4byte $$21601
-  .4byte $$21602
-  .4byte $$21603
-  .4byte $$21604
-  .4byte $$21605
-  .4byte $$21606
-  .4byte $$21607
-$$21781:
+  .4byte "@1535"
+  .4byte "@1536"
+  .4byte "@1537"
+  .4byte "@1538"
+  .4byte "@1539"
+  .4byte "@1540"
+  .4byte "@1541"
+  .4byte "@1542"
+  .4byte "@1543"
+  .4byte "@1544"
+  .4byte "@1545"
+  .4byte "@1546"
+  .4byte "@1547"
+  .4byte "@1548"
+  .4byte "@1549"
+  .4byte "@1550"
+  .4byte "@1551"
+  .4byte "@1552"
+  .4byte "@1553"
+  .4byte "@1554"
+  .4byte "@1555"
+  .4byte "@1556"
+  .4byte "@1557"
+  .4byte "@1558"
+  .4byte "@1559"
+  .4byte "@1560"
+  .4byte "@1561"
+  .4byte "@1562"
+  .4byte "@1563"
+  .4byte "@1564"
+  .4byte "@1565"
+  .4byte "@1566"
+  .4byte "@1567"
+  .4byte "@1568"
+  .4byte "@1569"
+  .4byte "@1570"
+  .4byte "@1571"
+  .4byte "@1572"
+  .4byte "@1573"
+  .4byte "@1574"
+  .4byte "@1575"
+  .4byte "@1576"
+  .4byte "@1577"
+  .4byte "@1578"
+  .4byte "@1579"
+  .4byte "@1580"
+  .4byte "@1581"
+  .4byte "@1582"
+  .4byte "@1583"
+  .4byte "@1584"
+  .4byte "@1585"
+  .4byte "@1586"
+  .4byte "@1587"
+  .4byte "@1588"
+  .4byte "@1589"
+  .4byte "@1590"
+  .4byte "@1591"
+  .4byte "@1592"
+  .4byte "@1593"
+  .4byte "@1594"
+  .4byte "@1595"
+  .4byte "@1596"
+  .4byte "@1597"
+  .4byte "@1598"
+  .4byte "@1599"
+  .4byte "@1600"
+  .4byte "@1601"
+  .4byte "@1602"
+  .4byte "@1603"
+  .4byte "@1604"
+  .4byte "@1605"
+  .4byte "@1606"
+  .4byte "@1607"
+"@1781":
     .4byte lbl_80362FBC
     .4byte lbl_80362FBC
     .4byte lbl_80362FC0
@@ -675,7 +675,7 @@ $$21781:
     .4byte lbl_80362FBC
     .4byte lbl_80362FBC
     .4byte lbl_80362FBC
-$$21809:
+"@1809":
     .4byte lbl_80363048
     .4byte lbl_8036304C
     .4byte lbl_8036304C
@@ -741,7 +741,7 @@ $$21809:
     .4byte lbl_8036304C
     .4byte lbl_80363048
     .4byte lbl_80363048
-$$21895:
+"@1895":
     .4byte lbl_803631A8
     .4byte lbl_803631A8
     .4byte lbl_803631AC
@@ -815,7 +815,7 @@ $$21895:
     .4byte lbl_803631A8
     .4byte lbl_803631A8
     .4byte lbl_803631A8
-$$21939:
+"@1939":
     .4byte lbl_803631F8
     .4byte lbl_803631F8
     .4byte lbl_803631FC

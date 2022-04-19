@@ -195,7 +195,7 @@ initDraw__18TMapObjPoleManagerFv:
 /* 801C1B50 001BEA90  39 00 00 00 */	li r8, 0
 /* 801C1B54 001BEA94  39 20 00 02 */	li r9, 2
 /* 801C1B58 001BEA98  4B EE 84 99 */	bl GXSetChanCtrl
-/* 801C1B5C 001BEA9C  80 02 C8 70 */	lwz r0, $$22186@sda21(r2)
+/* 801C1B5C 001BEA9C  80 02 C8 70 */	lwz r0, "@2186"@sda21(r2)
 /* 801C1B60 001BEAA0  38 81 00 14 */	addi r4, r1, 0x14
 /* 801C1B64 001BEAA4  38 60 00 04 */	li r3, 4
 /* 801C1B68 001BEAA8  90 01 00 10 */	stw r0, 0x10(r1)
@@ -282,7 +282,7 @@ draw__11TMapObjPoleFv:
 /* 801C1CA0 001BEBE0  DB 21 00 18 */	stfd f25, 0x18(r1)
 /* 801C1CA4 001BEBE4  DB 01 00 10 */	stfd f24, 0x10(r1)
 /* 801C1CA8 001BEBE8  C3 E3 00 14 */	lfs f31, 0x14(r3)
-/* 801C1CAC 001BEBEC  C0 42 C8 78 */	lfs f2, $$22279@sda21(r2)
+/* 801C1CAC 001BEBEC  C0 42 C8 78 */	lfs f2, "@2279"@sda21(r2)
 /* 801C1CB0 001BEBF0  C0 23 00 28 */	lfs f1, 0x28(r3)
 /* 801C1CB4 001BEBF4  EC 1F F8 28 */	fsubs f0, f31, f31
 /* 801C1CB8 001BEBF8  C0 A3 00 6C */	lfs f5, 0x6c(r3)
@@ -300,9 +300,9 @@ draw__11TMapObjPoleFv:
 /* 801C1CE8 001BEC28  EF 25 00 72 */	fmuls f25, f5, f1
 /* 801C1CEC 001BEC2C  4B EE 6B BD */	bl GXBegin
 /* 801C1CF0 001BEC30  3C 60 CC 01 */	lis r3, 0xCC008000@ha
-/* 801C1CF4 001BEC34  C0 22 C8 74 */	lfs f1, $$22263@sda21(r2)
+/* 801C1CF4 001BEC34  C0 22 C8 74 */	lfs f1, "@2263"@sda21(r2)
 /* 801C1CF8 001BEC38  D3 A3 80 00 */	stfs f29, 0xCC008000@l(r3)
-/* 801C1CFC 001BEC3C  C0 02 C8 7C */	lfs f0, $$22303@sda21(r2)
+/* 801C1CFC 001BEC3C  C0 02 C8 7C */	lfs f0, "@2303"@sda21(r2)
 /* 801C1D00 001BEC40  D3 43 80 00 */	stfs f26, -0x8000(r3)
 /* 801C1D04 001BEC44  D3 63 80 00 */	stfs f27, -0x8000(r3)
 /* 801C1D08 001BEC48  D0 23 80 00 */	stfs f1, -0x8000(r3)
@@ -358,205 +358,205 @@ draw__11TMapObjPoleFv:
 .global __sinit_MapObjPole_cpp
 __sinit_MapObjPole_cpp:
 /* 801C1DCC 001BED0C  7C 08 02 A6 */	mflr r0
-/* 801C1DD0 001BED10  3C 60 80 3F */	lis r3, $$22311@ha
+/* 801C1DD0 001BED10  3C 60 80 3F */	lis r3, "@2311"@ha
 /* 801C1DD4 001BED14  90 01 00 04 */	stw r0, 4(r1)
 /* 801C1DD8 001BED18  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 801C1DDC 001BED1C  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 801C1DE0 001BED20  3B E3 6B 48 */	addi r31, r3, $$22311@l
-/* 801C1DE4 001BED24  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 801C1DE0 001BED20  3B E3 6B 48 */	addi r31, r3, "@2311"@l
+/* 801C1DE4 001BED24  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 801C1DE8 001BED28  7C 00 07 75 */	extsb. r0, r0
 /* 801C1DEC 001BED2C  40 82 00 28 */	bne lbl_801C1E14
-/* 801C1DF0 001BED30  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 801C1DF0 001BED30  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 801C1DF4 001BED34  4B E4 CE 41 */	bl initiate__10JSUPtrListFv
-/* 801C1DF8 001BED38  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 801C1DFC 001BED3C  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 801C1E00 001BED40  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 801C1DF8 001BED38  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 801C1DFC 001BED3C  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 801C1E00 001BED40  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 801C1E04 001BED44  38 BF 00 00 */	addi r5, r31, 0
 /* 801C1E08 001BED48  4B EC 09 21 */	bl __register_global_object
 /* 801C1E0C 001BED4C  38 00 00 01 */	li r0, 1
-/* 801C1E10 001BED50  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 801C1E10 001BED50  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_801C1E14:
-/* 801C1E14 001BED54  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 801C1E14 001BED54  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 801C1E18 001BED58  7C 00 07 75 */	extsb. r0, r0
 /* 801C1E1C 001BED5C  40 82 00 28 */	bne lbl_801C1E44
-/* 801C1E20 001BED60  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 801C1E20 001BED60  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 801C1E24 001BED64  4B E4 CE 11 */	bl initiate__10JSUPtrListFv
-/* 801C1E28 001BED68  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 801C1E2C 001BED6C  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 801C1E30 001BED70  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 801C1E28 001BED68  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 801C1E2C 001BED6C  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 801C1E30 001BED70  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 801C1E34 001BED74  38 BF 00 0C */	addi r5, r31, 0xc
 /* 801C1E38 001BED78  4B EC 08 F1 */	bl __register_global_object
 /* 801C1E3C 001BED7C  38 00 00 01 */	li r0, 1
-/* 801C1E40 001BED80  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 801C1E40 001BED80  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_801C1E44:
-/* 801C1E44 001BED84  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 801C1E44 001BED84  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 801C1E48 001BED88  7C 00 07 75 */	extsb. r0, r0
 /* 801C1E4C 001BED8C  40 82 00 28 */	bne lbl_801C1E74
-/* 801C1E50 001BED90  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 801C1E50 001BED90  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 801C1E54 001BED94  4B E4 CD E1 */	bl initiate__10JSUPtrListFv
-/* 801C1E58 001BED98  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 801C1E5C 001BED9C  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 801C1E60 001BEDA0  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 801C1E58 001BED98  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 801C1E5C 001BED9C  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 801C1E60 001BEDA0  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 801C1E64 001BEDA4  38 BF 00 18 */	addi r5, r31, 0x18
 /* 801C1E68 001BEDA8  4B EC 08 C1 */	bl __register_global_object
 /* 801C1E6C 001BEDAC  38 00 00 01 */	li r0, 1
-/* 801C1E70 001BEDB0  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 801C1E70 001BEDB0  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_801C1E74:
-/* 801C1E74 001BEDB4  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801C1E74 001BEDB4  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 801C1E78 001BEDB8  7C 00 07 75 */	extsb. r0, r0
 /* 801C1E7C 001BEDBC  40 82 00 28 */	bne lbl_801C1EA4
-/* 801C1E80 001BEDC0  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801C1E80 001BEDC0  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801C1E84 001BEDC4  4B E4 CD B1 */	bl initiate__10JSUPtrListFv
-/* 801C1E88 001BEDC8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 801C1E8C 001BEDCC  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 801C1E90 001BEDD0  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 801C1E88 001BEDC8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 801C1E8C 001BEDCC  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 801C1E90 001BEDD0  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 801C1E94 001BEDD4  38 BF 00 24 */	addi r5, r31, 0x24
 /* 801C1E98 001BEDD8  4B EC 08 91 */	bl __register_global_object
 /* 801C1E9C 001BEDDC  38 00 00 01 */	li r0, 1
-/* 801C1EA0 001BEDE0  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 801C1EA0 001BEDE0  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_801C1EA4:
-/* 801C1EA4 001BEDE4  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 801C1EA4 001BEDE4  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 801C1EA8 001BEDE8  7C 00 07 75 */	extsb. r0, r0
 /* 801C1EAC 001BEDEC  40 82 00 28 */	bne lbl_801C1ED4
-/* 801C1EB0 001BEDF0  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801C1EB0 001BEDF0  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801C1EB4 001BEDF4  4B E4 CD 81 */	bl initiate__10JSUPtrListFv
-/* 801C1EB8 001BEDF8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 801C1EBC 001BEDFC  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 801C1EC0 001BEE00  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 801C1EB8 001BEDF8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 801C1EBC 001BEDFC  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 801C1EC0 001BEE00  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 801C1EC4 001BEE04  38 BF 00 30 */	addi r5, r31, 0x30
 /* 801C1EC8 001BEE08  4B EC 08 61 */	bl __register_global_object
 /* 801C1ECC 001BEE0C  38 00 00 01 */	li r0, 1
-/* 801C1ED0 001BEE10  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 801C1ED0 001BEE10  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_801C1ED4:
-/* 801C1ED4 001BEE14  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 801C1ED4 001BEE14  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 801C1ED8 001BEE18  7C 00 07 75 */	extsb. r0, r0
 /* 801C1EDC 001BEE1C  40 82 00 28 */	bne lbl_801C1F04
-/* 801C1EE0 001BEE20  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 801C1EE0 001BEE20  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 801C1EE4 001BEE24  4B E4 CD 51 */	bl initiate__10JSUPtrListFv
-/* 801C1EE8 001BEE28  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 801C1EEC 001BEE2C  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 801C1EF0 001BEE30  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 801C1EE8 001BEE28  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 801C1EEC 001BEE2C  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 801C1EF0 001BEE30  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 801C1EF4 001BEE34  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 801C1EF8 001BEE38  4B EC 08 31 */	bl __register_global_object
 /* 801C1EFC 001BEE3C  38 00 00 01 */	li r0, 1
-/* 801C1F00 001BEE40  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 801C1F00 001BEE40  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_801C1F04:
-/* 801C1F04 001BEE44  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 801C1F04 001BEE44  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 801C1F08 001BEE48  7C 00 07 75 */	extsb. r0, r0
 /* 801C1F0C 001BEE4C  40 82 00 28 */	bne lbl_801C1F34
-/* 801C1F10 001BEE50  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 801C1F10 001BEE50  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 801C1F14 001BEE54  4B E4 CD 21 */	bl initiate__10JSUPtrListFv
-/* 801C1F18 001BEE58  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 801C1F1C 001BEE5C  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 801C1F20 001BEE60  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 801C1F18 001BEE58  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 801C1F1C 001BEE5C  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 801C1F20 001BEE60  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 801C1F24 001BEE64  38 BF 00 48 */	addi r5, r31, 0x48
 /* 801C1F28 001BEE68  4B EC 08 01 */	bl __register_global_object
 /* 801C1F2C 001BEE6C  38 00 00 01 */	li r0, 1
-/* 801C1F30 001BEE70  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 801C1F30 001BEE70  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_801C1F34:
-/* 801C1F34 001BEE74  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 801C1F34 001BEE74  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 801C1F38 001BEE78  7C 00 07 75 */	extsb. r0, r0
 /* 801C1F3C 001BEE7C  40 82 00 28 */	bne lbl_801C1F64
-/* 801C1F40 001BEE80  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 801C1F40 001BEE80  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 801C1F44 001BEE84  4B E4 CC F1 */	bl initiate__10JSUPtrListFv
-/* 801C1F48 001BEE88  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 801C1F4C 001BEE8C  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 801C1F50 001BEE90  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 801C1F48 001BEE88  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 801C1F4C 001BEE8C  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 801C1F50 001BEE90  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 801C1F54 001BEE94  38 BF 00 54 */	addi r5, r31, 0x54
 /* 801C1F58 001BEE98  4B EC 07 D1 */	bl __register_global_object
 /* 801C1F5C 001BEE9C  38 00 00 01 */	li r0, 1
-/* 801C1F60 001BEEA0  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 801C1F60 001BEEA0  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_801C1F64:
-/* 801C1F64 001BEEA4  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 801C1F64 001BEEA4  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 801C1F68 001BEEA8  7C 00 07 75 */	extsb. r0, r0
 /* 801C1F6C 001BEEAC  40 82 00 28 */	bne lbl_801C1F94
-/* 801C1F70 001BEEB0  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801C1F70 001BEEB0  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801C1F74 001BEEB4  4B E4 CC C1 */	bl initiate__10JSUPtrListFv
-/* 801C1F78 001BEEB8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 801C1F7C 001BEEBC  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 801C1F80 001BEEC0  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 801C1F78 001BEEB8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 801C1F7C 001BEEBC  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 801C1F80 001BEEC0  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 801C1F84 001BEEC4  38 BF 00 60 */	addi r5, r31, 0x60
 /* 801C1F88 001BEEC8  4B EC 07 A1 */	bl __register_global_object
 /* 801C1F8C 001BEECC  38 00 00 01 */	li r0, 1
-/* 801C1F90 001BEED0  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 801C1F90 001BEED0  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_801C1F94:
-/* 801C1F94 001BEED4  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801C1F94 001BEED4  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 801C1F98 001BEED8  7C 00 07 75 */	extsb. r0, r0
 /* 801C1F9C 001BEEDC  40 82 00 28 */	bne lbl_801C1FC4
-/* 801C1FA0 001BEEE0  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801C1FA0 001BEEE0  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801C1FA4 001BEEE4  4B E4 CC 91 */	bl initiate__10JSUPtrListFv
-/* 801C1FA8 001BEEE8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 801C1FAC 001BEEEC  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 801C1FB0 001BEEF0  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 801C1FA8 001BEEE8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 801C1FAC 001BEEEC  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 801C1FB0 001BEEF0  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 801C1FB4 001BEEF4  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 801C1FB8 001BEEF8  4B EC 07 71 */	bl __register_global_object
 /* 801C1FBC 001BEEFC  38 00 00 01 */	li r0, 1
-/* 801C1FC0 001BEF00  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 801C1FC0 001BEF00  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_801C1FC4:
-/* 801C1FC4 001BEF04  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 801C1FC4 001BEF04  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 801C1FC8 001BEF08  7C 00 07 75 */	extsb. r0, r0
 /* 801C1FCC 001BEF0C  40 82 00 28 */	bne lbl_801C1FF4
-/* 801C1FD0 001BEF10  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 801C1FD0 001BEF10  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 801C1FD4 001BEF14  4B E4 CC 61 */	bl initiate__10JSUPtrListFv
-/* 801C1FD8 001BEF18  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 801C1FDC 001BEF1C  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 801C1FE0 001BEF20  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 801C1FD8 001BEF18  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 801C1FDC 001BEF1C  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 801C1FE0 001BEF20  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 801C1FE4 001BEF24  38 BF 00 78 */	addi r5, r31, 0x78
 /* 801C1FE8 001BEF28  4B EC 07 41 */	bl __register_global_object
 /* 801C1FEC 001BEF2C  38 00 00 01 */	li r0, 1
-/* 801C1FF0 001BEF30  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 801C1FF0 001BEF30  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_801C1FF4:
-/* 801C1FF4 001BEF34  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 801C1FF4 001BEF34  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 801C1FF8 001BEF38  7C 00 07 75 */	extsb. r0, r0
 /* 801C1FFC 001BEF3C  40 82 00 28 */	bne lbl_801C2024
-/* 801C2000 001BEF40  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 801C2000 001BEF40  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 801C2004 001BEF44  4B E4 CC 31 */	bl initiate__10JSUPtrListFv
-/* 801C2008 001BEF48  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 801C200C 001BEF4C  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 801C2010 001BEF50  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 801C2008 001BEF48  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 801C200C 001BEF4C  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 801C2010 001BEF50  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 801C2014 001BEF54  38 BF 00 84 */	addi r5, r31, 0x84
 /* 801C2018 001BEF58  4B EC 07 11 */	bl __register_global_object
 /* 801C201C 001BEF5C  38 00 00 01 */	li r0, 1
-/* 801C2020 001BEF60  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 801C2020 001BEF60  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_801C2024:
-/* 801C2024 001BEF64  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 801C2024 001BEF64  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 801C2028 001BEF68  7C 00 07 75 */	extsb. r0, r0
 /* 801C202C 001BEF6C  40 82 00 28 */	bne lbl_801C2054
-/* 801C2030 001BEF70  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 801C2030 001BEF70  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 801C2034 001BEF74  4B E4 CC 01 */	bl initiate__10JSUPtrListFv
-/* 801C2038 001BEF78  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 801C203C 001BEF7C  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 801C2040 001BEF80  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 801C2038 001BEF78  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 801C203C 001BEF7C  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 801C2040 001BEF80  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 801C2044 001BEF84  38 BF 00 90 */	addi r5, r31, 0x90
 /* 801C2048 001BEF88  4B EC 06 E1 */	bl __register_global_object
 /* 801C204C 001BEF8C  38 00 00 01 */	li r0, 1
-/* 801C2050 001BEF90  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 801C2050 001BEF90  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_801C2054:
-/* 801C2054 001BEF94  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 801C2054 001BEF94  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 801C2058 001BEF98  7C 00 07 75 */	extsb. r0, r0
 /* 801C205C 001BEF9C  40 82 00 28 */	bne lbl_801C2084
-/* 801C2060 001BEFA0  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 801C2060 001BEFA0  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 801C2064 001BEFA4  4B E4 CB D1 */	bl initiate__10JSUPtrListFv
-/* 801C2068 001BEFA8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 801C206C 001BEFAC  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 801C2070 001BEFB0  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 801C2068 001BEFA8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 801C206C 001BEFAC  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 801C2070 001BEFB0  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 801C2074 001BEFB4  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 801C2078 001BEFB8  4B EC 06 B1 */	bl __register_global_object
 /* 801C207C 001BEFBC  38 00 00 01 */	li r0, 1
-/* 801C2080 001BEFC0  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 801C2080 001BEFC0  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_801C2084:
-/* 801C2084 001BEFC4  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801C2084 001BEFC4  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 801C2088 001BEFC8  7C 00 07 75 */	extsb. r0, r0
 /* 801C208C 001BEFCC  40 82 00 28 */	bne lbl_801C20B4
-/* 801C2090 001BEFD0  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801C2090 001BEFD0  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801C2094 001BEFD4  4B E4 CB A1 */	bl initiate__10JSUPtrListFv
-/* 801C2098 001BEFD8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 801C209C 001BEFDC  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 801C20A0 001BEFE0  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 801C2098 001BEFD8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 801C209C 001BEFDC  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 801C20A0 001BEFE0  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 801C20A4 001BEFE4  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 801C20A8 001BEFE8  4B EC 06 81 */	bl __register_global_object
 /* 801C20AC 001BEFEC  38 00 00 01 */	li r0, 1
-/* 801C20B0 001BEFF0  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 801C20B0 001BEFF0  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_801C20B4:
 /* 801C20B4 001BEFF4  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 801C20B8 001BEFF8  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -584,45 +584,45 @@ __vt__18TMapObjPoleManager:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22186:
+"@2186":
   .4byte -1
-$$22263:
+"@2263":
   .4byte 0
-$$22279:
+"@2279":
 	.incbin "baserom.dol", 0x3E8578, 0x4
-$$22303:
+"@2303":
 	.incbin "baserom.dol", 0x3E857C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22311:
+"@2311":
 	.skip 0xC
-$$22312:
+"@2312":
 	.skip 0xC
-$$22313:
+"@2313":
 	.skip 0xC
-$$22314:
+"@2314":
 	.skip 0xC
-$$22315:
+"@2315":
 	.skip 0xC
-$$22316:
+"@2316":
 	.skip 0xC
-$$22317:
+"@2317":
 	.skip 0xC
-$$22318:
+"@2318":
 	.skip 0xC
-$$22319:
+"@2319":
 	.skip 0xC
-$$22320:
+"@2320":
 	.skip 0xC
-$$22321:
+"@2321":
 	.skip 0xC
-$$22322:
+"@2322":
 	.skip 0xC
-$$22323:
+"@2323":
 	.skip 0xC
-$$22324:
+"@2324":
 	.skip 0xC
-$$22325:
+"@2325":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

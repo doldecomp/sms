@@ -321,10 +321,10 @@ ReInitTransform__Fv:
 .global ReInitGeometry__Fv
 ReInitGeometry__Fv:
 /* 800CE834 000CB774  7C 08 02 A6 */	mflr r0
-/* 800CE838 000CB778  3C 60 80 37 */	lis r3, $$217@ha
+/* 800CE838 000CB778  3C 60 80 37 */	lis r3, "@17"@ha
 /* 800CE83C 000CB77C  90 01 00 04 */	stw r0, 4(r1)
 /* 800CE840 000CB780  38 00 00 1A */	li r0, 0x1a
-/* 800CE844 000CB784  38 63 26 E0 */	addi r3, r3, $$217@l
+/* 800CE844 000CB784  38 63 26 E0 */	addi r3, r3, "@17"@l
 /* 800CE848 000CB788  7C 09 03 A6 */	mtctr r0
 /* 800CE84C 000CB78C  94 21 FF 20 */	stwu r1, -0xe0(r1)
 /* 800CE850 000CB790  38 83 FF F8 */	addi r4, r3, -8
@@ -517,14 +517,14 @@ lbl_800CEAB0:
 /* 800CEB24 000CBA64  4B FD DD 11 */	bl GXSetAlphaUpdate
 /* 800CEB28 000CBA68  38 60 00 01 */	li r3, 1
 /* 800CEB2C 000CBA6C  4B FD DF 11 */	bl GXSetDither
-/* 800CEB30 000CBA70  C0 42 8E 64 */	lfs f2, $$252@sda21(r2)
+/* 800CEB30 000CBA70  C0 42 8E 64 */	lfs f2, "@52"@sda21(r2)
 /* 800CEB34 000CBA74  38 81 00 08 */	addi r4, r1, 8
 /* 800CEB38 000CBA78  80 0D 83 28 */	lwz r0, ColorBlack@sda21(r13)
 /* 800CEB3C 000CBA7C  38 60 00 00 */	li r3, 0
 /* 800CEB40 000CBA80  FC 80 10 90 */	fmr f4, f2
 /* 800CEB44 000CBA84  90 01 00 08 */	stw r0, 8(r1)
-/* 800CEB48 000CBA88  C0 22 8E 60 */	lfs f1, $$251@sda21(r2)
-/* 800CEB4C 000CBA8C  C0 62 8E 68 */	lfs f3, $$253@sda21(r2)
+/* 800CEB48 000CBA88  C0 22 8E 60 */	lfs f1, "@51"@sda21(r2)
+/* 800CEB4C 000CBA8C  C0 62 8E 68 */	lfs f3, "@53"@sda21(r2)
 /* 800CEB50 000CBA90  4B FD D8 F1 */	bl GXSetFog
 /* 800CEB54 000CBA94  38 60 00 00 */	li r3, 0
 /* 800CEB58 000CBA98  38 80 00 00 */	li r4, 0
@@ -547,7 +547,7 @@ lbl_800CEAB0:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$217:
+"@17":
 	.incbin "baserom.dol", 0x36F6E0, 0xD0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -567,9 +567,9 @@ ColorWhite:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$251:
+"@51":
   .4byte 0
-$$252:
+"@52":
 	.incbin "baserom.dol", 0x3E4B64, 0x4
-$$253:
+"@53":
 	.incbin "baserom.dol", 0x3E4B68, 0x8

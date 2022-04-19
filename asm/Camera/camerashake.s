@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global execShake__12TCameraShakeFRCQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
-execShake__12TCameraShakeFRCQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
+.global "execShake__12TCameraShakeFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+"execShake__12TCameraShakeFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>":
 /* 8035BCE0 00358C20  7C 08 02 A6 */	mflr r0
 /* 8035BCE4 00358C24  39 00 00 00 */	li r8, 0
 /* 8035BCE8 00358C28  90 01 00 04 */	stw r0, 4(r1)
@@ -158,7 +158,7 @@ lbl_8035BEC0:
 /* 8035BED8 00358E18  38 E1 00 D4 */	addi r7, r1, 0xd4
 /* 8035BEDC 00358E1C  4B FF C7 09 */	bl CLBCrossToPolar__FRC3VecRC3VecPfPsPs
 /* 8035BEE0 00358E20  38 00 00 20 */	li r0, 0x20
-/* 8035BEE4 00358E24  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035BEE4 00358E24  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035BEE8 00358E28  7C 09 03 A6 */	mtctr r0
 /* 8035BEEC 00358E2C  38 BC 00 04 */	addi r5, r28, 4
 lbl_8035BEF0:
@@ -294,34 +294,34 @@ lbl_8035C0B0:
 /* 8035C0DC 0035901C  EC 04 08 28 */	fsubs f0, f4, f1
 /* 8035C0E0 00359020  D0 41 00 CC */	stfs f2, 0xcc(r1)
 /* 8035C0E4 00359024  D0 01 00 D0 */	stfs f0, 0xd0(r1)
-/* 8035C0E8 00359028  C3 E2 06 9C */	lfs f31, $$21808@sda21(r2)
-/* 8035C0EC 0035902C  4B DC 5E 65 */	bl dot__Q29JGeometry8TVec3$$0f$$1CFRCQ29JGeometry8TVec3$$0f$$1
-/* 8035C0F0 00359030  C0 02 06 A0 */	lfs f0, $$21809@sda21(r2)
+/* 8035C0E8 00359028  C3 E2 06 9C */	lfs f31, "@1808"@sda21(r2)
+/* 8035C0EC 0035902C  4B DC 5E 65 */	bl "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>"
+/* 8035C0F0 00359030  C0 02 06 A0 */	lfs f0, "@1809"@sda21(r2)
 /* 8035C0F4 00359034  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8035C0F8 00359038  4C 40 13 82 */	cror 2, 0, 2
 /* 8035C0FC 0035903C  40 82 00 18 */	bne lbl_8035C114
-/* 8035C100 00359040  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C100 00359040  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C104 00359044  D0 01 00 D0 */	stfs f0, 0xd0(r1)
 /* 8035C108 00359048  D0 01 00 CC */	stfs f0, 0xcc(r1)
 /* 8035C10C 0035904C  D0 01 00 C8 */	stfs f0, 0xc8(r1)
 /* 8035C110 00359050  48 00 00 18 */	b lbl_8035C128
 lbl_8035C114:
-/* 8035C114 00359054  4B D1 0C 5D */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 8035C114 00359054  4B D1 0C 5D */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 8035C118 00359058  EC 3F 00 72 */	fmuls f1, f31, f1
 /* 8035C11C 0035905C  38 61 00 C8 */	addi r3, r1, 0xc8
 /* 8035C120 00359060  38 83 00 00 */	addi r4, r3, 0
-/* 8035C124 00359064  4B DC 5E 05 */	bl scale__Q29JGeometry8TVec3$$0f$$1FfRCQ29JGeometry8TVec3$$0f$$1
+/* 8035C124 00359064  4B DC 5E 05 */	bl "scale__Q29JGeometry8TVec3<f>FfRCQ29JGeometry8TVec3<f>"
 lbl_8035C128:
 /* 8035C128 00359068  A8 7C 00 00 */	lha r3, 0(r28)
 /* 8035C12C 0035906C  3C 00 43 30 */	lis r0, 0x4330
-/* 8035C130 00359070  C0 82 06 A4 */	lfs f4, $$21810@sda21(r2)
+/* 8035C130 00359070  C0 82 06 A4 */	lfs f4, "@1810"@sda21(r2)
 /* 8035C134 00359074  38 81 00 C8 */	addi r4, r1, 0xc8
-/* 8035C138 00359078  C0 62 06 A8 */	lfs f3, $$21811@sda21(r2)
+/* 8035C138 00359078  C0 62 06 A8 */	lfs f3, "@1811"@sda21(r2)
 /* 8035C13C 0035907C  6C 63 80 00 */	xoris r3, r3, 0x8000
-/* 8035C140 00359080  C8 42 06 B0 */	lfd f2, $$21815@sda21(r2)
+/* 8035C140 00359080  C8 42 06 B0 */	lfd f2, "@1815"@sda21(r2)
 /* 8035C144 00359084  90 61 00 EC */	stw r3, 0xec(r1)
 /* 8035C148 00359088  38 61 00 90 */	addi r3, r1, 0x90
-/* 8035C14C 0035908C  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C14C 0035908C  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C150 00359090  90 01 00 E8 */	stw r0, 0xe8(r1)
 /* 8035C154 00359094  D0 01 00 A4 */	stfs f0, 0xa4(r1)
 /* 8035C158 00359098  C8 21 00 E8 */	lfd f1, 0xe8(r1)
@@ -333,12 +333,12 @@ lbl_8035C128:
 /* 8035C170 003590B0  D0 01 00 A8 */	stfs f0, 0xa8(r1)
 /* 8035C174 003590B4  EC 24 00 72 */	fmuls f1, f4, f1
 /* 8035C178 003590B8  D0 01 00 9C */	stfs f0, 0x9c(r1)
-/* 8035C17C 003590BC  C0 02 06 9C */	lfs f0, $$21808@sda21(r2)
+/* 8035C17C 003590BC  C0 02 06 9C */	lfs f0, "@1808"@sda21(r2)
 /* 8035C180 003590C0  FC 20 08 50 */	fneg f1, f1
 /* 8035C184 003590C4  D0 01 00 B0 */	stfs f0, 0xb0(r1)
 /* 8035C188 003590C8  D0 01 00 A0 */	stfs f0, 0xa0(r1)
 /* 8035C18C 003590CC  D0 01 00 90 */	stfs f0, 0x90(r1)
-/* 8035C190 003590D0  4B FF B6 B9 */	bl setRotate__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix33$$0Q29JGeometry13SMatrix33C$$0f$$1$$1$$1FRCQ29JGeometry8TVec3$$0f$$1f
+/* 8035C190 003590D0  4B FF B6 B9 */	bl "setRotate__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix33<Q29JGeometry13SMatrix33C<f>>>FRCQ29JGeometry8TVec3<f>f"
 /* 8035C194 003590D4  80 7F 00 00 */	lwz r3, 0(r31)
 /* 8035C198 003590D8  80 1F 00 04 */	lwz r0, 4(r31)
 /* 8035C19C 003590DC  C0 21 00 90 */	lfs f1, 0x90(r1)
@@ -500,7 +500,7 @@ lbl_8035C3BC:
 /* 8035C3DC 0035931C  98 03 00 05 */	stb r0, 5(r3)
 /* 8035C3E0 00359320  B3 C3 00 06 */	sth r30, 6(r3)
 /* 8035C3E4 00359324  B0 03 00 08 */	sth r0, 8(r3)
-/* 8035C3E8 00359328  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C3E8 00359328  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C3EC 0035932C  C0 7F 00 2C */	lfs f3, 0x2c(r31)
 /* 8035C3F0 00359330  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C3F4 00359334  A8 BF 00 40 */	lha r5, 0x40(r31)
@@ -513,16 +513,16 @@ lbl_8035C408:
 /* 8035C40C 0035934C  D0 63 00 0C */	stfs f3, 0xc(r3)
 /* 8035C410 00359350  3C 00 43 30 */	lis r0, 0x4330
 /* 8035C414 00359354  90 81 00 34 */	stw r4, 0x34(r1)
-/* 8035C418 00359358  C8 22 06 B8 */	lfd f1, $$21894@sda21(r2)
+/* 8035C418 00359358  C8 22 06 B8 */	lfd f1, "@1894"@sda21(r2)
 /* 8035C41C 0035935C  90 01 00 30 */	stw r0, 0x30(r1)
-/* 8035C420 00359360  C0 42 06 9C */	lfs f2, $$21808@sda21(r2)
+/* 8035C420 00359360  C0 42 06 9C */	lfs f2, "@1808"@sda21(r2)
 /* 8035C424 00359364  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 8035C428 00359368  EC 00 08 28 */	fsubs f0, f0, f1
 /* 8035C42C 0035936C  EC 42 00 24 */	fdivs f2, f2, f0
 /* 8035C430 00359370  EC 03 00 B2 */	fmuls f0, f3, f2
 /* 8035C434 00359374  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8035C438 00359378  B0 A3 00 14 */	sth r5, 0x14(r3)
-/* 8035C43C 0035937C  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C43C 0035937C  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C440 00359380  C0 3F 00 54 */	lfs f1, 0x54(r31)
 /* 8035C444 00359384  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C448 00359388  A8 1F 00 68 */	lha r0, 0x68(r31)
@@ -535,7 +535,7 @@ lbl_8035C45C:
 /* 8035C460 003593A0  D0 23 00 18 */	stfs f1, 0x18(r3)
 /* 8035C464 003593A4  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 8035C468 003593A8  B0 03 00 20 */	sth r0, 0x20(r3)
-/* 8035C46C 003593AC  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C46C 003593AC  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C470 003593B0  C0 3F 00 7C */	lfs f1, 0x7c(r31)
 /* 8035C474 003593B4  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C478 003593B8  A8 1F 00 90 */	lha r0, 0x90(r31)
@@ -582,7 +582,7 @@ startShake__12TCameraShakeF16EnumCamShakeModef:
 /* 8035C508 00359448  98 03 00 05 */	stb r0, 5(r3)
 /* 8035C50C 0035944C  B3 C3 00 06 */	sth r30, 6(r3)
 /* 8035C510 00359450  B0 03 00 08 */	sth r0, 8(r3)
-/* 8035C514 00359454  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C514 00359454  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C518 00359458  C0 7F 00 2C */	lfs f3, 0x2c(r31)
 /* 8035C51C 0035945C  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C520 00359460  A8 BF 00 40 */	lha r5, 0x40(r31)
@@ -595,16 +595,16 @@ lbl_8035C534:
 /* 8035C538 00359478  D0 63 00 0C */	stfs f3, 0xc(r3)
 /* 8035C53C 0035947C  3C 00 43 30 */	lis r0, 0x4330
 /* 8035C540 00359480  90 81 00 34 */	stw r4, 0x34(r1)
-/* 8035C544 00359484  C8 22 06 B8 */	lfd f1, $$21894@sda21(r2)
+/* 8035C544 00359484  C8 22 06 B8 */	lfd f1, "@1894"@sda21(r2)
 /* 8035C548 00359488  90 01 00 30 */	stw r0, 0x30(r1)
-/* 8035C54C 0035948C  C0 42 06 9C */	lfs f2, $$21808@sda21(r2)
+/* 8035C54C 0035948C  C0 42 06 9C */	lfs f2, "@1808"@sda21(r2)
 /* 8035C550 00359490  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 8035C554 00359494  EC 00 08 28 */	fsubs f0, f0, f1
 /* 8035C558 00359498  EC 42 00 24 */	fdivs f2, f2, f0
 /* 8035C55C 0035949C  EC 03 00 B2 */	fmuls f0, f3, f2
 /* 8035C560 003594A0  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8035C564 003594A4  B0 A3 00 14 */	sth r5, 0x14(r3)
-/* 8035C568 003594A8  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C568 003594A8  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C56C 003594AC  C0 3F 00 54 */	lfs f1, 0x54(r31)
 /* 8035C570 003594B0  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C574 003594B4  A8 1F 00 68 */	lha r0, 0x68(r31)
@@ -617,7 +617,7 @@ lbl_8035C588:
 /* 8035C58C 003594CC  D0 23 00 18 */	stfs f1, 0x18(r3)
 /* 8035C590 003594D0  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 8035C594 003594D4  B0 03 00 20 */	sth r0, 0x20(r3)
-/* 8035C598 003594D8  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C598 003594D8  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C59C 003594DC  C0 3F 00 7C */	lfs f1, 0x7c(r31)
 /* 8035C5A0 003594E0  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035C5A4 003594E4  A8 1F 00 90 */	lha r0, 0x90(r31)
@@ -879,7 +879,7 @@ lbl_8035C8F4:
 /* 8035C904 00359844  3B DE 00 04 */	addi r30, r30, 4
 /* 8035C908 00359848  41 80 FF CC */	blt lbl_8035C8D4
 /* 8035C90C 0035984C  38 00 00 08 */	li r0, 8
-/* 8035C910 00359850  C0 02 06 98 */	lfs f0, $$21807@sda21(r2)
+/* 8035C910 00359850  C0 02 06 98 */	lfs f0, "@1807"@sda21(r2)
 /* 8035C914 00359854  7C 09 03 A6 */	mtctr r0
 /* 8035C918 00359858  38 60 00 00 */	li r3, 0
 lbl_8035C91C:
@@ -959,19 +959,19 @@ lbl_8035C91C:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21807:
+"@1807":
   .4byte 0
-$$21808:
+"@1808":
 	.incbin "baserom.dol", 0x3EC39C, 0x4
-$$21809:
+"@1809":
 	.incbin "baserom.dol", 0x3EC3A0, 0x4
-$$21810:
+"@1810":
 	.incbin "baserom.dol", 0x3EC3A4, 0x4
-$$21811:
+"@1811":
 	.incbin "baserom.dol", 0x3EC3A8, 0x8
-$$21815:
+"@1815":
 	.incbin "baserom.dol", 0x3EC3B0, 0x8
-$$21894:
+"@1894":
 	.incbin "baserom.dol", 0x3EC3B8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -200,9 +200,9 @@ __sinit_JASWaveArcLoader_cpp:
 /* 8005B144 00058084  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8005B148 00058088  48 00 85 A1 */	bl __ct__Q38JASystem6Kernel5THeapFv
 /* 8005B14C 0005808C  3C 80 80 06 */	lis r4, __dt__Q38JASystem6Kernel5THeapFv@ha
-/* 8005B150 00058090  3C A0 80 3E */	lis r5, $$2257@ha
+/* 8005B150 00058090  3C A0 80 3E */	lis r5, "@257"@ha
 /* 8005B154 00058094  38 84 96 6C */	addi r4, r4, __dt__Q38JASystem6Kernel5THeapFv@l
-/* 8005B158 00058098  38 A5 63 28 */	addi r5, r5, $$2257@l
+/* 8005B158 00058098  38 A5 63 28 */	addi r5, r5, "@257"@l
 /* 8005B15C 0005809C  48 02 75 CD */	bl __register_global_object
 /* 8005B160 000580A0  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8005B164 000580A4  38 21 00 08 */	addi r1, r1, 8
@@ -218,7 +218,7 @@ sCurrentDir__Q28JASystem13WaveArcLoader:
 	.incbin "baserom.dol", 0x3A7F10, 0x40
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2257:
+"@257":
 	.skip 0xC
 sAramHeap__Q28JASystem13WaveArcLoader:
 	.skip 0x2C

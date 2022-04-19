@@ -441,7 +441,7 @@ calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo:
 /* 8001E0BC 0001AFFC  D0 05 00 08 */	stfs f0, 8(r5)
 /* 8001E0C0 0001B000  80 65 00 00 */	lwz r3, 0(r5)
 /* 8001E0C4 0001B004  80 05 00 04 */	lwz r0, 4(r5)
-/* 8001E0C8 0001B008  C0 22 81 F0 */	lfs f1, $$21077@sda21(r2)
+/* 8001E0C8 0001B008  C0 22 81 F0 */	lfs f1, "@1077"@sda21(r2)
 /* 8001E0CC 0001B00C  90 61 00 28 */	stw r3, 0x28(r1)
 /* 8001E0D0 0001B010  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 8001E0D4 0001B014  80 05 00 08 */	lwz r0, 8(r5)
@@ -619,7 +619,7 @@ calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo:
 /* 8001E354 0001B294  D0 1E 00 00 */	stfs f0, 0(r30)
 /* 8001E358 0001B298  80 7C 00 00 */	lwz r3, 0(r28)
 /* 8001E35C 0001B29C  80 1C 00 04 */	lwz r0, 4(r28)
-/* 8001E360 0001B2A0  C0 22 81 F0 */	lfs f1, $$21077@sda21(r2)
+/* 8001E360 0001B2A0  C0 22 81 F0 */	lfs f1, "@1077"@sda21(r2)
 /* 8001E364 0001B2A4  90 61 00 2C */	stw r3, 0x2c(r1)
 /* 8001E368 0001B2A8  90 01 00 30 */	stw r0, 0x30(r1)
 /* 8001E36C 0001B2AC  80 1C 00 08 */	lwz r0, 8(r28)
@@ -750,7 +750,7 @@ calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo:
 /* 8001E53C 0001B47C  3B C5 00 00 */	addi r30, r5, 0
 /* 8001E540 0001B480  54 84 04 3E */	clrlwi r4, r4, 0x10
 /* 8001E544 0001B484  80 C3 00 38 */	lwz r6, 0x38(r3)
-/* 8001E548 0001B488  C0 22 81 F0 */	lfs f1, $$21077@sda21(r2)
+/* 8001E548 0001B488  C0 22 81 F0 */	lfs f1, "@1077"@sda21(r2)
 /* 8001E54C 0001B48C  80 66 00 04 */	lwz r3, 4(r6)
 /* 8001E550 0001B490  C0 05 00 00 */	lfs f0, 0(r5)
 /* 8001E554 0001B494  80 63 00 20 */	lwz r3, 0x20(r3)
@@ -822,7 +822,7 @@ lbl_8001E64C:
 /* 8001E650 0001B590  40 82 00 D4 */	bne lbl_8001E724
 /* 8001E654 0001B594  3C 60 80 40 */	lis r3, mParentS__6J3DSys@ha
 /* 8001E658 0001B598  C4 03 10 C0 */	lfsu f0, mParentS__6J3DSys@l(r3)
-/* 8001E65C 0001B59C  C0 62 81 F0 */	lfs f3, $$21077@sda21(r2)
+/* 8001E65C 0001B59C  C0 62 81 F0 */	lfs f3, "@1077"@sda21(r2)
 /* 8001E660 0001B5A0  39 41 00 58 */	addi r10, r1, 0x58
 /* 8001E664 0001B5A4  C0 43 00 04 */	lfs f2, 4(r3)
 /* 8001E668 0001B5A8  38 8A 00 00 */	addi r4, r10, 0
@@ -1170,7 +1170,7 @@ __dt__13J3DMtxCalcAnmFv:
 /* 8001EB58 0001BA98  7C 04 28 50 */	subf r0, r4, r5
 /* 8001EB5C 0001BA9C  90 04 00 04 */	stw r0, 4(r4)
 /* 8001EB60 0001BAA0  90 7F 00 08 */	stw r3, 8(r31)
-/* 8001EB64 0001BAA4  C0 02 81 F0 */	lfs f0, $$21077@sda21(r2)
+/* 8001EB64 0001BAA4  C0 02 81 F0 */	lfs f0, "@1077"@sda21(r2)
 /* 8001EB68 0001BAA8  D0 1F 00 10 */	stfs f0, 0x10(r31)
 /* 8001EB6C 0001BAAC  90 7F 00 0C */	stw r3, 0xc(r31)
 /* 8001EB70 0001BAB0  D0 1F 00 14 */	stfs f0, 0x14(r31)
@@ -1207,7 +1207,7 @@ lbl_8001EBB4:
 /* 8001EBD8 0001BB18  7C 86 20 50 */	subf r4, r6, r4
 /* 8001EBDC 0001BB1C  90 86 00 04 */	stw r4, 4(r6)
 /* 8001EBE0 0001BB20  90 03 00 08 */	stw r0, 8(r3)
-/* 8001EBE4 0001BB24  C0 02 81 F0 */	lfs f0, $$21077@sda21(r2)
+/* 8001EBE4 0001BB24  C0 02 81 F0 */	lfs f0, "@1077"@sda21(r2)
 /* 8001EBE8 0001BB28  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 8001EBEC 0001BB2C  90 03 00 0C */	stw r0, 0xc(r3)
 /* 8001EBF0 0001BB30  D0 03 00 14 */	stfs f0, 0x14(r3)
@@ -1223,11 +1223,11 @@ initialize__8J3DJointFv:
 /* 8001EC0C 0001BB4C  38 00 00 01 */	li r0, 1
 /* 8001EC10 0001BB50  38 E6 8D B0 */	addi r7, r6, j3dDefaultTransformInfo@l
 /* 8001EC14 0001BB54  98 03 00 1A */	stb r0, 0x1a(r3)
-/* 8001EC18 0001BB58  3C A0 80 37 */	lis r5, $$21249@ha
-/* 8001EC1C 0001BB5C  3C 80 80 37 */	lis r4, $$21251@ha
+/* 8001EC18 0001BB58  3C A0 80 37 */	lis r5, "@1249"@ha
+/* 8001EC1C 0001BB5C  3C 80 80 37 */	lis r4, "@1251"@ha
 /* 8001EC20 0001BB60  99 03 00 1B */	stb r8, 0x1b(r3)
-/* 8001EC24 0001BB64  38 C5 0C 10 */	addi r6, r5, $$21249@l
-/* 8001EC28 0001BB68  38 A4 0C 1C */	addi r5, r4, $$21251@l
+/* 8001EC24 0001BB64  38 C5 0C 10 */	addi r6, r5, "@1249"@l
+/* 8001EC28 0001BB68  38 A4 0C 1C */	addi r5, r4, "@1251"@l
 /* 8001EC2C 0001BB6C  C0 07 00 00 */	lfs f0, 0(r7)
 /* 8001EC30 0001BB70  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 8001EC34 0001BB74  C0 07 00 04 */	lfs f0, 4(r7)
@@ -1246,7 +1246,7 @@ initialize__8J3DJointFv:
 /* 8001EC68 0001BBA8  D0 03 00 34 */	stfs f0, 0x34(r3)
 /* 8001EC6C 0001BBAC  C0 07 00 1C */	lfs f0, 0x1c(r7)
 /* 8001EC70 0001BBB0  D0 03 00 38 */	stfs f0, 0x38(r3)
-/* 8001EC74 0001BBB4  C0 02 81 F4 */	lfs f0, $$21258@sda21(r2)
+/* 8001EC74 0001BBB4  C0 02 81 F4 */	lfs f0, "@1258"@sda21(r2)
 /* 8001EC78 0001BBB8  D0 03 00 3C */	stfs f0, 0x3c(r3)
 /* 8001EC7C 0001BBBC  80 86 00 00 */	lwz r4, 0(r6)
 /* 8001EC80 0001BBC0  80 06 00 04 */	lwz r0, 4(r6)
@@ -1758,7 +1758,7 @@ __dt__17J3DMtxCalcMayaAnmFv:
 /* 8001F330 0001C270  7C 65 30 50 */	subf r3, r5, r6
 /* 8001F334 0001C274  90 65 00 04 */	stw r3, 4(r5)
 /* 8001F338 0001C278  90 1F 00 58 */	stw r0, 0x58(r31)
-/* 8001F33C 0001C27C  C0 02 81 F0 */	lfs f0, $$21077@sda21(r2)
+/* 8001F33C 0001C27C  C0 02 81 F0 */	lfs f0, "@1077"@sda21(r2)
 /* 8001F340 0001C280  D0 1F 00 60 */	stfs f0, 0x60(r31)
 /* 8001F344 0001C284  90 1F 00 5C */	stw r0, 0x5c(r31)
 /* 8001F348 0001C288  D0 1F 00 64 */	stfs f0, 0x64(r31)
@@ -1800,9 +1800,9 @@ lbl_8001F3B4:
 
 .global init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
 init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf:
-/* 8001F3CC 0001C30C  3C 60 80 37 */	lis r3, $$2914@ha
+/* 8001F3CC 0001C30C  3C 60 80 37 */	lis r3, "@914"@ha
 /* 8001F3D0 0001C310  94 21 FF D8 */	stwu r1, -0x28(r1)
-/* 8001F3D4 0001C314  39 23 0C 04 */	addi r9, r3, $$2914@l
+/* 8001F3D4 0001C314  39 23 0C 04 */	addi r9, r3, "@914"@l
 /* 8001F3D8 0001C318  81 09 00 00 */	lwz r8, 0(r9)
 /* 8001F3DC 0001C31C  3C E0 80 40 */	lis r7, mParentS__6J3DSys@ha
 /* 8001F3E0 0001C320  80 09 00 04 */	lwz r0, 4(r9)
@@ -1970,7 +1970,7 @@ __dt__22J3DMtxCalcSoftimageAnmFv:
 /* 8001F644 0001C584  7C 65 30 50 */	subf r3, r5, r6
 /* 8001F648 0001C588  90 65 00 04 */	stw r3, 4(r5)
 /* 8001F64C 0001C58C  90 1F 00 58 */	stw r0, 0x58(r31)
-/* 8001F650 0001C590  C0 02 81 F0 */	lfs f0, $$21077@sda21(r2)
+/* 8001F650 0001C590  C0 02 81 F0 */	lfs f0, "@1077"@sda21(r2)
 /* 8001F654 0001C594  D0 1F 00 60 */	stfs f0, 0x60(r31)
 /* 8001F658 0001C598  90 1F 00 5C */	stw r0, 0x5c(r31)
 /* 8001F65C 0001C59C  D0 1F 00 64 */	stfs f0, 0x64(r31)
@@ -2132,7 +2132,7 @@ __dt__18J3DMtxCalcBasicAnmFv:
 /* 8001F890 0001C7D0  7C 65 30 50 */	subf r3, r5, r6
 /* 8001F894 0001C7D4  90 65 00 04 */	stw r3, 4(r5)
 /* 8001F898 0001C7D8  90 1F 00 58 */	stw r0, 0x58(r31)
-/* 8001F89C 0001C7DC  C0 02 81 F0 */	lfs f0, $$21077@sda21(r2)
+/* 8001F89C 0001C7DC  C0 02 81 F0 */	lfs f0, "@1077"@sda21(r2)
 /* 8001F8A0 0001C7E0  D0 1F 00 60 */	stfs f0, 0x60(r31)
 /* 8001F8A4 0001C7E4  90 1F 00 5C */	stw r0, 0x5c(r31)
 /* 8001F8A8 0001C7E8  D0 1F 00 64 */	stfs f0, 0x64(r31)
@@ -2168,10 +2168,10 @@ init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf:
 /* 8001F908 0001C848  3C C0 80 40 */	lis r6, mCurrentS__6J3DSys@ha
 /* 8001F90C 0001C84C  39 26 10 B4 */	addi r9, r6, mCurrentS__6J3DSys@l
 /* 8001F910 0001C850  80 64 00 00 */	lwz r3, 0(r4)
-/* 8001F914 0001C854  3C E0 80 37 */	lis r7, $$2894@ha
+/* 8001F914 0001C854  3C E0 80 37 */	lis r7, "@894"@ha
 /* 8001F918 0001C858  80 04 00 04 */	lwz r0, 4(r4)
 /* 8001F91C 0001C85C  3C C0 80 40 */	lis r6, mParentS__6J3DSys@ha
-/* 8001F920 0001C860  39 07 0B F8 */	addi r8, r7, $$2894@l
+/* 8001F920 0001C860  39 07 0B F8 */	addi r8, r7, "@894"@l
 /* 8001F924 0001C864  90 69 00 00 */	stw r3, 0(r9)
 /* 8001F928 0001C868  38 E6 10 C0 */	addi r7, r6, mParentS__6J3DSys@l
 /* 8001F92C 0001C86C  3C 60 80 40 */	lis r3, mCurrentMtx__6J3DSys@ha
@@ -2317,231 +2317,231 @@ recursiveCalc__10J3DMtxCalcFP7J3DNode:
 recursiveEntry__10J3DMtxCalcFP7J3DNode:
 /* 8001FB18 0001CA58  4E 80 00 20 */	blr 
 
-.global $$224$$24$$2calc__13J3DMtxCalcAnmFUs
-$$224$$24$$2calc__13J3DMtxCalcAnmFUs:
+.global "@24@4@calc__13J3DMtxCalcAnmFUs"
+"@24@4@calc__13J3DMtxCalcAnmFUs":
 /* 8001FB1C 0001CA5C  39 60 00 04 */	li r11, 4
 /* 8001FB20 0001CA60  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB24 0001CA64  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB28 0001CA68  38 63 FF E8 */	addi r3, r3, -24
 /* 8001FB2C 0001CA6C  4B FF DF 90 */	b calc__13J3DMtxCalcAnmFUs
 
-.global $$280$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
-$$280$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo:
+.global "@80@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo"
+"@80@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo":
 /* 8001FB30 0001CA70  39 60 00 04 */	li r11, 4
 /* 8001FB34 0001CA74  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB38 0001CA78  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB3C 0001CA7C  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FB40 0001CA80  4B FF E5 28 */	b calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
 
-.global $$280$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
-$$280$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf:
+.global "@80@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf"
+"@80@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf":
 /* 8001FB44 0001CA84  39 60 00 04 */	li r11, 4
 /* 8001FB48 0001CA88  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB4C 0001CA8C  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB50 0001CA90  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FB54 0001CA94  4B FF FD B0 */	b init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
 
-.global $$280$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
-$$280$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo:
+.global "@80@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo"
+"@80@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo":
 /* 8001FB58 0001CA98  39 60 00 04 */	li r11, 4
 /* 8001FB5C 0001CA9C  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB60 0001CAA0  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB64 0001CAA4  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FB68 0001CAA8  4B FF E7 4C */	b calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
 
-.global $$280$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
-$$280$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf:
+.global "@80@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf"
+"@80@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf":
 /* 8001FB6C 0001CAAC  39 60 00 04 */	li r11, 4
 /* 8001FB70 0001CAB0  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB74 0001CAB4  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB78 0001CAB8  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FB7C 0001CABC  4B FF FB 64 */	b init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
 
-.global $$280$$24$$2calc__15J3DMtxCalcBasicFUs
-$$280$$24$$2calc__15J3DMtxCalcBasicFUs:
+.global "@80@4@calc__15J3DMtxCalcBasicFUs"
+"@80@4@calc__15J3DMtxCalcBasicFUs":
 /* 8001FB80 0001CAC0  39 60 00 04 */	li r11, 4
 /* 8001FB84 0001CAC4  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB88 0001CAC8  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FB8C 0001CACC  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FB90 0001CAD0  4B FF E6 C4 */	b calc__15J3DMtxCalcBasicFUs
 
-.global $$280$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
-$$280$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo:
+.global "@80@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo"
+"@80@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo":
 /* 8001FB94 0001CAD4  39 60 00 04 */	li r11, 4
 /* 8001FB98 0001CAD8  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FB9C 0001CADC  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FBA0 0001CAE0  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FBA4 0001CAE4  4B FF E9 74 */	b calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
 
-.global $$280$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-$$280$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode:
+.global "@80@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+"@80@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FBA8 0001CAE8  39 60 00 04 */	li r11, 4
 /* 8001FBAC 0001CAEC  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FBB0 0001CAF0  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FBB4 0001CAF4  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FBB8 0001CAF8  4B FF E4 30 */	b recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$280$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-$$280$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode:
+.global "@80@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+"@80@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FBBC 0001CAFC  39 60 00 04 */	li r11, 4
 /* 8001FBC0 0001CB00  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FBC4 0001CB04  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FBC8 0001CB08  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FBCC 0001CB0C  4B FF E2 58 */	b recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$280$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-$$280$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode:
+.global "@80@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+"@80@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FBD0 0001CB10  39 60 00 04 */	li r11, 4
 /* 8001FBD4 0001CB14  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FBD8 0001CB18  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FBDC 0001CB1C  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FBE0 0001CB20  4B FF E0 18 */	b recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$280$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
-$$280$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf:
+.global "@80@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf"
+"@80@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf":
 /* 8001FBE4 0001CB24  39 60 00 04 */	li r11, 4
 /* 8001FBE8 0001CB28  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FBEC 0001CB2C  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FBF0 0001CB30  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FBF4 0001CB34  4B FF F7 D8 */	b init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
 
-.global $$2104$$24$$2calc__18J3DMtxCalcBasicAnmFUs
-$$2104$$24$$2calc__18J3DMtxCalcBasicAnmFUs:
+.global "@104@4@calc__18J3DMtxCalcBasicAnmFUs"
+"@104@4@calc__18J3DMtxCalcBasicAnmFUs":
 /* 8001FBF8 0001CB38  39 60 00 04 */	li r11, 4
 /* 8001FBFC 0001CB3C  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC00 0001CB40  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC04 0001CB44  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC08 0001CB48  4B FF FE 14 */	b calc__18J3DMtxCalcBasicAnmFUs
 
-.global $$2104$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
-$$2104$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo:
+.global "@104@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo"
+"@104@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo":
 /* 8001FC0C 0001CB4C  39 60 00 04 */	li r11, 4
 /* 8001FC10 0001CB50  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC14 0001CB54  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC18 0001CB58  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC1C 0001CB5C  4B FF E4 4C */	b calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
 
-.global $$2104$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
-$$2104$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf:
+.global "@104@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf"
+"@104@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf":
 /* 8001FC20 0001CB60  39 60 00 04 */	li r11, 4
 /* 8001FC24 0001CB64  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC28 0001CB68  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC2C 0001CB6C  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC30 0001CB70  4B FF FC D4 */	b init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
 
-.global $$280$$2calc__18J3DMtxCalcBasicAnmFUs
-$$280$$2calc__18J3DMtxCalcBasicAnmFUs:
+.global "@80@calc__18J3DMtxCalcBasicAnmFUs"
+"@80@calc__18J3DMtxCalcBasicAnmFUs":
 /* 8001FC34 0001CB74  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FC38 0001CB78  4B FF FD E4 */	b calc__18J3DMtxCalcBasicAnmFUs
 
-.global $$280$$2__dt__18J3DMtxCalcBasicAnmFv
-$$280$$2__dt__18J3DMtxCalcBasicAnmFv:
+.global "@80@__dt__18J3DMtxCalcBasicAnmFv"
+"@80@__dt__18J3DMtxCalcBasicAnmFv":
 /* 8001FC3C 0001CB7C  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FC40 0001CB80  4B FF FB E0 */	b __dt__18J3DMtxCalcBasicAnmFv
 
-.global $$2104$$24$$2calc__22J3DMtxCalcSoftimageAnmFUs
-$$2104$$24$$2calc__22J3DMtxCalcSoftimageAnmFUs:
+.global "@104@4@calc__22J3DMtxCalcSoftimageAnmFUs"
+"@104@4@calc__22J3DMtxCalcSoftimageAnmFUs":
 /* 8001FC44 0001CB84  39 60 00 04 */	li r11, 4
 /* 8001FC48 0001CB88  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC4C 0001CB8C  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC50 0001CB90  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC54 0001CB94  4B FF FA DC */	b calc__22J3DMtxCalcSoftimageAnmFUs
 
-.global $$2104$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
-$$2104$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo:
+.global "@104@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo"
+"@104@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo":
 /* 8001FC58 0001CB98  39 60 00 04 */	li r11, 4
 /* 8001FC5C 0001CB9C  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC60 0001CBA0  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC64 0001CBA4  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC68 0001CBA8  4B FF E6 4C */	b calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
 
-.global $$2104$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
-$$2104$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf:
+.global "@104@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf"
+"@104@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf":
 /* 8001FC6C 0001CBAC  39 60 00 04 */	li r11, 4
 /* 8001FC70 0001CBB0  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC74 0001CBB4  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC78 0001CBB8  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FC7C 0001CBBC  4B FF FA 64 */	b init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
 
-.global $$280$$2calc__22J3DMtxCalcSoftimageAnmFUs
-$$280$$2calc__22J3DMtxCalcSoftimageAnmFUs:
+.global "@80@calc__22J3DMtxCalcSoftimageAnmFUs"
+"@80@calc__22J3DMtxCalcSoftimageAnmFUs":
 /* 8001FC80 0001CBC0  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FC84 0001CBC4  4B FF FA AC */	b calc__22J3DMtxCalcSoftimageAnmFUs
 
-.global $$280$$2__dt__22J3DMtxCalcSoftimageAnmFv
-$$280$$2__dt__22J3DMtxCalcSoftimageAnmFv:
+.global "@80@__dt__22J3DMtxCalcSoftimageAnmFv"
+"@80@__dt__22J3DMtxCalcSoftimageAnmFv":
 /* 8001FC88 0001CBC8  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FC8C 0001CBCC  4B FF F9 48 */	b __dt__22J3DMtxCalcSoftimageAnmFv
 
-.global $$2104$$24$$2calc__17J3DMtxCalcMayaAnmFUs
-$$2104$$24$$2calc__17J3DMtxCalcMayaAnmFUs:
+.global "@104@4@calc__17J3DMtxCalcMayaAnmFUs"
+"@104@4@calc__17J3DMtxCalcMayaAnmFUs":
 /* 8001FC90 0001CBD0  39 60 00 04 */	li r11, 4
 /* 8001FC94 0001CBD4  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FC98 0001CBD8  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FC9C 0001CBDC  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FCA0 0001CBE0  4B FF F8 44 */	b calc__17J3DMtxCalcMayaAnmFUs
 
-.global $$2104$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
-$$2104$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo:
+.global "@104@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo"
+"@104@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo":
 /* 8001FCA4 0001CBE4  39 60 00 04 */	li r11, 4
 /* 8001FCA8 0001CBE8  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FCAC 0001CBEC  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FCB0 0001CBF0  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FCB4 0001CBF4  4B FF E8 64 */	b calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
 
-.global $$2104$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-$$2104$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode:
+.global "@104@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+"@104@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FCB8 0001CBF8  39 60 00 04 */	li r11, 4
 /* 8001FCBC 0001CBFC  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FCC0 0001CC00  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FCC4 0001CC04  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FCC8 0001CC08  4B FF E3 20 */	b recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2104$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-$$2104$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode:
+.global "@104@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+"@104@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FCCC 0001CC0C  39 60 00 04 */	li r11, 4
 /* 8001FCD0 0001CC10  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FCD4 0001CC14  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FCD8 0001CC18  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FCDC 0001CC1C  4B FF E1 48 */	b recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2104$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-$$2104$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode:
+.global "@104@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+"@104@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode":
 /* 8001FCE0 0001CC20  39 60 00 04 */	li r11, 4
 /* 8001FCE4 0001CC24  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FCE8 0001CC28  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FCEC 0001CC2C  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FCF0 0001CC30  4B FF DF 08 */	b recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2104$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
-$$2104$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf:
+.global "@104@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf"
+"@104@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf":
 /* 8001FCF4 0001CC34  39 60 00 04 */	li r11, 4
 /* 8001FCF8 0001CC38  7D 63 58 2E */	lwzx r11, r3, r11
 /* 8001FCFC 0001CC3C  7C 63 5A 14 */	add r3, r3, r11
 /* 8001FD00 0001CC40  38 63 FF 98 */	addi r3, r3, -104
 /* 8001FD04 0001CC44  4B FF F6 C8 */	b init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
 
-.global $$280$$2calc__17J3DMtxCalcMayaAnmFUs
-$$280$$2calc__17J3DMtxCalcMayaAnmFUs:
+.global "@80@calc__17J3DMtxCalcMayaAnmFUs"
+"@80@calc__17J3DMtxCalcMayaAnmFUs":
 /* 8001FD08 0001CC48  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FD0C 0001CC4C  4B FF F7 D8 */	b calc__17J3DMtxCalcMayaAnmFUs
 
-.global $$280$$2__dt__17J3DMtxCalcMayaAnmFv
-$$280$$2__dt__17J3DMtxCalcMayaAnmFv:
+.global "@80@__dt__17J3DMtxCalcMayaAnmFv"
+"@80@__dt__17J3DMtxCalcMayaAnmFv":
 /* 8001FD10 0001CC50  38 63 FF B0 */	addi r3, r3, -80
 /* 8001FD14 0001CC54  4B FF F5 AC */	b __dt__17J3DMtxCalcMayaAnmFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2894:
+"@894":
 	.incbin "baserom.dol", 0x36DBF8, 0xC
-$$2914:
+"@914":
 	.incbin "baserom.dol", 0x36DC04, 0xC
-$$21249:
+"@1249":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21251:
+"@1251":
   .4byte 0
   .4byte 0
   .4byte 0
@@ -2572,16 +2572,16 @@ __vt__17J3DMtxCalcMayaAnm:
   .4byte calc__17J3DMtxCalcMayaAnmFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$2__dt__17J3DMtxCalcMayaAnmFv
-  .4byte $$280$$2calc__17J3DMtxCalcMayaAnmFUs
+  .4byte "@80@__dt__17J3DMtxCalcMayaAnmFv"
+  .4byte "@80@calc__17J3DMtxCalcMayaAnmFUs"
   .4byte 0
   .4byte 0
-  .4byte $$2104$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
-  .4byte $$2104$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
-  .4byte $$2104$$24$$2calc__17J3DMtxCalcMayaAnmFUs
+  .4byte "@104@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf"
+  .4byte "@104@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo"
+  .4byte "@104@4@calc__17J3DMtxCalcMayaAnmFUs"
 .global __vt__22J3DMtxCalcSoftimageAnm
 __vt__22J3DMtxCalcSoftimageAnm:
   .4byte 0
@@ -2595,16 +2595,16 @@ __vt__22J3DMtxCalcSoftimageAnm:
   .4byte calc__22J3DMtxCalcSoftimageAnmFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$2__dt__22J3DMtxCalcSoftimageAnmFv
-  .4byte $$280$$2calc__22J3DMtxCalcSoftimageAnmFUs
+  .4byte "@80@__dt__22J3DMtxCalcSoftimageAnmFv"
+  .4byte "@80@calc__22J3DMtxCalcSoftimageAnmFUs"
   .4byte 0
   .4byte 0
-  .4byte $$2104$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
-  .4byte $$2104$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
-  .4byte $$2104$$24$$2calc__22J3DMtxCalcSoftimageAnmFUs
+  .4byte "@104@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf"
+  .4byte "@104@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo"
+  .4byte "@104@4@calc__22J3DMtxCalcSoftimageAnmFUs"
 .global __vt__18J3DMtxCalcBasicAnm
 __vt__18J3DMtxCalcBasicAnm:
   .4byte 0
@@ -2618,16 +2618,16 @@ __vt__18J3DMtxCalcBasicAnm:
   .4byte calc__18J3DMtxCalcBasicAnmFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$2__dt__18J3DMtxCalcBasicAnmFv
-  .4byte $$280$$2calc__18J3DMtxCalcBasicAnmFUs
+  .4byte "@80@__dt__18J3DMtxCalcBasicAnmFv"
+  .4byte "@80@calc__18J3DMtxCalcBasicAnmFUs"
   .4byte 0
   .4byte 0
-  .4byte $$2104$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
-  .4byte $$2104$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2104$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
-  .4byte $$2104$$24$$2calc__18J3DMtxCalcBasicAnmFUs
+  .4byte "@104@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf"
+  .4byte "@104@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@104@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo"
+  .4byte "@104@4@calc__18J3DMtxCalcBasicAnmFUs"
 .global __vt__14J3DMtxCalcMaya
 __vt__14J3DMtxCalcMaya:
   .4byte 0
@@ -2641,12 +2641,12 @@ __vt__14J3DMtxCalcMaya:
   .4byte calc__15J3DMtxCalcBasicFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$24$$2init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf
-  .4byte $$280$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo
-  .4byte $$280$$24$$2calc__15J3DMtxCalcBasicFUs
+  .4byte "@80@4@init__14J3DMtxCalcMayaFRC3VecRA3_A4_Cf"
+  .4byte "@80@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@calcTransform__14J3DMtxCalcMayaFUsRC16J3DTransformInfo"
+  .4byte "@80@4@calc__15J3DMtxCalcBasicFUs"
 .global __vt__19J3DMtxCalcSoftimage
 __vt__19J3DMtxCalcSoftimage:
   .4byte 0
@@ -2660,12 +2660,12 @@ __vt__19J3DMtxCalcSoftimage:
   .4byte calc__15J3DMtxCalcBasicFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$24$$2init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf
-  .4byte $$280$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo
-  .4byte $$280$$24$$2calc__15J3DMtxCalcBasicFUs
+  .4byte "@80@4@init__19J3DMtxCalcSoftimageFRC3VecRA3_A4_Cf"
+  .4byte "@80@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@calcTransform__19J3DMtxCalcSoftimageFUsRC16J3DTransformInfo"
+  .4byte "@80@4@calc__15J3DMtxCalcBasicFUs"
 .global __vt__15J3DMtxCalcBasic
 __vt__15J3DMtxCalcBasic:
   .4byte 0
@@ -2679,12 +2679,12 @@ __vt__15J3DMtxCalcBasic:
   .4byte calc__15J3DMtxCalcBasicFUs
   .4byte 0
   .4byte 0
-  .4byte $$280$$24$$2init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf
-  .4byte $$280$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$280$$24$$2calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo
-  .4byte $$280$$24$$2calc__15J3DMtxCalcBasicFUs
+  .4byte "@80@4@init__15J3DMtxCalcBasicFRC3VecRA3_A4_Cf"
+  .4byte "@80@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@80@4@calcTransform__15J3DMtxCalcBasicFUsRC16J3DTransformInfo"
+  .4byte "@80@4@calc__15J3DMtxCalcBasicFUs"
 .global __vt__10J3DMtxCalc
 __vt__10J3DMtxCalc:
   .4byte 0
@@ -2708,11 +2708,11 @@ __vt__13J3DMtxCalcAnm:
   .4byte recursiveCalc__10J3DMtxCalcFP7J3DNode
   .4byte recursiveEntry__10J3DMtxCalcFP7J3DNode
   .4byte calcTransform__10J3DMtxCalcFUsRC16J3DTransformInfo
-  .4byte $$224$$24$$2calc__13J3DMtxCalcAnmFUs
+  .4byte "@24@4@calc__13J3DMtxCalcAnmFUs"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21077:
+"@1077":
 	.incbin "baserom.dol", 0x3E3EF0, 0x4
-$$21258:
+"@1258":
   .4byte 0

@@ -128,10 +128,10 @@ OSInit:
 /* 8008C6C8 00089608  93 A1 00 0C */	stw r29, 0xc(r1)
 /* 8008C6CC 0008960C  80 0D 92 D0 */	lwz r0, AreWeInitialized@sda21(r13)
 /* 8008C6D0 00089610  3C 80 80 3F */	lis r4, DriveInfo@ha
-/* 8008C6D4 00089614  3C 60 80 3B */	lis r3, $$284@ha
+/* 8008C6D4 00089614  3C 60 80 3B */	lis r3, "@84"@ha
 /* 8008C6D8 00089618  2C 00 00 00 */	cmpwi r0, 0
 /* 8008C6DC 0008961C  3B C4 B0 80 */	addi r30, r4, DriveInfo@l
-/* 8008C6E0 00089620  3B E3 F0 C0 */	addi r31, r3, $$284@l
+/* 8008C6E0 00089620  3B E3 F0 C0 */	addi r31, r3, "@84"@l
 /* 8008C6E4 00089624  40 82 03 6C */	bne lbl_8008CA50
 /* 8008C6E8 00089628  38 00 00 01 */	li r0, 1
 /* 8008C6EC 0008962C  90 0D 92 D0 */	stw r0, AreWeInitialized@sda21(r13)
@@ -395,10 +395,10 @@ OSExceptionInit:
 /* 8008CA94 000899D4  3C 80 80 09 */	lis r4, lbl_8008CDDC@ha
 /* 8008CA98 000899D8  38 A5 CD 44 */	addi r5, r5, OSExceptionVector@l
 /* 8008CA9C 000899DC  38 84 CD DC */	addi r4, r4, lbl_8008CDDC@l
-/* 8008CAA0 000899E0  3C C0 80 3B */	lis r6, $$284@ha
+/* 8008CAA0 000899E0  3C C0 80 3B */	lis r6, "@84"@ha
 /* 8008CAA4 000899E4  28 00 00 00 */	cmplwi r0, 0
 /* 8008CAA8 000899E8  7C B8 2B 78 */	mr r24, r5
-/* 8008CAAC 000899EC  3B A6 F0 C0 */	addi r29, r6, $$284@l
+/* 8008CAAC 000899EC  3B A6 F0 C0 */	addi r29, r6, "@84"@l
 /* 8008CAB0 000899F0  7E E5 20 50 */	subf r23, r5, r4
 /* 8008CAB4 000899F4  3A 83 00 60 */	addi r20, r3, 0x60
 /* 8008CAB8 000899F8  40 82 00 4C */	bne lbl_8008CB04
@@ -692,57 +692,57 @@ __OSGetDIConfig:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
-$$284:
+"@84":
     .asciz "\nDolphin OS $Revision: 54 $.\n"
     .balign 8
-$$285:
+"@85":
 	.asciz "Kernel built : %s %s\n"
     .balign 8
-$$286:
+"@86":
 	.asciz "Jun  5 2002"
     .balign 4
-$$287:
+"@87":
     .asciz "02:09:12"
     .balign 8
-$$288:
+"@88":
 	.asciz "Console Type : "
     .balign 8
-$$289:
+"@89":
     .asciz "Retail %d\n"
 	.balign 4
-$$290:
+"@90":
     .asciz "Mac Emulator\n"
     .balign 4
-$$291:
+"@91":
     .asciz "PC Emulator\n"
     .balign 4
-$$292:
+"@92":
     .asciz "EPPC Arthur\n"
 	.balign 4
-$$293:
+"@93":
     .asciz "EPPC Minnow\n"
     .balign 4
-$$294:
+"@94":
     .asciz "Development HW%d\n"
     .balign 4
-$$295:
+"@95":
     .asciz "Memory %d MB\n"
 	.balign 4
-$$296:
+"@96":
     .asciz "Arena : 0x%x - 0x%x\n"
 	.balign 4
 __OSExceptionLocations:
 	.incbin "baserom.dol", 0x3AC1A8, 0x3C
-$$2130:
+"@130":
     .asciz "Installing OSDBIntegrator\n"
 	.balign 4
-$$2131:
+"@131":
     .asciz ">>> OSINIT: exception %d commandeered by TRK\n"
 	.balign 4
-$$2132:
+"@132":
     .asciz ">>> OSINIT: exception %d vectored to debugger\n"
 	.balign 4
-$$2133:
+"@133":
     .asciz "Exceptions initialized...\n"
 	.balign 8
 

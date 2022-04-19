@@ -283,7 +283,8 @@ O_FILES :=                                                            \
     $(BUILD_DIR)/asm/os/OSSync.o                                      \
     $(BUILD_DIR)/asm/os/OSThread.o                                    \
     $(BUILD_DIR)/asm/os/OSTime.o                                      \
-    $(BUILD_DIR)/asm/os/__start.o                                     \
+    $(BUILD_DIR)/src/os/__start.o                                     \
+    $(BUILD_DIR)/src/os/__ppc_eabi_init.o                             \
     $(BUILD_DIR)/asm/os/__ppc_eabi_init.o                             \
     $(BUILD_DIR)/asm/mtx/mtx.o                                        \
     $(BUILD_DIR)/asm/mtx/mtxvec.o                                     \

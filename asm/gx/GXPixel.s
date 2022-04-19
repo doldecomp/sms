@@ -16,8 +16,8 @@ GXSetFog:
 /* 800AC468 000A93A8  FC 02 08 00 */	fcmpu cr0, f2, f1
 /* 800AC46C 000A93AC  40 82 00 14 */	bne lbl_800AC480
 lbl_800AC470:
-/* 800AC470 000A93B0  C0 62 8B 58 */	lfs f3, $$2125@sda21(r2)
-/* 800AC474 000A93B4  C0 82 8B 5C */	lfs f4, $$2126@sda21(r2)
+/* 800AC470 000A93B0  C0 62 8B 58 */	lfs f3, "@125"@sda21(r2)
+/* 800AC474 000A93B4  C0 82 8B 5C */	lfs f4, "@126"@sda21(r2)
 /* 800AC478 000A93B8  FC A0 18 90 */	fmr f5, f3
 /* 800AC47C 000A93BC  48 00 00 20 */	b lbl_800AC49C
 lbl_800AC480:
@@ -29,9 +29,9 @@ lbl_800AC480:
 /* 800AC494 000A93D4  EC A1 28 24 */	fdivs f5, f1, f5
 /* 800AC498 000A93D8  EC 62 00 24 */	fdivs f3, f2, f0
 lbl_800AC49C:
-/* 800AC49C 000A93DC  C0 22 8B 5C */	lfs f1, $$2126@sda21(r2)
+/* 800AC49C 000A93DC  C0 22 8B 5C */	lfs f1, "@126"@sda21(r2)
 /* 800AC4A0 000A93E0  38 60 00 00 */	li r3, 0
-/* 800AC4A4 000A93E4  C8 02 8B 60 */	lfd f0, $$2127@sda21(r2)
+/* 800AC4A4 000A93E4  C8 02 8B 60 */	lfd f0, "@127"@sda21(r2)
 /* 800AC4A8 000A93E8  48 00 00 0C */	b lbl_800AC4B4
 lbl_800AC4AC:
 /* 800AC4AC 000A93EC  EC 84 00 72 */	fmuls f4, f4, f1
@@ -39,9 +39,9 @@ lbl_800AC4AC:
 lbl_800AC4B4:
 /* 800AC4B4 000A93F4  FC 04 00 40 */	fcmpo cr0, f4, f0
 /* 800AC4B8 000A93F8  41 81 FF F4 */	bgt lbl_800AC4AC
-/* 800AC4BC 000A93FC  C8 02 8B 70 */	lfd f0, $$2129@sda21(r2)
-/* 800AC4C0 000A9400  C0 42 8B 68 */	lfs f2, $$2128@sda21(r2)
-/* 800AC4C4 000A9404  C0 22 8B 58 */	lfs f1, $$2125@sda21(r2)
+/* 800AC4BC 000A93FC  C8 02 8B 70 */	lfd f0, "@129"@sda21(r2)
+/* 800AC4C0 000A9400  C0 42 8B 68 */	lfs f2, "@128"@sda21(r2)
+/* 800AC4C4 000A9404  C0 22 8B 58 */	lfs f1, "@125"@sda21(r2)
 /* 800AC4C8 000A9408  48 00 00 0C */	b lbl_800AC4D4
 lbl_800AC4CC:
 /* 800AC4CC 000A940C  EC 84 00 B2 */	fmuls f4, f4, f2
@@ -53,9 +53,9 @@ lbl_800AC4D4:
 /* 800AC4E0 000A9420  41 80 FF EC */	blt lbl_800AC4CC
 lbl_800AC4E4:
 /* 800AC4E4 000A9424  3B C3 00 01 */	addi r30, r3, 1
-/* 800AC4E8 000A9428  C0 02 8B 78 */	lfs f0, $$2130@sda21(r2)
+/* 800AC4E8 000A9428  C0 02 8B 78 */	lfs f0, "@130"@sda21(r2)
 /* 800AC4EC 000A942C  38 00 00 01 */	li r0, 1
-/* 800AC4F0 000A9430  C8 42 8B 80 */	lfd f2, $$2132@sda21(r2)
+/* 800AC4F0 000A9430  C8 42 8B 80 */	lfd f2, "@132"@sda21(r2)
 /* 800AC4F4 000A9434  7C 00 F0 30 */	slw r0, r0, r30
 /* 800AC4F8 000A9438  EC 20 01 32 */	fmuls f1, f0, f4
 /* 800AC4FC 000A943C  6C 03 80 00 */	xoris r3, r0, 0x8000
@@ -523,17 +523,17 @@ p2f$194:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2125:
+"@125":
   .4byte 0
-$$2126:
+"@126":
 	.incbin "baserom.dol", 0x3E485C, 0x4
-$$2127:
+"@127":
 	.incbin "baserom.dol", 0x3E4860, 0x8
-$$2128:
+"@128":
 	.incbin "baserom.dol", 0x3E4868, 0x8
-$$2129:
+"@129":
 	.incbin "baserom.dol", 0x3E4870, 0x8
-$$2130:
+"@130":
 	.incbin "baserom.dol", 0x3E4878, 0x8
-$$2132:
+"@132":
 	.incbin "baserom.dol", 0x3E4880, 0x8

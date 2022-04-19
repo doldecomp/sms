@@ -13,8 +13,8 @@ __dt__18TNerveNPCMareStandFv:
 /* 8016FF9C 0016CEDC  38 03 92 50 */	addi r0, r3, __vt__18TNerveNPCMareStand@l
 /* 8016FFA0 0016CEE0  90 1F 00 00 */	stw r0, 0(r31)
 /* 8016FFA4 0016CEE4  41 82 00 10 */	beq lbl_8016FFB4
-/* 8016FFA8 0016CEE8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8016FFAC 0016CEEC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8016FFA8 0016CEE8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8016FFAC 0016CEEC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8016FFB0 0016CEF0  90 1F 00 00 */	stw r0, 0(r31)
 lbl_8016FFB4:
 /* 8016FFB4 0016CEF4  7C 80 07 35 */	extsh. r0, r4
@@ -29,8 +29,8 @@ lbl_8016FFC4:
 /* 8016FFD4 0016CF14  7C 08 03 A6 */	mtlr r0
 /* 8016FFD8 0016CF18  4E 80 00 20 */	blr 
 
-.global execute__18TNerveNPCMareStandCFP24TSpineBase$$010TLiveActor$$1
-execute__18TNerveNPCMareStandCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__18TNerveNPCMareStandCFP24TSpineBase<10TLiveActor>"
+"execute__18TNerveNPCMareStandCFP24TSpineBase<10TLiveActor>":
 /* 8016FFDC 0016CF1C  7C 08 02 A6 */	mflr r0
 /* 8016FFE0 0016CF20  90 01 00 04 */	stw r0, 4(r1)
 /* 8016FFE4 0016CF24  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -65,15 +65,15 @@ theNerve__18TNerveNPCMareStandFv:
 /* 80170040 0016CF80  88 0D 99 C8 */	lbz r0, init$2438@sda21(r13)
 /* 80170044 0016CF84  7C 00 07 75 */	extsb. r0, r0
 /* 80170048 0016CF88  40 82 00 3C */	bne lbl_80170084
-/* 8017004C 0016CF8C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170050 0016CF90  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8017004C 0016CF8C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170050 0016CF90  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170054 0016CF94  3C 60 80 3C */	lis r3, __vt__18TNerveNPCMareStand@ha
 /* 80170058 0016CF98  90 0D 99 CC */	stw r0, instance$2436@sda21(r13)
 /* 8017005C 0016CF9C  38 03 92 50 */	addi r0, r3, __vt__18TNerveNPCMareStand@l
 /* 80170060 0016CFA0  3C 80 80 17 */	lis r4, __dt__18TNerveNPCMareStandFv@ha
 /* 80170064 0016CFA4  90 0D 99 CC */	stw r0, instance$2436@sda21(r13)
-/* 80170068 0016CFA8  3C 60 80 3F */	lis r3, $$22437@ha
-/* 8017006C 0016CFAC  38 A3 42 9C */	addi r5, r3, $$22437@l
+/* 80170068 0016CFA8  3C 60 80 3F */	lis r3, "@2437"@ha
+/* 8017006C 0016CFAC  38 A3 42 9C */	addi r5, r3, "@2437"@l
 /* 80170070 0016CFB0  38 84 FF 80 */	addi r4, r4, __dt__18TNerveNPCMareStandFv@l
 /* 80170074 0016CFB4  38 6D 99 CC */	addi r3, r13, instance$2436@sda21
 /* 80170078 0016CFB8  4B F1 26 B1 */	bl __register_global_object
@@ -86,16 +86,16 @@ lbl_80170084:
 /* 80170090 0016CFD0  7C 08 03 A6 */	mtlr r0
 /* 80170094 0016CFD4  4E 80 00 20 */	blr 
 
-.global __dt__24TNerveBase$$010TLiveActor$$1Fv
-__dt__24TNerveBase$$010TLiveActor$$1Fv:
+.global "__dt__24TNerveBase<10TLiveActor>Fv"
+"__dt__24TNerveBase<10TLiveActor>Fv":
 /* 80170098 0016CFD8  7C 08 02 A6 */	mflr r0
 /* 8017009C 0016CFDC  90 01 00 04 */	stw r0, 4(r1)
 /* 801700A0 0016CFE0  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 801700A4 0016CFE4  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 801700A8 0016CFE8  7C 7F 1B 79 */	or. r31, r3, r3
 /* 801700AC 0016CFEC  41 82 00 20 */	beq lbl_801700CC
-/* 801700B0 0016CFF0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801700B4 0016CFF4  38 63 92 60 */	addi r3, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801700B0 0016CFF0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801700B4 0016CFF4  38 63 92 60 */	addi r3, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801700B8 0016CFF8  7C 80 07 35 */	extsh. r0, r4
 /* 801700BC 0016CFFC  90 7F 00 00 */	stw r3, 0(r31)
 /* 801700C0 0016D000  40 81 00 0C */	ble lbl_801700CC
@@ -109,8 +109,8 @@ lbl_801700CC:
 /* 801700DC 0016D01C  7C 08 03 A6 */	mtlr r0
 /* 801700E0 0016D020  4E 80 00 20 */	blr 
 
-.global execute__14TNerveNPCBlownCFP24TSpineBase$$010TLiveActor$$1
-execute__14TNerveNPCBlownCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__14TNerveNPCBlownCFP24TSpineBase<10TLiveActor>"
+"execute__14TNerveNPCBlownCFP24TSpineBase<10TLiveActor>":
 /* 801700E4 0016D024  7C 08 02 A6 */	mflr r0
 /* 801700E8 0016D028  90 01 00 04 */	stw r0, 4(r1)
 /* 801700EC 0016D02C  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -145,15 +145,15 @@ lbl_80170150:
 /* 80170158 0016D098  88 0D 99 C8 */	lbz r0, init$2438@sda21(r13)
 /* 8017015C 0016D09C  7C 00 07 75 */	extsb. r0, r0
 /* 80170160 0016D0A0  40 82 00 3C */	bne lbl_8017019C
-/* 80170164 0016D0A4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170168 0016D0A8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170164 0016D0A4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170168 0016D0A8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017016C 0016D0AC  3C 60 80 3C */	lis r3, __vt__18TNerveNPCMareStand@ha
 /* 80170170 0016D0B0  90 0D 99 CC */	stw r0, instance$2436@sda21(r13)
 /* 80170174 0016D0B4  38 03 92 50 */	addi r0, r3, __vt__18TNerveNPCMareStand@l
 /* 80170178 0016D0B8  3C 80 80 17 */	lis r4, __dt__18TNerveNPCMareStandFv@ha
 /* 8017017C 0016D0BC  90 0D 99 CC */	stw r0, instance$2436@sda21(r13)
-/* 80170180 0016D0C0  3C 60 80 3F */	lis r3, $$22437@ha
-/* 80170184 0016D0C4  38 A3 42 9C */	addi r5, r3, $$22437@l
+/* 80170180 0016D0C0  3C 60 80 3F */	lis r3, "@2437"@ha
+/* 80170184 0016D0C4  38 A3 42 9C */	addi r5, r3, "@2437"@l
 /* 80170188 0016D0C8  38 84 FF 80 */	addi r4, r4, __dt__18TNerveNPCMareStandFv@l
 /* 8017018C 0016D0CC  38 6D 99 CC */	addi r3, r13, instance$2436@sda21
 /* 80170190 0016D0D0  4B F1 25 99 */	bl __register_global_object
@@ -195,15 +195,15 @@ theNerve__14TNerveNPCBlownFv:
 /* 80170204 0016D144  88 0D 99 C0 */	lbz r0, init$2426@sda21(r13)
 /* 80170208 0016D148  7C 00 07 75 */	extsb. r0, r0
 /* 8017020C 0016D14C  40 82 00 3C */	bne lbl_80170248
-/* 80170210 0016D150  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170214 0016D154  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170210 0016D150  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170214 0016D154  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170218 0016D158  3C 60 80 3C */	lis r3, __vt__14TNerveNPCBlown@ha
 /* 8017021C 0016D15C  90 0D 99 C4 */	stw r0, instance$2424@sda21(r13)
 /* 80170220 0016D160  38 03 92 70 */	addi r0, r3, __vt__14TNerveNPCBlown@l
 /* 80170224 0016D164  3C 80 80 17 */	lis r4, __dt__14TNerveNPCBlownFv@ha
 /* 80170228 0016D168  90 0D 99 C4 */	stw r0, instance$2424@sda21(r13)
-/* 8017022C 0016D16C  3C 60 80 3F */	lis r3, $$22425@ha
-/* 80170230 0016D170  38 A3 42 90 */	addi r5, r3, $$22425@l
+/* 8017022C 0016D16C  3C 60 80 3F */	lis r3, "@2425"@ha
+/* 80170230 0016D170  38 A3 42 90 */	addi r5, r3, "@2425"@l
 /* 80170234 0016D174  38 84 02 5C */	addi r4, r4, __dt__14TNerveNPCBlownFv@l
 /* 80170238 0016D178  38 6D 99 C4 */	addi r3, r13, instance$2424@sda21
 /* 8017023C 0016D17C  4B F1 24 ED */	bl __register_global_object
@@ -228,8 +228,8 @@ __dt__14TNerveNPCBlownFv:
 /* 80170278 0016D1B8  38 03 92 70 */	addi r0, r3, __vt__14TNerveNPCBlown@l
 /* 8017027C 0016D1BC  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170280 0016D1C0  41 82 00 10 */	beq lbl_80170290
-/* 80170284 0016D1C4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170288 0016D1C8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170284 0016D1C4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170288 0016D1C8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017028C 0016D1CC  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170290:
 /* 80170290 0016D1D0  7C 80 07 35 */	extsh. r0, r4
@@ -244,8 +244,8 @@ lbl_801702A0:
 /* 801702B0 0016D1F0  7C 08 03 A6 */	mtlr r0
 /* 801702B4 0016D1F4  4E 80 00 20 */	blr 
 
-.global execute__12TNerveNPCMadCFP24TSpineBase$$010TLiveActor$$1
-execute__12TNerveNPCMadCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__12TNerveNPCMadCFP24TSpineBase<10TLiveActor>"
+"execute__12TNerveNPCMadCFP24TSpineBase<10TLiveActor>":
 /* 801702B8 0016D1F8  7C 08 02 A6 */	mflr r0
 /* 801702BC 0016D1FC  90 01 00 04 */	stw r0, 4(r1)
 /* 801702C0 0016D200  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -280,15 +280,15 @@ theNerve__12TNerveNPCMadFv:
 /* 8017031C 0016D25C  88 0D 99 B8 */	lbz r0, init$2416@sda21(r13)
 /* 80170320 0016D260  7C 00 07 75 */	extsb. r0, r0
 /* 80170324 0016D264  40 82 00 3C */	bne lbl_80170360
-/* 80170328 0016D268  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017032C 0016D26C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170328 0016D268  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017032C 0016D26C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170330 0016D270  3C 60 80 3C */	lis r3, __vt__12TNerveNPCMad@ha
 /* 80170334 0016D274  90 0D 99 BC */	stw r0, instance$2414@sda21(r13)
 /* 80170338 0016D278  38 03 92 80 */	addi r0, r3, __vt__12TNerveNPCMad@l
 /* 8017033C 0016D27C  3C 80 80 17 */	lis r4, __dt__12TNerveNPCMadFv@ha
 /* 80170340 0016D280  90 0D 99 BC */	stw r0, instance$2414@sda21(r13)
-/* 80170344 0016D284  3C 60 80 3F */	lis r3, $$22415@ha
-/* 80170348 0016D288  38 A3 42 84 */	addi r5, r3, $$22415@l
+/* 80170344 0016D284  3C 60 80 3F */	lis r3, "@2415"@ha
+/* 80170348 0016D288  38 A3 42 84 */	addi r5, r3, "@2415"@l
 /* 8017034C 0016D28C  38 84 03 74 */	addi r4, r4, __dt__12TNerveNPCMadFv@l
 /* 80170350 0016D290  38 6D 99 BC */	addi r3, r13, instance$2414@sda21
 /* 80170354 0016D294  4B F1 23 D5 */	bl __register_global_object
@@ -313,8 +313,8 @@ __dt__12TNerveNPCMadFv:
 /* 80170390 0016D2D0  38 03 92 80 */	addi r0, r3, __vt__12TNerveNPCMad@l
 /* 80170394 0016D2D4  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170398 0016D2D8  41 82 00 10 */	beq lbl_801703A8
-/* 8017039C 0016D2DC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801703A0 0016D2E0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8017039C 0016D2DC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801703A0 0016D2E0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801703A4 0016D2E4  90 1F 00 00 */	stw r0, 0(r31)
 lbl_801703A8:
 /* 801703A8 0016D2E8  7C 80 07 35 */	extsh. r0, r4
@@ -329,8 +329,8 @@ lbl_801703B8:
 /* 801703C8 0016D308  7C 08 03 A6 */	mtlr r0
 /* 801703CC 0016D30C  4E 80 00 20 */	blr 
 
-.global execute__14TNerveNPCThrowCFP24TSpineBase$$010TLiveActor$$1
-execute__14TNerveNPCThrowCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__14TNerveNPCThrowCFP24TSpineBase<10TLiveActor>"
+"execute__14TNerveNPCThrowCFP24TSpineBase<10TLiveActor>":
 /* 801703D0 0016D310  7C 08 02 A6 */	mflr r0
 /* 801703D4 0016D314  90 01 00 04 */	stw r0, 4(r1)
 /* 801703D8 0016D318  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -365,15 +365,15 @@ theNerve__14TNerveNPCThrowFv:
 /* 80170434 0016D374  88 0D 99 B0 */	lbz r0, init$2406@sda21(r13)
 /* 80170438 0016D378  7C 00 07 75 */	extsb. r0, r0
 /* 8017043C 0016D37C  40 82 00 3C */	bne lbl_80170478
-/* 80170440 0016D380  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170444 0016D384  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170440 0016D380  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170444 0016D384  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170448 0016D388  3C 60 80 3C */	lis r3, __vt__14TNerveNPCThrow@ha
 /* 8017044C 0016D38C  90 0D 99 B4 */	stw r0, instance$2404@sda21(r13)
 /* 80170450 0016D390  38 03 92 90 */	addi r0, r3, __vt__14TNerveNPCThrow@l
 /* 80170454 0016D394  3C 80 80 17 */	lis r4, __dt__14TNerveNPCThrowFv@ha
 /* 80170458 0016D398  90 0D 99 B4 */	stw r0, instance$2404@sda21(r13)
-/* 8017045C 0016D39C  3C 60 80 3F */	lis r3, $$22405@ha
-/* 80170460 0016D3A0  38 A3 42 78 */	addi r5, r3, $$22405@l
+/* 8017045C 0016D39C  3C 60 80 3F */	lis r3, "@2405"@ha
+/* 80170460 0016D3A0  38 A3 42 78 */	addi r5, r3, "@2405"@l
 /* 80170464 0016D3A4  38 84 04 8C */	addi r4, r4, __dt__14TNerveNPCThrowFv@l
 /* 80170468 0016D3A8  38 6D 99 B4 */	addi r3, r13, instance$2404@sda21
 /* 8017046C 0016D3AC  4B F1 22 BD */	bl __register_global_object
@@ -398,8 +398,8 @@ __dt__14TNerveNPCThrowFv:
 /* 801704A8 0016D3E8  38 03 92 90 */	addi r0, r3, __vt__14TNerveNPCThrow@l
 /* 801704AC 0016D3EC  90 1F 00 00 */	stw r0, 0(r31)
 /* 801704B0 0016D3F0  41 82 00 10 */	beq lbl_801704C0
-/* 801704B4 0016D3F4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801704B8 0016D3F8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801704B4 0016D3F4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801704B8 0016D3F8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801704BC 0016D3FC  90 1F 00 00 */	stw r0, 0(r31)
 lbl_801704C0:
 /* 801704C0 0016D400  7C 80 07 35 */	extsh. r0, r4
@@ -414,8 +414,8 @@ lbl_801704D0:
 /* 801704E0 0016D420  7C 08 03 A6 */	mtlr r0
 /* 801704E4 0016D424  4E 80 00 20 */	blr 
 
-.global execute__13TNerveNPCTalkCFP24TSpineBase$$010TLiveActor$$1
-execute__13TNerveNPCTalkCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__13TNerveNPCTalkCFP24TSpineBase<10TLiveActor>"
+"execute__13TNerveNPCTalkCFP24TSpineBase<10TLiveActor>":
 /* 801704E8 0016D428  7C 08 02 A6 */	mflr r0
 /* 801704EC 0016D42C  38 60 00 01 */	li r3, 1
 /* 801704F0 0016D430  90 01 00 04 */	stw r0, 4(r1)
@@ -476,15 +476,15 @@ theNerve__13TNerveNPCTalkFv:
 /* 801705A4 0016D4E4  88 0D 99 A8 */	lbz r0, init$2392@sda21(r13)
 /* 801705A8 0016D4E8  7C 00 07 75 */	extsb. r0, r0
 /* 801705AC 0016D4EC  40 82 00 3C */	bne lbl_801705E8
-/* 801705B0 0016D4F0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801705B4 0016D4F4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801705B0 0016D4F0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801705B4 0016D4F4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801705B8 0016D4F8  3C 60 80 3C */	lis r3, __vt__13TNerveNPCTalk@ha
 /* 801705BC 0016D4FC  90 0D 99 AC */	stw r0, instance$2390@sda21(r13)
 /* 801705C0 0016D500  38 03 92 A0 */	addi r0, r3, __vt__13TNerveNPCTalk@l
 /* 801705C4 0016D504  3C 80 80 17 */	lis r4, __dt__13TNerveNPCTalkFv@ha
 /* 801705C8 0016D508  90 0D 99 AC */	stw r0, instance$2390@sda21(r13)
-/* 801705CC 0016D50C  3C 60 80 3F */	lis r3, $$22391@ha
-/* 801705D0 0016D510  38 A3 42 6C */	addi r5, r3, $$22391@l
+/* 801705CC 0016D50C  3C 60 80 3F */	lis r3, "@2391"@ha
+/* 801705D0 0016D510  38 A3 42 6C */	addi r5, r3, "@2391"@l
 /* 801705D4 0016D514  38 84 05 FC */	addi r4, r4, __dt__13TNerveNPCTalkFv@l
 /* 801705D8 0016D518  38 6D 99 AC */	addi r3, r13, instance$2390@sda21
 /* 801705DC 0016D51C  4B F1 21 4D */	bl __register_global_object
@@ -509,8 +509,8 @@ __dt__13TNerveNPCTalkFv:
 /* 80170618 0016D558  38 03 92 A0 */	addi r0, r3, __vt__13TNerveNPCTalk@l
 /* 8017061C 0016D55C  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170620 0016D560  41 82 00 10 */	beq lbl_80170630
-/* 80170624 0016D564  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170628 0016D568  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170624 0016D564  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170628 0016D568  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017062C 0016D56C  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170630:
 /* 80170630 0016D570  7C 80 07 35 */	extsh. r0, r4
@@ -525,8 +525,8 @@ lbl_80170640:
 /* 80170650 0016D590  7C 08 03 A6 */	mtlr r0
 /* 80170654 0016D594  4E 80 00 20 */	blr 
 
-.global execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase$$010TLiveActor$$1
-execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase<10TLiveActor>"
+"execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase<10TLiveActor>":
 /* 80170658 0016D598  7C 08 02 A6 */	mflr r0
 /* 8017065C 0016D59C  90 01 00 04 */	stw r0, 4(r1)
 /* 80170660 0016D5A0  94 21 FF F8 */	stwu r1, -8(r1)
@@ -546,15 +546,15 @@ theNerve__30TNerveNPCSetPosAfterSinkBottomFv:
 /* 8017068C 0016D5CC  88 0D 99 A0 */	lbz r0, init$2386@sda21(r13)
 /* 80170690 0016D5D0  7C 00 07 75 */	extsb. r0, r0
 /* 80170694 0016D5D4  40 82 00 3C */	bne lbl_801706D0
-/* 80170698 0016D5D8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017069C 0016D5DC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170698 0016D5D8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017069C 0016D5DC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801706A0 0016D5E0  3C 60 80 3C */	lis r3, __vt__30TNerveNPCSetPosAfterSinkBottom@ha
 /* 801706A4 0016D5E4  90 0D 99 A4 */	stw r0, instance$2384@sda21(r13)
 /* 801706A8 0016D5E8  38 03 92 B0 */	addi r0, r3, __vt__30TNerveNPCSetPosAfterSinkBottom@l
 /* 801706AC 0016D5EC  3C 80 80 17 */	lis r4, __dt__30TNerveNPCSetPosAfterSinkBottomFv@ha
 /* 801706B0 0016D5F0  90 0D 99 A4 */	stw r0, instance$2384@sda21(r13)
-/* 801706B4 0016D5F4  3C 60 80 3F */	lis r3, $$22385@ha
-/* 801706B8 0016D5F8  38 A3 42 60 */	addi r5, r3, $$22385@l
+/* 801706B4 0016D5F4  3C 60 80 3F */	lis r3, "@2385"@ha
+/* 801706B8 0016D5F8  38 A3 42 60 */	addi r5, r3, "@2385"@l
 /* 801706BC 0016D5FC  38 84 06 E4 */	addi r4, r4, __dt__30TNerveNPCSetPosAfterSinkBottomFv@l
 /* 801706C0 0016D600  38 6D 99 A4 */	addi r3, r13, instance$2384@sda21
 /* 801706C4 0016D604  4B F1 20 65 */	bl __register_global_object
@@ -579,8 +579,8 @@ __dt__30TNerveNPCSetPosAfterSinkBottomFv:
 /* 80170700 0016D640  38 03 92 B0 */	addi r0, r3, __vt__30TNerveNPCSetPosAfterSinkBottom@l
 /* 80170704 0016D644  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170708 0016D648  41 82 00 10 */	beq lbl_80170718
-/* 8017070C 0016D64C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170710 0016D650  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8017070C 0016D64C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170710 0016D650  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170714 0016D654  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170718:
 /* 80170718 0016D658  7C 80 07 35 */	extsh. r0, r4
@@ -595,8 +595,8 @@ lbl_80170728:
 /* 80170738 0016D678  7C 08 03 A6 */	mtlr r0
 /* 8017073C 0016D67C  4E 80 00 20 */	blr 
 
-.global execute__21TNerveNPCRecoverAfterCFP24TSpineBase$$010TLiveActor$$1
-execute__21TNerveNPCRecoverAfterCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__21TNerveNPCRecoverAfterCFP24TSpineBase<10TLiveActor>"
+"execute__21TNerveNPCRecoverAfterCFP24TSpineBase<10TLiveActor>":
 /* 80170740 0016D680  7C 08 02 A6 */	mflr r0
 /* 80170744 0016D684  90 01 00 04 */	stw r0, 4(r1)
 /* 80170748 0016D688  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -636,15 +636,15 @@ theNerve__21TNerveNPCRecoverAfterFv:
 /* 801707B8 0016D6F8  88 0D 99 98 */	lbz r0, init$2375@sda21(r13)
 /* 801707BC 0016D6FC  7C 00 07 75 */	extsb. r0, r0
 /* 801707C0 0016D700  40 82 00 3C */	bne lbl_801707FC
-/* 801707C4 0016D704  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801707C8 0016D708  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801707C4 0016D704  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801707C8 0016D708  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801707CC 0016D70C  3C 60 80 3C */	lis r3, __vt__21TNerveNPCRecoverAfter@ha
 /* 801707D0 0016D710  90 0D 99 9C */	stw r0, instance$2373@sda21(r13)
 /* 801707D4 0016D714  38 03 92 C0 */	addi r0, r3, __vt__21TNerveNPCRecoverAfter@l
 /* 801707D8 0016D718  3C 80 80 17 */	lis r4, __dt__21TNerveNPCRecoverAfterFv@ha
 /* 801707DC 0016D71C  90 0D 99 9C */	stw r0, instance$2373@sda21(r13)
-/* 801707E0 0016D720  3C 60 80 3F */	lis r3, $$22374@ha
-/* 801707E4 0016D724  38 A3 42 54 */	addi r5, r3, $$22374@l
+/* 801707E0 0016D720  3C 60 80 3F */	lis r3, "@2374"@ha
+/* 801707E4 0016D724  38 A3 42 54 */	addi r5, r3, "@2374"@l
 /* 801707E8 0016D728  38 84 08 10 */	addi r4, r4, __dt__21TNerveNPCRecoverAfterFv@l
 /* 801707EC 0016D72C  38 6D 99 9C */	addi r3, r13, instance$2373@sda21
 /* 801707F0 0016D730  4B F1 1F 39 */	bl __register_global_object
@@ -669,8 +669,8 @@ __dt__21TNerveNPCRecoverAfterFv:
 /* 8017082C 0016D76C  38 03 92 C0 */	addi r0, r3, __vt__21TNerveNPCRecoverAfter@l
 /* 80170830 0016D770  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170834 0016D774  41 82 00 10 */	beq lbl_80170844
-/* 80170838 0016D778  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017083C 0016D77C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170838 0016D778  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017083C 0016D77C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170840 0016D780  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170844:
 /* 80170844 0016D784  7C 80 07 35 */	extsh. r0, r4
@@ -685,8 +685,8 @@ lbl_80170854:
 /* 80170864 0016D7A4  7C 08 03 A6 */	mtlr r0
 /* 80170868 0016D7A8  4E 80 00 20 */	blr 
 
-.global execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase$$010TLiveActor$$1
-execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase<10TLiveActor>"
+"execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase<10TLiveActor>":
 /* 8017086C 0016D7AC  7C 08 02 A6 */	mflr r0
 /* 80170870 0016D7B0  90 01 00 04 */	stw r0, 4(r1)
 /* 80170874 0016D7B4  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -699,15 +699,15 @@ execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase$$010TLiveActor$$1:
 /* 80170890 0016D7D0  88 0D 99 98 */	lbz r0, init$2375@sda21(r13)
 /* 80170894 0016D7D4  7C 00 07 75 */	extsb. r0, r0
 /* 80170898 0016D7D8  40 82 00 3C */	bne lbl_801708D4
-/* 8017089C 0016D7DC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801708A0 0016D7E0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8017089C 0016D7DC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801708A0 0016D7E0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801708A4 0016D7E4  3C 60 80 3C */	lis r3, __vt__21TNerveNPCRecoverAfter@ha
 /* 801708A8 0016D7E8  90 0D 99 9C */	stw r0, instance$2373@sda21(r13)
 /* 801708AC 0016D7EC  38 03 92 C0 */	addi r0, r3, __vt__21TNerveNPCRecoverAfter@l
 /* 801708B0 0016D7F0  3C 80 80 17 */	lis r4, __dt__21TNerveNPCRecoverAfterFv@ha
 /* 801708B4 0016D7F4  90 0D 99 9C */	stw r0, instance$2373@sda21(r13)
-/* 801708B8 0016D7F8  3C 60 80 3F */	lis r3, $$22374@ha
-/* 801708BC 0016D7FC  38 A3 42 54 */	addi r5, r3, $$22374@l
+/* 801708B8 0016D7F8  3C 60 80 3F */	lis r3, "@2374"@ha
+/* 801708BC 0016D7FC  38 A3 42 54 */	addi r5, r3, "@2374"@l
 /* 801708C0 0016D800  38 84 08 10 */	addi r4, r4, __dt__21TNerveNPCRecoverAfterFv@l
 /* 801708C4 0016D804  38 6D 99 9C */	addi r3, r13, instance$2373@sda21
 /* 801708C8 0016D808  4B F1 1E 61 */	bl __register_global_object
@@ -747,15 +747,15 @@ theNerve__24TNerveNPCRecoverFromSinkFv:
 /* 80170934 0016D874  88 0D 99 90 */	lbz r0, init$2367@sda21(r13)
 /* 80170938 0016D878  7C 00 07 75 */	extsb. r0, r0
 /* 8017093C 0016D87C  40 82 00 3C */	bne lbl_80170978
-/* 80170940 0016D880  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170944 0016D884  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170940 0016D880  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170944 0016D884  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170948 0016D888  3C 60 80 3C */	lis r3, __vt__24TNerveNPCRecoverFromSink@ha
 /* 8017094C 0016D88C  90 0D 99 94 */	stw r0, instance$2365@sda21(r13)
 /* 80170950 0016D890  38 03 92 D0 */	addi r0, r3, __vt__24TNerveNPCRecoverFromSink@l
 /* 80170954 0016D894  3C 80 80 17 */	lis r4, __dt__24TNerveNPCRecoverFromSinkFv@ha
 /* 80170958 0016D898  90 0D 99 94 */	stw r0, instance$2365@sda21(r13)
-/* 8017095C 0016D89C  3C 60 80 3F */	lis r3, $$22366@ha
-/* 80170960 0016D8A0  38 A3 42 48 */	addi r5, r3, $$22366@l
+/* 8017095C 0016D89C  3C 60 80 3F */	lis r3, "@2366"@ha
+/* 80170960 0016D8A0  38 A3 42 48 */	addi r5, r3, "@2366"@l
 /* 80170964 0016D8A4  38 84 09 8C */	addi r4, r4, __dt__24TNerveNPCRecoverFromSinkFv@l
 /* 80170968 0016D8A8  38 6D 99 94 */	addi r3, r13, instance$2365@sda21
 /* 8017096C 0016D8AC  4B F1 1D BD */	bl __register_global_object
@@ -780,8 +780,8 @@ __dt__24TNerveNPCRecoverFromSinkFv:
 /* 801709A8 0016D8E8  38 03 92 D0 */	addi r0, r3, __vt__24TNerveNPCRecoverFromSink@l
 /* 801709AC 0016D8EC  90 1F 00 00 */	stw r0, 0(r31)
 /* 801709B0 0016D8F0  41 82 00 10 */	beq lbl_801709C0
-/* 801709B4 0016D8F4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801709B8 0016D8F8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801709B4 0016D8F4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801709B8 0016D8F8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801709BC 0016D8FC  90 1F 00 00 */	stw r0, 0(r31)
 lbl_801709C0:
 /* 801709C0 0016D900  7C 80 07 35 */	extsh. r0, r4
@@ -796,8 +796,8 @@ lbl_801709D0:
 /* 801709E0 0016D920  7C 08 03 A6 */	mtlr r0
 /* 801709E4 0016D924  4E 80 00 20 */	blr 
 
-.global execute__13TNerveNPCSinkCFP24TSpineBase$$010TLiveActor$$1
-execute__13TNerveNPCSinkCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__13TNerveNPCSinkCFP24TSpineBase<10TLiveActor>"
+"execute__13TNerveNPCSinkCFP24TSpineBase<10TLiveActor>":
 /* 801709E8 0016D928  7C 08 02 A6 */	mflr r0
 /* 801709EC 0016D92C  90 01 00 04 */	stw r0, 4(r1)
 /* 801709F0 0016D930  94 21 FF F8 */	stwu r1, -8(r1)
@@ -817,15 +817,15 @@ theNerve__13TNerveNPCSinkFv:
 /* 80170A1C 0016D95C  88 0D 99 88 */	lbz r0, init$2361@sda21(r13)
 /* 80170A20 0016D960  7C 00 07 75 */	extsb. r0, r0
 /* 80170A24 0016D964  40 82 00 3C */	bne lbl_80170A60
-/* 80170A28 0016D968  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170A2C 0016D96C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170A28 0016D968  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170A2C 0016D96C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170A30 0016D970  3C 60 80 3C */	lis r3, __vt__13TNerveNPCSink@ha
 /* 80170A34 0016D974  90 0D 99 8C */	stw r0, instance$2359@sda21(r13)
 /* 80170A38 0016D978  38 03 92 E0 */	addi r0, r3, __vt__13TNerveNPCSink@l
 /* 80170A3C 0016D97C  3C 80 80 17 */	lis r4, __dt__13TNerveNPCSinkFv@ha
 /* 80170A40 0016D980  90 0D 99 8C */	stw r0, instance$2359@sda21(r13)
-/* 80170A44 0016D984  3C 60 80 3F */	lis r3, $$22360@ha
-/* 80170A48 0016D988  38 A3 42 3C */	addi r5, r3, $$22360@l
+/* 80170A44 0016D984  3C 60 80 3F */	lis r3, "@2360"@ha
+/* 80170A48 0016D988  38 A3 42 3C */	addi r5, r3, "@2360"@l
 /* 80170A4C 0016D98C  38 84 0A 74 */	addi r4, r4, __dt__13TNerveNPCSinkFv@l
 /* 80170A50 0016D990  38 6D 99 8C */	addi r3, r13, instance$2359@sda21
 /* 80170A54 0016D994  4B F1 1C D5 */	bl __register_global_object
@@ -850,8 +850,8 @@ __dt__13TNerveNPCSinkFv:
 /* 80170A90 0016D9D0  38 03 92 E0 */	addi r0, r3, __vt__13TNerveNPCSink@l
 /* 80170A94 0016D9D4  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170A98 0016D9D8  41 82 00 10 */	beq lbl_80170AA8
-/* 80170A9C 0016D9DC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170AA0 0016D9E0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170A9C 0016D9DC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170AA0 0016D9E0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170AA4 0016D9E4  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170AA8:
 /* 80170AA8 0016D9E8  7C 80 07 35 */	extsh. r0, r4
@@ -866,8 +866,8 @@ lbl_80170AB8:
 /* 80170AC8 0016DA08  7C 08 03 A6 */	mtlr r0
 /* 80170ACC 0016DA0C  4E 80 00 20 */	blr 
 
-.global execute__12TNerveNPCWetCFP24TSpineBase$$010TLiveActor$$1
-execute__12TNerveNPCWetCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__12TNerveNPCWetCFP24TSpineBase<10TLiveActor>"
+"execute__12TNerveNPCWetCFP24TSpineBase<10TLiveActor>":
 /* 80170AD0 0016DA10  7C 08 02 A6 */	mflr r0
 /* 80170AD4 0016DA14  90 01 00 04 */	stw r0, 4(r1)
 /* 80170AD8 0016DA18  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -902,15 +902,15 @@ theNerve__12TNerveNPCWetFv:
 /* 80170B34 0016DA74  88 0D 99 80 */	lbz r0, init$2351@sda21(r13)
 /* 80170B38 0016DA78  7C 00 07 75 */	extsb. r0, r0
 /* 80170B3C 0016DA7C  40 82 00 3C */	bne lbl_80170B78
-/* 80170B40 0016DA80  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170B44 0016DA84  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170B40 0016DA80  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170B44 0016DA84  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170B48 0016DA88  3C 60 80 3C */	lis r3, __vt__12TNerveNPCWet@ha
 /* 80170B4C 0016DA8C  90 0D 99 84 */	stw r0, instance$2349@sda21(r13)
 /* 80170B50 0016DA90  38 03 92 F0 */	addi r0, r3, __vt__12TNerveNPCWet@l
 /* 80170B54 0016DA94  3C 80 80 17 */	lis r4, __dt__12TNerveNPCWetFv@ha
 /* 80170B58 0016DA98  90 0D 99 84 */	stw r0, instance$2349@sda21(r13)
-/* 80170B5C 0016DA9C  3C 60 80 3F */	lis r3, $$22350@ha
-/* 80170B60 0016DAA0  38 A3 42 30 */	addi r5, r3, $$22350@l
+/* 80170B5C 0016DA9C  3C 60 80 3F */	lis r3, "@2350"@ha
+/* 80170B60 0016DAA0  38 A3 42 30 */	addi r5, r3, "@2350"@l
 /* 80170B64 0016DAA4  38 84 0B 8C */	addi r4, r4, __dt__12TNerveNPCWetFv@l
 /* 80170B68 0016DAA8  38 6D 99 84 */	addi r3, r13, instance$2349@sda21
 /* 80170B6C 0016DAAC  4B F1 1B BD */	bl __register_global_object
@@ -935,8 +935,8 @@ __dt__12TNerveNPCWetFv:
 /* 80170BA8 0016DAE8  38 03 92 F0 */	addi r0, r3, __vt__12TNerveNPCWet@l
 /* 80170BAC 0016DAEC  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170BB0 0016DAF0  41 82 00 10 */	beq lbl_80170BC0
-/* 80170BB4 0016DAF4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170BB8 0016DAF8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170BB4 0016DAF4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170BB8 0016DAF8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170BBC 0016DAFC  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170BC0:
 /* 80170BC0 0016DB00  7C 80 07 35 */	extsh. r0, r4
@@ -951,8 +951,8 @@ lbl_80170BD0:
 /* 80170BE0 0016DB20  7C 08 03 A6 */	mtlr r0
 /* 80170BE4 0016DB24  4E 80 00 20 */	blr 
 
-.global execute__20TNerveNPCTurnToMarioCFP24TSpineBase$$010TLiveActor$$1
-execute__20TNerveNPCTurnToMarioCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__20TNerveNPCTurnToMarioCFP24TSpineBase<10TLiveActor>"
+"execute__20TNerveNPCTurnToMarioCFP24TSpineBase<10TLiveActor>":
 /* 80170BE8 0016DB28  7C 08 02 A6 */	mflr r0
 /* 80170BEC 0016DB2C  90 01 00 04 */	stw r0, 4(r1)
 /* 80170BF0 0016DB30  94 21 FF 50 */	stwu r1, -0xb0(r1)
@@ -966,7 +966,7 @@ execute__20TNerveNPCTurnToMarioCFP24TSpineBase$$010TLiveActor$$1:
 /* 80170C10 0016DB50  4B FF B3 A1 */	bl isInBodyTurnSearchRange__8TBaseNPCCFv
 /* 80170C14 0016DB54  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80170C18 0016DB58  41 82 00 14 */	beq lbl_80170C2C
-/* 80170C1C 0016DB5C  C0 22 A6 80 */	lfs f1, $$22727@sda21(r2)
+/* 80170C1C 0016DB5C  C0 22 A6 80 */	lfs f1, "@2727"@sda21(r2)
 /* 80170C20 0016DB60  C0 1F 01 78 */	lfs f0, 0x178(r31)
 /* 80170C24 0016DB64  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 80170C28 0016DB68  41 82 00 84 */	beq lbl_80170CAC
@@ -974,15 +974,15 @@ lbl_80170C2C:
 /* 80170C2C 0016DB6C  88 0D 99 70 */	lbz r0, init$2277@sda21(r13)
 /* 80170C30 0016DB70  7C 00 07 75 */	extsb. r0, r0
 /* 80170C34 0016DB74  40 82 00 3C */	bne lbl_80170C70
-/* 80170C38 0016DB78  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170C3C 0016DB7C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170C38 0016DB78  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170C3C 0016DB7C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170C40 0016DB80  3C 60 80 3C */	lis r3, __vt__26TNerveNPCWaitMarioApproach@ha
 /* 80170C44 0016DB84  90 0D 99 74 */	stw r0, instance$2275@sda21(r13)
 /* 80170C48 0016DB88  38 03 93 10 */	addi r0, r3, __vt__26TNerveNPCWaitMarioApproach@l
 /* 80170C4C 0016DB8C  3C 80 80 17 */	lis r4, __dt__26TNerveNPCWaitMarioApproachFv@ha
 /* 80170C50 0016DB90  90 0D 99 74 */	stw r0, instance$2275@sda21(r13)
-/* 80170C54 0016DB94  3C 60 80 3F */	lis r3, $$22276@ha
-/* 80170C58 0016DB98  38 A3 42 18 */	addi r5, r3, $$22276@l
+/* 80170C54 0016DB94  3C 60 80 3F */	lis r3, "@2276"@ha
+/* 80170C58 0016DB98  38 A3 42 18 */	addi r5, r3, "@2276"@l
 /* 80170C5C 0016DB9C  38 84 0F 50 */	addi r4, r4, __dt__26TNerveNPCWaitMarioApproachFv@l
 /* 80170C60 0016DBA0  38 6D 99 74 */	addi r3, r13, instance$2275@sda21
 /* 80170C64 0016DBA4  4B F1 1A C5 */	bl __register_global_object
@@ -1054,9 +1054,9 @@ lbl_80170D3C:
 /* 80170D50 0016DC90  38 7F 00 10 */	addi r3, r31, 0x10
 /* 80170D54 0016DC94  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
 /* 80170D58 0016DC98  38 BF 00 34 */	addi r5, r31, 0x34
-/* 80170D5C 0016DC9C  4B F5 4C 6D */	bl SMS_GoRotate__FRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1fPf
+/* 80170D5C 0016DC9C  4B F5 4C 6D */	bl "SMS_GoRotate__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fPf"
 /* 80170D60 0016DCA0  80 8D 98 DC */	lwz r4, gpMarioPos@sda21(r13)
-/* 80170D64 0016DCA4  C0 02 A6 80 */	lfs f0, $$22727@sda21(r2)
+/* 80170D64 0016DCA4  C0 02 A6 80 */	lfs f0, "@2727"@sda21(r2)
 /* 80170D68 0016DCA8  80 64 00 00 */	lwz r3, 0(r4)
 /* 80170D6C 0016DCAC  80 04 00 04 */	lwz r0, 4(r4)
 /* 80170D70 0016DCB0  90 61 00 5C */	stw r3, 0x5c(r1)
@@ -1094,10 +1094,10 @@ lbl_80170D3C:
 /* 80170DF0 0016DD30  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80170DF4 0016DD34  4C 41 13 82 */	cror 2, 1, 2
 /* 80170DF8 0016DD38  40 82 00 0C */	bne lbl_80170E04
-/* 80170DFC 0016DD3C  C0 42 A6 84 */	lfs f2, $$22728@sda21(r2)
+/* 80170DFC 0016DD3C  C0 42 A6 84 */	lfs f2, "@2728"@sda21(r2)
 /* 80170E00 0016DD40  48 00 00 80 */	b lbl_80170E80
 lbl_80170E04:
-/* 80170E04 0016DD44  C0 42 A6 88 */	lfs f2, $$22729@sda21(r2)
+/* 80170E04 0016DD44  C0 42 A6 88 */	lfs f2, "@2729"@sda21(r2)
 /* 80170E08 0016DD48  48 00 00 78 */	b lbl_80170E80
 lbl_80170E0C:
 /* 80170E0C 0016DD4C  FC 01 00 40 */	fcmpo cr0, f1, f0
@@ -1105,9 +1105,9 @@ lbl_80170E0C:
 /* 80170E14 0016DD54  40 82 00 34 */	bne lbl_80170E48
 /* 80170E18 0016DD58  4B F5 53 AD */	bl matan__Fff
 /* 80170E1C 0016DD5C  7C 60 07 34 */	extsh r0, r3
-/* 80170E20 0016DD60  C8 42 A6 A0 */	lfd f2, $$22735@sda21(r2)
+/* 80170E20 0016DD60  C8 42 A6 A0 */	lfd f2, "@2735"@sda21(r2)
 /* 80170E24 0016DD64  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80170E28 0016DD68  C0 02 A6 8C */	lfs f0, $$22730@sda21(r2)
+/* 80170E28 0016DD68  C0 02 A6 8C */	lfs f0, "@2730"@sda21(r2)
 /* 80170E2C 0016DD6C  90 01 00 9C */	stw r0, 0x9c(r1)
 /* 80170E30 0016DD70  3C 00 43 30 */	lis r0, 0x4330
 /* 80170E34 0016DD74  90 01 00 98 */	stw r0, 0x98(r1)
@@ -1119,12 +1119,12 @@ lbl_80170E48:
 /* 80170E48 0016DD88  FC 20 08 50 */	fneg f1, f1
 /* 80170E4C 0016DD8C  4B F5 53 79 */	bl matan__Fff
 /* 80170E50 0016DD90  7C 60 07 34 */	extsh r0, r3
-/* 80170E54 0016DD94  C8 62 A6 A0 */	lfd f3, $$22735@sda21(r2)
+/* 80170E54 0016DD94  C8 62 A6 A0 */	lfd f3, "@2735"@sda21(r2)
 /* 80170E58 0016DD98  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80170E5C 0016DD9C  C0 22 A6 8C */	lfs f1, $$22730@sda21(r2)
+/* 80170E5C 0016DD9C  C0 22 A6 8C */	lfs f1, "@2730"@sda21(r2)
 /* 80170E60 0016DDA0  90 01 00 9C */	stw r0, 0x9c(r1)
 /* 80170E64 0016DDA4  3C 00 43 30 */	lis r0, 0x4330
-/* 80170E68 0016DDA8  C0 02 A6 90 */	lfs f0, $$22731@sda21(r2)
+/* 80170E68 0016DDA8  C0 02 A6 90 */	lfs f0, "@2731"@sda21(r2)
 /* 80170E6C 0016DDAC  90 01 00 98 */	stw r0, 0x98(r1)
 /* 80170E70 0016DDB0  C8 41 00 98 */	lfd f2, 0x98(r1)
 /* 80170E74 0016DDB4  EC 42 18 28 */	fsubs f2, f2, f3
@@ -1132,7 +1132,7 @@ lbl_80170E48:
 /* 80170E7C 0016DDBC  EC 40 08 28 */	fsubs f2, f0, f1
 lbl_80170E80:
 /* 80170E80 0016DDC0  C0 3F 00 34 */	lfs f1, 0x34(r31)
-/* 80170E84 0016DDC4  C0 02 A6 94 */	lfs f0, $$22732@sda21(r2)
+/* 80170E84 0016DDC4  C0 02 A6 94 */	lfs f0, "@2732"@sda21(r2)
 /* 80170E88 0016DDC8  EC 21 10 28 */	fsubs f1, f1, f2
 /* 80170E8C 0016DDCC  FC 40 0A 10 */	fabs f2, f1
 /* 80170E90 0016DDD0  48 00 00 08 */	b lbl_80170E98
@@ -1142,15 +1142,15 @@ lbl_80170E98:
 /* 80170E98 0016DDD8  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80170E9C 0016DDDC  4C 41 13 82 */	cror 2, 1, 2
 /* 80170EA0 0016DDE0  41 82 FF F4 */	beq lbl_80170E94
-/* 80170EA4 0016DDE4  C0 22 A6 94 */	lfs f1, $$22732@sda21(r2)
-/* 80170EA8 0016DDE8  C0 02 A6 80 */	lfs f0, $$22727@sda21(r2)
+/* 80170EA4 0016DDE4  C0 22 A6 94 */	lfs f1, "@2732"@sda21(r2)
+/* 80170EA8 0016DDE8  C0 02 A6 80 */	lfs f0, "@2727"@sda21(r2)
 /* 80170EAC 0016DDEC  48 00 00 08 */	b lbl_80170EB4
 lbl_80170EB0:
 /* 80170EB0 0016DDF0  EC 42 08 2A */	fadds f2, f2, f1
 lbl_80170EB4:
 /* 80170EB4 0016DDF4  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80170EB8 0016DDF8  41 80 FF F8 */	blt lbl_80170EB0
-/* 80170EBC 0016DDFC  C0 02 A6 98 */	lfs f0, $$22733@sda21(r2)
+/* 80170EBC 0016DDFC  C0 02 A6 98 */	lfs f0, "@2733"@sda21(r2)
 /* 80170EC0 0016DE00  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 80170EC4 0016DE04  40 80 00 10 */	bge lbl_80170ED4
 /* 80170EC8 0016DE08  7F E3 FB 78 */	mr r3, r31
@@ -1206,8 +1206,8 @@ __dt__26TNerveNPCWaitMarioApproachFv:
 /* 80170F6C 0016DEAC  38 03 93 10 */	addi r0, r3, __vt__26TNerveNPCWaitMarioApproach@l
 /* 80170F70 0016DEB0  90 1F 00 00 */	stw r0, 0(r31)
 /* 80170F74 0016DEB4  41 82 00 10 */	beq lbl_80170F84
-/* 80170F78 0016DEB8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170F7C 0016DEBC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170F78 0016DEB8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170F7C 0016DEBC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170F80 0016DEC0  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80170F84:
 /* 80170F84 0016DEC4  7C 80 07 35 */	extsh. r0, r4
@@ -1230,15 +1230,15 @@ theNerve__20TNerveNPCTurnToMarioFv:
 /* 80170FB8 0016DEF8  88 0D 99 78 */	lbz r0, init$2305@sda21(r13)
 /* 80170FBC 0016DEFC  7C 00 07 75 */	extsb. r0, r0
 /* 80170FC0 0016DF00  40 82 00 3C */	bne lbl_80170FFC
-/* 80170FC4 0016DF04  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80170FC8 0016DF08  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80170FC4 0016DF04  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80170FC8 0016DF08  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80170FCC 0016DF0C  3C 60 80 3C */	lis r3, __vt__20TNerveNPCTurnToMario@ha
 /* 80170FD0 0016DF10  90 0D 99 7C */	stw r0, instance$2303@sda21(r13)
 /* 80170FD4 0016DF14  38 03 93 00 */	addi r0, r3, __vt__20TNerveNPCTurnToMario@l
 /* 80170FD8 0016DF18  3C 80 80 17 */	lis r4, __dt__20TNerveNPCTurnToMarioFv@ha
 /* 80170FDC 0016DF1C  90 0D 99 7C */	stw r0, instance$2303@sda21(r13)
-/* 80170FE0 0016DF20  3C 60 80 3F */	lis r3, $$22304@ha
-/* 80170FE4 0016DF24  38 A3 42 24 */	addi r5, r3, $$22304@l
+/* 80170FE0 0016DF20  3C 60 80 3F */	lis r3, "@2304"@ha
+/* 80170FE4 0016DF24  38 A3 42 24 */	addi r5, r3, "@2304"@l
 /* 80170FE8 0016DF28  38 84 10 10 */	addi r4, r4, __dt__20TNerveNPCTurnToMarioFv@l
 /* 80170FEC 0016DF2C  38 6D 99 7C */	addi r3, r13, instance$2303@sda21
 /* 80170FF0 0016DF30  4B F1 17 39 */	bl __register_global_object
@@ -1263,8 +1263,8 @@ __dt__20TNerveNPCTurnToMarioFv:
 /* 8017102C 0016DF6C  38 03 93 00 */	addi r0, r3, __vt__20TNerveNPCTurnToMario@l
 /* 80171030 0016DF70  90 1F 00 00 */	stw r0, 0(r31)
 /* 80171034 0016DF74  41 82 00 10 */	beq lbl_80171044
-/* 80171038 0016DF78  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017103C 0016DF7C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171038 0016DF78  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017103C 0016DF7C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171040 0016DF80  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80171044:
 /* 80171044 0016DF84  7C 80 07 35 */	extsh. r0, r4
@@ -1279,8 +1279,8 @@ lbl_80171054:
 /* 80171064 0016DFA4  7C 08 03 A6 */	mtlr r0
 /* 80171068 0016DFA8  4E 80 00 20 */	blr 
 
-.global execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase$$010TLiveActor$$1
-execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase<10TLiveActor>"
+"execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase<10TLiveActor>":
 /* 8017106C 0016DFAC  7C 08 02 A6 */	mflr r0
 /* 80171070 0016DFB0  90 01 00 04 */	stw r0, 4(r1)
 /* 80171074 0016DFB4  94 21 FF C0 */	stwu r1, -0x40(r1)
@@ -1294,22 +1294,22 @@ execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase$$010TLiveActor$$1:
 /* 80171094 0016DFD4  4B FF AF 1D */	bl isInBodyTurnSearchRange__8TBaseNPCCFv
 /* 80171098 0016DFD8  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8017109C 0016DFDC  41 82 00 94 */	beq lbl_80171130
-/* 801710A0 0016DFE0  C0 22 A6 80 */	lfs f1, $$22727@sda21(r2)
+/* 801710A0 0016DFE0  C0 22 A6 80 */	lfs f1, "@2727"@sda21(r2)
 /* 801710A4 0016DFE4  C0 1F 01 78 */	lfs f0, 0x178(r31)
 /* 801710A8 0016DFE8  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 801710AC 0016DFEC  40 82 00 84 */	bne lbl_80171130
 /* 801710B0 0016DFF0  88 0D 99 78 */	lbz r0, init$2305@sda21(r13)
 /* 801710B4 0016DFF4  7C 00 07 75 */	extsb. r0, r0
 /* 801710B8 0016DFF8  40 82 00 3C */	bne lbl_801710F4
-/* 801710BC 0016DFFC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801710C0 0016E000  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801710BC 0016DFFC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801710C0 0016E000  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801710C4 0016E004  3C 60 80 3C */	lis r3, __vt__20TNerveNPCTurnToMario@ha
 /* 801710C8 0016E008  90 0D 99 7C */	stw r0, instance$2303@sda21(r13)
 /* 801710CC 0016E00C  38 03 93 00 */	addi r0, r3, __vt__20TNerveNPCTurnToMario@l
 /* 801710D0 0016E010  3C 80 80 17 */	lis r4, __dt__20TNerveNPCTurnToMarioFv@ha
 /* 801710D4 0016E014  90 0D 99 7C */	stw r0, instance$2303@sda21(r13)
-/* 801710D8 0016E018  3C 60 80 3F */	lis r3, $$22304@ha
-/* 801710DC 0016E01C  38 A3 42 24 */	addi r5, r3, $$22304@l
+/* 801710D8 0016E018  3C 60 80 3F */	lis r3, "@2304"@ha
+/* 801710DC 0016E01C  38 A3 42 24 */	addi r5, r3, "@2304"@l
 /* 801710E0 0016E020  38 84 10 10 */	addi r4, r4, __dt__20TNerveNPCTurnToMarioFv@l
 /* 801710E4 0016E024  38 6D 99 7C */	addi r3, r13, instance$2303@sda21
 /* 801710E8 0016E028  4B F1 16 41 */	bl __register_global_object
@@ -1414,15 +1414,15 @@ theNerve__26TNerveNPCWaitMarioApproachFv:
 /* 8017123C 0016E17C  88 0D 99 70 */	lbz r0, init$2277@sda21(r13)
 /* 80171240 0016E180  7C 00 07 75 */	extsb. r0, r0
 /* 80171244 0016E184  40 82 00 3C */	bne lbl_80171280
-/* 80171248 0016E188  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017124C 0016E18C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171248 0016E188  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017124C 0016E18C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171250 0016E190  3C 60 80 3C */	lis r3, __vt__26TNerveNPCWaitMarioApproach@ha
 /* 80171254 0016E194  90 0D 99 74 */	stw r0, instance$2275@sda21(r13)
 /* 80171258 0016E198  38 03 93 10 */	addi r0, r3, __vt__26TNerveNPCWaitMarioApproach@l
 /* 8017125C 0016E19C  3C 80 80 17 */	lis r4, __dt__26TNerveNPCWaitMarioApproachFv@ha
 /* 80171260 0016E1A0  90 0D 99 74 */	stw r0, instance$2275@sda21(r13)
-/* 80171264 0016E1A4  3C 60 80 3F */	lis r3, $$22276@ha
-/* 80171268 0016E1A8  38 A3 42 18 */	addi r5, r3, $$22276@l
+/* 80171264 0016E1A4  3C 60 80 3F */	lis r3, "@2276"@ha
+/* 80171268 0016E1A8  38 A3 42 18 */	addi r5, r3, "@2276"@l
 /* 8017126C 0016E1AC  38 84 0F 50 */	addi r4, r4, __dt__26TNerveNPCWaitMarioApproachFv@l
 /* 80171270 0016E1B0  38 6D 99 74 */	addi r3, r13, instance$2275@sda21
 /* 80171274 0016E1B4  4B F1 14 B5 */	bl __register_global_object
@@ -1435,8 +1435,8 @@ lbl_80171280:
 /* 8017128C 0016E1CC  7C 08 03 A6 */	mtlr r0
 /* 80171290 0016E1D0  4E 80 00 20 */	blr 
 
-.global execute__21TNerveNPCWaitContinueCFP24TSpineBase$$010TLiveActor$$1
-execute__21TNerveNPCWaitContinueCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__21TNerveNPCWaitContinueCFP24TSpineBase<10TLiveActor>"
+"execute__21TNerveNPCWaitContinueCFP24TSpineBase<10TLiveActor>":
 /* 80171294 0016E1D4  7C 08 02 A6 */	mflr r0
 /* 80171298 0016E1D8  90 01 00 04 */	stw r0, 4(r1)
 /* 8017129C 0016E1DC  94 21 FF F8 */	stwu r1, -8(r1)
@@ -1466,15 +1466,15 @@ theNerve__21TNerveNPCWaitContinueFv:
 /* 801712E8 0016E228  88 0D 99 68 */	lbz r0, init$2266@sda21(r13)
 /* 801712EC 0016E22C  7C 00 07 75 */	extsb. r0, r0
 /* 801712F0 0016E230  40 82 00 3C */	bne lbl_8017132C
-/* 801712F4 0016E234  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801712F8 0016E238  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801712F4 0016E234  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801712F8 0016E238  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801712FC 0016E23C  3C 60 80 3C */	lis r3, __vt__21TNerveNPCWaitContinue@ha
 /* 80171300 0016E240  90 0D 99 6C */	stw r0, instance$2264@sda21(r13)
 /* 80171304 0016E244  38 03 93 20 */	addi r0, r3, __vt__21TNerveNPCWaitContinue@l
 /* 80171308 0016E248  3C 80 80 17 */	lis r4, __dt__21TNerveNPCWaitContinueFv@ha
 /* 8017130C 0016E24C  90 0D 99 6C */	stw r0, instance$2264@sda21(r13)
-/* 80171310 0016E250  3C 60 80 3F */	lis r3, $$22265@ha
-/* 80171314 0016E254  38 A3 42 0C */	addi r5, r3, $$22265@l
+/* 80171310 0016E250  3C 60 80 3F */	lis r3, "@2265"@ha
+/* 80171314 0016E254  38 A3 42 0C */	addi r5, r3, "@2265"@l
 /* 80171318 0016E258  38 84 13 40 */	addi r4, r4, __dt__21TNerveNPCWaitContinueFv@l
 /* 8017131C 0016E25C  38 6D 99 6C */	addi r3, r13, instance$2264@sda21
 /* 80171320 0016E260  4B F1 14 09 */	bl __register_global_object
@@ -1499,8 +1499,8 @@ __dt__21TNerveNPCWaitContinueFv:
 /* 8017135C 0016E29C  38 03 93 20 */	addi r0, r3, __vt__21TNerveNPCWaitContinue@l
 /* 80171360 0016E2A0  90 1F 00 00 */	stw r0, 0(r31)
 /* 80171364 0016E2A4  41 82 00 10 */	beq lbl_80171374
-/* 80171368 0016E2A8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8017136C 0016E2AC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171368 0016E2A8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8017136C 0016E2AC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171370 0016E2B0  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80171374:
 /* 80171374 0016E2B4  7C 80 07 35 */	extsh. r0, r4
@@ -1515,8 +1515,8 @@ lbl_80171384:
 /* 80171394 0016E2D4  7C 08 03 A6 */	mtlr r0
 /* 80171398 0016E2D8  4E 80 00 20 */	blr 
 
-.global execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1
-execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__18TNerveNPCGraphWaitCFP24TSpineBase<10TLiveActor>"
+"execute__18TNerveNPCGraphWaitCFP24TSpineBase<10TLiveActor>":
 /* 8017139C 0016E2DC  7C 08 02 A6 */	mflr r0
 /* 801713A0 0016E2E0  90 01 00 04 */	stw r0, 4(r1)
 /* 801713A4 0016E2E4  94 21 FF 98 */	stwu r1, -0x68(r1)
@@ -1534,11 +1534,11 @@ execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1:
 /* 801713D4 0016E314  90 1E 00 00 */	stw r0, 0(r30)
 /* 801713D8 0016E318  4B F1 46 ED */	bl rand
 /* 801713DC 0016E31C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 801713E0 0016E320  C8 62 A6 A0 */	lfd f3, $$22735@sda21(r2)
+/* 801713E0 0016E320  C8 62 A6 A0 */	lfd f3, "@2735"@sda21(r2)
 /* 801713E4 0016E324  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 801713E8 0016E328  7C 1D E0 50 */	subf r0, r29, r28
 /* 801713EC 0016E32C  3C 60 43 30 */	lis r3, 0x4330
-/* 801713F0 0016E330  C0 22 A6 A8 */	lfs f1, $$22857@sda21(r2)
+/* 801713F0 0016E330  C0 22 A6 A8 */	lfs f1, "@2857"@sda21(r2)
 /* 801713F4 0016E334  90 61 00 48 */	stw r3, 0x48(r1)
 /* 801713F8 0016E338  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 801713FC 0016E33C  90 01 00 44 */	stw r0, 0x44(r1)
@@ -1557,7 +1557,7 @@ execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1:
 /* 80171430 0016E370  90 1E 00 04 */	stw r0, 4(r30)
 lbl_80171434:
 /* 80171434 0016E374  C0 3B 01 40 */	lfs f1, 0x140(r27)
-/* 80171438 0016E378  C0 02 A6 98 */	lfs f0, $$22733@sda21(r2)
+/* 80171438 0016E378  C0 02 A6 98 */	lfs f0, "@2733"@sda21(r2)
 /* 8017143C 0016E37C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80171440 0016E380  40 80 00 B8 */	bge lbl_801714F8
 /* 80171444 0016E384  80 BB 02 2C */	lwz r5, 0x22c(r27)
@@ -1577,15 +1577,15 @@ lbl_80171470:
 /* 80171478 0016E3B8  88 0D 99 50 */	lbz r0, init$2214@sda21(r13)
 /* 8017147C 0016E3BC  7C 00 07 75 */	extsb. r0, r0
 /* 80171480 0016E3C0  40 82 00 3C */	bne lbl_801714BC
-/* 80171484 0016E3C4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171488 0016E3C8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171484 0016E3C4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171488 0016E3C8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017148C 0016E3CC  3C 60 80 3C */	lis r3, __vt__20TNerveNPCGraphWander@ha
 /* 80171490 0016E3D0  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
 /* 80171494 0016E3D4  38 03 93 50 */	addi r0, r3, __vt__20TNerveNPCGraphWander@l
 /* 80171498 0016E3D8  3C 80 80 17 */	lis r4, __dt__20TNerveNPCGraphWanderFv@ha
 /* 8017149C 0016E3DC  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
-/* 801714A0 0016E3E0  3C 60 80 3F */	lis r3, $$22213@ha
-/* 801714A4 0016E3E4  38 A3 41 E8 */	addi r5, r3, $$22213@l
+/* 801714A0 0016E3E0  3C 60 80 3F */	lis r3, "@2213"@ha
+/* 801714A4 0016E3E4  38 A3 41 E8 */	addi r5, r3, "@2213"@l
 /* 801714A8 0016E3E8  38 84 15 1C */	addi r4, r4, __dt__20TNerveNPCGraphWanderFv@l
 /* 801714AC 0016E3EC  38 6D 99 54 */	addi r3, r13, instance$2212@sda21
 /* 801714B0 0016E3F0  4B F1 12 79 */	bl __register_global_object
@@ -1633,8 +1633,8 @@ __dt__20TNerveNPCGraphWanderFv:
 /* 80171538 0016E478  38 03 93 50 */	addi r0, r3, __vt__20TNerveNPCGraphWander@l
 /* 8017153C 0016E47C  90 1F 00 00 */	stw r0, 0(r31)
 /* 80171540 0016E480  41 82 00 10 */	beq lbl_80171550
-/* 80171544 0016E484  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171548 0016E488  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171544 0016E484  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171548 0016E488  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017154C 0016E48C  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80171550:
 /* 80171550 0016E490  7C 80 07 35 */	extsh. r0, r4
@@ -1657,15 +1657,15 @@ theNerve__18TNerveNPCGraphWaitFv:
 /* 80171584 0016E4C4  88 0D 99 60 */	lbz r0, init$2253@sda21(r13)
 /* 80171588 0016E4C8  7C 00 07 75 */	extsb. r0, r0
 /* 8017158C 0016E4CC  40 82 00 3C */	bne lbl_801715C8
-/* 80171590 0016E4D0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171594 0016E4D4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171590 0016E4D0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171594 0016E4D4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171598 0016E4D8  3C 60 80 3C */	lis r3, __vt__18TNerveNPCGraphWait@ha
 /* 8017159C 0016E4DC  90 0D 99 64 */	stw r0, instance$2251@sda21(r13)
 /* 801715A0 0016E4E0  38 03 93 30 */	addi r0, r3, __vt__18TNerveNPCGraphWait@l
 /* 801715A4 0016E4E4  3C 80 80 17 */	lis r4, __dt__18TNerveNPCGraphWaitFv@ha
 /* 801715A8 0016E4E8  90 0D 99 64 */	stw r0, instance$2251@sda21(r13)
-/* 801715AC 0016E4EC  3C 60 80 3F */	lis r3, $$22252@ha
-/* 801715B0 0016E4F0  38 A3 42 00 */	addi r5, r3, $$22252@l
+/* 801715AC 0016E4EC  3C 60 80 3F */	lis r3, "@2252"@ha
+/* 801715B0 0016E4F0  38 A3 42 00 */	addi r5, r3, "@2252"@l
 /* 801715B4 0016E4F4  38 84 15 DC */	addi r4, r4, __dt__18TNerveNPCGraphWaitFv@l
 /* 801715B8 0016E4F8  38 6D 99 64 */	addi r3, r13, instance$2251@sda21
 /* 801715BC 0016E4FC  4B F1 11 6D */	bl __register_global_object
@@ -1690,8 +1690,8 @@ __dt__18TNerveNPCGraphWaitFv:
 /* 801715F8 0016E538  38 03 93 30 */	addi r0, r3, __vt__18TNerveNPCGraphWait@l
 /* 801715FC 0016E53C  90 1F 00 00 */	stw r0, 0(r31)
 /* 80171600 0016E540  41 82 00 10 */	beq lbl_80171610
-/* 80171604 0016E544  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171608 0016E548  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171604 0016E544  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171608 0016E548  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017160C 0016E54C  90 1F 00 00 */	stw r0, 0(r31)
 lbl_80171610:
 /* 80171610 0016E550  7C 80 07 35 */	extsh. r0, r4
@@ -1706,8 +1706,8 @@ lbl_80171620:
 /* 80171630 0016E570  7C 08 03 A6 */	mtlr r0
 /* 80171634 0016E574  4E 80 00 20 */	blr 
 
-.global execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1
-execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__14TNerveNPCUTurnCFP24TSpineBase<10TLiveActor>"
+"execute__14TNerveNPCUTurnCFP24TSpineBase<10TLiveActor>":
 /* 80171638 0016E578  7C 08 02 A6 */	mflr r0
 /* 8017163C 0016E57C  90 01 00 04 */	stw r0, 4(r1)
 /* 80171640 0016E580  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -1719,7 +1719,7 @@ execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1:
 /* 80171658 0016E598  48 00 9F 19 */	bl execUTurn__8TBaseNPCFv
 /* 8017165C 0016E59C  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80171660 0016E5A0  41 82 00 98 */	beq lbl_801716F8
-/* 80171664 0016E5A4  C0 02 A6 80 */	lfs f0, $$22727@sda21(r2)
+/* 80171664 0016E5A4  C0 02 A6 80 */	lfs f0, "@2727"@sda21(r2)
 /* 80171668 0016E5A8  D0 1E 01 40 */	stfs f0, 0x140(r30)
 /* 8017166C 0016E5AC  80 1E 00 F0 */	lwz r0, 0xf0(r30)
 /* 80171670 0016E5B0  54 00 02 D2 */	rlwinm r0, r0, 0, 0xb, 9
@@ -1727,15 +1727,15 @@ execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1:
 /* 80171678 0016E5B8  88 0D 99 50 */	lbz r0, init$2214@sda21(r13)
 /* 8017167C 0016E5BC  7C 00 07 75 */	extsb. r0, r0
 /* 80171680 0016E5C0  40 82 00 3C */	bne lbl_801716BC
-/* 80171684 0016E5C4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171688 0016E5C8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171684 0016E5C4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171688 0016E5C8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8017168C 0016E5CC  3C 60 80 3C */	lis r3, __vt__20TNerveNPCGraphWander@ha
 /* 80171690 0016E5D0  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
 /* 80171694 0016E5D4  38 03 93 50 */	addi r0, r3, __vt__20TNerveNPCGraphWander@l
 /* 80171698 0016E5D8  3C 80 80 17 */	lis r4, __dt__20TNerveNPCGraphWanderFv@ha
 /* 8017169C 0016E5DC  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
-/* 801716A0 0016E5E0  3C 60 80 3F */	lis r3, $$22213@ha
-/* 801716A4 0016E5E4  38 A3 41 E8 */	addi r5, r3, $$22213@l
+/* 801716A0 0016E5E0  3C 60 80 3F */	lis r3, "@2213"@ha
+/* 801716A4 0016E5E4  38 A3 41 E8 */	addi r5, r3, "@2213"@l
 /* 801716A8 0016E5E8  38 84 15 1C */	addi r4, r4, __dt__20TNerveNPCGraphWanderFv@l
 /* 801716AC 0016E5EC  38 6D 99 54 */	addi r3, r13, instance$2212@sda21
 /* 801716B0 0016E5F0  4B F1 10 79 */	bl __register_global_object
@@ -1776,15 +1776,15 @@ theNerve__14TNerveNPCUTurnFv:
 /* 80171720 0016E660  88 0D 99 58 */	lbz r0, init$2245@sda21(r13)
 /* 80171724 0016E664  7C 00 07 75 */	extsb. r0, r0
 /* 80171728 0016E668  40 82 00 3C */	bne lbl_80171764
-/* 8017172C 0016E66C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171730 0016E670  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8017172C 0016E66C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171730 0016E670  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171734 0016E674  3C 60 80 3C */	lis r3, __vt__14TNerveNPCUTurn@ha
 /* 80171738 0016E678  90 0D 99 5C */	stw r0, instance$2243@sda21(r13)
 /* 8017173C 0016E67C  38 03 93 40 */	addi r0, r3, __vt__14TNerveNPCUTurn@l
 /* 80171740 0016E680  3C 80 80 17 */	lis r4, __dt__14TNerveNPCUTurnFv@ha
 /* 80171744 0016E684  90 0D 99 5C */	stw r0, instance$2243@sda21(r13)
-/* 80171748 0016E688  3C 60 80 3F */	lis r3, $$22244@ha
-/* 8017174C 0016E68C  38 A3 41 F4 */	addi r5, r3, $$22244@l
+/* 80171748 0016E688  3C 60 80 3F */	lis r3, "@2244"@ha
+/* 8017174C 0016E68C  38 A3 41 F4 */	addi r5, r3, "@2244"@l
 /* 80171750 0016E690  38 84 17 78 */	addi r4, r4, __dt__14TNerveNPCUTurnFv@l
 /* 80171754 0016E694  38 6D 99 5C */	addi r3, r13, instance$2243@sda21
 /* 80171758 0016E698  4B F1 0F D1 */	bl __register_global_object
@@ -1809,8 +1809,8 @@ __dt__14TNerveNPCUTurnFv:
 /* 80171794 0016E6D4  38 03 93 40 */	addi r0, r3, __vt__14TNerveNPCUTurn@l
 /* 80171798 0016E6D8  90 1F 00 00 */	stw r0, 0(r31)
 /* 8017179C 0016E6DC  41 82 00 10 */	beq lbl_801717AC
-/* 801717A0 0016E6E0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 801717A4 0016E6E4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 801717A0 0016E6E0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 801717A4 0016E6E4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 801717A8 0016E6E8  90 1F 00 00 */	stw r0, 0(r31)
 lbl_801717AC:
 /* 801717AC 0016E6EC  7C 80 07 35 */	extsh. r0, r4
@@ -1825,8 +1825,8 @@ lbl_801717BC:
 /* 801717CC 0016E70C  7C 08 03 A6 */	mtlr r0
 /* 801717D0 0016E710  4E 80 00 20 */	blr 
 
-.global execute__20TNerveNPCGraphWanderCFP24TSpineBase$$010TLiveActor$$1
-execute__20TNerveNPCGraphWanderCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__20TNerveNPCGraphWanderCFP24TSpineBase<10TLiveActor>"
+"execute__20TNerveNPCGraphWanderCFP24TSpineBase<10TLiveActor>":
 /* 801717D4 0016E714  7C 08 02 A6 */	mflr r0
 /* 801717D8 0016E718  90 01 00 04 */	stw r0, 4(r1)
 /* 801717DC 0016E71C  94 21 FE D8 */	stwu r1, -0x128(r1)
@@ -1845,11 +1845,11 @@ execute__20TNerveNPCGraphWanderCFP24TSpineBase$$010TLiveActor$$1:
 /* 80171810 0016E750  90 1B 00 00 */	stw r0, 0(r27)
 /* 80171814 0016E754  4B F1 42 B1 */	bl rand
 /* 80171818 0016E758  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8017181C 0016E75C  C8 62 A6 A0 */	lfd f3, $$22735@sda21(r2)
+/* 8017181C 0016E75C  C8 62 A6 A0 */	lfd f3, "@2735"@sda21(r2)
 /* 80171820 0016E760  90 01 01 04 */	stw r0, 0x104(r1)
 /* 80171824 0016E764  7C 1D F0 50 */	subf r0, r29, r30
 /* 80171828 0016E768  3C 60 43 30 */	lis r3, 0x4330
-/* 8017182C 0016E76C  C0 22 A6 A8 */	lfs f1, $$22857@sda21(r2)
+/* 8017182C 0016E76C  C0 22 A6 A8 */	lfs f1, "@2857"@sda21(r2)
 /* 80171830 0016E770  90 61 01 00 */	stw r3, 0x100(r1)
 /* 80171834 0016E774  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 80171838 0016E778  90 01 00 FC */	stw r0, 0xfc(r1)
@@ -1880,7 +1880,7 @@ lbl_80171890:
 lbl_80171894:
 /* 80171894 0016E7D4  80 64 00 00 */	lwz r3, 0(r4)
 /* 80171898 0016E7D8  80 04 00 04 */	lwz r0, 4(r4)
-/* 8017189C 0016E7DC  C0 02 A6 80 */	lfs f0, $$22727@sda21(r2)
+/* 8017189C 0016E7DC  C0 02 A6 80 */	lfs f0, "@2727"@sda21(r2)
 /* 801718A0 0016E7E0  90 61 00 D0 */	stw r3, 0xd0(r1)
 /* 801718A4 0016E7E4  90 01 00 D4 */	stw r0, 0xd4(r1)
 /* 801718A8 0016E7E8  80 04 00 08 */	lwz r0, 8(r4)
@@ -1905,8 +1905,8 @@ lbl_80171894:
 /* 801718F4 0016E834  EC 01 00 2A */	fadds f0, f1, f0
 /* 801718F8 0016E838  EF E2 00 2A */	fadds f31, f2, f0
 /* 801718FC 0016E83C  41 82 00 50 */	beq lbl_8017194C
-/* 80171900 0016E840  C0 22 A6 AC */	lfs f1, $$23036@sda21(r2)
-/* 80171904 0016E844  4B FF B3 41 */	bl CLBSquared$$0f$$1__Ff
+/* 80171900 0016E840  C0 22 A6 AC */	lfs f1, "@3036"@sda21(r2)
+/* 80171904 0016E844  4B FF B3 41 */	bl "CLBSquared<f>__Ff"
 /* 80171908 0016E848  FC 1F 08 40 */	fcmpo cr0, f31, f1
 /* 8017190C 0016E84C  40 80 02 60 */	bge lbl_80171B6C
 /* 80171910 0016E850  80 1F 01 18 */	lwz r0, 0x118(r31)
@@ -1914,7 +1914,7 @@ lbl_80171894:
 /* 80171918 0016E858  41 82 02 54 */	beq lbl_80171B6C
 /* 8017191C 0016E85C  38 61 00 C0 */	addi r3, r1, 0xc0
 /* 80171920 0016E860  38 9F 01 14 */	addi r4, r31, 0x114
-/* 80171924 0016E864  48 00 02 B5 */	bl pop__23TSolidStack$$09TPathNode$$1Fv
+/* 80171924 0016E864  48 00 02 B5 */	bl "pop__23TSolidStack<9TPathNode>Fv"
 /* 80171928 0016E868  80 01 00 C0 */	lwz r0, 0xc0(r1)
 /* 8017192C 0016E86C  90 1F 00 F4 */	stw r0, 0xf4(r31)
 /* 80171930 0016E870  80 61 00 C4 */	lwz r3, 0xc4(r1)
@@ -1979,15 +1979,15 @@ lbl_80171A00:
 /* 80171A00 0016E940  57 C0 06 3E */	clrlwi r0, r30, 0x18
 /* 80171A04 0016E944  28 00 00 01 */	cmplwi r0, 1
 /* 80171A08 0016E948  40 82 00 14 */	bne lbl_80171A1C
-/* 80171A0C 0016E94C  C0 22 A6 B0 */	lfs f1, $$23037@sda21(r2)
-/* 80171A10 0016E950  4B FF B2 35 */	bl CLBSquared$$0f$$1__Ff
+/* 80171A0C 0016E94C  C0 22 A6 B0 */	lfs f1, "@3037"@sda21(r2)
+/* 80171A10 0016E950  4B FF B2 35 */	bl "CLBSquared<f>__Ff"
 /* 80171A14 0016E954  FC 1F 08 40 */	fcmpo cr0, f31, f1
 /* 80171A18 0016E958  41 80 00 1C */	blt lbl_80171A34
 lbl_80171A1C:
 /* 80171A1C 0016E95C  57 C0 06 3F */	clrlwi. r0, r30, 0x18
 /* 80171A20 0016E960  40 82 01 4C */	bne lbl_80171B6C
-/* 80171A24 0016E964  C0 22 A6 AC */	lfs f1, $$23036@sda21(r2)
-/* 80171A28 0016E968  4B FF B2 1D */	bl CLBSquared$$0f$$1__Ff
+/* 80171A24 0016E964  C0 22 A6 AC */	lfs f1, "@3036"@sda21(r2)
+/* 80171A28 0016E968  4B FF B2 1D */	bl "CLBSquared<f>__Ff"
 /* 80171A2C 0016E96C  FC 1F 08 40 */	fcmpo cr0, f31, f1
 /* 80171A30 0016E970  40 80 01 3C */	bge lbl_80171B6C
 lbl_80171A34:
@@ -1999,15 +1999,15 @@ lbl_80171A34:
 /* 80171A48 0016E988  88 0D 99 60 */	lbz r0, init$2253@sda21(r13)
 /* 80171A4C 0016E98C  7C 00 07 75 */	extsb. r0, r0
 /* 80171A50 0016E990  40 82 00 3C */	bne lbl_80171A8C
-/* 80171A54 0016E994  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171A58 0016E998  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171A54 0016E994  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171A58 0016E998  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171A5C 0016E99C  3C 60 80 3C */	lis r3, __vt__18TNerveNPCGraphWait@ha
 /* 80171A60 0016E9A0  90 0D 99 64 */	stw r0, instance$2251@sda21(r13)
 /* 80171A64 0016E9A4  38 03 93 30 */	addi r0, r3, __vt__18TNerveNPCGraphWait@l
 /* 80171A68 0016E9A8  3C 80 80 17 */	lis r4, __dt__18TNerveNPCGraphWaitFv@ha
 /* 80171A6C 0016E9AC  90 0D 99 64 */	stw r0, instance$2251@sda21(r13)
-/* 80171A70 0016E9B0  3C 60 80 3F */	lis r3, $$22252@ha
-/* 80171A74 0016E9B4  38 A3 42 00 */	addi r5, r3, $$22252@l
+/* 80171A70 0016E9B0  3C 60 80 3F */	lis r3, "@2252"@ha
+/* 80171A74 0016E9B4  38 A3 42 00 */	addi r5, r3, "@2252"@l
 /* 80171A78 0016E9B8  38 84 15 DC */	addi r4, r4, __dt__18TNerveNPCGraphWaitFv@l
 /* 80171A7C 0016E9BC  38 6D 99 64 */	addi r3, r13, instance$2251@sda21
 /* 80171A80 0016E9C0  4B F1 0C A9 */	bl __register_global_object
@@ -2038,15 +2038,15 @@ lbl_80171AC8:
 /* 80171AD8 0016EA18  88 0D 99 58 */	lbz r0, init$2245@sda21(r13)
 /* 80171ADC 0016EA1C  7C 00 07 75 */	extsb. r0, r0
 /* 80171AE0 0016EA20  40 82 00 3C */	bne lbl_80171B1C
-/* 80171AE4 0016EA24  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171AE8 0016EA28  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171AE4 0016EA24  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171AE8 0016EA28  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171AEC 0016EA2C  3C 60 80 3C */	lis r3, __vt__14TNerveNPCUTurn@ha
 /* 80171AF0 0016EA30  90 0D 99 5C */	stw r0, instance$2243@sda21(r13)
 /* 80171AF4 0016EA34  38 03 93 40 */	addi r0, r3, __vt__14TNerveNPCUTurn@l
 /* 80171AF8 0016EA38  3C 80 80 17 */	lis r4, __dt__14TNerveNPCUTurnFv@ha
 /* 80171AFC 0016EA3C  90 0D 99 5C */	stw r0, instance$2243@sda21(r13)
-/* 80171B00 0016EA40  3C 60 80 3F */	lis r3, $$22244@ha
-/* 80171B04 0016EA44  38 A3 41 F4 */	addi r5, r3, $$22244@l
+/* 80171B00 0016EA40  3C 60 80 3F */	lis r3, "@2244"@ha
+/* 80171B04 0016EA44  38 A3 41 F4 */	addi r5, r3, "@2244"@l
 /* 80171B08 0016EA48  38 84 17 78 */	addi r4, r4, __dt__14TNerveNPCUTurnFv@l
 /* 80171B0C 0016EA4C  38 6D 99 5C */	addi r3, r13, instance$2243@sda21
 /* 80171B10 0016EA50  4B F1 0C 19 */	bl __register_global_object
@@ -2115,8 +2115,8 @@ lbl_80171BC0:
 /* 80171BD0 0016EB10  7C 08 03 A6 */	mtlr r0
 /* 80171BD4 0016EB14  4E 80 00 20 */	blr 
 
-.global pop__23TSolidStack$$09TPathNode$$1Fv
-pop__23TSolidStack$$09TPathNode$$1Fv:
+.global "pop__23TSolidStack<9TPathNode>Fv"
+"pop__23TSolidStack<9TPathNode>Fv":
 /* 80171BD8 0016EB18  80 A4 00 04 */	lwz r5, 4(r4)
 /* 80171BDC 0016EB1C  2C 05 00 00 */	cmpwi r5, 0
 /* 80171BE0 0016EB20  41 81 00 34 */	bgt lbl_80171C14
@@ -2157,15 +2157,15 @@ theNerve__20TNerveNPCGraphWanderFv:
 /* 80171C5C 0016EB9C  88 0D 99 50 */	lbz r0, init$2214@sda21(r13)
 /* 80171C60 0016EBA0  7C 00 07 75 */	extsb. r0, r0
 /* 80171C64 0016EBA4  40 82 00 3C */	bne lbl_80171CA0
-/* 80171C68 0016EBA8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 80171C6C 0016EBAC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 80171C68 0016EBA8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 80171C6C 0016EBAC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 80171C70 0016EBB0  3C 60 80 3C */	lis r3, __vt__20TNerveNPCGraphWander@ha
 /* 80171C74 0016EBB4  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
 /* 80171C78 0016EBB8  38 03 93 50 */	addi r0, r3, __vt__20TNerveNPCGraphWander@l
 /* 80171C7C 0016EBBC  3C 80 80 17 */	lis r4, __dt__20TNerveNPCGraphWanderFv@ha
 /* 80171C80 0016EBC0  90 0D 99 54 */	stw r0, instance$2212@sda21(r13)
-/* 80171C84 0016EBC4  3C 60 80 3F */	lis r3, $$22213@ha
-/* 80171C88 0016EBC8  38 A3 41 E8 */	addi r5, r3, $$22213@l
+/* 80171C84 0016EBC4  3C 60 80 3F */	lis r3, "@2213"@ha
+/* 80171C88 0016EBC8  38 A3 41 E8 */	addi r5, r3, "@2213"@l
 /* 80171C8C 0016EBCC  38 84 15 1C */	addi r4, r4, __dt__20TNerveNPCGraphWanderFv@l
 /* 80171C90 0016EBD0  38 6D 99 54 */	addi r3, r13, instance$2212@sda21
 /* 80171C94 0016EBD4  4B F1 0A 95 */	bl __register_global_object
@@ -2184,161 +2184,161 @@ __vt__18TNerveNPCMareStand:
   .4byte 0
   .4byte 0
   .4byte __dt__18TNerveNPCMareStandFv
-  .4byte execute__18TNerveNPCMareStandCFP24TSpineBase$$010TLiveActor$$1
-.global __vt__24TNerveBase$$010TLiveActor$$1
-__vt__24TNerveBase$$010TLiveActor$$1:
+  .4byte "execute__18TNerveNPCMareStandCFP24TSpineBase<10TLiveActor>"
+.global "__vt__24TNerveBase<10TLiveActor>"
+"__vt__24TNerveBase<10TLiveActor>":
   .4byte 0
   .4byte 0
-  .4byte __dt__24TNerveBase$$010TLiveActor$$1Fv
+  .4byte "__dt__24TNerveBase<10TLiveActor>Fv"
   .4byte 0
 .global __vt__14TNerveNPCBlown
 __vt__14TNerveNPCBlown:
   .4byte 0
   .4byte 0
   .4byte __dt__14TNerveNPCBlownFv
-  .4byte execute__14TNerveNPCBlownCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__14TNerveNPCBlownCFP24TSpineBase<10TLiveActor>"
 .global __vt__12TNerveNPCMad
 __vt__12TNerveNPCMad:
   .4byte 0
   .4byte 0
   .4byte __dt__12TNerveNPCMadFv
-  .4byte execute__12TNerveNPCMadCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__12TNerveNPCMadCFP24TSpineBase<10TLiveActor>"
 .global __vt__14TNerveNPCThrow
 __vt__14TNerveNPCThrow:
   .4byte 0
   .4byte 0
   .4byte __dt__14TNerveNPCThrowFv
-  .4byte execute__14TNerveNPCThrowCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__14TNerveNPCThrowCFP24TSpineBase<10TLiveActor>"
 .global __vt__13TNerveNPCTalk
 __vt__13TNerveNPCTalk:
   .4byte 0
   .4byte 0
   .4byte __dt__13TNerveNPCTalkFv
-  .4byte execute__13TNerveNPCTalkCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__13TNerveNPCTalkCFP24TSpineBase<10TLiveActor>"
 .global __vt__30TNerveNPCSetPosAfterSinkBottom
 __vt__30TNerveNPCSetPosAfterSinkBottom:
   .4byte 0
   .4byte 0
   .4byte __dt__30TNerveNPCSetPosAfterSinkBottomFv
-  .4byte execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__30TNerveNPCSetPosAfterSinkBottomCFP24TSpineBase<10TLiveActor>"
 .global __vt__21TNerveNPCRecoverAfter
 __vt__21TNerveNPCRecoverAfter:
   .4byte 0
   .4byte 0
   .4byte __dt__21TNerveNPCRecoverAfterFv
-  .4byte execute__21TNerveNPCRecoverAfterCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__21TNerveNPCRecoverAfterCFP24TSpineBase<10TLiveActor>"
 .global __vt__24TNerveNPCRecoverFromSink
 __vt__24TNerveNPCRecoverFromSink:
   .4byte 0
   .4byte 0
   .4byte __dt__24TNerveNPCRecoverFromSinkFv
-  .4byte execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__24TNerveNPCRecoverFromSinkCFP24TSpineBase<10TLiveActor>"
 .global __vt__13TNerveNPCSink
 __vt__13TNerveNPCSink:
   .4byte 0
   .4byte 0
   .4byte __dt__13TNerveNPCSinkFv
-  .4byte execute__13TNerveNPCSinkCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__13TNerveNPCSinkCFP24TSpineBase<10TLiveActor>"
 .global __vt__12TNerveNPCWet
 __vt__12TNerveNPCWet:
   .4byte 0
   .4byte 0
   .4byte __dt__12TNerveNPCWetFv
-  .4byte execute__12TNerveNPCWetCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__12TNerveNPCWetCFP24TSpineBase<10TLiveActor>"
 .global __vt__20TNerveNPCTurnToMario
 __vt__20TNerveNPCTurnToMario:
   .4byte 0
   .4byte 0
   .4byte __dt__20TNerveNPCTurnToMarioFv
-  .4byte execute__20TNerveNPCTurnToMarioCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__20TNerveNPCTurnToMarioCFP24TSpineBase<10TLiveActor>"
 .global __vt__26TNerveNPCWaitMarioApproach
 __vt__26TNerveNPCWaitMarioApproach:
   .4byte 0
   .4byte 0
   .4byte __dt__26TNerveNPCWaitMarioApproachFv
-  .4byte execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__26TNerveNPCWaitMarioApproachCFP24TSpineBase<10TLiveActor>"
 .global __vt__21TNerveNPCWaitContinue
 __vt__21TNerveNPCWaitContinue:
   .4byte 0
   .4byte 0
   .4byte __dt__21TNerveNPCWaitContinueFv
-  .4byte execute__21TNerveNPCWaitContinueCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__21TNerveNPCWaitContinueCFP24TSpineBase<10TLiveActor>"
 .global __vt__18TNerveNPCGraphWait
 __vt__18TNerveNPCGraphWait:
   .4byte 0
   .4byte 0
   .4byte __dt__18TNerveNPCGraphWaitFv
-  .4byte execute__18TNerveNPCGraphWaitCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__18TNerveNPCGraphWaitCFP24TSpineBase<10TLiveActor>"
 .global __vt__14TNerveNPCUTurn
 __vt__14TNerveNPCUTurn:
   .4byte 0
   .4byte 0
   .4byte __dt__14TNerveNPCUTurnFv
-  .4byte execute__14TNerveNPCUTurnCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__14TNerveNPCUTurnCFP24TSpineBase<10TLiveActor>"
 .global __vt__20TNerveNPCGraphWander
 __vt__20TNerveNPCGraphWander:
   .4byte 0
   .4byte 0
   .4byte __dt__20TNerveNPCGraphWanderFv
-  .4byte execute__20TNerveNPCGraphWanderCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__20TNerveNPCGraphWanderCFP24TSpineBase<10TLiveActor>"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22727:
+"@2727":
   .4byte 0
-$$22728:
+"@2728":
 	.incbin "baserom.dol", 0x3E6384, 0x4
-$$22729:
+"@2729":
 	.incbin "baserom.dol", 0x3E6388, 0x4
-$$22730:
+"@2730":
 	.incbin "baserom.dol", 0x3E638C, 0x4
-$$22731:
+"@2731":
 	.incbin "baserom.dol", 0x3E6390, 0x4
-$$22732:
+"@2732":
 	.incbin "baserom.dol", 0x3E6394, 0x4
-$$22733:
+"@2733":
 	.incbin "baserom.dol", 0x3E6398, 0x8
-$$22735:
+"@2735":
 	.incbin "baserom.dol", 0x3E63A0, 0x8
-$$22857:
+"@2857":
 	.incbin "baserom.dol", 0x3E63A8, 0x4
-$$23036:
+"@3036":
 	.incbin "baserom.dol", 0x3E63AC, 0x4
-$$23037:
+"@3037":
 	.incbin "baserom.dol", 0x3E63B0, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22213:
+"@2213":
 	.skip 0xC
-$$22244:
+"@2244":
 	.skip 0xC
-$$22252:
+"@2252":
 	.skip 0xC
-$$22265:
+"@2265":
 	.skip 0xC
-$$22276:
+"@2276":
 	.skip 0xC
-$$22304:
+"@2304":
 	.skip 0xC
-$$22350:
+"@2350":
 	.skip 0xC
-$$22360:
+"@2360":
 	.skip 0xC
-$$22366:
+"@2366":
 	.skip 0xC
-$$22374:
+"@2374":
 	.skip 0xC
-$$22385:
+"@2385":
 	.skip 0xC
-$$22391:
+"@2391":
 	.skip 0xC
-$$22405:
+"@2405":
 	.skip 0xC
-$$22415:
+"@2415":
 	.skip 0xC
-$$22425:
+"@2425":
 	.skip 0xC
-$$22437:
+"@2437":
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -490,7 +490,7 @@ updateAll__Q28JASystem11TDSPChannelFv:
 /* 8005F588 0005C4C8  80 64 00 00 */	lwz r3, 0(r4)
 /* 8005F58C 0005C4CC  3C 00 43 30 */	lis r0, 0x4330
 /* 8005F590 0005C4D0  93 A1 00 34 */	stw r29, 0x34(r1)
-/* 8005F594 0005C4D4  C8 62 86 70 */	lfd f3, $$2353@sda21(r2)
+/* 8005F594 0005C4D4  C8 62 86 70 */	lfd f3, "@353"@sda21(r2)
 /* 8005F598 0005C4D8  90 61 00 3C */	stw r3, 0x3c(r1)
 /* 8005F59C 0005C4DC  C0 0D 81 B4 */	lfs f0, DSP_LIMIT_RATIO__8JASystem@sda21(r13)
 /* 8005F5A0 0005C4E0  90 01 00 38 */	stw r0, 0x38(r1)
@@ -627,7 +627,7 @@ DSP_LIMIT_RATIO__8JASystem:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2353:
+"@353":
 	.incbin "baserom.dol", 0x3E4370, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

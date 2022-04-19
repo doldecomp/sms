@@ -4,11 +4,11 @@
 .global getNameRef_Enemy__14TMarNameRefGenCFPCc
 getNameRef_Enemy__14TMarNameRefGenCFPCc:
 /* 800FE2C0 000FB200  7C 08 02 A6 */	mflr r0
-/* 800FE2C4 000FB204  3C 60 80 37 */	lis r3, $$21490@ha
+/* 800FE2C4 000FB204  3C 60 80 37 */	lis r3, "@1490"@ha
 /* 800FE2C8 000FB208  90 01 00 04 */	stw r0, 4(r1)
 /* 800FE2CC 000FB20C  94 21 FF D8 */	stwu r1, -0x28(r1)
 /* 800FE2D0 000FB210  93 E1 00 24 */	stw r31, 0x24(r1)
-/* 800FE2D4 000FB214  3B E3 56 78 */	addi r31, r3, $$21490@l
+/* 800FE2D4 000FB214  3B E3 56 78 */	addi r31, r3, "@1490"@l
 /* 800FE2D8 000FB218  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 800FE2DC 000FB21C  3B C4 00 00 */	addi r30, r4, 0
 /* 800FE2E0 000FB220  38 7E 00 00 */	addi r3, r30, 0
@@ -21,7 +21,7 @@ getNameRef_Enemy__14TMarNameRefGenCFPCc:
 /* 800FE2FC 000FB23C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FE300 000FB240  41 82 00 10 */	beq lbl_800FE310
 /* 800FE304 000FB244  38 7E 00 00 */	addi r3, r30, 0
-/* 800FE308 000FB248  38 82 92 C8 */	addi r4, r2, $$23917@sda21
+/* 800FE308 000FB248  38 82 92 C8 */	addi r4, r2, "@3917"@sda21
 /* 800FE30C 000FB24C  48 18 44 C9 */	bl __ct__13TTypicalEnemyFPCc
 lbl_800FE310:
 /* 800FE310 000FB250  7F C3 F3 78 */	mr r3, r30
@@ -53,7 +53,7 @@ lbl_800FE350:
 /* 800FE36C 000FB2AC  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FE370 000FB2B0  41 82 00 10 */	beq lbl_800FE380
 /* 800FE374 000FB2B4  38 7E 00 00 */	addi r3, r30, 0
-/* 800FE378 000FB2B8  38 82 92 D0 */	addi r4, r2, $$23921@sda21
+/* 800FE378 000FB2B8  38 82 92 D0 */	addi r4, r2, "@3921"@sda21
 /* 800FE37C 000FB2BC  48 1D BE 49 */	bl __ct__10TRiccoHookFPCc
 lbl_800FE380:
 /* 800FE380 000FB2C0  7F C3 F3 78 */	mr r3, r30
@@ -235,7 +235,7 @@ lbl_800FE5C8:
 /* 800FE5EC 000FB52C  3C 80 00 80 */	lis r4, 0x00800001@ha
 /* 800FE5F0 000FB530  38 7E 00 00 */	addi r3, r30, 0
 /* 800FE5F4 000FB534  38 84 00 01 */	addi r4, r4, 0x00800001@l
-/* 800FE5F8 000FB538  38 A2 92 D8 */	addi r5, r2, $$23937@sda21
+/* 800FE5F8 000FB538  38 A2 92 D8 */	addi r5, r2, "@3937"@sda21
 /* 800FE5FC 000FB53C  48 26 88 35 */	bl __ct__11TAnimalBaseFUlPCc
 lbl_800FE600:
 /* 800FE600 000FB540  7F C3 F3 78 */	mr r3, r30
@@ -251,7 +251,7 @@ lbl_800FE608:
 /* 800FE624 000FB564  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FE628 000FB568  41 82 00 1C */	beq lbl_800FE644
 /* 800FE62C 000FB56C  38 7E 00 00 */	addi r3, r30, 0
-/* 800FE630 000FB570  38 82 92 D8 */	addi r4, r2, $$23937@sda21
+/* 800FE630 000FB570  38 82 92 D8 */	addi r4, r2, "@3937"@sda21
 /* 800FE634 000FB574  48 26 8F 61 */	bl __ct__18TAnimalManagerBaseFPCc
 /* 800FE638 000FB578  3C 60 80 3E */	lis r3, __vt__11TMewManager@ha
 /* 800FE63C 000FB57C  38 03 58 68 */	addi r0, r3, __vt__11TMewManager@l
@@ -377,7 +377,7 @@ lbl_800FE7DC:
 /* 800FE7E0 000FB720  48 00 1B 90 */	b lbl_80100370
 lbl_800FE7E4:
 /* 800FE7E4 000FB724  38 7E 00 00 */	addi r3, r30, 0
-/* 800FE7E8 000FB728  38 82 92 DC */	addi r4, r2, $$23953@sda21
+/* 800FE7E8 000FB728  38 82 92 DC */	addi r4, r2, "@3953"@sda21
 /* 800FE7EC 000FB72C  4B F8 74 71 */	bl strcmp
 /* 800FE7F0 000FB730  2C 03 00 00 */	cmpwi r3, 0
 /* 800FE7F4 000FB734  40 82 00 28 */	bne lbl_800FE81C
@@ -419,7 +419,7 @@ lbl_800FE854:
 /* 800FE874 000FB7B4  41 82 00 14 */	beq lbl_800FE888
 /* 800FE878 000FB7B8  38 7E 00 00 */	addi r3, r30, 0
 /* 800FE87C 000FB7BC  38 80 00 00 */	li r4, 0
-/* 800FE880 000FB7C0  38 A2 92 E4 */	addi r5, r2, $$23958@sda21
+/* 800FE880 000FB7C0  38 A2 92 E4 */	addi r5, r2, "@3958"@sda21
 /* 800FE884 000FB7C4  48 27 0F 05 */	bl __ct__12TButterfloidFiPCc
 lbl_800FE888:
 /* 800FE888 000FB7C8  7F C3 F3 78 */	mr r3, r30
@@ -436,7 +436,7 @@ lbl_800FE890:
 /* 800FE8B0 000FB7F0  41 82 00 14 */	beq lbl_800FE8C4
 /* 800FE8B4 000FB7F4  38 7E 00 00 */	addi r3, r30, 0
 /* 800FE8B8 000FB7F8  38 80 00 01 */	li r4, 1
-/* 800FE8BC 000FB7FC  38 A2 92 EC */	addi r5, r2, $$23960@sda21
+/* 800FE8BC 000FB7FC  38 A2 92 EC */	addi r5, r2, "@3960"@sda21
 /* 800FE8C0 000FB800  48 27 0E C9 */	bl __ct__12TButterfloidFiPCc
 lbl_800FE8C4:
 /* 800FE8C4 000FB804  7F C3 F3 78 */	mr r3, r30
@@ -453,7 +453,7 @@ lbl_800FE8CC:
 /* 800FE8EC 000FB82C  41 82 00 14 */	beq lbl_800FE900
 /* 800FE8F0 000FB830  38 7E 00 00 */	addi r3, r30, 0
 /* 800FE8F4 000FB834  38 80 00 02 */	li r4, 2
-/* 800FE8F8 000FB838  38 A2 92 F4 */	addi r5, r2, $$23962@sda21
+/* 800FE8F8 000FB838  38 A2 92 F4 */	addi r5, r2, "@3962"@sda21
 /* 800FE8FC 000FB83C  48 27 0E 8D */	bl __ct__12TButterfloidFiPCc
 lbl_800FE900:
 /* 800FE900 000FB840  7F C3 F3 78 */	mr r3, r30
@@ -469,7 +469,7 @@ lbl_800FE908:
 /* 800FE924 000FB864  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FE928 000FB868  41 82 00 10 */	beq lbl_800FE938
 /* 800FE92C 000FB86C  38 7E 00 00 */	addi r3, r30, 0
-/* 800FE930 000FB870  38 82 92 FC */	addi r4, r2, $$23964@sda21
+/* 800FE930 000FB870  38 82 92 FC */	addi r4, r2, "@3964"@sda21
 /* 800FE934 000FB874  48 27 0A 59 */	bl __ct__19TButterfloidManagerFPCc
 lbl_800FE938:
 /* 800FE938 000FB878  7F C3 F3 78 */	mr r3, r30
@@ -930,7 +930,7 @@ lbl_800FEF70:
 /* 800FEF74 000FBEB4  48 00 13 FC */	b lbl_80100370
 lbl_800FEF78:
 /* 800FEF78 000FBEB8  38 7E 00 00 */	addi r3, r30, 0
-/* 800FEF7C 000FBEBC  38 82 93 00 */	addi r4, r2, $$24020@sda21
+/* 800FEF7C 000FBEBC  38 82 93 00 */	addi r4, r2, "@4020"@sda21
 /* 800FEF80 000FBEC0  4B F8 6C DD */	bl strcmp
 /* 800FEF84 000FBEC4  2C 03 00 00 */	cmpwi r3, 0
 /* 800FEF88 000FBEC8  40 82 00 28 */	bne lbl_800FEFB0
@@ -1103,7 +1103,7 @@ lbl_800FF1D4:
 /* 800FF1D8 000FC118  48 00 11 98 */	b lbl_80100370
 lbl_800FF1DC:
 /* 800FF1DC 000FC11C  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF1E0 000FC120  38 82 93 08 */	addi r4, r2, $$24040@sda21
+/* 800FF1E0 000FC120  38 82 93 08 */	addi r4, r2, "@4040"@sda21
 /* 800FF1E4 000FC124  4B F8 6A 79 */	bl strcmp
 /* 800FF1E8 000FC128  2C 03 00 00 */	cmpwi r3, 0
 /* 800FF1EC 000FC12C  40 82 00 28 */	bne lbl_800FF214
@@ -1112,7 +1112,7 @@ lbl_800FF1DC:
 /* 800FF1F8 000FC138  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FF1FC 000FC13C  41 82 00 10 */	beq lbl_800FF20C
 /* 800FF200 000FC140  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF204 000FC144  38 82 93 10 */	addi r4, r2, $$24041@sda21
+/* 800FF204 000FC144  38 82 93 10 */	addi r4, r2, "@4041"@sda21
 /* 800FF208 000FC148  48 1F BD C9 */	bl __ct__5TPopoFPCc
 lbl_800FF20C:
 /* 800FF20C 000FC14C  7F C3 F3 78 */	mr r3, r30
@@ -1151,7 +1151,7 @@ lbl_800FF27C:
 /* 800FF280 000FC1C0  48 00 10 F0 */	b lbl_80100370
 lbl_800FF284:
 /* 800FF284 000FC1C4  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF288 000FC1C8  38 82 93 18 */	addi r4, r2, $$24046@sda21
+/* 800FF288 000FC1C8  38 82 93 18 */	addi r4, r2, "@4046"@sda21
 /* 800FF28C 000FC1CC  4B F8 69 D1 */	bl strcmp
 /* 800FF290 000FC1D0  2C 03 00 00 */	cmpwi r3, 0
 /* 800FF294 000FC1D4  40 82 00 28 */	bne lbl_800FF2BC
@@ -1289,7 +1289,7 @@ lbl_800FF464:
 /* 800FF468 000FC3A8  48 00 0F 08 */	b lbl_80100370
 lbl_800FF46C:
 /* 800FF46C 000FC3AC  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF470 000FC3B0  38 82 93 20 */	addi r4, r2, $$24062@sda21
+/* 800FF470 000FC3B0  38 82 93 20 */	addi r4, r2, "@4062"@sda21
 /* 800FF474 000FC3B4  4B F8 67 E9 */	bl strcmp
 /* 800FF478 000FC3B8  2C 03 00 00 */	cmpwi r3, 0
 /* 800FF47C 000FC3BC  40 82 00 28 */	bne lbl_800FF4A4
@@ -1298,7 +1298,7 @@ lbl_800FF46C:
 /* 800FF488 000FC3C8  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FF48C 000FC3CC  41 82 00 10 */	beq lbl_800FF49C
 /* 800FF490 000FC3D0  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF494 000FC3D4  38 82 93 28 */	addi r4, r2, $$24063@sda21
+/* 800FF494 000FC3D4  38 82 93 28 */	addi r4, r2, "@4063"@sda21
 /* 800FF498 000FC3D8  48 19 80 C1 */	bl __ct__7TTelesaFPCc
 lbl_800FF49C:
 /* 800FF49C 000FC3DC  7F C3 F3 78 */	mr r3, r30
@@ -1417,7 +1417,7 @@ lbl_800FF624:
 /* 800FF628 000FC568  48 00 0D 48 */	b lbl_80100370
 lbl_800FF62C:
 /* 800FF62C 000FC56C  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF630 000FC570  38 82 93 30 */	addi r4, r2, $$24078@sda21
+/* 800FF630 000FC570  38 82 93 30 */	addi r4, r2, "@4078"@sda21
 /* 800FF634 000FC574  4B F8 66 29 */	bl strcmp
 /* 800FF638 000FC578  2C 03 00 00 */	cmpwi r3, 0
 /* 800FF63C 000FC57C  40 82 00 28 */	bne lbl_800FF664
@@ -1641,7 +1641,7 @@ lbl_800FF93C:
 /* 800FF940 000FC880  48 00 0A 30 */	b lbl_80100370
 lbl_800FF944:
 /* 800FF944 000FC884  38 7E 00 00 */	addi r3, r30, 0
-/* 800FF948 000FC888  38 82 93 38 */	addi r4, r2, $$24104@sda21
+/* 800FF948 000FC888  38 82 93 38 */	addi r4, r2, "@4104"@sda21
 /* 800FF94C 000FC88C  4B F8 63 11 */	bl strcmp
 /* 800FF950 000FC890  2C 03 00 00 */	cmpwi r3, 0
 /* 800FF954 000FC894  40 82 00 3C */	bne lbl_800FF990
@@ -1742,7 +1742,7 @@ lbl_800FFAA0:
 /* 800FFAA4 000FC9E4  48 00 08 CC */	b lbl_80100370
 lbl_800FFAA8:
 /* 800FFAA8 000FC9E8  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFAAC 000FC9EC  38 82 93 40 */	addi r4, r2, $$24116@sda21
+/* 800FFAAC 000FC9EC  38 82 93 40 */	addi r4, r2, "@4116"@sda21
 /* 800FFAB0 000FC9F0  4B F8 61 AD */	bl strcmp
 /* 800FFAB4 000FC9F4  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFAB8 000FC9F8  40 82 00 28 */	bne lbl_800FFAE0
@@ -1758,7 +1758,7 @@ lbl_800FFAD8:
 /* 800FFADC 000FCA1C  48 00 08 94 */	b lbl_80100370
 lbl_800FFAE0:
 /* 800FFAE0 000FCA20  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFAE4 000FCA24  38 82 93 48 */	addi r4, r2, $$24118@sda21
+/* 800FFAE4 000FCA24  38 82 93 48 */	addi r4, r2, "@4118"@sda21
 /* 800FFAE8 000FCA28  4B F8 61 75 */	bl strcmp
 /* 800FFAEC 000FCA2C  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFAF0 000FCA30  40 82 00 28 */	bne lbl_800FFB18
@@ -1767,7 +1767,7 @@ lbl_800FFAE0:
 /* 800FFAFC 000FCA3C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FFB00 000FCA40  41 82 00 10 */	beq lbl_800FFB10
 /* 800FFB04 000FCA44  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFB08 000FCA48  38 82 93 50 */	addi r4, r2, $$24119@sda21
+/* 800FFB08 000FCA48  38 82 93 50 */	addi r4, r2, "@4119"@sda21
 /* 800FFB0C 000FCA4C  48 22 8A F1 */	bl __ct__6TYumboFPCc
 lbl_800FFB10:
 /* 800FFB10 000FCA50  7F C3 F3 78 */	mr r3, r30
@@ -1790,7 +1790,7 @@ lbl_800FFB48:
 /* 800FFB4C 000FCA8C  48 00 08 24 */	b lbl_80100370
 lbl_800FFB50:
 /* 800FFB50 000FCA90  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFB54 000FCA94  38 82 93 58 */	addi r4, r2, $$24122@sda21
+/* 800FFB54 000FCA94  38 82 93 58 */	addi r4, r2, "@4122"@sda21
 /* 800FFB58 000FCA98  4B F8 61 05 */	bl strcmp
 /* 800FFB5C 000FCA9C  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFB60 000FCAA0  40 82 00 28 */	bne lbl_800FFB88
@@ -1799,7 +1799,7 @@ lbl_800FFB50:
 /* 800FFB6C 000FCAAC  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FFB70 000FCAB0  41 82 00 10 */	beq lbl_800FFB80
 /* 800FFB74 000FCAB4  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFB78 000FCAB8  38 82 93 60 */	addi r4, r2, $$24123@sda21
+/* 800FFB78 000FCAB8  38 82 93 60 */	addi r4, r2, "@4123"@sda21
 /* 800FFB7C 000FCABC  48 1E 19 AD */	bl __ct__7TCannonFPCc
 lbl_800FFB80:
 /* 800FFB80 000FCAC0  7F C3 F3 78 */	mr r3, r30
@@ -1822,7 +1822,7 @@ lbl_800FFBB8:
 /* 800FFBBC 000FCAFC  48 00 07 B4 */	b lbl_80100370
 lbl_800FFBC0:
 /* 800FFBC0 000FCB00  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFBC4 000FCB04  38 82 93 68 */	addi r4, r2, $$24126@sda21
+/* 800FFBC4 000FCB04  38 82 93 68 */	addi r4, r2, "@4126"@sda21
 /* 800FFBC8 000FCB08  4B F8 60 95 */	bl strcmp
 /* 800FFBCC 000FCB0C  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFBD0 000FCB10  40 82 00 28 */	bne lbl_800FFBF8
@@ -1831,7 +1831,7 @@ lbl_800FFBC0:
 /* 800FFBDC 000FCB1C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FFBE0 000FCB20  41 82 00 10 */	beq lbl_800FFBF0
 /* 800FFBE4 000FCB24  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFBE8 000FCB28  38 82 93 70 */	addi r4, r2, $$24127@sda21
+/* 800FFBE8 000FCB28  38 82 93 70 */	addi r4, r2, "@4127"@sda21
 /* 800FFBEC 000FCB2C  48 1D CD 05 */	bl __ct__8TBombHeiFPCc
 lbl_800FFBF0:
 /* 800FFBF0 000FCB30  7F C3 F3 78 */	mr r3, r30
@@ -1854,7 +1854,7 @@ lbl_800FFC28:
 /* 800FFC2C 000FCB6C  48 00 07 44 */	b lbl_80100370
 lbl_800FFC30:
 /* 800FFC30 000FCB70  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFC34 000FCB74  38 82 93 78 */	addi r4, r2, $$24130@sda21
+/* 800FFC34 000FCB74  38 82 93 78 */	addi r4, r2, "@4130"@sda21
 /* 800FFC38 000FCB78  4B F8 60 25 */	bl strcmp
 /* 800FFC3C 000FCB7C  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFC40 000FCB80  40 82 00 28 */	bne lbl_800FFC68
@@ -1863,7 +1863,7 @@ lbl_800FFC30:
 /* 800FFC4C 000FCB8C  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FFC50 000FCB90  41 82 00 10 */	beq lbl_800FFC60
 /* 800FFC54 000FCB94  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFC58 000FCB98  38 82 93 80 */	addi r4, r2, $$24131@sda21
+/* 800FFC58 000FCB98  38 82 93 80 */	addi r4, r2, "@4131"@sda21
 /* 800FFC5C 000FCB9C  48 1E F6 95 */	bl __ct__7TKillerFPCc
 lbl_800FFC60:
 /* 800FFC60 000FCBA0  7F C3 F3 78 */	mr r3, r30
@@ -1886,7 +1886,7 @@ lbl_800FFC98:
 /* 800FFC9C 000FCBDC  48 00 06 D4 */	b lbl_80100370
 lbl_800FFCA0:
 /* 800FFCA0 000FCBE0  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFCA4 000FCBE4  38 82 93 88 */	addi r4, r2, $$24134@sda21
+/* 800FFCA4 000FCBE4  38 82 93 88 */	addi r4, r2, "@4134"@sda21
 /* 800FFCA8 000FCBE8  4B F8 5F B5 */	bl strcmp
 /* 800FFCAC 000FCBEC  2C 03 00 00 */	cmpwi r3, 0
 /* 800FFCB0 000FCBF0  40 82 00 28 */	bne lbl_800FFCD8
@@ -2015,7 +2015,7 @@ lbl_800FFE48:
 /* 800FFE64 000FCDA4  7C 7E 1B 79 */	or. r30, r3, r3
 /* 800FFE68 000FCDA8  41 82 00 10 */	beq lbl_800FFE78
 /* 800FFE6C 000FCDAC  38 7E 00 00 */	addi r3, r30, 0
-/* 800FFE70 000FCDB0  38 82 93 90 */	addi r4, r2, $$24149@sda21
+/* 800FFE70 000FCDB0  38 82 93 90 */	addi r4, r2, "@4149"@sda21
 /* 800FFE74 000FCDB4  48 21 0E 81 */	bl __ct__5TSealFPCc
 lbl_800FFE78:
 /* 800FFE78 000FCDB8  7F C3 F3 78 */	mr r3, r30
@@ -2199,7 +2199,7 @@ lbl_801000EC:
 /* 801000F0 000FD030  48 00 02 80 */	b lbl_80100370
 lbl_801000F4:
 /* 801000F4 000FD034  38 7E 00 00 */	addi r3, r30, 0
-/* 801000F8 000FD038  38 82 93 98 */	addi r4, r2, $$24170@sda21
+/* 801000F8 000FD038  38 82 93 98 */	addi r4, r2, "@4170"@sda21
 /* 801000FC 000FD03C  4B F8 5B 61 */	bl strcmp
 /* 80100100 000FD040  2C 03 00 00 */	cmpwi r3, 0
 /* 80100104 000FD044  40 82 00 28 */	bne lbl_8010012C
@@ -2208,7 +2208,7 @@ lbl_801000F4:
 /* 80100110 000FD050  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80100114 000FD054  41 82 00 10 */	beq lbl_80100124
 /* 80100118 000FD058  38 7E 00 00 */	addi r3, r30, 0
-/* 8010011C 000FD05C  38 82 93 A0 */	addi r4, r2, $$24171@sda21
+/* 8010011C 000FD05C  38 82 93 A0 */	addi r4, r2, "@4171"@sda21
 /* 80100120 000FD060  48 23 C7 F1 */	bl __ct__6TKukkuFPCc
 lbl_80100124:
 /* 80100124 000FD064  7F C3 F3 78 */	mr r3, r30
@@ -2231,7 +2231,7 @@ lbl_8010015C:
 /* 80100160 000FD0A0  48 00 02 10 */	b lbl_80100370
 lbl_80100164:
 /* 80100164 000FD0A4  38 7E 00 00 */	addi r3, r30, 0
-/* 80100168 000FD0A8  38 82 93 A8 */	addi r4, r2, $$24174@sda21
+/* 80100168 000FD0A8  38 82 93 A8 */	addi r4, r2, "@4174"@sda21
 /* 8010016C 000FD0AC  4B F8 5A F1 */	bl strcmp
 /* 80100170 000FD0B0  2C 03 00 00 */	cmpwi r3, 0
 /* 80100174 000FD0B4  40 82 00 28 */	bne lbl_8010019C
@@ -2263,7 +2263,7 @@ lbl_801001CC:
 /* 801001D0 000FD110  48 00 01 A0 */	b lbl_80100370
 lbl_801001D4:
 /* 801001D4 000FD114  38 7E 00 00 */	addi r3, r30, 0
-/* 801001D8 000FD118  38 82 93 B0 */	addi r4, r2, $$24178@sda21
+/* 801001D8 000FD118  38 82 93 B0 */	addi r4, r2, "@4178"@sda21
 /* 801001DC 000FD11C  4B F8 5A 81 */	bl strcmp
 /* 801001E0 000FD120  2C 03 00 00 */	cmpwi r3, 0
 /* 801001E4 000FD124  40 82 00 28 */	bne lbl_8010020C
@@ -2295,7 +2295,7 @@ lbl_8010023C:
 /* 80100240 000FD180  48 00 01 30 */	b lbl_80100370
 lbl_80100244:
 /* 80100244 000FD184  38 7E 00 00 */	addi r3, r30, 0
-/* 80100248 000FD188  38 82 93 B8 */	addi r4, r2, $$24182@sda21
+/* 80100248 000FD188  38 82 93 B8 */	addi r4, r2, "@4182"@sda21
 /* 8010024C 000FD18C  4B F8 5A 11 */	bl strcmp
 /* 80100250 000FD190  2C 03 00 00 */	cmpwi r3, 0
 /* 80100254 000FD194  40 82 00 28 */	bne lbl_8010027C
@@ -2332,7 +2332,7 @@ lbl_8010027C:
 /* 801002C8 000FD208  90 64 00 20 */	stw r3, 0x20(r4)
 /* 801002CC 000FD20C  38 64 00 48 */	addi r3, r4, 0x48
 /* 801002D0 000FD210  98 04 00 44 */	stb r0, 0x44(r4)
-/* 801002D4 000FD214  48 00 01 21 */	bl __ct__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 801002D4 000FD214  48 00 01 21 */	bl "__ct__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 801002D8 000FD218  3C 60 80 3D */	lis r3, __vt__18TEffectPinnaFunsui@ha
 /* 801002DC 000FD21C  38 63 2A BC */	addi r3, r3, __vt__18TEffectPinnaFunsui@l
 /* 801002E0 000FD220  90 7E 00 00 */	stw r3, 0(r30)
@@ -2364,7 +2364,7 @@ lbl_801002F4:
 /* 80100340 000FD280  90 64 00 20 */	stw r3, 0x20(r4)
 /* 80100344 000FD284  38 64 00 48 */	addi r3, r4, 0x48
 /* 80100348 000FD288  98 04 00 44 */	stb r0, 0x44(r4)
-/* 8010034C 000FD28C  48 00 00 A9 */	bl __ct__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 8010034C 000FD28C  48 00 00 A9 */	bl "__ct__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 80100350 000FD290  3C 60 80 3D */	lis r3, __vt__19TEffectBiancoFunsui@ha
 /* 80100354 000FD294  38 63 2A 18 */	addi r3, r3, __vt__19TEffectBiancoFunsui@l
 /* 80100358 000FD298  90 7E 00 00 */	stw r3, 0(r30)
@@ -2414,8 +2414,8 @@ lbl_801003D8:
 /* 801003EC 000FD32C  38 21 00 18 */	addi r1, r1, 0x18
 /* 801003F0 000FD330  4E 80 00 20 */	blr 
 
-.global __ct__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
-__ct__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv:
+.global "__ct__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
+"__ct__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv":
 /* 801003F4 000FD334  4E 80 00 20 */	blr 
 
 .global __dt__16TLauncherManagerFv
@@ -2991,499 +2991,499 @@ lbl_80100B88:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x372684, 0x14
-$$21755:
+"@1755":
 	.incbin "baserom.dol", 0x372698, 0x30
-$$21756:
+"@1756":
 	.incbin "baserom.dol", 0x3726C8, 0x38
-$$21757:
+"@1757":
 	.incbin "baserom.dol", 0x372700, 0x34
-$$21758:
+"@1758":
 	.incbin "baserom.dol", 0x372734, 0x24
-$$23916:
+"@3916":
 	.incbin "baserom.dol", 0x372758, 0x10
-$$23918:
+"@3918":
 	.incbin "baserom.dol", 0x372768, 0x10
-$$23919:
+"@3919":
 	.incbin "baserom.dol", 0x372778, 0x14
-$$23920:
+"@3920":
 	.incbin "baserom.dol", 0x37278C, 0xC
-$$23922:
+"@3922":
 	.incbin "baserom.dol", 0x372798, 0x14
-$$23923:
+"@3923":
 	.incbin "baserom.dol", 0x3727AC, 0x14
-$$23924:
+"@3924":
 	.incbin "baserom.dol", 0x3727C0, 0x10
-$$23925:
+"@3925":
 	.incbin "baserom.dol", 0x3727D0, 0x1C
-$$23926:
+"@3926":
 	.incbin "baserom.dol", 0x3727EC, 0xC
-$$23927:
+"@3927":
 	.incbin "baserom.dol", 0x3727F8, 0x10
-$$23928:
+"@3928":
 	.incbin "baserom.dol", 0x372808, 0xC
-$$23929:
+"@3929":
 	.incbin "baserom.dol", 0x372814, 0xC
-$$23930:
+"@3930":
 	.incbin "baserom.dol", 0x372820, 0xC
-$$23931:
+"@3931":
 	.incbin "baserom.dol", 0x37282C, 0x14
-$$23932:
+"@3932":
 	.incbin "baserom.dol", 0x372840, 0x1C
-$$23933:
+"@3933":
 	.incbin "baserom.dol", 0x37285C, 0x14
-$$23934:
+"@3934":
 	.incbin "baserom.dol", 0x372870, 0x14
-$$23935:
+"@3935":
 	.incbin "baserom.dol", 0x372884, 0x14
-$$23936:
+"@3936":
 	.incbin "baserom.dol", 0x372898, 0xC
-$$23938:
+"@3938":
 	.incbin "baserom.dol", 0x3728A4, 0xC
-$$23939:
+"@3939":
 	.incbin "baserom.dol", 0x3728B0, 0xC
-$$23940:
+"@3940":
 	.incbin "baserom.dol", 0x3728BC, 0x10
-$$23941:
+"@3941":
 	.incbin "baserom.dol", 0x3728CC, 0x14
-$$23942:
+"@3942":
 	.incbin "baserom.dol", 0x3728E0, 0x1C
-$$23943:
+"@3943":
 	.incbin "baserom.dol", 0x3728FC, 0xC
-$$23944:
+"@3944":
 	.incbin "baserom.dol", 0x372908, 0xC
-$$23945:
+"@3945":
 	.incbin "baserom.dol", 0x372914, 0xC
-$$23946:
+"@3946":
 	.incbin "baserom.dol", 0x372920, 0xC
-$$23947:
+"@3947":
 	.incbin "baserom.dol", 0x37292C, 0xC
-$$23948:
+"@3948":
 	.incbin "baserom.dol", 0x372938, 0xC
-$$23949:
+"@3949":
 	.incbin "baserom.dol", 0x372944, 0xC
-$$23950:
+"@3950":
 	.incbin "baserom.dol", 0x372950, 0xC
-$$23951:
+"@3951":
 	.incbin "baserom.dol", 0x37295C, 0x10
-$$23952:
+"@3952":
 	.incbin "baserom.dol", 0x37296C, 0x14
-$$23954:
+"@3954":
 	.incbin "baserom.dol", 0x372980, 0x10
-$$23955:
+"@3955":
 	.incbin "baserom.dol", 0x372990, 0x10
-$$23956:
+"@3956":
 	.incbin "baserom.dol", 0x3729A0, 0x18
-$$23957:
+"@3957":
 	.incbin "baserom.dol", 0x3729B8, 0xC
-$$23959:
+"@3959":
 	.incbin "baserom.dol", 0x3729C4, 0xC
-$$23961:
+"@3961":
 	.incbin "baserom.dol", 0x3729D0, 0xC
-$$23963:
+"@3963":
 	.incbin "baserom.dol", 0x3729DC, 0x14
-$$23965:
+"@3965":
 	.incbin "baserom.dol", 0x3729F0, 0x10
-$$23966:
+"@3966":
 	.incbin "baserom.dol", 0x372A00, 0x14
-$$23967:
+"@3967":
 	.incbin "baserom.dol", 0x372A14, 0x14
-$$23968:
+"@3968":
 	.incbin "baserom.dol", 0x372A28, 0x10
-$$23969:
+"@3969":
 	.incbin "baserom.dol", 0x372A38, 0x20
-$$23970:
+"@3970":
 	.incbin "baserom.dol", 0x372A58, 0x18
-$$23971:
+"@3971":
 	.incbin "baserom.dol", 0x372A70, 0x1C
-$$23972:
+"@3972":
 	.incbin "baserom.dol", 0x372A8C, 0x1C
-$$23973:
+"@3973":
 	.incbin "baserom.dol", 0x372AA8, 0x20
-$$23974:
+"@3974":
 	.incbin "baserom.dol", 0x372AC8, 0x18
-$$23975:
+"@3975":
 	.incbin "baserom.dol", 0x372AE0, 0x1C
-$$23976:
+"@3976":
 	.incbin "baserom.dol", 0x372AFC, 0x18
-$$23977:
+"@3977":
 	.incbin "baserom.dol", 0x372B14, 0x1C
-$$23978:
+"@3978":
 	.incbin "baserom.dol", 0x372B30, 0x14
-$$23979:
+"@3979":
 	.incbin "baserom.dol", 0x372B44, 0x1C
-$$23980:
+"@3980":
 	.incbin "baserom.dol", 0x372B60, 0xC
-$$23981:
+"@3981":
 	.incbin "baserom.dol", 0x372B6C, 0x10
-$$23982:
+"@3982":
 	.incbin "baserom.dol", 0x372B7C, 0x10
-$$23983:
+"@3983":
 	.incbin "baserom.dol", 0x372B8C, 0x1C
-$$23984:
+"@3984":
 	.incbin "baserom.dol", 0x372BA8, 0x10
-$$23985:
+"@3985":
 	.incbin "baserom.dol", 0x372BB8, 0x18
-$$23986:
+"@3986":
 	.incbin "baserom.dol", 0x372BD0, 0xC
-$$23987:
+"@3987":
 	.incbin "baserom.dol", 0x372BDC, 0xC
-$$23988:
+"@3988":
 	.incbin "baserom.dol", 0x372BE8, 0x14
-$$23989:
+"@3989":
 	.incbin "baserom.dol", 0x372BFC, 0x1C
-$$23990:
+"@3990":
 	.incbin "baserom.dol", 0x372C18, 0x10
-$$23991:
+"@3991":
 	.incbin "baserom.dol", 0x372C28, 0x10
-$$23992:
+"@3992":
 	.incbin "baserom.dol", 0x372C38, 0x10
-$$23993:
+"@3993":
 	.incbin "baserom.dol", 0x372C48, 0x10
-$$23994:
+"@3994":
 	.incbin "baserom.dol", 0x372C58, 0x14
-$$23995:
+"@3995":
 	.incbin "baserom.dol", 0x372C6C, 0x1C
-$$23996:
+"@3996":
 	.incbin "baserom.dol", 0x372C88, 0x10
-$$23997:
+"@3997":
 	.incbin "baserom.dol", 0x372C98, 0x10
-$$23998:
+"@3998":
 	.incbin "baserom.dol", 0x372CA8, 0x18
-$$23999:
+"@3999":
 	.incbin "baserom.dol", 0x372CC0, 0x1C
-$$24000:
+"@4000":
 	.incbin "baserom.dol", 0x372CDC, 0x1C
-$$24001:
+"@4001":
 	.incbin "baserom.dol", 0x372CF8, 0x20
-$$24002:
+"@4002":
 	.incbin "baserom.dol", 0x372D18, 0x14
-$$24003:
+"@4003":
 	.incbin "baserom.dol", 0x372D2C, 0x14
-$$24004:
+"@4004":
 	.incbin "baserom.dol", 0x372D40, 0x14
-$$24005:
+"@4005":
 	.incbin "baserom.dol", 0x372D54, 0x18
-$$24006:
+"@4006":
 	.incbin "baserom.dol", 0x372D6C, 0x10
-$$24007:
+"@4007":
 	.incbin "baserom.dol", 0x372D7C, 0xC
-$$24008:
+"@4008":
 	.incbin "baserom.dol", 0x372D88, 0x14
-$$24009:
+"@4009":
 	.incbin "baserom.dol", 0x372D9C, 0x1C
-$$24010:
+"@4010":
 	.incbin "baserom.dol", 0x372DB8, 0x10
-$$24011:
+"@4011":
 	.incbin "baserom.dol", 0x372DC8, 0x10
-$$24012:
+"@4012":
 	.incbin "baserom.dol", 0x372DD8, 0x10
-$$24013:
+"@4013":
 	.incbin "baserom.dol", 0x372DE8, 0x18
-$$24014:
+"@4014":
 	.incbin "baserom.dol", 0x372E00, 0xC
-$$24015:
+"@4015":
 	.incbin "baserom.dol", 0x372E0C, 0xC
-$$24016:
+"@4016":
 	.incbin "baserom.dol", 0x372E18, 0x1C
-$$24017:
+"@4017":
 	.incbin "baserom.dol", 0x372E34, 0x1C
-$$24018:
+"@4018":
 	.incbin "baserom.dol", 0x372E50, 0x10
-$$24019:
+"@4019":
 	.incbin "baserom.dol", 0x372E60, 0x18
-$$24021:
+"@4021":
 	.incbin "baserom.dol", 0x372E78, 0xC
-$$24022:
+"@4022":
 	.incbin "baserom.dol", 0x372E84, 0xC
-$$24023:
+"@4023":
 	.incbin "baserom.dol", 0x372E90, 0x10
-$$24024:
+"@4024":
 	.incbin "baserom.dol", 0x372EA0, 0x14
-$$24025:
+"@4025":
 	.incbin "baserom.dol", 0x372EB4, 0x18
-$$24026:
+"@4026":
 	.incbin "baserom.dol", 0x372ECC, 0xC
-$$24027:
+"@4027":
 	.incbin "baserom.dol", 0x372ED8, 0xC
-$$24028:
+"@4028":
 	.incbin "baserom.dol", 0x372EE4, 0x14
-$$24029:
+"@4029":
 	.incbin "baserom.dol", 0x372EF8, 0x1C
-$$24030:
+"@4030":
 	.incbin "baserom.dol", 0x372F14, 0xC
-$$24031:
+"@4031":
 	.incbin "baserom.dol", 0x372F20, 0x10
-$$24032:
+"@4032":
 	.incbin "baserom.dol", 0x372F30, 0x10
-$$24033:
+"@4033":
 	.incbin "baserom.dol", 0x372F40, 0x14
-$$24034:
+"@4034":
 	.incbin "baserom.dol", 0x372F54, 0x14
-$$24035:
+"@4035":
 	.incbin "baserom.dol", 0x372F68, 0x1C
-$$24036:
+"@4036":
 	.incbin "baserom.dol", 0x372F84, 0xC
-$$24037:
+"@4037":
 	.incbin "baserom.dol", 0x372F90, 0x10
-$$24038:
+"@4038":
 	.incbin "baserom.dol", 0x372FA0, 0xC
-$$24039:
+"@4039":
 	.incbin "baserom.dol", 0x372FAC, 0x14
-$$24042:
+"@4042":
 	.incbin "baserom.dol", 0x372FC0, 0x10
-$$24043:
+"@4043":
 	.incbin "baserom.dol", 0x372FD0, 0x18
-$$24044:
+"@4044":
 	.incbin "baserom.dol", 0x372FE8, 0x10
-$$24045:
+"@4045":
 	.incbin "baserom.dol", 0x372FF8, 0x18
-$$24047:
+"@4047":
 	.incbin "baserom.dol", 0x373010, 0xC
-$$24048:
+"@4048":
 	.incbin "baserom.dol", 0x37301C, 0xC
-$$24049:
+"@4049":
 	.incbin "baserom.dol", 0x373028, 0x10
-$$24050:
+"@4050":
 	.incbin "baserom.dol", 0x373038, 0xC
-$$24051:
+"@4051":
 	.incbin "baserom.dol", 0x373044, 0x10
-$$24052:
+"@4052":
 	.incbin "baserom.dol", 0x373054, 0x14
-$$24053:
+"@4053":
 	.incbin "baserom.dol", 0x373068, 0x1C
-$$24054:
+"@4054":
 	.incbin "baserom.dol", 0x373084, 0xC
-$$24055:
+"@4055":
 	.incbin "baserom.dol", 0x373090, 0x10
-$$24056:
+"@4056":
 	.incbin "baserom.dol", 0x3730A0, 0x14
-$$24057:
+"@4057":
 	.incbin "baserom.dol", 0x3730B4, 0x1C
-$$24058:
+"@4058":
 	.incbin "baserom.dol", 0x3730D0, 0x10
-$$24059:
+"@4059":
 	.incbin "baserom.dol", 0x3730E0, 0x10
-$$24060:
+"@4060":
 	.incbin "baserom.dol", 0x3730F0, 0x10
-$$24061:
+"@4061":
 	.incbin "baserom.dol", 0x373100, 0x14
-$$24064:
+"@4064":
 	.incbin "baserom.dol", 0x373114, 0xC
-$$24065:
+"@4065":
 	.incbin "baserom.dol", 0x373120, 0xC
-$$24066:
+"@4066":
 	.incbin "baserom.dol", 0x37312C, 0xC
-$$24067:
+"@4067":
 	.incbin "baserom.dol", 0x373138, 0x10
-$$24068:
+"@4068":
 	.incbin "baserom.dol", 0x373148, 0xC
-$$24069:
+"@4069":
 	.incbin "baserom.dol", 0x373154, 0xC
-$$24070:
+"@4070":
 	.incbin "baserom.dol", 0x373160, 0x14
-$$24071:
+"@4071":
 	.incbin "baserom.dol", 0x373174, 0x14
-$$24072:
+"@4072":
 	.incbin "baserom.dol", 0x373188, 0x14
-$$24073:
+"@4073":
 	.incbin "baserom.dol", 0x37319C, 0x18
-$$24074:
+"@4074":
 	.incbin "baserom.dol", 0x3731B4, 0xC
-$$24075:
+"@4075":
 	.incbin "baserom.dol", 0x3731C0, 0xC
-$$24076:
+"@4076":
 	.incbin "baserom.dol", 0x3731CC, 0x10
-$$24077:
+"@4077":
 	.incbin "baserom.dol", 0x3731DC, 0x18
-$$24079:
+"@4079":
 	.incbin "baserom.dol", 0x3731F4, 0xC
-$$24080:
+"@4080":
 	.incbin "baserom.dol", 0x373200, 0xC
-$$24081:
+"@4081":
 	.incbin "baserom.dol", 0x37320C, 0xC
-$$24082:
+"@4082":
 	.incbin "baserom.dol", 0x373218, 0x10
-$$24083:
+"@4083":
 	.incbin "baserom.dol", 0x373228, 0x10
-$$24084:
+"@4084":
 	.incbin "baserom.dol", 0x373238, 0x10
-$$24085:
+"@4085":
 	.incbin "baserom.dol", 0x373248, 0x18
-$$24086:
+"@4086":
 	.incbin "baserom.dol", 0x373260, 0x14
-$$24087:
+"@4087":
 	.incbin "baserom.dol", 0x373274, 0x20
-$$24088:
+"@4088":
 	.incbin "baserom.dol", 0x373294, 0xC
-$$24089:
+"@4089":
 	.incbin "baserom.dol", 0x3732A0, 0x14
-$$24090:
+"@4090":
 	.incbin "baserom.dol", 0x3732B4, 0x1C
-$$24091:
+"@4091":
 	.incbin "baserom.dol", 0x3732D0, 0x1C
-$$24092:
+"@4092":
 	.incbin "baserom.dol", 0x3732EC, 0x14
-$$24093:
+"@4093":
 	.incbin "baserom.dol", 0x373300, 0x10
-$$24094:
+"@4094":
 	.incbin "baserom.dol", 0x373310, 0x18
-$$24095:
+"@4095":
 	.incbin "baserom.dol", 0x373328, 0x1C
-$$24096:
+"@4096":
 	.incbin "baserom.dol", 0x373344, 0x14
-$$24097:
+"@4097":
 	.incbin "baserom.dol", 0x373358, 0x10
-$$24098:
+"@4098":
 	.incbin "baserom.dol", 0x373368, 0x10
-$$24099:
+"@4099":
 	.incbin "baserom.dol", 0x373378, 0x18
-$$24100:
+"@4100":
 	.incbin "baserom.dol", 0x373390, 0x10
-$$24101:
+"@4101":
 	.incbin "baserom.dol", 0x3733A0, 0x18
-$$24102:
+"@4102":
 	.incbin "baserom.dol", 0x3733B8, 0xC
-$$24103:
+"@4103":
 	.incbin "baserom.dol", 0x3733C4, 0xC
-$$24105:
+"@4105":
 	.incbin "baserom.dol", 0x3733D0, 0xC
-$$24106:
+"@4106":
 	.incbin "baserom.dol", 0x3733DC, 0x10
-$$24107:
+"@4107":
 	.incbin "baserom.dol", 0x3733EC, 0x24
-$$24108:
+"@4108":
 	.incbin "baserom.dol", 0x373410, 0xC
-$$24109:
+"@4109":
 	.incbin "baserom.dol", 0x37341C, 0x18
-$$24110:
+"@4110":
 	.incbin "baserom.dol", 0x373434, 0x10
-$$24111:
+"@4111":
 	.incbin "baserom.dol", 0x373444, 0x1C
-$$24112:
+"@4112":
 	.incbin "baserom.dol", 0x373460, 0xC
-$$24113:
+"@4113":
 	.incbin "baserom.dol", 0x37346C, 0x10
-$$24114:
+"@4114":
 	.incbin "baserom.dol", 0x37347C, 0x10
-$$24115:
+"@4115":
 	.incbin "baserom.dol", 0x37348C, 0x18
-$$24117:
+"@4117":
 	.incbin "baserom.dol", 0x3734A4, 0xC
-$$24120:
+"@4120":
 	.incbin "baserom.dol", 0x3734B0, 0x10
-$$24121:
+"@4121":
 	.incbin "baserom.dol", 0x3734C0, 0x14
-$$24124:
+"@4124":
 	.incbin "baserom.dol", 0x3734D4, 0x10
-$$24125:
+"@4125":
 	.incbin "baserom.dol", 0x3734E4, 0x14
-$$24128:
+"@4128":
 	.incbin "baserom.dol", 0x3734F8, 0x10
-$$24129:
+"@4129":
 	.incbin "baserom.dol", 0x373508, 0x14
-$$24132:
+"@4132":
 	.incbin "baserom.dol", 0x37351C, 0x10
-$$24133:
+"@4133":
 	.incbin "baserom.dol", 0x37352C, 0x18
-$$24135:
+"@4135":
 	.incbin "baserom.dol", 0x373544, 0xC
-$$24136:
+"@4136":
 	.incbin "baserom.dol", 0x373550, 0x18
-$$24137:
+"@4137":
 	.incbin "baserom.dol", 0x373568, 0x20
-$$24138:
+"@4138":
 	.incbin "baserom.dol", 0x373588, 0x10
-$$24139:
+"@4139":
 	.incbin "baserom.dol", 0x373598, 0x14
-$$24140:
+"@4140":
 	.incbin "baserom.dol", 0x3735AC, 0x10
-$$24141:
+"@4141":
 	.incbin "baserom.dol", 0x3735BC, 0x14
-$$24142:
+"@4142":
 	.incbin "baserom.dol", 0x3735D0, 0x18
-$$24143:
+"@4143":
 	.incbin "baserom.dol", 0x3735E8, 0x20
-$$24144:
+"@4144":
 	.incbin "baserom.dol", 0x373608, 0xC
-$$24145:
+"@4145":
 	.incbin "baserom.dol", 0x373614, 0x18
-$$24146:
+"@4146":
 	.incbin "baserom.dol", 0x37362C, 0x14
-$$24147:
+"@4147":
 	.incbin "baserom.dol", 0x373640, 0x1C
-$$24148:
+"@4148":
 	.incbin "baserom.dol", 0x37365C, 0xC
-$$24150:
+"@4150":
 	.incbin "baserom.dol", 0x373668, 0xC
-$$24151:
+"@4151":
 	.incbin "baserom.dol", 0x373674, 0x14
-$$24152:
+"@4152":
 	.incbin "baserom.dol", 0x373688, 0x14
-$$24153:
+"@4153":
 	.incbin "baserom.dol", 0x37369C, 0x14
-$$24154:
+"@4154":
 	.incbin "baserom.dol", 0x3736B0, 0x18
-$$24155:
+"@4155":
 	.incbin "baserom.dol", 0x3736C8, 0x20
-$$24156:
+"@4156":
 	.incbin "baserom.dol", 0x3736E8, 0x14
-$$24157:
+"@4157":
 	.incbin "baserom.dol", 0x3736FC, 0x14
-$$24158:
+"@4158":
 	.incbin "baserom.dol", 0x373710, 0x18
-$$24159:
+"@4159":
 	.incbin "baserom.dol", 0x373728, 0x20
-$$24160:
+"@4160":
 	.incbin "baserom.dol", 0x373748, 0x10
-$$24161:
+"@4161":
 	.incbin "baserom.dol", 0x373758, 0x18
-$$24162:
+"@4162":
 	.incbin "baserom.dol", 0x373770, 0x10
-$$24163:
+"@4163":
 	.incbin "baserom.dol", 0x373780, 0x18
-$$24164:
+"@4164":
 	.incbin "baserom.dol", 0x373798, 0xC
-$$24165:
+"@4165":
 	.incbin "baserom.dol", 0x3737A4, 0xC
-$$24166:
+"@4166":
 	.incbin "baserom.dol", 0x3737B0, 0xC
-$$24167:
+"@4167":
 	.incbin "baserom.dol", 0x3737BC, 0x14
-$$24168:
+"@4168":
 	.incbin "baserom.dol", 0x3737D0, 0x10
-$$24169:
+"@4169":
 	.incbin "baserom.dol", 0x3737E0, 0x14
-$$24172:
+"@4172":
 	.incbin "baserom.dol", 0x3737F4, 0x10
-$$24173:
+"@4173":
 	.incbin "baserom.dol", 0x373804, 0x18
-$$24175:
+"@4175":
 	.incbin "baserom.dol", 0x37381C, 0xC
-$$24176:
+"@4176":
 	.incbin "baserom.dol", 0x373828, 0x10
-$$24177:
+"@4177":
 	.incbin "baserom.dol", 0x373838, 0x1C
-$$24179:
+"@4179":
 	.incbin "baserom.dol", 0x373854, 0x10
-$$24180:
+"@4180":
 	.incbin "baserom.dol", 0x373864, 0x10
-$$24181:
+"@4181":
 	.incbin "baserom.dol", 0x373874, 0x14
-$$24183:
+"@4183":
 	.incbin "baserom.dol", 0x373888, 0xC
-$$24184:
+"@4184":
 	.incbin "baserom.dol", 0x373894, 0x14
-$$24185:
+"@4185":
 	.incbin "baserom.dol", 0x3738A8, 0x18
-$$24186:
+"@4186":
 	.incbin "baserom.dol", 0x3738C0, 0x14
-$$24187:
+"@4187":
 	.incbin "baserom.dol", 0x3738D4, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -3536,67 +3536,67 @@ __vt__24THamuKuriLauncherManager:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$23917:
+"@3917":
 	.incbin "baserom.dol", 0x3E4FC8, 0x8
-$$23921:
+"@3921":
 	.incbin "baserom.dol", 0x3E4FD0, 0x8
-$$23937:
+"@3937":
 	.incbin "baserom.dol", 0x3E4FD8, 0x4
-$$23953:
+"@3953":
 	.incbin "baserom.dol", 0x3E4FDC, 0x8
-$$23958:
+"@3958":
 	.incbin "baserom.dol", 0x3E4FE4, 0x8
-$$23960:
+"@3960":
 	.incbin "baserom.dol", 0x3E4FEC, 0x8
-$$23962:
+"@3962":
 	.incbin "baserom.dol", 0x3E4FF4, 0x8
-$$23964:
+"@3964":
   .4byte 0
-$$24020:
+"@4020":
 	.incbin "baserom.dol", 0x3E5000, 0x8
-$$24040:
+"@4040":
 	.incbin "baserom.dol", 0x3E5008, 0x8
-$$24041:
+"@4041":
 	.incbin "baserom.dol", 0x3E5010, 0x8
-$$24046:
+"@4046":
 	.incbin "baserom.dol", 0x3E5018, 0x8
-$$24062:
+"@4062":
 	.incbin "baserom.dol", 0x3E5020, 0x8
-$$24063:
+"@4063":
 	.incbin "baserom.dol", 0x3E5028, 0x8
-$$24078:
+"@4078":
 	.incbin "baserom.dol", 0x3E5030, 0x8
-$$24104:
+"@4104":
 	.incbin "baserom.dol", 0x3E5038, 0x8
-$$24116:
+"@4116":
 	.incbin "baserom.dol", 0x3E5040, 0x8
-$$24118:
+"@4118":
 	.incbin "baserom.dol", 0x3E5048, 0x8
-$$24119:
+"@4119":
 	.incbin "baserom.dol", 0x3E5050, 0x8
-$$24122:
+"@4122":
 	.incbin "baserom.dol", 0x3E5058, 0x8
-$$24123:
+"@4123":
 	.incbin "baserom.dol", 0x3E5060, 0x8
-$$24126:
+"@4126":
 	.incbin "baserom.dol", 0x3E5068, 0x8
-$$24127:
+"@4127":
 	.incbin "baserom.dol", 0x3E5070, 0x8
-$$24130:
+"@4130":
 	.incbin "baserom.dol", 0x3E5078, 0x8
-$$24131:
+"@4131":
 	.incbin "baserom.dol", 0x3E5080, 0x8
-$$24134:
+"@4134":
 	.incbin "baserom.dol", 0x3E5088, 0x8
-$$24149:
+"@4149":
 	.incbin "baserom.dol", 0x3E5090, 0x8
-$$24170:
+"@4170":
 	.incbin "baserom.dol", 0x3E5098, 0x8
-$$24171:
+"@4171":
 	.incbin "baserom.dol", 0x3E50A0, 0x8
-$$24174:
+"@4174":
 	.incbin "baserom.dol", 0x3E50A8, 0x8
-$$24178:
+"@4178":
 	.incbin "baserom.dol", 0x3E50B0, 0x8
-$$24182:
+"@4182":
 	.incbin "baserom.dol", 0x3E50B8, 0x8

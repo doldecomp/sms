@@ -100,8 +100,8 @@ setCallback__16TDrawSyncManagerFUlUsUsP17TDrawSyncCallback:
 /* 800FCBD4 000F9B14  90 04 00 04 */	stw r0, 4(r4)
 /* 800FCBD8 000F9B18  4E 80 00 20 */	blr 
 
-.global DestroyElement___Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange
-DestroyElement___Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange:
+.global "DestroyElement___Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange"
+"DestroyElement___Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange":
 /* 800FCBDC 000F9B1C  48 00 00 08 */	b lbl_800FCBE4
 lbl_800FCBE0:
 /* 800FCBE0 000F9B20  38 84 00 08 */	addi r4, r4, 8
@@ -278,11 +278,11 @@ start__16TDrawSyncManagerFUlUll:
 /* 800FCE28 000F9D68  80 1C 00 04 */	lwz r0, 4(r28)
 /* 800FCE2C 000F9D6C  90 1C 00 08 */	stw r0, 8(r28)
 /* 800FCE30 000F9D70  93 BC 00 0C */	stw r29, 0xc(r28)
-/* 800FCE34 000F9D74  C0 02 92 78 */	lfs f0, $$21665@sda21(r2)
+/* 800FCE34 000F9D74  C0 02 92 78 */	lfs f0, "@1665"@sda21(r2)
 /* 800FCE38 000F9D78  D0 1C 00 10 */	stfs f0, 0x10(r28)
 /* 800FCE3C 000F9D7C  93 BC 00 14 */	stw r29, 0x14(r28)
 /* 800FCE40 000F9D80  80 9C 00 08 */	lwz r4, 8(r28)
-/* 800FCE44 000F9D84  48 00 00 AD */	bl insert__Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange
+/* 800FCE44 000F9D84  48 00 00 AD */	bl "insert__Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange"
 /* 800FCE48 000F9D88  B3 BC 03 4C */	sth r29, 0x34c(r28)
 /* 800FCE4C 000F9D8C  38 60 10 00 */	li r3, 0x1000
 /* 800FCE50 000F9D90  4B F0 FB 61 */	bl __nwa__FUl
@@ -329,8 +329,8 @@ lbl_800FCED8:
 /* 800FCEE8 000F9E28  7C 08 03 A6 */	mtlr r0
 /* 800FCEEC 000F9E2C  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange
-insert__Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange:
+.global "insert__Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange"
+"insert__Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange":
 /* 800FCEF0 000F9E30  7C 08 02 A6 */	mflr r0
 /* 800FCEF4 000F9E34  90 01 00 04 */	stw r0, 4(r1)
 /* 800FCEF8 000F9E38  94 21 FF 00 */	stwu r1, -0x100(r1)
@@ -491,7 +491,7 @@ lbl_800FD108:
 lbl_800FD118:
 /* 800FD118 000FA058  90 61 00 DC */	stw r3, 0xdc(r1)
 /* 800FD11C 000FA05C  3C 00 43 30 */	lis r0, 0x4330
-/* 800FD120 000FA060  C8 42 92 80 */	lfd f2, $$21825@sda21(r2)
+/* 800FD120 000FA060  C8 42 92 80 */	lfd f2, "@1825"@sda21(r2)
 /* 800FD124 000FA064  7F 23 EA 14 */	add r25, r3, r29
 /* 800FD128 000FA068  90 01 00 D8 */	stw r0, 0xd8(r1)
 /* 800FD12C 000FA06C  C0 1E 00 10 */	lfs f0, 0x10(r30)
@@ -556,7 +556,7 @@ lbl_800FD1EC:
 /* 800FD1F4 000FA134  80 9E 00 04 */	lwz r4, 4(r30)
 /* 800FD1F8 000FA138  7F C3 F3 78 */	mr r3, r30
 /* 800FD1FC 000FA13C  80 BE 00 08 */	lwz r5, 8(r30)
-/* 800FD200 000FA140  4B FF F9 DD */	bl DestroyElement___Q27JGadget116TVector$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$4Q27JGadget53TAllocator$$0Q216TDrawSyncManager19TDrawSyncTokenRange$$1$$1FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange
+/* 800FD200 000FA140  4B FF F9 DD */	bl "DestroyElement___Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangePQ216TDrawSyncManager19TDrawSyncTokenRange"
 /* 800FD204 000FA144  80 1E 00 04 */	lwz r0, 4(r30)
 /* 800FD208 000FA148  90 01 00 CC */	stw r0, 0xcc(r1)
 /* 800FD20C 000FA14C  80 7E 00 04 */	lwz r3, 4(r30)
@@ -609,9 +609,9 @@ __ct__Q216TDrawSyncManager19TDrawSyncTokenRangeFUsUsP17TDrawSyncCallback:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 .balign 8
-$$21665:
+"@1665":
 	.incbin "baserom.dol", 0x3E4F78, 0x8
-$$21825:
+"@1825":
 	.incbin "baserom.dol", 0x3E4F80, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -57,8 +57,8 @@ load__Q26JDrama6TActorFR20JSUMemoryInputStream:
 /* 80040A14 0003D954  7C 7E 1B 79 */	or. r30, r3, r3
 /* 80040A18 0003D958  41 82 00 4C */	beq lbl_80040A64
 /* 80040A1C 0003D95C  93 C1 00 40 */	stw r30, 0x40(r1)
-/* 80040A20 0003D960  3C 60 80 37 */	lis r3, $$2533@ha
-/* 80040A24 0003D964  38 83 0E F0 */	addi r4, r3, $$2533@l
+/* 80040A20 0003D960  3C 60 80 37 */	lis r3, "@533"@ha
+/* 80040A24 0003D964  38 83 0E F0 */	addi r4, r3, "@533"@l
 /* 80040A28 0003D968  80 61 00 40 */	lwz r3, 0x40(r1)
 /* 80040A2C 0003D96C  48 00 00 DD */	bl __ct__Q26JDrama8TNameRefFPCc
 /* 80040A30 0003D970  80 61 00 40 */	lwz r3, 0x40(r1)
@@ -67,7 +67,7 @@ load__Q26JDrama6TActorFR20JSUMemoryInputStream:
 /* 80040A3C 0003D97C  90 03 00 00 */	stw r0, 0(r3)
 /* 80040A40 0003D980  38 63 00 0C */	addi r3, r3, 0xc
 /* 80040A44 0003D984  38 80 00 00 */	li r4, 0
-/* 80040A48 0003D988  48 00 00 B9 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 80040A48 0003D988  48 00 00 B9 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 80040A4C 0003D98C  3C 60 80 3B */	lis r3, __vt__Q26JDrama9TLightMap@ha
 /* 80040A50 0003D990  38 03 A6 58 */	addi r0, r3, __vt__Q26JDrama9TLightMap@l
 /* 80040A54 0003D994  90 1E 00 00 */	stw r0, 0(r30)
@@ -119,8 +119,8 @@ lbl_80040AE4:
 /* 80040AF8 0003DA38  38 21 00 18 */	addi r1, r1, 0x18
 /* 80040AFC 0003DA3C  4E 80 00 20 */	blr 
 
-.global __ct__Q26JDrama10TFlagT$$0Us$$1FUs
-__ct__Q26JDrama10TFlagT$$0Us$$1FUs:
+.global "__ct__Q26JDrama10TFlagT<Us>FUs"
+"__ct__Q26JDrama10TFlagT<Us>FUs":
 /* 80040B00 0003DA40  B0 83 00 00 */	sth r4, 0(r3)
 /* 80040B04 0003DA44  4E 80 00 20 */	blr 
 
@@ -275,44 +275,44 @@ getType__Q26JDrama6TActorCFv:
 /* 80040CD8 0003DC18  38 60 00 01 */	li r3, 1
 /* 80040CDC 0003DC1C  4E 80 00 20 */	blr 
 
-.global $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
-$$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec:
+.global "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
+"@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec":
 /* 80040CE0 0003DC20  38 63 FF E0 */	addi r3, r3, -32
 /* 80040CE4 0003DC24  4B FF FF D8 */	b JSGSetRotation__Q26JDrama6TActorFRC3Vec
 
-.global $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-$$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec:
+.global "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+"@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec":
 /* 80040CE8 0003DC28  38 63 FF E0 */	addi r3, r3, -32
 /* 80040CEC 0003DC2C  4B FF FF B4 */	b JSGGetRotation__Q26JDrama6TActorCFP3Vec
 
-.global $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-$$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec:
+.global "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+"@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec":
 /* 80040CF0 0003DC30  38 63 FF E0 */	addi r3, r3, -32
 /* 80040CF4 0003DC34  4B FF FF 90 */	b JSGSetScaling__Q26JDrama6TActorFRC3Vec
 
-.global $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-$$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec:
+.global "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+"@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec":
 /* 80040CF8 0003DC38  38 63 FF E0 */	addi r3, r3, -32
 /* 80040CFC 0003DC3C  4B FF FF 6C */	b JSGGetScaling__Q26JDrama6TActorCFP3Vec
 
-.global $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-$$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec:
+.global "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+"@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec":
 /* 80040D00 0003DC40  38 63 FF E0 */	addi r3, r3, -32
 /* 80040D04 0003DC44  4B FF FF 48 */	b JSGSetTranslation__Q26JDrama6TActorFRC3Vec
 
-.global $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-$$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec:
+.global "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+"@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec":
 /* 80040D08 0003DC48  38 63 FF E0 */	addi r3, r3, -32
 /* 80040D0C 0003DC4C  4B FF FF 24 */	b JSGGetTranslation__Q26JDrama6TActorCFP3Vec
 
-.global $$232$$2__dt__Q26JDrama6TActorFv
-$$232$$2__dt__Q26JDrama6TActorFv:
+.global "@32@__dt__Q26JDrama6TActorFv"
+"@32@__dt__Q26JDrama6TActorFv":
 /* 80040D10 0003DC50  38 63 FF E0 */	addi r3, r3, -32
 /* 80040D14 0003DC54  4B FF FE 80 */	b __dt__Q26JDrama6TActorFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2533:
+"@533":
 	.incbin "baserom.dol", 0x36DEF0, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -329,7 +329,7 @@ __vt__Q26JDrama6TActor:
   .4byte perform__Q26JDrama6TActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama6TActorFv
+  .4byte "@32@__dt__Q26JDrama6TActorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -339,12 +339,12 @@ __vt__Q26JDrama6TActor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv

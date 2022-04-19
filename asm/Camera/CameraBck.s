@@ -36,8 +36,8 @@ lbl_80361538:
 /* 80361548 0035E488  38 21 00 20 */	addi r1, r1, 0x20
 /* 8036154C 0035E48C  4E 80 00 20 */	blr 
 
-.global updateDemo__10TCameraBckFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1Pf
-updateDemo__10TCameraBckFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1Pf:
+.global "updateDemo__10TCameraBckFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>Pf"
+"updateDemo__10TCameraBckFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>Pf":
 /* 80361550 0035E490  7C 08 02 A6 */	mflr r0
 /* 80361554 0035E494  90 01 00 04 */	stw r0, 4(r1)
 /* 80361558 0035E498  94 21 FF 80 */	stwu r1, -0x80(r1)
@@ -206,8 +206,8 @@ lbl_80361784:
 /* 80361794 0035E6D4  7C 08 03 A6 */	mtlr r0
 /* 80361798 0035E6D8  4E 80 00 20 */	blr 
 
-.global startDemo__10TCameraBckFPCcPCQ29JGeometry8TVec3$$0f$$1
-startDemo__10TCameraBckFPCcPCQ29JGeometry8TVec3$$0f$$1:
+.global "startDemo__10TCameraBckFPCcPCQ29JGeometry8TVec3<f>"
+"startDemo__10TCameraBckFPCcPCQ29JGeometry8TVec3<f>":
 /* 8036179C 0035E6DC  7C 08 02 A6 */	mflr r0
 /* 803617A0 0035E6E0  90 01 00 04 */	stw r0, 4(r1)
 /* 803617A4 0035E6E4  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -241,13 +241,13 @@ isFileExist__10TCameraBckCFPCc:
 .global __ct__10TCameraBckFv
 __ct__10TCameraBckFv:
 /* 80361804 0035E744  7C 08 02 A6 */	mflr r0
-/* 80361808 0035E748  3C 80 80 3A */	lis r4, $$21837@ha
+/* 80361808 0035E748  3C 80 80 3A */	lis r4, "@1837"@ha
 /* 8036180C 0035E74C  90 01 00 04 */	stw r0, 4(r1)
 /* 80361810 0035E750  38 00 00 00 */	li r0, 0
 /* 80361814 0035E754  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 80361818 0035E758  93 E1 00 3C */	stw r31, 0x3c(r1)
 /* 8036181C 0035E75C  3B E3 00 00 */	addi r31, r3, 0
-/* 80361820 0035E760  38 64 6C B8 */	addi r3, r4, $$21837@l
+/* 80361820 0035E760  38 64 6C B8 */	addi r3, r4, "@1837"@l
 /* 80361824 0035E764  93 C1 00 38 */	stw r30, 0x38(r1)
 /* 80361828 0035E768  93 A1 00 34 */	stw r29, 0x34(r1)
 /* 8036182C 0035E76C  90 1F 00 14 */	stw r0, 0x14(r31)
@@ -310,54 +310,54 @@ lbl_80361884:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A3AA4, 0x14
-$$21593:
+"@1593":
 	.incbin "baserom.dol", 0x3A3AB8, 0x30
-$$21594:
+"@1594":
 	.incbin "baserom.dol", 0x3A3AE8, 0x38
-$$21595:
+"@1595":
 	.incbin "baserom.dol", 0x3A3B20, 0x34
-$$21596:
+"@1596":
 	.incbin "baserom.dol", 0x3A3B54, 0x24
-$$21681:
+"@1681":
 	.incbin "baserom.dol", 0x3A3B78, 0x2C
-$$21682:
+"@1682":
 	.incbin "baserom.dol", 0x3A3BA4, 0x30
-$$21683:
+"@1683":
 	.incbin "baserom.dol", 0x3A3BD4, 0x24
-$$21684:
+"@1684":
 	.incbin "baserom.dol", 0x3A3BF8, 0x10
-$$21685:
+"@1685":
 	.incbin "baserom.dol", 0x3A3C08, 0x10
-$$21686:
+"@1686":
 	.incbin "baserom.dol", 0x3A3C18, 0x14
-$$21687:
+"@1687":
 	.incbin "baserom.dol", 0x3A3C2C, 0x30
-$$21688:
+"@1688":
 	.incbin "baserom.dol", 0x3A3C5C, 0x34
-$$21689:
+"@1689":
 	.incbin "baserom.dol", 0x3A3C90, 0x28
-$$21837:
+"@1837":
 	.incbin "baserom.dol", 0x3A3CB8, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sAddBckFileNameTable:
-  .4byte $$21687
-  .4byte $$21688
-  .4byte $$21689
+  .4byte "@1687"
+  .4byte "@1688"
+  .4byte "@1689"
   .4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cPositionJointName:
-  .4byte $$21684
+  .4byte "@1684"
 cLookatJointName:
-  .4byte $$21685
+  .4byte "@1685"
 .global cCameraBckVolumeName
 cCameraBckVolumeName:
-  .4byte $$21686
+  .4byte "@1686"
   .4byte 0

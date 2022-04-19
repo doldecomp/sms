@@ -11,8 +11,8 @@ load__Q26JDrama9TSmJ3DActFR20JSUMemoryInputStream:
 /* 8004619C 000430DC  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 800461A0 000430E0  4B FF A7 A9 */	bl load__Q26JDrama6TActorFR20JSUMemoryInputStream
 /* 800461A4 000430E4  80 7F 00 3C */	lwz r3, 0x3c(r31)
-/* 800461A8 000430E8  3C 80 80 37 */	lis r4, $$21143@ha
-/* 800461AC 000430EC  38 84 11 00 */	addi r4, r4, $$21143@l
+/* 800461A8 000430E8  3C 80 80 37 */	lis r4, "@1143"@ha
+/* 800461AC 000430EC  38 84 11 00 */	addi r4, r4, "@1143"@l
 /* 800461B0 000430F0  81 83 00 00 */	lwz r12, 0(r3)
 /* 800461B4 000430F4  81 8C 00 20 */	lwz r12, 0x20(r12)
 /* 800461B8 000430F8  7D 88 03 A6 */	mtlr r12
@@ -31,8 +31,8 @@ load__Q26JDrama9TSmJ3DActFR20JSUMemoryInputStream:
 /* 800461EC 0004312C  4B FE 17 6D */	bl __ct__8J3DModelFP12J3DModelDataUlUl
 lbl_800461F0:
 /* 800461F0 00043130  93 DF 00 48 */	stw r30, 0x48(r31)
-/* 800461F4 00043134  3C 60 80 37 */	lis r3, $$21144@ha
-/* 800461F8 00043138  38 83 11 10 */	addi r4, r3, $$21144@l
+/* 800461F4 00043134  3C 60 80 37 */	lis r3, "@1144"@ha
+/* 800461F8 00043138  38 83 11 10 */	addi r4, r3, "@1144"@l
 /* 800461FC 0004313C  80 7F 00 3C */	lwz r3, 0x3c(r31)
 /* 80046200 00043140  81 83 00 00 */	lwz r12, 0(r3)
 /* 80046204 00043144  81 8C 00 20 */	lwz r12, 0x20(r12)
@@ -95,7 +95,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 800462D4 00043214  3B C3 00 00 */	addi r30, r3, 0
 /* 800462D8 00043218  93 A1 01 A4 */	stw r29, 0x1a4(r1)
 /* 800462DC 0004321C  41 82 03 FC */	beq lbl_800466D8
-/* 800462E0 00043220  C0 02 83 F8 */	lfs f0, $$21562@sda21(r2)
+/* 800462E0 00043220  C0 02 83 F8 */	lfs f0, "@1562"@sda21(r2)
 /* 800462E4 00043224  D0 01 01 6C */	stfs f0, 0x16c(r1)
 /* 800462E8 00043228  D0 01 01 5C */	stfs f0, 0x15c(r1)
 /* 800462EC 0004322C  D0 01 01 4C */	stfs f0, 0x14c(r1)
@@ -105,7 +105,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 800462FC 0004323C  D0 01 01 44 */	stfs f0, 0x144(r1)
 /* 80046300 00043240  D0 01 01 60 */	stfs f0, 0x160(r1)
 /* 80046304 00043244  D0 01 01 50 */	stfs f0, 0x150(r1)
-/* 80046308 00043248  C0 02 83 FC */	lfs f0, $$21563@sda21(r2)
+/* 80046308 00043248  C0 02 83 FC */	lfs f0, "@1563"@sda21(r2)
 /* 8004630C 0004324C  D0 01 01 68 */	stfs f0, 0x168(r1)
 /* 80046310 00043250  D0 01 01 54 */	stfs f0, 0x154(r1)
 /* 80046314 00043254  D0 01 01 40 */	stfs f0, 0x140(r1)
@@ -115,7 +115,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046324 00043264  D0 01 01 5C */	stfs f0, 0x15c(r1)
 /* 80046328 00043268  C0 1E 00 18 */	lfs f0, 0x18(r30)
 /* 8004632C 0004326C  D0 01 01 6C */	stfs f0, 0x16c(r1)
-/* 80046330 00043270  C0 22 84 00 */	lfs f1, $$21564@sda21(r2)
+/* 80046330 00043270  C0 22 84 00 */	lfs f1, "@1564"@sda21(r2)
 /* 80046334 00043274  C0 1E 00 38 */	lfs f0, 0x38(r30)
 /* 80046338 00043278  EE C1 00 32 */	fmuls f22, f1, f0
 /* 8004633C 0004327C  FC 20 B0 90 */	fmr f1, f22
@@ -125,7 +125,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 8004634C 0004328C  48 04 0C 25 */	bl cosf
 /* 80046350 00043290  C0 61 01 64 */	lfs f3, 0x164(r1)
 /* 80046354 00043294  FC 40 F8 50 */	fneg f2, f31
-/* 80046358 00043298  C0 C2 83 F8 */	lfs f6, $$21562@sda21(r2)
+/* 80046358 00043298  C0 C2 83 F8 */	lfs f6, "@1562"@sda21(r2)
 /* 8004635C 0004329C  38 61 01 10 */	addi r3, r1, 0x110
 /* 80046360 000432A0  C1 81 01 54 */	lfs f12, 0x154(r1)
 /* 80046364 000432A4  EC 83 07 F2 */	fmuls f4, f3, f31
@@ -144,7 +144,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046398 000432D8  C0 01 01 6C */	lfs f0, 0x16c(r1)
 /* 8004639C 000432DC  EF 23 D1 BA */	fmadds f25, f3, f6, f26
 /* 800463A0 000432E0  ED 7D 29 BA */	fmadds f11, f29, f6, f5
-/* 800463A4 000432E4  C0 E2 83 FC */	lfs f7, $$21563@sda21(r2)
+/* 800463A4 000432E4  C0 E2 83 FC */	lfs f7, "@1563"@sda21(r2)
 /* 800463A8 000432E8  EC AC 00 72 */	fmuls f5, f12, f1
 /* 800463AC 000432EC  C1 01 01 5C */	lfs f8, 0x15c(r1)
 /* 800463B0 000432F0  EE C9 01 B2 */	fmuls f22, f9, f6
@@ -176,8 +176,8 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046418 00043358  EC C9 61 BA */	fmadds f6, f9, f6, f12
 /* 8004641C 0004335C  EC E9 59 FA */	fmadds f7, f9, f7, f11
 /* 80046420 00043360  ED 08 50 2A */	fadds f8, f8, f10
-/* 80046424 00043364  4B FF AE 69 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
-/* 80046428 00043368  C0 22 84 00 */	lfs f1, $$21564@sda21(r2)
+/* 80046424 00043364  4B FF AE 69 */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
+/* 80046428 00043368  C0 22 84 00 */	lfs f1, "@1564"@sda21(r2)
 /* 8004642C 0004336C  C0 1E 00 34 */	lfs f0, 0x34(r30)
 /* 80046430 00043370  EE C1 00 32 */	fmuls f22, f1, f0
 /* 80046434 00043374  FC 20 B0 90 */	fmr f1, f22
@@ -186,10 +186,10 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046440 00043380  FC 20 B0 90 */	fmr f1, f22
 /* 80046444 00043384  48 04 0B 2D */	bl cosf
 /* 80046448 00043388  FC 00 08 90 */	fmr f0, f1
-/* 8004644C 0004338C  C0 C2 83 F8 */	lfs f6, $$21562@sda21(r2)
+/* 8004644C 0004338C  C0 C2 83 F8 */	lfs f6, "@1562"@sda21(r2)
 /* 80046450 00043390  C0 21 01 34 */	lfs f1, 0x134(r1)
 /* 80046454 00043394  FD 20 F8 50 */	fneg f9, f31
-/* 80046458 00043398  C0 E2 83 FC */	lfs f7, $$21563@sda21(r2)
+/* 80046458 00043398  C0 E2 83 FC */	lfs f7, "@1563"@sda21(r2)
 /* 8004645C 0004339C  EC A1 01 B2 */	fmuls f5, f1, f6
 /* 80046460 000433A0  C1 01 01 30 */	lfs f8, 0x130(r1)
 /* 80046464 000433A4  C1 61 01 14 */	lfs f11, 0x114(r1)
@@ -239,8 +239,8 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046514 00043454  EC C7 61 BA */	fmadds f6, f7, f6, f12
 /* 80046518 00043458  EC E7 58 3A */	fmadds f7, f7, f0, f11
 /* 8004651C 0004345C  ED 08 50 2A */	fadds f8, f8, f10
-/* 80046520 00043460  4B FF AD 6D */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
-/* 80046524 00043464  C0 22 84 00 */	lfs f1, $$21564@sda21(r2)
+/* 80046520 00043460  4B FF AD 6D */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
+/* 80046524 00043464  C0 22 84 00 */	lfs f1, "@1564"@sda21(r2)
 /* 80046528 00043468  C0 1E 00 30 */	lfs f0, 0x30(r30)
 /* 8004652C 0004346C  EE C1 00 32 */	fmuls f22, f1, f0
 /* 80046530 00043470  FC 20 B0 90 */	fmr f1, f22
@@ -248,7 +248,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 80046538 00043478  FF E0 08 90 */	fmr f31, f1
 /* 8004653C 0004347C  FC 20 B0 90 */	fmr f1, f22
 /* 80046540 00043480  48 04 0A 31 */	bl cosf
-/* 80046544 00043484  C1 42 83 F8 */	lfs f10, $$21562@sda21(r2)
+/* 80046544 00043484  C1 42 83 F8 */	lfs f10, "@1562"@sda21(r2)
 /* 80046548 00043488  FC 00 08 90 */	fmr f0, f1
 /* 8004654C 0004348C  C0 41 01 64 */	lfs f2, 0x164(r1)
 /* 80046550 00043490  FE A0 F8 50 */	fneg f21, f31
@@ -257,7 +257,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 8004655C 0004349C  C1 01 01 60 */	lfs f8, 0x160(r1)
 /* 80046560 000434A0  EC 22 00 32 */	fmuls f1, f2, f0
 /* 80046564 000434A4  EC 82 05 72 */	fmuls f4, f2, f21
-/* 80046568 000434A8  C0 42 83 FC */	lfs f2, $$21563@sda21(r2)
+/* 80046568 000434A8  C0 42 83 FC */	lfs f2, "@1563"@sda21(r2)
 /* 8004656C 000434AC  C1 81 01 54 */	lfs f12, 0x154(r1)
 /* 80046570 000434B0  EE E8 0A BA */	fmadds f23, f8, f10, f1
 /* 80046574 000434B4  C0 61 01 68 */	lfs f3, 0x168(r1)
@@ -305,7 +305,7 @@ perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics:
 /* 8004661C 0004355C  EC C7 37 FA */	fmadds f6, f7, f31, f6
 /* 80046620 00043560  EC E7 60 3A */	fmadds f7, f7, f0, f12
 /* 80046624 00043564  ED 08 58 2A */	fadds f8, f8, f11
-/* 80046628 00043568  4B FF AC 65 */	bl set__Q29JGeometry13SMatrix34C$$0f$$1Fffffffffffff
+/* 80046628 00043568  4B FF AC 65 */	bl "set__Q29JGeometry13SMatrix34C<f>Fffffffffffff"
 /* 8004662C 0004356C  80 9E 00 48 */	lwz r4, 0x48(r30)
 /* 80046630 00043570  38 61 01 10 */	addi r3, r1, 0x110
 /* 80046634 00043574  38 84 00 20 */	addi r4, r4, 0x20
@@ -440,16 +440,16 @@ lbl_800467F8:
 /* 80046808 00043748  7C 08 03 A6 */	mtlr r0
 /* 8004680C 0004374C  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__Q26JDrama9TSmJ3DActFv
-$$232$$2__dt__Q26JDrama9TSmJ3DActFv:
+.global "@32@__dt__Q26JDrama9TSmJ3DActFv"
+"@32@__dt__Q26JDrama9TSmJ3DActFv":
 /* 80046810 00043750  38 63 FF E0 */	addi r3, r3, -32
 /* 80046814 00043754  4B FF FF 44 */	b __dt__Q26JDrama9TSmJ3DActFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21143:
+"@1143":
 	.incbin "baserom.dol", 0x36E100, 0x10
-$$21144:
+"@1144":
 	.incbin "baserom.dol", 0x36E110, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -466,7 +466,7 @@ __vt__Q26JDrama9TSmJ3DAct:
   .4byte perform__Q26JDrama9TSmJ3DActFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama9TSmJ3DActFv
+  .4byte "@32@__dt__Q26JDrama9TSmJ3DActFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -476,12 +476,12 @@ __vt__Q26JDrama9TSmJ3DAct:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -504,9 +504,9 @@ __vt__12J3DFrameCtrl:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21562:
+"@1562":
   .4byte 0
-$$21563:
+"@1563":
 	.incbin "baserom.dol", 0x3E40FC, 0x4
-$$21564:
+"@1564":
 	.incbin "baserom.dol", 0x3E4100, 0x8

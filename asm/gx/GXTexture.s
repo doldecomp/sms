@@ -7,8 +7,8 @@ GXGetTexBufferSize:
 /* 800AA1D8 000A7118  28 05 00 3C */	cmplwi r5, 0x3c
 /* 800AA1DC 000A711C  93 E1 00 24 */	stw r31, 0x24(r1)
 /* 800AA1E0 000A7120  41 81 00 40 */	bgt lbl_800AA220
-/* 800AA1E4 000A7124  3D 00 80 3B */	lis r8, $$292@ha
-/* 800AA1E8 000A7128  39 08 18 E8 */	addi r8, r8, $$292@l
+/* 800AA1E4 000A7124  3D 00 80 3B */	lis r8, "@92"@ha
+/* 800AA1E8 000A7128  39 08 18 E8 */	addi r8, r8, "@92"@l
 /* 800AA1EC 000A712C  54 A0 10 3A */	slwi r0, r5, 2
 /* 800AA1F0 000A7130  7C 08 00 2E */	lwzx r0, r8, r0
 /* 800AA1F4 000A7134  7C 09 03 A6 */	mtctr r0
@@ -111,8 +111,8 @@ lbl_800AA320:
 __GetImageTileCount:
 /* 800AA330 000A7270  28 03 00 3C */	cmplwi r3, 0x3c
 /* 800AA334 000A7274  41 81 00 40 */	bgt lbl_800AA374
-/* 800AA338 000A7278  3D 20 80 3B */	lis r9, $$2133@ha
-/* 800AA33C 000A727C  39 29 19 DC */	addi r9, r9, $$2133@l
+/* 800AA338 000A7278  3D 20 80 3B */	lis r9, "@133"@ha
+/* 800AA33C 000A727C  39 29 19 DC */	addi r9, r9, "@133"@l
 /* 800AA340 000A7280  54 60 10 3A */	slwi r0, r3, 2
 /* 800AA344 000A7284  7C 09 00 2E */	lwzx r0, r9, r0
 /* 800AA348 000A7288  7C 09 03 A6 */	mtctr r0
@@ -234,10 +234,10 @@ lbl_800AA4D0:
 /* 800AA4D4 000A7414  3C 00 43 30 */	lis r0, 0x4330
 /* 800AA4D8 000A7418  80 7F 00 04 */	lwz r3, 4(r31)
 /* 800AA4DC 000A741C  90 01 00 38 */	stw r0, 0x38(r1)
-/* 800AA4E0 000A7420  C8 22 8B 30 */	lfd f1, $$2166@sda21(r2)
+/* 800AA4E0 000A7420  C8 22 8B 30 */	lfd f1, "@166"@sda21(r2)
 /* 800AA4E4 000A7424  54 63 06 1E */	rlwinm r3, r3, 0, 0x18, 0xf
 /* 800AA4E8 000A7428  C8 01 00 38 */	lfd f0, 0x38(r1)
-/* 800AA4EC 000A742C  C0 42 8B 28 */	lfs f2, $$2164@sda21(r2)
+/* 800AA4EC 000A742C  C0 42 8B 28 */	lfs f2, "@164"@sda21(r2)
 /* 800AA4F0 000A7430  EC 00 08 28 */	fsubs f0, f0, f1
 /* 800AA4F4 000A7434  EC 02 00 32 */	fmuls f0, f2, f0
 /* 800AA4F8 000A7438  FC 00 00 1E */	fctiwz f0, f0
@@ -278,8 +278,8 @@ lbl_800AA520:
 /* 800AA57C 000A74BC  7C A0 03 78 */	or r0, r5, r0
 /* 800AA580 000A74C0  90 1F 00 0C */	stw r0, 0xc(r31)
 /* 800AA584 000A74C4  41 81 00 80 */	bgt lbl_800AA604
-/* 800AA588 000A74C8  3C A0 80 3B */	lis r5, $$2168@ha
-/* 800AA58C 000A74CC  38 A5 1A D0 */	addi r5, r5, $$2168@l
+/* 800AA588 000A74C8  3C A0 80 3B */	lis r5, "@168"@ha
+/* 800AA58C 000A74CC  38 A5 1A D0 */	addi r5, r5, "@168"@l
 /* 800AA590 000A74D0  54 E0 10 3A */	slwi r0, r7, 2
 /* 800AA594 000A74D4  7C 05 00 2E */	lwzx r0, r5, r0
 /* 800AA598 000A74D8  7C 09 03 A6 */	mtctr r0
@@ -367,19 +367,19 @@ GXInitTexObjCI:
 .global GXInitTexObjLOD
 GXInitTexObjLOD:
 /* 800AA6B4 000A75F4  94 21 FF C8 */	stwu r1, -0x38(r1)
-/* 800AA6B8 000A75F8  C0 02 8B 38 */	lfs f0, $$2192@sda21(r2)
+/* 800AA6B8 000A75F8  C0 02 8B 38 */	lfs f0, "@192"@sda21(r2)
 /* 800AA6BC 000A75FC  FC 03 00 40 */	fcmpo cr0, f3, f0
 /* 800AA6C0 000A7600  40 80 00 0C */	bge lbl_800AA6CC
 /* 800AA6C4 000A7604  FC 60 00 90 */	fmr f3, f0
 /* 800AA6C8 000A7608  48 00 00 18 */	b lbl_800AA6E0
 lbl_800AA6CC:
-/* 800AA6CC 000A760C  C0 02 8B 3C */	lfs f0, $$2193@sda21(r2)
+/* 800AA6CC 000A760C  C0 02 8B 3C */	lfs f0, "@193"@sda21(r2)
 /* 800AA6D0 000A7610  FC 03 00 40 */	fcmpo cr0, f3, f0
 /* 800AA6D4 000A7614  4C 41 13 82 */	cror 2, 1, 2
 /* 800AA6D8 000A7618  40 82 00 08 */	bne lbl_800AA6E0
-/* 800AA6DC 000A761C  C0 62 8B 40 */	lfs f3, $$2194@sda21(r2)
+/* 800AA6DC 000A761C  C0 62 8B 40 */	lfs f3, "@194"@sda21(r2)
 lbl_800AA6E0:
-/* 800AA6E0 000A7620  C0 02 8B 44 */	lfs f0, $$2195@sda21(r2)
+/* 800AA6E0 000A7620  C0 02 8B 44 */	lfs f0, "@195"@sda21(r2)
 /* 800AA6E4 000A7624  2C 05 00 01 */	cmpwi r5, 1
 /* 800AA6E8 000A7628  80 03 00 00 */	lwz r0, 0(r3)
 /* 800AA6EC 000A762C  EC 00 00 F2 */	fmuls f0, f0, f3
@@ -435,19 +435,19 @@ lbl_800AA75C:
 /* 800AA7A4 000A76E4  54 84 02 D2 */	rlwinm r4, r4, 0, 0xb, 9
 /* 800AA7A8 000A76E8  7C 80 03 78 */	or r0, r4, r0
 /* 800AA7AC 000A76EC  90 03 00 00 */	stw r0, 0(r3)
-/* 800AA7B0 000A76F0  C0 02 8B 48 */	lfs f0, $$2196@sda21(r2)
+/* 800AA7B0 000A76F0  C0 02 8B 48 */	lfs f0, "@196"@sda21(r2)
 /* 800AA7B4 000A76F4  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800AA7B8 000A76F8  40 80 00 0C */	bge lbl_800AA7C4
 /* 800AA7BC 000A76FC  FC 20 00 90 */	fmr f1, f0
 /* 800AA7C0 000A7700  48 00 00 14 */	b lbl_800AA7D4
 lbl_800AA7C4:
-/* 800AA7C4 000A7704  C0 02 8B 4C */	lfs f0, $$2197@sda21(r2)
+/* 800AA7C4 000A7704  C0 02 8B 4C */	lfs f0, "@197"@sda21(r2)
 /* 800AA7C8 000A7708  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800AA7CC 000A770C  40 81 00 08 */	ble lbl_800AA7D4
 /* 800AA7D0 000A7710  FC 20 00 90 */	fmr f1, f0
 lbl_800AA7D4:
-/* 800AA7D4 000A7714  C0 62 8B 28 */	lfs f3, $$2164@sda21(r2)
-/* 800AA7D8 000A7718  C0 02 8B 48 */	lfs f0, $$2196@sda21(r2)
+/* 800AA7D4 000A7714  C0 62 8B 28 */	lfs f3, "@164"@sda21(r2)
+/* 800AA7D8 000A7718  C0 02 8B 48 */	lfs f0, "@196"@sda21(r2)
 /* 800AA7DC 000A771C  EC 23 00 72 */	fmuls f1, f3, f1
 /* 800AA7E0 000A7720  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 800AA7E4 000A7724  FC 20 08 1E */	fctiwz f1, f1
@@ -457,7 +457,7 @@ lbl_800AA7D4:
 /* 800AA7F4 000A7734  FC 40 00 90 */	fmr f2, f0
 /* 800AA7F8 000A7738  48 00 00 14 */	b lbl_800AA80C
 lbl_800AA7FC:
-/* 800AA7FC 000A773C  C0 02 8B 4C */	lfs f0, $$2197@sda21(r2)
+/* 800AA7FC 000A773C  C0 02 8B 4C */	lfs f0, "@197"@sda21(r2)
 /* 800AA800 000A7740  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 800AA804 000A7744  40 81 00 08 */	ble lbl_800AA80C
 /* 800AA808 000A7748  FC 40 00 90 */	fmr f2, f0
@@ -466,7 +466,7 @@ lbl_800AA80C:
 /* 800AA810 000A7750  54 00 00 2E */	rlwinm r0, r0, 0, 0, 0x17
 /* 800AA814 000A7754  50 80 06 3E */	rlwimi r0, r4, 0, 0x18, 0x1f
 /* 800AA818 000A7758  90 03 00 04 */	stw r0, 4(r3)
-/* 800AA81C 000A775C  C0 02 8B 28 */	lfs f0, $$2164@sda21(r2)
+/* 800AA81C 000A775C  C0 02 8B 28 */	lfs f0, "@164"@sda21(r2)
 /* 800AA820 000A7760  80 03 00 04 */	lwz r0, 4(r3)
 /* 800AA824 000A7764  EC 00 00 B2 */	fmuls f0, f0, f2
 /* 800AA828 000A7768  54 04 06 1E */	rlwinm r4, r0, 0, 0x18, 0xf
@@ -1263,7 +1263,7 @@ lbl_800AB328:
 /* 800AB334 000A8274  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$292:
+"@92":
     .4byte lbl_800AA1FC
     .4byte lbl_800AA208
     .4byte lbl_800AA208
@@ -1325,7 +1325,7 @@ $$292:
     .4byte lbl_800AA208
     .4byte lbl_800AA220
     .4byte lbl_800AA214
-$$2133:
+"@133":
     .4byte lbl_800AA350
     .4byte lbl_800AA35C
     .4byte lbl_800AA35C
@@ -1387,7 +1387,7 @@ $$2133:
     .4byte lbl_800AA35C
     .4byte lbl_800AA374
     .4byte lbl_800AA368
-$$2168:
+"@168":
     .4byte lbl_800AA5A0
     .4byte lbl_800AA5B4
     .4byte lbl_800AA5B4
@@ -1410,19 +1410,19 @@ GX2HWFiltConv:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2164:
+"@164":
 	.incbin "baserom.dol", 0x3E4828, 0x8
-$$2166:
+"@166":
 	.incbin "baserom.dol", 0x3E4830, 0x8
-$$2192:
+"@192":
 	.incbin "baserom.dol", 0x3E4838, 0x4
-$$2193:
+"@193":
 	.incbin "baserom.dol", 0x3E483C, 0x4
-$$2194:
+"@194":
 	.incbin "baserom.dol", 0x3E4840, 0x4
-$$2195:
+"@195":
 	.incbin "baserom.dol", 0x3E4844, 0x4
-$$2196:
+"@196":
   .4byte 0
-$$2197:
+"@197":
 	.incbin "baserom.dol", 0x3E484C, 0x4

@@ -264,8 +264,8 @@ loadAfter__10THelpActorFv:
 /* 80218E1C 00215D5C  7D 88 03 A6 */	mtlr r12
 /* 80218E20 00215D60  4E 80 00 21 */	blrl 
 /* 80218E24 00215D64  90 7D 00 70 */	stw r3, 0x70(r29)
-/* 80218E28 00215D68  3C 60 80 39 */	lis r3, $$21991@ha
-/* 80218E2C 00215D6C  3B E3 3A F0 */	addi r31, r3, $$21991@l
+/* 80218E28 00215D68  3C 60 80 39 */	lis r3, "@1991"@ha
+/* 80218E2C 00215D6C  3B E3 3A F0 */	addi r31, r3, "@1991"@l
 /* 80218E30 00215D70  80 8D 8E E0 */	lwz r4, instance__Q26JDrama11TNameRefGen@sda21(r13)
 /* 80218E34 00215D74  7F E3 FB 78 */	mr r3, r31
 /* 80218E38 00215D78  83 C4 00 04 */	lwz r30, 4(r4)
@@ -310,9 +310,9 @@ load__10THelpActorFR20JSUMemoryInputStream:
 /* 80218EC8 00215E08  90 7E 00 6C */	stw r3, 0x6c(r30)
 /* 80218ECC 00215E0C  3C 80 40 00 */	lis r4, 0x40000320@ha
 /* 80218ED0 00215E10  38 7E 00 00 */	addi r3, r30, 0
-/* 80218ED4 00215E14  C0 62 D6 3C */	lfs f3, $$21996@sda21(r2)
+/* 80218ED4 00215E14  C0 62 D6 3C */	lfs f3, "@1996"@sda21(r2)
 /* 80218ED8 00215E18  38 84 03 20 */	addi r4, r4, 0x40000320@l
-/* 80218EDC 00215E1C  C0 42 D6 38 */	lfs f2, $$21995@sda21(r2)
+/* 80218EDC 00215E1C  C0 42 D6 38 */	lfs f2, "@1995"@sda21(r2)
 /* 80218EE0 00215E20  38 A0 00 01 */	li r5, 1
 /* 80218EE4 00215E24  C0 3E 00 24 */	lfs f1, 0x24(r30)
 /* 80218EE8 00215E28  C0 1E 00 28 */	lfs f0, 0x28(r30)
@@ -358,19 +358,19 @@ __ct__10THelpActorFPCc:
 /* 80218F7C 00215EBC  7C 08 03 A6 */	mtlr r0
 /* 80218F80 00215EC0  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__10THelpActorFv
-$$232$$2__dt__10THelpActorFv:
+.global "@32@__dt__10THelpActorFv"
+"@32@__dt__10THelpActorFv":
 /* 80218F84 00215EC4  38 63 FF E0 */	addi r3, r3, -32
 /* 80218F88 00215EC8  4B FF FC 50 */	b __dt__10THelpActorFv
 
-.global $$232$$2__dt__16TSwitchHelpActorFv
-$$232$$2__dt__16TSwitchHelpActorFv:
+.global "@32@__dt__16TSwitchHelpActorFv"
+"@32@__dt__16TSwitchHelpActorFv":
 /* 80218F8C 00215ECC  38 63 FF E0 */	addi r3, r3, -32
 /* 80218F90 00215ED0  4B FF FB 08 */	b __dt__16TSwitchHelpActorFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21991:
+"@1991":
 	.incbin "baserom.dol", 0x390AF0, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -387,7 +387,7 @@ __vt__16TSwitchHelpActor:
   .4byte perform__10THelpActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__16TSwitchHelpActorFv
+  .4byte "@32@__dt__16TSwitchHelpActorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -397,12 +397,12 @@ __vt__16TSwitchHelpActor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -431,7 +431,7 @@ __vt__10THelpActor:
   .4byte perform__10THelpActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__10THelpActorFv
+  .4byte "@32@__dt__10THelpActorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -441,12 +441,12 @@ __vt__10THelpActor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -465,7 +465,7 @@ __vt__10THelpActor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21995:
+"@1995":
 	.incbin "baserom.dol", 0x3E9338, 0x4
-$$21996:
+"@1996":
 	.incbin "baserom.dol", 0x3E933C, 0x4

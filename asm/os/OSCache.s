@@ -317,8 +317,8 @@ lbl_8008E31C:
 /* 8008E334 0008B274  4B FF E0 95 */	bl PPCMtl2cr
 /* 8008E338 0008B278  48 00 00 04 */	b lbl_8008E33C
 lbl_8008E33C:
-/* 8008E33C 0008B27C  3C 60 80 3B */	lis r3, $$269@ha
-/* 8008E340 0008B280  3B E3 F6 98 */	addi r31, r3, $$269@l
+/* 8008E33C 0008B27C  3C 60 80 3B */	lis r3, "@69"@ha
+/* 8008E340 0008B280  3B E3 F6 98 */	addi r31, r3, "@69"@l
 /* 8008E344 0008B284  48 00 00 04 */	b lbl_8008E348
 lbl_8008E348:
 /* 8008E348 0008B288  48 00 00 10 */	b lbl_8008E358
@@ -364,8 +364,8 @@ lbl_8008E3B8:
 /* 8008E3D0 0008B310  91 21 00 20 */	stw r9, 0x20(r1)
 /* 8008E3D4 0008B314  91 41 00 24 */	stw r10, 0x24(r1)
 /* 8008E3D8 0008B318  7C 9D 23 78 */	mr r29, r4
-/* 8008E3DC 0008B31C  3C 60 80 3B */	lis r3, $$269@ha
-/* 8008E3E0 0008B320  3B E3 F6 98 */	addi r31, r3, $$269@l
+/* 8008E3DC 0008B31C  3C 60 80 3B */	lis r3, "@69"@ha
+/* 8008E3E0 0008B320  3B E3 F6 98 */	addi r31, r3, "@69"@l
 /* 8008E3E4 0008B324  4B FF E0 11 */	bl PPCMfhid2
 /* 8008E3E8 0008B328  7C 7E 1B 78 */	mr r30, r3
 /* 8008E3EC 0008B32C  4C C6 31 82 */	crclr 6
@@ -442,8 +442,8 @@ __OSCacheInit:
 /* 8008E4E4 0008B424  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8008E4E8 0008B428  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8008E4EC 0008B42C  93 C1 00 08 */	stw r30, 8(r1)
-/* 8008E4F0 0008B430  3C 60 80 3B */	lis r3, $$269@ha
-/* 8008E4F4 0008B434  3B E3 F6 98 */	addi r31, r3, $$269@l
+/* 8008E4F0 0008B430  3C 60 80 3B */	lis r3, "@69"@ha
+/* 8008E4F4 0008B434  3B E3 F6 98 */	addi r31, r3, "@69"@l
 /* 8008E4F8 0008B438  4B FF DE B9 */	bl PPCMfhid0
 /* 8008E4FC 0008B43C  54 60 04 20 */	rlwinm r0, r3, 0, 0x10, 0x10
 /* 8008E500 0008B440  28 00 00 00 */	cmplwi r0, 0
@@ -503,31 +503,31 @@ lbl_8008E59C:
 /* 8008E5CC 0008B50C  4E 80 00 20 */	blr 
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$269:
+"@69":
 	.incbin "baserom.dol", 0x3AC698, 0x2C
-$$290:
+"@90":
 	.incbin "baserom.dol", 0x3AC6C4, 0x18
-$$291:
+"@91":
 	.incbin "baserom.dol", 0x3AC6DC, 0x1C
-$$292:
+"@92":
 	.incbin "baserom.dol", 0x3AC6F8, 0x30
-$$293:
+"@93":
 	.incbin "baserom.dol", 0x3AC728, 0x3C
-$$294:
+"@94":
 	.incbin "baserom.dol", 0x3AC764, 0x38
-$$295:
+"@95":
 	.incbin "baserom.dol", 0x3AC79C, 0x40
-$$296:
+"@96":
 	.incbin "baserom.dol", 0x3AC7DC, 0x2C
-$$297:
+"@97":
 	.incbin "baserom.dol", 0x3AC808, 0x20
-$$298:
+"@98":
 	.incbin "baserom.dol", 0x3AC828, 0x1C
-$$2110:
+"@110":
 	.incbin "baserom.dol", 0x3AC844, 0x1C
-$$2111:
+"@111":
 	.incbin "baserom.dol", 0x3AC860, 0x1C
-$$2112:
+"@112":
 	.incbin "baserom.dol", 0x3AC87C, 0x18
-$$2113:
+"@113":
 	.incbin "baserom.dol", 0x3AC894, 0x34

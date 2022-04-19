@@ -23,8 +23,8 @@ lbl_8010C36C:
 /* 8010C374 001092B4  4B F0 05 3D */	bl __nw__FUl
 /* 8010C378 001092B8  7C 7F 1B 79 */	or. r31, r3, r3
 /* 8010C37C 001092BC  41 82 00 14 */	beq lbl_8010C390
-/* 8010C380 001092C0  3C 60 80 38 */	lis r3, $$21816@ha
-/* 8010C384 001092C4  38 83 9A 28 */	addi r4, r3, $$21816@l
+/* 8010C380 001092C0  3C 60 80 38 */	lis r3, "@1816"@ha
+/* 8010C384 001092C4  38 83 9A 28 */	addi r4, r3, "@1816"@l
 /* 8010C388 001092C8  38 7F 00 00 */	addi r3, r31, 0
 /* 8010C38C 001092CC  4B FB 75 59 */	bl __ct__22TLightWithDBSetManagerFPCc
 lbl_8010C390:
@@ -38,5 +38,5 @@ lbl_8010C390:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21816:
+"@1816":
 	.incbin "baserom.dol", 0x376A28, 0x18

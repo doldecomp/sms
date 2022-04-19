@@ -104,10 +104,10 @@ loadNrmMtxIndx__6J3DSysCFiUs:
 .global setTexCacheRegion__6J3DSysF15_GXTexCacheSize
 setTexCacheRegion__6J3DSysF15_GXTexCacheSize:
 /* 8002A33C 0002727C  7C 08 02 A6 */	mflr r0
-/* 8002A340 00027280  3C A0 80 37 */	lis r5, $$2838@ha
+/* 8002A340 00027280  3C A0 80 37 */	lis r5, "@838"@ha
 /* 8002A344 00027284  90 01 00 04 */	stw r0, 4(r1)
-/* 8002A348 00027288  38 E5 0C 38 */	addi r7, r5, $$2838@l
-/* 8002A34C 0002728C  3C A0 80 37 */	lis r5, $$2839@ha
+/* 8002A348 00027288  38 E5 0C 38 */	addi r7, r5, "@838"@l
+/* 8002A34C 0002728C  3C A0 80 37 */	lis r5, "@839"@ha
 /* 8002A350 00027290  94 21 FF B0 */	stwu r1, -0x50(r1)
 /* 8002A354 00027294  BF 01 00 30 */	stmw r24, 0x30(r1)
 /* 8002A358 00027298  7C 7E 1B 78 */	mr r30, r3
@@ -122,7 +122,7 @@ setTexCacheRegion__6J3DSysF15_GXTexCacheSize:
 /* 8002A37C 000272BC  80 07 00 0C */	lwz r0, 0xc(r7)
 /* 8002A380 000272C0  90 61 00 28 */	stw r3, 0x28(r1)
 /* 8002A384 000272C4  90 01 00 2C */	stw r0, 0x2c(r1)
-/* 8002A388 000272C8  84 65 0C 48 */	lwzu r3, $$2839@l(r5)
+/* 8002A388 000272C8  84 65 0C 48 */	lwzu r3, "@839"@l(r5)
 /* 8002A38C 000272CC  80 05 00 04 */	lwz r0, 4(r5)
 /* 8002A390 000272D0  90 61 00 10 */	stw r3, 0x10(r1)
 /* 8002A394 000272D4  90 01 00 14 */	stw r0, 0x14(r1)
@@ -439,8 +439,8 @@ lbl_8002A834:
 /* 8002A834 00027774  57 E0 06 3E */	clrlwi r0, r31, 0x18
 /* 8002A838 00027778  28 00 00 0A */	cmplwi r0, 0xa
 /* 8002A83C 0002777C  41 80 FF DC */	blt lbl_8002A818
-/* 8002A840 00027780  3C 80 80 37 */	lis r4, $$2877@ha
-/* 8002A844 00027784  38 A4 0C 58 */	addi r5, r4, $$2877@l
+/* 8002A840 00027780  3C 80 80 37 */	lis r4, "@877"@ha
+/* 8002A844 00027784  38 A4 0C 58 */	addi r5, r4, "@877"@l
 /* 8002A848 00027788  80 85 00 00 */	lwz r4, 0(r5)
 /* 8002A84C 0002778C  3B E0 00 00 */	li r31, 0
 /* 8002A850 00027790  80 05 00 04 */	lwz r0, 4(r5)
@@ -482,8 +482,8 @@ lbl_8002A898:
 /* 8002A8D8 00027818  48 07 D8 79 */	bl GXSetNumTexGens
 /* 8002A8DC 0002781C  38 60 00 01 */	li r3, 1
 /* 8002A8E0 00027820  48 08 1B 2D */	bl GXSetNumTevStages
-/* 8002A8E4 00027824  3C 80 80 37 */	lis r4, $$2885@ha
-/* 8002A8E8 00027828  38 A4 0C 70 */	addi r5, r4, $$2885@l
+/* 8002A8E4 00027824  3C 80 80 37 */	lis r4, "@885"@ha
+/* 8002A8E8 00027828  38 A4 0C 70 */	addi r5, r4, "@885"@l
 /* 8002A8EC 0002782C  80 85 00 00 */	lwz r4, 0(r5)
 /* 8002A8F0 00027830  3B A1 00 28 */	addi r29, r1, 0x28
 /* 8002A8F4 00027834  80 05 00 04 */	lwz r0, 4(r5)
@@ -746,13 +746,13 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2838:
+"@838":
 	.incbin "baserom.dol", 0x36DC38, 0x10
-$$2839:
+"@839":
 	.incbin "baserom.dol", 0x36DC48, 0x10
-$$2877:
+"@877":
 	.incbin "baserom.dol", 0x36DC58, 0x18
-$$2885:
+"@885":
 	.incbin "baserom.dol", 0x36DC70, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

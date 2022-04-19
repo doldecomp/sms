@@ -200,11 +200,11 @@ lbl_8003AAE0:
 /* 8003AAEC 00037A2C  7D 88 03 A6 */	mtlr r12
 /* 8003AAF0 00037A30  4E 80 00 21 */	blrl 
 lbl_8003AAF4:
-/* 8003AAF4 00037A34  3C 60 80 37 */	lis r3, $$2110@ha
+/* 8003AAF4 00037A34  3C 60 80 37 */	lis r3, "@110"@ha
 /* 8003AAF8 00037A38  4C C6 31 82 */	crclr 6
-/* 8003AAFC 00037A3C  38 63 0D A8 */	addi r3, r3, $$2110@l
+/* 8003AAFC 00037A3C  38 63 0D A8 */	addi r3, r3, "@110"@l
 /* 8003AB00 00037A40  38 80 00 A9 */	li r4, 0xa9
-/* 8003AB04 00037A44  38 A2 83 10 */	addi r5, r2, $$2111@sda21
+/* 8003AB04 00037A44  38 A2 83 10 */	addi r5, r2, "@111"@sda21
 /* 8003AB08 00037A48  48 05 44 DD */	bl OSPanic
 lbl_8003AB0C:
 /* 8003AB0C 00037A4C  28 18 00 00 */	cmplwi r24, 0
@@ -389,7 +389,7 @@ __ct__20JKRAramStreamCommandFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2110:
+"@110":
 	.incbin "baserom.dol", 0x36DDA8, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -416,7 +416,7 @@ __vt__13JKRAramStream:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2111:
+"@111":
 	.incbin "baserom.dol", 0x3E4010, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

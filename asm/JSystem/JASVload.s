@@ -65,7 +65,7 @@ lbl_80064054:
 /* 80064054 00060F94  28 1F 00 00 */	cmplwi r31, 0
 /* 80064058 00060F98  40 82 00 20 */	bne lbl_80064078
 /* 8006405C 00060F9C  80 0D 92 1C */	lwz r0, vlCurrentArcs__Q28JASystem5Vload@sda21(r13)
-/* 80064060 00060FA0  38 82 86 F8 */	addi r4, r2, $$2259@sda21
+/* 80064060 00060FA0  38 82 86 F8 */	addi r4, r2, "@259"@sda21
 /* 80064064 00060FA4  80 6D 92 10 */	lwz r3, vlDirName__Q28JASystem5Vload@sda21(r13)
 /* 80064068 00060FA8  54 00 10 3A */	slwi r0, r0, 2
 /* 8006406C 00060FAC  7C 63 00 2E */	lwzx r3, r3, r0
@@ -235,7 +235,7 @@ loadFile__Q28JASystem5VloadFUlPUcUlUl:
 /* 80064290 000611D0  7F DE E2 14 */	add r30, r30, r28
 /* 80064294 000611D4  48 02 1B 5D */	bl strcpy
 /* 80064298 000611D8  38 61 00 1C */	addi r3, r1, 0x1c
-/* 8006429C 000611DC  38 82 86 F8 */	addi r4, r2, $$2259@sda21
+/* 8006429C 000611DC  38 82 86 F8 */	addi r4, r2, "@259"@sda21
 /* 800642A0 000611E0  48 02 1A E1 */	bl strcat
 /* 800642A4 000611E4  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 800642A8 000611E8  38 61 00 1C */	addi r3, r1, 0x1c
@@ -282,7 +282,7 @@ loadFileAsync__Q28JASystem5VloadFUlPUcUlUlPFUl_vUl:
 /* 8006433C 0006127C  7F DE D2 14 */	add r30, r30, r26
 /* 80064340 00061280  48 02 1A B1 */	bl strcpy
 /* 80064344 00061284  38 61 00 20 */	addi r3, r1, 0x20
-/* 80064348 00061288  38 82 86 F8 */	addi r4, r2, $$2259@sda21
+/* 80064348 00061288  38 82 86 F8 */	addi r4, r2, "@259"@sda21
 /* 8006434C 0006128C  48 02 1A 35 */	bl strcat
 /* 80064350 00061290  80 8D 92 18 */	lwz r4, vlArc__Q28JASystem5Vload@sda21(r13)
 /* 80064354 00061294  38 61 00 20 */	addi r3, r1, 0x20
@@ -364,7 +364,7 @@ vlMaxArcs__Q28JASystem5Vload:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2259:
+"@259":
 	.incbin "baserom.dol", 0x3E43F8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

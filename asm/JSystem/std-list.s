@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1:
+.global "__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+"__ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator<Pv>":
 /* 800341FC 0003113C  88 04 00 00 */	lbz r0, 0(r4)
 /* 80034200 00031140  38 80 00 00 */	li r4, 0
 /* 80034204 00031144  98 03 00 00 */	stb r0, 0(r3)
@@ -12,8 +12,8 @@ __ct__Q27JGadget18TList_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1:
 /* 80034214 00031154  90 03 00 0C */	stw r0, 0xc(r3)
 /* 80034218 00031158  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
-erase__Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator:
+.global "erase__Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
+"erase__Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator":
 /* 8003421C 0003115C  7C 08 02 A6 */	mflr r0
 /* 80034220 00031160  90 01 00 04 */	stw r0, 4(r1)
 /* 80034224 00031164  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -54,12 +54,12 @@ __dt__Q27JGadget18TList_pointer_voidFv:
 /* 800342A4 000311E4  41 82 00 80 */	beq lbl_80034324
 /* 800342A8 000311E8  38 61 00 4C */	addi r3, r1, 0x4c
 /* 800342AC 000311EC  38 9B 00 08 */	addi r4, r27, 8
-/* 800342B0 000311F0  48 00 00 B5 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 800342B0 000311F0  48 00 00 B5 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 800342B4 000311F4  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 800342B8 000311F8  38 61 00 44 */	addi r3, r1, 0x44
 /* 800342BC 000311FC  90 01 00 48 */	stw r0, 0x48(r1)
 /* 800342C0 00031200  80 9B 00 08 */	lwz r4, 8(r27)
-/* 800342C4 00031204  48 00 00 A1 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 800342C4 00031204  48 00 00 A1 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 800342C8 00031208  80 01 00 44 */	lwz r0, 0x44(r1)
 /* 800342CC 0003120C  3B E1 00 30 */	addi r31, r1, 0x30
 /* 800342D0 00031210  3B C1 00 28 */	addi r30, r1, 0x28
@@ -72,7 +72,7 @@ lbl_800342E0:
 /* 800342E8 00031228  38 BF 00 00 */	addi r5, r31, 0
 /* 800342EC 0003122C  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800342F0 00031230  38 61 00 2C */	addi r3, r1, 0x2c
-/* 800342F4 00031234  4B FF FF 29 */	bl erase__Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 800342F4 00031234  4B FF FF 29 */	bl "erase__Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 800342F8 00031238  80 01 00 2C */	lwz r0, 0x2c(r1)
 /* 800342FC 0003123C  90 01 00 40 */	stw r0, 0x40(r1)
 lbl_80034300:
@@ -82,7 +82,7 @@ lbl_80034300:
 /* 8003430C 0003124C  7F C4 F3 78 */	mr r4, r30
 /* 80034310 00031250  90 A1 00 28 */	stw r5, 0x28(r1)
 /* 80034314 00031254  90 01 00 24 */	stw r0, 0x24(r1)
-/* 80034318 00031258  48 00 00 35 */	bl __eq__7JGadgetFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 80034318 00031258  48 00 00 35 */	bl "__eq__7JGadgetFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 8003431C 0003125C  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80034320 00031260  41 82 FF C0 */	beq lbl_800342E0
 lbl_80034324:
@@ -98,8 +98,8 @@ lbl_80034334:
 /* 80034344 00031284  7C 08 03 A6 */	mtlr r0
 /* 80034348 00031288  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
-__eq__7JGadgetFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
+"__eq__7JGadgetFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator":
 /* 8003434C 0003128C  80 63 00 00 */	lwz r3, 0(r3)
 /* 80034350 00031290  80 04 00 00 */	lwz r0, 0(r4)
 /* 80034354 00031294  7C 03 00 50 */	subf r0, r3, r0
@@ -107,13 +107,13 @@ __eq__7JGadgetFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterat
 /* 8003435C 0003129C  54 03 D9 7E */	srwi r3, r0, 5
 /* 80034360 000312A0  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
-__ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_:
+.global "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
+"__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_":
 /* 80034364 000312A4  90 83 00 00 */	stw r4, 0(r3)
 /* 80034368 000312A8  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv
-insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv:
+.global "insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv"
+"insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv":
 /* 8003436C 000312AC  7C 08 02 A6 */	mflr r0
 /* 80034370 000312B0  90 01 00 04 */	stw r0, 4(r1)
 /* 80034374 000312B4  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -127,7 +127,7 @@ insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAll
 /* 80034394 000312D4  80 81 00 44 */	lwz r4, 0x44(r1)
 /* 80034398 000312D8  83 E4 00 04 */	lwz r31, 4(r4)
 /* 8003439C 000312DC  7F E5 FB 78 */	mr r5, r31
-/* 800343A0 000312E0  48 00 00 55 */	bl CreateNode___Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_PQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_RCPv
+/* 800343A0 000312E0  48 00 00 55 */	bl "CreateNode___Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_PQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_RCPv"
 /* 800343A4 000312E4  28 03 00 00 */	cmplwi r3, 0
 /* 800343A8 000312E8  40 82 00 14 */	bne lbl_800343BC
 /* 800343AC 000312EC  80 81 00 08 */	lwz r4, 8(r1)
@@ -151,8 +151,8 @@ lbl_800343DC:
 /* 800343EC 0003132C  38 21 00 50 */	addi r1, r1, 0x50
 /* 800343F0 00031330  4E 80 00 20 */	blr 
 
-.global CreateNode___Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_PQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_RCPv
-CreateNode___Q27JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_PQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_RCPv:
+.global "CreateNode___Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_PQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_RCPv"
+"CreateNode___Q27JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>FPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_PQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_RCPv":
 /* 800343F4 00031334  7C 08 02 A6 */	mflr r0
 /* 800343F8 00031338  38 60 00 0C */	li r3, 0xc
 /* 800343FC 0003133C  90 01 00 04 */	stw r0, 4(r1)

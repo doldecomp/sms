@@ -4,7 +4,7 @@
 .global calcEffect__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc
 calcEffect__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc:
 /* 8005C11C 0005905C  54 A0 06 3E */	clrlwi r0, r5, 0x18
-/* 8005C120 00059060  C0 22 86 38 */	lfs f1, $$2145@sda21(r2)
+/* 8005C120 00059060  C0 22 86 38 */	lfs f1, "@145"@sda21(r2)
 /* 8005C124 00059064  1C C0 00 03 */	mulli r6, r0, 3
 /* 8005C128 00059068  3C A0 80 3B */	lis r5, calc_sw_table__Q28JASystem6Driver@ha
 /* 8005C12C 0005906C  38 05 AF 50 */	addi r0, r5, calc_sw_table__Q28JASystem6Driver@l
@@ -65,7 +65,7 @@ lbl_8005C1CC:
 .global calcPan__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc
 calcPan__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc:
 /* 8005C1DC 0005911C  54 A0 06 3E */	clrlwi r0, r5, 0x18
-/* 8005C1E0 00059120  C0 22 86 38 */	lfs f1, $$2145@sda21(r2)
+/* 8005C1E0 00059120  C0 22 86 38 */	lfs f1, "@145"@sda21(r2)
 /* 8005C1E4 00059124  1C C0 00 03 */	mulli r6, r0, 3
 /* 8005C1E8 00059128  3C A0 80 3B */	lis r5, calc_sw_table__Q28JASystem6Driver@ha
 /* 8005C1EC 0005912C  38 05 AF 50 */	addi r0, r5, calc_sw_table__Q28JASystem6Driver@l
@@ -81,13 +81,13 @@ lbl_8005C208:
 /* 8005C210 00059150  48 00 00 18 */	b lbl_8005C228
 lbl_8005C214:
 /* 8005C214 00059154  C0 43 00 00 */	lfs f2, 0(r3)
-/* 8005C218 00059158  C0 02 86 3C */	lfs f0, $$2160@sda21(r2)
+/* 8005C218 00059158  C0 02 86 3C */	lfs f0, "@160"@sda21(r2)
 /* 8005C21C 0005915C  EC 02 00 28 */	fsubs f0, f2, f0
 /* 8005C220 00059160  EC 21 00 2A */	fadds f1, f1, f0
 /* 8005C224 00059164  48 00 00 18 */	b lbl_8005C23C
 lbl_8005C228:
 /* 8005C228 00059168  C0 63 00 00 */	lfs f3, 0(r3)
-/* 8005C22C 0005916C  C0 42 86 3C */	lfs f2, $$2160@sda21(r2)
+/* 8005C22C 0005916C  C0 42 86 3C */	lfs f2, "@160"@sda21(r2)
 /* 8005C230 00059170  C0 04 00 00 */	lfs f0, 0(r4)
 /* 8005C234 00059174  EC 43 10 28 */	fsubs f2, f3, f2
 /* 8005C238 00059178  EC 22 08 3A */	fmadds f1, f2, f0, f1
@@ -103,13 +103,13 @@ lbl_8005C250:
 /* 8005C258 00059198  48 00 00 18 */	b lbl_8005C270
 lbl_8005C25C:
 /* 8005C25C 0005919C  C0 43 00 04 */	lfs f2, 4(r3)
-/* 8005C260 000591A0  C0 02 86 3C */	lfs f0, $$2160@sda21(r2)
+/* 8005C260 000591A0  C0 02 86 3C */	lfs f0, "@160"@sda21(r2)
 /* 8005C264 000591A4  EC 02 00 28 */	fsubs f0, f2, f0
 /* 8005C268 000591A8  EC 21 00 2A */	fadds f1, f1, f0
 /* 8005C26C 000591AC  48 00 00 18 */	b lbl_8005C284
 lbl_8005C270:
 /* 8005C270 000591B0  C0 63 00 04 */	lfs f3, 4(r3)
-/* 8005C274 000591B4  C0 42 86 3C */	lfs f2, $$2160@sda21(r2)
+/* 8005C274 000591B4  C0 42 86 3C */	lfs f2, "@160"@sda21(r2)
 /* 8005C278 000591B8  C0 04 00 04 */	lfs f0, 4(r4)
 /* 8005C27C 000591BC  EC 43 10 28 */	fsubs f2, f3, f2
 /* 8005C280 000591C0  EC 22 08 3A */	fmadds f1, f2, f0, f1
@@ -125,18 +125,18 @@ lbl_8005C298:
 /* 8005C2A0 000591E0  48 00 00 18 */	b lbl_8005C2B8
 lbl_8005C2A4:
 /* 8005C2A4 000591E4  C0 43 00 08 */	lfs f2, 8(r3)
-/* 8005C2A8 000591E8  C0 02 86 3C */	lfs f0, $$2160@sda21(r2)
+/* 8005C2A8 000591E8  C0 02 86 3C */	lfs f0, "@160"@sda21(r2)
 /* 8005C2AC 000591EC  EC 02 00 28 */	fsubs f0, f2, f0
 /* 8005C2B0 000591F0  EC 21 00 2A */	fadds f1, f1, f0
 /* 8005C2B4 000591F4  48 00 00 18 */	b lbl_8005C2CC
 lbl_8005C2B8:
 /* 8005C2B8 000591F8  C0 63 00 08 */	lfs f3, 8(r3)
-/* 8005C2BC 000591FC  C0 42 86 3C */	lfs f2, $$2160@sda21(r2)
+/* 8005C2BC 000591FC  C0 42 86 3C */	lfs f2, "@160"@sda21(r2)
 /* 8005C2C0 00059200  C0 04 00 08 */	lfs f0, 8(r4)
 /* 8005C2C4 00059204  EC 43 10 28 */	fsubs f2, f3, f2
 /* 8005C2C8 00059208  EC 22 08 3A */	fmadds f1, f2, f0, f1
 lbl_8005C2CC:
-/* 8005C2CC 0005920C  C0 02 86 3C */	lfs f0, $$2160@sda21(r2)
+/* 8005C2CC 0005920C  C0 02 86 3C */	lfs f0, "@160"@sda21(r2)
 /* 8005C2D0 00059210  EC 21 00 2A */	fadds f1, f1, f0
 /* 8005C2D4 00059214  4E 80 00 20 */	blr 
 
@@ -334,7 +334,7 @@ lbl_8005C574:
 /* 8005C578 000594B8  54 64 06 3E */	clrlwi r4, r3, 0x18
 /* 8005C57C 000594BC  3C 00 43 30 */	lis r0, 0x4330
 /* 8005C580 000594C0  90 81 00 14 */	stw r4, 0x14(r1)
-/* 8005C584 000594C4  C8 62 86 40 */	lfd f3, $$2218@sda21(r2)
+/* 8005C584 000594C4  C8 62 86 40 */	lfd f3, "@218"@sda21(r2)
 /* 8005C588 000594C8  90 A1 00 1C */	stw r5, 0x1c(r1)
 /* 8005C58C 000594CC  C0 1F 00 50 */	lfs f0, 0x50(r31)
 /* 8005C590 000594D0  90 01 00 18 */	stw r0, 0x18(r1)
@@ -543,9 +543,9 @@ lbl_8005C824:
 .global updateMixer__Q28JASystem6DriverFPQ28JASystem8TChannelffff
 updateMixer__Q28JASystem6DriverFPQ28JASystem8TChannelffff:
 /* 8005C850 00059790  7C 08 02 A6 */	mflr r0
-/* 8005C854 00059794  3C 80 80 3B */	lis r4, $$2326@ha
+/* 8005C854 00059794  3C 80 80 3B */	lis r4, "@326"@ha
 /* 8005C858 00059798  90 01 00 04 */	stw r0, 4(r1)
-/* 8005C85C 0005979C  3C A0 80 3B */	lis r5, $$2325@ha
+/* 8005C85C 0005979C  3C A0 80 3B */	lis r5, "@325"@ha
 /* 8005C860 000597A0  94 21 FF 50 */	stwu r1, -0xb0(r1)
 /* 8005C864 000597A4  DB E1 00 A8 */	stfd f31, 0xa8(r1)
 /* 8005C868 000597A8  DB C1 00 A0 */	stfd f30, 0xa0(r1)
@@ -565,15 +565,15 @@ updateMixer__Q28JASystem6DriverFPQ28JASystem8TChannelffff:
 /* 8005C8A0 000597E0  FE 80 08 90 */	fmr f20, f1
 /* 8005C8A4 000597E4  BF 21 00 34 */	stmw r25, 0x34(r1)
 /* 8005C8A8 000597E8  3B C3 00 00 */	addi r30, r3, 0
-/* 8005C8AC 000597EC  3B 64 AF A4 */	addi r27, r4, $$2326@l
-/* 8005C8B0 000597F0  3B 45 AF C4 */	addi r26, r5, $$2325@l
+/* 8005C8AC 000597EC  3B 64 AF A4 */	addi r27, r4, "@326"@l
+/* 8005C8B0 000597F0  3B 45 AF C4 */	addi r26, r5, "@325"@l
 /* 8005C8B4 000597F4  3B E0 00 00 */	li r31, 0
 /* 8005C8B8 000597F8  3B A0 00 00 */	li r29, 0
 /* 8005C8BC 000597FC  3F 80 43 30 */	lis r28, 0x4330
-/* 8005C8C0 00059800  C3 A2 86 50 */	lfs f29, $$2324@sda21(r2)
-/* 8005C8C4 00059804  C3 C2 86 38 */	lfs f30, $$2145@sda21(r2)
+/* 8005C8C0 00059800  C3 A2 86 50 */	lfs f29, "@324"@sda21(r2)
+/* 8005C8C4 00059804  C3 C2 86 38 */	lfs f30, "@145"@sda21(r2)
 /* 8005C8C8 00059808  EF 7D A8 28 */	fsubs f27, f29, f21
-/* 8005C8CC 0005980C  CB E2 86 40 */	lfd f31, $$2218@sda21(r2)
+/* 8005C8CC 0005980C  CB E2 86 40 */	lfd f31, "@218"@sda21(r2)
 /* 8005C8D0 00059810  EF 5D B0 28 */	fsubs f26, f29, f22
 /* 8005C8D4 00059814  EF 3D B8 28 */	fsubs f25, f29, f23
 lbl_8005C8D8:
@@ -842,13 +842,13 @@ lbl_8005CC3C:
 lbl_8005CC50:
 /* 8005CC50 00059B90  28 04 00 00 */	cmplwi r4, 0
 /* 8005CC54 00059B94  40 82 01 74 */	bne lbl_8005CDC8
-/* 8005CC58 00059B98  C0 02 86 50 */	lfs f0, $$2324@sda21(r2)
+/* 8005CC58 00059B98  C0 02 86 50 */	lfs f0, "@324"@sda21(r2)
 /* 8005CC5C 00059B9C  3B A0 00 00 */	li r29, 0
 /* 8005CC60 00059BA0  D0 1F 00 8C */	stfs f0, 0x8c(r31)
 /* 8005CC64 00059BA4  D0 1F 00 90 */	stfs f0, 0x90(r31)
-/* 8005CC68 00059BA8  C0 02 86 3C */	lfs f0, $$2160@sda21(r2)
+/* 8005CC68 00059BA8  C0 02 86 3C */	lfs f0, "@160"@sda21(r2)
 /* 8005CC6C 00059BAC  D0 1F 00 6C */	stfs f0, 0x6c(r31)
-/* 8005CC70 00059BB0  C0 02 86 38 */	lfs f0, $$2145@sda21(r2)
+/* 8005CC70 00059BB0  C0 02 86 38 */	lfs f0, "@145"@sda21(r2)
 /* 8005CC74 00059BB4  D0 1F 00 78 */	stfs f0, 0x78(r31)
 /* 8005CC78 00059BB8  D0 1F 00 84 */	stfs f0, 0x84(r31)
 lbl_8005CC7C:
@@ -1194,7 +1194,7 @@ lbl_8005D100:
 /* 8005D108 0005A048  48 00 2E 45 */	bl getOffset__Q28JASystem11TOscillatorFv
 /* 8005D10C 0005A04C  48 00 00 08 */	b lbl_8005D114
 lbl_8005D110:
-/* 8005D110 0005A050  C0 22 86 50 */	lfs f1, $$2324@sda21(r2)
+/* 8005D110 0005A050  C0 22 86 50 */	lfs f1, "@324"@sda21(r2)
 lbl_8005D114:
 /* 8005D114 0005A054  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8005D118 0005A058  38 21 00 08 */	addi r1, r1, 8
@@ -1319,7 +1319,7 @@ lbl_8005D284:
 /* 8005D28C 0005A1CC  48 00 2C C1 */	bl getOffset__Q28JASystem11TOscillatorFv
 /* 8005D290 0005A1D0  48 00 00 08 */	b lbl_8005D298
 lbl_8005D294:
-/* 8005D294 0005A1D4  C0 22 86 50 */	lfs f1, $$2324@sda21(r2)
+/* 8005D294 0005A1D4  C0 22 86 50 */	lfs f1, "@324"@sda21(r2)
 lbl_8005D298:
 /* 8005D298 0005A1D8  80 7F 00 00 */	lwz r3, 0(r31)
 /* 8005D29C 0005A1DC  80 63 00 00 */	lwz r3, 0(r3)
@@ -1424,11 +1424,11 @@ setPauseFlagReq__Q28JASystem8TChannelFUc:
 .global setPanPower__Q28JASystem8TChannelFffff
 setPanPower__Q28JASystem8TChannelFffff:
 /* 8005D3CC 0005A30C  EC 81 10 2A */	fadds f4, f1, f2
-/* 8005D3D0 0005A310  C0 02 86 38 */	lfs f0, $$2145@sda21(r2)
+/* 8005D3D0 0005A310  C0 02 86 38 */	lfs f0, "@145"@sda21(r2)
 /* 8005D3D4 0005A314  EC 83 20 2A */	fadds f4, f3, f4
 /* 8005D3D8 0005A318  FC 00 20 00 */	fcmpu cr0, f0, f4
 /* 8005D3DC 0005A31C  40 82 00 08 */	bne lbl_8005D3E4
-/* 8005D3E0 0005A320  C0 82 86 50 */	lfs f4, $$2324@sda21(r2)
+/* 8005D3E0 0005A320  C0 82 86 50 */	lfs f4, "@324"@sda21(r2)
 lbl_8005D3E4:
 /* 8005D3E4 0005A324  EC 01 20 24 */	fdivs f0, f1, f4
 /* 8005D3E8 0005A328  EC 22 20 24 */	fdivs f1, f2, f4
@@ -1797,7 +1797,7 @@ lbl_8005D8A0:
 /* 8005D8A8 0005A7E8  48 00 26 A5 */	bl getOffset__Q28JASystem11TOscillatorFv
 /* 8005D8AC 0005A7EC  48 00 00 08 */	b lbl_8005D8B4
 lbl_8005D8B0:
-/* 8005D8B0 0005A7F0  C0 22 86 50 */	lfs f1, $$2324@sda21(r2)
+/* 8005D8B0 0005A7F0  C0 22 86 50 */	lfs f1, "@324"@sda21(r2)
 lbl_8005D8B4:
 /* 8005D8B4 0005A7F4  80 7D 00 00 */	lwz r3, 0(r29)
 /* 8005D8B8 0005A7F8  80 63 00 00 */	lwz r3, 0(r3)
@@ -1872,7 +1872,7 @@ updateEffectorParam__Q28JASystem8TChannelFv:
 /* 8005D9A0 0005A8E0  7C 7F 1B 78 */	mr r31, r3
 /* 8005D9A4 0005A8E4  80 03 00 9C */	lwz r0, 0x9c(r3)
 /* 8005D9A8 0005A8E8  80 63 00 04 */	lwz r3, 4(r3)
-/* 8005D9AC 0005A8EC  C3 A2 86 38 */	lfs f29, $$2145@sda21(r2)
+/* 8005D9AC 0005A8EC  C3 A2 86 38 */	lfs f29, "@145"@sda21(r2)
 /* 8005D9B0 0005A8F0  7C 00 18 40 */	cmplw r0, r3
 /* 8005D9B4 0005A8F4  40 82 00 60 */	bne lbl_8005DA14
 /* 8005D9B8 0005A8F8  C0 03 00 1C */	lfs f0, 0x1c(r3)
@@ -1911,9 +1911,9 @@ lbl_8005DA30:
 /* 8005DA34 0005A974  40 80 00 B4 */	bge lbl_8005DAE8
 /* 8005DA38 0005A978  48 00 00 64 */	b lbl_8005DA9C
 lbl_8005DA3C:
-/* 8005DA3C 0005A97C  C3 E2 86 3C */	lfs f31, $$2160@sda21(r2)
+/* 8005DA3C 0005A97C  C3 E2 86 3C */	lfs f31, "@160"@sda21(r2)
 /* 8005DA40 0005A980  38 7F 00 74 */	addi r3, r31, 0x74
-/* 8005DA44 0005A984  C3 A2 86 38 */	lfs f29, $$2145@sda21(r2)
+/* 8005DA44 0005A984  C3 A2 86 38 */	lfs f29, "@145"@sda21(r2)
 /* 8005DA48 0005A988  38 9F 00 5C */	addi r4, r31, 0x5c
 /* 8005DA4C 0005A98C  88 BF 00 59 */	lbz r5, 0x59(r31)
 /* 8005DA50 0005A990  4B FF E6 CD */	bl calcEffect__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc
@@ -1923,7 +1923,7 @@ lbl_8005DA5C:
 /* 8005DA5C 0005A99C  88 BF 00 58 */	lbz r5, 0x58(r31)
 /* 8005DA60 0005A9A0  28 05 00 00 */	cmplwi r5, 0
 /* 8005DA64 0005A9A4  40 82 00 0C */	bne lbl_8005DA70
-/* 8005DA68 0005A9A8  C3 E2 86 3C */	lfs f31, $$2160@sda21(r2)
+/* 8005DA68 0005A9A8  C3 E2 86 3C */	lfs f31, "@160"@sda21(r2)
 /* 8005DA6C 0005A9AC  48 00 00 14 */	b lbl_8005DA80
 lbl_8005DA70:
 /* 8005DA70 0005A9B0  38 7F 00 68 */	addi r3, r31, 0x68
@@ -1936,13 +1936,13 @@ lbl_8005DA80:
 /* 8005DA88 0005A9C8  38 9F 00 5C */	addi r4, r31, 0x5c
 /* 8005DA8C 0005A9CC  4B FF E6 91 */	bl calcEffect__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc
 /* 8005DA90 0005A9D0  FF C0 08 90 */	fmr f30, f1
-/* 8005DA94 0005A9D4  C3 A2 86 38 */	lfs f29, $$2145@sda21(r2)
+/* 8005DA94 0005A9D4  C3 A2 86 38 */	lfs f29, "@145"@sda21(r2)
 /* 8005DA98 0005A9D8  48 00 00 50 */	b lbl_8005DAE8
 lbl_8005DA9C:
 /* 8005DA9C 0005A9DC  88 BF 00 58 */	lbz r5, 0x58(r31)
 /* 8005DAA0 0005A9E0  28 05 00 00 */	cmplwi r5, 0
 /* 8005DAA4 0005A9E4  40 82 00 0C */	bne lbl_8005DAB0
-/* 8005DAA8 0005A9E8  C3 E2 86 3C */	lfs f31, $$2160@sda21(r2)
+/* 8005DAA8 0005A9E8  C3 E2 86 3C */	lfs f31, "@160"@sda21(r2)
 /* 8005DAAC 0005A9EC  48 00 00 14 */	b lbl_8005DAC0
 lbl_8005DAB0:
 /* 8005DAB0 0005A9F0  38 7F 00 68 */	addi r3, r31, 0x68
@@ -1961,7 +1961,7 @@ lbl_8005DAC0:
 /* 8005DAE0 0005AA20  4B FF E6 3D */	bl calcEffect__Q28JASystem6DriverFPCQ38JASystem6Driver10PanMatrix_PCQ38JASystem6Driver10PanMatrix_Uc
 /* 8005DAE4 0005AA24  FF A0 08 90 */	fmr f29, f1
 lbl_8005DAE8:
-/* 8005DAE8 0005AA28  C0 A2 86 38 */	lfs f5, $$2145@sda21(r2)
+/* 8005DAE8 0005AA28  C0 A2 86 38 */	lfs f5, "@145"@sda21(r2)
 /* 8005DAEC 0005AA2C  C0 3F 00 54 */	lfs f1, 0x54(r31)
 /* 8005DAF0 0005AA30  C0 1F 00 90 */	lfs f0, 0x90(r31)
 /* 8005DAF4 0005AA34  FC 1F 28 40 */	fcmpo cr0, f31, f5
@@ -1972,7 +1972,7 @@ lbl_8005DAE8:
 /* 8005DB08 0005AA48  40 82 00 08 */	bne lbl_8005DB10
 /* 8005DB0C 0005AA4C  48 00 00 1C */	b lbl_8005DB28
 lbl_8005DB10:
-/* 8005DB10 0005AA50  C0 A2 86 50 */	lfs f5, $$2324@sda21(r2)
+/* 8005DB10 0005AA50  C0 A2 86 50 */	lfs f5, "@324"@sda21(r2)
 /* 8005DB14 0005AA54  FC 1F 28 40 */	fcmpo cr0, f31, f5
 /* 8005DB18 0005AA58  4C 41 13 82 */	cror 2, 1, 2
 /* 8005DB1C 0005AA5C  40 82 00 08 */	bne lbl_8005DB24
@@ -1980,14 +1980,14 @@ lbl_8005DB10:
 lbl_8005DB24:
 /* 8005DB24 0005AA64  FC A0 F8 90 */	fmr f5, f31
 lbl_8005DB28:
-/* 8005DB28 0005AA68  C0 C2 86 38 */	lfs f6, $$2145@sda21(r2)
+/* 8005DB28 0005AA68  C0 C2 86 38 */	lfs f6, "@145"@sda21(r2)
 /* 8005DB2C 0005AA6C  FF E0 28 90 */	fmr f31, f5
 /* 8005DB30 0005AA70  FC 1E 30 40 */	fcmpo cr0, f30, f6
 /* 8005DB34 0005AA74  4C 40 13 82 */	cror 2, 0, 2
 /* 8005DB38 0005AA78  40 82 00 08 */	bne lbl_8005DB40
 /* 8005DB3C 0005AA7C  48 00 00 1C */	b lbl_8005DB58
 lbl_8005DB40:
-/* 8005DB40 0005AA80  C0 C2 86 50 */	lfs f6, $$2324@sda21(r2)
+/* 8005DB40 0005AA80  C0 C2 86 50 */	lfs f6, "@324"@sda21(r2)
 /* 8005DB44 0005AA84  FC 1E 30 40 */	fcmpo cr0, f30, f6
 /* 8005DB48 0005AA88  4C 41 13 82 */	cror 2, 1, 2
 /* 8005DB4C 0005AA8C  40 82 00 08 */	bne lbl_8005DB54
@@ -1995,14 +1995,14 @@ lbl_8005DB40:
 lbl_8005DB54:
 /* 8005DB54 0005AA94  FC C0 F0 90 */	fmr f6, f30
 lbl_8005DB58:
-/* 8005DB58 0005AA98  C0 82 86 38 */	lfs f4, $$2145@sda21(r2)
+/* 8005DB58 0005AA98  C0 82 86 38 */	lfs f4, "@145"@sda21(r2)
 /* 8005DB5C 0005AA9C  FF C0 30 90 */	fmr f30, f6
 /* 8005DB60 0005AAA0  FC 1D 20 40 */	fcmpo cr0, f29, f4
 /* 8005DB64 0005AAA4  4C 40 13 82 */	cror 2, 0, 2
 /* 8005DB68 0005AAA8  40 82 00 08 */	bne lbl_8005DB70
 /* 8005DB6C 0005AAAC  48 00 00 1C */	b lbl_8005DB88
 lbl_8005DB70:
-/* 8005DB70 0005AAB0  C0 82 86 50 */	lfs f4, $$2324@sda21(r2)
+/* 8005DB70 0005AAB0  C0 82 86 50 */	lfs f4, "@324"@sda21(r2)
 /* 8005DB74 0005AAB4  FC 1D 20 40 */	fcmpo cr0, f29, f4
 /* 8005DB78 0005AAB8  4C 41 13 82 */	cror 2, 1, 2
 /* 8005DB7C 0005AABC  40 82 00 08 */	bne lbl_8005DB84
@@ -2014,7 +2014,7 @@ lbl_8005DB88:
 /* 8005DB8C 0005AACC  C0 1F 00 8C */	lfs f0, 0x8c(r31)
 /* 8005DB90 0005AAD0  C0 7F 00 A0 */	lfs f3, 0xa0(r31)
 /* 8005DB94 0005AAD4  EC 02 00 32 */	fmuls f0, f2, f0
-/* 8005DB98 0005AAD8  C0 42 86 54 */	lfs f2, $$2836@sda21(r2)
+/* 8005DB98 0005AAD8  C0 42 86 54 */	lfs f2, "@836"@sda21(r2)
 /* 8005DB9C 0005AADC  EC 03 00 32 */	fmuls f0, f3, f0
 /* 8005DBA0 0005AAE0  EC 02 00 32 */	fmuls f0, f2, f0
 /* 8005DBA4 0005AAE4  FC 00 00 1E */	fctiwz f0, f0
@@ -2030,8 +2030,8 @@ lbl_8005DB88:
 /* 8005DBCC 0005AB0C  4B FF EC 85 */	bl updateMixer__Q28JASystem6DriverFPQ28JASystem8TChannelffff
 /* 8005DBD0 0005AB10  48 00 00 60 */	b lbl_8005DC30
 lbl_8005DBD4:
-/* 8005DBD4 0005AB14  C0 02 86 4C */	lfs f0, $$2275@sda21(r2)
-/* 8005DBD8 0005AB18  C0 62 86 48 */	lfs f3, $$2274@sda21(r2)
+/* 8005DBD4 0005AB14  C0 02 86 4C */	lfs f0, "@275"@sda21(r2)
+/* 8005DBD8 0005AB18  C0 62 86 48 */	lfs f3, "@274"@sda21(r2)
 /* 8005DBDC 0005AB1C  EC 40 01 72 */	fmuls f2, f0, f5
 /* 8005DBE0 0005AB20  80 7F 00 20 */	lwz r3, 0x20(r31)
 /* 8005DBE4 0005AB24  EC 63 00 72 */	fmuls f3, f3, f1
@@ -2066,7 +2066,7 @@ lbl_8005DC30:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 calc_sw_table__Q28JASystem6Driver:
 	.incbin "baserom.dol", 0x3A7F50, 0x54
-$$2326:
+"@326":
     .4byte lbl_8005C9AC
     .4byte lbl_8005C980
     .4byte lbl_8005C988
@@ -2075,7 +2075,7 @@ $$2326:
     .4byte lbl_8005C998
     .4byte lbl_8005C9A0
     .4byte lbl_8005C9A8
-$$2325:
+"@325":
     .4byte lbl_8005C950
     .4byte lbl_8005C924
     .4byte lbl_8005C92C
@@ -2086,17 +2086,17 @@ $$2325:
     .4byte lbl_8005C94C
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2145:
+"@145":
   .4byte 0
-$$2160:
+"@160":
 	.incbin "baserom.dol", 0x3E433C, 0x4
-$$2218:
+"@218":
 	.incbin "baserom.dol", 0x3E4340, 0x8
-$$2274:
+"@274":
 	.incbin "baserom.dol", 0x3E4348, 0x4
-$$2275:
+"@275":
 	.incbin "baserom.dol", 0x3E434C, 0x4
-$$2324:
+"@324":
 	.incbin "baserom.dol", 0x3E4350, 0x4
-$$2836:
+"@836":
 	.incbin "baserom.dol", 0x3E4354, 0x4

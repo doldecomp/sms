@@ -703,9 +703,9 @@ lbl_800123A4:
 lbl_800123B8:
 /* 800123B8 0000F2F8  88 03 00 0E */	lbz r0, 0xe(r3)
 /* 800123BC 0000F2FC  3C 80 43 30 */	lis r4, 0x4330
-/* 800123C0 0000F300  C8 42 80 98 */	lfd f2, $$2606@sda21(r2)
+/* 800123C0 0000F300  C8 42 80 98 */	lfd f2, "@606"@sda21(r2)
 /* 800123C4 0000F304  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 800123C8 0000F308  C0 22 80 90 */	lfs f1, $$2604@sda21(r2)
+/* 800123C8 0000F308  C0 22 80 90 */	lfs f1, "@604"@sda21(r2)
 /* 800123CC 0000F30C  90 01 00 24 */	stw r0, 0x24(r1)
 /* 800123D0 0000F310  90 81 00 20 */	stw r4, 0x20(r1)
 /* 800123D4 0000F314  C8 01 00 20 */	lfd f0, 0x20(r1)
@@ -725,7 +725,7 @@ lbl_800123B8:
 
 .global clear__Q210JUTGamePad6CStickFv
 clear__Q210JUTGamePad6CStickFv:
-/* 8001240C 0000F34C  C0 02 80 A0 */	lfs f0, $$2609@sda21(r2)
+/* 8001240C 0000F34C  C0 02 80 A0 */	lfs f0, "@609"@sda21(r2)
 /* 80012410 0000F350  38 00 00 00 */	li r0, 0
 /* 80012414 0000F354  D0 03 00 00 */	stfs f0, 0(r3)
 /* 80012418 0000F358  D0 03 00 04 */	stfs f0, 4(r3)
@@ -748,7 +748,7 @@ lbl_8001244C:
 /* 8001244C 0000F38C  38 60 00 2A */	li r3, 0x2a
 lbl_80012450:
 /* 80012450 0000F390  7C 80 07 74 */	extsb r0, r4
-/* 80012454 0000F394  C8 62 80 98 */	lfd f3, $$2606@sda21(r2)
+/* 80012454 0000F394  C8 62 80 98 */	lfd f3, "@606"@sda21(r2)
 /* 80012458 0000F398  6C 63 80 00 */	xoris r3, r3, 0x8000
 /* 8001245C 0000F39C  6C 04 80 00 */	xoris r4, r0, 0x8000
 /* 80012460 0000F3A0  90 61 00 3C */	stw r3, 0x3c(r1)
@@ -777,14 +777,14 @@ lbl_80012450:
 /* 800124BC 0000F3FC  C0 1F 00 00 */	lfs f0, 0(r31)
 /* 800124C0 0000F400  C0 3F 00 04 */	lfs f1, 4(r31)
 /* 800124C4 0000F404  EC 40 00 32 */	fmuls f2, f0, f0
-/* 800124C8 0000F408  C0 02 80 A0 */	lfs f0, $$2609@sda21(r2)
+/* 800124C8 0000F408  C0 02 80 A0 */	lfs f0, "@609"@sda21(r2)
 /* 800124CC 0000F40C  EC 21 00 72 */	fmuls f1, f1, f1
 /* 800124D0 0000F410  EC 82 08 2A */	fadds f4, f2, f1
 /* 800124D4 0000F414  FC 04 00 40 */	fcmpo cr0, f4, f0
 /* 800124D8 0000F418  40 81 00 50 */	ble lbl_80012528
 /* 800124DC 0000F41C  FC 20 20 34 */	frsqrte f1, f4
-/* 800124E0 0000F420  C8 62 80 A8 */	lfd f3, $$2637@sda21(r2)
-/* 800124E4 0000F424  C8 42 80 B0 */	lfd f2, $$2638@sda21(r2)
+/* 800124E0 0000F420  C8 62 80 A8 */	lfd f3, "@637"@sda21(r2)
+/* 800124E4 0000F424  C8 42 80 B0 */	lfd f2, "@638"@sda21(r2)
 /* 800124E8 0000F428  FC 01 00 72 */	fmul f0, f1, f1
 /* 800124EC 0000F42C  FC 23 00 72 */	fmul f1, f3, f1
 /* 800124F0 0000F430  FC 04 10 3C */	fnmsub f0, f4, f0, f2
@@ -804,7 +804,7 @@ lbl_80012450:
 lbl_80012528:
 /* 80012528 0000F468  D0 9F 00 08 */	stfs f4, 8(r31)
 /* 8001252C 0000F46C  C0 3F 00 08 */	lfs f1, 8(r31)
-/* 80012530 0000F470  C0 02 80 B8 */	lfs f0, $$2639@sda21(r2)
+/* 80012530 0000F470  C0 02 80 B8 */	lfs f0, "@639"@sda21(r2)
 /* 80012534 0000F474  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80012538 0000F478  40 81 00 30 */	ble lbl_80012568
 /* 8001253C 0000F47C  2C 06 00 01 */	cmpwi r6, 1
@@ -817,19 +817,19 @@ lbl_80012528:
 /* 80012558 0000F498  EC 01 00 24 */	fdivs f0, f1, f0
 /* 8001255C 0000F49C  D0 1F 00 04 */	stfs f0, 4(r31)
 lbl_80012560:
-/* 80012560 0000F4A0  C0 02 80 B8 */	lfs f0, $$2639@sda21(r2)
+/* 80012560 0000F4A0  C0 02 80 B8 */	lfs f0, "@639"@sda21(r2)
 /* 80012564 0000F4A4  D0 1F 00 08 */	stfs f0, 8(r31)
 lbl_80012568:
 /* 80012568 0000F4A8  C0 3F 00 08 */	lfs f1, 8(r31)
-/* 8001256C 0000F4AC  C0 02 80 A0 */	lfs f0, $$2609@sda21(r2)
+/* 8001256C 0000F4AC  C0 02 80 A0 */	lfs f0, "@609"@sda21(r2)
 /* 80012570 0000F4B0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80012574 0000F4B4  40 81 00 34 */	ble lbl_800125A8
 /* 80012578 0000F4B8  C0 1F 00 04 */	lfs f0, 4(r31)
 /* 8001257C 0000F4BC  C0 3F 00 00 */	lfs f1, 0(r31)
 /* 80012580 0000F4C0  FC 40 00 50 */	fneg f2, f0
 /* 80012584 0000F4C4  48 07 48 91 */	bl atan2f
-/* 80012588 0000F4C8  C0 42 80 BC */	lfs f2, $$2640@sda21(r2)
-/* 8001258C 0000F4CC  C8 02 80 C0 */	lfd f0, $$2641@sda21(r2)
+/* 80012588 0000F4C8  C0 42 80 BC */	lfs f2, "@640"@sda21(r2)
+/* 8001258C 0000F4CC  C8 02 80 C0 */	lfd f0, "@641"@sda21(r2)
 /* 80012590 0000F4D0  EC 22 00 72 */	fmuls f1, f2, f1
 /* 80012594 0000F4D4  FC 01 00 24 */	fdiv f0, f1, f0
 /* 80012598 0000F4D8  FC 00 00 1E */	fctiwz f0, f0
@@ -847,48 +847,48 @@ lbl_800125A8:
 
 .global getButton__Q210JUTGamePad6CStickFv
 getButton__Q210JUTGamePad6CStickFv:
-/* 800125C4 0000F504  C0 02 80 C8 */	lfs f0, $$2669@sda21(r2)
+/* 800125C4 0000F504  C0 02 80 C8 */	lfs f0, "@669"@sda21(r2)
 /* 800125C8 0000F508  38 00 00 00 */	li r0, 0
 /* 800125CC 0000F50C  C0 23 00 00 */	lfs f1, 0(r3)
 /* 800125D0 0000F510  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 800125D4 0000F514  40 80 00 18 */	bge lbl_800125EC
-/* 800125D8 0000F518  C0 02 80 CC */	lfs f0, $$2670@sda21(r2)
+/* 800125D8 0000F518  C0 02 80 CC */	lfs f0, "@670"@sda21(r2)
 /* 800125DC 0000F51C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800125E0 0000F520  40 80 00 0C */	bge lbl_800125EC
 /* 800125E4 0000F524  54 00 00 3A */	rlwinm r0, r0, 0, 0, 0x1d
 /* 800125E8 0000F528  48 00 00 30 */	b lbl_80012618
 lbl_800125EC:
-/* 800125EC 0000F52C  C0 02 80 D0 */	lfs f0, $$2671@sda21(r2)
+/* 800125EC 0000F52C  C0 02 80 D0 */	lfs f0, "@671"@sda21(r2)
 /* 800125F0 0000F530  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800125F4 0000F534  4C 40 13 82 */	cror 2, 0, 2
 /* 800125F8 0000F538  40 82 00 0C */	bne lbl_80012604
 /* 800125FC 0000F53C  60 00 00 01 */	ori r0, r0, 1
 /* 80012600 0000F540  48 00 00 18 */	b lbl_80012618
 lbl_80012604:
-/* 80012604 0000F544  C0 02 80 D4 */	lfs f0, $$2672@sda21(r2)
+/* 80012604 0000F544  C0 02 80 D4 */	lfs f0, "@672"@sda21(r2)
 /* 80012608 0000F548  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8001260C 0000F54C  4C 41 13 82 */	cror 2, 1, 2
 /* 80012610 0000F550  40 82 00 08 */	bne lbl_80012618
 /* 80012614 0000F554  60 00 00 02 */	ori r0, r0, 2
 lbl_80012618:
-/* 80012618 0000F558  C0 02 80 C8 */	lfs f0, $$2669@sda21(r2)
+/* 80012618 0000F558  C0 02 80 C8 */	lfs f0, "@669"@sda21(r2)
 /* 8001261C 0000F55C  C0 23 00 04 */	lfs f1, 4(r3)
 /* 80012620 0000F560  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 80012624 0000F564  40 80 00 18 */	bge lbl_8001263C
-/* 80012628 0000F568  C0 02 80 CC */	lfs f0, $$2670@sda21(r2)
+/* 80012628 0000F568  C0 02 80 CC */	lfs f0, "@670"@sda21(r2)
 /* 8001262C 0000F56C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80012630 0000F570  40 80 00 0C */	bge lbl_8001263C
 /* 80012634 0000F574  54 00 07 B6 */	rlwinm r0, r0, 0, 0x1e, 0x1b
 /* 80012638 0000F578  48 00 00 30 */	b lbl_80012668
 lbl_8001263C:
-/* 8001263C 0000F57C  C0 02 80 D0 */	lfs f0, $$2671@sda21(r2)
+/* 8001263C 0000F57C  C0 02 80 D0 */	lfs f0, "@671"@sda21(r2)
 /* 80012640 0000F580  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80012644 0000F584  4C 40 13 82 */	cror 2, 0, 2
 /* 80012648 0000F588  40 82 00 0C */	bne lbl_80012654
 /* 8001264C 0000F58C  60 00 00 04 */	ori r0, r0, 4
 /* 80012650 0000F590  48 00 00 18 */	b lbl_80012668
 lbl_80012654:
-/* 80012654 0000F594  C0 02 80 D4 */	lfs f0, $$2672@sda21(r2)
+/* 80012654 0000F594  C0 02 80 D4 */	lfs f0, "@672"@sda21(r2)
 /* 80012658 0000F598  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8001265C 0000F59C  4C 41 13 82 */	cror 2, 1, 2
 /* 80012660 0000F5A0  40 82 00 08 */	bne lbl_80012668
@@ -1219,9 +1219,9 @@ setButtonRepeat__10JUTGamePadFUlUlUl:
 .global recalibrate__10JUTGamePadFUl
 recalibrate__10JUTGamePadFUl:
 /* 80012AD4 0000FA14  7C 08 02 A6 */	mflr r0
-/* 80012AD8 0000FA18  3C 80 80 37 */	lis r4, $$2855@ha
+/* 80012AD8 0000FA18  3C 80 80 37 */	lis r4, "@855"@ha
 /* 80012ADC 0000FA1C  90 01 00 04 */	stw r0, 4(r1)
-/* 80012AE0 0000FA20  38 A4 0B 50 */	addi r5, r4, $$2855@l
+/* 80012AE0 0000FA20  38 A4 0B 50 */	addi r5, r4, "@855"@l
 /* 80012AE4 0000FA24  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80012AE8 0000FA28  80 85 00 00 */	lwz r4, 0(r5)
 /* 80012AEC 0000FA2C  80 05 00 04 */	lwz r0, 4(r5)
@@ -1480,10 +1480,10 @@ __sinit_JUTGamePad_cpp:
 /* 80012E40 0000FD80  3B E3 0B D4 */	addi r31, r3, mPadList__10JUTGamePad@l
 /* 80012E44 0000FD84  38 7F 00 00 */	addi r3, r31, 0
 /* 80012E48 0000FD88  4B FF BD 49 */	bl __ct__10JSUPtrListFb
-/* 80012E4C 0000FD8C  3C 80 80 01 */	lis r4, __dt__21JSUList$$010JUTGamePad$$1Fv@ha
-/* 80012E50 0000FD90  3C 60 80 3E */	lis r3, $$2301@ha
-/* 80012E54 0000FD94  38 A3 60 C0 */	addi r5, r3, $$2301@l
-/* 80012E58 0000FD98  38 84 2F 74 */	addi r4, r4, __dt__21JSUList$$010JUTGamePad$$1Fv@l
+/* 80012E4C 0000FD8C  3C 80 80 01 */	lis r4, "__dt__21JSUList<10JUTGamePad>Fv"@ha
+/* 80012E50 0000FD90  3C 60 80 3E */	lis r3, "@301"@ha
+/* 80012E54 0000FD94  38 A3 60 C0 */	addi r5, r3, "@301"@l
+/* 80012E58 0000FD98  38 84 2F 74 */	addi r4, r4, "__dt__21JSUList<10JUTGamePad>Fv"@l
 /* 80012E5C 0000FD9C  38 7F 00 00 */	addi r3, r31, 0
 /* 80012E60 0000FDA0  48 06 F8 C9 */	bl __register_global_object
 /* 80012E64 0000FDA4  3C 60 80 40 */	lis r3, mPadButton__10JUTGamePad@ha
@@ -1535,7 +1535,7 @@ __sinit_JUTGamePad_cpp:
 
 .global __ct__Q210JUTGamePad6CStickFv
 __ct__Q210JUTGamePad6CStickFv:
-/* 80012F1C 0000FE5C  C0 02 80 A0 */	lfs f0, $$2609@sda21(r2)
+/* 80012F1C 0000FE5C  C0 02 80 A0 */	lfs f0, "@609"@sda21(r2)
 /* 80012F20 0000FE60  38 00 00 00 */	li r0, 0
 /* 80012F24 0000FE64  D0 03 00 00 */	stfs f0, 0(r3)
 /* 80012F28 0000FE68  D0 03 00 04 */	stfs f0, 4(r3)
@@ -1561,8 +1561,8 @@ __ct__Q210JUTGamePad7CButtonFv:
 /* 80012F6C 0000FEAC  90 03 00 2C */	stw r0, 0x2c(r3)
 /* 80012F70 0000FEB0  4E 80 00 20 */	blr 
 
-.global __dt__21JSUList$$010JUTGamePad$$1Fv
-__dt__21JSUList$$010JUTGamePad$$1Fv:
+.global "__dt__21JSUList<10JUTGamePad>Fv"
+"__dt__21JSUList<10JUTGamePad>Fv":
 /* 80012F74 0000FEB4  7C 08 02 A6 */	mflr r0
 /* 80012F78 0000FEB8  90 01 00 04 */	stw r0, 4(r1)
 /* 80012F7C 0000FEBC  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -1593,7 +1593,7 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2855:
+"@855":
 	.incbin "baserom.dol", 0x36DB50, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1614,34 +1614,34 @@ sResetPattern__Q210JUTGamePad13C3ButtonReset:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2604:
+"@604":
 	.incbin "baserom.dol", 0x3E3D90, 0x8
-$$2606:
+"@606":
 	.incbin "baserom.dol", 0x3E3D98, 0x8
-$$2609:
+"@609":
   .4byte 0
   .4byte 0
-$$2637:
+"@637":
 	.incbin "baserom.dol", 0x3E3DA8, 0x8
-$$2638:
+"@638":
 	.incbin "baserom.dol", 0x3E3DB0, 0x8
-$$2639:
+"@639":
 	.incbin "baserom.dol", 0x3E3DB8, 0x4
-$$2640:
+"@640":
 	.incbin "baserom.dol", 0x3E3DBC, 0x4
-$$2641:
+"@641":
 	.incbin "baserom.dol", 0x3E3DC0, 0x8
-$$2669:
+"@669":
 	.incbin "baserom.dol", 0x3E3DC8, 0x4
-$$2670:
+"@670":
 	.incbin "baserom.dol", 0x3E3DCC, 0x4
-$$2671:
+"@671":
 	.incbin "baserom.dol", 0x3E3DD0, 0x4
-$$2672:
+"@672":
 	.incbin "baserom.dol", 0x3E3DD4, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$2301:
+"@301":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

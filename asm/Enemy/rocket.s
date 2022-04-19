@@ -13,8 +13,8 @@ __dt__16TNerveRocketWaitFv:
 /* 8031C080 00318FC0  38 03 12 48 */	addi r0, r3, __vt__16TNerveRocketWait@l
 /* 8031C084 00318FC4  90 1F 00 00 */	stw r0, 0(r31)
 /* 8031C088 00318FC8  41 82 00 10 */	beq lbl_8031C098
-/* 8031C08C 00318FCC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C090 00318FD0  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C08C 00318FCC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C090 00318FD0  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C094 00318FD4  90 1F 00 00 */	stw r0, 0(r31)
 lbl_8031C098:
 /* 8031C098 00318FD8  7C 80 07 35 */	extsh. r0, r4
@@ -29,8 +29,8 @@ lbl_8031C0A8:
 /* 8031C0B8 00318FF8  7C 08 03 A6 */	mtlr r0
 /* 8031C0BC 00318FFC  4E 80 00 20 */	blr 
 
-.global execute__16TNerveRocketWaitCFP24TSpineBase$$010TLiveActor$$1
-execute__16TNerveRocketWaitCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__16TNerveRocketWaitCFP24TSpineBase<10TLiveActor>"
+"execute__16TNerveRocketWaitCFP24TSpineBase<10TLiveActor>":
 /* 8031C0C0 00319000  7C 08 02 A6 */	mflr r0
 /* 8031C0C4 00319004  90 01 00 04 */	stw r0, 4(r1)
 /* 8031C0C8 00319008  94 21 FF F8 */	stwu r1, -8(r1)
@@ -53,8 +53,8 @@ lbl_8031C0FC:
 /* 8031C108 00319048  7C 08 03 A6 */	mtlr r0
 /* 8031C10C 0031904C  4E 80 00 20 */	blr 
 
-.global execute__15TNerveRocketFlyCFP24TSpineBase$$010TLiveActor$$1
-execute__15TNerveRocketFlyCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__15TNerveRocketFlyCFP24TSpineBase<10TLiveActor>"
+"execute__15TNerveRocketFlyCFP24TSpineBase<10TLiveActor>":
 /* 8031C110 00319050  7C 08 02 A6 */	mflr r0
 /* 8031C114 00319054  90 01 00 04 */	stw r0, 4(r1)
 /* 8031C118 00319058  94 21 FF 48 */	stwu r1, -0xb8(r1)
@@ -97,7 +97,7 @@ execute__15TNerveRocketFlyCFP24TSpineBase$$010TLiveActor$$1:
 /* 8031C1AC 003190EC  80 7F 00 70 */	lwz r3, 0x70(r31)
 /* 8031C1B0 003190F0  98 83 00 60 */	stb r4, 0x60(r3)
 /* 8031C1B4 003190F4  98 1F 01 A0 */	stb r0, 0x1a0(r31)
-/* 8031C1B8 003190F8  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
+/* 8031C1B8 003190F8  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
 /* 8031C1BC 003190FC  C0 21 00 A4 */	lfs f1, 0xa4(r1)
 /* 8031C1C0 00319100  FC 02 08 00 */	fcmpu cr0, f2, f1
 /* 8031C1C4 00319104  40 82 00 24 */	bne lbl_8031C1E8
@@ -105,10 +105,10 @@ execute__15TNerveRocketFlyCFP24TSpineBase$$010TLiveActor$$1:
 /* 8031C1CC 0031910C  FC 00 10 40 */	fcmpo cr0, f0, f2
 /* 8031C1D0 00319110  4C 41 13 82 */	cror 2, 1, 2
 /* 8031C1D4 00319114  40 82 00 0C */	bne lbl_8031C1E0
-/* 8031C1D8 00319118  C0 22 FC 44 */	lfs f1, $$23025@sda21(r2)
+/* 8031C1D8 00319118  C0 22 FC 44 */	lfs f1, "@3025"@sda21(r2)
 /* 8031C1DC 0031911C  48 00 00 88 */	b lbl_8031C264
 lbl_8031C1E0:
-/* 8031C1E0 00319120  C0 22 FC 48 */	lfs f1, $$23026@sda21(r2)
+/* 8031C1E0 00319120  C0 22 FC 48 */	lfs f1, "@3026"@sda21(r2)
 /* 8031C1E4 00319124  48 00 00 80 */	b lbl_8031C264
 lbl_8031C1E8:
 /* 8031C1E8 00319128  FC 01 10 40 */	fcmpo cr0, f1, f2
@@ -117,9 +117,9 @@ lbl_8031C1E8:
 /* 8031C1F4 00319134  C0 41 00 9C */	lfs f2, 0x9c(r1)
 /* 8031C1F8 00319138  4B DA 9F CD */	bl matan__Fff
 /* 8031C1FC 0031913C  7C 60 07 34 */	extsh r0, r3
-/* 8031C200 00319140  C8 42 FC 58 */	lfd f2, $$23031@sda21(r2)
+/* 8031C200 00319140  C8 42 FC 58 */	lfd f2, "@3031"@sda21(r2)
 /* 8031C204 00319144  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8031C208 00319148  C0 02 FC 4C */	lfs f0, $$23027@sda21(r2)
+/* 8031C208 00319148  C0 02 FC 4C */	lfs f0, "@3027"@sda21(r2)
 /* 8031C20C 0031914C  90 01 00 AC */	stw r0, 0xac(r1)
 /* 8031C210 00319150  3C 00 43 30 */	lis r0, 0x4330
 /* 8031C214 00319154  90 01 00 A8 */	stw r0, 0xa8(r1)
@@ -132,22 +132,22 @@ lbl_8031C228:
 /* 8031C22C 0031916C  C0 41 00 9C */	lfs f2, 0x9c(r1)
 /* 8031C230 00319170  4B DA 9F 95 */	bl matan__Fff
 /* 8031C234 00319174  7C 60 07 34 */	extsh r0, r3
-/* 8031C238 00319178  C8 62 FC 58 */	lfd f3, $$23031@sda21(r2)
+/* 8031C238 00319178  C8 62 FC 58 */	lfd f3, "@3031"@sda21(r2)
 /* 8031C23C 0031917C  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8031C240 00319180  C0 22 FC 4C */	lfs f1, $$23027@sda21(r2)
+/* 8031C240 00319180  C0 22 FC 4C */	lfs f1, "@3027"@sda21(r2)
 /* 8031C244 00319184  90 01 00 AC */	stw r0, 0xac(r1)
 /* 8031C248 00319188  3C 00 43 30 */	lis r0, 0x4330
-/* 8031C24C 0031918C  C0 02 FC 50 */	lfs f0, $$23028@sda21(r2)
+/* 8031C24C 0031918C  C0 02 FC 50 */	lfs f0, "@3028"@sda21(r2)
 /* 8031C250 00319190  90 01 00 A8 */	stw r0, 0xa8(r1)
 /* 8031C254 00319194  C8 41 00 A8 */	lfd f2, 0xa8(r1)
 /* 8031C258 00319198  EC 42 18 28 */	fsubs f2, f2, f3
 /* 8031C25C 0031919C  EC 21 00 B2 */	fmuls f1, f1, f2
 /* 8031C260 003191A0  EC 20 08 28 */	fsubs f1, f0, f1
 lbl_8031C264:
-/* 8031C264 003191A4  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
-/* 8031C268 003191A8  C0 62 FC 54 */	lfs f3, $$23029@sda21(r2)
-/* 8031C26C 003191AC  48 00 00 F5 */	bl MsWrap$$0f$$1__Ffff
-/* 8031C270 003191B0  C0 02 FC 40 */	lfs f0, $$23024@sda21(r2)
+/* 8031C264 003191A4  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
+/* 8031C268 003191A8  C0 62 FC 54 */	lfs f3, "@3029"@sda21(r2)
+/* 8031C26C 003191AC  48 00 00 F5 */	bl "MsWrap<f>__Ffff"
+/* 8031C270 003191B0  C0 02 FC 40 */	lfs f0, "@3024"@sda21(r2)
 /* 8031C274 003191B4  D0 1F 00 30 */	stfs f0, 0x30(r31)
 /* 8031C278 003191B8  D0 3F 00 34 */	stfs f1, 0x34(r31)
 /* 8031C27C 003191BC  D0 1F 00 38 */	stfs f0, 0x38(r31)
@@ -180,7 +180,7 @@ lbl_8031C2C4:
 /* 8031C2D8 00319218  90 01 00 88 */	stw r0, 0x88(r1)
 /* 8031C2DC 0031921C  80 1F 00 B4 */	lwz r0, 0xb4(r31)
 /* 8031C2E0 00319220  90 01 00 8C */	stw r0, 0x8c(r1)
-/* 8031C2E4 00319224  4B DA 9C AD */	bl MsGetRotFromZaxis__FRCQ29JGeometry8TVec3$$0f$$1
+/* 8031C2E4 00319224  4B DA 9C AD */	bl "MsGetRotFromZaxis__FRCQ29JGeometry8TVec3<f>"
 /* 8031C2E8 00319228  C0 01 00 90 */	lfs f0, 0x90(r1)
 /* 8031C2EC 0031922C  38 FF 00 00 */	addi r7, r31, 0
 /* 8031C2F0 00319230  38 BF 00 10 */	addi r5, r31, 0x10
@@ -188,7 +188,7 @@ lbl_8031C2C4:
 /* 8031C2F8 00319238  38 80 01 79 */	li r4, 0x179
 /* 8031C2FC 0031923C  38 C0 00 01 */	li r6, 1
 /* 8031C300 00319240  80 6D 97 98 */	lwz r3, gpMarioParticleManager@sda21(r13)
-/* 8031C304 00319244  4B DB F4 CD */	bl emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3$$0f$$1UcPCv
+/* 8031C304 00319244  4B DB F4 CD */	bl "emitAndBindToPosPtr__21TMarioParticleManagerFlPCQ29JGeometry8TVec3<f>UcPCv"
 /* 8031C308 00319248  80 9F 00 8C */	lwz r4, 0x8c(r31)
 /* 8031C30C 0031924C  80 7F 01 A4 */	lwz r3, 0x1a4(r31)
 /* 8031C310 00319250  80 84 00 20 */	lwz r4, 0x20(r4)
@@ -214,7 +214,7 @@ lbl_8031C348:
 /* 8031C358 00319298  7C 08 03 A6 */	mtlr r0
 /* 8031C35C 0031929C  4E 80 00 20 */	blr 
 
-MsWrap$$0f$$1__Ffff:
+"MsWrap<f>__Ffff":
 /* 8031C360 003192A0  FC 02 18 40 */	fcmpo cr0, f2, f3
 /* 8031C364 003192A4  4C 41 13 82 */	cror 2, 1, 2
 /* 8031C368 003192A8  40 82 00 34 */	bne lbl_8031C39C
@@ -251,8 +251,8 @@ __dt__15TNerveRocketFlyFv:
 /* 8031C3C4 00319304  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031C3C8 00319308  90 1F 00 00 */	stw r0, 0(r31)
 /* 8031C3CC 0031930C  41 82 00 10 */	beq lbl_8031C3DC
-/* 8031C3D0 00319310  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C3D4 00319314  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C3D0 00319310  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C3D4 00319314  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C3D8 00319318  90 1F 00 00 */	stw r0, 0(r31)
 lbl_8031C3DC:
 /* 8031C3DC 0031931C  7C 80 07 35 */	extsh. r0, r4
@@ -267,8 +267,8 @@ lbl_8031C3EC:
 /* 8031C3FC 0031933C  7C 08 03 A6 */	mtlr r0
 /* 8031C400 00319340  4E 80 00 20 */	blr 
 
-.global execute__27TNerveRocketPossessedNozzleCFP24TSpineBase$$010TLiveActor$$1
-execute__27TNerveRocketPossessedNozzleCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__27TNerveRocketPossessedNozzleCFP24TSpineBase<10TLiveActor>"
+"execute__27TNerveRocketPossessedNozzleCFP24TSpineBase<10TLiveActor>":
 /* 8031C404 00319344  7C 08 02 A6 */	mflr r0
 /* 8031C408 00319348  90 01 00 04 */	stw r0, 4(r1)
 /* 8031C40C 0031934C  94 21 FF 60 */	stwu r1, -0xa0(r1)
@@ -379,7 +379,7 @@ lbl_8031C584:
 /* 8031C590 003194D0  80 03 00 D4 */	lwz r0, 0xd4(r3)
 /* 8031C594 003194D4  54 00 05 6B */	rlwinm. r0, r0, 0, 0x15, 0x15
 /* 8031C598 003194D8  41 82 00 60 */	beq lbl_8031C5F8
-/* 8031C59C 003194DC  C0 02 FC 60 */	lfs f0, $$23123@sda21(r2)
+/* 8031C59C 003194DC  C0 02 FC 60 */	lfs f0, "@3123"@sda21(r2)
 /* 8031C5A0 003194E0  7F E3 FB 78 */	mr r3, r31
 /* 8031C5A4 003194E4  D0 1F 01 90 */	stfs f0, 0x190(r31)
 /* 8031C5A8 003194E8  4B F6 1D 41 */	bl expandCollision__11TSmallEnemyFv
@@ -411,15 +411,15 @@ lbl_8031C5FC:
 /* 8031C604 00319544  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031C608 00319548  7C 00 07 75 */	extsb. r0, r0
 /* 8031C60C 0031954C  40 82 00 3C */	bne lbl_8031C648
-/* 8031C610 00319550  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C614 00319554  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C610 00319550  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C614 00319554  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C618 00319558  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031C61C 0031955C  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031C620 00319560  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031C624 00319564  3C 80 80 32 */	lis r4, __dt__15TNerveRocketFlyFv@ha
 /* 8031C628 00319568  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
-/* 8031C62C 0031956C  3C 60 80 40 */	lis r3, $$22910@ha
-/* 8031C630 00319570  38 A3 F7 54 */	addi r5, r3, $$22910@l
+/* 8031C62C 0031956C  3C 60 80 40 */	lis r3, "@2910"@ha
+/* 8031C630 00319570  38 A3 F7 54 */	addi r5, r3, "@2910"@l
 /* 8031C634 00319574  38 84 C3 A8 */	addi r4, r4, __dt__15TNerveRocketFlyFv@l
 /* 8031C638 00319578  38 6D A5 DC */	addi r3, r13, instance$2909@sda21
 /* 8031C63C 0031957C  4B D6 60 ED */	bl __register_global_object
@@ -464,8 +464,8 @@ __dt__27TNerveRocketPossessedNozzleFv:
 /* 8031C6BC 003195FC  38 03 12 68 */	addi r0, r3, __vt__27TNerveRocketPossessedNozzle@l
 /* 8031C6C0 00319600  90 1F 00 00 */	stw r0, 0(r31)
 /* 8031C6C4 00319604  41 82 00 10 */	beq lbl_8031C6D4
-/* 8031C6C8 00319608  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C6CC 0031960C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C6C8 00319608  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C6CC 0031960C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C6D0 00319610  90 1F 00 00 */	stw r0, 0(r31)
 lbl_8031C6D4:
 /* 8031C6D4 00319614  7C 80 07 35 */	extsh. r0, r4
@@ -496,15 +496,15 @@ isAttack__7TRocketFv:
 /* 8031C71C 0031965C  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031C720 00319660  7C 00 07 75 */	extsb. r0, r0
 /* 8031C724 00319664  40 82 00 3C */	bne lbl_8031C760
-/* 8031C728 00319668  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C72C 0031966C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C728 00319668  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C72C 0031966C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C730 00319670  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031C734 00319674  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031C738 00319678  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031C73C 0031967C  3C 80 80 32 */	lis r4, __dt__15TNerveRocketFlyFv@ha
 /* 8031C740 00319680  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
-/* 8031C744 00319684  3C 60 80 40 */	lis r3, $$22910@ha
-/* 8031C748 00319688  38 A3 F7 54 */	addi r5, r3, $$22910@l
+/* 8031C744 00319684  3C 60 80 40 */	lis r3, "@2910"@ha
+/* 8031C748 00319688  38 A3 F7 54 */	addi r5, r3, "@2910"@l
 /* 8031C74C 0031968C  38 84 C3 A8 */	addi r4, r4, __dt__15TNerveRocketFlyFv@l
 /* 8031C750 00319690  38 6D A5 DC */	addi r3, r13, instance$2909@sda21
 /* 8031C754 00319694  4B D6 5F D5 */	bl __register_global_object
@@ -539,15 +539,15 @@ isCollidMove__7TRocketFP9THitActor:
 /* 8031C7B0 003196F0  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031C7B4 003196F4  7C 00 07 75 */	extsb. r0, r0
 /* 8031C7B8 003196F8  40 82 00 3C */	bne lbl_8031C7F4
-/* 8031C7BC 003196FC  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C7C0 00319700  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C7BC 003196FC  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C7C0 00319700  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C7C4 00319704  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031C7C8 00319708  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031C7CC 0031970C  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031C7D0 00319710  3C 80 80 32 */	lis r4, __dt__15TNerveRocketFlyFv@ha
 /* 8031C7D4 00319714  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
-/* 8031C7D8 00319718  3C 60 80 40 */	lis r3, $$22910@ha
-/* 8031C7DC 0031971C  38 A3 F7 54 */	addi r5, r3, $$22910@l
+/* 8031C7D8 00319718  3C 60 80 40 */	lis r3, "@2910"@ha
+/* 8031C7DC 0031971C  38 A3 F7 54 */	addi r5, r3, "@2910"@l
 /* 8031C7E0 00319720  38 84 C3 A8 */	addi r4, r4, __dt__15TNerveRocketFlyFv@l
 /* 8031C7E4 00319724  38 6D A5 DC */	addi r3, r13, instance$2909@sda21
 /* 8031C7E8 00319728  4B D6 5F 41 */	bl __register_global_object
@@ -594,15 +594,15 @@ getGravityY__7TRocketCFv:
 /* 8031C878 003197B8  C3 E3 00 CC */	lfs f31, 0xcc(r3)
 /* 8031C87C 003197BC  7C 00 07 75 */	extsb. r0, r0
 /* 8031C880 003197C0  40 82 00 3C */	bne lbl_8031C8BC
-/* 8031C884 003197C4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031C888 003197C8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031C884 003197C4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031C888 003197C8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031C88C 003197CC  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031C890 003197D0  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031C894 003197D4  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031C898 003197D8  3C 80 80 32 */	lis r4, __dt__15TNerveRocketFlyFv@ha
 /* 8031C89C 003197DC  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
-/* 8031C8A0 003197E0  3C 60 80 40 */	lis r3, $$22910@ha
-/* 8031C8A4 003197E4  38 A3 F7 54 */	addi r5, r3, $$22910@l
+/* 8031C8A0 003197E0  3C 60 80 40 */	lis r3, "@2910"@ha
+/* 8031C8A4 003197E4  38 A3 F7 54 */	addi r5, r3, "@2910"@l
 /* 8031C8A8 003197E8  38 84 C3 A8 */	addi r4, r4, __dt__15TNerveRocketFlyFv@l
 /* 8031C8AC 003197EC  38 6D A5 DC */	addi r3, r13, instance$2909@sda21
 /* 8031C8B0 003197F0  4B D6 5E 79 */	bl __register_global_object
@@ -698,15 +698,15 @@ bind__7TRocketFv:
 /* 8031C9F4 00319934  7C 7E 1B 78 */	mr r30, r3
 /* 8031C9F8 00319938  93 A1 00 B4 */	stw r29, 0xb4(r1)
 /* 8031C9FC 0031993C  80 03 00 F0 */	lwz r0, 0xf0(r3)
-/* 8031CA00 00319940  3C 60 80 40 */	lis r3, $$22896@ha
-/* 8031CA04 00319944  3B E3 F7 48 */	addi r31, r3, $$22896@l
+/* 8031CA00 00319940  3C 60 80 40 */	lis r3, "@2896"@ha
+/* 8031CA04 00319944  3B E3 F7 48 */	addi r31, r3, "@2896"@l
 /* 8031CA08 00319948  54 00 06 F7 */	rlwinm. r0, r0, 0, 0x1b, 0x1b
 /* 8031CA0C 0031994C  40 82 02 00 */	bne lbl_8031CC0C
 /* 8031CA10 00319950  88 0D A5 D0 */	lbz r0, init$2897@sda21(r13)
 /* 8031CA14 00319954  7C 00 07 75 */	extsb. r0, r0
 /* 8031CA18 00319958  40 82 00 38 */	bne lbl_8031CA50
-/* 8031CA1C 0031995C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CA20 00319960  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CA1C 0031995C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CA20 00319960  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CA24 00319964  3C 60 80 3E */	lis r3, __vt__27TNerveRocketPossessedNozzle@ha
 /* 8031CA28 00319968  90 0D A5 D4 */	stw r0, instance$2895@sda21(r13)
 /* 8031CA2C 0031996C  38 03 12 68 */	addi r0, r3, __vt__27TNerveRocketPossessedNozzle@l
@@ -727,8 +727,8 @@ lbl_8031CA50:
 /* 8031CA64 003199A4  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031CA68 003199A8  7C 00 07 75 */	extsb. r0, r0
 /* 8031CA6C 003199AC  40 82 00 38 */	bne lbl_8031CAA4
-/* 8031CA70 003199B0  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CA74 003199B4  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CA70 003199B0  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CA74 003199B4  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CA78 003199B8  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031CA7C 003199BC  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031CA80 003199C0  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
@@ -788,8 +788,8 @@ lbl_8031CB48:
 /* 8031CB48 00319A88  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031CB4C 00319A8C  7C 00 07 75 */	extsb. r0, r0
 /* 8031CB50 00319A90  40 82 00 34 */	bne lbl_8031CB84
-/* 8031CB54 00319A94  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CB58 00319A98  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CB54 00319A94  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CB58 00319A98  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CB5C 00319A9C  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031CB60 00319AA0  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031CB64 00319AA4  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
@@ -872,15 +872,15 @@ attackToMario__7TRocketFv:
 /* 8031CC68 00319BA8  88 0D A5 E0 */	lbz r0, init$2933@sda21(r13)
 /* 8031CC6C 00319BAC  7C 00 07 75 */	extsb. r0, r0
 /* 8031CC70 00319BB0  40 82 00 3C */	bne lbl_8031CCAC
-/* 8031CC74 00319BB4  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CC78 00319BB8  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CC74 00319BB4  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CC78 00319BB8  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CC7C 00319BBC  3C 60 80 3E */	lis r3, __vt__16TNerveRocketWait@ha
 /* 8031CC80 00319BC0  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
 /* 8031CC84 00319BC4  38 03 12 48 */	addi r0, r3, __vt__16TNerveRocketWait@l
 /* 8031CC88 00319BC8  3C 80 80 32 */	lis r4, __dt__16TNerveRocketWaitFv@ha
 /* 8031CC8C 00319BCC  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
-/* 8031CC90 00319BD0  3C 60 80 40 */	lis r3, $$22932@ha
-/* 8031CC94 00319BD4  38 A3 F7 60 */	addi r5, r3, $$22932@l
+/* 8031CC90 00319BD0  3C 60 80 40 */	lis r3, "@2932"@ha
+/* 8031CC94 00319BD4  38 A3 F7 60 */	addi r5, r3, "@2932"@l
 /* 8031CC98 00319BD8  38 84 C0 64 */	addi r4, r4, __dt__16TNerveRocketWaitFv@l
 /* 8031CC9C 00319BDC  38 6D A5 E4 */	addi r3, r13, instance$2931@sda21
 /* 8031CCA0 00319BE0  4B D6 5A 89 */	bl __register_global_object
@@ -899,15 +899,15 @@ lbl_8031CCAC:
 /* 8031CCD0 00319C10  88 0D A5 D0 */	lbz r0, init$2897@sda21(r13)
 /* 8031CCD4 00319C14  7C 00 07 75 */	extsb. r0, r0
 /* 8031CCD8 00319C18  40 82 00 3C */	bne lbl_8031CD14
-/* 8031CCDC 00319C1C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CCE0 00319C20  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CCDC 00319C1C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CCE0 00319C20  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CCE4 00319C24  3C 60 80 3E */	lis r3, __vt__27TNerveRocketPossessedNozzle@ha
 /* 8031CCE8 00319C28  90 0D A5 D4 */	stw r0, instance$2895@sda21(r13)
 /* 8031CCEC 00319C2C  38 03 12 68 */	addi r0, r3, __vt__27TNerveRocketPossessedNozzle@l
 /* 8031CCF0 00319C30  3C 80 80 32 */	lis r4, __dt__27TNerveRocketPossessedNozzleFv@ha
 /* 8031CCF4 00319C34  90 0D A5 D4 */	stw r0, instance$2895@sda21(r13)
-/* 8031CCF8 00319C38  3C 60 80 40 */	lis r3, $$22896@ha
-/* 8031CCFC 00319C3C  38 A3 F7 48 */	addi r5, r3, $$22896@l
+/* 8031CCF8 00319C38  3C 60 80 40 */	lis r3, "@2896"@ha
+/* 8031CCFC 00319C3C  38 A3 F7 48 */	addi r5, r3, "@2896"@l
 /* 8031CD00 00319C40  38 84 C6 A0 */	addi r4, r4, __dt__27TNerveRocketPossessedNozzleFv@l
 /* 8031CD04 00319C44  38 6D A5 D4 */	addi r3, r13, instance$2895@sda21
 /* 8031CD08 00319C48  4B D6 5A 21 */	bl __register_global_object
@@ -976,15 +976,15 @@ lbl_8031CDC4:
 /* 8031CDE8 00319D28  88 0D A5 E0 */	lbz r0, init$2933@sda21(r13)
 /* 8031CDEC 00319D2C  7C 00 07 75 */	extsb. r0, r0
 /* 8031CDF0 00319D30  40 82 00 3C */	bne lbl_8031CE2C
-/* 8031CDF4 00319D34  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CDF8 00319D38  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CDF4 00319D34  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CDF8 00319D38  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CDFC 00319D3C  3C 60 80 3E */	lis r3, __vt__16TNerveRocketWait@ha
 /* 8031CE00 00319D40  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
 /* 8031CE04 00319D44  38 03 12 48 */	addi r0, r3, __vt__16TNerveRocketWait@l
 /* 8031CE08 00319D48  3C 80 80 32 */	lis r4, __dt__16TNerveRocketWaitFv@ha
 /* 8031CE0C 00319D4C  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
-/* 8031CE10 00319D50  3C 60 80 40 */	lis r3, $$22932@ha
-/* 8031CE14 00319D54  38 A3 F7 60 */	addi r5, r3, $$22932@l
+/* 8031CE10 00319D50  3C 60 80 40 */	lis r3, "@2932"@ha
+/* 8031CE14 00319D54  38 A3 F7 60 */	addi r5, r3, "@2932"@l
 /* 8031CE18 00319D58  38 84 C0 64 */	addi r4, r4, __dt__16TNerveRocketWaitFv@l
 /* 8031CE1C 00319D5C  38 6D A5 E4 */	addi r3, r13, instance$2931@sda21
 /* 8031CE20 00319D60  4B D6 59 09 */	bl __register_global_object
@@ -1023,8 +1023,8 @@ setMActorAndKeeper__7TRocketFv:
 /* 8031CE94 00319DD4  4B DF 94 A5 */	bl __ct__13TMActorKeeperFP12TLiveManagerUs
 lbl_8031CE98:
 /* 8031CE98 00319DD8  93 DF 00 78 */	stw r30, 0x78(r31)
-/* 8031CE9C 00319DDC  3C 60 80 3A */	lis r3, $$22822@ha
-/* 8031CEA0 00319DE0  38 83 1E 98 */	addi r4, r3, $$22822@l
+/* 8031CE9C 00319DDC  3C 60 80 3A */	lis r3, "@2822"@ha
+/* 8031CEA0 00319DE0  38 83 1E 98 */	addi r4, r3, "@2822"@l
 /* 8031CEA4 00319DE4  80 7F 00 78 */	lwz r3, 0x78(r31)
 /* 8031CEA8 00319DE8  38 A0 00 03 */	li r5, 3
 /* 8031CEAC 00319DEC  4B DF 96 5D */	bl createMActor__13TMActorKeeperFPCcUl
@@ -1061,15 +1061,15 @@ calcRootMatrix__7TRocketFv:
 /* 8031CF1C 00319E5C  88 0D A5 D8 */	lbz r0, init$2911@sda21(r13)
 /* 8031CF20 00319E60  7C 00 07 75 */	extsb. r0, r0
 /* 8031CF24 00319E64  40 82 00 3C */	bne lbl_8031CF60
-/* 8031CF28 00319E68  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031CF2C 00319E6C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031CF28 00319E68  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031CF2C 00319E6C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031CF30 00319E70  3C 60 80 3E */	lis r3, __vt__15TNerveRocketFly@ha
 /* 8031CF34 00319E74  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
 /* 8031CF38 00319E78  38 03 12 58 */	addi r0, r3, __vt__15TNerveRocketFly@l
 /* 8031CF3C 00319E7C  3C 80 80 32 */	lis r4, __dt__15TNerveRocketFlyFv@ha
 /* 8031CF40 00319E80  90 0D A5 DC */	stw r0, instance$2909@sda21(r13)
-/* 8031CF44 00319E84  3C 60 80 40 */	lis r3, $$22910@ha
-/* 8031CF48 00319E88  38 A3 F7 54 */	addi r5, r3, $$22910@l
+/* 8031CF44 00319E84  3C 60 80 40 */	lis r3, "@2910"@ha
+/* 8031CF48 00319E88  38 A3 F7 54 */	addi r5, r3, "@2910"@l
 /* 8031CF4C 00319E8C  38 84 C3 A8 */	addi r4, r4, __dt__15TNerveRocketFlyFv@l
 /* 8031CF50 00319E90  38 6D A5 DC */	addi r3, r13, instance$2909@sda21
 /* 8031CF54 00319E94  4B D6 57 D5 */	bl __register_global_object
@@ -1085,7 +1085,7 @@ lbl_8031CF60:
 /* 8031CF78 00319EB8  38 61 00 D0 */	addi r3, r1, 0xd0
 /* 8031CF7C 00319EBC  C3 DF 00 14 */	lfs f30, 0x14(r31)
 /* 8031CF80 00319EC0  C3 FF 00 10 */	lfs f31, 0x10(r31)
-/* 8031CF84 00319EC4  4B DA 3E C1 */	bl identity33__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 8031CF84 00319EC4  4B DA 3E C1 */	bl "identity33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 8031CF88 00319EC8  D3 E1 00 DC */	stfs f31, 0xdc(r1)
 /* 8031CF8C 00319ECC  D3 C1 00 EC */	stfs f30, 0xec(r1)
 /* 8031CF90 00319ED0  D3 A1 00 FC */	stfs f29, 0xfc(r1)
@@ -1107,7 +1107,7 @@ lbl_8031CF98:
 /* 8031CFCC 00319F0C  EC 41 00 72 */	fmuls f2, f1, f1
 /* 8031CFD0 00319F10  C0 61 00 B4 */	lfs f3, 0xb4(r1)
 /* 8031CFD4 00319F14  EC 00 00 32 */	fmuls f0, f0, f0
-/* 8031CFD8 00319F18  C0 22 FC 40 */	lfs f1, $$23024@sda21(r2)
+/* 8031CFD8 00319F18  C0 22 FC 40 */	lfs f1, "@3024"@sda21(r2)
 /* 8031CFDC 00319F1C  EC 63 00 F2 */	fmuls f3, f3, f3
 /* 8031CFE0 00319F20  EC 02 00 2A */	fadds f0, f2, f0
 /* 8031CFE4 00319F24  EC 03 00 2A */	fadds f0, f3, f0
@@ -1117,8 +1117,8 @@ lbl_8031CF98:
 /* 8031CFF4 00319F34  48 00 00 28 */	b lbl_8031D01C
 lbl_8031CFF8:
 /* 8031CFF8 00319F38  FC 80 00 34 */	frsqrte f4, f0
-/* 8031CFFC 00319F3C  C0 62 FC 64 */	lfs f3, $$23523@sda21(r2)
-/* 8031D000 00319F40  C0 22 FC 68 */	lfs f1, $$23524@sda21(r2)
+/* 8031CFFC 00319F3C  C0 62 FC 64 */	lfs f3, "@3523"@sda21(r2)
+/* 8031D000 00319F40  C0 22 FC 68 */	lfs f1, "@3524"@sda21(r2)
 /* 8031D004 00319F44  FC 80 20 18 */	frsp f4, f4
 /* 8031D008 00319F48  EC 44 01 32 */	fmuls f2, f4, f4
 /* 8031D00C 00319F4C  EC 63 01 32 */	fmuls f3, f3, f4
@@ -1137,7 +1137,7 @@ lbl_8031D01C:
 /* 8031D03C 00319F7C  EC 62 00 B2 */	fmuls f3, f2, f2
 /* 8031D040 00319F80  C0 81 00 C0 */	lfs f4, 0xc0(r1)
 /* 8031D044 00319F84  EC 21 00 72 */	fmuls f1, f1, f1
-/* 8031D048 00319F88  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
+/* 8031D048 00319F88  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
 /* 8031D04C 00319F8C  EC 84 01 32 */	fmuls f4, f4, f4
 /* 8031D050 00319F90  EC 23 08 2A */	fadds f1, f3, f1
 /* 8031D054 00319F94  EC 24 08 2A */	fadds f1, f4, f1
@@ -1147,8 +1147,8 @@ lbl_8031D01C:
 /* 8031D064 00319FA4  48 00 00 28 */	b lbl_8031D08C
 lbl_8031D068:
 /* 8031D068 00319FA8  FC A0 08 34 */	frsqrte f5, f1
-/* 8031D06C 00319FAC  C0 82 FC 64 */	lfs f4, $$23523@sda21(r2)
-/* 8031D070 00319FB0  C0 42 FC 68 */	lfs f2, $$23524@sda21(r2)
+/* 8031D06C 00319FAC  C0 82 FC 64 */	lfs f4, "@3523"@sda21(r2)
+/* 8031D070 00319FB0  C0 42 FC 68 */	lfs f2, "@3524"@sda21(r2)
 /* 8031D074 00319FB4  FC A0 28 18 */	frsp f5, f5
 /* 8031D078 00319FB8  EC 65 01 72 */	fmuls f3, f5, f5
 /* 8031D07C 00319FBC  EC 84 01 72 */	fmuls f4, f4, f5
@@ -1167,7 +1167,7 @@ lbl_8031D08C:
 /* 8031D0AC 00319FEC  EC 83 00 F2 */	fmuls f4, f3, f3
 /* 8031D0B0 00319FF0  C0 A1 00 CC */	lfs f5, 0xcc(r1)
 /* 8031D0B4 00319FF4  EC 62 00 B2 */	fmuls f3, f2, f2
-/* 8031D0B8 00319FF8  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
+/* 8031D0B8 00319FF8  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
 /* 8031D0BC 00319FFC  EC A5 01 72 */	fmuls f5, f5, f5
 /* 8031D0C0 0031A000  EC 64 18 2A */	fadds f3, f4, f3
 /* 8031D0C4 0031A004  EC C5 18 2A */	fadds f6, f5, f3
@@ -1177,8 +1177,8 @@ lbl_8031D08C:
 /* 8031D0D4 0031A014  48 00 00 28 */	b lbl_8031D0FC
 lbl_8031D0D8:
 /* 8031D0D8 0031A018  FC A0 30 34 */	frsqrte f5, f6
-/* 8031D0DC 0031A01C  C0 82 FC 64 */	lfs f4, $$23523@sda21(r2)
-/* 8031D0E0 0031A020  C0 42 FC 68 */	lfs f2, $$23524@sda21(r2)
+/* 8031D0DC 0031A01C  C0 82 FC 64 */	lfs f4, "@3523"@sda21(r2)
+/* 8031D0E0 0031A020  C0 42 FC 68 */	lfs f2, "@3524"@sda21(r2)
 /* 8031D0E4 0031A024  FC A0 28 18 */	frsp f5, f5
 /* 8031D0E8 0031A028  EC 65 01 72 */	fmuls f3, f5, f5
 /* 8031D0EC 0031A02C  EC 84 01 72 */	fmuls f4, f4, f5
@@ -1186,7 +1186,7 @@ lbl_8031D0D8:
 /* 8031D0F4 0031A034  EC 44 00 B2 */	fmuls f2, f4, f2
 /* 8031D0F8 0031A038  EC C6 00 B2 */	fmuls f6, f6, f2
 lbl_8031D0FC:
-/* 8031D0FC 0031A03C  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
+/* 8031D0FC 0031A03C  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
 /* 8031D100 0031A040  FC 02 30 00 */	fcmpu cr0, f2, f6
 /* 8031D104 0031A044  41 82 00 28 */	beq lbl_8031D12C
 /* 8031D108 0031A048  C0 41 00 D0 */	lfs f2, 0xd0(r1)
@@ -1199,7 +1199,7 @@ lbl_8031D0FC:
 /* 8031D124 0031A064  EC 42 00 24 */	fdivs f2, f2, f0
 /* 8031D128 0031A068  D0 41 00 F0 */	stfs f2, 0xf0(r1)
 lbl_8031D12C:
-/* 8031D12C 0031A06C  C0 42 FC 40 */	lfs f2, $$23024@sda21(r2)
+/* 8031D12C 0031A06C  C0 42 FC 40 */	lfs f2, "@3024"@sda21(r2)
 /* 8031D130 0031A070  FC 02 00 00 */	fcmpu cr0, f2, f0
 /* 8031D134 0031A074  41 82 00 28 */	beq lbl_8031D15C
 /* 8031D138 0031A078  C0 01 00 D4 */	lfs f0, 0xd4(r1)
@@ -1212,7 +1212,7 @@ lbl_8031D12C:
 /* 8031D154 0031A094  EC 00 08 24 */	fdivs f0, f0, f1
 /* 8031D158 0031A098  D0 01 00 F4 */	stfs f0, 0xf4(r1)
 lbl_8031D15C:
-/* 8031D15C 0031A09C  C0 02 FC 40 */	lfs f0, $$23024@sda21(r2)
+/* 8031D15C 0031A09C  C0 02 FC 40 */	lfs f0, "@3024"@sda21(r2)
 /* 8031D160 0031A0A0  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8031D164 0031A0A4  41 82 00 28 */	beq lbl_8031D18C
 /* 8031D168 0031A0A8  C0 01 00 D8 */	lfs f0, 0xd8(r1)
@@ -1227,10 +1227,10 @@ lbl_8031D15C:
 lbl_8031D18C:
 /* 8031D18C 0031A0CC  C3 AD 8A E4 */	lfs f29, mNozzleOffsetZ__7TRocket@sda21(r13)
 /* 8031D190 0031A0D0  38 61 00 70 */	addi r3, r1, 0x70
-/* 8031D194 0031A0D4  4B DA 3C B1 */	bl identity33__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 8031D194 0031A0D4  4B DA 3C B1 */	bl "identity33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 8031D198 0031A0D8  D3 A1 00 7C */	stfs f29, 0x7c(r1)
 /* 8031D19C 0031A0DC  38 61 00 D0 */	addi r3, r1, 0xd0
-/* 8031D1A0 0031A0E0  C0 02 FC 40 */	lfs f0, $$23024@sda21(r2)
+/* 8031D1A0 0031A0E0  C0 02 FC 40 */	lfs f0, "@3024"@sda21(r2)
 /* 8031D1A4 0031A0E4  38 A3 00 00 */	addi r5, r3, 0
 /* 8031D1A8 0031A0E8  38 81 00 70 */	addi r4, r1, 0x70
 /* 8031D1AC 0031A0EC  D0 01 00 8C */	stfs f0, 0x8c(r1)
@@ -1321,15 +1321,15 @@ init__7TRocketFP12TLiveManager:
 /* 8031D2DC 0031A21C  88 0D A5 E0 */	lbz r0, init$2933@sda21(r13)
 /* 8031D2E0 0031A220  7C 00 07 75 */	extsb. r0, r0
 /* 8031D2E4 0031A224  40 82 00 3C */	bne lbl_8031D320
-/* 8031D2E8 0031A228  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 8031D2EC 0031A22C  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 8031D2E8 0031A228  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 8031D2EC 0031A22C  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 8031D2F0 0031A230  3C 60 80 3E */	lis r3, __vt__16TNerveRocketWait@ha
 /* 8031D2F4 0031A234  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
 /* 8031D2F8 0031A238  38 03 12 48 */	addi r0, r3, __vt__16TNerveRocketWait@l
 /* 8031D2FC 0031A23C  3C 80 80 32 */	lis r4, __dt__16TNerveRocketWaitFv@ha
 /* 8031D300 0031A240  90 0D A5 E4 */	stw r0, instance$2931@sda21(r13)
-/* 8031D304 0031A244  3C 60 80 40 */	lis r3, $$22932@ha
-/* 8031D308 0031A248  38 A3 F7 60 */	addi r5, r3, $$22932@l
+/* 8031D304 0031A244  3C 60 80 40 */	lis r3, "@2932"@ha
+/* 8031D308 0031A248  38 A3 F7 60 */	addi r5, r3, "@2932"@l
 /* 8031D30C 0031A24C  38 84 C0 64 */	addi r4, r4, __dt__16TNerveRocketWaitFv@l
 /* 8031D310 0031A250  38 6D A5 E4 */	addi r3, r13, instance$2931@sda21
 /* 8031D314 0031A254  4B D6 54 15 */	bl __register_global_object
@@ -1487,13 +1487,13 @@ initSetEnemies__14TRocketManagerFv:
 /* 8031D518 0031A458  3B A0 00 00 */	li r29, 0
 /* 8031D51C 0031A45C  3B 40 00 00 */	li r26, 0
 /* 8031D520 0031A460  3F E0 43 30 */	lis r31, 0x4330
-/* 8031D524 0031A464  CB A2 FC 58 */	lfd f29, $$23031@sda21(r2)
-/* 8031D528 0031A468  C3 C2 FC 74 */	lfs f30, $$23614@sda21(r2)
-/* 8031D52C 0031A46C  C3 E2 FC 78 */	lfs f31, $$23615@sda21(r2)
+/* 8031D524 0031A464  CB A2 FC 58 */	lfd f29, "@3031"@sda21(r2)
+/* 8031D528 0031A468  C3 C2 FC 74 */	lfs f30, "@3614"@sda21(r2)
+/* 8031D52C 0031A46C  C3 E2 FC 78 */	lfs f31, "@3615"@sda21(r2)
 /* 8031D530 0031A470  48 00 01 00 */	b lbl_8031D630
 lbl_8031D534:
 /* 8031D534 0031A474  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
-/* 8031D538 0031A478  38 82 FC 6C */	addi r4, r2, $$23613@sda21
+/* 8031D538 0031A478  38 82 FC 6C */	addi r4, r2, "@3613"@sda21
 /* 8031D53C 0031A47C  4B F2 B8 0D */	bl getGraphByName__10TConductorFPCc
 /* 8031D540 0031A480  80 9B 00 18 */	lwz r4, 0x18(r27)
 /* 8031D544 0031A484  7C 7E 1B 78 */	mr r30, r3
@@ -1579,9 +1579,9 @@ createEnemyInstance__14TRocketManagerFv:
 /* 8031D670 0031A5B0  4B CE F2 41 */	bl __nw__FUl
 /* 8031D674 0031A5B4  7C 7F 1B 79 */	or. r31, r3, r3
 /* 8031D678 0031A5B8  41 82 00 34 */	beq lbl_8031D6AC
-/* 8031D67C 0031A5BC  3C 80 80 3A */	lis r4, $$23627@ha
+/* 8031D67C 0031A5BC  3C 80 80 3A */	lis r4, "@3627"@ha
 /* 8031D680 0031A5C0  38 7F 00 00 */	addi r3, r31, 0
-/* 8031D684 0031A5C4  38 84 1E A4 */	addi r4, r4, $$23627@l
+/* 8031D684 0031A5C4  38 84 1E A4 */	addi r4, r4, "@3627"@l
 /* 8031D688 0031A5C8  4B F6 35 E1 */	bl __ct__11TSmallEnemyFPCc
 /* 8031D68C 0031A5CC  3C 60 80 3E */	lis r3, __vt__7TRocket@ha
 /* 8031D690 0031A5D0  38 63 12 78 */	addi r3, r3, __vt__7TRocket@l
@@ -1613,12 +1613,12 @@ loadAfter__14TRocketManagerFv:
 .global load__14TRocketManagerFR20JSUMemoryInputStream
 load__14TRocketManagerFR20JSUMemoryInputStream:
 /* 8031D6E4 0031A624  7C 08 02 A6 */	mflr r0
-/* 8031D6E8 0031A628  3C A0 80 3A */	lis r5, $$21490@ha
+/* 8031D6E8 0031A628  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 8031D6EC 0031A62C  90 01 00 04 */	stw r0, 4(r1)
 /* 8031D6F0 0031A630  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8031D6F4 0031A634  BF 41 00 18 */	stmw r26, 0x18(r1)
 /* 8031D6F8 0031A638  3B A3 00 00 */	addi r29, r3, 0
-/* 8031D6FC 0031A63C  3B E5 1D B8 */	addi r31, r5, $$21490@l
+/* 8031D6FC 0031A63C  3B E5 1D B8 */	addi r31, r5, "@1490"@l
 /* 8031D700 0031A640  4B F6 37 01 */	bl load__18TSmallEnemyManagerFR20JSUMemoryInputStream
 /* 8031D704 0031A644  38 60 03 10 */	li r3, 0x310
 /* 8031D708 0031A648  4B CE F1 A9 */	bl __nw__FUl
@@ -1636,12 +1636,12 @@ load__14TRocketManagerFR20JSUMemoryInputStream:
 /* 8031D738 0031A678  38 9E 00 00 */	addi r4, r30, 0
 /* 8031D73C 0031A67C  38 7E 02 D4 */	addi r3, r30, 0x2d4
 /* 8031D740 0031A680  4B DB D4 B5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 8031D744 0031A684  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 8031D748 0031A688  3B 43 29 B8 */	addi r26, r3, __vt__10TParamT$$0f$$1@l
+/* 8031D744 0031A684  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 8031D748 0031A688  3B 43 29 B8 */	addi r26, r3, "__vt__10TParamT<f>"@l
 /* 8031D74C 0031A68C  93 5E 02 D4 */	stw r26, 0x2d4(r30)
-/* 8031D750 0031A690  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 8031D754 0031A694  3B 63 29 F4 */	addi r27, r3, __vt__11TParamRT$$0f$$1@l
-/* 8031D758 0031A698  C0 02 FC 7C */	lfs f0, $$23652@sda21(r2)
+/* 8031D750 0031A690  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 8031D754 0031A694  3B 63 29 F4 */	addi r27, r3, "__vt__11TParamRT<f>"@l
+/* 8031D758 0031A698  C0 02 FC 7C */	lfs f0, "@3652"@sda21(r2)
 /* 8031D75C 0031A69C  38 7F 01 1C */	addi r3, r31, 0x11c
 /* 8031D760 0031A6A0  D0 1E 02 E4 */	stfs f0, 0x2e4(r30)
 /* 8031D764 0031A6A4  93 7E 02 D4 */	stw r27, 0x2d4(r30)
@@ -1653,7 +1653,7 @@ load__14TRocketManagerFR20JSUMemoryInputStream:
 /* 8031D77C 0031A6BC  4B DB D4 79 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8031D780 0031A6C0  93 5E 02 E8 */	stw r26, 0x2e8(r30)
 /* 8031D784 0031A6C4  38 7F 01 2C */	addi r3, r31, 0x12c
-/* 8031D788 0031A6C8  C0 02 FC 40 */	lfs f0, $$23024@sda21(r2)
+/* 8031D788 0031A6C8  C0 02 FC 40 */	lfs f0, "@3024"@sda21(r2)
 /* 8031D78C 0031A6CC  D0 1E 02 F8 */	stfs f0, 0x2f8(r30)
 /* 8031D790 0031A6D0  93 7E 02 E8 */	stw r27, 0x2e8(r30)
 /* 8031D794 0031A6D4  4B D2 6E F9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1662,13 +1662,13 @@ load__14TRocketManagerFR20JSUMemoryInputStream:
 /* 8031D7A0 0031A6E0  38 7E 02 FC */	addi r3, r30, 0x2fc
 /* 8031D7A4 0031A6E4  38 DF 01 2C */	addi r6, r31, 0x12c
 /* 8031D7A8 0031A6E8  4B DB D4 4D */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 8031D7AC 0031A6EC  3C 60 80 3B */	lis r3, __vt__10TParamT$$0l$$1@ha
-/* 8031D7B0 0031A6F0  38 03 6A 7C */	addi r0, r3, __vt__10TParamT$$0l$$1@l
+/* 8031D7AC 0031A6EC  3C 60 80 3B */	lis r3, "__vt__10TParamT<l>"@ha
+/* 8031D7B0 0031A6F0  38 03 6A 7C */	addi r0, r3, "__vt__10TParamT<l>"@l
 /* 8031D7B4 0031A6F4  90 1E 02 FC */	stw r0, 0x2fc(r30)
 /* 8031D7B8 0031A6F8  38 00 01 2C */	li r0, 0x12c
-/* 8031D7BC 0031A6FC  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0l$$1@ha
+/* 8031D7BC 0031A6FC  3C 60 80 3B */	lis r3, "__vt__11TParamRT<l>"@ha
 /* 8031D7C0 0031A700  90 1E 03 0C */	stw r0, 0x30c(r30)
-/* 8031D7C4 0031A704  38 03 6A 70 */	addi r0, r3, __vt__11TParamRT$$0l$$1@l
+/* 8031D7C4 0031A704  38 03 6A 70 */	addi r0, r3, "__vt__11TParamRT<l>"@l
 /* 8031D7C8 0031A708  7F C3 F3 78 */	mr r3, r30
 /* 8031D7CC 0031A70C  90 1E 02 FC */	stw r0, 0x2fc(r30)
 /* 8031D7D0 0031A710  80 9E 00 00 */	lwz r4, 0(r30)
@@ -1792,205 +1792,205 @@ clipEnemies__14TRocketManagerFPQ26JDrama9TGraphics:
 .global __sinit_rocket_cpp
 __sinit_rocket_cpp:
 /* 8031D95C 0031A89C  7C 08 02 A6 */	mflr r0
-/* 8031D960 0031A8A0  3C 60 80 40 */	lis r3, $$22896@ha
+/* 8031D960 0031A8A0  3C 60 80 40 */	lis r3, "@2896"@ha
 /* 8031D964 0031A8A4  90 01 00 04 */	stw r0, 4(r1)
 /* 8031D968 0031A8A8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8031D96C 0031A8AC  93 E1 00 0C */	stw r31, 0xc(r1)
-/* 8031D970 0031A8B0  3B E3 F7 48 */	addi r31, r3, $$22896@l
-/* 8031D974 0031A8B4  88 0D 97 CC */	lbz r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 8031D970 0031A8B0  3B E3 F7 48 */	addi r31, r3, "@2896"@l
+/* 8031D974 0031A8B4  88 0D 97 CC */	lbz r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 /* 8031D978 0031A8B8  7C 00 07 75 */	extsb. r0, r0
 /* 8031D97C 0031A8BC  40 82 00 28 */	bne lbl_8031D9A4
-/* 8031D980 0031A8C0  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 8031D980 0031A8C0  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8031D984 0031A8C4  4B CF 12 B1 */	bl initiate__10JSUPtrListFv
-/* 8031D988 0031A8C8  3C 60 80 0E */	lis r3, __dt__15JSUList$$05MSBgm$$1Fv@ha
-/* 8031D98C 0031A8CC  38 83 6A 44 */	addi r4, r3, __dt__15JSUList$$05MSBgm$$1Fv@l
-/* 8031D990 0031A8D0  38 6D 97 A8 */	addi r3, r13, smList__15JALList$$05MSBgm$$1@sda21
+/* 8031D988 0031A8C8  3C 60 80 0E */	lis r3, "__dt__15JSUList<5MSBgm>Fv"@ha
+/* 8031D98C 0031A8CC  38 83 6A 44 */	addi r4, r3, "__dt__15JSUList<5MSBgm>Fv"@l
+/* 8031D990 0031A8D0  38 6D 97 A8 */	addi r3, r13, "smList__15JALList<5MSBgm>"@sda21
 /* 8031D994 0031A8D4  38 BF 00 24 */	addi r5, r31, 0x24
 /* 8031D998 0031A8D8  4B D6 4D 91 */	bl __register_global_object
 /* 8031D99C 0031A8DC  38 00 00 01 */	li r0, 1
-/* 8031D9A0 0031A8E0  98 0D 97 CC */	stb r0, __init__smList__15JALList$$05MSBgm$$1@sda21(r13)
+/* 8031D9A0 0031A8E0  98 0D 97 CC */	stb r0, "__init__smList__15JALList<5MSBgm>"@sda21(r13)
 lbl_8031D9A4:
-/* 8031D9A4 0031A8E4  88 0D 97 CD */	lbz r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 8031D9A4 0031A8E4  88 0D 97 CD */	lbz r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 /* 8031D9A8 0031A8E8  7C 00 07 75 */	extsb. r0, r0
 /* 8031D9AC 0031A8EC  40 82 00 28 */	bne lbl_8031D9D4
-/* 8031D9B0 0031A8F0  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 8031D9B0 0031A8F0  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 8031D9B4 0031A8F4  4B CF 12 81 */	bl initiate__10JSUPtrListFv
-/* 8031D9B8 0031A8F8  3C 60 80 0E */	lis r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@ha
-/* 8031D9BC 0031A8FC  38 83 69 EC */	addi r4, r3, __dt__24JSUList$$013MSSetSoundGrp$$1Fv@l
-/* 8031D9C0 0031A900  38 6D 97 B4 */	addi r3, r13, smList__24JALList$$013MSSetSoundGrp$$1@sda21
+/* 8031D9B8 0031A8F8  3C 60 80 0E */	lis r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@ha
+/* 8031D9BC 0031A8FC  38 83 69 EC */	addi r4, r3, "__dt__24JSUList<13MSSetSoundGrp>Fv"@l
+/* 8031D9C0 0031A900  38 6D 97 B4 */	addi r3, r13, "smList__24JALList<13MSSetSoundGrp>"@sda21
 /* 8031D9C4 0031A904  38 BF 00 30 */	addi r5, r31, 0x30
 /* 8031D9C8 0031A908  4B D6 4D 61 */	bl __register_global_object
 /* 8031D9CC 0031A90C  38 00 00 01 */	li r0, 1
-/* 8031D9D0 0031A910  98 0D 97 CD */	stb r0, __init__smList__24JALList$$013MSSetSoundGrp$$1@sda21(r13)
+/* 8031D9D0 0031A910  98 0D 97 CD */	stb r0, "__init__smList__24JALList<13MSSetSoundGrp>"@sda21(r13)
 lbl_8031D9D4:
-/* 8031D9D4 0031A914  88 0D 97 CE */	lbz r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 8031D9D4 0031A914  88 0D 97 CE */	lbz r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 /* 8031D9D8 0031A918  7C 00 07 75 */	extsb. r0, r0
 /* 8031D9DC 0031A91C  40 82 00 28 */	bne lbl_8031DA04
-/* 8031D9E0 0031A920  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 8031D9E0 0031A920  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 8031D9E4 0031A924  4B CF 12 51 */	bl initiate__10JSUPtrListFv
-/* 8031D9E8 0031A928  3C 60 80 0E */	lis r3, __dt__21JSUList$$010MSSetSound$$1Fv@ha
-/* 8031D9EC 0031A92C  38 83 69 94 */	addi r4, r3, __dt__21JSUList$$010MSSetSound$$1Fv@l
-/* 8031D9F0 0031A930  38 6D 97 C0 */	addi r3, r13, smList__21JALList$$010MSSetSound$$1@sda21
+/* 8031D9E8 0031A928  3C 60 80 0E */	lis r3, "__dt__21JSUList<10MSSetSound>Fv"@ha
+/* 8031D9EC 0031A92C  38 83 69 94 */	addi r4, r3, "__dt__21JSUList<10MSSetSound>Fv"@l
+/* 8031D9F0 0031A930  38 6D 97 C0 */	addi r3, r13, "smList__21JALList<10MSSetSound>"@sda21
 /* 8031D9F4 0031A934  38 BF 00 3C */	addi r5, r31, 0x3c
 /* 8031D9F8 0031A938  4B D6 4D 31 */	bl __register_global_object
 /* 8031D9FC 0031A93C  38 00 00 01 */	li r0, 1
-/* 8031DA00 0031A940  98 0D 97 CE */	stb r0, __init__smList__21JALList$$010MSSetSound$$1@sda21(r13)
+/* 8031DA00 0031A940  98 0D 97 CE */	stb r0, "__init__smList__21JALList<10MSSetSound>"@sda21(r13)
 lbl_8031DA04:
-/* 8031DA04 0031A944  88 0D 8F 8C */	lbz r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 8031DA04 0031A944  88 0D 8F 8C */	lbz r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 /* 8031DA08 0031A948  7C 00 07 75 */	extsb. r0, r0
 /* 8031DA0C 0031A94C  40 82 00 28 */	bne lbl_8031DA34
-/* 8031DA10 0031A950  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 8031DA10 0031A950  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 8031DA14 0031A954  4B CF 12 21 */	bl initiate__10JSUPtrListFv
-/* 8031DA18 0031A958  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@ha
-/* 8031DA1C 0031A95C  38 83 A8 0C */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDGrp$$1Fv@l
-/* 8031DA20 0031A960  38 6D 8E FC */	addi r3, r13, smList__26JALList$$015JALSeModEffDGrp$$1@sda21
+/* 8031DA18 0031A958  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@ha
+/* 8031DA1C 0031A95C  38 83 A8 0C */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDGrp>Fv"@l
+/* 8031DA20 0031A960  38 6D 8E FC */	addi r3, r13, "smList__26JALList<15JALSeModEffDGrp>"@sda21
 /* 8031DA24 0031A964  38 BF 00 48 */	addi r5, r31, 0x48
 /* 8031DA28 0031A968  4B D6 4D 01 */	bl __register_global_object
 /* 8031DA2C 0031A96C  38 00 00 01 */	li r0, 1
-/* 8031DA30 0031A970  98 0D 8F 8C */	stb r0, __init__smList__26JALList$$015JALSeModEffDGrp$$1@sda21(r13)
+/* 8031DA30 0031A970  98 0D 8F 8C */	stb r0, "__init__smList__26JALList<15JALSeModEffDGrp>"@sda21(r13)
 lbl_8031DA34:
-/* 8031DA34 0031A974  88 0D 8F 8D */	lbz r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 8031DA34 0031A974  88 0D 8F 8D */	lbz r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 /* 8031DA38 0031A978  7C 00 07 75 */	extsb. r0, r0
 /* 8031DA3C 0031A97C  40 82 00 28 */	bne lbl_8031DA64
-/* 8031DA40 0031A980  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 8031DA40 0031A980  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 8031DA44 0031A984  4B CF 11 F1 */	bl initiate__10JSUPtrListFv
-/* 8031DA48 0031A988  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@ha
-/* 8031DA4C 0031A98C  38 83 A7 B4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDGrp$$1Fv@l
-/* 8031DA50 0031A990  38 6D 8F 08 */	addi r3, r13, smList__26JALList$$015JALSeModPitDGrp$$1@sda21
+/* 8031DA48 0031A988  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@ha
+/* 8031DA4C 0031A98C  38 83 A7 B4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDGrp>Fv"@l
+/* 8031DA50 0031A990  38 6D 8F 08 */	addi r3, r13, "smList__26JALList<15JALSeModPitDGrp>"@sda21
 /* 8031DA54 0031A994  38 BF 00 54 */	addi r5, r31, 0x54
 /* 8031DA58 0031A998  4B D6 4C D1 */	bl __register_global_object
 /* 8031DA5C 0031A99C  38 00 00 01 */	li r0, 1
-/* 8031DA60 0031A9A0  98 0D 8F 8D */	stb r0, __init__smList__26JALList$$015JALSeModPitDGrp$$1@sda21(r13)
+/* 8031DA60 0031A9A0  98 0D 8F 8D */	stb r0, "__init__smList__26JALList<15JALSeModPitDGrp>"@sda21(r13)
 lbl_8031DA64:
-/* 8031DA64 0031A9A4  88 0D 8F 8E */	lbz r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 8031DA64 0031A9A4  88 0D 8F 8E */	lbz r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 /* 8031DA68 0031A9A8  7C 00 07 75 */	extsb. r0, r0
 /* 8031DA6C 0031A9AC  40 82 00 28 */	bne lbl_8031DA94
-/* 8031DA70 0031A9B0  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 8031DA70 0031A9B0  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8031DA74 0031A9B4  4B CF 11 C1 */	bl initiate__10JSUPtrListFv
-/* 8031DA78 0031A9B8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@ha
-/* 8031DA7C 0031A9BC  38 83 A7 5C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDGrp$$1Fv@l
-/* 8031DA80 0031A9C0  38 6D 8F 14 */	addi r3, r13, smList__26JALList$$015JALSeModVolDGrp$$1@sda21
+/* 8031DA78 0031A9B8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@ha
+/* 8031DA7C 0031A9BC  38 83 A7 5C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDGrp>Fv"@l
+/* 8031DA80 0031A9C0  38 6D 8F 14 */	addi r3, r13, "smList__26JALList<15JALSeModVolDGrp>"@sda21
 /* 8031DA84 0031A9C4  38 BF 00 60 */	addi r5, r31, 0x60
 /* 8031DA88 0031A9C8  4B D6 4C A1 */	bl __register_global_object
 /* 8031DA8C 0031A9CC  38 00 00 01 */	li r0, 1
-/* 8031DA90 0031A9D0  98 0D 8F 8E */	stb r0, __init__smList__26JALList$$015JALSeModVolDGrp$$1@sda21(r13)
+/* 8031DA90 0031A9D0  98 0D 8F 8E */	stb r0, "__init__smList__26JALList<15JALSeModVolDGrp>"@sda21(r13)
 lbl_8031DA94:
-/* 8031DA94 0031A9D4  88 0D 8F 8F */	lbz r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 8031DA94 0031A9D4  88 0D 8F 8F */	lbz r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 /* 8031DA98 0031A9D8  7C 00 07 75 */	extsb. r0, r0
 /* 8031DA9C 0031A9DC  40 82 00 28 */	bne lbl_8031DAC4
-/* 8031DAA0 0031A9E0  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 8031DAA0 0031A9E0  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8031DAA4 0031A9E4  4B CF 11 91 */	bl initiate__10JSUPtrListFv
-/* 8031DAA8 0031A9E8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@ha
-/* 8031DAAC 0031A9EC  38 83 A7 04 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFGrp$$1Fv@l
-/* 8031DAB0 0031A9F0  38 6D 8F 20 */	addi r3, r13, smList__26JALList$$015JALSeModEffFGrp$$1@sda21
+/* 8031DAA8 0031A9E8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@ha
+/* 8031DAAC 0031A9EC  38 83 A7 04 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFGrp>Fv"@l
+/* 8031DAB0 0031A9F0  38 6D 8F 20 */	addi r3, r13, "smList__26JALList<15JALSeModEffFGrp>"@sda21
 /* 8031DAB4 0031A9F4  38 BF 00 6C */	addi r5, r31, 0x6c
 /* 8031DAB8 0031A9F8  4B D6 4C 71 */	bl __register_global_object
 /* 8031DABC 0031A9FC  38 00 00 01 */	li r0, 1
-/* 8031DAC0 0031AA00  98 0D 8F 8F */	stb r0, __init__smList__26JALList$$015JALSeModEffFGrp$$1@sda21(r13)
+/* 8031DAC0 0031AA00  98 0D 8F 8F */	stb r0, "__init__smList__26JALList<15JALSeModEffFGrp>"@sda21(r13)
 lbl_8031DAC4:
-/* 8031DAC4 0031AA04  88 0D 8F 90 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 8031DAC4 0031AA04  88 0D 8F 90 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 /* 8031DAC8 0031AA08  7C 00 07 75 */	extsb. r0, r0
 /* 8031DACC 0031AA0C  40 82 00 28 */	bne lbl_8031DAF4
-/* 8031DAD0 0031AA10  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 8031DAD0 0031AA10  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 8031DAD4 0031AA14  4B CF 11 61 */	bl initiate__10JSUPtrListFv
-/* 8031DAD8 0031AA18  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@ha
-/* 8031DADC 0031AA1C  38 83 A6 AC */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFGrp$$1Fv@l
-/* 8031DAE0 0031AA20  38 6D 8F 2C */	addi r3, r13, smList__26JALList$$015JALSeModPitFGrp$$1@sda21
+/* 8031DAD8 0031AA18  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@ha
+/* 8031DADC 0031AA1C  38 83 A6 AC */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFGrp>Fv"@l
+/* 8031DAE0 0031AA20  38 6D 8F 2C */	addi r3, r13, "smList__26JALList<15JALSeModPitFGrp>"@sda21
 /* 8031DAE4 0031AA24  38 BF 00 78 */	addi r5, r31, 0x78
 /* 8031DAE8 0031AA28  4B D6 4C 41 */	bl __register_global_object
 /* 8031DAEC 0031AA2C  38 00 00 01 */	li r0, 1
-/* 8031DAF0 0031AA30  98 0D 8F 90 */	stb r0, __init__smList__26JALList$$015JALSeModPitFGrp$$1@sda21(r13)
+/* 8031DAF0 0031AA30  98 0D 8F 90 */	stb r0, "__init__smList__26JALList<15JALSeModPitFGrp>"@sda21(r13)
 lbl_8031DAF4:
-/* 8031DAF4 0031AA34  88 0D 8F 91 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 8031DAF4 0031AA34  88 0D 8F 91 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 /* 8031DAF8 0031AA38  7C 00 07 75 */	extsb. r0, r0
 /* 8031DAFC 0031AA3C  40 82 00 28 */	bne lbl_8031DB24
-/* 8031DB00 0031AA40  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 8031DB00 0031AA40  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 8031DB04 0031AA44  4B CF 11 31 */	bl initiate__10JSUPtrListFv
-/* 8031DB08 0031AA48  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@ha
-/* 8031DB0C 0031AA4C  38 83 A6 54 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFGrp$$1Fv@l
-/* 8031DB10 0031AA50  38 6D 8F 38 */	addi r3, r13, smList__26JALList$$015JALSeModVolFGrp$$1@sda21
+/* 8031DB08 0031AA48  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@ha
+/* 8031DB0C 0031AA4C  38 83 A6 54 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFGrp>Fv"@l
+/* 8031DB10 0031AA50  38 6D 8F 38 */	addi r3, r13, "smList__26JALList<15JALSeModVolFGrp>"@sda21
 /* 8031DB14 0031AA54  38 BF 00 84 */	addi r5, r31, 0x84
 /* 8031DB18 0031AA58  4B D6 4C 11 */	bl __register_global_object
 /* 8031DB1C 0031AA5C  38 00 00 01 */	li r0, 1
-/* 8031DB20 0031AA60  98 0D 8F 91 */	stb r0, __init__smList__26JALList$$015JALSeModVolFGrp$$1@sda21(r13)
+/* 8031DB20 0031AA60  98 0D 8F 91 */	stb r0, "__init__smList__26JALList<15JALSeModVolFGrp>"@sda21(r13)
 lbl_8031DB24:
-/* 8031DB24 0031AA64  88 0D 8F 92 */	lbz r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 8031DB24 0031AA64  88 0D 8F 92 */	lbz r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 /* 8031DB28 0031AA68  7C 00 07 75 */	extsb. r0, r0
 /* 8031DB2C 0031AA6C  40 82 00 28 */	bne lbl_8031DB54
-/* 8031DB30 0031AA70  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 8031DB30 0031AA70  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 8031DB34 0031AA74  4B CF 11 01 */	bl initiate__10JSUPtrListFv
-/* 8031DB38 0031AA78  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@ha
-/* 8031DB3C 0031AA7C  38 83 A5 FC */	addi r4, r3, __dt__26JSUList$$015JALSeModEffDist$$1Fv@l
-/* 8031DB40 0031AA80  38 6D 8F 44 */	addi r3, r13, smList__26JALList$$015JALSeModEffDist$$1@sda21
+/* 8031DB38 0031AA78  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@ha
+/* 8031DB3C 0031AA7C  38 83 A5 FC */	addi r4, r3, "__dt__26JSUList<15JALSeModEffDist>Fv"@l
+/* 8031DB40 0031AA80  38 6D 8F 44 */	addi r3, r13, "smList__26JALList<15JALSeModEffDist>"@sda21
 /* 8031DB44 0031AA84  38 BF 00 90 */	addi r5, r31, 0x90
 /* 8031DB48 0031AA88  4B D6 4B E1 */	bl __register_global_object
 /* 8031DB4C 0031AA8C  38 00 00 01 */	li r0, 1
-/* 8031DB50 0031AA90  98 0D 8F 92 */	stb r0, __init__smList__26JALList$$015JALSeModEffDist$$1@sda21(r13)
+/* 8031DB50 0031AA90  98 0D 8F 92 */	stb r0, "__init__smList__26JALList<15JALSeModEffDist>"@sda21(r13)
 lbl_8031DB54:
-/* 8031DB54 0031AA94  88 0D 8F 93 */	lbz r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 8031DB54 0031AA94  88 0D 8F 93 */	lbz r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 /* 8031DB58 0031AA98  7C 00 07 75 */	extsb. r0, r0
 /* 8031DB5C 0031AA9C  40 82 00 28 */	bne lbl_8031DB84
-/* 8031DB60 0031AAA0  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 8031DB60 0031AAA0  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8031DB64 0031AAA4  4B CF 10 D1 */	bl initiate__10JSUPtrListFv
-/* 8031DB68 0031AAA8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@ha
-/* 8031DB6C 0031AAAC  38 83 A5 A4 */	addi r4, r3, __dt__26JSUList$$015JALSeModPitDist$$1Fv@l
-/* 8031DB70 0031AAB0  38 6D 8F 50 */	addi r3, r13, smList__26JALList$$015JALSeModPitDist$$1@sda21
+/* 8031DB68 0031AAA8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@ha
+/* 8031DB6C 0031AAAC  38 83 A5 A4 */	addi r4, r3, "__dt__26JSUList<15JALSeModPitDist>Fv"@l
+/* 8031DB70 0031AAB0  38 6D 8F 50 */	addi r3, r13, "smList__26JALList<15JALSeModPitDist>"@sda21
 /* 8031DB74 0031AAB4  38 BF 00 9C */	addi r5, r31, 0x9c
 /* 8031DB78 0031AAB8  4B D6 4B B1 */	bl __register_global_object
 /* 8031DB7C 0031AABC  38 00 00 01 */	li r0, 1
-/* 8031DB80 0031AAC0  98 0D 8F 93 */	stb r0, __init__smList__26JALList$$015JALSeModPitDist$$1@sda21(r13)
+/* 8031DB80 0031AAC0  98 0D 8F 93 */	stb r0, "__init__smList__26JALList<15JALSeModPitDist>"@sda21(r13)
 lbl_8031DB84:
-/* 8031DB84 0031AAC4  88 0D 8F 94 */	lbz r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 8031DB84 0031AAC4  88 0D 8F 94 */	lbz r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 /* 8031DB88 0031AAC8  7C 00 07 75 */	extsb. r0, r0
 /* 8031DB8C 0031AACC  40 82 00 28 */	bne lbl_8031DBB4
-/* 8031DB90 0031AAD0  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 8031DB90 0031AAD0  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8031DB94 0031AAD4  4B CF 10 A1 */	bl initiate__10JSUPtrListFv
-/* 8031DB98 0031AAD8  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@ha
-/* 8031DB9C 0031AADC  38 83 A5 4C */	addi r4, r3, __dt__26JSUList$$015JALSeModVolDist$$1Fv@l
-/* 8031DBA0 0031AAE0  38 6D 8F 5C */	addi r3, r13, smList__26JALList$$015JALSeModVolDist$$1@sda21
+/* 8031DB98 0031AAD8  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@ha
+/* 8031DB9C 0031AADC  38 83 A5 4C */	addi r4, r3, "__dt__26JSUList<15JALSeModVolDist>Fv"@l
+/* 8031DBA0 0031AAE0  38 6D 8F 5C */	addi r3, r13, "smList__26JALList<15JALSeModVolDist>"@sda21
 /* 8031DBA4 0031AAE4  38 BF 00 A8 */	addi r5, r31, 0xa8
 /* 8031DBA8 0031AAE8  4B D6 4B 81 */	bl __register_global_object
 /* 8031DBAC 0031AAEC  38 00 00 01 */	li r0, 1
-/* 8031DBB0 0031AAF0  98 0D 8F 94 */	stb r0, __init__smList__26JALList$$015JALSeModVolDist$$1@sda21(r13)
+/* 8031DBB0 0031AAF0  98 0D 8F 94 */	stb r0, "__init__smList__26JALList<15JALSeModVolDist>"@sda21(r13)
 lbl_8031DBB4:
-/* 8031DBB4 0031AAF4  88 0D 8F 95 */	lbz r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 8031DBB4 0031AAF4  88 0D 8F 95 */	lbz r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 /* 8031DBB8 0031AAF8  7C 00 07 75 */	extsb. r0, r0
 /* 8031DBBC 0031AAFC  40 82 00 28 */	bne lbl_8031DBE4
-/* 8031DBC0 0031AB00  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 8031DBC0 0031AB00  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 8031DBC4 0031AB04  4B CF 10 71 */	bl initiate__10JSUPtrListFv
-/* 8031DBC8 0031AB08  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@ha
-/* 8031DBCC 0031AB0C  38 83 A4 F4 */	addi r4, r3, __dt__26JSUList$$015JALSeModEffFunk$$1Fv@l
-/* 8031DBD0 0031AB10  38 6D 8F 68 */	addi r3, r13, smList__26JALList$$015JALSeModEffFunk$$1@sda21
+/* 8031DBC8 0031AB08  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@ha
+/* 8031DBCC 0031AB0C  38 83 A4 F4 */	addi r4, r3, "__dt__26JSUList<15JALSeModEffFunk>Fv"@l
+/* 8031DBD0 0031AB10  38 6D 8F 68 */	addi r3, r13, "smList__26JALList<15JALSeModEffFunk>"@sda21
 /* 8031DBD4 0031AB14  38 BF 00 B4 */	addi r5, r31, 0xb4
 /* 8031DBD8 0031AB18  4B D6 4B 51 */	bl __register_global_object
 /* 8031DBDC 0031AB1C  38 00 00 01 */	li r0, 1
-/* 8031DBE0 0031AB20  98 0D 8F 95 */	stb r0, __init__smList__26JALList$$015JALSeModEffFunk$$1@sda21(r13)
+/* 8031DBE0 0031AB20  98 0D 8F 95 */	stb r0, "__init__smList__26JALList<15JALSeModEffFunk>"@sda21(r13)
 lbl_8031DBE4:
-/* 8031DBE4 0031AB24  88 0D 8F 96 */	lbz r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 8031DBE4 0031AB24  88 0D 8F 96 */	lbz r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 /* 8031DBE8 0031AB28  7C 00 07 75 */	extsb. r0, r0
 /* 8031DBEC 0031AB2C  40 82 00 28 */	bne lbl_8031DC14
-/* 8031DBF0 0031AB30  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 8031DBF0 0031AB30  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 8031DBF4 0031AB34  4B CF 10 41 */	bl initiate__10JSUPtrListFv
-/* 8031DBF8 0031AB38  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@ha
-/* 8031DBFC 0031AB3C  38 83 A4 9C */	addi r4, r3, __dt__26JSUList$$015JALSeModPitFunk$$1Fv@l
-/* 8031DC00 0031AB40  38 6D 8F 74 */	addi r3, r13, smList__26JALList$$015JALSeModPitFunk$$1@sda21
+/* 8031DBF8 0031AB38  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@ha
+/* 8031DBFC 0031AB3C  38 83 A4 9C */	addi r4, r3, "__dt__26JSUList<15JALSeModPitFunk>Fv"@l
+/* 8031DC00 0031AB40  38 6D 8F 74 */	addi r3, r13, "smList__26JALList<15JALSeModPitFunk>"@sda21
 /* 8031DC04 0031AB44  38 BF 00 C0 */	addi r5, r31, 0xc0
 /* 8031DC08 0031AB48  4B D6 4B 21 */	bl __register_global_object
 /* 8031DC0C 0031AB4C  38 00 00 01 */	li r0, 1
-/* 8031DC10 0031AB50  98 0D 8F 96 */	stb r0, __init__smList__26JALList$$015JALSeModPitFunk$$1@sda21(r13)
+/* 8031DC10 0031AB50  98 0D 8F 96 */	stb r0, "__init__smList__26JALList<15JALSeModPitFunk>"@sda21(r13)
 lbl_8031DC14:
-/* 8031DC14 0031AB54  88 0D 8F 97 */	lbz r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 8031DC14 0031AB54  88 0D 8F 97 */	lbz r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 /* 8031DC18 0031AB58  7C 00 07 75 */	extsb. r0, r0
 /* 8031DC1C 0031AB5C  40 82 00 28 */	bne lbl_8031DC44
-/* 8031DC20 0031AB60  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 8031DC20 0031AB60  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 8031DC24 0031AB64  4B CF 10 11 */	bl initiate__10JSUPtrListFv
-/* 8031DC28 0031AB68  3C 60 80 05 */	lis r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@ha
-/* 8031DC2C 0031AB6C  38 83 A4 44 */	addi r4, r3, __dt__26JSUList$$015JALSeModVolFunk$$1Fv@l
-/* 8031DC30 0031AB70  38 6D 8F 80 */	addi r3, r13, smList__26JALList$$015JALSeModVolFunk$$1@sda21
+/* 8031DC28 0031AB68  3C 60 80 05 */	lis r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@ha
+/* 8031DC2C 0031AB6C  38 83 A4 44 */	addi r4, r3, "__dt__26JSUList<15JALSeModVolFunk>Fv"@l
+/* 8031DC30 0031AB70  38 6D 8F 80 */	addi r3, r13, "smList__26JALList<15JALSeModVolFunk>"@sda21
 /* 8031DC34 0031AB74  38 BF 00 CC */	addi r5, r31, 0xcc
 /* 8031DC38 0031AB78  4B D6 4A F1 */	bl __register_global_object
 /* 8031DC3C 0031AB7C  38 00 00 01 */	li r0, 1
-/* 8031DC40 0031AB80  98 0D 8F 97 */	stb r0, __init__smList__26JALList$$015JALSeModVolFunk$$1@sda21(r13)
+/* 8031DC40 0031AB80  98 0D 8F 97 */	stb r0, "__init__smList__26JALList<15JALSeModVolFunk>"@sda21(r13)
 lbl_8031DC44:
 /* 8031DC44 0031AB84  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 8031DC48 0031AB88  83 E1 00 0C */	lwz r31, 0xc(r1)
@@ -1998,8 +1998,8 @@ lbl_8031DC44:
 /* 8031DC50 0031AB90  7C 08 03 A6 */	mtlr r0
 /* 8031DC54 0031AB94  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__7TRocketFv
-$$232$$2__dt__7TRocketFv:
+.global "@32@__dt__7TRocketFv"
+"@32@__dt__7TRocketFv":
 /* 8031DC58 0031AB98  38 63 FF E0 */	addi r3, r3, -32
 /* 8031DC5C 0031AB9C  4B FF FC 04 */	b __dt__7TRocketFv
 
@@ -2009,33 +2009,33 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$22391:
+"@2391":
 	.incbin "baserom.dol", 0x39EDC4, 0x14
-$$22603:
+"@2603":
 	.incbin "baserom.dol", 0x39EDD8, 0x30
-$$22604:
+"@2604":
 	.incbin "baserom.dol", 0x39EE08, 0x38
-$$22605:
+"@2605":
 	.incbin "baserom.dol", 0x39EE40, 0x34
-$$22606:
+"@2606":
 	.incbin "baserom.dol", 0x39EE74, 0x24
-$$22822:
+"@2822":
 	.incbin "baserom.dol", 0x39EE98, 0xC
-$$23627:
+"@3627":
 	.incbin "baserom.dol", 0x39EEA4, 0xC
-$$23650:
+"@3650":
 	.incbin "baserom.dol", 0x39EEB0, 0x14
-$$23651:
+"@3651":
 	.incbin "baserom.dol", 0x39EEC4, 0x10
-$$23653:
+"@3653":
 	.incbin "baserom.dol", 0x39EED4, 0x10
-$$23654:
+"@3654":
 	.incbin "baserom.dol", 0x39EEE4, 0x10
-$$23655:
+"@3655":
 	.incbin "baserom.dol", 0x39EEF4, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -2045,7 +2045,7 @@ rocket_bastable:
   .4byte 0
   .4byte 0
 entry$2821:
-  .4byte $$22822
+  .4byte "@2822"
   .4byte 0x10040000
   .4byte 0
   .4byte 0
@@ -2056,19 +2056,19 @@ __vt__16TNerveRocketWait:
   .4byte 0
   .4byte 0
   .4byte __dt__16TNerveRocketWaitFv
-  .4byte execute__16TNerveRocketWaitCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__16TNerveRocketWaitCFP24TSpineBase<10TLiveActor>"
 .global __vt__15TNerveRocketFly
 __vt__15TNerveRocketFly:
   .4byte 0
   .4byte 0
   .4byte __dt__15TNerveRocketFlyFv
-  .4byte execute__15TNerveRocketFlyCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__15TNerveRocketFlyCFP24TSpineBase<10TLiveActor>"
 .global __vt__27TNerveRocketPossessedNozzle
 __vt__27TNerveRocketPossessedNozzle:
   .4byte 0
   .4byte 0
   .4byte __dt__27TNerveRocketPossessedNozzleFv
-  .4byte execute__27TNerveRocketPossessedNozzleCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__27TNerveRocketPossessedNozzleCFP24TSpineBase<10TLiveActor>"
 .global __vt__7TRocket
 __vt__7TRocket:
   .4byte 0
@@ -2082,7 +2082,7 @@ __vt__7TRocket:
   .4byte perform__11TSmallEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__7TRocketFv
+  .4byte "@32@__dt__7TRocketFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -2092,12 +2092,12 @@ __vt__7TRocket:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -2114,7 +2114,7 @@ __vt__7TRocket:
   .4byte receiveMessage__11TSmallEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -2135,8 +2135,8 @@ __vt__7TRocket:
   .4byte updateAnmSound__11TSmallEnemyFv
   .4byte getBasNameTable__7TRocketCFv
   .4byte reset__7TRocketFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -2212,71 +2212,71 @@ mColOffsetY__7TRocket:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$23024:
+"@3024":
   .4byte 0
-$$23025:
+"@3025":
 	.incbin "baserom.dol", 0x3EB944, 0x4
-$$23026:
+"@3026":
 	.incbin "baserom.dol", 0x3EB948, 0x4
-$$23027:
+"@3027":
 	.incbin "baserom.dol", 0x3EB94C, 0x4
-$$23028:
+"@3028":
 	.incbin "baserom.dol", 0x3EB950, 0x4
-$$23029:
+"@3029":
 	.incbin "baserom.dol", 0x3EB954, 0x4
-$$23031:
+"@3031":
 	.incbin "baserom.dol", 0x3EB958, 0x8
-$$23123:
+"@3123":
 	.incbin "baserom.dol", 0x3EB960, 0x4
-$$23523:
+"@3523":
 	.incbin "baserom.dol", 0x3EB964, 0x4
-$$23524:
+"@3524":
 	.incbin "baserom.dol", 0x3EB968, 0x4
-$$23613:
+"@3613":
 	.incbin "baserom.dol", 0x3EB96C, 0x8
-$$23614:
+"@3614":
 	.incbin "baserom.dol", 0x3EB974, 0x4
-$$23615:
+"@3615":
 	.incbin "baserom.dol", 0x3EB978, 0x4
-$$23652:
+"@3652":
 	.incbin "baserom.dol", 0x3EB97C, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22896:
+"@2896":
 	.skip 0xC
-$$22910:
+"@2910":
 	.skip 0xC
-$$22932:
+"@2932":
 	.skip 0xC
-$$23752:
+"@3752":
 	.skip 0xC
-$$23753:
+"@3753":
 	.skip 0xC
-$$23754:
+"@3754":
 	.skip 0xC
-$$23755:
+"@3755":
 	.skip 0xC
-$$23756:
+"@3756":
 	.skip 0xC
-$$23757:
+"@3757":
 	.skip 0xC
-$$23758:
+"@3758":
 	.skip 0xC
-$$23759:
+"@3759":
 	.skip 0xC
-$$23760:
+"@3760":
 	.skip 0xC
-$$23761:
+"@3761":
 	.skip 0xC
-$$23762:
+"@3762":
 	.skip 0xC
-$$23763:
+"@3763":
 	.skip 0xC
-$$23764:
+"@3764":
 	.skip 0xC
-$$23765:
+"@3765":
 	.skip 0xC
-$$23766:
+"@3766":
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

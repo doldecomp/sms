@@ -219,13 +219,13 @@ lbl_800F8764:
 /* 800F8778 000F56B8  38 9F 00 00 */	addi r4, r31, 0
 /* 800F877C 000F56BC  38 61 00 4C */	addi r3, r1, 0x4c
 /* 800F8780 000F56C0  90 01 00 30 */	stw r0, 0x30(r1)
-/* 800F8784 000F56C4  48 00 00 91 */	bl __ct__Q37JGadget33TSingleLinkList$$012TPerformLink$$40$$18iteratorFQ37JGadget19TSingleNodeLinkList8iterator
+/* 800F8784 000F56C4  48 00 00 91 */	bl "__ct__Q37JGadget33TSingleLinkList<12TPerformLink,0>8iteratorFQ37JGadget19TSingleNodeLinkList8iterator"
 /* 800F8788 000F56C8  80 01 00 4C */	lwz r0, 0x4c(r1)
 /* 800F878C 000F56CC  7F 63 DB 78 */	mr r3, r27
 /* 800F8790 000F56D0  90 01 00 48 */	stw r0, 0x48(r1)
 /* 800F8794 000F56D4  80 01 00 48 */	lwz r0, 0x48(r1)
 /* 800F8798 000F56D8  90 01 00 40 */	stw r0, 0x40(r1)
-/* 800F879C 000F56DC  48 00 00 75 */	bl Element_getNode__Q27JGadget33TSingleLinkList$$012TPerformLink$$40$$1FP12TPerformLink
+/* 800F879C 000F56DC  48 00 00 75 */	bl "Element_getNode__Q27JGadget33TSingleLinkList<12TPerformLink,0>FP12TPerformLink"
 /* 800F87A0 000F56E0  38 C3 00 00 */	addi r6, r3, 0
 /* 800F87A4 000F56E4  38 BE 00 00 */	addi r5, r30, 0
 /* 800F87A8 000F56E8  38 61 00 3C */	addi r3, r1, 0x3c
@@ -256,12 +256,12 @@ lbl_800F87C8:
 /* 800F8808 000F5748  7C 08 03 A6 */	mtlr r0
 /* 800F880C 000F574C  4E 80 00 20 */	blr 
 
-.global Element_getNode__Q27JGadget33TSingleLinkList$$012TPerformLink$$40$$1FP12TPerformLink
-Element_getNode__Q27JGadget33TSingleLinkList$$012TPerformLink$$40$$1FP12TPerformLink:
+.global "Element_getNode__Q27JGadget33TSingleLinkList<12TPerformLink,0>FP12TPerformLink"
+"Element_getNode__Q27JGadget33TSingleLinkList<12TPerformLink,0>FP12TPerformLink":
 /* 800F8810 000F5750  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget33TSingleLinkList$$012TPerformLink$$40$$18iteratorFQ37JGadget19TSingleNodeLinkList8iterator
-__ct__Q37JGadget33TSingleLinkList$$012TPerformLink$$40$$18iteratorFQ37JGadget19TSingleNodeLinkList8iterator:
+.global "__ct__Q37JGadget33TSingleLinkList<12TPerformLink,0>8iteratorFQ37JGadget19TSingleNodeLinkList8iterator"
+"__ct__Q37JGadget33TSingleLinkList<12TPerformLink,0>8iteratorFQ37JGadget19TSingleNodeLinkList8iterator":
 /* 800F8814 000F5754  80 04 00 00 */	lwz r0, 0(r4)
 /* 800F8818 000F5758  90 03 00 00 */	stw r0, 0(r3)
 /* 800F881C 000F575C  4E 80 00 20 */	blr 

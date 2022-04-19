@@ -63,10 +63,10 @@ lbl_8017BC04:
 /* 8017BC20 00178B60  48 05 FB E1 */	bl checkGroundIgnoreWaterSurface__4TMapCFfffPPC12TBGCheckData
 /* 8017BC24 00178B64  D0 3F 00 C8 */	stfs f1, 0xc8(r31)
 /* 8017BC28 00178B68  C0 3F 00 C8 */	lfs f1, 0xc8(r31)
-/* 8017BC2C 00178B6C  C0 02 A9 D8 */	lfs f0, $$22319@sda21(r2)
+/* 8017BC2C 00178B6C  C0 02 A9 D8 */	lfs f0, "@2319"@sda21(r2)
 /* 8017BC30 00178B70  EC 01 00 2A */	fadds f0, f1, f0
 /* 8017BC34 00178B74  D0 1F 00 C8 */	stfs f0, 0xc8(r31)
-/* 8017BC38 00178B78  C0 22 A9 DC */	lfs f1, $$22320@sda21(r2)
+/* 8017BC38 00178B78  C0 22 A9 DC */	lfs f1, "@2320"@sda21(r2)
 /* 8017BC3C 00178B7C  C0 1F 00 C8 */	lfs f0, 0xc8(r31)
 /* 8017BC40 00178B80  C0 41 00 38 */	lfs f2, 0x38(r1)
 /* 8017BC44 00178B84  EC 01 00 2A */	fadds f0, f1, f0
@@ -97,7 +97,7 @@ lbl_8017BC90:
 /* 8017BC98 00178BD8  80 1F 00 F0 */	lwz r0, 0xf0(r31)
 /* 8017BC9C 00178BDC  54 00 06 6E */	rlwinm r0, r0, 0, 0x19, 0x17
 /* 8017BCA0 00178BE0  90 1F 00 F0 */	stw r0, 0xf0(r31)
-/* 8017BCA4 00178BE4  C0 02 A9 E0 */	lfs f0, $$22321@sda21(r2)
+/* 8017BCA4 00178BE4  C0 02 A9 E0 */	lfs f0, "@2321"@sda21(r2)
 /* 8017BCA8 00178BE8  D0 1F 00 AC */	stfs f0, 0xac(r31)
 /* 8017BCAC 00178BEC  D0 1F 00 B0 */	stfs f0, 0xb0(r31)
 /* 8017BCB0 00178BF0  D0 1F 00 B4 */	stfs f0, 0xb4(r31)
@@ -122,7 +122,7 @@ lbl_8017BCD8:
 /* 8017BCF0 00178C30  38 81 00 34 */	addi r4, r1, 0x34
 /* 8017BCF4 00178C34  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 8017BCF8 00178C38  EC 21 00 2A */	fadds f1, f1, f0
-/* 8017BCFC 00178C3C  C0 42 A9 E4 */	lfs f2, $$22322@sda21(r2)
+/* 8017BCFC 00178C3C  C0 42 A9 E4 */	lfs f2, "@2322"@sda21(r2)
 /* 8017BD00 00178C40  48 05 FC 1D */	bl isTouchedOneWallAndMoveXZ__4TMapCFPffPff
 lbl_8017BD04:
 /* 8017BD04 00178C44  80 01 00 34 */	lwz r0, 0x34(r1)
@@ -133,7 +133,7 @@ lbl_8017BD04:
 /* 8017BD18 00178C58  80 01 00 3C */	lwz r0, 0x3c(r1)
 /* 8017BD1C 00178C5C  90 A1 00 14 */	stw r5, 0x14(r1)
 /* 8017BD20 00178C60  90 01 00 18 */	stw r0, 0x18(r1)
-/* 8017BD24 00178C64  4B F4 63 65 */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 8017BD24 00178C64  4B F4 63 65 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 8017BD28 00178C68  80 61 00 10 */	lwz r3, 0x10(r1)
 /* 8017BD2C 00178C6C  80 01 00 14 */	lwz r0, 0x14(r1)
 /* 8017BD30 00178C70  90 7F 00 94 */	stw r3, 0x94(r31)
@@ -177,7 +177,7 @@ setVariableDamageRadius___8TBaseNPCFv:
 /* 8017BDBC 00178CFC  C0 23 00 04 */	lfs f1, 4(r3)
 /* 8017BDC0 00178D00  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8017BDC4 00178D04  40 81 00 44 */	ble lbl_8017BE08
-/* 8017BDC8 00178D08  C0 02 A9 E8 */	lfs f0, $$22347@sda21(r2)
+/* 8017BDC8 00178D08  C0 02 A9 E8 */	lfs f0, "@2347"@sda21(r2)
 /* 8017BDCC 00178D0C  C0 83 00 00 */	lfs f4, 0(r3)
 /* 8017BDD0 00178D10  C0 7F 00 10 */	lfs f3, 0x10(r31)
 /* 8017BDD4 00178D14  EC 20 07 B2 */	fmuls f1, f0, f30
@@ -185,8 +185,8 @@ setVariableDamageRadius___8TBaseNPCFv:
 /* 8017BDDC 00178D1C  C0 1F 00 18 */	lfs f0, 0x18(r31)
 /* 8017BDE0 00178D20  EF E4 18 28 */	fsubs f31, f4, f3
 /* 8017BDE4 00178D24  EF C2 00 28 */	fsubs f30, f2, f0
-/* 8017BDE8 00178D28  4B FF 0E 5D */	bl CLBSquared$$0f$$1__Ff
-/* 8017BDEC 00178D2C  C0 02 A9 E0 */	lfs f0, $$22321@sda21(r2)
+/* 8017BDE8 00178D28  4B FF 0E 5D */	bl "CLBSquared<f>__Ff"
+/* 8017BDEC 00178D2C  C0 02 A9 E0 */	lfs f0, "@2321"@sda21(r2)
 /* 8017BDF0 00178D30  EC 1F 07 FA */	fmadds f0, f31, f31, f0
 /* 8017BDF4 00178D34  EC 1E 07 BA */	fmadds f0, f30, f30, f0
 /* 8017BDF8 00178D38  FC 00 08 40 */	fcmpo cr0, f0, f1
@@ -224,11 +224,11 @@ execNpcObjCollision___8TBaseNPCFv:
 /* 8017BE68 00178DA8  93 A1 00 5C */	stw r29, 0x5c(r1)
 /* 8017BE6C 00178DAC  3B A0 00 00 */	li r29, 0
 /* 8017BE70 00178DB0  93 81 00 58 */	stw r28, 0x58(r1)
-/* 8017BE74 00178DB4  C3 A2 A9 E0 */	lfs f29, $$22321@sda21(r2)
-/* 8017BE78 00178DB8  C3 C2 A9 F0 */	lfs f30, $$22429@sda21(r2)
-/* 8017BE7C 00178DBC  C3 E2 A9 EC */	lfs f31, $$22428@sda21(r2)
-/* 8017BE80 00178DC0  C3 62 A9 D8 */	lfs f27, $$22319@sda21(r2)
-/* 8017BE84 00178DC4  C3 82 A9 F4 */	lfs f28, $$22430@sda21(r2)
+/* 8017BE74 00178DB4  C3 A2 A9 E0 */	lfs f29, "@2321"@sda21(r2)
+/* 8017BE78 00178DB8  C3 C2 A9 F0 */	lfs f30, "@2429"@sda21(r2)
+/* 8017BE7C 00178DBC  C3 E2 A9 EC */	lfs f31, "@2428"@sda21(r2)
+/* 8017BE80 00178DC0  C3 62 A9 D8 */	lfs f27, "@2319"@sda21(r2)
+/* 8017BE84 00178DC4  C3 82 A9 F4 */	lfs f28, "@2430"@sda21(r2)
 /* 8017BE88 00178DC8  48 00 02 94 */	b lbl_8017C11C
 lbl_8017BE8C:
 /* 8017BE8C 00178DCC  7F C3 F3 78 */	mr r3, r30
@@ -366,7 +366,7 @@ lbl_8017C038:
 /* 8017C06C 00178FAC  D3 A1 00 4C */	stfs f29, 0x4c(r1)
 /* 8017C070 00178FB0  48 00 00 30 */	b lbl_8017C0A0
 lbl_8017C074:
-/* 8017C074 00178FB4  4B EF 0C FD */	bl inv_sqrt__Q29JGeometry8TUtil$$0f$$1Ff
+/* 8017C074 00178FB4  4B EF 0C FD */	bl "inv_sqrt__Q29JGeometry8TUtil<f>Ff"
 /* 8017C078 00178FB8  EC 3A 00 72 */	fmuls f1, f26, f1
 /* 8017C07C 00178FBC  C0 01 00 4C */	lfs f0, 0x4c(r1)
 /* 8017C080 00178FC0  EC 00 00 72 */	fmuls f0, f0, f1
@@ -494,19 +494,19 @@ lbl_8017C224:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22319:
+"@2319":
 	.incbin "baserom.dol", 0x3E66D8, 0x4
-$$22320:
+"@2320":
 	.incbin "baserom.dol", 0x3E66DC, 0x4
-$$22321:
+"@2321":
   .4byte 0
-$$22322:
+"@2322":
 	.incbin "baserom.dol", 0x3E66E4, 0x4
-$$22347:
+"@2347":
 	.incbin "baserom.dol", 0x3E66E8, 0x4
-$$22428:
+"@2428":
 	.incbin "baserom.dol", 0x3E66EC, 0x4
-$$22429:
+"@2429":
 	.incbin "baserom.dol", 0x3E66F0, 0x4
-$$22430:
+"@2430":
 	.incbin "baserom.dol", 0x3E66F4, 0x4

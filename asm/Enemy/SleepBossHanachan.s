@@ -13,8 +13,8 @@ __dt__14TNerveSBH_FallFv:
 /* 802FC2D4 002F9214  38 03 EE E8 */	addi r0, r3, __vt__14TNerveSBH_Fall@l
 /* 802FC2D8 002F9218  90 1F 00 00 */	stw r0, 0(r31)
 /* 802FC2DC 002F921C  41 82 00 10 */	beq lbl_802FC2EC
-/* 802FC2E0 002F9220  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC2E4 002F9224  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC2E0 002F9220  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC2E4 002F9224  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC2E8 002F9228  90 1F 00 00 */	stw r0, 0(r31)
 lbl_802FC2EC:
 /* 802FC2EC 002F922C  7C 80 07 35 */	extsh. r0, r4
@@ -29,8 +29,8 @@ lbl_802FC2FC:
 /* 802FC30C 002F924C  7C 08 03 A6 */	mtlr r0
 /* 802FC310 002F9250  4E 80 00 20 */	blr 
 
-.global execute__14TNerveSBH_FallCFP24TSpineBase$$010TLiveActor$$1
-execute__14TNerveSBH_FallCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__14TNerveSBH_FallCFP24TSpineBase<10TLiveActor>"
+"execute__14TNerveSBH_FallCFP24TSpineBase<10TLiveActor>":
 /* 802FC314 002F9254  7C 08 02 A6 */	mflr r0
 /* 802FC318 002F9258  38 A0 00 00 */	li r5, 0
 /* 802FC31C 002F925C  90 01 00 04 */	stw r0, 4(r1)
@@ -45,12 +45,12 @@ execute__14TNerveSBH_FallCFP24TSpineBase$$010TLiveActor$$1:
 /* 802FC340 002F9280  2C 03 00 00 */	cmpwi r3, 0
 /* 802FC344 002F9284  41 82 00 F0 */	beq lbl_802FC434
 /* 802FC348 002F9288  80 BE 01 50 */	lwz r5, 0x150(r30)
-/* 802FC34C 002F928C  3C 80 80 3A */	lis r4, $$22311@ha
+/* 802FC34C 002F928C  3C 80 80 3A */	lis r4, "@2311"@ha
 /* 802FC350 002F9290  80 1E 01 54 */	lwz r0, 0x154(r30)
-/* 802FC354 002F9294  3C 60 80 3A */	lis r3, $$22312@ha
-/* 802FC358 002F9298  38 84 F8 D4 */	addi r4, r4, $$22311@l
+/* 802FC354 002F9294  3C 60 80 3A */	lis r3, "@2312"@ha
+/* 802FC358 002F9298  38 84 F8 D4 */	addi r4, r4, "@2311"@l
 /* 802FC35C 002F929C  90 A1 00 28 */	stw r5, 0x28(r1)
-/* 802FC360 002F92A0  38 A3 F8 E8 */	addi r5, r3, $$22312@l
+/* 802FC360 002F92A0  38 A3 F8 E8 */	addi r5, r3, "@2312"@l
 /* 802FC364 002F92A4  80 6D 9A 18 */	lwz r3, gpItemManager@sda21(r13)
 /* 802FC368 002F92A8  90 01 00 2C */	stw r0, 0x2c(r1)
 /* 802FC36C 002F92AC  80 1E 01 58 */	lwz r0, 0x158(r30)
@@ -74,15 +74,15 @@ execute__14TNerveSBH_FallCFP24TSpineBase$$010TLiveActor$$1:
 /* 802FC3B4 002F92F4  88 0D A4 98 */	lbz r0, init$2266@sda21(r13)
 /* 802FC3B8 002F92F8  7C 00 07 75 */	extsb. r0, r0
 /* 802FC3BC 002F92FC  40 82 00 3C */	bne lbl_802FC3F8
-/* 802FC3C0 002F9300  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC3C4 002F9304  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC3C0 002F9300  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC3C4 002F9304  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC3C8 002F9308  3C 60 80 3E */	lis r3, __vt__23TNerveSBH_SleepContinue@ha
 /* 802FC3CC 002F930C  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
 /* 802FC3D0 002F9310  38 03 EE F8 */	addi r0, r3, __vt__23TNerveSBH_SleepContinue@l
 /* 802FC3D4 002F9314  3C 80 80 30 */	lis r4, __dt__23TNerveSBH_SleepContinueFv@ha
 /* 802FC3D8 002F9318  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
-/* 802FC3DC 002F931C  3C 60 80 40 */	lis r3, $$22265@ha
-/* 802FC3E0 002F9320  38 A3 EC 20 */	addi r5, r3, $$22265@l
+/* 802FC3DC 002F931C  3C 60 80 40 */	lis r3, "@2265"@ha
+/* 802FC3E0 002F9320  38 A3 EC 20 */	addi r5, r3, "@2265"@l
 /* 802FC3E4 002F9324  38 84 C4 50 */	addi r4, r4, __dt__23TNerveSBH_SleepContinueFv@l
 /* 802FC3E8 002F9328  38 6D A4 9C */	addi r3, r13, instance$2264@sda21
 /* 802FC3EC 002F932C  4B D8 63 3D */	bl __register_global_object
@@ -127,8 +127,8 @@ __dt__23TNerveSBH_SleepContinueFv:
 /* 802FC46C 002F93AC  38 03 EE F8 */	addi r0, r3, __vt__23TNerveSBH_SleepContinue@l
 /* 802FC470 002F93B0  90 1F 00 00 */	stw r0, 0(r31)
 /* 802FC474 002F93B4  41 82 00 10 */	beq lbl_802FC484
-/* 802FC478 002F93B8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC47C 002F93BC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC478 002F93B8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC47C 002F93BC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC480 002F93C0  90 1F 00 00 */	stw r0, 0(r31)
 lbl_802FC484:
 /* 802FC484 002F93C4  7C 80 07 35 */	extsh. r0, r4
@@ -151,15 +151,15 @@ theNerve__14TNerveSBH_FallFv:
 /* 802FC4B8 002F93F8  88 0D A4 A0 */	lbz r0, init$2272@sda21(r13)
 /* 802FC4BC 002F93FC  7C 00 07 75 */	extsb. r0, r0
 /* 802FC4C0 002F9400  40 82 00 3C */	bne lbl_802FC4FC
-/* 802FC4C4 002F9404  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC4C8 002F9408  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC4C4 002F9404  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC4C8 002F9408  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC4CC 002F940C  3C 60 80 3E */	lis r3, __vt__14TNerveSBH_Fall@ha
 /* 802FC4D0 002F9410  90 0D A4 A4 */	stw r0, instance$2270@sda21(r13)
 /* 802FC4D4 002F9414  38 03 EE E8 */	addi r0, r3, __vt__14TNerveSBH_Fall@l
 /* 802FC4D8 002F9418  3C 80 80 30 */	lis r4, __dt__14TNerveSBH_FallFv@ha
 /* 802FC4DC 002F941C  90 0D A4 A4 */	stw r0, instance$2270@sda21(r13)
-/* 802FC4E0 002F9420  3C 60 80 40 */	lis r3, $$22271@ha
-/* 802FC4E4 002F9424  38 A3 EC 2C */	addi r5, r3, $$22271@l
+/* 802FC4E0 002F9420  3C 60 80 40 */	lis r3, "@2271"@ha
+/* 802FC4E4 002F9424  38 A3 EC 2C */	addi r5, r3, "@2271"@l
 /* 802FC4E8 002F9428  38 84 C2 B8 */	addi r4, r4, __dt__14TNerveSBH_FallFv@l
 /* 802FC4EC 002F942C  38 6D A4 A4 */	addi r3, r13, instance$2270@sda21
 /* 802FC4F0 002F9430  4B D8 62 39 */	bl __register_global_object
@@ -172,8 +172,8 @@ lbl_802FC4FC:
 /* 802FC508 002F9448  7C 08 03 A6 */	mtlr r0
 /* 802FC50C 002F944C  4E 80 00 20 */	blr 
 
-.global execute__23TNerveSBH_SleepContinueCFP24TSpineBase$$010TLiveActor$$1
-execute__23TNerveSBH_SleepContinueCFP24TSpineBase$$010TLiveActor$$1:
+.global "execute__23TNerveSBH_SleepContinueCFP24TSpineBase<10TLiveActor>"
+"execute__23TNerveSBH_SleepContinueCFP24TSpineBase<10TLiveActor>":
 /* 802FC510 002F9450  38 60 00 00 */	li r3, 0
 /* 802FC514 002F9454  4E 80 00 20 */	blr 
 
@@ -185,15 +185,15 @@ theNerve__23TNerveSBH_SleepContinueFv:
 /* 802FC524 002F9464  88 0D A4 98 */	lbz r0, init$2266@sda21(r13)
 /* 802FC528 002F9468  7C 00 07 75 */	extsb. r0, r0
 /* 802FC52C 002F946C  40 82 00 3C */	bne lbl_802FC568
-/* 802FC530 002F9470  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC534 002F9474  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC530 002F9470  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC534 002F9474  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC538 002F9478  3C 60 80 3E */	lis r3, __vt__23TNerveSBH_SleepContinue@ha
 /* 802FC53C 002F947C  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
 /* 802FC540 002F9480  38 03 EE F8 */	addi r0, r3, __vt__23TNerveSBH_SleepContinue@l
 /* 802FC544 002F9484  3C 80 80 30 */	lis r4, __dt__23TNerveSBH_SleepContinueFv@ha
 /* 802FC548 002F9488  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
-/* 802FC54C 002F948C  3C 60 80 40 */	lis r3, $$22265@ha
-/* 802FC550 002F9490  38 A3 EC 20 */	addi r5, r3, $$22265@l
+/* 802FC54C 002F948C  3C 60 80 40 */	lis r3, "@2265"@ha
+/* 802FC550 002F9490  38 A3 EC 20 */	addi r5, r3, "@2265"@l
 /* 802FC554 002F9494  38 84 C4 50 */	addi r4, r4, __dt__23TNerveSBH_SleepContinueFv@l
 /* 802FC558 002F9498  38 6D A4 9C */	addi r3, r13, instance$2264@sda21
 /* 802FC55C 002F949C  4B D8 61 CD */	bl __register_global_object
@@ -236,15 +236,15 @@ startFall__18TSleepBossHanachanFfff:
 /* 802FC5E0 002F9520  88 0D A4 A0 */	lbz r0, init$2272@sda21(r13)
 /* 802FC5E4 002F9524  7C 00 07 75 */	extsb. r0, r0
 /* 802FC5E8 002F9528  40 82 00 3C */	bne lbl_802FC624
-/* 802FC5EC 002F952C  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC5F0 002F9530  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC5EC 002F952C  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC5F0 002F9530  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC5F4 002F9534  3C 60 80 3E */	lis r3, __vt__14TNerveSBH_Fall@ha
 /* 802FC5F8 002F9538  90 0D A4 A4 */	stw r0, instance$2270@sda21(r13)
 /* 802FC5FC 002F953C  38 03 EE E8 */	addi r0, r3, __vt__14TNerveSBH_Fall@l
 /* 802FC600 002F9540  3C 80 80 30 */	lis r4, __dt__14TNerveSBH_FallFv@ha
 /* 802FC604 002F9544  90 0D A4 A4 */	stw r0, instance$2270@sda21(r13)
-/* 802FC608 002F9548  3C 60 80 40 */	lis r3, $$22271@ha
-/* 802FC60C 002F954C  38 A3 EC 2C */	addi r5, r3, $$22271@l
+/* 802FC608 002F9548  3C 60 80 40 */	lis r3, "@2271"@ha
+/* 802FC60C 002F954C  38 A3 EC 2C */	addi r5, r3, "@2271"@l
 /* 802FC610 002F9550  38 84 C2 B8 */	addi r4, r4, __dt__14TNerveSBH_FallFv@l
 /* 802FC614 002F9554  38 6D A4 A4 */	addi r3, r13, instance$2270@sda21
 /* 802FC618 002F9558  4B D8 61 11 */	bl __register_global_object
@@ -298,15 +298,15 @@ init__18TSleepBossHanachanFP12TLiveManager:
 /* 802FC6AC 002F95EC  88 0D A4 98 */	lbz r0, init$2266@sda21(r13)
 /* 802FC6B0 002F95F0  7C 00 07 75 */	extsb. r0, r0
 /* 802FC6B4 002F95F4  40 82 00 3C */	bne lbl_802FC6F0
-/* 802FC6B8 002F95F8  3C 60 80 3C */	lis r3, __vt__24TNerveBase$$010TLiveActor$$1@ha
-/* 802FC6BC 002F95FC  38 03 92 60 */	addi r0, r3, __vt__24TNerveBase$$010TLiveActor$$1@l
+/* 802FC6B8 002F95F8  3C 60 80 3C */	lis r3, "__vt__24TNerveBase<10TLiveActor>"@ha
+/* 802FC6BC 002F95FC  38 03 92 60 */	addi r0, r3, "__vt__24TNerveBase<10TLiveActor>"@l
 /* 802FC6C0 002F9600  3C 60 80 3E */	lis r3, __vt__23TNerveSBH_SleepContinue@ha
 /* 802FC6C4 002F9604  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
 /* 802FC6C8 002F9608  38 03 EE F8 */	addi r0, r3, __vt__23TNerveSBH_SleepContinue@l
 /* 802FC6CC 002F960C  3C 80 80 30 */	lis r4, __dt__23TNerveSBH_SleepContinueFv@ha
 /* 802FC6D0 002F9610  90 0D A4 9C */	stw r0, instance$2264@sda21(r13)
-/* 802FC6D4 002F9614  3C 60 80 40 */	lis r3, $$22265@ha
-/* 802FC6D8 002F9618  38 A3 EC 20 */	addi r5, r3, $$22265@l
+/* 802FC6D4 002F9614  3C 60 80 40 */	lis r3, "@2265"@ha
+/* 802FC6D8 002F9618  38 A3 EC 20 */	addi r5, r3, "@2265"@l
 /* 802FC6DC 002F961C  38 84 C4 50 */	addi r4, r4, __dt__23TNerveSBH_SleepContinueFv@l
 /* 802FC6E0 002F9620  38 6D A4 9C */	addi r3, r13, instance$2264@sda21
 /* 802FC6E4 002F9624  4B D8 60 45 */	bl __register_global_object
@@ -326,7 +326,7 @@ lbl_802FC6F0:
 /* 802FC718 002F9658  38 C0 00 00 */	li r6, 0
 /* 802FC71C 002F965C  90 08 00 18 */	stw r0, 0x18(r8)
 /* 802FC720 002F9660  90 E8 00 1C */	stw r7, 0x1c(r8)
-/* 802FC724 002F9664  C0 22 F6 30 */	lfs f1, $$22378@sda21(r2)
+/* 802FC724 002F9664  C0 22 F6 30 */	lfs f1, "@2378"@sda21(r2)
 /* 802FC728 002F9668  FC 40 08 90 */	fmr f2, f1
 /* 802FC72C 002F966C  FC 60 08 90 */	fmr f3, f1
 /* 802FC730 002F9670  FC 80 08 90 */	fmr f4, f1
@@ -349,7 +349,7 @@ lbl_802FC6F0:
 /* 802FC774 002F96B4  C3 DF 00 14 */	lfs f30, 0x14(r31)
 /* 802FC778 002F96B8  C3 FF 00 10 */	lfs f31, 0x10(r31)
 /* 802FC77C 002F96BC  4B E1 5A F5 */	bl getModel__10TLiveActorCFv
-/* 802FC780 002F96C0  C0 02 F6 34 */	lfs f0, $$22379@sda21(r2)
+/* 802FC780 002F96C0  C0 02 F6 34 */	lfs f0, "@2379"@sda21(r2)
 /* 802FC784 002F96C4  FC 20 F8 90 */	fmr f1, f31
 /* 802FC788 002F96C8  38 63 00 20 */	addi r3, r3, 0x20
 /* 802FC78C 002F96CC  EC 60 07 32 */	fmuls f3, f0, f28
@@ -371,8 +371,8 @@ lbl_802FC6F0:
 /* 802FC7CC 002F970C  4B D1 00 E5 */	bl __nw__FUl
 /* 802FC7D0 002F9710  7C 7E 1B 79 */	or. r30, r3, r3
 /* 802FC7D4 002F9714  41 82 00 14 */	beq lbl_802FC7E8
-/* 802FC7D8 002F9718  3C 60 80 3A */	lis r3, $$22380@ha
-/* 802FC7DC 002F971C  38 83 F8 FC */	addi r4, r3, $$22380@l
+/* 802FC7D8 002F9718  3C 60 80 3A */	lis r3, "@2380"@ha
+/* 802FC7DC 002F971C  38 83 F8 FC */	addi r4, r3, "@2380"@l
 /* 802FC7E0 002F9720  38 7E 00 00 */	addi r3, r30, 0
 /* 802FC7E4 002F9724  4B E2 16 91 */	bl __ct__12TMirrorActorFPCc
 lbl_802FC7E8:
@@ -484,43 +484,43 @@ lbl_802FC944:
 /* 802FC958 002F9898  38 21 00 18 */	addi r1, r1, 0x18
 /* 802FC95C 002F989C  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__18TSleepBossHanachanFv
-$$232$$2__dt__18TSleepBossHanachanFv:
+.global "@32@__dt__18TSleepBossHanachanFv"
+"@32@__dt__18TSleepBossHanachanFv":
 /* 802FC960 002F98A0  38 63 FF E0 */	addi r3, r3, -32
 /* 802FC964 002F98A4  4B FF FF 04 */	b __dt__18TSleepBossHanachanFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21700:
+"@1700":
 	.incbin "baserom.dol", 0x39C79C, 0x14
-$$21797:
+"@1797":
 	.incbin "baserom.dol", 0x39C7B0, 0x30
-$$21798:
+"@1798":
 	.incbin "baserom.dol", 0x39C7E0, 0x38
-$$21799:
+"@1799":
 	.incbin "baserom.dol", 0x39C818, 0x34
-$$21800:
+"@1800":
 	.incbin "baserom.dol", 0x39C84C, 0x24
-$$22258:
+"@2258":
 	.incbin "baserom.dol", 0x39C870, 0x34
-$$22261:
+"@2261":
 	.incbin "baserom.dol", 0x39C8A4, 0x18
 entry$2260:
-  .4byte $$22261
+  .4byte "@2261"
   .4byte 0x10010000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22311:
+"@2311":
 	.incbin "baserom.dol", 0x39C8D4, 0x14
-$$22312:
+"@2312":
 	.incbin "baserom.dol", 0x39C8E8, 0x14
-$$22380:
+"@2380":
 	.incbin "baserom.dol", 0x39C8FC, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -529,13 +529,13 @@ __vt__14TNerveSBH_Fall:
   .4byte 0
   .4byte 0
   .4byte __dt__14TNerveSBH_FallFv
-  .4byte execute__14TNerveSBH_FallCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__14TNerveSBH_FallCFP24TSpineBase<10TLiveActor>"
 .global __vt__23TNerveSBH_SleepContinue
 __vt__23TNerveSBH_SleepContinue:
   .4byte 0
   .4byte 0
   .4byte __dt__23TNerveSBH_SleepContinueFv
-  .4byte execute__23TNerveSBH_SleepContinueCFP24TSpineBase$$010TLiveActor$$1
+  .4byte "execute__23TNerveSBH_SleepContinueCFP24TSpineBase<10TLiveActor>"
 .global __vt__18TSleepBossHanachan
 __vt__18TSleepBossHanachan:
   .4byte 0
@@ -549,7 +549,7 @@ __vt__18TSleepBossHanachan:
   .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__18TSleepBossHanachanFv
+  .4byte "@32@__dt__18TSleepBossHanachanFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -559,12 +559,12 @@ __vt__18TSleepBossHanachan:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -581,7 +581,7 @@ __vt__18TSleepBossHanachan:
   .4byte receiveMessage__17TDemoBossHanachanFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -602,8 +602,8 @@ __vt__18TSleepBossHanachan:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__18TSleepBossHanachanCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -633,20 +633,20 @@ __vt__25TSleepBossHanachanManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 sleepBossHanachan_bastable:
-  .4byte $$22258
+  .4byte "@2258"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22378:
+"@2378":
   .4byte 0
-$$22379:
+"@2379":
 	.incbin "baserom.dol", 0x3EB334, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$22265:
+"@2265":
 	.skip 0xC
-$$22271:
+"@2271":
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

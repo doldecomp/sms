@@ -10,9 +10,9 @@ __ct__Q26JDrama11TDrawBufObjFv:
 /* 80042064 0003EFA4  94 21 FF E8 */	stwu r1, -0x18(r1)
 /* 80042068 0003EFA8  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 8004206C 0003EFAC  3B E3 00 00 */	addi r31, r3, 0
-/* 80042070 0003EFB0  3C 60 80 37 */	lis r3, $$2903@ha
+/* 80042070 0003EFB0  3C 60 80 37 */	lis r3, "@903"@ha
 /* 80042074 0003EFB4  90 1F 00 00 */	stw r0, 0(r31)
-/* 80042078 0003EFB8  38 63 0F 00 */	addi r3, r3, $$2903@l
+/* 80042078 0003EFB8  38 63 0F 00 */	addi r3, r3, "@903"@l
 /* 8004207C 0003EFBC  90 7F 00 04 */	stw r3, 4(r31)
 /* 80042080 0003EFC0  48 00 26 0D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 80042084 0003EFC4  B0 7F 00 08 */	sth r3, 8(r31)
@@ -200,7 +200,7 @@ lbl_800422F0:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2903:
+"@903":
 	.incbin "baserom.dol", 0x36DF00, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

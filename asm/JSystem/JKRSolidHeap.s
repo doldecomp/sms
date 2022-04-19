@@ -185,9 +185,9 @@ allocFromHead__12JKRSolidHeapFUli:
 /* 8000D64C 0000A58C  90 1E 00 68 */	stw r0, 0x68(r30)
 /* 8000D650 0000A590  48 00 00 40 */	b lbl_8000D690
 lbl_8000D654:
-/* 8000D654 0000A594  3C 60 80 37 */	lis r3, $$2288@ha
+/* 8000D654 0000A594  3C 60 80 37 */	lis r3, "@288"@ha
 /* 8000D658 0000A598  4C C6 31 82 */	crclr 6
-/* 8000D65C 0000A59C  38 63 05 50 */	addi r3, r3, $$2288@l
+/* 8000D65C 0000A59C  38 63 05 50 */	addi r3, r3, "@288"@l
 /* 8000D660 0000A5A0  48 03 2C 21 */	bl JUTWarningConsole_f
 /* 8000D664 0000A5A4  88 1E 00 64 */	lbz r0, 0x64(r30)
 /* 8000D668 0000A5A8  28 00 00 01 */	cmplwi r0, 1
@@ -243,9 +243,9 @@ allocFromTail__12JKRSolidHeapFUli:
 /* 8000D720 0000A660  90 1F 00 68 */	stw r0, 0x68(r31)
 /* 8000D724 0000A664  48 00 00 40 */	b lbl_8000D764
 lbl_8000D728:
-/* 8000D728 0000A668  3C 60 80 37 */	lis r3, $$2303@ha
+/* 8000D728 0000A668  3C 60 80 37 */	lis r3, "@303"@ha
 /* 8000D72C 0000A66C  4C C6 31 82 */	crclr 6
-/* 8000D730 0000A670  38 63 05 84 */	addi r3, r3, $$2303@l
+/* 8000D730 0000A670  38 63 05 84 */	addi r3, r3, "@303"@l
 /* 8000D734 0000A674  48 03 2B 4D */	bl JUTWarningConsole_f
 /* 8000D738 0000A678  88 1F 00 64 */	lbz r0, 0x64(r31)
 /* 8000D73C 0000A67C  28 00 00 01 */	cmplwi r0, 1
@@ -272,10 +272,10 @@ lbl_8000D764:
 .global free__12JKRSolidHeapFPv
 free__12JKRSolidHeapFPv:
 /* 8000D788 0000A6C8  7C 08 02 A6 */	mflr r0
-/* 8000D78C 0000A6CC  3C 60 80 37 */	lis r3, $$2305@ha
+/* 8000D78C 0000A6CC  3C 60 80 37 */	lis r3, "@305"@ha
 /* 8000D790 0000A6D0  90 01 00 04 */	stw r0, 4(r1)
 /* 8000D794 0000A6D4  4C C6 31 82 */	crclr 6
-/* 8000D798 0000A6D8  38 63 05 B8 */	addi r3, r3, $$2305@l
+/* 8000D798 0000A6D8  38 63 05 B8 */	addi r3, r3, "@305"@l
 /* 8000D79C 0000A6DC  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000D7A0 0000A6E0  48 03 2A E1 */	bl JUTWarningConsole_f
 /* 8000D7A4 0000A6E4  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -354,10 +354,10 @@ lbl_8000D87C:
 .global resize__12JKRSolidHeapFPvUl
 resize__12JKRSolidHeapFPvUl:
 /* 8000D8A0 0000A7E0  7C 08 02 A6 */	mflr r0
-/* 8000D8A4 0000A7E4  3C 60 80 37 */	lis r3, $$2322@ha
+/* 8000D8A4 0000A7E4  3C 60 80 37 */	lis r3, "@322"@ha
 /* 8000D8A8 0000A7E8  90 01 00 04 */	stw r0, 4(r1)
 /* 8000D8AC 0000A7EC  4C C6 31 82 */	crclr 6
-/* 8000D8B0 0000A7F0  38 63 05 E0 */	addi r3, r3, $$2322@l
+/* 8000D8B0 0000A7F0  38 63 05 E0 */	addi r3, r3, "@322"@l
 /* 8000D8B4 0000A7F4  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000D8B8 0000A7F8  48 03 29 C9 */	bl JUTWarningConsole_f
 /* 8000D8BC 0000A7FC  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -369,10 +369,10 @@ resize__12JKRSolidHeapFPvUl:
 .global getSize__12JKRSolidHeapFPv
 getSize__12JKRSolidHeapFPv:
 /* 8000D8D0 0000A810  7C 08 02 A6 */	mflr r0
-/* 8000D8D4 0000A814  3C 60 80 37 */	lis r3, $$2324@ha
+/* 8000D8D4 0000A814  3C 60 80 37 */	lis r3, "@324"@ha
 /* 8000D8D8 0000A818  90 01 00 04 */	stw r0, 4(r1)
 /* 8000D8DC 0000A81C  4C C6 31 82 */	crclr 6
-/* 8000D8E0 0000A820  38 63 06 10 */	addi r3, r3, $$2324@l
+/* 8000D8E0 0000A820  38 63 06 10 */	addi r3, r3, "@324"@l
 /* 8000D8E4 0000A824  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8000D8E8 0000A828  48 03 29 99 */	bl JUTWarningConsole_f
 /* 8000D8EC 0000A82C  80 01 00 0C */	lwz r0, 0xc(r1)
@@ -405,9 +405,9 @@ check__12JKRSolidHeapFv:
 /* 8000D94C 0000A88C  7C 00 20 40 */	cmplw r0, r4
 /* 8000D950 0000A890  7C 05 03 78 */	mr r5, r0
 /* 8000D954 0000A894  41 82 00 18 */	beq lbl_8000D96C
-/* 8000D958 0000A898  3C 60 80 37 */	lis r3, $$2357@ha
+/* 8000D958 0000A898  3C 60 80 37 */	lis r3, "@357"@ha
 /* 8000D95C 0000A89C  4C C6 31 82 */	crclr 6
-/* 8000D960 0000A8A0  38 63 06 40 */	addi r3, r3, $$2357@l
+/* 8000D960 0000A8A0  38 63 06 40 */	addi r3, r3, "@357"@l
 /* 8000D964 0000A8A4  3B E0 00 00 */	li r31, 0
 /* 8000D968 0000A8A8  48 03 29 19 */	bl JUTWarningConsole_f
 lbl_8000D96C:
@@ -424,13 +424,13 @@ lbl_8000D96C:
 .global dump__12JKRSolidHeapFv
 dump__12JKRSolidHeapFv:
 /* 8000D990 0000A8D0  7C 08 02 A6 */	mflr r0
-/* 8000D994 0000A8D4  3C 80 80 37 */	lis r4, $$2288@ha
+/* 8000D994 0000A8D4  3C 80 80 37 */	lis r4, "@288"@ha
 /* 8000D998 0000A8D8  90 01 00 04 */	stw r0, 4(r1)
 /* 8000D99C 0000A8DC  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8000D9A0 0000A8E0  93 E1 00 2C */	stw r31, 0x2c(r1)
 /* 8000D9A4 0000A8E4  3B E3 00 00 */	addi r31, r3, 0
 /* 8000D9A8 0000A8E8  93 C1 00 28 */	stw r30, 0x28(r1)
-/* 8000D9AC 0000A8EC  3B C4 05 50 */	addi r30, r4, $$2288@l
+/* 8000D9AC 0000A8EC  3B C4 05 50 */	addi r30, r4, "@288"@l
 /* 8000D9B0 0000A8F0  38 7E 01 24 */	addi r3, r30, 0x124
 /* 8000D9B4 0000A8F4  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 8000D9B8 0000A8F8  93 81 00 20 */	stw r28, 0x20(r1)
@@ -470,10 +470,10 @@ dump__12JKRSolidHeapFv:
 /* 8000DA40 0000A980  3C 00 43 30 */	lis r0, 0x4330
 /* 8000DA44 0000A984  93 81 00 1C */	stw r28, 0x1c(r1)
 /* 8000DA48 0000A988  7F 84 E3 78 */	mr r4, r28
-/* 8000DA4C 0000A98C  C8 42 80 48 */	lfd f2, $$2371@sda21(r2)
+/* 8000DA4C 0000A98C  C8 42 80 48 */	lfd f2, "@371"@sda21(r2)
 /* 8000DA50 0000A990  90 A1 00 14 */	stw r5, 0x14(r1)
 /* 8000DA54 0000A994  38 7E 01 78 */	addi r3, r30, 0x178
-/* 8000DA58 0000A998  C0 62 80 40 */	lfs f3, $$2369@sda21(r2)
+/* 8000DA58 0000A998  C0 62 80 40 */	lfs f3, "@369"@sda21(r2)
 /* 8000DA5C 0000A99C  4C C6 32 42 */	crset 6
 /* 8000DA60 0000A9A0  90 01 00 18 */	stw r0, 0x18(r1)
 /* 8000DA64 0000A9A4  90 01 00 10 */	stw r0, 0x10(r1)
@@ -568,27 +568,27 @@ getHeapType__12JKRSolidHeapFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2288:
+"@288":
 	.incbin "baserom.dol", 0x36D550, 0x34
-$$2303:
+"@303":
 	.incbin "baserom.dol", 0x36D584, 0x34
-$$2305:
+"@305":
 	.incbin "baserom.dol", 0x36D5B8, 0x28
-$$2322:
+"@322":
 	.incbin "baserom.dol", 0x36D5E0, 0x30
-$$2324:
+"@324":
 	.incbin "baserom.dol", 0x36D610, 0x30
-$$2357:
+"@357":
 	.incbin "baserom.dol", 0x36D640, 0x34
-$$2364:
+"@364":
 	.incbin "baserom.dol", 0x36D674, 0x14
-$$2365:
+"@365":
 	.incbin "baserom.dol", 0x36D688, 0x18
-$$2366:
+"@366":
 	.incbin "baserom.dol", 0x36D6A0, 0x14
-$$2367:
+"@367":
 	.incbin "baserom.dol", 0x36D6B4, 0x14
-$$2368:
+"@368":
 	.incbin "baserom.dol", 0x36D6C8, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -617,7 +617,7 @@ __vt__12JKRSolidHeap:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2369:
+"@369":
 	.incbin "baserom.dol", 0x3E3D40, 0x8
-$$2371:
+"@371":
 	.incbin "baserom.dol", 0x3E3D48, 0x8

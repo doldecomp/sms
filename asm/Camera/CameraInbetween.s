@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 80356428 00353368  7C 08 02 A6 */	mflr r0
 /* 8035642C 0035336C  90 01 00 04 */	stw r0, 4(r1)
 /* 80356430 00353370  94 21 FF B0 */	stwu r1, -0x50(r1)
@@ -31,13 +31,13 @@ execCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometr
 /* 8035648C 003533CC  2C 00 00 00 */	cmpwi r0, 0
 /* 80356490 003533D0  40 81 02 F4 */	ble lbl_80356784
 /* 80356494 003533D4  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 80356498 003533D8  C0 22 05 30 */	lfs f1, $$21663@sda21(r2)
+/* 80356498 003533D8  C0 22 05 30 */	lfs f1, "@1663"@sda21(r2)
 /* 8035649C 003533DC  90 01 00 34 */	stw r0, 0x34(r1)
 /* 803564A0 003533E0  3C 00 43 30 */	lis r0, 0x4330
 /* 803564A4 003533E4  C0 1C 00 44 */	lfs f0, 0x44(r28)
 /* 803564A8 003533E8  90 01 00 30 */	stw r0, 0x30(r1)
 /* 803564AC 003533EC  FC 01 00 00 */	fcmpu cr0, f1, f0
-/* 803564B0 003533F0  C8 22 05 28 */	lfd f1, $$21657@sda21(r2)
+/* 803564B0 003533F0  C8 22 05 28 */	lfd f1, "@1657"@sda21(r2)
 /* 803564B4 003533F4  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 803564B8 003533F8  EF E0 08 28 */	fsubs f31, f0, f1
 /* 803564BC 003533FC  41 82 00 0C */	beq lbl_803564C8
@@ -49,9 +49,9 @@ lbl_803564CC:
 /* 803564CC 0035340C  54 00 06 3F */	clrlwi. r0, r0, 0x18
 /* 803564D0 00353410  41 82 00 14 */	beq lbl_803564E4
 /* 803564D4 00353414  FC 40 F8 90 */	fmr f2, f31
-/* 803564D8 00353418  C0 22 05 30 */	lfs f1, $$21663@sda21(r2)
+/* 803564D8 00353418  C0 22 05 30 */	lfs f1, "@1663"@sda21(r2)
 /* 803564DC 0035341C  38 7C 00 44 */	addi r3, r28, 0x44
-/* 803564E0 00353420  4B E1 41 89 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
+/* 803564E0 00353420  4B E1 41 89 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
 lbl_803564E4:
 /* 803564E4 00353424  38 7F 00 00 */	addi r3, r31, 0
 /* 803564E8 00353428  38 9E 00 00 */	addi r4, r30, 0
@@ -62,19 +62,19 @@ lbl_803564E4:
 /* 803564FC 0035343C  FC 40 F8 90 */	fmr f2, f31
 /* 80356500 00353440  C0 21 00 28 */	lfs f1, 0x28(r1)
 /* 80356504 00353444  38 7C 00 10 */	addi r3, r28, 0x10
-/* 80356508 00353448  4B E1 41 61 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 8035650C 0035344C  C0 02 05 34 */	lfs f0, $$21708@sda21(r2)
+/* 80356508 00353448  4B E1 41 61 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 8035650C 0035344C  C0 02 05 34 */	lfs f0, "@1708"@sda21(r2)
 /* 80356510 00353450  A8 81 00 26 */	lha r4, 0x26(r1)
 /* 80356514 00353454  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356518 00353458  40 80 00 0C */	bge lbl_80356524
 /* 8035651C 0035345C  B0 9C 00 14 */	sth r4, 0x14(r28)
 /* 80356520 00353460  48 00 00 48 */	b lbl_80356568
 lbl_80356524:
-/* 80356524 00353464  C0 02 05 20 */	lfs f0, $$21655@sda21(r2)
+/* 80356524 00353464  C0 02 05 20 */	lfs f0, "@1655"@sda21(r2)
 /* 80356528 00353468  3C 00 43 30 */	lis r0, 0x4330
 /* 8035652C 0035346C  A8 7C 00 14 */	lha r3, 0x14(r28)
 /* 80356530 00353470  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356534 00353474  C8 22 05 28 */	lfd f1, $$21657@sda21(r2)
+/* 80356534 00353474  C8 22 05 28 */	lfd f1, "@1657"@sda21(r2)
 /* 80356538 00353478  7C 63 20 50 */	subf r3, r3, r4
 /* 8035653C 0035347C  7C 63 07 34 */	extsh r3, r3
 /* 80356540 00353480  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -83,23 +83,23 @@ lbl_80356524:
 /* 8035654C 0035348C  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 80356550 00353490  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356554 00353494  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356558 00353498  4B E1 66 F5 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356558 00353498  4B E1 66 F5 */	bl "CLBRoundf<s>__Ff"
 /* 8035655C 0035349C  A8 1C 00 14 */	lha r0, 0x14(r28)
 /* 80356560 003534A0  7C 00 1A 14 */	add r0, r0, r3
 /* 80356564 003534A4  B0 1C 00 14 */	sth r0, 0x14(r28)
 lbl_80356568:
-/* 80356568 003534A8  C0 02 05 34 */	lfs f0, $$21708@sda21(r2)
+/* 80356568 003534A8  C0 02 05 34 */	lfs f0, "@1708"@sda21(r2)
 /* 8035656C 003534AC  A8 81 00 24 */	lha r4, 0x24(r1)
 /* 80356570 003534B0  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356574 003534B4  40 80 00 0C */	bge lbl_80356580
 /* 80356578 003534B8  B0 9C 00 16 */	sth r4, 0x16(r28)
 /* 8035657C 003534BC  48 00 00 48 */	b lbl_803565C4
 lbl_80356580:
-/* 80356580 003534C0  C0 02 05 20 */	lfs f0, $$21655@sda21(r2)
+/* 80356580 003534C0  C0 02 05 20 */	lfs f0, "@1655"@sda21(r2)
 /* 80356584 003534C4  3C 00 43 30 */	lis r0, 0x4330
 /* 80356588 003534C8  A8 7C 00 16 */	lha r3, 0x16(r28)
 /* 8035658C 003534CC  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356590 003534D0  C8 22 05 28 */	lfd f1, $$21657@sda21(r2)
+/* 80356590 003534D0  C8 22 05 28 */	lfd f1, "@1657"@sda21(r2)
 /* 80356594 003534D4  7C 63 20 50 */	subf r3, r3, r4
 /* 80356598 003534D8  7C 63 07 34 */	extsh r3, r3
 /* 8035659C 003534DC  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -108,14 +108,14 @@ lbl_80356580:
 /* 803565A8 003534E8  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 803565AC 003534EC  EC 00 08 28 */	fsubs f0, f0, f1
 /* 803565B0 003534F0  EC 22 00 32 */	fmuls f1, f2, f0
-/* 803565B4 003534F4  4B E1 66 99 */	bl CLBRoundf$$0s$$1__Ff
+/* 803565B4 003534F4  4B E1 66 99 */	bl "CLBRoundf<s>__Ff"
 /* 803565B8 003534F8  A8 1C 00 16 */	lha r0, 0x16(r28)
 /* 803565BC 003534FC  7C 00 1A 14 */	add r0, r0, r3
 /* 803565C0 00353500  B0 1C 00 16 */	sth r0, 0x16(r28)
 lbl_803565C4:
 /* 803565C4 00353504  C0 5F 00 00 */	lfs f2, 0(r31)
 /* 803565C8 00353508  C0 3E 00 00 */	lfs f1, 0(r30)
-/* 803565CC 0035350C  C0 02 05 30 */	lfs f0, $$21663@sda21(r2)
+/* 803565CC 0035350C  C0 02 05 30 */	lfs f0, "@1663"@sda21(r2)
 /* 803565D0 00353510  EC 22 08 28 */	fsubs f1, f2, f1
 /* 803565D4 00353514  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 803565D8 00353518  4C 41 13 82 */	cror 2, 1, 2
@@ -124,12 +124,12 @@ lbl_803565C4:
 lbl_803565E4:
 /* 803565E4 00353524  FC 20 08 50 */	fneg f1, f1
 lbl_803565E8:
-/* 803565E8 00353528  C0 02 05 38 */	lfs f0, $$21709@sda21(r2)
+/* 803565E8 00353528  C0 02 05 38 */	lfs f0, "@1709"@sda21(r2)
 /* 803565EC 0035352C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 803565F0 00353530  41 81 00 34 */	bgt lbl_80356624
 /* 803565F4 00353534  C0 5F 00 08 */	lfs f2, 8(r31)
 /* 803565F8 00353538  C0 3E 00 08 */	lfs f1, 8(r30)
-/* 803565FC 0035353C  C0 02 05 30 */	lfs f0, $$21663@sda21(r2)
+/* 803565FC 0035353C  C0 02 05 30 */	lfs f0, "@1663"@sda21(r2)
 /* 80356600 00353540  EC 22 08 28 */	fsubs f1, f2, f1
 /* 80356604 00353544  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80356608 00353548  4C 41 13 82 */	cror 2, 1, 2
@@ -138,7 +138,7 @@ lbl_803565E8:
 lbl_80356614:
 /* 80356614 00353554  FC 20 08 50 */	fneg f1, f1
 lbl_80356618:
-/* 80356618 00353558  C0 02 05 38 */	lfs f0, $$21709@sda21(r2)
+/* 80356618 00353558  C0 02 05 38 */	lfs f0, "@1709"@sda21(r2)
 /* 8035661C 0035355C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80356620 00353560  40 81 00 2C */	ble lbl_8035664C
 lbl_80356624:
@@ -162,19 +162,19 @@ lbl_8035664C:
 /* 80356664 003535A4  FC 40 F8 90 */	fmr f2, f31
 /* 80356668 003535A8  C0 21 00 28 */	lfs f1, 0x28(r1)
 /* 8035666C 003535AC  38 7C 00 08 */	addi r3, r28, 8
-/* 80356670 003535B0  4B E1 3F F9 */	bl CLBChaseConstantSpecifyFrame$$0f$$1__FPfff
-/* 80356674 003535B4  C0 02 05 34 */	lfs f0, $$21708@sda21(r2)
+/* 80356670 003535B0  4B E1 3F F9 */	bl "CLBChaseConstantSpecifyFrame<f>__FPfff"
+/* 80356674 003535B4  C0 02 05 34 */	lfs f0, "@1708"@sda21(r2)
 /* 80356678 003535B8  A8 81 00 26 */	lha r4, 0x26(r1)
 /* 8035667C 003535BC  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 80356680 003535C0  40 80 00 0C */	bge lbl_8035668C
 /* 80356684 003535C4  B0 9C 00 0C */	sth r4, 0xc(r28)
 /* 80356688 003535C8  48 00 00 48 */	b lbl_803566D0
 lbl_8035668C:
-/* 8035668C 003535CC  C0 02 05 20 */	lfs f0, $$21655@sda21(r2)
+/* 8035668C 003535CC  C0 02 05 20 */	lfs f0, "@1655"@sda21(r2)
 /* 80356690 003535D0  3C 00 43 30 */	lis r0, 0x4330
 /* 80356694 003535D4  A8 7C 00 0C */	lha r3, 0xc(r28)
 /* 80356698 003535D8  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 8035669C 003535DC  C8 22 05 28 */	lfd f1, $$21657@sda21(r2)
+/* 8035669C 003535DC  C8 22 05 28 */	lfd f1, "@1657"@sda21(r2)
 /* 803566A0 003535E0  7C 63 20 50 */	subf r3, r3, r4
 /* 803566A4 003535E4  7C 63 07 34 */	extsh r3, r3
 /* 803566A8 003535E8  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -183,7 +183,7 @@ lbl_8035668C:
 /* 803566B4 003535F4  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 803566B8 003535F8  EC 00 08 28 */	fsubs f0, f0, f1
 /* 803566BC 003535FC  EC 22 00 32 */	fmuls f1, f2, f0
-/* 803566C0 00353600  4B E1 65 8D */	bl CLBRoundf$$0s$$1__Ff
+/* 803566C0 00353600  4B E1 65 8D */	bl "CLBRoundf<s>__Ff"
 /* 803566C4 00353604  A8 1C 00 0C */	lha r0, 0xc(r28)
 /* 803566C8 00353608  7C 00 1A 14 */	add r0, r0, r3
 /* 803566CC 0035360C  B0 1C 00 0C */	sth r0, 0xc(r28)
@@ -191,18 +191,18 @@ lbl_803566D0:
 /* 803566D0 00353610  80 1C 00 3C */	lwz r0, 0x3c(r28)
 /* 803566D4 00353614  2C 00 00 00 */	cmpwi r0, 0
 /* 803566D8 00353618  40 82 00 64 */	bne lbl_8035673C
-/* 803566DC 0035361C  C0 02 05 34 */	lfs f0, $$21708@sda21(r2)
+/* 803566DC 0035361C  C0 02 05 34 */	lfs f0, "@1708"@sda21(r2)
 /* 803566E0 00353620  A8 81 00 24 */	lha r4, 0x24(r1)
 /* 803566E4 00353624  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 803566E8 00353628  40 80 00 0C */	bge lbl_803566F4
 /* 803566EC 0035362C  B0 9C 00 0E */	sth r4, 0xe(r28)
 /* 803566F0 00353630  48 00 00 5C */	b lbl_8035674C
 lbl_803566F4:
-/* 803566F4 00353634  C0 02 05 20 */	lfs f0, $$21655@sda21(r2)
+/* 803566F4 00353634  C0 02 05 20 */	lfs f0, "@1655"@sda21(r2)
 /* 803566F8 00353638  3C 00 43 30 */	lis r0, 0x4330
 /* 803566FC 0035363C  A8 7C 00 0E */	lha r3, 0xe(r28)
 /* 80356700 00353640  EC 40 F8 24 */	fdivs f2, f0, f31
-/* 80356704 00353644  C8 22 05 28 */	lfd f1, $$21657@sda21(r2)
+/* 80356704 00353644  C8 22 05 28 */	lfd f1, "@1657"@sda21(r2)
 /* 80356708 00353648  7C 63 20 50 */	subf r3, r3, r4
 /* 8035670C 0035364C  7C 63 07 34 */	extsh r3, r3
 /* 80356710 00353650  6C 63 80 00 */	xoris r3, r3, 0x8000
@@ -211,7 +211,7 @@ lbl_803566F4:
 /* 8035671C 0035365C  C8 01 00 30 */	lfd f0, 0x30(r1)
 /* 80356720 00353660  EC 00 08 28 */	fsubs f0, f0, f1
 /* 80356724 00353664  EC 22 00 32 */	fmuls f1, f2, f0
-/* 80356728 00353668  4B E1 65 25 */	bl CLBRoundf$$0s$$1__Ff
+/* 80356728 00353668  4B E1 65 25 */	bl "CLBRoundf<s>__Ff"
 /* 8035672C 0035366C  A8 1C 00 0E */	lha r0, 0xe(r28)
 /* 80356730 00353670  7C 00 1A 14 */	add r0, r0, r3
 /* 80356734 00353674  B0 1C 00 0E */	sth r0, 0xe(r28)
@@ -253,8 +253,8 @@ lbl_80356784:
 /* 803567B8 003536F8  7C 08 03 A6 */	mtlr r0
 /* 803567BC 003536FC  4E 80 00 20 */	blr 
 
-.global initCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
-initCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1:
+.global "initCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
+"initCameraInbetween__16TCameraInbetweenFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>":
 /* 803567C0 00353700  7C 08 02 A6 */	mflr r0
 /* 803567C4 00353704  90 01 00 04 */	stw r0, 4(r1)
 /* 803567C8 00353708  94 21 FF E0 */	stwu r1, -0x20(r1)
@@ -429,7 +429,7 @@ __ct__16TCameraInbetweenFv:
 /* 80356A3C 0035397C  90 03 00 00 */	stw r0, 0(r3)
 /* 80356A40 00353980  38 00 00 00 */	li r0, 0
 /* 80356A44 00353984  90 03 00 04 */	stw r0, 4(r3)
-/* 80356A48 00353988  C0 02 05 30 */	lfs f0, $$21663@sda21(r2)
+/* 80356A48 00353988  C0 02 05 30 */	lfs f0, "@1663"@sda21(r2)
 /* 80356A4C 0035398C  D0 03 00 18 */	stfs f0, 0x18(r3)
 /* 80356A50 00353990  D0 03 00 1C */	stfs f0, 0x1c(r3)
 /* 80356A54 00353994  D0 03 00 20 */	stfs f0, 0x20(r3)
@@ -446,13 +446,13 @@ __ct__16TCameraInbetweenFv:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21655:
+"@1655":
 	.incbin "baserom.dol", 0x3EC220, 0x8
-$$21657:
+"@1657":
 	.incbin "baserom.dol", 0x3EC228, 0x8
-$$21663:
+"@1663":
   .4byte 0
-$$21708:
+"@1708":
 	.incbin "baserom.dol", 0x3EC234, 0x4
-$$21709:
+"@1709":
 	.incbin "baserom.dol", 0x3EC238, 0x8

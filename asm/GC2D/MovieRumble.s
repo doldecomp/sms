@@ -73,14 +73,14 @@ lbl_80247950:
 /* 8024795C 0024489C  80 03 00 00 */	lwz r0, 0(r3)
 /* 80247960 002448A0  7C 1D 00 00 */	cmpw r29, r0
 /* 80247964 002448A4  40 80 00 58 */	bge lbl_802479BC
-/* 80247968 002448A8  3C 60 80 39 */	lis r3, $$21578@ha
-/* 8024796C 002448AC  38 A3 48 34 */	addi r5, r3, $$21578@l
+/* 80247968 002448A8  3C 60 80 39 */	lis r3, "@1578"@ha
+/* 8024796C 002448AC  38 A3 48 34 */	addi r5, r3, "@1578"@l
 /* 80247970 002448B0  38 7E 00 00 */	addi r3, r30, 0
 /* 80247974 002448B4  38 9D 00 00 */	addi r4, r29, 0
 /* 80247978 002448B8  38 DF 00 1C */	addi r6, r31, 0x1c
 /* 8024797C 002448BC  4B E8 A7 ED */	bl GetValue__Q24Koga8ToolDataCFiPCcRl
-/* 80247980 002448C0  3C 60 80 39 */	lis r3, $$21579@ha
-/* 80247984 002448C4  38 A3 48 40 */	addi r5, r3, $$21579@l
+/* 80247980 002448C0  3C 60 80 39 */	lis r3, "@1579"@ha
+/* 80247984 002448C4  38 A3 48 40 */	addi r5, r3, "@1579"@l
 /* 80247988 002448C8  38 7E 00 00 */	addi r3, r30, 0
 /* 8024798C 002448CC  38 9D 00 00 */	addi r4, r29, 0
 /* 80247990 002448D0  38 DF 00 20 */	addi r6, r31, 0x20
@@ -88,7 +88,7 @@ lbl_80247950:
 /* 80247998 002448D8  38 7E 00 00 */	addi r3, r30, 0
 /* 8024799C 002448DC  38 9D 00 00 */	addi r4, r29, 0
 /* 802479A0 002448E0  38 C1 00 2C */	addi r6, r1, 0x2c
-/* 802479A4 002448E4  38 A2 DC 18 */	addi r5, r2, $$21580@sda21
+/* 802479A4 002448E4  38 A2 DC 18 */	addi r5, r2, "@1580"@sda21
 /* 802479A8 002448E8  4B E8 A6 F5 */	bl GetValue__Q24Koga8ToolDataCFiPCcRPCc
 /* 802479AC 002448EC  80 61 00 2C */	lwz r3, 0x2c(r1)
 /* 802479B0 002448F0  4B E8 8F 65 */	bl getIndex__10RumbleTypeFPc
@@ -149,7 +149,7 @@ lbl_80247A54:
 .global init__12TMovieRumbleFPCc
 init__12TMovieRumbleFPCc:
 /* 80247A68 002449A8  7C 08 02 A6 */	mflr r0
-/* 80247A6C 002449AC  3C A0 80 39 */	lis r5, $$21490@ha
+/* 80247A6C 002449AC  3C A0 80 39 */	lis r5, "@1490"@ha
 /* 80247A70 002449B0  90 01 00 04 */	stw r0, 4(r1)
 /* 80247A74 002449B4  4C C6 31 82 */	crclr 6
 /* 80247A78 002449B8  94 21 FF 40 */	stwu r1, -0xc0(r1)
@@ -157,7 +157,7 @@ init__12TMovieRumbleFPCc:
 /* 80247A80 002449C0  3B E3 00 00 */	addi r31, r3, 0
 /* 80247A84 002449C4  38 61 00 30 */	addi r3, r1, 0x30
 /* 80247A88 002449C8  93 C1 00 B8 */	stw r30, 0xb8(r1)
-/* 80247A8C 002449CC  3B C5 48 00 */	addi r30, r5, $$21490@l
+/* 80247A8C 002449CC  3B C5 48 00 */	addi r30, r5, "@1490"@l
 /* 80247A90 002449D0  38 A4 00 00 */	addi r5, r4, 0
 /* 80247A94 002449D4  93 A1 00 B4 */	stw r29, 0xb4(r1)
 /* 80247A98 002449D8  38 9E 00 20 */	addi r4, r30, 0x20
@@ -166,7 +166,7 @@ init__12TMovieRumbleFPCc:
 /* 80247AA4 002449E4  38 61 00 30 */	addi r3, r1, 0x30
 /* 80247AA8 002449E8  38 80 00 2E */	li r4, 0x2e
 /* 80247AAC 002449EC  4B E3 E1 39 */	bl strrchr
-/* 80247AB0 002449F0  38 82 DC 10 */	addi r4, r2, $$21558@sda21
+/* 80247AB0 002449F0  38 82 DC 10 */	addi r4, r2, "@1558"@sda21
 /* 80247AB4 002449F4  4B E3 E3 3D */	bl strcpy
 /* 80247AB8 002449F8  38 60 00 08 */	li r3, 8
 /* 80247ABC 002449FC  4B DC 4D F5 */	bl __nw__FUl
@@ -222,7 +222,7 @@ lbl_80247B34:
 /* 80247B74 00244AB4  38 7D 00 00 */	addi r3, r29, 0
 /* 80247B78 00244AB8  38 9C 00 00 */	addi r4, r28, 0
 /* 80247B7C 00244ABC  38 C1 00 28 */	addi r6, r1, 0x28
-/* 80247B80 00244AC0  38 A2 DC 18 */	addi r5, r2, $$21580@sda21
+/* 80247B80 00244AC0  38 A2 DC 18 */	addi r5, r2, "@1580"@sda21
 /* 80247B84 00244AC4  4B E8 A5 19 */	bl GetValue__Q24Koga8ToolDataCFiPCcRPCc
 /* 80247B88 00244AC8  80 61 00 28 */	lwz r3, 0x28(r1)
 /* 80247B8C 00244ACC  4B E8 8D 89 */	bl getIndex__10RumbleTypeFPc
@@ -254,9 +254,9 @@ __ct__12TMovieRumbleFPC10TTHPRender:
 /* 80247BE0 00244B20  7C 9F 23 78 */	mr r31, r4
 /* 80247BE4 00244B24  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 80247BE8 00244B28  3B C3 00 00 */	addi r30, r3, 0
-/* 80247BEC 00244B2C  3C 60 80 39 */	lis r3, $$21681@ha
+/* 80247BEC 00244B2C  3C 60 80 39 */	lis r3, "@1681"@ha
 /* 80247BF0 00244B30  90 1E 00 00 */	stw r0, 0(r30)
-/* 80247BF4 00244B34  38 63 48 4C */	addi r3, r3, $$21681@l
+/* 80247BF4 00244B34  38 63 48 4C */	addi r3, r3, "@1681"@l
 /* 80247BF8 00244B38  90 7E 00 04 */	stw r3, 4(r30)
 /* 80247BFC 00244B3C  4B DF CA 91 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 80247C00 00244B40  B0 7E 00 08 */	sth r3, 8(r30)
@@ -279,19 +279,19 @@ __ct__12TMovieRumbleFPC10TTHPRender:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x39180C, 0x14
-$$21557:
+"@1557":
 	.incbin "baserom.dol", 0x391820, 0x14
-$$21578:
+"@1578":
 	.incbin "baserom.dol", 0x391834, 0xC
-$$21579:
+"@1579":
 	.incbin "baserom.dol", 0x391840, 0xC
-$$21681:
+"@1681":
 	.incbin "baserom.dol", 0x39184C, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -310,7 +310,7 @@ __vt__12TMovieRumble:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21558:
+"@1558":
 	.incbin "baserom.dol", 0x3E9910, 0x8
-$$21580:
+"@1580":
 	.incbin "baserom.dol", 0x3E9918, 0x8

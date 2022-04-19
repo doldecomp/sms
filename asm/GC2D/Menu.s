@@ -191,8 +191,8 @@ __ct__10TMenuPlaneFPC13TMarioGamePadP7J2DPaneUlUl:
 /* 80200E20 001FDD60  3B A6 00 00 */	addi r29, r6, 0
 /* 80200E24 001FDD64  3B C7 00 00 */	addi r30, r7, 0
 /* 80200E28 001FDD68  90 61 00 08 */	stw r3, 8(r1)
-/* 80200E2C 001FDD6C  3C 60 80 39 */	lis r3, $$21772@ha
-/* 80200E30 001FDD70  38 63 32 F8 */	addi r3, r3, $$21772@l
+/* 80200E2C 001FDD6C  3C 60 80 39 */	lis r3, "@1772"@ha
+/* 80200E30 001FDD70  38 63 32 F8 */	addi r3, r3, "@1772"@l
 /* 80200E34 001FDD74  83 E1 00 08 */	lwz r31, 8(r1)
 /* 80200E38 001FDD78  90 1F 00 00 */	stw r0, 0(r31)
 /* 80200E3C 001FDD7C  90 7F 00 04 */	stw r3, 4(r31)
@@ -416,7 +416,7 @@ lbl_80201134:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21772:
+"@1772":
 	.incbin "baserom.dol", 0x3902F8, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

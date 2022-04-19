@@ -86,7 +86,7 @@ XYNTSC:
 	.incbin "baserom.dol", 0x3AEDD8, 0x30
 XYPAL:
 	.incbin "baserom.dol", 0x3AEE08, 0x30
-$$216:
+"@16":
 	.incbin "baserom.dol", 0x3AEE38, 0x38
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

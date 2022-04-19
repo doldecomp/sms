@@ -24,7 +24,7 @@ perform__Q26JDrama12TDStageGroupFUlPQ26JDrama9TGraphics:
 /* 800426B0 0003F5F0  38 7D 00 00 */	addi r3, r29, 0
 /* 800426B4 0003F5F4  38 9E 00 00 */	addi r4, r30, 0
 /* 800426B8 0003F5F8  38 BF 00 00 */	addi r5, r31, 0
-/* 800426BC 0003F5FC  48 00 25 81 */	bl perform__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUlPQ26JDrama9TGraphics
+/* 800426BC 0003F5FC  48 00 25 81 */	bl "perform__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUlPQ26JDrama9TGraphics"
 /* 800426C0 0003F600  38 7D 00 20 */	addi r3, r29, 0x20
 /* 800426C4 0003F604  81 9D 00 20 */	lwz r12, 0x20(r29)
 /* 800426C8 0003F608  57 C0 07 76 */	rlwinm r0, r30, 0, 0x1d, 0x1b
@@ -71,8 +71,8 @@ __dt__Q26JDrama12TDStageGroupFv:
 lbl_8004275C:
 /* 8004275C 0003F69C  28 1E 00 00 */	cmplwi r30, 0
 /* 80042760 0003F6A0  41 82 00 44 */	beq lbl_800427A4
-/* 80042764 0003F6A4  3C 60 80 3B */	lis r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@ha
-/* 80042768 0003F6A8  38 63 A5 40 */	addi r3, r3, __vt__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1@l
+/* 80042764 0003F6A4  3C 60 80 3B */	lis r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@ha
+/* 80042768 0003F6A8  38 63 A5 40 */	addi r3, r3, "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"@l
 /* 8004276C 0003F6AC  34 1E 00 10 */	addic. r0, r30, 0x10
 /* 80042770 0003F6B0  90 7E 00 00 */	stw r3, 0(r30)
 /* 80042774 0003F6B4  41 82 00 10 */	beq lbl_80042784
@@ -109,11 +109,11 @@ __vt__Q26JDrama12TDStageGroup:
   .4byte 0
   .4byte __dt__Q26JDrama12TDStageGroupFv
   .4byte getType__Q26JDrama8TNameRefCFv
-  .4byte load__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
+  .4byte "load__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
   .4byte save__Q26JDrama8TNameRefFR21JSUMemoryOutputStream
-  .4byte loadAfter__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
-  .4byte searchF__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FUsPCc
+  .4byte "loadAfter__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
+  .4byte "searchF__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FUsPCc"
   .4byte perform__Q26JDrama12TDStageGroupFUlPQ26JDrama9TGraphics
-  .4byte loadSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1FR20JSUMemoryInputStream
-  .4byte loadAfterSuper__Q26JDrama55TViewObjPtrListT$$0Q26JDrama8TViewObj$$4Q26JDrama8TViewObj$$1Fv
+  .4byte "loadSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>FR20JSUMemoryInputStream"
+  .4byte "loadAfterSuper__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>Fv"
   .4byte 0

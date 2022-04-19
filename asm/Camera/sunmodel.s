@@ -144,24 +144,24 @@ lbl_8035E650:
 /* 8035E654 0035B594  41 82 02 28 */	beq lbl_8035E87C
 /* 8035E658 0035B598  88 1D 00 68 */	lbz r0, 0x68(r29)
 /* 8035E65C 0035B59C  3F 80 43 30 */	lis r28, 0x4330
-/* 8035E660 0035B5A0  C8 22 07 88 */	lfd f1, $$21867@sda21(r2)
+/* 8035E660 0035B5A0  C8 22 07 88 */	lfd f1, "@1867"@sda21(r2)
 /* 8035E664 0035B5A4  90 01 00 CC */	stw r0, 0xcc(r1)
-/* 8035E668 0035B5A8  C0 42 07 70 */	lfs f2, $$21861@sda21(r2)
+/* 8035E668 0035B5A8  C0 42 07 70 */	lfs f2, "@1861"@sda21(r2)
 /* 8035E66C 0035B5AC  93 81 00 C8 */	stw r28, 0xc8(r1)
 /* 8035E670 0035B5B0  C0 7D 01 94 */	lfs f3, 0x194(r29)
 /* 8035E674 0035B5B4  C8 01 00 C8 */	lfd f0, 0xc8(r1)
 /* 8035E678 0035B5B8  EC 20 08 28 */	fsubs f1, f0, f1
-/* 8035E67C 0035B5BC  4B E0 BF B9 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 8035E67C 0035B5BC  4B E0 BF B9 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 8035E680 0035B5C0  D0 3D 00 A4 */	stfs f1, 0xa4(r29)
 /* 8035E684 0035B5C4  88 1D 00 74 */	lbz r0, 0x74(r29)
-/* 8035E688 0035B5C8  C8 22 07 88 */	lfd f1, $$21867@sda21(r2)
+/* 8035E688 0035B5C8  C8 22 07 88 */	lfd f1, "@1867"@sda21(r2)
 /* 8035E68C 0035B5CC  90 01 00 C4 */	stw r0, 0xc4(r1)
-/* 8035E690 0035B5D0  C0 42 07 70 */	lfs f2, $$21861@sda21(r2)
+/* 8035E690 0035B5D0  C0 42 07 70 */	lfs f2, "@1861"@sda21(r2)
 /* 8035E694 0035B5D4  93 81 00 C0 */	stw r28, 0xc0(r1)
 /* 8035E698 0035B5D8  C0 7D 01 94 */	lfs f3, 0x194(r29)
 /* 8035E69C 0035B5DC  C8 01 00 C0 */	lfd f0, 0xc0(r1)
 /* 8035E6A0 0035B5E0  EC 20 08 28 */	fsubs f1, f0, f1
-/* 8035E6A4 0035B5E4  4B FF ED 01 */	bl CLBEaseOutInbetween$$0f$$1__Ffff
+/* 8035E6A4 0035B5E4  4B FF ED 01 */	bl "CLBEaseOutInbetween<f>__Ffff"
 /* 8035E6A8 0035B5E8  D0 3D 00 A8 */	stfs f1, 0xa8(r29)
 /* 8035E6AC 0035B5EC  C0 1D 00 9C */	lfs f0, 0x9c(r29)
 /* 8035E6B0 0035B5F0  C0 3D 00 A4 */	lfs f1, 0xa4(r29)
@@ -172,7 +172,7 @@ lbl_8035E650:
 lbl_8035E6C4:
 /* 8035E6C4 0035B604  C0 5D 00 70 */	lfs f2, 0x70(r29)
 lbl_8035E6C8:
-/* 8035E6C8 0035B608  C0 62 07 74 */	lfs f3, $$21862@sda21(r2)
+/* 8035E6C8 0035B608  C0 62 07 74 */	lfs f3, "@1862"@sda21(r2)
 /* 8035E6CC 0035B60C  38 7D 00 9C */	addi r3, r29, 0x9c
 /* 8035E6D0 0035B610  4B FF A0 9D */	bl CLBChaseDecrease__FPffff
 /* 8035E6D4 0035B614  C0 1D 00 9C */	lfs f0, 0x9c(r29)
@@ -189,7 +189,7 @@ lbl_8035E6C8:
 lbl_8035E700:
 /* 8035E700 0035B640  C0 5D 00 7C */	lfs f2, 0x7c(r29)
 lbl_8035E704:
-/* 8035E704 0035B644  C0 62 07 74 */	lfs f3, $$21862@sda21(r2)
+/* 8035E704 0035B644  C0 62 07 74 */	lfs f3, "@1862"@sda21(r2)
 /* 8035E708 0035B648  38 7D 00 A0 */	addi r3, r29, 0xa0
 /* 8035E70C 0035B64C  4B FF A0 61 */	bl CLBChaseDecrease__FPffff
 /* 8035E710 0035B650  C0 1D 00 A0 */	lfs f0, 0xa0(r29)
@@ -201,36 +201,36 @@ lbl_8035E704:
 /* 8035E728 0035B668  4B FF A3 A9 */	bl isMarioIndoor__16TCameraMarioDataCFv
 /* 8035E72C 0035B66C  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8035E730 0035B670  41 82 00 10 */	beq lbl_8035E740
-/* 8035E734 0035B674  C0 02 07 74 */	lfs f0, $$21862@sda21(r2)
+/* 8035E734 0035B674  C0 02 07 74 */	lfs f0, "@1862"@sda21(r2)
 /* 8035E738 0035B678  D0 1D 00 B0 */	stfs f0, 0xb0(r29)
 /* 8035E73C 0035B67C  48 00 00 6C */	b lbl_8035E7A8
 lbl_8035E740:
 /* 8035E740 0035B680  C0 1D 00 F8 */	lfs f0, 0xf8(r29)
 /* 8035E744 0035B684  C0 3D 00 FC */	lfs f1, 0xfc(r29)
 /* 8035E748 0035B688  EC 40 00 32 */	fmuls f2, f0, f0
-/* 8035E74C 0035B68C  C0 02 07 78 */	lfs f0, $$21863@sda21(r2)
+/* 8035E74C 0035B68C  C0 02 07 78 */	lfs f0, "@1863"@sda21(r2)
 /* 8035E750 0035B690  EC 21 00 72 */	fmuls f1, f1, f1
 /* 8035E754 0035B694  EC 22 08 2A */	fadds f1, f2, f1
 /* 8035E758 0035B698  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8035E75C 0035B69C  40 81 00 10 */	ble lbl_8035E76C
-/* 8035E760 0035B6A0  C0 02 07 74 */	lfs f0, $$21862@sda21(r2)
+/* 8035E760 0035B6A0  C0 02 07 74 */	lfs f0, "@1862"@sda21(r2)
 /* 8035E764 0035B6A4  D0 1D 00 B0 */	stfs f0, 0xb0(r29)
 /* 8035E768 0035B6A8  48 00 00 40 */	b lbl_8035E7A8
 lbl_8035E76C:
 /* 8035E76C 0035B6AC  EC 20 08 28 */	fsubs f1, f0, f1
 /* 8035E770 0035B6B0  88 7D 00 80 */	lbz r3, 0x80(r29)
-/* 8035E774 0035B6B4  C0 42 07 7C */	lfs f2, $$21864@sda21(r2)
+/* 8035E774 0035B6B4  C0 42 07 7C */	lfs f2, "@1864"@sda21(r2)
 /* 8035E778 0035B6B8  3C 00 43 30 */	lis r0, 0x4330
 /* 8035E77C 0035B6BC  90 61 00 C4 */	stw r3, 0xc4(r1)
 /* 8035E780 0035B6C0  EC 22 00 72 */	fmuls f1, f2, f1
 /* 8035E784 0035B6C4  C0 1D 01 94 */	lfs f0, 0x194(r29)
 /* 8035E788 0035B6C8  90 01 00 C0 */	stw r0, 0xc0(r1)
-/* 8035E78C 0035B6CC  C8 42 07 88 */	lfd f2, $$21867@sda21(r2)
+/* 8035E78C 0035B6CC  C8 42 07 88 */	lfd f2, "@1867"@sda21(r2)
 /* 8035E790 0035B6D0  EC 61 00 32 */	fmuls f3, f1, f0
 /* 8035E794 0035B6D4  C8 01 00 C0 */	lfd f0, 0xc0(r1)
-/* 8035E798 0035B6D8  C0 22 07 74 */	lfs f1, $$21862@sda21(r2)
+/* 8035E798 0035B6D8  C0 22 07 74 */	lfs f1, "@1862"@sda21(r2)
 /* 8035E79C 0035B6DC  EC 40 10 28 */	fsubs f2, f0, f2
-/* 8035E7A0 0035B6E0  4B E0 BE 95 */	bl CLBLinearInbetween$$0f$$1__Ffff
+/* 8035E7A0 0035B6E0  4B E0 BE 95 */	bl "CLBLinearInbetween<f>__Ffff"
 /* 8035E7A4 0035B6E4  D0 3D 00 B0 */	stfs f1, 0xb0(r29)
 lbl_8035E7A8:
 /* 8035E7A8 0035B6E8  C0 1D 00 AC */	lfs f0, 0xac(r29)
@@ -243,7 +243,7 @@ lbl_8035E7C0:
 /* 8035E7C0 0035B700  C0 5D 00 88 */	lfs f2, 0x88(r29)
 lbl_8035E7C4:
 /* 8035E7C4 0035B704  38 7D 00 AC */	addi r3, r29, 0xac
-/* 8035E7C8 0035B708  4B E0 BE D1 */	bl CLBChaseGeneralConstantSpecifySpeed$$0f$$1__FPfff
+/* 8035E7C8 0035B708  4B E0 BE D1 */	bl "CLBChaseGeneralConstantSpecifySpeed<f>__FPfff"
 /* 8035E7CC 0035B70C  80 AD A8 B0 */	lwz r5, gpCamera@sda21(r13)
 /* 8035E7D0 0035B710  38 61 00 A8 */	addi r3, r1, 0xa8
 /* 8035E7D4 0035B714  C4 05 01 24 */	lfsu f0, 0x124(r5)
@@ -263,9 +263,9 @@ lbl_8035E7C4:
 /* 8035E80C 0035B74C  80 8D A8 B0 */	lwz r4, gpCamera@sda21(r13)
 /* 8035E810 0035B750  38 61 00 B4 */	addi r3, r1, 0xb4
 /* 8035E814 0035B754  38 84 01 24 */	addi r4, r4, 0x124
-/* 8035E818 0035B758  4B D7 EC F5 */	bl set__Q29JGeometry8TVec3$$0f$$1FRC3Vec
+/* 8035E818 0035B758  4B D7 EC F5 */	bl "set__Q29JGeometry8TVec3<f>FRC3Vec"
 /* 8035E81C 0035B75C  C0 21 00 A8 */	lfs f1, 0xa8(r1)
-/* 8035E820 0035B760  C0 42 07 80 */	lfs f2, $$21865@sda21(r2)
+/* 8035E820 0035B760  C0 42 07 80 */	lfs f2, "@1865"@sda21(r2)
 /* 8035E824 0035B764  C0 01 00 B4 */	lfs f0, 0xb4(r1)
 /* 8035E828 0035B768  EC 01 00 BA */	fmadds f0, f1, f2, f0
 /* 8035E82C 0035B76C  D0 1D 01 98 */	stfs f0, 0x198(r29)
@@ -397,10 +397,10 @@ lbl_8035E9F8:
 /* 8035E9FC 0035B93C  42 00 FF E4 */	bdnz lbl_8035E9E0
 /* 8035EA00 0035B940  88 9E 01 91 */	lbz r4, 0x191(r30)
 /* 8035EA04 0035B944  3C 00 43 30 */	lis r0, 0x4330
-/* 8035EA08 0035B948  C8 22 07 88 */	lfd f1, $$21867@sda21(r2)
+/* 8035EA08 0035B948  C8 22 07 88 */	lfd f1, "@1867"@sda21(r2)
 /* 8035EA0C 0035B94C  38 7E 00 F8 */	addi r3, r30, 0xf8
 /* 8035EA10 0035B950  90 81 00 24 */	stw r4, 0x24(r1)
-/* 8035EA14 0035B954  C0 42 07 90 */	lfs f2, $$21887@sda21(r2)
+/* 8035EA14 0035B954  C0 42 07 90 */	lfs f2, "@1887"@sda21(r2)
 /* 8035EA18 0035B958  38 DE 01 98 */	addi r6, r30, 0x198
 /* 8035EA1C 0035B95C  90 01 00 20 */	stw r0, 0x20(r1)
 /* 8035EA20 0035B960  38 E0 00 00 */	li r7, 0
@@ -412,7 +412,7 @@ lbl_8035E9F8:
 /* 8035EA38 0035B978  80 8D A8 B0 */	lwz r4, gpCamera@sda21(r13)
 /* 8035EA3C 0035B97C  38 A4 01 EC */	addi r5, r4, 0x1ec
 /* 8035EA40 0035B980  38 84 01 6C */	addi r4, r4, 0x16c
-/* 8035EA44 0035B984  4B FF 9E 01 */	bl CLBCalc2DFPos__FPQ29JGeometry8TVec2$$0f$$1PA4_CfPA4_CfRC3VecPUlb
+/* 8035EA44 0035B984  4B FF 9E 01 */	bl "CLBCalc2DFPos__FPQ29JGeometry8TVec2<f>PA4_CfPA4_CfRC3VecPUlb"
 /* 8035EA48 0035B988  C0 3E 01 A4 */	lfs f1, 0x1a4(r30)
 /* 8035EA4C 0035B98C  7F C3 F3 78 */	mr r3, r30
 /* 8035EA50 0035B990  C0 1E 00 28 */	lfs f0, 0x28(r30)
@@ -420,21 +420,21 @@ lbl_8035E9F8:
 /* 8035EA58 0035B998  38 BE 00 F8 */	addi r5, r30, 0xf8
 /* 8035EA5C 0035B99C  EF E1 00 32 */	fmuls f31, f1, f0
 /* 8035EA60 0035B9A0  FC 20 F8 90 */	fmr f1, f31
-/* 8035EA64 0035B9A4  48 00 01 81 */	bl calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2$$0f$$1RCQ29JGeometry8TVec2$$0f$$1f
-/* 8035EA68 0035B9A8  C0 02 07 7C */	lfs f0, $$21864@sda21(r2)
+/* 8035EA64 0035B9A4  48 00 01 81 */	bl "calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>f"
+/* 8035EA68 0035B9A8  C0 02 07 7C */	lfs f0, "@1864"@sda21(r2)
 /* 8035EA6C 0035B9AC  38 7E 00 00 */	addi r3, r30, 0
 /* 8035EA70 0035B9B0  38 9E 01 40 */	addi r4, r30, 0x140
 /* 8035EA74 0035B9B4  EF FF 00 32 */	fmuls f31, f31, f0
 /* 8035EA78 0035B9B8  38 BE 00 F8 */	addi r5, r30, 0xf8
 /* 8035EA7C 0035B9BC  FC 20 F8 90 */	fmr f1, f31
-/* 8035EA80 0035B9C0  48 00 01 65 */	bl calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2$$0f$$1RCQ29JGeometry8TVec2$$0f$$1f
+/* 8035EA80 0035B9C0  48 00 01 65 */	bl "calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>f"
 /* 8035EA84 0035B9C4  3B BE 00 B4 */	addi r29, r30, 0xb4
 /* 8035EA88 0035B9C8  3B DE 00 F8 */	addi r30, r30, 0xf8
 /* 8035EA8C 0035B9CC  3B E0 00 00 */	li r31, 0
 lbl_8035EA90:
 /* 8035EA90 0035B9D0  38 7D 00 00 */	addi r3, r29, 0
 /* 8035EA94 0035B9D4  38 9E 00 00 */	addi r4, r30, 0
-/* 8035EA98 0035B9D8  48 00 00 39 */	bl CLBScreenFPosToSPos__FPQ29JGeometry8TVec2$$0s$$1RCQ29JGeometry8TVec2$$0f$$1
+/* 8035EA98 0035B9D8  48 00 00 39 */	bl "CLBScreenFPosToSPos__FPQ29JGeometry8TVec2<s>RCQ29JGeometry8TVec2<f>"
 /* 8035EA9C 0035B9DC  3B FF 00 01 */	addi r31, r31, 1
 /* 8035EAA0 0035B9E0  2C 1F 00 11 */	cmpwi r31, 0x11
 /* 8035EAA4 0035B9E4  3B BD 00 04 */	addi r29, r29, 4
@@ -449,8 +449,8 @@ lbl_8035EA90:
 /* 8035EAC8 0035BA08  38 21 00 40 */	addi r1, r1, 0x40
 /* 8035EACC 0035BA0C  4E 80 00 20 */	blr 
 
-.global CLBScreenFPosToSPos__FPQ29JGeometry8TVec2$$0s$$1RCQ29JGeometry8TVec2$$0f$$1
-CLBScreenFPosToSPos__FPQ29JGeometry8TVec2$$0s$$1RCQ29JGeometry8TVec2$$0f$$1:
+.global "CLBScreenFPosToSPos__FPQ29JGeometry8TVec2<s>RCQ29JGeometry8TVec2<f>"
+"CLBScreenFPosToSPos__FPQ29JGeometry8TVec2<s>RCQ29JGeometry8TVec2<f>":
 /* 8035EAD0 0035BA10  7C 08 02 A6 */	mflr r0
 /* 8035EAD4 0035BA14  90 01 00 04 */	stw r0, 4(r1)
 /* 8035EAD8 0035BA18  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -459,11 +459,11 @@ CLBScreenFPosToSPos__FPQ29JGeometry8TVec2$$0s$$1RCQ29JGeometry8TVec2$$0f$$1:
 /* 8035EAE4 0035BA24  7C 9F 23 78 */	mr r31, r4
 /* 8035EAE8 0035BA28  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8035EAEC 0035BA2C  7C 7E 1B 78 */	mr r30, r3
-/* 8035EAF0 0035BA30  C0 02 07 94 */	lfs f0, $$21906@sda21(r2)
+/* 8035EAF0 0035BA30  C0 02 07 94 */	lfs f0, "@1906"@sda21(r2)
 /* 8035EAF4 0035BA34  C3 E4 00 00 */	lfs f31, 0(r4)
 /* 8035EAF8 0035BA38  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035EAFC 0035BA3C  41 80 00 10 */	blt lbl_8035EB0C
-/* 8035EB00 0035BA40  C0 02 07 98 */	lfs f0, $$21907@sda21(r2)
+/* 8035EB00 0035BA40  C0 02 07 98 */	lfs f0, "@1907"@sda21(r2)
 /* 8035EB04 0035BA44  FC 00 F8 40 */	fcmpo cr0, f0, f31
 /* 8035EB08 0035BA48  40 80 00 10 */	bge lbl_8035EB18
 lbl_8035EB0C:
@@ -473,11 +473,11 @@ lbl_8035EB0C:
 lbl_8035EB18:
 /* 8035EB18 0035BA58  4B D9 DB 25 */	bl SMSGetGameRenderWidth__Fv
 /* 8035EB1C 0035BA5C  54 63 04 3E */	clrlwi r3, r3, 0x10
-/* 8035EB20 0035BA60  C0 02 07 98 */	lfs f0, $$21907@sda21(r2)
+/* 8035EB20 0035BA60  C0 02 07 98 */	lfs f0, "@1907"@sda21(r2)
 /* 8035EB24 0035BA64  38 03 FF FF */	addi r0, r3, -1
-/* 8035EB28 0035BA68  C8 22 07 A0 */	lfd f1, $$21910@sda21(r2)
+/* 8035EB28 0035BA68  C8 22 07 A0 */	lfd f1, "@1910"@sda21(r2)
 /* 8035EB2C 0035BA6C  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8035EB30 0035BA70  C0 42 07 7C */	lfs f2, $$21864@sda21(r2)
+/* 8035EB30 0035BA70  C0 42 07 7C */	lfs f2, "@1864"@sda21(r2)
 /* 8035EB34 0035BA74  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8035EB38 0035BA78  3C 00 43 30 */	lis r0, 0x4330
 /* 8035EB3C 0035BA7C  EC 60 F8 2A */	fadds f3, f0, f31
@@ -486,14 +486,14 @@ lbl_8035EB18:
 /* 8035EB48 0035BA88  EC 00 08 28 */	fsubs f0, f0, f1
 /* 8035EB4C 0035BA8C  EC 02 00 32 */	fmuls f0, f2, f0
 /* 8035EB50 0035BA90  EC 23 00 32 */	fmuls f1, f3, f0
-/* 8035EB54 0035BA94  4B E0 E0 F9 */	bl CLBRoundf$$0s$$1__Ff
+/* 8035EB54 0035BA94  4B E0 E0 F9 */	bl "CLBRoundf<s>__Ff"
 /* 8035EB58 0035BA98  B0 7E 00 00 */	sth r3, 0(r30)
 lbl_8035EB5C:
 /* 8035EB5C 0035BA9C  C3 FF 00 04 */	lfs f31, 4(r31)
-/* 8035EB60 0035BAA0  C0 02 07 94 */	lfs f0, $$21906@sda21(r2)
+/* 8035EB60 0035BAA0  C0 02 07 94 */	lfs f0, "@1906"@sda21(r2)
 /* 8035EB64 0035BAA4  FC 1F 00 40 */	fcmpo cr0, f31, f0
 /* 8035EB68 0035BAA8  41 80 00 10 */	blt lbl_8035EB78
-/* 8035EB6C 0035BAAC  C0 02 07 98 */	lfs f0, $$21907@sda21(r2)
+/* 8035EB6C 0035BAAC  C0 02 07 98 */	lfs f0, "@1907"@sda21(r2)
 /* 8035EB70 0035BAB0  FC 00 F8 40 */	fcmpo cr0, f0, f31
 /* 8035EB74 0035BAB4  40 80 00 10 */	bge lbl_8035EB84
 lbl_8035EB78:
@@ -503,11 +503,11 @@ lbl_8035EB78:
 lbl_8035EB84:
 /* 8035EB84 0035BAC4  4B D9 DA B1 */	bl SMSGetGameRenderHeight__Fv
 /* 8035EB88 0035BAC8  54 63 04 3E */	clrlwi r3, r3, 0x10
-/* 8035EB8C 0035BACC  C0 02 07 98 */	lfs f0, $$21907@sda21(r2)
+/* 8035EB8C 0035BACC  C0 02 07 98 */	lfs f0, "@1907"@sda21(r2)
 /* 8035EB90 0035BAD0  38 03 FF FF */	addi r0, r3, -1
-/* 8035EB94 0035BAD4  C8 22 07 A0 */	lfd f1, $$21910@sda21(r2)
+/* 8035EB94 0035BAD4  C8 22 07 A0 */	lfd f1, "@1910"@sda21(r2)
 /* 8035EB98 0035BAD8  6C 00 80 00 */	xoris r0, r0, 0x8000
-/* 8035EB9C 0035BADC  C0 42 07 9C */	lfs f2, $$21908@sda21(r2)
+/* 8035EB9C 0035BADC  C0 42 07 9C */	lfs f2, "@1908"@sda21(r2)
 /* 8035EBA0 0035BAE0  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8035EBA4 0035BAE4  3C 00 43 30 */	lis r0, 0x4330
 /* 8035EBA8 0035BAE8  EC 7F 00 28 */	fsubs f3, f31, f0
@@ -516,7 +516,7 @@ lbl_8035EB84:
 /* 8035EBB4 0035BAF4  EC 00 08 28 */	fsubs f0, f0, f1
 /* 8035EBB8 0035BAF8  EC 02 00 32 */	fmuls f0, f2, f0
 /* 8035EBBC 0035BAFC  EC 23 00 32 */	fmuls f1, f3, f0
-/* 8035EBC0 0035BB00  4B E0 E0 8D */	bl CLBRoundf$$0s$$1__Ff
+/* 8035EBC0 0035BB00  4B E0 E0 8D */	bl "CLBRoundf<s>__Ff"
 /* 8035EBC4 0035BB04  B0 7E 00 02 */	sth r3, 2(r30)
 lbl_8035EBC8:
 /* 8035EBC8 0035BB08  80 01 00 34 */	lwz r0, 0x34(r1)
@@ -527,9 +527,9 @@ lbl_8035EBC8:
 /* 8035EBDC 0035BB1C  38 21 00 30 */	addi r1, r1, 0x30
 /* 8035EBE0 0035BB20  4E 80 00 20 */	blr 
 
-.global calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2$$0f$$1RCQ29JGeometry8TVec2$$0f$$1f
-calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2$$0f$$1RCQ29JGeometry8TVec2$$0f$$1f:
-/* 8035EBE4 0035BB24  C0 42 07 A8 */	lfs f2, $$21913@sda21(r2)
+.global "calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>f"
+"calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>f":
+/* 8035EBE4 0035BB24  C0 42 07 A8 */	lfs f2, "@1913"@sda21(r2)
 /* 8035EBE8 0035BB28  C0 05 00 00 */	lfs f0, 0(r5)
 /* 8035EBEC 0035BB2C  EC 42 00 72 */	fmuls f2, f2, f1
 /* 8035EBF0 0035BB30  D0 04 00 00 */	stfs f0, 0(r4)
@@ -580,16 +580,16 @@ calcOtherFPosFromCenterAndRadius___9TSunModelFPQ29JGeometry8TVec2$$0f$$1RCQ29JGe
 .global load__9TSunModelFR20JSUMemoryInputStream
 load__9TSunModelFR20JSUMemoryInputStream:
 /* 8035ECA0 0035BBE0  7C 08 02 A6 */	mflr r0
-/* 8035ECA4 0035BBE4  3C A0 80 3A */	lis r5, $$21490@ha
+/* 8035ECA4 0035BBE4  3C A0 80 3A */	lis r5, "@1490"@ha
 /* 8035ECA8 0035BBE8  90 01 00 04 */	stw r0, 4(r1)
 /* 8035ECAC 0035BBEC  94 21 FE 08 */	stwu r1, -0x1f8(r1)
 /* 8035ECB0 0035BBF0  BF 21 01 DC */	stmw r25, 0x1dc(r1)
 /* 8035ECB4 0035BBF4  3B C3 00 00 */	addi r30, r3, 0
-/* 8035ECB8 0035BBF8  3B E5 69 C8 */	addi r31, r5, $$21490@l
+/* 8035ECB8 0035BBF8  3B E5 69 C8 */	addi r31, r5, "@1490"@l
 /* 8035ECBC 0035BBFC  4B CE 1C 8D */	bl load__Q26JDrama6TActorFR20JSUMemoryInputStream
 /* 8035ECC0 0035BC00  C0 1E 00 24 */	lfs f0, 0x24(r30)
 /* 8035ECC4 0035BC04  3F A0 10 02 */	lis r29, 0x1002
-/* 8035ECC8 0035BC08  C0 22 07 AC */	lfs f1, $$21996@sda21(r2)
+/* 8035ECC8 0035BC08  C0 22 07 AC */	lfs f1, "@1996"@sda21(r2)
 /* 8035ECCC 0035BC0C  EC 00 00 72 */	fmuls f0, f0, f1
 /* 8035ECD0 0035BC10  D0 1E 00 24 */	stfs f0, 0x24(r30)
 /* 8035ECD4 0035BC14  C0 1E 00 28 */	lfs f0, 0x28(r30)
@@ -610,7 +610,7 @@ lbl_8035ED04:
 /* 8035ED0C 0035BC4C  38 61 00 C4 */	addi r3, r1, 0xc4
 /* 8035ED10 0035BC50  38 FF 00 3C */	addi r7, r31, 0x3c
 /* 8035ED14 0035BC54  38 80 01 00 */	li r4, 0x100
-/* 8035ED18 0035BC58  38 A2 07 B0 */	addi r5, r2, $$21997@sda21
+/* 8035ED18 0035BC58  38 A2 07 B0 */	addi r5, r2, "@1997"@sda21
 /* 8035ED1C 0035BC5C  4B D2 53 A9 */	bl snprintf
 /* 8035ED20 0035BC60  38 61 00 C4 */	addi r3, r1, 0xc4
 /* 8035ED24 0035BC64  4B CA CF 99 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -633,7 +633,7 @@ lbl_8035ED58:
 /* 8035ED64 0035BCA4  4C C6 31 82 */	crclr 6
 /* 8035ED68 0035BCA8  38 FF 00 48 */	addi r7, r31, 0x48
 /* 8035ED6C 0035BCAC  38 80 01 00 */	li r4, 0x100
-/* 8035ED70 0035BCB0  38 A2 07 B0 */	addi r5, r2, $$21997@sda21
+/* 8035ED70 0035BCB0  38 A2 07 B0 */	addi r5, r2, "@1997"@sda21
 /* 8035ED74 0035BCB4  4B D2 53 51 */	bl snprintf
 /* 8035ED78 0035BCB8  38 61 00 C4 */	addi r3, r1, 0xc4
 /* 8035ED7C 0035BCBC  4B CA CF 41 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -703,7 +703,7 @@ lbl_8035EDF0:
 /* 8035EE70 0035BDB0  90 BE 00 94 */	stw r5, 0x94(r30)
 /* 8035EE74 0035BDB4  90 1E 00 98 */	stw r0, 0x98(r30)
 /* 8035EE78 0035BDB8  88 1E 00 68 */	lbz r0, 0x68(r30)
-/* 8035EE7C 0035BDBC  C8 22 07 88 */	lfd f1, $$21867@sda21(r2)
+/* 8035EE7C 0035BDBC  C8 22 07 88 */	lfd f1, "@1867"@sda21(r2)
 /* 8035EE80 0035BDC0  90 01 01 D4 */	stw r0, 0x1d4(r1)
 /* 8035EE84 0035BDC4  90 81 01 D0 */	stw r4, 0x1d0(r1)
 /* 8035EE88 0035BDC8  C8 01 01 D0 */	lfd f0, 0x1d0(r1)
@@ -777,12 +777,12 @@ lbl_8035EF04:
 /* 8035EF94 0035BED4  3B A3 00 10 */	addi r29, r3, 0x10
 /* 8035EF98 0035BED8  38 61 00 68 */	addi r3, r1, 0x68
 /* 8035EF9C 0035BEDC  38 9D 00 08 */	addi r4, r29, 8
-/* 8035EFA0 0035BEE0  4B CD 53 C5 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 8035EFA0 0035BEE0  4B CD 53 C5 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 8035EFA4 0035BEE4  80 01 00 68 */	lwz r0, 0x68(r1)
 /* 8035EFA8 0035BEE8  38 61 00 90 */	addi r3, r1, 0x90
 /* 8035EFAC 0035BEEC  38 81 00 64 */	addi r4, r1, 0x64
 /* 8035EFB0 0035BEF0  90 01 00 64 */	stw r0, 0x64(r1)
-/* 8035EFB4 0035BEF4  4B CE 5C 7D */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 8035EFB4 0035BEF4  4B CE 5C 7D */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 8035EFB8 0035BEF8  80 01 00 90 */	lwz r0, 0x90(r1)
 /* 8035EFBC 0035BEFC  38 A1 00 74 */	addi r5, r1, 0x74
 /* 8035EFC0 0035BF00  38 9D 00 00 */	addi r4, r29, 0
@@ -791,7 +791,7 @@ lbl_8035EF04:
 /* 8035EFCC 0035BF0C  38 DE 00 64 */	addi r6, r30, 0x64
 /* 8035EFD0 0035BF10  80 01 00 8C */	lwz r0, 0x8c(r1)
 /* 8035EFD4 0035BF14  90 01 00 74 */	stw r0, 0x74(r1)
-/* 8035EFD8 0035BF18  4B CD 53 95 */	bl insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv
+/* 8035EFD8 0035BF18  4B CD 53 95 */	bl "insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv"
 /* 8035EFDC 0035BF1C  BB 21 01 DC */	lmw r25, 0x1dc(r1)
 /* 8035EFE0 0035BF20  80 01 01 FC */	lwz r0, 0x1fc(r1)
 /* 8035EFE4 0035BF24  38 21 01 F8 */	addi r1, r1, 0x1f8
@@ -821,16 +821,16 @@ __ct__9TSunModelFbPCc:
 /* 8035F038 0035BF78  90 03 00 00 */	stw r0, 0(r3)
 /* 8035F03C 0035BF7C  38 63 00 0C */	addi r3, r3, 0xc
 /* 8035F040 0035BF80  38 80 00 00 */	li r4, 0
-/* 8035F044 0035BF84  4B CE 1A BD */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 8035F044 0035BF84  4B CE 1A BD */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 8035F048 0035BF88  83 81 00 18 */	lwz r28, 0x18(r1)
 /* 8035F04C 0035BF8C  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
 /* 8035F050 0035BF90  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 8035F054 0035BF94  90 1C 00 00 */	stw r0, 0(r28)
 /* 8035F058 0035BF98  38 7C 00 10 */	addi r3, r28, 0x10
-/* 8035F05C 0035BF9C  C0 22 07 74 */	lfs f1, $$21862@sda21(r2)
+/* 8035F05C 0035BF9C  C0 22 07 74 */	lfs f1, "@1862"@sda21(r2)
 /* 8035F060 0035BFA0  FC 40 08 90 */	fmr f2, f1
 /* 8035F064 0035BFA4  FC 60 08 90 */	fmr f3, f1
-/* 8035F068 0035BFA8  48 00 01 E1 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+/* 8035F068 0035BFA8  48 00 01 E1 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff"
 /* 8035F06C 0035BFAC  3B E0 00 00 */	li r31, 0
 /* 8035F070 0035BFB0  3C 60 80 3B */	lis r3, __vt__Q26JStage7TObject@ha
 /* 8035F074 0035BFB4  B3 FC 00 1C */	sth r31, 0x1c(r28)
@@ -847,7 +847,7 @@ __ct__9TSunModelFbPCc:
 /* 8035F0A0 0035BFE0  90 1E 00 20 */	stw r0, 0x20(r30)
 /* 8035F0A4 0035BFE4  38 C3 4B 98 */	addi r6, r3, __vt__9TSunModel@l
 /* 8035F0A8 0035BFE8  3C 60 80 3B */	lis r3, __vt__12J3DFrameCtrl@ha
-/* 8035F0AC 0035BFEC  C0 02 07 98 */	lfs f0, $$21907@sda21(r2)
+/* 8035F0AC 0035BFEC  C0 02 07 98 */	lfs f0, "@1907"@sda21(r2)
 /* 8035F0B0 0035BFF0  38 03 A9 C0 */	addi r0, r3, __vt__12J3DFrameCtrl@l
 /* 8035F0B4 0035BFF4  38 A6 00 24 */	addi r5, r6, 0x24
 /* 8035F0B8 0035BFF8  D0 1E 00 24 */	stfs f0, 0x24(r30)
@@ -855,7 +855,7 @@ __ct__9TSunModelFbPCc:
 /* 8035F0C0 0035C000  38 80 00 00 */	li r4, 0
 /* 8035F0C4 0035C004  D0 1E 00 28 */	stfs f0, 0x28(r30)
 /* 8035F0C8 0035C008  D0 1E 00 2C */	stfs f0, 0x2c(r30)
-/* 8035F0CC 0035C00C  C0 02 07 74 */	lfs f0, $$21862@sda21(r2)
+/* 8035F0CC 0035C00C  C0 02 07 74 */	lfs f0, "@1862"@sda21(r2)
 /* 8035F0D0 0035C010  D0 1E 00 30 */	stfs f0, 0x30(r30)
 /* 8035F0D4 0035C014  D0 1E 00 34 */	stfs f0, 0x34(r30)
 /* 8035F0D8 0035C018  D0 1E 00 38 */	stfs f0, 0x38(r30)
@@ -870,28 +870,28 @@ __ct__9TSunModelFbPCc:
 /* 8035F0FC 0035C03C  4B CC BB 99 */	bl init__12J3DFrameCtrlFs
 /* 8035F100 0035C040  93 FE 00 64 */	stw r31, 0x64(r30)
 /* 8035F104 0035C044  38 00 00 FF */	li r0, 0xff
-/* 8035F108 0035C048  3C 60 80 36 */	lis r3, __ct__Q29JGeometry8TVec2$$0s$$1Fv@ha
+/* 8035F108 0035C048  3C 60 80 36 */	lis r3, "__ct__Q29JGeometry8TVec2<s>Fv"@ha
 /* 8035F10C 0035C04C  98 1E 00 68 */	stb r0, 0x68(r30)
-/* 8035F110 0035C050  38 83 F2 44 */	addi r4, r3, __ct__Q29JGeometry8TVec2$$0s$$1Fv@l
+/* 8035F110 0035C050  38 83 F2 44 */	addi r4, r3, "__ct__Q29JGeometry8TVec2<s>Fv"@l
 /* 8035F114 0035C054  39 00 00 32 */	li r8, 0x32
-/* 8035F118 0035C058  C0 22 07 B8 */	lfs f1, $$22042@sda21(r2)
+/* 8035F118 0035C058  C0 22 07 B8 */	lfs f1, "@2042"@sda21(r2)
 /* 8035F11C 0035C05C  38 00 00 64 */	li r0, 0x64
 /* 8035F120 0035C060  38 7E 00 B4 */	addi r3, r30, 0xb4
 /* 8035F124 0035C064  D0 3E 00 6C */	stfs f1, 0x6c(r30)
 /* 8035F128 0035C068  38 A0 00 00 */	li r5, 0
 /* 8035F12C 0035C06C  38 C0 00 04 */	li r6, 4
-/* 8035F130 0035C070  C0 02 07 BC */	lfs f0, $$22043@sda21(r2)
+/* 8035F130 0035C070  C0 02 07 BC */	lfs f0, "@2043"@sda21(r2)
 /* 8035F134 0035C074  38 E0 00 11 */	li r7, 0x11
 /* 8035F138 0035C078  D0 1E 00 70 */	stfs f0, 0x70(r30)
 /* 8035F13C 0035C07C  99 1E 00 74 */	stb r8, 0x74(r30)
 /* 8035F140 0035C080  D0 3E 00 78 */	stfs f1, 0x78(r30)
 /* 8035F144 0035C084  D0 1E 00 7C */	stfs f0, 0x7c(r30)
 /* 8035F148 0035C088  98 1E 00 80 */	stb r0, 0x80(r30)
-/* 8035F14C 0035C08C  C0 02 07 C0 */	lfs f0, $$22044@sda21(r2)
+/* 8035F14C 0035C08C  C0 02 07 C0 */	lfs f0, "@2044"@sda21(r2)
 /* 8035F150 0035C090  D0 1E 00 84 */	stfs f0, 0x84(r30)
-/* 8035F154 0035C094  C0 02 07 78 */	lfs f0, $$21863@sda21(r2)
+/* 8035F154 0035C094  C0 02 07 78 */	lfs f0, "@1863"@sda21(r2)
 /* 8035F158 0035C098  D0 1E 00 88 */	stfs f0, 0x88(r30)
-/* 8035F15C 0035C09C  C0 02 07 74 */	lfs f0, $$21862@sda21(r2)
+/* 8035F15C 0035C09C  C0 02 07 74 */	lfs f0, "@1862"@sda21(r2)
 /* 8035F160 0035C0A0  D0 1E 00 9C */	stfs f0, 0x9c(r30)
 /* 8035F164 0035C0A4  D0 1E 00 A0 */	stfs f0, 0xa0(r30)
 /* 8035F168 0035C0A8  D0 1E 00 A4 */	stfs f0, 0xa4(r30)
@@ -899,8 +899,8 @@ __ct__9TSunModelFbPCc:
 /* 8035F170 0035C0B0  D0 1E 00 AC */	stfs f0, 0xac(r30)
 /* 8035F174 0035C0B4  D0 1E 00 B0 */	stfs f0, 0xb0(r30)
 /* 8035F178 0035C0B8  4B D2 36 BD */	bl __construct_array
-/* 8035F17C 0035C0BC  3C 60 80 07 */	lis r3, __ct__Q29JGeometry8TVec2$$0f$$1Fv@ha
-/* 8035F180 0035C0C0  38 83 76 EC */	addi r4, r3, __ct__Q29JGeometry8TVec2$$0f$$1Fv@l
+/* 8035F17C 0035C0BC  3C 60 80 07 */	lis r3, "__ct__Q29JGeometry8TVec2<f>Fv"@ha
+/* 8035F180 0035C0C0  38 83 76 EC */	addi r4, r3, "__ct__Q29JGeometry8TVec2<f>Fv"@l
 /* 8035F184 0035C0C4  38 7E 00 F8 */	addi r3, r30, 0xf8
 /* 8035F188 0035C0C8  38 A0 00 00 */	li r5, 0
 /* 8035F18C 0035C0CC  38 C0 00 08 */	li r6, 8
@@ -908,11 +908,11 @@ __ct__9TSunModelFbPCc:
 /* 8035F194 0035C0D4  4B D2 36 A1 */	bl __construct_array
 /* 8035F198 0035C0D8  9B FE 01 91 */	stb r31, 0x191(r30)
 /* 8035F19C 0035C0DC  57 A0 06 3F */	clrlwi. r0, r29, 0x18
-/* 8035F1A0 0035C0E0  C0 02 07 74 */	lfs f0, $$21862@sda21(r2)
+/* 8035F1A0 0035C0E0  C0 02 07 74 */	lfs f0, "@1862"@sda21(r2)
 /* 8035F1A4 0035C0E4  D0 1E 01 94 */	stfs f0, 0x194(r30)
-/* 8035F1A8 0035C0E8  C0 02 07 C4 */	lfs f0, $$22045@sda21(r2)
+/* 8035F1A8 0035C0E8  C0 02 07 C4 */	lfs f0, "@2045"@sda21(r2)
 /* 8035F1AC 0035C0EC  D0 1E 01 A4 */	stfs f0, 0x1a4(r30)
-/* 8035F1B0 0035C0F0  C0 02 07 C0 */	lfs f0, $$22044@sda21(r2)
+/* 8035F1B0 0035C0F0  C0 02 07 C0 */	lfs f0, "@2044"@sda21(r2)
 /* 8035F1B4 0035C0F4  D0 1E 01 A8 */	stfs f0, 0x1a8(r30)
 /* 8035F1B8 0035C0F8  9B FE 01 AC */	stb r31, 0x1ac(r30)
 /* 8035F1BC 0035C0FC  93 CD A8 D0 */	stw r30, gpSunModel@sda21(r13)
@@ -926,7 +926,7 @@ lbl_8035F1D8:
 /* 8035F1D8 0035C118  80 61 00 08 */	lwz r3, 8(r1)
 /* 8035F1DC 0035C11C  38 00 00 11 */	li r0, 0x11
 /* 8035F1E0 0035C120  7C 09 03 A6 */	mtctr r0
-/* 8035F1E4 0035C124  C0 02 07 C8 */	lfs f0, $$22046@sda21(r2)
+/* 8035F1E4 0035C124  C0 02 07 C8 */	lfs f0, "@2046"@sda21(r2)
 /* 8035F1E8 0035C128  38 83 00 B4 */	addi r4, r3, 0xb4
 /* 8035F1EC 0035C12C  38 A3 00 F8 */	addi r5, r3, 0xf8
 /* 8035F1F0 0035C130  38 C3 01 80 */	addi r6, r3, 0x180
@@ -952,42 +952,42 @@ lbl_8035F1FC:
 /* 8035F23C 0035C17C  38 21 00 30 */	addi r1, r1, 0x30
 /* 8035F240 0035C180  4E 80 00 20 */	blr 
 
-.global __ct__Q29JGeometry8TVec2$$0s$$1Fv
-__ct__Q29JGeometry8TVec2$$0s$$1Fv:
+.global "__ct__Q29JGeometry8TVec2<s>Fv"
+"__ct__Q29JGeometry8TVec2<s>Fv":
 /* 8035F244 0035C184  4E 80 00 20 */	blr 
 
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
+"set<f>__Q29JGeometry8TVec3<f>Ffff":
 /* 8035F248 0035C188  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8035F24C 0035C18C  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8035F250 0035C190  D0 63 00 08 */	stfs f3, 8(r3)
 /* 8035F254 0035C194  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__9TSunModelFv
-$$232$$2__dt__9TSunModelFv:
+.global "@32@__dt__9TSunModelFv"
+"@32@__dt__9TSunModelFv":
 /* 8035F258 0035C198  38 63 FF E0 */	addi r3, r3, -32
 /* 8035F25C 0035C19C  4B FF F2 14 */	b __dt__9TSunModelFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x3A39D4, 0x14
-$$21633:
+"@1633":
 	.incbin "baserom.dol", 0x3A39E8, 0xC
-$$21634:
+"@1634":
 	.incbin "baserom.dol", 0x3A39F4, 0x10
-$$21998:
+"@1998":
 	.incbin "baserom.dol", 0x3A3A04, 0xC
-$$21999:
+"@1999":
 	.incbin "baserom.dol", 0x3A3A10, 0xC
-$$22000:
+"@2000":
 	.incbin "baserom.dol", 0x3A3A1C, 0xC
-$$22001:
+"@2001":
 	.incbin "baserom.dol", 0x3A3A28, 0xC
-$$22002:
+"@2002":
 	.incbin "baserom.dol", 0x3A3A34, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1004,7 +1004,7 @@ __vt__9TSunModel:
   .4byte perform__9TSunModelFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__9TSunModelFv
+  .4byte "@32@__dt__9TSunModelFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1014,12 +1014,12 @@ __vt__9TSunModel:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1036,43 +1036,43 @@ __vt__9TSunModel:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21861:
+"@1861":
 	.incbin "baserom.dol", 0x3EC470, 0x4
-$$21862:
+"@1862":
   .4byte 0
-$$21863:
+"@1863":
 	.incbin "baserom.dol", 0x3EC478, 0x4
-$$21864:
+"@1864":
 	.incbin "baserom.dol", 0x3EC47C, 0x4
-$$21865:
+"@1865":
 	.incbin "baserom.dol", 0x3EC480, 0x8
-$$21867:
+"@1867":
 	.incbin "baserom.dol", 0x3EC488, 0x8
-$$21887:
+"@1887":
 	.incbin "baserom.dol", 0x3EC490, 0x4
-$$21906:
+"@1906":
 	.incbin "baserom.dol", 0x3EC494, 0x4
-$$21907:
+"@1907":
 	.incbin "baserom.dol", 0x3EC498, 0x4
-$$21908:
+"@1908":
 	.incbin "baserom.dol", 0x3EC49C, 0x4
-$$21910:
+"@1910":
 	.incbin "baserom.dol", 0x3EC4A0, 0x8
-$$21913:
+"@1913":
 	.incbin "baserom.dol", 0x3EC4A8, 0x4
-$$21996:
+"@1996":
 	.incbin "baserom.dol", 0x3EC4AC, 0x4
-$$21997:
+"@1997":
 	.incbin "baserom.dol", 0x3EC4B0, 0x8
-$$22042:
+"@2042":
 	.incbin "baserom.dol", 0x3EC4B8, 0x4
-$$22043:
+"@2043":
 	.incbin "baserom.dol", 0x3EC4BC, 0x4
-$$22044:
+"@2044":
 	.incbin "baserom.dol", 0x3EC4C0, 0x4
-$$22045:
+"@2045":
 	.incbin "baserom.dol", 0x3EC4C4, 0x4
-$$22046:
+"@2046":
 	.incbin "baserom.dol", 0x3EC4C8, 0x8
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

@@ -19,16 +19,16 @@ __ct__9THitActorFPCc:
 /* 8011D700 0011A640  90 03 00 00 */	stw r0, 0(r3)
 /* 8011D704 0011A644  38 63 00 0C */	addi r3, r3, 0xc
 /* 8011D708 0011A648  38 80 00 00 */	li r4, 0
-/* 8011D70C 0011A64C  4B F2 33 F5 */	bl __ct__Q26JDrama10TFlagT$$0Us$$1FUs
+/* 8011D70C 0011A64C  4B F2 33 F5 */	bl "__ct__Q26JDrama10TFlagT<Us>FUs"
 /* 8011D710 0011A650  83 C1 00 14 */	lwz r30, 0x14(r1)
 /* 8011D714 0011A654  3C 60 80 3B */	lis r3, __vt__Q26JDrama10TPlacement@ha
 /* 8011D718 0011A658  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 8011D71C 0011A65C  90 1E 00 00 */	stw r0, 0(r30)
 /* 8011D720 0011A660  38 7E 00 10 */	addi r3, r30, 0x10
-/* 8011D724 0011A664  C0 22 97 70 */	lfs f1, $$21618@sda21(r2)
+/* 8011D724 0011A664  C0 22 97 70 */	lfs f1, "@1618"@sda21(r2)
 /* 8011D728 0011A668  FC 40 08 90 */	fmr f2, f1
 /* 8011D72C 0011A66C  FC 60 08 90 */	fmr f3, f1
-/* 8011D730 0011A670  48 00 00 B9 */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+/* 8011D730 0011A670  48 00 00 B9 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff"
 /* 8011D734 0011A674  38 A0 00 00 */	li r5, 0
 /* 8011D738 0011A678  3C 60 80 3B */	lis r3, __vt__Q26JStage7TObject@ha
 /* 8011D73C 0011A67C  B0 BE 00 1C */	sth r5, 0x1c(r30)
@@ -45,12 +45,12 @@ __ct__9THitActorFPCc:
 /* 8011D768 0011A6A8  90 1F 00 20 */	stw r0, 0x20(r31)
 /* 8011D76C 0011A6AC  38 83 53 A0 */	addi r4, r3, __vt__9THitActor@l
 /* 8011D770 0011A6B0  38 04 00 24 */	addi r0, r4, 0x24
-/* 8011D774 0011A6B4  C0 02 97 74 */	lfs f0, $$21619@sda21(r2)
+/* 8011D774 0011A6B4  C0 02 97 74 */	lfs f0, "@1619"@sda21(r2)
 /* 8011D778 0011A6B8  7F E3 FB 78 */	mr r3, r31
 /* 8011D77C 0011A6BC  D0 1F 00 24 */	stfs f0, 0x24(r31)
 /* 8011D780 0011A6C0  D0 1F 00 28 */	stfs f0, 0x28(r31)
 /* 8011D784 0011A6C4  D0 1F 00 2C */	stfs f0, 0x2c(r31)
-/* 8011D788 0011A6C8  C0 02 97 70 */	lfs f0, $$21618@sda21(r2)
+/* 8011D788 0011A6C8  C0 02 97 70 */	lfs f0, "@1618"@sda21(r2)
 /* 8011D78C 0011A6CC  D0 1F 00 30 */	stfs f0, 0x30(r31)
 /* 8011D790 0011A6D0  D0 1F 00 34 */	stfs f0, 0x34(r31)
 /* 8011D794 0011A6D4  D0 1F 00 38 */	stfs f0, 0x38(r31)
@@ -75,7 +75,7 @@ __ct__9THitActorFPCc:
 /* 8011D7E0 0011A720  38 21 00 28 */	addi r1, r1, 0x28
 /* 8011D7E4 0011A724  4E 80 00 20 */	blr 
 
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
+"set<f>__Q29JGeometry8TVec3<f>Ffff":
 /* 8011D7E8 0011A728  D0 23 00 00 */	stfs f1, 0(r3)
 /* 8011D7EC 0011A72C  D0 43 00 04 */	stfs f2, 4(r3)
 /* 8011D7F0 0011A730  D0 63 00 08 */	stfs f3, 8(r3)
@@ -169,12 +169,12 @@ lbl_8011D918:
 /* 8011D918 0011A858  FC 00 08 90 */	fmr f0, f1
 lbl_8011D91C:
 /* 8011D91C 0011A85C  EC 20 00 32 */	fmuls f1, f0, f0
-/* 8011D920 0011A860  C0 02 97 70 */	lfs f0, $$21618@sda21(r2)
+/* 8011D920 0011A860  C0 02 97 70 */	lfs f0, "@1618"@sda21(r2)
 /* 8011D924 0011A864  EC 42 08 BA */	fmadds f2, f2, f2, f1
 /* 8011D928 0011A868  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 8011D92C 0011A86C  40 81 00 28 */	ble lbl_8011D954
 /* 8011D930 0011A870  FC 20 10 34 */	frsqrte f1, f2
-/* 8011D934 0011A874  C0 02 97 78 */	lfs f0, $$21660@sda21(r2)
+/* 8011D934 0011A874  C0 02 97 78 */	lfs f0, "@1660"@sda21(r2)
 /* 8011D938 0011A878  FC 22 00 72 */	fmul f1, f2, f1
 /* 8011D93C 0011A87C  FC 20 08 18 */	frsp f1, f1
 /* 8011D940 0011A880  D0 21 00 30 */	stfs f1, 0x30(r1)
@@ -188,8 +188,8 @@ lbl_8011D958:
 /* 8011D958 0011A898  38 21 00 40 */	addi r1, r1, 0x40
 /* 8011D95C 0011A89C  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__9THitActorFv
-$$232$$2__dt__9THitActorFv:
+.global "@32@__dt__9THitActorFv"
+"@32@__dt__9THitActorFv":
 /* 8011D960 0011A8A0  38 63 FF E0 */	addi r3, r3, -32
 /* 8011D964 0011A8A4  4B FE 76 54 */	b __dt__9THitActorFv
 
@@ -207,7 +207,7 @@ __vt__9THitActor:
   .4byte perform__9THitActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__9THitActorFv
+  .4byte "@32@__dt__9THitActorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -217,12 +217,12 @@ __vt__9THitActor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -241,9 +241,9 @@ __vt__9THitActor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21618:
+"@1618":
   .4byte 0
-$$21619:
+"@1619":
 	.incbin "baserom.dol", 0x3E5474, 0x4
-$$21660:
+"@1660":
 	.incbin "baserom.dol", 0x3E5478, 0x8

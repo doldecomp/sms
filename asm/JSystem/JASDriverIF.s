@@ -23,7 +23,7 @@ setMixerLevel__Q28JASystem6DriverFff:
 /* 8005E9DC 0005B91C  7C 08 02 A6 */	mflr r0
 /* 8005E9E0 0005B920  90 01 00 04 */	stw r0, 4(r1)
 /* 8005E9E4 0005B924  94 21 FF E8 */	stwu r1, -0x18(r1)
-/* 8005E9E8 0005B928  C0 02 86 68 */	lfs f0, $$2120@sda21(r2)
+/* 8005E9E8 0005B928  C0 02 86 68 */	lfs f0, "@120"@sda21(r2)
 /* 8005E9EC 0005B92C  EC 00 00 72 */	fmuls f0, f0, f1
 /* 8005E9F0 0005B930  FC 20 10 90 */	fmr f1, f2
 /* 8005E9F4 0005B934  FC 00 00 1E */	fctiwz f0, f0
@@ -68,5 +68,5 @@ DSP_VOICE_WAITS_MAX__Q28JASystem6Driver:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2120:
+"@120":
 	.incbin "baserom.dol", 0x3E4368, 0x8

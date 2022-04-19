@@ -353,9 +353,9 @@ __ct__Q26JDrama9TIdxLightFv:
 /* 80043C24 00040B64  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 80043C28 00040B68  93 E1 00 34 */	stw r31, 0x34(r1)
 /* 80043C2C 00040B6C  7C 7F 1B 78 */	mr r31, r3
-/* 80043C30 00040B70  3C 60 80 37 */	lis r3, $$2632@ha
+/* 80043C30 00040B70  3C 60 80 37 */	lis r3, "@632"@ha
 /* 80043C34 00040B74  93 C1 00 30 */	stw r30, 0x30(r1)
-/* 80043C38 00040B78  38 83 0F 38 */	addi r4, r3, $$2632@l
+/* 80043C38 00040B78  38 83 0F 38 */	addi r4, r3, "@632"@l
 /* 80043C3C 00040B7C  93 A1 00 2C */	stw r29, 0x2c(r1)
 /* 80043C40 00040B80  93 E1 00 14 */	stw r31, 0x14(r1)
 /* 80043C44 00040B84  93 E1 00 18 */	stw r31, 0x18(r1)
@@ -366,10 +366,10 @@ __ct__Q26JDrama9TIdxLightFv:
 /* 80043C58 00040B98  38 03 A8 B0 */	addi r0, r3, __vt__Q26JDrama10TPlacement@l
 /* 80043C5C 00040B9C  90 1E 00 00 */	stw r0, 0(r30)
 /* 80043C60 00040BA0  38 7E 00 10 */	addi r3, r30, 0x10
-/* 80043C64 00040BA4  C0 22 83 B0 */	lfs f1, $$2633@sda21(r2)
+/* 80043C64 00040BA4  C0 22 83 B0 */	lfs f1, "@633"@sda21(r2)
 /* 80043C68 00040BA8  FC 40 08 90 */	fmr f2, f1
 /* 80043C6C 00040BAC  FC 60 08 90 */	fmr f3, f1
-/* 80043C70 00040BB0  48 00 01 ED */	bl set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff
+/* 80043C70 00040BB0  48 00 01 ED */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff"
 /* 80043C74 00040BB4  3B A0 00 00 */	li r29, 0
 /* 80043C78 00040BB8  B3 BE 00 1C */	sth r29, 0x1c(r30)
 /* 80043C7C 00040BBC  3C C0 80 3B */	lis r6, __vt__Q26JStage7TObject@ha
@@ -387,8 +387,8 @@ __ct__Q26JDrama9TIdxLightFv:
 /* 80043CAC 00040BEC  38 7E 00 24 */	addi r3, r30, 0x24
 /* 80043CB0 00040BF0  90 9E 00 20 */	stw r4, 0x20(r30)
 /* 80043CB4 00040BF4  90 1E 00 64 */	stw r0, 0x64(r30)
-/* 80043CB8 00040BF8  C0 42 83 B0 */	lfs f2, $$2633@sda21(r2)
-/* 80043CBC 00040BFC  C0 22 83 B4 */	lfs f1, $$2634@sda21(r2)
+/* 80043CB8 00040BF8  C0 42 83 B0 */	lfs f2, "@633"@sda21(r2)
+/* 80043CBC 00040BFC  C0 22 83 B4 */	lfs f1, "@634"@sda21(r2)
 /* 80043CC0 00040C00  FC 60 10 90 */	fmr f3, f2
 /* 80043CC4 00040C04  FC 80 08 90 */	fmr f4, f1
 /* 80043CC8 00040C08  FC A0 10 90 */	fmr f5, f2
@@ -506,7 +506,7 @@ lbl_80043E40:
 /* 80043E54 00040D94  38 21 00 18 */	addi r1, r1, 0x18
 /* 80043E58 00040D98  4E 80 00 20 */	blr 
 
-set$$0f$$1__Q29JGeometry8TVec3$$0f$$1Ffff:
+"set<f>__Q29JGeometry8TVec3<f>Ffff":
 /* 80043E5C 00040D9C  D0 23 00 00 */	stfs f1, 0(r3)
 /* 80043E60 00040DA0  D0 43 00 04 */	stfs f2, 4(r3)
 /* 80043E64 00040DA4  D0 63 00 08 */	stfs f3, 8(r3)
@@ -831,9 +831,9 @@ __ct__Q26JDrama9TAmbColorFv:
 /* 800442A4 000411E4  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800442A8 000411E8  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 800442AC 000411EC  3B E3 00 00 */	addi r31, r3, 0
-/* 800442B0 000411F0  3C 60 80 37 */	lis r3, $$2753@ha
+/* 800442B0 000411F0  3C 60 80 37 */	lis r3, "@753"@ha
 /* 800442B4 000411F4  90 1F 00 00 */	stw r0, 0(r31)
-/* 800442B8 000411F8  38 63 0F 44 */	addi r3, r3, $$2753@l
+/* 800442B8 000411F8  38 63 0F 44 */	addi r3, r3, "@753"@l
 /* 800442BC 000411FC  90 7F 00 04 */	stw r3, 4(r31)
 /* 800442C0 00041200  48 00 03 CD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
 /* 800442C4 00041204  B0 7F 00 08 */	sth r3, 8(r31)
@@ -1090,66 +1090,66 @@ lbl_80044618:
 /* 8004462C 0004156C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80044630 00041570  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__Q26JDrama6TLightFv
-$$232$$2__dt__Q26JDrama6TLightFv:
+.global "@32@__dt__Q26JDrama6TLightFv"
+"@32@__dt__Q26JDrama6TLightFv":
 /* 80044634 00041574  38 63 FF E0 */	addi r3, r3, -32
 /* 80044638 00041578  4B FF F7 00 */	b __dt__Q26JDrama6TLightFv
 
-.global $$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor
-$$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor:
+.global "@32@JSGSetColor__Q26JDrama6TLightF8_GXColor"
+"@32@JSGSetColor__Q26JDrama6TLightF8_GXColor":
 /* 8004463C 0004157C  38 63 FF E0 */	addi r3, r3, -32
 /* 80044640 00041580  4B FF F2 D8 */	b JSGSetColor__Q26JDrama6TLightF8_GXColor
 
-.global $$232$$2JSGGetColor__Q26JDrama6TLightCFv
-$$232$$2JSGGetColor__Q26JDrama6TLightCFv:
+.global "@32@JSGGetColor__Q26JDrama6TLightCFv"
+"@32@JSGGetColor__Q26JDrama6TLightCFv":
 /* 80044644 00041584  38 63 FF E0 */	addi r3, r3, -32
 /* 80044648 00041588  4B FF F2 A4 */	b JSGGetColor__Q26JDrama6TLightCFv
 
-.global $$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec
-$$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec:
+.global "@32@JSGSetPosition__Q26JDrama6TLightFRC3Vec"
+"@32@JSGSetPosition__Q26JDrama6TLightFRC3Vec":
 /* 8004464C 0004158C  38 63 FF E0 */	addi r3, r3, -32
 /* 80044650 00041590  4B FF F2 74 */	b JSGSetPosition__Q26JDrama6TLightFRC3Vec
 
-.global $$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec
-$$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec:
+.global "@32@JSGGetPosition__Q26JDrama6TLightCFP3Vec"
+"@32@JSGGetPosition__Q26JDrama6TLightCFP3Vec":
 /* 80044654 00041594  38 63 FF E0 */	addi r3, r3, -32
 /* 80044658 00041598  4B FF F2 50 */	b JSGGetPosition__Q26JDrama6TLightCFP3Vec
 
-.global $$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
-$$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight:
+.global "@32@JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight"
+"@32@JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight":
 /* 8004465C 0004159C  38 63 FF E0 */	addi r3, r3, -32
 /* 80044660 000415A0  4B FF F2 38 */	b JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
 
-.global $$232$$2JSGGetLightType__Q26JDrama6TLightCFv
-$$232$$2JSGGetLightType__Q26JDrama6TLightCFv:
+.global "@32@JSGGetLightType__Q26JDrama6TLightCFv"
+"@32@JSGGetLightType__Q26JDrama6TLightCFv":
 /* 80044664 000415A4  38 63 FF E0 */	addi r3, r3, -32
 /* 80044668 000415A8  4B FF F2 28 */	b JSGGetLightType__Q26JDrama6TLightCFv
 
-.global $$232$$2__dt__Q26JDrama9TIdxLightFv
-$$232$$2__dt__Q26JDrama9TIdxLightFv:
+.global "@32@__dt__Q26JDrama9TIdxLightFv"
+"@32@__dt__Q26JDrama9TIdxLightFv":
 /* 8004466C 000415AC  38 63 FF E0 */	addi r3, r3, -32
 /* 80044670 000415B0  4B FF F4 F8 */	b __dt__Q26JDrama9TIdxLightFv
 
-.global $$216$$2JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
-$$216$$2JSGSetColor__Q26JDrama9TAmbColorF8_GXColor:
+.global "@16@JSGSetColor__Q26JDrama9TAmbColorF8_GXColor"
+"@16@JSGSetColor__Q26JDrama9TAmbColorF8_GXColor":
 /* 80044674 000415B4  38 63 FF F0 */	addi r3, r3, -16
 /* 80044678 000415B8  4B FF F9 80 */	b JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
 
-.global $$216$$2JSGGetColor__Q26JDrama9TAmbColorCFv
-$$216$$2JSGGetColor__Q26JDrama9TAmbColorCFv:
+.global "@16@JSGGetColor__Q26JDrama9TAmbColorCFv"
+"@16@JSGGetColor__Q26JDrama9TAmbColorCFv":
 /* 8004467C 000415BC  38 63 FF F0 */	addi r3, r3, -16
 /* 80044680 000415C0  4B FF F9 70 */	b JSGGetColor__Q26JDrama9TAmbColorCFv
 
-.global $$216$$2__dt__Q26JDrama9TAmbColorFv
-$$216$$2__dt__Q26JDrama9TAmbColorFv:
+.global "@16@__dt__Q26JDrama9TAmbColorFv"
+"@16@__dt__Q26JDrama9TAmbColorFv":
 /* 80044684 000415C4  38 63 FF F0 */	addi r3, r3, -16
 /* 80044688 000415C8  4B FF FB 80 */	b __dt__Q26JDrama9TAmbColorFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$2632:
+"@632":
 	.incbin "baserom.dol", 0x36DF38, 0xC
-$$2753:
+"@753":
 	.incbin "baserom.dol", 0x36DF44, 0xC
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1188,7 +1188,7 @@ __vt__Q26JDrama9TAmbColor:
   .4byte perform__Q26JDrama9TAmbColorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$216$$2__dt__Q26JDrama9TAmbColorFv
+  .4byte "@16@__dt__Q26JDrama9TAmbColorFv"
   .4byte JSGFGetType__Q26JStage13TAmbientLightCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1198,8 +1198,8 @@ __vt__Q26JDrama9TAmbColor:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$216$$2JSGGetColor__Q26JDrama9TAmbColorCFv
-  .4byte $$216$$2JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
+  .4byte "@16@JSGGetColor__Q26JDrama9TAmbColorCFv"
+  .4byte "@16@JSGSetColor__Q26JDrama9TAmbColorF8_GXColor"
   .4byte JSGGetColor__Q26JDrama9TAmbColorCFv
   .4byte JSGSetColor__Q26JDrama9TAmbColorF8_GXColor
 .global __vt__Q26JDrama9TIdxLight
@@ -1215,7 +1215,7 @@ __vt__Q26JDrama9TIdxLight:
   .4byte perform__Q26JDrama6TLightFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama9TIdxLightFv
+  .4byte "@32@__dt__Q26JDrama9TIdxLightFv"
   .4byte JSGFGetType__Q26JStage6TLightCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1225,12 +1225,12 @@ __vt__Q26JDrama9TIdxLight:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetLightType__Q26JDrama6TLightCFv
-  .4byte $$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
-  .4byte $$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec
-  .4byte $$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec
-  .4byte $$232$$2JSGGetColor__Q26JDrama6TLightCFv
-  .4byte $$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor
+  .4byte "@32@JSGGetLightType__Q26JDrama6TLightCFv"
+  .4byte "@32@JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight"
+  .4byte "@32@JSGGetPosition__Q26JDrama6TLightCFP3Vec"
+  .4byte "@32@JSGSetPosition__Q26JDrama6TLightFRC3Vec"
+  .4byte "@32@JSGGetColor__Q26JDrama6TLightCFv"
+  .4byte "@32@JSGSetColor__Q26JDrama6TLightF8_GXColor"
   .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
   .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
   .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
@@ -1267,7 +1267,7 @@ __vt__Q26JDrama6TLight:
   .4byte perform__Q26JDrama6TLightFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__Q26JDrama6TLightFv
+  .4byte "@32@__dt__Q26JDrama6TLightFv"
   .4byte JSGFGetType__Q26JStage6TLightCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1277,12 +1277,12 @@ __vt__Q26JDrama6TLight:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetLightType__Q26JDrama6TLightCFv
-  .4byte $$232$$2JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight
-  .4byte $$232$$2JSGGetPosition__Q26JDrama6TLightCFP3Vec
-  .4byte $$232$$2JSGSetPosition__Q26JDrama6TLightFRC3Vec
-  .4byte $$232$$2JSGGetColor__Q26JDrama6TLightCFv
-  .4byte $$232$$2JSGSetColor__Q26JDrama6TLightF8_GXColor
+  .4byte "@32@JSGGetLightType__Q26JDrama6TLightCFv"
+  .4byte "@32@JSGSetLightType__Q26JDrama6TLightFQ26JStage7TELight"
+  .4byte "@32@JSGGetPosition__Q26JDrama6TLightCFP3Vec"
+  .4byte "@32@JSGSetPosition__Q26JDrama6TLightFRC3Vec"
+  .4byte "@32@JSGGetColor__Q26JDrama6TLightCFv"
+  .4byte "@32@JSGSetColor__Q26JDrama6TLightF8_GXColor"
   .4byte JSGGetDistanceAttenuation__Q26JStage6TLightCFPfPfP13_GXDistAttnFn
   .4byte JSGSetDistanceAttenuation__Q26JStage6TLightFff13_GXDistAttnFn
   .4byte JSGGetAngleAttenuation__Q26JStage6TLightCFPfP9_GXSpotFn
@@ -1298,7 +1298,7 @@ __vt__Q26JDrama6TLight:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2633:
+"@633":
   .4byte 0
-$$2634:
+"@634":
 	.incbin "baserom.dol", 0x3E40B4, 0x4

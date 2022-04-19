@@ -313,7 +313,7 @@ initialize__17JPADefaultTextureFP7JKRHeap:
 /* 80081758 0007E698  39 20 00 01 */	li r9, 1
 /* 8008175C 0007E69C  39 40 00 00 */	li r10, 0
 /* 80081760 0007E6A0  48 02 8C 99 */	bl GXInitTexObj
-/* 80081764 0007E6A4  C0 22 89 28 */	lfs f1, $$21494@sda21(r2)
+/* 80081764 0007E6A4  C0 22 89 28 */	lfs f1, "@1494"@sda21(r2)
 /* 80081768 0007E6A8  38 7F 00 04 */	addi r3, r31, 4
 /* 8008176C 0007E6AC  38 80 00 01 */	li r4, 1
 /* 80081770 0007E6B0  FC 40 08 90 */	fmr f2, f1
@@ -374,6 +374,6 @@ __vt__10JPATexture:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21494:
+"@1494":
   .4byte 0
   .4byte 0

@@ -185,8 +185,8 @@ getTiming:
 /* 800998A8 000967E8  3C 80 80 3B */	lis r4, timing@ha
 /* 800998AC 000967EC  38 A4 0F 30 */	addi r5, r4, timing@l
 /* 800998B0 000967F0  41 81 00 7C */	bgt lbl_8009992C
-/* 800998B4 000967F4  3C 80 80 3B */	lis r4, $$292@ha
-/* 800998B8 000967F8  38 84 10 94 */	addi r4, r4, $$292@l
+/* 800998B4 000967F4  3C 80 80 3B */	lis r4, "@92"@ha
+/* 800998B8 000967F8  38 84 10 94 */	addi r4, r4, "@92"@l
 /* 800998BC 000967FC  54 60 10 3A */	slwi r0, r3, 2
 /* 800998C0 00096800  7C 04 00 2E */	lwzx r0, r4, r0
 /* 800998C4 00096804  7C 09 03 A6 */	mtctr r0
@@ -1877,7 +1877,7 @@ timing:
 	.incbin "baserom.dol", 0x3ADF30, 0x130
 taps:
 	.incbin "baserom.dol", 0x3AE060, 0x34
-$$292:
+"@92":
     .4byte lbl_800998CC
     .4byte lbl_800998D4
     .4byte lbl_8009990C
@@ -1900,17 +1900,17 @@ $$292:
     .4byte lbl_8009992C
     .4byte lbl_800998EC
     .4byte lbl_800998F4
-$$2336:
+"@336":
 	.incbin "baserom.dol", 0x3AE0EC, 0x2C
-$$2337:
+"@337":
 	.incbin "baserom.dol", 0x3AE118, 0x2C
-$$2338:
+"@338":
 	.incbin "baserom.dol", 0x3AE144, 0x2C
-$$2339:
+"@339":
 	.incbin "baserom.dol", 0x3AE170, 0x2C
-$$2340:
+"@340":
 	.incbin "baserom.dol", 0x3AE19C, 0x2C
-$$2341:
+"@341":
 	.incbin "baserom.dol", 0x3AE1C8, 0x30
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

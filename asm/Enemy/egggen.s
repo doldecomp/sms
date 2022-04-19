@@ -44,8 +44,8 @@ load__14TEggGenManagerFR20JSUMemoryInputStream:
 /* 8030FD6C 0030CCAC  4B CF CB 45 */	bl __nw__FUl
 /* 8030FD70 0030CCB0  7C 7D 1B 79 */	or. r29, r3, r3
 /* 8030FD74 0030CCB4  41 82 00 14 */	beq lbl_8030FD88
-/* 8030FD78 0030CCB8  3C 60 80 3A */	lis r3, $$22277@ha
-/* 8030FD7C 0030CCBC  38 83 11 5C */	addi r4, r3, $$22277@l
+/* 8030FD78 0030CCB8  3C 60 80 3A */	lis r3, "@2277"@ha
+/* 8030FD7C 0030CCBC  38 83 11 5C */	addi r4, r3, "@2277"@l
 /* 8030FD80 0030CCC0  38 7D 00 00 */	addi r3, r29, 0
 /* 8030FD84 0030CCC4  4B F4 2E 99 */	bl __ct__17TSpineEnemyParamsFPCc
 lbl_8030FD88:
@@ -106,7 +106,7 @@ control__13TEggGeneratorFv:
 /* 8030FE3C 0030CD7C  80 8D 98 B8 */	lwz r4, gpMarioOriginal@sda21(r13)
 /* 8030FE40 0030CD80  38 84 00 10 */	addi r4, r4, 0x10
 /* 8030FE44 0030CD84  4B D8 51 89 */	bl PSVECSquareDistance
-/* 8030FE48 0030CD88  C0 02 FA 08 */	lfs f0, $$22291@sda21(r2)
+/* 8030FE48 0030CD88  C0 02 FA 08 */	lfs f0, "@2291"@sda21(r2)
 /* 8030FE4C 0030CD8C  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8030FE50 0030CD90  40 80 00 38 */	bge lbl_8030FE88
 /* 8030FE54 0030CD94  80 6D 98 B8 */	lwz r3, gpMarioOriginal@sda21(r13)
@@ -153,15 +153,15 @@ init__13TEggGeneratorFP12TLiveManager:
 /* 8030FEE0 0030CE20  4B E0 64 59 */	bl __ct__13TMActorKeeperFP12TLiveManagerUs
 lbl_8030FEE4:
 /* 8030FEE4 0030CE24  93 DF 00 78 */	stw r30, 0x78(r31)
-/* 8030FEE8 0030CE28  3C 60 80 3A */	lis r3, $$22267@ha
-/* 8030FEEC 0030CE2C  38 83 11 30 */	addi r4, r3, $$22267@l
+/* 8030FEE8 0030CE28  3C 60 80 3A */	lis r3, "@2267"@ha
+/* 8030FEEC 0030CE2C  38 83 11 30 */	addi r4, r3, "@2267"@l
 /* 8030FEF0 0030CE30  80 7F 00 78 */	lwz r3, 0x78(r31)
 /* 8030FEF4 0030CE34  38 A0 00 00 */	li r5, 0
 /* 8030FEF8 0030CE38  4B E0 66 11 */	bl createMActor__13TMActorKeeperFPCcUl
 /* 8030FEFC 0030CE3C  90 7F 00 74 */	stw r3, 0x74(r31)
 /* 8030FF00 0030CE40  3C 80 02 00 */	lis r4, 0x02000001@ha
 /* 8030FF04 0030CE44  38 7F 00 00 */	addi r3, r31, 0
-/* 8030FF08 0030CE48  C0 22 FA 0C */	lfs f1, $$22309@sda21(r2)
+/* 8030FF08 0030CE48  C0 22 FA 0C */	lfs f1, "@2309"@sda21(r2)
 /* 8030FF0C 0030CE4C  38 84 00 01 */	addi r4, r4, 0x02000001@l
 /* 8030FF10 0030CE50  38 A0 00 01 */	li r5, 1
 /* 8030FF14 0030CE54  FC 40 08 90 */	fmr f2, f1
@@ -173,8 +173,8 @@ lbl_8030FEE4:
 /* 8030FF2C 0030CE6C  38 80 00 00 */	li r4, 0
 /* 8030FF30 0030CE70  4B DC 41 F1 */	bl setBckFromIndex__6MActorFi
 /* 8030FF34 0030CE74  C0 5F 00 30 */	lfs f2, 0x30(r31)
-/* 8030FF38 0030CE78  C0 22 FA 10 */	lfs f1, $$22310@sda21(r2)
-/* 8030FF3C 0030CE7C  C0 02 FA 14 */	lfs f0, $$22311@sda21(r2)
+/* 8030FF38 0030CE78  C0 22 FA 10 */	lfs f1, "@2310"@sda21(r2)
+/* 8030FF3C 0030CE7C  C0 02 FA 14 */	lfs f0, "@2311"@sda21(r2)
 /* 8030FF40 0030CE80  EC 42 08 28 */	fsubs f2, f2, f1
 /* 8030FF44 0030CE84  48 00 00 08 */	b lbl_8030FF4C
 lbl_8030FF48:
@@ -183,8 +183,8 @@ lbl_8030FF4C:
 /* 8030FF4C 0030CE8C  FC 02 00 40 */	fcmpo cr0, f2, f0
 /* 8030FF50 0030CE90  4C 41 13 82 */	cror 2, 1, 2
 /* 8030FF54 0030CE94  41 82 FF F4 */	beq lbl_8030FF48
-/* 8030FF58 0030CE98  C0 22 FA 14 */	lfs f1, $$22311@sda21(r2)
-/* 8030FF5C 0030CE9C  C0 02 FA 18 */	lfs f0, $$22312@sda21(r2)
+/* 8030FF58 0030CE98  C0 22 FA 14 */	lfs f1, "@2311"@sda21(r2)
+/* 8030FF5C 0030CE9C  C0 02 FA 18 */	lfs f0, "@2312"@sda21(r2)
 /* 8030FF60 0030CEA0  48 00 00 08 */	b lbl_8030FF68
 lbl_8030FF64:
 /* 8030FF64 0030CEA4  EC 42 08 2A */	fadds f2, f2, f1
@@ -256,37 +256,37 @@ lbl_80310038:
 /* 8031004C 0030CF8C  38 21 00 18 */	addi r1, r1, 0x18
 /* 80310050 0030CF90  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__13TEggGeneratorFv
-$$232$$2__dt__13TEggGeneratorFv:
+.global "@32@__dt__13TEggGeneratorFv"
+"@32@__dt__13TEggGeneratorFv":
 /* 80310054 0030CF94  38 63 FF E0 */	addi r3, r3, -32
 /* 80310058 0030CF98  4B FF FF 90 */	b __dt__13TEggGeneratorFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x39E05C, 0x14
-$$21598:
+"@1598":
 	.incbin "baserom.dol", 0x39E070, 0x30
-$$21599:
+"@1599":
 	.incbin "baserom.dol", 0x39E0A0, 0x38
-$$21600:
+"@1600":
 	.incbin "baserom.dol", 0x39E0D8, 0x34
-$$21601:
+"@1601":
 	.incbin "baserom.dol", 0x39E10C, 0x24
-$$22267:
+"@2267":
 	.incbin "baserom.dol", 0x39E130, 0x14
 entry$2266:
-  .4byte $$22267
+  .4byte "@2267"
   .4byte 0x10210000
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-$$22277:
+"@2277":
 	.incbin "baserom.dol", 0x39E15C, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -326,7 +326,7 @@ __vt__13TEggGenerator:
   .4byte perform__11TSpineEnemyFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__13TEggGeneratorFv
+  .4byte "@32@__dt__13TEggGeneratorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -336,12 +336,12 @@ __vt__13TEggGenerator:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -358,7 +358,7 @@ __vt__13TEggGenerator:
   .4byte receiveMessage__11TSpineEnemyFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -379,22 +379,22 @@ __vt__13TEggGenerator:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22291:
+"@2291":
 	.incbin "baserom.dol", 0x3EB708, 0x4
-$$22309:
+"@2309":
 	.incbin "baserom.dol", 0x3EB70C, 0x4
-$$22310:
+"@2310":
 	.incbin "baserom.dol", 0x3EB710, 0x4
-$$22311:
+"@2311":
 	.incbin "baserom.dol", 0x3EB714, 0x4
-$$22312:
+"@2312":
   .4byte 0
   .4byte 0

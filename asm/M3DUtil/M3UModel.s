@@ -288,7 +288,7 @@ changeAnmTexPattern__8M3UModelFiUc:
 /* 800D2FD4 000CFF14  A8 03 00 02 */	lha r0, 2(r3)
 /* 800D2FD8 000CFF18  7C 66 2A 14 */	add r3, r6, r5
 /* 800D2FDC 000CFF1C  B0 03 00 08 */	sth r0, 8(r3)
-/* 800D2FE0 000CFF20  C0 02 8E F0 */	lfs f0, $$21716@sda21(r2)
+/* 800D2FE0 000CFF20  C0 02 8E F0 */	lfs f0, "@1716"@sda21(r2)
 /* 800D2FE4 000CFF24  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 800D2FE8 000CFF28  4E 80 00 20 */	blr 
 
@@ -308,7 +308,7 @@ changeMtxCalcAnmTransform__8M3UModelFiUc:
 /* 800D3018 000CFF58  A8 03 00 02 */	lha r0, 2(r3)
 /* 800D301C 000CFF5C  7C 66 2A 14 */	add r3, r6, r5
 /* 800D3020 000CFF60  B0 03 00 08 */	sth r0, 8(r3)
-/* 800D3024 000CFF64  C0 02 8E F0 */	lfs f0, $$21716@sda21(r2)
+/* 800D3024 000CFF64  C0 02 8E F0 */	lfs f0, "@1716"@sda21(r2)
 /* 800D3028 000CFF68  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 800D302C 000CFF6C  4E 80 00 20 */	blr 
 
@@ -361,6 +361,6 @@ __vt__14M3UModelCommon:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21716:
+"@1716":
   .4byte 0
   .4byte 0

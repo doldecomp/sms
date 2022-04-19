@@ -376,7 +376,7 @@ __THPReadQuantizationTable:
 /* 800B6478 000B33B8  90 08 00 00 */	stw r0, 0(r8)
 /* 800B647C 000B33BC  54 A7 04 3E */	clrlwi r7, r5, 0x10
 /* 800B6480 000B33C0  3C 00 43 30 */	lis r0, 0x4330
-/* 800B6484 000B33C4  C8 02 8B D0 */	lfd f0, $$2243@sda21(r2)
+/* 800B6484 000B33C4  C8 02 8B D0 */	lfd f0, "@243"@sda21(r2)
 /* 800B6488 000B33C8  38 E7 FF FE */	addi r7, r7, -2
 lbl_800B648C:
 /* 800B648C 000B33CC  81 6D 97 10 */	lwz r11, __THPInfo@sda21(r13)
@@ -1234,12 +1234,12 @@ __THPDecompressiMCURow512x448:
 /* 800B70CC 000B400C  38 60 00 03 */	li r3, 3
 /* 800B70D0 000B4010  93 C1 00 08 */	stw r30, 8(r1)
 /* 800B70D4 000B4014  4B FD 71 F9 */	bl LCQueueWait
-/* 800B70D8 000B4018  C3 62 8B D8 */	lfs f27, $$2665@sda21(r2)
+/* 800B70D8 000B4018  C3 62 8B D8 */	lfs f27, "@665"@sda21(r2)
 /* 800B70DC 000B401C  3B C0 00 00 */	li r30, 0
-/* 800B70E0 000B4020  C3 82 8B DC */	lfs f28, $$2666@sda21(r2)
-/* 800B70E4 000B4024  C3 A2 8B E0 */	lfs f29, $$2667@sda21(r2)
-/* 800B70E8 000B4028  C3 C2 8B E4 */	lfs f30, $$2668@sda21(r2)
-/* 800B70EC 000B402C  C3 E2 8B E8 */	lfs f31, $$2669@sda21(r2)
+/* 800B70E0 000B4020  C3 82 8B DC */	lfs f28, "@666"@sda21(r2)
+/* 800B70E4 000B4024  C3 A2 8B E0 */	lfs f29, "@667"@sda21(r2)
+/* 800B70E8 000B4028  C3 C2 8B E4 */	lfs f30, "@668"@sda21(r2)
+/* 800B70EC 000B402C  C3 E2 8B E8 */	lfs f31, "@669"@sda21(r2)
 /* 800B70F0 000B4030  48 00 19 90 */	b lbl_800B8A80
 lbl_800B70F4:
 /* 800B70F4 000B4034  80 6D 97 10 */	lwz r3, __THPInfo@sda21(r13)
@@ -2981,12 +2981,12 @@ __THPDecompressiMCURow640x480:
 /* 800B8B54 000B5A94  38 60 00 03 */	li r3, 3
 /* 800B8B58 000B5A98  93 C1 00 08 */	stw r30, 8(r1)
 /* 800B8B5C 000B5A9C  4B FD 57 71 */	bl LCQueueWait
-/* 800B8B60 000B5AA0  C3 62 8B D8 */	lfs f27, $$2665@sda21(r2)
+/* 800B8B60 000B5AA0  C3 62 8B D8 */	lfs f27, "@665"@sda21(r2)
 /* 800B8B64 000B5AA4  3B C0 00 00 */	li r30, 0
-/* 800B8B68 000B5AA8  C3 82 8B DC */	lfs f28, $$2666@sda21(r2)
-/* 800B8B6C 000B5AAC  C3 A2 8B E0 */	lfs f29, $$2667@sda21(r2)
-/* 800B8B70 000B5AB0  C3 C2 8B E4 */	lfs f30, $$2668@sda21(r2)
-/* 800B8B74 000B5AB4  C3 E2 8B E8 */	lfs f31, $$2669@sda21(r2)
+/* 800B8B68 000B5AA8  C3 82 8B DC */	lfs f28, "@666"@sda21(r2)
+/* 800B8B6C 000B5AAC  C3 A2 8B E0 */	lfs f29, "@667"@sda21(r2)
+/* 800B8B70 000B5AB0  C3 C2 8B E4 */	lfs f30, "@668"@sda21(r2)
+/* 800B8B74 000B5AB4  C3 E2 8B E8 */	lfs f31, "@669"@sda21(r2)
 /* 800B8B78 000B5AB8  48 00 19 94 */	b lbl_800BA50C
 lbl_800B8B7C:
 /* 800B8B7C 000B5ABC  80 6D 97 10 */	lwz r3, __THPInfo@sda21(r13)
@@ -4733,13 +4733,13 @@ __THPDecompressiMCURowNxN:
 /* 800BA5F0 000B7530  A3 83 06 92 */	lhz r28, 0x692(r3)
 /* 800BA5F4 000B7534  38 60 00 03 */	li r3, 3
 /* 800BA5F8 000B7538  4B FD 3C D5 */	bl LCQueueWait
-/* 800BA5FC 000B753C  C3 62 8B D8 */	lfs f27, $$2665@sda21(r2)
+/* 800BA5FC 000B753C  C3 62 8B D8 */	lfs f27, "@665"@sda21(r2)
 /* 800BA600 000B7540  57 9F F8 7E */	srwi r31, r28, 1
-/* 800BA604 000B7544  C3 82 8B DC */	lfs f28, $$2666@sda21(r2)
+/* 800BA604 000B7544  C3 82 8B DC */	lfs f28, "@666"@sda21(r2)
 /* 800BA608 000B7548  3B A0 00 00 */	li r29, 0
-/* 800BA60C 000B754C  C3 A2 8B E0 */	lfs f29, $$2667@sda21(r2)
-/* 800BA610 000B7550  C3 C2 8B E4 */	lfs f30, $$2668@sda21(r2)
-/* 800BA614 000B7554  C3 E2 8B E8 */	lfs f31, $$2669@sda21(r2)
+/* 800BA60C 000B754C  C3 A2 8B E0 */	lfs f29, "@667"@sda21(r2)
+/* 800BA610 000B7550  C3 C2 8B E4 */	lfs f30, "@668"@sda21(r2)
+/* 800BA614 000B7554  C3 E2 8B E8 */	lfs f31, "@669"@sda21(r2)
 /* 800BA618 000B7558  48 00 19 8C */	b lbl_800BBFA4
 lbl_800BA61C:
 /* 800BA61C 000B755C  80 6D 97 10 */	lwz r3, __THPInfo@sda21(r13)
@@ -7933,17 +7933,17 @@ __THPAANScaleFactor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2243:
+"@243":
 	.incbin "baserom.dol", 0x3E48D0, 0x8
-$$2665:
+"@665":
 	.incbin "baserom.dol", 0x3E48D8, 0x4
-$$2666:
+"@666":
 	.incbin "baserom.dol", 0x3E48DC, 0x4
-$$2667:
+"@667":
 	.incbin "baserom.dol", 0x3E48E0, 0x4
-$$2668:
+"@668":
 	.incbin "baserom.dol", 0x3E48E4, 0x4
-$$2669:
+"@669":
 	.incbin "baserom.dol", 0x3E48E8, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

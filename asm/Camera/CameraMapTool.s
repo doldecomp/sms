@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1
-calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0f$$1:
+.global "calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+"calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>":
 /* 8035FA5C 0035C99C  7C 08 02 A6 */	mflr r0
 /* 8035FA60 0035C9A0  90 01 00 04 */	stw r0, 4(r1)
 /* 8035FA64 0035C9A4  94 21 FF D0 */	stwu r1, -0x30(r1)
@@ -24,16 +24,16 @@ calcPosAndAt__14TCameraMapToolCFPQ29JGeometry8TVec3$$0f$$1PQ29JGeometry8TVec3$$0
 /* 8035FAA4 0035C9E4  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8035FAA8 0035C9E8  41 82 00 48 */	beq lbl_8035FAF0
 /* 8035FAAC 0035C9EC  C0 3F 00 1C */	lfs f1, 0x1c(r31)
-/* 8035FAB0 0035C9F0  C0 02 07 F8 */	lfs f0, $$21652@sda21(r2)
+/* 8035FAB0 0035C9F0  C0 02 07 F8 */	lfs f0, "@1652"@sda21(r2)
 /* 8035FAB4 0035C9F4  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8035FAB8 0035C9F8  4B E0 D1 95 */	bl CLBRoundf$$0s$$1__Ff
+/* 8035FAB8 0035C9F8  4B E0 D1 95 */	bl "CLBRoundf<s>__Ff"
 /* 8035FABC 0035C9FC  C0 3F 00 18 */	lfs f1, 0x18(r31)
 /* 8035FAC0 0035CA00  7C 7F 1B 78 */	mr r31, r3
-/* 8035FAC4 0035CA04  C0 02 07 F8 */	lfs f0, $$21652@sda21(r2)
+/* 8035FAC4 0035CA04  C0 02 07 F8 */	lfs f0, "@1652"@sda21(r2)
 /* 8035FAC8 0035CA08  FC 20 08 50 */	fneg f1, f1
 /* 8035FACC 0035CA0C  EC 20 00 72 */	fmuls f1, f0, f1
-/* 8035FAD0 0035CA10  4B E0 D1 7D */	bl CLBRoundf$$0s$$1__Ff
-/* 8035FAD4 0035CA14  C0 22 07 FC */	lfs f1, $$21653@sda21(r2)
+/* 8035FAD0 0035CA10  4B E0 D1 7D */	bl "CLBRoundf<s>__Ff"
+/* 8035FAD4 0035CA14  C0 22 07 FC */	lfs f1, "@1653"@sda21(r2)
 /* 8035FAD8 0035CA18  38 A3 00 00 */	addi r5, r3, 0
 /* 8035FADC 0035CA1C  38 7D 00 00 */	addi r3, r29, 0
 /* 8035FAE0 0035CA20  38 9E 00 00 */	addi r4, r30, 0
@@ -132,9 +132,9 @@ __vt__14TCameraMapTool:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21652:
+"@1652":
 	.incbin "baserom.dol", 0x3EC4F8, 0x4
-$$21653:
+"@1653":
 	.incbin "baserom.dol", 0x3EC4FC, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

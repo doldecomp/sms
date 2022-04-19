@@ -84,7 +84,7 @@ load__15TCubeStreamInfoFR20JSUMemoryInputStream:
 /* 8035FD30 0035CC70  4B CA E8 61 */	bl read__14JSUInputStreamFPvl
 /* 8035FD34 0035CC74  C0 1D 00 24 */	lfs f0, 0x24(r29)
 /* 8035FD38 0035CC78  7F C3 F3 78 */	mr r3, r30
-/* 8035FD3C 0035CC7C  C0 22 08 00 */	lfs f1, $$21577@sda21(r2)
+/* 8035FD3C 0035CC7C  C0 22 08 00 */	lfs f1, "@1577"@sda21(r2)
 /* 8035FD40 0035CC80  38 81 00 58 */	addi r4, r1, 0x58
 /* 8035FD44 0035CC84  38 A0 00 04 */	li r5, 4
 /* 8035FD48 0035CC88  EC 00 00 72 */	fmuls f0, f0, f1
@@ -114,7 +114,7 @@ load__15TCubeStreamInfoFR20JSUMemoryInputStream:
 /* 8035FDA8 0035CCE8  38 81 00 5C */	addi r4, r1, 0x5c
 /* 8035FDAC 0035CCEC  38 A0 00 04 */	li r5, 4
 /* 8035FDB0 0035CCF0  80 1D 00 34 */	lwz r0, 0x34(r29)
-/* 8035FDB4 0035CCF4  C8 22 08 08 */	lfd f1, $$21579@sda21(r2)
+/* 8035FDB4 0035CCF4  C8 22 08 08 */	lfd f1, "@1579"@sda21(r2)
 /* 8035FDB8 0035CCF8  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8035FDBC 0035CCFC  90 01 00 6C */	stw r0, 0x6c(r1)
 /* 8035FDC0 0035CD00  93 E1 00 68 */	stw r31, 0x68(r1)
@@ -124,7 +124,7 @@ load__15TCubeStreamInfoFR20JSUMemoryInputStream:
 /* 8035FDD0 0035CD10  4B CA E7 C1 */	bl read__14JSUInputStreamFPvl
 /* 8035FDD4 0035CD14  80 01 00 5C */	lwz r0, 0x5c(r1)
 /* 8035FDD8 0035CD18  7F C3 F3 78 */	mr r3, r30
-/* 8035FDDC 0035CD1C  C8 22 08 08 */	lfd f1, $$21579@sda21(r2)
+/* 8035FDDC 0035CD1C  C8 22 08 08 */	lfd f1, "@1579"@sda21(r2)
 /* 8035FDE0 0035CD20  38 9D 00 38 */	addi r4, r29, 0x38
 /* 8035FDE4 0035CD24  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8035FDE8 0035CD28  90 01 00 64 */	stw r0, 0x64(r1)
@@ -190,7 +190,7 @@ load__15TCubeCameraInfoFR20JSUMemoryInputStream:
 /* 8035FECC 0035CE0C  4B CA E6 C5 */	bl read__14JSUInputStreamFPvl
 /* 8035FED0 0035CE10  C0 1E 00 24 */	lfs f0, 0x24(r30)
 /* 8035FED4 0035CE14  7F E3 FB 78 */	mr r3, r31
-/* 8035FED8 0035CE18  C0 22 08 00 */	lfs f1, $$21577@sda21(r2)
+/* 8035FED8 0035CE18  C0 22 08 00 */	lfs f1, "@1577"@sda21(r2)
 /* 8035FEDC 0035CE1C  38 81 00 58 */	addi r4, r1, 0x58
 /* 8035FEE0 0035CE20  38 A0 00 04 */	li r5, 4
 /* 8035FEE4 0035CE24  EC 00 00 72 */	fmuls f0, f0, f1
@@ -282,7 +282,7 @@ load__16TCubeGeneralInfoFR20JSUMemoryInputStream:
 /* 80360030 0035CF70  4B CA E5 61 */	bl read__14JSUInputStreamFPvl
 /* 80360034 0035CF74  C0 1E 00 24 */	lfs f0, 0x24(r30)
 /* 80360038 0035CF78  7F E3 FB 78 */	mr r3, r31
-/* 8036003C 0035CF7C  C0 22 08 00 */	lfs f1, $$21577@sda21(r2)
+/* 8036003C 0035CF7C  C0 22 08 00 */	lfs f1, "@1577"@sda21(r2)
 /* 80360040 0035CF80  38 81 00 58 */	addi r4, r1, 0x58
 /* 80360044 0035CF84  38 A0 00 04 */	li r5, 4
 /* 80360048 0035CF88  EC 00 00 72 */	fmuls f0, f0, f1
@@ -382,7 +382,7 @@ __vt__16TCubeGeneralInfo:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21577:
+"@1577":
 	.incbin "baserom.dol", 0x3EC500, 0x8
-$$21579:
+"@1579":
 	.incbin "baserom.dol", 0x3EC508, 0x8

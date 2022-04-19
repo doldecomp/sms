@@ -79,7 +79,7 @@ lbl_800D239C:
 lbl_800D23C0:
 /* 800D23C0 000CF300  28 03 00 00 */	cmplwi r3, 0
 /* 800D23C4 000CF304  40 82 00 14 */	bne lbl_800D23D8
-/* 800D23C8 000CF308  C0 22 8E E8 */	lfs f1, $$21572@sda21(r2)
+/* 800D23C8 000CF308  C0 22 8E E8 */	lfs f1, "@1572"@sda21(r2)
 /* 800D23CC 000CF30C  C0 1D 00 50 */	lfs f0, 0x50(r29)
 /* 800D23D0 000CF310  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 800D23D4 000CF314  41 82 00 20 */	beq lbl_800D23F4
@@ -87,7 +87,7 @@ lbl_800D23D8:
 /* 800D23D8 000CF318  80 1D 00 58 */	lwz r0, 0x58(r29)
 /* 800D23DC 000CF31C  28 00 00 00 */	cmplwi r0, 0
 /* 800D23E0 000CF320  40 82 00 98 */	bne lbl_800D2478
-/* 800D23E4 000CF324  C0 22 8E EC */	lfs f1, $$21573@sda21(r2)
+/* 800D23E4 000CF324  C0 22 8E EC */	lfs f1, "@1573"@sda21(r2)
 /* 800D23E8 000CF328  C0 1D 00 50 */	lfs f0, 0x50(r29)
 /* 800D23EC 000CF32C  FC 01 00 00 */	fcmpu cr0, f1, f0
 /* 800D23F0 000CF330  40 82 00 88 */	bne lbl_800D2478
@@ -126,7 +126,7 @@ lbl_800D23F4:
 /* 800D2470 000CF3B0  4E 80 00 21 */	blrl 
 /* 800D2474 000CF3B4  48 00 00 F4 */	b lbl_800D2568
 lbl_800D2478:
-/* 800D2478 000CF3B8  C0 02 8E E8 */	lfs f0, $$21572@sda21(r2)
+/* 800D2478 000CF3B8  C0 02 8E E8 */	lfs f0, "@1572"@sda21(r2)
 /* 800D247C 000CF3BC  C0 3D 00 50 */	lfs f1, 0x50(r29)
 /* 800D2480 000CF3C0  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 800D2484 000CF3C4  41 82 00 0C */	beq lbl_800D2490
@@ -148,7 +148,7 @@ lbl_800D2490:
 /* 800D24C0 000CF400  4E 80 00 21 */	blrl 
 /* 800D24C4 000CF404  48 00 00 A4 */	b lbl_800D2568
 lbl_800D24C8:
-/* 800D24C8 000CF408  C0 02 8E EC */	lfs f0, $$21573@sda21(r2)
+/* 800D24C8 000CF408  C0 02 8E EC */	lfs f0, "@1573"@sda21(r2)
 /* 800D24CC 000CF40C  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 800D24D0 000CF410  41 82 00 0C */	beq lbl_800D24DC
 /* 800D24D4 000CF414  28 03 00 00 */	cmplwi r3, 0
@@ -211,10 +211,10 @@ init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf:
 /* 800D25A0 000CF4E0  80 64 00 00 */	lwz r3, 0(r4)
 /* 800D25A4 000CF4E4  39 26 10 B4 */	addi r9, r6, mCurrentS__6J3DSys@l
 /* 800D25A8 000CF4E8  80 04 00 04 */	lwz r0, 4(r4)
-/* 800D25AC 000CF4EC  3C E0 80 3B */	lis r7, $$21411@ha
+/* 800D25AC 000CF4EC  3C E0 80 3B */	lis r7, "@1411"@ha
 /* 800D25B0 000CF4F0  90 69 00 00 */	stw r3, 0(r9)
 /* 800D25B4 000CF4F4  3C C0 80 40 */	lis r6, mParentS__6J3DSys@ha
-/* 800D25B8 000CF4F8  39 07 34 90 */	addi r8, r7, $$21411@l
+/* 800D25B8 000CF4F8  39 07 34 90 */	addi r8, r7, "@1411"@l
 /* 800D25BC 000CF4FC  90 09 00 04 */	stw r0, 4(r9)
 /* 800D25C0 000CF500  38 E6 10 C0 */	addi r7, r6, mParentS__6J3DSys@l
 /* 800D25C4 000CF504  3C 60 80 40 */	lis r3, mCurrentMtx__6J3DSys@ha
@@ -355,7 +355,7 @@ lbl_800D275C:
 /* 800D27B4 000CF6F4  80 BE 00 00 */	lwz r5, 0(r30)
 /* 800D27B8 000CF6F8  7C 85 20 50 */	subf r4, r5, r4
 /* 800D27BC 000CF6FC  90 85 00 04 */	stw r4, 4(r5)
-/* 800D27C0 000CF700  C0 02 8E E8 */	lfs f0, $$21572@sda21(r2)
+/* 800D27C0 000CF700  C0 02 8E E8 */	lfs f0, "@1572"@sda21(r2)
 /* 800D27C4 000CF704  D0 1E 00 50 */	stfs f0, 0x50(r30)
 /* 800D27C8 000CF708  D0 1E 00 60 */	stfs f0, 0x60(r30)
 /* 800D27CC 000CF70C  90 1E 00 58 */	stw r0, 0x58(r30)
@@ -386,7 +386,7 @@ M3UMtxCalcBlendAux__FUsP16J3DTransformInfoP16J3DTransformInfofb:
 /* 800D2824 000CF764  3B 44 00 00 */	addi r26, r4, 0
 /* 800D2828 000CF768  3B 65 00 00 */	addi r27, r5, 0
 /* 800D282C 000CF76C  3B E6 10 B4 */	addi r31, r6, mCurrentS__6J3DSys@l
-/* 800D2830 000CF770  C0 02 8E EC */	lfs f0, $$21573@sda21(r2)
+/* 800D2830 000CF770  C0 02 8E EC */	lfs f0, "@1573"@sda21(r2)
 /* 800D2834 000CF774  EF 80 D8 28 */	fsubs f28, f0, f27
 /* 800D2838 000CF778  41 82 00 14 */	beq lbl_800D284C
 /* 800D283C 000CF77C  D0 01 00 7C */	stfs f0, 0x7c(r1)
@@ -424,7 +424,7 @@ lbl_800D2864:
 /* 800D28B4 000CF7F4  D0 1F 00 08 */	stfs f0, 8(r31)
 /* 800D28B8 000CF7F8  80 9F 00 00 */	lwz r4, 0(r31)
 /* 800D28BC 000CF7FC  80 1F 00 04 */	lwz r0, 4(r31)
-/* 800D28C0 000CF800  C0 22 8E EC */	lfs f1, $$21573@sda21(r2)
+/* 800D28C0 000CF800  C0 22 8E EC */	lfs f1, "@1573"@sda21(r2)
 /* 800D28C4 000CF804  90 81 00 2C */	stw r4, 0x2c(r1)
 /* 800D28C8 000CF808  90 01 00 30 */	stw r0, 0x30(r1)
 /* 800D28CC 000CF80C  80 1F 00 08 */	lwz r0, 8(r31)
@@ -612,48 +612,48 @@ lbl_800D2B6C:
 /* 800D2B8C 000CFACC  38 21 01 00 */	addi r1, r1, 0x100
 /* 800D2B90 000CFAD0  4E 80 00 20 */	blr 
 
-.global $$2100$$24$$2calc__24M3UMtxCalcSIAnmBlendQuatFUs
-$$2100$$24$$2calc__24M3UMtxCalcSIAnmBlendQuatFUs:
+.global "@100@4@calc__24M3UMtxCalcSIAnmBlendQuatFUs"
+"@100@4@calc__24M3UMtxCalcSIAnmBlendQuatFUs":
 /* 800D2B94 000CFAD4  39 60 00 04 */	li r11, 4
 /* 800D2B98 000CFAD8  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2B9C 000CFADC  7C 63 5A 14 */	add r3, r3, r11
 /* 800D2BA0 000CFAE0  38 63 FF 9C */	addi r3, r3, -100
 /* 800D2BA4 000CFAE4  4B FF F7 CC */	b calc__24M3UMtxCalcSIAnmBlendQuatFUs
 
-.global $$2100$$24$$2calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
-$$2100$$24$$2calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo:
+.global "@100@4@calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo"
+"@100@4@calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo":
 /* 800D2BA8 000CFAE8  39 60 00 04 */	li r11, 4
 /* 800D2BAC 000CFAEC  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2BB0 000CFAF0  7C 63 5A 14 */	add r3, r3, r11
 /* 800D2BB4 000CFAF4  38 63 FF 9C */	addi r3, r3, -100
 /* 800D2BB8 000CFAF8  4B FF FB 38 */	b calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
 
-.global $$2100$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-$$2100$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode:
+.global "@100@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+"@100@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode":
 /* 800D2BBC 000CFAFC  39 60 00 04 */	li r11, 4
 /* 800D2BC0 000CFB00  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2BC4 000CFB04  7C 63 5A 14 */	add r3, r3, r11
 /* 800D2BC8 000CFB08  38 63 FF 9C */	addi r3, r3, -100
 /* 800D2BCC 000CFB0C  4B F4 B4 1C */	b recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2100$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-$$2100$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode:
+.global "@100@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+"@100@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode":
 /* 800D2BD0 000CFB10  39 60 00 04 */	li r11, 4
 /* 800D2BD4 000CFB14  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2BD8 000CFB18  7C 63 5A 14 */	add r3, r3, r11
 /* 800D2BDC 000CFB1C  38 63 FF 9C */	addi r3, r3, -100
 /* 800D2BE0 000CFB20  4B F4 B2 44 */	b recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2100$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-$$2100$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode:
+.global "@100@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+"@100@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode":
 /* 800D2BE4 000CFB24  39 60 00 04 */	li r11, 4
 /* 800D2BE8 000CFB28  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2BEC 000CFB2C  7C 63 5A 14 */	add r3, r3, r11
 /* 800D2BF0 000CFB30  38 63 FF 9C */	addi r3, r3, -100
 /* 800D2BF4 000CFB34  4B F4 B0 04 */	b recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
 
-.global $$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
-$$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf:
+.global "@100@4@init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf"
+"@100@4@init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf":
 /* 800D2BF8 000CFB38  39 60 00 04 */	li r11, 4
 /* 800D2BFC 000CFB3C  7D 63 58 2E */	lwzx r11, r3, r11
 /* 800D2C00 000CFB40  7C 63 5A 14 */	add r3, r3, r11
@@ -661,7 +661,7 @@ $$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf:
 /* 800D2C08 000CFB48  4B FF F9 7C */	b init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x3B0490, 0xC
 .global __vt__24M3UMtxCalcSIAnmBlendQuat
 __vt__24M3UMtxCalcSIAnmBlendQuat:
@@ -676,16 +676,16 @@ __vt__24M3UMtxCalcSIAnmBlendQuat:
   .4byte calc__24M3UMtxCalcSIAnmBlendQuatFUs
   .4byte 0
   .4byte 0
-  .4byte $$2100$$24$$2init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf
-  .4byte $$2100$$24$$2recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2100$$24$$2recursiveCalc__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2100$$24$$2recursiveEntry__15J3DMtxCalcBasicFP7J3DNode
-  .4byte $$2100$$24$$2calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo
-  .4byte $$2100$$24$$2calc__24M3UMtxCalcSIAnmBlendQuatFUs
+  .4byte "@100@4@init__24M3UMtxCalcSIAnmBlendQuatFRC3VecRA3_A4_Cf"
+  .4byte "@100@4@recursiveUpdate__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@100@4@recursiveCalc__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@100@4@recursiveEntry__15J3DMtxCalcBasicFP7J3DNode"
+  .4byte "@100@4@calcTransform__24M3UMtxCalcSIAnmBlendQuatFUsRC16J3DTransformInfo"
+  .4byte "@100@4@calc__24M3UMtxCalcSIAnmBlendQuatFUs"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21572:
+"@1572":
   .4byte 0
-$$21573:
+"@1573":
 	.incbin "baserom.dol", 0x3E4BEC, 0x4

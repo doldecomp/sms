@@ -171,10 +171,10 @@ __sinit_JKRThread_cpp:
 /* 8000E20C 0000B14C  3B E3 0B BC */	addi r31, r3, sThreadList__9JKRThread@l
 /* 8000E210 0000B150  38 7F 00 00 */	addi r3, r31, 0
 /* 8000E214 0000B154  48 00 0A 21 */	bl initiate__10JSUPtrListFv
-/* 8000E218 0000B158  3C 80 80 01 */	lis r4, __dt__19JSUList$$09JKRThread$$1Fv@ha
-/* 8000E21C 0000B15C  3C 60 80 3E */	lis r3, $$225@ha
-/* 8000E220 0000B160  38 A3 60 90 */	addi r5, r3, $$225@l
-/* 8000E224 0000B164  38 84 E2 44 */	addi r4, r4, __dt__19JSUList$$09JKRThread$$1Fv@l
+/* 8000E218 0000B158  3C 80 80 01 */	lis r4, "__dt__19JSUList<9JKRThread>Fv"@ha
+/* 8000E21C 0000B15C  3C 60 80 3E */	lis r3, "@25"@ha
+/* 8000E220 0000B160  38 A3 60 90 */	addi r5, r3, "@25"@l
+/* 8000E224 0000B164  38 84 E2 44 */	addi r4, r4, "__dt__19JSUList<9JKRThread>Fv"@l
 /* 8000E228 0000B168  38 7F 00 00 */	addi r3, r31, 0
 /* 8000E22C 0000B16C  48 07 44 FD */	bl __register_global_object
 /* 8000E230 0000B170  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -183,8 +183,8 @@ __sinit_JKRThread_cpp:
 /* 8000E23C 0000B17C  7C 08 03 A6 */	mtlr r0
 /* 8000E240 0000B180  4E 80 00 20 */	blr 
 
-.global __dt__19JSUList$$09JKRThread$$1Fv
-__dt__19JSUList$$09JKRThread$$1Fv:
+.global "__dt__19JSUList<9JKRThread>Fv"
+"__dt__19JSUList<9JKRThread>Fv":
 /* 8000E244 0000B184  7C 08 02 A6 */	mflr r0
 /* 8000E248 0000B188  90 01 00 04 */	stw r0, 4(r1)
 /* 8000E24C 0000B18C  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -222,5 +222,5 @@ __vt__9JKRThread:
   .4byte run__9JKRThreadFv
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$225:
+"@25":
 	.skip 0x10

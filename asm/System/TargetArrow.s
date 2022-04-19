@@ -35,8 +35,8 @@ lbl_80110F58:
 /* 80110F6C 0010DEAC  38 21 00 18 */	addi r1, r1, 0x18
 /* 80110F70 0010DEB0  4E 80 00 20 */	blr 
 
-.global setPos__12TTargetArrowFRCQ29JGeometry8TVec3$$0f$$1
-setPos__12TTargetArrowFRCQ29JGeometry8TVec3$$0f$$1:
+.global "setPos__12TTargetArrowFRCQ29JGeometry8TVec3<f>"
+"setPos__12TTargetArrowFRCQ29JGeometry8TVec3<f>":
 /* 80110F74 0010DEB4  80 63 00 10 */	lwz r3, 0x10(r3)
 /* 80110F78 0010DEB8  28 03 00 00 */	cmplwi r3, 0
 /* 80110F7C 0010DEBC  4D 82 00 20 */	beqlr 
@@ -80,15 +80,15 @@ loadAfter__12TTargetArrowFv:
 /* 80110FF8 0010DF38  4B EF AC C5 */	bl getGlbResource__13JKRFileLoaderFPCc
 /* 80110FFC 0010DF3C  28 03 00 00 */	cmplwi r3, 0
 /* 80111000 0010DF40  41 82 00 30 */	beq lbl_80111030
-/* 80111004 0010DF44  3C 60 80 38 */	lis r3, $$21708@ha
+/* 80111004 0010DF44  3C 60 80 38 */	lis r3, "@1708"@ha
 /* 80111008 0010DF48  80 8D 84 70 */	lwz r4, cTargetArrowBmdFileName@sda21(r13)
-/* 8011100C 0010DF4C  38 63 9F 4C */	addi r3, r3, $$21708@l
+/* 8011100C 0010DF4C  38 63 9F 4C */	addi r3, r3, "@1708"@l
 /* 80111010 0010DF50  38 A0 00 03 */	li r5, 3
 /* 80111014 0010DF54  3C C0 10 01 */	lis r6, 0x1001
 /* 80111018 0010DF58  4B FC 8A 5D */	bl SMS_MakeMActor__FPCcPCcUlUl
 /* 8011101C 0010DF5C  90 7F 00 10 */	stw r3, 0x10(r31)
-/* 80111020 0010DF60  3C 60 80 38 */	lis r3, $$21709@ha
-/* 80111024 0010DF64  38 83 9F 64 */	addi r4, r3, $$21709@l
+/* 80111020 0010DF60  3C 60 80 38 */	lis r3, "@1709"@ha
+/* 80111024 0010DF64  38 83 9F 64 */	addi r4, r3, "@1709"@l
 /* 80111028 0010DF68  80 7F 00 10 */	lwz r3, 0x10(r31)
 /* 8011102C 0010DF6C  4B FC 31 31 */	bl setBck__6MActorFPCc
 lbl_80111030:
@@ -100,25 +100,25 @@ lbl_80111030:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x376E4C, 0x14
-$$21582:
+"@1582":
 	.incbin "baserom.dol", 0x376E60, 0x30
-$$21583:
+"@1583":
 	.incbin "baserom.dol", 0x376E90, 0x38
-$$21584:
+"@1584":
 	.incbin "baserom.dol", 0x376EC8, 0x34
-$$21585:
+"@1585":
 	.incbin "baserom.dol", 0x376EFC, 0x24
-$$21681:
+"@1681":
 	.incbin "baserom.dol", 0x376F20, 0x2C
-$$21708:
+"@1708":
 	.incbin "baserom.dol", 0x376F4C, 0x18
-$$21709:
+"@1709":
 	.incbin "baserom.dol", 0x376F64, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -137,7 +137,7 @@ __vt__12TTargetArrow:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cTargetArrowBmdFileName:
-  .4byte $$21681
+  .4byte "@1681"
   .4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

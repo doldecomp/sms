@@ -1,8 +1,8 @@
 .include "macros.inc"
 
 .section .text, "ax"  # 0x80005600 - 0x8036FBA0
-.global __ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1
-__ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1:
+.global "__ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator<Pv>"
+"__ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator<Pv>":
 /* 80039B38 00036A78  88 04 00 00 */	lbz r0, 0(r4)
 /* 80039B3C 00036A7C  38 80 00 00 */	li r4, 0
 /* 80039B40 00036A80  98 03 00 00 */	stb r0, 0(r3)
@@ -10,13 +10,13 @@ __ct__Q27JGadget20TVector_pointer_voidFRCQ27JGadget14TAllocator$$0Pv$$1:
 /* 80039B48 00036A88  80 03 00 04 */	lwz r0, 4(r3)
 /* 80039B4C 00036A8C  90 03 00 08 */	stw r0, 8(r3)
 /* 80039B50 00036A90  90 83 00 0C */	stw r4, 0xc(r3)
-/* 80039B54 00036A94  C0 02 82 F8 */	lfs f0, $$2360@sda21(r2)
+/* 80039B54 00036A94  C0 02 82 F8 */	lfs f0, "@360"@sda21(r2)
 /* 80039B58 00036A98  D0 03 00 10 */	stfs f0, 0x10(r3)
 /* 80039B5C 00036A9C  90 83 00 14 */	stw r4, 0x14(r3)
 /* 80039B60 00036AA0  4E 80 00 20 */	blr 
 
-.global DestroyElement___Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv
-DestroyElement___Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv:
+.global "DestroyElement___Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv"
+"DestroyElement___Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv":
 /* 80039B64 00036AA4  48 00 00 08 */	b lbl_80039B6C
 lbl_80039B68:
 /* 80039B68 00036AA8  38 84 00 04 */	addi r4, r4, 4
@@ -25,8 +25,8 @@ lbl_80039B6C:
 /* 80039B70 00036AB0  40 82 FF F8 */	bne lbl_80039B68
 /* 80039B74 00036AB4  4E 80 00 20 */	blr 
 
-.global copy__Q23std14__copy$$0Pv$$41$$40$$1FPPvPPvPPv
-copy__Q23std14__copy$$0Pv$$41$$40$$1FPPvPPvPPv:
+.global "copy__Q23std14__copy<Pv,1,0>FPPvPPvPPv"
+"copy__Q23std14__copy<Pv,1,0>FPPvPPvPPv":
 /* 80039B78 00036AB8  38 C4 00 03 */	addi r6, r4, 3
 /* 80039B7C 00036ABC  7C C3 30 50 */	subf r6, r3, r6
 /* 80039B80 00036AC0  7C 03 20 40 */	cmplw r3, r4
@@ -69,8 +69,8 @@ lbl_80039C04:
 /* 80039C04 00036B44  7C A3 2B 78 */	mr r3, r5
 /* 80039C08 00036B48  4E 80 00 20 */	blr 
 
-.global uninitialized_fill_n$$0PPv$$4Ul$$4Pv$$1__3stdFPPvUlRCPv
-uninitialized_fill_n$$0PPv$$4Ul$$4Pv$$1__3stdFPPvUlRCPv:
+.global "uninitialized_fill_n<PPv,Ul,Pv>__3stdFPPvUlRCPv"
+"uninitialized_fill_n<PPv,Ul,Pv>__3stdFPPvUlRCPv":
 /* 80039C0C 00036B4C  28 04 00 00 */	cmplwi r4, 0
 /* 80039C10 00036B50  7C 89 03 A6 */	mtctr r4
 /* 80039C14 00036B54  4D 82 00 20 */	beqlr 
@@ -84,8 +84,8 @@ lbl_80039C28:
 /* 80039C2C 00036B6C  42 00 FF EC */	bdnz lbl_80039C18
 /* 80039C30 00036B70  4E 80 00 20 */	blr 
 
-.global InsertRaw__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvUl
-InsertRaw__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvUl:
+.global "InsertRaw__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvUl"
+"InsertRaw__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvUl":
 /* 80039C34 00036B74  7C 08 02 A6 */	mflr r0
 /* 80039C38 00036B78  90 01 00 04 */	stw r0, 4(r1)
 /* 80039C3C 00036B7C  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -223,7 +223,7 @@ lbl_80039DEC:
 lbl_80039DFC:
 /* 80039DFC 00036D3C  90 61 00 7C */	stw r3, 0x7c(r1)
 /* 80039E00 00036D40  3C 00 43 30 */	lis r0, 0x4330
-/* 80039E04 00036D44  C8 42 83 00 */	lfd f2, $$2549@sda21(r2)
+/* 80039E04 00036D44  C8 42 83 00 */	lfd f2, "@549"@sda21(r2)
 /* 80039E08 00036D48  7F C3 E2 14 */	add r30, r3, r28
 /* 80039E0C 00036D4C  90 01 00 78 */	stw r0, 0x78(r1)
 /* 80039E10 00036D50  C0 1B 00 10 */	lfs f0, 0x10(r27)
@@ -323,7 +323,7 @@ __dt__Q27JGadget20TVector_pointer_voidFv:
 /* 80039F4C 00036E8C  80 BE 00 08 */	lwz r5, 8(r30)
 /* 80039F50 00036E90  7F C3 F3 78 */	mr r3, r30
 /* 80039F54 00036E94  80 9E 00 04 */	lwz r4, 4(r30)
-/* 80039F58 00036E98  48 00 00 39 */	bl erase__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv
+/* 80039F58 00036E98  48 00 00 39 */	bl "erase__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv"
 /* 80039F5C 00036E9C  80 7E 00 04 */	lwz r3, 4(r30)
 /* 80039F60 00036EA0  4B FD 2B 51 */	bl __dl__FPv
 lbl_80039F64:
@@ -340,8 +340,8 @@ lbl_80039F74:
 /* 80039F88 00036EC8  38 21 00 18 */	addi r1, r1, 0x18
 /* 80039F8C 00036ECC  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv
-erase__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv:
+.global "erase__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv"
+"erase__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv":
 /* 80039F90 00036ED0  7C 08 02 A6 */	mflr r0
 /* 80039F94 00036ED4  90 01 00 04 */	stw r0, 4(r1)
 /* 80039F98 00036ED8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -353,7 +353,7 @@ erase__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv:
 /* 80039FB0 00036EF0  80 83 00 08 */	lwz r4, 8(r3)
 /* 80039FB4 00036EF4  38 65 00 00 */	addi r3, r5, 0
 /* 80039FB8 00036EF8  7C 05 03 78 */	mr r5, r0
-/* 80039FBC 00036EFC  4B FF FB BD */	bl copy__Q23std14__copy$$0Pv$$41$$40$$1FPPvPPvPPv
+/* 80039FBC 00036EFC  4B FF FB BD */	bl "copy__Q23std14__copy<Pv,1,0>FPPvPPvPPv"
 /* 80039FC0 00036F00  80 1E 00 08 */	lwz r0, 8(r30)
 /* 80039FC4 00036F04  7C 64 1B 78 */	mr r4, r3
 /* 80039FC8 00036F08  48 00 00 08 */	b lbl_80039FD0
@@ -386,13 +386,13 @@ insert__Q27JGadget20TVector_pointer_voidFPPvRCPv:
 /* 8003A020 00036F60  7C 00 20 50 */	subf r0, r0, r4
 /* 8003A024 00036F64  7C 1F 16 70 */	srawi r31, r0, 2
 /* 8003A028 00036F68  7F FF 01 94 */	addze r31, r31
-/* 8003A02C 00036F6C  4B FF FC 09 */	bl InsertRaw__Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvUl
+/* 8003A02C 00036F6C  4B FF FC 09 */	bl "InsertRaw__Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvUl"
 /* 8003A030 00036F70  80 1D 00 08 */	lwz r0, 8(r29)
 /* 8003A034 00036F74  7C 03 00 40 */	cmplw r3, r0
 /* 8003A038 00036F78  41 82 00 10 */	beq lbl_8003A048
 /* 8003A03C 00036F7C  38 BE 00 00 */	addi r5, r30, 0
 /* 8003A040 00036F80  38 80 00 01 */	li r4, 1
-/* 8003A044 00036F84  4B FF FB C9 */	bl uninitialized_fill_n$$0PPv$$4Ul$$4Pv$$1__3stdFPPvUlRCPv
+/* 8003A044 00036F84  4B FF FB C9 */	bl "uninitialized_fill_n<PPv,Ul,Pv>__3stdFPPvUlRCPv"
 lbl_8003A048:
 /* 8003A048 00036F88  80 7D 00 04 */	lwz r3, 4(r29)
 /* 8003A04C 00036F8C  57 E0 10 3A */	slwi r0, r31, 2
@@ -442,7 +442,7 @@ lbl_8003A0DC:
 /* 8003A0E4 00037024  80 9D 00 04 */	lwz r4, 4(r29)
 /* 8003A0E8 00037028  7F A3 EB 78 */	mr r3, r29
 /* 8003A0EC 0003702C  80 BD 00 08 */	lwz r5, 8(r29)
-/* 8003A0F0 00037030  4B FF FA 75 */	bl DestroyElement___Q27JGadget38TVector$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$1FPPvPPv
+/* 8003A0F0 00037030  4B FF FA 75 */	bl "DestroyElement___Q27JGadget38TVector<Pv,Q27JGadget14TAllocator<Pv>>FPPvPPv"
 /* 8003A0F4 00037034  80 1D 00 04 */	lwz r0, 4(r29)
 /* 8003A0F8 00037038  90 01 00 28 */	stw r0, 0x28(r1)
 /* 8003A0FC 0003703C  80 7D 00 04 */	lwz r3, 4(r29)
@@ -468,7 +468,7 @@ lbl_8003A12C:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2360:
+"@360":
 	.incbin "baserom.dol", 0x3E3FF8, 0x8
-$$2549:
+"@549":
 	.incbin "baserom.dol", 0x3E4000, 0x8

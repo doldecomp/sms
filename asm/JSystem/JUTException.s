@@ -211,19 +211,19 @@ lbl_8000F8B8:
 .global showFloat__12JUTExceptionFP9OSContext
 showFloat__12JUTExceptionFP9OSContext:
 /* 8000F900 0000C840  7C 08 02 A6 */	mflr r0
-/* 8000F904 0000C844  3C A0 80 37 */	lis r5, $$21210@ha
+/* 8000F904 0000C844  3C A0 80 37 */	lis r5, "@1210"@ha
 /* 8000F908 0000C848  90 01 00 04 */	stw r0, 4(r1)
 /* 8000F90C 0000C84C  94 21 FF B8 */	stwu r1, -0x48(r1)
 /* 8000F910 0000C850  DB E1 00 40 */	stfd f31, 0x40(r1)
 /* 8000F914 0000C854  BF 61 00 2C */	stmw r27, 0x2c(r1)
 /* 8000F918 0000C858  3B 64 00 00 */	addi r27, r4, 0
-/* 8000F91C 0000C85C  3B C5 07 90 */	addi r30, r5, $$21210@l
+/* 8000F91C 0000C85C  3B C5 07 90 */	addi r30, r5, "@1210"@l
 /* 8000F920 0000C860  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 8000F924 0000C864  28 03 00 00 */	cmplwi r3, 0
 /* 8000F928 0000C868  41 82 04 08 */	beq lbl_8000FD30
 /* 8000F92C 0000C86C  38 9E 01 38 */	addi r4, r30, 0x138
 /* 8000F930 0000C870  48 03 00 71 */	bl print__10JUTConsoleFPCc
-/* 8000F934 0000C874  C3 E2 80 68 */	lfs f31, $$21565@sda21(r2)
+/* 8000F934 0000C874  C3 E2 80 68 */	lfs f31, "@1565"@sda21(r2)
 /* 8000F938 0000C878  3B 80 00 00 */	li r28, 0
 /* 8000F93C 0000C87C  3B E0 00 00 */	li r31, 0
 lbl_8000F940:
@@ -280,7 +280,7 @@ lbl_8000F9E8:
 /* 8000F9F8 0000C938  48 02 FF 29 */	bl print_f__10JUTConsoleFPCce
 lbl_8000F9FC:
 /* 8000F9FC 0000C93C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 8000FA00 0000C940  38 82 80 6C */	addi r4, r2, $$21629@sda21
+/* 8000FA00 0000C940  38 82 80 6C */	addi r4, r2, "@1629"@sda21
 /* 8000FA04 0000C944  48 02 FF 9D */	bl print__10JUTConsoleFPCc
 /* 8000FA08 0000C948  C8 1D 00 E8 */	lfd f0, 0xe8(r29)
 /* 8000FA0C 0000C94C  FC 00 00 18 */	frsp f0, f0
@@ -334,7 +334,7 @@ lbl_8000FAAC:
 /* 8000FABC 0000C9FC  48 02 FE 65 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FAC0:
 /* 8000FAC0 0000CA00  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 8000FAC4 0000CA04  38 82 80 6C */	addi r4, r2, $$21629@sda21
+/* 8000FAC4 0000CA04  38 82 80 6C */	addi r4, r2, "@1629"@sda21
 /* 8000FAC8 0000CA08  48 02 FE D9 */	bl print__10JUTConsoleFPCc
 /* 8000FACC 0000CA0C  C8 1D 01 40 */	lfd f0, 0x140(r29)
 /* 8000FAD0 0000CA10  FC 00 00 18 */	frsp f0, f0
@@ -388,7 +388,7 @@ lbl_8000FB70:
 /* 8000FB80 0000CAC0  48 02 FD A1 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FB84:
 /* 8000FB84 0000CAC4  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 8000FB88 0000CAC8  38 82 80 70 */	addi r4, r2, $$21630@sda21
+/* 8000FB88 0000CAC8  38 82 80 70 */	addi r4, r2, "@1630"@sda21
 /* 8000FB8C 0000CACC  48 02 FE 15 */	bl print__10JUTConsoleFPCc
 /* 8000FB90 0000CAD0  3B 9C 00 01 */	addi r28, r28, 1
 /* 8000FB94 0000CAD4  2C 1C 00 0A */	cmpwi r28, 0xa
@@ -429,7 +429,7 @@ lbl_8000FC08:
 /* 8000FC18 0000CB58  48 02 FD 09 */	bl print_f__10JUTConsoleFPCce
 /* 8000FC1C 0000CB5C  48 00 00 40 */	b lbl_8000FC5C
 lbl_8000FC20:
-/* 8000FC20 0000CB60  C0 02 80 68 */	lfs f0, $$21565@sda21(r2)
+/* 8000FC20 0000CB60  C0 02 80 68 */	lfs f0, "@1565"@sda21(r2)
 /* 8000FC24 0000CB64  C0 21 00 14 */	lfs f1, 0x14(r1)
 /* 8000FC28 0000CB68  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8000FC2C 0000CB6C  40 82 00 1C */	bne lbl_8000FC48
@@ -447,7 +447,7 @@ lbl_8000FC48:
 /* 8000FC58 0000CB98  48 02 FC C9 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FC5C:
 /* 8000FC5C 0000CB9C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 8000FC60 0000CBA0  38 82 80 6C */	addi r4, r2, $$21629@sda21
+/* 8000FC60 0000CBA0  38 82 80 6C */	addi r4, r2, "@1629"@sda21
 /* 8000FC64 0000CBA4  48 02 FD 3D */	bl print__10JUTConsoleFPCc
 /* 8000FC68 0000CBA8  C8 1B 01 38 */	lfd f0, 0x138(r27)
 /* 8000FC6C 0000CBAC  FC 00 00 18 */	frsp f0, f0
@@ -484,7 +484,7 @@ lbl_8000FCD0:
 /* 8000FCE0 0000CC20  48 02 FC 41 */	bl print_f__10JUTConsoleFPCce
 /* 8000FCE4 0000CC24  48 00 00 40 */	b lbl_8000FD24
 lbl_8000FCE8:
-/* 8000FCE8 0000CC28  C0 02 80 68 */	lfs f0, $$21565@sda21(r2)
+/* 8000FCE8 0000CC28  C0 02 80 68 */	lfs f0, "@1565"@sda21(r2)
 /* 8000FCEC 0000CC2C  C0 21 00 10 */	lfs f1, 0x10(r1)
 /* 8000FCF0 0000CC30  FC 00 08 00 */	fcmpu cr0, f0, f1
 /* 8000FCF4 0000CC34  40 82 00 1C */	bne lbl_8000FD10
@@ -502,7 +502,7 @@ lbl_8000FD10:
 /* 8000FD20 0000CC60  48 02 FC 01 */	bl print_f__10JUTConsoleFPCce
 lbl_8000FD24:
 /* 8000FD24 0000CC64  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 8000FD28 0000CC68  38 82 80 70 */	addi r4, r2, $$21630@sda21
+/* 8000FD28 0000CC68  38 82 80 70 */	addi r4, r2, "@1630"@sda21
 /* 8000FD2C 0000CC6C  48 02 FC 75 */	bl print__10JUTConsoleFPCc
 lbl_8000FD30:
 /* 8000FD30 0000CC70  BB 61 00 2C */	lmw r27, 0x2c(r1)
@@ -651,11 +651,11 @@ lbl_8000FEDC:
 .global showStack__12JUTExceptionFP9OSContext
 showStack__12JUTExceptionFP9OSContext:
 /* 8000FEE8 0000CE28  7C 08 02 A6 */	mflr r0
-/* 8000FEEC 0000CE2C  3C A0 80 37 */	lis r5, $$21210@ha
+/* 8000FEEC 0000CE2C  3C A0 80 37 */	lis r5, "@1210"@ha
 /* 8000FEF0 0000CE30  90 01 00 04 */	stw r0, 4(r1)
 /* 8000FEF4 0000CE34  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8000FEF8 0000CE38  93 E1 00 1C */	stw r31, 0x1c(r1)
-/* 8000FEFC 0000CE3C  3B E5 07 90 */	addi r31, r5, $$21210@l
+/* 8000FEFC 0000CE3C  3B E5 07 90 */	addi r31, r5, "@1210"@l
 /* 8000FF00 0000CE40  93 C1 00 18 */	stw r30, 0x18(r1)
 /* 8000FF04 0000CE44  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 8000FF08 0000CE48  3B A4 00 00 */	addi r29, r4, 0
@@ -722,12 +722,12 @@ lbl_8000FFC8:
 .global showGPR__12JUTExceptionFP9OSContext
 showGPR__12JUTExceptionFP9OSContext:
 /* 8000FFE8 0000CF28  7C 08 02 A6 */	mflr r0
-/* 8000FFEC 0000CF2C  3C A0 80 37 */	lis r5, $$21210@ha
+/* 8000FFEC 0000CF2C  3C A0 80 37 */	lis r5, "@1210"@ha
 /* 8000FFF0 0000CF30  90 01 00 04 */	stw r0, 4(r1)
 /* 8000FFF4 0000CF34  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8000FFF8 0000CF38  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 8000FFFC 0000CF3C  93 C1 00 18 */	stw r30, 0x18(r1)
-/* 80010000 0000CF40  3B C5 07 90 */	addi r30, r5, $$21210@l
+/* 80010000 0000CF40  3B C5 07 90 */	addi r30, r5, "@1210"@l
 /* 80010004 0000CF44  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80010008 0000CF48  93 81 00 10 */	stw r28, 0x10(r1)
 lbl_8001000C:
@@ -800,9 +800,9 @@ lbl_800100E8:
 /* 800100EC 0000D02C  48 00 00 FC */	b lbl_800101E8
 lbl_800100F0:
 /* 800100F0 0000D030  57 A0 06 3F */	clrlwi. r0, r29, 0x18
-/* 800100F4 0000D034  3B C2 80 70 */	addi r30, r2, $$21630@sda21
+/* 800100F4 0000D034  3B C2 80 70 */	addi r30, r2, "@1630"@sda21
 /* 800100F8 0000D038  40 82 00 08 */	bne lbl_80010100
-/* 800100FC 0000D03C  3B C2 80 74 */	addi r30, r2, $$21756@sda21
+/* 800100FC 0000D03C  3B C2 80 74 */	addi r30, r2, "@1756"@sda21
 lbl_80010100:
 /* 80010100 0000D040  38 7C 00 00 */	addi r3, r28, 0
 /* 80010104 0000D044  38 81 01 58 */	addi r4, r1, 0x158
@@ -818,10 +818,10 @@ lbl_80010100:
 /* 8001012C 0000D06C  38 81 01 2C */	addi r4, r1, 0x12c
 /* 80010130 0000D070  38 A0 00 20 */	li r5, 0x20
 /* 80010134 0000D074  4B FF FD 3D */	bl search_name_part__FPUcPUci
-/* 80010138 0000D078  3C 80 80 37 */	lis r4, $$21757@ha
+/* 80010138 0000D078  3C 80 80 37 */	lis r4, "@1757"@ha
 /* 8001013C 0000D07C  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
 /* 80010140 0000D080  80 E1 01 50 */	lwz r7, 0x150(r1)
-/* 80010144 0000D084  38 84 0A 28 */	addi r4, r4, $$21757@l
+/* 80010144 0000D084  38 84 0A 28 */	addi r4, r4, "@1757"@l
 /* 80010148 0000D088  81 01 01 54 */	lwz r8, 0x154(r1)
 /* 8001014C 0000D08C  38 BE 00 00 */	addi r5, r30, 0
 /* 80010150 0000D090  4C C6 31 82 */	crclr 6
@@ -879,13 +879,13 @@ lbl_800101E8:
 .global showGPRMap__12JUTExceptionFP9OSContext
 showGPRMap__12JUTExceptionFP9OSContext:
 /* 80010208 0000D148  7C 08 02 A6 */	mflr r0
-/* 8001020C 0000D14C  3C A0 80 37 */	lis r5, $$21210@ha
+/* 8001020C 0000D14C  3C A0 80 37 */	lis r5, "@1210"@ha
 /* 80010210 0000D150  90 01 00 04 */	stw r0, 4(r1)
 /* 80010214 0000D154  94 21 FF C8 */	stwu r1, -0x38(r1)
 /* 80010218 0000D158  BE E1 00 14 */	stmw r23, 0x14(r1)
 /* 8001021C 0000D15C  3A E3 00 00 */	addi r23, r3, 0
 /* 80010220 0000D160  3B 04 00 00 */	addi r24, r4, 0
-/* 80010224 0000D164  3B 85 07 90 */	addi r28, r5, $$21210@l
+/* 80010224 0000D164  3B 85 07 90 */	addi r28, r5, "@1210"@l
 /* 80010228 0000D168  80 0D 8D A4 */	lwz r0, sConsole__12JUTException@sda21(r13)
 /* 8001022C 0000D16C  28 00 00 00 */	cmplwi r0, 0
 /* 80010230 0000D170  41 82 00 B4 */	beq lbl_800102E4
@@ -1091,8 +1091,8 @@ printContext__12JUTExceptionFUsP9OSContextUlUl:
 /* 80010500 0000D440  3B 86 00 00 */	addi r28, r6, 0
 /* 80010504 0000D444  3B A7 00 00 */	addi r29, r7, 0
 /* 80010508 0000D448  81 03 00 68 */	lwz r8, 0x68(r3)
-/* 8001050C 0000D44C  3C 60 80 37 */	lis r3, $$21210@ha
-/* 80010510 0000D450  3B C3 07 90 */	addi r30, r3, $$21210@l
+/* 8001050C 0000D44C  3C 60 80 37 */	lis r3, "@1210"@ha
+/* 80010510 0000D450  3B C3 07 90 */	addi r30, r3, "@1210"@l
 /* 80010514 0000D454  3C 08 00 01 */	addis r0, r8, 1
 /* 80010518 0000D458  28 00 FF FF */	cmplwi r0, 0xffff
 /* 8001051C 0000D45C  40 82 00 0C */	bne lbl_80010528
@@ -1594,7 +1594,7 @@ queryMapAddress__12JUTExceptionFPcUllPUlPUlPcUlbb:
 /* 80010BE4 0000DB24  7C 04 03 78 */	mr r4, r0
 /* 80010BE8 0000DB28  48 07 52 09 */	bl strcpy
 /* 80010BEC 0000DB2C  38 61 00 48 */	addi r3, r1, 0x48
-/* 80010BF0 0000DB30  38 82 80 78 */	addi r4, r2, $$22094@sda21
+/* 80010BF0 0000DB30  38 82 80 78 */	addi r4, r2, "@2094"@sda21
 /* 80010BF4 0000DB34  48 07 51 8D */	bl strcat
 /* 80010BF8 0000DB38  93 E1 00 08 */	stw r31, 8(r1)
 /* 80010BFC 0000DB3C  38 98 00 00 */	addi r4, r24, 0
@@ -1675,7 +1675,7 @@ lbl_80010CE0:
 /* 80010D0C 0000DC4C  38 60 00 00 */	li r3, 0
 /* 80010D10 0000DC50  48 00 02 C8 */	b lbl_80010FD8
 lbl_80010D14:
-/* 80010D14 0000DC54  3C 60 80 37 */	lis r3, $$22193@ha
+/* 80010D14 0000DC54  3C 60 80 37 */	lis r3, "@2193"@ha
 /* 80010D18 0000DC58  8A 21 0A A8 */	lbz r17, 0xaa8(r1)
 /* 80010D1C 0000DC5C  3B 0E FF FF */	addi r24, r14, -1
 /* 80010D20 0000DC60  3B 41 00 39 */	addi r26, r1, 0x39
@@ -1683,7 +1683,7 @@ lbl_80010D14:
 /* 80010D28 0000DC68  3B 81 00 43 */	addi r28, r1, 0x43
 /* 80010D2C 0000DC6C  3A 01 00 56 */	addi r16, r1, 0x56
 /* 80010D30 0000DC70  3B 21 00 28 */	addi r25, r1, 0x28
-/* 80010D34 0000DC74  39 E3 0B 30 */	addi r15, r3, $$22193@l
+/* 80010D34 0000DC74  39 E3 0B 30 */	addi r15, r3, "@2193"@l
 /* 80010D38 0000DC78  39 C0 00 00 */	li r14, 0
 lbl_80010D3C:
 /* 80010D3C 0000DC7C  3B A0 00 00 */	li r29, 0
@@ -1833,7 +1833,7 @@ lbl_80010F2C:
 /* 80010F3C 0000DE7C  56 40 06 3F */	clrlwi. r0, r18, 0x18
 /* 80010F40 0000DE80  41 82 00 10 */	beq lbl_80010F50
 /* 80010F44 0000DE84  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 80010F48 0000DE88  38 82 80 70 */	addi r4, r2, $$21630@sda21
+/* 80010F48 0000DE88  38 82 80 70 */	addi r4, r2, "@1630"@sda21
 /* 80010F4C 0000DE8C  48 02 EA 55 */	bl print__10JUTConsoleFPCc
 lbl_80010F50:
 /* 80010F50 0000DE90  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
@@ -1859,7 +1859,7 @@ lbl_80010F7C:
 /* 80010F98 0000DED8  56 40 06 3F */	clrlwi. r0, r18, 0x18
 /* 80010F9C 0000DEDC  41 82 00 10 */	beq lbl_80010FAC
 /* 80010FA0 0000DEE0  80 6D 8D A4 */	lwz r3, sConsole__12JUTException@sda21(r13)
-/* 80010FA4 0000DEE4  38 82 80 70 */	addi r4, r2, $$21630@sda21
+/* 80010FA4 0000DEE4  38 82 80 70 */	addi r4, r2, "@1630"@sda21
 /* 80010FA8 0000DEE8  48 02 E9 F9 */	bl print__10JUTConsoleFPCc
 lbl_80010FAC:
 /* 80010FAC 0000DEEC  38 61 02 38 */	addi r3, r1, 0x238
@@ -1913,11 +1913,11 @@ lbl_80011018:
 /* 80011050 0000DF90  48 02 EF 49 */	bl setDirectConsole__17JUTConsoleManagerFP10JUTConsole
 /* 80011054 0000DF94  80 AD 8D A4 */	lwz r5, sConsole__12JUTException@sda21(r13)
 /* 80011058 0000DF98  38 80 00 0F */	li r4, 0xf
-/* 8001105C 0000DF9C  C0 02 80 80 */	lfs f0, $$22216@sda21(r2)
+/* 8001105C 0000DF9C  C0 02 80 80 */	lfs f0, "@2216"@sda21(r2)
 /* 80011060 0000DFA0  38 60 00 1A */	li r3, 0x1a
 /* 80011064 0000DFA4  38 00 00 17 */	li r0, 0x17
 /* 80011068 0000DFA8  D0 05 00 50 */	stfs f0, 0x50(r5)
-/* 8001106C 0000DFAC  C0 02 80 84 */	lfs f0, $$22217@sda21(r2)
+/* 8001106C 0000DFAC  C0 02 80 84 */	lfs f0, "@2217"@sda21(r2)
 /* 80011070 0000DFB0  D0 05 00 54 */	stfs f0, 0x54(r5)
 /* 80011074 0000DFB4  80 AD 8D A4 */	lwz r5, sConsole__12JUTException@sda21(r13)
 /* 80011078 0000DFB8  90 85 00 40 */	stw r4, 0x40(r5)
@@ -1995,10 +1995,10 @@ __sinit_JUTException_cpp:
 /* 80011168 0000E0A8  3B E3 0B C8 */	addi r31, r3, sMapFileList__12JUTException@l
 /* 8001116C 0000E0AC  38 7F 00 00 */	addi r3, r31, 0
 /* 80011170 0000E0B0  4B FF DA 21 */	bl __ct__10JSUPtrListFb
-/* 80011174 0000E0B4  3C 80 80 01 */	lis r4, __dt__39JSUList$$0Q212JUTException12JUTExMapFile$$1Fv@ha
-/* 80011178 0000E0B8  3C 60 80 3E */	lis r3, $$21483@ha
-/* 8001117C 0000E0BC  38 A3 60 B4 */	addi r5, r3, $$21483@l
-/* 80011180 0000E0C0  38 84 11 A0 */	addi r4, r4, __dt__39JSUList$$0Q212JUTException12JUTExMapFile$$1Fv@l
+/* 80011174 0000E0B4  3C 80 80 01 */	lis r4, "__dt__39JSUList<Q212JUTException12JUTExMapFile>Fv"@ha
+/* 80011178 0000E0B8  3C 60 80 3E */	lis r3, "@1483"@ha
+/* 8001117C 0000E0BC  38 A3 60 B4 */	addi r5, r3, "@1483"@l
+/* 80011180 0000E0C0  38 84 11 A0 */	addi r4, r4, "__dt__39JSUList<Q212JUTException12JUTExMapFile>Fv"@l
 /* 80011184 0000E0C4  38 7F 00 00 */	addi r3, r31, 0
 /* 80011188 0000E0C8  48 07 15 A1 */	bl __register_global_object
 /* 8001118C 0000E0CC  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -2007,8 +2007,8 @@ __sinit_JUTException_cpp:
 /* 80011198 0000E0D8  7C 08 03 A6 */	mtlr r0
 /* 8001119C 0000E0DC  4E 80 00 20 */	blr 
 
-.global __dt__39JSUList$$0Q212JUTException12JUTExMapFile$$1Fv
-__dt__39JSUList$$0Q212JUTException12JUTExMapFile$$1Fv:
+.global "__dt__39JSUList<Q212JUTException12JUTExMapFile>Fv"
+"__dt__39JSUList<Q212JUTException12JUTExMapFile>Fv":
 /* 800111A0 0000E0E0  7C 08 02 A6 */	mflr r0
 /* 800111A4 0000E0E4  90 01 00 04 */	stw r0, 4(r1)
 /* 800111A8 0000E0E8  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -2039,85 +2039,85 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x36D790, 0x10
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x36D7A0, 0xC
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x36D7AC, 0xC
-$$21484:
+"@1484":
 	.incbin "baserom.dol", 0x36D7B8, 0x10
-$$21485:
+"@1485":
 	.incbin "baserom.dol", 0x36D7C8, 0x10
-$$21488:
+"@1488":
 	.incbin "baserom.dol", 0x36D7D8, 0x14
-$$21489:
+"@1489":
 	.incbin "baserom.dol", 0x36D7EC, 0xC
-$$21491:
+"@1491":
 	.incbin "baserom.dol", 0x36D7F8, 0x10
-$$21492:
+"@1492":
 	.incbin "baserom.dol", 0x36D808, 0xC
-$$21493:
+"@1493":
 	.incbin "baserom.dol", 0x36D814, 0xC
-$$21495:
+"@1495":
 	.incbin "baserom.dol", 0x36D820, 0x14
-$$21496:
+"@1496":
 	.incbin "baserom.dol", 0x36D834, 0xC
-$$21497:
+"@1497":
 	.incbin "baserom.dol", 0x36D840, 0x14
-$$21498:
+"@1498":
 	.incbin "baserom.dol", 0x36D854, 0x14
-$$21499:
+"@1499":
 	.incbin "baserom.dol", 0x36D868, 0xC
-$$21562:
+"@1562":
 	.incbin "baserom.dol", 0x36D874, 0x14
-$$21563:
+"@1563":
 	.incbin "baserom.dol", 0x36D888, 0x10
-$$21564:
+"@1564":
 	.incbin "baserom.dol", 0x36D898, 0x10
-$$21566:
+"@1566":
 	.incbin "baserom.dol", 0x36D8A8, 0x14
-$$21567:
+"@1567":
 	.incbin "baserom.dol", 0x36D8BC, 0xC
-$$21628:
+"@1628":
 	.incbin "baserom.dol", 0x36D8C8, 0x28
-$$21701:
+"@1701":
 	.incbin "baserom.dol", 0x36D8F0, 0x28
-$$21702:
+"@1702":
 	.incbin "baserom.dol", 0x36D918, 0x20
-$$21703:
+"@1703":
 	.incbin "baserom.dol", 0x36D938, 0x14
-$$21704:
+"@1704":
 	.incbin "baserom.dol", 0x36D94C, 0x18
-$$21709:
+"@1709":
 	.incbin "baserom.dol", 0x36D964, 0x20
-$$21710:
+"@1710":
 	.incbin "baserom.dol", 0x36D984, 0x1C
-$$21711:
+"@1711":
 	.incbin "baserom.dol", 0x36D9A0, 0x1C
-$$21722:
+"@1722":
 	.incbin "baserom.dol", 0x36D9BC, 0x28
-$$21723:
+"@1723":
 	.incbin "baserom.dol", 0x36D9E4, 0x28
-$$21724:
+"@1724":
 	.incbin "baserom.dol", 0x36DA0C, 0x1C
-$$21757:
+"@1757":
 	.incbin "baserom.dol", 0x36DA28, 0x18
-$$21775:
+"@1775":
 	.incbin "baserom.dol", 0x36DA40, 0x2C
-$$21776:
+"@1776":
 	.incbin "baserom.dol", 0x36DA6C, 0x10
-$$21777:
+"@1777":
 	.incbin "baserom.dol", 0x36DA7C, 0x14
-$$21778:
+"@1778":
 	.incbin "baserom.dol", 0x36DA90, 0x28
-$$21795:
+"@1795":
 	.incbin "baserom.dol", 0x36DAB8, 0x1C
-$$22006:
+"@2006":
 	.incbin "baserom.dol", 0x36DAD4, 0x38
-$$22007:
+"@2007":
 	.incbin "baserom.dol", 0x36DB0C, 0x24
-$$22193:
+"@2193":
 	.incbin "baserom.dol", 0x36DB30, 0x20
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -2131,22 +2131,22 @@ sMessageQueue__12JUTException:
   .4byte 0
   .4byte 0
 sCpuExpName__12JUTException:
-  .4byte $$21484
-  .4byte $$21485
-  .4byte $$21486
-  .4byte $$21487
-  .4byte $$21488
-  .4byte $$21489
-  .4byte $$21490
-  .4byte $$21491
-  .4byte $$21492
-  .4byte $$21493
-  .4byte $$21494
-  .4byte $$21495
-  .4byte $$21496
-  .4byte $$21497
-  .4byte $$21498
-  .4byte $$21499
+  .4byte "@1484"
+  .4byte "@1485"
+  .4byte "@1486"
+  .4byte "@1487"
+  .4byte "@1488"
+  .4byte "@1489"
+  .4byte "@1490"
+  .4byte "@1491"
+  .4byte "@1492"
+  .4byte "@1493"
+  .4byte "@1494"
+  .4byte "@1495"
+  .4byte "@1496"
+  .4byte "@1497"
+  .4byte "@1498"
+  .4byte "@1499"
 .global __vt__12JUTException
 __vt__12JUTException:
   .4byte 0
@@ -2161,33 +2161,33 @@ sMessageBuffer__12JUTException:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21486:
+"@1486":
 	.incbin "baserom.dol", 0x3E3D50, 0x4
-$$21487:
+"@1487":
 	.incbin "baserom.dol", 0x3E3D54, 0x4
-$$21490:
+"@1490":
 	.incbin "baserom.dol", 0x3E3D58, 0x8
-$$21494:
+"@1494":
 	.incbin "baserom.dol", 0x3E3D60, 0x8
-$$21565:
+"@1565":
   .4byte 0
-$$21629:
+"@1629":
 	.incbin "baserom.dol", 0x3E3D6C, 0x4
-$$21630:
+"@1630":
 	.incbin "baserom.dol", 0x3E3D70, 0x4
-$$21756:
+"@1756":
   .4byte 0
-$$22094:
+"@2094":
 	.incbin "baserom.dol", 0x3E3D78, 0x8
-$$22216:
+"@2216":
 	.incbin "baserom.dol", 0x3E3D80, 0x4
-$$22217:
+"@2217":
 	.incbin "baserom.dol", 0x3E3D84, 0x4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 exCallbackObject:
 	.skip 0x14
-$$21483:
+"@1483":
 	.skip 0xC
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

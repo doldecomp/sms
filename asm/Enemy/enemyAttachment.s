@@ -139,8 +139,8 @@ __ct__18TEnemyPolluteModelFP10TLiveActoriP12SDLModelDataPCc:
 /* 802509B4 0024D8F4  4B DB BE FD */	bl __nw__FUl
 /* 802509B8 0024D8F8  7C 7F 1B 79 */	or. r31, r3, r3
 /* 802509BC 0024D8FC  41 82 00 24 */	beq lbl_802509E0
-/* 802509C0 0024D900  3C 60 80 39 */	lis r3, $$22620@ha
-/* 802509C4 0024D904  39 03 4F B0 */	addi r8, r3, $$22620@l
+/* 802509C0 0024D900  3C 60 80 39 */	lis r3, "@2620"@ha
+/* 802509C4 0024D904  39 03 4F B0 */	addi r8, r3, "@2620"@l
 /* 802509C8 0024D908  38 7F 00 00 */	addi r3, r31, 0
 /* 802509CC 0024D90C  38 9C 00 00 */	addi r4, r28, 0
 /* 802509D0 0024D910  38 BD 00 00 */	addi r5, r29, 0
@@ -159,8 +159,8 @@ lbl_802509E0:
 /* 80250A00 0024D940  38 21 00 30 */	addi r1, r1, 0x30
 /* 80250A04 0024D944  4E 80 00 20 */	blr 
 
-.global generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1
-generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3$$0f$$1RQ29JGeometry8TVec3$$0f$$1:
+.global "generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>"
+"generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>":
 /* 80250A08 0024D948  7C 08 02 A6 */	mflr r0
 /* 80250A0C 0024D94C  90 01 00 04 */	stw r0, 4(r1)
 /* 80250A10 0024D950  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -181,7 +181,7 @@ generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3$$0f$$1RQ29
 /* 80250A4C 0024D98C  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
 /* 80250A50 0024D990  7F E4 00 2E */	lwzx r31, r4, r0
 /* 80250A54 0024D994  38 9D 00 00 */	addi r4, r29, 0
-/* 80250A58 0024D998  4B F8 AD 0D */	bl checkGround__4TMapCFRCQ29JGeometry8TVec3$$0f$$1PPC12TBGCheckData
+/* 80250A58 0024D998  4B F8 AD 0D */	bl "checkGround__4TMapCFRCQ29JGeometry8TVec3<f>PPC12TBGCheckData"
 /* 80250A5C 0024D99C  80 61 00 3C */	lwz r3, 0x3c(r1)
 /* 80250A60 0024D9A0  A0 03 00 04 */	lhz r0, 4(r3)
 /* 80250A64 0024D9A4  54 00 06 F7 */	rlwinm. r0, r0, 0, 0x1b, 0x1b
@@ -209,12 +209,12 @@ lbl_80250A78:
 /* 80250AB4 0024D9F4  90 1F 00 54 */	stw r0, 0x54(r31)
 /* 80250AB8 0024D9F8  80 1E 00 08 */	lwz r0, 8(r30)
 /* 80250ABC 0024D9FC  90 1F 00 58 */	stw r0, 0x58(r31)
-/* 80250AC0 0024DA00  4B DF 11 91 */	bl __ct__Q29JGeometry13SMatrix34C$$0f$$1Fv
+/* 80250AC0 0024DA00  4B DF 11 91 */	bl "__ct__Q29JGeometry13SMatrix34C<f>Fv"
 /* 80250AC4 0024DA04  C3 BD 00 08 */	lfs f29, 8(r29)
 /* 80250AC8 0024DA08  38 61 00 40 */	addi r3, r1, 0x40
 /* 80250ACC 0024DA0C  C3 DD 00 04 */	lfs f30, 4(r29)
 /* 80250AD0 0024DA10  C3 FD 00 00 */	lfs f31, 0(r29)
-/* 80250AD4 0024DA14  4B E7 03 71 */	bl identity33__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 80250AD4 0024DA14  4B E7 03 71 */	bl "identity33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 80250AD8 0024DA18  D3 E1 00 4C */	stfs f31, 0x4c(r1)
 /* 80250ADC 0024DA1C  38 7F 00 14 */	addi r3, r31, 0x14
 /* 80250AE0 0024DA20  D3 C1 00 5C */	stfs f30, 0x5c(r1)
@@ -222,7 +222,7 @@ lbl_80250A78:
 /* 80250AE8 0024DA28  C3 FD 00 08 */	lfs f31, 8(r29)
 /* 80250AEC 0024DA2C  C3 DD 00 04 */	lfs f30, 4(r29)
 /* 80250AF0 0024DA30  C3 BD 00 00 */	lfs f29, 0(r29)
-/* 80250AF4 0024DA34  4B E7 03 51 */	bl identity33__Q29JGeometry64TRotation3$$0Q29JGeometry38TMatrix34$$0Q29JGeometry13SMatrix34C$$0f$$1$$1$$1Fv
+/* 80250AF4 0024DA34  4B E7 03 51 */	bl "identity33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Fv"
 /* 80250AF8 0024DA38  D3 BF 00 20 */	stfs f29, 0x20(r31)
 /* 80250AFC 0024DA3C  38 61 00 40 */	addi r3, r1, 0x40
 /* 80250B00 0024DA40  D3 DF 00 30 */	stfs f30, 0x30(r31)
@@ -282,7 +282,7 @@ perform__25TEnemyPolluteModelManagerFUlPQ26JDrama9TGraphics:
 /* 80250BC4 0024DB04  C0 83 00 9C */	lfs f4, 0x9c(r3)
 /* 80250BC8 0024DB08  C0 44 00 4C */	lfs f2, 0x4c(r4)
 /* 80250BCC 0024DB0C  C0 24 00 48 */	lfs f1, 0x48(r4)
-/* 80250BD0 0024DB10  C3 E2 DC F8 */	lfs f31, $$22700@sda21(r2)
+/* 80250BD0 0024DB10  C3 E2 DC F8 */	lfs f31, "@2700"@sda21(r2)
 /* 80250BD4 0024DB14  4B E7 08 41 */	bl SetViewFrustumClipCheckPerspective__Fffff
 /* 80250BD8 0024DB18  3B 80 00 00 */	li r28, 0
 /* 80250BDC 0024DB1C  3B 5C 00 00 */	addi r26, r28, 0
@@ -454,7 +454,7 @@ calcRootMatrix__16TEnemyAttachmentFv:
 /* 80250E08 0024DD48  94 21 FF A0 */	stwu r1, -0x60(r1)
 /* 80250E0C 0024DD4C  93 E1 00 5C */	stw r31, 0x5c(r1)
 /* 80250E10 0024DD50  7C 7F 1B 78 */	mr r31, r3
-/* 80250E14 0024DD54  C0 42 DC FC */	lfs f2, $$22757@sda21(r2)
+/* 80250E14 0024DD54  C0 42 DC FC */	lfs f2, "@2757"@sda21(r2)
 /* 80250E18 0024DD58  C0 03 00 38 */	lfs f0, 0x38(r3)
 /* 80250E1C 0024DD5C  C0 23 00 34 */	lfs f1, 0x34(r3)
 /* 80250E20 0024DD60  C0 63 00 30 */	lfs f3, 0x30(r3)
@@ -619,7 +619,7 @@ rebirth__16TEnemyAttachmentFv:
 /* 80251040 0024DF80  80 03 00 64 */	lwz r0, 0x64(r3)
 /* 80251044 0024DF84  60 00 00 01 */	ori r0, r0, 1
 /* 80251048 0024DF88  90 03 00 64 */	stw r0, 0x64(r3)
-/* 8025104C 0024DF8C  C0 02 DC F4 */	lfs f0, $$22567@sda21(r2)
+/* 8025104C 0024DF8C  C0 02 DC F4 */	lfs f0, "@2567"@sda21(r2)
 /* 80251050 0024DF90  D0 03 00 B0 */	stfs f0, 0xb0(r3)
 /* 80251054 0024DF94  4E 80 00 20 */	blr 
 
@@ -692,7 +692,7 @@ lbl_8025112C:
 /* 80251154 0024E094  4B F8 A5 E5 */	bl checkGround__4TMapCFfffPPC12TBGCheckData
 /* 80251158 0024E098  D0 3F 00 C8 */	stfs f1, 0xc8(r31)
 /* 8025115C 0024E09C  C0 3F 00 C8 */	lfs f1, 0xc8(r31)
-/* 80251160 0024E0A0  C0 02 DC F0 */	lfs f0, $$22566@sda21(r2)
+/* 80251160 0024E0A0  C0 02 DC F0 */	lfs f0, "@2566"@sda21(r2)
 /* 80251164 0024E0A4  EC 01 00 2A */	fadds f0, f1, f0
 /* 80251168 0024E0A8  D0 1F 00 C8 */	stfs f0, 0xc8(r31)
 lbl_8025116C:
@@ -720,7 +720,7 @@ lbl_802511AC:
 /* 802511B8 0024E0F8  38 00 00 00 */	li r0, 0
 /* 802511BC 0024E0FC  C0 01 00 5C */	lfs f0, 0x5c(r1)
 /* 802511C0 0024E100  EC 7F 08 2A */	fadds f3, f31, f1
-/* 802511C4 0024E104  C0 22 DD 00 */	lfs f1, $$22829@sda21(r2)
+/* 802511C4 0024E104  C0 22 DD 00 */	lfs f1, "@2829"@sda21(r2)
 /* 802511C8 0024E108  D0 01 00 30 */	stfs f0, 0x30(r1)
 /* 802511CC 0024E10C  38 81 00 30 */	addi r4, r1, 0x30
 /* 802511D0 0024E110  EC 21 00 B2 */	fmuls f1, f1, f2
@@ -755,7 +755,7 @@ lbl_80251214:
 /* 80251240 0024E180  80 01 00 64 */	lwz r0, 0x64(r1)
 /* 80251244 0024E184  90 A1 00 14 */	stw r5, 0x14(r1)
 /* 80251248 0024E188  90 01 00 18 */	stw r0, 0x18(r1)
-/* 8025124C 0024E18C  4B E7 0E 3D */	bl sub__Q29JGeometry8TVec3$$0f$$1FRCQ29JGeometry8TVec3$$0f$$1
+/* 8025124C 0024E18C  4B E7 0E 3D */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
 /* 80251250 0024E190  80 81 00 10 */	lwz r4, 0x10(r1)
 /* 80251254 0024E194  7F E3 FB 78 */	mr r3, r31
 /* 80251258 0024E198  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -810,7 +810,7 @@ recoverScale__16TEnemyAttachmentFv:
 /* 802512F8 0024E238  FC 00 08 40 */	fcmpo cr0, f0, f1
 /* 802512FC 0024E23C  40 80 00 18 */	bge lbl_80251314
 /* 80251300 0024E240  38 63 00 24 */	addi r3, r3, 0x24
-/* 80251304 0024E244  C0 22 DD 00 */	lfs f1, $$22829@sda21(r2)
+/* 80251304 0024E244  C0 22 DD 00 */	lfs f1, "@2829"@sda21(r2)
 /* 80251308 0024E248  7C 64 1B 78 */	mr r4, r3
 /* 8025130C 0024E24C  4B E4 3B C9 */	bl PSVECScale
 /* 80251310 0024E250  48 00 00 10 */	b lbl_80251320
@@ -902,9 +902,9 @@ behaveToHitGround__16TEnemyAttachmentFv:
 /* 80251428 0024E368  80 03 00 F0 */	lwz r0, 0xf0(r3)
 /* 8025142C 0024E36C  54 00 06 6E */	rlwinm r0, r0, 0, 0x19, 0x17
 /* 80251430 0024E370  90 03 00 F0 */	stw r0, 0xf0(r3)
-/* 80251434 0024E374  C0 22 DC F4 */	lfs f1, $$22567@sda21(r2)
+/* 80251434 0024E374  C0 22 DC F4 */	lfs f1, "@2567"@sda21(r2)
 /* 80251438 0024E378  D0 23 00 AC */	stfs f1, 0xac(r3)
-/* 8025143C 0024E37C  C0 02 DD 04 */	lfs f0, $$22860@sda21(r2)
+/* 8025143C 0024E37C  C0 02 DD 04 */	lfs f0, "@2860"@sda21(r2)
 /* 80251440 0024E380  D0 03 00 B0 */	stfs f0, 0xb0(r3)
 /* 80251444 0024E384  D0 23 00 B4 */	stfs f1, 0xb4(r3)
 /* 80251448 0024E388  81 83 00 00 */	lwz r12, 0(r3)
@@ -969,7 +969,7 @@ __ct__16TEnemyAttachmentFPCc:
 /* 80251518 0024E458  90 1F 01 54 */	stw r0, 0x154(r31)
 /* 8025151C 0024E45C  90 1F 01 58 */	stw r0, 0x158(r31)
 /* 80251520 0024E460  90 1F 01 60 */	stw r0, 0x160(r31)
-/* 80251524 0024E464  C0 02 DC F0 */	lfs f0, $$22566@sda21(r2)
+/* 80251524 0024E464  C0 02 DC F0 */	lfs f0, "@2566"@sda21(r2)
 /* 80251528 0024E468  D0 1F 01 64 */	stfs f0, 0x164(r31)
 /* 8025152C 0024E46C  98 1F 01 68 */	stb r0, 0x168(r31)
 /* 80251530 0024E470  80 01 00 1C */	lwz r0, 0x1c(r1)
@@ -1047,7 +1047,7 @@ lbl_80251608:
 appear__16TEnemyAttachmentFv:
 /* 80251624 0024E564  38 00 00 01 */	li r0, 1
 /* 80251628 0024E568  90 03 01 50 */	stw r0, 0x150(r3)
-/* 8025162C 0024E56C  C0 02 DD 08 */	lfs f0, $$22879@sda21(r2)
+/* 8025162C 0024E56C  C0 02 DD 08 */	lfs f0, "@2879"@sda21(r2)
 /* 80251630 0024E570  D0 03 00 2C */	stfs f0, 0x2c(r3)
 /* 80251634 0024E574  D0 03 00 28 */	stfs f0, 0x28(r3)
 /* 80251638 0024E578  D0 03 00 24 */	stfs f0, 0x24(r3)
@@ -1058,14 +1058,14 @@ receiveMessage__16TEnemyAttachmentFP9THitActorUl:
 /* 80251640 0024E580  38 60 00 00 */	li r3, 0
 /* 80251644 0024E584  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__16TEnemyAttachmentFv
-$$232$$2__dt__16TEnemyAttachmentFv:
+.global "@32@__dt__16TEnemyAttachmentFv"
+"@32@__dt__16TEnemyAttachmentFv":
 /* 80251648 0024E588  38 63 FF E0 */	addi r3, r3, -32
 /* 8025164C 0024E58C  4B FF FF 6C */	b __dt__16TEnemyAttachmentFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$22620:
+"@2620":
 	.incbin "baserom.dol", 0x391FB0, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -1106,7 +1106,7 @@ __vt__16TEnemyAttachment:
   .4byte perform__16TEnemyAttachmentFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__16TEnemyAttachmentFv
+  .4byte "@32@__dt__16TEnemyAttachmentFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -1116,12 +1116,12 @@ __vt__16TEnemyAttachment:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -1138,7 +1138,7 @@ __vt__16TEnemyAttachment:
   .4byte receiveMessage__16TEnemyAttachmentFP9THitActorUl
   .4byte getTakingMtx__10TLiveActorFv
   .4byte ensureTakeSituation__10TTakeActorFv
-  .4byte moveRequest__10TTakeActorFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "moveRequest__10TTakeActorFRCQ29JGeometry8TVec3<f>"
   .4byte getRadiusAtY__10TTakeActorCFf
   .4byte belongToGround__10TLiveActorCFv
   .4byte getRootJointMtx__10TLiveActorCFv
@@ -1159,8 +1159,8 @@ __vt__16TEnemyAttachment:
   .4byte updateAnmSound__10TLiveActorFv
   .4byte getBasNameTable__10TLiveActorCFv
   .4byte reset__11TSpineEnemyFv
-  .4byte resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1RCQ29JGeometry8TVec3$$0f$$1
+  .4byte "resetToPosition__11TSpineEnemyFRCQ29JGeometry8TVec3<f>"
+  .4byte "resetSRTV__11TSpineEnemyFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>"
   .4byte getSaveParam__11TSpineEnemyCFv
   .4byte getPhaseShift__11TSpineEnemyCFv
   .4byte isReachedToGoal__11TSpineEnemyCFv
@@ -1180,17 +1180,17 @@ __vt__16TEnemyAttachment:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22566:
+"@2566":
 	.incbin "baserom.dol", 0x3E99F0, 0x4
-$$22567:
+"@2567":
   .4byte 0
-$$22700:
+"@2700":
 	.incbin "baserom.dol", 0x3E99F8, 0x4
-$$22757:
+"@2757":
 	.incbin "baserom.dol", 0x3E99FC, 0x4
-$$22829:
+"@2829":
 	.incbin "baserom.dol", 0x3E9A00, 0x4
-$$22860:
+"@2860":
 	.incbin "baserom.dol", 0x3E9A04, 0x4
-$$22879:
+"@2879":
 	.incbin "baserom.dol", 0x3E9A08, 0x8

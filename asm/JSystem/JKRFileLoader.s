@@ -371,7 +371,7 @@ fetchVolumeName__13JKRFileLoaderFPclPCc:
 /* 8000BF94 00008ED4  3B E5 00 00 */	addi r31, r5, 0
 /* 8000BF98 00008ED8  93 C1 00 28 */	stw r30, 0x28(r1)
 /* 8000BF9C 00008EDC  3B C4 00 00 */	addi r30, r4, 0
-/* 8000BFA0 00008EE0  38 82 80 30 */	addi r4, r2, $$21783@sda21
+/* 8000BFA0 00008EE0  38 82 80 30 */	addi r4, r2, "@1783"@sda21
 /* 8000BFA4 00008EE4  93 A1 00 24 */	stw r29, 0x24(r1)
 /* 8000BFA8 00008EE8  3B A3 00 00 */	addi r29, r3, 0
 /* 8000BFAC 00008EEC  38 7F 00 00 */	addi r3, r31, 0
@@ -442,10 +442,10 @@ __sinit_JKRFileLoader_cpp:
 /* 8000C080 00008FC0  3B E3 0B B0 */	addi r31, r3, sVolumeList__13JKRFileLoader@l
 /* 8000C084 00008FC4  38 7F 00 00 */	addi r3, r31, 0
 /* 8000C088 00008FC8  48 00 2B AD */	bl initiate__10JSUPtrListFv
-/* 8000C08C 00008FCC  3C 80 80 01 */	lis r4, __dt__24JSUList$$013JKRFileLoader$$1Fv@ha
-/* 8000C090 00008FD0  3C 60 80 3E */	lis r3, $$21483@ha
-/* 8000C094 00008FD4  38 A3 60 80 */	addi r5, r3, $$21483@l
-/* 8000C098 00008FD8  38 84 C0 B8 */	addi r4, r4, __dt__24JSUList$$013JKRFileLoader$$1Fv@l
+/* 8000C08C 00008FCC  3C 80 80 01 */	lis r4, "__dt__24JSUList<13JKRFileLoader>Fv"@ha
+/* 8000C090 00008FD0  3C 60 80 3E */	lis r3, "@1483"@ha
+/* 8000C094 00008FD4  38 A3 60 80 */	addi r5, r3, "@1483"@l
+/* 8000C098 00008FD8  38 84 C0 B8 */	addi r4, r4, "__dt__24JSUList<13JKRFileLoader>Fv"@l
 /* 8000C09C 00008FDC  38 7F 00 00 */	addi r3, r31, 0
 /* 8000C0A0 00008FE0  48 07 66 89 */	bl __register_global_object
 /* 8000C0A4 00008FE4  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -454,8 +454,8 @@ __sinit_JKRFileLoader_cpp:
 /* 8000C0B0 00008FF0  7C 08 03 A6 */	mtlr r0
 /* 8000C0B4 00008FF4  4E 80 00 20 */	blr 
 
-.global __dt__24JSUList$$013JKRFileLoader$$1Fv
-__dt__24JSUList$$013JKRFileLoader$$1Fv:
+.global "__dt__24JSUList<13JKRFileLoader>Fv"
+"__dt__24JSUList<13JKRFileLoader>Fv":
 /* 8000C0B8 00008FF8  7C 08 02 A6 */	mflr r0
 /* 8000C0BC 00008FFC  90 01 00 04 */	stw r0, 4(r1)
 /* 8000C0C0 00009000  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -510,11 +510,11 @@ rootPath$1763:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21783:
+"@1783":
 	.incbin "baserom.dol", 0x3E3D30, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$21483:
+"@1483":
 	.skip 0x10
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

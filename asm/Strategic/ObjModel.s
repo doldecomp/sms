@@ -466,14 +466,14 @@ createMActorFromDefaultBmd__13TMActorKeeperFPCcUl:
 /* 801168A8 001137E8  94 21 FE C8 */	stwu r1, -0x138(r1)
 /* 801168AC 001137EC  BF 61 01 24 */	stmw r27, 0x124(r1)
 /* 801168B0 001137F0  3B E3 00 00 */	addi r31, r3, 0
-/* 801168B4 001137F4  3C 60 80 38 */	lis r3, $$21948@ha
+/* 801168B4 001137F4  3C 60 80 38 */	lis r3, "@1948"@ha
 /* 801168B8 001137F8  3B 84 00 00 */	addi r28, r4, 0
-/* 801168BC 001137FC  38 C3 A2 20 */	addi r6, r3, $$21948@l
+/* 801168BC 001137FC  38 C3 A2 20 */	addi r6, r3, "@1948"@l
 /* 801168C0 00113800  3B A5 00 00 */	addi r29, r5, 0
 /* 801168C4 00113804  38 BC 00 00 */	addi r5, r28, 0
 /* 801168C8 00113808  38 61 00 14 */	addi r3, r1, 0x14
 /* 801168CC 0011380C  83 DF 00 14 */	lwz r30, 0x14(r31)
-/* 801168D0 00113810  38 82 96 F0 */	addi r4, r2, $$21947@sda21
+/* 801168D0 00113810  38 82 96 F0 */	addi r4, r2, "@1947"@sda21
 /* 801168D4 00113814  4B F6 D7 1D */	bl sprintf
 /* 801168D8 00113818  38 61 00 14 */	addi r3, r1, 0x14
 /* 801168DC 0011381C  4B EF 53 E1 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -841,7 +841,7 @@ lbl_80116D84:
 /* 80116D94 00113CD4  38 DD 00 00 */	addi r6, r29, 0
 /* 80116D98 00113CD8  38 61 00 20 */	addi r3, r1, 0x20
 /* 80116D9C 00113CDC  4C C6 31 82 */	crclr 6
-/* 80116DA0 00113CE0  38 82 96 F0 */	addi r4, r2, $$21947@sda21
+/* 80116DA0 00113CE0  38 82 96 F0 */	addi r4, r2, "@1947"@sda21
 /* 80116DA4 00113CE4  4B F6 D2 4D */	bl sprintf
 /* 80116DA8 00113CE8  38 61 00 20 */	addi r3, r1, 0x20
 /* 80116DAC 00113CEC  4B EF 4F 11 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -893,7 +893,7 @@ loadModelData__16TModelDataKeeperFPCcUlPCc:
 /* 80116E50 00113D90  3B E4 00 00 */	addi r31, r4, 0
 /* 80116E54 00113D94  38 61 00 18 */	addi r3, r1, 0x18
 /* 80116E58 00113D98  93 C1 01 18 */	stw r30, 0x118(r1)
-/* 80116E5C 00113D9C  38 82 96 F0 */	addi r4, r2, $$21947@sda21
+/* 80116E5C 00113D9C  38 82 96 F0 */	addi r4, r2, "@1947"@sda21
 /* 80116E60 00113DA0  4B F6 D1 91 */	bl sprintf
 /* 80116E64 00113DA4  38 61 00 18 */	addi r3, r1, 0x18
 /* 80116E68 00113DA8  4B EF 4E 55 */	bl getGlbResource__13JKRFileLoaderFPCc
@@ -947,10 +947,10 @@ lbl_80116EFC:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21948:
+"@1948":
 	.incbin "baserom.dol", 0x377220, 0x10
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21947:
+"@1947":
 	.incbin "baserom.dol", 0x3E53F0, 0x8

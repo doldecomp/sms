@@ -4,12 +4,12 @@
 .global getBasNameTable__8TBaseNPCCFv
 getBasNameTable__8TBaseNPCCFv:
 /* 8017731C 0017425C  7C 08 02 A6 */	mflr r0
-/* 80177320 00174260  3C 80 80 3C */	lis r4, $$21431@ha
+/* 80177320 00174260  3C 80 80 3C */	lis r4, "@1431"@ha
 /* 80177324 00174264  90 01 00 04 */	stw r0, 4(r1)
 /* 80177328 00174268  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8017732C 0017426C  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 80177330 00174270  93 C1 00 18 */	stw r30, 0x18(r1)
-/* 80177334 00174274  3B C4 94 E8 */	addi r30, r4, $$21431@l
+/* 80177334 00174274  3B C4 94 E8 */	addi r30, r4, "@1431"@l
 /* 80177338 00174278  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 8017733C 0017427C  3B A0 00 00 */	li r29, 0
 /* 80177340 00174280  93 81 00 10 */	stw r28, 0x10(r1)
@@ -45,8 +45,8 @@ lbl_801773A0:
 /* 801773A8 001742E8  38 84 FF FA */	addi r4, r4, -6
 /* 801773AC 001742EC  28 04 00 17 */	cmplwi r4, 0x17
 /* 801773B0 001742F0  41 81 00 D0 */	bgt lbl_80177480
-/* 801773B4 001742F4  3C 60 80 3C */	lis r3, $$22235@ha
-/* 801773B8 001742F8  38 63 9B C8 */	addi r3, r3, $$22235@l
+/* 801773B4 001742F4  3C 60 80 3C */	lis r3, "@2235"@ha
+/* 801773B8 001742F8  38 63 9B C8 */	addi r3, r3, "@2235"@l
 /* 801773BC 001742FC  54 84 10 3A */	slwi r4, r4, 2
 /* 801773C0 00174300  7C 03 20 2E */	lwzx r0, r3, r4
 /* 801773C4 00174304  7C 09 03 A6 */	mtctr r0
@@ -130,571 +130,571 @@ lbl_80177480:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x37F7EC, 0x14
-$$21755:
+"@1755":
 	.incbin "baserom.dol", 0x37F800, 0x30
-$$21756:
+"@1756":
 	.incbin "baserom.dol", 0x37F830, 0x38
-$$21757:
+"@1757":
 	.incbin "baserom.dol", 0x37F868, 0x34
-$$21758:
+"@1758":
 	.incbin "baserom.dol", 0x37F89C, 0x24
-$$21938:
+"@1938":
 	.incbin "baserom.dol", 0x37F8C0, 0x28
-$$21939:
+"@1939":
 	.incbin "baserom.dol", 0x37F8E8, 0x28
-$$21940:
+"@1940":
 	.incbin "baserom.dol", 0x37F910, 0x28
-$$21941:
+"@1941":
 	.incbin "baserom.dol", 0x37F938, 0x28
-$$21942:
+"@1942":
 	.incbin "baserom.dol", 0x37F960, 0x24
-$$21943:
+"@1943":
 	.incbin "baserom.dol", 0x37F984, 0x28
-$$21944:
+"@1944":
 	.incbin "baserom.dol", 0x37F9AC, 0x28
-$$21945:
+"@1945":
 	.incbin "baserom.dol", 0x37F9D4, 0x24
-$$21946:
+"@1946":
 	.incbin "baserom.dol", 0x37F9F8, 0x28
-$$21947:
+"@1947":
 	.incbin "baserom.dol", 0x37FA20, 0x28
-$$21948:
+"@1948":
 	.incbin "baserom.dol", 0x37FA48, 0x2C
-$$21949:
+"@1949":
 	.incbin "baserom.dol", 0x37FA74, 0x28
-$$21950:
+"@1950":
 	.incbin "baserom.dol", 0x37FA9C, 0x24
-$$21951:
+"@1951":
 	.incbin "baserom.dol", 0x37FAC0, 0x28
-$$21952:
+"@1952":
 	.incbin "baserom.dol", 0x37FAE8, 0x2C
-$$21953:
+"@1953":
 	.incbin "baserom.dol", 0x37FB14, 0x2C
-$$21954:
+"@1954":
 	.incbin "baserom.dol", 0x37FB40, 0x28
-$$21955:
+"@1955":
 	.incbin "baserom.dol", 0x37FB68, 0x28
-$$21956:
+"@1956":
 	.incbin "baserom.dol", 0x37FB90, 0x28
-$$21957:
+"@1957":
 	.incbin "baserom.dol", 0x37FBB8, 0x28
-$$21958:
+"@1958":
 	.incbin "baserom.dol", 0x37FBE0, 0x2C
-$$21959:
+"@1959":
 	.incbin "baserom.dol", 0x37FC0C, 0x2C
-$$21960:
+"@1960":
 	.incbin "baserom.dol", 0x37FC38, 0x28
-$$21961:
+"@1961":
 	.incbin "baserom.dol", 0x37FC60, 0x2C
-$$21962:
+"@1962":
 	.incbin "baserom.dol", 0x37FC8C, 0x28
-$$21963:
+"@1963":
 	.incbin "baserom.dol", 0x37FCB4, 0x30
-$$21964:
+"@1964":
 	.incbin "baserom.dol", 0x37FCE4, 0x28
-$$21965:
+"@1965":
 	.incbin "baserom.dol", 0x37FD0C, 0x28
-$$21966:
+"@1966":
 	.incbin "baserom.dol", 0x37FD34, 0x28
-$$21967:
+"@1967":
 	.incbin "baserom.dol", 0x37FD5C, 0x30
-$$21970:
+"@1970":
 	.incbin "baserom.dol", 0x37FD8C, 0x24
-$$21971:
+"@1971":
 	.incbin "baserom.dol", 0x37FDB0, 0x20
-$$21972:
+"@1972":
 	.incbin "baserom.dol", 0x37FDD0, 0x20
-$$21975:
+"@1975":
 	.incbin "baserom.dol", 0x37FDF0, 0x24
-$$21976:
+"@1976":
 	.incbin "baserom.dol", 0x37FE14, 0x24
-$$21977:
+"@1977":
 	.incbin "baserom.dol", 0x37FE38, 0x28
-$$21980:
+"@1980":
 	.incbin "baserom.dol", 0x37FE60, 0x2C
-$$21981:
+"@1981":
 	.incbin "baserom.dol", 0x37FE8C, 0x2C
-$$21984:
+"@1984":
 	.incbin "baserom.dol", 0x37FEB8, 0x24
-$$21985:
+"@1985":
 	.incbin "baserom.dol", 0x37FEDC, 0x28
-$$21986:
+"@1986":
 	.incbin "baserom.dol", 0x37FF04, 0x28
-$$21989:
+"@1989":
 	.incbin "baserom.dol", 0x37FF2C, 0x28
-$$21990:
+"@1990":
 	.incbin "baserom.dol", 0x37FF54, 0x28
-$$21991:
+"@1991":
 	.incbin "baserom.dol", 0x37FF7C, 0x28
-$$21992:
+"@1992":
 	.incbin "baserom.dol", 0x37FFA4, 0x28
-$$21993:
+"@1993":
 	.incbin "baserom.dol", 0x37FFCC, 0x24
-$$21994:
+"@1994":
 	.incbin "baserom.dol", 0x37FFF0, 0x28
-$$21995:
+"@1995":
 	.incbin "baserom.dol", 0x380018, 0x24
-$$21996:
+"@1996":
 	.incbin "baserom.dol", 0x38003C, 0x28
-$$21997:
+"@1997":
 	.incbin "baserom.dol", 0x380064, 0x28
-$$21998:
+"@1998":
 	.incbin "baserom.dol", 0x38008C, 0x2C
-$$21999:
+"@1999":
 	.incbin "baserom.dol", 0x3800B8, 0x2C
-$$22000:
+"@2000":
 	.incbin "baserom.dol", 0x3800E4, 0x28
-$$22001:
+"@2001":
 	.incbin "baserom.dol", 0x38010C, 0x24
-$$22002:
+"@2002":
 	.incbin "baserom.dol", 0x380130, 0x28
-$$22003:
+"@2003":
 	.incbin "baserom.dol", 0x380158, 0x2C
-$$22004:
+"@2004":
 	.incbin "baserom.dol", 0x380184, 0x2C
-$$22005:
+"@2005":
 	.incbin "baserom.dol", 0x3801B0, 0x28
-$$22006:
+"@2006":
 	.incbin "baserom.dol", 0x3801D8, 0x28
-$$22007:
+"@2007":
 	.incbin "baserom.dol", 0x380200, 0x28
-$$22008:
+"@2008":
 	.incbin "baserom.dol", 0x380228, 0x28
-$$22009:
+"@2009":
 	.incbin "baserom.dol", 0x380250, 0x2C
-$$22010:
+"@2010":
 	.incbin "baserom.dol", 0x38027C, 0x28
-$$22011:
+"@2011":
 	.incbin "baserom.dol", 0x3802A4, 0x2C
-$$22012:
+"@2012":
 	.incbin "baserom.dol", 0x3802D0, 0x28
-$$22013:
+"@2013":
 	.incbin "baserom.dol", 0x3802F8, 0x30
-$$22014:
+"@2014":
 	.incbin "baserom.dol", 0x380328, 0x30
-$$22015:
+"@2015":
 	.incbin "baserom.dol", 0x380358, 0x28
-$$22016:
+"@2016":
 	.incbin "baserom.dol", 0x380380, 0x28
-$$22017:
+"@2017":
 	.incbin "baserom.dol", 0x3803A8, 0x28
-$$22018:
+"@2018":
 	.incbin "baserom.dol", 0x3803D0, 0x30
-$$22021:
+"@2021":
 	.incbin "baserom.dol", 0x380400, 0x20
-$$22022:
+"@2022":
 	.incbin "baserom.dol", 0x380420, 0x20
-$$22023:
+"@2023":
 	.incbin "baserom.dol", 0x380440, 0x24
-$$22026:
+"@2026":
 	.incbin "baserom.dol", 0x380464, 0x24
-$$22027:
+"@2027":
 	.incbin "baserom.dol", 0x380488, 0x24
-$$22028:
+"@2028":
 	.incbin "baserom.dol", 0x3804AC, 0x20
-$$22029:
+"@2029":
 	.incbin "baserom.dol", 0x3804CC, 0x24
-$$22030:
+"@2030":
 	.incbin "baserom.dol", 0x3804F0, 0x20
-$$22031:
+"@2031":
 	.incbin "baserom.dol", 0x380510, 0x24
-$$22032:
+"@2032":
 	.incbin "baserom.dol", 0x380534, 0x20
-$$22033:
+"@2033":
 	.incbin "baserom.dol", 0x380554, 0x24
-$$22034:
+"@2034":
 	.incbin "baserom.dol", 0x380578, 0x24
-$$22035:
+"@2035":
 	.incbin "baserom.dol", 0x38059C, 0x28
-$$22036:
+"@2036":
 	.incbin "baserom.dol", 0x3805C4, 0x20
-$$22037:
+"@2037":
 	.incbin "baserom.dol", 0x3805E4, 0x20
-$$22038:
+"@2038":
 	.incbin "baserom.dol", 0x380604, 0x20
-$$22039:
+"@2039":
 	.incbin "baserom.dol", 0x380624, 0x24
-$$22040:
+"@2040":
 	.incbin "baserom.dol", 0x380648, 0x24
-$$22041:
+"@2041":
 	.incbin "baserom.dol", 0x38066C, 0x24
-$$22042:
+"@2042":
 	.incbin "baserom.dol", 0x380690, 0x24
-$$22043:
+"@2043":
 	.incbin "baserom.dol", 0x3806B4, 0x24
-$$22044:
+"@2044":
 	.incbin "baserom.dol", 0x3806D8, 0x24
-$$22045:
+"@2045":
 	.incbin "baserom.dol", 0x3806FC, 0x28
-$$22046:
+"@2046":
 	.incbin "baserom.dol", 0x380724, 0x24
-$$22047:
+"@2047":
 	.incbin "baserom.dol", 0x380748, 0x24
-$$22048:
+"@2048":
 	.incbin "baserom.dol", 0x38076C, 0x28
-$$22049:
+"@2049":
 	.incbin "baserom.dol", 0x380794, 0x24
-$$22050:
+"@2050":
 	.incbin "baserom.dol", 0x3807B8, 0x24
-$$22051:
+"@2051":
 	.incbin "baserom.dol", 0x3807DC, 0x24
-$$22052:
+"@2052":
 	.incbin "baserom.dol", 0x380800, 0x24
-$$22057:
+"@2057":
 	.incbin "baserom.dol", 0x380824, 0x24
-$$22059:
+"@2059":
 	.incbin "baserom.dol", 0x380848, 0x24
-$$22060:
+"@2060":
 	.incbin "baserom.dol", 0x38086C, 0x28
-$$22061:
+"@2061":
 	.incbin "baserom.dol", 0x380894, 0x24
-$$22062:
+"@2062":
 	.incbin "baserom.dol", 0x3808B8, 0x24
-$$22065:
+"@2065":
 	.incbin "baserom.dol", 0x3808DC, 0x24
-$$22066:
+"@2066":
 	.incbin "baserom.dol", 0x380900, 0x24
-$$22069:
+"@2069":
 	.incbin "baserom.dol", 0x380924, 0x24
-$$22070:
+"@2070":
 	.incbin "baserom.dol", 0x380948, 0x24
-$$22071:
+"@2071":
 	.incbin "baserom.dol", 0x38096C, 0x20
-$$22072:
+"@2072":
 	.incbin "baserom.dol", 0x38098C, 0x24
-$$22073:
+"@2073":
 	.incbin "baserom.dol", 0x3809B0, 0x24
-$$22074:
+"@2074":
 	.incbin "baserom.dol", 0x3809D4, 0x20
-$$22075:
+"@2075":
 	.incbin "baserom.dol", 0x3809F4, 0x24
-$$22076:
+"@2076":
 	.incbin "baserom.dol", 0x380A18, 0x24
-$$22077:
+"@2077":
 	.incbin "baserom.dol", 0x380A3C, 0x28
-$$22078:
+"@2078":
 	.incbin "baserom.dol", 0x380A64, 0x20
-$$22079:
+"@2079":
 	.incbin "baserom.dol", 0x380A84, 0x20
-$$22080:
+"@2080":
 	.incbin "baserom.dol", 0x380AA4, 0x20
-$$22081:
+"@2081":
 	.incbin "baserom.dol", 0x380AC4, 0x24
-$$22082:
+"@2082":
 	.incbin "baserom.dol", 0x380AE8, 0x24
-$$22083:
+"@2083":
 	.incbin "baserom.dol", 0x380B0C, 0x24
-$$22084:
+"@2084":
 	.incbin "baserom.dol", 0x380B30, 0x24
-$$22085:
+"@2085":
 	.incbin "baserom.dol", 0x380B54, 0x24
-$$22086:
+"@2086":
 	.incbin "baserom.dol", 0x380B78, 0x28
-$$22087:
+"@2087":
 	.incbin "baserom.dol", 0x380BA0, 0x24
-$$22088:
+"@2088":
 	.incbin "baserom.dol", 0x380BC4, 0x24
-$$22089:
+"@2089":
 	.incbin "baserom.dol", 0x380BE8, 0x28
-$$22090:
+"@2090":
 	.incbin "baserom.dol", 0x380C10, 0x24
-$$22091:
+"@2091":
 	.incbin "baserom.dol", 0x380C34, 0x24
-$$22092:
+"@2092":
 	.incbin "baserom.dol", 0x380C58, 0x24
-$$22093:
+"@2093":
 	.incbin "baserom.dol", 0x380C7C, 0x24
-$$22098:
+"@2098":
 	.incbin "baserom.dol", 0x380CA0, 0x28
-$$22099:
+"@2099":
 	.incbin "baserom.dol", 0x380CC8, 0x2C
-$$22100:
+"@2100":
 	.incbin "baserom.dol", 0x380CF4, 0x2C
-$$22101:
+"@2101":
 	.incbin "baserom.dol", 0x380D20, 0x28
-$$22102:
+"@2102":
 	.incbin "baserom.dol", 0x380D48, 0x28
-$$22105:
+"@2105":
 	.incbin "baserom.dol", 0x380D70, 0x28
-$$22106:
+"@2106":
 	.incbin "baserom.dol", 0x380D98, 0x24
-$$22107:
+"@2107":
 	.incbin "baserom.dol", 0x380DBC, 0x28
-$$22108:
+"@2108":
 	.incbin "baserom.dol", 0x380DE4, 0x28
-$$22109:
+"@2109":
 	.incbin "baserom.dol", 0x380E0C, 0x24
-$$22110:
+"@2110":
 	.incbin "baserom.dol", 0x380E30, 0x28
-$$22111:
+"@2111":
 	.incbin "baserom.dol", 0x380E58, 0x28
-$$22112:
+"@2112":
 	.incbin "baserom.dol", 0x380E80, 0x28
-$$22113:
+"@2113":
 	.incbin "baserom.dol", 0x380EA8, 0x2C
-$$22114:
+"@2114":
 	.incbin "baserom.dol", 0x380ED4, 0x24
-$$22115:
+"@2115":
 	.incbin "baserom.dol", 0x380EF8, 0x24
-$$22116:
+"@2116":
 	.incbin "baserom.dol", 0x380F1C, 0x28
-$$22117:
+"@2117":
 	.incbin "baserom.dol", 0x380F44, 0x2C
-$$22120:
+"@2120":
 	.incbin "baserom.dol", 0x380F70, 0x24
-$$22121:
+"@2121":
 	.incbin "baserom.dol", 0x380F94, 0x28
-$$22122:
+"@2122":
 	.incbin "baserom.dol", 0x380FBC, 0x28
-$$22123:
+"@2123":
 	.incbin "baserom.dol", 0x380FE4, 0x28
-$$22124:
+"@2124":
 	.incbin "baserom.dol", 0x38100C, 0x28
-$$22125:
+"@2125":
 	.incbin "baserom.dol", 0x381034, 0x24
-$$22126:
+"@2126":
 	.incbin "baserom.dol", 0x381058, 0x24
-$$22127:
+"@2127":
 	.incbin "baserom.dol", 0x38107C, 0x24
-$$22130:
+"@2130":
 	.incbin "baserom.dol", 0x3810A0, 0x28
-$$22131:
+"@2131":
 	.incbin "baserom.dol", 0x3810C8, 0x24
-$$22132:
+"@2132":
 	.incbin "baserom.dol", 0x3810EC, 0x28
-$$22133:
+"@2133":
 	.incbin "baserom.dol", 0x381114, 0x28
-$$22134:
+"@2134":
 	.incbin "baserom.dol", 0x38113C, 0x24
-$$22135:
+"@2135":
 	.incbin "baserom.dol", 0x381160, 0x28
-$$22136:
+"@2136":
 	.incbin "baserom.dol", 0x381188, 0x20
-$$22139:
+"@2139":
 	.incbin "baserom.dol", 0x3811A8, 0x28
-$$22140:
+"@2140":
 	.incbin "baserom.dol", 0x3811D0, 0x28
-$$22141:
+"@2141":
 	.incbin "baserom.dol", 0x3811F8, 0x28
-$$22144:
+"@2144":
 	.incbin "baserom.dol", 0x381220, 0x2C
-$$22145:
+"@2145":
 	.incbin "baserom.dol", 0x38124C, 0x28
-$$22146:
+"@2146":
 	.incbin "baserom.dol", 0x381274, 0x2C
-$$22150:
+"@2150":
 	.incbin "baserom.dol", 0x3812A0, 0x2C
-$$22151:
+"@2151":
 	.incbin "baserom.dol", 0x3812CC, 0x2C
-$$22152:
+"@2152":
 	.incbin "baserom.dol", 0x3812F8, 0x30
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x3B64E8, 0xC
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x3B64F4, 0xC
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x3B6500, 0x10
 MtxCalcTypeName:
-  .4byte $$21755
-  .4byte $$21756
-  .4byte $$21757
-  .4byte $$21758
+  .4byte "@1755"
+  .4byte "@1756"
+  .4byte "@1757"
+  .4byte "@1758"
 monteMCommon_bastable:
-  .4byte $$21938
-  .4byte $$21939
-  .4byte $$21940
-  .4byte $$21941
-  .4byte $$21942
-  .4byte $$21943
-  .4byte $$21944
-  .4byte $$21945
+  .4byte "@1938"
+  .4byte "@1939"
+  .4byte "@1940"
+  .4byte "@1941"
+  .4byte "@1942"
+  .4byte "@1943"
+  .4byte "@1944"
+  .4byte "@1945"
   .4byte 0
   .4byte 0
-  .4byte $$21946
+  .4byte "@1946"
   .4byte 0
   .4byte 0
-  .4byte $$21947
+  .4byte "@1947"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$21948
-  .4byte $$21949
-  .4byte $$21950
-  .4byte $$21951
-  .4byte $$21952
+  .4byte "@1948"
+  .4byte "@1949"
+  .4byte "@1950"
+  .4byte "@1951"
+  .4byte "@1952"
 monteMCommon_bas_c_table:
-  .4byte $$21953
-  .4byte $$21954
-  .4byte $$21955
-  .4byte $$21956
-  .4byte $$21957
-  .4byte $$21958
-  .4byte $$21959
-  .4byte $$21960
+  .4byte "@1953"
+  .4byte "@1954"
+  .4byte "@1955"
+  .4byte "@1956"
+  .4byte "@1957"
+  .4byte "@1958"
+  .4byte "@1959"
+  .4byte "@1960"
   .4byte 0
   .4byte 0
-  .4byte $$21961
+  .4byte "@1961"
   .4byte 0
   .4byte 0
-  .4byte $$21962
+  .4byte "@1962"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$21963
-  .4byte $$21964
-  .4byte $$21965
-  .4byte $$21966
-  .4byte $$21967
+  .4byte "@1963"
+  .4byte "@1964"
+  .4byte "@1965"
+  .4byte "@1966"
+  .4byte "@1967"
 monteME_bastable:
-  .4byte $$21970
+  .4byte "@1970"
   .4byte 0
   .4byte 0
-  .4byte $$21971
+  .4byte "@1971"
   .4byte 0
   .4byte 0
-  .4byte $$21972
+  .4byte "@1972"
 monteME_bas_c_table:
-  .4byte $$21970
+  .4byte "@1970"
   .4byte 0
   .4byte 0
-  .4byte $$21971
+  .4byte "@1971"
   .4byte 0
   .4byte 0
-  .4byte $$21972
+  .4byte "@1972"
 monteMF_bastable:
-  .4byte $$21975
-  .4byte $$21976
-  .4byte $$21977
+  .4byte "@1975"
+  .4byte "@1976"
+  .4byte "@1977"
 monteMF_bas_c_table:
-  .4byte $$21975
-  .4byte $$21976
-  .4byte $$21977
+  .4byte "@1975"
+  .4byte "@1976"
+  .4byte "@1977"
 monteMH_bastable:
-  .4byte $$21984
+  .4byte "@1984"
   .4byte 0
-  .4byte $$21985
-  .4byte $$21986
+  .4byte "@1985"
+  .4byte "@1986"
 monteMH_bas_c_table:
-  .4byte $$21984
+  .4byte "@1984"
   .4byte 0
-  .4byte $$21985
-  .4byte $$21986
+  .4byte "@1985"
+  .4byte "@1986"
 monteWCommon_bastable:
-  .4byte $$21989
-  .4byte $$21990
-  .4byte $$21991
-  .4byte $$21992
-  .4byte $$21993
-  .4byte $$21994
+  .4byte "@1989"
+  .4byte "@1990"
+  .4byte "@1991"
+  .4byte "@1992"
+  .4byte "@1993"
+  .4byte "@1994"
   .4byte 0
-  .4byte $$21995
-  .4byte 0
-  .4byte 0
-  .4byte $$21996
+  .4byte "@1995"
   .4byte 0
   .4byte 0
-  .4byte $$21997
+  .4byte "@1996"
   .4byte 0
   .4byte 0
-  .4byte $$21998
+  .4byte "@1997"
   .4byte 0
   .4byte 0
-  .4byte $$21999
-  .4byte $$22000
-  .4byte $$22001
-  .4byte $$22002
-  .4byte $$22003
+  .4byte "@1998"
+  .4byte 0
+  .4byte 0
+  .4byte "@1999"
+  .4byte "@2000"
+  .4byte "@2001"
+  .4byte "@2002"
+  .4byte "@2003"
 monteWCommon_bas_c_table:
-  .4byte $$22004
-  .4byte $$22005
-  .4byte $$22006
-  .4byte $$22007
-  .4byte $$22008
-  .4byte $$22009
+  .4byte "@2004"
+  .4byte "@2005"
+  .4byte "@2006"
+  .4byte "@2007"
+  .4byte "@2008"
+  .4byte "@2009"
   .4byte 0
-  .4byte $$22010
-  .4byte 0
-  .4byte 0
-  .4byte $$22011
+  .4byte "@2010"
   .4byte 0
   .4byte 0
-  .4byte $$22012
+  .4byte "@2011"
   .4byte 0
   .4byte 0
-  .4byte $$22013
+  .4byte "@2012"
   .4byte 0
   .4byte 0
-  .4byte $$22014
-  .4byte $$22015
-  .4byte $$22016
-  .4byte $$22017
-  .4byte $$22018
+  .4byte "@2013"
+  .4byte 0
+  .4byte 0
+  .4byte "@2014"
+  .4byte "@2015"
+  .4byte "@2016"
+  .4byte "@2017"
+  .4byte "@2018"
 monteWC_bastable:
   .4byte 0
-  .4byte $$22021
+  .4byte "@2021"
   .4byte 0
-  .4byte $$22022
-  .4byte $$22023
+  .4byte "@2022"
+  .4byte "@2023"
 monteWC_bas_c_table:
   .4byte 0
-  .4byte $$22021
+  .4byte "@2021"
   .4byte 0
-  .4byte $$22022
-  .4byte $$22023
+  .4byte "@2022"
+  .4byte "@2023"
 mareM_bastable:
-  .4byte $$22026
-  .4byte $$22027
-  .4byte $$22028
-  .4byte $$22029
-  .4byte $$22030
-  .4byte $$22031
-  .4byte $$22032
+  .4byte "@2026"
+  .4byte "@2027"
+  .4byte "@2028"
+  .4byte "@2029"
+  .4byte "@2030"
+  .4byte "@2031"
+  .4byte "@2032"
   .4byte 0
   .4byte 0
-  .4byte $$22033
-  .4byte $$22034
+  .4byte "@2033"
+  .4byte "@2034"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22035
-  .4byte $$22036
-  .4byte $$22037
-  .4byte $$22038
-  .4byte $$22039
+  .4byte "@2035"
+  .4byte "@2036"
+  .4byte "@2037"
+  .4byte "@2038"
+  .4byte "@2039"
 mareM_bas_c_table:
-  .4byte $$22040
-  .4byte $$22041
-  .4byte $$22042
-  .4byte $$22043
-  .4byte $$22044
-  .4byte $$22045
-  .4byte $$22046
+  .4byte "@2040"
+  .4byte "@2041"
+  .4byte "@2042"
+  .4byte "@2043"
+  .4byte "@2044"
+  .4byte "@2045"
+  .4byte "@2046"
   .4byte 0
   .4byte 0
-  .4byte $$22047
-  .4byte $$22048
+  .4byte "@2047"
+  .4byte "@2048"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22035
-  .4byte $$22049
-  .4byte $$22050
-  .4byte $$22051
-  .4byte $$22052
+  .4byte "@2035"
+  .4byte "@2049"
+  .4byte "@2050"
+  .4byte "@2051"
+  .4byte "@2052"
 mareMA_bastable:
   .4byte 0
   .4byte 0
@@ -713,68 +713,68 @@ mareMB_bastable:
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22057
+  .4byte "@2057"
 mareMB_bas_c_table:
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22057
+  .4byte "@2057"
 mareMC_bastable:
-  .4byte $$22059
-  .4byte $$22060
+  .4byte "@2059"
+  .4byte "@2060"
   .4byte 0
-  .4byte $$22061
-  .4byte $$22062
+  .4byte "@2061"
+  .4byte "@2062"
 mareMC_bas_c_table:
-  .4byte $$22059
-  .4byte $$22060
+  .4byte "@2059"
+  .4byte "@2060"
   .4byte 0
-  .4byte $$22061
-  .4byte $$22062
+  .4byte "@2061"
+  .4byte "@2062"
 mareW_bastable:
-  .4byte $$22069
-  .4byte $$22070
-  .4byte $$22071
-  .4byte $$22072
-  .4byte $$22073
-  .4byte $$22074
+  .4byte "@2069"
+  .4byte "@2070"
+  .4byte "@2071"
+  .4byte "@2072"
+  .4byte "@2073"
+  .4byte "@2074"
   .4byte 0
   .4byte 0
-  .4byte $$22075
-  .4byte $$22076
+  .4byte "@2075"
+  .4byte "@2076"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22077
-  .4byte $$22078
-  .4byte $$22079
-  .4byte $$22080
-  .4byte $$22081
+  .4byte "@2077"
+  .4byte "@2078"
+  .4byte "@2079"
+  .4byte "@2080"
+  .4byte "@2081"
 mareW_bas_c_table:
-  .4byte $$22082
-  .4byte $$22083
-  .4byte $$22084
-  .4byte $$22085
-  .4byte $$22086
-  .4byte $$22087
+  .4byte "@2082"
+  .4byte "@2083"
+  .4byte "@2084"
+  .4byte "@2085"
+  .4byte "@2086"
+  .4byte "@2087"
   .4byte 0
   .4byte 0
-  .4byte $$22088
-  .4byte $$22089
+  .4byte "@2088"
+  .4byte "@2089"
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22077
-  .4byte $$22090
-  .4byte $$22091
-  .4byte $$22092
-  .4byte $$22093
+  .4byte "@2077"
+  .4byte "@2090"
+  .4byte "@2091"
+  .4byte "@2092"
+  .4byte "@2093"
 mareWA_bastable:
   .4byte 0
   .4byte 0
@@ -786,113 +786,113 @@ mareWA_bas_c_table:
   .4byte 0
   .4byte 0
 mareWB_bastable:
-  .4byte $$22098
-  .4byte $$22099
-  .4byte $$22100
+  .4byte "@2098"
+  .4byte "@2099"
+  .4byte "@2100"
   .4byte 0
-  .4byte $$22101
-  .4byte $$22102
+  .4byte "@2101"
+  .4byte "@2102"
 mareWB_bas_c_table:
-  .4byte $$22098
-  .4byte $$22099
-  .4byte $$22100
+  .4byte "@2098"
+  .4byte "@2099"
+  .4byte "@2100"
   .4byte 0
-  .4byte $$22101
-  .4byte $$22102
+  .4byte "@2101"
+  .4byte "@2102"
 kinopio_bastable:
-  .4byte $$22105
-  .4byte $$22106
-  .4byte $$22107
-  .4byte $$22108
-  .4byte $$22109
+  .4byte "@2105"
+  .4byte "@2106"
+  .4byte "@2107"
+  .4byte "@2108"
+  .4byte "@2109"
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22110
+  .4byte "@2110"
   .4byte 0
-  .4byte $$22111
-  .4byte 0
-  .4byte 0
-  .4byte $$22112
+  .4byte "@2111"
   .4byte 0
   .4byte 0
+  .4byte "@2112"
   .4byte 0
   .4byte 0
-  .4byte $$22113
-  .4byte $$22114
   .4byte 0
-  .4byte $$22115
-  .4byte $$22116
-  .4byte $$22117
+  .4byte 0
+  .4byte "@2113"
+  .4byte "@2114"
+  .4byte 0
+  .4byte "@2115"
+  .4byte "@2116"
+  .4byte "@2117"
   .4byte 0
 kinopio_bas_c_table:
-  .4byte $$22105
-  .4byte $$22106
-  .4byte $$22107
-  .4byte $$22108
-  .4byte $$22109
+  .4byte "@2105"
+  .4byte "@2106"
+  .4byte "@2107"
+  .4byte "@2108"
+  .4byte "@2109"
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22110
+  .4byte "@2110"
   .4byte 0
-  .4byte $$22111
-  .4byte 0
-  .4byte 0
-  .4byte $$22112
+  .4byte "@2111"
   .4byte 0
   .4byte 0
+  .4byte "@2112"
   .4byte 0
   .4byte 0
-  .4byte $$22113
-  .4byte $$22114
   .4byte 0
-  .4byte $$22115
-  .4byte $$22116
-  .4byte $$22117
+  .4byte 0
+  .4byte "@2113"
+  .4byte "@2114"
+  .4byte 0
+  .4byte "@2115"
+  .4byte "@2116"
+  .4byte "@2117"
   .4byte 0
 kinojii_bastable:
-  .4byte $$22120
-  .4byte $$22121
+  .4byte "@2120"
+  .4byte "@2121"
   .4byte 0
   .4byte 0
-  .4byte $$22122
+  .4byte "@2122"
   .4byte 0
-  .4byte $$22123
-  .4byte 0
-  .4byte 0
-  .4byte $$22124
+  .4byte "@2123"
   .4byte 0
   .4byte 0
+  .4byte "@2124"
   .4byte 0
-  .4byte $$22125
   .4byte 0
-  .4byte $$22126
-  .4byte $$22127
+  .4byte 0
+  .4byte "@2125"
+  .4byte 0
+  .4byte "@2126"
+  .4byte "@2127"
   .4byte 0
 kinojii_bas_c_table:
-  .4byte $$22120
-  .4byte $$22121
+  .4byte "@2120"
+  .4byte "@2121"
   .4byte 0
   .4byte 0
-  .4byte $$22122
+  .4byte "@2122"
   .4byte 0
-  .4byte $$22123
-  .4byte 0
-  .4byte 0
-  .4byte $$22124
+  .4byte "@2123"
   .4byte 0
   .4byte 0
+  .4byte "@2124"
   .4byte 0
-  .4byte $$22125
   .4byte 0
-  .4byte $$22126
-  .4byte $$22127
+  .4byte 0
+  .4byte "@2125"
+  .4byte 0
+  .4byte "@2126"
+  .4byte "@2127"
   .4byte 0
 peach_bastable:
-  .4byte $$22130
-  .4byte $$22131
-  .4byte $$22132
+  .4byte "@2130"
+  .4byte "@2131"
+  .4byte "@2132"
   .4byte 0
   .4byte 0
   .4byte 0
@@ -908,15 +908,15 @@ peach_bastable:
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22133
-  .4byte $$22134
-  .4byte $$22135
+  .4byte "@2133"
+  .4byte "@2134"
+  .4byte "@2135"
   .4byte 0
-  .4byte $$22136
+  .4byte "@2136"
 peach_bas_c_table:
-  .4byte $$22130
-  .4byte $$22131
-  .4byte $$22132
+  .4byte "@2130"
+  .4byte "@2131"
+  .4byte "@2132"
   .4byte 0
   .4byte 0
   .4byte 0
@@ -932,46 +932,46 @@ peach_bas_c_table:
   .4byte 0
   .4byte 0
   .4byte 0
-  .4byte $$22133
-  .4byte $$22134
-  .4byte $$22135
+  .4byte "@2133"
+  .4byte "@2134"
+  .4byte "@2135"
   .4byte 0
-  .4byte $$22136
+  .4byte "@2136"
 raccoonDog_bastable:
-  .4byte $$22139
-  .4byte $$22140
+  .4byte "@2139"
+  .4byte "@2140"
   .4byte 0
-  .4byte $$22141
+  .4byte "@2141"
 raccoonDog_bas_c_table:
-  .4byte $$22139
-  .4byte $$22140
+  .4byte "@2139"
+  .4byte "@2140"
   .4byte 0
-  .4byte $$22141
+  .4byte "@2141"
 sunflowerL_bastable:
   .4byte 0
-  .4byte $$22144
+  .4byte "@2144"
   .4byte 0
-  .4byte $$22145
-  .4byte $$22146
+  .4byte "@2145"
+  .4byte "@2146"
 sunflowerL_bas_c_table:
   .4byte 0
-  .4byte $$22144
+  .4byte "@2144"
   .4byte 0
-  .4byte $$22145
-  .4byte $$22146
+  .4byte "@2145"
+  .4byte "@2146"
 sunflowerS_bastable:
   .4byte 0
-  .4byte $$22150
+  .4byte "@2150"
   .4byte 0
-  .4byte $$22151
-  .4byte $$22152
+  .4byte "@2151"
+  .4byte "@2152"
 sunflowerS_bas_c_table:
   .4byte 0
-  .4byte $$22150
+  .4byte "@2150"
   .4byte 0
-  .4byte $$22151
-  .4byte $$22152
-$$22235:
+  .4byte "@2151"
+  .4byte "@2152"
+"@2235":
     .4byte lbl_801773CC
     .4byte lbl_801773D4
     .4byte lbl_801773DC
@@ -999,8 +999,8 @@ $$22235:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 monteMG_bastable:
-  .4byte $$21980
-  .4byte $$21981
+  .4byte "@1980"
+  .4byte "@1981"
 mareMD_bastable:
-  .4byte $$22065
-  .4byte $$22066
+  .4byte "@2065"
+  .4byte "@2066"

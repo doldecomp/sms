@@ -17,12 +17,12 @@ orderAsync__12JKRAramPieceFiUlUlUlP12JKRAramBlockPFUl_v:
 /* 8003A3D0 00037310  7C 08 02 A6 */	mflr r0
 /* 8003A3D4 00037314  3D 20 80 40 */	lis r9, mMutex__12JKRAramPiece@ha
 /* 8003A3D8 00037318  90 01 00 04 */	stw r0, 4(r1)
-/* 8003A3DC 0003731C  3D 40 80 37 */	lis r10, $$295@ha
+/* 8003A3DC 0003731C  3D 40 80 37 */	lis r10, "@95"@ha
 /* 8003A3E0 00037320  38 09 3D D0 */	addi r0, r9, mMutex__12JKRAramPiece@l
 /* 8003A3E4 00037324  94 21 FF B0 */	stwu r1, -0x50(r1)
 /* 8003A3E8 00037328  BF 01 00 30 */	stmw r24, 0x30(r1)
 /* 8003A3EC 0003732C  3B 03 00 00 */	addi r24, r3, 0
-/* 8003A3F0 00037330  3B 4A 0D 50 */	addi r26, r10, $$295@l
+/* 8003A3F0 00037330  3B 4A 0D 50 */	addi r26, r10, "@95"@l
 /* 8003A3F4 00037334  3B 64 00 00 */	addi r27, r4, 0
 /* 8003A3F8 00037338  3B 85 00 00 */	addi r28, r5, 0
 /* 8003A3FC 0003733C  3B A6 00 00 */	addi r29, r6, 0
@@ -54,7 +54,7 @@ lbl_8003A420:
 /* 8003A460 000373A0  38 7A 00 44 */	addi r3, r26, 0x44
 /* 8003A464 000373A4  4C C6 31 82 */	crclr 6
 /* 8003A468 000373A8  38 80 00 66 */	li r4, 0x66
-/* 8003A46C 000373AC  38 A2 83 08 */	addi r5, r2, $$2100@sda21
+/* 8003A46C 000373AC  38 A2 83 08 */	addi r5, r2, "@100"@sda21
 /* 8003A470 000373B0  48 05 4B 75 */	bl OSPanic
 lbl_8003A474:
 /* 8003A474 000373B4  80 8D 8D 68 */	lwz r4, sSystemHeap__7JKRHeap@sda21(r13)
@@ -329,10 +329,10 @@ __sinit_JKRAramPiece_cpp:
 /* 8003A824 00037764  3B E3 3D AC */	addi r31, r3, sAramPieceCommandList__12JKRAramPiece@l
 /* 8003A828 00037768  38 7F 00 00 */	addi r3, r31, 0
 /* 8003A82C 0003776C  4B FD 44 09 */	bl initiate__10JSUPtrListFv
-/* 8003A830 00037770  3C 80 80 00 */	lis r4, __dt__23JSUList$$012JKRAMCommand$$1Fv@ha
-/* 8003A834 00037774  3C 60 80 3E */	lis r3, $$260@ha
-/* 8003A838 00037778  38 A3 60 F0 */	addi r5, r3, $$260@l
-/* 8003A83C 0003777C  38 84 78 80 */	addi r4, r4, __dt__23JSUList$$012JKRAMCommand$$1Fv@l
+/* 8003A830 00037770  3C 80 80 00 */	lis r4, "__dt__23JSUList<12JKRAMCommand>Fv"@ha
+/* 8003A834 00037774  3C 60 80 3E */	lis r3, "@60"@ha
+/* 8003A838 00037778  38 A3 60 F0 */	addi r5, r3, "@60"@l
+/* 8003A83C 0003777C  38 84 78 80 */	addi r4, r4, "__dt__23JSUList<12JKRAMCommand>Fv"@l
 /* 8003A840 00037780  38 7F 00 00 */	addi r3, r31, 0
 /* 8003A844 00037784  48 04 7E E5 */	bl __register_global_object
 /* 8003A848 00037788  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -347,22 +347,22 @@ lbl_constructor:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$295:
+"@95":
 	.incbin "baserom.dol", 0x36DD50, 0x10
-$$296:
+"@96":
 	.incbin "baserom.dol", 0x36DD60, 0x10
-$$297:
+"@97":
 	.incbin "baserom.dol", 0x36DD70, 0x14
-$$298:
+"@98":
 	.incbin "baserom.dol", 0x36DD84, 0x10
-$$299:
+"@99":
 	.incbin "baserom.dol", 0x36DD94, 0x14
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2100:
+"@100":
 	.incbin "baserom.dol", 0x3E4008, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
-$$260:
+"@60":
 	.skip 0x10

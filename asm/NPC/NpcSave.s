@@ -94,8 +94,8 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171DE4 0016ED24  7C 7F 1B 78 */	mr r31, r3
 /* 80171DE8 0016ED28  3B 60 00 00 */	li r27, 0
 /* 80171DEC 0016ED2C  90 83 00 00 */	stw r4, 0(r3)
-/* 80171DF0 0016ED30  3C 60 80 38 */	lis r3, $$21490@ha
-/* 80171DF4 0016ED34  3B C3 EF 38 */	addi r30, r3, $$21490@l
+/* 80171DF0 0016ED30  3C 60 80 38 */	lis r3, "@1490"@ha
+/* 80171DF4 0016ED34  3B C3 EF 38 */	addi r30, r3, "@1490"@l
 /* 80171DF8 0016ED38  93 7F 00 04 */	stw r27, 4(r31)
 /* 80171DFC 0016ED3C  38 7E 02 B8 */	addi r3, r30, 0x2b8
 /* 80171E00 0016ED40  4B ED 28 8D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -104,12 +104,12 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171E0C 0016ED4C  38 7F 00 08 */	addi r3, r31, 8
 /* 80171E10 0016ED50  38 DE 02 B8 */	addi r6, r30, 0x2b8
 /* 80171E14 0016ED54  4B F6 8D E1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80171E18 0016ED58  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80171E1C 0016ED5C  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80171E18 0016ED58  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80171E1C 0016ED5C  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 80171E20 0016ED60  93 BF 00 08 */	stw r29, 8(r31)
-/* 80171E24 0016ED64  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80171E28 0016ED68  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80171E2C 0016ED6C  C0 02 A6 B8 */	lfs f0, $$22161@sda21(r2)
+/* 80171E24 0016ED64  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80171E28 0016ED68  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80171E2C 0016ED6C  C0 02 A6 B8 */	lfs f0, "@2161"@sda21(r2)
 /* 80171E30 0016ED70  38 7E 02 C8 */	addi r3, r30, 0x2c8
 /* 80171E34 0016ED74  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80171E38 0016ED78  93 9F 00 08 */	stw r28, 8(r31)
@@ -121,7 +121,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171E50 0016ED90  4B F6 8D A5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171E54 0016ED94  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 80171E58 0016ED98  38 7E 02 D8 */	addi r3, r30, 0x2d8
-/* 80171E5C 0016ED9C  C0 02 A6 BC */	lfs f0, $$22163@sda21(r2)
+/* 80171E5C 0016ED9C  C0 02 A6 BC */	lfs f0, "@2163"@sda21(r2)
 /* 80171E60 0016EDA0  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 80171E64 0016EDA4  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 80171E68 0016EDA8  4B ED 28 25 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -132,7 +132,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171E7C 0016EDBC  4B F6 8D 79 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171E80 0016EDC0  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 80171E84 0016EDC4  38 7E 02 E8 */	addi r3, r30, 0x2e8
-/* 80171E88 0016EDC8  C0 02 A6 C0 */	lfs f0, $$22165@sda21(r2)
+/* 80171E88 0016EDC8  C0 02 A6 C0 */	lfs f0, "@2165"@sda21(r2)
 /* 80171E8C 0016EDCC  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 80171E90 0016EDD0  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 80171E94 0016EDD4  4B ED 27 F9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -143,7 +143,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171EA8 0016EDE8  4B F6 8D 4D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171EAC 0016EDEC  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 80171EB0 0016EDF0  38 7E 02 FC */	addi r3, r30, 0x2fc
-/* 80171EB4 0016EDF4  C0 02 A6 C4 */	lfs f0, $$22167@sda21(r2)
+/* 80171EB4 0016EDF4  C0 02 A6 C4 */	lfs f0, "@2167"@sda21(r2)
 /* 80171EB8 0016EDF8  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 80171EBC 0016EDFC  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 80171EC0 0016EE00  4B ED 27 CD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -154,7 +154,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171ED4 0016EE14  4B F6 8D 21 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171ED8 0016EE18  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80171EDC 0016EE1C  38 7E 03 14 */	addi r3, r30, 0x314
-/* 80171EE0 0016EE20  C0 02 A6 C8 */	lfs f0, $$22169@sda21(r2)
+/* 80171EE0 0016EE20  C0 02 A6 C8 */	lfs f0, "@2169"@sda21(r2)
 /* 80171EE4 0016EE24  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80171EE8 0016EE28  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80171EEC 0016EE2C  4B ED 27 A1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -165,7 +165,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171F00 0016EE40  4B F6 8C F5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171F04 0016EE44  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80171F08 0016EE48  38 7E 03 28 */	addi r3, r30, 0x328
-/* 80171F0C 0016EE4C  C0 02 A6 CC */	lfs f0, $$22171@sda21(r2)
+/* 80171F0C 0016EE4C  C0 02 A6 CC */	lfs f0, "@2171"@sda21(r2)
 /* 80171F10 0016EE50  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 80171F14 0016EE54  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80171F18 0016EE58  4B ED 27 75 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -176,7 +176,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171F2C 0016EE6C  4B F6 8C C9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171F30 0016EE70  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 80171F34 0016EE74  38 7E 03 3C */	addi r3, r30, 0x33c
-/* 80171F38 0016EE78  C0 02 A6 D0 */	lfs f0, $$22173@sda21(r2)
+/* 80171F38 0016EE78  C0 02 A6 D0 */	lfs f0, "@2173"@sda21(r2)
 /* 80171F3C 0016EE7C  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 80171F40 0016EE80  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 80171F44 0016EE84  4B ED 27 49 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -187,7 +187,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171F58 0016EE98  4B F6 8C 9D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171F5C 0016EE9C  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 80171F60 0016EEA0  38 7E 03 50 */	addi r3, r30, 0x350
-/* 80171F64 0016EEA4  C0 02 A6 D4 */	lfs f0, $$22175@sda21(r2)
+/* 80171F64 0016EEA4  C0 02 A6 D4 */	lfs f0, "@2175"@sda21(r2)
 /* 80171F68 0016EEA8  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 80171F6C 0016EEAC  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 80171F70 0016EEB0  4B ED 27 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -198,7 +198,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171F84 0016EEC4  4B F6 8C 71 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171F88 0016EEC8  93 BF 00 A8 */	stw r29, 0xa8(r31)
 /* 80171F8C 0016EECC  38 7E 03 64 */	addi r3, r30, 0x364
-/* 80171F90 0016EED0  C0 02 A6 D8 */	lfs f0, $$22177@sda21(r2)
+/* 80171F90 0016EED0  C0 02 A6 D8 */	lfs f0, "@2177"@sda21(r2)
 /* 80171F94 0016EED4  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
 /* 80171F98 0016EED8  93 9F 00 A8 */	stw r28, 0xa8(r31)
 /* 80171F9C 0016EEDC  4B ED 26 F1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -209,7 +209,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171FB0 0016EEF0  4B F6 8C 45 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171FB4 0016EEF4  93 BF 00 BC */	stw r29, 0xbc(r31)
 /* 80171FB8 0016EEF8  38 7E 03 74 */	addi r3, r30, 0x374
-/* 80171FBC 0016EEFC  C0 02 A6 D4 */	lfs f0, $$22175@sda21(r2)
+/* 80171FBC 0016EEFC  C0 02 A6 D4 */	lfs f0, "@2175"@sda21(r2)
 /* 80171FC0 0016EF00  D0 1F 00 CC */	stfs f0, 0xcc(r31)
 /* 80171FC4 0016EF04  93 9F 00 BC */	stw r28, 0xbc(r31)
 /* 80171FC8 0016EF08  4B ED 26 C5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -220,7 +220,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80171FDC 0016EF1C  4B F6 8C 19 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80171FE0 0016EF20  93 BF 00 D0 */	stw r29, 0xd0(r31)
 /* 80171FE4 0016EF24  38 7E 03 84 */	addi r3, r30, 0x384
-/* 80171FE8 0016EF28  C0 02 A6 DC */	lfs f0, $$22180@sda21(r2)
+/* 80171FE8 0016EF28  C0 02 A6 DC */	lfs f0, "@2180"@sda21(r2)
 /* 80171FEC 0016EF2C  D0 1F 00 E0 */	stfs f0, 0xe0(r31)
 /* 80171FF0 0016EF30  93 9F 00 D0 */	stw r28, 0xd0(r31)
 /* 80171FF4 0016EF34  4B ED 26 99 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -231,7 +231,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172008 0016EF48  4B F6 8B ED */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017200C 0016EF4C  93 BF 00 E4 */	stw r29, 0xe4(r31)
 /* 80172010 0016EF50  38 7E 03 90 */	addi r3, r30, 0x390
-/* 80172014 0016EF54  C0 02 A6 E0 */	lfs f0, $$22182@sda21(r2)
+/* 80172014 0016EF54  C0 02 A6 E0 */	lfs f0, "@2182"@sda21(r2)
 /* 80172018 0016EF58  D0 1F 00 F4 */	stfs f0, 0xf4(r31)
 /* 8017201C 0016EF5C  93 9F 00 E4 */	stw r28, 0xe4(r31)
 /* 80172020 0016EF60  4B ED 26 6D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -242,7 +242,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172034 0016EF74  4B F6 8B C1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172038 0016EF78  93 BF 00 F8 */	stw r29, 0xf8(r31)
 /* 8017203C 0016EF7C  38 7E 03 9C */	addi r3, r30, 0x39c
-/* 80172040 0016EF80  C0 02 A6 E4 */	lfs f0, $$22184@sda21(r2)
+/* 80172040 0016EF80  C0 02 A6 E4 */	lfs f0, "@2184"@sda21(r2)
 /* 80172044 0016EF84  D0 1F 01 08 */	stfs f0, 0x108(r31)
 /* 80172048 0016EF88  93 9F 00 F8 */	stw r28, 0xf8(r31)
 /* 8017204C 0016EF8C  4B ED 26 41 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -253,7 +253,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172060 0016EFA0  4B F6 8B 95 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172064 0016EFA4  93 BF 01 0C */	stw r29, 0x10c(r31)
 /* 80172068 0016EFA8  38 7E 03 AC */	addi r3, r30, 0x3ac
-/* 8017206C 0016EFAC  C0 02 A6 CC */	lfs f0, $$22171@sda21(r2)
+/* 8017206C 0016EFAC  C0 02 A6 CC */	lfs f0, "@2171"@sda21(r2)
 /* 80172070 0016EFB0  D0 1F 01 1C */	stfs f0, 0x11c(r31)
 /* 80172074 0016EFB4  93 9F 01 0C */	stw r28, 0x10c(r31)
 /* 80172078 0016EFB8  4B ED 26 15 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -264,7 +264,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 8017208C 0016EFCC  4B F6 8B 69 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172090 0016EFD0  93 BF 01 20 */	stw r29, 0x120(r31)
 /* 80172094 0016EFD4  38 7E 03 BC */	addi r3, r30, 0x3bc
-/* 80172098 0016EFD8  C0 02 A6 E8 */	lfs f0, $$22187@sda21(r2)
+/* 80172098 0016EFD8  C0 02 A6 E8 */	lfs f0, "@2187"@sda21(r2)
 /* 8017209C 0016EFDC  D0 1F 01 30 */	stfs f0, 0x130(r31)
 /* 801720A0 0016EFE0  93 9F 01 20 */	stw r28, 0x120(r31)
 /* 801720A4 0016EFE4  4B ED 25 E9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -275,7 +275,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801720B8 0016EFF8  4B F6 8B 3D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801720BC 0016EFFC  93 BF 01 34 */	stw r29, 0x134(r31)
 /* 801720C0 0016F000  38 7E 03 CC */	addi r3, r30, 0x3cc
-/* 801720C4 0016F004  C0 02 A6 EC */	lfs f0, $$22189@sda21(r2)
+/* 801720C4 0016F004  C0 02 A6 EC */	lfs f0, "@2189"@sda21(r2)
 /* 801720C8 0016F008  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 801720CC 0016F00C  93 9F 01 34 */	stw r28, 0x134(r31)
 /* 801720D0 0016F010  4B ED 25 BD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -286,7 +286,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801720E4 0016F024  4B F6 8B 11 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801720E8 0016F028  93 BF 01 48 */	stw r29, 0x148(r31)
 /* 801720EC 0016F02C  38 7E 03 DC */	addi r3, r30, 0x3dc
-/* 801720F0 0016F030  C0 02 A6 EC */	lfs f0, $$22189@sda21(r2)
+/* 801720F0 0016F030  C0 02 A6 EC */	lfs f0, "@2189"@sda21(r2)
 /* 801720F4 0016F034  D0 1F 01 58 */	stfs f0, 0x158(r31)
 /* 801720F8 0016F038  93 9F 01 48 */	stw r28, 0x148(r31)
 /* 801720FC 0016F03C  4B ED 25 91 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -297,7 +297,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172110 0016F050  4B F6 8A E5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172114 0016F054  93 BF 01 5C */	stw r29, 0x15c(r31)
 /* 80172118 0016F058  38 7E 03 EC */	addi r3, r30, 0x3ec
-/* 8017211C 0016F05C  C0 02 A6 EC */	lfs f0, $$22189@sda21(r2)
+/* 8017211C 0016F05C  C0 02 A6 EC */	lfs f0, "@2189"@sda21(r2)
 /* 80172120 0016F060  D0 1F 01 6C */	stfs f0, 0x16c(r31)
 /* 80172124 0016F064  93 9F 01 5C */	stw r28, 0x15c(r31)
 /* 80172128 0016F068  4B ED 25 65 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -308,7 +308,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 8017213C 0016F07C  4B F6 8A B9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172140 0016F080  93 BF 01 70 */	stw r29, 0x170(r31)
 /* 80172144 0016F084  38 7E 03 FC */	addi r3, r30, 0x3fc
-/* 80172148 0016F088  C0 02 A6 EC */	lfs f0, $$22189@sda21(r2)
+/* 80172148 0016F088  C0 02 A6 EC */	lfs f0, "@2189"@sda21(r2)
 /* 8017214C 0016F08C  D0 1F 01 80 */	stfs f0, 0x180(r31)
 /* 80172150 0016F090  93 9F 01 70 */	stw r28, 0x170(r31)
 /* 80172154 0016F094  4B ED 25 39 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -319,7 +319,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172168 0016F0A8  4B F6 8A 8D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017216C 0016F0AC  93 BF 01 84 */	stw r29, 0x184(r31)
 /* 80172170 0016F0B0  38 7E 04 10 */	addi r3, r30, 0x410
-/* 80172174 0016F0B4  C0 02 A6 F0 */	lfs f0, $$22194@sda21(r2)
+/* 80172174 0016F0B4  C0 02 A6 F0 */	lfs f0, "@2194"@sda21(r2)
 /* 80172178 0016F0B8  D0 1F 01 94 */	stfs f0, 0x194(r31)
 /* 8017217C 0016F0BC  93 9F 01 84 */	stw r28, 0x184(r31)
 /* 80172180 0016F0C0  4B ED 25 0D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -330,7 +330,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172194 0016F0D4  4B F6 8A 61 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172198 0016F0D8  93 BF 01 98 */	stw r29, 0x198(r31)
 /* 8017219C 0016F0DC  38 7E 04 24 */	addi r3, r30, 0x424
-/* 801721A0 0016F0E0  C0 02 A6 F4 */	lfs f0, $$22196@sda21(r2)
+/* 801721A0 0016F0E0  C0 02 A6 F4 */	lfs f0, "@2196"@sda21(r2)
 /* 801721A4 0016F0E4  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 /* 801721A8 0016F0E8  93 9F 01 98 */	stw r28, 0x198(r31)
 /* 801721AC 0016F0EC  4B ED 24 E1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -341,7 +341,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801721C0 0016F100  4B F6 8A 35 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801721C4 0016F104  93 BF 01 AC */	stw r29, 0x1ac(r31)
 /* 801721C8 0016F108  38 7E 04 34 */	addi r3, r30, 0x434
-/* 801721CC 0016F10C  C0 02 A6 F8 */	lfs f0, $$22198@sda21(r2)
+/* 801721CC 0016F10C  C0 02 A6 F8 */	lfs f0, "@2198"@sda21(r2)
 /* 801721D0 0016F110  D0 1F 01 BC */	stfs f0, 0x1bc(r31)
 /* 801721D4 0016F114  93 9F 01 AC */	stw r28, 0x1ac(r31)
 /* 801721D8 0016F118  4B ED 24 B5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -352,7 +352,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801721EC 0016F12C  4B F6 8A 09 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801721F0 0016F130  93 BF 01 C0 */	stw r29, 0x1c0(r31)
 /* 801721F4 0016F134  38 7E 04 44 */	addi r3, r30, 0x444
-/* 801721F8 0016F138  C0 02 A6 FC */	lfs f0, $$22200@sda21(r2)
+/* 801721F8 0016F138  C0 02 A6 FC */	lfs f0, "@2200"@sda21(r2)
 /* 801721FC 0016F13C  D0 1F 01 D0 */	stfs f0, 0x1d0(r31)
 /* 80172200 0016F140  93 9F 01 C0 */	stw r28, 0x1c0(r31)
 /* 80172204 0016F144  4B ED 24 89 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -363,7 +363,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172218 0016F158  4B F6 89 DD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017221C 0016F15C  93 BF 01 D4 */	stw r29, 0x1d4(r31)
 /* 80172220 0016F160  38 7E 04 58 */	addi r3, r30, 0x458
-/* 80172224 0016F164  C0 02 A7 00 */	lfs f0, $$22202@sda21(r2)
+/* 80172224 0016F164  C0 02 A7 00 */	lfs f0, "@2202"@sda21(r2)
 /* 80172228 0016F168  D0 1F 01 E4 */	stfs f0, 0x1e4(r31)
 /* 8017222C 0016F16C  93 9F 01 D4 */	stw r28, 0x1d4(r31)
 /* 80172230 0016F170  4B ED 24 5D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -374,7 +374,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172244 0016F184  4B F6 89 B1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172248 0016F188  93 BF 01 E8 */	stw r29, 0x1e8(r31)
 /* 8017224C 0016F18C  38 7E 04 70 */	addi r3, r30, 0x470
-/* 80172250 0016F190  C0 02 A7 04 */	lfs f0, $$22204@sda21(r2)
+/* 80172250 0016F190  C0 02 A7 04 */	lfs f0, "@2204"@sda21(r2)
 /* 80172254 0016F194  D0 1F 01 F8 */	stfs f0, 0x1f8(r31)
 /* 80172258 0016F198  93 9F 01 E8 */	stw r28, 0x1e8(r31)
 /* 8017225C 0016F19C  4B ED 24 31 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -385,7 +385,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172270 0016F1B0  4B F6 89 85 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172274 0016F1B4  93 BF 01 FC */	stw r29, 0x1fc(r31)
 /* 80172278 0016F1B8  38 7E 04 84 */	addi r3, r30, 0x484
-/* 8017227C 0016F1BC  C0 02 A7 08 */	lfs f0, $$22206@sda21(r2)
+/* 8017227C 0016F1BC  C0 02 A7 08 */	lfs f0, "@2206"@sda21(r2)
 /* 80172280 0016F1C0  D0 1F 02 0C */	stfs f0, 0x20c(r31)
 /* 80172284 0016F1C4  93 9F 01 FC */	stw r28, 0x1fc(r31)
 /* 80172288 0016F1C8  4B ED 24 05 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -396,7 +396,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 8017229C 0016F1DC  4B F6 89 59 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801722A0 0016F1E0  93 BF 02 10 */	stw r29, 0x210(r31)
 /* 801722A4 0016F1E4  38 7E 04 9C */	addi r3, r30, 0x49c
-/* 801722A8 0016F1E8  C0 02 A7 0C */	lfs f0, $$22208@sda21(r2)
+/* 801722A8 0016F1E8  C0 02 A7 0C */	lfs f0, "@2208"@sda21(r2)
 /* 801722AC 0016F1EC  D0 1F 02 20 */	stfs f0, 0x220(r31)
 /* 801722B0 0016F1F0  93 9F 02 10 */	stw r28, 0x210(r31)
 /* 801722B4 0016F1F4  4B ED 23 D9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -407,7 +407,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801722C8 0016F208  4B F6 89 2D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801722CC 0016F20C  93 BF 02 24 */	stw r29, 0x224(r31)
 /* 801722D0 0016F210  38 7E 04 B4 */	addi r3, r30, 0x4b4
-/* 801722D4 0016F214  C0 02 A7 10 */	lfs f0, $$22210@sda21(r2)
+/* 801722D4 0016F214  C0 02 A7 10 */	lfs f0, "@2210"@sda21(r2)
 /* 801722D8 0016F218  D0 1F 02 34 */	stfs f0, 0x234(r31)
 /* 801722DC 0016F21C  93 9F 02 24 */	stw r28, 0x224(r31)
 /* 801722E0 0016F220  4B ED 23 AD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -418,7 +418,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801722F4 0016F234  4B F6 89 01 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801722F8 0016F238  93 BF 02 38 */	stw r29, 0x238(r31)
 /* 801722FC 0016F23C  38 7E 04 CC */	addi r3, r30, 0x4cc
-/* 80172300 0016F240  C0 02 A7 14 */	lfs f0, $$22212@sda21(r2)
+/* 80172300 0016F240  C0 02 A7 14 */	lfs f0, "@2212"@sda21(r2)
 /* 80172304 0016F244  D0 1F 02 48 */	stfs f0, 0x248(r31)
 /* 80172308 0016F248  93 9F 02 38 */	stw r28, 0x238(r31)
 /* 8017230C 0016F24C  4B ED 23 81 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -429,7 +429,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172320 0016F260  4B F6 88 D5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172324 0016F264  93 BF 02 4C */	stw r29, 0x24c(r31)
 /* 80172328 0016F268  38 7E 04 DC */	addi r3, r30, 0x4dc
-/* 8017232C 0016F26C  C0 02 A7 18 */	lfs f0, $$22214@sda21(r2)
+/* 8017232C 0016F26C  C0 02 A7 18 */	lfs f0, "@2214"@sda21(r2)
 /* 80172330 0016F270  D0 1F 02 5C */	stfs f0, 0x25c(r31)
 /* 80172334 0016F274  93 9F 02 4C */	stw r28, 0x24c(r31)
 /* 80172338 0016F278  4B ED 23 55 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -440,7 +440,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 8017234C 0016F28C  4B F6 88 A9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172350 0016F290  93 BF 02 60 */	stw r29, 0x260(r31)
 /* 80172354 0016F294  38 7E 04 F0 */	addi r3, r30, 0x4f0
-/* 80172358 0016F298  C0 02 A7 1C */	lfs f0, $$22216@sda21(r2)
+/* 80172358 0016F298  C0 02 A7 1C */	lfs f0, "@2216"@sda21(r2)
 /* 8017235C 0016F29C  D0 1F 02 70 */	stfs f0, 0x270(r31)
 /* 80172360 0016F2A0  93 9F 02 60 */	stw r28, 0x260(r31)
 /* 80172364 0016F2A4  4B ED 23 29 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -451,7 +451,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172378 0016F2B8  4B F6 88 7D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017237C 0016F2BC  93 BF 02 74 */	stw r29, 0x274(r31)
 /* 80172380 0016F2C0  38 7E 05 04 */	addi r3, r30, 0x504
-/* 80172384 0016F2C4  C0 02 A7 10 */	lfs f0, $$22210@sda21(r2)
+/* 80172384 0016F2C4  C0 02 A7 10 */	lfs f0, "@2210"@sda21(r2)
 /* 80172388 0016F2C8  D0 1F 02 84 */	stfs f0, 0x284(r31)
 /* 8017238C 0016F2CC  93 9F 02 74 */	stw r28, 0x274(r31)
 /* 80172390 0016F2D0  4B ED 22 FD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -462,7 +462,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801723A4 0016F2E4  4B F6 88 51 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801723A8 0016F2E8  93 BF 02 88 */	stw r29, 0x288(r31)
 /* 801723AC 0016F2EC  38 7E 05 14 */	addi r3, r30, 0x514
-/* 801723B0 0016F2F0  C0 02 A7 00 */	lfs f0, $$22202@sda21(r2)
+/* 801723B0 0016F2F0  C0 02 A7 00 */	lfs f0, "@2202"@sda21(r2)
 /* 801723B4 0016F2F4  D0 1F 02 98 */	stfs f0, 0x298(r31)
 /* 801723B8 0016F2F8  93 9F 02 88 */	stw r28, 0x288(r31)
 /* 801723BC 0016F2FC  4B ED 22 D1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -473,7 +473,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801723D0 0016F310  4B F6 88 25 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801723D4 0016F314  93 BF 02 9C */	stw r29, 0x29c(r31)
 /* 801723D8 0016F318  38 7E 05 24 */	addi r3, r30, 0x524
-/* 801723DC 0016F31C  C0 02 A7 20 */	lfs f0, $$22220@sda21(r2)
+/* 801723DC 0016F31C  C0 02 A7 20 */	lfs f0, "@2220"@sda21(r2)
 /* 801723E0 0016F320  D0 1F 02 AC */	stfs f0, 0x2ac(r31)
 /* 801723E4 0016F324  93 9F 02 9C */	stw r28, 0x29c(r31)
 /* 801723E8 0016F328  4B ED 22 A5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -484,7 +484,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801723FC 0016F33C  4B F6 87 F9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172400 0016F340  93 BF 02 B0 */	stw r29, 0x2b0(r31)
 /* 80172404 0016F344  38 7E 05 3C */	addi r3, r30, 0x53c
-/* 80172408 0016F348  C0 02 A7 24 */	lfs f0, $$22222@sda21(r2)
+/* 80172408 0016F348  C0 02 A7 24 */	lfs f0, "@2222"@sda21(r2)
 /* 8017240C 0016F34C  D0 1F 02 C0 */	stfs f0, 0x2c0(r31)
 /* 80172410 0016F350  93 9F 02 B0 */	stw r28, 0x2b0(r31)
 /* 80172414 0016F354  4B ED 22 79 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -495,7 +495,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172428 0016F368  4B F6 87 CD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017242C 0016F36C  93 BF 02 C4 */	stw r29, 0x2c4(r31)
 /* 80172430 0016F370  38 7E 05 48 */	addi r3, r30, 0x548
-/* 80172434 0016F374  C0 02 A6 D4 */	lfs f0, $$22175@sda21(r2)
+/* 80172434 0016F374  C0 02 A6 D4 */	lfs f0, "@2175"@sda21(r2)
 /* 80172438 0016F378  D0 1F 02 D4 */	stfs f0, 0x2d4(r31)
 /* 8017243C 0016F37C  93 9F 02 C4 */	stw r28, 0x2c4(r31)
 /* 80172440 0016F380  4B ED 22 4D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -506,7 +506,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172454 0016F394  4B F6 87 A1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172458 0016F398  93 BF 02 D8 */	stw r29, 0x2d8(r31)
 /* 8017245C 0016F39C  38 7E 05 54 */	addi r3, r30, 0x554
-/* 80172460 0016F3A0  C0 02 A7 28 */	lfs f0, $$22225@sda21(r2)
+/* 80172460 0016F3A0  C0 02 A7 28 */	lfs f0, "@2225"@sda21(r2)
 /* 80172464 0016F3A4  D0 1F 02 E8 */	stfs f0, 0x2e8(r31)
 /* 80172468 0016F3A8  93 9F 02 D8 */	stw r28, 0x2d8(r31)
 /* 8017246C 0016F3AC  4B ED 22 21 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -517,7 +517,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 80172480 0016F3C0  4B F6 87 75 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172484 0016F3C4  93 BF 02 EC */	stw r29, 0x2ec(r31)
 /* 80172488 0016F3C8  38 7E 05 60 */	addi r3, r30, 0x560
-/* 8017248C 0016F3CC  C0 02 A7 2C */	lfs f0, $$22227@sda21(r2)
+/* 8017248C 0016F3CC  C0 02 A7 2C */	lfs f0, "@2227"@sda21(r2)
 /* 80172490 0016F3D0  D0 1F 02 FC */	stfs f0, 0x2fc(r31)
 /* 80172494 0016F3D4  93 9F 02 EC */	stw r28, 0x2ec(r31)
 /* 80172498 0016F3D8  4B ED 21 F5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -526,13 +526,13 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801724A4 0016F3E4  38 7F 03 00 */	addi r3, r31, 0x300
 /* 801724A8 0016F3E8  38 DE 05 60 */	addi r6, r30, 0x560
 /* 801724AC 0016F3EC  4B F6 87 49 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 801724B0 0016F3F0  3C 60 80 3B */	lis r3, __vt__11TParamT$$0Uc$$1@ha
-/* 801724B4 0016F3F4  38 03 6A 94 */	addi r0, r3, __vt__11TParamT$$0Uc$$1@l
+/* 801724B0 0016F3F0  3C 60 80 3B */	lis r3, "__vt__11TParamT<Uc>"@ha
+/* 801724B4 0016F3F4  38 03 6A 94 */	addi r0, r3, "__vt__11TParamT<Uc>"@l
 /* 801724B8 0016F3F8  90 1F 03 00 */	stw r0, 0x300(r31)
 /* 801724BC 0016F3FC  38 00 00 96 */	li r0, 0x96
-/* 801724C0 0016F400  3C 60 80 3B */	lis r3, __vt__12TParamRT$$0Uc$$1@ha
+/* 801724C0 0016F400  3C 60 80 3B */	lis r3, "__vt__12TParamRT<Uc>"@ha
 /* 801724C4 0016F404  98 1F 03 10 */	stb r0, 0x310(r31)
-/* 801724C8 0016F408  38 03 6A 88 */	addi r0, r3, __vt__12TParamRT$$0Uc$$1@l
+/* 801724C8 0016F408  38 03 6A 88 */	addi r0, r3, "__vt__12TParamRT<Uc>"@l
 /* 801724CC 0016F40C  38 7E 05 70 */	addi r3, r30, 0x570
 /* 801724D0 0016F410  90 1F 03 00 */	stw r0, 0x300(r31)
 /* 801724D4 0016F414  4B ED 21 B9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -543,7 +543,7 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 801724E8 0016F428  4B F6 87 0D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801724EC 0016F42C  93 BF 03 14 */	stw r29, 0x314(r31)
 /* 801724F0 0016F430  38 7E 05 88 */	addi r3, r30, 0x588
-/* 801724F4 0016F434  C0 02 A7 30 */	lfs f0, $$22230@sda21(r2)
+/* 801724F4 0016F434  C0 02 A7 30 */	lfs f0, "@2230"@sda21(r2)
 /* 801724F8 0016F438  D0 1F 03 24 */	stfs f0, 0x324(r31)
 /* 801724FC 0016F43C  93 9F 03 14 */	stw r28, 0x314(r31)
 /* 80172500 0016F440  4B ED 21 8D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -552,13 +552,13 @@ __ct__18TNpcSaveIndividualFPCc:
 /* 8017250C 0016F44C  38 7F 03 28 */	addi r3, r31, 0x328
 /* 80172510 0016F450  38 DE 05 88 */	addi r6, r30, 0x588
 /* 80172514 0016F454  4B F6 86 E1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80172518 0016F458  3C 60 80 3B */	lis r3, __vt__10TParamT$$0s$$1@ha
-/* 8017251C 0016F45C  3B A3 6A AC */	addi r29, r3, __vt__10TParamT$$0s$$1@l
+/* 80172518 0016F458  3C 60 80 3B */	lis r3, "__vt__10TParamT<s>"@ha
+/* 8017251C 0016F45C  3B A3 6A AC */	addi r29, r3, "__vt__10TParamT<s>"@l
 /* 80172520 0016F460  93 BF 03 28 */	stw r29, 0x328(r31)
 /* 80172524 0016F464  38 00 E0 00 */	li r0, -8192
-/* 80172528 0016F468  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0s$$1@ha
+/* 80172528 0016F468  3C 60 80 3B */	lis r3, "__vt__11TParamRT<s>"@ha
 /* 8017252C 0016F46C  B0 1F 03 38 */	sth r0, 0x338(r31)
-/* 80172530 0016F470  3B 83 6A A0 */	addi r28, r3, __vt__11TParamRT$$0s$$1@l
+/* 80172530 0016F470  3B 83 6A A0 */	addi r28, r3, "__vt__11TParamRT<s>"@l
 /* 80172534 0016F474  38 7E 05 98 */	addi r3, r30, 0x598
 /* 80172538 0016F478  93 9F 03 28 */	stw r28, 0x328(r31)
 /* 8017253C 0016F47C  4B ED 21 51 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -616,11 +616,11 @@ __ct__18TNpcSaveIndividualFPCc:
 .global __ct__14TNpcSaveNormalFv
 __ct__14TNpcSaveNormalFv:
 /* 80172608 0016F548  7C 08 02 A6 */	mflr r0
-/* 8017260C 0016F54C  3C 80 80 38 */	lis r4, $$21490@ha
+/* 8017260C 0016F54C  3C 80 80 38 */	lis r4, "@1490"@ha
 /* 80172610 0016F550  90 01 00 04 */	stw r0, 4(r1)
 /* 80172614 0016F554  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 80172618 0016F558  BF 01 00 10 */	stmw r24, 0x10(r1)
-/* 8017261C 0016F55C  3B C4 EF 38 */	addi r30, r4, $$21490@l
+/* 8017261C 0016F55C  3B C4 EF 38 */	addi r30, r4, "@1490"@l
 /* 80172620 0016F560  38 1E 05 E0 */	addi r0, r30, 0x5e0
 /* 80172624 0016F564  3B E3 00 00 */	addi r31, r3, 0
 /* 80172628 0016F568  90 03 00 00 */	stw r0, 0(r3)
@@ -633,12 +633,12 @@ __ct__14TNpcSaveNormalFv:
 /* 80172644 0016F584  38 7F 00 08 */	addi r3, r31, 8
 /* 80172648 0016F588  38 DE 05 F4 */	addi r6, r30, 0x5f4
 /* 8017264C 0016F58C  4B F6 85 A9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80172650 0016F590  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80172654 0016F594  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80172650 0016F590  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80172654 0016F594  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 80172658 0016F598  93 BF 00 08 */	stw r29, 8(r31)
-/* 8017265C 0016F59C  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80172660 0016F5A0  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80172664 0016F5A4  C0 02 A7 34 */	lfs f0, $$22336@sda21(r2)
+/* 8017265C 0016F59C  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80172660 0016F5A0  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80172664 0016F5A4  C0 02 A7 34 */	lfs f0, "@2336"@sda21(r2)
 /* 80172668 0016F5A8  38 7E 06 10 */	addi r3, r30, 0x610
 /* 8017266C 0016F5AC  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80172670 0016F5B0  93 9F 00 08 */	stw r28, 8(r31)
@@ -650,7 +650,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172688 0016F5C8  4B F6 85 6D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017268C 0016F5CC  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 80172690 0016F5D0  38 7E 06 20 */	addi r3, r30, 0x620
-/* 80172694 0016F5D4  C0 02 A6 B8 */	lfs f0, $$22161@sda21(r2)
+/* 80172694 0016F5D4  C0 02 A6 B8 */	lfs f0, "@2161"@sda21(r2)
 /* 80172698 0016F5D8  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 8017269C 0016F5DC  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 801726A0 0016F5E0  4B ED 1F ED */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -661,7 +661,7 @@ __ct__14TNpcSaveNormalFv:
 /* 801726B4 0016F5F4  4B F6 85 41 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801726B8 0016F5F8  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 801726BC 0016F5FC  38 7E 06 34 */	addi r3, r30, 0x634
-/* 801726C0 0016F600  C0 02 A7 34 */	lfs f0, $$22336@sda21(r2)
+/* 801726C0 0016F600  C0 02 A7 34 */	lfs f0, "@2336"@sda21(r2)
 /* 801726C4 0016F604  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 801726C8 0016F608  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 801726CC 0016F60C  4B ED 1F C1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -672,7 +672,7 @@ __ct__14TNpcSaveNormalFv:
 /* 801726E0 0016F620  4B F6 85 15 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801726E4 0016F624  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 801726E8 0016F628  38 7E 06 48 */	addi r3, r30, 0x648
-/* 801726EC 0016F62C  C0 02 A7 34 */	lfs f0, $$22336@sda21(r2)
+/* 801726EC 0016F62C  C0 02 A7 34 */	lfs f0, "@2336"@sda21(r2)
 /* 801726F0 0016F630  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 801726F4 0016F634  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 801726F8 0016F638  4B ED 1F 95 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -683,7 +683,7 @@ __ct__14TNpcSaveNormalFv:
 /* 8017270C 0016F64C  4B F6 84 E9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172710 0016F650  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80172714 0016F654  38 7E 06 60 */	addi r3, r30, 0x660
-/* 80172718 0016F658  C0 02 A7 38 */	lfs f0, $$22341@sda21(r2)
+/* 80172718 0016F658  C0 02 A7 38 */	lfs f0, "@2341"@sda21(r2)
 /* 8017271C 0016F65C  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80172720 0016F660  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80172724 0016F664  4B ED 1F 69 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -694,7 +694,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172738 0016F678  4B F6 84 BD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017273C 0016F67C  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80172740 0016F680  38 7E 06 78 */	addi r3, r30, 0x678
-/* 80172744 0016F684  C0 02 A7 04 */	lfs f0, $$22204@sda21(r2)
+/* 80172744 0016F684  C0 02 A7 04 */	lfs f0, "@2204"@sda21(r2)
 /* 80172748 0016F688  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 8017274C 0016F68C  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80172750 0016F690  4B ED 1F 3D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -705,7 +705,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172764 0016F6A4  4B F6 84 91 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172768 0016F6A8  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 8017276C 0016F6AC  38 7E 06 90 */	addi r3, r30, 0x690
-/* 80172770 0016F6B0  C0 02 A6 B8 */	lfs f0, $$22161@sda21(r2)
+/* 80172770 0016F6B0  C0 02 A6 B8 */	lfs f0, "@2161"@sda21(r2)
 /* 80172774 0016F6B4  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 80172778 0016F6B8  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 8017277C 0016F6BC  4B ED 1F 11 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -716,7 +716,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172790 0016F6D0  4B F6 84 65 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172794 0016F6D4  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 80172798 0016F6D8  38 7E 06 AC */	addi r3, r30, 0x6ac
-/* 8017279C 0016F6DC  C0 02 A7 34 */	lfs f0, $$22336@sda21(r2)
+/* 8017279C 0016F6DC  C0 02 A7 34 */	lfs f0, "@2336"@sda21(r2)
 /* 801727A0 0016F6E0  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 801727A4 0016F6E4  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 801727A8 0016F6E8  4B ED 1E E5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -725,13 +725,13 @@ __ct__14TNpcSaveNormalFv:
 /* 801727B4 0016F6F4  38 7F 00 A8 */	addi r3, r31, 0xa8
 /* 801727B8 0016F6F8  38 DE 06 AC */	addi r6, r30, 0x6ac
 /* 801727BC 0016F6FC  4B F6 84 39 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 801727C0 0016F700  3C 60 80 3B */	lis r3, __vt__10TParamT$$0s$$1@ha
-/* 801727C4 0016F704  3B 63 6A AC */	addi r27, r3, __vt__10TParamT$$0s$$1@l
+/* 801727C0 0016F700  3C 60 80 3B */	lis r3, "__vt__10TParamT<s>"@ha
+/* 801727C4 0016F704  3B 63 6A AC */	addi r27, r3, "__vt__10TParamT<s>"@l
 /* 801727C8 0016F708  93 7F 00 A8 */	stw r27, 0xa8(r31)
 /* 801727CC 0016F70C  3B 00 00 28 */	li r24, 0x28
-/* 801727D0 0016F710  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0s$$1@ha
+/* 801727D0 0016F710  3C 60 80 3B */	lis r3, "__vt__11TParamRT<s>"@ha
 /* 801727D4 0016F714  B3 1F 00 B8 */	sth r24, 0xb8(r31)
-/* 801727D8 0016F718  3B 43 6A A0 */	addi r26, r3, __vt__11TParamRT$$0s$$1@l
+/* 801727D8 0016F718  3B 43 6A A0 */	addi r26, r3, "__vt__11TParamRT<s>"@l
 /* 801727DC 0016F71C  38 7E 06 C0 */	addi r3, r30, 0x6c0
 /* 801727E0 0016F720  93 5F 00 A8 */	stw r26, 0xa8(r31)
 /* 801727E4 0016F724  4B ED 1E A9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -752,7 +752,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172820 0016F760  4B F6 83 D5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172824 0016F764  93 BF 00 D0 */	stw r29, 0xd0(r31)
 /* 80172828 0016F768  38 7E 06 EC */	addi r3, r30, 0x6ec
-/* 8017282C 0016F76C  C0 02 A7 3C */	lfs f0, $$22348@sda21(r2)
+/* 8017282C 0016F76C  C0 02 A7 3C */	lfs f0, "@2348"@sda21(r2)
 /* 80172830 0016F770  D0 1F 00 E0 */	stfs f0, 0xe0(r31)
 /* 80172834 0016F774  93 9F 00 D0 */	stw r28, 0xd0(r31)
 /* 80172838 0016F778  4B ED 1E 55 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -785,7 +785,7 @@ __ct__14TNpcSaveNormalFv:
 /* 801728A4 0016F7E4  4B F6 83 51 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801728A8 0016F7E8  93 BF 01 0C */	stw r29, 0x10c(r31)
 /* 801728AC 0016F7EC  38 7E 07 2C */	addi r3, r30, 0x72c
-/* 801728B0 0016F7F0  C0 02 A7 38 */	lfs f0, $$22341@sda21(r2)
+/* 801728B0 0016F7F0  C0 02 A7 38 */	lfs f0, "@2341"@sda21(r2)
 /* 801728B4 0016F7F4  D0 1F 01 1C */	stfs f0, 0x11c(r31)
 /* 801728B8 0016F7F8  93 9F 01 0C */	stw r28, 0x10c(r31)
 /* 801728BC 0016F7FC  4B ED 1D D1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -796,7 +796,7 @@ __ct__14TNpcSaveNormalFv:
 /* 801728D0 0016F810  4B F6 83 25 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 801728D4 0016F814  93 BF 01 20 */	stw r29, 0x120(r31)
 /* 801728D8 0016F818  38 7E 07 44 */	addi r3, r30, 0x744
-/* 801728DC 0016F81C  C0 02 A6 B8 */	lfs f0, $$22161@sda21(r2)
+/* 801728DC 0016F81C  C0 02 A6 B8 */	lfs f0, "@2161"@sda21(r2)
 /* 801728E0 0016F820  D0 1F 01 30 */	stfs f0, 0x130(r31)
 /* 801728E4 0016F824  93 9F 01 20 */	stw r28, 0x120(r31)
 /* 801728E8 0016F828  4B ED 1D A5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -807,7 +807,7 @@ __ct__14TNpcSaveNormalFv:
 /* 801728FC 0016F83C  4B F6 82 F9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172900 0016F840  93 BF 01 34 */	stw r29, 0x134(r31)
 /* 80172904 0016F844  38 7E 07 58 */	addi r3, r30, 0x758
-/* 80172908 0016F848  C0 02 A6 BC */	lfs f0, $$22163@sda21(r2)
+/* 80172908 0016F848  C0 02 A6 BC */	lfs f0, "@2163"@sda21(r2)
 /* 8017290C 0016F84C  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 80172910 0016F850  93 9F 01 34 */	stw r28, 0x134(r31)
 /* 80172914 0016F854  4B ED 1D 79 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -818,7 +818,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172928 0016F868  4B F6 82 CD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8017292C 0016F86C  93 BF 01 48 */	stw r29, 0x148(r31)
 /* 80172930 0016F870  38 7E 07 64 */	addi r3, r30, 0x764
-/* 80172934 0016F874  C0 02 A7 28 */	lfs f0, $$22225@sda21(r2)
+/* 80172934 0016F874  C0 02 A7 28 */	lfs f0, "@2225"@sda21(r2)
 /* 80172938 0016F878  D0 1F 01 58 */	stfs f0, 0x158(r31)
 /* 8017293C 0016F87C  93 9F 01 48 */	stw r28, 0x148(r31)
 /* 80172940 0016F880  4B ED 1D 4D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -829,7 +829,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172954 0016F894  4B F6 82 A1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172958 0016F898  93 BF 01 5C */	stw r29, 0x15c(r31)
 /* 8017295C 0016F89C  38 7E 07 7C */	addi r3, r30, 0x77c
-/* 80172960 0016F8A0  C0 02 A7 40 */	lfs f0, $$22356@sda21(r2)
+/* 80172960 0016F8A0  C0 02 A7 40 */	lfs f0, "@2356"@sda21(r2)
 /* 80172964 0016F8A4  D0 1F 01 6C */	stfs f0, 0x16c(r31)
 /* 80172968 0016F8A8  93 9F 01 5C */	stw r28, 0x15c(r31)
 /* 8017296C 0016F8AC  4B ED 1D 21 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -840,7 +840,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172980 0016F8C0  4B F6 82 75 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172984 0016F8C4  93 BF 01 70 */	stw r29, 0x170(r31)
 /* 80172988 0016F8C8  38 7E 07 94 */	addi r3, r30, 0x794
-/* 8017298C 0016F8CC  C0 02 A7 44 */	lfs f0, $$22358@sda21(r2)
+/* 8017298C 0016F8CC  C0 02 A7 44 */	lfs f0, "@2358"@sda21(r2)
 /* 80172990 0016F8D0  D0 1F 01 80 */	stfs f0, 0x180(r31)
 /* 80172994 0016F8D4  93 9F 01 70 */	stw r28, 0x170(r31)
 /* 80172998 0016F8D8  4B ED 1C F5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -849,13 +849,13 @@ __ct__14TNpcSaveNormalFv:
 /* 801729A4 0016F8E4  38 7F 01 84 */	addi r3, r31, 0x184
 /* 801729A8 0016F8E8  38 DE 07 94 */	addi r6, r30, 0x794
 /* 801729AC 0016F8EC  4B F6 82 49 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 801729B0 0016F8F0  3C 60 80 3B */	lis r3, __vt__10TParamT$$0l$$1@ha
-/* 801729B4 0016F8F4  3B 03 6A 7C */	addi r24, r3, __vt__10TParamT$$0l$$1@l
+/* 801729B0 0016F8F0  3C 60 80 3B */	lis r3, "__vt__10TParamT<l>"@ha
+/* 801729B4 0016F8F4  3B 03 6A 7C */	addi r24, r3, "__vt__10TParamT<l>"@l
 /* 801729B8 0016F8F8  93 1F 01 84 */	stw r24, 0x184(r31)
 /* 801729BC 0016F8FC  38 00 00 0A */	li r0, 0xa
-/* 801729C0 0016F900  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0l$$1@ha
+/* 801729C0 0016F900  3C 60 80 3B */	lis r3, "__vt__11TParamRT<l>"@ha
 /* 801729C4 0016F904  90 1F 01 94 */	stw r0, 0x194(r31)
-/* 801729C8 0016F908  3B 23 6A 70 */	addi r25, r3, __vt__11TParamRT$$0l$$1@l
+/* 801729C8 0016F908  3B 23 6A 70 */	addi r25, r3, "__vt__11TParamRT<l>"@l
 /* 801729CC 0016F90C  38 7E 07 AC */	addi r3, r30, 0x7ac
 /* 801729D0 0016F910  93 3F 01 84 */	stw r25, 0x184(r31)
 /* 801729D4 0016F914  4B ED 1C B9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -877,7 +877,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172A14 0016F954  4B F6 81 E1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172A18 0016F958  93 BF 01 AC */	stw r29, 0x1ac(r31)
 /* 80172A1C 0016F95C  38 7E 07 D4 */	addi r3, r30, 0x7d4
-/* 80172A20 0016F960  C0 02 A7 48 */	lfs f0, $$22362@sda21(r2)
+/* 80172A20 0016F960  C0 02 A7 48 */	lfs f0, "@2362"@sda21(r2)
 /* 80172A24 0016F964  D0 1F 01 BC */	stfs f0, 0x1bc(r31)
 /* 80172A28 0016F968  93 9F 01 AC */	stw r28, 0x1ac(r31)
 /* 80172A2C 0016F96C  4B ED 1C 61 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -888,7 +888,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172A40 0016F980  4B F6 81 B5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172A44 0016F984  93 BF 01 C0 */	stw r29, 0x1c0(r31)
 /* 80172A48 0016F988  38 7E 07 E4 */	addi r3, r30, 0x7e4
-/* 80172A4C 0016F98C  C0 02 A7 4C */	lfs f0, $$22364@sda21(r2)
+/* 80172A4C 0016F98C  C0 02 A7 4C */	lfs f0, "@2364"@sda21(r2)
 /* 80172A50 0016F990  D0 1F 01 D0 */	stfs f0, 0x1d0(r31)
 /* 80172A54 0016F994  93 9F 01 C0 */	stw r28, 0x1c0(r31)
 /* 80172A58 0016F998  4B ED 1C 35 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -899,7 +899,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172A6C 0016F9AC  4B F6 81 89 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172A70 0016F9B0  93 BF 01 D4 */	stw r29, 0x1d4(r31)
 /* 80172A74 0016F9B4  38 7E 07 F4 */	addi r3, r30, 0x7f4
-/* 80172A78 0016F9B8  C0 02 A7 50 */	lfs f0, $$22366@sda21(r2)
+/* 80172A78 0016F9B8  C0 02 A7 50 */	lfs f0, "@2366"@sda21(r2)
 /* 80172A7C 0016F9BC  D0 1F 01 E4 */	stfs f0, 0x1e4(r31)
 /* 80172A80 0016F9C0  93 9F 01 D4 */	stw r28, 0x1d4(r31)
 /* 80172A84 0016F9C4  4B ED 1C 09 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -965,7 +965,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172B74 0016FAB4  4B F6 80 81 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172B78 0016FAB8  93 BF 02 4C */	stw r29, 0x24c(r31)
 /* 80172B7C 0016FABC  38 7E 08 7C */	addi r3, r30, 0x87c
-/* 80172B80 0016FAC0  C0 02 A6 D4 */	lfs f0, $$22175@sda21(r2)
+/* 80172B80 0016FAC0  C0 02 A6 D4 */	lfs f0, "@2175"@sda21(r2)
 /* 80172B84 0016FAC4  D0 1F 02 5C */	stfs f0, 0x25c(r31)
 /* 80172B88 0016FAC8  93 9F 02 4C */	stw r28, 0x24c(r31)
 /* 80172B8C 0016FACC  4B ED 1B 01 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -976,7 +976,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172BA0 0016FAE0  4B F6 80 55 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172BA4 0016FAE4  93 BF 02 60 */	stw r29, 0x260(r31)
 /* 80172BA8 0016FAE8  38 7E 08 90 */	addi r3, r30, 0x890
-/* 80172BAC 0016FAEC  C0 02 A6 D0 */	lfs f0, $$22173@sda21(r2)
+/* 80172BAC 0016FAEC  C0 02 A6 D0 */	lfs f0, "@2173"@sda21(r2)
 /* 80172BB0 0016FAF0  D0 1F 02 70 */	stfs f0, 0x270(r31)
 /* 80172BB4 0016FAF4  93 9F 02 60 */	stw r28, 0x260(r31)
 /* 80172BB8 0016FAF8  4B ED 1A D5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -987,7 +987,7 @@ __ct__14TNpcSaveNormalFv:
 /* 80172BCC 0016FB0C  4B F6 80 29 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172BD0 0016FB10  93 BF 02 74 */	stw r29, 0x274(r31)
 /* 80172BD4 0016FB14  7F E3 FB 78 */	mr r3, r31
-/* 80172BD8 0016FB18  C0 02 A7 54 */	lfs f0, $$22375@sda21(r2)
+/* 80172BD8 0016FB18  C0 02 A7 54 */	lfs f0, "@2375"@sda21(r2)
 /* 80172BDC 0016FB1C  D0 1F 02 84 */	stfs f0, 0x284(r31)
 /* 80172BE0 0016FB20  93 9F 02 74 */	stw r28, 0x274(r31)
 /* 80172BE4 0016FB24  80 9F 00 00 */	lwz r4, 0(r31)
@@ -1002,13 +1002,13 @@ __ct__14TNpcSaveNormalFv:
 .global __ct__20TNpcSaveStageFarClipFv
 __ct__20TNpcSaveStageFarClipFv:
 /* 80172C04 0016FB44  7C 08 02 A6 */	mflr r0
-/* 80172C08 0016FB48  3C 80 80 38 */	lis r4, $$21490@ha
+/* 80172C08 0016FB48  3C 80 80 38 */	lis r4, "@1490"@ha
 /* 80172C0C 0016FB4C  90 01 00 04 */	stw r0, 4(r1)
 /* 80172C10 0016FB50  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80172C14 0016FB54  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 80172C18 0016FB58  3B E3 00 00 */	addi r31, r3, 0
 /* 80172C1C 0016FB5C  93 C1 00 18 */	stw r30, 0x18(r1)
-/* 80172C20 0016FB60  3B C4 EF 38 */	addi r30, r4, $$21490@l
+/* 80172C20 0016FB60  3B C4 EF 38 */	addi r30, r4, "@1490"@l
 /* 80172C24 0016FB64  38 1E 08 A0 */	addi r0, r30, 0x8a0
 /* 80172C28 0016FB68  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80172C2C 0016FB6C  93 81 00 10 */	stw r28, 0x10(r1)
@@ -1022,12 +1022,12 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172C4C 0016FB8C  38 7F 00 08 */	addi r3, r31, 8
 /* 80172C50 0016FB90  38 DE 08 B4 */	addi r6, r30, 0x8b4
 /* 80172C54 0016FB94  4B F6 7F A1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80172C58 0016FB98  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80172C5C 0016FB9C  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80172C58 0016FB98  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80172C5C 0016FB9C  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 80172C60 0016FBA0  93 BF 00 08 */	stw r29, 8(r31)
-/* 80172C64 0016FBA4  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80172C68 0016FBA8  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80172C6C 0016FBAC  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172C64 0016FBA4  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80172C68 0016FBA8  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80172C6C 0016FBAC  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172C70 0016FBB0  38 7E 08 C4 */	addi r3, r30, 0x8c4
 /* 80172C74 0016FBB4  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80172C78 0016FBB8  93 9F 00 08 */	stw r28, 8(r31)
@@ -1039,7 +1039,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172C90 0016FBD0  4B F6 7F 65 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172C94 0016FBD4  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 80172C98 0016FBD8  38 7E 08 D8 */	addi r3, r30, 0x8d8
-/* 80172C9C 0016FBDC  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172C9C 0016FBDC  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172CA0 0016FBE0  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 80172CA4 0016FBE4  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 80172CA8 0016FBE8  4B ED 19 E5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1050,7 +1050,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172CBC 0016FBFC  4B F6 7F 39 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172CC0 0016FC00  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 80172CC4 0016FC04  38 7E 08 EC */	addi r3, r30, 0x8ec
-/* 80172CC8 0016FC08  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172CC8 0016FC08  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172CCC 0016FC0C  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 80172CD0 0016FC10  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 80172CD4 0016FC14  4B ED 19 B9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1061,7 +1061,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172CE8 0016FC28  4B F6 7F 0D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172CEC 0016FC2C  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 80172CF0 0016FC30  38 7E 09 00 */	addi r3, r30, 0x900
-/* 80172CF4 0016FC34  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172CF4 0016FC34  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172CF8 0016FC38  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 80172CFC 0016FC3C  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 80172D00 0016FC40  4B ED 19 8D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1072,7 +1072,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172D14 0016FC54  4B F6 7E E1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172D18 0016FC58  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80172D1C 0016FC5C  38 7E 09 14 */	addi r3, r30, 0x914
-/* 80172D20 0016FC60  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172D20 0016FC60  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172D24 0016FC64  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80172D28 0016FC68  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80172D2C 0016FC6C  4B ED 19 61 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1083,7 +1083,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172D40 0016FC80  4B F6 7E B5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172D44 0016FC84  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80172D48 0016FC88  38 7E 09 28 */	addi r3, r30, 0x928
-/* 80172D4C 0016FC8C  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172D4C 0016FC8C  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172D50 0016FC90  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 80172D54 0016FC94  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80172D58 0016FC98  4B ED 19 35 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1094,7 +1094,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172D6C 0016FCAC  4B F6 7E 89 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172D70 0016FCB0  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 80172D74 0016FCB4  38 7E 09 3C */	addi r3, r30, 0x93c
-/* 80172D78 0016FCB8  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172D78 0016FCB8  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172D7C 0016FCBC  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 80172D80 0016FCC0  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 80172D84 0016FCC4  4B ED 19 09 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1105,7 +1105,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172D98 0016FCD8  4B F6 7E 5D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172D9C 0016FCDC  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 80172DA0 0016FCE0  38 7E 09 50 */	addi r3, r30, 0x950
-/* 80172DA4 0016FCE4  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172DA4 0016FCE4  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172DA8 0016FCE8  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 80172DAC 0016FCEC  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 80172DB0 0016FCF0  4B ED 18 DD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1116,7 +1116,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172DC4 0016FD04  4B F6 7E 31 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172DC8 0016FD08  93 BF 00 A8 */	stw r29, 0xa8(r31)
 /* 80172DCC 0016FD0C  38 7E 09 64 */	addi r3, r30, 0x964
-/* 80172DD0 0016FD10  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172DD0 0016FD10  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172DD4 0016FD14  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
 /* 80172DD8 0016FD18  93 9F 00 A8 */	stw r28, 0xa8(r31)
 /* 80172DDC 0016FD1C  4B ED 18 B1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1127,7 +1127,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172DF0 0016FD30  4B F6 7E 05 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172DF4 0016FD34  93 BF 00 BC */	stw r29, 0xbc(r31)
 /* 80172DF8 0016FD38  38 7E 09 78 */	addi r3, r30, 0x978
-/* 80172DFC 0016FD3C  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172DFC 0016FD3C  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172E00 0016FD40  D0 1F 00 CC */	stfs f0, 0xcc(r31)
 /* 80172E04 0016FD44  93 9F 00 BC */	stw r28, 0xbc(r31)
 /* 80172E08 0016FD48  4B ED 18 85 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1138,7 +1138,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172E1C 0016FD5C  4B F6 7D D9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172E20 0016FD60  93 BF 00 D0 */	stw r29, 0xd0(r31)
 /* 80172E24 0016FD64  38 7E 09 8C */	addi r3, r30, 0x98c
-/* 80172E28 0016FD68  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172E28 0016FD68  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172E2C 0016FD6C  D0 1F 00 E0 */	stfs f0, 0xe0(r31)
 /* 80172E30 0016FD70  93 9F 00 D0 */	stw r28, 0xd0(r31)
 /* 80172E34 0016FD74  4B ED 18 59 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1149,7 +1149,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172E48 0016FD88  4B F6 7D AD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172E4C 0016FD8C  93 BF 00 E4 */	stw r29, 0xe4(r31)
 /* 80172E50 0016FD90  38 7E 09 A4 */	addi r3, r30, 0x9a4
-/* 80172E54 0016FD94  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172E54 0016FD94  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172E58 0016FD98  D0 1F 00 F4 */	stfs f0, 0xf4(r31)
 /* 80172E5C 0016FD9C  93 9F 00 E4 */	stw r28, 0xe4(r31)
 /* 80172E60 0016FDA0  4B ED 18 2D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -1160,7 +1160,7 @@ __ct__20TNpcSaveStageFarClipFv:
 /* 80172E74 0016FDB4  4B F6 7D 81 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80172E78 0016FDB8  93 BF 00 F8 */	stw r29, 0xf8(r31)
 /* 80172E7C 0016FDBC  7F E3 FB 78 */	mr r3, r31
-/* 80172E80 0016FDC0  C0 02 A7 58 */	lfs f0, $$22419@sda21(r2)
+/* 80172E80 0016FDC0  C0 02 A7 58 */	lfs f0, "@2419"@sda21(r2)
 /* 80172E84 0016FDC4  D0 1F 01 08 */	stfs f0, 0x108(r31)
 /* 80172E88 0016FDC8  93 9F 00 F8 */	stw r28, 0xf8(r31)
 /* 80172E8C 0016FDCC  80 9F 00 00 */	lwz r4, 0(r31)
@@ -1177,365 +1177,365 @@ __ct__20TNpcSaveStageFarClipFv:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x37BF44, 0x14
-$$21755:
+"@1755":
 	.incbin "baserom.dol", 0x37BF58, 0x30
-$$21756:
+"@1756":
 	.incbin "baserom.dol", 0x37BF88, 0x38
-$$21757:
+"@1757":
 	.incbin "baserom.dol", 0x37BFC0, 0x34
-$$21758:
+"@1758":
 	.incbin "baserom.dol", 0x37BFF4, 0x24
-$$21961:
+"@1961":
 	.incbin "baserom.dol", 0x37C018, 0x14
-$$21962:
+"@1962":
 	.incbin "baserom.dol", 0x37C02C, 0x14
-$$21963:
+"@1963":
 	.incbin "baserom.dol", 0x37C040, 0x14
-$$21964:
+"@1964":
 	.incbin "baserom.dol", 0x37C054, 0x14
-$$21965:
+"@1965":
 	.incbin "baserom.dol", 0x37C068, 0x14
-$$21966:
+"@1966":
 	.incbin "baserom.dol", 0x37C07C, 0x14
-$$21967:
+"@1967":
 	.incbin "baserom.dol", 0x37C090, 0x14
-$$21968:
+"@1968":
 	.incbin "baserom.dol", 0x37C0A4, 0x14
-$$21969:
+"@1969":
 	.incbin "baserom.dol", 0x37C0B8, 0x14
-$$21970:
+"@1970":
 	.incbin "baserom.dol", 0x37C0CC, 0x14
-$$21971:
+"@1971":
 	.incbin "baserom.dol", 0x37C0E0, 0x14
-$$21972:
+"@1972":
 	.incbin "baserom.dol", 0x37C0F4, 0x14
-$$21973:
+"@1973":
 	.incbin "baserom.dol", 0x37C108, 0x14
-$$21974:
+"@1974":
 	.incbin "baserom.dol", 0x37C11C, 0x14
-$$21975:
+"@1975":
 	.incbin "baserom.dol", 0x37C130, 0x14
-$$21976:
+"@1976":
 	.incbin "baserom.dol", 0x37C144, 0x14
-$$21977:
+"@1977":
 	.incbin "baserom.dol", 0x37C158, 0x14
-$$21978:
+"@1978":
 	.incbin "baserom.dol", 0x37C16C, 0x14
-$$21979:
+"@1979":
 	.incbin "baserom.dol", 0x37C180, 0x18
-$$21980:
+"@1980":
 	.incbin "baserom.dol", 0x37C198, 0x18
-$$21981:
+"@1981":
 	.incbin "baserom.dol", 0x37C1B0, 0x18
-$$21982:
+"@1982":
 	.incbin "baserom.dol", 0x37C1C8, 0x14
-$$21983:
+"@1983":
 	.incbin "baserom.dol", 0x37C1DC, 0x14
-$$22160:
+"@2160":
 	.incbin "baserom.dol", 0x37C1F0, 0x10
-$$22162:
+"@2162":
 	.incbin "baserom.dol", 0x37C200, 0x10
-$$22164:
+"@2164":
 	.incbin "baserom.dol", 0x37C210, 0x10
-$$22166:
+"@2166":
 	.incbin "baserom.dol", 0x37C220, 0x14
-$$22168:
+"@2168":
 	.incbin "baserom.dol", 0x37C234, 0x18
-$$22170:
+"@2170":
 	.incbin "baserom.dol", 0x37C24C, 0x14
-$$22172:
+"@2172":
 	.incbin "baserom.dol", 0x37C260, 0x14
-$$22174:
+"@2174":
 	.incbin "baserom.dol", 0x37C274, 0x14
-$$22176:
+"@2176":
 	.incbin "baserom.dol", 0x37C288, 0x14
-$$22178:
+"@2178":
 	.incbin "baserom.dol", 0x37C29C, 0x10
-$$22179:
+"@2179":
 	.incbin "baserom.dol", 0x37C2AC, 0x10
-$$22181:
+"@2181":
 	.incbin "baserom.dol", 0x37C2BC, 0xC
-$$22183:
+"@2183":
 	.incbin "baserom.dol", 0x37C2C8, 0xC
-$$22185:
+"@2185":
 	.incbin "baserom.dol", 0x37C2D4, 0x10
-$$22186:
+"@2186":
 	.incbin "baserom.dol", 0x37C2E4, 0x10
-$$22188:
+"@2188":
 	.incbin "baserom.dol", 0x37C2F4, 0x10
-$$22190:
+"@2190":
 	.incbin "baserom.dol", 0x37C304, 0x10
-$$22191:
+"@2191":
 	.incbin "baserom.dol", 0x37C314, 0x10
-$$22192:
+"@2192":
 	.incbin "baserom.dol", 0x37C324, 0x10
-$$22193:
+"@2193":
 	.incbin "baserom.dol", 0x37C334, 0x14
-$$22195:
+"@2195":
 	.incbin "baserom.dol", 0x37C348, 0x14
-$$22197:
+"@2197":
 	.incbin "baserom.dol", 0x37C35C, 0x10
-$$22199:
+"@2199":
 	.incbin "baserom.dol", 0x37C36C, 0x10
-$$22201:
+"@2201":
 	.incbin "baserom.dol", 0x37C37C, 0x14
-$$22203:
+"@2203":
 	.incbin "baserom.dol", 0x37C390, 0x18
-$$22205:
+"@2205":
 	.incbin "baserom.dol", 0x37C3A8, 0x14
-$$22207:
+"@2207":
 	.incbin "baserom.dol", 0x37C3BC, 0x18
-$$22209:
+"@2209":
 	.incbin "baserom.dol", 0x37C3D4, 0x18
-$$22211:
+"@2211":
 	.incbin "baserom.dol", 0x37C3EC, 0x18
-$$22213:
+"@2213":
 	.incbin "baserom.dol", 0x37C404, 0x10
-$$22215:
+"@2215":
 	.incbin "baserom.dol", 0x37C414, 0x14
-$$22217:
+"@2217":
 	.incbin "baserom.dol", 0x37C428, 0x14
-$$22218:
+"@2218":
 	.incbin "baserom.dol", 0x37C43C, 0x10
-$$22219:
+"@2219":
 	.incbin "baserom.dol", 0x37C44C, 0x10
-$$22221:
+"@2221":
 	.incbin "baserom.dol", 0x37C45C, 0x18
-$$22223:
+"@2223":
 	.incbin "baserom.dol", 0x37C474, 0xC
-$$22224:
+"@2224":
 	.incbin "baserom.dol", 0x37C480, 0xC
-$$22226:
+"@2226":
 	.incbin "baserom.dol", 0x37C48C, 0xC
-$$22228:
+"@2228":
 	.incbin "baserom.dol", 0x37C498, 0x10
-$$22229:
+"@2229":
 	.incbin "baserom.dol", 0x37C4A8, 0x18
-$$22231:
+"@2231":
 	.incbin "baserom.dol", 0x37C4C0, 0x10
-$$22232:
+"@2232":
 	.incbin "baserom.dol", 0x37C4D0, 0x10
-$$22233:
+"@2233":
 	.incbin "baserom.dol", 0x37C4E0, 0x10
-$$22234:
+"@2234":
 	.incbin "baserom.dol", 0x37C4F0, 0x14
-$$22235:
+"@2235":
 	.incbin "baserom.dol", 0x37C504, 0x14
-$$22334:
+"@2334":
 	.incbin "baserom.dol", 0x37C518, 0x14
-$$22335:
+"@2335":
 	.incbin "baserom.dol", 0x37C52C, 0x1C
-$$22337:
+"@2337":
 	.incbin "baserom.dol", 0x37C548, 0x10
-$$22338:
+"@2338":
 	.incbin "baserom.dol", 0x37C558, 0x14
-$$22339:
+"@2339":
 	.incbin "baserom.dol", 0x37C56C, 0x14
-$$22340:
+"@2340":
 	.incbin "baserom.dol", 0x37C580, 0x18
-$$22342:
+"@2342":
 	.incbin "baserom.dol", 0x37C598, 0x18
-$$22343:
+"@2343":
 	.incbin "baserom.dol", 0x37C5B0, 0x18
-$$22344:
+"@2344":
 	.incbin "baserom.dol", 0x37C5C8, 0x1C
-$$22345:
+"@2345":
 	.incbin "baserom.dol", 0x37C5E4, 0x14
-$$22346:
+"@2346":
 	.incbin "baserom.dol", 0x37C5F8, 0x18
-$$22347:
+"@2347":
 	.incbin "baserom.dol", 0x37C610, 0x14
-$$22349:
+"@2349":
 	.incbin "baserom.dol", 0x37C624, 0x14
-$$22350:
+"@2350":
 	.incbin "baserom.dol", 0x37C638, 0x18
-$$22351:
+"@2351":
 	.incbin "baserom.dol", 0x37C650, 0x14
-$$22352:
+"@2352":
 	.incbin "baserom.dol", 0x37C664, 0x18
-$$22353:
+"@2353":
 	.incbin "baserom.dol", 0x37C67C, 0x14
-$$22354:
+"@2354":
 	.incbin "baserom.dol", 0x37C690, 0xC
-$$22355:
+"@2355":
 	.incbin "baserom.dol", 0x37C69C, 0x18
-$$22357:
+"@2357":
 	.incbin "baserom.dol", 0x37C6B4, 0x18
-$$22359:
+"@2359":
 	.incbin "baserom.dol", 0x37C6CC, 0x18
-$$22360:
+"@2360":
 	.incbin "baserom.dol", 0x37C6E4, 0x14
-$$22361:
+"@2361":
 	.incbin "baserom.dol", 0x37C6F8, 0x14
-$$22363:
+"@2363":
 	.incbin "baserom.dol", 0x37C70C, 0x10
-$$22365:
+"@2365":
 	.incbin "baserom.dol", 0x37C71C, 0x10
-$$22367:
+"@2367":
 	.incbin "baserom.dol", 0x37C72C, 0x14
-$$22368:
+"@2368":
 	.incbin "baserom.dol", 0x37C740, 0x18
-$$22369:
+"@2369":
 	.incbin "baserom.dol", 0x37C758, 0x18
-$$22370:
+"@2370":
 	.incbin "baserom.dol", 0x37C770, 0x18
-$$22371:
+"@2371":
 	.incbin "baserom.dol", 0x37C788, 0x18
-$$22372:
+"@2372":
 	.incbin "baserom.dol", 0x37C7A0, 0x14
-$$22373:
+"@2373":
 	.incbin "baserom.dol", 0x37C7B4, 0x14
-$$22374:
+"@2374":
 	.incbin "baserom.dol", 0x37C7C8, 0x10
-$$22417:
+"@2417":
 	.incbin "baserom.dol", 0x37C7D8, 0x14
-$$22418:
+"@2418":
 	.incbin "baserom.dol", 0x37C7EC, 0x10
-$$22420:
+"@2420":
 	.incbin "baserom.dol", 0x37C7FC, 0x14
-$$22421:
+"@2421":
 	.incbin "baserom.dol", 0x37C810, 0x14
-$$22422:
+"@2422":
 	.incbin "baserom.dol", 0x37C824, 0x14
-$$22423:
+"@2423":
 	.incbin "baserom.dol", 0x37C838, 0x14
-$$22424:
+"@2424":
 	.incbin "baserom.dol", 0x37C84C, 0x14
-$$22425:
+"@2425":
 	.incbin "baserom.dol", 0x37C860, 0x14
-$$22426:
+"@2426":
 	.incbin "baserom.dol", 0x37C874, 0x14
-$$22427:
+"@2427":
 	.incbin "baserom.dol", 0x37C888, 0x14
-$$22428:
+"@2428":
 	.incbin "baserom.dol", 0x37C89C, 0x14
-$$22429:
+"@2429":
 	.incbin "baserom.dol", 0x37C8B0, 0x14
-$$22430:
+"@2430":
 	.incbin "baserom.dol", 0x37C8C4, 0x18
-$$22431:
+"@2431":
 	.incbin "baserom.dol", 0x37C8DC, 0x14
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sSaveFileName$1960:
-  .4byte $$21961
-  .4byte $$21961
-  .4byte $$21961
-  .4byte $$21961
-  .4byte $$21961
-  .4byte $$21962
-  .4byte $$21963
-  .4byte $$21964
-  .4byte $$21965
-  .4byte $$21966
-  .4byte $$21966
-  .4byte $$21966
-  .4byte $$21967
-  .4byte $$21968
-  .4byte $$21969
-  .4byte $$21970
-  .4byte $$21971
-  .4byte $$21972
-  .4byte $$21973
-  .4byte $$21974
-  .4byte $$21975
-  .4byte $$21976
-  .4byte $$21977
-  .4byte $$21978
-  .4byte $$21979
-  .4byte $$21980
-  .4byte $$21981
-  .4byte $$21982
-  .4byte $$21983
+  .4byte "@1961"
+  .4byte "@1961"
+  .4byte "@1961"
+  .4byte "@1961"
+  .4byte "@1961"
+  .4byte "@1962"
+  .4byte "@1963"
+  .4byte "@1964"
+  .4byte "@1965"
+  .4byte "@1966"
+  .4byte "@1966"
+  .4byte "@1966"
+  .4byte "@1967"
+  .4byte "@1968"
+  .4byte "@1969"
+  .4byte "@1970"
+  .4byte "@1971"
+  .4byte "@1972"
+  .4byte "@1973"
+  .4byte "@1974"
+  .4byte "@1975"
+  .4byte "@1976"
+  .4byte "@1977"
+  .4byte "@1978"
+  .4byte "@1979"
+  .4byte "@1980"
+  .4byte "@1981"
+  .4byte "@1982"
+  .4byte "@1983"
   .4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22161:
+"@2161":
 	.incbin "baserom.dol", 0x3E63B8, 0x4
-$$22163:
+"@2163":
 	.incbin "baserom.dol", 0x3E63BC, 0x4
-$$22165:
+"@2165":
 	.incbin "baserom.dol", 0x3E63C0, 0x4
-$$22167:
+"@2167":
 	.incbin "baserom.dol", 0x3E63C4, 0x4
-$$22169:
+"@2169":
 	.incbin "baserom.dol", 0x3E63C8, 0x4
-$$22171:
+"@2171":
 	.incbin "baserom.dol", 0x3E63CC, 0x4
-$$22173:
+"@2173":
 	.incbin "baserom.dol", 0x3E63D0, 0x4
-$$22175:
+"@2175":
 	.incbin "baserom.dol", 0x3E63D4, 0x4
-$$22177:
+"@2177":
 	.incbin "baserom.dol", 0x3E63D8, 0x4
-$$22180:
+"@2180":
 	.incbin "baserom.dol", 0x3E63DC, 0x4
-$$22182:
+"@2182":
 	.incbin "baserom.dol", 0x3E63E0, 0x4
-$$22184:
+"@2184":
 	.incbin "baserom.dol", 0x3E63E4, 0x4
-$$22187:
+"@2187":
 	.incbin "baserom.dol", 0x3E63E8, 0x4
-$$22189:
+"@2189":
 	.incbin "baserom.dol", 0x3E63EC, 0x4
-$$22194:
+"@2194":
 	.incbin "baserom.dol", 0x3E63F0, 0x4
-$$22196:
+"@2196":
 	.incbin "baserom.dol", 0x3E63F4, 0x4
-$$22198:
+"@2198":
 	.incbin "baserom.dol", 0x3E63F8, 0x4
-$$22200:
+"@2200":
 	.incbin "baserom.dol", 0x3E63FC, 0x4
-$$22202:
+"@2202":
 	.incbin "baserom.dol", 0x3E6400, 0x4
-$$22204:
+"@2204":
 	.incbin "baserom.dol", 0x3E6404, 0x4
-$$22206:
+"@2206":
 	.incbin "baserom.dol", 0x3E6408, 0x4
-$$22208:
+"@2208":
 	.incbin "baserom.dol", 0x3E640C, 0x4
-$$22210:
+"@2210":
 	.incbin "baserom.dol", 0x3E6410, 0x4
-$$22212:
+"@2212":
 	.incbin "baserom.dol", 0x3E6414, 0x4
-$$22214:
+"@2214":
 	.incbin "baserom.dol", 0x3E6418, 0x4
-$$22216:
+"@2216":
 	.incbin "baserom.dol", 0x3E641C, 0x4
-$$22220:
+"@2220":
 	.incbin "baserom.dol", 0x3E6420, 0x4
-$$22222:
+"@2222":
 	.incbin "baserom.dol", 0x3E6424, 0x4
-$$22225:
+"@2225":
 	.incbin "baserom.dol", 0x3E6428, 0x4
-$$22227:
+"@2227":
 	.incbin "baserom.dol", 0x3E642C, 0x4
-$$22230:
+"@2230":
 	.incbin "baserom.dol", 0x3E6430, 0x4
-$$22336:
+"@2336":
 	.incbin "baserom.dol", 0x3E6434, 0x4
-$$22341:
+"@2341":
 	.incbin "baserom.dol", 0x3E6438, 0x4
-$$22348:
+"@2348":
 	.incbin "baserom.dol", 0x3E643C, 0x4
-$$22356:
+"@2356":
 	.incbin "baserom.dol", 0x3E6440, 0x4
-$$22358:
+"@2358":
 	.incbin "baserom.dol", 0x3E6444, 0x4
-$$22362:
+"@2362":
 	.incbin "baserom.dol", 0x3E6448, 0x4
-$$22364:
+"@2364":
 	.incbin "baserom.dol", 0x3E644C, 0x4
-$$22366:
+"@2366":
 	.incbin "baserom.dol", 0x3E6450, 0x4
-$$22375:
+"@2375":
 	.incbin "baserom.dol", 0x3E6454, 0x4
-$$22419:
+"@2419":
 	.incbin "baserom.dol", 0x3E6458, 0x8

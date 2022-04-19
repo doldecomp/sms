@@ -69,8 +69,8 @@ lbl_802A2334:
 /* 802A235C 0029F29C  38 61 00 1C */	addi r3, r1, 0x1c
 /* 802A2360 0029F2A0  80 9F 01 24 */	lwz r4, 0x124(r31)
 /* 802A2364 0029F2A4  90 04 00 00 */	stw r0, 0(r4)
-/* 802A2368 0029F2A8  C0 22 E9 C8 */	lfs f1, $$22196@sda21(r2)
-/* 802A236C 0029F2AC  C0 02 E9 CC */	lfs f0, $$22197@sda21(r2)
+/* 802A2368 0029F2A8  C0 22 E9 C8 */	lfs f1, "@2196"@sda21(r2)
+/* 802A236C 0029F2AC  C0 02 E9 CC */	lfs f0, "@2197"@sda21(r2)
 /* 802A2370 0029F2B0  D0 21 00 58 */	stfs f1, 0x58(r1)
 /* 802A2374 0029F2B4  D0 21 00 4C */	stfs f1, 0x4c(r1)
 /* 802A2378 0029F2B8  D0 21 00 5C */	stfs f1, 0x5c(r1)
@@ -135,9 +135,9 @@ loadAfter__17TOneShotGeneratorFv:
 /* 802A2448 0029F388  4B FA 69 01 */	bl getGraphByName__10TConductorFPCc
 /* 802A244C 0029F38C  90 7D 00 74 */	stw r3, 0x74(r29)
 lbl_802A2450:
-/* 802A2450 0029F390  C0 22 E9 D0 */	lfs f1, $$22231@sda21(r2)
+/* 802A2450 0029F390  C0 22 E9 D0 */	lfs f1, "@2231"@sda21(r2)
 /* 802A2454 0029F394  3C 60 02 00 */	lis r3, 0x02000001@ha
-/* 802A2458 0029F398  C0 42 E9 D4 */	lfs f2, $$22232@sda21(r2)
+/* 802A2458 0029F398  C0 42 E9 D4 */	lfs f2, "@2232"@sda21(r2)
 /* 802A245C 0029F39C  38 83 00 01 */	addi r4, r3, 0x02000001@l
 /* 802A2460 0029F3A0  FC 60 08 90 */	fmr f3, f1
 /* 802A2464 0029F3A4  FC 80 10 90 */	fmr f4, f2
@@ -146,8 +146,8 @@ lbl_802A2450:
 /* 802A2470 0029F3B0  3C C0 80 00 */	lis r6, 0x8000
 /* 802A2474 0029F3B4  4B E7 B3 85 */	bl initHitActor__9THitActorFUlUsiffff
 /* 802A2478 0029F3B8  83 C1 00 08 */	lwz r30, 8(r1)
-/* 802A247C 0029F3BC  3C 60 80 3A */	lis r3, $$22233@ha
-/* 802A2480 0029F3C0  3B E3 9A 50 */	addi r31, r3, $$22233@l
+/* 802A247C 0029F3BC  3C 60 80 3A */	lis r3, "@2233"@ha
+/* 802A2480 0029F3C0  3B E3 9A 50 */	addi r31, r3, "@2233"@l
 /* 802A2484 0029F3C4  80 1E 00 64 */	lwz r0, 0x64(r30)
 /* 802A2488 0029F3C8  38 7F 00 00 */	addi r3, r31, 0
 /* 802A248C 0029F3CC  54 00 00 3C */	rlwinm r0, r0, 0, 0, 0x1e
@@ -165,12 +165,12 @@ lbl_802A2450:
 /* 802A24BC 0029F3FC  3B E3 00 10 */	addi r31, r3, 0x10
 /* 802A24C0 0029F400  38 61 00 38 */	addi r3, r1, 0x38
 /* 802A24C4 0029F404  38 9F 00 08 */	addi r4, r31, 8
-/* 802A24C8 0029F408  4B D9 1E 9D */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFPQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$16TNode_
+/* 802A24C8 0029F408  4B D9 1E 9D */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFPQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>6TNode_"
 /* 802A24CC 0029F40C  80 01 00 38 */	lwz r0, 0x38(r1)
 /* 802A24D0 0029F410  38 61 00 54 */	addi r3, r1, 0x54
 /* 802A24D4 0029F414  38 81 00 34 */	addi r4, r1, 0x34
 /* 802A24D8 0029F418  90 01 00 34 */	stw r0, 0x34(r1)
-/* 802A24DC 0029F41C  4B DA 27 55 */	bl __ct__Q37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorFRCQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iterator
+/* 802A24DC 0029F41C  4B DA 27 55 */	bl "__ct__Q37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorFRCQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iterator"
 /* 802A24E0 0029F420  80 01 00 54 */	lwz r0, 0x54(r1)
 /* 802A24E4 0029F424  38 A1 00 44 */	addi r5, r1, 0x44
 /* 802A24E8 0029F428  38 9F 00 00 */	addi r4, r31, 0
@@ -179,7 +179,7 @@ lbl_802A2450:
 /* 802A24F4 0029F434  38 C1 00 08 */	addi r6, r1, 8
 /* 802A24F8 0029F438  80 01 00 50 */	lwz r0, 0x50(r1)
 /* 802A24FC 0029F43C  90 01 00 44 */	stw r0, 0x44(r1)
-/* 802A2500 0029F440  4B D9 1E 6D */	bl insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList$$0Pv$$4Q27JGadget14TAllocator$$0Pv$$1$$18iteratorRCPv
+/* 802A2500 0029F440  4B D9 1E 6D */	bl "insert__Q27JGadget18TList_pointer_voidFQ37JGadget36TList<Pv,Q27JGadget14TAllocator<Pv>>8iteratorRCPv"
 /* 802A2504 0029F444  80 6D 9C 28 */	lwz r3, gpConductor@sda21(r13)
 /* 802A2508 0029F448  7F C4 F3 78 */	mr r4, r30
 /* 802A250C 0029F44C  4B FA 6C A9 */	bl registerOtherObj__10TConductorFPQ26JDrama8TViewObj
@@ -288,8 +288,8 @@ lbl_802A2670:
 /* 802A2674 0029F5B4  38 61 00 1C */	addi r3, r1, 0x1c
 /* 802A2678 0029F5B8  80 9F 01 24 */	lwz r4, 0x124(r31)
 /* 802A267C 0029F5BC  90 04 00 00 */	stw r0, 0(r4)
-/* 802A2680 0029F5C0  C0 22 E9 C8 */	lfs f1, $$22196@sda21(r2)
-/* 802A2684 0029F5C4  C0 02 E9 CC */	lfs f0, $$22197@sda21(r2)
+/* 802A2680 0029F5C0  C0 22 E9 C8 */	lfs f1, "@2196"@sda21(r2)
+/* 802A2684 0029F5C4  C0 02 E9 CC */	lfs f0, "@2197"@sda21(r2)
 /* 802A2688 0029F5C8  D0 21 00 58 */	stfs f1, 0x58(r1)
 /* 802A268C 0029F5CC  D0 21 00 4C */	stfs f1, 0x4c(r1)
 /* 802A2690 0029F5D0  D0 21 00 5C */	stfs f1, 0x5c(r1)
@@ -402,11 +402,11 @@ lbl_802A27F4:
 /* 802A2824 0029F764  83 FC 00 38 */	lwz r31, 0x38(r28)
 /* 802A2828 0029F768  4B DE 32 9D */	bl rand
 /* 802A282C 0029F76C  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802A2830 0029F770  C8 62 E9 E0 */	lfd f3, $$22301@sda21(r2)
+/* 802A2830 0029F770  C8 62 E9 E0 */	lfd f3, "@2301"@sda21(r2)
 /* 802A2834 0029F774  90 01 00 7C */	stw r0, 0x7c(r1)
 /* 802A2838 0029F778  3C 60 43 30 */	lis r3, 0x4330
 /* 802A283C 0029F77C  6F E0 80 00 */	xoris r0, r31, 0x8000
-/* 802A2840 0029F780  C0 22 E9 D8 */	lfs f1, $$22299@sda21(r2)
+/* 802A2840 0029F780  C0 22 E9 D8 */	lfs f1, "@2299"@sda21(r2)
 /* 802A2844 0029F784  90 61 00 78 */	stw r3, 0x78(r1)
 /* 802A2848 0029F788  7F 84 E3 78 */	mr r4, r28
 /* 802A284C 0029F78C  90 01 00 74 */	stw r0, 0x74(r1)
@@ -502,14 +502,14 @@ lbl_802A2980:
 /* 802A2994 0029F8D4  38 21 00 18 */	addi r1, r1, 0x18
 /* 802A2998 0029F8D8  4E 80 00 20 */	blr 
 
-.global $$232$$2__dt__17TOneShotGeneratorFv
-$$232$$2__dt__17TOneShotGeneratorFv:
+.global "@32@__dt__17TOneShotGeneratorFv"
+"@32@__dt__17TOneShotGeneratorFv":
 /* 802A299C 0029F8DC  38 63 FF E0 */	addi r3, r3, -32
 /* 802A29A0 0029F8E0  4B FF F8 DC */	b __dt__17TOneShotGeneratorFv
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$22233:
+"@2233":
 	.incbin "baserom.dol", 0x396A50, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -526,7 +526,7 @@ __vt__17TOneShotGenerator:
   .4byte perform__9THitActorFUlPQ26JDrama9TGraphics
   .4byte 0
   .4byte 0
-  .4byte $$232$$2__dt__17TOneShotGeneratorFv
+  .4byte "@32@__dt__17TOneShotGeneratorFv"
   .4byte JSGFGetType__Q26JStage6TActorCFv
   .4byte JSGGetName__Q26JStage7TObjectCFv
   .4byte JSGGetFlag__Q26JStage7TObjectCFv
@@ -536,12 +536,12 @@ __vt__17TOneShotGenerator:
   .4byte JSGGetParent__Q26JStage7TObjectCFPPQ26JStage7TObjectPUl
   .4byte JSGSetParent__Q26JStage7TObjectFPQ26JStage7TObjectUl
   .4byte JSGSetRelation__Q26JStage7TObjectFbPQ26JStage7TObjectUl
-  .4byte $$232$$2JSGGetTranslation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetTranslation__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetScaling__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetScaling__Q26JDrama6TActorFRC3Vec
-  .4byte $$232$$2JSGGetRotation__Q26JDrama6TActorCFP3Vec
-  .4byte $$232$$2JSGSetRotation__Q26JDrama6TActorFRC3Vec
+  .4byte "@32@JSGGetTranslation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetTranslation__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetScaling__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetScaling__Q26JDrama6TActorFRC3Vec"
+  .4byte "@32@JSGGetRotation__Q26JDrama6TActorCFP3Vec"
+  .4byte "@32@JSGSetRotation__Q26JDrama6TActorFRC3Vec"
   .4byte JSGGetShape__Q26JStage6TActorCFv
   .4byte JSGSetShape__Q26JStage6TActorFUl
   .4byte JSGGetAnimation__Q26JStage6TActorCFv
@@ -570,15 +570,15 @@ __vt__10TGenerator:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$22196:
+"@2196":
   .4byte 0
-$$22197:
+"@2197":
 	.incbin "baserom.dol", 0x3EA6CC, 0x4
-$$22231:
+"@2231":
 	.incbin "baserom.dol", 0x3EA6D0, 0x4
-$$22232:
+"@2232":
 	.incbin "baserom.dol", 0x3EA6D4, 0x4
-$$22299:
+"@2299":
 	.incbin "baserom.dol", 0x3EA6D8, 0x8
-$$22301:
+"@2301":
 	.incbin "baserom.dol", 0x3EA6E0, 0x8

@@ -573,7 +573,7 @@ lbl_80008970:
 .global fetchResource__14JKRCompArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl
 fetchResource__14JKRCompArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl:
 /* 8000898C 000058CC  7C 08 02 A6 */	mflr r0
-/* 80008990 000058D0  3D 00 80 37 */	lis r8, $$21210@ha
+/* 80008990 000058D0  3D 00 80 37 */	lis r8, "@1210"@ha
 /* 80008994 000058D4  90 01 00 04 */	stw r0, 4(r1)
 /* 80008998 000058D8  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 8000899C 000058DC  BE E1 00 34 */	stmw r23, 0x34(r1)
@@ -582,7 +582,7 @@ fetchResource__14JKRCompArchiveFPvUlPQ210JKRArchive12SDIFileEntryPUl:
 /* 800089A8 000058E8  3B E4 00 00 */	addi r31, r4, 0
 /* 800089AC 000058EC  3B 25 00 00 */	addi r25, r5, 0
 /* 800089B0 000058F0  3B 67 00 00 */	addi r27, r7, 0
-/* 800089B4 000058F4  3A E8 00 60 */	addi r23, r8, $$21210@l
+/* 800089B4 000058F4  3A E8 00 60 */	addi r23, r8, "@1210"@l
 /* 800089B8 000058F8  3B C0 00 00 */	li r30, 0
 /* 800089BC 000058FC  80 C6 00 0C */	lwz r6, 0xc(r6)
 /* 800089C0 00005900  38 06 00 1F */	addi r0, r6, 0x1f
@@ -806,17 +806,17 @@ lbl_80008C98:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x36D060, 0x10
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x36D070, 0xC
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x36D07C, 0xC
-$$21809:
+"@1809":
 	.incbin "baserom.dol", 0x36D088, 0x14
-$$21810:
+"@1810":
 	.incbin "baserom.dol", 0x36D09C, 0x20
-$$21811:
+"@1811":
 	.incbin "baserom.dol", 0x36D0BC, 0x1C
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000

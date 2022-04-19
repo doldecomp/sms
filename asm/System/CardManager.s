@@ -4,12 +4,12 @@
 .global cmdLoop__12TCardManagerFv
 cmdLoop__12TCardManagerFv:
 /* 801068D4 00103814  7C 08 02 A6 */	mflr r0
-/* 801068D8 00103818  3C 80 80 3B */	lis r4, $$21818@ha
+/* 801068D8 00103818  3C 80 80 3B */	lis r4, "@1818"@ha
 /* 801068DC 0010381C  90 01 00 04 */	stw r0, 4(r1)
 /* 801068E0 00103820  94 21 FF A8 */	stwu r1, -0x58(r1)
 /* 801068E4 00103824  BF 21 00 3C */	stmw r25, 0x3c(r1)
 /* 801068E8 00103828  3B A3 00 00 */	addi r29, r3, 0
-/* 801068EC 0010382C  3B E4 48 50 */	addi r31, r4, $$21818@l
+/* 801068EC 0010382C  3B E4 48 50 */	addi r31, r4, "@1818"@l
 /* 801068F0 00103830  3B C0 00 01 */	li r30, 1
 /* 801068F4 00103834  48 00 01 E8 */	b lbl_80106ADC
 lbl_801068F8:
@@ -1014,9 +1014,9 @@ filledInitData___12TCardManagerFP12CARDFileInfo:
 /* 801076D8 00104618  7C 7D 1B 78 */	mr r29, r3
 /* 801076DC 0010461C  3B C4 00 00 */	addi r30, r4, 0
 /* 801076E0 00104620  80 03 00 0C */	lwz r0, 0xc(r3)
-/* 801076E4 00104624  3C 60 80 3B */	lis r3, $$21431@ha
+/* 801076E4 00104624  3C 60 80 3B */	lis r3, "@1431"@ha
 /* 801076E8 00104628  83 FD 01 30 */	lwz r31, 0x130(r29)
-/* 801076EC 0010462C  3B 23 47 F0 */	addi r25, r3, $$21431@l
+/* 801076EC 0010462C  3B 23 47 F0 */	addi r25, r3, "@1431"@l
 /* 801076F0 00104630  2C 00 00 01 */	cmpwi r0, 1
 /* 801076F4 00104634  40 82 01 CC */	bne lbl_801078C0
 /* 801076F8 00104638  38 7F 00 04 */	addi r3, r31, 4
@@ -1557,8 +1557,8 @@ getOptionWriteStream__12TCardManagerFP21JSUMemoryOutputStream:
 /* 80107E6C 00104DAC  7C 79 1B 78 */	mr r25, r3
 /* 80107E70 00104DB0  38 80 00 00 */	li r4, 0
 /* 80107E74 00104DB4  83 63 01 30 */	lwz r27, 0x130(r3)
-/* 80107E78 00104DB8  3C 60 80 3B */	lis r3, $$21431@ha
-/* 80107E7C 00104DBC  3B C3 47 F0 */	addi r30, r3, $$21431@l
+/* 80107E78 00104DB8  3C 60 80 3B */	lis r3, "@1431"@ha
+/* 80107E7C 00104DBC  3B C3 47 F0 */	addi r30, r3, "@1431"@l
 /* 80107E80 00104DC0  38 7B 00 04 */	addi r3, r27, 4
 /* 80107E84 00104DC4  4B EF B2 7D */	bl memset
 /* 80107E88 00104DC8  3F E0 00 0A */	lis r31, 0x000A0001@ha
@@ -2263,39 +2263,39 @@ lbl_80108814:
 .balign 8
 CardFileName:
 	.incbin "baserom.dol", 0x375350, 0x20
-$$21632:
+"@1632":
 	.incbin "baserom.dol", 0x375370, 0x1C
-$$21633:
+"@1633":
 	.incbin "baserom.dol", 0x37538C, 0x18
-$$21634:
+"@1634":
 	.incbin "baserom.dol", 0x3753A4, 0x1C
-$$21635:
+"@1635":
 	.incbin "baserom.dol", 0x3753C0, 0x18
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
-$$21431:
+"@1431":
 	.incbin "baserom.dol", 0x3B17F0, 0xC
-$$21411:
+"@1411":
 	.incbin "baserom.dol", 0x3B17FC, 0xC
-$$21210:
+"@1210":
 	.incbin "baserom.dol", 0x3B1808, 0x10
 titles:
-  .4byte $$21632
-  .4byte $$21633
-  .4byte $$21633
-  .4byte $$21633
-  .4byte $$21633
-  .4byte $$21633
-  .4byte $$21633
+  .4byte "@1632"
+  .4byte "@1633"
+  .4byte "@1633"
+  .4byte "@1633"
+  .4byte "@1633"
+  .4byte "@1633"
+  .4byte "@1633"
 comments:
-  .4byte $$21634
-  .4byte $$21635
-  .4byte $$21635
-  .4byte $$21635
-  .4byte $$21635
-  .4byte $$21635
-  .4byte $$21635
-$$21818:
+  .4byte "@1634"
+  .4byte "@1635"
+  .4byte "@1635"
+  .4byte "@1635"
+  .4byte "@1635"
+  .4byte "@1635"
+  .4byte "@1635"
+"@1818":
     .4byte lbl_80106ACC
     .4byte lbl_80106934
     .4byte lbl_801069A4

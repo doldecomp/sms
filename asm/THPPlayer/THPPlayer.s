@@ -48,7 +48,7 @@ lbl_800BE5B4:
 lbl_800BE5C0:
 /* 800BE5C0 000BB500  4B FD 1C 0D */	bl OSDisableInterrupts
 /* 800BE5C4 000BB504  6F 80 80 00 */	xoris r0, r28, 0x8000
-/* 800BE5C8 000BB508  C8 42 8C 18 */	lfd f2, $$2385@sda21(r2)
+/* 800BE5C8 000BB508  C8 42 8C 18 */	lfd f2, "@385"@sda21(r2)
 /* 800BE5CC 000BB50C  90 01 00 14 */	stw r0, 0x14(r1)
 /* 800BE5D0 000BB510  3C 80 43 30 */	lis r4, 0x4330
 /* 800BE5D4 000BB514  2C 1D 00 00 */	cmpwi r29, 0
@@ -402,7 +402,7 @@ lbl_800BEA60:
 /* 800BEA74 000BB9B4  38 60 00 01 */	li r3, 1
 /* 800BEA78 000BB9B8  48 00 00 B8 */	b lbl_800BEB30
 lbl_800BEA7C:
-/* 800BEA7C 000BB9BC  C0 22 8C 20 */	lfs f1, $$2479@sda21(r2)
+/* 800BEA7C 000BB9BC  C0 22 8C 20 */	lfs f1, "@479"@sda21(r2)
 /* 800BEA80 000BB9C0  C0 1F 00 4C */	lfs f0, 0x4c(r31)
 /* 800BEA84 000BB9C4  EC 01 00 32 */	fmuls f0, f1, f0
 /* 800BEA88 000BB9C8  FC 00 00 1E */	fctiwz f0, f0
@@ -1306,7 +1306,7 @@ lbl_800BF6E0:
 /* 800BF6EC 000BC62C  38 A0 00 30 */	li r5, 0x30
 /* 800BF6F0 000BC630  4B F4 3B 05 */	bl memcpy
 /* 800BF6F4 000BC634  38 7C 00 00 */	addi r3, r28, 0
-/* 800BF6F8 000BC638  38 82 8C 24 */	addi r4, r2, $$2791@sda21
+/* 800BF6F8 000BC638  38 82 8C 24 */	addi r4, r2, "@791"@sda21
 /* 800BF6FC 000BC63C  4B FC 65 61 */	bl strcmp
 /* 800BF700 000BC640  2C 03 00 00 */	cmpwi r3, 0
 /* 800BF704 000BC644  41 82 00 14 */	beq lbl_800BF718
@@ -1417,7 +1417,7 @@ lbl_800BF85C:
 /* 800BF87C 000BC7BC  98 9D 00 A6 */	stb r4, 0xa6(r29)
 /* 800BF880 000BC7C0  93 DD 00 B0 */	stw r30, 0xb0(r29)
 /* 800BF884 000BC7C4  90 1F 00 00 */	stw r0, 0(r31)
-/* 800BF888 000BC7C8  C0 02 8C 28 */	lfs f0, $$2792@sda21(r2)
+/* 800BF888 000BC7C8  C0 02 8C 28 */	lfs f0, "@792"@sda21(r2)
 /* 800BF88C 000BC7CC  D0 1D 00 DC */	stfs f0, 0xdc(r29)
 /* 800BF890 000BC7D0  C0 1D 00 DC */	lfs f0, 0xdc(r29)
 /* 800BF894 000BC7D4  D0 1D 00 E0 */	stfs f0, 0xe0(r29)
@@ -1557,13 +1557,13 @@ VolumeTable:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2385:
+"@385":
 	.incbin "baserom.dol", 0x3E4918, 0x8
-$$2479:
+"@479":
 	.incbin "baserom.dol", 0x3E4920, 0x4
-$$2791:
+"@791":
 	.incbin "baserom.dol", 0x3E4924, 0x4
-$$2792:
+"@792":
 	.incbin "baserom.dol", 0x3E4928, 0x8
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0

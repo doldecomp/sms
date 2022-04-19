@@ -11,7 +11,7 @@ incTimer__15JPABaseParticleFv:
 /* 80073280 000701C0  48 00 00 14 */	b lbl_80073294
 lbl_80073284:
 /* 80073284 000701C4  C0 23 00 44 */	lfs f1, 0x44(r3)
-/* 80073288 000701C8  C0 02 88 5C */	lfs f0, $$21689@sda21(r2)
+/* 80073288 000701C8  C0 02 88 5C */	lfs f0, "@1689"@sda21(r2)
 /* 8007328C 000701CC  EC 01 00 2A */	fadds f0, f1, f0
 /* 80073290 000701D0  D0 03 00 44 */	stfs f0, 0x44(r3)
 lbl_80073294:
@@ -20,7 +20,7 @@ lbl_80073294:
 /* 8007329C 000701DC  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 800732A0 000701E0  4C 41 13 82 */	cror 2, 1, 2
 /* 800732A4 000701E4  40 82 00 1C */	bne lbl_800732C0
-/* 800732A8 000701E8  C0 02 88 5C */	lfs f0, $$21689@sda21(r2)
+/* 800732A8 000701E8  C0 02 88 5C */	lfs f0, "@1689"@sda21(r2)
 /* 800732AC 000701EC  D0 03 00 48 */	stfs f0, 0x48(r3)
 /* 800732B0 000701F0  80 03 00 10 */	lwz r0, 0x10(r3)
 /* 800732B4 000701F4  60 00 00 80 */	ori r0, r0, 0x80
@@ -50,8 +50,8 @@ lbl_800732F8:
 /* 80073300 00070240  7C 08 03 A6 */	mtlr r0
 /* 80073304 00070244  4E 80 00 20 */	blr 
 
-.global execute__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
-execute__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle:
+.global "execute__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
+"execute__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle":
 /* 80073308 00070248  4E 80 00 20 */	blr 
 
 .global drawParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
@@ -73,8 +73,8 @@ lbl_80073338:
 /* 80073340 00070280  7C 08 03 A6 */	mtlr r0
 /* 80073344 00070284  4E 80 00 20 */	blr 
 
-.global draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle
-draw__54JPACallBackBase2$$0P14JPABaseEmitter$$4P15JPABaseParticle$$1FP14JPABaseEmitterP15JPABaseParticle:
+.global "draw__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle"
+"draw__54JPACallBackBase2<P14JPABaseEmitter,P15JPABaseParticle>FP14JPABaseEmitterP15JPABaseParticle":
 /* 80073348 00070288  4E 80 00 20 */	blr 
 
 .global __ct__11JPAParticleFv
@@ -103,14 +103,14 @@ __ct__11JPAParticleFv:
 init__11JPAParticleFv:
 /* 80073398 000702D8  38 00 00 00 */	li r0, 0
 /* 8007339C 000702DC  90 03 00 10 */	stw r0, 0x10(r3)
-/* 800733A0 000702E0  C0 22 88 58 */	lfs f1, $$21675@sda21(r2)
+/* 800733A0 000702E0  C0 22 88 58 */	lfs f1, "@1675"@sda21(r2)
 /* 800733A4 000702E4  D0 23 00 28 */	stfs f1, 0x28(r3)
 /* 800733A8 000702E8  D0 23 00 24 */	stfs f1, 0x24(r3)
 /* 800733AC 000702EC  D0 23 00 20 */	stfs f1, 0x20(r3)
 /* 800733B0 000702F0  D0 23 00 44 */	stfs f1, 0x44(r3)
 /* 800733B4 000702F4  90 03 00 50 */	stw r0, 0x50(r3)
 /* 800733B8 000702F8  D0 23 00 78 */	stfs f1, 0x78(r3)
-/* 800733BC 000702FC  C0 02 88 5C */	lfs f0, $$21689@sda21(r2)
+/* 800733BC 000702FC  C0 02 88 5C */	lfs f0, "@1689"@sda21(r2)
 /* 800733C0 00070300  D0 03 00 80 */	stfs f0, 0x80(r3)
 /* 800733C4 00070304  D0 03 00 84 */	stfs f0, 0x84(r3)
 /* 800733C8 00070308  D0 23 00 9C */	stfs f1, 0x9c(r3)
@@ -176,7 +176,7 @@ calcVelocity__11JPAParticleFv:
 /* 800734A0 000703E0  93 E1 00 1C */	stw r31, 0x1c(r1)
 /* 800734A4 000703E4  7C 7F 1B 78 */	mr r31, r3
 /* 800734A8 000703E8  4B FF 90 C9 */	bl JPAGetEmitterInfoPtr__Fv
-/* 800734AC 000703EC  C0 02 88 58 */	lfs f0, $$21675@sda21(r2)
+/* 800734AC 000703EC  C0 02 88 58 */	lfs f0, "@1675"@sda21(r2)
 /* 800734B0 000703F0  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 800734B4 000703F4  D0 1F 00 8C */	stfs f0, 0x8c(r31)
 /* 800734B8 000703F8  D0 1F 00 88 */	stfs f0, 0x88(r31)
@@ -197,7 +197,7 @@ lbl_800734D4:
 /* 800734EC 0007042C  C0 03 00 2C */	lfs f0, 0x2c(r3)
 /* 800734F0 00070430  D0 1F 00 1C */	stfs f0, 0x1c(r31)
 lbl_800734F4:
-/* 800734F4 00070434  C0 02 88 58 */	lfs f0, $$21675@sda21(r2)
+/* 800734F4 00070434  C0 02 88 58 */	lfs f0, "@1675"@sda21(r2)
 /* 800734F8 00070438  C0 5F 00 78 */	lfs f2, 0x78(r31)
 /* 800734FC 0007043C  FC 00 10 00 */	fcmpu cr0, f0, f2
 /* 80073500 00070440  41 82 00 34 */	beq lbl_80073534
@@ -229,7 +229,7 @@ lbl_8007354C:
 /* 8007355C 0007049C  4B FF E7 AD */	bl affectField__15JPAFieldManagerFP11JPAParticle
 lbl_80073560:
 /* 80073560 000704A0  C0 3F 00 7C */	lfs f1, 0x7c(r31)
-/* 80073564 000704A4  C0 02 88 5C */	lfs f0, $$21689@sda21(r2)
+/* 80073564 000704A4  C0 02 88 5C */	lfs f0, "@1689"@sda21(r2)
 /* 80073568 000704A8  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 8007356C 000704AC  40 80 00 28 */	bge lbl_80073594
 /* 80073570 000704B0  C0 1F 00 5C */	lfs f0, 0x5c(r31)
@@ -323,8 +323,8 @@ calcGlobalPosition__15JPABaseParticleFv:
 /* 800736B4 000705F4  7C 08 03 A6 */	mtlr r0
 /* 800736B8 000705F8  4E 80 00 20 */	blr 
 
-.global getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3$$0f$$1
-getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3$$0f$$1:
+.global "getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3<f>"
+"getCurrentPosition__15JPABaseParticleFRQ29JGeometry8TVec3<f>":
 /* 800736BC 000705FC  7C 08 02 A6 */	mflr r0
 /* 800736C0 00070600  90 01 00 04 */	stw r0, 4(r1)
 /* 800736C4 00070604  94 21 FF E8 */	stwu r1, -0x18(r1)
@@ -376,7 +376,7 @@ checkCreateChildParticle__11JPAParticleFv:
 /* 80073770 000706B0  28 00 00 00 */	cmplwi r0, 0
 /* 80073774 000706B4  41 82 00 7C */	beq lbl_800737F0
 /* 80073778 000706B8  C0 3E 00 4C */	lfs f1, 0x4c(r30)
-/* 8007377C 000706BC  C0 02 88 5C */	lfs f0, $$21689@sda21(r2)
+/* 8007377C 000706BC  C0 02 88 5C */	lfs f0, "@1689"@sda21(r2)
 /* 80073780 000706C0  FC 01 00 40 */	fcmpo cr0, f1, f0
 /* 80073784 000706C4  40 81 00 14 */	ble lbl_80073798
 /* 80073788 000706C8  EC 01 00 28 */	fsubs f0, f1, f0
@@ -459,7 +459,7 @@ getDrawParamCPtr__11JPAParticleFv:
 
 .global getWidth__11JPAParticleFv
 getWidth__11JPAParticleFv:
-/* 8007384C 0007078C  C0 42 88 60 */	lfs f2, $$21820@sda21(r2)
+/* 8007384C 0007078C  C0 42 88 60 */	lfs f2, "@1820"@sda21(r2)
 /* 80073850 00070790  3C 80 80 41 */	lis r4, cb__7JPADraw@ha
 /* 80073854 00070794  C0 23 00 B0 */	lfs f1, 0xb0(r3)
 /* 80073858 00070798  38 64 8A 10 */	addi r3, r4, cb__7JPADraw@l
@@ -470,7 +470,7 @@ getWidth__11JPAParticleFv:
 
 .global getHeight__11JPAParticleFv
 getHeight__11JPAParticleFv:
-/* 8007386C 000707AC  C0 42 88 60 */	lfs f2, $$21820@sda21(r2)
+/* 8007386C 000707AC  C0 42 88 60 */	lfs f2, "@1820"@sda21(r2)
 /* 80073870 000707B0  3C 80 80 41 */	lis r4, cb__7JPADraw@ha
 /* 80073874 000707B4  C0 23 00 B4 */	lfs f1, 0xb4(r3)
 /* 80073878 000707B8  38 64 8A 10 */	addi r3, r4, cb__7JPADraw@l
@@ -492,10 +492,10 @@ __vt__11JPAParticle:
   .4byte drawParticleCallBack__15JPABaseParticleFP14JPABaseEmitter
   .4byte accessFVelVec__11JPAParticleFv
   .4byte accessFAccVec__11JPAParticleFv
-  .4byte getBaseVelVec__11JPAParticleCFRQ29JGeometry8TVec3$$0f$$1
+  .4byte "getBaseVelVec__11JPAParticleCFRQ29JGeometry8TVec3<f>"
   .4byte accessBaseVelVec__11JPAParticleFv
-  .4byte setBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3$$0f$$1
-  .4byte addBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3$$0f$$1
+  .4byte "setBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3<f>"
+  .4byte "addBaseVelVec__11JPAParticleFRCQ29JGeometry8TVec3<f>"
   .4byte getDynamicsWeight__11JPAParticleCFv
   .4byte getAirResistance__11JPAParticleCFv
   .4byte getCurrentDragForce__11JPAParticleCFv
@@ -531,9 +531,9 @@ __vt__15JPABaseParticle:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21675:
+"@1675":
   .4byte 0
-$$21689:
+"@1689":
 	.incbin "baserom.dol", 0x3E455C, 0x4
-$$21820:
+"@1820":
 	.incbin "baserom.dol", 0x3E4560, 0x8

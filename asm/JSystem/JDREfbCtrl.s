@@ -200,8 +200,8 @@ lbl_80042A98:
 /* 80042AB0 0003F9F0  38 21 00 60 */	addi r1, r1, 0x60
 /* 80042AB4 0003F9F4  4E 80 00 20 */	blr 
 
-.global __ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT$$0Us$$1
-__ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT$$0Us$$1:
+.global "__ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT<Us>"
+"__ct__Q26JDrama11TEfbCtrlTexFPCcQ26JDrama10TFlagT<Us>":
 /* 80042AB8 0003F9F8  7C 08 02 A6 */	mflr r0
 /* 80042ABC 0003F9FC  90 01 00 04 */	stw r0, 4(r1)
 /* 80042AC0 0003FA00  94 21 FF D0 */	stwu r1, -0x30(r1)

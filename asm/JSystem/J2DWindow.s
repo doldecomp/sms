@@ -1443,13 +1443,13 @@ drawContentsTexture__Q29J2DWindow7TextureFiiiiUc:
 /* 8001B564 000184A4  6C 00 80 00 */	xoris r0, r0, 0x8000
 /* 8001B568 000184A8  90 81 00 64 */	stw r4, 0x64(r1)
 /* 8001B56C 000184AC  3C C0 43 30 */	lis r6, 0x4330
-/* 8001B570 000184B0  C8 C2 81 98 */	lfd f6, $$21324@sda21(r2)
+/* 8001B570 000184B0  C8 C2 81 98 */	lfd f6, "@1324"@sda21(r2)
 /* 8001B574 000184B4  90 61 00 5C */	stw r3, 0x5c(r1)
 /* 8001B578 000184B8  7F 43 D3 78 */	mr r3, r26
-/* 8001B57C 000184BC  C0 62 81 90 */	lfs f3, $$21321@sda21(r2)
+/* 8001B57C 000184BC  C0 62 81 90 */	lfs f3, "@1321"@sda21(r2)
 /* 8001B580 000184C0  38 80 00 00 */	li r4, 0
 /* 8001B584 000184C4  90 A1 00 54 */	stw r5, 0x54(r1)
-/* 8001B588 000184C8  C0 42 81 94 */	lfs f2, $$21322@sda21(r2)
+/* 8001B588 000184C8  C0 42 81 94 */	lfs f2, "@1322"@sda21(r2)
 /* 8001B58C 000184CC  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 8001B590 000184D0  90 C1 00 60 */	stw r6, 0x60(r1)
 /* 8001B594 000184D4  90 C1 00 58 */	stw r6, 0x58(r1)
@@ -1561,7 +1561,7 @@ setTevMode__Q29J2DWindow7TextureFUcQ28JUtility6TColorQ28JUtility6TColor:
 /* 8001B730 00018670  39 00 00 00 */	li r8, 0
 /* 8001B734 00018674  39 20 00 02 */	li r9, 2
 /* 8001B738 00018678  48 08 E8 B9 */	bl GXSetChanCtrl
-/* 8001B73C 0001867C  80 02 81 A0 */	lwz r0, $$21329@sda21(r2)
+/* 8001B73C 0001867C  80 02 81 A0 */	lwz r0, "@1329"@sda21(r2)
 /* 8001B740 00018680  38 81 00 64 */	addi r4, r1, 0x64
 /* 8001B744 00018684  38 60 00 04 */	li r3, 4
 /* 8001B748 00018688  90 01 00 60 */	stw r0, 0x60(r1)
@@ -1814,11 +1814,11 @@ __vt__Q29J2DWindow7Texture:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21321:
+"@1321":
 	.incbin "baserom.dol", 0x3E3E90, 0x4
-$$21322:
+"@1322":
 	.incbin "baserom.dol", 0x3E3E94, 0x4
-$$21324:
+"@1324":
 	.incbin "baserom.dol", 0x3E3E98, 0x8
-$$21329:
+"@1329":
 	.incbin "baserom.dol", 0x3E3EA0, 0x8

@@ -1,7 +1,7 @@
 #ifndef __MEM_H
 #define __MEM_H
 
-#include <types.h>
+#include "dolphin/types.h"
 
 #ifdef __cplusplus
 extern "C" {

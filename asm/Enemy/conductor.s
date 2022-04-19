@@ -115,7 +115,7 @@ lbl_80247DB4:
 /* 80247DD0 00244D10  90 18 00 F0 */	stw r0, 0xf0(r24)
 /* 80247DD4 00244D14  48 00 00 38 */	b lbl_80247E0C
 lbl_80247DD8:
-/* 80247DD8 00244D18  C0 22 DC 20 */	lfs f1, $$23345@sda21(r2)
+/* 80247DD8 00244D18  C0 22 DC 20 */	lfs f1, "@3345"@sda21(r2)
 /* 80247DDC 00244D1C  38 7B 00 00 */	addi r3, r27, 0
 /* 80247DE0 00244D20  38 98 00 10 */	addi r4, r24, 0x10
 /* 80247DE4 00244D24  4B E7 94 C1 */	bl ViewFrustumClipCheck__FPQ26JDrama9TGraphicsP3Vecf
@@ -552,10 +552,10 @@ lbl_802483C4:
 /* 802483F0 00245330  C3 DE 00 B0 */	lfs f30, 0xb0(r30)
 /* 802483F4 00245334  4B E3 D6 D1 */	bl rand
 /* 802483F8 00245338  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802483FC 0024533C  C8 62 DC 38 */	lfd f3, $$23616@sda21(r2)
+/* 802483FC 0024533C  C8 62 DC 38 */	lfd f3, "@3616"@sda21(r2)
 /* 80248400 00245340  90 01 00 BC */	stw r0, 0xbc(r1)
 /* 80248404 00245344  3F 80 43 30 */	lis r28, 0x4330
-/* 80248408 00245348  C0 22 DC 24 */	lfs f1, $$23611@sda21(r2)
+/* 80248408 00245348  C0 22 DC 24 */	lfs f1, "@3611"@sda21(r2)
 /* 8024840C 0024534C  EC 1E F8 28 */	fsubs f0, f30, f31
 /* 80248410 00245350  93 81 00 B8 */	stw r28, 0xb8(r1)
 /* 80248414 00245354  C8 41 00 B8 */	lfd f2, 0xb8(r1)
@@ -564,15 +564,15 @@ lbl_802483C4:
 /* 80248420 00245360  EF E0 F8 7A */	fmadds f31, f0, f1, f31
 /* 80248424 00245364  4B E3 D6 A1 */	bl rand
 /* 80248428 00245368  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8024842C 0024536C  C8 82 DC 38 */	lfd f4, $$23616@sda21(r2)
+/* 8024842C 0024536C  C8 82 DC 38 */	lfd f4, "@3616"@sda21(r2)
 /* 80248430 00245370  90 01 00 B4 */	stw r0, 0xb4(r1)
 /* 80248434 00245374  38 81 00 94 */	addi r4, r1, 0x94
-/* 80248438 00245378  C0 62 DC 24 */	lfs f3, $$23611@sda21(r2)
+/* 80248438 00245378  C0 62 DC 24 */	lfs f3, "@3611"@sda21(r2)
 /* 8024843C 0024537C  38 A1 00 8C */	addi r5, r1, 0x8c
 /* 80248440 00245380  93 81 00 B0 */	stw r28, 0xb0(r1)
-/* 80248444 00245384  C0 22 DC 2C */	lfs f1, $$23613@sda21(r2)
+/* 80248444 00245384  C0 22 DC 2C */	lfs f1, "@3613"@sda21(r2)
 /* 80248448 00245388  C8 01 00 B0 */	lfd f0, 0xb0(r1)
-/* 8024844C 0024538C  C0 42 DC 28 */	lfs f2, $$23612@sda21(r2)
+/* 8024844C 0024538C  C0 42 DC 28 */	lfs f2, "@3612"@sda21(r2)
 /* 80248450 00245390  EC 80 20 28 */	fsubs f4, f0, f4
 /* 80248454 00245394  80 0D 8D EC */	lwz r0, jmaSinShift@sda21(r13)
 /* 80248458 00245398  80 ED 8D F0 */	lwz r7, jmaSinTable@sda21(r13)
@@ -595,8 +595,8 @@ lbl_802483C4:
 /* 8024849C 002453DC  EC 1F 00 7A */	fmadds f0, f31, f1, f0
 /* 802484A0 002453E0  D0 01 00 9C */	stfs f0, 0x9c(r1)
 /* 802484A4 002453E4  80 6D 9A B0 */	lwz r3, gpMap@sda21(r13)
-/* 802484A8 002453E8  4B F9 32 BD */	bl checkGround__4TMapCFRCQ29JGeometry8TVec3$$0f$$1PPC12TBGCheckData
-/* 802484AC 002453EC  C0 02 DC 30 */	lfs f0, $$23614@sda21(r2)
+/* 802484A8 002453E8  4B F9 32 BD */	bl "checkGround__4TMapCFRCQ29JGeometry8TVec3<f>PPC12TBGCheckData"
+/* 802484AC 002453EC  C0 02 DC 30 */	lfs f0, "@3614"@sda21(r2)
 /* 802484B0 002453F0  EC 00 08 2A */	fadds f0, f0, f1
 /* 802484B4 002453F4  D0 01 00 98 */	stfs f0, 0x98(r1)
 /* 802484B8 002453F8  80 6D 9A E8 */	lwz r3, gpPollution@sda21(r13)
@@ -610,15 +610,15 @@ lbl_802483C4:
 /* 802484D8 00245418  28 03 00 00 */	cmplwi r3, 0
 /* 802484DC 0024541C  41 82 00 7C */	beq lbl_80248558
 /* 802484E0 00245420  38 81 00 94 */	addi r4, r1, 0x94
-/* 802484E4 00245424  48 0D 0F 0D */	bl getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3$$0f$$1
+/* 802484E4 00245424  48 0D 0F 0D */	bl "getCylinderContains__20TAreaCylinderManagerFRCQ29JGeometry8TVec3<f>"
 /* 802484E8 00245428  7C 7D 1B 79 */	or. r29, r3, r3
 /* 802484EC 0024542C  40 82 00 38 */	bne lbl_80248524
 /* 802484F0 00245430  C3 DE 00 EC */	lfs f30, 0xec(r30)
 /* 802484F4 00245434  4B E3 D5 D1 */	bl rand
 /* 802484F8 00245438  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 802484FC 0024543C  C8 42 DC 38 */	lfd f2, $$23616@sda21(r2)
+/* 802484FC 0024543C  C8 42 DC 38 */	lfd f2, "@3616"@sda21(r2)
 /* 80248500 00245440  90 01 00 AC */	stw r0, 0xac(r1)
-/* 80248504 00245444  C0 02 DC 24 */	lfs f0, $$23611@sda21(r2)
+/* 80248504 00245444  C0 02 DC 24 */	lfs f0, "@3611"@sda21(r2)
 /* 80248508 00245448  93 81 00 A8 */	stw r28, 0xa8(r1)
 /* 8024850C 0024544C  C8 21 00 A8 */	lfd f1, 0xa8(r1)
 /* 80248510 00245450  EC 21 10 28 */	fsubs f1, f1, f2
@@ -629,9 +629,9 @@ lbl_802483C4:
 lbl_80248524:
 /* 80248524 00245464  4B E3 D5 A1 */	bl rand
 /* 80248528 00245468  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 8024852C 0024546C  C8 62 DC 38 */	lfd f3, $$23616@sda21(r2)
+/* 8024852C 0024546C  C8 62 DC 38 */	lfd f3, "@3616"@sda21(r2)
 /* 80248530 00245470  90 01 00 AC */	stw r0, 0xac(r1)
-/* 80248534 00245474  C0 22 DC 24 */	lfs f1, $$23611@sda21(r2)
+/* 80248534 00245474  C0 22 DC 24 */	lfs f1, "@3611"@sda21(r2)
 /* 80248538 00245478  93 81 00 A8 */	stw r28, 0xa8(r1)
 /* 8024853C 0024547C  C0 1D 00 24 */	lfs f0, 0x24(r29)
 /* 80248540 00245480  C8 41 00 A8 */	lfd f2, 0xa8(r1)
@@ -644,9 +644,9 @@ lbl_80248558:
 /* 80248558 00245498  C3 DE 00 EC */	lfs f30, 0xec(r30)
 /* 8024855C 0024549C  4B E3 D5 69 */	bl rand
 /* 80248560 002454A0  6C 60 80 00 */	xoris r0, r3, 0x8000
-/* 80248564 002454A4  C8 42 DC 38 */	lfd f2, $$23616@sda21(r2)
+/* 80248564 002454A4  C8 42 DC 38 */	lfd f2, "@3616"@sda21(r2)
 /* 80248568 002454A8  90 01 00 AC */	stw r0, 0xac(r1)
-/* 8024856C 002454AC  C0 02 DC 24 */	lfs f0, $$23611@sda21(r2)
+/* 8024856C 002454AC  C0 02 DC 24 */	lfs f0, "@3611"@sda21(r2)
 /* 80248570 002454B0  93 81 00 A8 */	stw r28, 0xa8(r1)
 /* 80248574 002454B4  C8 21 00 A8 */	lfd f1, 0xa8(r1)
 /* 80248578 002454B8  EC 21 10 28 */	fsubs f1, f1, f2
@@ -691,8 +691,8 @@ lbl_802485EC:
 /* 8024860C 0024554C  38 21 00 E0 */	addi r1, r1, 0xe0
 /* 80248610 00245550  4E 80 00 20 */	blr 
 
-.global killEnemiesWithin__10TConductorFRCQ29JGeometry8TVec3$$0f$$1f
-killEnemiesWithin__10TConductorFRCQ29JGeometry8TVec3$$0f$$1f:
+.global "killEnemiesWithin__10TConductorFRCQ29JGeometry8TVec3<f>f"
+"killEnemiesWithin__10TConductorFRCQ29JGeometry8TVec3<f>f":
 /* 80248614 00245554  7C 08 02 A6 */	mflr r0
 /* 80248618 00245558  90 01 00 04 */	stw r0, 4(r1)
 /* 8024861C 0024555C  38 03 00 28 */	addi r0, r3, 0x28
@@ -704,8 +704,8 @@ killEnemiesWithin__10TConductorFRCQ29JGeometry8TVec3$$0f$$1f:
 /* 80248634 00245574  93 A1 00 5C */	stw r29, 0x5c(r1)
 /* 80248638 00245578  7C 9D 23 78 */	mr r29, r4
 /* 8024863C 0024557C  80 A3 00 28 */	lwz r5, 0x28(r3)
-/* 80248640 00245580  3C 60 80 39 */	lis r3, $$23643@ha
-/* 80248644 00245584  3B E3 49 38 */	addi r31, r3, $$23643@l
+/* 80248640 00245580  3C 60 80 39 */	lis r3, "@3643"@ha
+/* 80248644 00245584  3B E3 49 38 */	addi r31, r3, "@3643"@l
 /* 80248648 00245588  90 A1 00 50 */	stw r5, 0x50(r1)
 /* 8024864C 0024558C  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 80248650 00245590  48 00 00 5C */	b lbl_802486AC
@@ -728,7 +728,7 @@ lbl_80248654:
 /* 80248690 002455D0  38 9D 00 00 */	addi r4, r29, 0
 /* 80248694 002455D4  38 63 00 08 */	addi r3, r3, 8
 /* 80248698 002455D8  80 63 00 00 */	lwz r3, 0(r3)
-/* 8024869C 002455DC  48 00 91 D1 */	bl killChildrenWithin__13TEnemyManagerFRCQ29JGeometry8TVec3$$0f$$1f
+/* 8024869C 002455DC  48 00 91 D1 */	bl "killChildrenWithin__13TEnemyManagerFRCQ29JGeometry8TVec3<f>f"
 lbl_802486A0:
 /* 802486A0 002455E0  80 61 00 50 */	lwz r3, 0x50(r1)
 /* 802486A4 002455E4  80 03 00 00 */	lwz r0, 0(r3)
@@ -751,8 +751,8 @@ lbl_802486AC:
 /* 802486E4 00245624  38 21 00 70 */	addi r1, r1, 0x70
 /* 802486E8 00245628  4E 80 00 20 */	blr 
 
-.global makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3$$0f$$1PCci
-makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3$$0f$$1PCci:
+.global "makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3<f>PCci"
+"makeOneEnemyAppear__10TConductorFRCQ29JGeometry8TVec3<f>PCci":
 /* 802486EC 0024562C  7C 08 02 A6 */	mflr r0
 /* 802486F0 00245630  90 01 00 04 */	stw r0, 4(r1)
 /* 802486F4 00245634  94 21 FF 90 */	stwu r1, -0x70(r1)
@@ -865,8 +865,8 @@ lbl_80248860:
 /* 80248878 002457B8  38 21 00 70 */	addi r1, r1, 0x70
 /* 8024887C 002457BC  4E 80 00 20 */	blr 
 
-.global makeEnemyAppear__10TConductorFRCQ29JGeometry8TVec3$$0f$$1PCcii
-makeEnemyAppear__10TConductorFRCQ29JGeometry8TVec3$$0f$$1PCcii:
+.global "makeEnemyAppear__10TConductorFRCQ29JGeometry8TVec3<f>PCcii"
+"makeEnemyAppear__10TConductorFRCQ29JGeometry8TVec3<f>PCcii":
 /* 80248880 002457C0  7C 08 02 A6 */	mflr r0
 /* 80248884 002457C4  90 01 00 04 */	stw r0, 4(r1)
 /* 80248888 002457C8  94 21 FF 68 */	stwu r1, -0x98(r1)
@@ -1027,11 +1027,11 @@ lbl_80248A98:
 .global isBossDefeated__10TConductorFv
 isBossDefeated__10TConductorFv:
 /* 80248AAC 002459EC  7C 08 02 A6 */	mflr r0
-/* 80248AB0 002459F0  3C A0 80 39 */	lis r5, $$21490@ha
+/* 80248AB0 002459F0  3C A0 80 39 */	lis r5, "@1490"@ha
 /* 80248AB4 002459F4  90 01 00 04 */	stw r0, 4(r1)
 /* 80248AB8 002459F8  94 21 FF 48 */	stwu r1, -0xb8(r1)
 /* 80248ABC 002459FC  93 E1 00 B4 */	stw r31, 0xb4(r1)
-/* 80248AC0 00245A00  3B E5 48 58 */	addi r31, r5, $$21490@l
+/* 80248AC0 00245A00  3B E5 48 58 */	addi r31, r5, "@1490"@l
 /* 80248AC4 00245A04  93 C1 00 B0 */	stw r30, 0xb0(r1)
 /* 80248AC8 00245A08  3B C3 00 00 */	addi r30, r3, 0
 /* 80248ACC 00245A0C  80 8D 97 E8 */	lwz r4, gpMarDirector@sda21(r13)
@@ -1240,14 +1240,14 @@ lbl_80248D6C:
 .global init__10TConductorFv
 init__10TConductorFv:
 /* 80248D7C 00245CBC  7C 08 02 A6 */	mflr r0
-/* 80248D80 00245CC0  3C 80 80 39 */	lis r4, $$21490@ha
+/* 80248D80 00245CC0  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 80248D84 00245CC4  90 01 00 04 */	stw r0, 4(r1)
 /* 80248D88 00245CC8  94 21 FF 80 */	stwu r1, -0x80(r1)
 /* 80248D8C 00245CCC  93 E1 00 7C */	stw r31, 0x7c(r1)
 /* 80248D90 00245CD0  7C 7F 1B 78 */	mr r31, r3
 /* 80248D94 00245CD4  38 1F 00 28 */	addi r0, r31, 0x28
 /* 80248D98 00245CD8  93 C1 00 78 */	stw r30, 0x78(r1)
-/* 80248D9C 00245CDC  3B C4 48 58 */	addi r30, r4, $$21490@l
+/* 80248D9C 00245CDC  3B C4 48 58 */	addi r30, r4, "@1490"@l
 /* 80248DA0 00245CE0  93 A1 00 74 */	stw r29, 0x74(r1)
 /* 80248DA4 00245CE4  80 63 00 28 */	lwz r3, 0x28(r3)
 /* 80248DA8 00245CE8  90 61 00 68 */	stw r3, 0x68(r1)
@@ -1339,14 +1339,14 @@ registerSDLModelData__10TConductorFP12SDLModelData:
 /* 80248EDC 00245E1C  38 86 00 70 */	addi r4, r6, 0x70
 /* 80248EE0 00245E20  38 C1 00 0C */	addi r6, r1, 0xc
 /* 80248EE4 00245E24  90 01 00 18 */	stw r0, 0x18(r1)
-/* 80248EE8 00245E28  48 00 00 15 */	bl insert__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorRCP12SDLModelData
+/* 80248EE8 00245E28  48 00 00 15 */	bl "insert__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorRCP12SDLModelData"
 /* 80248EEC 00245E2C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80248EF0 00245E30  38 21 00 20 */	addi r1, r1, 0x20
 /* 80248EF4 00245E34  7C 08 03 A6 */	mtlr r0
 /* 80248EF8 00245E38  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorRCP12SDLModelData
-insert__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorRCP12SDLModelData:
+.global "insert__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorRCP12SDLModelData"
+"insert__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorRCP12SDLModelData":
 /* 80248EFC 00245E3C  7C 08 02 A6 */	mflr r0
 /* 80248F00 00245E40  90 01 00 04 */	stw r0, 4(r1)
 /* 80248F04 00245E44  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1413,14 +1413,14 @@ registerAreaCylinderManager__10TConductorFP20TAreaCylinderManager:
 /* 80248FDC 00245F1C  38 86 00 50 */	addi r4, r6, 0x50
 /* 80248FE0 00245F20  38 C1 00 0C */	addi r6, r1, 0xc
 /* 80248FE4 00245F24  90 01 00 18 */	stw r0, 0x18(r1)
-/* 80248FE8 00245F28  48 00 00 15 */	bl insert__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorRCP20TAreaCylinderManager
+/* 80248FE8 00245F28  48 00 00 15 */	bl "insert__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorRCP20TAreaCylinderManager"
 /* 80248FEC 00245F2C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 80248FF0 00245F30  38 21 00 20 */	addi r1, r1, 0x20
 /* 80248FF4 00245F34  7C 08 03 A6 */	mtlr r0
 /* 80248FF8 00245F38  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorRCP20TAreaCylinderManager
-insert__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorRCP20TAreaCylinderManager:
+.global "insert__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorRCP20TAreaCylinderManager"
+"insert__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorRCP20TAreaCylinderManager":
 /* 80248FFC 00245F3C  7C 08 02 A6 */	mflr r0
 /* 80249000 00245F40  90 01 00 04 */	stw r0, 4(r1)
 /* 80249004 00245F44  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1487,14 +1487,14 @@ registerGenerator__10TConductorFP10TGenerator:
 /* 802490DC 0024601C  38 86 00 60 */	addi r4, r6, 0x60
 /* 802490E0 00246020  38 C1 00 0C */	addi r6, r1, 0xc
 /* 802490E4 00246024  90 01 00 18 */	stw r0, 0x18(r1)
-/* 802490E8 00246028  48 00 00 15 */	bl insert__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorRCP10TGenerator
+/* 802490E8 00246028  48 00 00 15 */	bl "insert__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorRCP10TGenerator"
 /* 802490EC 0024602C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802490F0 00246030  38 21 00 20 */	addi r1, r1, 0x20
 /* 802490F4 00246034  7C 08 03 A6 */	mtlr r0
 /* 802490F8 00246038  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorRCP10TGenerator
-insert__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorRCP10TGenerator:
+.global "insert__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorRCP10TGenerator"
+"insert__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorRCP10TGenerator":
 /* 802490FC 0024603C  7C 08 02 A6 */	mflr r0
 /* 80249100 00246040  90 01 00 04 */	stw r0, 4(r1)
 /* 80249104 00246044  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1561,14 +1561,14 @@ registerOtherObj__10TConductorFPQ26JDrama8TViewObj:
 /* 802491DC 0024611C  38 86 00 40 */	addi r4, r6, 0x40
 /* 802491E0 00246120  38 C1 00 0C */	addi r6, r1, 0xc
 /* 802491E4 00246124  90 01 00 18 */	stw r0, 0x18(r1)
-/* 802491E8 00246128  48 00 00 15 */	bl insert__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorRCPQ26JDrama8TViewObj
+/* 802491E8 00246128  48 00 00 15 */	bl "insert__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorRCPQ26JDrama8TViewObj"
 /* 802491EC 0024612C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802491F0 00246130  38 21 00 20 */	addi r1, r1, 0x20
 /* 802491F4 00246134  7C 08 03 A6 */	mtlr r0
 /* 802491F8 00246138  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorRCPQ26JDrama8TViewObj
-insert__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorRCPQ26JDrama8TViewObj:
+.global "insert__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorRCPQ26JDrama8TViewObj"
+"insert__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorRCPQ26JDrama8TViewObj":
 /* 802491FC 0024613C  7C 08 02 A6 */	mflr r0
 /* 80249200 00246140  90 01 00 04 */	stw r0, 4(r1)
 /* 80249204 00246144  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1635,14 +1635,14 @@ registerAloneActor__10TConductorFP10TLiveActor:
 /* 802492DC 0024621C  38 86 00 30 */	addi r4, r6, 0x30
 /* 802492E0 00246220  38 C1 00 0C */	addi r6, r1, 0xc
 /* 802492E4 00246224  90 01 00 18 */	stw r0, 0x18(r1)
-/* 802492E8 00246228  48 00 00 15 */	bl insert__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorRCP10TLiveActor
+/* 802492E8 00246228  48 00 00 15 */	bl "insert__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorRCP10TLiveActor"
 /* 802492EC 0024622C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802492F0 00246230  38 21 00 20 */	addi r1, r1, 0x20
 /* 802492F4 00246234  7C 08 03 A6 */	mtlr r0
 /* 802492F8 00246238  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorRCP10TLiveActor
-insert__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorRCP10TLiveActor:
+.global "insert__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorRCP10TLiveActor"
+"insert__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorRCP10TLiveActor":
 /* 802492FC 0024623C  7C 08 02 A6 */	mflr r0
 /* 80249300 00246240  90 01 00 04 */	stw r0, 4(r1)
 /* 80249304 00246244  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1709,14 +1709,14 @@ registerEnemyManager__10TConductorFP13TEnemyManager:
 /* 802493DC 0024631C  38 86 00 20 */	addi r4, r6, 0x20
 /* 802493E0 00246320  38 C1 00 0C */	addi r6, r1, 0xc
 /* 802493E4 00246324  90 01 00 18 */	stw r0, 0x18(r1)
-/* 802493E8 00246328  48 00 00 15 */	bl insert__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorRCP13TEnemyManager
+/* 802493E8 00246328  48 00 00 15 */	bl "insert__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorRCP13TEnemyManager"
 /* 802493EC 0024632C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802493F0 00246330  38 21 00 20 */	addi r1, r1, 0x20
 /* 802493F4 00246334  7C 08 03 A6 */	mtlr r0
 /* 802493F8 00246338  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorRCP13TEnemyManager
-insert__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorRCP13TEnemyManager:
+.global "insert__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorRCP13TEnemyManager"
+"insert__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorRCP13TEnemyManager":
 /* 802493FC 0024633C  7C 08 02 A6 */	mflr r0
 /* 80249400 00246340  90 01 00 04 */	stw r0, 4(r1)
 /* 80249404 00246344  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1783,14 +1783,14 @@ registerManager__10TConductorFP12TLiveManager:
 /* 802494DC 0024641C  38 86 00 10 */	addi r4, r6, 0x10
 /* 802494E0 00246420  38 C1 00 0C */	addi r6, r1, 0xc
 /* 802494E4 00246424  90 01 00 18 */	stw r0, 0x18(r1)
-/* 802494E8 00246428  48 00 00 15 */	bl insert__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorRCP12TLiveManager
+/* 802494E8 00246428  48 00 00 15 */	bl "insert__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorRCP12TLiveManager"
 /* 802494EC 0024642C  80 01 00 24 */	lwz r0, 0x24(r1)
 /* 802494F0 00246430  38 21 00 20 */	addi r1, r1, 0x20
 /* 802494F4 00246434  7C 08 03 A6 */	mtlr r0
 /* 802494F8 00246438  4E 80 00 20 */	blr 
 
-.global insert__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorRCP12TLiveManager
-insert__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorRCP12TLiveManager:
+.global "insert__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorRCP12TLiveManager"
+"insert__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorRCP12TLiveManager":
 /* 802494FC 0024643C  7C 08 02 A6 */	mflr r0
 /* 80249500 00246440  90 01 00 04 */	stw r0, 4(r1)
 /* 80249504 00246444  94 21 FF B8 */	stwu r1, -0x48(r1)
@@ -1897,12 +1897,12 @@ __dt__10TConductorFv:
 /* 80249660 002465A0  41 82 00 80 */	beq lbl_802496E0
 /* 80249664 002465A4  38 61 01 CC */	addi r3, r1, 0x1cc
 /* 80249668 002465A8  38 9E 00 78 */	addi r4, r30, 0x78
-/* 8024966C 002465AC  48 00 07 A1 */	bl __ct__Q37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorFPQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$16TNode_
+/* 8024966C 002465AC  48 00 07 A1 */	bl "__ct__Q37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorFPQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>6TNode_"
 /* 80249670 002465B0  80 01 01 CC */	lwz r0, 0x1cc(r1)
 /* 80249674 002465B4  38 61 01 C4 */	addi r3, r1, 0x1c4
 /* 80249678 002465B8  90 01 01 C8 */	stw r0, 0x1c8(r1)
 /* 8024967C 002465BC  80 9E 00 78 */	lwz r4, 0x78(r30)
-/* 80249680 002465C0  48 00 07 8D */	bl __ct__Q37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorFPQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$16TNode_
+/* 80249680 002465C0  48 00 07 8D */	bl "__ct__Q37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorFPQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>6TNode_"
 /* 80249684 002465C4  80 01 01 C4 */	lwz r0, 0x1c4(r1)
 /* 80249688 002465C8  3B A1 01 38 */	addi r29, r1, 0x138
 /* 8024968C 002465CC  3B 81 00 D0 */	addi r28, r1, 0xd0
@@ -1915,7 +1915,7 @@ lbl_8024969C:
 /* 802496A4 002465E4  38 61 01 34 */	addi r3, r1, 0x134
 /* 802496A8 002465E8  90 01 01 38 */	stw r0, 0x138(r1)
 /* 802496AC 002465EC  38 9E 00 70 */	addi r4, r30, 0x70
-/* 802496B0 002465F0  48 00 06 F1 */	bl erase__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator
+/* 802496B0 002465F0  48 00 06 F1 */	bl "erase__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator"
 /* 802496B4 002465F4  80 01 01 34 */	lwz r0, 0x134(r1)
 /* 802496B8 002465F8  90 01 01 C0 */	stw r0, 0x1c0(r1)
 lbl_802496BC:
@@ -1925,7 +1925,7 @@ lbl_802496BC:
 /* 802496C8 00246608  7F 84 E3 78 */	mr r4, r28
 /* 802496CC 0024660C  90 A1 00 D0 */	stw r5, 0xd0(r1)
 /* 802496D0 00246610  90 01 00 CC */	stw r0, 0xcc(r1)
-/* 802496D4 00246614  48 00 06 B5 */	bl __eq__7JGadgetFQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator
+/* 802496D4 00246614  48 00 06 B5 */	bl "__eq__7JGadgetFQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator"
 /* 802496D8 00246618  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 802496DC 0024661C  41 82 FF C0 */	beq lbl_8024969C
 lbl_802496E0:
@@ -1933,12 +1933,12 @@ lbl_802496E0:
 /* 802496E4 00246624  41 82 00 80 */	beq lbl_80249764
 /* 802496E8 00246628  38 61 01 B8 */	addi r3, r1, 0x1b8
 /* 802496EC 0024662C  38 9E 00 68 */	addi r4, r30, 0x68
-/* 802496F0 00246630  48 00 06 91 */	bl __ct__Q37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorFPQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$16TNode_
+/* 802496F0 00246630  48 00 06 91 */	bl "__ct__Q37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorFPQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>6TNode_"
 /* 802496F4 00246634  80 01 01 B8 */	lwz r0, 0x1b8(r1)
 /* 802496F8 00246638  38 61 01 B0 */	addi r3, r1, 0x1b0
 /* 802496FC 0024663C  90 01 01 B4 */	stw r0, 0x1b4(r1)
 /* 80249700 00246640  80 9E 00 68 */	lwz r4, 0x68(r30)
-/* 80249704 00246644  48 00 06 7D */	bl __ct__Q37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorFPQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$16TNode_
+/* 80249704 00246644  48 00 06 7D */	bl "__ct__Q37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorFPQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>6TNode_"
 /* 80249708 00246648  80 01 01 B0 */	lwz r0, 0x1b0(r1)
 /* 8024970C 0024664C  3B 61 01 28 */	addi r27, r1, 0x128
 /* 80249710 00246650  3B 81 00 C8 */	addi r28, r1, 0xc8
@@ -1951,7 +1951,7 @@ lbl_80249720:
 /* 80249728 00246668  38 61 01 24 */	addi r3, r1, 0x124
 /* 8024972C 0024666C  90 01 01 28 */	stw r0, 0x128(r1)
 /* 80249730 00246670  38 9E 00 60 */	addi r4, r30, 0x60
-/* 80249734 00246674  48 00 05 E1 */	bl erase__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator
+/* 80249734 00246674  48 00 05 E1 */	bl "erase__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator"
 /* 80249738 00246678  80 01 01 24 */	lwz r0, 0x124(r1)
 /* 8024973C 0024667C  90 01 01 AC */	stw r0, 0x1ac(r1)
 lbl_80249740:
@@ -1961,7 +1961,7 @@ lbl_80249740:
 /* 8024974C 0024668C  7F 84 E3 78 */	mr r4, r28
 /* 80249750 00246690  90 A1 00 C8 */	stw r5, 0xc8(r1)
 /* 80249754 00246694  90 01 00 C4 */	stw r0, 0xc4(r1)
-/* 80249758 00246698  48 00 05 A5 */	bl __eq__7JGadgetFQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator
+/* 80249758 00246698  48 00 05 A5 */	bl "__eq__7JGadgetFQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator"
 /* 8024975C 0024669C  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80249760 002466A0  41 82 FF C0 */	beq lbl_80249720
 lbl_80249764:
@@ -1969,12 +1969,12 @@ lbl_80249764:
 /* 80249768 002466A8  41 82 00 80 */	beq lbl_802497E8
 /* 8024976C 002466AC  38 61 01 A4 */	addi r3, r1, 0x1a4
 /* 80249770 002466B0  38 9E 00 58 */	addi r4, r30, 0x58
-/* 80249774 002466B4  48 00 05 81 */	bl __ct__Q37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorFPQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$16TNode_
+/* 80249774 002466B4  48 00 05 81 */	bl "__ct__Q37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorFPQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>6TNode_"
 /* 80249778 002466B8  80 01 01 A4 */	lwz r0, 0x1a4(r1)
 /* 8024977C 002466BC  38 61 01 9C */	addi r3, r1, 0x19c
 /* 80249780 002466C0  90 01 01 A0 */	stw r0, 0x1a0(r1)
 /* 80249784 002466C4  80 9E 00 58 */	lwz r4, 0x58(r30)
-/* 80249788 002466C8  48 00 05 6D */	bl __ct__Q37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorFPQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$16TNode_
+/* 80249788 002466C8  48 00 05 6D */	bl "__ct__Q37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorFPQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>6TNode_"
 /* 8024978C 002466CC  80 01 01 9C */	lwz r0, 0x19c(r1)
 /* 80249790 002466D0  3B 61 01 18 */	addi r27, r1, 0x118
 /* 80249794 002466D4  3B 81 00 C0 */	addi r28, r1, 0xc0
@@ -1987,7 +1987,7 @@ lbl_802497A4:
 /* 802497AC 002466EC  38 61 01 14 */	addi r3, r1, 0x114
 /* 802497B0 002466F0  90 01 01 18 */	stw r0, 0x118(r1)
 /* 802497B4 002466F4  38 9E 00 50 */	addi r4, r30, 0x50
-/* 802497B8 002466F8  48 00 04 D1 */	bl erase__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator
+/* 802497B8 002466F8  48 00 04 D1 */	bl "erase__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator"
 /* 802497BC 002466FC  80 01 01 14 */	lwz r0, 0x114(r1)
 /* 802497C0 00246700  90 01 01 98 */	stw r0, 0x198(r1)
 lbl_802497C4:
@@ -1997,7 +1997,7 @@ lbl_802497C4:
 /* 802497D0 00246710  7F 84 E3 78 */	mr r4, r28
 /* 802497D4 00246714  90 A1 00 C0 */	stw r5, 0xc0(r1)
 /* 802497D8 00246718  90 01 00 BC */	stw r0, 0xbc(r1)
-/* 802497DC 0024671C  48 00 04 95 */	bl __eq__7JGadgetFQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator
+/* 802497DC 0024671C  48 00 04 95 */	bl "__eq__7JGadgetFQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator"
 /* 802497E0 00246720  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 802497E4 00246724  41 82 FF C0 */	beq lbl_802497A4
 lbl_802497E8:
@@ -2005,12 +2005,12 @@ lbl_802497E8:
 /* 802497EC 0024672C  41 82 00 80 */	beq lbl_8024986C
 /* 802497F0 00246730  38 61 01 90 */	addi r3, r1, 0x190
 /* 802497F4 00246734  38 9E 00 48 */	addi r4, r30, 0x48
-/* 802497F8 00246738  48 00 04 71 */	bl __ct__Q37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorFPQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$16TNode_
+/* 802497F8 00246738  48 00 04 71 */	bl "__ct__Q37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorFPQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>6TNode_"
 /* 802497FC 0024673C  80 01 01 90 */	lwz r0, 0x190(r1)
 /* 80249800 00246740  38 61 01 88 */	addi r3, r1, 0x188
 /* 80249804 00246744  90 01 01 8C */	stw r0, 0x18c(r1)
 /* 80249808 00246748  80 9E 00 48 */	lwz r4, 0x48(r30)
-/* 8024980C 0024674C  48 00 04 5D */	bl __ct__Q37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorFPQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$16TNode_
+/* 8024980C 0024674C  48 00 04 5D */	bl "__ct__Q37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorFPQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>6TNode_"
 /* 80249810 00246750  80 01 01 88 */	lwz r0, 0x188(r1)
 /* 80249814 00246754  3B 61 01 08 */	addi r27, r1, 0x108
 /* 80249818 00246758  3B 81 00 B8 */	addi r28, r1, 0xb8
@@ -2023,7 +2023,7 @@ lbl_80249828:
 /* 80249830 00246770  38 61 01 04 */	addi r3, r1, 0x104
 /* 80249834 00246774  90 01 01 08 */	stw r0, 0x108(r1)
 /* 80249838 00246778  38 9E 00 40 */	addi r4, r30, 0x40
-/* 8024983C 0024677C  48 00 03 C1 */	bl erase__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator
+/* 8024983C 0024677C  48 00 03 C1 */	bl "erase__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator"
 /* 80249840 00246780  80 01 01 04 */	lwz r0, 0x104(r1)
 /* 80249844 00246784  90 01 01 84 */	stw r0, 0x184(r1)
 lbl_80249848:
@@ -2033,7 +2033,7 @@ lbl_80249848:
 /* 80249854 00246794  7F 84 E3 78 */	mr r4, r28
 /* 80249858 00246798  90 A1 00 B8 */	stw r5, 0xb8(r1)
 /* 8024985C 0024679C  90 01 00 B4 */	stw r0, 0xb4(r1)
-/* 80249860 002467A0  48 00 03 85 */	bl __eq__7JGadgetFQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator
+/* 80249860 002467A0  48 00 03 85 */	bl "__eq__7JGadgetFQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator"
 /* 80249864 002467A4  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80249868 002467A8  41 82 FF C0 */	beq lbl_80249828
 lbl_8024986C:
@@ -2041,12 +2041,12 @@ lbl_8024986C:
 /* 80249870 002467B0  41 82 00 80 */	beq lbl_802498F0
 /* 80249874 002467B4  38 61 01 7C */	addi r3, r1, 0x17c
 /* 80249878 002467B8  38 9E 00 38 */	addi r4, r30, 0x38
-/* 8024987C 002467BC  48 00 03 61 */	bl __ct__Q37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorFPQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$16TNode_
+/* 8024987C 002467BC  48 00 03 61 */	bl "__ct__Q37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorFPQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>6TNode_"
 /* 80249880 002467C0  80 01 01 7C */	lwz r0, 0x17c(r1)
 /* 80249884 002467C4  38 61 01 74 */	addi r3, r1, 0x174
 /* 80249888 002467C8  90 01 01 78 */	stw r0, 0x178(r1)
 /* 8024988C 002467CC  80 9E 00 38 */	lwz r4, 0x38(r30)
-/* 80249890 002467D0  48 00 03 4D */	bl __ct__Q37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorFPQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$16TNode_
+/* 80249890 002467D0  48 00 03 4D */	bl "__ct__Q37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorFPQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>6TNode_"
 /* 80249894 002467D4  80 01 01 74 */	lwz r0, 0x174(r1)
 /* 80249898 002467D8  3B 61 00 F8 */	addi r27, r1, 0xf8
 /* 8024989C 002467DC  3B 81 00 B0 */	addi r28, r1, 0xb0
@@ -2059,7 +2059,7 @@ lbl_802498AC:
 /* 802498B4 002467F4  38 61 00 F4 */	addi r3, r1, 0xf4
 /* 802498B8 002467F8  90 01 00 F8 */	stw r0, 0xf8(r1)
 /* 802498BC 002467FC  38 9E 00 30 */	addi r4, r30, 0x30
-/* 802498C0 00246800  48 00 02 B1 */	bl erase__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator
+/* 802498C0 00246800  48 00 02 B1 */	bl "erase__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator"
 /* 802498C4 00246804  80 01 00 F4 */	lwz r0, 0xf4(r1)
 /* 802498C8 00246808  90 01 01 70 */	stw r0, 0x170(r1)
 lbl_802498CC:
@@ -2069,7 +2069,7 @@ lbl_802498CC:
 /* 802498D8 00246818  7F 84 E3 78 */	mr r4, r28
 /* 802498DC 0024681C  90 A1 00 B0 */	stw r5, 0xb0(r1)
 /* 802498E0 00246820  90 01 00 AC */	stw r0, 0xac(r1)
-/* 802498E4 00246824  48 00 02 75 */	bl __eq__7JGadgetFQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator
+/* 802498E4 00246824  48 00 02 75 */	bl "__eq__7JGadgetFQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator"
 /* 802498E8 00246828  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 802498EC 0024682C  41 82 FF C0 */	beq lbl_802498AC
 lbl_802498F0:
@@ -2077,12 +2077,12 @@ lbl_802498F0:
 /* 802498F4 00246834  41 82 00 80 */	beq lbl_80249974
 /* 802498F8 00246838  38 61 01 68 */	addi r3, r1, 0x168
 /* 802498FC 0024683C  38 9E 00 28 */	addi r4, r30, 0x28
-/* 80249900 00246840  48 00 02 51 */	bl __ct__Q37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorFPQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$16TNode_
+/* 80249900 00246840  48 00 02 51 */	bl "__ct__Q37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorFPQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>6TNode_"
 /* 80249904 00246844  80 01 01 68 */	lwz r0, 0x168(r1)
 /* 80249908 00246848  38 61 01 60 */	addi r3, r1, 0x160
 /* 8024990C 0024684C  90 01 01 64 */	stw r0, 0x164(r1)
 /* 80249910 00246850  80 9E 00 28 */	lwz r4, 0x28(r30)
-/* 80249914 00246854  48 00 02 3D */	bl __ct__Q37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorFPQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$16TNode_
+/* 80249914 00246854  48 00 02 3D */	bl "__ct__Q37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorFPQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>6TNode_"
 /* 80249918 00246858  80 01 01 60 */	lwz r0, 0x160(r1)
 /* 8024991C 0024685C  3B 61 00 E8 */	addi r27, r1, 0xe8
 /* 80249920 00246860  3B 81 00 A8 */	addi r28, r1, 0xa8
@@ -2095,7 +2095,7 @@ lbl_80249930:
 /* 80249938 00246878  38 61 00 E4 */	addi r3, r1, 0xe4
 /* 8024993C 0024687C  90 01 00 E8 */	stw r0, 0xe8(r1)
 /* 80249940 00246880  38 9E 00 20 */	addi r4, r30, 0x20
-/* 80249944 00246884  48 00 01 A1 */	bl erase__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator
+/* 80249944 00246884  48 00 01 A1 */	bl "erase__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator"
 /* 80249948 00246888  80 01 00 E4 */	lwz r0, 0xe4(r1)
 /* 8024994C 0024688C  90 01 01 5C */	stw r0, 0x15c(r1)
 lbl_80249950:
@@ -2105,7 +2105,7 @@ lbl_80249950:
 /* 8024995C 0024689C  7F 84 E3 78 */	mr r4, r28
 /* 80249960 002468A0  90 A1 00 A8 */	stw r5, 0xa8(r1)
 /* 80249964 002468A4  90 01 00 A4 */	stw r0, 0xa4(r1)
-/* 80249968 002468A8  48 00 01 65 */	bl __eq__7JGadgetFQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator
+/* 80249968 002468A8  48 00 01 65 */	bl "__eq__7JGadgetFQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator"
 /* 8024996C 002468AC  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 80249970 002468B0  41 82 FF C0 */	beq lbl_80249930
 lbl_80249974:
@@ -2113,12 +2113,12 @@ lbl_80249974:
 /* 80249978 002468B8  41 82 00 80 */	beq lbl_802499F8
 /* 8024997C 002468BC  38 61 01 54 */	addi r3, r1, 0x154
 /* 80249980 002468C0  38 9E 00 18 */	addi r4, r30, 0x18
-/* 80249984 002468C4  48 00 01 41 */	bl __ct__Q37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorFPQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$16TNode_
+/* 80249984 002468C4  48 00 01 41 */	bl "__ct__Q37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorFPQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>6TNode_"
 /* 80249988 002468C8  80 01 01 54 */	lwz r0, 0x154(r1)
 /* 8024998C 002468CC  38 61 01 4C */	addi r3, r1, 0x14c
 /* 80249990 002468D0  90 01 01 50 */	stw r0, 0x150(r1)
 /* 80249994 002468D4  80 9E 00 18 */	lwz r4, 0x18(r30)
-/* 80249998 002468D8  48 00 01 2D */	bl __ct__Q37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorFPQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$16TNode_
+/* 80249998 002468D8  48 00 01 2D */	bl "__ct__Q37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorFPQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>6TNode_"
 /* 8024999C 002468DC  80 01 01 4C */	lwz r0, 0x14c(r1)
 /* 802499A0 002468E0  3B 61 00 D8 */	addi r27, r1, 0xd8
 /* 802499A4 002468E4  3B 81 00 A0 */	addi r28, r1, 0xa0
@@ -2131,7 +2131,7 @@ lbl_802499B4:
 /* 802499BC 002468FC  38 61 00 D4 */	addi r3, r1, 0xd4
 /* 802499C0 00246900  90 01 00 D8 */	stw r0, 0xd8(r1)
 /* 802499C4 00246904  38 9E 00 10 */	addi r4, r30, 0x10
-/* 802499C8 00246908  48 00 00 91 */	bl erase__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator
+/* 802499C8 00246908  48 00 00 91 */	bl "erase__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator"
 /* 802499CC 0024690C  80 01 00 D4 */	lwz r0, 0xd4(r1)
 /* 802499D0 00246910  90 01 01 48 */	stw r0, 0x148(r1)
 lbl_802499D4:
@@ -2141,7 +2141,7 @@ lbl_802499D4:
 /* 802499E0 00246920  7F 84 E3 78 */	mr r4, r28
 /* 802499E4 00246924  90 A1 00 A0 */	stw r5, 0xa0(r1)
 /* 802499E8 00246928  90 01 00 9C */	stw r0, 0x9c(r1)
-/* 802499EC 0024692C  48 00 00 55 */	bl __eq__7JGadgetFQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator
+/* 802499EC 0024692C  48 00 00 55 */	bl "__eq__7JGadgetFQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator"
 /* 802499F0 00246930  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 802499F4 00246934  41 82 FF C0 */	beq lbl_802499B4
 lbl_802499F8:
@@ -2166,8 +2166,8 @@ lbl_80249A28:
 /* 80249A38 00246978  7C 08 03 A6 */	mtlr r0
 /* 80249A3C 0024697C  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator
-__eq__7JGadgetFQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator"
+"__eq__7JGadgetFQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator":
 /* 80249A40 00246980  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249A44 00246984  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249A48 00246988  7C 03 00 50 */	subf r0, r3, r0
@@ -2175,8 +2175,8 @@ __eq__7JGadgetFQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P1
 /* 80249A50 00246990  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249A54 00246994  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator
-erase__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$1FQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iterator:
+.global "erase__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator"
+"erase__Q27JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>FQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iterator":
 /* 80249A58 00246998  7C 08 02 A6 */	mflr r0
 /* 80249A5C 0024699C  90 01 00 04 */	stw r0, 4(r1)
 /* 80249A60 002469A0  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2205,13 +2205,13 @@ erase__Q27JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveMa
 /* 80249ABC 002469FC  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249AC0 00246A00  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorFPQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$16TNode_
-__ct__Q37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$18iteratorFPQ37JGadget62TList$$0P12TLiveManager$$4Q27JGadget27TAllocator$$0P12TLiveManager$$1$$16TNode_:
+.global "__ct__Q37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorFPQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>6TNode_"
+"__ct__Q37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>8iteratorFPQ37JGadget62TList<P12TLiveManager,Q27JGadget27TAllocator<P12TLiveManager>>6TNode_":
 /* 80249AC4 00246A04  90 83 00 00 */	stw r4, 0(r3)
 /* 80249AC8 00246A08  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator
-__eq__7JGadgetFQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator"
+"__eq__7JGadgetFQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator":
 /* 80249ACC 00246A0C  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249AD0 00246A10  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249AD4 00246A14  7C 03 00 50 */	subf r0, r3, r0
@@ -2219,8 +2219,8 @@ __eq__7JGadgetFQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P
 /* 80249ADC 00246A1C  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249AE0 00246A20  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator
-erase__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$1FQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iterator:
+.global "erase__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator"
+"erase__Q27JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>FQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iterator":
 /* 80249AE4 00246A24  7C 08 02 A6 */	mflr r0
 /* 80249AE8 00246A28  90 01 00 04 */	stw r0, 4(r1)
 /* 80249AEC 00246A2C  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2249,13 +2249,13 @@ erase__Q27JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemy
 /* 80249B48 00246A88  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249B4C 00246A8C  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorFPQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$16TNode_
-__ct__Q37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$18iteratorFPQ37JGadget64TList$$0P13TEnemyManager$$4Q27JGadget28TAllocator$$0P13TEnemyManager$$1$$16TNode_:
+.global "__ct__Q37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorFPQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>6TNode_"
+"__ct__Q37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>8iteratorFPQ37JGadget64TList<P13TEnemyManager,Q27JGadget28TAllocator<P13TEnemyManager>>6TNode_":
 /* 80249B50 00246A90  90 83 00 00 */	stw r4, 0(r3)
 /* 80249B54 00246A94  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator
-__eq__7JGadgetFQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator"
+"__eq__7JGadgetFQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator":
 /* 80249B58 00246A98  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249B5C 00246A9C  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249B60 00246AA0  7C 03 00 50 */	subf r0, r3, r0
@@ -2263,8 +2263,8 @@ __eq__7JGadgetFQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10T
 /* 80249B68 00246AA8  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249B6C 00246AAC  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator
-erase__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$1FQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iterator:
+.global "erase__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator"
+"erase__Q27JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>FQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iterator":
 /* 80249B70 00246AB0  7C 08 02 A6 */	mflr r0
 /* 80249B74 00246AB4  90 01 00 04 */	stw r0, 4(r1)
 /* 80249B78 00246AB8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2293,13 +2293,13 @@ erase__Q27JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActo
 /* 80249BD4 00246B14  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249BD8 00246B18  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorFPQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$16TNode_
-__ct__Q37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$18iteratorFPQ37JGadget58TList$$0P10TLiveActor$$4Q27JGadget25TAllocator$$0P10TLiveActor$$1$$16TNode_:
+.global "__ct__Q37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorFPQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>6TNode_"
+"__ct__Q37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>8iteratorFPQ37JGadget58TList<P10TLiveActor,Q27JGadget25TAllocator<P10TLiveActor>>6TNode_":
 /* 80249BDC 00246B1C  90 83 00 00 */	stw r4, 0(r3)
 /* 80249BE0 00246B20  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator
-__eq__7JGadgetFQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator"
+"__eq__7JGadgetFQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator":
 /* 80249BE4 00246B24  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249BE8 00246B28  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249BEC 00246B2C  7C 03 00 50 */	subf r0, r3, r0
@@ -2307,8 +2307,8 @@ __eq__7JGadgetFQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$
 /* 80249BF4 00246B34  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249BF8 00246B38  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator
-erase__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$1FQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iterator:
+.global "erase__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator"
+"erase__Q27JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>FQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iterator":
 /* 80249BFC 00246B3C  7C 08 02 A6 */	mflr r0
 /* 80249C00 00246B40  90 01 00 04 */	stw r0, 4(r1)
 /* 80249C04 00246B44  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2337,13 +2337,13 @@ erase__Q27JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JD
 /* 80249C60 00246BA0  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249C64 00246BA4  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorFPQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$16TNode_
-__ct__Q37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$18iteratorFPQ37JGadget70TList$$0PQ26JDrama8TViewObj$$4Q27JGadget31TAllocator$$0PQ26JDrama8TViewObj$$1$$16TNode_:
+.global "__ct__Q37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorFPQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>6TNode_"
+"__ct__Q37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>8iteratorFPQ37JGadget70TList<PQ26JDrama8TViewObj,Q27JGadget31TAllocator<PQ26JDrama8TViewObj>>6TNode_":
 /* 80249C68 00246BA8  90 83 00 00 */	stw r4, 0(r3)
 /* 80249C6C 00246BAC  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator
-__eq__7JGadgetFQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator"
+"__eq__7JGadgetFQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator":
 /* 80249C70 00246BB0  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249C74 00246BB4  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249C78 00246BB8  7C 03 00 50 */	subf r0, r3, r0
@@ -2351,8 +2351,8 @@ __eq__7JGadgetFQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAlloca
 /* 80249C80 00246BC0  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249C84 00246BC4  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator
-erase__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$1FQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iterator:
+.global "erase__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator"
+"erase__Q27JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>FQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iterator":
 /* 80249C88 00246BC8  7C 08 02 A6 */	mflr r0
 /* 80249C8C 00246BCC  90 01 00 04 */	stw r0, 4(r1)
 /* 80249C90 00246BD0  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2381,13 +2381,13 @@ erase__Q27JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P2
 /* 80249CEC 00246C2C  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249CF0 00246C30  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorFPQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$16TNode_
-__ct__Q37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$18iteratorFPQ37JGadget78TList$$0P20TAreaCylinderManager$$4Q27JGadget35TAllocator$$0P20TAreaCylinderManager$$1$$16TNode_:
+.global "__ct__Q37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorFPQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>6TNode_"
+"__ct__Q37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>8iteratorFPQ37JGadget78TList<P20TAreaCylinderManager,Q27JGadget35TAllocator<P20TAreaCylinderManager>>6TNode_":
 /* 80249CF4 00246C34  90 83 00 00 */	stw r4, 0(r3)
 /* 80249CF8 00246C38  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator
-__eq__7JGadgetFQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator"
+"__eq__7JGadgetFQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator":
 /* 80249CFC 00246C3C  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249D00 00246C40  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249D04 00246C44  7C 03 00 50 */	subf r0, r3, r0
@@ -2395,8 +2395,8 @@ __eq__7JGadgetFQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10T
 /* 80249D0C 00246C4C  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249D10 00246C50  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator
-erase__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$1FQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iterator:
+.global "erase__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator"
+"erase__Q27JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>FQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iterator":
 /* 80249D14 00246C54  7C 08 02 A6 */	mflr r0
 /* 80249D18 00246C58  90 01 00 04 */	stw r0, 4(r1)
 /* 80249D1C 00246C5C  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2425,13 +2425,13 @@ erase__Q27JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerato
 /* 80249D78 00246CB8  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249D7C 00246CBC  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorFPQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$16TNode_
-__ct__Q37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$18iteratorFPQ37JGadget58TList$$0P10TGenerator$$4Q27JGadget25TAllocator$$0P10TGenerator$$1$$16TNode_:
+.global "__ct__Q37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorFPQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>6TNode_"
+"__ct__Q37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>8iteratorFPQ37JGadget58TList<P10TGenerator,Q27JGadget25TAllocator<P10TGenerator>>6TNode_":
 /* 80249D80 00246CC0  90 83 00 00 */	stw r4, 0(r3)
 /* 80249D84 00246CC4  4E 80 00 20 */	blr 
 
-.global __eq__7JGadgetFQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator
-__eq__7JGadgetFQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator:
+.global "__eq__7JGadgetFQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator"
+"__eq__7JGadgetFQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator":
 /* 80249D88 00246CC8  80 63 00 00 */	lwz r3, 0(r3)
 /* 80249D8C 00246CCC  80 04 00 00 */	lwz r0, 0(r4)
 /* 80249D90 00246CD0  7C 03 00 50 */	subf r0, r3, r0
@@ -2439,8 +2439,8 @@ __eq__7JGadgetFQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P1
 /* 80249D98 00246CD8  54 03 D9 7E */	srwi r3, r0, 5
 /* 80249D9C 00246CDC  4E 80 00 20 */	blr 
 
-.global erase__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator
-erase__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$1FQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iterator:
+.global "erase__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator"
+"erase__Q27JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>FQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iterator":
 /* 80249DA0 00246CE0  7C 08 02 A6 */	mflr r0
 /* 80249DA4 00246CE4  90 01 00 04 */	stw r0, 4(r1)
 /* 80249DA8 00246CE8  94 21 FF D8 */	stwu r1, -0x28(r1)
@@ -2469,19 +2469,19 @@ erase__Q27JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLMode
 /* 80249E04 00246D44  38 21 00 28 */	addi r1, r1, 0x28
 /* 80249E08 00246D48  4E 80 00 20 */	blr 
 
-.global __ct__Q37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorFPQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$16TNode_
-__ct__Q37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$18iteratorFPQ37JGadget62TList$$0P12SDLModelData$$4Q27JGadget27TAllocator$$0P12SDLModelData$$1$$16TNode_:
+.global "__ct__Q37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorFPQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>6TNode_"
+"__ct__Q37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>8iteratorFPQ37JGadget62TList<P12SDLModelData,Q27JGadget27TAllocator<P12SDLModelData>>6TNode_":
 /* 80249E0C 00246D4C  90 83 00 00 */	stw r4, 0(r3)
 /* 80249E10 00246D50  4E 80 00 20 */	blr 
 
 .global __ct__10TConductorFv
 __ct__10TConductorFv:
 /* 80249E14 00246D54  7C 08 02 A6 */	mflr r0
-/* 80249E18 00246D58  3C 80 80 39 */	lis r4, $$21490@ha
+/* 80249E18 00246D58  3C 80 80 39 */	lis r4, "@1490"@ha
 /* 80249E1C 00246D5C  90 01 00 04 */	stw r0, 4(r1)
 /* 80249E20 00246D60  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 80249E24 00246D64  BF 61 00 2C */	stmw r27, 0x2c(r1)
-/* 80249E28 00246D68  3B 84 48 58 */	addi r28, r4, $$21490@l
+/* 80249E28 00246D68  3B 84 48 58 */	addi r28, r4, "@1490"@l
 /* 80249E2C 00246D6C  90 61 00 08 */	stw r3, 8(r1)
 /* 80249E30 00246D70  3C 60 80 3B */	lis r3, __vt__Q26JDrama8TNameRef@ha
 /* 80249E34 00246D74  38 03 A8 60 */	addi r0, r3, __vt__Q26JDrama8TNameRef@l
@@ -2552,12 +2552,12 @@ __ct__10TConductorFv:
 /* 80249F38 00246E78  38 9B 00 84 */	addi r4, r27, 0x84
 /* 80249F3C 00246E7C  38 DC 01 88 */	addi r6, r28, 0x188
 /* 80249F40 00246E80  4B E9 0C B5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80249F44 00246E84  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80249F48 00246E88  3B C3 29 B8 */	addi r30, r3, __vt__10TParamT$$0f$$1@l
+/* 80249F44 00246E84  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80249F48 00246E88  3B C3 29 B8 */	addi r30, r3, "__vt__10TParamT<f>"@l
 /* 80249F4C 00246E8C  93 DB 00 8C */	stw r30, 0x8c(r27)
-/* 80249F50 00246E90  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80249F54 00246E94  3B E3 29 F4 */	addi r31, r3, __vt__11TParamRT$$0f$$1@l
-/* 80249F58 00246E98  C0 02 DC 40 */	lfs f0, $$24574@sda21(r2)
+/* 80249F50 00246E90  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80249F54 00246E94  3B E3 29 F4 */	addi r31, r3, "__vt__11TParamRT<f>"@l
+/* 80249F58 00246E98  C0 02 DC 40 */	lfs f0, "@4574"@sda21(r2)
 /* 80249F5C 00246E9C  38 7C 01 98 */	addi r3, r28, 0x198
 /* 80249F60 00246EA0  D0 1B 00 9C */	stfs f0, 0x9c(r27)
 /* 80249F64 00246EA4  93 FB 00 8C */	stw r31, 0x8c(r27)
@@ -2569,7 +2569,7 @@ __ct__10TConductorFv:
 /* 80249F7C 00246EBC  4B E9 0C 79 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80249F80 00246EC0  93 DB 00 A0 */	stw r30, 0xa0(r27)
 /* 80249F84 00246EC4  38 7C 01 AC */	addi r3, r28, 0x1ac
-/* 80249F88 00246EC8  C0 02 DC 44 */	lfs f0, $$24576@sda21(r2)
+/* 80249F88 00246EC8  C0 02 DC 44 */	lfs f0, "@4576"@sda21(r2)
 /* 80249F8C 00246ECC  D0 1B 00 B0 */	stfs f0, 0xb0(r27)
 /* 80249F90 00246ED0  93 FB 00 A0 */	stw r31, 0xa0(r27)
 /* 80249F94 00246ED4  4B DF A6 F9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -2580,7 +2580,7 @@ __ct__10TConductorFv:
 /* 80249FA8 00246EE8  4B E9 0C 4D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80249FAC 00246EEC  93 DB 00 B4 */	stw r30, 0xb4(r27)
 /* 80249FB0 00246EF0  38 7C 01 C0 */	addi r3, r28, 0x1c0
-/* 80249FB4 00246EF4  C0 02 DC 48 */	lfs f0, $$24578@sda21(r2)
+/* 80249FB4 00246EF4  C0 02 DC 48 */	lfs f0, "@4578"@sda21(r2)
 /* 80249FB8 00246EF8  D0 1B 00 C4 */	stfs f0, 0xc4(r27)
 /* 80249FBC 00246EFC  93 FB 00 B4 */	stw r31, 0xb4(r27)
 /* 80249FC0 00246F00  4B DF A6 CD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -2589,13 +2589,13 @@ __ct__10TConductorFv:
 /* 80249FCC 00246F0C  38 9B 00 84 */	addi r4, r27, 0x84
 /* 80249FD0 00246F10  38 DC 01 C0 */	addi r6, r28, 0x1c0
 /* 80249FD4 00246F14  4B E9 0C 21 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80249FD8 00246F18  3C 60 80 3B */	lis r3, __vt__10TParamT$$0l$$1@ha
-/* 80249FDC 00246F1C  38 03 6A 7C */	addi r0, r3, __vt__10TParamT$$0l$$1@l
+/* 80249FD8 00246F18  3C 60 80 3B */	lis r3, "__vt__10TParamT<l>"@ha
+/* 80249FDC 00246F1C  38 03 6A 7C */	addi r0, r3, "__vt__10TParamT<l>"@l
 /* 80249FE0 00246F20  90 1B 00 C8 */	stw r0, 0xc8(r27)
 /* 80249FE4 00246F24  38 00 01 2C */	li r0, 0x12c
-/* 80249FE8 00246F28  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0l$$1@ha
+/* 80249FE8 00246F28  3C 60 80 3B */	lis r3, "__vt__11TParamRT<l>"@ha
 /* 80249FEC 00246F2C  90 1B 00 D8 */	stw r0, 0xd8(r27)
-/* 80249FF0 00246F30  38 03 6A 70 */	addi r0, r3, __vt__11TParamRT$$0l$$1@l
+/* 80249FF0 00246F30  38 03 6A 70 */	addi r0, r3, "__vt__11TParamRT<l>"@l
 /* 80249FF4 00246F34  38 7C 01 D0 */	addi r3, r28, 0x1d0
 /* 80249FF8 00246F38  90 1B 00 C8 */	stw r0, 0xc8(r27)
 /* 80249FFC 00246F3C  4B DF A6 91 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -2606,7 +2606,7 @@ __ct__10TConductorFv:
 /* 8024A010 00246F50  4B E9 0B E5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8024A014 00246F54  93 DB 00 DC */	stw r30, 0xdc(r27)
 /* 8024A018 00246F58  38 7B 00 84 */	addi r3, r27, 0x84
-/* 8024A01C 00246F5C  C0 02 DC 4C */	lfs f0, $$24581@sda21(r2)
+/* 8024A01C 00246F5C  C0 02 DC 4C */	lfs f0, "@4581"@sda21(r2)
 /* 8024A020 00246F60  D0 1B 00 EC */	stfs f0, 0xec(r27)
 /* 8024A024 00246F64  93 FB 00 DC */	stw r31, 0xdc(r27)
 /* 8024A028 00246F68  80 9B 00 84 */	lwz r4, 0x84(r27)
@@ -2633,43 +2633,43 @@ lbl_8024A05C:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21700:
+"@1700":
 	.incbin "baserom.dol", 0x391864, 0x14
-$$21782:
+"@1782":
 	.incbin "baserom.dol", 0x391878, 0x30
-$$21783:
+"@1783":
 	.incbin "baserom.dol", 0x3918A8, 0x38
-$$21784:
+"@1784":
 	.incbin "baserom.dol", 0x3918E0, 0x34
-$$21785:
+"@1785":
 	.incbin "baserom.dol", 0x391914, 0x24
-$$23643:
+"@3643":
 	.incbin "baserom.dol", 0x391938, 0x1C
-$$23939:
+"@3939":
 	.incbin "baserom.dol", 0x391954, 0x18
-$$23940:
+"@3940":
 	.incbin "baserom.dol", 0x39196C, 0x1C
-$$23983:
+"@3983":
 	.incbin "baserom.dol", 0x391988, 0x18
-$$24047:
+"@4047":
 	.incbin "baserom.dol", 0x3919A0, 0x20
-$$24571:
+"@4571":
 	.incbin "baserom.dol", 0x3919C0, 0x10
-$$24572:
+"@4572":
 	.incbin "baserom.dol", 0x3919D0, 0x10
-$$24573:
+"@4573":
 	.incbin "baserom.dol", 0x3919E0, 0x10
-$$24575:
+"@4575":
 	.incbin "baserom.dol", 0x3919F0, 0x14
-$$24577:
+"@4577":
 	.incbin "baserom.dol", 0x391A04, 0x14
-$$24579:
+"@4579":
 	.incbin "baserom.dol", 0x391A18, 0x10
-$$24580:
+"@4580":
 	.incbin "baserom.dol", 0x391A28, 0x10
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
@@ -2688,25 +2688,25 @@ __vt__10TConductor:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$23345:
+"@3345":
 	.incbin "baserom.dol", 0x3E9920, 0x4
-$$23611:
+"@3611":
 	.incbin "baserom.dol", 0x3E9924, 0x4
-$$23612:
+"@3612":
 	.incbin "baserom.dol", 0x3E9928, 0x4
-$$23613:
+"@3613":
 	.incbin "baserom.dol", 0x3E992C, 0x4
-$$23614:
+"@3614":
 	.incbin "baserom.dol", 0x3E9930, 0x8
-$$23616:
+"@3616":
 	.incbin "baserom.dol", 0x3E9938, 0x8
-$$24574:
+"@4574":
 	.incbin "baserom.dol", 0x3E9940, 0x4
-$$24576:
+"@4576":
 	.incbin "baserom.dol", 0x3E9944, 0x4
-$$24578:
+"@4578":
 	.incbin "baserom.dol", 0x3E9948, 0x4
-$$24581:
+"@4581":
 	.incbin "baserom.dol", 0x3E994C, 0x4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C

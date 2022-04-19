@@ -27,7 +27,7 @@ ctrlMultiPlayerCamera___15CPolarSubCameraFv:
 /* 80360180 0035D0C0  D0 1F 00 A0 */	stfs f0, 0xa0(r31)
 /* 80360184 0035D0C4  48 00 02 FC */	b lbl_80360480
 lbl_80360188:
-/* 80360188 0035D0C8  C0 02 08 10 */	lfs f0, $$21758@sda21(r2)
+/* 80360188 0035D0C8  C0 02 08 10 */	lfs f0, "@1758"@sda21(r2)
 /* 8036018C 0035D0CC  7C C3 33 78 */	mr r3, r6
 /* 80360190 0035D0D0  D0 01 00 3C */	stfs f0, 0x3c(r1)
 /* 80360194 0035D0D4  D0 01 00 40 */	stfs f0, 0x40(r1)
@@ -115,10 +115,10 @@ lbl_80360298:
 /* 803602D0 0035D210  42 00 FF C8 */	bdnz lbl_80360298
 lbl_803602D4:
 /* 803602D4 0035D214  6C C0 80 00 */	xoris r0, r6, 0x8000
-/* 803602D8 0035D218  C8 22 08 30 */	lfd f1, $$21765@sda21(r2)
+/* 803602D8 0035D218  C8 22 08 30 */	lfd f1, "@1765"@sda21(r2)
 /* 803602DC 0035D21C  90 01 00 4C */	stw r0, 0x4c(r1)
 /* 803602E0 0035D220  3C 00 43 30 */	lis r0, 0x4330
-/* 803602E4 0035D224  C0 42 08 14 */	lfs f2, $$21759@sda21(r2)
+/* 803602E4 0035D224  C0 42 08 14 */	lfs f2, "@1759"@sda21(r2)
 /* 803602E8 0035D228  38 66 FF FF */	addi r3, r6, -1
 /* 803602EC 0035D22C  90 01 00 48 */	stw r0, 0x48(r1)
 /* 803602F0 0035D230  C0 61 00 3C */	lfs f3, 0x3c(r1)
@@ -140,7 +140,7 @@ lbl_803602D4:
 /* 80360330 0035D270  EC 01 00 2A */	fadds f0, f1, f0
 /* 80360334 0035D274  D0 01 00 40 */	stfs f0, 0x40(r1)
 /* 80360338 0035D278  80 9F 02 BC */	lwz r4, 0x2bc(r31)
-/* 8036033C 0035D27C  C0 A2 08 10 */	lfs f5, $$21758@sda21(r2)
+/* 8036033C 0035D27C  C0 A2 08 10 */	lfs f5, "@1758"@sda21(r2)
 /* 80360340 0035D280  81 04 00 04 */	lwz r8, 4(r4)
 /* 80360344 0035D284  48 00 00 78 */	b lbl_803603BC
 lbl_80360348:
@@ -179,12 +179,12 @@ lbl_803603B4:
 lbl_803603BC:
 /* 803603BC 0035D2FC  7C 07 18 00 */	cmpw r7, r3
 /* 803603C0 0035D300  41 80 FF 88 */	blt lbl_80360348
-/* 803603C4 0035D304  C0 02 08 10 */	lfs f0, $$21758@sda21(r2)
+/* 803603C4 0035D304  C0 02 08 10 */	lfs f0, "@1758"@sda21(r2)
 /* 803603C8 0035D308  FC 05 00 40 */	fcmpo cr0, f5, f0
 /* 803603CC 0035D30C  40 81 00 34 */	ble lbl_80360400
 /* 803603D0 0035D310  FC 60 28 34 */	frsqrte f3, f5
-/* 803603D4 0035D314  C8 42 08 18 */	lfd f2, $$21760@sda21(r2)
-/* 803603D8 0035D318  C8 02 08 20 */	lfd f0, $$21761@sda21(r2)
+/* 803603D4 0035D314  C8 42 08 18 */	lfd f2, "@1760"@sda21(r2)
+/* 803603D8 0035D318  C8 02 08 20 */	lfd f0, "@1761"@sda21(r2)
 /* 803603DC 0035D31C  FC 23 00 F2 */	fmul f1, f3, f3
 /* 803603E0 0035D320  FC 42 00 F2 */	fmul f2, f2, f3
 /* 803603E4 0035D324  FC 05 00 7C */	fnmsub f0, f5, f1, f0
@@ -197,8 +197,8 @@ lbl_803603BC:
 lbl_80360400:
 /* 80360400 0035D340  FC 60 28 90 */	fmr f3, f5
 lbl_80360404:
-/* 80360404 0035D344  C0 22 08 2C */	lfs f1, $$21763@sda21(r2)
-/* 80360408 0035D348  C0 02 08 28 */	lfs f0, $$21762@sda21(r2)
+/* 80360404 0035D344  C0 22 08 2C */	lfs f1, "@1763"@sda21(r2)
+/* 80360408 0035D348  C0 02 08 28 */	lfs f0, "@1762"@sda21(r2)
 /* 8036040C 0035D34C  80 7F 00 68 */	lwz r3, 0x68(r31)
 /* 80360410 0035D350  EF E1 00 FA */	fmadds f31, f1, f3, f0
 /* 80360414 0035D354  C0 43 00 0C */	lfs f2, 0xc(r3)
@@ -213,11 +213,11 @@ lbl_8036042C:
 /* 80360434 0035D374  FF E0 08 90 */	fmr f31, f1
 lbl_80360438:
 /* 80360438 0035D378  FC 60 F8 90 */	fmr f3, f31
-/* 8036043C 0035D37C  4B E0 A2 05 */	bl CLBCalcRatio$$0f$$1__Ffff
+/* 8036043C 0035D37C  4B E0 A2 05 */	bl "CLBCalcRatio<f>__Ffff"
 /* 80360440 0035D380  80 9F 00 68 */	lwz r4, 0x68(r31)
 /* 80360444 0035D384  A8 64 00 18 */	lha r3, 0x18(r4)
 /* 80360448 0035D388  A8 84 00 1A */	lha r4, 0x1a(r4)
-/* 8036044C 0035D38C  4B FF 5B 81 */	bl CLBLinearInbetween$$0s$$1__Fssf
+/* 8036044C 0035D38C  4B FF 5B 81 */	bl "CLBLinearInbetween<s>__Fssf"
 /* 80360450 0035D390  C0 01 00 3C */	lfs f0, 0x3c(r1)
 /* 80360454 0035D394  7C 65 1B 78 */	mr r5, r3
 /* 80360458 0035D398  FC 20 F8 90 */	fmr f1, f31
@@ -240,8 +240,8 @@ lbl_80360480:
 /* 80360498 0035D3D8  38 21 00 60 */	addi r1, r1, 0x60
 /* 8036049C 0035D3DC  4E 80 00 20 */	blr 
 
-.global removeMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3$$0f$$1
-removeMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3$$0f$$1:
+.global "removeMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3<f>"
+"removeMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3<f>":
 /* 803604A0 0035D3E0  80 E3 02 BC */	lwz r7, 0x2bc(r3)
 /* 803604A4 0035D3E4  28 07 00 00 */	cmplwi r7, 0
 /* 803604A8 0035D3E8  40 82 00 0C */	bne lbl_803604B4
@@ -287,8 +287,8 @@ lbl_80360514:
 /* 80360530 0035D470  98 07 00 01 */	stb r0, 1(r7)
 /* 80360534 0035D474  4E 80 00 20 */	blr 
 
-.global addMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3$$0f$$1ff
-addMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3$$0f$$1ff:
+.global "addMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3<f>ff"
+"addMultiPlayer__15CPolarSubCameraFPCQ29JGeometry8TVec3<f>ff":
 /* 80360538 0035D478  80 A3 02 BC */	lwz r5, 0x2bc(r3)
 /* 8036053C 0035D47C  28 05 00 00 */	cmplwi r5, 0
 /* 80360540 0035D480  40 82 00 0C */	bne lbl_8036054C
@@ -363,24 +363,24 @@ lbl_80360610:
 __ct__16TMultiPlayerDataFv:
 /* 8036062C 0035D56C  38 00 00 00 */	li r0, 0
 /* 80360630 0035D570  90 03 00 00 */	stw r0, 0(r3)
-/* 80360634 0035D574  C0 02 08 10 */	lfs f0, $$21758@sda21(r2)
+/* 80360634 0035D574  C0 02 08 10 */	lfs f0, "@1758"@sda21(r2)
 /* 80360638 0035D578  D0 03 00 04 */	stfs f0, 4(r3)
 /* 8036063C 0035D57C  D0 03 00 08 */	stfs f0, 8(r3)
 /* 80360640 0035D580  4E 80 00 20 */	blr 
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21758:
+"@1758":
   .4byte 0
-$$21759:
+"@1759":
 	.incbin "baserom.dol", 0x3EC514, 0x4
-$$21760:
+"@1760":
 	.incbin "baserom.dol", 0x3EC518, 0x8
-$$21761:
+"@1761":
 	.incbin "baserom.dol", 0x3EC520, 0x8
-$$21762:
+"@1762":
 	.incbin "baserom.dol", 0x3EC528, 0x4
-$$21763:
+"@1763":
 	.incbin "baserom.dol", 0x3EC52C, 0x4
-$$21765:
+"@1765":
 	.incbin "baserom.dol", 0x3EC530, 0x8

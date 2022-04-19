@@ -46,7 +46,7 @@ JSGSetProjectionType__Q26JStage7TCameraFQ26JStage18TECameraProjection:
 
 .global JSGGetProjectionNear__Q26JStage7TCameraCFv
 JSGGetProjectionNear__Q26JStage7TCameraCFv:
-/* 80081918 0007E858  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
+/* 80081918 0007E858  C0 22 89 38 */	lfs f1, "@127"@sda21(r2)
 /* 8008191C 0007E85C  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionNear__Q26JStage7TCameraFf
@@ -55,7 +55,7 @@ JSGSetProjectionNear__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionFar__Q26JStage7TCameraCFv
 JSGGetProjectionFar__Q26JStage7TCameraCFv:
-/* 80081924 0007E864  C0 22 89 3C */	lfs f1, $$2130@sda21(r2)
+/* 80081924 0007E864  C0 22 89 3C */	lfs f1, "@130"@sda21(r2)
 /* 80081928 0007E868  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionFar__Q26JStage7TCameraFf
@@ -64,7 +64,7 @@ JSGSetProjectionFar__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionFovy__Q26JStage7TCameraCFv
 JSGGetProjectionFovy__Q26JStage7TCameraCFv:
-/* 80081930 0007E870  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
+/* 80081930 0007E870  C0 22 89 38 */	lfs f1, "@127"@sda21(r2)
 /* 80081934 0007E874  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionFovy__Q26JStage7TCameraFf
@@ -73,7 +73,7 @@ JSGSetProjectionFovy__Q26JStage7TCameraFf:
 
 .global JSGGetProjectionAspect__Q26JStage7TCameraCFv
 JSGGetProjectionAspect__Q26JStage7TCameraCFv:
-/* 8008193C 0007E87C  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
+/* 8008193C 0007E87C  C0 22 89 38 */	lfs f1, "@127"@sda21(r2)
 /* 80081940 0007E880  4E 80 00 20 */	blr 
 
 .global JSGSetProjectionAspect__Q26JStage7TCameraFf
@@ -123,7 +123,7 @@ JSGSetViewTargetPosition__Q26JStage7TCameraFRC3Vec:
 
 .global JSGGetViewRoll__Q26JStage7TCameraCFv
 JSGGetViewRoll__Q26JStage7TCameraCFv:
-/* 80081974 0007E8B4  C0 22 89 38 */	lfs f1, $$2127@sda21(r2)
+/* 80081974 0007E8B4  C0 22 89 38 */	lfs f1, "@127"@sda21(r2)
 /* 80081978 0007E8B8  4E 80 00 20 */	blr 
 
 .global JSGSetViewRoll__Q26JStage7TCameraFf
@@ -170,7 +170,7 @@ __vt__Q26JStage7TCamera:
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$2127:
+"@127":
   .4byte 0
-$$2130:
+"@130":
 	.incbin "baserom.dol", 0x3E463C, 0x4

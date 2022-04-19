@@ -10,8 +10,8 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306CDC 00303C1C  BF 21 00 14 */	stmw r25, 0x14(r1)
 /* 80306CE0 00303C20  7C 7F 1B 78 */	mr r31, r3
 /* 80306CE4 00303C24  90 83 00 00 */	stw r4, 0(r3)
-/* 80306CE8 00303C28  3C 60 80 3A */	lis r3, $$21490@ha
-/* 80306CEC 00303C2C  3B C3 01 68 */	addi r30, r3, $$21490@l
+/* 80306CE8 00303C28  3C 60 80 3A */	lis r3, "@1490"@ha
+/* 80306CEC 00303C2C  3B C3 01 68 */	addi r30, r3, "@1490"@l
 /* 80306CF0 00303C30  90 1F 00 04 */	stw r0, 4(r31)
 /* 80306CF4 00303C34  38 7E 00 20 */	addi r3, r30, 0x20
 /* 80306CF8 00303C38  4B D3 D9 95 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -20,12 +20,12 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306D04 00303C44  38 7F 00 08 */	addi r3, r31, 8
 /* 80306D08 00303C48  38 DE 00 20 */	addi r6, r30, 0x20
 /* 80306D0C 00303C4C  4B DD 3E E9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80306D10 00303C50  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80306D14 00303C54  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80306D10 00303C50  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80306D14 00303C54  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 80306D18 00303C58  93 BF 00 08 */	stw r29, 8(r31)
-/* 80306D1C 00303C5C  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80306D20 00303C60  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80306D24 00303C64  C0 02 F8 48 */	lfs f0, $$21638@sda21(r2)
+/* 80306D1C 00303C5C  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80306D20 00303C60  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80306D24 00303C64  C0 02 F8 48 */	lfs f0, "@1638"@sda21(r2)
 /* 80306D28 00303C68  38 7E 00 38 */	addi r3, r30, 0x38
 /* 80306D2C 00303C6C  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80306D30 00303C70  93 9F 00 08 */	stw r28, 8(r31)
@@ -37,7 +37,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306D48 00303C88  4B DD 3E AD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306D4C 00303C8C  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 80306D50 00303C90  38 7E 00 4C */	addi r3, r30, 0x4c
-/* 80306D54 00303C94  C0 02 F8 4C */	lfs f0, $$21640@sda21(r2)
+/* 80306D54 00303C94  C0 02 F8 4C */	lfs f0, "@1640"@sda21(r2)
 /* 80306D58 00303C98  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 80306D5C 00303C9C  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 80306D60 00303CA0  4B D3 D9 2D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -48,7 +48,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306D74 00303CB4  4B DD 3E 81 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306D78 00303CB8  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 80306D7C 00303CBC  38 7E 00 64 */	addi r3, r30, 0x64
-/* 80306D80 00303CC0  C0 02 F8 50 */	lfs f0, $$21642@sda21(r2)
+/* 80306D80 00303CC0  C0 02 F8 50 */	lfs f0, "@1642"@sda21(r2)
 /* 80306D84 00303CC4  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 80306D88 00303CC8  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 80306D8C 00303CCC  4B D3 D9 01 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -59,7 +59,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306DA0 00303CE0  4B DD 3E 55 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306DA4 00303CE4  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 80306DA8 00303CE8  38 7E 00 78 */	addi r3, r30, 0x78
-/* 80306DAC 00303CEC  C0 02 F8 54 */	lfs f0, $$21644@sda21(r2)
+/* 80306DAC 00303CEC  C0 02 F8 54 */	lfs f0, "@1644"@sda21(r2)
 /* 80306DB0 00303CF0  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 80306DB4 00303CF4  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 80306DB8 00303CF8  4B D3 D8 D5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -70,7 +70,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306DCC 00303D0C  4B DD 3E 29 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306DD0 00303D10  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80306DD4 00303D14  38 7E 00 8C */	addi r3, r30, 0x8c
-/* 80306DD8 00303D18  C0 02 F8 54 */	lfs f0, $$21644@sda21(r2)
+/* 80306DD8 00303D18  C0 02 F8 54 */	lfs f0, "@1644"@sda21(r2)
 /* 80306DDC 00303D1C  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80306DE0 00303D20  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80306DE4 00303D24  4B D3 D8 A9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -81,7 +81,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306DF8 00303D38  4B DD 3D FD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306DFC 00303D3C  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80306E00 00303D40  38 7E 00 9C */	addi r3, r30, 0x9c
-/* 80306E04 00303D44  C0 02 F8 58 */	lfs f0, $$21647@sda21(r2)
+/* 80306E04 00303D44  C0 02 F8 58 */	lfs f0, "@1647"@sda21(r2)
 /* 80306E08 00303D48  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 80306E0C 00303D4C  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80306E10 00303D50  4B D3 D8 7D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -92,7 +92,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306E24 00303D64  4B DD 3D D1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306E28 00303D68  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 80306E2C 00303D6C  38 7E 00 B0 */	addi r3, r30, 0xb0
-/* 80306E30 00303D70  C0 02 F8 5C */	lfs f0, $$21649@sda21(r2)
+/* 80306E30 00303D70  C0 02 F8 5C */	lfs f0, "@1649"@sda21(r2)
 /* 80306E34 00303D74  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 80306E38 00303D78  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 80306E3C 00303D7C  4B D3 D8 51 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -103,7 +103,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306E50 00303D90  4B DD 3D A5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306E54 00303D94  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 80306E58 00303D98  38 7E 00 C4 */	addi r3, r30, 0xc4
-/* 80306E5C 00303D9C  C0 02 F8 60 */	lfs f0, $$21651@sda21(r2)
+/* 80306E5C 00303D9C  C0 02 F8 60 */	lfs f0, "@1651"@sda21(r2)
 /* 80306E60 00303DA0  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 80306E64 00303DA4  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 80306E68 00303DA8  4B D3 D8 25 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -114,7 +114,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306E7C 00303DBC  4B DD 3D 79 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306E80 00303DC0  93 BF 00 A8 */	stw r29, 0xa8(r31)
 /* 80306E84 00303DC4  38 7E 00 DC */	addi r3, r30, 0xdc
-/* 80306E88 00303DC8  C0 02 F8 64 */	lfs f0, $$21653@sda21(r2)
+/* 80306E88 00303DC8  C0 02 F8 64 */	lfs f0, "@1653"@sda21(r2)
 /* 80306E8C 00303DCC  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
 /* 80306E90 00303DD0  93 9F 00 A8 */	stw r28, 0xa8(r31)
 /* 80306E94 00303DD4  4B D3 D7 F9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -125,7 +125,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306EA8 00303DE8  4B DD 3D 4D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306EAC 00303DEC  93 BF 00 BC */	stw r29, 0xbc(r31)
 /* 80306EB0 00303DF0  38 7E 00 F4 */	addi r3, r30, 0xf4
-/* 80306EB4 00303DF4  C0 02 F8 68 */	lfs f0, $$21655@sda21(r2)
+/* 80306EB4 00303DF4  C0 02 F8 68 */	lfs f0, "@1655"@sda21(r2)
 /* 80306EB8 00303DF8  D0 1F 00 CC */	stfs f0, 0xcc(r31)
 /* 80306EBC 00303DFC  93 9F 00 BC */	stw r28, 0xbc(r31)
 /* 80306EC0 00303E00  4B D3 D7 CD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -136,7 +136,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306ED4 00303E14  4B DD 3D 21 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306ED8 00303E18  93 BF 00 D0 */	stw r29, 0xd0(r31)
 /* 80306EDC 00303E1C  38 7E 01 0C */	addi r3, r30, 0x10c
-/* 80306EE0 00303E20  C0 02 F8 60 */	lfs f0, $$21651@sda21(r2)
+/* 80306EE0 00303E20  C0 02 F8 60 */	lfs f0, "@1651"@sda21(r2)
 /* 80306EE4 00303E24  D0 1F 00 E0 */	stfs f0, 0xe0(r31)
 /* 80306EE8 00303E28  93 9F 00 D0 */	stw r28, 0xd0(r31)
 /* 80306EEC 00303E2C  4B D3 D7 A1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -147,7 +147,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306F00 00303E40  4B DD 3C F5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306F04 00303E44  93 BF 00 E4 */	stw r29, 0xe4(r31)
 /* 80306F08 00303E48  38 7E 01 20 */	addi r3, r30, 0x120
-/* 80306F0C 00303E4C  C0 02 F8 5C */	lfs f0, $$21649@sda21(r2)
+/* 80306F0C 00303E4C  C0 02 F8 5C */	lfs f0, "@1649"@sda21(r2)
 /* 80306F10 00303E50  D0 1F 00 F4 */	stfs f0, 0xf4(r31)
 /* 80306F14 00303E54  93 9F 00 E4 */	stw r28, 0xe4(r31)
 /* 80306F18 00303E58  4B D3 D7 75 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -158,7 +158,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306F2C 00303E6C  4B DD 3C C9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306F30 00303E70  93 BF 00 F8 */	stw r29, 0xf8(r31)
 /* 80306F34 00303E74  38 7E 01 38 */	addi r3, r30, 0x138
-/* 80306F38 00303E78  C0 02 F8 6C */	lfs f0, $$21659@sda21(r2)
+/* 80306F38 00303E78  C0 02 F8 6C */	lfs f0, "@1659"@sda21(r2)
 /* 80306F3C 00303E7C  D0 1F 01 08 */	stfs f0, 0x108(r31)
 /* 80306F40 00303E80  93 9F 00 F8 */	stw r28, 0xf8(r31)
 /* 80306F44 00303E84  4B D3 D7 49 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -169,7 +169,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306F58 00303E98  4B DD 3C 9D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306F5C 00303E9C  93 BF 01 0C */	stw r29, 0x10c(r31)
 /* 80306F60 00303EA0  38 7E 01 4C */	addi r3, r30, 0x14c
-/* 80306F64 00303EA4  C0 02 F8 60 */	lfs f0, $$21651@sda21(r2)
+/* 80306F64 00303EA4  C0 02 F8 60 */	lfs f0, "@1651"@sda21(r2)
 /* 80306F68 00303EA8  D0 1F 01 1C */	stfs f0, 0x11c(r31)
 /* 80306F6C 00303EAC  93 9F 01 0C */	stw r28, 0x10c(r31)
 /* 80306F70 00303EB0  4B D3 D7 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -180,7 +180,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306F84 00303EC4  4B DD 3C 71 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306F88 00303EC8  93 BF 01 20 */	stw r29, 0x120(r31)
 /* 80306F8C 00303ECC  38 7E 01 68 */	addi r3, r30, 0x168
-/* 80306F90 00303ED0  C0 02 F8 4C */	lfs f0, $$21640@sda21(r2)
+/* 80306F90 00303ED0  C0 02 F8 4C */	lfs f0, "@1640"@sda21(r2)
 /* 80306F94 00303ED4  D0 1F 01 30 */	stfs f0, 0x130(r31)
 /* 80306F98 00303ED8  93 9F 01 20 */	stw r28, 0x120(r31)
 /* 80306F9C 00303EDC  4B D3 D6 F1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -191,7 +191,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306FB0 00303EF0  4B DD 3C 45 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306FB4 00303EF4  93 BF 01 34 */	stw r29, 0x134(r31)
 /* 80306FB8 00303EF8  38 7E 01 7C */	addi r3, r30, 0x17c
-/* 80306FBC 00303EFC  C0 02 F8 70 */	lfs f0, $$21663@sda21(r2)
+/* 80306FBC 00303EFC  C0 02 F8 70 */	lfs f0, "@1663"@sda21(r2)
 /* 80306FC0 00303F00  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 80306FC4 00303F04  93 9F 01 34 */	stw r28, 0x134(r31)
 /* 80306FC8 00303F08  4B D3 D6 C5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -202,7 +202,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80306FDC 00303F1C  4B DD 3C 19 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80306FE0 00303F20  93 BF 01 48 */	stw r29, 0x148(r31)
 /* 80306FE4 00303F24  38 7E 01 90 */	addi r3, r30, 0x190
-/* 80306FE8 00303F28  C0 02 F8 74 */	lfs f0, $$21665@sda21(r2)
+/* 80306FE8 00303F28  C0 02 F8 74 */	lfs f0, "@1665"@sda21(r2)
 /* 80306FEC 00303F2C  D0 1F 01 58 */	stfs f0, 0x158(r31)
 /* 80306FF0 00303F30  93 9F 01 48 */	stw r28, 0x148(r31)
 /* 80306FF4 00303F34  4B D3 D6 99 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -213,7 +213,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307008 00303F48  4B DD 3B ED */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030700C 00303F4C  93 BF 01 5C */	stw r29, 0x15c(r31)
 /* 80307010 00303F50  38 7E 01 A4 */	addi r3, r30, 0x1a4
-/* 80307014 00303F54  C0 02 F8 60 */	lfs f0, $$21651@sda21(r2)
+/* 80307014 00303F54  C0 02 F8 60 */	lfs f0, "@1651"@sda21(r2)
 /* 80307018 00303F58  D0 1F 01 6C */	stfs f0, 0x16c(r31)
 /* 8030701C 00303F5C  93 9F 01 5C */	stw r28, 0x15c(r31)
 /* 80307020 00303F60  4B D3 D6 6D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -224,7 +224,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307034 00303F74  4B DD 3B C1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307038 00303F78  93 BF 01 70 */	stw r29, 0x170(r31)
 /* 8030703C 00303F7C  38 7E 01 B4 */	addi r3, r30, 0x1b4
-/* 80307040 00303F80  C0 02 F8 78 */	lfs f0, $$21668@sda21(r2)
+/* 80307040 00303F80  C0 02 F8 78 */	lfs f0, "@1668"@sda21(r2)
 /* 80307044 00303F84  D0 1F 01 80 */	stfs f0, 0x180(r31)
 /* 80307048 00303F88  93 9F 01 70 */	stw r28, 0x170(r31)
 /* 8030704C 00303F8C  4B D3 D6 41 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -235,7 +235,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307060 00303FA0  4B DD 3B 95 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307064 00303FA4  93 BF 01 84 */	stw r29, 0x184(r31)
 /* 80307068 00303FA8  38 7E 01 C4 */	addi r3, r30, 0x1c4
-/* 8030706C 00303FAC  C0 02 F8 7C */	lfs f0, $$21670@sda21(r2)
+/* 8030706C 00303FAC  C0 02 F8 7C */	lfs f0, "@1670"@sda21(r2)
 /* 80307070 00303FB0  D0 1F 01 94 */	stfs f0, 0x194(r31)
 /* 80307074 00303FB4  93 9F 01 84 */	stw r28, 0x184(r31)
 /* 80307078 00303FB8  4B D3 D6 15 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -244,13 +244,13 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307084 00303FC4  38 7F 01 98 */	addi r3, r31, 0x198
 /* 80307088 00303FC8  38 DE 01 C4 */	addi r6, r30, 0x1c4
 /* 8030708C 00303FCC  4B DD 3B 69 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80307090 00303FD0  3C 60 80 3B */	lis r3, __vt__10TParamT$$0s$$1@ha
-/* 80307094 00303FD4  3B 43 6A AC */	addi r26, r3, __vt__10TParamT$$0s$$1@l
+/* 80307090 00303FD0  3C 60 80 3B */	lis r3, "__vt__10TParamT<s>"@ha
+/* 80307094 00303FD4  3B 43 6A AC */	addi r26, r3, "__vt__10TParamT<s>"@l
 /* 80307098 00303FD8  93 5F 01 98 */	stw r26, 0x198(r31)
 /* 8030709C 00303FDC  38 00 07 D0 */	li r0, 0x7d0
-/* 803070A0 00303FE0  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0s$$1@ha
+/* 803070A0 00303FE0  3C 60 80 3B */	lis r3, "__vt__11TParamRT<s>"@ha
 /* 803070A4 00303FE4  B0 1F 01 A8 */	sth r0, 0x1a8(r31)
-/* 803070A8 00303FE8  3B 23 6A A0 */	addi r25, r3, __vt__11TParamRT$$0s$$1@l
+/* 803070A8 00303FE8  3B 23 6A A0 */	addi r25, r3, "__vt__11TParamRT<s>"@l
 /* 803070AC 00303FEC  38 7E 01 D4 */	addi r3, r30, 0x1d4
 /* 803070B0 00303FF0  93 3F 01 98 */	stw r25, 0x198(r31)
 /* 803070B4 00303FF4  4B D3 D5 D9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -281,13 +281,13 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307118 00304058  38 7F 01 D4 */	addi r3, r31, 0x1d4
 /* 8030711C 0030405C  38 DE 01 FC */	addi r6, r30, 0x1fc
 /* 80307120 00304060  4B DD 3A D5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80307124 00304064  3C 60 80 3B */	lis r3, __vt__11TParamT$$0Uc$$1@ha
-/* 80307128 00304068  3B 23 6A 94 */	addi r25, r3, __vt__11TParamT$$0Uc$$1@l
+/* 80307124 00304064  3C 60 80 3B */	lis r3, "__vt__11TParamT<Uc>"@ha
+/* 80307128 00304068  3B 23 6A 94 */	addi r25, r3, "__vt__11TParamT<Uc>"@l
 /* 8030712C 0030406C  93 3F 01 D4 */	stw r25, 0x1d4(r31)
 /* 80307130 00304070  3B 40 00 0A */	li r26, 0xa
-/* 80307134 00304074  3C 60 80 3B */	lis r3, __vt__12TParamRT$$0Uc$$1@ha
+/* 80307134 00304074  3C 60 80 3B */	lis r3, "__vt__12TParamRT<Uc>"@ha
 /* 80307138 00304078  9B 5F 01 E4 */	stb r26, 0x1e4(r31)
-/* 8030713C 0030407C  3B 63 6A 88 */	addi r27, r3, __vt__12TParamRT$$0Uc$$1@l
+/* 8030713C 0030407C  3B 63 6A 88 */	addi r27, r3, "__vt__12TParamRT<Uc>"@l
 /* 80307140 00304080  38 7E 02 14 */	addi r3, r30, 0x214
 /* 80307144 00304084  93 7F 01 D4 */	stw r27, 0x1d4(r31)
 /* 80307148 00304088  4B D3 D5 45 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -339,7 +339,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307200 00304140  4B DD 39 F5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307204 00304144  93 BF 02 38 */	stw r29, 0x238(r31)
 /* 80307208 00304148  38 7E 02 7C */	addi r3, r30, 0x27c
-/* 8030720C 0030414C  C0 02 F8 80 */	lfs f0, $$21680@sda21(r2)
+/* 8030720C 0030414C  C0 02 F8 80 */	lfs f0, "@1680"@sda21(r2)
 /* 80307210 00304150  D0 1F 02 48 */	stfs f0, 0x248(r31)
 /* 80307214 00304154  93 9F 02 38 */	stw r28, 0x238(r31)
 /* 80307218 00304158  4B D3 D4 75 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -350,7 +350,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 8030722C 0030416C  4B DD 39 C9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307230 00304170  93 BF 02 4C */	stw r29, 0x24c(r31)
 /* 80307234 00304174  38 7E 02 90 */	addi r3, r30, 0x290
-/* 80307238 00304178  C0 02 F8 7C */	lfs f0, $$21670@sda21(r2)
+/* 80307238 00304178  C0 02 F8 7C */	lfs f0, "@1670"@sda21(r2)
 /* 8030723C 0030417C  D0 1F 02 5C */	stfs f0, 0x25c(r31)
 /* 80307240 00304180  93 9F 02 4C */	stw r28, 0x24c(r31)
 /* 80307244 00304184  4B D3 D4 49 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -361,7 +361,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307258 00304198  4B DD 39 9D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030725C 0030419C  93 BF 02 60 */	stw r29, 0x260(r31)
 /* 80307260 003041A0  38 7E 02 A4 */	addi r3, r30, 0x2a4
-/* 80307264 003041A4  C0 02 F8 84 */	lfs f0, $$21683@sda21(r2)
+/* 80307264 003041A4  C0 02 F8 84 */	lfs f0, "@1683"@sda21(r2)
 /* 80307268 003041A8  D0 1F 02 70 */	stfs f0, 0x270(r31)
 /* 8030726C 003041AC  93 9F 02 60 */	stw r28, 0x260(r31)
 /* 80307270 003041B0  4B D3 D4 1D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -372,7 +372,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 80307284 003041C4  4B DD 39 71 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307288 003041C8  93 BF 02 74 */	stw r29, 0x274(r31)
 /* 8030728C 003041CC  38 7E 02 B8 */	addi r3, r30, 0x2b8
-/* 80307290 003041D0  C0 02 F8 88 */	lfs f0, $$21685@sda21(r2)
+/* 80307290 003041D0  C0 02 F8 88 */	lfs f0, "@1685"@sda21(r2)
 /* 80307294 003041D4  D0 1F 02 84 */	stfs f0, 0x284(r31)
 /* 80307298 003041D8  93 9F 02 74 */	stw r28, 0x274(r31)
 /* 8030729C 003041DC  4B D3 D3 F1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -383,7 +383,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 803072B0 003041F0  4B DD 39 45 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803072B4 003041F4  93 BF 02 88 */	stw r29, 0x288(r31)
 /* 803072B8 003041F8  38 7E 02 D0 */	addi r3, r30, 0x2d0
-/* 803072BC 003041FC  C0 02 F8 84 */	lfs f0, $$21683@sda21(r2)
+/* 803072BC 003041FC  C0 02 F8 84 */	lfs f0, "@1683"@sda21(r2)
 /* 803072C0 00304200  D0 1F 02 98 */	stfs f0, 0x298(r31)
 /* 803072C4 00304204  93 9F 02 88 */	stw r28, 0x288(r31)
 /* 803072C8 00304208  4B D3 D3 C5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -394,7 +394,7 @@ __ct__29TBossHanachanChangeSaveParamsFPCc:
 /* 803072DC 0030421C  4B DD 39 19 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803072E0 00304220  93 BF 02 9C */	stw r29, 0x29c(r31)
 /* 803072E4 00304224  7F E3 FB 78 */	mr r3, r31
-/* 803072E8 00304228  C0 02 F8 8C */	lfs f0, $$21688@sda21(r2)
+/* 803072E8 00304228  C0 02 F8 8C */	lfs f0, "@1688"@sda21(r2)
 /* 803072EC 0030422C  D0 1F 02 AC */	stfs f0, 0x2ac(r31)
 /* 803072F0 00304230  93 9F 02 9C */	stw r28, 0x29c(r31)
 /* 803072F4 00304234  80 9F 00 00 */	lwz r4, 0(r31)
@@ -418,8 +418,8 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307330 00304270  93 A1 00 14 */	stw r29, 0x14(r1)
 /* 80307334 00304274  93 81 00 10 */	stw r28, 0x10(r1)
 /* 80307338 00304278  90 83 00 00 */	stw r4, 0(r3)
-/* 8030733C 0030427C  3C 60 80 3A */	lis r3, $$21490@ha
-/* 80307340 00304280  3B C3 01 68 */	addi r30, r3, $$21490@l
+/* 8030733C 0030427C  3C 60 80 3A */	lis r3, "@1490"@ha
+/* 80307340 00304280  3B C3 01 68 */	addi r30, r3, "@1490"@l
 /* 80307344 00304284  90 1F 00 04 */	stw r0, 4(r31)
 /* 80307348 00304288  38 7E 02 E0 */	addi r3, r30, 0x2e0
 /* 8030734C 0030428C  4B D3 D3 41 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -428,12 +428,12 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307358 00304298  38 7F 00 08 */	addi r3, r31, 8
 /* 8030735C 0030429C  38 DE 02 E0 */	addi r6, r30, 0x2e0
 /* 80307360 003042A0  4B DD 38 95 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80307364 003042A4  3C 60 80 3B */	lis r3, __vt__10TParamT$$0f$$1@ha
-/* 80307368 003042A8  3B A3 29 B8 */	addi r29, r3, __vt__10TParamT$$0f$$1@l
+/* 80307364 003042A4  3C 60 80 3B */	lis r3, "__vt__10TParamT<f>"@ha
+/* 80307368 003042A8  3B A3 29 B8 */	addi r29, r3, "__vt__10TParamT<f>"@l
 /* 8030736C 003042AC  93 BF 00 08 */	stw r29, 8(r31)
-/* 80307370 003042B0  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0f$$1@ha
-/* 80307374 003042B4  3B 83 29 F4 */	addi r28, r3, __vt__11TParamRT$$0f$$1@l
-/* 80307378 003042B8  C0 02 F8 90 */	lfs f0, $$21779@sda21(r2)
+/* 80307370 003042B0  3C 60 80 3B */	lis r3, "__vt__11TParamRT<f>"@ha
+/* 80307374 003042B4  3B 83 29 F4 */	addi r28, r3, "__vt__11TParamRT<f>"@l
+/* 80307378 003042B8  C0 02 F8 90 */	lfs f0, "@1779"@sda21(r2)
 /* 8030737C 003042BC  38 7E 02 F0 */	addi r3, r30, 0x2f0
 /* 80307380 003042C0  D0 1F 00 18 */	stfs f0, 0x18(r31)
 /* 80307384 003042C4  93 9F 00 08 */	stw r28, 8(r31)
@@ -445,7 +445,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 8030739C 003042DC  4B DD 38 59 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803073A0 003042E0  93 BF 00 1C */	stw r29, 0x1c(r31)
 /* 803073A4 003042E4  38 7E 03 04 */	addi r3, r30, 0x304
-/* 803073A8 003042E8  C0 02 F8 94 */	lfs f0, $$21781@sda21(r2)
+/* 803073A8 003042E8  C0 02 F8 94 */	lfs f0, "@1781"@sda21(r2)
 /* 803073AC 003042EC  D0 1F 00 2C */	stfs f0, 0x2c(r31)
 /* 803073B0 003042F0  93 9F 00 1C */	stw r28, 0x1c(r31)
 /* 803073B4 003042F4  4B D3 D2 D9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -456,7 +456,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803073C8 00304308  4B DD 38 2D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803073CC 0030430C  93 BF 00 30 */	stw r29, 0x30(r31)
 /* 803073D0 00304310  38 7E 03 18 */	addi r3, r30, 0x318
-/* 803073D4 00304314  C0 02 F8 98 */	lfs f0, $$21783@sda21(r2)
+/* 803073D4 00304314  C0 02 F8 98 */	lfs f0, "@1783"@sda21(r2)
 /* 803073D8 00304318  D0 1F 00 40 */	stfs f0, 0x40(r31)
 /* 803073DC 0030431C  93 9F 00 30 */	stw r28, 0x30(r31)
 /* 803073E0 00304320  4B D3 D2 AD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -467,7 +467,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803073F4 00304334  4B DD 38 01 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803073F8 00304338  93 BF 00 44 */	stw r29, 0x44(r31)
 /* 803073FC 0030433C  38 7E 03 2C */	addi r3, r30, 0x32c
-/* 80307400 00304340  C0 02 F8 9C */	lfs f0, $$21785@sda21(r2)
+/* 80307400 00304340  C0 02 F8 9C */	lfs f0, "@1785"@sda21(r2)
 /* 80307404 00304344  D0 1F 00 54 */	stfs f0, 0x54(r31)
 /* 80307408 00304348  93 9F 00 44 */	stw r28, 0x44(r31)
 /* 8030740C 0030434C  4B D3 D2 81 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -478,7 +478,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307420 00304360  4B DD 37 D5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307424 00304364  93 BF 00 58 */	stw r29, 0x58(r31)
 /* 80307428 00304368  38 7E 03 40 */	addi r3, r30, 0x340
-/* 8030742C 0030436C  C0 02 F8 A0 */	lfs f0, $$21787@sda21(r2)
+/* 8030742C 0030436C  C0 02 F8 A0 */	lfs f0, "@1787"@sda21(r2)
 /* 80307430 00304370  D0 1F 00 68 */	stfs f0, 0x68(r31)
 /* 80307434 00304374  93 9F 00 58 */	stw r28, 0x58(r31)
 /* 80307438 00304378  4B D3 D2 55 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -489,7 +489,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 8030744C 0030438C  4B DD 37 A9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307450 00304390  93 BF 00 6C */	stw r29, 0x6c(r31)
 /* 80307454 00304394  38 7E 03 54 */	addi r3, r30, 0x354
-/* 80307458 00304398  C0 02 F8 A4 */	lfs f0, $$21789@sda21(r2)
+/* 80307458 00304398  C0 02 F8 A4 */	lfs f0, "@1789"@sda21(r2)
 /* 8030745C 0030439C  D0 1F 00 7C */	stfs f0, 0x7c(r31)
 /* 80307460 003043A0  93 9F 00 6C */	stw r28, 0x6c(r31)
 /* 80307464 003043A4  4B D3 D2 29 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -500,7 +500,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307478 003043B8  4B DD 37 7D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030747C 003043BC  93 BF 00 80 */	stw r29, 0x80(r31)
 /* 80307480 003043C0  38 7E 03 68 */	addi r3, r30, 0x368
-/* 80307484 003043C4  C0 02 F8 A8 */	lfs f0, $$21791@sda21(r2)
+/* 80307484 003043C4  C0 02 F8 A8 */	lfs f0, "@1791"@sda21(r2)
 /* 80307488 003043C8  D0 1F 00 90 */	stfs f0, 0x90(r31)
 /* 8030748C 003043CC  93 9F 00 80 */	stw r28, 0x80(r31)
 /* 80307490 003043D0  4B D3 D1 FD */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -511,7 +511,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803074A4 003043E4  4B DD 37 51 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803074A8 003043E8  93 BF 00 94 */	stw r29, 0x94(r31)
 /* 803074AC 003043EC  38 7E 03 7C */	addi r3, r30, 0x37c
-/* 803074B0 003043F0  C0 02 F8 78 */	lfs f0, $$21668@sda21(r2)
+/* 803074B0 003043F0  C0 02 F8 78 */	lfs f0, "@1668"@sda21(r2)
 /* 803074B4 003043F4  D0 1F 00 A4 */	stfs f0, 0xa4(r31)
 /* 803074B8 003043F8  93 9F 00 94 */	stw r28, 0x94(r31)
 /* 803074BC 003043FC  4B D3 D1 D1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -522,7 +522,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803074D0 00304410  4B DD 37 25 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803074D4 00304414  93 BF 00 A8 */	stw r29, 0xa8(r31)
 /* 803074D8 00304418  38 7E 03 90 */	addi r3, r30, 0x390
-/* 803074DC 0030441C  C0 02 F8 AC */	lfs f0, $$21794@sda21(r2)
+/* 803074DC 0030441C  C0 02 F8 AC */	lfs f0, "@1794"@sda21(r2)
 /* 803074E0 00304420  D0 1F 00 B8 */	stfs f0, 0xb8(r31)
 /* 803074E4 00304424  93 9F 00 A8 */	stw r28, 0xa8(r31)
 /* 803074E8 00304428  4B D3 D1 A5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -533,7 +533,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803074FC 0030443C  4B DD 36 F9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307500 00304440  93 BF 00 BC */	stw r29, 0xbc(r31)
 /* 80307504 00304444  38 7E 03 A4 */	addi r3, r30, 0x3a4
-/* 80307508 00304448  C0 02 F8 B0 */	lfs f0, $$21796@sda21(r2)
+/* 80307508 00304448  C0 02 F8 B0 */	lfs f0, "@1796"@sda21(r2)
 /* 8030750C 0030444C  D0 1F 00 CC */	stfs f0, 0xcc(r31)
 /* 80307510 00304450  93 9F 00 BC */	stw r28, 0xbc(r31)
 /* 80307514 00304454  4B D3 D1 79 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -544,7 +544,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307528 00304468  4B DD 36 CD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030752C 0030446C  93 BF 00 D0 */	stw r29, 0xd0(r31)
 /* 80307530 00304470  38 7E 03 B8 */	addi r3, r30, 0x3b8
-/* 80307534 00304474  C0 02 F8 88 */	lfs f0, $$21685@sda21(r2)
+/* 80307534 00304474  C0 02 F8 88 */	lfs f0, "@1685"@sda21(r2)
 /* 80307538 00304478  D0 1F 00 E0 */	stfs f0, 0xe0(r31)
 /* 8030753C 0030447C  93 9F 00 D0 */	stw r28, 0xd0(r31)
 /* 80307540 00304480  4B D3 D1 4D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -555,7 +555,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307554 00304494  4B DD 36 A1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307558 00304498  93 BF 00 E4 */	stw r29, 0xe4(r31)
 /* 8030755C 0030449C  38 7E 03 CC */	addi r3, r30, 0x3cc
-/* 80307560 003044A0  C0 02 F8 88 */	lfs f0, $$21685@sda21(r2)
+/* 80307560 003044A0  C0 02 F8 88 */	lfs f0, "@1685"@sda21(r2)
 /* 80307564 003044A4  D0 1F 00 F4 */	stfs f0, 0xf4(r31)
 /* 80307568 003044A8  93 9F 00 E4 */	stw r28, 0xe4(r31)
 /* 8030756C 003044AC  4B D3 D1 21 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -566,7 +566,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307580 003044C0  4B DD 36 75 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307584 003044C4  93 BF 00 F8 */	stw r29, 0xf8(r31)
 /* 80307588 003044C8  38 7E 03 E0 */	addi r3, r30, 0x3e0
-/* 8030758C 003044CC  C0 02 F8 B4 */	lfs f0, $$21800@sda21(r2)
+/* 8030758C 003044CC  C0 02 F8 B4 */	lfs f0, "@1800"@sda21(r2)
 /* 80307590 003044D0  D0 1F 01 08 */	stfs f0, 0x108(r31)
 /* 80307594 003044D4  93 9F 00 F8 */	stw r28, 0xf8(r31)
 /* 80307598 003044D8  4B D3 D0 F5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -577,7 +577,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803075AC 003044EC  4B DD 36 49 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803075B0 003044F0  93 BF 01 0C */	stw r29, 0x10c(r31)
 /* 803075B4 003044F4  38 7E 03 F4 */	addi r3, r30, 0x3f4
-/* 803075B8 003044F8  C0 02 F8 8C */	lfs f0, $$21688@sda21(r2)
+/* 803075B8 003044F8  C0 02 F8 8C */	lfs f0, "@1688"@sda21(r2)
 /* 803075BC 003044FC  D0 1F 01 1C */	stfs f0, 0x11c(r31)
 /* 803075C0 00304500  93 9F 01 0C */	stw r28, 0x10c(r31)
 /* 803075C4 00304504  4B D3 D0 C9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -588,7 +588,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803075D8 00304518  4B DD 36 1D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803075DC 0030451C  93 BF 01 20 */	stw r29, 0x120(r31)
 /* 803075E0 00304520  38 7E 04 08 */	addi r3, r30, 0x408
-/* 803075E4 00304524  C0 02 F8 78 */	lfs f0, $$21668@sda21(r2)
+/* 803075E4 00304524  C0 02 F8 78 */	lfs f0, "@1668"@sda21(r2)
 /* 803075E8 00304528  D0 1F 01 30 */	stfs f0, 0x130(r31)
 /* 803075EC 0030452C  93 9F 01 20 */	stw r28, 0x120(r31)
 /* 803075F0 00304530  4B D3 D0 9D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -599,7 +599,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307604 00304544  4B DD 35 F1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307608 00304548  93 BF 01 34 */	stw r29, 0x134(r31)
 /* 8030760C 0030454C  38 7E 04 1C */	addi r3, r30, 0x41c
-/* 80307610 00304550  C0 02 F8 B8 */	lfs f0, $$21804@sda21(r2)
+/* 80307610 00304550  C0 02 F8 B8 */	lfs f0, "@1804"@sda21(r2)
 /* 80307614 00304554  D0 1F 01 44 */	stfs f0, 0x144(r31)
 /* 80307618 00304558  93 9F 01 34 */	stw r28, 0x134(r31)
 /* 8030761C 0030455C  4B D3 D0 71 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -610,7 +610,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307630 00304570  4B DD 35 C5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307634 00304574  93 BF 01 48 */	stw r29, 0x148(r31)
 /* 80307638 00304578  38 7E 04 30 */	addi r3, r30, 0x430
-/* 8030763C 0030457C  C0 02 F8 B8 */	lfs f0, $$21804@sda21(r2)
+/* 8030763C 0030457C  C0 02 F8 B8 */	lfs f0, "@1804"@sda21(r2)
 /* 80307640 00304580  D0 1F 01 58 */	stfs f0, 0x158(r31)
 /* 80307644 00304584  93 9F 01 48 */	stw r28, 0x148(r31)
 /* 80307648 00304588  4B D3 D0 45 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -621,7 +621,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 8030765C 0030459C  4B DD 35 99 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307660 003045A0  93 BF 01 5C */	stw r29, 0x15c(r31)
 /* 80307664 003045A4  38 7E 04 40 */	addi r3, r30, 0x440
-/* 80307668 003045A8  C0 02 F8 BC */	lfs f0, $$21807@sda21(r2)
+/* 80307668 003045A8  C0 02 F8 BC */	lfs f0, "@1807"@sda21(r2)
 /* 8030766C 003045AC  D0 1F 01 6C */	stfs f0, 0x16c(r31)
 /* 80307670 003045B0  93 9F 01 5C */	stw r28, 0x15c(r31)
 /* 80307674 003045B4  4B D3 D0 19 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -632,7 +632,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307688 003045C8  4B DD 35 6D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030768C 003045CC  93 BF 01 70 */	stw r29, 0x170(r31)
 /* 80307690 003045D0  38 7E 04 50 */	addi r3, r30, 0x450
-/* 80307694 003045D4  C0 02 F8 C0 */	lfs f0, $$21809@sda21(r2)
+/* 80307694 003045D4  C0 02 F8 C0 */	lfs f0, "@1809"@sda21(r2)
 /* 80307698 003045D8  D0 1F 01 80 */	stfs f0, 0x180(r31)
 /* 8030769C 003045DC  93 9F 01 70 */	stw r28, 0x170(r31)
 /* 803076A0 003045E0  4B D3 CF ED */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -643,7 +643,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803076B4 003045F4  4B DD 35 41 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803076B8 003045F8  93 BF 01 84 */	stw r29, 0x184(r31)
 /* 803076BC 003045FC  38 7E 04 64 */	addi r3, r30, 0x464
-/* 803076C0 00304600  C0 02 F8 C4 */	lfs f0, $$21811@sda21(r2)
+/* 803076C0 00304600  C0 02 F8 C4 */	lfs f0, "@1811"@sda21(r2)
 /* 803076C4 00304604  D0 1F 01 94 */	stfs f0, 0x194(r31)
 /* 803076C8 00304608  93 9F 01 84 */	stw r28, 0x184(r31)
 /* 803076CC 0030460C  4B D3 CF C1 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -654,7 +654,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803076E0 00304620  4B DD 35 15 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803076E4 00304624  93 BF 01 98 */	stw r29, 0x198(r31)
 /* 803076E8 00304628  38 7E 04 78 */	addi r3, r30, 0x478
-/* 803076EC 0030462C  C0 02 F8 C8 */	lfs f0, $$21813@sda21(r2)
+/* 803076EC 0030462C  C0 02 F8 C8 */	lfs f0, "@1813"@sda21(r2)
 /* 803076F0 00304630  D0 1F 01 A8 */	stfs f0, 0x1a8(r31)
 /* 803076F4 00304634  93 9F 01 98 */	stw r28, 0x198(r31)
 /* 803076F8 00304638  4B D3 CF 95 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -665,7 +665,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 8030770C 0030464C  4B DD 34 E9 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307710 00304650  93 BF 01 AC */	stw r29, 0x1ac(r31)
 /* 80307714 00304654  38 7E 04 90 */	addi r3, r30, 0x490
-/* 80307718 00304658  C0 02 F8 CC */	lfs f0, $$21815@sda21(r2)
+/* 80307718 00304658  C0 02 F8 CC */	lfs f0, "@1815"@sda21(r2)
 /* 8030771C 0030465C  D0 1F 01 BC */	stfs f0, 0x1bc(r31)
 /* 80307720 00304660  93 9F 01 AC */	stw r28, 0x1ac(r31)
 /* 80307724 00304664  4B D3 CF 69 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -676,7 +676,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307738 00304678  4B DD 34 BD */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 8030773C 0030467C  93 BF 01 C0 */	stw r29, 0x1c0(r31)
 /* 80307740 00304680  38 7E 04 A8 */	addi r3, r30, 0x4a8
-/* 80307744 00304684  C0 02 F8 D0 */	lfs f0, $$21817@sda21(r2)
+/* 80307744 00304684  C0 02 F8 D0 */	lfs f0, "@1817"@sda21(r2)
 /* 80307748 00304688  D0 1F 01 D0 */	stfs f0, 0x1d0(r31)
 /* 8030774C 0030468C  93 9F 01 C0 */	stw r28, 0x1c0(r31)
 /* 80307750 00304690  4B D3 CF 3D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -687,7 +687,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307764 003046A4  4B DD 34 91 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307768 003046A8  93 BF 01 D4 */	stw r29, 0x1d4(r31)
 /* 8030776C 003046AC  38 7E 04 C0 */	addi r3, r30, 0x4c0
-/* 80307770 003046B0  C0 02 F8 D4 */	lfs f0, $$21819@sda21(r2)
+/* 80307770 003046B0  C0 02 F8 D4 */	lfs f0, "@1819"@sda21(r2)
 /* 80307774 003046B4  D0 1F 01 E4 */	stfs f0, 0x1e4(r31)
 /* 80307778 003046B8  93 9F 01 D4 */	stw r28, 0x1d4(r31)
 /* 8030777C 003046BC  4B D3 CF 11 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -698,7 +698,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307790 003046D0  4B DD 34 65 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307794 003046D4  93 BF 01 E8 */	stw r29, 0x1e8(r31)
 /* 80307798 003046D8  38 7E 04 D8 */	addi r3, r30, 0x4d8
-/* 8030779C 003046DC  C0 02 F8 64 */	lfs f0, $$21653@sda21(r2)
+/* 8030779C 003046DC  C0 02 F8 64 */	lfs f0, "@1653"@sda21(r2)
 /* 803077A0 003046E0  D0 1F 01 F8 */	stfs f0, 0x1f8(r31)
 /* 803077A4 003046E4  93 9F 01 E8 */	stw r28, 0x1e8(r31)
 /* 803077A8 003046E8  4B D3 CE E5 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -709,7 +709,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803077BC 003046FC  4B DD 34 39 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803077C0 00304700  93 BF 01 FC */	stw r29, 0x1fc(r31)
 /* 803077C4 00304704  38 7E 04 F0 */	addi r3, r30, 0x4f0
-/* 803077C8 00304708  C0 02 F8 B8 */	lfs f0, $$21804@sda21(r2)
+/* 803077C8 00304708  C0 02 F8 B8 */	lfs f0, "@1804"@sda21(r2)
 /* 803077CC 0030470C  D0 1F 02 0C */	stfs f0, 0x20c(r31)
 /* 803077D0 00304710  93 9F 01 FC */	stw r28, 0x1fc(r31)
 /* 803077D4 00304714  4B D3 CE B9 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -720,7 +720,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 803077E8 00304728  4B DD 34 0D */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 803077EC 0030472C  93 BF 02 10 */	stw r29, 0x210(r31)
 /* 803077F0 00304730  38 7E 05 04 */	addi r3, r30, 0x504
-/* 803077F4 00304734  C0 02 F8 D8 */	lfs f0, $$21823@sda21(r2)
+/* 803077F4 00304734  C0 02 F8 D8 */	lfs f0, "@1823"@sda21(r2)
 /* 803077F8 00304738  D0 1F 02 20 */	stfs f0, 0x220(r31)
 /* 803077FC 0030473C  93 9F 02 10 */	stw r28, 0x210(r31)
 /* 80307800 00304740  4B D3 CE 8D */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -731,7 +731,7 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307814 00304754  4B DD 33 E1 */	bl __ct__10TBaseParamFP7TParamsUsPCc
 /* 80307818 00304758  93 BF 02 24 */	stw r29, 0x224(r31)
 /* 8030781C 0030475C  38 7E 05 18 */	addi r3, r30, 0x518
-/* 80307820 00304760  C0 02 F8 A8 */	lfs f0, $$21791@sda21(r2)
+/* 80307820 00304760  C0 02 F8 A8 */	lfs f0, "@1791"@sda21(r2)
 /* 80307824 00304764  D0 1F 02 34 */	stfs f0, 0x234(r31)
 /* 80307828 00304768  93 9F 02 24 */	stw r28, 0x224(r31)
 /* 8030782C 0030476C  4B D3 CE 61 */	bl calcKeyCode__Q26JDrama8TNameRefFPCc
@@ -740,13 +740,13 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 /* 80307838 00304778  38 7F 02 38 */	addi r3, r31, 0x238
 /* 8030783C 0030477C  38 DE 05 18 */	addi r6, r30, 0x518
 /* 80307840 00304780  4B DD 33 B5 */	bl __ct__10TBaseParamFP7TParamsUsPCc
-/* 80307844 00304784  3C 60 80 3B */	lis r3, __vt__10TParamT$$0s$$1@ha
-/* 80307848 00304788  38 03 6A AC */	addi r0, r3, __vt__10TParamT$$0s$$1@l
+/* 80307844 00304784  3C 60 80 3B */	lis r3, "__vt__10TParamT<s>"@ha
+/* 80307848 00304788  38 03 6A AC */	addi r0, r3, "__vt__10TParamT<s>"@l
 /* 8030784C 0030478C  90 1F 02 38 */	stw r0, 0x238(r31)
 /* 80307850 00304790  38 00 00 14 */	li r0, 0x14
-/* 80307854 00304794  3C 60 80 3B */	lis r3, __vt__11TParamRT$$0s$$1@ha
+/* 80307854 00304794  3C 60 80 3B */	lis r3, "__vt__11TParamRT<s>"@ha
 /* 80307858 00304798  B0 1F 02 48 */	sth r0, 0x248(r31)
-/* 8030785C 0030479C  38 03 6A A0 */	addi r0, r3, __vt__11TParamRT$$0s$$1@l
+/* 8030785C 0030479C  38 03 6A A0 */	addi r0, r3, "__vt__11TParamRT<s>"@l
 /* 80307860 003047A0  38 7F 00 00 */	addi r3, r31, 0
 /* 80307864 003047A4  90 1F 02 38 */	stw r0, 0x238(r31)
 /* 80307868 003047A8  80 9F 00 00 */	lwz r4, 0(r31)
@@ -763,212 +763,212 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
 
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
-$$21490:
+"@1490":
   .4byte 0
   .4byte 0
   .4byte 0
-$$21526:
+"@1526":
 	.incbin "baserom.dol", 0x39D174, 0x14
-$$21637:
+"@1637":
 	.incbin "baserom.dol", 0x39D188, 0x18
-$$21639:
+"@1639":
 	.incbin "baserom.dol", 0x39D1A0, 0x14
-$$21641:
+"@1641":
 	.incbin "baserom.dol", 0x39D1B4, 0x18
-$$21643:
+"@1643":
 	.incbin "baserom.dol", 0x39D1CC, 0x14
-$$21645:
+"@1645":
 	.incbin "baserom.dol", 0x39D1E0, 0x14
-$$21646:
+"@1646":
 	.incbin "baserom.dol", 0x39D1F4, 0x10
-$$21648:
+"@1648":
 	.incbin "baserom.dol", 0x39D204, 0x14
-$$21650:
+"@1650":
 	.incbin "baserom.dol", 0x39D218, 0x14
-$$21652:
+"@1652":
 	.incbin "baserom.dol", 0x39D22C, 0x18
-$$21654:
+"@1654":
 	.incbin "baserom.dol", 0x39D244, 0x18
-$$21656:
+"@1656":
 	.incbin "baserom.dol", 0x39D25C, 0x18
-$$21657:
+"@1657":
 	.incbin "baserom.dol", 0x39D274, 0x14
-$$21658:
+"@1658":
 	.incbin "baserom.dol", 0x39D288, 0x18
-$$21660:
+"@1660":
 	.incbin "baserom.dol", 0x39D2A0, 0x14
-$$21661:
+"@1661":
 	.incbin "baserom.dol", 0x39D2B4, 0x1C
-$$21662:
+"@1662":
 	.incbin "baserom.dol", 0x39D2D0, 0x14
-$$21664:
+"@1664":
 	.incbin "baserom.dol", 0x39D2E4, 0x14
-$$21666:
+"@1666":
 	.incbin "baserom.dol", 0x39D2F8, 0x14
-$$21667:
+"@1667":
 	.incbin "baserom.dol", 0x39D30C, 0x10
-$$21669:
+"@1669":
 	.incbin "baserom.dol", 0x39D31C, 0x10
-$$21671:
+"@1671":
 	.incbin "baserom.dol", 0x39D32C, 0x10
-$$21672:
+"@1672":
 	.incbin "baserom.dol", 0x39D33C, 0x10
-$$21673:
+"@1673":
 	.incbin "baserom.dol", 0x39D34C, 0x18
-$$21674:
+"@1674":
 	.incbin "baserom.dol", 0x39D364, 0x18
-$$21675:
+"@1675":
 	.incbin "baserom.dol", 0x39D37C, 0x14
-$$21676:
+"@1676":
 	.incbin "baserom.dol", 0x39D390, 0x14
-$$21677:
+"@1677":
 	.incbin "baserom.dol", 0x39D3A4, 0x14
-$$21678:
+"@1678":
 	.incbin "baserom.dol", 0x39D3B8, 0x14
-$$21679:
+"@1679":
 	.incbin "baserom.dol", 0x39D3CC, 0x18
-$$21681:
+"@1681":
 	.incbin "baserom.dol", 0x39D3E4, 0x14
-$$21682:
+"@1682":
 	.incbin "baserom.dol", 0x39D3F8, 0x14
-$$21684:
+"@1684":
 	.incbin "baserom.dol", 0x39D40C, 0x14
-$$21686:
+"@1686":
 	.incbin "baserom.dol", 0x39D420, 0x18
-$$21687:
+"@1687":
 	.incbin "baserom.dol", 0x39D438, 0x10
-$$21778:
+"@1778":
 	.incbin "baserom.dol", 0x39D448, 0x10
-$$21780:
+"@1780":
 	.incbin "baserom.dol", 0x39D458, 0x14
-$$21782:
+"@1782":
 	.incbin "baserom.dol", 0x39D46C, 0x14
-$$21784:
+"@1784":
 	.incbin "baserom.dol", 0x39D480, 0x14
-$$21786:
+"@1786":
 	.incbin "baserom.dol", 0x39D494, 0x14
-$$21788:
+"@1788":
 	.incbin "baserom.dol", 0x39D4A8, 0x14
-$$21790:
+"@1790":
 	.incbin "baserom.dol", 0x39D4BC, 0x14
-$$21792:
+"@1792":
 	.incbin "baserom.dol", 0x39D4D0, 0x14
-$$21793:
+"@1793":
 	.incbin "baserom.dol", 0x39D4E4, 0x14
-$$21795:
+"@1795":
 	.incbin "baserom.dol", 0x39D4F8, 0x14
-$$21797:
+"@1797":
 	.incbin "baserom.dol", 0x39D50C, 0x14
-$$21798:
+"@1798":
 	.incbin "baserom.dol", 0x39D520, 0x14
-$$21799:
+"@1799":
 	.incbin "baserom.dol", 0x39D534, 0x14
-$$21801:
+"@1801":
 	.incbin "baserom.dol", 0x39D548, 0x14
-$$21802:
+"@1802":
 	.incbin "baserom.dol", 0x39D55C, 0x14
-$$21803:
+"@1803":
 	.incbin "baserom.dol", 0x39D570, 0x14
-$$21805:
+"@1805":
 	.incbin "baserom.dol", 0x39D584, 0x14
-$$21806:
+"@1806":
 	.incbin "baserom.dol", 0x39D598, 0x10
-$$21808:
+"@1808":
 	.incbin "baserom.dol", 0x39D5A8, 0x10
-$$21810:
+"@1810":
 	.incbin "baserom.dol", 0x39D5B8, 0x14
-$$21812:
+"@1812":
 	.incbin "baserom.dol", 0x39D5CC, 0x14
-$$21814:
+"@1814":
 	.incbin "baserom.dol", 0x39D5E0, 0x18
-$$21816:
+"@1816":
 	.incbin "baserom.dol", 0x39D5F8, 0x18
-$$21818:
+"@1818":
 	.incbin "baserom.dol", 0x39D610, 0x18
-$$21820:
+"@1820":
 	.incbin "baserom.dol", 0x39D628, 0x18
-$$21821:
+"@1821":
 	.incbin "baserom.dol", 0x39D640, 0x18
-$$21822:
+"@1822":
 	.incbin "baserom.dol", 0x39D658, 0x14
-$$21824:
+"@1824":
 	.incbin "baserom.dol", 0x39D66C, 0x14
-$$21825:
+"@1825":
 	.incbin "baserom.dol", 0x39D680, 0x18
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
-$$21638:
+"@1638":
 	.incbin "baserom.dol", 0x3EB548, 0x4
-$$21640:
+"@1640":
 	.incbin "baserom.dol", 0x3EB54C, 0x4
-$$21642:
+"@1642":
 	.incbin "baserom.dol", 0x3EB550, 0x4
-$$21644:
+"@1644":
 	.incbin "baserom.dol", 0x3EB554, 0x4
-$$21647:
+"@1647":
 	.incbin "baserom.dol", 0x3EB558, 0x4
-$$21649:
+"@1649":
 	.incbin "baserom.dol", 0x3EB55C, 0x4
-$$21651:
+"@1651":
 	.incbin "baserom.dol", 0x3EB560, 0x4
-$$21653:
+"@1653":
 	.incbin "baserom.dol", 0x3EB564, 0x4
-$$21655:
+"@1655":
 	.incbin "baserom.dol", 0x3EB568, 0x4
-$$21659:
+"@1659":
 	.incbin "baserom.dol", 0x3EB56C, 0x4
-$$21663:
+"@1663":
 	.incbin "baserom.dol", 0x3EB570, 0x4
-$$21665:
+"@1665":
 	.incbin "baserom.dol", 0x3EB574, 0x4
-$$21668:
+"@1668":
 	.incbin "baserom.dol", 0x3EB578, 0x4
-$$21670:
+"@1670":
 	.incbin "baserom.dol", 0x3EB57C, 0x4
-$$21680:
+"@1680":
 	.incbin "baserom.dol", 0x3EB580, 0x4
-$$21683:
+"@1683":
 	.incbin "baserom.dol", 0x3EB584, 0x4
-$$21685:
+"@1685":
 	.incbin "baserom.dol", 0x3EB588, 0x4
-$$21688:
+"@1688":
 	.incbin "baserom.dol", 0x3EB58C, 0x4
-$$21779:
+"@1779":
 	.incbin "baserom.dol", 0x3EB590, 0x4
-$$21781:
+"@1781":
 	.incbin "baserom.dol", 0x3EB594, 0x4
-$$21783:
+"@1783":
 	.incbin "baserom.dol", 0x3EB598, 0x4
-$$21785:
+"@1785":
 	.incbin "baserom.dol", 0x3EB59C, 0x4
-$$21787:
+"@1787":
 	.incbin "baserom.dol", 0x3EB5A0, 0x4
-$$21789:
+"@1789":
 	.incbin "baserom.dol", 0x3EB5A4, 0x4
-$$21791:
+"@1791":
 	.incbin "baserom.dol", 0x3EB5A8, 0x4
-$$21794:
+"@1794":
 	.incbin "baserom.dol", 0x3EB5AC, 0x4
-$$21796:
+"@1796":
 	.incbin "baserom.dol", 0x3EB5B0, 0x4
-$$21800:
+"@1800":
 	.incbin "baserom.dol", 0x3EB5B4, 0x4
-$$21804:
+"@1804":
   .4byte 0
-$$21807:
+"@1807":
 	.incbin "baserom.dol", 0x3EB5BC, 0x4
-$$21809:
+"@1809":
 	.incbin "baserom.dol", 0x3EB5C0, 0x4
-$$21811:
+"@1811":
 	.incbin "baserom.dol", 0x3EB5C4, 0x4
-$$21813:
+"@1813":
 	.incbin "baserom.dol", 0x3EB5C8, 0x4
-$$21815:
+"@1815":
 	.incbin "baserom.dol", 0x3EB5CC, 0x4
-$$21817:
+"@1817":
 	.incbin "baserom.dol", 0x3EB5D0, 0x4
-$$21819:
+"@1819":
 	.incbin "baserom.dol", 0x3EB5D4, 0x4
-$$21823:
+"@1823":
 	.incbin "baserom.dol", 0x3EB5D8, 0x8

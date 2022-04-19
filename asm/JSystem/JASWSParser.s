@@ -7,7 +7,7 @@ getGroupCount__Q28JASystem8WSParserFPv:
 /* 8005B450 00058390  90 01 00 04 */	stw r0, 4(r1)
 /* 8005B454 00058394  94 21 FF F8 */	stwu r1, -8(r1)
 /* 8005B458 00058398  80 83 00 14 */	lwz r4, 0x14(r3)
-/* 8005B45C 0005839C  48 00 04 F5 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl
+/* 8005B45C 0005839C  48 00 04 F5 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlGroup>__FPCvUl"
 /* 8005B460 000583A0  80 01 00 0C */	lwz r0, 0xc(r1)
 /* 8005B464 000583A4  38 21 00 08 */	addi r1, r1, 8
 /* 8005B468 000583A8  80 63 00 08 */	lwz r3, 8(r3)
@@ -46,7 +46,7 @@ lbl_8005B4CC:
 lbl_8005B4DC:
 /* 8005B4DC 0005841C  7F 23 CB 78 */	mr r3, r25
 /* 8005B4E0 00058420  80 99 00 14 */	lwz r4, 0x14(r25)
-/* 8005B4E4 00058424  48 00 04 6D */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl
+/* 8005B4E4 00058424  48 00 04 6D */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlGroup>__FPCvUl"
 /* 8005B4E8 00058428  7C 7D 1B 78 */	mr r29, r3
 /* 8005B4EC 0005842C  80 83 00 08 */	lwz r4, 8(r3)
 /* 8005B4F0 00058430  7F 63 DB 78 */	mr r3, r27
@@ -59,10 +59,10 @@ lbl_8005B508:
 /* 8005B508 00058448  38 1F 00 0C */	addi r0, r31, 0xc
 /* 8005B50C 0005844C  7C 9D 00 2E */	lwzx r4, r29, r0
 /* 8005B510 00058450  7F 23 CB 78 */	mr r3, r25
-/* 8005B514 00058454  48 00 04 25 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlScene$$1__FPCvUl
+/* 8005B514 00058454  48 00 04 25 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlScene>__FPCvUl"
 /* 8005B518 00058458  80 83 00 0C */	lwz r4, 0xc(r3)
 /* 8005B51C 0005845C  7F 23 CB 78 */	mr r3, r25
-/* 8005B520 00058460  48 00 04 01 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TCtrl$$1__FPCvUl
+/* 8005B520 00058460  48 00 04 01 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TCtrl>__FPCvUl"
 /* 8005B524 00058464  3B C3 00 00 */	addi r30, r3, 0
 /* 8005B528 00058468  38 7B 00 00 */	addi r3, r27, 0
 /* 8005B52C 0005846C  38 97 00 00 */	addi r4, r23, 0
@@ -70,11 +70,11 @@ lbl_8005B508:
 /* 8005B534 00058474  80 99 00 10 */	lwz r4, 0x10(r25)
 /* 8005B538 00058478  3A C3 00 00 */	addi r22, r3, 0
 /* 8005B53C 0005847C  38 79 00 00 */	addi r3, r25, 0
-/* 8005B540 00058480  48 00 03 C9 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser16TWaveArchiveBank$$1__FPCvUl
+/* 8005B540 00058480  48 00 03 C9 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser16TWaveArchiveBank>__FPCvUl"
 /* 8005B544 00058484  38 1F 00 08 */	addi r0, r31, 8
 /* 8005B548 00058488  7C 83 00 2E */	lwzx r4, r3, r0
 /* 8005B54C 0005848C  7F 23 CB 78 */	mr r3, r25
-/* 8005B550 00058490  48 00 03 A1 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser12TWaveArchive$$1__FPCvUl
+/* 8005B550 00058490  48 00 03 A1 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser12TWaveArchive>__FPCvUl"
 /* 8005B554 00058494  80 9E 00 04 */	lwz r4, 4(r30)
 /* 8005B558 00058498  3A A3 00 00 */	addi r21, r3, 0
 /* 8005B55C 0005849C  38 76 00 00 */	addi r3, r22, 0
@@ -86,7 +86,7 @@ lbl_8005B570:
 /* 8005B570 000584B0  38 13 00 74 */	addi r0, r19, 0x74
 /* 8005B574 000584B4  7C 95 00 2E */	lwzx r4, r21, r0
 /* 8005B578 000584B8  7F 23 CB 78 */	mr r3, r25
-/* 8005B57C 000584BC  48 00 03 5D */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TWave$$1__FPCvUl
+/* 8005B57C 000584BC  48 00 03 5D */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TWave>__FPCvUl"
 /* 8005B580 000584C0  88 83 00 00 */	lbz r4, 0(r3)
 /* 8005B584 000584C4  38 13 00 08 */	addi r0, r19, 8
 /* 8005B588 000584C8  98 81 00 18 */	stb r4, 0x18(r1)
@@ -116,7 +116,7 @@ lbl_8005B570:
 /* 8005B5E8 00058528  7F 23 CB 78 */	mr r3, r25
 /* 8005B5EC 0005852C  90 81 00 40 */	stw r4, 0x40(r1)
 /* 8005B5F0 00058530  7C 9E 00 2E */	lwzx r4, r30, r0
-/* 8005B5F4 00058534  48 00 02 CD */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser9TCtrlWave$$1__FPCvUl
+/* 8005B5F4 00058534  48 00 02 CD */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser9TCtrlWave>__FPCvUl"
 /* 8005B5F8 00058538  80 03 00 00 */	lwz r0, 0(r3)
 /* 8005B5FC 0005853C  38 76 00 00 */	addi r3, r22, 0
 /* 8005B600 00058540  38 94 00 00 */	addi r4, r20, 0
@@ -181,7 +181,7 @@ createSimpleWaveBank__Q28JASystem8WSParserFPv:
 /* 8005B6D0 00058610  80 97 00 14 */	lwz r4, 0x14(r23)
 /* 8005B6D4 00058614  3B C3 00 00 */	addi r30, r3, 0
 /* 8005B6D8 00058618  38 7B 00 00 */	addi r3, r27, 0
-/* 8005B6DC 0005861C  48 00 02 75 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl
+/* 8005B6DC 0005861C  48 00 02 75 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlGroup>__FPCvUl"
 /* 8005B6E0 00058620  7C 78 1B 78 */	mr r24, r3
 /* 8005B6E4 00058624  80 03 00 08 */	lwz r0, 8(r3)
 /* 8005B6E8 00058628  28 00 00 01 */	cmplwi r0, 1
@@ -207,17 +207,17 @@ lbl_8005B72C:
 /* 8005B72C 0005866C  80 98 00 0C */	lwz r4, 0xc(r24)
 /* 8005B730 00058670  38 7B 00 00 */	addi r3, r27, 0
 /* 8005B734 00058674  3B 40 00 00 */	li r26, 0
-/* 8005B738 00058678  48 00 02 01 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlScene$$1__FPCvUl
+/* 8005B738 00058678  48 00 02 01 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlScene>__FPCvUl"
 /* 8005B73C 0005867C  80 83 00 0C */	lwz r4, 0xc(r3)
 /* 8005B740 00058680  7F 63 DB 78 */	mr r3, r27
-/* 8005B744 00058684  48 00 01 DD */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TCtrl$$1__FPCvUl
+/* 8005B744 00058684  48 00 01 DD */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TCtrl>__FPCvUl"
 /* 8005B748 00058688  80 9B 00 10 */	lwz r4, 0x10(r27)
 /* 8005B74C 0005868C  3B E3 00 00 */	addi r31, r3, 0
 /* 8005B750 00058690  38 7B 00 00 */	addi r3, r27, 0
-/* 8005B754 00058694  48 00 01 B5 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser16TWaveArchiveBank$$1__FPCvUl
+/* 8005B754 00058694  48 00 01 B5 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser16TWaveArchiveBank>__FPCvUl"
 /* 8005B758 00058698  80 83 00 08 */	lwz r4, 8(r3)
 /* 8005B75C 0005869C  7F 63 DB 78 */	mr r3, r27
-/* 8005B760 000586A0  48 00 01 91 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser12TWaveArchive$$1__FPCvUl
+/* 8005B760 000586A0  48 00 01 91 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser12TWaveArchive>__FPCvUl"
 /* 8005B764 000586A4  3B 23 00 00 */	addi r25, r3, 0
 /* 8005B768 000586A8  3A E0 00 00 */	li r23, 0
 /* 8005B76C 000586AC  3B 00 00 00 */	li r24, 0
@@ -226,7 +226,7 @@ lbl_8005B774:
 /* 8005B774 000586B4  38 18 00 08 */	addi r0, r24, 8
 /* 8005B778 000586B8  7C 9F 00 2E */	lwzx r4, r31, r0
 /* 8005B77C 000586BC  7F 63 DB 78 */	mr r3, r27
-/* 8005B780 000586C0  48 00 01 41 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser9TCtrlWave$$1__FPCvUl
+/* 8005B780 000586C0  48 00 01 41 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser9TCtrlWave>__FPCvUl"
 /* 8005B784 000586C4  80 03 00 00 */	lwz r0, 0(r3)
 /* 8005B788 000586C8  54 00 04 3E */	clrlwi r0, r0, 0x10
 /* 8005B78C 000586CC  7C 1A 00 40 */	cmplw r26, r0
@@ -249,7 +249,7 @@ lbl_8005B7C4:
 /* 8005B7C4 00058704  38 18 00 74 */	addi r0, r24, 0x74
 /* 8005B7C8 00058708  7C 99 00 2E */	lwzx r4, r25, r0
 /* 8005B7CC 0005870C  7F 63 DB 78 */	mr r3, r27
-/* 8005B7D0 00058710  48 00 01 09 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TWave$$1__FPCvUl
+/* 8005B7D0 00058710  48 00 01 09 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TWave>__FPCvUl"
 /* 8005B7D4 00058714  88 83 00 00 */	lbz r4, 0(r3)
 /* 8005B7D8 00058718  38 18 00 08 */	addi r0, r24, 8
 /* 8005B7DC 0005871C  98 81 00 20 */	stb r4, 0x20(r1)
@@ -279,7 +279,7 @@ lbl_8005B7C4:
 /* 8005B83C 0005877C  7F 63 DB 78 */	mr r3, r27
 /* 8005B840 00058780  90 81 00 48 */	stw r4, 0x48(r1)
 /* 8005B844 00058784  7C 9F 00 2E */	lwzx r4, r31, r0
-/* 8005B848 00058788  48 00 00 79 */	bl JSUConvertOffsetToPtr$$0Q38JASystem8WSParser9TCtrlWave$$1__FPCvUl
+/* 8005B848 00058788  48 00 00 79 */	bl "JSUConvertOffsetToPtr<Q38JASystem8WSParser9TCtrlWave>__FPCvUl"
 /* 8005B84C 0005878C  80 03 00 00 */	lwz r0, 0(r3)
 /* 8005B850 00058790  38 7D 00 00 */	addi r3, r29, 0
 /* 8005B854 00058794  38 A1 00 20 */	addi r5, r1, 0x20
@@ -312,8 +312,8 @@ lbl_8005B8AC:
 /* 8005B8B8 000587F8  7C 08 03 A6 */	mtlr r0
 /* 8005B8BC 000587FC  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser9TCtrlWave$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser9TCtrlWave$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser9TCtrlWave>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser9TCtrlWave>__FPCvUl":
 /* 8005B8C0 00058800  28 04 00 00 */	cmplwi r4, 0
 /* 8005B8C4 00058804  40 82 00 0C */	bne lbl_8005B8D0
 /* 8005B8C8 00058808  38 60 00 00 */	li r3, 0
@@ -322,8 +322,8 @@ lbl_8005B8D0:
 /* 8005B8D0 00058810  7C 63 22 14 */	add r3, r3, r4
 /* 8005B8D4 00058814  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TWave$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TWave$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TWave>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser5TWave>__FPCvUl":
 /* 8005B8D8 00058818  28 04 00 00 */	cmplwi r4, 0
 /* 8005B8DC 0005881C  40 82 00 0C */	bne lbl_8005B8E8
 /* 8005B8E0 00058820  38 60 00 00 */	li r3, 0
@@ -332,8 +332,8 @@ lbl_8005B8E8:
 /* 8005B8E8 00058828  7C 63 22 14 */	add r3, r3, r4
 /* 8005B8EC 0005882C  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser12TWaveArchive$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser12TWaveArchive$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser12TWaveArchive>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser12TWaveArchive>__FPCvUl":
 /* 8005B8F0 00058830  28 04 00 00 */	cmplwi r4, 0
 /* 8005B8F4 00058834  40 82 00 0C */	bne lbl_8005B900
 /* 8005B8F8 00058838  38 60 00 00 */	li r3, 0
@@ -342,8 +342,8 @@ lbl_8005B900:
 /* 8005B900 00058840  7C 63 22 14 */	add r3, r3, r4
 /* 8005B904 00058844  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser16TWaveArchiveBank$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser16TWaveArchiveBank$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser16TWaveArchiveBank>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser16TWaveArchiveBank>__FPCvUl":
 /* 8005B908 00058848  28 04 00 00 */	cmplwi r4, 0
 /* 8005B90C 0005884C  40 82 00 0C */	bne lbl_8005B918
 /* 8005B910 00058850  38 60 00 00 */	li r3, 0
@@ -352,8 +352,8 @@ lbl_8005B918:
 /* 8005B918 00058858  7C 63 22 14 */	add r3, r3, r4
 /* 8005B91C 0005885C  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TCtrl$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser5TCtrl$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser5TCtrl>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser5TCtrl>__FPCvUl":
 /* 8005B920 00058860  28 04 00 00 */	cmplwi r4, 0
 /* 8005B924 00058864  40 82 00 0C */	bne lbl_8005B930
 /* 8005B928 00058868  38 60 00 00 */	li r3, 0
@@ -362,8 +362,8 @@ lbl_8005B930:
 /* 8005B930 00058870  7C 63 22 14 */	add r3, r3, r4
 /* 8005B934 00058874  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlScene$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlScene$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlScene>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlScene>__FPCvUl":
 /* 8005B938 00058878  28 04 00 00 */	cmplwi r4, 0
 /* 8005B93C 0005887C  40 82 00 0C */	bne lbl_8005B948
 /* 8005B940 00058880  38 60 00 00 */	li r3, 0
@@ -372,8 +372,8 @@ lbl_8005B948:
 /* 8005B948 00058888  7C 63 22 14 */	add r3, r3, r4
 /* 8005B94C 0005888C  4E 80 00 20 */	blr 
 
-.global JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl
-JSUConvertOffsetToPtr$$0Q38JASystem8WSParser10TCtrlGroup$$1__FPCvUl:
+.global "JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlGroup>__FPCvUl"
+"JSUConvertOffsetToPtr<Q38JASystem8WSParser10TCtrlGroup>__FPCvUl":
 /* 8005B950 00058890  28 04 00 00 */	cmplwi r4, 0
 /* 8005B954 00058894  40 82 00 0C */	bne lbl_8005B960
 /* 8005B958 00058898  38 60 00 00 */	li r3, 0
