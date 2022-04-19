@@ -1,7 +1,7 @@
 #ifndef JSUOUTPUTSTREAM_HPP
 #define JSUOUTPUTSTREAM_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 class JSUOutputStream {
     public:

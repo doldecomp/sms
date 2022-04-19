@@ -1,7 +1,7 @@
 #ifndef JDRNAMEREF_HPP
 #define JDRNAMEREF_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 #include "JSystem/JSUMemoryStream.hpp"
 

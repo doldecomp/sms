@@ -1,7 +1,7 @@
 #ifndef JKRHEAP_HPP
 #define JKRHEAP_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 class JKRHeap;
 

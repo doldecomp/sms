@@ -1,7 +1,7 @@
 #ifndef JUTRECT_HPP
 #define JUTRECT_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 
 class JUTRect {
     public:

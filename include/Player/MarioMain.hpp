@@ -1,7 +1,7 @@
 #ifndef MARIOMAIN_HPP
 #define MARIOMAIN_HPP
 
-#include <dolphin.h>
+#include "dolphin.h"
 #include "JSystem/JGeometry.hpp"
 #include "JSystem/JDRNameRef.hpp"
 #include "JSystem/JDRPlacement.hpp"
