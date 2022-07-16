@@ -128,7 +128,6 @@ with open(sys.argv[1], 'rt') as f:
                 start = int(g[0], 0)
                 size = int(g[1], 0)
                 data = read_baserom(start, size)
-                print('\t# ROM: 0x%X' % start)
-                print(convert_data(data, start))
+                print(convert_data(data, start).rstrip())
                 continue
         print(line)
