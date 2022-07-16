@@ -996,28 +996,29 @@ lbl_80351160:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2010":
-	.incbin "baserom.dol", 0x3EC158, 0x4
+	.4byte 0x43480000
 "@2011":
-	.incbin "baserom.dol", 0x3EC15C, 0x4
+	.4byte 0x43C80000
 "@2046":
-	.incbin "baserom.dol", 0x3EC160, 0x4
+	.4byte 0xC4002000
 "@2112":
   .4byte 0
 "@2113":
-	.incbin "baserom.dol", 0x3EC168, 0x4
+	.4byte 0x41200000
 "@2167":
-	.incbin "baserom.dol", 0x3EC16C, 0x4
+	.4byte 0x3FA00000
 "@2304":
-	.incbin "baserom.dol", 0x3EC170, 0x4
+	.4byte 0x3E99999A
 "@2305":
-	.incbin "baserom.dol", 0x3EC174, 0x4
+	.4byte 0x43360B61
 "@2306":
-	.incbin "baserom.dol", 0x3EC178, 0x4
+	.4byte 0x3F000000
 "@2307":
-	.incbin "baserom.dol", 0x3EC17C, 0x4
+	.4byte 0x3F800000
 "@2308":
-	.incbin "baserom.dol", 0x3EC180, 0x4
+	.4byte 0x40000000
 "@2309":
-	.incbin "baserom.dol", 0x3EC184, 0x4
+	.4byte 0xC29C0000
 "@2311":
-	.incbin "baserom.dol", 0x3EC188, 0x8
+	.4byte 0x43300000
+	.4byte 0

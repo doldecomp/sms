@@ -423,13 +423,15 @@ __vt__23TNerveAnimalGraphWander:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2158":
-	.incbin "baserom.dol", 0x3EC718, 0x4
+	.4byte 0x38000000
 "@2159":
-	.incbin "baserom.dol", 0x3EC71C, 0x4
+	.4byte 0x43480000
 "@2160":
-	.incbin "baserom.dol", 0x3EC720, 0x8
+	.4byte 0x42C80000
+	.4byte 0
 "@2162":
-	.incbin "baserom.dol", 0x3EC728, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2001":

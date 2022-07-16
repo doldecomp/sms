@@ -468,11 +468,12 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2152":
-	.incbin "baserom.dol", 0x3E5488, 0x4
+	.4byte 0x3F800000
 "@2153":
-	.incbin "baserom.dol", 0x3E548C, 0x4
+	.4byte 0x41A00000
 "@2188":
-	.incbin "baserom.dol", 0x3E5490, 0x8
+	.4byte 0x41300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2108":

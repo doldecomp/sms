@@ -6564,61 +6564,124 @@ lbl_803338D0:
   .4byte 0
   .4byte 0
 "@1529":
-	.incbin "baserom.dol", 0x3A02B4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1607":
-	.incbin "baserom.dol", 0x3A02C8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1608":
-	.incbin "baserom.dol", 0x3A02F8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1609":
-	.incbin "baserom.dol", 0x3A0330, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1610":
-	.incbin "baserom.dol", 0x3A0364, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2179":
-	.incbin "baserom.dol", 0x3A0388, 0x24
+	.asciz "/scene/kumokun/bas/kumo_down1.bas"
+	.balign 4
 "@2180":
-	.incbin "baserom.dol", 0x3A03AC, 0x2C
+	.asciz "/scene/kumokun/bas/kumo_flying1_loop.bas"
+	.balign 4
 "@2181":
-	.incbin "baserom.dol", 0x3A03D8, 0x28
+	.asciz "/scene/kumokun/bas/kumo_flyingdown1.bas"
 "@2182":
-	.incbin "baserom.dol", 0x3A0400, 0x24
+	.asciz "/scene/kumokun/bas/kumo_hit_end.bas"
 "@2183":
-	.incbin "baserom.dol", 0x3A0424, 0x28
+	.asciz "/scene/kumokun/bas/kumo_hit_loop.bas"
+	.balign 4
 "@2184":
-	.incbin "baserom.dol", 0x3A044C, 0x28
+	.asciz "/scene/kumokun/bas/kumo_hit_start.bas"
+	.balign 4
 "@2185":
-	.incbin "baserom.dol", 0x3A0474, 0x28
+	.asciz "/scene/kumokun/bas/kumo_run1_end.bas"
+	.balign 4
 "@2186":
-	.incbin "baserom.dol", 0x3A049C, 0x28
+	.asciz "/scene/kumokun/bas/kumo_run1_loop.bas"
+	.balign 4
 "@2187":
-	.incbin "baserom.dol", 0x3A04C4, 0x28
+	.asciz "/scene/kumokun/bas/kumo_turn1_end.bas"
+	.balign 4
 "@2188":
-	.incbin "baserom.dol", 0x3A04EC, 0x28
+	.asciz "/scene/kumokun/bas/kumo_turn1_loop.bas"
+	.balign 4
 "@2189":
-	.incbin "baserom.dol", 0x3A0514, 0x24
+	.asciz "/scene/kumokun/bas/kumo_wait1.bas"
+	.balign 4
 "@2190":
-	.incbin "baserom.dol", 0x3A0538, 0x24
+	.asciz "/scene/kumokun/bas/kumo_down1_c.bas"
 "@2191":
-	.incbin "baserom.dol", 0x3A055C, 0x2C
+	.asciz "/scene/kumokun/bas/kumo_flying1_loop_c.bas"
+	.balign 4
 "@2192":
-	.incbin "baserom.dol", 0x3A0588, 0x2C
+	.asciz "/scene/kumokun/bas/kumo_flyingdown1_c.bas"
+	.balign 4
 "@2193":
-	.incbin "baserom.dol", 0x3A05B4, 0x28
+	.asciz "/scene/kumokun/bas/kumo_hit_end_c.bas"
+	.balign 4
 "@2194":
-	.incbin "baserom.dol", 0x3A05DC, 0x28
+	.asciz "/scene/kumokun/bas/kumo_hit_loop_c.bas"
+	.balign 4
 "@2195":
-	.incbin "baserom.dol", 0x3A0604, 0x28
+	.asciz "/scene/kumokun/bas/kumo_hit_start_c.bas"
 "@2196":
-	.incbin "baserom.dol", 0x3A062C, 0x28
+	.asciz "/scene/kumokun/bas/kumo_run1_end_c.bas"
+	.balign 4
 "@2197":
-	.incbin "baserom.dol", 0x3A0654, 0x28
+	.asciz "/scene/kumokun/bas/kumo_run1_loop_c.bas"
 "@2198":
-	.incbin "baserom.dol", 0x3A067C, 0x28
+	.asciz "/scene/kumokun/bas/kumo_turn1_end_c.bas"
 "@2199":
-	.incbin "baserom.dol", 0x3A06A4, 0x2C
+	.asciz "/scene/kumokun/bas/kumo_turn1_loop_c.bas"
+	.balign 4
 "@2200":
-	.incbin "baserom.dol", 0x3A06D0, 0x24
+	.asciz "/scene/kumokun/bas/kumo_wait1_c.bas"
 "@2661":
-	.incbin "baserom.dol", 0x3A06F4, 0x10
+	.asciz "kumo_model1.bmd"
 entry$2660:
   .4byte "@2661"
   .4byte 0x10210000
@@ -6627,47 +6690,64 @@ entry$2660:
   .4byte 0
   .4byte 0
 "@2807":
-	.incbin "baserom.dol", 0x3A071C, 0x10
+	.asciz "kumo_hit_start"
+	.balign 4
 "@2944":
-	.incbin "baserom.dol", 0x3A072C, 0x14
+	.asciz "kumo_flying1_loop"
+	.balign 4
 "@3046":
-	.incbin "baserom.dol", 0x3A0740, 0x10
+	.asciz "kumo_hit_end"
+	.balign 4
 "@3131":
-	.incbin "baserom.dol", 0x3A0750, 0x10
+	.asciz "kumo_hit_loop"
+	.balign 4
 "@3258":
-	.incbin "baserom.dol", 0x3A0760, 0xC
+	.asciz "kumo_wait1"
+	.balign 4
 "@3465":
-	.incbin "baserom.dol", 0x3A076C, 0x10
+	.asciz "kumo_turn1_loop"
 "@3466":
-	.incbin "baserom.dol", 0x3A077C, 0x14
+	.asciz "kumo_turn1_start"
+	.balign 4
 "@3467":
-	.incbin "baserom.dol", 0x3A0790, 0x10
+	.asciz "kumo_turn1_end"
+	.balign 4
 "@3583":
-	.incbin "baserom.dol", 0x3A07A0, 0x10
+	.asciz "kumo_run1_end"
+	.balign 4
 "@3651":
-	.incbin "baserom.dol", 0x3A07B0, 0x10
+	.asciz "kumo_run1_loop"
+	.balign 4
 "@3711":
-	.incbin "baserom.dol", 0x3A07C0, 0x10
+	.asciz "kumo_run1_start"
 "@3763":
-	.incbin "baserom.dol", 0x3A07D0, 0x14
+	.asciz "/enemy/kumokun.prm"
+	.balign 4
 "@3764":
-	.incbin "baserom.dol", 0x3A07E4, 0xC
+	.asciz "mTorqueY"
+	.balign 4
 "@3766":
-	.incbin "baserom.dol", 0x3A07F0, 0xC
+	.asciz "mMarchSpeed"
 "@3767":
-	.incbin "baserom.dol", 0x3A07FC, 0x10
+	.asciz "mAttackSpeed"
+	.balign 4
 "@3769":
-	.incbin "baserom.dol", 0x3A080C, 0xC
+	.asciz "mMarchTimer"
 "@3770":
-	.incbin "baserom.dol", 0x3A0818, 0xC
+	.asciz "mWaitTimer"
+	.balign 4
 "@3771":
-	.incbin "baserom.dol", 0x3A0824, 0x10
+	.asciz "mSearchRange"
+	.balign 4
 "@3773":
-	.incbin "baserom.dol", 0x3A0834, 0xC
+	.asciz "mFlySpeed"
+	.balign 4
 "@5315":
-	.incbin "baserom.dol", 0x3A0840, 0xC
+	.asciz "kumo_down1"
+	.balign 4
 "@5316":
-	.incbin "baserom.dol", 0x3A084C, 0x14
+	.asciz "kumo_flyingdown1"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 kumokun_bastable:
@@ -6893,74 +6973,77 @@ __vt__8TKumokun:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@2655":
-	.incbin "baserom.dol", 0x3E3B78, 0x4
+	.4byte 0x0000003C
 "@2656":
-	.incbin "baserom.dol", 0x3E3B7C, 0x4
+	.4byte 0x00000032
 "@2657":
-	.incbin "baserom.dol", 0x3E3B80, 0x4
+	.4byte 0x00000041
 "@2658":
-	.incbin "baserom.dol", 0x3E3B84, 0x4
+	.4byte 0x00000046
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2945":
-	.incbin "baserom.dol", 0x3EBC08, 0x4
+	.4byte 0x3F800000
 "@2946":
-	.incbin "baserom.dol", 0x3EBC0C, 0x4
+	.4byte 0x40000000
 "@2947":
-	.incbin "baserom.dol", 0x3EBC10, 0x4
+	.4byte 0x3F000000
 "@2948":
   .4byte 0
 "@2949":
-	.incbin "baserom.dol", 0x3EBC18, 0x4
+	.4byte 0x36800000
 "@2986":
-	.incbin "baserom.dol", 0x3EBC1C, 0x4
+	.4byte 0x40400000
 "@3259":
-	.incbin "baserom.dol", 0x3EBC20, 0x4
+	.4byte 0xBF333333
 "@3463":
-	.incbin "baserom.dol", 0x3EBC24, 0x4
+	.4byte 0x38000000
 "@3464":
-	.incbin "baserom.dol", 0x3EBC28, 0x8
+	.4byte 0x40490FDB
+	.4byte 0
 "@3469":
-	.incbin "baserom.dol", 0x3EBC30, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3765":
-	.incbin "baserom.dol", 0x3EBC38, 0x4
+	.4byte 0x3C23D70A
 "@3768":
-	.incbin "baserom.dol", 0x3EBC3C, 0x4
+	.4byte 0x3FC00000
 "@3772":
-	.incbin "baserom.dol", 0x3EBC40, 0x4
+	.4byte 0x447A0000
 "@3774":
-	.incbin "baserom.dol", 0x3EBC44, 0x4
+	.4byte 0x41F00000
 "@3843":
-	.incbin "baserom.dol", 0x3EBC48, 0x4
+	.4byte 0x3F7D70A4
 "@3851":
-	.incbin "baserom.dol", 0x3EBC4C, 0x4
+	.4byte 0x3D4CCCCD
 "@3974":
-	.incbin "baserom.dol", 0x3EBC50, 0x4
+	.4byte 0x3F333333
 "@4179":
-	.incbin "baserom.dol", 0x3EBC54, 0x4
+	.4byte 0x40A00000
 "@4620":
-	.incbin "baserom.dol", 0x3EBC58, 0x4
+	.4byte 0xBF800000
 "@4642":
-	.incbin "baserom.dol", 0x3EBC5C, 0x4
+	.4byte 0x42C80000
 "@5228":
-	.incbin "baserom.dol", 0x3EBC60, 0x4
+	.4byte 0xC1F00000
 "@5925":
-	.incbin "baserom.dol", 0x3EBC64, 0x4
+	.4byte 0xC1200000
 "@6055":
-	.incbin "baserom.dol", 0x3EBC68, 0x4
+	.4byte 0xC2C80000
 "@6235":
-	.incbin "baserom.dol", 0x3EBC6C, 0x4
+	.4byte 0x42480000
 "@6419":
-	.incbin "baserom.dol", 0x3EBC70, 0x4
+	.4byte 0x42700000
 "@6420":
-	.incbin "baserom.dol", 0x3EBC74, 0x4
+	.4byte 0x42820000
 "@6421":
-	.incbin "baserom.dol", 0x3EBC78, 0x4
+	.4byte 0x428C0000
 "@6422":
-	.incbin "baserom.dol", 0x3EBC7C, 0x4
+	.4byte 0x42960000
 "@6423":
-	.incbin "baserom.dol", 0x3EBC80, 0x8
+	.4byte 0x42A00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2663":

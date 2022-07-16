@@ -510,7 +510,10 @@ lbl_802A2980:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2233":
-	.incbin "baserom.dol", 0x396A50, 0x10
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TOneShotGenerator
@@ -573,12 +576,14 @@ __vt__10TGenerator:
 "@2196":
   .4byte 0
 "@2197":
-	.incbin "baserom.dol", 0x3EA6CC, 0x4
+	.4byte 0x40800000
 "@2231":
-	.incbin "baserom.dol", 0x3EA6D0, 0x4
+	.4byte 0x42A00000
 "@2232":
-	.incbin "baserom.dol", 0x3EA6D4, 0x4
+	.4byte 0x42F00000
 "@2299":
-	.incbin "baserom.dol", 0x3EA6D8, 0x8
+	.4byte 0x38000000
+	.4byte 0
 "@2301":
-	.incbin "baserom.dol", 0x3EA6E0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

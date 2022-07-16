@@ -2065,7 +2065,27 @@ lbl_8005DC30:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 calc_sw_table__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3A7F50, 0x54
+	.4byte 0
+	.4byte 0x00010000
+	.4byte 0x01000100
+	.4byte 0x00010100
+	.4byte 0x01020001
+	.4byte 0x00000201
+	.4byte 0x00020201
+	.4byte 0x00000100
+	.4byte 0x01010002
+	.4byte 0x01010001
+	.4byte 0x01010101
+	.4byte 0x02010200
+	.4byte 0x01020101
+	.4byte 0x02020100
+	.4byte 0x00020001
+	.4byte 0x02000202
+	.4byte 0x01000201
+	.4byte 0x01020102
+	.4byte 0x02020002
+	.4byte 0x02010202
+	.4byte 0x02000000
 "@326":
     .4byte lbl_8005C9AC
     .4byte lbl_8005C980
@@ -2089,14 +2109,15 @@ calc_sw_table__Q28JASystem6Driver:
 "@145":
   .4byte 0
 "@160":
-	.incbin "baserom.dol", 0x3E433C, 0x4
+	.4byte 0x3F000000
 "@218":
-	.incbin "baserom.dol", 0x3E4340, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@274":
-	.incbin "baserom.dol", 0x3E4348, 0x4
+	.4byte 0x46FFFF00
 "@275":
-	.incbin "baserom.dol", 0x3E434C, 0x4
+	.4byte 0x42FF0000
 "@324":
-	.incbin "baserom.dol", 0x3E4350, 0x4
+	.4byte 0x3F800000
 "@836":
-	.incbin "baserom.dol", 0x3E4354, 0x4
+	.4byte 0x45800000

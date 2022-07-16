@@ -4645,61 +4645,64 @@ lbl_constructor:
 "@3370":
   .4byte 0
 "@3371":
-	.incbin "baserom.dol", 0x3E58AC, 0x4
+	.4byte 0x3F7AE148
 "@3372":
-	.incbin "baserom.dol", 0x3E58B0, 0x4
+	.4byte 0x3F800000
 "@3373":
-	.incbin "baserom.dol", 0x3E58B4, 0x4
+	.4byte 0xC1800000
 "@3374":
-	.incbin "baserom.dol", 0x3E58B8, 0x4
+	.4byte 0x41800000
 "@3479":
-	.incbin "baserom.dol", 0x3E58BC, 0x4
+	.4byte 0x3D000000
 "@3480":
-	.incbin "baserom.dol", 0x3E58C0, 0x8
+	.4byte 0x40800000
+	.4byte 0
 "@3482":
-	.incbin "baserom.dol", 0x3E58C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3598":
-	.incbin "baserom.dol", 0x3E58D0, 0x4
+	.4byte 0x428C0000
 "@3599":
-	.incbin "baserom.dol", 0x3E58D4, 0x4
+	.4byte 0x3F000000
 "@3600":
-	.incbin "baserom.dol", 0x3E58D8, 0x4
+	.4byte 0x43200000
 "@3601":
-	.incbin "baserom.dol", 0x3E58DC, 0x4
+	.4byte 0x3E800000
 "@3930":
-	.incbin "baserom.dol", 0x3E58E0, 0x4
+	.4byte 0x3ECCCCCD
 "@3966":
-	.incbin "baserom.dol", 0x3E58E4, 0x4
+	.4byte 0x3EB33333
 "@3967":
-	.incbin "baserom.dol", 0x3E58E8, 0x4
+	.4byte 0x44800000
 "@3968":
-	.incbin "baserom.dol", 0x3E58EC, 0x4
+	.4byte 0xBF800000
 "@3969":
-	.incbin "baserom.dol", 0x3E58F0, 0x4
+	.4byte 0x42000000
 "@3970":
-	.incbin "baserom.dol", 0x3E58F4, 0x4
+	.4byte 0x40000000
 "@4013":
-	.incbin "baserom.dol", 0x3E58F8, 0x4
+	.4byte 0x43FA0000
 "@4014":
-	.incbin "baserom.dol", 0x3E58FC, 0x4
+	.4byte 0x3E4CCCCD
 "@4015":
-	.incbin "baserom.dol", 0x3E5900, 0x4
+	.4byte 0x3F7C1C5C
 "@4031":
-	.incbin "baserom.dol", 0x3E5904, 0x4
+	.4byte 0x41F00000
 "@4084":
-	.incbin "baserom.dol", 0x3E5908, 0x4
+	.4byte 0x42500000
 "@4085":
-	.incbin "baserom.dol", 0x3E590C, 0x4
+	.4byte 0xC1200000
 "@4204":
-	.incbin "baserom.dol", 0x3E5910, 0x4
+	.4byte 0xC28C0000
 "@4513":
-	.incbin "baserom.dol", 0x3E5914, 0x4
+	.4byte 0x42180000
 "@4514":
-	.incbin "baserom.dol", 0x3E5918, 0x4
+	.4byte 0x41000000
 "@4515":
-	.incbin "baserom.dol", 0x3E591C, 0x4
+	.4byte 0xC1000000
 "@4633":
-	.incbin "baserom.dol", 0x3E5920, 0x8
+	.4byte 0x40200000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3120":

@@ -918,7 +918,8 @@ lbl_constructor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 smMainVolume__5MSBgm:
-	.incbin "baserom.dol", 0x3E3500, 0x8
+	.4byte 0x3F400000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 smBgmInTrack__5MSBgm:

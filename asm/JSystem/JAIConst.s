@@ -43,7 +43,15 @@ nullInfoData2__8JAIConst:
   .4byte 0
 .global sCInfos_0__8JAIConst
 sCInfos_0__8JAIConst:
-	.incbin "baserom.dol", 0x3A7CCC, 0x24
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0x04020402
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global random__8JAIConst

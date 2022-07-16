@@ -552,34 +552,90 @@ lbl_800605E8:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 relTableSampleCell__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x36E288, 0x44
+	.4byte 0x3F800000
+	.4byte 0x3F7871F8
+	.4byte 0x3F480193
+	.4byte 0x3F0BD912
+	.4byte 0x3ECCB189
+	.4byte 0x3E942118
+	.4byte 0x3E5931CA
+	.4byte 0x3E214163
+	.4byte 0x3DE6A1A5
+	.4byte 0x3DA7814E
+	.4byte 0x3D6D81E4
+	.4byte 0x3D32C16E
+	.4byte 0x3CFC81FC
+	.4byte 0x3CC2418E
+	.4byte 0x3C7A0225
+	.4byte 0x3C160129
+	.4byte 0
 relTableSqRoot__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x36E2CC, 0x44
+	.4byte 0x3F800000
+	.4byte 0x3F60FFFC
+	.4byte 0x3F440000
+	.4byte 0x3F28FFFC
+	.4byte 0x3F100000
+	.4byte 0x3EF1FFF8
+	.4byte 0x3EC80000
+	.4byte 0x3EA1FFF8
+	.4byte 0x3E800000
+	.4byte 0x3E43FFEF
+	.4byte 0x3E100000
+	.4byte 0x3DC7FFF9
+	.4byte 0x3D800000
+	.4byte 0x3D0FFFF3
+	.4byte 0x3C800000
+	.4byte 0x3B800000
+	.4byte 0
 relTableSquare__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x36E310, 0x48
+	.4byte 0x3F800000
+	.4byte 0x3F77DEF8
+	.4byte 0x3F6F774B
+	.4byte 0x3F66C15D
+	.4byte 0x3F5DB3D0
+	.4byte 0x3F544391
+	.4byte 0x3F4A62BB
+	.4byte 0x3F400000
+	.4byte 0x3F3504F7
+	.4byte 0x3F295400
+	.4byte 0x3F1CC469
+	.4byte 0x3F0F1BBD
+	.4byte 0x3F000000
+	.4byte 0x3EDDB3E1
+	.4byte 0x3EB504E6
+	.4byte 0x3E800000
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 FORCE_STOP_TABLE__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3A8798, 0x10
+	.4byte 0x0000000F
+	.4byte 0x0000000F
+	.4byte 0
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@204":
   .4byte 0
 "@231":
-	.incbin "baserom.dol", 0x3E437C, 0x4
+	.4byte 0x3F800000
 "@260":
-	.incbin "baserom.dol", 0x3E4380, 0x4
+	.4byte 0x42A00000
 "@261":
-	.incbin "baserom.dol", 0x3E4384, 0x4
+	.4byte 0x44160000
 "@263":
-	.incbin "baserom.dol", 0x3E4388, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@265":
-	.incbin "baserom.dol", 0x3E4390, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@332":
-	.incbin "baserom.dol", 0x3E4398, 0x8
+	.4byte 0x47000000
+	.4byte 0
 "@333":
   .4byte 0
   .4byte 0
 "@334":
-	.incbin "baserom.dol", 0x3E43A8, 0x8
+	.4byte 0x41800000
+	.4byte 0

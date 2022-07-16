@@ -447,8 +447,9 @@ copySaveParam__16TCameraKindParamFRC17TCamSaveKindParam:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1659":
-	.incbin "baserom.dol", 0x3EC240, 0x4
+	.4byte 0x3A83126F
 "@1660":
-	.incbin "baserom.dol", 0x3EC244, 0x4
+	.4byte 0x3F800000
 "@1662":
-	.incbin "baserom.dol", 0x3EC248, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

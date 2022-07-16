@@ -5481,33 +5481,78 @@ makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
   .4byte 0
   .4byte 0
 "@1809":
-	.incbin "baserom.dol", 0x36F5DC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1974":
-	.incbin "baserom.dol", 0x36F5F0, 0x10
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
 "@1975":
-	.incbin "baserom.dol", 0x36F600, 0x10
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
 "@2149":
-	.incbin "baserom.dol", 0x36F610, 0x24
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0x00000004
+	.4byte 0x00000003
+	.4byte 0
 "@2150":
-	.incbin "baserom.dol", 0x36F634, 0x24
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0x00000004
 calctablex$2412:
-	.incbin "baserom.dol", 0x36F658, 0x10
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
 calctablez$2413:
-	.incbin "baserom.dol", 0x36F668, 0x10
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@4135":
-	.incbin "baserom.dol", 0x36F678, 0x1C
+	.asciz "/common/shadowCircle.bmd"
+	.balign 4
 "@4136":
-	.incbin "baserom.dol", 0x36F694, 0x1C
+	.asciz "/common/shadowCircleLow.bmd"
 "@4137":
-	.incbin "baserom.dol", 0x36F6B0, 0x18
+	.asciz "/common/shadowCube.bmd"
+	.balign 4
 "@4138":
-	.incbin "baserom.dol", 0x36F6C8, 0x18
+	.asciz "/common/ShipShadow.bmd"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 vl$localstatic0$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
-	.incbin "baserom.dol", 0x3AFA60, 0x10
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x000000FF
+	.4byte 0
 fl$localstatic1$makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv:
-	.incbin "baserom.dol", 0x3AFA70, 0x20
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x000000FF
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0
 .global __vt__19TMBindShadowManager
 __vt__19TMBindShadowManager:
   .4byte 0
@@ -5561,84 +5606,86 @@ __vt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cpp:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mSquareShadowHeight__19TMBindShadowManager:
-	.incbin "baserom.dol", 0x3E3318, 0x4
+	.4byte 0x43480000
 mTreeScale__19TMBindShadowManager:
-	.incbin "baserom.dol", 0x3E331C, 0x4
+	.4byte 0x3CA3D70A
 mYScalePlus__19TMBindShadowManager:
-	.incbin "baserom.dol", 0x3E3320, 0x8
+	.4byte 0x41A00000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2235":
-	.incbin "baserom.dol", 0x3E4AD0, 0x4
+	.4byte 0x1E3273B4
 "@2297":
-	.incbin "baserom.dol", 0x3E4AD4, 0x4
+	.4byte 0xFFFFFF80
 "@2312":
   .4byte -1
 "@2315":
-	.incbin "baserom.dol", 0x3E4ADC, 0x4
+	.4byte 0xFFFFFF5A
 "@2742":
-	.incbin "baserom.dol", 0x3E4AE0, 0x4
+	.4byte 0x3F000000
 "@2743":
-	.incbin "baserom.dol", 0x3E4AE4, 0x4
+	.4byte 0x3F800000
 "@2744":
-	.incbin "baserom.dol", 0x3E4AE8, 0x4
+	.4byte 0x4B989680
 "@2745":
   .4byte 0
 "@2746":
-	.incbin "baserom.dol", 0x3E4AF0, 0x4
+	.4byte 0x3E4CCCCD
 "@2747":
-	.incbin "baserom.dol", 0x3E4AF4, 0x4
+	.4byte 0x42B40000
 "@2748":
-	.incbin "baserom.dol", 0x3E4AF8, 0x4
+	.4byte 0x3DA3D70A
 "@2749":
-	.incbin "baserom.dol", 0x3E4AFC, 0x4
+	.4byte 0x3F4CCCCD
 "@2750":
-	.incbin "baserom.dol", 0x3E4B00, 0x4
+	.4byte 0x3C23D70A
 "@2751":
-	.incbin "baserom.dol", 0x3E4B04, 0x4
+	.4byte 0x43480000
 "@2752":
-	.incbin "baserom.dol", 0x3E4B08, 0x4
+	.4byte 0x3F8CCCCD
 "@2753":
-	.incbin "baserom.dol", 0x3E4B0C, 0x4
+	.4byte 0xBF800000
 "@2754":
-	.incbin "baserom.dol", 0x3E4B10, 0x4
+	.4byte 0x3FC00000
 "@2857":
-	.incbin "baserom.dol", 0x3E4B14, 0x4
+	.4byte 0x40C00000
 "@2858":
-	.incbin "baserom.dol", 0x3E4B18, 0x4
+	.4byte 0x41200000
 "@2859":
-	.incbin "baserom.dol", 0x3E4B1C, 0x4
+	.4byte 0x4D3EBC20
 "@2976":
-	.incbin "baserom.dol", 0x3E4B20, 0x4
+	.4byte 0xC47A0000
 "@2977":
-	.incbin "baserom.dol", 0x3E4B24, 0x4
+	.4byte 0x447A0000
 "@2978":
-	.incbin "baserom.dol", 0x3E4B28, 0x4
+	.4byte 0xC3480000
 "@4014":
-	.incbin "baserom.dol", 0x3E4B2C, 0x4
+	.4byte 0x42480000
 "@4158":
-	.incbin "baserom.dol", 0x3E4B30, 0x4
+	.4byte 0x41F00000
 "@4159":
-	.incbin "baserom.dol", 0x3E4B34, 0x4
+	.4byte 0x3FC66666
 "@4634":
-	.incbin "baserom.dol", 0x3E4B38, 0x4
+	.4byte 0x36800000
 "@4756":
-	.incbin "baserom.dol", 0x3E4B3C, 0x4
+	.4byte 0x42180000
 "@4757":
-	.incbin "baserom.dol", 0x3E4B40, 0x4
+	.4byte 0x41900000
 "@4758":
-	.incbin "baserom.dol", 0x3E4B44, 0x4
+	.4byte 0x41C80000
 "@4759":
-	.incbin "baserom.dol", 0x3E4B48, 0x4
+	.4byte 0x438C0000
 "@4869":
-	.incbin "baserom.dol", 0x3E4B4C, 0x4
+	.4byte 0x3BB40000
 "@4871":
-	.incbin "baserom.dol", 0x3E4B50, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@5163":
-	.incbin "baserom.dol", 0x3E4B58, 0x4
+	.4byte 0x40490FDB
 "@5164":
-	.incbin "baserom.dol", 0x3E4B5C, 0x4
+	.4byte 0x40000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2174":

@@ -1594,11 +1594,17 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@855":
-	.incbin "baserom.dol", 0x36DB50, 0x10
+	.4byte 0x80000000
+	.4byte 0x40000000
+	.4byte 0x20000000
+	.4byte 0x10000000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 channel_mask:
-	.incbin "baserom.dol", 0x3A5BA0, 0x10
+	.4byte 0x80000000
+	.4byte 0x40000000
+	.4byte 0x20000000
+	.4byte 0x10000000
 .global __vt__10JUTGamePad
 __vt__10JUTGamePad:
   .4byte 0
@@ -1608,37 +1614,42 @@ __vt__10JUTGamePad:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mStickMode__10JUTGamePad:
-	.incbin "baserom.dol", 0x3E3010, 0x4
+	.4byte 0x00000001
 sResetPattern__Q210JUTGamePad13C3ButtonReset:
-	.incbin "baserom.dol", 0x3E3014, 0x4
+	.4byte 0x00001600
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@604":
-	.incbin "baserom.dol", 0x3E3D90, 0x8
+	.4byte 0x43160000
+	.4byte 0
 "@606":
-	.incbin "baserom.dol", 0x3E3D98, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@609":
   .4byte 0
   .4byte 0
 "@637":
-	.incbin "baserom.dol", 0x3E3DA8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@638":
-	.incbin "baserom.dol", 0x3E3DB0, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@639":
-	.incbin "baserom.dol", 0x3E3DB8, 0x4
+	.4byte 0x3F800000
 "@640":
-	.incbin "baserom.dol", 0x3E3DBC, 0x4
+	.4byte 0x47000000
 "@641":
-	.incbin "baserom.dol", 0x3E3DC0, 0x8
+	.4byte 0x400921FB
+	.4byte 0x4D12D84A
 "@669":
-	.incbin "baserom.dol", 0x3E3DC8, 0x4
+	.4byte 0xBE800000
 "@670":
-	.incbin "baserom.dol", 0x3E3DCC, 0x4
+	.4byte 0x3E800000
 "@671":
-	.incbin "baserom.dol", 0x3E3DD0, 0x4
+	.4byte 0xBF000000
 "@672":
-	.incbin "baserom.dol", 0x3E3DD4, 0x4
+	.4byte 0x3F000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@301":

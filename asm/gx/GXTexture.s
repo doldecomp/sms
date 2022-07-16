@@ -1406,23 +1406,26 @@ lbl_800AB328:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 GX2HWFiltConv:
-	.incbin "baserom.dol", 0x3E32E0, 0x8
+	.4byte 0x00040105
+	.4byte 0x02060000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@164":
-	.incbin "baserom.dol", 0x3E4828, 0x8
+	.4byte 0x41800000
+	.4byte 0
 "@166":
-	.incbin "baserom.dol", 0x3E4830, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@192":
-	.incbin "baserom.dol", 0x3E4838, 0x4
+	.4byte 0xC0800000
 "@193":
-	.incbin "baserom.dol", 0x3E483C, 0x4
+	.4byte 0x40800000
 "@194":
-	.incbin "baserom.dol", 0x3E4840, 0x4
+	.4byte 0x407F5C29
 "@195":
-	.incbin "baserom.dol", 0x3E4844, 0x4
+	.4byte 0x42000000
 "@196":
   .4byte 0
 "@197":
-	.incbin "baserom.dol", 0x3E484C, 0x4
+	.4byte 0x41200000

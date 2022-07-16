@@ -2085,23 +2085,75 @@ lbl_80114610:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x376FDC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1582":
-	.incbin "baserom.dol", 0x376FF0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1583":
-	.incbin "baserom.dol", 0x377020, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1584":
-	.incbin "baserom.dol", 0x377058, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1585":
-	.incbin "baserom.dol", 0x37708C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2725":
-	.incbin "baserom.dol", 0x3770B0, 0xC
+	.asciz "pushNerve"
+	.balign 4
 "@2734":
-	.incbin "baserom.dol", 0x3770BC, 0xC
+	.asciz "setAnmRate"
+	.balign 4
 "@2777":
-	.incbin "baserom.dol", 0x3770C8, 0x20
+	.asciz "TSpcStack : stack underflow\n"
+	.balign 4
 "@2778":
-	.incbin "baserom.dol", 0x3770E8, 0x20
+	.asciz "TSpcStack : stack overflow\n"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@3444":
@@ -2216,27 +2268,36 @@ lbl_80114610:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2726":
-	.incbin "baserom.dol", 0x3E5378, 0x8
+	.asciz "setBck"
+	.balign 4
 "@2727":
-	.incbin "baserom.dol", 0x3E5380, 0x8
+	.asciz "setBpk"
+	.balign 4
 "@2728":
-	.incbin "baserom.dol", 0x3E5388, 0x8
+	.asciz "setBtp"
+	.balign 4
 "@2729":
-	.incbin "baserom.dol", 0x3E5390, 0x8
+	.asciz "setBtk"
+	.balign 4
 "@2730":
-	.incbin "baserom.dol", 0x3E5398, 0x8
+	.asciz "setBlk"
+	.balign 4
 "@2731":
-	.incbin "baserom.dol", 0x3E53A0, 0x8
+	.asciz "setBls"
+	.balign 4
 "@2732":
-	.incbin "baserom.dol", 0x3E53A8, 0x8
+	.asciz "setSRT"
+	.balign 4
 "@2733":
-	.incbin "baserom.dol", 0x3E53B0, 0x8
+	.asciz "getSRT"
+	.balign 4
 "@2875":
   .4byte 0
 "@2876":
-	.incbin "baserom.dol", 0x3E53BC, 0x4
+	.4byte 0x43B40000
 "@2878":
-	.incbin "baserom.dol", 0x3E53C0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3178":
   .4byte 0
   .4byte 0

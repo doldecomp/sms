@@ -397,8 +397,9 @@ __ct__12J3DFrameCtrlFv:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2232":
-	.incbin "baserom.dol", 0x3E4B80, 0x4
+	.4byte 0x42C80000
 "@2233":
-	.incbin "baserom.dol", 0x3E4B84, 0x4
+	.4byte 0x42480000
 "@2278":
-	.incbin "baserom.dol", 0x3E4B88, 0x8
+	.4byte 0x3F000000
+	.4byte 0

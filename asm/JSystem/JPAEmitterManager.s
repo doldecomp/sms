@@ -706,4 +706,4 @@ forceDeleteEmitter__17JPAEmitterManagerFP14JPABaseEmitter:
 "@1786":
   .4byte 0
 "@1787":
-	.incbin "baserom.dol", 0x3E44FC, 0x4
+	.4byte 0x3F800000

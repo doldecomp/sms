@@ -1394,31 +1394,44 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x3701D4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2608":
-	.incbin "baserom.dol", 0x3701E8, 0x10
+	.asciz "<TDStageGroup>"
+	.balign 4
 "@2609":
-	.incbin "baserom.dol", 0x3701F8, 0xC
+	.asciz "<FrmGXSet>"
+	.balign 4
 "@2610":
-	.incbin "baserom.dol", 0x370204, 0x10
+	.asciz "root View Objs"
+	.balign 4
 "@2611":
-	.incbin "baserom.dol", 0x370214, 0xC
+	.asciz "Group 2D"
+	.balign 4
 "@2612":
-	.incbin "baserom.dol", 0x370220, 0x24
+	.asciz "/nintendo/timg/nintendo_376x104.bti"
 "@2613":
-	.incbin "baserom.dol", 0x370244, 0x24
+	.asciz "/nintendo/timg/title_dolby_mark.bti"
 "@2614":
-	.incbin "baserom.dol", 0x370268, 0xC
+	.asciz "Nintendo2D"
+	.balign 4
 "@2615":
-	.incbin "baserom.dol", 0x370274, 0xC
+	.asciz "ProgSelect"
+	.balign 4
 "@2616":
-	.incbin "baserom.dol", 0x370280, 0x10
+	.asciz "<DStageDisp>"
+	.balign 4
 "@2620":
-	.incbin "baserom.dol", 0x370290, 0x10
+	.asciz "<TOrthoProj>"
+	.balign 4
 "@2622":
-	.incbin "baserom.dol", 0x3702A0, 0xC
+	.asciz "Screen 2D"
+	.balign 4
 "@2664":
-	.incbin "baserom.dol", 0x3702AC, 0xC
+	.asciz "<TDirector>"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TGCLogoDir
@@ -1465,26 +1478,27 @@ __vt__11TNintendo2D:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2171":
-	.incbin "baserom.dol", 0x3E4D08, 0x4
+	.4byte 0x3F4CCCCD
 "@2172":
-	.incbin "baserom.dol", 0x3E4D0C, 0x4
+	.4byte 0x3ECCCCCD
 "@2173":
   .4byte 0
   .4byte 0
 "@2175":
-	.incbin "baserom.dol", 0x3E4D18, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2316":
-	.incbin "baserom.dol", 0x3E4D20, 0x4
+	.4byte 0x3F800000
 "@2317":
-	.incbin "baserom.dol", 0x3E4D24, 0x4
+	.4byte 0x40000000
 "@2617":
-	.incbin "baserom.dol", 0x3E4D28, 0x4
+	.4byte 0x3F8C0000
 "@2618":
-	.incbin "baserom.dol", 0x3E4D2C, 0x4
+	.4byte 0x43F00000
 "@2619":
-	.incbin "baserom.dol", 0x3E4D30, 0x4
+	.4byte 0x3F000000
 "@2621":
-	.incbin "baserom.dol", 0x3E4D34, 0x4
+	.4byte 0xBF800000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2705":

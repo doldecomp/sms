@@ -288,9 +288,41 @@ lbl_80083738:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 bit_values:
-	.incbin "baserom.dol", 0x36E598, 0x48
+	.4byte 0x40240000
+	.4byte 0
+	.4byte 0x40590000
+	.4byte 0
+	.4byte 0x40C38800
+	.4byte 0
+	.4byte 0x4197D784
+	.4byte 0
+	.4byte 0x4341C379
+	.4byte 0x37E08000
+	.4byte 0x4693B8B5
+	.4byte 0xB5056E17
+	.4byte 0x4D384F03
+	.4byte 0xE93FF9F5
+	.4byte 0x5A827748
+	.4byte 0xF9301D32
+	.4byte 0x75154FDD
+	.4byte 0x7F73BF3C
 digit_values:
-	.incbin "baserom.dol", 0x36E5E0, 0x40
+	.4byte 0x40240000
+	.4byte 0
+	.4byte 0x40590000
+	.4byte 0
+	.4byte 0x408F4000
+	.4byte 0
+	.4byte 0x40C38800
+	.4byte 0
+	.4byte 0x40F86A00
+	.4byte 0
+	.4byte 0x412E8480
+	.4byte 0
+	.4byte 0x416312D0
+	.4byte 0
+	.4byte 0x4197D784
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
@@ -298,10 +330,14 @@ digit_values:
   .4byte 0
   .4byte 0
 "@270":
-	.incbin "baserom.dol", 0x3E4660, 0x8
+	.4byte 0x3FF00000
+	.4byte 0
 "@272":
-	.incbin "baserom.dol", 0x3E4668, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@362":
-	.incbin "baserom.dol", 0x3E4670, 0x8
+	.4byte 0x3FB99999
+	.4byte 0x9999999A
 "@363":
-	.incbin "baserom.dol", 0x3E4678, 0x8
+	.4byte 0x40240000
+	.4byte 0

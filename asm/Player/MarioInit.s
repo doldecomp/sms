@@ -8594,789 +8594,1114 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2367":
-	.incbin "baserom.dol", 0x37974C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x379760, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x379784, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2529":
-	.incbin "baserom.dol", 0x379794, 0x14
+	.asciz "/Mario/Sound.prm"
+	.balign 4
 "@2530":
-	.incbin "baserom.dol", 0x3797A8, 0x18
+	.asciz "mStartFallVoiceSpeed"
+	.balign 4
 "@2555":
-	.incbin "baserom.dol", 0x3797C0, 0x14
+	.asciz "/Mario/AutoDemo.prm"
 "@2556":
-	.incbin "baserom.dol", 0x3797D4, 0x18
+	.asciz "mWarpInBallsDispTime"
+	.balign 4
 "@2557":
-	.incbin "baserom.dol", 0x3797EC, 0x14
+	.asciz "mWarpInBallsTime"
+	.balign 4
 "@2558":
-	.incbin "baserom.dol", 0x379800, 0x14
+	.asciz "mWarpInCapturedTime"
 "@2559":
-	.incbin "baserom.dol", 0x379814, 0x10
+	.asciz "mWarpInTremble"
+	.balign 4
 "@2561":
-	.incbin "baserom.dol", 0x379824, 0x10
+	.asciz "mWarpInVecBase"
+	.balign 4
 "@2563":
-	.incbin "baserom.dol", 0x379834, 0x14
+	.asciz "mWarpTransTremble"
+	.balign 4
 "@2565":
-	.incbin "baserom.dol", 0x379848, 0xC
+	.asciz "mReadRotSp"
+	.balign 4
 "@2590":
-	.incbin "baserom.dol", 0x379854, 0xC
+	.asciz "mDownType"
+	.balign 4
 "@2591":
-	.incbin "baserom.dol", 0x379860, 0xC
+	.asciz "mWaterEmit"
+	.balign 4
 "@2593":
-	.incbin "baserom.dol", 0x37986C, 0xC
+	.asciz "mMinSpeed"
+	.balign 4
 "@2597":
-	.incbin "baserom.dol", 0x379878, 0x10
+	.asciz "mInvincibleTime"
 "@2616":
-	.incbin "baserom.dol", 0x379888, 0xC
+	.asciz "mGravity"
+	.balign 4
 "@2618":
-	.incbin "baserom.dol", 0x379894, 0x10
+	.asciz "mAccelControl"
+	.balign 4
 "@2620":
-	.incbin "baserom.dol", 0x3798A4, 0xC
+	.asciz "mSeaBrake"
+	.balign 4
 "@2622":
-	.incbin "baserom.dol", 0x3798B0, 0xC
+	.asciz "mSeaBrakeY"
+	.balign 4
 "@2635":
-	.incbin "baserom.dol", 0x3798BC, 0xC
+	.asciz "mAccelRate"
+	.balign 4
 "@2720":
-	.incbin "baserom.dol", 0x3798C8, 0xC
+	.asciz "mWaistRoll"
+	.balign 4
 "@2722":
-	.incbin "baserom.dol", 0x3798D4, 0xC
+	.asciz "mWaistPitch"
 "@2724":
-	.incbin "baserom.dol", 0x3798E0, 0x10
+	.asciz "mWaistRollMax"
+	.balign 4
 "@2725":
-	.incbin "baserom.dol", 0x3798F0, 0x10
+	.asciz "mWaistPitchMax"
+	.balign 4
 "@2730":
-	.incbin "baserom.dol", 0x379900, 0xC
+	.asciz "mRollMax"
+	.balign 4
 "@2731":
-	.incbin "baserom.dol", 0x37990C, 0xC
+	.asciz "mPitchMax"
+	.balign 4
 "@2732":
-	.incbin "baserom.dol", 0x379918, 0x14
+	.asciz "mAngleChangeRate"
+	.balign 4
 "@2734":
-	.incbin "baserom.dol", 0x37992C, 0x18
+	.asciz "mWaistAngleChangeRate"
+	.balign 4
 "@2735":
-	.incbin "baserom.dol", 0x379944, 0xC
+	.asciz "mScaleMin"
+	.balign 4
 "@2736":
-	.incbin "baserom.dol", 0x379950, 0xC
+	.asciz "mScaleMax"
+	.balign 4
 "@2738":
-	.incbin "baserom.dol", 0x37995C, 0x10
+	.asciz "mScaleMinSpeed"
+	.balign 4
 "@2739":
-	.incbin "baserom.dol", 0x37996C, 0x10
+	.asciz "mScaleMaxSpeed"
+	.balign 4
 "@2740":
-	.incbin "baserom.dol", 0x37997C, 0xC
+	.asciz "mJumpPow"
+	.balign 4
 "@2742":
-	.incbin "baserom.dol", 0x379988, 0x10
+	.asciz "mJumpXZRatio"
+	.balign 4
 "@2743":
-	.incbin "baserom.dol", 0x379998, 0xC
+	.asciz "mClashSpeed"
 "@2745":
-	.incbin "baserom.dol", 0x3799A4, 0xC
+	.asciz "mClashAngle"
 "@2763":
-	.incbin "baserom.dol", 0x3799B0, 0x10
+	.asciz "mPumpWaitTime"
+	.balign 4
 "@2764":
-	.incbin "baserom.dol", 0x3799C0, 0x10
+	.asciz "mPumpAnmSpeed"
+	.balign 4
 "@2765":
-	.incbin "baserom.dol", 0x3799D0, 0x10
+	.asciz "mHoverHeadAngle"
 "@2766":
-	.incbin "baserom.dol", 0x3799E0, 0x14
+	.asciz "mFeelDeepHeadAngle"
+	.balign 4
 "@2767":
-	.incbin "baserom.dol", 0x3799F4, 0x14
+	.asciz "mFrontWallHeadAngle"
 "@2803":
-	.incbin "baserom.dol", 0x379A08, 0x10
+	.asciz "mSlipFriction"
+	.balign 4
 "@2805":
-	.incbin "baserom.dol", 0x379A18, 0x10
+	.asciz "mSlopeAcceleUp"
+	.balign 4
 "@2806":
-	.incbin "baserom.dol", 0x379A28, 0x14
+	.asciz "mSlopeAcceleDown"
+	.balign 4
 "@2807":
-	.incbin "baserom.dol", 0x379A3C, 0x10
+	.asciz "mSlideAcceleUp"
+	.balign 4
 "@2808":
-	.incbin "baserom.dol", 0x379A4C, 0x14
+	.asciz "mSlideAcceleDown"
+	.balign 4
 "@2809":
-	.incbin "baserom.dol", 0x379A60, 0x14
+	.asciz "mSlideStopNormal"
+	.balign 4
 "@2810":
-	.incbin "baserom.dol", 0x379A74, 0x10
+	.asciz "mSlideStopCatch"
 "@2811":
-	.incbin "baserom.dol", 0x379A84, 0xC
+	.asciz "mJumpEnable"
 "@2812":
-	.incbin "baserom.dol", 0x379A90, 0xC
+	.asciz "mMissJump"
+	.balign 4
 "@2813":
-	.incbin "baserom.dol", 0x379A9C, 0x10
+	.asciz "mSlideAngleYSp"
+	.balign 4
 "@2814":
-	.incbin "baserom.dol", 0x379AAC, 0x10
+	.asciz "mStickSlideMult"
 "@2833":
-	.incbin "baserom.dol", 0x379ABC, 0x18
+	.asciz "/Mario/MarioEffect.prm"
+	.balign 4
 "@2834":
-	.incbin "baserom.dol", 0x379AD4, 0xC
+	.asciz "mDashInc"
+	.balign 4
 "@2836":
-	.incbin "baserom.dol", 0x379AE0, 0xC
+	.asciz "mDashDec"
+	.balign 4
 "@2838":
-	.incbin "baserom.dol", 0x379AEC, 0x14
+	.asciz "mDashMaxBlendInBlur"
 "@2839":
-	.incbin "baserom.dol", 0x379B00, 0x14
+	.asciz "mDashMaxBlendInIris"
 "@2840":
-	.incbin "baserom.dol", 0x379B14, 0x10
+	.asciz "mDashBlendScale"
 "@2877":
-	.incbin "baserom.dol", 0x379B24, 0x1C
+	.asciz "/Mario/MarioParticle.prm"
+	.balign 4
 "@2878":
-	.incbin "baserom.dol", 0x379B40, 0x10
+	.asciz "mMeltInWaterMax"
 "@2879":
-	.incbin "baserom.dol", 0x379B50, 0x10
+	.asciz "mWaveEmitSpeed"
+	.balign 4
 "@2881":
-	.incbin "baserom.dol", 0x379B60, 0x10
+	.asciz "mWaveAlphaDec"
+	.balign 4
 "@2882":
-	.incbin "baserom.dol", 0x379B70, 0x10
+	.asciz "mBubbleDepth"
+	.balign 4
 "@2884":
-	.incbin "baserom.dol", 0x379B80, 0x14
+	.asciz "mBodyBubbleSpMin"
+	.balign 4
 "@2885":
-	.incbin "baserom.dol", 0x379B94, 0x14
+	.asciz "mBodyBubbleSpMax"
+	.balign 4
 "@2886":
-	.incbin "baserom.dol", 0x379BA8, 0x14
+	.asciz "mBodyBubbleEmitMin"
+	.balign 4
 "@2887":
-	.incbin "baserom.dol", 0x379BBC, 0x14
+	.asciz "mBodyBubbleEmitMax"
+	.balign 4
 "@2888":
-	.incbin "baserom.dol", 0x379BD0, 0x10
+	.asciz "mBubbleToRipple"
 "@2889":
-	.incbin "baserom.dol", 0x379BE0, 0x10
+	.asciz "mToroccoWind"
+	.balign 4
 "@2891":
-	.incbin "baserom.dol", 0x379BF0, 0x10
+	.asciz "mToroccoSpark"
+	.balign 4
 "@2906":
-	.incbin "baserom.dol", 0x379C00, 0x18
+	.asciz "/Mario/MarioMotor.prm"
+	.balign 4
 "@2907":
-	.incbin "baserom.dol", 0x379C18, 0x10
+	.asciz "mMotorReturn"
+	.balign 4
 "@2908":
-	.incbin "baserom.dol", 0x379C28, 0x10
+	.asciz "mMotorTrample"
+	.balign 4
 "@2909":
-	.incbin "baserom.dol", 0x379C38, 0x10
+	.asciz "mMotorHipDrop"
+	.balign 4
 "@2910":
-	.incbin "baserom.dol", 0x379C48, 0xC
+	.asciz "mMotorWall"
+	.balign 4
 "@2985":
-	.incbin "baserom.dol", 0x379C54, 0x14
+	.asciz "/Mario/Dirty.prm"
+	.balign 4
 "@2986":
-	.incbin "baserom.dol", 0x379C68, 0xC
+	.asciz "mIncRunning"
 "@2988":
-	.incbin "baserom.dol", 0x379C74, 0x10
+	.asciz "mIncCatching"
+	.balign 4
 "@2989":
-	.incbin "baserom.dol", 0x379C84, 0x10
+	.asciz "mIncSlipping"
+	.balign 4
 "@2990":
-	.incbin "baserom.dol", 0x379C94, 0x10
+	.asciz "mDecSwimming"
+	.balign 4
 "@2991":
-	.incbin "baserom.dol", 0x379CA4, 0x10
+	.asciz "mDecWaterHit"
+	.balign 4
 "@2992":
-	.incbin "baserom.dol", 0x379CB4, 0xC
+	.asciz "mDecRotJump"
 "@2993":
-	.incbin "baserom.dol", 0x379CC0, 0x14
+	.asciz "mBrakeStartValSlip"
+	.balign 4
 "@2995":
-	.incbin "baserom.dol", 0x379CD4, 0x14
+	.asciz "mBrakeStartValRun"
+	.balign 4
 "@2996":
-	.incbin "baserom.dol", 0x379CE8, 0x10
+	.asciz "mDirtyTimeSlip"
+	.balign 4
 "@2997":
-	.incbin "baserom.dol", 0x379CF8, 0x10
+	.asciz "mDirtyTimeRun"
+	.balign 4
 "@2998":
-	.incbin "baserom.dol", 0x379D08, 0x10
+	.asciz "mPolSizeSlip"
+	.balign 4
 "@3000":
-	.incbin "baserom.dol", 0x379D18, 0xC
+	.asciz "mPolSizeRun"
 "@3002":
-	.incbin "baserom.dol", 0x379D24, 0x14
+	.asciz "mPolSizeFootPrint"
+	.balign 4
 "@3003":
-	.incbin "baserom.dol", 0x379D38, 0x10
+	.asciz "mPolSizeJump"
+	.balign 4
 "@3004":
-	.incbin "baserom.dol", 0x379D48, 0xC
+	.asciz "mSlopeAngle"
 "@3005":
-	.incbin "baserom.dol", 0x379D54, 0xC
+	.asciz "mDirtyMax"
+	.balign 4
 "@3006":
-	.incbin "baserom.dol", 0x379D60, 0x10
+	.asciz "mSlipAnmSpeed"
+	.balign 4
 "@3008":
-	.incbin "baserom.dol", 0x379D70, 0xC
+	.asciz "mSlipRunSp"
+	.balign 4
 "@3009":
-	.incbin "baserom.dol", 0x379D7C, 0x10
+	.asciz "mSlipCatchSp"
+	.balign 4
 "@3010":
-	.incbin "baserom.dol", 0x379D8C, 0xC
+	.asciz "mSlipRotate"
 "@3011":
-	.incbin "baserom.dol", 0x379D98, 0x14
+	.asciz "mSlipCatchRotate"
+	.balign 4
 "@3012":
-	.incbin "baserom.dol", 0x379DAC, 0x14
+	.asciz "mBrakeSlipNoPollute"
 "@3013":
-	.incbin "baserom.dol", 0x379DC0, 0x10
+	.asciz "mFogTimeYellow"
+	.balign 4
 "@3014":
-	.incbin "baserom.dol", 0x379DD0, 0xC
+	.asciz "mFogTimeRed"
 "@3080":
-	.incbin "baserom.dol", 0x379DDC, 0x14
+	.asciz "/Mario/Graffito.prm"
 "@3081":
-	.incbin "baserom.dol", 0x379DF0, 0xC
+	.asciz "mSinkTime"
+	.balign 4
 "@3082":
-	.incbin "baserom.dol", 0x379DFC, 0x10
+	.asciz "mSinkDmgTime"
+	.balign 4
 "@3083":
-	.incbin "baserom.dol", 0x379E0C, 0xC
+	.asciz "mSinkHeight"
 "@3085":
-	.incbin "baserom.dol", 0x379E18, 0x10
+	.asciz "mSinkMoveMin"
+	.balign 4
 "@3086":
-	.incbin "baserom.dol", 0x379E28, 0x10
+	.asciz "mSinkMoveMax"
+	.balign 4
 "@3087":
-	.incbin "baserom.dol", 0x379E38, 0x10
+	.asciz "mSinkRecover"
+	.balign 4
 "@3088":
-	.incbin "baserom.dol", 0x379E48, 0x14
+	.asciz "mSinkJumpRateMin"
+	.balign 4
 "@3089":
-	.incbin "baserom.dol", 0x379E5C, 0x14
+	.asciz "mSinkJumpRateMax"
+	.balign 4
 "@3090":
-	.incbin "baserom.dol", 0x379E70, 0x10
+	.asciz "mSinkPumpLimit"
+	.balign 4
 "@3091":
-	.incbin "baserom.dol", 0x379E80, 0x10
+	.asciz "mSinkDmgDepth"
+	.balign 4
 "@3092":
-	.incbin "baserom.dol", 0x379E90, 0xC
+	.asciz "mFireHeight"
 "@3094":
-	.incbin "baserom.dol", 0x379E9C, 0x10
+	.asciz "mDizzySlipCtMax"
 "@3095":
-	.incbin "baserom.dol", 0x379EAC, 0x10
+	.asciz "mDizzyWalkCtMax"
 "@3096":
-	.incbin "baserom.dol", 0x379EBC, 0x10
+	.asciz "mDizzyAngleY"
+	.balign 4
 "@3097":
-	.incbin "baserom.dol", 0x379ECC, 0x10
+	.asciz "mDizzyAngleRate"
 "@3099":
-	.incbin "baserom.dol", 0x379EDC, 0x10
+	.asciz "mDizzyPowerRate"
 "@3101":
-	.incbin "baserom.dol", 0x379EEC, 0xC
+	.asciz "mDizzyPower"
 "@3103":
-	.incbin "baserom.dol", 0x379EF8, 0x14
+	.asciz "mFireInvincibleTime"
 "@3104":
-	.incbin "baserom.dol", 0x379F0C, 0x10
+	.asciz "mFootEraseTimes"
 "@3105":
-	.incbin "baserom.dol", 0x379F1C, 0x10
+	.asciz "mFootEraseSize"
+	.balign 4
 "@3106":
-	.incbin "baserom.dol", 0x379F2C, 0x10
+	.asciz "mFootEraseFront"
 "@3139":
-	.incbin "baserom.dol", 0x379F3C, 0x18
+	.asciz "/Mario/Controller.prm"
+	.balign 4
 "@3140":
-	.incbin "baserom.dol", 0x379F54, 0x14
+	.asciz "mAnalogLRToZeroVal"
+	.balign 4
 "@3141":
-	.incbin "baserom.dol", 0x379F68, 0x18
+	.asciz "mAnalogLRToMiddleVal"
+	.balign 4
 "@3142":
-	.incbin "baserom.dol", 0x379F80, 0x14
+	.asciz "mAnalogLRToMaxVal"
+	.balign 4
 "@3143":
-	.incbin "baserom.dol", 0x379F94, 0x18
+	.asciz "mAnalogLRMiddleLevel"
+	.balign 4
 "@3144":
-	.incbin "baserom.dol", 0x379FAC, 0x14
+	.asciz "mStartToWalkLevel"
+	.balign 4
 "@3145":
-	.incbin "baserom.dol", 0x379FC0, 0x14
+	.asciz "mStickRotateTime"
+	.balign 4
 "@3146":
-	.incbin "baserom.dol", 0x379FD4, 0x14
+	.asciz "mLengthMultTimes"
+	.balign 4
 "@3147":
-	.incbin "baserom.dol", 0x379FE8, 0xC
+	.asciz "mLengthMult"
 "@3149":
-	.incbin "baserom.dol", 0x379FF4, 0x14
+	.asciz "mSquatRotMidAnalog"
+	.balign 4
 "@3151":
-	.incbin "baserom.dol", 0x37A008, 0x14
+	.asciz "mSquatRotMidValue"
+	.balign 4
 "@3181":
-	.incbin "baserom.dol", 0x37A01C, 0x14
+	.asciz "/Mario/Yoshi.prm"
+	.balign 4
 "@3182":
-	.incbin "baserom.dol", 0x37A030, 0x10
+	.asciz "mRunYoshiMult"
+	.balign 4
 "@3184":
-	.incbin "baserom.dol", 0x37A040, 0x10
+	.asciz "mJumpYoshiMult"
+	.balign 4
 "@3185":
-	.incbin "baserom.dol", 0x37A050, 0x10
+	.asciz "mRotYoshiMult"
+	.balign 4
 "@3187":
-	.incbin "baserom.dol", 0x37A060, 0xC
+	.asciz "mHeadFront"
+	.balign 4
 "@3188":
-	.incbin "baserom.dol", 0x37A06C, 0xC
+	.asciz "mHeadRadius"
 "@3189":
-	.incbin "baserom.dol", 0x37A078, 0x14
+	.asciz "mHoldOutAccCtrlF"
+	.balign 4
 "@3190":
-	.incbin "baserom.dol", 0x37A08C, 0x14
+	.asciz "mHoldOutAccCtrlB"
+	.balign 4
 "@3192":
-	.incbin "baserom.dol", 0x37A0A0, 0x10
+	.asciz "mHoldOutSldCtrl"
 "@3193":
-	.incbin "baserom.dol", 0x37A0B0, 0xC
+	.asciz "mDecBrake"
+	.balign 4
 "@3217":
-	.incbin "baserom.dol", 0x37A0BC, 0x18
+	.asciz "/Mario/WaterEffect.prm"
+	.balign 4
 "@3218":
-	.incbin "baserom.dol", 0x37A0D4, 0x18
+	.asciz "mJumpIntoMdlEffectSpY"
+	.balign 4
 "@3219":
-	.incbin "baserom.dol", 0x37A0EC, 0x10
+	.asciz "mJumpIntoMinY"
+	.balign 4
 "@3220":
-	.incbin "baserom.dol", 0x37A0FC, 0x10
+	.asciz "mJumpIntoMaxY"
+	.balign 4
 "@3221":
-	.incbin "baserom.dol", 0x37A10C, 0x14
+	.asciz "mJumpIntoScaleMin"
+	.balign 4
 "@3223":
-	.incbin "baserom.dol", 0x37A120, 0x14
+	.asciz "mJumpIntoScaleWidth"
 "@3224":
-	.incbin "baserom.dol", 0x37A134, 0x14
+	.asciz "mRunningRippleSpeed"
 "@3226":
-	.incbin "baserom.dol", 0x37A148, 0x14
+	.asciz "mRunningRippleDepth"
 "@3244":
-	.incbin "baserom.dol", 0x37A15C, 0x10
+	.asciz "/Mario/Bar.prm"
+	.balign 4
 "@3245":
-	.incbin "baserom.dol", 0x37A16C, 0xC
+	.asciz "mClimbSp"
+	.balign 4
 "@3247":
-	.incbin "baserom.dol", 0x37A178, 0xC
+	.asciz "mRotateSp"
+	.balign 4
 "@3248":
-	.incbin "baserom.dol", 0x37A184, 0x10
+	.asciz "mClimbAnmRate"
+	.balign 4
 "@3250":
-	.incbin "baserom.dol", 0x37A194, 0x10
+	.asciz "mCatchRadius"
+	.balign 4
 "@3252":
-	.incbin "baserom.dol", 0x37A1A4, 0xC
+	.asciz "mCatchAngle"
 "@3268":
-	.incbin "baserom.dol", 0x37A1B0, 0xC
+	.asciz "mPullRateV"
+	.balign 4
 "@3269":
-	.incbin "baserom.dol", 0x37A1BC, 0xC
+	.asciz "mPullRateH"
+	.balign 4
 "@3270":
-	.incbin "baserom.dol", 0x37A1C8, 0x10
+	.asciz "mOilPullRateV"
+	.balign 4
 "@3271":
-	.incbin "baserom.dol", 0x37A1D8, 0x10
+	.asciz "mOilPullRateH"
+	.balign 4
 "@3322":
-	.incbin "baserom.dol", 0x37A1E8, 0x10
+	.asciz "/Mario/Wire.prm"
 "@3323":
-	.incbin "baserom.dol", 0x37A1F8, 0xC
+	.asciz "mRotSpeed"
+	.balign 4
 "@3324":
-	.incbin "baserom.dol", 0x37A204, 0x14
+	.asciz "mRotSpeedTrgHover"
+	.balign 4
 "@3325":
-	.incbin "baserom.dol", 0x37A218, 0x14
+	.asciz "mRotSpeedTrgTurbo"
+	.balign 4
 "@3326":
-	.incbin "baserom.dol", 0x37A22C, 0x14
+	.asciz "mRotSpeedTrgRocket"
+	.balign 4
 "@3327":
-	.incbin "baserom.dol", 0x37A240, 0x10
+	.asciz "mRotSpeedMax"
+	.balign 4
 "@3328":
-	.incbin "baserom.dol", 0x37A250, 0xC
+	.asciz "mRotStop"
+	.balign 4
 "@3329":
-	.incbin "baserom.dol", 0x37A25C, 0xC
+	.asciz "mRotGravity"
 "@3330":
-	.incbin "baserom.dol", 0x37A268, 0xC
+	.asciz "mRotBrake"
+	.balign 4
 "@3331":
-	.incbin "baserom.dol", 0x37A274, 0xC
+	.asciz "mJumpRate"
+	.balign 4
 "@3333":
-	.incbin "baserom.dol", 0x37A280, 0xC
+	.asciz "mSwingRate"
+	.balign 4
 "@3335":
-	.incbin "baserom.dol", 0x37A28C, 0x18
+	.asciz "mWireJumpAccelControl"
+	.balign 4
 "@3336":
-	.incbin "baserom.dol", 0x37A2A4, 0x18
+	.asciz "mWireJumpSlideControl"
+	.balign 4
 "@3337":
-	.incbin "baserom.dol", 0x37A2BC, 0x10
+	.asciz "mWireJumpMult"
+	.balign 4
 "@3338":
-	.incbin "baserom.dol", 0x37A2CC, 0x10
+	.asciz "mWireJumpBase"
+	.balign 4
 "@3339":
-	.incbin "baserom.dol", 0x37A2DC, 0x10
+	.asciz "mWireSwingBrake"
 "@3340":
-	.incbin "baserom.dol", 0x37A2EC, 0x10
+	.asciz "mWireSwingMax"
+	.balign 4
 "@3346":
-	.incbin "baserom.dol", 0x37A2FC, 0x14
+	.asciz "/Mario/HangRoof.prm"
 "@3347":
-	.incbin "baserom.dol", 0x37A310, 0xC
+	.asciz "mAnmMult"
+	.balign 4
 "@3368":
-	.incbin "baserom.dol", 0x37A31C, 0x14
+	.asciz "/Mario/Hanging.prm"
+	.balign 4
 "@3370":
-	.incbin "baserom.dol", 0x37A330, 0xC
+	.asciz "mAnmRate"
+	.balign 4
 "@3371":
-	.incbin "baserom.dol", 0x37A33C, 0xC
+	.asciz "mRapidTime"
+	.balign 4
 "@3372":
-	.incbin "baserom.dol", 0x37A348, 0xC
+	.asciz "mLimitTime"
+	.balign 4
 "@3373":
-	.incbin "baserom.dol", 0x37A354, 0xC
+	.asciz "mAnmRapid"
+	.balign 4
 "@3375":
-	.incbin "baserom.dol", 0x37A360, 0xC
+	.asciz "mDescentSp"
+	.balign 4
 "@3465":
-	.incbin "baserom.dol", 0x37A36C, 0x10
+	.asciz "/Mario/Swim.prm"
 "@3466":
-	.incbin "baserom.dol", 0x37A37C, 0xC
+	.asciz "mStartSp"
+	.balign 4
 "@3467":
-	.incbin "baserom.dol", 0x37A388, 0xC
+	.asciz "mMoveBrake"
+	.balign 4
 "@3468":
-	.incbin "baserom.dol", 0x37A394, 0x14
+	.asciz "mSwimmingRotSpMin"
+	.balign 4
 "@3469":
-	.incbin "baserom.dol", 0x37A3A8, 0x14
+	.asciz "mSwimmingRotSpMax"
+	.balign 4
 "@3470":
-	.incbin "baserom.dol", 0x37A3BC, 0x14
+	.asciz "mPumpingRotSpMin"
+	.balign 4
 "@3471":
-	.incbin "baserom.dol", 0x37A3D0, 0x14
+	.asciz "mPumpingRotSpMax"
+	.balign 4
 "@3472":
-	.incbin "baserom.dol", 0x37A3E4, 0x10
+	.asciz "mWaitBouyancy"
+	.balign 4
 "@3473":
-	.incbin "baserom.dol", 0x37A3F4, 0x10
+	.asciz "mMoveBouyancy"
+	.balign 4
 "@3474":
-	.incbin "baserom.dol", 0x37A404, 0x10
+	.asciz "mUpDownBrake"
+	.balign 4
 "@3475":
-	.incbin "baserom.dol", 0x37A414, 0x10
+	.asciz "mCanJumpDepth"
+	.balign 4
 "@3476":
-	.incbin "baserom.dol", 0x37A424, 0xC
+	.asciz "mEndDepth"
+	.balign 4
 "@3477":
-	.incbin "baserom.dol", 0x37A430, 0x10
+	.asciz "mFloatHeight"
+	.balign 4
 "@3478":
-	.incbin "baserom.dol", 0x37A440, 0xC
+	.asciz "mStartVMult"
 "@3479":
-	.incbin "baserom.dol", 0x37A44C, 0x10
+	.asciz "mStartVYMult"
+	.balign 4
 "@3481":
-	.incbin "baserom.dol", 0x37A45C, 0xC
+	.asciz "mAnmBrake"
+	.balign 4
 "@3482":
-	.incbin "baserom.dol", 0x37A468, 0x10
+	.asciz "mPaddleSpeedUp"
+	.balign 4
 "@3483":
-	.incbin "baserom.dol", 0x37A478, 0x10
+	.asciz "mPaddleJumpUp"
+	.balign 4
 "@3484":
-	.incbin "baserom.dol", 0x37A488, 0xC
+	.asciz "mFloatUp"
+	.balign 4
 "@3486":
-	.incbin "baserom.dol", 0x37A494, 0x18
+	.asciz "mWaterLevelCheckHeight"
+	.balign 4
 "@3487":
-	.incbin "baserom.dol", 0x37A4AC, 0xC
+	.asciz "mPaddleDown"
 "@3488":
-	.incbin "baserom.dol", 0x37A4B8, 0x10
+	.asciz "mWaitSinkTime"
+	.balign 4
 "@3489":
-	.incbin "baserom.dol", 0x37A4C8, 0x10
+	.asciz "mCanBreathDepth"
 "@3490":
-	.incbin "baserom.dol", 0x37A4D8, 0x10
+	.asciz "mWaitSinkSpeed"
+	.balign 4
 "@3492":
-	.incbin "baserom.dol", 0x37A4E8, 0xC
+	.asciz "mAirDecDive"
 "@3559":
-	.incbin "baserom.dol", 0x37A4F4, 0x10
+	.asciz "/Mario/Run.prm"
+	.balign 4
 "@3560":
-	.incbin "baserom.dol", 0x37A504, 0xC
+	.asciz "mMaxSpeed"
+	.balign 4
 "@3562":
-	.incbin "baserom.dol", 0x37A510, 0x10
+	.asciz "mVelMinusBrake"
+	.balign 4
 "@3564":
-	.incbin "baserom.dol", 0x37A520, 0xC
+	.asciz "mAddBase"
+	.balign 4
 "@3565":
-	.incbin "baserom.dol", 0x37A52C, 0xC
+	.asciz "mAddVelDiv"
+	.balign 4
 "@3567":
-	.incbin "baserom.dol", 0x37A538, 0x10
+	.asciz "mDecStartNrmY"
+	.balign 4
 "@3568":
-	.incbin "baserom.dol", 0x37A548, 0xC
+	.asciz "mSoft2Walk"
+	.balign 4
 "@3569":
-	.incbin "baserom.dol", 0x37A554, 0xC
+	.asciz "mWalk2Soft"
+	.balign 4
 "@3570":
-	.incbin "baserom.dol", 0x37A560, 0x14
+	.asciz "mSoftStepAnmMult"
+	.balign 4
 "@3572":
-	.incbin "baserom.dol", 0x37A574, 0x14
+	.asciz "mRunAnmSpeedBase"
+	.balign 4
 "@3573":
-	.incbin "baserom.dol", 0x37A588, 0x14
+	.asciz "mRunAnmSpeedMult"
+	.balign 4
 "@3575":
-	.incbin "baserom.dol", 0x37A59C, 0x10
+	.asciz "mMotBlendWalkSp"
 "@3576":
-	.incbin "baserom.dol", 0x37A5AC, 0x10
+	.asciz "mMotBlendRunSp"
+	.balign 4
 "@3577":
-	.incbin "baserom.dol", 0x37A5BC, 0xC
+	.asciz "mSwimDepth"
+	.balign 4
 "@3578":
-	.incbin "baserom.dol", 0x37A5C8, 0x10
+	.asciz "mInWaterBrake"
+	.balign 4
 "@3579":
-	.incbin "baserom.dol", 0x37A5D8, 0x14
+	.asciz "mInWaterAnmBrake"
+	.balign 4
 "@3581":
-	.incbin "baserom.dol", 0x37A5EC, 0x10
+	.asciz "mPumpingSlideSp"
 "@3582":
-	.incbin "baserom.dol", 0x37A5FC, 0x14
+	.asciz "mPumpingSlideAnmSp"
+	.balign 4
 "@3583":
-	.incbin "baserom.dol", 0x37A610, 0x10
+	.asciz "mDoJumpCatchSp"
+	.balign 4
 "@3584":
-	.incbin "baserom.dol", 0x37A620, 0xC
+	.asciz "mTurnNeedSp"
 "@3585":
-	.incbin "baserom.dol", 0x37A62C, 0xC
+	.asciz "mDashRotSp"
+	.balign 4
 "@3726":
-	.incbin "baserom.dol", 0x37A638, 0x10
+	.asciz "/Mario/Jump.prm"
 "@3727":
-	.incbin "baserom.dol", 0x37A648, 0x14
+	.asciz "mSpinJumpGravity"
+	.balign 4
 "@3728":
-	.incbin "baserom.dol", 0x37A65C, 0xC
+	.asciz "mJumpingMax"
 "@3729":
-	.incbin "baserom.dol", 0x37A668, 0x10
+	.asciz "mJumpSpeedBrake"
 "@3730":
-	.incbin "baserom.dol", 0x37A678, 0x14
+	.asciz "mJumpAccelControl"
+	.balign 4
 "@3731":
-	.incbin "baserom.dol", 0x37A68C, 0x14
+	.asciz "mJumpSlideControl"
+	.balign 4
 "@3732":
-	.incbin "baserom.dol", 0x37A6A0, 0x10
+	.asciz "mTurnJumpForce"
+	.balign 4
 "@3734":
-	.incbin "baserom.dol", 0x37A6B0, 0xC
+	.asciz "mFenceSpeed"
 "@3735":
-	.incbin "baserom.dol", 0x37A6BC, 0x10
+	.asciz "mFireDownForce"
+	.balign 4
 "@3736":
-	.incbin "baserom.dol", 0x37A6CC, 0x14
+	.asciz "mFireDownControl"
+	.balign 4
 "@3737":
-	.incbin "baserom.dol", 0x37A6E0, 0x14
+	.asciz "mFireBackVelocity"
+	.balign 4
 "@3738":
-	.incbin "baserom.dol", 0x37A6F4, 0x10
+	.asciz "mBroadJumpForce"
 "@3739":
-	.incbin "baserom.dol", 0x37A704, 0x14
+	.asciz "mBroadJumpForceY"
+	.balign 4
 "@3740":
-	.incbin "baserom.dol", 0x37A718, 0x14
+	.asciz "mRotateJumpForceY"
+	.balign 4
 "@3741":
-	.incbin "baserom.dol", 0x37A72C, 0x10
+	.asciz "mPopUpSpeedY"
+	.balign 4
 "@3742":
-	.incbin "baserom.dol", 0x37A73C, 0x14
+	.asciz "mPopUpForceYMult"
+	.balign 4
 "@3743":
-	.incbin "baserom.dol", 0x37A750, 0x10
+	.asciz "mBackJumpForce"
+	.balign 4
 "@3745":
-	.incbin "baserom.dol", 0x37A760, 0x10
+	.asciz "mBackJumpForceY"
 "@3746":
-	.incbin "baserom.dol", 0x37A770, 0x14
+	.asciz "mHipAttackSpeedY"
+	.balign 4
 "@3748":
-	.incbin "baserom.dol", 0x37A784, 0x18
+	.asciz "mSuperHipAttackSpeedY"
+	.balign 4
 "@3750":
-	.incbin "baserom.dol", 0x37A79C, 0x14
+	.asciz "mJumpCatchRotXSp"
+	.balign 4
 "@3751":
-	.incbin "baserom.dol", 0x37A7B0, 0x14
+	.asciz "mJumpCatchRotXMax"
+	.balign 4
 "@3752":
-	.incbin "baserom.dol", 0x37A7C4, 0x14
+	.asciz "mRotBroadEnableV"
+	.balign 4
 "@3753":
-	.incbin "baserom.dol", 0x37A7D8, 0x14
+	.asciz "mRotBroadJumpForce"
+	.balign 4
 "@3754":
-	.incbin "baserom.dol", 0x37A7EC, 0x14
+	.asciz "mRotBroadJumpForceY"
 "@3755":
-	.incbin "baserom.dol", 0x37A800, 0x10
+	.asciz "mTrampolineDec"
+	.balign 4
 "@3756":
-	.incbin "baserom.dol", 0x37A810, 0x14
+	.asciz "mSecJumpEnableSp"
+	.balign 4
 "@3757":
-	.incbin "baserom.dol", 0x37A824, 0x10
+	.asciz "mSecJumpForce"
+	.balign 4
 "@3759":
-	.incbin "baserom.dol", 0x37A834, 0x14
+	.asciz "mSecJumpSpeedMult"
+	.balign 4
 "@3760":
-	.incbin "baserom.dol", 0x37A848, 0x10
+	.asciz "mSecJumpXZMult"
+	.balign 4
 "@3761":
-	.incbin "baserom.dol", 0x37A858, 0x14
+	.asciz "mTriJumpEnableSp"
+	.balign 4
 "@3762":
-	.incbin "baserom.dol", 0x37A86C, 0x10
+	.asciz "mUltraJumpForce"
 "@3764":
-	.incbin "baserom.dol", 0x37A87C, 0x14
+	.asciz "mUltraJumpSpeedMult"
 "@3765":
-	.incbin "baserom.dol", 0x37A890, 0x14
+	.asciz "mUltraJumpXZMult"
+	.balign 4
 "@3766":
-	.incbin "baserom.dol", 0x37A8A4, 0x10
+	.asciz "mValleyDepth"
+	.balign 4
 "@3768":
-	.incbin "baserom.dol", 0x37A8B4, 0x10
+	.asciz "mThrownAccel"
+	.balign 4
 "@3769":
-	.incbin "baserom.dol", 0x37A8C4, 0x10
+	.asciz "mThrownSlide"
+	.balign 4
 "@3770":
-	.incbin "baserom.dol", 0x37A8D4, 0x10
+	.asciz "mThrownBrake"
+	.balign 4
 "@3771":
-	.incbin "baserom.dol", 0x37A8E4, 0x10
+	.asciz "mTremblePower"
+	.balign 4
 "@3772":
-	.incbin "baserom.dol", 0x37A8F4, 0x10
+	.asciz "mTrembleAccele"
+	.balign 4
 "@3773":
-	.incbin "baserom.dol", 0x37A904, 0x10
+	.asciz "mTrembleBrake"
+	.balign 4
 "@3774":
-	.incbin "baserom.dol", 0x37A914, 0x10
+	.asciz "mTrembleTime"
+	.balign 4
 "@3775":
-	.incbin "baserom.dol", 0x37A924, 0x14
+	.asciz "mJumpJumpCatchSp"
+	.balign 4
 "@3776":
-	.incbin "baserom.dol", 0x37A938, 0x10
+	.asciz "mGetOffYoshiY"
+	.balign 4
 "@3777":
-	.incbin "baserom.dol", 0x37A948, 0x14
+	.asciz "mSuperHipAttackCt"
+	.balign 4
 "@3808":
-	.incbin "baserom.dol", 0x37A95C, 0xC
+	.asciz "mHeadRot"
+	.balign 4
 "@3971":
-	.incbin "baserom.dol", 0x37A968, 0x14
+	.asciz "/Mario/Mario.prm"
+	.balign 4
 "@3973":
-	.incbin "baserom.dol", 0x37A97C, 0xC
+	.asciz "mRunningMax"
 "@3975":
-	.incbin "baserom.dol", 0x37A988, 0xC
+	.asciz "mDashMax"
+	.balign 4
 "@3976":
-	.incbin "baserom.dol", 0x37A994, 0xC
+	.asciz "mDashAcc"
+	.balign 4
 "@3977":
-	.incbin "baserom.dol", 0x37A9A0, 0xC
+	.asciz "mDashBrake"
+	.balign 4
 "@3978":
-	.incbin "baserom.dol", 0x37A9AC, 0x10
+	.asciz "mDashStartTime"
+	.balign 4
 "@3979":
-	.incbin "baserom.dol", 0x37A9BC, 0x10
+	.asciz "mWaitingRotSp"
+	.balign 4
 "@3980":
-	.incbin "baserom.dol", 0x37A9CC, 0x14
+	.asciz "mRunningRotSpMin"
+	.balign 4
 "@3981":
-	.incbin "baserom.dol", 0x37A9E0, 0x14
+	.asciz "mRunningRotSpMax"
+	.balign 4
 "@3982":
-	.incbin "baserom.dol", 0x37A9F4, 0x10
+	.asciz "mRocketRotSp"
+	.balign 4
 "@3983":
-	.incbin "baserom.dol", 0x37AA04, 0x14
+	.asciz "mFootPrintTimerMax"
+	.balign 4
 "@3984":
-	.incbin "baserom.dol", 0x37AA18, 0x14
+	.asciz "mWaterTriggerRate"
+	.balign 4
 "@3985":
-	.incbin "baserom.dol", 0x37AA2C, 0x14
+	.asciz "mGraffitoNoDmgTime"
+	.balign 4
 "@3986":
-	.incbin "baserom.dol", 0x37AA40, 0xC
+	.asciz "mRestMax"
+	.balign 4
 "@3987":
-	.incbin "baserom.dol", 0x37AA4C, 0xC
+	.asciz "mShadowSize"
 "@3988":
-	.incbin "baserom.dol", 0x37AA58, 0x10
+	.asciz "mShadowErase"
+	.balign 4
 "@3989":
-	.incbin "baserom.dol", 0x37AA68, 0xC
+	.asciz "mHoldRadius"
 "@3990":
-	.incbin "baserom.dol", 0x37AA74, 0x10
+	.asciz "mDamageRadius"
+	.balign 4
 "@3991":
-	.incbin "baserom.dol", 0x37AA84, 0x10
+	.asciz "mDamageHeight"
+	.balign 4
 "@3993":
-	.incbin "baserom.dol", 0x37AA94, 0x10
+	.asciz "mAttackHeight"
+	.balign 4
 "@3994":
-	.incbin "baserom.dol", 0x37AAA4, 0x10
+	.asciz "mTrampleRadius"
+	.balign 4
 "@3995":
-	.incbin "baserom.dol", 0x37AAB4, 0x10
+	.asciz "mPushupRadius"
+	.balign 4
 "@3996":
-	.incbin "baserom.dol", 0x37AAC4, 0x10
+	.asciz "mPushupHeight"
+	.balign 4
 "@3997":
-	.incbin "baserom.dol", 0x37AAD4, 0x10
+	.asciz "mHipdropRadius"
+	.balign 4
 "@3999":
-	.incbin "baserom.dol", 0x37AAE4, 0x10
+	.asciz "mQuakeRadius"
+	.balign 4
 "@4000":
-	.incbin "baserom.dol", 0x37AAF4, 0x10
+	.asciz "mQuakeHeight"
+	.balign 4
 "@4001":
-	.incbin "baserom.dol", 0x37AB04, 0x14
+	.asciz "mTramplePowStep1"
+	.balign 4
 "@4002":
-	.incbin "baserom.dol", 0x37AB18, 0x14
+	.asciz "mTramplePowStep2"
+	.balign 4
 "@4003":
-	.incbin "baserom.dol", 0x37AB2C, 0x14
+	.asciz "mTramplePowStep3"
+	.balign 4
 "@4004":
-	.incbin "baserom.dol", 0x37AB40, 0x10
+	.asciz "mJumpWallHeight"
 "@4005":
-	.incbin "baserom.dol", 0x37AB50, 0xC
+	.asciz "mThrowPower"
 "@4006":
-	.incbin "baserom.dol", 0x37AB5C, 0xC
+	.asciz "mSlipStart"
+	.balign 4
 "@4008":
-	.incbin "baserom.dol", 0x37AB68, 0x10
+	.asciz "mWasOnWaterSlip"
 "@4010":
-	.incbin "baserom.dol", 0x37AB78, 0x10
+	.asciz "mInWaterSlip"
+	.balign 4
 "@4011":
-	.incbin "baserom.dol", 0x37AB88, 0x10
+	.asciz "mToroccoRotSp"
+	.balign 4
 "@4012":
-	.incbin "baserom.dol", 0x37AB98, 0x10
+	.asciz "mRecoverTimer"
+	.balign 4
 "@4013":
-	.incbin "baserom.dol", 0x37ABA8, 0xC
+	.asciz "mHotTimer"
+	.balign 4
 "@4014":
-	.incbin "baserom.dol", 0x37ABB4, 0xC
+	.asciz "mFeelDeep"
+	.balign 4
 "@4015":
-	.incbin "baserom.dol", 0x37ABC0, 0x14
+	.asciz "mDamageFallHeight"
+	.balign 4
 "@4016":
-	.incbin "baserom.dol", 0x37ABD4, 0x10
+	.asciz "mForceSlipAngle"
 "@4017":
-	.incbin "baserom.dol", 0x37ABE4, 0x18
+	.asciz "mHangWallMovableAngle"
+	.balign 4
 "@4018":
-	.incbin "baserom.dol", 0x37ABFC, 0xC
+	.asciz "mColMvMax"
+	.balign 4
 "@4019":
-	.incbin "baserom.dol", 0x37AC08, 0x10
+	.asciz "mNoFreezeTime"
+	.balign 4
 "@4020":
-	.incbin "baserom.dol", 0x37AC18, 0x10
+	.asciz "mKickFreezeTime"
 "@4021":
-	.incbin "baserom.dol", 0x37AC28, 0x18
+	.asciz "mSurfStartFreezeTime"
+	.balign 4
 "@4022":
-	.incbin "baserom.dol", 0x37AC40, 0x14
+	.asciz "mSleepingCheckDist"
+	.balign 4
 "@4023":
-	.incbin "baserom.dol", 0x37AC54, 0x18
+	.asciz "mSleepingCheckHeight"
+	.balign 4
 "@4024":
-	.incbin "baserom.dol", 0x37AC6C, 0x14
+	.asciz "mIllegalPlaneCtInc"
+	.balign 4
 "@4025":
-	.incbin "baserom.dol", 0x37AC80, 0x14
+	.asciz "mIllegalPlaneTime"
+	.balign 4
 "@4081":
-	.incbin "baserom.dol", 0x37AC94, 0x1C
+	.asciz "/Mario/DamageWaterEmit.prm"
+	.balign 4
 "@4082":
-	.incbin "baserom.dol", 0x37ACB0, 0x18
+	.asciz "/Mario/WetWaterEmit.prm"
 "@4083":
-	.incbin "baserom.dol", 0x37ACC8, 0x14
+	.4byte 0x837D838A
+	.4byte 0x83498347
+	.4byte 0x83748346
+	.4byte 0x834E8367
+	.4byte 0
 "@6516":
-	.incbin "baserom.dol", 0x37ACDC, 0xC
+	.asciz "HitActor"
+	.balign 4
 "@6517":
-	.incbin "baserom.dol", 0x37ACE8, 0x1C
+	.asciz "/Mario/BodyAngleFree.prm"
+	.balign 4
 "@6518":
-	.incbin "baserom.dol", 0x37AD04, 0x20
+	.asciz "/Mario/BodyAngleWaterGun.prm"
+	.balign 4
 "@6519":
-	.incbin "baserom.dol", 0x37AD24, 0x1C
+	.asciz "/Mario/AttackFencePunch.prm"
 "@6520":
-	.incbin "baserom.dol", 0x37AD40, 0x1C
+	.asciz "/Mario/AttackKickRoof.prm"
+	.balign 4
 "@6521":
-	.incbin "baserom.dol", 0x37AD5C, 0x1C
+	.asciz "/Mario/PullParamBGBeak.prm"
+	.balign 4
 "@6522":
-	.incbin "baserom.dol", 0x37AD78, 0x20
+	.asciz "/Mario/PullParamBGTentacle.prm"
+	.balign 4
 "@6523":
-	.incbin "baserom.dol", 0x37AD98, 0x2C
+	.asciz "/Mario/PullParamBGFireWanWanBossTail.prm"
+	.balign 4
 "@6524":
-	.incbin "baserom.dol", 0x37ADC4, 0x24
+	.asciz "/Mario/PullParamFireWanWanTail.prm"
+	.balign 4
 "@6525":
-	.incbin "baserom.dol", 0x37ADE8, 0x1C
+	.asciz "/Mario/SurfingWaterRed.prm"
+	.balign 4
 "@6526":
-	.incbin "baserom.dol", 0x37AE04, 0x1C
+	.asciz "/Mario/SurfingGroundRed.prm"
 "@6527":
-	.incbin "baserom.dol", 0x37AE20, 0x20
+	.asciz "/Mario/SurfingWaterYellow.prm"
+	.balign 4
 "@6528":
-	.incbin "baserom.dol", 0x37AE40, 0x20
+	.asciz "/Mario/SurfingGroundYellow.prm"
+	.balign 4
 "@6529":
-	.incbin "baserom.dol", 0x37AE60, 0x20
+	.asciz "/Mario/SurfingWaterGreen.prm"
+	.balign 4
 "@6530":
-	.incbin "baserom.dol", 0x37AE80, 0x20
+	.asciz "/Mario/SurfingGroundGreen.prm"
+	.balign 4
 "@6531":
-	.incbin "baserom.dol", 0x37AEA0, 0x14
+	.asciz "/Mario/HHover.prm"
+	.balign 4
 "@6532":
-	.incbin "baserom.dol", 0x37AEB4, 0x14
+	.asciz "/Mario/Diving.prm"
+	.balign 4
 "@6533":
-	.incbin "baserom.dol", 0x37AEC8, 0x1C
+	.asciz "/Mario/SlipParamNormal.prm"
+	.balign 4
 "@6534":
-	.incbin "baserom.dol", 0x37AEE4, 0x18
+	.asciz "/Mario/SlipParamOil.prm"
 "@6535":
-	.incbin "baserom.dol", 0x37AEFC, 0x18
+	.asciz "/Mario/SlipParamAll.prm"
 "@6536":
-	.incbin "baserom.dol", 0x37AF14, 0x20
+	.asciz "/Mario/SlipParamAll_Slider.prm"
+	.balign 4
 "@6537":
-	.incbin "baserom.dol", 0x37AF34, 0x18
+	.asciz "/Mario/SlipParam45.prm"
+	.balign 4
 "@6538":
-	.incbin "baserom.dol", 0x37AF4C, 0x20
+	.asciz "/Mario/SlipParamWaterSlope.prm"
+	.balign 4
 "@6539":
-	.incbin "baserom.dol", 0x37AF6C, 0x20
+	.asciz "/Mario/SlipParamWaterGround.prm"
 "@6540":
-	.incbin "baserom.dol", 0x37AF8C, 0x1C
+	.asciz "/Mario/SlipParamYoshi.prm"
+	.balign 4
 "@6541":
-	.incbin "baserom.dol", 0x37AFA8, 0x18
+	.asciz "/Mario/UpperBody.prm"
+	.balign 4
 "@6542":
-	.incbin "baserom.dol", 0x37AFC0, 0x1C
+	.asciz "/Mario/DmgEnemyCommon.prm"
+	.balign 4
 "@6543":
-	.incbin "baserom.dol", 0x37AFDC, 0x18
+	.asciz "/Mario/DmgHamukuri.prm"
+	.balign 4
 "@6544":
-	.incbin "baserom.dol", 0x37AFF4, 0x18
+	.asciz "/Mario/DmgNamekuri.prm"
+	.balign 4
 "@6545":
-	.incbin "baserom.dol", 0x37B00C, 0x18
+	.asciz "/Mario/DmgHinokuri.prm"
+	.balign 4
 "@6546":
-	.incbin "baserom.dol", 0x37B024, 0x14
+	.asciz "/Mario/DmgFire.prm"
+	.balign 4
 "@6547":
-	.incbin "baserom.dol", 0x37B038, 0x1C
+	.asciz "/Mario/DmgBGTentacle.prm"
+	.balign 4
 "@6548":
-	.incbin "baserom.dol", 0x37B054, 0x18
+	.asciz "/Mario/DmgBossEel.prm"
+	.balign 4
 "@6549":
-	.incbin "baserom.dol", 0x37B06C, 0x1C
+	.asciz "/Mario/DmgHanachanBoss.prm"
+	.balign 4
 "@6550":
-	.incbin "baserom.dol", 0x37B088, 0x18
+	.asciz "/Mario/DmgPoihana.prm"
+	.balign 4
 "@6551":
-	.incbin "baserom.dol", 0x37B0A0, 0x18
+	.asciz "/Mario/DmgKiller.prm"
+	.balign 4
 "@6552":
-	.incbin "baserom.dol", 0x37B0B8, 0x1C
+	.asciz "/Mario/DmgLampTrapIron.prm"
+	.balign 4
 "@6553":
-	.incbin "baserom.dol", 0x37B0D4, 0x1C
+	.asciz "/Mario/DmgLampTrapSpike.prm"
 "@6554":
-	.incbin "baserom.dol", 0x37B0F0, 0x1C
+	.asciz "/Mario/DmgEnemyMario.prm"
+	.balign 4
 "@6555":
-	.incbin "baserom.dol", 0x37B10C, 0x1C
+	.asciz "/Mario/DmgCannotBreath.prm"
+	.balign 4
 "@6556":
-	.incbin "baserom.dol", 0x37B128, 0x1C
+	.asciz "/Mario/DmgGraffitoFire.prm"
+	.balign 4
 "@6557":
-	.incbin "baserom.dol", 0x37B144, 0x20
+	.asciz "/Mario/DmgGraffitoPoison.prm"
+	.balign 4
 "@6558":
-	.incbin "baserom.dol", 0x37B164, 0x1C
+	.asciz "/Mario/DmgGraffitoElec.prm"
+	.balign 4
 "@6559":
-	.incbin "baserom.dol", 0x37B180, 0x1C
+	.asciz "/Mario/DmgGraffitoLava.prm"
+	.balign 4
 "@6560":
-	.incbin "baserom.dol", 0x37B19C, 0x24
+	.asciz "/Mario/DmgGraffitoWaterSurface.prm"
+	.balign 4
 "@6561":
-	.incbin "baserom.dol", 0x37B1C0, 0x18
+	.asciz "/Mario/DmgMapCode0.prm"
+	.balign 4
 "@6562":
-	.incbin "baserom.dol", 0x37B1D8, 0x18
+	.asciz "/Mario/DmgMapCode1.prm"
+	.balign 4
 "@6563":
-	.incbin "baserom.dol", 0x37B1F0, 0x18
+	.asciz "/Mario/DmgMapCode2.prm"
+	.balign 4
 "@6564":
-	.incbin "baserom.dol", 0x37B208, 0x18
+	.asciz "/Mario/DmgMapCode3.prm"
+	.balign 4
 "@6565":
-	.incbin "baserom.dol", 0x37B220, 0x18
+	.asciz "/Mario/DmgMapCode4.prm"
+	.balign 4
 "@6566":
-	.incbin "baserom.dol", 0x37B238, 0x18
+	.asciz "/Mario/DmgMapCode5.prm"
+	.balign 4
 "@6567":
-	.incbin "baserom.dol", 0x37B250, 0x18
+	.asciz "/Mario/DmgMapCode6.prm"
+	.balign 4
 "@6568":
-	.incbin "baserom.dol", 0x37B268, 0x18
+	.asciz "/Mario/DmgMapCode7.prm"
+	.balign 4
 "@6569":
-	.incbin "baserom.dol", 0x37B280, 0x18
+	.asciz "/Mario/DmgMapCode8.prm"
+	.balign 4
 "@6570":
-	.incbin "baserom.dol", 0x37B298, 0x18
+	.asciz "/Mario/DmgMapCode9.prm"
+	.balign 4
 "@6571":
-	.incbin "baserom.dol", 0x37B2B0, 0x18
+	.asciz "/Mario/Option.prm"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B3C20, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B3C2C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B3C38, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 .global __vt__6TMario
 __vt__6TMario:
   .4byte 0
@@ -9517,227 +9842,242 @@ __vt__6TMario:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2518":
-	.incbin "baserom.dol", 0x3E5EA0, 0x4
+	.4byte 0x6D5A0000
 "@2519":
-	.incbin "baserom.dol", 0x3E5EA4, 0x4
+	.4byte 0xC47A0000
 "@2520":
-	.incbin "baserom.dol", 0x3E5EA8, 0x8
+	.asciz "mXMin"
+	.balign 4
 "@2521":
-	.incbin "baserom.dol", 0x3E5EB0, 0x4
+	.4byte 0x44538000
 "@2522":
-	.incbin "baserom.dol", 0x3E5EB4, 0x8
+	.asciz "mXMax"
+	.balign 4
 "@2523":
-	.incbin "baserom.dol", 0x3E5EBC, 0x4
+	.4byte 0x44FA0000
 "@2531":
-	.incbin "baserom.dol", 0x3E5EC0, 0x4
+	.4byte 0x42700000
 "@2560":
-	.incbin "baserom.dol", 0x3E5EC4, 0x4
+	.4byte 0x41700000
 "@2562":
-	.incbin "baserom.dol", 0x3E5EC8, 0x4
+	.4byte 0x3E99999A
 "@2564":
-	.incbin "baserom.dol", 0x3E5ECC, 0x4
+	.4byte 0x42480000
 "@2589":
-	.incbin "baserom.dol", 0x3E5ED0, 0x8
+	.asciz "mDamage"
 "@2592":
-	.incbin "baserom.dol", 0x3E5ED8, 0x8
+	.asciz "mMotor"
+	.balign 4
 "@2594":
-	.incbin "baserom.dol", 0x3E5EE0, 0x4
+	.4byte 0x41800000
 "@2595":
-	.incbin "baserom.dol", 0x3E5EE4, 0x8
+	.asciz "mDirty"
+	.balign 4
 "@2596":
   .4byte 0
 "@2615":
-	.incbin "baserom.dol", 0x3E5EF0, 0x8
+	.asciz "mRotSp"
+	.balign 4
 "@2617":
-	.incbin "baserom.dol", 0x3E5EF8, 0x4
+	.4byte 0x3F000000
 "@2619":
-	.incbin "baserom.dol", 0x3E5EFC, 0x4
+	.4byte 0x3CA3D70A
 "@2621":
-	.incbin "baserom.dol", 0x3E5F00, 0x4
+	.4byte 0x3F7FBE77
 "@2623":
-	.incbin "baserom.dol", 0x3E5F04, 0x4
+	.4byte 0x3F7AE148
 "@2636":
-	.incbin "baserom.dol", 0x3E5F08, 0x4
+	.4byte 0x3CF5C28F
 "@2637":
-	.incbin "baserom.dol", 0x3E5F0C, 0x8
+	.asciz "mBrake"
+	.balign 4
 "@2638":
-	.incbin "baserom.dol", 0x3E5F14, 0x4
+	.4byte 0x3F733333
 "@2710":
-	.incbin "baserom.dol", 0x3E5F18, 0x8
+	.asciz "mRotMin"
 "@2711":
-	.incbin "baserom.dol", 0x3E5F20, 0x4
+	.4byte 0x45000000
 "@2712":
-	.incbin "baserom.dol", 0x3E5F24, 0x8
+	.asciz "mRotMax"
 "@2713":
-	.incbin "baserom.dol", 0x3E5F2C, 0x4
+	.4byte 0x44800000
 "@2714":
-	.incbin "baserom.dol", 0x3E5F30, 0x8
+	.asciz "mPowMin"
 "@2715":
-	.incbin "baserom.dol", 0x3E5F38, 0x4
+	.4byte 0x41C00000
 "@2716":
-	.incbin "baserom.dol", 0x3E5F3C, 0x8
+	.asciz "mPowMax"
 "@2717":
-	.incbin "baserom.dol", 0x3E5F44, 0x4
+	.4byte 0x42800000
 "@2718":
-	.incbin "baserom.dol", 0x3E5F48, 0x8
+	.asciz "mAccel"
+	.balign 4
 "@2719":
-	.incbin "baserom.dol", 0x3E5F50, 0x4
+	.4byte 0x42680000
 "@2721":
-	.incbin "baserom.dol", 0x3E5F54, 0x4
+	.4byte 0x3E800000
 "@2723":
-	.incbin "baserom.dol", 0x3E5F58, 0x4
+	.4byte 0x432A0000
 "@2726":
-	.incbin "baserom.dol", 0x3E5F5C, 0x8
+	.asciz "mRoll"
+	.balign 4
 "@2727":
-	.incbin "baserom.dol", 0x3E5F64, 0x4
+	.4byte 0xBEE66666
 "@2728":
-	.incbin "baserom.dol", 0x3E5F68, 0x8
+	.asciz "mPitch"
+	.balign 4
 "@2729":
-	.incbin "baserom.dol", 0x3E5F70, 0x4
+	.4byte 0xC32A0000
 "@2733":
-	.incbin "baserom.dol", 0x3E5F74, 0x4
+	.4byte 0x3C23D70A
 "@2737":
-	.incbin "baserom.dol", 0x3E5F78, 0x4
+	.4byte 0x3F800000
 "@2741":
-	.incbin "baserom.dol", 0x3E5F7C, 0x4
+	.4byte 0x42280000
 "@2744":
-	.incbin "baserom.dol", 0x3E5F80, 0x4
+	.4byte 0x42200000
 "@2804":
-	.incbin "baserom.dol", 0x3E5F84, 0x4
+	.4byte 0x3F666666
 "@2815":
-	.incbin "baserom.dol", 0x3E5F88, 0x4
+	.4byte 0x3D4CCCCD
 "@2835":
-	.incbin "baserom.dol", 0x3E5F8C, 0x4
+	.4byte 0x3D088889
 "@2837":
-	.incbin "baserom.dol", 0x3E5F90, 0x4
+	.4byte 0x3C888889
 "@2841":
-	.incbin "baserom.dol", 0x3E5F94, 0x4
+	.4byte 0x3E4CCCCD
 "@2880":
-	.incbin "baserom.dol", 0x3E5F98, 0x4
+	.4byte 0x40A00000
 "@2883":
-	.incbin "baserom.dol", 0x3E5F9C, 0x4
+	.4byte 0x41200000
 "@2890":
-	.incbin "baserom.dol", 0x3E5FA0, 0x4
+	.4byte 0x3A83126F
 "@2987":
-	.incbin "baserom.dol", 0x3E5FA4, 0x4
+	.4byte 0x3DCCCCCD
 "@2994":
-	.incbin "baserom.dol", 0x3E5FA8, 0x4
+	.4byte 0x3F7D70A4
 "@2999":
-	.incbin "baserom.dol", 0x3E5FAC, 0x4
+	.4byte 0x43480000
 "@3001":
-	.incbin "baserom.dol", 0x3E5FB0, 0x4
+	.4byte 0x42A00000
 "@3007":
-	.incbin "baserom.dol", 0x3E5FB4, 0x4
+	.4byte 0x40400000
 "@3084":
-	.incbin "baserom.dol", 0x3E5FB8, 0x4
+	.4byte 0x43160000
 "@3093":
-	.incbin "baserom.dol", 0x3E5FBC, 0x4
+	.4byte 0x447A0000
 "@3098":
-	.incbin "baserom.dol", 0x3E5FC0, 0x4
+	.4byte 0x43C80000
 "@3100":
-	.incbin "baserom.dol", 0x3E5FC4, 0x4
+	.4byte 0x42F00000
 "@3102":
-	.incbin "baserom.dol", 0x3E5FC8, 0x4
+	.4byte 0x41A00000
 "@3148":
-	.incbin "baserom.dol", 0x3E5FCC, 0x4
+	.4byte 0x3F6F5C29
 "@3150":
-	.incbin "baserom.dol", 0x3E5FD0, 0x4
+	.4byte 0x3F333333
 "@3183":
-	.incbin "baserom.dol", 0x3E5FD4, 0x4
+	.4byte 0x3F99999A
 "@3186":
-	.incbin "baserom.dol", 0x3E5FD8, 0x4
+	.4byte 0x3FC00000
 "@3191":
-	.incbin "baserom.dol", 0x3E5FDC, 0x4
+	.4byte 0x3CBC6A7F
 "@3222":
-	.incbin "baserom.dol", 0x3E5FE0, 0x4
+	.4byte 0x3F400000
 "@3225":
-	.incbin "baserom.dol", 0x3E5FE4, 0x4
+	.4byte 0x41F00000
 "@3246":
-	.incbin "baserom.dol", 0x3E5FE8, 0x4
+	.4byte 0x3D0F5C29
 "@3249":
-	.incbin "baserom.dol", 0x3E5FEC, 0x4
+	.4byte 0x3B800000
 "@3251":
-	.incbin "baserom.dol", 0x3E5FF0, 0x4
+	.4byte 0x42C80000
 "@3253":
-	.incbin "baserom.dol", 0x3E5FF4, 0x4
+	.4byte 0x3F4CCCCD
 "@3332":
-	.incbin "baserom.dol", 0x3E5FF8, 0x4
+	.4byte 0x3DB851EC
 "@3334":
-	.incbin "baserom.dol", 0x3E5FFC, 0x4
+	.4byte 0x3BA3D70A
 "@3369":
-	.incbin "baserom.dol", 0x3E6000, 0x8
+	.asciz "mMoveSp"
 "@3374":
-	.incbin "baserom.dol", 0x3E6008, 0x4
+	.4byte 0x41000000
 "@3480":
-	.incbin "baserom.dol", 0x3E600C, 0x8
+	.asciz "mRush"
+	.balign 4
 "@3485":
-	.incbin "baserom.dol", 0x3E6014, 0x4
+	.4byte 0x40000000
 "@3491":
-	.incbin "baserom.dol", 0x3E6018, 0x8
+	.asciz "mAirDec"
 "@3493":
-	.incbin "baserom.dol", 0x3E6020, 0x8
+	.asciz "mAirInc"
 "@3561":
-	.incbin "baserom.dol", 0x3E6028, 0x4
+	.4byte 0x42000000
 "@3563":
-	.incbin "baserom.dol", 0x3E602C, 0x4
+	.4byte 0x3F8CCCCD
 "@3566":
-	.incbin "baserom.dol", 0x3E6030, 0x4
+	.4byte 0x3CBE82FA
 "@3571":
-	.incbin "baserom.dol", 0x3E6034, 0x4
+	.4byte 0x3E000000
 "@3574":
-	.incbin "baserom.dol", 0x3E6038, 0x4
+	.4byte 0x3D75C28F
 "@3580":
-	.incbin "baserom.dol", 0x3E603C, 0x4
+	.4byte 0x3F19999A
 "@3733":
-	.incbin "baserom.dol", 0x3E6040, 0x4
+	.4byte 0x42780000
 "@3744":
-	.incbin "baserom.dol", 0x3E6044, 0x4
+	.4byte 0xC1800000
 "@3747":
-	.incbin "baserom.dol", 0x3E6048, 0x4
+	.4byte 0xC2480000
 "@3749":
-	.incbin "baserom.dol", 0x3E604C, 0x4
+	.4byte 0xC2A00000
 "@3758":
-	.incbin "baserom.dol", 0x3E6050, 0x4
+	.4byte 0x42500000
 "@3763":
-	.incbin "baserom.dol", 0x3E6054, 0x4
+	.4byte 0x428C0000
 "@3767":
-	.incbin "baserom.dol", 0x3E6058, 0x4
+	.4byte 0x43FA0000
 "@3786":
-	.incbin "baserom.dol", 0x3E605C, 0x8
+	.asciz "mRadius"
 "@3787":
-	.incbin "baserom.dol", 0x3E6064, 0x8
+	.asciz "mHeight"
 "@3809":
-	.incbin "baserom.dol", 0x3E606C, 0x4
+	.4byte 0x3D8F5C29
 "@3972":
-	.incbin "baserom.dol", 0x3E6070, 0x8
+	.asciz "mHPMax"
+	.balign 4
 "@3974":
-	.incbin "baserom.dol", 0x3E6078, 0x4
+	.4byte 0x42340000
 "@3992":
-	.incbin "baserom.dol", 0x3E607C, 0x4
+	.4byte 0x42DC0000
 "@3998":
-	.incbin "baserom.dol", 0x3E6080, 0x4
+	.4byte 0x437A0000
 "@4007":
-	.incbin "baserom.dol", 0x3E6084, 0x4
+	.4byte 0x3EAF1D44
 "@4009":
-	.incbin "baserom.dol", 0x3E6088, 0x8
+	.4byte 0x3F7851EC
+	.4byte 0
 "@4085":
-	.incbin "baserom.dol", 0x3E6090, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@4130":
-	.incbin "baserom.dol", 0x3E6098, 0x4
+	.4byte 0x43360B61
 "@6572":
-	.incbin "baserom.dol", 0x3E609C, 0x4
+	.4byte 0x3727C5AC
 "@6573":
-	.incbin "baserom.dol", 0x3E60A0, 0x4
+	.4byte 0x453B8000
 "@6574":
-	.incbin "baserom.dol", 0x3E60A4, 0x4
+	.4byte 0xC0A00000
 "@6575":
-	.incbin "baserom.dol", 0x3E60A8, 0x4
+	.4byte 0xC1200000
 "@6576":
-	.incbin "baserom.dol", 0x3E60AC, 0x4
+	.4byte 0x43000000
 "@6578":
-	.incbin "baserom.dol", 0x3E60B0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@6709":
-	.incbin "baserom.dol", 0x3E60B8, 0x8
+	.4byte 0x459C4000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 cDeformedTerrainCenter:

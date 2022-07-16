@@ -523,6 +523,7 @@ __vt__14J2DGrafContext:
 "@166":
   .4byte 0
 "@167":
-	.incbin "baserom.dol", 0x3E3FA4, 0x4
+	.4byte 0x3F800000
 "@169":
-	.incbin "baserom.dol", 0x3E3FA8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

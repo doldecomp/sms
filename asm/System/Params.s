@@ -237,16 +237,20 @@ lbl_800F82C8:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 SceneParamsDir:
-	.incbin "baserom.dol", 0x371B60, 0x10
+	.asciz "/map/params"
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1607":
-	.incbin "baserom.dol", 0x3E4ED0, 0x4
+	.4byte 0x2F000000
 "@1618":
-	.incbin "baserom.dol", 0x3E4ED4, 0x8
+	.asciz "params"
+	.balign 4
 "@1619":
-	.incbin "baserom.dol", 0x3E4EDC, 0xC
+	.asciz "scene"
+	.balign 4
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 mArc__7TParams:

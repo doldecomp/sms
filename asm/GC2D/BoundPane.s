@@ -376,14 +376,16 @@ __ct__10TBoundPaneFP9J2DScreenUl:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1549":
-	.incbin "baserom.dol", 0x3E9240, 0x4
+	.4byte 0x3F800000
 "@1550":
-	.incbin "baserom.dol", 0x3E9244, 0x4
+	.4byte 0x40000000
 "@1551":
   .4byte 0
 "@1552":
-	.incbin "baserom.dol", 0x3E924C, 0x4
+	.4byte 0x3F000000
 "@1553":
-	.incbin "baserom.dol", 0x3E9250, 0x8
+	.4byte 0xBF000000
+	.4byte 0
 "@1555":
-	.incbin "baserom.dol", 0x3E9258, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

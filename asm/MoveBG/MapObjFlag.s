@@ -1627,37 +1627,57 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38C084, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2487":
-	.incbin "baserom.dol", 0x38C098, 0x18
+	.asciz "/scene/mapObj/%s.bti"
+	.balign 4
 "@2488":
-	.incbin "baserom.dol", 0x38C0B0, 0xC
+	.asciz "flagWhite"
+	.balign 4
 "@2489":
-	.incbin "baserom.dol", 0x38C0BC, 0xC
+	.asciz "flagRedsun"
+	.balign 4
 "@2490":
-	.incbin "baserom.dol", 0x38C0C8, 0xC
+	.asciz "flagMonte"
+	.balign 4
 "@2491":
-	.incbin "baserom.dol", 0x38C0D4, 0xC
+	.asciz "flagBird"
+	.balign 4
 "@2492":
-	.incbin "baserom.dol", 0x38C0E0, 0x10
+	.asciz "flagHigekuri"
+	.balign 4
 "@2493":
-	.incbin "baserom.dol", 0x38C0F0, 0x10
+	.asciz "flagBenvenuto"
+	.balign 4
 "@2494":
-	.incbin "baserom.dol", 0x38C100, 0x14
+	.asciz "flagDolpicDolphin"
+	.balign 4
 "@2495":
-	.incbin "baserom.dol", 0x38C114, 0xC
+	.asciz "flagDolSun"
+	.balign 4
 "@2496":
-	.incbin "baserom.dol", 0x38C120, 0x14
+	.asciz "flagDolSunWelcome"
+	.balign 4
 "@2497":
-	.incbin "baserom.dol", 0x38C134, 0xC
+	.asciz "flagBianco"
+	.balign 4
 "@2498":
-	.incbin "baserom.dol", 0x38C140, 0x10
+	.asciz "flagRiccoBuoy"
+	.balign 4
 "@2499":
-	.incbin "baserom.dol", 0x38C150, 0x10
+	.asciz "flagSailMonte"
+	.balign 4
 "@2500":
-	.incbin "baserom.dol", 0x38C160, 0x10
+	.asciz "MammaYacht00"
+	.balign 4
 "@2501":
-	.incbin "baserom.dol", 0x38C170, 0x10
+	.asciz "flagMare"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TMapObjFlagManager
@@ -1719,48 +1739,51 @@ __vt__11TMapObjFlag:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mFlutterSpeed__11TMapObjFlag:
-	.incbin "baserom.dol", 0x3E36B8, 0x8
+	.4byte 0x40800000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2283":
   .4byte -1
 "@2392":
-	.incbin "baserom.dol", 0x3E82B4, 0x4
+	.4byte 0x41800000
 "@2393":
-	.incbin "baserom.dol", 0x3E82B8, 0x4
+	.4byte 0x41400000
 "@2394":
-	.incbin "baserom.dol", 0x3E82BC, 0x4
+	.4byte 0x41000000
 "@2486":
-	.incbin "baserom.dol", 0x3E82C0, 0x8
+	.asciz "flagSun"
 "@2553":
-	.incbin "baserom.dol", 0x3E82C8, 0x4
+	.4byte 0x43360B61
 "@2554":
-	.incbin "baserom.dol", 0x3E82CC, 0x4
+	.4byte 0x43B40000
 "@2555":
-	.incbin "baserom.dol", 0x3E82D0, 0x4
+	.4byte 0x40400000
 "@2587":
   .4byte 0
 "@2588":
-	.incbin "baserom.dol", 0x3E82D8, 0x4
+	.4byte 0x42FA0000
 "@2589":
-	.incbin "baserom.dol", 0x3E82DC, 0x4
+	.4byte 0x43020000
 "@2590":
-	.incbin "baserom.dol", 0x3E82E0, 0x4
+	.4byte 0x41A00000
 "@2591":
-	.incbin "baserom.dol", 0x3E82E4, 0x4
+	.4byte 0x38000000
 "@2592":
-	.incbin "baserom.dol", 0x3E82E8, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@2594":
-	.incbin "baserom.dol", 0x3E82F0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2631":
-	.incbin "baserom.dol", 0x3E82F8, 0x4
+	.4byte 0x42C80000
 "@2632":
-	.incbin "baserom.dol", 0x3E82FC, 0x4
+	.4byte 0x42480000
 "@2674":
-	.incbin "baserom.dol", 0x3E8300, 0x4
+	.4byte 0x43340000
 "@2675":
-	.incbin "baserom.dol", 0x3E8304, 0x4
+	.4byte 0xC3340000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2827":

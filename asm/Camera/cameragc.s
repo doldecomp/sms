@@ -3496,37 +3496,98 @@ lbl_80355F60:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A2854, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1873":
-	.incbin "baserom.dol", 0x3A2868, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1874":
-	.incbin "baserom.dol", 0x3A2898, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1875":
-	.incbin "baserom.dol", 0x3A28D0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1876":
-	.incbin "baserom.dol", 0x3A2904, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x3A2928, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x3A294C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2170":
-	.incbin "baserom.dol", 0x3A295C, 0x2C
+	.asciz "/common/camera/camera_demo_shine_get_inside"
 "@2171":
-	.incbin "baserom.dol", 0x3A2988, 0x30
+	.asciz "/common/camera/camera_demo_shine_get_outside"
+	.balign 4
 "@2172":
-	.incbin "baserom.dol", 0x3A29B8, 0x24
+	.asciz "/common/camera/camera_demo_gate_in"
+	.balign 4
 "@2176":
-	.incbin "baserom.dol", 0x3A29DC, 0xC
+	.4byte 0x8A4A8E6E
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@2177":
-	.incbin "baserom.dol", 0x3A29E8, 0x10
+	.4byte 0x8A4A8E6E
+	.4byte 0x8CE3834A
+	.4byte 0x83818389
+	.4byte 0
 "@2178":
-	.incbin "baserom.dol", 0x3A29F8, 0x10
+	.asciz "pinna2_camera"
+	.balign 4
 "@2179":
-	.incbin "baserom.dol", 0x3A2A08, 0x10
+	.asciz "tinkoopa_camera"
 "@2180":
-	.incbin "baserom.dol", 0x3A2A18, 0x18
+	.asciz "tinkoopa_killer_camera"
+	.balign 4
 "@2181":
-	.incbin "baserom.dol", 0x3A2A30, 0x28
+	.asciz "/scene/map/camera/StartCamera.bck"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15CPolarSubCamera
@@ -3613,47 +3674,55 @@ cStartCamBckFileName:
 "@2650":
   .4byte 0
 "@2651":
-	.incbin "baserom.dol", 0x3EC1A4, 0x4
+	.4byte 0x3F800000
 "@2670":
-	.incbin "baserom.dol", 0x3EC1A8, 0x4
+	.4byte 0x36800000
 "@2671":
-	.incbin "baserom.dol", 0x3EC1AC, 0x4
+	.4byte 0x3F000000
 "@2672":
-	.incbin "baserom.dol", 0x3EC1B0, 0x8
+	.4byte 0x40400000
+	.4byte 0
 "@2678":
-	.incbin "baserom.dol", 0x3EC1B8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2679":
-	.incbin "baserom.dol", 0x3EC1C0, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@2759":
-	.incbin "baserom.dol", 0x3EC1C8, 0x4
+	.4byte 0x420C0000
 "@2760":
-	.incbin "baserom.dol", 0x3EC1CC, 0x4
+	.4byte 0x43820000
 "@2761":
-	.incbin "baserom.dol", 0x3EC1D0, 0x8
+	.4byte 0x48927C00
+	.4byte 0
 "@2763":
-	.incbin "baserom.dol", 0x3EC1D8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3274":
-	.incbin "baserom.dol", 0x3EC1E0, 0x4
+	.4byte 0x3D4CCCCD
 "@3275":
-	.incbin "baserom.dol", 0x3EC1E4, 0x4
+	.4byte 0x3A83126F
 "@3276":
-	.incbin "baserom.dol", 0x3EC1E8, 0x4
+	.4byte 0x46FFFDFF
 "@3277":
-	.incbin "baserom.dol", 0x3EC1EC, 0x4
+	.4byte 0xC6FFFDFF
 "@3278":
-	.incbin "baserom.dol", 0x3EC1F0, 0x4
+	.4byte 0x42F00000
 "@3279":
-	.incbin "baserom.dol", 0x3EC1F4, 0x4
+	.4byte 0x41A00000
 "@3282":
-	.incbin "baserom.dol", 0x3EC1F8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3378":
-	.incbin "baserom.dol", 0x3EC200, 0x4
+	.4byte 0x41200000
 "@3735":
-	.incbin "baserom.dol", 0x3EC204, 0x8
+	.asciz "%s%d"
+	.balign 4
 "@3736":
-	.incbin "baserom.dol", 0x3EC20C, 0x4
+	.4byte 0x43360B61
 "@3834":
-	.incbin "baserom.dol", 0x3EC210, 0x8
+	.4byte 0x40000000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCamera

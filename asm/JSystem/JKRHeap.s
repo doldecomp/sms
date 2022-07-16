@@ -836,11 +836,12 @@ getCurrentGroupId__7JKRHeapFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@149":
-	.incbin "baserom.dol", 0x36D4E8, 0x10
+	.asciz "%x %x %x %x %x\n"
 "@150":
-	.incbin "baserom.dol", 0x36D4F8, 0x18
+	.asciz "arenaLo=%x arenaHi=%x \n"
 "@369":
-	.incbin "baserom.dol", 0x36D510, 0x10
+	.asciz "JKRHeap.cpp"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7JKRHeap
@@ -869,7 +870,8 @@ __vt__7JKRHeap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@370":
-	.incbin "baserom.dol", 0x3E3D38, 0x8
+	.asciz "abort\n"
+	.balign 4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global sSystemHeap__7JKRHeap

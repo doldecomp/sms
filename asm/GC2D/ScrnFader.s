@@ -1253,13 +1253,20 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1953":
-	.incbin "baserom.dol", 0x390314, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2082":
-	.incbin "baserom.dol", 0x390328, 0x20
+	.asciz "/subtitle/timg/title_mini.bti"
+	.balign 4
 "@2084":
-	.incbin "baserom.dol", 0x390348, 0x20
+	.asciz "/subtitle/timg/wipe_m_mark.bti"
+	.balign 4
 "@2086":
-	.incbin "baserom.dol", 0x390368, 0x20
+	.asciz "/common/2d/wipe_gameover.bti"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TSMSFader
@@ -1282,11 +1289,13 @@ __vt__9TSMSFader:
 "@2120":
   .4byte 0
 "@2239":
-	.incbin "baserom.dol", 0x3E90F4, 0x4
+	.4byte 0x3F800000
 "@2375":
-	.incbin "baserom.dol", 0x3E90F8, 0x8
+	.4byte 0x437F0000
+	.4byte 0
 "@2377":
-	.incbin "baserom.dol", 0x3E9100, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2405":

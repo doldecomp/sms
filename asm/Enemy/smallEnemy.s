@@ -4847,81 +4847,151 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x394CD4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2396":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2398":
-	.incbin "baserom.dol", 0x394CF4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2594":
-	.incbin "baserom.dol", 0x394D00, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2595":
-	.incbin "baserom.dol", 0x394D30, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2596":
-	.incbin "baserom.dol", 0x394D68, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2597":
-	.incbin "baserom.dol", 0x394D9C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@3005":
-	.incbin "baserom.dol", 0x394DC0, 0xC
+	.asciz "default.bmd"
 "@3759":
-	.incbin "baserom.dol", 0x394DCC, 0x1C
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x83679085
+	.4byte 0x928C837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@4777":
-	.incbin "baserom.dol", 0x394DE8, 0x1C
+	.asciz "/common/timg/down_osen.bti"
+	.balign 4
 "@4932":
-	.incbin "baserom.dol", 0x394E04, 0x10
+	.asciz "mSLJumpForce"
+	.balign 4
 "@4933":
-	.incbin "baserom.dol", 0x394E14, 0x10
+	.asciz "mSLSearchLength"
 "@4935":
-	.incbin "baserom.dol", 0x394E24, 0x10
+	.asciz "mSLSearchHeight"
 "@4937":
-	.incbin "baserom.dol", 0x394E34, 0x10
+	.asciz "mSLSearchAware"
+	.balign 4
 "@4939":
-	.incbin "baserom.dol", 0x394E44, 0x10
+	.asciz "mSLSearchAngle"
+	.balign 4
 "@4941":
-	.incbin "baserom.dol", 0x394E54, 0x10
+	.asciz "mSLGiveUpLength"
 "@4943":
-	.incbin "baserom.dol", 0x394E64, 0x10
+	.asciz "mSLGiveUpHeight"
 "@4945":
-	.incbin "baserom.dol", 0x394E74, 0x10
+	.asciz "mSLAttackWait"
+	.balign 4
 "@4946":
-	.incbin "baserom.dol", 0x394E84, 0x10
+	.asciz "mSLFreezeWait"
+	.balign 4
 "@4947":
-	.incbin "baserom.dol", 0x394E94, 0x10
+	.asciz "mSLDamageRadius"
 "@4948":
-	.incbin "baserom.dol", 0x394EA4, 0x10
+	.asciz "mSLDamageHeight"
 "@4949":
-	.incbin "baserom.dol", 0x394EB4, 0x10
+	.asciz "mSLAttackRadius"
 "@4950":
-	.incbin "baserom.dol", 0x394EC4, 0x10
+	.asciz "mSLAttackHeight"
 "@4951":
-	.incbin "baserom.dol", 0x394ED4, 0x10
+	.asciz "mSLTurnSpeedLow"
 "@4952":
-	.incbin "baserom.dol", 0x394EE4, 0x14
+	.asciz "mSLTurnSpeedHigh"
+	.balign 4
 "@4954":
-	.incbin "baserom.dol", 0x394EF8, 0x10
+	.asciz "mSLBodyScaleLow"
 "@4956":
-	.incbin "baserom.dol", 0x394F08, 0x14
+	.asciz "mSLBodyScaleHigh"
+	.balign 4
 "@4958":
-	.incbin "baserom.dol", 0x394F1C, 0x10
+	.asciz "mSLGenItemRate"
+	.balign 4
 "@4960":
-	.incbin "baserom.dol", 0x394F2C, 0x10
+	.asciz "mSLGenEggRate"
+	.balign 4
 "@4961":
-	.incbin "baserom.dol", 0x394F3C, 0x10
+	.asciz "mSLPolluteRange"
 "@4962":
-	.incbin "baserom.dol", 0x394F4C, 0xC
+	.asciz "mSLWaitTime"
 "@4963":
-	.incbin "baserom.dol", 0x394F58, 0x10
+	.asciz "mSLPolluteRMin"
+	.balign 4
 "@4964":
-	.incbin "baserom.dol", 0x394F68, 0x10
+	.asciz "mSLPolluteRMax"
+	.balign 4
 "@4965":
-	.incbin "baserom.dol", 0x394F78, 0x10
+	.asciz "mSLPolluteCycle"
 "@4966":
-	.incbin "baserom.dol", 0x394F88, 0x10
+	.asciz "mSLStampRange"
+	.balign 4
 "@4967":
-	.incbin "baserom.dol", 0x394F98, 0x14
+	.asciz "mSLPolluteInterval"
+	.balign 4
 "@4968":
-	.incbin "baserom.dol", 0x394FAC, 0x14
+	.asciz "mSLGenerateOnlyDead"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 entry$3004:
@@ -5103,110 +5173,115 @@ __vt__18TSmallEnemyManager:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global mBlockWaitTime__18TSmallEnemyManager
 mBlockWaitTime__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E3918, 0x4
+	.4byte 0x00000190
 .global mBlockMoveSpeed__18TSmallEnemyManager
 mBlockMoveSpeed__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E391C, 0x4
+	.4byte 0x40000000
 .global mBlockWaitMoveY__18TSmallEnemyManager
 mBlockWaitMoveY__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E3920, 0x4
+	.4byte 0x43480000
 mChangeBlockTime__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E3924, 0x4
+	.4byte 0x000009C4
 .global mBlockXZScale__18TSmallEnemyManager
 mBlockXZScale__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E3928, 0x4
+	.4byte 0x3FC00000
 .global mBlockYScale__18TSmallEnemyManager
 mBlockYScale__18TSmallEnemyManager:
-	.incbin "baserom.dol", 0x3E392C, 0x4
+	.4byte 0x3F19999A
 .global mIsPolluter__11TSmallEnemy
 mIsPolluter__11TSmallEnemy:
-	.incbin "baserom.dol", 0x3E3930, 0x1
+	.byte 0x01
 .global mIsAmpPolluter__11TSmallEnemy
 mIsAmpPolluter__11TSmallEnemy:
-	.incbin "baserom.dol", 0x3E3931, 0x7
+	.byte 0x01, 0x00, 0x00
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3330":
   .4byte 0
 "@3420":
-	.incbin "baserom.dol", 0x3EA22C, 0x4
+	.4byte 0x41F00000
 "@3421":
-	.incbin "baserom.dol", 0x3EA230, 0x4
+	.4byte 0x42C80000
 "@3422":
-	.incbin "baserom.dol", 0x3EA234, 0x4
+	.4byte 0x38000000
 "@3423":
-	.incbin "baserom.dol", 0x3EA238, 0x4
+	.4byte 0x40800000
 "@3424":
-	.incbin "baserom.dol", 0x3EA23C, 0x4
+	.4byte 0x41200000
 "@3426":
-	.incbin "baserom.dol", 0x3EA240, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3601":
-	.incbin "baserom.dol", 0x3EA248, 0x8
+	.4byte 0x42000000
+	.4byte 0
 "@3603":
-	.incbin "baserom.dol", 0x3EA250, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3653":
-	.incbin "baserom.dol", 0x3EA258, 0x4
+	.4byte 0x3F800000
 "@3654":
-	.incbin "baserom.dol", 0x3EA25C, 0x4
+	.4byte 0x40400000
 "@3701":
-	.incbin "baserom.dol", 0x3EA260, 0x4
+	.4byte 0x41C80000
 "@3702":
-	.incbin "baserom.dol", 0x3EA264, 0x4
+	.4byte 0x3F8CCCCD
 "@3703":
-	.incbin "baserom.dol", 0x3EA268, 0x4
+	.4byte 0x3BB40000
 "@3931":
-	.incbin "baserom.dol", 0x3EA26C, 0x4
+	.4byte 0x3CA3D70A
 "@3932":
-	.incbin "baserom.dol", 0x3EA270, 0x4
+	.4byte 0x3C23D70A
 "@4018":
-	.incbin "baserom.dol", 0x3EA274, 0x4
+	.4byte 0x3E4CCCCD
 "@4019":
-	.incbin "baserom.dol", 0x3EA278, 0x4
+	.4byte 0x40000000
 "@4020":
-	.incbin "baserom.dol", 0x3EA27C, 0x4
+	.4byte 0x43360B61
 "@4021":
-	.incbin "baserom.dol", 0x3EA280, 0x4
+	.4byte 0x43020000
 "@4022":
-	.incbin "baserom.dol", 0x3EA284, 0x4
+	.4byte 0x44870000
 "@4023":
-	.incbin "baserom.dol", 0x3EA288, 0x4
+	.4byte 0x41A00000
 "@4024":
-	.incbin "baserom.dol", 0x3EA28C, 0x4
+	.4byte 0x43960000
 "@4025":
-	.incbin "baserom.dol", 0x3EA290, 0x4
+	.4byte 0x3F000000
 "@4091":
-	.incbin "baserom.dol", 0x3EA294, 0x4
+	.4byte 0x3DCCCCCD
 "@4357":
-	.incbin "baserom.dol", 0x3EA298, 0x4
+	.4byte 0x43B40000
 "@4358":
-	.incbin "baserom.dol", 0x3EA29C, 0x4
+	.4byte 0x41000000
 "@4359":
-	.incbin "baserom.dol", 0x3EA2A0, 0x4
+	.4byte 0x41800000
 "@4546":
-	.incbin "baserom.dol", 0x3EA2A4, 0x4
+	.4byte 0x41700000
 "@4722":
-	.incbin "baserom.dol", 0x3EA2A8, 0x8
+	.asciz "main"
+	.balign 4
 "@4934":
-	.incbin "baserom.dol", 0x3EA2B0, 0x4
+	.4byte 0x44480000
 "@4936":
-	.incbin "baserom.dol", 0x3EA2B4, 0x4
+	.4byte 0x44160000
 "@4938":
-	.incbin "baserom.dol", 0x3EA2B8, 0x4
+	.4byte 0x43C80000
 "@4940":
-	.incbin "baserom.dol", 0x3EA2BC, 0x4
+	.4byte 0x42B40000
 "@4942":
-	.incbin "baserom.dol", 0x3EA2C0, 0x4
+	.4byte 0x44FA0000
 "@4944":
-	.incbin "baserom.dol", 0x3EA2C4, 0x4
+	.4byte 0x44228000
 "@4953":
-	.incbin "baserom.dol", 0x3EA2C8, 0x4
+	.4byte 0x40A00000
 "@4955":
-	.incbin "baserom.dol", 0x3EA2CC, 0x4
+	.4byte 0x3DDD2F1B
 "@4957":
-	.incbin "baserom.dol", 0x3EA2D0, 0x4
+	.4byte 0x3DE147AE
 "@4959":
-	.incbin "baserom.dol", 0x3EA2D4, 0x4
+	.4byte 0x42480000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3224":

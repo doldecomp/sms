@@ -173,68 +173,72 @@ getParamMaxVolumeDistance__18JAIGlobalParameterFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@530":
-	.incbin "baserom.dol", 0x36E1F8, 0x14
+	.asciz "Seqs/JaiSeInf.bst"
+	.balign 4
 "@531":
-	.incbin "baserom.dol", 0x36E20C, 0x14
+	.asciz "Seqs/JaiSqInf.bst"
+	.balign 4
 "@532":
-	.incbin "baserom.dol", 0x36E220, 0x14
+	.asciz "Seqs/JaiStInf.bst"
+	.balign 4
 "@533":
-	.incbin "baserom.dol", 0x36E234, 0xC
+	.asciz "JaiInit.aaf"
 "@537":
-	.incbin "baserom.dol", 0x36E240, 0x10
+	.asciz "JaiArcS.hed"
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global distanceParameterMoveTime__18JAIGlobalParameter
 distanceParameterMoveTime__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F0, 0x1
+	.byte 0x03
 .global audioSystemThreadPriority__18JAIGlobalParameter
 audioSystemThreadPriority__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F1, 0x1
+	.byte 0x02
 .global audioDvdThreadPriority__18JAIGlobalParameter
 audioDvdThreadPriority__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F2, 0x1
+	.byte 0x03
 .global seqMuteVolumeSePlay__18JAIGlobalParameter
 seqMuteVolumeSePlay__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F3, 0x1
+	.byte 0x28
 .global seDistanceFxParameter__18JAIGlobalParameter
 seDistanceFxParameter__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F4, 0x4
+	.4byte 0x00960000
 .global soundSceneMax__18JAIGlobalParameter
 soundSceneMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30F8, 0x4
+	.4byte 0x00000002
 .global seRegistMax__18JAIGlobalParameter
 seRegistMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E30FC, 0x4
+	.4byte 0x00000014
 .global seTrackMax__18JAIGlobalParameter
 seTrackMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3100, 0x4
+	.4byte 0x00000020
 .global seqTrackMax__18JAIGlobalParameter
 seqTrackMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3104, 0x4
+	.4byte 0x00000020
 .global seqPlayTrackMax__18JAIGlobalParameter
 seqPlayTrackMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3108, 0x4
+	.4byte 0x00000008
 .global seqControlBufferMax__18JAIGlobalParameter
 seqControlBufferMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E310C, 0x4
+	.4byte 0x00000010
 .global streamControlBufferMax__18JAIGlobalParameter
 streamControlBufferMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3110, 0x4
+	.4byte 0x00000008
 .global streamParameterBufferMax__18JAIGlobalParameter
 streamParameterBufferMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3114, 0x4
+	.4byte 0x00000010
 .global autoHeapMax__18JAIGlobalParameter
 autoHeapMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3118, 0x4
+	.4byte 0x00000002
 .global stayHeapMax__18JAIGlobalParameter
 stayHeapMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E311C, 0x4
+	.4byte 0x00000002
 .global autoHeapRoomSize__18JAIGlobalParameter
 autoHeapRoomSize__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3120, 0x4
+	.4byte 0x0000C000
 .global stayHeapSize__18JAIGlobalParameter
 stayHeapSize__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3124, 0x4
+	.4byte 0x00010000
 .global seInfoFileName__18JAIGlobalParameter
 seInfoFileName__18JAIGlobalParameter:
   .4byte "@530"
@@ -261,73 +265,75 @@ sequenceArchivesFileName__18JAIGlobalParameter:
   .4byte "@537"
 .global inputGainDown__18JAIGlobalParameter
 inputGainDown__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3148, 0x4
+	.4byte 0x3F000000
 .global outputGainUp__18JAIGlobalParameter
 outputGainUp__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E314C, 0x4
+	.4byte 0x3F99999A
 .global distanceMax__18JAIGlobalParameter
 distanceMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3150, 0x4
+	.4byte 0x459C4000
 .global maxVolumeDistance__18JAIGlobalParameter
 maxVolumeDistance__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3154, 0x4
+	.4byte 0x447A0000
 .global seDolbyCenterValue__18JAIGlobalParameter
 seDolbyCenterValue__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3158, 0x4
+	.4byte 0x41F00000
 .global seDolbyFrontDistanceMax__18JAIGlobalParameter
 seDolbyFrontDistanceMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E315C, 0x4
+	.4byte 0xC3960000
 .global seDolbyBehindDistanceMax__18JAIGlobalParameter
 seDolbyBehindDistanceMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3160, 0x4
+	.4byte 0x447A0000
 .global dopplarMoveTime__18JAIGlobalParameter
 dopplarMoveTime__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3164, 0x4
+	.4byte 0x0000000F
 .global dummyPositionMax__18JAIGlobalParameter
 dummyPositionMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3168, 0x4
+	.4byte 0x0000000A
 .global seqMuteMoveSpeedSePlay__18JAIGlobalParameter
 seqMuteMoveSpeedSePlay__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E316C, 0x4
+	.4byte 0x00000003
 .global audioCameraMax__18JAIGlobalParameter
 audioCameraMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3170, 0x4
+	.4byte 0x00000001
 .global systemTrackMax__18JAIGlobalParameter
 systemTrackMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3174, 0x4
+	.4byte 0x00000100
 .global systemRootTrackMax__18JAIGlobalParameter
 systemRootTrackMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3178, 0x4
+	.4byte 0x00000010
 .global panDistanceMax__18JAIGlobalParameter
 panDistanceMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E317C, 0x4
+	.4byte 0x43FA0000
 .global panDistance2Max__18JAIGlobalParameter
 panDistance2Max__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3180, 0x4
+	.4byte 0x447A0000
 .global panAngleParameter__18JAIGlobalParameter
 panAngleParameter__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3184, 0x4
+	.4byte 0x41400000
 .global panAngleParameter2__18JAIGlobalParameter
 panAngleParameter2__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3188, 0x4
+	.4byte 0x4019999A
 .global dopplarParameter__18JAIGlobalParameter
 dopplarParameter__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E318C, 0x4
+	.4byte 0x45480000
 .global seDistanceWaitMax__18JAIGlobalParameter
 seDistanceWaitMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3190, 0x4
+	.4byte 0x000C0000
 .global seDistancepitchMax__18JAIGlobalParameter
 seDistancepitchMax__18JAIGlobalParameter:
-	.incbin "baserom.dol", 0x3E3194, 0x4
+	.4byte 0x3E4CCCCD
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@534":
-	.incbin "baserom.dol", 0x3E4240, 0x8
+	.asciz "Banks/"
+	.balign 4
 "@535":
-	.incbin "baserom.dol", 0x3E4248, 0x8
+	.asciz "Seqs/"
+	.balign 4
 "@536":
-	.incbin "baserom.dol", 0x3E4250, 0x8
+	.asciz "Stream/"
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global seDefaultFx__18JAIGlobalParameter

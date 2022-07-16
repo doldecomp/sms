@@ -1066,7 +1066,8 @@ receiveMessage__16TEnemyAttachmentFP9THitActorUl:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2620":
-	.incbin "baserom.dol", 0x391FB0, 0x10
+	.asciz "<TSharedParts>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TEnemyPolluteModel
@@ -1181,16 +1182,17 @@ __vt__16TEnemyAttachment:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2566":
-	.incbin "baserom.dol", 0x3E99F0, 0x4
+	.4byte 0x3F800000
 "@2567":
   .4byte 0
 "@2700":
-	.incbin "baserom.dol", 0x3E99F8, 0x4
+	.4byte 0x42C80000
 "@2757":
-	.incbin "baserom.dol", 0x3E99FC, 0x4
+	.4byte 0x43360B61
 "@2829":
-	.incbin "baserom.dol", 0x3E9A00, 0x4
+	.4byte 0x40000000
 "@2860":
-	.incbin "baserom.dol", 0x3E9A04, 0x4
+	.4byte 0xBE99999A
 "@2879":
-	.incbin "baserom.dol", 0x3E9A08, 0x8
+	.4byte 0x3C23D70A
+	.4byte 0

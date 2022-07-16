@@ -1618,13 +1618,29 @@ TRKTargetSetInputPendingPtr:
 .balign 8
 .global gTRKMemMap
 gTRKMemMap:
-	.incbin "baserom.dol", 0x36F210, 0x10
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000001
+	.4byte 0x00000001
 "@233":
-	.incbin "baserom.dol", 0x36F220, 0x14
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
 "@238":
-	.incbin "baserom.dol", 0x36F234, 0x14
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
 "@243":
-	.incbin "baserom.dol", 0x36F248, 0x18
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0x60000000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global gTRKRestoreFlags
@@ -1634,7 +1650,10 @@ gTRKRestoreFlags:
   .4byte 0
 .global gTRKExceptionStatus
 gTRKExceptionStatus:
-	.incbin "baserom.dol", 0x3AC024, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x01000000
 .global gTRKStepStatus
 gTRKStepStatus:
   .4byte 0

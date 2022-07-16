@@ -2472,13 +2472,14 @@ __vt__11TMapObjBase:
 "@2995":
   .4byte 0
 "@3006":
-	.incbin "baserom.dol", 0x3E6A24, 0x4
+	.4byte 0x3F800000
 "@3068":
-	.incbin "baserom.dol", 0x3E6A28, 0x4
+	.4byte 0x43360B61
 "@3322":
-	.incbin "baserom.dol", 0x3E6A2C, 0x4
+	.4byte 0x3BB40000
 "@3324":
-	.incbin "baserom.dol", 0x3E6A30, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3845":

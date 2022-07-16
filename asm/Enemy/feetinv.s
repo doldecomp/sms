@@ -913,11 +913,18 @@ lbl_8025950C:
     .4byte 0
     .endr
 "@1431":
-	.incbin "baserom.dol", 0x3D0A48, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3D0A54, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3D0A60, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 .global __vt__15TMtxCalcFootInv
 __vt__15TMtxCalcFootInv:
   .4byte 0
@@ -974,32 +981,35 @@ __vt__15TMtxCalcFootInv:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1795":
-	.incbin "baserom.dol", 0x3E9E18, 0x4
+	.4byte 0x3F800000
 "@2168":
   .4byte 0
 "@2169":
-	.incbin "baserom.dol", 0x3E9E20, 0x4
+	.4byte 0x3F000000
 "@2170":
-	.incbin "baserom.dol", 0x3E9E24, 0x4
+	.4byte 0x40400000
 "@2171":
-	.incbin "baserom.dol", 0x3E9E28, 0x4
+	.4byte 0x3BB40000
 "@2172":
-	.incbin "baserom.dol", 0x3E9E2C, 0x4
+	.4byte 0x40000000
 "@2173":
-	.incbin "baserom.dol", 0x3E9E30, 0x4
+	.4byte 0xBF800000
 "@2174":
-	.incbin "baserom.dol", 0x3E9E34, 0x4
+	.4byte 0x43340000
 "@2175":
-	.incbin "baserom.dol", 0x3E9E38, 0x4
+	.4byte 0x42B40000
 "@2176":
-	.incbin "baserom.dol", 0x3E9E3C, 0x4
+	.4byte 0x43360B61
 "@2177":
-	.incbin "baserom.dol", 0x3E9E40, 0x4
+	.4byte 0xC2B40000
 "@2178":
-	.incbin "baserom.dol", 0x3E9E44, 0x4
+	.4byte 0x36800000
 "@2179":
-	.incbin "baserom.dol", 0x3E9E48, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x3E9E50, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@2182":
-	.incbin "baserom.dol", 0x3E9E58, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

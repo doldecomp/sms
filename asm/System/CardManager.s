@@ -2262,23 +2262,47 @@ lbl_80108814:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 CardFileName:
-	.incbin "baserom.dol", 0x375350, 0x20
+	.asciz "super_mario_sunshine"
+	.balign 4
+	.4byte 0
+	.4byte 0
 "@1632":
-	.incbin "baserom.dol", 0x375370, 0x1C
+	.4byte 0x8358815B
+	.4byte 0x8370815B
+	.4byte 0x837D838A
+	.4byte 0x83498354
+	.4byte 0x83938356
+	.4byte 0x83838343
+	.4byte 0x83930000
 "@1633":
-	.incbin "baserom.dol", 0x37538C, 0x18
+	.asciz "Super Mario Sunshine"
+	.balign 4
 "@1634":
-	.incbin "baserom.dol", 0x3753A4, 0x1C
+	.4byte 0x25648C8E
+	.4byte 0x256493FA
+	.4byte 0x82CC835A
+	.4byte 0x815B8375
+	.4byte 0x8366815B
+	.4byte 0x835E82C5
+	.4byte 0x82B70000
 "@1635":
-	.incbin "baserom.dol", 0x3753C0, 0x18
+	.asciz "Last saved on %d/%d"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B17F0, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B17FC, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B1808, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 titles:
   .4byte "@1632"
   .4byte "@1633"

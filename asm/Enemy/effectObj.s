@@ -3202,69 +3202,148 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2141":
-	.incbin "baserom.dol", 0x391A44, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2197":
-	.incbin "baserom.dol", 0x391A58, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2198":
-	.incbin "baserom.dol", 0x391A88, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2199":
-	.incbin "baserom.dol", 0x391AC0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2200":
-	.incbin "baserom.dol", 0x391AF4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2673":
-	.incbin "baserom.dol", 0x391B18, 0x18
+	.asciz "06_enem_tobikomi.bmd"
+	.balign 4
 "@2685":
-	.incbin "baserom.dol", 0x391B30, 0x10
+	.asciz "04_tobikomi.bmd"
 "@2698":
-	.incbin "baserom.dol", 0x391B40, 0x14
+	.asciz "08_sunabashira.bmd"
+	.balign 4
 "@2707":
-	.incbin "baserom.dol", 0x391B54, 0xC
+	.asciz "10_bomb.bmd"
 "@2861":
-	.incbin "baserom.dol", 0x391B60, 0x10
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x8367949A
+	.4byte 0x94AD0000
 "@2875":
-	.incbin "baserom.dol", 0x391B70, 0x28
+	.asciz "/scene/explosion/jpa/ms_bomb_smoke.jpa"
+	.balign 4
 "@2876":
-	.incbin "baserom.dol", 0x391B98, 0x28
+	.asciz "/scene/explosion/jpa/ms_bomb_bomb.jpa"
+	.balign 4
 "@2877":
-	.incbin "baserom.dol", 0x391BC0, 0x28
+	.asciz "/scene/explosion/jpa/ms_bomb_hahen.jpa"
+	.balign 4
 "@2880":
-	.incbin "baserom.dol", 0x391BE8, 0x18
+	.asciz "/enemy/explosion.prm"
+	.balign 4
 "@2930":
-	.incbin "baserom.dol", 0x391C00, 0x10
+	.asciz "08_sunabashira"
+	.balign 4
 "@2956":
-	.incbin "baserom.dol", 0x391C10, 0x10
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x83678DBB
+	.4byte 0x928C0000
 "@2962":
-	.incbin "baserom.dol", 0x391C20, 0x2C
+	.asciz "/scene/columSand/jpa/ms_boha_crash_a.jpa"
+	.balign 4
 "@2965":
-	.incbin "baserom.dol", 0x391C4C, 0x18
+	.asciz "/enemy/sandcolum.prm"
+	.balign 4
 "@3018":
-	.incbin "baserom.dol", 0x391C64, 0xC
+	.asciz "04_tobikomi"
 "@3045":
-	.incbin "baserom.dol", 0x391C70, 0x14
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x8367949A
+	.4byte 0x94AD9085
+	.4byte 0x928C0000
 "@3059":
-	.incbin "baserom.dol", 0x391C84, 0x30
+	.asciz "/scene/bombColumWater/jpa/ms_m_tobikomi_a.jpa"
+	.balign 4
 "@3060":
-	.incbin "baserom.dol", 0x391CB4, 0x30
+	.asciz "/scene/bombColumWater/jpa/ms_m_tobikomi_b.jpa"
+	.balign 4
 "@3061":
-	.incbin "baserom.dol", 0x391CE4, 0x30
+	.asciz "/scene/bombColumWater/jpa/ms_m_tobikomi_c.jpa"
+	.balign 4
 "@3064":
-	.incbin "baserom.dol", 0x391D14, 0x1C
+	.asciz "/enemy/bombwatercolum.prm"
+	.balign 4
 "@3119":
-	.incbin "baserom.dol", 0x391D30, 0x14
+	.asciz "06_enem_tobikomi"
+	.balign 4
 "@3146":
-	.incbin "baserom.dol", 0x391D44, 0x10
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x83679085
+	.4byte 0x928C0000
 "@3156":
-	.incbin "baserom.dol", 0x391D54, 0x28
+	.asciz "/scene/columWater/jpa/ms_enehamon_a.jpa"
 "@3157":
-	.incbin "baserom.dol", 0x391D7C, 0x28
+	.asciz "/scene/columWater/jpa/ms_enehamon_b.jpa"
 "@3160":
-	.incbin "baserom.dol", 0x391DA4, 0x18
+	.asciz "/enemy/watercolum.prm"
+	.balign 4
 "@3321":
-	.incbin "baserom.dol", 0x391DBC, 0x10
+	.asciz "<EffectObjBase>"
 "@3475":
-	.incbin "baserom.dol", 0x391DCC, 0x24
+	.asciz "/scene/map/map/ms_bia_funsui.jpa"
+	.balign 4
 "@3501":
-	.incbin "baserom.dol", 0x391DF0, 0x28
+	.asciz "/scene/map/map/ms_pinna_funsui.jpa"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 entry$2672:
@@ -3959,25 +4038,27 @@ __vt__13TSimpleEffect:
 "@2718":
   .4byte 0
 "@2828":
-	.incbin "baserom.dol", 0x3E9954, 0x4
+	.4byte 0x43B40000
 "@2829":
-	.incbin "baserom.dol", 0x3E9958, 0x4
+	.4byte 0x38000000
 "@2830":
-	.incbin "baserom.dol", 0x3E995C, 0xC
+	.asciz "10_bomb"
+	.4byte 0
 "@2832":
-	.incbin "baserom.dol", 0x3E9968, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3085":
-	.incbin "baserom.dol", 0x3E9970, 0x4
+	.4byte 0x3FA66666
 "@3195":
-	.incbin "baserom.dol", 0x3E9974, 0x4
+	.4byte 0x43360B61
 "@3209":
-	.incbin "baserom.dol", 0x3E9978, 0x4
+	.4byte 0x3F800000
 "@3433":
-	.incbin "baserom.dol", 0x3E997C, 0x4
+	.4byte 0x43480000
 "@3435":
-	.incbin "baserom.dol", 0x3E9980, 0x4
+	.4byte 0x41F00000
 "@3436":
-	.incbin "baserom.dol", 0x3E9984, 0x4
+	.4byte 0x43160000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3585":

@@ -1976,51 +1976,134 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1994":
-	.incbin "baserom.dol", 0x384500, 0xC
+	.4byte 0x95FA9085
+	.4byte 0x9285926E
+	.4byte 0x89B90000
 "@2005":
-	.incbin "baserom.dol", 0x38450C, 0x10
+	.4byte 0x978E8F91
+	.4byte 0x82AB8FC1
+	.4byte 0x82B589B9
+	.4byte 0
 "@2016":
-	.incbin "baserom.dol", 0x38451C, 0x14
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x899890F5
+	.4byte 0x9285926E
+	.4byte 0x89B90000
 "@2024":
-	.incbin "baserom.dol", 0x384530, 0xC
+	.4byte 0x90858AA3
+	.4byte 0x918789B9
+	.4byte 0
 "@2026":
-	.incbin "baserom.dol", 0x38453C, 0x10
+	.4byte 0x90858371
+	.4byte 0x83628367
+	.4byte 0x837D815B
+	.4byte 0x834E0000
 "@2028":
-	.incbin "baserom.dol", 0x38454C, 0x10
+	.4byte 0x837D8393
+	.4byte 0x835E8F50
+	.4byte 0x8C8290BA
+	.4byte 0
 "@2449":
-	.incbin "baserom.dol", 0x38455C, 0x10
+	.4byte 0x8DC490B6
+	.4byte 0x836F8362
+	.4byte 0x83748340
+	.4byte 0x90940000
 "@2450":
-	.incbin "baserom.dol", 0x38456C, 0x10
+	.4byte 0x8DC58FAC
+	.4byte 0x8E9E8AD4
+	.4byte 0x8AD48A75
+	.4byte 0
 "@2451":
-	.incbin "baserom.dol", 0x38457C, 0x10
+	.4byte 0x83898393
+	.4byte 0x835F8380
+	.4byte 0x83568374
+	.4byte 0x83670000
 "@2452":
-	.incbin "baserom.dol", 0x38458C, 0xC
+	.4byte 0x925088CA
+	.4byte 0x89B98E9E
+	.4byte 0x8AD40000
 "@2453":
-	.incbin "baserom.dol", 0x384598, 0xC
+	.4byte 0x925088CA
+	.4byte 0x89B98B97
+	.4byte 0x97A30000
 "@2454":
-	.incbin "baserom.dol", 0x3845A4, 0x10
+	.4byte 0x925088CA
+	.4byte 0x89B98AD4
+	.4byte 0x88F882AB
+	.4byte 0
 "@2455":
-	.incbin "baserom.dol", 0x3845B4, 0x10
+	.4byte 0x925088CA
+	.4byte 0x95CF92B2
+	.4byte 0x8E9E8AD4
+	.4byte 0
 "@2456":
-	.incbin "baserom.dol", 0x3845C4, 0x10
+	.4byte 0x925088CA
+	.4byte 0x95CF92B2
+	.4byte 0x8B9797A3
+	.4byte 0
 "@2457":
-	.incbin "baserom.dol", 0x3845D4, 0x18
+	.4byte 0x837B838A
+	.4byte 0x8385815B
+	.4byte 0x838095CF
+	.4byte 0x92B28DC5
+	.4byte 0x92E1926C
+	.4byte 0
 "@2458":
-	.incbin "baserom.dol", 0x3845EC, 0x14
+	.4byte 0x83738362
+	.4byte 0x836095CF
+	.4byte 0x92B28DC5
+	.4byte 0x92E1926C
+	.4byte 0
 "@2459":
-	.incbin "baserom.dol", 0x384600, 0x10
+	.4byte 0x8341835E
+	.4byte 0x8362834E
+	.4byte 0x8DC591E5
+	.4byte 0x926C0000
 "@2460":
-	.incbin "baserom.dol", 0x384610, 0x20
+	.4byte 0x984191B1
+	.4byte 0x90AB82F0
+	.4byte 0x92E88B60
+	.4byte 0x82B782E9
+	.4byte 0x89B99688
+	.4byte 0x82CC8E9E
+	.4byte 0x8AD48DB7
+	.4byte 0
 "@2461":
-	.incbin "baserom.dol", 0x384630, 0x18
+	.4byte 0x984191B1
+	.4byte 0x90AB82F0
+	.4byte 0x92E88B60
+	.4byte 0x82B782E9
+	.4byte 0x8B9797A3
+	.4byte 0
 "@2462":
-	.incbin "baserom.dol", 0x384648, 0x10
+	.4byte 0x8DC591E5
+	.4byte 0x984191B1
+	.4byte 0x8E9E8AD4
+	.4byte 0
 "@2463":
-	.incbin "baserom.dol", 0x384658, 0x1C
+	.4byte 0x837B838A
+	.4byte 0x8385815B
+	.4byte 0x83809841
+	.4byte 0x91B195CF
+	.4byte 0x92B28DC5
+	.4byte 0x8FAC926C
+	.4byte 0
 "@2464":
-	.incbin "baserom.dol", 0x384674, 0x18
+	.4byte 0x83738362
+	.4byte 0x83609841
+	.4byte 0x91B195CF
+	.4byte 0x92B295CF
+	.4byte 0x89BB926C
+	.4byte 0
 "@2465":
-	.incbin "baserom.dol", 0x38468C, 0x1C
+	.4byte 0x8341835E
+	.4byte 0x8362834E
+	.4byte 0x984191B1
+	.4byte 0x95CF92B2
+	.4byte 0x8DC591E5
+	.4byte 0x926C0000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global "__vt__26MSSetSoundTL<10MSSetSound>"
@@ -2049,73 +2132,77 @@ __vt__10MSSetSound:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1995":
-	.incbin "baserom.dol", 0x3E6910, 0x4
+	.4byte 0x43380000
 "@1996":
-	.incbin "baserom.dol", 0x3E6914, 0x4
+	.4byte 0x41B0F5C3
 "@1997":
-	.incbin "baserom.dol", 0x3E6918, 0x4
+	.4byte 0x43160000
 "@1998":
-	.incbin "baserom.dol", 0x3E691C, 0x4
+	.4byte 0x3F59999A
 "@1999":
-	.incbin "baserom.dol", 0x3E6920, 0x4
+	.4byte 0x3F6FDF3B
 "@2000":
-	.incbin "baserom.dol", 0x3E6924, 0x4
+	.4byte 0x4393999A
 "@2001":
-	.incbin "baserom.dol", 0x3E6928, 0x4
+	.4byte 0x446A5333
 "@2002":
-	.incbin "baserom.dol", 0x3E692C, 0x4
+	.4byte 0x3F733333
 "@2003":
-	.incbin "baserom.dol", 0x3E6930, 0x4
+	.4byte 0x3F7851EC
 "@2004":
-	.incbin "baserom.dol", 0x3E6934, 0x4
+	.4byte 0x424E851F
 "@2006":
-	.incbin "baserom.dol", 0x3E6938, 0x4
+	.4byte 0x42C80000
 "@2007":
-	.incbin "baserom.dol", 0x3E693C, 0x4
+	.4byte 0x41300000
 "@2008":
-	.incbin "baserom.dol", 0x3E6940, 0x4
+	.4byte 0x4684D000
 "@2009":
-	.incbin "baserom.dol", 0x3E6944, 0x4
+	.4byte 0x3F051EB8
 "@2010":
-	.incbin "baserom.dol", 0x3E6948, 0x4
+	.4byte 0x3F666666
 "@2011":
-	.incbin "baserom.dol", 0x3E694C, 0x4
+	.4byte 0x435DC7AE
 "@2012":
-	.incbin "baserom.dol", 0x3E6950, 0x4
+	.4byte 0x45FA0000
 "@2013":
-	.incbin "baserom.dol", 0x3E6954, 0x4
+	.4byte 0x3F4F5C29
 "@2014":
-	.incbin "baserom.dol", 0x3E6958, 0x4
+	.4byte 0x3FACCCCD
 "@2015":
-	.incbin "baserom.dol", 0x3E695C, 0x4
+	.4byte 0x4319BAE1
 "@2017":
-	.incbin "baserom.dol", 0x3E6960, 0x4
+	.4byte 0x42300000
 "@2018":
-	.incbin "baserom.dol", 0x3E6964, 0x4
+	.4byte 0x40400000
 "@2019":
-	.incbin "baserom.dol", 0x3E6968, 0x4
+	.4byte 0x3F800000
 "@2020":
   .4byte 0
 "@2021":
-	.incbin "baserom.dol", 0x3E6970, 0x4
+	.4byte 0x43480000
 "@2022":
-	.incbin "baserom.dol", 0x3E6974, 0x8
+	.4byte 0x89CE928C
+	.4byte 0
 "@2023":
-	.incbin "baserom.dol", 0x3E697C, 0x8
+	.4byte 0x93648B43
+	.4byte 0x928C0000
 "@2025":
-	.incbin "baserom.dol", 0x3E6984, 0x4
+	.4byte 0x43A00000
 "@2027":
-	.incbin "baserom.dol", 0x3E6988, 0x4
+	.4byte 0x43960000
 "@2029":
-	.incbin "baserom.dol", 0x3E698C, 0x4
+	.4byte 0x3F70A3D7
 "@2030":
-	.incbin "baserom.dol", 0x3E6990, 0x4
+	.4byte 0x3F50A3D7
 "@2031":
-	.incbin "baserom.dol", 0x3E6994, 0x4
+	.4byte 0x438C199A
 "@2341":
-	.incbin "baserom.dol", 0x3E6998, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2343":
-	.incbin "baserom.dol", 0x3E69A0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 smSetSound__10MSSetSound:

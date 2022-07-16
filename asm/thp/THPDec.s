@@ -7927,24 +7927,60 @@ THPInit:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 __THPJpegNaturalOrder:
-	.incbin "baserom.dol", 0x36F260, 0x50
+	.4byte 0x00010810
+	.4byte 0x0902030A
+	.4byte 0x11182019
+	.4byte 0x120B0405
+	.4byte 0x0C131A21
+	.4byte 0x28302922
+	.4byte 0x1B140D06
+	.4byte 0x070E151C
+	.4byte 0x232A3138
+	.4byte 0x39322B24
+	.4byte 0x1D160F17
+	.4byte 0x1E252C33
+	.4byte 0x3A3B342D
+	.4byte 0x261F272E
+	.4byte 0x353C3D36
+	.4byte 0x2F373E3F
+	.4byte 0x3F3F3F3F
+	.4byte 0x3F3F3F3F
+	.4byte 0x3F3F3F3F
+	.4byte 0x3F3F3F3F
 __THPAANScaleFactor:
-	.incbin "baserom.dol", 0x36F2B0, 0x40
+	.4byte 0x3FF00000
+	.4byte 0
+	.4byte 0x3FF63150
+	.4byte 0xC0000000
+	.4byte 0x3FF4E7AE
+	.4byte 0xA0000000
+	.4byte 0x3FF2D062
+	.4byte 0xE0000000
+	.4byte 0x3FF00000
+	.4byte 0
+	.4byte 0x3FE92469
+	.4byte 0xC0000000
+	.4byte 0x3FE1517A
+	.4byte 0x80000000
+	.4byte 0x3FD1A855
+	.4byte 0xE0000000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@243":
-	.incbin "baserom.dol", 0x3E48D0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@665":
-	.incbin "baserom.dol", 0x3E48D8, 0x4
+	.4byte 0x3FB504F3
 "@666":
-	.incbin "baserom.dol", 0x3E48DC, 0x4
+	.4byte 0x3FEC835E
 "@667":
-	.incbin "baserom.dol", 0x3E48E0, 0x4
+	.4byte 0x3F8A8BD4
 "@668":
-	.incbin "baserom.dol", 0x3E48E4, 0x4
+	.4byte 0xC0273D75
 "@669":
-	.incbin "baserom.dol", 0x3E48E8, 0x8
+	.4byte 0x44800000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 __THPIDCTWorkspace:

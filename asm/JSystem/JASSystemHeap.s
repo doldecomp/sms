@@ -134,9 +134,9 @@ lbl_constructor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 audioDramSize__Q28JASystem6Kernel:
-	.incbin "baserom.dol", 0x3E3200, 0x4
+	.4byte 0x000C8000
 audioAramSize__Q28JASystem6Kernel:
-	.incbin "baserom.dol", 0x3E3204, 0x4
+	.4byte 0x00400000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@241":

@@ -844,18 +844,20 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@177":
-	.incbin "baserom.dol", 0x36DC80, 0x14
+	.asciz "JKRDvdRipper.cpp"
+	.balign 4
 "@178":
-	.incbin "baserom.dol", 0x36DC94, 0x28
+	.asciz "Sorry, not prepared for SZP resource\n"
+	.balign 4
 "@179":
-	.incbin "baserom.dol", 0x36DCBC, 0x24
+	.asciz ":::Not support SZP with offset read"
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 errorRetry__12JKRDvdRipper:
-	.incbin "baserom.dol", 0x3E3028, 0x4
+	.4byte 0x01000000
 .global szpBufferSize__12JKRDvdRipper
 szpBufferSize__12JKRDvdRipper:
-	.incbin "baserom.dol", 0x3E302C, 0x4
+	.4byte 0x00000400
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@56":

@@ -4062,7 +4062,8 @@ lbl_constructor:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sOscTable__Q28JASystem6TTrack:
-	.incbin "baserom.dol", 0x3A8DD8, 0x8
+	.4byte 0x01020804
+	.4byte 0x10000000
 "@982":
     .4byte lbl_80066998
     .4byte lbl_80066A14
@@ -4118,29 +4119,34 @@ sOscTable__Q28JASystem6TTrack:
 "@357":
   .4byte 0
 "@440":
-	.incbin "baserom.dol", 0x3E4424, 0x4
+	.4byte 0x3F800000
 "@441":
-	.incbin "baserom.dol", 0x3E4428, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@513":
-	.incbin "baserom.dol", 0x3E4430, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@642":
-	.incbin "baserom.dol", 0x3E4438, 0x4
+	.4byte 0x46FFFE00
 "@643":
-	.incbin "baserom.dol", 0x3E443C, 0x4
+	.4byte 0x43000000
 "@797":
-	.incbin "baserom.dol", 0x3E4440, 0x4
+	.4byte 0x42A00000
 "@798":
-	.incbin "baserom.dol", 0x3E4444, 0x4
+	.4byte 0x42700000
 "@948":
-	.incbin "baserom.dol", 0x3E4448, 0x4
+	.4byte 0x42C80000
 "@949":
-	.incbin "baserom.dol", 0x3E444C, 0x4
+	.4byte 0x42F00000
 "@950":
-	.incbin "baserom.dol", 0x3E4450, 0x8
+	.4byte 0x41200000
+	.4byte 0
 "@952":
-	.incbin "baserom.dol", 0x3E4458, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@981":
-	.incbin "baserom.dol", 0x3E4460, 0x8
+	.4byte 0x47000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 oRandom__Q28JASystem6Player:

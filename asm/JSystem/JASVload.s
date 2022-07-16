@@ -360,12 +360,14 @@ lbl_8006443C:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 vlMaxArcs__Q28JASystem5Vload:
-	.incbin "baserom.dol", 0x3E3208, 0x8
+	.4byte 0x00000010
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@259":
-	.incbin "baserom.dol", 0x3E43F8, 0x8
+	.4byte 0x2F000000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 vlDirName__Q28JASystem5Vload:

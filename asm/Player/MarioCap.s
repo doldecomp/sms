@@ -903,25 +903,40 @@ lbl_80121718:
   .4byte 0
   .4byte 0
 "@1763":
-	.incbin "baserom.dol", 0x377744, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x377758, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x37777C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2316":
-	.incbin "baserom.dol", 0x37778C, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83499658
+	.4byte 0x8E71696E
+	.4byte 0x8BBE0000
 "@2479":
-	.incbin "baserom.dol", 0x37779C, 0x18
+	.asciz "/mario/bmd/ma_cap1.bmd"
+	.balign 4
 "@2480":
-	.incbin "baserom.dol", 0x3777B4, 0x18
+	.asciz "/mario/bmd/ma_cap3.bmd"
+	.balign 4
 "@2481":
-	.incbin "baserom.dol", 0x3777CC, 0x28
+	.asciz "/mario/watergun2/body/diver_helm.bmd"
+	.balign 4
 "@2482":
-	.incbin "baserom.dol", 0x3777F4, 0x1C
+	.asciz "/mario/bmd/ma_glass1.bmd"
+	.balign 4
 "@2483":
-	.incbin "baserom.dol", 0x377810, 0x10
+	.asciz "null_airtube"
+	.balign 4
 "@2484":
-	.incbin "baserom.dol", 0x377820, 0x10
+	.asciz "Mario/MarioCap"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TMarioCap
@@ -934,10 +949,10 @@ __vt__9TMarioCap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2278":
-	.incbin "baserom.dol", 0x3E5510, 0x4
+	.4byte 0x431D0000
 "@2279":
-	.incbin "baserom.dol", 0x3E5514, 0x4
+	.4byte 0x41A00000
 "@2280":
   .4byte 0
 "@2485":
-	.incbin "baserom.dol", 0x3E551C, 0x4
+	.4byte 0x40800000

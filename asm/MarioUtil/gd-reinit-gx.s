@@ -548,7 +548,58 @@ lbl_800CEAB0:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@17":
-	.incbin "baserom.dol", 0x36F6E0, 0xD0
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x0000000A
+	.4byte 0
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x0000000B
+	.4byte 0x00000001
+	.4byte 0x00000005
+	.4byte 0
+	.4byte 0x0000000C
+	.4byte 0x00000001
+	.4byte 0x00000005
+	.4byte 0
+	.4byte 0x0000000D
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x0000000E
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x0000000F
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x00000010
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x00000011
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x00000012
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x00000013
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x00000014
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0
+	.4byte 0x000000FF
+	.4byte 0
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 NullTexData:
@@ -557,7 +608,18 @@ NullTexData:
   .4byte 0
   .4byte 0
 IdentityMtx:
-	.incbin "baserom.dol", 0x3AFB30, 0x30
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ColorBlack:
@@ -570,6 +632,7 @@ ColorWhite:
 "@51":
   .4byte 0
 "@52":
-	.incbin "baserom.dol", 0x3E4B64, 0x4
+	.4byte 0x3F800000
 "@53":
-	.incbin "baserom.dol", 0x3E4B68, 0x8
+	.4byte 0x3DCCCCCD
+	.4byte 0

@@ -398,7 +398,9 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2324":
-	.incbin "baserom.dol", 0x38E478, 0x10
+	.asciz "/%s/%s.bmd"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TJointModel

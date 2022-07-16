@@ -2040,85 +2040,118 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1210":
-	.incbin "baserom.dol", 0x36D790, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 "@1411":
-	.incbin "baserom.dol", 0x36D7A0, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1431":
-	.incbin "baserom.dol", 0x36D7AC, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1484":
-	.incbin "baserom.dol", 0x36D7B8, 0x10
+	.asciz "SYSTEM RESET"
+	.balign 4
 "@1485":
-	.incbin "baserom.dol", 0x36D7C8, 0x10
+	.asciz "MACHINE CHECK"
+	.balign 4
 "@1488":
-	.incbin "baserom.dol", 0x36D7D8, 0x14
+	.asciz "EXTERNAL INTERRUPT"
+	.balign 4
 "@1489":
-	.incbin "baserom.dol", 0x36D7EC, 0xC
+	.asciz "ALIGNMENT"
+	.balign 4
 "@1491":
-	.incbin "baserom.dol", 0x36D7F8, 0x10
+	.asciz "FLOATING POINT"
+	.balign 4
 "@1492":
-	.incbin "baserom.dol", 0x36D808, 0xC
+	.asciz "DECREMENTER"
 "@1493":
-	.incbin "baserom.dol", 0x36D814, 0xC
+	.asciz "SYSTEM CALL"
 "@1495":
-	.incbin "baserom.dol", 0x36D820, 0x14
+	.asciz "PERFORMACE MONITOR"
+	.balign 4
 "@1496":
-	.incbin "baserom.dol", 0x36D834, 0xC
+	.asciz "BREAK POINT"
 "@1497":
-	.incbin "baserom.dol", 0x36D840, 0x14
+	.asciz "SYSTEM INTERRUPT"
+	.balign 4
 "@1498":
-	.incbin "baserom.dol", 0x36D854, 0x14
+	.asciz "THERMAL INTERRUPT"
+	.balign 4
 "@1499":
-	.incbin "baserom.dol", 0x36D868, 0xC
+	.asciz "PROTECTION"
+	.balign 4
 "@1562":
-	.incbin "baserom.dol", 0x36D874, 0x14
+	.asciz "F%02d: Nan      "
+	.balign 4
 "@1563":
-	.incbin "baserom.dol", 0x36D888, 0x10
+	.asciz "F%02d:+Inf     "
 "@1564":
-	.incbin "baserom.dol", 0x36D898, 0x10
+	.asciz "F%02d:-Inf     "
 "@1566":
-	.incbin "baserom.dol", 0x36D8A8, 0x14
+	.asciz "F%02d: 0.0      "
+	.balign 4
 "@1567":
-	.incbin "baserom.dol", 0x36D8BC, 0xC
+	.asciz "F%02d:%+.3E"
 "@1628":
-	.incbin "baserom.dol", 0x36D8C8, 0x28
+	.asciz "-------------------------------- FPR\n"
+	.balign 4
 "@1701":
-	.incbin "baserom.dol", 0x36D8F0, 0x28
+	.asciz "-------------------------------- TRACE\n"
 "@1702":
-	.incbin "baserom.dol", 0x36D918, 0x20
+	.asciz "Address:   BackChain   LR save\n"
 "@1703":
-	.incbin "baserom.dol", 0x36D938, 0x14
+	.asciz "Suppress trace.\n"
+	.balign 4
 "@1704":
-	.incbin "baserom.dol", 0x36D94C, 0x18
+	.asciz "%08X:  %08X    %08X\n"
+	.balign 4
 "@1709":
-	.incbin "baserom.dol", 0x36D964, 0x20
+	.asciz "CONTEXT:%08XH  (%s EXCEPTION)\n"
+	.balign 4
 "@1710":
-	.incbin "baserom.dol", 0x36D984, 0x1C
+	.asciz "SRR0:   %08XH   SRR1:%08XH\n"
 "@1711":
-	.incbin "baserom.dol", 0x36D9A0, 0x1C
+	.asciz "DSISR:  %08XH   DAR: %08XH\n"
 "@1722":
-	.incbin "baserom.dol", 0x36D9BC, 0x28
+	.asciz "-------------------------------- GPR\n"
+	.balign 4
 "@1723":
-	.incbin "baserom.dol", 0x36D9E4, 0x28
+	.asciz "R%02d:%08XH  R%02d:%08XH  R%02d:%08XH\n"
+	.balign 4
 "@1724":
-	.incbin "baserom.dol", 0x36DA0C, 0x1C
+	.asciz "R%02d:%08XH  R%02d:%08XH\n"
+	.balign 4
 "@1757":
-	.incbin "baserom.dol", 0x36DA28, 0x18
+	.asciz "%s %s:%x section:%d\n"
+	.balign 4
 "@1775":
-	.incbin "baserom.dol", 0x36DA40, 0x2C
+	.asciz "-------------------------------- GPRMAP\n"
+	.balign 4
 "@1776":
-	.incbin "baserom.dol", 0x36DA6C, 0x10
+	.asciz "R%02d: %08XH"
+	.balign 4
 "@1777":
-	.incbin "baserom.dol", 0x36DA7C, 0x14
+	.asciz "  no information\n"
+	.balign 4
 "@1778":
-	.incbin "baserom.dol", 0x36DA90, 0x28
+	.asciz "  no register which seem to address.\n"
+	.balign 4
 "@1795":
-	.incbin "baserom.dol", 0x36DAB8, 0x1C
+	.asciz " MSR:%08XH\t FPSCR:%08XH\n"
+	.balign 4
 "@2006":
-	.incbin "baserom.dol", 0x36DAD4, 0x38
+	.asciz "******** EXCEPTION OCCURRED! ********\nFrameMemory:%XH\n"
+	.balign 4
 "@2007":
-	.incbin "baserom.dol", 0x36DB0C, 0x24
+	.asciz "--------------------------------\n"
+	.balign 4
 "@2193":
-	.incbin "baserom.dol", 0x36DB30, 0x20
+	.asciz "  [%08X]: .%s [%08X: %XH]\n  %s\n"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageQueue__12JUTException:
@@ -2162,27 +2195,29 @@ sMessageBuffer__12JUTException:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1486":
-	.incbin "baserom.dol", 0x3E3D50, 0x4
+	.4byte 0x44534900
 "@1487":
-	.incbin "baserom.dol", 0x3E3D54, 0x4
+	.4byte 0x49534900
 "@1490":
-	.incbin "baserom.dol", 0x3E3D58, 0x8
+	.asciz "PROGRAM"
 "@1494":
-	.incbin "baserom.dol", 0x3E3D60, 0x8
+	.asciz "TRACE"
+	.balign 4
 "@1565":
   .4byte 0
 "@1629":
-	.incbin "baserom.dol", 0x3E3D6C, 0x4
+	.4byte 0x20000000
 "@1630":
-	.incbin "baserom.dol", 0x3E3D70, 0x4
+	.4byte 0x0A000000
 "@1756":
   .4byte 0
 "@2094":
-	.incbin "baserom.dol", 0x3E3D78, 0x8
+	.asciz ".map"
+	.balign 4
 "@2216":
-	.incbin "baserom.dol", 0x3E3D80, 0x4
+	.4byte 0x41200000
 "@2217":
-	.incbin "baserom.dol", 0x3E3D84, 0x4
+	.4byte 0x40C00000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 exCallbackObject:

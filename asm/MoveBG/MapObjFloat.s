@@ -438,33 +438,88 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38C1A4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38C1B8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38C1E8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38C220, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38C254, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2464":
-	.incbin "baserom.dol", 0x38C278, 0xC
+	.asciz "riccoShip"
+	.balign 4
 "@2467":
-	.incbin "baserom.dol", 0x38C284, 0xC
+	.asciz "riccoLog"
+	.balign 4
 "@2468":
-	.incbin "baserom.dol", 0x38C290, 0xC
+	.asciz "riccoYachtL"
 "@2469":
-	.incbin "baserom.dol", 0x38C29C, 0xC
+	.asciz "riccoYachtS"
 "@2470":
-	.incbin "baserom.dol", 0x38C2A8, 0xC
+	.asciz "riccoBoatL"
+	.balign 4
 "@2471":
-	.incbin "baserom.dol", 0x38C2B4, 0xC
+	.asciz "riccoBoatS"
+	.balign 4
 "@2472":
-	.incbin "baserom.dol", 0x38C2C0, 0x10
+	.asciz "riccoShipLog"
+	.balign 4
 "@2473":
-	.incbin "baserom.dol", 0x38C2D0, 0x10
+	.asciz "riccoShipDol"
+	.balign 4
 "@2474":
-	.incbin "baserom.dol", 0x38C2E0, 0x10
+	.asciz "mareWaterJump"
+	.balign 4
 param_table:
   .4byte "@2464"
   .4byte 0x3c23d70a
@@ -599,9 +654,11 @@ param_table:
   .4byte 0
   .4byte 0
 "@2539":
-	.incbin "baserom.dol", 0x38C500, 0x24
+	.asciz "/scene/mapObj/ms_obj_hamon_b.jpa"
+	.balign 4
 "@2540":
-	.incbin "baserom.dol", 0x38C524, 0x24
+	.asciz "/scene/mapObj/ms_obj_hamon_a.jpa"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TMapObjFloatOnSea
@@ -700,9 +757,10 @@ __vt__17TMapObjFloatOnSea:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2465":
-	.incbin "baserom.dol", 0x3E8390, 0x8
+	.asciz "ukisima"
 "@2466":
-	.incbin "baserom.dol", 0x3E8398, 0x8
+	.asciz "Buoy"
+	.balign 4
 "@2512":
   .4byte 0
   .4byte 0

@@ -1011,35 +1011,104 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38FCDC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2253":
-	.incbin "baserom.dol", 0x38FCF0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2254":
-	.incbin "baserom.dol", 0x38FD20, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2255":
-	.incbin "baserom.dol", 0x38FD58, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2256":
-	.incbin "baserom.dol", 0x38FD8C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2585":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2587":
-	.incbin "baserom.dol", 0x38FDBC, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2925":
-	.incbin "baserom.dol", 0x38FDC8, 0x18
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169838A
+	.4byte 0x83528351
+	.4byte 0x815B8367
+	.4byte 0x816A0000
 "@2931":
-	.incbin "baserom.dol", 0x38FDE0, 0x28
+	.asciz "/scene/map/map/ms_objup_maniya_a.jpa"
+	.balign 4
 "@2932":
-	.incbin "baserom.dol", 0x38FE08, 0x28
+	.asciz "/scene/map/map/ms_objup_maniya_b.jpa"
+	.balign 4
 "@2935":
-	.incbin "baserom.dol", 0x38FE30, 0x28
+	.asciz "/scene/map/map/ms_objup_toudai_a.jpa"
+	.balign 4
 "@2936":
-	.incbin "baserom.dol", 0x38FE58, 0x28
+	.asciz "/scene/map/map/ms_objup_toudai_b.jpa"
+	.balign 4
 "@2989":
-	.incbin "baserom.dol", 0x38FE80, 0x18
+	.4byte 0x837D836A
+	.4byte 0x89AE8FE3
+	.4byte 0x82B08366
+	.4byte 0x8382834A
+	.4byte 0x83818389
+	.4byte 0
 "@2990":
-	.incbin "baserom.dol", 0x38FE98, 0x18
+	.4byte 0x939491E4
+	.4byte 0x8FE382B0
+	.4byte 0x83668382
+	.4byte 0x834A8381
+	.4byte 0x83890000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__26TDolpicEventRiccoMammaGate
@@ -1084,31 +1153,34 @@ __vt__22TDolpicEventBiancoGate:
 "@2864":
   .4byte 0
 "@2926":
-	.incbin "baserom.dol", 0x3E8E4C, 0x4
+	.4byte 0x3C03126F
 "@2927":
-	.incbin "baserom.dol", 0x3E8E50, 0x4
+	.4byte 0x43938000
 "@2928":
-	.incbin "baserom.dol", 0x3E8E54, 0x4
+	.4byte 0xC6241000
 "@2929":
-	.incbin "baserom.dol", 0x3E8E58, 0x4
+	.4byte 0x43960000
 "@2930":
-	.incbin "baserom.dol", 0x3E8E5C, 0x4
+	.4byte 0x44FA6000
 "@2933":
-	.incbin "baserom.dol", 0x3E8E60, 0x4
+	.4byte 0x461AEC00
 "@2934":
-	.incbin "baserom.dol", 0x3E8E64, 0x4
+	.4byte 0xC5EC6800
 "@2949":
-	.incbin "baserom.dol", 0x3E8E68, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@2951":
-	.incbin "baserom.dol", 0x3E8E70, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3053":
-	.incbin "baserom.dol", 0x3E8E78, 0x4
+	.4byte 0x40400000
 "@3063":
-	.incbin "baserom.dol", 0x3E8E7C, 0x8
+	.asciz "dptKing"
 "@3064":
-	.incbin "baserom.dol", 0x3E8E84, 0x4
+	.4byte 0x44E10000
 "@3085":
-	.incbin "baserom.dol", 0x3E8E88, 0x8
+	.4byte 0x461C4000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3102":

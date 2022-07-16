@@ -4582,45 +4582,178 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1938":
-	.incbin "baserom.dol", 0x3915F4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "cRumbleAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391608, 0x50
+	.4byte 0x636E7430
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7431
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7432
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7431
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7432
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7431
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7432
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7431
+	.4byte 0x3CF5C28F
+	.4byte 0x636E7432
+	.4byte 0x3CF5C28F
+	.asciz "cnt0@"
+	.balign 4
 "cSurMonteAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391658, 0x40
+	.4byte 0x66615F38
+	.4byte 0x3E99999A
+	.4byte 0x66615F39
+	.4byte 0x3E99999A
+	.4byte 0x66615F38
+	.4byte 0x3E99999A
+	.4byte 0x66615F39
+	.4byte 0x3E99999A
+	.4byte 0x66615F36
+	.4byte 0x3E99999A
+	.4byte 0x66615F37
+	.4byte 0x3E99999A
+	.4byte 0x66615F36
+	.4byte 0x3E99999A
+	.4byte 0x66615F37
+	.4byte 0x3E99999A
 "cSurLTSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391698, 0x28
+	.4byte 0x73703262
+	.4byte 0x3E99999A
+	.4byte 0x73703261
+	.4byte 0x3E99999A
+	.4byte 0x73703262
+	.4byte 0x3E99999A
+	.4byte 0x73703261
+	.4byte 0x3E99999A
+	.4byte 0x73703261
+	.4byte 0x3F99999A
 "cSurRTSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3916C0, 0x28
+	.4byte 0x73703263
+	.4byte 0x3E99999A
+	.4byte 0x73703264
+	.4byte 0x3E99999A
+	.4byte 0x73703263
+	.4byte 0x3E99999A
+	.4byte 0x73703264
+	.4byte 0x3E99999A
+	.4byte 0x73703263
+	.4byte 0x3F99999A
 "cSurLBSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3916E8, 0x28
+	.4byte 0x73703265
+	.4byte 0x3F99999A
+	.4byte 0x73703266
+	.4byte 0x3E99999A
+	.4byte 0x73703265
+	.4byte 0x3E99999A
+	.4byte 0x73703266
+	.4byte 0x3E99999A
+	.4byte 0x73703265
+	.4byte 0x3E99999A
 "cSurRBSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391710, 0x28
+	.4byte 0x73703267
+	.4byte 0x3F99999A
+	.4byte 0x73703267
+	.4byte 0x3E99999A
+	.4byte 0x73703268
+	.4byte 0x3E99999A
+	.4byte 0x73703267
+	.4byte 0x3E99999A
+	.4byte 0x73703268
+	.4byte 0x3E99999A
 "cSteMonteAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391738, 0x40
+	.4byte 0x66615F34
+	.4byte 0x3E99999A
+	.4byte 0x66615F35
+	.4byte 0x3E99999A
+	.4byte 0x66615F34
+	.4byte 0x3E99999A
+	.4byte 0x66615F35
+	.4byte 0x3E99999A
+	.4byte 0x66615F32
+	.4byte 0x3E99999A
+	.4byte 0x66615F33
+	.4byte 0x3E99999A
+	.4byte 0x66615F32
+	.4byte 0x3E99999A
+	.4byte 0x66615F33
+	.4byte 0x3E99999A
 "cSteLSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x391778, 0x28
+	.4byte 0x73703062
+	.4byte 0x3E99999A
+	.4byte 0x73703061
+	.4byte 0x3E99999A
+	.4byte 0x73703062
+	.4byte 0x3E99999A
+	.4byte 0x73703061
+	.4byte 0x3E99999A
+	.4byte 0x73703061
+	.4byte 0x3F99999A
 "cSteRSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3917A0, 0x28
+	.4byte 0x73703161
+	.4byte 0x3F99999A
+	.4byte 0x73703162
+	.4byte 0x3E99999A
+	.4byte 0x73703161
+	.4byte 0x3E99999A
+	.4byte 0x73703162
+	.4byte 0x3E99999A
+	.4byte 0x73703161
+	.4byte 0x3E99999A
 "cMonoMonteAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3917C8, 0x10
+	.4byte 0x66615F30
+	.4byte 0x3E99999A
+	.4byte 0x66615F31
+	.4byte 0x3E99999A
 "cMonoSpeakerAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3917D8, 0x10
+	.4byte 0x73703061
+	.4byte 0x3E99999A
+	.4byte 0x73703062
+	.4byte 0x3E99999A
 "cSoundToggleItems__9@unnamed@":
-	.incbin "baserom.dol", 0x3917E8, 0xC
+	.4byte 0x73656C33
+	.4byte 0x73656C32
+	.4byte 0x73656C34
 "@3079":
-	.incbin "baserom.dol", 0x3917F4, 0xC
+	.asciz "option.blo"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3CF090, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3CF09C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3CF0A8, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 cSoundSettings__16TOptionSoundUnit:
-	.incbin "baserom.dol", 0x3CF0B8, 0x18
+	.4byte 0x00008843
+	.4byte 0
+	.4byte 0x0000884A
+	.4byte 0x00000001
+	.4byte 0x0000884B
+	.4byte 0x00000002
 cFlagInfos__16TOptionSoundUnit:
-	.incbin "baserom.dol", 0x3CF0D0, 0x18
+	.4byte 0
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000002
 "@2212":
   .4byte 0
   .4byte -1
@@ -4677,39 +4810,44 @@ cFlagInfos__16TOptionSoundUnit:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "cStopRumbleAnm__9@unnamed@":
-	.incbin "baserom.dol", 0x3E98B8, 0x8
+	.4byte 0x636E7430
+	.4byte 0x3F800000
 "cRumbleToggleItems__9@unnamed@":
-	.incbin "baserom.dol", 0x3E98C0, 0x8
+	.4byte 0x73656C31
+	.4byte 0x73656C30
 "@2496":
   .4byte 0
 "@2497":
-	.incbin "baserom.dol", 0x3E98CC, 0x4
+	.4byte 0x3F800000
 "@2498":
-	.incbin "baserom.dol", 0x3E98D0, 0x4
+	.4byte 0x3F400000
 "@2499":
-	.incbin "baserom.dol", 0x3E98D4, 0x4
+	.4byte 0xBF400000
 "@2732":
-	.incbin "baserom.dol", 0x3E98D8, 0x4
+	.4byte 0x42480000
 "@2733":
-	.incbin "baserom.dol", 0x3E98DC, 0x4
+	.4byte 0x41000000
 "@2734":
-	.incbin "baserom.dol", 0x3E98E0, 0x8
+	.4byte 0xC1000000
+	.4byte 0
 "@2736":
-	.incbin "baserom.dol", 0x3E98E8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2912":
-	.incbin "baserom.dol", 0x3E98F0, 0x4
+	.4byte 0x43360B61
 "@2913":
-	.incbin "baserom.dol", 0x3E98F4, 0x4
+	.4byte 0x42652EE0
 "@2914":
-	.incbin "baserom.dol", 0x3E98F8, 0x4
+	.4byte 0x40C90FDB
 "@3078":
-	.incbin "baserom.dol", 0x3E98FC, 0x8
+	.asciz "option"
+	.balign 4
 "@3596":
-	.incbin "baserom.dol", 0x3E9904, 0x4
+	.4byte 0x41F00000
 "@3597":
-	.incbin "baserom.dol", 0x3E9908, 0x4
+	.4byte 0x42F00000
 "@4136":
-	.incbin "baserom.dol", 0x3E990C, 0x4
+	.4byte 0x3D4CCCCD
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2300":

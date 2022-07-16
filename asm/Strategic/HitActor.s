@@ -244,6 +244,7 @@ __vt__9THitActor:
 "@1618":
   .4byte 0
 "@1619":
-	.incbin "baserom.dol", 0x3E5474, 0x4
+	.4byte 0x3F800000
 "@1660":
-	.incbin "baserom.dol", 0x3E5478, 0x8
+	.4byte 0x3FB504F3
+	.4byte 0

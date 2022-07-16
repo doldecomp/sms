@@ -11927,219 +11927,388 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x36F99C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2200":
-	.incbin "baserom.dol", 0x36F9B0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2201":
-	.incbin "baserom.dol", 0x36F9E0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2202":
-	.incbin "baserom.dol", 0x36FA18, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2203":
-	.incbin "baserom.dol", 0x36FA4C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2728":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2730":
-	.incbin "baserom.dol", 0x36FA7C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@3432":
-	.incbin "baserom.dol", 0x36FA88, 0x18
+	.4byte 0x96D894A0
+	.4byte 0x8351815B
+	.4byte 0x83809770
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x82500000
 "@3433":
-	.incbin "baserom.dol", 0x36FAA0, 0x18
+	.4byte 0x96D894A0
+	.4byte 0x8351815B
+	.4byte 0x83809770
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x82510000
 "@3441":
-	.incbin "baserom.dol", 0x36FAB8, 0x10
+	.4byte 0x8351815B
+	.4byte 0x838096D8
+	.4byte 0x94A03030
+	.4byte 0
 "@3457":
-	.incbin "baserom.dol", 0x36FAC8, 0x10
+	.4byte 0x8351815B
+	.4byte 0x838096D8
+	.4byte 0x94A03030
+	.4byte 0
 "@3471":
-	.incbin "baserom.dol", 0x36FAD8, 0x10
+	.4byte 0x8351815B
+	.4byte 0x838096D8
+	.4byte 0x94A03030
+	.4byte 0
 "@3708":
-	.incbin "baserom.dol", 0x36FAE8, 0x10
+	.asciz "getSystemFlag"
+	.balign 4
 "@3709":
-	.incbin "baserom.dol", 0x36FAF8, 0x10
+	.asciz "setSystemFlag"
+	.balign 4
 "@3710":
-	.incbin "baserom.dol", 0x36FB08, 0x14
+	.asciz "getNameRefHandle"
+	.balign 4
 "@3711":
-	.incbin "baserom.dol", 0x36FB1C, 0x10
+	.asciz "getNameRefName"
+	.balign 4
 "@3712":
-	.incbin "baserom.dol", 0x36FB2C, 0xC
+	.asciz "getNPCType"
+	.balign 4
 "@3713":
-	.incbin "baserom.dol", 0x36FB38, 0x14
+	.asciz "setFlagNPCDontTalk"
+	.balign 4
 "@3714":
-	.incbin "baserom.dol", 0x36FB4C, 0x14
+	.asciz "setFlagNPCDontThrow"
 "@3715":
-	.incbin "baserom.dol", 0x36FB60, 0x10
+	.asciz "setFlagNPCDead"
+	.balign 4
 "@3716":
-	.incbin "baserom.dol", 0x36FB70, 0x14
+	.asciz "isNearSameActors"
+	.balign 4
 "@3717":
-	.incbin "baserom.dol", 0x36FB84, 0x10
+	.asciz "isNearActors"
+	.balign 4
 "@3718":
-	.incbin "baserom.dol", 0x36FB94, 0xC
+	.asciz "getTalkNPC"
+	.balign 4
 "@3719":
-	.incbin "baserom.dol", 0x36FBA0, 0x10
+	.asciz "getTalkNPCName"
+	.balign 4
 "@3720":
-	.incbin "baserom.dol", 0x36FBB0, 0x10
+	.asciz "setTalkMsgID"
+	.balign 4
 "@3721":
-	.incbin "baserom.dol", 0x36FBC0, 0xC
+	.asciz "getTalkMode"
 "@3722":
-	.incbin "baserom.dol", 0x36FBCC, 0x18
+	.asciz "getTalkSelectedValue"
+	.balign 4
 "@3723":
-	.incbin "baserom.dol", 0x36FBE4, 0x18
+	.asciz "setValue2TalkVariable"
+	.balign 4
 "@3724":
-	.incbin "baserom.dol", 0x36FBFC, 0x10
+	.asciz "isTalkModeNow"
+	.balign 4
 "@3725":
-	.incbin "baserom.dol", 0x36FC0C, 0x14
+	.asciz "setFlagNPCCanTaken"
+	.balign 4
 "@3726":
-	.incbin "baserom.dol", 0x36FC20, 0x14
+	.asciz "pushNerve4LiveActor"
 "@3727":
-	.incbin "baserom.dol", 0x36FC34, 0x14
+	.asciz "isOnLiveActorFlag"
+	.balign 4
 "@3728":
-	.incbin "baserom.dol", 0x36FC48, 0x14
+	.asciz "setHide4LiveActor"
+	.balign 4
 "@3729":
-	.incbin "baserom.dol", 0x36FC5C, 0x14
+	.asciz "setDead4LiveActor"
+	.balign 4
 "@3730":
-	.incbin "baserom.dol", 0x36FC70, 0x10
+	.asciz "setTimeLimit"
+	.balign 4
 "@3731":
-	.incbin "baserom.dol", 0x36FC80, 0x14
+	.asciz "setAttentionTime"
+	.balign 4
 "@3732":
-	.incbin "baserom.dol", 0x36FC94, 0x1C
+	.asciz "setPollutionIncreaseCount"
+	.balign 4
 "@3733":
-	.incbin "baserom.dol", 0x36FCB0, 0xC
+	.asciz "getRestTime"
 "@3734":
-	.incbin "baserom.dol", 0x36FCBC, 0x14
+	.asciz "getPollutionLevel"
+	.balign 4
 "@3735":
-	.incbin "baserom.dol", 0x36FCD0, 0x10
+	.asciz "setNextStage"
+	.balign 4
 "@3736":
-	.incbin "baserom.dol", 0x36FCE0, 0x10
+	.asciz "registerMovie"
+	.balign 4
 "@3737":
-	.incbin "baserom.dol", 0x36FCF0, 0xC
+	.asciz "gameOver"
+	.balign 4
 "@3738":
-	.incbin "baserom.dol", 0x36FCFC, 0x14
+	.asciz "isGraffitoCoverage0"
 "@3739":
-	.incbin "baserom.dol", 0x36FD10, 0x18
+	.asciz "setGraffitoMultiplied"
+	.balign 4
 "@3740":
-	.incbin "baserom.dol", 0x36FD28, 0x10
+	.asciz "isBossDefeated"
+	.balign 4
 "@3741":
-	.incbin "baserom.dol", 0x36FD38, 0x18
+	.asciz "launchEventClearDemo"
+	.balign 4
 "@3742":
-	.incbin "baserom.dol", 0x36FD50, 0x18
+	.asciz "isEMarioReachedToGoal"
+	.balign 4
 "@3743":
-	.incbin "baserom.dol", 0x36FD68, 0x1C
+	.asciz "isEMarioDownWaitingToTalk"
+	.balign 4
 "@3744":
-	.incbin "baserom.dol", 0x36FD84, 0x14
+	.asciz "startEMarioRunAway"
+	.balign 4
 "@3745":
-	.incbin "baserom.dol", 0x36FD98, 0x18
+	.asciz "startEMarioGateDrawing"
+	.balign 4
 "@3746":
-	.incbin "baserom.dol", 0x36FDB0, 0x18
+	.asciz "startEMarioDisappear"
+	.balign 4
 "@3747":
-	.incbin "baserom.dol", 0x36FDC8, 0x14
+	.asciz "startOpenModelGate"
+	.balign 4
 "@3748":
-	.incbin "baserom.dol", 0x36FDDC, 0x18
+	.asciz "isMapEventFinishedAll"
+	.balign 4
 "@3749":
-	.incbin "baserom.dol", 0x36FDF4, 0x10
+	.asciz "raiseBuilding"
+	.balign 4
 "@3750":
-	.incbin "baserom.dol", 0x36FE04, 0x10
+	.asciz "forceCloseTalk"
+	.balign 4
 "@3751":
-	.incbin "baserom.dol", 0x36FE14, 0xC
+	.asciz "insertTimer"
 "@3752":
-	.incbin "baserom.dol", 0x36FE20, 0xC
+	.asciz "startTimer"
+	.balign 4
 "@3753":
-	.incbin "baserom.dol", 0x36FE2C, 0x10
+	.asciz "startMonteman"
+	.balign 4
 "@3754":
-	.incbin "baserom.dol", 0x36FE3C, 0xC
+	.asciz "stopTimer"
+	.balign 4
 "@3755":
-	.incbin "baserom.dol", 0x36FE48, 0x14
+	.asciz "monteManReachFlag"
+	.balign 4
 "@3757":
-	.incbin "baserom.dol", 0x36FE5C, 0xC
+	.asciz "killShine"
+	.balign 4
 "@3758":
-	.incbin "baserom.dol", 0x36FE68, 0x10
+	.asciz "killMushroom1up"
 "@3759":
-	.incbin "baserom.dol", 0x36FE78, 0x14
+	.asciz "appearMushroom1up"
+	.balign 4
 "@3760":
-	.incbin "baserom.dol", 0x36FE8C, 0x14
+	.asciz "appearShineFromNPC"
+	.balign 4
 "@3761":
-	.incbin "baserom.dol", 0x36FEA0, 0x20
+	.asciz "appearShineFromNPCWithoutDemo"
+	.balign 4
 "@3762":
-	.incbin "baserom.dol", 0x36FEC0, 0x1C
+	.asciz "appearShineFromKageMario"
+	.balign 4
 "@3763":
-	.incbin "baserom.dol", 0x36FEDC, 0xC
+	.asciz "appearShine"
 "@3764":
-	.incbin "baserom.dol", 0x36FEE8, 0x18
+	.asciz "appearShineForWoodBox"
+	.balign 4
 "@3765":
-	.incbin "baserom.dol", 0x36FF00, 0x10
+	.asciz "changeNozzle"
+	.balign 4
 "@3766":
-	.incbin "baserom.dol", 0x36FF10, 0x14
+	.asciz "startMarioTalking"
+	.balign 4
 "@3767":
-	.incbin "baserom.dol", 0x36FF24, 0x10
+	.asciz "isInsideCube"
+	.balign 4
 "@3768":
-	.incbin "baserom.dol", 0x36FF34, 0x10
+	.asciz "setMarioWaiting"
 "@3769":
-	.incbin "baserom.dol", 0x36FF44, 0x10
+	.asciz "setTransScale"
+	.balign 4
 "@3770":
-	.incbin "baserom.dol", 0x36FF54, 0xC
+	.asciz "setEventID"
+	.balign 4
 "@3771":
-	.incbin "baserom.dol", 0x36FF60, 0xC
+	.asciz "startBGM"
+	.balign 4
 "@3773":
-	.incbin "baserom.dol", 0x36FF6C, 0xC
+	.asciz "startMiss"
+	.balign 4
 "@3775":
-	.incbin "baserom.dol", 0x36FF78, 0x10
+	.asciz "startEventSE"
+	.balign 4
 "@3776":
-	.incbin "baserom.dol", 0x36FF88, 0x10
+	.asciz "changeSunglass"
+	.balign 4
 "@3777":
-	.incbin "baserom.dol", 0x36FF98, 0x10
+	.asciz "setCollision"
+	.balign 4
 "@3778":
-	.incbin "baserom.dol", 0x36FFA8, 0xC
+	.asciz "warpMario"
+	.balign 4
 "@3779":
-	.incbin "baserom.dol", 0x36FFB4, 0x18
+	.asciz "startAppearJetBalloon"
+	.balign 4
 "@3780":
-	.incbin "baserom.dol", 0x36FFCC, 0x18
+	.asciz "appear8RedCoinsAndTimer"
 "@3781":
-	.incbin "baserom.dol", 0x36FFE4, 0x14
+	.asciz "warpFrontToMario"
+	.balign 4
 "@3782":
-	.incbin "baserom.dol", 0x36FFF8, 0x10
+	.asciz "appearReadyGo"
+	.balign 4
 "@3783":
-	.incbin "baserom.dol", 0x370008, 0x14
+	.asciz "onNeutralMarioKey"
+	.balign 4
 "@3784":
-	.incbin "baserom.dol", 0x37001C, 0x10
+	.asciz "invalidatePad"
+	.balign 4
 "@3785":
-	.incbin "baserom.dol", 0x37002C, 0x10
+	.asciz "checkWoodBox"
+	.balign 4
 "@3786":
-	.incbin "baserom.dol", 0x37003C, 0x10
+	.asciz "refreshWoodBox"
+	.balign 4
 "@3787":
-	.incbin "baserom.dol", 0x37004C, 0xC
+	.asciz "killWoodBox"
 "@3788":
-	.incbin "baserom.dol", 0x370058, 0x14
+	.asciz "maniCoinFallDown"
+	.balign 4
 "@3789":
-	.incbin "baserom.dol", 0x37006C, 0x14
+	.asciz "eggYoshiStartFruit"
+	.balign 4
 "@3790":
-	.incbin "baserom.dol", 0x370080, 0xC
+	.asciz "putNozzle"
+	.balign 4
 "@3791":
-	.incbin "baserom.dol", 0x37008C, 0x14
+	.asciz "startMareBottleDemo"
 "@3792":
-	.incbin "baserom.dol", 0x3700A0, 0x18
+	.asciz "isFinishMareBottleDemo"
+	.balign 4
 "@3793":
-	.incbin "baserom.dol", 0x3700B8, 0x14
+	.asciz "isInsideFastCube"
+	.balign 4
 "@3794":
-	.incbin "baserom.dol", 0x3700CC, 0x18
+	.asciz "setEventForWaterMelon"
+	.balign 4
 "@3795":
-	.incbin "baserom.dol", 0x3700E4, 0x18
+	.asciz "isWaterMelonIsReached"
+	.balign 4
 "@3829":
-	.incbin "baserom.dol", 0x3700FC, 0x20
+	.asciz "TSpcStack : stack underflow\n"
+	.balign 4
 "@3834":
-	.incbin "baserom.dol", 0x37011C, 0x1C
+	.asciz "TSpcStack : stack overflow\n"
 "@3988":
-	.incbin "baserom.dol", 0x370138, 0x14
+	.4byte 0x90D48352
+	.4byte 0x83438393
+	.4byte 0x97708358
+	.4byte 0x83438362
+	.4byte 0x83600000
 "@4300":
-	.incbin "baserom.dol", 0x37014C, 0x14
+	.4byte 0x83548393
+	.4byte 0x834F8389
+	.4byte 0x83588374
+	.4byte 0x8346815B
+	.4byte 0x835F0000
 "@4824":
-	.incbin "baserom.dol", 0x370160, 0xC
+	.4byte 0x82648277
+	.4byte 0x83728393
+	.4byte 0
 "@4846":
-	.incbin "baserom.dol", 0x37016C, 0x14
+	.asciz "exbottle_bottle_in"
+	.balign 4
 "@5130":
-	.incbin "baserom.dol", 0x370180, 0x1C
+	.4byte 0x96D894A0
+	.4byte 0x8351815B
+	.4byte 0x83809770
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@5584":
-	.incbin "baserom.dol", 0x37019C, 0xC
+	.4byte 0x83828393
+	.4byte 0x8365837D
+	.4byte 0x83930000
 "@5774":
-	.incbin "baserom.dol", 0x3701A8, 0x20
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169834A
+	.4byte 0x8351837D
+	.4byte 0x838A8349
+	.4byte 0x8351815B
+	.4byte 0x8367816A
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TEventWatcher
@@ -12177,39 +12346,41 @@ sShineViewObjName$3431:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3756":
-	.incbin "baserom.dol", 0x3E4CB0, 0x8
+	.asciz "getTime"
 "@3772":
-	.incbin "baserom.dol", 0x3E4CB8, 0x8
+	.asciz "stopBGM"
 "@3774":
-	.incbin "baserom.dol", 0x3E4CC0, 0x8
+	.asciz "startSE"
 "@3830":
-	.incbin "baserom.dol", 0x3E4CC8, 0x4
+	.4byte 0xC591A000
 "@3831":
-	.incbin "baserom.dol", 0x3E4CCC, 0x4
+	.4byte 0x463B8000
 "@3832":
   .4byte 0
 "@3833":
-	.incbin "baserom.dol", 0x3E4CD4, 0x4
+	.4byte 0x47AFC800
 "@3931":
-	.incbin "baserom.dol", 0x3E4CD8, 0x4
+	.4byte 0x43C80000
 "@3932":
-	.incbin "baserom.dol", 0x3E4CDC, 0x4
+	.4byte 0x3BB40000
 "@3934":
-	.incbin "baserom.dol", 0x3E4CE0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3989":
-	.incbin "baserom.dol", 0x3E4CE8, 0x4
+	.4byte 0x428C0000
 "@3990":
-	.incbin "baserom.dol", 0x3E4CEC, 0x4
+	.4byte 0x3C088889
 "@4053":
   .4byte 0
 "@4803":
-	.incbin "baserom.dol", 0x3E4CF4, 0x4
+	.4byte 0x41200000
 "@5131":
-	.incbin "baserom.dol", 0x3E4CF8, 0x4
+	.4byte 0xC57AA000
 "@5132":
-	.incbin "baserom.dol", 0x3E4CFC, 0x4
+	.4byte 0x4619E800
 "@5133":
-	.incbin "baserom.dol", 0x3E4D00, 0x8
+	.4byte 0xC57C8000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@7636":

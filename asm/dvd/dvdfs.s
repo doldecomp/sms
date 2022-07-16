@@ -800,33 +800,41 @@ lbl_800968DC:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@117":
-	.incbin "baserom.dol", 0x3AD970, 0xC8
+	.asciz "DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): specified directory or file (%s) doesn't match standard 8.3 format. This is a temporary restriction and will be removed soon\n"
 "@138":
-	.incbin "baserom.dol", 0x3ADA38, 0x38
+	.asciz "Warning: DVDOpen(): file '%s' was not found under %s.\n"
+	.balign 4
 "@237":
-	.incbin "baserom.dol", 0x3ADA70, 0x34
+	.asciz "DVDReadAsync(): specified area is out of the file  "
 "@263":
-	.incbin "baserom.dol", 0x3ADAA4, 0x30
+	.asciz "DVDRead(): specified area is out of the file  "
+	.balign 4
 "@269":
-	.incbin "baserom.dol", 0x3ADAD4, 0x28
+	.asciz "DVDSeek(): offset is out of the file  "
+	.balign 4
 "@309":
-	.incbin "baserom.dol", 0x3ADAFC, 0x3C
+	.asciz "Warning: DVDOpenDir(): file '%s' was not found under %s.\n"
+	.balign 4
 "@340":
-	.incbin "baserom.dol", 0x3ADB38, 0x68
+	.asciz "DVDPrepareStreamAsync(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned"
+	.balign 4
 "@341":
-	.incbin "baserom.dol", 0x3ADBA0, 0x58
+	.asciz "DVDPrepareStreamAsync(): Specified length (0x%x) is not a multiple of 32768(32*1024)"
+	.balign 4
 "@342":
-	.incbin "baserom.dol", 0x3ADBF8, 0x5C
+	.asciz "DVDPrepareStreamAsync(): The area specified (offset(0x%x), length(0x%x)) is out of the file"
 "@373":
-	.incbin "baserom.dol", 0x3ADC54, 0x64
+	.asciz "DVDPrepareStream(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned"
+	.balign 4
 "@374":
-	.incbin "baserom.dol", 0x3ADCB8, 0x50
+	.asciz "DVDPrepareStream(): Specified length (0x%x) is not a multiple of 32768(32*1024)"
 "@375":
-	.incbin "baserom.dol", 0x3ADD08, 0x58
+	.asciz "DVDPrepareStream(): The area specified (offset(0x%x), length(0x%x)) is out of the file"
+	.balign 4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@116":
-	.incbin "baserom.dol", 0x3E3270, 0x8
+	.asciz "dvdfs.c"
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 BootInfo:

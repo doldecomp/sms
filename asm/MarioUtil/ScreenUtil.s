@@ -963,7 +963,12 @@ lbl_800C9360:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1831":
-	.incbin "baserom.dol", 0x36F5B8, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TScreenTexture
@@ -992,25 +997,27 @@ __vt__12TAfterEffect:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1629":
-	.incbin "baserom.dol", 0x3E4AA0, 0x4
+	.4byte 0xC47A0000
 "@1630":
-	.incbin "baserom.dol", 0x3E4AA4, 0x4
+	.4byte 0x447A0000
 "@1631":
-	.incbin "baserom.dol", 0x3E4AA8, 0x4
+	.4byte 0xC3480000
 "@1800":
   .4byte 0
 "@1801":
-	.incbin "baserom.dol", 0x3E4AB0, 0x4
+	.4byte 0x3F800000
 "@1802":
-	.incbin "baserom.dol", 0x3E4AB4, 0x4
+	.4byte 0x3F000000
 "@1803":
-	.incbin "baserom.dol", 0x3E4AB8, 0x8
+	.4byte 0xBF000000
+	.4byte 0
 "@1805":
-	.incbin "baserom.dol", 0x3E4AC0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1833":
-	.incbin "baserom.dol", 0x3E4AC8, 0x4
+	.4byte 0x3D4CCCCD
 "@1834":
-	.incbin "baserom.dol", 0x3E4ACC, 0x4
+	.4byte 0x3C23D70A
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpAfterEffect

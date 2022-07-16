@@ -537,19 +537,21 @@ lbl_800AD20C:
 "@133":
   .4byte 0
 "@357":
-	.incbin "baserom.dol", 0x3E488C, 0x4
+	.4byte 0x3F800000
 "@358":
-	.incbin "baserom.dol", 0x3E4890, 0x4
+	.4byte 0x40490FDB
 "@360":
-	.incbin "baserom.dol", 0x3E4894, 0x4
+	.4byte 0xBF800000
 "@362":
-	.incbin "baserom.dol", 0x3E4898, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@364":
-	.incbin "baserom.dol", 0x3E48A0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@405":
-	.incbin "baserom.dol", 0x3E48A8, 0x4
+	.4byte 0x40C90FDB
 "@493":
-	.incbin "baserom.dol", 0x3E48AC, 0x4
+	.4byte 0x3F13CD3A
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 vcd:

@@ -1599,29 +1599,118 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2122":
-	.incbin "baserom.dol", 0x39E664, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2362":
-	.incbin "baserom.dol", 0x39E678, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2363":
-	.incbin "baserom.dol", 0x39E6A8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2364":
-	.incbin "baserom.dol", 0x39E6E0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2365":
-	.incbin "baserom.dol", 0x39E714, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 tevColorData1$2781:
-	.incbin "baserom.dol", 0x39E738, 0x40
+	.4byte 0
+	.4byte 0x007800FF
+	.4byte 0x00780000
+	.4byte 0x000000FF
+	.4byte 0x00000078
+	.4byte 0x000000FF
+	.4byte 0x00780078
+	.4byte 0x000000FF
+	.4byte 0x00780000
+	.4byte 0x007800FF
+	.4byte 0x006400C8
+	.4byte 0x000000FF
+	.4byte 0x00000064
+	.4byte 0x00C800FF
+	.4byte 0x00C80064
+	.4byte 0x009600FF
 tevColorData2$2782:
-	.incbin "baserom.dol", 0x39E778, 0x40
+	.4byte 0
+	.4byte 0x00FA00FF
+	.4byte 0x00FA0000
+	.4byte 0x000000FF
+	.4byte 0x000000FA
+	.4byte 0x000000FF
+	.4byte 0x00FA00FA
+	.4byte 0x000000FF
+	.4byte 0x00FA0000
+	.4byte 0x00FA00FF
+	.4byte 0x009600FA
+	.4byte 0x000000FF
+	.4byte 0x00000096
+	.4byte 0x00FA00FF
+	.4byte 0x00FA0096
+	.4byte 0x00C800FF
 "@2799":
-	.incbin "baserom.dol", 0x39E7B8, 0x10
+	.asciz "hauntleg.bmd"
+	.balign 4
 "@3267":
-	.incbin "baserom.dol", 0x39E7C8, 0x14
+	.4byte 0x836E8393
+	.4byte 0x83678349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x83670000
 "@3268":
-	.incbin "baserom.dol", 0x39E7DC, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@3365":
-	.incbin "baserom.dol", 0x39E7E8, 0x10
+	.4byte 0x836E8393
+	.4byte 0x8367838C
+	.4byte 0x8362834F
+	.4byte 0
 "@3368":
-	.incbin "baserom.dol", 0x39E7F8, 0x18
+	.asciz "/enemy/hauntLeg.prm"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 hauntleg_bastable:
@@ -1822,39 +1911,42 @@ __vt__16THauntLegManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2976":
-	.incbin "baserom.dol", 0x3EB870, 0x4
+	.4byte 0x41200000
 "@2977":
   .4byte 0
 "@2978":
-	.incbin "baserom.dol", 0x3EB878, 0x4
+	.4byte 0x3F000000
 "@2979":
-	.incbin "baserom.dol", 0x3EB87C, 0x4
+	.4byte 0x40400000
 "@2980":
-	.incbin "baserom.dol", 0x3EB880, 0x4
+	.4byte 0x43480000
 "@2981":
-	.incbin "baserom.dol", 0x3EB884, 0x4
+	.4byte 0x40000000
 "@2982":
-	.incbin "baserom.dol", 0x3EB888, 0x4
+	.4byte 0x43340000
 "@2983":
-	.incbin "baserom.dol", 0x3EB88C, 0x4
+	.4byte 0x43B40000
 "@3044":
-	.incbin "baserom.dol", 0x3EB890, 0x4
+	.4byte 0x3F800000
 "@3082":
-	.incbin "baserom.dol", 0x3EB894, 0x4
+	.4byte 0x461C4000
 "@3215":
-	.incbin "baserom.dol", 0x3EB898, 0x4
+	.4byte 0x43360B61
 "@3216":
-	.incbin "baserom.dol", 0x3EB89C, 0x4
+	.4byte 0x42B40000
 "@3269":
-	.incbin "baserom.dol", 0x3EB8A0, 0x4
+	.4byte 0x41F00000
 "@3350":
-	.incbin "baserom.dol", 0x3EB8A4, 0x8
+	.asciz "main"
+	.balign 4
 "@3351":
-	.incbin "baserom.dol", 0x3EB8AC, 0x4
+	.4byte 0x38000000
 "@3352":
-	.incbin "baserom.dol", 0x3EB8B0, 0x8
+	.4byte 0x40A00000
+	.4byte 0
 "@3354":
-	.incbin "baserom.dol", 0x3EB8B8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2858":

@@ -3001,26 +3001,29 @@ __vt__11TRailMapObj:
 "@2572":
   .4byte 0
 "@2636":
-	.incbin "baserom.dol", 0x3E867C, 0x4
+	.4byte 0x43340000
 "@2637":
-	.incbin "baserom.dol", 0x3E8680, 0x4
+	.4byte 0x40400000
 "@2638":
-	.incbin "baserom.dol", 0x3E8684, 0x4
+	.4byte 0x3F800000
 "@2640":
-	.incbin "baserom.dol", 0x3E8688, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2671":
-	.incbin "baserom.dol", 0x3E8690, 0x4
+	.4byte 0x43B40000
 "@2693":
-	.incbin "baserom.dol", 0x3E8694, 0x4
+	.4byte 0x43360B61
 "@2715":
-	.incbin "baserom.dol", 0x3E8698, 0x4
+	.4byte 0x3C23D70A
 "@2900":
-	.incbin "baserom.dol", 0x3E869C, 0x4
+	.4byte 0x43960000
 "@2901":
-	.incbin "baserom.dol", 0x3E86A0, 0x4
+	.4byte 0x42480000
 "@2902":
-	.incbin "baserom.dol", 0x3E86A4, 0x4
+	.4byte 0x3CA3D70A
 "@2904":
-	.incbin "baserom.dol", 0x3E86A8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2940":
-	.incbin "baserom.dol", 0x3E86B0, 0x8
+	.4byte 0x40000000
+	.4byte 0

@@ -3953,7 +3953,8 @@ __vt__15JALSeModVolFunk:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@544":
-	.incbin "baserom.dol", 0x3E4130, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@1661":

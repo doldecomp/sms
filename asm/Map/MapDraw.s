@@ -516,7 +516,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2364":
-	.incbin "baserom.dol", 0x38E7D8, 0x18
+	.asciz "/common/timg/wall.bti"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TMapDrawWall
@@ -537,7 +538,7 @@ __vt__12TMapDrawWall:
 "@2341":
   .4byte 0
 "@2346":
-	.incbin "baserom.dol", 0x3E8B0C, 0x4
+	.4byte 0x5050C896
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2402":

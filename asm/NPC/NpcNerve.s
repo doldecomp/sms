@@ -2287,25 +2287,28 @@ __vt__20TNerveNPCGraphWander:
 "@2727":
   .4byte 0
 "@2728":
-	.incbin "baserom.dol", 0x3E6384, 0x4
+	.4byte 0x42B40000
 "@2729":
-	.incbin "baserom.dol", 0x3E6388, 0x4
+	.4byte 0xC2B40000
 "@2730":
-	.incbin "baserom.dol", 0x3E638C, 0x4
+	.4byte 0x3BB40000
 "@2731":
-	.incbin "baserom.dol", 0x3E6390, 0x4
+	.4byte 0x43340000
 "@2732":
-	.incbin "baserom.dol", 0x3E6394, 0x4
+	.4byte 0x43B40000
 "@2733":
-	.incbin "baserom.dol", 0x3E6398, 0x8
+	.4byte 0x3A83126F
+	.4byte 0
 "@2735":
-	.incbin "baserom.dol", 0x3E63A0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2857":
-	.incbin "baserom.dol", 0x3E63A8, 0x4
+	.4byte 0x38000000
 "@3036":
-	.incbin "baserom.dol", 0x3E63AC, 0x4
+	.4byte 0x42C80000
 "@3037":
-	.incbin "baserom.dol", 0x3E63B0, 0x8
+	.4byte 0x42480000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2213":

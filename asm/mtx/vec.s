@@ -140,6 +140,6 @@ PSVECDistance:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@116":
-	.incbin "baserom.dol", 0x3E47C8, 0x4
+	.4byte 0x3F000000
 "@117":
-	.incbin "baserom.dol", 0x3E47CC, 0x4
+	.4byte 0x40400000

@@ -1572,75 +1572,107 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x37681C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2033":
-	.incbin "baserom.dol", 0x376830, 0x10
+	.asciz "stolenpeach.thp"
 "@2034":
-	.incbin "baserom.dol", 0x376840, 0x10
+	.asciz "openingA.thp"
+	.balign 4
 "@2035":
-	.incbin "baserom.dol", 0x376850, 0xC
+	.asciz "NozuruA.thp"
 "@2036":
-	.incbin "baserom.dol", 0x37685C, 0x10
+	.asciz "openingBA.thp"
+	.balign 4
 "@2037":
-	.incbin "baserom.dol", 0x37686C, 0x10
+	.asciz "kagemario.thp"
+	.balign 4
 "@2038":
-	.incbin "baserom.dol", 0x37687C, 0x14
+	.asciz "stolennozuru.thp"
+	.balign 4
 "@2039":
-	.incbin "baserom.dol", 0x376890, 0xC
+	.asciz "pakkun.thp"
+	.balign 4
 "@2040":
-	.incbin "baserom.dol", 0x37689C, 0x10
+	.asciz "MechaKuppa.thp"
+	.balign 4
 "@2041":
-	.incbin "baserom.dol", 0x3768AC, 0xC
+	.asciz "KuppaJr.thp"
 "@2042":
-	.incbin "baserom.dol", 0x3768B8, 0x10
+	.asciz "Entrance.thp"
+	.balign 4
 "@2043":
-	.incbin "baserom.dol", 0x3768C8, 0x10
+	.asciz "demogeso.thp"
+	.balign 4
 "@2044":
-	.incbin "baserom.dol", 0x3768D8, 0xC
+	.asciz "bath.thp"
+	.balign 4
 "@2045":
-	.incbin "baserom.dol", 0x3768E4, 0x10
+	.asciz "autodemoA.thp"
+	.balign 4
 "@2046":
-	.incbin "baserom.dol", 0x3768F4, 0x10
+	.asciz "openingBC.thp"
+	.balign 4
 "@2047":
-	.incbin "baserom.dol", 0x376904, 0x10
+	.asciz "epilogue.thp"
+	.balign 4
 "@2048":
-	.incbin "baserom.dol", 0x376914, 0x10
+	.asciz "staffroll.thp"
+	.balign 4
 "@2049":
-	.incbin "baserom.dol", 0x376924, 0xC
+	.asciz "omakeA.thp"
+	.balign 4
 "@2050":
-	.incbin "baserom.dol", 0x376930, 0xC
+	.asciz "omakeB.thp"
+	.balign 4
 "@2051":
-	.incbin "baserom.dol", 0x37693C, 0xC
+	.asciz "NozuruB.thp"
 "@2052":
-	.incbin "baserom.dol", 0x376948, 0x10
+	.asciz "openingBB.thp"
+	.balign 4
 "@2554":
-	.incbin "baserom.dol", 0x376958, 0xC
+	.asciz "subtitle"
+	.balign 4
 "@2825":
-	.incbin "baserom.dol", 0x376964, 0x14
+	.asciz "/data/subtitle.arc"
+	.balign 4
 "@2826":
-	.incbin "baserom.dol", 0x376978, 0x14
+	.asciz "/data/endsave.arc"
+	.balign 4
 "@2827":
-	.incbin "baserom.dol", 0x37698C, 0x10
+	.asciz "root View Objs"
+	.balign 4
 "@2828":
-	.incbin "baserom.dol", 0x37699C, 0xC
+	.asciz "Group 2D"
+	.balign 4
 "@2830":
-	.incbin "baserom.dol", 0x3769A8, 0x14
+	.asciz "EX128x144_q0.thp"
+	.balign 4
 "@2831":
-	.incbin "baserom.dol", 0x3769BC, 0xC
+	.asciz "<THPRender>"
 "@2832":
-	.incbin "baserom.dol", 0x3769C8, 0xC
+	.asciz "card save"
+	.balign 4
 "@2833":
-	.incbin "baserom.dol", 0x3769D4, 0x10
+	.asciz "<DStageDisp>"
+	.balign 4
 "@2834":
-	.incbin "baserom.dol", 0x3769E4, 0x10
+	.asciz "<TOrthoProj>"
+	.balign 4
 "@2836":
-	.incbin "baserom.dol", 0x3769F4, 0xC
+	.asciz "Screen 2D"
+	.balign 4
 "@2883":
-	.incbin "baserom.dol", 0x376A00, 0x10
+	.asciz "<TDStageGroup>"
+	.balign 4
 "@2884":
-	.incbin "baserom.dol", 0x376A10, 0xC
+	.asciz "<FrmGXSet>"
+	.balign 4
 "@2908":
-	.incbin "baserom.dol", 0x376A1C, 0xC
+	.asciz "<TDirector>"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .space 0x10
@@ -1701,19 +1733,22 @@ __vt__14TMovieDirector:
 "@2441":
   .4byte 0
 "@2442":
-	.incbin "baserom.dol", 0x3E528C, 0x4
+	.4byte 0x3F800000
 "@2443":
-	.incbin "baserom.dol", 0x3E5290, 0x4
+	.4byte 0x3E99999A
 "@2553":
-	.incbin "baserom.dol", 0x3E5294, 0x8
+	.asciz "endsave"
 "@2829":
-	.incbin "baserom.dol", 0x3E529C, 0x8
+	.asciz "/data"
+	.balign 4
 "@2835":
-	.incbin "baserom.dol", 0x3E52A4, 0x4
+	.4byte 0xBF800000
 "@2837":
-	.incbin "baserom.dol", 0x3E52A8, 0x8
+	.4byte 0x2F000000
+	.4byte 0
 "@2839":
-	.incbin "baserom.dol", 0x3E52B0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2913":

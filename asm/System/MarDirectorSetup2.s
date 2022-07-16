@@ -742,49 +742,148 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x370B64, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2205":
-	.incbin "baserom.dol", 0x370B78, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2206":
-	.incbin "baserom.dol", 0x370BA8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2207":
-	.incbin "baserom.dol", 0x370BE0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2208":
-	.incbin "baserom.dol", 0x370C14, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2694":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2696":
-	.incbin "baserom.dol", 0x370C44, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@3409":
-	.incbin "baserom.dol", 0x370C50, 0x14
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8365815B
+	.4byte 0x8375838B
+	.4byte 0
 "@3411":
-	.incbin "baserom.dol", 0x370C64, 0xC
+	.asciz "camera 1"
+	.balign 4
 "@3412":
-	.incbin "baserom.dol", 0x370C70, 0x10
+	.4byte 0x89EF9862
+	.4byte 0x834A815B
+	.4byte 0x835C838B
+	.4byte 0
 "@3413":
-	.incbin "baserom.dol", 0x370C80, 0x10
+	.4byte 0x47438352
+	.4byte 0x8393835C
+	.4byte 0x815B838B
+	.4byte 0
 "@3414":
-	.incbin "baserom.dol", 0x370C90, 0x14
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x83748346
+	.4byte 0x815B835F
+	.4byte 0x815B0000
 "@3416":
-	.incbin "baserom.dol", 0x370CA4, 0x14
+	.4byte 0x83548393
+	.4byte 0x834F8389
+	.4byte 0x83588374
+	.4byte 0x8346815B
+	.4byte 0x835F0000
 "@3417":
-	.incbin "baserom.dol", 0x370CB8, 0xC
+	.4byte 0x834B8343
+	.4byte 0x836889E6
+	.4byte 0x96CA0000
 "@3418":
-	.incbin "baserom.dol", 0x370CC4, 0x10
+	.4byte 0x837C815B
+	.4byte 0x83598381
+	.4byte 0x836A8385
+	.4byte 0x815B0000
 "@3419":
-	.incbin "baserom.dol", 0x370CD4, 0xC
+	.4byte 0x89EF9862
+	.4byte 0x955C8EA6
+	.4byte 0
 "@3420":
-	.incbin "baserom.dol", 0x370CE0, 0x10
+	.4byte 0x8366815B
+	.4byte 0x835E838D
+	.4byte 0x815B8368
+	.4byte 0
 "@3421":
-	.incbin "baserom.dol", 0x370CF0, 0xC
+	.4byte 0x83668382
+	.4byte 0x964391E4
+	.4byte 0
 "@3422":
-	.incbin "baserom.dol", 0x370CFC, 0x18
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169926E
+	.4byte 0x8C6092BE
+	.4byte 0x82DE816A
+	.4byte 0
 "@3423":
-	.incbin "baserom.dol", 0x370D14, 0x1C
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169926E
+	.4byte 0x8C6092BE
+	.4byte 0x82DE8DC4
+	.4byte 0x899890F5
+	.4byte 0x816A0000
 "@3424":
-	.incbin "baserom.dol", 0x370D30, 0x20
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169926E
+	.4byte 0x8C6092BE
+	.4byte 0x82DE8372
+	.4byte 0x83418393
+	.4byte 0x8352816A
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
@@ -822,19 +921,26 @@ __vt__12TMarDirector:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3109":
-	.incbin "baserom.dol", 0x3E4DF0, 0x8
+	.asciz "option"
+	.balign 4
 "@3110":
-	.incbin "baserom.dol", 0x3E4DF8, 0x8
+	.asciz "game_6"
+	.balign 4
 "@3111":
-	.incbin "baserom.dol", 0x3E4E00, 0x8
+	.asciz "guide"
+	.balign 4
 "@3112":
-	.incbin "baserom.dol", 0x3E4E08, 0x8
+	.asciz "yoshi"
+	.balign 4
 "@3113":
-	.incbin "baserom.dol", 0x3E4E10, 0x8
+	.asciz "scene"
+	.balign 4
 "@3410":
-	.incbin "baserom.dol", 0x3E4E18, 0x8
+	.4byte 0x837D838A
+	.4byte 0x83490000
 "@3415":
-	.incbin "baserom.dol", 0x3E4E20, 0x8
+	.4byte 0x42F00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3428":

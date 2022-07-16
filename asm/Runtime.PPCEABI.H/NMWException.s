@@ -275,16 +275,27 @@ lbl_80082ADC:
 
 .section extab_, "wa"  # 0x80005540 - 0x800055A0
 "@152":
-	.incbin "baserom.dol", 0x36CAE0, 0x8
+	.4byte 0x30080000
+	.4byte 0
 "@157":
-	.incbin "baserom.dol", 0x36CAE8, 0x8
+	.4byte 0x20080000
+	.4byte 0
 "@174":
-	.incbin "baserom.dol", 0x36CAF0, 0x14
+	.4byte 0x20080000
+	.4byte 0x00000064
+	.4byte 0x00000010
+	.4byte 0
+	.4byte 0x8200001C
     .4byte __dt__26__partial_array_destructorFv
 "@182":
-	.incbin "baserom.dol", 0x36CB08, 0x8
+	.4byte 0x18080000
+	.4byte 0
 "@201":
-	.incbin "baserom.dol", 0x36CB10, 0x14
+	.4byte 0x28080000
+	.4byte 0x00000074
+	.4byte 0x00000010
+	.4byte 0
+	.4byte 0x8200001C
     .4byte __dt__26__partial_array_destructorFv
 
 .section extabindex_, "wa"  # 0x800055A0 - 0x80005600

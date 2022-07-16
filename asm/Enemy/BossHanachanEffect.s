@@ -993,75 +993,139 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x39DE0C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2434":
-	.incbin "baserom.dol", 0x39DE20, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2435":
-	.incbin "baserom.dol", 0x39DE50, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2436":
-	.incbin "baserom.dol", 0x39DE88, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2437":
-	.incbin "baserom.dol", 0x39DEBC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 sSnortStepFrames:
-	.incbin "baserom.dol", 0x39DEE0, 0xC
+	.4byte 0x41A80000
+	.4byte 0x42100000
+	.4byte 0x425C0000
 "@3044":
-	.incbin "baserom.dol", 0x39DEEC, 0x14
+	.asciz "ms_boha_sandsmo.jpa"
 "@3045":
-	.incbin "baserom.dol", 0x39DF00, 0x14
+	.asciz "ms_boha_sand.jpa"
+	.balign 4
 "@3046":
-	.incbin "baserom.dol", 0x39DF14, 0x18
+	.asciz "ms_boha_jouki_r_a.jpa"
+	.balign 4
 "@3047":
-	.incbin "baserom.dol", 0x39DF2C, 0x18
+	.asciz "ms_boha_jouki_r_b.jpa"
+	.balign 4
 "@3048":
-	.incbin "baserom.dol", 0x39DF44, 0x18
+	.asciz "ms_boha_jouki_l_a.jpa"
+	.balign 4
 "@3049":
-	.incbin "baserom.dol", 0x39DF5C, 0x18
+	.asciz "ms_boha_jouki_l_b.jpa"
+	.balign 4
 "@3050":
-	.incbin "baserom.dol", 0x39DF74, 0x14
+	.asciz "ms_boha_hamon_a.jpa"
 "@3051":
-	.incbin "baserom.dol", 0x39DF88, 0x14
+	.asciz "ms_boha_hamon_b.jpa"
 "@3052":
-	.incbin "baserom.dol", 0x39DF9C, 0x14
+	.asciz "ms_boha_crash_a.jpa"
 "@3053":
-	.incbin "baserom.dol", 0x39DFB0, 0x18
+	.asciz "ms_boha_jouki2_r_a.jpa"
+	.balign 4
 "@3054":
-	.incbin "baserom.dol", 0x39DFC8, 0x18
+	.asciz "ms_boha_jouki2_r_b.jpa"
+	.balign 4
 "@3055":
-	.incbin "baserom.dol", 0x39DFE0, 0x18
+	.asciz "ms_boha_jouki2_l_a.jpa"
+	.balign 4
 "@3056":
-	.incbin "baserom.dol", 0x39DFF8, 0x18
+	.asciz "ms_boha_jouki2_l_b.jpa"
+	.balign 4
 "@3057":
-	.incbin "baserom.dol", 0x39E010, 0x18
+	.asciz "ms_boha_sandsmo_sl.jpa"
+	.balign 4
 "@3058":
-	.incbin "baserom.dol", 0x39E028, 0x14
+	.asciz "ms_boha_sand_sl.jpa"
 "@3059":
-	.incbin "baserom.dol", 0x39E03C, 0x14
+	.asciz "ms_boha_kizetsu.jpa"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 sEmitSandFrameFoot:
-	.incbin "baserom.dol", 0x3EB6C8, 0x8
+	.4byte 0x41600000
+	.4byte 0x42080000
 "@2839":
   .4byte 0
   .4byte 0
 "@2840":
-	.incbin "baserom.dol", 0x3EB6D8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2841":
-	.incbin "baserom.dol", 0x3EB6E0, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@2842":
-	.incbin "baserom.dol", 0x3EB6E8, 0x4
+	.4byte 0x3F800000
 "@2843":
-	.incbin "baserom.dol", 0x3EB6EC, 0x4
+	.4byte 0x41100000
 "@2865":
-	.incbin "baserom.dol", 0x3EB6F0, 0x4
+	.4byte 0x3F000000
 "@2974":
-	.incbin "baserom.dol", 0x3EB6F4, 0x4
+	.4byte 0x3A83126F
 "@2975":
-	.incbin "baserom.dol", 0x3EB6F8, 0x4
+	.4byte 0x38000000
 "@2976":
-	.incbin "baserom.dol", 0x3EB6FC, 0x4
+	.4byte 0x43060000
 "@2978":
-	.incbin "baserom.dol", 0x3EB700, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2731":

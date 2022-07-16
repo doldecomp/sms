@@ -1022,7 +1022,8 @@ __DVDLowSetWAType:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 FirstRead:
-	.incbin "baserom.dol", 0x3E3268, 0x8
+	.4byte 0x00000001
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 CommandList:

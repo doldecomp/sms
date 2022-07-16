@@ -705,21 +705,74 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2112":
-	.incbin "baserom.dol", 0x37761C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2302":
-	.incbin "baserom.dol", 0x377630, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2303":
-	.incbin "baserom.dol", 0x377660, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2304":
-	.incbin "baserom.dol", 0x377698, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2305":
-	.incbin "baserom.dol", 0x3776CC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2579":
-	.incbin "baserom.dol", 0x3776F0, 0xC
+	.4byte 0x8BBE8356
+	.4byte 0x815B8393
+	.4byte 0
 "@2580":
-	.incbin "baserom.dol", 0x3776FC, 0x1C
+	.asciz "DrawBuf MirrorAlways Opa"
+	.balign 4
 "@2581":
-	.incbin "baserom.dol", 0x377718, 0x20
+	.asciz "DrawBuf MirrorAlways Xlu"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TMirrorActor

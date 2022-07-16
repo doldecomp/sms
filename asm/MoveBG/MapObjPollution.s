@@ -604,9 +604,11 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2600":
-	.incbin "baserom.dol", 0x38CBD0, 0x28
+	.asciz "/scene/map/pollution/pollute%02d.bti"
+	.balign 4
 "@2703":
-	.incbin "baserom.dol", 0x38CBF8, 0x18
+	.asciz "/scene/mapObj/%s.bmd"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__23TMapObjRevivalPollution
@@ -717,7 +719,7 @@ __vt__13TPolluterBase:
 "@2649":
   .4byte 0
 "@2704":
-	.incbin "baserom.dol", 0x3E8544, 0x4
+	.4byte 0x43360B61
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2737":

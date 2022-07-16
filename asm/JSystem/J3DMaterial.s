@@ -8270,7 +8270,10 @@ load__15J3DIndBlockNullFP11J3DTevBlock:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@329":
-	.incbin "baserom.dol", 0x36DC28, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14J3DPEBlockFull
@@ -8803,30 +8806,30 @@ __vt__13J3DColorBlock:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@330":
-	.incbin "baserom.dol", 0x3E3EF8, 0x4
+	.4byte 0x02000201
 "@2217":
-	.incbin "baserom.dol", 0x3E3EFC, 0x4
+	.4byte 0x07000007
 lbl_8040B660:
   .4byte 0
 "@2218":
-	.incbin "baserom.dol", 0x3E3F04, 0x4
+	.4byte 0x00010003
 "@2219":
-	.incbin "baserom.dol", 0x3E3F08, 0x4
+	.4byte 0x01030100
 "@2221":
-	.incbin "baserom.dol", 0x3E3F0C, 0x4
+	.4byte 0x06800003
 lbl_8040B670:
-	.incbin "baserom.dol", 0x3E3F10, 0x4
+	.4byte 0xFF000000
 "@2222":
-	.incbin "baserom.dol", 0x3E3F14, 0x4
+	.4byte 0x00010003
 "@2223":
-	.incbin "baserom.dol", 0x3E3F18, 0x4
+	.4byte 0x01030100
 "@2225":
-	.incbin "baserom.dol", 0x3E3F1C, 0x4
+	.4byte 0x07000007
 lbl_8040B680:
   .4byte 0
 "@2226":
-	.incbin "baserom.dol", 0x3E3F24, 0x4
+	.4byte 0x01040503
 "@2227":
-	.incbin "baserom.dol", 0x3E3F28, 0x4
+	.4byte 0x01030000
 "@2456":
   .4byte 0

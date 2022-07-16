@@ -4,7 +4,7 @@
     .balign 8
 .global __float_nan
 __float_nan:
-	.incbin "baserom.dol", 0x3ABF40, 0x4
+	.4byte 0x7FFFFFFF
 .global __float_huge
 __float_huge:
-	.incbin "baserom.dol", 0x3ABF44, 0x4
+	.4byte 0x7F800000

@@ -1743,21 +1743,36 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x378824, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x378838, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x37885C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@3054":
-	.incbin "baserom.dol", 0x37886C, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@3055":
-	.incbin "baserom.dol", 0x378878, 0x10
+	.4byte 0x83888362
+	.4byte 0x8356815B
+	.4byte 0x90E3696E
+	.4byte 0x8BBE0000
 "@3056":
-	.incbin "baserom.dol", 0x378888, 0x14
+	.4byte 0x83888362
+	.4byte 0x8356815B
+	.4byte 0x90E390E6
+	.4byte 0x696E8BBE
+	.4byte 0
 "@3086":
-	.incbin "baserom.dol", 0x37889C, 0x1C
+	.asciz "/mario/bmd/yoshi_tongue.bmd"
 "@3087":
-	.incbin "baserom.dol", 0x3788B8, 0x20
+	.asciz "/mario/bmd/yoshi_tongue_tip.bmd"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TYoshiTongue
@@ -1824,41 +1839,41 @@ __vt__12TYoshiTongue:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2631":
-	.incbin "baserom.dol", 0x3E5CD8, 0x4
+	.4byte 0x42480000
 "@2632":
   .4byte 0
 "@2633":
-	.incbin "baserom.dol", 0x3E5CE0, 0x4
+	.4byte 0x3F800000
 "@2836":
-	.incbin "baserom.dol", 0x3E5CE4, 0x4
+	.4byte 0x43960000
 "@2837":
-	.incbin "baserom.dol", 0x3E5CE8, 0x4
+	.4byte 0x447A0000
 "@2838":
-	.incbin "baserom.dol", 0x3E5CEC, 0x4
+	.4byte 0x41200000
 "@2839":
-	.incbin "baserom.dol", 0x3E5CF0, 0x4
+	.4byte 0x3F000000
 "@2840":
-	.incbin "baserom.dol", 0x3E5CF4, 0x4
+	.4byte 0x40400000
 "@2841":
-	.incbin "baserom.dol", 0x3E5CF8, 0x4
+	.4byte 0x3C23D70A
 "@2842":
-	.incbin "baserom.dol", 0x3E5CFC, 0x4
+	.4byte 0x43480000
 "@2953":
-	.incbin "baserom.dol", 0x3E5D00, 0x4
+	.4byte 0x461C4000
 "@2954":
-	.incbin "baserom.dol", 0x3E5D04, 0x4
+	.4byte 0x36800000
 "@3022":
-	.incbin "baserom.dol", 0x3E5D08, 0x4
+	.4byte 0xC2480000
 "@3088":
-	.incbin "baserom.dol", 0x3E5D0C, 0x4
+	.4byte 0x3D4CCCCD
 "@3089":
-	.incbin "baserom.dol", 0x3E5D10, 0x4
+	.4byte 0x3F333333
 "@3090":
-	.incbin "baserom.dol", 0x3E5D14, 0x4
+	.4byte 0x42A00000
 "@3091":
-	.incbin "baserom.dol", 0x3E5D18, 0x4
+	.4byte 0x43FA0000
 "@3092":
-	.incbin "baserom.dol", 0x3E5D1C, 0x4
+	.4byte 0x3F4CCCCD
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3097":

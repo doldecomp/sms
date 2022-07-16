@@ -753,14 +753,17 @@ __vt__13JAIAnimeSound:
 "@461":
   .4byte 0
 "@622":
-	.incbin "baserom.dol", 0x3E413C, 0x4
+	.4byte 0x42FE0000
 "@623":
-	.incbin "baserom.dol", 0x3E4140, 0x4
+	.4byte 0x3F800000
 "@624":
-	.incbin "baserom.dol", 0x3E4144, 0x4
+	.4byte 0x3D000000
 "@626":
-	.incbin "baserom.dol", 0x3E4148, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@628":
-	.incbin "baserom.dol", 0x3E4150, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@643":
-	.incbin "baserom.dol", 0x3E4158, 0x8
+	.4byte 0x40000000
+	.4byte 0

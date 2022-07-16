@@ -1431,81 +1431,151 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38EBE4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2197":
-	.incbin "baserom.dol", 0x38EBF8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2198":
-	.incbin "baserom.dol", 0x38EC28, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2199":
-	.incbin "baserom.dol", 0x38EC60, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2200":
-	.incbin "baserom.dol", 0x38EC94, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2521":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2523":
-	.incbin "baserom.dol", 0x38ECC4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2868":
-	.incbin "baserom.dol", 0x38ECD0, 0xC
+	.asciz "SeaIndirect"
 "@2869":
-	.incbin "baserom.dol", 0x38ECDC, 0x10
+	.asciz "ReflectParts"
+	.balign 4
 "@2870":
-	.incbin "baserom.dol", 0x38ECEC, 0xC
+	.asciz "ReflectSky"
+	.balign 4
 "@2871":
-	.incbin "baserom.dol", 0x38ECF8, 0xC
+	.asciz "sun_mirror"
+	.balign 4
 "@2873":
-	.incbin "baserom.dol", 0x38ED04, 0x10
+	.4byte 0x837D8362
+	.4byte 0x8376834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@2875":
-	.incbin "baserom.dol", 0x38ED14, 0xC
+	.asciz "fountain"
+	.balign 4
 "@2876":
-	.incbin "baserom.dol", 0x38ED20, 0xC
+	.asciz "TopOfCorona"
 "@2877":
-	.incbin "baserom.dol", 0x38ED2C, 0x24
+	.asciz "/scene/mapObj/ms_coronasmoke.jpa"
+	.balign 4
 "@2878":
-	.incbin "baserom.dol", 0x38ED50, 0xC
+	.asciz "BiancoRiver"
 "@2879":
-	.incbin "baserom.dol", 0x38ED5C, 0x10
+	.asciz "SoundObjRiver"
+	.balign 4
 "@2880":
-	.incbin "baserom.dol", 0x38ED6C, 0x18
+	.asciz "SoundObjWaterIntoWater"
+	.balign 4
 "@2881":
-	.incbin "baserom.dol", 0x38ED84, 0x10
+	.asciz "BiancoAirWall"
+	.balign 4
 "@2882":
-	.incbin "baserom.dol", 0x38ED94, 0xC
+	.asciz "BiaAirWall"
+	.balign 4
 "@2883":
-	.incbin "baserom.dol", 0x38EDA0, 0x18
+	.asciz "BiancoBossEffectLight"
+	.balign 4
 "@2884":
-	.incbin "baserom.dol", 0x38EDB8, 0x24
+	.asciz "/scene/map/map/ms_wmlin_light.jpa"
+	.balign 4
 "@2885":
-	.incbin "baserom.dol", 0x38EDDC, 0x14
+	.asciz "BiaWaterPollution"
+	.balign 4
 "@2886":
-	.incbin "baserom.dol", 0x38EDF0, 0xC
+	.asciz "riccoSea"
+	.balign 4
 "@2887":
-	.incbin "baserom.dol", 0x38EDFC, 0x14
+	.asciz "riccoSeaPollutionS0"
 "@2888":
-	.incbin "baserom.dol", 0x38EE10, 0x14
+	.asciz "riccoSeaPollutionS1"
 "@2889":
-	.incbin "baserom.dol", 0x38EE24, 0x14
+	.asciz "riccoSeaPollutionS2"
 "@2890":
-	.incbin "baserom.dol", 0x38EE38, 0x14
+	.asciz "riccoSeaPollutionS3"
 "@2891":
-	.incbin "baserom.dol", 0x38EE4C, 0x14
+	.asciz "riccoSeaPollutionS4"
 "@2892":
-	.incbin "baserom.dol", 0x38EE60, 0xC
+	.asciz "MareFalls"
+	.balign 4
 "@2893":
-	.incbin "baserom.dol", 0x38EE6C, 0x14
+	.asciz "mareSeaPollutionS0"
+	.balign 4
 "@2894":
-	.incbin "baserom.dol", 0x38EE80, 0x14
+	.asciz "mareSeaPollutionS12"
 "@2895":
-	.incbin "baserom.dol", 0x38EE94, 0x18
+	.asciz "mareSeaPollutionS34567"
+	.balign 4
 "@2896":
-	.incbin "baserom.dol", 0x38EEAC, 0xC
+	.asciz "Mare5ExGate"
 "@2897":
-	.incbin "baserom.dol", 0x38EEB8, 0xC
+	.asciz "MonteRiver"
+	.balign 4
 "@2898":
-	.incbin "baserom.dol", 0x38EEC4, 0xC
+	.asciz "IndirectObj"
 "@2899":
-	.incbin "baserom.dol", 0x38EED0, 0xC
+	.asciz "TargetArrow"
 actor_data_table: # TODO: Im sure this 0x44 struct has an actual format, use that instead
   .4byte "@2868"
   .4byte 0
@@ -2001,7 +2071,8 @@ actor_data_table: # TODO: Im sure this 0x44 struct has an actual format, use tha
   .4byte 0
   .4byte 0
 "@2999":
-	.incbin "baserom.dol", 0x38F690, 0xC
+	.asciz "ms_harbor"
+	.balign 4
 sound_info:
   .4byte "@2998"
   .4byte 0x5000
@@ -2010,21 +2081,34 @@ sound_info:
   .4byte 0
   .4byte 0
 "@3307":
-	.incbin "baserom.dol", 0x38F6B4, 0xC
+	.asciz "/map/map"
+	.balign 4
 "@3308":
-	.incbin "baserom.dol", 0x38F6C0, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 "@3309":
-	.incbin "baserom.dol", 0x38F6D8, 0x10
+	.asciz "indirectdummy"
+	.balign 4
 "@3334":
-	.incbin "baserom.dol", 0x38F6E8, 0x14
+	.asciz "/common/map/%s.bmd"
+	.balign 4
 "@3335":
-	.incbin "baserom.dol", 0x38F6FC, 0x18
+	.asciz "/scene/mapObj/%s.bmd"
+	.balign 4
 "@3336":
-	.incbin "baserom.dol", 0x38F714, 0x18
+	.asciz "/scene/map/map/%s.bmd"
+	.balign 4
 "@3417":
-	.incbin "baserom.dol", 0x38F72C, 0x18
+	.asciz "DrawBuf MirrorSky Opa"
+	.balign 4
 "@3418":
-	.incbin "baserom.dol", 0x38F744, 0x1C
+	.asciz "DrawBuf MirrorSky Xlu"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TMapObjSoundGroup
@@ -2129,23 +2213,25 @@ __vt__13TMapStaticObj:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2872":
-	.incbin "baserom.dol", 0x3E8C80, 0x4
+	.4byte 0x73656100
 "@2874":
-	.incbin "baserom.dol", 0x3E8C84, 0x8
+	.asciz "falls"
+	.balign 4
 "@2998":
-	.incbin "baserom.dol", 0x3E8C8C, 0x8
+	.asciz "ms_sea"
+	.balign 4
 "@3140":
   .4byte 0
 "@3141":
-	.incbin "baserom.dol", 0x3E8C98, 0x4
+	.4byte 0x3F800000
 "@3166":
-	.incbin "baserom.dol", 0x3E8C9C, 0x4
+	.4byte 0x43360B61
 "@3306":
-	.incbin "baserom.dol", 0x3E8CA0, 0x8
+	.asciz "/mapObj"
 "@3415":
-	.incbin "baserom.dol", 0x3E8CA8, 0x4
+	.4byte 0x3FE66666
 "@3416":
-	.incbin "baserom.dol", 0x3E8CAC, 0x4
+	.4byte 0x8BF30000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3581":

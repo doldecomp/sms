@@ -225,6 +225,7 @@ __vt__13JPAExtraShape:
 "@1509":
   .4byte 0
 "@1510":
-	.incbin "baserom.dol", 0x3E461C, 0x4
+	.4byte 0x3F800000
 "@1511":
-	.incbin "baserom.dol", 0x3E4620, 0x8
+	.4byte 0x41200000
+	.4byte 0

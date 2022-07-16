@@ -1099,16 +1099,20 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@114":
-	.incbin "baserom.dol", 0x36CFD0, 0xC
+	.asciz "JKRAram.cpp"
 "@115":
-	.incbin "baserom.dol", 0x36CFDC, 0x20
+	.asciz ":::address not 32Byte aligned."
+	.balign 4
 "@447":
-	.incbin "baserom.dol", 0x36CFFC, 0x8
+	.4byte 0x3A3A3A42
+	.4byte 0x61642041
 .global lbl_80370004
 lbl_80370004:
-	.incbin "baserom.dol", 0x36D004, 0x18
+	.asciz "ram Block specified.\n"
+	.balign 4
 "@548":
-	.incbin "baserom.dol", 0x36D01C, 0x44
+	.asciz "---------------- BAD SYNC. you'd set callback, but now call sync.\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__7JKRAram:

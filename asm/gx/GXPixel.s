@@ -519,21 +519,33 @@ GXSetFieldMode:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 p2f$194:
-	.incbin "baserom.dol", 0x3AEB38, 0x20
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000004
+	.4byte 0x00000004
+	.4byte 0x00000004
+	.4byte 0x00000005
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@125":
   .4byte 0
 "@126":
-	.incbin "baserom.dol", 0x3E485C, 0x4
+	.4byte 0x3F000000
 "@127":
-	.incbin "baserom.dol", 0x3E4860, 0x8
+	.4byte 0x3FF00000
+	.4byte 0
 "@128":
-	.incbin "baserom.dol", 0x3E4868, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@129":
-	.incbin "baserom.dol", 0x3E4870, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@130":
-	.incbin "baserom.dol", 0x3E4878, 0x8
+	.4byte 0x4B00001E
+	.4byte 0
 "@132":
-	.incbin "baserom.dol", 0x3E4880, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

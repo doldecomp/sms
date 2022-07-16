@@ -3680,63 +3680,135 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2115":
-	.incbin "baserom.dol", 0x39937C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2354":
-	.incbin "baserom.dol", 0x399390, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2355":
-	.incbin "baserom.dol", 0x3993C0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2356":
-	.incbin "baserom.dol", 0x3993F8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2357":
-	.incbin "baserom.dol", 0x39942C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2893":
-	.incbin "baserom.dol", 0x399450, 0x24
+	.asciz "/scene/poihana/bas/poihana_dash.bas"
 "@2894":
-	.incbin "baserom.dol", 0x399474, 0x28
+	.asciz "/scene/poihana/bas/poihana_death.bas"
+	.balign 4
 "@2895":
-	.incbin "baserom.dol", 0x39949C, 0x28
+	.asciz "/scene/poihana/bas/poihana_getup.bas"
+	.balign 4
 "@2896":
-	.incbin "baserom.dol", 0x3994C4, 0x24
+	.asciz "/scene/poihana/bas/poihana_humi.bas"
 "@2897":
-	.incbin "baserom.dol", 0x3994E8, 0x2C
+	.asciz "/scene/poihana/bas/poihana_sleep_start.bas"
+	.balign 4
 "@2898":
-	.incbin "baserom.dol", 0x399514, 0x28
+	.asciz "/scene/poihana/bas/poihana_throw.bas"
+	.balign 4
 "@2899":
-	.incbin "baserom.dol", 0x39953C, 0x28
+	.asciz "/scene/poihana/bas/poihana_waken.bas"
+	.balign 4
 "@2900":
-	.incbin "baserom.dol", 0x399564, 0x24
+	.asciz "/scene/poihana/bas/poihana_walk.bas"
 "@2901":
-	.incbin "baserom.dol", 0x399588, 0x28
+	.asciz "/scene/poihana/bas/poihana_waterhit.bas"
 "@2902":
-	.incbin "baserom.dol", 0x3995B0, 0x2C
+	.asciz "/scene/poihana/bas/poihana_waterhit2.bas"
+	.balign 4
 "@4252":
-	.incbin "baserom.dol", 0x3995DC, 0xC
+	.asciz "default.bmd"
 "@4324":
-	.incbin "baserom.dol", 0x3995E8, 0x14
+	.4byte 0x837C8343
+	.4byte 0x836E8369
+	.4byte 0x8352838A
+	.4byte 0x83578387
+	.4byte 0x83930000
 "@4325":
-	.incbin "baserom.dol", 0x3995FC, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@4422":
-	.incbin "baserom.dol", 0x399608, 0xC
+	.4byte 0x837C8343
+	.4byte 0x836E8369
+	.4byte 0
 "@4473":
-	.incbin "baserom.dol", 0x399614, 0x14
+	.asciz "/enemy/poihana.prm"
+	.balign 4
 "@4474":
-	.incbin "baserom.dol", 0x399628, 0x10
+	.asciz "mSLThrowSpeed"
+	.balign 4
 "@4476":
-	.incbin "baserom.dol", 0x399638, 0x10
+	.asciz "mSLBackThrowVal"
 "@4478":
-	.incbin "baserom.dol", 0x399648, 0x10
+	.asciz "mSLSleepFrame"
+	.balign 4
 "@4479":
-	.incbin "baserom.dol", 0x399658, 0x10
+	.asciz "mSLWakeFrame"
+	.balign 4
 "@4480":
-	.incbin "baserom.dol", 0x399668, 0x14
+	.asciz "mSLTrapJumpMaxSpY"
+	.balign 4
 "@4481":
-	.incbin "baserom.dol", 0x39967C, 0x14
+	.asciz "mSLTrapJumpMinSpY"
+	.balign 4
 "@4482":
-	.incbin "baserom.dol", 0x399690, 0x14
+	.asciz "mSLTrapJumpMaxSpXZ"
+	.balign 4
 "@4484":
-	.incbin "baserom.dol", 0x3996A4, 0x14
+	.asciz "mSLTrapJumpMinSpXZ"
+	.balign 4
 "@4485":
-	.incbin "baserom.dol", 0x3996B8, 0x18
+	.asciz "mSLTrapJumpGravity"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 poihana_bastable:
@@ -4185,54 +4257,60 @@ __vt__15TPoiHanaManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mMouthJntIndex__8TPoiHana:
-	.incbin "baserom.dol", 0x3E39E0, 0x1
+	.byte 0x06
 mSleepVersion__8TPoiHana:
-	.incbin "baserom.dol", 0x3E39E1, 0x7
+	.byte 0x01, 0x00, 0x00
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3382":
-	.incbin "baserom.dol", 0x3EAC08, 0x4
+	.4byte 0x43160000
 "@3383":
-	.incbin "baserom.dol", 0x3EAC0C, 0x4
+	.4byte 0x3F800000
 "@3384":
-	.incbin "baserom.dol", 0x3EAC10, 0x4
+	.4byte 0x38000000
 "@3385":
-	.incbin "baserom.dol", 0x3EAC14, 0x4
+	.4byte 0x3DCCCCCD
 "@3386":
-	.incbin "baserom.dol", 0x3EAC18, 0x4
+	.4byte 0x43AF0000
 "@3387":
-	.incbin "baserom.dol", 0x3EAC1C, 0x4
+	.4byte 0x3F333333
 "@3388":
-	.incbin "baserom.dol", 0x3EAC20, 0x8
+	.4byte 0x42480000
+	.4byte 0
 "@3390":
-	.incbin "baserom.dol", 0x3EAC28, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3391":
-	.incbin "baserom.dol", 0x3EAC30, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3453":
-	.incbin "baserom.dol", 0x3EAC38, 0x4
+	.4byte 0x40800000
 "@3454":
   .4byte 0
 "@3617":
-	.incbin "baserom.dol", 0x3EAC40, 0x4
+	.4byte 0x43140000
 "@3735":
-	.incbin "baserom.dol", 0x3EAC44, 0x4
+	.4byte 0x41200000
 "@3736":
-	.incbin "baserom.dol", 0x3EAC48, 0x4
+	.4byte 0x41900000
 "@3869":
-	.incbin "baserom.dol", 0x3EAC4C, 0x4
+	.4byte 0x42080000
 "@3961":
-	.incbin "baserom.dol", 0x3EAC50, 0x4
+	.4byte 0xC0000000
 "@3962":
-	.incbin "baserom.dol", 0x3EAC54, 0x4
+	.4byte 0x40A00000
 "@4415":
-	.incbin "baserom.dol", 0x3EAC58, 0x8
+	.asciz "_body"
+	.balign 4
 "@4475":
-	.incbin "baserom.dol", 0x3EAC60, 0x4
+	.4byte 0x42C80000
 "@4477":
-	.incbin "baserom.dol", 0x3EAC64, 0x4
+	.4byte 0x3F000000
 "@4483":
-	.incbin "baserom.dol", 0x3EAC68, 0x8
+	.4byte 0x41000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3099":

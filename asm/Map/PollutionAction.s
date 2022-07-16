@@ -844,38 +844,41 @@ lbl_constructor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mAreaMinRate__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3808, 0x4
+	.4byte 0x3F333333
 mSpreadArea__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E380C, 0x4
+	.4byte 0x44FA0000
 mSpreadFrequency__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3810, 0x4
+	.4byte 0x00000003
 mFireArea__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3814, 0x4
+	.4byte 0x44C80000
 mFireEffectWaitTime__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3818, 0x4
+	.4byte 0x00000014
 mThunderArea__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E381C, 0x4
+	.4byte 0x447A0000
 mGlassWallArea__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3820, 0x4
+	.4byte 0x447A0000
 mGlassWallEffectTime__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3824, 0x4
+	.4byte 0x00000078
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2703":
   .4byte 0
 "@2704":
-	.incbin "baserom.dol", 0x3E8D04, 0x4
+	.4byte 0x38000000
 "@2705":
-	.incbin "baserom.dol", 0x3E8D08, 0x4
+	.4byte 0x3F000000
 "@2706":
-	.incbin "baserom.dol", 0x3E8D0C, 0x4
+	.4byte 0x3BB40000
 "@2707":
-	.incbin "baserom.dol", 0x3E8D10, 0x8
+	.4byte 0x43000000
+	.4byte 0
 "@2709":
-	.incbin "baserom.dol", 0x3E8D18, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2737":
-	.incbin "baserom.dol", 0x3E8D20, 0x8
+	.4byte 0x3FC00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2615":

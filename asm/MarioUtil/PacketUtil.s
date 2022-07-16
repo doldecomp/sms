@@ -1255,14 +1255,20 @@ sFogOffColor$1583:
 "@2226":
   .4byte 0
 "@2278":
-	.incbin "baserom.dol", 0x3E4BB0, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@2279":
-	.incbin "baserom.dol", 0x3E4BB8, 0x8
+	.4byte 0x3FF00000
+	.4byte 0
 "@2280":
-	.incbin "baserom.dol", 0x3E4BC0, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@2281":
-	.incbin "baserom.dol", 0x3E4BC8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2282":
-	.incbin "baserom.dol", 0x3E4BD0, 0x8
+	.4byte 0x4B00001E
+	.4byte 0
 "@2284":
-	.incbin "baserom.dol", 0x3E4BD8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

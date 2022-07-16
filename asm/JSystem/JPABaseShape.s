@@ -574,19 +574,56 @@ lbl_80080ACC:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global stBlendMode__12JPABaseShape
 stBlendMode__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9C28, 0x10
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0
 .global stBlendFactor__12JPABaseShape
 stBlendFactor__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9C38, 0x28
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000004
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000007
 .global stLogicOp__12JPABaseShape
 stLogicOp__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9C60, 0x40
+	.4byte 0
+	.4byte 0x0000000F
+	.4byte 0x00000003
+	.4byte 0x0000000C
+	.4byte 0x00000005
+	.4byte 0x0000000A
+	.4byte 0x00000001
+	.4byte 0x0000000E
+	.4byte 0x00000007
+	.4byte 0x00000008
+	.4byte 0x00000006
+	.4byte 0x00000009
+	.4byte 0x00000002
+	.4byte 0x00000004
+	.4byte 0x0000000B
+	.4byte 0x0000000D
 .global stCompare__12JPABaseShape
 stCompare__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9CA0, 0x20
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000003
+	.4byte 0x00000002
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000004
+	.4byte 0x00000007
 .global stAlphaOp__12JPABaseShape
 stAlphaOp__12JPABaseShape:
-	.incbin "baserom.dol", 0x3A9CC0, 0x10
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000003
 .global __vt__12JPABaseShape
 __vt__12JPABaseShape:
   .4byte 0
@@ -599,12 +636,14 @@ __vt__12JPABaseShape:
 "@1505":
   .4byte 0
 "@1506":
-	.incbin "baserom.dol", 0x3E45FC, 0x4
+	.4byte 0x3F800000
 "@1508":
-	.incbin "baserom.dol", 0x3E4600, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1512":
-	.incbin "baserom.dol", 0x3E4608, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1570":
-	.incbin "baserom.dol", 0x3E4610, 0x4
+	.4byte 0x41200000
 "@1571":
-	.incbin "baserom.dol", 0x3E4614, 0x4
+	.4byte 0x3DCCCCCD

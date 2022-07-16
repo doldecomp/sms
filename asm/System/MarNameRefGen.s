@@ -6725,335 +6725,621 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2117":
-	.incbin "baserom.dol", 0x370D84, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2173":
-	.incbin "baserom.dol", 0x370D98, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2174":
-	.incbin "baserom.dol", 0x370DC8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2175":
-	.incbin "baserom.dol", 0x370E00, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2176":
-	.incbin "baserom.dol", 0x370E34, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x370E58, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x370E7C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2958":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2960":
-	.incbin "baserom.dol", 0x370E98, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@4634":
-	.incbin "baserom.dol", 0x370EA4, 0xC
+	.asciz "BindShadow"
+	.balign 4
 "@4635":
-	.incbin "baserom.dol", 0x370EB0, 0x18
+	.asciz "<TMBindShadowManager>"
+	.balign 4
 "@4636":
-	.incbin "baserom.dol", 0x370EC8, 0xC
+	.asciz "normalLight"
 "@4637":
-	.incbin "baserom.dol", 0x370ED4, 0x10
+	.asciz "<TLightCommon>"
+	.balign 4
 "@4638":
-	.incbin "baserom.dol", 0x370EE4, 0xC
+	.asciz "shadowLight"
 "@4639":
-	.incbin "baserom.dol", 0x370EF0, 0x10
+	.asciz "<TLightShadow>"
+	.balign 4
 "@4640":
-	.incbin "baserom.dol", 0x370F00, 0x14
+	.asciz "EffectObjManager"
+	.balign 4
 "@4641":
-	.incbin "baserom.dol", 0x370F14, 0x14
+	.asciz "<EffectObjManager>"
+	.balign 4
 "@4642":
-	.incbin "baserom.dol", 0x370F28, 0xC
+	.asciz "EffectFire"
+	.balign 4
 "@4643":
-	.incbin "baserom.dol", 0x370F34, 0x10
+	.asciz "<EffectObjBase>"
 "@4644":
-	.incbin "baserom.dol", 0x370F44, 0xC
+	.asciz "ObjChara"
+	.balign 4
 "@4645":
-	.incbin "baserom.dol", 0x370F50, 0x10
+	.asciz "<TCharacter>"
+	.balign 4
 "@4646":
-	.incbin "baserom.dol", 0x370F60, 0xC
+	.asciz "SmplChara"
+	.balign 4
 "@4647":
-	.incbin "baserom.dol", 0x370F6C, 0xC
+	.asciz "LiveActor"
+	.balign 4
 "@4648":
-	.incbin "baserom.dol", 0x370F78, 0x18
+	.4byte 0x8A8893AE
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x834E8367
+	.4byte 0x8AEE92EA
+	.4byte 0x8C5E0000
 "@4649":
-	.incbin "baserom.dol", 0x370F90, 0xC
+	.asciz "LiveManager"
 "@4650":
-	.incbin "baserom.dol", 0x370F9C, 0x1C
+	.4byte 0x83898343
+	.4byte 0x83758341
+	.4byte 0x834E835E
+	.4byte 0x815B837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@4651":
-	.incbin "baserom.dol", 0x370FB8, 0x10
+	.asciz "QuestionManager"
 "@4652":
-	.incbin "baserom.dol", 0x370FC8, 0xC
+	.asciz "<TViewObj>"
+	.balign 4
 "@4653":
-	.incbin "baserom.dol", 0x370FD4, 0xC
+	.asciz "AfterEffect"
 "@4654":
-	.incbin "baserom.dol", 0x370FE0, 0xC
+	.asciz "Generator"
+	.balign 4
 "@4655":
-	.incbin "baserom.dol", 0x370FEC, 0x10
+	.asciz "<TGenerator>"
+	.balign 4
 "@4656":
-	.incbin "baserom.dol", 0x370FFC, 0x14
+	.asciz "OneShotGenerator"
+	.balign 4
 "@4657":
-	.incbin "baserom.dol", 0x371010, 0x14
+	.asciz "<TOneShotGenerator>"
 "@4658":
-	.incbin "baserom.dol", 0x371024, 0xC
+	.asciz "AreaSphere"
+	.balign 4
 "@4659":
-	.incbin "baserom.dol", 0x371030, 0x10
+	.asciz "<TAreaCylinder>"
 "@4660":
-	.incbin "baserom.dol", 0x371040, 0x10
+	.asciz "AreaCylinder"
+	.balign 4
 "@4662":
-	.incbin "baserom.dol", 0x371050, 0xC
+	.asciz "<TTalk2D2>"
+	.balign 4
 "@4663":
-	.incbin "baserom.dol", 0x37105C, 0xC
+	.asciz "MarScene"
+	.balign 4
 "@4664":
-	.incbin "baserom.dol", 0x371068, 0xC
+	.asciz "<SmJ3DScn>"
+	.balign 4
 "@4665":
-	.incbin "baserom.dol", 0x371074, 0x10
+	.asciz "ScreenTexture"
+	.balign 4
 "@4666":
-	.incbin "baserom.dol", 0x371084, 0x14
+	.asciz "ModelWaterManager"
+	.balign 4
 "@4667":
-	.incbin "baserom.dol", 0x371098, 0x18
+	.asciz "<TModelWaterParticle>"
+	.balign 4
 "@4668":
-	.incbin "baserom.dol", 0x3710B0, 0x10
+	.asciz "SplashManager"
+	.balign 4
 "@4669":
-	.incbin "baserom.dol", 0x3710C0, 0x10
+	.asciz "PolarSubCamera"
+	.balign 4
 "@4670":
-	.incbin "baserom.dol", 0x3710D0, 0x10
+	.asciz "<CPolarCamera>"
+	.balign 4
 "@4671":
-	.incbin "baserom.dol", 0x3710E0, 0x10
+	.asciz "MirrorCamera"
+	.balign 4
 "@4672":
-	.incbin "baserom.dol", 0x3710F0, 0xC
+	.4byte 0x8BBE9770
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@4675":
-	.incbin "baserom.dol", 0x3710FC, 0x10
+	.asciz "<TLightMario>"
+	.balign 4
 "@4676":
-	.incbin "baserom.dol", 0x37110C, 0x14
+	.asciz "MirrorModelManager"
+	.balign 4
 "@4677":
-	.incbin "baserom.dol", 0x371120, 0x14
+	.4byte 0x8BBE955C
+	.4byte 0x8EA68382
+	.4byte 0x8366838B
+	.4byte 0x8AC7979D
+	.4byte 0
 "@4678":
-	.incbin "baserom.dol", 0x371134, 0x14
+	.asciz "MirrorMapDrawBuf"
+	.balign 4
 "@4679":
-	.incbin "baserom.dol", 0x371148, 0xC
+	.asciz "Silhouette"
+	.balign 4
 "@4680":
-	.incbin "baserom.dol", 0x371154, 0x10
+	.asciz "<TSilhouette>"
+	.balign 4
 "@4681":
-	.incbin "baserom.dol", 0x371164, 0xC
+	.asciz "ScrnFader"
+	.balign 4
 "@4683":
-	.incbin "baserom.dol", 0x371170, 0xC
+	.asciz "<ScrnFader>"
 "@4684":
-	.incbin "baserom.dol", 0x37117C, 0xC
+	.asciz "ShineFader"
+	.balign 4
 "@4685":
-	.incbin "baserom.dol", 0x371188, 0x10
+	.asciz "<ShineFader>"
+	.balign 4
 "@4686":
-	.incbin "baserom.dol", 0x371198, 0xC
+	.asciz "IdxGroup"
+	.balign 4
 "@4687":
-	.incbin "baserom.dol", 0x3711A4, 0x10
+	.asciz "<IdxGroupObj>"
+	.balign 4
 "@4688":
-	.incbin "baserom.dol", 0x3711B4, 0xC
+	.asciz "HitActor"
+	.balign 4
 "@4689":
-	.incbin "baserom.dol", 0x3711C0, 0xC
+	.asciz "Strategy"
+	.balign 4
 "@4690":
-	.incbin "baserom.dol", 0x3711CC, 0xC
+	.asciz "<TStrategy>"
 "@4691":
-	.incbin "baserom.dol", 0x3711D8, 0xC
+	.asciz "GCConsole"
+	.balign 4
 "@4692":
-	.incbin "baserom.dol", 0x3711E4, 0x10
+	.asciz "<TGCConsole2>"
+	.balign 4
 "@4693":
-	.incbin "baserom.dol", 0x3711F4, 0xC
+	.asciz "BalloonHelp"
 "@4694":
-	.incbin "baserom.dol", 0x371200, 0x10
+	.4byte 0x836F838B
+	.4byte 0x815B8393
+	.4byte 0x8377838B
+	.4byte 0x83760000
 "@4695":
-	.incbin "baserom.dol", 0x371210, 0xC
+	.asciz "SwitchHelp"
+	.balign 4
 "@4696":
-	.incbin "baserom.dol", 0x37121C, 0x18
+	.4byte 0x83588343
+	.4byte 0x83628360
+	.4byte 0x836F838B
+	.4byte 0x815B8393
+	.4byte 0x8377838B
+	.4byte 0x83760000
 "@4697":
-	.incbin "baserom.dol", 0x371234, 0xC
+	.asciz "ConsoleStr"
+	.balign 4
 "@4698":
-	.incbin "baserom.dol", 0x371240, 0x10
+	.asciz "<ConsoleStr>"
+	.balign 4
 "@4699":
-	.incbin "baserom.dol", 0x371250, 0xC
+	.asciz "PauseMenu"
+	.balign 4
 "@4700":
-	.incbin "baserom.dol", 0x37125C, 0x10
+	.asciz "<TPauseMenu>"
+	.balign 4
 "@4701":
-	.incbin "baserom.dol", 0x37126C, 0xC
+	.asciz "CardSave"
+	.balign 4
 "@4702":
-	.incbin "baserom.dol", 0x371278, 0xC
+	.asciz "<TCardSave>"
 "@4703":
-	.incbin "baserom.dol", 0x371284, 0xC
+	.asciz "CardLoad"
+	.balign 4
 "@4704":
-	.incbin "baserom.dol", 0x371290, 0xC
+	.asciz "<TCardLoad>"
 "@4707":
-	.incbin "baserom.dol", 0x37129C, 0xC
+	.asciz "SunGlass"
+	.balign 4
 "@4708":
-	.incbin "baserom.dol", 0x3712A8, 0xC
+	.asciz "<SunGlass>"
+	.balign 4
 "@4709":
-	.incbin "baserom.dol", 0x3712B4, 0xC
+	.asciz "SunShine"
+	.balign 4
 "@4710":
-	.incbin "baserom.dol", 0x3712C0, 0xC
+	.asciz "<SunShine>"
+	.balign 4
 "@4711":
-	.incbin "baserom.dol", 0x3712CC, 0xC
+	.asciz "CubeCamera"
+	.balign 4
 "@4713":
-	.incbin "baserom.dol", 0x3712D8, 0x18
+	.4byte 0x834A8381
+	.4byte 0x8389834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4714":
-	.incbin "baserom.dol", 0x3712F0, 0xC
+	.asciz "CubeMirror"
+	.balign 4
 "@4715":
-	.incbin "baserom.dol", 0x3712FC, 0x14
+	.4byte 0x8BBE834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4716":
-	.incbin "baserom.dol", 0x371310, 0xC
+	.asciz "CubeWire"
+	.balign 4
 "@4717":
-	.incbin "baserom.dol", 0x37131C, 0x1C
+	.4byte 0x838F8343
+	.4byte 0x8384815B
+	.4byte 0x834C8385
+	.4byte 0x815B8375
+	.4byte 0x8365815B
+	.4byte 0x8375838B
+	.4byte 0
 "@4718":
-	.incbin "baserom.dol", 0x371338, 0xC
+	.asciz "CubeStream"
+	.balign 4
 "@4719":
-	.incbin "baserom.dol", 0x371344, 0x18
+	.4byte 0x97AC82EA
+	.4byte 0x834C8385
+	.4byte 0x815B8375
+	.4byte 0x8365815B
+	.4byte 0x8375838B
+	.4byte 0
 "@4720":
-	.incbin "baserom.dol", 0x37135C, 0xC
+	.asciz "CubeShadow"
+	.balign 4
 "@4721":
-	.incbin "baserom.dol", 0x371368, 0x14
+	.4byte 0x8965834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4722":
-	.incbin "baserom.dol", 0x37137C, 0xC
+	.asciz "CubeArea"
+	.balign 4
 "@4723":
-	.incbin "baserom.dol", 0x371388, 0x18
+	.4byte 0x8347838A
+	.4byte 0x8341834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4724":
-	.incbin "baserom.dol", 0x3713A0, 0xC
+	.asciz "CubeFastA"
+	.balign 4
 "@4725":
-	.incbin "baserom.dol", 0x3713AC, 0x18
+	.4byte 0x8D8291AC
+	.4byte 0x8260834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4726":
-	.incbin "baserom.dol", 0x3713C4, 0xC
+	.asciz "CubeFastB"
+	.balign 4
 "@4727":
-	.incbin "baserom.dol", 0x3713D0, 0x18
+	.4byte 0x8D8291AC
+	.4byte 0x8261834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4728":
-	.incbin "baserom.dol", 0x3713E8, 0xC
+	.asciz "CubeFastC"
+	.balign 4
 "@4729":
-	.incbin "baserom.dol", 0x3713F4, 0x18
+	.4byte 0x8D8291AC
+	.4byte 0x8262834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4730":
-	.incbin "baserom.dol", 0x37140C, 0x10
+	.asciz "CubeSoundChange"
 "@4731":
-	.incbin "baserom.dol", 0x37141C, 0x24
+	.4byte 0x83548345
+	.4byte 0x83938368
+	.4byte 0x90D882E8
+	.4byte 0x91D682A6
+	.4byte 0x834C8385
+	.4byte 0x815B8375
+	.4byte 0x8365815B
+	.4byte 0x8375838B
+	.4byte 0
 "@4732":
-	.incbin "baserom.dol", 0x371440, 0x10
+	.asciz "CubeSoundEffect"
 "@4733":
-	.incbin "baserom.dol", 0x371450, 0x24
+	.4byte 0x83548345
+	.4byte 0x83938368
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x8367834C
+	.4byte 0x8385815B
+	.4byte 0x83758365
+	.4byte 0x815B8375
+	.4byte 0x838B0000
 "@4734":
-	.incbin "baserom.dol", 0x371474, 0x18
+	.asciz "MapEventSinkInPollution"
 "@4735":
-	.incbin "baserom.dol", 0x37148C, 0x14
+	.4byte 0x8C9A95A8
+	.4byte 0x92BE82DE
+	.4byte 0x8169978E
+	.4byte 0x8F9182AB
+	.4byte 0x816A0000
 "@4736":
-	.incbin "baserom.dol", 0x3714A0, 0x20
+	.asciz "MapEventSinkInPollutionReset"
+	.balign 4
 "@4737":
-	.incbin "baserom.dol", 0x3714C0, 0x1C
+	.4byte 0x8C9A95A8
+	.4byte 0x92BE82DE
+	.4byte 0x8169978E
+	.4byte 0x8F9182AB
+	.4byte 0x8DC4835A
+	.4byte 0x83628367
+	.4byte 0x816A0000
 "@4738":
-	.incbin "baserom.dol", 0x3714DC, 0x18
+	.asciz "MapEventSinkShadowMario"
 "@4739":
-	.incbin "baserom.dol", 0x3714F4, 0x18
+	.4byte 0x8C9A95A8
+	.4byte 0x92BE82DE
+	.4byte 0x81698965
+	.4byte 0x837D838A
+	.4byte 0x8349816A
+	.4byte 0
 "@4740":
-	.incbin "baserom.dol", 0x37150C, 0x14
+	.asciz "MapEventSirenaSink"
+	.balign 4
 "@4741":
-	.incbin "baserom.dol", 0x371520, 0xC
+	.4byte 0x837A8365
+	.4byte 0x838B92BE
+	.4byte 0x82DE0000
 "@4742":
-	.incbin "baserom.dol", 0x37152C, 0x14
+	.asciz "MapEventSinkBianco"
+	.balign 4
 "@4743":
-	.incbin "baserom.dol", 0x371540, 0x20
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x81698C9A
+	.4byte 0x95A892BE
+	.4byte 0x82DE8372
+	.4byte 0x83418393
+	.4byte 0x8352816A
+	.4byte 0
 "@4744":
-	.incbin "baserom.dol", 0x371560, 0x18
+	.asciz "DolpicEventBiancoGate"
+	.balign 4
 "@4745":
-	.incbin "baserom.dol", 0x371578, 0x1C
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x81698372
+	.4byte 0x83418393
+	.4byte 0x83528351
+	.4byte 0x815B8367
+	.4byte 0x816A0000
 "@4746":
-	.incbin "baserom.dol", 0x371594, 0x18
+	.asciz "DolpicEventRiccoGate"
+	.balign 4
 "@4747":
-	.incbin "baserom.dol", 0x3715AC, 0x20
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169838A
+	.4byte 0x83528141
+	.4byte 0x837D8393
+	.4byte 0x837D8351
+	.4byte 0x815B8367
+	.4byte 0x816A0000
 "@4748":
-	.incbin "baserom.dol", 0x3715CC, 0x18
+	.asciz "DolpicEventMammaGate"
+	.balign 4
 "@4749":
-	.incbin "baserom.dol", 0x3715E4, 0x14
+	.asciz "MareEventBumpyWall"
+	.balign 4
 "@4751":
-	.incbin "baserom.dol", 0x3715F8, 0x14
+	.asciz "MareEventWallRock"
+	.balign 4
 "@4752":
-	.incbin "baserom.dol", 0x37160C, 0x1C
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169837D
+	.4byte 0x815B838C
+	.4byte 0x95C782CC
+	.4byte 0x8AE2816A
+	.4byte 0
 "@4753":
-	.incbin "baserom.dol", 0x371628, 0x18
+	.asciz "StageEnemyInfoHeader"
+	.balign 4
 "@4754":
-	.incbin "baserom.dol", 0x371640, 0x18
+	.asciz "<TStageEnemyInfoTable>"
+	.balign 4
 "@4755":
-	.incbin "baserom.dol", 0x371658, 0x10
+	.asciz "StageEnemyInfo"
+	.balign 4
 "@4756":
-	.incbin "baserom.dol", 0x371668, 0x14
+	.asciz "<TStageEnemyInfo>"
+	.balign 4
 "@4757":
-	.incbin "baserom.dol", 0x37167C, 0xC
+	.asciz "EventTable"
+	.balign 4
 "@4758":
-	.incbin "baserom.dol", 0x371688, 0x10
+	.asciz "<NameRefAryT>"
+	.balign 4
 "@4759":
-	.incbin "baserom.dol", 0x371698, 0x10
+	.asciz "StageEventInfo"
+	.balign 4
 "@4760":
-	.incbin "baserom.dol", 0x3716A8, 0x14
+	.asciz "<StageEventInfo>"
+	.balign 4
 "@4761":
-	.incbin "baserom.dol", 0x3716BC, 0x14
+	.asciz "CameraMapToolTable"
+	.balign 4
 "@4762":
-	.incbin "baserom.dol", 0x3716D0, 0x18
+	.asciz "CubeGeneralInfoTable"
+	.balign 4
 "@4763":
-	.incbin "baserom.dol", 0x3716E8, 0x14
+	.asciz "<NameRefPtrAryT>"
+	.balign 4
 "@4764":
-	.incbin "baserom.dol", 0x3716FC, 0x10
+	.asciz "CubeGeneralInfo"
 "@4765":
-	.incbin "baserom.dol", 0x37170C, 0x14
+	.asciz "<TCubeGeneralInfo>"
+	.balign 4
 "@4768":
-	.incbin "baserom.dol", 0x371720, 0x10
+	.asciz "CameraCubeInfo"
+	.balign 4
 "@4769":
-	.incbin "baserom.dol", 0x371730, 0x14
+	.asciz "<TCubeCameraInfo>"
+	.balign 4
 "@4770":
-	.incbin "baserom.dol", 0x371744, 0x18
+	.asciz "StreamGeneralInfoTable"
+	.balign 4
 "@4771":
-	.incbin "baserom.dol", 0x37175C, 0x10
+	.asciz "CubeStreamInfo"
+	.balign 4
 "@4772":
-	.incbin "baserom.dol", 0x37176C, 0x14
+	.asciz "<TCubeStreamInfo>"
+	.balign 4
 "@4773":
-	.incbin "baserom.dol", 0x371780, 0x1C
+	.asciz "ScenarioArchiveNameTable"
+	.balign 4
 "@4774":
-	.incbin "baserom.dol", 0x37179C, 0x1C
+	.asciz "ScenarioArchiveNamesInStage"
 "@4775":
-	.incbin "baserom.dol", 0x3717B8, 0xC
+	.asciz "TalkCursor"
+	.balign 4
 "@4776":
-	.incbin "baserom.dol", 0x3717C4, 0xC
+	.asciz "TargetArrow"
 "@4777":
-	.incbin "baserom.dol", 0x3717D0, 0x10
+	.asciz "PositionHolder"
+	.balign 4
 "@4778":
-	.incbin "baserom.dol", 0x3717E0, 0x14
+	.asciz "MarioPositionObj"
+	.balign 4
 "@4779":
-	.incbin "baserom.dol", 0x3717F4, 0x14
+	.asciz "<MarioPositionObj>"
+	.balign 4
 "@4780":
-	.incbin "baserom.dol", 0x371808, 0xC
+	.asciz "PerformList"
 "@4781":
-	.incbin "baserom.dol", 0x371814, 0x10
+	.asciz "GXAlphaUpdate"
+	.balign 4
 "@4782":
-	.incbin "baserom.dol", 0x371824, 0x14
+	.asciz "<TGXAlphaUpdate>"
+	.balign 4
 "@4783":
-	.incbin "baserom.dol", 0x371838, 0xC
+	.asciz "ReInitGX"
+	.balign 4
 "@4784":
-	.incbin "baserom.dol", 0x371844, 0xC
+	.asciz "<TReInitGX>"
 "@4785":
-	.incbin "baserom.dol", 0x371850, 0x14
+	.asciz "J3DSysSetViewMtx"
+	.balign 4
 "@4786":
-	.incbin "baserom.dol", 0x371864, 0x14
+	.asciz "<J3DSysSetViewMtx>"
+	.balign 4
 "@4787":
-	.incbin "baserom.dol", 0x371878, 0xC
+	.asciz "SMSDrawInit"
 "@4788":
-	.incbin "baserom.dol", 0x371884, 0x10
+	.asciz "<SMSDrawInit>"
+	.balign 4
 "@4789":
-	.incbin "baserom.dol", 0x371894, 0x10
+	.asciz "ZBufferCatch"
+	.balign 4
 "@4790":
-	.incbin "baserom.dol", 0x3718A4, 0x10
+	.asciz "<ZBufferCatch>"
+	.balign 4
 "@4791":
-	.incbin "baserom.dol", 0x3718B4, 0xC
+	.asciz "AlphaCatch"
+	.balign 4
 "@4792":
-	.incbin "baserom.dol", 0x3718C0, 0x10
+	.asciz "<AlphaCatch>"
+	.balign 4
 "@4793":
-	.incbin "baserom.dol", 0x3718D0, 0xC
+	.asciz "J3DSysFlag"
+	.balign 4
 "@4794":
-	.incbin "baserom.dol", 0x3718DC, 0x10
+	.asciz "<J3DSysFlag>"
+	.balign 4
 "@4795":
-	.incbin "baserom.dol", 0x3718EC, 0xC
+	.asciz "Conductor"
+	.balign 4
 "@5119":
-	.incbin "baserom.dol", 0x3718F8, 0x14
+	.asciz "<StagePositionInfo>"
 "@5549":
-	.incbin "baserom.dol", 0x37190C, 0x14
+	.asciz "<TCameraMapTool>"
+	.balign 4
 "@5832":
-	.incbin "baserom.dol", 0x371920, 0x18
+	.asciz "<ScenarioArchiveName>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TMarNameRefGen
@@ -7186,29 +7472,36 @@ __vt__10TSmplFader:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@4661":
-	.incbin "baserom.dol", 0x3E4E28, 0x8
+	.asciz "Talk2D"
+	.balign 4
 "@4673":
-	.incbin "baserom.dol", 0x3E4E30, 0x8
+	.asciz "Mario"
+	.balign 4
 "@4674":
-	.incbin "baserom.dol", 0x3E4E38, 0x8
+	.asciz "MLight"
+	.balign 4
 "@4682":
-	.incbin "baserom.dol", 0x3E4E40, 0x4
+	.4byte 0x42700000
 "@4705":
-	.incbin "baserom.dol", 0x3E4E44, 0x8
+	.asciz "Guide"
+	.balign 4
 "@4706":
-	.incbin "baserom.dol", 0x3E4E4C, 0x8
+	.asciz "<Guide>"
 "@4712":
-	.incbin "baserom.dol", 0x3E4E54, 0x4
+	.4byte 0x3F000000
 "@4750":
-	.incbin "baserom.dol", 0x3E4E58, 0x8
+	.4byte 0x93CA899A
+	.4byte 0x95C70000
 "@4766":
   .4byte 0
 "@4767":
-	.incbin "baserom.dol", 0x3E4E64, 0x4
+	.4byte 0x3F800000
 "@4835":
-	.incbin "baserom.dol", 0x3E4E68, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@5267":
-	.incbin "baserom.dol", 0x3E4E70, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@6138":

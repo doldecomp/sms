@@ -2182,39 +2182,107 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2355":
-	.incbin "baserom.dol", 0x3A1AF4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2422":
-	.incbin "baserom.dol", 0x3A1B08, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2423":
-	.incbin "baserom.dol", 0x3A1B38, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2424":
-	.incbin "baserom.dol", 0x3A1B70, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2425":
-	.incbin "baserom.dol", 0x3A1BA4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2839":
-	.incbin "baserom.dol", 0x3A1BC8, 0x28
+	.asciz "/scene/killer/bas/downkiller_down1.bas"
+	.balign 4
 "@2840":
-	.incbin "baserom.dol", 0x3A1BF0, 0x28
+	.asciz "/scene/killer/bas/killer_search1.bas"
+	.balign 4
 "@2931":
-	.incbin "baserom.dol", 0x3A1C18, 0x14
+	.asciz "killer_model1.bmd"
+	.balign 4
 "@2932":
-	.incbin "baserom.dol", 0x3A1C2C, 0x18
+	.asciz "downkiller_model1.bmd"
+	.balign 4
 "@2953":
-	.incbin "baserom.dol", 0x3A1C44, 0x14
+	.4byte 0x8352815B
+	.4byte 0x8358835E
+	.4byte 0x815B834C
+	.4byte 0x8389815B
+	.4byte 0
 "@3036":
-	.incbin "baserom.dol", 0x3A1C58, 0x1C
+	.asciz "/enemy/coasterkiller.prm"
+	.balign 4
 "@3037":
-	.incbin "baserom.dol", 0x3A1C74, 0x18
+	.asciz "mSLCoasterSpeedInOrder"
+	.balign 4
 "@3039":
-	.incbin "baserom.dol", 0x3A1C8C, 0x18
+	.asciz "mSLCoasterSpeedReverse"
+	.balign 4
 "@3040":
-	.incbin "baserom.dol", 0x3A1CA4, 0x10
+	.asciz "mSLBombRange"
+	.balign 4
 "@3125":
-	.incbin "baserom.dol", 0x3A1CB4, 0x1C
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x8367949A
+	.4byte 0x94AD837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3298":
-	.incbin "baserom.dol", 0x3A1CD0, 0xC
+	.asciz "_nosemat1"
+	.balign 4
 "@3299":
-	.incbin "baserom.dol", 0x3A1CDC, 0xC
+	.asciz "_eyesmat1"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 killer_bastable:
@@ -2502,40 +2570,42 @@ __vt__13TCoasterEnemy:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@2842":
-	.incbin "baserom.dol", 0x3E3C50, 0x4
+	.4byte 0x41A00000
 "@2843":
-	.incbin "baserom.dol", 0x3E3C54, 0x4
+	.4byte 0x41800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3038":
-	.incbin "baserom.dol", 0x3EBF70, 0x4
+	.4byte 0x41A00000
 "@3041":
-	.incbin "baserom.dol", 0x3EBF74, 0x4
+	.4byte 0x43960000
 "@3103":
   .4byte 0
 "@3104":
-	.incbin "baserom.dol", 0x3EBF7C, 0x4
+	.4byte 0x3F800000
 "@3105":
-	.incbin "baserom.dol", 0x3EBF80, 0x4
+	.4byte 0x3FA66666
 "@3126":
-	.incbin "baserom.dol", 0x3EBF84, 0x4
+	.4byte 0x3F19999A
 "@3300":
-	.incbin "baserom.dol", 0x3EBF88, 0x8
+	.asciz "_body1"
+	.balign 4
 "@3340":
-	.incbin "baserom.dol", 0x3EBF90, 0x4
+	.4byte 0x3F000000
 "@3341":
-	.incbin "baserom.dol", 0x3EBF94, 0x4
+	.4byte 0x40400000
 "@3359":
-	.incbin "baserom.dol", 0x3EBF98, 0x4
+	.4byte 0x40000000
 "@3398":
-	.incbin "baserom.dol", 0x3EBF9C, 0x8
+	.asciz "killer"
+	.balign 4
 "@3755":
-	.incbin "baserom.dol", 0x3EBFA4, 0x4
+	.4byte 0x36800000
 "@3756":
-	.incbin "baserom.dol", 0x3EBFA8, 0x4
+	.4byte 0x3DCCCCCD
 "@3757":
-	.incbin "baserom.dol", 0x3EBFAC, 0x4
+	.4byte 0x3F490FDB
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2869":

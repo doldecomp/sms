@@ -754,23 +754,44 @@ lbl_8001C4E4:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global j3dDefaultTransformInfo
 j3dDefaultTransformInfo:
-	.incbin "baserom.dol", 0x3A5DB0, 0x20
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 .global j3dDefaultMtx
 j3dDefaultMtx:
-	.incbin "baserom.dol", 0x3A5DD0, 0x30
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
 .global PSMulUnit01
 PSMulUnit01:
-	.incbin "baserom.dol", 0x3A5E00, 0x8
+	.4byte 0
+	.4byte 0xBF800000
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 Unit01:
-	.incbin "baserom.dol", 0x3E3018, 0x8
+	.4byte 0
+	.4byte 0x3F800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@871":
   .4byte 0
 "@872":
-	.incbin "baserom.dol", 0x3E3EAC, 0x4
+	.4byte 0x3F800000
 "@912":
-	.incbin "baserom.dol", 0x3E3EB0, 0x8
+	.4byte 0x3F000000
+	.4byte 0

@@ -747,13 +747,27 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@838":
-	.incbin "baserom.dol", 0x36DC38, 0x10
+	.4byte 0x00008000
+	.4byte 0x00020000
+	.4byte 0x00080000
+	.4byte 0
 "@839":
-	.incbin "baserom.dol", 0x36DC48, 0x10
+	.4byte 0x00000008
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte 0
 "@877":
-	.incbin "baserom.dol", 0x36DC58, 0x18
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
 "@885":
-	.incbin "baserom.dol", 0x36DC70, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 NullTexData:

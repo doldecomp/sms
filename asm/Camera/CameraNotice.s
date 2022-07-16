@@ -811,15 +811,39 @@ lbl_8035988C:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A2A64, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1859":
-	.incbin "baserom.dol", 0x3A2A78, 0x18
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@1860":
-	.incbin "baserom.dol", 0x3A2A90, 0x18
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x8251837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@1861":
-	.incbin "baserom.dol", 0x3A2AA8, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x83708362
+	.4byte 0x834E8393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@1862":
-	.incbin "baserom.dol", 0x3A2AC4, 0x14
+	.4byte 0x837B8358
+	.4byte 0x83518362
+	.4byte 0x835C815B
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sNoticeActorManagerName:
@@ -836,22 +860,24 @@ bossGesoViewObjName:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1990":
-	.incbin "baserom.dol", 0x3EC2A8, 0x4
+	.4byte 0x3F800000
 "@1991":
-	.incbin "baserom.dol", 0x3EC2AC, 0x4
+	.4byte 0x36800000
 "@1992":
   .4byte 0
 "@1993":
-	.incbin "baserom.dol", 0x3EC2B4, 0x4
+	.4byte 0x41F00000
 "@2080":
-	.incbin "baserom.dol", 0x3EC2B8, 0x4
+	.4byte 0x43FA0000
 "@2081":
-	.incbin "baserom.dol", 0x3EC2BC, 0x4
+	.4byte 0x38000000
 "@2082":
-	.incbin "baserom.dol", 0x3EC2C0, 0x8
+	.4byte 0x46FFFDFF
+	.4byte 0
 "@2084":
-	.incbin "baserom.dol", 0x3EC2C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2209":
-	.incbin "baserom.dol", 0x3EC2D0, 0x4
+	.4byte 0x3BB40000
 "@2210":
-	.incbin "baserom.dol", 0x3EC2D4, 0x4
+	.4byte 0xBF800000

@@ -1726,21 +1726,71 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x3846C4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2189":
-	.incbin "baserom.dol", 0x3846D8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2190":
-	.incbin "baserom.dol", 0x384708, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2191":
-	.incbin "baserom.dol", 0x384740, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2192":
-	.incbin "baserom.dol", 0x384774, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2688":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2690":
-	.incbin "baserom.dol", 0x3847A4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 no_data_obj_hit_table:
   .4byte 0
   .4byte 0
@@ -1752,13 +1802,21 @@ no_data_obj_hit_info:
   .4byte 0
   .4byte no_data_obj_hit_table
 "@2771":
-	.incbin "baserom.dol", 0x3847D0, 0x1C
+	.4byte 0x926E8C60
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@2772":
-	.incbin "baserom.dol", 0x3847EC, 0x14
+	.asciz "billboardDol.bmd"
+	.balign 4
 "@2773":
-	.incbin "baserom.dol", 0x384800, 0x10
+	.asciz "billboardrot"
+	.balign 4
 "@2774":
-	.incbin "baserom.dol", 0x384810, 0x10
+	.asciz "billboardrotrev"
 billboard_dolphin_anim_data:
   .4byte "@2772"
   .4byte 0
@@ -1776,18 +1834,28 @@ billboard_dolphin_anim_data:
   .4byte 0
   .4byte 0
 billboard_hit_data_table:
-	.incbin "baserom.dol", 0x38485C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42700000
+	.4byte 0x42C80000
+	.4byte 0x42700000
 billboard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc2c80000
   .4byte billboard_hit_data_table
 "@2775":
-	.incbin "baserom.dol", 0x38487C, 0x14
+	.asciz "billboard_dolphin"
+	.balign 4
 "@2776":
-	.incbin "baserom.dol", 0x384890, 0x18
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x834E8367
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@2777":
-	.incbin "baserom.dol", 0x3848A8, 0x14
+	.asciz "billboardSun.bmd"
+	.balign 4
 billboard_sun_anim_data:
   .4byte "@2777"
   .4byte 0
@@ -1805,9 +1873,10 @@ billboard_sun_anim_data:
   .4byte 0
   .4byte 0
 "@2778":
-	.incbin "baserom.dol", 0x3848F8, 0x10
+	.asciz "billboard_sun"
+	.balign 4
 "@2779":
-	.incbin "baserom.dol", 0x384908, 0x18
+	.asciz "billboardRestaurant.bmd"
 billboard_restaurant_anim_data:
   .4byte "@2779"
   .4byte 0
@@ -1825,9 +1894,11 @@ billboard_restaurant_anim_data:
   .4byte 0
   .4byte 0
 "@2780":
-	.incbin "baserom.dol", 0x38495C, 0x18
+	.asciz "billboard_restaurant"
+	.balign 4
 "@2781":
-	.incbin "baserom.dol", 0x384974, 0x14
+	.asciz "billboardFish.bmd"
+	.balign 4
 billboard_fish_anim_data:
   .4byte "@2781"
   .4byte 0
@@ -1845,43 +1916,58 @@ billboard_fish_anim_data:
   .4byte 0
   .4byte 0
 "@2782":
-	.incbin "baserom.dol", 0x3849C4, 0x10
+	.asciz "billboard_fish"
+	.balign 4
 HideObj_hit_data_table:
-	.incbin "baserom.dol", 0x3849D4, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42700000
+	.4byte 0
+	.4byte 0
 HideObj_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc1200000
   .4byte HideObj_hit_data_table
 WaterHitHideObj_hit_data_table:
-	.incbin "baserom.dol", 0x3849F4, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42700000
+	.4byte 0x41A00000
 WaterHitHideObj_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte WaterHitHideObj_hit_data_table
 "@2784":
-	.incbin "baserom.dol", 0x384A14, 0x10
+	.asciz "WaterHitHideObj"
 FruitHitHideObj_hit_data_table:
-	.incbin "baserom.dol", 0x384A24, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42700000
+	.4byte 0
+	.4byte 0
 FruitHitHideObj_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0
   .4byte FruitHitHideObj_hit_data_table
 "@2785":
-	.incbin "baserom.dol", 0x384A44, 0x10
+	.asciz "FruitHitHideObj"
 HipDropHideObj_hit_data_table:
-	.incbin "baserom.dol", 0x384A54, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42700000
+	.4byte 0
+	.4byte 0
 HipDropHideObj_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0
   .4byte HipDropHideObj_hit_data_table
 "@2786":
-	.incbin "baserom.dol", 0x384A74, 0x10
+	.asciz "HipDropHideObj"
+	.balign 4
 "@2787":
-	.incbin "baserom.dol", 0x384A84, 0x18
+	.asciz "monte_chair_model.bmd"
+	.balign 4
 MonteChair_anim_data:
   .4byte "@2787"
   .4byte 0
@@ -1889,25 +1975,30 @@ MonteChair_anim_data:
   .4byte 0
   .4byte 0
 "@2788":
-	.incbin "baserom.dol", 0x384AB0, 0xC
+	.asciz "monte_chair"
 "@2789":
-	.incbin "baserom.dol", 0x384ABC, 0xC
+	.asciz "door.bmd"
+	.balign 4
 "@2790":
-	.incbin "baserom.dol", 0x384AC8, 0xC
+	.asciz "door_open_l"
 "@2791":
-	.incbin "baserom.dol", 0x384AD4, 0x20
+	.asciz "/scene/mapObj/door_open_l.bas"
+	.balign 4
 "@2792":
-	.incbin "baserom.dol", 0x384AF4, 0xC
+	.asciz "door_open_r"
 "@2793":
-	.incbin "baserom.dol", 0x384B00, 0x20
+	.asciz "/scene/mapObj/door_open_r.bas"
+	.balign 4
 "@2794":
-	.incbin "baserom.dol", 0x384B20, 0xC
+	.asciz "door_kick_l"
 "@2795":
-	.incbin "baserom.dol", 0x384B2C, 0x20
+	.asciz "/scene/mapObj/door_kick_l.bas"
+	.balign 4
 "@2796":
-	.incbin "baserom.dol", 0x384B4C, 0xC
+	.asciz "door_kick_r"
 "@2797":
-	.incbin "baserom.dol", 0x384B58, 0x20
+	.asciz "/scene/mapObj/door_kick_r.bas"
+	.balign 4
 door_anim_data:
   .4byte "@2789"
   .4byte 0
@@ -1935,14 +2026,18 @@ door_anim_data:
   .4byte 0
   .4byte "@2797"
 door_hit_data_table:
-	.incbin "baserom.dol", 0x384BDC, 0x10
+	.4byte 0x43160000
+	.4byte 0x437A0000
+	.4byte 0x43160000
+	.4byte 0x437A0000
 door_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte door_hit_data_table
 "@2799":
-	.incbin "baserom.dol", 0x384BFC, 0x10
+	.asciz "doorHotel.bmd"
+	.balign 4
 doorHotel_anim_data:
   .4byte "@2799"
   .4byte 0
@@ -1970,9 +2065,10 @@ doorHotel_anim_data:
   .4byte 0
   .4byte "@2797"
 "@2800":
-	.incbin "baserom.dol", 0x384C70, 0xC
+	.asciz "doorHotel"
+	.balign 4
 "@2801":
-	.incbin "baserom.dol", 0x384C7C, 0xC
+	.asciz "manhole.bmd"
 manhole_anim_data:
   .4byte "@2801"
   .4byte "@2802"
@@ -1980,7 +2076,10 @@ manhole_anim_data:
   .4byte 0
   .4byte 0
 manhole_hit_data_table:
-	.incbin "baserom.dol", 0x384C9C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42480000
+	.4byte 0x43020000
+	.4byte 0x42480000
 manhole_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
@@ -1992,7 +2091,8 @@ manhole_map_collision_data:
   .4byte "@2802"
   .4byte 0x10000
 "@2803":
-	.incbin "baserom.dol", 0x384CCC, 0xC
+	.asciz "Basket.bmd"
+	.balign 4
 FruitBasket_anim_data:
   .4byte "@2803"
   .4byte 0
@@ -2005,14 +2105,17 @@ FruitBasket_anim_data:
   .4byte 0
   .4byte 0
 FruitBasket_hit_data_table:
-	.incbin "baserom.dol", 0x384D00, 0x10
+	.4byte 0x42480000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 FruitBasket_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0xc1200000
   .4byte FruitBasket_hit_data_table
 "@2806":
-	.incbin "baserom.dol", 0x384D20, 0xC
+	.asciz "FruitBasket"
 BasketReverse_anim_data:
   .4byte "@2803"
   .4byte 0
@@ -2020,54 +2123,80 @@ BasketReverse_anim_data:
   .4byte 0
   .4byte 0
 BasketReverse_hit_data_table:
-	.incbin "baserom.dol", 0x384D40, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42C80000
+	.4byte 0x43480000
 BasketReverse_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc3480000
   .4byte BasketReverse_hit_data_table
 "@2807":
-	.incbin "baserom.dol", 0x384D60, 0x10
+	.asciz "BasketReverse"
+	.balign 4
 CoconutJuice_hit_data_table:
-	.incbin "baserom.dol", 0x384D70, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x42480000
 CoconutJuice_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte CoconutJuice_hit_data_table
 "@2808":
-	.incbin "baserom.dol", 0x384D90, 0x10
+	.asciz "CoconutJuice"
+	.balign 4
 Pile_hit_data_table:
-	.incbin "baserom.dol", 0x384DA0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x41F00000
+	.4byte 0x42C80000
 Pile_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte Pile_hit_data_table
 "@2810":
-	.incbin "baserom.dol", 0x384DC0, 0x20
+	.4byte 0x91E58C5E
+	.4byte 0x926E8C60
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 ChangeStage_hit_data_table:
-	.incbin "baserom.dol", 0x384DE0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 ChangeStage_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ChangeStage_hit_data_table
 "@2811":
-	.incbin "baserom.dol", 0x384E00, 0xC
+	.asciz "ChangeStage"
 "@2812":
-	.incbin "baserom.dol", 0x384E0C, 0x18
+	.asciz "ChangeStageMerrygoround"
 StartDemo_hit_data_table:
-	.incbin "baserom.dol", 0x384E24, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 StartDemo_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte StartDemo_hit_data_table
 "@2813":
-	.incbin "baserom.dol", 0x384E44, 0xC
+	.asciz "StartDemo"
+	.balign 4
 "@2814":
-	.incbin "baserom.dol", 0x384E50, 0x18
+	.asciz "chip_shine_model1.bmd"
+	.balign 4
 ChipShine_anim_data:
   .4byte "@2814"
   .4byte 0
@@ -2075,16 +2204,21 @@ ChipShine_anim_data:
   .4byte 0
   .4byte 0
 ChipShine_hit_data_table:
-	.incbin "baserom.dol", 0x384E7C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43160000
+	.4byte 0x43960000
 ChipShine_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc3160000
   .4byte ChipShine_hit_data_table
 "@2815":
-	.incbin "baserom.dol", 0x384E9C, 0xC
+	.asciz "ChipShine"
+	.balign 4
 "@2816":
-	.incbin "baserom.dol", 0x384EA8, 0x14
+	.asciz "koopa_jr_sign.bmd"
+	.balign 4
 KoopaJrSignM_anim_data:
   .4byte "@2816"
   .4byte 0
@@ -2092,18 +2226,24 @@ KoopaJrSignM_anim_data:
   .4byte 0
   .4byte 0
 KoopaJrSignM_hit_data_table:
-	.incbin "baserom.dol", 0x384ED0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43160000
+	.4byte 0x43960000
 KoopaJrSignM_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc3160000
   .4byte KoopaJrSignM_hit_data_table
 "@2817":
-	.incbin "baserom.dol", 0x384EF0, 0x10
+	.asciz "KoopaJrSignM"
+	.balign 4
 "@2818":
-	.incbin "baserom.dol", 0x384F00, 0xC
+	.asciz "star_sign"
+	.balign 4
 "@2819":
-	.incbin "baserom.dol", 0x384F0C, 0x10
+	.asciz "maru_sign.bmd"
+	.balign 4
 SignCircle_anim_data:
   .4byte "@2819"
   .4byte 0
@@ -2111,9 +2251,11 @@ SignCircle_anim_data:
   .4byte 0
   .4byte 0
 "@2820":
-	.incbin "baserom.dol", 0x384F30, 0xC
+	.asciz "SignCircle"
+	.balign 4
 "@2821":
-	.incbin "baserom.dol", 0x384F3C, 0x10
+	.asciz "batu_sign.bmd"
+	.balign 4
 SignCross_anim_data:
   .4byte "@2821"
   .4byte 0
@@ -2121,9 +2263,11 @@ SignCross_anim_data:
   .4byte 0
   .4byte 0
 "@2822":
-	.incbin "baserom.dol", 0x384F60, 0xC
+	.asciz "SignCross"
+	.balign 4
 "@2823":
-	.incbin "baserom.dol", 0x384F6C, 0x10
+	.asciz "3kaku_sign.bmd"
+	.balign 4
 SignTriangle_anim_data:
   .4byte "@2823"
   .4byte 0
@@ -2131,111 +2275,178 @@ SignTriangle_anim_data:
   .4byte 0
   .4byte 0
 "@2824":
-	.incbin "baserom.dol", 0x384F90, 0x10
+	.asciz "SignTriangle"
+	.balign 4
 ArrowBoardLR_hit_data_table:
-	.incbin "baserom.dol", 0x384FA0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42F00000
+	.4byte 0x43960000
 ArrowBoardLR_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ArrowBoardLR_hit_data_table
 "@2825":
-	.incbin "baserom.dol", 0x384FC0, 0x10
+	.asciz "ArrowBoardLR"
+	.balign 4
 ArrowBoardUp_hit_data_table:
-	.incbin "baserom.dol", 0x384FD0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42A00000
+	.4byte 0x43DC0000
 ArrowBoardUp_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ArrowBoardUp_hit_data_table
 "@2826":
-	.incbin "baserom.dol", 0x384FF0, 0x10
+	.asciz "ArrowBoardUp"
+	.balign 4
 ArrowBoardDown_hit_data_table:
-	.incbin "baserom.dol", 0x385000, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42A00000
+	.4byte 0x43DC0000
 ArrowBoardDown_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ArrowBoardDown_hit_data_table
 "@2827":
-	.incbin "baserom.dol", 0x385020, 0x10
+	.asciz "ArrowBoardDown"
+	.balign 4
 "@2828":
-	.incbin "baserom.dol", 0x385030, 0x14
+	.asciz "WaterSprayCylinder"
+	.balign 4
 "@2829":
-	.incbin "baserom.dol", 0x385044, 0x10
+	.asciz "WaterSprayBox"
+	.balign 4
 "@2830":
-	.incbin "baserom.dol", 0x385054, 0xC
+	.asciz "ObjSwitch"
+	.balign 4
 "@2831":
-	.incbin "baserom.dol", 0x385060, 0x10
+	.asciz "RedCoinSwitch"
+	.balign 4
 GeneralHitObj_hit_data_table:
-	.incbin "baserom.dol", 0x385070, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x42C80000
 GeneralHitObj_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte GeneralHitObj_hit_data_table
 "@2833":
-	.incbin "baserom.dol", 0x385090, 0x10
+	.asciz "GeneralHitObj"
+	.balign 4
 item_hit_data_table:
-	.incbin "baserom.dol", 0x3850A0, 0x10
+	.4byte 0x42200000
+	.4byte 0x42200000
+	.4byte 0
+	.4byte 0
 item_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte item_hit_data_table
 "@2834":
-	.incbin "baserom.dol", 0x3850C0, 0x10
+	.asciz "bottle_large"
+	.balign 4
 "@2835":
-	.incbin "baserom.dol", 0x3850D0, 0x18
+	.4byte 0x83418343
+	.4byte 0x83658380
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@2836":
-	.incbin "baserom.dol", 0x3850E8, 0x14
+	.4byte 0x83418343
+	.4byte 0x83658380
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@2837":
-	.incbin "baserom.dol", 0x3850FC, 0x10
+	.asciz "bottle_short"
+	.balign 4
 WaterRecoverObj_hit_data_table:
-	.incbin "baserom.dol", 0x38510C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 WaterRecoverObj_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte item_hit_data_table
 "@2838":
-	.incbin "baserom.dol", 0x38512C, 0x10
+	.asciz "WaterRecoverObj"
 "@2839":
-	.incbin "baserom.dol", 0x38513C, 0x10
+	.asciz "watergun_item"
+	.balign 4
 "@2840":
-	.incbin "baserom.dol", 0x38514C, 0x14
+	.asciz "normal_nozzle_item"
+	.balign 4
 "@2841":
-	.incbin "baserom.dol", 0x385160, 0x14
+	.asciz "yoshi_whistle_item"
+	.balign 4
 nozzle_item_hit_data_table:
-	.incbin "baserom.dol", 0x385174, 0x10
+	.4byte 0x42200000
+	.4byte 0x42200000
+	.4byte 0x42C80000
+	.4byte 0x42200000
 nozzle_item_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte nozzle_item_hit_data_table
 "@2842":
-	.incbin "baserom.dol", 0x385194, 0x14
+	.asciz "rocket_nozzle_item"
+	.balign 4
 "@2843":
-	.incbin "baserom.dol", 0x3851A8, 0x14
+	.asciz "back_nozzle_item"
+	.balign 4
 coin_hit_data_table:
-	.incbin "baserom.dol", 0x3851BC, 0x10
+	.4byte 0x428C0000
+	.4byte 0x42C80000
+	.4byte 0x428C0000
+	.4byte 0x42C80000
 coin_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte coin_hit_data_table
 coin_sound_data:
-	.incbin "baserom.dol", 0x3851DC, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00004842
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 "@2845":
-	.incbin "baserom.dol", 0x385204, 0x10
+	.asciz "invisible_coin"
+	.balign 4
 "@2846":
-	.incbin "baserom.dol", 0x385214, 0xC
+	.asciz "coin_red"
+	.balign 4
 "@2847":
-	.incbin "baserom.dol", 0x385220, 0xC
+	.asciz "coin_blue"
+	.balign 4
 "@2849":
-	.incbin "baserom.dol", 0x38522C, 0x18
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@2850":
-	.incbin "baserom.dol", 0x385244, 0x10
+	.asciz "mariocap.bmd"
+	.balign 4
 mario_cap_anim_data:
   .4byte "@2850"
   .4byte 0
@@ -2243,16 +2454,21 @@ mario_cap_anim_data:
   .4byte 0
   .4byte 0
 mario_cap_hit_data_table:
-	.incbin "baserom.dol", 0x385268, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42480000
+	.4byte 0
+	.4byte 0
 mario_cap_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte mario_cap_hit_data_table
 "@2851":
-	.incbin "baserom.dol", 0x385288, 0xC
+	.asciz "mario_cap"
+	.balign 4
 "@2852":
-	.incbin "baserom.dol", 0x385294, 0xC
+	.asciz "coin.bmd"
+	.balign 4
 coin_anim_data:
   .4byte "@2852"
   .4byte 0
@@ -2260,19 +2476,23 @@ coin_anim_data:
   .4byte 0
   .4byte 0
 "@2853":
-	.incbin "baserom.dol", 0x3852B4, 0xC
+	.asciz "joint_coin"
+	.balign 4
 "@2854":
-	.incbin "baserom.dol", 0x3852C0, 0x14
+	.asciz "eggYoshi_normal.bmd"
 "@2855":
-	.incbin "baserom.dol", 0x3852D4, 0x10
+	.asciz "eggyoshi_wait"
+	.balign 4
 "@2856":
-	.incbin "baserom.dol", 0x3852E4, 0x10
+	.asciz "eggyoshi_true"
+	.balign 4
 "@2857":
-	.incbin "baserom.dol", 0x3852F4, 0x10
+	.asciz "eggyoshi_false"
+	.balign 4
 "@2858":
-	.incbin "baserom.dol", 0x385304, 0x14
+	.asciz "eggYoshi_broken.bmd"
 "@2859":
-	.incbin "baserom.dol", 0x385318, 0x10
+	.asciz "eggyoshi_broken"
 eggYoshi_anim_data:
   .4byte "@2854"
   .4byte "@2855"
@@ -2295,24 +2515,69 @@ eggYoshi_anim_data:
   .4byte 0
   .4byte 0
 eggYoshi_hit_data_table:
-	.incbin "baserom.dol", 0x385378, 0xA0
+	.4byte 0x43960000
+	.4byte 0x42C80000
+	.4byte 0x42480000
+	.4byte 0x42480000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 eggYoshi_obj_hit_info:
   .4byte 0xa
   .4byte 0xc0000000
   .4byte 0
   .4byte eggYoshi_hit_data_table
 "@2860":
-	.incbin "baserom.dol", 0x385428, 0xC
+	.asciz "eggYoshi"
+	.balign 4
 "@2861":
-	.incbin "baserom.dol", 0x385434, 0x10
+	.asciz "eggYoshiEvent"
+	.balign 4
 "@2862":
-	.incbin "baserom.dol", 0x385444, 0x10
+	.asciz "nozzleBox.bmd"
+	.balign 4
 "@2863":
-	.incbin "baserom.dol", 0x385454, 0x14
+	.asciz "nozzleBoxCrash.bmd"
+	.balign 4
 "@2864":
-	.incbin "baserom.dol", 0x385468, 0x10
+	.asciz "nozzleboxcrash"
+	.balign 4
 "@2865":
-	.incbin "baserom.dol", 0x385478, 0x14
+	.asciz "nozzleBoxAlpha.bmd"
+	.balign 4
 NozzleBox_anim_data:
   .4byte "@2862"
   .4byte 0
@@ -2335,16 +2600,20 @@ NozzleBox_anim_data:
   .4byte 0
   .4byte 0
 NozzleBox_hit_data_table:
-	.incbin "baserom.dol", 0x3854DC, 0x10
+	.4byte 0x43480000
+	.4byte 0x43480000
+	.4byte 0x42C80000
+	.4byte 0x43480000
 NozzleBox_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte NozzleBox_hit_data_table
 "@2866":
-	.incbin "baserom.dol", 0x3854FC, 0xC
+	.asciz "NozzleBox"
+	.balign 4
 "@2867":
-	.incbin "baserom.dol", 0x385508, 0x10
+	.asciz "mushroom1up.bmd"
 mushroom1up_anim_data:
   .4byte "@2867"
   .4byte 0
@@ -2352,20 +2621,26 @@ mushroom1up_anim_data:
   .4byte 0
   .4byte 0
 mushroom1up_hit_data_table:
-	.incbin "baserom.dol", 0x38552C, 0x10
+	.4byte 0x41A00000
+	.4byte 0x42200000
+	.4byte 0x41A00000
+	.4byte 0x42200000
 mushroom1up_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte mushroom1up_hit_data_table
 "@2868":
-	.incbin "baserom.dol", 0x38554C, 0xC
+	.asciz "mushroom1up"
 "@2869":
-	.incbin "baserom.dol", 0x385558, 0x10
+	.asciz "mushroom1upR"
+	.balign 4
 "@2870":
-	.incbin "baserom.dol", 0x385568, 0x10
+	.asciz "mushroom1upX"
+	.balign 4
 "@2871":
-	.incbin "baserom.dol", 0x385578, 0x10
+	.asciz "jumpbase.bmd"
+	.balign 4
 jumpbase_anim_data:
   .4byte "@2871"
   .4byte 0
@@ -2373,54 +2648,84 @@ jumpbase_anim_data:
   .4byte 0
   .4byte 0
 jumpbase_hit_data_table:
-	.incbin "baserom.dol", 0x38559C, 0x10
+	.4byte 0x42480000
+	.4byte 0x42A00000
+	.4byte 0x42480000
+	.4byte 0x42A00000
 jumpbase_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte jumpbase_hit_data_table
 "@2872":
-	.incbin "baserom.dol", 0x3855BC, 0xC
+	.asciz "jumpbase"
+	.balign 4
 fruit_hit_data_table:
-	.incbin "baserom.dol", 0x3855C8, 0x10
+	.4byte 0x42700000
+	.4byte 0x42700000
+	.4byte 0x42A00000
+	.4byte 0x42B40000
 fruit_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte fruit_hit_data_table
 coconut_hit_data_table:
-	.incbin "baserom.dol", 0x3855E8, 0x10
+	.4byte 0x42200000
+	.4byte 0x42700000
+	.4byte 0x42480000
+	.4byte 0x42A00000
 coconut_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte coconut_hit_data_table
 fruit_sound_data:
-	.incbin "baserom.dol", 0x385608, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003801
+	.4byte 0xFFFFFFFF
+	.4byte 0x00001807
+	.4byte 0x00003862
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 "@2873":
-	.incbin "baserom.dol", 0x385630, 0x10
+	.asciz "FruitCoconut"
+	.balign 4
 "@2874":
-	.incbin "baserom.dol", 0x385640, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 papaya_hit_data_table:
-	.incbin "baserom.dol", 0x38564C, 0x10
+	.4byte 0x42200000
+	.4byte 0x42700000
+	.4byte 0x42480000
+	.4byte 0x42A00000
 papaya_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte papaya_hit_data_table
 "@2875":
-	.incbin "baserom.dol", 0x38566C, 0xC
+	.asciz "FruitPapaya"
 pine_hit_data_table:
-	.incbin "baserom.dol", 0x385678, 0x10
+	.4byte 0x42A00000
+	.4byte 0x42700000
+	.4byte 0x42480000
+	.4byte 0x42A00000
 pine_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte pine_hit_data_table
 "@2876":
-	.incbin "baserom.dol", 0x385698, 0xC
+	.asciz "FruitPine"
+	.balign 4
 "@2877":
-	.incbin "baserom.dol", 0x3856A4, 0x10
+	.asciz "FruitPine.bmd"
+	.balign 4
 CoverPine_anim_data:
   .4byte "@2877"
   .4byte 0
@@ -2458,40 +2763,62 @@ CoverPine_anim_data:
   .4byte 0
   .4byte 0
 cover_pine_hit_data_table:
-	.incbin "baserom.dol", 0x385740, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42200000
+	.4byte 0x43340000
 cover_pine_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc2f00000
   .4byte cover_pine_hit_data_table
 "@2878":
-	.incbin "baserom.dol", 0x385760, 0x10
+	.asciz "FruitCoverPine"
+	.balign 4
 durian_hit_data_table:
-	.incbin "baserom.dol", 0x385770, 0x10
+	.4byte 0x43160000
+	.4byte 0x42700000
+	.4byte 0x42700000
+	.4byte 0x42B40000
 durian_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte durian_hit_data_table
 durian_sound_data:
-	.incbin "baserom.dol", 0x385790, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003802
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003862
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003812
+	.4byte 0xFFFFFFFF
 "@2879":
-	.incbin "baserom.dol", 0x3857B8, 0xC
+	.asciz "FruitDurian"
 banana_hit_data_table:
-	.incbin "baserom.dol", 0x3857C4, 0x10
+	.4byte 0x42A00000
+	.4byte 0x42700000
+	.4byte 0x42700000
+	.4byte 0x42B40000
 banana_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte banana_hit_data_table
 "@2880":
-	.incbin "baserom.dol", 0x3857E4, 0xC
+	.asciz "FruitBanana"
 "@2881":
-	.incbin "baserom.dol", 0x3857F0, 0xC
+	.asciz "RedPepper"
+	.balign 4
 "@2882":
-	.incbin "baserom.dol", 0x3857FC, 0x10
+	.asciz "fence_normal"
+	.balign 4
 "@2883":
-	.incbin "baserom.dol", 0x38580C, 0x10
+	.asciz "fence_half.bmd"
+	.balign 4
 fence3x3_anim_data:
   .4byte "@2883"
   .4byte 0
@@ -2499,9 +2826,10 @@ fence3x3_anim_data:
   .4byte 0
   .4byte 0
 "@2884":
-	.incbin "baserom.dol", 0x385830, 0xC
+	.asciz "fence3x3"
+	.balign 4
 "@2885":
-	.incbin "baserom.dol", 0x38583C, 0x18
+	.asciz "fence_revolve_outer.bmd"
 fence_revolve_outer_anim_data:
   .4byte "@2885"
   .4byte 0
@@ -2509,31 +2837,37 @@ fence_revolve_outer_anim_data:
   .4byte 0
   .4byte 0
 "@2886":
-	.incbin "baserom.dol", 0x385868, 0x10
+	.asciz "fence_revolve"
+	.balign 4
 FenceInner_hit_data_table:
-	.incbin "baserom.dol", 0x385878, 0x10
+	.4byte 0x438C0000
+	.4byte 0x43FA0000
+	.4byte 0
+	.4byte 0
 FenceInner_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0xc37a0000
   .4byte FenceInner_hit_data_table
 "@2887":
-	.incbin "baserom.dol", 0x385898, 0x14
+	.asciz "fence_revolve_inner"
 "@2888":
-	.incbin "baserom.dol", 0x3858AC, 0x10
+	.asciz "fenceInnerGreen"
 "@2889":
-	.incbin "baserom.dol", 0x3858BC, 0xC
+	.asciz "FenceWaterV"
 "@2890":
-	.incbin "baserom.dol", 0x3858C8, 0xC
+	.asciz "FenceWaterH"
 "@2891":
-	.incbin "baserom.dol", 0x3858D4, 0x14
+	.asciz "FenceWaterH_ground"
+	.balign 4
 FenceWaterH_map_collision_data:
   .4byte "@2890"
   .4byte 0x20000
   .4byte "@2891"
   .4byte 0x10000
 "@2892":
-	.incbin "baserom.dol", 0x3858F8, 0x14
+	.asciz "fence_normal.bmd"
+	.balign 4
 RailFence_anim_data:
   .4byte "@2892"
   .4byte 0
@@ -2546,22 +2880,27 @@ RailFence_anim_data:
   .4byte 0
   .4byte 0
 "@2893":
-	.incbin "baserom.dol", 0x385934, 0x14
+	.asciz "fence_normal_v_tool"
 RailFence_map_collision_data:
   .4byte "@2893"
   .4byte 0x20000
   .4byte "@2893"
   .4byte 0x10000
 "@2894":
-	.incbin "baserom.dol", 0x385958, 0xC
+	.asciz "RailFence"
+	.balign 4
 "@2895":
-	.incbin "baserom.dol", 0x385964, 0x1C
+	.asciz "bambooFence_revolve_inner"
+	.balign 4
 "@2896":
-	.incbin "baserom.dol", 0x385980, 0x1C
+	.asciz "bambooFence_revolve_outer"
+	.balign 4
 "@2897":
-	.incbin "baserom.dol", 0x38599C, 0x18
+	.asciz "bambooFence_rail.bmd"
+	.balign 4
 "@2898":
-	.incbin "baserom.dol", 0x3859B4, 0x14
+	.asciz "bamboofence_rail"
+	.balign 4
 BambooRailFence_anim_data:
   .4byte "@2897"
   .4byte 0
@@ -2574,19 +2913,25 @@ BambooRailFence_anim_data:
   .4byte 0
   .4byte 0
 "@2899":
-	.incbin "baserom.dol", 0x3859F0, 0x10
+	.asciz "bambooRailFence"
 "@2900":
-	.incbin "baserom.dol", 0x385A00, 0x14
+	.asciz "barrel_normal.bmd"
+	.balign 4
 "@2901":
-	.incbin "baserom.dol", 0x385A14, 0x14
+	.asciz "barrel_crash.bmd"
+	.balign 4
 "@2902":
-	.incbin "baserom.dol", 0x385A28, 0x10
+	.asciz "barrel_crash"
+	.balign 4
 "@2903":
-	.incbin "baserom.dol", 0x385A38, 0x20
+	.asciz "/scene/mapObj/barrel_crash.bas"
+	.balign 4
 "@2904":
-	.incbin "baserom.dol", 0x385A58, 0xC
+	.asciz "barrel_rot"
+	.balign 4
 "@2905":
-	.incbin "baserom.dol", 0x385A64, 0x20
+	.asciz "/scene/mapObj/barrel_rot.bas"
+	.balign 4
 wood_barrel_anim_data:
   .4byte "@2900"
   .4byte 0
@@ -2624,7 +2969,18 @@ wood_barrel_anim_data:
   .4byte 0
   .4byte 0
 wood_barrel_hit_data_table:
-	.incbin "baserom.dol", 0x385B10, 0x30
+	.4byte 0x42820000
+	.4byte 0x43020000
+	.4byte 0x42820000
+	.4byte 0x42DC0000
+	.4byte 0x43480000
+	.4byte 0x43480000
+	.4byte 0
+	.4byte 0
+	.4byte 0x42820000
+	.4byte 0x43160000
+	.4byte 0x42820000
+	.4byte 0x43020000
 wood_barrel_obj_hit_info:
   .4byte 0x3
   .4byte 0xdc000000
@@ -2636,32 +2992,54 @@ wood_barrel_map_collision_data:
   .4byte "@2906"
   .4byte 0x10000
 wood_barrel_sound_data:
-	.incbin "baserom.dol", 0x385B60, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003802
+	.4byte 0x0000380A
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x0000380B
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003812
+	.4byte 0xFFFFFFFF
 "@2907":
-	.incbin "baserom.dol", 0x385B88, 0x20
+	.asciz "/scene/mapObj/barrel_offset.bmd"
 "@2908":
-	.incbin "baserom.dol", 0x385BA8, 0x10
+	.asciz "barrel_center"
+	.balign 4
 "@2909":
-	.incbin "baserom.dol", 0x385BB8, 0xC
+	.asciz "wood_barrel"
 "@2910":
-	.incbin "baserom.dol", 0x385BC4, 0x14
+	.4byte 0x8FE682E8
+	.4byte 0x95A8837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@2911":
-	.incbin "baserom.dol", 0x385BD8, 0x14
+	.asciz "wood_barrel_once"
+	.balign 4
 barrel_float_hit_data_table:
-	.incbin "baserom.dol", 0x385BEC, 0x10
+	.4byte 0x42F00000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 barrel_float_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte barrel_float_hit_data_table
 "@2912":
-	.incbin "baserom.dol", 0x385C0C, 0x10
+	.asciz "barrel_float"
+	.balign 4
 "@2913":
-	.incbin "baserom.dol", 0x385C1C, 0x14
+	.asciz "drum_can_model.bmd"
+	.balign 4
 "@2914":
-	.incbin "baserom.dol", 0x385C30, 0x1C
+	.asciz "drum_can_crash_model.bmd"
+	.balign 4
 "@2915":
-	.incbin "baserom.dol", 0x385C4C, 0x10
+	.asciz "drum_can_crash"
+	.balign 4
 drum_can_anim_data:
   .4byte "@2913"
   .4byte 0
@@ -2679,25 +3057,32 @@ drum_can_anim_data:
   .4byte 0
   .4byte 0
 drum_can_hit_data_table:
-	.incbin "baserom.dol", 0x385C98, 0x10
+	.4byte 0x42480000
+	.4byte 0x43340000
+	.4byte 0x42480000
+	.4byte 0x432A0000
 drum_can_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte drum_can_hit_data_table
 "@2916":
-	.incbin "baserom.dol", 0x385CB8, 0xC
+	.asciz "drum_can"
+	.balign 4
 "@2917":
-	.incbin "baserom.dol", 0x385CC4, 0x10
+	.asciz "drum_can_sink"
+	.balign 4
 drum_can_map_collision_data:
   .4byte "@2916"
   .4byte 0x20000
   .4byte "@2917"
   .4byte 0x10000
 "@2918":
-	.incbin "baserom.dol", 0x385CE4, 0x10
+	.asciz "barrel_oil.bmd"
+	.balign 4
 "@2919":
-	.incbin "baserom.dol", 0x385CF4, 0x28
+	.asciz "/scene/mapObj/barrel_crash_model.bas"
+	.balign 4
 barrel_oil_anim_data:
   .4byte "@2918"
   .4byte 0
@@ -2735,24 +3120,30 @@ barrel_oil_anim_data:
   .4byte 0
   .4byte 0
 barrel_oil_hit_data_table:
-	.incbin "baserom.dol", 0x385DA8, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x432A0000
 barrel_oil_obj_hit_info:
   .4byte 0x1
   .4byte 0x9c000000
   .4byte 0
   .4byte barrel_oil_hit_data_table
 "@2920":
-	.incbin "baserom.dol", 0x385DC8, 0xC
+	.asciz "barrel_oil"
+	.balign 4
 "@2921":
-	.incbin "baserom.dol", 0x385DD4, 0xC
+	.asciz "lower_block"
 "@2922":
-	.incbin "baserom.dol", 0x385DE0, 0x10
+	.asciz "center_block"
+	.balign 4
 "@2923":
-	.incbin "baserom.dol", 0x385DF0, 0x14
+	.asciz "breakable_block.bmd"
 "@2924":
-	.incbin "baserom.dol", 0x385E04, 0x20
+	.asciz "breakable_block_break_model.bmd"
 "@2925":
-	.incbin "baserom.dol", 0x385E24, 0x18
+	.asciz "breakable_block_break"
+	.balign 4
 breakable_block_anim_data:
   .4byte "@2923"
   .4byte 0
@@ -2770,45 +3161,59 @@ breakable_block_anim_data:
   .4byte 0
   .4byte 0
 breakable_block_hit_data_table:
-	.incbin "baserom.dol", 0x385E78, 0x10
+	.4byte 0x428C0000
+	.4byte 0x430C0000
+	.4byte 0x428C0000
+	.4byte 0x430C0000
 breakable_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte breakable_block_hit_data_table
 "@2926":
-	.incbin "baserom.dol", 0x385E98, 0x10
+	.asciz "breakable_block"
 supermario_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc1200000
   .4byte breakable_block_hit_data_table
 "@2927":
-	.incbin "baserom.dol", 0x385EB8, 0x14
+	.asciz "supermario_block"
+	.balign 4
 "@2928":
-	.incbin "baserom.dol", 0x385ECC, 0xC
+	.asciz "move_block"
+	.balign 4
 "@2929":
-	.incbin "baserom.dol", 0x385ED8, 0x10
+	.asciz "fall_slow_block"
 expand_block_hit_data_table:
-	.incbin "baserom.dol", 0x385EE8, 0x10
+	.4byte 0x42480000
+	.4byte 0x430C0000
+	.4byte 0x42480000
+	.4byte 0x430C0000
 expand_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc1200000
   .4byte expand_block_hit_data_table
 "@2930":
-	.incbin "baserom.dol", 0x385F08, 0x10
+	.asciz "expand_block"
+	.balign 4
 spread_block_hit_data_table:
-	.incbin "baserom.dol", 0x385F18, 0x10
+	.4byte 0x42480000
+	.4byte 0x43160000
+	.4byte 0x42480000
+	.4byte 0x43160000
 spread_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc1200000
   .4byte spread_block_hit_data_table
 "@2931":
-	.incbin "baserom.dol", 0x385F38, 0x10
+	.asciz "spread_block"
+	.balign 4
 "@2932":
-	.incbin "baserom.dol", 0x385F48, 0x18
+	.asciz "water_roll_block.bmd"
+	.balign 4
 water_roll_block_anim_data:
   .4byte "@2932"
   .4byte 0
@@ -2821,11 +3226,14 @@ water_roll_block_obj_hit_info:
   .4byte 0
   .4byte breakable_block_hit_data_table
 "@2933":
-	.incbin "baserom.dol", 0x385F84, 0x14
+	.asciz "water_roll_block"
+	.balign 4
 "@2934":
-	.incbin "baserom.dol", 0x385F98, 0x10
+	.asciz "SandBlock.bmd"
+	.balign 4
 "@2935":
-	.incbin "baserom.dol", 0x385FA8, 0xC
+	.asciz "SandBlock"
+	.balign 4
 sand_block_anim_data:
   .4byte "@2934"
   .4byte 0
@@ -2843,7 +3251,10 @@ sand_block_anim_data:
   .4byte 0
   .4byte 0
 sand_block_hit_data_table:
-	.incbin "baserom.dol", 0x385FF0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x430C0000
+	.4byte 0x42C80000
+	.4byte 0x430C0000
 sand_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
@@ -2855,32 +3266,43 @@ sand_block_map_collision_data:
   .4byte "@2935"
   .4byte 0x10000
 "@2936":
-	.incbin "baserom.dol", 0x386020, 0xC
+	.asciz "sand_block"
+	.balign 4
 "@2937":
-	.incbin "baserom.dol", 0x38602C, 0x14
+	.asciz "water_power_lift"
+	.balign 4
 "@2938":
-	.incbin "baserom.dol", 0x386040, 0x1C
+	.asciz "water_power_inertial_lift"
+	.balign 4
 "@2939":
-	.incbin "baserom.dol", 0x38605C, 0x14
+	.asciz "water_power_ship"
+	.balign 4
 "@2940":
-	.incbin "baserom.dol", 0x386070, 0x14
+	.asciz "lean_direct_block"
+	.balign 4
 "@2941":
-	.incbin "baserom.dol", 0x386084, 0x14
+	.asciz "lean_indirect_block"
 "@2942":
-	.incbin "baserom.dol", 0x386098, 0xC
+	.asciz "lean_block"
+	.balign 4
 skate_block_hit_data_table:
-	.incbin "baserom.dol", 0x3860A4, 0x10
+	.4byte 0x42200000
+	.4byte 0x43020000
+	.4byte 0
+	.4byte 0
 skate_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte skate_block_hit_data_table
 "@2943":
-	.incbin "baserom.dol", 0x3860C4, 0xC
+	.asciz "skate_block"
 "@2944":
-	.incbin "baserom.dol", 0x3860D0, 0x14
+	.asciz "SandMoveCoin.bmd"
+	.balign 4
 "@2945":
-	.incbin "baserom.dol", 0x3860E4, 0x10
+	.asciz "sandmovecoin"
+	.balign 4
 MoveCoin_anim_data:
   .4byte "@2944"
   .4byte "@2945"
@@ -2888,9 +3310,11 @@ MoveCoin_anim_data:
   .4byte 0
   .4byte 0
 "@2946":
-	.incbin "baserom.dol", 0x386108, 0xC
+	.asciz "MoveCoin"
+	.balign 4
 "@2947":
-	.incbin "baserom.dol", 0x386114, 0x14
+	.asciz "test_cluster.bmd"
+	.balign 4
 cluster_block_anim_data:
   .4byte "@2947"
   .4byte 0
@@ -2898,24 +3322,30 @@ cluster_block_anim_data:
   .4byte 0
   .4byte 0
 "@2948":
-	.incbin "baserom.dol", 0x38613C, 0x10
+	.asciz "cluster_block"
+	.balign 4
 "@2949":
-	.incbin "baserom.dol", 0x38614C, 0xC
+	.asciz "NormalBlock"
 ice_block_hit_data_table:
-	.incbin "baserom.dol", 0x386158, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x428C0000
+	.4byte 0x428C0000
 ice_block_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ice_block_hit_data_table
 "@2950":
-	.incbin "baserom.dol", 0x386178, 0xC
+	.asciz "IceBlock"
+	.balign 4
 "@2951":
-	.incbin "baserom.dol", 0x386184, 0x10
+	.asciz "BrickBlock.bmd"
+	.balign 4
 "@2952":
-	.incbin "baserom.dol", 0x386194, 0x14
+	.asciz "BrickBlockBreak.bmd"
 "@2953":
-	.incbin "baserom.dol", 0x3861A8, 0x10
+	.asciz "brickblockbreak"
 BrickBlock_anim_data:
   .4byte "@2951"
   .4byte 0
@@ -2933,13 +3363,16 @@ BrickBlock_anim_data:
   .4byte 0
   .4byte 0
 "@2954":
-	.incbin "baserom.dol", 0x3861F4, 0xC
+	.asciz "BrickBlock"
+	.balign 4
 "@2955":
-	.incbin "baserom.dol", 0x386200, 0x14
+	.asciz "WaterMelonBlock.bmd"
 "@2956":
-	.incbin "baserom.dol", 0x386214, 0x1C
+	.asciz "WaterMelonBlockBreak.bmd"
+	.balign 4
 "@2957":
-	.incbin "baserom.dol", 0x386230, 0x18
+	.asciz "watermelonblockbreak"
+	.balign 4
 WaterMelonBlock_anim_data:
   .4byte "@2955"
   .4byte 0
@@ -2957,28 +3390,35 @@ WaterMelonBlock_anim_data:
   .4byte 0
   .4byte 0
 "@2958":
-	.incbin "baserom.dol", 0x386284, 0x10
+	.asciz "WaterMelonBlock"
 "@2959":
-	.incbin "baserom.dol", 0x386294, 0xC
+	.asciz "TelesaBlock"
 WoodBlockPole_hit_data_table:
-	.incbin "baserom.dol", 0x3862A0, 0x10
+	.4byte 0x41F00000
+	.4byte 0x43FA0000
+	.4byte 0x42C80000
+	.4byte 0x43FA0000
 WoodBlockPole_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte WoodBlockPole_hit_data_table
 "@2960":
-	.incbin "baserom.dol", 0x3862C0, 0x10
+	.asciz "WoodBlockPole"
+	.balign 4
 "@2961":
-	.incbin "baserom.dol", 0x3862D0, 0xC
+	.asciz "JuiceBlock"
+	.balign 4
 "@2962":
-	.incbin "baserom.dol", 0x3862DC, 0x10
+	.asciz "super_rock.bmd"
+	.balign 4
 "@2963":
-	.incbin "baserom.dol", 0x3862EC, 0x14
+	.asciz "super_rock_down.bmd"
 "@2964":
-	.incbin "baserom.dol", 0x386300, 0x10
+	.asciz "super_rock_down"
 "@2965":
-	.incbin "baserom.dol", 0x386310, 0x24
+	.asciz "/scene/mapObj/super_rock_down.bas"
+	.balign 4
 SuperHipDropBlock_anim_data:
   .4byte "@2962"
   .4byte 0
@@ -2996,13 +3436,25 @@ SuperHipDropBlock_anim_data:
   .4byte 0
   .4byte "@2965"
 "@2966":
-	.incbin "baserom.dol", 0x386370, 0xC
+	.asciz "super_rock"
+	.balign 4
 "@2967":
-	.incbin "baserom.dol", 0x38637C, 0x14
+	.asciz "SuperHipDropBlock"
+	.balign 4
 tree_sound_data:
-	.incbin "baserom.dol", 0x386390, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x0000300F
+	.4byte 0x0000300F
 "@2968":
-	.incbin "baserom.dol", 0x3863B8, 0x10
+	.asciz "palmNormal.bmd"
+	.balign 4
 PalmNormal_anim_data:
   .4byte "@2968"
   .4byte 0
@@ -3010,45 +3462,65 @@ PalmNormal_anim_data:
   .4byte 0
   .4byte 0
 palmNormal_hit_data_table:
-	.incbin "baserom.dol", 0x3863DC, 0x10
+	.4byte 0x44160000
+	.4byte 0x44AF0000
+	.4byte 0x42A00000
+	.4byte 0x446D8000
 palmNormal_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte palmNormal_hit_data_table
 "@2969":
-	.incbin "baserom.dol", 0x3863FC, 0xC
+	.asciz "palmNormal"
+	.balign 4
 "@2970":
-	.incbin "baserom.dol", 0x386408, 0x10
+	.4byte 0x96D8837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 palmOugi_hit_data_table:
-	.incbin "baserom.dol", 0x386418, 0x10
+	.4byte 0x44048000
+	.4byte 0x44960000
+	.4byte 0x42A00000
+	.4byte 0x446D8000
 palmOugi_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte palmOugi_hit_data_table
 "@2971":
-	.incbin "baserom.dol", 0x386438, 0xC
+	.asciz "palmOugi"
+	.balign 4
 palmSago_hit_data_table:
-	.incbin "baserom.dol", 0x386444, 0x10
+	.4byte 0x443B8000
+	.4byte 0x44C80000
+	.4byte 0x42A00000
+	.4byte 0x446D8000
 palmSago_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte palmSago_hit_data_table
 "@2972":
-	.incbin "baserom.dol", 0x386464, 0xC
+	.asciz "palmSago"
+	.balign 4
 palmNatume_hit_data_table:
-	.incbin "baserom.dol", 0x386470, 0x10
+	.4byte 0x44048000
+	.4byte 0x44AF0000
+	.4byte 0x42A00000
+	.4byte 0x446D8000
 palmNatume_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte palmNatume_hit_data_table
 "@2973":
-	.incbin "baserom.dol", 0x386490, 0xC
+	.asciz "palmNatume"
+	.balign 4
 "@2974":
-	.incbin "baserom.dol", 0x38649C, 0x10
+	.asciz "palmLeaf.bmd"
+	.balign 4
 PalmLeaf_anim_data:
   .4byte "@2974"
   .4byte 0
@@ -3056,16 +3528,21 @@ PalmLeaf_anim_data:
   .4byte 0
   .4byte 0
 palmLeaf_hit_data_table:
-	.incbin "baserom.dol", 0x3864C0, 0x10
+	.4byte 0x44160000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 palmLeaf_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte palmLeaf_hit_data_table
 "@2975":
-	.incbin "baserom.dol", 0x3864E0, 0xC
+	.asciz "palmLeaf"
+	.balign 4
 "@2976":
-	.incbin "baserom.dol", 0x3864EC, 0x10
+	.asciz "BananaTree.bmd"
+	.balign 4
 BananaTree_anim_data:
   .4byte "@2976"
   .4byte 0
@@ -3073,36 +3550,49 @@ BananaTree_anim_data:
   .4byte 0
   .4byte 0
 BananaTree_hit_data_table:
-	.incbin "baserom.dol", 0x386510, 0x10
+	.4byte 0x442F0000
+	.4byte 0x44C80000
+	.4byte 0x42A00000
+	.4byte 0x442F0000
 BananaTree_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte BananaTree_hit_data_table
 "@2977":
-	.incbin "baserom.dol", 0x386530, 0xC
+	.asciz "BananaTree"
+	.balign 4
 FruitTree_hit_data_table:
-	.incbin "baserom.dol", 0x38653C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42A00000
+	.4byte 0x43C80000
 FruitTree_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte FruitTree_hit_data_table
 "@2978":
-	.incbin "baserom.dol", 0x38655C, 0xC
+	.asciz "fruitTree"
+	.balign 4
 flower_hit_data_table:
-	.incbin "baserom.dol", 0x386568, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42200000
+	.4byte 0x42A00000
 flower_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0
   .4byte flower_hit_data_table
 "@2979":
-	.incbin "baserom.dol", 0x386588, 0xC
+	.asciz "plantFlower"
 "@2980":
-	.incbin "baserom.dol", 0x386594, 0x14
+	.asciz "flowerOrange.bmd"
+	.balign 4
 "@2982":
-	.incbin "baserom.dol", 0x3865A8, 0x14
+	.asciz "flowerOrangeL.bmd"
+	.balign 4
 flowerOrange_anim_data:
   .4byte "@2980"
   .4byte 0
@@ -3115,11 +3605,13 @@ flowerOrange_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2983":
-	.incbin "baserom.dol", 0x3865E4, 0x10
+	.asciz "flowerOrange"
+	.balign 4
 "@2984":
-	.incbin "baserom.dol", 0x3865F4, 0x10
+	.asciz "flowerPink.bmd"
+	.balign 4
 "@2985":
-	.incbin "baserom.dol", 0x386604, 0x10
+	.asciz "flowerPinkL.bmd"
 flowerPink_anim_data:
   .4byte "@2984"
   .4byte 0
@@ -3132,11 +3624,14 @@ flowerPink_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2986":
-	.incbin "baserom.dol", 0x38663C, 0xC
+	.asciz "flowerPink"
+	.balign 4
 "@2987":
-	.incbin "baserom.dol", 0x386648, 0x14
+	.asciz "flowerPurple.bmd"
+	.balign 4
 "@2988":
-	.incbin "baserom.dol", 0x38665C, 0x14
+	.asciz "flowerPurpleL.bmd"
+	.balign 4
 flowerPurple_anim_data:
   .4byte "@2987"
   .4byte 0
@@ -3149,11 +3644,14 @@ flowerPurple_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2989":
-	.incbin "baserom.dol", 0x386698, 0x10
+	.asciz "flowerPurple"
+	.balign 4
 "@2990":
-	.incbin "baserom.dol", 0x3866A8, 0x10
+	.asciz "flowerRed.bmd"
+	.balign 4
 "@2991":
-	.incbin "baserom.dol", 0x3866B8, 0x10
+	.asciz "flowerRedL.bmd"
+	.balign 4
 flowerRed_anim_data:
   .4byte "@2990"
   .4byte 0
@@ -3166,11 +3664,14 @@ flowerRed_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2992":
-	.incbin "baserom.dol", 0x3866F0, 0xC
+	.asciz "flowerRed"
+	.balign 4
 "@2993":
-	.incbin "baserom.dol", 0x3866FC, 0x14
+	.asciz "flowerYellow.bmd"
+	.balign 4
 "@2994":
-	.incbin "baserom.dol", 0x386710, 0x14
+	.asciz "flowerYellowL.bmd"
+	.balign 4
 flowerYellow_anim_data:
   .4byte "@2993"
   .4byte 0
@@ -3183,11 +3684,13 @@ flowerYellow_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2995":
-	.incbin "baserom.dol", 0x38674C, 0x10
+	.asciz "flowerYellow"
+	.balign 4
 "@2996":
-	.incbin "baserom.dol", 0x38675C, 0x14
+	.asciz "flowerSunflower.bmd"
 "@2997":
-	.incbin "baserom.dol", 0x386770, 0x18
+	.asciz "flowerSunflowerL.bmd"
+	.balign 4
 flowerSunflower_anim_data:
   .4byte "@2996"
   .4byte 0
@@ -3200,33 +3703,53 @@ flowerSunflower_anim_data:
   .4byte "@2981"
   .4byte 0
 "@2998":
-	.incbin "baserom.dol", 0x3867B0, 0x10
+	.asciz "flowerSunflower"
 pole_sound_data:
-	.incbin "baserom.dol", 0x3867C0, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003010
+	.4byte 0x00003010
 telegraph_pole_l_hit_data_table:
-	.incbin "baserom.dol", 0x3867E8, 0x10
+	.4byte 0x42480000
+	.4byte 0x448FC000
+	.4byte 0x42480000
+	.4byte 0x448FC000
 telegraph_pole_l_obj_hit_info:
   .4byte 0x1
   .4byte 0x9c000000
   .4byte 0
   .4byte telegraph_pole_l_hit_data_table
 "@2999":
-	.incbin "baserom.dol", 0x386808, 0x14
+	.asciz "telegraph_pole_l"
+	.balign 4
 telegraph_pole_s_hit_data_table:
-	.incbin "baserom.dol", 0x38681C, 0x10
+	.4byte 0x42480000
+	.4byte 0x44610000
+	.4byte 0x42480000
+	.4byte 0x44610000
 telegraph_pole_s_obj_hit_info:
   .4byte 0x1
   .4byte 0x9c000000
   .4byte 0
   .4byte telegraph_pole_s_hit_data_table
 "@3000":
-	.incbin "baserom.dol", 0x38683C, 0x14
+	.asciz "telegraph_pole_s"
+	.balign 4
 "@3001":
-	.incbin "baserom.dol", 0x386850, 0x10
+	.asciz "dptlight.bmd"
+	.balign 4
 "@3002":
-	.incbin "baserom.dol", 0x386860, 0x18
+	.asciz "dptlight_recover.bmd"
+	.balign 4
 "@3003":
-	.incbin "baserom.dol", 0x386878, 0x14
+	.asciz "dptlight_recover"
+	.balign 4
 dptlight_anim_data:
   .4byte "@3001"
   .4byte 0
@@ -3264,32 +3787,50 @@ dptlight_anim_data:
   .4byte 0
   .4byte 0
 streetlamp_hit_data_table:
-	.incbin "baserom.dol", 0x386918, 0x30
+	.4byte 0x41A00000
+	.4byte 0x442F0000
+	.4byte 0x41A00000
+	.4byte 0x442F0000
+	.4byte 0x41A00000
+	.4byte 0x442F0000
+	.4byte 0x41A00000
+	.4byte 0x442F0000
+	.4byte 0x42C80000
+	.4byte 0x44390000
+	.4byte 0x42C80000
+	.4byte 0x44390000
 streetlamp_obj_hit_info:
   .4byte 0x3
   .4byte 0x9c000000
   .4byte 0
   .4byte streetlamp_hit_data_table
 "@3004":
-	.incbin "baserom.dol", 0x386958, 0xC
+	.asciz "dptlight"
+	.balign 4
 "@3005":
-	.incbin "baserom.dol", 0x386964, 0x10
+	.asciz "dptlight_sink"
+	.balign 4
 streetlamp_map_collision_data:
   .4byte "@3004"
   .4byte 0x20000
   .4byte "@3005"
   .4byte 0x10000
 PoleNormal_hit_data_table:
-	.incbin "baserom.dol", 0x386984, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x41200000
+	.4byte 0
 PoleNormal_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte PoleNormal_hit_data_table
 "@3006":
-	.incbin "baserom.dol", 0x3869A4, 0xC
+	.asciz "PoleNormal"
+	.balign 4
 "@3007":
-	.incbin "baserom.dol", 0x3869B0, 0x10
+	.asciz "soccerball.bmd"
+	.balign 4
 football_anim_data:
   .4byte "@3007"
   .4byte 0
@@ -3297,18 +3838,32 @@ football_anim_data:
   .4byte 0
   .4byte 0
 football_hit_data_table:
-	.incbin "baserom.dol", 0x3869D4, 0x10
+	.4byte 0x42340000
+	.4byte 0x42B40000
+	.4byte 0x42340000
+	.4byte 0x42480000
 football_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte football_hit_data_table
 football_sound_data:
-	.incbin "baserom.dol", 0x3869F4, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003801
+	.4byte 0xFFFFFFFF
+	.4byte 0x00001807
+	.4byte 0x00001807
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 "@3008":
-	.incbin "baserom.dol", 0x386A1C, 0xC
+	.asciz "football"
+	.balign 4
 "@3009":
-	.incbin "baserom.dol", 0x386A28, 0x18
+	.asciz "soccergoal_model.bmd"
+	.balign 4
 football_goal_anim_data:
   .4byte "@3009"
   .4byte 0
@@ -3316,33 +3871,42 @@ football_goal_anim_data:
   .4byte 0
   .4byte 0
 football_goal_hit_data_table:
-	.incbin "baserom.dol", 0x386A54, 0x10
+	.4byte 0x42AA0000
+	.4byte 0x42E60000
+	.4byte 0
+	.4byte 0
 football_goal_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0
   .4byte football_goal_hit_data_table
 "@3010":
-	.incbin "baserom.dol", 0x386A74, 0xC
+	.asciz "soccer_goal"
 "@3011":
-	.incbin "baserom.dol", 0x386A80, 0x14
+	.asciz "soccer_goal_stand"
+	.balign 4
 football_goal_map_collision_data:
   .4byte "@3010"
   .4byte 0x20000
   .4byte "@3011"
   .4byte 0x20000
 "@3012":
-	.incbin "baserom.dol", 0x386AA4, 0x10
+	.asciz "football_goal"
+	.balign 4
 "@3013":
-	.incbin "baserom.dol", 0x386AB4, 0xC
+	.asciz "baloonball"
+	.balign 4
 "@3014":
-	.incbin "baserom.dol", 0x386AC0, 0x10
+	.asciz "coconut_ball"
+	.balign 4
 "@3015":
-	.incbin "baserom.dol", 0x386AD0, 0x10
+	.asciz "watermelon.bmd"
+	.balign 4
 "@3016":
-	.incbin "baserom.dol", 0x386AE0, 0x14
+	.asciz "watermelon_shrink"
+	.balign 4
 "@3017":
-	.incbin "baserom.dol", 0x386AF4, 0x24
+	.asciz "/scene/mapObj/watermelon_shrink.bas"
 Watermelon_anim_data:
   .4byte "@3015"
   .4byte 0
@@ -3385,16 +3949,29 @@ Watermelon_anim_data:
   .4byte 0
   .4byte "@3017"
 watermelon_hit_data_table:
-	.incbin "baserom.dol", 0x386BB8, 0x10
+	.4byte 0x42340000
+	.4byte 0x42C80000
+	.4byte 0x42340000
+	.4byte 0x42C80000
 watermelon_obj_hit_info:
   .4byte 0x1
   .4byte 0xdc000000
   .4byte 0
   .4byte watermelon_hit_data_table
 watermelon_sound_data:
-	.incbin "baserom.dol", 0x386BD8, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003801
+	.4byte 0xFFFFFFFF
+	.4byte 0x0000194F
+	.4byte 0x00003862
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0
+	.4byte 0
 "@3018":
-	.incbin "baserom.dol", 0x386C00, 0xC
+	.asciz "watermelon"
+	.balign 4
 WatermelonStatic_anim_data:
   .4byte "@3015"
   .4byte 0
@@ -3402,11 +3979,14 @@ WatermelonStatic_anim_data:
   .4byte 0
   .4byte 0
 "@3019":
-	.incbin "baserom.dol", 0x386C20, 0x14
+	.asciz "WatermelonStatic"
+	.balign 4
 "@3020":
-	.incbin "baserom.dol", 0x386C34, 0xC
+	.asciz "cloud.bmd"
+	.balign 4
 "@3021":
-	.incbin "baserom.dol", 0x386C40, 0xC
+	.asciz "cloud_wait"
+	.balign 4
 cloud_anim_data:
   .4byte "@3020"
   .4byte "@3021"
@@ -3414,14 +3994,17 @@ cloud_anim_data:
   .4byte 0
   .4byte 0
 cloud_hit_data_table:
-	.incbin "baserom.dol", 0x386C60, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 cloud_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte cloud_hit_data_table
 "@3023":
-	.incbin "baserom.dol", 0x386C80, 0x10
+	.asciz "NormalBlock.bmd"
 normallift_anim_data:
   .4byte "@3023"
   .4byte 0
@@ -3429,16 +4012,21 @@ normallift_anim_data:
   .4byte 0
   .4byte 0
 normallift_hit_data_table:
-	.incbin "baserom.dol", 0x386CA4, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normallift_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normallift_hit_data_table
 "@3024":
-	.incbin "baserom.dol", 0x386CC4, 0xC
+	.asciz "normallift"
+	.balign 4
 "@3025":
-	.incbin "baserom.dol", 0x386CD0, 0x10
+	.asciz "EXRollCube.bmd"
+	.balign 4
 exrollcube_anim_data:
   .4byte "@3025"
   .4byte 0
@@ -3446,18 +4034,23 @@ exrollcube_anim_data:
   .4byte 0
   .4byte 0
 exrollcube_hit_data_table:
-	.incbin "baserom.dol", 0x386CF4, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 exrollcube_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte exrollcube_hit_data_table
 "@3026":
-	.incbin "baserom.dol", 0x386D14, 0xC
+	.asciz "EXRollCube"
+	.balign 4
 "@3027":
-	.incbin "baserom.dol", 0x386D20, 0xC
+	.asciz "exrollcube"
+	.balign 4
 "@3028":
-	.incbin "baserom.dol", 0x386D2C, 0x10
+	.asciz "EXKickBoard.bmd"
 exkickboard_anim_data:
   .4byte "@3028"
   .4byte 0
@@ -3465,18 +4058,22 @@ exkickboard_anim_data:
   .4byte 0
   .4byte 0
 exkickboard_hit_data_table:
-	.incbin "baserom.dol", 0x386D50, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 exkickboard_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte exkickboard_hit_data_table
 "@3029":
-	.incbin "baserom.dol", 0x386D70, 0xC
+	.asciz "EXKickBoard"
 "@3030":
-	.incbin "baserom.dol", 0x386D7C, 0xC
+	.asciz "exkickboard"
 "@3031":
-	.incbin "baserom.dol", 0x386D88, 0x18
+	.asciz "AllPurposeBoardR.bmd"
+	.balign 4
 railblockr_anim_data:
   .4byte "@3031"
   .4byte 0
@@ -3484,7 +4081,8 @@ railblockr_anim_data:
   .4byte 0
   .4byte 0
 "@3032":
-	.incbin "baserom.dol", 0x386DB4, 0x18
+	.asciz "AllPurposeBoardY.bmd"
+	.balign 4
 railblocky_anim_data:
   .4byte "@3032"
   .4byte 0
@@ -3492,7 +4090,8 @@ railblocky_anim_data:
   .4byte 0
   .4byte 0
 "@3033":
-	.incbin "baserom.dol", 0x386DE0, 0x18
+	.asciz "AllPurposeBoardB.bmd"
+	.balign 4
 railblockb_anim_data:
   .4byte "@3033"
   .4byte 0
@@ -3500,28 +4099,37 @@ railblockb_anim_data:
   .4byte 0
   .4byte 0
 railblock_hit_data_table:
-	.incbin "baserom.dol", 0x386E0C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x43FA0000
 railblock_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railblock_hit_data_table
 "@3034":
-	.incbin "baserom.dol", 0x386E2C, 0x10
+	.asciz "AllPurposeBoard"
 "@3035":
-	.incbin "baserom.dol", 0x386E3C, 0xC
+	.asciz "railblockr"
+	.balign 4
 "@3036":
-	.incbin "baserom.dol", 0x386E48, 0xC
+	.asciz "railblocky"
+	.balign 4
 "@3037":
-	.incbin "baserom.dol", 0x386E54, 0xC
+	.asciz "railblockb"
+	.balign 4
 "@3038":
-	.incbin "baserom.dol", 0x386E60, 0xC
+	.asciz "rollblockr"
+	.balign 4
 "@3039":
-	.incbin "baserom.dol", 0x386E6C, 0xC
+	.asciz "rollblocky"
+	.balign 4
 "@3040":
-	.incbin "baserom.dol", 0x386E78, 0xC
+	.asciz "rollblockb"
+	.balign 4
 "@3041":
-	.incbin "baserom.dol", 0x386E84, 0xC
+	.asciz "umaibou.bmd"
 umaibou_anim_data:
   .4byte "@3041"
   .4byte 0
@@ -3529,14 +4137,18 @@ umaibou_anim_data:
   .4byte 0
   .4byte 0
 umaibou_hit_data_table:
-	.incbin "baserom.dol", 0x386EA4, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 umaibou_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte umaibou_hit_data_table
 "@3043":
-	.incbin "baserom.dol", 0x386EC4, 0x10
+	.asciz "kamaboko.bmd"
+	.balign 4
 kamaboko_anim_data:
   .4byte "@3043"
   .4byte 0
@@ -3544,16 +4156,21 @@ kamaboko_anim_data:
   .4byte 0
   .4byte 0
 kamaboko_hit_data_table:
-	.incbin "baserom.dol", 0x386EE8, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 kamaboko_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte kamaboko_hit_data_table
 "@3044":
-	.incbin "baserom.dol", 0x386F08, 0xC
+	.asciz "kamaboko"
+	.balign 4
 "@3045":
-	.incbin "baserom.dol", 0x386F14, 0x10
+	.asciz "getaGreen.bmd"
+	.balign 4
 getag_anim_data:
   .4byte "@3045"
   .4byte 0
@@ -3561,7 +4178,8 @@ getag_anim_data:
   .4byte 0
   .4byte 0
 "@3046":
-	.incbin "baserom.dol", 0x386F38, 0x10
+	.asciz "getaOrange.bmd"
+	.balign 4
 getao_anim_data:
   .4byte "@3046"
   .4byte 0
@@ -3569,14 +4187,18 @@ getao_anim_data:
   .4byte 0
   .4byte 0
 geta_hit_data_table:
-	.incbin "baserom.dol", 0x386F5C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 geta_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte geta_hit_data_table
 "@3050":
-	.incbin "baserom.dol", 0x386F7C, 0xC
+	.asciz "uirou.bmd"
+	.balign 4
 uirou_anim_data:
   .4byte "@3050"
   .4byte 0
@@ -3584,14 +4206,18 @@ uirou_anim_data:
   .4byte 0
   .4byte 0
 uirou_hit_data_table:
-	.incbin "baserom.dol", 0x386F9C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 uirou_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte uirou_hit_data_table
 "@3052":
-	.incbin "baserom.dol", 0x386FBC, 0x10
+	.asciz "hikidashi.bmd"
+	.balign 4
 hikidashi_anim_data:
   .4byte "@3052"
   .4byte 0
@@ -3599,16 +4225,21 @@ hikidashi_anim_data:
   .4byte 0
   .4byte 0
 hikidashi_hit_data_table:
-	.incbin "baserom.dol", 0x386FE0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 hikidashi_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte hikidashi_hit_data_table
 "@3053":
-	.incbin "baserom.dol", 0x387000, 0xC
+	.asciz "hikidashi"
+	.balign 4
 "@3054":
-	.incbin "baserom.dol", 0x38700C, 0x10
+	.asciz "castella.bmd"
+	.balign 4
 castella_anim_data:
   .4byte "@3054"
   .4byte 0
@@ -3616,16 +4247,21 @@ castella_anim_data:
   .4byte 0
   .4byte 0
 castella_hit_data_table:
-	.incbin "baserom.dol", 0x387030, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 castella_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte castella_hit_data_table
 "@3055":
-	.incbin "baserom.dol", 0x387050, 0xC
+	.asciz "castella"
+	.balign 4
 "@3056":
-	.incbin "baserom.dol", 0x38705C, 0x10
+	.asciz "yoshiblock.bmd"
+	.balign 4
 yoshiblock_anim_data:
   .4byte "@3056"
   .4byte 0
@@ -3633,167 +4269,239 @@ yoshiblock_anim_data:
   .4byte 0
   .4byte 0
 yoshiblock_hit_data_table:
-	.incbin "baserom.dol", 0x387080, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x43C80000
 yoshiblock_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte yoshiblock_hit_data_table
 "@3057":
-	.incbin "baserom.dol", 0x3870A0, 0xC
+	.asciz "yoshiblock"
+	.balign 4
 "@3058":
-	.incbin "baserom.dol", 0x3870AC, 0x14
+	.asciz "WoodBlockTriangle"
+	.balign 4
 "@3059":
-	.incbin "baserom.dol", 0x3870C0, 0x14
+	.asciz "WoodBlockPyramid"
+	.balign 4
 "@3060":
-	.incbin "baserom.dol", 0x3870D4, 0x10
+	.asciz "WoodBlockLong"
+	.balign 4
 "@3061":
-	.incbin "baserom.dol", 0x3870E4, 0x10
+	.asciz "WoodBlockLarge"
+	.balign 4
 "@3062":
-	.incbin "baserom.dol", 0x3870F4, 0x10
+	.asciz "WoodBlockCone"
+	.balign 4
 "@3063":
-	.incbin "baserom.dol", 0x387104, 0xC
+	.asciz "WoodBlockL"
+	.balign 4
 "@3064":
-	.incbin "baserom.dol", 0x387110, 0x10
+	.asciz "WoodBlockBridge"
 "@3065":
-	.incbin "baserom.dol", 0x387120, 0x10
+	.asciz "WoodBlockCube"
+	.balign 4
 normalvariant0_hit_data_table:
-	.incbin "baserom.dol", 0x387130, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normalvariant0_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normalvariant0_hit_data_table
 "@3066":
-	.incbin "baserom.dol", 0x387150, 0x10
+	.asciz "normalvariant0"
+	.balign 4
 normalvariant1_hit_data_table:
-	.incbin "baserom.dol", 0x387160, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normalvariant1_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normalvariant1_hit_data_table
 "@3067":
-	.incbin "baserom.dol", 0x387180, 0x10
+	.asciz "normalvariant1"
+	.balign 4
 normalvariant2_hit_data_table:
-	.incbin "baserom.dol", 0x387190, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normalvariant2_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normalvariant2_hit_data_table
 "@3068":
-	.incbin "baserom.dol", 0x3871B0, 0x10
+	.asciz "normalvariant2"
+	.balign 4
 normalvariant3_hit_data_table:
-	.incbin "baserom.dol", 0x3871C0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normalvariant3_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normalvariant3_hit_data_table
 "@3069":
-	.incbin "baserom.dol", 0x3871E0, 0x10
+	.asciz "normalvariant3"
+	.balign 4
 normalvariant4_hit_data_table:
-	.incbin "baserom.dol", 0x3871F0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 normalvariant4_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte normalvariant4_hit_data_table
 "@3070":
-	.incbin "baserom.dol", 0x387210, 0x10
+	.asciz "normalvariant4"
+	.balign 4
 railvariant0_hit_data_table:
-	.incbin "baserom.dol", 0x387220, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 railvariant0_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railvariant0_hit_data_table
 "@3071":
-	.incbin "baserom.dol", 0x387240, 0x10
+	.asciz "railvariant0"
+	.balign 4
 railvariant1_hit_data_table:
-	.incbin "baserom.dol", 0x387250, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 railvariant1_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railvariant1_hit_data_table
 "@3072":
-	.incbin "baserom.dol", 0x387270, 0x10
+	.asciz "railvariant1"
+	.balign 4
 railvariant2_hit_data_table:
-	.incbin "baserom.dol", 0x387280, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 railvariant2_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railvariant2_hit_data_table
 "@3073":
-	.incbin "baserom.dol", 0x3872A0, 0x10
+	.asciz "railvariant2"
+	.balign 4
 railvariant3_hit_data_table:
-	.incbin "baserom.dol", 0x3872B0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 railvariant3_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railvariant3_hit_data_table
 "@3074":
-	.incbin "baserom.dol", 0x3872D0, 0x10
+	.asciz "railvariant3"
+	.balign 4
 railvariant4_hit_data_table:
-	.incbin "baserom.dol", 0x3872E0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 railvariant4_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte railvariant4_hit_data_table
 "@3075":
-	.incbin "baserom.dol", 0x387300, 0x10
+	.asciz "railvariant4"
+	.balign 4
 rollvariant0_hit_data_table:
-	.incbin "baserom.dol", 0x387310, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 rollvariant0_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte rollvariant0_hit_data_table
 "@3076":
-	.incbin "baserom.dol", 0x387330, 0x10
+	.asciz "rollvariant0"
+	.balign 4
 rollvariant1_hit_data_table:
-	.incbin "baserom.dol", 0x387340, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 rollvariant1_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte rollvariant1_hit_data_table
 "@3077":
-	.incbin "baserom.dol", 0x387360, 0x10
+	.asciz "rollvariant1"
+	.balign 4
 rollvariant2_hit_data_table:
-	.incbin "baserom.dol", 0x387370, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 rollvariant2_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte rollvariant2_hit_data_table
 "@3078":
-	.incbin "baserom.dol", 0x387390, 0x10
+	.asciz "rollvariant2"
+	.balign 4
 rollvariant3_hit_data_table:
-	.incbin "baserom.dol", 0x3873A0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 rollvariant3_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte rollvariant3_hit_data_table
 "@3079":
-	.incbin "baserom.dol", 0x3873C0, 0x10
+	.asciz "rollvariant3"
+	.balign 4
 rollvariant4_hit_data_table:
-	.incbin "baserom.dol", 0x3873D0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0x42480000
 rollvariant4_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte rollvariant4_hit_data_table
 "@3080":
-	.incbin "baserom.dol", 0x3873F0, 0x10
+	.asciz "rollvariant4"
+	.balign 4
 "@3081":
-	.incbin "baserom.dol", 0x387400, 0x14
+	.asciz "lamptrapspike.bmd"
+	.balign 4
 lamptrapspike_anim_data:
   .4byte "@3081"
   .4byte 0
@@ -3801,7 +4509,8 @@ lamptrapspike_anim_data:
   .4byte 0
   .4byte 0
 "@3082":
-	.incbin "baserom.dol", 0x387428, 0x14
+	.asciz "lamptrapiron.bmd"
+	.balign 4
 lamptrapiron_anim_data:
   .4byte "@3082"
   .4byte 0
@@ -3809,26 +4518,36 @@ lamptrapiron_anim_data:
   .4byte 0
   .4byte 0
 lamptrap_hit_data_table:
-	.incbin "baserom.dol", 0x387450, 0x10
+	.4byte 0x41A00000
+	.4byte 0x442F0000
+	.4byte 0x41A00000
+	.4byte 0x442F0000
 lamptrap_obj_hit_info:
   .4byte 0x1
   .4byte 0x9c000000
   .4byte 0
   .4byte lamptrap_hit_data_table
 "@3083":
-	.incbin "baserom.dol", 0x387470, 0xC
+	.asciz "lamptrap"
+	.balign 4
 "@3084":
-	.incbin "baserom.dol", 0x38747C, 0x10
+	.asciz "lamptrapspike"
+	.balign 4
 "@3085":
-	.incbin "baserom.dol", 0x38748C, 0x10
+	.asciz "lamptrapiron"
+	.balign 4
 "@3086":
-	.incbin "baserom.dol", 0x38749C, 0xC
+	.asciz "airplane"
+	.balign 4
 "@3087":
-	.incbin "baserom.dol", 0x3874A8, 0xC
+	.asciz "kibako.bmd"
+	.balign 4
 "@3088":
-	.incbin "baserom.dol", 0x3874B4, 0x14
+	.asciz "kibako_crash.bmd"
+	.balign 4
 "@3089":
-	.incbin "baserom.dol", 0x3874C8, 0x10
+	.asciz "kibako_crash"
+	.balign 4
 WoodBox_anim_data:
   .4byte "@3087"
   .4byte 0
@@ -3846,20 +4565,33 @@ WoodBox_anim_data:
   .4byte 0
   .4byte 0
 WoodBox_sound_data:
-	.incbin "baserom.dol", 0x387514, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003802
+	.4byte 0x0000380A
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x0000380B
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003812
+	.4byte 0xFFFFFFFF
 AirportPole_hit_data_table:
-	.incbin "baserom.dol", 0x38753C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42700000
+	.4byte 0x452F0000
 AirportPole_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte AirportPole_hit_data_table
 "@3092":
-	.incbin "baserom.dol", 0x38755C, 0xC
+	.asciz "AirportPole"
 "@3093":
-	.incbin "baserom.dol", 0x387568, 0xC
+	.asciz "yatai.bmd"
+	.balign 4
 "@3094":
-	.incbin "baserom.dol", 0x387574, 0xC
+	.asciz "yatai_bound"
 ice_car_anim_data:
   .4byte "@3093"
   .4byte 0
@@ -3897,32 +4629,42 @@ ice_car_anim_data:
   .4byte 0
   .4byte 0
 ice_car_hit_data_table:
-	.incbin "baserom.dol", 0x38760C, 0x10
+	.4byte 0x42B40000
+	.4byte 0x438C0000
+	.4byte 0x42B40000
+	.4byte 0x438C0000
 ice_car_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte ice_car_hit_data_table
 "@3097":
-	.incbin "baserom.dol", 0x38762C, 0x10
+	.asciz "move_ice_car"
+	.balign 4
 AirportBuoy_hit_data_table:
-	.incbin "baserom.dol", 0x38763C, 0x10
+	.4byte 0x43960000
+	.4byte 0x43C80000
+	.4byte 0
+	.4byte 0
 AirportBuoy_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc2c80000
   .4byte AirportBuoy_hit_data_table
 "@3099":
-	.incbin "baserom.dol", 0x38765C, 0xC
+	.asciz "dptCannon"
+	.balign 4
 dptKing_map_collision_data:
   .4byte "@3100"
   .4byte 0x20000
   .4byte "@3100"
   .4byte 0x10000
 "@3101":
-	.incbin "baserom.dol", 0x387678, 0x14
+	.asciz "KoopaJrSubmarine"
+	.balign 4
 "@3102":
-	.incbin "baserom.dol", 0x38768C, 0x14
+	.asciz "monumentshine.bmd"
+	.balign 4
 monumentshine_anim_data:
   .4byte "@3102"
   .4byte 0
@@ -3930,16 +4672,21 @@ monumentshine_anim_data:
   .4byte 0
   .4byte 0
 monumentshine_hit_data_table:
-	.incbin "baserom.dol", 0x3876B4, 0x10
+	.4byte 0x43960000
+	.4byte 0x44160000
+	.4byte 0x43960000
+	.4byte 0x44160000
 monumentshine_obj_hit_info:
   .4byte 0x1
   .4byte 0x81000000
   .4byte 0xc3960000
   .4byte monumentshine_hit_data_table
 "@3103":
-	.incbin "baserom.dol", 0x3876D4, 0x10
+	.asciz "monumentshine"
+	.balign 4
 "@3104":
-	.incbin "baserom.dol", 0x3876E4, 0x10
+	.asciz "BellDolpic.bmd"
+	.balign 4
 belldolpic_anim_data:
   .4byte "@3104"
   .4byte 0
@@ -3947,18 +4694,24 @@ belldolpic_anim_data:
   .4byte 0
   .4byte 0
 belldolpic_hit_data_table:
-	.incbin "baserom.dol", 0x387708, 0x10
+	.4byte 0x43960000
+	.4byte 0x44160000
+	.4byte 0x43960000
+	.4byte 0x44160000
 belldolpic_obj_hit_info:
   .4byte 0x1
   .4byte 0x81000000
   .4byte 0xc3960000
   .4byte belldolpic_hit_data_table
 "@3105":
-	.incbin "baserom.dol", 0x387728, 0xC
+	.asciz "belldolpic"
+	.balign 4
 "@3106":
-	.incbin "baserom.dol", 0x387734, 0x14
+	.asciz "DptWeathercock.bmd"
+	.balign 4
 "@3107":
-	.incbin "baserom.dol", 0x387748, 0x10
+	.asciz "dptweathercock"
+	.balign 4
 DptWeathercock_anim_data:
   .4byte "@3106"
   .4byte "@3107"
@@ -3966,38 +4719,53 @@ DptWeathercock_anim_data:
   .4byte 0
   .4byte 0
 DptWeathercock_hit_data_table:
-	.incbin "baserom.dol", 0x38776C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42A00000
+	.4byte 0x438C0000
 DptWeathercock_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte DptWeathercock_hit_data_table
 "@3108":
-	.incbin "baserom.dol", 0x38778C, 0x10
+	.asciz "dptWeathercock"
+	.balign 4
 DptMonteFence_hit_data_table:
-	.incbin "baserom.dol", 0x38779C, 0x10
+	.4byte 0x42480000
+	.4byte 0x42A00000
+	.4byte 0
+	.4byte 0
 DptMonteFence_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte DptMonteFence_hit_data_table
 "@3109":
-	.incbin "baserom.dol", 0x3877BC, 0x10
+	.asciz "dptMonteFence"
+	.balign 4
 "@3110":
-	.incbin "baserom.dol", 0x3877CC, 0x10
+	.asciz "dptCoronaFence"
+	.balign 4
 MapSmoke_hit_data_table:
-	.incbin "baserom.dol", 0x3877DC, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x42C80000
 MapSmoke_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte MapSmoke_hit_data_table
 "@3111":
-	.incbin "baserom.dol", 0x3877FC, 0xC
+	.asciz "MapSmoke"
+	.balign 4
 "@3112":
-	.incbin "baserom.dol", 0x387808, 0x10
+	.asciz "maregate.bmd"
+	.balign 4
 "@3113":
-	.incbin "baserom.dol", 0x387818, 0xC
+	.asciz "maregate"
+	.balign 4
 MareGate_anim_data:
   .4byte "@3112"
   .4byte "@3113"
@@ -4005,11 +4773,14 @@ MareGate_anim_data:
   .4byte 0
   .4byte 0
 "@3114":
-	.incbin "baserom.dol", 0x387838, 0xC
+	.asciz "demoCannon"
+	.balign 4
 "@3115":
-	.incbin "baserom.dol", 0x387844, 0x10
+	.asciz "nozzleDoor.bmd"
+	.balign 4
 "@3116":
-	.incbin "baserom.dol", 0x387854, 0xC
+	.asciz "nozzledoor"
+	.balign 4
 NozzleDoor_anim_data:
   .4byte "@3115"
   .4byte 0
@@ -4022,18 +4793,22 @@ NozzleDoor_anim_data:
   .4byte 0
   .4byte 0
 NozzleDoor_hit_data_table:
-	.incbin "baserom.dol", 0x387888, 0x10
+	.4byte 0x42C80000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 NozzleDoor_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte NozzleDoor_hit_data_table
 "@3117":
-	.incbin "baserom.dol", 0x3878A8, 0xC
+	.asciz "nozzleDoor"
+	.balign 4
 "@3118":
-	.incbin "baserom.dol", 0x3878B4, 0x10
+	.asciz "efDokanGate.bmd"
 "@3119":
-	.incbin "baserom.dol", 0x3878C4, 0xC
+	.asciz "efdokangate"
 DokanGate_anim_data:
   .4byte "@3118"
   .4byte "@3119"
@@ -4041,81 +4816,112 @@ DokanGate_anim_data:
   .4byte 0
   .4byte 0
 "@3120":
-	.incbin "baserom.dol", 0x3878E4, 0xC
+	.asciz "DokanGate"
+	.balign 4
 Crane_hit_data_table:
-	.incbin "baserom.dol", 0x3878F0, 0x10
+	.4byte 0x45002000
+	.4byte 0x44D48000
+	.4byte 0
+	.4byte 0
 Crane_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0x44160000
   .4byte Crane_hit_data_table
 "@3122":
-	.incbin "baserom.dol", 0x387910, 0x10
+	.asciz "crane90Scene2"
+	.balign 4
 "@3123":
-	.incbin "baserom.dol", 0x387920, 0x10
+	.asciz "crane180Scene1"
+	.balign 4
 CraneUpDown_hit_data_table:
-	.incbin "baserom.dol", 0x387930, 0x10
+	.4byte 0x44C80000
+	.4byte 0x447A0000
+	.4byte 0
+	.4byte 0
 CraneUpDown_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0xc3fa0000
   .4byte CraneUpDown_hit_data_table
 "@3124":
-	.incbin "baserom.dol", 0x387950, 0xC
+	.asciz "craneUpDown"
 crane_cargo_hit_data_table:
-	.incbin "baserom.dol", 0x38795C, 0x10
+	.4byte 0x44160000
+	.4byte 0x442F0000
+	.4byte 0
+	.4byte 0
 crane_cargo_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0xc4ce4000
   .4byte crane_cargo_hit_data_table
 "@3125":
-	.incbin "baserom.dol", 0x38797C, 0x14
+	.asciz "craneCargoUpDown"
+	.balign 4
 "@3127":
-	.incbin "baserom.dol", 0x387990, 0xC
+	.asciz "container"
+	.balign 4
 Submarine_hit_data_table:
-	.incbin "baserom.dol", 0x38799C, 0x10
+	.4byte 0x43C80000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 Submarine_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
   .4byte 0
   .4byte Submarine_hit_data_table
 "@3128":
-	.incbin "baserom.dol", 0x3879BC, 0xC
+	.asciz "submarine"
+	.balign 4
 submarine_map_collision_data:
   .4byte "@3128"
   .4byte 0x20000
   .4byte "@3128"
   .4byte 0x10000
 ricco_ship_hit_data_table:
-	.incbin "baserom.dol", 0x3879D8, 0x10
+	.4byte 0x442F0000
+	.4byte 0x43C80000
+	.4byte 0
+	.4byte 0
 ricco_ship_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ricco_ship_hit_data_table
 "@3129":
-	.incbin "baserom.dol", 0x3879F8, 0xC
+	.asciz "riccoShip"
+	.balign 4
 ricco_pole_hit_data_table:
-	.incbin "baserom.dol", 0x387A04, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42700000
+	.4byte 0x452F0000
 ricco_pole_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte ricco_pole_hit_data_table
 "@3130":
-	.incbin "baserom.dol", 0x387A24, 0xC
+	.asciz "riccoPole"
+	.balign 4
 riccoLog_hit_data_table:
-	.incbin "baserom.dol", 0x387A30, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x43C80000
+	.4byte 0
+	.4byte 0
 riccoLog_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3480000
   .4byte riccoLog_hit_data_table
 "@3131":
-	.incbin "baserom.dol", 0x387A50, 0xC
+	.asciz "riccoLog"
+	.balign 4
 "@3132":
-	.incbin "baserom.dol", 0x387A5C, 0x10
+	.asciz "surf_geso.bmd"
+	.balign 4
 gesoSurfboard_anim_data:
   .4byte "@3132"
   .4byte 0
@@ -4123,112 +4929,154 @@ gesoSurfboard_anim_data:
   .4byte 0
   .4byte 0
 gesoSurfboard_hit_data_table:
-	.incbin "baserom.dol", 0x387A80, 0x10
+	.4byte 0x42200000
+	.4byte 0x42200000
+	.4byte 0
+	.4byte 0
 gesoSurfboard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte gesoSurfboard_hit_data_table
 "@3133":
-	.incbin "baserom.dol", 0x387AA0, 0x10
+	.asciz "GesoSurfBoard"
+	.balign 4
 "@3134":
-	.incbin "baserom.dol", 0x387AB0, 0x14
+	.asciz "GesoSurfBoardStatic"
 riccoWatermill_hit_data_table:
-	.incbin "baserom.dol", 0x387AC4, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43C80000
+	.4byte 0x44160000
 riccoWatermill_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc3960000
   .4byte riccoWatermill_hit_data_table
 "@3135":
-	.incbin "baserom.dol", 0x387AE4, 0x10
+	.asciz "riccoWatermill"
+	.balign 4
 riccoShipLog_hit_data_table:
-	.incbin "baserom.dol", 0x387AF4, 0x10
+	.4byte 0x45098000
+	.4byte 0x449C4000
+	.4byte 0
+	.4byte 0
 riccoShipLog_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte riccoShipLog_hit_data_table
 "@3136":
-	.incbin "baserom.dol", 0x387B14, 0x10
+	.asciz "riccoShipLog"
+	.balign 4
 riccoShipDol_hit_data_table:
-	.incbin "baserom.dol", 0x387B24, 0x10
+	.4byte 0x45098000
+	.4byte 0x44BB8000
+	.4byte 0
+	.4byte 0
 riccoShipDol_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3c80000
   .4byte riccoShipDol_hit_data_table
 "@3137":
-	.incbin "baserom.dol", 0x387B44, 0x10
+	.asciz "riccoShipDol"
+	.balign 4
 riccoYachtL_hit_data_table:
-	.incbin "baserom.dol", 0x387B54, 0x10
+	.4byte 0x449C4000
+	.4byte 0x44960000
+	.4byte 0
+	.4byte 0
 riccoYachtL_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc4160000
   .4byte riccoYachtL_hit_data_table
 "@3138":
-	.incbin "baserom.dol", 0x387B74, 0xC
+	.asciz "riccoYachtL"
 riccoYachtS_hit_data_table:
-	.incbin "baserom.dol", 0x387B80, 0x10
+	.4byte 0x442F0000
+	.4byte 0x44610000
+	.4byte 0
+	.4byte 0
 riccoYachtS_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3fa0000
   .4byte riccoYachtS_hit_data_table
 "@3139":
-	.incbin "baserom.dol", 0x387BA0, 0xC
+	.asciz "riccoYachtS"
 riccoBoatL_hit_data_table:
-	.incbin "baserom.dol", 0x387BAC, 0x10
+	.4byte 0x44834000
+	.4byte 0x44480000
+	.4byte 0
+	.4byte 0
 riccoBoatL_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3480000
   .4byte riccoBoatL_hit_data_table
 "@3140":
-	.incbin "baserom.dol", 0x387BCC, 0xC
+	.asciz "riccoBoatL"
+	.balign 4
 riccoBoatS_hit_data_table:
-	.incbin "baserom.dol", 0x387BD8, 0x10
+	.4byte 0x44480000
+	.4byte 0x442F0000
+	.4byte 0
+	.4byte 0
 riccoBoatS_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3480000
   .4byte riccoBoatS_hit_data_table
 "@3141":
-	.incbin "baserom.dol", 0x387BF8, 0xC
+	.asciz "riccoBoatS"
+	.balign 4
 "@3142":
-	.incbin "baserom.dol", 0x387C04, 0xC
+	.asciz "riccoBasket"
 "@3143":
-	.incbin "baserom.dol", 0x387C10, 0x10
+	.asciz "riccoGangway"
+	.balign 4
 "@3144":
-	.incbin "baserom.dol", 0x387C20, 0x10
+	.asciz "riccoShipFish"
+	.balign 4
 "@3145":
-	.incbin "baserom.dol", 0x387C30, 0x10
+	.asciz "riccoShipGeso"
+	.balign 4
 "@3146":
-	.incbin "baserom.dol", 0x387C40, 0xC
+	.asciz "riccoSwitch"
 "@3147":
-	.incbin "baserom.dol", 0x387C4C, 0x14
+	.asciz "riccoSwitchShine"
+	.balign 4
 "@3148":
-	.incbin "baserom.dol", 0x387C60, 0x10
+	.asciz "riccoFenceMaze"
+	.balign 4
 "@3149":
-	.incbin "baserom.dol", 0x387C70, 0xC
+	.asciz "riccoStand"
+	.balign 4
 "@3150":
-	.incbin "baserom.dol", 0x387C7C, 0xC
+	.asciz "riccoGrille"
 "@3151":
-	.incbin "baserom.dol", 0x387C88, 0xC
+	.asciz "riccoArrow"
+	.balign 4
 "@3152":
-	.incbin "baserom.dol", 0x387C94, 0x14
+	.asciz "riccoStreetStall"
+	.balign 4
 "@3153":
-	.incbin "baserom.dol", 0x387CA8, 0x10
+	.asciz "riccoHericopter"
 surfgeso_hit_data_table:
-	.incbin "baserom.dol", 0x387CB8, 0x10
+	.4byte 0x42200000
+	.4byte 0x42480000
+	.4byte 0x42200000
+	.4byte 0x42480000
 surfgeso_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte surfgeso_hit_data_table
 "@3154":
-	.incbin "baserom.dol", 0x387CD8, 0x10
+	.asciz "surfgeso.bmd"
+	.balign 4
 surfgeso_anim_data:
   .4byte "@3154"
   .4byte 0
@@ -4236,13 +5084,15 @@ surfgeso_anim_data:
   .4byte 0
   .4byte 0
 "@3155":
-	.incbin "baserom.dol", 0x387CFC, 0xC
+	.asciz "SurfGesoRed"
 "@3156":
-	.incbin "baserom.dol", 0x387D08, 0x10
+	.asciz "SurfGesoYellow"
+	.balign 4
 "@3157":
-	.incbin "baserom.dol", 0x387D18, 0x10
+	.asciz "SurfGesoGreen"
+	.balign 4
 "@3158":
-	.incbin "baserom.dol", 0x387D28, 0x10
+	.asciz "bigWindmill.bmd"
 windmill_anim_data:
   .4byte "@3158"
   .4byte 0
@@ -4250,31 +5100,42 @@ windmill_anim_data:
   .4byte 0
   .4byte 0
 Windmill_hit_data_table:
-	.incbin "baserom.dol", 0x387D4C, 0x10
+	.4byte 0x451C4000
+	.4byte 0x459C4000
+	.4byte 0
+	.4byte 0
 Windmill_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc51c4000
   .4byte Windmill_hit_data_table
 "@3159":
-	.incbin "baserom.dol", 0x387D6C, 0xC
+	.asciz "bigWindmill"
 "@3160":
-	.incbin "baserom.dol", 0x387D78, 0x10
+	.asciz "windmill_far"
+	.balign 4
 MiniWindmill_hit_data_table:
-	.incbin "baserom.dol", 0x387D88, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x41A00000
+	.4byte 0x45C80000
 MiniWindmill_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte MiniWindmill_hit_data_table
 "@3161":
-	.incbin "baserom.dol", 0x387DA8, 0x10
+	.asciz "MiniWindmillL"
+	.balign 4
 "@3162":
-	.incbin "baserom.dol", 0x387DB8, 0x10
+	.asciz "MiniWindmillS"
+	.balign 4
 "@3163":
-	.incbin "baserom.dol", 0x387DC8, 0x10
+	.asciz "WindmillRoof"
+	.balign 4
 "@3164":
-	.incbin "baserom.dol", 0x387DD8, 0x10
+	.asciz "lampBianco.bmd"
+	.balign 4
 lamp_bianco_anim_data:
   .4byte "@3164"
   .4byte 0
@@ -4312,49 +5173,74 @@ lamp_bianco_anim_data:
   .4byte 0
   .4byte 0
 lamp_bianco_hit_data_table:
-	.incbin "baserom.dol", 0x387E74, 0x30
+	.4byte 0
+	.4byte 0
+	.4byte 0x41A00000
+	.4byte 0x45160000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 lamp_bianco_obj_hit_info:
   .4byte 0x3
   .4byte 0x9c000000
   .4byte 0
   .4byte lamp_bianco_hit_data_table
 "@3165":
-	.incbin "baserom.dol", 0x387EB4, 0xC
+	.asciz "lampBianco"
+	.balign 4
 lamp_bianco_map_collision_data:
   .4byte "@3165"
   .4byte 0x20000
   .4byte "@3165"
   .4byte 0x10000
 "@3166":
-	.incbin "baserom.dol", 0x387ED0, 0xC
+	.asciz "rootPaku"
+	.balign 4
 WindmillBlock_hit_data_table:
-	.incbin "baserom.dol", 0x387EDC, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 WindmillBlock_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3480000
   .4byte WindmillBlock_hit_data_table
 "@3167":
-	.incbin "baserom.dol", 0x387EFC, 0x14
+	.asciz "bigWindmillBlock"
+	.balign 4
 PolluterPakkun_hit_data_table:
-	.incbin "baserom.dol", 0x387F10, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42C80000
+	.4byte 0x42C80000
 PolluterPakkun_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte PolluterPakkun_hit_data_table
 "@3168":
-	.incbin "baserom.dol", 0x387F30, 0x10
+	.asciz "PolluterPakkun"
+	.balign 4
 "@3169":
-	.incbin "baserom.dol", 0x387F40, 0xC
+	.asciz "BiaBell.bmd"
 "@3170":
-	.incbin "baserom.dol", 0x387F4C, 0xC
+	.asciz "biabella"
+	.balign 4
 "@3171":
-	.incbin "baserom.dol", 0x387F58, 0xC
+	.asciz "biabellb"
+	.balign 4
 "@3172":
-	.incbin "baserom.dol", 0x387F64, 0xC
+	.asciz "biabellc"
+	.balign 4
 "@3173":
-	.incbin "baserom.dol", 0x387F70, 0xC
+	.asciz "biabelld"
+	.balign 4
 BiaBell_anim_data:
   .4byte "@3169"
   .4byte 0
@@ -4382,16 +5268,29 @@ BiaBell_anim_data:
   .4byte 0
   .4byte 0
 BiaBell_hit_data_table:
-	.incbin "baserom.dol", 0x387FE0, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x42C80000
 BiaBell_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte BiaBell_hit_data_table
 "@3175":
-	.incbin "baserom.dol", 0x388000, 0x28
+	.4byte 0x83748340
+	.4byte 0x815B834E
+	.4byte 0x838A8362
+	.4byte 0x8376926E
+	.4byte 0x8C608349
+	.4byte 0x83758357
+	.4byte 0x8346837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3176":
-	.incbin "baserom.dol", 0x388028, 0x14
+	.asciz "BiaWatermill00.bmd"
+	.balign 4
 watermill00_anim_data:
   .4byte "@3176"
   .4byte 0
@@ -4399,52 +5298,73 @@ watermill00_anim_data:
   .4byte 0
   .4byte 0
 BiaWatermill00_hit_data_table:
-	.incbin "baserom.dol", 0x388050, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43A00000
+	.4byte 0x43FA0000
 BiaWatermill00_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0xc3960000
   .4byte BiaWatermill00_hit_data_table
 "@3177":
-	.incbin "baserom.dol", 0x388070, 0x10
+	.asciz "BiaWatermill00"
+	.balign 4
 BiaWatermill01_hit_data_table:
-	.incbin "baserom.dol", 0x388080, 0x10
+	.4byte 0x44960000
+	.4byte 0x44FA0000
+	.4byte 0
+	.4byte 0
 BiaWatermill01_obj_hit_info:
   .4byte 0x1
   .4byte 0x91000000
   .4byte 0xc47a0000
   .4byte BiaWatermill01_hit_data_table
 "@3178":
-	.incbin "baserom.dol", 0x3880A0, 0x10
+	.asciz "BiaWatermill01"
+	.balign 4
 BiaWatermillVertical_hit_data_table:
-	.incbin "baserom.dol", 0x3880B0, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x44E74000
+	.4byte 0x43FA0000
+	.4byte 0x44E74000
 BiaWatermillVertical_obj_hit_info:
   .4byte 0x1
   .4byte 0x91000000
   .4byte 0
   .4byte BiaWatermillVertical_hit_data_table
 "@3179":
-	.incbin "baserom.dol", 0x3880D0, 0x18
+	.asciz "BiaWatermillVertical"
+	.balign 4
 BiaTurnBridge_hit_data_table:
-	.incbin "baserom.dol", 0x3880E8, 0x10
+	.4byte 0x44960000
+	.4byte 0x437A0000
+	.4byte 0x42C80000
+	.4byte 0x42C80000
 BiaTurnBridge_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte BiaTurnBridge_hit_data_table
 "@3180":
-	.incbin "baserom.dol", 0x388108, 0x10
+	.asciz "BiaTurnBridge"
+	.balign 4
 LeafBoat_hit_data_table:
-	.incbin "baserom.dol", 0x388118, 0x10
+	.4byte 0x43960000
+	.4byte 0x43C80000
+	.4byte 0x43960000
+	.4byte 0x43C80000
 LeafBoat_obj_hit_info:
   .4byte 0x1
   .4byte 0xd0000000
   .4byte 0xc3480000
   .4byte LeafBoat_hit_data_table
 "@3181":
-	.incbin "baserom.dol", 0x388138, 0xC
+	.asciz "LeafBoat"
+	.balign 4
 "@3182":
-	.incbin "baserom.dol", 0x388144, 0x10
+	.asciz "LeafBoatRotten"
+	.balign 4
 LampSeesaw_anim_data:
   .4byte "@3164"
   .4byte 0
@@ -4452,20 +5372,35 @@ LampSeesaw_anim_data:
   .4byte 0
   .4byte 0
 LampSeesaw_hit_data_table:
-	.incbin "baserom.dol", 0x388168, 0x30
+	.4byte 0x43960000
+	.4byte 0x45228000
+	.4byte 0x42480000
+	.4byte 0x45160000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 LampSeesaw_obj_hit_info:
   .4byte 0x3
   .4byte 0x9c000000
   .4byte 0
   .4byte LampSeesaw_hit_data_table
 "@3183":
-	.incbin "baserom.dol", 0x3881A8, 0xC
+	.asciz "LampSeesaw"
+	.balign 4
 "@3185":
-	.incbin "baserom.dol", 0x3881B4, 0xC
+	.asciz "BiaBridge"
+	.balign 4
 "@3186":
-	.incbin "baserom.dol", 0x3881C0, 0x10
+	.asciz "SandBird.bmd"
+	.balign 4
 "@3187":
-	.incbin "baserom.dol", 0x3881D0, 0xC
+	.asciz "sandbird"
+	.balign 4
 SandBird_anim_data:
   .4byte "@3186"
   .4byte "@3187"
@@ -4473,25 +5408,32 @@ SandBird_anim_data:
   .4byte 0
   .4byte 0
 "@3188":
-	.incbin "baserom.dol", 0x3881F0, 0xC
+	.asciz "SandBird"
+	.balign 4
 SandBirdBlock_hit_data_table:
-	.incbin "baserom.dol", 0x3881FC, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x447A0000
+	.4byte 0
+	.4byte 0
 SandBirdBlock_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3fa0000
   .4byte SandBirdBlock_hit_data_table
 "@3189":
-	.incbin "baserom.dol", 0x38821C, 0x10
+	.asciz "SandBirdBlock"
+	.balign 4
 SandBirdBlock_map_collision_data:
   .4byte "@3189"
   .4byte 0x10000
   .4byte 0
   .4byte 0
 "@3190":
-	.incbin "baserom.dol", 0x38823C, 0x10
+	.asciz "SkyIsland.bmd"
+	.balign 4
 "@3191":
-	.incbin "baserom.dol", 0x38824C, 0xC
+	.asciz "skyisland"
+	.balign 4
 SkyIsland_anim_data:
   .4byte "@3190"
   .4byte "@3191"
@@ -4499,17 +5441,23 @@ SkyIsland_anim_data:
   .4byte 0
   .4byte 0
 "@3192":
-	.incbin "baserom.dol", 0x38826C, 0xC
+	.asciz "SkyIsland"
+	.balign 4
 "@3193":
-	.incbin "baserom.dol", 0x388278, 0x10
+	.asciz "SandLeaf.bmd"
+	.balign 4
 "@3194":
-	.incbin "baserom.dol", 0x388288, 0x10
+	.asciz "sandleaf_wait"
+	.balign 4
 "@3195":
-	.incbin "baserom.dol", 0x388298, 0x10
+	.asciz "sandleaf_set"
+	.balign 4
 "@3196":
-	.incbin "baserom.dol", 0x3882A8, 0x10
+	.asciz "sandleaf_water"
+	.balign 4
 "@3197":
-	.incbin "baserom.dol", 0x3882B8, 0x10
+	.asciz "sandleaf_end"
+	.balign 4
 SandLeaf_anim_data:
   .4byte "@3193"
   .4byte "@3194"
@@ -4537,16 +5485,21 @@ SandLeaf_anim_data:
   .4byte 0
   .4byte 0
 sand_leaf_hit_data_table:
-	.incbin "baserom.dol", 0x38832C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x43340000
 sand_leaf_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte sand_leaf_hit_data_table
 "@3198":
-	.incbin "baserom.dol", 0x38834C, 0xC
+	.asciz "SandLeaf"
+	.balign 4
 "@3199":
-	.incbin "baserom.dol", 0x388358, 0x14
+	.asciz "SandLeafBase00.bmd"
+	.balign 4
 SandLeafBase00_anim_data:
   .4byte "@3199"
   .4byte 0
@@ -4554,14 +5507,16 @@ SandLeafBase00_anim_data:
   .4byte 0
   .4byte 0
 "@3200":
-	.incbin "baserom.dol", 0x388380, 0x10
+	.asciz "SandLeafBase00"
+	.balign 4
 SandLeafBase00_map_collision_data:
   .4byte "@3200"
   .4byte 0x20000
   .4byte "@3200"
   .4byte 0x10000
 "@3201":
-	.incbin "baserom.dol", 0x3883A0, 0x14
+	.asciz "SandLeafBase01.bmd"
+	.balign 4
 SandLeafBase01_anim_data:
   .4byte "@3201"
   .4byte 0
@@ -4569,14 +5524,16 @@ SandLeafBase01_anim_data:
   .4byte 0
   .4byte 0
 "@3202":
-	.incbin "baserom.dol", 0x3883C8, 0x10
+	.asciz "SandLeafBase01"
+	.balign 4
 SandLeafBase01_map_collision_data:
   .4byte "@3202"
   .4byte 0x20000
   .4byte "@3202"
   .4byte 0x10000
 "@3203":
-	.incbin "baserom.dol", 0x3883E8, 0x14
+	.asciz "SandLeafBase02.bmd"
+	.balign 4
 SandLeafBase02_anim_data:
   .4byte "@3203"
   .4byte 0
@@ -4584,14 +5541,16 @@ SandLeafBase02_anim_data:
   .4byte 0
   .4byte 0
 "@3204":
-	.incbin "baserom.dol", 0x388410, 0x10
+	.asciz "SandLeafBase02"
+	.balign 4
 SandLeafBase02_map_collision_data:
   .4byte "@3204"
   .4byte 0x20000
   .4byte "@3204"
   .4byte 0x10000
 "@3205":
-	.incbin "baserom.dol", 0x388430, 0x14
+	.asciz "SandLeafBase03.bmd"
+	.balign 4
 SandLeafBase03_anim_data:
   .4byte "@3205"
   .4byte 0
@@ -4599,22 +5558,27 @@ SandLeafBase03_anim_data:
   .4byte 0
   .4byte 0
 "@3206":
-	.incbin "baserom.dol", 0x388458, 0x10
+	.asciz "SandLeafBase03"
+	.balign 4
 SandLeafBase03_map_collision_data:
   .4byte "@3206"
   .4byte 0x20000
   .4byte "@3206"
   .4byte 0x10000
 "@3207":
-	.incbin "baserom.dol", 0x388478, 0x10
+	.asciz "SandBomb.bmd"
+	.balign 4
 "@3208":
-	.incbin "baserom.dol", 0x388488, 0x10
+	.asciz "sandbomb_wait"
+	.balign 4
 "@3209":
-	.incbin "baserom.dol", 0x388498, 0x10
+	.asciz "sandbomb_water"
+	.balign 4
 "@3210":
-	.incbin "baserom.dol", 0x3884A8, 0x14
+	.asciz "sandbomb_ignition"
+	.balign 4
 "@3211":
-	.incbin "baserom.dol", 0x3884BC, 0xC
+	.asciz "sandbomb_up"
 SandBomb_anim_data:
   .4byte "@3207"
   .4byte "@3208"
@@ -4652,16 +5616,23 @@ SandBomb_anim_data:
   .4byte 0
   .4byte 0
 sand_bomb_hit_data_table:
-	.incbin "baserom.dol", 0x388554, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x43340000
 sand_bomb_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte sand_bomb_hit_data_table
 "@3212":
-	.incbin "baserom.dol", 0x388574, 0xC
+	.asciz "SandBomb"
+	.balign 4
 mirror_L_hit_data_table:
-	.incbin "baserom.dol", 0x388580, 0x10
+	.4byte 0x44E10000
+	.4byte 0x44FA0000
+	.4byte 0
+	.4byte 0
 mirror_L_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
@@ -4673,7 +5644,10 @@ mirror_L_map_collision_data:
   .4byte "@3213"
   .4byte 0x20000
 mirror_M_hit_data_table:
-	.incbin "baserom.dol", 0x3885B0, 0x10
+	.4byte 0x44AF0000
+	.4byte 0x44D48000
+	.4byte 0
+	.4byte 0
 mirror_M_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
@@ -4685,7 +5659,10 @@ mirror_M_map_collision_data:
   .4byte "@3214"
   .4byte 0x20000
 mirrorS_hit_data_table:
-	.incbin "baserom.dol", 0x3885E0, 0x10
+	.4byte 0x44960000
+	.4byte 0x44A28000
+	.4byte 0
+	.4byte 0
 mirrorS_obj_hit_info:
   .4byte 0x1
   .4byte 0x90000000
@@ -4697,11 +5674,14 @@ mirrorS_map_collision_data:
   .4byte "@3215"
   .4byte 0x20000
 "@3216":
-	.incbin "baserom.dol", 0x388610, 0x10
+	.asciz "SandCastle.bmd"
+	.balign 4
 "@3217":
-	.incbin "baserom.dol", 0x388620, 0x10
+	.asciz "sandcastle_up"
+	.balign 4
 "@3218":
-	.incbin "baserom.dol", 0x388630, 0x10
+	.asciz "sandcastle_end"
+	.balign 4
 SandCastle_anim_data:
   .4byte "@3216"
   .4byte 0
@@ -4724,59 +5704,78 @@ SandCastle_anim_data:
   .4byte 0
   .4byte 0
 "@3219":
-	.incbin "baserom.dol", 0x388690, 0xC
+	.asciz "SandCastle"
+	.balign 4
 SandCastle_map_collision_data:
   .4byte "@3219"
   .4byte 0x20000
   .4byte "@3219"
   .4byte 0x10000
 "@3220":
-	.incbin "baserom.dol", 0x3886AC, 0x14
+	.asciz "MammaBlockRotate"
+	.balign 4
 MammaBlockRotate_map_collision_data:
   .4byte "@3220"
   .4byte 0x10000
   .4byte "@3220"
   .4byte 0x20000
 "@3221":
-	.incbin "baserom.dol", 0x3886D0, 0x10
+	.asciz "SandEggNormal"
+	.balign 4
 "@3222":
-	.incbin "baserom.dol", 0x3886E0, 0x10
+	.asciz "SandEggBroken"
+	.balign 4
 "@3223":
-	.incbin "baserom.dol", 0x3886F0, 0x10
+	.asciz "ShiningStone"
+	.balign 4
 MammaSurfboard_hit_data_table:
-	.incbin "baserom.dol", 0x388700, 0x10
+	.4byte 0x42C80000
+	.4byte 0x43480000
+	.4byte 0
+	.4byte 0
 MammaSurfboard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte MammaSurfboard_hit_data_table
 "@3224":
-	.incbin "baserom.dol", 0x388720, 0x14
+	.asciz "MammaSurfboard00"
+	.balign 4
 "@3225":
-	.incbin "baserom.dol", 0x388734, 0x14
+	.asciz "MammaSurfboard01"
+	.balign 4
 "@3226":
-	.incbin "baserom.dol", 0x388748, 0x14
+	.asciz "MammaSurfboard02"
+	.balign 4
 "@3227":
-	.incbin "baserom.dol", 0x38875C, 0x14
+	.asciz "MammaSurfboard03"
+	.balign 4
 "@3228":
-	.incbin "baserom.dol", 0x388770, 0x14
+	.asciz "MammaSurfboardStand"
 MammaYacht00_hit_data_table:
-	.incbin "baserom.dol", 0x388784, 0x10
+	.4byte 0x447A0000
+	.4byte 0x44480000
+	.4byte 0x42480000
+	.4byte 0x447A0000
 MammaYacht00_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte MammaYacht00_hit_data_table
 "@3229":
-	.incbin "baserom.dol", 0x3887A4, 0x10
+	.asciz "MammaYacht00"
+	.balign 4
 "@3230":
-	.incbin "baserom.dol", 0x3887B4, 0x10
+	.asciz "MammaYacht01"
+	.balign 4
 "@3231":
-	.incbin "baserom.dol", 0x3887C4, 0x10
+	.asciz "MammaYacht02"
+	.balign 4
 "@3232":
-	.incbin "baserom.dol", 0x3887D4, 0x14
+	.asciz "SandBombBase00.bmd"
+	.balign 4
 "@3233":
-	.incbin "baserom.dol", 0x3887E8, 0x10
+	.asciz "sandbombbase_up"
 SandBombBase00_anim_data:
   .4byte "@3232"
   .4byte 0
@@ -4789,14 +5788,16 @@ SandBombBase00_anim_data:
   .4byte 0
   .4byte 0
 "@3234":
-	.incbin "baserom.dol", 0x388820, 0x10
+	.asciz "SandBombBase00"
+	.balign 4
 SandBombBase00_map_collision_data:
   .4byte "@3234"
   .4byte 0x20000
   .4byte "@3234"
   .4byte 0x10000
 "@3235":
-	.incbin "baserom.dol", 0x388840, 0x1C
+	.asciz "SandBombBaseMushroom.bmd"
+	.balign 4
 SandBombBaseMushroom_anim_data:
   .4byte "@3235"
   .4byte 0
@@ -4809,14 +5810,15 @@ SandBombBaseMushroom_anim_data:
   .4byte 0
   .4byte 0
 "@3236":
-	.incbin "baserom.dol", 0x388884, 0x18
+	.asciz "SandBombBaseMushroom"
+	.balign 4
 SandBombBaseMushroom_map_collision_data:
   .4byte "@3236"
   .4byte 0x20000
   .4byte "@3236"
   .4byte 0x10000
 "@3237":
-	.incbin "baserom.dol", 0x3888AC, 0x18
+	.asciz "SandBombBasePyramid.bmd"
 SandBombBasePyramid_anim_data:
   .4byte "@3237"
   .4byte 0
@@ -4829,14 +5831,15 @@ SandBombBasePyramid_anim_data:
   .4byte 0
   .4byte 0
 "@3238":
-	.incbin "baserom.dol", 0x3888EC, 0x14
+	.asciz "SandBombBasePyramid"
 SandBombBasePyramid_map_collision_data:
   .4byte "@3238"
   .4byte 0x20000
   .4byte "@3238"
   .4byte 0x10000
 "@3239":
-	.incbin "baserom.dol", 0x388910, 0x18
+	.asciz "SandBombBaseShit.bmd"
+	.balign 4
 SandBombBaseShit_anim_data:
   .4byte "@3239"
   .4byte 0
@@ -4849,14 +5852,16 @@ SandBombBaseShit_anim_data:
   .4byte 0
   .4byte 0
 "@3240":
-	.incbin "baserom.dol", 0x388950, 0x14
+	.asciz "SandBombBaseShit"
+	.balign 4
 SandBombBaseShit_map_collision_data:
   .4byte "@3240"
   .4byte 0x20000
   .4byte "@3240"
   .4byte 0x10000
 "@3241":
-	.incbin "baserom.dol", 0x388974, 0x18
+	.asciz "SandBombBaseStar.bmd"
+	.balign 4
 SandBombBaseStar_anim_data:
   .4byte "@3241"
   .4byte 0
@@ -4869,14 +5874,16 @@ SandBombBaseStar_anim_data:
   .4byte 0
   .4byte 0
 "@3242":
-	.incbin "baserom.dol", 0x3889B4, 0x14
+	.asciz "SandBombBaseStar"
+	.balign 4
 SandBombBaseStar_map_collision_data:
   .4byte "@3242"
   .4byte 0x20000
   .4byte "@3242"
   .4byte 0x10000
 "@3243":
-	.incbin "baserom.dol", 0x3889D8, 0x18
+	.asciz "SandBombBaseTurtle.bmd"
+	.balign 4
 SandBombBaseTurtle_anim_data:
   .4byte "@3243"
   .4byte 0
@@ -4889,14 +5896,16 @@ SandBombBaseTurtle_anim_data:
   .4byte 0
   .4byte 0
 "@3244":
-	.incbin "baserom.dol", 0x388A18, 0x14
+	.asciz "SandBombBaseTurtle"
+	.balign 4
 SandBombBaseTurtle_map_collision_data:
   .4byte "@3244"
   .4byte 0x20000
   .4byte "@3244"
   .4byte 0x10000
 "@3245":
-	.incbin "baserom.dol", 0x388A3C, 0x18
+	.asciz "SandBombBaseFoot.bmd"
+	.balign 4
 SandBombBaseFoot_anim_data:
   .4byte "@3245"
   .4byte 0
@@ -4909,14 +5918,16 @@ SandBombBaseFoot_anim_data:
   .4byte 0
   .4byte 0
 "@3246":
-	.incbin "baserom.dol", 0x388A7C, 0x14
+	.asciz "SandBombBaseFoot"
+	.balign 4
 SandBombBaseFoot_map_collision_data:
   .4byte "@3246"
   .4byte 0x20000
   .4byte "@3246"
   .4byte 0x10000
 "@3247":
-	.incbin "baserom.dol", 0x388AA0, 0x18
+	.asciz "SandBombBaseHand.bmd"
+	.balign 4
 SandBombBaseHand_anim_data:
   .4byte "@3247"
   .4byte 0
@@ -4929,14 +5940,16 @@ SandBombBaseHand_anim_data:
   .4byte 0
   .4byte 0
 "@3248":
-	.incbin "baserom.dol", 0x388AE0, 0x14
+	.asciz "SandBombBaseHand"
+	.balign 4
 SandBombBaseHand_map_collision_data:
   .4byte "@3248"
   .4byte 0x20000
   .4byte "@3248"
   .4byte 0x10000
 "@3249":
-	.incbin "baserom.dol", 0x388B04, 0x18
+	.asciz "SandBombBaseStairs.bmd"
+	.balign 4
 SandBombBaseStairs_anim_data:
   .4byte "@3249"
   .4byte 0
@@ -4949,25 +5962,32 @@ SandBombBaseStairs_anim_data:
   .4byte 0
   .4byte 0
 "@3250":
-	.incbin "baserom.dol", 0x388B44, 0x14
+	.asciz "SandBombBaseStairs"
+	.balign 4
 SandBombBaseStairs_map_collision_data:
   .4byte "@3250"
   .4byte 0x20000
   .4byte "@3250"
   .4byte 0x10000
 GoalWatermelon_hit_data_table:
-	.incbin "baserom.dol", 0x388B68, 0x10
+	.4byte 0x42F00000
+	.4byte 0x43340000
+	.4byte 0
+	.4byte 0
 GoalWatermelon_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0
   .4byte GoalWatermelon_hit_data_table
 "@3253":
-	.incbin "baserom.dol", 0x388B88, 0x10
+	.asciz "GoalWatermelon"
+	.balign 4
 "@3254":
-	.incbin "baserom.dol", 0x388B98, 0x14
+	.asciz "TeethOfJuicer.bmd"
+	.balign 4
 "@3255":
-	.incbin "baserom.dol", 0x388BAC, 0x10
+	.asciz "teethofjuicer"
+	.balign 4
 TeethOfJuicer_anim_data:
   .4byte "@3254"
   .4byte "@3255"
@@ -4975,18 +5995,24 @@ TeethOfJuicer_anim_data:
   .4byte 0
   .4byte 0
 TeethOfJuicer_hit_data_table:
-	.incbin "baserom.dol", 0x388BD0, 0x10
+	.4byte 0x42F00000
+	.4byte 0x43340000
+	.4byte 0
+	.4byte 0
 TeethOfJuicer_obj_hit_info:
   .4byte 0x1
   .4byte 0x40000000
   .4byte 0
   .4byte TeethOfJuicer_hit_data_table
 "@3256":
-	.incbin "baserom.dol", 0x388BF0, 0x10
+	.asciz "TeethOfJuicer"
+	.balign 4
 "@3257":
-	.incbin "baserom.dol", 0x388C00, 0x10
+	.asciz "SandEggrepair"
+	.balign 4
 "@3258":
-	.incbin "baserom.dol", 0x388C10, 0xC
+	.asciz "merry.bmd"
+	.balign 4
 merrygoround_anim_data:
   .4byte "@3258"
   .4byte "@3259"
@@ -4994,34 +6020,45 @@ merrygoround_anim_data:
   .4byte 0
   .4byte 0
 merry_hit_data_table:
-	.incbin "baserom.dol", 0x388C30, 0x10
+	.4byte 0x44FA0000
+	.4byte 0x44FA0000
+	.4byte 0
+	.4byte 0
 merrygoround_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte merry_hit_data_table
 merry_egg_hit_data_table:
-	.incbin "baserom.dol", 0x388C50, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 merry_egg_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte merry_egg_hit_data_table
 "@3260":
-	.incbin "baserom.dol", 0x388C70, 0xC
+	.asciz "merry_egg"
+	.balign 4
 merry_pole_hit_data_table:
-	.incbin "baserom.dol", 0x388C7C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x44160000
 merry_pole_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte merry_pole_hit_data_table
 "@3261":
-	.incbin "baserom.dol", 0x388C9C, 0xC
+	.asciz "merry_pole"
+	.balign 4
 "@3262":
-	.incbin "baserom.dol", 0x388CA8, 0x10
+	.asciz "FerrisWheel.bmd"
 "@3263":
-	.incbin "baserom.dol", 0x388CB8, 0xC
+	.asciz "ferriswheel"
 FerrisWheel_anim_data:
   .4byte "@3262"
   .4byte "@3263"
@@ -5029,27 +6066,36 @@ FerrisWheel_anim_data:
   .4byte 0
   .4byte 0
 FerrisWheel_hit_data_table:
-	.incbin "baserom.dol", 0x388CD8, 0x10
+	.4byte 0x452F0000
+	.4byte 0x45AF0000
+	.4byte 0
+	.4byte 0
 FerrisWheel_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc52f0000
   .4byte FerrisWheel_hit_data_table
 "@3264":
-	.incbin "baserom.dol", 0x388CF8, 0xC
+	.asciz "FerrisWheel"
 "@3265":
-	.incbin "baserom.dol", 0x388D04, 0x10
+	.asciz "FerrisGondola"
+	.balign 4
 FerrisWheelGondola_hit_data_table:
-	.incbin "baserom.dol", 0x388D14, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x44480000
+	.4byte 0
+	.4byte 0
 FerrisWheelGondola_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc42f0000
   .4byte FerrisWheelGondola_hit_data_table
 "@3266":
-	.incbin "baserom.dol", 0x388D34, 0x10
+	.asciz "FerrisLOD.bmd"
+	.balign 4
 "@3267":
-	.incbin "baserom.dol", 0x388D44, 0xC
+	.asciz "ferrislod"
+	.balign 4
 FerrisLOD_anim_data:
   .4byte "@3266"
   .4byte "@3267"
@@ -5057,24 +6103,32 @@ FerrisLOD_anim_data:
   .4byte 0
   .4byte 0
 "@3268":
-	.incbin "baserom.dol", 0x388D64, 0xC
+	.asciz "FerrisLOD"
+	.balign 4
 Viking_hit_data_table:
-	.incbin "baserom.dol", 0x388D70, 0x10
+	.4byte 0x44A28000
+	.4byte 0x45160000
+	.4byte 0
+	.4byte 0
 Viking_obj_hit_info:
   .4byte 0x1
   .4byte 0x81000000
   .4byte 0xc47a0000
   .4byte Viking_hit_data_table
 "@3270":
-	.incbin "baserom.dol", 0x388D90, 0xC
+	.asciz "PinnaDoor"
+	.balign 4
 "@3271":
-	.incbin "baserom.dol", 0x388D9C, 0x10
+	.asciz "PinnaDoorOpen"
+	.balign 4
 "@3272":
-	.incbin "baserom.dol", 0x388DAC, 0xC
+	.asciz "SirenaGate"
+	.balign 4
 "@3273":
-	.incbin "baserom.dol", 0x388DB8, 0x14
+	.asciz "balloonKoopaJr.bmd"
+	.balign 4
 "@3274":
-	.incbin "baserom.dol", 0x388DCC, 0x14
+	.asciz "balloonkoopajr_wait"
 balloon_koopajr_anim_data:
   .4byte "@3273"
   .4byte "@3274"
@@ -5092,18 +6146,24 @@ balloon_koopajr_anim_data:
   .4byte 0
   .4byte 0
 balloon_koopajr_hit_data_table:
-	.incbin "baserom.dol", 0x388E1C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x42C80000
+	.4byte 0x42C80000
 balloon_koopajr_obj_hit_info:
   .4byte 0x1
   .4byte 0x10000000
   .4byte 0
   .4byte balloon_koopajr_hit_data_table
 "@3275":
-	.incbin "baserom.dol", 0x388E3C, 0x10
+	.asciz "balloonKoopaJr"
+	.balign 4
 "@3276":
-	.incbin "baserom.dol", 0x388E4C, 0x10
+	.asciz "ShellCup.bmd"
+	.balign 4
 "@3277":
-	.incbin "baserom.dol", 0x388E5C, 0xC
+	.asciz "shellcup"
+	.balign 4
 ShellCup_anim_data:
   .4byte "@3276"
   .4byte "@3277"
@@ -5111,20 +6171,27 @@ ShellCup_anim_data:
   .4byte 0
   .4byte 0
 "@3278":
-	.incbin "baserom.dol", 0x388E7C, 0x10
+	.asciz "ShellCup_under"
+	.balign 4
 ShellCup_hit_data_table:
-	.incbin "baserom.dol", 0x388E8C, 0x10
+	.4byte 0x44A28000
+	.4byte 0x43FA0000
+	.4byte 0
+	.4byte 0
 ShellCup_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ShellCup_hit_data_table
 "@3279":
-	.incbin "baserom.dol", 0x388EAC, 0xC
+	.asciz "ShellCup"
+	.balign 4
 "@3280":
-	.incbin "baserom.dol", 0x388EB8, 0x10
+	.asciz "Gateshell.bmd"
+	.balign 4
 "@3281":
-	.incbin "baserom.dol", 0x388EC8, 0xC
+	.asciz "gateshell"
+	.balign 4
 Gateshell_anim_data:
   .4byte "@3280"
   .4byte "@3281"
@@ -5132,9 +6199,11 @@ Gateshell_anim_data:
   .4byte 0
   .4byte 0
 "@3282":
-	.incbin "baserom.dol", 0x388EE8, 0xC
+	.asciz "Gateshell"
+	.balign 4
 "@3283":
-	.incbin "baserom.dol", 0x388EF4, 0x10
+	.asciz "PinnaBoard.bmd"
+	.balign 4
 PinnaHangingBridgeBoard_anim_data:
   .4byte "@3283"
   .4byte 0
@@ -5142,20 +6211,26 @@ PinnaHangingBridgeBoard_anim_data:
   .4byte 0
   .4byte 0
 PinnaHangingBridgeBoard_hit_data_table:
-	.incbin "baserom.dol", 0x388F18, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 PinnaHangingBridgeBoard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte PinnaHangingBridgeBoard_hit_data_table
 "@3284":
-	.incbin "baserom.dol", 0x388F38, 0xC
+	.asciz "PinnaBoard"
+	.balign 4
 "@3285":
-	.incbin "baserom.dol", 0x388F44, 0x18
+	.asciz "PinnaHangingBridgeBoard"
 "@3286":
-	.incbin "baserom.dol", 0x388F5C, 0x10
+	.asciz "GateManta.bmd"
+	.balign 4
 "@3287":
-	.incbin "baserom.dol", 0x388F6C, 0xC
+	.asciz "gatemanta"
+	.balign 4
 GateManta_anim_data:
   .4byte "@3286"
   .4byte "@3287"
@@ -5163,11 +6238,14 @@ GateManta_anim_data:
   .4byte 0
   .4byte 0
 "@3288":
-	.incbin "baserom.dol", 0x388F8C, 0xC
+	.asciz "GateManta"
+	.balign 4
 "@3289":
-	.incbin "baserom.dol", 0x388F98, 0x10
+	.asciz "PinnaSunFlower"
+	.balign 4
 "@3290":
-	.incbin "baserom.dol", 0x388FA8, 0x14
+	.asciz "amiking_model1.bmd"
+	.balign 4
 AmiKing_anim_data:
   .4byte "@3290"
   .4byte 0
@@ -5175,23 +6253,29 @@ AmiKing_anim_data:
   .4byte 0
   .4byte 0
 AmiKing_hit_data_table:
-	.incbin "baserom.dol", 0x388FD0, 0x10
+	.4byte 0x43960000
+	.4byte 0x43FA0000
+	.4byte 0x43960000
+	.4byte 0x43FA0000
 AmiKing_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte AmiKing_hit_data_table
 PinnaCoaster_hit_data_table:
-	.incbin "baserom.dol", 0x388FF0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43960000
+	.4byte 0x43960000
 PinnaCoaster_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte PinnaCoaster_hit_data_table
 "@3293":
-	.incbin "baserom.dol", 0x389010, 0xC
+	.asciz "casinorulet"
 "@3294":
-	.incbin "baserom.dol", 0x38901C, 0xC
+	.asciz "rulet00.bmd"
 roulette_anim_data:
   .4byte "@3294"
   .4byte "@3295"
@@ -5199,25 +6283,33 @@ roulette_anim_data:
   .4byte 0
   .4byte 0
 slotdrum_hit_data_table:
-	.incbin "baserom.dol", 0x38903C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43FA0000
+	.4byte 0x43960000
 slotdrum_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte slotdrum_hit_data_table
 "@3298":
-	.incbin "baserom.dol", 0x38905C, 0xC
+	.asciz "srotdram"
+	.balign 4
 "@3299":
-	.incbin "baserom.dol", 0x389068, 0xC
+	.asciz "srotRulet"
+	.balign 4
 telesaslot_hit_data_table:
-	.incbin "baserom.dol", 0x389074, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43C80000
+	.4byte 0x43960000
 telesaslot_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte telesaslot_hit_data_table
 "@3300":
-	.incbin "baserom.dol", 0x389094, 0xC
+	.asciz "Donchou.bmd"
 donchou_anim_data:
   .4byte "@3300"
   .4byte "@3301"
@@ -5225,23 +6317,31 @@ donchou_anim_data:
   .4byte 0
   .4byte 0
 donchou_hit_data_table:
-	.incbin "baserom.dol", 0x3890B4, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43C80000
+	.4byte 0x44480000
 donchou_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte donchou_hit_data_table
 casino_panel_gate_hit_data_table:
-	.incbin "baserom.dol", 0x3890D4, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43FA0000
+	.4byte 0x44480000
 casino_panel_gate_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte casino_panel_gate_hit_data_table
 "@3304":
-	.incbin "baserom.dol", 0x3890F4, 0xC
+	.asciz "SakuCasino"
+	.balign 4
 "@3305":
-	.incbin "baserom.dol", 0x389100, 0x10
+	.asciz "boss_wall.bmd"
+	.balign 4
 bosswall_anim_data:
   .4byte "@3305"
   .4byte 0
@@ -5249,11 +6349,12 @@ bosswall_anim_data:
   .4byte 0
   .4byte 0
 "@3306":
-	.incbin "baserom.dol", 0x389124, 0x10
+	.asciz "SirenabossWall"
+	.balign 4
 "@3307":
-	.incbin "baserom.dol", 0x389134, 0x14
+	.asciz "casino_lighting.bmd"
 "@3308":
-	.incbin "baserom.dol", 0x389148, 0x10
+	.asciz "casino_lighting"
 casinoroof_anim_data:
   .4byte "@3307"
   .4byte "@3308"
@@ -5261,11 +6362,14 @@ casinoroof_anim_data:
   .4byte 0
   .4byte 0
 "@3309":
-	.incbin "baserom.dol", 0x38916C, 0x14
+	.asciz "SirenaCasinoRoof"
+	.balign 4
 "@3310":
-	.incbin "baserom.dol", 0x389180, 0x10
+	.asciz "GlassBreak.bmd"
+	.balign 4
 "@3311":
-	.incbin "baserom.dol", 0x389190, 0xC
+	.asciz "GlassBreak"
+	.balign 4
 GlassBreak_anim_data:
   .4byte "@3310"
   .4byte 0
@@ -5303,11 +6407,22 @@ GlassBreak_anim_data:
   .4byte 0
   .4byte 0
 GlassBreak_sound_data:
-	.incbin "baserom.dol", 0x389228, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003857
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 "@3312":
-	.incbin "baserom.dol", 0x389250, 0xC
+	.asciz "closet.bmd"
+	.balign 4
 "@3313":
-	.incbin "baserom.dol", 0x38925C, 0xC
+	.asciz "ClosetOpen"
+	.balign 4
 closet_anim_data:
   .4byte "@3312"
   .4byte "@3313"
@@ -5315,18 +6430,24 @@ closet_anim_data:
   .4byte 0
   .4byte 0
 closet_hit_data_table:
-	.incbin "baserom.dol", 0x38927C, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x43C80000
+	.4byte 0x43E10000
 closet_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte closet_hit_data_table
 "@3315":
-	.incbin "baserom.dol", 0x38929C, 0x14
+	.asciz "ChestRevolve.bmd"
+	.balign 4
 "@3316":
-	.incbin "baserom.dol", 0x3892B0, 0x10
+	.asciz "chestrevolve"
+	.balign 4
 "@3317":
-	.incbin "baserom.dol", 0x3892C0, 0x20
+	.asciz "/scene/mapObj/ChestRevolve.bas"
+	.balign 4
 ChestRevolve_anim_data:
   .4byte "@3315"
   .4byte 0
@@ -5339,16 +6460,19 @@ ChestRevolve_anim_data:
   .4byte 0
   .4byte "@3317"
 "@3318":
-	.incbin "baserom.dol", 0x389308, 0x10
+	.asciz "ChestRevolve"
+	.balign 4
 ChestRevolve_map_collision_data:
   .4byte "@3318"
   .4byte 0x20000
   .4byte "@3318"
   .4byte 0x10000
 "@3319":
-	.incbin "baserom.dol", 0x389328, 0x14
+	.asciz "PosterTeresa.bmd"
+	.balign 4
 "@3320":
-	.incbin "baserom.dol", 0x38933C, 0x10
+	.asciz "posterteresa"
+	.balign 4
 PosterTeresa_anim_data:
   .4byte "@3319"
   .4byte "@3320"
@@ -5356,11 +6480,14 @@ PosterTeresa_anim_data:
   .4byte 0
   .4byte 0
 "@3321":
-	.incbin "baserom.dol", 0x389360, 0x10
+	.asciz "PosterTeresa"
+	.balign 4
 "@3322":
-	.incbin "baserom.dol", 0x389370, 0x14
+	.asciz "PictureTeresa.bmd"
+	.balign 4
 "@3323":
-	.incbin "baserom.dol", 0x389384, 0x10
+	.asciz "pictureteresa"
+	.balign 4
 PictureTeresa_anim_data:
   .4byte "@3322"
   .4byte "@3323"
@@ -5368,18 +6495,24 @@ PictureTeresa_anim_data:
   .4byte 0
   .4byte 0
 PictureTeresa_hit_data_table:
-	.incbin "baserom.dol", 0x3893A8, 0x10
+	.4byte 0x43480000
+	.4byte 0x43C80000
+	.4byte 0
+	.4byte 0
 PictureTeresa_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte PictureTeresa_hit_data_table
 "@3324":
-	.incbin "baserom.dol", 0x3893C8, 0x10
+	.asciz "PictureTeresa"
+	.balign 4
 "@3325":
-	.incbin "baserom.dol", 0x3893D8, 0x10
+	.asciz "PanelBreak.bmd"
+	.balign 4
 "@3326":
-	.incbin "baserom.dol", 0x3893E8, 0xC
+	.asciz "PanelBreak"
+	.balign 4
 PanelBreak_anim_data:
   .4byte "@3325"
   .4byte 0
@@ -5417,11 +6550,22 @@ PanelBreak_anim_data:
   .4byte 0
   .4byte 0
 PanelBreak_sound_data:
-	.incbin "baserom.dol", 0x389480, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003878
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 "@3327":
-	.incbin "baserom.dol", 0x3894A8, 0x14
+	.asciz "PanelRevolve.bmd"
+	.balign 4
 "@3328":
-	.incbin "baserom.dol", 0x3894BC, 0x10
+	.asciz "panelrevolve"
+	.balign 4
 PanelRevolve_anim_data:
   .4byte "@3327"
   .4byte 0
@@ -5434,15 +6578,20 @@ PanelRevolve_anim_data:
   .4byte 0
   .4byte 0
 "@3329":
-	.incbin "baserom.dol", 0x3894F4, 0x10
+	.asciz "PanelRevolve"
+	.balign 4
 "@3330":
-	.incbin "baserom.dol", 0x389504, 0x14
+	.asciz "SirenaBlockBreak"
+	.balign 4
 "@3331":
-	.incbin "baserom.dol", 0x389518, 0xC
+	.asciz "SirenaShop"
+	.balign 4
 "@3332":
-	.incbin "baserom.dol", 0x389524, 0xC
+	.asciz "SimiHotel"
+	.balign 4
 "@3333":
-	.incbin "baserom.dol", 0x389530, 0x14
+	.asciz "cogwheel_wheel.bmd"
+	.balign 4
 cogwheel_anim_data:
   .4byte "@3333"
   .4byte 0
@@ -5450,65 +6599,90 @@ cogwheel_anim_data:
   .4byte 0
   .4byte 0
 Cogwheel_hit_data_table:
-	.incbin "baserom.dol", 0x389558, 0x10
+	.4byte 0x44C80000
+	.4byte 0x44570000
+	.4byte 0
+	.4byte 0
 Cogwheel_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc4480000
   .4byte Cogwheel_hit_data_table
 "@3334":
-	.incbin "baserom.dol", 0x389578, 0x10
+	.asciz "cogwheel_wheel"
+	.balign 4
 "@3335":
-	.incbin "baserom.dol", 0x389588, 0xC
+	.asciz "cogwheel"
+	.balign 4
 CogwheelPlate_hit_data_table:
-	.incbin "baserom.dol", 0x389594, 0x10
+	.4byte 0x43480000
+	.4byte 0x43480000
+	.4byte 0
+	.4byte 0
 CogwheelPlate_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc2480000
   .4byte CogwheelPlate_hit_data_table
 "@3336":
-	.incbin "baserom.dol", 0x3895B4, 0x10
+	.asciz "cogwheel_plate"
+	.balign 4
 CogwheelPot_hit_data_table:
-	.incbin "baserom.dol", 0x3895C4, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0x437A0000
+	.4byte 0x43FA0000
 CogwheelPot_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte CogwheelPot_hit_data_table
 "@3337":
-	.incbin "baserom.dol", 0x3895E4, 0x10
+	.asciz "cogwheel_pot"
+	.balign 4
 mare_float_house_hit_data_table:
-	.incbin "baserom.dol", 0x3895F4, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x44960000
+	.4byte 0
+	.4byte 0
 mare_float_house_obj_hit_info:
   .4byte 0x1
   .4byte 0x84000000
   .4byte 0xc4480000
   .4byte mare_float_house_hit_data_table
 StopRock_hit_data_table:
-	.incbin "baserom.dol", 0x389614, 0x10
+	.4byte 0x437A0000
+	.4byte 0x43AF0000
+	.4byte 0x437A0000
+	.4byte 0x43AF0000
 StopRock_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte StopRock_hit_data_table
 "@3339":
-	.incbin "baserom.dol", 0x389634, 0xC
+	.asciz "StopRock"
+	.balign 4
 ElasticCode_hit_data_table:
-	.incbin "baserom.dol", 0x389640, 0x10
+	.4byte 0x43480000
+	.4byte 0x43480000
+	.4byte 0x43480000
+	.4byte 0x43480000
 ElasticCode_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte ElasticCode_hit_data_table
 "@3340":
-	.incbin "baserom.dol", 0x389660, 0xC
+	.asciz "ElasticCode"
 "@3341":
-	.incbin "baserom.dol", 0x38966C, 0xC
+	.asciz "Moyasi.bmd"
+	.balign 4
 "@3342":
-	.incbin "baserom.dol", 0x389678, 0xC
+	.asciz "moyasi_wait"
 "@3343":
-	.incbin "baserom.dol", 0x389684, 0x10
+	.asciz "moyasi_grow10"
+	.balign 4
 GrowthTree_anim_data:
   .4byte "@3341"
   .4byte "@3342"
@@ -5521,20 +6695,26 @@ GrowthTree_anim_data:
   .4byte 0
   .4byte 0
 GrowthTree_hit_data_table:
-	.incbin "baserom.dol", 0x3896BC, 0x10
+	.4byte 0x42480000
+	.4byte 0x43960000
+	.4byte 0x42480000
+	.4byte 0x43960000
 GrowthTree_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte GrowthTree_hit_data_table
 "@3345":
-	.incbin "baserom.dol", 0x3896DC, 0x10
+	.asciz "WireBellPurple"
+	.balign 4
 "@3346":
-	.incbin "baserom.dol", 0x3896EC, 0x10
+	.asciz "MuddyBoat.bmd"
+	.balign 4
 "@3347":
-	.incbin "baserom.dol", 0x3896FC, 0xC
+	.asciz "muddyboat"
+	.balign 4
 "@3348":
-	.incbin "baserom.dol", 0x389708, 0x1C
+	.asciz "/scene/mapObj/muddyboat.bas"
 MuddyBoat_anim_data:
   .4byte "@3346"
   .4byte 0
@@ -5552,20 +6732,26 @@ MuddyBoat_anim_data:
   .4byte 0
   .4byte 0
 MuddyBoat_hit_data_table:
-	.incbin "baserom.dol", 0x389760, 0x10
+	.4byte 0x43960000
+	.4byte 0x43FA0000
+	.4byte 0
+	.4byte 0
 MuddyBoat_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc3160000
   .4byte MuddyBoat_hit_data_table
 "@3349":
-	.incbin "baserom.dol", 0x389780, 0xC
+	.asciz "MuddyBoat"
+	.balign 4
 "@3350":
-	.incbin "baserom.dol", 0x38978C, 0x14
+	.asciz "puncher_model1.bmd"
+	.balign 4
 "@3351":
-	.incbin "baserom.dol", 0x3897A0, 0x10
+	.asciz "puncher_appear1"
 "@3352":
-	.incbin "baserom.dol", 0x3897B0, 0x24
+	.asciz "/scene/mapObj/puncher_appear1.bas"
+	.balign 4
 Puncher_anim_data:
   .4byte "@3350"
   .4byte 0
@@ -5578,18 +6764,23 @@ Puncher_anim_data:
   .4byte 0
   .4byte "@3352"
 Puncher_hit_data_table:
-	.incbin "baserom.dol", 0x3897FC, 0x10
+	.4byte 0x42C80000
+	.4byte 0x43480000
+	.4byte 0
+	.4byte 0
 Puncher_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte Puncher_hit_data_table
 "@3354":
-	.incbin "baserom.dol", 0x38981C, 0x14
+	.asciz "hatopop_model1.bmd"
+	.balign 4
 "@3355":
-	.incbin "baserom.dol", 0x389830, 0x10
+	.asciz "hatopop_appear1"
 "@3356":
-	.incbin "baserom.dol", 0x389840, 0x24
+	.asciz "/scene/mapObj/hatopop_appear1.bas"
+	.balign 4
 HatoPop_anim_data:
   .4byte "@3354"
   .4byte 0
@@ -5602,45 +6793,63 @@ HatoPop_anim_data:
   .4byte 0
   .4byte "@3356"
 HatoPop_hit_data_table:
-	.incbin "baserom.dol", 0x38988C, 0x10
+	.4byte 0x42C80000
+	.4byte 0x43480000
+	.4byte 0
+	.4byte 0
 HatoPop_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte HatoPop_hit_data_table
 MareWaterJump_hit_data_table:
-	.incbin "baserom.dol", 0x3898AC, 0x10
+	.4byte 0x43FA0000
+	.4byte 0x44960000
+	.4byte 0
+	.4byte 0
 MareWaterJump_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc4480000
   .4byte MareWaterJump_hit_data_table
 "@3358":
-	.incbin "baserom.dol", 0x3898CC, 0x14
+	.asciz "mareWaterJump_tool"
+	.balign 4
 "@3359":
-	.incbin "baserom.dol", 0x3898E0, 0x10
+	.asciz "mareWaterJump"
+	.balign 4
 BumpyWall_hit_data_table:
-	.incbin "baserom.dol", 0x3898F0, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42C80000
+	.4byte 0x43480000
 BumpyWall_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte BumpyWall_hit_data_table
 "@3360":
-	.incbin "baserom.dol", 0x389910, 0x14
+	.asciz "MareEventBumpyWall"
+	.balign 4
 ExBottle_hit_data_table:
-	.incbin "baserom.dol", 0x389924, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42C80000
+	.4byte 0x42C80000
 ExBottle_obj_hit_info:
   .4byte 0x1
   .4byte 0
   .4byte 0
   .4byte ExBottle_hit_data_table
 "@3361":
-	.incbin "baserom.dol", 0x389944, 0xC
+	.asciz "exBottle"
+	.balign 4
 "@3362":
-	.incbin "baserom.dol", 0x389950, 0x10
+	.asciz "CoinFish.bmd"
+	.balign 4
 "@3363":
-	.incbin "baserom.dol", 0x389960, 0xC
+	.asciz "coinfish"
+	.balign 4
 CoinFish_anim_data:
   .4byte "@3362"
   .4byte "@3363"
@@ -5648,11 +6857,14 @@ CoinFish_anim_data:
   .4byte 0
   .4byte 0
 "@3364":
-	.incbin "baserom.dol", 0x389980, 0xC
+	.asciz "CoinFish"
+	.balign 4
 "@3365":
-	.incbin "baserom.dol", 0x38998C, 0x10
+	.asciz "MareFall.bmd"
+	.balign 4
 "@3366":
-	.incbin "baserom.dol", 0x38999C, 0xC
+	.asciz "marefall"
+	.balign 4
 MareFall_anim_data:
   .4byte "@3365"
   .4byte "@3366"
@@ -5660,11 +6872,14 @@ MareFall_anim_data:
   .4byte 0
   .4byte 0
 "@3367":
-	.incbin "baserom.dol", 0x3899BC, 0xC
+	.asciz "mareFall"
+	.balign 4
 "@3368":
-	.incbin "baserom.dol", 0x3899C8, 0xC
+	.asciz "MareCork"
+	.balign 4
 "@3369":
-	.incbin "baserom.dol", 0x3899D4, 0xC
+	.asciz "nekko.bmd"
+	.balign 4
 MonteRoot_anim_data:
   .4byte "@3369"
   .4byte 0
@@ -5672,18 +6887,24 @@ MonteRoot_anim_data:
   .4byte 0
   .4byte 0
 MonteRoot_hit_data_table:
-	.incbin "baserom.dol", 0x3899F4, 0x10
+	.4byte 0
+	.4byte 0
+	.4byte 0x42480000
+	.4byte 0x44960000
 MonteRoot_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte MonteRoot_hit_data_table
 "@3370":
-	.incbin "baserom.dol", 0x389A14, 0xC
+	.asciz "MonteRoot"
+	.balign 4
 "@3371":
-	.incbin "baserom.dol", 0x389A20, 0x10
+	.asciz "JumpKinoko.bmd"
+	.balign 4
 "@3372":
-	.incbin "baserom.dol", 0x389A30, 0x14
+	.asciz "jumpkinoko_bound"
+	.balign 4
 JumpMushroom_anim_data:
   .4byte "@3371"
   .4byte 0
@@ -5696,13 +6917,17 @@ JumpMushroom_anim_data:
   .4byte 0
   .4byte 0
 "@3373":
-	.incbin "baserom.dol", 0x389A6C, 0xC
+	.asciz "JumpKinoko"
+	.balign 4
 "@3374":
-	.incbin "baserom.dol", 0x389A78, 0x10
+	.asciz "JumpMushroom"
+	.balign 4
 "@3375":
-	.incbin "baserom.dol", 0x389A88, 0x10
+	.asciz "monteflag.bmd"
+	.balign 4
 "@3376":
-	.incbin "baserom.dol", 0x389A98, 0x10
+	.asciz "monteflag_wait"
+	.balign 4
 MonteGoalFlag_anim_data:
   .4byte "@3375"
   .4byte "@3376"
@@ -5710,16 +6935,20 @@ MonteGoalFlag_anim_data:
   .4byte 0
   .4byte 0
 MonteGoalFlag_hit_data_table:
-	.incbin "baserom.dol", 0x389ABC, 0x10
+	.4byte 0x42480000
+	.4byte 0x44570000
+	.4byte 0x41A00000
+	.4byte 0x44570000
 MonteGoalFlag_obj_hit_info:
   .4byte 0x1
   .4byte 0x88000000
   .4byte 0
   .4byte MonteGoalFlag_hit_data_table
 "@3377":
-	.incbin "baserom.dol", 0x389ADC, 0x10
+	.asciz "MonteGoalFlag"
+	.balign 4
 "@3378":
-	.incbin "baserom.dol", 0x389AEC, 0xC
+	.asciz "mon_bri.bmd"
 HangingBridgeBoard_anim_data:
   .4byte "@3378"
   .4byte 0
@@ -5727,27 +6956,37 @@ HangingBridgeBoard_anim_data:
   .4byte 0
   .4byte 0
 HangingBridgeBoard_hit_data_table:
-	.incbin "baserom.dol", 0x389B0C, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 HangingBridgeBoard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte HangingBridgeBoard_hit_data_table
 "@3380":
-	.incbin "baserom.dol", 0x389B2C, 0x14
+	.asciz "HangingBridgeBoard"
+	.balign 4
 "@3381":
-	.incbin "baserom.dol", 0x389B40, 0x10
+	.asciz "HangingBridge"
+	.balign 4
 SwingBoard_hit_data_table:
-	.incbin "baserom.dol", 0x389B50, 0x10
+	.4byte 0x43960000
+	.4byte 0x43960000
+	.4byte 0
+	.4byte 0
 SwingBoard_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte SwingBoard_hit_data_table
 "@3382":
-	.incbin "baserom.dol", 0x389B70, 0xC
+	.asciz "SwingBoard"
+	.balign 4
 "@3383":
-	.incbin "baserom.dol", 0x389B7C, 0xC
+	.asciz "Watage.bmd"
+	.balign 4
 Fluff_anim_data:
   .4byte "@3383"
   .4byte 0
@@ -5755,18 +6994,24 @@ Fluff_anim_data:
   .4byte 0
   .4byte 0
 Fluff_hit_data_table:
-	.incbin "baserom.dol", 0x389B9C, 0x10
+	.4byte 0x43480000
+	.4byte 0x43FA0000
+	.4byte 0x43C80000
+	.4byte 0x44480000
 Fluff_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0xc2c80000
   .4byte Fluff_hit_data_table
 "@3385":
-	.incbin "baserom.dol", 0x389BBC, 0x10
+	.asciz "FluffManager"
+	.balign 4
 "@3386":
-	.incbin "baserom.dol", 0x389BCC, 0xC
+	.asciz "bath.bmd"
+	.balign 4
 "@3387":
-	.incbin "baserom.dol", 0x389BD8, 0x10
+	.asciz "bath_overturn"
+	.balign 4
 Bathtub_anim_data:
   .4byte "@3386"
   .4byte 0
@@ -5779,19 +7024,25 @@ Bathtub_anim_data:
   .4byte 0
   .4byte 0
 "@3390":
-	.incbin "baserom.dol", 0x389C10, 0x20
+	.asciz "/scene/mapObj/stand_break.bck"
+	.balign 4
 "@3391":
-	.incbin "baserom.dol", 0x389C30, 0x10
+	.asciz "stand_break.bmd"
 "@3392":
-	.incbin "baserom.dol", 0x389C40, 0x10
+	.asciz "stand_break0"
+	.balign 4
 "@3393":
-	.incbin "baserom.dol", 0x389C50, 0x10
+	.asciz "stand_break1"
+	.balign 4
 "@3394":
-	.incbin "baserom.dol", 0x389C60, 0x10
+	.asciz "stand_break2"
+	.balign 4
 "@3395":
-	.incbin "baserom.dol", 0x389C70, 0x10
+	.asciz "stand_break3"
+	.balign 4
 "@3396":
-	.incbin "baserom.dol", 0x389C80, 0x10
+	.asciz "stand_break4"
+	.balign 4
 BathtubStandBreaking_anim_data:
   .4byte "@3391"
   .4byte "@3392"
@@ -5819,9 +7070,10 @@ BathtubStandBreaking_anim_data:
   .4byte 0
   .4byte 0
 "@3397":
-	.incbin "baserom.dol", 0x389CF4, 0xC
+	.asciz "stand_break"
 "@3398":
-	.incbin "baserom.dol", 0x389D00, 0x10
+	.asciz "TurnLift.bmd"
+	.balign 4
 ex1_turn_lift_anim_data:
   .4byte "@3398"
   .4byte 0
@@ -5829,17 +7081,22 @@ ex1_turn_lift_anim_data:
   .4byte 0
   .4byte 0
 "@3399":
-	.incbin "baserom.dol", 0x389D24, 0x1C
+	.asciz "/scene/mapObj/TurnLift.bck"
+	.balign 4
 "@3400":
-	.incbin "baserom.dol", 0x389D40, 0xC
+	.asciz "TurnLift"
+	.balign 4
 "@3401":
-	.incbin "baserom.dol", 0x389D4C, 0x10
+	.asciz "ex1_turn_lift"
+	.balign 4
 "@3402":
-	.incbin "baserom.dol", 0x389D5C, 0x1C
+	.asciz "/scene/mapObj/zTurnDisk.bck"
 "@3403":
-	.incbin "baserom.dol", 0x389D78, 0xC
+	.asciz "zTurnDisk"
+	.balign 4
 "@3404":
-	.incbin "baserom.dol", 0x389D84, 0x10
+	.asciz "yTurnLift.bmd"
+	.balign 4
 y_turn_lift_anim_data:
   .4byte "@3404"
   .4byte 0
@@ -5847,17 +7104,20 @@ y_turn_lift_anim_data:
   .4byte 0
   .4byte 0
 "@3405":
-	.incbin "baserom.dol", 0x389DA8, 0x1C
+	.asciz "/scene/mapObj/yTurnLift.bck"
 "@3406":
-	.incbin "baserom.dol", 0x389DC4, 0xC
+	.asciz "yTurnLift"
+	.balign 4
 "@3407":
-	.incbin "baserom.dol", 0x389DD0, 0xC
+	.asciz "EXskyTumiki"
 "@3408":
-	.incbin "baserom.dol", 0x389DDC, 0xC
+	.asciz "EXskyWindow"
 "@3409":
-	.incbin "baserom.dol", 0x389DE8, 0xC
+	.asciz "EXskySenro"
+	.balign 4
 "@3410":
-	.incbin "baserom.dol", 0x389DF4, 0xC
+	.asciz "kugi.bmd"
+	.balign 4
 Nail_anim_data:
   .4byte "@3410"
   .4byte 0
@@ -5865,16 +7125,21 @@ Nail_anim_data:
   .4byte 0
   .4byte 0
 Nail_hit_data_table:
-	.incbin "baserom.dol", 0x389E14, 0x10
+	.4byte 0x42480000
+	.4byte 0x43480000
+	.4byte 0x42200000
+	.4byte 0x430C0000
 Nail_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte Nail_hit_data_table
 "@3412":
-	.incbin "baserom.dol", 0x389E34, 0xC
+	.asciz "MapObjNail"
+	.balign 4
 "@3413":
-	.incbin "baserom.dol", 0x389E40, 0x14
+	.asciz "PachinkoKugi.bmd"
+	.balign 4
 PachinkoNail_anim_data:
   .4byte "@3413"
   .4byte 0
@@ -5882,17 +7147,22 @@ PachinkoNail_anim_data:
   .4byte 0
   .4byte 0
 "@3414":
-	.incbin "baserom.dol", 0x389E68, 0x10
+	.asciz "PachinkoKugi"
+	.balign 4
 "@3415":
-	.incbin "baserom.dol", 0x389E78, 0x14
+	.asciz "MapObjPachinkoNail"
+	.balign 4
 "@3416":
-	.incbin "baserom.dol", 0x389E8C, 0x10
+	.asciz "FileLoadBlock"
+	.balign 4
 "@3417":
-	.incbin "baserom.dol", 0x389E9C, 0x14
+	.asciz "FileLoadBlockA.bmd"
+	.balign 4
 "@3418":
-	.incbin "baserom.dol", 0x389EB0, 0x18
+	.asciz "FileLoadBlockRockA.bmd"
+	.balign 4
 "@3419":
-	.incbin "baserom.dol", 0x389EC8, 0x18
+	.asciz "FileLoadBlockNoCard.bmd"
 FileLoadBlockA_anim_data:
   .4byte "@3417"
   .4byte 0
@@ -5910,18 +7180,24 @@ FileLoadBlockA_anim_data:
   .4byte 0
   .4byte 0
 FileLoadBlock_hit_data_table:
-	.incbin "baserom.dol", 0x389F1C, 0x10
+	.4byte 0x428C0000
+	.4byte 0x42C80000
+	.4byte 0
+	.4byte 0
 FileLoadBlock_obj_hit_info:
   .4byte 0x1
   .4byte 2147483648
   .4byte 0
   .4byte FileLoadBlock_hit_data_table
 "@3420":
-	.incbin "baserom.dol", 0x389F3C, 0x10
+	.asciz "FileLoadBlockA"
+	.balign 4
 "@3421":
-	.incbin "baserom.dol", 0x389F4C, 0x14
+	.asciz "FileLoadBlockB.bmd"
+	.balign 4
 "@3422":
-	.incbin "baserom.dol", 0x389F60, 0x18
+	.asciz "FileLoadBlockRockB.bmd"
+	.balign 4
 FileLoadBlockB_anim_data:
   .4byte "@3421"
   .4byte 0
@@ -5939,11 +7215,14 @@ FileLoadBlockB_anim_data:
   .4byte 0
   .4byte 0
 "@3423":
-	.incbin "baserom.dol", 0x389FB4, 0x10
+	.asciz "FileLoadBlockB"
+	.balign 4
 "@3424":
-	.incbin "baserom.dol", 0x389FC4, 0x14
+	.asciz "FileLoadBlockC.bmd"
+	.balign 4
 "@3425":
-	.incbin "baserom.dol", 0x389FD8, 0x18
+	.asciz "FileLoadBlockRockC.bmd"
+	.balign 4
 FileLoadBlockC_anim_data:
   .4byte "@3424"
   .4byte 0
@@ -5961,19 +7240,36 @@ FileLoadBlockC_anim_data:
   .4byte 0
   .4byte 0
 "@3426":
-	.incbin "baserom.dol", 0x38A02C, 0x10
+	.asciz "FileLoadBlockC"
+	.balign 4
 "@3728":
-	.incbin "baserom.dol", 0x38A03C, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 "@3767":
-	.incbin "baserom.dol", 0x38A054, 0x14
+	.4byte 0x926E8C60
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B7618, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B7624, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B7630, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 MtxCalcTypeName:
   .4byte "@2189"
   .4byte "@2190"
@@ -5981,7 +7277,16 @@ MtxCalcTypeName:
   .4byte "@2192"
 .global mDefaultSound__14TMapObjGeneral
 mDefaultSound__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3B7650, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003802
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00003812
+	.4byte 0xFFFFFFFF
 normal_sound_data:
   .4byte -1
   .4byte -1
@@ -6634,7 +7939,19 @@ watergun_item_data:
   .4byte 0x4000800
   .4byte 0
 nozzle_normal_physical_data:
-	.incbin "baserom.dol", 0x3B8000, 0x34
+	.4byte 0x3EB33333
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0x40A00000
+	.4byte 0x3F4CCCCD
+	.4byte 0x3F733333
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 nozzle_normal_physical_info:
   .4byte 0xd
   .4byte nozzle_normal_physical_data
@@ -6704,7 +8021,19 @@ nozzle_back_item_data:
   .4byte 0xa040100
   .4byte 0
 coin_physical_data:
-	.incbin "baserom.dol", 0x3B8130, 0x34
+	.4byte 0x3EB33333
+	.4byte 0x3F000000
+	.4byte 0x3F19999A
+	.4byte 0x3F800000
+	.4byte 0x3F000000
+	.4byte 0x3F733333
+	.4byte 0x3F7D70A4
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 coin_physical_info:
   .4byte 0xd
   .4byte coin_physical_data
@@ -6838,7 +8167,19 @@ eggYoshi_data:
   .4byte 0
   .4byte 0
 EggYoshi_physical_data:
-	.incbin "baserom.dol", 0x3B8350, 0x34
+	.4byte 0x3EB33333
+	.4byte 0x3DCCCCCD
+	.4byte 0
+	.4byte 0x40A00000
+	.4byte 0x3F800000
+	.4byte 0x3F733333
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 EggYoshi_physical_info:
   .4byte 0xd
   .4byte EggYoshi_physical_data
@@ -6940,7 +8281,19 @@ jumpbase_data:
   .4byte 0
   .4byte 0
 coconut_physical_data:
-	.incbin "baserom.dol", 0x3B84F8, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3F19999A
+	.4byte 0x3E99999A
+	.4byte 0x3E99999A
+	.4byte 0x3F7851EC
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x40000000
+	.4byte 0x41700000
 coconut_physical_info:
   .4byte 0xd
   .4byte coconut_physical_data
@@ -6962,7 +8315,19 @@ coconut_data:
   .4byte 0x2130100
   .4byte 0
 papaya_physical_data:
-	.incbin "baserom.dol", 0x3B8574, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3F19999A
+	.4byte 0x3E99999A
+	.4byte 0x3E99999A
+	.4byte 0x3F7851EC
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x40A00000
+	.4byte 0x41A00000
 papaya_physical_info:
   .4byte 0xd
   .4byte papaya_physical_data
@@ -6984,7 +8349,19 @@ papaya_data:
   .4byte 0x2130100
   .4byte 0
 pine_physical_data:
-	.incbin "baserom.dol", 0x3B85F0, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3F19999A
+	.4byte 0x3E99999A
+	.4byte 0x3E99999A
+	.4byte 0x3F7851EC
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x40000000
+	.4byte 0x41B00000
 pine_physical_info:
   .4byte 0xd
   .4byte pine_physical_data
@@ -7022,7 +8399,19 @@ CoverPine_data:
   .4byte 0x100100
   .4byte 0
 durian_physical_data:
-	.incbin "baserom.dol", 0x3B86A8, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3F19999A
+	.4byte 0x3E4CCCCD
+	.4byte 0x3E4CCCCD
+	.4byte 0x3F7851EC
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x3C23D70A
+	.4byte 0x40A00000
 durian_physical_info:
   .4byte 0xd
   .4byte durian_physical_data
@@ -7044,7 +8433,19 @@ durian_data:
   .4byte 0x170100
   .4byte 0
 banana_physical_data:
-	.incbin "baserom.dol", 0x3B8724, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3ECCCCCD
+	.4byte 0x3E4CCCCD
+	.4byte 0x3F800000
+	.4byte 0x3ECCCCCD
+	.4byte 0x3F000000
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x40200000
+	.4byte 0x41600000
 banana_physical_info:
   .4byte 0xd
   .4byte banana_physical_data
@@ -7066,7 +8467,19 @@ banana_data:
   .4byte 0x2130100
   .4byte 0
 red_pepper_physical_data:
-	.incbin "baserom.dol", 0x3B87A0, 0x34
+	.4byte 0x3E99999A
+	.4byte 0x3F19999A
+	.4byte 0x3E99999A
+	.4byte 0x3E99999A
+	.4byte 0x3F7851EC
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0x40A00000
+	.4byte 0x3F000000
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0x40A00000
+	.4byte 0x41400000
 red_pepper_physical_info:
   .4byte 0xd
   .4byte red_pepper_physical_data
@@ -7264,7 +8677,19 @@ bambooRailFence_data:
   .4byte 0x904
   .4byte 0
 wood_barrel_physical_data:
-	.incbin "baserom.dol", 0x3B8AB0, 0x34
+	.4byte 0x3EB33333
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F733333
+	.4byte 0x3F733333
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x40600000
+	.4byte 0x41A00000
 wood_barrel_physical_info:
   .4byte 0xd
   .4byte wood_barrel_physical_data
@@ -8044,7 +9469,19 @@ PoleNormal_data:
   .4byte 0x1c0
   .4byte 0
 football_physical_data:
-	.incbin "baserom.dol", 0x3B9644, 0x34
+	.4byte 0x3EB33333
+	.4byte 0x3F19999A
+	.4byte 0x3F19999A
+	.4byte 0x3DCCCCCD
+	.4byte 0x3F7AE148
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0x3F59999A
+	.4byte 0x3F3851EC
+	.4byte 0
+	.4byte 0
+	.4byte 0
 football_physical_info:
   .4byte 0xd
   .4byte football_physical_data
@@ -8082,7 +9519,19 @@ football_goal_data:
   .4byte 0
   .4byte 0
 baloonball_physical_data:
-	.incbin "baserom.dol", 0x3B96FC, 0x34
+	.4byte 0x3D4CCCCD
+	.4byte 0x3F19999A
+	.4byte 0x3F19999A
+	.4byte 0x3DCCCCCD
+	.4byte 0x3F7AE148
+	.4byte 0x3F7AE148
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0x3DA3D70A
+	.4byte 0x3E99999A
+	.4byte 0
+	.4byte 0
+	.4byte 0
 baloonball_physical_info:
   .4byte 0xd
   .4byte baloonball_physical_data
@@ -8120,7 +9569,19 @@ coconutball_data:
   .4byte 0xb0100
   .4byte 0
 watermelon_physical_data:
-	.incbin "baserom.dol", 0x3B97B4, 0x34
+	.4byte 0x3E800000
+	.4byte 0x3ECCCCCD
+	.4byte 0x3E99999A
+	.4byte 0x3DCCCCCD
+	.4byte 0x3F7851EC
+	.4byte 0x3F7851EC
+	.4byte 0x3F800000
+	.4byte 0x43960000
+	.4byte 0x3F000000
+	.asciz "?fff"
+	.balign 4
+	.4byte 0
+	.4byte 0
 watermelon_physical_info:
   .4byte 0xd
   .4byte watermelon_physical_data
@@ -11326,7 +12787,19 @@ mare_float_house_data:
   .4byte 0x90b
   .4byte 0
 StopRock_physical_data:
-	.incbin "baserom.dol", 0x3BC6D4, 0x34
+	.4byte 0x3EB33333
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F733333
+	.4byte 0x3F733333
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
 StopRock_physical_info:
   .4byte 0xd
   .4byte StopRock_physical_data
@@ -12395,9 +13868,11 @@ __vt__14TMapObjGeneral:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 streetlamp_sink_data:
-	.incbin "baserom.dol", 0x3E3538, 0x8
+	.4byte 0
+	.4byte 0x40400000
 lamp_bianco_sink_data:
-	.incbin "baserom.dol", 0x3E3540, 0x8
+	.4byte 0
+	.4byte 0x40400000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
@@ -12408,7 +13883,7 @@ normal_sound_info:
   .4byte 0xa
   .4byte normal_sound_data
 "@2770":
-	.incbin "baserom.dol", 0x3E6A48, 0x8
+	.asciz "no_data"
 billboard_dolphin_anim_info:
   .4byte 0x30001
   .4byte billboard_dolphin_anim_data
@@ -12422,17 +13897,18 @@ billboard_fish_anim_info:
   .4byte 0x30001
   .4byte billboard_fish_anim_data
 "@2783":
-	.incbin "baserom.dol", 0x3E6A70, 0x8
+	.asciz "HideObj"
 MonteChair_anim_info:
   .4byte 0x10001
   .4byte MonteChair_anim_data
 "@2798":
-	.incbin "baserom.dol", 0x3E6A80, 0x8
+	.asciz "door"
+	.balign 4
 doorHotel_anim_info:
   .4byte 0x50001
   .4byte doorHotel_anim_data
 "@2802":
-	.incbin "baserom.dol", 0x3E6A90, 0x8
+	.asciz "manhole"
 manhole_anim_info:
   .4byte 0x10001
   .4byte manhole_anim_data
@@ -12440,12 +13916,14 @@ manhole_map_collision_info:
   .4byte 0x20002
   .4byte manhole_map_collision_data
 "@2804":
-	.incbin "baserom.dol", 0x3E6AA8, 0x8
+	.asciz "basket"
+	.balign 4
 FruitBasket_anim_info:
   .4byte 0x20002
   .4byte FruitBasket_anim_data
 "@2805":
-	.incbin "baserom.dol", 0x3E6AB8, 0x8
+	.asciz "Basket"
+	.balign 4
 FruitBasket_map_collision_data:
   .4byte "@2805"
   .4byte 0
@@ -12462,7 +13940,8 @@ BasketReverse_map_collision_info:
   .4byte 0x10001
   .4byte BasketReverse_map_collision_data
 "@2809":
-	.incbin "baserom.dol", 0x3E6AE8, 0x8
+	.asciz "Pile"
+	.balign 4
 Pile_map_collision_data:
   .4byte "@2809"
   .4byte 0
@@ -12497,14 +13976,17 @@ RedCoinSwitch_map_collision_info:
   .4byte 0x10001
   .4byte RedCoinSwitch_map_collision_data
 "@2832":
-	.incbin "baserom.dol", 0x3E6B48, 0x8
+	.asciz "bucket"
+	.balign 4
 coin_sound_info:
   .4byte 0xa
   .4byte coin_sound_data
 "@2844":
-	.incbin "baserom.dol", 0x3E6B58, 0x8
+	.asciz "coin"
+	.balign 4
 "@2848":
-	.incbin "baserom.dol", 0x3E6B60, 0x8
+	.asciz "shine"
+	.balign 4
 mario_cap_anim_info:
   .4byte 0x10001
   .4byte mario_cap_anim_data
@@ -12566,7 +14048,8 @@ wood_barrel_anim_info:
   .4byte 0x70002
   .4byte wood_barrel_anim_data
 "@2906":
-	.incbin "baserom.dol", 0x3E6C08, 0x8
+	.asciz "barrel"
+	.balign 4
 wood_barrel_map_collision_info:
   .4byte 0x20002
   .4byte wood_barrel_map_collision_data
@@ -12574,7 +14057,8 @@ wood_barrel_sound_info:
   .4byte 0xa
   .4byte wood_barrel_sound_data
 wood_barrel_sink_data:
-	.incbin "baserom.dol", 0x3E6C20, 0x8
+	.4byte 0x3E800000
+	.4byte 0x41200000
 barrel_float_map_collision_data:
   .4byte "@2912"
   .4byte 0x10000
@@ -12741,7 +14225,8 @@ FruitTree_map_collision_info:
   .4byte 0x10001
   .4byte FruitTree_map_collision_data
 "@2981":
-	.incbin "baserom.dol", 0x3E6DE0, 0x8
+	.asciz "flower"
+	.balign 4
 flowerOrange_anim_info:
   .4byte 0x20002
   .4byte flowerOrange_anim_data
@@ -12794,7 +14279,8 @@ cloud_anim_info:
   .4byte 0x10001
   .4byte cloud_anim_data
 "@3022":
-	.incbin "baserom.dol", 0x3E6E70, 0x8
+	.asciz "cloud"
+	.balign 4
 cloud_map_collision_data:
   .4byte "@3022"
   .4byte 0x10000
@@ -12847,7 +14333,7 @@ umaibou_anim_info:
   .4byte 0x10001
   .4byte umaibou_anim_data
 "@3042":
-	.incbin "baserom.dol", 0x3E6F00, 0x8
+	.asciz "umaibou"
 umaibou_map_collision_data:
   .4byte "@3042"
   .4byte 0x10000
@@ -12870,7 +14356,8 @@ getao_anim_info:
   .4byte 0x10001
   .4byte getao_anim_data
 "@3047":
-	.incbin "baserom.dol", 0x3E6F40, 0x8
+	.asciz "geta"
+	.balign 4
 geta_map_collision_data:
   .4byte "@3047"
   .4byte 0x10000
@@ -12878,14 +14365,17 @@ geta_map_collision_info:
   .4byte 0x10001
   .4byte geta_map_collision_data
 "@3048":
-	.incbin "baserom.dol", 0x3E6F58, 0x8
+	.asciz "getag"
+	.balign 4
 "@3049":
-	.incbin "baserom.dol", 0x3E6F60, 0x8
+	.asciz "getao"
+	.balign 4
 uirou_anim_info:
   .4byte 0x10001
   .4byte uirou_anim_data
 "@3051":
-	.incbin "baserom.dol", 0x3E6F70, 0x8
+	.asciz "uirou"
+	.balign 4
 uirou_map_collision_data:
   .4byte "@3051"
   .4byte 0x10000
@@ -13079,7 +14569,8 @@ WoodBox_anim_info:
   .4byte 0x30002
   .4byte WoodBox_anim_data
 "@3090":
-	.incbin "baserom.dol", 0x3E7178, 0x8
+	.asciz "kibako"
+	.balign 4
 WoodBoxNozzle_map_collision_data:
   .4byte "@3090"
   .4byte 0x20000
@@ -13087,12 +14578,13 @@ WoodBoxNozzle_map_collision_info:
   .4byte 0x10001
   .4byte WoodBoxNozzle_map_collision_data
 "@3091":
-	.incbin "baserom.dol", 0x3E7190, 0x8
+	.asciz "WoodBox"
 ice_car_anim_info:
   .4byte 0x70001
   .4byte ice_car_anim_data
 "@3095":
-	.incbin "baserom.dol", 0x3E71A0, 0x8
+	.asciz "yatai"
+	.balign 4
 ice_car_map_collision_data:
   .4byte "@3095"
   .4byte 0x20000
@@ -13100,7 +14592,7 @@ ice_car_map_collision_info:
   .4byte 0x10001
   .4byte ice_car_map_collision_data
 "@3096":
-	.incbin "baserom.dol", 0x3E71B8, 0x8
+	.asciz "ice_car"
 move_ice_car_map_collision_data:
   .4byte "@3095"
   .4byte 0x10000
@@ -13108,7 +14600,8 @@ move_ice_car_map_collision_info:
   .4byte 0x10001
   .4byte move_ice_car_map_collision_data
 "@3098":
-	.incbin "baserom.dol", 0x3E71D0, 0x8
+	.asciz "Buoy"
+	.balign 4
 AirportBuoy_map_collision_data:
   .4byte "@3098"
   .4byte 0x10000
@@ -13116,7 +14609,7 @@ AirportBuoy_map_collision_info:
   .4byte 0x10001
   .4byte AirportBuoy_map_collision_data
 "@3100":
-	.incbin "baserom.dol", 0x3E71E8, 0x8
+	.asciz "dptKing"
 dptKing_map_collision_info:
   .4byte 0x20002
   .4byte dptKing_map_collision_data
@@ -13163,7 +14656,8 @@ DokanGate_anim_info:
   .4byte 0x10001
   .4byte DokanGate_anim_data
 "@3121":
-	.incbin "baserom.dol", 0x3E7268, 0x8
+	.asciz "crane"
+	.balign 4
 crane_map_collision_data:
   .4byte "@3121"
   .4byte 0x10000
@@ -13195,7 +14689,8 @@ crane_cargo_map_collision_info:
   .4byte 0x10001
   .4byte crane_cargo_map_collision_data
 "@3126":
-	.incbin "baserom.dol", 0x3E72C0, 0x8
+	.asciz "tank"
+	.balign 4
 tank_map_collision_data:
   .4byte "@3126"
   .4byte 0x20000
@@ -13377,7 +14872,7 @@ BiaBell_anim_info:
   .4byte 0x50005
   .4byte BiaBell_anim_data
 "@3174":
-	.incbin "baserom.dol", 0x3E74A8, 0x8
+	.asciz "BiaBell"
 watermill00_anim_info:
   .4byte 0x10001
   .4byte watermill00_anim_data
@@ -13415,7 +14910,7 @@ LampSeesaw_map_collision_info:
   .4byte 0x10001
   .4byte LampSeesaw_map_collision_data
 "@3184":
-	.incbin "baserom.dol", 0x3E7510, 0x8
+	.asciz "BiaDoor"
 BiancoDoor_map_collision_data:
   .4byte "@3184"
   .4byte 0
@@ -13474,17 +14969,17 @@ SandBomb_anim_info:
   .4byte 0x70001
   .4byte SandBomb_anim_data
 "@3213":
-	.incbin "baserom.dol", 0x3E75B0, 0x8
+	.asciz "mirrorL"
 mirror_L_map_collision_info:
   .4byte 0x20002
   .4byte mirror_L_map_collision_data
 "@3214":
-	.incbin "baserom.dol", 0x3E75C0, 0x8
+	.asciz "mirrorM"
 mirror_M_map_collision_info:
   .4byte 0x20002
   .4byte mirror_M_map_collision_data
 "@3215":
-	.incbin "baserom.dol", 0x3E75D0, 0x8
+	.asciz "mirrorS"
 mirrorS_map_collision_info:
   .4byte 0x20002
   .4byte mirrorS_map_collision_data
@@ -13588,9 +15083,9 @@ SandBombBaseStairs_map_collision_info:
   .4byte 0x20002
   .4byte SandBombBaseStairs_map_collision_data
 "@3251":
-	.incbin "baserom.dol", 0x3E76E8, 0x8
+	.asciz "coral00"
 "@3252":
-	.incbin "baserom.dol", 0x3E76F0, 0x8
+	.asciz "coral01"
 TeethOfJuicer_anim_info:
   .4byte 0x10001
   .4byte TeethOfJuicer_anim_data
@@ -13601,7 +15096,8 @@ SandEggRepair_map_collision_info:
   .4byte 0x10001
   .4byte SandEggRepair_map_collision_data
 "@3259":
-	.incbin "baserom.dol", 0x3E7710, 0x8
+	.asciz "merry"
+	.balign 4
 merrygoround_anim_info:
   .4byte 0x10001
   .4byte merrygoround_anim_data
@@ -13630,7 +15126,8 @@ FerrisLOD_anim_info:
   .4byte 0x10001
   .4byte FerrisLOD_anim_data
 "@3269":
-	.incbin "baserom.dol", 0x3E7760, 0x8
+	.asciz "viking"
+	.balign 4
 viking_map_collision_data:
   .4byte "@3269"
   .4byte 0x10000
@@ -13692,9 +15189,9 @@ AmiKing_anim_info:
   .4byte 0x10001
   .4byte AmiKing_anim_data
 "@3291":
-	.incbin "baserom.dol", 0x3E7808, 0x8
+	.asciz "amiking"
 "@3292":
-	.incbin "baserom.dol", 0x3E7810, 0x8
+	.asciz "Coaster"
 casinoroulette_map_collision_data:
   .4byte "@3293"
   .4byte 0x10000
@@ -13702,7 +15199,7 @@ casinoroulette_map_collision_info:
   .4byte 0x10001
   .4byte casinoroulette_map_collision_data
 "@3295":
-	.incbin "baserom.dol", 0x3E7828, 0x8
+	.asciz "rulet00"
 roulette_anim_info:
   .4byte 0x10001
   .4byte roulette_anim_data
@@ -13713,7 +15210,7 @@ roulette00_map_collision_info:
   .4byte 0x10001
   .4byte roulette00_map_collision_data
 "@3296":
-	.incbin "baserom.dol", 0x3E7848, 0x8
+	.asciz "rulet01"
 roulette01_map_collision_data:
   .4byte "@3296"
   .4byte 0
@@ -13721,7 +15218,7 @@ roulette01_map_collision_info:
   .4byte 0x10001
   .4byte roulette01_map_collision_data
 "@3297":
-	.incbin "baserom.dol", 0x3E7860, 0x8
+	.asciz "rulet02"
 roulette02_map_collision_data:
   .4byte "@3297"
   .4byte 0
@@ -13729,11 +15226,12 @@ roulette02_map_collision_info:
   .4byte 0x10001
   .4byte roulette02_map_collision_data
 "@3301":
-	.incbin "baserom.dol", 0x3E7878, 0x8
+	.asciz "donchou"
 "@3302":
-	.incbin "baserom.dol", 0x3E7880, 0x8
+	.asciz "Donchou"
 "@3303":
-	.incbin "baserom.dol", 0x3E7888, 0x8
+	.asciz "pazul"
+	.balign 4
 pazul_map_collision_data:
   .4byte "@3303"
   .4byte 0x20000
@@ -13762,7 +15260,8 @@ closet_anim_info:
   .4byte 0x10001
   .4byte closet_anim_data
 "@3314":
-	.incbin "baserom.dol", 0x3E78D8, 0x8
+	.asciz "Closet"
+	.balign 4
 ChestRevolve_anim_info:
   .4byte 0x20001
   .4byte ChestRevolve_anim_data
@@ -13830,7 +15329,7 @@ CogwheelPot_map_collision_info:
   .4byte 0x10001
   .4byte CogwheelPot_map_collision_data
 "@3338":
-	.incbin "baserom.dol", 0x3E7990, 0x8
+	.asciz "ukisima"
 mare_float_house_map_collision_data:
   .4byte "@3338"
   .4byte 0x10000
@@ -13847,7 +15346,8 @@ GrowthTree_anim_info:
   .4byte 0x20002
   .4byte GrowthTree_anim_data
 "@3344":
-	.incbin "baserom.dol", 0x3E79C0, 0x8
+	.asciz "Moyasi"
+	.balign 4
 GrowthTree_map_collision_data:
   .4byte "@3344"
   .4byte 0x20000
@@ -13867,12 +15367,12 @@ Puncher_anim_info:
   .4byte 0x20002
   .4byte Puncher_anim_data
 "@3353":
-	.incbin "baserom.dol", 0x3E79F8, 0x8
+	.asciz "Puncher"
 HatoPop_anim_info:
   .4byte 0x20002
   .4byte HatoPop_anim_data
 "@3357":
-	.incbin "baserom.dol", 0x3E7A08, 0x8
+	.asciz "HatoPop"
 MareWaterJump_map_collision_data:
   .4byte "@3358"
   .4byte 0x10000
@@ -13910,7 +15410,7 @@ HangingBridgeBoard_anim_info:
   .4byte 0x10001
   .4byte HangingBridgeBoard_anim_data
 "@3379":
-	.incbin "baserom.dol", 0x3E7A70, 0x8
+	.asciz "mon_bri"
 HangingBridgeBoard_map_collision_data:
   .4byte "@3379"
   .4byte 0x10000
@@ -13927,14 +15427,17 @@ Fluff_anim_info:
   .4byte 0x10001
   .4byte Fluff_anim_data
 "@3384":
-	.incbin "baserom.dol", 0x3E7AA0, 0x8
+	.asciz "Fluff"
+	.balign 4
 Bathtub_anim_info:
   .4byte 0x20001
   .4byte Bathtub_anim_data
 "@3388":
-	.incbin "baserom.dol", 0x3E7AB0, 0x8
+	.asciz "bath"
+	.balign 4
 "@3389":
-	.incbin "baserom.dol", 0x3E7AB8, 0x8
+	.asciz "stand"
+	.balign 4
 BathtubStandBreaking_anim_info:
   .4byte 0x50001
   .4byte BathtubStandBreaking_anim_data
@@ -13966,7 +15469,8 @@ Nail_anim_info:
   .4byte 0x10001
   .4byte Nail_anim_data
 "@3411":
-	.incbin "baserom.dol", 0x3E7B10, 0x8
+	.asciz "kugi"
+	.balign 4
 Nail_map_collision_data:
   .4byte "@3411"
   .4byte 0x20000
@@ -14000,13 +15504,16 @@ FileLoadBlockC_anim_info:
 "@3635":
   .4byte 0
 "@3910":
-	.incbin "baserom.dol", 0x3E7B6C, 0x8
+	.asciz "%s.bmd"
+	.balign 4
 "@3969":
-	.incbin "baserom.dol", 0x3E7B74, 0x4
+	.4byte 0x3F800000
 "@4008":
-	.incbin "baserom.dol", 0x3E7B78, 0x8
+	.asciz "mapObj"
+	.balign 4
 "@4389":
-	.incbin "baserom.dol", 0x3E7B80, 0x8
+	.4byte 0x42480000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@4410":

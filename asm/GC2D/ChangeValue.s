@@ -33,6 +33,7 @@ lbl_802006D8:
 "@1680":
   .4byte 0
 "@1681":
-	.incbin "baserom.dol", 0x3E90B4, 0x4
+	.4byte 0x3F800000
 "@1683":
-	.incbin "baserom.dol", 0x3E90B8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

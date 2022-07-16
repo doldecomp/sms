@@ -3890,21 +3890,72 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x3A501C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1996":
-	.incbin "baserom.dol", 0x3A5030, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1997":
-	.incbin "baserom.dol", 0x3A5060, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1998":
-	.incbin "baserom.dol", 0x3A5098, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1999":
-	.incbin "baserom.dol", 0x3A50CC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2986":
-	.incbin "baserom.dol", 0x3A50F0, 0x10
+	.asciz "bee_body.bmd"
+	.balign 4
 "@2987":
-	.incbin "baserom.dol", 0x3A5100, 0x10
+	.asciz "bee_nest.bmd"
+	.balign 4
 "@2988":
-	.incbin "baserom.dol", 0x3A5110, 0x14
+	.asciz "bee_nest_break.bmd"
+	.balign 4
 entry$2985:
     .4byte "@2986"
     .4byte 0x10210000
@@ -3919,27 +3970,36 @@ entry$2985:
     .4byte 0
     .4byte 0
 "@3447":
-	.incbin "baserom.dol", 0x3A5154, 0x10
+	.asciz "bee_nest_break"
+	.balign 4
 "@3661":
-	.incbin "baserom.dol", 0x3A5164, 0x14
+	.asciz "/Animal/beehive.prm"
 "@3662":
-	.incbin "baserom.dol", 0x3A5178, 0x10
+	.asciz "mGiveupTimer"
+	.balign 4
 "@3663":
-	.incbin "baserom.dol", 0x3A5188, 0x10
+	.asciz "mGiveupRange"
+	.balign 4
 "@3665":
-	.incbin "baserom.dol", 0x3A5198, 0x10
+	.asciz "mDecrimentTimer"
 "@3666":
-	.incbin "baserom.dol", 0x3A51A8, 0xC
+	.asciz "mRebound"
+	.balign 4
 "@3670":
-	.incbin "baserom.dol", 0x3A51B4, 0x10
+	.asciz "mAngleMaxAdd"
+	.balign 4
 "@3672":
-	.incbin "baserom.dol", 0x3A51C4, 0xC
+	.asciz "mShakePower"
 "@3674":
-	.incbin "baserom.dol", 0x3A51D0, 0x10
+	.asciz "mFallAngularVel"
 "@3675":
-	.incbin "baserom.dol", 0x3A51E0, 0x10
+	.asciz "mSearchRange"
+	.balign 4
 "@5081":
-	.incbin "baserom.dol", 0x3A51F0, 0x10
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TNerveBeeHiveReset
@@ -4128,81 +4188,86 @@ __vt__4TBee:
 "@3087":
   .4byte 0
 "@3088":
-	.incbin "baserom.dol", 0x3EC7BC, 0x4
+	.4byte 0x3C23D70A
 "@3089":
-	.incbin "baserom.dol", 0x3EC7C0, 0x4
+	.4byte 0x3F800000
 "@3203":
-	.incbin "baserom.dol", 0x3EC7C4, 0x4
+	.4byte 0x41C80000
 "@3204":
-	.incbin "baserom.dol", 0x3EC7C8, 0x4
+	.4byte 0x42A00000
 "@3205":
-	.incbin "baserom.dol", 0x3EC7CC, 0x4
+	.4byte 0x41000000
 "@3206":
-	.incbin "baserom.dol", 0x3EC7D0, 0x4
+	.4byte 0x42AA0000
 "@3207":
-	.incbin "baserom.dol", 0x3EC7D4, 0x4
+	.4byte 0x3A83126F
 "@3208":
-	.incbin "baserom.dol", 0x3EC7D8, 0x4
+	.4byte 0x43FA0000
 "@3347":
-	.incbin "baserom.dol", 0x3EC7DC, 0x4
+	.4byte 0x43480000
 "@3448":
-	.incbin "baserom.dol", 0x3EC7E0, 0x4
+	.4byte 0x40000000
 "@3664":
-	.incbin "baserom.dol", 0x3EC7E4, 0x4
+	.4byte 0x44DAC000
 "@3667":
-	.incbin "baserom.dol", 0x3EC7E8, 0x4
+	.4byte 0x3BE56042
 "@3668":
-	.incbin "baserom.dol", 0x3EC7EC, 0x8
+	.asciz "mDecay"
+	.balign 4
 "@3669":
-	.incbin "baserom.dol", 0x3EC7F4, 0x4
+	.4byte 0x3F7AE148
 "@3671":
-	.incbin "baserom.dol", 0x3EC7F8, 0x4
+	.4byte 0x3DA3D70A
 "@3673":
-	.incbin "baserom.dol", 0x3EC7FC, 0x4
+	.4byte 0x3B449BA6
 "@3676":
-	.incbin "baserom.dol", 0x3EC800, 0x8
+	.4byte 0x44480000
+	.4byte 0
 "@3752":
-	.incbin "baserom.dol", 0x3EC808, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3852":
-	.incbin "baserom.dol", 0x3EC810, 0x4
+	.4byte 0x36800000
 "@3853":
-	.incbin "baserom.dol", 0x3EC814, 0x4
+	.4byte 0x38D1B717
 "@3854":
-	.incbin "baserom.dol", 0x3EC818, 0x4
+	.4byte 0x3F000000
 "@3855":
-	.incbin "baserom.dol", 0x3EC81C, 0x4
+	.4byte 0x40400000
 "@4245":
-	.incbin "baserom.dol", 0x3EC820, 0x4
+	.4byte 0x3FC90FDB
 "@4246":
-	.incbin "baserom.dol", 0x3EC824, 0x4
+	.4byte 0x3F7D70A4
 "@4332":
-	.incbin "baserom.dol", 0x3EC828, 0x4
+	.4byte 0x42F00000
 "@4452":
-	.incbin "baserom.dol", 0x3EC82C, 0x4
+	.4byte 0xC2700000
 "@4453":
-	.incbin "baserom.dol", 0x3EC830, 0x4
+	.4byte 0xBF800000
 "@4454":
-	.incbin "baserom.dol", 0x3EC834, 0x4
+	.4byte 0x43360B61
 "@4455":
-	.incbin "baserom.dol", 0x3EC838, 0x4
+	.4byte 0x42652EE0
 "@4456":
-	.incbin "baserom.dol", 0x3EC83C, 0x4
+	.4byte 0x3D4CCCCD
 "@4641":
   .4byte 0
 "@4642":
-	.incbin "baserom.dol", 0x3EC844, 0x8
+	.asciz "coin"
+	.balign 4
 "@4709":
-	.incbin "baserom.dol", 0x3EC84C, 0x4
+	.4byte 0x41700000
 "@4869":
-	.incbin "baserom.dol", 0x3EC850, 0x4
+	.4byte 0x42480000
 "@4870":
-	.incbin "baserom.dol", 0x3EC854, 0x4
+	.4byte 0x42C80000
 "@4993":
-	.incbin "baserom.dol", 0x3EC858, 0x4
+	.4byte 0x3C80ADFD
 "@5080":
-	.incbin "baserom.dol", 0x3EC85C, 0x4
+	.4byte 0x41A00000
 "@5340":
-	.incbin "baserom.dol", 0x3EC860, 0x8
+	.4byte 0x3F96CBE4
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2990":

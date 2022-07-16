@@ -3082,51 +3082,116 @@ lbl_8016FF64:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x37B8A4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2050":
-	.incbin "baserom.dol", 0x37B8B8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2051":
-	.incbin "baserom.dol", 0x37B8E8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2052":
-	.incbin "baserom.dol", 0x37B920, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2053":
-	.incbin "baserom.dol", 0x37B954, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2207":
-	.incbin "baserom.dol", 0x37B978, 0x10
+	.asciz "__ROOT_JOINT__"
+	.balign 4
 "@2212":
-	.incbin "baserom.dol", 0x37B988, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2213":
-	.incbin "baserom.dol", 0x37B998, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 "@2214":
-	.incbin "baserom.dol", 0x37B9BC, 0x14
+	.asciz "I_mom_mino_dummyI4"
+	.balign 4
 "@2215":
-	.incbin "baserom.dol", 0x37B9D0, 0x14
+	.asciz "I_mow_mino_dummyI4"
+	.balign 4
 "@2216":
-	.incbin "baserom.dol", 0x37B9E4, 0x28
+	.asciz "/scene/monteMCommon/I_mom_mino_rgba.bti"
 "@2217":
-	.incbin "baserom.dol", 0x37BA0C, 0x28
+	.asciz "/scene/monteWCommon/I_mow_mino_rgba.bti"
 "@2218":
-	.incbin "baserom.dol", 0x37BA34, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 "@2219":
-	.incbin "baserom.dol", 0x37BA4C, 0xC
+	.asciz "dummy_8x8i4"
 "@2220":
-	.incbin "baserom.dol", 0x37BA58, 0x14
+	.asciz "J_jellyFish_dummy"
+	.balign 4
 "@2221":
-	.incbin "baserom.dol", 0x37BA6C, 0x24
+	.asciz "/scene/mareJellyFish/J_kurage.bti"
+	.balign 4
 "@2222":
-	.incbin "baserom.dol", 0x37BA90, 0x14
+	.asciz "/scene/monteMCommon"
 "@2223":
-	.incbin "baserom.dol", 0x37BAA4, 0x14
+	.asciz "/scene/monteWCommon"
 "@2224":
-	.incbin "baserom.dol", 0x37BAB8, 0x10
+	.asciz "/scene/mareM"
+	.balign 4
 "@2225":
-	.incbin "baserom.dol", 0x37BAC8, 0x10
+	.asciz "/scene/mareW"
+	.balign 4
 "@2226":
-	.incbin "baserom.dol", 0x37BAD8, 0x1C
+	.asciz "/scene/mareCommon/mare.bmt"
+	.balign 4
 "@2227":
-	.incbin "baserom.dol", 0x37BAF4, 0x24
+	.asciz "/scene/mareCommon/mare_yogore.bmt"
+	.balign 4
 "@2230":
-	.incbin "baserom.dol", 0x37BB18, 0x10
+	.asciz "boardNpc.bmd"
+	.balign 4
 entry$2229:
   .4byte "@2230"
   .4byte 0x10220000
@@ -3135,17 +3200,17 @@ entry$2229:
   .4byte 0
   .4byte 0
 "@2232":
-	.incbin "baserom.dol", 0x37BB40, 0x10
+	.asciz "jellyFish_A.bmd"
 "@2233":
-	.incbin "baserom.dol", 0x37BB50, 0x10
+	.asciz "jellyFish_B.bmd"
 "@2234":
-	.incbin "baserom.dol", 0x37BB60, 0x10
+	.asciz "jellyFish_C.bmd"
 "@2235":
-	.incbin "baserom.dol", 0x37BB70, 0x10
+	.asciz "jellyFish_D.bmd"
 "@2236":
-	.incbin "baserom.dol", 0x37BB80, 0x10
+	.asciz "jellyFish_E.bmd"
 "@2237":
-	.incbin "baserom.dol", 0x37BB90, 0x10
+	.asciz "jellyFish_F.bmd"
 entry$2231:
   .4byte "@2232"
   .4byte 0x11240000
@@ -3169,7 +3234,8 @@ entry$2231:
   .4byte 0
   .4byte 0
 "@2336":
-	.incbin "baserom.dol", 0x37BBF4, 0x10
+	.asciz "mom_model.bmd"
+	.balign 4
 entry$2335:
   .4byte "@2336"
   .4byte 0x10300000
@@ -3178,7 +3244,8 @@ entry$2335:
   .4byte 0
   .4byte 0
 "@2338":
-	.incbin "baserom.dol", 0x37BC1C, 0x10
+	.asciz "momA_model.bmd"
+	.balign 4
 entry$2337:
   .4byte "@2338"
   .4byte 0x10300000
@@ -3187,7 +3254,8 @@ entry$2337:
   .4byte 0
   .4byte 0
 "@2340":
-	.incbin "baserom.dol", 0x37BC44, 0x10
+	.asciz "momB_model.bmd"
+	.balign 4
 entry$2339:
   .4byte "@2340"
   .4byte 0x10210000
@@ -3196,7 +3264,8 @@ entry$2339:
   .4byte 0
   .4byte 0
 "@2342":
-	.incbin "baserom.dol", 0x37BC6C, 0x10
+	.asciz "momC_model.bmd"
+	.balign 4
 entry$2341:
   .4byte "@2342"
   .4byte 0x10300000
@@ -3205,7 +3274,8 @@ entry$2341:
   .4byte 0
   .4byte 0
 "@2344":
-	.incbin "baserom.dol", 0x37BC94, 0x10
+	.asciz "momD_model.bmd"
+	.balign 4
 entry$2343:
   .4byte "@2344"
   .4byte 0x10210000
@@ -3214,7 +3284,8 @@ entry$2343:
   .4byte 0
   .4byte 0
 "@2346":
-	.incbin "baserom.dol", 0x37BCBC, 0x10
+	.asciz "momE_model.bmd"
+	.balign 4
 entry$2345:
   .4byte "@2346"
   .4byte 0x10010000
@@ -3244,7 +3315,8 @@ entry$2349:
   .4byte 0
   .4byte 0
 "@2351":
-	.incbin "baserom.dol", 0x37BD2C, 0x10
+	.asciz "mow_model.bmd"
+	.balign 4
 entry$2350:
   .4byte "@2351"
   .4byte 0x10300000
@@ -3253,7 +3325,8 @@ entry$2350:
   .4byte 0
   .4byte 0
 "@2353":
-	.incbin "baserom.dol", 0x37BD54, 0x10
+	.asciz "mowA_model.bmd"
+	.balign 4
 entry$2352:
   .4byte "@2353"
   .4byte 0x10300000
@@ -3262,7 +3335,8 @@ entry$2352:
   .4byte 0
   .4byte 0
 "@2355":
-	.incbin "baserom.dol", 0x37BD7C, 0x10
+	.asciz "mowB_model.bmd"
+	.balign 4
 entry$2354:
   .4byte "@2355"
   .4byte 0x10210000
@@ -3278,7 +3352,8 @@ entry$2356:
   .4byte 0
   .4byte 0
 "@2358":
-	.incbin "baserom.dol", 0x37BDBC, 0xC
+	.asciz "mareM.bmd"
+	.balign 4
 entry$2357:
   .4byte "@2358"
   .4byte 0x10300000
@@ -3287,7 +3362,8 @@ entry$2357:
   .4byte 0
   .4byte 0
 "@2360":
-	.incbin "baserom.dol", 0x37BDE0, 0xC
+	.asciz "mareW.bmd"
+	.balign 4
 entry$2359:
   .4byte "@2360"
   .4byte 0x10300000
@@ -3296,7 +3372,8 @@ entry$2359:
   .4byte 0
   .4byte 0
 "@2362":
-	.incbin "baserom.dol", 0x37BE04, 0x14
+	.asciz "kinopio_body.bmd"
+	.balign 4
 entry$2361:
   .4byte "@2362"
   .4byte 0x10300000
@@ -3305,7 +3382,7 @@ entry$2361:
   .4byte 0
   .4byte 0
 "@2364":
-	.incbin "baserom.dol", 0x37BE30, 0x10
+	.asciz "kinoji_body.bmd"
 entry$2363:
   .4byte "@2364"
   .4byte 0x10010000
@@ -3314,7 +3391,7 @@ entry$2363:
   .4byte 0
   .4byte 0
 "@2366":
-	.incbin "baserom.dol", 0x37BE58, 0x10
+	.asciz "peach_model.bmd"
 entry$2365:
   .4byte "@2366"
   .4byte 0x10010000
@@ -3323,7 +3400,8 @@ entry$2365:
   .4byte 0
   .4byte 0
 "@2368":
-	.incbin "baserom.dol", 0x37BE80, 0xC
+	.asciz "tanuki.bmd"
+	.balign 4
 entry$2367:
   .4byte "@2368"
   .4byte 0x10210000
@@ -3332,7 +3410,8 @@ entry$2367:
   .4byte 0
   .4byte 0
 "@2370":
-	.incbin "baserom.dol", 0x37BEA4, 0x10
+	.asciz "sunflower.bmd"
+	.balign 4
 entry$2369:
   .4byte "@2370"
   .4byte 0x10020000
@@ -3341,7 +3420,7 @@ entry$2369:
   .4byte 0
   .4byte 0
 "@2372":
-	.incbin "baserom.dol", 0x37BECC, 0x10
+	.asciz "sunflower_s.bmd"
 entry$2371:
   .4byte "@2372"
   .4byte 0x10220000
@@ -3350,13 +3429,18 @@ entry$2371:
   .4byte 0
   .4byte 0
 "@2416":
-	.incbin "baserom.dol", 0x37BEF4, 0x10
+	.asciz "/scene/monteW"
+	.balign 4
 "@2459":
-	.incbin "baserom.dol", 0x37BF04, 0x10
+	.asciz "/scene/monteMA"
+	.balign 4
 "@2467":
-	.incbin "baserom.dol", 0x37BF14, 0x10
+	.asciz "/scene/monteMC"
+	.balign 4
 "@2475":
-	.incbin "baserom.dol", 0x37BF24, 0x14
+	.asciz "/scene/monteM"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
@@ -4237,19 +4321,20 @@ cMareCommonPollutionBmtName:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2535":
-	.incbin "baserom.dol", 0x3E6360, 0x4
+	.4byte 0x437A0000
 "@2536":
-	.incbin "baserom.dol", 0x3E6364, 0x4
+	.4byte 0x43FA0000
 "@2804":
-	.incbin "baserom.dol", 0x3E6368, 0x4
+	.4byte 0x466A6000
 "@2805":
-	.incbin "baserom.dol", 0x3E636C, 0x4
+	.4byte 0x42960000
 "@2860":
-	.incbin "baserom.dol", 0x3E6370, 0x8
+	.asciz "%s/%s"
+	.balign 4
 "@2898":
-	.incbin "baserom.dol", 0x3E6378, 0x4
+	.4byte 0x43AF0000
 "@2934":
-	.incbin "baserom.dol", 0x3E637C, 0x4
+	.4byte 0x43480000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global mStaticCommonKeeper__18TMonteMBaseManager

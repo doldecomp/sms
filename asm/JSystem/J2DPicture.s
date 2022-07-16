@@ -2059,14 +2059,16 @@ __vt__10J2DPicture:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@297":
-	.incbin "baserom.dol", 0x3E3E40, 0x4
+	.4byte 0x3F800000
 "@725":
   .4byte 0
 "@726":
-	.incbin "baserom.dol", 0x3E3E48, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@728":
-	.incbin "baserom.dol", 0x3E3E50, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@920":
-	.incbin "baserom.dol", 0x3E3E58, 0x4
+	.4byte 0xFFFFFF00
 "@1014":
-	.incbin "baserom.dol", 0x3E3E5C, 0x4
+	.4byte 0x437F0000

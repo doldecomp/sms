@@ -58,15 +58,16 @@ getUpdateInterval__Q28JASystem6DriverFv:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 MAX_MIXERLEVEL__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3E31A0, 0x4
+	.4byte 0x2EE00000
 JAS_SYSTEM_OUTPUT_MODE__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3E31A4, 0x4
+	.4byte 0x00000001
 JAS_UPDATE_INTERVAL__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3E31A8, 0x4
+	.4byte 0x01000000
 DSP_VOICE_WAITS_MAX__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x3E31AC, 0x4
+	.4byte 0x00000020
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@120":
-	.incbin "baserom.dol", 0x3E4368, 0x8
+	.4byte 0x46800000
+	.4byte 0

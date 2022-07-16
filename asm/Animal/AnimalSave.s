@@ -143,41 +143,53 @@ __ct__21TAnimalSaveIndividualFPCc:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A4C44, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1562":
-	.incbin "baserom.dol", 0x3A4C58, 0x10
+	.asciz "mSLSharedAnmNum"
 "@1563":
-	.incbin "baserom.dol", 0x3A4C68, 0x10
+	.asciz "mSLViewClipNear"
 "@1565":
-	.incbin "baserom.dol", 0x3A4C78, 0x10
+	.asciz "mSLViewClipFar"
+	.balign 4
 "@1567":
-	.incbin "baserom.dol", 0x3A4C88, 0x14
+	.asciz "mSLViewClipRadius"
+	.balign 4
 "@1569":
-	.incbin "baserom.dol", 0x3A4C9C, 0x14
+	.asciz "mSLMaxMarchSpeed"
+	.balign 4
 "@1571":
-	.incbin "baserom.dol", 0x3A4CB0, 0x10
+	.asciz "mSLMarchAccel"
+	.balign 4
 "@1573":
-	.incbin "baserom.dol", 0x3A4CC0, 0x14
+	.asciz "mSLMarchDecrease"
+	.balign 4
 "@1575":
-	.incbin "baserom.dol", 0x3A4CD4, 0x14
+	.asciz "mSLWalkTurnSpeed"
+	.balign 4
 "@1577":
-	.incbin "baserom.dol", 0x3A4CE8, 0x18
+	.asciz "mSLWaitTurnSpeed"
+	.balign 4
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1564":
-	.incbin "baserom.dol", 0x3EC6F8, 0x4
+	.4byte 0x42C80000
 "@1566":
-	.incbin "baserom.dol", 0x3EC6FC, 0x4
+	.4byte 0x461C4000
 "@1568":
-	.incbin "baserom.dol", 0x3EC700, 0x4
+	.4byte 0x42960000
 "@1570":
-	.incbin "baserom.dol", 0x3EC704, 0x4
+	.4byte 0x40C00000
 "@1572":
-	.incbin "baserom.dol", 0x3EC708, 0x4
+	.4byte 0x3D23D70A
 "@1574":
-	.incbin "baserom.dol", 0x3EC70C, 0x4
+	.4byte 0x3E4CCCCD
 "@1576":
-	.incbin "baserom.dol", 0x3EC710, 0x4
+	.4byte 0x41200000
 "@1578":
-	.incbin "baserom.dol", 0x3EC714, 0x4
+	.4byte 0x40000000

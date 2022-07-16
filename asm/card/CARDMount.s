@@ -771,6 +771,20 @@ lbl_800A3370:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 SectorSizeTable:
-	.incbin "baserom.dol", 0x3AE500, 0x20
+	.4byte 0x00002000
+	.4byte 0x00004000
+	.4byte 0x00008000
+	.4byte 0x00010000
+	.4byte 0x00020000
+	.4byte 0x00040000
+	.4byte 0
+	.4byte 0
 LatencyTable:
-	.incbin "baserom.dol", 0x3AE520, 0x20
+	.4byte 0x00000004
+	.4byte 0x00000008
+	.4byte 0x00000010
+	.4byte 0x00000020
+	.4byte 0x00000040
+	.4byte 0x00000080
+	.4byte 0x00000100
+	.4byte 0x00000200

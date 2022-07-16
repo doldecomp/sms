@@ -2553,41 +2553,99 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1940":
-	.incbin "baserom.dol", 0x39F93C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2018":
-	.incbin "baserom.dol", 0x39F950, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2019":
-	.incbin "baserom.dol", 0x39F980, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2020":
-	.incbin "baserom.dol", 0x39F9B8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2021":
-	.incbin "baserom.dol", 0x39F9EC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2762":
-	.incbin "baserom.dol", 0x39FA10, 0x28
+	.asciz "/scene/sambohead/bas/flower_shoot.bas"
+	.balign 4
 "@2763":
-	.incbin "baserom.dol", 0x39FA38, 0x2C
+	.asciz "/scene/sambohead/bas/samboHead_crash.bas"
+	.balign 4
 "@2764":
-	.incbin "baserom.dol", 0x39FA64, 0x2C
+	.asciz "/scene/sambohead/bas/samboHead_dance.bas"
+	.balign 4
 "@2765":
-	.incbin "baserom.dol", 0x39FA90, 0x28
+	.asciz "/scene/sambohead/bas/samboHead_down.bas"
 "@2766":
-	.incbin "baserom.dol", 0x39FAB8, 0x2C
+	.asciz "/scene/sambohead/bas/samboHead_Fhide.bas"
+	.balign 4
 "@2767":
-	.incbin "baserom.dol", 0x39FAE4, 0x28
+	.asciz "/scene/sambohead/bas/samboHead_hit.bas"
+	.balign 4
 "@2768":
-	.incbin "baserom.dol", 0x39FB0C, 0x2C
+	.asciz "/scene/sambohead/bas/samboHead_hit_end.bas"
+	.balign 4
 "@2769":
-	.incbin "baserom.dol", 0x39FB38, 0x2C
+	.asciz "/scene/sambohead/bas/samboHead_jump_end.bas"
 "@2770":
-	.incbin "baserom.dol", 0x39FB64, 0x30
+	.asciz "/scene/sambohead/bas/samboHead_jump_start.bas"
+	.balign 4
 "@2771":
-	.incbin "baserom.dol", 0x39FB94, 0x28
+	.asciz "/scene/sambohead/bas/samboHead_set.bas"
+	.balign 4
 "@2772":
-	.incbin "baserom.dol", 0x39FBBC, 0x28
+	.asciz "/scene/sambohead/bas/samboHead_turn.bas"
 "@2873":
-	.incbin "baserom.dol", 0x39FBE4, 0xC
+	.asciz "yumbo.bmd"
+	.balign 4
 "@2874":
-	.incbin "baserom.dol", 0x39FBF0, 0xC
+	.asciz "flower.bmd"
+	.balign 4
 entry$2872:
   .4byte "@2873"
   .4byte 0x10210000
@@ -2599,29 +2657,41 @@ entry$2872:
   .4byte 0
   .4byte 0
 "@3283":
-	.incbin "baserom.dol", 0x39FC20, 0x14
+	.asciz "/enemy/Yumbo.prm"
+	.balign 4
 "@3284":
-	.incbin "baserom.dol", 0x39FC34, 0x10
+	.asciz "mRecoverTimer"
+	.balign 4
 "@3285":
-	.incbin "baserom.dol", 0x39FC44, 0xC
+	.asciz "mShootSpeed"
 "@3287":
-	.incbin "baserom.dol", 0x39FC50, 0x10
+	.asciz "mShootAngleX"
+	.balign 4
 "@3289":
-	.incbin "baserom.dol", 0x39FC60, 0xC
+	.asciz "mSeedLife"
+	.balign 4
 "@3290":
-	.incbin "baserom.dol", 0x39FC6C, 0x10
+	.asciz "mSeedAirFric"
+	.balign 4
 "@3292":
-	.incbin "baserom.dol", 0x39FC7C, 0x10
+	.asciz "mSeedGravityY"
+	.balign 4
 "@3294":
-	.incbin "baserom.dol", 0x39FC8C, 0x24
+	.asciz "/scene/samboHead/flower_blue.bmt"
+	.balign 4
 "@3702":
-	.incbin "baserom.dol", 0x39FCB0, 0x10
+	.asciz "sambohead_dance"
 "@3947":
-	.incbin "baserom.dol", 0x39FCC0, 0x10
+	.asciz "samboSeed.bmd"
+	.balign 4
 "@3948":
-	.incbin "baserom.dol", 0x39FCD0, 0xC
+	.4byte 0x83868393
+	.4byte 0x837B8EED
+	.4byte 0
 "@4066":
-	.incbin "baserom.dol", 0x39FCDC, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sambohead_bastable:
@@ -2848,70 +2918,73 @@ __vt__10TYumboSeed:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@2867":
-	.incbin "baserom.dol", 0x3E3B00, 0x4
+	.4byte 0x00000061
 "@2868":
-	.incbin "baserom.dol", 0x3E3B04, 0x4
+	.4byte 0x000000E1
 "@2869":
-	.incbin "baserom.dol", 0x3E3B08, 0x4
+	.4byte 0x0000005A
 "@2870":
-	.incbin "baserom.dol", 0x3E3B0C, 0x4
+	.4byte 0x000000E1
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3040":
   .4byte 0
 "@3099":
-	.incbin "baserom.dol", 0x3EBAFC, 0x4
+	.4byte 0x42B40000
 "@3100":
-	.incbin "baserom.dol", 0x3EBB00, 0x4
+	.4byte 0xC2B40000
 "@3101":
-	.incbin "baserom.dol", 0x3EBB04, 0x4
+	.4byte 0x3BB40000
 "@3102":
-	.incbin "baserom.dol", 0x3EBB08, 0x8
+	.4byte 0x43340000
+	.4byte 0
 "@3104":
-	.incbin "baserom.dol", 0x3EBB10, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3143":
-	.incbin "baserom.dol", 0x3EBB18, 0x4
+	.4byte 0x40400000
 "@3144":
-	.incbin "baserom.dol", 0x3EBB1C, 0x4
+	.4byte 0x42080000
 "@3286":
-	.incbin "baserom.dol", 0x3EBB20, 0x4
+	.4byte 0x425C0000
 "@3288":
-	.incbin "baserom.dol", 0x3EBB24, 0x4
+	.4byte 0x3E4CCCCD
 "@3291":
-	.incbin "baserom.dol", 0x3EBB28, 0x4
+	.4byte 0x3F70A3D7
 "@3293":
-	.incbin "baserom.dol", 0x3EBB2C, 0x4
+	.4byte 0x3F666666
 "@3603":
-	.incbin "baserom.dol", 0x3EBB30, 0x4
+	.4byte 0x38000000
 "@3604":
-	.incbin "baserom.dol", 0x3EBB34, 0x4
+	.4byte 0x43480000
 "@3605":
-	.incbin "baserom.dol", 0x3EBB38, 0x4
+	.4byte 0x3F000000
 "@3606":
-	.incbin "baserom.dol", 0x3EBB3C, 0x4
+	.4byte 0x36800000
 "@3607":
-	.incbin "baserom.dol", 0x3EBB40, 0x4
+	.4byte 0x3C8EFA36
 "@3608":
-	.incbin "baserom.dol", 0x3EBB44, 0x4
+	.4byte 0x40C90FDB
 "@3609":
-	.incbin "baserom.dol", 0x3EBB48, 0x4
+	.4byte 0xC0490FDB
 "@3610":
-	.incbin "baserom.dol", 0x3EBB4C, 0x4
+	.4byte 0x40000000
 "@3860":
-	.incbin "baserom.dol", 0x3EBB50, 0x4
+	.4byte 0x42C30000
 "@3861":
-	.incbin "baserom.dol", 0x3EBB54, 0x4
+	.4byte 0x43610000
 "@3862":
-	.incbin "baserom.dol", 0x3EBB58, 0x4
+	.4byte 0x42960000
 "@3863":
-	.incbin "baserom.dol", 0x3EBB5C, 0x4
+	.4byte 0x3FC00000
 "@3949":
-	.incbin "baserom.dol", 0x3EBB60, 0x8
+	.asciz "center"
+	.balign 4
 "@4036":
-	.incbin "baserom.dol", 0x3EBB68, 0x4
+	.4byte 0x3F800000
 "@4065":
-	.incbin "baserom.dol", 0x3EBB6C, 0x4
+	.4byte 0x41F00000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2876":

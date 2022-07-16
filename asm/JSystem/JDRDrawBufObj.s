@@ -201,7 +201,8 @@ lbl_800422F0:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@903":
-	.incbin "baserom.dol", 0x36DF00, 0x10
+	.asciz "<DrawBufObj>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama11TDrawBufObj

@@ -648,15 +648,36 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2901":
-	.incbin "baserom.dol", 0x38C800, 0x1C
+	.4byte 0x8351815B
+	.4byte 0x8367834C
+	.4byte 0x815B8370
+	.4byte 0x815B8169
+	.4byte 0x83728341
+	.4byte 0x83938352
+	.4byte 0x816A0000
 "@2916":
-	.incbin "baserom.dol", 0x38C81C, 0x14
+	.4byte 0x8BF38D60
+	.4byte 0x8DE28FE3
+	.4byte 0x82B0834A
+	.4byte 0x83818389
+	.4byte 0
 "@2932":
-	.incbin "baserom.dol", 0x38C830, 0x18
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x8169978E
+	.4byte 0x8F9182AB
+	.4byte 0x9770816A
+	.4byte 0
 "@2933":
-	.incbin "baserom.dol", 0x38C848, 0x18
+	.4byte 0x978E8F91
+	.4byte 0x82AB8356
+	.4byte 0x83838343
+	.4byte 0x8393834A
+	.4byte 0x83818389
+	.4byte 0
 "@2948":
-	.incbin "baserom.dol", 0x38C860, 0x10
+	.asciz "AirportPool"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TAirportEventSink
@@ -807,11 +828,12 @@ __vt__14TAirportSwitch:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2902":
-	.incbin "baserom.dol", 0x3E84C8, 0x4
+	.4byte 0x43480000
 "@2917":
   .4byte 0
 "@2924":
-	.incbin "baserom.dol", 0x3E84D0, 0x8
+	.4byte 0x3DCCCCCD
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2992":

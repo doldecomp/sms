@@ -721,25 +721,79 @@ lbl_801770C4:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x37F6B4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2069":
-	.incbin "baserom.dol", 0x37F6C8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2070":
-	.incbin "baserom.dol", 0x37F6F8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2071":
-	.incbin "baserom.dol", 0x37F730, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2072":
-	.incbin "baserom.dol", 0x37F764, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2266":
-	.incbin "baserom.dol", 0x37F788, 0x10
+	.asciz "__ROOT_JOINT__"
+	.balign 4
 "@2275":
-	.incbin "baserom.dol", 0x37F798, 0x14
+	.asciz "H_peach_main_dummy"
+	.balign 4
 "@2276":
-	.incbin "baserom.dol", 0x37F7AC, 0x14
+	.asciz "H_peach_main_s3tc"
+	.balign 4
 "@2489":
-	.incbin "baserom.dol", 0x37F7C0, 0xC
+	.asciz "_starglow1"
+	.balign 4
 "@2633":
-	.incbin "baserom.dol", 0x37F7CC, 0x14
+	.asciz "<TSharedParts>"
+	.balign 4
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cPeachPartsTextureName:
@@ -752,8 +806,10 @@ cPeachHostTextureName:
 "@2491":
   .4byte 0
 "@2492":
-	.incbin "baserom.dol", 0x3E65F4, 0x4
+	.4byte 0x3F800000
 "@2632":
-	.incbin "baserom.dol", 0x3E65F8, 0x8
+	.4byte 0x38000000
+	.4byte 0
 "@2635":
-	.incbin "baserom.dol", 0x3E6600, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

@@ -590,11 +590,17 @@ __ct__16TCubeManagerBaseFPCcPCc:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A3A4C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2024":
-	.incbin "baserom.dol", 0x3A3A60, 0x14
+	.asciz "<NameRefPtrAryT>"
+	.balign 4
 "@2025":
-	.incbin "baserom.dol", 0x3A3A74, 0x14
+	.asciz "<TCubeGeneralInfo>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16TCubeManagerBase
@@ -613,17 +619,21 @@ __vt__16TCubeManagerBase:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1778":
-	.incbin "baserom.dol", 0x3EC4D0, 0x4
+	.4byte 0x42960000
 "@1897":
-	.incbin "baserom.dol", 0x3EC4D4, 0x8
+	.4byte 0x82528A4B
+	.4byte 0
 "@1898":
-	.incbin "baserom.dol", 0x3EC4DC, 0x8
+	.4byte 0x82518A4B
+	.4byte 0
 "@1899":
-	.incbin "baserom.dol", 0x3EC4E4, 0x8
+	.4byte 0x82508A4B
+	.4byte 0
 "@2026":
   .4byte 0
 "@2027":
-	.incbin "baserom.dol", 0x3EC4F0, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCubeCamera

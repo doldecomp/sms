@@ -280,9 +280,10 @@ __ct__16TCameraMarioDataFv:
 "@2149":
   .4byte 0
 "@2190":
-	.incbin "baserom.dol", 0x3EC29C, 0x4
+	.4byte 0x42C80000
 "@2191":
-	.incbin "baserom.dol", 0x3EC2A0, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCameraMario

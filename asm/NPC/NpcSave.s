@@ -1182,245 +1182,385 @@ __ct__20TNpcSaveStageFarClipFv:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x37BF44, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1755":
-	.incbin "baserom.dol", 0x37BF58, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1756":
-	.incbin "baserom.dol", 0x37BF88, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1757":
-	.incbin "baserom.dol", 0x37BFC0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1758":
-	.incbin "baserom.dol", 0x37BFF4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1961":
-	.incbin "baserom.dol", 0x37C018, 0x14
+	.asciz "/Npc/npcMonteM.prm"
+	.balign 4
 "@1962":
-	.incbin "baserom.dol", 0x37C02C, 0x14
+	.asciz "/Npc/npcMonteME.prm"
 "@1963":
-	.incbin "baserom.dol", 0x37C040, 0x14
+	.asciz "/Npc/npcMonteMF.prm"
 "@1964":
-	.incbin "baserom.dol", 0x37C054, 0x14
+	.asciz "/Npc/npcMonteMG.prm"
 "@1965":
-	.incbin "baserom.dol", 0x37C068, 0x14
+	.asciz "/Npc/npcMonteMH.prm"
 "@1966":
-	.incbin "baserom.dol", 0x37C07C, 0x14
+	.asciz "/Npc/npcMonteW.prm"
+	.balign 4
 "@1967":
-	.incbin "baserom.dol", 0x37C090, 0x14
+	.asciz "/Npc/npcMonteWC.prm"
 "@1968":
-	.incbin "baserom.dol", 0x37C0A4, 0x14
+	.asciz "/Npc/npcMareM.prm"
+	.balign 4
 "@1969":
-	.incbin "baserom.dol", 0x37C0B8, 0x14
+	.asciz "/Npc/npcMareMA.prm"
+	.balign 4
 "@1970":
-	.incbin "baserom.dol", 0x37C0CC, 0x14
+	.asciz "/Npc/npcMareMB.prm"
+	.balign 4
 "@1971":
-	.incbin "baserom.dol", 0x37C0E0, 0x14
+	.asciz "/Npc/npcMareMC.prm"
+	.balign 4
 "@1972":
-	.incbin "baserom.dol", 0x37C0F4, 0x14
+	.asciz "/Npc/npcMareMD.prm"
+	.balign 4
 "@1973":
-	.incbin "baserom.dol", 0x37C108, 0x14
+	.asciz "/Npc/npcMareW.prm"
+	.balign 4
 "@1974":
-	.incbin "baserom.dol", 0x37C11C, 0x14
+	.asciz "/Npc/npcMareWA.prm"
+	.balign 4
 "@1975":
-	.incbin "baserom.dol", 0x37C130, 0x14
+	.asciz "/Npc/npcMareWB.prm"
+	.balign 4
 "@1976":
-	.incbin "baserom.dol", 0x37C144, 0x14
+	.asciz "/Npc/npcKinopio.prm"
 "@1977":
-	.incbin "baserom.dol", 0x37C158, 0x14
+	.asciz "/Npc/npcKinojii.prm"
 "@1978":
-	.incbin "baserom.dol", 0x37C16C, 0x14
+	.asciz "/Npc/npcPeach.prm"
+	.balign 4
 "@1979":
-	.incbin "baserom.dol", 0x37C180, 0x18
+	.asciz "/Npc/npcRaccoonDog.prm"
+	.balign 4
 "@1980":
-	.incbin "baserom.dol", 0x37C198, 0x18
+	.asciz "/Npc/npcSunflowerL.prm"
+	.balign 4
 "@1981":
-	.incbin "baserom.dol", 0x37C1B0, 0x18
+	.asciz "/Npc/npcSunflowerS.prm"
+	.balign 4
 "@1982":
-	.incbin "baserom.dol", 0x37C1C8, 0x14
+	.asciz "/Npc/npcDummy.prm"
+	.balign 4
 "@1983":
-	.incbin "baserom.dol", 0x37C1DC, 0x14
+	.asciz "/Npc/npcBoard.prm"
+	.balign 4
 "@2160":
-	.incbin "baserom.dol", 0x37C1F0, 0x10
+	.asciz "mSLBodyHeight"
+	.balign 4
 "@2162":
-	.incbin "baserom.dol", 0x37C200, 0x10
+	.asciz "mSLCursorHeight"
 "@2164":
-	.incbin "baserom.dol", 0x37C210, 0x10
+	.asciz "mSLLookatHeight"
 "@2166":
-	.incbin "baserom.dol", 0x37C220, 0x14
+	.asciz "mCircleShadowSize"
+	.balign 4
 "@2168":
-	.incbin "baserom.dol", 0x37C234, 0x18
+	.asciz "mSLDamageRadiusSmall"
+	.balign 4
 "@2170":
-	.incbin "baserom.dol", 0x37C24C, 0x14
+	.asciz "mSLMinWalkAnmRate"
+	.balign 4
 "@2172":
-	.incbin "baserom.dol", 0x37C260, 0x14
+	.asciz "mSLMaxWalkAnmRate"
+	.balign 4
 "@2174":
-	.incbin "baserom.dol", 0x37C274, 0x14
+	.asciz "mSLMaxRunAnmRate"
+	.balign 4
 "@2176":
-	.incbin "baserom.dol", 0x37C288, 0x14
+	.asciz "mSLMinMarchSpeed"
+	.balign 4
 "@2178":
-	.incbin "baserom.dol", 0x37C29C, 0x10
+	.asciz "mMaxMarchSpeed"
+	.balign 4
 "@2179":
-	.incbin "baserom.dol", 0x37C2AC, 0x10
+	.asciz "mSLMaxRunSpeed"
+	.balign 4
 "@2181":
-	.incbin "baserom.dol", 0x37C2BC, 0xC
+	.asciz "mSLRunAccel"
 "@2183":
-	.incbin "baserom.dol", 0x37C2C8, 0xC
+	.asciz "mMarchAccel"
 "@2185":
-	.incbin "baserom.dol", 0x37C2D4, 0x10
+	.asciz "mMarchDecrease"
+	.balign 4
 "@2186":
-	.incbin "baserom.dol", 0x37C2E4, 0x10
+	.asciz "mWalkTurnSpeed"
+	.balign 4
 "@2188":
-	.incbin "baserom.dol", 0x37C2F4, 0x10
+	.asciz "mWaitTurnSpeed"
+	.balign 4
 "@2190":
-	.incbin "baserom.dol", 0x37C304, 0x10
+	.asciz "mTurnAnmMinRate"
 "@2191":
-	.incbin "baserom.dol", 0x37C314, 0x10
+	.asciz "mTurnAnmMaxRate"
 "@2192":
-	.incbin "baserom.dol", 0x37C324, 0x10
+	.asciz "mTurnAnmRate"
+	.balign 4
 "@2193":
-	.incbin "baserom.dol", 0x37C334, 0x14
+	.asciz "mWaitAnmOffDist0"
+	.balign 4
 "@2195":
-	.incbin "baserom.dol", 0x37C348, 0x14
+	.asciz "mWaitAnmOffDist1"
+	.balign 4
 "@2197":
-	.incbin "baserom.dol", 0x37C35C, 0x10
+	.asciz "mLodChangeDist"
+	.balign 4
 "@2199":
-	.incbin "baserom.dol", 0x37C36C, 0x10
+	.asciz "mAllDLLockDist"
+	.balign 4
 "@2201":
-	.incbin "baserom.dol", 0x37C37C, 0x14
+	.asciz "mNeckTurnSearchDist"
 "@2203":
-	.incbin "baserom.dol", 0x37C390, 0x18
+	.asciz "mNeckTurnSearchHeight"
+	.balign 4
 "@2205":
-	.incbin "baserom.dol", 0x37C3A8, 0x14
+	.asciz "mBodyTurnSearchDist"
 "@2207":
-	.incbin "baserom.dol", 0x37C3BC, 0x18
+	.asciz "mBodyTurnSearchHeight"
+	.balign 4
 "@2209":
-	.incbin "baserom.dol", 0x37C3D4, 0x18
+	.asciz "mBodyTurnSearchDegree"
+	.balign 4
 "@2211":
-	.incbin "baserom.dol", 0x37C3EC, 0x18
+	.asciz "mBodyTurnSearchAware"
+	.balign 4
 "@2213":
-	.incbin "baserom.dol", 0x37C404, 0x10
+	.asciz "mMadSearchDist"
+	.balign 4
 "@2215":
-	.incbin "baserom.dol", 0x37C414, 0x14
+	.asciz "mMadSearchHeight"
+	.balign 4
 "@2217":
-	.incbin "baserom.dol", 0x37C428, 0x14
+	.asciz "mMadSearchDegree"
+	.balign 4
 "@2218":
-	.incbin "baserom.dol", 0x37C43C, 0x10
+	.asciz "mMadSearchAware"
 "@2219":
-	.incbin "baserom.dol", 0x37C44C, 0x10
+	.asciz "mMadTurnSpeed"
+	.balign 4
 "@2221":
-	.incbin "baserom.dol", 0x37C45C, 0x18
+	.asciz "mFirstStateTurnSpeed"
+	.balign 4
 "@2223":
-	.incbin "baserom.dol", 0x37C474, 0xC
+	.asciz "mUTurnSpeed"
 "@2224":
-	.incbin "baserom.dol", 0x37C480, 0xC
+	.asciz "mSinkSpeed"
+	.balign 4
 "@2226":
-	.incbin "baserom.dol", 0x37C48C, 0xC
+	.asciz "mSinkHeight"
 "@2228":
-	.incbin "baserom.dol", 0x37C498, 0x10
+	.asciz "mPollutionMax"
+	.balign 4
 "@2229":
-	.incbin "baserom.dol", 0x37C4A8, 0x18
+	.asciz "mPollutionCleanSpeed"
+	.balign 4
 "@2231":
-	.incbin "baserom.dol", 0x37C4C0, 0x10
+	.asciz "mNeckMinAngleX"
+	.balign 4
 "@2232":
-	.incbin "baserom.dol", 0x37C4D0, 0x10
+	.asciz "mNeckMaxAngleX"
+	.balign 4
 "@2233":
-	.incbin "baserom.dol", 0x37C4E0, 0x10
+	.asciz "mNeckMaxAngleY"
+	.balign 4
 "@2234":
-	.incbin "baserom.dol", 0x37C4F0, 0x14
+	.asciz "mNeckAngleXSpeed"
+	.balign 4
 "@2235":
-	.incbin "baserom.dol", 0x37C504, 0x14
+	.asciz "mNeckAngleYSpeed"
+	.balign 4
 "@2334":
-	.incbin "baserom.dol", 0x37C518, 0x14
+	.asciz "/Npc/npcNormal.prm"
+	.balign 4
 "@2335":
-	.incbin "baserom.dol", 0x37C52C, 0x1C
+	.asciz "mSLMarioTalkAcceptDegree"
+	.balign 4
 "@2337":
-	.incbin "baserom.dol", 0x37C548, 0x10
+	.asciz "mTalkAcceptDist"
 "@2338":
-	.incbin "baserom.dol", 0x37C558, 0x14
+	.asciz "mTalkAcceptHeight"
+	.balign 4
 "@2339":
-	.incbin "baserom.dol", 0x37C56C, 0x14
+	.asciz "mTalkAcceptDegree"
+	.balign 4
 "@2340":
-	.incbin "baserom.dol", 0x37C580, 0x18
+	.asciz "mSLSitTalkAcceptDegree"
+	.balign 4
 "@2342":
-	.incbin "baserom.dol", 0x37C598, 0x18
+	.asciz "mSLSunflowerLTalkDist"
+	.balign 4
 "@2343":
-	.incbin "baserom.dol", 0x37C5B0, 0x18
+	.asciz "mSLThrowTalkAcceptDist"
+	.balign 4
 "@2344":
-	.incbin "baserom.dol", 0x37C5C8, 0x1C
+	.asciz "mSLThrowTalkAcceptHeight"
+	.balign 4
 "@2345":
-	.incbin "baserom.dol", 0x37C5E4, 0x14
+	.asciz "mSLThrowStartFrame"
+	.balign 4
 "@2346":
-	.incbin "baserom.dol", 0x37C5F8, 0x18
+	.asciz "mSLTrampleShakeFrames"
+	.balign 4
 "@2347":
-	.incbin "baserom.dol", 0x37C610, 0x14
+	.asciz "mSLTrampleAmplitude"
 "@2349":
-	.incbin "baserom.dol", 0x37C624, 0x14
+	.asciz "mSLTrampleVelocity"
+	.balign 4
 "@2350":
-	.incbin "baserom.dol", 0x37C638, 0x18
+	.asciz "mSLTrampleToMadFrames"
+	.balign 4
 "@2351":
-	.incbin "baserom.dol", 0x37C650, 0x14
+	.asciz "mSLHeadHeightNormal"
 "@2352":
-	.incbin "baserom.dol", 0x37C664, 0x18
+	.asciz "mSLHeadHeightSandBomb"
+	.balign 4
 "@2353":
-	.incbin "baserom.dol", 0x37C67C, 0x14
+	.asciz "mSLBlownVelocity"
+	.balign 4
 "@2354":
-	.incbin "baserom.dol", 0x37C690, 0xC
+	.asciz "mGravityY"
+	.balign 4
 "@2355":
-	.incbin "baserom.dol", 0x37C69C, 0x18
+	.asciz "mMoveWalkAnmRateChase"
+	.balign 4
 "@2357":
-	.incbin "baserom.dol", 0x37C6B4, 0x18
+	.asciz "mStopWalkAnmRateChase"
+	.balign 4
 "@2359":
-	.incbin "baserom.dol", 0x37C6CC, 0x18
+	.asciz "mStopWalkAnmRateFrame"
+	.balign 4
 "@2360":
-	.incbin "baserom.dol", 0x37C6E4, 0x14
+	.asciz "mMotionBlendFrame"
+	.balign 4
 "@2361":
-	.incbin "baserom.dol", 0x37C6F8, 0x14
+	.asciz "mSLDanceAnmOffDist"
+	.balign 4
 "@2363":
-	.incbin "baserom.dol", 0x37C70C, 0x10
+	.asciz "mThrowSpeedXZ"
+	.balign 4
 "@2365":
-	.incbin "baserom.dol", 0x37C71C, 0x10
+	.asciz "mThrowSpeedY"
+	.balign 4
 "@2367":
-	.incbin "baserom.dol", 0x37C72C, 0x14
+	.asciz "mPosInbetweenFrame"
+	.balign 4
 "@2368":
-	.incbin "baserom.dol", 0x37C740, 0x18
+	.asciz "mSLGraphWanderMinFrame"
+	.balign 4
 "@2369":
-	.incbin "baserom.dol", 0x37C758, 0x18
+	.asciz "mSLGraphWanderMaxFrame"
+	.balign 4
 "@2370":
-	.incbin "baserom.dol", 0x37C770, 0x18
+	.asciz "mSLGraphWaitMinFrame"
+	.balign 4
 "@2371":
-	.incbin "baserom.dol", 0x37C788, 0x18
+	.asciz "mSLGraphWaitMaxFrame"
+	.balign 4
 "@2372":
-	.incbin "baserom.dol", 0x37C7A0, 0x14
+	.asciz "mSLCleanEffectScale"
 "@2373":
-	.incbin "baserom.dol", 0x37C7B4, 0x14
+	.asciz "mSLSmokeRunMagnif"
+	.balign 4
 "@2374":
-	.incbin "baserom.dol", 0x37C7C8, 0x10
+	.asciz "mSLFireDecSpeed"
 "@2417":
-	.incbin "baserom.dol", 0x37C7D8, 0x14
+	.asciz "/Npc/npcFarClip.prm"
 "@2418":
-	.incbin "baserom.dol", 0x37C7EC, 0x10
+	.asciz "mSLFarAirport"
+	.balign 4
 "@2420":
-	.incbin "baserom.dol", 0x37C7FC, 0x14
+	.asciz "mSLFarDolpicTown"
+	.balign 4
 "@2421":
-	.incbin "baserom.dol", 0x37C810, 0x14
+	.asciz "mSLFarBiancoHills"
+	.balign 4
 "@2422":
-	.incbin "baserom.dol", 0x37C824, 0x14
+	.asciz "mSLFarRiccoHarbor"
+	.balign 4
 "@2423":
-	.incbin "baserom.dol", 0x37C838, 0x14
+	.asciz "mSLFarMammaBeach"
+	.balign 4
 "@2424":
-	.incbin "baserom.dol", 0x37C84C, 0x14
+	.asciz "mSLFarPinnaBeach"
+	.balign 4
 "@2425":
-	.incbin "baserom.dol", 0x37C860, 0x14
+	.asciz "mSLFarPinnaParco"
+	.balign 4
 "@2426":
-	.incbin "baserom.dol", 0x37C874, 0x14
+	.asciz "mSLFarSirenaBeach"
+	.balign 4
 "@2427":
-	.incbin "baserom.dol", 0x37C888, 0x14
+	.asciz "mSLFarHotelDelfino"
+	.balign 4
 "@2428":
-	.incbin "baserom.dol", 0x37C89C, 0x14
+	.asciz "mSLFarMareVillage"
+	.balign 4
 "@2429":
-	.incbin "baserom.dol", 0x37C8B0, 0x14
+	.asciz "mSLFarMonteVillage"
+	.balign 4
 "@2430":
-	.incbin "baserom.dol", 0x37C8C4, 0x18
+	.asciz "mSLFarCoronaMountain"
+	.balign 4
 "@2431":
-	.incbin "baserom.dol", 0x37C8DC, 0x14
+	.asciz "mSLFarOthers"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sSaveFileName$1960:
@@ -1458,84 +1598,85 @@ sSaveFileName$1960:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2161":
-	.incbin "baserom.dol", 0x3E63B8, 0x4
+	.4byte 0x43480000
 "@2163":
-	.incbin "baserom.dol", 0x3E63BC, 0x4
+	.4byte 0x41F00000
 "@2165":
-	.incbin "baserom.dol", 0x3E63C0, 0x4
+	.4byte 0x42200000
 "@2167":
-	.incbin "baserom.dol", 0x3E63C4, 0x4
+	.4byte 0x42700000
 "@2169":
-	.incbin "baserom.dol", 0x3E63C8, 0x4
+	.4byte 0x41200000
 "@2171":
-	.incbin "baserom.dol", 0x3E63CC, 0x4
+	.4byte 0x3DCCCCCD
 "@2173":
-	.incbin "baserom.dol", 0x3E63D0, 0x4
+	.4byte 0x3FC00000
 "@2175":
-	.incbin "baserom.dol", 0x3E63D4, 0x4
+	.4byte 0x40400000
 "@2177":
-	.incbin "baserom.dol", 0x3E63D8, 0x4
+	.4byte 0x3E4CCCCD
 "@2180":
-	.incbin "baserom.dol", 0x3E63DC, 0x4
+	.4byte 0x40C00000
 "@2182":
-	.incbin "baserom.dol", 0x3E63E0, 0x4
+	.4byte 0x3DA3D70A
 "@2184":
-	.incbin "baserom.dol", 0x3E63E4, 0x4
+	.4byte 0x3CA3D70A
 "@2187":
-	.incbin "baserom.dol", 0x3E63E8, 0x4
+	.4byte 0x40A00000
 "@2189":
-	.incbin "baserom.dol", 0x3E63EC, 0x4
+	.4byte 0x3F800000
 "@2194":
-	.incbin "baserom.dol", 0x3E63F0, 0x4
+	.4byte 0x455AC000
 "@2196":
-	.incbin "baserom.dol", 0x3E63F4, 0x4
+	.4byte 0x45EA6000
 "@2198":
-	.incbin "baserom.dol", 0x3E63F8, 0x4
+	.4byte 0x45ABE000
 "@2200":
-	.incbin "baserom.dol", 0x3E63FC, 0x4
+	.4byte 0x44FA0000
 "@2202":
-	.incbin "baserom.dol", 0x3E6400, 0x4
+	.4byte 0x43FA0000
 "@2204":
-	.incbin "baserom.dol", 0x3E6404, 0x4
+	.4byte 0x44160000
 "@2206":
-	.incbin "baserom.dol", 0x3E6408, 0x4
+	.4byte 0x43960000
 "@2208":
-	.incbin "baserom.dol", 0x3E640C, 0x4
+	.4byte 0x437A0000
 "@2210":
-	.incbin "baserom.dol", 0x3E6410, 0x4
+	.4byte 0x43700000
 "@2212":
-	.incbin "baserom.dol", 0x3E6414, 0x4
+	.4byte 0x43200000
 "@2214":
-	.incbin "baserom.dol", 0x3E6418, 0x4
+	.4byte 0x44480000
 "@2216":
-	.incbin "baserom.dol", 0x3E641C, 0x4
+	.4byte 0x43C80000
 "@2220":
-	.incbin "baserom.dol", 0x3E6420, 0x4
+	.4byte 0x41A00000
 "@2222":
-	.incbin "baserom.dol", 0x3E6424, 0x4
+	.4byte 0x3F000000
 "@2225":
-	.incbin "baserom.dol", 0x3E6428, 0x4
+	.4byte 0x3E99999A
 "@2227":
-	.incbin "baserom.dol", 0x3E642C, 0x4
+	.4byte 0x435C0000
 "@2230":
-	.incbin "baserom.dol", 0x3E6430, 0x4
+	.4byte 0x3B83126F
 "@2336":
-	.incbin "baserom.dol", 0x3E6434, 0x4
+	.4byte 0x43160000
 "@2341":
-	.incbin "baserom.dol", 0x3E6438, 0x4
+	.4byte 0x42C80000
 "@2348":
-	.incbin "baserom.dol", 0x3E643C, 0x4
+	.4byte 0x3F400000
 "@2356":
-	.incbin "baserom.dol", 0x3E6440, 0x4
+	.4byte 0x3F666666
 "@2358":
-	.incbin "baserom.dol", 0x3E6444, 0x4
+	.4byte 0x3C23D70A
 "@2362":
-	.incbin "baserom.dol", 0x3E6448, 0x4
+	.4byte 0x45CB2000
 "@2364":
-	.incbin "baserom.dol", 0x3E644C, 0x4
+	.4byte 0x40600000
 "@2366":
-	.incbin "baserom.dol", 0x3E6450, 0x4
+	.4byte 0x40200000
 "@2375":
-	.incbin "baserom.dol", 0x3E6454, 0x4
+	.4byte 0x3B03126F
 "@2419":
-	.incbin "baserom.dol", 0x3E6458, 0x8
+	.4byte 0x466A6000
+	.4byte 0

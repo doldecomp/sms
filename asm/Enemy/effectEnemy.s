@@ -755,11 +755,15 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2971":
-	.incbin "baserom.dol", 0x39E620, 0xC
+	.asciz "default.bmd"
 "@3012":
-	.incbin "baserom.dol", 0x39E62C, 0x10
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x83679347
+	.4byte 0
 "@3016":
-	.incbin "baserom.dol", 0x39E63C, 0x1C
+	.asciz "/enemy/moveFireEffect.prm"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TEffectEnemy
@@ -902,7 +906,8 @@ __vt__19TEffectEnemyManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2891":
-	.incbin "baserom.dol", 0x3EB868, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3023":

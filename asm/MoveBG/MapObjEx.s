@@ -984,31 +984,87 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38D994, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38D9A8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38D9D8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38DA10, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38DA44, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2605":
-	.incbin "baserom.dol", 0x38DA68, 0x24
+	.asciz "/scene/mapObj/ms_funsui_yuge.jpa"
+	.balign 4
 "@2658":
-	.incbin "baserom.dol", 0x38DA8C, 0x20
+	.asciz "/scene/mapObj/CoinFishRail.bmd"
+	.balign 4
 "@2659":
-	.incbin "baserom.dol", 0x38DAAC, 0x10
+	.asciz "coinfishrail"
+	.balign 4
 "@2660":
-	.incbin "baserom.dol", 0x38DABC, 0x20
+	.asciz "/scene/mapObj/SandBirdRail.bmd"
+	.balign 4
 "@2661":
-	.incbin "baserom.dol", 0x38DADC, 0x10
+	.asciz "sandbirdrail"
+	.balign 4
 "@2698":
-	.incbin "baserom.dol", 0x38DAEC, 0xC
+	.asciz "coin_red"
+	.balign 4
 "@2699":
-	.incbin "baserom.dol", 0x38DAF8, 0xC
+	.asciz "bluecoin"
+	.balign 4
 "@2700":
-	.incbin "baserom.dol", 0x38DB04, 0xC
+	.asciz "coin_blue"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TMapObjSteam
@@ -1296,28 +1352,32 @@ __vt__11TMapObjNail:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mDownHeight__11TMapObjNail:
-	.incbin "baserom.dol", 0x3E37B0, 0x8
+	.4byte 0x42480000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2596":
   .4byte 0
 "@2662":
-	.incbin "baserom.dol", 0x3E8814, 0x4
+	.4byte 0x43360B61
 "@2668":
-	.incbin "baserom.dol", 0x3E8818, 0x8
+	.asciz "coin"
+	.balign 4
 "@2691":
-	.incbin "baserom.dol", 0x3E8820, 0x4
+	.4byte 0x3E800000
 "@2697":
-	.incbin "baserom.dol", 0x3E8824, 0x8
+	.asciz "redcoin"
 "@2701":
-	.incbin "baserom.dol", 0x3E882C, 0x8
+	.asciz "dust"
+	.balign 4
 "@2702":
-	.incbin "baserom.dol", 0x3E8834, 0x8
+	.asciz "no_data"
 "@2727":
-	.incbin "baserom.dol", 0x3E883C, 0x4
+	.4byte 0x3F800000
 "@2796":
-	.incbin "baserom.dol", 0x3E8840, 0x8
+	.4byte 0x43480000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2809":

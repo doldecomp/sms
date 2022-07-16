@@ -7,89 +7,126 @@
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A44C4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1536":
-	.incbin "baserom.dol", 0x3A44D8, 0x1C
+	.asciz "/Camera/shakeHipDrop.prm"
+	.balign 4
 "@1537":
-	.incbin "baserom.dol", 0x3A44F4, 0x1C
+	.asciz "/Camera/shakeWallJump.prm"
+	.balign 4
 "@1538":
-	.incbin "baserom.dol", 0x3A4510, 0x18
+	.asciz "/Camera/shakeDamage.prm"
 "@1539":
-	.incbin "baserom.dol", 0x3A4528, 0x18
+	.asciz "/Camera/shakeEnemy.prm"
+	.balign 4
 "@1540":
-	.incbin "baserom.dol", 0x3A4540, 0x18
+	.asciz "/Camera/shakeEnemy2.prm"
 "@1541":
-	.incbin "baserom.dol", 0x3A4558, 0x20
+	.asciz "/Camera/shakeBuildingAppear.prm"
 "@1542":
-	.incbin "baserom.dol", 0x3A4578, 0x18
+	.asciz "/Camera/shakeKiller.prm"
 "@1543":
-	.incbin "baserom.dol", 0x3A4590, 0x1C
+	.asciz "/Camera/shakeTamanoko.prm"
+	.balign 4
 "@1544":
-	.incbin "baserom.dol", 0x3A45AC, 0x20
+	.asciz "/Camera/shakeBohaSandCrash.prm"
+	.balign 4
 "@1545":
-	.incbin "baserom.dol", 0x3A45CC, 0x1C
+	.asciz "/Camera/shakeBohaSlip.prm"
+	.balign 4
 "@1546":
-	.incbin "baserom.dol", 0x3A45E8, 0x1C
+	.asciz "/Camera/shakeBohaStep.prm"
+	.balign 4
 "@1547":
-	.incbin "baserom.dol", 0x3A4604, 0x1C
+	.asciz "/Camera/shakeBohaRun.prm"
+	.balign 4
 "@1548":
-	.incbin "baserom.dol", 0x3A4620, 0x1C
+	.asciz "/Camera/shakeBohaGetup.prm"
+	.balign 4
 "@1549":
-	.incbin "baserom.dol", 0x3A463C, 0x20
+	.asciz "/Camera/shakeSandBombAppear.prm"
 "@1550":
-	.incbin "baserom.dol", 0x3A465C, 0x1C
+	.asciz "/Camera/shakeBopaDown.prm"
+	.balign 4
 "@1551":
-	.incbin "baserom.dol", 0x3A4678, 0x1C
+	.asciz "/Camera/shakeBopaPopo.prm"
+	.balign 4
 "@1552":
-	.incbin "baserom.dol", 0x3A4694, 0x1C
+	.asciz "/Camera/shakeBopaGetup.prm"
+	.balign 4
 "@1553":
-	.incbin "baserom.dol", 0x3A46B0, 0x20
+	.asciz "/Camera/shakeBopaDownLoop.prm"
+	.balign 4
 "@1554":
-	.incbin "baserom.dol", 0x3A46D0, 0x20
+	.asciz "/Camera/shakeBogeBeakHit.prm"
+	.balign 4
 "@1555":
-	.incbin "baserom.dol", 0x3A46F0, 0x1C
+	.asciz "/Camera/shakeBogeTumble.prm"
 "@1556":
-	.incbin "baserom.dol", 0x3A470C, 0x1C
+	.asciz "/Camera/shakeBogeLand.prm"
+	.balign 4
 "@1557":
-	.incbin "baserom.dol", 0x3A4728, 0x1C
+	.asciz "/Camera/shakeBogeTeHit.prm"
+	.balign 4
 "@1558":
-	.incbin "baserom.dol", 0x3A4744, 0x1C
+	.asciz "/Camera/shakeBowaLand1.prm"
+	.balign 4
 "@1559":
-	.incbin "baserom.dol", 0x3A4760, 0x1C
+	.asciz "/Camera/shakeBowaLand2.prm"
+	.balign 4
 "@1560":
-	.incbin "baserom.dol", 0x3A477C, 0x1C
+	.asciz "/Camera/shakeBEelRoll.prm"
+	.balign 4
 "@1561":
-	.incbin "baserom.dol", 0x3A4798, 0x1C
+	.asciz "/Camera/shakeBEelOut.prm"
+	.balign 4
 "@1562":
-	.incbin "baserom.dol", 0x3A47B4, 0x20
+	.asciz "/Camera/shakeBEelHanukeIn.prm"
+	.balign 4
 "@1563":
-	.incbin "baserom.dol", 0x3A47D4, 0x20
+	.asciz "/Camera/shakeBEelSuckOpen.prm"
+	.balign 4
 "@1564":
-	.incbin "baserom.dol", 0x3A47F4, 0x20
+	.asciz "/Camera/shakeBEelSuckLoop.prm"
+	.balign 4
 "@1565":
-	.incbin "baserom.dol", 0x3A4814, 0x20
+	.asciz "/Camera/shakeBEelSuckClose.prm"
+	.balign 4
 "@1566":
-	.incbin "baserom.dol", 0x3A4834, 0x1C
+	.asciz "/Camera/shakeBEelDie.prm"
+	.balign 4
 "@1567":
-	.incbin "baserom.dol", 0x3A4850, 0x20
+	.asciz "/Camera/shakeBTelesaDamage.prm"
+	.balign 4
 "@1568":
-	.incbin "baserom.dol", 0x3A4870, 0x1C
+	.asciz "/Camera/shakeBTelesaHit.prm"
 "@1569":
-	.incbin "baserom.dol", 0x3A488C, 0x20
+	.asciz "/Camera/shakeBTelesaDown.prm"
+	.balign 4
 "@1570":
-	.incbin "baserom.dol", 0x3A48AC, 0x20
+	.asciz "/Camera/shakeBTelesaAppear.prm"
+	.balign 4
 "@1571":
-	.incbin "baserom.dol", 0x3A48CC, 0x20
+	.asciz "/Camera/shakeBTelesaRoll.prm"
+	.balign 4
 "@1572":
-	.incbin "baserom.dol", 0x3A48EC, 0x1C
+	.asciz "/Camera/shakeCannonDemo.prm"
 "@1573":
-	.incbin "baserom.dol", 0x3A4908, 0x28
+	.asciz "/Camera/shakeBathtubGripBreaking.prm"
+	.balign 4
 "@1574":
-	.incbin "baserom.dol", 0x3A4930, 0x28
+	.asciz "/Camera/shakeBathtubGripBreaking2.prm"
+	.balign 4
 "@1575":
-	.incbin "baserom.dol", 0x3A4958, 0x20
+	.asciz "/Camera/shakeKoopaHipdrop.prm"
+	.balign 4
 "@1576":
-	.incbin "baserom.dol", 0x3A4978, 0x20
+	.asciz "/Camera/shakeBathtubKiller.prm"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8

@@ -160,23 +160,26 @@ lbl_800995F8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@36":
-	.incbin "baserom.dol", 0x3ADEC0, 0x1C
+	.asciz "  Game Name ... %c%c%c%c\n"
+	.balign 4
 "@37":
-	.incbin "baserom.dol", 0x3ADEDC, 0x18
+	.asciz "  Company ..... %c%c\n"
+	.balign 4
 "@38":
-	.incbin "baserom.dol", 0x3ADEF4, 0x14
+	.asciz "  Disk # ...... %d\n"
 "@39":
-	.incbin "baserom.dol", 0x3ADF08, 0x14
+	.asciz "  Game ver .... %d\n"
 "@42":
-	.incbin "baserom.dol", 0x3ADF1C, 0x14
+	.asciz "  Streaming ... %s\n"
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@35":
-	.incbin "baserom.dol", 0x3E3280, 0x4
+	.4byte 0x0A000000
 "@40":
-	.incbin "baserom.dol", 0x3E3284, 0x4
+	.4byte 0x4F464600
 "@41":
-	.incbin "baserom.dol", 0x3E3288, 0x8
+	.4byte 0x4F4E0000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 bb2Buf:

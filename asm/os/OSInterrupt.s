@@ -659,7 +659,18 @@ ExternalInterruptHandler:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 InterruptPrioTable:
-	.incbin "baserom.dol", 0x3AD8D0, 0x30
+	.4byte 0x00000100
+	.4byte 0x00000040
+	.4byte 0xF8000000
+	.4byte 0x00000200
+	.4byte 0x00000080
+	.4byte 0x00003000
+	.4byte 0x00000020
+	.4byte 0x03FF8C00
+	.4byte 0x04000000
+	.4byte 0x00004000
+	.4byte 0xFFFFFFFF
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 InterruptHandlerTable:

@@ -2767,41 +2767,46 @@ __vt__7MSStage:
 "@2293":
   .4byte 0
 "@2300":
-	.incbin "baserom.dol", 0x3E52EC, 0x4
+	.4byte 0x3F800000
 "@2344":
-	.incbin "baserom.dol", 0x3E52F0, 0x4
+	.4byte 0x42960000
 "@2373":
-	.incbin "baserom.dol", 0x3E52F4, 0x4
+	.4byte 0x3F000000
 "@2554":
-	.incbin "baserom.dol", 0x3E52F8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2555":
-	.incbin "baserom.dol", 0x3E5300, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@2556":
-	.incbin "baserom.dol", 0x3E5308, 0x8
+	.4byte 0x461C4000
+	.4byte 0
 "@2796":
-	.incbin "baserom.dol", 0x3E5310, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2814":
-	.incbin "baserom.dol", 0x3E5318, 0x4
+	.4byte 0x44FA0000
 "@2815":
-	.incbin "baserom.dol", 0x3E531C, 0x4
+	.4byte 0x43FA0000
 "@2999":
-	.incbin "baserom.dol", 0x3E5320, 0x4
+	.4byte 0x45BB8000
 "@3000":
-	.incbin "baserom.dol", 0x3E5324, 0x4
+	.4byte 0x44C80000
 "@3001":
-	.incbin "baserom.dol", 0x3E5328, 0x4
+	.4byte 0x453B8000
 "@3002":
-	.incbin "baserom.dol", 0x3E532C, 0x4
+	.4byte 0x44480000
 "@3408":
-	.incbin "baserom.dol", 0x3E5330, 0x4
+	.4byte 0x3E19999A
 "@3409":
-	.incbin "baserom.dol", 0x3E5334, 0x4
+	.4byte 0x3E6147AE
 "@3410":
-	.incbin "baserom.dol", 0x3E5338, 0x4
+	.4byte 0x3EAE147B
 "@3411":
-	.incbin "baserom.dol", 0x3E533C, 0x4
+	.4byte 0x3E8F5C29
 "@3412":
-	.incbin "baserom.dol", 0x3E5340, 0x8
+	.4byte 0x3DF5C28F
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3490":

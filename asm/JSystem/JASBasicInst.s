@@ -474,4 +474,5 @@ __vt__Q28JASystem5TInst:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@294":
-	.incbin "baserom.dol", 0x3E42D0, 0x8
+	.4byte 0x3F800000
+	.4byte 0

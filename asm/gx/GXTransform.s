@@ -595,12 +595,14 @@ lbl_800ADBE8:
 "@14":
   .4byte 0
 "@15":
-	.incbin "baserom.dol", 0x3E48B4, 0x4
+	.4byte 0x3F800000
 "@16":
-	.incbin "baserom.dol", 0x3E48B8, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@24":
-	.incbin "baserom.dol", 0x3E48C0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@63":
-	.incbin "baserom.dol", 0x3E48C8, 0x4
+	.4byte 0x43AB0000
 "@64":
-	.incbin "baserom.dol", 0x3E48CC, 0x4
+	.4byte 0x4B7FFFFF

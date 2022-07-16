@@ -989,10 +989,10 @@ lbl_constructor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 errorRetry__16JKRDvdAramRipper:
-	.incbin "baserom.dol", 0x3E3030, 0x4
+	.4byte 0x01000000
 .global szpBufferSize__16JKRDvdAramRipper
 szpBufferSize__16JKRDvdAramRipper:
-	.incbin "baserom.dol", 0x3E3034, 0x4
+	.4byte 0x00000400
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@56":

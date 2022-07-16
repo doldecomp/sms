@@ -604,17 +604,26 @@ lbl_8035DBD8:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A390C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1632":
-	.incbin "baserom.dol", 0x3A3920, 0xC
+	.asciz "/scene/sun"
+	.balign 4
 "@1633":
-	.incbin "baserom.dol", 0x3A392C, 0x10
+	.asciz "/scene/sunset"
+	.balign 4
 "@1928":
-	.incbin "baserom.dol", 0x3A393C, 0xC
+	.asciz "glow.bmd"
+	.balign 4
 "@1929":
-	.incbin "baserom.dol", 0x3A3948, 0xC
+	.asciz "glow.btk"
+	.balign 4
 "@1930":
-	.incbin "baserom.dol", 0x3A3954, 0xC
+	.asciz "glow.brk"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TLensGlow
@@ -635,26 +644,31 @@ __vt__9TLensGlow:
 "@1859":
   .4byte 0
 "@1860":
-	.incbin "baserom.dol", 0x3EC414, 0x4
+	.4byte 0x3F800000
 "@1861":
-	.incbin "baserom.dol", 0x3EC418, 0x4
+	.4byte 0x3B03126F
 "@1862":
-	.incbin "baserom.dol", 0x3EC41C, 0x4
+	.4byte 0x3F000000
 "@1863":
-	.incbin "baserom.dol", 0x3EC420, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@1865":
-	.incbin "baserom.dol", 0x3EC428, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1868":
-	.incbin "baserom.dol", 0x3EC430, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1923":
-	.incbin "baserom.dol", 0x3EC438, 0x4
+	.4byte 0x41200000
 "@1924":
-	.incbin "baserom.dol", 0x3EC43C, 0x4
+	.4byte 0x3DCCCCCD
 "@1925":
-	.incbin "baserom.dol", 0x3EC440, 0x4
+	.4byte 0x3FC00000
 "@1926":
-	.incbin "baserom.dol", 0x3EC444, 0x4
+	.4byte 0x41700000
 "@1927":
-	.incbin "baserom.dol", 0x3EC448, 0x8
+	.asciz "%s/%s"
+	.balign 4
 "@1931":
-	.incbin "baserom.dol", 0x3EC450, 0x8
+	.4byte 0x43FA0000
+	.4byte 0

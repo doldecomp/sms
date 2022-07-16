@@ -648,19 +648,20 @@ C_MTXLightOrtho:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 Unit01:
-	.incbin "baserom.dol", 0x3E3260, 0x8
+	.4byte 0
+	.4byte 0x3F800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@94":
-	.incbin "baserom.dol", 0x3E4798, 0x4
+	.4byte 0x3F800000
 "@95":
   .4byte 0
 "@193":
-	.incbin "baserom.dol", 0x3E47A0, 0x4
+	.4byte 0x40000000
 "@214":
-	.incbin "baserom.dol", 0x3E47A4, 0x4
+	.4byte 0xBF800000
 "@217":
-	.incbin "baserom.dol", 0x3E47A8, 0x4
+	.4byte 0x3F000000
 "@218":
-	.incbin "baserom.dol", 0x3E47AC, 0x4
+	.4byte 0x3C8EFA35

@@ -169,4 +169,5 @@ lbl_8009B280:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ClampRegion:
-	.incbin "baserom.dol", 0x3E3290, 0x8
+	.4byte 0x1EB40F48
+	.4byte 0x280F3B1F

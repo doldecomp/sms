@@ -876,26 +876,29 @@ __vt__14TWaterHitActor:
 "@2082":
   .4byte 0
 "@2083":
-	.incbin "baserom.dol", 0x3EB3D4, 0x4
+	.4byte 0x42B40000
 "@2084":
-	.incbin "baserom.dol", 0x3EB3D8, 0x4
+	.4byte 0xC2B40000
 "@2085":
-	.incbin "baserom.dol", 0x3EB3DC, 0x4
+	.4byte 0x3BB40000
 "@2086":
-	.incbin "baserom.dol", 0x3EB3E0, 0x4
+	.4byte 0x43340000
 "@2087":
-	.incbin "baserom.dol", 0x3EB3E4, 0x4
+	.4byte 0x43B40000
 "@2088":
-	.incbin "baserom.dol", 0x3EB3E8, 0x8
+	.4byte 0x43360B61
+	.4byte 0
 "@2090":
-	.incbin "baserom.dol", 0x3EB3F0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2199":
-	.incbin "baserom.dol", 0x3EB3F8, 0x4
+	.4byte 0x36800000
 "@2200":
-	.incbin "baserom.dol", 0x3EB3FC, 0x4
+	.4byte 0x3F800000
 "@2356":
-	.incbin "baserom.dol", 0x3EB400, 0x4
+	.4byte 0x3A83126F
 "@2357":
-	.incbin "baserom.dol", 0x3EB404, 0x4
+	.4byte 0x38000000
 "@2358":
-	.incbin "baserom.dol", 0x3EB408, 0x8
+	.4byte 0x3F000000
+	.4byte 0

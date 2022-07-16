@@ -1569,22 +1569,30 @@ lbl_800D87EC:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2019":
-	.incbin "baserom.dol", 0x3E4C48, 0x8
+	.asciz ".bck"
+	.balign 4
 "@2020":
-	.incbin "baserom.dol", 0x3E4C50, 0x4
+	.4byte 0x25730000
 "@2021":
-	.incbin "baserom.dol", 0x3E4C54, 0x8
+	.asciz ".bpk"
+	.balign 4
 "@2022":
-	.incbin "baserom.dol", 0x3E4C5C, 0x8
+	.asciz ".btp"
+	.balign 4
 "@2023":
-	.incbin "baserom.dol", 0x3E4C64, 0x8
+	.asciz ".btk"
+	.balign 4
 "@2024":
-	.incbin "baserom.dol", 0x3E4C6C, 0x8
+	.asciz ".brk"
+	.balign 4
 "@2025":
-	.incbin "baserom.dol", 0x3E4C74, 0x8
+	.asciz ".blk"
+	.balign 4
 "@2161":
-	.incbin "baserom.dol", 0x3E4C7C, 0x8
+	.asciz "%s%s"
+	.balign 4
 "@2162":
-	.incbin "baserom.dol", 0x3E4C84, 0x4
+	.4byte 0x2F000000
 "@2163":
-	.incbin "baserom.dol", 0x3E4C88, 0x8
+	.4byte 0x23000000
+	.4byte 0

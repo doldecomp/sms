@@ -685,14 +685,17 @@ lbl_8005E51C:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 polys_table__Q28JASystem6Driver:
-	.incbin "baserom.dol", 0x36E260, 0x10
+	.4byte 0x00010203
+	.4byte 0x04050608
+	.4byte 0x0A0C0E10
+	.4byte 0x14181C20
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@136":
-	.incbin "baserom.dol", 0x3E4358, 0x4
+	.4byte 0x3F800000
 "@137":
-	.incbin "baserom.dol", 0x3E435C, 0x4
+	.4byte 0x3F000000
 "@138":
   .4byte 0
   .4byte 0

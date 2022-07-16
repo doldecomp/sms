@@ -253,7 +253,8 @@ lbl_8005C0FC:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 waitMax__Q38JASystem6Driver8DSPQueue:
-	.incbin "baserom.dol", 0x3E3198, 0x8
+	.4byte 0x00000020
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 waitp__Q38JASystem6Driver8DSPQueue:

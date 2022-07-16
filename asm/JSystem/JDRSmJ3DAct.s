@@ -448,9 +448,11 @@ lbl_800467F8:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1143":
-	.incbin "baserom.dol", 0x36E100, 0x10
+	.asciz "/default.bmd"
+	.balign 4
 "@1144":
-	.incbin "baserom.dol", 0x36E110, 0x10
+	.asciz "/default.bck"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama9TSmJ3DAct
@@ -507,6 +509,7 @@ __vt__12J3DFrameCtrl:
 "@1562":
   .4byte 0
 "@1563":
-	.incbin "baserom.dol", 0x3E40FC, 0x4
+	.4byte 0x3F800000
 "@1564":
-	.incbin "baserom.dol", 0x3E4100, 0x8
+	.4byte 0x3C8EFA35
+	.4byte 0

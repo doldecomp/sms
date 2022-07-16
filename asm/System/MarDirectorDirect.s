@@ -3122,51 +3122,118 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2182":
-	.incbin "baserom.dol", 0x370304, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2358":
-	.incbin "baserom.dol", 0x370318, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2359":
-	.incbin "baserom.dol", 0x370348, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2360":
-	.incbin "baserom.dol", 0x370380, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2361":
-	.incbin "baserom.dol", 0x3703B4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2697":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2699":
-	.incbin "baserom.dol", 0x3703E4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@3517":
-	.incbin "baserom.dol", 0x3703F0, 0xC
+	.asciz "cam_int1"
+	.balign 4
 "@3518":
-	.incbin "baserom.dol", 0x3703FC, 0xC
+	.asciz "camera 1"
+	.balign 4
 "@3917":
-	.incbin "baserom.dol", 0x370408, 0x14
+	.asciz "hodai_dpt_pinna1"
+	.balign 4
 "@3919":
-	.incbin "baserom.dol", 0x37041C, 0x18
+	.asciz "camera_sirena_gate_in"
+	.balign 4
 "@3920":
-	.incbin "baserom.dol", 0x370434, 0x18
+	.asciz "camera_monte_gate_in"
+	.balign 4
 "@4156":
-	.incbin "baserom.dol", 0x37044C, 0xC
+	.asciz "startcamera"
 "@4157":
-	.incbin "baserom.dol", 0x370458, 0x18
+	.asciz "mareopen_startcamera"
+	.balign 4
 "@4158":
-	.incbin "baserom.dol", 0x370470, 0x14
+	.asciz "yoshi_startcamera"
+	.balign 4
 "@4159":
-	.incbin "baserom.dol", 0x370484, 0x14
+	.asciz "turbo_startcamera"
+	.balign 4
 "@4160":
-	.incbin "baserom.dol", 0x370498, 0x14
+	.asciz "rocket_startcamera"
+	.balign 4
 "@4161":
-	.incbin "baserom.dol", 0x3704AC, 0xC
+	.asciz "sinkricco"
+	.balign 4
 "@4162":
-	.incbin "baserom.dol", 0x3704B8, 0xC
+	.asciz "sinkmamma"
+	.balign 4
 "@4164":
-	.incbin "baserom.dol", 0x3704C4, 0xC
+	.asciz "Group 2D"
+	.balign 4
 "@4266":
-	.incbin "baserom.dol", 0x3704D0, 0x14
+	.4byte 0x837D838A
+	.4byte 0x8349835A
+	.4byte 0x83628367
+	.4byte 0x88CA9275
+	.4byte 0
 "@4664":
-	.incbin "baserom.dol", 0x3704E4, 0x24
+	.asciz "/scene/map/camera/startcamera.bck"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@3623":
@@ -3222,36 +3289,42 @@ lbl_constructor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 stages$3022:
-	.incbin "baserom.dol", 0x3E3450, 0x8
+	.4byte 0x06101A24
+	.4byte 0x2E384200
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3519":
-	.incbin "baserom.dol", 0x3E4D48, 0x8
+	.asciz "mario"
+	.balign 4
 "@3520":
-	.incbin "baserom.dol", 0x3E4D50, 0x8
+	.4byte 0x837D838A
+	.4byte 0x83490000
 "@3915":
-	.incbin "baserom.dol", 0x3E4D58, 0x4
+	.4byte 0x3F800000
 "@3916":
-	.incbin "baserom.dol", 0x3E4D5C, 0x4
+	.4byte 0x40AAAAAB
 "@3918":
   .4byte 0
 "@4163":
-	.incbin "baserom.dol", 0x3E4D64, 0x4
+	.4byte 0x3ECCCCCD
 "@4165":
-	.incbin "baserom.dol", 0x3E4D68, 0x8
+	.asciz "Guide"
+	.balign 4
 "@4166":
-	.incbin "baserom.dol", 0x3E4D70, 0x4
+	.4byte 0x40000000
 "@4167":
-	.incbin "baserom.dol", 0x3E4D74, 0x4
+	.4byte 0x400CCCCD
 "@4376":
-	.incbin "baserom.dol", 0x3E4D78, 0x8
+	.asciz "guide"
+	.balign 4
 "@4665":
-	.incbin "baserom.dol", 0x3E4D80, 0x4
+	.4byte 0x42F00000
 "@4666":
-	.incbin "baserom.dol", 0x3E4D84, 0x4
+	.4byte 0x3E99999A
 "@4669":
-	.incbin "baserom.dol", 0x3E4D88, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3491":

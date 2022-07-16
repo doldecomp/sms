@@ -671,4 +671,7 @@ lbl_800B27F8:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
 c2r$382:
-	.incbin "baserom.dol", 0x3AECF8, 0x10
+	.4byte 0x00010001
+	.4byte 0x00010705
+	.4byte 0x06000000
+	.4byte 0x00000007

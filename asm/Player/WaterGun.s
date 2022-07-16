@@ -5535,201 +5535,332 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2386":
-	.incbin "baserom.dol", 0x3788E4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2442":
-	.incbin "baserom.dol", 0x3788F8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2443":
-	.incbin "baserom.dol", 0x378928, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2444":
-	.incbin "baserom.dol", 0x378960, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2445":
-	.incbin "baserom.dol", 0x378994, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x3789B8, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x3789DC, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2694":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2696":
-	.incbin "baserom.dol", 0x3789F8, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2741":
-	.incbin "baserom.dol", 0x378A04, 0x1C
+	.asciz "/mario/watergun2/normal_wg"
+	.balign 4
 "@2742":
-	.incbin "baserom.dol", 0x378A20, 0x2C
+	.asciz "/mario/watergun2/normal_wg/normal_wg.bmd"
+	.balign 4
 "@2743":
-	.incbin "baserom.dol", 0x378A4C, 0x1C
+	.asciz "/mario/watergun2/rocket_wg"
+	.balign 4
 "@2744":
-	.incbin "baserom.dol", 0x378A68, 0x2C
+	.asciz "/mario/watergun2/rocket_wg/rocket_wg.bmd"
+	.balign 4
 "@2745":
-	.incbin "baserom.dol", 0x378A94, 0x1C
+	.asciz "/mario/bmd/wg_hel_diver.bmd"
 "@2746":
-	.incbin "baserom.dol", 0x378AB0, 0x1C
+	.asciz "/mario/watergun2/hover_wg"
+	.balign 4
 "@2747":
-	.incbin "baserom.dol", 0x378ACC, 0x28
+	.asciz "/mario/watergun2/hover_wg/hover_wg.bmd"
+	.balign 4
 "@2748":
-	.incbin "baserom.dol", 0x378AF4, 0x1C
+	.asciz "/mario/watergun2/dummy_wg"
+	.balign 4
 "@2749":
-	.incbin "baserom.dol", 0x378B10, 0x28
+	.asciz "/mario/watergun2/dummy_wg/dummy_wg.bmd"
+	.balign 4
 "@2750":
-	.incbin "baserom.dol", 0x378B38, 0x1C
+	.asciz "/mario/watergun2/back_wg"
+	.balign 4
 "@2751":
-	.incbin "baserom.dol", 0x378B54, 0x28
+	.asciz "/mario/watergun2/back_wg/back_wg.bmd"
+	.balign 4
 "@3694":
-	.incbin "baserom.dol", 0x378B7C, 0xC
+	.asciz "wg_fepmp"
+	.balign 4
 "@3695":
-	.incbin "baserom.dol", 0x378B88, 0xC
+	.asciz "wg_swpmp"
+	.balign 4
 "@3696":
-	.incbin "baserom.dol", 0x378B94, 0xC
+	.asciz "wg_hgpmp"
+	.balign 4
 "@3698":
-	.incbin "baserom.dol", 0x378BA0, 0xC
+	.asciz "wg_house"
+	.balign 4
 "@4027":
-	.incbin "baserom.dol", 0x378BAC, 0x14
+	.asciz "/Mario/WaterGun.prm"
 "@4028":
-	.incbin "baserom.dol", 0x378BC0, 0x10
+	.asciz "mRocketHeight"
+	.balign 4
 "@4030":
-	.incbin "baserom.dol", 0x378BD0, 0x10
+	.asciz "mHHoverHeight"
+	.balign 4
 "@4032":
-	.incbin "baserom.dol", 0x378BE0, 0x10
+	.asciz "mLAngleNormal"
+	.balign 4
 "@4034":
-	.incbin "baserom.dol", 0x378BF0, 0x14
+	.asciz "mNozzleAngleYSpeed"
+	.balign 4
 "@4035":
-	.incbin "baserom.dol", 0x378C04, 0x14
+	.asciz "mNozzleAngleYBrake"
+	.balign 4
 "@4037":
-	.incbin "baserom.dol", 0x378C18, 0x18
+	.asciz "mNozzleAngleYSpeedMax"
+	.balign 4
 "@4038":
-	.incbin "baserom.dol", 0x378C30, 0x10
+	.asciz "mHoverRotMax"
+	.balign 4
 "@4039":
-	.incbin "baserom.dol", 0x378C40, 0x10
+	.asciz "mHoverSmooth"
+	.balign 4
 "@4041":
-	.incbin "baserom.dol", 0x378C50, 0x10
+	.asciz "mChangeSpeed"
+	.balign 4
 "@4052":
-	.incbin "baserom.dol", 0x378C60, 0x18
+	.asciz "/mario/watergun2/body"
+	.balign 4
 "@4053":
-	.incbin "baserom.dol", 0x378C78, 0x24
+	.asciz "/mario/watergun2/body/wg_mdl1.bmd"
+	.balign 4
 "@4359":
-	.incbin "baserom.dol", 0x378C9C, 0x14
+	.asciz "/Mario/GunEmit.prm"
+	.balign 4
 "@4360":
-	.incbin "baserom.dol", 0x378CB0, 0x10
+	.asciz "jnt_G_handle"
+	.balign 4
 "@4361":
-	.incbin "baserom.dol", 0x378CC0, 0x10
+	.asciz "Mario/WaterGun"
+	.balign 4
 "@4362":
-	.incbin "baserom.dol", 0x378CD0, 0x10
+	.asciz "nozzle_center"
+	.balign 4
 "@4363":
-	.incbin "baserom.dol", 0x378CE0, 0x18
+	.asciz "H_watergun_main_dummy"
+	.balign 4
 "@4364":
-	.incbin "baserom.dol", 0x378CF8, 0x10
+	.asciz "null_G_muzzle"
+	.balign 4
 "@4365":
-	.incbin "baserom.dol", 0x378D08, 0x10
+	.asciz "null_G_muzzle2"
+	.balign 4
 "@4366":
-	.incbin "baserom.dol", 0x378D18, 0x10
+	.asciz "null_G_muzzle3"
+	.balign 4
 "@4367":
-	.incbin "baserom.dol", 0x378D28, 0x10
+	.asciz "chn_muzzle_1"
+	.balign 4
 "@4368":
-	.incbin "baserom.dol", 0x378D38, 0x10
+	.asciz "jnt_nozzle_L"
+	.balign 4
 "@4369":
-	.incbin "baserom.dol", 0x378D48, 0x10
+	.asciz "jnt_nozzle_R"
+	.balign 4
 "@4370":
-	.incbin "baserom.dol", 0x378D58, 0x18
+	.asciz "chn_back_nozzle_prop"
+	.balign 4
 "@4371":
-	.incbin "baserom.dol", 0x378D70, 0x18
+	.asciz "jnt_back_nozzle_neck"
+	.balign 4
 "@4372":
-	.incbin "baserom.dol", 0x378D88, 0xC
+	.4byte 0x90859353
+	.4byte 0x9643696E
+	.4byte 0x8BBE0000
 "@4416":
-	.incbin "baserom.dol", 0x378D94, 0xC
+	.asciz "normal_wg"
+	.balign 4
 "@4417":
-	.incbin "baserom.dol", 0x378DA0, 0x24
+	.asciz "/Mario/WaterGun/NozzleDeform.prm"
+	.balign 4
 "@4418":
-	.incbin "baserom.dol", 0x378DC4, 0x28
+	.asciz "/Mario/WaterGun/NozzleDeformBomb.prm"
+	.balign 4
 "@4419":
-	.incbin "baserom.dol", 0x378DEC, 0x24
+	.asciz "/Mario/WaterGun/NozzleTrgRocket.prm"
 "@4420":
-	.incbin "baserom.dol", 0x378E10, 0xC
+	.asciz "hover_wg"
+	.balign 4
 "@4421":
-	.incbin "baserom.dol", 0x378E1C, 0x24
+	.asciz "/Mario/WaterGun/NozzleDiving.prm"
+	.balign 4
 "@4422":
-	.incbin "baserom.dol", 0x378E40, 0xC
+	.asciz "dummy_wg"
+	.balign 4
 "@4423":
-	.incbin "baserom.dol", 0x378E4C, 0x28
+	.asciz "/Mario/WaterGun/NozzleYoshiMouth.prm"
+	.balign 4
 "@4424":
-	.incbin "baserom.dol", 0x378E74, 0x24
+	.asciz "/Mario/WaterGun/NozzleTrgHover.prm"
+	.balign 4
 "@4426":
-	.incbin "baserom.dol", 0x378E98, 0x24
+	.asciz "/Mario/WaterGun/NozzleTrgTurbo.prm"
+	.balign 4
 "@5867":
-	.incbin "baserom.dol", 0x378EBC, 0xC
+	.asciz "mRocketType"
 "@5870":
-	.incbin "baserom.dol", 0x378EC8, 0xC
+	.asciz "mDirTremble"
 "@5872":
-	.incbin "baserom.dol", 0x378ED4, 0xC
+	.asciz "mEmitPow"
+	.balign 4
 "@5874":
-	.incbin "baserom.dol", 0x378EE0, 0xC
+	.asciz "mEmitCtrl"
+	.balign 4
 "@5875":
-	.incbin "baserom.dol", 0x378EEC, 0xC
+	.asciz "mPowTremble"
 "@5877":
-	.incbin "baserom.dol", 0x378EF8, 0x10
+	.asciz "mSizeTremble"
+	.balign 4
 "@5879":
-	.incbin "baserom.dol", 0x378F08, 0xC
+	.asciz "mAmountMax"
+	.balign 4
 "@5880":
-	.incbin "baserom.dol", 0x378F14, 0x10
+	.asciz "mReactionPow"
+	.balign 4
 "@5881":
-	.incbin "baserom.dol", 0x378F24, 0xC
+	.asciz "mReactionY"
+	.balign 4
 "@5882":
-	.incbin "baserom.dol", 0x378F30, 0xC
+	.asciz "mDecRate"
+	.balign 4
 "@5883":
-	.incbin "baserom.dol", 0x378F3C, 0x10
+	.asciz "mTriggerRate"
+	.balign 4
 "@5884":
-	.incbin "baserom.dol", 0x378F4C, 0xC
+	.asciz "mDamageLoss"
 "@5885":
-	.incbin "baserom.dol", 0x378F58, 0xC
+	.asciz "mSuckRate"
+	.balign 4
 "@5886":
-	.incbin "baserom.dol", 0x378F64, 0xC
+	.asciz "mHitRadius"
+	.balign 4
 "@5888":
-	.incbin "baserom.dol", 0x378F70, 0xC
+	.asciz "mHitHeight"
+	.balign 4
 "@5890":
-	.incbin "baserom.dol", 0x378F7C, 0xC
+	.asciz "mLAngleBase"
 "@5891":
-	.incbin "baserom.dol", 0x378F88, 0x10
+	.asciz "mLAngleSquat"
+	.balign 4
 "@5892":
-	.incbin "baserom.dol", 0x378F98, 0xC
+	.asciz "mLAngleMin"
+	.balign 4
 "@5893":
-	.incbin "baserom.dol", 0x378FA4, 0xC
+	.asciz "mLAngleMax"
+	.balign 4
 "@5894":
-	.incbin "baserom.dol", 0x378FB0, 0x10
+	.asciz "mLAngleChase"
+	.balign 4
 "@5895":
-	.incbin "baserom.dol", 0x378FC0, 0x14
+	.asciz "mSizeMinPressure"
+	.balign 4
 "@5896":
-	.incbin "baserom.dol", 0x378FD4, 0x14
+	.asciz "mSizeMaxPressure"
+	.balign 4
 "@5898":
-	.incbin "baserom.dol", 0x378FE8, 0xC
+	.asciz "mAttackMin"
+	.balign 4
 "@5899":
-	.incbin "baserom.dol", 0x378FF4, 0x10
+	.asciz "mDirTrembleMin"
+	.balign 4
 "@5900":
-	.incbin "baserom.dol", 0x379004, 0xC
+	.asciz "mEmitPowMin"
 "@5901":
-	.incbin "baserom.dol", 0x379010, 0xC
+	.asciz "mSizeMin"
+	.balign 4
 "@5902":
-	.incbin "baserom.dol", 0x37901C, 0x10
+	.asciz "mMotorPowMin"
+	.balign 4
 "@5904":
-	.incbin "baserom.dol", 0x37902C, 0x10
+	.asciz "mMotorPowMax"
+	.balign 4
 "@5906":
-	.incbin "baserom.dol", 0x37903C, 0x10
+	.asciz "mReactionPowMin"
 "@5907":
-	.incbin "baserom.dol", 0x37904C, 0x14
+	.asciz "mInsidePressureDec"
+	.balign 4
 "@5909":
-	.incbin "baserom.dol", 0x379060, 0x14
+	.asciz "mInsidePressureMax"
+	.balign 4
 "@5911":
-	.incbin "baserom.dol", 0x379074, 0x10
+	.asciz "mTriggerTime"
+	.balign 4
 "@5913":
-	.incbin "baserom.dol", 0x379084, 0x14
+	.asciz "mSideAngleMaxSide"
+	.balign 4
 "@5914":
-	.incbin "baserom.dol", 0x379098, 0x14
+	.asciz "mSideAngleMaxFront"
+	.balign 4
 "@5915":
-	.incbin "baserom.dol", 0x3790AC, 0x14
+	.asciz "mSideAngleMaxBack"
+	.balign 4
 "@5916":
-	.incbin "baserom.dol", 0x3790C0, 0x10
+	.asciz "mRButtonMult"
+	.balign 4
 "@5918":
-	.incbin "baserom.dol", 0x3790D0, 0x10
+	.asciz "mEmitPowScale"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
@@ -5863,77 +5994,82 @@ __vt__11TNozzleBase:
 "@3267":
   .4byte 0
 "@3268":
-	.incbin "baserom.dol", 0x3E5D24, 0x4
+	.4byte 0x3F800000
 "@3322":
-	.incbin "baserom.dol", 0x3E5D28, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3428":
-	.incbin "baserom.dol", 0x3E5D30, 0x4
+	.4byte 0x41A00000
 "@3439":
-	.incbin "baserom.dol", 0x3E5D34, 0x4
+	.4byte 0x43160000
 "@3456":
-	.incbin "baserom.dol", 0x3E5D38, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3471":
-	.incbin "baserom.dol", 0x3E5D40, 0x4
+	.4byte 0x3E000000
 "@3697":
-	.incbin "baserom.dol", 0x3E5D44, 0x8
+	.asciz "wg_pump"
 "@3699":
-	.incbin "baserom.dol", 0x3E5D4C, 0x4
+	.4byte 0x3DCCCCCD
 "@3711":
-	.incbin "baserom.dol", 0x3E5D50, 0x4
+	.4byte 0x3BB40000
 "@3882":
-	.incbin "baserom.dol", 0x3E5D54, 0x4
+	.4byte 0x3F000000
 "@4029":
-	.incbin "baserom.dol", 0x3E5D58, 0x4
+	.4byte 0x44BB8000
 "@4031":
-	.incbin "baserom.dol", 0x3E5D5C, 0x4
+	.4byte 0x43200000
 "@4033":
-	.incbin "baserom.dol", 0x3E5D60, 0x4
+	.4byte 0x42700000
 "@4036":
-	.incbin "baserom.dol", 0x3E5D64, 0x4
+	.4byte 0x3F7EB852
 "@4040":
-	.incbin "baserom.dol", 0x3E5D68, 0x4
+	.4byte 0x3D4CCCCD
 "@4358":
-	.incbin "baserom.dol", 0x3E5D6C, 0x4
+	.4byte 0x3BA3D70A
 "@4425":
-	.incbin "baserom.dol", 0x3E5D70, 0x8
+	.asciz "back_wg"
 "@4557":
-	.incbin "baserom.dol", 0x3E5D78, 0x4
+	.4byte 0x40000000
 "@4582":
-	.incbin "baserom.dol", 0x3E5D7C, 0x4
+	.4byte 0x43800000
 "@4583":
-	.incbin "baserom.dol", 0x3E5D80, 0x4
+	.4byte 0x37800000
 "@4956":
-	.incbin "baserom.dol", 0x3E5D84, 0x4
+	.4byte 0x41200000
 "@5868":
-	.incbin "baserom.dol", 0x3E5D88, 0x8
+	.asciz "mNum"
+	.balign 4
 "@5869":
-	.incbin "baserom.dol", 0x3E5D90, 0x8
+	.asciz "mAttack"
 "@5871":
-	.incbin "baserom.dol", 0x3E5D98, 0x4
+	.4byte 0x3C23D70A
 "@5873":
-	.incbin "baserom.dol", 0x3E5D9C, 0x4
+	.4byte 0x42200000
 "@5876":
-	.incbin "baserom.dol", 0x3E5DA0, 0x8
+	.asciz "mSize"
+	.balign 4
 "@5878":
-	.incbin "baserom.dol", 0x3E5DA8, 0x4
+	.4byte 0x41800000
 "@5887":
-	.incbin "baserom.dol", 0x3E5DAC, 0x4
+	.4byte 0x42480000
 "@5889":
-	.incbin "baserom.dol", 0x3E5DB0, 0x4
+	.4byte 0x42A00000
 "@5897":
-	.incbin "baserom.dol", 0x3E5DB4, 0x8
+	.asciz "mNumMin"
 "@5903":
-	.incbin "baserom.dol", 0x3E5DBC, 0x4
+	.4byte 0x40A00000
 "@5905":
-	.incbin "baserom.dol", 0x3E5DC0, 0x4
+	.4byte 0x41C80000
 "@5908":
-	.incbin "baserom.dol", 0x3E5DC4, 0x4
+	.4byte 0x42C80000
 "@5910":
-	.incbin "baserom.dol", 0x3E5DC8, 0x4
+	.4byte 0x458CA000
 "@5912":
-	.incbin "baserom.dol", 0x3E5DCC, 0x8
+	.asciz "mType"
+	.balign 4
 "@5917":
-	.incbin "baserom.dol", 0x3E5DD4, 0x4
+	.4byte 0x461C4000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@5981":

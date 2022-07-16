@@ -549,11 +549,12 @@ __vt__13TAreaCylinder:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2137":
-	.incbin "baserom.dol", 0x3EB8C0, 0x4
+	.4byte 0x42480000
 "@2138":
-	.incbin "baserom.dol", 0x3EB8C4, 0x4
+	.4byte 0x42C80000
 "@2140":
-	.incbin "baserom.dol", 0x3EB8C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2149":
   .4byte 0
   .4byte 0

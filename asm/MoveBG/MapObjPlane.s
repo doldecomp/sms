@@ -1593,13 +1593,17 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2634":
-	.incbin "baserom.dol", 0x38C548, 0x20
+	.asciz "/scene/map/map/SandPlane.bti"
+	.balign 4
 "@2635":
-	.incbin "baserom.dol", 0x38C568, 0x20
+	.asciz "/scene/map/map/SandPlane.bmp"
+	.balign 4
 "@2638":
-	.incbin "baserom.dol", 0x38C588, 0x20
+	.asciz "/scene/map/map/RockPlane.bti"
+	.balign 4
 "@2639":
-	.incbin "baserom.dol", 0x38C5A8, 0x20
+	.asciz "/scene/map/map/RockPlane.bmp"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TSandPlane
@@ -1801,46 +1805,49 @@ __vt__12TMapObjPlane:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mHipDropDownRate__12TMapObjPlane:
-	.incbin "baserom.dol", 0x3E36C8, 0x4
+	.4byte 0x42480000
 mWaterDownRate__12TMapObjPlane:
-	.incbin "baserom.dol", 0x3E36CC, 0x4
+	.4byte 0x40000000
 mTexScale__12TMapObjPlane:
-	.incbin "baserom.dol", 0x3E36D0, 0x4
+	.4byte 0x3F19999A
 mAmbColor__12TMapObjPlane:
-	.incbin "baserom.dol", 0x3E36D4, 0x4
+	.4byte 0x46000000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2490":
-	.incbin "baserom.dol", 0x3E83A8, 0x4
+	.4byte 0x000000FF
 "@2493":
   .4byte -1
 "@2496":
   .4byte -1
 "@2633":
-	.incbin "baserom.dol", 0x3E83B4, 0x4
+	.4byte 0x42C80000
 "@2641":
   .4byte 0
 "@2662":
-	.incbin "baserom.dol", 0x3E83BC, 0x4
+	.4byte 0x3F000000
 "@2664":
-	.incbin "baserom.dol", 0x3E83C0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2704":
-	.incbin "baserom.dol", 0x3E83C8, 0x4
+	.4byte 0x453B8000
 "@2705":
-	.incbin "baserom.dol", 0x3E83CC, 0x4
+	.4byte 0x437F0000
 "@2707":
-	.incbin "baserom.dol", 0x3E83D0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2767":
-	.incbin "baserom.dol", 0x3E83D8, 0x4
+	.4byte 0x3F800000
 "@2993":
-	.incbin "baserom.dol", 0x3E83DC, 0x4
+	.4byte 0x36800000
 "@2994":
-	.incbin "baserom.dol", 0x3E83E0, 0x4
+	.4byte 0x3E800000
 "@3041":
-	.incbin "baserom.dol", 0x3E83E4, 0x4
+	.4byte 0x40000000
 "@3122":
-	.incbin "baserom.dol", 0x3E83E8, 0x8
+	.4byte 0x469C4000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3130":

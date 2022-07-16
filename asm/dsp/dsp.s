@@ -103,11 +103,13 @@ lbl_8009E788:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@16":
-	.incbin "baserom.dol", 0x3AE208, 0x20
+	.asciz "DSPInit(): Build Date: %s %s\n"
+	.balign 4
 "@17":
-	.incbin "baserom.dol", 0x3AE228, 0xC
+	.asciz "Dec 17 2001"
 "@18":
-	.incbin "baserom.dol", 0x3AE234, 0xC
+	.asciz "18:25:00"
+	.balign 4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global __DSP_init_flag

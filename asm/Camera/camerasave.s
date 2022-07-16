@@ -1933,421 +1933,570 @@ __ct__14TCamSaveNoticeFv:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A2C14, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1897":
-	.incbin "baserom.dol", 0x3A2C28, 0xC
+	.asciz "mSLNearClip"
 "@1899":
-	.incbin "baserom.dol", 0x3A2C34, 0xC
+	.asciz "mSLDistMin"
+	.balign 4
 "@1901":
-	.incbin "baserom.dol", 0x3A2C40, 0xC
+	.asciz "mSLDistMax"
+	.balign 4
 "@1903":
-	.incbin "baserom.dol", 0x3A2C4C, 0x10
+	.asciz "mSLCushionMin"
+	.balign 4
 "@1905":
-	.incbin "baserom.dol", 0x3A2C5C, 0x10
+	.asciz "mSLCushionMax"
+	.balign 4
 "@1907":
-	.incbin "baserom.dol", 0x3A2C6C, 0x10
+	.asciz "mSLXAngleMin"
+	.balign 4
 "@1908":
-	.incbin "baserom.dol", 0x3A2C7C, 0x10
+	.asciz "mSLXAngleMax"
+	.balign 4
 "@1909":
-	.incbin "baserom.dol", 0x3A2C8C, 0x18
+	.asciz "mSLXRotRatioManualSpeed"
 "@1911":
-	.incbin "baserom.dol", 0x3A2CA4, 0x1C
+	.asciz "mSLYAngleManualSpeedXMin"
+	.balign 4
 "@1912":
-	.incbin "baserom.dol", 0x3A2CC0, 0x1C
+	.asciz "mSLYAngleManualSpeedXMax"
+	.balign 4
 "@1913":
-	.incbin "baserom.dol", 0x3A2CDC, 0x10
+	.asciz "mSLAtOffsetY"
+	.balign 4
 "@1915":
-	.incbin "baserom.dol", 0x3A2CEC, 0x18
+	.asciz "mSLXRotRatioAtOffsetY"
+	.balign 4
 "@1917":
-	.incbin "baserom.dol", 0x3A2D04, 0x18
+	.asciz "mSLTargetAtJumpOffsetY"
+	.balign 4
 "@1919":
-	.incbin "baserom.dol", 0x3A2D1C, 0x18
+	.asciz "mSLAtJumpOffsetSpeed"
+	.balign 4
 "@1921":
-	.incbin "baserom.dol", 0x3A2D34, 0x18
+	.asciz "mSLHeightPanChaseRateY"
+	.balign 4
 "@1922":
-	.incbin "baserom.dol", 0x3A2D4C, 0x14
+	.asciz "mSLSecureViewChase"
+	.balign 4
 "@1923":
-	.incbin "baserom.dol", 0x3A2D60, 0x18
+	.asciz "mSLSecureViewDistXMin"
+	.balign 4
 "@1924":
-	.incbin "baserom.dol", 0x3A2D78, 0x18
+	.asciz "mSLSecureViewDistZMin"
+	.balign 4
 "@1925":
-	.incbin "baserom.dol", 0x3A2D90, 0x18
+	.asciz "mSLSecureViewDistXMax"
+	.balign 4
 "@1926":
-	.incbin "baserom.dol", 0x3A2DA8, 0x18
+	.asciz "mSLSecureViewDistZMax"
+	.balign 4
 "@1927":
-	.incbin "baserom.dol", 0x3A2DC0, 0x14
+	.asciz "mSLHoldAddDistXZMin"
 "@1928":
-	.incbin "baserom.dol", 0x3A2DD4, 0x14
+	.asciz "mSLHoldAddDistXZMax"
 "@1929":
-	.incbin "baserom.dol", 0x3A2DE8, 0x18
+	.asciz "mSLHoldOffsetAngleXMin"
+	.balign 4
 "@1930":
-	.incbin "baserom.dol", 0x3A2E00, 0x18
+	.asciz "mSLHoldOffsetAngleXMax"
+	.balign 4
 "@1931":
-	.incbin "baserom.dol", 0x3A2E18, 0x10
+	.asciz "mSLOffsetAngleX"
 "@1932":
-	.incbin "baserom.dol", 0x3A2E28, 0x10
+	.asciz "mSLOffsetAngleY"
 "@1933":
-	.incbin "baserom.dol", 0x3A2E38, 0x14
+	.asciz "mSLOffsetLookatXZ"
+	.balign 4
 "@1934":
-	.incbin "baserom.dol", 0x3A2E4C, 0x10
+	.asciz "mSLMaxAddAngleY"
 "@1935":
-	.incbin "baserom.dol", 0x3A2E5C, 0x18
+	.asciz "mSLAutoChaseStartFrame"
+	.balign 4
 "@1936":
-	.incbin "baserom.dol", 0x3A2E74, 0x1C
+	.asciz "mSLAutoChaseCompleteFrame"
+	.balign 4
 "@1937":
-	.incbin "baserom.dol", 0x3A2E90, 0x14
+	.asciz "mSLFollowSpeedXmin"
+	.balign 4
 "@1939":
-	.incbin "baserom.dol", 0x3A2EA4, 0x14
+	.asciz "mSLFollowSpeedXmax"
+	.balign 4
 "@1941":
-	.incbin "baserom.dol", 0x3A2EB8, 0x18
+	.asciz "mSLJumpFollowSpeedXmin"
+	.balign 4
 "@1943":
-	.incbin "baserom.dol", 0x3A2ED0, 0x18
+	.asciz "mSLJumpFollowSpeedXmax"
+	.balign 4
 "@1944":
-	.incbin "baserom.dol", 0x3A2EE8, 0x18
+	.asciz "mSLObstructMaginfXmin"
+	.balign 4
 "@1946":
-	.incbin "baserom.dol", 0x3A2F00, 0x18
+	.asciz "mSLObstructMaginfXmax"
+	.balign 4
 "@1948":
-	.incbin "baserom.dol", 0x3A2F18, 0x18
+	.asciz "mSLInHouseMaginfXmin"
+	.balign 4
 "@1950":
-	.incbin "baserom.dol", 0x3A2F30, 0x18
+	.asciz "mSLInHouseMaginfXmax"
+	.balign 4
 "@1952":
-	.incbin "baserom.dol", 0x3A2F48, 0x18
+	.asciz "mSLLFollowMaginfXmin"
+	.balign 4
 "@1954":
-	.incbin "baserom.dol", 0x3A2F60, 0x18
+	.asciz "mSLLFollowMaginfXmax"
+	.balign 4
 "@1955":
-	.incbin "baserom.dol", 0x3A2F78, 0x14
+	.asciz "mSLPosChaseRateXZ"
+	.balign 4
 "@1957":
-	.incbin "baserom.dol", 0x3A2F8C, 0x14
+	.asciz "mSLPosChaseRateXZ_C"
 "@1959":
-	.incbin "baserom.dol", 0x3A2FA0, 0x14
+	.asciz "mSLPosChaseRateY"
+	.balign 4
 "@1961":
-	.incbin "baserom.dol", 0x3A2FB4, 0x14
+	.asciz "mSLPosChaseRateY_C"
+	.balign 4
 "@1962":
-	.incbin "baserom.dol", 0x3A2FC8, 0x14
+	.asciz "mSLAtChaseRateXZ"
+	.balign 4
 "@1964":
-	.incbin "baserom.dol", 0x3A2FDC, 0x10
+	.asciz "mSLAtChaseRateY"
 "@1966":
-	.incbin "baserom.dol", 0x3A2FEC, 0x10
+	.asciz "mSLInbetFollow"
+	.balign 4
 "@1967":
-	.incbin "baserom.dol", 0x3A2FFC, 0x14
+	.asciz "mSLInbetParallel"
+	.balign 4
 "@1968":
-	.incbin "baserom.dol", 0x3A3010, 0x14
+	.asciz "mSLInbetMultiPlayer"
 "@1969":
-	.incbin "baserom.dol", 0x3A3024, 0x14
+	.asciz "mSLInbetWallJump"
+	.balign 4
 "@1970":
-	.incbin "baserom.dol", 0x3A3038, 0x14
+	.asciz "mSLInbetHipAttack"
+	.balign 4
 "@1971":
-	.incbin "baserom.dol", 0x3A304C, 0x14
+	.asciz "mSLInbetRocketJump"
+	.balign 4
 "@1972":
-	.incbin "baserom.dol", 0x3A3060, 0x10
+	.asciz "mSLInbetWire"
+	.balign 4
 "@1973":
-	.incbin "baserom.dol", 0x3A3070, 0x10
+	.asciz "mSLInbetLNormal"
 "@1974":
-	.incbin "baserom.dol", 0x3A3080, 0x18
+	.asciz "mSLInbetMareUnderGround"
 "@1975":
-	.incbin "baserom.dol", 0x3A3098, 0x14
+	.asciz "mSLInbetDefiniteD2"
+	.balign 4
 "@1976":
-	.incbin "baserom.dol", 0x3A30AC, 0x10
+	.asciz "mSLInbetTalkE"
+	.balign 4
 "@1977":
-	.incbin "baserom.dol", 0x3A30BC, 0x14
+	.asciz "mSLInbetLeanMirror"
+	.balign 4
 "@1978":
-	.incbin "baserom.dol", 0x3A30D0, 0x10
+	.asciz "mSLInbetTalkA"
+	.balign 4
 "@1979":
-	.incbin "baserom.dol", 0x3A30E0, 0x14
+	.asciz "mSLInbetUnderGround"
 "@1980":
-	.incbin "baserom.dol", 0x3A30F4, 0x10
+	.asciz "mSLInbetIndoor"
+	.balign 4
 "@1981":
-	.incbin "baserom.dol", 0x3A3104, 0x10
+	.asciz "mSLInbetHang"
+	.balign 4
 "@1982":
-	.incbin "baserom.dol", 0x3A3114, 0x14
+	.asciz "mSLInbetWireHang"
+	.balign 4
 "@1983":
-	.incbin "baserom.dol", 0x3A3128, 0x14
+	.asciz "mSLInbetSandBird"
+	.balign 4
 "@1984":
-	.incbin "baserom.dol", 0x3A313C, 0x14
+	.asciz "mSLInbetHovering"
+	.balign 4
 "@1985":
-	.incbin "baserom.dol", 0x3A3150, 0x14
+	.asciz "mSLInbetJumpCode"
+	.balign 4
 "@1986":
-	.incbin "baserom.dol", 0x3A3164, 0x10
+	.asciz "mSLInbetDelfino"
 "@1987":
-	.incbin "baserom.dol", 0x3A3174, 0x10
+	.asciz "mSLInbetClimb"
+	.balign 4
 "@1988":
-	.incbin "baserom.dol", 0x3A3184, 0x10
+	.asciz "mSLInbetFixA"
+	.balign 4
 "@1989":
-	.incbin "baserom.dol", 0x3A3194, 0x10
+	.asciz "mSLInbetFixB"
+	.balign 4
 "@1990":
-	.incbin "baserom.dol", 0x3A31A4, 0x10
+	.asciz "mSLInbetFixC"
+	.balign 4
 "@1991":
-	.incbin "baserom.dol", 0x3A31B4, 0x10
+	.asciz "mSLInbetFixD"
+	.balign 4
 "@1992":
-	.incbin "baserom.dol", 0x3A31C4, 0x10
+	.asciz "mSLInbetFixE"
+	.balign 4
 "@1993":
-	.incbin "baserom.dol", 0x3A31D4, 0x10
+	.asciz "mSLInbetFixF"
+	.balign 4
 "@1994":
-	.incbin "baserom.dol", 0x3A31E4, 0x10
+	.asciz "mSLInbetFixG"
+	.balign 4
 "@1995":
-	.incbin "baserom.dol", 0x3A31F4, 0x10
+	.asciz "mSLInbetFixH"
+	.balign 4
 "@1996":
-	.incbin "baserom.dol", 0x3A3204, 0x14
+	.asciz "mSLInbetDefiniteA"
+	.balign 4
 "@1997":
-	.incbin "baserom.dol", 0x3A3218, 0x14
+	.asciz "mSLInbetDefiniteB"
+	.balign 4
 "@1998":
-	.incbin "baserom.dol", 0x3A322C, 0x14
+	.asciz "mSLInbetDefiniteC"
+	.balign 4
 "@1999":
-	.incbin "baserom.dol", 0x3A3240, 0x14
+	.asciz "mSLInbetDefiniteD"
+	.balign 4
 "@2000":
-	.incbin "baserom.dol", 0x3A3254, 0x14
+	.asciz "mSLInbetDefiniteE"
+	.balign 4
 "@2001":
-	.incbin "baserom.dol", 0x3A3268, 0x14
+	.asciz "mSLInbetDefiniteF"
+	.balign 4
 "@2002":
-	.incbin "baserom.dol", 0x3A327C, 0x14
+	.asciz "mSLInbetDefiniteG"
+	.balign 4
 "@2003":
-	.incbin "baserom.dol", 0x3A3290, 0x14
+	.asciz "mSLInbetDefiniteH"
+	.balign 4
 "@2004":
-	.incbin "baserom.dol", 0x3A32A4, 0x10
+	.asciz "mSLInbetExMap0"
+	.balign 4
 "@2005":
-	.incbin "baserom.dol", 0x3A32B4, 0x10
+	.asciz "mSLInbetTowerA"
+	.balign 4
 "@2006":
-	.incbin "baserom.dol", 0x3A32C4, 0x10
+	.asciz "mSLInbetTowerB"
+	.balign 4
 "@2007":
-	.incbin "baserom.dol", 0x3A32D4, 0x10
+	.asciz "mSLInbetTowerC"
+	.balign 4
 "@2008":
-	.incbin "baserom.dol", 0x3A32E4, 0x10
+	.asciz "mSLInbetSlider"
+	.balign 4
 "@2009":
-	.incbin "baserom.dol", 0x3A32F4, 0x10
+	.asciz "mSLInbetDiving"
+	.balign 4
 "@2010":
-	.incbin "baserom.dol", 0x3A3304, 0x10
+	.asciz "mSLInbetTurbo"
+	.balign 4
 "@2011":
-	.incbin "baserom.dol", 0x3A3314, 0x10
+	.asciz "mSLInbetTalkB"
+	.balign 4
 "@2012":
-	.incbin "baserom.dol", 0x3A3324, 0x14
+	.asciz "mSLInbetJetCoaster"
+	.balign 4
 "@2013":
-	.incbin "baserom.dol", 0x3A3338, 0x14
+	.asciz "mSLInbetParallelB"
+	.balign 4
 "@2014":
-	.incbin "baserom.dol", 0x3A334C, 0x10
+	.asciz "mSLInbetSurfing"
 "@2015":
-	.incbin "baserom.dol", 0x3A335C, 0x14
+	.asciz "mSLInbetSwimming"
+	.balign 4
 "@2016":
-	.incbin "baserom.dol", 0x3A3370, 0x14
+	.asciz "mSLInbetClimbJump"
+	.balign 4
 "@2017":
-	.incbin "baserom.dol", 0x3A3384, 0x14
+	.asciz "mSLInbetLookDown"
+	.balign 4
 "@2018":
-	.incbin "baserom.dol", 0x3A3398, 0x14
+	.asciz "mSLInbetRailFence"
+	.balign 4
 "@2019":
-	.incbin "baserom.dol", 0x3A33AC, 0x10
+	.asciz "mSLInbetFollowB"
 "@2020":
-	.incbin "baserom.dol", 0x3A33BC, 0x10
+	.asciz "mSLInbetFollowC"
 "@2021":
-	.incbin "baserom.dol", 0x3A33CC, 0x10
+	.asciz "mSLInbetTowerD"
+	.balign 4
 "@2022":
-	.incbin "baserom.dol", 0x3A33DC, 0x18
+	.asciz "mSLInbetDelfinoAttic"
+	.balign 4
 "@2023":
-	.incbin "baserom.dol", 0x3A33F4, 0x14
+	.asciz "mSLInbetBossGeso"
+	.balign 4
 "@2024":
-	.incbin "baserom.dol", 0x3A3408, 0x10
+	.asciz "mSLInbetFixI"
+	.balign 4
 "@2025":
-	.incbin "baserom.dol", 0x3A3418, 0x14
+	.asciz "mSLInbetDefiniteI"
+	.balign 4
 "@2026":
-	.incbin "baserom.dol", 0x3A342C, 0x10
+	.asciz "mSLInbetFence"
+	.balign 4
 "@2027":
-	.incbin "baserom.dol", 0x3A343C, 0x14
+	.asciz "mSLInbetMonteFence"
+	.balign 4
 "@2028":
-	.incbin "baserom.dol", 0x3A3450, 0x14
+	.asciz "mSLInbetMonteHang"
+	.balign 4
 "@2029":
-	.incbin "baserom.dol", 0x3A3464, 0x10
+	.asciz "mSLInbetTalkC"
+	.balign 4
 "@2030":
-	.incbin "baserom.dol", 0x3A3474, 0x10
+	.asciz "mSLInbetTalkD"
+	.balign 4
 "@2031":
-	.incbin "baserom.dol", 0x3A3484, 0x10
+	.asciz "mSLInbetTowerE"
+	.balign 4
 "@2032":
-	.incbin "baserom.dol", 0x3A3494, 0x14
+	.asciz "mSLInbetDelfinoB"
+	.balign 4
 "@2033":
-	.incbin "baserom.dol", 0x3A34A8, 0x10
+	.asciz "mSLInbetCancan"
+	.balign 4
 "@2034":
-	.incbin "baserom.dol", 0x3A34B8, 0x18
+	.asciz "mSLInbetAquaticTurbo"
+	.balign 4
 "@2035":
-	.incbin "baserom.dol", 0x3A34D0, 0x10
+	.asciz "mSLInbetFollowD"
 "@2036":
-	.incbin "baserom.dol", 0x3A34E0, 0x10
+	.asciz "mSLInbetFollowE"
 "@2037":
-	.incbin "baserom.dol", 0x3A34F0, 0x14
+	.asciz "mSLInbetParallelC"
+	.balign 4
 "@2038":
-	.incbin "baserom.dol", 0x3A3504, 0x14
+	.asciz "mSLInbetParallelD"
+	.balign 4
 "@2119":
-	.incbin "baserom.dol", 0x3A3518, 0x1C
+	.asciz "/Camera/camera_normal.prm"
+	.balign 4
 "@2120":
-	.incbin "baserom.dol", 0x3A3534, 0xC
+	.asciz "mXRotStart"
+	.balign 4
 "@2122":
-	.incbin "baserom.dol", 0x3A3540, 0x10
+	.asciz "mPanAfterMagnif"
 "@2123":
-	.incbin "baserom.dol", 0x3A3550, 0x14
+	.asciz "mPanAfterMinHeight"
+	.balign 4
 "@2124":
-	.incbin "baserom.dol", 0x3A3564, 0x10
+	.asciz "mPanWarpAngleX"
+	.balign 4
 "@2125":
-	.incbin "baserom.dol", 0x3A3574, 0x10
+	.asciz "mSLMinCushionXZ"
 "@2127":
-	.incbin "baserom.dol", 0x3A3584, 0x14
+	.asciz "mSLWallCheckRadius"
+	.balign 4
 "@2129":
-	.incbin "baserom.dol", 0x3A3598, 0x18
+	.asciz "mSLWallRevisionRatio"
+	.balign 4
 "@2130":
-	.incbin "baserom.dol", 0x3A35B0, 0x10
+	.asciz "mGroundChangeY"
+	.balign 4
 "@2131":
-	.incbin "baserom.dol", 0x3A35C0, 0x18
+	.asciz "mSLGroundHeightNormal"
+	.balign 4
 "@2133":
-	.incbin "baserom.dol", 0x3A35D8, 0x18
+	.asciz "mSLGroundHeightReadyGun"
 "@2135":
-	.incbin "baserom.dol", 0x3A35F0, 0x10
+	.asciz "mSLRoofChangeY"
+	.balign 4
 "@2136":
-	.incbin "baserom.dol", 0x3A3600, 0x10
+	.asciz "mSLRoofHeight"
+	.balign 4
 "@2138":
-	.incbin "baserom.dol", 0x3A3610, 0x14
+	.asciz "mInHouseMinFrame"
+	.balign 4
 "@2139":
-	.incbin "baserom.dol", 0x3A3624, 0x14
+	.asciz "mYButtonRotateChase"
 "@2140":
-	.incbin "baserom.dol", 0x3A3638, 0x14
+	.asciz "mLButtonRotateChase"
 "@2141":
-	.incbin "baserom.dol", 0x3A364C, 0x14
+	.asciz "mSLAddAngleYSpeed"
+	.balign 4
 "@2142":
-	.incbin "baserom.dol", 0x3A3660, 0x1C
+	.asciz "mSLReproduceDemoNearClip"
+	.balign 4
 "@2143":
-	.incbin "baserom.dol", 0x3A367C, 0x14
+	.asciz "mSLHoldAngleXChase"
+	.balign 4
 "@2144":
-	.incbin "baserom.dol", 0x3A3690, 0x14
+	.asciz "mSLHoldDistChase"
+	.balign 4
 "@2146":
-	.incbin "baserom.dol", 0x3A36A4, 0x18
+	.asciz "mSLAimAngleYChaseMin"
+	.balign 4
 "@2147":
-	.incbin "baserom.dol", 0x3A36BC, 0x18
+	.asciz "mSLAimAngleYChaseMax"
+	.balign 4
 "@2148":
-	.incbin "baserom.dol", 0x3A36D4, 0x14
+	.asciz "mSLLimitMinAngleX"
+	.balign 4
 "@2149":
-	.incbin "baserom.dol", 0x3A36E8, 0x14
+	.asciz "mSLLimitMaxAngleX"
+	.balign 4
 "@2150":
-	.incbin "baserom.dol", 0x3A36FC, 0x14
+	.asciz "mSLSlopeMaxAngleX"
+	.balign 4
 "@2151":
-	.incbin "baserom.dol", 0x3A3710, 0x14
+	.asciz "mSLSlopeSpeedAngleX"
 "@2152":
-	.incbin "baserom.dol", 0x3A3724, 0x18
+	.asciz "mSLSlopeForwardDistXZ"
+	.balign 4
 "@2173":
-	.incbin "baserom.dol", 0x3A373C, 0x20
+	.asciz "/Camera/camera_jetCoaster.prm"
+	.balign 4
 "@2174":
-	.incbin "baserom.dol", 0x3A375C, 0x18
+	.asciz "mSLOffsetAngleXLimit"
+	.balign 4
 "@2175":
-	.incbin "baserom.dol", 0x3A3774, 0x18
+	.asciz "mSLOffsetAngleYLimit"
+	.balign 4
 "@2176":
-	.incbin "baserom.dol", 0x3A378C, 0x1C
+	.asciz "mSLOffsetAngleXManualSpeed"
+	.balign 4
 "@2177":
-	.incbin "baserom.dol", 0x3A37A8, 0x1C
+	.asciz "mSLOffsetAngleYManualSpeed"
+	.balign 4
 "@2178":
-	.incbin "baserom.dol", 0x3A37C4, 0x18
+	.asciz "mSLOffsetAngleXChase"
+	.balign 4
 "@2179":
-	.incbin "baserom.dol", 0x3A37DC, 0x18
+	.asciz "mSLOffsetAngleYChase"
+	.balign 4
 "@2203":
-	.incbin "baserom.dol", 0x3A37F4, 0xC
+	.asciz "mShakeTime"
+	.balign 4
 "@2204":
-	.incbin "baserom.dol", 0x3A3800, 0xC
+	.asciz "mShakeAmpX"
+	.balign 4
 "@2206":
-	.incbin "baserom.dol", 0x3A380C, 0xC
+	.asciz "mShakeVelX"
+	.balign 4
 "@2207":
-	.incbin "baserom.dol", 0x3A3818, 0xC
+	.asciz "mShakeAmpY"
+	.balign 4
 "@2208":
-	.incbin "baserom.dol", 0x3A3824, 0xC
+	.asciz "mShakeVelY"
+	.balign 4
 "@2209":
-	.incbin "baserom.dol", 0x3A3830, 0xC
+	.asciz "mShakeAmpZ"
+	.balign 4
 "@2210":
-	.incbin "baserom.dol", 0x3A383C, 0xC
+	.asciz "mShakeVelZ"
+	.balign 4
 "@2240":
-	.incbin "baserom.dol", 0x3A3848, 0x1C
+	.asciz "/Camera/camera_bossA.prm"
+	.balign 4
 "@2243":
-	.incbin "baserom.dol", 0x3A3864, 0xC
+	.asciz "mOffDist"
+	.balign 4
 "@2245":
-	.incbin "baserom.dol", 0x3A3870, 0x10
+	.asciz "mOnClipRatio"
+	.balign 4
 "@2246":
-	.incbin "baserom.dol", 0x3A3880, 0x10
+	.asciz "mOffClipRatio"
+	.balign 4
 "@2248":
-	.incbin "baserom.dol", 0x3A3890, 0xC
+	.asciz "mOnDegree"
+	.balign 4
 "@2250":
-	.incbin "baserom.dol", 0x3A389C, 0x10
+	.asciz "mRotateYSpeed"
+	.balign 4
 "@2251":
-	.incbin "baserom.dol", 0x3A38AC, 0x14
+	.asciz "mRotateMinDistXZ"
+	.balign 4
 "@2252":
-	.incbin "baserom.dol", 0x3A38C0, 0x18
+	.asciz "mRotateFastMinDistXZ"
+	.balign 4
 "@2253":
-	.incbin "baserom.dol", 0x3A38D8, 0x18
+	.asciz "mRotateMagnifXmax"
+	.balign 4
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1895":
-	.incbin "baserom.dol", 0x3EC2F8, 0x8
+	.asciz "mSLFovy"
 "@1896":
-	.incbin "baserom.dol", 0x3EC300, 0x4
+	.4byte 0x42480000
 "@1898":
-	.incbin "baserom.dol", 0x3EC304, 0x4
+	.4byte 0x41200000
 "@1900":
-	.incbin "baserom.dol", 0x3EC308, 0x4
+	.4byte 0x43E10000
 "@1902":
-	.incbin "baserom.dol", 0x3EC30C, 0x4
+	.4byte 0x44FA0000
 "@1904":
-	.incbin "baserom.dol", 0x3EC310, 0x4
+	.4byte 0x43AF0000
 "@1906":
-	.incbin "baserom.dol", 0x3EC314, 0x4
+	.4byte 0x44160000
 "@1910":
-	.incbin "baserom.dol", 0x3EC318, 0x4
+	.4byte 0x3C23D70A
 "@1914":
-	.incbin "baserom.dol", 0x3EC31C, 0x4
+	.4byte 0x430565E3
 "@1916":
   .4byte 0
 "@1918":
-	.incbin "baserom.dol", 0x3EC324, 0x4
+	.4byte 0xC2C80000
 "@1920":
-	.incbin "baserom.dol", 0x3EC328, 0x4
+	.4byte 0x41A00000
 "@1938":
-	.incbin "baserom.dol", 0x3EC32C, 0x4
+	.4byte 0x40600000
 "@1940":
-	.incbin "baserom.dol", 0x3EC330, 0x4
+	.4byte 0x3F800000
 "@1942":
-	.incbin "baserom.dol", 0x3EC334, 0x4
+	.4byte 0x40000000
 "@1945":
-	.incbin "baserom.dol", 0x3EC338, 0x4
+	.4byte 0x3FC00000
 "@1947":
-	.incbin "baserom.dol", 0x3EC33C, 0x4
+	.4byte 0x3F99999A
 "@1949":
-	.incbin "baserom.dol", 0x3EC340, 0x4
+	.4byte 0x3FD9999A
 "@1951":
-	.incbin "baserom.dol", 0x3EC344, 0x4
+	.4byte 0x3FA66666
 "@1953":
-	.incbin "baserom.dol", 0x3EC348, 0x4
+	.4byte 0x40800000
 "@1956":
-	.incbin "baserom.dol", 0x3EC34C, 0x4
+	.4byte 0x3D23D70A
 "@1958":
-	.incbin "baserom.dol", 0x3EC350, 0x4
+	.4byte 0x3E99999A
 "@1960":
-	.incbin "baserom.dol", 0x3EC354, 0x4
+	.4byte 0x3DA3D70A
 "@1963":
-	.incbin "baserom.dol", 0x3EC358, 0x4
+	.4byte 0x3DCCCCCD
 "@1965":
-	.incbin "baserom.dol", 0x3EC35C, 0x4
+	.4byte 0x3CF5C28F
 "@2121":
-	.incbin "baserom.dol", 0x3EC360, 0x4
+	.4byte 0x3E4CCCCD
 "@2126":
-	.incbin "baserom.dol", 0x3EC364, 0x4
+	.4byte 0x43960000
 "@2128":
-	.incbin "baserom.dol", 0x3EC368, 0x4
+	.4byte 0x42A00000
 "@2132":
-	.incbin "baserom.dol", 0x3EC36C, 0x4
+	.4byte 0x43100000
 "@2134":
-	.incbin "baserom.dol", 0x3EC370, 0x4
+	.4byte 0x41F00000
 "@2137":
-	.incbin "baserom.dol", 0x3EC374, 0x4
+	.4byte 0x42700000
 "@2145":
-	.incbin "baserom.dol", 0x3EC378, 0x4
+	.4byte 0x3CA3D70A
 "@2205":
-	.incbin "baserom.dol", 0x3EC37C, 0x4
+	.4byte 0x43FA0000
 "@2241":
-	.incbin "baserom.dol", 0x3EC380, 0x8
+	.asciz "mOnDist"
 "@2242":
-	.incbin "baserom.dol", 0x3EC388, 0x4
+	.4byte 0x451C4000
 "@2244":
-	.incbin "baserom.dol", 0x3EC38C, 0x4
+	.4byte 0x457A0000
 "@2247":
-	.incbin "baserom.dol", 0x3EC390, 0x4
+	.4byte 0x40400000
 "@2249":
-	.incbin "baserom.dol", 0x3EC394, 0x4
+	.4byte 0x43160000

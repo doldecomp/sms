@@ -19,49 +19,113 @@ getBasNameTable__22TBossHanachanPartsBaseCFv:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x39E9BC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1755":
-	.incbin "baserom.dol", 0x39E9D0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1756":
-	.incbin "baserom.dol", 0x39EA00, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1757":
-	.incbin "baserom.dol", 0x39EA38, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1758":
-	.incbin "baserom.dol", 0x39EA6C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1940":
-	.incbin "baserom.dol", 0x39EA90, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanabody_damage.bas"
 "@1941":
-	.incbin "baserom.dol", 0x39EABC, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_getup_l2.bas"
+	.balign 4
 "@1942":
-	.incbin "baserom.dol", 0x39EAEC, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_getup_l3.bas"
+	.balign 4
 "@1943":
-	.incbin "baserom.dol", 0x39EB1C, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_getup_r2.bas"
+	.balign 4
 "@1944":
-	.incbin "baserom.dol", 0x39EB4C, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_getup_r3.bas"
+	.balign 4
 "@1945":
-	.incbin "baserom.dol", 0x39EB7C, 0x34
+	.asciz "/scene/bosshanachan/bas/hanabody_hipdrop_long.bas"
+	.balign 4
 "@1946":
-	.incbin "baserom.dol", 0x39EBB0, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_jitabata2.bas"
+	.balign 4
 "@1947":
-	.incbin "baserom.dol", 0x39EBE0, 0x34
+	.asciz "/scene/bosshanachan/bas/hanabody_jump_reaction.bas"
+	.balign 4
 "@1948":
-	.incbin "baserom.dol", 0x39EC14, 0x30
+	.asciz "/scene/bosshanachan/bas/hanabody_pikupiku2.bas"
+	.balign 4
 "@1949":
-	.incbin "baserom.dol", 0x39EC44, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanabody_run.bas"
+	.balign 4
 "@1950":
-	.incbin "baserom.dol", 0x39EC70, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanabody_start.bas"
+	.balign 4
 "@1951":
-	.incbin "baserom.dol", 0x39EC9C, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanabody_walk.bas"
+	.balign 4
 "@1952":
-	.incbin "baserom.dol", 0x39ECC8, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanahead_end.bas"
+	.balign 4
 "@1953":
-	.incbin "baserom.dol", 0x39ECF4, 0x38
+	.asciz "/scene/bosshanachan/bas/hanahead_hipdrop_reaction.bas"
+	.balign 4
 "@1954":
-	.incbin "baserom.dol", 0x39ED2C, 0x2C
+	.asciz "/scene/bosshanachan/bas/hanahead_start.bas"
+	.balign 4
 "@1955":
-	.incbin "baserom.dol", 0x39ED58, 0x30
+	.asciz "/scene/bosshanachan/bas/hanahead_tumble_L.bas"
+	.balign 4
 "@1956":
-	.incbin "baserom.dol", 0x39ED88, 0x30
+	.asciz "/scene/bosshanachan/bas/hanahead_tumble_R.bas"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bosshanachan_bastable:

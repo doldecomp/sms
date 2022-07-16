@@ -838,19 +838,29 @@ remove__19TMapCollisionStaticFv:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x38E77C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1766":
   .4byte 0
   .4byte 0
   .4byte 0
 "@1768":
-	.incbin "baserom.dol", 0x38E79C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2018":
-	.incbin "baserom.dol", 0x38E7A8, 0x10
+	.asciz "/scene/%s.col"
+	.balign 4
 "@2019":
-	.incbin "baserom.dol", 0x38E7B8, 0x10
+	.asciz "/scene%s.col"
+	.balign 4
 "@2020":
-	.incbin "baserom.dol", 0x38E7C8, 0x10
+	.asciz "/scene/%s"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TMapCollisionWarp
@@ -903,4 +913,6 @@ __vt__17TMapCollisionBase:
 "@1871":
   .4byte 0
 "@2017":
-	.incbin "baserom.dol", 0x3E8AE4, 0xC
+	.asciz ".col"
+	.balign 4
+	.4byte 0

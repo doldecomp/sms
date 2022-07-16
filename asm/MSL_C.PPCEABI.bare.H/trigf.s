@@ -287,7 +287,10 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 tmp_float:
-	.incbin "baserom.dol", 0x36EA80, 0x10
+	.4byte 0x3E800000
+	.4byte 0x3CBE6080
+	.4byte 0x34372200
+	.4byte 0x2DA44152
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 __four_over_pi_m1:
@@ -299,10 +302,12 @@ __four_over_pi_m1:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@106":
-	.incbin "baserom.dol", 0x3E4730, 0x4
+	.4byte 0x3F22F983
 "@107":
-	.incbin "baserom.dol", 0x3E4734, 0x4
+	.4byte 0x3F000000
 "@108":
-	.incbin "baserom.dol", 0x3E4738, 0x8
+	.4byte 0x39B504F3
+	.4byte 0
 "@110":
-	.incbin "baserom.dol", 0x3E4740, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

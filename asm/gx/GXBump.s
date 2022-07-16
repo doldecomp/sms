@@ -497,4 +497,5 @@ __GXFlushTextureState:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@45":
-	.incbin "baserom.dol", 0x3E4850, 0x8
+	.4byte 0x44800000
+	.4byte 0

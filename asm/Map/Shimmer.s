@@ -699,11 +699,18 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2694":
-	.incbin "baserom.dol", 0x38FA50, 0x18
+	.asciz "/scene/mapObj/%s.bmd"
+	.balign 4
 "@2695":
-	.incbin "baserom.dol", 0x38FA68, 0x18
+	.asciz "/scene/mapObj/%s.btk"
+	.balign 4
 "@2720":
-	.incbin "baserom.dol", 0x38FA80, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__8TShimmer
@@ -754,9 +761,10 @@ __vt__8TShimmer:
 "@2641":
   .4byte 0
 "@2642":
-	.incbin "baserom.dol", 0x3E8D9C, 0x4
+	.4byte 0x3F800000
 "@2803":
-	.incbin "baserom.dol", 0x3E8DA0, 0x8
+	.4byte 0x46160000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2809":

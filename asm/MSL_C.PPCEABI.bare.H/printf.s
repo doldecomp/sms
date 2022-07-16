@@ -1999,7 +1999,10 @@ lbl_80085AA0:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@stringBase0":
-	.incbin "baserom.dol", 0x36E920, 0x10
+	.4byte 0x002D496E
+	.4byte 0x6600496E
+	.4byte 0x66004E61
+	.4byte 0x4E000000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1009":

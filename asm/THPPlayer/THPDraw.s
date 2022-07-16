@@ -519,20 +519,21 @@ THPGXRestore:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@22":
-	.incbin "baserom.dol", 0x3E48F0, 0x4
+	.4byte 0xFFA60000
 lbl_8040C054:
-	.incbin "baserom.dol", 0x3E48F4, 0x4
+	.4byte 0xFF8E0087
 "@25":
-	.incbin "baserom.dol", 0x3E48F8, 0x4
+	.4byte 0x0000E258
 "@28":
-	.incbin "baserom.dol", 0x3E48FC, 0x4
+	.4byte 0xB30000B6
 "@31":
-	.incbin "baserom.dol", 0x3E4900, 0x4
+	.4byte 0xFF00FF80
 "@55":
   .4byte 0
 "@71":
-	.incbin "baserom.dol", 0x3E4908, 0x4
+	.4byte 0xBF800000
 "@72":
-	.incbin "baserom.dol", 0x3E490C, 0x4
+	.4byte 0x3F800000
 "@74":
-	.incbin "baserom.dol", 0x3E4910, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

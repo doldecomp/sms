@@ -545,7 +545,8 @@ lbl_8035D38C:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1987":
-	.incbin "baserom.dol", 0x3A38F0, 0x10
+	.asciz "sun_lensfx.bmd"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TLensFlare
@@ -566,36 +567,38 @@ __vt__10TLensFlare:
 "@1949":
   .4byte 0
 "@1950":
-	.incbin "baserom.dol", 0x3EC3C4, 0x4
+	.4byte 0x3F800000
 "@1951":
-	.incbin "baserom.dol", 0x3EC3C8, 0x4
+	.4byte 0x3D70F0F1
 "@1952":
-	.incbin "baserom.dol", 0x3EC3CC, 0x4
+	.4byte 0x437F0000
 "@1953":
-	.incbin "baserom.dol", 0x3EC3D0, 0x4
+	.4byte 0x43360B61
 "@1954":
-	.incbin "baserom.dol", 0x3EC3D4, 0x4
+	.4byte 0x3F000000
 "@1955":
-	.incbin "baserom.dol", 0x3EC3D8, 0x4
+	.4byte 0x40000000
 "@1956":
-	.incbin "baserom.dol", 0x3EC3DC, 0x4
+	.4byte 0x3BB40000
 "@1958":
-	.incbin "baserom.dol", 0x3EC3E0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1978":
-	.incbin "baserom.dol", 0x3EC3E8, 0x4
+	.4byte 0x42700000
 "@1979":
-	.incbin "baserom.dol", 0x3EC3EC, 0x4
+	.4byte 0x42A00000
 "@1980":
-	.incbin "baserom.dol", 0x3EC3F0, 0x4
+	.4byte 0x3D23D70A
 "@1981":
-	.incbin "baserom.dol", 0x3EC3F4, 0x4
+	.4byte 0x3BA3D70A
 "@1982":
-	.incbin "baserom.dol", 0x3EC3F8, 0x4
+	.4byte 0x46EA6000
 "@1983":
-	.incbin "baserom.dol", 0x3EC3FC, 0x4
+	.4byte 0x40400000
 "@1984":
-	.incbin "baserom.dol", 0x3EC400, 0x4
+	.4byte 0x3FE00000
 "@1985":
-	.incbin "baserom.dol", 0x3EC404, 0x4
+	.4byte 0x42960000
 "@1986":
-	.incbin "baserom.dol", 0x3EC408, 0x8
+	.asciz "%s/%s"
+	.balign 4

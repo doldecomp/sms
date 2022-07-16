@@ -589,9 +589,12 @@ lbl_80006624:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1727":
-	.incbin "baserom.dol", 0x36CFA0, 0x14
+	.asciz "JKRAramArchive.cpp"
+	.balign 4
 "@1728":
-	.incbin "baserom.dol", 0x36CFB4, 0x1C
+	.asciz ":::??? bad sequence\n"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7JKRFile

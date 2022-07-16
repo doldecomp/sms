@@ -1510,7 +1510,10 @@ lbl_8001DAA4:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1454":
-	.incbin "baserom.dol", 0x36DBE8, 0x10
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000002
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13J3DSkinDeform
@@ -1523,22 +1526,26 @@ __vt__13J3DSkinDeform:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1084":
-	.incbin "baserom.dol", 0x3E3EB8, 0x4
+	.4byte 0x3F800000
 "@1099":
-	.incbin "baserom.dol", 0x3E3EBC, 0x4
+	.4byte 0x3F800000
 lbl_8040B620:
-	.incbin "baserom.dol", 0x3E3EC0, 0x4
+	.4byte 0xBF800000
 "@1259":
   .4byte 0
 "@1260":
-	.incbin "baserom.dol", 0x3E3EC8, 0x4
+	.4byte 0xBF800000
 "@1261":
-	.incbin "baserom.dol", 0x3E3ECC, 0x4
+	.4byte 0x43340000
 "@1262":
-	.incbin "baserom.dol", 0x3E3ED0, 0x8
+	.4byte 0x40490E56
+	.4byte 0
 "@1264":
-	.incbin "baserom.dol", 0x3E3ED8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1420":
-	.incbin "baserom.dol", 0x3E3EE0, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@1421":
-	.incbin "baserom.dol", 0x3E3EE8, 0x8
+	.4byte 0x40080000
+	.4byte 0

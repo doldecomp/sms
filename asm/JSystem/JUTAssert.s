@@ -48,7 +48,8 @@ lbl_8003ADFC:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "mVisible__Q212JUTAssertion9@unnamed@":
-	.incbin "baserom.dol", 0x3E30B8, 0x8
+	.4byte 0x01000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "sMessageFileLine__Q212JUTAssertion9@unnamed@":

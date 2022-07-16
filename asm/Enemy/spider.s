@@ -433,8 +433,9 @@ __vt__7TSpider:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2402":
-	.incbin "baserom.dol", 0x3EA2D8, 0x4
+	.4byte 0x3F800000
 "@2403":
   .4byte 0
 "@2404":
-	.incbin "baserom.dol", 0x3EA2E0, 0x8
+	.4byte 0x3C888889
+	.4byte 0

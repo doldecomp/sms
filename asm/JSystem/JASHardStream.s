@@ -1024,18 +1024,21 @@ rootDir__Q28JASystem10HardStream:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 playListMax__Q28JASystem10HardStream:
-	.incbin "baserom.dol", 0x3E31E8, 0x8
+	.4byte 0x00000020
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@275":
   .4byte 0
 "@621":
-	.incbin "baserom.dol", 0x3E43E4, 0x4
+	.4byte 0x3F800000
 "@738":
-	.incbin "baserom.dol", 0x3E43E8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@754":
-	.incbin "baserom.dol", 0x3E43F0, 0x8
+	.4byte 0x437F0000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@245":

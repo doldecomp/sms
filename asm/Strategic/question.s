@@ -396,7 +396,9 @@ __ct__16TQuestionRequestFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1826":
-	.incbin "baserom.dol", 0x3775F0, 0x20
+	.asciz "/common/timg/question.bti"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16TQuestionManager
@@ -417,7 +419,7 @@ __vt__16TQuestionManager:
 "@1772":
   .4byte 0
 "@1825":
-	.incbin "baserom.dol", 0x3E5464, 0x4
+	.4byte 0x459C4000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpQuestionManager

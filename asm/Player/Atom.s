@@ -27,7 +27,7 @@ lbl_constructor:
 "@1908":
   .4byte 0
 "@2110":
-	.incbin "baserom.dol", 0x3E5484, 0x4
+	.4byte 0x459C4000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 cDeformedTerrainCenter:

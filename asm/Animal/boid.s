@@ -1361,48 +1361,50 @@ __vt__11TBoidLeader:
 "@2190":
   .4byte 0
 "@2191":
-	.incbin "baserom.dol", 0x3EC5F4, 0x4
+	.4byte 0x38000000
 "@2192":
-	.incbin "baserom.dol", 0x3EC5F8, 0x4
+	.4byte 0x3C23D70A
 "@2193":
-	.incbin "baserom.dol", 0x3EC5FC, 0x4
+	.4byte 0x42BE0000
 "@2194":
-	.incbin "baserom.dol", 0x3EC600, 0x4
+	.4byte 0x40A00000
 "@2195":
-	.incbin "baserom.dol", 0x3EC604, 0x4
+	.4byte 0x36800000
 "@2196":
-	.incbin "baserom.dol", 0x3EC608, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@2198":
-	.incbin "baserom.dol", 0x3EC610, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2202":
-	.incbin "baserom.dol", 0x3EC618, 0x4
+	.4byte 0x3F000000
 "@2203":
-	.incbin "baserom.dol", 0x3EC61C, 0x4
+	.4byte 0x40400000
 "@2289":
-	.incbin "baserom.dol", 0x3EC620, 0x4
+	.4byte 0x461C4000
 "@2290":
-	.incbin "baserom.dol", 0x3EC624, 0x4
+	.4byte 0x3F666666
 "@2526":
-	.incbin "baserom.dol", 0x3EC628, 0x4
+	.4byte 0x3A83126F
 "@2527":
-	.incbin "baserom.dol", 0x3EC62C, 0x4
+	.4byte 0xBC23D70A
 "@2528":
-	.incbin "baserom.dol", 0x3EC630, 0x4
+	.4byte 0x3F7AE148
 "@2529":
-	.incbin "baserom.dol", 0x3EC634, 0x4
+	.4byte 0x42B40000
 "@2530":
-	.incbin "baserom.dol", 0x3EC638, 0x4
+	.4byte 0xC2B40000
 "@2531":
-	.incbin "baserom.dol", 0x3EC63C, 0x4
+	.4byte 0x3BB40000
 "@2532":
-	.incbin "baserom.dol", 0x3EC640, 0x4
+	.4byte 0x43340000
 "@2533":
-	.incbin "baserom.dol", 0x3EC644, 0x4
+	.4byte 0x43B40000
 "@2577":
-	.incbin "baserom.dol", 0x3EC648, 0x4
+	.4byte 0x40C00000
 "@2578":
-	.incbin "baserom.dol", 0x3EC64C, 0x4
+	.4byte 0x43160000
 "@2579":
-	.incbin "baserom.dol", 0x3EC650, 0x4
+	.4byte 0x40000000
 "@2580":
-	.incbin "baserom.dol", 0x3EC654, 0x4
+	.4byte 0x41200000

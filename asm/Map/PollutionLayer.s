@@ -1702,17 +1702,36 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2580":
-	.incbin "baserom.dol", 0x38FC40, 0x28
+	.asciz "/scene/map/pollution/ms_thunder_s.jpa"
+	.balign 4
 "@2687":
-	.incbin "baserom.dol", 0x38FC68, 0x1C
+	.asciz "/scene/map/pollution/%s.bmp"
 "@3031":
-	.incbin "baserom.dol", 0x38FC84, 0x1C
+	.asciz "/scene/map/pollution/%s.bti"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 x_offset_table$2432:
-	.incbin "baserom.dol", 0x3CD6A8, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFE
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0xFFFFFFFD
 z_offset_table$2433:
-	.incbin "baserom.dol", 0x3CD6D0, 0x28
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0xFFFFFFFE
+	.4byte 0xFFFFFFFD
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0
+	.4byte 0x00000001
 .global __vt__15TPollutionLayer
 __vt__15TPollutionLayer:
   .4byte 0
@@ -1842,11 +1861,12 @@ __vt__19TPollutionLayerWave:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mInterval__19TPollutionLayerWave:
-	.incbin "baserom.dol", 0x3E3830, 0x4
+	.4byte 0x43960000
 mAlpha__19TPollutionLayerWave:
-	.incbin "baserom.dol", 0x3E3834, 0x4
+	.4byte 0xE6000000
 mEffectTime__15TPollutionLayer:
-	.incbin "baserom.dol", 0x3E3838, 0x8
+	.4byte 0x0000000F
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
@@ -1855,13 +1875,15 @@ mEffectTime__15TPollutionLayer:
 "@2548":
   .4byte 0
 "@2714":
-	.incbin "baserom.dol", 0x3E8DE8, 0x4
+	.4byte 0x3F800000
 "@2786":
-	.incbin "baserom.dol", 0x3E8DEC, 0x4
+	.4byte 0x42000000
 "@2788":
-	.incbin "baserom.dol", 0x3E8DF0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3074":
-	.incbin "baserom.dol", 0x3E8DF8, 0x8
+	.4byte 0x41200000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 pos$2426:

@@ -2108,61 +2108,84 @@ getHeapType__10JKRExpHeapFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@237":
-	.incbin "baserom.dol", 0x36D158, 0x10
+	.asciz "bad size %d\n"
+	.balign 4
 "@294":
-	.incbin "baserom.dol", 0x36D168, 0x28
+	.asciz ":::cannot alloc memory (0x%x byte).\n"
+	.balign 4
 "@591":
-	.incbin "baserom.dol", 0x36D190, 0x2C
+	.asciz ":::addr %08x: bad heap signature. (%c%c)\n"
+	.balign 4
 "@592":
-	.incbin "baserom.dol", 0x36D1BC, 0x30
+	.asciz ":::addr %08x: bad next pointer (%08x)\nabort\n"
+	.balign 4
 "@593":
-	.incbin "baserom.dol", 0x36D1EC, 0x2C
+	.asciz ":::addr %08x: bad previous pointer (%08x)\n"
+	.balign 4
 "@594":
-	.incbin "baserom.dol", 0x36D218, 0x2C
+	.asciz ":::addr %08x: bad used list(REV) (%08x)\n"
+	.balign 4
 "@595":
-	.incbin "baserom.dol", 0x36D244, 0x28
+	.asciz ":::addr %08x: bad block size (%08x)\n"
+	.balign 4
 "@596":
-	.incbin "baserom.dol", 0x36D26C, 0x30
+	.asciz ":::bad total memory block size (%08X, %08X)\n"
+	.balign 4
 "@597":
-	.incbin "baserom.dol", 0x36D29C, 0x28
+	.asciz ":::there is some error in this heap!\n"
+	.balign 4
 "@606":
-	.incbin "baserom.dol", 0x36D2C4, 0x10
+	.asciz "JKRExpHeap.cpp"
+	.balign 4
 "@607":
-	.incbin "baserom.dol", 0x36D2D4, 0x1C
+	.asciz ":::ERROR! appendUsedList\n"
+	.balign 4
 "@688":
-	.incbin "baserom.dol", 0x36D2F0, 0x24
+	.asciz ":::Heap may be broken. (block = %x)"
 "@689":
-	.incbin "baserom.dol", 0x36D314, 0x10
+	.asciz ":::: Bad Block\n"
 "@720":
-	.incbin "baserom.dol", 0x36D324, 0x38
+	.asciz " attr  address:   size    gid aln   prev_ptr next_ptr\n"
+	.balign 4
 "@721":
-	.incbin "baserom.dol", 0x36D35C, 0x10
+	.asciz "(Used Blocks)\n"
+	.balign 4
 "@723":
-	.incbin "baserom.dol", 0x36D36C, 0x3C
+	.asciz "xxxxx %08x: --------  --- ---  (-------- --------)\nabort\n"
+	.balign 4
 "@726":
-	.incbin "baserom.dol", 0x36D3A8, 0x28
+	.asciz "%s %08x: %08x  %3d %3d  (%08x %08x)\n"
+	.balign 4
 "@727":
-	.incbin "baserom.dol", 0x36D3D0, 0x10
+	.asciz "(Free Blocks)\n"
+	.balign 4
 "@729":
-	.incbin "baserom.dol", 0x36D3E0, 0x2C
+	.asciz "%d / %d bytes (%6.2f%%) used (U:%d F:%d)\n"
+	.balign 4
 "@798":
-	.incbin "baserom.dol", 0x36D40C, 0x1C
+	.asciz "+---------------JKRExpHeap\n"
 "@799":
-	.incbin "baserom.dol", 0x36D428, 0x30
+	.asciz "|         Align Group  size    ( prev , next )\n"
 "@800":
-	.incbin "baserom.dol", 0x36D458, 0x14
+	.asciz "| ---- FreeFirst\n"
+	.balign 4
 "@801":
-	.incbin "baserom.dol", 0x36D46C, 0xC
+	.asciz "| %08x  "
+	.balign 4
 "@802":
-	.incbin "baserom.dol", 0x36D478, 0x1C
+	.asciz "%2x  %3d  %6x  (%08x %08x)\n"
 "@803":
-	.incbin "baserom.dol", 0x36D494, 0x14
+	.asciz "| ---- FreeLast\n"
+	.balign 4
 "@804":
-	.incbin "baserom.dol", 0x36D4A8, 0x14
+	.asciz "| ---- UsedFirst\n"
+	.balign 4
 "@805":
-	.incbin "baserom.dol", 0x36D4BC, 0x14
+	.asciz "| ---- UsedLast\n"
+	.balign 4
 "@806":
-	.incbin "baserom.dol", 0x36D4D0, 0x18
+	.asciz "+---------------End\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRExpHeap
@@ -2191,17 +2214,23 @@ __vt__10JKRExpHeap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@722":
-	.incbin "baserom.dol", 0x3E3D00, 0x8
+	.asciz " NONE\n"
+	.balign 4
 "@724":
-	.incbin "baserom.dol", 0x3E3D08, 0x8
+	.asciz " temp"
+	.balign 4
 "@725":
-	.incbin "baserom.dol", 0x3E3D10, 0x8
+	.asciz "alloc"
+	.balign 4
 "@728":
-	.incbin "baserom.dol", 0x3E3D18, 0x8
+	.asciz " free"
+	.balign 4
 "@730":
-	.incbin "baserom.dol", 0x3E3D20, 0x8
+	.4byte 0x42C80000
+	.4byte 0
 "@732":
-	.incbin "baserom.dol", 0x3E3D28, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 whatdo:

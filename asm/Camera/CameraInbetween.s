@@ -447,12 +447,15 @@ __ct__16TCameraInbetweenFv:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1655":
-	.incbin "baserom.dol", 0x3EC220, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@1657":
-	.incbin "baserom.dol", 0x3EC228, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1663":
   .4byte 0
 "@1708":
-	.incbin "baserom.dol", 0x3EC234, 0x4
+	.4byte 0x3A83126F
 "@1709":
-	.incbin "baserom.dol", 0x3EC238, 0x8
+	.4byte 0x3DCCCCCD
+	.4byte 0

@@ -597,11 +597,12 @@ drawFuncTable__13J3DDrawBuffer:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@824":
-	.incbin "baserom.dol", 0x3E3FE8, 0x4
+	.4byte 0x3F800000
 "@825":
-	.incbin "baserom.dol", 0x3E3FEC, 0x4
+	.4byte 0x461C4000
 "@827":
-	.incbin "baserom.dol", 0x3E3FF0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global entryNum__13J3DDrawBuffer

@@ -643,13 +643,14 @@ __vt__12TBGCheckList:
 "@2183":
   .4byte 0
 "@2184":
-	.incbin "baserom.dol", 0x3E8ACC, 0x4
+	.4byte 0xC6FFFE00
 "@2185":
-	.incbin "baserom.dol", 0x3E8AD0, 0x4
+	.4byte 0x46FFFE00
 "@2221":
-	.incbin "baserom.dol", 0x3E8AD4, 0x4
+	.4byte 0x44800000
 "@2223":
-	.incbin "baserom.dol", 0x3E8AD8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global mIllegalCheckData__17TMapCollisionData

@@ -1148,9 +1148,11 @@ lbl_80044618:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@632":
-	.incbin "baserom.dol", 0x36DF38, 0xC
+	.asciz "<IdxLight>"
+	.balign 4
 "@753":
-	.incbin "baserom.dol", 0x36DF44, 0xC
+	.asciz "<AmbColor>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama9TLightMap
@@ -1301,4 +1303,4 @@ __vt__Q26JDrama6TLight:
 "@633":
   .4byte 0
 "@634":
-	.incbin "baserom.dol", 0x3E40B4, 0x4
+	.4byte 0x3F800000

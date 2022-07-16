@@ -1030,14 +1030,15 @@ lbl_80304D4C:
 "@2330":
   .4byte 0
 "@2331":
-	.incbin "baserom.dol", 0x3EB4CC, 0x4
+	.4byte 0x3F800000
 "@2474":
-	.incbin "baserom.dol", 0x3EB4D0, 0x4
+	.4byte 0x43330000
 "@2475":
-	.incbin "baserom.dol", 0x3EB4D4, 0x4
+	.4byte 0xC3330000
 "@2476":
-	.incbin "baserom.dol", 0x3EB4D8, 0x4
+	.4byte 0x40000000
 "@2477":
-	.incbin "baserom.dol", 0x3EB4DC, 0x4
+	.4byte 0x42200000
 "@2512":
-	.incbin "baserom.dol", 0x3EB4E0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

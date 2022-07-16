@@ -254,22 +254,25 @@ JMAHermiteInterpolation__Ffffffff:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@151":
-	.incbin "baserom.dol", 0x3E3DF0, 0x8
+	.4byte 0x40C90FDB
+	.4byte 0
 "@153":
-	.incbin "baserom.dol", 0x3E3DF8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@182":
   .4byte 0
   .4byte 0
 "@183":
-	.incbin "baserom.dol", 0x3E3E08, 0x8
+	.4byte 0x3FF00000
+	.4byte 0
 "@186":
-	.incbin "baserom.dol", 0x3E3E10, 0x4
+	.4byte 0x3F800000
 "@187":
-	.incbin "baserom.dol", 0x3E3E14, 0x4
+	.4byte 0x40000000
 "@188":
-	.incbin "baserom.dol", 0x3E3E18, 0x4
+	.4byte 0x40400000
 "@189":
-	.incbin "baserom.dol", 0x3E3E1C, 0x4
+	.4byte 0xC0000000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 jmaSinTableSize:

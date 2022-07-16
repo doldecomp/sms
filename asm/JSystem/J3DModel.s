@@ -3123,15 +3123,18 @@ __vt__12J3DModelData:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 J3DUnit01:
-	.incbin "baserom.dol", 0x3E3020, 0x8
+	.4byte 0
+	.4byte 0x3F800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1460":
-	.incbin "baserom.dol", 0x3E3F30, 0x4
+	.4byte 0x3F800000
 "@2249":
   .4byte 0
 "@2250":
-	.incbin "baserom.dol", 0x3E3F38, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2251":
-	.incbin "baserom.dol", 0x3E3F40, 0x8
+	.4byte 0x40080000
+	.4byte 0

@@ -1191,11 +1191,12 @@ audioRootPath__Q28JASystem3Dvd:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 dvdMsgsSize__Q28JASystem3Dvd:
-	.incbin "baserom.dol", 0x3E31D8, 0x4
+	.4byte 0x00000020
 dvdBufSize__Q28JASystem3Dvd:
-	.incbin "baserom.dol", 0x3E31DC, 0x4
+	.4byte 0x00008000
 maxDics__Q28JASystem3Dvd:
-	.incbin "baserom.dol", 0x3E31E0, 0x8
+	.4byte 0x00000020
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 mq__Q28JASystem3Dvd:

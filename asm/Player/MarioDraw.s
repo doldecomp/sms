@@ -6117,279 +6117,441 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1936":
-	.incbin "baserom.dol", 0x37787C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2445":
-	.incbin "baserom.dol", 0x377890, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2446":
-	.incbin "baserom.dol", 0x3778C0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2447":
-	.incbin "baserom.dol", 0x3778F8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2448":
-	.incbin "baserom.dol", 0x37792C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2825":
-	.incbin "baserom.dol", 0x377950, 0xC
+	.asciz "tree_climb"
+	.balign 4
 "@2826":
-	.incbin "baserom.dol", 0x37795C, 0xC
+	.asciz "tree_catch"
+	.balign 4
 "@2827":
-	.incbin "baserom.dol", 0x377968, 0xC
+	.asciz "tree_stand"
+	.balign 4
 "@2828":
-	.incbin "baserom.dol", 0x377974, 0xC
+	.asciz "tree_wait"
+	.balign 4
 "@2838":
-	.incbin "baserom.dol", 0x377980, 0x14
+	.asciz "ladder_hang_catch"
+	.balign 4
 "@2851":
-	.incbin "baserom.dol", 0x377994, 0xC
+	.asciz "door_openr"
+	.balign 4
 "@2852":
-	.incbin "baserom.dol", 0x3779A0, 0xC
+	.asciz "door_openl"
+	.balign 4
 "@2854":
-	.incbin "baserom.dol", 0x3779AC, 0x14
+	.asciz "ladder_hang_move_l"
+	.balign 4
 "@2855":
-	.incbin "baserom.dol", 0x3779C0, 0x14
+	.asciz "ladder_hang_move_r"
+	.balign 4
 "@2858":
-	.incbin "baserom.dol", 0x3779D4, 0xC
+	.asciz "ride_shell"
+	.balign 4
 "@2885":
-	.incbin "baserom.dol", 0x3779E0, 0x14
+	.asciz "ladder_hang_wait_l"
+	.balign 4
 "@2886":
-	.incbin "baserom.dol", 0x3779F4, 0x14
+	.asciz "ladder_hang_wait_r"
+	.balign 4
 "@2901":
-	.incbin "baserom.dol", 0x377A08, 0xC
+	.asciz "hot_wait"
+	.balign 4
 "@2902":
-	.incbin "baserom.dol", 0x377A14, 0xC
+	.asciz "rope_walk"
+	.balign 4
 "@2903":
-	.incbin "baserom.dol", 0x377A20, 0xC
+	.asciz "rope_run"
+	.balign 4
 "@2904":
-	.incbin "baserom.dol", 0x377A2C, 0xC
+	.asciz "rope_wait"
+	.balign 4
 "@2905":
-	.incbin "baserom.dol", 0x377A38, 0xC
+	.asciz "rope_wtosw"
+	.balign 4
 "@2906":
-	.incbin "baserom.dol", 0x377A44, 0x10
+	.asciz "rope_wtosw_r"
+	.balign 4
 "@2907":
-	.incbin "baserom.dol", 0x377A54, 0xC
+	.asciz "rope_swait"
+	.balign 4
 "@2908":
-	.incbin "baserom.dol", 0x377A60, 0xC
+	.asciz "rope_whg"
+	.balign 4
 "@2909":
-	.incbin "baserom.dol", 0x377A6C, 0xC
+	.asciz "rope_swhg"
+	.balign 4
 "@2910":
-	.incbin "baserom.dol", 0x377A78, 0xC
+	.asciz "rope_hgwat"
+	.balign 4
 "@2911":
-	.incbin "baserom.dol", 0x377A84, 0xC
+	.asciz "rope_return"
 "@2912":
-	.incbin "baserom.dol", 0x377A90, 0xC
+	.asciz "rope_hmovr"
+	.balign 4
 "@2913":
-	.incbin "baserom.dol", 0x377A9C, 0xC
+	.asciz "rope_hmovl"
+	.balign 4
 "@2915":
-	.incbin "baserom.dol", 0x377AA8, 0xC
+	.asciz "sink_down"
+	.balign 4
 "@2916":
-	.incbin "baserom.dol", 0x377AB4, 0xC
+	.asciz "door_kick"
+	.balign 4
 "@2918":
-	.incbin "baserom.dol", 0x377AC0, 0xC
+	.asciz "hold_wait"
+	.balign 4
 "@2919":
-	.incbin "baserom.dol", 0x377ACC, 0xC
+	.asciz "hold_back"
+	.balign 4
 "@2920":
-	.incbin "baserom.dol", 0x377AD8, 0xC
+	.asciz "hold_move_r"
 "@2921":
-	.incbin "baserom.dol", 0x377AE4, 0xC
+	.asciz "hold_move_l"
 "@2922":
-	.incbin "baserom.dol", 0x377AF0, 0xC
+	.asciz "hold_drag"
+	.balign 4
 "@2923":
-	.incbin "baserom.dol", 0x377AFC, 0x10
+	.asciz "hold_to_hang"
+	.balign 4
 "@2924":
-	.incbin "baserom.dol", 0x377B0C, 0xC
+	.asciz "hold_hang"
+	.balign 4
 "@2925":
-	.incbin "baserom.dol", 0x377B18, 0x10
+	.asciz "hang_to_hold"
+	.balign 4
 "@2926":
-	.incbin "baserom.dol", 0x377B28, 0xC
+	.asciz "hold_return"
 "@2928":
-	.incbin "baserom.dol", 0x377B34, 0xC
+	.asciz "turbo_dash"
+	.balign 4
 "@2929":
-	.incbin "baserom.dol", 0x377B40, 0xC
+	.asciz "broad_jump"
+	.balign 4
 "@2930":
-	.incbin "baserom.dol", 0x377B4C, 0x10
+	.asciz "jump_rolling"
+	.balign 4
 "@2931":
-	.incbin "baserom.dol", 0x377B5C, 0x10
+	.asciz "giant_rolling"
+	.balign 4
 "@2932":
-	.incbin "baserom.dol", 0x377B6C, 0xC
+	.asciz "fence_catch"
 "@2933":
-	.incbin "baserom.dol", 0x377B78, 0x10
+	.asciz "fence_jcatch"
+	.balign 4
 "@2934":
-	.incbin "baserom.dol", 0x377B88, 0xC
+	.asciz "fence_wait"
+	.balign 4
 "@2935":
-	.incbin "baserom.dol", 0x377B94, 0x10
+	.asciz "fence_move_l"
+	.balign 4
 "@2936":
-	.incbin "baserom.dol", 0x377BA4, 0x10
+	.asciz "fence_move_r"
+	.balign 4
 "@2937":
-	.incbin "baserom.dol", 0x377BB4, 0x10
+	.asciz "fence_move_up"
+	.balign 4
 "@2938":
-	.incbin "baserom.dol", 0x377BC4, 0x10
+	.asciz "fence_move_down"
 "@2939":
-	.incbin "baserom.dol", 0x377BD4, 0xC
+	.asciz "fence_punch"
 "@2940":
-	.incbin "baserom.dol", 0x377BE0, 0x14
+	.asciz "ladder_hang_kick"
+	.balign 4
 "@2941":
-	.incbin "baserom.dol", 0x377BF4, 0x10
+	.asciz "ladder_roll_up"
+	.balign 4
 "@2942":
-	.incbin "baserom.dol", 0x377C04, 0x14
+	.asciz "ladder_roll_down"
+	.balign 4
 "@2943":
-	.incbin "baserom.dol", 0x377C18, 0x10
+	.asciz "ride_shell_wait"
 "@2944":
-	.incbin "baserom.dol", 0x377C28, 0xC
+	.asciz "swim_start"
+	.balign 4
 "@2945":
-	.incbin "baserom.dol", 0x377C34, 0xC
+	.asciz "swim_wait"
+	.balign 4
 "@2946":
-	.incbin "baserom.dol", 0x377C40, 0x10
+	.asciz "wait_to_swim"
+	.balign 4
 "@2948":
-	.incbin "baserom.dol", 0x377C50, 0x10
+	.asciz "swim_to_wait"
+	.balign 4
 "@2949":
-	.incbin "baserom.dol", 0x377C60, 0xC
+	.asciz "swim_damage"
 "@2950":
-	.incbin "baserom.dol", 0x377C6C, 0xC
+	.asciz "swim_down"
+	.balign 4
 "@2951":
-	.incbin "baserom.dol", 0x377C78, 0x10
+	.asciz "demo_shine_get"
+	.balign 4
 "@2952":
-	.incbin "baserom.dol", 0x377C88, 0x10
+	.asciz "demo_gate_in"
+	.balign 4
 "@2953":
-	.incbin "baserom.dol", 0x377C98, 0x10
+	.asciz "demo_gate_out"
+	.balign 4
 "@2954":
-	.incbin "baserom.dol", 0x377CA8, 0xC
+	.asciz "roll_jump"
+	.balign 4
 "@2955":
-	.incbin "baserom.dol", 0x377CB4, 0xC
+	.asciz "get_fail"
+	.balign 4
 "@2956":
-	.incbin "baserom.dol", 0x377CC0, 0xC
+	.asciz "tree_move_l"
 "@2957":
-	.incbin "baserom.dol", 0x377CCC, 0xC
+	.asciz "tree_move_r"
 "@2959":
-	.incbin "baserom.dol", 0x377CD8, 0x10
+	.asciz "monteman_wait"
+	.balign 4
 "@2960":
-	.incbin "baserom.dol", 0x377CE8, 0x10
+	.asciz "wait_to_paddle"
+	.balign 4
 "@2961":
-	.incbin "baserom.dol", 0x377CF8, 0x10
+	.asciz "paddle_start"
+	.balign 4
 "@2962":
-	.incbin "baserom.dol", 0x377D08, 0xC
+	.asciz "paddle_end"
+	.balign 4
 "@2963":
-	.incbin "baserom.dol", 0x377D14, 0x10
+	.asciz "paddle_to_wait"
+	.balign 4
 "@2965":
-	.incbin "baserom.dol", 0x377D24, 0xC
+	.asciz "damage_wait"
 "@2969":
-	.incbin "baserom.dol", 0x377D30, 0xC
+	.asciz "thrown_end"
+	.balign 4
 "@2970":
-	.incbin "baserom.dol", 0x377D3C, 0xC
+	.asciz "bottle_in"
+	.balign 4
 "@2971":
-	.incbin "baserom.dol", 0x377D48, 0x10
+	.asciz "sand_fill_head"
+	.balign 4
 "@2972":
-	.incbin "baserom.dol", 0x377D58, 0x14
+	.asciz "sand_fill_head_end"
+	.balign 4
 "@2973":
-	.incbin "baserom.dol", 0x377D6C, 0x10
+	.asciz "sandfill_leg"
+	.balign 4
 "@2974":
-	.incbin "baserom.dol", 0x377D7C, 0x14
+	.asciz "sandfill_leg_end"
+	.balign 4
 "@2975":
-	.incbin "baserom.dol", 0x377D90, 0x14
+	.asciz "damage_wait_start"
+	.balign 4
 "@2976":
-	.incbin "baserom.dol", 0x377DA4, 0xC
+	.asciz "swim_dive"
+	.balign 4
 "@2978":
-	.incbin "baserom.dol", 0x377DB0, 0x10
+	.asciz "swim_p_damage"
+	.balign 4
 "@2979":
-	.incbin "baserom.dol", 0x377DC0, 0xC
+	.asciz "swim_p_down"
 "@2981":
-	.incbin "baserom.dol", 0x377DCC, 0x14
+	.asciz "demo_gate_out_get2"
+	.balign 4
 "@2982":
-	.incbin "baserom.dol", 0x377DE0, 0x18
+	.asciz "demo_gate_out_appear"
+	.balign 4
 "@2986":
-	.incbin "baserom.dol", 0x377DF8, 0xC
+	.asciz "sit_wait"
+	.balign 4
 "@2989":
-	.incbin "baserom.dol", 0x377E04, 0xC
+	.asciz "sleep_wait"
+	.balign 4
 "@2990":
-	.incbin "baserom.dol", 0x377E10, 0xC
+	.asciz "sleep_end"
+	.balign 4
 "@2991":
-	.incbin "baserom.dol", 0x377E1C, 0xC
+	.asciz "dive_wait"
+	.balign 4
 "@2992":
-	.incbin "baserom.dol", 0x377E28, 0xC
+	.asciz "dive_land"
+	.balign 4
 "@2993":
-	.incbin "baserom.dol", 0x377E34, 0x10
+	.asciz "door_gacha_l"
+	.balign 4
 "@2994":
-	.incbin "baserom.dol", 0x377E44, 0x10
+	.asciz "door_gacha_r"
+	.balign 4
 "@2995":
-	.incbin "baserom.dol", 0x377E54, 0xC
+	.asciz "shock_down"
+	.balign 4
 "@2996":
-	.incbin "baserom.dol", 0x377E60, 0x1C
+	.asciz "demo_gate_out_appear_get"
+	.balign 4
 "@2997":
-	.incbin "baserom.dol", 0x377E7C, 0x1C
+	.asciz "demo_gate_out_rolling_get"
+	.balign 4
 "@2998":
-	.incbin "baserom.dol", 0x377E98, 0x18
+	.asciz "demo_gate_out_rolling"
+	.balign 4
 "@2999":
-	.incbin "baserom.dol", 0x377EB0, 0x10
+	.asciz "fall_down_wait"
+	.balign 4
 "@3004":
-	.incbin "baserom.dol", 0x377EC0, 0xC
+	.asciz "yo_eat_end"
+	.balign 4
 "@3006":
-	.incbin "baserom.dol", 0x377ECC, 0x10
+	.asciz "yo_jump_fall"
+	.balign 4
 "@3007":
-	.incbin "baserom.dol", 0x377EDC, 0xC
+	.asciz "yo_jump_end"
 "@3008":
-	.incbin "baserom.dol", 0x377EE8, 0x10
+	.asciz "yo_hold_jump"
+	.balign 4
 "@3010":
-	.incbin "baserom.dol", 0x377EF8, 0x10
+	.asciz "yo_hip_start"
+	.balign 4
 "@3011":
-	.incbin "baserom.dol", 0x377F08, 0xC
+	.asciz "yo_hip_pose"
 "@3012":
-	.incbin "baserom.dol", 0x377F14, 0xC
+	.asciz "yo_hip_end"
+	.balign 4
 "@3013":
-	.incbin "baserom.dol", 0x377F20, 0xC
+	.asciz "yo_damage"
+	.balign 4
 "@3014":
-	.incbin "baserom.dol", 0x377F2C, 0x14
+	.asciz "demo_shine_get_yo"
+	.balign 4
 "@3015":
-	.incbin "baserom.dol", 0x377F40, 0x10
+	.asciz "yo_slide_pose"
+	.balign 4
 "@3016":
-	.incbin "baserom.dol", 0x377F50, 0x10
+	.asciz "yo_slide_end"
+	.balign 4
 cDirtyFileName:
-	.incbin "baserom.dol", 0x377F60, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x377F84, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@3088":
-	.incbin "baserom.dol", 0x377F94, 0x1C
+	.asciz "/mario/btp/ma_wink_tx.btp"
+	.balign 4
 "@3089":
-	.incbin "baserom.dol", 0x377FB0, 0x1C
+	.asciz "/mario/btp/ma_bdwn_tx.btp"
+	.balign 4
 "@3090":
-	.incbin "baserom.dol", 0x377FCC, 0x1C
+	.asciz "/mario/btp/ma_bkdwn_tx.btp"
+	.balign 4
 "@3091":
-	.incbin "baserom.dol", 0x377FE8, 0x1C
+	.asciz "/mario/btp/ma_sdwnf_tx.btp"
+	.balign 4
 "@3092":
-	.incbin "baserom.dol", 0x378004, 0x1C
+	.asciz "/mario/btp/ma_jfdwn_tx.btp"
+	.balign 4
 "@3093":
-	.incbin "baserom.dol", 0x378020, 0x1C
+	.asciz "/mario/btp/ma_sdown_tx.btp"
+	.balign 4
 "@3094":
-	.incbin "baserom.dol", 0x37803C, 0x1C
+	.asciz "/mario/btp/ma_sldwn_tx.btp"
+	.balign 4
 "@3095":
-	.incbin "baserom.dol", 0x378058, 0x1C
+	.asciz "/mario/btp/ma_dgrun_tx.btp"
+	.balign 4
 "@3096":
-	.incbin "baserom.dol", 0x378074, 0x20
+	.asciz "/mario/btp/ma_hot_wait_tx.btp"
+	.balign 4
 "@3097":
-	.incbin "baserom.dol", 0x378094, 0x20
+	.asciz "/mario/btp/ma_firejmp_tx.btp"
+	.balign 4
 "@3098":
-	.incbin "baserom.dol", 0x3780B4, 0x1C
+	.asciz "/mario/btp/ma_fjpend_tx.btp"
 "@3099":
-	.incbin "baserom.dol", 0x3780D0, 0x1C
+	.asciz "/mario/btp/ma_shock_tx.btp"
+	.balign 4
 "@3100":
-	.incbin "baserom.dol", 0x3780EC, 0x20
+	.asciz "/mario/btp/ma_gate_out_tx.btp"
+	.balign 4
 "@3101":
-	.incbin "baserom.dol", 0x37810C, 0x1C
+	.asciz "/mario/btp/ma_die_tx.btp"
+	.balign 4
 "@3102":
-	.incbin "baserom.dol", 0x378128, 0x1C
+	.asciz "/mario/btp/ma_d_wait_tx.btp"
 "@3103":
-	.incbin "baserom.dol", 0x378144, 0x24
+	.asciz "/mario/btp/ma_swim_p_damage_tx.btp"
+	.balign 4
 "@3104":
-	.incbin "baserom.dol", 0x378168, 0x24
+	.asciz "/mario/btp/ma_swim_p_down_tx.btp"
+	.balign 4
 "@3105":
-	.incbin "baserom.dol", 0x37818C, 0x1C
+	.asciz "/mario/btp/ma_yawn_tx.btp"
+	.balign 4
 "@3106":
-	.incbin "baserom.dol", 0x3781A8, 0x1C
+	.asciz "/mario/btp/ma_sit_tx.btp"
+	.balign 4
 "@3107":
-	.incbin "baserom.dol", 0x3781C4, 0x20
+	.asciz "/mario/btp/ma_sit_wait_tx.btp"
+	.balign 4
 "@3108":
-	.incbin "baserom.dol", 0x3781E4, 0x20
+	.asciz "/mario/btp/ma_sit_end_tx.btp"
+	.balign 4
 "@3109":
-	.incbin "baserom.dol", 0x378204, 0x1C
+	.asciz "/mario/btp/ma_sleep_tx.btp"
+	.balign 4
 "@3110":
-	.incbin "baserom.dol", 0x378220, 0x20
+	.asciz "/mario/btp/ma_sleep_wait_tx.btp"
 "@3111":
-	.incbin "baserom.dol", 0x378240, 0x20
+	.asciz "/mario/btp/ma_sleep_end_tx.btp"
+	.balign 4
 "@3177":
   .4byte 0
   .4byte 0
@@ -6415,77 +6577,119 @@ cDirtyTexName:
   .4byte 0
   .4byte 0
 "@3340":
-	.incbin "baserom.dol", 0x3782A8, 0xC
+	.4byte 0x00000200
+	.4byte 0x00140041
+	.4byte 0
 "@3342":
-	.incbin "baserom.dol", 0x3782B4, 0xC
+	.4byte 0x00000201
+	.4byte 0
+	.4byte 0x01000000
 "@5182":
-	.incbin "baserom.dol", 0x3782C0, 0xC
+	.4byte 0x837D838A
+	.4byte 0x8349696E
+	.4byte 0x8BBE0000
 "@5183":
-	.incbin "baserom.dol", 0x3782CC, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83498EE8
+	.4byte 0x696E8BBE
+	.4byte 0
 "@5184":
-	.incbin "baserom.dol", 0x3782DC, 0x10
+	.4byte 0x8367838D
+	.4byte 0x83628352
+	.4byte 0x696E8BBE
+	.4byte 0
 "@5660":
-	.incbin "baserom.dol", 0x3782EC, 0x18
+	.asciz "/mario/bmd/ma_mdl1.bmd"
+	.balign 4
 "@5662":
-	.incbin "baserom.dol", 0x378304, 0xC
+	.asciz "chn_chest"
+	.balign 4
 "@5663":
-	.incbin "baserom.dol", 0x378310, 0xC
+	.asciz "jnt_chest"
+	.balign 4
 "@5664":
-	.incbin "baserom.dol", 0x37831C, 0xC
+	.asciz "jnt_arm_R1"
+	.balign 4
 "@5665":
-	.incbin "baserom.dol", 0x378328, 0xC
+	.asciz "jnt_arm_L1"
+	.balign 4
 "@5666":
-	.incbin "baserom.dol", 0x378334, 0xC
+	.asciz "jnt_hand_R"
+	.balign 4
 "@5667":
-	.incbin "baserom.dol", 0x378340, 0xC
+	.asciz "jnt_hand_L"
+	.balign 4
 "@5668":
-	.incbin "baserom.dol", 0x37834C, 0xC
+	.asciz "chn_foot_R"
+	.balign 4
 "@5669":
-	.incbin "baserom.dol", 0x378358, 0xC
+	.asciz "jnt_foot_R"
+	.balign 4
 "@5670":
-	.incbin "baserom.dol", 0x378364, 0xC
+	.asciz "chn_foot_L"
+	.balign 4
 "@5671":
-	.incbin "baserom.dol", 0x378370, 0xC
+	.asciz "jnt_foot_L"
+	.balign 4
 "@5672":
-	.incbin "baserom.dol", 0x37837C, 0xC
+	.asciz "jnt_head"
+	.balign 4
 "@5674":
-	.incbin "baserom.dol", 0x378388, 0x18
+	.asciz "/mario/bmd/ma_hnd2r.bmd"
 "@5675":
-	.incbin "baserom.dol", 0x3783A0, 0x18
+	.asciz "/mario/bmd/ma_hnd2l.bmd"
 "@5676":
-	.incbin "baserom.dol", 0x3783B8, 0x18
+	.asciz "/mario/bmd/ma_hnd3r.bmd"
 "@5677":
-	.incbin "baserom.dol", 0x3783D0, 0x18
+	.asciz "/mario/bmd/ma_hnd3l.bmd"
 "@5678":
-	.incbin "baserom.dol", 0x3783E8, 0x18
+	.asciz "/mario/bmd/ma_hnd4r.bmd"
 "@5679":
-	.incbin "baserom.dol", 0x378400, 0x18
+	.asciz "/mario/bck/ma_%s.bck"
+	.balign 4
 "@5680":
-	.incbin "baserom.dol", 0x378418, 0x18
+	.asciz "/mario/bas/ma_%s.bas"
+	.balign 4
 "@5681":
-	.incbin "baserom.dol", 0x378430, 0xC
+	.asciz "_mat_eye_L"
+	.balign 4
 "@5682":
-	.incbin "baserom.dol", 0x37843C, 0xC
+	.asciz "_mat_eye_R"
+	.balign 4
 "@5683":
-	.incbin "baserom.dol", 0x378448, 0x18
+	.asciz "/scene/map/map/Torocco"
+	.balign 4
 "@5684":
-	.incbin "baserom.dol", 0x378460, 0x24
+	.asciz "/scene/map/map/Torocco/Torocco.bmd"
+	.balign 4
 "@5685":
-	.incbin "baserom.dol", 0x378484, 0x1C
+	.asciz "/scene/map/map/Pinna_rail"
+	.balign 4
 "@5686":
-	.incbin "baserom.dol", 0x3784A0, 0x2C
+	.asciz "/scene/map/map/Pinna_rail/Pinna_rail.bmd"
+	.balign 4
 "@5687":
-	.incbin "baserom.dol", 0x3784CC, 0x1C
+	.asciz "/scene/map/map/Koopa_rail"
+	.balign 4
 "@5688":
-	.incbin "baserom.dol", 0x3784E8, 0x30
+	.asciz "/scene/map/map/Koopa_rail/Koopa_rail.bmd"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B24E0, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B24EC, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B24F8, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 MtxCalcTypeName:
   .4byte "@2445"
   .4byte "@2446"
@@ -6892,7 +7096,678 @@ marioAnimeFiles:
   .4byte "@3016"
 .global gMarioAnimeData
 gMarioAnimeData:
-	.incbin "baserom.dol", 0x3B2B50, 0xA80
+	.4byte 0x000000C8
+	.4byte 0x00010416
+	.4byte 0x000100C8
+	.4byte 0x01000616
+	.4byte 0x000200C8
+	.4byte 0x0200060A
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050616
+	.4byte 0x000300C8
+	.4byte 0x00010416
+	.4byte 0x000400C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x000600C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00070044
+	.4byte 0x00000616
+	.4byte 0x00080044
+	.4byte 0x00000616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x000900C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x000A00C8
+	.4byte 0x0A00060B
+	.4byte 0x000B00C8
+	.4byte 0x0900060A
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x000C00C8
+	.4byte 0x03000616
+	.4byte 0x000D00C8
+	.4byte 0x0400060A
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x000E0045
+	.4byte 0x00010416
+	.4byte 0x000F00C8
+	.4byte 0x0001060A
+	.4byte 0x001000C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x001100C8
+	.4byte 0x00020616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00120044
+	.4byte 0x00020616
+	.4byte 0x00130044
+	.4byte 0x00020616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00140044
+	.4byte 0x00010E0F
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00150044
+	.4byte 0x0000060B
+	.4byte 0x00160044
+	.4byte 0x0000060A
+	.4byte 0x00170044
+	.4byte 0x0002060A
+	.4byte 0x00180044
+	.4byte 0x0001060B
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00190044
+	.4byte 0x0000060B
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x001A0044
+	.4byte 0x0000060C
+	.4byte 0x001B0044
+	.4byte 0x0000060B
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x001C00C8
+	.4byte 0x00000616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x002000C8
+	.4byte 0x00010416
+	.4byte 0x002100C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x001D00C8
+	.4byte 0x00000416
+	.4byte 0x001E00C8
+	.4byte 0x00000416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x001F00C8
+	.4byte 0x00010616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x002200C8
+	.4byte 0x00010616
+	.4byte 0x002300C8
+	.4byte 0x00000616
+	.4byte 0x002400C8
+	.4byte 0x00000616
+	.4byte 0x002500C8
+	.4byte 0x00010616
+	.4byte 0x00260044
+	.4byte 0x00020616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00270044
+	.4byte 0x0002060F
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x002900C8
+	.4byte 0x00000616
+	.4byte 0x002A00C8
+	.4byte 0x00000616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00B100C8
+	.4byte 0x05000616
+	.4byte 0x002800C8
+	.4byte 0x05000616
+	.4byte 0x002B00C8
+	.4byte 0x05000616
+	.4byte 0x002C00C8
+	.4byte 0x03000616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x002D0044
+	.4byte 0x00000616
+	.4byte 0x002E0044
+	.4byte 0x00000610
+	.4byte 0x002F0044
+	.4byte 0x00000611
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x003000C8
+	.4byte 0x00000613
+	.4byte 0x003100C8
+	.4byte 0x00000613
+	.4byte 0x003200C8
+	.4byte 0x06000613
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x003300C8
+	.4byte 0x00010612
+	.4byte 0x003400C8
+	.4byte 0x00010616
+	.4byte 0x003500C8
+	.4byte 0x00010613
+	.4byte 0x00360044
+	.4byte 0x0000060F
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00370044
+	.4byte 0x00010016
+	.4byte 0x00380044
+	.4byte 0x00010016
+	.4byte 0x00390044
+	.4byte 0x00010016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x003A0044
+	.4byte 0x00010616
+	.4byte 0x003B0044
+	.4byte 0x00010616
+	.4byte 0x003C0044
+	.4byte 0x0002060B
+	.4byte 0x003D0044
+	.4byte 0x0002060A
+	.4byte 0x003C0044
+	.4byte 0x0002060B
+	.4byte 0x006C0044
+	.4byte 0x0002060A
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x003E0044
+	.4byte 0x00000616
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x003F00C8
+	.4byte 0x00010416
+	.4byte 0x004000C8
+	.4byte 0x00010416
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00410044
+	.4byte 0x00000618
+	.4byte 0x00420044
+	.4byte 0x0000060A
+	.4byte 0x004300C8
+	.4byte 0x00000616
+	.4byte 0x008200C8
+	.4byte 0x00000002
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00C800C8
+	.4byte 0x19050016
+	.4byte 0x00460044
+	.4byte 0x00020616
+	.4byte 0x00470044
+	.4byte 0x00020616
+	.4byte 0x00480044
+	.4byte 0x00020616
+	.4byte 0x004900C8
+	.4byte 0x00020616
+	.4byte 0x004A00C8
+	.4byte 0x07020616
+	.4byte 0x001A0044
+	.4byte 0x00010616
+	.4byte 0x004C00C8
+	.4byte 0x00010416
+	.4byte 0x004D00C8
+	.4byte 0x00010416
+	.4byte 0x004E0044
+	.4byte 0x00000616
+	.4byte 0x004F0044
+	.4byte 0x08000616
+	.4byte 0x00500044
+	.4byte 0x00000618
+	.4byte 0x00510044
+	.4byte 0x00000616
+	.4byte 0x00520044
+	.4byte 0x00000616
+	.4byte 0x00530044
+	.4byte 0x00000016
+	.4byte 0x00540044
+	.4byte 0x00000016
+	.4byte 0x00550044
+	.4byte 0x00000616
+	.4byte 0x005600C8
+	.4byte 0x00000016
+	.4byte 0x005700C8
+	.4byte 0x00000016
+	.4byte 0x00580045
+	.4byte 0x00000616
+	.4byte 0x005900C8
+	.4byte 0x00000016
+	.4byte 0x005A00C8
+	.4byte 0x00010616
+	.4byte 0x005B00C8
+	.4byte 0x00010616
+	.4byte 0x005C0044
+	.4byte 0x00000616
+	.4byte 0x005D0044
+	.4byte 0x00000616
+	.4byte 0x005E00C8
+	.4byte 0x00010616
+	.4byte 0x005F00C8
+	.4byte 0x00010616
+	.4byte 0x006000C8
+	.4byte 0x00010616
+	.4byte 0x006100C8
+	.4byte 0x00010616
+	.4byte 0x006200C8
+	.4byte 0x00010616
+	.4byte 0x006300C8
+	.4byte 0x00010616
+	.4byte 0x006400C8
+	.4byte 0x00010616
+	.4byte 0x006500C8
+	.4byte 0x00010616
+	.4byte 0x006600C8
+	.4byte 0x00010616
+	.4byte 0x006700C8
+	.4byte 0x00010616
+	.4byte 0x006800C8
+	.4byte 0x00010616
+	.4byte 0x00690044
+	.4byte 0x0000000A
+	.4byte 0x006A0044
+	.4byte 0x0002060F
+	.4byte 0x006B0044
+	.4byte 0x0000060A
+	.4byte 0x006C0044
+	.4byte 0x0000060A
+	.4byte 0x006D0044
+	.4byte 0x00020616
+	.4byte 0x006E00C8
+	.4byte 0x00010616
+	.4byte 0x006F00C8
+	.4byte 0x00010616
+	.4byte 0x00700094
+	.4byte 0x00010616
+	.4byte 0x00710094
+	.4byte 0x00010416
+	.4byte 0x00720094
+	.4byte 0x00010416
+	.4byte 0x00730094
+	.4byte 0x00010416
+	.4byte 0x00740045
+	.4byte 0x00010416
+	.4byte 0x007500C8
+	.4byte 0x00010616
+	.4byte 0x007600C8
+	.4byte 0x00010416
+	.4byte 0x007700C8
+	.4byte 0x00010616
+	.4byte 0x007800C8
+	.4byte 0x00010616
+	.4byte 0x007900C8
+	.4byte 0x00010616
+	.4byte 0x007A0044
+	.4byte 0x00000616
+	.4byte 0x007B0095
+	.4byte 0x00000616
+	.4byte 0x007C0095
+	.4byte 0x00000616
+	.4byte 0x007D0095
+	.4byte 0x00000616
+	.4byte 0x007E0095
+	.4byte 0x00000616
+	.4byte 0x007F0095
+	.4byte 0x00000616
+	.4byte 0x00800095
+	.4byte 0x00000616
+	.4byte 0x00810095
+	.4byte 0x00000616
+	.4byte 0x008300C8
+	.4byte 0x00000016
+	.4byte 0x008400C8
+	.4byte 0x0C000016
+	.4byte 0x00850044
+	.4byte 0x00000616
+	.4byte 0x008600C8
+	.4byte 0x00000616
+	.4byte 0x008700C8
+	.4byte 0x00000616
+	.4byte 0x008800C8
+	.4byte 0x00000616
+	.4byte 0x008900C8
+	.4byte 0x0D000616
+	.4byte 0x008A00C8
+	.4byte 0x00020616
+	.4byte 0x008B0095
+	.4byte 0x00000616
+	.4byte 0x008C0095
+	.4byte 0x00000616
+	.4byte 0x008D0095
+	.4byte 0x00000616
+	.4byte 0x008E0095
+	.4byte 0x00000616
+	.4byte 0x008F0095
+	.4byte 0x00000616
+	.4byte 0x00900095
+	.4byte 0x00000616
+	.4byte 0x00910095
+	.4byte 0x00000616
+	.4byte 0x00920095
+	.4byte 0x00000616
+	.4byte 0x00930044
+	.4byte 0x0E000616
+	.4byte 0x00940044
+	.4byte 0x00000616
+	.4byte 0x00950044
+	.4byte 0x00000616
+	.4byte 0x009600C8
+	.4byte 0x00000616
+	.4byte 0x009700C8
+	.4byte 0x00000616
+	.4byte 0x009800C8
+	.4byte 0x00000616
+	.4byte 0x009900C8
+	.4byte 0x00000616
+	.4byte 0x009A00C8
+	.4byte 0x00000616
+	.4byte 0x009B00C8
+	.4byte 0x00000616
+	.4byte 0x009C00C8
+	.4byte 0x00000616
+	.4byte 0x009D0044
+	.4byte 0x00000616
+	.4byte 0x009E00C8
+	.4byte 0x00000616
+	.4byte 0x009F00C8
+	.4byte 0x00000616
+	.4byte 0x00A000C8
+	.4byte 0x0F000616
+	.4byte 0x00A100C8
+	.4byte 0x10000616
+	.4byte 0x00A20044
+	.4byte 0x00000616
+	.4byte 0x00A300C8
+	.4byte 0x00000016
+	.4byte 0x00A400C8
+	.4byte 0x00000016
+	.4byte 0x00A500C8
+	.4byte 0x00000616
+	.4byte 0x00A600C8
+	.4byte 0x11000616
+	.4byte 0x00A700C8
+	.4byte 0x12000616
+	.4byte 0x00A800C8
+	.4byte 0x13000616
+	.4byte 0x00A900C8
+	.4byte 0x14000616
+	.4byte 0x00AA00C8
+	.4byte 0x15000616
+	.4byte 0x00AB00C8
+	.4byte 0x16000616
+	.4byte 0x00AC00C8
+	.4byte 0x17000616
+	.4byte 0x00AD0044
+	.4byte 0x00000616
+	.4byte 0x00AE0044
+	.4byte 0x00000616
+	.4byte 0x00AF00C8
+	.4byte 0x00000016
+	.4byte 0x00B000C8
+	.4byte 0x00000016
+	.4byte 0x00B200C8
+	.4byte 0x00020616
+	.4byte 0x00B300C8
+	.4byte 0x00000616
+	.4byte 0x00B400C8
+	.4byte 0x00000616
+	.4byte 0x00B500C8
+	.4byte 0x00000616
+	.4byte 0x00B600C8
+	.4byte 0x00000616
+	.4byte 0x00B700C8
+	.4byte 0x00000618
+	.4byte 0x00B800C8
+	.4byte 0x0000060F
+	.4byte 0x00B900C8
+	.4byte 0x00000603
+	.4byte 0x00BA00C8
+	.4byte 0x00000604
+	.4byte 0x00BB00C8
+	.4byte 0x0000060A
+	.4byte 0x00BC00C8
+	.4byte 0x0000060C
+	.4byte 0x00BD00C8
+	.4byte 0x0000060B
+	.4byte 0x00BE00C8
+	.4byte 0x00000609
+	.4byte 0x00BF00C8
+	.4byte 0x0000060E
+	.4byte 0x00C000C8
+	.4byte 0x00000608
+	.4byte 0x00C100C8
+	.4byte 0x00000607
+	.4byte 0x00C200C8
+	.4byte 0x00000606
+	.4byte 0x00C300C8
+	.4byte 0x00000601
+	.4byte 0x00C400C8
+	.4byte 0x00000602
+	.4byte 0x00C500C8
+	.4byte 0x00000613
+	.4byte 0x00C600C8
+	.4byte 0x00000612
 .global marioAnimeTexPatternFilenames
 marioAnimeTexPatternFilenames:
   .4byte "@3088"
@@ -6957,251 +7832,335 @@ __vt__19M3UModelCommonMario:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2822":
-	.incbin "baserom.dol", 0x3E5548, 0x8
+	.asciz "hgup"
+	.balign 4
 "@2823":
-	.incbin "baserom.dol", 0x3E5550, 0x8
+	.asciz "bdwn"
+	.balign 4
 "@2824":
-	.incbin "baserom.dol", 0x3E5558, 0x8
+	.asciz "bkdwn"
+	.balign 4
 "@2829":
-	.incbin "baserom.dol", 0x3E5560, 0x8
+	.asciz "brake"
+	.balign 4
 "@2830":
-	.incbin "baserom.dol", 0x3E5568, 0x8
+	.asciz "brend"
+	.balign 4
 "@2831":
-	.incbin "baserom.dol", 0x3E5570, 0x8
+	.asciz "hgdwn"
+	.balign 4
 "@2832":
-	.incbin "baserom.dol", 0x3E5578, 0x8
+	.asciz "fjpend"
+	.balign 4
 "@2833":
-	.incbin "baserom.dol", 0x3E5580, 0x8
+	.asciz "firejmp"
 "@2834":
-	.incbin "baserom.dol", 0x3E5588, 0x8
+	.asciz "sdwnf"
+	.balign 4
 "@2835":
-	.incbin "baserom.dol", 0x3E5590, 0x8
+	.asciz "jfdwn"
+	.balign 4
 "@2836":
-	.incbin "baserom.dol", 0x3E5598, 0x8
+	.asciz "hang"
+	.balign 4
 "@2837":
-	.incbin "baserom.dol", 0x3E55A0, 0x8
+	.asciz "hgjmp"
+	.balign 4
 "@2839":
-	.incbin "baserom.dol", 0x3E55A8, 0x8
+	.asciz "hiped"
+	.balign 4
 "@2840":
-	.incbin "baserom.dol", 0x3E55B0, 0x8
+	.asciz "hipsr"
+	.balign 4
 "@2841":
-	.incbin "baserom.dol", 0x3E55B8, 0x8
+	.asciz "hipat"
+	.balign 4
 "@2842":
-	.incbin "baserom.dol", 0x3E55C0, 0x8
+	.asciz "run1"
+	.balign 4
 "@2843":
-	.incbin "baserom.dol", 0x3E55C8, 0x8
+	.asciz "2jmed"
+	.balign 4
 "@2844":
-	.incbin "baserom.dol", 0x3E55D0, 0x8
+	.asciz "2jmp2"
+	.balign 4
 "@2845":
-	.incbin "baserom.dol", 0x3E55D8, 0x8
+	.asciz "jump"
+	.balign 4
 "@2846":
-	.incbin "baserom.dol", 0x3E55E0, 0x8
+	.asciz "jmped"
+	.balign 4
 "@2847":
-	.incbin "baserom.dol", 0x3E55E8, 0x8
+	.asciz "2jmp1"
+	.balign 4
 "@2848":
-	.incbin "baserom.dol", 0x3E55F0, 0x8
+	.asciz "land"
+	.balign 4
 "@2849":
-	.incbin "baserom.dol", 0x3E55F8, 0x8
+	.asciz "laend"
+	.balign 4
 "@2850":
-	.incbin "baserom.dol", 0x3E5600, 0x8
+	.asciz "lost"
+	.balign 4
 "@2853":
-	.incbin "baserom.dol", 0x3E5608, 0x8
+	.asciz "throw"
+	.balign 4
 "@2856":
-	.incbin "baserom.dol", 0x3E5610, 0x8
+	.asciz "raise"
+	.balign 4
 "@2857":
-	.incbin "baserom.dol", 0x3E5618, 0x8
+	.asciz "push"
+	.balign 4
 "@2859":
-	.incbin "baserom.dol", 0x3E5620, 0x4
+	.4byte 0x70757400
 "@2860":
-	.incbin "baserom.dol", 0x3E5624, 0x8
+	.asciz "roll"
+	.balign 4
 "@2861":
-	.incbin "baserom.dol", 0x3E562C, 0x8
+	.asciz "run2"
+	.balign 4
 "@2862":
-	.incbin "baserom.dol", 0x3E5634, 0x8
+	.asciz "shock"
+	.balign 4
 "@2863":
-	.incbin "baserom.dol", 0x3E563C, 0x8
+	.asciz "sfbdn"
+	.balign 4
 "@2864":
-	.incbin "baserom.dol", 0x3E5644, 0x8
+	.asciz "sffdn"
+	.balign 4
 "@2865":
-	.incbin "baserom.dol", 0x3E564C, 0x8
+	.asciz "sdown"
+	.balign 4
 "@2866":
-	.incbin "baserom.dol", 0x3E5654, 0x8
+	.asciz "shfdn"
+	.balign 4
 "@2867":
-	.incbin "baserom.dol", 0x3E565C, 0x8
+	.asciz "swait"
+	.balign 4
 "@2868":
-	.incbin "baserom.dol", 0x3E5664, 0x8
+	.asciz "swlkl"
+	.balign 4
 "@2869":
-	.incbin "baserom.dol", 0x3E566C, 0x8
+	.asciz "swlkr"
+	.balign 4
 "@2870":
-	.incbin "baserom.dol", 0x3E5674, 0x8
+	.asciz "sldct"
+	.balign 4
 "@2871":
-	.incbin "baserom.dol", 0x3E567C, 0x8
+	.asciz "slpbk"
+	.balign 4
 "@2872":
-	.incbin "baserom.dol", 0x3E5684, 0x8
+	.asciz "sldwn"
+	.balign 4
 "@2873":
-	.incbin "baserom.dol", 0x3E568C, 0x8
+	.asciz "slped"
+	.balign 4
 "@2874":
-	.incbin "baserom.dol", 0x3E5694, 0x8
+	.asciz "slpla"
+	.balign 4
 "@2875":
-	.incbin "baserom.dol", 0x3E569C, 0x8
+	.asciz "slip"
+	.balign 4
 "@2876":
-	.incbin "baserom.dol", 0x3E56A4, 0x8
+	.asciz "sstep"
+	.balign 4
 "@2877":
-	.incbin "baserom.dol", 0x3E56AC, 0x8
+	.asciz "sqend"
+	.balign 4
 "@2878":
-	.incbin "baserom.dol", 0x3E56B4, 0x8
+	.asciz "sqsta"
+	.balign 4
 "@2879":
-	.incbin "baserom.dol", 0x3E56BC, 0x8
+	.asciz "sqwat"
+	.balign 4
 "@2880":
-	.incbin "baserom.dol", 0x3E56C4, 0x8
+	.asciz "turn"
+	.balign 4
 "@2881":
-	.incbin "baserom.dol", 0x3E56CC, 0x8
+	.asciz "trned"
+	.balign 4
 "@2882":
-	.incbin "baserom.dol", 0x3E56D4, 0x8
+	.asciz "tjmp2"
+	.balign 4
 "@2883":
-	.incbin "baserom.dol", 0x3E56DC, 0x8
+	.asciz "tjmp1"
+	.balign 4
 "@2884":
-	.incbin "baserom.dol", 0x3E56E4, 0x8
+	.asciz "wait"
+	.balign 4
 "@2887":
-	.incbin "baserom.dol", 0x3E56EC, 0x8
+	.asciz "walk"
+	.balign 4
 "@2888":
-	.incbin "baserom.dol", 0x3E56F4, 0x8
+	.asciz "wjmp"
+	.balign 4
 "@2889":
-	.incbin "baserom.dol", 0x3E56FC, 0x8
+	.asciz "wsld"
+	.balign 4
 "@2890":
-	.incbin "baserom.dol", 0x3E5704, 0x8
+	.asciz "pump"
+	.balign 4
 "@2891":
-	.incbin "baserom.dol", 0x3E570C, 0x8
+	.asciz "hgpmp"
+	.balign 4
 "@2892":
-	.incbin "baserom.dol", 0x3E5714, 0x8
+	.asciz "step1"
+	.balign 4
 "@2893":
-	.incbin "baserom.dol", 0x3E571C, 0x8
+	.asciz "step2"
+	.balign 4
 "@2894":
-	.incbin "baserom.dol", 0x3E5724, 0x8
+	.asciz "step3"
+	.balign 4
 "@2895":
-	.incbin "baserom.dol", 0x3E572C, 0x8
+	.asciz "jkick"
+	.balign 4
 "@2896":
-	.incbin "baserom.dol", 0x3E5734, 0x8
+	.asciz "dgrun"
+	.balign 4
 "@2897":
-	.incbin "baserom.dol", 0x3E573C, 0x8
+	.asciz "carry_p"
 "@2898":
-	.incbin "baserom.dol", 0x3E5744, 0x8
+	.asciz "hmov_l"
+	.balign 4
 "@2899":
-	.incbin "baserom.dol", 0x3E574C, 0x8
+	.asciz "hmov_r"
+	.balign 4
 "@2900":
-	.incbin "baserom.dol", 0x3E5754, 0x8
+	.asciz "t_wait"
+	.balign 4
 "@2914":
-	.incbin "baserom.dol", 0x3E575C, 0x8
+	.asciz "sinking"
 "@2917":
-	.incbin "baserom.dol", 0x3E5764, 0x8
+	.asciz "hold"
+	.balign 4
 "@2927":
-	.incbin "baserom.dol", 0x3E576C, 0x8
+	.asciz "spin_p"
+	.balign 4
 "@2947":
-	.incbin "baserom.dol", 0x3E5774, 0x8
+	.asciz "swim"
+	.balign 4
 "@2958":
-	.incbin "baserom.dol", 0x3E577C, 0x4
+	.4byte 0x64696500
 "@2964":
-	.incbin "baserom.dol", 0x3E5780, 0x8
+	.asciz "float"
+	.balign 4
 "@2966":
-	.incbin "baserom.dol", 0x3E5788, 0x8
+	.asciz "fepmp"
+	.balign 4
 "@2967":
-	.incbin "baserom.dol", 0x3E5790, 0x8
+	.asciz "swpmp"
+	.balign 4
 "@2968":
-	.incbin "baserom.dol", 0x3E5798, 0x8
+	.asciz "thrown"
+	.balign 4
 "@2977":
-	.incbin "baserom.dol", 0x3E57A0, 0x8
+	.asciz "draw"
+	.balign 4
 "@2980":
-	.incbin "baserom.dol", 0x3E57A8, 0x8
+	.asciz "pivot"
+	.balign 4
 "@2983":
-	.incbin "baserom.dol", 0x3E57B0, 0x8
+	.asciz "belt_up"
 "@2984":
-	.incbin "baserom.dol", 0x3E57B8, 0x8
+	.asciz "yawn"
+	.balign 4
 "@2985":
-	.incbin "baserom.dol", 0x3E57C0, 0x4
+	.4byte 0x73697400
 "@2987":
-	.incbin "baserom.dol", 0x3E57C4, 0x8
+	.asciz "sit_end"
 "@2988":
-	.incbin "baserom.dol", 0x3E57CC, 0x8
+	.asciz "sleep"
+	.balign 4
 "@3000":
-	.incbin "baserom.dol", 0x3E57D4, 0x8
+	.asciz "yo_wait"
 "@3001":
-	.incbin "baserom.dol", 0x3E57DC, 0x8
+	.asciz "yo_walk"
 "@3002":
-	.incbin "baserom.dol", 0x3E57E4, 0x8
+	.asciz "yo_run"
+	.balign 4
 "@3003":
-	.incbin "baserom.dol", 0x3E57EC, 0x8
+	.asciz "yo_eat"
+	.balign 4
 "@3005":
-	.incbin "baserom.dol", 0x3E57F4, 0x8
+	.asciz "yo_jump"
 "@3009":
-	.incbin "baserom.dol", 0x3E57FC, 0x8
+	.asciz "yo_ride"
 "@3344":
-	.incbin "baserom.dol", 0x3E5804, 0x4
+	.4byte 0x00020000
 "@3613":
   .4byte -1
 "@3620":
   .4byte -1
 "@3647":
-	.incbin "baserom.dol", 0x3E5810, 0x4
+	.4byte 0xFF0080FF
 "@3656":
-	.incbin "baserom.dol", 0x3E5814, 0x4
+	.4byte 0x829600FF
 "@3659":
-	.incbin "baserom.dol", 0x3E5818, 0x4
+	.4byte 0xFF0080FF
 "@3759":
-	.incbin "baserom.dol", 0x3E581C, 0x4
+	.4byte 0x3F800000
 "@3760":
   .4byte 0
 "@3969":
-	.incbin "baserom.dol", 0x3E5824, 0x4
+	.4byte 0x42A00000
 "@3970":
-	.incbin "baserom.dol", 0x3E5828, 0x4
+	.4byte 0x43480000
 "@4330":
-	.incbin "baserom.dol", 0x3E582C, 0x4
+	.4byte 0x3F000000
 "@4331":
-	.incbin "baserom.dol", 0x3E5830, 0x4
+	.4byte 0x3E99999A
 "@4332":
-	.incbin "baserom.dol", 0x3E5834, 0x4
+	.4byte 0x3F333333
 "@4333":
-	.incbin "baserom.dol", 0x3E5838, 0x4
+	.4byte 0x431E0000
 "@4427":
-	.incbin "baserom.dol", 0x3E583C, 0x4
+	.4byte 0x41000000
 "@4428":
-	.incbin "baserom.dol", 0x3E5840, 0x8
+	.4byte 0x41500000
+	.4byte 0
 "@4440":
-	.incbin "baserom.dol", 0x3E5848, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@4947":
-	.incbin "baserom.dol", 0x3E5850, 0x4
+	.4byte 0x3BB40000
 "@4948":
-	.incbin "baserom.dol", 0x3E5854, 0x4
+	.4byte 0x42200000
 "@4949":
-	.incbin "baserom.dol", 0x3E5858, 0x4
+	.4byte 0x43200000
 "@4950":
-	.incbin "baserom.dol", 0x3E585C, 0x4
+	.4byte 0xC2F00000
 "@4951":
-	.incbin "baserom.dol", 0x3E5860, 0x4
+	.4byte 0x40400000
 "@4970":
-	.incbin "baserom.dol", 0x3E5864, 0x4
+	.4byte 0x36800000
 "@5661":
-	.incbin "baserom.dol", 0x3E5868, 0x8
+	.asciz "center"
+	.balign 4
 "@5673":
-	.incbin "baserom.dol", 0x3E5870, 0x8
+	.asciz "M_head"
+	.balign 4
 "@5689":
-	.incbin "baserom.dol", 0x3E5878, 0x8
+	.asciz "Mario"
+	.balign 4
 "@5743":
-	.incbin "baserom.dol", 0x3E5880, 0x4
+	.4byte 0xBF000000
 "@5744":
-	.incbin "baserom.dol", 0x3E5884, 0x4
+	.4byte 0x3DCCCCCD
 "@6364":
-	.incbin "baserom.dol", 0x3E5888, 0x4
+	.4byte 0x41200000
 "@6365":
-	.incbin "baserom.dol", 0x3E588C, 0x4
+	.4byte 0x41700000
 "@6366":
-	.incbin "baserom.dol", 0x3E5890, 0x4
+	.4byte 0xC1700000
 "@6705":
-	.incbin "baserom.dol", 0x3E5894, 0x4
+	.4byte 0x42E00000
 "@6706":
-	.incbin "baserom.dol", 0x3E5898, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@6707":
-	.incbin "baserom.dol", 0x3E58A0, 0x8
+	.4byte 0x40080000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3721":

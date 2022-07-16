@@ -277,4 +277,4 @@ lbl_80085EAC:
 K1:
   .4byte 0x80808080
 K2:
-	.incbin "baserom.dol", 0x3E323C, 0x4
+	.4byte 0xFEFEFEFF

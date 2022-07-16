@@ -1203,53 +1203,76 @@ lbl_80045A10:
   .4byte 0
   .4byte 0
 "@1461":
-	.incbin "baserom.dol", 0x36DF5C, 0xC
+	.asciz "GroupObj"
+	.balign 4
 "@1462":
-	.incbin "baserom.dol", 0x36DF68, 0x14
+	.asciz "<TViewObjPtrListT>"
+	.balign 4
 "@1463":
-	.incbin "baserom.dol", 0x36DF7C, 0xC
+	.asciz "SmJ3DScn"
+	.balign 4
 "@1464":
-	.incbin "baserom.dol", 0x36DF88, 0xC
+	.asciz "<SmJ3DScn>"
+	.balign 4
 "@1465":
-	.incbin "baserom.dol", 0x36DF94, 0xC
+	.asciz "PolarCamera"
 "@1468":
-	.incbin "baserom.dol", 0x36DFA0, 0x10
+	.asciz "<TPolarCamera>"
+	.balign 4
 "@1473":
-	.incbin "baserom.dol", 0x36DFB0, 0xC
+	.asciz "SmJ3DAct"
+	.balign 4
 "@1474":
-	.incbin "baserom.dol", 0x36DFBC, 0xC
+	.asciz "<SmJ3DAct>"
+	.balign 4
 "@1475":
-	.incbin "baserom.dol", 0x36DFC8, 0xC
+	.asciz "SmplChara"
+	.balign 4
 "@1476":
-	.incbin "baserom.dol", 0x36DFD4, 0x10
+	.asciz "<TCharacter>"
+	.balign 4
 "@1480":
-	.incbin "baserom.dol", 0x36DFE4, 0xC
+	.asciz "IdxLight"
+	.balign 4
 "@1481":
-	.incbin "baserom.dol", 0x36DFF0, 0xC
+	.asciz "<IdxLight>"
+	.balign 4
 "@1482":
-	.incbin "baserom.dol", 0x36DFFC, 0xC
+	.asciz "LightAry"
+	.balign 4
 "@1483":
-	.incbin "baserom.dol", 0x36E008, 0xC
+	.asciz "<LightAry>"
+	.balign 4
 "@1484":
-	.incbin "baserom.dol", 0x36E014, 0xC
+	.asciz "AmbColor"
+	.balign 4
 "@1485":
-	.incbin "baserom.dol", 0x36E020, 0xC
+	.asciz "<AmbColor>"
+	.balign 4
 "@1487":
-	.incbin "baserom.dol", 0x36E02C, 0xC
+	.asciz "<AmbAry>"
+	.balign 4
 "@1488":
-	.incbin "baserom.dol", 0x36E038, 0xC
+	.asciz "NameRefGrp"
+	.balign 4
 "@1489":
-	.incbin "baserom.dol", 0x36E044, 0x14
+	.asciz "<TNameRefPtrListT>"
+	.balign 4
 "@1490":
-	.incbin "baserom.dol", 0x36E058, 0xC
+	.asciz "DrawBufObj"
+	.balign 4
 "@1491":
-	.incbin "baserom.dol", 0x36E064, 0xC
+	.asciz "EfbCtrlTex"
+	.balign 4
 "@1492":
-	.incbin "baserom.dol", 0x36E070, 0x10
+	.asciz "<EfbCtrlTex>"
+	.balign 4
 "@1493":
-	.incbin "baserom.dol", 0x36E080, 0xC
+	.asciz "Viewport"
+	.balign 4
 "@1494":
-	.incbin "baserom.dol", 0x36E08C, 0xC
+	.asciz "<Viewport>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global "__vt__Q26JDrama55TNameRefPtrListT<Q26JDrama8TNameRef,Q26JDrama8TNameRef>"
@@ -1272,25 +1295,28 @@ __vt__Q26JDrama11TNameRefGen:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1466":
-	.incbin "baserom.dol", 0x3E40B8, 0x4
+	.4byte 0x42480000
 "@1467":
-	.incbin "baserom.dol", 0x3E40BC, 0x4
+	.4byte 0x461C4000
 "@1469":
-	.incbin "baserom.dol", 0x3E40C0, 0x4
+	.4byte 0x42340000
 "@1470":
-	.incbin "baserom.dol", 0x3E40C4, 0x4
+	.4byte 0x3FAAAAAB
 "@1471":
   .4byte 0
 "@1472":
-	.incbin "baserom.dol", 0x3E40CC, 0x4
+	.4byte 0x44960000
 "@1477":
-	.incbin "baserom.dol", 0x3E40D0, 0x8
+	.asciz "Light"
+	.balign 4
 "@1478":
-	.incbin "baserom.dol", 0x3E40D8, 0x8
+	.asciz "<Light>"
 "@1479":
-	.incbin "baserom.dol", 0x3E40E0, 0x4
+	.4byte 0x3F800000
 "@1486":
-	.incbin "baserom.dol", 0x3E40E4, 0xC
+	.asciz "AmbAry"
+	.balign 4
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global instance__Q26JDrama11TNameRefGen

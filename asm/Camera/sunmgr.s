@@ -578,17 +578,31 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x3A396C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2078":
-	.incbin "baserom.dol", 0x3A3980, 0xC
+	.asciz "/scene/sun"
+	.balign 4
 "@2079":
-	.incbin "baserom.dol", 0x3A398C, 0x10
+	.asciz "/scene/sunset"
+	.balign 4
 "@2081":
-	.incbin "baserom.dol", 0x3A399C, 0x14
+	.4byte 0x91BE977A
+	.4byte 0x838F815B
+	.4byte 0x8376837C
+	.4byte 0x83438393
+	.4byte 0x83670000
 "@2223":
-	.incbin "baserom.dol", 0x3A39B0, 0xC
+	.4byte 0x91BE977A
+	.4byte 0x83828366
+	.4byte 0x838B0000
 "@2224":
-	.incbin "baserom.dol", 0x3A39BC, 0xC
+	.4byte 0x975B93FA
+	.4byte 0x83828366
+	.4byte 0x838B0000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__7TSunMgr
@@ -616,15 +630,16 @@ cSunWarpPointName:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2158":
-	.incbin "baserom.dol", 0x3EC458, 0x4
+	.4byte 0x481C4000
 "@2159":
-	.incbin "baserom.dol", 0x3EC45C, 0x4
+	.4byte 0xBE99999A
 "@2160":
-	.incbin "baserom.dol", 0x3EC460, 0x4
+	.4byte 0x3E99999A
 "@2161":
   .4byte 0
 "@2162":
-	.incbin "baserom.dol", 0x3EC468, 0x8
+	.4byte 0x3FA66666
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2240":

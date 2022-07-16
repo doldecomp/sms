@@ -78,7 +78,7 @@ lbl_8008C500:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@7":
-	.incbin "baserom.dol", 0x3AC0A8, 0x18
+	.asciz "DBExceptionDestination\n"
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 __DBInterface:

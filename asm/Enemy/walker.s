@@ -1147,10 +1147,11 @@ __vt__7TWalker:
 "@2687":
   .4byte 0
 "@2688":
-	.incbin "baserom.dol", 0x3EA324, 0x4
+	.4byte 0x3F800000
 "@2689":
-	.incbin "baserom.dol", 0x3EA328, 0x4
+	.4byte 0x3D4CCCCD
 "@2690":
-	.incbin "baserom.dol", 0x3EA32C, 0x4
+	.4byte 0x36800000
 "@2691":
-	.incbin "baserom.dol", 0x3EA330, 0x8
+	.4byte 0x40000000
+	.4byte 0

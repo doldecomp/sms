@@ -2534,9 +2534,13 @@ recursiveEntry__10J3DMtxCalcFP7J3DNode:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@894":
-	.incbin "baserom.dol", 0x36DBF8, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@914":
-	.incbin "baserom.dol", 0x36DC04, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1249":
   .4byte 0
   .4byte 0
@@ -2713,6 +2717,6 @@ __vt__13J3DMtxCalcAnm:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1077":
-	.incbin "baserom.dol", 0x3E3EF0, 0x4
+	.4byte 0x3F800000
 "@1258":
   .4byte 0

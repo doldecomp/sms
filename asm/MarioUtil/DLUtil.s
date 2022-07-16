@@ -740,4 +740,5 @@ __vt__10TDLTexQuad:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 uv:
-	.incbin "baserom.dol", 0x3E3300, 0x8
+	.4byte 0x00008000
+	.4byte 0x80800080

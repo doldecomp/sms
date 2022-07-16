@@ -2969,7 +2969,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@463":
-	.incbin "baserom.dol", 0x36E1E8, 0x10
+	.asciz "JaiInit.bld"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@547":
@@ -3003,17 +3004,19 @@ __vt__8JAIBasic:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@413":
-	.incbin "baserom.dol", 0x3E4160, 0x8
+	.asciz "%s%s%c"
+	.balign 4
 "@694":
   .4byte 0
 "@695":
-	.incbin "baserom.dol", 0x3E416C, 0x4
+	.4byte 0xC2480000
 "@696":
-	.incbin "baserom.dol", 0x3E4170, 0x4
+	.4byte 0x3F800000
 "@1287":
-	.incbin "baserom.dol", 0x3E4174, 0x4
+	.4byte 0x42FE0000
 "@1289":
-	.incbin "baserom.dol", 0x3E4178, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global basic__8JAIBasic

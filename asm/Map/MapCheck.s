@@ -2034,30 +2034,31 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2904":
-	.incbin "baserom.dol", 0x3E8A90, 0x4
+	.4byte 0x3A800000
 "@2905":
-	.incbin "baserom.dol", 0x3E8A94, 0x4
+	.4byte 0x44800000
 "@2906":
   .4byte 0
   .4byte 0
 "@2913":
-	.incbin "baserom.dol", 0x3E8AA0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3158":
-	.incbin "baserom.dol", 0x3E8AA8, 0x4
+	.4byte 0x3727C5AC
 "@3159":
-	.incbin "baserom.dol", 0x3E8AAC, 0x4
+	.4byte 0x3F800000
 "@3160":
-	.incbin "baserom.dol", 0x3E8AB0, 0x4
+	.4byte 0x40C90FDB
 "@3161":
-	.incbin "baserom.dol", 0x3E8AB4, 0x4
+	.4byte 0x3A83126F
 "@3196":
-	.incbin "baserom.dol", 0x3E8AB8, 0x4
+	.4byte 0xC6FFFE00
 "@3255":
-	.incbin "baserom.dol", 0x3E8ABC, 0x4
+	.4byte 0xBF800000
 "@3256":
-	.incbin "baserom.dol", 0x3E8AC0, 0x4
+	.4byte 0xC29C0000
 "@3279":
-	.incbin "baserom.dol", 0x3E8AC4, 0x4
+	.4byte 0x4B18967F
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2530":

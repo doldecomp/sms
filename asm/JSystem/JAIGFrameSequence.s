@@ -1882,18 +1882,22 @@ lbl_80052C18:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@412":
-	.incbin "baserom.dol", 0x3E41E8, 0x4
+	.4byte 0x3F800000
 "@826":
   .4byte 0
 "@827":
-	.incbin "baserom.dol", 0x3E41F0, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@828":
-	.incbin "baserom.dol", 0x3E41F8, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@829":
-	.incbin "baserom.dol", 0x3E4200, 0x4
+	.4byte 0x42FE0000
 "@830":
-	.incbin "baserom.dol", 0x3E4204, 0x4
+	.4byte 0x3F000000
 "@833":
-	.incbin "baserom.dol", 0x3E4208, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@932":
-	.incbin "baserom.dol", 0x3E4210, 0x8
+	.4byte 0x3F8CCCCD
+	.4byte 0

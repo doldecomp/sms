@@ -2123,7 +2123,7 @@ lbl_80030A5C:
 "@1288":
   .4byte -1
 "@1345":
-	.incbin "baserom.dol", 0x3E3F84, 0x4
+	.4byte 0x32323232
 "@1425":
   .4byte 0
 lbl_8040B6EC:

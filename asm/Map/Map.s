@@ -1620,63 +1620,169 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38E494, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2375":
-	.incbin "baserom.dol", 0x38E4A8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2376":
-	.incbin "baserom.dol", 0x38E4D8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2377":
-	.incbin "baserom.dol", 0x38E510, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2378":
-	.incbin "baserom.dol", 0x38E544, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2514":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2516":
-	.incbin "baserom.dol", 0x38E574, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2972":
-	.incbin "baserom.dol", 0x38E580, 0x10
+	.4byte 0x926E8C60
+	.4byte 0x83828366
+	.4byte 0x838B8AC7
+	.4byte 0x979D0000
 "@3338":
-	.incbin "baserom.dol", 0x38E590, 0x1C
+	.asciz "/scene/mapObj/SandSteam.jpa"
 "@3339":
-	.incbin "baserom.dol", 0x38E5AC, 0x10
+	.4byte 0x83498376
+	.4byte 0x83568387
+	.4byte 0x83939770
+	.4byte 0x95C70000
 "@3340":
-	.incbin "baserom.dol", 0x38E5BC, 0x10
+	.4byte 0x837D8362
+	.4byte 0x8376834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@3506":
-	.incbin "baserom.dol", 0x38E5CC, 0x18
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x83678356
+	.4byte 0x815B8393
+	.4byte 0
 "@3507":
-	.incbin "baserom.dol", 0x38E5E4, 0xC
+	.4byte 0x94678169
+	.4byte 0x89938C69
+	.4byte 0x816A0000
 "@3509":
-	.incbin "baserom.dol", 0x38E5F0, 0x14
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x83679467
+	.4byte 0
 "@3510":
-	.incbin "baserom.dol", 0x38E604, 0xC
+	.asciz "SeaIndirect"
 "@3511":
-	.incbin "baserom.dol", 0x38E610, 0x14
+	.4byte 0x90859286
+	.4byte 0x834A8381
+	.4byte 0x83898374
+	.4byte 0x8342838B
+	.4byte 0x835E0000
 "@3512":
-	.incbin "baserom.dol", 0x38E624, 0x1C
+	.4byte 0x90859286
+	.4byte 0x834A8381
+	.4byte 0x83898343
+	.4byte 0x8393835F
+	.4byte 0x8343838C
+	.4byte 0x834E8367
+	.4byte 0
 "@3566":
-	.incbin "baserom.dol", 0x38E640, 0x18
+	.4byte 0x83738393
+	.4byte 0x83698BBE
+	.4byte 0x9770926E
+	.4byte 0x8C608382
+	.4byte 0x8366838B
+	.4byte 0
 "@3567":
-	.incbin "baserom.dol", 0x38E658, 0xC
+	.4byte 0x8BBE8356
+	.4byte 0x815B8393
+	.4byte 0
 "@3701":
-	.incbin "baserom.dol", 0x38E664, 0x14
+	.4byte 0x837D815B
+	.4byte 0x838C8254
+	.4byte 0x82648277
+	.4byte 0x8351815B
+	.4byte 0x83670000
 "@3702":
-	.incbin "baserom.dol", 0x38E678, 0xC
+	.asciz "Mare5ExGate"
 "@3703":
-	.incbin "baserom.dol", 0x38E684, 0x24
+	.asciz "/scene/map/map/ms_mare_objup_a.jpa"
+	.balign 4
 "@3704":
-	.incbin "baserom.dol", 0x38E6A8, 0x24
+	.asciz "/scene/map/map/ms_mare_objup_b.jpa"
+	.balign 4
 "@3705":
-	.incbin "baserom.dol", 0x38E6CC, 0x1C
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x8169837D
+	.4byte 0x815B838C
+	.4byte 0x82D682B1
+	.4byte 0x82DE95C7
+	.4byte 0x816A0000
 "@3799":
-	.incbin "baserom.dol", 0x38E6E8, 0x14
+	.4byte 0x90858343
+	.4byte 0x8393835F
+	.4byte 0x8343838C
+	.4byte 0x834E8367
+	.4byte 0
 "@3800":
-	.incbin "baserom.dol", 0x38E6FC, 0x28
+	.asciz "/scene/map/pollution/ms_newfire_b.jpa"
+	.balign 4
 "@3801":
-	.incbin "baserom.dol", 0x38E724, 0x28
+	.asciz "/scene/map/pollution/ms_newfire_a.jpa"
+	.balign 4
 "@3802":
-	.incbin "baserom.dol", 0x38E74C, 0x24
+	.asciz "/scene/map/map/ms_monte_yuge.jpa"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__4TMap
@@ -1711,15 +1817,16 @@ __vt__4TMap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3002":
-	.incbin "baserom.dol", 0x3E8A70, 0x4
+	.4byte 0xC29C0000
 "@3209":
-	.incbin "baserom.dol", 0x3E8A74, 0x4
+	.4byte 0x44E2E000
 "@3210":
-	.incbin "baserom.dol", 0x3E8A78, 0x4
+	.4byte 0x44BB8000
 "@3211":
-	.incbin "baserom.dol", 0x3E8A7C, 0x4
+	.4byte 0x44C1C000
 "@3508":
-	.incbin "baserom.dol", 0x3E8A80, 0x8
+	.4byte 0x73656100
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 pos$2895:

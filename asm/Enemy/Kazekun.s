@@ -3451,25 +3451,76 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1940":
-	.incbin "baserom.dol", 0x39EF1C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2018":
-	.incbin "baserom.dol", 0x39EF30, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2019":
-	.incbin "baserom.dol", 0x39EF60, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2020":
-	.incbin "baserom.dol", 0x39EF98, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2021":
-	.incbin "baserom.dol", 0x39EFCC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2586":
-	.incbin "baserom.dol", 0x39EFF0, 0x28
+	.asciz "/scene/Kazekun/bas/kazekun_appear.bas"
+	.balign 4
 "@2587":
-	.incbin "baserom.dol", 0x39F018, 0x28
+	.asciz "/scene/Kazekun/bas/kazekun_attack.bas"
+	.balign 4
 "@2588":
-	.incbin "baserom.dol", 0x39F040, 0x28
+	.asciz "/scene/Kazekun/bas/kazekun_vanish.bas"
+	.balign 4
 "@2589":
-	.incbin "baserom.dol", 0x39F068, 0x24
+	.asciz "/scene/Kazekun/bas/kazekun_wait.bas"
 "@2839":
-	.incbin "baserom.dol", 0x39F08C, 0xC
+	.asciz "kazekun.bmd"
 entry$2838:
   .4byte "@2839"
   .4byte 0x10210000
@@ -3478,53 +3529,72 @@ entry$2838:
   .4byte 0
   .4byte 0
 "@2970":
-	.incbin "baserom.dol", 0x39F0B0, 0xC
+	.asciz "kazekun_hit"
 "@3049":
-	.incbin "baserom.dol", 0x39F0BC, 0x10
+	.asciz "kazekun_vanish"
+	.balign 4
 "@3263":
-	.incbin "baserom.dol", 0x39F0CC, 0x10
+	.asciz "kazekun_attack"
+	.balign 4
 "@3565":
-	.incbin "baserom.dol", 0x39F0DC, 0x10
+	.asciz "kazekun_wait"
+	.balign 4
 "@3604":
-	.incbin "baserom.dol", 0x39F0EC, 0x10
+	.asciz "kazekun_appear"
+	.balign 4
 "@3651":
-	.incbin "baserom.dol", 0x39F0FC, 0x14
+	.asciz "/enemy/kazekun.prm"
+	.balign 4
 "@3732":
-	.incbin "baserom.dol", 0x39F110, 0xC
+	.asciz "mAppearDist"
 "@3734":
-	.incbin "baserom.dol", 0x39F11C, 0xC
+	.asciz "mAroundDist"
 "@3736":
-	.incbin "baserom.dol", 0x39F128, 0x10
+	.asciz "mAroundSpeed"
+	.balign 4
 "@3738":
-	.incbin "baserom.dol", 0x39F138, 0xC
+	.asciz "mAroundTime"
 "@3739":
-	.incbin "baserom.dol", 0x39F144, 0x10
+	.asciz "mAttackSpeed"
+	.balign 4
 "@3740":
-	.incbin "baserom.dol", 0x39F154, 0xC
+	.asciz "mAirFric"
+	.balign 4
 "@3742":
-	.incbin "baserom.dol", 0x39F160, 0xC
+	.asciz "mResetTime"
+	.balign 4
 "@3743":
-	.incbin "baserom.dol", 0x39F16C, 0x14
+	.asciz "mResetTimeHitting"
+	.balign 4
 "@3744":
-	.incbin "baserom.dol", 0x39F180, 0xC
+	.asciz "mPoseTime"
+	.balign 4
 "@3745":
-	.incbin "baserom.dol", 0x39F18C, 0x10
+	.asciz "mDicideTiming"
+	.balign 4
 "@3746":
-	.incbin "baserom.dol", 0x39F19C, 0x10
+	.asciz "mTurnOffsetY"
+	.balign 4
 "@3748":
-	.incbin "baserom.dol", 0x39F1AC, 0x10
+	.asciz "mLostOffsetYUp"
+	.balign 4
 "@3750":
-	.incbin "baserom.dol", 0x39F1BC, 0x14
+	.asciz "mLostOffsetYDown"
+	.balign 4
 "@3751":
-	.incbin "baserom.dol", 0x39F1D0, 0xC
+	.asciz "mPoseSpeed"
+	.balign 4
 "@3753":
-	.incbin "baserom.dol", 0x39F1DC, 0x10
+	.asciz "mPoseOmegaRate"
+	.balign 4
 "@4671":
-	.incbin "baserom.dol", 0x39F1EC, 0x28
+	.asciz "/scene/kazekun/jpa/ms_kaze_appear.jpa"
+	.balign 4
 "@4672":
-	.incbin "baserom.dol", 0x39F214, 0x24
+	.asciz "/scene/kazekun/jpa/ms_kaze_wind.jpa"
 "@4673":
-	.incbin "baserom.dol", 0x39F238, 0x28
+	.asciz "/scene/kazekun/jpa/ms_kaze_blur.jpa"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 Kazekun_bastable:
@@ -3717,64 +3787,66 @@ __vt__8TKazekun:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@2833":
-	.incbin "baserom.dol", 0x3E3AF0, 0x4
+	.4byte 0x00000032
 "@2834":
-	.incbin "baserom.dol", 0x3E3AF4, 0x4
+	.4byte 0x00000028
 "@2835":
-	.incbin "baserom.dol", 0x3E3AF8, 0x4
+	.4byte 0x00000032
 "@2836":
-	.incbin "baserom.dol", 0x3E3AFC, 0x4
+	.4byte 0x00000028
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2971":
   .4byte 0
 "@3264":
-	.incbin "baserom.dol", 0x3EB984, 0x4
+	.4byte 0x36800000
 "@3265":
-	.incbin "baserom.dol", 0x3EB988, 0x4
+	.4byte 0x3F800000
 "@3266":
-	.incbin "baserom.dol", 0x3EB98C, 0x4
+	.4byte 0x3DCCCCCD
 "@3422":
-	.incbin "baserom.dol", 0x3EB990, 0x4
+	.4byte 0x3F000000
 "@3423":
-	.incbin "baserom.dol", 0x3EB994, 0x4
+	.4byte 0x40400000
 "@3499":
-	.incbin "baserom.dol", 0x3EB998, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3733":
-	.incbin "baserom.dol", 0x3EB9A0, 0x4
+	.4byte 0x447A0000
 "@3735":
-	.incbin "baserom.dol", 0x3EB9A4, 0x4
+	.4byte 0x43C80000
 "@3737":
-	.incbin "baserom.dol", 0x3EB9A8, 0x4
+	.4byte 0x41F00000
 "@3741":
-	.incbin "baserom.dol", 0x3EB9AC, 0x4
+	.4byte 0x3F7851EC
 "@3747":
-	.incbin "baserom.dol", 0x3EB9B0, 0x4
+	.4byte 0x43480000
 "@3749":
-	.incbin "baserom.dol", 0x3EB9B4, 0x4
+	.4byte 0x43FA0000
 "@3752":
-	.incbin "baserom.dol", 0x3EB9B8, 0x4
+	.4byte 0x40F33333
 "@3754":
-	.incbin "baserom.dol", 0x3EB9BC, 0x4
+	.4byte 0x3D23D70A
 "@4146":
-	.incbin "baserom.dol", 0x3EB9C0, 0x4
+	.4byte 0x3F490FDB
 "@4147":
-	.incbin "baserom.dol", 0x3EB9C4, 0x4
+	.4byte 0xBF800000
 "@4148":
-	.incbin "baserom.dol", 0x3EB9C8, 0x4
+	.4byte 0x40490FDB
 "@4302":
-	.incbin "baserom.dol", 0x3EB9CC, 0x4
+	.4byte 0x3FC90FDB
 "@4325":
-	.incbin "baserom.dol", 0x3EB9D0, 0x4
+	.4byte 0x40000000
 "@4455":
-	.incbin "baserom.dol", 0x3EB9D4, 0x4
+	.4byte 0xC3C80000
 "@4456":
-	.incbin "baserom.dol", 0x3EB9D8, 0x4
+	.4byte 0x3B23D70A
 "@4683":
-	.incbin "baserom.dol", 0x3EB9DC, 0x4
+	.4byte 0x42200000
 "@4684":
-	.incbin "baserom.dol", 0x3EB9E0, 0x8
+	.4byte 0x42480000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2841":

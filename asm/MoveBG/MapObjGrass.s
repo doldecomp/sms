@@ -1042,7 +1042,9 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2596":
-	.incbin "baserom.dol", 0x38CC10, 0x10
+	.asciz "HitActor"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19TMapObjGrassManager
@@ -1102,38 +1104,43 @@ __vt__17TMapObjGrassGroup:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mWidth__19TMapObjGrassManager:
-	.incbin "baserom.dol", 0x3E3700, 0x4
+	.4byte 0x41400000
 mSwingWidth__19TMapObjGrassManager:
-	.incbin "baserom.dol", 0x3E3704, 0x4
+	.4byte 0x42480000
 mSwingSpeed__19TMapObjGrassManager:
-	.incbin "baserom.dol", 0x3E3708, 0x4
+	.4byte 0x3D23D70A
 mDistNear__19TMapObjGrassManager:
-	.incbin "baserom.dol", 0x3E370C, 0x4
+	.4byte 0x44480000
 mDistFar__19TMapObjGrassManager:
-	.incbin "baserom.dol", 0x3E3710, 0x4
+	.4byte 0x46C35000
 sGrassAddTime:
-	.incbin "baserom.dol", 0x3E3714, 0xC
+	.4byte 0x3E4CCCCD
+	.4byte 0
+	.4byte 0
 color_table:
-	.incbin "baserom.dol", 0x3E3720, 0x8
+	.4byte 0x3CC83CFF
+	.4byte 0x286428FF
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2453":
-	.incbin "baserom.dol", 0x3E8548, 0x4
+	.4byte 0x28C828FF
 "@2496":
   .4byte 0
 "@2555":
-	.incbin "baserom.dol", 0x3E8550, 0x4
+	.4byte 0x40C90FD0
 "@2620":
-	.incbin "baserom.dol", 0x3E8554, 0x4
+	.4byte 0x42C80000
 "@2621":
-	.incbin "baserom.dol", 0x3E8558, 0x4
+	.4byte 0x43480000
 "@2622":
-	.incbin "baserom.dol", 0x3E855C, 0x4
+	.4byte 0x38000000
 "@2623":
-	.incbin "baserom.dol", 0x3E8560, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@2625":
-	.incbin "baserom.dol", 0x3E8568, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 mDrawVec__19TMapObjGrassManager:

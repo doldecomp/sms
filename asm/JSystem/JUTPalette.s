@@ -91,6 +91,9 @@ lbl_80013204:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@83":
-	.incbin "baserom.dol", 0x36DB60, 0x10
+	.asciz "JUTPalette.cpp"
+	.balign 4
 "@84":
-	.incbin "baserom.dol", 0x36DB70, 0x20
+	.asciz "JUTTexture: TLUT is NULL\n"
+	.balign 4
+	.4byte 0
