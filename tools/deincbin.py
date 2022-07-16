@@ -65,6 +65,10 @@ def convert_data(data, offset):
     text = ''
     size = len(data)
     pos = 0
+
+    if size == 1:
+        return f'\t.byte {hex_bytes(data[:1])}\n'
+
     while pos < size:
         # pad unaligned
         pad = []
@@ -85,6 +89,16 @@ def convert_data(data, offset):
             continue
 
         assert(is_aligned(offset + pos))
+
+        if pos + 1 == size:
+            text += f'\t.byte {hex_bytes(data[pos:pos+1])}\n'
+            break
+        if pos + 2 == size:
+            text += f'\t.byte {hex_bytes(data[pos:pos+2])}\n'
+            break
+        if pos + 3 == size:
+            text += f'\t.byte {hex_bytes(data[pos:pos+3])}\n'
+            break
 
         if pos + 4 <= size:
             val = read_u32(data, pos)
