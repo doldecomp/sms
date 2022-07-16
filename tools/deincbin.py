@@ -115,7 +115,7 @@ currSection = ''
 
 with open(sys.argv[1], 'rt') as f:
     for line in f.readlines():
-        line = line.rstrip()
+        line = line.rstrip('\n')
         # Section directive
         m = re.match(r'\s*\.section\s+([\._A-Za-z0-9]+)', line)
         if m:
