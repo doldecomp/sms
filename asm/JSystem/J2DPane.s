@@ -1255,8 +1255,11 @@ __vt__7J2DPane:
   .4byte 0
   .4byte 0
 "@295":
-	.incbin "baserom.dol", 0x3E3E28, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@543":
-	.incbin "baserom.dol", 0x3E3E30, 0x8
+	.4byte 0x3C8EFA35
+	.4byte 0
 "@545":
-	.incbin "baserom.dol", 0x3E3E38, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

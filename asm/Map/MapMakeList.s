@@ -962,10 +962,12 @@ allocCheckData__17TMapCollisionDataFUl:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2088":
-	.incbin "baserom.dol", 0x3E8B48, 0x4
+	.4byte 0x44800000
 "@2089":
-	.incbin "baserom.dol", 0x3E8B4C, 0x4
+	.4byte 0x42A00000
 "@2091":
-	.incbin "baserom.dol", 0x3E8B50, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2207":
-	.incbin "baserom.dol", 0x3E8B58, 0x8
+	.4byte 0x3A800000
+	.4byte 0

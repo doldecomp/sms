@@ -974,21 +974,34 @@ lbl_8035F1FC:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A39D4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1633":
-	.incbin "baserom.dol", 0x3A39E8, 0xC
+	.asciz "/scene/sun"
+	.balign 4
 "@1634":
-	.incbin "baserom.dol", 0x3A39F4, 0x10
+	.asciz "/scene/sunset"
+	.balign 4
 "@1998":
-	.incbin "baserom.dol", 0x3A3A04, 0xC
+	.asciz "model.bmd"
+	.balign 4
 "@1999":
-	.incbin "baserom.dol", 0x3A3A10, 0xC
+	.asciz "model.btk"
+	.balign 4
 "@2000":
-	.incbin "baserom.dol", 0x3A3A1C, 0xC
+	.4byte 0x91BE977A
+	.4byte 0x696E8BBE
+	.4byte 0
 "@2001":
-	.incbin "baserom.dol", 0x3A3A28, 0xC
+	.asciz "sun_mirror"
+	.balign 4
 "@2002":
-	.incbin "baserom.dol", 0x3A3A34, 0xC
+	.4byte 0x8BBE8356
+	.4byte 0x815B8393
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__9TSunModel
@@ -1037,43 +1050,48 @@ __vt__9TSunModel:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1861":
-	.incbin "baserom.dol", 0x3EC470, 0x4
+	.4byte 0x437F0000
 "@1862":
   .4byte 0
 "@1863":
-	.incbin "baserom.dol", 0x3EC478, 0x4
+	.4byte 0x40000000
 "@1864":
-	.incbin "baserom.dol", 0x3EC47C, 0x4
+	.4byte 0x3F000000
 "@1865":
-	.incbin "baserom.dol", 0x3EC480, 0x8
+	.4byte 0x48742400
+	.4byte 0
 "@1867":
-	.incbin "baserom.dol", 0x3EC488, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1887":
-	.incbin "baserom.dol", 0x3EC490, 0x4
+	.4byte 0x3D70F0F1
 "@1906":
-	.incbin "baserom.dol", 0x3EC494, 0x4
+	.4byte 0xBF800000
 "@1907":
-	.incbin "baserom.dol", 0x3EC498, 0x4
+	.4byte 0x3F800000
 "@1908":
-	.incbin "baserom.dol", 0x3EC49C, 0x4
+	.4byte 0xBF000000
 "@1910":
-	.incbin "baserom.dol", 0x3EC4A0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1913":
-	.incbin "baserom.dol", 0x3EC4A8, 0x4
+	.4byte 0x3F34FDF4
 "@1996":
-	.incbin "baserom.dol", 0x3EC4AC, 0x4
+	.4byte 0x3ECCCCCD
 "@1997":
-	.incbin "baserom.dol", 0x3EC4B0, 0x8
+	.asciz "%s/%s"
+	.balign 4
 "@2042":
-	.incbin "baserom.dol", 0x3EC4B8, 0x4
+	.4byte 0x3DCCCCCD
 "@2043":
-	.incbin "baserom.dol", 0x3EC4BC, 0x4
+	.4byte 0x3C23D70A
 "@2044":
-	.incbin "baserom.dol", 0x3EC4C0, 0x4
+	.4byte 0x40400000
 "@2045":
-	.incbin "baserom.dol", 0x3EC4C4, 0x4
+	.4byte 0x3C656042
 "@2046":
-	.incbin "baserom.dol", 0x3EC4C8, 0x8
+	.4byte 0x461C4000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpSunModel

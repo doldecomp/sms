@@ -2570,7 +2570,70 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 Arglist__8JASystem:
-	.incbin "baserom.dol", 0x36E370, 0x100
+	.4byte 0
+	.4byte 0x00020008
+	.4byte 0x00020008
+	.4byte 0x00010002
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010000
+	.4byte 0x00010002
+	.4byte 0
+	.4byte 0x00010001
+	.4byte 0
+	.4byte 0x00020000
+	.4byte 0x0002000C
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00010003
+	.4byte 0x00020005
+	.4byte 0x0002000C
+	.4byte 0x0002000C
+	.4byte 0
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00020008
+	.4byte 0x00050155
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00010001
+	.4byte 0x00020004
+	.4byte 0x00010000
+	.4byte 0x00020008
+	.4byte 0x00010000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x00020004
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010001
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010002
+	.4byte 0x00050000
+	.4byte 0x00040055
+	.4byte 0x00010002
+	.4byte 0x00010002
+	.4byte 0x00030000
+	.4byte 0x00010000
+	.4byte 0x00010000
+	.4byte 0x00030028
+	.4byte 0x00010000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010001
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010001
+	.4byte 0x00010001
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
@@ -2986,26 +3049,31 @@ sCmdPList__Q28JASystem10TSeqParser:
 "@363":
   .4byte 0
 "@364":
-	.incbin "baserom.dol", 0x3E447C, 0x4
+	.4byte 0x3F800000
 "@377":
-	.incbin "baserom.dol", 0x3E4480, 0x8
+	.4byte 0x43A3D5C3
+	.4byte 0
 "@379":
-	.incbin "baserom.dol", 0x3E4488, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@397":
-	.incbin "baserom.dol", 0x3E4490, 0x8
+	.4byte 0x47000000
+	.4byte 0
 "@399":
-	.incbin "baserom.dol", 0x3E4498, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@411":
-	.incbin "baserom.dol", 0x3E44A0, 0x4
+	.4byte 0x00000001
 lbl_8040BC04:
-	.incbin "baserom.dol", 0x3E44A4, 0x2
+	.byte 0x01, 0x02
 lbl_8040BC06:
-	.incbin "baserom.dol", 0x3E44A6, 0x2
+	.byte 0x02, 0x00
 "@412":
-	.incbin "baserom.dol", 0x3E44A8, 0x4
+	.4byte 0x00010200
 lbl_8040BC0C:
-	.incbin "baserom.dol", 0x3E44AC, 0x2
+	.byte 0x02, 0x00
 lbl_8040BC0E:
-	.incbin "baserom.dol", 0x3E44AE, 0x2
+	.byte 0x02, 0x00
 "@446":
-	.incbin "baserom.dol", 0x3E44B0, 0x8
+	.4byte 0x46FFFE00
+	.4byte 0

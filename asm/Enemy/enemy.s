@@ -3234,37 +3234,38 @@ __vt__11TSpineEnemy:
 "@2765":
   .4byte 0
 "@2787":
-	.incbin "baserom.dol", 0x3E99AC, 0x4
+	.4byte 0x42C80000
 "@2791":
-	.incbin "baserom.dol", 0x3E99B0, 0x4
+	.4byte 0x3F000000
 "@2792":
-	.incbin "baserom.dol", 0x3E99B4, 0x4
+	.4byte 0x40400000
 "@2994":
-	.incbin "baserom.dol", 0x3E99B8, 0x4
+	.4byte 0x3F800000
 "@2995":
-	.incbin "baserom.dol", 0x3E99BC, 0x4
+	.4byte 0x36800000
 "@2996":
-	.incbin "baserom.dol", 0x3E99C0, 0x4
+	.4byte 0x40000000
 "@3141":
-	.incbin "baserom.dol", 0x3E99C4, 0x4
+	.4byte 0x43B40000
 "@3142":
-	.incbin "baserom.dol", 0x3E99C8, 0x4
+	.4byte 0x43360B61
 "@3143":
-	.incbin "baserom.dol", 0x3E99CC, 0x4
+	.4byte 0x42B40000
 "@3144":
-	.incbin "baserom.dol", 0x3E99D0, 0x4
+	.4byte 0xC2B40000
 "@3145":
-	.incbin "baserom.dol", 0x3E99D4, 0x4
+	.4byte 0x3BB40000
 "@3146":
-	.incbin "baserom.dol", 0x3E99D8, 0x4
+	.4byte 0x43340000
 "@3147":
-	.incbin "baserom.dol", 0x3E99DC, 0x4
+	.4byte 0x47C35000
 "@3149":
-	.incbin "baserom.dol", 0x3E99E0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3299":
-	.incbin "baserom.dol", 0x3E99E8, 0x4
+	.4byte 0xBF800000
 "@4073":
-	.incbin "baserom.dol", 0x3E99EC, 0x4
+	.4byte 0x40A00000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@4324":

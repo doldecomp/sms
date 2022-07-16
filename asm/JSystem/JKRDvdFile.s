@@ -413,9 +413,11 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@302":
-	.incbin "baserom.dol", 0x36D130, 0x10
+	.asciz "JKRDvdFile.cpp"
+	.balign 4
 "@303":
-	.incbin "baserom.dol", 0x36D140, 0x18
+	.asciz "cannot close DVD file\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRDvdFile

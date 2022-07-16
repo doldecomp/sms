@@ -11810,25 +11810,92 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x390B0C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@4430":
-	.incbin "baserom.dol", 0x390B20, 0x10
+	.4byte 0x82B182ED
+	.4byte 0x82EA82C4
+	.4byte 0x82A282DC
+	.4byte 0x82B70000
 "@6860":
-	.incbin "baserom.dol", 0x390B30, 0x10
+	.asciz "save_end.blo"
+	.balign 4
 "@6862":
-	.incbin "baserom.dol", 0x390B40, 0xC
+	.asciz "save.blo"
+	.balign 4
 "@6863":
-	.incbin "baserom.dol", 0x390B4C, 0x24
+	.asciz "/endsave/timg/coin_number_%d.bti"
+	.balign 4
 "@6864":
-	.incbin "baserom.dol", 0x390B70, 0x20
+	.asciz "/game_6/timg/coin_number_%d.bti"
 "@6865":
-	.incbin "baserom.dol", 0x390B90, 0x1C
+	.asciz "/common/2d/savemessage.bmg"
+	.balign 4
 "@6866":
-	.incbin "baserom.dol", 0x390BAC, 0x14
+	.4byte 0x837C815B
+	.4byte 0x83598381
+	.4byte 0x836A8385
+	.4byte 0x815B0000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 cMessageID__9TCardSave:
-	.incbin "baserom.dol", 0x3CE418, 0xD4
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x0000000C
+	.4byte 0x0000000F
+	.4byte 0x00000012
+	.4byte 0x00000004
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000016
+	.4byte 0x0000001A
+	.4byte 0x00000014
+	.4byte 0x0000000E
+	.4byte 0x0000000D
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x00000010
+	.4byte 0x00000019
+	.4byte 0x00000013
+	.4byte 0x00000018
+	.4byte 0x00000002
+	.4byte 0x00000008
+	.4byte 0x00000017
+	.4byte 0x0000001B
+	.4byte 0x00000015
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000003
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000011
+	.4byte 0x0000000B
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000009
+	.4byte 0x00000007
 .global __vt__9TCardSave
 __vt__9TCardSave:
   .4byte 0
@@ -11899,35 +11966,39 @@ __vt__9TCardSave:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@4196":
-	.incbin "baserom.dol", 0x3E9340, 0x4
+	.4byte 0x3C23D70A
 "@4197":
   .4byte 0
 "@4198":
-	.incbin "baserom.dol", 0x3E9348, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@4201":
-	.incbin "baserom.dol", 0x3E9350, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@4203":
-	.incbin "baserom.dol", 0x3E9358, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@4238":
-	.incbin "baserom.dol", 0x3E9360, 0x4
+	.4byte 0x3F800000
 "@4431":
-	.incbin "baserom.dol", 0x3E9364, 0x4
+	.4byte 0x4E455700
 "@5894":
-	.incbin "baserom.dol", 0x3E9368, 0x4
+	.4byte 0xBF000000
 "@5895":
-	.incbin "baserom.dol", 0x3E936C, 0x4
+	.4byte 0x3FC00000
 "@5896":
-	.incbin "baserom.dol", 0x3E9370, 0x4
+	.4byte 0x3F666666
 "@5897":
-	.incbin "baserom.dol", 0x3E9374, 0x4
+	.4byte 0x3DCCCCCD
 "@5898":
-	.incbin "baserom.dol", 0x3E9378, 0x4
+	.4byte 0x437F0000
 "@5899":
-	.incbin "baserom.dol", 0x3E937C, 0x4
+	.4byte 0x42200000
 "@6859":
-	.incbin "baserom.dol", 0x3E9380, 0x8
+	.asciz "endsave"
 "@6861":
-	.incbin "baserom.dol", 0x3E9388, 0x8
+	.asciz "game_6"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@6914":

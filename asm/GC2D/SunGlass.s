@@ -530,16 +530,19 @@ __vt__9TSunGlass:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1842":
-	.incbin "baserom.dol", 0x3E9720, 0x4
+	.4byte 0x43960000
 "@1843":
-	.incbin "baserom.dol", 0x3E9724, 0x4
+	.4byte 0x43600000
 "@1844":
   .4byte 0
 "@1862":
-	.incbin "baserom.dol", 0x3E972C, 0x4
+	.4byte 0x3F800000
 "@1863":
-	.incbin "baserom.dol", 0x3E9730, 0x8
+	.4byte 0x42F00000
+	.4byte 0
 "@1865":
-	.incbin "baserom.dol", 0x3E9738, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1890":
-	.incbin "baserom.dol", 0x3E9740, 0x8
+	.4byte 0x43300000
+	.4byte 0

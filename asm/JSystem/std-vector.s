@@ -469,6 +469,8 @@ lbl_8003A12C:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@360":
-	.incbin "baserom.dol", 0x3E3FF8, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@549":
-	.incbin "baserom.dol", 0x3E4000, 0x8
+	.4byte 0x43300000
+	.4byte 0

@@ -2176,34 +2176,60 @@ lbl_constructor:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 filter_table__Q27JAInter9StreamLib:
-	.incbin "baserom.dol", 0x3A7CF0, 0x40
+	.4byte 0
+	.4byte 0x08000000
+	.4byte 0x00000800
+	.4byte 0x04000400
+	.4byte 0x1000F800
+	.4byte 0x0E00FA00
+	.4byte 0x0C00FC00
+	.4byte 0x1200F600
+	.4byte 0x1068F738
+	.4byte 0x12C0F704
+	.4byte 0x1400F400
+	.4byte 0x0800F800
+	.4byte 0x0400FC00
+	.4byte 0xFC000400
+	.4byte 0xFC000000
+	.4byte 0xF8000000
 table4__Q27JAInter9StreamLib:
-	.incbin "baserom.dol", 0x3A7D30, 0x20
+	.4byte 0x00000001
+	.4byte 0x00020003
+	.4byte 0x00040005
+	.4byte 0x00060007
+	.4byte 0xFFF8FFF9
+	.4byte 0xFFFAFFFB
+	.4byte 0xFFFCFFFD
+	.4byte 0xFFFEFFFF
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 LOOP_BLOCKS__Q27JAInter9StreamLib:
-	.incbin "baserom.dol", 0x3E30E0, 0x4
+	.4byte 0x0000000C
 LOOP_SAMPLESIZE__Q27JAInter9StreamLib:
-	.incbin "baserom.dol", 0x3E30E4, 0x4
+	.4byte 0x0000F000
 outputmode__Q27JAInter9StreamLib:
-	.incbin "baserom.dol", 0x3E30E8, 0x8
+	.4byte 0x00000001
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@425":
   .4byte 0
 "@426":
-	.incbin "baserom.dol", 0x3E421C, 0x4
+	.4byte 0x3F800000
 "@504":
-	.incbin "baserom.dol", 0x3E4220, 0x4
+	.4byte 0x3F000000
 "@988":
-	.incbin "baserom.dol", 0x3E4224, 0x4
+	.4byte 0x3FB50481
 "@989":
-	.incbin "baserom.dol", 0x3E4228, 0x8
+	.4byte 0x46B4FC00
+	.4byte 0
 "@992":
-	.incbin "baserom.dol", 0x3E4230, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@996":
-	.incbin "baserom.dol", 0x3E4238, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 finfo__Q27JAInter9StreamLib:

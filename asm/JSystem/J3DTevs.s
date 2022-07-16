@@ -1573,11 +1573,35 @@ lbl_80038FF8:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@813":
-	.incbin "baserom.dol", 0x36DCE0, 0x30
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0xBF000000
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
 "@814":
-	.incbin "baserom.dol", 0x36DD10, 0x30
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0xBF000000
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
 "@999":
-	.incbin "baserom.dol", 0x36DD40, 0x10
+	.4byte 0x1E212427
+	.asciz "*-0369<"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@804":
@@ -1600,19 +1624,72 @@ lbl_80038FF8:
     .4byte lbl_80037BB0
 .global j3dDefaultLightInfo
 j3dDefaultLightInfo:
-	.incbin "baserom.dol", 0x3A6CA4, 0x34
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0xBF800000
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
 .global j3dDefaultTexCoordInfo
 j3dDefaultTexCoordInfo:
-	.incbin "baserom.dol", 0x3A6CD8, 0x20
+	.4byte 0x01043C00
+	.4byte 0x01053C00
+	.4byte 0x01063C00
+	.4byte 0x01073C00
+	.4byte 0x01083C00
+	.4byte 0x01093C00
+	.4byte 0x010A3C00
+	.4byte 0x010B3C00
 .global j3dDefaultTexMtxInfo
 j3dDefaultTexMtxInfo:
-	.incbin "baserom.dol", 0x3A6CF8, 0x64
+	.4byte 0x0100FFFF
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
 .global j3dDefaultIndTexMtxInfo
 j3dDefaultIndTexMtxInfo:
-	.incbin "baserom.dol", 0x3A6D5C, 0x1C
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F000000
+	.4byte 0
+	.4byte 0x01000000
 .global j3dDefaultTevStageInfo
 j3dDefaultTevStageInfo:
-	.incbin "baserom.dol", 0x3A6D78, 0x14
+	.4byte 0x040A0F0F
+	.4byte 0
+	.4byte 0x01000507
+	.4byte 0x07000000
+	.4byte 0x00010000
 .global j3dDefaultIndTevStageInfo
 j3dDefaultIndTevStageInfo:
   .4byte 0
@@ -1620,56 +1697,78 @@ j3dDefaultIndTevStageInfo:
   .4byte 0
 .global j3dDefaultFogInfo
 j3dDefaultFogInfo:
-	.incbin "baserom.dol", 0x3A6D98, 0x2C
+	.4byte 0x00000140
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 .global j3dDefaultNBTScaleInfo
 j3dDefaultNBTScaleInfo:
-	.incbin "baserom.dol", 0x3A6DC4, 0x14
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global GXTexMode0Ids
 GXTexMode0Ids:
-	.incbin "baserom.dol", 0x3E3038, 0x8
+	.4byte 0x80818283
+	.4byte 0xA0A1A2A3
 .global GXTexMode1Ids
 GXTexMode1Ids:
-	.incbin "baserom.dol", 0x3E3040, 0x8
+	.4byte 0x84858687
+	.4byte 0xA4A5A6A7
 .global GXTexImage0Ids
 GXTexImage0Ids:
-	.incbin "baserom.dol", 0x3E3048, 0x8
+	.4byte 0x88898A8B
+	.4byte 0xA8A9AAAB
 .global GXTexImage1Ids
 GXTexImage1Ids:
-	.incbin "baserom.dol", 0x3E3050, 0x8
+	.4byte 0x8C8D8E8F
+	.4byte 0xACADAEAF
 .global GXTexImage2Ids
 GXTexImage2Ids:
-	.incbin "baserom.dol", 0x3E3058, 0x8
+	.4byte 0x90919293
+	.4byte 0xB0B1B2B3
 .global GXTexImage3Ids
 GXTexImage3Ids:
-	.incbin "baserom.dol", 0x3E3060, 0x8
+	.4byte 0x94959697
+	.4byte 0xB4B5B6B7
 .global GXTexTlutIds
 GXTexTlutIds:
-	.incbin "baserom.dol", 0x3E3068, 0x8
+	.4byte 0x98999A9B
+	.4byte 0xB8B9BABB
 GX2HWFiltConv:
-	.incbin "baserom.dol", 0x3E3070, 0x8
+	.4byte 0x00040105
+	.4byte 0x02060000
 .global j3dDefaultColInfo
 j3dDefaultColInfo:
   .4byte -1
 .global j3dDefaultAmbInfo
 j3dDefaultAmbInfo:
-	.incbin "baserom.dol", 0x3E307C, 0x4
+	.4byte 0x32323232
 .global j3dDefaultColorChanNum
 j3dDefaultColorChanNum:
-	.incbin "baserom.dol", 0x3E3080, 0x4
+	.4byte 0x01000000
 .global j3dDefaultTevOrderInfoNull
 j3dDefaultTevOrderInfoNull:
-	.incbin "baserom.dol", 0x3E3084, 0x4
+	.4byte 0xFFFFFF00
 .global j3dDefaultIndTexOrderNull
 j3dDefaultIndTexOrderNull:
-	.incbin "baserom.dol", 0x3E3088, 0x4
+	.4byte 0xFFFF0000
 .global j3dDefaultTevColor
 j3dDefaultTevColor:
-	.incbin "baserom.dol", 0x3E308C, 0x4
+	.4byte 0x00FF00FF
 .global lbl_80408B50
 lbl_80408B50:
-	.incbin "baserom.dol", 0x3E3090, 0x4
+	.4byte 0x00FF00FF
 .global j3dDefaultIndTexCoordScaleInfo
 j3dDefaultIndTexCoordScaleInfo:
   .4byte 0
@@ -1681,32 +1780,34 @@ j3dDefaultTevSwapMode:
   .4byte 0
 .global j3dDefaultTevSwapModeTable
 j3dDefaultTevSwapModeTable:
-	.incbin "baserom.dol", 0x3E30A0, 0x4
+	.4byte 0x00010203
 .global j3dDefaultBlendInfo
 j3dDefaultBlendInfo:
-	.incbin "baserom.dol", 0x3E30A4, 0x4
+	.4byte 0x01040505
 .global j3dDefaultColorChanInfo
 j3dDefaultColorChanInfo:
-	.incbin "baserom.dol", 0x3E30A8, 0x8
+	.4byte 0x00000002
+	.4byte 0x0200FFFF
 .global j3dDefaultTevSwapTableID
 j3dDefaultTevSwapTableID:
-	.incbin "baserom.dol", 0x3E30B0, 0x2
+	.byte 0x1B, 0x00
 .global j3dDefaultAlphaCmpID
 j3dDefaultAlphaCmpID:
-	.incbin "baserom.dol", 0x3E30B2, 0x2
+	.byte 0x00, 0xE7
 .global j3dDefaultZModeID
 j3dDefaultZModeID:
-	.incbin "baserom.dol", 0x3E30B4, 0x4
+	.4byte 0x00170000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@926":
-	.incbin "baserom.dol", 0x3E3FD0, 0x4
+	.4byte 0x42000000
 "@927":
-	.incbin "baserom.dol", 0x3E3FD4, 0x4
+	.4byte 0x41800000
 "@978":
-	.incbin "baserom.dol", 0x3E3FD8, 0x4
+	.4byte 0x3E000000
 "@979":
-	.incbin "baserom.dol", 0x3E3FDC, 0x4
+	.4byte 0x3C23D70A
 "@981":
-	.incbin "baserom.dol", 0x3E3FE0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

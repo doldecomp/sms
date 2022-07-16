@@ -2544,516 +2544,738 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2155":
-	.incbin "baserom.dol", 0x3753E4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2384":
-	.incbin "baserom.dol", 0x3753F8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2385":
-	.incbin "baserom.dol", 0x375428, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2386":
-	.incbin "baserom.dol", 0x375460, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2387":
-	.incbin "baserom.dol", 0x375494, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2653":
-	.incbin "baserom.dol", 0x3754B8, 0x18
+	.asciz "/data/ex128x144_q0.thp"
+	.balign 4
 "@3117":
-	.incbin "baserom.dol", 0x3754D0, 0x14
+	.asciz "ms_m_rocket_a.jpa"
+	.balign 4
 "@3118":
-	.incbin "baserom.dol", 0x3754E4, 0x14
+	.asciz "ms_m_rocket_b.jpa"
+	.balign 4
 "@3119":
-	.incbin "baserom.dol", 0x3754F8, 0x14
+	.asciz "ms_m_rocket_b2.jpa"
+	.balign 4
 "@3120":
-	.incbin "baserom.dol", 0x37550C, 0x14
+	.asciz "ms_m_rocket_c.jpa"
+	.balign 4
 "@3121":
-	.incbin "baserom.dol", 0x375520, 0x14
+	.asciz "ms_m_rocket_d.jpa"
+	.balign 4
 "@3122":
-	.incbin "baserom.dol", 0x375534, 0x14
+	.asciz "ms_firedmg_a.jpa"
+	.balign 4
 "@3123":
-	.incbin "baserom.dol", 0x375548, 0x10
+	.asciz "ms_fumi_a.jpa"
+	.balign 4
 "@3124":
-	.incbin "baserom.dol", 0x375558, 0x10
+	.asciz "ms_fumi_b.jpa"
+	.balign 4
 "@3125":
-	.incbin "baserom.dol", 0x375568, 0x10
+	.asciz "ms_fumi_c.jpa"
+	.balign 4
 "@3126":
-	.incbin "baserom.dol", 0x375578, 0x10
+	.asciz "ms_dmg_a.jpa"
+	.balign 4
 "@3127":
-	.incbin "baserom.dol", 0x375588, 0x10
+	.asciz "ms_dmg_b.jpa"
+	.balign 4
 "@3128":
-	.incbin "baserom.dol", 0x375598, 0x10
+	.asciz "ms_dmg_c.jpa"
+	.balign 4
 "@3129":
-	.incbin "baserom.dol", 0x3755A8, 0x14
+	.asciz "ms_mariwalk1_a.jpa"
+	.balign 4
 "@3130":
-	.incbin "baserom.dol", 0x3755BC, 0x14
+	.asciz "ms_mariwalk1_b.jpa"
+	.balign 4
 "@3131":
-	.incbin "baserom.dol", 0x3755D0, 0x14
+	.asciz "ms_mariwalk1_c.jpa"
+	.balign 4
 "@3132":
-	.incbin "baserom.dol", 0x3755E4, 0xC
+	.asciz "ms_ase.jpa"
+	.balign 4
 "@3133":
-	.incbin "baserom.dol", 0x3755F0, 0x14
+	.asciz "ms_itemget1_a.jpa"
+	.balign 4
 "@3134":
-	.incbin "baserom.dol", 0x375604, 0x14
+	.asciz "ms_itemget1_b.jpa"
+	.balign 4
 "@3135":
-	.incbin "baserom.dol", 0x375618, 0x14
+	.asciz "ms_jump_ed_a.jpa"
+	.balign 4
 "@3136":
-	.incbin "baserom.dol", 0x37562C, 0x14
+	.asciz "ms_jump_ed_b.jpa"
+	.balign 4
 "@3137":
-	.incbin "baserom.dol", 0x375640, 0x14
+	.asciz "ms_hipdrop_a.jpa"
+	.balign 4
 "@3138":
-	.incbin "baserom.dol", 0x375654, 0x14
+	.asciz "ms_hipdrop_b.jpa"
+	.balign 4
 "@3139":
-	.incbin "baserom.dol", 0x375668, 0x14
+	.asciz "ms_hipdrop_c.jpa"
+	.balign 4
 "@3140":
-	.incbin "baserom.dol", 0x37567C, 0x14
+	.asciz "ms_wallkick_a.jpa"
+	.balign 4
 "@3141":
-	.incbin "baserom.dol", 0x375690, 0x14
+	.asciz "ms_wallkick_b.jpa"
+	.balign 4
 "@3142":
-	.incbin "baserom.dol", 0x3756A4, 0x14
+	.asciz "ms_marioap_body.jpa"
 "@3143":
-	.incbin "baserom.dol", 0x3756B8, 0x14
+	.asciz "ms_marioap_head.jpa"
 "@3144":
-	.incbin "baserom.dol", 0x3756CC, 0x14
+	.asciz "ms_marioap_cap.jpa"
+	.balign 4
 "@3145":
-	.incbin "baserom.dol", 0x3756E0, 0x18
+	.asciz "ms_marioap_rhand.jpa"
+	.balign 4
 "@3146":
-	.incbin "baserom.dol", 0x3756F8, 0x18
+	.asciz "ms_marioap_lhand.jpa"
+	.balign 4
 "@3147":
-	.incbin "baserom.dol", 0x375710, 0x14
+	.asciz "ms_marioap_rleg.jpa"
 "@3148":
-	.incbin "baserom.dol", 0x375724, 0x18
+	.asciz "ms_marioap_rfoot.jpa"
+	.balign 4
 "@3149":
-	.incbin "baserom.dol", 0x37573C, 0x14
+	.asciz "ms_marioap_lleg.jpa"
 "@3150":
-	.incbin "baserom.dol", 0x375750, 0x18
+	.asciz "ms_marioap_lfoot.jpa"
+	.balign 4
 "@3151":
-	.incbin "baserom.dol", 0x375768, 0x18
+	.asciz "ms_marioap_watgun.jpa"
+	.balign 4
 "@3152":
-	.incbin "baserom.dol", 0x375780, 0x14
+	.asciz "ms_watboost_on.jpa"
+	.balign 4
 "@3153":
-	.incbin "baserom.dol", 0x375794, 0x14
+	.asciz "ms_m_tobikomi_a.jpa"
 "@3154":
-	.incbin "baserom.dol", 0x3757A8, 0x14
+	.asciz "ms_m_tobikomi_b.jpa"
 "@3155":
-	.incbin "baserom.dol", 0x3757BC, 0x18
+	.asciz "ms_m_tobikomi_s_a.jpa"
+	.balign 4
 "@3156":
-	.incbin "baserom.dol", 0x3757D4, 0x18
+	.asciz "ms_m_tobikomi_s_b.jpa"
+	.balign 4
 "@3157":
-	.incbin "baserom.dol", 0x3757EC, 0x14
+	.asciz "ms_m_awahamon.jpa"
+	.balign 4
 "@3158":
-	.incbin "baserom.dol", 0x375800, 0x14
+	.asciz "ms_m_watrun_a.jpa"
+	.balign 4
 "@3159":
-	.incbin "baserom.dol", 0x375814, 0x14
+	.asciz "ms_m_watrun_b.jpa"
+	.balign 4
 "@3160":
-	.incbin "baserom.dol", 0x375828, 0x14
+	.asciz "ms_m_watrun_c.jpa"
+	.balign 4
 "@3161":
-	.incbin "baserom.dol", 0x37583C, 0x14
+	.asciz "ms_coinget_a.jpa"
+	.balign 4
 "@3162":
-	.incbin "baserom.dol", 0x375850, 0x14
+	.asciz "ms_coinget_b.jpa"
+	.balign 4
 "@3163":
-	.incbin "baserom.dol", 0x375864, 0x14
+	.asciz "ms_m_amiattack.jpa"
+	.balign 4
 "@3164":
-	.incbin "baserom.dol", 0x375878, 0x14
+	.asciz "ms_m_walksand_a.jpa"
 "@3165":
-	.incbin "baserom.dol", 0x37588C, 0x14
+	.asciz "ms_m_walksand_b.jpa"
 "@3166":
-	.incbin "baserom.dol", 0x3758A0, 0x14
+	.asciz "ms_yos_nomu_a.jpa"
+	.balign 4
 "@3167":
-	.incbin "baserom.dol", 0x3758B4, 0x14
+	.asciz "ms_yos_nomu_b.jpa"
+	.balign 4
 "@3168":
-	.incbin "baserom.dol", 0x3758C8, 0x10
+	.asciz "ms_yos_warp.jpa"
 "@3169":
-	.incbin "baserom.dol", 0x3758D8, 0x14
+	.asciz "ms_m_gout_gate.jpa"
+	.balign 4
 "@3170":
-	.incbin "baserom.dol", 0x3758EC, 0x14
+	.asciz "ms_m_gout_dokan.jpa"
 "@3171":
-	.incbin "baserom.dol", 0x375900, 0x14
+	.asciz "ms_m_walkcloud.jpa"
+	.balign 4
 "@3172":
-	.incbin "baserom.dol", 0x375914, 0x18
+	.asciz "ms_m_sphipd_hit_a.jpa"
+	.balign 4
 "@3173":
-	.incbin "baserom.dol", 0x37592C, 0x18
+	.asciz "ms_m_sphipd_hit_b.jpa"
+	.balign 4
 "@3174":
-	.incbin "baserom.dol", 0x375944, 0x18
+	.asciz "ms_m_sphipd_hit_c.jpa"
+	.balign 4
 "@3175":
-	.incbin "baserom.dol", 0x37595C, 0x18
+	.asciz "ms_m_sphipd_hit_d.jpa"
+	.balign 4
 "@3176":
-	.incbin "baserom.dol", 0x375974, 0x14
+	.asciz "ms_redcoinget_1.jpa"
 "@3177":
-	.incbin "baserom.dol", 0x375988, 0x14
+	.asciz "ms_redcoinget_2.jpa"
 "@3178":
-	.incbin "baserom.dol", 0x37599C, 0x14
+	.asciz "ms_redcoinget_3.jpa"
 "@3179":
-	.incbin "baserom.dol", 0x3759B0, 0x14
+	.asciz "ms_redcoinget_4.jpa"
 "@3180":
-	.incbin "baserom.dol", 0x3759C4, 0x14
+	.asciz "ms_redcoinget_5.jpa"
 "@3181":
-	.incbin "baserom.dol", 0x3759D8, 0x14
+	.asciz "ms_redcoinget_6.jpa"
 "@3182":
-	.incbin "baserom.dol", 0x3759EC, 0x14
+	.asciz "ms_redcoinget_7.jpa"
 "@3183":
-	.incbin "baserom.dol", 0x375A00, 0x14
+	.asciz "ms_redcoinget_8.jpa"
 "@3184":
-	.incbin "baserom.dol", 0x375A14, 0x14
+	.asciz "ms_watboost_a.jpa"
+	.balign 4
 "@3185":
-	.incbin "baserom.dol", 0x375A28, 0x14
+	.asciz "ms_watboost_b.jpa"
+	.balign 4
 "@3186":
-	.incbin "baserom.dol", 0x375A3C, 0x14
+	.asciz "ms_hikage1_a.jpa"
+	.balign 4
 "@3187":
-	.incbin "baserom.dol", 0x375A50, 0x14
+	.asciz "ms_hikage1_b.jpa"
+	.balign 4
 "@3188":
-	.incbin "baserom.dol", 0x375A64, 0x14
+	.asciz "ms_mariwallsl1.jpa"
+	.balign 4
 "@3189":
-	.incbin "baserom.dol", 0x375A78, 0x14
+	.asciz "ms_m_slipsmoke.jpa"
+	.balign 4
 "@3190":
-	.incbin "baserom.dol", 0x375A8C, 0x14
+	.asciz "ms_m_hamon_a.jpa"
+	.balign 4
 "@3191":
-	.incbin "baserom.dol", 0x375AA0, 0x14
+	.asciz "ms_m_hamon_c.jpa"
+	.balign 4
 "@3192":
-	.incbin "baserom.dol", 0x375AB4, 0x14
+	.asciz "ms_m_hamon_d.jpa"
+	.balign 4
 "@3193":
-	.incbin "baserom.dol", 0x375AC8, 0x10
+	.asciz "ms_m_blur3.jpa"
+	.balign 4
 "@3194":
-	.incbin "baserom.dol", 0x375AD8, 0x10
+	.asciz "ms_m_blur2.jpa"
+	.balign 4
 "@3195":
-	.incbin "baserom.dol", 0x375AE8, 0x14
+	.asciz "ms_m_blur2sp.jpa"
+	.balign 4
 "@3196":
-	.incbin "baserom.dol", 0x375AFC, 0x10
+	.asciz "ms_m_awa.jpa"
+	.balign 4
 "@3197":
-	.incbin "baserom.dol", 0x375B0C, 0x14
+	.asciz "ms_nozzlesmoke.jpa"
+	.balign 4
 "@3198":
-	.incbin "baserom.dol", 0x375B20, 0x10
+	.asciz "ms_m_blur1.jpa"
+	.balign 4
 "@3199":
-	.incbin "baserom.dol", 0x375B30, 0x18
+	.asciz "ms_m_slidesand_a.jpa"
+	.balign 4
 "@3200":
-	.incbin "baserom.dol", 0x375B48, 0x18
+	.asciz "ms_m_slidesand_b.jpa"
+	.balign 4
 "@3201":
-	.incbin "baserom.dol", 0x375B60, 0x10
+	.asciz "ms_m_awa_s.jpa"
+	.balign 4
 "@3202":
-	.incbin "baserom.dol", 0x375B70, 0x14
+	.asciz "ms_m_watslide_b.jpa"
 "@3203":
-	.incbin "baserom.dol", 0x375B84, 0x14
+	.asciz "ms_m_watslide_c.jpa"
 "@3204":
-	.incbin "baserom.dol", 0x375B98, 0x14
+	.asciz "ms_m_spinshot_a.jpa"
 "@3205":
-	.incbin "baserom.dol", 0x375BAC, 0x14
+	.asciz "ms_m_spinshot_b.jpa"
 "@3206":
-	.incbin "baserom.dol", 0x375BC0, 0x10
+	.asciz "ms_m_biri_a.jpa"
 "@3207":
-	.incbin "baserom.dol", 0x375BD0, 0x10
+	.asciz "ms_m_biri_b.jpa"
 "@3208":
-	.incbin "baserom.dol", 0x375BE0, 0x10
+	.asciz "ms_m_biri_c.jpa"
 "@3209":
-	.incbin "baserom.dol", 0x375BF0, 0x10
+	.asciz "ms_yos_ase.jpa"
+	.balign 4
 "@3210":
-	.incbin "baserom.dol", 0x375C00, 0x14
+	.asciz "ms_gesosurf_b.jpa"
+	.balign 4
 "@3211":
-	.incbin "baserom.dol", 0x375C14, 0x14
+	.asciz "ms_gesosurf_c.jpa"
+	.balign 4
 "@3212":
-	.incbin "baserom.dol", 0x375C28, 0x14
+	.asciz "ms_gesosurf_d.jpa"
+	.balign 4
 "@3213":
-	.incbin "baserom.dol", 0x375C3C, 0x10
+	.asciz "ms_poi_zzz.jpa"
+	.balign 4
 "@3214":
-	.incbin "baserom.dol", 0x375C4C, 0x14
+	.asciz "ms_m_mzbhamon_a.jpa"
 "@3215":
-	.incbin "baserom.dol", 0x375C60, 0x14
+	.asciz "ms_m_mzbhamon_c.jpa"
 "@3216":
-	.incbin "baserom.dol", 0x375C74, 0x14
+	.asciz "ms_m_sphipd_a.jpa"
+	.balign 4
 "@3217":
-	.incbin "baserom.dol", 0x375C88, 0x14
+	.asciz "ms_m_sphipd_b.jpa"
+	.balign 4
 "@3218":
-	.incbin "baserom.dol", 0x375C9C, 0x14
+	.asciz "ms_m_sphipd_c.jpa"
+	.balign 4
 "@3219":
-	.incbin "baserom.dol", 0x375CB0, 0x14
+	.asciz "ms_m_sphipd_d.jpa"
+	.balign 4
 "@3220":
-	.incbin "baserom.dol", 0x375CC4, 0x14
+	.asciz "ms_m_seasmoke.jpa"
+	.balign 4
 "@3221":
-	.incbin "baserom.dol", 0x375CD8, 0x14
+	.asciz "ms_toro_wind.jpa"
+	.balign 4
 "@3222":
-	.incbin "baserom.dol", 0x375CEC, 0x14
+	.asciz "ms_toro_hibana.jpa"
+	.balign 4
 "@3223":
-	.incbin "baserom.dol", 0x375D00, 0x14
+	.asciz "ms_m_tobikomi_c.jpa"
 "@3224":
-	.incbin "baserom.dol", 0x375D14, 0x18
+	.asciz "ms_m_tobikomi_s_c.jpa"
+	.balign 4
 "@3225":
-	.incbin "baserom.dol", 0x375D2C, 0x10
+	.asciz "ms_gatein.jpa"
+	.balign 4
 "@3226":
-	.incbin "baserom.dol", 0x375D3C, 0x14
+	.asciz "ms_m_hamon_b.jpa"
+	.balign 4
 "@3227":
-	.incbin "baserom.dol", 0x375D50, 0x14
+	.asciz "ms_gesosurf_a.jpa"
+	.balign 4
 "@3228":
-	.incbin "baserom.dol", 0x375D64, 0x14
+	.asciz "ms_m_mzbhamon_b.jpa"
 "@3229":
-	.incbin "baserom.dol", 0x375D78, 0x14
+	.asciz "ms_m_watslide_a.jpa"
 "@3230":
-	.incbin "baserom.dol", 0x375D8C, 0x14
+	.asciz "ms_mpk_fire_c.jpa"
+	.balign 4
 "@3262":
-	.incbin "baserom.dol", 0x375DA0, 0x14
+	.asciz "/data/particle.arc"
+	.balign 4
 "@3264":
-	.incbin "baserom.dol", 0x375DB4, 0x14
+	.asciz "ms_shine_promi.jpa"
+	.balign 4
 "@3265":
-	.incbin "baserom.dol", 0x375DC8, 0x14
+	.asciz "ms_shine_senko.jpa"
+	.balign 4
 "@3266":
-	.incbin "baserom.dol", 0x375DDC, 0x14
+	.asciz "ms_shine_kira.jpa"
+	.balign 4
 "@3267":
-	.incbin "baserom.dol", 0x375DF0, 0x14
+	.asciz "ms_shine_bow.jpa"
+	.balign 4
 "@3268":
-	.incbin "baserom.dol", 0x375E04, 0x10
+	.asciz "ms_osendan.jpa"
+	.balign 4
 "@3269":
-	.incbin "baserom.dol", 0x375E14, 0x10
+	.asciz "ms_poi_sand.jpa"
 "@3270":
-	.incbin "baserom.dol", 0x375E24, 0x10
+	.asciz "ms_chu_jump.jpa"
 "@3271":
-	.incbin "baserom.dol", 0x375E34, 0x18
+	.asciz "ms_packn_ap_rock.jpa"
+	.balign 4
 "@3272":
-	.incbin "baserom.dol", 0x375E4C, 0x18
+	.asciz "ms_packn_ap_smoke.jpa"
+	.balign 4
 "@3273":
-	.incbin "baserom.dol", 0x375E64, 0x18
+	.asciz "ms_deadnamekli_m1.jpa"
+	.balign 4
 "@3274":
-	.incbin "baserom.dol", 0x375E7C, 0x18
+	.asciz "ms_deadnamekli_m2.jpa"
+	.balign 4
 "@3275":
-	.incbin "baserom.dol", 0x375E94, 0x18
+	.asciz "ms_deadnamekli_n.jpa"
+	.balign 4
 "@3276":
-	.incbin "baserom.dol", 0x375EAC, 0x18
+	.asciz "ms_deadnamekli_o.jpa"
+	.balign 4
 "@3277":
-	.incbin "baserom.dol", 0x375EC4, 0x14
+	.asciz "ms_deaddorokli.jpa"
+	.balign 4
 "@3278":
-	.incbin "baserom.dol", 0x375ED8, 0x18
+	.asciz "ms_deaddorokli_w.jpa"
+	.balign 4
 "@3279":
-	.incbin "baserom.dol", 0x375EF0, 0x14
+	.asciz "ms_deadhamkli.jpa"
+	.balign 4
 "@3280":
-	.incbin "baserom.dol", 0x375F04, 0x14
+	.asciz "ms_deadhamkli_w.jpa"
 "@3281":
-	.incbin "baserom.dol", 0x375F18, 0x14
+	.asciz "ms_moe_fire_off.jpa"
 "@3282":
-	.incbin "baserom.dol", 0x375F2C, 0x14
+	.asciz "ms_popo_bomb_a.jpa"
+	.balign 4
 "@3283":
-	.incbin "baserom.dol", 0x375F40, 0x14
+	.asciz "ms_popo_bomb_b.jpa"
+	.balign 4
 "@3284":
-	.incbin "baserom.dol", 0x375F54, 0x14
+	.asciz "ms_deadhanekli.jpa"
+	.balign 4
 "@3285":
-	.incbin "baserom.dol", 0x375F68, 0x18
+	.asciz "ms_deadhanekli_w.jpa"
+	.balign 4
 "@3286":
-	.incbin "baserom.dol", 0x375F80, 0x14
+	.asciz "ms_deadmoekli.jpa"
+	.balign 4
 "@3287":
-	.incbin "baserom.dol", 0x375F94, 0x14
+	.asciz "ms_deadmoekli_w.jpa"
 "@3288":
-	.incbin "baserom.dol", 0x375FA8, 0x14
+	.asciz "ms_smb_kafun_ow.jpa"
 "@3289":
-	.incbin "baserom.dol", 0x375FBC, 0x14
+	.asciz "ms_smb_kafun_oa.jpa"
 "@3290":
-	.incbin "baserom.dol", 0x375FD0, 0x14
+	.asciz "ms_smb_kafun_cw.jpa"
 "@3291":
-	.incbin "baserom.dol", 0x375FE4, 0x14
+	.asciz "ms_smb_kafun_ca.jpa"
 "@3292":
-	.incbin "baserom.dol", 0x375FF8, 0x14
+	.asciz "ms_smb_ap_rock.jpa"
+	.balign 4
 "@3293":
-	.incbin "baserom.dol", 0x37600C, 0x14
+	.asciz "ms_smb_ap_smoke.jpa"
 "@3294":
-	.incbin "baserom.dol", 0x376020, 0x14
+	.asciz "ms_smb_hd_rock.jpa"
+	.balign 4
 "@3295":
-	.incbin "baserom.dol", 0x376034, 0x14
+	.asciz "ms_smb_hd_smoke.jpa"
 "@3296":
-	.incbin "baserom.dol", 0x376048, 0x14
+	.asciz "ms_geso_dead.jpa"
+	.balign 4
 "@3297":
-	.incbin "baserom.dol", 0x37605C, 0x14
+	.asciz "ms_geso_cannon.jpa"
+	.balign 4
 "@3298":
-	.incbin "baserom.dol", 0x376070, 0x18
+	.asciz "ms_geso_osenhit_a.jpa"
+	.balign 4
 "@3299":
-	.incbin "baserom.dol", 0x376088, 0x18
+	.asciz "ms_geso_osenhit_b.jpa"
+	.balign 4
 "@3300":
-	.incbin "baserom.dol", 0x3760A0, 0x10
+	.asciz "ms_pkh_toke.jpa"
 "@3301":
-	.incbin "baserom.dol", 0x3760B0, 0x10
+	.asciz "ms_pkh_fumi.jpa"
 "@3302":
-	.incbin "baserom.dol", 0x3760C0, 0x10
+	.asciz "ms_poi_dead.jpa"
 "@3303":
-	.incbin "baserom.dol", 0x3760D0, 0x18
+	.asciz "ms_petbtl_bomb_a.jpa"
+	.balign 4
 "@3304":
-	.incbin "baserom.dol", 0x3760E8, 0x18
+	.asciz "ms_petbtl_bomb_b.jpa"
+	.balign 4
 "@3305":
-	.incbin "baserom.dol", 0x376100, 0x18
+	.asciz "ms_petbtl_appear.jpa"
+	.balign 4
 "@3306":
-	.incbin "baserom.dol", 0x376118, 0x10
+	.asciz "ms_mnt_kira.jpa"
 "@3307":
-	.incbin "baserom.dol", 0x376128, 0x14
+	.asciz "ms_mare_kira.jpa"
+	.balign 4
 "@3308":
-	.incbin "baserom.dol", 0x37613C, 0x14
+	.asciz "ms_mnt_yogore_b.jpa"
 "@3309":
-	.incbin "baserom.dol", 0x376150, 0x14
+	.asciz "ms_mnt_yogore_f.jpa"
 "@3310":
-	.incbin "baserom.dol", 0x376164, 0x14
+	.asciz "ms_mare_yogore.jpa"
+	.balign 4
 "@3311":
-	.incbin "baserom.dol", 0x376178, 0x14
+	.asciz "ms_kino_yogore.jpa"
+	.balign 4
 "@3312":
-	.incbin "baserom.dol", 0x37618C, 0x14
+	.asciz "ms_cho_moku_a.jpa"
+	.balign 4
 "@3313":
-	.incbin "baserom.dol", 0x3761A0, 0x14
+	.asciz "ms_cho_moku_b.jpa"
+	.balign 4
 "@3314":
-	.incbin "baserom.dol", 0x3761B4, 0x10
+	.asciz "ms_cho_ase.jpa"
+	.balign 4
 "@3315":
-	.incbin "baserom.dol", 0x3761C4, 0x18
+	.asciz "ms_dnk_shibire_b.jpa"
+	.balign 4
 "@3316":
-	.incbin "baserom.dol", 0x3761DC, 0x14
+	.asciz "ms_iga_fumi_air.jpa"
 "@3317":
-	.incbin "baserom.dol", 0x3761F0, 0x14
+	.asciz "ms_tama_flower.jpa"
+	.balign 4
 "@3318":
-	.incbin "baserom.dol", 0x376204, 0x14
+	.asciz "ms_tls_change.jpa"
+	.balign 4
 "@3319":
-	.incbin "baserom.dol", 0x376218, 0x10
+	.asciz "ms_tls_dead.jpa"
 "@3320":
-	.incbin "baserom.dol", 0x376228, 0x14
+	.asciz "ms_teppanfire_j.jpa"
 "@3321":
-	.incbin "baserom.dol", 0x37623C, 0x14
+	.asciz "ms_enm_wallhit.jpa"
+	.balign 4
 "@3322":
-	.incbin "baserom.dol", 0x376250, 0x18
+	.asciz "ms_enm_wallhit_o.jpa"
+	.balign 4
 "@3323":
-	.incbin "baserom.dol", 0x376268, 0x14
+	.asciz "ms_enm_disap_a.jpa"
+	.balign 4
 "@3324":
-	.incbin "baserom.dol", 0x37627C, 0x18
+	.asciz "ms_enm_disap_a_w.jpa"
+	.balign 4
 "@3325":
-	.incbin "baserom.dol", 0x376294, 0x14
+	.asciz "ms_enm_disap_b.jpa"
+	.balign 4
 "@3326":
-	.incbin "baserom.dol", 0x3762A8, 0x14
+	.asciz "ms_enm_wathit.jpa"
+	.balign 4
 "@3327":
-	.incbin "baserom.dol", 0x3762BC, 0x14
+	.asciz "ms_ex_cube_disa.jpa"
 "@3328":
-	.incbin "baserom.dol", 0x3762D0, 0x14
+	.asciz "ms_poi_kizetsu.jpa"
+	.balign 4
 "@3329":
-	.incbin "baserom.dol", 0x3762E4, 0x10
+	.asciz "ms_chu_ase.jpa"
+	.balign 4
 "@3330":
-	.incbin "baserom.dol", 0x3762F4, 0x14
+	.asciz "ms_moe_fire_a.jpa"
+	.balign 4
 "@3331":
-	.incbin "baserom.dol", 0x376308, 0x14
+	.asciz "ms_moe_fire_b.jpa"
+	.balign 4
 "@3332":
-	.incbin "baserom.dol", 0x37631C, 0x14
+	.asciz "ms_moe_fire_d.jpa"
+	.balign 4
 "@3333":
-	.incbin "baserom.dol", 0x376330, 0x14
+	.asciz "ms_popo_shuwa_a.jpa"
 "@3334":
-	.incbin "baserom.dol", 0x376344, 0x14
+	.asciz "ms_popo_shuwa_b.jpa"
 "@3335":
-	.incbin "baserom.dol", 0x376358, 0x18
+	.asciz "ms_packn_hd_rock.jpa"
+	.balign 4
 "@3336":
-	.incbin "baserom.dol", 0x376370, 0x18
+	.asciz "ms_packn_hd_smoke.jpa"
+	.balign 4
 "@3337":
-	.incbin "baserom.dol", 0x376388, 0x14
+	.asciz "ms_geso_kiseki.jpa"
+	.balign 4
 "@3338":
-	.incbin "baserom.dol", 0x37639C, 0x14
+	.asciz "ms_npc_kokuen.jpa"
+	.balign 4
 "@3339":
-	.incbin "baserom.dol", 0x3763B0, 0x14
+	.asciz "ms_npc_hamon_a.jpa"
+	.balign 4
 "@3340":
-	.incbin "baserom.dol", 0x3763C4, 0x14
+	.asciz "ms_npc_hamon_b.jpa"
+	.balign 4
 "@3341":
-	.incbin "baserom.dol", 0x3763D8, 0x10
+	.asciz "ms_mnt_wash.jpa"
 "@3342":
-	.incbin "baserom.dol", 0x3763E8, 0x14
+	.asciz "ms_mare_wash.jpa"
+	.balign 4
 "@3343":
-	.incbin "baserom.dol", 0x3763FC, 0x14
+	.asciz "ms_kil_smoke.jpa"
+	.balign 4
 "@3344":
-	.incbin "baserom.dol", 0x376410, 0x10
+	.asciz "ms_pkh_doro.jpa"
 "@3345":
-	.incbin "baserom.dol", 0x376420, 0x10
+	.asciz "ms_pkh_wash.jpa"
 "@3346":
-	.incbin "baserom.dol", 0x376430, 0x14
+	.asciz "ms_puku_pichi.jpa"
+	.balign 4
 "@3347":
-	.incbin "baserom.dol", 0x376444, 0x10
+	.asciz "ms_puku_awa.jpa"
 "@3348":
-	.incbin "baserom.dol", 0x376454, 0x14
+	.asciz "ms_petbtl_smoke.jpa"
 "@3349":
-	.incbin "baserom.dol", 0x376468, 0x10
+	.asciz "ms_dnk_biri.jpa"
 "@3350":
-	.incbin "baserom.dol", 0x376478, 0x14
+	.asciz "ms_dnk_spark_l.jpa"
+	.balign 4
 "@3351":
-	.incbin "baserom.dol", 0x37648C, 0x14
+	.asciz "ms_dnk_spark_r.jpa"
+	.balign 4
 "@3352":
-	.incbin "baserom.dol", 0x3764A0, 0x18
+	.asciz "ms_dnk_shibire_a.jpa"
+	.balign 4
 "@3353":
-	.incbin "baserom.dol", 0x3764B8, 0x14
+	.asciz "ms_dnk_hibana.jpa"
+	.balign 4
 "@3354":
-	.incbin "baserom.dol", 0x3764CC, 0x14
+	.asciz "ms_bomb_limit.jpa"
+	.balign 4
 "@3355":
-	.incbin "baserom.dol", 0x3764E0, 0x10
+	.asciz "ms_amn_biri.jpa"
 "@3356":
-	.incbin "baserom.dol", 0x3764F0, 0x14
+	.asciz "ms_amn_spark_l.jpa"
+	.balign 4
 "@3357":
-	.incbin "baserom.dol", 0x376504, 0x14
+	.asciz "ms_amn_spark_r.jpa"
+	.balign 4
 "@3358":
-	.incbin "baserom.dol", 0x376518, 0x14
+	.asciz "ms_amn_spark_m.jpa"
+	.balign 4
 "@3359":
-	.incbin "baserom.dol", 0x37652C, 0x10
+	.asciz "ms_tama_hit.jpa"
 "@3360":
-	.incbin "baserom.dol", 0x37653C, 0x14
+	.asciz "ms_tama_blur.jpa"
+	.balign 4
 "@3361":
-	.incbin "baserom.dol", 0x376550, 0x14
+	.asciz "ms_tls_yodare_l.jpa"
 "@3362":
-	.incbin "baserom.dol", 0x376564, 0x14
+	.asciz "ms_tls_yodare_s.jpa"
 "@3363":
-	.incbin "baserom.dol", 0x376578, 0x10
+	.asciz "ms_ynb_onpu.jpa"
 "@3364":
-	.incbin "baserom.dol", 0x376588, 0x14
+	.asciz "ms_teppanfire_a.jpa"
 "@3365":
-	.incbin "baserom.dol", 0x37659C, 0x14
+	.asciz "ms_map_fire_a.jpa"
+	.balign 4
 "@3366":
-	.incbin "baserom.dol", 0x3765B0, 0x14
+	.asciz "ms_map_fire_b.jpa"
+	.balign 4
 "@3367":
-	.incbin "baserom.dol", 0x3765C4, 0x14
+	.asciz "ms_mpk_fire_a.jpa"
+	.balign 4
 "@3368":
-	.incbin "baserom.dol", 0x3765D8, 0x14
+	.asciz "ms_mpk_fire_b.jpa"
+	.balign 4
 "@3369":
-	.incbin "baserom.dol", 0x3765EC, 0x18
+	.asciz "ms_mari_rakuball.jpa"
+	.balign 4
 "@3370":
-	.incbin "baserom.dol", 0x376604, 0x18
+	.asciz "ms_mari_rakuhamon.jpa"
+	.balign 4
 "@3371":
-	.incbin "baserom.dol", 0x37661C, 0x14
+	.asciz "ms_raku_indawa.jpa"
+	.balign 4
 "@3372":
-	.incbin "baserom.dol", 0x376630, 0x10
+	.asciz "ms_raku_kie.jpa"
 "@3373":
-	.incbin "baserom.dol", 0x376640, 0x14
+	.asciz "ms_teppanfire_b.jpa"
 "@3374":
-	.incbin "baserom.dol", 0x376654, 0x18
+	.asciz "ms_name_indirect.jpa"
+	.balign 4
 "@3375":
-	.incbin "baserom.dol", 0x37666C, 0x14
+	.asciz "ms_moe_fire_c.jpa"
+	.balign 4
 "@3376":
-	.incbin "baserom.dol", 0x376680, 0x14
+	.asciz "ms_map_fire_c.jpa"
+	.balign 4
 "@3377":
-	.incbin "baserom.dol", 0x376694, 0x14
+	.asciz "ms_sl_or_melt1.jpa"
+	.balign 4
 "@3378":
-	.incbin "baserom.dol", 0x3766A8, 0x14
+	.asciz "ms_sl_or_melt2.jpa"
+	.balign 4
 "@3379":
-	.incbin "baserom.dol", 0x3766BC, 0x14
+	.asciz "ms_sl_or_damage.jpa"
 "@3380":
-	.incbin "baserom.dol", 0x3766D0, 0x14
+	.asciz "ms_gene_dead.jpa"
+	.balign 4
 "@3381":
-	.incbin "baserom.dol", 0x3766E4, 0x10
+	.asciz "ms_gene_hit.jpa"
 "@3382":
-	.incbin "baserom.dol", 0x3766F4, 0x14
+	.asciz "ms_2d_pause_smo.jpa"
 "@3383":
-	.incbin "baserom.dol", 0x376708, 0x14
+	.asciz "ms_2d_pause_sel.jpa"
 "@3384":
-	.incbin "baserom.dol", 0x37671C, 0x18
+	.asciz "ms_2d_icon_kira1.jpa"
+	.balign 4
 "@3385":
-	.incbin "baserom.dol", 0x376734, 0x18
+	.asciz "ms_2d_icon_kira2.jpa"
+	.balign 4
 "@3386":
-	.incbin "baserom.dol", 0x37674C, 0x10
+	.asciz "ms_2d_go.jpa"
+	.balign 4
 "@3387":
-	.incbin "baserom.dol", 0x37675C, 0x10
+	.asciz "ms_2d_get_a.jpa"
 "@3388":
-	.incbin "baserom.dol", 0x37676C, 0x10
+	.asciz "ms_2d_get_b.jpa"
 "@3389":
-	.incbin "baserom.dol", 0x37677C, 0x14
+	.asciz "ms_2d_elecflash.jpa"
 "@3390":
-	.incbin "baserom.dol", 0x376790, 0x1C
+	.asciz "/data/bosshanachanJpa.arc"
+	.balign 4
 "@3477":
-	.incbin "baserom.dol", 0x3767AC, 0x18
+	.asciz "MarioParticleManager"
+	.balign 4
 "@3478":
-	.incbin "baserom.dol", 0x3767C4, 0x10
+	.asciz "/data/yoshi.arc"
 "@3479":
-	.incbin "baserom.dol", 0x3767D4, 0x14
+	.asciz "/data/scenecmn.bin"
+	.balign 4
 "@3480":
-	.incbin "baserom.dol", 0x3767E8, 0x14
+	.asciz "/data/params.arc"
+	.balign 4
 "@3481":
-	.incbin "baserom.dol", 0x3767FC, 0x14
+	.asciz "/data/option.arc"
+	.balign 4
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3263":
-	.incbin "baserom.dol", 0x3E5280, 0x8
+	.4byte 0x2F000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global gParticleFlagLoaded

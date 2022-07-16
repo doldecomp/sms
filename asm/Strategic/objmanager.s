@@ -455,17 +455,65 @@ load__9TObjCharaFR20JSUMemoryInputStream:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x377124, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1598":
-	.incbin "baserom.dol", 0x377138, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1599":
-	.incbin "baserom.dol", 0x377168, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1600":
-	.incbin "baserom.dol", 0x3771A0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1601":
-	.incbin "baserom.dol", 0x3771D4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1735":
-	.incbin "baserom.dol", 0x3771F8, 0xC
+	.asciz "default.bmd"
 entry$1734:
   .4byte "@1735"
   .4byte 0x10210000
@@ -506,4 +554,5 @@ __vt__9TObjChara:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1841":
-	.incbin "baserom.dol", 0x3E53E8, 0x8
+	.asciz "%s%s"
+	.balign 4

@@ -96,4 +96,5 @@ __vt__13TSMSSmplChara:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1540":
-	.incbin "baserom.dol", 0x3E5468, 0x8
+	.asciz "%s%s"
+	.balign 4

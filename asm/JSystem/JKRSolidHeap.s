@@ -569,27 +569,37 @@ getHeapType__12JKRSolidHeapFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@288":
-	.incbin "baserom.dol", 0x36D550, 0x34
+	.asciz "allocFromHead: cannot alloc memory (0x%x byte).\n"
+	.balign 4
 "@303":
-	.incbin "baserom.dol", 0x36D584, 0x34
+	.asciz "allocFromTail: cannot alloc memory (0x%x byte).\n"
+	.balign 4
 "@305":
-	.incbin "baserom.dol", 0x36D5B8, 0x28
+	.asciz "free: cannot free memory block (%08x)\n"
+	.balign 4
 "@322":
-	.incbin "baserom.dol", 0x36D5E0, 0x30
+	.asciz "resize: cannot resize memory block (%08x: %d)\n"
+	.balign 4
 "@324":
-	.incbin "baserom.dol", 0x36D610, 0x30
+	.asciz "getSize: cannot get memory block size (%08x)\n"
+	.balign 4
 "@357":
-	.incbin "baserom.dol", 0x36D640, 0x34
+	.asciz "check: bad total memory block size (%08X, %08X)\n"
+	.balign 4
 "@364":
-	.incbin "baserom.dol", 0x36D674, 0x14
+	.asciz "\nJKRSolidHeap dump\n"
 "@365":
-	.incbin "baserom.dol", 0x36D688, 0x18
+	.asciz "attr  address:   size\n"
+	.balign 4
 "@366":
-	.incbin "baserom.dol", 0x36D6A0, 0x14
+	.asciz "head %08x: %08x\n"
+	.balign 4
 "@367":
-	.incbin "baserom.dol", 0x36D6B4, 0x14
+	.asciz "tail %08x: %08x\n"
+	.balign 4
 "@368":
-	.incbin "baserom.dol", 0x36D6C8, 0x20
+	.asciz "%d / %d bytes (%6.2f%%) used\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12JKRSolidHeap
@@ -618,6 +628,8 @@ __vt__12JKRSolidHeap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@369":
-	.incbin "baserom.dol", 0x3E3D40, 0x8
+	.4byte 0x42C80000
+	.4byte 0
 "@371":
-	.incbin "baserom.dol", 0x3E3D48, 0x8
+	.4byte 0x43300000
+	.4byte 0

@@ -7853,49 +7853,107 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2322":
-	.incbin "baserom.dol", 0x3A086C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2561":
-	.incbin "baserom.dol", 0x3A0880, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2562":
-	.incbin "baserom.dol", 0x3A08B0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2563":
-	.incbin "baserom.dol", 0x3A08E8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2564":
-	.incbin "baserom.dol", 0x3A091C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2850":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2852":
-	.incbin "baserom.dol", 0x3A094C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2935":
-	.incbin "baserom.dol", 0x3A0958, 0x20
+	.asciz "/scene/koopa/bas/koopa_down.bas"
 "@2936":
-	.incbin "baserom.dol", 0x3A0978, 0x20
+	.asciz "/scene/koopa/bas/koopa_fall.bas"
 "@2937":
-	.incbin "baserom.dol", 0x3A0998, 0x24
+	.asciz "/scene/koopa/bas/koopa_fire_end.bas"
 "@2938":
-	.incbin "baserom.dol", 0x3A09BC, 0x28
+	.asciz "/scene/koopa/bas/koopa_fire_loop.bas"
+	.balign 4
 "@2939":
-	.incbin "baserom.dol", 0x3A09E4, 0x28
+	.asciz "/scene/koopa/bas/koopa_fire_start.bas"
+	.balign 4
 "@2940":
-	.incbin "baserom.dol", 0x3A0A0C, 0x24
+	.asciz "/scene/koopa/bas/koopa_first.bas"
+	.balign 4
 "@2941":
-	.incbin "baserom.dol", 0x3A0A30, 0x24
+	.asciz "/scene/koopa/bas/koopa_getup.bas"
+	.balign 4
 "@2942":
-	.incbin "baserom.dol", 0x3A0A54, 0x24
+	.asciz "/scene/koopa/bas/koopa_hipdrop.bas"
+	.balign 4
 "@2943":
-	.incbin "baserom.dol", 0x3A0A78, 0x24
+	.asciz "/scene/koopa/bas/koopa_stagger.bas"
+	.balign 4
 "@2944":
-	.incbin "baserom.dol", 0x3A0A9C, 0x24
+	.asciz "/scene/koopa/bas/koopa_turn_l.bas"
+	.balign 4
 "@2945":
-	.incbin "baserom.dol", 0x3A0AC0, 0x24
+	.asciz "/scene/koopa/bas/koopa_turn_r.bas"
+	.balign 4
 "@2946":
-	.incbin "baserom.dol", 0x3A0AE4, 0x20
+	.asciz "/scene/koopa/bas/koopa_wait.bas"
 "@2947":
-	.incbin "baserom.dol", 0x3A0B04, 0x24
+	.asciz "/scene/koopa/bas/koopa_waterhit.bas"
 "@3401":
-	.incbin "baserom.dol", 0x3A0B28, 0x10
+	.asciz "koopa_model.bmd"
 entry$3400:
   .4byte "@3401"
   .4byte 0x14240000
@@ -7904,95 +7962,142 @@ entry$3400:
   .4byte 0
   .4byte 0
 "@3434":
-	.incbin "baserom.dol", 0x3A0B50, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_fire_a.jpa"
+	.balign 4
 "@3435":
-	.incbin "baserom.dol", 0x3A0B74, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_fire_b.jpa"
+	.balign 4
 "@3436":
-	.incbin "baserom.dol", 0x3A0B98, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_fire_c.jpa"
+	.balign 4
 "@3437":
-	.incbin "baserom.dol", 0x3A0BBC, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_fire_d.jpa"
+	.balign 4
 "@3438":
-	.incbin "baserom.dol", 0x3A0BE0, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_hipdrop.jpa"
+	.balign 4
 "@3439":
-	.incbin "baserom.dol", 0x3A0C04, 0x24
+	.asciz "/scene/koopa/jpa/ms_kp_fire_e.jpa"
+	.balign 4
 "@3539":
-	.incbin "baserom.dol", 0x3A0C28, 0x14
+	.asciz "/enemy/koopa.prm"
+	.balign 4
 "@3540":
-	.incbin "baserom.dol", 0x3A0C3C, 0xC
+	.asciz "turnSpeed"
+	.balign 4
 "@3542":
-	.incbin "baserom.dol", 0x3A0C48, 0xC
+	.asciz "turnAnim"
+	.balign 4
 "@3544":
-	.incbin "baserom.dol", 0x3A0C54, 0xC
+	.asciz "waitStep"
+	.balign 4
 "@3546":
-	.incbin "baserom.dol", 0x3A0C60, 0xC
+	.asciz "downStep"
+	.balign 4
 "@3548":
-	.incbin "baserom.dol", 0x3A0C6C, 0x10
+	.asciz "attackRadius"
+	.balign 4
 "@3550":
-	.incbin "baserom.dol", 0x3A0C7C, 0x10
+	.asciz "attackHeight"
+	.balign 4
 "@3551":
-	.incbin "baserom.dol", 0x3A0C8C, 0xC
+	.asciz "focusRange"
+	.balign 4
 "@3553":
-	.incbin "baserom.dol", 0x3A0C98, 0xC
+	.asciz "waitRange"
+	.balign 4
 "@3555":
-	.incbin "baserom.dol", 0x3A0CA4, 0xC
+	.asciz "fireSpeed"
+	.balign 4
 "@3557":
-	.incbin "baserom.dol", 0x3A0CB0, 0x10
+	.asciz "tumbleWeight"
+	.balign 4
 "@3559":
-	.incbin "baserom.dol", 0x3A0CC0, 0xC
+	.asciz "tumbleSpeed"
 "@3560":
-	.incbin "baserom.dol", 0x3A0CCC, 0x14
+	.asciz "tumbleStartFrame"
+	.balign 4
 "@3562":
-	.incbin "baserom.dol", 0x3A0CE0, 0x10
+	.asciz "tumbleEndFrame"
+	.balign 4
 "@3564":
-	.incbin "baserom.dol", 0x3A0CF0, 0xC
+	.asciz "waitSpeed"
+	.balign 4
 "@3565":
-	.incbin "baserom.dol", 0x3A0CFC, 0x10
+	.asciz "staggerSpeed"
+	.balign 4
 "@3566":
-	.incbin "baserom.dol", 0x3A0D0C, 0xC
+	.asciz "downSpeed"
+	.balign 4
 "@3567":
-	.incbin "baserom.dol", 0x3A0D18, 0x10
+	.asciz "flameVelocity"
+	.balign 4
 "@3569":
-	.incbin "baserom.dol", 0x3A0D28, 0xC
+	.asciz "flameScale"
+	.balign 4
 "@3571":
-	.incbin "baserom.dol", 0x3A0D34, 0xC
+	.asciz "flameCount"
+	.balign 4
 "@3572":
-	.incbin "baserom.dol", 0x3A0D40, 0x14
+	.asciz "flameFocusStartStep"
 "@3573":
-	.incbin "baserom.dol", 0x3A0D54, 0x14
+	.asciz "flameFocusEndStep"
+	.balign 4
 "@3574":
-	.incbin "baserom.dol", 0x3A0D68, 0xC
+	.asciz "flameRadius"
 "@3576":
-	.incbin "baserom.dol", 0x3A0D74, 0xC
+	.asciz "flameHeight"
 "@3577":
-	.incbin "baserom.dol", 0x3A0D80, 0xC
+	.asciz "headRadius"
+	.balign 4
 "@3579":
-	.incbin "baserom.dol", 0x3A0D8C, 0x10
+	.asciz "waterhitSpeed"
+	.balign 4
 "@3580":
-	.incbin "baserom.dol", 0x3A0D9C, 0x10
+	.asciz "flameOverStart"
+	.balign 4
 "@3581":
-	.incbin "baserom.dol", 0x3A0DAC, 0x10
+	.asciz "flameNeckRange"
+	.balign 4
 "@3583":
-	.incbin "baserom.dol", 0x3A0DBC, 0x14
+	.asciz "flameNeckDownRate"
+	.balign 4
 "@3585":
-	.incbin "baserom.dol", 0x3A0DD0, 0xC
+	.asciz "flameJump"
+	.balign 4
 "@3587":
-	.incbin "baserom.dol", 0x3A0DDC, 0xC
+	.asciz "fallSpeed"
+	.balign 4
 "@3588":
-	.incbin "baserom.dol", 0x3A0DE8, 0x14
+	.asciz "marioEstimationFire"
 "@3590":
-	.incbin "baserom.dol", 0x3A0DFC, 0x14
+	.asciz "marioEstimationWait"
 "@3671":
-	.incbin "baserom.dol", 0x3A0E10, 0xC
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0
 "@4286":
-	.incbin "baserom.dol", 0x3A0E1C, 0x10
+	.4byte 0x834E8362
+	.4byte 0x837082CC
+	.4byte 0x936682AD
+	.4byte 0x898A0000
 "@4288":
-	.incbin "baserom.dol", 0x3A0E2C, 0xC
+	.4byte 0x834E8362
+	.4byte 0x837082CC
+	.4byte 0x8EE80000
 "@4289":
-	.incbin "baserom.dol", 0x3A0E38, 0xC
+	.4byte 0x834E8362
+	.4byte 0x837082CC
+	.4byte 0x93AA0000
 "@4290":
-	.incbin "baserom.dol", 0x3A0E44, 0xC
+	.4byte 0x834E8362
+	.4byte 0x837082CC
+	.4byte 0x91CC0000
 "@6256":
-	.incbin "baserom.dol", 0x3A0E50, 0x10
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 koopa_bastable:
@@ -8417,127 +8522,132 @@ __vt__15TNerveKoopaWait:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3541":
-	.incbin "baserom.dol", 0x3EBC88, 0x4
+	.4byte 0x3FCCCCCD
 "@3543":
-	.incbin "baserom.dol", 0x3EBC8C, 0x4
+	.4byte 0x406CCCCD
 "@3545":
-	.incbin "baserom.dol", 0x3EBC90, 0x4
+	.4byte 0x44160000
 "@3547":
-	.incbin "baserom.dol", 0x3EBC94, 0x4
+	.4byte 0x447A0000
 "@3549":
-	.incbin "baserom.dol", 0x3EBC98, 0x4
+	.4byte 0x44480000
 "@3552":
-	.incbin "baserom.dol", 0x3EBC9C, 0x4
+	.4byte 0x40000000
 "@3554":
-	.incbin "baserom.dol", 0x3EBCA0, 0x4
+	.4byte 0x41400000
 "@3556":
-	.incbin "baserom.dol", 0x3EBCA4, 0x4
+	.4byte 0x40600000
 "@3558":
-	.incbin "baserom.dol", 0x3EBCA8, 0x4
+	.4byte 0x4104CCCD
 "@3561":
-	.incbin "baserom.dol", 0x3EBCAC, 0x4
+	.4byte 0x42BE0000
 "@3563":
-	.incbin "baserom.dol", 0x3EBCB0, 0x4
+	.4byte 0x43200000
 "@3568":
-	.incbin "baserom.dol", 0x3EBCB4, 0x4
+	.4byte 0x420C0000
 "@3570":
-	.incbin "baserom.dol", 0x3EBCB8, 0x4
+	.4byte 0x3F800000
 "@3575":
-	.incbin "baserom.dol", 0x3EBCBC, 0x4
+	.4byte 0x43960000
 "@3578":
-	.incbin "baserom.dol", 0x3EBCC0, 0x4
+	.4byte 0x43C80000
 "@3582":
-	.incbin "baserom.dol", 0x3EBCC4, 0x4
+	.4byte 0x41880000
 "@3584":
-	.incbin "baserom.dol", 0x3EBCC8, 0x4
+	.4byte 0x3E99999A
 "@3586":
-	.incbin "baserom.dol", 0x3EBCCC, 0x4
+	.4byte 0x42A00000
 "@3589":
-	.incbin "baserom.dol", 0x3EBCD0, 0x4
+	.4byte 0x41A00000
 "@3591":
-	.incbin "baserom.dol", 0x3EBCD4, 0x4
+	.4byte 0x41200000
 "@3672":
-	.incbin "baserom.dol", 0x3EBCD8, 0x4
+	.4byte 0x3BB40000
 "@3673":
-	.incbin "baserom.dol", 0x3EBCDC, 0x4
+	.4byte 0x43B40000
 "@3674":
-	.incbin "baserom.dol", 0x3EBCE0, 0x4
+	.4byte 0xC3340000
 "@3675":
   .4byte 0
 "@3677":
-	.incbin "baserom.dol", 0x3EBCE8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3827":
-	.incbin "baserom.dol", 0x3EBCF0, 0x4
+	.4byte 0xC4BB8000
 "@4045":
-	.incbin "baserom.dol", 0x3EBCF4, 0x4
+	.4byte 0x42AA0000
 "@4046":
-	.incbin "baserom.dol", 0x3EBCF8, 0x4
+	.4byte 0x42880000
 "@4047":
-	.incbin "baserom.dol", 0x3EBCFC, 0x4
+	.4byte 0x43240000
 "@4090":
-	.incbin "baserom.dol", 0x3EBD00, 0x4
+	.4byte 0x3F000000
 "@4250":
-	.incbin "baserom.dol", 0x3EBD04, 0x4
+	.4byte 0x44FA0000
 "@4251":
-	.incbin "baserom.dol", 0x3EBD08, 0x4
+	.4byte 0x61676F00
 "@4252":
-	.incbin "baserom.dol", 0x3EBD0C, 0x8
+	.asciz "head"
+	.balign 4
 "@4253":
-	.incbin "baserom.dol", 0x3EBD14, 0x8
+	.asciz "neck"
+	.balign 4
 "@4287":
-	.incbin "baserom.dol", 0x3EBD1C, 0x4
+	.4byte 0x42C80000
 "@4350":
-	.incbin "baserom.dol", 0x3EBD20, 0x4
+	.4byte 0x43340000
 "@4421":
-	.incbin "baserom.dol", 0x3EBD24, 0x4
+	.4byte 0x3BA3D70A
 "@4422":
-	.incbin "baserom.dol", 0x3EBD28, 0x4
+	.4byte 0x442F0000
 "@5018":
-	.incbin "baserom.dol", 0x3EBD2C, 0x4
+	.4byte 0x42200000
 "@5019":
-	.incbin "baserom.dol", 0x3EBD30, 0x4
+	.4byte 0x42FA0000
 "@5020":
-	.incbin "baserom.dol", 0x3EBD34, 0x4
+	.4byte 0x41F00000
 "@5021":
-	.incbin "baserom.dol", 0x3EBD38, 0x4
+	.4byte 0x42820000
 "@5022":
-	.incbin "baserom.dol", 0x3EBD3C, 0x4
+	.4byte 0x432A0000
 "@5023":
-	.incbin "baserom.dol", 0x3EBD40, 0x4
+	.4byte 0x42CE0000
 "@5024":
-	.incbin "baserom.dol", 0x3EBD44, 0x4
+	.4byte 0x43480000
 "@5025":
-	.incbin "baserom.dol", 0x3EBD48, 0x4
+	.4byte 0x437F0000
 "@5026":
-	.incbin "baserom.dol", 0x3EBD4C, 0x4
+	.4byte 0x425C0000
 "@5027":
-	.incbin "baserom.dol", 0x3EBD50, 0x4
+	.4byte 0x43A50000
 "@5028":
-	.incbin "baserom.dol", 0x3EBD54, 0x4
+	.4byte 0x43C30000
 "@5029":
-	.incbin "baserom.dol", 0x3EBD58, 0x4
+	.4byte 0x42700000
 "@5030":
-	.incbin "baserom.dol", 0x3EBD5C, 0x4
+	.4byte 0x43DC0000
 "@5031":
-	.incbin "baserom.dol", 0x3EBD60, 0x4
+	.4byte 0x43F00000
 "@5032":
-	.incbin "baserom.dol", 0x3EBD64, 0x4
+	.4byte 0x440AC000
 "@5033":
-	.incbin "baserom.dol", 0x3EBD68, 0x4
+	.4byte 0x4419C000
 "@5360":
-	.incbin "baserom.dol", 0x3EBD6C, 0x4
+	.4byte 0x43FA0000
 "@5361":
-	.incbin "baserom.dol", 0x3EBD70, 0x4
+	.4byte 0x36800000
 "@5362":
-	.incbin "baserom.dol", 0x3EBD74, 0x4
+	.4byte 0x457A0000
 "@5366":
-	.incbin "baserom.dol", 0x3EBD78, 0x4
+	.4byte 0x40400000
 "@6098":
-	.incbin "baserom.dol", 0x3EBD7C, 0x4
+	.4byte 0x40C90FDB
 "@6099":
-	.incbin "baserom.dol", 0x3EBD80, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@6100":
-	.incbin "baserom.dol", 0x3EBD88, 0x8
+	.4byte 0x3FC00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2978":

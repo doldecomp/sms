@@ -1874,9 +1874,96 @@ VIGetDTVStatus:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 timing:
-	.incbin "baserom.dol", 0x3ADF30, 0x130
+	.4byte 0x060000F0
+	.4byte 0x00180019
+	.4byte 0x00030002
+	.4byte 0x0C0D0C0D
+	.4byte 0x02080207
+	.4byte 0x02080207
+	.4byte 0x020D01AD
+	.4byte 0x404769A2
+	.4byte 0x01757A00
+	.4byte 0x019C0600
+	.4byte 0x00F00018
+	.4byte 0x00180004
+	.4byte 0x00040C0C
+	.4byte 0x0C0C0208
+	.4byte 0x02080208
+	.4byte 0x0208020E
+	.4byte 0x01AD4047
+	.4byte 0x69A20175
+	.4byte 0x7A00019C
+	.4byte 0x0500011F
+	.4byte 0x00230024
+	.4byte 0x00010000
+	.4byte 0x0D0C0B0A
+	.4byte 0x026B026A
+	.4byte 0x0269026C
+	.4byte 0x027101B0
+	.4byte 0x404B6AAC
+	.4byte 0x017C8500
+	.4byte 0x01A40500
+	.4byte 0x011F0021
+	.4byte 0x00210002
+	.4byte 0x00020D0B
+	.4byte 0x0D0B026B
+	.4byte 0x026D026B
+	.4byte 0x026D0270
+	.4byte 0x01B0404B
+	.4byte 0x6AAC017C
+	.4byte 0x850001A4
+	.4byte 0x060000F0
+	.4byte 0x00180019
+	.4byte 0x00030002
+	.4byte 0x100F0E0D
+	.4byte 0x02060205
+	.4byte 0x02040207
+	.4byte 0x020D01AD
+	.4byte 0x404E70A2
+	.4byte 0x01757A00
+	.4byte 0x019C0600
+	.4byte 0x00F00018
+	.4byte 0x00180004
+	.4byte 0x0004100E
+	.4byte 0x100E0206
+	.4byte 0x02080206
+	.4byte 0x0208020E
+	.4byte 0x01AD404E
+	.4byte 0x70A20175
+	.4byte 0x7A00019C
+	.4byte 0x0C0001E0
+	.4byte 0x00300030
+	.4byte 0x00060006
+	.4byte 0x18181818
+	.4byte 0x040E040E
+	.4byte 0x040E040E
+	.4byte 0x041A01AD
+	.4byte 0x404769A2
+	.4byte 0x01757A00
+	.4byte 0x019C0C00
+	.4byte 0x01E0002C
+	.4byte 0x002C000A
+	.4byte 0x000A1818
+	.4byte 0x1818040E
+	.4byte 0x040E040E
+	.4byte 0x040E041A
+	.4byte 0x01AD4047
+	.4byte 0x69A8017B
+	.4byte 0x7A00019C
 taps:
-	.incbin "baserom.dol", 0x3AE060, 0x34
+	.4byte 0x01F001DC
+	.4byte 0x01AE0174
+	.4byte 0x012900DB
+	.4byte 0x008E0046
+	.4byte 0x000C00E2
+	.4byte 0x00CB00C0
+	.4byte 0x00C400CF
+	.4byte 0x00DE00EC
+	.4byte 0x00FC0008
+	.4byte 0x000F0013
+	.4byte 0x0013000F
+	.4byte 0x000C0008
+	.4byte 0x00010000
 "@92":
     .4byte lbl_800998CC
     .4byte lbl_800998D4
@@ -1901,17 +1988,24 @@ taps:
     .4byte lbl_800998EC
     .4byte lbl_800998F4
 "@336":
-	.incbin "baserom.dol", 0x3AE0EC, 0x2C
+	.asciz "***************************************\n"
+	.balign 4
 "@337":
-	.incbin "baserom.dol", 0x3AE118, 0x2C
+	.asciz " ! ! ! C A U T I O N ! ! !             \n"
+	.balign 4
 "@338":
-	.incbin "baserom.dol", 0x3AE144, 0x2C
+	.asciz "This TV format \"DEBUG_PAL\" is only for \n"
+	.balign 4
 "@339":
-	.incbin "baserom.dol", 0x3AE170, 0x2C
+	.asciz "temporary solution until PAL DAC board \n"
+	.balign 4
 "@340":
-	.incbin "baserom.dol", 0x3AE19C, 0x2C
+	.asciz "is available. Please do NOT use this   \n"
+	.balign 4
 "@341":
-	.incbin "baserom.dol", 0x3AE1C8, 0x30
+	.asciz "mode in real games!!!                  \n"
+	.balign 4
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 regs:

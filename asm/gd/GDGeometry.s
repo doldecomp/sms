@@ -1566,6 +1566,8 @@ lbl_800B071C:
     .4byte lbl_800AF8A8
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cm2hw$400:
-	.incbin "baserom.dol", 0x3E32F0, 0x4
+	.4byte 0x00020103
 cm2hw$515:
-	.incbin "baserom.dol", 0x3E32F4, 0xC
+	.4byte 0x00020103
+	.4byte 0
+	.4byte 0

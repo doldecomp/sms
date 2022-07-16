@@ -1483,131 +1483,237 @@ lbl_801068B8:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x374F34, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1755":
-	.incbin "baserom.dol", 0x374F48, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1756":
-	.incbin "baserom.dol", 0x374F78, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1757":
-	.incbin "baserom.dol", 0x374FB0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1758":
-	.incbin "baserom.dol", 0x374FE4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2574":
-	.incbin "baserom.dol", 0x375008, 0xC
+	.asciz "NPCMonteM"
+	.balign 4
 "@2576":
-	.incbin "baserom.dol", 0x375014, 0xC
+	.asciz "NPCMonteMA"
+	.balign 4
 "@2577":
-	.incbin "baserom.dol", 0x375020, 0xC
+	.asciz "NPCMonteMB"
+	.balign 4
 "@2578":
-	.incbin "baserom.dol", 0x37502C, 0xC
+	.asciz "NPCMonteMC"
+	.balign 4
 "@2579":
-	.incbin "baserom.dol", 0x375038, 0xC
+	.asciz "NPCMonteMD"
+	.balign 4
 "@2580":
-	.incbin "baserom.dol", 0x375044, 0xC
+	.asciz "NPCMonteME"
+	.balign 4
 "@2581":
-	.incbin "baserom.dol", 0x375050, 0xC
+	.asciz "NPCMonteMF"
+	.balign 4
 "@2582":
-	.incbin "baserom.dol", 0x37505C, 0xC
+	.asciz "NPCMonteMG"
+	.balign 4
 "@2583":
-	.incbin "baserom.dol", 0x375068, 0xC
+	.asciz "NPCMonteMH"
+	.balign 4
 "@2584":
-	.incbin "baserom.dol", 0x375074, 0xC
+	.asciz "NPCMonteW"
+	.balign 4
 "@2585":
-	.incbin "baserom.dol", 0x375080, 0xC
+	.asciz "NPCMonteWA"
+	.balign 4
 "@2586":
-	.incbin "baserom.dol", 0x37508C, 0xC
+	.asciz "NPCMonteWB"
+	.balign 4
 "@2587":
-	.incbin "baserom.dol", 0x375098, 0xC
+	.asciz "NPCMonteWC"
+	.balign 4
 "@2588":
-	.incbin "baserom.dol", 0x3750A4, 0xC
+	.asciz "NPCMareM"
+	.balign 4
 "@2589":
-	.incbin "baserom.dol", 0x3750B0, 0xC
+	.asciz "NPCMareMA"
+	.balign 4
 "@2590":
-	.incbin "baserom.dol", 0x3750BC, 0xC
+	.asciz "NPCMareMB"
+	.balign 4
 "@2591":
-	.incbin "baserom.dol", 0x3750C8, 0xC
+	.asciz "NPCMareMC"
+	.balign 4
 "@2592":
-	.incbin "baserom.dol", 0x3750D4, 0xC
+	.asciz "NPCMareMD"
+	.balign 4
 "@2593":
-	.incbin "baserom.dol", 0x3750E0, 0xC
+	.asciz "NPCMareW"
+	.balign 4
 "@2594":
-	.incbin "baserom.dol", 0x3750EC, 0xC
+	.asciz "NPCMareWA"
+	.balign 4
 "@2595":
-	.incbin "baserom.dol", 0x3750F8, 0xC
+	.asciz "NPCMareWB"
+	.balign 4
 "@2596":
-	.incbin "baserom.dol", 0x375104, 0xC
+	.asciz "NPCKinopio"
+	.balign 4
 "@2597":
-	.incbin "baserom.dol", 0x375110, 0xC
+	.asciz "NPCKinojii"
+	.balign 4
 "@2598":
-	.incbin "baserom.dol", 0x37511C, 0xC
+	.asciz "NPCPeach"
+	.balign 4
 "@2599":
-	.incbin "baserom.dol", 0x375128, 0x10
+	.asciz "NPCRaccoonDog"
+	.balign 4
 "@2600":
-	.incbin "baserom.dol", 0x375138, 0x10
+	.asciz "NPCSunflowerL"
+	.balign 4
 "@2601":
-	.incbin "baserom.dol", 0x375148, 0x10
+	.asciz "NPCSunflowerS"
+	.balign 4
 "@2602":
-	.incbin "baserom.dol", 0x375158, 0xC
+	.asciz "NPCDummy"
+	.balign 4
 "@2603":
-	.incbin "baserom.dol", 0x375164, 0xC
+	.asciz "NPCBoard"
+	.balign 4
 "@2604":
-	.incbin "baserom.dol", 0x375170, 0x10
+	.asciz "MonteMManager"
+	.balign 4
 "@2605":
-	.incbin "baserom.dol", 0x375180, 0x10
+	.asciz "MonteMAManager"
+	.balign 4
 "@2606":
-	.incbin "baserom.dol", 0x375190, 0x10
+	.asciz "MonteMBManager"
+	.balign 4
 "@2607":
-	.incbin "baserom.dol", 0x3751A0, 0x10
+	.asciz "MonteMCManager"
+	.balign 4
 "@2608":
-	.incbin "baserom.dol", 0x3751B0, 0x10
+	.asciz "MonteMDManager"
+	.balign 4
 "@2609":
-	.incbin "baserom.dol", 0x3751C0, 0x10
+	.asciz "MonteMEManager"
+	.balign 4
 "@2610":
-	.incbin "baserom.dol", 0x3751D0, 0x10
+	.asciz "MonteMFManager"
+	.balign 4
 "@2611":
-	.incbin "baserom.dol", 0x3751E0, 0x10
+	.asciz "MonteMGManager"
+	.balign 4
 "@2612":
-	.incbin "baserom.dol", 0x3751F0, 0x10
+	.asciz "MonteMHManager"
+	.balign 4
 "@2613":
-	.incbin "baserom.dol", 0x375200, 0x10
+	.asciz "MonteWManager"
+	.balign 4
 "@2614":
-	.incbin "baserom.dol", 0x375210, 0x10
+	.asciz "MonteWAManager"
+	.balign 4
 "@2615":
-	.incbin "baserom.dol", 0x375220, 0x10
+	.asciz "MonteWBManager"
+	.balign 4
 "@2616":
-	.incbin "baserom.dol", 0x375230, 0x10
+	.asciz "MonteWCManager"
+	.balign 4
 "@2617":
-	.incbin "baserom.dol", 0x375240, 0x10
+	.asciz "MareMManager"
+	.balign 4
 "@2618":
-	.incbin "baserom.dol", 0x375250, 0x10
+	.asciz "MareMAManager"
+	.balign 4
 "@2619":
-	.incbin "baserom.dol", 0x375260, 0x10
+	.asciz "MareMBManager"
+	.balign 4
 "@2620":
-	.incbin "baserom.dol", 0x375270, 0x10
+	.asciz "MareMCManager"
+	.balign 4
 "@2621":
-	.incbin "baserom.dol", 0x375280, 0x10
+	.asciz "MareMDManager"
+	.balign 4
 "@2622":
-	.incbin "baserom.dol", 0x375290, 0x10
+	.asciz "MareWManager"
+	.balign 4
 "@2623":
-	.incbin "baserom.dol", 0x3752A0, 0x10
+	.asciz "MareWAManager"
+	.balign 4
 "@2624":
-	.incbin "baserom.dol", 0x3752B0, 0x10
+	.asciz "MareWBManager"
+	.balign 4
 "@2625":
-	.incbin "baserom.dol", 0x3752C0, 0x10
+	.asciz "KinopioManager"
+	.balign 4
 "@2626":
-	.incbin "baserom.dol", 0x3752D0, 0x10
+	.asciz "KinojiiManager"
+	.balign 4
 "@2627":
-	.incbin "baserom.dol", 0x3752E0, 0x10
+	.asciz "PeachManager"
+	.balign 4
 "@2628":
-	.incbin "baserom.dol", 0x3752F0, 0x14
+	.asciz "RaccoonDogManager"
+	.balign 4
 "@2629":
-	.incbin "baserom.dol", 0x375304, 0x14
+	.asciz "SunflowerLManager"
+	.balign 4
 "@2630":
-	.incbin "baserom.dol", 0x375318, 0x14
+	.asciz "SunflowerSManager"
+	.balign 4
 "@2631":
-	.incbin "baserom.dol", 0x37532C, 0x10
+	.asciz "MareJellyFish"
+	.balign 4
 "@2632":
-	.incbin "baserom.dol", 0x37533C, 0x14
+	.asciz "BoardNpcManager"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TMareWManager
@@ -1662,4 +1768,5 @@ __vt__13TMareMManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2575":
-	.incbin "baserom.dol", 0x3E5278, 0x8
+	.4byte 0x3F000000
+	.4byte 0

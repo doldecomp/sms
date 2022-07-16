@@ -448,25 +448,88 @@ lbl_80359EA8:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A2AE4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1857":
-	.incbin "baserom.dol", 0x3A2AF8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1858":
-	.incbin "baserom.dol", 0x3A2B28, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1859":
-	.incbin "baserom.dol", 0x3A2B60, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1860":
-	.incbin "baserom.dol", 0x3A2B94, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2176":
-	.incbin "baserom.dol", 0x3A2BB8, 0x10
+	.4byte 0x9383834A
+	.4byte 0x83818389
+	.4byte 0x82609286
+	.4byte 0x90530000
 "@2177":
-	.incbin "baserom.dol", 0x3A2BC8, 0x10
+	.4byte 0x9383834A
+	.4byte 0x83818389
+	.4byte 0x82619286
+	.4byte 0x90530000
 "@2178":
-	.incbin "baserom.dol", 0x3A2BD8, 0x10
+	.4byte 0x9383834A
+	.4byte 0x83818389
+	.4byte 0x82629286
+	.4byte 0x90530000
 "@2179":
-	.incbin "baserom.dol", 0x3A2BE8, 0x10
+	.4byte 0x9383834A
+	.4byte 0x83818389
+	.4byte 0x82639286
+	.4byte 0x90530000
 "@2180":
-	.incbin "baserom.dol", 0x3A2BF8, 0x10
+	.4byte 0x9383834A
+	.4byte 0x83818389
+	.4byte 0x82649286
+	.4byte 0x90530000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec:
@@ -482,14 +545,15 @@ sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec:
 "@2326":
   .4byte 0
 "@2327":
-	.incbin "baserom.dol", 0x3EC2DC, 0x4
+	.4byte 0x3F800000
 "@2328":
-	.incbin "baserom.dol", 0x3EC2E0, 0x4
+	.4byte 0x38000000
 "@2329":
-	.incbin "baserom.dol", 0x3EC2E4, 0x4
+	.4byte 0x3F000000
 "@2330":
-	.incbin "baserom.dol", 0x3EC2E8, 0x4
+	.4byte 0x42C80000
 "@2331":
-	.incbin "baserom.dol", 0x3EC2EC, 0x4
+	.4byte 0x46FFFDFF
 "@2333":
-	.incbin "baserom.dol", 0x3EC2F0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

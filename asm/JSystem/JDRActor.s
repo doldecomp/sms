@@ -313,7 +313,9 @@ getType__Q26JDrama6TActorCFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@533":
-	.incbin "baserom.dol", 0x36DEF0, 0x10
+	.asciz "<LightMap>"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__Q26JDrama6TActor

@@ -6422,43 +6422,114 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38C5D4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2371":
-	.incbin "baserom.dol", 0x38C5E8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2372":
-	.incbin "baserom.dol", 0x38C618, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2373":
-	.incbin "baserom.dol", 0x38C650, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2374":
-	.incbin "baserom.dol", 0x38C684, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@3416":
-	.incbin "baserom.dol", 0x38C6A8, 0x24
+	.asciz "/scene/mapObj/watermelon_bomb.jpa"
+	.balign 4
 "@3417":
-	.incbin "baserom.dol", 0x38C6CC, 0x24
+	.asciz "/scene/mapObj/watermelon_bomb_a.jpa"
 "@3418":
-	.incbin "baserom.dol", 0x38C6F0, 0x24
+	.asciz "/scene/mapObj/watermelon_bomb_b.jpa"
 "@3419":
-	.incbin "baserom.dol", 0x38C714, 0x28
+	.asciz "/scene/mapObj/watermelon_shrink_a.jpa"
+	.balign 4
 "@3420":
-	.incbin "baserom.dol", 0x38C73C, 0x28
+	.asciz "/scene/mapObj/watermelon_shrink_b.jpa"
+	.balign 4
 "@3421":
-	.incbin "baserom.dol", 0x38C764, 0x10
+	.asciz "/watermelon.prm"
 "@3432":
-	.incbin "baserom.dol", 0x38C774, 0x1C
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x816982A8
+	.4byte 0x89BB82AF
+	.4byte 0x83588343
+	.4byte 0x834A9770
+	.4byte 0x816A0000
 "@3489":
-	.incbin "baserom.dol", 0x38C790, 0x10
+	.4byte 0x83588343
+	.4byte 0x834A8169
+	.4byte 0x91E5816A
+	.4byte 0
 "@3493":
-	.incbin "baserom.dol", 0x38C7A0, 0x14
+	.4byte 0x83588343
+	.4byte 0x834A8353
+	.4byte 0x815B838B
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@3494":
-	.incbin "baserom.dol", 0x38C7B4, 0x18
+	.4byte 0x83588343
+	.4byte 0x834A8356
+	.4byte 0x83838343
+	.4byte 0x8393834A
+	.4byte 0x83818389
+	.4byte 0
 "@3829":
-	.incbin "baserom.dol", 0x38C7CC, 0x10
+	.asciz "FruitCoconut"
+	.balign 4
 "@3830":
-	.incbin "baserom.dol", 0x38C7DC, 0xC
+	.asciz "FruitDurian"
 "@3831":
-	.incbin "baserom.dol", 0x38C7E8, 0xC
+	.asciz "FruitPapaya"
 "@3832":
-	.incbin "baserom.dol", 0x38C7F4, 0xC
+	.asciz "FruitPine"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TBigWatermelon
@@ -7075,106 +7146,109 @@ __vt__11TMapObjBall:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mFruitLivingTime__11TResetFruit:
-	.incbin "baserom.dol", 0x3E36E8, 0x4
+	.4byte 0x00003840
 mScaleUpSpeed__11TResetFruit:
-	.incbin "baserom.dol", 0x3E36EC, 0x4
+	.4byte 0x3F866666
 mBreakingScaleSpeed__11TResetFruit:
-	.incbin "baserom.dol", 0x3E36F0, 0x4
+	.4byte 0x3F75C28F
 mFruitWaitTimeToAppear__11TResetFruit:
-	.incbin "baserom.dol", 0x3E36F4, 0xC
+	.4byte 0x00000168
+	.4byte 0
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3387":
   .4byte 0
 "@3433":
-	.incbin "baserom.dol", 0x3E8414, 0x4
+	.4byte 0xC5919800
 "@3434":
-	.incbin "baserom.dol", 0x3E8418, 0x4
+	.4byte 0x43E60000
 "@3435":
-	.incbin "baserom.dol", 0x3E841C, 0x4
+	.4byte 0x4654D000
 "@3490":
-	.incbin "baserom.dol", 0x3E8420, 0x4
+	.4byte 0xC591A000
 "@3491":
-	.incbin "baserom.dol", 0x3E8424, 0x4
+	.4byte 0x44A28000
 "@3492":
-	.incbin "baserom.dol", 0x3E8428, 0x4
+	.4byte 0x46548000
 "@3495":
-	.incbin "baserom.dol", 0x3E842C, 0x4
+	.4byte 0x38000000
 "@3496":
-	.incbin "baserom.dol", 0x3E8430, 0x4
+	.4byte 0x41A00000
 "@3497":
-	.incbin "baserom.dol", 0x3E8434, 0x4
+	.4byte 0x3F000000
 "@3499":
-	.incbin "baserom.dol", 0x3E8438, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3568":
-	.incbin "baserom.dol", 0x3E8440, 0x4
+	.4byte 0x36800000
 "@3569":
-	.incbin "baserom.dol", 0x3E8444, 0x4
+	.4byte 0x43480000
 "@3570":
-	.incbin "baserom.dol", 0x3E8448, 0x4
+	.4byte 0x3D4CCCCD
 "@3571":
-	.incbin "baserom.dol", 0x3E844C, 0x4
+	.4byte 0x3F800000
 "@3592":
-	.incbin "baserom.dol", 0x3E8450, 0x4
+	.4byte 0x42480000
 "@3612":
-	.incbin "baserom.dol", 0x3E8454, 0x4
+	.4byte 0x41C80000
 "@3688":
-	.incbin "baserom.dol", 0x3E8458, 0x4
+	.4byte 0x40400000
 "@3689":
-	.incbin "baserom.dol", 0x3E845C, 0x4
+	.4byte 0x3F19999A
 "@3690":
-	.incbin "baserom.dol", 0x3E8460, 0x4
+	.4byte 0x41F00000
 "@3753":
-	.incbin "baserom.dol", 0x3E8464, 0x4
+	.4byte 0x40A00000
 "@3804":
-	.incbin "baserom.dol", 0x3E8468, 0x4
+	.4byte 0x43360B61
 "@3964":
-	.incbin "baserom.dol", 0x3E846C, 0x4
+	.4byte 0x41200000
 "@4225":
-	.incbin "baserom.dol", 0x3E8470, 0x4
+	.4byte 0x3E4CCCCD
 "@4359":
-	.incbin "baserom.dol", 0x3E8474, 0x4
+	.4byte 0x40000000
 "@4716":
-	.incbin "baserom.dol", 0x3E8478, 0x4
+	.4byte 0x40800000
 "@4717":
-	.incbin "baserom.dol", 0x3E847C, 0x4
+	.4byte 0x3E19999A
 "@4718":
-	.incbin "baserom.dol", 0x3E8480, 0x4
+	.4byte 0x3F666666
 "@4719":
-	.incbin "baserom.dol", 0x3E8484, 0x4
+	.4byte 0x3D75C28F
 "@4720":
-	.incbin "baserom.dol", 0x3E8488, 0x4
+	.4byte 0x3FC00000
 "@4721":
-	.incbin "baserom.dol", 0x3E848C, 0x4
+	.4byte 0x40200000
 "@4722":
-	.incbin "baserom.dol", 0x3E8490, 0x4
+	.4byte 0x3A83126F
 "@4723":
-	.incbin "baserom.dol", 0x3E8494, 0x4
+	.4byte 0x3E99999A
 "@4724":
-	.incbin "baserom.dol", 0x3E8498, 0x4
+	.4byte 0x3CA3D70A
 "@4725":
-	.incbin "baserom.dol", 0x3E849C, 0x4
+	.4byte 0x3D6147AE
 "@4726":
-	.incbin "baserom.dol", 0x3E84A0, 0x4
+	.4byte 0x3F547AE1
 "@4727":
-	.incbin "baserom.dol", 0x3E84A4, 0x4
+	.4byte 0x3E051EB8
 "@4728":
-	.incbin "baserom.dol", 0x3E84A8, 0x4
+	.4byte 0x3F99999A
 "@4729":
-	.incbin "baserom.dol", 0x3E84AC, 0x4
+	.4byte 0x3F4CCCCD
 "@4730":
-	.incbin "baserom.dol", 0x3E84B0, 0x4
+	.4byte 0x3FA66666
 "@4731":
-	.incbin "baserom.dol", 0x3E84B4, 0x4
+	.4byte 0x41700000
 "@4732":
-	.incbin "baserom.dol", 0x3E84B8, 0x4
+	.4byte 0x3ECCCCCD
 "@4733":
-	.incbin "baserom.dol", 0x3E84BC, 0x4
+	.4byte 0x42340000
 "@4734":
-	.incbin "baserom.dol", 0x3E84C0, 0x4
+	.4byte 0x42200000
 "@5113":
-	.incbin "baserom.dol", 0x3E84C4, 0x4
+	.4byte 0x43020000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@5478":

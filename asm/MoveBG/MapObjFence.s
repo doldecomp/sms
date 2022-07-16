@@ -2402,61 +2402,137 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38D214, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38D228, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38D258, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38D290, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38D2C4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x38D2E8, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x38D30C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2698":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2700":
-	.incbin "baserom.dol", 0x38D328, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@3311":
-	.incbin "baserom.dol", 0x38D334, 0x1C
+	.4byte 0x926E8C60
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x83818362
+	.4byte 0x835A8393
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3314":
-	.incbin "baserom.dol", 0x38D350, 0x18
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x834E8367
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@3418":
-	.incbin "baserom.dol", 0x38D368, 0x1C
+	.asciz "fence_revolve_inner_v_tool"
+	.balign 4
 "@3419":
-	.incbin "baserom.dol", 0x38D384, 0x1C
+	.asciz "fence_revolve_inner_h_tool"
+	.balign 4
 "@3679":
-	.incbin "baserom.dol", 0x38D3A0, 0x20
+	.asciz "fence_revolve_inner_roll_down"
+	.balign 4
 "@3680":
-	.incbin "baserom.dol", 0x38D3C0, 0x1C
+	.asciz "fence_revolve_inner_roll_up"
 "@3708":
-	.incbin "baserom.dol", 0x38D3DC, 0x1C
+	.asciz "fence_revolve_outer_v_tool"
+	.balign 4
 "@3709":
-	.incbin "baserom.dol", 0x38D3F8, 0x1C
+	.asciz "fence_revolve_outer_h_tool"
+	.balign 4
 "@3710":
-	.incbin "baserom.dol", 0x38D414, 0x1C
+	.asciz "bambooFence_revolve_inner"
+	.balign 4
 "@3711":
-	.incbin "baserom.dol", 0x38D430, 0x14
+	.asciz "fence_revolve_inner"
 "@3714":
-	.incbin "baserom.dol", 0x38D444, 0x1C
+	.asciz "fence_revolve_outer_shake"
+	.balign 4
 "@3715":
-	.incbin "baserom.dol", 0x38D460, 0x1C
+	.asciz "fence_revolve_inner_shake"
+	.balign 4
 "@3754":
-	.incbin "baserom.dol", 0x38D47C, 0xC
+	.asciz "fence3x3"
+	.balign 4
 "@3755":
-	.incbin "baserom.dol", 0x38D488, 0x14
+	.asciz "fence_normal_v_tool"
 "@3756":
-	.incbin "baserom.dol", 0x38D49C, 0x10
+	.asciz "fence_h_tool"
+	.balign 4
 "@3757":
-	.incbin "baserom.dol", 0x38D4AC, 0x14
+	.asciz "fence_half_v_tool"
+	.balign 4
 "@3758":
-	.incbin "baserom.dol", 0x38D4C0, 0x14
+	.asciz "fence_half_h_tool"
+	.balign 4
 "@3761":
-	.incbin "baserom.dol", 0x38D4D4, 0x14
+	.asciz "fence_normal_shake"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TRailFence
@@ -3012,62 +3088,65 @@ __vt__6TFence:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mSpeed__20TRevolvingFenceInner:
-	.incbin "baserom.dol", 0x3E3728, 0x4
+	.4byte 0x40800000
 mWaterAccel__11TFenceWater:
-	.incbin "baserom.dol", 0x3E372C, 0x4
+	.4byte 0x40066666
 mBackSpeed__11TFenceWater:
-	.incbin "baserom.dol", 0x3E3730, 0x4
+	.4byte 0x40400000
 mTurnedWaitTime__11TFenceWater:
-	.incbin "baserom.dol", 0x3E3734, 0x4
+	.4byte 0x00000258
 mFallHeight__10TRailFence:
-	.incbin "baserom.dol", 0x3E3738, 0x4
+	.4byte 0x47435000
 mWaitTime__10TRailFence:
-	.incbin "baserom.dol", 0x3E373C, 0x4
+	.4byte 0x000000F0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3023":
   .4byte 0
 "@3041":
-	.incbin "baserom.dol", 0x3E8614, 0x4
+	.4byte 0x41000000
 "@3042":
-	.incbin "baserom.dol", 0x3E8618, 0x4
+	.4byte 0x3E99999A
 "@3075":
-	.incbin "baserom.dol", 0x3E861C, 0x4
+	.4byte 0xC2C80000
 "@3140":
-	.incbin "baserom.dol", 0x3E8620, 0x4
+	.4byte 0x42480000
 "@3262":
-	.incbin "baserom.dol", 0x3E8624, 0x4
+	.4byte 0x43B40000
 "@3263":
-	.incbin "baserom.dol", 0x3E8628, 0x4
+	.4byte 0x3F800000
 "@3264":
-	.incbin "baserom.dol", 0x3E862C, 0x4
+	.4byte 0x3C8EFA36
 "@3265":
-	.incbin "baserom.dol", 0x3E8630, 0x4
+	.4byte 0x43160000
 "@3310":
-	.incbin "baserom.dol", 0x3E8634, 0x8
+	.asciz "bamboo"
+	.balign 4
 "@3312":
-	.incbin "baserom.dol", 0x3E863C, 0x4
+	.4byte 0x42C80000
 "@3313":
-	.incbin "baserom.dol", 0x3E8640, 0x4
+	.4byte 0x43960000
 "@3333":
-	.incbin "baserom.dol", 0x3E8644, 0x4
+	.4byte 0x43FA0000
 "@3334":
-	.incbin "baserom.dol", 0x3E8648, 0x4
+	.4byte 0x43360B61
 "@3364":
-	.incbin "baserom.dol", 0x3E864C, 0x4
+	.4byte 0xC2B40000
 "@3416":
-	.incbin "baserom.dol", 0x3E8650, 0x8
+	.asciz "mapObj"
+	.balign 4
 "@3417":
-	.incbin "baserom.dol", 0x3E8658, 0x4
+	.4byte 0x42A00000
 "@3560":
-	.incbin "baserom.dol", 0x3E865C, 0x4
+	.4byte 0x43340000
 "@3561":
-	.incbin "baserom.dol", 0x3E8660, 0x4
+	.4byte 0xC3340000
 "@3681":
-	.incbin "baserom.dol", 0x3E8664, 0x4
+	.4byte 0x4048F5C3
 "@3682":
-	.incbin "baserom.dol", 0x3E8668, 0x8
+	.4byte 0x42B40000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3789":

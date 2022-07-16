@@ -103,10 +103,12 @@ __vt__Q28JASystem10TInstSense:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@252":
-	.incbin "baserom.dol", 0x3E4318, 0x4
+	.4byte 0x42FE0000
 "@253":
-	.incbin "baserom.dol", 0x3E431C, 0x4
+	.4byte 0x3F800000
 "@255":
-	.incbin "baserom.dol", 0x3E4320, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@257":
-	.incbin "baserom.dol", 0x3E4328, 0x8
+	.4byte 0x43300000
+	.4byte 0

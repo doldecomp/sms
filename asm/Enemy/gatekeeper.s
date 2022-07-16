@@ -5188,33 +5188,86 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x39D8F4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2197":
-	.incbin "baserom.dol", 0x39D908, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2198":
-	.incbin "baserom.dol", 0x39D938, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2199":
-	.incbin "baserom.dol", 0x39D970, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2200":
-	.incbin "baserom.dol", 0x39D9A4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2930":
-	.incbin "baserom.dol", 0x39D9C8, 0x30
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_appear1.bas"
+	.balign 4
 "@2931":
-	.incbin "baserom.dol", 0x39D9F8, 0x30
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_damage1.bas"
+	.balign 4
 "@2932":
-	.incbin "baserom.dol", 0x39DA28, 0x2C
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_dead1.bas"
 "@2933":
-	.incbin "baserom.dol", 0x39DA54, 0x2C
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_dive1.bas"
 "@2934":
-	.incbin "baserom.dol", 0x39DA80, 0x30
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_iyaiya1.bas"
+	.balign 4
 "@2935":
-	.incbin "baserom.dol", 0x39DAB0, 0x2C
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_wait2.bas"
 "@2936":
-	.incbin "baserom.dol", 0x39DADC, 0x34
+	.asciz "/scene/gatekeeper/bas/gene_pakkun_wait2_loop.bas"
+	.balign 4
 "@2989":
-	.incbin "baserom.dol", 0x39DB10, 0x18
+	.asciz "gene_pakkun_model1.bmd"
+	.balign 4
 "@2990":
-	.incbin "baserom.dol", 0x39DB28, 0x18
+	.asciz "stamp_keeper_model1.bmd"
 entry$2988:
   .4byte "@2989"
   .4byte 0x11210000
@@ -5226,53 +5279,105 @@ entry$2988:
   .4byte 0
   .4byte 0
 "@3574":
-	.incbin "baserom.dol", 0x39DB64, 0x18
+	.4byte 0x8353838D
+	.4byte 0x8353838D
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3760":
-	.incbin "baserom.dol", 0x39DB7C, 0x10
+	.4byte 0x25738C82
+	.4byte 0x92BE834A
+	.4byte 0x83818389
+	.4byte 0
 "@4277":
-	.incbin "baserom.dol", 0x39DB8C, 0x10
+	.4byte 0x25738F6F
+	.4byte 0x8CBB834A
+	.4byte 0x83818389
+	.4byte 0
 "@4875":
-	.incbin "baserom.dol", 0x39DB9C, 0x1C
+	.4byte 0x8A678E55
+	.4byte 0x83698381
+	.4byte 0x834E838A
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@4876":
-	.incbin "baserom.dol", 0x39DBB8, 0x18
+	.4byte 0x83698381
+	.4byte 0x834E838A
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@5254":
-	.incbin "baserom.dol", 0x39DBD0, 0x18
+	.4byte 0x8351815B
+	.4byte 0x8367834C
+	.4byte 0x815B8370
+	.4byte 0x815B8169
+	.4byte 0x838A8352
+	.4byte 0x816A0000
 "@5255":
-	.incbin "baserom.dol", 0x39DBE8, 0x1C
+	.4byte 0x8351815B
+	.4byte 0x8367834C
+	.4byte 0x815B8370
+	.4byte 0x815B8169
+	.4byte 0x837D8393
+	.4byte 0x837D816A
+	.4byte 0
 "@5261":
-	.incbin "baserom.dol", 0x39DC04, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@5262":
-	.incbin "baserom.dol", 0x39DC10, 0x10
+	.asciz "TBGKObstacle"
+	.balign 4
 "@5265":
-	.incbin "baserom.dol", 0x39DC20, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 "@5266":
-	.incbin "baserom.dol", 0x39DC44, 0x18
+	.asciz "Q_kepper_dummy_128IA4"
+	.balign 4
 "@5267":
-	.incbin "baserom.dol", 0x39DC5C, 0xC
+	.4byte 0x93AA8371
+	.4byte 0x83628367
+	.4byte 0
 "@5537":
-	.incbin "baserom.dol", 0x39DC68, 0x18
+	.asciz "/enemy/gatekeeper.prm"
+	.balign 4
 "@5538":
-	.incbin "baserom.dol", 0x39DC80, 0x10
+	.asciz "mSLDiveTimer"
+	.balign 4
 "@5539":
-	.incbin "baserom.dol", 0x39DC90, 0x10
+	.asciz "mSLLoop2Dive"
+	.balign 4
 "@5540":
-	.incbin "baserom.dol", 0x39DCA0, 0x18
+	.asciz "mSLLaunchTimerNormal"
+	.balign 4
 "@5541":
-	.incbin "baserom.dol", 0x39DCB8, 0x18
+	.asciz "mSLLaunchTimerDamage"
+	.balign 4
 "@5571":
-	.incbin "baserom.dol", 0x39DCD0, 0x28
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_dead.jpa"
+	.balign 4
 "@5572":
-	.incbin "baserom.dol", 0x39DCF8, 0x2C
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_deadsmoke.jpa"
 "@5573":
-	.incbin "baserom.dol", 0x39DD24, 0x28
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_bota.jpa"
+	.balign 4
 "@5574":
-	.incbin "baserom.dol", 0x39DD4C, 0x2C
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_yodare_s.jpa"
+	.balign 4
 "@5575":
-	.incbin "baserom.dol", 0x39DD78, 0x2C
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_yodare_l.jpa"
+	.balign 4
 "@5576":
-	.incbin "baserom.dol", 0x39DDA4, 0x2C
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_kemuri.jpa"
+	.balign 4
 "@5577":
-	.incbin "baserom.dol", 0x39DDD0, 0x30
+	.asciz "/scene/gatekeeper/jpa/ms_gkpa_kemuri_w.jpa"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 gatekeeper_bastable:
@@ -5631,78 +5736,79 @@ __vt__9TGKHitObj:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@3012":
-	.incbin "baserom.dol", 0x3E3AD8, 0x4
+	.4byte 0x40400000
 "@3014":
-	.incbin "baserom.dol", 0x3E3ADC, 0x4
+	.4byte 0xC0400000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3634":
-	.incbin "baserom.dol", 0x3EB640, 0x4
+	.4byte 0x38000000
 "@3635":
-	.incbin "baserom.dol", 0x3EB644, 0x4
+	.4byte 0x43700000
 "@3637":
-	.incbin "baserom.dol", 0x3EB648, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3761":
   .4byte 0
 "@3762":
-	.incbin "baserom.dol", 0x3EB654, 0x4
+	.4byte 0x3F800000
 "@3834":
-	.incbin "baserom.dol", 0x3EB658, 0x4
+	.4byte 0x3DCCCCCD
 "@4366":
-	.incbin "baserom.dol", 0x3EB65C, 0x4
+	.4byte 0x41900000
 "@4553":
-	.incbin "baserom.dol", 0x3EB660, 0x4
+	.4byte 0x42200000
 "@4647":
-	.incbin "baserom.dol", 0x3EB664, 0x4
+	.4byte 0x42480000
 "@4648":
-	.incbin "baserom.dol", 0x3EB668, 0x4
+	.4byte 0x43200000
 "@4744":
-	.incbin "baserom.dol", 0x3EB66C, 0x4
+	.4byte 0x3F000000
 "@4745":
-	.incbin "baserom.dol", 0x3EB670, 0x4
+	.4byte 0x40400000
 "@4746":
-	.incbin "baserom.dol", 0x3EB674, 0x4
+	.4byte 0x44FA0000
 "@4877":
-	.incbin "baserom.dol", 0x3EB678, 0x4
+	.4byte 0x42C80000
 "@4878":
-	.incbin "baserom.dol", 0x3EB67C, 0x4
+	.4byte 0x40800000
 "@4879":
-	.incbin "baserom.dol", 0x3EB680, 0x4
+	.4byte 0x43360B61
 "@4880":
-	.incbin "baserom.dol", 0x3EB684, 0x4
+	.4byte 0x42100000
 "@4881":
-	.incbin "baserom.dol", 0x3EB688, 0x4
+	.4byte 0x41400000
 "@4999":
-	.incbin "baserom.dol", 0x3EB68C, 0x4
+	.4byte 0x3E800000
 "@5256":
-	.incbin "baserom.dol", 0x3EB690, 0x4
+	.4byte 0x3F4CCCCD
 "@5257":
-	.incbin "baserom.dol", 0x3EB694, 0x4
+	.4byte 0x3F99999A
 "@5258":
-	.incbin "baserom.dol", 0x3EB698, 0x4
+	.4byte 0x3FB33333
 "@5259":
-	.incbin "baserom.dol", 0x3EB69C, 0x4
+	.4byte 0x43C80000
 "@5260":
-	.incbin "baserom.dol", 0x3EB6A0, 0x4
+	.4byte 0x43160000
 "@5263":
-	.incbin "baserom.dol", 0x3EB6A4, 0x4
+	.4byte 0x447A0000
 "@5264":
-	.incbin "baserom.dol", 0x3EB6A8, 0x4
+	.4byte 0x44480000
 "@5268":
-	.incbin "baserom.dol", 0x3EB6AC, 0x4
+	.4byte 0x43480000
 "@5470":
-	.incbin "baserom.dol", 0x3EB6B0, 0x4
+	.4byte 0x42B40000
 "@5471":
-	.incbin "baserom.dol", 0x3EB6B4, 0x4
+	.4byte 0xC2B40000
 "@5472":
-	.incbin "baserom.dol", 0x3EB6B8, 0x4
+	.4byte 0x3BB40000
 "@5473":
-	.incbin "baserom.dol", 0x3EB6BC, 0x4
+	.4byte 0x43340000
 "@5474":
-	.incbin "baserom.dol", 0x3EB6C0, 0x4
+	.4byte 0x43B40000
 "@5475":
-	.incbin "baserom.dol", 0x3EB6C4, 0x4
+	.4byte 0xC3340000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3260":

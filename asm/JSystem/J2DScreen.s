@@ -845,11 +845,14 @@ lbl_80019394:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@321":
-	.incbin "baserom.dol", 0x36DB90, 0x10
+	.asciz "J2DScreen.cpp"
+	.balign 4
 "@322":
-	.incbin "baserom.dol", 0x36DBA0, 0x1C
+	.asciz "SCRN resource is broken.\n"
+	.balign 4
 "@326":
-	.incbin "baserom.dol", 0x36DBBC, 0x2C
+	.asciz "There is a unknown pane in SCRN resource\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@323":

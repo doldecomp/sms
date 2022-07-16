@@ -1226,6 +1226,7 @@ __vt__Q26JDrama7TCamera:
 "@877":
   .4byte 0
 "@878":
-	.incbin "baserom.dol", 0x3E409C, 0x4
+	.4byte 0x3F800000
 "@879":
-	.incbin "baserom.dol", 0x3E40A0, 0x8
+	.4byte 0x3C8EFA35
+	.4byte 0

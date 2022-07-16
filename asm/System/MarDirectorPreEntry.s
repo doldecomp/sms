@@ -236,67 +236,156 @@ lbl_800EF9CC:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3708EC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x370900, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x370924, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@1615":
-	.incbin "baserom.dol", 0x370934, 0x18
+	.asciz "J3D System Set View Mtx"
 "@1616":
-	.incbin "baserom.dol", 0x37094C, 0x14
+	.4byte 0x8BBE955C
+	.4byte 0x8EA68382
+	.4byte 0x8366838B
+	.4byte 0x8AC7979D
+	.4byte 0
 "@1617":
-	.incbin "baserom.dol", 0x370960, 0x10
+	.4byte 0x837D8362
+	.4byte 0x8376834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@1618":
-	.incbin "baserom.dol", 0x370970, 0xC
+	.asciz "camera 1"
+	.balign 4
 "@1619":
-	.incbin "baserom.dol", 0x37097C, 0x10
+	.asciz "DrawBuf Sky Opa"
 "@1620":
-	.incbin "baserom.dol", 0x37098C, 0x10
+	.asciz "DrawBuf Sky Xlu"
 "@1621":
-	.incbin "baserom.dol", 0x37099C, 0xC
+	.4byte 0x8BF3834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@1622":
-	.incbin "baserom.dol", 0x3709A8, 0x10
+	.asciz "DrawBuf MapOpa"
+	.balign 4
 "@1623":
-	.incbin "baserom.dol", 0x3709B8, 0x10
+	.asciz "DrawBuf MapXlu"
+	.balign 4
 "@1624":
-	.incbin "baserom.dol", 0x3709C8, 0x20
+	.4byte 0x44726177
+	.4byte 0x42756620
+	.4byte 0x4D617020
+	.4byte 0x94BC93A7
+	.4byte 0x96BE9744
+	.4byte 0x90E62028
+	.asciz "opa)"
+	.balign 4
 "@1625":
-	.incbin "baserom.dol", 0x3709E8, 0x20
+	.4byte 0x44726177
+	.4byte 0x42756620
+	.4byte 0x4D617020
+	.4byte 0x94BC93A7
+	.4byte 0x96BE9744
+	.4byte 0x90E62028
+	.asciz "xlu)"
+	.balign 4
 "@1627":
-	.incbin "baserom.dol", 0x370A08, 0x20
+	.4byte 0x44726177
+	.4byte 0x42756620
+	.4byte 0x4D617020
+	.4byte 0x94BC93A7
+	.4byte 0x96BE9744
+	.4byte 0x90E63220
+	.asciz "(opa)"
+	.balign 4
 "@1628":
-	.incbin "baserom.dol", 0x370A28, 0x20
+	.4byte 0x44726177
+	.4byte 0x42756620
+	.4byte 0x4D617020
+	.4byte 0x94BC93A7
+	.4byte 0x96BE9744
+	.4byte 0x90E63220
+	.asciz "(xlu)"
+	.balign 4
 "@1629":
-	.incbin "baserom.dol", 0x370A48, 0x14
+	.asciz "DrawBuf Graffito"
+	.balign 4
 "@1630":
-	.incbin "baserom.dol", 0x370A5C, 0x10
+	.4byte 0x978E8F91
+	.4byte 0x82AB834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@1631":
-	.incbin "baserom.dol", 0x370A6C, 0x14
+	.4byte 0x83898343
+	.4byte 0x8367837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@1632":
-	.incbin "baserom.dol", 0x370A80, 0x10
+	.asciz "DrawBuf ChrOpa"
+	.balign 4
 "@1633":
-	.incbin "baserom.dol", 0x370A90, 0x10
+	.asciz "DrawBuf ChrXlu"
+	.balign 4
 "@1634":
-	.incbin "baserom.dol", 0x370AA0, 0x18
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@1635":
-	.incbin "baserom.dol", 0x370AB8, 0x10
+	.4byte 0x83528393
+	.4byte 0x835F834E
+	.4byte 0x835E815B
+	.4byte 0
 "@1636":
-	.incbin "baserom.dol", 0x370AC8, 0x10
+	.asciz "vp WParticle 2"
+	.balign 4
 "@1637":
-	.incbin "baserom.dol", 0x370AD8, 0x10
+	.4byte 0x9085837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@1638":
-	.incbin "baserom.dol", 0x370AE8, 0x14
+	.4byte 0x908594F2
+	.4byte 0x9697837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@1639":
-	.incbin "baserom.dol", 0x370AFC, 0x18
+	.4byte 0x834E8347
+	.4byte 0x83628356
+	.4byte 0x83878393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x83830000
 "@1640":
-	.incbin "baserom.dol", 0x370B14, 0x18
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x83678356
+	.4byte 0x815B8393
+	.4byte 0
 "@1641":
-	.incbin "baserom.dol", 0x370B2C, 0x14
+	.asciz "DrawBuf Indirect"
+	.balign 4
 "@1642":
-	.incbin "baserom.dol", 0x370B40, 0x18
+	.4byte 0x8376838C
+	.4byte 0x815B8384
+	.4byte 0x815B834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1626":
-	.incbin "baserom.dol", 0x3E4DE8, 0x8
+	.4byte 0x837D8362
+	.4byte 0x83760000

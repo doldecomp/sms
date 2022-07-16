@@ -589,9 +589,9 @@ __vt__18TMapObjPoleManager:
 "@2263":
   .4byte 0
 "@2279":
-	.incbin "baserom.dol", 0x3E8578, 0x4
+	.4byte 0x42C80000
 "@2303":
-	.incbin "baserom.dol", 0x3E857C, 0x4
+	.4byte 0x3F800000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2311":

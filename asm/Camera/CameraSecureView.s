@@ -226,8 +226,10 @@ lbl_803636E0:
 "@1839":
   .4byte 0
 "@1840":
-	.incbin "baserom.dol", 0x3EC5DC, 0x4
+	.4byte 0x3BB40000
 "@1841":
-	.incbin "baserom.dol", 0x3EC5E0, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@1843":
-	.incbin "baserom.dol", 0x3EC5E8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

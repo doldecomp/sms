@@ -662,7 +662,9 @@ lbl_800D2B6C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1411":
-	.incbin "baserom.dol", 0x3B0490, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 .global __vt__24M3UMtxCalcSIAnmBlendQuat
 __vt__24M3UMtxCalcSIAnmBlendQuat:
   .4byte 0
@@ -688,4 +690,4 @@ __vt__24M3UMtxCalcSIAnmBlendQuat:
 "@1572":
   .4byte 0
 "@1573":
-	.incbin "baserom.dol", 0x3E4BEC, 0x4
+	.4byte 0x3F800000

@@ -1239,23 +1239,75 @@ lbl_80365BC4:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A49A4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1585":
-	.incbin "baserom.dol", 0x3A49B8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1586":
-	.incbin "baserom.dol", 0x3A49E8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1587":
-	.incbin "baserom.dol", 0x3A4A20, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1588":
-	.incbin "baserom.dol", 0x3A4A54, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2230":
-	.incbin "baserom.dol", 0x3A4A78, 0xC
+	.asciz "fishA.bmd"
+	.balign 4
 "@2231":
-	.incbin "baserom.dol", 0x3A4A84, 0xC
+	.asciz "fishB.bmd"
+	.balign 4
 "@2232":
-	.incbin "baserom.dol", 0x3A4A90, 0xC
+	.asciz "fishC.bmd"
+	.balign 4
 "@2233":
-	.incbin "baserom.dol", 0x3A4A9C, 0xC
+	.asciz "fishD.bmd"
+	.balign 4
 "cFishoidMdlNames__9@unnamed@":
   .4byte "@2230"
   .4byte "@2231"
@@ -1278,9 +1330,13 @@ entry$2319:
     .4byte 0
     .4byte 0
 "@2458":
-	.incbin "baserom.dol", 0x3A4AF4, 0xC
+	.asciz "fish_swim"
+	.balign 4
 "@2688":
-	.incbin "baserom.dol", 0x3A4B00, 0x10
+	.4byte 0x83528393
+	.4byte 0x8367838D
+	.4byte 0x815B8389
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TFishoidManager
@@ -1551,31 +1607,32 @@ __vt__13TRealoidActor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2339":
-	.incbin "baserom.dol", 0x3EC658, 0x8
+	.asciz "boid"
+	.balign 4
 "@2362":
   .4byte 0
 "@2450":
-	.incbin "baserom.dol", 0x3EC664, 0x4
+	.4byte 0x40800000
 "@2451":
-	.incbin "baserom.dol", 0x3EC668, 0x4
+	.4byte 0x43480000
 "@2452":
-	.incbin "baserom.dol", 0x3EC66C, 0x4
+	.4byte 0x3F800000
 "@2453":
-	.incbin "baserom.dol", 0x3EC670, 0x4
+	.4byte 0x3F000000
 "@2454":
-	.incbin "baserom.dol", 0x3EC674, 0x4
+	.4byte 0x40A00000
 "@2455":
   .4byte 0
 "@2456":
-	.incbin "baserom.dol", 0x3EC67C, 0x4
+	.4byte 0x43C80000
 "@2457":
-	.incbin "baserom.dol", 0x3EC680, 0x4
+	.4byte 0x40400000
 "@2627":
-	.incbin "baserom.dol", 0x3EC684, 0x4
+	.4byte 0x461C4000
 "@2628":
-	.incbin "baserom.dol", 0x3EC688, 0x4
+	.4byte 0x42C80000
 "@2689":
-	.incbin "baserom.dol", 0x3EC68C, 0x4
+	.4byte 0x41200000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2300":

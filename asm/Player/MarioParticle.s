@@ -2486,29 +2486,93 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2110":
-	.incbin "baserom.dol", 0x37864C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x378660, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x378684, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2565":
-	.incbin "baserom.dol", 0x378694, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2566":
-	.incbin "baserom.dol", 0x3786C4, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2567":
-	.incbin "baserom.dol", 0x3786FC, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2568":
-	.incbin "baserom.dol", 0x378730, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2659":
-	.incbin "baserom.dol", 0x378754, 0x28
+	.asciz "/scene/map/pollution/ms_m_ashios.jpa"
+	.balign 4
 "@2660":
-	.incbin "baserom.dol", 0x37877C, 0x28
+	.asciz "/scene/map/pollution/ms_m_spinos.jpa"
+	.balign 4
 "@2661":
-	.incbin "baserom.dol", 0x3787A4, 0x28
+	.asciz "/scene/map/pollution/ms_m_tokeos.jpa"
+	.balign 4
 cParticleIDs:
-	.incbin "baserom.dol", 0x3787CC, 0xC
+	.4byte 0x00000050
+	.4byte 0x00000126
+	.4byte 0x0000012B
 warpInEffectIDs:
-	.incbin "baserom.dol", 0x3787D8, 0x28
+	.4byte 0x0000001A
+	.4byte 0x0000001B
+	.4byte 0x0000001C
+	.4byte 0x0000001D
+	.4byte 0x0000001E
+	.4byte 0x0000001F
+	.4byte 0x00000020
+	.4byte 0x00000021
+	.4byte 0x00000022
+	.4byte 0x00000023
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 cParticleFileNames:
@@ -2549,51 +2613,54 @@ __vt__15TBubbleCallBack:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2884":
-	.incbin "baserom.dol", 0x3E5C18, 0x4
+	.4byte 0x3F000000
 "@2899":
-	.incbin "baserom.dol", 0x3E5C1C, 0x4
+	.4byte 0x3F99999A
 "@2900":
-	.incbin "baserom.dol", 0x3E5C20, 0x4
+	.4byte 0x41F00000
 "@2939":
   .4byte 0
 "@2957":
-	.incbin "baserom.dol", 0x3E5C28, 0x4
+	.4byte 0x41000000
 "@3006":
-	.incbin "baserom.dol", 0x3E5C2C, 0x4
+	.4byte 0x3B808081
 "@3007":
-	.incbin "baserom.dol", 0x3E5C30, 0x4
+	.4byte 0x3F19999A
 "@3064":
-	.incbin "baserom.dol", 0x3E5C34, 0x4
+	.4byte 0x423C0000
 "@3065":
-	.incbin "baserom.dol", 0x3E5C38, 0x4
+	.4byte 0x41800000
 "@3066":
-	.incbin "baserom.dol", 0x3E5C3C, 0x4
+	.4byte 0x42180000
 "@3067":
-	.incbin "baserom.dol", 0x3E5C40, 0x4
+	.4byte 0x41A00000
 "@3068":
-	.incbin "baserom.dol", 0x3E5C44, 0x4
+	.4byte 0x428E0000
 "@3069":
-	.incbin "baserom.dol", 0x3E5C48, 0x4
+	.4byte 0x43060000
 "@3070":
-	.incbin "baserom.dol", 0x3E5C4C, 0x4
+	.4byte 0x42340000
 "@3071":
-	.incbin "baserom.dol", 0x3E5C50, 0x4
+	.4byte 0x42CC0000
 "@3079":
-	.incbin "baserom.dol", 0x3E5C54, 0x4
+	.4byte 0x3FE00000
 "@3168":
-	.incbin "baserom.dol", 0x3E5C58, 0x4
+	.4byte 0x43360B61
 "@3267":
-	.incbin "baserom.dol", 0x3E5C5C, 0x4
+	.4byte 0x3D800000
 "@3268":
-	.incbin "baserom.dol", 0x3E5C60, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@3270":
-	.incbin "baserom.dol", 0x3E5C68, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3272":
-	.incbin "baserom.dol", 0x3E5C70, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3362":
-	.incbin "baserom.dol", 0x3E5C78, 0x4
+	.4byte 0x3F4CCCCD
 "@3484":
-	.incbin "baserom.dol", 0x3E5C7C, 0x4
+	.4byte 0x3F333333
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 scale$2692:

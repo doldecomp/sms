@@ -16880,71 +16880,195 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x390394, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 scNozzleSoundList:
-	.incbin "baserom.dol", 0x3903A8, 0x30
+	.4byte 0x000088B0
+	.4byte 0x000088B1
+	.4byte 0x000088B2
+	.4byte 0x000088B3
+	.4byte 0x000088B4
+	.4byte 0x000088B5
+	.4byte 0x000088B6
+	.4byte 0x000088B7
+	.4byte 0x000088B8
+	.4byte 0x000088B9
+	.4byte 0x000088BA
+	.4byte 0xFFFFFFFF
 "@2426":
-	.incbin "baserom.dol", 0x3903D8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2427":
-	.incbin "baserom.dol", 0x390408, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2428":
-	.incbin "baserom.dol", 0x390440, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2429":
-	.incbin "baserom.dol", 0x390474, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@7074":
-	.incbin "baserom.dol", 0x390498, 0x34
+	.4byte 0x1B474D5B
+	.4byte 0x305D1B43
+	.4byte 0x435B2530
+	.4byte 0x32782530
+	.4byte 0x32782530
+	.4byte 0x32785D1B
+	.4byte 0x46585B32
+	.4byte 0x385D1B46
+	.4byte 0x595B3238
+	.4byte 0x5D1B5348
+	.4byte 0x5B335D1B
+	.asciz "CD[4]"
+	.balign 4
 "@7075":
-	.incbin "baserom.dol", 0x3904CC, 0x1C
+	.4byte 0x1B474D5B
+	.4byte 0x305D1B43
+	.4byte 0x431B4658
+	.4byte 0x1B46591B
+	.4byte 0x53481B43
+	.asciz "U[4]"
+	.balign 4
 "@10723":
-	.incbin "baserom.dol", 0x3904E8, 0x10
+	.4byte 0x837D8362
+	.4byte 0x8376834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@11361":
-	.incbin "baserom.dol", 0x3904F8, 0x10
+	.4byte 0x83528393
+	.4byte 0x835C815B
+	.4byte 0x838B95B6
+	.4byte 0x8E9A0000
 "@11365":
-	.incbin "baserom.dol", 0x390508, 0xC
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0
 "@11366":
-	.incbin "baserom.dol", 0x390514, 0x10
+	.4byte 0x82DF82A8
+	.4byte 0x82C68345
+	.4byte 0x8369834D
+	.4byte 0
 "@11367":
-	.incbin "baserom.dol", 0x390524, 0xC
+	.4byte 0x8373815B
+	.4byte 0x83609550
+	.4byte 0
 "@11582":
-	.incbin "baserom.dol", 0x390530, 0x10
+	.asciz "standard_1.blo"
+	.balign 4
 "@11583":
-	.incbin "baserom.dol", 0x390540, 0x20
+	.asciz "/game_6/timg/coin_number_%d.bti"
 "@11584":
-	.incbin "baserom.dol", 0x390560, 0x18
+	.asciz "/common/2d/balloon.bmg"
+	.balign 4
 "@11585":
-	.incbin "baserom.dol", 0x390578, 0x18
+	.asciz "/common/2d/infomess.bmg"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3CDF18, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3CDF24, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3CDF30, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 scDolpicNewsDolpic5_1:
-	.incbin "baserom.dol", 0x3CDF40, 0xC
+	.4byte 0x000E0009
+	.4byte 0x000E0011
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic5_4:
-	.incbin "baserom.dol", 0x3CDF4C, 0xC
+	.4byte 0x000E0012
+	.4byte 0x000E0013
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic6:
-	.incbin "baserom.dol", 0x3CDF58, 0xC
+	.4byte 0x000E0002
+	.4byte 0x000E0004
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic7:
-	.incbin "baserom.dol", 0x3CDF64, 0xC
+	.4byte 0x000E0005
+	.4byte 0x000E0006
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_2:
-	.incbin "baserom.dol", 0x3CDF70, 0xC
+	.4byte 0x000E0007
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_3:
-	.incbin "baserom.dol", 0x3CDF7C, 0xC
+	.4byte 0x000E0008
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_4:
-	.incbin "baserom.dol", 0x3CDF88, 0xC
+	.4byte 0x000E000E
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_5:
-	.incbin "baserom.dol", 0x3CDF94, 0xC
+	.4byte 0x000E000F
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_6:
-	.incbin "baserom.dol", 0x3CDFA0, 0x10
+	.4byte 0x000E000E
+	.4byte 0x000E000F
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_7:
-	.incbin "baserom.dol", 0x3CDFB0, 0xC
+	.4byte 0x000E0010
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic9:
-	.incbin "baserom.dol", 0x3CDFBC, 0xC
+	.4byte 0x000E000A
+	.4byte 0x000E000B
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic10:
-	.incbin "baserom.dol", 0x3CDFC8, 0xC
+	.4byte 0x000E000C
+	.4byte 0x000E000D
+	.4byte 0xFFFFFFFF
 MtxCalcTypeName:
   .4byte "@2426"
   .4byte "@2427"
@@ -17017,15 +17141,20 @@ __vt__11TGCConsole2:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 scDolpicNewsDolpic0:
-	.incbin "baserom.dol", 0x3E3860, 0x8
+	.4byte 0x000E0000
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic1:
-	.incbin "baserom.dol", 0x3E3868, 0x8
+	.4byte 0x000E0001
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic5_2:
-	.incbin "baserom.dol", 0x3E3870, 0x8
+	.4byte 0x000E0012
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic5_3:
-	.incbin "baserom.dol", 0x3E3878, 0x8
+	.4byte 0x000E0013
+	.4byte 0xFFFFFFFF
 scDolpicNewsDolpic8_1:
-	.incbin "baserom.dol", 0x3E3880, 0x8
+	.4byte 0x000E0003
+	.4byte 0xFFFFFFFF
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
@@ -17036,9 +17165,10 @@ scDolpicNewsDolpic8_1:
 "@3576":
   .4byte -1
 height$localstatic0$drawWater__11TGCConsole2FR13J2DOrthoGraph:
-	.incbin "baserom.dol", 0x3E9114, 0x8
+	.4byte 0x3E24DD2F
+	.4byte 0x3E051EB8
 topDiff$localstatic1$drawWater__11TGCConsole2FR13J2DOrthoGraph:
-	.incbin "baserom.dol", 0x3E911C, 0x4
+	.4byte 0x0007000A
 "@3578":
   .2byte 0
 lbl_80410882:
@@ -17046,61 +17176,67 @@ lbl_80410882:
 "@7060":
   .4byte 0
 "@7061":
-	.incbin "baserom.dol", 0x3E9128, 0x4
+	.4byte 0x3F000000
 "@7062":
-	.incbin "baserom.dol", 0x3E912C, 0x4
+	.4byte 0xBF000000
 "@7063":
-	.incbin "baserom.dol", 0x3E9130, 0x4
+	.4byte 0x3DCCCCCD
 "@7064":
-	.incbin "baserom.dol", 0x3E9134, 0x4
+	.4byte 0x3C23D70A
 "@7065":
-	.incbin "baserom.dol", 0x3E9138, 0x4
+	.4byte 0x3F800000
 "@7066":
-	.incbin "baserom.dol", 0x3E913C, 0x4
+	.4byte 0x42C80000
 "@7067":
-	.incbin "baserom.dol", 0x3E9140, 0x4
+	.4byte 0x42A00000
 "@7068":
-	.incbin "baserom.dol", 0x3E9144, 0x4
+	.4byte 0x42700000
 "@7069":
-	.incbin "baserom.dol", 0x3E9148, 0x4
+	.4byte 0x420C0000
 "@7070":
-	.incbin "baserom.dol", 0x3E914C, 0x4
+	.4byte 0x40000000
 "@7071":
-	.incbin "baserom.dol", 0x3E9150, 0x4
+	.4byte 0x3FC00000
 "@7072":
-	.incbin "baserom.dol", 0x3E9154, 0x4
+	.4byte 0x40400000
 "@7073":
-	.incbin "baserom.dol", 0x3E9158, 0x8
+	.4byte 0x40A00000
+	.4byte 0
 "@7078":
-	.incbin "baserom.dol", 0x3E9160, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@7090":
-	.incbin "baserom.dol", 0x3E9168, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@7226":
-	.incbin "baserom.dol", 0x3E9170, 0x4
+	.4byte 0x423C0000
 "@7308":
-	.incbin "baserom.dol", 0x3E9174, 0x4
+	.4byte 0x42800000
 "@7309":
-	.incbin "baserom.dol", 0x3E9178, 0x8
+	.4byte 0x3C800000
+	.4byte 0
 "@8335":
-	.incbin "baserom.dol", 0x3E9180, 0x8
+	.4byte 0x3F847AE1
+	.4byte 0x47AE147B
 "@8675":
-	.incbin "baserom.dol", 0x3E9188, 0x4
+	.4byte 0xC0C9999A
 "@8676":
-	.incbin "baserom.dol", 0x3E918C, 0x4
+	.4byte 0x4199999A
 "@9157":
-	.incbin "baserom.dol", 0x3E9190, 0x4
+	.4byte 0xC2920000
 "@9480":
-	.incbin "baserom.dol", 0x3E9194, 0x4
+	.4byte 0x25730000
 "@11362":
-	.incbin "baserom.dol", 0x3E9198, 0x4
+	.4byte 0x3F888889
 "@11363":
-	.incbin "baserom.dol", 0x3E919C, 0x4
+	.4byte 0xC1A00000
 "@11364":
-	.incbin "baserom.dol", 0x3E91A0, 0x4
+	.4byte 0x3C449BA6
 "@11581":
-	.incbin "baserom.dol", 0x3E91A4, 0x8
+	.asciz "game_6"
+	.balign 4
 "@11639":
-	.incbin "baserom.dol", 0x3E91AC, 0x4
+	.4byte 0x3F333333
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@11646":

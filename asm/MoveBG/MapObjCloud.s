@@ -875,30 +875,31 @@ __vt__10TRideCloud:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mMoveSpeedDefault__10TRideCloud:
-	.incbin "baserom.dol", 0x3E36D8, 0x4
+	.4byte 0x40000000
 mCushionLen__10TRideCloud:
-	.incbin "baserom.dol", 0x3E36DC, 0x4
+	.4byte 0x42A00000
 mCushionSpeed__10TRideCloud:
-	.incbin "baserom.dol", 0x3E36E0, 0x4
+	.4byte 0x3C75C28F
 mScaleSpeed__10TRideCloud:
-	.incbin "baserom.dol", 0x3E36E4, 0x4
+	.4byte 0x3BA3D70A
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2842":
   .4byte 0
 "@2958":
-	.incbin "baserom.dol", 0x3E83F4, 0x4
+	.4byte 0x3F800000
 "@2959":
-	.incbin "baserom.dol", 0x3E83F8, 0x4
+	.4byte 0x40400000
 "@2960":
-	.incbin "baserom.dol", 0x3E83FC, 0x4
+	.4byte 0x43960000
 "@2961":
-	.incbin "baserom.dol", 0x3E8400, 0x4
+	.4byte 0x42480000
 "@2962":
-	.incbin "baserom.dol", 0x3E8404, 0x4
+	.4byte 0x3C23D70A
 "@2964":
-	.incbin "baserom.dol", 0x3E8408, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3023":

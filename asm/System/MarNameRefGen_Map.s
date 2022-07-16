@@ -242,49 +242,116 @@ lbl_80100EC4:
   .4byte 0
   .4byte 0
 "@1723":
-	.incbin "baserom.dol", 0x3738FC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1779":
-	.incbin "baserom.dol", 0x373910, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1780":
-	.incbin "baserom.dol", 0x373940, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1781":
-	.incbin "baserom.dol", 0x373978, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1782":
-	.incbin "baserom.dol", 0x3739AC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1956":
-	.incbin "baserom.dol", 0x3739D0, 0xC
+	.asciz "/scene/sun"
+	.balign 4
 "@1957":
-	.incbin "baserom.dol", 0x3739DC, 0x10
+	.asciz "/scene/sunset"
+	.balign 4
 "@2090":
-	.incbin "baserom.dol", 0x3739EC, 0xC
+	.asciz "MapDrawWall"
 "@2091":
-	.incbin "baserom.dol", 0x3739F8, 0x14
+	.4byte 0x834A8381
+	.4byte 0x83899048
+	.4byte 0x82A28D9E
+	.4byte 0x82DD95C7
+	.4byte 0
 "@2095":
-	.incbin "baserom.dol", 0x373A0C, 0xC
+	.asciz "<Shimmer>"
+	.balign 4
 "@2096":
-	.incbin "baserom.dol", 0x373A18, 0xC
+	.asciz "Pollution"
+	.balign 4
 "@2097":
-	.incbin "baserom.dol", 0x373A24, 0xC
+	.4byte 0x978E8F91
+	.4byte 0x82AB8AC7
+	.4byte 0x979D0000
 "@2098":
-	.incbin "baserom.dol", 0x373A30, 0x10
+	.asciz "PollutionTest"
+	.balign 4
 "@2099":
-	.incbin "baserom.dol", 0x373A40, 0x10
+	.4byte 0x978E8F91
+	.4byte 0x82AB8365
+	.4byte 0x83588367
+	.4byte 0
 "@2101":
-	.incbin "baserom.dol", 0x373A50, 0xC
+	.asciz "<TSunMgr>"
+	.balign 4
 "@2102":
-	.incbin "baserom.dol", 0x373A5C, 0xC
+	.asciz "SunModel"
+	.balign 4
 "@2103":
-	.incbin "baserom.dol", 0x373A68, 0xC
+	.asciz "<TSunModel>"
 "@2104":
-	.incbin "baserom.dol", 0x373A74, 0xC
+	.asciz "SunsetModel"
 "@2105":
-	.incbin "baserom.dol", 0x373A80, 0xC
+	.asciz "MarineSnow"
+	.balign 4
 "@2106":
-	.incbin "baserom.dol", 0x373A8C, 0xC
+	.asciz "StickyStain"
 "@2107":
-	.incbin "baserom.dol", 0x373A98, 0xC
+	.asciz "<TViewObj>"
+	.balign 4
 "@2108":
-	.incbin "baserom.dol", 0x373AA4, 0xC
+	.asciz "BathWater"
+	.balign 4
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cSunVolumeName
@@ -297,14 +364,17 @@ cSunsetVolumeName:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2088":
-	.incbin "baserom.dol", 0x3E50C0, 0x4
+	.4byte 0x4D617000
 "@2089":
-	.incbin "baserom.dol", 0x3E50C4, 0x8
+	.4byte 0x837D8362
+	.4byte 0x83760000
 "@2092":
-	.incbin "baserom.dol", 0x3E50CC, 0x4
+	.4byte 0x536B7900
 "@2093":
-	.incbin "baserom.dol", 0x3E50D0, 0x4
+	.4byte 0x8BF30000
 "@2094":
-	.incbin "baserom.dol", 0x3E50D4, 0x8
+	.asciz "Shimmer"
 "@2100":
-	.incbin "baserom.dol", 0x3E50DC, 0xC
+	.asciz "SunMgr"
+	.balign 4
+	.4byte 0

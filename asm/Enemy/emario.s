@@ -1073,35 +1073,101 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x391E24, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1973":
-	.incbin "baserom.dol", 0x391E38, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1974":
-	.incbin "baserom.dol", 0x391E68, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1975":
-	.incbin "baserom.dol", 0x391EA0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1976":
-	.incbin "baserom.dol", 0x391ED4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x391EF8, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x391F1C, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@2688":
-	.incbin "baserom.dol", 0x391F2C, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83492083
+	.4byte 0x4C838383
+	.4byte 0x89000000
 "@2760":
-	.incbin "baserom.dol", 0x391F3C, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83498382
+	.4byte 0x8368834C
+	.4byte 0
 "@2763":
-	.incbin "baserom.dol", 0x391F4C, 0x14
+	.asciz "/enemy/emario.prm"
+	.balign 4
 "@3021":
-	.incbin "baserom.dol", 0x391F60, 0x14
+	.asciz "kagemario_scroll"
+	.balign 4
 "@3022":
-	.incbin "baserom.dol", 0x391F74, 0x14
+	.asciz "H_kagemario_dummy"
+	.balign 4
 "@3115":
-	.incbin "baserom.dol", 0x391F88, 0xC
+	.4byte 0x837D838A
+	.4byte 0x83498251
+	.4byte 0x826F0000
 "@3116":
-	.incbin "baserom.dol", 0x391F94, 0xC
+	.4byte 0x837D838A
+	.4byte 0x83498252
+	.4byte 0x826F0000
 "@3117":
-	.incbin "baserom.dol", 0x391FA0, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83498253
+	.4byte 0x826F0000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TEMarioManager
@@ -1202,19 +1268,20 @@ __vt__7TEMario:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3023":
-	.incbin "baserom.dol", 0x3E9988, 0x4
+	.4byte 0x428C0000
 "@3024":
-	.incbin "baserom.dol", 0x3E998C, 0x4
+	.4byte 0x42340000
 "@3025":
-	.incbin "baserom.dol", 0x3E9990, 0x4
+	.4byte 0x42700000
 "@3026":
-	.incbin "baserom.dol", 0x3E9994, 0x4
+	.4byte 0x42200000
 "@3029":
-	.incbin "baserom.dol", 0x3E9998, 0x4
+	.4byte 0x43160000
 "@3118":
-	.incbin "baserom.dol", 0x3E999C, 0x4
+	.4byte 0x47800000
 "@3119":
-	.incbin "baserom.dol", 0x3E99A0, 0x8
+	.4byte 0x3B360B61
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3175":

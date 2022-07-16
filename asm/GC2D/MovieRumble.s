@@ -284,15 +284,22 @@ __ct__12TMovieRumbleFPC10TTHPRender:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x39180C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1557":
-	.incbin "baserom.dol", 0x391820, 0x14
+	.asciz "/subtitle/rnbl/%s"
+	.balign 4
 "@1578":
-	.incbin "baserom.dol", 0x391834, 0xC
+	.asciz "start_frame"
 "@1579":
-	.incbin "baserom.dol", 0x391840, 0xC
+	.asciz "end_frame"
+	.balign 4
 "@1681":
-	.incbin "baserom.dol", 0x39184C, 0xC
+	.asciz "<TViewObj>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TMovieRumble
@@ -311,6 +318,8 @@ __vt__12TMovieRumble:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1558":
-	.incbin "baserom.dol", 0x3E9910, 0x8
+	.asciz ".bcr"
+	.balign 4
 "@1580":
-	.incbin "baserom.dol", 0x3E9918, 0x8
+	.asciz "type"
+	.balign 4

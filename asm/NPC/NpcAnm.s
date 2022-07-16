@@ -4655,29 +4655,102 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x37B73C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2255":
-	.incbin "baserom.dol", 0x37B750, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2256":
-	.incbin "baserom.dol", 0x37B780, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2257":
-	.incbin "baserom.dol", 0x37B7B8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2258":
-	.incbin "baserom.dol", 0x37B7EC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2440":
-	.incbin "baserom.dol", 0x37B810, 0x10
+	.asciz "__ROOT_JOINT__"
+	.balign 4
 sIndividualPeachBck$2896:
-	.incbin "baserom.dol", 0x37B820, 0x18
+	.4byte 0x00000015
+	.4byte 0x00000010
+	.4byte 0x00000016
+	.4byte 0x00000012
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualPeachBtp$2897:
-	.incbin "baserom.dol", 0x37B838, 0x10
+	.4byte 0x00000004
+	.4byte 0x00000002
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualPeachBck$2904:
-	.incbin "baserom.dol", 0x37B848, 0x10
+	.4byte 0x00000015
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualPeachBtp$2905:
-	.incbin "baserom.dol", 0x37B858, 0x10
+	.4byte 0x00000005
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualSunflowerBck$2906:
-	.incbin "baserom.dol", 0x37B868, 0x18
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0x00000004
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualSunflowerBtp$2907:
-	.incbin "baserom.dol", 0x37B880, 0x18
+	.4byte 0x00000003
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@3884":
@@ -4780,46 +4853,49 @@ cNpcPartsNameRootJoint:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3245":
-	.incbin "baserom.dol", 0x3E6290, 0x4
+	.4byte 0x38000000
 "@3246":
-	.incbin "baserom.dol", 0x3E6294, 0x4
+	.4byte 0x42F00000
 "@3247":
   .4byte 0
   .4byte 0
 "@3249":
-	.incbin "baserom.dol", 0x3E62A0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3361":
-	.incbin "baserom.dol", 0x3E62A8, 0x4
+	.4byte 0x42B40000
 "@3362":
-	.incbin "baserom.dol", 0x3E62AC, 0x4
+	.4byte 0xC2B40000
 "@3363":
-	.incbin "baserom.dol", 0x3E62B0, 0x4
+	.4byte 0x3BB40000
 "@3364":
-	.incbin "baserom.dol", 0x3E62B4, 0x4
+	.4byte 0x43340000
 "@3365":
-	.incbin "baserom.dol", 0x3E62B8, 0x4
+	.4byte 0x43B40000
 "@3366":
-	.incbin "baserom.dol", 0x3E62BC, 0x4
+	.4byte 0x3A83126F
 "@3472":
-	.incbin "baserom.dol", 0x3E62C0, 0x4
+	.4byte 0x3F800000
 "@3878":
-	.incbin "baserom.dol", 0x3E62C4, 0x4
+	.4byte 0x43700000
 "@3879":
-	.incbin "baserom.dol", 0x3E62C8, 0x4
+	.4byte 0x3F000000
 "@4245":
-	.incbin "baserom.dol", 0x3E62CC, 0x4
+	.4byte 0x42000000
 "@4246":
-	.incbin "baserom.dol", 0x3E62D0, 0x4
+	.4byte 0x43160000
 "@4247":
-	.incbin "baserom.dol", 0x3E62D4, 0x4
+	.4byte 0x41000000
 "@4248":
-	.incbin "baserom.dol", 0x3E62D8, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@4249":
-	.incbin "baserom.dol", 0x3E62E0, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@4250":
-	.incbin "baserom.dol", 0x3E62E8, 0x4
+	.4byte 0x40A00000
 "@4778":
-	.incbin "baserom.dol", 0x3E62EC, 0x4
+	.4byte 0xBF000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2936":

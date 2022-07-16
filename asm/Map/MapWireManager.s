@@ -1180,9 +1180,17 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2537":
-	.incbin "baserom.dol", 0x38F7D0, 0x10
+	.4byte 0x8341834E
+	.4byte 0x835E815B
+	.4byte 0x95E28F95
+	.4byte 0
 "@2539":
-	.incbin "baserom.dol", 0x38F7E0, 0x18
+	.4byte 0x83418343
+	.4byte 0x83658380
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__15TMapWireManager
@@ -1246,14 +1254,14 @@ __vt__13TMapWireActor:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mCommonAttackRadius__13TMapWireActor:
-	.incbin "baserom.dol", 0x3E3800, 0x4
+	.4byte 0x43480000
 mCommonAttackHeight__13TMapWireActor:
-	.incbin "baserom.dol", 0x3E3804, 0x4
+	.4byte 0x43480000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2393":
-	.incbin "baserom.dol", 0x3E8CF8, 0x4
+	.4byte 0x000000FF
 "@2538":
   .4byte 0
 

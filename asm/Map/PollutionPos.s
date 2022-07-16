@@ -513,13 +513,14 @@ lbl_constructor:
 "@2390":
   .4byte 0
 "@2392":
-	.incbin "baserom.dol", 0x3E8D84, 0x4
+	.4byte 0x3F800000
 "@2396":
-	.incbin "baserom.dol", 0x3E8D88, 0x4
+	.4byte 0x3CCCCCCD
 "@2460":
-	.incbin "baserom.dol", 0x3E8D8C, 0x4
+	.4byte 0xC61C3C00
 "@2462":
-	.incbin "baserom.dol", 0x3E8D90, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2374":

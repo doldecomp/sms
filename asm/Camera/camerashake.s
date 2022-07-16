@@ -962,17 +962,20 @@ lbl_8035C91C:
 "@1807":
   .4byte 0
 "@1808":
-	.incbin "baserom.dol", 0x3EC39C, 0x4
+	.4byte 0x3F800000
 "@1809":
-	.incbin "baserom.dol", 0x3EC3A0, 0x4
+	.4byte 0x36800000
 "@1810":
-	.incbin "baserom.dol", 0x3EC3A4, 0x4
+	.4byte 0x3C8EFA36
 "@1811":
-	.incbin "baserom.dol", 0x3EC3A8, 0x8
+	.4byte 0x3BB40000
+	.4byte 0
 "@1815":
-	.incbin "baserom.dol", 0x3EC3B0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1894":
-	.incbin "baserom.dol", 0x3EC3B8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCameraShake

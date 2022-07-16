@@ -398,18 +398,37 @@ SMSGetRederRect_Game__Fv:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B0F40, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B0F4C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B0F58, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 SMSAASamplePattern_non:
-	.incbin "baserom.dol", 0x3B0F68, 0x18
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
 SMSAASamplePattern_aa:
-	.incbin "baserom.dol", 0x3B0F80, 0x18
+	.4byte 0x03020906
+	.4byte 0x030A0302
+	.4byte 0x0906030A
+	.4byte 0x09020306
+	.4byte 0x090A0902
+	.4byte 0x0306090A
 .global SMSVFilter_non
 SMSVFilter_non:
-	.incbin "baserom.dol", 0x3B0F98, 0x8
+	.4byte 0x00001516
+	.4byte 0x15000000
 .global SMSVFilter_flicker
 SMSVFilter_flicker:
-	.incbin "baserom.dol", 0x3B0FA0, 0x8
+	.4byte 0x08080A0C
+	.4byte 0x0A080800

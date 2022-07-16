@@ -3740,9 +3740,16 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@3453":
-	.incbin "baserom.dol", 0x38A880, 0x1C
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x83679085
+	.4byte 0x928C837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@4047":
-	.incbin "baserom.dol", 0x38A89C, 0x24
+	.asciz "/scene/map/map/building%02d.col"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TMapObjTurn
@@ -3886,48 +3893,54 @@ __vt__16TMapObjMessenger:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mWaveSpeed__14TMapObjLibWave:
-	.incbin "baserom.dol", 0x3E3560, 0x8
+	.asciz "?333"
+	.balign 4
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3123":
   .4byte 0
 "@3137":
-	.incbin "baserom.dol", 0x3E7C04, 0x4
+	.4byte 0x3F000000
 "@3138":
-	.incbin "baserom.dol", 0x3E7C08, 0x4
+	.4byte 0x41200000
 "@3139":
-	.incbin "baserom.dol", 0x3E7C0C, 0x4
+	.4byte 0x3C23D70A
 "@3272":
-	.incbin "baserom.dol", 0x3E7C10, 0x4
+	.4byte 0x43B40000
 "@3273":
-	.incbin "baserom.dol", 0x3E7C14, 0x4
+	.4byte 0x43360B61
 "@3274":
-	.incbin "baserom.dol", 0x3E7C18, 0x4
+	.4byte 0x3F800000
 "@3347":
-	.incbin "baserom.dol", 0x3E7C1C, 0x4
+	.4byte 0x43480000
 "@3355":
-	.incbin "baserom.dol", 0x3E7C20, 0x8
+	.4byte 0x38000000
+	.4byte 0
 "@3357":
-	.incbin "baserom.dol", 0x3E7C28, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3375":
-	.incbin "baserom.dol", 0x3E7C30, 0x4
+	.4byte 0x47000000
 "@3396":
-	.incbin "baserom.dol", 0x3E7C34, 0x4
+	.4byte 0x43340000
 "@3555":
-	.incbin "baserom.dol", 0x3E7C38, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@3556":
-	.incbin "baserom.dol", 0x3E7C40, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@3651":
-	.incbin "baserom.dol", 0x3E7C48, 0x4
+	.4byte 0x3FC90FDA
 "@3735":
-	.incbin "baserom.dol", 0x3E7C4C, 0x4
+	.4byte 0x36800000
 "@3833":
-	.incbin "baserom.dol", 0x3E7C50, 0x4
+	.4byte 0x3C8EFA36
 "@4215":
-	.incbin "baserom.dol", 0x3E7C54, 0x4
+	.4byte 0x41A00000
 "@4224":
-	.incbin "baserom.dol", 0x3E7C58, 0x8
+	.4byte 0x3D75C28F
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@4274":

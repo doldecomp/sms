@@ -495,32 +495,74 @@ lbl_constructor:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B7218, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B7224, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B7230, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 scTiming__10MSBgmXFade:
-	.incbin "baserom.dol", 0x3B7240, 0x48
+	.4byte 0x3D5794A7
+	.4byte 0x3DD79421
+	.4byte 0x3E21AF3A
+	.4byte 0x3E579421
+	.4byte 0x3E86BCA5
+	.4byte 0x3EA1AF19
+	.4byte 0x3EBCA1AD
+	.4byte 0x3ED79442
+	.4byte 0x3EF286B6
+	.4byte 0x3F06BCA5
+	.4byte 0x3F1435DF
+	.4byte 0x3F21AF29
+	.4byte 0x3F2F2874
+	.4byte 0x3F3CA1AD
+	.4byte 0x3F4A1AF8
+	.4byte 0x3F579431
+	.4byte 0x3F650D7C
+	.4byte 0x3F7286B6
 scExp__10MSBgmXFade:
-	.incbin "baserom.dol", 0x3B7288, 0x48
+	.4byte 0
+	.4byte 0
+	.4byte 0x3CF774AC
+	.4byte 0x3D823C00
+	.4byte 0x3DCDCB14
+	.4byte 0x3E10A676
+	.4byte 0x3E3ECBB8
+	.4byte 0x3E71CB04
+	.4byte 0x3E9513D7
+	.4byte 0x3EB438D2
+	.4byte 0x3ED6A466
+	.4byte 0x3EFCAEA7
+	.4byte 0x3F135C7D
+	.4byte 0x3F2A97AF
+	.4byte 0x3F44444A
+	.4byte 0x3F60A42B
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2016":
-	.incbin "baserom.dol", 0x3E69F0, 0x4
+	.4byte 0x3F800000
 "@2017":
-	.incbin "baserom.dol", 0x3E69F4, 0x4
+	.4byte 0x3F8A1AB5
 "@2018":
-	.incbin "baserom.dol", 0x3E69F8, 0x4
+	.4byte 0x3F9435BD
 "@2019":
-	.incbin "baserom.dol", 0x3E69FC, 0x4
+	.4byte 0x3F99999A
 "@2039":
-	.incbin "baserom.dol", 0x3E6A00, 0x4
+	.4byte 0x3FA66666
 "@2040":
-	.incbin "baserom.dol", 0x3E6A04, 0x4
+	.4byte 0x3E99999A
 "@2041":
-	.incbin "baserom.dol", 0x3E6A08, 0x8
+	.4byte 0x3E4CCCCD
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@1945":

@@ -348,20 +348,25 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@95":
-	.incbin "baserom.dol", 0x36DD50, 0x10
+	.asciz "direction = %x\n"
 "@96":
-	.incbin "baserom.dol", 0x36DD60, 0x10
+	.asciz "source = %x\n"
+	.balign 4
 "@97":
-	.incbin "baserom.dol", 0x36DD70, 0x14
+	.asciz "destination = %x\n"
+	.balign 4
 "@98":
-	.incbin "baserom.dol", 0x36DD84, 0x10
+	.asciz "length = %x\n"
+	.balign 4
 "@99":
-	.incbin "baserom.dol", 0x36DD94, 0x14
+	.asciz "JKRAramPiece.cpp"
+	.balign 4
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@100":
-	.incbin "baserom.dol", 0x3E4008, 0x8
+	.asciz "Abort."
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@60":

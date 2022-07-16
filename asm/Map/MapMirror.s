@@ -1683,27 +1683,86 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38E9C4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2167":
-	.incbin "baserom.dol", 0x38E9D8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2168":
-	.incbin "baserom.dol", 0x38EA08, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2169":
-	.incbin "baserom.dol", 0x38EA40, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2170":
-	.incbin "baserom.dol", 0x38EA74, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2513":
-	.incbin "baserom.dol", 0x38EA98, 0xC
+	.4byte 0x461C4000
+	.4byte 0x461C4000
+	.4byte 0x461C4000
 "@2515":
-	.incbin "baserom.dol", 0x38EAA4, 0xC
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
 "@2517":
-	.incbin "baserom.dol", 0x38EAB0, 0xC
+	.4byte 0x469C4000
+	.4byte 0x469C4000
+	.4byte 0x469C4000
 "@2633":
-	.incbin "baserom.dol", 0x38EABC, 0x20
+	.asciz "/scene/map/mirror/mirror%s.bmd"
+	.balign 4
 "@2634":
-	.incbin "baserom.dol", 0x38EADC, 0x24
+	.asciz "/scene/map/mirror/mirror%02d.bmd"
+	.balign 4
 "@2667":
-	.incbin "baserom.dol", 0x38EB00, 0x10
+	.4byte 0x8BBE834A
+	.4byte 0x83818389
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__17TMirrorMapDrawBuf
@@ -1807,27 +1866,30 @@ table$2575:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2576":
-	.incbin "baserom.dol", 0x3E8B60, 0x4
+	.4byte 0x32303500
 "@2632":
   .4byte 0
 "@2821":
-	.incbin "baserom.dol", 0x3E8B68, 0x4
+	.4byte 0xC0000000
 "@2822":
-	.incbin "baserom.dol", 0x3E8B6C, 0x4
+	.4byte 0x3F000000
 "@2823":
-	.incbin "baserom.dol", 0x3E8B70, 0x4
+	.4byte 0xBF000000
 "@2825":
-	.incbin "baserom.dol", 0x3E8B74, 0x4
+	.4byte 0x3F800000
 "@2841":
-	.incbin "baserom.dol", 0x3E8B78, 0x8
+	.4byte 0xC2480000
+	.4byte 0
 "@3126":
-	.incbin "baserom.dol", 0x3E8B80, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3181":
-	.incbin "baserom.dol", 0x3E8B88, 0x4
+	.4byte 0x41200000
 "@3182":
-	.incbin "baserom.dol", 0x3E8B8C, 0x4
+	.4byte 0x48927C00
 "@3183":
-	.incbin "baserom.dol", 0x3E8B90, 0x8
+	.4byte 0x3FA66666
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3293":

@@ -762,13 +762,19 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2650":
-	.incbin "baserom.dol", 0x38ABA8, 0xC
+	.4byte 0x8BF38352
+	.4byte 0x83438393
+	.4byte 0
 "@2667":
-	.incbin "baserom.dol", 0x38ABB4, 0x10
+	.asciz "bottle_large"
+	.balign 4
 "@2703":
-	.incbin "baserom.dol", 0x38ABC4, 0xC
+	.asciz "coin_blue"
+	.balign 4
 "@2704":
-	.incbin "baserom.dol", 0x38ABD0, 0x10
+	.asciz "coin_red"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TItemManager
@@ -793,19 +799,22 @@ __vt__12TItemManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2636":
-	.incbin "baserom.dol", 0x3E7CF8, 0x4
+	.4byte 0x40000000
 "@2637":
   .4byte 0
 "@2638":
-	.incbin "baserom.dol", 0x3E7D00, 0x4
+	.4byte 0x3F800000
 "@2665":
-	.incbin "baserom.dol", 0x3E7D04, 0x8
+	.4byte 0x83528343
+	.4byte 0x83930000
 "@2666":
-	.incbin "baserom.dol", 0x3E7D0C, 0x8
+	.asciz "coin"
+	.balign 4
 "@2683":
-	.incbin "baserom.dol", 0x3E7D14, 0x4
+	.4byte 0x43B40000
 "@2684":
-	.incbin "baserom.dol", 0x3E7D18, 0x8
+	.4byte 0x43360B61
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2778":

@@ -948,9 +948,11 @@ lbl_80116EFC:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1948":
-	.incbin "baserom.dol", 0x377220, 0x10
+	.asciz "default.bmd"
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1947":
-	.incbin "baserom.dol", 0x3E53F0, 0x8
+	.asciz "%s/%s"
+	.balign 4

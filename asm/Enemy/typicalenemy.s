@@ -392,19 +392,70 @@ lbl_802828F0:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x394FCC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1604":
-	.incbin "baserom.dol", 0x394FE0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1605":
-	.incbin "baserom.dol", 0x395010, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1606":
-	.incbin "baserom.dol", 0x395048, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1607":
-	.incbin "baserom.dol", 0x39507C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2252":
-	.incbin "baserom.dol", 0x3950A0, 0x14
+	.asciz "/enemy/typical.prm"
+	.balign 4
 "@2253":
-	.incbin "baserom.dol", 0x3950B4, 0x14
+	.asciz "mSLMoveSpeed"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__24TNerveTypicalGraphWander
@@ -513,11 +564,13 @@ __vt__13TTypicalEnemy:
 "@2202":
   .4byte 0
 "@2245":
-	.incbin "baserom.dol", 0x3EA30C, 0x8
+	.4byte 0x93548C5E
+	.4byte 0x93470000
 "@2254":
-	.incbin "baserom.dol", 0x3EA314, 0x4
+	.4byte 0x40800000
 "@2280":
-	.incbin "baserom.dol", 0x3EA318, 0x8
+	.asciz "main"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2167":

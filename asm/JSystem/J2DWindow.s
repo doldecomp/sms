@@ -1815,10 +1815,12 @@ __vt__Q29J2DWindow7Texture:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1321":
-	.incbin "baserom.dol", 0x3E3E90, 0x4
+	.4byte 0x3F800000
 "@1322":
-	.incbin "baserom.dol", 0x3E3E94, 0x4
+	.4byte 0x3F000000
 "@1324":
-	.incbin "baserom.dol", 0x3E3E98, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1329":
-	.incbin "baserom.dol", 0x3E3EA0, 0x8
+	.4byte 0xFFFFFF00
+	.4byte 0

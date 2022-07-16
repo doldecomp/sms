@@ -3634,17 +3634,25 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1953":
-	.incbin "baserom.dol", 0x383F64, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@3426":
-	.incbin "baserom.dol", 0x383F78, 0x18
+	.asciz "/AudioRes/mSound.aaf"
+	.balign 4
 "@3427":
-	.incbin "baserom.dol", 0x383F90, 0x18
+	.asciz "/AudioRes/mSound.asn"
+	.balign 4
 "@3428":
-	.incbin "baserom.dol", 0x383FA8, 0x14
+	.asciz "/AudioRes/Banks/"
+	.balign 4
 "@3429":
-	.incbin "baserom.dol", 0x383FBC, 0x10
+	.asciz "/AudioRes/Seqs/"
 "@3430":
-	.incbin "baserom.dol", 0x383FCC, 0x14
+	.asciz "/AudioRes/Streams/"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 smTrackCategory__12MSSeCallBack:
@@ -3712,45 +3720,46 @@ __vt__6MSound:
 "@2462":
   .4byte 0
 "@2520":
-	.incbin "baserom.dol", 0x3E671C, 0x4
+	.4byte 0x3F800000
 "@2594":
-	.incbin "baserom.dol", 0x3E6720, 0x4
+	.4byte 0x40400000
 "@2595":
-	.incbin "baserom.dol", 0x3E6724, 0x4
+	.4byte 0x42480000
 "@2597":
-	.incbin "baserom.dol", 0x3E6728, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2614":
-	.incbin "baserom.dol", 0x3E6730, 0x4
+	.4byte 0x41700000
 "@2615":
-	.incbin "baserom.dol", 0x3E6734, 0x4
+	.4byte 0x41F00000
 "@2851":
-	.incbin "baserom.dol", 0x3E6738, 0x4
+	.4byte 0x3F000000
 "@2852":
-	.incbin "baserom.dol", 0x3E673C, 0x4
+	.4byte 0x3E800000
 "@2853":
-	.incbin "baserom.dol", 0x3E6740, 0x4
+	.4byte 0x3E19999A
 "@2854":
-	.incbin "baserom.dol", 0x3E6744, 0x4
+	.4byte 0x3E99999A
 "@2855":
-	.incbin "baserom.dol", 0x3E6748, 0x4
+	.4byte 0x3F333333
 "@2856":
-	.incbin "baserom.dol", 0x3E674C, 0x4
+	.4byte 0x3F99999A
 "@2857":
-	.incbin "baserom.dol", 0x3E6750, 0x4
+	.4byte 0x3F666666
 "@2904":
-	.incbin "baserom.dol", 0x3E6754, 0x4
+	.4byte 0x42FE0000
 "@2968":
-	.incbin "baserom.dol", 0x3E6758, 0x4
+	.4byte 0x3B03126F
 "@2969":
-	.incbin "baserom.dol", 0x3E675C, 0x4
+	.4byte 0x3F4D4FDF
 "@2970":
-	.incbin "baserom.dol", 0x3E6760, 0x4
+	.4byte 0x3951B718
 "@3093":
-	.incbin "baserom.dol", 0x3E6764, 0x4
+	.4byte 0x3F19999A
 "@3431":
-	.incbin "baserom.dol", 0x3E6768, 0x4
+	.4byte 0x40A00000
 "@3432":
-	.incbin "baserom.dol", 0x3E676C, 0x4
+	.4byte 0x44960000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3758":

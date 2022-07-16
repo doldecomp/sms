@@ -215,7 +215,21 @@ lbl_constructor:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sCurrentDir__Q28JASystem13WaveArcLoader:
-	.incbin "baserom.dol", 0x3A7F10, 0x40
+	.asciz "/Banks/"
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@257":

@@ -553,17 +553,19 @@ lbl_80061474:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@525":
-	.incbin "baserom.dol", 0x3E43C0, 0x4
+	.4byte 0x3FC90FDB
 "@526":
-	.incbin "baserom.dol", 0x3E43C4, 0x4
+	.4byte 0x3B800000
 "@527":
-	.incbin "baserom.dol", 0x3E43C8, 0x4
+	.4byte 0x3EA6F933
 "@528":
-	.incbin "baserom.dol", 0x3E43CC, 0x4
+	.4byte 0x3EB20D99
 "@530":
-	.incbin "baserom.dol", 0x3E43D0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@532":
-	.incbin "baserom.dol", 0x3E43D8, 0x8
+	.4byte 0x43800000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 JASC_SINTABLE__Q28JASystem4Calc:

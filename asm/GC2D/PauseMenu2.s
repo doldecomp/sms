@@ -2223,15 +2223,24 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x390A84, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@3284":
-	.incbin "baserom.dol", 0x390A98, 0x10
+	.4byte 0x8366815B
+	.4byte 0x835E835A
+	.4byte 0x815B8375
+	.4byte 0
 "@3339":
-	.incbin "baserom.dol", 0x390AA8, 0xC
+	.asciz "pause_1.blo"
 "@3340":
-	.incbin "baserom.dol", 0x390AB4, 0x1C
+	.asciz "/common/2d/stagename.bmg"
+	.balign 4
 "@3341":
-	.incbin "baserom.dol", 0x390AD0, 0x20
+	.asciz "/common/2d/scenarioname.bmg"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 scShineConvTable:
@@ -2246,7 +2255,76 @@ scShineConvTable:
   .4byte scShineTableMare
   .4byte 0
 scScenarioNameTable:
-	.incbin "baserom.dol", 0x3CE188, 0x118
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000004
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x00000008
+	.4byte 0x00000009
+	.4byte 0x00000032
+	.4byte 0x00000033
+	.4byte 0x00000034
+	.4byte 0x00000035
+	.4byte 0x00000036
+	.4byte 0x00000037
+	.4byte 0x00000038
+	.4byte 0x00000039
+	.4byte 0x0000003A
+	.4byte 0x0000003B
+	.4byte 0x0000000A
+	.4byte 0x0000000B
+	.4byte 0x0000000C
+	.4byte 0x0000000D
+	.4byte 0x0000000E
+	.4byte 0x0000000F
+	.4byte 0x00000010
+	.4byte 0x00000011
+	.4byte 0x00000012
+	.4byte 0x00000013
+	.4byte 0x00000028
+	.4byte 0x00000029
+	.4byte 0x0000002A
+	.4byte 0x0000002B
+	.4byte 0x0000002C
+	.4byte 0x0000002D
+	.4byte 0x0000002E
+	.4byte 0x0000002F
+	.4byte 0x00000030
+	.4byte 0x00000031
+	.4byte 0x0000003C
+	.4byte 0x0000003D
+	.4byte 0x0000003E
+	.4byte 0x0000003F
+	.4byte 0x00000040
+	.4byte 0x00000041
+	.4byte 0x00000042
+	.4byte 0x00000043
+	.4byte 0x00000044
+	.4byte 0x00000045
+	.4byte 0x00000014
+	.4byte 0x00000015
+	.4byte 0x00000016
+	.4byte 0x00000017
+	.4byte 0x00000018
+	.4byte 0x00000019
+	.4byte 0x0000001A
+	.4byte 0x0000001B
+	.4byte 0x0000001C
+	.4byte 0x0000001D
+	.4byte 0x0000001E
+	.4byte 0x00000021
+	.4byte 0x00000020
+	.4byte 0x00000023
+	.4byte 0x00000022
+	.4byte 0x0000001F
+	.4byte 0x00000024
+	.4byte 0x00000025
+	.4byte 0x00000026
+	.4byte 0x00000027
 .global __vt__11TPauseMenu2
 __vt__11TPauseMenu2:
   .4byte 0
@@ -2263,89 +2341,101 @@ __vt__11TPauseMenu2:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 scShineTableAirport:
-	.incbin "baserom.dol", 0x3E9260, 0x4
+	.4byte 0x56000000
 scShineTableBianco:
-	.incbin "baserom.dol", 0x3E9264, 0x8
+	.4byte 0x00010203
+	.4byte 0x04050607
 scShineTableRicco:
-	.incbin "baserom.dol", 0x3E926C, 0x8
+	.4byte 0x0A0B0C0D
+	.4byte 0x0E0F1011
 scShineTableMamma:
-	.incbin "baserom.dol", 0x3E9274, 0x8
+	.4byte 0x14151617
+	.4byte 0x18191A1B
 scShineTablePinna:
-	.incbin "baserom.dol", 0x3E927C, 0x8
+	.4byte 0x1E1F2021
+	.4byte 0x22232425
 scShineTableSirena:
-	.incbin "baserom.dol", 0x3E9284, 0x8
+	.4byte 0x28292A2B
+	.4byte 0x2C2D2E2F
 scShineTableMare:
-	.incbin "baserom.dol", 0x3E928C, 0x8
+	.4byte 0x32333435
+	.4byte 0x36373839
 scShineTableMonte:
-	.incbin "baserom.dol", 0x3E9294, 0x8
+	.4byte 0x3C413E3D
+	.4byte 0x403F4243
 "@2665":
   .4byte 0
 "@2666":
-	.incbin "baserom.dol", 0x3E92A0, 0x4
+	.4byte 0x41A00000
 "@2667":
-	.incbin "baserom.dol", 0x3E92A4, 0x4
+	.4byte 0x40000000
 "@2668":
-	.incbin "baserom.dol", 0x3E92A8, 0x4
+	.4byte 0x3F000000
 "@2669":
-	.incbin "baserom.dol", 0x3E92AC, 0x4
+	.4byte 0x3D4CCCCD
 "@2670":
-	.incbin "baserom.dol", 0x3E92B0, 0x4
+	.4byte 0x42A00000
 "@2671":
-	.incbin "baserom.dol", 0x3E92B4, 0x4
+	.4byte 0x3F800000
 "@2672":
-	.incbin "baserom.dol", 0x3E92B8, 0x4
+	.4byte 0x3F400000
 "@2673":
-	.incbin "baserom.dol", 0x3E92BC, 0x4
+	.4byte 0x41980000
 "@2674":
-	.incbin "baserom.dol", 0x3E92C0, 0x8
+	.4byte 0x414CCCCD
+	.4byte 0
 "@2676":
-	.incbin "baserom.dol", 0x3E92C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2729":
-	.incbin "baserom.dol", 0x3E92D0, 0x8
+	.4byte 0x43340000
+	.4byte 0
 "@2732":
-	.incbin "baserom.dol", 0x3E92D8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3067":
-	.incbin "baserom.dol", 0x3E92E0, 0x4
+	.4byte 0x40800000
 "@3068":
-	.incbin "baserom.dol", 0x3E92E4, 0x4
+	.4byte 0x41900000
 "@3069":
-	.incbin "baserom.dol", 0x3E92E8, 0x4
+	.4byte 0x41200000
 "@3070":
-	.incbin "baserom.dol", 0x3E92EC, 0x4
+	.4byte 0x420C0000
 "@3071":
-	.incbin "baserom.dol", 0x3E92F0, 0x4
+	.4byte 0xBF000000
 "@3154":
-	.incbin "baserom.dol", 0x3E92F4, 0x4
+	.4byte 0x3CCCCCCD
 "@3155":
-	.incbin "baserom.dol", 0x3E92F8, 0x4
+	.4byte 0x3C23D70A
 "@3156":
-	.incbin "baserom.dol", 0x3E92FC, 0x4
+	.4byte 0x3F7AE148
 "@3216":
-	.incbin "baserom.dol", 0x3E9300, 0x4
+	.4byte 0x42340000
 "@3217":
-	.incbin "baserom.dol", 0x3E9304, 0x4
+	.4byte 0x40A00000
 "@3218":
-	.incbin "baserom.dol", 0x3E9308, 0x4
+	.4byte 0x41100000
 "@3219":
-	.incbin "baserom.dol", 0x3E930C, 0x4
+	.4byte 0x3FC00000
 "@3220":
-	.incbin "baserom.dol", 0x3E9310, 0x4
+	.4byte 0x41F00000
 "@3221":
-	.incbin "baserom.dol", 0x3E9314, 0x4
+	.4byte 0x42200000
 "@3222":
-	.incbin "baserom.dol", 0x3E9318, 0x4
+	.4byte 0x40400000
 "@3223":
-	.incbin "baserom.dol", 0x3E931C, 0x4
+	.4byte 0x41D00000
 "@3224":
-	.incbin "baserom.dol", 0x3E9320, 0x4
+	.4byte 0x3DCCCCCD
 "@3225":
-	.incbin "baserom.dol", 0x3E9324, 0x4
+	.4byte 0x42380000
 "@3338":
-	.incbin "baserom.dol", 0x3E9328, 0x8
+	.asciz "game_6"
+	.balign 4
 "@3342":
   .4byte 0
 "@3343":
-	.incbin "baserom.dol", 0x3E9334, 0x4
+	.4byte 0x25730000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3375":

@@ -821,7 +821,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2790":
-	.incbin "baserom.dol", 0x3846A8, 0x10
+	.asciz "/barrel.prm"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TWoodBarrel
@@ -949,20 +950,22 @@ __vt__11TWoodBarrel:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mWaitAppearTime__11TWoodBarrel:
-	.incbin "baserom.dol", 0x3E3528, 0x4
+	.4byte 0x00000168
 mBreakTime__11TWoodBarrel:
-	.incbin "baserom.dol", 0x3E352C, 0x4
+	.4byte 0x00001C20
 mOilBarrelFlushTime__11TWoodBarrel:
-	.incbin "baserom.dol", 0x3E3530, 0x8
+	.4byte 0x00000258
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2850":
-	.incbin "baserom.dol", 0x3E6A10, 0x4
+	.4byte 0x42B40000
 "@2851":
-	.incbin "baserom.dol", 0x3E6A14, 0x4
+	.4byte 0x42480000
 "@2861":
-	.incbin "baserom.dol", 0x3E6A18, 0x8
+	.4byte 0x42C80000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2899":

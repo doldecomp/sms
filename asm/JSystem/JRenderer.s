@@ -2839,29 +2839,41 @@ lbl_8003F17C:
     .4byte lbl_8003D494
     .4byte lbl_8003D49C
 c2r$795:
-	.incbin "baserom.dol", 0x3A6FFC, 0x14
+	.4byte 0x00010001
+	.4byte 0x00010705
+	.4byte 0x06000000
+	.4byte 0x00000007
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 JRNTexImage1Ids:
-	.incbin "baserom.dol", 0x3E30C0, 0x8
+	.4byte 0x8C8D8E8F
+	.4byte 0xACADAEAF
 JRNTexImage2Ids:
-	.incbin "baserom.dol", 0x3E30C8, 0x8
+	.4byte 0x90919293
+	.4byte 0xB0B1B2B3
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@385":
   .4byte 0
 "@386":
-	.incbin "baserom.dol", 0x3E4044, 0x4
+	.4byte 0x3F000000
 "@387":
-	.incbin "baserom.dol", 0x3E4048, 0x8
+	.4byte 0x3FF00000
+	.4byte 0
 "@388":
-	.incbin "baserom.dol", 0x3E4050, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@389":
-	.incbin "baserom.dol", 0x3E4058, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@390":
-	.incbin "baserom.dol", 0x3E4060, 0x8
+	.4byte 0x4B00001E
+	.4byte 0
 "@392":
-	.incbin "baserom.dol", 0x3E4068, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@697":
-	.incbin "baserom.dol", 0x3E4070, 0x8
+	.4byte 0x44800000
+	.4byte 0

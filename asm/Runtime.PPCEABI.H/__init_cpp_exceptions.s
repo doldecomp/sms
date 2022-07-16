@@ -58,4 +58,5 @@ __fini_cpp_exceptions_reference:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 fragmentID:
-	.incbin "baserom.dol", 0x3E3220, 0x8
+	.4byte 0xFFFFFFFE
+	.4byte 0

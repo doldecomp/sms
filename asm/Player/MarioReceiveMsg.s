@@ -2769,7 +2769,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@4271":
-	.incbin "baserom.dol", 0x37B720, 0x10
+	.asciz "surfgeso_run1"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@4230":
@@ -2837,27 +2838,30 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@4221":
-	.incbin "baserom.dol", 0x3E6240, 0x4
+	.4byte 0x43360B61
 "@4222":
   .4byte 0
 "@4223":
-	.incbin "baserom.dol", 0x3E6248, 0x4
+	.4byte 0x3E4CCCCD
 "@4224":
-	.incbin "baserom.dol", 0x3E624C, 0x4
+	.4byte 0x3F800000
 "@4225":
-	.incbin "baserom.dol", 0x3E6250, 0x4
+	.4byte 0x41F00000
 "@4226":
-	.incbin "baserom.dol", 0x3E6254, 0x4
+	.4byte 0x47800000
 "@4227":
-	.incbin "baserom.dol", 0x3E6258, 0x4
+	.4byte 0x3B360B61
 "@4228":
-	.incbin "baserom.dol", 0x3E625C, 0x4
+	.4byte 0x42200000
 "@4229":
-	.incbin "baserom.dol", 0x3E6260, 0x8
+	.4byte 0x41200000
+	.4byte 0
 "@4233":
-	.incbin "baserom.dol", 0x3E6268, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@4272":
-	.incbin "baserom.dol", 0x3E6270, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3257":

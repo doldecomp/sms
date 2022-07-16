@@ -135,373 +135,563 @@ lbl_80177480:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x37F7EC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1755":
-	.incbin "baserom.dol", 0x37F800, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1756":
-	.incbin "baserom.dol", 0x37F830, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1757":
-	.incbin "baserom.dol", 0x37F868, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1758":
-	.incbin "baserom.dol", 0x37F89C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1938":
-	.incbin "baserom.dol", 0x37F8C0, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_appear.bas"
+	.balign 4
 "@1939":
-	.incbin "baserom.dol", 0x37F8E8, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_dance.bas"
+	.balign 4
 "@1940":
-	.incbin "baserom.dol", 0x37F910, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_fall.bas"
+	.balign 4
 "@1941":
-	.incbin "baserom.dol", 0x37F938, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_happy.bas"
+	.balign 4
 "@1942":
-	.incbin "baserom.dol", 0x37F960, 0x24
+	.asciz "/scene/monteMCommon/bas/mom_mad.bas"
 "@1943":
-	.incbin "baserom.dol", 0x37F984, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_madloop.bas"
 "@1944":
-	.incbin "baserom.dol", 0x37F9AC, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_recover.bas"
 "@1945":
-	.incbin "baserom.dol", 0x37F9D4, 0x24
+	.asciz "/scene/monteMCommon/bas/mom_run.bas"
 "@1946":
-	.incbin "baserom.dol", 0x37F9F8, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_sitwet.bas"
+	.balign 4
 "@1947":
-	.incbin "baserom.dol", 0x37FA20, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_throw.bas"
+	.balign 4
 "@1948":
-	.incbin "baserom.dol", 0x37FA48, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_wait_yogore.bas"
 "@1949":
-	.incbin "baserom.dol", 0x37FA74, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_walk.bas"
+	.balign 4
 "@1950":
-	.incbin "baserom.dol", 0x37FA9C, 0x24
+	.asciz "/scene/monteMCommon/bas/mom_wet.bas"
 "@1951":
-	.incbin "baserom.dol", 0x37FAC0, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_wet_A.bas"
+	.balign 4
 "@1952":
-	.incbin "baserom.dol", 0x37FAE8, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_wet_yogore.bas"
+	.balign 4
 "@1953":
-	.incbin "baserom.dol", 0x37FB14, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_appear_c.bas"
+	.balign 4
 "@1954":
-	.incbin "baserom.dol", 0x37FB40, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_dance_c.bas"
 "@1955":
-	.incbin "baserom.dol", 0x37FB68, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_fall_c.bas"
+	.balign 4
 "@1956":
-	.incbin "baserom.dol", 0x37FB90, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_happy_c.bas"
 "@1957":
-	.incbin "baserom.dol", 0x37FBB8, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_mad_c.bas"
+	.balign 4
 "@1958":
-	.incbin "baserom.dol", 0x37FBE0, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_madloop_c.bas"
+	.balign 4
 "@1959":
-	.incbin "baserom.dol", 0x37FC0C, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_recover_c.bas"
+	.balign 4
 "@1960":
-	.incbin "baserom.dol", 0x37FC38, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_run_c.bas"
+	.balign 4
 "@1961":
-	.incbin "baserom.dol", 0x37FC60, 0x2C
+	.asciz "/scene/monteMCommon/bas/mom_sitwet_c.bas"
+	.balign 4
 "@1962":
-	.incbin "baserom.dol", 0x37FC8C, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_throw_c.bas"
 "@1963":
-	.incbin "baserom.dol", 0x37FCB4, 0x30
+	.asciz "/scene/monteMCommon/bas/mom_wait_yogore_c.bas"
+	.balign 4
 "@1964":
-	.incbin "baserom.dol", 0x37FCE4, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_walk_c.bas"
+	.balign 4
 "@1965":
-	.incbin "baserom.dol", 0x37FD0C, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_wet_c.bas"
+	.balign 4
 "@1966":
-	.incbin "baserom.dol", 0x37FD34, 0x28
+	.asciz "/scene/monteMCommon/bas/mom_wet_A_c.bas"
 "@1967":
-	.incbin "baserom.dol", 0x37FD5C, 0x30
+	.asciz "/scene/monteMCommon/bas/mom_wet_yogore_c.bas"
+	.balign 4
 "@1970":
-	.incbin "baserom.dol", 0x37FD8C, 0x24
+	.asciz "/scene/monteME/bas/momE_down.bas"
+	.balign 4
 "@1971":
-	.incbin "baserom.dol", 0x37FDB0, 0x20
+	.asciz "/scene/monteME/bas/momE_up.bas"
+	.balign 4
 "@1972":
-	.incbin "baserom.dol", 0x37FDD0, 0x20
+	.asciz "/scene/monteME/bas/momE_wet.bas"
 "@1975":
-	.incbin "baserom.dol", 0x37FDF0, 0x24
+	.asciz "/scene/monteMF/bas/momF_swim.bas"
+	.balign 4
 "@1976":
-	.incbin "baserom.dol", 0x37FE14, 0x24
+	.asciz "/scene/monteMF/bas/momF_swimmad.bas"
 "@1977":
-	.incbin "baserom.dol", 0x37FE38, 0x28
+	.asciz "/scene/monteMF/bas/momF_swimtalk.bas"
+	.balign 4
 "@1980":
-	.incbin "baserom.dol", 0x37FE60, 0x2C
+	.asciz "/scene/monteMG/bas/momG_wait_cleanup.bas"
+	.balign 4
 "@1981":
-	.incbin "baserom.dol", 0x37FE8C, 0x2C
+	.asciz "/scene/monteMG/bas/momG_walk_cleanup.bas"
+	.balign 4
 "@1984":
-	.incbin "baserom.dol", 0x37FEB8, 0x24
+	.asciz "/scene/monteMH/bas/momH_play.bas"
+	.balign 4
 "@1985":
-	.incbin "baserom.dol", 0x37FEDC, 0x28
+	.asciz "/scene/monteMH/bas/momH_walk_play.bas"
+	.balign 4
 "@1986":
-	.incbin "baserom.dol", 0x37FF04, 0x28
+	.asciz "/scene/monteMH/bas/momH_wet_play.bas"
+	.balign 4
 "@1989":
-	.incbin "baserom.dol", 0x37FF2C, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_appear.bas"
+	.balign 4
 "@1990":
-	.incbin "baserom.dol", 0x37FF54, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_dance.bas"
+	.balign 4
 "@1991":
-	.incbin "baserom.dol", 0x37FF7C, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_fall.bas"
+	.balign 4
 "@1992":
-	.incbin "baserom.dol", 0x37FFA4, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_happy.bas"
+	.balign 4
 "@1993":
-	.incbin "baserom.dol", 0x37FFCC, 0x24
+	.asciz "/scene/monteWCommon/bas/mow_mad.bas"
 "@1994":
-	.incbin "baserom.dol", 0x37FFF0, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_madloop.bas"
 "@1995":
-	.incbin "baserom.dol", 0x380018, 0x24
+	.asciz "/scene/monteWCommon/bas/mow_run.bas"
 "@1996":
-	.incbin "baserom.dol", 0x38003C, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_sitwet.bas"
+	.balign 4
 "@1997":
-	.incbin "baserom.dol", 0x380064, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_throw.bas"
+	.balign 4
 "@1998":
-	.incbin "baserom.dol", 0x38008C, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_wait_arrow.bas"
+	.balign 4
 "@1999":
-	.incbin "baserom.dol", 0x3800B8, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_wait_yogore.bas"
 "@2000":
-	.incbin "baserom.dol", 0x3800E4, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_walk.bas"
+	.balign 4
 "@2001":
-	.incbin "baserom.dol", 0x38010C, 0x24
+	.asciz "/scene/monteWCommon/bas/mow_wet.bas"
 "@2002":
-	.incbin "baserom.dol", 0x380130, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_wet_A.bas"
+	.balign 4
 "@2003":
-	.incbin "baserom.dol", 0x380158, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_wet_yogore.bas"
+	.balign 4
 "@2004":
-	.incbin "baserom.dol", 0x380184, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_appear_c.bas"
+	.balign 4
 "@2005":
-	.incbin "baserom.dol", 0x3801B0, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_dance_c.bas"
 "@2006":
-	.incbin "baserom.dol", 0x3801D8, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_fall_c.bas"
+	.balign 4
 "@2007":
-	.incbin "baserom.dol", 0x380200, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_happy_c.bas"
 "@2008":
-	.incbin "baserom.dol", 0x380228, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_mad_c.bas"
+	.balign 4
 "@2009":
-	.incbin "baserom.dol", 0x380250, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_madloop_c.bas"
+	.balign 4
 "@2010":
-	.incbin "baserom.dol", 0x38027C, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_run_c.bas"
+	.balign 4
 "@2011":
-	.incbin "baserom.dol", 0x3802A4, 0x2C
+	.asciz "/scene/monteWCommon/bas/mow_sitwet_c.bas"
+	.balign 4
 "@2012":
-	.incbin "baserom.dol", 0x3802D0, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_throw_c.bas"
 "@2013":
-	.incbin "baserom.dol", 0x3802F8, 0x30
+	.asciz "/scene/monteWCommon/bas/mow_wait_arrow_c.bas"
+	.balign 4
 "@2014":
-	.incbin "baserom.dol", 0x380328, 0x30
+	.asciz "/scene/monteWCommon/bas/mow_wait_yogore_c.bas"
+	.balign 4
 "@2015":
-	.incbin "baserom.dol", 0x380358, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_walk_c.bas"
+	.balign 4
 "@2016":
-	.incbin "baserom.dol", 0x380380, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_wet_c.bas"
+	.balign 4
 "@2017":
-	.incbin "baserom.dol", 0x3803A8, 0x28
+	.asciz "/scene/monteWCommon/bas/mow_wet_A_c.bas"
 "@2018":
-	.incbin "baserom.dol", 0x3803D0, 0x30
+	.asciz "/scene/monteWCommon/bas/mow_wet_yogore_c.bas"
+	.balign 4
 "@2021":
-	.incbin "baserom.dol", 0x380400, 0x20
+	.asciz "/scene/monteWC/bas/mowC_mad.bas"
 "@2022":
-	.incbin "baserom.dol", 0x380420, 0x20
+	.asciz "/scene/monteWC/bas/mowC_wet.bas"
 "@2023":
-	.incbin "baserom.dol", 0x380440, 0x24
+	.asciz "/scene/monteWC/bas/mowC_wet_A.bas"
+	.balign 4
 "@2026":
-	.incbin "baserom.dol", 0x380464, 0x24
+	.asciz "/scene/mareM/bas/mareM_appear.bas"
+	.balign 4
 "@2027":
-	.incbin "baserom.dol", 0x380488, 0x24
+	.asciz "/scene/mareM/bas/mareM_dance.bas"
+	.balign 4
 "@2028":
-	.incbin "baserom.dol", 0x3804AC, 0x20
+	.asciz "/scene/mareM/bas/mareM_fall.bas"
 "@2029":
-	.incbin "baserom.dol", 0x3804CC, 0x24
+	.asciz "/scene/mareM/bas/mareM_happy.bas"
+	.balign 4
 "@2030":
-	.incbin "baserom.dol", 0x3804F0, 0x20
+	.asciz "/scene/mareM/bas/mareM_jump.bas"
 "@2031":
-	.incbin "baserom.dol", 0x380510, 0x24
+	.asciz "/scene/mareM/bas/mareM_recover.bas"
+	.balign 4
 "@2032":
-	.incbin "baserom.dol", 0x380534, 0x20
+	.asciz "/scene/mareM/bas/mareM_run.bas"
+	.balign 4
 "@2033":
-	.incbin "baserom.dol", 0x380554, 0x24
+	.asciz "/scene/mareM/bas/mareM_stand.bas"
+	.balign 4
 "@2034":
-	.incbin "baserom.dol", 0x380578, 0x24
+	.asciz "/scene/mareM/bas/mareM_stand_A.bas"
+	.balign 4
 "@2035":
-	.incbin "baserom.dol", 0x38059C, 0x28
+	.asciz "/scene/mareM/bas/mareM_wait_yogore.bas"
+	.balign 4
 "@2036":
-	.incbin "baserom.dol", 0x3805C4, 0x20
+	.asciz "/scene/mareM/bas/mareM_walk.bas"
 "@2037":
-	.incbin "baserom.dol", 0x3805E4, 0x20
+	.asciz "/scene/mareM/bas/mareM_wash.bas"
 "@2038":
-	.incbin "baserom.dol", 0x380604, 0x20
+	.asciz "/scene/mareM/bas/mareM_wet.bas"
+	.balign 4
 "@2039":
-	.incbin "baserom.dol", 0x380624, 0x24
+	.asciz "/scene/mareM/bas/mareM_wet_A.bas"
+	.balign 4
 "@2040":
-	.incbin "baserom.dol", 0x380648, 0x24
+	.asciz "/scene/mareM/bas/mareM_appear_c.bas"
 "@2041":
-	.incbin "baserom.dol", 0x38066C, 0x24
+	.asciz "/scene/mareM/bas/mareM_dance_c.bas"
+	.balign 4
 "@2042":
-	.incbin "baserom.dol", 0x380690, 0x24
+	.asciz "/scene/mareM/bas/mareM_fall_c.bas"
+	.balign 4
 "@2043":
-	.incbin "baserom.dol", 0x3806B4, 0x24
+	.asciz "/scene/mareM/bas/mareM_happy_c.bas"
+	.balign 4
 "@2044":
-	.incbin "baserom.dol", 0x3806D8, 0x24
+	.asciz "/scene/mareM/bas/mareM_jump_c.bas"
+	.balign 4
 "@2045":
-	.incbin "baserom.dol", 0x3806FC, 0x28
+	.asciz "/scene/mareM/bas/mareM_recover_c.bas"
+	.balign 4
 "@2046":
-	.incbin "baserom.dol", 0x380724, 0x24
+	.asciz "/scene/mareM/bas/mareM_run_c.bas"
+	.balign 4
 "@2047":
-	.incbin "baserom.dol", 0x380748, 0x24
+	.asciz "/scene/mareM/bas/mareM_stand_c.bas"
+	.balign 4
 "@2048":
-	.incbin "baserom.dol", 0x38076C, 0x28
+	.asciz "/scene/mareM/bas/mareM_stand_A_c.bas"
+	.balign 4
 "@2049":
-	.incbin "baserom.dol", 0x380794, 0x24
+	.asciz "/scene/mareM/bas/mareM_walk_c.bas"
+	.balign 4
 "@2050":
-	.incbin "baserom.dol", 0x3807B8, 0x24
+	.asciz "/scene/mareM/bas/mareM_wash_c.bas"
+	.balign 4
 "@2051":
-	.incbin "baserom.dol", 0x3807DC, 0x24
+	.asciz "/scene/mareM/bas/mareM_wet_c.bas"
+	.balign 4
 "@2052":
-	.incbin "baserom.dol", 0x380800, 0x24
+	.asciz "/scene/mareM/bas/mareM_wet_A_c.bas"
+	.balign 4
 "@2057":
-	.incbin "baserom.dol", 0x380824, 0x24
+	.asciz "/scene/mareMB/bas/mareMB_wet.bas"
+	.balign 4
 "@2059":
-	.incbin "baserom.dol", 0x380848, 0x24
+	.asciz "/scene/mareMC/bas/mareMC_stand.bas"
+	.balign 4
 "@2060":
-	.incbin "baserom.dol", 0x38086C, 0x28
+	.asciz "/scene/mareMC/bas/mareMC_stand_A.bas"
+	.balign 4
 "@2061":
-	.incbin "baserom.dol", 0x380894, 0x24
+	.asciz "/scene/mareMC/bas/mareMC_wet.bas"
+	.balign 4
 "@2062":
-	.incbin "baserom.dol", 0x3808B8, 0x24
+	.asciz "/scene/mareMC/bas/mareMC_wet_A.bas"
+	.balign 4
 "@2065":
-	.incbin "baserom.dol", 0x3808DC, 0x24
+	.asciz "/scene/mareMD/bas/mareMD_hue.bas"
+	.balign 4
 "@2066":
-	.incbin "baserom.dol", 0x380900, 0x24
+	.asciz "/scene/mareMD/bas/mareMD_wet.bas"
+	.balign 4
 "@2069":
-	.incbin "baserom.dol", 0x380924, 0x24
+	.asciz "/scene/mareW/bas/mareW_appear.bas"
+	.balign 4
 "@2070":
-	.incbin "baserom.dol", 0x380948, 0x24
+	.asciz "/scene/mareW/bas/mareW_dance.bas"
+	.balign 4
 "@2071":
-	.incbin "baserom.dol", 0x38096C, 0x20
+	.asciz "/scene/mareW/bas/mareW_fall.bas"
 "@2072":
-	.incbin "baserom.dol", 0x38098C, 0x24
+	.asciz "/scene/mareW/bas/mareW_happy.bas"
+	.balign 4
 "@2073":
-	.incbin "baserom.dol", 0x3809B0, 0x24
+	.asciz "/scene/mareW/bas/mareW_recover.bas"
+	.balign 4
 "@2074":
-	.incbin "baserom.dol", 0x3809D4, 0x20
+	.asciz "/scene/mareW/bas/mareW_run.bas"
+	.balign 4
 "@2075":
-	.incbin "baserom.dol", 0x3809F4, 0x24
+	.asciz "/scene/mareW/bas/mareW_stand.bas"
+	.balign 4
 "@2076":
-	.incbin "baserom.dol", 0x380A18, 0x24
+	.asciz "/scene/mareW/bas/mareW_stand_A.bas"
+	.balign 4
 "@2077":
-	.incbin "baserom.dol", 0x380A3C, 0x28
+	.asciz "/scene/mareW/bas/mareW_wait_yogore.bas"
+	.balign 4
 "@2078":
-	.incbin "baserom.dol", 0x380A64, 0x20
+	.asciz "/scene/mareW/bas/mareW_walk.bas"
 "@2079":
-	.incbin "baserom.dol", 0x380A84, 0x20
+	.asciz "/scene/mareW/bas/mareW_wash.bas"
 "@2080":
-	.incbin "baserom.dol", 0x380AA4, 0x20
+	.asciz "/scene/mareW/bas/mareW_wet.bas"
+	.balign 4
 "@2081":
-	.incbin "baserom.dol", 0x380AC4, 0x24
+	.asciz "/scene/mareW/bas/mareW_wet_A.bas"
+	.balign 4
 "@2082":
-	.incbin "baserom.dol", 0x380AE8, 0x24
+	.asciz "/scene/mareW/bas/mareW_appear_c.bas"
 "@2083":
-	.incbin "baserom.dol", 0x380B0C, 0x24
+	.asciz "/scene/mareW/bas/mareW_dance_c.bas"
+	.balign 4
 "@2084":
-	.incbin "baserom.dol", 0x380B30, 0x24
+	.asciz "/scene/mareW/bas/mareW_fall_c.bas"
+	.balign 4
 "@2085":
-	.incbin "baserom.dol", 0x380B54, 0x24
+	.asciz "/scene/mareW/bas/mareW_happy_c.bas"
+	.balign 4
 "@2086":
-	.incbin "baserom.dol", 0x380B78, 0x28
+	.asciz "/scene/mareW/bas/mareW_recover_c.bas"
+	.balign 4
 "@2087":
-	.incbin "baserom.dol", 0x380BA0, 0x24
+	.asciz "/scene/mareW/bas/mareW_run_c.bas"
+	.balign 4
 "@2088":
-	.incbin "baserom.dol", 0x380BC4, 0x24
+	.asciz "/scene/mareW/bas/mareW_stand_c.bas"
+	.balign 4
 "@2089":
-	.incbin "baserom.dol", 0x380BE8, 0x28
+	.asciz "/scene/mareW/bas/mareW_stand_A_c.bas"
+	.balign 4
 "@2090":
-	.incbin "baserom.dol", 0x380C10, 0x24
+	.asciz "/scene/mareW/bas/mareW_walk_c.bas"
+	.balign 4
 "@2091":
-	.incbin "baserom.dol", 0x380C34, 0x24
+	.asciz "/scene/mareW/bas/mareW_wash_c.bas"
+	.balign 4
 "@2092":
-	.incbin "baserom.dol", 0x380C58, 0x24
+	.asciz "/scene/mareW/bas/mareW_wet_c.bas"
+	.balign 4
 "@2093":
-	.incbin "baserom.dol", 0x380C7C, 0x24
+	.asciz "/scene/mareW/bas/mareW_wet_A_c.bas"
+	.balign 4
 "@2098":
-	.incbin "baserom.dol", 0x380CA0, 0x28
+	.asciz "/scene/mareWB/bas/mareWBbaby_hold.bas"
+	.balign 4
 "@2099":
-	.incbin "baserom.dol", 0x380CC8, 0x2C
+	.asciz "/scene/mareWB/bas/mareWBbaby_holdTalk.bas"
+	.balign 4
 "@2100":
-	.incbin "baserom.dol", 0x380CF4, 0x2C
+	.asciz "/scene/mareWB/bas/mareWBbaby_holdWet.bas"
+	.balign 4
 "@2101":
-	.incbin "baserom.dol", 0x380D20, 0x28
+	.asciz "/scene/mareWB/bas/mareWB_holdTalk.bas"
+	.balign 4
 "@2102":
-	.incbin "baserom.dol", 0x380D48, 0x28
+	.asciz "/scene/mareWB/bas/mareWB_holdWet.bas"
+	.balign 4
 "@2105":
-	.incbin "baserom.dol", 0x380D70, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_appear.bas"
+	.balign 4
 "@2106":
-	.incbin "baserom.dol", 0x380D98, 0x24
+	.asciz "/scene/kinopio/bas/kinopio_fall.bas"
 "@2107":
-	.incbin "baserom.dol", 0x380DBC, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_happy.bas"
+	.balign 4
 "@2108":
-	.incbin "baserom.dol", 0x380DE4, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_recover.bas"
+	.balign 4
 "@2109":
-	.incbin "baserom.dol", 0x380E0C, 0x24
+	.asciz "/scene/kinopio/bas/kinopio_run.bas"
+	.balign 4
 "@2110":
-	.incbin "baserom.dol", 0x380E30, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_sitshake.bas"
 "@2111":
-	.incbin "baserom.dol", 0x380E58, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_sitwet.bas"
+	.balign 4
 "@2112":
-	.incbin "baserom.dol", 0x380E80, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_stumble.bas"
+	.balign 4
 "@2113":
-	.incbin "baserom.dol", 0x380EA8, 0x2C
+	.asciz "/scene/kinopio/bas/kinopio_wait_yogore.bas"
+	.balign 4
 "@2114":
-	.incbin "baserom.dol", 0x380ED4, 0x24
+	.asciz "/scene/kinopio/bas/kinopio_walk.bas"
 "@2115":
-	.incbin "baserom.dol", 0x380EF8, 0x24
+	.asciz "/scene/kinopio/bas/kinopio_wet.bas"
+	.balign 4
 "@2116":
-	.incbin "baserom.dol", 0x380F1C, 0x28
+	.asciz "/scene/kinopio/bas/kinopio_wet_A.bas"
+	.balign 4
 "@2117":
-	.incbin "baserom.dol", 0x380F44, 0x2C
+	.asciz "/scene/kinopio/bas/kinopio_wet_yogore.bas"
+	.balign 4
 "@2120":
-	.incbin "baserom.dol", 0x380F70, 0x24
+	.asciz "/scene/kinojii/bas/kinoji_fall.bas"
+	.balign 4
 "@2121":
-	.incbin "baserom.dol", 0x380F94, 0x28
+	.asciz "/scene/kinojii/bas/kinoji_recover.bas"
+	.balign 4
 "@2122":
-	.incbin "baserom.dol", 0x380FBC, 0x28
+	.asciz "/scene/kinojii/bas/kinoji_sitshake.bas"
+	.balign 4
 "@2123":
-	.incbin "baserom.dol", 0x380FE4, 0x28
+	.asciz "/scene/kinojii/bas/kinoji_sitwet.bas"
+	.balign 4
 "@2124":
-	.incbin "baserom.dol", 0x38100C, 0x28
+	.asciz "/scene/kinojii/bas/kinoji_stumble.bas"
+	.balign 4
 "@2125":
-	.incbin "baserom.dol", 0x381034, 0x24
+	.asciz "/scene/kinojii/bas/kinoji_walk.bas"
+	.balign 4
 "@2126":
-	.incbin "baserom.dol", 0x381058, 0x24
+	.asciz "/scene/kinojii/bas/kinoji_wet.bas"
+	.balign 4
 "@2127":
-	.incbin "baserom.dol", 0x38107C, 0x24
+	.asciz "/scene/kinojii/bas/kinoji_wet_A.bas"
 "@2130":
-	.incbin "baserom.dol", 0x3810A0, 0x28
+	.asciz "/scene/peach/bas/peach_anger_wait.bas"
+	.balign 4
 "@2131":
-	.incbin "baserom.dol", 0x3810C8, 0x24
+	.asciz "/scene/peach/bas/peach_carry.bas"
+	.balign 4
 "@2132":
-	.incbin "baserom.dol", 0x3810EC, 0x28
+	.asciz "/scene/peach/bas/peach_fear_wait.bas"
+	.balign 4
 "@2133":
-	.incbin "baserom.dol", 0x381114, 0x28
+	.asciz "/scene/peach/bas/peach_parasol_wet.bas"
+	.balign 4
 "@2134":
-	.incbin "baserom.dol", 0x38113C, 0x24
+	.asciz "/scene/peach/bas/peach_recover.bas"
+	.balign 4
 "@2135":
-	.incbin "baserom.dol", 0x381160, 0x28
+	.asciz "/scene/peach/bas/peach_tired_wait.bas"
+	.balign 4
 "@2136":
-	.incbin "baserom.dol", 0x381188, 0x20
+	.asciz "/scene/peach/bas/peach_wet.bas"
+	.balign 4
 "@2139":
-	.incbin "baserom.dol", 0x3811A8, 0x28
+	.asciz "/scene/raccoonDog/bas/tanuki_wait_A.bas"
 "@2140":
-	.incbin "baserom.dol", 0x3811D0, 0x28
+	.asciz "/scene/raccoonDog/bas/tanuki_wait_B.bas"
 "@2141":
-	.incbin "baserom.dol", 0x3811F8, 0x28
+	.asciz "/scene/raccoonDog/bas/tanuki_wet.bas"
+	.balign 4
 "@2144":
-	.incbin "baserom.dol", 0x381220, 0x2C
+	.asciz "/scene/sunflowerL/bas/sunflower_stand.bas"
+	.balign 4
 "@2145":
-	.incbin "baserom.dol", 0x38124C, 0x28
+	.asciz "/scene/sunflowerL/bas/sunflower_wet.bas"
 "@2146":
-	.incbin "baserom.dol", 0x381274, 0x2C
+	.asciz "/scene/sunflowerL/bas/sunflower_wet_B.bas"
+	.balign 4
 "@2150":
-	.incbin "baserom.dol", 0x3812A0, 0x2C
+	.asciz "/scene/sunflowerS/bas/sunflower_s_stand.bas"
 "@2151":
-	.incbin "baserom.dol", 0x3812CC, 0x2C
+	.asciz "/scene/sunflowerS/bas/sunflower_s_wet.bas"
+	.balign 4
 "@2152":
-	.incbin "baserom.dol", 0x3812F8, 0x30
+	.asciz "/scene/sunflowerS/bas/sunflower_s_wet_B.bas"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B64E8, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B64F4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B6500, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 MtxCalcTypeName:
   .4byte "@1755"
   .4byte "@1756"

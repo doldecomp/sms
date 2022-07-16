@@ -1168,25 +1168,76 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2322":
-	.incbin "baserom.dol", 0x3A14EC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2561":
-	.incbin "baserom.dol", 0x3A1500, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2562":
-	.incbin "baserom.dol", 0x3A1530, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2563":
-	.incbin "baserom.dol", 0x3A1568, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2564":
-	.incbin "baserom.dol", 0x3A159C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2850":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2852":
-	.incbin "baserom.dol", 0x3A15CC, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2935":
-	.incbin "baserom.dol", 0x3A15D8, 0x28
+	.asciz "/scene/bathtubpeach/bas/peach_wait.bas"
+	.balign 4
 "@2977":
-	.incbin "baserom.dol", 0x3A1600, 0x10
+	.asciz "ahiru_peach.bmd"
 entry$2976:
   .4byte "@2977"
   .4byte 0x14240000
@@ -1195,13 +1246,18 @@ entry$2976:
   .4byte 0
   .4byte 0
 "@3006":
-	.incbin "baserom.dol", 0x3A1628, 0x18
+	.asciz "/enemy/bathtubpeach.prm"
 "@3007":
-	.incbin "baserom.dol", 0x3A1640, 0xC
+	.asciz "turnSpeed"
+	.balign 4
 "@3009":
-	.incbin "baserom.dol", 0x3A164C, 0xC
+	.asciz "turnSpeed2"
+	.balign 4
 "@3039":
-	.incbin "baserom.dol", 0x3A1658, 0x10
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 bathtubpeach_bastable:
@@ -1339,51 +1395,58 @@ __vt__13TBathtubPeach:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3008":
-	.incbin "baserom.dol", 0x3EBE80, 0x4
+	.4byte 0x41000000
 "@3010":
-	.incbin "baserom.dol", 0x3EBE84, 0x4
+	.4byte 0x3F800000
 "@3011":
-	.incbin "baserom.dol", 0x3EBE88, 0x8
+	.asciz "speed"
+	.balign 4
 "@3012":
-	.incbin "baserom.dol", 0x3EBE90, 0x4
+	.4byte 0x41800000
 "@3013":
-	.incbin "baserom.dol", 0x3EBE94, 0x8
+	.asciz "angle"
+	.balign 4
 "@3014":
-	.incbin "baserom.dol", 0x3EBE9C, 0x4
+	.4byte 0x42900000
 "@3015":
-	.incbin "baserom.dol", 0x3EBEA0, 0x8
+	.asciz "range"
+	.balign 4
 "@3016":
-	.incbin "baserom.dol", 0x3EBEA8, 0x4
+	.4byte 0x42C80000
 "@3017":
-	.incbin "baserom.dol", 0x3EBEAC, 0x8
+	.asciz "radius"
+	.balign 4
 "@3018":
-	.incbin "baserom.dol", 0x3EBEB4, 0x4
+	.4byte 0x45098000
 "@3064":
-	.incbin "baserom.dol", 0x3EBEB8, 0x4
+	.4byte 0x3E570A3D
 "@3065":
-	.incbin "baserom.dol", 0x3EBEBC, 0x4
+	.4byte 0x42480000
 "@3066":
   .4byte 0
 "@3067":
-	.incbin "baserom.dol", 0x3EBEC4, 0x4
+	.4byte 0x3FC00000
 "@3068":
-	.incbin "baserom.dol", 0x3EBEC8, 0x4
+	.4byte 0x3F000000
 "@3069":
-	.incbin "baserom.dol", 0x3EBECC, 0x4
+	.4byte 0x40000000
 "@3134":
-	.incbin "baserom.dol", 0x3EBED0, 0x4
+	.4byte 0x36800000
 "@3135":
-	.incbin "baserom.dol", 0x3EBED4, 0x4
+	.4byte 0x3BB40000
 "@3136":
-	.incbin "baserom.dol", 0x3EBED8, 0x4
+	.4byte 0x42B40000
 "@3137":
-	.incbin "baserom.dol", 0x3EBEDC, 0x4
+	.4byte 0x43B40000
 "@3138":
-	.incbin "baserom.dol", 0x3EBEE0, 0x8
+	.4byte 0xC3340000
+	.4byte 0
 "@3140":
-	.incbin "baserom.dol", 0x3EBEE8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3435":
-	.incbin "baserom.dol", 0x3EBEF0, 0x8
+	.4byte 0x43360B61
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2938":

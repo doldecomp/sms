@@ -417,7 +417,8 @@ lbl_80201134:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1772":
-	.incbin "baserom.dol", 0x3902F8, 0x10
+	.asciz "<TMenuPlane>"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TFlashPane

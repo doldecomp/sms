@@ -107,6 +107,6 @@ __vt__10TBlendPane:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1505":
-	.incbin "baserom.dol", 0x3E9668, 0x4
+	.4byte 0x3F800000
 "@1507":
   .4byte 0

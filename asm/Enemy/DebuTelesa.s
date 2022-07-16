@@ -796,25 +796,77 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x3A1CF4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2015":
-	.incbin "baserom.dol", 0x3A1D08, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2016":
-	.incbin "baserom.dol", 0x3A1D38, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2017":
-	.incbin "baserom.dol", 0x3A1D70, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2018":
-	.incbin "baserom.dol", 0x3A1DA4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2602":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2604":
-	.incbin "baserom.dol", 0x3A1DD4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2621":
-	.incbin "baserom.dol", 0x3A1DE0, 0x2C
+	.asciz "/scene/DebuTelesa/bas/debuTelesa_wait.bas"
+	.balign 4
 "@2836":
-	.incbin "baserom.dol", 0x3A1E0C, 0x10
+	.asciz "debuTelesa.bmd"
+	.balign 4
 entry$2835:
   .4byte "@2836"
   .4byte 0x10210000
@@ -823,13 +875,16 @@ entry$2835:
   .4byte 0
   .4byte 0
 "@2866":
-	.incbin "baserom.dol", 0x3A1E34, 0x10
+	.asciz "debutelesa_wait"
 "@2916":
-	.incbin "baserom.dol", 0x3A1E44, 0x18
+	.asciz "/enemy/debuTelesa.prm"
+	.balign 4
 "@3043":
-	.incbin "baserom.dol", 0x3A1E5C, 0xC
+	.asciz "null_yodare"
 "@3044":
-	.incbin "baserom.dol", 0x3A1E68, 0x10
+	.asciz "jnt_Rhand"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20TNerveDebuTelesaWait
@@ -975,26 +1030,28 @@ __vt__11TDebuTelesa:
 DebuTelesa_bastable:
   .4byte "@2621"
 "@2830":
-	.incbin "baserom.dol", 0x3E3C5C, 0x4
+	.4byte 0x000000F0
 "@2831":
-	.incbin "baserom.dol", 0x3E3C60, 0x4
+	.4byte 0x0000014A
 "@2832":
-	.incbin "baserom.dol", 0x3E3C64, 0x4
+	.4byte 0x000000DC
 "@2833":
-	.incbin "baserom.dol", 0x3E3C68, 0x8
+	.4byte 0x0000012C
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2905":
-	.incbin "baserom.dol", 0x3EBFB0, 0x4
+	.4byte 0x43AF0000
 "@2917":
-	.incbin "baserom.dol", 0x3EBFB4, 0x4
+	.4byte 0x3F800000
 "@2960":
-	.incbin "baserom.dol", 0x3EBFB8, 0x4
+	.4byte 0x3FC00000
 "@2961":
-	.incbin "baserom.dol", 0x3EBFBC, 0x4
+	.4byte 0x40133333
 "@3013":
-	.incbin "baserom.dol", 0x3EBFC0, 0x8
+	.4byte 0x41200000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2850":

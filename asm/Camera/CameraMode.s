@@ -377,153 +377,221 @@ isLButtonCameraSpecifyMode__15CPolarSubCameraCFi:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A3D2C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1535":
-	.incbin "baserom.dol", 0x3A3D40, 0x18
+	.asciz "/Camera/kindFollow.prm"
+	.balign 4
 "@1536":
-	.incbin "baserom.dol", 0x3A3D58, 0x1C
+	.asciz "/Camera/kindParallel.prm"
+	.balign 4
 "@1537":
-	.incbin "baserom.dol", 0x3A3D74, 0x1C
+	.asciz "/Camera/kindMultiPlayer.prm"
 "@1538":
-	.incbin "baserom.dol", 0x3A3D90, 0x1C
+	.asciz "/Camera/kindWallJump.prm"
+	.balign 4
 "@1539":
-	.incbin "baserom.dol", 0x3A3DAC, 0x1C
+	.asciz "/Camera/kindHipAttack.prm"
+	.balign 4
 "@1540":
-	.incbin "baserom.dol", 0x3A3DC8, 0x1C
+	.asciz "/Camera/kindRocketJump.prm"
+	.balign 4
 "@1541":
-	.incbin "baserom.dol", 0x3A3DE4, 0x18
+	.asciz "/Camera/kindWire.prm"
+	.balign 4
 "@1542":
-	.incbin "baserom.dol", 0x3A3DFC, 0x18
+	.asciz "/Camera/kindLNormal.prm"
 "@1543":
-	.incbin "baserom.dol", 0x3A3E14, 0x20
+	.asciz "/Camera/kindMareUnderGround.prm"
 "@1544":
-	.incbin "baserom.dol", 0x3A3E34, 0x1C
+	.asciz "/Camera/kindDefiniteD2.prm"
+	.balign 4
 "@1545":
-	.incbin "baserom.dol", 0x3A3E50, 0x18
+	.asciz "/Camera/kindTalkE.prm"
+	.balign 4
 "@1546":
-	.incbin "baserom.dol", 0x3A3E68, 0x1C
+	.asciz "/Camera/kindLeanMirror.prm"
+	.balign 4
 "@1547":
-	.incbin "baserom.dol", 0x3A3E84, 0x18
+	.asciz "/Camera/kindTalkA.prm"
+	.balign 4
 "@1548":
-	.incbin "baserom.dol", 0x3A3E9C, 0x1C
+	.asciz "/Camera/kindUnderGround.prm"
 "@1549":
-	.incbin "baserom.dol", 0x3A3EB8, 0x18
+	.asciz "/Camera/kindIndoor.prm"
+	.balign 4
 "@1550":
-	.incbin "baserom.dol", 0x3A3ED0, 0x18
+	.asciz "/Camera/kindHang.prm"
+	.balign 4
 "@1551":
-	.incbin "baserom.dol", 0x3A3EE8, 0x1C
+	.asciz "/Camera/kindWireHang.prm"
+	.balign 4
 "@1552":
-	.incbin "baserom.dol", 0x3A3F04, 0x1C
+	.asciz "/Camera/kindSandBird.prm"
+	.balign 4
 "@1553":
-	.incbin "baserom.dol", 0x3A3F20, 0x1C
+	.asciz "/Camera/kindHovering.prm"
+	.balign 4
 "@1554":
-	.incbin "baserom.dol", 0x3A3F3C, 0x1C
+	.asciz "/Camera/kindJumpCode.prm"
+	.balign 4
 "@1555":
-	.incbin "baserom.dol", 0x3A3F58, 0x18
+	.asciz "/Camera/kindDelfino.prm"
 "@1556":
-	.incbin "baserom.dol", 0x3A3F70, 0x18
+	.asciz "/Camera/kindClimb.prm"
+	.balign 4
 "@1557":
-	.incbin "baserom.dol", 0x3A3F88, 0x18
+	.asciz "/Camera/kindFixA.prm"
+	.balign 4
 "@1558":
-	.incbin "baserom.dol", 0x3A3FA0, 0x18
+	.asciz "/Camera/kindFixB.prm"
+	.balign 4
 "@1559":
-	.incbin "baserom.dol", 0x3A3FB8, 0x18
+	.asciz "/Camera/kindFixC.prm"
+	.balign 4
 "@1560":
-	.incbin "baserom.dol", 0x3A3FD0, 0x18
+	.asciz "/Camera/kindFixD.prm"
+	.balign 4
 "@1561":
-	.incbin "baserom.dol", 0x3A3FE8, 0x18
+	.asciz "/Camera/kindFixE.prm"
+	.balign 4
 "@1562":
-	.incbin "baserom.dol", 0x3A4000, 0x18
+	.asciz "/Camera/kindFixF.prm"
+	.balign 4
 "@1563":
-	.incbin "baserom.dol", 0x3A4018, 0x18
+	.asciz "/Camera/kindFixG.prm"
+	.balign 4
 "@1564":
-	.incbin "baserom.dol", 0x3A4030, 0x18
+	.asciz "/Camera/kindFixH.prm"
+	.balign 4
 "@1565":
-	.incbin "baserom.dol", 0x3A4048, 0x1C
+	.asciz "/Camera/kindDefiniteA.prm"
+	.balign 4
 "@1566":
-	.incbin "baserom.dol", 0x3A4064, 0x1C
+	.asciz "/Camera/kindDefiniteB.prm"
+	.balign 4
 "@1567":
-	.incbin "baserom.dol", 0x3A4080, 0x1C
+	.asciz "/Camera/kindDefiniteC.prm"
+	.balign 4
 "@1568":
-	.incbin "baserom.dol", 0x3A409C, 0x1C
+	.asciz "/Camera/kindDefiniteD.prm"
+	.balign 4
 "@1569":
-	.incbin "baserom.dol", 0x3A40B8, 0x1C
+	.asciz "/Camera/kindDefiniteE.prm"
+	.balign 4
 "@1570":
-	.incbin "baserom.dol", 0x3A40D4, 0x1C
+	.asciz "/Camera/kindDefiniteF.prm"
+	.balign 4
 "@1571":
-	.incbin "baserom.dol", 0x3A40F0, 0x1C
+	.asciz "/Camera/kindDefiniteG.prm"
+	.balign 4
 "@1572":
-	.incbin "baserom.dol", 0x3A410C, 0x1C
+	.asciz "/Camera/kindDefiniteH.prm"
+	.balign 4
 "@1573":
-	.incbin "baserom.dol", 0x3A4128, 0x18
+	.asciz "/Camera/kindExMap0.prm"
+	.balign 4
 "@1574":
-	.incbin "baserom.dol", 0x3A4140, 0x18
+	.asciz "/Camera/kindTowerA.prm"
+	.balign 4
 "@1575":
-	.incbin "baserom.dol", 0x3A4158, 0x18
+	.asciz "/Camera/kindTowerB.prm"
+	.balign 4
 "@1576":
-	.incbin "baserom.dol", 0x3A4170, 0x18
+	.asciz "/Camera/kindTowerC.prm"
+	.balign 4
 "@1577":
-	.incbin "baserom.dol", 0x3A4188, 0x18
+	.asciz "/Camera/kindSlider.prm"
+	.balign 4
 "@1578":
-	.incbin "baserom.dol", 0x3A41A0, 0x18
+	.asciz "/Camera/kindDiving.prm"
+	.balign 4
 "@1579":
-	.incbin "baserom.dol", 0x3A41B8, 0x18
+	.asciz "/Camera/kindTurbo.prm"
+	.balign 4
 "@1580":
-	.incbin "baserom.dol", 0x3A41D0, 0x18
+	.asciz "/Camera/kindTalkB.prm"
+	.balign 4
 "@1581":
-	.incbin "baserom.dol", 0x3A41E8, 0x1C
+	.asciz "/Camera/kindJetCoaster.prm"
+	.balign 4
 "@1582":
-	.incbin "baserom.dol", 0x3A4204, 0x1C
+	.asciz "/Camera/kindParallelB.prm"
+	.balign 4
 "@1583":
-	.incbin "baserom.dol", 0x3A4220, 0x18
+	.asciz "/Camera/kindSurfing.prm"
 "@1584":
-	.incbin "baserom.dol", 0x3A4238, 0x1C
+	.asciz "/Camera/kindSwimming.prm"
+	.balign 4
 "@1585":
-	.incbin "baserom.dol", 0x3A4254, 0x1C
+	.asciz "/Camera/kindClimbJump.prm"
+	.balign 4
 "@1586":
-	.incbin "baserom.dol", 0x3A4270, 0x1C
+	.asciz "/Camera/kindLookDown.prm"
+	.balign 4
 "@1587":
-	.incbin "baserom.dol", 0x3A428C, 0x1C
+	.asciz "/Camera/kindRailFence.prm"
+	.balign 4
 "@1588":
-	.incbin "baserom.dol", 0x3A42A8, 0x18
+	.asciz "/Camera/kindFollowB.prm"
 "@1589":
-	.incbin "baserom.dol", 0x3A42C0, 0x18
+	.asciz "/Camera/kindFollowC.prm"
 "@1590":
-	.incbin "baserom.dol", 0x3A42D8, 0x18
+	.asciz "/Camera/kindTowerD.prm"
+	.balign 4
 "@1591":
-	.incbin "baserom.dol", 0x3A42F0, 0x20
+	.asciz "/Camera/kindDelfinoAttic.prm"
+	.balign 4
 "@1592":
-	.incbin "baserom.dol", 0x3A4310, 0x1C
+	.asciz "/Camera/kindBossGeso.prm"
+	.balign 4
 "@1593":
-	.incbin "baserom.dol", 0x3A432C, 0x18
+	.asciz "/Camera/kindFixI.prm"
+	.balign 4
 "@1594":
-	.incbin "baserom.dol", 0x3A4344, 0x1C
+	.asciz "/Camera/kindDefiniteI.prm"
+	.balign 4
 "@1595":
-	.incbin "baserom.dol", 0x3A4360, 0x18
+	.asciz "/Camera/kindFence.prm"
+	.balign 4
 "@1596":
-	.incbin "baserom.dol", 0x3A4378, 0x1C
+	.asciz "/Camera/kindMonteFence.prm"
+	.balign 4
 "@1597":
-	.incbin "baserom.dol", 0x3A4394, 0x1C
+	.asciz "/Camera/kindMonteHang.prm"
+	.balign 4
 "@1598":
-	.incbin "baserom.dol", 0x3A43B0, 0x18
+	.asciz "/Camera/kindTalkC.prm"
+	.balign 4
 "@1599":
-	.incbin "baserom.dol", 0x3A43C8, 0x18
+	.asciz "/Camera/kindTalkD.prm"
+	.balign 4
 "@1600":
-	.incbin "baserom.dol", 0x3A43E0, 0x18
+	.asciz "/Camera/kindTowerE.prm"
+	.balign 4
 "@1601":
-	.incbin "baserom.dol", 0x3A43F8, 0x1C
+	.asciz "/Camera/kindDelfinoB.prm"
+	.balign 4
 "@1602":
-	.incbin "baserom.dol", 0x3A4414, 0x18
+	.asciz "/Camera/kindCancan.prm"
+	.balign 4
 "@1603":
-	.incbin "baserom.dol", 0x3A442C, 0x20
+	.asciz "/Camera/kindAquaticTurbo.prm"
+	.balign 4
 "@1604":
-	.incbin "baserom.dol", 0x3A444C, 0x18
+	.asciz "/Camera/kindFollowD.prm"
 "@1605":
-	.incbin "baserom.dol", 0x3A4464, 0x18
+	.asciz "/Camera/kindFollowE.prm"
 "@1606":
-	.incbin "baserom.dol", 0x3A447C, 0x1C
+	.asciz "/Camera/kindParallelC.prm"
+	.balign 4
 "@1607":
-	.incbin "baserom.dol", 0x3A4498, 0x20
+	.asciz "/Camera/kindParallelD.prm"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global mCamKindNameSaveFile__15CPolarSubCamera

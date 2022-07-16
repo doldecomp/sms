@@ -998,19 +998,20 @@ __vt__12TBeamManager:
 "@2019":
   .4byte 0
 "@2020":
-	.incbin "baserom.dol", 0x3EB1B8, 0x4
+	.4byte 0x3F800000
 "@2021":
-	.incbin "baserom.dol", 0x3EB1BC, 0x4
+	.4byte 0x36800000
 "@2022":
-	.incbin "baserom.dol", 0x3EB1C0, 0x4
+	.4byte 0x3F000000
 "@2023":
-	.incbin "baserom.dol", 0x3EB1C4, 0x4
+	.4byte 0x43360B61
 "@2024":
-	.incbin "baserom.dol", 0x3EB1C8, 0x4
+	.4byte 0x43B40000
 "@2025":
-	.incbin "baserom.dol", 0x3EB1CC, 0x4
+	.4byte 0x3BB40000
 "@2027":
-	.incbin "baserom.dol", 0x3EB1D0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpBeamManager

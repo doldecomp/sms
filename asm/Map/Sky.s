@@ -595,7 +595,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2827":
-	.incbin "baserom.dol", 0x38FA98, 0x18
+	.asciz "/scene/map/map/sky.bmd"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__4TSky
@@ -644,23 +645,24 @@ __vt__4TSky:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2748":
-	.incbin "baserom.dol", 0x3E8DA8, 0x4
+	.4byte 0x0012EE80
 "@2787":
   .4byte 0
 "@2788":
-	.incbin "baserom.dol", 0x3E8DB0, 0x4
+	.4byte 0x3F800000
 "@2789":
-	.incbin "baserom.dol", 0x3E8DB4, 0x4
+	.4byte 0xC1F00000
 "@2790":
-	.incbin "baserom.dol", 0x3E8DB8, 0x4
+	.4byte 0x3D0F5C29
 "@2828":
-	.incbin "baserom.dol", 0x3E8DBC, 0x4
+	.4byte 0x736B7900
 "@2864":
-	.incbin "baserom.dol", 0x3E8DC0, 0x4
+	.4byte 0x3C8EFA36
 "@2865":
-	.incbin "baserom.dol", 0x3E8DC4, 0x4
+	.4byte 0x43B40000
 "@2866":
-	.incbin "baserom.dol", 0x3E8DC8, 0x8
+	.4byte 0x47C35000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2867":

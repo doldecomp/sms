@@ -547,16 +547,24 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2396":
-	.incbin "baserom.dol", 0x3702C4, 0xC
+	.asciz "<TDirector>"
 "@2397":
-	.incbin "baserom.dol", 0x3702D0, 0xC
+	.asciz "<TViewObj>"
+	.balign 4
 "@2399":
-	.incbin "baserom.dol", 0x3702DC, 0x1C
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x97708358
+	.4byte 0x83678362
+	.4byte 0x83768345
+	.4byte 0x83488362
+	.4byte 0x83600000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2398":
-	.incbin "baserom.dol", 0x3E4D40, 0x8
+	.4byte 0x42F00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2269":

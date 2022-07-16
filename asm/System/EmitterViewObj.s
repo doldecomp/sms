@@ -1829,19 +1829,40 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1711":
-	.incbin "baserom.dol", 0x36F94C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 prmarray$2214:
-	.incbin "baserom.dol", 0x36F960, 0x18
+	.4byte 0xB58466FF
+	.4byte 0xFFE3A8FF
+	.4byte 0xB58466FF
+	.4byte 0x6E6757FF
+	.4byte 0xEFB02EFF
+	.4byte 0xB0BF30FF
 envarray$2215:
-	.incbin "baserom.dol", 0x36F978, 0x18
+	.4byte 0x620E00FF
+	.4byte 0xD83060FF
+	.4byte 0x620E00FF
+	.4byte 0x000000FF
+	.4byte 0xB72408FF
+	.4byte 0x00736CFF
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3B0838, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3B0844, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3B0850, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 .global __vt__21TMarioParticleManager
 __vt__21TMarioParticleManager:
   .4byte 0
@@ -1916,9 +1937,9 @@ __vt__15TEmitterViewObj:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2802":
-	.incbin "baserom.dol", 0x3E4CA8, 0x4
+	.4byte 0x42340000
 "@2803":
-	.incbin "baserom.dol", 0x3E4CAC, 0x4
+	.4byte 0x3F9BE76D
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpMarioParticleManager

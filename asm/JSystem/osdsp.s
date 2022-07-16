@@ -78,9 +78,12 @@ lbl_80082180:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@347":
-	.incbin "baserom.dol", 0x36E470, 0x1C
+	.asciz "Prior Task is not inited\n"
+	.balign 4
 "@351":
-	.incbin "baserom.dol", 0x36E48C, 0x24
+	.asciz "Already inited prior DSP task\n"
+	.balign 4
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global __DSP_tmp_task

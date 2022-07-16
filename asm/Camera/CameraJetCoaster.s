@@ -1002,34 +1002,39 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 sFixCameraPos$localstatic0$drawJetCoasterBalloonMessage___15CPolarSubCameraFv:
-	.incbin "baserom.dol", 0x3A3A88, 0x10
+	.4byte 0x453BD000
+	.4byte 0x457B4000
+	.4byte 0xC6156000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2347":
-	.incbin "baserom.dol", 0x3EC538, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2361":
   .4byte 0
 "@2362":
-	.incbin "baserom.dol", 0x3EC544, 0x4
+	.4byte 0x43FA0000
 "@2363":
-	.incbin "baserom.dol", 0x3EC548, 0x4
+	.4byte 0x3F800000
 "@2364":
-	.incbin "baserom.dol", 0x3EC54C, 0x4
+	.4byte 0x42700000
 "@2711":
-	.incbin "baserom.dol", 0x3EC550, 0x4
+	.4byte 0x36800000
 "@2712":
-	.incbin "baserom.dol", 0x3EC554, 0x4
+	.4byte 0xBFC90FD8
 "@2713":
-	.incbin "baserom.dol", 0x3EC558, 0x4
+	.4byte 0xC2B40000
 "@2714":
-	.incbin "baserom.dol", 0x3EC55C, 0x4
+	.4byte 0x42B40000
 "@2715":
-	.incbin "baserom.dol", 0x3EC560, 0x4
+	.4byte 0x3BB40000
 "@2716":
-	.incbin "baserom.dol", 0x3EC564, 0x4
+	.4byte 0x43340000
 "@2717":
-	.incbin "baserom.dol", 0x3EC568, 0x8
+	.4byte 0x43360B61
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2284":

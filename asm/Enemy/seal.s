@@ -1208,23 +1208,74 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x39E17C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2200":
-	.incbin "baserom.dol", 0x39E190, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2201":
-	.incbin "baserom.dol", 0x39E1C0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2202":
-	.incbin "baserom.dol", 0x39E1F8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2203":
-	.incbin "baserom.dol", 0x39E22C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2761":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2763":
-	.incbin "baserom.dol", 0x39E25C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2837":
-	.incbin "baserom.dol", 0x39E268, 0x18
+	.asciz "gene_orange_model1.bmd"
+	.balign 4
 entry$2836:
   .4byte "@2837"
   .4byte 0x11210000
@@ -1233,11 +1284,14 @@ entry$2836:
   .4byte 0
   .4byte 0
 "@3207":
-	.incbin "baserom.dol", 0x39E298, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@3210":
-	.incbin "baserom.dol", 0x39E2A4, 0xC
+	.asciz "/scene/seal"
 "@3211":
-	.incbin "baserom.dol", 0x39E2B0, 0x18
+	.asciz "gene_orange_col1.col"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13TNerveSealDie
@@ -1356,19 +1410,20 @@ __vt__5TSeal:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2980":
-	.incbin "baserom.dol", 0x3EB720, 0x4
+	.4byte 0x4A095440
 "@3019":
-	.incbin "baserom.dol", 0x3EB724, 0x4
+	.4byte 0x49742400
 "@3075":
-	.incbin "baserom.dol", 0x3EB728, 0x4
+	.4byte 0x43360B61
 "@3126":
   .4byte 0
 "@3206":
-	.incbin "baserom.dol", 0x3EB730, 0x4
+	.4byte 0x42C80000
 "@3208":
-	.incbin "baserom.dol", 0x3EB734, 0x4
+	.4byte 0x43870000
 "@3209":
-	.incbin "baserom.dol", 0x3EB738, 0x8
+	.4byte 0x43B40000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2839":

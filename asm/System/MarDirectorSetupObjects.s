@@ -2555,105 +2555,185 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2110":
-	.incbin "baserom.dol", 0x376A4C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@3753":
-	.incbin "baserom.dol", 0x376A60, 0x10
+	.asciz "Root View Obj"
+	.balign 4
 "@3754":
-	.incbin "baserom.dol", 0x376A70, 0x14
+	.4byte 0x8351815B
+	.4byte 0x83808349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x83670000
 "@3755":
-	.incbin "baserom.dol", 0x376A84, 0x10
+	.4byte 0x83758389
+	.4byte 0x815B834A
+	.4byte 0x83818389
+	.4byte 0
 "@3759":
-	.incbin "baserom.dol", 0x376A94, 0x10
+	.4byte 0x8C7691AA
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@3760":
-	.incbin "baserom.dol", 0x376AA4, 0x18
+	.asciz "Mirror Draw SnapTime"
+	.balign 4
 "@3761":
-	.incbin "baserom.dol", 0x376ABC, 0x1C
+	.asciz "Pollution Check SnapTime"
+	.balign 4
 "@3762":
-	.incbin "baserom.dol", 0x376AD8, 0x18
+	.asciz "Pollution Draw SnapTime"
 "@3763":
-	.incbin "baserom.dol", 0x376AF0, 0x14
+	.asciz "Map Draw SnapTime"
+	.balign 4
 "@3764":
-	.incbin "baserom.dol", 0x376B04, 0x18
+	.asciz "MapObj Draw SnapTime"
+	.balign 4
 "@3765":
-	.incbin "baserom.dol", 0x376B1C, 0x18
+	.asciz "Player Draw SnapTime"
+	.balign 4
 "@3766":
-	.incbin "baserom.dol", 0x376B34, 0x14
+	.asciz "Water Draw SnapTime"
 "@3767":
-	.incbin "baserom.dol", 0x376B48, 0x14
+	.asciz "Sky Draw SnapTime"
+	.balign 4
 "@3768":
-	.incbin "baserom.dol", 0x376B5C, 0x20
+	.asciz "PollutionModel Draw SnapTime"
+	.balign 4
 "@3769":
-	.incbin "baserom.dol", 0x376B7C, 0x18
+	.asciz "Shadow Draw SnapTime"
+	.balign 4
 "@3770":
-	.incbin "baserom.dol", 0x376B94, 0x1C
+	.asciz "Silhouette Draw SnapTime"
+	.balign 4
 "@3771":
-	.incbin "baserom.dol", 0x376BB0, 0x14
+	.asciz "Chara Draw SnapTime"
 "@3772":
-	.incbin "baserom.dol", 0x376BC4, 0x18
+	.asciz "Indirect Draw SnapTime"
+	.balign 4
 "@3773":
-	.incbin "baserom.dol", 0x376BDC, 0x18
+	.asciz "Particle Draw SnapTime"
+	.balign 4
 "@3774":
-	.incbin "baserom.dol", 0x376BF4, 0x18
+	.asciz "/scene/map/scene.ral"
+	.balign 4
 "@3775":
-	.incbin "baserom.dol", 0x376C0C, 0x18
+	.asciz "/scene/map/tables.bin"
+	.balign 4
 "@3776":
-	.incbin "baserom.dol", 0x376C24, 0x18
+	.asciz "/scene/map/scene.bin"
+	.balign 4
 "@3777":
-	.incbin "baserom.dol", 0x376C3C, 0xC
+	.asciz "camera 1"
+	.balign 4
 "@3779":
-	.incbin "baserom.dol", 0x376C48, 0x14
+	.4byte 0x83438378
+	.4byte 0x83938367
+	.4byte 0x834F838B
+	.4byte 0x815B8376
+	.4byte 0
 "@3780":
-	.incbin "baserom.dol", 0x376C5C, 0xC
+	.asciz "/common/sp"
+	.balign 4
 "@3782":
-	.incbin "baserom.dol", 0x376C68, 0x10
+	.asciz "<EventWatcher>"
+	.balign 4
 "@3784":
-	.incbin "baserom.dol", 0x376C78, 0x10
+	.asciz "/scene/map/sp"
+	.balign 4
 "@3786":
-	.incbin "baserom.dol", 0x376C88, 0xC
+	.4byte 0x92CA8FED
+	.4byte 0x8356815B
+	.4byte 0x83930000
 "@3787":
-	.incbin "baserom.dol", 0x376C94, 0x14
+	.asciz "PERF Event Group"
+	.balign 4
 "@3788":
-	.incbin "baserom.dol", 0x376CA8, 0xC
+	.asciz "<FrmGXSet>"
+	.balign 4
 "@3789":
-	.incbin "baserom.dol", 0x376CB4, 0x14
+	.asciz "Draw Buffer Group"
+	.balign 4
 "@3790":
-	.incbin "baserom.dol", 0x376CC8, 0x10
+	.asciz "DrawBuf Sky Opa"
 "@3791":
-	.incbin "baserom.dol", 0x376CD8, 0x10
+	.asciz "DrawBuf Sky Xlu"
 "@3792":
-	.incbin "baserom.dol", 0x376CE8, 0x14
+	.asciz "DrawBuf Graffito"
+	.balign 4
 "@3793":
-	.incbin "baserom.dol", 0x376CFC, 0x18
+	.4byte 0x92CA8FED
+	.4byte 0x8356815B
+	.4byte 0x83939560
+	.4byte 0x89E68358
+	.4byte 0x8365815B
+	.4byte 0x83570000
 "@3794":
-	.incbin "baserom.dol", 0x376D14, 0x18
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
 "@3795":
-	.incbin "baserom.dol", 0x376D2C, 0x14
+	.4byte 0x92CA8FED
+	.4byte 0x8356815B
+	.4byte 0x83935669
+	.asciz "ewport"
+	.balign 4
 "@3796":
-	.incbin "baserom.dol", 0x376D40, 0x18
+	.asciz "/data/PerformLists.bin"
+	.balign 4
 "@3797":
-	.incbin "baserom.dol", 0x376D58, 0x18
+	.asciz "PerformList Movement"
+	.balign 4
 "@3798":
-	.incbin "baserom.dol", 0x376D70, 0x18
+	.asciz "PerformList CalcAnim"
+	.balign 4
 "@3799":
-	.incbin "baserom.dol", 0x376D88, 0x10
+	.asciz "PerformList GX"
+	.balign 4
 "@3800":
-	.incbin "baserom.dol", 0x376D98, 0x18
+	.asciz "PerformList Silhouette"
+	.balign 4
 "@3801":
-	.incbin "baserom.dol", 0x376DB0, 0x14
+	.asciz "PerformList GX Post"
 "@3802":
-	.incbin "baserom.dol", 0x376DC4, 0x10
+	.asciz "Shine PfLst Mov"
 "@3803":
-	.incbin "baserom.dol", 0x376DD4, 0x10
+	.asciz "Shine PfLst Anm"
 "@3805":
-	.incbin "baserom.dol", 0x376DE4, 0x14
+	.4byte 0x83588379
+	.4byte 0x834C8385
+	.4byte 0x83898356
+	.4byte 0x815B8393
+	.4byte 0
 "@3806":
-	.incbin "baserom.dol", 0x376DF8, 0x10
+	.4byte 0x838C8393
+	.4byte 0x83598374
+	.4byte 0x838C8341
+	.4byte 0
 "@3807":
-	.incbin "baserom.dol", 0x376E08, 0x14
+	.4byte 0x91BE977A
+	.4byte 0x8ED595C1
+	.4byte 0x95A8834F
+	.4byte 0x838D815B
+	.4byte 0
 "@3808":
-	.incbin "baserom.dol", 0x376E1C, 0x10
+	.4byte 0x89EF9862
+	.4byte 0x834A815B
+	.4byte 0x835C838B
+	.4byte 0
 "@3809":
-	.incbin "baserom.dol", 0x376E2C, 0x14
+	.4byte 0x835E815B
+	.4byte 0x83518362
+	.4byte 0x836796EE
+	.4byte 0x88F30000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@3810":
@@ -2701,21 +2781,24 @@ lbl_constructor:
 "@3756":
   .4byte 0
 "@3757":
-	.incbin "baserom.dol", 0x3E52BC, 0x4
+	.4byte 0xBF800000
 "@3758":
-	.incbin "baserom.dol", 0x3E52C0, 0x4
+	.4byte 0x3F800000
 "@3778":
-	.incbin "baserom.dol", 0x3E52C4, 0x4
+	.4byte 0x3F69D89C
 "@3781":
-	.incbin "baserom.dol", 0x3E52C8, 0x4
+	.4byte 0x2E736200
 "@3783":
-	.incbin "baserom.dol", 0x3E52CC, 0x4
+	.4byte 0x2F000000
 "@3785":
-	.incbin "baserom.dol", 0x3E52D0, 0x8
+	.asciz "params"
+	.balign 4
 "@3804":
-	.incbin "baserom.dol", 0x3E52D8, 0x8
+	.4byte 0x8D8790AC
+	.4byte 0x33000000
 "@3812":
-	.incbin "baserom.dol", 0x3E52E0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2579":

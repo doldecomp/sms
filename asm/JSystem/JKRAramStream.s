@@ -390,7 +390,9 @@ __ct__20JKRAramStreamCommandFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@110":
-	.incbin "baserom.dol", 0x36DDA8, 0x18
+	.asciz "JKRAramStream.cpp"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sMessageBuffer__13JKRAramStream:
@@ -417,7 +419,8 @@ __vt__13JKRAramStream:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@111":
-	.incbin "baserom.dol", 0x3E4010, 0x8
+	.asciz "abort\n"
+	.balign 4
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sAramStreamObject__13JKRAramStream:

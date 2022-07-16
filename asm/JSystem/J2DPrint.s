@@ -1954,15 +1954,18 @@ __vt__8J2DPrint:
   .4byte 0
   .4byte 0
 "@196":
-	.incbin "baserom.dol", 0x3E3E68, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@276":
-	.incbin "baserom.dol", 0x3E3E70, 0x4
+	.4byte 0x3F000000
 "@403":
-	.incbin "baserom.dol", 0x3E3E74, 0x4
+	.4byte 0x461C4000
 "@405":
-	.incbin "baserom.dol", 0x3E3E78, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@425":
-	.incbin "baserom.dol", 0x3E3E80, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 mStrBuff__8J2DPrint:

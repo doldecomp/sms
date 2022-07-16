@@ -750,21 +750,23 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1806":
-	.incbin "baserom.dol", 0x3E4F48, 0x4
+	.4byte 0x3F800000
 "@1807":
   .4byte 0
 "@2115":
-	.incbin "baserom.dol", 0x3E4F50, 0x4
+	.4byte 0x3E800000
 "@2116":
-	.incbin "baserom.dol", 0x3E4F54, 0x4
+	.4byte 0x3F000000
 "@2118":
-	.incbin "baserom.dol", 0x3E4F58, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2121":
-	.incbin "baserom.dol", 0x3E4F60, 0x4
+	.4byte 0x41A00000
 "@2122":
-	.incbin "baserom.dol", 0x3E4F64, 0x4
+	.4byte 0x40C00000
 "@2128":
-	.incbin "baserom.dol", 0x3E4F68, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global mResetFlag__13TMarioGamePad

@@ -2179,57 +2179,135 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38B394, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38B3A8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38B3D8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38B410, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38B444, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2738":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2740":
-	.incbin "baserom.dol", 0x38B474, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2983":
-	.incbin "baserom.dol", 0x38B480, 0x10
+	.asciz "FruitCoconut"
+	.balign 4
 "@2984":
-	.incbin "baserom.dol", 0x38B490, 0xC
+	.asciz "FruitDurian"
 "@2985":
-	.incbin "baserom.dol", 0x38B49C, 0xC
+	.asciz "FruitPapaya"
 "@2986":
-	.incbin "baserom.dol", 0x38B4A8, 0xC
+	.asciz "FruitPine"
+	.balign 4
 "@2987":
-	.incbin "baserom.dol", 0x38B4B4, 0xC
+	.asciz "FruitBanana"
 "@2988":
-	.incbin "baserom.dol", 0x38B4C0, 0x14
+	.4byte 0x835E8393
+	.4byte 0x834E8358
+	.4byte 0x83438362
+	.4byte 0x83608260
+	.4byte 0
 "@2989":
-	.incbin "baserom.dol", 0x38B4D4, 0x14
+	.4byte 0x835E8393
+	.4byte 0x834E8358
+	.4byte 0x83438362
+	.4byte 0x83608261
+	.4byte 0
 "@2990":
-	.incbin "baserom.dol", 0x38B4E8, 0xC
+	.asciz "riccoswitch"
 "@3087":
-	.incbin "baserom.dol", 0x38B4F4, 0x1C
+	.4byte 0x8374838B
+	.4byte 0x815B8363
+	.4byte 0x835E8393
+	.4byte 0x834E834A
+	.4byte 0x83818389
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@3153":
-	.incbin "baserom.dol", 0x38B510, 0xC
+	.asciz "SurfGesoRed"
 "@3154":
-	.incbin "baserom.dol", 0x38B51C, 0x10
+	.asciz "SurfGesoYellow"
+	.balign 4
 "@3155":
-	.incbin "baserom.dol", 0x38B52C, 0x10
+	.asciz "SurfGesoGreen"
+	.balign 4
 "@3156":
-	.incbin "baserom.dol", 0x38B53C, 0x10
+	.asciz "surfgeso_run1"
+	.balign 4
 "@3184":
-	.incbin "baserom.dol", 0x38B54C, 0xC
+	.asciz "submarine"
+	.balign 4
 "@3185":
-	.incbin "baserom.dol", 0x38B558, 0x18
+	.4byte 0x90C28352
+	.4byte 0x83438393
+	.4byte 0x816990F6
+	.4byte 0x90858ACD
+	.4byte 0x9770816A
+	.4byte 0
 "@3345":
-	.incbin "baserom.dol", 0x38B570, 0x14
+	.asciz "craneCargoUpDown"
+	.balign 4
 "@3346":
-	.incbin "baserom.dol", 0x38B584, 0x10
+	.asciz "craneUpDown 0"
+	.balign 4
 "@3440":
-	.incbin "baserom.dol", 0x38B594, 0xC
+	.asciz "crane90 0"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TFruitLauncher
@@ -2905,84 +2983,86 @@ __vt__10TCraneRotY:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mWaitTime__10TCraneRotY:
-	.incbin "baserom.dol", 0x3E3600, 0x4
+	.4byte 0x00000078
 mRotSpeed__12TCraneUpDown:
-	.incbin "baserom.dol", 0x3E3604, 0x4
+	.4byte 0x3DCCCCCD
 mWaitTime__12TCraneUpDown:
-	.incbin "baserom.dol", 0x3E3608, 0x4
+	.4byte 0x00000078
 mRotAccel__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E360C, 0x4
+	.4byte 0x3F800000
 mRotSpeedMaxUp__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3610, 0x4
+	.4byte 0x40400000
 mRotSpeedMaxDown__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3614, 0x4
+	.4byte 0x3F800000
 mRotDown__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3618, 0x4
+	.4byte 0x3D4CCCCD
 mSubmarineMoveRate__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E361C, 0x4
+	.4byte 0x3F000000
 mSubmarineMaxTransY__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3620, 0x4
+	.4byte 0x443B8000
 mSubmarineBottomTransY__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3624, 0x4
+	.4byte 0xC46D8000
 mWaitTime__15TRiccoWatermill:
-	.incbin "baserom.dol", 0x3E3628, 0x4
+	.4byte 0x00000258
 mObjSpeedXZ__14TFruitLauncher:
-	.incbin "baserom.dol", 0x3E362C, 0x4
+	.4byte 0x3F800000
 mObjSpeedY__14TFruitLauncher:
-	.incbin "baserom.dol", 0x3E3630, 0x4
+	.4byte 0x41A00000
 mFruitLiveTime__14TFruitLauncher:
-	.incbin "baserom.dol", 0x3E3634, 0x4
+	.4byte 0x000012C0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2926":
   .4byte 0
 "@2982":
-	.incbin "baserom.dol", 0x3E7F6C, 0x4
+	.4byte 0x3F800000
 "@3080":
-	.incbin "baserom.dol", 0x3E7F70, 0x4
+	.4byte 0x38000000
 "@3081":
-	.incbin "baserom.dol", 0x3E7F74, 0x4
+	.4byte 0x42C80000
 "@3082":
-	.incbin "baserom.dol", 0x3E7F78, 0x4
+	.4byte 0x41A00000
 "@3083":
-	.incbin "baserom.dol", 0x3E7F7C, 0x4
+	.4byte 0x42200000
 "@3084":
-	.incbin "baserom.dol", 0x3E7F80, 0x4
+	.4byte 0x42700000
 "@3085":
-	.incbin "baserom.dol", 0x3E7F84, 0x4
+	.4byte 0x42A00000
 "@3086":
-	.incbin "baserom.dol", 0x3E7F88, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@3089":
-	.incbin "baserom.dol", 0x3E7F90, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3305":
-	.incbin "baserom.dol", 0x3E7F98, 0x4
+	.4byte 0x44FB0000
 "@3306":
-	.incbin "baserom.dol", 0x3E7F9C, 0x4
+	.4byte 0x43FA0000
 "@3307":
-	.incbin "baserom.dol", 0x3E7FA0, 0x4
+	.4byte 0x45DCD000
 "@3347":
-	.incbin "baserom.dol", 0x3E7FA4, 0x4
+	.4byte 0xC1C80000
 "@3348":
-	.incbin "baserom.dol", 0x3E7FA8, 0x4
+	.4byte 0x42340000
 "@3349":
-	.incbin "baserom.dol", 0x3E7FAC, 0x4
+	.4byte 0x41F00000
 "@3427":
-	.incbin "baserom.dol", 0x3E7FB0, 0x4
+	.4byte 0x44BB8000
 "@3428":
-	.incbin "baserom.dol", 0x3E7FB4, 0x4
+	.4byte 0x43360B61
 "@3438":
-	.incbin "baserom.dol", 0x3E7FB8, 0x4
+	.4byte 0x3D4CCCCD
 "@3439":
-	.incbin "baserom.dol", 0x3E7FBC, 0x4
+	.4byte 0x3DCCCCCD
 "@3654":
-	.incbin "baserom.dol", 0x3E7FC0, 0x4
+	.4byte 0x44F48000
 "@3655":
-	.incbin "baserom.dol", 0x3E7FC4, 0x4
+	.4byte 0x447A0000
 "@3656":
-	.incbin "baserom.dol", 0x3E7FC8, 0x4
+	.4byte 0x45C8C800
 "@3657":
-	.incbin "baserom.dol", 0x3E7FCC, 0x4
+	.4byte 0xC2C80000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 submarineCranePos_forSound:

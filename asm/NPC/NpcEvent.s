@@ -2714,77 +2714,172 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x37C8FC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2219":
-	.incbin "baserom.dol", 0x37C910, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2220":
-	.incbin "baserom.dol", 0x37C940, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2221":
-	.incbin "baserom.dol", 0x37C978, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2222":
-	.incbin "baserom.dol", 0x37C9AC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2627":
-	.incbin "baserom.dol", 0x37C9D0, 0x10
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x834A8381
+	.4byte 0x83893000
 "@2628":
-	.incbin "baserom.dol", 0x37C9E0, 0x10
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x834A8381
+	.4byte 0x83893100
 "@2629":
-	.incbin "baserom.dol", 0x37C9F0, 0x10
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x834A8381
+	.4byte 0x83893200
 "@2630":
-	.incbin "baserom.dol", 0x37CA00, 0x10
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x834A8381
+	.4byte 0x83893300
 "@2631":
-	.incbin "baserom.dol", 0x37CA10, 0x10
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x834A8381
+	.4byte 0x83893400
 "@2680":
-	.incbin "baserom.dol", 0x37CA20, 0xC
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0
 "@2683":
-	.incbin "baserom.dol", 0x37CA2C, 0x14
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x97708356
+	.4byte 0x83838343
+	.4byte 0x83930000
 "@2684":
-	.incbin "baserom.dol", 0x37CA40, 0x18
+	.4byte 0x82D082DC
+	.4byte 0x82ED82E8
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@2721":
-	.incbin "baserom.dol", 0x37CA58, 0x1C
+	.asciz "getAddressFromViewObjName"
+	.balign 4
 "@2722":
-	.incbin "baserom.dol", 0x37CA74, 0x14
+	.asciz "checkCurNerve4Npc"
+	.balign 4
 "@2723":
-	.incbin "baserom.dol", 0x37CA88, 0x18
+	.asciz "checkLatestNerve4Npc"
+	.balign 4
 "@2724":
-	.incbin "baserom.dol", 0x37CAA0, 0x10
+	.asciz "isNpcSinkBottom"
 "@2725":
-	.incbin "baserom.dol", 0x37CAB0, 0x14
+	.asciz "isGameModeNormal"
+	.balign 4
 "@2726":
-	.incbin "baserom.dol", 0x37CAC4, 0x14
+	.asciz "__forceStartTalk"
+	.balign 4
 "@2727":
-	.incbin "baserom.dol", 0x37CAD8, 0x1C
+	.asciz "__forceStartTalkExceptNpc"
+	.balign 4
 "@2728":
-	.incbin "baserom.dol", 0x37CAF4, 0x10
+	.asciz "connectDummyNpc"
 "@2729":
-	.incbin "baserom.dol", 0x37CB04, 0x14
+	.asciz "onTalkToDummyNpc"
+	.balign 4
 "@2730":
-	.incbin "baserom.dol", 0x37CB18, 0x18
+	.asciz "setNpcBalloonMessage"
+	.balign 4
 "@2731":
-	.incbin "baserom.dol", 0x37CB30, 0x18
+	.asciz "setNpcTalkForbidCount"
+	.balign 4
 "@2732":
-	.incbin "baserom.dol", 0x37CB48, 0xC
+	.asciz "npcDanceOn"
+	.balign 4
 "@2733":
-	.incbin "baserom.dol", 0x37CB54, 0x14
+	.asciz "npcDanceOffHappyOn"
+	.balign 4
 "@2734":
-	.incbin "baserom.dol", 0x37CB68, 0x10
+	.asciz "resetFruitNum"
+	.balign 4
 "@2735":
-	.incbin "baserom.dol", 0x37CB78, 0xC
+	.asciz "getFruitNum"
 "@2736":
-	.incbin "baserom.dol", 0x37CB84, 0x10
+	.asciz "setFruitType"
+	.balign 4
 "@2737":
-	.incbin "baserom.dol", 0x37CB94, 0x14
+	.asciz "fireStartDemoCamera"
 "@2738":
-	.incbin "baserom.dol", 0x37CBA8, 0xC
+	.asciz "isDemoMode"
+	.balign 4
 "@2739":
-	.incbin "baserom.dol", 0x37CBB4, 0x10
+	.asciz "checkMonteClear"
 "@2775":
-	.incbin "baserom.dol", 0x37CBC4, 0x20
+	.asciz "TSpcStack : stack underflow\n"
+	.balign 4
 "@2776":
-	.incbin "baserom.dol", 0x37CBE4, 0xC
+	.4byte 0x83828393
+	.4byte 0x83652564
+	.4byte 0
 "@2777":
-	.incbin "baserom.dol", 0x37CBF0, 0x1C
+	.asciz "TSpcStack : stack overflow\n"
 "@3130":
-	.incbin "baserom.dol", 0x37CC0C, 0x14
+	.4byte 0x835F837E
+	.4byte 0x815B826D
+	.4byte 0x826F8262
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sCameraNames$2626:
@@ -2798,11 +2893,12 @@ sCameraNames$2626:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2681":
-	.incbin "baserom.dol", 0x3E6460, 0x8
+	.asciz "%s%d"
+	.balign 4
 "@2682":
   .4byte 0
 "@2685":
-	.incbin "baserom.dol", 0x3E646C, 0x4
+	.4byte 0x43FA0000
 "@2821":
   .4byte 0
   .4byte 0

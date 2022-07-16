@@ -684,15 +684,15 @@ __vt__12TPoolManager:
 "@2679":
   .4byte 0
 "@2713":
-	.incbin "baserom.dol", 0x3E884C, 0x4
+	.4byte 0x40A00000
 "@2733":
-	.incbin "baserom.dol", 0x3E8850, 0x4
+	.4byte 0x42C80000
 "@2734":
-	.incbin "baserom.dol", 0x3E8854, 0x4
+	.4byte 0x47C34F80
 "@2742":
-	.incbin "baserom.dol", 0x3E8858, 0x4
+	.4byte 0x3F800000
 "@2770":
-	.incbin "baserom.dol", 0x3E885C, 0x4
+	.4byte 0x43480000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2782":

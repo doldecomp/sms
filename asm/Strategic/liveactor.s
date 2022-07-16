@@ -1951,11 +1951,13 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2836":
-	.incbin "baserom.dol", 0x376F78, 0x10
+	.asciz "liveactor.cpp"
+	.balign 4
 "@2837":
-	.incbin "baserom.dol", 0x376F88, 0x24
+	.asciz "TLiveActor[%s] : mAnmSound == NULL\n"
 "@3117":
-	.incbin "baserom.dol", 0x376FAC, 0x24
+	.asciz "TSpineBase : broken nerve chain\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TLiveActor
@@ -2028,32 +2030,34 @@ __vt__10TLiveActor:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global mVelocityMinY__10TLiveActor
 mVelocityMinY__10TLiveActor:
-	.incbin "baserom.dol", 0x3E3478, 0x8
+	.4byte 0xC2200000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2838":
   .4byte 0
 "@2872":
-	.incbin "baserom.dol", 0x3E534C, 0x4
+	.4byte 0x437F0000
 "@2873":
-	.incbin "baserom.dol", 0x3E5350, 0x4
+	.4byte 0x3F800000
 "@2935":
-	.incbin "baserom.dol", 0x3E5354, 0x4
+	.4byte 0xC2200000
 "@3064":
-	.incbin "baserom.dol", 0x3E5358, 0x4
+	.4byte 0x43360B61
 "@3163":
-	.incbin "baserom.dol", 0x3E535C, 0x4
+	.4byte 0x3D4CCCCD
 "@3282":
-	.incbin "baserom.dol", 0x3E5360, 0x4
+	.4byte 0x43340000
 "@3344":
-	.incbin "baserom.dol", 0x3E5364, 0x4
+	.4byte 0x41200000
 "@3345":
-	.incbin "baserom.dol", 0x3E5368, 0x4
+	.4byte 0x41C80000
 "@3346":
-	.incbin "baserom.dol", 0x3E536C, 0x4
+	.4byte 0x42480000
 "@3347":
-	.incbin "baserom.dol", 0x3E5370, 0x8
+	.4byte 0x3E19999A
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3355":

@@ -330,11 +330,12 @@ __vt__Q28JASystem8TDrumSet:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@323":
-	.incbin "baserom.dol", 0x3E42F8, 0x4
+	.4byte 0x3F800000
 "@324":
   .4byte 0
 "@328":
-	.incbin "baserom.dol", 0x3E4300, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 osc$294:

@@ -39,4 +39,9 @@ lbl_8010C390:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1816":
-	.incbin "baserom.dol", 0x376A28, 0x18
+	.4byte 0x83898343
+	.4byte 0x8367837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
+	.4byte 0

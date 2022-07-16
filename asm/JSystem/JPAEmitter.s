@@ -3288,27 +3288,31 @@ lbl_constructor:
 "@1706":
   .4byte 0
 "@1707":
-	.incbin "baserom.dol", 0x3E44BC, 0x4
+	.4byte 0x3F800000
 "@2021":
-	.incbin "baserom.dol", 0x3E44C0, 0x4
+	.4byte 0x40000000
 "@2022":
-	.incbin "baserom.dol", 0x3E44C4, 0x4
+	.4byte 0x3F000000
 "@2023":
-	.incbin "baserom.dol", 0x3E44C8, 0x4
+	.4byte 0x36800000
 "@2024":
-	.incbin "baserom.dol", 0x3E44CC, 0x4
+	.4byte 0xBF800000
 "@2026":
-	.incbin "baserom.dol", 0x3E44D0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2032":
-	.incbin "baserom.dol", 0x3E44D8, 0x4
+	.4byte 0x40400000
 "@2829":
-	.incbin "baserom.dol", 0x3E44DC, 0x4
+	.4byte 0x47800000
 "@2830":
-	.incbin "baserom.dol", 0x3E44E0, 0x8
+	.4byte 0x47000000
+	.4byte 0
 "@2832":
-	.incbin "baserom.dol", 0x3E44E8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2840":
-	.incbin "baserom.dol", 0x3E44F0, 0x8
+	.4byte 0x33D6BF95
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 JPAEmitterInfoObj:

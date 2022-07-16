@@ -768,207 +768,255 @@ __ct__29TBossHanachanCommonSaveParamsFPCc:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x39D174, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1637":
-	.incbin "baserom.dol", 0x39D188, 0x18
+	.asciz "mSLWalkBckRateMagnif"
+	.balign 4
 "@1639":
-	.incbin "baserom.dol", 0x39D1A0, 0x14
+	.asciz "mSLWalkBckRateMin"
+	.balign 4
 "@1641":
-	.incbin "baserom.dol", 0x39D1B4, 0x18
+	.asciz "mSLWalkAnmMarchSpeed"
+	.balign 4
 "@1643":
-	.incbin "baserom.dol", 0x39D1CC, 0x14
+	.asciz "mSLRunAnmMarchSpeed"
 "@1645":
-	.incbin "baserom.dol", 0x39D1E0, 0x14
+	.asciz "mSLMaxMarchSpeed"
+	.balign 4
 "@1646":
-	.incbin "baserom.dol", 0x39D1F4, 0x10
+	.asciz "mSLMarchAccel"
+	.balign 4
 "@1648":
-	.incbin "baserom.dol", 0x39D204, 0x14
+	.asciz "mSLMarchDecrease"
+	.balign 4
 "@1650":
-	.incbin "baserom.dol", 0x39D218, 0x14
+	.asciz "mSLWalkTurnSpeed"
+	.balign 4
 "@1652":
-	.incbin "baserom.dol", 0x39D22C, 0x18
+	.asciz "mSLFallDecideRotateZ"
+	.balign 4
 "@1654":
-	.incbin "baserom.dol", 0x39D244, 0x18
+	.asciz "mSLWaveFallDownSpeed"
+	.balign 4
 "@1656":
-	.incbin "baserom.dol", 0x39D25C, 0x18
+	.asciz "mSLFallDecideMinSpeed"
+	.balign 4
 "@1657":
-	.incbin "baserom.dol", 0x39D274, 0x14
+	.asciz "mSLSandSlopeForce"
+	.balign 4
 "@1658":
-	.incbin "baserom.dol", 0x39D288, 0x18
+	.asciz "mSLMaxRotateZNotSand"
+	.balign 4
 "@1660":
-	.incbin "baserom.dol", 0x39D2A0, 0x14
+	.asciz "mSLRotateZLeanSpeed"
 "@1661":
-	.incbin "baserom.dol", 0x39D2B4, 0x1C
+	.asciz "mSLRotateZRestorationSpeed"
+	.balign 4
 "@1662":
-	.incbin "baserom.dol", 0x39D2D0, 0x14
+	.asciz "mSLDiffMaxRotateZ"
+	.balign 4
 "@1664":
-	.incbin "baserom.dol", 0x39D2E4, 0x14
+	.asciz "mSLCentrifugalForce"
 "@1666":
-	.incbin "baserom.dol", 0x39D2F8, 0x14
+	.asciz "mSLCentrifugalSpeed"
 "@1667":
-	.incbin "baserom.dol", 0x39D30C, 0x10
+	.asciz "mSLWaveVelocity"
 "@1669":
-	.incbin "baserom.dol", 0x39D31C, 0x10
+	.asciz "mSLWaveDecrease"
 "@1671":
-	.incbin "baserom.dol", 0x39D32C, 0x10
+	.asciz "mSLDownFrames"
+	.balign 4
 "@1672":
-	.incbin "baserom.dol", 0x39D33C, 0x10
+	.asciz "mSLDamageFrames"
 "@1673":
-	.incbin "baserom.dol", 0x39D34C, 0x18
+	.asciz "mSLNotFallDownFrames"
+	.balign 4
 "@1674":
-	.incbin "baserom.dol", 0x39D364, 0x18
+	.asciz "mSLNormalBckFrameDiff"
+	.balign 4
 "@1675":
-	.incbin "baserom.dol", 0x39D37C, 0x14
+	.asciz "mSLGetUpFrameDiff"
+	.balign 4
 "@1676":
-	.incbin "baserom.dol", 0x39D390, 0x14
+	.asciz "mSLSnortFrameDiff"
+	.balign 4
 "@1677":
-	.incbin "baserom.dol", 0x39D3A4, 0x14
+	.asciz "mSLDamageFrameDiff"
+	.balign 4
 "@1678":
-	.incbin "baserom.dol", 0x39D3B8, 0x14
+	.asciz "mSLDeadFrameDiff"
+	.balign 4
 "@1679":
-	.incbin "baserom.dol", 0x39D3CC, 0x18
+	.asciz "mSLParticleProbability"
+	.balign 4
 "@1681":
-	.incbin "baserom.dol", 0x39D3E4, 0x14
+	.asciz "mSLThrowTotalPower"
+	.balign 4
 "@1682":
-	.incbin "baserom.dol", 0x39D3F8, 0x14
+	.asciz "mSLThrowSpeedMin"
+	.balign 4
 "@1684":
-	.incbin "baserom.dol", 0x39D40C, 0x14
+	.asciz "mSLThrowSpeedMax"
+	.balign 4
 "@1686":
-	.incbin "baserom.dol", 0x39D420, 0x18
+	.asciz "mSLThrowMoveDirPower"
+	.balign 4
 "@1687":
-	.incbin "baserom.dol", 0x39D438, 0x10
+	.asciz "mSLThrowVecY"
+	.balign 4
 "@1778":
-	.incbin "baserom.dol", 0x39D448, 0x10
+	.asciz "mSLViewClipFar"
+	.balign 4
 "@1780":
-	.incbin "baserom.dol", 0x39D458, 0x14
+	.asciz "mSLViewClipRadius"
+	.balign 4
 "@1782":
-	.incbin "baserom.dol", 0x39D46C, 0x14
+	.asciz "mSLHeadHitOffsetY"
+	.balign 4
 "@1784":
-	.incbin "baserom.dol", 0x39D480, 0x14
+	.asciz "mSLHeadAttackRadius"
 "@1786":
-	.incbin "baserom.dol", 0x39D494, 0x14
+	.asciz "mSLHeadAttackHeight"
 "@1788":
-	.incbin "baserom.dol", 0x39D4A8, 0x14
+	.asciz "mSLHeadDamageRadius"
 "@1790":
-	.incbin "baserom.dol", 0x39D4BC, 0x14
+	.asciz "mSLHeadDamageHeight"
 "@1792":
-	.incbin "baserom.dol", 0x39D4D0, 0x14
+	.asciz "mSLBodyHitOffsetY"
+	.balign 4
 "@1793":
-	.incbin "baserom.dol", 0x39D4E4, 0x14
+	.asciz "mSLBodyAttackRadius"
 "@1795":
-	.incbin "baserom.dol", 0x39D4F8, 0x14
+	.asciz "mSLBodyAttackHeight"
 "@1797":
-	.incbin "baserom.dol", 0x39D50C, 0x14
+	.asciz "mSLBodyDamageRadius"
 "@1798":
-	.incbin "baserom.dol", 0x39D520, 0x14
+	.asciz "mSLBodyDamageHeight"
 "@1799":
-	.incbin "baserom.dol", 0x39D534, 0x14
+	.asciz "mSLFootHitOffsetY"
+	.balign 4
 "@1801":
-	.incbin "baserom.dol", 0x39D548, 0x14
+	.asciz "mSLFootAttackRadius"
 "@1802":
-	.incbin "baserom.dol", 0x39D55C, 0x14
+	.asciz "mSLFootAttackHeight"
 "@1803":
-	.incbin "baserom.dol", 0x39D570, 0x14
+	.asciz "mSLFootDamageRadius"
 "@1805":
-	.incbin "baserom.dol", 0x39D584, 0x14
+	.asciz "mSLFootDamageHeight"
 "@1806":
-	.incbin "baserom.dol", 0x39D598, 0x10
+	.asciz "mSLHeadLength"
+	.balign 4
 "@1808":
-	.incbin "baserom.dol", 0x39D5A8, 0x10
+	.asciz "mSLBodyLength"
+	.balign 4
 "@1810":
-	.incbin "baserom.dol", 0x39D5B8, 0x14
+	.asciz "mSLHeadShadowSize"
+	.balign 4
 "@1812":
-	.incbin "baserom.dol", 0x39D5CC, 0x14
+	.asciz "mSLBodyShadowSize"
+	.balign 4
 "@1814":
-	.incbin "baserom.dol", 0x39D5E0, 0x18
+	.asciz "mSLHeadPlusYByRotateZ"
+	.balign 4
 "@1816":
-	.incbin "baserom.dol", 0x39D5F8, 0x18
+	.asciz "mSLBodyPlusYByRotateZ"
+	.balign 4
 "@1818":
-	.incbin "baserom.dol", 0x39D610, 0x18
+	.asciz "mSLRecoverSearchDist"
+	.balign 4
 "@1820":
-	.incbin "baserom.dol", 0x39D628, 0x18
+	.asciz "mSLRecoverSearchDegree"
+	.balign 4
 "@1821":
-	.incbin "baserom.dol", 0x39D640, 0x18
+	.asciz "mSLShineAppearOffsetY"
+	.balign 4
 "@1822":
-	.incbin "baserom.dol", 0x39D658, 0x14
+	.asciz "mSLCamShakeZeroDist"
 "@1824":
-	.incbin "baserom.dol", 0x39D66C, 0x14
+	.asciz "mSLCamShakeMaxDist"
+	.balign 4
 "@1825":
-	.incbin "baserom.dol", 0x39D680, 0x18
+	.asciz "mSLMotionBlendFrames"
+	.balign 4
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1638":
-	.incbin "baserom.dol", 0x3EB548, 0x4
+	.4byte 0x3DCCCCCD
 "@1640":
-	.incbin "baserom.dol", 0x3EB54C, 0x4
+	.4byte 0x3E99999A
 "@1642":
-	.incbin "baserom.dol", 0x3EB550, 0x4
+	.4byte 0x41200000
 "@1644":
-	.incbin "baserom.dol", 0x3EB554, 0x4
+	.4byte 0x41C00000
 "@1647":
-	.incbin "baserom.dol", 0x3EB558, 0x4
+	.4byte 0x3CA3D70A
 "@1649":
-	.incbin "baserom.dol", 0x3EB55C, 0x4
+	.4byte 0x3D4CCCCD
 "@1651":
-	.incbin "baserom.dol", 0x3EB560, 0x4
+	.4byte 0x3F800000
 "@1653":
-	.incbin "baserom.dol", 0x3EB564, 0x4
+	.4byte 0x42B40000
 "@1655":
-	.incbin "baserom.dol", 0x3EB568, 0x4
+	.4byte 0x3F8CCCCD
 "@1659":
-	.incbin "baserom.dol", 0x3EB56C, 0x4
+	.4byte 0x42200000
 "@1663":
-	.incbin "baserom.dol", 0x3EB570, 0x4
+	.4byte 0x42700000
 "@1665":
-	.incbin "baserom.dol", 0x3EB574, 0x4
+	.4byte 0x41F00000
 "@1668":
-	.incbin "baserom.dol", 0x3EB578, 0x4
+	.4byte 0x43480000
 "@1670":
-	.incbin "baserom.dol", 0x3EB57C, 0x4
+	.4byte 0x42C80000
 "@1680":
-	.incbin "baserom.dol", 0x3EB580, 0x4
+	.4byte 0x3E4CCCCD
 "@1683":
-	.incbin "baserom.dol", 0x3EB584, 0x4
+	.4byte 0x41A00000
 "@1685":
-	.incbin "baserom.dol", 0x3EB588, 0x4
+	.4byte 0x43960000
 "@1688":
-	.incbin "baserom.dol", 0x3EB58C, 0x4
+	.4byte 0x43160000
 "@1779":
-	.incbin "baserom.dol", 0x3EB590, 0x4
+	.4byte 0x46C35000
 "@1781":
-	.incbin "baserom.dol", 0x3EB594, 0x4
+	.4byte 0x455AC000
 "@1783":
-	.incbin "baserom.dol", 0x3EB598, 0x4
+	.4byte 0x43C80000
 "@1785":
-	.incbin "baserom.dol", 0x3EB59C, 0x4
+	.4byte 0x43ED8000
 "@1787":
-	.incbin "baserom.dol", 0x3EB5A0, 0x4
+	.4byte 0x44520000
 "@1789":
-	.incbin "baserom.dol", 0x3EB5A4, 0x4
+	.4byte 0x43E10000
 "@1791":
-	.incbin "baserom.dol", 0x3EB5A8, 0x4
+	.4byte 0x43FA0000
 "@1794":
-	.incbin "baserom.dol", 0x3EB5AC, 0x4
+	.4byte 0x43A28000
 "@1796":
-	.incbin "baserom.dol", 0x3EB5B0, 0x4
+	.4byte 0x4400C000
 "@1800":
-	.incbin "baserom.dol", 0x3EB5B4, 0x4
+	.4byte 0x42960000
 "@1804":
   .4byte 0
 "@1807":
-	.incbin "baserom.dol", 0x3EB5BC, 0x4
+	.4byte 0x43EB0000
 "@1809":
-	.incbin "baserom.dol", 0x3EB5C0, 0x4
+	.4byte 0x43D20000
 "@1811":
-	.incbin "baserom.dol", 0x3EB5C4, 0x4
+	.4byte 0x44548000
 "@1813":
-	.incbin "baserom.dol", 0x3EB5C8, 0x4
+	.4byte 0x44034000
 "@1815":
-	.incbin "baserom.dol", 0x3EB5CC, 0x4
+	.4byte 0x40D00000
 "@1817":
-	.incbin "baserom.dol", 0x3EB5D0, 0x4
+	.4byte 0x40600000
 "@1819":
-	.incbin "baserom.dol", 0x3EB5D4, 0x4
+	.4byte 0x447A0000
 "@1823":
-	.incbin "baserom.dol", 0x3EB5D8, 0x8
+	.4byte 0x457A0000
+	.4byte 0

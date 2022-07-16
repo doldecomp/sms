@@ -275,13 +275,16 @@ CopyRenderModeVFilter__6JDramaFP16_GXRenderModeObjPCUc:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@49":
-	.incbin "baserom.dol", 0x36E098, 0x14
+	.asciz "JDRRenderMode.cpp"
+	.balign 4
 "@50":
-	.incbin "baserom.dol", 0x36E0AC, 0x18
+	.asciz "future not implemented!"
 "@61":
-	.incbin "baserom.dol", 0x36E0C4, 0x1C
+	.asciz "future not implemented!\n"
+	.balign 4
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@48":
-	.incbin "baserom.dol", 0x3E40F0, 0x8
+	.4byte 0x3F800000
+	.4byte 0

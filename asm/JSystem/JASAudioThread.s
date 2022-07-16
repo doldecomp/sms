@@ -329,12 +329,14 @@ lbl_8005BD9C:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@128":
-	.incbin "baserom.dol", 0x36E250, 0x10
+	.asciz "UPDATE-DAC"
+	.balign 4
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@148":
-	.incbin "baserom.dol", 0x3E4330, 0x8
+	.asciz "SFR_DSP"
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 audioproc_mq__Q28JASystem11AudioThread:

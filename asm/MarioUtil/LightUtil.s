@@ -2483,47 +2483,141 @@ lbl_800C57B4:
   .4byte 0
   .4byte 0
 lightName$1906:
-	.incbin "baserom.dol", 0x36F33C, 0x14
+	.4byte 0x91BE977A
+	.4byte 0x81698376
+	.4byte 0x838C8343
+	.4byte 0x8384815B
+	.4byte 0x816A0000
 ambName$1907:
-	.incbin "baserom.dol", 0x36F350, 0x20
+	.4byte 0x91BE977A
+	.4byte 0x83418393
+	.4byte 0x83728347
+	.4byte 0x83938367
+	.4byte 0x81698376
+	.4byte 0x838C8343
+	.4byte 0x8384815B
+	.4byte 0x816A0000
 lightName$1917:
-	.incbin "baserom.dol", 0x36F370, 0x18
+	.4byte 0x91BE977A
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 ambName$1918:
-	.incbin "baserom.dol", 0x36F388, 0x24
+	.4byte 0x91BE977A
+	.4byte 0x83418393
+	.4byte 0x83728347
+	.4byte 0x83938367
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 lightName$1928:
-	.incbin "baserom.dol", 0x36F3AC, 0x18
+	.4byte 0x91BE977A
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 ambName$1929:
-	.incbin "baserom.dol", 0x36F3C4, 0x24
+	.4byte 0x91BE977A
+	.4byte 0x83418393
+	.4byte 0x83728347
+	.4byte 0x83938367
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 "@1931":
-	.incbin "baserom.dol", 0x36F3E8, 0x14
+	.4byte 0x837D8362
+	.4byte 0x83768349
+	.4byte 0x83758357
+	.4byte 0x834691BE
+	.4byte 0x977A0000
 "@1932":
-	.incbin "baserom.dol", 0x36F3FC, 0x14
+	.4byte 0x837D8362
+	.4byte 0x83768349
+	.4byte 0x83758357
+	.4byte 0x83468965
+	.4byte 0
 lightName$1942:
-	.incbin "baserom.dol", 0x36F410, 0x18
+	.4byte 0x91BE977A
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 ambName$1943:
-	.incbin "baserom.dol", 0x36F428, 0x24
+	.4byte 0x91BE977A
+	.4byte 0x83418393
+	.4byte 0x83728347
+	.4byte 0x83938367
+	.4byte 0x81698349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x8367816A
+	.4byte 0
 "@1945":
-	.incbin "baserom.dol", 0x36F44C, 0x14
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x836791BE
+	.4byte 0x977A0000
 "@1946":
-	.incbin "baserom.dol", 0x36F460, 0x14
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x83678965
+	.4byte 0
 "@2007":
-	.incbin "baserom.dol", 0x36F474, 0xC
+	.asciz "?fff?"
+	.balign 4
+	.4byte 0x3D4CCCCD
 "@2157":
-	.incbin "baserom.dol", 0x36F480, 0xC
+	.asciz "Light Group"
 "@2223":
-	.incbin "baserom.dol", 0x36F48C, 0x14
+	.4byte 0x8376838C
+	.4byte 0x83438384
+	.4byte 0x815B9770
+	.4byte 0x83898343
+	.4byte 0x83670000
 "@2224":
-	.incbin "baserom.dol", 0x36F4A0, 0x18
+	.4byte 0x83498375
+	.4byte 0x83578346
+	.4byte 0x834E8367
+	.4byte 0x97708389
+	.4byte 0x83438367
+	.4byte 0
 "@2225":
-	.incbin "baserom.dol", 0x36F4B8, 0x1C
+	.4byte 0x837D8362
+	.4byte 0x83768349
+	.4byte 0x83758357
+	.4byte 0x8346834E
+	.4byte 0x83679770
+	.4byte 0x83898343
+	.4byte 0x83670000
 "@2226":
-	.incbin "baserom.dol", 0x36F4D4, 0x20
+	.4byte 0x83438393
+	.4byte 0x835F8343
+	.4byte 0x838C834E
+	.4byte 0x83678382
+	.4byte 0x8366838B
+	.4byte 0x97708389
+	.4byte 0x83438367
+	.4byte 0
 "@2296":
-	.incbin "baserom.dol", 0x36F4F4, 0x10
+	.asciz "<TLightCommon>"
+	.balign 4
 "@2477":
-	.incbin "baserom.dol", 0x36F504, 0x10
+	.asciz "<TLightMario>"
+	.balign 4
 "@2843":
-	.incbin "baserom.dol", 0x36F514, 0x14
+	.asciz "Ambient Group"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__22TLightWithDBSetManager
@@ -2666,35 +2760,38 @@ className$1944:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2032":
-	.incbin "baserom.dol", 0x3E49A0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2043":
-	.incbin "baserom.dol", 0x3E49A8, 0x4
+	.4byte 0x3F800000
 "@2044":
   .4byte 0
 "@2045":
-	.incbin "baserom.dol", 0x3E49B0, 0x4
+	.4byte 0x447A0000
 "@2046":
-	.incbin "baserom.dol", 0x3E49B4, 0x4
+	.4byte 0x3F000000
 "@2227":
-	.incbin "baserom.dol", 0x3E49B8, 0x4
+	.4byte 0x42C80000
 "@2228":
-	.incbin "baserom.dol", 0x3E49BC, 0x4
+	.4byte 0x43C80000
 "@2229":
-	.incbin "baserom.dol", 0x3E49C0, 0x4
+	.4byte 0x3FE715B5
 "@2230":
-	.incbin "baserom.dol", 0x3E49C4, 0x4
+	.4byte 0xBC458EEB
 "@2231":
-	.incbin "baserom.dol", 0x3E49C8, 0x4
+	.4byte 0x37FBA882
 "@2232":
-	.incbin "baserom.dol", 0x3E49CC, 0x4
+	.4byte 0x42B40000
 "@2665":
-	.incbin "baserom.dol", 0x3E49D0, 0x8
+	.asciz "%s%s"
+	.balign 4
 "@2666":
-	.incbin "baserom.dol", 0x3E49D8, 0x4
+	.4byte 0x6F706100
 "@2667":
-	.incbin "baserom.dol", 0x3E49DC, 0x4
+	.4byte 0x786C7500
 "@2844":
-	.incbin "baserom.dol", 0x3E49E0, 0x8
+	.4byte 0x42480000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 mAmbAry__12TLightCommon:

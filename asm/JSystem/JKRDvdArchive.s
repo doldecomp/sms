@@ -658,11 +658,15 @@ lbl_800096B8:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@438":
-	.incbin "baserom.dol", 0x36D0D8, 0x14
+	.asciz "JKRDvdArchive.cpp"
+	.balign 4
 "@439":
-	.incbin "baserom.dol", 0x36D0EC, 0x28
+	.asciz "Sorry, not prepared for SZP archive.\n"
+	.balign 4
 "@440":
-	.incbin "baserom.dol", 0x36D114, 0x1C
+	.asciz ":::??? bad sequence\n"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__13JKRDvdArchive

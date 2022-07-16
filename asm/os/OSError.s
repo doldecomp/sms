@@ -272,35 +272,45 @@ lbl_8008F2F8:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@10":
-	.incbin "baserom.dol", 0x3ACAA0, 0x18
+	.asciz " in \"%s\" on line %d.\n"
+	.balign 4
 "@11":
-	.incbin "baserom.dol", 0x3ACAB8, 0x28
+	.asciz "\nAddress:      Back Chain    LR Save\n"
+	.balign 4
 "@12":
-	.incbin "baserom.dol", 0x3ACAE0, 0x1C
+	.asciz "0x%08x:   0x%08x    0x%08x\n"
 "@30":
-	.incbin "baserom.dol", 0x3ACAFC, 0x20
+	.asciz "Non-recoverable Exception %d"
+	.balign 4
 "@31":
-	.incbin "baserom.dol", 0x3ACB1C, 0x18
+	.asciz "Unhandled Exception %d"
+	.balign 4
 "@33":
-	.incbin "baserom.dol", 0x3ACB34, 0x34
+	.asciz "\nDSISR = 0x%08x                   DAR  = 0x%08x\n"
+	.balign 4
 "@34":
-	.incbin "baserom.dol", 0x3ACB68, 0x10
+	.asciz "TB = 0x%016llx\n"
 "@35":
-	.incbin "baserom.dol", 0x3ACB78, 0x60
+	.asciz "\nInstruction at 0x%x (read from SRR0) attempted to access invalid address 0x%x (read from DAR)\n"
 "@36":
-	.incbin "baserom.dol", 0x3ACBD8, 0x4C
+	.asciz "\nAttempted to fetch instruction from invalid address 0x%x (read from SRR0)\n"
 "@37":
-	.incbin "baserom.dol", 0x3ACC24, 0x64
+	.asciz "\nInstruction at 0x%x (read from SRR0) attempted to access unaligned address 0x%x (read from DAR)\n"
+	.balign 4
 "@38":
-	.incbin "baserom.dol", 0x3ACC88, 0x60
+	.asciz "\nProgram exception : Possible illegal instruction/operation at or around 0x%x (read from SRR0)\n"
 "@39":
-	.incbin "baserom.dol", 0x3ACCE8, 0x20
+	.asciz "AI DMA Address =   0x%04x%04x\n"
+	.balign 4
 "@40":
-	.incbin "baserom.dol", 0x3ACD08, 0x20
+	.asciz "ARAM DMA Address = 0x%04x%04x\n"
+	.balign 4
 "@41":
-	.incbin "baserom.dol", 0x3ACD28, 0x1C
+	.asciz "DI DMA Address =   0x%08x\n"
+	.balign 4
 "@42":
-	.incbin "baserom.dol", 0x3ACD44, 0x38
+	.asciz "\nLast interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx\n"
+	.balign 4
 "@43":
     .4byte lbl_8008F2F8
     .4byte lbl_8008F2F8
@@ -320,7 +330,8 @@ lbl_8008F2F8:
     .4byte lbl_8008F2AC
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@32":
-	.incbin "baserom.dol", 0x3E3250, 0x8
+	.4byte 0x0A000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global __OSErrorTable

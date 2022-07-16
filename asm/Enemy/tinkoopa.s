@@ -4550,121 +4550,213 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x397974, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2194":
-	.incbin "baserom.dol", 0x397988, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2195":
-	.incbin "baserom.dol", 0x3979B8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2196":
-	.incbin "baserom.dol", 0x3979F0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2197":
-	.incbin "baserom.dol", 0x397A24, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2659":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2661":
-	.incbin "baserom.dol", 0x397A54, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2986":
-	.incbin "baserom.dol", 0x397A60, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_break1.bas"
 "@2987":
-	.incbin "baserom.dol", 0x397A88, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_break2.bas"
 "@2988":
-	.incbin "baserom.dol", 0x397AB0, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_break3.bas"
 "@2989":
-	.incbin "baserom.dol", 0x397AD8, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_break4.bas"
 "@2990":
-	.incbin "baserom.dol", 0x397B00, 0x2C
+	.asciz "/scene/tinkoopa/bas/tinkoopa_damage1.bas"
+	.balign 4
 "@2991":
-	.incbin "baserom.dol", 0x397B2C, 0x2C
+	.asciz "/scene/tinkoopa/bas/tinkoopa_damage2.bas"
+	.balign 4
 "@2992":
-	.incbin "baserom.dol", 0x397B58, 0x2C
+	.asciz "/scene/tinkoopa/bas/tinkoopa_damage3.bas"
+	.balign 4
 "@2993":
-	.incbin "baserom.dol", 0x397B84, 0x2C
+	.asciz "/scene/tinkoopa/bas/tinkoopa_damage4.bas"
+	.balign 4
 "@2994":
-	.incbin "baserom.dol", 0x397BB0, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_wait1.bas"
+	.balign 4
 "@2995":
-	.incbin "baserom.dol", 0x397BD8, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_wait2.bas"
+	.balign 4
 "@2996":
-	.incbin "baserom.dol", 0x397C00, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_wait3.bas"
+	.balign 4
 "@2997":
-	.incbin "baserom.dol", 0x397C28, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_wait4.bas"
+	.balign 4
 "@2998":
-	.incbin "baserom.dol", 0x397C50, 0x28
+	.asciz "/scene/tinkoopa/bas/tinkoopa_wait5.bas"
+	.balign 4
 "@3014":
-	.incbin "baserom.dol", 0x397C78, 0xC
+	.asciz "jnt_head"
+	.balign 4
 "@3015":
-	.incbin "baserom.dol", 0x397C84, 0xC
+	.asciz "jnt_breast"
+	.balign 4
 "@3016":
-	.incbin "baserom.dol", 0x397C90, 0xC
+	.asciz "jnt_stomach"
 "@3017":
-	.incbin "baserom.dol", 0x397C9C, 0xC
+	.asciz "jnt_rarm"
+	.balign 4
 "@3018":
-	.incbin "baserom.dol", 0x397CA8, 0xC
+	.asciz "jnt_larm"
+	.balign 4
 "@3020":
-	.incbin "baserom.dol", 0x397CB4, 0xC
+	.asciz "jnt_leye"
+	.balign 4
 "@3021":
-	.incbin "baserom.dol", 0x397CC0, 0xC
+	.asciz "jnt_reye"
+	.balign 4
 "@3022":
-	.incbin "baserom.dol", 0x397CCC, 0xC
+	.asciz "fire_null"
+	.balign 4
 "@3023":
-	.incbin "baserom.dol", 0x397CD8, 0x10
+	.asciz "fire_col_null"
+	.balign 4
 "@3024":
-	.incbin "baserom.dol", 0x397CE8, 0xC
+	.asciz "jnt_femur"
+	.balign 4
 "@3025":
-	.incbin "baserom.dol", 0x397CF4, 0x10
+	.asciz "killer_null1"
+	.balign 4
 "@3026":
-	.incbin "baserom.dol", 0x397D04, 0x10
+	.asciz "killer_null2"
+	.balign 4
 "@3027":
-	.incbin "baserom.dol", 0x397D14, 0x10
+	.asciz "killer_null3"
+	.balign 4
 "@3028":
-	.incbin "baserom.dol", 0x397D24, 0x10
+	.asciz "killer_null4"
+	.balign 4
 "@3030":
-	.incbin "baserom.dol", 0x397D34, 0x20
+	.asciz "/scene/tinkoopa/head_col.col"
+	.balign 4
 "@3031":
-	.incbin "baserom.dol", 0x397D54, 0x20
+	.asciz "/scene/tinkoopa/breast_col.col"
+	.balign 4
 "@3032":
-	.incbin "baserom.dol", 0x397D74, 0x20
+	.asciz "/scene/tinkoopa/stomach_col.col"
 "@3033":
-	.incbin "baserom.dol", 0x397D94, 0x20
+	.asciz "/scene/tinkoopa/rarm_col.col"
+	.balign 4
 "@3034":
-	.incbin "baserom.dol", 0x397DB4, 0x20
+	.asciz "/scene/tinkoopa/larm_col.col"
+	.balign 4
 "@3035":
-	.incbin "baserom.dol", 0x397DD4, 0x1C
+	.asciz "/scene/tinkoopa/leg_col.col"
 "@3037":
-	.incbin "baserom.dol", 0x397DF0, 0x14
+	.asciz "tinkoopa_breast.bmd"
 "@3038":
-	.incbin "baserom.dol", 0x397E04, 0x18
+	.asciz "tinkoopa_stomach.bmd"
+	.balign 4
 "@3039":
-	.incbin "baserom.dol", 0x397E1C, 0x14
+	.asciz "tinkoopa_rarm.bmd"
+	.balign 4
 "@3040":
-	.incbin "baserom.dol", 0x397E30, 0x14
+	.asciz "tinkoopa_larm.bmd"
+	.balign 4
 "@3048":
-	.incbin "baserom.dol", 0x397E44, 0xC
+	.asciz "breast_1"
+	.balign 4
 "@3049":
-	.incbin "baserom.dol", 0x397E50, 0xC
+	.asciz "breast_2"
+	.balign 4
 "@3050":
-	.incbin "baserom.dol", 0x397E5C, 0xC
+	.asciz "breast_3"
+	.balign 4
 "@3051":
-	.incbin "baserom.dol", 0x397E68, 0xC
+	.asciz "breast_4"
+	.balign 4
 "@3052":
-	.incbin "baserom.dol", 0x397E74, 0xC
+	.asciz "breast_5"
+	.balign 4
 "@3053":
-	.incbin "baserom.dol", 0x397E80, 0xC
+	.asciz "breast_6"
+	.balign 4
 "@3054":
-	.incbin "baserom.dol", 0x397E8C, 0xC
+	.asciz "stomach_1"
+	.balign 4
 "@3055":
-	.incbin "baserom.dol", 0x397E98, 0xC
+	.asciz "stomach_2"
+	.balign 4
 "@3056":
-	.incbin "baserom.dol", 0x397EA4, 0xC
+	.asciz "stomach_3"
+	.balign 4
 "@3057":
-	.incbin "baserom.dol", 0x397EB0, 0xC
+	.asciz "stomach_4"
+	.balign 4
 "@3058":
-	.incbin "baserom.dol", 0x397EBC, 0xC
+	.asciz "stomach_5"
+	.balign 4
 "@3059":
-	.incbin "baserom.dol", 0x397EC8, 0xC
+	.asciz "stomach_6"
+	.balign 4
 "@3489":
-	.incbin "baserom.dol", 0x397ED4, 0x14
+	.asciz "tinkoopa_body.bmd"
+	.balign 4
 entry$3488:
   .4byte "@3489"
   .4byte 0x14240000
@@ -4673,97 +4765,155 @@ entry$3488:
   .4byte 0
   .4byte 0
 "@3494":
-	.incbin "baserom.dol", 0x397F00, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_hibana_d1he.jpa"
+	.balign 4
 "@3495":
-	.incbin "baserom.dol", 0x397F2C, 0x28
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_killer.jpa"
+	.balign 4
 "@3496":
-	.incbin "baserom.dol", 0x397F54, 0x28
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_smoke1.jpa"
+	.balign 4
 "@3497":
-	.incbin "baserom.dol", 0x397F7C, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_parge_b14.jpa"
+	.balign 4
 "@3498":
-	.incbin "baserom.dol", 0x397FA8, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_parge_b23.jpa"
+	.balign 4
 "@3499":
-	.incbin "baserom.dol", 0x397FD4, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_flame_yuge.jpa"
+	.balign 4
 "@3500":
-	.incbin "baserom.dol", 0x398000, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_parts.jpa"
+	.balign 4
 "@3508":
-	.incbin "baserom.dol", 0x39802C, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_hibana_w1br.jpa"
+	.balign 4
 "@3509":
-	.incbin "baserom.dol", 0x398058, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_hibana_w3ar.jpa"
+	.balign 4
 "@3510":
-	.incbin "baserom.dol", 0x398084, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_hibana_w4ar.jpa"
+	.balign 4
 "@3511":
-	.incbin "baserom.dol", 0x3980B0, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_w1st.jpa"
+	.balign 4
 "@3512":
-	.incbin "baserom.dol", 0x3980DC, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_w1ar.jpa"
+	.balign 4
 "@3513":
-	.incbin "baserom.dol", 0x398108, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_w1fe.jpa"
+	.balign 4
 "@3514":
-	.incbin "baserom.dol", 0x398134, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_w1he.jpa"
+	.balign 4
 "@3515":
-	.incbin "baserom.dol", 0x398160, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_d1br_a.jpa"
+	.balign 4
 "@3516":
-	.incbin "baserom.dol", 0x39818C, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_biri_d1br_b.jpa"
+	.balign 4
 "@3517":
-	.incbin "baserom.dol", 0x3981B8, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_b1ar.jpa"
+	.balign 4
 "@3518":
-	.incbin "baserom.dol", 0x3981E4, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_w2br_a.jpa"
+	.balign 4
 "@3519":
-	.incbin "baserom.dol", 0x398210, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_w2br_b.jpa"
+	.balign 4
 "@3520":
-	.incbin "baserom.dol", 0x39823C, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_b1he.jpa"
+	.balign 4
 "@3521":
-	.incbin "baserom.dol", 0x398268, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_b1fe_l.jpa"
+	.balign 4
 "@3522":
-	.incbin "baserom.dol", 0x398294, 0x2C
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_kemu_b1fe_r.jpa"
+	.balign 4
 "@3523":
-	.incbin "baserom.dol", 0x3982C0, 0x28
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_fire_a.jpa"
+	.balign 4
 "@3524":
-	.incbin "baserom.dol", 0x3982E8, 0x28
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_fire_b.jpa"
+	.balign 4
 "@3532":
-	.incbin "baserom.dol", 0x398310, 0x28
+	.asciz "/scene/tinkoopa/jpa/ms_mkp_fire_c.jpa"
+	.balign 4
 "@3856":
-	.incbin "baserom.dol", 0x398338, 0x14
+	.asciz "/enemy/tinkoopa.prm"
 "@4977":
-	.incbin "baserom.dol", 0x39834C, 0x20
+	.4byte 0x8352815B
+	.4byte 0x8358835E
+	.4byte 0x815B834C
+	.4byte 0x8389815B
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@5227":
-	.incbin "baserom.dol", 0x39836C, 0x1C
+	.4byte 0x83478374
+	.4byte 0x8346834E
+	.4byte 0x8367949A
+	.4byte 0x94AD837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@5541":
-	.incbin "baserom.dol", 0x398388, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@6087":
-	.incbin "baserom.dol", 0x398394, 0xC
+	.asciz "mSLPartsHP"
+	.balign 4
 "@6088":
-	.incbin "baserom.dol", 0x3983A0, 0xC
+	.asciz "mSLFlameHP"
+	.balign 4
 "@6089":
-	.incbin "baserom.dol", 0x3983AC, 0x14
+	.asciz "mSLFlameRevivalTime"
 "@6090":
-	.incbin "baserom.dol", 0x3983C0, 0x18
+	.asciz "mSLFlameDamageRadius0"
+	.balign 4
 "@6091":
-	.incbin "baserom.dol", 0x3983D8, 0x18
+	.asciz "mSLFlameDamageHeight0"
+	.balign 4
 "@6093":
-	.incbin "baserom.dol", 0x3983F0, 0x18
+	.asciz "mSLFlameDamageRadius1"
+	.balign 4
 "@6094":
-	.incbin "baserom.dol", 0x398408, 0x18
+	.asciz "mSLFlameDamageHeight1"
+	.balign 4
 "@6095":
-	.incbin "baserom.dol", 0x398420, 0x10
+	.asciz "mSLDamageRadius"
 "@6096":
-	.incbin "baserom.dol", 0x398430, 0x14
+	.asciz "mSLDamageHeight0"
+	.balign 4
 "@6098":
-	.incbin "baserom.dol", 0x398444, 0x14
+	.asciz "mSLDamageHeight1"
+	.balign 4
 "@6099":
-	.incbin "baserom.dol", 0x398458, 0x14
+	.asciz "mSLKillerInterval"
+	.balign 4
 "@6100":
-	.incbin "baserom.dol", 0x39846C, 0x14
+	.asciz "mSLDefeatWaitTime"
+	.balign 4
 "@6101":
-	.incbin "baserom.dol", 0x398480, 0x20
+	.asciz "mSLKillerApproachingDistance"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3D6DE8, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3D6DF4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3D6E00, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 MtxCalcTypeName:
   .4byte "@2194"
   .4byte "@2195"
@@ -4818,19 +4968,49 @@ table$3036:
   .4byte "@3040"
   .4byte 0
 table$3041:
-	.incbin "baserom.dol", 0x3D6ED0, 0x18
+	.4byte 0
+	.4byte 0x00000004
+	.4byte 0x0000000B
+	.4byte 0x00000009
+	.4byte 0x0000000A
+	.4byte 0
 table$3042:
-	.incbin "baserom.dol", 0x3D6EE8, 0x18
+	.4byte 0x08000019
+	.4byte 0x0800001A
+	.4byte 0x0800001B
+	.4byte 0x0800001D
+	.4byte 0x0800001C
+	.4byte 0x0800001E
 table$3043:
-	.incbin "baserom.dol", 0x3D6F00, 0x14
+	.4byte 0x0000000C
+	.4byte 0x0000000D
+	.4byte 0x0000000E
+	.4byte 0x0000000F
+	.4byte 0x00000010
 table$3044:
-	.incbin "baserom.dol", 0x3D6F14, 0x14
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000010
 table$3045:
-	.incbin "baserom.dol", 0x3D6F28, 0x14
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x00000008
+	.4byte 0x00000010
 table$3046:
-	.incbin "baserom.dol", 0x3D6F3C, 0x14
+	.4byte 0x00000064
+	.4byte 0x00000086
+	.4byte 0x00000086
+	.4byte 0x00000064
+	.4byte 0
 table$3047:
-	.incbin "baserom.dol", 0x3D6F50, 0x14
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte 0x00000002
 breastTrackJointNameTable:
   .4byte "@3048"
   .4byte "@3049"
@@ -5149,106 +5329,118 @@ __vt__9TTinKoopa:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 "@3000":
-	.incbin "baserom.dol", 0x3E3970, 0x4
+	.4byte 0x00000001
 "@3001":
-	.incbin "baserom.dol", 0x3E3974, 0x4
+	.4byte 0x00000032
 "@3002":
-	.incbin "baserom.dol", 0x3E3978, 0x4
+	.4byte 0x000004B0
 "@3003":
-	.incbin "baserom.dol", 0x3E397C, 0x4
+	.4byte 0x43FA0000
 "@3004":
-	.incbin "baserom.dol", 0x3E3980, 0x4
+	.4byte 0x43960000
 "@3005":
-	.incbin "baserom.dol", 0x3E3984, 0x4
+	.4byte 0x442F0000
 "@3006":
-	.incbin "baserom.dol", 0x3E3988, 0x4
+	.4byte 0x43C80000
 "@3007":
-	.incbin "baserom.dol", 0x3E398C, 0x4
+	.4byte 0x0000003C
 "@3008":
-	.incbin "baserom.dol", 0x3E3990, 0x4
+	.4byte 0x44480000
 "@3009":
-	.incbin "baserom.dol", 0x3E3994, 0x4
+	.4byte 0x457A0000
 "@3010":
-	.incbin "baserom.dol", 0x3E3998, 0x4
+	.4byte 0x45548000
 "@3011":
-	.incbin "baserom.dol", 0x3E399C, 0x4
+	.4byte 0x000000A0
 "@3012":
-	.incbin "baserom.dol", 0x3E39A0, 0x4
+	.4byte 0x44FA0000
 loopIndirectFilenames$3531:
   .4byte "@3532"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3019":
-	.incbin "baserom.dol", 0x3EA868, 0x8
+	.asciz "jnt_leg"
 "@3060":
-	.incbin "baserom.dol", 0x3EA870, 0x8
+	.asciz "rarm_1"
+	.balign 4
 "@3061":
-	.incbin "baserom.dol", 0x3EA878, 0x8
+	.asciz "rarm_2"
+	.balign 4
 "@3062":
-	.incbin "baserom.dol", 0x3EA880, 0x8
+	.asciz "rarm_3"
+	.balign 4
 "@3063":
-	.incbin "baserom.dol", 0x3EA888, 0x8
+	.asciz "rarm_4"
+	.balign 4
 "@3064":
-	.incbin "baserom.dol", 0x3EA890, 0x8
+	.asciz "larm_1"
+	.balign 4
 "@3065":
-	.incbin "baserom.dol", 0x3EA898, 0x8
+	.asciz "larm_2"
+	.balign 4
 "@3066":
-	.incbin "baserom.dol", 0x3EA8A0, 0x8
+	.asciz "larm_3"
+	.balign 4
 "@3067":
-	.incbin "baserom.dol", 0x3EA8A8, 0x8
+	.asciz "larm_4"
+	.balign 4
 "@3725":
-	.incbin "baserom.dol", 0x3EA8B0, 0x4
+	.4byte 0x3F800000
 "@3726":
   .4byte 0
 "@3728":
-	.incbin "baserom.dol", 0x3EA8B8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@4259":
-	.incbin "baserom.dol", 0x3EA8C0, 0x4
+	.4byte 0x42C80000
 "@4260":
-	.incbin "baserom.dol", 0x3EA8C4, 0x4
+	.4byte 0x42D00000
 "@4261":
-	.incbin "baserom.dol", 0x3EA8C8, 0x4
+	.4byte 0x42D80000
 "@4262":
-	.incbin "baserom.dol", 0x3EA8CC, 0x4
+	.4byte 0x42D40000
 "@4308":
-	.incbin "baserom.dol", 0x3EA8D0, 0x4
+	.4byte 0x45228000
 "@4309":
-	.incbin "baserom.dol", 0x3EA8D4, 0x4
+	.4byte 0x4541C000
 "@4322":
-	.incbin "baserom.dol", 0x3EA8D8, 0x4
+	.4byte 0x43960000
 "@4698":
-	.incbin "baserom.dol", 0x3EA8DC, 0x4
+	.4byte 0x41F00000
 "@4700":
-	.incbin "baserom.dol", 0x3EA8E0, 0x4
+	.4byte 0x447A0000
 "@4837":
-	.incbin "baserom.dol", 0x3EA8E4, 0x4
+	.4byte 0x3F000000
 "@4838":
-	.incbin "baserom.dol", 0x3EA8E8, 0x4
+	.4byte 0x40400000
 "@4978":
-	.incbin "baserom.dol", 0x3EA8EC, 0x4
+	.4byte 0x41700000
 "@4979":
-	.incbin "baserom.dol", 0x3EA8F0, 0x4
+	.4byte 0x42340000
 "@5143":
-	.incbin "baserom.dol", 0x3EA8F4, 0x4
+	.4byte 0x44FA0000
 "@5251":
-	.incbin "baserom.dol", 0x3EA8F8, 0x4
+	.4byte 0x40800000
 "@5666":
-	.incbin "baserom.dol", 0x3EA8FC, 0x4
+	.4byte 0x3FCCCCCD
 "@5667":
-	.incbin "baserom.dol", 0x3EA900, 0x4
+	.4byte 0x3D4CCCCD
 "@5668":
-	.incbin "baserom.dol", 0x3EA904, 0x4
+	.4byte 0x3E99999A
 "@6019":
-	.incbin "baserom.dol", 0x3EA908, 0x8
+	.asciz "flame"
+	.balign 4
 "@6020":
-	.incbin "baserom.dol", 0x3EA910, 0x8
+	.asciz "killer"
+	.balign 4
 "@6092":
-	.incbin "baserom.dol", 0x3EA918, 0x4
+	.4byte 0x43C80000
 "@6097":
-	.incbin "baserom.dol", 0x3EA91C, 0x4
+	.4byte 0x457A0000
 "@6102":
-	.incbin "baserom.dol", 0x3EA920, 0x8
+	.4byte 0x45BB8000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 TTinKoopa_jointIndexTable:

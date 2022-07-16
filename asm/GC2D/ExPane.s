@@ -256,10 +256,13 @@ __ct__7TExPaneFP9J2DScreenUl:
 "@1610":
   .4byte 0
 "@1611":
-	.incbin "baserom.dol", 0x3E90D4, 0x4
+	.4byte 0x3F000000
 "@1612":
-	.incbin "baserom.dol", 0x3E90D8, 0x8
+	.4byte 0xBF000000
+	.4byte 0
 "@1614":
-	.incbin "baserom.dol", 0x3E90E0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1624":
-	.incbin "baserom.dol", 0x3E90E8, 0x8
+	.4byte 0x437F0000
+	.4byte 0

@@ -608,7 +608,9 @@ lbl_80058B6C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 OSC_RELEASE_TABLE__Q28JASystem7BankMgr:
-	.incbin "baserom.dol", 0x3A7D88, 0xC
+	.4byte 0x0001000A
+	.4byte 0x0000000F
+	.4byte 0
 OSC_ENV__Q28JASystem7BankMgr:
     .4byte 0
     .float 1.0
@@ -623,15 +625,17 @@ OSC_ENV__Q28JASystem7BankMgr:
 "@339":
   .4byte 0
 "@340":
-	.incbin "baserom.dol", 0x3E42B4, 0x4
+	.4byte 0x3F800000
 "@418":
-	.incbin "baserom.dol", 0x3E42B8, 0x4
+	.4byte 0x3F000000
 "@419":
-	.incbin "baserom.dol", 0x3E42BC, 0x4
+	.4byte 0x42FE0000
 "@421":
-	.incbin "baserom.dol", 0x3E42C0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@435":
-	.incbin "baserom.dol", 0x3E42C8, 0x8
+	.4byte 0x4682C008
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sTableSize__Q28JASystem7BankMgr:

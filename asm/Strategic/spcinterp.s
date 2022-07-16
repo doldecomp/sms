@@ -6677,65 +6677,86 @@ lbl_8011CA5C:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@514":
-	.incbin "baserom.dol", 0x377230, 0x1C
+	.asciz "TSpcInterp : null binary\n"
+	.balign 4
 "@515":
-	.incbin "baserom.dol", 0x37724C, 0x24
+	.asciz "TSpcInterp : unknown command 0x%x\n"
+	.balign 4
 "@559":
-	.incbin "baserom.dol", 0x377270, 0x24
+	.asciz "TSpcInterp : unknown variable, %s\n"
+	.balign 4
 "@560":
-	.incbin "baserom.dol", 0x377294, 0x28
+	.asciz "TSpcInterp : cannot refer function, %s\n"
 "@561":
-	.incbin "baserom.dol", 0x3772BC, 0x24
+	.asciz "TSpcInterp : cannot refer variable\n"
 "@610":
-	.incbin "baserom.dol", 0x3772E0, 0x24
+	.asciz "TSpcInterp : unknown function, %s\n"
+	.balign 4
 "@611":
-	.incbin "baserom.dol", 0x377304, 0x30
+	.asciz "TSpcInterp : cannot invoke variable symbol %s\n"
+	.balign 4
 "@612":
-	.incbin "baserom.dol", 0x377334, 0x28
+	.asciz "TSpcInterp : cannot invoke builtin, %s\n"
 "@654":
-	.incbin "baserom.dol", 0x37735C, 0x1C
+	.asciz "TSpcStack : stack overflow\n"
 "@655":
-	.incbin "baserom.dol", 0x377378, 0x20
+	.asciz "TSpcStack : stack underflow\n"
+	.balign 4
 "@725":
-	.incbin "baserom.dol", 0x377398, 0x30
+	.asciz "TSpcInterp : cannot call variable symbol %s\n"
+	.balign 4
 "@834":
-	.incbin "baserom.dol", 0x3773C8, 0x38
+	.asciz "TSpcInterp : argument number mismatch (%s, %d -> %d)\n"
+	.balign 4
 "@915":
-	.incbin "baserom.dol", 0x377400, 0x20
+	.asciz "TSpcInterp : internal status\n"
+	.balign 4
 "@916":
-	.incbin "baserom.dol", 0x377420, 0x10
+	.asciz "textofs = %u\n"
+	.balign 4
 "@917":
-	.incbin "baserom.dol", 0x377430, 0x10
+	.asciz "dataofs = %u\n"
+	.balign 4
 "@918":
-	.incbin "baserom.dol", 0x377440, 0x10
+	.asciz "datanum = %u\n"
+	.balign 4
 "@919":
-	.incbin "baserom.dol", 0x377450, 0x10
+	.asciz "symofs  = %u\n"
+	.balign 4
 "@920":
-	.incbin "baserom.dol", 0x377460, 0x10
+	.asciz "symnum  = %u\n"
+	.balign 4
 "@921":
-	.incbin "baserom.dol", 0x377470, 0x14
+	.asciz "mDisplay[%d] = %d\n"
+	.balign 4
 "@922":
-	.incbin "baserom.dol", 0x377484, 0x18
+	.asciz "mProcessStack[%d] = %d\n"
 "@923":
-	.incbin "baserom.dol", 0x37749C, 0x18
+	.asciz "mContextStack[%d] = %d\n"
 "@924":
-	.incbin "baserom.dol", 0x3774B4, 0x18
+	.asciz "mStorageStack[%d] = %d\n"
 "@925":
-	.incbin "baserom.dol", 0x3774CC, 0x34
+	.asciz "symbol [%03u] %s : type = %u, ofs = %u, data = %u\n"
+	.balign 4
 "@1000":
-	.incbin "baserom.dol", 0x377500, 0x1C
+	.asciz "TSpcInterp : invalid magic\n"
 "@1071":
-	.incbin "baserom.dol", 0x37751C, 0x1C
+	.asciz "TSpcInterp : null symbol\n"
+	.balign 4
 "@1072":
-	.incbin "baserom.dol", 0x377538, 0x2C
+	.asciz "TSpcInterp : unknown builtin function %s\n"
+	.balign 4
 "@1078":
-	.incbin "baserom.dol", 0x377564, 0x20
+	.asciz "TSpcInterp : script finished\n"
+	.balign 4
 "@2481":
-	.incbin "baserom.dol", 0x377584, 0x20
+	.asciz "TSpcBinary : unknown symbol %s\n"
 "@2541":
-	.incbin "baserom.dol", 0x3775A4, 0x28
+	.asciz "TSpcBinary : system symbol installed\n"
+	.balign 4
 "@2620":
-	.incbin "baserom.dol", 0x3775CC, 0x24
+	.asciz "TSpcBinary : system initialized\n"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@285":
@@ -7050,35 +7071,44 @@ __vt__10TSpcBinary:
   .4byte 0
   .4byte 0
 "@1664":
-	.incbin "baserom.dol", 0x3E5400, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2285":
-	.incbin "baserom.dol", 0x3E5408, 0x4
+	.4byte 0x3F800000
 "@2409":
   .4byte 0
 "@2532":
-	.incbin "baserom.dol", 0x3E5410, 0x8
+	.asciz "yield"
+	.balign 4
 "@2533":
-	.incbin "baserom.dol", 0x3E5418, 0x8
+	.asciz "exit"
+	.balign 4
 "@2534":
-	.incbin "baserom.dol", 0x3E5420, 0x8
+	.asciz "lock"
+	.balign 4
 "@2535":
-	.incbin "baserom.dol", 0x3E5428, 0x8
+	.asciz "unlock"
+	.balign 4
 "@2536":
-	.incbin "baserom.dol", 0x3E5430, 0x8
+	.asciz "print"
+	.balign 4
 "@2537":
-	.incbin "baserom.dol", 0x3E5438, 0x8
+	.asciz "dump"
+	.balign 4
 "@2538":
-	.incbin "baserom.dol", 0x3E5440, 0x4
+	.4byte 0x696E7400
 "@2539":
-	.incbin "baserom.dol", 0x3E5444, 0x8
+	.asciz "float"
+	.balign 4
 "@2540":
-	.incbin "baserom.dol", 0x3E544C, 0x8
+	.asciz "typeof"
+	.balign 4
 "@2829":
-	.incbin "baserom.dol", 0x3E5454, 0x4
+	.4byte 0x25640000
 "@2830":
-	.incbin "baserom.dol", 0x3E5458, 0x4
+	.4byte 0x25660000
 "@2831":
-	.incbin "baserom.dol", 0x3E545C, 0x4
+	.4byte 0x25730000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 init$325:

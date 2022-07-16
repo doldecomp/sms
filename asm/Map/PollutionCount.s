@@ -2871,7 +2871,7 @@ __vt__22TPollutionCounterLayer:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2537":
-	.incbin "baserom.dol", 0x3E8D28, 0x4
+	.4byte 0x000000FF
 "@2547":
   .4byte -1
 "@2582":
@@ -2879,7 +2879,7 @@ __vt__22TPollutionCounterLayer:
 "@2585":
   .4byte 0
 "@2606":
-	.incbin "baserom.dol", 0x3E8D38, 0x4
+	.4byte 0x000000FF
 "@2610":
   .4byte -1
 "@2636":
@@ -2887,15 +2887,16 @@ __vt__22TPollutionCounterLayer:
 "@2639":
   .4byte 0
 "@2652":
-	.incbin "baserom.dol", 0x3E8D48, 0x4
+	.4byte 0xFFFFFF14
 "@2670":
-	.incbin "baserom.dol", 0x3E8D4C, 0x4
+	.4byte 0x000000C8
 "@2863":
   .4byte 0
 "@2958":
-	.incbin "baserom.dol", 0x3E8D54, 0x4
+	.4byte 0x3F800000
 "@3357":
-	.incbin "baserom.dol", 0x3E8D58, 0x8
+	.4byte 0x3D000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3519":

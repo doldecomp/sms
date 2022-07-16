@@ -504,30 +504,42 @@ lbl_8008E59C:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@69":
-	.incbin "baserom.dol", 0x3AC698, 0x2C
+	.asciz ">>> L2 INVALIDATE : SHOULD NEVER HAPPEN\n"
+	.balign 4
 "@90":
-	.incbin "baserom.dol", 0x3AC6C4, 0x18
+	.asciz "Machine check received\n"
 "@91":
-	.incbin "baserom.dol", 0x3AC6DC, 0x1C
+	.asciz "HID2 = 0x%x   SRR1 = 0x%x\n"
+	.balign 4
 "@92":
-	.incbin "baserom.dol", 0x3AC6F8, 0x30
+	.asciz "Machine check was not DMA/locked cache related\n"
 "@93":
-	.incbin "baserom.dol", 0x3AC728, 0x3C
+	.asciz "DMAErrorHandler(): An error occurred while processing DMA.\n"
 "@94":
-	.incbin "baserom.dol", 0x3AC764, 0x38
+	.asciz "The following errors have been detected and cleared :\n"
+	.balign 4
 "@95":
-	.incbin "baserom.dol", 0x3AC79C, 0x40
+	.asciz "\t- Requested a locked cache tag that was already in the cache\n"
+	.balign 4
 "@96":
-	.incbin "baserom.dol", 0x3AC7DC, 0x2C
+	.asciz "\t- DMA attempted to access normal cache\n"
+	.balign 4
 "@97":
-	.incbin "baserom.dol", 0x3AC808, 0x20
+	.asciz "\t- DMA missed in data cache\n"
+	.balign 4
 "@98":
-	.incbin "baserom.dol", 0x3AC828, 0x1C
+	.asciz "\t- DMA queue overflowed\n"
+	.balign 4
 "@110":
-	.incbin "baserom.dol", 0x3AC844, 0x1C
+	.asciz "L1 i-caches initialized\n"
+	.balign 4
 "@111":
-	.incbin "baserom.dol", 0x3AC860, 0x1C
+	.asciz "L1 d-caches initialized\n"
+	.balign 4
 "@112":
-	.incbin "baserom.dol", 0x3AC87C, 0x18
+	.asciz "L2 cache initialized\n"
+	.balign 4
 "@113":
-	.incbin "baserom.dol", 0x3AC894, 0x34
+	.asciz "Locked cache machine check handler installed\n"
+	.balign 4
+	.4byte 0

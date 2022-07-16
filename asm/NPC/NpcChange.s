@@ -2496,23 +2496,25 @@ lbl_constructor:
 "@3189":
   .4byte 0
 "@3190":
-	.incbin "baserom.dol", 0x3E660C, 0x4
+	.4byte 0x40000000
 "@3191":
-	.incbin "baserom.dol", 0x3E6610, 0x4
+	.4byte 0x40A00000
 "@3386":
-	.incbin "baserom.dol", 0x3E6614, 0x4
+	.4byte 0x42960000
 "@3387":
-	.incbin "baserom.dol", 0x3E6618, 0x4
+	.4byte 0xBF800000
 "@3388":
-	.incbin "baserom.dol", 0x3E661C, 0x4
+	.4byte 0x3BB40000
 "@3390":
-	.incbin "baserom.dol", 0x3E6620, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3467":
-	.incbin "baserom.dol", 0x3E6628, 0x4
+	.4byte 0x3D4CCCCD
 "@3468":
-	.incbin "baserom.dol", 0x3E662C, 0x4
+	.4byte 0x3A83126F
 "@3776":
-	.incbin "baserom.dol", 0x3E6630, 0x8
+	.4byte 0x43360B61
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3044":

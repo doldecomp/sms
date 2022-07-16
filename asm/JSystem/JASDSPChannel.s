@@ -617,18 +617,28 @@ lbl_8005F728:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 history__8JASystem:
-	.incbin "baserom.dol", 0x3A8740, 0x28
+	.4byte 0x000F4240
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 smnFree__Q28JASystem11TDSPChannel:
-	.incbin "baserom.dol", 0x3E31B0, 0x4
+	.4byte 0x00000040
 DSP_LIMIT_RATIO__8JASystem:
-	.incbin "baserom.dol", 0x3E31B4, 0x4
+	.4byte 0x3F8CCCCD
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@353":
-	.incbin "baserom.dol", 0x3E4370, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 DSPCH__Q28JASystem11TDSPChannel:

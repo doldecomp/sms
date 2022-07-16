@@ -3278,35 +3278,40 @@ __vt__8JAISound:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@412":
-	.incbin "baserom.dol", 0x3E4258, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@434":
   .4byte 0
 "@602":
-	.incbin "baserom.dol", 0x3E4264, 0x4
+	.4byte 0x3F800000
 "@604":
-	.incbin "baserom.dol", 0x3E4268, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@643":
-	.incbin "baserom.dol", 0x3E4270, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@678":
-	.incbin "baserom.dol", 0x3E4278, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@679":
-	.incbin "baserom.dol", 0x3E4280, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@680":
-	.incbin "baserom.dol", 0x3E4288, 0x4
+	.4byte 0x3DCCCCCD
 "@681":
-	.incbin "baserom.dol", 0x3E428C, 0x4
+	.4byte 0x40000000
 "@943":
-	.incbin "baserom.dol", 0x3E4290, 0x4
+	.4byte 0x4F800000
 "@944":
-	.incbin "baserom.dol", 0x3E4294, 0x4
+	.4byte 0x447A0000
 "@1090":
-	.incbin "baserom.dol", 0x3E4298, 0x4
+	.4byte 0x41800000
 "@1207":
-	.incbin "baserom.dol", 0x3E429C, 0x4
+	.4byte 0x43400000
 "@1242":
-	.incbin "baserom.dol", 0x3E42A0, 0x4
+	.4byte 0x42FE0000
 "@1373":
-	.incbin "baserom.dol", 0x3E42A4, 0x4
+	.4byte 0xBF800000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global interPointer__8JAISound

@@ -102,4 +102,5 @@ __ct__8TCoord2DFv:
   .4byte 0
   .4byte 0
 "@1652":
-	.incbin "baserom.dol", 0x3E90C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

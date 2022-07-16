@@ -2681,47 +2681,193 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1938":
-	.incbin "baserom.dol", 0x371CAC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2573":
-	.incbin "baserom.dol", 0x371CC0, 0xC
+	.asciz "/data/scene"
 "@2620":
-	.incbin "baserom.dol", 0x371CCC, 0x68
+	.4byte 0x83478389
+	.4byte 0x815B82AA
+	.4byte 0x94AD90B6
+	.4byte 0x82B582DC
+	.4byte 0x82B582BD
+	.4byte 0x81420A96
+	.4byte 0x7B91CC82
+	.4byte 0xCC837083
+	.4byte 0x8F815B83
+	.4byte 0x7B835E83
+	.4byte 0x9382F089
+	.4byte 0x9F82B582
+	.4byte 0xC493648C
+	.4byte 0xB982F04F
+	.4byte 0x464682C9
+	.4byte 0x82B50A96
+	.4byte 0x7B91CC82
+	.4byte 0xCC8EE688
+	.4byte 0xB590E096
+	.4byte 0xBE8F9182
+	.4byte 0xCC8E778E
+	.4byte 0xA682C98F
+	.4byte 0x5D82C182
+	.4byte 0xC482AD82
+	.4byte 0xBE82B382
+	.4byte 0xA2814200
 "@2621":
-	.incbin "baserom.dol", 0x371D34, 0x50
+	.4byte 0x83668342
+	.4byte 0x8358834E
+	.4byte 0x82F093C7
+	.4byte 0x82DF82DC
+	.4byte 0x82B982F1
+	.4byte 0x82C582B5
+	.4byte 0x82BD8142
+	.4byte 0x0A82AD82
+	.4byte 0xED82B582
+	.4byte 0xAD82CD81
+	.4byte 0x41967B91
+	.4byte 0xCC82CC8E
+	.4byte 0xE688B590
+	.4byte 0xE096BE8F
+	.4byte 0x9182F00A
+	.4byte 0x82A893C7
+	.4byte 0x82DD82AD
+	.4byte 0x82BE82B3
+	.4byte 0x82A28142
+	.4byte 0
 "@2622":
-	.incbin "baserom.dol", 0x371D84, 0x20
+	.4byte 0x83668342
+	.4byte 0x8358834E
+	.4byte 0x82F093C7
+	.4byte 0x82DD8D9E
+	.4byte 0x82F182C5
+	.4byte 0x82A282DC
+	.4byte 0x82B78142
+	.4byte 0
 "@2623":
-	.incbin "baserom.dol", 0x371DA4, 0x58
+	.4byte 0x83668342
+	.4byte 0x8358834E
+	.4byte 0x834A836F
+	.4byte 0x815B82AA
+	.4byte 0x8A4A82A2
+	.4byte 0x82C482A2
+	.4byte 0x82DC82B7
+	.4byte 0x81420A83
+	.4byte 0x51815B83
+	.4byte 0x8082F091
+	.4byte 0xB182AF82
+	.4byte 0xE98FEA8D
+	.4byte 0x8782CD0A
+	.4byte 0x83668342
+	.4byte 0x8358834E
+	.4byte 0x834A836F
+	.4byte 0x815B82F0
+	.4byte 0x95C282DF
+	.4byte 0x82C482AD
+	.4byte 0x82BE82B3
+	.4byte 0x82A28142
+	.4byte 0
 "@2624":
-	.incbin "baserom.dol", 0x371DFC, 0x40
+	.4byte 0x81758358
+	.4byte 0x815B8370
+	.4byte 0x815B837D
+	.4byte 0x838A8349
+	.4byte 0x83548393
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x817682CC
+	.4byte 0x0A836683
+	.4byte 0x42835883
+	.4byte 0x4E82F083
+	.4byte 0x5A836283
+	.4byte 0x6782B582
+	.4byte 0xC482AD82
+	.4byte 0xBE82B382
+	.4byte 0xA2814200
 "@2625":
-	.incbin "baserom.dol", 0x371E3C, 0x8C
+	.4byte 0x82B182CC
+	.4byte 0x83668342
+	.4byte 0x8358834E
+	.4byte 0x82CD8141
+	.4byte 0x81758358
+	.4byte 0x815B8370
+	.4byte 0x815B837D
+	.4byte 0x838A8349
+	.4byte 0x83548393
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x817682CC
+	.4byte 0x0A836683
+	.4byte 0x42835883
+	.4byte 0x4E82C582
+	.4byte 0xCD82A082
+	.4byte 0xE882DC82
+	.4byte 0xB982F181
+	.4byte 0x420A8175
+	.4byte 0x8358815B
+	.4byte 0x8370815B
+	.4byte 0x837D838A
+	.4byte 0x83498354
+	.4byte 0x83938356
+	.4byte 0x83838343
+	.4byte 0x83938176
+	.4byte 0x82CC0A83
+	.4byte 0x66834283
+	.4byte 0x58834E82
+	.4byte 0xF0835A83
+	.4byte 0x62836782
+	.4byte 0xB582C482
+	.4byte 0xAD82BE82
+	.4byte 0xB382A281
+	.4byte 0x42200000
 "@3107":
-	.incbin "baserom.dol", 0x371EC8, 0xC
+	.asciz "nintendo"
+	.balign 4
 "@3108":
-	.incbin "baserom.dol", 0x371ED4, 0x24
+	.4byte 0x83588365
+	.4byte 0x815B8357
+	.4byte 0x96888356
+	.4byte 0x8369838A
+	.4byte 0x83498341
+	.4byte 0x815B834A
+	.4byte 0x83438375
+	.4byte 0x96BC8C51
+	.4byte 0
 "@3109":
-	.incbin "baserom.dol", 0x371EF8, 0x18
+	.asciz "/card/mario_icon.bti"
+	.balign 4
 "@3110":
-	.incbin "baserom.dol", 0x371F10, 0x18
+	.asciz "/card/mariobnr_jpn.bti"
+	.balign 4
 "@3137":
-	.incbin "baserom.dol", 0x371F28, 0x14
+	.asciz "standard_fontEx.bfn"
 "@3139":
-	.incbin "baserom.dol", 0x371F3C, 0xC
+	.asciz "mSound.aaf"
+	.balign 4
 "@3196":
-	.incbin "baserom.dol", 0x371F48, 0x10
+	.asciz "/data/mario.arc"
 "@3197":
-	.incbin "baserom.dol", 0x371F58, 0x14
+	.asciz "/data/common.arc"
+	.balign 4
 "@3198":
-	.incbin "baserom.dol", 0x371F6C, 0x14
+	.asciz "/data/stageArc.bin"
+	.balign 4
 "@3199":
-	.incbin "baserom.dol", 0x371F80, 0x14
+	.asciz "/data/game_6.arc"
+	.balign 4
 "@3200":
-	.incbin "baserom.dol", 0x371F94, 0x10
+	.asciz "/data/guide.arc"
 "@3306":
-	.incbin "baserom.dol", 0x371FA4, 0x14
+	.4byte 0x838B815B
+	.4byte 0x83678374
+	.4byte 0x8346815B
+	.4byte 0x835F815B
+	.4byte 0
 "@3312":
-	.incbin "baserom.dol", 0x371FB8, 0x18
+	.asciz "/data/nintendo.arc"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@2633":
@@ -2760,39 +2906,45 @@ __vt__13TMarioGamePad:
 "@2481":
   .4byte -1
 "@2485":
-	.incbin "baserom.dol", 0x3E4EEC, 0x4
+	.4byte 0xFFFF00FF
 lbl_8040C650:
-	.incbin "baserom.dol", 0x3E4EF0, 0x4
+	.4byte 0xFFFF00FF
 "@2574":
-	.incbin "baserom.dol", 0x3E4EF4, 0x8
+	.asciz ".arc"
+	.balign 4
 "@2575":
-	.incbin "baserom.dol", 0x3E4EFC, 0x8
+	.asciz ".szs"
+	.balign 4
 "@2576":
-	.incbin "baserom.dol", 0x3E4F04, 0x4
+	.4byte 0x2F000000
 "@2626":
   .4byte 0
 "@2627":
-	.incbin "baserom.dol", 0x3E4F0C, 0x4
+	.4byte 0x3F800000
 "@2628":
-	.incbin "baserom.dol", 0x3E4F10, 0x4
+	.4byte 0x41800000
 "@2629":
-	.incbin "baserom.dol", 0x3E4F14, 0x4
+	.4byte 0x43E80000
 "@2630":
-	.incbin "baserom.dol", 0x3E4F18, 0x4
+	.4byte 0x44160000
 "@2631":
-	.incbin "baserom.dol", 0x3E4F1C, 0x4
+	.4byte 0xBF800000
 "@2632":
-	.incbin "baserom.dol", 0x3E4F20, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@2635":
-	.incbin "baserom.dol", 0x3E4F28, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3136":
-	.incbin "baserom.dol", 0x3E4F30, 0x8
+	.asciz "/font"
+	.balign 4
 "@3138":
-	.incbin "baserom.dol", 0x3E4F38, 0x8
+	.asciz "/audi"
+	.balign 4
 "@3429":
-	.incbin "baserom.dol", 0x3E4F40, 0x4
+	.4byte 0x42700000
 "@3430":
-	.incbin "baserom.dol", 0x3E4F44, 0x4
+	.4byte 0x42480000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global gSetupThread

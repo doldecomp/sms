@@ -349,15 +349,24 @@ __ct__14TMovieSubTitleFPC10TTHPRender:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x39159C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1591":
-	.incbin "baserom.dol", 0x3915B0, 0x10
+	.asciz "/subtitle/%s"
+	.balign 4
 "@1842":
-	.incbin "baserom.dol", 0x3915C0, 0xC
+	.asciz "demo_1.blo"
+	.balign 4
 "@1843":
-	.incbin "baserom.dol", 0x3915CC, 0xC
+	.asciz "demo_2.blo"
+	.balign 4
 "@1851":
-	.incbin "baserom.dol", 0x3915D8, 0x10
+	.asciz "<TViewObj>"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TMovieSubTitle
@@ -376,8 +385,11 @@ __vt__14TMovieSubTitle:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "cLongHeightMovieIdList__9@unnamed@":
-	.incbin "baserom.dol", 0x3E98A0, 0x8
+	.4byte 0x00000009
+	.4byte 0x00000014
 "@1592":
-	.incbin "baserom.dol", 0x3E98A8, 0x8
+	.asciz ".bmg"
+	.balign 4
 "@1605":
-	.incbin "baserom.dol", 0x3E98B0, 0x8
+	.4byte 0x25730000
+	.4byte 0

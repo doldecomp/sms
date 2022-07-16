@@ -7058,29 +7058,32 @@ __vt__25JPADrawExecEmitterVisitor:
 "@1659":
   .4byte -1
 "@1860":
-	.incbin "baserom.dol", 0x3E456C, 0x4
+	.4byte 0x3F800000
 "@2021":
-	.incbin "baserom.dol", 0x3E4570, 0x4
+	.4byte 0x47000000
 "@2022":
-	.incbin "baserom.dol", 0x3E4574, 0x4
+	.4byte 0x47800000
 "@2023":
-	.incbin "baserom.dol", 0x3E4578, 0x4
+	.4byte 0x3F000000
 "@2024":
-	.incbin "baserom.dol", 0x3E457C, 0x4
+	.4byte 0x40000000
 "@2026":
-	.incbin "baserom.dol", 0x3E4580, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2087":
-	.incbin "baserom.dol", 0x3E4588, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2759":
-	.incbin "baserom.dol", 0x3E4590, 0x4
+	.4byte 0x41C80000
 "@2760":
-	.incbin "baserom.dol", 0x3E4594, 0x4
+	.4byte 0x3F828F5C
 "@2761":
-	.incbin "baserom.dol", 0x3E4598, 0x4
+	.4byte 0x3ECCCCCD
 "@2762":
   .4byte 0
 "@3307":
-	.incbin "baserom.dol", 0x3E45A0, 0x8
+	.4byte 0x36800000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@1657":

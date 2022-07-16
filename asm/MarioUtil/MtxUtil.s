@@ -2258,19 +2258,25 @@ getParams__14TMtxEffectBaseFv:
   .4byte 0
   .4byte 0
 "@2544":
-	.incbin "baserom.dol", 0x36F55C, 0x14
+	.asciz "/%s/MtxEffect%d.prm"
 "@2545":
-	.incbin "baserom.dol", 0x36F570, 0xC
+	.asciz "mPosAccel"
+	.balign 4
 "@2546":
-	.incbin "baserom.dol", 0x36F57C, 0xC
+	.asciz "mPosBrake"
+	.balign 4
 "@2547":
-	.incbin "baserom.dol", 0x36F588, 0xC
+	.asciz "mPosLimit"
+	.balign 4
 "@2548":
-	.incbin "baserom.dol", 0x36F594, 0xC
+	.asciz "mQuatAccel"
+	.balign 4
 "@2549":
-	.incbin "baserom.dol", 0x36F5A0, 0xC
+	.asciz "mQuatBrake"
+	.balign 4
 "@2556":
-	.incbin "baserom.dol", 0x36F5AC, 0xC
+	.asciz "mVelScale"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global "__vt__10TParamT<f>"
@@ -2317,38 +2323,46 @@ __vt__14TMtxEffectBase:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2093":
-	.incbin "baserom.dol", 0x3E4A38, 0x4
+	.4byte 0xB6800000
 "@2094":
-	.incbin "baserom.dol", 0x3E4A3C, 0x4
+	.4byte 0x36800000
 "@2123":
   .4byte 0
 "@2124":
-	.incbin "baserom.dol", 0x3E4A44, 0x4
+	.4byte 0x3F800000
 "@2156":
-	.incbin "baserom.dol", 0x3E4A48, 0x4
+	.4byte 0x40000000
 "@2157":
-	.incbin "baserom.dol", 0x3E4A4C, 0x4
+	.4byte 0x40400000
 "@2194":
-	.incbin "baserom.dol", 0x3E4A50, 0x8
+	.4byte 0xBF800000
+	.4byte 0
 "@2375":
-	.incbin "baserom.dol", 0x3E4A58, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2377":
-	.incbin "baserom.dol", 0x3E4A60, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2550":
-	.incbin "baserom.dol", 0x3E4A68, 0x8
+	.asciz "mAcc"
+	.balign 4
 "@2551":
-	.incbin "baserom.dol", 0x3E4A70, 0x4
+	.4byte 0xC0800000
 "@2552":
-	.incbin "baserom.dol", 0x3E4A74, 0x4
+	.4byte 0x6D4C0000
 "@2553":
-	.incbin "baserom.dol", 0x3E4A78, 0x4
+	.4byte 0x42480000
 "@2554":
-	.incbin "baserom.dol", 0x3E4A7C, 0x8
+	.asciz "mBrake"
+	.balign 4
 "@2555":
-	.incbin "baserom.dol", 0x3E4A84, 0x4
+	.4byte 0x3F333333
 "@2687":
-	.incbin "baserom.dol", 0x3E4A88, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@2688":
-	.incbin "baserom.dol", 0x3E4A90, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@2742":
-	.incbin "baserom.dol", 0x3E4A98, 0x8
+	.4byte 0x3E800000
+	.4byte 0

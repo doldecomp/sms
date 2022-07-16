@@ -373,14 +373,17 @@ __ct__16TMultiPlayerDataFv:
 "@1758":
   .4byte 0
 "@1759":
-	.incbin "baserom.dol", 0x3EC514, 0x4
+	.4byte 0x3F800000
 "@1760":
-	.incbin "baserom.dol", 0x3EC518, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@1761":
-	.incbin "baserom.dol", 0x3EC520, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@1762":
-	.incbin "baserom.dol", 0x3EC528, 0x4
+	.4byte 0x43960000
 "@1763":
-	.incbin "baserom.dol", 0x3EC52C, 0x4
+	.4byte 0x3FC00000
 "@1765":
-	.incbin "baserom.dol", 0x3EC530, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

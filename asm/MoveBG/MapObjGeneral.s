@@ -2580,42 +2580,46 @@ lbl_constructor:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global mNormalLivingTime__14TMapObjGeneral
 mNormalLivingTime__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E3548, 0x4
+	.4byte 0x000003C0
 .global mNormalFlushTime__14TMapObjGeneral
 mNormalFlushTime__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E354C, 0x4
+	.4byte 0x00000168
 .global mNormalFlushInterval__14TMapObjGeneral
 mNormalFlushInterval__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E3550, 0x4
+	.4byte 0x0000000A
 mNormalWaitToAppearTime__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E3554, 0x4
+	.4byte 0x00000168
 mNormalAppearingScaleUp__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E3558, 0x4
+	.4byte 0x3C23D70A
 mNormalThrowSpeedRate__14TMapObjGeneral:
-	.incbin "baserom.dol", 0x3E355C, 0x4
+	.4byte 0x3F000000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3049":
   .4byte 0
 "@3139":
-	.incbin "baserom.dol", 0x3E7B8C, 0x4
+	.4byte 0x36800000
 "@3201":
-	.incbin "baserom.dol", 0x3E7B90, 0x4
+	.4byte 0x43360B61
 "@3333":
-	.incbin "baserom.dol", 0x3E7B94, 0x4
+	.4byte 0x3F800000
 "@3505":
-	.incbin "baserom.dol", 0x3E7B98, 0x8
+	.4byte 0x40C00000
+	.4byte 0
 "@3508":
-	.incbin "baserom.dol", 0x3E7BA0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3655":
-	.incbin "baserom.dol", 0x3E7BA8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3676":
-	.incbin "baserom.dol", 0x3E7BB0, 0x4
+	.4byte 0x41200000
 "@3727":
-	.incbin "baserom.dol", 0x3E7BB4, 0x4
+	.4byte 0x42C80000
 "@3738":
-	.incbin "baserom.dol", 0x3E7BB8, 0x8
+	.4byte 0x42000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3033":

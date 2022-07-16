@@ -1164,55 +1164,130 @@ lbl_8017AA0C:
   .4byte 0
   .4byte 0
 "@1700":
-	.incbin "baserom.dol", 0x381334, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2153":
-	.incbin "baserom.dol", 0x381348, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2154":
-	.incbin "baserom.dol", 0x381378, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2155":
-	.incbin "baserom.dol", 0x3813B0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2156":
-	.incbin "baserom.dol", 0x3813E4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2336":
-	.incbin "baserom.dol", 0x381408, 0x10
+	.asciz "__ROOT_JOINT__"
+	.balign 4
 sCheckFrameMonte$localstatic0$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
-	.incbin "baserom.dol", 0x381418, 0x1C
+	.4byte 0x41E00000
+	.4byte 0x42500000
+	.4byte 0x42980000
+	.4byte 0x43000000
+	.4byte 0x43180000
+	.4byte 0x43300000
+	.4byte 0xBF800000
 sCheckFrameMare$localstatic1$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
-	.incbin "baserom.dol", 0x381434, 0xC
+	.4byte 0x42FC0000
+	.4byte 0x431C0000
+	.4byte 0xBF800000
 sCheckFrameKino$localstatic2$isPolWaitCEffectEmitTime___8TBaseNPCCFv:
-	.incbin "baserom.dol", 0x381440, 0xC
+	.4byte 0x41B00000
+	.4byte 0x42300000
+	.4byte 0xBF800000
 sCheckFrameMonte$localstatic0$isPolWaitLEffectEmitTime___8TBaseNPCCFv:
-	.incbin "baserom.dol", 0x38144C, 0x10
+	.4byte 0x41E00000
+	.4byte 0x42500000
+	.4byte 0x42980000
+	.4byte 0xBF800000
 sCheckFrameMonte$localstatic0$isPolWaitREffectEmitTime___8TBaseNPCCFv:
-	.incbin "baserom.dol", 0x38145C, 0x10
+	.4byte 0x43000000
+	.4byte 0x43180000
+	.4byte 0x43300000
+	.4byte 0xBF800000
 "@2696":
-	.incbin "baserom.dol", 0x38146C, 0xC
+	.asciz "yashi_jnt"
+	.balign 4
 "@2725":
-	.incbin "baserom.dol", 0x381478, 0xC
+	.asciz "koshi_null"
+	.balign 4
 "@2727":
-	.incbin "baserom.dol", 0x381484, 0xC
+	.asciz "jnt_body"
+	.balign 4
 "@2728":
-	.incbin "baserom.dol", 0x381490, 0xC
+	.asciz "footL_jnt"
+	.balign 4
 "@2729":
-	.incbin "baserom.dol", 0x38149C, 0xC
+	.asciz "footR_jnt"
+	.balign 4
 "@2738":
-	.incbin "baserom.dol", 0x3814A8, 0x10
+	.asciz "nose_jnt"
+	.balign 4
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2611":
-	.incbin "baserom.dol", 0x3E6660, 0x4
+	.4byte 0x3F800000
 "@2612":
-	.incbin "baserom.dol", 0x3E6664, 0x4
+	.4byte 0x3F400000
 "@2613":
   .4byte 0
 "@2614":
-	.incbin "baserom.dol", 0x3E666C, 0x4
+	.4byte 0x3FC00000
 "@2615":
-	.incbin "baserom.dol", 0x3E6670, 0x4
+	.4byte 0x41F00000
 "@2695":
-	.incbin "baserom.dol", 0x3E6674, 0x8
+	.asciz "ef_null"
 "@2726":
-	.incbin "baserom.dol", 0x3E667C, 0x8
+	.asciz "koshi"
+	.balign 4
 "@2739":
-	.incbin "baserom.dol", 0x3E6684, 0xC
+	.asciz "kuchi"
+	.balign 4
+	.4byte 0

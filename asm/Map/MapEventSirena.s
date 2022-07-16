@@ -485,31 +485,98 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38FABC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2253":
-	.incbin "baserom.dol", 0x38FAD0, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2254":
-	.incbin "baserom.dol", 0x38FB00, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2255":
-	.incbin "baserom.dol", 0x38FB38, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2256":
-	.incbin "baserom.dol", 0x38FB6C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2585":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2587":
-	.incbin "baserom.dol", 0x38FB9C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2771":
-	.incbin "baserom.dol", 0x38FBA8, 0x24
+	.asciz "/scene/map/map/ms_objup_hotel_a.jpa"
 "@2772":
-	.incbin "baserom.dol", 0x38FBCC, 0x24
+	.asciz "/scene/map/map/ms_objup_hotel_b.jpa"
 "@2784":
-	.incbin "baserom.dol", 0x38FBF0, 0x14
+	.4byte 0x837A8365
+	.4byte 0x838B8FE3
+	.4byte 0x82B0834A
+	.4byte 0x83818389
+	.4byte 0
 "@2810":
-	.incbin "baserom.dol", 0x38FC04, 0x1C
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x8169837A
+	.4byte 0x8365838B
+	.4byte 0x8FE382B0
+	.4byte 0x9770816A
+	.4byte 0
 "@2811":
-	.incbin "baserom.dol", 0x38FC20, 0x20
+	.4byte 0x837A8365
+	.4byte 0x838B8FE3
+	.4byte 0x82B08356
+	.4byte 0x83838343
+	.4byte 0x8393834A
+	.4byte 0x83818389
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__19TMapEventSirenaSink
@@ -544,11 +611,11 @@ __vt__19TMapEventSirenaSink:
 "@2744":
   .4byte 0
 "@2785":
-	.incbin "baserom.dol", 0x3E8DD4, 0x4
+	.4byte 0x455AC000
 "@2786":
-	.incbin "baserom.dol", 0x3E8DD8, 0x4
+	.4byte 0x454E4000
 "@2787":
-	.incbin "baserom.dol", 0x3E8DDC, 0x4
+	.4byte 0xC520A000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2812":

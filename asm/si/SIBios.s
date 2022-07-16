@@ -1638,29 +1638,39 @@ Si:
   .4byte 0
   .4byte 0
 Type:
-	.incbin "baserom.dol", 0x3AED1C, 0x10
+	.4byte 0x00000008
+	.4byte 0x00000008
+	.4byte 0x00000008
+	.4byte 0x00000008
 "@456":
-	.incbin "baserom.dol", 0x3AED2C, 0xC
+	.asciz "No response"
 "@458":
-	.incbin "baserom.dol", 0x3AED38, 0x10
+	.asciz "N64 controller"
+	.balign 4
 "@459":
-	.incbin "baserom.dol", 0x3AED48, 0x10
+	.asciz "N64 microphone"
+	.balign 4
 "@460":
-	.incbin "baserom.dol", 0x3AED58, 0x10
+	.asciz "N64 keyboard"
+	.balign 4
 "@461":
-	.incbin "baserom.dol", 0x3AED68, 0xC
+	.asciz "N64 mouse"
+	.balign 4
 "@462":
-	.incbin "baserom.dol", 0x3AED74, 0x10
+	.asciz "GameBoy Advance"
 "@463":
-	.incbin "baserom.dol", 0x3AED84, 0x14
+	.asciz "Standard controller"
 "@464":
-	.incbin "baserom.dol", 0x3AED98, 0x14
+	.asciz "Wireless receiver"
+	.balign 4
 "@465":
-	.incbin "baserom.dol", 0x3AEDAC, 0x14
+	.asciz "WaveBird controller"
 "@466":
-	.incbin "baserom.dol", 0x3AEDC0, 0xC
+	.asciz "Keyboard"
+	.balign 4
 "@467":
-	.incbin "baserom.dol", 0x3AEDCC, 0xC
+	.asciz "Steering"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 Packet:

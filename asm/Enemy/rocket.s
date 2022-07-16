@@ -2014,29 +2014,83 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2391":
-	.incbin "baserom.dol", 0x39EDC4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2603":
-	.incbin "baserom.dol", 0x39EDD8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2604":
-	.incbin "baserom.dol", 0x39EE08, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2605":
-	.incbin "baserom.dol", 0x39EE40, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2606":
-	.incbin "baserom.dol", 0x39EE74, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2822":
-	.incbin "baserom.dol", 0x39EE98, 0xC
+	.asciz "rocket.bmd"
+	.balign 4
 "@3627":
-	.incbin "baserom.dol", 0x39EEA4, 0xC
+	.4byte 0x838D8350
+	.4byte 0x83628367
+	.4byte 0
 "@3650":
-	.incbin "baserom.dol", 0x39EEB0, 0x14
+	.asciz "/enemy/rocket.prm"
+	.balign 4
 "@3651":
-	.incbin "baserom.dol", 0x39EEC4, 0x10
+	.asciz "mSLReleaseSpeed"
 "@3653":
-	.incbin "baserom.dol", 0x39EED4, 0x10
+	.asciz "mSLFlyGravity"
+	.balign 4
 "@3654":
-	.incbin "baserom.dol", 0x39EEE4, 0x10
+	.asciz "mSLFlyLimitTime"
 "@3655":
-	.incbin "baserom.dol", 0x39EEF4, 0x1C
+	.asciz "/enemy/rocketexpwater.prm"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 rocket_bastable:
@@ -2204,42 +2258,45 @@ __vt__14TRocketManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mTestAng_y__7TRocket:
-	.incbin "baserom.dol", 0x3E3AE0, 0x4
+	.4byte 0x42B40000
 mNozzleOffsetZ__7TRocket:
-	.incbin "baserom.dol", 0x3E3AE4, 0x4
+	.4byte 0x41C80000
 mColOffsetY__7TRocket:
-	.incbin "baserom.dol", 0x3E3AE8, 0x8
+	.4byte 0x41A00000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3024":
   .4byte 0
 "@3025":
-	.incbin "baserom.dol", 0x3EB944, 0x4
+	.4byte 0x42B40000
 "@3026":
-	.incbin "baserom.dol", 0x3EB948, 0x4
+	.4byte 0xC2B40000
 "@3027":
-	.incbin "baserom.dol", 0x3EB94C, 0x4
+	.4byte 0x3BB40000
 "@3028":
-	.incbin "baserom.dol", 0x3EB950, 0x4
+	.4byte 0x43340000
 "@3029":
-	.incbin "baserom.dol", 0x3EB954, 0x4
+	.4byte 0x43B40000
 "@3031":
-	.incbin "baserom.dol", 0x3EB958, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3123":
-	.incbin "baserom.dol", 0x3EB960, 0x4
+	.4byte 0x40000000
 "@3523":
-	.incbin "baserom.dol", 0x3EB964, 0x4
+	.4byte 0x3F000000
 "@3524":
-	.incbin "baserom.dol", 0x3EB968, 0x4
+	.4byte 0x40400000
 "@3613":
-	.incbin "baserom.dol", 0x3EB96C, 0x8
+	.asciz "main"
+	.balign 4
 "@3614":
-	.incbin "baserom.dol", 0x3EB974, 0x4
+	.4byte 0x38000000
 "@3615":
-	.incbin "baserom.dol", 0x3EB978, 0x4
+	.4byte 0x40A00000
 "@3652":
-	.incbin "baserom.dol", 0x3EB97C, 0x4
+	.4byte 0x41200000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2896":

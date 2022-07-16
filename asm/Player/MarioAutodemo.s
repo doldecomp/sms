@@ -1860,53 +1860,59 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3152":
-	.incbin "baserom.dol", 0x3E5498, 0x4
+	.4byte 0x3F800000
 "@3153":
-	.incbin "baserom.dol", 0x3E549C, 0x4
+	.4byte 0x43160000
 "@3154":
   .4byte 0
 "@3175":
-	.incbin "baserom.dol", 0x3E54A4, 0x4
+	.4byte 0x41C00000
 "@3196":
-	.incbin "baserom.dol", 0x3E54A8, 0x4
+	.4byte 0x40A00000
 "@3197":
-	.incbin "baserom.dol", 0x3E54AC, 0x4
+	.4byte 0x40000000
 "@3198":
-	.incbin "baserom.dol", 0x3E54B0, 0x4
+	.4byte 0x3F7D70A4
 "@3242":
-	.incbin "baserom.dol", 0x3E54B4, 0x4
+	.4byte 0x43340000
 "@3243":
-	.incbin "baserom.dol", 0x3E54B8, 0x8
+	.4byte 0x3BB40000
+	.4byte 0
 "@3245":
-	.incbin "baserom.dol", 0x3E54C0, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3247":
-	.incbin "baserom.dol", 0x3E54C8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3262":
-	.incbin "baserom.dol", 0x3E54D0, 0x4
+	.4byte 0x3F000000
 "@3269":
-	.incbin "baserom.dol", 0x3E54D4, 0x4
+	.4byte 0x43360B61
 "@3270":
-	.incbin "baserom.dol", 0x3E54D8, 0x4
+	.4byte 0x41C80000
 "@3459":
-	.incbin "baserom.dol", 0x3E54DC, 0x4
+	.4byte 0x42A00000
 "@3460":
-	.incbin "baserom.dol", 0x3E54E0, 0x4
+	.4byte 0x36800000
 "@3461":
-	.incbin "baserom.dol", 0x3E54E4, 0x4
+	.4byte 0x3CA3D70A
 "@3462":
-	.incbin "baserom.dol", 0x3E54E8, 0x4
+	.4byte 0x40400000
 "@3463":
-	.incbin "baserom.dol", 0x3E54EC, 0x4
+	.4byte 0x3DCCCCCD
 "@3560":
-	.incbin "baserom.dol", 0x3E54F0, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@3561":
-	.incbin "baserom.dol", 0x3E54F8, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@3562":
-	.incbin "baserom.dol", 0x3E5500, 0x4
+	.4byte 0x42C80000
 "@3563":
-	.incbin "baserom.dol", 0x3E5504, 0x4
+	.4byte 0x42480000
 "@3576":
-	.incbin "baserom.dol", 0x3E5508, 0x8
+	.4byte 0x44FA0000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3085":

@@ -1078,184 +1078,421 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1726":
-	.incbin "baserom.dol", 0x371FDC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 cDirtyFileName:
-	.incbin "baserom.dol", 0x371FF0, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x372014, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 "@1956":
-	.incbin "baserom.dol", 0x372024, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1957":
-	.incbin "baserom.dol", 0x372054, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1958":
-	.incbin "baserom.dol", 0x37208C, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1959":
-	.incbin "baserom.dol", 0x3720C0, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@3484":
-	.incbin "baserom.dol", 0x3720E4, 0x10
+	.4byte 0x837D838A
+	.4byte 0x83498382
+	.4byte 0x8368834C
+	.4byte 0
 "@3485":
-	.incbin "baserom.dol", 0x3720F4, 0x10
+	.asciz "EMarioManager"
+	.balign 4
 "@3486":
-	.incbin "baserom.dol", 0x372104, 0x14
+	.4byte 0x93548C5E
+	.4byte 0x9347837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@3487":
-	.incbin "baserom.dol", 0x372118, 0x10
+	.asciz "BossHanachan"
+	.balign 4
 "@3489":
-	.incbin "baserom.dol", 0x372128, 0x14
+	.asciz "BossHanachanManager"
 "@3490":
-	.incbin "baserom.dol", 0x37213C, 0x14
+	.asciz "SleepBossHanachan"
+	.balign 4
 "@3492":
-	.incbin "baserom.dol", 0x372150, 0x1C
+	.asciz "SleepBossHanachanManager"
+	.balign 4
 "@3493":
-	.incbin "baserom.dol", 0x37216C, 0x20
+	.asciz "/enemy/sleepBossHanachan.prm"
+	.balign 4
 "@3495":
-	.incbin "baserom.dol", 0x37218C, 0x10
+	.asciz "BossEelManager"
+	.balign 4
 "@3496":
-	.incbin "baserom.dol", 0x37219C, 0x14
+	.asciz "BEelTearsManager"
+	.balign 4
 "@3497":
-	.incbin "baserom.dol", 0x3721B0, 0x1C
+	.4byte 0x82DF82A8
+	.4byte 0x82C68345
+	.4byte 0x8369834D
+	.4byte 0x97DC837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3500":
-	.incbin "baserom.dol", 0x3721CC, 0x10
+	.asciz "KoopaManager"
+	.balign 4
 "@3501":
-	.incbin "baserom.dol", 0x3721DC, 0x14
+	.4byte 0x834E8362
+	.4byte 0x8370837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3502":
-	.incbin "baserom.dol", 0x3721F0, 0xC
+	.asciz "HinoKuri2"
+	.balign 4
 "@3503":
-	.incbin "baserom.dol", 0x3721FC, 0xC
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x82510000
 "@3504":
-	.incbin "baserom.dol", 0x372208, 0x14
+	.asciz "HinoKuri2Manager"
+	.balign 4
 "@3505":
-	.incbin "baserom.dol", 0x37221C, 0x18
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x8251837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@3506":
-	.incbin "baserom.dol", 0x372234, 0xC
+	.asciz "BossGesso"
+	.balign 4
 "@3507":
-	.incbin "baserom.dol", 0x372240, 0x10
+	.4byte 0x837B8358
+	.4byte 0x83518362
+	.4byte 0x835C815B
+	.4byte 0
 "@3508":
-	.incbin "baserom.dol", 0x372250, 0x14
+	.asciz "BossGessoManager"
+	.balign 4
 "@3509":
-	.incbin "baserom.dol", 0x372264, 0x18
+	.4byte 0x837B8358
+	.4byte 0x83518362
+	.4byte 0x835C815B
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x83830000
 "@3510":
-	.incbin "baserom.dol", 0x37227C, 0xC
+	.asciz "TinKoopa"
+	.balign 4
 "@3511":
-	.incbin "baserom.dol", 0x372288, 0xC
+	.4byte 0x8381834A
+	.4byte 0x834E8362
+	.4byte 0x83700000
 "@3512":
-	.incbin "baserom.dol", 0x372294, 0x10
+	.asciz "TinKoopaManager"
 "@3513":
-	.incbin "baserom.dol", 0x3722A4, 0x18
+	.4byte 0x8381834A
+	.4byte 0x834E8362
+	.4byte 0x8370837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@3514":
-	.incbin "baserom.dol", 0x3722BC, 0x18
+	.asciz "CoasterKillerManager"
+	.balign 4
 "@3515":
-	.incbin "baserom.dol", 0x3722D4, 0x20
+	.4byte 0x8352815B
+	.4byte 0x8358835E
+	.4byte 0x815B834C
+	.4byte 0x8389815B
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3516":
-	.incbin "baserom.dol", 0x3722F4, 0x10
+	.asciz "CoasterKiller"
+	.balign 4
 "@3517":
-	.incbin "baserom.dol", 0x372304, 0x14
+	.4byte 0x8352815B
+	.4byte 0x8358835E
+	.4byte 0x815B834C
+	.4byte 0x8389815B
+	.4byte 0
 "@3518":
-	.incbin "baserom.dol", 0x372318, 0x10
+	.asciz "KoopaJrManager"
+	.balign 4
 "@3519":
-	.incbin "baserom.dol", 0x372328, 0x1C
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x8341837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3521":
-	.incbin "baserom.dol", 0x372344, 0x10
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x83410000
 "@3522":
-	.incbin "baserom.dol", 0x372354, 0x18
+	.asciz "KoopaJrSubmarineManager"
 "@3523":
-	.incbin "baserom.dol", 0x37236C, 0x28
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x83418354
+	.4byte 0x8375837D
+	.4byte 0x838A8393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3524":
-	.incbin "baserom.dol", 0x372394, 0x14
+	.asciz "KoopaJrSubmarine"
+	.balign 4
 "@3525":
-	.incbin "baserom.dol", 0x3723A8, 0x1C
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x83418354
+	.4byte 0x8375837D
+	.4byte 0x838A8393
+	.4byte 0
 "@3526":
-	.incbin "baserom.dol", 0x3723C4, 0x14
+	.asciz "LimitKoopaJrManager"
 "@3527":
-	.incbin "baserom.dol", 0x3723D8, 0x24
+	.4byte 0x838A837E
+	.4byte 0x83628367
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x8341837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3528":
-	.incbin "baserom.dol", 0x3723FC, 0x10
+	.asciz "LimitKoopaJr"
+	.balign 4
 "@3529":
-	.incbin "baserom.dol", 0x37240C, 0x18
+	.4byte 0x838A837E
+	.4byte 0x83628367
+	.4byte 0x834E8362
+	.4byte 0x83708357
+	.4byte 0x8385836A
+	.4byte 0x83410000
 "@3530":
-	.incbin "baserom.dol", 0x372424, 0x14
+	.asciz "LimitKoopaManager"
+	.balign 4
 "@3531":
-	.incbin "baserom.dol", 0x372438, 0xC
+	.asciz "LimitKoopa"
+	.balign 4
 "@3532":
-	.incbin "baserom.dol", 0x372444, 0x18
+	.asciz "BathtubKillerManager"
+	.balign 4
 "@3533":
-	.incbin "baserom.dol", 0x37245C, 0x1C
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0x834C8389
+	.4byte 0x815B837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3534":
-	.incbin "baserom.dol", 0x372478, 0x10
+	.asciz "BathtubKiller"
+	.balign 4
 "@3535":
-	.incbin "baserom.dol", 0x372488, 0x10
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0x834C8389
+	.4byte 0x815B0000
 "@3536":
-	.incbin "baserom.dol", 0x372498, 0x14
+	.asciz "BathtubPeachManager"
 "@3537":
-	.incbin "baserom.dol", 0x3724AC, 0x1C
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0x8373815B
+	.4byte 0x8360837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3538":
-	.incbin "baserom.dol", 0x3724C8, 0x10
+	.asciz "BathtubPeach"
+	.balign 4
 "@3539":
-	.incbin "baserom.dol", 0x3724D8, 0x10
+	.4byte 0x836F8358
+	.4byte 0x835E8375
+	.4byte 0x8373815B
+	.4byte 0x83600000
 "@3540":
-	.incbin "baserom.dol", 0x3724E8, 0xC
+	.asciz "BossWanwan"
+	.balign 4
 "@3541":
-	.incbin "baserom.dol", 0x3724F4, 0x10
+	.4byte 0x837B8358
+	.4byte 0x838F8393
+	.4byte 0x838F8393
+	.4byte 0
 "@3542":
-	.incbin "baserom.dol", 0x372504, 0x14
+	.asciz "BossWanwanManager"
+	.balign 4
 "@3543":
-	.incbin "baserom.dol", 0x372518, 0x18
+	.4byte 0x837B8358
+	.4byte 0x838F8393
+	.4byte 0x838F8393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x83830000
 "@3544":
-	.incbin "baserom.dol", 0x372530, 0xC
+	.asciz "BossPakkun"
+	.balign 4
 "@3545":
-	.incbin "baserom.dol", 0x37253C, 0x10
+	.4byte 0x837B8358
+	.4byte 0x83708362
+	.4byte 0x834E8393
+	.4byte 0x89FC0000
 "@3546":
-	.incbin "baserom.dol", 0x37254C, 0xC
+	.asciz "KBossPakkun"
 "@3547":
-	.incbin "baserom.dol", 0x372558, 0x10
+	.4byte 0x837B8358
+	.4byte 0x83708362
+	.4byte 0x834E8393
+	.4byte 0x8C790000
 "@3548":
-	.incbin "baserom.dol", 0x372568, 0x14
+	.asciz "BossPakkunManager"
+	.balign 4
 "@3549":
-	.incbin "baserom.dol", 0x37257C, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x83708362
+	.4byte 0x834E8393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3550":
-	.incbin "baserom.dol", 0x372598, 0x14
+	.asciz "KBossPakkunManager"
+	.balign 4
 "@3551":
-	.incbin "baserom.dol", 0x3725AC, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x83708362
+	.4byte 0x834E8393
+	.4byte 0x8C79837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
 "@3552":
-	.incbin "baserom.dol", 0x3725C8, 0xC
+	.asciz "BossTelesa"
+	.balign 4
 "@3553":
-	.incbin "baserom.dol", 0x3725D4, 0xC
+	.4byte 0x837B8358
+	.4byte 0x8365838C
+	.4byte 0x83540000
 "@3554":
-	.incbin "baserom.dol", 0x3725E0, 0x14
+	.asciz "BossTelesaManager"
+	.balign 4
 "@3555":
-	.incbin "baserom.dol", 0x3725F4, 0x18
+	.4byte 0x837B8358
+	.4byte 0x8365838C
+	.4byte 0x8354837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3556":
-	.incbin "baserom.dol", 0x37260C, 0x10
+	.asciz "BubbleManager"
+	.balign 4
 "@3557":
-	.incbin "baserom.dol", 0x37261C, 0x14
+	.4byte 0x836F8375
+	.4byte 0x838B837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3560":
-	.incbin "baserom.dol", 0x372630, 0xC
+	.asciz "BossManta"
+	.balign 4
 "@3561":
-	.incbin "baserom.dol", 0x37263C, 0xC
+	.4byte 0x837B8358
+	.4byte 0x837D8393
+	.4byte 0x835E0000
 "@3562":
-	.incbin "baserom.dol", 0x372648, 0x14
+	.asciz "BossMantaManager"
+	.balign 4
 "@3563":
-	.incbin "baserom.dol", 0x37265C, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x837D8393
+	.4byte 0x835E837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3483":
-	.incbin "baserom.dol", 0x3E4F88, 0x8
+	.asciz "EMario"
+	.balign 4
 "@3488":
-	.incbin "baserom.dol", 0x3E4F90, 0x4
+	.4byte 0x3F000000
 "@3491":
   .4byte 0
 "@3494":
-	.incbin "baserom.dol", 0x3E4F98, 0x8
+	.asciz "BossEel"
 "@3498":
-	.incbin "baserom.dol", 0x3E4FA0, 0x8
+	.asciz "Koopa"
+	.balign 4
 "@3499":
-	.incbin "baserom.dol", 0x3E4FA8, 0x8
+	.4byte 0x834E8362
+	.4byte 0x83700000
 "@3520":
-	.incbin "baserom.dol", 0x3E4FB0, 0x8
+	.asciz "KoopaJr"
 "@3558":
-	.incbin "baserom.dol", 0x3E4FB8, 0x8
+	.asciz "OilBall"
 "@3559":
-	.incbin "baserom.dol", 0x3E4FC0, 0x8
+	.4byte 0x96FB835F
+	.4byte 0x837D0000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3239":

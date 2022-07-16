@@ -4573,18 +4573,22 @@ __vt__10J3DAnmBase:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@955":
-	.incbin "baserom.dol", 0x3E3F50, 0x4
+	.4byte 0x3F800000
 "@956":
   .4byte 0
 "@1073":
-	.incbin "baserom.dol", 0x3E3F58, 0x8
+	.4byte 0x3A83126F
+	.4byte 0
 "@1075":
-	.incbin "baserom.dol", 0x3E3F60, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1230":
-	.incbin "baserom.dol", 0x3E3F68, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@1500":
-	.incbin "baserom.dol", 0x3E3F70, 0x4
+	.4byte 0x437F0000
 "@1718":
-	.incbin "baserom.dol", 0x3E3F74, 0x4
+	.4byte 0xC4800000
 "@1719":
-	.incbin "baserom.dol", 0x3E3F78, 0x8
+	.4byte 0x447FC000
+	.4byte 0

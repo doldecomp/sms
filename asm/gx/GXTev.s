@@ -740,4 +740,13 @@ GXSetNumTevStages:
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
 c2r$71:
-	.incbin "baserom.dol", 0x3AEB10, 0x28
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000007
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0

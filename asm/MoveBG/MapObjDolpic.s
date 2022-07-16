@@ -2238,63 +2238,178 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38C87C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38C890, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38C8C0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38C8F8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38C92C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2837":
-	.incbin "baserom.dol", 0x38C950, 0xC
+	.asciz "nozzledoor"
+	.balign 4
 "@2888":
-	.incbin "baserom.dol", 0x38C95C, 0x10
+	.4byte 0x8BF38D60
+	.4byte 0x83688341
+	.4byte 0x8260824F
+	.4byte 0
 "@2889":
-	.incbin "baserom.dol", 0x38C96C, 0x10
+	.4byte 0x8BF38D60
+	.4byte 0x83688341
+	.4byte 0x82608250
+	.4byte 0
 "@2890":
-	.incbin "baserom.dol", 0x38C97C, 0x10
+	.4byte 0x8BF38D60
+	.4byte 0x83688341
+	.4byte 0x8261824F
+	.4byte 0
 "@2891":
-	.incbin "baserom.dol", 0x38C98C, 0x10
+	.4byte 0x8BF38D60
+	.4byte 0x83688341
+	.4byte 0x82618250
+	.4byte 0
 "@2970":
-	.incbin "baserom.dol", 0x38C99C, 0x10
+	.asciz "democannon_dpt"
+	.balign 4
 "@2971":
-	.incbin "baserom.dol", 0x38C9AC, 0x10
+	.asciz "democannon_dom"
+	.balign 4
 "@2972":
-	.incbin "baserom.dol", 0x38C9BC, 0x18
+	.asciz "democannon_mario_fly1"
+	.balign 4
 "@2995":
-	.incbin "baserom.dol", 0x38C9D4, 0x24
+	.asciz "/scene/mapObj/demoCannon_dom.bmd"
+	.balign 4
 "@2997":
-	.incbin "baserom.dol", 0x38C9F8, 0x10
+	.asciz "<TSharedParts>"
+	.balign 4
 "@2998":
-	.incbin "baserom.dol", 0x38CA08, 0x24
+	.asciz "/scene/mapObj/demoCannon_mario.bmd"
+	.balign 4
 "@3026":
-	.incbin "baserom.dol", 0x38CA2C, 0x20
+	.asciz "/scene/mapObj/demoCannon_a.jpa"
+	.balign 4
 "@3027":
-	.incbin "baserom.dol", 0x38CA4C, 0x20
+	.asciz "/scene/mapObj/demoCannon_b.jpa"
+	.balign 4
 "@3028":
-	.incbin "baserom.dol", 0x38CA6C, 0x20
+	.asciz "/scene/mapObj/demoCannon_c.jpa"
+	.balign 4
 "@3029":
-	.incbin "baserom.dol", 0x38CA8C, 0x20
+	.asciz "/scene/mapObj/demoCannon_d.jpa"
+	.balign 4
 "@3030":
-	.incbin "baserom.dol", 0x38CAAC, 0x20
+	.asciz "/scene/mapObj/demoCannon_e.jpa"
+	.balign 4
 "@3031":
-	.incbin "baserom.dol", 0x38CACC, 0x24
+	.asciz "/scene/mapObj/demoCannon_smoke.jpa"
+	.balign 4
 "@3050":
-	.incbin "baserom.dol", 0x38CAF0, 0x20
+	.asciz "/scene/mapObj/ms_map_kokuen.jpa"
 "@3144":
-	.incbin "baserom.dol", 0x38CB10, 0x24
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x81698368
+	.4byte 0x838B8373
+	.4byte 0x8362834E
+	.4byte 0x8FE08C78
+	.4byte 0x8E408F90
+	.4byte 0x9770816A
+	.4byte 0
 "@3145":
-	.incbin "baserom.dol", 0x38CB34, 0x1C
+	.4byte 0x8368838B
+	.4byte 0x83738362
+	.4byte 0x834E8FE0
+	.4byte 0x8C788E40
+	.4byte 0x8F90834A
+	.4byte 0x83818389
+	.4byte 0
 "@3146":
-	.incbin "baserom.dol", 0x38CB50, 0x24
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x81698368
+	.4byte 0x838B8373
+	.4byte 0x8362834E
+	.4byte 0x8FE08365
+	.4byte 0x838C8372
+	.4byte 0x8BC79770
+	.4byte 0x816A0000
 "@3147":
-	.incbin "baserom.dol", 0x38CB74, 0x1C
+	.4byte 0x8368838B
+	.4byte 0x83738362
+	.4byte 0x834E8FE0
+	.4byte 0x8365838C
+	.4byte 0x83728BC7
+	.4byte 0x834A8381
+	.4byte 0x83890000
 "@3298":
-	.incbin "baserom.dol", 0x38CB90, 0x24
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x81698382
+	.4byte 0x836A8385
+	.4byte 0x83818393
+	.4byte 0x83678356
+	.4byte 0x83838343
+	.4byte 0x83939770
+	.4byte 0x816A0000
 "@3299":
-	.incbin "baserom.dol", 0x38CBB4, 0x1C
+	.4byte 0x8382836A
+	.4byte 0x83858381
+	.4byte 0x83938367
+	.4byte 0x83568383
+	.4byte 0x83438393
+	.4byte 0x834A8381
+	.4byte 0x83890000
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16TTurboNozzleDoor
@@ -2943,51 +3058,53 @@ __vt__14TMonumentShine:
 "@2803":
   .4byte 0
 "@2838":
-	.incbin "baserom.dol", 0x3E84DC, 0x4
+	.4byte 0x3FA66666
 "@2839":
-	.incbin "baserom.dol", 0x3E84E0, 0x4
+	.4byte 0x42C80000
 "@2957":
-	.incbin "baserom.dol", 0x3E84E4, 0x4
+	.4byte 0x432E0000
 "@2958":
-	.incbin "baserom.dol", 0x3E84E8, 0x4
+	.4byte 0x3F800000
 "@2959":
-	.incbin "baserom.dol", 0x3E84EC, 0x4
+	.4byte 0x432F0000
 "@2996":
-	.incbin "baserom.dol", 0x3E84F0, 0x8
+	.asciz "nullA"
+	.balign 4
 "@3000":
-	.incbin "baserom.dol", 0x3E84F8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3114":
-	.incbin "baserom.dol", 0x3E8500, 0x4
+	.4byte 0x3C23D70A
 "@3115":
-	.incbin "baserom.dol", 0x3E8504, 0x4
+	.4byte 0x43360B61
 "@3116":
-	.incbin "baserom.dol", 0x3E8508, 0x4
+	.4byte 0xC1F00000
 "@3117":
-	.incbin "baserom.dol", 0x3E850C, 0x4
+	.4byte 0x41F00000
 "@3118":
-	.incbin "baserom.dol", 0x3E8510, 0x4
+	.4byte 0x3F7FDF3B
 "@3184":
-	.incbin "baserom.dol", 0x3E8514, 0x4
+	.4byte 0x36800000
 "@3185":
-	.incbin "baserom.dol", 0x3E8518, 0x4
+	.4byte 0x3F000000
 "@3186":
-	.incbin "baserom.dol", 0x3E851C, 0x4
+	.4byte 0x38000000
 "@3187":
-	.incbin "baserom.dol", 0x3E8520, 0x4
+	.4byte 0x46610000
 "@3193":
-	.incbin "baserom.dol", 0x3E8524, 0x4
+	.4byte 0x3C8EFA35
 "@3269":
-	.incbin "baserom.dol", 0x3E8528, 0x4
+	.4byte 0x3F7FCB92
 "@3270":
-	.incbin "baserom.dol", 0x3E852C, 0x4
+	.4byte 0x3DCCCCCD
 "@3271":
-	.incbin "baserom.dol", 0x3E8530, 0x4
+	.4byte 0x43B40000
 "@3272":
-	.incbin "baserom.dol", 0x3E8534, 0x4
+	.4byte 0x43340000
 "@3273":
-	.incbin "baserom.dol", 0x3E8538, 0x4
+	.4byte 0xBDCCCCCD
 "@3347":
-	.incbin "baserom.dol", 0x3E853C, 0x4
+	.4byte 0x3B83126F
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 up$2645:

@@ -3586,87 +3586,169 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1790":
-	.incbin "baserom.dol", 0x39426C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2018":
-	.incbin "baserom.dol", 0x394280, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2019":
-	.incbin "baserom.dol", 0x3942B0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2020":
-	.incbin "baserom.dol", 0x3942E8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2021":
-	.incbin "baserom.dol", 0x39431C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2428":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2430":
-	.incbin "baserom.dol", 0x39434C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2458":
-	.incbin "baserom.dol", 0x394358, 0x28
+	.asciz "/scene/mameGesso/bas/mamegeso_land2.bas"
 "@2459":
-	.incbin "baserom.dol", 0x394380, 0x2C
+	.asciz "/scene/mameGesso/bas/mamegeso_run_end2.bas"
+	.balign 4
 "@2460":
-	.incbin "baserom.dol", 0x3943AC, 0x30
+	.asciz "/scene/mameGesso/bas/mamegeso_run_start2.bas"
+	.balign 4
 "@2461":
-	.incbin "baserom.dol", 0x3943DC, 0x28
+	.asciz "/scene/mameGesso/bas/mamegeso_turn1.bas"
 "@2462":
-	.incbin "baserom.dol", 0x394404, 0x30
+	.asciz "/scene/mameGesso/bas/mamegeso_water_return1.bas"
 "@2475":
-	.incbin "baserom.dol", 0x394434, 0xC
+	.asciz "mamegesso0"
+	.balign 4
 "@2476":
-	.incbin "baserom.dol", 0x394440, 0xC
+	.asciz "mamegesso1"
+	.balign 4
 "@2477":
-	.incbin "baserom.dol", 0x39444C, 0xC
+	.asciz "mamegesso2"
+	.balign 4
 "@2478":
-	.incbin "baserom.dol", 0x394458, 0xC
+	.asciz "mamegesso3"
+	.balign 4
 "@2479":
-	.incbin "baserom.dol", 0x394464, 0xC
+	.asciz "mamegesso4"
+	.balign 4
 "@2480":
-	.incbin "baserom.dol", 0x394470, 0xC
+	.asciz "mamegesso5"
+	.balign 4
 "@2481":
-	.incbin "baserom.dol", 0x39447C, 0xC
+	.asciz "mamegesso6"
+	.balign 4
 "@2482":
-	.incbin "baserom.dol", 0x394488, 0xC
+	.asciz "mamegesso7"
+	.balign 4
 "@2483":
-	.incbin "baserom.dol", 0x394494, 0xC
+	.asciz "mamegesso8"
+	.balign 4
 "@2484":
-	.incbin "baserom.dol", 0x3944A0, 0xC
+	.asciz "mamegesso9"
+	.balign 4
 xzTable$2559:
-	.incbin "baserom.dol", 0x3944AC, 0x20
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
 "@3811":
-	.incbin "baserom.dol", 0x3944CC, 0xC
+	.asciz "default.bmd"
 "@3910":
-	.incbin "baserom.dol", 0x3944D8, 0x10
+	.4byte 0x82DC82DF
+	.4byte 0x83518362
+	.4byte 0x835C815B
+	.4byte 0
 "@3914":
-	.incbin "baserom.dol", 0x3944E8, 0x18
+	.asciz "/enemy/MameGesso.prm"
+	.balign 4
 "@3990":
-	.incbin "baserom.dol", 0x394500, 0x18
+	.asciz "mSLJumpWanderGravityY"
+	.balign 4
 "@3991":
-	.incbin "baserom.dol", 0x394518, 0x14
+	.asciz "mSLJumpWanderSpeed"
+	.balign 4
 "@3993":
-	.incbin "baserom.dol", 0x39452C, 0x10
+	.asciz "mSLPickUpTime"
+	.balign 4
 "@3994":
-	.incbin "baserom.dol", 0x39453C, 0x14
+	.asciz "mSLThrownGravityY"
+	.balign 4
 "@3995":
-	.incbin "baserom.dol", 0x394550, 0xC
+	.asciz "mSLThrownVY"
 "@3996":
-	.incbin "baserom.dol", 0x39455C, 0x10
+	.asciz "mSLThrownRateXZ"
 "@3997":
-	.incbin "baserom.dol", 0x39456C, 0x14
+	.asciz "mSLGenerateInterval"
 "@3998":
-	.incbin "baserom.dol", 0x394580, 0x14
+	.asciz "mSLWaitTimeOnGround"
 "@3999":
-	.incbin "baserom.dol", 0x394594, 0x14
+	.asciz "mSLWaitTimeInWater"
+	.balign 4
 "@4000":
-	.incbin "baserom.dol", 0x3945A8, 0x18
+	.asciz "mSLObjectRecoverTime"
+	.balign 4
 "@4001":
-	.incbin "baserom.dol", 0x3945C0, 0x10
+	.asciz "mSLObjectScale"
+	.balign 4
 "@4002":
-	.incbin "baserom.dol", 0x3945D0, 0x14
+	.asciz "mSLCollisionScale"
+	.balign 4
 "@4003":
-	.incbin "baserom.dol", 0x3945E4, 0x14
+	.asciz "mSLReturnJumpDist"
+	.balign 4
 "@4005":
-	.incbin "baserom.dol", 0x3945F8, 0x10
+	.asciz "mSLReturnJumpSp"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 mameGesso_bastable:
@@ -3877,44 +3959,46 @@ __vt__17TMameGessoManager:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mBaseHoseiTransY__10TMameGesso:
-	.incbin "baserom.dol", 0x3E38F8, 0x8
+	.4byte 0xC1A00000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2884":
-	.incbin "baserom.dol", 0x3EA0C8, 0x4
+	.4byte 0x40200000
 "@2885":
   .4byte 0
 "@2886":
-	.incbin "baserom.dol", 0x3EA0D0, 0x4
+	.4byte 0x42A00000
 "@2887":
-	.incbin "baserom.dol", 0x3EA0D4, 0x4
+	.4byte 0x3F800000
 "@2969":
-	.incbin "baserom.dol", 0x3EA0D8, 0x4
+	.4byte 0x40000000
 "@3093":
-	.incbin "baserom.dol", 0x3EA0DC, 0x4
+	.4byte 0x43960000
 "@3097":
-	.incbin "baserom.dol", 0x3EA0E0, 0x4
+	.4byte 0x3F000000
 "@3391":
-	.incbin "baserom.dol", 0x3EA0E4, 0x4
+	.4byte 0x41D00000
 "@3392":
-	.incbin "baserom.dol", 0x3EA0E8, 0x4
+	.4byte 0x41200000
 "@3459":
-	.incbin "baserom.dol", 0x3EA0EC, 0x4
+	.4byte 0x42480000
 "@3460":
-	.incbin "baserom.dol", 0x3EA0F0, 0x4
+	.4byte 0x42B40000
 "@3585":
-	.incbin "baserom.dol", 0x3EA0F4, 0x4
+	.4byte 0x43160000
 "@3755":
-	.incbin "baserom.dol", 0x3EA0F8, 0x4
+	.4byte 0x38000000
 "@3756":
-	.incbin "baserom.dol", 0x3EA0FC, 0x4
+	.4byte 0x41A00000
 "@3758":
-	.incbin "baserom.dol", 0x3EA100, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3992":
-	.incbin "baserom.dol", 0x3EA108, 0x4
+	.4byte 0x41700000
 "@4004":
-	.incbin "baserom.dol", 0x3EA10C, 0x4
+	.4byte 0x43480000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2573":

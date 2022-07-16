@@ -710,15 +710,16 @@ __vt__10TBGPolDrop:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2932":
-	.incbin "baserom.dol", 0x3EB740, 0x4
+	.4byte 0x3F800000
 "@2933":
   .4byte 0
 "@2934":
-	.incbin "baserom.dol", 0x3EB748, 0x4
+	.4byte 0x43360B61
 "@2988":
-	.incbin "baserom.dol", 0x3EB74C, 0x4
+	.4byte 0x3E4CCCCD
 "@2989":
-	.incbin "baserom.dol", 0x3EB750, 0x8
+	.4byte 0x42A00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3018":

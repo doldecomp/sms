@@ -1315,15 +1315,18 @@ __vt__10JUTConsole:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1718":
-	.incbin "baserom.dol", 0x3E4078, 0x4
+	.4byte 0x40000000
 "@1719":
-	.incbin "baserom.dol", 0x3E407C, 0x4
+	.4byte 0x40800000
 "@1721":
-	.incbin "baserom.dol", 0x3E4080, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1724":
-	.incbin "baserom.dol", 0x3E4088, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2338":
-	.incbin "baserom.dol", 0x3E4090, 0x8
+	.4byte 0x25730000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global sManager__17JUTConsoleManager

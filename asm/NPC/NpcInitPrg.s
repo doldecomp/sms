@@ -1125,37 +1125,102 @@ lbl_8017643C:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x37F35C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1962":
-	.incbin "baserom.dol", 0x37F370, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1963":
-	.incbin "baserom.dol", 0x37F3A0, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1964":
-	.incbin "baserom.dol", 0x37F3D8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1965":
-	.incbin "baserom.dol", 0x37F40C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2082":
-	.incbin "baserom.dol", 0x37F430, 0x10
+	.asciz "__ROOT_JOINT__"
+	.balign 4
 "@2105":
-	.incbin "baserom.dol", 0x37F440, 0x10
+	.4byte 0x837D836A
+	.4byte 0x89AE9065
+	.4byte 0x835E836B
+	.4byte 0x834C0000
 "@2106":
-	.incbin "baserom.dol", 0x37F450, 0x10
+	.4byte 0x837D836A
+	.4byte 0x89AE8E71
+	.4byte 0x835E836B
+	.4byte 0x834C0000
 "@2107":
-	.incbin "baserom.dol", 0x37F460, 0xC
+	.4byte 0x83828393
+	.4byte 0x83653236
+	.4byte 0
 "@2108":
-	.incbin "baserom.dol", 0x37F46C, 0xC
+	.4byte 0x83828393
+	.4byte 0x83653237
+	.4byte 0
 "@2109":
-	.incbin "baserom.dol", 0x37F478, 0xC
+	.asciz "_eye_mat"
+	.balign 4
 "@2110":
-	.incbin "baserom.dol", 0x37F484, 0xC
+	.asciz "monte_koko"
+	.balign 4
 "@2112":
-	.incbin "baserom.dol", 0x37F490, 0xC
+	.asciz "koshi_null"
+	.balign 4
 "@2114":
-	.incbin "baserom.dol", 0x37F49C, 0xC
+	.asciz "Npc/MonteM"
+	.balign 4
 "@2115":
-	.incbin "baserom.dol", 0x37F4A8, 0xC
+	.asciz "Npc/MonteW"
+	.balign 4
 "@2116":
-	.incbin "baserom.dol", 0x37F4B4, 0xC
+	.asciz "Npc/Peach"
+	.balign 4
 sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv:
   .4byte 0x4000001
   .4byte sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv
@@ -1214,27 +1279,82 @@ sMtxEffectInitData$localstatic1$setMtxEffect___8TBaseNPCFv:
   .4byte 0
   .4byte 0
 sIndividualHoldArrowBck$localstatic0$initBaseActionFlag___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F5A0, 0x10
+	.4byte 0x0000000E
+	.4byte 0x00000010
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualKinopioBck$localstatic1$initBaseActionFlag___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F5B0, 0x38
+	.4byte 0x0000000F
+	.4byte 0x00000010
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x00000004
+	.4byte 0x00000005
+	.4byte 0x0000000E
+	.4byte 0x00000018
+	.4byte 0x00000009
+	.4byte 0x0000000B
+	.4byte 0x00000013
+	.4byte 0x00000014
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualKinopioBtp$localstatic2$initBaseActionFlag___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F5E8, 0x18
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0x00000005
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualKinojiiBck$localstatic3$initBaseActionFlag___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F600, 0x30
+	.4byte 0x0000000B
+	.4byte 0x0000000C
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x0000000A
+	.4byte 0x00000011
+	.4byte 0x00000005
+	.4byte 0x00000007
+	.4byte 0x0000000D
+	.4byte 0x0000000E
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualKinojiiBtp$localstatic4$initBaseActionFlag___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F630, 0x18
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0x00000005
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualParentRaccoonDogAnmBck$localstatic0$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F648, 0x10
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualChildRaccoonDogAnmBck$localstatic1$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F658, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualMareMA0Bck$localstatic2$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F668, 0x10
+	.4byte 0
+	.4byte 0x00000003
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualMareMA0Btp$localstatic3$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F678, 0x10
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualMareMA1Bck$localstatic4$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F688, 0x10
+	.4byte 0
+	.4byte 0x00000004
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 sIndividualMareMA1Btp$localstatic5$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x37F698, 0x10
+	.4byte 0x00000002
+	.4byte 0
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cManiyaParentViewObjName:
@@ -1256,27 +1376,32 @@ sWaistJointName$localstatic0$setMtxEffect___8TBaseNPCFv:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2111":
-	.incbin "baserom.dol", 0x3E65A0, 0x8
+	.asciz "kubi"
+	.balign 4
 sIndividualMareWA0Bck$localstatic6$initIndividualAnm___8TBaseNPCFv:
-	.incbin "baserom.dol", 0x3E65A8, 0x8
+	.4byte 0
+	.4byte 0x00000003
 "@2532":
-	.incbin "baserom.dol", 0x3E65B0, 0x4
+	.4byte 0x3B808081
 "@2533":
-	.incbin "baserom.dol", 0x3E65B4, 0x4
+	.4byte 0x38000000
 "@2534":
-	.incbin "baserom.dol", 0x3E65B8, 0x4
+	.4byte 0x40400000
 "@2535":
-	.incbin "baserom.dol", 0x3E65BC, 0x4
+	.4byte 0x40000000
 "@2537":
-	.incbin "baserom.dol", 0x3E65C0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2539":
-	.incbin "baserom.dol", 0x3E65C8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2754":
   .4byte 0
 "@2755":
-	.incbin "baserom.dol", 0x3E65D4, 0x4
+	.4byte 0x3F800000
 "@2756":
-	.incbin "baserom.dol", 0x3E65D8, 0x8
+	.4byte 0x41200000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 sCheckPollutedStartCounter$localstatic0$initSinkNpc___8TBaseNPCFv:

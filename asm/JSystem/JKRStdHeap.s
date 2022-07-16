@@ -332,13 +332,18 @@ dump__10JKRStdHeapFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1545":
-	.incbin "baserom.dol", 0x36D6E8, 0x2C
+	.asciz "alloc: cannot alloc memory (0x%x byte).\n"
+	.balign 4
 "@1558":
-	.incbin "baserom.dol", 0x36D714, 0x24
+	.asciz "freeTail: freeTail() is not work\n"
+	.balign 4
 "@1560":
-	.incbin "baserom.dol", 0x36D738, 0x30
+	.asciz "resize: cannot resize memory block (%08x: %d)\n"
+	.balign 4
 "@1562":
-	.incbin "baserom.dol", 0x36D768, 0x28
+	.asciz "getFreeSize: cannot get free size\n"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10JKRStdHeap

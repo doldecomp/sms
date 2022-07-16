@@ -2638,39 +2638,125 @@ lbl_8024A05C:
   .4byte 0
   .4byte 0
 "@1700":
-	.incbin "baserom.dol", 0x391864, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1782":
-	.incbin "baserom.dol", 0x391878, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1783":
-	.incbin "baserom.dol", 0x3918A8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1784":
-	.incbin "baserom.dol", 0x3918E0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1785":
-	.incbin "baserom.dol", 0x391914, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@3643":
-	.incbin "baserom.dol", 0x391938, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x838F8393
+	.4byte 0x838F8393
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3939":
-	.incbin "baserom.dol", 0x391954, 0x18
+	.4byte 0x8371836D
+	.4byte 0x834E838A
+	.4byte 0x8251837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@3940":
-	.incbin "baserom.dol", 0x39196C, 0x1C
+	.4byte 0x837B8358
+	.4byte 0x83518362
+	.4byte 0x835C815B
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@3983":
-	.incbin "baserom.dol", 0x391988, 0x18
+	.4byte 0x83698381
+	.4byte 0x834E838A
+	.4byte 0x837D836C
+	.4byte 0x815B8357
+	.4byte 0x8383815B
+	.4byte 0
 "@4047":
-	.incbin "baserom.dol", 0x3919A0, 0x20
+	.4byte 0x83698381
+	.4byte 0x834E838A
+	.4byte 0x8F6F8CBB
+	.4byte 0x8347838A
+	.4byte 0x8341837D
+	.4byte 0x836C815B
+	.4byte 0x83578383
+	.4byte 0x815B0000
 "@4571":
-	.incbin "baserom.dol", 0x3919C0, 0x10
+	.4byte 0x83528393
+	.4byte 0x835F834E
+	.4byte 0x835E815B
+	.4byte 0
 "@4572":
-	.incbin "baserom.dol", 0x3919D0, 0x10
+	.asciz "/conductor.prm"
+	.balign 4
 "@4573":
-	.incbin "baserom.dol", 0x3919E0, 0x10
+	.asciz "mEnemyFarClip"
+	.balign 4
 "@4575":
-	.incbin "baserom.dol", 0x3919F0, 0x14
+	.asciz "mGenerateRadiusMax"
+	.balign 4
 "@4577":
-	.incbin "baserom.dol", 0x391A04, 0x14
+	.asciz "mGenerateRadiusMin"
+	.balign 4
 "@4579":
-	.incbin "baserom.dol", 0x391A18, 0x10
+	.asciz "mGenerateTime"
+	.balign 4
 "@4580":
-	.incbin "baserom.dol", 0x391A28, 0x10
+	.asciz "mGenerateProp"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TConductor
@@ -2689,25 +2775,27 @@ __vt__10TConductor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3345":
-	.incbin "baserom.dol", 0x3E9920, 0x4
+	.4byte 0x43960000
 "@3611":
-	.incbin "baserom.dol", 0x3E9924, 0x4
+	.4byte 0x38000000
 "@3612":
-	.incbin "baserom.dol", 0x3E9928, 0x4
+	.4byte 0x43360B61
 "@3613":
-	.incbin "baserom.dol", 0x3E992C, 0x4
+	.4byte 0x43B40000
 "@3614":
-	.incbin "baserom.dol", 0x3E9930, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@3616":
-	.incbin "baserom.dol", 0x3E9938, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@4574":
-	.incbin "baserom.dol", 0x3E9940, 0x4
+	.4byte 0x459C4000
 "@4576":
-	.incbin "baserom.dol", 0x3E9944, 0x4
+	.4byte 0x447A0000
 "@4578":
-	.incbin "baserom.dol", 0x3E9948, 0x4
+	.4byte 0x43480000
 "@4581":
-	.incbin "baserom.dol", 0x3E994C, 0x4
+	.4byte 0x3C23D70A
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpConductor

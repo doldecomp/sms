@@ -807,17 +807,26 @@ lbl_80008C98:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1210":
-	.incbin "baserom.dol", 0x36D060, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 "@1411":
-	.incbin "baserom.dol", 0x36D070, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1431":
-	.incbin "baserom.dol", 0x36D07C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1809":
-	.incbin "baserom.dol", 0x36D088, 0x14
+	.asciz "JKRCompArchive.cpp"
+	.balign 4
 "@1810":
-	.incbin "baserom.dol", 0x36D09C, 0x20
+	.asciz ":::bad resource size. size = 0\n"
 "@1811":
-	.incbin "baserom.dol", 0x36D0BC, 0x1C
+	.asciz ":::CompArchive: bad mode."
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14JKRCompArchive

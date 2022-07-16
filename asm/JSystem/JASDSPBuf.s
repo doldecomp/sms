@@ -360,9 +360,11 @@ lbl_8005EF24:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@119":
-	.incbin "baserom.dol", 0x36E270, 0xC
+	.asciz "SFR-UPDATE"
+	.balign 4
 "@211":
-	.incbin "baserom.dol", 0x36E27C, 0xC
+	.asciz "DSP-MAIN"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 dsp_buf__Q28JASystem6DSPBuf:

@@ -441,14 +441,16 @@ __vt__13J2DOrthoGraph:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@123":
-	.incbin "baserom.dol", 0x3E3FB0, 0x4
+	.4byte 0xBF800000
 "@124":
-	.incbin "baserom.dol", 0x3E3FB4, 0x4
+	.4byte 0x3F800000
 "@130":
-	.incbin "baserom.dol", 0x3E3FB8, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 "@132":
-	.incbin "baserom.dol", 0x3E3FC0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@164":
-	.incbin "baserom.dol", 0x3E3FC8, 0x4
+	.4byte 0x3DCCCCCD
 "@165":
-	.incbin "baserom.dol", 0x3E3FCC, 0x4
+	.4byte 0x3F666666

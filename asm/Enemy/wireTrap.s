@@ -2757,17 +2757,66 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1937":
-	.incbin "baserom.dol", 0x39E81C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2018":
-	.incbin "baserom.dol", 0x39E830, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2019":
-	.incbin "baserom.dol", 0x39E860, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2020":
-	.incbin "baserom.dol", 0x39E898, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2021":
-	.incbin "baserom.dol", 0x39E8CC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2670":
-	.incbin "baserom.dol", 0x39E8F0, 0x10
+	.asciz "wire_trap.bmd"
+	.balign 4
 entry$2669:
   .4byte "@2670"
   .4byte 0x10210000
@@ -2776,17 +2825,22 @@ entry$2669:
   .4byte 0
   .4byte 0
 "@3094":
-	.incbin "baserom.dol", 0x39E918, 0x14
+	.asciz "/enemy/wiretrap.prm"
 "@3095":
-	.incbin "baserom.dol", 0x39E92C, 0x14
+	.asciz "mInWaterPowerRate"
+	.balign 4
 "@3097":
-	.incbin "baserom.dol", 0x39E940, 0x10
+	.asciz "mScaleTimerMax"
+	.balign 4
 "@3098":
-	.incbin "baserom.dol", 0x39E950, 0xC
+	.asciz "mGoTimerMax"
 "@3979":
-	.incbin "baserom.dol", 0x39E95C, 0x28
+	.asciz "/scene/wireTrap/jpa/ms_wrt_biri_a.jpa"
+	.balign 4
 "@3980":
-	.incbin "baserom.dol", 0x39E984, 0x2C
+	.asciz "/scene/wireTrap/jpa/ms_wrt_biri_b.jpa"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__20TNerveWireTrapGoWait
@@ -2943,45 +2997,51 @@ __vt__9TWireTrap:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "cMatName__9@unnamed@":
-	.incbin "baserom.dol", 0x3EB8D8, 0x8
+	.asciz "_mat_1"
+	.balign 4
 "cRedColor__9@unnamed@":
-	.incbin "baserom.dol", 0x3EB8E0, 0x8
+	.4byte 0x00D20014
+	.4byte 0x000F0000
 "cBlueColor__9@unnamed@":
-	.incbin "baserom.dol", 0x3EB8E8, 0x8
+	.4byte 0x000F0014
+	.4byte 0x00D20000
 "@2844":
   .4byte 0
 "@2845":
-	.incbin "baserom.dol", 0x3EB8F4, 0x4
+	.4byte 0x3F800000
 "@2846":
-	.incbin "baserom.dol", 0x3EB8F8, 0x8
+	.4byte 0x41F00000
+	.4byte 0
 "@2848":
-	.incbin "baserom.dol", 0x3EB900, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2879":
-	.incbin "baserom.dol", 0x3EB908, 0x4
+	.4byte 0x3C23D70A
 "@3069":
-	.incbin "baserom.dol", 0x3EB90C, 0x4
+	.4byte 0xBF800000
 "@3096":
-	.incbin "baserom.dol", 0x3EB910, 0x4
+	.4byte 0x3F666666
 "@3197":
-	.incbin "baserom.dol", 0x3EB914, 0x4
+	.4byte 0x42200000
 "@3198":
-	.incbin "baserom.dol", 0x3EB918, 0x4
+	.4byte 0x41A00000
 "@3745":
-	.incbin "baserom.dol", 0x3EB91C, 0x4
+	.4byte 0x3F000000
 "@3746":
-	.incbin "baserom.dol", 0x3EB920, 0x4
+	.4byte 0x40400000
 "@3747":
-	.incbin "baserom.dol", 0x3EB924, 0x4
+	.4byte 0xC18E0000
 "@3748":
-	.incbin "baserom.dol", 0x3EB928, 0x4
+	.4byte 0x43B40000
 "@3749":
-	.incbin "baserom.dol", 0x3EB92C, 0x4
+	.4byte 0x3C8EFA36
 "@3750":
-	.incbin "baserom.dol", 0x3EB930, 0x4
+	.4byte 0x40000000
 "@3968":
-	.incbin "baserom.dol", 0x3EB934, 0x4
+	.4byte 0x43360B61
 "@4047":
-	.incbin "baserom.dol", 0x3EB938, 0x8
+	.4byte 0x41200000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2571":

@@ -322,21 +322,29 @@ Dsp_Running_Start__Fv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@440":
-	.incbin "baserom.dol", 0x36E4B0, 0x10
+	.asciz "Audio Resumed\n"
+	.balign 4
 "@441":
-	.incbin "baserom.dol", 0x36E4C0, 0x10
+	.asciz "Yield Handler\n"
+	.balign 4
 "@442":
-	.incbin "baserom.dol", 0x36E4D0, 0x14
+	.asciz "Done DSP Task  %x \n"
 "@443":
-	.incbin "baserom.dol", 0x36E4E4, 0x14
+	.asciz "Audio Yield Start\n"
+	.balign 4
 "@444":
-	.incbin "baserom.dol", 0x36E4F8, 0x14
+	.asciz "Audio Yield Finish\n"
 "@445":
-	.incbin "baserom.dol", 0x36E50C, 0x10
+	.asciz "osdsp_task.c"
+	.balign 4
 "@446":
-	.incbin "baserom.dol", 0x36E51C, 0x44
+	.asciz "__DSPHandler(): Unknown msg from DSP 0x%08X - task sync failed!\n"
+	.balign 4
 "@451":
-	.incbin "baserom.dol", 0x36E560, 0x10
+	.4byte 0x5969656C
+	.4byte 0x64928682
+	.4byte 0xC582B70A
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 sync_stack:

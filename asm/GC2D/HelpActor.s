@@ -371,7 +371,10 @@ __ct__10THelpActorFPCc:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1991":
-	.incbin "baserom.dol", 0x390AF0, 0x10
+	.4byte 0x47438352
+	.4byte 0x8393835C
+	.4byte 0x815B838B
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__16TSwitchHelpActor
@@ -466,6 +469,6 @@ __vt__10THelpActor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1995":
-	.incbin "baserom.dol", 0x3E9338, 0x4
+	.4byte 0x42C80000
 "@1996":
-	.incbin "baserom.dol", 0x3E933C, 0x4
+	.4byte 0x3F800000

@@ -1925,19 +1925,20 @@ ResetFunctionInfo:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 ResettingChan:
-	.incbin "baserom.dol", 0x3E3298, 0x4
+	.4byte 0x00000020
 XPatchBits:
-	.incbin "baserom.dol", 0x3E329C, 0x4
+	.4byte 0xF0000000
 AnalogMode:
-	.incbin "baserom.dol", 0x3E32A0, 0x4
+	.4byte 0x00000300
 Spec:
-	.incbin "baserom.dol", 0x3E32A4, 0x4
+	.4byte 0x00000005
 MakeStatus:
   .4byte SPEC2_MakeStatus
 CmdReadOrigin:
-	.incbin "baserom.dol", 0x3E32AC, 0x4
+	.4byte 0x41000000
 CmdCalibrate:
-	.incbin "baserom.dol", 0x3E32B0, 0x8
+	.4byte 0x42000000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 Type:

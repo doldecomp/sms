@@ -644,29 +644,88 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38CC2C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2188":
-	.incbin "baserom.dol", 0x38CC40, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2189":
-	.incbin "baserom.dol", 0x38CC70, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2190":
-	.incbin "baserom.dol", 0x38CCA8, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2191":
-	.incbin "baserom.dol", 0x38CCDC, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2520":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2522":
-	.incbin "baserom.dol", 0x38CD0C, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2650":
-	.incbin "baserom.dol", 0x38CD18, 0x24
+	.asciz "/common/map/UnderWaterFilter.bmd"
+	.balign 4
 "@2748":
-	.incbin "baserom.dol", 0x38CD3C, 0x1C
+	.asciz "/common/map/UNDERwater.bmd"
+	.balign 4
 "@2749":
-	.incbin "baserom.dol", 0x38CD58, 0xC
+	.asciz "underwater"
+	.balign 4
 "@2750":
-	.incbin "baserom.dol", 0x38CD64, 0x1C
+	.4byte 0x8358834E
+	.4byte 0x838A815B
+	.4byte 0x83938365
+	.4byte 0x834E8358
+	.4byte 0x83608383
+	.4byte 0
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__18TMapObjWaterFilter
@@ -759,7 +818,7 @@ __vt__18TMapObjSeaIndirect:
 "@2635":
   .4byte 0
 "@2636":
-	.incbin "baserom.dol", 0x3E8584, 0x4
+	.4byte 0x3F800000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2811":

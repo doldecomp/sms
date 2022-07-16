@@ -173,4 +173,4 @@ __vt__Q26JStage7TCamera:
 "@127":
   .4byte 0
 "@130":
-	.incbin "baserom.dol", 0x3E463C, 0x4
+	.4byte 0x7F7FFFFF

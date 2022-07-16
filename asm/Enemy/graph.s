@@ -3514,32 +3514,139 @@ __ct__10TGraphNodeFv:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x393244, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1961":
-	.incbin "baserom.dol", 0x393258, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1962":
-	.incbin "baserom.dol", 0x393288, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1963":
-	.incbin "baserom.dol", 0x3932C0, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1964":
-	.incbin "baserom.dol", 0x3932F4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@3085":
-	.incbin "baserom.dol", 0x393318, 0x10
+	.asciz "<nullrail>"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@1431":
-	.incbin "baserom.dol", 0x3D1358, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1411":
-	.incbin "baserom.dol", 0x3D1364, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@1210":
-	.incbin "baserom.dol", 0x3D1370, 0x10
+	.4byte 0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000003
 MtxCalcTypeName:
   .4byte "@1961"
   .4byte "@1962"
   .4byte "@1963"
   .4byte "@1964"
 grDummyRail:
-	.incbin "baserom.dol", 0x3D1390, 0xCC
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x00010000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0x3F800000
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 .global __vt__9TGraphWeb
 __vt__9TGraphWeb:
   .4byte 0
@@ -3551,26 +3658,29 @@ __vt__9TGraphWeb:
 "@2783":
   .4byte 0
 "@2890":
-	.incbin "baserom.dol", 0x3E9F0C, 0x4
+	.4byte 0x3A83126F
 "@2892":
-	.incbin "baserom.dol", 0x3E9F10, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2923":
-	.incbin "baserom.dol", 0x3E9F18, 0x4
+	.4byte 0x37800080
 "@2924":
-	.incbin "baserom.dol", 0x3E9F1C, 0x4
+	.4byte 0x3C23D70A
 "@2926":
-	.incbin "baserom.dol", 0x3E9F20, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2972":
-	.incbin "baserom.dol", 0x3E9F28, 0x4
+	.4byte 0x42C80000
 "@2973":
-	.incbin "baserom.dol", 0x3E9F2C, 0x4
+	.4byte 0x3F800000
 "@3127":
-	.incbin "baserom.dol", 0x3E9F30, 0x4
+	.4byte 0x38000000
 "@3419":
-	.incbin "baserom.dol", 0x3E9F34, 0x4
+	.4byte 0xBF800000
 "@3607":
-	.incbin "baserom.dol", 0x3E9F38, 0x4
+	.4byte 0x3BB40000
 "@4077":
-	.incbin "baserom.dol", 0x3E9F3C, 0x4
+	.4byte 0x36800000
 "@4078":
-	.incbin "baserom.dol", 0x3E9F40, 0x8
+	.4byte 0x40000000
+	.4byte 0

@@ -1230,73 +1230,126 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x38F804, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2178":
-	.incbin "baserom.dol", 0x38F818, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2179":
-	.incbin "baserom.dol", 0x38F848, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2180":
-	.incbin "baserom.dol", 0x38F880, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2181":
-	.incbin "baserom.dol", 0x38F8B4, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2647":
   .4byte 0
   .4byte 0
   .4byte 0
 "@2649":
-	.incbin "baserom.dol", 0x38F8E4, 0xC
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
 "@2806":
-	.incbin "baserom.dol", 0x38F8F0, 0xC
+	.asciz "pollution00"
 "@2807":
-	.incbin "baserom.dol", 0x38F8FC, 0xC
+	.asciz "pollution01"
 "@2808":
-	.incbin "baserom.dol", 0x38F908, 0xC
+	.asciz "pollution02"
 "@2809":
-	.incbin "baserom.dol", 0x38F914, 0xC
+	.asciz "pollution03"
 "@2810":
-	.incbin "baserom.dol", 0x38F920, 0xC
+	.asciz "pollution04"
 "@2811":
-	.incbin "baserom.dol", 0x38F92C, 0xC
+	.asciz "pollution05"
 "@2812":
-	.incbin "baserom.dol", 0x38F938, 0xC
+	.asciz "pollution06"
 "@2813":
-	.incbin "baserom.dol", 0x38F944, 0xC
+	.asciz "pollutionA"
+	.balign 4
 "@2814":
-	.incbin "baserom.dol", 0x38F950, 0xC
+	.asciz "pollutionB"
+	.balign 4
 "@2817":
-	.incbin "baserom.dol", 0x38F95C, 0xC
+	.asciz "pollution07"
 "@2818":
-	.incbin "baserom.dol", 0x38F968, 0xC
+	.asciz "pollution08"
 "@2819":
-	.incbin "baserom.dol", 0x38F974, 0xC
+	.asciz "pollution09"
 "@2820":
-	.incbin "baserom.dol", 0x38F980, 0xC
+	.asciz "pollution10"
 "@2821":
-	.incbin "baserom.dol", 0x38F98C, 0xC
+	.asciz "pollution11"
 "@2822":
-	.incbin "baserom.dol", 0x38F998, 0xC
+	.asciz "pollution12"
 "@2823":
-	.incbin "baserom.dol", 0x38F9A4, 0xC
+	.asciz "pollution13"
 "@2824":
-	.incbin "baserom.dol", 0x38F9B0, 0xC
+	.asciz "pollution14"
 "@2825":
-	.incbin "baserom.dol", 0x38F9BC, 0xC
+	.asciz "pollution15"
 "@2826":
-	.incbin "baserom.dol", 0x38F9C8, 0xC
+	.asciz "pollution16"
 "@2827":
-	.incbin "baserom.dol", 0x38F9D4, 0xC
+	.asciz "pollution17"
 "@2828":
-	.incbin "baserom.dol", 0x38F9E0, 0xC
+	.asciz "pollution18"
 "@2829":
-	.incbin "baserom.dol", 0x38F9EC, 0xC
+	.asciz "pollution19"
 "@2986":
-	.incbin "baserom.dol", 0x38F9F8, 0x14
+	.asciz "/scene/map/ymap.ymp"
 "@2987":
-	.incbin "baserom.dol", 0x38FA0C, 0x14
+	.asciz "scene/map/pollution"
 "@2988":
-	.incbin "baserom.dol", 0x38FA20, 0x18
+	.asciz "/common/map/pollute.bti"
 "@2989":
-	.incbin "baserom.dol", 0x38FA38, 0x18
+	.asciz "/common/map/clean.bti"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 mare_name_table$2805:
@@ -1406,15 +1459,16 @@ __vt__25TPollutionLayerWallMinusZ:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global mFlushTime__17TPollutionManager
 mFlushTime__17TPollutionManager:
-	.incbin "baserom.dol", 0x3E3828, 0x4
+	.4byte 0x000000C8
 .global mEdgeAlpha__17TPollutionManager
 mEdgeAlpha__17TPollutionManager:
-	.incbin "baserom.dol", 0x3E382C, 0x4
+	.4byte 0x32000000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3188":
-	.incbin "baserom.dol", 0x3E8D60, 0x8
+	.4byte 0xC1200000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3239":

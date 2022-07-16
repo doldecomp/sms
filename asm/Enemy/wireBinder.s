@@ -501,14 +501,15 @@ __vt__11TWireBinder:
 "@1946":
   .4byte 0
 "@1947":
-	.incbin "baserom.dol", 0x3EBADC, 0x4
+	.4byte 0x3F800000
 "@1966":
-	.incbin "baserom.dol", 0x3EBAE0, 0x4
+	.4byte 0x3C75C28F
 "@2039":
-	.incbin "baserom.dol", 0x3EBAE4, 0x4
+	.4byte 0x3C23D70A
 "@2040":
-	.incbin "baserom.dol", 0x3EBAE8, 0x4
+	.4byte 0x3F7D70A4
 "@2119":
-	.incbin "baserom.dol", 0x3EBAEC, 0x4
+	.4byte 0x3D4CCCCD
 "@2152":
-	.incbin "baserom.dol", 0x3EBAF0, 0x8
+	.4byte 0x36800000
+	.4byte 0

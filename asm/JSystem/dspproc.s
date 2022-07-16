@@ -123,12 +123,14 @@ DsyncFrame__FUlUlUl:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 DSP_MIXERLEVEL:
-	.incbin "baserom.dol", 0x3E3218, 0x8
+	.4byte 0x40000000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@71":
-	.incbin "baserom.dol", 0x3E4650, 0x8
+	.4byte 0x45800000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 flag:

@@ -174,4 +174,4 @@ __vt__Q26JDrama9TViewport:
 "@516":
   .4byte 0
 "@517":
-	.incbin "baserom.dol", 0x3E410C, 0x4
+	.4byte 0x3F800000

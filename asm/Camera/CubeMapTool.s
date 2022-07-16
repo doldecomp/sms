@@ -383,6 +383,8 @@ __vt__16TCubeGeneralInfo:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1577":
-	.incbin "baserom.dol", 0x3EC500, 0x8
+	.4byte 0x42C80000
+	.4byte 0
 "@1579":
-	.incbin "baserom.dol", 0x3EC508, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

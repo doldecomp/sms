@@ -163,7 +163,8 @@ __ct__11TMarineSnowFPCc:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@1974":
-	.incbin "baserom.dol", 0x38FCA0, 0x30
+	.asciz "/scene/others/marinesnow/ms_mare_marinsnow.jpa"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TMarineSnow
@@ -214,4 +215,4 @@ __vt__11TMarineSnow:
 "@1992":
   .4byte 0
 "@1993":
-	.incbin "baserom.dol", 0x3E8E24, 0x4
+	.4byte 0x3F800000

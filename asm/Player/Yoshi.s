@@ -4042,89 +4042,175 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2172":
-	.incbin "baserom.dol", 0x3790EC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2228":
-	.incbin "baserom.dol", 0x379100, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2229":
-	.incbin "baserom.dol", 0x379130, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2230":
-	.incbin "baserom.dol", 0x379168, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2231":
-	.incbin "baserom.dol", 0x37919C, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 cDirtyFileName:
-	.incbin "baserom.dol", 0x3791C0, 0x24
+	.asciz "/scene/map/pollution/H_ma_rak.bti"
+	.balign 4
 cDirtyTexName:
-	.incbin "baserom.dol", 0x3791E4, 0x10
+	.asciz "H_ma_rak_dummy"
+	.balign 4
 bodyColor:
-	.incbin "baserom.dol", 0x3791F4, 0x10
+	.4byte 0x40A124FF
+	.4byte 0xFF8C1CFF
+	.4byte 0xAA4CFFFF
+	.4byte 0xFFA0BEFF
 "@4626":
-	.incbin "baserom.dol", 0x379204, 0x10
+	.4byte 0x83888362
+	.4byte 0x8356815B
+	.4byte 0x696E8BBE
+	.4byte 0
 "@4627":
-	.incbin "baserom.dol", 0x379214, 0x10
+	.4byte 0x83888362
+	.4byte 0x8356815B
+	.4byte 0x8EE8696E
+	.4byte 0x8BBE0000
 "@4888":
-	.incbin "baserom.dol", 0x379224, 0x18
+	.asciz "/yoshi/yoshi_model.bmd"
+	.balign 4
 "@4889":
-	.incbin "baserom.dol", 0x37923C, 0xC
+	.asciz "null_tongue"
 "@4890":
-	.incbin "baserom.dol", 0x379248, 0xC
+	.asciz "jnt_foot_L"
+	.balign 4
 "@4891":
-	.incbin "baserom.dol", 0x379254, 0xC
+	.asciz "jnt_foot_R"
+	.balign 4
 "@4893":
-	.incbin "baserom.dol", 0x379260, 0x1C
+	.asciz "/yoshi/yoshi_hand2_l.bmd"
+	.balign 4
 "@4894":
-	.incbin "baserom.dol", 0x37927C, 0x1C
+	.asciz "/yoshi/yoshi_hand2_r.bmd"
+	.balign 4
 "@4895":
-	.incbin "baserom.dol", 0x379298, 0x18
+	.asciz "/yoshi/yoshi_eat.bck"
+	.balign 4
 "@4896":
-	.incbin "baserom.dol", 0x3792B0, 0x1C
+	.asciz "/yoshi/yoshi_eat_end.bck"
+	.balign 4
 "@4897":
-	.incbin "baserom.dol", 0x3792CC, 0xC
+	.asciz "HitActor"
+	.balign 4
 "@4907":
-	.incbin "baserom.dol", 0x3792D8, 0xC
+	.asciz "jnt_mouth"
+	.balign 4
 "@4908":
-	.incbin "baserom.dol", 0x3792E4, 0xC
+	.asciz "jnt_neck_2"
+	.balign 4
 "@4910":
-	.incbin "baserom.dol", 0x3792F0, 0x1C
+	.asciz "/yoshi/bas/yoshi_born.bas"
+	.balign 4
 "@4911":
-	.incbin "baserom.dol", 0x37930C, 0x1C
+	.asciz "/yoshi/bas/yoshi_damage.bas"
 "@4912":
-	.incbin "baserom.dol", 0x379328, 0x24
+	.asciz "/yoshi/bas/yoshi_demo_shine_get.bas"
 "@4913":
-	.incbin "baserom.dol", 0x37934C, 0x1C
+	.asciz "/yoshi/bas/yoshi_eat.bas"
+	.balign 4
 "@4914":
-	.incbin "baserom.dol", 0x379368, 0x20
+	.asciz "/yoshi/bas/yoshi_eat_end.bas"
+	.balign 4
 "@4915":
-	.incbin "baserom.dol", 0x379388, 0x1C
+	.asciz "/yoshi/bas/yoshi_goff.bas"
+	.balign 4
 "@4916":
-	.incbin "baserom.dol", 0x3793A4, 0x20
+	.asciz "/yoshi/bas/yoshi_hip_end.bas"
+	.balign 4
 "@4917":
-	.incbin "baserom.dol", 0x3793C4, 0x20
+	.asciz "/yoshi/bas/yoshi_hip_start.bas"
+	.balign 4
 "@4918":
-	.incbin "baserom.dol", 0x3793E4, 0x20
+	.asciz "/yoshi/bas/yoshi_hold_jump.bas"
+	.balign 4
 "@4919":
-	.incbin "baserom.dol", 0x379404, 0x1C
+	.asciz "/yoshi/bas/yoshi_jump.bas"
+	.balign 4
 "@4920":
-	.incbin "baserom.dol", 0x379420, 0x20
+	.asciz "/yoshi/bas/yoshi_jump_end.bas"
+	.balign 4
 "@4921":
-	.incbin "baserom.dol", 0x379440, 0x1C
+	.asciz "/yoshi/bas/yoshi_pivot.bas"
+	.balign 4
 "@4922":
-	.incbin "baserom.dol", 0x37945C, 0x1C
+	.asciz "/yoshi/bas/yoshi_ride.bas"
+	.balign 4
 "@4923":
-	.incbin "baserom.dol", 0x379478, 0x1C
+	.asciz "/yoshi/bas/yoshi_run.bas"
+	.balign 4
 "@4924":
-	.incbin "baserom.dol", 0x379494, 0x20
+	.asciz "/yoshi/bas/yoshi_sidewalk_l.bas"
 "@4925":
-	.incbin "baserom.dol", 0x3794B4, 0x20
+	.asciz "/yoshi/bas/yoshi_sidewalk_r.bas"
 "@4926":
-	.incbin "baserom.dol", 0x3794D4, 0x20
+	.asciz "/yoshi/bas/yoshi_slide_end.bas"
+	.balign 4
 "@4927":
-	.incbin "baserom.dol", 0x3794F4, 0x1C
+	.asciz "/yoshi/bas/yoshi_wait.bas"
+	.balign 4
 "@4928":
-	.incbin "baserom.dol", 0x379510, 0x20
+	.asciz "/yoshi/bas/yoshi_wait_alone.bas"
 "@4929":
-	.incbin "baserom.dol", 0x379530, 0x1C
+	.asciz "/yoshi/bas/yoshi_walk.bas"
+	.balign 4
 "@4930":
-	.incbin "baserom.dol", 0x37954C, 0x24
+	.asciz "/yoshi/bas/yoshi_water_die.bas"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@3436":
@@ -4153,49 +4239,54 @@ bodyColor:
 "@3257":
   .4byte 0
 "@3435":
-	.incbin "baserom.dol", 0x3E5DDC, 0x4
+	.4byte 0x42C80000
 "@3438":
-	.incbin "baserom.dol", 0x3E5DE0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3798":
-	.incbin "baserom.dol", 0x3E5DE8, 0x4
+	.4byte 0x3BB40000
 "@3799":
-	.incbin "baserom.dol", 0x3E5DEC, 0x4
+	.4byte 0x43360B61
 "@3800":
-	.incbin "baserom.dol", 0x3E5DF0, 0x4
+	.4byte 0x43480000
 "@3801":
-	.incbin "baserom.dol", 0x3E5DF4, 0x4
+	.4byte 0x42700000
 "@3806":
-	.incbin "baserom.dol", 0x3E5DF8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@3810":
-	.incbin "baserom.dol", 0x3E5E00, 0x4
+	.4byte 0x3F000000
 "@4034":
-	.incbin "baserom.dol", 0x3E5E04, 0x4
+	.4byte 0x38000000
 "@4160":
-	.incbin "baserom.dol", 0x3E5E08, 0x4
+	.4byte 0x3F800000
 "@4887":
-	.incbin "baserom.dol", 0x3E5E0C, 0x8
+	.asciz "yoshi"
+	.balign 4
 "@4892":
-	.incbin "baserom.dol", 0x3E5E14, 0x8
+	.asciz "center"
+	.balign 4
 "@4898":
-	.incbin "baserom.dol", 0x3E5E1C, 0x4
+	.4byte 0x3C23D70A
 "@4899":
-	.incbin "baserom.dol", 0x3E5E20, 0x4
+	.4byte 0x43200000
 "@4900":
-	.incbin "baserom.dol", 0x3E5E24, 0x4
+	.4byte 0x41A00000
 "@4901":
-	.incbin "baserom.dol", 0x3E5E28, 0x4
+	.4byte 0x41F00000
 "@4902":
-	.incbin "baserom.dol", 0x3E5E2C, 0x4
+	.4byte 0x3DCCCCCD
 "@4903":
-	.incbin "baserom.dol", 0x3E5E30, 0x4
+	.4byte 0x3D3851EC
 "@4904":
-	.incbin "baserom.dol", 0x3E5E34, 0x4
+	.4byte 0xC0A00000
 "@4905":
-	.incbin "baserom.dol", 0x3E5E38, 0x4
+	.4byte 0x3F99999A
 "@4906":
-	.incbin "baserom.dol", 0x3E5E3C, 0x4
+	.4byte 0x40800000
 "@4909":
-	.incbin "baserom.dol", 0x3E5E40, 0x8
+	.4byte 0x42A00000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3165":

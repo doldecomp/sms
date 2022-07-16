@@ -1447,26 +1447,27 @@ __ct__16RumbleChannelMgrFv:
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 mMotorCountLimit__9RumbleMgr:
-	.incbin "baserom.dol", 0x3E3330, 0x4
+	.4byte 0x00000384
 mMotorTimerPeriod__9RumbleMgr:
-	.incbin "baserom.dol", 0x3E3334, 0x4
+	.4byte 0x00500000
 mPowerThreshold__9RumbleMgr:
-	.incbin "baserom.dol", 0x3E3338, 0x8
+	.4byte 0x3F000000
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1767":
-	.incbin "baserom.dol", 0x3E4B90, 0x4
+	.4byte 0x3F000000
 "@1790":
   .4byte 0
 "@1841":
-	.incbin "baserom.dol", 0x3E4B98, 0x4
+	.4byte 0x3F800000
 "@2244":
-	.incbin "baserom.dol", 0x3E4B9C, 0x4
+	.4byte 0x39AEC33E
 "@2245":
-	.incbin "baserom.dol", 0x3E4BA0, 0x4
+	.4byte 0x43960000
 "@2249":
-	.incbin "baserom.dol", 0x3E4BA4, 0x4
+	.4byte 0x40400000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global SMSRumbleMgr

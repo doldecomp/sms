@@ -248,9 +248,12 @@ lbl_8004264C:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@881":
-	.incbin "baserom.dol", 0x36DF10, 0x10
+	.asciz "<EfbCtrlDisp>"
+	.balign 4
 "@882":
-	.incbin "baserom.dol", 0x36DF20, 0x18
+	.asciz "<TViewObjPtrListT>"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global "__vt__Q26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>"

@@ -3352,6 +3352,8 @@ __ct__13MActorAnmBaseFv:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3554":
-	.incbin "baserom.dol", 0x3E4BF8, 0x8
+	.4byte 0x3DCCCCCD
+	.4byte 0
 "@3556":
-	.incbin "baserom.dol", 0x3E4C00, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

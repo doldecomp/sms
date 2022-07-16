@@ -2078,8 +2078,9 @@ GXSetNumTexGens:
     .4byte lbl_800A7EF0
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 tbl1$215:
-	.incbin "baserom.dol", 0x3E32D0, 0x4
+	.4byte 0x00040102
 tbl2$216:
-	.incbin "baserom.dol", 0x3E32D4, 0x4
+	.4byte 0x00080102
 tbl3$217:
-	.incbin "baserom.dol", 0x3E32D8, 0x8
+	.4byte 0x000C0102
+	.4byte 0

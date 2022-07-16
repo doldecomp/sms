@@ -308,25 +308,27 @@ lbl_800475FC:
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 .global cEqualCSlope__7JALCalc
 cEqualCSlope__7JALCalc:
-	.incbin "baserom.dol", 0x3E30D0, 0x4
+	.4byte 0x3F800000
 .global cPlusPSlope__7JALCalc
 cPlusPSlope__7JALCalc:
-	.incbin "baserom.dol", 0x3E30D4, 0x4
+	.4byte 0x3F800000
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@244":
   .4byte 0
 "@245":
-	.incbin "baserom.dol", 0x3E4114, 0x4
+	.4byte 0x3F800000
 "@354":
-	.incbin "baserom.dol", 0x3E4118, 0x4
+	.4byte 0x40000000
 "@355":
-	.incbin "baserom.dol", 0x3E411C, 0x4
+	.4byte 0xC0000000
 "@380":
-	.incbin "baserom.dol", 0x3E4120, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@399":
-	.incbin "baserom.dol", 0x3E4128, 0x8
+	.4byte 0x40080000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 init$357:

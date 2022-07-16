@@ -640,24 +640,26 @@ lbl_8017BB14:
 "@2109":
   .4byte 0
 "@2155":
-	.incbin "baserom.dol", 0x3E66A4, 0x4
+	.4byte 0x43360B61
 "@2156":
-	.incbin "baserom.dol", 0x3E66A8, 0x8
+	.4byte 0x3BB40000
+	.4byte 0
 "@2158":
-	.incbin "baserom.dol", 0x3E66B0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2214":
-	.incbin "baserom.dol", 0x3E66B8, 0x4
+	.4byte 0x43B40000
 "@2348":
-	.incbin "baserom.dol", 0x3E66BC, 0x4
+	.4byte 0x40800000
 "@2349":
-	.incbin "baserom.dol", 0x3E66C0, 0x4
+	.4byte 0x40C00000
 "@2350":
-	.incbin "baserom.dol", 0x3E66C4, 0x4
+	.4byte 0x42B40000
 "@2351":
-	.incbin "baserom.dol", 0x3E66C8, 0x4
+	.4byte 0xC2B40000
 "@2352":
-	.incbin "baserom.dol", 0x3E66CC, 0x4
+	.4byte 0x43340000
 "@2353":
-	.incbin "baserom.dol", 0x3E66D0, 0x4
+	.4byte 0x3A83126F
 "@2354":
-	.incbin "baserom.dol", 0x3E66D4, 0x4
+	.4byte 0x41200000

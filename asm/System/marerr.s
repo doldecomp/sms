@@ -85,6 +85,13 @@ lbl_800F05BC:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "cDispExceptionCommand__9@unnamed@":
-	.incbin "baserom.dol", 0x370D50, 0x18
+	.4byte 0x00000100
+	.4byte 0x00000200
+	.4byte 0x00000400
+	.4byte 0x00000800
+	.4byte 0x00000001
+	.4byte 0
 "@1503":
-	.incbin "baserom.dol", 0x370D68, 0x10
+	.asciz "/mario.MAP"
+	.balign 4
+	.4byte 0

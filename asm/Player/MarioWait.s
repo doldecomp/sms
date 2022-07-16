@@ -2180,23 +2180,24 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2963":
-	.incbin "baserom.dol", 0x3E5C80, 0x4
+	.4byte 0x42C80000
 "@2964":
-	.incbin "baserom.dol", 0x3E5C84, 0x4
+	.4byte 0x41200000
 "@2965":
-	.incbin "baserom.dol", 0x3E5C88, 0x4
+	.4byte 0x3F800000
 "@3196":
   .4byte 0
 "@3198":
-	.incbin "baserom.dol", 0x3E5C90, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3340":
-	.incbin "baserom.dol", 0x3E5C98, 0x4
+	.4byte 0x3F7D70A4
 "@3341":
-	.incbin "baserom.dol", 0x3E5C9C, 0x4
+	.4byte 0x430A0000
 "@3463":
-	.incbin "baserom.dol", 0x3E5CA0, 0x4
+	.4byte 0x41F00000
 "@3464":
-	.incbin "baserom.dol", 0x3E5CA4, 0x4
+	.4byte 0x42A00000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2827":

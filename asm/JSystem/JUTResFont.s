@@ -1292,11 +1292,59 @@ getLeading__10JUTResFontCFv:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@272":
-	.incbin "baserom.dol", 0x36DDC0, 0x20
+	.asciz "JUTResFont: Unknown data block\n"
 "@289":
-	.incbin "baserom.dol", 0x36DDE0, 0x14
+	.asciz "Unknown data block\n"
 halftofull$376:
-	.incbin "baserom.dol", 0x36DDF4, 0xC4
+	.4byte 0x81408149
+	.4byte 0x81688194
+	.4byte 0x81908193
+	.4byte 0x81958166
+	.4byte 0x8169816A
+	.4byte 0x8196817B
+	.4byte 0x8143817C
+	.4byte 0x8144815E
+	.4byte 0x824F8250
+	.4byte 0x82518252
+	.4byte 0x82538254
+	.4byte 0x82558256
+	.4byte 0x82578258
+	.4byte 0x81468147
+	.4byte 0x81838181
+	.4byte 0x81848148
+	.4byte 0x81978260
+	.4byte 0x82618262
+	.4byte 0x82638264
+	.4byte 0x82658266
+	.4byte 0x82678268
+	.4byte 0x8269826A
+	.4byte 0x826B826C
+	.4byte 0x826D826E
+	.4byte 0x826F8270
+	.4byte 0x82718272
+	.4byte 0x82738274
+	.4byte 0x82758276
+	.4byte 0x82778278
+	.4byte 0x8279816D
+	.4byte 0x818F816E
+	.4byte 0x814F8151
+	.4byte 0x81658281
+	.4byte 0x82828283
+	.4byte 0x82848285
+	.4byte 0x82868287
+	.4byte 0x82888289
+	.4byte 0x828A828B
+	.4byte 0x828C828D
+	.4byte 0x828E828F
+	.4byte 0x82908291
+	.4byte 0x82928293
+	.4byte 0x82948295
+	.4byte 0x82968297
+	.4byte 0x82988299
+	.4byte 0x829A816F
+	.4byte 0x81628170
+	.4byte 0x81600000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 saoAboutEncoding___10JUTResFont:
@@ -1327,6 +1375,8 @@ __vt__10JUTResFont:
   .4byte 0
   .4byte 0
 "@337":
-	.incbin "baserom.dol", 0x3E4020, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@339":
-	.incbin "baserom.dol", 0x3E4028, 0x8
+	.4byte 0x43300000
+	.4byte 0

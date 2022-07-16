@@ -534,6 +534,7 @@ __vt__15JPABaseParticle:
 "@1675":
   .4byte 0
 "@1689":
-	.incbin "baserom.dol", 0x3E455C, 0x4
+	.4byte 0x3F800000
 "@1820":
-	.incbin "baserom.dol", 0x3E4560, 0x8
+	.4byte 0x40000000
+	.4byte 0

@@ -757,7 +757,8 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2153":
-	.incbin "baserom.dol", 0x378800, 0x18
+	.asciz "/mario/timg/splash.bti"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__14TSplashManager
@@ -776,23 +777,26 @@ __vt__14TSplashManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1978":
-	.incbin "baserom.dol", 0x3E5CA8, 0x4
+	.4byte 0xA8CBE3FF
 "@2014":
-	.incbin "baserom.dol", 0x3E5CAC, 0x4
+	.4byte 0xFFFFFF00
 "@2096":
-	.incbin "baserom.dol", 0x3E5CB0, 0x8
+	.4byte 0xC37A0000
+	.4byte 0
 "@2098":
-	.incbin "baserom.dol", 0x3E5CB8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2154":
-	.incbin "baserom.dol", 0x3E5CC0, 0x4
+	.4byte 0x42480000
 "@2155":
-	.incbin "baserom.dol", 0x3E5CC4, 0x4
+	.4byte 0x42C80000
 "@2156":
-	.incbin "baserom.dol", 0x3E5CC8, 0x4
+	.4byte 0xBF000000
 "@2157":
   .4byte 0
 "@2158":
-	.incbin "baserom.dol", 0x3E5CD0, 0x8
+	.4byte 0x453B8000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2161":

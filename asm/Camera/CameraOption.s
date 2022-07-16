@@ -381,9 +381,16 @@ lbl_80361E34:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A3CE4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1650":
-	.incbin "baserom.dol", 0x3A3CF8, 0x10
+	.4byte 0x8DB68354
+	.4byte 0x83438368
+	.4byte 0x834A8381
+	.4byte 0x83890000
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 cLoadCamName:
@@ -392,23 +399,24 @@ cLoadCamName:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1704":
-	.incbin "baserom.dol", 0x3EC570, 0x4
+	.4byte 0x42200000
 "@1705":
   .4byte 0
 "@1706":
-	.incbin "baserom.dol", 0x3EC578, 0x4
+	.4byte 0xC64FA4FB
 "@1707":
-	.incbin "baserom.dol", 0x3EC57C, 0x4
+	.4byte 0x4619999A
 "@1708":
-	.incbin "baserom.dol", 0x3EC580, 0x4
+	.4byte 0x447A0000
 "@1709":
-	.incbin "baserom.dol", 0x3EC584, 0x4
+	.4byte 0x43360B61
 "@1710":
-	.incbin "baserom.dol", 0x3EC588, 0x4
+	.4byte 0x462AAAAB
 "@1765":
-	.incbin "baserom.dol", 0x3EC58C, 0x4
+	.4byte 0x42960000
 "@1767":
-	.incbin "baserom.dol", 0x3EC590, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCameraOption

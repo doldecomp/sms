@@ -1580,15 +1580,23 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@1752":
-	.incbin "baserom.dol", 0x39126C, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2482":
-	.incbin "baserom.dol", 0x391280, 0x18
+	.asciz "/select/shine_menu.bmd"
+	.balign 4
 "@2483":
-	.incbin "baserom.dol", 0x391298, 0x18
+	.asciz "/select/shine_menu.bpk"
+	.balign 4
 "@2484":
-	.incbin "baserom.dol", 0x3912B0, 0x20
+	.asciz "/select/shine_menu_empty.bmd"
+	.balign 4
 "@2485":
-	.incbin "baserom.dol", 0x3912D0, 0x20
+	.asciz "/select/shine_menu_empty.bpk"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__12TSelectShine
@@ -1613,49 +1621,51 @@ __vt__19TSelectShineManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1912":
-	.incbin "baserom.dol", 0x3E9608, 0x4
+	.4byte 0x3F800000
 "@1913":
-	.incbin "baserom.dol", 0x3E960C, 0x4
+	.4byte 0x40000000
 "@2031":
   .4byte 0
 "@2032":
-	.incbin "baserom.dol", 0x3E9614, 0x4
+	.4byte 0x3F666666
 "@2033":
-	.incbin "baserom.dol", 0x3E9618, 0x4
+	.4byte 0x40400000
 "@2034":
-	.incbin "baserom.dol", 0x3E961C, 0x4
+	.4byte 0x40800000
 "@2035":
-	.incbin "baserom.dol", 0x3E9620, 0x4
+	.4byte 0xBD4CCCCD
 "@2036":
-	.incbin "baserom.dol", 0x3E9624, 0x4
+	.4byte 0x437F0000
 "@2037":
-	.incbin "baserom.dol", 0x3E9628, 0x8
+	.4byte 0x3C8EFA35
+	.4byte 0
 "@2040":
-	.incbin "baserom.dol", 0x3E9630, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2217":
-	.incbin "baserom.dol", 0x3E9638, 0x4
+	.4byte 0x42652EE0
 "@2218":
-	.incbin "baserom.dol", 0x3E963C, 0x4
+	.4byte 0x460CA000
 "@2219":
-	.incbin "baserom.dol", 0x3E9640, 0x4
+	.4byte 0x44BB8000
 "@2220":
-	.incbin "baserom.dol", 0x3E9644, 0x4
+	.4byte 0x43960000
 "@2221":
-	.incbin "baserom.dol", 0x3E9648, 0x4
+	.4byte 0x44A28000
 "@2486":
-	.incbin "baserom.dol", 0x3E964C, 0x4
+	.4byte 0x38000000
 "@2487":
-	.incbin "baserom.dol", 0x3E9650, 0x4
+	.4byte 0x457A0000
 "@2488":
-	.incbin "baserom.dol", 0x3E9654, 0x4
+	.4byte 0x447A0000
 "@2489":
-	.incbin "baserom.dol", 0x3E9658, 0x4
+	.4byte 0x3C23D70A
 "@2490":
-	.incbin "baserom.dol", 0x3E965C, 0x4
+	.4byte 0x41200000
 "@2514":
-	.incbin "baserom.dol", 0x3E9660, 0x4
+	.4byte 0x43200000
 "@2515":
-	.incbin "baserom.dol", 0x3E9664, 0x4
+	.4byte 0xC60CA000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 cCenter__19TSelectShineManager:

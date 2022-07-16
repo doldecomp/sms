@@ -512,16 +512,19 @@ lbl_80060CD4:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@197":
-	.incbin "baserom.dol", 0x36E358, 0xC
+	.asciz "MONO-MIX"
+	.balign 4
 "@216":
-	.incbin "baserom.dol", 0x36E364, 0xC
+	.asciz "MONO(W)-MIX"
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@236":
-	.incbin "baserom.dol", 0x3E43B0, 0x8
+	.asciz "DSPMIX"
+	.balign 4
 "@237":
-	.incbin "baserom.dol", 0x3E43B8, 0x8
+	.asciz "MIXING"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 dac__Q28JASystem6Kernel:

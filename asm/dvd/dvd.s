@@ -2909,13 +2909,17 @@ lbl_80099044:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@13":
-	.incbin "baserom.dol", 0x3ADD60, 0x18
+	.asciz "app booted via JTAG\n"
+	.balign 4
 "@14":
-	.incbin "baserom.dol", 0x3ADD78, 0xC
+	.asciz "load fst\n"
+	.balign 4
 "@15":
-	.incbin "baserom.dol", 0x3ADD84, 0x1C
+	.asciz "app booted from bootrom\n"
+	.balign 4
 "@16":
-	.incbin "baserom.dol", 0x3ADDA0, 0xC
+	.asciz "bootrom\n"
+	.balign 4
 "@293":
     .4byte lbl_80097AC8
     .4byte lbl_80097988
@@ -2972,7 +2976,8 @@ lbl_80099044:
     .4byte lbl_80098F00
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 autoInvalidation:
-	.incbin "baserom.dol", 0x3E3278, 0x8
+	.4byte 0x00000001
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 tmpBuffer:

@@ -570,43 +570,59 @@ lbl_8008DC98:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@352":
-	.incbin "baserom.dol", 0x3AC280, 0x24
+	.asciz "OSCheckHeap: Failed HeapArray in %d"
 "@353":
-	.incbin "baserom.dol", 0x3AC2A4, 0x38
+	.asciz "OSCheckHeap: Failed 0 <= heap && heap < NumHeaps in %d"
+	.balign 4
 "@354":
-	.incbin "baserom.dol", 0x3AC2DC, 0x28
+	.asciz "OSCheckHeap: Failed 0 <= hd->size in %d"
 "@355":
-	.incbin "baserom.dol", 0x3AC304, 0x50
+	.asciz "OSCheckHeap: Failed hd->allocated == NULL || hd->allocated->prev == NULL in %d"
+	.balign 4
 "@356":
-	.incbin "baserom.dol", 0x3AC354, 0x40
+	.asciz "OSCheckHeap: Failed InRange(cell, ArenaStart, ArenaEnd) in %d"
+	.balign 4
 "@357":
-	.incbin "baserom.dol", 0x3AC394, 0x38
+	.asciz "OSCheckHeap: Failed OFFSET(cell, ALIGNMENT) == 0 in %d"
+	.balign 4
 "@358":
-	.incbin "baserom.dol", 0x3AC3CC, 0x4C
+	.asciz "OSCheckHeap: Failed cell->next == NULL || cell->next->prev == cell in %d"
+	.balign 4
 "@359":
-	.incbin "baserom.dol", 0x3AC418, 0x34
+	.asciz "OSCheckHeap: Failed MINOBJSIZE <= cell->size in %d"
+	.balign 4
 "@360":
-	.incbin "baserom.dol", 0x3AC44C, 0x40
+	.asciz "OSCheckHeap: Failed OFFSET(cell->size, ALIGNMENT) == 0 in %d"
+	.balign 4
 "@361":
-	.incbin "baserom.dol", 0x3AC48C, 0x3C
+	.asciz "OSCheckHeap: Failed 0 < total && total <= hd->size in %d"
+	.balign 4
 "@362":
-	.incbin "baserom.dol", 0x3AC4C8, 0x48
+	.asciz "OSCheckHeap: Failed hd->free == NULL || hd->free->prev == NULL in %d"
+	.balign 4
 "@363":
-	.incbin "baserom.dol", 0x3AC510, 0x60
+	.asciz "OSCheckHeap: Failed cell->next == NULL || (char*) cell + cell->size < (char*) cell->next in %d"
+	.balign 4
 "@364":
-	.incbin "baserom.dol", 0x3AC570, 0x2C
+	.asciz "OSCheckHeap: Failed total == hd->size in %d"
 "@383":
-	.incbin "baserom.dol", 0x3AC59C, 0x14
+	.asciz "\nOSDumpHeap(%d):\n"
+	.balign 4
 "@384":
-	.incbin "baserom.dol", 0x3AC5B0, 0x14
+	.asciz "--------Inactive\n"
+	.balign 4
 "@385":
-	.incbin "baserom.dol", 0x3AC5C4, 0x1C
+	.asciz "addr\tsize\t\tend\tprev\tnext\n"
+	.balign 4
 "@386":
-	.incbin "baserom.dol", 0x3AC5E0, 0x14
+	.asciz "--------Allocated\n"
+	.balign 4
 "@387":
-	.incbin "baserom.dol", 0x3AC5F4, 0x10
+	.asciz "%x\t%d\t%x\t%x\t%x\n"
 "@388":
-	.incbin "baserom.dol", 0x3AC604, 0x14
+	.asciz "--------Free\n"
+	.balign 4
+	.4byte 0
 
 .section .sdata, "wa"  # 0x80408AC0 - 0x804097C0
 __OSCurrHeap:

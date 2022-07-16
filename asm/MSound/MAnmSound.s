@@ -550,17 +550,19 @@ __vt__9MAnmSound:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1981":
-	.incbin "baserom.dol", 0x3E66F8, 0x4
+	.4byte 0x3F800000
 "@1982":
-	.incbin "baserom.dol", 0x3E66FC, 0x4
+	.4byte 0x40000000
 "@1983":
   .4byte 0
 "@1984":
-	.incbin "baserom.dol", 0x3E6704, 0x4
+	.4byte 0x44FA0000
 "@1985":
-	.incbin "baserom.dol", 0x3E6708, 0x8
+	.4byte 0x44160000
+	.4byte 0
 "@1987":
-	.incbin "baserom.dol", 0x3E6710, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2044":

@@ -2784,11 +2784,17 @@ load__11TSilhouetteFR20JSUMemoryInputStream:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2036":
-	.incbin "baserom.dol", 0x36F2F0, 0xC
+	.asciz "?fff?"
+	.balign 4
+	.4byte 0x3D4CCCCD
 "@2195":
-	.incbin "baserom.dol", 0x36F2FC, 0x10
+	.4byte 0
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000002
 "@3559":
-	.incbin "baserom.dol", 0x36F30C, 0x24
+	.asciz "/common/timg/H_marukage_xlu_i8.bti"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TSilhouette
@@ -2807,56 +2813,58 @@ __vt__11TSilhouette:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1997":
-	.incbin "baserom.dol", 0x3E4930, 0x4
+	.4byte 0x002777FF
 "@1999":
   .4byte -1
 "@2009":
   .4byte 0
   .4byte 0
 "@2402":
-	.incbin "baserom.dol", 0x3E4940, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2452":
   .4byte 0
 "@2453":
-	.incbin "baserom.dol", 0x3E494C, 0x4
+	.4byte 0x3F800000
 "@2472":
-	.incbin "baserom.dol", 0x3E4950, 0x4
+	.4byte 0x40000000
 "@2473":
-	.incbin "baserom.dol", 0x3E4954, 0x4
+	.4byte 0x3F000000
 "@2948":
-	.incbin "baserom.dol", 0x3E4958, 0x4
+	.4byte 0x3C0EFA36
 "@3041":
-	.incbin "baserom.dol", 0x3E495C, 0x4
+	.4byte 0xC42F0000
 "@3042":
-	.incbin "baserom.dol", 0x3E4960, 0x4
+	.4byte 0x43FA0000
 "@3043":
-	.incbin "baserom.dol", 0x3E4964, 0x4
+	.4byte 0xC3C80000
 "@3044":
-	.incbin "baserom.dol", 0x3E4968, 0x4
+	.4byte 0x44480000
 "@3357":
-	.incbin "baserom.dol", 0x3E496C, 0x4
+	.4byte 0x38000000
 "@3505":
-	.incbin "baserom.dol", 0x3E4970, 0x4
+	.4byte 0xBF800000
 "@3506":
-	.incbin "baserom.dol", 0x3E4974, 0x4
+	.4byte 0x41200000
 "@3507":
-	.incbin "baserom.dol", 0x3E4978, 0x4
+	.4byte 0x3FC90FDB
 "@3555":
-	.incbin "baserom.dol", 0x3E497C, 0x4
+	.4byte 0x41F00000
 "@3556":
-	.incbin "baserom.dol", 0x3E4980, 0x4
+	.4byte 0x44228000
 "@3557":
-	.incbin "baserom.dol", 0x3E4984, 0x4
+	.4byte 0x44BB8000
 "@3558":
-	.incbin "baserom.dol", 0x3E4988, 0x4
+	.4byte 0x38A7C5AC
 "@3560":
-	.incbin "baserom.dol", 0x3E498C, 0x4
+	.4byte 0x3C23D70A
 "@3561":
-	.incbin "baserom.dol", 0x3E4990, 0x4
+	.4byte 0x43000000
 "@3565":
-	.incbin "baserom.dol", 0x3E4994, 0x4
+	.4byte 0x42C80000
 "@3566":
-	.incbin "baserom.dol", 0x3E4998, 0x8
+	.asciz "?fff"
+	.balign 4
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 sViewPlane:

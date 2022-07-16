@@ -6963,37 +6963,41 @@ __vt__20JPADrawExecLoadExTex:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1703":
-	.incbin "baserom.dol", 0x3E45A8, 0x4
+	.4byte 0x3F000000
 "@1704":
-	.incbin "baserom.dol", 0x3E45AC, 0x4
+	.4byte 0xBF000000
 "@1743":
-	.incbin "baserom.dol", 0x3E45B0, 0x4
+	.4byte 0x47000000
 "@1744":
   .4byte 0
 "@1745":
-	.incbin "baserom.dol", 0x3E45B8, 0x8
+	.4byte 0x3F800000
+	.4byte 0
 "@1797":
-	.incbin "baserom.dol", 0x3E45C0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@1841":
-	.incbin "baserom.dol", 0x3E45C8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 "@2374":
-	.incbin "baserom.dol", 0x3E45D0, 0x4
+	.4byte 0x3EAAAA9F
 "@2375":
-	.incbin "baserom.dol", 0x3E45D4, 0x4
+	.4byte 0x3F13CD36
 "@2378":
-	.incbin "baserom.dol", 0x3E45D8, 0x4
+	.4byte 0x3E54E6E2
 "@2379":
-	.incbin "baserom.dol", 0x3E45DC, 0x4
+	.4byte 0x3F7A67E8
 "@2380":
-	.incbin "baserom.dol", 0x3E45E0, 0x4
+	.4byte 0xBE54E6E2
 "@2538":
-	.incbin "baserom.dol", 0x3E45E4, 0x4
+	.4byte 0x36800000
 "@2542":
-	.incbin "baserom.dol", 0x3E45E8, 0x4
+	.4byte 0x40400000
 "@4485":
-	.incbin "baserom.dol", 0x3E45EC, 0x4
+	.4byte 0x3C23D70A
 "@4568":
-	.incbin "baserom.dol", 0x3E45F0, 0x8
+	.4byte 0x40000000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global pcb__14JPADrawContext

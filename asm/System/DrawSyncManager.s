@@ -610,9 +610,11 @@ __ct__Q216TDrawSyncManager19TDrawSyncTokenRangeFUsUsP17TDrawSyncCallback:
 .balign 8
 .balign 8
 "@1665":
-	.incbin "baserom.dol", 0x3E4F78, 0x8
+	.4byte 0x40000000
+	.4byte 0
 "@1825":
-	.incbin "baserom.dol", 0x3E4F80, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global smInstance__16TDrawSyncManager

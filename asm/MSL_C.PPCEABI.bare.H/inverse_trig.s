@@ -272,35 +272,74 @@ lbl_80086EDC:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 atan_coeff$96:
-	.incbin "baserom.dol", 0x36E9C8, 0x1C
+	.4byte 0x3F800000
+	.4byte 0xBEAAAAAA
+	.4byte 0x3E4CCC81
+	.4byte 0xBE123E7D
+	.4byte 0x3DE21F95
+	.4byte 0xBDAD417C
+	.4byte 0x3D41186D
 onep_one_over_xisqr_hi$97:
-	.incbin "baserom.dol", 0x36E9E4, 0x18
+	.4byte 0x40DA826B
+	.asciz "@OYX@"
+	.balign 4
+	.4byte 0x3FB925AB
+	.4byte 0x3F95F61A
+	.4byte 0x3F851081
 onep_one_over_xisqr_lo$98:
-	.incbin "baserom.dol", 0x36E9FC, 0x18
+	.4byte 0x36EF692F
+	.4byte 0x355C1DF9
+	.4byte 0
+	.4byte 0x35291D45
+	.4byte 0
+	.4byte 0
 atan_xi_hi$99:
-	.incbin "baserom.dol", 0x36EA14, 0x1C
+	.4byte 0
+	.4byte 0x3EC90EAA
+	.4byte 0x3F16CBE4
+	.4byte 0x3F490FDA
+	.4byte 0x3F7B53C5
+	.4byte 0x3F96CBE2
+	.4byte 0x3FAFEDD9
 atan_xi_lo$100:
-	.incbin "baserom.dol", 0x36EA30, 0x1C
+	.4byte 0
+	.4byte 0x37185D99
+	.4byte 0x32C59189
+	.4byte 0x33874A9E
+	.4byte 0x353CFA83
+	.4byte 0x348637BD
+	.4byte 0x35541063
 one_over_xi_hi$101:
-	.incbin "baserom.dol", 0x36EA4C, 0x18
+	.4byte 0x401A8277
+	.4byte 0x3FBF90C7
+	.4byte 0x3F800000
+	.4byte 0x3F2B0DC1
+	.4byte 0x3ED413CD
+	.4byte 0x3E4BAFAF
 one_over_xi_lo$102:
-	.incbin "baserom.dol", 0x36EA64, 0x1C
+	.4byte 0x3516DC59
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
+	.4byte 0
 
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@156":
-	.incbin "baserom.dol", 0x3E4710, 0x4
+	.4byte 0x401A827A
 "@157":
-	.incbin "baserom.dol", 0x3E4714, 0x4
+	.4byte 0x3F800000
 "@158":
-	.incbin "baserom.dol", 0x3E4718, 0x4
+	.4byte 0x3ED413CD
 "@159":
-	.incbin "baserom.dol", 0x3E471C, 0x4
+	.4byte 0x3FC90FDB
 "@168":
   .4byte 0
 "@169":
-	.incbin "baserom.dol", 0x3E4724, 0x4
+	.4byte 0x3F000000
 "@170":
-	.incbin "baserom.dol", 0x3E4728, 0x4
+	.4byte 0x40400000
 "@188":
-	.incbin "baserom.dol", 0x3E472C, 0x4
+	.4byte 0x40490FDB

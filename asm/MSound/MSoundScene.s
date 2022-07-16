@@ -742,15 +742,17 @@ lbl_constructor:
 "@2051":
   .4byte 0
 "@2053":
-	.incbin "baserom.dol", 0x3E6774, 0x4
+	.4byte 0x40490FDB
 "@2263":
-	.incbin "baserom.dol", 0x3E6778, 0x4
+	.4byte 0xC0490FDB
 "@2264":
-	.incbin "baserom.dol", 0x3E677C, 0x4
+	.4byte 0xBF860723
 "@2265":
-	.incbin "baserom.dol", 0x3E6780, 0x8
+	.4byte 0x3F860723
+	.4byte 0
 "@2267":
-	.incbin "baserom.dol", 0x3E6788, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 _posByCamera:

@@ -434,7 +434,8 @@ lbl_80114BD4:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2148":
-	.incbin "baserom.dol", 0x377108, 0x10
+	.asciz "/default.sb"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
     .balign 8
@@ -466,8 +467,9 @@ __vt__12TLiveManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2101":
-	.incbin "baserom.dol", 0x3E53D0, 0x4
+	.4byte 0x42960000
 "@2103":
-	.incbin "baserom.dol", 0x3E53D4, 0x4
+	.4byte 0x457A0000
 "@2104":
-	.incbin "baserom.dol", 0x3E53D8, 0x8
+	.4byte 0x43480000
+	.4byte 0

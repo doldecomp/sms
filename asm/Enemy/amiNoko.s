@@ -3278,39 +3278,103 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2351":
-	.incbin "baserom.dol", 0x39D6A4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@2557":
-	.incbin "baserom.dol", 0x39D6B8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@2558":
-	.incbin "baserom.dol", 0x39D6E8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@2559":
-	.incbin "baserom.dol", 0x39D720, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@2560":
-	.incbin "baserom.dol", 0x39D754, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@2792":
-	.incbin "baserom.dol", 0x39D778, 0x30
+	.asciz "/scene/amiNoko/bas/aminoko_flying1_start.bas"
+	.balign 4
 "@2793":
-	.incbin "baserom.dol", 0x39D7A8, 0x24
+	.asciz "/scene/amiNoko/bas/aminoko_hit1.bas"
 "@2794":
-	.incbin "baserom.dol", 0x39D7CC, 0x2C
+	.asciz "/scene/amiNoko/bas/aminoko_run1_loop.bas"
+	.balign 4
 "@2795":
-	.incbin "baserom.dol", 0x39D7F8, 0x2C
+	.asciz "/scene/amiNoko/bas/aminoko_run2_loop.bas"
+	.balign 4
 "@2796":
-	.incbin "baserom.dol", 0x39D824, 0x2C
+	.asciz "/scene/amiNoko/bas/aminoko_turn1_loop.bas"
+	.balign 4
 "@2797":
-	.incbin "baserom.dol", 0x39D850, 0x2C
+	.asciz "/scene/amiNoko/bas/aminoko_turn2_loop.bas"
+	.balign 4
 "@2821":
-	.incbin "baserom.dol", 0x39D87C, 0x14
+	.asciz "aminoko_model1.bmd"
+	.balign 4
 "@4244":
-	.incbin "baserom.dol", 0x39D890, 0x14
+	.4byte 0x8341837E
+	.4byte 0x836D8352
+	.4byte 0x939682E8
+	.4byte 0x94BB92E8
+	.4byte 0
 "@4245":
-	.incbin "baserom.dol", 0x39D8A4, 0xC
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
 "@4367":
-	.incbin "baserom.dol", 0x39D8B0, 0x14
+	.asciz "/enemy/amiNoko.prm"
+	.balign 4
 "@4368":
-	.incbin "baserom.dol", 0x39D8C4, 0x10
+	.asciz "mSLElecRange"
+	.balign 4
 "@4370":
-	.incbin "baserom.dol", 0x39D8D4, 0x14
+	.asciz "mSLMtxRotSpeed"
+	.balign 4
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 amiNoko_bastable:
@@ -3545,51 +3609,52 @@ __vt__15TAmiNokoManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@3134":
-	.incbin "baserom.dol", 0x3EB5E0, 0x4
+	.4byte 0x40000000
 "@3263":
   .4byte 0
 "@3264":
-	.incbin "baserom.dol", 0x3EB5E8, 0x4
+	.4byte 0x3F800000
 "@3265":
-	.incbin "baserom.dol", 0x3EB5EC, 0x4
+	.4byte 0x41A00000
 "@3266":
-	.incbin "baserom.dol", 0x3EB5F0, 0x4
+	.4byte 0x41200000
 "@3267":
-	.incbin "baserom.dol", 0x3EB5F4, 0x4
+	.4byte 0x40400000
 "@3268":
-	.incbin "baserom.dol", 0x3EB5F8, 0x4
+	.4byte 0x43360B61
 "@3269":
-	.incbin "baserom.dol", 0x3EB5FC, 0x4
+	.4byte 0x3F000000
 "@3270":
-	.incbin "baserom.dol", 0x3EB600, 0x4
+	.4byte 0x461C4000
 "@3380":
-	.incbin "baserom.dol", 0x3EB604, 0x4
+	.4byte 0x3F4CCCCD
 "@3470":
-	.incbin "baserom.dol", 0x3EB608, 0x4
+	.4byte 0x3FC00000
 "@3597":
-	.incbin "baserom.dol", 0x3EB60C, 0x4
+	.4byte 0x3D4CCCCD
 "@4043":
-	.incbin "baserom.dol", 0x3EB610, 0x4
+	.4byte 0xBF800000
 "@4044":
-	.incbin "baserom.dol", 0x3EB614, 0x4
+	.4byte 0xBDCCCCCD
 "@4045":
-	.incbin "baserom.dol", 0x3EB618, 0x4
+	.4byte 0x3FC90FDB
 "@4046":
-	.incbin "baserom.dol", 0x3EB61C, 0x4
+	.4byte 0x36800000
 "@4047":
-	.incbin "baserom.dol", 0x3EB620, 0x4
+	.4byte 0xC3480000
 "@4048":
-	.incbin "baserom.dol", 0x3EB624, 0x4
+	.4byte 0x41F00000
 "@4154":
-	.incbin "baserom.dol", 0x3EB628, 0x4
+	.4byte 0x40A00000
 "@4246":
-	.incbin "baserom.dol", 0x3EB62C, 0x4
+	.4byte 0x42F00000
 "@4247":
-	.incbin "baserom.dol", 0x3EB630, 0x4
+	.4byte 0x43700000
 "@4315":
-	.incbin "baserom.dol", 0x3EB634, 0x4
+	.4byte 0x42C80000
 "@4369":
-	.incbin "baserom.dol", 0x3EB638, 0x8
+	.4byte 0x43480000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2978":

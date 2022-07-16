@@ -1716,63 +1716,92 @@ lbl_constructor:
   .4byte 0
   .4byte 0
 "@2111":
-	.incbin "baserom.dol", 0x390FBC, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@3038":
-	.incbin "baserom.dol", 0x390FD0, 0x14
+	.asciz "/data/select.arc"
+	.balign 4
 "@3039":
-	.incbin "baserom.dol", 0x390FE4, 0x10
+	.asciz "root View Objs"
+	.balign 4
 "@3040":
-	.incbin "baserom.dol", 0x390FF4, 0x10
+	.asciz "<TDStageGroup>"
+	.balign 4
 "@3041":
-	.incbin "baserom.dol", 0x391004, 0xC
+	.asciz "<FrmGXSet>"
+	.balign 4
 "@3042":
-	.incbin "baserom.dol", 0x391010, 0x10
+	.asciz "<TSelectMenu>"
+	.balign 4
 "@3043":
-	.incbin "baserom.dol", 0x391020, 0x14
+	.asciz "<SelectShineManger>"
 "@3044":
-	.incbin "baserom.dol", 0x391034, 0x10
+	.asciz "<TSelectGrad>"
+	.balign 4
 "@3045":
-	.incbin "baserom.dol", 0x391044, 0xC
+	.asciz "Group 3D"
+	.balign 4
 "@3046":
-	.incbin "baserom.dol", 0x391050, 0xC
+	.asciz "Group 2D"
+	.balign 4
 "@3047":
-	.incbin "baserom.dol", 0x39105C, 0xC
+	.asciz "Group Grad"
+	.balign 4
 "@3048":
-	.incbin "baserom.dol", 0x391068, 0x14
+	.asciz "Group 2D Particle"
+	.balign 4
 "@3049":
-	.incbin "baserom.dol", 0x39107C, 0x28
+	.asciz "/select/particle/ms_2d_shine_promi.jpa"
+	.balign 4
 "@3050":
-	.incbin "baserom.dol", 0x3910A4, 0x28
+	.asciz "/select/particle/ms_2d_shine_senko.jpa"
+	.balign 4
 "@3051":
-	.incbin "baserom.dol", 0x3910CC, 0x28
+	.asciz "/select/particle/ms_2d_shine_kira.jpa"
+	.balign 4
 "@3052":
-	.incbin "baserom.dol", 0x3910F4, 0x2C
+	.asciz "/select/particle/ms_2d_shine_kira_em.jpa"
+	.balign 4
 "@3053":
-	.incbin "baserom.dol", 0x391120, 0x28
+	.asciz "/select/particle/ms_2d_scsel_on_a.jpa"
+	.balign 4
 "@3054":
-	.incbin "baserom.dol", 0x391148, 0x28
+	.asciz "/select/particle/ms_2d_scsel_on_a2.jpa"
+	.balign 4
 "@3055":
-	.incbin "baserom.dol", 0x391170, 0x28
+	.asciz "/select/particle/ms_2d_scsel_on_b.jpa"
+	.balign 4
 "@3056":
-	.incbin "baserom.dol", 0x391198, 0x28
+	.asciz "/select/particle/ms_2d_scsel_on_c.jpa"
+	.balign 4
 "@3057":
-	.incbin "baserom.dol", 0x3911C0, 0x28
+	.asciz "/select/particle/ms_2d_scsel_on_d.jpa"
+	.balign 4
 "@3058":
-	.incbin "baserom.dol", 0x3911E8, 0x14
+	.asciz "<EmitterViewObj>"
+	.balign 4
 "@3059":
-	.incbin "baserom.dol", 0x3911FC, 0x10
+	.asciz "<DStageDisp>"
+	.balign 4
 "@3060":
-	.incbin "baserom.dol", 0x39120C, 0x10
+	.asciz "<TOrthoProj>"
+	.balign 4
 "@3066":
-	.incbin "baserom.dol", 0x39121C, 0xC
+	.asciz "Screen Grad"
 "@3067":
-	.incbin "baserom.dol", 0x391228, 0xC
+	.asciz "Screen 2D"
+	.balign 4
 "@3071":
-	.incbin "baserom.dol", 0x391234, 0x10
+	.asciz "<TLookAtCamera>"
 "@3076":
-	.incbin "baserom.dol", 0x391244, 0xC
+	.asciz "Screen 3D"
+	.balign 4
 "@3128":
-	.incbin "baserom.dol", 0x391250, 0x10
+	.asciz "<TDirector>"
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__10TSelectDir
@@ -1809,41 +1838,43 @@ __vt__10TSelectDir:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2392":
-	.incbin "baserom.dol", 0x3E95B8, 0x4
+	.4byte 0x3ECCCCCD
 "@2393":
   .4byte 0
 "@2394":
-	.incbin "baserom.dol", 0x3E95C0, 0x4
+	.4byte 0x3F800000
 "@3061":
-	.incbin "baserom.dol", 0x3E95C4, 0x4
+	.4byte 0xC2C80000
 "@3062":
-	.incbin "baserom.dol", 0x3E95C8, 0x4
+	.4byte 0x42C80000
 "@3063":
-	.incbin "baserom.dol", 0x3E95CC, 0x4
+	.4byte 0x41800000
 "@3064":
-	.incbin "baserom.dol", 0x3E95D0, 0x4
+	.4byte 0x44160000
 "@3065":
-	.incbin "baserom.dol", 0x3E95D4, 0x4
+	.4byte 0x43E80000
 "@3068":
-	.incbin "baserom.dol", 0x3E95D8, 0x4
+	.4byte 0x43960000
 "@3069":
-	.incbin "baserom.dol", 0x3E95DC, 0x4
+	.4byte 0x43700000
 "@3070":
-	.incbin "baserom.dol", 0x3E95E0, 0x4
+	.4byte 0x44A28000
 "@3072":
-	.incbin "baserom.dol", 0x3E95E4, 0x4
+	.4byte 0x42480000
 "@3073":
-	.incbin "baserom.dol", 0x3E95E8, 0x4
+	.4byte 0x461C4000
 "@3074":
-	.incbin "baserom.dol", 0x3E95EC, 0x4
+	.4byte 0x41F00000
 "@3075":
-	.incbin "baserom.dol", 0x3E95F0, 0x4
+	.4byte 0x3FAAAAAB
 "@3077":
-	.incbin "baserom.dol", 0x3E95F4, 0x4
+	.4byte 0xC3FA0000
 "@3078":
-	.incbin "baserom.dol", 0x3E95F8, 0x4
+	.4byte 0x43FA0000
 "@3119":
-	.incbin "baserom.dol", 0x3E95FC, 0xC
+	.asciz "select"
+	.balign 4
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3131":

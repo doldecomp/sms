@@ -100,14 +100,14 @@ C_MTXOrtho:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@97":
-	.incbin "baserom.dol", 0x3E47B0, 0x4
+	.4byte 0x3F800000
 "@98":
-	.incbin "baserom.dol", 0x3E47B4, 0x4
+	.4byte 0x40000000
 "@99":
   .4byte 0
 "@100":
-	.incbin "baserom.dol", 0x3E47BC, 0x4
+	.4byte 0xBF800000
 "@103":
-	.incbin "baserom.dol", 0x3E47C0, 0x4
+	.4byte 0x3F000000
 "@104":
-	.incbin "baserom.dol", 0x3E47C4, 0x4
+	.4byte 0x3C8EFA35

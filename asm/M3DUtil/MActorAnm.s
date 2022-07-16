@@ -1820,20 +1820,27 @@ __vt__13MActorAnmBase:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1875":
-	.incbin "baserom.dol", 0x3E4C08, 0x8
+	.asciz ".blk"
+	.balign 4
 "@1908":
-	.incbin "baserom.dol", 0x3E4C10, 0x4
+	.4byte 0x3F800000
 "@1909":
   .4byte 0
 "@1911":
-	.incbin "baserom.dol", 0x3E4C18, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2660":
-	.incbin "baserom.dol", 0x3E4C20, 0x8
+	.asciz ".brk"
+	.balign 4
 "@2663":
-	.incbin "baserom.dol", 0x3E4C28, 0x8
+	.asciz ".bpk"
+	.balign 4
 "@2666":
-	.incbin "baserom.dol", 0x3E4C30, 0x8
+	.asciz ".btk"
+	.balign 4
 "@2669":
-	.incbin "baserom.dol", 0x3E4C38, 0x8
+	.asciz ".btp"
+	.balign 4
 "@2672":
-	.incbin "baserom.dol", 0x3E4C40, 0x8
+	.asciz ".bck"
+	.balign 4

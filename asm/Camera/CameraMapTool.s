@@ -133,9 +133,9 @@ __vt__14TCameraMapTool:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1652":
-	.incbin "baserom.dol", 0x3EC4F8, 0x4
+	.4byte 0x43360B61
 "@1653":
-	.incbin "baserom.dol", 0x3EC4FC, 0x4
+	.4byte 0x447A0000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 .global gpCamMapToolTable

@@ -1679,31 +1679,36 @@ lbl_constructor:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1906":
-	.incbin "baserom.dol", 0x3EC250, 0x4
+	.4byte 0x3F800000
 "@1907":
   .4byte 0
 "@1908":
-	.incbin "baserom.dol", 0x3EC258, 0x4
+	.4byte 0x36800000
 "@1909":
-	.incbin "baserom.dol", 0x3EC25C, 0x4
+	.4byte 0x3C8EFA36
 "@1910":
-	.incbin "baserom.dol", 0x3EC260, 0x4
+	.4byte 0x3BB40000
 "@1911":
-	.incbin "baserom.dol", 0x3EC264, 0x4
+	.4byte 0x3F000000
 "@1912":
-	.incbin "baserom.dol", 0x3EC268, 0x8
+	.4byte 0x3FE00000
+	.4byte 0
 "@1913":
-	.incbin "baserom.dol", 0x3EC270, 0x8
+	.4byte 0x40080000
+	.4byte 0
 "@1915":
-	.incbin "baserom.dol", 0x3EC278, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@2020":
-	.incbin "baserom.dol", 0x3EC280, 0x4
+	.4byte 0x43360B61
 "@2403":
-	.incbin "baserom.dol", 0x3EC284, 0x4
+	.4byte 0x461C4000
 "@2404":
-	.incbin "baserom.dol", 0x3EC288, 0x8
+	.4byte 0xBF800000
+	.4byte 0
 "@2407":
-	.incbin "baserom.dol", 0x3EC290, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 .global CLBConstUpVec

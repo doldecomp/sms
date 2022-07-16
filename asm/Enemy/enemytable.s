@@ -446,6 +446,8 @@ __vt__20TStageEnemyInfoTable:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@1696":
-	.incbin "baserom.dol", 0x3EA6B8, 0x8
+	.4byte 0x38000000
+	.4byte 0
 "@1698":
-	.incbin "baserom.dol", 0x3EA6C0, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000

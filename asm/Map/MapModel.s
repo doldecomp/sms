@@ -626,11 +626,14 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@2502":
-	.incbin "baserom.dol", 0x38EB10, 0x10
+	.asciz "scene/map/map"
+	.balign 4
 "@2503":
-	.incbin "baserom.dol", 0x38EB20, 0x14
+	.asciz "/scene/map/map.col"
+	.balign 4
 "@2571":
-	.incbin "baserom.dol", 0x38EB34, 0xC
+	.asciz "underpass"
+	.balign 4
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 name_table$2428:
@@ -670,23 +673,24 @@ __vt__16TMapModelManager:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2429":
-	.incbin "baserom.dol", 0x3E8B98, 0x4
+	.4byte 0x6D617000
 "@2430":
-	.incbin "baserom.dol", 0x3E8B9C, 0x8
+	.asciz "map_obj"
 "@2431":
-	.incbin "baserom.dol", 0x3E8BA4, 0x8
+	.asciz "station"
 "@2432":
-	.incbin "baserom.dol", 0x3E8BAC, 0x8
+	.asciz "inside"
+	.balign 4
 "@2505":
-	.incbin "baserom.dol", 0x3E8BB4, 0x4
+	.4byte 0x3F000000
 "@2506":
-	.incbin "baserom.dol", 0x3E8BB8, 0x4
+	.4byte 0x3F800000
 "@2618":
-	.incbin "baserom.dol", 0x3E8BBC, 0x4
+	.4byte 0x43480000
 "@2619":
-	.incbin "baserom.dol", 0x3E8BC0, 0x4
+	.4byte 0xC47A0000
 "@2620":
-	.incbin "baserom.dol", 0x3E8BC4, 0x4
+	.4byte 0x447A0000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2668":

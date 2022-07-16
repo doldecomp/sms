@@ -773,59 +773,78 @@ point_name_table$2639:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2640":
-	.incbin "baserom.dol", 0x3E8BC8, 0x8
+	.asciz "warpA1"
+	.balign 4
 "@2641":
-	.incbin "baserom.dol", 0x3E8BD0, 0x8
+	.asciz "warpA0"
+	.balign 4
 "@2642":
-	.incbin "baserom.dol", 0x3E8BD8, 0x8
+	.asciz "warpB1"
+	.balign 4
 "@2643":
-	.incbin "baserom.dol", 0x3E8BE0, 0x8
+	.asciz "warpB0"
+	.balign 4
 "@2644":
-	.incbin "baserom.dol", 0x3E8BE8, 0x8
+	.asciz "warpC1"
+	.balign 4
 "@2645":
-	.incbin "baserom.dol", 0x3E8BF0, 0x8
+	.asciz "warpC0"
+	.balign 4
 "@2646":
-	.incbin "baserom.dol", 0x3E8BF8, 0x8
+	.asciz "warpD1"
+	.balign 4
 "@2647":
-	.incbin "baserom.dol", 0x3E8C00, 0x8
+	.asciz "warpD0"
+	.balign 4
 "@2648":
-	.incbin "baserom.dol", 0x3E8C08, 0x8
+	.asciz "warpE1"
+	.balign 4
 "@2649":
-	.incbin "baserom.dol", 0x3E8C10, 0x8
+	.asciz "warpE0"
+	.balign 4
 "@2650":
-	.incbin "baserom.dol", 0x3E8C18, 0x8
+	.asciz "warpF1"
+	.balign 4
 "@2651":
-	.incbin "baserom.dol", 0x3E8C20, 0x8
+	.asciz "warpF0"
+	.balign 4
 "@2652":
-	.incbin "baserom.dol", 0x3E8C28, 0x8
+	.asciz "warpG1"
+	.balign 4
 "@2653":
-	.incbin "baserom.dol", 0x3E8C30, 0x8
+	.asciz "warpG0"
+	.balign 4
 "@2654":
-	.incbin "baserom.dol", 0x3E8C38, 0x8
+	.asciz "warpH1"
+	.balign 4
 "@2655":
-	.incbin "baserom.dol", 0x3E8C40, 0x8
+	.asciz "warpH0"
+	.balign 4
 "@2656":
-	.incbin "baserom.dol", 0x3E8C48, 0x8
+	.asciz "warpI1"
+	.balign 4
 "@2657":
-	.incbin "baserom.dol", 0x3E8C50, 0x8
+	.asciz "warpI0"
+	.balign 4
 "@2700":
-	.incbin "baserom.dol", 0x3E8C58, 0x4
+	.4byte 0x40400000
 "@2778":
-	.incbin "baserom.dol", 0x3E8C5C, 0x4
+	.4byte 0x41000000
 "@2960":
-	.incbin "baserom.dol", 0x3E8C60, 0x4
+	.4byte 0x41F00000
 "@2961":
-	.incbin "baserom.dol", 0x3E8C64, 0x4
+	.4byte 0x43340000
 "@2962":
-	.incbin "baserom.dol", 0x3E8C68, 0x4
+	.4byte 0x47000000
 "@2963":
   .4byte 0
 "@2964":
-	.incbin "baserom.dol", 0x3E8C70, 0x4
+	.4byte 0x43360B61
 "@2965":
-	.incbin "baserom.dol", 0x3E8C74, 0x4
+	.4byte 0x3C23D70A
 "@2967":
-	.incbin "baserom.dol", 0x3E8C78, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2684":

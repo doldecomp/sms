@@ -315,35 +315,90 @@ lbl_80361884:
   .4byte 0
   .4byte 0
 "@1526":
-	.incbin "baserom.dol", 0x3A3AA4, 0x14
+	.4byte 0x83818382
+	.4byte 0x838A82AA
+	.4byte 0x91AB82E8
+	.4byte 0x82DC82B9
+	.4byte 0x82F10A00
 "@1593":
-	.incbin "baserom.dol", 0x3A3AB8, 0x30
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4261
+	.4byte 0x73696320
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x826D0000
 "@1594":
-	.incbin "baserom.dol", 0x3A3AE8, 0x38
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F536F
+	.4byte 0x6674696D
+	.4byte 0x61676520
+	.4byte 0x834E8389
+	.4byte 0x83568362
+	.4byte 0x834E8358
+	.4byte 0x8350815B
+	.4byte 0x838B826E
+	.4byte 0x82658265
+	.4byte 0
 "@1595":
-	.incbin "baserom.dol", 0x3A3B20, 0x34
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F4D6F
+	.4byte 0x74696F6E
+	.4byte 0x426C656E
+	.4byte 0x64208382
+	.4byte 0x815B8356
+	.4byte 0x83878393
+	.4byte 0x8375838C
+	.4byte 0x83938368
+	.4byte 0
 "@1596":
-	.incbin "baserom.dol", 0x3A3B54, 0x24
+	.4byte 0x4D416374
+	.4byte 0x6F724D74
+	.4byte 0x7843616C
+	.4byte 0x63547970
+	.4byte 0x655F5573
+	.4byte 0x65722083
+	.4byte 0x86815B83
+	.4byte 0x55815B92
+	.4byte 0xE88B6000
 "@1681":
-	.incbin "baserom.dol", 0x3A3B78, 0x2C
+	.asciz "/common/camera/camera_demo_shine_get_inside"
 "@1682":
-	.incbin "baserom.dol", 0x3A3BA4, 0x30
+	.asciz "/common/camera/camera_demo_shine_get_outside"
+	.balign 4
 "@1683":
-	.incbin "baserom.dol", 0x3A3BD4, 0x24
+	.asciz "/common/camera/camera_demo_gate_in"
+	.balign 4
 "@1684":
-	.incbin "baserom.dol", 0x3A3BF8, 0x10
+	.asciz "cam_position"
+	.balign 4
 "@1685":
-	.incbin "baserom.dol", 0x3A3C08, 0x10
+	.asciz "cam_interest"
+	.balign 4
 "@1686":
-	.incbin "baserom.dol", 0x3A3C18, 0x14
+	.asciz "/scene/map/camera"
+	.balign 4
 "@1687":
-	.incbin "baserom.dol", 0x3A3C2C, 0x30
+	.asciz "/common/camera/camera_demo_shine_get_inside.bck"
 "@1688":
-	.incbin "baserom.dol", 0x3A3C5C, 0x34
+	.asciz "/common/camera/camera_demo_shine_get_outside.bck"
+	.balign 4
 "@1689":
-	.incbin "baserom.dol", 0x3A3C90, 0x28
+	.asciz "/common/camera/camera_demo_gate_in.bck"
+	.balign 4
 "@1837":
-	.incbin "baserom.dol", 0x3A3CB8, 0x20
+	.asciz "/common/camera/camera_model.bmd"
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 sAddBckFileNameTable:

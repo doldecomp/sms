@@ -2812,19 +2812,19 @@ __vt__12JPABaseField:
 "@1671":
   .4byte 0
 "@1672":
-	.incbin "baserom.dol", 0x3E4504, 0x4
+	.4byte 0xBF800000
 "@1673":
-	.incbin "baserom.dol", 0x3E4508, 0x4
+	.4byte 0x3F800000
 "@1877":
-	.incbin "baserom.dol", 0x3E450C, 0x4
+	.4byte 0x47000000
 "@1955":
-	.incbin "baserom.dol", 0x3E4510, 0x4
+	.4byte 0x36800000
 "@1956":
-	.incbin "baserom.dol", 0x3E4514, 0x4
+	.4byte 0x3F000000
 "@1957":
-	.incbin "baserom.dol", 0x3E4518, 0x4
+	.4byte 0x40400000
 "@2076":
-	.incbin "baserom.dol", 0x3E451C, 0x4
+	.4byte 0x41200000
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 FieldRand:

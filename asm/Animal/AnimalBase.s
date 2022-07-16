@@ -1636,7 +1636,10 @@ lbl_constructor:
 .section .rodata, "a"  # 0x8036FFA0 - 0x803A8380
 .balign 8
 "@3202":
-	.incbin "baserom.dol", 0x3A4B10, 0x10
+	.4byte 0x9347834F
+	.4byte 0x838B815B
+	.4byte 0x83760000
+	.4byte 0
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 .global __vt__11TAnimalBase
@@ -1717,47 +1720,49 @@ __vt__11TAnimalBase:
 "@2579":
   .4byte 0
 "@2601":
-	.incbin "baserom.dol", 0x3EC694, 0x4
+	.4byte 0x42C80000
 "@2605":
-	.incbin "baserom.dol", 0x3EC698, 0x4
+	.4byte 0x3F000000
 "@2606":
-	.incbin "baserom.dol", 0x3EC69C, 0x4
+	.4byte 0x40400000
 "@2760":
-	.incbin "baserom.dol", 0x3EC6A0, 0x4
+	.4byte 0x3A83126F
 "@2761":
-	.incbin "baserom.dol", 0x3EC6A4, 0x4
+	.4byte 0x40000000
 "@2762":
-	.incbin "baserom.dol", 0x3EC6A8, 0x4
+	.4byte 0x43B40000
 "@2763":
-	.incbin "baserom.dol", 0x3EC6AC, 0x4
+	.4byte 0x43340000
 "@2764":
-	.incbin "baserom.dol", 0x3EC6B0, 0x4
+	.4byte 0x41F00000
 "@2765":
-	.incbin "baserom.dol", 0x3EC6B4, 0x4
+	.4byte 0xC2340000
 "@2766":
-	.incbin "baserom.dol", 0x3EC6B8, 0x4
+	.4byte 0x42340000
 "@2767":
-	.incbin "baserom.dol", 0x3EC6BC, 0x4
+	.4byte 0x3DCCCCCD
 "@2768":
-	.incbin "baserom.dol", 0x3EC6C0, 0x4
+	.4byte 0xC3340000
 "@2929":
-	.incbin "baserom.dol", 0x3EC6C4, 0x4
+	.4byte 0x3C8EFA36
 "@3022":
-	.incbin "baserom.dol", 0x3EC6C8, 0x4
+	.4byte 0x38000000
 "@3023":
-	.incbin "baserom.dol", 0x3EC6CC, 0x4
+	.4byte 0x447A0000
 "@3024":
-	.incbin "baserom.dol", 0x3EC6D0, 0x8
+	.4byte 0x437A0000
+	.4byte 0
 "@3026":
-	.incbin "baserom.dol", 0x3EC6D8, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 "@3201":
-	.incbin "baserom.dol", 0x3EC6E0, 0x4
+	.4byte 0x43160000
 "@3267":
-	.incbin "baserom.dol", 0x3EC6E4, 0x4
+	.4byte 0x3F800000
 "@3268":
-	.incbin "baserom.dol", 0x3EC6E8, 0x4
+	.4byte 0x41200000
 "@3269":
-	.incbin "baserom.dol", 0x3EC6EC, 0x4
+	.4byte 0x41A00000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@3346":

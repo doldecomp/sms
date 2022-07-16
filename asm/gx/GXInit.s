@@ -1149,19 +1149,20 @@ gx:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@121":
-	.incbin "baserom.dol", 0x3E47D0, 0x4
+	.4byte 0x404040FF
 "@122":
   .4byte 0
 "@123":
   .4byte -1
 "@177":
-	.incbin "baserom.dol", 0x3E47DC, 0x4
+	.4byte 0x3F800000
 "@178":
   .4byte 0
 "@179":
-	.incbin "baserom.dol", 0x3E47E4, 0x4
+	.4byte 0x3DCCCCCD
 "@181":
-	.incbin "baserom.dol", 0x3E47E8, 0x8
+	.4byte 0x43300000
+	.4byte 0
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 gxData:

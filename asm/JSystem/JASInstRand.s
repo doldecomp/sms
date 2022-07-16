@@ -56,11 +56,12 @@ __vt__Q28JASystem9TInstRand:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@345":
-	.incbin "baserom.dol", 0x3E4308, 0x4
+	.4byte 0x40000000
 "@346":
-	.incbin "baserom.dol", 0x3E430C, 0x4
+	.4byte 0x3F800000
 "@347":
-	.incbin "baserom.dol", 0x3E4310, 0x8
+	.4byte 0x3F7FFFFE
+	.4byte 0
 
 .section .sbss, "wa"  # 0x804097C0 - 0x8040B45C
 init$332:

@@ -686,28 +686,38 @@ lbl_8008EF60:
 
 .section .data, "wa"  # 0x803A8380 - 0x803E6000
 "@59":
-	.incbin "baserom.dol", 0x3AC8C8, 0x44
+	.asciz "------------------------- Context 0x%08x -------------------------\n"
 "@60":
-	.incbin "baserom.dol", 0x3AC90C, 0x30
+	.asciz "r%-2d  = 0x%08x (%14d)  r%-2d  = 0x%08x (%14d)\n"
 "@61":
-	.incbin "baserom.dol", 0x3AC93C, 0x30
+	.asciz "LR   = 0x%08x                   CR   = 0x%08x\n"
+	.balign 4
 "@62":
-	.incbin "baserom.dol", 0x3AC96C, 0x30
+	.asciz "SRR0 = 0x%08x                   SRR1 = 0x%08x\n"
+	.balign 4
 "@63":
-	.incbin "baserom.dol", 0x3AC99C, 0x14
+	.asciz "\nGQRs----------\n"
+	.balign 4
 "@64":
-	.incbin "baserom.dol", 0x3AC9B0, 0x24
+	.asciz "gqr%d = 0x%08x \t gqr%d = 0x%08x\n"
+	.balign 4
 "@65":
-	.incbin "baserom.dol", 0x3AC9D4, 0x14
+	.asciz "\n\nFPRs----------\n"
+	.balign 4
 "@66":
-	.incbin "baserom.dol", 0x3AC9E8, 0x1C
+	.asciz "fr%d \t= %d \t fr%d \t= %d\n"
+	.balign 4
 "@67":
-	.incbin "baserom.dol", 0x3ACA04, 0x14
+	.asciz "\n\nPSFs----------\n"
+	.balign 4
 "@68":
-	.incbin "baserom.dol", 0x3ACA18, 0x20
+	.asciz "ps%d \t= 0x%x \t ps%d \t= 0x%x\n"
+	.balign 4
 "@69":
-	.incbin "baserom.dol", 0x3ACA38, 0x28
+	.asciz "\nAddress:      Back Chain    LR Save\n"
+	.balign 4
 "@70":
-	.incbin "baserom.dol", 0x3ACA60, 0x1C
+	.asciz "0x%08x:   0x%08x    0x%08x\n"
 "@74":
-	.incbin "baserom.dol", 0x3ACA7C, 0x24
+	.asciz "FPU-unavailable handler installed\n"
+	.balign 4

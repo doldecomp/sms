@@ -606,15 +606,16 @@ __vt__13TPollutionObj:
 .section .sdata2, "a"  # 0x8040B460 - 0x80414020
 .balign 8
 "@2849":
-	.incbin "baserom.dol", 0x3E8D68, 0x4
+	.4byte 0x40A00000
 "@2850":
-	.incbin "baserom.dol", 0x3E8D6C, 0x4
+	.4byte 0x4B18967F
 "@2851":
-	.incbin "baserom.dol", 0x3E8D70, 0x4
+	.4byte 0x41F00000
 "@2852":
-	.incbin "baserom.dol", 0x3E8D74, 0x4
+	.4byte 0x3F000000
 "@2854":
-	.incbin "baserom.dol", 0x3E8D78, 0x8
+	.4byte 0x43300000
+	.4byte 0x80000000
 
 .section .bss, "wa"  # 0x803E6000 - 0x80408AC0
 "@2734":
