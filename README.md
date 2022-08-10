@@ -1,78 +1,57 @@
 
-# Super Mario Sunshine [![Discord Badge]][Discord]
+<br>
+
+<div align = center>
+
+[![Badge Contribute]][Issues]
+
+<br>
+
+# Super Mario Sunshine
 
 *A* ***WIP*** *decompilation of the* ***0th*** *revision of the* ***JP*** *version.*
 
 <br>
+<br>
 
----
+[![Button Discord]][Discord]   
+[![Button Build]][Build]
+
+</div>
+
+<br>
+<br>
 
 ## DOL
 
 *The* ***DOL*** *built with this repository.*
 
-**File** : `sms_jp_r0.dol` <br>
-**SHA1** : `9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
+### `sms_jp_r0.dol` <br>
 
----
-
-<br>
-
-## Building
-
-### Requirements
-
-- **[DevKitPro]**
-
-- **[GCC]**
-
-    ```sh
-    pacman -S gcc
-    ```
+```
+9f5a8caf56f5356aeac9d3ed28bf8de976a03625
+```
 
 <br>
-
-### Preparation
-
-*Windows only.*
-
--   Launch msys2(Provided by devkitPro) and run the command `pacman -S gcc`.
-
-<br>
-
-### Instructions
-
-1. Obtain a clean **DOL** of `Super Mario Sunshine JP 1.0`.
-
-2. Place it in the root folder with `baserom.dol` as its name.
-
-3. Download <kbd>**[GC_WII_COMPILERS.zip][GC]**</kbd>
-
-4. Extract it's content to `/tools/mwcc_compiler/`.
-
-5. Run the **Make** command :
-
-    ```sh
-    make
-    ```
-
-<br>
-
----
-
-<br>
-
-## Contributions
-
-*`Contributions` / `Pull Requests` are welcome !*
-
 
 
 <!----------------------------------------------------------------------------->
 
 [DevKitPro]: https://devkitpro.org/wiki/Getting_Started
+[Discord]: https://discord.gg/hKx3FJJgrV
+[Issues]: https://github.com/doldecomp/sms/issues
 [GCC]: https://gcc.gnu.org/
 [GC]: https://cdn.discordapp.com/attachments/727918646525165659/917185027656286218/GC_WII_COMPILERS.zip
 
-[Discord Badge]: https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white
-[Discord]: https://discord.gg/hKx3FJJgrV
+[Build]: docs/Building.md
+
+
+<!---------------------------------[ Badges ]---------------------------------->
+
+[Badge Contribute]: https://img.shields.io/badge/Contributions-Welcome-33660e?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=428813
+
+
+<!---------------------------------[ Buttons ]--------------------------------->
+
+[Button Discord]: https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white
+[Button Build]: https://img.shields.io/badge/Building-00A8E1?style=for-the-badge&logo=GitBook&logoColor=white
