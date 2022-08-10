@@ -37,11 +37,8 @@
 
 <!----------------------------------------------------------------------------->
 
-[DevKitPro]: https://devkitpro.org/wiki/Getting_Started
 [Discord]: https://discord.gg/hKx3FJJgrV
 [Issues]: https://github.com/doldecomp/sms/issues
-[GCC]: https://gcc.gnu.org/
-[GC]: https://cdn.discordapp.com/attachments/727918646525165659/917185027656286218/GC_WII_COMPILERS.zip
 
 [Build]: docs/Building.md
 
