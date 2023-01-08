@@ -69,6 +69,306 @@ class TDeParams : public TParams {
         TParamT<s16> illegalPlaneTime;
 };
 
+class TBodyAngleParams : public TParams {
+    public:
+        TParamT<f32> headRot;
+        TParamT<f32> waistRoll;
+        TParamT<f32> waistPitch;
+        TParamT<s16> waistRollMax;
+        TParamT<s16> waistPitchMax;
+        TParamT<f32> waistAngleChangeRate;
+};
+
+class TAttackParams : public TParams {
+    public:
+        TParamT<f32> radius;
+        TParamT<f32> height;
+};
+
+class THangingParams : public TParams {
+    public:
+        TParamT<f32> moveS;
+        TParamT<f32> anmRate;
+        TParamT<s16> rapidTime;
+        TParamT<s16> limitTime;
+        TParamT<f32> anmRapid;
+        TParamT<f32> descentSp;
+};
+
+class TPullParams : public TParams {
+    public:
+        TParamT<f32> pullRateV;
+        TParamT<f32> pullRateH;
+        TParamT<f32> oilPullRateV;
+        TParamT<f32> oilPullRateH;
+};
+
+class TDmgParams : public TParams {
+    public:
+        TParamT<u8> damage;
+        TParamT<u8> downType;
+        TParamT<u8> waterEmit;
+        TParamT<u8> motor;
+        TParamT<f32> minSpeed;
+        TParamT<f32> dirty;
+        TParamT<s16> invincibleTime;
+};
+
+class TUpperBodyParams : public TParams {
+    public:
+        TParamT<s16> pumpWaitTime;
+        TParamT<f32> pumpAnmSpeed;
+        TParamT<s16> hoverHeadAngle;
+        TParamT<s16> feelDeepHeadAngle;
+        TParamT<s16> frontWallHeadAngle;
+};
+
+class TBarParams : public TParams {
+    public:
+        TParamT<f32> climbSp;
+        TParamT<f32> rotateSp;
+        TParamT<f32> climbAnmRate;
+        TParamT<f32> catchRadius;
+        TParamT<f32> catchAngle;
+};
+
+class TSoundParams : public TParams {
+    public:
+        TParamT<f32> startFallVoiceSpeed;
+};
+
+class TOptionParams : public TParams {
+    public:
+        TParamT<f32> z;
+        TParamT<f32> xMin;
+        TParamT<f32> xMax;
+};
+
+class TMarioEffectParams : public TParams {
+    public:
+        TParamT<f32> dashInc;
+        TParamT<f32> dashDec;
+        TParamT<u8> dashMaxBlendInBlur;
+        TParamT<u8> dashMaxBlendInIris;
+        TParamT<f32> dashBlendScale;
+};
+
+class THoverParams : public TParams {
+    public:
+        TParamT<s16> rotSp;
+        TParamT<f32> accelRate;
+        TParamT<f32> brake;
+};
+
+class TDivingParams : public TParams {
+    public:
+        TParamT<s16> rotSp;
+        TParamT<f32> gravity;
+        TParamT<f32> accelControl;
+        TParamT<f32> seaBrake;
+        TParamT<f32> seaBrakeY;
+};
+
+class TYoshiParams : public TParams {
+    public:
+        TParamT<f32> runYoshiMult;
+        TParamT<f32> jumpYoshiMult;
+        TParamT<f32> rotYoshiMult;
+        TParamT<f32> headFront;
+        TParamT<f32> headRadius;
+        TParamT<f32> holdOutAccCtrlF;
+        TParamT<f32> holdOutAccCtrlB;
+        TParamT<f32> holdOutSldCtrl;
+        TParamT<f32> decBrake;
+};
+
+class THangRoofParams : public TParams {
+    public:
+        TParamT<f32> anmMult;
+};
+
+class TWireParams : public TParams {
+    public:
+        TParamT<s16> rotSpeed;
+        TParamT<s16> rotSpeedTrgHover;
+        TParamT<s16> rotSpeedTrgTurbo;
+        TParamT<s16> rotSpeedTrgRocket;
+        TParamT<s16> rotSpeedMax;
+        TParamT<s16> rotStop;
+        TParamT<s16> rotGravity;
+        TParamT<f32> rotBrake;
+        TParamT<f32> jumpRate;
+        TParamT<s32> swingRate;
+        TParamT<f32> wireJumpAccelControl;
+        TParamT<f32> wireJumpSlideControl;
+        TParamT<f32> wireJumpMult;
+        TParamT<f32> wireJumpBase;
+        TParamT<f32> wireSwingBrake;
+        TParamT<f32> wireSwingMax;
+};
+
+class TAutoDemoParams : public TParams {
+    public:
+        TParamT<s16> warpInBallsDispTime;
+        TParamT<s16> warpInBallsTime;
+        TParamT<s16> warpInCapturedTime;
+        TParamT<f32> warpInTremble;
+        TParamT<f32> warpInVecBase;
+        TParamT<f32> warpTransTremble;
+        TParamT<s16> readRotSp;
+};
+
+class TSlipParams : TParams {
+    public:
+        TParamT<f32> slipFriction;
+        TParamT<f32> slopeAccelUp;
+        TParamT<f32> slopeAccelDown;
+        TParamT<f32> slideAccelUp;
+        TParamT<f32> slideAccelDown;
+        TParamT<f32> slideAccelNormal;
+        TParamT<f32> slideStopCatch;
+        TParamT<u8> jumpEnable;
+        TParamT<f32> missJump;
+        TParamT<f32> slideAngleYSp;
+        TParamT<f32> stickSlideMult;
+};
+
+class TWaterEffectParams : public TParams {
+    public:
+        TParamT<f32> jumpIntoMdlEffectSpY;
+        TParamT<f32> jumpIntoMinY;
+        TParamT<f32> jumpIntoMaxY;
+        TParamT<f32> jumpIntoScaleMin;
+        TParamT<f32> jumpIntoScaleWidth;
+        TParamT<f32> runningRippleSpeed;
+        TParamT<f32> runningRippleDepth;
+};
+
+class TDirtyParams : TParams {
+    public:
+        TParamT<f32> incRunning;
+        TParamT<f32> incCatching;
+        TParamT<f32> incSlipping;
+        TParamT<f32> decSwimming;
+        TParamT<f32> decWaterHit;
+        TParamT<f32> decRotJump;
+        TParamT<f32> brakeStartValSlip;
+        TParamT<f32> brakeStartValRun;
+        TParamT<s16> dirtyTimeSlip;
+        TParamT<s16> dirtyTimeRun;
+        TParamT<f32> polSizeSlip;
+        TParamT<f32> polSizeRun;
+        TParamT<f32> polSizeFootPrint;
+        TParamT<f32> polSizeJump;
+        TParamT<f32> slopeAngle;
+        TParamT<f32> dirtyMax;
+        TParamT<f32> slipAnmSpeed;
+        TParamT<f32> slipRunSp;
+        TParamT<f32> slipCatchSp;
+        TParamT<s16> slipRotate;
+        TParamT<s16> slipCatchRotate;
+        TParamT<f32> brakeSlipNoPollute;
+        TParamT<s16> fogTimeYellow;
+        TParamT<s16> fogTimeRed;
+};
+
+class TMarioMotorParams : TParams {
+    public:
+        TParamT<s16> motorReturn;
+        TParamT<s16> motorTrample;
+        TParamT<s16> motorHipDrop;
+        TParamT<s16> motorWall;
+};
+
+class TSwimParams : TParams {
+    public:
+        TParamT<f32> startSp;
+        TParamT<f32> moveSp;
+        TParamT<f32> moveBrake;
+        TParamT<s16> swimmingRotSpMin;
+        TParamT<s16> swimmingRotSpMax;
+        TParamT<s16> pumpingRotSpMin;
+        TParamT<s16> pumpingRotSpMax;
+        TParamT<f32> gravity;
+        TParamT<f32> waitBouyancy;
+        TParamT<f32> moveBouyancy;
+        TParamT<f32> upDownBrake;
+        TParamT<f32> canJumpDepth;
+        TParamT<f32> endDepth;
+        TParamT<f32> floatHeight;
+        TParamT<f32> startVMult;
+        TParamT<f32> startVYMult;
+        TParamT<f32> rush;
+        TParamT<f32> anmBrake;
+        TParamT<f32> paddleSpeedUp;
+        TParamT<f32> paddleJumpUp;
+        TParamT<f32> floatUp;
+        TParamT<f32> waterLevelCheckHeight;
+        TParamT<f32> paddleDown;
+        TParamT<s16> waitSinkTime;
+        TParamT<f32> canBreathDepth;
+        TParamT<f32> waitSinkSpeed;
+        TParamT<f32> airDec;
+        TParamT<f32> airDecDive;
+        TParamT<f32> airInc;
+};
+
+class TMarioParticleParams : public TParams {
+    public:
+        TParamT<f32> meltInWaterMax;
+        TParamT<f32> waveEmitSpeed;
+        TParamT<s16> waveAlphaDec;
+        TParamT<f32> bubbleDepth;
+        TParamT<f32> bodyBubbleSpMin;
+        TParamT<f32> bodyBubbleSpMax;
+        TParamT<f32> bodyBubbleEmitMin;
+        TParamT<f32> bodyBubbleEmitMax;
+        TParamT<f32> bubbleToRipple;
+        TParamT<f32> toroccoWind;
+        TParamT<f32> toroccoSpark;
+};
+
+class TSurfingParams : TParams {
+    public:
+        TParamT<f32> rotMin;
+        TParamT<f32> rotMax;
+        TParamT<f32> powMin;
+        TParamT<f32> powMax;
+        TParamT<f32> accel;
+        TParamT<f32> waistRoll;
+        TParamT<f32> waistPitch;
+        TParamT<s16> waistRollMax;
+        TParamT<s16> waistPitchMax;
+        TParamT<s32> roll;
+        TParamT<f32> pitch;
+        TParamT<s16> rollMax;
+        TParamT<s16> pitchMax;
+        TParamT<f32> angleChangeRate;
+        TParamT<f32> waistAngleChangeRate;
+        TParamT<f32> scaleMin;
+        TParamT<f32> scaleMax;
+        TParamT<f32> scaleMinSpeed;
+        TParamT<f32> scaleMaxSpeed;
+        TParamT<f32> jumpPow;
+        TParamT<f32> jumpXZRatio;
+        TParamT<f32> clashSpeed;
+        TParamT<s16> clashAngle;
+};
+
+class TControllerParams : TParams {
+    public:
+        TParamT<u8> analogLRToZeroVal;
+        TParamT<u8> analogLRToMiddleVal;
+        TParamT<u8> analogLRToMaxVal;
+        TParamT<f32> analogLRMiddleLevel;
+        TParamT<f32> startToWalkLevel;
+        TParamT<s16> stickRotateTime;
+        TParamT<s16> lengthMultTimes;
+        TParamT<f32> lengthMult;
+        TParamT<f32> squatRotMidAnalog;
+        TParamT<f32> squatRotMidValue;
+};
+
 class TJumpParams : TParams {
     public:
         TParamT<f32> gravity;
@@ -117,6 +417,56 @@ class TJumpParams : TParams {
         TParamT<f32> jumpJumpCatchSp;
         TParamT<f32> getOffYoshiY;
         TParamT<s16> superHipAttackCt;
+};
+
+class TRunParams : TParams {
+    public:
+        TParamT<f32> maxSpeed;
+        TParamT<f32> velMinusBrake;
+        TParamT<f32> addBase;
+        TParamT<f32> addVelDiv;
+        TParamT<f32> decStartNrmY;
+        TParamT<f32> decBrake;
+        TParamT<f32> soft2Walk;
+        TParamT<f32> walk2Soft;
+        TParamT<f32> softStepAnmMult;
+        TParamT<f32> runAnmSpeedBase;
+        TParamT<f32> runAnmSpeedMult;
+        TParamT<f32> motBlendWalkSp;
+        TParamT<f32> motBlendRunSp;
+        TParamT<f32> swimDepth;
+        TParamT<f32> inWaterBrake;
+        TParamT<f32> inWaterAnmBrake;
+        TParamT<f32> pumpingSlideSp;
+        TParamT<f32> pumpingSlideAnmSp;
+        TParamT<f32> doJumpCatchSp;
+        TParamT<f32> turnNeedSp;
+        TParamT<s16> dashRotSp;
+};
+
+class TGraffitoParams : TParams {
+    public:
+        TParamT<s16> sinkTime;
+        TParamT<s16> sinkDmgTime;
+        TParamT<f32> sinkHeight;
+        TParamT<f32> sinkMoveMin;
+        TParamT<f32> sinkMoveMax;
+        TParamT<f32> sinkRecover;
+        TParamT<f32> sinkJumpRateMin;
+        TParamT<f32> sinkJumpRateMax;
+        TParamT<f32> sinkPumpLimit;
+        TParamT<f32> field14_0xbc;
+        TParamT<f32> fireHeight;
+        TParamT<s16> dizzySlipCtMax;
+        TParamT<s16> dizzyWalkCtMax;
+        TParamT<s16> dizzyAngleY;
+        TParamT<f32> dizzyAngleRate;
+        TParamT<f32> dizzyPowerRate;
+        TParamT<f32> dizzyPower;
+        TParamT<s16> fireInvincibleTime;
+        TParamT<s16> footEraseTimes;
+        TParamT<f32> footEraseSize;
+        TParamT<f32> footEraseFront;
 };
 
 #endif
