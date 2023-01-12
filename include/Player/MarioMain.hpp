@@ -58,6 +58,7 @@ class TMario : public TTakeActor {
         u32 actionArg;
         f32 intendedMag;
         s16 intendedYaw;
+        u16 _092;
 
         JGeometry::TVec3<s16> faceAngle; // 0x94
         u16 modelFaceAngle;
