@@ -113,7 +113,7 @@ $(BUILD_DIR)/src/os/__start.o:             FILE_UNIQUE_CFLAGS = -inline on,auto 
 
 default: all
 
-all: $(DOL)
+all: dirs $(DOL)
 
 ALL_DIRS := $(sort $(dir $(O_FILES)))
 ifeq ($(EPILOGUE_PROCESS),1)
@@ -129,6 +129,9 @@ DUMMY != mkdir -p $(ALL_DIRS)
 # endif
 
 .PHONY: tools
+
+dirs:
+	mkdir -p $(ALL_DIRS)
 
 $(LDSCRIPT): ldscript.lcf
 	$(CPP) -MMD -MP -MT $@ -MF $@.d -I include/ -I . -DBUILD_DIR=$(BUILD_DIR) -o $@ $<
