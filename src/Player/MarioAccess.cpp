@@ -19,7 +19,7 @@ bool SMS_IsMarioRoofing()
 {
 	bool ret;
 
-	u32 val = gpMarioOriginal->status & 0x1FF;
+	u32 val = gpMarioOriginal->action & 0x1FF;
 
 	if (val >= 0x147 and val <= 0x14A) {
 		ret = true;
@@ -34,7 +34,7 @@ bool SMS_IsMarioFencing()
 {
 	bool ret;
 
-	u32 val = gpMarioOriginal->status & 0x1FF;
+	u32 val = gpMarioOriginal->action & 0x1FF;
 
 	if (val >= 0x168 and val <= 0x16C) {
 		ret = true;
@@ -45,7 +45,7 @@ bool SMS_IsMarioFencing()
 	return ret;
 }
 
-u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->status; }
+u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->action; }
 
 void* SMS_GetMarioRfPlane() { return gpMarioOriginal->ceil; }
 
@@ -53,7 +53,7 @@ void* SMS_GetMarioWlPlane() { return gpMarioOriginal->wall; }
 
 void* SMS_GetMarioGrPlane() { return gpMarioOriginal->floor; }
 
-u32 SMS_GetMarioStatus() { return gpMarioOriginal->status; }
+u32 SMS_GetMarioStatus() { return gpMarioOriginal->action; }
 
 void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
 {
@@ -113,8 +113,8 @@ u32 SMS_IsMarioOnYoshi()
 
 bool SMS_IsMarioOpeningDoor()
 {
-	if (gpMarioOriginal->status == 0x1320
-	    || gpMarioOriginal->status == 0x1321) {
+	if (gpMarioOriginal->action == 0x1320
+	    || gpMarioOriginal->action == 0x1321) {
 		return true;
 	} else {
 		return false;
@@ -216,8 +216,8 @@ s16 SMS_GetMarioHP() { return gpMarioOriginal->health; }
 
 bool SMS_IsMarioHeadSlideAttack()
 {
-	if (gpMarioOriginal->status == 0x00800456
-	    || gpMarioOriginal->status == 0x0080088A) {
+	if (gpMarioOriginal->action == 0x00800456
+	    || gpMarioOriginal->action == 0x0080088A) {
 		return 1;
 	} else {
 		return 0;
@@ -226,7 +226,7 @@ bool SMS_IsMarioHeadSlideAttack()
 
 bool SMS_IsMarioStatusElecDamage()
 {
-	if (gpMarioOriginal->status == 0x00020338) {
+	if (gpMarioOriginal->action == 0x00020338) {
 		return 1;
 	} else {
 		return 0;
@@ -235,7 +235,7 @@ bool SMS_IsMarioStatusElecDamage()
 
 bool SMS_IsMarioStatusThrownDown()
 {
-	if (gpMarioOriginal->status == 0x000208B8) {
+	if (gpMarioOriginal->action == 0x000208B8) {
 		return 1;
 	} else {
 		return 0;
@@ -244,7 +244,7 @@ bool SMS_IsMarioStatusThrownDown()
 
 bool SMS_IsMarioStatusHipDrop()
 {
-	if (gpMarioOriginal->status == 0x008008A9) {
+	if (gpMarioOriginal->action == 0x008008A9) {
 		return 1;
 	} else {
 		return 0;
@@ -253,7 +253,7 @@ bool SMS_IsMarioStatusHipDrop()
 
 bool SMS_IsMarioStatusTypeSwimming()
 {
-	if (gpMarioOriginal->status & (1 << 13)) {
+	if (gpMarioOriginal->action & (1 << 13)) {
 		return 1;
 	} else {
 		return 0;
@@ -262,7 +262,7 @@ bool SMS_IsMarioStatusTypeSwimming()
 
 bool SMS_IsMarioStatusTypeJumping()
 {
-	if (gpMarioOriginal->status & (1 << 11)) {
+	if (gpMarioOriginal->action & (1 << 11)) {
 		return 1;
 	} else {
 		return 0;
@@ -291,12 +291,12 @@ void SMS_SetMarioAccessParams()
 	gpMarioAddress = gpMarioOriginal;
 	gpMarioPos     = &gpMarioOriginal->position;
 
-	angle         = &gpMarioOriginal->angle.x;
+	angle         = &gpMarioOriginal->faceAngle.x;
 	gpMarioAngleX = angle;
 	gpMarioAngleY = angle + 1;
 	gpMarioAngleZ = angle + 2;
 
-	speed         = &gpMarioOriginal->speed.x;
+	speed         = &gpMarioOriginal->vel.x;
 	gpMarioSpeedX = speed;
 	gpMarioSpeedY = speed + 1;
 	gpMarioSpeedZ = speed + 2;
