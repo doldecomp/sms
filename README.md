@@ -27,9 +27,9 @@ sms_jp_r0.dol: `sha1: 9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
 #### Docker
 
 1. Install docker
-2. Run `docker build . -t sms` to build the enviroment
-3. Run `docker run --rm -it --entrypoint bash sms:latest` to enter the shell of the container
-4. While inside the docker shell, run `make`
+2. Run `docker build . -t sms` to build the environment
+3. Run `docker run --rm -it -v YOURPATH:/sms sms:latest` to build the sms project
+    * Replace `YOURPATH` with the absolute path to the project directory i.e. `~/sms` if it is in your home directory
 
 ## Contributions
 

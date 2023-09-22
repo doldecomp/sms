@@ -17,4 +17,4 @@ RUN apt-get install -y gcc build-essential
 ENV DEVKITPPC=${DEVKITPRO}/devkitPPC
 ENV DEVKITARM=/opt/devkitpro/devkitARM
 
-ENTRYPOINT [ "tail -f /dev/null" ]
+ENTRYPOINT [ "make" ]
