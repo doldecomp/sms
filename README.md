@@ -27,8 +27,10 @@ sms_jp_r0.dol: `sha1: 9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
 #### Docker
 
 1. Install docker
-2. Run `docker build . -t sms` to build the environment
-3. Run `docker run --rm -it -v YOURPATH:/sms sms:latest` to build the sms project
+2. Obtain a clean DOL of SMS JP 1.0 and place it in the base working directory and name it `baserom.dol`.
+3. Download GC_WII_COMPILERS.zip from (https://cdn.discordapp.com/attachments/727918646525165659/1129759991696457728/GC_WII_COMPILERS.zip) and extract it to tools/mwcc_compiler/.
+4. Run `docker build . -t sms` to build the environment
+5. Run `docker run --rm -it -v YOURPATH:/sms sms:latest` to build the sms project
     * Replace `YOURPATH` with the absolute path to the project directory i.e. `~/sms` if it is in your home directory
 
 ## Contributions
