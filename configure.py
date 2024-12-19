@@ -176,7 +176,7 @@ config.reconfig_deps = []
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
-config.scratch_preset_id = None
+config.scratch_preset_id = 61  # Super Mario Sunshine
 
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
@@ -254,17 +254,6 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Helper function for REL script objects
-def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
-    return {
-        "lib": lib_name,
-        "mw_version": "GC/1.3.2",
-        "cflags": cflags_rel,
-        "progress_category": "game",
-        "objects": objects,
-    }
-
-
 Matching = True                   # Object matches and should be linked
 NonMatching = False               # Object does not match and should not be linked
 Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
@@ -282,7 +271,6 @@ config.libs = [
         "lib": "main",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
-        "host": True,
         "objects": [
             Object(Matching, "main.cpp"),
         ],
@@ -291,7 +279,6 @@ config.libs = [
         "lib": "JSystem",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_jsystem,
-        "host": True,
         "objects": [
             Object(Matching, "JSystem/J3DClusterLoader.cpp"),
             Object(Matching, "JSystem/JASProbe.cpp"),
@@ -305,7 +292,6 @@ config.libs = [
         "lib": "MarioUtil",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
-        "host": True,
         "objects": [
             Object(Matching, "MarioUtil/MapUtil.cpp"),
             Object(Matching, "MarioUtil/RumbleType.cpp"),
@@ -316,7 +302,6 @@ config.libs = [
         "lib": "Runtime.PPCEABI.H",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_runtime,
-        "host": False,
         "objects": [
             Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
             Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.cp"),
@@ -327,7 +312,6 @@ config.libs = [
         "lib": "MSL_C.PPCEABI.bare.H",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_runtime,
-        "host": False,
         "objects": [
             Object(Matching, "MSL_C.PPCEABI.bare.H/hyperbolicsf.c"),
             Object(Matching, "MSL_C.PPCEABI.bare.H/rand.c"),
@@ -337,7 +321,6 @@ config.libs = [
         "lib": "NPC",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
-        "host": True,
         "objects": [
             Object(Matching, "NPC/NpcBalloon.cpp"),
             Object(Matching, "NPC/NpcInitActionData.cpp"),
@@ -347,7 +330,6 @@ config.libs = [
         "lib": "os",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_base,
-        "host": False,
         "objects": [
             Object(Matching, "os/__ppc_eabi_init.cpp"),
             Object(Matching, "os/__start.c"),
@@ -357,7 +339,6 @@ config.libs = [
         "lib": "Player",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
-        "host": True,
         "objects": [
             Object(Matching, "Player/MarioAccess.cpp"),
         ],
@@ -366,9 +347,9 @@ config.libs = [
         "lib": "System",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_system,
-        "host": True,
         "objects": [
-            Object(Matching,
+            Object(
+                Matching,
                 "System/FlagManager.cpp",
                 cflags=[*cflags_system, "-inline all,level=1,deferred"],
             ),

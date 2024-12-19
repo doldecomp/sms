@@ -1,16 +1,16 @@
 Sections:
-	.init       type:code
-	extab       type:rodata
-	extabindex  type:rodata
-	.text       type:code
-	.ctors      type:rodata
-	.dtors      type:rodata
-	.rodata     type:rodata
-	.data       type:data
-	.bss        type:bss
-	.sdata      type:data
-	.sbss       type:bss
-	.sdata2     type:rodata
+	.init       type:code align:4
+	extab       type:rodata align:32
+	extabindex  type:rodata align:32
+	.text       type:code align:8
+	.ctors      type:rodata align:16
+	.dtors      type:rodata align:16
+	.rodata     type:rodata align:32
+	.data       type:data align:16
+	.bss        type:bss align:32
+	.sdata      type:data align:4
+	.sbss       type:bss align:16
+	.sdata2     type:rodata align:16
 
 main.cpp:
 	.text       start:0x80005600 end:0x8000566C
@@ -3675,12 +3675,12 @@ Runtime.PPCEABI.H/__va_arg.c:
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
 	.text       start:0x8032FF40 end:0x8032FFA0
-	.dtors      start:0x8036B6A8 end:0x8036B6B0
+	.dtors      start:0x8036B6A8 end:0x8036B6AC
 	.sbss       start:0x80405DF0 end:0x80405DF8
 
 Runtime.PPCEABI.H/NMWException.cp:
 	extab       start:0x80005540 end:0x80005588
-	extabindex  start:0x800055A0 end:0x800055FC
+	extabindex  start:0x800055A0 end:0x800055DC
 	.text       start:0x8032FFA0 end:0x80330354
 
 Runtime.PPCEABI.H/ptmf.c:
@@ -3800,7 +3800,7 @@ MSL_C.PPCEABI.bare.H/inverse_trig.c:
 
 MSL_C.PPCEABI.bare.H/trigf.c:
 	.text       start:0x8033474C end:0x80334B38
-	.ctors      start:0x8036B690 end:0x8036B698
+	.ctors      start:0x8036B690 end:0x8036B694
 	.rodata     start:0x803A3168 end:0x803A3178
 	.data       start:0x803DE188 end:0x803DE198
 	.sdata2     start:0x8040EB88 end:0x8040EBA0
@@ -4001,7 +4001,7 @@ os/__start.c:
 	.init       start:0x800051EC end:0x80005440
 
 os/__ppc_eabi_init.cpp:
-	.init       start:0x80005440 end:0x80005530
+	.init       start:0x80005440 end:0x80005494
 	.text       start:0x80341B58 end:0x80341BEC
 
 mtx/mtx.c:

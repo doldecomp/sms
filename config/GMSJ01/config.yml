@@ -1,5 +1,6 @@
 name: mario
-object: orig/GMSJ01/sys/main.dol
+object_base: orig/GMSJ01
+object: sys/main.dol
 
 # Generated from mario.MAP
 # map: orig/GMSJ01/files/mario.MAP

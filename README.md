@@ -1,43 +1,21 @@
-Some Game  
-[![Build Status]][actions] ![Progress] ![DOL Progress] ![RELs Progress] [![Discord Badge]][discord]
+Super Mario Sunshine  
+[![Build Status]][actions] [![Code Progress]][progress] [![Discord Badge]][discord]
 =============
 
-<!--
-Replace with your repository's URL.
--->
-[Build Status]: https://github.com/encounter/sms-dtk/actions/workflows/build.yml/badge.svg
-[actions]: https://github.com/encounter/sms-dtk/actions/workflows/build.yml
-<!---
-Code progress URL:
-https://progress.decomp.club/data/[project]/[version]/all/?mode=shield&measure=code
-URL encoded then appended to: https://img.shields.io/endpoint?label=Code&url=
--->
-[Progress]: https://img.shields.io/endpoint?label=Code&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Ftww%2FGZLE01%2Fall%2F%3Fmode%3Dshield%26measure%3Dcode
-<!---
-DOL progress URL:
-https://progress.decomp.club/data/[project]/[version]/dol/?mode=shield&measure=code
-URL encoded then appended to: https://img.shields.io/endpoint?label=DOL&url=
--->
-[DOL Progress]: https://img.shields.io/endpoint?label=DOL&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Ftww%2FGZLE01%2Fdol%2F%3Fmode%3Dshield%26measure%3Dcode
-<!--
-REL progress URL:
-https://progress.decomp.club/data/[project]/[version]/modules/?mode=shield&measure=code
-URL encoded then appended to: https://img.shields.io/endpoint?label=RELs&url=
--->
-[RELs Progress]: https://img.shields.io/endpoint?label=RELs&url=https%3A%2F%2Fprogress.decomp.club%2Fdata%2Ftww%2FGZLE01%2Fmodules%2F%3Fmode%3Dshield%26measure%3Dcode
-<!--
-Replace with your Discord server's ID and invite URL.
--->
+[Build Status]: https://github.com/doldecomp/sms/actions/workflows/build.yml/badge.svg
+[actions]: https://github.com/doldecomp/sms/actions/workflows/build.yml
+[Code Progress]: https://decomp.dev/doldecomp/sms.svg?mode=shield&measure=code&label=Code
+[progress]: https://decomp.dev/doldecomp/sms
 [Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
 [discord]: https://discord.gg/hKx3FJJgrV
 
-A work-in-progress decompilation of SMS.
+A work-in-progress decompilation of Super Mario Sunshine.
 
 This repository does **not** contain any game assets or assembly whatsoever. An existing copy of the game is required.
 
 Supported versions:
 
-- `GMSJ01`: Rev 0 (JP)
+- `GMSJ01`: Rev 0 (JPN)
 - `GMSP01`: Rev 0 (PAL)
 
 Dependencies
@@ -88,10 +66,10 @@ Building
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/my/repo.git
+  git clone https://github.com/doldecomp/sms.git
   ```
 
-- Copy your game's disc image to `orig/GAMEID`.
+- Copy your game's disc image to `orig/GMSJ01`. (Or the appropriate version folder.)
   - Supported formats: ISO (GCM), RVZ, WIA, WBFS, CISO, NFS, GCZ, TGC
   - After the initial build, the disc image can be deleted to save space.
 
@@ -101,7 +79,7 @@ Building
   python configure.py
   ```
 
-  To use a version other than `GAMEID` (USA), specify it with `--version`.
+  To use a version other than `GMSJ01` (JPN), specify it with `--version`.
 
 - Build:
 

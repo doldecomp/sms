@@ -1,5 +1,6 @@
 name: marioEU
-object: orig/GMSP01/sys/main.dol
+object_base: orig/GMSP01
+object: sys/main.dol
 
 # Generated from mario.MAP
 # map: orig/GMSP01/files/marioEU.MAP
