@@ -71,7 +71,7 @@ public:
 	/* 0x44 */ char undefined2[2];
 	/* 0x46 */ char undefined2_2[2];
 	/* 0x48 */ TProcessMeter* meter;
-	char filler4C[4]; // this should be 0x50 according to the bss padding...
+
 	// functions
 	TApplication();
 	void initialize();

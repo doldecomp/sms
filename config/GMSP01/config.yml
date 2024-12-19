@@ -1,0 +1,12 @@
+name: marioEU
+object: orig/GMSP01/sys/main.dol
+
+# Generated from mario.MAP
+# map: orig/GMSP01/files/marioEU.MAP
+# common_start: 0x803FBA30
+symbols: config/GMSP01/symbols.txt
+splits: config/GMSP01/splits.txt
+
+mw_comment_version: 8 # GC Linker 1.2.5
+symbols_known: true # Very fast analysis
+fill_gaps: false # Alignments known

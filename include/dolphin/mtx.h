@@ -11,6 +11,7 @@ extern "C" {
 
 // sizeof = 48 or 0x30
 typedef float Mtx[3][4];
+typedef float (*MtxPtr)[4];
 typedef float Mtx44[4][4];
 typedef float PSQuaternion[4];
 #define MTXDegToRad(a) ((a)*0.01745329252f)

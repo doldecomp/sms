@@ -3,9 +3,11 @@
 
 #include "GC2D/GCConsole2.hpp"
 
-extern class  {
+extern class TMarDirector {
     public:
-        char pad_000[0x70];
+        char pad_000[0x58];
+        s32 frameIndex;
+        char pad_001[0x14];
         int _070;
         TGCConsole2 *console;
         int _078;
