@@ -111,11 +111,6 @@ struct UnkStructUnk58 {
 	float unk14;
 };
 
-struct J3DModel {
-	char filler0[0x58];
-	struct UnkStructUnk58* unk58;
-};
-
 class TLiveActor {
 public:
 	struct J3DModel* getModel() const;
@@ -124,12 +119,6 @@ public:
 struct UnkStruct44 {
 	char filler0[0x4C];
 	int unk4C;
-};
-
-class TBGCheckData {
-public:
-	char filler0[0x44];
-	struct UnkStruct44* unk44;
 };
 
 extern struct gpCameraStruct* gpCamera;
