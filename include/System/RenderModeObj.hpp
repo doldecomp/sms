@@ -3,6 +3,4 @@
 
 #include "dolphin.h"
 
-
-
 #endif // RENDERMODEOBJ_HPP

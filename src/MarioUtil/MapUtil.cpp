@@ -1,6 +1,9 @@
 #include "dolphin.h"
 #include "gpMarDirector.hpp"
 #include "types.h"
+#include <Map/Map.hpp>
+#include <JSystem/J3DModel.hpp>
+#include <Strategic/HitActor.hpp>
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
 {
@@ -20,7 +23,10 @@ void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value)
 	void* actor = NULL;
 	if (bgData) {
 		actor = bgData->unk44;
-		if (bgData->unk44 && value != bgData->unk44->unk4C) {
+		// TODO: this does not match and I have no idea what the original
+		// author was thinking, the entire THitActor hierarchy needs to be
+		// figured out
+		if (bgData->unk44 && value != bgData->unk44->actorType) {
 			actor = NULL;
 		}
 	}

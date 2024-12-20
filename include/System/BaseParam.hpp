@@ -11,8 +11,8 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 
 	u16 keyCode;
-	char *name;
-	TBaseParam *next;
+	char* name;
+	TBaseParam* next;
 };
 
 #endif

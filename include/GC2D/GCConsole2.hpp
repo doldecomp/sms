@@ -4,8 +4,8 @@
 #include <dolphin/types.h>
 
 class TGCConsole2 {
-    public:
-        void startAppearBalloon(u32, bool);
+public:
+	void startAppearBalloon(u32, bool);
 };
 
 #endif

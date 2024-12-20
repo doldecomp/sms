@@ -5,6 +5,6 @@
 
 class JKRHeap;
 
-void *operator new(u32, JKRHeap *, int);
+void* operator new(u32, JKRHeap*, int);
 
 #endif
