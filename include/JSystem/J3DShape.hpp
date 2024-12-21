@@ -7,7 +7,7 @@
 class J3DShape {
 public:
 	typedef void IDK;
-	IDK initialize();
+	void initialize();
 	~J3DShape();
 	IDK calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 	IDK countBumpMtxNum() const;
@@ -16,7 +16,27 @@ public:
 	IDK loadVtxArray() const;
 	IDK draw() const;
 
-	char unk0[0x50];
+	u32 unk0;
+	u16 unk4;
+	u16 unk6;
+	u32 unk8;
+	float unkC;
+	float unk10;
+	float unk14;
+	float unk18;
+	float unk1C;
+	float unk20;
+	float unk24;
+	void* unk28;
+	u32 unk2c;
+	u8 unk30;
+	char unk31[3];
+	u32 unk34;
+	u32 unk38;
+	char unk3c[8];
+	u32 unk44;
+	u32 unk48;
+	u32 unk4c;
 	u32 unk50;
 	u32 unk54;
 	void* unk58;
@@ -37,7 +57,7 @@ public:
 	virtual IDK getType() const;
 
 	static IDK* mtxLoadPipeline;
-	static IDK* currentPipeline;
+	static u32 currentPipeline;
 };
 
 #endif

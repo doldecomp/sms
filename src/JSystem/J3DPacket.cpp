@@ -4,8 +4,9 @@
 #include <JSystem/J3DMaterial.hpp>
 #include <JSystem/J3DShape.hpp>
 #include <dolphin/os.h>
-#include <gd/GDBase.h>
-#include <gx/GXDisplayList.h>
+#include <dolphin/GDBase.h>
+#include <dolphin/gx.h>
+
 
 int J3DDrawPacket::sInterruptFlag;
 
