@@ -297,6 +297,7 @@ config.libs = [
             Object(Matching, "MarioUtil/RumbleType.cpp"),
             Object(Matching, "MarioUtil/EffectUtil.cpp"),
             Object(Matching, "MarioUtil/ModelUtil.cpp"),
+            Object(Matching, "MarioUtil/TexUtil.cpp"),
         ],
     },
     {
