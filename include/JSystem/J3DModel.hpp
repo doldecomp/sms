@@ -74,9 +74,6 @@ struct J3DSkinDeform;
 struct J3DVtxColorCalc;
 struct J3DVtxShader;
 
-// TODO: is this an enum? Probably
-enum J3DDeformAttachFlag {};
-
 // size should be 0xa0
 class J3DModel {
 public:
@@ -112,9 +109,12 @@ public:
 		float unk14;
 	};
 
-	char padding0[0x58];
+	void* unk0; // some JThing w/ a lot of data inside of it
+	char padding0[0x50];
 	UnknownStruct* unk58;
-	char padding5c[0x40];
+	char padding1[0x24];
+	void* unk80; // array of things of size 0x48 judging by SMS_UnifyMaterial
+	char padding5c[0x1c];
 };
 
 #endif

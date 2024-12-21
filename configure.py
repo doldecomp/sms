@@ -286,6 +286,9 @@ config.libs = [
             Object(Matching, "JSystem/JDRResolution.cpp"),
             Object(Matching, "JSystem/JSUList.cpp"),
             Object(Matching, "JSystem/JUTRect.cpp"),
+            Object(Matching, "JSystem/J3DModel.cpp"),
+            Object(Matching, "JSystem/J3DVertex.cpp"),
+            Object(Matching, "JSystem/J3DPacket.cpp"),
         ],
     },
     {
@@ -298,6 +301,7 @@ config.libs = [
             Object(Matching, "MarioUtil/EffectUtil.cpp"),
             Object(Matching, "MarioUtil/ModelUtil.cpp"),
             Object(Matching, "MarioUtil/TexUtil.cpp"),
+            Object(Matching, "MarioUtil/DrawUtil.cpp"),
         ],
     },
     {
