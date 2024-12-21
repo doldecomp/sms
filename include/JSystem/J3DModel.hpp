@@ -4,6 +4,7 @@
 #include <dolphin/types.h>
 #include <JSystem/J3DVertex.hpp>
 #include <JSystem/J3DMaterialAttach.hpp>
+#include <JSystem/ResTIMG.hpp>
 
 struct J3DNode;
 struct J3DModelHierarchy;
@@ -24,6 +25,9 @@ struct J3DMaterialCopyFlag {
 	u32 unk1b : 1;
 };
 
+class JUTNameTab;
+
+// Should be 0xbc bytes
 class J3DModelData : public J3DDrawMtxData, public J3DVertexData {
 public:
 	typedef void IDK;
@@ -48,8 +52,21 @@ public:
 	IDK setTexMtxAnimator(J3DAnmTextureSRTKey*, J3DTexMtxAnm*, J3DTexMtxAnm*);
 	IDK setTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm*, J3DTevKColorAnm*);
 
-	char padding[0x18];
+	char padding0[0x18];
 	J3DMaterialTable mMaterialTable;
+	char padding1[0x7c];
+	JUTNameTab* unkA8;
+
+	struct UnknownStruct
+	{
+		u16 unk0;
+		char unk2[2];
+		ResTIMG* unk4;
+	};
+
+	UnknownStruct* unkAC;
+	char padding2[0x10];
+
 };
 
 struct J3DDeformData;
