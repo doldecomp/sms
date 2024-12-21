@@ -289,6 +289,7 @@ config.libs = [
             # Object(Matching, "JSystem/J3DModel.cpp"),
             Object(Matching, "JSystem/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3DPacket.cpp"),
+            # Object(Matching, "JSystem/J3DShape.cpp"),
         ],
     },
     {
