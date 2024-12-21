@@ -51,12 +51,12 @@ void J3DVertexBuffer::copyTransformedVtxArray()
 	}
 
 	for (int i = 0; i < 2; ++i) {
-    // TODO: the `new`s are probably for vec3s
+		// TODO: the `new`s are probably for vec3s
 		if (i == 0 || unk1C[i] == 0) {
-			unk1C[i] = new(0x20) char[mVertexData->unk0 * 0xc];
+			unk1C[i] = new (0x20) char[mVertexData->unk0 * 0xc];
 		}
 		if (i == 0 || unk24[i] == 0) {
-			unk24[i] = new(0x20) char[mVertexData->unk4 * 0xc];
+			unk24[i] = new (0x20) char[mVertexData->unk4 * 0xc];
 		}
 	}
 }

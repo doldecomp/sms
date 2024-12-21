@@ -7,31 +7,28 @@
 #include <JSystem/JDRNameRef.hpp>
 #include <JSystem/JGeometry.hpp>
 
-
-class TSilhouette : public JDrama::TNameRef
-{
+class TSilhouette : public JDrama::TNameRef {
 public:
-  typedef void IDK;
-  IDK calcSilhouetteBorder();
-  virtual IDK perform(u32, JDrama::TGraphics*);
-  IDK setting(float(*)[4]);
-  virtual void loadAfter();
-  virtual void load(JSUMemoryInputStream&);
+	typedef void IDK;
+	IDK calcSilhouetteBorder();
+	virtual IDK perform(u32, JDrama::TGraphics*);
+	IDK setting(float (*)[4]);
+	virtual void loadAfter();
+	virtual void load(JSUMemoryInputStream&);
 
-  virtual ~TSilhouette() {};
+	virtual ~TSilhouette() {};
 };
 
 class J3DModel;
 
-class TTrembleModelEffect
-{
+class TTrembleModelEffect {
 public:
-  typedef void IDK;
-  IDK reset();
-  IDK movement();
-  IDK clash(float);
-  IDK tremble(float, float, float, int);
-  IDK init(J3DModel*);
+	typedef void IDK;
+	IDK reset();
+	IDK movement();
+	IDK clash(float);
+	IDK tremble(float, float, float, int);
+	IDK init(J3DModel*);
 };
 
 class J3DMaterial;
@@ -46,9 +43,11 @@ IDK SMS_DrawInit();
 IDK SMS_MakeDLAndLock(J3DModel*);
 IDK SMS_DrawShape(J3DModelData*, u16);
 IDK SMS_SettingDrawShape(J3DModelData*, u16);
-IDK SMS_DrawCube(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&);
+IDK SMS_DrawCube(const JGeometry::TVec3<float>&,
+                 const JGeometry::TVec3<float>&);
 IDK SMS_CountPolygonNumInShape(J3DShape*);
 IDK SMS_ResetDamageFogEffect(J3DModelData*);
-IDK SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&, JDrama::TGraphics*);
+IDK SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&,
+                           JDrama::TGraphics*);
 
 #endif
