@@ -57,8 +57,7 @@ public:
 	char padding1[0x7c];
 	JUTNameTab* unkA8;
 
-	struct UnknownStruct
-	{
+	struct UnknownStruct {
 		u16 unk0;
 		char unk2[2];
 		ResTIMG* unk4;
@@ -66,7 +65,6 @@ public:
 
 	UnknownStruct* unkAC;
 	char padding2[0x10];
-
 };
 
 struct J3DDeformData;

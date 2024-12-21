@@ -8,7 +8,12 @@ class J3DDrawBuffer;
 
 class J3DPacket {
 public:
-  J3DPacket() { unk4 = 0; unk8 = 0; unkC = 0; }
+	J3DPacket()
+	{
+		unk4 = 0;
+		unk8 = 0;
+		unkC = 0;
+	}
 
 	typedef void IDK;
 
@@ -21,12 +26,12 @@ public:
 
 	J3DPacket* unk4;
 	J3DPacket* unk8;
-  u32 unkC;
+	u32 unkC;
 };
 
 class J3DCallBackPacket : public J3DPacket {
 public:
-  J3DCallBackPacket() { unk10 = NULL; }
+	J3DCallBackPacket() { unk10 = NULL; }
 
 	virtual void draw();
 	virtual ~J3DCallBackPacket() { }
@@ -43,15 +48,15 @@ public:
 	virtual void draw();
 	virtual ~J3DShapePacket();
 
-  J3DShape *unk14;
-  u32 unk18;
-  u32 unk1C;
-  void* unk20;
-  u32 unk24;
-  u32 unk28;
-  u32 unk2C;
-  u8 unk30;
-  char unk31[0x3];
+	J3DShape* unk14;
+	u32 unk18;
+	u32 unk1C;
+	void* unk20;
+	u32 unk24;
+	u32 unk28;
+	u32 unk2C;
+	u8 unk30;
+	char unk31[0x3];
 };
 
 class J3DDrawPacket : public J3DPacket {
@@ -67,7 +72,7 @@ public:
 	IDK beginPatch();
 	IDK endPatch();
 
-  u32 unk10;
+	u32 unk10;
 	char padding0[0xc];
 	u32 unk20;
 	char padding1[0x4];
@@ -103,11 +108,11 @@ public:
 	void addShapePacket(J3DShapePacket* packet);
 	IDK isHideAllShapePacket_();
 
-  J3DShapePacket* unk34; // TODO: might be part of DrawPacket
-  J3DMaterial *unk38;
-  u32 unk3C; // TODO: unk3C is something weird, probably not u32
-  u32 unk40;
-  u32 unk44;
+	J3DShapePacket* unk34; // TODO: might be part of DrawPacket
+	J3DMaterial* unk38;
+	u32 unk3C; // TODO: unk3C is something weird, probably not u32
+	u32 unk40;
+	u32 unk44;
 };
 
 class J3DDisplayListObj {

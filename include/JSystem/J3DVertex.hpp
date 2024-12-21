@@ -30,8 +30,7 @@ public:
 // TODO: is this an enum?
 enum J3DDeformAttachFlag {};
 
-class J3DVertexBuffer
-{
+class J3DVertexBuffer {
 public:
 	J3DVertexBuffer(J3DVertexData* vertex_data);
 

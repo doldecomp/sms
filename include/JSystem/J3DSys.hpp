@@ -11,7 +11,7 @@ public:
 	char pad_000[0x34];
 	s32 _034;
 	char pad_001[0x4];
-  void* _03C_4_;
+	void* _03C_4_;
 	char pad_002[0x14];
 	u32 _054_4_;
 	char padd_003[0xb4];
