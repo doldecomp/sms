@@ -1,74 +1,47 @@
-#ifndef _DOLPHIN_TYPES_H
-#define _DOLPHIN_TYPES_H
+#ifndef _DOLPHIN_TYPES_H_
+#define _DOLPHIN_TYPES_H_
 
-typedef signed char s8;
-typedef signed short s16;
-typedef signed long s32;
-typedef signed long long s64;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned long u32;
-typedef unsigned long size_t;
-typedef unsigned long long u64;
+typedef signed   char          s8;
+typedef unsigned char          u8;
+typedef signed   short int     s16;
+typedef unsigned short int     u16;
+typedef signed   long          s32;
+typedef unsigned long          u32;
+typedef signed   long long int s64;
+typedef unsigned long long int u64;
 
-typedef unsigned int uint;
-
-typedef volatile u8 vu8;
-typedef volatile u16 vu16;
-typedef volatile u32 vu32;
-typedef volatile u64 vu64;
-typedef volatile s8 vs8;
-typedef volatile s16 vs16;
-typedef volatile s32 vs32;
-typedef volatile s64 vs64;
-
-typedef float f32;
+typedef float  f32;
 typedef double f64;
-typedef volatile f32 vf32;
-typedef volatile f64 vf64;
+
+typedef char *Ptr;
 
 typedef int BOOL;
 
-typedef unsigned int uintptr_t; // Manually added
-
-// Pointer to unknown, to be determined at a later date.
-typedef void* unkptr;
-
-typedef u32 unknown;
-
-#ifndef TRUE
-#define TRUE 1
-#endif // ifndef TRUE
-
-#ifndef FALSE
 #define FALSE 0
-#endif // ifndef FALSE
+#define TRUE 1
+
+#if defined(__MWERKS__)
+#define AT_ADDRESS(addr) : (addr)
+#elif defined(__GNUC__)
+//#define AT_ADDRESS(addr) __attribute__((address((addr))))
+#define AT_ADDRESS(addr)  // was removed in GCC. define in linker script instead.
+#else
+#error unknown compiler
+#endif
+
+#define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
+
+#define INT_MAX 2147483647
 
 #ifndef NULL
-#define NULL 0
-#endif // ifndef NULL
+#define NULL ((void*)0)
+#endif
 
-#ifndef nullptr
-#define nullptr 0
-#endif // ifndef nullptr
+#include "libc/stdio.h"
+#include "libc/stdarg.h"
+#include "libc/string.h"
+#include "libc/ctype.h"
 
-// Array size define
-#define ARRAY_SIZE(o) (sizeof((o)) / sizeof(*(o)))
-
-// Align X to the previous N bytes (N must be power of two)
-#define ALIGN_PREV(X, N) ((X) & ~((N)-1))
-// Align X to the next N bytes (N must be power of two)
-#define ALIGN_NEXT(X, N) ALIGN_PREV(((X) + (N)-1), N)
-
-// For functions that return 0 on a success and -1 on failure
-#ifndef EXIT_SUCCESS
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE -1
-#endif // ifndef EXIT_SUCCESS
-
-#define ASSERT_HANG(cond) \
-	if (!(cond)) {        \
-		while (true) { }  \
-	}
+#include "cmath.h"
 
 #endif

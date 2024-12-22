@@ -1,7 +1,6 @@
 #ifndef J3D_TEVS_HPP
 #define J3D_TEVS_HPP
 
-#include <dolphin/types.h>
 #include <dolphin/gx.h>
 
 void J3DLoadCPCmd(u8, u32);

@@ -4,7 +4,7 @@
 #include <JSystem/J3DMaterial.hpp>
 #include <JSystem/J3DShape.hpp>
 #include <dolphin/os.h>
-#include <dolphin/GDBase.h>
+#include <dolphin/gd.h>
 #include <dolphin/gx.h>
 
 
@@ -50,7 +50,7 @@ void J3DCallBackPacket::draw()
 J3DDrawPacket::J3DDrawPacket()
 {
 	unk10 = 0;
-	unk30 = NULL;
+	unk30 = (Unknown*) NULL;
 }
 
 void J3DDrawPacket::draw()

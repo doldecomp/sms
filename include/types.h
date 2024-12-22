@@ -2,7 +2,6 @@
 #define UNSORTED_TYPES_H
 
 #include "dolphin.h"
-#include "functions.h"
 #include "variables.h"
 
 // TODO

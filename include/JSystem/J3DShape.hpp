@@ -2,7 +2,7 @@
 #define J3D_SHAPE_HPP
 
 #include <dolphin/types.h>
-#include <dolphin/vec.h>
+#include <dolphin/mtx.h>
 
 class J3DShape {
 public:
