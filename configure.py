@@ -314,22 +314,11 @@ config.libs = [
         ],
     },
     {
-        "lib": "Runtime.PPCEABI.H",
+        "lib": "Player",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_runtime,
+        "cflags": cflags_game,
         "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
-            Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.cp"),
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-        ],
-    },
-    {
-        "lib": "MSL_C.PPCEABI.bare.H",
-        "mw_version": "GC/1.2.5",
-        "cflags": cflags_runtime,
-        "objects": [
-            Object(Matching, "MSL_C.PPCEABI.bare.H/hyperbolicsf.c"),
-            Object(Matching, "MSL_C.PPCEABI.bare.H/rand.c"),
+            Object(Matching, "Player/MarioAccess.cpp"),
         ],
     },
     {
@@ -339,6 +328,49 @@ config.libs = [
         "objects": [
             Object(Matching, "NPC/NpcBalloon.cpp"),
             Object(Matching, "NPC/NpcInitActionData.cpp"),
+        ],
+    },
+    {
+        "lib": "System",
+        "mw_version": "GC/1.2.5",
+        "cflags": cflags_system,
+        "objects": [
+            Object(
+                Matching,
+                "System/FlagManager.cpp",
+                cflags=[*cflags_system, "-inline all,level=1,deferred"],
+            ),
+            Object(Matching, "System/ParamInst.cpp"),
+            Object(Matching, "System/ProcessMeter.cpp"),
+            Object(Matching, "System/Resolution.cpp"),
+            Object(Matching, "System/StageUtil.cpp"),
+            Object(Matching, "System/TexCache.cpp"),
+        ],
+    },
+    {
+        "lib": "Runtime.PPCEABI.H",
+        "progress_category": "sdk",
+        "mw_version": "GC/1.2.5",
+        "cflags": cflags_runtime,
+        "objects": [
+            Object(Matching, "Runtime.PPCEABI.H/__mem.c"),
+            Object(Matching, "Runtime.PPCEABI.H/__va_arg.c"),
+            Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
+            Object(Matching, "Runtime.PPCEABI.H/NMWException.cp"),
+            Object(Matching, "Runtime.PPCEABI.H/ptmf.c"),
+            Object(Matching, "Runtime.PPCEABI.H/ExceptionPPC.cp"),
+            Object(Matching, "Runtime.PPCEABI.H/runtime.c"),
+            Object(Matching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
+        ],
+    },
+    {
+        "lib": "MSL_C.PPCEABI.bare.H",
+        "progress_category": "sdk",
+        "mw_version": "GC/1.2.5",
+        "cflags": cflags_runtime,
+        "objects": [
+            Object(Matching, "MSL_C.PPCEABI.bare.H/hyperbolicsf.c"),
+            Object(Matching, "MSL_C.PPCEABI.bare.H/rand.c"),
         ],
     },
     DolphinLib("base", [
@@ -444,31 +476,6 @@ config.libs = [
     DolphinLib("odenotstub", [
             Object(Matching, "odenotstub/odenotstub.c"),
         ]),
-    {
-        "lib": "Player",
-        "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
-        "objects": [
-            Object(Matching, "Player/MarioAccess.cpp"),
-        ],
-    },
-    {
-        "lib": "System",
-        "mw_version": "GC/1.2.5",
-        "cflags": cflags_system,
-        "objects": [
-            Object(
-                Matching,
-                "System/FlagManager.cpp",
-                cflags=[*cflags_system, "-inline all,level=1,deferred"],
-            ),
-            Object(Matching, "System/ParamInst.cpp"),
-            Object(Matching, "System/ProcessMeter.cpp"),
-            Object(Matching, "System/Resolution.cpp"),
-            Object(Matching, "System/StageUtil.cpp"),
-            Object(Matching, "System/TexCache.cpp"),
-        ],
-    },
 ]
 
 # Optional extra categories for progress tracking
