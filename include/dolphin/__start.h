@@ -23,7 +23,6 @@ extern void __init_user(void);
 extern void InitMetroTRK_BBA(void);
 extern void OSInit(void);
 extern void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu);
-extern void __init_hardware(void);
 
 __declspec(section ".init") extern void __check_pad3(void);
 __declspec(section ".init") extern void __start(void);

@@ -77,7 +77,7 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			riding_info->unk10 = riding_info->unk0->unk34;
 		}
 	} else {
-		riding_info->unk0 = NULL;
+		riding_info->unk0 = (THitActor*) NULL;
 	}
 }
 

@@ -1,7 +1,7 @@
 #ifndef J3D_PACKET_HPP
 #define J3D_PACKET_HPP
 
-#include <dolphin/types.h>
+#include <dolphin.h>
 
 class J3DMatPacket;
 class J3DDrawBuffer;
@@ -31,12 +31,14 @@ public:
 
 class J3DCallBackPacket : public J3DPacket {
 public:
-	J3DCallBackPacket() { unk10 = NULL; }
+	typedef void (*CallbackT)(J3DPacket*, u32);
+
+	J3DCallBackPacket() { unk10 = (CallbackT) NULL; }
 
 	virtual void draw();
 	virtual ~J3DCallBackPacket() { }
 
-	void (*unk10)(J3DPacket*, u32);
+	CallbackT unk10;
 };
 
 class J3DShape;

@@ -5,10 +5,10 @@
 
 JSUPtrLink::JSUPtrLink(void* val)
 {
-	this->list  = NULL;
+	this->list  = (JSUPtrList*) NULL;
 	this->value = val;
-	this->prev  = NULL;
-	this->next  = NULL;
+	this->prev  = (JSUPtrLink*) NULL;
+	this->next  = (JSUPtrLink*) NULL;
 }
 
 JSUPtrLink::~JSUPtrLink()
@@ -37,8 +37,8 @@ JSUPtrList::~JSUPtrList()
 
 void JSUPtrList::initiate()
 {
-	this->first  = NULL;
-	this->last   = NULL;
+	this->first  = (JSUPtrLink*) NULL;
+	this->last   = (JSUPtrLink*) NULL;
 	this->length = 0;
 }
 
@@ -53,15 +53,15 @@ bool JSUPtrList::append(JSUPtrLink* node)
 	if (result) {
 		if (this->length == 0) {
 			node->list   = this;
-			node->prev   = NULL;
-			node->next   = NULL;
+			node->prev   = (JSUPtrLink*) NULL;
+			node->next   = (JSUPtrLink*) NULL;
 			this->last   = node;
 			this->first  = node;
 			this->length = 1;
 		} else {
 			node->list       = this;
 			node->prev       = this->last;
-			node->next       = NULL;
+			node->next       = (JSUPtrLink*) NULL;
 			this->last->next = node;
 			this->last       = node;
 			this->length     = this->length + 1;
@@ -82,14 +82,14 @@ bool JSUPtrList::prepend(JSUPtrLink* node)
 	if (result) {
 		if (this->length == 0) {
 			node->list   = this;
-			node->prev   = NULL;
-			node->next   = NULL;
+			node->prev   = (JSUPtrLink*) NULL;
+			node->next   = (JSUPtrLink*) NULL;
 			this->last   = node;
 			this->first  = node;
 			this->length = 1;
 		} else {
 			node->list        = this;
-			node->prev        = NULL;
+			node->prev        = (JSUPtrLink*) NULL;
 			node->next        = this->first;
 			this->first->prev = node;
 			this->first       = node;
@@ -138,20 +138,20 @@ bool JSUPtrList::remove(JSUPtrLink* node)
 
 	if (isSameList) {
 		if (this->length == 1) {
-			this->first = NULL;
-			this->last  = NULL;
+			this->first = (JSUPtrLink*) NULL;
+			this->last  = (JSUPtrLink*) NULL;
 		} else if (node == this->first) {
-			node->next->prev = NULL;
+			node->next->prev = (JSUPtrLink*) NULL;
 			this->first      = node->next;
 		} else if (node == this->last) {
-			node->prev->next = NULL;
+			node->prev->next = (JSUPtrLink*) NULL;
 			this->last       = node->prev;
 		} else {
 			node->prev->next = node->next;
 			node->next->prev = node->prev;
 		}
 
-		node->list = NULL;
+		node->list = (JSUPtrList*) NULL;
 		this->length--;
 	}
 

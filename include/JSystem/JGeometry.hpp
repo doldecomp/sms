@@ -2,7 +2,7 @@
 #define JGEOMETRY_HPP
 
 #include <dolphin/types.h>
-#include <dolphin/vec.h>
+#include <dolphin/mtx.h>
 
 namespace JGeometry {
 
@@ -65,8 +65,7 @@ public:
 	template <typename TY> void set(TY x, TY y, TY z);
 	template <typename TY> void set(const TVec3<TY>&);
 
-	Vec* toVec() { return (Vec*)this; }
-	const Vec* toVec() const { return (const Vec*)this; }
+	Vec* toVec() const { return (Vec*)this; }
 
 	void setLength(const TVec3<T>& v, f32 length)
 	{

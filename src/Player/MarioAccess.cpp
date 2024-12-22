@@ -275,7 +275,7 @@ THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
 
 u32 SMS_AskJumpIntoWaterEffectExist() // bool?
 {
-	gpMarioOriginal->askJumpIntoWaterEffectExist();
+	return gpMarioOriginal->askJumpIntoWaterEffectExist();
 }
 
 void* SMS_GetYoshi()

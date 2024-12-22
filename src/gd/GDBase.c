@@ -1,1 +1,1 @@
-#include <dolphin/GDBase.h>
+#include <dolphin/gd.h>

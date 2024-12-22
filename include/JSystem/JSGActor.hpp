@@ -1,7 +1,7 @@
 #ifndef JSG_ACTOR_HPP
 #define JSG_ACTOR_HPP
 
-#include <dolphin/vec.h>
+#include <dolphin/mtx.h>
 #include <JSystem/JSGObject.hpp>
 
 namespace JStage {

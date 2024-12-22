@@ -9,8 +9,6 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-// TODO: this is part of the SDK and so parts are probably present in other decomps, steal them
-
 void GDInitGDLObj(void*, void*, u32);
 void GDFlushCurrToMem();
 void GDPadCurr32();

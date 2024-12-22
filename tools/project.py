@@ -1662,6 +1662,7 @@ def generate_compile_commands(
                 "-nostdinc",
                 "-fno-builtin",
                 "--target=powerpc-eabi",
+                "-fdeclspec",
                 *cflags,
                 "-c",
                 obj.src_path,

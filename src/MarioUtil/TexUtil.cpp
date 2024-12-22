@@ -1,7 +1,6 @@
 #include <JSystem/J3DModel.hpp>
 #include <JSystem/JUTNameTab.hpp>
 #include <dolphin/os.h>
-#include <functions.h>
 
 void SMS_ChangeTextureAll(J3DModelData* param_1, const char* param_2,
                           const ResTIMG& param_3)

@@ -157,6 +157,7 @@ config.asflags = [
     "-mgekko",
     "--strip-local-absolute",
     "-I include",
+    "-I include/libc",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
     f"--defsym VERSION_{config.version}",
@@ -198,7 +199,9 @@ cflags_base = [
     "-fp_contract on",
     "-str reuse",
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
+    "-cwd source",
     "-i include",
+    "-i include/libc",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
@@ -240,6 +243,11 @@ cflags_system = [
     "-opt all,nostrength",
 ]
 
+cflags_dolphin = [
+    *cflags_base,
+    # TODO: should these be different?
+]
+
 config.linker_version = "GC/1.2.5"
 
 
@@ -248,7 +256,7 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/1.2.5n",
-        "cflags": cflags_base,
+        "cflags": cflags_dolphin,
         "progress_category": "sdk",
         "objects": objects,
     }
@@ -333,15 +341,109 @@ config.libs = [
             Object(Matching, "NPC/NpcInitActionData.cpp"),
         ],
     },
-    {
-        "lib": "os",
-        "mw_version": "GC/1.2.5",
-        "cflags": cflags_base,
-        "objects": [
-            Object(Matching, "os/__ppc_eabi_init.cpp"),
+    DolphinLib("base", [
+            Object(NonMatching, "base/PPCArch.c"),
+        ]),
+    DolphinLib("db", [
+            Object(Matching, "db/db.c"),
+        ]),
+    DolphinLib("os", [
+            Object(NonMatching, "os/OS.c"),
+            Object(Matching, "os/OSAlarm.c"),
+            Object(Matching, "os/OSAlloc.c"),
+            Object(Matching, "os/OSArena.c"),
+            Object(Matching, "os/OSAudioSystem.c"),
+            Object(Matching, "os/OSCache.c"),
+            Object(Matching, "os/OSContext.c"),
+            Object(NonMatching, "os/OSError.c"),
+            Object(Matching, "os/OSFont.c"),
+            Object(NonMatching, "os/OSInterrupt.c"),
+            Object(Matching, "os/OSLink.c"),
+            Object(Matching, "os/OSMessage.c"),
+            Object(NonMatching, "os/OSMemory.c"),
+            Object(Matching, "os/OSMutex.c"),
+            # Object(NonMatching, "os/OSReboot.c"),
+            Object(NonMatching, "os/OSReset.c"),
+            Object(Matching, "os/OSResetSW.c"),
+            Object(NonMatching, "os/OSRtc.c"),
+            Object(Matching, "os/OSStopwatch.c"),
+            Object(Matching, "os/OSSync.c"),
+            Object(Matching, "os/OSThread.c"),
+            Object(Matching, "os/OSTime.c"),
             Object(Matching, "os/__start.c"),
-        ],
-    },
+            Object(Matching, "os/__ppc_eabi_init.cpp"),
+        ]),
+    DolphinLib("mtx", [
+            Object(NonMatching, "mtx/mtx.c"),
+            Object(NonMatching, "mtx/mtxvec.c"),
+            Object(NonMatching, "mtx/mtx44.c"),
+            Object(NonMatching, "mtx/vec.c"),
+        ]),
+    DolphinLib("dvd", [
+            Object(NonMatching, "dvd/dvd.c"),
+            Object(NonMatching, "dvd/dvdfs.c"),
+            Object(NonMatching, "dvd/dvdlow.c"),
+            Object(NonMatching, "dvd/dvdqueue.c"),
+            Object(NonMatching, "dvd/fstload.c"),
+        ]),
+    DolphinLib("vi", [
+            Object(NonMatching, "vi/vi.c"),
+        ]),
+    DolphinLib("pad", [
+            Object(NonMatching, "pad/Padclamp.c"),
+            Object(NonMatching, "pad/Pad.c"),
+        ]),
+    DolphinLib("ai", [
+            Object(Matching, "ai/ai.c"),
+        ]),
+    DolphinLib("ar", [
+            Object(Matching, "ar/ar.c"),
+            Object(Matching, "ar/arq.c"),
+        ]),
+    DolphinLib("dsp", [
+            Object(NonMatching, "dsp/dsp.c"),
+            Object(NonMatching, "dsp/dsp_debug.c"),
+            Object(NonMatching, "dsp/dsp_task.c"),
+        ]),
+    DolphinLib("card", [
+            Object(NonMatching, "card/CARDBios.c"),
+            Object(NonMatching, "card/CARDUnlock.c"),
+            Object(NonMatching, "card/CARDRdwr.c"),
+            Object(NonMatching, "card/CARDBlock.c"),
+            Object(NonMatching, "card/CARDDir.c"),
+            Object(NonMatching, "card/CARDCheck.c"),
+            Object(NonMatching, "card/CARDMount.c"),
+            Object(NonMatching, "card/CARDFormat.c"),
+            Object(NonMatching, "card/CARDOpen.c"),
+            Object(NonMatching, "card/CARDCreate.c"),
+            Object(NonMatching, "card/CARDRead.c"),
+            Object(NonMatching, "card/CARDWrite.c"),
+            Object(NonMatching, "card/CARDStat.c"),
+        ]),
+    DolphinLib("gx", [
+            Object(Matching, "gx/GXInit.c"),
+            Object(Matching, "gx/GXFifo.c"),
+            Object(Matching, "gx/GXAttr.c"),
+            Object(Matching, "gx/GXMisc.c"),
+            Object(Matching, "gx/GXGeometry.c"),
+            Object(Matching, "gx/GXFrameBuf.c"),
+            Object(Matching, "gx/GXLight.c"),
+            Object(Matching, "gx/GXTexture.c"),
+            Object(Matching, "gx/GXBump.c"),
+            Object(Matching, "gx/GXTev.c"),
+            Object(Matching, "gx/GXPixel.c"),
+            Object(Matching, "gx/GXDraw.c"),
+            Object(Matching, "gx/GXStubs.c"),
+            Object(Matching, "gx/GXDisplayList.c"),
+            Object(Matching, "gx/GXTransform.c"),
+            Object(Matching, "gx/GXPerf.c"),
+        ]),
+    DolphinLib("amcstubs", [
+            Object(Matching, "amcstubs/AmcExi2Stubs.c"),
+        ]),
+    DolphinLib("odenotstub", [
+            Object(Matching, "odenotstub/odenotstub.c"),
+        ]),
     {
         "lib": "Player",
         "mw_version": "GC/1.2.5",

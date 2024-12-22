@@ -42,15 +42,15 @@ bool JSUPtrList::append_(JSUPtrLink* node)
 	if (result) {
 		if (this->length == 0) {
 			node->list   = this;
-			node->prev   = NULL;
-			node->next   = NULL;
+			node->prev   = (JSUPtrLink*) NULL;
+			node->next   = (JSUPtrLink*) NULL;
 			this->last   = node;
 			this->first  = node;
 			this->length = 1;
 		} else {
 			node->list       = this;
 			node->prev       = this->last;
-			node->next       = NULL;
+			node->next       = (JSUPtrLink*) NULL;
 			this->last->next = node;
 			this->last       = node;
 			this->length     = this->length + 1;
@@ -71,14 +71,14 @@ bool JSUPtrList::prepend_(JSUPtrLink* node)
 	if (result) {
 		if (this->length == 0) {
 			node->list   = this;
-			node->prev   = NULL;
-			node->next   = NULL;
+			node->prev   = (JSUPtrLink*) NULL;
+			node->next   = (JSUPtrLink*) NULL;
 			this->last   = node;
 			this->first  = node;
 			this->length = 1;
 		} else {
 			node->list        = this;
-			node->prev        = NULL;
+			node->prev        = (JSUPtrLink*) NULL;
 			node->next        = this->first;
 			this->first->prev = node;
 			this->first       = node;
