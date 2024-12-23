@@ -107,8 +107,8 @@ public:
 	virtual bool state_compare(JKRHeap::TState const&,
 	                           JKRHeap::TState const&) const;
 	virtual void state_dump(JKRHeap::TState const&) const;
-	virtual void unkVirtFunc48()         = 0;
-	virtual void unkVirtFunc4C()         = 0;
+	virtual void unkVirtFunc48() = 0;
+	virtual void unkVirtFunc4C() = 0;
 
 	JKRHeap* becomeSystemHeap();
 	JKRHeap* becomeCurrentHeap();

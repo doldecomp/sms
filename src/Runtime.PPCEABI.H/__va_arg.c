@@ -1,10 +1,6 @@
 #include "stdarg.h"
 #include "dolphin/types.h"
 
-/**
- * @note Address: 0x800C15F0
- * @note Size: 0xC8
- */
 void* __va_arg(va_list v_list, unsigned char type)
 {
 	char* addr;

@@ -16,10 +16,6 @@ const PTMF __ptmf_null = { 0, 0, 0 };
 s32 __ptmf_test(PTMF* ptmf);
 void __ptmf_scall(...);
 
-/**
- * @note Address: 0x800C1AF4
- * @note Size: 0x30
- */
 asm s32 __ptmf_test(register PTMF* ptmf) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
@@ -38,10 +34,6 @@ asm s32 __ptmf_test(register PTMF* ptmf) {
 #endif // clang-format on
 }
 
-/**
- * @note Address: 0x800C1B24
- * @note Size: 0x28
- */
 asm void __ptmf_scall(...)
 {
 #ifdef __MWERKS__ // clang-format off
