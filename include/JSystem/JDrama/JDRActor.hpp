@@ -1,15 +1,30 @@
-#ifndef JSG_ACTOR_HPP
-#define JSG_ACTOR_HPP
+#ifndef JDR_ACTOR_HPP
+#define JDR_ACTOR_HPP
 
-#include <dolphin/mtx.h>
-#include <JSystem/JSGObject.hpp>
+#include <JSystem/JDrama/JDRPlacement.hpp>
+#include <JSystem/JDrama/JDRGraphics.hpp>
+#include <JSystem/JStage/JSGActor.hpp>
 
-namespace JStage {
+namespace JDrama {
 
-class TActor : public TObject {
+class TActor : public TPlacement, public JStage::TActor {
 public:
+	// TActor
+	char _020[0x10];
+	f32 unk34;
+	char unk40[0x8];
+
+	f32 getUnk34() { return unk34; }
+
+	TActor(const char*);
+
 	typedef void IDK;
-	IDK JSGFGetType() const;
+
+	virtual IDK getType();
+	virtual IDK load(JSUMemoryInputStream&);
+
+	virtual IDK perform(u32, TGraphics*);
+
 	virtual void JSGGetTranslation(Vec*) const;
 	virtual void JSGSetTranslation(const Vec&);
 	virtual void JSGGetScaling(Vec*) const;
@@ -25,6 +40,6 @@ public:
 	virtual float JSGGetAnimationFrameMax() const;
 };
 
-} // namespace JStage
+} // namespace JDrama
 
 #endif

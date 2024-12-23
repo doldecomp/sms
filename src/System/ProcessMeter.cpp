@@ -1,6 +1,6 @@
 #include "dolphin.h"
 
-#include "types.h"
+#include "unsorted_types.h"
 
 TProcessMeter::TProcessMeter(s32 r4)
 {

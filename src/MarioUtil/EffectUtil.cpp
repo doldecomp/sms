@@ -39,9 +39,9 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	matrix.mMtx[2][3] = arg0.z;
 
 	if (arg2) {
-		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U, NULL);
+		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U, nullptr);
 	}
-	gpMarioParticleManager->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U, NULL);
+	gpMarioParticleManager->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U, nullptr);
 }
 
 s32 SMS_EmitRippleSea(MtxPtr arg0, void* arg1)
@@ -83,10 +83,10 @@ s32 SMS_EmitRipplePool(f32 (*arg0)[4], void* arg1)
 s32 SMS_EmitRippleTiny(JGeometry::TVec3<float>* arg0)
 {
 	s32 ret = 1;
-	if (gpMarioParticleManager->emit(0x35, arg0, 0U, NULL) == 0U) {
+	if (gpMarioParticleManager->emit(0x35, arg0, 0U, nullptr) == 0U) {
 		ret = 0;
 	}
-	if (gpMarioParticleManager->emit(0x36, arg0, 0U, NULL) == 0U) {
+	if (gpMarioParticleManager->emit(0x36, arg0, 0U, nullptr) == 0U) {
 		ret = 0;
 	}
 	return ret;

@@ -1,8 +1,8 @@
-#include <JSystem/J3DPacket.hpp>
-#include <JSystem/JKRHeap.hpp>
-#include <JSystem/J3DSys.hpp>
-#include <JSystem/J3DMaterial.hpp>
-#include <JSystem/J3DShape.hpp>
+#include <JSystem/J3D/J3DPacket.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/J3D/J3DSys.hpp>
+#include <JSystem/J3D/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DShape.hpp>
 #include <dolphin/os.h>
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>
@@ -26,7 +26,7 @@ bool J3DPacket::entry(J3DDrawBuffer*) { return true; }
 
 void J3DPacket::addChildPacket(J3DPacket* packet)
 {
-	if (unk8 == NULL) {
+	if (unk8 == nullptr) {
 		unk8 = packet;
 		return;
 	}
@@ -36,13 +36,13 @@ void J3DPacket::addChildPacket(J3DPacket* packet)
 
 void J3DCallBackPacket::draw()
 {
-	if (unk10 != NULL) {
+	if (unk10 != nullptr) {
 		unk10(this, 0);
 	}
-	for (J3DPacket* packet = unk8; packet != NULL; packet = packet->unk4) {
+	for (J3DPacket* packet = unk8; packet != nullptr; packet = packet->unk4) {
 		packet->draw();
 	}
-	if (unk10 != NULL) {
+	if (unk10 != nullptr) {
 		unk10(this, 1);
 	}
 }
@@ -50,7 +50,7 @@ void J3DCallBackPacket::draw()
 J3DDrawPacket::J3DDrawPacket()
 {
 	unk10 = 0;
-	unk30 = (Unknown*) NULL;
+	unk30 = nullptr;
 }
 
 void J3DDrawPacket::draw()
@@ -77,7 +77,7 @@ void J3DShapePacket::draw()
 	char
 	    trash[0x20]; // TODO: probably shares inlines w/ J3DCallBackPacket::draw
 	if ((unk14 != 0) && (unk30 != 0)) {
-		if (unk10 != NULL) {
+		if (unk10 != nullptr) {
 			unk10(this, 0);
 		}
 		j3dSys._10C_4_ = unk24;
@@ -87,7 +87,7 @@ void J3DShapePacket::draw()
 		unk14->unk54   = unk1C;
 		unk14->unk58   = unk20;
 		unk14->draw();
-		if (unk10 != NULL) {
+		if (unk10 != nullptr) {
 			unk10(this, 1);
 		}
 	}
@@ -105,7 +105,7 @@ J3DMatPacket::J3DMatPacket()
 
 void J3DMatPacket::addShapePacket(J3DShapePacket* packet)
 {
-	if (unk34 == NULL) {
+	if (unk34 == nullptr) {
 		unk34 = packet;
 		return;
 	}
@@ -117,7 +117,7 @@ inline bool checkThing(J3DShapePacket* p)
 {
 	bool ret = true;
 
-	for (J3DShapePacket* i = p; i != NULL; i = (J3DShapePacket*)i->unk4) {
+	for (J3DShapePacket* i = p; i != nullptr; i = (J3DShapePacket*)i->unk4) {
 		if (i->unk30 != 0) {
 			ret = false;
 			break;
@@ -134,7 +134,7 @@ void J3DMatPacket::draw()
 		j3dSys._054_4_ = this->unk40;
 		j3dSys._03C_4_ = this;
 		this->unk38->load();
-		for (J3DPacket* j = unk34; j != NULL; j = j->unk4) {
+		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {
 			j->draw();
 		}
 	}

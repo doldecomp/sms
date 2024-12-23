@@ -1,7 +1,7 @@
 #ifndef GCCONSOLE2_HPP
 #define GCCONSOLE2_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 
 class TGCConsole2 {
 public:

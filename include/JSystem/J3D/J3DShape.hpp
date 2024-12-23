@@ -1,7 +1,7 @@
 #ifndef J3D_SHAPE_HPP
 #define J3D_SHAPE_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 #include <dolphin/mtx.h>
 
 class J3DShape {

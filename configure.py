@@ -231,6 +231,10 @@ cflags_rel = [
 cflags_jsystem = [
     *cflags_base,
     "-str reuse,readonly",
+    "-lang=c++",
+    "-fp fmadd",
+    "-char signed",
+    "-rostr",
 ]
 
 cflags_game = [
@@ -298,6 +302,7 @@ config.libs = [
             Object(Matching, "JSystem/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3DPacket.cpp"),
             # Object(Matching, "JSystem/J3DShape.cpp"),
+            Object(Matching, "JSystem/JKRHeap.cpp"),
         ],
     },
     {

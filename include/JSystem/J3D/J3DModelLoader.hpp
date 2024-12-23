@@ -1,8 +1,8 @@
 #ifndef J3D_MODEL_LOADER_HPP
 #define J3D_MODEL_LOADER_HPP
 
-#include <dolphin/types.h>
-#include <JSystem/J3DModel.hpp>
+#include <types.h>
+#include <JSystem/J3D/J3DModel.hpp>
 
 struct J3DModelLoaderDataBase {
 	// NOTE: I have no idea why, but it seems like they pass in the

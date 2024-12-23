@@ -1,7 +1,7 @@
 #ifndef STAGEUTIL_HPP
 #define STAGEUTIL_HPP
 
-#include "dolphin/types.h"
+#include <types.h>
 
 u8 SMS_getShineIDofExStage(u8);
 u8 SMS_getShineStage(u8);

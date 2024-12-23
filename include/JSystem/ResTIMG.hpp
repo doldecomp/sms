@@ -1,7 +1,7 @@
 #ifndef RESTIMG_HPP
 #define RESTIMG_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 
 struct ResTIMG {
 	char unk0[0xc];

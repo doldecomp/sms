@@ -1,5 +1,6 @@
 #include "dolphin.h"
-#include "types.h"
+#include "unsorted_types.h"
+#include "unsorted_variables.h"
 
 // Enum To Str?
 struct UnkStruct3B0378 _info[23] = {

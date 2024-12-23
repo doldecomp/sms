@@ -1,7 +1,7 @@
 #ifndef HIT_ACTOR_HPP
 #define HIT_ACTOR_HPP
 
-#include "JSystem/JDRActor.hpp"
+#include <JSystem/JDrama/JDRActor.hpp>
 
 class THitActor : public JDrama::TActor {
 public:

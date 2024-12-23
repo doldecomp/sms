@@ -1,6 +1,6 @@
-#include <JSystem/J3DVertex.hpp>
+#include <JSystem/J3D/J3DVertex.hpp>
 
-#include <JSystem/JKRHeap.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 J3DVertexData::J3DVertexData()
 {

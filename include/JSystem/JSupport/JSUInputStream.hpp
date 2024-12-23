@@ -1,7 +1,7 @@
 #ifndef JSUINPUTSTREAM_HPP
 #define JSUINPUTSTREAM_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 
 class JSUInputStream {
 public:

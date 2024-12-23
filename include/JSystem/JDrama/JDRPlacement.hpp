@@ -4,9 +4,9 @@
 #include "dolphin.h"
 #include "types.h"
 
-#include "JSystem/JDRViewObj.hpp"
-#include "JSystem/JSUInputStream.hpp"
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JSupport/JSUInputStream.hpp>
+#include <JSystem/JGeometry.hpp>
 
 namespace JDrama {
 class TPlacement : public TViewObj {

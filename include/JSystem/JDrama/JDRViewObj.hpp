@@ -4,7 +4,7 @@
 #include "dolphin.h"
 #include "types.h"
 
-#include "JSystem/JDRNameRef.hpp"
+#include <JSystem/JDrama/JDRNameRef.hpp>
 
 namespace JDrama {
 class TViewObj : TNameRef { // based on TNameRef

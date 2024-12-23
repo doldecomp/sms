@@ -1,7 +1,7 @@
 #ifndef JGEOMETRY_HPP
 #define JGEOMETRY_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 #include <dolphin/mtx.h>
 
 namespace JGeometry {

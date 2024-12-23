@@ -2,7 +2,7 @@
 
 #include "types.h"
 
-#include "JSystem/JDRPlacement.hpp"
+#include <JSystem/JDrama/JDRPlacement.hpp>
 using namespace JDrama;
 
 void TPlacement::load(JSUMemoryInputStream& stream)

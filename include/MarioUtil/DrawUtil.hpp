@@ -1,10 +1,10 @@
 #ifndef DRAW_UTIL_HPP
 #define DRAW_UTIL_HPP
 
-#include <dolphin/types.h>
-#include <JSystem/JDRGraphics.hpp>
-#include <JSystem/JSUMemoryStream.hpp>
-#include <JSystem/JDRNameRef.hpp>
+#include <types.h>
+#include <JSystem/JDrama/JDRGraphics.hpp>
+#include <JSystem/JSupport/JSUMemoryStream.hpp>
+#include <JSystem/JDrama/JDRNameRef.hpp>
 #include <JSystem/JGeometry.hpp>
 
 class TSilhouette : public JDrama::TNameRef {

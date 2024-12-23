@@ -155,6 +155,8 @@ void OSSetSoundMode(u32 mode);
 void OSReport(char *, ...);
 void OSPanic(char *file, int line, char *msg, ...);
 
+#define OSErrorLine(line, ...) OSPanic(__FILE__, line, __VA_ARGS__)
+
 #define OSRoundUp32B(x)   (((u32)(x) + 32 - 1) & ~(32 - 1))
 #define OSRoundDown32B(x) (((u32)(x)) & ~(32 - 1))
 
