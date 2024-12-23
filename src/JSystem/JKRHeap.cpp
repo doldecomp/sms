@@ -64,7 +64,7 @@ bool JKRHeap::initArena(char** outUserRamStart, u32* outUserRamSize,
 	mUserRamStart    = (u8*)arenaLo;
 	mUserRamEnd      = (u8*)arenaHi;
 	mMemorySize      = *(u32*)((start + 0x28));
-	OSReport("%x %x %x %x %x\n", 0x80000000, arenaLo, arenaLo, arenaHi,
+	OSReport("%x %x %x %x %x\n", mCodeStart, mCodeEnd, mUserRamStart, mUserRamEnd,
 	         mMemorySize);
 	OSSetArenaLo(arenaHi);
 	OSSetArenaHi(arenaHi);
@@ -99,55 +99,21 @@ void* JKRHeap::alloc(u32 byteCount, int padding, JKRHeap* heap)
 	return memory;
 }
 
-void* JKRHeap::alloc(u32 byteCount, int padding)
-{
-	JUT_WARNING_F(317, !mInitFlag, "alloc %x byte in heap %x", byteCount, this);
-	return do_alloc(byteCount, padding);
-}
-
 void JKRHeap::free(void* memory, JKRHeap* heap)
 {
 	if (heap != nullptr || (heap = findFromRoot(memory)) != nullptr)
 		heap->do_free(memory);
 }
 
-void JKRHeap::free(void* memory)
-{
-	JUT_WARNING_F(365, !mInitFlag, "free %x in heap %x", memory, this);
-	do_free(memory);
-}
-
 void JKRHeap::freeAll()
 {
 	JUT_WARNING_F(417, !mInitFlag, "freeAll in heap %x", this);
-	do_freeAll();
+	JSUListIterator<JKRDisposer> iterator;
+	while (iterator = mDisposerList.getFirst(),
+	       iterator != mDisposerList.getEnd()) {
+		iterator.getObject()->~JKRDisposer();
+	}
 }
-
-void JKRHeap::freeTail()
-{
-	JUT_WARNING_F(431, !mInitFlag, "freeTail in heap %x", this);
-	do_freeTail();
-}
-
-void JKRHeap::resize(void* memoryBlock, u32 newSize)
-{
-	JUT_WARNING_F(491, !mInitFlag, "resize block %x into %x in heap %x",
-	              memoryBlock, newSize, this);
-	do_resize(memoryBlock, newSize);
-}
-
-s32 JKRHeap::getSize(void* memoryBlock, JKRHeap* heap)
-{
-	if (heap == nullptr
-	    && (heap = findFromRoot(memoryBlock), heap == nullptr)) {
-		return -1;
-	} else
-		return heap->getSize(memoryBlock);
-}
-
-s32 JKRHeap::getSize(void* memoryBlock) { return do_getSize(memoryBlock); }
-s32 JKRHeap::getFreeSize() { return do_getFreeSize(); }
-s32 JKRHeap::getTotalFreeSize() { return do_getTotalFreeSize(); }
 
 s32 JKRHeap::changeGroupID(u8 newGroupID) { return 0; }
 
@@ -178,8 +144,6 @@ JKRHeap* JKRHeap::find(void* memory) const
 	return nullptr;
 }
 
-// generates __as__25JSUTreeIterator<7JKRHeap>FP17JSUTree<7JKRHeap> and
-// __ct__25JSUTreeIterator<7JKRHeap>Fv, remove this
 void JKRHeap::dispose_subroutine(u32 begin, u32 end)
 {
 	JSUListIterator<JKRDisposer> last_iterator;
@@ -187,10 +151,8 @@ void JKRHeap::dispose_subroutine(u32 begin, u32 end)
 	JSUListIterator<JKRDisposer> iterator;
 	for (iterator = mDisposerList.getFirst();
 	     iterator != mDisposerList.getEnd(); iterator = next_iterator) {
-		JKRDisposer* disposer = iterator.getObject();
-
-		if ((void*)begin <= disposer && disposer < (void*)end) {
-			disposer->~JKRDisposer();
+		if ((void*)begin <= iterator.getObject() && iterator.getObject() < (void*)end) {
+			iterator.getObject()->~JKRDisposer();
 			if (last_iterator == nullptr) {
 				next_iterator = mDisposerList.getFirst();
 			} else {
