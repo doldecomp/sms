@@ -2,6 +2,8 @@
 #define _H_MACROS_
 
 #define ARRAY_COUNT(arr) (int)(sizeof(arr) / sizeof(arr[0]))
+#define FLAG_ON(V, F) (((V) & (F)) == 0)
+#define FLAG_OFF(V, F) (((V) & (F)) != 0)
 
 #ifdef DEBUG
 #define ASSERTLINE(line, cond) \
