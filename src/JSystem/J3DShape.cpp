@@ -28,6 +28,4 @@ void J3DShape::initialize()
 	unk30 = 0;
 }
 
-void J3DShape::draw() const
-{
-}
+void J3DShape::draw() const { }

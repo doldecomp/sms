@@ -7,7 +7,6 @@
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>
 
-
 int J3DDrawPacket::sInterruptFlag;
 
 void J3DDisplayListObj::newDisplayList(u32 param_1)

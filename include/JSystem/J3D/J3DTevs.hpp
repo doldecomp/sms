@@ -9,29 +9,31 @@ void J3DLoadArrayBasePtr(_GXAttr, void*);
 void J3DSetVtxAttrFmtv(_GXVtxFmt, _GXVtxAttrFmtList*, bool);
 
 struct J3DLightObj {
-  void load(u32) const;
+	void load(u32) const;
 };
 
 struct J3DTexMtx {
-  void calc();
-  void load(u32) const;
+	void calc();
+	void load(u32) const;
 };
 
-void J3DGDSetTexLookupMode(_GXTexMapID, _GXTexWrapMode, _GXTexWrapMode, _GXTexFilter, _GXTexFilter, float, float, float, u8, u8, _GXAnisotropy);
+void J3DGDSetTexLookupMode(_GXTexMapID, _GXTexWrapMode, _GXTexWrapMode,
+                           _GXTexFilter, _GXTexFilter, float, float, float, u8,
+                           u8, _GXAnisotropy);
 
 struct J3DTevOrder {
-  typedef void IDK;
-  IDK load(u32) const;
+	typedef void IDK;
+	IDK load(u32) const;
 };
 
 struct J3DIndTexOrder {
-  typedef void IDK;
-  IDK load(u32) const;
+	typedef void IDK;
+	IDK load(u32) const;
 };
 
 struct J3DIndTexCoordScale {
-  typedef void IDK;
-  IDK load(unsigned long) const;
+	typedef void IDK;
+	IDK load(unsigned long) const;
 };
 
 #endif

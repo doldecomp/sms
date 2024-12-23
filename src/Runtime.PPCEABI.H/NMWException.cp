@@ -35,10 +35,6 @@ public:
 	}
 };
 
-/**
- * @note Address: 0x800C19F0
- * @note Size: 0x104
- */
 extern void* __construct_new_array(void* block, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
 {
 	char* ptr;
@@ -62,10 +58,6 @@ extern void* __construct_new_array(void* block, ConstructorDestructor ctor, Cons
 	return ptr;
 }
 
-/**
- * @note Address: 0x800C183C
- * @note Size: 0xFC
- */
 extern void __construct_array(void* ptr, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
 {
 	__partial_array_destructor pad(ptr, size, n, dtor);
@@ -76,10 +68,6 @@ extern void __construct_array(void* ptr, ConstructorDestructor ctor, Constructor
 	}
 }
 
-/**
- * @note Address: 0x800C17C4
- * @note Size: 0x78
- */
 extern void __destroy_arr(void* block, ConstructorDestructor* dtor, size_t size, size_t n)
 {
 	char* p;
@@ -90,10 +78,6 @@ extern void __destroy_arr(void* block, ConstructorDestructor* dtor, size_t size,
 	}
 }
 
-/**
- * @note Address: 0x800C1748
- * @note Size: 0x7C
- */
 extern void __destroy_new_array(void* block, ConstructorDestructor dtor)
 {
 	if (block) {

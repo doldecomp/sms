@@ -3,17 +3,16 @@
 
 #include <JSystem/JSupport/JSUList.hpp>
 
-
 class JKRHeap;
 
-class JKRDisposer
-{
+class JKRDisposer {
 public:
-    JKRDisposer();
-    virtual ~JKRDisposer();
+	JKRDisposer();
+	virtual ~JKRDisposer();
+
 public:
-    JKRHeap* mRootHeap; // _4
-    JSULink<JKRDisposer> mPointerLinks; // _8
+	JKRHeap* mRootHeap;                 // _4
+	JSULink<JKRDisposer> mPointerLinks; // _8
 };
 
 #endif

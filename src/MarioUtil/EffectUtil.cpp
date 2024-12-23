@@ -39,7 +39,8 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	matrix.mMtx[2][3] = arg0.z;
 
 	if (arg2) {
-		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U, nullptr);
+		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U,
+		                                         nullptr);
 	}
 	gpMarioParticleManager->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U, nullptr);
 }
