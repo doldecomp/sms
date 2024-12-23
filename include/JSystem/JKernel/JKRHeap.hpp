@@ -1,11 +1,10 @@
-#ifndef JKRHEAP_H
-#define JKRHEAP_H
+#ifndef JKR_HEAP_H
+#define JKR_HEAP_H
 
 #include <types.h>
 #include <dolphin/os/OSMutex.h>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 
-#ifdef __cplusplus
 typedef void JKRHeapErrorHandler(void*, u32, int);
 
 class JKRHeap : public JKRDisposer {
@@ -120,6 +119,19 @@ public:
 	void fillFreeArea();
 	void resize(void*, u32);
 	static s32 getSize(void*, JKRHeap*);
+
+	// TODO: pure speculation but helped JKRThread to match
+	template <class T> static inline T* allocOne(int align, JKRHeap* heap)
+	{
+		return (T*)alloc(sizeof(T), align, heap);
+	}
+
+	// TODO: pure speculation but helped JKRThread to match
+	template <class T>
+	static inline T* allocArray(size_t cnt, int align, JKRHeap* heap)
+	{
+		return (T*)alloc(cnt * sizeof(T), align, heap);
+	}
 
 	// ... more functions
 
@@ -276,5 +288,4 @@ void* operator new[](size_t, JKRHeap*, int);
 void operator delete(void*);
 void operator delete[](void*);
 
-#endif
 #endif

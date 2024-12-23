@@ -235,6 +235,7 @@ cflags_jsystem = [
     "-fp fmadd",
     "-char signed",
     "-rostr",
+    "-common on"
 ]
 
 cflags_game = [
@@ -283,6 +284,7 @@ config.libs = [
         "lib": "main",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
+        "progress_category": "game",
         "objects": [
             Object(Matching, "main.cpp"),
         ],
@@ -291,6 +293,7 @@ config.libs = [
         "lib": "JSystem",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_jsystem,
+        "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/J3DClusterLoader.cpp"),
             Object(Matching, "JSystem/JASProbe.cpp"),
@@ -302,13 +305,17 @@ config.libs = [
             Object(Matching, "JSystem/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3DPacket.cpp"),
             # Object(Matching, "JSystem/J3DShape.cpp"),
+            Object(Matching, "JSystem/JKRDisposer.cpp"),
             Object(Matching, "JSystem/JKRHeap.cpp"),
+            Object(Matching, "JSystem/JKRFileLoader.cpp"),
+            Object(Matching, "JSystem/JKRThread.cpp"),
         ],
     },
     {
         "lib": "MarioUtil",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
+        "progress_category": "game",
         "objects": [
             Object(Matching, "MarioUtil/MapUtil.cpp"),
             Object(Matching, "MarioUtil/RumbleType.cpp"),
@@ -322,6 +329,7 @@ config.libs = [
         "lib": "Player",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
+        "progress_category": "game",
         "objects": [
             Object(Matching, "Player/MarioAccess.cpp"),
         ],
@@ -330,6 +338,7 @@ config.libs = [
         "lib": "NPC",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
+        "progress_category": "game",
         "objects": [
             Object(Matching, "NPC/NpcBalloon.cpp"),
             Object(Matching, "NPC/NpcInitActionData.cpp"),
@@ -515,6 +524,7 @@ config.libs = [
 # Adjust as desired for your project
 config.progress_categories = [
     ProgressCategory("game", "Game Code"),
+    ProgressCategory("jsystem", "JSystem Middleware"),
     ProgressCategory("sdk", "SDK Code"),
 ]
 config.progress_each_module = args.verbose

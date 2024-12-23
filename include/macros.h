@@ -1,6 +1,8 @@
 #ifndef _H_MACROS_
 #define _H_MACROS_
 
+#define ARRAY_COUNT(arr) (int)(sizeof(arr) / sizeof(arr[0]))
+
 #ifdef DEBUG
 #define ASSERTLINE(line, cond) \
     ((cond) || (OSPanic(__FILE__, line, "Failed assertion " #cond), 0))
