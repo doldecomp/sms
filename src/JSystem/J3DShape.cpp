@@ -1,6 +1,6 @@
-#include <JSystem/J3DShape.hpp>
-#include <JSystem/J3DSys.hpp>
-#include <JSystem/J3DTevs.hpp>
+#include <JSystem/J3D/J3DShape.hpp>
+#include <JSystem/J3D/J3DSys.hpp>
+#include <JSystem/J3D/J3DTevs.hpp>
 #include <dolphin/gx.h>
 
 void J3DShape::initialize()

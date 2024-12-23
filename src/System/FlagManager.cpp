@@ -11,10 +11,10 @@ TFlagManager::TFlagManager() { }
 TFlagManager* TFlagManager::start(JKRHeap* heap)
 {
 	u8 _padding[8];
-	if (smInstance == NULL) {
+	if (smInstance == nullptr) {
 		TFlagManager* fm = new (heap, 0) TFlagManager();
 
-		if (fm != NULL) {
+		if (fm != nullptr) {
 			fm->firstStart();
 			fm->initOpt();
 		}

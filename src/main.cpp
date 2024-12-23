@@ -1,5 +1,5 @@
-#include "dolphin.h"
-#include "types.h"
+#include <types.h>
+#include <unsorted_types.h>
 
 // BSS
 TApplication gpApplication;

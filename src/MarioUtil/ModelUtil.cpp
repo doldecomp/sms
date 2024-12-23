@@ -1,9 +1,9 @@
 #include <MarioUtil/ModelUtil.hpp>
-#include <JSystem/J3DModelLoader.hpp>
-#include <JSystem/JKRFileLoader.hpp>
-#include <JSystem/J3DAnimation.hpp>
-#include <JSystem/J3DMaterialAnm.hpp>
-#include <JSystem/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DModelLoader.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/J3D/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DMaterial.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <Player/MarioMain.hpp>
 #include <dolphin/mtx.h>
@@ -32,7 +32,7 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
                               const JGeometry::TVec3<float>& pos)
 {
 
-	if (riding_info->unk0 == NULL)
+	if (riding_info->unk0 == nullptr)
 		return;
 
 	TMtx34f mtx;
@@ -54,8 +54,8 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 	const TBGCheckData* checkData;
 	f32 temp_f1
 	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
-	if ((checkData->unk44 != NULL) && ((pos->y - temp_f1) < 50.0f)) {
-		if ((riding_info->unk0 == NULL)
+	if ((checkData->unk44 != nullptr) && ((pos->y - temp_f1) < 50.0f)) {
+		if ((riding_info->unk0 == nullptr)
 		    || (riding_info->unk0 != checkData->unk44)) {
 			riding_info->unk0 = checkData->unk44;
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
@@ -77,7 +77,7 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			riding_info->unk10 = riding_info->unk0->unk34;
 		}
 	} else {
-		riding_info->unk0 = (THitActor*) NULL;
+		riding_info->unk0 = nullptr;
 	}
 }
 

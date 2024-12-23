@@ -1,8 +1,8 @@
 #ifndef J3D_ANM_LOADER_HPP
 #define J3D_ANM_LOADER_HPP
 
-#include <JSystem/J3DModel.hpp>
-#include <JSystem/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DModel.hpp>
+#include <JSystem/J3D/J3DAnimation.hpp>
 
 // NOTE: seems to be a plain struct w/ no methods
 struct J3DTextureSRTInfo;

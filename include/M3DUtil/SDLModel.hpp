@@ -1,7 +1,7 @@
 #ifndef SDL_MODEL_HPP
 #define SDL_MODEL_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 
 class J3DModelData;
 

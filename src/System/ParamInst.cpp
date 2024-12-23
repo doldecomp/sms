@@ -1,7 +1,7 @@
 #include "dolphin.h"
 
 #include "types.h"
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 #include "System/ParamInst.hpp"
 
 template <typename T> void TParamT<T>::load(JSUMemoryInputStream& stream)

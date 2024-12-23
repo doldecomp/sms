@@ -4,7 +4,7 @@
 #include "dolphin.h"
 
 #include "types.h"
-#include "JSystem/JSUMemoryStream.hpp"
+#include <JSystem/JSupport/JSUMemoryStream.hpp>
 
 class TBaseParam {
 public:

@@ -1,7 +1,7 @@
 #ifndef EMITTER_VIE_OBJ_HPP
 #define EMITTER_VIE_OBJ_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 #include <dolphin/mtx.h>
 #include <JSystem/JGeometry.hpp>
 

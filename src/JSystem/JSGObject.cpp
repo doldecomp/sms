@@ -1,1 +1,1 @@
-#include <JSystem/JSGObject.hpp>
+#include <JSystem/JStage/JSGObject.hpp>

@@ -1,4 +1,4 @@
-#include "JSystem/JDrama.hpp"
+#include <JSystem/JDrama.hpp>
 
 s32 JDrama::GetVIWidthMax()
 {

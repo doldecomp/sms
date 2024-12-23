@@ -1,1 +1,1 @@
-#include <JSystem/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DModelLoader.hpp>

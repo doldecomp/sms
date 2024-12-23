@@ -1,1 +1,1 @@
-#include <JSystem/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DMaterial.hpp>

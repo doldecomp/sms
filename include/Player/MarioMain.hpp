@@ -1,7 +1,7 @@
 #ifndef MARIOMAIN_HPP
 #define MARIOMAIN_HPP
 
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 #include "Player/MarioInit.hpp"
 #include "Strategic/HitActor.hpp"
 

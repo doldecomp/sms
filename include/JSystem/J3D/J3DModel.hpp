@@ -1,9 +1,9 @@
 #ifndef J3D_MODEL_HPP
 #define J3D_MODEL_HPP
 
-#include <dolphin/types.h>
-#include <JSystem/J3DVertex.hpp>
-#include <JSystem/J3DMaterialAttach.hpp>
+#include <types.h>
+#include <JSystem/J3D/J3DVertex.hpp>
+#include <JSystem/J3D/J3DMaterialAttach.hpp>
 #include <JSystem/ResTIMG.hpp>
 
 struct J3DNode;

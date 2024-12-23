@@ -1,10 +1,10 @@
 #include "dolphin.h"
 
 #include "Player/MarioMain.hpp"
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 
 // TODO: Move TLiveActor to correct header, then replace this with said header
-#include "types.h"
+#include "unsorted_types.h"
 
 TMario* gpMarioAddress;
 JGeometry::TVec3<float>* gpMarioPos;

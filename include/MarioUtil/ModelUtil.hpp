@@ -1,8 +1,8 @@
 #ifndef MODEL_UTIL_HPP
 #define MODEL_UTIL_HPP
 
-#include <JSystem/J3DModel.hpp>
-#include <JSystem/J3DAnmLoader.hpp>
+#include <JSystem/J3D/J3DModel.hpp>
+#include <JSystem/J3D/J3DAnmLoader.hpp>
 
 struct J3DFrameCtrl;
 

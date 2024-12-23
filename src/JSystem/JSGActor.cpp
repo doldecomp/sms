@@ -1,1 +1,1 @@
-#include <JSystem/JSGActor.hpp>
+#include <JSystem/JStage/JSGActor.hpp>

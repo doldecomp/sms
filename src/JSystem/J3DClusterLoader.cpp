@@ -1,13 +1,13 @@
 #include "dolphin.h"
 #include "types.h"
 
-#include "JSystem/JUTNameTab.hpp"
+#include <JSystem/JUtility/JUTNameTab.hpp>
 
 template <typename T>
 void* JSUConvertOffsetToPtr(const void* ptr, const void* offset)
 {
-	if (offset == NULL) {
-		return NULL;
+	if (offset == nullptr) {
+		return nullptr;
 	}
 	return (void*)((u32)ptr + (u32)offset);
 };

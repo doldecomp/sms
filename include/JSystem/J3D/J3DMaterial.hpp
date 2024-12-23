@@ -1,7 +1,7 @@
 #ifndef J3D_MATERIAL_HPP
 #define J3D_MATERIAL_HPP
 
-#include <dolphin/types.h>
+#include <types.h>
 
 class J3DMaterialAnm;
 
