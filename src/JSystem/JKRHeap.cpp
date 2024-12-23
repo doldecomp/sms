@@ -107,11 +107,8 @@ void* JKRHeap::alloc(u32 byteCount, int padding)
 
 void JKRHeap::free(void* memory, JKRHeap* heap)
 {
-	if (!heap)
-		heap = findFromRoot(memory);
-	if (!heap)
-		return;
-	heap->do_free(memory);
+	if (heap != nullptr || (heap = findFromRoot(memory)) != nullptr)
+		heap->do_free(memory);
 }
 
 void JKRHeap::free(void* memory)
