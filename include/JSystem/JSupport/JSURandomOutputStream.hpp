@@ -3,13 +3,11 @@
 
 #include <JSystem/JSupport/JSUOutputStream.hpp>
 
-
-class JSURandomOutputStream : public JSUOutputStream
-{
+class JSURandomOutputStream : public JSUOutputStream {
 public:
-	virtual ~JSURandomOutputStream() {}
+	virtual ~JSURandomOutputStream() { }
 
-	virtual int getLength() const = 0;
+	virtual int getLength() const   = 0;
 	virtual int getPosition() const = 0;
 	virtual void seek(s32 offset, JSUStreamSeekFrom from);
 	virtual int getAvailable() const { return getLength() - getPosition(); }

@@ -40,33 +40,33 @@ void setLogMessage_f_va(u32 device, char* file, int line, const char* fmt,
 #ifdef DEBUG
 
 // Asserts
-#define JUT_CONFIRM_MESSAGE(COND)                                         \
-	JUTAssertion::setConfirmMessage(JUTAssertion::getSDevice(), __FILE__, \
+#define JUT_CONFIRM_MESSAGE(COND)                                              \
+	JUTAssertion::setConfirmMessage(JUTAssertion::getSDevice(), __FILE__,      \
 	                                __LINE__, COND, #COND);
 
-#define JUT_WARNING(COND)                                                \
-	(COND) ? (void)0                                                     \
-	       : JUTAssertion::setWarningMessage(JUTAssertion::getSDevice(), \
+#define JUT_WARNING(COND)                                                      \
+	(COND) ? (void)0                                                           \
+	       : JUTAssertion::setWarningMessage(JUTAssertion::getSDevice(),       \
 	                                         __FILE__, __LINE__, #COND);
 
-#define JUT_WARNING_F(COND, ...)                \
-	(COND) ? (void)0                            \
-	       : JUTAssertion::setWarningMessage_f( \
+#define JUT_WARNING_F(COND, ...)                                               \
+	(COND) ? (void)0                                                           \
+	       : JUTAssertion::setWarningMessage_f(                                \
 	           JUTAssertion::getSDevice(), __FILE__, __LINE__, __VA_ARGS__);
 
 // how about get rid of this and pass true to JUT_WARNING_F instead?
-#define JUT_WARNING_F2(...)                                                 \
-	JUTAssertion::setWarningMessage_f(JUTAssertion::getSDevice(), __FILE__, \
+#define JUT_WARNING_F2(...)                                                    \
+	JUTAssertion::setWarningMessage_f(JUTAssertion::getSDevice(), __FILE__,    \
 	                                  __LINE__, __VA_ARGS__);
 
 // perhaps "%s" is already added here
-#define JUT_CRITICAL_WARNING_F(...) \
+#define JUT_CRITICAL_WARNING_F(...)                                            \
 	JUTAssertion::setWarningMessage_f(2, __FILE__, __LINE__, __VA_ARGS__);
 
-#define JUT_ASSERT(COND)                                                     \
-	(COND) ? (void)0                                                         \
-	       : (JUTAssertion::showAssert(JUTAssertion::getSDevice(), __FILE__, \
-	                                   __LINE__, #COND),                     \
+#define JUT_ASSERT(COND)                                                       \
+	(COND) ? (void)0                                                           \
+	       : (JUTAssertion::showAssert(JUTAssertion::getSDevice(), __FILE__,   \
+	                                   __LINE__, #COND),                       \
 	          OSHalt("Halt"));
 
 #define JUT_ASSERT_F(COND, ...)                                                \
@@ -76,23 +76,23 @@ void setLogMessage_f_va(u32 device, char* file, int line, const char* fmt,
 	          OSHalt("Halt"));
 
 // could this maybe have used __VA_ARGS__?
-#define JUT_ASSERT_MSG(COND, MSG)                                            \
-	(COND) ? (void)0                                                         \
-	       : (JUTAssertion::showAssert(JUTAssertion::getSDevice(), __FILE__, \
-	                                   __LINE__, MSG),                       \
+#define JUT_ASSERT_MSG(COND, MSG)                                              \
+	(COND) ? (void)0                                                           \
+	       : (JUTAssertion::showAssert(JUTAssertion::getSDevice(), __FILE__,   \
+	                                   __LINE__, MSG),                         \
 	          OSHalt("Halt"));
 
-#define JUT_MINMAX_ASSERT(min, cur, max)                \
-	JUT_ASSERT_F((((min) <= (cur)) && ((cur) < (max))), \
+#define JUT_MINMAX_ASSERT(min, cur, max)                                       \
+	JUT_ASSERT_F((((min) <= (cur)) && ((cur) < (max))),                        \
 	             "range over: %d <= " #cur "=%d < %d", (min), (cur), (max));
 
 // TODO: might not exist, unsigned comparisons against 0 get discarded
-#define JUT_MAX_ASSERT(cur, max)                                           \
-	JUT_ASSERT_F(((cur) < (max)), "range over: %d <= " #cur "=%d < %d", 0, \
+#define JUT_MAX_ASSERT(cur, max)                                               \
+	JUT_ASSERT_F(((cur) < (max)), "range over: %d <= " #cur "=%d < %d", 0,     \
 	             (cur), (max));
 
-#define JUT_LOG_F(...)                                                  \
-	JUTAssertion::setLogMessage_f(JUTAssertion::getSDevice(), __FILE__, \
+#define JUT_LOG_F(...)                                                         \
+	JUTAssertion::setLogMessage_f(JUTAssertion::getSDevice(), __FILE__,        \
 	                              __LINE__, __VA_ARGS__);
 
 #define JUT_REPORT_MSG(...) OSReport(__VA_ARGS__);

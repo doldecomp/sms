@@ -51,9 +51,9 @@ int JSUMemoryInputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
 
 void JSUMemoryOutputStream::setBuffer(void* buffer, s32 size)
 {
-  mBuffer = buffer;
-  mLength = size;
-  mPosition = 0;
+	mBuffer   = buffer;
+	mLength   = size;
+	mPosition = 0;
 }
 
 int JSUMemoryOutputStream::writeData(const void* buf, s32 count)
@@ -67,7 +67,7 @@ int JSUMemoryOutputStream::writeData(const void* buf, s32 count)
 		mPosition += count;
 	}
 
-  return count;
+	return count;
 }
 
 int JSUMemoryOutputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
@@ -96,5 +96,3 @@ int JSUMemoryOutputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
 
 	return mPosition - oldPosition;
 }
-
-

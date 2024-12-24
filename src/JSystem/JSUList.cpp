@@ -1,6 +1,5 @@
 #include <JSystem/JSupport/JSUList.hpp>
 
-
 JSUPtrLink::JSUPtrLink(void* val)
 {
 	mPtrList = nullptr;
@@ -50,19 +49,19 @@ bool JSUPtrList::append(JSUPtrLink* node)
 	}
 	if (result) {
 		if (mLinkCount == 0) {
-			node->mPtrList   = this;
-			node->mPrev      = nullptr;
-			node->mNext      = nullptr;
-			mTail      = node;
-			mHead      = node;
-			mLinkCount = 1;
+			node->mPtrList = this;
+			node->mPrev    = nullptr;
+			node->mNext    = nullptr;
+			mTail          = node;
+			mHead          = node;
+			mLinkCount     = 1;
 		} else {
-			node->mPtrList     = this;
-			node->mPrev        = mTail;
-			node->mNext        = nullptr;
-			mTail->mNext = node;
-			mTail        = node;
-			mLinkCount   = mLinkCount + 1;
+			node->mPtrList = this;
+			node->mPrev    = mTail;
+			node->mNext    = nullptr;
+			mTail->mNext   = node;
+			mTail          = node;
+			mLinkCount     = mLinkCount + 1;
 		}
 	}
 
@@ -79,19 +78,19 @@ bool JSUPtrList::prepend(JSUPtrLink* node)
 	}
 	if (result) {
 		if (mLinkCount == 0) {
-			node->mPtrList   = this;
-			node->mPrev      = nullptr;
-			node->mNext      = nullptr;
-			mTail      = node;
-			mHead      = node;
-			mLinkCount = 1;
+			node->mPtrList = this;
+			node->mPrev    = nullptr;
+			node->mNext    = nullptr;
+			mTail          = node;
+			mHead          = node;
+			mLinkCount     = 1;
 		} else {
-			node->mPtrList     = this;
-			node->mPrev        = nullptr;
-			node->mNext        = mHead;
-			mHead->mPrev = node;
-			mHead        = node;
-			mLinkCount   = mLinkCount + 1;
+			node->mPtrList = this;
+			node->mPrev    = nullptr;
+			node->mNext    = mHead;
+			mHead->mPrev   = node;
+			mHead          = node;
+			mLinkCount     = mLinkCount + 1;
 		}
 	}
 
@@ -140,10 +139,10 @@ bool JSUPtrList::remove(JSUPtrLink* node)
 			mTail = nullptr;
 		} else if (node == mHead) {
 			node->mNext->mPrev = nullptr;
-			mHead        = node->mNext;
+			mHead              = node->mNext;
 		} else if (node == mTail) {
 			node->mPrev->mNext = nullptr;
-			mTail        = node->mPrev;
+			mTail              = node->mPrev;
 		} else {
 			node->mPrev->mNext = node->mNext;
 			node->mNext->mPrev = node->mPrev;

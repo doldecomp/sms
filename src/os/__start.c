@@ -1,16 +1,17 @@
 #include <dolphin.h>
-#include <dolphin/os.h>
 #include <dolphin/__ppc_eabi_init.h>
+#include <dolphin/os.h>
+#include <string.h>
 
 // internal header
 #include "__os.h"
 
-#define EXCEPTIONMASK_ADDR 0x80000044
-#define BOOTINFO2_ADDR 0x800000F4
+#define EXCEPTIONMASK_ADDR      0x80000044
+#define BOOTINFO2_ADDR          0x800000F4
 #define OS_BI2_DEBUGFLAG_OFFSET 0xC
-#define ARENAHI_ADDR 0x80000034
-#define DEBUGFLAG_ADDR 0x800030E8
-#define DVD_DEVICECODE_ADDR 0x800030E6
+#define ARENAHI_ADDR            0x80000034
+#define DEBUGFLAG_ADDR          0x800030E8
+#define DVD_DEVICECODE_ADDR     0x800030E6
 
 extern void InitMetroTRK();
 
@@ -19,28 +20,28 @@ __declspec(section ".init") extern char _SDA_BASE_[];
 __declspec(section ".init") extern char _SDA2_BASE_[];
 
 typedef struct __rom_copy_info {
-  char* rom;
-  char* addr;
-  unsigned int size;
+	char* rom;
+	char* addr;
+	unsigned int size;
 } __rom_copy_info;
 
 __declspec(section ".init") extern __rom_copy_info _rom_copy_info[];
 
 typedef struct __bss_init_info {
-  char* addr;
-  unsigned int size;
+	char* addr;
+	unsigned int size;
 } __bss_init_info;
 
 __declspec(section ".init") extern __bss_init_info _bss_init_info[];
 extern int main(int argc, char* argv[]);
 extern void exit(int);
 
-static void __init_registers(void);
-static void __init_data(void);
+__declspec(section ".init") static void __init_registers(void);
+__declspec(section ".init") static void __init_data(void);
 
-__declspec(section ".init")
-__declspec(weak) asm void __start(void) {
-  // clang-format off
+__declspec(section ".init") __declspec(weak) asm void __start(void)
+{
+#ifdef __MWERKS__ // clang-format off
 	nofralloc
 	bl __init_registers
 	bl __init_hardware
@@ -61,7 +62,7 @@ _check_TRK:
 	cmplwi r6, 0
 	beq _goto_main
 	lwz r7, OS_BI2_DEBUGFLAG_OFFSET(r6)
-	
+
 _check_debug_flag:
 	li r5, 0
 	cmplwi r7, 2
@@ -75,7 +76,7 @@ _goto_inittrk:
 	addi r6, r6, InitMetroTRK@l
 	mtlr r6
 	blrl
-	
+
 _goto_main:
 	lis r6, BOOTINFO2_ADDR@ha
 	addi r6, r6, BOOTINFO2_ADDR@l
@@ -118,24 +119,30 @@ _goto_skip_init_bba:
 	mr r4, r15
 	bl main
 	b exit
-  // clang-format on
+#endif // clang-format on
 }
 
-static void __copy_rom_section(void* dst, const void* src, unsigned long size) {
-  if (size && (dst != src)) {
-    memcpy(dst, src, size);
-    __flush_cache(dst, size);
-  }
+__declspec(section ".init") static void __copy_rom_section(void* dst,
+                                                           const void* src,
+                                                           unsigned long size)
+{
+	if (size && (dst != src)) {
+		memcpy(dst, src, size);
+		__flush_cache(dst, size);
+	}
 }
 
-static void __init_bss_section(void* dst, unsigned long size) {
-  if (size) {
-    memset(dst, 0, size);
-  }
+__declspec(section ".init") static void __init_bss_section(void* dst,
+                                                           unsigned long size)
+{
+	if (size) {
+		memset(dst, 0, size);
+	}
 }
 
-asm static void __init_registers(void) {
-  // clang-format off
+asm static void __init_registers(void)
+{
+#ifdef __MWERKS__ // clang-format off
 	nofralloc
 	lis r1,  _stack_addr@h
 	ori r1, r1,  _stack_addr@l
@@ -144,26 +151,27 @@ asm static void __init_registers(void) {
 	lis r13, _SDA_BASE_@h
 	ori r13, r13, _SDA_BASE_@l
 	blr
-  // clang-format on
+#endif // clang-format on
 }
 
-static void __init_data(void) {
-  __rom_copy_info* dci;
-  __bss_init_info* bii;
+static void __init_data(void)
+{
+	__rom_copy_info* dci;
+	__bss_init_info* bii;
 
-  dci = _rom_copy_info;
-  while (TRUE) {
-    if (dci->size == 0)
-      break;
-    __copy_rom_section(dci->addr, dci->rom, dci->size);
-    dci++;
-  }
+	dci = _rom_copy_info;
+	while (TRUE) {
+		if (dci->size == 0)
+			break;
+		__copy_rom_section(dci->addr, dci->rom, dci->size);
+		dci++;
+	}
 
-  bii = _bss_init_info;
-  while (TRUE) {
-    if (bii->size == 0)
-      break;
-    __init_bss_section(bii->addr, bii->size);
-    bii++;
-  }
+	bii = _bss_init_info;
+	while (TRUE) {
+		if (bii->size == 0)
+			break;
+		__init_bss_section(bii->addr, bii->size);
+		bii++;
+	}
 }

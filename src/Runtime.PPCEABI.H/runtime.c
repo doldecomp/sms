@@ -49,7 +49,8 @@ asm u32 __cvt_fp2unsigned(register f64 d)
 #endif // clang-format on
 }
 
-asm void __div2u(void) {
+asm void __div2u(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	cmpwi   cr0,r3,0
@@ -123,7 +124,8 @@ lab9:
 #endif // clang-format on
 }
 
-asm void __div2i(void) {
+asm void __div2i(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	stwu    r1,-16(r1)
@@ -222,7 +224,8 @@ func_end:
 #endif // clang-format on
 }
 
-asm void __mod2u(void) {
+asm void __mod2u(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	cmpwi   cr0,r3,0
@@ -294,7 +297,8 @@ lab9:
 #endif // clang-format on
 }
 
-asm void __mod2i(void) {
+asm void __mod2i(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 
@@ -380,7 +384,8 @@ no_adjust:
 #endif // clang-format on
 }
 
-asm void __shl2i(void) {
+asm void __shl2i(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	subfic  r8,r5,32
@@ -395,7 +400,8 @@ asm void __shl2i(void) {
 #endif // clang-format on
 }
 
-asm void __shr2u(void) {
+asm void __shr2u(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	subfic  r8,r5,32
@@ -410,7 +416,8 @@ asm void __shr2u(void) {
 #endif // clang-format on
 }
 
-asm void __shr2i(void) {
+asm void __shr2i(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	subfic  r8, r5, 0x20
@@ -427,7 +434,8 @@ around:
 #endif // clang-format on
 }
 
-asm void __cvt_sll_flt(void) {
+asm void __cvt_sll_flt(void)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	stwu    r1, -0x10(r1)

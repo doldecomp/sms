@@ -5,68 +5,68 @@
 
 #include "__os.h"
 
-#define ENQUEUE_THREAD(thread, queue, link) \
-	do {                                    \
-		OSThread* __prev = (queue)->tail;   \
-		if (__prev == NULL) {               \
-			(queue)->head = (thread);       \
-		} else {                            \
-			__prev->link.next = (thread);   \
-		}                                   \
-		(thread)->link.prev = __prev;       \
-		(thread)->link.next = 0;            \
-		(queue)->tail       = (thread);     \
+#define ENQUEUE_THREAD(thread, queue, link)                                    \
+	do {                                                                       \
+		OSThread* __prev = (queue)->tail;                                      \
+		if (__prev == NULL) {                                                  \
+			(queue)->head = (thread);                                          \
+		} else {                                                               \
+			__prev->link.next = (thread);                                      \
+		}                                                                      \
+		(thread)->link.prev = __prev;                                          \
+		(thread)->link.next = 0;                                               \
+		(queue)->tail       = (thread);                                        \
 	} while (0);
 
-#define DEQUEUE_THREAD(thread, queue, link)     \
-	do {                                        \
-		OSThread* __next = (thread)->link.next; \
-		OSThread* __prev = (thread)->link.prev; \
-		if (__next == NULL) {                   \
-			(queue)->tail = __prev;             \
-		} else {                                \
-			__next->link.prev = __prev;         \
-		}                                       \
-		if (__prev == NULL) {                   \
-			(queue)->head = __next;             \
-		} else {                                \
-			__prev->link.next = __next;         \
-		}                                       \
+#define DEQUEUE_THREAD(thread, queue, link)                                    \
+	do {                                                                       \
+		OSThread* __next = (thread)->link.next;                                \
+		OSThread* __prev = (thread)->link.prev;                                \
+		if (__next == NULL) {                                                  \
+			(queue)->tail = __prev;                                            \
+		} else {                                                               \
+			__next->link.prev = __prev;                                        \
+		}                                                                      \
+		if (__prev == NULL) {                                                  \
+			(queue)->head = __next;                                            \
+		} else {                                                               \
+			__prev->link.next = __next;                                        \
+		}                                                                      \
 	} while (0);
 
-#define ENQUEUE_THREAD_PRIO(thread, queue, link)                 \
-	do {                                                         \
-		OSThread* __prev;                                        \
-		OSThread* __next;                                        \
-		for (__next = (queue)->head;                             \
-		     __next && (__next->priority <= (thread)->priority); \
-		     __next = __next->link.next)                         \
-			;                                                    \
-                                                                 \
-		if (__next == NULL) {                                    \
-			ENQUEUE_THREAD(thread, queue, link);                 \
-		} else {                                                 \
-			(thread)->link.next = __next;                        \
-			__prev              = __next->link.prev;             \
-			__next->link.prev   = (thread);                      \
-			(thread)->link.prev = __prev;                        \
-			if (__prev == NULL) {                                \
-				(queue)->head = (thread);                        \
-			} else {                                             \
-				__prev->link.next = (thread);                    \
-			}                                                    \
-		}                                                        \
+#define ENQUEUE_THREAD_PRIO(thread, queue, link)                               \
+	do {                                                                       \
+		OSThread* __prev;                                                      \
+		OSThread* __next;                                                      \
+		for (__next = (queue)->head;                                           \
+		     __next && (__next->priority <= (thread)->priority);               \
+		     __next = __next->link.next)                                       \
+			;                                                                  \
+                                                                               \
+		if (__next == NULL) {                                                  \
+			ENQUEUE_THREAD(thread, queue, link);                               \
+		} else {                                                               \
+			(thread)->link.next = __next;                                      \
+			__prev              = __next->link.prev;                           \
+			__next->link.prev   = (thread);                                    \
+			(thread)->link.prev = __prev;                                      \
+			if (__prev == NULL) {                                              \
+				(queue)->head = (thread);                                      \
+			} else {                                                           \
+				__prev->link.next = (thread);                                  \
+			}                                                                  \
+		}                                                                      \
 	} while (0);
 
-#define DEQUEUE_HEAD(thread, queue, link)     \
-	do {                                      \
-		OSThread* __next = thread->link.next; \
-		if (__next == NULL) {                 \
-			(queue)->tail = 0;                \
-		} else {                              \
-			__next->link.prev = 0;            \
-		}                                     \
-		(queue)->head = __next;               \
+#define DEQUEUE_HEAD(thread, queue, link)                                      \
+	do {                                                                       \
+		OSThread* __next = thread->link.next;                                  \
+		if (__next == NULL) {                                                  \
+			(queue)->tail = 0;                                                 \
+		} else {                                                               \
+			__next->link.prev = 0;                                             \
+		}                                                                      \
+		(queue)->head = __next;                                                \
 	} while (0);
 
 // which header should these go in?

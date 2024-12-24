@@ -3,32 +3,38 @@
 
 #define qr0 0
 
-asm void PSMTXMultVec(register Mtx44 m, register Vec *src, register Vec *dst) {
-    nofralloc
-    psq_l f0, Vec.x(src), 0, qr0
-    psq_l f2, 0(m), 0, qr0
-    psq_l f1, Vec.z(src), 1, qr0
-    ps_mul f4, f2, f0
-    psq_l f3, 8(m), 0, qr0
-    ps_madd f5, f3, f1, f4
-    psq_l f8, 16(m), 0, qr0
-    ps_sum0 f6, f5, f6, f5
-    psq_l f9, 24(m), 0, qr0
-    ps_mul f10, f8, f0
-    psq_st f6, Vec.x(dst), 1, qr0
-    ps_madd f11, f9, f1, f10
-    psq_l f2, 32(m), 0, qr0
-    ps_sum0 f12, f11, f12, f11
-    psq_l f3, 40(m), 0, qr0
-    ps_mul f4, f2, f0
-    psq_st f12, Vec.y(dst), 1, qr0
-    ps_madd f5, f3, f1, f4
-    ps_sum0 f6, f5, f6, f5
-    psq_st f6, Vec.z(dst), 1, qr0
-    blr
+asm void PSMTXMultVec(register Mtx44 m, register Vec* src, register Vec* dst)
+{
+#ifdef __MWERKS__ // clang-format off
+	nofralloc
+	psq_l f0, Vec.x(src), 0, qr0
+	psq_l f2, 0(m), 0, qr0
+	psq_l f1, Vec.z(src), 1, qr0
+	ps_mul f4, f2, f0
+	psq_l f3, 8(m), 0, qr0
+	ps_madd f5, f3, f1, f4
+	psq_l f8, 16(m), 0, qr0
+	ps_sum0 f6, f5, f6, f5
+	psq_l f9, 24(m), 0, qr0
+	ps_mul f10, f8, f0
+	psq_st f6, Vec.x(dst), 1, qr0
+	ps_madd f11, f9, f1, f10
+	psq_l f2, 32(m), 0, qr0
+	ps_sum0 f12, f11, f12, f11
+	psq_l f3, 40(m), 0, qr0
+	ps_mul f4, f2, f0
+	psq_st f12, Vec.y(dst), 1, qr0
+	ps_madd f5, f3, f1, f4
+	ps_sum0 f6, f5, f6, f5
+	psq_st f6, Vec.z(dst), 1, qr0
+	blr
+#endif // clang-format on
 }
 
-asm void PSMTXMultVecArray(register Mtx m, register Vec *srcBase, register Vec *dstBase, register u32 count) {
+asm void PSMTXMultVecArray(register Mtx m, register Vec* srcBase,
+                           register Vec* dstBase, register u32 count)
+{
+#ifdef __MWERKS__ // clang-format off
 	psq_l f0, 0(m), 0, qr0
 	subi count, count, 1
 	psq_l f6, Vec.x(srcBase), 0, qr0
@@ -38,7 +44,7 @@ asm void PSMTXMultVecArray(register Mtx m, register Vec *srcBase, register Vec *
 	addi srcBase, srcBase, 8
 	psq_l f2, 16(m), 0, qr0
 	subi dstBase, dstBase, 4
-    
+
 	psq_l f3, 24(m), 0, qr0
 	ps_mul f8, f0, f6
 	psq_l f4, 32(m), 0, qr0
@@ -72,4 +78,5 @@ loop:
 	psq_stu f9, Vec.y(dstBase), 1, qr0
 	psq_stu f11, Vec.y(dstBase), 1, qr0
 	psq_stu f13, Vec.y(dstBase), 1, qr0
+#endif // clang-format on
 }

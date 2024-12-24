@@ -4,7 +4,6 @@
 #include <types.h>
 #include <JSystem/JSupport/JSUIosBase.hpp>
 
-
 class JSUInputStream : public JSUIosBase {
 public:
 	virtual ~JSUInputStream();

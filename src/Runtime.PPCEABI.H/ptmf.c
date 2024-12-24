@@ -16,7 +16,8 @@ const PTMF __ptmf_null = { 0, 0, 0 };
 s32 __ptmf_test(PTMF* ptmf);
 void __ptmf_scall(...);
 
-asm s32 __ptmf_test(register PTMF* ptmf) {
+asm s32 __ptmf_test(register PTMF* ptmf)
+{
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 		lwz       r5, PTMF.this_delta(r3)

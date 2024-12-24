@@ -3,7 +3,6 @@
 
 #include <types.h>
 
-
 class JSUPtrLink;
 
 class JSUPtrList {

@@ -1,5 +1,5 @@
-#include "stdarg.h"
 #include "dolphin/types.h"
+#include "stdarg.h"
 
 void* __va_arg(va_list v_list, unsigned char type)
 {
@@ -13,11 +13,11 @@ void* __va_arg(va_list v_list, unsigned char type)
 	s32 fpr_offset = 0;
 	s32 regsize    = 4;
 
-  if (type == 4) {
+	if (type == 4) {
 		addr = (char*)(((int)v_list->input_arg_area + 0xf) & 0xfffffff0);
 		v_list->input_arg_area = addr + 0x10;
-    return addr;
-  }
+		return addr;
+	}
 	if (type == 3) {
 		reg        = &(v_list->fpr);
 		g_reg      = v_list->fpr;
@@ -37,9 +37,9 @@ void* __va_arg(va_list v_list, unsigned char type)
 		addr = v_list->reg_save_area + fpr_offset + (g_reg * regsize);
 		*reg = g_reg + increment;
 	} else {
-		*reg                    = 8;
-		addr                    = v_list->input_arg_area;
-		addr                    = (char*)(((u32)(addr) + ((size)-1)) & ~((size)-1));
+		*reg = 8;
+		addr = v_list->input_arg_area;
+		addr = (char*)(((u32)(addr) + ((size)-1)) & ~((size)-1));
 		v_list->input_arg_area = addr + size;
 	}
 	if (type == 0)

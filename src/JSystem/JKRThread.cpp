@@ -5,7 +5,6 @@
 
 JSUList<JKRThread> JKRThread::sThreadList;
 
-
 JKRThread::JKRThread(u32 stackSize, int msgCount, int threadPrio)
     : mLink(this)
 {
@@ -17,13 +16,13 @@ JKRThread::JKRThread(u32 stackSize, int msgCount, int threadPrio)
 	mStackSize    = JKR_ALIGN32(stackSize);
 	mStackMemory  = JKRHeap::alloc(mStackSize, 32, mHeap);
 	mThreadRecord = JKRHeap::allocOne<OSThread>(32, mHeap);
-    // (OSThread*)JKRHeap::alloc(sizeof(OSThread), 32, mHeap);
+	// (OSThread*)JKRHeap::alloc(sizeof(OSThread), 32, mHeap);
 	OSCreateThread(mThreadRecord, &JKRThread::start, this,
 	               (void*)((u32)mStackMemory + mStackSize), mStackSize,
 	               threadPrio, OS_THREAD_ATTR_DETACH);
-	mMesgCount = msgCount;
+	mMesgCount  = msgCount;
 	mMesgBuffer = JKRHeap::allocArray<OSMessage>(mMesgCount, 0, mHeap);
-	    // = (OSMessage*)JKRHeap::alloc(mMesgCount * sizeof(OSMessage), 0, mHeap);
+	// = (OSMessage*)JKRHeap::alloc(mMesgCount * sizeof(OSMessage), 0, mHeap);
 	OSInitMessageQueue(&mMesgQueue, mMesgBuffer, mMesgCount);
 	JKRThread::sThreadList.append(&mLink);
 }

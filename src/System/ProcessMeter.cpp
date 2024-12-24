@@ -1,6 +1,5 @@
 #include "unsorted_types.h"
 
-
 TProcessMeter::TProcessMeter(s32 r4)
 {
 	_000 = 0x28;

@@ -22,5 +22,4 @@ extern void* __GDCurrentDL;
 }
 #endif // ifdef __cplusplus
 
-
 #endif

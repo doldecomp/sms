@@ -1,6 +1,5 @@
-#include <JSystem/JGeometry.hpp>
 #include "System/ParamInst.hpp"
-
+#include <JSystem/JGeometry.hpp>
 
 template <typename T> void TParamT<T>::load(JSUMemoryInputStream& stream)
 {
@@ -9,9 +8,9 @@ template <typename T> void TParamT<T>::load(JSUMemoryInputStream& stream)
 	stream.read(&discard[8], 4);
 	stream.read(&value, sizeof(T));
 };
-// clang-format off
-template class TParamT< JGeometry::TVec3<f32> >;
-// clang-format on
+
+template class TParamT<JGeometry::TVec3<f32> >;
+
 template class TParamT<f32>;
 
 template class TParamT<s32>;

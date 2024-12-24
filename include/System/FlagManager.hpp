@@ -5,7 +5,6 @@
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
-
 class TFlagManager {
 public:
 	void saveOption(JSUMemoryOutputStream& out);
