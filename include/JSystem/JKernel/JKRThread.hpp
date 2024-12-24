@@ -65,16 +65,16 @@ public:
   static void* start(void* param);
   static JSUList<JKRThread>* getList() { return &JKRThread::sThreadList; }
 
-  OSThread* getThreadRecord() const { return this->mThreadRecord; }
-  void* getStack() const { return this->mStackMemory; }
+  OSThread* getThreadRecord() const { return mThreadRecord; }
+  void* getStack() const { return mStackMemory; }
 
-  void resume() { OSResumeThread(this->mThreadRecord); }
-  void jamMessageBlock(OSMessage msg) { OSJamMessage(&this->mMesgQueue, msg, OS_MESSAGE_BLOCK); }
-  void sendMessage(OSMessage msg) { OSSendMessage(&this->mMesgQueue, msg, OS_MESSAGE_NOBLOCK); }
+  void resume() { OSResumeThread(mThreadRecord); }
+  void jamMessageBlock(OSMessage msg) { OSJamMessage(&mMesgQueue, msg, OS_MESSAGE_BLOCK); }
+  void sendMessage(OSMessage msg) { OSSendMessage(&mMesgQueue, msg, OS_MESSAGE_NOBLOCK); }
 
   OSMessage waitMessage(int* received) {
     OSMessage mesg;
-    BOOL retrieved = OSReceiveMessage(&this->mMesgQueue, &mesg, OS_MESSAGE_NOBLOCK);
+    BOOL retrieved = OSReceiveMessage(&mMesgQueue, &mesg, OS_MESSAGE_NOBLOCK);
     if (received != nullptr) {
       *received = retrieved;
     }
@@ -83,7 +83,7 @@ public:
 
   OSMessage waitMeessageBlock() {
     OSMessage mesg;
-    OSReceiveMessage(&this->mMesgQueue, &mesg, OS_MESSAGE_BLOCK);
+    OSReceiveMessage(&mMesgQueue, &mesg, OS_MESSAGE_BLOCK);
     return mesg;
   }
 

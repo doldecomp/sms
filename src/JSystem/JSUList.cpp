@@ -1,32 +1,33 @@
 #include <JSystem/JSupport/JSUList.hpp>
 
+
 JSUPtrLink::JSUPtrLink(void* val)
 {
-	this->mPtrList = nullptr;
-	this->mData    = val;
-	this->mPrev    = nullptr;
-	this->mNext    = nullptr;
+	mPtrList = nullptr;
+	mData    = val;
+	mPrev    = nullptr;
+	mNext    = nullptr;
 }
 
 JSUPtrLink::~JSUPtrLink()
 {
-	if (this->mPtrList) {
-		this->mPtrList->remove(this);
+	if (mPtrList) {
+		mPtrList->remove(this);
 	}
 }
 
 JSUPtrList::JSUPtrList(bool b)
 {
 	if (b) {
-		this->initiate();
+		initiate();
 	}
 }
 
 JSUPtrList::~JSUPtrList()
 {
-	JSUPtrLink* p = this->mHead;
+	JSUPtrLink* p = mHead;
 
-	for (int i = 0; i < this->mLinkCount; i++) {
+	for (int i = 0; i < mLinkCount; i++) {
 		p->mPtrList = 0;
 		p           = p->mNext;
 	}
@@ -34,9 +35,9 @@ JSUPtrList::~JSUPtrList()
 
 void JSUPtrList::initiate()
 {
-	this->mHead      = nullptr;
-	this->mTail      = nullptr;
-	this->mLinkCount = 0;
+	mHead      = nullptr;
+	mTail      = nullptr;
+	mLinkCount = 0;
 }
 
 bool JSUPtrList::append(JSUPtrLink* node)
@@ -48,20 +49,20 @@ bool JSUPtrList::append(JSUPtrLink* node)
 		result = node->mPtrList->remove(node);
 	}
 	if (result) {
-		if (this->mLinkCount == 0) {
+		if (mLinkCount == 0) {
 			node->mPtrList   = this;
 			node->mPrev      = nullptr;
 			node->mNext      = nullptr;
-			this->mTail      = node;
-			this->mHead      = node;
-			this->mLinkCount = 1;
+			mTail      = node;
+			mHead      = node;
+			mLinkCount = 1;
 		} else {
 			node->mPtrList     = this;
-			node->mPrev        = this->mTail;
+			node->mPrev        = mTail;
 			node->mNext        = nullptr;
-			this->mTail->mNext = node;
-			this->mTail        = node;
-			this->mLinkCount   = this->mLinkCount + 1;
+			mTail->mNext = node;
+			mTail        = node;
+			mLinkCount   = mLinkCount + 1;
 		}
 	}
 
@@ -77,20 +78,20 @@ bool JSUPtrList::prepend(JSUPtrLink* node)
 		result = node->mPtrList->remove(node);
 	}
 	if (result) {
-		if (this->mLinkCount == 0) {
+		if (mLinkCount == 0) {
 			node->mPtrList   = this;
 			node->mPrev      = nullptr;
 			node->mNext      = nullptr;
-			this->mTail      = node;
-			this->mHead      = node;
-			this->mLinkCount = 1;
+			mTail      = node;
+			mHead      = node;
+			mLinkCount = 1;
 		} else {
 			node->mPtrList     = this;
 			node->mPrev        = nullptr;
-			node->mNext        = this->mHead;
-			this->mHead->mPrev = node;
-			this->mHead        = node;
-			this->mLinkCount   = this->mLinkCount + 1;
+			node->mNext        = mHead;
+			mHead->mPrev = node;
+			mHead        = node;
+			mLinkCount   = mLinkCount + 1;
 		}
 	}
 
@@ -101,10 +102,10 @@ bool JSUPtrList::insert(JSUPtrLink* before, JSUPtrLink* ptr)
 {
 	bool result;
 
-	if (before == this->mHead) {
-		return this->prepend(ptr);
+	if (before == mHead) {
+		return prepend(ptr);
 	} else if (before == nullptr) {
-		return this->append(ptr);
+		return append(ptr);
 	}
 
 	if (before->mPtrList != this) {
@@ -123,7 +124,7 @@ bool JSUPtrList::insert(JSUPtrLink* before, JSUPtrLink* ptr)
 		ptr->mNext        = before;
 		mPrev->mNext      = ptr;
 		before->mPrev     = ptr;
-		this->mLinkCount++;
+		mLinkCount++;
 	}
 
 	return result;
@@ -134,22 +135,22 @@ bool JSUPtrList::remove(JSUPtrLink* node)
 	bool isSameList = (node->mPtrList == this);
 
 	if (isSameList) {
-		if (this->mLinkCount == 1) {
-			this->mHead = nullptr;
-			this->mTail = nullptr;
-		} else if (node == this->mHead) {
+		if (mLinkCount == 1) {
+			mHead = nullptr;
+			mTail = nullptr;
+		} else if (node == mHead) {
 			node->mNext->mPrev = nullptr;
-			this->mHead        = node->mNext;
-		} else if (node == this->mTail) {
+			mHead        = node->mNext;
+		} else if (node == mTail) {
 			node->mPrev->mNext = nullptr;
-			this->mTail        = node->mPrev;
+			mTail        = node->mPrev;
 		} else {
 			node->mPrev->mNext = node->mNext;
 			node->mNext->mPrev = node->mPrev;
 		}
 
 		node->mPtrList = nullptr;
-		this->mLinkCount--;
+		mLinkCount--;
 	}
 
 	return isSameList;

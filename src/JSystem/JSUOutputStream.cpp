@@ -1,6 +1,7 @@
 #include <JSystem/JSupport/JSUOutputStream.hpp>
 #include <JSystem/JSupport/JSURandomOutputStream.hpp>
 
+
 JSUOutputStream::~JSUOutputStream() { }
 
 int JSUOutputStream::write(const void* buf, s32 size)

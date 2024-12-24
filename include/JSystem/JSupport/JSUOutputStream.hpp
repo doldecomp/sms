@@ -2,7 +2,8 @@
 #define JSU_OUTPUT_STREAM_HPP
 
 #include <types.h>
-#include <JSystem/JSupport/JSUIosBase.h>
+#include <JSystem/JSupport/JSUIosBase.hpp>
+
 
 class JSUOutputStream : public JSUIosBase {
 public:

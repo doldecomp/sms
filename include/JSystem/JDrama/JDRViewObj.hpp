@@ -1,13 +1,11 @@
-#ifndef JDRVIEWOBJ_HPP
-#define JDRVIEWOBJ_HPP
-
-#include "dolphin.h"
-#include "types.h"
+#ifndef JDR_VIEW_OBJ_HPP
+#define JDR_VIEW_OBJ_HPP
 
 #include <JSystem/JDrama/JDRNameRef.hpp>
 
+
 namespace JDrama {
-class TViewObj : TNameRef { // based on TNameRef
+class TViewObj : public TNameRef { // based on TNameRef
 public:
 	u32 _00C;
 };

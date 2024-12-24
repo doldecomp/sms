@@ -1,8 +1,7 @@
-// #include "os/OSRtc.h"
-// #include "os/OSTime.h"
-#include "Runtime.PPCEABI.H/__mem.h"
 #include "System/FlagManager.hpp"
 #include "System/StageUtil.hpp"
+#include "dolphin/os.h"
+
 
 TFlagManager* TFlagManager::smInstance = 0;
 
@@ -28,40 +27,40 @@ TFlagManager* TFlagManager::start(JKRHeap* heap)
 void TFlagManager::resetCard()
 {
 	for (int i = 0; i < 119; ++i) {
-		this->mCardBools[i] = 0;
+		mCardBools[i] = 0;
 	}
 
 	for (int i = 0; i < 21; ++i) {
-		this->mCardInts[i] = 0;
+		mCardInts[i] = 0;
 	}
 
-	this->mLastSaveTime       = 0;
-	this->mLastSaveTimeBackup = 0;
+	mLastSaveTime       = 0;
+	mLastSaveTimeBackup = 0;
 
-	this->resetGame();
+	resetGame();
 }
 
 void TFlagManager::resetGame()
 {
 	for (int i = 0; i < 4; ++i) {
-		this->mGameBools[i] = 0;
+		mGameBools[i] = 0;
 	}
 
 	for (int i = 0; i < 5; ++i) {
-		this->mGameInts[i] = 0;
+		mGameInts[i] = 0;
 	}
 
-	this->resetStage();
+	resetStage();
 }
 
 void TFlagManager::resetStage()
 {
 	for (int i = 0; i < 13; ++i) {
-		this->mStageBools[i] = 0;
+		mStageBools[i] = 0;
 	}
 
 	for (int i = 0; i < 100; ++i) {
-		this->mStageInts[i] = 0;
+		mStageInts[i] = 0;
 	}
 }
 
@@ -71,52 +70,52 @@ s32 TFlagManager::getFlag(u32 flag) const
 	switch (flag >> 16) {
 	case 1:
 		if (flag < 0x103B4) {
-			return this->mCardBools[low >> 3] >> (low & 7) & 1;
+			return mCardBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 2:
 		if (flag < 0x20015) {
-			return this->mCardInts[low];
+			return mCardInts[low];
 		}
 		break;
 	case 3:
 		if (flag < 0x3001D) {
-			return this->mGameBools[low >> 3] >> (low & 7) & 1;
+			return mGameBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 4:
 		if (flag < 0x40005) {
-			return this->mGameInts[low];
+			return mGameInts[low];
 		}
 		break;
 	case 5:
 		if (flag < 0x50064) {
-			return this->mStageBools[low >> 3] >> (low & 7) & 1;
+			return mStageBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 6:
 		if (flag < 0x60064) {
-			return this->mStageInts[low];
+			return mStageInts[low];
 		}
 		break;
 	case 7:
 		if (flag < 0x70002) {
-			return this->mSavedOptionBools[low >> 3] >> (low & 7) & 1;
+			return mSavedOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 8:
 		if (flag < 0x80001) {
-			return this->mSavedOptionInts[low];
+			return mSavedOptionInts[low];
 		}
 		break;
 	case 9:
 		if (flag < 0x90001) {
-			return this->mOptionBools[low >> 3] >> (low & 7) & 1;
+			return mOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 10:
 		if (flag < 0xA0002) {
-			return this->mOptionInts[low];
+			return mOptionInts[low];
 		}
 		break;
 	}
@@ -129,57 +128,57 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 	switch (flag >> 16) {
 	case 1:
 		if (flag < 0x103B4) {
-			this->mCardBools[low >> 3] &= ~(1 << (low & 7));
-			this->mCardBools[low >> 3] |= (value & 1) << (low & 7);
+			mCardBools[low >> 3] &= ~(1 << (low & 7));
+			mCardBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 2:
 		if (flag < 0x20015) {
-			this->mCardInts[low] = value;
+			mCardInts[low] = value;
 		}
 		break;
 	case 3:
 		if (flag < 0x3001D) {
-			this->mGameBools[low >> 3] &= ~(1 << (low & 7));
-			this->mGameBools[low >> 3] |= (value & 1) << (low & 7);
+			mGameBools[low >> 3] &= ~(1 << (low & 7));
+			mGameBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 4:
 		if (flag < 0x40005) {
-			this->mGameInts[low] = value;
+			mGameInts[low] = value;
 		}
 		break;
 	case 5:
 		if (flag < 0x50064) {
-			this->mStageBools[low >> 3] &= ~(1 << (low & 7));
-			this->mStageBools[low >> 3] |= (value & 1) << (low & 7);
+			mStageBools[low >> 3] &= ~(1 << (low & 7));
+			mStageBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 6:
 		if (flag < 0x60064) {
-			this->mStageInts[low] = value;
+			mStageInts[low] = value;
 		}
 		break;
 	case 7:
 		if (flag < 0x70002) {
-			this->mSavedOptionBools[low >> 3] &= ~(1 << (low & 7));
-			this->mSavedOptionBools[low >> 3] |= (value & 1) << (low & 7);
+			mSavedOptionBools[low >> 3] &= ~(1 << (low & 7));
+			mSavedOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 8:
 		if (flag < 0x80001) {
-			this->mSavedOptionInts[low] = value;
+			mSavedOptionInts[low] = value;
 		}
 		break;
 	case 9:
 		if (flag < 0x90001) {
-			this->mOptionBools[low >> 3] &= ~(1 << (low & 7));
-			this->mOptionBools[low >> 3] |= (value & 1) << (low & 7);
+			mOptionBools[low >> 3] &= ~(1 << (low & 7));
+			mOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 10:
 		if (flag < 0xA0002) {
-			this->mOptionInts[low] = value;
+			mOptionInts[low] = value;
 		}
 		break;
 	}
@@ -190,27 +189,27 @@ bool TFlagManager::getBool(u32 flag) const
 	switch (flag >> 16) {
 	case 1:
 		if (flag < 0x103B4) {
-			return this->getFlag(flag) != 0;
+			return getFlag(flag) != 0;
 		}
 		break;
 	case 3:
 		if (flag < 0x3001D) {
-			return this->getFlag(flag) != 0;
+			return getFlag(flag) != 0;
 		}
 		break;
 	case 5:
 		if (flag < 0x50064) {
-			return this->getFlag(flag) != 0;
+			return getFlag(flag) != 0;
 		}
 		break;
 	case 7:
 		if (flag < 0x70002) {
-			return this->getFlag(flag) != 0;
+			return getFlag(flag) != 0;
 		}
 		break;
 	case 9:
 		if (flag < 0x90001) {
-			return this->getFlag(flag) != 0;
+			return getFlag(flag) != 0;
 		}
 		break;
 	}
@@ -222,35 +221,35 @@ void TFlagManager::setBool(bool value, u32 flag)
 	switch (flag >> 16) {
 	case 1:
 		if (flag < 0x103B4) {
-			this->setFlag(flag, value ? 1 : 0);
+			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 2:
 		break;
 	case 3:
 		if (flag < 0x3001D) {
-			this->setFlag(flag, value ? 1 : 0);
+			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 4:
 		break;
 	case 5:
 		if (flag < 0x50064) {
-			this->setFlag(flag, value ? 1 : 0);
+			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 6:
 		break;
 	case 7:
 		if (flag < 0x70002) {
-			this->setFlag(flag, value ? 1 : 0);
+			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 8:
 		break;
 	case 9:
 		if (flag < 0x90001) {
-			this->setFlag(flag, value ? 1 : 0);
+			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 10:
@@ -264,27 +263,27 @@ void TFlagManager::incFlag(u32 flag, s32 amount)
 	switch (flag >> 16) {
 	case 2:
 		if (flag < 0x20015) {
-			this->mCardInts[low] += amount;
+			mCardInts[low] += amount;
 		}
 		break;
 	case 4:
 		if (flag < 0x40005) {
-			this->mGameInts[low] += amount;
+			mGameInts[low] += amount;
 		}
 		break;
 	case 6:
 		if (flag < 0x60064) {
-			this->mStageInts[low] += amount;
+			mStageInts[low] += amount;
 		}
 		break;
 	case 8:
 		if (flag < 0x80001) {
-			this->mSavedOptionInts[low] += amount;
+			mSavedOptionInts[low] += amount;
 		}
 		break;
 	case 10:
 		if (flag < 0xA0002) {
-			this->mOptionInts[low] += amount;
+			mOptionInts[low] += amount;
 		}
 		break;
 	}
@@ -292,14 +291,14 @@ void TFlagManager::incFlag(u32 flag, s32 amount)
 
 void TFlagManager::decFlag(u32 flag, s32 amount)
 {
-	this->incFlag(flag, -amount);
+	incFlag(flag, -amount);
 }
 
 void TFlagManager::incMario(s32 amount)
 {
-	this->incFlag(0x20001, amount);
-	if (99 < this->getFlag(0x20001)) {
-		this->setFlag(0x20001, 99);
+	incFlag(0x20001, amount);
+	if (99 < getFlag(0x20001)) {
+		setFlag(0x20001, 99);
 	}
 }
 
@@ -308,7 +307,7 @@ bool TFlagManager::getShineFlag(u8 shine) const
 	if (shine >= 120) {
 		shine = 0;
 	}
-	return this->getFlag(shine + 0x10000) != 0;
+	return getFlag(shine + 0x10000) != 0;
 }
 
 void TFlagManager::setShineFlag(u8 shine)
@@ -317,17 +316,17 @@ void TFlagManager::setShineFlag(u8 shine)
 		shine = 0;
 	}
 	u32 flag = 0x10000 + shine;
-	if (this->getFlag(flag) == 0) {
-		this->incFlag(0x40000, 1);
-		this->setFlag(flag, 1);
+	if (getFlag(flag) == 0) {
+		incFlag(0x40000, 1);
+		setFlag(flag, 1);
 	}
 }
 
 void TFlagManager::incGoldCoinFlag(u8 area, s32 amount)
 {
-	this->incFlag(0x40002, amount);
-	if (this->getFlag(0x40002) > this->getFlag(0x20005 + area)) {
-		this->setFlag(0x20005 + area, this->getFlag(0x40002));
+	incFlag(0x40002, amount);
+	if (getFlag(0x40002) > getFlag(0x20005 + area)) {
+		setFlag(0x20005 + area, getFlag(0x40002));
 	}
 }
 
@@ -341,7 +340,7 @@ bool TFlagManager::getBlueCoinFlag(u8 area, u8 blueCoin) const
 		blueCoin = 0;
 	}
 	u32 flag = 0x10078 + (stage - 1) * 50 + blueCoin;
-	return this->getFlag(flag) != 0;
+	return getFlag(flag) != 0;
 }
 
 void TFlagManager::setBlueCoinFlag(u8 area, u8 blueCoin)
@@ -355,9 +354,9 @@ void TFlagManager::setBlueCoinFlag(u8 area, u8 blueCoin)
 		blueCoin = 0;
 	}
 	u32 flag = 0x10078 + (stage - 1) * 50 + blueCoin;
-	if (this->getFlag(flag) == 0) {
-		this->incFlag(0x40001, 1);
-		this->setFlag(flag, 1);
+	if (getFlag(flag) == 0) {
+		incFlag(0x40001, 1);
+		setFlag(flag, 1);
 	}
 }
 
@@ -371,7 +370,7 @@ bool TFlagManager::getNozzleRight(u8 area, u8 nozzle) const
 		nozzle = 0;
 	}
 	u32 flag = 0x10366 + (stage - 1) * 2 + nozzle;
-	return this->getFlag(flag) != 0;
+	return getFlag(flag) != 0;
 }
 
 void TFlagManager::setNozzleRight(u8 area, u8 nozzle)
@@ -385,20 +384,20 @@ void TFlagManager::setNozzleRight(u8 area, u8 nozzle)
 		nozzle = 0;
 	}
 	u32 flag = 0x10366 + (stage - 1) * 2 + nozzle;
-	if (this->getFlag(flag) == 0) {
-		this->setFlag(flag, 1);
+	if (getFlag(flag) == 0) {
+		setFlag(flag, 1);
 	}
 }
 
 void TFlagManager::load(JSUMemoryInputStream& in)
 {
-	this->resetCard();
+	resetCard();
 
 	u32 magic;
 	in.read(&magic, sizeof(magic));
 
 	if (magic == 4) {
-		in.read(&this->mLastSaveTime, sizeof(this->mLastSaveTime));
+		in.read(&mLastSaveTime, sizeof(mLastSaveTime));
 
 		u64 padding1 = 0;
 		in.read(&padding1, sizeof(padding1));
@@ -417,95 +416,95 @@ void TFlagManager::load(JSUMemoryInputStream& in)
 			in.read(&padding5, sizeof(padding5));
 		}
 
-		in.read(&this->mCardBools, sizeof(this->mCardBools));
-		in.skip(0x200 - sizeof(this->mCardBools));
-		in.read(&this->mCardInts, sizeof(this->mCardInts));
-		in.skip(0x200 - sizeof(this->mCardInts));
+		in.read(&mCardBools, sizeof(mCardBools));
+		in.skip(0x200 - sizeof(mCardBools));
+		in.read(&mCardInts, sizeof(mCardInts));
+		in.skip(0x200 - sizeof(mCardInts));
 	}
 
-	memcpy(this->mSavedCardBools, this->mCardBools, sizeof(this->mCardBools));
-	memcpy(this->mSavedCardInts, this->mCardInts, sizeof(this->mCardInts));
-	this->mSavedLastSaveTime = this->mLastSaveTime;
-	this->correctFlag();
+	memcpy(mSavedCardBools, mCardBools, sizeof(mCardBools));
+	memcpy(mSavedCardInts, mCardInts, sizeof(mCardInts));
+	mSavedLastSaveTime = mLastSaveTime;
+	correctFlag();
 }
 
 void TFlagManager::restore()
 {
-	this->resetCard();
-	this->mLastSaveTime = this->mSavedLastSaveTime;
-	memcpy(this->mCardBools, this->mSavedCardBools, sizeof(this->mCardBools));
-	memcpy(this->mCardInts, this->mSavedCardInts, sizeof(this->mCardInts));
-	this->correctFlag();
+	resetCard();
+	mLastSaveTime = mSavedLastSaveTime;
+	memcpy(mCardBools, mSavedCardBools, sizeof(mCardBools));
+	memcpy(mCardInts, mSavedCardInts, sizeof(mCardInts));
+	correctFlag();
 }
 
 void TFlagManager::firstStart()
 {
-	this->resetCard();
-	memcpy(this->mSavedCardBools, this->mCardBools, sizeof(this->mCardBools));
-	memcpy(this->mSavedCardInts, this->mCardInts, sizeof(this->mCardInts));
-	this->mSavedLastSaveTime = this->mLastSaveTime;
-	this->correctFlag();
+	resetCard();
+	memcpy(mSavedCardBools, mCardBools, sizeof(mCardBools));
+	memcpy(mSavedCardInts, mCardInts, sizeof(mCardInts));
+	mSavedLastSaveTime = mLastSaveTime;
+	correctFlag();
 }
 
 void TFlagManager::correctFlag()
 {
-	if (this->getFlag(0x20001) < 3) {
-		this->setFlag(0x20001, 3);
+	if (getFlag(0x20001) < 3) {
+		setFlag(0x20001, 3);
 	}
-	if (this->getFlag(0x20002) == 0) {
-		this->setFlag(0x20002, 3500);
+	if (getFlag(0x20002) == 0) {
+		setFlag(0x20002, 3500);
 	}
-	if (this->getFlag(0x20003) == 0) {
-		this->setFlag(0x20003, 3000);
+	if (getFlag(0x20003) == 0) {
+		setFlag(0x20003, 3000);
 	}
-	if (this->getFlag(0x20014) == 0) {
-		this->setFlag(0x20014, 4000);
+	if (getFlag(0x20014) == 0) {
+		setFlag(0x20014, 4000);
 	}
-	if (this->getFlag(0x20004) == 0) {
-		this->setFlag(0x20004, 3000);
+	if (getFlag(0x20004) == 0) {
+		setFlag(0x20004, 3000);
 	}
-	this->setBool(true, 0x1039A);
-	this->setBool(true, 0x1039D);
+	setBool(true, 0x1039A);
+	setBool(true, 0x1039D);
 
 	int shines = 0;
 	for (u32 flag = 0x10000; flag <= 0x10077; ++flag) {
-		if (this->getFlag(flag) != 0) {
+		if (getFlag(flag) != 0) {
 			++shines;
 		}
 	}
-	this->setFlag(0x40000, shines);
+	setFlag(0x40000, shines);
 
 	int blues = 0;
 	for (u32 flag = 0x10078; flag <= 0x10365; ++flag) {
-		if (this->getFlag(flag) != 0) {
+		if (getFlag(flag) != 0) {
 			++blues;
 		}
 	}
-	this->setFlag(0x40001, blues);
+	setFlag(0x40001, blues);
 }
 
 void TFlagManager::save(JSUMemoryOutputStream& out)
 {
 	u8 _padding[8];
 
-	this->mLastSaveTimeBackup = this->mLastSaveTime;
-	this->mLastSaveTime       = OSGetTime();
+	mLastSaveTimeBackup = mLastSaveTime;
+	mLastSaveTime       = OSGetTime();
 
-	this->incFlag(0x20000, 1);
+	incFlag(0x20000, 1);
 
 	u32 magic = 4;
 	out.write(&magic, sizeof(magic));
 
-	s64 time = this->mLastSaveTime;
+	s64 time = mLastSaveTime;
 	out.write(&time, sizeof(time));
 
 	u64 padding = 0;
 	out.write(&padding, sizeof(padding));
 
-	s32 saveCount = this->getFlag(0x20000);
+	s32 saveCount = getFlag(0x20000);
 	out.write(&saveCount, sizeof(saveCount));
 
-	u16 shineCount = this->getFlag(0x40000);
+	u16 shineCount = getFlag(0x40000);
 	out.write(&shineCount, sizeof(shineCount));
 
 	u16 padding2 = 0;
@@ -516,87 +515,87 @@ void TFlagManager::save(JSUMemoryOutputStream& out)
 		out.write(&padding3, sizeof(padding3));
 	}
 
-	out.write(this->mCardBools, sizeof(this->mCardBools));
-	out.skip(0x200 - sizeof(this->mCardBools), 0);
-	out.write(this->mCardInts, sizeof(this->mCardInts));
-	out.skip(0x200 - sizeof(this->mCardInts), 0);
+	out.write(mCardBools, sizeof(mCardBools));
+	out.skip(0x200 - sizeof(mCardBools), 0);
+	out.write(mCardInts, sizeof(mCardInts));
+	out.skip(0x200 - sizeof(mCardInts), 0);
 }
 
 void TFlagManager::saveSuccess()
 {
-	memcpy(this->mSavedCardBools, this->mCardBools, sizeof(this->mCardBools));
-	memcpy(this->mSavedCardInts, this->mCardInts, sizeof(this->mCardInts));
-	this->mSavedLastSaveTime = this->mLastSaveTime;
+	memcpy(mSavedCardBools, mCardBools, sizeof(mCardBools));
+	memcpy(mSavedCardInts, mCardInts, sizeof(mCardInts));
+	mSavedLastSaveTime = mLastSaveTime;
 }
 
 void TFlagManager::saveFail()
 {
-	this->mLastSaveTime = this->mLastSaveTimeBackup;
-	this->incFlag(0x20000, -1);
+	mLastSaveTime = mLastSaveTimeBackup;
+	incFlag(0x20000, -1);
 }
 
 void TFlagManager::resetOpt()
 {
-	this->mSavedOptionBools[0] = 0;
-	this->mSavedOptionInts[0]  = 0;
+	mSavedOptionBools[0] = 0;
+	mSavedOptionInts[0]  = 0;
 }
 
 void TFlagManager::correctOptFlag()
 {
-	this->setBool(!this->getBool(0x70000), 0x90000);
+	setBool(!getBool(0x70000), 0x90000);
 
 	if (OSGetSoundMode() == 0) {
-		this->setFlag(0xA0000, 0);
+		setFlag(0xA0000, 0);
 	} else {
-		this->setFlag(0xA0000, this->getBool(0x70001) ? 2 : 1);
+		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
 	}
 
-	this->setFlag(0xA0001, 0x100);
+	setFlag(0xA0001, 0x100);
 }
 
 void TFlagManager::loadOption(JSUMemoryInputStream& in)
 {
-	this->mSavedOptionBools[0] = 0;
-	this->mSavedOptionInts[0]  = 0;
+	mSavedOptionBools[0] = 0;
+	mSavedOptionInts[0]  = 0;
 
 	u32 magic;
 	u8 _padding[24];
 	in.read(&magic, sizeof(magic));
 	if (magic == 2) {
-		in.read(this->mSavedOptionBools, sizeof(this->mSavedOptionBools));
-		in.read(this->mSavedOptionInts, sizeof(this->mSavedOptionInts));
+		in.read(mSavedOptionBools, sizeof(mSavedOptionBools));
+		in.read(mSavedOptionInts, sizeof(mSavedOptionInts));
 	}
 
-	this->setBool(!this->getBool(0x70000), 0x90000);
+	setBool(!getBool(0x70000), 0x90000);
 
 	if (OSGetSoundMode() == 0) {
-		this->setFlag(0xA0000, 0);
+		setFlag(0xA0000, 0);
 	} else {
-		this->setFlag(0xA0000, this->getBool(0x70001) ? 2 : 1);
+		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
 	}
 
-	this->setFlag(0xA0001, 0x100);
+	setFlag(0xA0001, 0x100);
 }
 
 void TFlagManager::saveOption(JSUMemoryOutputStream& out)
 {
 	u32 magic = 2;
 	out.write(&magic, sizeof(magic));
-	this->setBool(!this->getBool(0x90000), 0x70000);
-	switch (this->getFlag(0xA0000)) {
+	setBool(!getBool(0x90000), 0x70000);
+	switch (getFlag(0xA0000)) {
 	case 0:
 		OSSetSoundMode(0);
-		this->setBool(false, 0x70001);
+		setBool(false, 0x70001);
 		break;
 	case 1:
 		OSSetSoundMode(1);
-		this->setBool(false, 0x70001);
+		setBool(false, 0x70001);
 		break;
 	case 2:
 		OSSetSoundMode(1);
-		this->setBool(true, 0x70001);
+		setBool(true, 0x70001);
 	}
-	this->setFlag(0x80000, 0);
-	out.write(this->mSavedOptionBools, sizeof(this->mSavedOptionBools));
-	out.write(this->mSavedOptionInts, sizeof(this->mSavedOptionInts));
+	setFlag(0x80000, 0);
+	out.write(mSavedOptionBools, sizeof(mSavedOptionBools));
+	out.write(mSavedOptionInts, sizeof(mSavedOptionInts));
 }

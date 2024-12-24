@@ -1,7 +1,8 @@
-#ifndef JSULIST_H
-#define JSULIST_H
+#ifndef JSU_LIST_H
+#define JSU_LIST_H
 
 #include <types.h>
+
 
 class JSUPtrLink;
 

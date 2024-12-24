@@ -1,10 +1,9 @@
-#ifndef FLAGMANAGER_HPP
-#define FLAGMANAGER_HPP
-
-#include "dolphin.h"
+#ifndef FLAG_MANAGER_HPP
+#define FLAG_MANAGER_HPP
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JSupport/JSUMemoryStream.hpp>
+
 
 class TFlagManager {
 public:
@@ -44,8 +43,8 @@ private:
 	TFlagManager();
 	void initOpt()
 	{
-		this->resetOpt();
-		this->correctOptFlag();
+		resetOpt();
+		correctOptFlag();
 	}
 
 	u8 mCardBools[119];

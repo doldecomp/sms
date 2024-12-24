@@ -1,15 +1,13 @@
-#include "dolphin.h"
-
-#include "types.h"
 #include <JSystem/JGeometry.hpp>
 #include "System/ParamInst.hpp"
+
 
 template <typename T> void TParamT<T>::load(JSUMemoryInputStream& stream)
 {
 	u8 discard[16];
 
 	stream.read(&discard[8], 4);
-	stream.read(&this->value, sizeof(T));
+	stream.read(&value, sizeof(T));
 };
 // clang-format off
 template class TParamT< JGeometry::TVec3<f32> >;
