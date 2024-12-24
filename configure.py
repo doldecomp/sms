@@ -295,21 +295,32 @@ config.libs = [
         "cflags": cflags_jsystem,
         "progress_category": "jsystem",
         "objects": [
-            Object(Matching, "JSystem/J3DClusterLoader.cpp"),
             Object(Matching, "JSystem/JASProbe.cpp"),
+
+            # JDrama
             Object(Matching, "JSystem/JDRPlacement.cpp"),
             Object(Matching, "JSystem/JDRResolution.cpp"),
-            Object(Matching, "JSystem/JSUList.cpp"),
+
+            # JUtility
             Object(Matching, "JSystem/JUTRect.cpp"),
+
+            # J3D
+            Object(Matching, "JSystem/J3DClusterLoader.cpp"),
             # Object(Matching, "JSystem/J3DModel.cpp"),
             Object(Matching, "JSystem/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3DPacket.cpp"),
             # Object(Matching, "JSystem/J3DShape.cpp"),
+
+            # JKernel
             Object(Matching, "JSystem/JKRDisposer.cpp"),
             Object(Matching, "JSystem/JKRHeap.cpp"),
             Object(Matching, "JSystem/JKRFileLoader.cpp"),
             Object(Matching, "JSystem/JKRThread.cpp"),
             Object(Matching, "JSystem/JKRFileFinder.cpp"),
+
+            # JSupport
+            Object(Matching, "JSystem/JSUInputStream.cpp"),
+            Object(Matching, "JSystem/JSUList.cpp"),
         ],
     },
     {

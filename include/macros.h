@@ -5,6 +5,9 @@
 #define FLAG_ON(V, F) (((V) & (F)) == 0)
 #define FLAG_OFF(V, F) (((V) & (F)) != 0)
 
+#define ALIGN_PREV(u, align) (u & (~(align - 1)))
+#define ALIGN_NEXT(u, align) ((u + (align - 1)) & (~(align - 1)))
+
 #ifdef DEBUG
 #define ASSERTLINE(line, cond) \
     ((cond) || (OSPanic(__FILE__, line, "Failed assertion " #cond), 0))
