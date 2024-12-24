@@ -1,0 +1,27 @@
+name: lint
+
+on:
+  pull_request:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**.h'
+      - '**.c'
+      - '**.clang-format'
+      - '**.clang-tidy'
+
+permissions:
+  contents: read
+
+jobs:
+  check-format-and-tidy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: jidicula/clang-format-action@v4.14.0
+      with:
+        clang-format-version: '17'
+        fallback-style: 'none'
+
+    # no tidy for now I'm too lazy sorry
