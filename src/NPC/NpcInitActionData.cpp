@@ -1,5 +1,3 @@
-#include "dolphin.h"
-
 #include "NPC/NpcBase.hpp"
 
 // clang-format off
@@ -19,24 +17,24 @@ static const u32 sBaseActionFlagTable3[] = {
 
 void TBaseNPC::setKinoActionFlag_()
 {
-	if (this->_16C > 0xF) {
-		this->_16C = 0;
+	if (_16C > 0xF) {
+		_16C = 0;
 	}
-	this->mActionFlag = sBaseActionFlagTable3[this->_16C];
+	mActionFlag = sBaseActionFlagTable3[_16C];
 }
 
 void TBaseNPC::setMareActionFlag_()
 {
-	if (this->_16C > 0x10) {
-		this->_16C = 0;
+	if (_16C > 0x10) {
+		_16C = 0;
 	}
-	this->mActionFlag = sBaseActionFlagTable2[this->_16C];
+	mActionFlag = sBaseActionFlagTable2[_16C];
 }
 
 void TBaseNPC::setMonteActionFlag_()
 {
-	if (this->_16C > 0x18) {
-		this->_16C = 0;
+	if (_16C > 0x18) {
+		_16C = 0;
 	}
-	this->mActionFlag = sBaseActionFlagTable[this->_16C];
+	mActionFlag = sBaseActionFlagTable[_16C];
 }

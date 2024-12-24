@@ -11,7 +11,7 @@ public:
 
 	virtual int getAvailable() const
 	{
-		return this->getLength() - this->getPosition();
+		return getLength() - getPosition();
 	}
 	virtual int skip(s32 amount);
 	virtual int readData(void* buf, s32 count)              = 0;

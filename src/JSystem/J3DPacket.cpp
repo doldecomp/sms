@@ -7,17 +7,18 @@
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>
 
+
 int J3DDrawPacket::sInterruptFlag;
 
 void J3DDisplayListObj::newDisplayList(u32 param_1)
 {
-	this->unkC = param_1 + 0x1f & 0xffffffe0;
-	this->unk0 = new (0x20) char[this->unkC];
-	this->unk4 = new (0x20) char[this->unkC];
-	this->unk8 = 0;
+	unkC = param_1 + 0x1f & 0xffffffe0;
+	unk0 = new (0x20) char[unkC];
+	unk4 = new (0x20) char[unkC];
+	unk8 = 0;
 }
 
-void J3DDisplayListObj::callDL() { GXCallDisplayList(this->unk0, this->unk8); }
+void J3DDisplayListObj::callDL() { GXCallDisplayList(unk0, unk8); }
 
 bool J3DPacket::isSame(J3DMatPacket*) const { return false; }
 
@@ -29,7 +30,7 @@ void J3DPacket::addChildPacket(J3DPacket* packet)
 		unk8 = packet;
 		return;
 	}
-	packet->unk4 = this->unk8;
+	packet->unk4 = unk8;
 	unk8         = packet;
 }
 
@@ -54,7 +55,7 @@ J3DDrawPacket::J3DDrawPacket()
 
 void J3DDrawPacket::draw()
 {
-	GXCallDisplayList(this->unk30->unk0, this->unk30->unk8);
+	GXCallDisplayList(unk30->unk0, unk30->unk8);
 }
 
 J3DDrawPacket::~J3DDrawPacket() { }
@@ -130,9 +131,9 @@ void J3DMatPacket::draw()
 {
 	char trash[0x20];
 	if (!checkThing(unk34)) {
-		j3dSys._054_4_ = this->unk40;
+		j3dSys._054_4_ = unk40;
 		j3dSys._03C_4_ = this;
-		this->unk38->load();
+		unk38->load();
 		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {
 			j->draw();
 		}

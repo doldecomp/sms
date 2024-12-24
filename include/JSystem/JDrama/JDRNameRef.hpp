@@ -1,9 +1,8 @@
-#ifndef JDRNAMEREF_HPP
-#define JDRNAMEREF_HPP
-
-#include "dolphin.h"
+#ifndef JDR_NAME_REF_HPP
+#define JDR_NAME_REF_HPP
 
 #include <JSystem/JSupport/JSUMemoryStream.hpp>
+
 
 namespace JDrama {
 class TNameRef {

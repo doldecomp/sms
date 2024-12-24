@@ -1,12 +1,10 @@
-#ifndef JDRPLACEMENT_HPP
-#define JDRPLACEMENT_HPP
-
-#include "dolphin.h"
-#include "types.h"
+#ifndef JDR_PLACEMENT_HPP
+#define JDR_PLACEMENT_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 #include <JSystem/JGeometry.hpp>
+
 
 namespace JDrama {
 class TPlacement : public TViewObj {

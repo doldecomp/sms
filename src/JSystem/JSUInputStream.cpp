@@ -2,6 +2,7 @@
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <macros.h>
 
+
 JSUInputStream::~JSUInputStream() { }
 
 int JSUInputStream::read(void* buf, s32 size)
