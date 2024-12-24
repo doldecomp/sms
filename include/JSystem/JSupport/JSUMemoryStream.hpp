@@ -2,7 +2,7 @@
 #define JSUMEMORYSTREAM_HPP
 
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
-#include <JSystem/JSupport/JSUOutputStream.hpp>
+#include <JSystem/JSupport/JSURandomOutputStream.hpp>
 
 class JSUMemoryInputStream : public JSURandomInputStream {
 public:
