@@ -5,7 +5,6 @@
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
-
 namespace JDrama {
 class TNameRef {
 public:

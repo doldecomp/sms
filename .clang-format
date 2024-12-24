@@ -10,8 +10,9 @@ TabWidth: 4
 UseTab: ForIndentation
 SortIncludes: false
 AlignConsecutiveMacros: true
-AlignEscapedNewlines: Left
+AlignEscapedNewlines: Right
 AlignOperands: true
 AllowShortIfStatementsOnASingleLine: Never
 Cpp11BracedListStyle: false
 Language: Cpp
+Standard: Cpp03

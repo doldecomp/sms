@@ -64,8 +64,8 @@ bool JKRHeap::initArena(char** outUserRamStart, u32* outUserRamSize,
 	mUserRamStart    = (u8*)arenaLo;
 	mUserRamEnd      = (u8*)arenaHi;
 	mMemorySize      = *(u32*)((start + 0x28));
-	OSReport("%x %x %x %x %x\n", mCodeStart, mCodeEnd, mUserRamStart, mUserRamEnd,
-	         mMemorySize);
+	OSReport("%x %x %x %x %x\n", mCodeStart, mCodeEnd, mUserRamStart,
+	         mUserRamEnd, mMemorySize);
 	OSSetArenaLo(arenaHi);
 	OSSetArenaHi(arenaHi);
 	*outUserRamStart = (char*)arenaLo;
@@ -151,7 +151,8 @@ void JKRHeap::dispose_subroutine(u32 begin, u32 end)
 	JSUListIterator<JKRDisposer> iterator;
 	for (iterator = mDisposerList.getFirst();
 	     iterator != mDisposerList.getEnd(); iterator = next_iterator) {
-		if ((void*)begin <= iterator.getObject() && iterator.getObject() < (void*)end) {
+		if ((void*)begin <= iterator.getObject()
+		    && iterator.getObject() < (void*)end) {
 			iterator.getObject()->~JKRDisposer();
 			if (last_iterator == nullptr) {
 				next_iterator = mDisposerList.getFirst();

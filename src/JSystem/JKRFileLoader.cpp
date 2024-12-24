@@ -71,19 +71,19 @@ void* JKRFileLoader::getGlbResource(const char* name, JKRFileLoader* fileLoader)
 
 long JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
 {
-  long ret = -1; // TODO: this feels wrong, but it matches, so whatever?
+	long ret = -1; // TODO: this feels wrong, but it matches, so whatever?
 
-  if (fileLoader != nullptr)
-    return fileLoader->getResSize(resourceBuffer);
+	if (fileLoader != nullptr)
+		return fileLoader->getResSize(resourceBuffer);
 
-  for (JSUListIterator<JKRFileLoader> it = sVolumeList.getFirst();
-      it != sVolumeList.getEnd(); ++it) {
-    ret = it.getObject()->getResSize(resourceBuffer);
-    if (ret >= 0)
-      break;
-  }
+	for (JSUListIterator<JKRFileLoader> it = sVolumeList.getFirst();
+	     it != sVolumeList.getEnd(); ++it) {
+		ret = it.getObject()->getResSize(resourceBuffer);
+		if (ret >= 0)
+			break;
+	}
 
-  return ret;
+	return ret;
 }
 
 JKRFileLoader* JKRFileLoader::findVolume(const char** volumeName)
@@ -96,7 +96,8 @@ JKRFileLoader* JKRFileLoader::findVolume(const char** volumeName)
 	*volumeName = fetchVolumeName(volumeNameBuffer,
 	                              ARRAY_COUNT(volumeNameBuffer), *volumeName);
 
-	for (JSUListIterator<JKRFileLoader> it = sVolumeList.getFirst(); it != sVolumeList.getEnd(); ++it) {
+	for (JSUListIterator<JKRFileLoader> it = sVolumeList.getFirst();
+	     it != sVolumeList.getEnd(); ++it) {
 		if (strcmp(volumeNameBuffer, it->mVolumeName) == 0)
 			return it.getObject();
 	}

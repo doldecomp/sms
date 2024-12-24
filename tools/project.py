@@ -1663,6 +1663,7 @@ def generate_compile_commands(
                 "-fno-builtin",
                 "--target=powerpc-eabi",
                 "-fdeclspec",
+                "-Dasm=",
                 *cflags,
                 "-c",
                 obj.src_path,

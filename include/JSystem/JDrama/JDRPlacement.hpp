@@ -4,7 +4,6 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 
-
 namespace JDrama {
 class TPlacement : public TViewObj {
 public:

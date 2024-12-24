@@ -3,7 +3,6 @@
 
 #include <JSystem/JDrama/JDRNameRef.hpp>
 
-
 namespace JDrama {
 class TViewObj : public TNameRef { // based on TNameRef
 public:

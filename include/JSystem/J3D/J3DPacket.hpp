@@ -33,7 +33,7 @@ class J3DCallBackPacket : public J3DPacket {
 public:
 	typedef void (*CallbackT)(J3DPacket*, u32);
 
-	J3DCallBackPacket() { unk10 = (CallbackT) nullptr; }
+	J3DCallBackPacket() { unk10 = (CallbackT)nullptr; }
 
 	virtual void draw();
 	virtual ~J3DCallBackPacket() { }

@@ -21,7 +21,8 @@ extern "C" {
 /* Sometimes it's necessary to define __LITTLE_ENDIAN explicitly
    but these catch some common cases. */
 
-#if defined(i386) || defined(i486) || defined(intel) || defined(x86) || defined(i86pc) || defined(__alpha) || defined(__osf__)
+#if defined(i386) || defined(i486) || defined(intel) || defined(x86)           \
+    || defined(i86pc) || defined(__alpha) || defined(__osf__)
 #define __LITTLE_ENDIAN
 #endif
 
@@ -126,7 +127,8 @@ extern f64 sqrt __P((f64));
 
 extern f64 ceil __P((f64));
 extern f64 fabs __P((f64));
-extern f64 fabs__Fd(f64); // NOTE: I have no idea how they got it to mangle like this
+extern f64
+    fabs__Fd(f64); // NOTE: I have no idea how they got it to mangle like this
 extern f64 floor __P((f64));
 extern f64 fmod __P((f64, f64));
 

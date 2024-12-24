@@ -10,7 +10,7 @@ bool TNpcBalloon::updateBalloon()
 	    && (--mBalloonAppearTimer, !mBalloonAppearTimer)) {
 		gpMarDirector->console->startAppearBalloon(_000, true);
 		mBalloonAppearTimer = -1;
-		ret                       = true;
+		ret                 = true;
 	}
 
 	return ret;

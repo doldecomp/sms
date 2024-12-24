@@ -3,14 +3,14 @@
 
 #include <dolphin/types.h>
 
-#define GX_NOP                 0x00
-#define GX_LOAD_CP_REG         0x08
-#define GX_LOAD_XF_REG         0x10
-#define GX_LOAD_INDX_A         0x20
-#define GX_LOAD_INDX_B         0x28
-#define GX_LOAD_INDX_C         0x30
-#define GX_LOAD_INDX_D         0x38
-#define GX_LOAD_BP_REG         0x61
+#define GX_NOP         0x00
+#define GX_LOAD_CP_REG 0x08
+#define GX_LOAD_XF_REG 0x10
+#define GX_LOAD_INDX_A 0x20
+#define GX_LOAD_INDX_B 0x28
+#define GX_LOAD_INDX_C 0x30
+#define GX_LOAD_INDX_D 0x38
+#define GX_LOAD_BP_REG 0x61
 
 #define GX_DRAW_QUADS          0x80
 #define GX_DRAW_TRIANGLES      0x90

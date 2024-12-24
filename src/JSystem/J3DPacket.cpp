@@ -7,7 +7,6 @@
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>
 
-
 int J3DDrawPacket::sInterruptFlag;
 
 void J3DDisplayListObj::newDisplayList(u32 param_1)
@@ -53,10 +52,7 @@ J3DDrawPacket::J3DDrawPacket()
 	unk30 = nullptr;
 }
 
-void J3DDrawPacket::draw()
-{
-	GXCallDisplayList(unk30->unk0, unk30->unk8);
-}
+void J3DDrawPacket::draw() { GXCallDisplayList(unk30->unk0, unk30->unk8); }
 
 J3DDrawPacket::~J3DDrawPacket() { }
 

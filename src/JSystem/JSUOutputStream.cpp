@@ -1,7 +1,6 @@
 #include <JSystem/JSupport/JSUOutputStream.hpp>
 #include <JSystem/JSupport/JSURandomOutputStream.hpp>
 
-
 JSUOutputStream::~JSUOutputStream() { }
 
 int JSUOutputStream::write(const void* buf, s32 size)
@@ -15,19 +14,19 @@ int JSUOutputStream::write(const void* buf, s32 size)
 
 int JSUOutputStream::skip(s32 amount, s8 val)
 {
-  int i;
+	int i;
 	for (i = 0; i < amount; ++i) {
 		u32 r = writeData(&val, 1);
-    if (r != 1) {
-      setState(EOF);
-      break;
-    }
+		if (r != 1) {
+			setState(EOF);
+			break;
+		}
 	}
-  return i;
+	return i;
 }
 
 void JSURandomOutputStream::seek(s32 offset, JSUStreamSeekFrom from)
 {
-  seekPos(offset, from);
-  clrState(EOF);
+	seekPos(offset, from);
+	clrState(EOF);
 }

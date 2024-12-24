@@ -11,8 +11,8 @@ class JKRFileLoader : public JKRDisposer {
 public:
 	JKRFileLoader();
 
-	virtual ~JKRFileLoader();                                  // _08
-	virtual void unmount();                                    // _0C
+	virtual ~JKRFileLoader(); // _08
+	virtual void unmount();   // _0C
 	static JKRFileLoader* getVolume(const char*);
 	virtual bool becomeCurrent(const char*)               = 0; // _10
 	virtual void* getResource(const char* path)           = 0; // _14

@@ -74,8 +74,10 @@ BOOL OSIsThreadTerminated(OSThread*);
 s32 OSDisableScheduler(void);
 s32 OSEnableScheduler(void);
 void OSYieldThread(void);
-int OSCreateThread(OSThread * thread, void * (* func)(void *), void * param, void * stack, unsigned long stackSize, long priority, unsigned short attr);
-void OSExitThread(OSThread * thread);
+int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param,
+                   void* stack, unsigned long stackSize, long priority,
+                   unsigned short attr);
+void OSExitThread(OSThread* thread);
 void OSCancelThread(OSThread*);
 int OSJoinThread(OSThread* thread, void* val);
 void OSDetachThread(OSThread* thread);

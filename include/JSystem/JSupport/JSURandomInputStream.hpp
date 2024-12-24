@@ -9,10 +9,7 @@ class JSURandomInputStream : public JSUInputStream {
 public:
 	virtual ~JSURandomInputStream() { }
 
-	virtual int getAvailable() const
-	{
-		return getLength() - getPosition();
-	}
+	virtual int getAvailable() const { return getLength() - getPosition(); }
 	virtual int skip(s32 amount);
 	virtual int readData(void* buf, s32 count)              = 0;
 	virtual int getLength() const                           = 0;

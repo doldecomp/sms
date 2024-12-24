@@ -2,8 +2,8 @@
 #define TYPES_H
 
 #include <dolphin/types.h>
-#include <libc/stddef.h>
 #include <libc/stdarg.h>
+#include <libc/stddef.h>
 #include <libc/string.h>
 
 #ifndef nullptr

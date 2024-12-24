@@ -11,21 +11,22 @@ typedef struct OSMessageQueue OSMessageQueue;
 typedef void* OSMessage;
 
 struct OSMessageQueue {
-    struct OSThreadQueue queueSend;
-    struct OSThreadQueue queueReceive;
-    void * msgArray;
-    long msgCount;
-    long firstIndex;
-    long usedCount;
+	struct OSThreadQueue queueSend;
+	struct OSThreadQueue queueReceive;
+	void* msgArray;
+	long msgCount;
+	long firstIndex;
+	long usedCount;
 };
 
 #define OS_MESSAGE_NOBLOCK 0
-#define OS_MESSAGE_BLOCK 1
+#define OS_MESSAGE_BLOCK   1
 
-void OSInitMessageQueue(struct OSMessageQueue * mq, void * msgArray, long msgCount);
-int OSSendMessage(struct OSMessageQueue * mq, void * msg, long flags);
-int OSReceiveMessage(struct OSMessageQueue * mq, void * msg, long flags);
-int OSJamMessage(struct OSMessageQueue * mq, void * msg, long flags);
+void OSInitMessageQueue(struct OSMessageQueue* mq, void* msgArray,
+                        long msgCount);
+int OSSendMessage(struct OSMessageQueue* mq, void* msg, long flags);
+int OSReceiveMessage(struct OSMessageQueue* mq, void* msg, long flags);
+int OSJamMessage(struct OSMessageQueue* mq, void* msg, long flags);
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,9 @@ private:
 public:
 	size_t i;
 
-	__partial_array_destructor(void* array, size_t elementsize, size_t nelements, ConstructorDestructor destructor)
+	__partial_array_destructor(void* array, size_t elementsize,
+	                           size_t nelements,
+	                           ConstructorDestructor destructor)
 	{
 		p    = array;
 		size = elementsize;
@@ -35,7 +37,9 @@ public:
 	}
 };
 
-extern void* __construct_new_array(void* block, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
+extern void* __construct_new_array(void* block, ConstructorDestructor ctor,
+                                   ConstructorDestructor dtor, size_t size,
+                                   size_t n)
 {
 	char* ptr;
 
@@ -58,7 +62,8 @@ extern void* __construct_new_array(void* block, ConstructorDestructor ctor, Cons
 	return ptr;
 }
 
-extern void __construct_array(void* ptr, ConstructorDestructor ctor, ConstructorDestructor dtor, size_t size, size_t n)
+extern void __construct_array(void* ptr, ConstructorDestructor ctor,
+                              ConstructorDestructor dtor, size_t size, size_t n)
 {
 	__partial_array_destructor pad(ptr, size, n, dtor);
 	char* p;
@@ -68,7 +73,8 @@ extern void __construct_array(void* ptr, ConstructorDestructor ctor, Constructor
 	}
 }
 
-extern void __destroy_arr(void* block, ConstructorDestructor* dtor, size_t size, size_t n)
+extern void __destroy_arr(void* block, ConstructorDestructor* dtor, size_t size,
+                          size_t n)
 {
 	char* p;
 

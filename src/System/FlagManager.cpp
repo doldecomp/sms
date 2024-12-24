@@ -2,7 +2,6 @@
 #include "System/StageUtil.hpp"
 #include "dolphin/os.h"
 
-
 TFlagManager* TFlagManager::smInstance = 0;
 
 TFlagManager::TFlagManager() { }
@@ -289,10 +288,7 @@ void TFlagManager::incFlag(u32 flag, s32 amount)
 	}
 }
 
-void TFlagManager::decFlag(u32 flag, s32 amount)
-{
-	incFlag(flag, -amount);
-}
+void TFlagManager::decFlag(u32 flag, s32 amount) { incFlag(flag, -amount); }
 
 void TFlagManager::incMario(s32 amount)
 {

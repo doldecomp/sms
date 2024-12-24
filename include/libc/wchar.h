@@ -7,6 +7,6 @@
 typedef unsigned short wchar_t;
 #endif
 
-int fwide(FILE *stream, int mode);
+int fwide(FILE* stream, int mode);
 
 #endif
