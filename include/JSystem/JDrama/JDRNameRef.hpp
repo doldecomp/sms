@@ -1,7 +1,9 @@
 #ifndef JDR_NAME_REF_HPP
 #define JDR_NAME_REF_HPP
 
-#include <JSystem/JSupport/JSUMemoryStream.hpp>
+#include <types.h>
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
+#include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
 
 namespace JDrama {
