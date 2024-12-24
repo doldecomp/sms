@@ -9,6 +9,14 @@ on:
       - '**.c'
       - '**.clang-format'
       - '**.clang-tidy'
+  push:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**.h'
+      - '**.c'
+      - '**.clang-format'
+      - '**.clang-tidy'
 
 permissions:
   contents: read
