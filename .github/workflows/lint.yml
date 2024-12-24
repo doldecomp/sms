@@ -9,9 +9,6 @@ on:
       - '**.c'
       - '**.clang-format'
       - '**.clang-tidy'
-    paths-ignore:
-      - src/Runtime.PPCEABI.H
-      - src/MSL_C.PPCEABI.bare.H
   push:
     paths:
       - '**.hpp'
@@ -20,9 +17,6 @@ on:
       - '**.c'
       - '**.clang-format'
       - '**.clang-tidy'
-    paths-ignore:
-      - src/Runtime.PPCEABI.H
-      - src/MSL_C.PPCEABI.bare.H
 
 permissions:
   contents: read
