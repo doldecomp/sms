@@ -1,10 +1,7 @@
-#ifndef BASEPARAM_HPP
-#define BASEPARAM_HPP
+#ifndef BASE_PARAM_HPP
+#define BASE_PARAM_HPP
 
-#include "dolphin.h"
-
-#include "types.h"
-#include <JSystem/JSupport/JSUMemoryStream.hpp>
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 
 class TBaseParam {
 public:

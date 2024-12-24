@@ -2,7 +2,8 @@
 #define FLAG_MANAGER_HPP
 
 #include <JSystem/JKernel/JKRHeap.hpp>
-#include <JSystem/JSupport/JSUMemoryStream.hpp>
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
+#include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
 
 class TFlagManager {

@@ -2,7 +2,6 @@
 #define JDR_PLACEMENT_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
-#include <JSystem/JSupport/JSUInputStream.hpp>
 #include <JSystem/JGeometry.hpp>
 
 
