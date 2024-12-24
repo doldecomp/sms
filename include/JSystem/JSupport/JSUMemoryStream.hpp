@@ -1,7 +1,7 @@
 #ifndef JSUMEMORYSTREAM_HPP
 #define JSUMEMORYSTREAM_HPP
 
-#include <JSystem/JSupport/JSUInputStream.hpp>
+#include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <JSystem/JSupport/JSUOutputStream.hpp>
 
 class JSUMemoryInputStream : public JSURandomInputStream {
