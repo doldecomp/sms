@@ -322,6 +322,7 @@ config.libs = [
             Object(Matching, "JSystem/JSUInputStream.cpp"),
             Object(Matching, "JSystem/JSUOutputStream.cpp"),
             Object(Matching, "JSystem/JSUMemoryStream.cpp"),
+            Object(Matching, "JSystem/JSUFileStream.cpp"),
             Object(Matching, "JSystem/JSUList.cpp"),
         ],
     },
