@@ -11,7 +11,7 @@ int JSUFileInputStream::readData(void* buf, s32 count)
 {
   int result = 0;
 
-  if (mFile->unk18 != 0)
+  if (mFile->isAvailable())
   {
     if (mPosition + (u32)count > mFile->getFileSize()) {
       count = mFile->getFileSize() - mPosition;

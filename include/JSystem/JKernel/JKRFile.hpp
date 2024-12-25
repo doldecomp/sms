@@ -2,20 +2,23 @@
 #define JKR_FILE_H
 
 #include <types.h>
+#include <JSystem/JKernel/JKRDisposer.hpp>
 
-class JKRFile
-{
+class JKRFile : public JKRDisposer {
 public:
-  virtual ~JKRFile() {}
+	JKRFile() { mFileOpen = false; }
+	virtual ~JKRFile() { }
 
-  virtual int open(const char*) = 0;
-  virtual void close() = 0;
-  virtual int readData(void*, s32, s32) = 0;
-  virtual void writeData(const void*, s32, s32) = 0;
-  virtual s32 getFileSize() const = 0;
+	virtual bool open(const char*)               = 0;
+	virtual bool close()                         = 0;
+	virtual int readData(void*, s32, s32)        = 0;
+	virtual int writeData(const void*, s32, s32) = 0;
+	virtual s32 getFileSize() const              = 0;
 
-  char unk4[0x14];
-  u8 unk18;
+	bool isAvailable() { return mFileOpen; }
+
+protected:
+	bool mFileOpen;
 };
 
 #endif
