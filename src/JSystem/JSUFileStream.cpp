@@ -1,29 +1,27 @@
 #include <JSystem/JSupport/JSUFileInputStream.hpp>
 
-
 JSUFileInputStream::JSUFileInputStream(JKRFile* file)
 {
-  mFile = file;
-  mPosition = 0;
+	mFile     = file;
+	mPosition = 0;
 }
 
 int JSUFileInputStream::readData(void* buf, s32 count)
 {
-  int result = 0;
+	int result = 0;
 
-  if (mFile->isAvailable())
-  {
-    if (mPosition + (u32)count > mFile->getFileSize()) {
-      count = mFile->getFileSize() - mPosition;
-    }
+	if (mFile->isAvailable()) {
+		if (mPosition + (u32)count > mFile->getFileSize()) {
+			count = mFile->getFileSize() - mPosition;
+		}
 
-    if (count > 0) {
-      result = mFile->readData(buf, count, mPosition);
-      mPosition += result;
-    }
-  }
+		if (count > 0) {
+			result = mFile->readData(buf, count, mPosition);
+			mPosition += result;
+		}
+	}
 
-  return result;
+	return result;
 }
 
 int JSUFileInputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
