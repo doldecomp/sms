@@ -317,6 +317,7 @@ config.libs = [
             Object(Matching, "JSystem/JKRFileLoader.cpp"),
             Object(Matching, "JSystem/JKRThread.cpp"),
             Object(Matching, "JSystem/JKRFileFinder.cpp"),
+            Object(Matching, "JSystem/JKRDvdFile.cpp"),
 
             # JSupport
             Object(Matching, "JSystem/JSUInputStream.cpp"),

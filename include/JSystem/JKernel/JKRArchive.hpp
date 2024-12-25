@@ -1,5 +1,5 @@
-#ifndef JKR_ARCHIVE_H
-#define JKR_ARCHIVE_H
+#ifndef JKR_ARCHIVE_HPP
+#define JKR_ARCHIVE_HPP
 
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
