@@ -314,6 +314,7 @@ config.libs = [
             # JKernel
             Object(Matching, "JSystem/JKRDisposer.cpp"),
             Object(Matching, "JSystem/JKRHeap.cpp"),
+            Object(Matching, "JSystem/JKRExpHeap.cpp"),
             Object(Matching, "JSystem/JKRFileLoader.cpp"),
             Object(Matching, "JSystem/JKRThread.cpp"),
             Object(Matching, "JSystem/JKRFileFinder.cpp"),

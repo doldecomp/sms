@@ -1,7 +1,8 @@
-#ifndef JUTASSERT_H
-#define JUTASSERT_H
+#ifndef JUT_ASSERT_HPP
+#define JUT_ASSERT_HPP
 
 #include <dolphin/os.h>
+#include <stdarg.h>
 
 namespace JUTAssertion {
 void create();

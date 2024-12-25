@@ -90,34 +90,29 @@ public:
 	// TODO: order of vtable entries, their names and 2 unknown entries
 	// (looks to be a bit different in sms)
 	virtual ~JKRHeap();
-	virtual void* do_alloc(u32, int)  = 0;
-	virtual void do_free(void*)       = 0;
-	virtual void do_freeAll()         = 0;
-	virtual void do_freeTail()        = 0;
-	virtual s32 do_resize(void*, u32) = 0;
-	virtual s32 do_getSize(void*)     = 0;
-	virtual s32 do_getFreeSize()      = 0;
-	virtual s32 do_getTotalFreeSize() = 0;
-	virtual u32 getHeapType()         = 0;
-	virtual bool check()              = 0;
+	virtual void* alloc(u32, int) = 0;
+	virtual void free(void*);
+	virtual void freeAll();
+	virtual void freeTail();
+	virtual s32 resize(void*, u32);
+	virtual s32 getSize(void*);
+	virtual s32 getFreeSize();
+	virtual s32 getTotalFreeSize();
+	virtual u32 getHeapType() = 0;
+	virtual bool check()      = 0;
 	virtual bool dump_sort() { return true; }
 	virtual bool dump() = 0;
+	virtual s32 changeGroupID(u8 newGroupId);
+	virtual u8 getCurrentGroupId();
 	virtual void state_register(JKRHeap::TState*, u32) const;
 	virtual bool state_compare(JKRHeap::TState const&,
 	                           JKRHeap::TState const&) const;
 	virtual void state_dump(JKRHeap::TState const&) const;
-	virtual void unkVirtFunc48() = 0;
-	virtual void unkVirtFunc4C() = 0;
 
 	JKRHeap* becomeSystemHeap();
 	JKRHeap* becomeCurrentHeap();
 	void destroy();
-	void* alloc(u32, int);
-	void free(void*);
-	void freeAll();
-	void freeTail();
 	void fillFreeArea();
-	void resize(void*, u32);
 	static s32 getSize(void*, JKRHeap*);
 
 	// TODO: pure speculation but helped JKRThread to match
@@ -135,12 +130,7 @@ public:
 
 	// ... more functions
 
-	s32 getSize(void* ptr);
-	s32 getFreeSize();
 	void* getMaxFreeBlock();
-	s32 getTotalFreeSize();
-	u8 getCurrentGroupId();
-	s32 changeGroupID(u8 newGroupId);
 	u32 getMaxAllocatableSize(int alignment);
 	JKRHeap* find(void*) const;
 	void dispose_subroutine(u32 begin, u32 end);

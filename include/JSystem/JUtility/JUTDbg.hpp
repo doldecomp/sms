@@ -1,5 +1,5 @@
-#ifndef _JSYSTEM_JUTILITY_JUTDBG_H
-#define _JSYSTEM_JUTILITY_JUTDBG_H
+#ifndef JUT_DBG_HPP
+#define JUT_DBG_HPP
 
 // Get rid of this file?
 
