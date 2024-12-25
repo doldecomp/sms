@@ -1,4 +1,8 @@
-#include "dolphin.h"
+#ifndef J_DRAMA_HPP
+#define J_DRAMA_HPP
+
+#include <types.h>
+#include <dolphin/gx.h>
 
 namespace JDrama {
 //* JDRRenderMode:
@@ -16,3 +20,5 @@ s32 GetVIWidthMax(void);
 s32 GetVIHeightMax(void);
 
 }; // namespace JDrama
+
+#endif

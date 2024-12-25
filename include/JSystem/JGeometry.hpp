@@ -1,5 +1,5 @@
-#ifndef JGEOMETRY_HPP
-#define JGEOMETRY_HPP
+#ifndef J_GEOMETRY_HPP
+#define J_GEOMETRY_HPP
 
 #include <types.h>
 #include <dolphin/mtx.h>
