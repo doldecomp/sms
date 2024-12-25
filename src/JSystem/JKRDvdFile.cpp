@@ -21,10 +21,7 @@ JKRDvdFile::JKRDvdFile(s32 entrynum)
 	}
 }
 
-JKRDvdFile::~JKRDvdFile()
-{
-  close();
-}
+JKRDvdFile::~JKRDvdFile() { close(); }
 
 void JKRDvdFile::initiate()
 {
@@ -81,7 +78,7 @@ bool JKRDvdFile::close()
 
 int JKRDvdFile::readData(void* data, s32 length, s32 ofs)
 {
-  length = ALIGN_NEXT(length, 32);
+	length = ALIGN_NEXT(length, 32);
 
 	OSLockMutex(&mDvdMutex);
 	int ret;
@@ -91,7 +88,7 @@ int JKRDvdFile::readData(void* data, s32 length, s32 ofs)
 		return -1;
 	} else {
 		mDvdThread = OSGetCurrentThread();
-		ret    = -1;
+		ret        = -1;
 		if (DVDReadAsync(&mDvdFileInfo, data, length, ofs,
 		                 JKRDvdFile::doneProcess)) {
 			ret = sync();
