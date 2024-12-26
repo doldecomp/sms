@@ -16,7 +16,7 @@ This repository does **not** contain any game assets or assembly whatsoever. An 
 Supported versions:
 
 - `GMSJ01`: Rev 0 (JPN)
-- `GMSP01`: Rev 0 (PAL)
+- ~~`GMSP01`: Rev 0 (PAL)~~ slightly broken, feel free to fix
 
 Dependencies
 ============
