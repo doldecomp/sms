@@ -115,9 +115,9 @@ void JKRSolidHeap::freeTail()
 	mFreeSize += (u8*)mEnd - (u8*)mCurEnd;
 	mCurEnd = mEnd;
 	// more stuff, unk74 has size 18
-  for (UnknownStruct* s = unk74; s != nullptr; s = s->unk10) {
-    s->unkC = mEnd;
-  }
+	for (UnknownStruct* s = unk74; s != nullptr; s = s->unk10) {
+		s->unkC = mEnd;
+	}
 	unlock();
 }
 
@@ -154,7 +154,7 @@ bool JKRSolidHeap::check()
 bool JKRSolidHeap::dump()
 {
 	JUTReportConsole("\nJKRSolidHeap dump\n");
-	u32 type = getHeapType();
+	bool ret = check();
 	lock();
 	u32 checkedFreeSize = mFreeSize + ((u8*)mCurStart - (u8*)mStart)
 	                      + ((u8*)mEnd - (u8*)mCurEnd);
@@ -163,12 +163,11 @@ bool JKRSolidHeap::dump()
 	                   (u8*)mCurStart - (u8*)mStart);
 	JUTReportConsole_f("tail %08x: %08x\n", mCurEnd, (u8*)mEnd - (u8*)mCurEnd);
 
-	double diff = mSize - 4503599627370496.0;
-	float pcnt  = 100.0f * ((checkedFreeSize - 4503599627370496.0) / diff);
-	JUTReportConsole_f("%d / %d bytes (%6.2f%%) used\n", checkedFreeSize, diff,
+	float pcnt = 100.0f * ((float)checkedFreeSize / (float)mSize);
+	JUTReportConsole_f("%d / %d bytes (%6.2f%%) used\n", checkedFreeSize, mSize,
 	                   pcnt);
 	unlock();
-	return type;
+	return ret;
 }
 
 void JKRSolidHeap::state_register(TState* state, u32 param_1) const
@@ -178,7 +177,8 @@ void JKRSolidHeap::state_register(TState* state, u32 param_1) const
 	state->mCheckCode = ((u32)mCurEnd * 3) + (u32)mCurStart;
 }
 
-bool JKRSolidHeap::state_compare(const TState& fst, const TState& snd) const {
+bool JKRSolidHeap::state_compare(const TState& fst, const TState& snd) const
+{
 	bool result = true;
 	if (fst.mCheckCode != snd.mCheckCode) {
 		result = false;
