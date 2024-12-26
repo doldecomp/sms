@@ -68,6 +68,7 @@ public:
 	void recycleFreeBlock(CMemBlock*);
 	void removeFreeBlock(CMemBlock*);
 	void setFreeBlock(CMemBlock*, CMemBlock*, CMemBlock*);
+  void destroy();
 
 	// unused/inlined:
 	void removeUsedBlock(CMemBlock*);
@@ -89,16 +90,16 @@ public:
 
 private:
 	// _00     = VTBL
-	// _00-_6C = JKRHeap
-	u8 mCurrentAllocMode;     // _6C
-	u8 mCurrentGroupID;       // _6D
-	u8 _6E;                   // _6E
-	void* _70;                // _70
-	u32 _74;                  // _74
-	CMemBlock* mHead;         // _78, free list
-	CMemBlock* mTail;         // _7C, free list
-	CMemBlock* mHeadUsedList; // _80
-	CMemBlock* mTailUsedList; // _84
+	// _00-_68 = JKRHeap
+	u8 mCurrentAllocMode;     // _68
+	u8 mCurrentGroupID;       // _69
+	u8 mIsRoot;               // _6A
+	void* _70;                // _6C
+	u32 _74;                  // _70
+	CMemBlock* mHead;         // _74, free list
+	CMemBlock* mTail;         // _78, free list
+	CMemBlock* mHeadUsedList; // _8C
+	CMemBlock* mTailUsedList; // _80
 };
 
 inline JKRExpHeap* JKRCreateExpHeap(u32 size, JKRHeap* parent, bool errorFlag)

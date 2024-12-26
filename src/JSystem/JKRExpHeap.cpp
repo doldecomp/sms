@@ -1,7 +1,6 @@
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JUtility/JUTConcole.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include <JSystem/JSupport.hpp>
 #include <JSystem/JMacro.hpp>
 #include <macros.h>
 
@@ -20,12 +19,13 @@ JKRExpHeap* JKRExpHeap::createRoot(int maxHeaps, bool errorFlag)
 		void* memory;
 		u32 memorySize;
 		initArena((char**)&memory, &memorySize, maxHeaps);
-		u8* start       = (u8*)memory + ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
-		u32 alignedSize = memorySize - ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
+		u32 expHeapSize = ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
+		u8* start       = (u8*)memory + expHeapSize;
+		u32 alignedSize = memorySize - expHeapSize;
 		heap = new (memory) JKRExpHeap(start, alignedSize, nullptr, errorFlag);
 		sRootHeap = heap;
 	}
-	heap->_6E = true;
+	heap->mIsRoot = true;
 	return heap;
 }
 
@@ -38,15 +38,15 @@ JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 
 	u32 alignedSize = ALIGN_PREV(size, 0x10);
 	s32 expHeapSize = ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
-	if (alignedSize < 0x90)
-		return nullptr;
 
 	u8* memory  = (u8*)JKRAllocFromHeap(parent, alignedSize, 0x10);
 	u8* dataPtr = memory + expHeapSize;
 	if (!memory) {
 		return nullptr;
 	}
-	if ((int)(alignedSize - expHeapSize) < 0x10) {
+
+	if ((int)(alignedSize - expHeapSize) <= 0) {
+		OSReport("bad size %d\n", alignedSize - expHeapSize);
 		JKRFree(memory);
 		return nullptr;
 	}
@@ -57,39 +57,48 @@ JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 		JKRFree(memory);
 		return nullptr;
 	};
-	newHeap->_6E = false;
+	newHeap->mIsRoot = false;
 	return newHeap;
 }
 
 JKRExpHeap* JKRExpHeap::create(void* ptr, u32 size, JKRHeap* parent,
                                bool errorFlag)
 {
-	JKRHeap* parent2;
-	if (parent == nullptr) {
-		parent2 = sRootHeap->find(ptr);
-		if (!parent2)
+	if (!parent) {
+		parent = sRootHeap->find(ptr);
+		if (!parent)
 			return nullptr;
-	} else {
-		parent2 = parent;
 	}
 
 	JKRExpHeap* newHeap = nullptr;
-	u32 expHeapSize     = ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
 
-	if (size < expHeapSize)
-		return nullptr;
+	const u32 expHeapSize = ALIGN_NEXT(sizeof(JKRExpHeap), 0x10); // = 0x90
+	u32 alignedSize       = ALIGN_PREV(size - expHeapSize, 0x10);
+	char* castedPtr       = (char*)ptr;
+	char* dataPtr         = castedPtr + expHeapSize;
 
-	void* dataPtr   = (u8*)ptr + expHeapSize;
-	u32 alignedSize = ALIGN_PREV((u32)ptr + size - (u32)dataPtr, 0x10);
+	if (castedPtr) {
+		newHeap = new (castedPtr)
+		    JKRExpHeap(dataPtr, alignedSize - expHeapSize, parent, errorFlag);
+	}
 
-	if (ptr)
-		newHeap
-		    = new (ptr) JKRExpHeap(dataPtr, alignedSize, parent2, errorFlag);
-
-	newHeap->_6E = true;
+	newHeap->mIsRoot = true;
 	newHeap->_70 = ptr;
 	newHeap->_74 = size;
 	return newHeap;
+}
+
+void JKRExpHeap::destroy()
+{
+	if (!mIsRoot) {
+    JKRHeap* parent = mChildTree.getParent()->getObject();
+		if (parent) {
+			this->~JKRExpHeap();
+			JKRFreeToHeap(parent, this);
+		}
+	} else {
+		this->~JKRExpHeap();
+	}
 }
 
 JKRExpHeap::JKRExpHeap(void* p1, u32 p2, JKRHeap* p3, bool p4)
@@ -158,17 +167,14 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
-	CMemBlock* newFreeBlock;
-	CMemBlock* newUsedBlock;
-
 	size                  = ALIGN_NEXT(size, 4);
 	int foundSize         = -1;
 	u32 foundOffset       = 0;
 	CMemBlock* foundBlock = nullptr;
 
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
-		u32 offset = ALIGN_PREV(align - 1 + (u32)block->getContent(), align)
-		             - (u32)block->getContent();
+		u32 content = (u32)block->getContent();
+		u32 offset  = ALIGN_PREV(align - 1 + content, align) - content;
 		if (block->mAllocatedSpace < size + offset) {
 			continue;
 		}
@@ -181,8 +187,7 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 		if (mCurrentAllocMode != 0) {
 			break;
 		}
-		u32 blockSize = block->mAllocatedSpace;
-		if (blockSize == size) {
+		if (block->mAllocatedSpace == size) {
 			break;
 		}
 	}
@@ -192,6 +197,9 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	DBfoundBlock  = foundBlock;
 
 	if (foundBlock) {
+		CMemBlock* newFreeBlock;
+		CMemBlock* newUsedBlock;
+
 		if (foundOffset >= sizeof(CMemBlock)) {
 			whatdo2++;
 			CMemBlock* prev = foundBlock->mPrev;
@@ -424,7 +432,7 @@ int JKRExpHeap::freeGroup(u8 groupID)
 void JKRExpHeap::freeAll()
 {
 	lock();
-	// JKRHeap::callAllDisposer();
+	JKRHeap::freeAll();
 	mHead = (CMemBlock*)mStart;
 	mTail = mHead;
 	mHead->initiate(nullptr, nullptr, mSize - sizeof(CMemBlock), 0, 0);
@@ -438,7 +446,7 @@ void JKRExpHeap::freeTail()
 	lock();
 	for (CMemBlock* block = mHeadUsedList; block != nullptr;) {
 		if ((block->mFlags & 0x80) != 0) {
-			dispose(block + 1, block->mAllocatedSpace);
+			dispose(block->getContent(), block->mAllocatedSpace);
 			CMemBlock* temp = block->mNext;
 			block->free(this);
 			block = temp;
@@ -571,8 +579,8 @@ bool JKRExpHeap::check()
 		if (!block->isValid()) {
 			ok = false;
 			JUTWarningConsole_f(":::addr %08x: bad heap signature. (%c%c)\n",
-			                    block, JSUHiByte(block->mUsageHeader),
-			                    JSULoByte(block->mUsageHeader));
+			                    block, (u8)(block->mUsageHeader >> 8),
+			                    (u8)(block->mUsageHeader & 0xff));
 		}
 		if (block->mNext) {
 			if (!block->mNext->isValid()) {
@@ -638,9 +646,8 @@ bool JKRExpHeap::check()
 void JKRExpHeap::appendUsedList(JKRExpHeap::CMemBlock* blockToAppend)
 {
 	if (!blockToAppend) {
-		JPANIC(1543, ":::ERROR! appendUsedList\n");
+		JPANIC(1527, ":::ERROR! appendUsedList\n");
 	}
-	CMemBlock* block            = mTailUsedList;
 	CMemBlock* tail             = mTailUsedList;
 	blockToAppend->mUsageHeader = 'HM';
 	if (tail) {
