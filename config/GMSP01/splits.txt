@@ -3893,324 +3893,324 @@ TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
 TRK_MINNOW_DOLPHIN/targcont.c:
 	.text       start:0x80339BCC end:0x80339C00
 
-base/PPCArch.c:
+dolphin/base/PPCArch.c:
 	.text       start:0x80339C00 end:0x80339C9C
 
-db/db.c:
+dolphin/db/db.c:
 	.text       start:0x80339C9C end:0x80339D88
 	.data       start:0x803DE2E8 end:0x803DE300
 	.sbss       start:0x80405E20 end:0x80405E28
 
-os/OS.c:
+dolphin/os/OS.c:
 	.text       start:0x80339D88 end:0x8033A6E4
 	.data       start:0x803DE300 end:0x803DE4C0
 	.bss        start:0x803F9D20 end:0x803F9D70
 	.sbss       start:0x80405E28 end:0x80405E58
 
-os/OSAlarm.c:
+dolphin/os/OSAlarm.c:
 	.text       start:0x8033A6E4 end:0x8033AD90
 	.sbss       start:0x80405E58 end:0x80405E60
 
-os/OSAlloc.c:
+dolphin/os/OSAlloc.c:
 	.text       start:0x8033AD90 end:0x8033B514
 	.data       start:0x803DE4C0 end:0x803DE858
 	.sdata      start:0x804045A0 end:0x804045A8
 	.sbss       start:0x80405E60 end:0x80405E70
 
-os/OSArena.c:
+dolphin/os/OSArena.c:
 	.text       start:0x8033B514 end:0x8033B534
 	.sdata      start:0x804045A8 end:0x804045B0
 	.sbss       start:0x80405E70 end:0x80405E78
 
-os/OSAudioSystem.c:
+dolphin/os/OSAudioSystem.c:
 	.text       start:0x8033B534 end:0x8033B7C8
 	.data       start:0x803DE858 end:0x803DE8D8
 
-os/OSCache.c:
+dolphin/os/OSCache.c:
 	.text       start:0x8033B7C8 end:0x8033BE30
 	.data       start:0x803DE8D8 end:0x803DEB08
 
-os/OSContext.c:
+dolphin/os/OSContext.c:
 	.text       start:0x8033BE30 end:0x8033C7C4
 	.data       start:0x803DEB08 end:0x803DECE0
 
-os/OSError.c:
+dolphin/os/OSError.c:
 	.text       start:0x8033C7C4 end:0x8033CB8C
 	.data       start:0x803DECE0 end:0x803DF000
 	.bss        start:0x803F9D70 end:0x803F9DC0
 	.sdata      start:0x804045B0 end:0x804045B8
 
-os/OSFont.c:
+dolphin/os/OSFont.c:
 	.text       start:0x8033CB8C end:0x8033DA2C
 	.data       start:0x803DF000 end:0x803DFB10
 	.sdata      start:0x804045B8 end:0x804045C0
 	.sbss       start:0x80405E78 end:0x80405E88
 	.sdata2     start:0x8040EBE8 end:0x8040EBF0
 
-os/OSInterrupt.c:
+dolphin/os/OSInterrupt.c:
 	.text       start:0x8033DA2C end:0x8033E298
 	.data       start:0x803DFB10 end:0x803DFB40
 	.sbss       start:0x80405E88 end:0x80405EA0
 
-os/OSLink.c:
+dolphin/os/OSLink.c:
 	.text       start:0x8033E298 end:0x8033E2B0
 
-os/OSMessage.c:
+dolphin/os/OSMessage.c:
 	.text       start:0x8033E2B0 end:0x8033E4B4
 
-os/OSMemory.c:
+dolphin/os/OSMemory.c:
 	.text       start:0x8033E4B4 end:0x8033E858
 	.data       start:0x803DFB40 end:0x803DFB50
 
-os/OSMutex.c:
+dolphin/os/OSMutex.c:
 	.text       start:0x8033E858 end:0x8033EC74
 
-os/OSReboot.c:
+dolphin/os/OSReboot.c:
 	.text       start:0x8033EC74 end:0x8033EE80
 	.bss        start:0x803F9DC0 end:0x803F9DE0
 	.sbss       start:0x80405EA0 end:0x80405EB0
 
-os/OSReset.c:
+dolphin/os/OSReset.c:
 	.text       start:0x8033EE80 end:0x8033F264
 	.sbss       start:0x80405EB0 end:0x80405EB8
 
-os/OSResetSW.c:
+dolphin/os/OSResetSW.c:
 	.text       start:0x8033F264 end:0x8033F610
 	.sbss       start:0x80405EB8 end:0x80405ED8
 
-os/OSRtc.c:
+dolphin/os/OSRtc.c:
 	.text       start:0x8033F610 end:0x8034023C
 	.bss        start:0x803F9DE0 end:0x803F9E38
 
-os/OSStopwatch.c:
+dolphin/os/OSStopwatch.c:
 	.text       start:0x8034023C end:0x80340408
 
-os/OSSync.c:
+dolphin/os/OSSync.c:
 	.text       start:0x80340408 end:0x8034048C
 
-os/OSThread.c:
+dolphin/os/OSThread.c:
 	.text       start:0x8034048C end:0x80341734
 	.bss        start:0x803F9E38 end:0x803FA820
 	.sbss       start:0x80405ED8 end:0x80405EE8
 
-os/OSTime.c:
+dolphin/os/OSTime.c:
 	.text       start:0x80341734 end:0x80341B58
 	.data       start:0x803DFB50 end:0x803DFBB0
 
-os/__start.c:
+dolphin/os/__start.c:
 	.init       start:0x800051EC end:0x80005440
 
-os/__ppc_eabi_init.cpp:
+dolphin/os/__ppc_eabi_init.cpp:
 	.init       start:0x80005440 end:0x80005494
 	.text       start:0x80341B58 end:0x80341BEC
 
-mtx/mtx.c:
+dolphin/mtx/mtx.c:
 	.text       start:0x80341BEC end:0x8034252C
 	.sdata      start:0x804045C0 end:0x804045C8
 	.sdata2     start:0x8040EBF0 end:0x8040EC08
 
-mtx/mtxvec.c:
+dolphin/mtx/mtxvec.c:
 	.text       start:0x8034252C end:0x80342660
 
-mtx/mtx44.c:
+dolphin/mtx/mtx44.c:
 	.text       start:0x80342660 end:0x803427C8
 	.sdata2     start:0x8040EC08 end:0x8040EC20
 
-mtx/vec.c:
+dolphin/mtx/vec.c:
 	.text       start:0x803427C8 end:0x8034297C
 	.sdata2     start:0x8040EC20 end:0x8040EC28
 
-dvd/dvdlow.c:
+dolphin/dvd/dvdlow.c:
 	.text       start:0x8034297C end:0x803437D0
 	.bss        start:0x803FA820 end:0x803FA900
 	.sdata      start:0x804045C8 end:0x804045D0
 	.sbss       start:0x80405EE8 end:0x80405F30
 
-dvd/dvdfs.c:
+dolphin/dvd/dvdfs.c:
 	.text       start:0x803437D0 end:0x80344228
 	.data       start:0x803DFBB0 end:0x803DFFA0
 	.sdata      start:0x804045D0 end:0x804045D8
 	.sbss       start:0x80405F30 end:0x80405F50
 
-dvd/dvd.c:
+dolphin/dvd/dvd.c:
 	.text       start:0x80344228 end:0x803469A4
 	.data       start:0x803DFFA0 end:0x803E00B8
 	.bss        start:0x803FA900 end:0x803FA9D8
 	.sdata      start:0x804045D8 end:0x804045E0
 	.sbss       start:0x80405F50 end:0x80405F98
 
-dvd/dvdqueue.c:
+dolphin/dvd/dvdqueue.c:
 	.text       start:0x803469A4 end:0x80346B9C
 	.bss        start:0x803FA9D8 end:0x803FA9F8
 
-dvd/dvderror.c:
+dolphin/dvd/dvderror.c:
 	.text       start:0x80346B9C end:0x80346D34
 	.data       start:0x803E00B8 end:0x803E0100
 
-dvd/fstload.c:
+dolphin/dvd/fstload.c:
 	.text       start:0x80346D34 end:0x80346F74
 	.data       start:0x803E0100 end:0x803E0170
 	.bss        start:0x803FA9F8 end:0x803FAA68
 	.sdata      start:0x804045E0 end:0x804045F0
 	.sbss       start:0x80405F98 end:0x80405FA8
 
-vi/vi.c:
+dolphin/vi/vi.c:
 	.text       start:0x80346F74 end:0x80348974
 	.data       start:0x803E0170 end:0x803E0438
 	.bss        start:0x803FAA68 end:0x803FABB0
 	.sbss       start:0x80405FA8 end:0x80405FF8
 
-pad/Padclamp.c:
+dolphin/pad/Padclamp.c:
 	.text       start:0x80348974 end:0x80348BAC
 	.sdata      start:0x804045F0 end:0x804045F8
 
-pad/Pad.c:
+dolphin/pad/Pad.c:
 	.text       start:0x80348BAC end:0x8034A6E8
 	.data       start:0x803E0438 end:0x803E0448
 	.bss        start:0x803FABB0 end:0x803FAC00
 	.sdata      start:0x804045F8 end:0x80404618
 	.sbss       start:0x80405FF8 end:0x80406020
 
-ai/ai.c:
+dolphin/ai/ai.c:
 	.text       start:0x8034A6E8 end:0x8034AFD0
 	.sbss       start:0x80406020 end:0x80406060
 
-ar/ar.c:
+dolphin/ar/ar.c:
 	.text       start:0x8034AFD0 end:0x8034BBC4
 	.sbss       start:0x80406060 end:0x80406080
 
-ar/arq.c:
+dolphin/ar/arq.c:
 	.text       start:0x8034BBC4 end:0x8034BF58
 	.sbss       start:0x80406080 end:0x804060A8
 
-dsp/dsp.c:
+dolphin/dsp/dsp.c:
 	.text       start:0x8034BF58 end:0x8034C09C
 	.data       start:0x803E0448 end:0x803E0480
 	.sbss       start:0x804060A8 end:0x804060B0
 
-dsp/dsp_debug.c:
+dolphin/dsp/dsp_debug.c:
 	.text       start:0x8034C09C end:0x8034C0EC
 
-dsp/dsp_task.c:
+dolphin/dsp/dsp_task.c:
 	.text       start:0x8034C0EC end:0x8034C54C
 	.data       start:0x803E0480 end:0x803E05C0
 	.sbss       start:0x804060B0 end:0x804060C0
 
-card/CARDBios.c:
+dolphin/card/CARDBios.c:
 	.text       start:0x8034C54C end:0x8034D7E8
 	.data       start:0x803E05C0 end:0x803E05E0
 	.bss        start:0x803FAC00 end:0x803FAE40
 
-card/CARDUnlock.c:
+dolphin/card/CARDUnlock.c:
 	.text       start:0x8034D7E8 end:0x8034EA48
 	.data       start:0x803E05E0 end:0x803E0740
 	.sdata      start:0x80404618 end:0x80404620
 
-card/CARDRdwr.c:
+dolphin/card/CARDRdwr.c:
 	.text       start:0x8034EA48 end:0x8034ECC8
 
-card/CARDBlock.c:
+dolphin/card/CARDBlock.c:
 	.text       start:0x8034ECC8 end:0x8034F030
 
-card/CARDDir.c:
+dolphin/card/CARDDir.c:
 	.text       start:0x8034F030 end:0x8034F294
 
-card/CARDCheck.c:
+dolphin/card/CARDCheck.c:
 	.text       start:0x8034F294 end:0x803501FC
 
-card/CARDMount.c:
+dolphin/card/CARDMount.c:
 	.text       start:0x803501FC end:0x80350C8C
 	.data       start:0x803E0740 end:0x803E0780
 
-card/CARDFormat.c:
+dolphin/card/CARDFormat.c:
 	.text       start:0x80350C8C end:0x8035147C
 
-card/CARDOpen.c:
+dolphin/card/CARDOpen.c:
 	.text       start:0x8035147C end:0x80351778
 
-card/CARDCreate.c:
+dolphin/card/CARDCreate.c:
 	.text       start:0x80351778 end:0x80351B10
 
-card/CARDRead.c:
+dolphin/card/CARDRead.c:
 	.text       start:0x80351B10 end:0x80351F88
 
-card/CARDWrite.c:
+dolphin/card/CARDWrite.c:
 	.text       start:0x80351F88 end:0x80352304
 
-card/CARDStat.c:
+dolphin/card/CARDStat.c:
 	.text       start:0x80352304 end:0x803527E4
 
-card/CARDNet.c:
+dolphin/card/CARDNet.c:
 	.text       start:0x803527E4 end:0x803527E4
 	.sdata      start:0x80404620 end:0x80404628
 
-gx/GXInit.c:
+dolphin/gx/GXInit.c:
 	.text       start:0x803527E4 end:0x803538D4
 	.bss        start:0x803FAE40 end:0x803FB3B8
 	.sdata      start:0x80404628 end:0x80404630
 	.sbss       start:0x804060C0 end:0x804060D0
 	.sdata2     start:0x8040EC28 end:0x8040EC48
 
-gx/GXFifo.c:
+dolphin/gx/GXFifo.c:
 	.text       start:0x803538D4 end:0x80354090
 	.sbss       start:0x804060D0 end:0x804060F0
 
-gx/GXAttr.c:
+dolphin/gx/GXAttr.c:
 	.text       start:0x80354090 end:0x80355A98
 	.data       start:0x803E0780 end:0x803E09F8
 	.sdata      start:0x80404630 end:0x80404640
 
-gx/GXMisc.c:
+dolphin/gx/GXMisc.c:
 	.text       start:0x80355A98 end:0x80356108
 	.sbss       start:0x804060F0 end:0x80406108
 
-gx/GXGeometry.c:
+dolphin/gx/GXGeometry.c:
 	.text       start:0x80356108 end:0x803564E8
 
-gx/GXFrameBuf.c:
+dolphin/gx/GXFrameBuf.c:
 	.text       start:0x803564E8 end:0x80357244
 	.data       start:0x803E09F8 end:0x803E0B28
 	.sdata2     start:0x8040EC48 end:0x8040EC58
 
-gx/GXLight.c:
+dolphin/gx/GXLight.c:
 	.text       start:0x80357244 end:0x80357AD4
 	.sdata2     start:0x8040EC58 end:0x8040EC80
 
-gx/GXTexture.c:
+dolphin/gx/GXTexture.c:
 	.text       start:0x80357AD4 end:0x80358C38
 	.data       start:0x803E0B28 end:0x803E0D50
 	.sdata      start:0x80404640 end:0x80404648
 	.sdata2     start:0x8040EC80 end:0x8040ECA8
 
-gx/GXBump.c:
+dolphin/gx/GXBump.c:
 	.text       start:0x80358C38 end:0x80359308
 	.sdata2     start:0x8040ECA8 end:0x8040ECB0
 
-gx/GXTev.c:
+dolphin/gx/GXTev.c:
 	.text       start:0x80359308 end:0x80359D40
 	.data       start:0x803E0D50 end:0x803E0D78
 
-gx/GXPixel.c:
+dolphin/gx/GXPixel.c:
 	.text       start:0x80359D40 end:0x8035A488
 	.data       start:0x803E0D78 end:0x803E0D98
 	.sdata2     start:0x8040ECB0 end:0x8040ECE0
 
-gx/GXDraw.c:
+dolphin/gx/GXDraw.c:
 	.text       start:0x8035A488 end:0x8035AC6C
 	.bss        start:0x803FB3B8 end:0x803FB640
 	.sdata2     start:0x8040ECE0 end:0x8040ED08
 
-gx/GXStubs.c:
+dolphin/gx/GXStubs.c:
 	.text       start:0x8035AC6C end:0x8035AC70
 
-gx/GXDisplayList.c:
+dolphin/gx/GXDisplayList.c:
 	.text       start:0x8035AC70 end:0x8035ACE0
 
-gx/GXTransform.c:
+dolphin/gx/GXTransform.c:
 	.text       start:0x8035ACE0 end:0x8035B4F8
 	.sdata2     start:0x8040ED08 end:0x8040ED28
 
-gx/GXPerf.c:
+dolphin/gx/GXPerf.c:
 	.text       start:0x8035B4F8 end:0x8035BE60
 	.data       start:0x803E0D98 end:0x803E0E88
 
@@ -4219,59 +4219,59 @@ OdemuExi2/DebuggerDriver.c:
 	.sdata      start:0x80404648 end:0x80404650
 	.sbss       start:0x80406108 end:0x80406120
 
-amcstubs/AmcExi2Stubs.c:
+dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x8035C8E0 end:0x8035C910
 
-odenotstub/odenotstub.c:
+dolphin/odenotstub/odenotstub.c:
 	.text       start:0x8035C910 end:0x8035C918
 
-gd/GDBase.c:
+dolphin/gd/GDBase.c:
 	.text       start:0x8035C918 end:0x8035CA8C
 	.sbss       start:0x80406120 end:0x80406128
 
-gd/GDGeometry.c:
+dolphin/gd/GDGeometry.c:
 	.text       start:0x8035CA8C end:0x8035E084
 	.data       start:0x803E0E88 end:0x803E0F38
 	.sdata      start:0x80404650 end:0x80404658
 
-gd/GDLight.c:
+dolphin/gd/GDLight.c:
 	.text       start:0x8035E084 end:0x8035F11C
 
-gd/GDPixel.c:
+dolphin/gd/GDPixel.c:
 	.text       start:0x8035F11C end:0x8035F7A4
 
-gd/GDTev.c:
+dolphin/gd/GDTev.c:
 	.text       start:0x8035F7A4 end:0x8036016C
 	.data       start:0x803E0F38 end:0x803E0F48
 
-gd/GDTransform.c:
+dolphin/gd/GDTransform.c:
 	.text       start:0x8036016C end:0x80360538
 
-si/SIBios.c:
+dolphin/si/SIBios.c:
 	.text       start:0x80360538 end:0x80361C18
 	.data       start:0x803E0F48 end:0x803E1018
 	.bss        start:0x803FB640 end:0x803FB840
 	.sbss       start:0x80406128 end:0x80406138
 
-si/SISamplingRate.c:
+dolphin/si/SISamplingRate.c:
 	.text       start:0x80361C18 end:0x80361D20
 	.data       start:0x803E1018 end:0x803E10AB
 	.sbss       start:0x80406138 end:0x80406140
 
-exi/EXIBios.c:
+dolphin/exi/EXIBios.c:
 	.text       start:0x80361D20 end:0x803635EC
 	.bss        start:0x803FB840 end:0x803FB900
 
-exi/EXIUart.c:
+dolphin/exi/EXIUart.c:
 	.text       start:0x803635EC end:0x80363864
 	.sbss       start:0x80406140 end:0x80406160
 
-thp/THPDec.c:
+dolphin/thp/THPDec.c:
 	.text       start:0x80363864 end:0x8036ADA4
 	.rodata     start:0x803A3948 end:0x803A39D8
 	.bss        start:0x803FB900 end:0x803FBA30
 	.sbss       start:0x80406160 end:0x80406278
 	.sdata2     start:0x8040ED28 end:0x8040ED44
 
-thp/THPAudio.c:
+dolphin/thp/THPAudio.c:
 	.text       start:0x8036ADA4 end:0x8036B2D4
