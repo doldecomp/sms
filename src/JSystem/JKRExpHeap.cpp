@@ -1011,7 +1011,7 @@ void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 bool JKRExpHeap::state_compare(const JKRHeap::TState& fst,
                                const JKRHeap::TState& snd) const
 {
-	JUT_ASSERT(r1.getHeap() == r2.getHeap());
+	JUT_ASSERT(fst.getHeap() == snd.getHeap());
 	bool result = true;
 	if (fst.mCheckCode != snd.mCheckCode) {
 		result = false;
