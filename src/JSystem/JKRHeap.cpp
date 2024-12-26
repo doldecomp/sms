@@ -12,7 +12,7 @@ void* JKRHeap::mUserRamStart;
 void* JKRHeap::mUserRamEnd;
 u32 JKRHeap::mMemorySize;
 
-JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* heap, bool errorFlag)
+JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag)
     : JKRDisposer()
     , mChildTree(this)
     , mDisposerList()
@@ -21,11 +21,11 @@ JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* heap, bool errorFlag)
 	mSize  = size;
 	mStart = (u8*)data;
 	mEnd   = ((u8*)data + size);
-	if (heap == nullptr) {
+	if (parent == nullptr) {
 		becomeSystemHeap();
 		becomeCurrentHeap();
 	} else {
-		heap->mChildTree.appendChild(&mChildTree);
+		parent->mChildTree.appendChild(&mChildTree);
 		if (sSystemHeap == sRootHeap)
 			becomeSystemHeap();
 		if (sCurrentHeap == sRootHeap)
