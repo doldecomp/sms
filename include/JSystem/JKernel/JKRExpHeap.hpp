@@ -15,7 +15,7 @@ public:
 
 		void newGroupId(u8 groupId) { mGroupID = groupId; }
 		bool isValid() const { return mUsageHeader == 'HM'; }
-		bool _isTempMemBlock() const { return (mFlags & 0x80) ? true : false; }
+		bool _isTempMemBlock() const { return (mFlags & 0x80); }
 		int getAlignment() const { return mFlags & 0x7f; }
 		void* getContent() const { return (void*)(this + 1); }
 		CMemBlock* getPrevBlock() const { return mPrev; }
