@@ -56,10 +56,10 @@ public:
 	virtual bool state_compare(const TState& fst,
 	                           const TState& snd) const; // _4C
 
-	void* allocFromHead(u32, int);
-	void* allocFromHead(u32);
-	void* allocFromTail(u32, int);
-	void* allocFromTail(u32);
+	void* allocFromHead(u32 size, int align);
+	void* allocFromHead(u32 size);
+	void* allocFromTail(u32 size, int align);
+	void* allocFromTail(u32 size);
 	void appendUsedList(CMemBlock*);
 	static JKRExpHeap* create(u32 size, JKRHeap* parent, bool errorFlag);
 	static JKRExpHeap* create(void*, u32, JKRHeap*, bool);
