@@ -77,29 +77,29 @@ public:
 		u32 mBuf;            // _00
 		u32 mUsedSize;       // _04
 		u32 mCheckCode;      // _08, plausibly TLocation when combined with _08
-		u8 _0C[0x4];         // _0C
+		u32 _0C;             // _0C
 		TArgument mArgument; // _10
 		TLocation mLocation; // _1C
 	};
 
 public:
-	JKRHeap(void*, u32, JKRHeap*, bool);
+	JKRHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag);
 
 	bool setErrorFlag(bool errorFlag);
 
 	// TODO: order of vtable entries, their names and 2 unknown entries
 	// (looks to be a bit different in sms)
 	virtual ~JKRHeap();
-	virtual void* alloc(u32, int) = 0;
-	virtual void free(void*)      = 0;
+	virtual void* alloc(u32 size, int alignment) = 0;
+	virtual void free(void* ptr)                 = 0;
 	virtual void freeAll();
-	virtual void freeTail()        = 0;
-	virtual s32 resize(void*, u32) = 0;
-	virtual s32 getSize(void*)     = 0;
-	virtual s32 getFreeSize()      = 0;
-	virtual s32 getTotalFreeSize() = 0;
-	virtual u32 getHeapType()      = 0;
-	virtual bool check()           = 0;
+	virtual void freeTail()                 = 0;
+	virtual s32 resize(void* ptr, u32 size) = 0;
+	virtual s32 getSize(void* ptr)          = 0;
+	virtual s32 getFreeSize()               = 0;
+	virtual s32 getTotalFreeSize()          = 0;
+	virtual u32 getHeapType()               = 0;
+	virtual bool check()                    = 0;
 	virtual bool dump_sort() { return true; }
 	virtual bool dump() = 0;
 	virtual s32 changeGroupID(u8 newGroupId);
@@ -188,7 +188,7 @@ public:
 	void checkMemoryFilled(u8*, u32 size, u8);
 
 	static bool initArena(char**, u32*, int);
-	static void* alloc(u32, int, JKRHeap*);
+	static void* alloc(u32 byteCount, int padding, JKRHeap* heap);
 	static void copyMemory(void*, void*, u32);
 	static void free(void*, JKRHeap*);
 	static void state_dumpDifference(const TState&, const TState&);

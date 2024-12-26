@@ -83,15 +83,15 @@ JKRExpHeap* JKRExpHeap::create(void* ptr, u32 size, JKRHeap* parent,
 	}
 
 	newHeap->mIsRoot = true;
-	newHeap->_70 = ptr;
-	newHeap->_74 = size;
+	newHeap->_70     = ptr;
+	newHeap->_74     = size;
 	return newHeap;
 }
 
 void JKRExpHeap::destroy()
 {
 	if (!mIsRoot) {
-    JKRHeap* parent = mChildTree.getParent()->getObject();
+		JKRHeap* parent = mChildTree.getParent()->getObject();
 		if (parent) {
 			this->~JKRExpHeap();
 			JKRFreeToHeap(parent, this);
@@ -101,21 +101,21 @@ void JKRExpHeap::destroy()
 	}
 }
 
-JKRExpHeap::JKRExpHeap(void* p1, u32 p2, JKRHeap* p3, bool p4)
-    : JKRHeap(p1, p2, p3, p4)
+JKRExpHeap::JKRExpHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag)
+    : JKRHeap(data, size, parent, errorFlag)
 {
 	mCurrentAllocMode = 0;
 	mCurrentGroupID   = 0xFF;
-	mHead             = static_cast<CMemBlock*>(p1);
+	mHead             = static_cast<CMemBlock*>(data);
 	mTail             = mHead;
-	mHead->initiate(nullptr, nullptr, p2 - 0x10, 0, 0);
+	mHead->initiate(nullptr, nullptr, size - 0x10, 0, 0);
 	mHeadUsedList = nullptr;
 	mTailUsedList = nullptr;
 }
 
 JKRExpHeap::~JKRExpHeap() { dispose(); }
 
-s32 JKRExpHeap::changeGroupID(unsigned char groupID)
+s32 JKRExpHeap::changeGroupID(u8 groupID)
 {
 	lock();
 	u8 oldGroupID   = mCurrentGroupID;
@@ -395,11 +395,11 @@ void* JKRExpHeap::allocFromTail(u32 size)
 	return nullptr;
 }
 
-void JKRExpHeap::free(void* memblock)
+void JKRExpHeap::free(void* ptr)
 {
 	lock();
-	if (mStart <= memblock && memblock <= mEnd) {
-		CMemBlock* block = CMemBlock::getHeapBlock(memblock);
+	if (mStart <= ptr && ptr <= mEnd) {
+		CMemBlock* block = CMemBlock::getHeapBlock(ptr);
 		if (block != nullptr) {
 			block->free(this);
 		}
@@ -1008,15 +1008,15 @@ void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 	setState_u32CheckCode_(p, checkCode);
 }
 
-bool JKRExpHeap::state_compare(const JKRHeap::TState& r1,
-                               const JKRHeap::TState& r2) const
+bool JKRExpHeap::state_compare(const JKRHeap::TState& fst,
+                               const JKRHeap::TState& snd) const
 {
 	JUT_ASSERT(r1.getHeap() == r2.getHeap());
 	bool result = true;
-	if (r1.mCheckCode != r2.mCheckCode) {
+	if (fst.mCheckCode != snd.mCheckCode) {
 		result = false;
 	}
-	if (r1.mUsedSize != r2.mUsedSize) {
+	if (fst.mUsedSize != snd.mUsedSize) {
 		result = false;
 	}
 	return result;
