@@ -4,7 +4,7 @@ typedef struct PTMF {
 	long this_delta; // self-explanatory
 	long v_offset;   // vtable offset
 	union {
-		void* f_addr;  // function address
+		void* f_addr;   // function address
 		long ve_offset; // virtual function entry offset (of vtable)
 	} f_data;
 } PTMF;
