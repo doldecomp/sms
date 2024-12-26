@@ -125,8 +125,8 @@ extern double sqrt __P((double));
 
 extern double ceil __P((double));
 extern double fabs __P((double));
-extern double
-    fabs__Fd(double); // NOTE: I have no idea how they got it to mangle like this
+// NOTE: I have no idea how they got it to mangle like this
+extern double fabs__Fd(double);
 extern double floor __P((double));
 extern double fmod __P((double, double));
 
