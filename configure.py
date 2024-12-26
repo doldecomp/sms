@@ -295,39 +295,39 @@ config.libs = [
         "cflags": cflags_jsystem,
         "progress_category": "jsystem",
         "objects": [
-            Object(Matching, "JSystem/JASProbe.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASProbe.cpp"),
 
             # JDrama
-            Object(Matching, "JSystem/JDRPlacement.cpp"),
-            Object(Matching, "JSystem/JDRResolution.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRPlacement.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRResolution.cpp"),
 
             # JUtility
-            Object(Matching, "JSystem/JUTRect.cpp"),
+            Object(Matching, "JSystem/JUtility/JUTRect.cpp"),
 
             # J3D
-            Object(Matching, "JSystem/J3DClusterLoader.cpp"),
-            # Object(Matching, "JSystem/J3DModel.cpp"),
-            Object(Matching, "JSystem/J3DVertex.cpp"),
-            Object(Matching, "JSystem/J3DPacket.cpp"),
-            # Object(Matching, "JSystem/J3DShape.cpp"),
+            Object(Matching, "JSystem/J3D/J3DClusterLoader.cpp"),
+            # Object(Matching, "JSystem/J3D/J3DModel.cpp"),
+            Object(Matching, "JSystem/J3D/J3DVertex.cpp"),
+            Object(Matching, "JSystem/J3D/J3DPacket.cpp"),
+            # Object(Matching, "JSystem/J3D/J3DShape.cpp"),
 
             # JKernel
-            Object(Matching, "JSystem/JKRDisposer.cpp"),
-            Object(Matching, "JSystem/JKRHeap.cpp"),
-            Object(Matching, "JSystem/JKRExpHeap.cpp"),
-            Object(Matching, "JSystem/JKRStdHeap.cpp"),
-            Object(Matching, "JSystem/JKRSolidHeap.cpp"),
-            Object(Matching, "JSystem/JKRFileLoader.cpp"),
-            Object(Matching, "JSystem/JKRThread.cpp"),
-            Object(Matching, "JSystem/JKRFileFinder.cpp"),
-            Object(Matching, "JSystem/JKRDvdFile.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRDisposer.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRExpHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRStdHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRSolidHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRFileLoader.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRThread.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRFileFinder.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRDvdFile.cpp"),
 
             # JSupport
-            Object(Matching, "JSystem/JSUInputStream.cpp"),
-            Object(Matching, "JSystem/JSUOutputStream.cpp"),
-            Object(Matching, "JSystem/JSUMemoryStream.cpp"),
-            Object(Matching, "JSystem/JSUFileStream.cpp"),
-            Object(Matching, "JSystem/JSUList.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUInputStream.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUOutputStream.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUMemoryStream.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUFileStream.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUList.cpp"),
         ],
     },
     {
