@@ -74,9 +74,9 @@ public:
 
 		static bool bVerbose_;
 
-		u32 mUsedSize;       // _00
-		u32 mBuf;            // _08
-		u32 mCheckCode;      // _04, plausibly TLocation when combined with _00
+		u32 mBuf;            // _00
+		u32 mUsedSize;       // _04
+		u32 mCheckCode;      // _08, plausibly TLocation when combined with _08
 		u8 _0C[0x4];         // _0C
 		TArgument mArgument; // _10
 		TLocation mLocation; // _1C
@@ -91,15 +91,15 @@ public:
 	// (looks to be a bit different in sms)
 	virtual ~JKRHeap();
 	virtual void* alloc(u32, int) = 0;
-	virtual void free(void*);
+	virtual void free(void*)      = 0;
 	virtual void freeAll();
-	virtual void freeTail();
-	virtual s32 resize(void*, u32);
-	virtual s32 getSize(void*);
-	virtual s32 getFreeSize();
-	virtual s32 getTotalFreeSize();
-	virtual u32 getHeapType() = 0;
-	virtual bool check()      = 0;
+	virtual void freeTail()        = 0;
+	virtual s32 resize(void*, u32) = 0;
+	virtual s32 getSize(void*)     = 0;
+	virtual s32 getFreeSize()      = 0;
+	virtual s32 getTotalFreeSize() = 0;
+	virtual u32 getHeapType()      = 0;
+	virtual bool check()           = 0;
 	virtual bool dump_sort() { return true; }
 	virtual bool dump() = 0;
 	virtual s32 changeGroupID(u8 newGroupId);
@@ -223,17 +223,17 @@ public:
 	static JKRHeapErrorHandler* mErrorHandler;
 
 protected:
-	// vtable
-	// JKRDisposer
-	OSMutex mMutex;
-	void* mStart;
-	void* mEnd;
-	u32 mSize;
-	JSUTree<JKRHeap> mChildTree;
-	JSUList<JKRDisposer> mDisposerList;
-	bool mErrorFlag;
-	bool mInitFlag;
-	u8 padding_0x6a[2];
+	// _00 = vtable
+	// _00-_18 = JKRDisposer
+	OSMutex mMutex;                     // _18
+	void* mStart;                       // _30
+	void* mEnd;                         // _34
+	u32 mSize;                          // _38
+	JSUTree<JKRHeap> mChildTree;        // _3C
+	JSUList<JKRDisposer> mDisposerList; // _58
+	bool mErrorFlag;                    // _64
+	bool mInitFlag;                     // _65
+	u8 padding_0x6a[2];                 // _66
 };
 
 inline JKRHeap* JKRGetCurrentHeap() { return JKRHeap::getCurrentHeap(); }

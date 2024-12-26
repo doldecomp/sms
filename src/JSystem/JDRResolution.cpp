@@ -1,4 +1,5 @@
 #include <JSystem/JDrama.hpp>
+#include <dolphin/vi.h>
 
 s32 JDrama::GetVIWidthMax()
 {
