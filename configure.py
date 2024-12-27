@@ -312,6 +312,7 @@ config.libs = [
             # Object(Matching, "JSystem/J3D/J3DShape.cpp"),
 
             # JKernel
+            Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDisposer.cpp"),
             Object(Matching, "JSystem/JKernel/JKRHeap.cpp"),
             Object(Matching, "JSystem/JKernel/JKRExpHeap.cpp"),
@@ -321,6 +322,7 @@ config.libs = [
             Object(Matching, "JSystem/JKernel/JKRThread.cpp"),
             Object(Matching, "JSystem/JKernel/JKRFileFinder.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDvdFile.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAramBlock.cpp"),
 
             # JSupport
             Object(Matching, "JSystem/JSupport/JSUInputStream.cpp"),
