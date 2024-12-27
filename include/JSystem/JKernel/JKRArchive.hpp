@@ -178,11 +178,11 @@ public:
 	{
 		int compression;
 		if (FLAG_ON(attr, JKRARCHIVE_ATTR_COMPRESSION))
-			compression = JKRCOMPRESSION_NONE;
+			compression = JKR_COMPRESSION_NONE;
 		else if (!FLAG_ON(attr, JKRARCHIVE_ATTR_YAY0))
-			compression = JKRCOMPRESSION_YAZ0;
+			compression = JKR_COMPRESSION_YAZ0;
 		else
-			compression = JKRCOMPRESSION_YAY0;
+			compression = JKR_COMPRESSION_YAY0;
 
 		return compression;
 	}

@@ -313,16 +313,21 @@ config.libs = [
 
             # JKernel
             Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAram.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDisposer.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRHeap.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRExpHeap.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRStdHeap.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRSolidHeap.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRFileLoader.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRThread.cpp"),
-            Object(Matching, "JSystem/JKernel/JKRFileFinder.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDvdFile.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRExpHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRFileFinder.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRFileLoader.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRSolidHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRStdHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRThread.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRDvdRipper.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRDecomp.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramBlock.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAramPiece.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAramStream.cpp"),
 
             # JSupport
             Object(Matching, "JSystem/JSupport/JSUInputStream.cpp"),

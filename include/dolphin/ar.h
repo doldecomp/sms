@@ -34,6 +34,10 @@ typedef struct ARQRequest ARQRequest;
 #define ARQ_PRIORITY_LOW  0
 #define ARQ_PRIORITY_HIGH 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // ar.c
 ARQCallback ARRegisterDMACallback(ARQCallback callback);
 u32 ARGetDMAStatus(void);
@@ -58,5 +62,9 @@ void ARQRemoveOwnerRequest(u32 owner);
 void ARQFlushQueue(void);
 void ARQSetChunkSize(u32 size);
 u32 ARQGetChunkSize(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

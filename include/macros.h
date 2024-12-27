@@ -7,6 +7,12 @@
 
 #define ALIGN_PREV(u, align) (u & (~(align - 1)))
 #define ALIGN_NEXT(u, align) ((u + (align - 1)) & (~(align - 1)))
+#define IS_ALIGNED(X, N) (((X) & ((N)-1)) == 0)
+#define IS_NOT_ALIGNED(X, N) (((X) & ((N)-1)) != 0)
+
+#define READU32_BE(ptr, offset)                                                                    \
+    (((u32)ptr[offset] << 24) | ((u32)ptr[offset + 1] << 16) | ((u32)ptr[offset + 2] << 8) |       \
+     (u32)ptr[offset + 3]);
 
 #ifdef DEBUG
 #define ASSERTLINE(line, cond)                                                 \

@@ -9,6 +9,8 @@ class JKRAramBlock;
 class JSUFileInputStream;
 class JKRDvdFile;
 
+// TODO: tww doesn't think this exists, maybe get rid of it?
+
 struct JKRDvdFileInfo : DVDFileInfo {
 	JKRDvdFile* mFile;
 };
@@ -28,6 +30,7 @@ public:
 	virtual int writeData(const void* data, s32 length, s32 offset);
 	virtual s32 getFileSize() const { return mDvdFileInfo.length; }
 	virtual bool open(s32 entrynum);
+	DVDFileInfo* getFileInfo() { return &mDvdFileInfo; }
 
 	s32 sync();
 	static void doneProcess(s32 result, DVDFileInfo* info);
