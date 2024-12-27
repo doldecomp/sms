@@ -3,7 +3,7 @@
 #include "unsorted_types.h"
 #include "unsorted_variables.h"
 #include <Map/Map.hpp>
-#include <JSystem/J3D/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <Strategic/HitActor.hpp>
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)

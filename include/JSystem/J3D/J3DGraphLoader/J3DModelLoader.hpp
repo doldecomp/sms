@@ -2,7 +2,7 @@
 #define J3D_MODEL_LOADER_HPP
 
 #include <types.h>
-#include <JSystem/J3D/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 struct J3DModelLoaderDataBase {
 	// NOTE: I have no idea why, but it seems like they pass in the

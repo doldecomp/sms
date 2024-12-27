@@ -1,4 +1,4 @@
-#include <JSystem/J3D/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <dolphin/os.h>
 

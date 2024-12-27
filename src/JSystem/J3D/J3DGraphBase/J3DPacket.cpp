@@ -1,8 +1,8 @@
-#include <JSystem/J3D/J3DPacket.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
-#include <JSystem/J3D/J3DSys.hpp>
-#include <JSystem/J3D/J3DMaterial.hpp>
-#include <JSystem/J3D/J3DShape.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <dolphin/os.h>
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>

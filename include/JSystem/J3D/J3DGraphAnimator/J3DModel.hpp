@@ -2,8 +2,8 @@
 #define J3D_MODEL_HPP
 
 #include <types.h>
-#include <JSystem/J3D/J3DVertex.hpp>
-#include <JSystem/J3D/J3DMaterialAttach.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
 #include <JSystem/ResTIMG.hpp>
 
 struct J3DNode;

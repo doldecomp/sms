@@ -1,7 +1,7 @@
 #include "dolphin.h"
 
 #include "types.h"
-#include <JSystem/J3D/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 
 void SMS_ResetTexCacheRegion()
 {

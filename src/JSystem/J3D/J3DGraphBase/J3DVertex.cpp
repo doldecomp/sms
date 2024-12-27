@@ -1,4 +1,4 @@
-#include <JSystem/J3D/J3DVertex.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 
