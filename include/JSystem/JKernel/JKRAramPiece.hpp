@@ -56,8 +56,8 @@ public:
 
 	static JKRAMCommand* orderAsync(int, u32, u32, u32, JKRAramBlock*,
 	                                JKRAMCommand::AsyncCallback);
-	static BOOL sync(JKRAMCommand*, int);
-	static BOOL orderSync(int, u32, u32, u32, JKRAramBlock*);
+	static bool sync(JKRAMCommand*, int);
+	static bool orderSync(int, u32, u32, u32, JKRAramBlock*);
 	static void startDMA(JKRAMCommand*);
 	static void doneDMA(u32);
 
