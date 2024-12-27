@@ -51,11 +51,12 @@ void* JKRSolidHeap::alloc(u32 size, int alignment)
 
 void* JKRSolidHeap::allocFromHead(u32 size, int align)
 {
+	size = ALIGN_NEXT(size, align);
+
 	void* ret = nullptr;
 
-	u32 alignedSize    = ALIGN_NEXT(size, align);
 	char* alignedStart = (char*)ALIGN_NEXT((u32)mCurStart, align);
-	u32 requiredSize   = (alignedStart - (char*)mCurStart) + alignedSize;
+	u32 requiredSize   = (alignedStart - (char*)mCurStart) + size;
 	if (requiredSize <= mFreeSize) {
 		mCurStart = (char*)mCurStart + requiredSize;
 		mFreeSize -= requiredSize;
@@ -64,7 +65,7 @@ void* JKRSolidHeap::allocFromHead(u32 size, int align)
 		JUTWarningConsole_f("allocFromHead: cannot alloc memory (0x%x byte).\n",
 		                    requiredSize);
 		if (mErrorFlag == true && mErrorHandler != nullptr) {
-			(*mErrorHandler)(this, alignedSize, align);
+			(*mErrorHandler)(this, size, align);
 		}
 	}
 	return ret;
@@ -72,10 +73,11 @@ void* JKRSolidHeap::allocFromHead(u32 size, int align)
 
 void* JKRSolidHeap::allocFromTail(u32 size, int align)
 {
+	size = ALIGN_NEXT(size, align);
+
 	void* ret = nullptr;
 
-	const u32 alignedSize = ALIGN_NEXT(size, align);
-	char* alignedEnd = (char*)ALIGN_PREV((u32)mCurEnd - alignedSize, align);
+	char* alignedEnd = (char*)ALIGN_PREV((u32)mCurEnd - size, align);
 	u32 requiredSize = (char*)mCurEnd - alignedEnd;
 	if (requiredSize <= mFreeSize) {
 		mCurEnd = (char*)mCurEnd - requiredSize;
@@ -85,7 +87,7 @@ void* JKRSolidHeap::allocFromTail(u32 size, int align)
 		JUTWarningConsole_f("allocFromTail: cannot alloc memory (0x%x byte).\n",
 		                    requiredSize);
 		if (mErrorFlag == true && mErrorHandler != nullptr) {
-			(*mErrorHandler)(this, alignedSize, align);
+			(*mErrorHandler)(this, size, align);
 		}
 	}
 	return ret;
