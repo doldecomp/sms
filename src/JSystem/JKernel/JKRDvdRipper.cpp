@@ -226,8 +226,7 @@ static u32 readCount;
 static u32 maxDest;
 
 int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
-                                u32 inMaxDest, u32 inFileOffset,
-                                u32 inSrcOffset)
+                         u32 inMaxDest, u32 inFileOffset, u32 inSrcOffset)
 {
 	u32 result = 0;
 
