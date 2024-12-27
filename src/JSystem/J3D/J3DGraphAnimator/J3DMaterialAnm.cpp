@@ -1,1 +1,1 @@
-#include <JSystem/J3D/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>

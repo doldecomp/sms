@@ -1,4 +1,4 @@
-#include <JSystem/J3D/J3DTevs.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
 
 typedef void IDK;
 IDK loadCullMode(u8);

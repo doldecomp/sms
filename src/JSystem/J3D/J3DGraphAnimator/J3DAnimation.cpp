@@ -1,1 +1,1 @@
-#include <JSystem/J3D/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
