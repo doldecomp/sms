@@ -7,7 +7,7 @@
 #include <dolphin/vi.h>
 #include "macros.h"
 
-static int JKRDecompressFromDVD(JKRDvdFile*, void*, u32, u32, u32, u32);
+int JKRDecompressFromDVD(JKRDvdFile*, void*, u32, u32, u32, u32);
 static int decompSZS_subroutine(u8*, u8*);
 static u8* firstSrcData();
 static u8* nextSrcData(u8*);
@@ -225,7 +225,7 @@ static u32 fileOffset;
 static u32 readCount;
 static u32 maxDest;
 
-static int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
+int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
                                 u32 inMaxDest, u32 inFileOffset,
                                 u32 inSrcOffset)
 {
