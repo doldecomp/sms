@@ -12,9 +12,6 @@ static int decompSZS_subroutine(u8*, u8*);
 static u8* firstSrcData();
 static u8* nextSrcData(u8*);
 
-/* 802BCD4C-802BCE00       .text
- * loadToMainRAM__12JKRDvdRipperFPCcPUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
- */
 void* JKRDvdRipper::loadToMainRAM(const char* name, u8* dst,
                                   JKRExpandSwitch expandSwitch, u32 dstLength,
                                   JKRHeap* heap, EAllocDirection allocDirection,
@@ -24,13 +21,11 @@ void* JKRDvdRipper::loadToMainRAM(const char* name, u8* dst,
 	if (!file.open(name)) {
 		return nullptr;
 	}
+	char trash[0x4]; // uuuuh..???
 	return loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
 	                     allocDirection, offset, pCompression);
 }
 
-/* 802BCE00-802BCEB4       .text
- * loadToMainRAM__12JKRDvdRipperFlPUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
- */
 void* JKRDvdRipper::loadToMainRAM(s32 entryNumber, u8* dst,
                                   JKRExpandSwitch expandSwitch, u32 dstLength,
                                   JKRHeap* heap, EAllocDirection allocDirection,
@@ -40,27 +35,24 @@ void* JKRDvdRipper::loadToMainRAM(s32 entryNumber, u8* dst,
 	if (!file.open(entryNumber)) {
 		return nullptr;
 	}
+	char trash[0x4]; // uuuuh..???
 	return loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
 	                     allocDirection, offset, pCompression);
 }
 
 bool JKRDvdRipper::errorRetry = true;
 
-/* 802BCEB4-802BD324       .text
- * loadToMainRAM__12JKRDvdRipperFP10JKRDvdFilePUc15JKRExpandSwitchUlP7JKRHeapQ212JKRDvdRipper15EAllocDirectionUlPi
- */
 void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
                                   JKRExpandSwitch expandSwitch, u32 dstLength,
                                   JKRHeap* heap, EAllocDirection allocDirection,
                                   u32 offset, int* pCompression)
 {
-	s32 fileSizeAligned;
 	bool hasAllocated          = false;
 	JKRCompression compression = JKR_COMPRESSION_NONE;
 	u32 expandSize;
 	u8* mem = nullptr;
 
-	fileSizeAligned = ALIGN_NEXT(dvdFile->getFileSize(), 32);
+	s32 fileSizeAligned = ALIGN_NEXT(dvdFile->getFileSize(), 32);
 	if (expandSwitch == EXPAND_SWITCH_DECOMPRESS) {
 		u8 buffer[0x40];
 		u8* bufPtr = (u8*)ALIGN_NEXT((u32)buffer, 32);
@@ -71,24 +63,30 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 				break;
 			}
 
-			if (readBytes == -3 || !isErrorRetry()) {
+			if (!isErrorRetry()) {
 				return nullptr;
 			}
 
 			VIWaitForRetrace();
 		}
-		DCInvalidateRange(bufPtr, 0x20);
 
 		compression = JKRCheckCompressed(bufPtr);
 		expandSize  = JKRDecompExpandSize(bufPtr);
 	}
 
+	char trash[0x4];
+
 	if (pCompression) {
 		*pCompression = (int)compression;
 	}
 
-	if (expandSwitch == EXPAND_SWITCH_DECOMPRESS
-	    && compression != JKR_COMPRESSION_NONE) {
+	if (compression == JKR_COMPRESSION_NONE
+	    && expandSwitch == EXPAND_SWITCH_DECOMPRESS) {
+		expandSwitch = EXPAND_SWITCH_DEFAULT;
+	}
+
+	if (expandSwitch == EXPAND_SWITCH_DECOMPRESS) {
+
 		if (dstLength != 0 && expandSize > dstLength) {
 			expandSize = dstLength;
 		}
@@ -135,35 +133,30 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 					break;
 				}
 
-				if (readBytes == -3 || !isErrorRetry()) {
-					if (hasAllocated == true) {
-						JKRFree(dst);
-					}
+				if (!isErrorRetry()) {
+					// BUG: dst memory leak
 					return nullptr;
 				}
 				VIWaitForRetrace();
 			}
-			DCInvalidateRange(bufPtr, 32);
 
 			compression2 = JKRCheckCompressed(bufPtr);
 		}
+
 		if ((compression2 == JKR_COMPRESSION_NONE
 		     || expandSwitch == EXPAND_SWITCH_NONE)
 		    || expandSwitch == EXPAND_SWITCH_DEFAULT) {
-			s32 size = fileSizeAligned - offset;
-			if (dstLength != 0 && dstLength < size)
-				size = dstLength; // probably a ternary
+			if (dstLength != 0 && dstLength < fileSizeAligned)
+				fileSizeAligned = dstLength; // probably a ternary
 			while (true) {
-				int readBytes = DVDReadPrio(dvdFile->getFileInfo(), dst, size,
-				                            (s32)offset, 2);
+				int readBytes = DVDReadPrio(dvdFile->getFileInfo(), dst,
+				                            fileSizeAligned, (s32)offset, 2);
 				if (readBytes >= 0) {
 					break;
 				}
 
-				if (readBytes == -3 || !isErrorRetry()) {
-					if (hasAllocated == true) {
-						JKRFree(dst);
-					}
+				if (!isErrorRetry()) {
+					// BUG: dst memory leak
 					return nullptr;
 				}
 				VIWaitForRetrace();
@@ -173,15 +166,19 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 		} else if (compression2 == JKR_COMPRESSION_YAZ0) {
 			JKRDecompressFromDVD(dvdFile, dst, fileSizeAligned, dstLength, 0,
 			                     offset);
+			DCStoreRange(dst, dstLength);
 		} else {
-			OSPanic(__FILE__, 337, "Sorry, not prepared for SZP resource\n");
+			OSPanic(__FILE__, 303, "Sorry, not prepared for SZP resource\n");
 		}
-		return dst;
-	} else if (compression == JKR_COMPRESSION_YAY0) {
+	}
+
+	char trash2[0x4];
+
+	if (compression == JKR_COMPRESSION_YAY0) {
 		// SZP decompression
 		// s32 readoffset = startOffset;
 		if (offset != 0) {
-			OSPanic(__FILE__, 347, ":::Not support SZP with offset read");
+			OSPanic(__FILE__, 312, ":::Not support SZP with offset read");
 		}
 		while (true) {
 			int readBytes = DVDReadPrio(dvdFile->getFileInfo(), mem,
@@ -189,26 +186,22 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 			if (readBytes >= 0)
 				break;
 
-			if (readBytes == -3 || !isErrorRetry()) {
-				if (hasAllocated == true)
-					JKRFree(dst);
-
-				JKRFree(mem);
-				return nullptr;
+			if (!isErrorRetry()) {
+				// BUG: dst mem leak
+				VIWaitForRetrace();
 			}
-			VIWaitForRetrace();
+
+			JKRFree(mem);
+			return nullptr;
 		}
 		JKRDecompress(mem, dst, expandSize, offset);
 		JKRFree(mem);
 		return dst;
 	} else if (compression == JKR_COMPRESSION_YAZ0) {
-		if (JKRDecompressFromDVD(dvdFile, dst, fileSizeAligned, expandSize,
-		                         offset, 0)
-		    != 0u) {
-			if (hasAllocated)
-				JKRFree(dst);
-			dst = nullptr;
-		}
+		// BUG: JKRDecompressFromDVD can fail
+		JKRDecompressFromDVD(dvdFile, dst, fileSizeAligned, expandSize, offset,
+		                     0);
+		DCStoreRange(dst, expandSize);
 		return dst;
 	} else if (hasAllocated) {
 		JKRFree(dst);
@@ -218,7 +211,6 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 }
 
 JSUList<JKRDMCommand> JKRDvdRipper::sDvdAsyncList;
-static OSMutex decompMutex;
 u32 JKRDvdRipper::szpBufferSize = 0x00000400;
 static u8* szpBuf;
 static u8* szpEnd;
@@ -232,29 +224,20 @@ static JKRDvdFile* srcFile;
 static u32 fileOffset;
 static u32 readCount;
 static u32 maxDest;
-static bool isInitMutex;
 
-/* 802BD324-802BD4F0       .text JKRDecompressFromDVD__FP10JKRDvdFilePvUlUlUlUl
- */
 static int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
                                 u32 inMaxDest, u32 inFileOffset,
                                 u32 inSrcOffset)
 {
-	BOOL interrupts = OSDisableInterrupts();
-	if (isInitMutex == false) {
-		OSInitMutex(&decompMutex);
-		isInitMutex = true;
-	}
-	OSRestoreInterrupts(interrupts);
-	OSLockMutex(&decompMutex);
-	int bufSize = JKRDvdRipper::getSzpBufferSize();
-	szpBuf      = (u8*)JKRAllocFromSysHeap(bufSize, -0x20);
-	JUT_ASSERT(VERSION_SELECT(913, 884, 884), szpBuf != nullptr);
+	u32 result = 0;
 
-	szpEnd = szpBuf + bufSize;
+	szpBuf = (u8*)JKRAllocFromSysHeap(JKRDvdRipper::getSzpBufferSize(), -0x20);
+	JUT_ASSERT(913, szpBuf != nullptr);
+
+	szpEnd = szpBuf + JKRDvdRipper::getSzpBufferSize();
 	if (inFileOffset != 0) {
 		refBuf = (u8*)JKRAllocFromSysHeap(0x1120, -4);
-		JUT_ASSERT(VERSION_SELECT(922, 893, 893), refBuf != nullptr);
+		JUT_ASSERT(922, refBuf != nullptr);
 		refEnd     = refBuf + 0x1120;
 		refCurrent = refBuf;
 	} else {
@@ -267,32 +250,27 @@ static int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
 	readCount  = 0;
 	maxDest    = inMaxDest;
 	u8* data   = firstSrcData();
-	u32 result = (data != nullptr) ? decompSZS_subroutine(data, (u8*)dst)
-	                               : -1; // figure out correct datatypes
-	u32 decompressedSize = ((u32*)data)[1];
+	if (data != nullptr)
+		result = decompSZS_subroutine(data, (u8*)dst);
 	JKRFree(szpBuf);
 	if (refBuf) {
 		JKRFree(refBuf);
 	}
-	DCStoreRangeNoSync(dst, decompressedSize);
-	OSUnlockMutex(&decompMutex);
+
 	return result;
 }
 
-/* 802BD4F0-802BD784       .text decompSZS_subroutine__FPUcPUc */
 static int decompSZS_subroutine(u8* src, u8* dest)
 {
 	u8* endPtr;
 	s32 validBitCount = 0;
 	s32 currCodeByte  = 0;
-	u32 ts            = 0;
 
 	if (src[0] != 'Y' || src[1] != 'a' || src[2] != 'z' || src[3] != '0') {
 		return -1;
 	}
 
-	SYaz0Header* header = (SYaz0Header*)src;
-	endPtr              = dest + (header->length - fileOffset);
+	endPtr = dest + (((SYaz0Header*)src)->length - fileOffset);
 	if (endPtr > dest + maxDest) {
 		endPtr = dest + maxDest;
 	}
@@ -315,7 +293,6 @@ static int decompSZS_subroutine(u8* src, u8* dest)
 				if (readCount >= fileOffset) {
 					*dest = *src;
 					dest++;
-					ts++;
 					if (dest == endPtr) {
 						break;
 					}
@@ -329,7 +306,6 @@ static int decompSZS_subroutine(u8* src, u8* dest)
 				*dest = *src;
 				dest++;
 				src++;
-				ts++;
 				if (dest == endPtr) {
 					break;
 				}
@@ -359,7 +335,6 @@ static int decompSZS_subroutine(u8* src, u8* dest)
 					if (readCount >= fileOffset) {
 						*dest = *copySource;
 						dest++;
-						ts++;
 						if (dest == endPtr) {
 							break;
 						}
@@ -379,7 +354,6 @@ static int decompSZS_subroutine(u8* src, u8* dest)
 				do {
 					*dest = *copySource;
 					dest++;
-					ts++;
 					if (dest == endPtr) {
 						break;
 					}
@@ -395,7 +369,6 @@ static int decompSZS_subroutine(u8* src, u8* dest)
 	return 0;
 }
 
-/* 802BD784-802BD84C       .text firstSrcData__Fv */
 static u8* firstSrcData()
 {
 	srcLimit    = szpEnd - 0x19;
@@ -404,13 +377,13 @@ static u8* firstSrcData()
 	u32 length  = transLeft < bufSize ? transLeft : bufSize;
 
 	while (true) {
-		int result
-		    = DVDReadPrio(srcFile->getFileInfo(), buffer, length, srcOffset, 2);
+		DVDFileInfo* info = srcFile->getFileInfo();
+		int result        = DVDReadPrio(info, buffer, length, srcOffset, 2);
 		if (result >= 0) {
 			break;
 		}
 
-		if (result == -3 || !JKRDvdRipper::isErrorRetry()) {
+		if (!JKRDvdRipper::isErrorRetry()) {
 			return nullptr;
 		}
 		VIWaitForRetrace();
@@ -418,13 +391,10 @@ static u8* firstSrcData()
 
 	srcOffset += length;
 	transLeft -= length;
-	if (transLeft == 0) {
-		srcLimit = buffer + length;
-	}
+
 	return buffer;
 }
 
-/* 802BD84C-802BD974       .text nextSrcData__FPUc */
 static u8* nextSrcData(u8* src)
 {
 	u32 limit = szpEnd - src;
@@ -449,7 +419,7 @@ static u8* nextSrcData(u8* src)
 			break;
 		}
 		// bug: supposed to call isErrorRetry, but didn't
-		if (result == -3 || !JKRDvdRipper::isErrorRetry) {
+		if (!JKRDvdRipper::isErrorRetry) {
 			return nullptr;
 		}
 
