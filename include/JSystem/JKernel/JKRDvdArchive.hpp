@@ -24,5 +24,4 @@ struct JKRDvdArchive : public JKRArchive {
 	JKRFile* mDvdFile; // _64
 };
 
-
 #endif

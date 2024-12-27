@@ -1,7 +1,6 @@
 #ifndef JKR_COMP_ARCHIVE_HPP
 #define JKR_COMP_ARCHIVE_HPP
 
-
 #include <JSystem/JKernel/JKRArchive.hpp>
 
 class JKRCompArchive : public JKRArchive {
