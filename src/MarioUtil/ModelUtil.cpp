@@ -1,9 +1,9 @@
 #include <MarioUtil/ModelUtil.hpp>
-#include <JSystem/J3D/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <JSystem/J3D/J3DAnimation.hpp>
-#include <JSystem/J3D/J3DMaterialAnm.hpp>
-#include <JSystem/J3D/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <Player/MarioMain.hpp>
 #include <dolphin/mtx.h>

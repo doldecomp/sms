@@ -305,11 +305,11 @@ config.libs = [
             Object(Matching, "JSystem/JUtility/JUTRect.cpp"),
 
             # J3D
-            Object(Matching, "JSystem/J3D/J3DClusterLoader.cpp"),
-            # Object(Matching, "JSystem/J3D/J3DModel.cpp"),
-            Object(Matching, "JSystem/J3D/J3DVertex.cpp"),
-            Object(Matching, "JSystem/J3D/J3DPacket.cpp"),
-            # Object(Matching, "JSystem/J3D/J3DShape.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp"),
+            # Object(Matching, "JSystem/J3D/J3DGraphAnimator/J3DModel.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphBase/J3DVertex.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphBase/J3DPacket.cpp"),
+            # Object(Matching, "JSystem/J3D/J3DGraphBase/J3DShape.cpp"),
 
             # JKernel
             Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),

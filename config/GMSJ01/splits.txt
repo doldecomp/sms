@@ -234,48 +234,48 @@ JSystem/J2D/J2DWindow.cpp:
 	.data       start:0x803A8D78 end:0x803A8DB0
 	.sdata2     start:0x8040B5F0 end:0x8040B608
 
-JSystem/J3D/J3DTransform.cpp:
+JSystem/J3D/J3DGraphBase/J3DTransform.cpp:
 	.text       start:0x8001BAB0 end:0x8001C59C
 	.data       start:0x803A8DB0 end:0x803A8E08
 	.sdata      start:0x80408AD8 end:0x80408AE0
 	.sdata2     start:0x8040B608 end:0x8040B618
 
-JSystem/J3D/J3DCluster.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DCluster.cpp:
 	.text       start:0x8001C59C end:0x8001DABC
 	.rodata     start:0x80370BE8 end:0x80370BF8
 	.data       start:0x803A8E08 end:0x803A8E18
 	.sdata2     start:0x8040B618 end:0x8040B650
 
-JSystem/J3D/J3DJoint.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DJoint.cpp:
 	.text       start:0x8001DABC end:0x8001FD18
 	.rodata     start:0x80370BF8 end:0x80370C28
 	.data       start:0x803A8E18 end:0x803A9058
 	.sdata2     start:0x8040B650 end:0x8040B658
 
-JSystem/J3D/J3DMaterial.cpp:
+JSystem/J3D/J3DGraphBase/J3DMaterial.cpp:
 	.text       start:0x8001FD18 end:0x80026A94
 	.rodata     start:0x80370C28 end:0x80370C38
 	.data       start:0x803A9058 end:0x803A9800
 	.sdata2     start:0x8040B658 end:0x8040B690
 
-JSystem/J3D/J3DModel.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DModel.cpp:
 	.text       start:0x80026A94 end:0x80029534
 	.data       start:0x803A9800 end:0x803A9878
 	.sdata      start:0x80408AE0 end:0x80408AE8
 	.sdata2     start:0x8040B690 end:0x8040B6A8
 
-JSystem/J3D/J3DNode.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DNode.cpp:
 	.text       start:0x80029534 end:0x800295D8
 	.data       start:0x803A9878 end:0x803A98A0
 
-JSystem/J3D/J3DShape.cpp:
+JSystem/J3D/J3DGraphBase/J3DShape.cpp:
 	.text       start:0x800295D8 end:0x8002A1D0
 	.ctors      start:0x8036FBC4 end:0x8036FBC8
 	.data       start:0x803A98A0 end:0x803A9980
 	.sbss       start:0x804098C8 end:0x804098D0
 	.sdata2     start:0x8040B6A8 end:0x8040B6B0
 
-JSystem/J3D/J3DSys.cpp:
+JSystem/J3D/J3DGraphBase/J3DSys.cpp:
 	.text       start:0x8002A1D0 end:0x8002AC94
 	.ctors      start:0x8036FBC8 end:0x8036FBCC
 	.rodata     start:0x80370C38 end:0x80370C80
@@ -283,29 +283,29 @@ JSystem/J3D/J3DSys.cpp:
 	.bss        start:0x80400ED8 end:0x8040110C align:4 common
 	.sbss       start:0x804098D0 end:0x804098D8
 
-JSystem/J3D/J3DAnimation.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DAnimation.cpp:
 	.text       start:0x8002AC94 end:0x8002EB3C
 	.data       start:0x803A9990 end:0x803A9A60
 	.sdata2     start:0x8040B6B0 end:0x8040B6E0
 
-JSystem/J3D/J3DClusterLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp:
 	.text       start:0x8002EB3C end:0x8002EB84
 
-JSystem/J3D/J3DJointFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp:
 	.text       start:0x8002EB84 end:0x8002EDB0
 
-JSystem/J3D/J3DMaterialFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp:
 	.text       start:0x8002EDB0 end:0x80030A64
 	.sdata2     start:0x8040B6E0 end:0x8040B6F8
 
-JSystem/J3D/J3DModelLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp:
 	.text       start:0x80030A64 end:0x80032380
 	.data       start:0x803A9A60 end:0x803A9AE8
 
-JSystem/J3D/J3DShapeFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp:
 	.text       start:0x80032380 end:0x80032808
 
-JSystem/J3D/J3DAnmLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp:
 	.text       start:0x80032808 end:0x800341FC
 	.data       start:0x803A9AE8 end:0x803A9B48
 	.sdata2     start:0x8040B6F8 end:0x8040B700
@@ -345,16 +345,16 @@ JSystem/J2D/J2DOrthoGraph.cpp:
 	.data       start:0x803A9BB0 end:0x803A9BD8
 	.sdata2     start:0x8040B710 end:0x8040B730
 
-JSystem/J3D/J3DVertex.cpp:
+JSystem/J3D/J3DGraphBase/J3DVertex.cpp:
 	.text       start:0x80037180 end:0x800373E8
 	.data       start:0x803A9BD8 end:0x803A9BE8
 
-JSystem/J3D/J3DPacket.cpp:
+JSystem/J3D/J3DGraphBase/J3DPacket.cpp:
 	.text       start:0x800373E8 end:0x80037A58
 	.data       start:0x803A9BE8 end:0x803A9C60
 	.sbss       start:0x80409950 end:0x80409958
 
-JSystem/J3D/J3DTevs.cpp:
+JSystem/J3D/J3DGraphBase/J3DTevs.cpp:
 	.text       start:0x80037A58 end:0x80039130
 	.rodata     start:0x80370CE0 end:0x80370D50
 	.data       start:0x803A9C60 end:0x803A9DD8
@@ -362,14 +362,14 @@ JSystem/J3D/J3DTevs.cpp:
 	.sdata      start:0x80408AF8 end:0x80408B78
 	.sdata2     start:0x8040B730 end:0x8040B748
 
-JSystem/J3D/J3DDrawBuffer.cpp:
+JSystem/J3D/J3DGraphBase/J3DDrawBuffer.cpp:
 	.text       start:0x80039130 end:0x80039858
 	.ctors      start:0x8036FBD4 end:0x8036FBD8
 	.data       start:0x803A9DD8 end:0x803A9E98
 	.sbss       start:0x80409958 end:0x80409960
 	.sdata2     start:0x8040B748 end:0x8040B758
 
-JSystem/J3D/J3DMaterialAnm.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.cpp:
 	.text       start:0x80039858 end:0x80039B38
 	.data       start:0x803A9E98 end:0x803A9EB8
 
@@ -889,7 +889,7 @@ JSystem/JAudio/JASystem/JASTrackPort.cpp:
 JSystem/random.cpp:
 	.text       start:0x80068B1C end:0x80068C18
 
-JSystem/J3D/J3DMaterialFactory_v21.cpp:
+JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp:
 	.text       start:0x80068C18 end:0x8006A1D0
 	.sdata2     start:0x8040BBC8 end:0x8040BBD8
 
@@ -900,7 +900,7 @@ JSystem/JAudio/JASystem/JASSeqParser.cpp:
 	.data       start:0x803ABEA0 end:0x803AC420
 	.sdata2     start:0x8040BBD8 end:0x8040BC18
 
-JSystem/J3D/J3DMaterialAttach.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.cpp:
 	.text       start:0x8006C4E0 end:0x8006C570
 	.data       start:0x803AC420 end:0x803AC430
 
