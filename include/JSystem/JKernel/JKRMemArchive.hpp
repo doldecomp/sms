@@ -15,18 +15,16 @@ public:
 	virtual bool removeResource(void*);                             // _28
 	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize); // _40
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize,
-	                            JKRExpandSwitch expandSwitch); // _44
+	                            SDIFileEntry* entry, u32* resSize); // _44
 
 	bool open(s32, EMountDirection);
 	bool open(void*, u32, JKRMemBreakFlag);
 	static u32 fetchResource_subroutine(u8*, u32, u8*, u32, int);
 
-	// Unused/inlined:
 	void fixedInit(s32);
 	void mountFixed(s32, EMountDirection);
 	void mountFixed(const char*, EMountDirection);
-	void mountFixed(void*, JKRMemBreakFlag);
+	bool mountFixed(void*, JKRMemBreakFlag);
 	void unmountFixed();
 	void open(const char*, EMountDirection);
 
@@ -35,6 +33,7 @@ public:
 	SArcHeader* mArcHeader; // _60
 	u8* mArchiveData;       // _64
 	bool mIsOpen;           // _68
+	u8 field_0x6d[3];       // _69
 };
 
 #endif

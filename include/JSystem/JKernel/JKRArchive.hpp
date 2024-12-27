@@ -142,8 +142,7 @@ public:
 	virtual JKRFileFinder* getFirstFile(const char*) const;             // _38
 	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0; // _40
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize,
-	                            JKRExpandSwitch expandSwitch)
+	                            SDIFileEntry* entry, u32* resSize)
 	    = 0; // _44
 
 	SDIDirEntry* findDirectory(const char*, u32) const;
@@ -206,7 +205,7 @@ protected:
 	SDIFileEntry* mFileEntries;      // _4C
 	const char* mStrTable;           // _50
 	int _54;                         // _54
-	int mCompression;                // _58
+	JKRCompression mCompression;     // _58
 	EMountDirection mMountDirection; // _5C
 };
 
