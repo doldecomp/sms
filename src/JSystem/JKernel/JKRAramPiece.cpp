@@ -52,7 +52,7 @@ JKRAMCommand* JKRAramPiece::orderAsync(int direction, u32 source,
 	return command;
 }
 
-BOOL JKRAramPiece::sync(JKRAMCommand* command, int is_non_blocking)
+bool JKRAramPiece::sync(JKRAMCommand* command, int is_non_blocking)
 {
 	OSMessage message;
 
@@ -76,14 +76,14 @@ BOOL JKRAramPiece::sync(JKRAMCommand* command, int is_non_blocking)
 	return TRUE;
 }
 
-BOOL JKRAramPiece::orderSync(int direction, u32 source, u32 destination,
+bool JKRAramPiece::orderSync(int direction, u32 source, u32 destination,
                              u32 length, JKRAramBlock* block)
 {
 	lock();
 
 	JKRAMCommand* command = JKRAramPiece::orderAsync(
 	    direction, source, destination, length, block, nullptr);
-	BOOL result = JKRAramPiece::sync(command, 0);
+	bool result = JKRAramPiece::sync(command, 0);
 	delete command;
 
 	unlock();
