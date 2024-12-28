@@ -312,6 +312,7 @@ config.libs = [
             # Object(Matching, "JSystem/J3D/J3DGraphBase/J3DShape.cpp"),
 
             # JKernel
+            Object(NonMatching, "JSystem/JKernel/JKRArchivePri.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAram.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDisposer.cpp"),
