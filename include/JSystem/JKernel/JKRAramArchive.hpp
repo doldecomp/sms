@@ -10,8 +10,7 @@ public:
 
 	virtual ~JKRAramArchive();                        // _08
 	virtual void* fetchResource(SDIFileEntry*, u32*); // _40
-	virtual void* fetchResource(void*, u32, SDIFileEntry*, u32*,
-	                            JKRExpandSwitch expandSwitch); // _44
+	virtual void* fetchResource(void*, u32, SDIFileEntry*, u32*); // _44
 
 	bool open(s32);
 	u32 getAramAddress_Entry(SDIFileEntry* fileEntry);
