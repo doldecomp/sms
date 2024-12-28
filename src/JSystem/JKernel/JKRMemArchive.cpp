@@ -11,16 +11,29 @@ JKRMemArchive::JKRMemArchive(s32 entryNum,
                              JKRArchive::EMountDirection mountDirection)
     : JKRArchive(entryNum, MOUNT_MEM)
 {
-	mIsMounted      = false;
 	mMountDirection = mountDirection;
-	if (!open(entryNum, mMountDirection)) {
-		return;
-	}
+	open(entryNum, mMountDirection);
 
 	mVolumeType = 'RARC';
 	mVolumeName = mStrTable + mDirectories->mOffset;
 
-	getVolumeList().prepend(&mFileLoaderLink);
+	JSULink<JKRFileLoader>* fileLoaderLinkPtr = &mFileLoaderLink;
+	getVolumeList().prepend(fileLoaderLinkPtr);
+	mIsMounted = true;
+}
+
+JKRMemArchive::JKRMemArchive(void* buffer, u32 bufferSize,
+                             JKRMemBreakFlag memBreakFlag)
+    : JKRArchive((s32)buffer, MOUNT_MEM) // WTF?
+{
+	open(buffer, bufferSize, memBreakFlag);
+
+	mVolumeType = 'RARC';
+	mVolumeName = mStrTable + mDirectories->mOffset;
+
+	JSULink<JKRFileLoader>* fileLoaderLinkPtr = &mFileLoaderLink;
+	getVolumeList().prepend(fileLoaderLinkPtr);
+
 	mIsMounted = true;
 }
 
@@ -63,7 +76,7 @@ bool JKRMemArchive::mountFixed(void* param_1, JKRMemBreakFlag param_2)
 	mVolumeType = 'RARC';
 	mVolumeName = mStrTable + mDirectories->mOffset;
 	sVolumeList.prepend(&mFileLoaderLink);
-	mIsOpen    = param_2 == 1;
+	mIsOpen    = param_2 == 1 ? true : false; // ewwwww
 	mIsMounted = true;
 	return true;
 }
@@ -123,9 +136,6 @@ bool JKRMemArchive::open(s32 entryNum,
 		                     + mArcHeader->file_data_offset);
 		mIsOpen      = true;
 	}
-	if (mMountMode == 0) {
-		OSReport(":::Cannot alloc memory [%s][%d]\n", __FILE__, 440);
-	}
 
 	return (mMountMode == UNKNOWN_MOUNT_MODE) ? false : true;
 }
@@ -168,19 +178,20 @@ void* JKRMemArchive::fetchResource(void* buffer, u32 bufferSize,
                                    SDIFileEntry* fileEntry, u32* resourceSize)
 {
 	JUT_ASSERT(575, isMounted());
-	u32 srcLength = fileEntry->mSize;
+	bufferSize    = ALIGN_PREV(bufferSize, 0x20);
+	u32 srcLength = ALIGN_NEXT(fileEntry->mSize, 0x20);
 	if (srcLength > bufferSize) {
 		srcLength = bufferSize;
 	}
 
 	if (fileEntry->mData != nullptr) {
-		memcpy(buffer, fileEntry->mData, srcLength);
+		JKRHeap::copyMemory(buffer, fileEntry->mData, srcLength);
 	} else {
 		JKRCompression compression
-		    = JKRConvertAttrToCompressionType(fileEntry->getAttr());
-		void* data = mArchiveData + fileEntry->mDataOffset;
-		srcLength  = fetchResource_subroutine((u8*)data, srcLength, (u8*)buffer,
-		                                      bufferSize, compression);
+		    = JKRArchive::convertAttrToCompressionType(fileEntry->getAttr());
+		srcLength = fetchResource_subroutine(
+		    (u8*)mArchiveData + fileEntry->mDataOffset, srcLength, (u8*)buffer,
+		    bufferSize, compression);
 	}
 
 	if (resourceSize) {
@@ -225,20 +236,23 @@ bool JKRMemArchive::removeResource(void* resource)
 u32 JKRMemArchive::fetchResource_subroutine(u8* src, u32 srcLength, u8* dst,
                                             u32 dstLength, int compression)
 {
+	dstLength = ALIGN_PREV(dstLength, 0x20);
+	srcLength = ALIGN_NEXT(srcLength, 0x20);
+
 	switch (compression) {
 	case JKR_COMPRESSION_NONE: {
 		if (srcLength > dstLength) {
 			srcLength = dstLength;
 		}
 
-		memcpy(dst, src, srcLength);
+		JKRHeap::copyMemory(dst, src, srcLength);
 		return srcLength;
 	}
 	case JKR_COMPRESSION_YAY0:
 	case JKR_COMPRESSION_YAZ0: {
-		u32 expendedSize = JKRDecompExpandSize(src);
-		srcLength        = expendedSize;
-		if (expendedSize > dstLength) {
+		u32 expandedSize = JKRDecompExpandSize(src);
+		srcLength        = expandedSize;
+		if (expandedSize > dstLength) {
 			srcLength = dstLength;
 		}
 
@@ -246,7 +260,7 @@ u32 JKRMemArchive::fetchResource_subroutine(u8* src, u32 srcLength, u8* dst,
 		return srcLength;
 	}
 	default:
-		OSPanic(__FILE__, 703, ":::??? bad sequence\n");
+		OSPanic(__FILE__, 720, ":::??? bad sequence\n");
 		break;
 	}
 

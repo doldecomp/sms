@@ -5,10 +5,10 @@
 
 class JKRMemArchive : public JKRArchive {
 public:
-	JKRMemArchive(); // unused/inlined
+	JKRMemArchive();
 	JKRMemArchive(s32, EMountDirection);
 	JKRMemArchive(void*, u32, JKRMemBreakFlag);
-	JKRMemArchive(const char*, EMountDirection); // unused/inlined
+	JKRMemArchive(const char*, EMountDirection); // unused
 
 	virtual ~JKRMemArchive();                                       // _08
 	virtual void removeResourceAll();                               // _24
