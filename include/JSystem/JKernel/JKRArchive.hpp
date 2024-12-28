@@ -50,7 +50,7 @@ public:
 		CArcName(const char* data) { store(data); }
 
 		u16 mHash;         // _00
-		u16 _02;           // _02
+		u16 mLength;       // _02
 		char mString[256]; // _04
 		u8 _104[4];        // _104, unknown, used to fix stack size
 	};
@@ -63,6 +63,7 @@ public:
 		u32 getSize() { return mSize; }
 		u16 getFileID() const { return mFileID; }
 		bool isDirectory() const { return (getFlags() & 0x02) != 0; }
+		bool isUnknownFlag1() const { return (getFlags() & 0x01) != 0; }
 		bool isCompressed() const { return (getFlags() & 0x04) != 0; }
 		u8 getCompressFlag() const
 		{
