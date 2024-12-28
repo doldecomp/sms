@@ -1,7 +1,6 @@
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <ctype.h>
-#include <string.h>
 
 u32 JKRArchive::sCurrentDirID;
 
@@ -16,7 +15,7 @@ JKRArchive::JKRArchive(s32 entryNumber, JKRArchive::EMountMode mountMode)
 	mIsMounted  = false;
 	mMountMode  = mountMode;
 	mMountCount = 1;
-	// field_0x58 = 1;
+	_54         = 1;
 
 	mHeap = JKRHeap::findFromRoot(this);
 	if (mHeap == nullptr) {
@@ -31,6 +30,15 @@ JKRArchive::JKRArchive(s32 entryNumber, JKRArchive::EMountMode mountMode)
 }
 
 JKRArchive::~JKRArchive() { }
+
+bool JKRArchive::isSameName(JKRArchive::CArcName& name, u32 nameOffset,
+                            u16 nameHash) const
+{
+	u16 hash = name.getHash();
+	if (hash != nameHash)
+		return false;
+	return strcmp(mStrTable + nameOffset, name.getString()) == 0;
+}
 
 JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name,
                                                    u32 directoryId) const
@@ -50,6 +58,22 @@ JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name,
 			}
 			break;
 		}
+	}
+
+	return nullptr;
+}
+
+JKRArchive::SDIDirEntry* JKRArchive::findResType(u32 type) const
+{
+	SDIDirEntry* node = mDirectories;
+	u32 count         = 0;
+	while (count < mArcInfoBlock->num_nodes) {
+		if (node->mType == type) {
+			return node;
+		}
+
+		node++;
+		count++;
 	}
 
 	return nullptr;
@@ -88,7 +112,9 @@ JKRArchive::SDIFileEntry* JKRArchive::findFsResource(const char* name,
 			if (isSameName(arcName, fileEntry->getNameOffset(),
 			               fileEntry->mHash)) {
 				if (fileEntry->isDirectory()) {
-					return findFsResource(name, fileEntry->mDataOffset);
+					SDIFileEntry* ntry
+					    = findFsResource(name, fileEntry->mDataOffset);
+					return ntry;
 				}
 
 				if (name == nullptr) {
@@ -118,8 +144,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findNameResource(const char* name) const
 
 	CArcName arcName(name);
 	for (int i = 0; i < mArcInfoBlock->num_file_entries; fileEntry++, i++) {
-		if (isSameName(arcName, fileEntry->getNameOffset(),
-		               fileEntry->getNameHash())) {
+		if (isSameName(arcName, fileEntry->getNameOffset(), fileEntry->mHash)) {
 			return fileEntry;
 		}
 	}
