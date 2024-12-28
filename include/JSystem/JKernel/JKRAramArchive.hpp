@@ -12,7 +12,7 @@ public:
 	virtual void* fetchResource(SDIFileEntry*, u32*); // _40
 	virtual void* fetchResource(void*, u32, SDIFileEntry*, u32*); // _44
 
-	bool open(s32);
+	bool open(s32, EMountDirection);
 	u32 getAramAddress_Entry(SDIFileEntry* fileEntry);
 	u32 getAramAddress(u32, const char* file);
 	static u32 fetchResource_subroutine(u32, u32, u8*, u32, int);
