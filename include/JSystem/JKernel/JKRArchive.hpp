@@ -123,6 +123,7 @@ public:
 		u32 _1C;              // _1C
 	};
 
+	JKRArchive();
 	JKRArchive(s32, EMountMode);
 
 	virtual ~JKRArchive();                                 // _08
@@ -166,7 +167,6 @@ public:
 	                            JKRArchive* archive);
 
 	// Unused/inlined:
-	JKRArchive();
 	JKRArchive(const char* p1, EMountMode mountMode);
 	static JKRArchive* check_mount_already(s32);
 	static JKRArchive* check_mount_already(s32, JKRHeap*);
@@ -175,15 +175,12 @@ public:
 
 	static int convertAttrToCompressionType(int attr)
 	{
-		int compression;
 		if (FLAG_ON(attr, JKRARCHIVE_ATTR_COMPRESSION))
-			compression = JKR_COMPRESSION_NONE;
+			return JKR_COMPRESSION_NONE;
 		else if (!FLAG_ON(attr, JKRARCHIVE_ATTR_YAY0))
-			compression = JKR_COMPRESSION_YAZ0;
+			return JKR_COMPRESSION_YAZ0;
 		else
-			compression = JKR_COMPRESSION_YAY0;
-
-		return compression;
+			return JKR_COMPRESSION_YAY0;
 	}
 
 	u32 getMountMode() const { return mMountMode; }
