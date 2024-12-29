@@ -189,7 +189,7 @@ public:
 
 	static bool initArena(char**, u32*, int);
 	static void* alloc(u32 byteCount, int padding, JKRHeap* heap);
-	static void copyMemory(void*, void*, u32);
+	static void copyMemory(void* dst, void* src, u32 size);
 	static void free(void*, JKRHeap*);
 	static void state_dumpDifference(const TState&, const TState&);
 	static JKRHeap* findFromRoot(void*);

@@ -10,8 +10,6 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include "math.h"
-#include "string.h"
 #include "dolphin/os.h"
 
 JKRCompArchive::JKRCompArchive(s32 entryNum,
@@ -20,9 +18,7 @@ JKRCompArchive::JKRCompArchive(s32 entryNum,
 {
 	mMountDirection = mountDirection;
 
-	if (!open(entryNum)) {
-		return;
-	}
+	open(entryNum);
 
 	mVolumeType = 'RARC';
 	mVolumeName = &mStrTable[mDirectories->mOffset];
@@ -35,7 +31,7 @@ JKRCompArchive::~JKRCompArchive()
 	if (mArcInfoBlock != nullptr) {
 		SDIFileEntry* file = mFileEntries;
 		for (int i = 0; i < mArcInfoBlock->num_file_entries; i++) {
-			if (!((file->mFlag >> 0x18) & 0x10) && file->mData != nullptr) {
+			if (!file->getFlag10() && file->mData != nullptr) {
 				JKRFreeToHeap(mHeap, file->mData);
 			}
 
@@ -58,12 +54,11 @@ JKRCompArchive::~JKRCompArchive()
 	mIsMounted = false;
 }
 
-static void dummy()
+void dummy()
 {
-	OSReport(__FILE__);
-	OSReport("isMounted()");
-	OSReport("Halt");
-	OSReport("mMountCount == 1");
+	const int unknownTable1[4]   = { 0, 2, 1, 3 };
+	const float unknownTable2[3] = { 1, 1, 1 };
+	const float unknownTable3[3] = { 1, 1, 1 };
 }
 
 bool JKRCompArchive::open(s32 entryNum)
@@ -89,8 +84,6 @@ bool JKRCompArchive::open(s32 entryNum)
 	if (arcHeader == nullptr) {
 		mMountMode = 0;
 	} else {
-		int alignment;
-
 		JKRDvdToMainRam(entryNum, (u8*)arcHeader, EXPAND_SWITCH_DECOMPRESS, 32,
 		                nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0,
 		                &mCompression);
@@ -100,8 +93,8 @@ bool JKRCompArchive::open(s32 entryNum)
 
 		switch (mCompression) {
 		case JKR_COMPRESSION_NONE:
-		case JKR_COMPRESSION_YAZ0:
-			alignment     = mMountDirection == 1 ? 32 : -32;
+		case JKR_COMPRESSION_YAZ0: {
+			int alignment = mMountDirection == 1 ? 32 : -32;
 			mArcInfoBlock = (SArcDataInfo*)JKRAllocFromHeap(
 			    mHeap, arcHeader->file_data_offset + mSizeOfMemPart, alignment);
 			if (mArcInfoBlock == nullptr) {
@@ -111,7 +104,7 @@ bool JKRCompArchive::open(s32 entryNum)
 				    entryNum, (u8*)mArcInfoBlock, EXPAND_SWITCH_DECOMPRESS,
 				    (u32)arcHeader->file_data_offset + mSizeOfMemPart, nullptr,
 				    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0x20, nullptr);
-				// _60 = (u32)mArcInfoBlock + arcHeader->file_data_offset;
+				_60 = (u32)mArcInfoBlock + arcHeader->file_data_offset;
 
 				if (mSizeOfAramPart != 0) {
 					mAramPart = (JKRAramBlock*)JKRAllocFromAram(
@@ -139,10 +132,11 @@ bool JKRCompArchive::open(s32 entryNum)
 				_68 = arcHeader->header_length + arcHeader->file_data_offset;
 			}
 			break;
+		}
 
-		case JKR_COMPRESSION_YAY0:
+		case JKR_COMPRESSION_YAY0: {
 			u32 alignedSize = ALIGN_NEXT(mDvdFile->getFileSize(), 32);
-			alignment       = ((mMountDirection == 1) ? 32 : -32);
+			int alignment   = ((mMountDirection == 1) ? 32 : -32);
 			u8* buf         = (u8*)JKRAllocFromSysHeap(alignedSize, -alignment);
 
 			if (buf == nullptr) {
@@ -199,78 +193,50 @@ bool JKRCompArchive::open(s32 entryNum)
 			_68 = arcHeader->header_length + arcHeader->file_data_offset;
 			break;
 		}
-
-		u8 compressedFiles      = 0;
-		SDIFileEntry* fileEntry = mFileEntries;
-		for (int i = 0; i < mArcInfoBlock->num_file_entries; i++) {
-			u8 flag = fileEntry->mFlag >> 0x18;
-			if (((flag & 0x1) != 0) && (((flag) & 0x10) == 0)) {
-				compressedFiles = compressedFiles | (flag & 4);
-			}
-			fileEntry++;
 		}
-
-		// if (compressedFiles != 0)
-		// {
-		//     mExpandedSize = (s32 *)JKRAllocFromHeap(mHeap,
-		//     mArcInfoBlock->num_file_entries * 4, abs(alignment)); if
-		//     (mExpandedSize == nullptr)
-		//     {
-		//         JKRFreeToSysHeap(mArcInfoBlock);
-		//         mMountMode = 0;
-		//     }
-		//     else
-		//     {
-		//         memset(mExpandedSize, 0, mArcInfoBlock->num_file_entries *
-		//         4);
-		//     }
-		// }
 	}
 
 	if (arcHeader != nullptr) {
-		JKRFreeToSysHeap(arcHeader);
+		// BUG: freeing to wrong heap
+		JKRFreeToHeap(mHeap, arcHeader);
 	}
-	if (mMountMode == 0) {
-		OSReport(":::[%s: %d] Cannot alloc memory in mounting CompArchive\n",
-		         __FILE__, 548);
-		if (mDvdFile != nullptr) {
-			delete mDvdFile;
-		}
+	if (mMountMode == 0 && mDvdFile != nullptr) {
+		delete mDvdFile;
+		mDvdFile = nullptr;
+	}
+
+	if (mMountMode == 0)
 		return false;
-	}
+
 	return true;
 }
 
 void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 {
-	u32 ptrSize;
-	u32 size        = fileEntry->mSize;
-	int compression = JKRConvertAttrToCompressionType(fileEntry->mFlag >> 0x18);
-
-	if (pSize == nullptr) {
-		pSize = &ptrSize; // this makes barely any sense but ok
-	}
-
 	if (fileEntry->mData == nullptr) {
-		u32 flag = fileEntry->mFlag >> 0x18;
+		u32 flag = fileEntry->getFlags();
 		if (flag & 0x10) {
 			fileEntry->mData = (void*)(_60 + fileEntry->mDataOffset);
-			*pSize           = size;
+			if (pSize)
+				*pSize = fileEntry->mSize;
 		} else if (flag & 0x20) {
 			u8* data;
-			*pSize = JKRAramArchive::fetchResource_subroutine(
+			u32 sz = JKRAramArchive::fetchResource_subroutine(
 			    fileEntry->mDataOffset + mAramPart->getAddress()
 			        - mSizeOfMemPart,
-			    size, mHeap, compression, &data);
+			    fileEntry->mSize, mHeap,
+			    JKRArchive::convertAttrToCompressionType((u8)flag), &data);
+			if (pSize)
+				*pSize = sz;
 			fileEntry->mData = data;
 		} else if (flag & 0x40) {
 			u8* data;
 			u32 resSize = JKRDvdArchive::fetchResource_subroutine(
 			    mEntryNum, _68 + fileEntry->mDataOffset, fileEntry->mSize,
-			    mHeap, compression, mCompression, &data);
-			if (pSize != nullptr) {
+			    mHeap, JKRArchive::convertAttrToCompressionType((u8)flag),
+			    mCompression, &data);
+			if (pSize)
 				*pSize = resSize;
-			}
 			fileEntry->mData = data;
 		}
 	} else {
@@ -287,32 +253,52 @@ void* JKRCompArchive::fetchResource(void* data, u32 compressedSize,
 	u32 size        = 0;
 	u32 fileSize    = fileEntry->mSize;
 	u32 alignedSize = ALIGN_NEXT(fileSize, 32);
-	u32 fileFlag    = fileEntry->mFlag >> 0x18;
-	int compression = JKRConvertAttrToCompressionType(fileFlag);
+
+	if (alignedSize == 0)
+		OSPanic(__FILE__, 0x287, ":::bad resource size. size = 0\n");
 
 	if (fileEntry->mData != nullptr) {
-		if (fileSize > compressedSize) {
-			fileSize = compressedSize;
+		if (fileSize > ALIGN_PREV(compressedSize, 0x20)) {
+			fileSize = ALIGN_PREV(compressedSize, 0x20);
 		}
 
 		JKRHeap::copyMemory(data, fileEntry->mData, fileSize);
+
 		size = fileSize;
 	} else {
-		if (fileFlag & 0x10) {
+		int compression
+		    = JKRArchive::convertAttrToCompressionType(fileEntry->getFlags());
+		if (fileEntry->getFlag10()) {
+			if (alignedSize > ALIGN_PREV(compressedSize, 0x20)) {
+				alignedSize = ALIGN_PREV(compressedSize, 0x20);
+			}
+
+			if (!fileEntry->getFlag04()) {
+				JKRHeap::copyMemory(data, (u8*)_60 + fileEntry->mDataOffset,
+				                    alignedSize);
+			} else {
+				u32 decompressedSize
+				    = JKRDecompExpandSize((u8*)_60 + fileEntry->mDataOffset);
+				if (decompressedSize > compressedSize)
+					decompressedSize = compressedSize;
+				JKRDecompress((u8*)fileEntry->mData, (u8*)data,
+				              decompressedSize, 0);
+			}
+
 			size = JKRMemArchive::fetchResource_subroutine(
 			    (u8*)(_60 + fileEntry->mDataOffset), alignedSize, (u8*)data,
-			    compressedSize & ~31, compression);
-		} else if (fileFlag & 0x20) {
+			    compressedSize, compression);
+		} else if (fileEntry->getFlag20()) {
 			size = JKRAramArchive::fetchResource_subroutine(
 			    fileEntry->mDataOffset + mAramPart->getAddress()
 			        - mSizeOfMemPart,
-			    alignedSize, (u8*)data, compressedSize & ~31, compression);
-		} else if (fileFlag & 0x40) {
+			    alignedSize, (u8*)data, compressedSize, compression);
+		} else if (fileEntry->getFlag40()) {
 			size = JKRDvdArchive::fetchResource_subroutine(
 			    mEntryNum, _68 + fileEntry->mDataOffset, alignedSize, (u8*)data,
-			    compressedSize & ~31, compression, mCompression);
+			    compressedSize, compression, mCompression);
 		} else {
-			OSPanic(__FILE__, 756, ":::CompArchive: bad mode.");
+			OSPanic(__FILE__, 727, ":::CompArchive: bad mode.");
 		}
 	}
 
@@ -346,7 +332,7 @@ bool JKRCompArchive::removeResource(void* resource)
 	if (!fileEntry)
 		return false;
 
-	if (!((fileEntry->mFlag >> 0x18) & 0x10)) {
+	if (!fileEntry->getFlag10()) {
 		JKRFreeToHeap(mHeap, resource);
 	}
 
