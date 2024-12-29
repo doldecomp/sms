@@ -44,11 +44,6 @@
 		(queue)->head = __next;                                                \
 	} while (0);
 
-static int IsMember(struct OSMutexQueue* queue, struct OSMutex* mutex);
-int __OSCheckMutex(struct OSMutex* mutex);
-int __OSCheckDeadLock(struct OSThread* thread);
-int __OSCheckMutexes(struct OSThread* thread);
-
 void OSInitMutex(struct OSMutex* mutex)
 {
 	OSInitThreadQueue(&mutex->queue);
@@ -79,10 +74,6 @@ void OSLockMutex(struct OSMutex* mutex)
 		} else {
 			currentThread->mutex = mutex;
 			__OSPromoteThread(mutex->thread, currentThread->priority);
-			ASSERTMSG2LINE(0xA4, __OSCheckDeadLock(currentThread) == 0,
-			               "OSLockMutex(): detected deadlock: current thread "
-			               "%p, mutex %p.",
-			               currentThread, mutex);
 			OSSleepThread(&mutex->queue);
 			currentThread->mutex = NULL;
 		}
@@ -194,89 +185,3 @@ void OSWaitCond(struct OSCond* cond, struct OSMutex* mutex)
 }
 
 void OSSignalCond(struct OSCond* cond) { OSWakeupThread(&cond->queue); }
-
-static int IsMember(struct OSMutexQueue* queue, struct OSMutex* mutex)
-{
-	struct OSMutex* member = queue->head;
-
-	while (member) {
-		if (mutex == member) {
-			return 1;
-		}
-		member = member->link.next;
-	}
-	return 0;
-}
-
-int __OSCheckMutex(struct OSMutex* mutex)
-{
-	struct OSThread* thread;
-	struct OSThreadQueue* queue;
-	long priority;
-
-	priority = 0;
-	queue    = &mutex->queue;
-
-	if (queue->head != NULL && queue->head->link.prev != NULL) {
-		return 0;
-	}
-	if (queue->tail != NULL && queue->tail->link.next != NULL) {
-		return 0;
-	}
-	thread = queue->head;
-	while (thread) {
-		if (thread->link.next != NULL
-		    && (thread != thread->link.next->link.prev)) {
-			return 0;
-		}
-		if (thread->link.prev != NULL
-		    && (thread != thread->link.prev->link.next)) {
-			return 0;
-		}
-		if (thread->state != 4) {
-			return 0;
-		}
-		if (thread->priority < priority) {
-			return 0;
-		}
-		priority = thread->priority;
-		thread   = thread->link.next;
-	}
-	if (mutex->thread) {
-		if (mutex->count <= 0) {
-			return 0;
-		}
-	} else if (mutex->count != 0) {
-		return 0;
-	}
-	return 1;
-}
-
-int __OSCheckDeadLock(struct OSThread* thread)
-{
-	struct OSMutex* mutex = thread->mutex;
-
-	while (mutex && mutex->thread) {
-		if (mutex->thread == thread) {
-			return 1;
-		}
-		mutex = mutex->thread->mutex;
-	}
-	return 0;
-}
-
-int __OSCheckMutexes(struct OSThread* thread)
-{
-	struct OSMutex* mutex = thread->queueMutex.head;
-
-	while (mutex) {
-		if (mutex->thread != thread) {
-			return 0;
-		}
-		if (__OSCheckMutex(mutex) == 0) {
-			return 0;
-		}
-		mutex = mutex->link.next;
-	}
-	return 1;
-}

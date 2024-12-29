@@ -39,32 +39,6 @@ asm unsigned long OSGetTick(void)
 #endif // clang-format on
 }
 
-asm static void __SetTime(long long time)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	li r5, 0
-	mttbl r5
-	mttbu r3
-	mttbl r4
-	blr
-#endif // clang-format on
-}
-
-void __OSSetTime(long long time)
-{
-	int enabled;
-	long long* timeAdjustAddr;
-
-	timeAdjustAddr = (long long*)0x800030D8;
-	enabled        = OSDisableInterrupts();
-
-	*timeAdjustAddr += OSGetTime() - time;
-	__SetTime(time);
-	EXIProbeReset();
-	OSRestoreInterrupts(enabled);
-}
-
 long long __OSGetSystemTime()
 {
 	int enabled;
@@ -79,25 +53,9 @@ long long __OSGetSystemTime()
 	return result;
 }
 
-asm void __OSSetTick(register unsigned long newTicks)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	mttbl newTicks
-	blr
-#endif // clang-format on
-}
-
 static int IsLeapYear(int year)
 {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-}
-
-static int GetYearDays(int year, int mon)
-{
-	int* md = (IsLeapYear(year)) ? LeapYearDays : YearDays;
-
-	return md[mon];
 }
 
 static int GetLeapDays(int year)
@@ -174,34 +132,4 @@ void OSTicksToCalendarTime(long long ticks, OSCalendarTime* td)
 	td->hour = secs / 60 / 60;
 	td->min  = secs / 60 % 60;
 	td->sec  = secs % 60;
-}
-
-OSTime OSCalendarTimeToTicks(OSCalendarTime* td)
-{
-	long long secs;
-	int ov_mon;
-	int mon;
-	int year;
-
-	ov_mon = td->mon / MONTH_MAX;
-	mon    = td->mon - (ov_mon * MONTH_MAX);
-
-	if (mon < 0) {
-		mon += MONTH_MAX;
-		ov_mon--;
-	}
-
-	ASSERTLINE(0x182, (ov_mon <= 0 && 0 <= td->year + ov_mon)
-	                      || (0 < ov_mon && td->year <= INT_MAX - ov_mon));
-
-	year = td->year + ov_mon;
-
-	secs = (s64)SECS_IN_YEAR * year
-	       + (s64)SECS_IN_DAY
-	             * (GetLeapDays(year) + GetYearDays(year, mon) + td->mday - 1)
-	       + (s64)SECS_IN_HOUR * td->hour + (s64)SECS_IN_MIN * td->min + td->sec
-	       - (s64)0xEB1E1BF80ULL;
-
-	return OS_SEC_TO_TICKS(secs) + OS_MSEC_TO_TICKS((s64)td->msec)
-	       + OS_USEC_TO_TICKS((s64)td->usec);
 }
