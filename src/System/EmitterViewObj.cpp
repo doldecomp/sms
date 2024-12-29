@@ -1,3 +1,3 @@
-#include <System/EmitterViewObj.cpp>
+#include <System/EmitterViewObj.hpp>
 
 TMarioParticleManager* gpMarioParticleManager = nullptr;
