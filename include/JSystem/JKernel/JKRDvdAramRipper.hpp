@@ -25,9 +25,8 @@ public:
 	/* 0x38 */ int field_0x38;
 	/* 0x3C */ int field_0x3c;
 	/* 0x40 */ void (*mCallback)(u32);
-	/* 0x44 */ int field_0x44;
-	/* 0x48 */ bool field_0x48;
-	/* 0x4C */ JKRAramStreamCommand* mStreamCommand;
+	/* 0x44 */ bool field_0x48;
+	/* 0x48 */ JKRAramStreamCommand* mStreamCommand;
 };
 
 class JKRDvdFile;

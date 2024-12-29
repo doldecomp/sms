@@ -7,9 +7,9 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JSupport/JSUFileInputStream.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include "string.h"
-#include "dolphin/os/OSCache.h"
-#include "dolphin/vi.h"
+#include <dolphin/os.h>
+#include <dolphin/vi.h>
+#include <string.h>
 #include <macros.h>
 
 static int JKRDecompressFromDVDToAram(JKRDvdFile*, u32, u32, u32, u32, u32);
@@ -37,11 +37,6 @@ JKRAramBlock* JKRDvdAramRipper::loadToAram(JKRDvdFile* dvdFile, u32 address,
 	JKRADCommand* command = loadToAram_Async(dvdFile, address, expandSwitch,
 	                                         nullptr, param_3, param_4);
 	syncAram(command, 0);
-
-	if (command->field_0x44 < 0) {
-		delete command;
-		return nullptr;
-	}
 
 	if (address) {
 		delete command;
@@ -82,7 +77,7 @@ JSUList<JKRADCommand> JKRDvdAramRipper::sDvdAramAsyncList;
 
 JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command)
 {
-	s32 compression;
+	s32 compression = 0;
 	s32 uncompressedSize;
 	bool bVar1          = true;
 	JKRDvdFile* dvdFile = command->mDvdFile;
@@ -101,6 +96,7 @@ JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command)
 			fileSize = command->field_0x18;
 		}
 		fileSize = ALIGN_NEXT(fileSize, 0x20);
+
 		if (command->mExpandSwitch == 1) {
 			u8 buffer[0x40];
 			u8* bufPtr = (u8*)ALIGN_NEXT((u32)&buffer, 0x20);
@@ -117,11 +113,9 @@ JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command)
 
 				VIWaitForRetrace();
 			}
-			DCInvalidateRange(bufPtr, 0x20);
 
 			compression      = JKRCheckCompressed(bufPtr);
-			u32 expandSize   = JKRDecompExpandSize(bufPtr);
-			uncompressedSize = expandSize;
+			uncompressedSize = JKRDecompExpandSize(bufPtr);
 			if (command->field_0x18 && uncompressedSize > command->field_0x18) {
 				uncompressedSize = command->field_0x18;
 			}
@@ -200,7 +194,6 @@ bool JKRDvdAramRipper::syncAram(JKRADCommand* command, int param_1)
 	if (command->mStreamCommand) {
 		JKRAramStreamCommand* var1
 		    = JKRAramStream::sync(command->mStreamCommand, param_1);
-		command->field_0x44 = -(var1 == nullptr);
 
 		if (param_1 != 0 && var1 == nullptr) {
 			OSUnlockMutex(&dvdFile->mAramMutex);
@@ -222,7 +215,6 @@ bool JKRDvdAramRipper::syncAram(JKRADCommand* command, int param_1)
 JKRADCommand::JKRADCommand()
     : mLink(this)
 {
-	field_0x44 = 0;
 	field_0x48 = false;
 }
 
@@ -233,7 +225,6 @@ JKRADCommand::~JKRADCommand()
 	}
 }
 
-static OSMutex decompMutex;
 u32 JKRDvdAramRipper::sSzpBufferSize = 0x00000400;
 static u8* szpBuf;
 static u8* szpEnd;
@@ -256,35 +247,28 @@ static int JKRDecompressFromDVDToAram(JKRDvdFile* dvdFile, u32 param_1,
                                       u32 fileSize, u32 uncompressedSize,
                                       u32 param_4, u32 param_5)
 {
-	BOOL level = OSDisableInterrupts();
-	if (!isInitMutex) {
-		OSInitMutex(&decompMutex);
-		isInitMutex = true;
-	}
-
-	OSRestoreInterrupts(level);
-	OSLockMutex(&decompMutex);
-	u32 bufferSize = JKRDvdAramRipper::getSzpBufferSize();
-	szpBuf         = (u8*)JKRAllocFromSysHeap(bufferSize, 0x20);
-	szpEnd         = szpBuf + bufferSize;
-	refBuf         = (u8*)JKRAllocFromSysHeap(0x1120, 0);
-	refEnd         = refBuf + 0x1120;
-	refCurrent     = refBuf;
-	dmaBuf         = (u8*)JKRAllocFromSysHeap(0x100, 0x20);
-	dmaEnd         = dmaBuf + 0x100;
-	dmaCurrent     = dmaBuf;
-	srcFile        = dvdFile;
-	srcOffset      = param_5;
-	transLeft      = fileSize - param_5;
-	fileOffset     = param_4;
-	readCount      = 0;
-	maxDest        = uncompressedSize;
-	u8* first      = firstSrcData();
-	int result     = first ? decompSZS_subroutine(first, param_1) : -1;
+	int result = 0;
+	szpBuf
+	    = (u8*)JKRAllocFromSysHeap(JKRDvdAramRipper::getSzpBufferSize(), 0x20);
+	szpEnd     = szpBuf + JKRDvdAramRipper::getSzpBufferSize();
+	refBuf     = (u8*)JKRAllocFromSysHeap(0x1120, 0);
+	refEnd     = refBuf + 0x1120;
+	refCurrent = refBuf;
+	dmaBuf     = (u8*)JKRAllocFromSysHeap(0x100, 0x20);
+	dmaEnd     = dmaBuf + 0x100;
+	dmaCurrent = dmaBuf;
+	srcFile    = dvdFile;
+	srcOffset  = param_5;
+	transLeft  = fileSize - param_5;
+	fileOffset = param_4;
+	readCount  = 0;
+	maxDest    = uncompressedSize;
+	u8* first  = firstSrcData();
+	if (first)
+		result = decompSZS_subroutine(first, param_1);
 	JKRHeap::free(szpBuf, 0);
 	JKRHeap::free(refBuf, 0);
 	JKRHeap::free(dmaBuf, 0);
-	OSUnlockMutex(&decompMutex);
 	return result;
 }
 
@@ -292,21 +276,16 @@ static int decompSZS_subroutine(u8* src, u32 dest)
 {
 	u32 endAddr;
 	u8* copySource;
-	s32 validBitCount;
-	u32 currCodeByte;
+	s32 validBitCount = 0;
+	u32 currCodeByte  = 0;
 	s32 numBytes;
-	u32 startDest;
-
-	validBitCount = 0;
-	currCodeByte  = 0;
-	startDest     = dest;
+	u32 startDest = dest;
 
 	if (src[0] != 'Y' || src[1] != 'a' || src[2] != 'z' || src[3] != '0') {
 		return -1;
 	}
 
-	SYaz0Header* header = (SYaz0Header*)src;
-	endAddr             = dest + (header->length - fileOffset);
+	endAddr = dest + (((SYaz0Header*)src)->length - fileOffset);
 	if (endAddr > dest + maxDest) {
 		endAddr = dest + maxDest;
 	}
@@ -406,15 +385,19 @@ static u8* firstSrcData()
 static u8* nextSrcData(u8* src)
 {
 	u32 size = szpEnd - src;
-	u8* dest = IS_NOT_ALIGNED(size, 0x20) ? szpBuf + 0x20 - (size & (0x20 - 1))
-	                                      : szpBuf;
+	u8* dest;
+	if (IS_NOT_ALIGNED(size, 0x20))
+		dest = szpBuf + 0x20 - (size & (0x20 - 1));
+	else
+		dest = szpBuf;
 	memcpy(dest, src, size);
-	u32 transSize = szpEnd - (dest + size);
+	dest += size;
+	u32 transSize = szpEnd - dest;
 	if (transSize > transLeft) {
 		transSize = transLeft;
 	}
 	while (true) {
-		s32 result = DVDReadPrio(&srcFile->mDvdFileInfo, dest + size, transSize,
+		s32 result = DVDReadPrio(&srcFile->mDvdFileInfo, dest, transSize,
 		                         srcOffset, 2);
 		if (result >= 0) {
 			break;
@@ -427,7 +410,7 @@ static u8* nextSrcData(u8* src)
 	srcOffset += transSize;
 	transLeft -= transSize;
 	if (transLeft == 0) {
-		srcLimit = dest + size + transSize;
+		srcLimit = dest + transSize;
 	}
 	return dest;
 }
