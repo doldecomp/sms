@@ -87,10 +87,10 @@ public:
 	};
 
 	struct SDirEntry {
-		u8 mFlags;   // _00
-		u8 _01;      // _01
-		u16 mID;     // _02
-		char* mName; // _04
+		u8 mFlags;         // _00
+		u8 _01;            // _01
+		u16 mID;           // _02
+		const char* mName; // _04
 	};
 
 	struct SDIDirEntry {
@@ -134,8 +134,7 @@ public:
 	virtual void* getResource(const char* path);           // _14
 	virtual void* getResource(u32 type, const char* name); // _18
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize,
-	                            const char* path,
-	                            JKRExpandSwitch expandSwitch); // _1C
+	                            const char* path); // _1C
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize, u32 type,
 	                            const char* name);                      // _20
 	virtual void removeResourceAll();                                   // _24
@@ -160,7 +159,6 @@ public:
 
 	bool getDirEntry(SDirEntry*, u32) const;
 	void* getIdxResource(u32 index);
-	size_t readResource(void* resourceBuffer, u32 bufferSize, u16 id);
 
 	static JKRArchive* mount(char const*, EMountMode, JKRHeap*,
 	                         EMountDirection);

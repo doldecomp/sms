@@ -18,7 +18,7 @@ public:
 	virtual void* getResource(const char* path)           = 0; // _14
 	virtual void* getResource(u32 type, const char* name) = 0; // _18
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize,
-	                            const char* path, JKRExpandSwitch expandSwitch)
+	                            const char* path)
 	    = 0; // _1C
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize, u32 type,
 	                            const char* name)
