@@ -34,29 +34,21 @@ JKRArchive* JKRArchive::mount(const char* path,
 	if (entryNum < 0)
 		return nullptr;
 
-	return mount(entryNum, mountMode, heap, mountDirection);
-}
-
-JKRArchive* JKRArchive::mount(s32 entryNum, JKRArchive::EMountMode mountMode,
-                              JKRHeap* heap,
-                              JKRArchive::EMountDirection mountDirection)
-{
 	JKRArchive* archive = check_mount_already(entryNum);
 	if (archive != nullptr) {
 		return archive;
 	} else {
-		int alignment;
-		if (mountDirection == JKRArchive::MOUNT_DIRECTION_HEAD) {
-			alignment = 4;
-		} else {
-			alignment = -4;
-		}
+		int alignment
+		    = mountDirection == JKRArchive::MOUNT_DIRECTION_HEAD ? 4 : -4;
 
 		JKRArchive* archive;
 		switch (mountMode) {
 		case JKRArchive::MOUNT_MEM:
-			archive
-			    = new (heap, alignment) JKRMemArchive(entryNum, mountDirection);
+			if ((s32)path == -1)
+				archive = nullptr;
+			else
+				archive = new (heap, alignment)
+				    JKRMemArchive(entryNum, mountDirection);
 			break;
 		case JKRArchive::MOUNT_ARAM:
 			archive = new (heap, alignment)
@@ -97,8 +89,8 @@ bool JKRArchive::becomeCurrent(const char* path)
 
 	bool found = dirEntry != nullptr;
 	if (found) {
-		setCurrentVolume(this);
-		setCurrentDirID(dirEntry - mDirectories);
+		sCurrentVolume = this;
+		sCurrentDirID  = dirEntry - mDirectories;
 	}
 
 	return found;
@@ -111,8 +103,8 @@ bool JKRArchive::getDirEntry(SDirEntry* dirEntry, u32 index) const
 		return false;
 	}
 
-	dirEntry->mFlags = fileEntry->getFlags();
-	dirEntry->mID    = fileEntry->getFileID();
+	dirEntry->mFlags = fileEntry->mFlag >> 24;
+	dirEntry->mID    = fileEntry->mFileID;
 	dirEntry->mName  = mStrTable + fileEntry->getNameOffset();
 	return true;
 }
@@ -126,9 +118,8 @@ void* JKRArchive::getGlbResource(u32 param_0, const char* path,
 	}
 
 	JSUList<JKRFileLoader>& volumeList = getVolumeList();
-	JSUListIterator<JKRFileLoader> iterator;
-	for (iterator = volumeList.getFirst(); iterator != volumeList.getEnd();
-	     ++iterator) {
+	for (JSUListIterator<JKRFileLoader> iterator = volumeList.getFirst();
+	     iterator != volumeList.getEnd(); ++iterator) {
 		if (iterator->getVolumeType() == 'RARC') {
 			resource = iterator->getResource(param_0, path);
 			if (resource)
@@ -216,10 +207,12 @@ void JKRArchive::removeResourceAll()
 {
 	if (mArcInfoBlock && mMountMode != MOUNT_MEM) {
 		SDIFileEntry* fileEntry = mFileEntries;
-		for (int i = 0; i < mArcInfoBlock->num_file_entries; fileEntry++, i++) {
+		// BUT: fileEntry is not incremented
+		for (int i = 0; i < mArcInfoBlock->num_file_entries; i++) {
 			if (fileEntry->mData) {
-				JKRFreeToHeap(mHeap, fileEntry->mData);
+				// BUG: freeing nullptr, mem leak
 				fileEntry->mData = nullptr;
+				JKRFreeToHeap(mHeap, fileEntry->mData);
 			}
 		}
 	}

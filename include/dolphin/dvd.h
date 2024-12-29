@@ -69,6 +69,10 @@ typedef struct DVDDriveInfo {
 	/* 0x08 */ u8 padding[24];
 } DVDDriveInfo;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void DVDDumpWaitingQueue(void);
 int DVDLowRead(void* addr, unsigned long length, unsigned long offset,
                void (*callback)(unsigned long));
@@ -247,5 +251,9 @@ int DVDPrepareStreamAbsAsync(
     struct DVDCommandBlock* block /* r31 */, unsigned long length /* r1+0xC */,
     unsigned long offset /* r1+0x10 */,
     void (*callback)(long, struct DVDCommandBlock*) /* r1+0x14 */);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

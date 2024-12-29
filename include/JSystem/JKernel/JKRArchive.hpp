@@ -161,9 +161,8 @@ public:
 	void* getIdxResource(u32 index);
 
 	static JKRArchive* mount(char const*, EMountMode, JKRHeap*,
-	                         EMountDirection);
-	static JKRArchive* mount(void*, JKRHeap*, EMountDirection);
-	static JKRArchive* mount(s32, EMountMode, JKRHeap*, EMountDirection);
+	                         EMountDirection);                  // yes
+	static JKRArchive* mount(void*, JKRHeap*, EMountDirection); // unused
 	static void* getGlbResource(u32 type, const char* name,
 	                            JKRArchive* archive);
 
