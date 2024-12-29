@@ -12,8 +12,7 @@ public:
 	virtual bool removeResource(void*);                             // _28
 	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize); // _40
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize,
-	                            JKRExpandSwitch expandSwitch); // _44
+	                            SDIFileEntry* entry, u32* resSize); // _44
 
 	bool open(s32);
 
