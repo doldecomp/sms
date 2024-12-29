@@ -74,6 +74,8 @@ public:
 		bool getFlag01() const { return (getFlags() & 0x01) != 0; }
 		bool getFlag04() { return mFlag >> 0x18 & 0x04; }
 		bool getFlag10() { return mFlag >> 0x18 & 0x10; }
+		bool getFlag20() { return mFlag >> 0x18 & 0x20; }
+		bool getFlag40() { return mFlag >> 0x18 & 0x40; }
 		bool getFlag80() { return mFlag >> 0x18 & 0x80; }
 
 		u16 mFileID;     // _00
