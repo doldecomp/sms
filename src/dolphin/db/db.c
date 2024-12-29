@@ -2,8 +2,6 @@
 #include <dolphin/db.h>
 #include <dolphin/os.h>
 
-u8 DBStack[4096];
-u8* DBStackEnd = DBStack + 4088;
 BOOL DBVerbose;
 struct DBInterface* __DBInterface;
 
@@ -13,13 +11,6 @@ void DBInit(void)
 	__DBInterface->ExceptionDestination
 	    = (void*)OSCachedToPhysical(__DBExceptionDestination);
 	DBVerbose = TRUE;
-}
-
-BOOL DBIsDebuggerPresent(void)
-{
-	if (__DBInterface == NULL)
-		return FALSE;
-	return __DBInterface->bPresent;
 }
 
 void __DBExceptionDestinationAux(void)
@@ -49,17 +40,5 @@ BOOL __DBIsExceptionMarked(__OSException exception)
 	u32 mask = (1 << exception);
 	return __DBInterface->exceptionMask & mask;
 }
-
-void __DBMarkException(u8 exception, int value)
-{
-	u32 mask = (1 << exception);
-
-	if (value != 0)
-		__DBInterface->exceptionMask = __DBInterface->exceptionMask | mask;
-	else
-		__DBInterface->exceptionMask = __DBInterface->exceptionMask & ~mask;
-}
-
-void __DBSetPresent(u32 value) { __DBInterface->bPresent = value; }
 
 void DBPrintf(char* str, ...) { }

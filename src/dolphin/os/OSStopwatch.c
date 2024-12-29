@@ -46,13 +46,3 @@ long long OSCheckStopwatch(struct OSStopwatch* sw)
 }
 
 void OSResetStopwatch(struct OSStopwatch* sw) { OSInitStopwatch(sw, sw->name); }
-
-void OSDumpStopwatch(struct OSStopwatch* sw)
-{
-	OSReport("Stopwatch [%s]	:\n", sw->name);
-	OSReport("\tTotal= %lld us\n", OSTicksToMicroseconds(sw->total));
-	OSReport("\tHits = %d \n", sw->hits);
-	OSReport("\tMin  = %lld us\n", OSTicksToMicroseconds(sw->min));
-	OSReport("\tMax  = %lld us\n", OSTicksToMicroseconds(sw->max));
-	OSReport("\tMean = %lld us\n", OSTicksToMicroseconds(sw->total / sw->hits));
-}

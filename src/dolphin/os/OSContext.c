@@ -183,24 +183,6 @@ _return:
 #endif // clang-format on
 }
 
-asm void OSLoadFPUContext(register OSContext* fpuContext)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	addi    r4, fpuContext, 0
-	b       __OSLoadFPUContext
-#endif // clang-format on
-}
-
-asm void OSSaveFPUContext(register OSContext* fpuContext)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	addi    r5, fpuContext, 0
-	b       __OSSaveFPUContext
-#endif // clang-format on
-}
-
 asm void OSSetCurrentContext(register OSContext* context) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
@@ -363,36 +345,6 @@ asm u32 OSGetStackPointer()
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	mr r3, r1
-	blr
-#endif // clang-format on
-}
-
-asm u32 OSSwitchStack(register u32 newsp)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	mr  r5, r1
-	mr  r1, newsp
-	mr  r3, r5
-	blr
-#endif // clang-format on
-}
-
-asm int OSSwitchFiber(register u32 pc, register u32 newsp)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	mflr    r0
-	mr      r5, r1
-	stwu    r5, -8(newsp)
-	mr      r1, newsp
-	stw     r0, 4(r5)
-	mtlr    pc
-	blrl
-	lwz     r5, 0(r1)
-	lwz     r0, 4(r5)
-	mtlr    r0
-	mr      r1, r5
 	blr
 #endif // clang-format on
 }
