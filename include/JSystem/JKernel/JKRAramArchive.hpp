@@ -8,8 +8,8 @@ public:
 	JKRAramArchive();
 	JKRAramArchive(s32, EMountDirection);
 
-	virtual ~JKRAramArchive();                        // _08
-	virtual void* fetchResource(SDIFileEntry*, u32*); // _40
+	virtual ~JKRAramArchive();                                    // _08
+	virtual void* fetchResource(SDIFileEntry*, u32*);             // _40
 	virtual void* fetchResource(void*, u32, SDIFileEntry*, u32*); // _44
 
 	bool open(s32, EMountDirection);
