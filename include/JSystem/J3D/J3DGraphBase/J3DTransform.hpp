@@ -26,18 +26,23 @@ extern Mtx const j3dDefaultMtx;
 extern f32 PSMulUnit01[];
 
 f32 J3DCalcZValue(MtxPtr m, Vec v);
-void J3DPSCalcInverseTranspose(MtxPtr, ROMtxPtr);
+bool J3DPSCalcInverseTranspose(MtxPtr, ROMtxPtr);
 void J3DGetTranslateRotateMtx(J3DTransformInfo const&, Mtx);
 void J3DGetTranslateRotateMtx(s16, s16, s16, f32, f32, f32, Mtx);
 void J3DGetTextureMtx(const J3DTextureSRTInfo&, Vec, MtxPtr);
 void J3DGetTextureMtxOld(const J3DTextureSRTInfo&, Vec, MtxPtr);
 void J3DGetTextureMtxMaya(const J3DTextureSRTInfo&, MtxPtr);
 void J3DGetTextureMtxMayaOld(const J3DTextureSRTInfo&, MtxPtr);
-void J3DScaleNrmMtx(Mtx, const Vec&);
 void J3DScaleNrmMtx33(ROMtxPtr, const Vec&);
 void J3DMtxProjConcat(MtxPtr, MtxPtr, MtxPtr);
 void J3DPSMtx33Copy(ROMtxPtr src, ROMtxPtr dst);
 void J3DPSMtx33CopyFrom34(MtxPtr src, ROMtxPtr dst);
+void J3DPSMtxArrayCopy(MtxPtr, MtxPtr, u32);
+void J3DMTXConcatArrayIndexedSrc(const float (*)[4], const float (*)[3][4],
+                                 const u16*, float (*)[3][4], u32);
+void J3DPSMtxArrayConcat(Mtx, Mtx, Mtx, u32);
+
+// TODO: is this used in sms? Probably, but totally inlined
 
 // regalloc issues
 inline void J3DPSMulMtxVec(register MtxPtr mtx, register Vec* vec,
