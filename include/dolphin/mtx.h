@@ -105,7 +105,14 @@ void PSMTXCopy(Mtx src, Mtx dst);
 void PSMTXConcat(Mtx mA, Mtx mB, Mtx mAB);
 void PSMTXTranspose(Mtx src, Mtx xPose);
 u32 PSMTXInverse(Mtx src, Mtx inv);
-u32 PSMTXInvXpose(Mtx src, Mtx invX);
+void PSMTXRotRad(Mtx m, char axis, f32 rad);
+void PSMTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
+void PSMTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
+void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
+void PSMTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
+void PSMTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
+void PSMTXScaleApply(Mtx src, Mtx dst, f32 xS, f32 yS, f32 zS);
+void PSMTXQuat(Mtx m, Quaternion* q);
 
 // mtxstack.c
 typedef struct {
