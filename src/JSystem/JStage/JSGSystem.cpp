@@ -7,7 +7,7 @@ s32 JStage::TSystem::JSGFGetType() const { return 1; }
 
 void* JStage::TSystem::JSGFindObject(const char*, JStage::TEObject) const
 {
-	return NULL;
+	return nullptr;
 }
 
 bool JStage::TSystem::JSGCreateObject(const char*, JStage::TEObject, u32)
