@@ -1178,7 +1178,7 @@ config.libs = [
         ],
     },
     {
-        "lib": "Animal",
+        "lib": "Camera",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
         "progress_category": "game",
