@@ -231,7 +231,8 @@ cflags_jsystem = [
     *cflags_base,
     "-str reuse,readonly",
     "-lang=c++",
-    "-fp fmadd",
+    "-fp hard",
+    "-fp_contract on",
     "-char signed",
     "-rostr",
     "-common on"
@@ -463,7 +464,7 @@ config.libs = [
 
             # J3D
             # J3DGraphBase
-            Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DTransform.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphBase/J3DTransform.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DMaterial.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DShape.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DSys.cpp"),
