@@ -310,7 +310,7 @@ JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp:
 	.data       start:0x803A9AE8 end:0x803A9B48
 	.sdata2     start:0x8040B6F8 end:0x8040B700
 
-JSystem/std-list.cpp:
+JSystem/JGadget/std-list.cpp:
 	.text       start:0x800341FC end:0x80034468
 
 JSystem/JKernel/JKRDvdRipper.cpp:
@@ -373,7 +373,7 @@ JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.cpp:
 	.text       start:0x80039858 end:0x80039B38
 	.data       start:0x803A9E98 end:0x803A9EB8
 
-JSystem/std-vector.cpp:
+JSystem/JGadget/std-vector.cpp:
 	.text       start:0x80039B38 end:0x8003A148
 	.sdata2     start:0x8040B758 end:0x8040B768
 
