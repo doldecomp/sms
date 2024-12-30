@@ -204,7 +204,7 @@ cflags_base = [
     "-i include/libc",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
-    f"--defsym VERSION_{config.version=1}",
+    f"--defsym VERSION_{config.version}"=1,
 ]
 
 # Debug flags
