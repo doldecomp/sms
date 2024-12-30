@@ -160,7 +160,6 @@ config.asflags = [
     "-I include/libc",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
-    f"--defsym VERSION_{config.version}",
 ]
 config.ldflags = [
     "-fp hardware",
