@@ -302,6 +302,10 @@ config.libs = [
             Object(Matching, "JSystem/JSupport/JSUMemoryStream.cpp"),
             Object(Matching, "JSystem/JSupport/JSUFileStream.cpp"),
 
+            # JGadget
+            Object(NonMatching, "JSystem/JGadget/std-list.cpp"),
+            Object(NonMatching, "JSystem/JGadget/std-vector.cpp"),
+
             # JKernel
             Object(NonMatching, "JSystem/JKernel/JKRArchivePri.cpp"),
             Object(NonMatching, "JSystem/JKernel/JKRAramArchive.cpp"),
@@ -510,8 +514,6 @@ config.libs = [
             Object(NonMatching, "JSystem/JStage/JSGSystem.cpp"),
 
             Object(NonMatching, "JSystem/JMath.cpp"),
-            Object(NonMatching, "JSystem/std-list.cpp"),
-            Object(NonMatching, "JSystem/std-vector.cpp"),
             Object(NonMatching, "JSystem/JRenderer.cpp"),
             Object(NonMatching, "JSystem/linklist.cpp"),
             Object(NonMatching, "JSystem/singlelinklist.cpp"),
