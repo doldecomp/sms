@@ -250,6 +250,7 @@ cflags_system = [
 
 cflags_dolphin = [
     *cflags_base,
+    "-fp_contract off", # NOTE: this is definitely off according to mtx.c
     # TODO: should these be different?
 ]
 
