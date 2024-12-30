@@ -32,6 +32,7 @@ typedef int BOOL;
 #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
 
 #define INT_MAX 2147483647
+#define FLOAT_MAX 3.40282346638528860e+38f
 
 #ifndef NULL
 #define NULL ((void*)0)
