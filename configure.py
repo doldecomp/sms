@@ -195,7 +195,6 @@ cflags_base = [
     "-maxerrors 1",
     "-nosyspath",
     "-RTTI off",
-    "-fp_contract on",
     "-str reuse",
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-cwd source",
@@ -216,6 +215,7 @@ else:
 # Metrowerks library flags
 cflags_runtime = [
     *cflags_base,
+    "-fp_contract on",
     "-str reuse,pool,readonly",
     "-inline deferred,auto",
 ]
@@ -239,6 +239,7 @@ cflags_jsystem = [
 
 cflags_game = [
     *cflags_base,
+    "-fp_contract on",
     "-str reuse,readonly",
 ]
 
