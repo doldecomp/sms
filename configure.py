@@ -258,11 +258,20 @@ cflags_dolphin = [
 config.linker_version = "GC/1.2.5"
 
 
-# Helper function for Dolphin libraries
+# Some parts of the SDK were compiled with the 1.2.5n patch, some weren't
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/1.2.5n",
+        "cflags": cflags_dolphin,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+def DolphinLibUnpatched(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.2.5",
         "cflags": cflags_dolphin,
         "progress_category": "sdk",
         "objects": objects,
@@ -636,8 +645,8 @@ config.libs = [
             Object(NonMatching, "dolphin/os/__start.c"),
             Object(Matching, "dolphin/os/__ppc_eabi_init.cpp"),
         ]),
-    DolphinLib("mtx", [
-            Object(NonMatching, "dolphin/mtx/mtx.c"),
+    DolphinLibUnpatched("mtx", [
+            Object(Matching, "dolphin/mtx/mtx.c"),
             Object(NonMatching, "dolphin/mtx/mtxvec.c"),
             Object(NonMatching, "dolphin/mtx/mtx44.c"),
             Object(NonMatching, "dolphin/mtx/vec.c"),
