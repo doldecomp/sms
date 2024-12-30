@@ -5,7 +5,9 @@
 #include "dolphin/mtx.h"
 
 namespace JStage {
-enum TECameraProjection { };
+enum TECameraProjection {
+
+};
 
 struct TECameraView { };
 
