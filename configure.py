@@ -160,7 +160,6 @@ config.asflags = [
     "-I include/libc",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
-    f"--defsym VERSION_{config.version}",
 ]
 config.ldflags = [
     "-fp hardware",
@@ -1178,7 +1177,7 @@ config.libs = [
         ],
     },
     {
-        "lib": "Animal",
+        "lib": "Camera",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_game,
         "progress_category": "game",
