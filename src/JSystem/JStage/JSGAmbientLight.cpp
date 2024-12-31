@@ -1,5 +1,4 @@
-#include "JSystem/JStage/JSGAmbientLight.hpp"
-#include "dolphin/types.h"
+#include <JSystem/JStage/JSGAmbientLight.hpp>
 
 JStage::TAmbientLight::~TAmbientLight() { }
 

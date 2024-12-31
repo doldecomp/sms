@@ -1,5 +1,4 @@
-#include "JSystem/JStage/JSGActor.hpp"
-#include "dolphin/types.h"
+#include <JSystem/JStage/JSGActor.hpp>
 
 JStage::TActor::~TActor() { }
 

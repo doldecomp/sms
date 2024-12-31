@@ -1,5 +1,4 @@
-#include "JSystem/JStage/JSGSystem.hpp"
-#include "dolphin/types.h"
+#include <JSystem/JStage/JSGSystem.hpp>
 
 JStage::TSystem::~TSystem() { }
 

@@ -1,9 +1,10 @@
 #ifndef JSG_SYSTEM_HPP
 #define JSG_SYSTEM_HPP
 
-#include "JSystem/JStage/JSGObject.hpp"
+#include <JSystem/JStage/JSGObject.hpp>
 
 namespace JStage {
+
 struct TSystem : public TObject {
 	virtual ~TSystem() = 0;
 	virtual s32 JSGFGetType() const;
@@ -13,6 +14,7 @@ struct TSystem : public TObject {
 	virtual bool JSGGetSystemData(u32);
 	virtual void JSGSetSystemData(u32, u32);
 };
-}; // namespace JStage
+
+} // namespace JStage
 
 #endif

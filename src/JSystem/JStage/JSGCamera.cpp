@@ -1,6 +1,5 @@
-#include "JSystem/JStage/JSGCamera.hpp"
-#include "dolphin/types.h"
-#include "libc/float.h"
+#include <JSystem/JStage/JSGCamera.hpp>
+#include <libc/float.h>
 
 JStage::TCamera::~TCamera() { }
 
