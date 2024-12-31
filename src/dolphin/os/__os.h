@@ -5,6 +5,7 @@
 
 // OS.c
 extern char* __OSExceptionNames[15]; // D ONLY
+extern OSTime __OSStartTime;
 
 unsigned long __OSIsDebuggerPresent(void);
 void __OSPSInit(void);
