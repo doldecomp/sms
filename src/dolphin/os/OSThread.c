@@ -70,8 +70,8 @@
 	} while (0);
 
 // which header should these go in?
-extern unsigned char _stack_end[];
-extern unsigned char _stack_addr[];
+extern unsigned char _stack_end[] AT_ADDRESS(0x80414004);
+extern char _stack_addr[] AT_ADDRESS(0x80424008);
 
 // .bss
 static OSThreadQueue RunQueue[32];
@@ -108,12 +108,9 @@ void __OSThreadInit()
 	thread->mutex                   = 0;
 
 	OSInitThreadQueue(&thread->queueJoin);
-#ifdef DEBUG
-	OSInitMutexQueue(&thread->queueMutex);
-#else
+
 	thread->queueMutex.head = thread->queueMutex.tail
 	    = 0; // it got inlined? cant reproduce the inline...
-#endif
 
 	ASSERTLINE(282, PPCMfmsr() & MSR_FP);
 
@@ -137,13 +134,6 @@ void __OSThreadInit()
 	OSClearContext(&IdleContext);
 	Reschedule = 0;
 }
-
-#if DEBUG
-static void OSInitMutexQueue(struct OSMutexQueue* queue)
-{
-	queue->head = queue->tail = 0;
-}
-#endif
 
 void OSInitThreadQueue(OSThreadQueue* queue) { queue->head = queue->tail = 0; }
 
@@ -422,11 +412,9 @@ int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param,
 	thread->val      = (void*)-1;
 	thread->mutex    = 0;
 	OSInitThreadQueue(&thread->queueJoin);
-#ifdef DEBUG
-	OSInitMutexQueue(&thread->queueMutex);
-#else
+
 	OSInitThreadQueue((void*)&thread->queueMutex); // why
-#endif
+
 	sp = (u32)stack;
 	sp &= ~7;
 	sp -= 8;
@@ -472,13 +460,11 @@ void OSExitThread(OSThread* val)
 	__OSUnlockAllMutex(currentThread);
 	OSWakeupThread(&currentThread->queueJoin);
 	RunQueueHint = 1;
-#ifdef DEBUG
-	__OSReschedule();
-#else
+
 	if (RunQueueHint != 0) {
 		SelectThread(0);
 	}
-#endif
+
 	OSRestoreInterrupts(enabled);
 }
 
