@@ -38,12 +38,14 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #ifdef DEBUG
 #define VECSquareMag      C_VECSquareMag
 #define VECNormalize      C_VECNormalize
+#define VECMag            C_VECMag
 #define VECAdd            C_VECAdd
 #define VECDotProduct     C_VECDotProduct
 #define VECSquareDistance C_VECSquareDistance
 #define VECCrossProduct   C_VECCrossProduct
 #define MTXMultVec        C_MTXMultVec
 #define MTXMultVecArray   C_MTXMultVecArray
+#define MTXMultVecSR      C_MTXMultVecSR
 #define MTXCopy           C_MTXCopy
 #define MTXConcat         C_MTXConcat
 #define MTXInverse        C_MTXInverse
@@ -52,12 +54,14 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #else
 #define VECSquareMag      PSVECSquareMag
 #define VECNormalize      PSVECNormalize
+#define VECMag            PSVECMag
 #define VECAdd            PSVECAdd
 #define VECDotProduct     PSVECDotProduct
 #define VECSquareDistance PSVECSquareDistance
 #define VECCrossProduct   PSVECCrossProduct
 #define MTXMultVec        PSMTXMultVec
 #define MTXMultVecArray   PSMTXMultVecArray
+#define MTXMultVecSR      PSMTXMultVecSR
 #define MTXCopy           PSMTXCopy
 #define MTXConcat         PSMTXConcat
 #define MTXInverse        PSMTXInverse
@@ -150,7 +154,6 @@ void PSMTXROMultS16VecArray(ROMtx* m, S16Vec* srcBase, Vec* dstBase, u32 count);
 void PSMTXMultS16VecArray(Mtx44* m, S16Vec* srcBase, Vec* dstBase, u32 count);
 
 // vec.c
-f32 VECMag(Vec* v);
 void VECHalfAngle(Vec* a, Vec* b, Vec* half);
 void VECReflect(Vec* src, Vec* normal, Vec* dst);
 f32 VECDistance(Vec* a, Vec* b);
@@ -160,6 +163,7 @@ void C_VECAdd(Vec* a, Vec* b, Vec* c);
 void C_VECSubtract(Vec* a, Vec* b, Vec* c);
 void C_VECScale(Vec* src, Vec* dst, f32 scale);
 void C_VECNormalize(Vec* src, Vec* unit);
+f32 C_VECMag(Vec* v);
 f32 C_VECSquareMag(Vec* v);
 f32 C_VECDotProduct(Vec* a, Vec* b);
 void C_VECCrossProduct(Vec* a, Vec* b, Vec* axb);
@@ -170,6 +174,7 @@ void PSVECAdd(Vec* a, Vec* b, Vec* c);
 void PSVECSubtract(Vec* a, Vec* b, Vec* c);
 void PSVECScale(Vec* src, Vec* dst, f32 scale);
 void PSVECNormalize(Vec* vec1, Vec* dst);
+void PSVECMag(Vec* v);
 f32 PSVECSquareMag(Vec* vec1);
 f32 PSVECDotProduct(Vec* vec1, Vec* vec2);
 void PSVECCrossProduct(Vec* vec1, Vec* vec2, Vec* dst);

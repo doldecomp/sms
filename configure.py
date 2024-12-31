@@ -647,9 +647,9 @@ config.libs = [
         ]),
     DolphinLibUnpatched("mtx", [
             Object(Matching, "dolphin/mtx/mtx.c"),
-            Object(NonMatching, "dolphin/mtx/mtxvec.c"),
-            Object(NonMatching, "dolphin/mtx/mtx44.c"),
-            Object(NonMatching, "dolphin/mtx/vec.c"),
+            Object(Matching, "dolphin/mtx/mtxvec.c"),
+            Object(Matching, "dolphin/mtx/mtx44.c"),
+            Object(Matching, "dolphin/mtx/vec.c"),
         ]),
     DolphinLib("dvd", [
             Object(NonMatching, "dolphin/dvd/dvd.c"),
