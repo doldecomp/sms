@@ -15,7 +15,7 @@
 
 extern void InitMetroTRK();
 
-__declspec(section ".init") extern char _stack_addr[];
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80424008);
 __declspec(section ".init") extern char _SDA_BASE_[];
 __declspec(section ".init") extern char _SDA2_BASE_[];
 
@@ -39,6 +39,13 @@ extern void exit(int);
 __declspec(section ".init") static void __init_registers(void);
 __declspec(section ".init") static void __init_data(void);
 
+__declspec(section ".init") static void __check_pad3(void)
+{
+	if ((*(u16*)(OSPhysicalToCached(0x30e4)) & 0xeef) == 0xeef) {
+		OSResetSystem(0, 0, 0);
+	}
+}
+
 __declspec(section ".init") __declspec(weak) asm void __start(void)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -60,8 +67,19 @@ __declspec(section ".init") __declspec(weak) asm void __start(void)
 
 _check_TRK:
 	cmplwi r6, 0
-	beq _goto_main
+	beq _idklol
 	lwz r7, OS_BI2_DEBUGFLAG_OFFSET(r6)
+	b _check_debug_flag
+
+_idklol:
+	lis r5, 0x8000
+	addi r5, r5, 0x34
+	lwz r5, 0x0(r5)
+	cmplwi r5, 0x0
+	beq _goto_main
+	lis r7, 0x8000
+	addi r7, r7, 0x30e8
+	lwz r7, 0x0(r7)
 
 _check_debug_flag:
 	li r5, 0
@@ -112,6 +130,17 @@ _no_args:
 _end_of_parseargs:
 	bl DBInit
 	bl OSInit
+	lis r4, 0x8000
+	addi r4, r4, 0x30e6
+	lhz r3, 0x0(r4)
+	andi. r5, r3, 0x8000
+	beq _idk
+	andi. r3, r3, 0x7fff
+	cmplwi r3, 0x1
+	bne _goto_skip_init_bba
+
+_idk:
+	bl __check_pad3
 
 _goto_skip_init_bba:
 	bl __init_user

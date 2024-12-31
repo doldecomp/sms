@@ -642,7 +642,7 @@ config.libs = [
             Object(Matching, "dolphin/os/OSSync.c"),
             Object(Matching, "dolphin/os/OSThread.c"),
             Object(Matching, "dolphin/os/OSTime.c"),
-            Object(NonMatching, "dolphin/os/__start.c"),
+            Object(Matching, "dolphin/os/__start.c"),
             Object(Matching, "dolphin/os/__ppc_eabi_init.cpp"),
         ]),
     DolphinLibUnpatched("mtx", [
