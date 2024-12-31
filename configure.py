@@ -632,7 +632,7 @@ config.libs = [
             Object(Matching, "dolphin/os/OSInterrupt.c"),
             Object(Matching, "dolphin/os/OSLink.c"),
             Object(Matching, "dolphin/os/OSMessage.c"),
-            Object(NonMatching, "dolphin/os/OSMemory.c"),
+            Object(Matching, "dolphin/os/OSMemory.c"),
             Object(Matching, "dolphin/os/OSMutex.c"),
             Object(NonMatching, "dolphin/os/OSReboot.c"),
             Object(NonMatching, "dolphin/os/OSReset.c"),
