@@ -1,5 +1,3 @@
-
-
 #ifndef _DOLPHIN_GD_BASE_H
 #define _DOLPHIN_GD_BASE_H
 
