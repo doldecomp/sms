@@ -5,8 +5,8 @@
 
 #define HID2 920
 
-volatile OSContext* __OSCurrentContext : (OS_BASE_CACHED | 0x00D4);
-volatile OSContext* __OSFPUContext : (OS_BASE_CACHED | 0x00D8);
+volatile OSContext* __OSCurrentContext AT_ADDRESS(OS_BASE_CACHED | 0x00D4);
+volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 
 static asm void __OSLoadFPUContext(register u32, register OSContext* fpuContext)
 {

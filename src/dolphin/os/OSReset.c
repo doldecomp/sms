@@ -1,8 +1,11 @@
 #include <dolphin.h>
 #include <dolphin/os.h>
+#include <dolphin/hw_regs.h>
 #include <macros.h>
+#include <string.h>
 
 #include "__os.h"
+#include "../pad/__pad.h"
 
 // These macros are copied from OSThread.c. Or ARE they the same
 // macros? They dont seem to be in the SDK headers.
@@ -66,8 +69,6 @@ static asm void Reset(unsigned long resetCode);
 
 void OSRegisterResetFunction(struct OSResetFunctionInfo* info)
 {
-	ASSERTLINE(0x76, info->func);
-
 	ENQUEUE_INFO_PRIO(info, &ResetFunctionQueue);
 }
 
@@ -135,33 +136,105 @@ L_00000208:
 #endif // clang-format on
 }
 
+void __OSDoHotReset(s32 arg0)
+{
+	OSDisableInterrupts();
+	__VIRegs[1] = 0;
+	ICFlashInvalidate();
+	Reset(arg0 * 8);
+}
+
+inline BOOL __OSCallResetFunctions(BOOL arg0)
+{
+	OSResetFunctionInfo* iter;
+	s32 retCode = 0;
+	s32 temp;
+
+	for (iter = ResetFunctionQueue.head; iter != NULL;) {
+		temp = !iter->func(arg0);
+		iter = iter->next;
+		retCode |= temp;
+	}
+	retCode |= !__OSSyncSram();
+	if (retCode) {
+		return 0;
+	}
+	return 1;
+}
+
+inline static void KillThreads(void)
+{
+	OSThread* thread;
+	OSThread* next;
+
+	for (thread = __OSActiveThreadQueue.head; thread; thread = next) {
+		next = thread->linkActive.next;
+		switch (thread->state) {
+		case 1:
+		case 4:
+			OSCancelThread(thread);
+			continue;
+		default:
+			continue;
+		}
+	}
+}
+
+extern u8 OS_REBOOT_BOOL AT_ADDRESS(0x800030E2);
+
 void OSResetSystem(int reset, unsigned long resetCode, int forceMenu)
 {
-	int rc;
-	int enabled;
-	struct OSSram* sram;
+	char trash[0x10]; // Either more inlines or more local vars, idk
+	s32 padThing;
 
 	OSDisableScheduler();
 	__OSStopAudioSystem();
+
+	if (reset == OS_RESET_SHUTDOWN)
+		padThing = __PADDisableRecalibration(1);
+
 	do {
 	} while (CallResetFunctions(0) == 0);
 
-	if ((reset != 0 && (forceMenu != 0))) {
-		sram = __OSLockSram();
-		sram->flags |= 0x40;
+	if ((reset == OS_RESET_HOTRESET && (forceMenu != 0))) {
+		__OSLockSram()->flags |= 0x40;
 		__OSUnlockSram(1);
 		do {
 		} while (__OSSyncSram() == 0);
 	}
-	enabled = OSDisableInterrupts();
-	rc      = CallResetFunctions(1);
-	ASSERTLINE(0x117, rc);
-	if (reset != 0) {
+
+	OSDisableInterrupts();
+	__OSCallResetFunctions(TRUE);
+
+	LCDisable();
+
+	if (reset == OS_RESET_HOTRESET) {
+		OSDisableInterrupts();
+		__VIRegs[1] = 0;
 		ICFlashInvalidate();
 		Reset(resetCode * 8);
+	} else if (reset == OS_RESET_RESTART) {
+		KillThreads();
+		OSEnableScheduler();
+		__OSReboot(resetCode, forceMenu);
 	}
-	OSRestoreInterrupts(enabled);
-	OSEnableScheduler();
+
+	KillThreads();
+
+	// TODO: maybe use AT_ADDRESS vars or macros from other files here?
+	memset(OSPhysicalToCached(0x40), 0, 0xCC - 0x40);
+	memset(OSPhysicalToCached(0xD4), 0, 0xE8 - 0xD4);
+	memset(OSPhysicalToCached(0xF4), 0, 0xF8 - 0xF4);
+	memset(OSPhysicalToCached(0x3000), 0, 0xC0);
+	memset(OSPhysicalToCached(0x30C8), 0, 0xD4 - 0xC8);
+	memset(&OS_REBOOT_BOOL, 0, 1);
+	__PADDisableRecalibration(padThing);
 }
 
-unsigned long OSGetResetCode() { return (__PIRegs[9] & 0xFFFFFFF8) / 8; }
+u32 OSGetResetCode(void)
+{
+	if (OS_REBOOT_BOOL != 0)
+		return 0x80000000;
+
+	return ((__PIRegs[9] & ~7) >> 3);
+}
