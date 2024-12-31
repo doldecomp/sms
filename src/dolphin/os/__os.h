@@ -61,6 +61,9 @@ void __OSResetSWInterruptHandler(short exception, struct OSContext* context);
 // OSReset.c
 void __OSDoHotReset(s32);
 
+// OSReboot.c
+void __OSReboot(u32, u32);
+
 // OSRtc.c
 int __OSGetRTC(unsigned long* rtc);
 int __OSSetRTC(unsigned long rtc);

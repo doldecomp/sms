@@ -8,8 +8,8 @@ static void* SaveEnd   = NULL;
 static volatile BOOL Prepared;
 
 extern u32 OS_RESET_CODE AT_ADDRESS(0x800030F0);
-extern u8 OS_REBOOT_BOOL
-    AT_ADDRESS(0x800030E2); // unknown function, set to true by __OSReboot
+// unknown function, set to true by __OSReboot
+extern u8 OS_REBOOT_BOOL AT_ADDRESS(0x800030E2);
 extern u32 UNK_817FFFF8 AT_ADDRESS(0x817FFFF8);
 extern u32 UNK_817FFFFC AT_ADDRESS(0x817FFFFC);
 
