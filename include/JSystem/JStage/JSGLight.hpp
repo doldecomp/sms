@@ -1,12 +1,13 @@
 #ifndef JSG_LIGHT_HPP
 #define JSG_LIGHT_HPP
 
-#include "JSystem/JStage/JSGObject.hpp"
-#include "dolphin/mtx.h"
-#include "dolphin/gx/GXEnum.h"
-#include "dolphin/gx/GXStruct.h"
+#include <JSystem/JStage/JSGObject.hpp>
+#include <dolphin/mtx.h>
+#include <dolphin/gx/GXEnum.h>
+#include <dolphin/gx/GXStruct.h>
 
 namespace JStage {
+
 enum TELight {
 	TELIGHT_Unk0 = 0,
 	TELIGHT_Unk1 = 1,
@@ -32,6 +33,7 @@ struct TLight : public TObject {
 	virtual void JSGGetDirection(Vec*) const;
 	virtual void JSGSetDirection(Vec const&);
 };
-}; // namespace JStage
+
+} // namespace JStage
 
 #endif

@@ -1,10 +1,11 @@
 #ifndef JSG_CAMERA_HPP
 #define JSG_CAMERA_HPP
 
-#include "JSystem/JStage/JSGObject.hpp"
-#include "dolphin/mtx.h"
+#include <JSystem/JStage/JSGObject.hpp>
+#include <dolphin/mtx.h>
 
 namespace JStage {
+
 enum TECameraProjection {
 
 };
@@ -37,6 +38,7 @@ struct TCamera : public TObject {
 	virtual f32 JSGGetViewRoll() const;
 	virtual void JSGSetViewRoll(f32);
 };
-}; // namespace JStage
+
+} // namespace JStage
 
 #endif

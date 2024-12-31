@@ -5,6 +5,7 @@
 #include <dolphin/mtx.h>
 
 namespace JStage {
+
 struct TActor : public TObject {
 	virtual ~TActor() = 0;
 	virtual s32 JSGFGetType() const;
@@ -22,6 +23,7 @@ struct TActor : public TObject {
 	virtual void JSGSetAnimationFrame(f32);
 	virtual f32 JSGGetAnimationFrameMax() const;
 };
-}; // namespace JStage
+
+} // namespace JStage
 
 #endif

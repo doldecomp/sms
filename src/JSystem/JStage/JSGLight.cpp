@@ -1,5 +1,4 @@
-#include "JSystem/JStage/JSGLight.hpp"
-#include "dolphin/types.h"
+#include <JSystem/JStage/JSGLight.hpp>
 
 JStage::TLight::~TLight() { }
 

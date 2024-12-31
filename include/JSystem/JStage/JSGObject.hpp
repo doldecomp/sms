@@ -1,9 +1,10 @@
 #ifndef JSG_OBJECT_HPP
 #define JSG_OBJECT_HPP
 
-#include "types.h"
+#include <types.h>
 
 namespace JStage {
+
 enum TEObject {
 	/* 0x0 */ TOBJ_ACTOR_UNK,
 	/* 0x1 */ TOBJ_UNK1,
@@ -26,6 +27,7 @@ struct TObject {
 	virtual void JSGSetParent(JStage::TObject*, u32);
 	virtual void JSGSetRelation(bool, JStage::TObject*, u32);
 };
-}; // namespace JStage
+
+} // namespace JStage
 
 #endif

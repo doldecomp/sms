@@ -1,5 +1,4 @@
-#include "JSystem/JStage/JSGObject.hpp"
-#include "dolphin/types.h"
+#include <JSystem/JStage/JSGObject.hpp>
 
 JStage::TObject::~TObject() { }
 
