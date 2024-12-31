@@ -51,8 +51,7 @@ __OSExceptionHandler __OSGetExceptionHandler(__OSException exception);
 	mfspr r0, GQR6;                                                            \
 	stw r0, OS_CONTEXT_GQR6(context);                                          \
 	mfspr r0, GQR7;                                                            \
-	stw r0, OS_CONTEXT_GQR7(context);                                          \
-	stwu r1, -0x8(r1)
+	stw r0, OS_CONTEXT_GQR7(context);
 
 #ifdef __cplusplus
 }

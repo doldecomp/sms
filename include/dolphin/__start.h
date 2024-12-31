@@ -13,7 +13,7 @@
 
 extern void InitMetroTRK();
 
-u16 Pad3Button : PAD3_BUTTON_ADDR;
+u16 Pad3Button AT_ADDRESS(PAD3_BUTTON_ADDR);
 
 extern void memset(void*, int, int);
 extern int main(int argc, char* argv[]);

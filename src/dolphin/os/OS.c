@@ -1,24 +1,18 @@
-#include <dolphin.h>
+#include <dolphin/os.h>
 #include <dolphin/base/PPCArch.h>
 #include <dolphin/db.h>
 #include <dolphin/exi.h>
-#include <dolphin/os.h>
+#include <string.h>
 #include <macros.h>
+#include "__os.h"
 
 void EnableMetroTRKInterrupts(void);
 
-// internal headers
-#include "__os.h"
-
-#define OS_BI2_DEBUG_ADDRESS    0x800000F4
-#define DEBUGFLAG_ADDR          0x800030E8
-#define OS_DEBUG_ADDRESS_2      0x800030E9
 #define OS_CURRENTCONTEXT_PADDR 0x00C0
 
 #define OS_EXCEPTIONTABLE_ADDR 0x3000
 #define OS_DBJUMPPOINT_ADDR    0x60
 // memory locations for important stuff
-#define OS_CACHED_REGION_PREFIX 0x8000
 #define OS_BI2_DEBUG_ADDRESS    0x800000F4
 #define OS_BI2_DEBUGFLAG_OFFSET 0xC
 #define PAD3_BUTTON_ADDR        0x800030E4
@@ -30,8 +24,10 @@ void EnableMetroTRKInterrupts(void);
 
 extern unsigned long __DVDLongFileNameFlag;
 extern unsigned long __PADSpec;
-extern unsigned char __ArenaLo[];
-extern char _stack_addr[];
+// TODO: other games don't seem to have AT_ADDRESS here,
+// but OSInit won't match without it. Am I doing smthing wrong?
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80426020);
+extern char _stack_addr[] AT_ADDRESS(0x80424008);
 extern unsigned char __ArenaHi[];
 
 // dummy entry points to the OS Exception vector
@@ -48,59 +44,115 @@ void __OSDBJUMPEND(void);
 
 #define NOP 0x60000000
 
-static struct OSBootInfo_s* BootInfo;
-static unsigned long* BI2DebugFlag;
-static double ZeroF;
-static int AreWeInitialized;
-static void (**OSExceptionTable)(unsigned char, struct OSContext*);
+static OSBootInfo* BootInfo;
+static volatile u32* BI2DebugFlag;
+static u32* BI2DebugFlagHolder;
+static f64 ZeroPS;
+static f64 ZeroF;
+static BOOL __OSIsGcam;
+static BOOL AreWeInitialized;
+
+typedef void (*OSExceptionHandler)(u8, struct OSContext*);
+static OSExceptionHandler* OSExceptionTable;
+
+static void* __OSSavedRegionEnd;
+static void* __OSSavedRegionStart;
+static BOOL __OSInIPL;
+OSTime __OSStartTime;
+
+static DVDDriveInfo DriveInfo __attribute__((aligned(0x20)));
+static DVDCommandBlock DriveBlock;
 
 // functions
 static asm void __OSInitFPRs(void);
 static void OSExceptionInit(void);
-static void OSDefaultExceptionHandler(unsigned char exception /* r3 */,
-                                      struct OSContext* context /* r4 */);
+static void OSDefaultExceptionHandler(u8 exception /* r3 */,
+                                      OSContext* context /* r4 */);
 
-unsigned long __OSIsDebuggerPresent()
-{
-	return *(u32*)OSPhysicalToCached(0x40);
-}
-
+// NOTE: this is unused, but stuff won't align properly without it
 static asm void __OSInitFPRs(void)
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
-	lfd	 fp0, ZeroF
-	fmr	 fp1, fp0
-	fmr	 fp2, fp0
-	fmr	 fp3, fp0
-	fmr	 fp4, fp0
-	fmr	 fp5, fp0
-	fmr	 fp6, fp0
-	fmr	 fp7, fp0
-	fmr	 fp8, fp0
-	fmr	 fp9, fp0
-	fmr	 fp10, fp0
-	fmr	 fp11, fp0
-	fmr	 fp12, fp0
-	fmr	 fp13, fp0
-	fmr	 fp14, fp0
-	fmr	 fp15, fp0
-	fmr	 fp16, fp0
-	fmr	 fp17, fp0
-	fmr	 fp18, fp0
-	fmr	 fp19, fp0
-	fmr	 fp20, fp0
-	fmr	 fp21, fp0
-	fmr	 fp22, fp0
-	fmr	 fp23, fp0
-	fmr	 fp24, fp0
-	fmr	 fp25, fp0
-	fmr	 fp26, fp0
-	fmr	 fp27, fp0
-	fmr	 fp28, fp0
-	fmr	 fp29, fp0
-	fmr	 fp30, fp0
-	fmr	 fp31, fp0
+
+	mfmsr r3
+	ori r3, r3, 0x2000
+	mtmsr r3
+
+	mfspr r3, 0x398
+	rlwinm. r3, r3, 3, 0x1f, 0x1f
+	beq skip_ps_init
+
+	lis r3, ZeroPS@ha
+	addi r3, r3, ZeroPS@l
+	psq_l f0, 0(r3), 0, 0
+	ps_mr f1, f0
+	ps_mr f2, f0
+	ps_mr f3, f0
+	ps_mr f4, f0
+	ps_mr f5, f0
+	ps_mr f6, f0
+	ps_mr f7, f0
+	ps_mr f8, f0
+	ps_mr f9, f0
+	ps_mr f10, f0
+	ps_mr f11, f0
+	ps_mr f12, f0
+	ps_mr f13, f0
+	ps_mr f14, f0
+	ps_mr f15, f0
+	ps_mr f16, f0
+	ps_mr f17, f0
+	ps_mr f18, f0
+	ps_mr f19, f0
+	ps_mr f20, f0
+	ps_mr f21, f0
+	ps_mr f22, f0
+	ps_mr f23, f0
+	ps_mr f24, f0
+	ps_mr f25, f0
+	ps_mr f26, f0
+	ps_mr f27, f0
+	ps_mr f28, f0
+	ps_mr f29, f0
+	ps_mr f30, f0
+	ps_mr f31, f0
+
+skip_ps_init:
+	lfd f0, ZeroF(r13)
+	fmr f1, f0
+	fmr f2, f0
+	fmr f3, f0
+	fmr f4, f0
+	fmr f5, f0
+	fmr f6, f0
+	fmr f7, f0
+	fmr f8, f0
+	fmr f9, f0
+	fmr f10, f0
+	fmr f11, f0
+	fmr f12, f0
+	fmr f13, f0
+	fmr f14, f0
+	fmr f15, f0
+	fmr f16, f0
+	fmr f17, f0
+	fmr f18, f0
+	fmr f19, f0
+	fmr f20, f0
+	fmr f21, f0
+	fmr f22, f0
+	fmr f23, f0
+	fmr f24, f0
+	fmr f25, f0
+	fmr f26, f0
+	fmr f27, f0
+	fmr f28, f0
+	fmr f29, f0
+	fmr f30, f0
+	fmr f31, f0
+
+	mtfsf 0xff, f0
 	blr
 #endif // clang-format on
 }
@@ -113,95 +165,168 @@ unsigned long OSGetConsoleType()
 	return BootInfo->consoleType;
 }
 
+extern void* BOOT_REGION_START AT_ADDRESS(0x812FDFF0);
+extern void* BOOT_REGION_END AT_ADDRESS(0x812FDFEC);
+
+volatile u16 __OSDeviceCode AT_ADDRESS(0x800030E6);
+
+static void ClearArena()
+{
+	if (OSGetResetCode() != -0x80000000) {
+		__OSSavedRegionStart = NULL;
+		__OSSavedRegionEnd   = NULL;
+		memset(OSGetArenaLo(), 0, (u8*)OSGetArenaHi() - (u8*)OSGetArenaLo());
+		return;
+	}
+
+	__OSSavedRegionStart = BOOT_REGION_START;
+	__OSSavedRegionEnd   = BOOT_REGION_END;
+
+	if (BOOT_REGION_START == NULL) {
+		memset(OSGetArenaLo(), 0, (u8*)OSGetArenaHi() - (u8*)OSGetArenaLo());
+		return;
+	}
+
+	if ((u8*)OSGetArenaLo() < (u8*)__OSSavedRegionStart) {
+		if ((u8*)OSGetArenaHi() <= (u8*)__OSSavedRegionStart) {
+			memset(OSGetArenaLo(), 0,
+			       (u8*)OSGetArenaHi() - (u8*)OSGetArenaLo());
+			return;
+		}
+
+		memset(OSGetArenaLo(), 0,
+		       (u8*)__OSSavedRegionStart - (u8*)OSGetArenaLo());
+
+		if ((u8*)OSGetArenaHi() > (u8*)__OSSavedRegionEnd) {
+			memset(__OSSavedRegionEnd, 0,
+			       (u8*)OSGetArenaHi() - (u8*)__OSSavedRegionEnd);
+		}
+	}
+}
+
+static void InquiryCallback(s32 result, struct DVDCommandBlock* block)
+{
+	switch (block->state) {
+	case 0:
+		__OSDeviceCode = DriveInfo.deviceCode | 0x8000;
+		break;
+	default:
+		__OSDeviceCode = 1;
+		break;
+	}
+}
+
 void OSInit()
 {
-	unsigned long consoleType;
-	void* bi2StartAddr;
+	u32 consoleType;
+	BI2Debug* bi2DebugInfo;
 
-	if (AreWeInitialized == 0) {
-		AreWeInitialized = 1;
-		OSDisableInterrupts();
-		BootInfo              = (struct OSBootInfo_s*)OSPhysicalToCached(0);
-		BI2DebugFlag          = NULL;
-		__DVDLongFileNameFlag = 0;
-		bi2StartAddr          = (void*)(*(u32*)OSPhysicalToCached(0xF4));
-		if (bi2StartAddr) {
-			BI2DebugFlag          = (void*)((char*)bi2StartAddr + 0xC);
-			__DVDLongFileNameFlag = ((u32*)bi2StartAddr)[8];
-			__PADSpec             = ((u32*)bi2StartAddr)[9];
-		}
-		OSSetArenaLo((!BootInfo->arenaLo) ? &__ArenaLo : BootInfo->arenaLo);
-		if ((!BootInfo->arenaLo) && (BI2DebugFlag)
-		    && (*(u32*)BI2DebugFlag < 2)) {
-			OSSetArenaLo(
-			    (void*)(((u32)(char*)&_stack_addr + 0x1F) & 0xFFFFFFE0));
-		}
-		OSSetArenaHi((!BootInfo->arenaHi) ? &__ArenaHi : BootInfo->arenaHi);
-		OSExceptionInit();
-		__OSInitSystemCall();
-		__OSModuleInit();
-		__OSInterruptInit();
-		__OSSetInterruptHandler(0x16, &__OSResetSWInterruptHandler);
-		__OSContextInit();
-		__OSCacheInit();
-		EXIInit();
-		SIInit();
-		__OSInitSram();
-		__OSThreadInit();
-		__OSInitAudioSystem();
-		ASSERTLINE(0x252, BootInfo); // oh sure, assert NOW, you've already
-		                             // dereferenced it a bunch of times.
-		if ((BootInfo->consoleType & OS_CONSOLE_DEVELOPMENT) != 0) {
-			BootInfo->consoleType = OS_CONSOLE_DEVHW1;
-		} else {
-			BootInfo->consoleType = OS_CONSOLE_RETAIL1;
-		}
-		BootInfo->consoleType += (__PIRegs[11] & 0xF0000000) >> 28;
-		OSReport("\nDolphin OS $Revision: 36 $.\n");
-#if DEBUG
-		OSReport("Kernel built : %s %s\n", "May 22 2001", "01:47:06");
-#else
-		OSReport("Kernel built : %s %s\n", "May 22 2001", "02:04:48");
-#endif
-		OSReport("Console Type : ");
+	if (AreWeInitialized != 0)
+		return;
 
-		// work out what console type this corresponds to and report it
-		// consoleTypeSwitchHi = inputConsoleType & 0xF0000000;
-		consoleType = OSGetConsoleType();
-		if ((consoleType & 0x10000000)
-		    == OS_CONSOLE_RETAIL) { // check "first" byte
-			OSReport("Retail %d\n", consoleType);
-		} else {
-			switch (consoleType) { // if "first" byte is 2, check "the rest"
-			case OS_CONSOLE_EMULATOR:
-				OSReport("Mac Emulator\n");
-				break;
-			case OS_CONSOLE_PC_EMULATOR:
-				OSReport("PC Emulator\n");
-				break;
-			case OS_CONSOLE_ARTHUR:
-				OSReport("EPPC Arthur\n");
-				break;
-			case OS_CONSOLE_MINNOW:
-				OSReport("EPPC Minnow\n");
-				break;
-			default:
-				OSReport("Development HW%d\n",
-				         ((u32)consoleType - 0x10000000) - 3);
-				break;
-			}
-		}
-		// report memory size
-		OSReport("Memory %d MB\n", (u32)BootInfo->memorySize >> 0x14U);
-		// report heap bounds
-		OSReport("Arena : 0x%x - 0x%x\n", OSGetArenaLo(), OSGetArenaHi());
+	AreWeInitialized = 1;
+	__OSStartTime    = __OSGetSystemTime();
+	OSDisableInterrupts();
+	PPCDisableSpeculation();
+	PPCSetFpNonIEEEMode();
+	BootInfo              = (struct OSBootInfo_s*)OSPhysicalToCached(0);
+	BI2DebugFlag          = NULL;
+	__DVDLongFileNameFlag = 0;
+	bi2DebugInfo          = (BI2Debug*)*(BI2Debug**)OS_BI2_DEBUG_ADDRESS;
+	if (bi2DebugInfo != NULL) {
+		BI2DebugFlag               = &bi2DebugInfo->debugFlag;
+		__PADSpec                  = bi2DebugInfo->padSpec;
+		*((u8*)DEBUGFLAG_ADDR)     = (u8)*BI2DebugFlag;
+		*((u8*)OS_DEBUG_ADDRESS_2) = (u8)__PADSpec;
+	} else if (BootInfo->arenaHi) {
+		BI2DebugFlagHolder = (u32*)*((u8*)DEBUGFLAG_ADDR);
+		BI2DebugFlag       = (u32*)&BI2DebugFlagHolder;
+		__PADSpec          = (u32) * ((u8*)OS_DEBUG_ADDRESS_2);
+	}
 
-		// if location of debug flag exists, and flag is >= 2, enable
-		// MetroTRKInterrupts
-		if (BI2DebugFlag && ((*BI2DebugFlag) >= 2)) {
-			EnableMetroTRKInterrupts();
+	__DVDLongFileNameFlag = 1;
+
+	OSSetArenaLo((!BootInfo->arenaLo) ? &__ArenaLo : BootInfo->arenaLo);
+	if ((!BootInfo->arenaLo) && (BI2DebugFlag) && (*(u32*)BI2DebugFlag < 2)) {
+		OSSetArenaLo((void*)(((u32)(char*)&_stack_addr + 0x1F) & 0xFFFFFFE0));
+	}
+	OSSetArenaHi((!BootInfo->arenaHi) ? &__ArenaHi : BootInfo->arenaHi);
+	OSExceptionInit();
+	__OSInitSystemCall();
+	OSInitAlarm();
+	__OSModuleInit();
+	__OSInterruptInit();
+	__OSSetInterruptHandler(0x16, &__OSResetSWInterruptHandler);
+	__OSContextInit();
+	__OSCacheInit();
+	EXIInit();
+	SIInit();
+	__OSInitSram();
+	__OSThreadInit();
+	__OSInitAudioSystem();
+	PPCMthid2(PPCMfhid2() & 0xbfffffff);
+	if ((BootInfo->consoleType & OS_CONSOLE_DEVELOPMENT) != 0) {
+		BootInfo->consoleType = OS_CONSOLE_DEVHW1;
+	} else {
+		BootInfo->consoleType = OS_CONSOLE_RETAIL1;
+	}
+	BootInfo->consoleType += (__PIRegs[11] & 0xF0000000) >> 28;
+	if (__OSInIPL == 0) {
+		__OSInitMemoryProtection();
+	}
+
+	OSReport("\nDolphin OS $Revision: 54 $.\n");
+	OSReport("Kernel built : %s %s\n", "Jun  5 2002", "02:09:12");
+
+	OSReport("Console Type : ");
+
+	consoleType = OSGetConsoleType();
+	// work out what console type this corresponds to and report it
+	// consoleTypeSwitchHi = inputConsoleType & 0xF0000000;
+	if ((consoleType & 0x10000000) == OS_CONSOLE_RETAIL) { // check "first" byte
+		OSReport("Retail %d\n", consoleType);
+	} else {
+		switch (consoleType) { // if "first" byte is 2, check "the rest"
+		case OS_CONSOLE_EMULATOR:
+			OSReport("Mac Emulator\n");
+			break;
+		case OS_CONSOLE_PC_EMULATOR:
+			OSReport("PC Emulator\n");
+			break;
+		case OS_CONSOLE_ARTHUR:
+			OSReport("EPPC Arthur\n");
+			break;
+		case OS_CONSOLE_MINNOW:
+			OSReport("EPPC Minnow\n");
+			break;
+		default:
+			OSReport("Development HW%d\n", ((u32)consoleType - 0x10000000) - 3);
+			break;
 		}
-		OSEnableInterrupts();
+	}
+
+	// report memory size
+	OSReport("Memory %d MB\n", (u32)BootInfo->memorySize >> 0x14U);
+	// report heap bounds
+	OSReport("Arena : 0x%x - 0x%x\n", OSGetArenaLo(), OSGetArenaHi());
+
+	// if location of debug flag exists, and flag is >= 2, enable
+	// MetroTRKInterrupts
+	if (BI2DebugFlag && ((*BI2DebugFlag) >= 2)) {
+		EnableMetroTRKInterrupts();
+	}
+	ClearArena();
+	OSEnableInterrupts();
+	if (__OSInIPL == 0) {
+		DVDInit();
+
+		if (__OSIsGcam) {
+			__OSDeviceCode = 0x9000;
+			return;
+		}
+
+		DCInvalidateRange(&DriveInfo, 0x20);
+		DVDInquiryAsync(&DriveBlock, &DriveInfo, InquiryCallback);
 	}
 }
 
@@ -210,15 +335,6 @@ static u32 __OSExceptionLocations[] = {
 	0x00000600, 0x00000700, 0x00000800, 0x00000900, 0x00000C00,
 	0x00000D00, 0x00000F00, 0x00001300, 0x00001400, 0x00001700,
 };
-
-#if DEBUG
-char* __OSExceptionNames[15] = {
-	"System reset",  "MachineCheck", "DSI",          "ISI",
-	"External Int.", "Alignment",    "Program",      "FP Unavailable",
-	"Decrementer",   "System call",  "Trace",        "Perf mon",
-	"IABR",          "SMI",          "Thermal Int.",
-};
-#endif
 
 static void OSExceptionInit(void)
 {
@@ -234,9 +350,6 @@ static void OSExceptionInit(void)
 	u8* handlerStart;
 	u32 handlerSize;
 
-	ASSERTMSGLINE(0x2F1, ((u32)&__OSEVEnd - (u32)&__OSEVStart) <= 0x100,
-	              "OSExceptionInit(): too big exception vector code.");
-
 	// Install the first level exception vector.
 	opCodeAddr   = (u32*)__OSEVSetNumber;
 	oldOpCode    = *opCodeAddr;
@@ -249,10 +362,11 @@ static void OSExceptionInit(void)
 	{
 		DBPrintf("Installing OSDBIntegrator\n");
 		memcpy(destAddr, (void*)__OSDBINTSTART,
-		       (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
-		DCFlushRangeNoSync(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
+		       (u32)__OSDBJUMPSTART - (u32)__OSDBINTSTART);
+		DCFlushRangeNoSync(destAddr,
+		                   (u32)__OSDBJUMPSTART - (u32)__OSDBINTSTART);
 		__sync();
-		ICInvalidateRange(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
+		ICInvalidateRange(destAddr, (u32)__OSDBJUMPSTART - (u32)__OSDBINTSTART);
 	}
 
 	// Copy the right vector into the table
@@ -341,9 +455,6 @@ __OSExceptionHandler __OSSetExceptionHandler(__OSException exception,
 {
 	__OSExceptionHandler oldHandler;
 
-	ASSERTMSGLINE(0x37F, exception < __OS_EXCEPTION_MAX,
-	              "__OSSetExceptionHandler(): unknown exception.");
-
 	oldHandler                  = OSExceptionTable[exception];
 	OSExceptionTable[exception] = handler;
 	return oldHandler;
@@ -351,8 +462,6 @@ __OSExceptionHandler __OSSetExceptionHandler(__OSException exception,
 
 __OSExceptionHandler __OSGetExceptionHandler(__OSException exception)
 {
-	ASSERTMSGLINE(0x396, exception < __OS_EXCEPTION_MAX,
-	              "__OSGetExceptionHandler(): unknown exception.");
 	return OSExceptionTable[exception];
 }
 
@@ -451,7 +560,7 @@ asm void OSDefaultExceptionHandler(register __OSException exception,
 	OS_EXCEPTION_SAVE_GPRS(context)
 	mfdsisr r5
 	mfdar   r6
-
+	stwu r1, -0x8(r1)
 	b	   __OSUnhandledException
 #endif // clang-format on
 }
@@ -468,4 +577,12 @@ void __OSPSInit(void)
 		mtspr   GQR0, r3
 	}
 #endif // clang-format on
+}
+
+#define DI_CONFIG_IDX         0x9
+#define DI_CONFIG_CONFIG_MASK 0xFF
+
+u32 __OSGetDIConfig(void)
+{
+	return (__DIRegs[DI_CONFIG_IDX] & DI_CONFIG_CONFIG_MASK);
 }
