@@ -370,7 +370,7 @@ static void OSExceptionInit(void)
 	}
 
 	// Copy the right vector into the table
-	for (exception = 0; exception < __OS_EXCEPTION_MAX; exception++) {
+	for (exception = 0; exception < OS_EXCEPTION_MAX; exception++) {
 		if (BI2DebugFlag && (*BI2DebugFlag >= 2)
 		    && __DBIsExceptionMarked(exception)) {
 			// this DBPrintf is suspicious.
@@ -412,7 +412,7 @@ static void OSExceptionInit(void)
 	OSExceptionTable = (void*)OSPhysicalToCached(OS_EXCEPTIONTABLE_ADDR);
 
 	// install default exception handlers
-	for (exception = 0; exception < __OS_EXCEPTION_MAX; exception++) {
+	for (exception = 0; exception < OS_EXCEPTION_MAX; exception++) {
 		__OSSetExceptionHandler(exception, OSDefaultExceptionHandler);
 	}
 

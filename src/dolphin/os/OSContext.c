@@ -525,7 +525,7 @@ extern void DBPrintf(char*, ...);
 
 void __OSContextInit(void)
 {
-	__OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
+	__OSSetExceptionHandler(OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
 	__OSFPUContext = NULL;
 	DBPrintf("FPU-unavailable handler installed\n");
 }
