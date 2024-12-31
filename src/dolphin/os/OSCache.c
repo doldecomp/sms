@@ -727,7 +727,7 @@ void DMAErrorHandler(OSError error, OSContext* context, ...)
 	u32 hid2 = PPCMfhid2();
 
 	OSReport("Machine check received\n");
-	OSReport("HID2 = 0x%x	 SRR1 = 0x%x\n", hid2, context->srr1);
+	OSReport("HID2 = 0x%x   SRR1 = 0x%x\n", hid2, context->srr1);
 	if (!(hid2 & (HID2_DCHERR | HID2_DNCERR | HID2_DCMERR | HID2_DQOERR))
 	    || !(context->srr1 & SRR1_DMA_BIT)) {
 		OSReport("Machine check was not DMA/locked cache related\n");
