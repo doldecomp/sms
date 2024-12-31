@@ -143,6 +143,7 @@ void DVDReset();
 int DVDResetRequired();
 long DVDGetCommandBlockStatus(struct DVDCommandBlock* block);
 long DVDGetDriveStatus();
+BOOL DVDCheckDisk(void);
 int DVDSetAutoInvalidation(int autoInval);
 void DVDPause();
 void DVDResume();

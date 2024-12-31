@@ -9,6 +9,9 @@ extern char* __OSExceptionNames[15]; // D ONLY
 unsigned long __OSIsDebuggerPresent(void);
 void __OSPSInit(void);
 
+extern void* BOOT_REGION_START AT_ADDRESS(0x812FDFF0);
+extern void* BOOT_REGION_END AT_ADDRESS(0x812FDFEC);
+
 // OSAlloc.c
 extern volatile int __OSCurrHeap;
 
@@ -54,6 +57,9 @@ int __OSCheckMutexes(struct OSThread* thread);
 
 // OSResetSW.c
 void __OSResetSWInterruptHandler(short exception, struct OSContext* context);
+
+// OSReset.c
+void __OSDoHotReset(s32);
 
 // OSRtc.c
 int __OSGetRTC(unsigned long* rtc);

@@ -165,9 +165,6 @@ unsigned long OSGetConsoleType()
 	return BootInfo->consoleType;
 }
 
-extern void* BOOT_REGION_START AT_ADDRESS(0x812FDFF0);
-extern void* BOOT_REGION_END AT_ADDRESS(0x812FDFEC);
-
 volatile u16 __OSDeviceCode AT_ADDRESS(0x800030E6);
 
 static void ClearArena()
