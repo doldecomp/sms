@@ -639,7 +639,7 @@ config.libs = [
             Object(Matching, "dolphin/os/OSResetSW.c"),
             Object(Matching, "dolphin/os/OSRtc.c"),
             Object(Matching, "dolphin/os/OSStopwatch.c"),
-            Object(NonMatching, "dolphin/os/OSSync.c"),
+            Object(Matching, "dolphin/os/OSSync.c"),
             Object(NonMatching, "dolphin/os/OSThread.c"),
             Object(Matching, "dolphin/os/OSTime.c"),
             Object(NonMatching, "dolphin/os/__start.c"),
