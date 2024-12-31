@@ -22,6 +22,9 @@ void __OSCacheInit(void);
 // OSContext.c
 void __OSContextInit(void);
 
+// OSMemory.c
+void __OSInitMemoryProtection(void);
+
 // OSError.c
 void __OSUnhandledException(unsigned char exception, struct OSContext* context,
                             unsigned long dsisr, unsigned long dar);
