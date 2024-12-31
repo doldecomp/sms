@@ -14,5 +14,6 @@ AlignEscapedNewlines: Right
 AlignOperands: true
 AllowShortIfStatementsOnASingleLine: Never
 Cpp11BracedListStyle: false
+InsertNewlineAtEOF: true
 Language: Cpp
 Standard: Cpp03
