@@ -407,7 +407,7 @@ void VIInit(void)
 	HorVer.tv       = (u32)((dspCfg >> 8U) & 3);
 
 	tv            = (HorVer.tv == 3) ? 0 : HorVer.tv;
-	HorVer.timing = getTiming((tv << 2) + HorVer.nonInter);
+	HorVer.timing = getTiming(VI_TVMODE(tv, HorVer.nonInter));
 
 	regs[1] = dspCfg;
 
@@ -739,7 +739,7 @@ void VIConfigure(GXRenderModeObj* rm)
 	                       : HorVer.PanSizeY;
 	HorVer.threeD    = HorVer.nonInter == 3 ? 1 : 0;
 
-	tm            = getTiming((HorVer.tv << 2) + HorVer.nonInter);
+	tm            = getTiming(VI_TVMODE(HorVer.tv, HorVer.nonInter));
 	HorVer.timing = tm;
 	AdjustPosition(tm->acv);
 
