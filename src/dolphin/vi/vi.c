@@ -92,10 +92,10 @@ static SomeVIStruct HorVer;
 #define MARK_CHANGED(index) (changed |= 1LL << (63 - (index)))
 
 static VITiming timing[8] = {
-	// VI_TVMODE_NTSC_INT, VI_TVMODE_20
+	// VI_TVMODE_NTSC_INT, VI_TVMODE_EURGB60_INT
 	{ 6,   240, 24,  25,  3,  2,  12,  13,  12,  13,  520, 519,
 	  520, 519, 525, 429, 64, 71, 105, 162, 373, 122, 412 },
-	// VI_TVMODE_NTSC_DS, VI_TVMODE_21
+	// VI_TVMODE_NTSC_DS, VI_TVMODE_EURGB60_DS
 	{ 6,   240, 24,  24,  4,  4,  12,  12,  12,  12,  520, 520,
 	  520, 520, 526, 429, 64, 71, 105, 162, 373, 122, 412 },
 	// VI_TVMODE_PAL_INT, VI_TVMODE_DEBUG_PAL_INT
@@ -238,9 +238,9 @@ static VITiming* getTiming(VITVMode mode)
 	case VI_TVMODE_PAL_DS:
 		return &timing[3];
 
-	case VI_TVMODE_20:
+	case VI_TVMODE_EURGB60_INT:
 		return &timing[0];
-	case VI_TVMODE_21:
+	case VI_TVMODE_EURGB60_DS:
 		return &timing[1];
 
 	case VI_TVMODE_MPAL_INT:
