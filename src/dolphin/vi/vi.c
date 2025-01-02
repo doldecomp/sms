@@ -92,16 +92,16 @@ static SomeVIStruct HorVer;
 #define MARK_CHANGED(index) (changed |= 1LL << (63 - (index)))
 
 static VITiming timing[8] = {
-	// VI_TVMODE_NTSC_INT
+	// VI_TVMODE_NTSC_INT, VI_TVMODE_20
 	{ 6,   240, 24,  25,  3,  2,  12,  13,  12,  13,  520, 519,
 	  520, 519, 525, 429, 64, 71, 105, 162, 373, 122, 412 },
-	// VI_TVMODE_NTSC_DS
+	// VI_TVMODE_NTSC_DS, VI_TVMODE_21
 	{ 6,   240, 24,  24,  4,  4,  12,  12,  12,  12,  520, 520,
 	  520, 520, 526, 429, 64, 71, 105, 162, 373, 122, 412 },
-	// VI_TVMODE_PAL_INT
+	// VI_TVMODE_PAL_INT, VI_TVMODE_DEBUG_PAL_INT
 	{ 5,   287, 35,  36,  1,  0,  13,  12,  11,  10,  619, 618,
 	  617, 620, 625, 432, 64, 75, 106, 172, 380, 133, 420 },
-	// VI_TVMODE_PAL_DS
+	// VI_TVMODE_PAL_DS, VI_TVMODE_DEBUG_PAL_DS
 	{ 5,   287, 33,  33,  2,  2,  13,  11,  13,  11,  619, 621,
 	  619, 621, 624, 432, 64, 75, 106, 172, 380, 133, 420 },
 	// VI_TVMODE_MPAL_INT
@@ -113,7 +113,7 @@ static VITiming timing[8] = {
 	// VI_TVMODE_NTSC_PROG
 	{ 12,   480,  48,   48,  6,  6,  24,  24,  24,  24,  1038, 1038,
 	  1038, 1038, 1050, 429, 64, 71, 105, 162, 373, 122, 412 },
-	// VI_TVMODE_
+	// VI_TVMODE_3
 	{ 12,   480,  44,   44,  10, 10, 24,  24,  24,  24,  1038, 1038,
 	  1038, 1038, 1050, 429, 64, 71, 105, 168, 379, 122, 412 },
 };
