@@ -57,7 +57,7 @@ typedef struct BI2Debug {
 } BI2Debug;
 
 u32 __OSPhysicalMemSize AT_ADDRESS(OS_BASE_CACHED | 0x0028);
-volatile int __OSTVMode AT_ADDRESS(OS_BASE_CACHED | 0x00CC);
+volatile u32 __OSTVMode AT_ADDRESS(OS_BASE_CACHED | 0x00CC);
 OSThread* __gUnkThread1 AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 OSThreadQueue __OSActiveThreadQueue AT_ADDRESS(OS_BASE_CACHED | 0x00DC);
 OSThread* __gCurrentThread AT_ADDRESS(OS_BASE_CACHED | 0x00E4);

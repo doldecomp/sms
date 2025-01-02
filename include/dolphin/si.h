@@ -1,6 +1,9 @@
 #ifndef _DOLPHIN_SI_H_
 #define _DOLPHIN_SI_H_
 
+#include <dolphin/types.h>
+#include <dolphin/os/OSTime.h>
+
 #define PAD_CHAN0_BIT 0x80000000
 #define PAD_CHAN1_BIT 0x40000000
 #define PAD_CHAN2_BIT 0x20000000
@@ -49,7 +52,8 @@
 
 #define SI_MAX_CHAN 4
 
-typedef void (*SICallback)(s32 chan, u32 sr, OSContext* context);
+struct OSContext;
+typedef void (*SICallback)(s32 chan, u32 sr, struct OSContext* context);
 typedef void (*SITypeAndStatusCallback)(s32 chan, u32 type);
 
 BOOL SITransfer(s32 chan, void* output, u32 outputBytes, void* input,
@@ -60,5 +64,6 @@ u32 SIDisablePolling(u32 poll);
 u32 SISetXY(u32 x, u32 y);
 void SITransferCommands(void);
 BOOL SIBusy(void);
+void SIRefreshSamplingRate();
 
 #endif // _DOLPHIN_SI_H_

@@ -660,7 +660,7 @@ config.libs = [
             Object(NonMatching, "dolphin/dvd/fstload.c"),
         ]),
     DolphinLib("vi", [
-            Object(NonMatching, "dolphin/vi/vi.c"),
+            Object(Matching, "dolphin/vi/vi.c"),
         ]),
     DolphinLib("pad", [
             Object(NonMatching, "dolphin/pad/Padclamp.c"),
