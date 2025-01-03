@@ -27,6 +27,10 @@ typedef struct STRUCT_DSP_TASK {
 	OSTime t_task;
 } DSPTaskInfo;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 u32 DSPCheckMailToDSP(void);
 u32 DSPCheckMailFromDSP(void);
 u32 DSPReadCPUToDSPMbox(void);
@@ -44,5 +48,9 @@ DSPTaskInfo* DSPCancelTask(DSPTaskInfo* task);
 DSPTaskInfo* DSPAssertTask(DSPTaskInfo* task);
 
 DSPTaskInfo* __DSPGetCurrentTask(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

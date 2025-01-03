@@ -674,9 +674,9 @@ config.libs = [
             Object(Matching, "dolphin/ar/arq.c"),
         ]),
     DolphinLib("dsp", [
-            Object(NonMatching, "dolphin/dsp/dsp.c"),
+            Object(Matching, "dolphin/dsp/dsp.c"),
             Object(Matching, "dolphin/dsp/dsp_debug.c"),
-            Object(NonMatching, "dolphin/dsp/dsp_task.c"),
+            Object(Matching, "dolphin/dsp/dsp_task.c"),
         ]),
     DolphinLib("card", [
             Object(NonMatching, "dolphin/card/CARDBios.c"),
