@@ -663,8 +663,8 @@ config.libs = [
             Object(Matching, "dolphin/vi/vi.c"),
         ]),
     DolphinLib("pad", [
-            Object(NonMatching, "dolphin/pad/Padclamp.c"),
-            Object(NonMatching, "dolphin/pad/Pad.c"),
+            Object(Matching, "dolphin/pad/Padclamp.c"),
+            Object(Matching, "dolphin/pad/Pad.c"),
         ]),
     DolphinLib("ai", [
             Object(Matching, "dolphin/ai/ai.c"),

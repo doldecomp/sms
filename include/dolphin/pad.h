@@ -52,11 +52,17 @@ typedef struct PADStatus {
 	/*0x0A*/ s8 err;
 } PADStatus;
 
+typedef void (*PADSamplingCallback)(void);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // PAD.c
 int PADReset(unsigned long mask);
 BOOL PADRecalibrate(u32 mask);
 BOOL PADInit();
-void PADRead(struct PADStatus* status);
+u32 PADRead(struct PADStatus* status);
 void PADSetSamplingRate(unsigned long msec);
 void __PADTestSamplingRate(unsigned long tvmode);
 void PADControlAllMotors(const u32* commandArray);
@@ -69,5 +75,9 @@ void PADSetAnalogMode(u32 mode);
 
 // Padclamp.c
 void PADClamp(PADStatus* status);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
