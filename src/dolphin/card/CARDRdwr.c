@@ -100,9 +100,3 @@ long __CARDWrite(long chan, unsigned long addr, long length, void* dst,
 	card->buffer       = dst;
 	return __CARDWritePage(chan, BlockWriteCallback);
 }
-
-long CARDGetXferredBytes(long chan)
-{
-	ASSERTLINE(0xB4, 0 <= chan && chan < 2);
-	return __CARDBlock[chan].xferred;
-}

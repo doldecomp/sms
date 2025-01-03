@@ -22,8 +22,6 @@ static void WriteCallback(s32 chan, s32 result)
 		CARDDir* dir0 = (CARDDir*)((u8*)card->workArea + 0x2000);
 		CARDDir* dir1 = (CARDDir*)((u8*)card->workArea + 0x4000);
 
-		ASSERTLINE(0x4F, card->currentDir);
-
 		if (card->currentDir == dir0) {
 			card->currentDir = dir1;
 			memcpy(dir1, dir0, 0x2000);

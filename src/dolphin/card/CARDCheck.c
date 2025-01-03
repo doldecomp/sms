@@ -190,7 +190,7 @@ s32 __CARDVerify(CARDControl* card)
 	}
 }
 
-s32 CARDCheckAsync(s32 chan, CARDCallback callback)
+s32 CARDCheckExAsync(s32 chan, s32* xferBytes, CARDCallback callback)
 {
 	CARDControl* card;
 	CARDDir* dir[2];
@@ -208,41 +208,41 @@ s32 CARDCheckAsync(s32 chan, CARDCallback callback)
 	BOOL updateDir    = FALSE;
 	BOOL updateOrphan = FALSE;
 
-	ASSERTLINE(0x14A, 0 <= chan && chan < 2);
+	if (xferBytes) {
+		*xferBytes = 0;
+	}
+
 	result = __CARDGetControlBlock(chan, &card);
-	if (result < 0)
+	if (result < 0) {
 		return result;
+	}
 
 	result = VerifyID(card);
-	if (result < 0)
+	if (result < 0) {
 		return __CARDPutControlBlock(card, result);
+	}
 
 	errors = VerifyDir(card, &currentDir);
 	errors += VerifyFAT(card, &currentFat);
-	if (1 < errors)
+	if (1 < errors) {
 		return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
+	}
 
 	dir[0] = (CARDDir*)((u8*)card->workArea + (1 + 0) * CARD_SYSTEM_BLOCK_SIZE);
 	dir[1] = (CARDDir*)((u8*)card->workArea + (1 + 1) * CARD_SYSTEM_BLOCK_SIZE);
 	fat[0] = (u16*)((u8*)card->workArea + (3 + 0) * CARD_SYSTEM_BLOCK_SIZE);
 	fat[1] = (u16*)((u8*)card->workArea + (3 + 1) * CARD_SYSTEM_BLOCK_SIZE);
 
-	ASSERTLINE(0x163, errors == 0 || errors == 1);
-
 	switch (errors) {
 	case 0:
-		ASSERTLINE(0x167, card->currentDir);
-		ASSERTLINE(0x168, card->currentFat);
 		break;
 	case 1:
 		if (!card->currentDir) {
-			ASSERTLINE(0x16D, card->currentFat);
 			card->currentDir = dir[currentDir];
 			memcpy(dir[currentDir], dir[currentDir ^ 1],
 			       CARD_SYSTEM_BLOCK_SIZE);
 			updateDir = TRUE;
 		} else {
-			ASSERTLINE(0x174, !card->currentFat);
 			card->currentFat = fat[currentFat];
 			memcpy(fat[currentFat], fat[currentFat ^ 1],
 			       CARD_SYSTEM_BLOCK_SIZE);
@@ -258,17 +258,20 @@ s32 CARDCheckAsync(s32 chan, CARDCallback callback)
 		CARDDir* ent;
 
 		ent = &card->currentDir[fileNo];
-		if (ent->gameName[0] == 0xff)
+		if (ent->gameName[0] == 0xff) {
 			continue;
+		}
 
 		for (iBlock = ent->startBlock, cBlock = 0;
 		     iBlock != 0xFFFF && cBlock < ent->length;
 		     iBlock = card->currentFat[iBlock], ++cBlock) {
-			if (!CARDIsValidBlockNo(card, iBlock) || 1 < ++map[iBlock])
+			if (!CARDIsValidBlockNo(card, iBlock) || 1 < ++map[iBlock]) {
 				return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
+			}
 		}
-		if (cBlock != ent->length || iBlock != 0xFFFF)
+		if (cBlock != ent->length || iBlock != 0xFFFF) {
 			return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
+		}
 	}
 
 	cFree = 0;
@@ -282,8 +285,10 @@ s32 CARDCheckAsync(s32 chan, CARDCallback callback)
 				updateOrphan             = TRUE;
 			}
 			cFree++;
-		} else if (!CARDIsValidBlockNo(card, nextBlock) && nextBlock != 0xFFFF)
+		} else if (!CARDIsValidBlockNo(card, nextBlock)
+		           && nextBlock != 0xFFFF) {
 			return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
+		}
 	}
 	if (cFree != card->currentFat[CARD_FAT_FREEBLOCKS]) {
 		card->currentFat[CARD_FAT_FREEBLOCKS] = cFree;
@@ -299,22 +304,45 @@ s32 CARDCheckAsync(s32 chan, CARDCallback callback)
 	memcpy(fat[currentFat ^ 1], fat[currentFat], CARD_SYSTEM_BLOCK_SIZE);
 
 	if (updateDir) {
+		if (xferBytes) {
+			*xferBytes = CARD_SYSTEM_BLOCK_SIZE;
+		}
 		return __CARDUpdateDir(chan, callback);
 	}
 
 	if (updateFat | updateOrphan) {
+		if (xferBytes) {
+			*xferBytes = CARD_SYSTEM_BLOCK_SIZE;
+		}
 		return __CARDUpdateFatBlock(chan, card->currentFat, callback);
 	}
 
-	return __CARDPutControlBlock(card, CARD_RESULT_READY);
+	__CARDPutControlBlock(card, CARD_RESULT_READY);
+	if (callback) {
+		BOOL enabled = OSDisableInterrupts();
+		callback(chan, CARD_RESULT_READY);
+		OSRestoreInterrupts(enabled);
+	}
+
+	return CARD_RESULT_READY;
 }
 
-long CARDCheck(long chan)
+s32 CARDCheckAsync(s32 chan, CARDCallback callback)
 {
-	long result = CARDCheckAsync(chan, __CARDSyncCallback);
+	s32 xferBytes;
 
-	if (result < 0) {
+	return CARDCheckExAsync(chan, &xferBytes, callback);
+}
+
+s32 CARDCheck(s32 channel)
+{
+	s32 result;
+	s32 xferBytes;
+
+	result = CARDCheckExAsync(channel, &xferBytes, __CARDSyncCallback);
+
+	if (result < 0 || &xferBytes == NULL)
 		return result;
-	}
-	return __CARDSync(chan);
+
+	return __CARDSync(channel);
 }

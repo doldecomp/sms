@@ -23,17 +23,16 @@ BOOL __CARDCompareFileName(CARDDir* ent, const char* fileName)
 	return FALSE;
 }
 
-s32 __CARDAccess(CARDDir* ent)
+s32 __CARDAccess(CARDControl* card, CARDDir* ent)
 {
 	if (ent->gameName[0] == 0xFF)
 		return CARD_RESULT_NOFILE;
 
-	if (__CARDDiskID == &__CARDDiskNone
-	    || (memcmp(ent->gameName, __CARDDiskID->gameName, sizeof(ent->gameName))
-	            == 0
-	        && memcmp(ent->company, __CARDDiskID->company, sizeof(ent->company))
-	               == 0))
+	if (card->diskID == &__CARDDiskNone
+	    || (memcmp(ent->gameName, card->diskID->gameName, 4) == 0
+	        && memcmp(ent->company, card->diskID->company, 2) == 0)) {
 		return CARD_RESULT_READY;
+	}
 
 	return CARD_RESULT_NOPERM;
 }
@@ -47,52 +46,54 @@ s32 __CARDIsPublic(CARDDir* ent)
 	return CARD_RESULT_NOPERM;
 }
 
-inline s32 __CARDGetFileNo(CARDControl* card, const char* fileName,
-                           s32* pfileNo)
+s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo)
 {
 	CARDDir* dir;
+	CARDDir* ent;
 	s32 fileNo;
+	s32 result;
 
 	if (!card->attached)
 		return CARD_RESULT_NOCARD;
 
 	dir = __CARDGetDirBlock(card);
 	for (fileNo = 0; fileNo < CARD_MAX_FILE; fileNo++) {
-		CARDDir* ent = &dir[fileNo];
-		s32 result   = __CARDAccess(ent);
-
+		ent    = &dir[fileNo];
+		result = __CARDAccess(card, ent);
 		if (result < 0)
 			continue;
+
 		if (__CARDCompareFileName(ent, fileName)) {
 			*pfileNo = fileNo;
 			return CARD_RESULT_READY;
 		}
 	}
+
 	return CARD_RESULT_NOFILE;
 }
 
 s32 CARDOpen(s32 chan, char* fileName, CARDFileInfo* fileInfo)
 {
 	CARDControl* card;
-	s32 result;
 	CARDDir* dir;
 	CARDDir* ent;
+	s32 result;
 	s32 fileNo;
-
-	ASSERTLINE(0x11A, 0 <= chan && chan < 2);
 
 	fileInfo->chan = -1;
 	result         = __CARDGetControlBlock(chan, &card);
+
 	if (result < 0)
 		return result;
 
 	result = __CARDGetFileNo(card, fileName, &fileNo);
-	if (result >= 0) {
+	if (0 <= result) {
 		dir = __CARDGetDirBlock(card);
+
 		ent = &dir[fileNo];
-		if (!CARDIsValidBlockNo(card, ent->startBlock))
+		if (!CARDIsValidBlockNo(card, ent->startBlock)) {
 			result = CARD_RESULT_BROKEN;
-		else {
+		} else {
 			fileInfo->chan   = chan;
 			fileInfo->fileNo = fileNo;
 			fileInfo->offset = 0;

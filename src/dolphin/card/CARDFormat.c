@@ -5,8 +5,6 @@
 #include "../os/__os.h"
 #include "__card.h"
 
-#define formatStep mountStep // huh?
-
 // functions
 static void FormatCallback(s32 chan, s32 result);
 
@@ -23,7 +21,7 @@ static void FormatCallback(s32 chan, s32 result)
 	if (card->formatStep < CARD_NUM_SYSTEM_BLOCK) {
 		result = __CARDEraseSector(
 		    chan, (u32)card->sectorSize * card->formatStep, FormatCallback);
-		if (result >= 0)
+		if (0 <= result)
 			return;
 	} else if (card->formatStep < 2 * CARD_NUM_SYSTEM_BLOCK) {
 		int step = card->formatStep - CARD_NUM_SYSTEM_BLOCK;
@@ -48,13 +46,12 @@ static void FormatCallback(s32 chan, s32 result)
 
 error:
 	callback          = card->apiCallback;
-	card->apiCallback = NULL;
+	card->apiCallback = 0;
 	__CARDPutControlBlock(card, result);
-	ASSERTLINE(0x79, callback);
 	callback(chan, result);
 }
 
-s32 CARDFormatAsync(s32 chan, CARDCallback callback)
+s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback)
 {
 	CARDControl* card;
 	CARDID* id;
@@ -68,17 +65,16 @@ s32 CARDFormatAsync(s32 chan, CARDCallback callback)
 	OSTime time;
 	OSTime rand;
 
-	ASSERTLINE(0x9A, 0 <= chan && chan < 2);
-
 	result = __CARDGetControlBlock(chan, &card);
-	if (result < 0)
+	if (result < 0) {
 		return result;
+	}
 
 	id = (CARDID*)card->workArea;
 	memset(id, 0xff, CARD_SYSTEM_BLOCK_SIZE);
 	viDTVStatus = __VIRegs[55];
 
-	id->encode = OSGetFontEncode();
+	id->encode = encode;
 
 	sram                   = __OSLockSram();
 	*(u32*)&id->serial[20] = sram->counterBias;
@@ -109,7 +105,7 @@ s32 CARDFormatAsync(s32 chan, CARDCallback callback)
 		dir = (CARDDir*)((u8*)card->workArea
 		                 + (1 + i) * CARD_SYSTEM_BLOCK_SIZE);
 		memset(dir, 0xff, CARD_SYSTEM_BLOCK_SIZE);
-		check            = CARDGetDirCheck(dir);
+		check            = __CARDGetDirCheck(dir);
 		check->checkCode = i;
 		__CARDCheckSum(dir, CARD_SYSTEM_BLOCK_SIZE - sizeof(u32),
 		               &check->checkSum, &check->checkSumInv);
@@ -131,17 +127,18 @@ s32 CARDFormatAsync(s32 chan, CARDCallback callback)
 	card->formatStep = 0;
 	result = __CARDEraseSector(chan, (u32)card->sectorSize * card->formatStep,
 	                           FormatCallback);
-	if (result < 0)
+	if (result < 0) {
 		__CARDPutControlBlock(card, result);
+	}
 	return result;
 }
 
-long CARDFormat(long chan)
+s32 CARDFormat(s32 channel)
 {
-	long result = CARDFormatAsync(chan, &__CARDSyncCallback);
-
+	s32 result = __CARDFormatRegionAsync(channel, OSGetFontEncode(),
+	                                     __CARDSyncCallback);
 	if (result < 0) {
 		return result;
 	}
-	return __CARDSync(chan);
+	return __CARDSync(channel);
 }

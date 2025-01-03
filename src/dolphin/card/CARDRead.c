@@ -19,15 +19,9 @@ s32 __CARDSeek(CARDFileInfo* fileInfo, s32 length, s32 offset,
 	s32 result;
 	u16* fat;
 
-	ASSERTLINE(0x57, 0 <= fileInfo->chan && fileInfo->chan < 2);
-	ASSERTLINE(0x58, 0 <= fileInfo->fileNo && fileInfo->fileNo < CARD_MAX_FILE);
-
 	result = __CARDGetControlBlock(fileInfo->chan, &card);
 	if (result < 0)
 		return result;
-
-	ASSERTLINE(0x5F, CARDIsValidBlockNo(card, fileInfo->iBlock));
-	ASSERTLINE(0x60, fileInfo->offset < card->cBlock * card->sectorSize);
 
 	if (!CARDIsValidBlockNo(card, fileInfo->iBlock)
 	    || card->cBlock * card->sectorSize <= fileInfo->offset)
@@ -35,8 +29,6 @@ s32 __CARDSeek(CARDFileInfo* fileInfo, s32 length, s32 offset,
 
 	dir = __CARDGetDirBlock(card);
 	ent = &dir[fileInfo->fileNo];
-
-	ASSERTLINE(0x6A, ent->gameName[0] != 0xff);
 
 	if (ent->length * card->sectorSize <= offset
 	    || ent->length * card->sectorSize < offset + length)
@@ -82,13 +74,7 @@ static void ReadCallback(s32 chan, s32 result)
 		goto error;
 	}
 
-	// something funky is going on here; these conflicting casts are needed to
-	// match both debug and retail regalloc and codegen. Perhaps the macro is
-	// different, but for the life of me i cant figure this one out. Fake for
-	// now. Maybe? Unless the macro is just weird.
-	length = TRUNC((int)fileInfo->offset + (long)card->sectorSize
-	                   + card->sectorSize - 1,
-	               card->sectorSize)
+	length = (s32)TRUNC(fileInfo->offset + card->sectorSize, card->sectorSize)
 	         - fileInfo->offset;
 	fileInfo->length -= length;
 	if (fileInfo->length <= 0)
@@ -102,9 +88,6 @@ static void ReadCallback(s32 chan, s32 result)
 		goto error;
 	}
 
-	ASSERTLINE(0xBC, OFFSET(fileInfo->length, CARD_SEG_SIZE) == 0);
-	ASSERTLINE(0xBD, OFFSET(fileInfo->offset, card->sectorSize) == 0);
-
 	result
 	    = __CARDRead(chan, card->sectorSize * (u32)fileInfo->iBlock,
 	                 (fileInfo->length < card->sectorSize) ? fileInfo->length
@@ -117,9 +100,8 @@ static void ReadCallback(s32 chan, s32 result)
 
 error:
 	callback          = card->apiCallback;
-	card->apiCallback = NULL;
+	card->apiCallback = 0;
 	__CARDPutControlBlock(card, result);
-	ASSERTLINE(0xCE, callback);
 	callback(chan, result);
 }
 
@@ -144,7 +126,7 @@ s32 CARDReadAsync(CARDFileInfo* fileInfo, void* buf, s32 length, s32 offset,
 
 	dir    = __CARDGetDirBlock(card);
 	ent    = &dir[fileInfo->fileNo];
-	result = __CARDAccess(ent);
+	result = __CARDAccess(card, ent);
 	if (result == CARD_RESULT_NOPERM)
 		result = __CARDIsPublic(ent);
 	if (result < 0)

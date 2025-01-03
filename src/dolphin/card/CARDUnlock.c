@@ -1,7 +1,6 @@
 #include <dolphin.h>
 #include <dolphin/card.h>
 #include <macros.h>
-#include <stdlib.h>
 
 #include "__card.h"
 
@@ -141,19 +140,30 @@ static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, s32 mode)
 	return err ? CARD_RESULT_NOCARD : CARD_RESULT_READY;
 }
 
+static u32 next = 1;
+
+static int CARDRand(void)
+{
+	next = next * 1103515245 + 12345;
+	return (int)((unsigned int)(next / 65536) % 32768);
+}
+
+static void CARDSrand(unsigned int seed) { next = seed; }
+
 static u32 GetInitVal(void)
 {
 	u32 tmp;
 	u32 tick;
 
 	tick = OSGetTick();
-	srand(tick);
+	CARDSrand(tick);
 	tmp = 0x7fec8000;
-	tmp |= rand();
+	tmp |= CARDRand();
 	tmp &= 0xfffff000;
 	return tmp;
 }
 
+// Calculate Dummy Read Length, 4-32Bytes
 static s32 DummyLen(void)
 {
 	u32 tick;
@@ -164,25 +174,27 @@ static s32 DummyLen(void)
 	wk   = 1;
 	max  = 0;
 	tick = OSGetTick();
-	srand(tick);
+	CARDSrand(tick);
 
-	tmp = rand();
+	tmp = CARDRand();
 	tmp &= 0x0000001f;
 	tmp += 1;
 	while ((tmp < 4) && (max < 10)) {
 		tick = OSGetTick();
 		tmp  = (s32)(tick << wk);
 		wk++;
-		if (wk > 16)
+		if (wk > 16) {
 			wk = 1;
-		srand((u32)tmp);
-		tmp = rand();
+		}
+		CARDSrand((u32)tmp);
+		tmp = CARDRand();
 		tmp &= 0x0000001f;
 		tmp += 1;
 		max++;
 	}
-	if (tmp < 4)
+	if (tmp < 4) {
 		tmp = 4;
+	}
 
 	return tmp;
 }
@@ -225,6 +237,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12])
 
 	dummy = DummyLen();
 	rlen  = dummy;
+
 	if (ReadArrayUnlock(chan, init_val, rbuf, rlen, 0) < 0)
 		return CARD_RESULT_NOCARD;
 
@@ -236,6 +249,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12])
 	dummy          = DummyLen();
 	rlen           = 20 + dummy;
 	data           = 0;
+
 	if (ReadArrayUnlock(chan, data, rbuf, rlen, 1) < 0)
 		return CARD_RESULT_NOCARD;
 
@@ -288,7 +302,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12])
 	DCFlushRange(param, sizeof(CARDDecParam));
 
 	task->priority        = 255;
-	task->iram_mmem_addr  = (u16*)OSCachedToPhysical(CardData);
+	task->iram_mmem_addr  = (u16*)OSPhysicalToCached(CardData);
 	task->iram_length     = 0x160;
 	task->iram_addr       = 0;
 	task->dsp_init_vector = 0x10;
@@ -374,6 +388,7 @@ static void DoneCallback(void* _task)
 	if (ReadArrayUnlock(chan, data, rbuf, rlen, 1) < 0) {
 		EXIUnlock(chan);
 		__CARDMountCallback(chan, CARD_RESULT_NOCARD);
+		return;
 	}
 
 	rshift         = (u32)((dummy + 4 + card->latency) * 8 + 1);
@@ -387,11 +402,13 @@ static void DoneCallback(void* _task)
 	if (ReadArrayUnlock(chan, data, rbuf, rlen, 1) < 0) {
 		EXIUnlock(chan);
 		__CARDMountCallback(chan, CARD_RESULT_NOCARD);
+		return;
 	}
 	result = __CARDReadStatus(chan, &unk);
 	if (!EXIProbe(chan)) {
 		EXIUnlock(chan);
 		__CARDMountCallback(chan, CARD_RESULT_NOCARD);
+		return;
 	}
 	if (result == CARD_RESULT_READY && !(unk & 0x40)) {
 		EXIUnlock(chan);

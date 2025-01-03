@@ -30,7 +30,7 @@ long __CARDRawRead(long chan, void* buf, long length, long offset);
 
 // CARDOpen.c
 BOOL __CARDCompareFileName(CARDDir* ent, const char* fileName);
-s32 __CARDAccess(CARDDir* ent);
+s32 __CARDAccess(CARDControl* card, CARDDir* ent);
 s32 __CARDIsPublic(CARDDir* ent);
 s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo);
 BOOL __CARDIsOpened(CARDControl* card, s32 fileNo);
@@ -40,6 +40,7 @@ void __CARDMountCallback(s32 chan, s32 result);
 
 // CARDFormat.c
 s32 CARDFormatAsync(s32 chan, CARDCallback callback);
+#define __CARDGetDirCheck(dir) ((CARDDirCheck*)&(dir)[CARD_MAX_FILE])
 
 // CARDDir.c
 CARDDir* __CARDGetDirBlock(CARDControl* card);
@@ -54,6 +55,9 @@ void* __CARDGetFatBlock(CARDControl* card);
 s32 __CARDAllocBlock(s32 chan, u32 cBlock, CARDCallback callback);
 s32 __CARDFreeBlock(s32 chan, u16 nBlock, CARDCallback callback);
 s32 __CARDUpdateFatBlock(s32 chan, u16* fat, CARDCallback callback);
+
+// CARDNet.c
+extern u16 __CARDVendorID;
 
 // CARDBios.c
 extern struct CARDControl __CARDBlock[2];

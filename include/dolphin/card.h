@@ -53,8 +53,8 @@ typedef struct CARDControl {
 	/*0x14*/ s32 latency;
 	/*0x18*/ u8 id[12];
 	/*0x24*/ int mountStep;
-	/*0x28*/ u32 scramble;
-	/*0x2C*/ int formatStep;
+	int formatStep;
+	u32 scramble;
 	DSPTaskInfo task;
 	void* workArea;
 	/*0x84*/ CARDDir* currentDir;
@@ -79,6 +79,8 @@ typedef struct CARDControl {
 	CARDCallback eraseCallback;
 	CARDCallback unlockCallback;
 	OSAlarm alarm;
+	u32 cid;
+	DVDDiskID* diskID;
 } CARDControl;
 
 typedef struct CARDDecParam {
@@ -187,6 +189,10 @@ typedef struct CARDID {
 #define CARDGetIconFormat(stat, n)                                             \
 	(((stat)->iconFormat >> (2 * (n))) & CARD_STAT_ICON_MASK)
 #define CARDGetDirCheck(dir) ((CARDDirCheck*)&(dir)[CARD_MAX_FILE])
+#define CARDSetIconSpeed(stat, n, f)                                           \
+	((stat)->iconSpeed                                                         \
+	 = (u16)(((stat)->iconSpeed & ~(CARD_STAT_SPEED_MASK << (2 * (n))))        \
+	         | ((f) << (2 * (n)))))
 
 void CARDInit(void);
 s32 CARDGetResultCode(s32 chan);
