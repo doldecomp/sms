@@ -107,7 +107,7 @@ long CARDWriteAsync(struct CARDFileInfo* fileInfo, void* buf, long length,
 
 	dir    = __CARDGetDirBlock(card);
 	ent    = &dir[fileInfo->fileNo];
-	result = __CARDAccess(ent);
+	result = __CARDAccess(card, ent);
 	if (result < 0)
 		return __CARDPutControlBlock(card, result);
 
