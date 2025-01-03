@@ -1,6 +1,8 @@
 #ifndef _DOLPHIN_OSRTC_H_
 #define _DOLPHIN_OSRTC_H_
 
+#include <dolphin/types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,8 +16,8 @@ extern "C" {
 #define OS_VIDEO_MODE_MPAL 2
 
 struct SramControl {
-	unsigned char sram[64];
-	unsigned long offset;
+	u8 sram[64];
+	u32 offset;
 	int enabled;
 	int locked;
 	int sync;
@@ -23,32 +25,33 @@ struct SramControl {
 };
 
 typedef struct OSSram {
-	unsigned short checkSum;
-	unsigned short checkSumInv;
-	unsigned long ead0;
-	unsigned long ead1;
-	unsigned long counterBias;
-	signed char displayOffsetH;
-	unsigned char ntd;
-	unsigned char language;
-	unsigned char flags;
+	u16 checkSum;
+	u16 checkSumInv;
+	u32 ead0;
+	u32 ead1;
+	u32 counterBias;
+	s8 displayOffsetH;
+	u8 ntd;
+	u8 language;
+	u8 flags;
 } OSSram;
 
 typedef struct OSSramEx {
-	unsigned char flashID[2][12];
-	unsigned long wirelessKeyboardID;
-	unsigned short wirelessPadID[4];
-	unsigned short _padding0;
-	unsigned char flashIDCheckSum[2];
-	unsigned char _padding1[4];
+	u8 flashID[2][12];
+	u32 wirelessKeyboardID;
+	u16 wirelessPadID[4];
+	u16 _padding0;
+	u8 flashIDCheckSum[2];
+	u8 _padding1[4];
 } OSSramEx;
 
-unsigned long OSGetSoundMode();
-void OSSetSoundMode(unsigned long mode);
-unsigned long OSGetVideoMode();
-void OSSetVideoMode(unsigned long mode);
-unsigned char OSGetLanguage();
-void OSSetLanguage(unsigned char language);
+u32 OSGetSoundMode();
+void OSSetSoundMode(u32 mode);
+u32 OSGetVideoMode();
+void OSSetVideoMode(u32 mode);
+u8 OSGetLanguage();
+void OSSetLanguage(u8 language);
+void OSSetWirelessID(s32 channel, u16 id);
 
 #ifdef __cplusplus
 }

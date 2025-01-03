@@ -3,6 +3,7 @@
 
 #include <dolphin/types.h>
 #include <dolphin/os/OSTime.h>
+#include <dolphin/os/OSInterrupt.h>
 
 #define PAD_CHAN0_BIT 0x80000000
 #define PAD_CHAN1_BIT 0x40000000
@@ -62,6 +63,13 @@ u32 SIGetCommand(long chan);
 u32 SIEnablePolling(u32 poll);
 u32 SIDisablePolling(u32 poll);
 u32 SISetXY(u32 x, u32 y);
+u32 SIGetType(s32 chan);
+u32 SIGetTypeAsync(s32 chan, void (*callback)(long, u32));
+BOOL SIIsChanBusy(s32 chan);
+u32 SIGetStatus(s32 chan);
+BOOL SIGetResponse(s32 chan, void* data);
+BOOL SIRegisterPollingHandler(__OSInterruptHandler handler);
+BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler);
 void SITransferCommands(void);
 BOOL SIBusy(void);
 void SIRefreshSamplingRate();

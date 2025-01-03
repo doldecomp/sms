@@ -1664,6 +1664,7 @@ def generate_compile_commands(
                 "--target=powerpc-eabi",
                 "-fdeclspec",
                 "-Dasm=",
+                "-D__cntlzw=__builtin_clzl",
                 *cflags,
                 "-c",
                 obj.src_path,
