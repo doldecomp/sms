@@ -730,8 +730,8 @@ config.libs = [
             Object(NonMatching, "dolphin/gd/GDTransform.c"),
         ]),
     DolphinLib("si", [
-            Object(NonMatching, "dolphin/si/SIBios.c"),
-            Object(NonMatching, "dolphin/si/SISamplingRate.c"),
+            Object(Matching, "dolphin/si/SIBios.c"),
+            Object(Matching, "dolphin/si/SISamplingRate.c"),
         ]),
     DolphinLib("exi", [
             Object(NonMatching, "dolphin/exi/EXIBios.c"),

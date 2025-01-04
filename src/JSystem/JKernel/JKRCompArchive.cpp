@@ -54,7 +54,7 @@ JKRCompArchive::~JKRCompArchive()
 	mIsMounted = false;
 }
 
-void dummy()
+static void dummy()
 {
 	const int unknownTable1[4]   = { 0, 2, 1, 3 };
 	const float unknownTable2[3] = { 1, 1, 1 };

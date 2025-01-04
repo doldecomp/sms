@@ -73,5 +73,6 @@ BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler);
 void SITransferCommands(void);
 BOOL SIBusy(void);
 void SIRefreshSamplingRate();
+void SISetSamplingRate(u32 msec);
 
 #endif // _DOLPHIN_SI_H_

@@ -159,7 +159,7 @@ void __DSP_insert_task(DSPTaskInfo* task)
 	}
 }
 
-void dummy()
+static void dummy()
 {
 	__DSP_debug_printf("__DSP_add_task() : Added task    : 0x%08X\n");
 }
