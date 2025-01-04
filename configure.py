@@ -713,7 +713,7 @@ config.libs = [
             Object(NonMatching, "dolphin/gx/GXPerf.c"),
         ]),
     DolphinLib("OdemuExi2", [
-            Object(NonMatching, "OdemuExi2/DebuggerDriver.c"),
+            Object(Matching, "OdemuExi2/DebuggerDriver.c", cflags=[*cflags_dolphin, "-inline auto,deferred"]),
         ]),
     DolphinLib("amcstubs", [
             Object(Matching, "dolphin/amcstubs/AmcExi2Stubs.c"),
