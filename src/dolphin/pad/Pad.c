@@ -5,7 +5,6 @@
 #include <string.h>
 #include <macros.h>
 
-
 #define LATENCY 8
 
 #define PAD_ALL                                                                \
