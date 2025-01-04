@@ -51,6 +51,7 @@ u32 OSGetVideoMode();
 void OSSetVideoMode(u32 mode);
 u8 OSGetLanguage();
 void OSSetLanguage(u8 language);
+u16 OSGetWirelessID(s32 channel);
 void OSSetWirelessID(s32 channel, u16 id);
 
 #ifdef __cplusplus

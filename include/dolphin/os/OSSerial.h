@@ -2,13 +2,21 @@
 #define _DOLPHIN_OSSERIAL_H
 
 #include <dolphin/hw_regs.h>
+#include <dolphin/os/OSTime.h>
 
 #define CHAN_NONE -1
 
 #define SI_MAX_CHAN 4
 
-#define SI_COMCSR_IDX 13
-#define SI_STATUS_IDX 14
+#define SI_MAX_COMCSR_INLNGTH  128
+#define SI_MAX_COMCSR_OUTLNGTH 128
+#define SI_COMCSR_IDX          13
+#define SI_STATUS_IDX          14
+
+#define SI_CHAN0_BIT 0x80000000
+#define SI_CHAN1_BIT 0x40000000
+#define SI_CHAN2_BIT 0x20000000
+#define SI_CHAN3_BIT 0x10000000
 
 #define SI_COMCSR_TCINT_MASK      (1 << 31)
 #define SI_COMCSR_TCINTMSK_MASK   (1 << 30)
@@ -29,36 +37,37 @@
 
 #define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
 
-struct SIControl {
-	long chan;
-	unsigned long poll;
-	unsigned long inputBytes;
-	void* input;
-	void (*callback)(long, unsigned long, struct OSContext*);
-};
+struct OSContext;
 
-struct SIPacket {
-	long chan;
-	void* output;
-	unsigned long outputBytes;
+typedef struct SIControl {
+	s32 chan;
+	u32 poll;
+	u32 inputBytes;
 	void* input;
-	unsigned long inputBytes;
-	void (*callback)(long, unsigned long, struct OSContext*);
-	long long time;
-};
+	void (*callback)(s32, u32, struct OSContext*);
+} SIControl;
+
+typedef struct SIPacket {
+	s32 chan;
+	void* output;
+	u32 outputBytes;
+	void* input;
+	u32 inputBytes;
+	void (*callback)(s32, u32, struct OSContext*);
+	OSTime fire;
+} SIPacket;
 
 int SIBusy();
 void SIInit();
-unsigned long SISync();
-void SISetCommand(long chan, unsigned long command);
-unsigned long SIGetCommand(long chan);
+u32 SISync();
+void SISetCommand(s32 chan, u32 command);
+u32 SIGetCommand(s32 chan);
 void SITransferCommands();
-unsigned long SISetXY(unsigned long x, unsigned long y);
-unsigned long SIEnablePolling(unsigned long poll);
-unsigned long SIDisablePolling(unsigned long poll);
-int SITransfer(long chan, void* output, unsigned long outputBytes, void* input,
-               unsigned long inputBytes,
-               void (*callback)(long, unsigned long, struct OSContext*),
-               long long time);
+u32 SISetXY(u32 x, u32 y);
+u32 SIEnablePolling(u32 poll);
+u32 SIDisablePolling(u32 poll);
+int SITransfer(s32 chan, void* output, u32 outputBytes, void* input,
+               u32 inputBytes, void (*callback)(s32, u32, struct OSContext*),
+               OSTime time);
 
 #endif // _DOLPHIN_OSSERIAL_H
