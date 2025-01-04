@@ -734,8 +734,8 @@ config.libs = [
             Object(Matching, "dolphin/si/SISamplingRate.c"),
         ]),
     DolphinLib("exi", [
-            Object(NonMatching, "dolphin/exi/EXIBios.c"),
-            Object(NonMatching, "dolphin/exi/EXIUart.c"),
+            Object(Matching, "dolphin/exi/EXIBios.c"),
+            Object(Matching, "dolphin/exi/EXIUart.c"),
         ]),
     DolphinLib("thp", [
             Object(NonMatching, "dolphin/thp/THPDec.c"),
