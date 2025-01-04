@@ -1,108 +1,130 @@
-#include <dolphin.h>
 #include <dolphin/dvd.h>
-#include <macros.h>
+#include <dolphin/os.h>
 
-#include "__dvd.h"
+#define MAX_QUEUES 4
+typedef struct {
+	DVDCommandBlock* next;
+	DVDCommandBlock* prev;
+} DVDQueue;
 
-static struct {
-	/* 0x00 */ struct DVDCommandBlock* next;
-	/* 0x04 */ struct DVDCommandBlock* prev;
-} WaitingQueue[4];
-
-static struct DVDCommandBlock* PopWaitingQueuePrio(long prio);
+static DVDQueue WaitingQueue[MAX_QUEUES];
 
 void __DVDClearWaitingQueue(void)
 {
-	unsigned long i;
-	struct DVDCommandBlock* q;
+	u32 i;
 
-	for (i = 0; i < 4; i++) {
-		q       = (struct DVDCommandBlock*)&WaitingQueue[i].next;
+	for (i = 0; i < MAX_QUEUES; i++) {
+		DVDCommandBlock* q;
+
+		q       = (DVDCommandBlock*)&(WaitingQueue[i]);
 		q->next = q;
 		q->prev = q;
 	}
 }
 
-int __DVDPushWaitingQueue(long prio, struct DVDCommandBlock* block)
+BOOL __DVDPushWaitingQueue(s32 prio, DVDCommandBlock* block)
 {
-	int enabled               = OSDisableInterrupts();
-	struct DVDCommandBlock* q = (struct DVDCommandBlock*)&WaitingQueue[prio];
+	BOOL enabled;
+	DVDCommandBlock* q;
+
+	enabled = OSDisableInterrupts();
+
+	q = (DVDCommandBlock*)&(WaitingQueue[prio]);
 
 	q->prev->next = block;
 	block->prev   = q->prev;
 	block->next   = q;
 	q->prev       = block;
+
 	OSRestoreInterrupts(enabled);
-	return 1;
+
+	return TRUE;
 }
 
-inline static struct DVDCommandBlock* PopWaitingQueuePrio(long prio)
+static DVDCommandBlock* PopWaitingQueuePrio(s32 prio)
 {
-	struct DVDCommandBlock* tmp;
-	int enabled;
-	struct DVDCommandBlock* q;
+	DVDCommandBlock* tmp;
+	BOOL enabled;
+	DVDCommandBlock* q;
 
 	enabled = OSDisableInterrupts();
-	q       = (struct DVDCommandBlock*)&WaitingQueue[prio];
-	ASSERTLINE(0x54, q->next != q);
+
+	q = (DVDCommandBlock*)&(WaitingQueue[prio]);
+
 	tmp             = q->next;
 	q->next         = tmp->next;
 	tmp->next->prev = q;
+
 	OSRestoreInterrupts(enabled);
-	tmp->next = 0;
-	tmp->prev = 0;
+
+	tmp->next = (DVDCommandBlock*)NULL;
+	tmp->prev = (DVDCommandBlock*)NULL;
+
 	return tmp;
 }
 
-struct DVDCommandBlock* __DVDPopWaitingQueue(void)
+DVDCommandBlock* __DVDPopWaitingQueue(void)
 {
-	unsigned long i;
-	int enabled;
-	struct DVDCommandBlock* q;
+	u32 i;
+	BOOL enabled;
+	DVDCommandBlock* q;
 
 	enabled = OSDisableInterrupts();
-	for (i = 0; i < 4; i++) {
-		q = (struct DVDCommandBlock*)&WaitingQueue[i];
+
+	for (i = 0; i < MAX_QUEUES; i++) {
+		q = (DVDCommandBlock*)&(WaitingQueue[i]);
 		if (q->next != q) {
-			return PopWaitingQueuePrio(i);
+			OSRestoreInterrupts(enabled);
+			return PopWaitingQueuePrio((s32)i);
 		}
 	}
+
 	OSRestoreInterrupts(enabled);
-	return NULL;
+
+	return (DVDCommandBlock*)NULL;
 }
 
-int __DVDCheckWaitingQueue(void)
+BOOL __DVDCheckWaitingQueue(void)
 {
-	unsigned long i;
-	int enabled;
-	struct DVDCommandBlock* q;
+	u32 i;
+	BOOL enabled;
+	DVDCommandBlock* q;
 
 	enabled = OSDisableInterrupts();
-	for (i = 0; i < 4; i++) {
-		q = (struct DVDCommandBlock*)&WaitingQueue[i];
+
+	for (i = 0; i < MAX_QUEUES; i++) {
+		q = (DVDCommandBlock*)&(WaitingQueue[i]);
 		if (q->next != q) {
-			return 1;
+			OSRestoreInterrupts(enabled);
+			return TRUE;
 		}
 	}
+
 	OSRestoreInterrupts(enabled);
-	return 0;
+
+	return FALSE;
 }
 
-int __DVDDequeueWaitingQueue(struct DVDCommandBlock* block)
+BOOL __DVDDequeueWaitingQueue(DVDCommandBlock* block)
 {
-	int enabled;
-	struct DVDCommandBlock* prev;
-	struct DVDCommandBlock* next;
+	BOOL enabled;
+	DVDCommandBlock* prev;
+	DVDCommandBlock* next;
 
 	enabled = OSDisableInterrupts();
-	prev    = block->prev;
-	next    = block->next;
-	if (prev == NULL || next == NULL) {
+
+	prev = block->prev;
+	next = block->next;
+
+	if ((prev == (DVDCommandBlock*)NULL) || (next == (DVDCommandBlock*)NULL)) {
 		OSRestoreInterrupts(enabled);
-		return 0;
+		return FALSE;
 	}
+
 	prev->next = next;
 	next->prev = prev;
+
 	OSRestoreInterrupts(enabled);
-	return 1;
+
+	return TRUE;
 }

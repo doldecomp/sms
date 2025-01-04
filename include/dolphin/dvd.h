@@ -141,7 +141,7 @@ int DVDInquiryAsync(struct DVDCommandBlock* block, struct DVDDriveInfo* info,
 long DVDInquiry(struct DVDCommandBlock* block, struct DVDDriveInfo* info);
 void DVDReset();
 int DVDResetRequired();
-long DVDGetCommandBlockStatus(struct DVDCommandBlock* block);
+s32 DVDGetCommandBlockStatus(struct DVDCommandBlock* block);
 long DVDGetDriveStatus();
 BOOL DVDCheckDisk(void);
 int DVDSetAutoInvalidation(int autoInval);
@@ -149,7 +149,7 @@ void DVDPause();
 void DVDResume();
 int DVDCancelAsync(struct DVDCommandBlock* block,
                    void (*callback)(long, struct DVDCommandBlock*));
-long DVDCancel(volatile struct DVDCommandBlock* block);
+s32 DVDCancel(struct DVDCommandBlock* block);
 int DVDCancelAllAsync(void (*callback)(long, struct DVDCommandBlock*));
 long DVDCancelAll();
 struct DVDDiskID* DVDGetCurrentDiskID();
@@ -226,6 +226,12 @@ s32 DVDGetTransferredSize(DVDFileInfo* fileinfo);
 #define DVD_COMMAND_AUDIO_BUFFER_CONFIG 13
 #define DVD_COMMAND_INQUIRY             14
 #define DVD_COMMAND_BS_CHANGE_DISK      15
+
+// dvdlow.c
+
+typedef void (*DVDLowCallback)(u32 intType);
+
+u32 DVDLowGetLength(void);
 
 // unidentified externs
 extern int DVDReadAbsAsyncForBS(struct DVDCommandBlock* block, void* addr,

@@ -40,7 +40,8 @@ typedef struct OSSramEx {
 	u8 flashID[2][12];
 	u32 wirelessKeyboardID;
 	u16 wirelessPadID[4];
-	u16 _padding0;
+	u8 dvdErrorCode;
+	u8 _padding0;
 	u8 flashIDCheckSum[2];
 	u8 _padding1[4];
 } OSSramEx;

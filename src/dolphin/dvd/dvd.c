@@ -1,1170 +1,1471 @@
-#include <dolphin.h>
 #include <dolphin/dvd.h>
+#include <dolphin/hw_regs.h>
 #include <dolphin/os.h>
-#include <macros.h>
-
-#include "../os/__os.h"
+#include <string.h>
 #include "__dvd.h"
 
-static unsigned char* tmpBuffer[32] ATTRIBUTE_ALIGN(32);
-static struct DVDCommandBlock DummyCommandBlock;
+typedef void (*stateFunc)(DVDCommandBlock* block);
+stateFunc LastState;
 
-static int autoInvalidation = 1;
+static DVDBB2 BB2 __attribute__((aligned(32)));
+static DVDDiskID CurrDiskID __attribute__((aligned(32)));
+static DVDCommandBlock* executing;
+static DVDDiskID* IDShouldBe;
+static OSBootInfo* bootInfo;
+static BOOL autoInvalidation        = TRUE;
+static volatile BOOL PauseFlag      = FALSE;
+static volatile BOOL PausingFlag    = FALSE;
+static volatile BOOL AutoFinishing  = FALSE;
+static volatile BOOL FatalErrorFlag = FALSE;
+static volatile u32 CurrCommand;
+static volatile u32 Canceling = FALSE;
+static DVDCBCallback CancelCallback;
+static volatile u32 ResumeFromHere = 0;
+static volatile u32 CancelLastError;
+static volatile u32 LastError;
+static volatile s32 NumInternalRetry = 0;
+static volatile BOOL ResetRequired;
+static volatile BOOL CancelAllSyncComplete = FALSE;
+static volatile BOOL FirstTimeInBootrom    = FALSE;
 
-static struct DVDCommandBlock* executing;
-static void* tmp;
-static struct DVDDiskID* currID;
-static struct OSBootInfo_s* bootInfo;
-static volatile int PauseFlag;
-static volatile int PausingFlag;
-static int AutoFinishing;
-static volatile unsigned long CurrCommand;
-static volatile unsigned long Canceling;
-static struct DVDCommandBlock* CancelingCommandBlock;
-static void (*CancelCallback)(long, struct DVDCommandBlock*);
-static volatile unsigned long ResumeFromHere;
-static volatile unsigned long CancelLastError;
-static unsigned long LastError;
-static volatile long NumInternalRetry;
-static int ResetRequired;
-static int CancelAllSyncComplete;
-static volatile unsigned long ResetCount;
-static int FirstTimeInBootrom;
-static long ResultForSyncCommand;
-static int DVDInitialized;
-void (*LastState)(struct DVDCommandBlock*);
+static DVDCommandBlock DummyCommandBlock;
+static OSAlarm ResetAlarm;
 
+static BOOL DVDInitialized = FALSE;
+
+/* States */
 static void stateReadingFST();
-static void cbForStateReadingFST(unsigned long intType);
-static void stateError();
+static void stateTimeout();
 static void stateGettingError();
-static unsigned long CategorizeError(unsigned long error);
-static int ResetWorkAround(unsigned long error);
-static void cbForStateGettingError(unsigned long intType);
 static void stateGoToRetry();
-static void cbForStateGoToRetry(unsigned long intType);
 static void stateCheckID();
 static void stateCheckID3();
+static void stateCheckID2a();
 static void stateCheckID2();
-static void cbForStateCheckID1(unsigned long intType);
-static void cbForStateCheckID2(unsigned long intType);
-static void cbForStateCheckID3(unsigned long intType);
 static void stateCoverClosed();
 static void stateCoverClosed_CMD();
-static void cbForStateCoverClosed(unsigned long intType);
+static void stateCoverOpen();
 static void stateMotorStopped();
-static void cbForStateMotorStopped(unsigned long intType);
 static void stateReady();
-static void stateBusy(struct DVDCommandBlock* block);
-static void cbForStateBusy(unsigned long intType);
-static int issueCommand(long prio, struct DVDCommandBlock* block);
-static void cbForCancelStreamSync(long result, struct DVDCommandBlock* block);
-static void cbForStopStreamAtEndSync(long result,
-                                     struct DVDCommandBlock* block);
-static void cbForGetStreamErrorStatusSync(long result,
-                                          struct DVDCommandBlock* block);
-static void cbForGetStreamPlayAddrSync(long result,
-                                       struct DVDCommandBlock* block);
-static void cbForGetStreamStartAddrSync(long result,
-                                        struct DVDCommandBlock* block);
-static void cbForGetStreamLengthSync(long result,
-                                     struct DVDCommandBlock* block);
-static void cbForChangeDiskSync();
-static void cbForInquirySync(long result, struct DVDCommandBlock* block);
-static void cbForCancelSync();
-static void cbForCancelAllSync();
+static void stateBusy();
+
+/* Callbacks */
+static void cbForStateReadingFST(u32 intType);
+static void cbForStateError(u32 intType);
+static void cbForStateGettingError(u32 intType);
+static void cbForUnrecoveredError(u32 intType);
+static void cbForUnrecoveredErrorRetry(u32 intType);
+static void cbForStateGoToRetry(u32 intType);
+static void cbForStateCheckID2a(u32 intType);
+static void cbForStateCheckID1(u32 intType);
+static void cbForStateCheckID2(u32 intType);
+static void cbForStateCheckID3(u32 intType);
+static void cbForStateCoverClosed(u32 intType);
+static void cbForStateMotorStopped(u32 intType);
+static void cbForStateBusy(u32 intType);
+static void cbForCancelStreamSync(s32 result, DVDCommandBlock* block);
+static void cbForCancelSync(s32 result, DVDCommandBlock* block);
+static void cbForCancelAllSync(s32 result, DVDCommandBlock* block);
+
+static void defaultOptionalCommandChecker(DVDCommandBlock* block,
+                                          DVDLowCallback cb);
+
+static DVDOptionalCommandChecker checkOptionalCommand
+    = defaultOptionalCommandChecker;
+
+static void defaultOptionalCommandChecker(DVDCommandBlock* block,
+                                          DVDLowCallback cb)
+{
+}
 
 void DVDInit()
 {
-	if (DVDInitialized == 0) {
-		DVDInitialized = 1;
-		__DVDFSInit();
-		__DVDClearWaitingQueue();
-		bootInfo = (void*)OSPhysicalToCached(0);
-		currID   = &bootInfo->DVDDiskID;
-		__OSSetInterruptHandler(0x15, __DVDInterruptHandler);
-		__OSUnmaskInterrupts(0x400U);
-		OSInitThreadQueue(&__DVDThreadQueue);
-		__DIRegs[0] = 0x2A;
-		__DIRegs[1] = 0;
-		if (bootInfo->magic == 0xE5207C22) {
-			OSReport("app booted via JTAG\n");
-			OSReport("load fst\n");
-			__fstLoad();
-			return;
-		}
-		if (bootInfo->magic == 0x0D15EA5E) {
-			OSReport("app booted from bootrom\n");
-			return;
-		}
-		FirstTimeInBootrom = 1;
-		OSReport("bootrom\n");
+	if (DVDInitialized) {
+		return;
+	}
+
+	DVDInitialized = TRUE;
+	__DVDFSInit();
+	__DVDClearWaitingQueue();
+	__DVDInitWA();
+	bootInfo   = (OSBootInfo*)OSPhysicalToCached(0x0000);
+	IDShouldBe = &(bootInfo->DVDDiskID);
+	__OSSetInterruptHandler(21, __DVDInterruptHandler);
+	__OSUnmaskInterrupts(0x400);
+	OSInitThreadQueue(&__DVDThreadQueue);
+	__DIRegs[0] = 0x2a;
+	__DIRegs[1] = 0;
+	if (bootInfo->magic == 0xE5207C22) {
+		OSReport("load fst\n");
+		__fstLoad();
+	} else if (bootInfo->magic != 0xD15EA5E) {
+		FirstTimeInBootrom = TRUE;
 	}
 }
 
 static void stateReadingFST()
 {
-	LastState = stateReadingFST;
-	ASSERTLINE(0x219, ((u32)(bootInfo->FSTLocation) & (32 - 1)) == 0);
-	DVDLowRead(bootInfo->FSTLocation, (u32)(tmpBuffer[2] + 0x1F) & 0xFFFFFFE0,
-	           (u32)tmpBuffer[1], cbForStateReadingFST);
+	LastState = (stateFunc)stateReadingFST;
+
+	DVDLowRead(bootInfo->FSTLocation, OSRoundUp32B(BB2.FSTLength),
+	           BB2.FSTPosition, cbForStateReadingFST);
 }
 
-static void cbForStateReadingFST(unsigned long intType)
+static void cbForStateReadingFST(u32 intType)
 {
-	struct DVDCommandBlock* finished;
+	DVDCommandBlock* finished;
 
-	ASSERTLINE(0x229, (intType & DVD_INTTYPE_CVR) == 0);
-	if (intType & 1) {
-		ASSERTLINE(0x22E, (intType & DVD_INTTYPE_DE) == 0);
-		NumInternalRetry = 0;
-		finished         = executing;
-		executing        = &DummyCommandBlock;
-		finished->state  = DVD_STATE_END;
-		if (finished->callback) {
-			finished->callback(0, finished);
-		}
-		stateReady();
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
 		return;
 	}
-	ASSERTLINE(0x246, intType == DVD_INTTYPE_DE);
-	stateGettingError();
+
+	if (intType & 1) {
+		NumInternalRetry = 0;
+		__DVDFSInit();
+		finished        = executing;
+		executing       = &DummyCommandBlock;
+		finished->state = 0;
+		if (finished->callback) {
+			(finished->callback)(0, finished);
+		}
+
+		stateReady();
+	} else {
+
+		stateGettingError();
+	}
 }
 
-static void stateError()
+inline static void stateError(u32 error)
 {
-	struct DVDCommandBlock* finished;
-	int unused;
+	__DVDStoreErrorCode(error);
+	DVDLowStopMotor(cbForStateError);
+}
 
-	finished  = executing;
-	executing = &DummyCommandBlock;
-	if (finished->callback) {
-		finished->callback(-1, finished);
+static void cbForStateError(u32 intType)
+{
+	DVDCommandBlock* finished;
+
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
 	}
+
+	FatalErrorFlag = TRUE;
+	finished       = executing;
+	executing      = &DummyCommandBlock;
+	if (finished->callback) {
+		(finished->callback)(-1, finished);
+	}
+
+	if (Canceling) {
+		Canceling = FALSE;
+		if (CancelCallback)
+			(CancelCallback)(0, finished);
+	}
+
+	stateReady();
+
+	return;
+}
+
+static void stateTimeout()
+{
+	__DVDStoreErrorCode(0x1234568);
+	DVDReset();
+	cbForStateError(0);
 }
 
 static void stateGettingError() { DVDLowRequestError(cbForStateGettingError); }
 
-static unsigned long CategorizeError(unsigned long error)
+static u32 CategorizeError(u32 error)
 {
-	if (error == 1) {
+	if (error == 0x20400) {
+		LastError = error;
 		return 1;
 	}
-	error &= 0x00FFFFFF;
-	if (error == 0x31100) {
-		return 2;
-	}
-	if ((error == 0x62800) || (error == 0x23A00) || (error == 0xB5A01)) {
+
+	error &= 0xffffff;
+
+	if ((error == 0x62800) || (error == 0x23a00) || (error == 0xb5a01)) {
 		return 0;
 	}
-	NumInternalRetry += 1;
+
+	++NumInternalRetry;
 	if (NumInternalRetry == 2) {
 		if (error == LastError) {
+			LastError = error;
 			return 1;
+		} else {
+			LastError = error;
+			return 2;
 		}
-		return 2;
-	}
-	LastError = error;
-	return 3;
-}
+	} else {
+		LastError = error;
 
-static int ResetWorkAround(unsigned long error)
-{
-	if ((LastState == stateCoverClosed_CMD
-	     || (CurrCommand == DVD_COMMAND_READID))) {
-		u32 status = error & 0xFF000000;
-		if (status == 0x03000000 && ResetCount != 1) {
-			if (ResetCount != 0) {
-				ASSERTLINE(0x2F1, FALSE);
-			}
-			ResetCount += 1;
-			return 1;
+		if ((error == 0x31100) || (executing->command == 5)) {
+			return 2;
+		} else {
+			return 3;
 		}
 	}
-	ResetCount = 0;
-	return 0;
 }
 
-static void cbForStateGettingError(unsigned long intType)
+inline static BOOL CheckCancel(u32 resume)
 {
-	unsigned long error;
-	unsigned long status;
-	long result;
-	unsigned long errorCategory;
-	struct DVDCommandBlock* finished;
+	DVDCommandBlock* finished;
 
-	if (intType & DVD_INTTYPE_DE) {
-		executing->state = DVD_STATE_FATAL_ERROR;
-		stateError(0);
+	if (Canceling) {
+		ResumeFromHere = resume;
+		Canceling      = FALSE;
+
+		finished  = executing;
+		executing = &DummyCommandBlock;
+
+		finished->state = 10;
+		if (finished->callback)
+			(*finished->callback)(-3, finished);
+		if (CancelCallback)
+			(CancelCallback)(0, finished);
+		stateReady();
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static void cbForStateGettingError(u32 intType)
+{
+	u32 error;
+	u32 status;
+	u32 errorCategory;
+	u32 resume;
+
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
 		return;
 	}
-	ASSERTLINE(0x30F, intType == DVD_INTTYPE_TC);
-	error         = __DIRegs[8];
+
+	if (intType & 2) {
+		executing->state = -1;
+		stateError(0x1234567);
+		return;
+	}
+
+	error  = __DIRegs[8];
+	status = error & 0xff000000;
+
 	errorCategory = CategorizeError(error);
+
 	if (errorCategory == 1) {
-		if (Canceling != 0U) {
-			ResumeFromHere  = 5;
-			Canceling       = 0;
-			CancelLastError = error;
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			if (finished->state == DVD_STATE_BUSY) {
-				finished->state = DVD_STATE_CANCELED;
-				if (finished->callback) {
-					finished->callback(-6, finished);
-				}
-				if (CancelCallback) {
-					CancelCallback(0, finished);
-				}
-			}
-			stateReady();
-			return;
-		}
-		executing->state = DVD_STATE_FATAL_ERROR;
+		executing->state = -1;
 		stateError(error);
 		return;
-	} else if (errorCategory == 2) {
+	}
+
+	if ((errorCategory == 2) || (errorCategory == 3)) {
+		resume = 0;
+	} else {
+		if (status == 0x01000000)
+			resume = 4;
+		else if (status == 0x02000000)
+			resume = 6;
+		else if (status == 0x03000000)
+			resume = 3;
+		else
+			resume = 5;
+	}
+
+	if (CheckCancel(resume))
+		return;
+
+	if (errorCategory == 2) {
+		__DVDStoreErrorCode(error);
 		stateGoToRetry();
 		return;
-	} else if (errorCategory == 3) {
-		if (Canceling != 0U) {
-			ResumeFromHere = 0;
-			Canceling      = 0;
-			finished       = executing;
-			executing      = &DummyCommandBlock;
-			if (finished->state == DVD_STATE_BUSY) {
-				finished->state = DVD_STATE_CANCELED;
-				if (finished->callback) {
-					finished->callback(-6, finished);
-				}
-				if (CancelCallback) {
-					CancelCallback(0, finished);
-				}
-			}
-			stateReady();
-			return;
-		}
-		LastState(executing);
-		return;
-	} else {
-		status = (error & 0xFF000000);
-		if ((status + 0xFF000000) == 0) {
-			executing->state = DVD_STATE_COVER_OPEN;
-		} else if ((status + 0xFE000000) == 0) {
-			executing->state = DVD_STATE_COVER_CLOSED;
-		} else if ((status + 0xFD000000) == 0) {
-			executing->state = DVD_STATE_NO_DISK;
+	}
+
+	if (errorCategory == 3) {
+		if ((error & 0x00ffffff) == 0x00031100) {
+			DVDLowSeek(executing->offset, cbForUnrecoveredError);
 		} else {
-			ASSERTLINE(0x37B, FALSE);
-			executing->state = DVD_STATE_FATAL_ERROR;
-		}
-		if (CurrCommand == DVD_COMMAND_INITSTREAM
-		    || CurrCommand == DVD_COMMAND_CANCELSTREAM
-		    || CurrCommand == DVD_COMMAND_STOP_STREAM_AT_END
-		    || CurrCommand == DVD_COMMAND_REQUEST_AUDIO_ERROR
-		    || CurrCommand == DVD_COMMAND_REQUEST_PLAY_ADDR
-		    || CurrCommand == DVD_COMMAND_REQUEST_START_ADDR
-		    || CurrCommand == DVD_COMMAND_REQUEST_LENGTH) {
-			if ((status + 0xFF000000) == 0) {
-				result = -3;
-			} else if ((status + 0xFE000000) == 0) {
-				result = -2;
-			} else {
-				ASSERTLINE(0x389, FALSE);
-				result = -1;
-			}
-			finished  = executing;
-			executing = &DummyCommandBlock;
-			if (finished->callback) {
-				finished->callback(result, finished);
-			}
-			stateReady();
-			return;
-		}
-		if (Canceling != 0U) {
-			if ((status + 0xFF000000) == 0) {
-				ResumeFromHere = 4;
-			} else if ((status + 0xFE000000) == 0) {
-				ResumeFromHere = 6;
-			} else if ((status + 0xFD000000) == 0) {
-				ResumeFromHere = 3;
-			}
-			finished  = executing;
-			executing = &DummyCommandBlock;
-			if (finished->state == DVD_STATE_BUSY) {
-				finished->state = DVD_STATE_CANCELED;
-				if (finished->callback) {
-					finished->callback(-6, finished);
-				}
-				if (CancelCallback) {
-					CancelCallback(0, finished);
-				}
-			}
-			Canceling = 0;
-			stateReady();
-			return;
-		}
-		if ((status + 0xFF000000) == 0) {
-			stateMotorStopped();
-			return;
-		}
-		if ((status + 0xFE000000) == 0) {
-			stateCoverClosed();
-			return;
-		}
-		if ((status + 0xFD000000) == 0) {
-			stateMotorStopped();
+			LastState(executing);
 		}
 		return;
 	}
+
+	if (status == 0x01000000) {
+		executing->state = 5;
+		stateMotorStopped();
+		return;
+	} else if (status == 0x02000000) {
+		executing->state = 3;
+		stateCoverClosed();
+		return;
+	} else if (status == 0x03000000) {
+		executing->state = 4;
+		stateMotorStopped();
+		return;
+	} else {
+		executing->state = -1;
+		stateError(0x1234567);
+		return;
+	}
+}
+
+static void cbForUnrecoveredError(u32 intType)
+{
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
+
+	if (intType & 1) {
+		stateGoToRetry();
+		return;
+	}
+
+	DVDLowRequestError(cbForUnrecoveredErrorRetry);
+}
+
+static void cbForUnrecoveredErrorRetry(u32 intType)
+{
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
+	executing->state = -1;
+
+	if (intType & 2) {
+		__DVDStoreErrorCode(0x1234567);
+		DVDLowStopMotor(cbForStateError);
+		return;
+	}
+
+	__DVDStoreErrorCode(__DIRegs[8]);
+	DVDLowStopMotor(cbForStateError);
 }
 
 static void stateGoToRetry() { DVDLowStopMotor(cbForStateGoToRetry); }
 
-static void cbForStateGoToRetry(unsigned long intType)
+static void cbForStateGoToRetry(u32 intType)
 {
-	struct DVDCommandBlock* finished;
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
 
 	if (intType & 2) {
-		executing->state = DVD_STATE_FATAL_ERROR;
-		stateError(0);
+		executing->state = -1;
+		stateError(0x1234567);
 		return;
 	}
-	ASSERTLINE(0x3D9, intType == DVD_INTTYPE_TC);
+
 	NumInternalRetry = 0;
-	if ((CurrCommand == DVD_COMMAND_BSREAD)
-	    || (CurrCommand == DVD_COMMAND_READID)
-	    || (CurrCommand == DVD_COMMAND_AUDIO_BUFFER_CONFIG)
-	    || (CurrCommand == DVD_COMMAND_BS_CHANGE_DISK)) {
-		ResetRequired = 1;
+
+	if ((CurrCommand == 4) || (CurrCommand == 5) || (CurrCommand == 13)
+	    || (CurrCommand == 15)) {
+		ResetRequired = TRUE;
 	}
-	if (Canceling != 0) {
-		ResumeFromHere = 2;
-		Canceling      = 0;
-		finished       = executing;
-		executing      = &DummyCommandBlock;
-		if (finished->state == DVD_STATE_BUSY) {
-			finished->state = DVD_STATE_CANCELED;
-			if (finished->callback) {
-				finished->callback(-6, finished);
-			}
-			if (CancelCallback) {
-				CancelCallback(0, finished);
-			}
-		}
-		stateReady();
-		return;
+
+	if (!CheckCancel(2)) {
+		executing->state = 11;
+		stateMotorStopped();
 	}
-	executing->state = DVD_STATE_RETRY;
-	stateMotorStopped();
 }
 
 static void stateCheckID()
 {
 	switch (CurrCommand) {
-	case DVD_COMMAND_READ:
-	case DVD_COMMAND_SEEK:
-		if (memcmp(&tmpBuffer, currID, 0x20)) {
-			DVDLowStopMotor(cbForStateCheckID1);
+	case 3:
+		if (memcmp(&CurrDiskID, executing->id, sizeof(CurrDiskID)) == 0) {
+			memcpy(IDShouldBe, &CurrDiskID, sizeof(DVDDiskID));
+
+			executing->state = 1;
+			DCInvalidateRange(&BB2, sizeof(DVDBB2));
+			LastState = stateCheckID2a;
+			stateCheckID2a(executing);
 			return;
-		}
-		LastState = stateCheckID3;
-		stateCheckID3(executing);
-		return;
-	case DVD_COMMAND_CHANGE_DISK:
-		if (memcmp(&tmpBuffer, executing->id, 0x1C)) {
+		} else {
 			DVDLowStopMotor(cbForStateCheckID1);
-			return;
 		}
-		memcpy(currID, &tmpBuffer, 0x20);
-		executing->state = DVD_STATE_BUSY;
-		DCInvalidateRange(&tmpBuffer, 0x20);
-		LastState = stateCheckID2;
-		stateCheckID2(executing);
 		break;
+
 	default:
-		ASSERTLINE(0x452, FALSE);
-		return;
+		if (memcmp(&CurrDiskID, IDShouldBe, sizeof(DVDDiskID))) {
+			DVDLowStopMotor(cbForStateCheckID1);
+		} else {
+			LastState = stateCheckID3;
+			stateCheckID3(executing);
+		}
+		break;
 	}
 }
 
 static void stateCheckID3()
 {
-	DVDLowAudioBufferConfig(currID->streaming, 0xAU, cbForStateCheckID3);
+	DVDLowAudioBufferConfig(IDShouldBe->streaming, 10, cbForStateCheckID3);
+}
+
+static void stateCheckID2a()
+{
+	DVDLowAudioBufferConfig(IDShouldBe->streaming, 10, cbForStateCheckID2a);
+}
+
+static void cbForStateCheckID2a(u32 intType)
+{
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
+
+	if (intType & 1) {
+		NumInternalRetry = 0;
+		stateCheckID2(executing);
+		return;
+	}
+
+	DVDLowRequestError(cbForStateGettingError);
 }
 
 static void stateCheckID2()
 {
-	DVDLowRead(&tmpBuffer, 0x20U, 0x420, cbForStateCheckID2);
+	DVDLowRead(&BB2, OSRoundUp32B(sizeof(BB2)), 0x420, cbForStateCheckID2);
 }
 
-static void cbForStateCheckID1(unsigned long intType)
+static void cbForStateCheckID1(u32 intType)
 {
-	if (intType & DVD_INTTYPE_DE) {
-		executing->state = DVD_STATE_FATAL_ERROR;
-		stateError(0);
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
 		return;
 	}
-	ASSERTLINE(0x478, intType == DVD_INTTYPE_TC);
+
+	if (intType & 2) {
+		executing->state = -1;
+		stateError(0x1234567);
+		return;
+	}
+
 	NumInternalRetry = 0;
-	if (Canceling != 0U) {
-		ResumeFromHere = 1;
-		Canceling      = 0U;
-		stateReady();
-		return;
+
+	if (!CheckCancel(1)) {
+		executing->state = 6;
+		stateMotorStopped();
 	}
-	executing->state = DVD_STATE_WRONG_DISK;
-	stateMotorStopped();
 }
 
-static void cbForStateCheckID2(unsigned long intType)
+static void cbForStateCheckID2(u32 intType)
 {
-	ASSERTLINE(0x494, (intType & DVD_INTTYPE_CVR) == 0);
-	if (intType & DVD_INTTYPE_TC) {
-		ASSERTLINE(0x499, (intType & DVD_INTTYPE_DE) == 0);
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
+
+	if (intType & 1) {
+
 		NumInternalRetry = 0;
+
 		stateReadingFST();
-		return;
+	} else {
+
+		stateGettingError();
 	}
-	ASSERTLINE(0x4AA, intType == DVD_INTTYPE_DE);
-	stateGettingError();
 }
 
-static void cbForStateCheckID3(unsigned long intType)
+static void cbForStateCheckID3(u32 intType)
 {
-	ASSERTLINE(0x4B4, (intType & DVD_INTTYPE_CVR) == 0);
-	if (intType & DVD_INTTYPE_TC) {
-		ASSERTLINE(0x4B9, (intType & DVD_INTTYPE_DE) == 0);
-		NumInternalRetry = 0;
-		if (Canceling != 0) {
-			ResumeFromHere = 0;
-			Canceling      = 0;
-			stateReady();
-			return;
-		}
-		executing->state = DVD_STATE_BUSY;
-		stateBusy(executing);
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
 		return;
 	}
-	ASSERTLINE(0x4CD, intType == DVD_INTTYPE_DE);
-	stateGettingError();
+
+	if (intType & 1) {
+
+		NumInternalRetry = 0;
+
+		if (!CheckCancel(0)) {
+			executing->state = 1;
+			stateBusy(executing);
+		}
+	} else {
+		stateGettingError();
+	}
+}
+
+static void AlarmHandler(OSAlarm* alarm, OSContext* context)
+{
+	DVDReset();
+	DCInvalidateRange(&CurrDiskID, sizeof(DVDDiskID));
+	LastState = stateCoverClosed_CMD;
+	stateCoverClosed_CMD(executing);
 }
 
 static void stateCoverClosed()
 {
-	struct DVDCommandBlock* finished;
+	DVDCommandBlock* finished;
 
 	switch (CurrCommand) {
-	case DVD_COMMAND_BSREAD:
-	case DVD_COMMAND_READID:
-	case DVD_COMMAND_AUDIO_BUFFER_CONFIG:
-	case DVD_COMMAND_BS_CHANGE_DISK:
+	case 5:
+	case 4:
+	case 13:
+	case 15:
 		__DVDClearWaitingQueue();
 		finished  = executing;
 		executing = &DummyCommandBlock;
 		if (finished->callback) {
-			finished->callback(-2, finished);
+			(finished->callback)(-4, finished);
 		}
 		stateReady();
+		break;
+
+	default:
+		DVDReset();
+		OSCreateAlarm(&ResetAlarm);
+		OSSetAlarm(&ResetAlarm, OSMillisecondsToTicks(1150), AlarmHandler);
+		break;
+	}
+}
+
+static void stateCoverClosed_CMD(DVDCommandBlock* block)
+{
+	DVDLowReadDiskID(&CurrDiskID, cbForStateCoverClosed);
+}
+
+static void cbForStateCoverClosed(u32 intType)
+{
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
 		return;
 	}
-	DVDReset();
-	DCInvalidateRange(&tmpBuffer, 0x20);
-	LastState = stateCoverClosed_CMD;
-	stateCoverClosed_CMD(executing);
-	return;
-}
 
-static void stateCoverClosed_CMD()
-{
-	DVDLowReadDiskID((void*)&tmpBuffer, cbForStateCoverClosed);
-}
-
-static void cbForStateCoverClosed(unsigned long intType)
-{
-	ASSERTLINE(0x510, (intType & DVD_INTTYPE_CVR) == 0);
-	if (intType & DVD_INTTYPE_TC) {
-		ASSERTLINE(0x515, (intType & DVD_INTTYPE_DE) == 0);
-		ASSERTLINE(0x519, (CurrCommand == DVD_COMMAND_READ)
-		                      || (CurrCommand == DVD_COMMAND_SEEK)
-		                      || (CurrCommand == DVD_COMMAND_CHANGE_DISK));
+	if (intType & 1) {
 		NumInternalRetry = 0;
 		stateCheckID();
-		return;
+	} else {
+		stateGettingError();
 	}
-	ASSERTLINE(0x523, intType == DVD_INTTYPE_DE);
-	stateGettingError();
 }
 
-static void stateMotorStopped()
+static void stateMotorStopped(void)
 {
 	DVDLowWaitCoverClose(cbForStateMotorStopped);
 }
 
-static void cbForStateMotorStopped(unsigned long intType)
+static void cbForStateMotorStopped(u32 intType)
 {
-	ASSERTLINE(0x540, intType == DVD_INTTYPE_CVR);
 	__DIRegs[1]      = 0;
-	executing->state = DVD_STATE_COVER_CLOSED;
+	executing->state = 3;
 	stateCoverClosed();
 }
 
 static void stateReady()
 {
-	if (__DVDCheckWaitingQueue() == 0) {
-		executing = NULL;
-		return;
-	}
-	if (PauseFlag != 0) {
-		PausingFlag = 1;
-		executing   = NULL;
-		return;
-	}
-	executing   = __DVDPopWaitingQueue();
-	CurrCommand = executing->command;
-	if (ResumeFromHere != 0) {
-		switch (ResumeFromHere) {
-		case 1:
-			executing->state = DVD_STATE_WRONG_DISK;
-			stateMotorStopped();
-			break;
-		case 2:
-			executing->state = DVD_STATE_RETRY;
-			stateMotorStopped();
-			break;
-		case 3:
-			executing->state = DVD_STATE_NO_DISK;
-			stateMotorStopped();
-			break;
-		case 7:
-			executing->state = DVD_STATE_MOTOR_STOPPED;
-			stateMotorStopped();
-			break;
-		case 4:
-			executing->state = DVD_STATE_COVER_OPEN;
-			stateMotorStopped();
-			break;
-		case 6:
-			executing->state = DVD_STATE_COVER_CLOSED;
-			stateCoverClosed();
-			break;
-		case 5:
-			executing->state = DVD_STATE_FATAL_ERROR;
-			stateError(CancelLastError);
-			break;
-		}
-		ResumeFromHere = 0;
-		return;
-	}
-	executing->state = DVD_STATE_BUSY;
-	stateBusy(executing);
-}
+	DVDCommandBlock* finished;
 
-static void stateBusy(struct DVDCommandBlock* block)
-{
-	LastState = stateBusy;
-	switch (block->command) {
-	case DVD_COMMAND_READID:
-		__DIRegs[1]             = __DIRegs[1];
-		block->currTransferSize = 0x20;
-		DVDLowReadDiskID(block->addr, cbForStateBusy);
-		return;
-	case DVD_COMMAND_READ:
-	case DVD_COMMAND_BSREAD:
-		__DIRegs[1] = __DIRegs[1];
-		block->currTransferSize
-		    = (block->length - block->transferredSize > 0x600000)
-		          ? 0x600000
-		          : (block->length - block->transferredSize);
-		DVDLowRead((char*)block->addr + block->transferredSize,
-		           block->currTransferSize,
-		           block->offset + block->transferredSize, cbForStateBusy);
-		return;
-	case DVD_COMMAND_SEEK:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowSeek(block->offset, cbForStateBusy);
-		return;
-	case DVD_COMMAND_CHANGE_DISK:
-		DVDLowStopMotor(cbForStateBusy);
-		return;
-	case DVD_COMMAND_BS_CHANGE_DISK:
-		DVDLowStopMotor(cbForStateBusy);
-		return;
-	case DVD_COMMAND_INITSTREAM:
-		__DIRegs[1] = __DIRegs[1];
-		if (AutoFinishing != 0) {
-			executing->currTransferSize = 0;
-			DVDLowRequestAudioStatus(0, cbForStateBusy);
-			return;
-		}
-		executing->currTransferSize = 1;
-		DVDLowAudioStream(0, block->length, block->offset, cbForStateBusy);
-		return;
-	case DVD_COMMAND_CANCELSTREAM:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowAudioStream(0x10000, 0U, 0U, cbForStateBusy);
-		return;
-	case DVD_COMMAND_STOP_STREAM_AT_END:
-		__DIRegs[1]   = __DIRegs[1];
-		AutoFinishing = 1;
-		DVDLowAudioStream(0, 0U, 0U, cbForStateBusy);
-		return;
-	case DVD_COMMAND_REQUEST_AUDIO_ERROR:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowRequestAudioStatus(0, cbForStateBusy);
-		return;
-	case DVD_COMMAND_REQUEST_PLAY_ADDR:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowRequestAudioStatus(0x10000, cbForStateBusy);
-		return;
-	case DVD_COMMAND_REQUEST_START_ADDR:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowRequestAudioStatus(0x20000, cbForStateBusy);
-		return;
-	case DVD_COMMAND_REQUEST_LENGTH:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowRequestAudioStatus(0x30000, cbForStateBusy);
-		return;
-	case DVD_COMMAND_AUDIO_BUFFER_CONFIG:
-		__DIRegs[1] = __DIRegs[1];
-		DVDLowAudioBufferConfig(block->offset, block->length, cbForStateBusy);
-		return;
-	case DVD_COMMAND_INQUIRY:
-		__DIRegs[1]             = __DIRegs[1];
-		block->currTransferSize = 0x20;
-		DVDLowInquiry(block->addr, cbForStateBusy);
+	if (!__DVDCheckWaitingQueue()) {
+		executing = (DVDCommandBlock*)NULL;
 		return;
 	}
-}
 
-static void cbForStateBusy(unsigned long intType)
-{
-	struct DVDCommandBlock* finished;
-	long result;
-
-	if ((CurrCommand == DVD_COMMAND_CHANGE_DISK)
-	    || (CurrCommand == DVD_COMMAND_BS_CHANGE_DISK)) {
-		if (intType & DVD_INTTYPE_DE) {
-			executing->state = DVD_STATE_FATAL_ERROR;
-			stateError(0U);
-			return;
-		}
-		ASSERTLINE(0x64B, intType == DVD_INTTYPE_TC);
-		NumInternalRetry = 0;
-		if (CurrCommand == DVD_COMMAND_BS_CHANGE_DISK) {
-			ResetRequired = 1;
-		}
-		if (Canceling != 0U) {
-			Canceling       = 0;
-			ResumeFromHere  = 7;
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_CANCELED;
-			if (finished->callback) {
-				finished->callback(-6, finished);
-			}
-			if (CancelCallback) {
-				CancelCallback(0, finished);
-			}
-			stateReady();
-			return;
-		}
-		executing->state = DVD_STATE_MOTOR_STOPPED;
-		stateMotorStopped();
+	if (PauseFlag) {
+		PausingFlag = TRUE;
+		executing   = (DVDCommandBlock*)NULL;
 		return;
 	}
-	ASSERTLINE(0x671, (intType & DVD_INTTYPE_CVR) == 0);
-	if ((CurrCommand == DVD_COMMAND_READ) || (CurrCommand == DVD_COMMAND_BSREAD)
-	    || (CurrCommand == DVD_COMMAND_READID)
-	    || (CurrCommand == DVD_COMMAND_INQUIRY)) {
-		executing->transferredSize += executing->currTransferSize - __DIRegs[6];
-	}
-	if (intType & 8) {
-		Canceling       = 0;
-		finished        = executing;
-		executing       = &DummyCommandBlock;
-		finished->state = DVD_STATE_CANCELED;
+
+	executing = __DVDPopWaitingQueue();
+
+	if (FatalErrorFlag) {
+		executing->state = -1;
+		finished         = executing;
+		executing        = &DummyCommandBlock;
 		if (finished->callback) {
-			finished->callback(-6, finished);
-		}
-		if (CancelCallback) {
-			CancelCallback(0, finished);
+			(finished->callback)(-1, finished);
 		}
 		stateReady();
 		return;
 	}
-	if (intType & 1) {
-		ASSERTLINE(0x697, (intType & DVD_INTTYPE_DE) == 0);
-		NumInternalRetry = 0;
-		if (Canceling != 0U) {
-			Canceling       = 0;
+
+	CurrCommand = executing->command;
+
+	if (ResumeFromHere) {
+		switch (ResumeFromHere) {
+		case 2:
+			executing->state = 11;
+			stateMotorStopped();
+			break;
+		case 3:
+			executing->state = 4;
+			stateMotorStopped();
+			break;
+
+		case 4:
+			executing->state = 5;
+			stateMotorStopped();
+			break;
+		case 1:
+		case 7:
+		case 6:
+			executing->state = 3;
+			stateCoverClosed();
+			break;
+
+		case 5:
+			executing->state = -1;
+			stateError(CancelLastError);
+			break;
+		}
+
+		ResumeFromHere = 0;
+	} else {
+		executing->state = 1;
+		stateBusy(executing);
+	}
+}
+
+static void stateBusy(DVDCommandBlock* block)
+{
+	DVDCommandBlock* finished;
+	LastState = stateBusy;
+	switch (block->command) {
+	case 5:
+		__DIRegs[1]             = __DIRegs[1];
+		block->currTransferSize = sizeof(DVDDiskID);
+		DVDLowReadDiskID(block->addr, cbForStateBusy);
+		break;
+	case 1:
+	case 4:
+		if (!block->length) {
 			finished        = executing;
 			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_CANCELED;
+			finished->state = 0;
 			if (finished->callback) {
-				finished->callback(-6, finished);
-			}
-			if (CancelCallback) {
-				CancelCallback(0, finished);
+				finished->callback(0, finished);
 			}
 			stateReady();
+		} else {
+			__DIRegs[1] = __DIRegs[1];
+			block->currTransferSize
+			    = block->length - block->transferredSize > 0x80000
+			          ? 0x80000
+			          : block->length - block->transferredSize;
+			DVDLowRead((void*)((u8*)block->addr + block->transferredSize),
+			           block->currTransferSize,
+			           block->offset + block->transferredSize, cbForStateBusy);
+		}
+		break;
+	case 2:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowSeek(block->offset, cbForStateBusy);
+		break;
+	case 3:
+		DVDLowStopMotor(cbForStateBusy);
+		break;
+	case 15:
+		DVDLowStopMotor(cbForStateBusy);
+		break;
+	case 6:
+		__DIRegs[1] = __DIRegs[1];
+		if (AutoFinishing) {
+			executing->currTransferSize = 0;
+			DVDLowRequestAudioStatus(0, cbForStateBusy);
+		} else {
+			executing->currTransferSize = 1;
+			DVDLowAudioStream(0, block->length, block->offset, cbForStateBusy);
+		}
+		break;
+	case 7:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowAudioStream(0x10000, 0, 0, cbForStateBusy);
+		break;
+	case 8:
+		__DIRegs[1]   = __DIRegs[1];
+		AutoFinishing = TRUE;
+		DVDLowAudioStream(0, 0, 0, cbForStateBusy);
+		break;
+	case 9:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowRequestAudioStatus(0, cbForStateBusy);
+		break;
+	case 10:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowRequestAudioStatus(0x10000, cbForStateBusy);
+		break;
+	case 11:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowRequestAudioStatus(0x20000, cbForStateBusy);
+		break;
+	case 12:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowRequestAudioStatus(0x30000, cbForStateBusy);
+		break;
+	case 13:
+		__DIRegs[1] = __DIRegs[1];
+		DVDLowAudioBufferConfig(block->offset, block->length, cbForStateBusy);
+		break;
+	case 14:
+		__DIRegs[1]             = __DIRegs[1];
+		block->currTransferSize = sizeof(DVDDriveInfo);
+		DVDLowInquiry(block->addr, cbForStateBusy);
+		break;
+	default:
+		checkOptionalCommand(block, cbForStateBusy);
+		break;
+	}
+}
+
+static u32 ImmCommand[] = { 0xffffffff, 0xffffffff, 0xffffffff };
+/* Somehow this got included even though the function is stripped? O.o */
+static char string_DVDChangeDiskAsyncMsg[]
+    = "DVDChangeDiskAsync(): You can't specify NULL to company name.  \n";
+static u32 DmaCommand[] = { 0xffffffff };
+
+inline static BOOL IsImmCommandWithResult(u32 command)
+{
+	u32 i;
+
+	if (command == 9 || command == 10 || command == 11 || command == 12) {
+		return TRUE;
+	}
+
+	for (i = 0; i < sizeof(ImmCommand) / sizeof(ImmCommand[0]); i++) {
+		if (command == ImmCommand[i])
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+inline static BOOL IsDmaCommand(u32 command)
+{
+	u32 i;
+
+	if (command == 1 || command == 4 || command == 5 || command == 14)
+		return TRUE;
+
+	for (i = 0; i < sizeof(DmaCommand) / sizeof(DmaCommand[0]); i++) {
+		if (command == DmaCommand[i])
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+static void cbForStateBusy(u32 intType)
+{
+	DVDCommandBlock* finished;
+
+	if (intType == 16) {
+		executing->state = -1;
+		stateTimeout();
+		return;
+	}
+
+	if ((CurrCommand == 3) || (CurrCommand == 15)) {
+		if (intType & 2) {
+			executing->state = -1;
+			stateError(0x1234567);
 			return;
 		}
-		if (CurrCommand == DVD_COMMAND_READ || CurrCommand == DVD_COMMAND_BSREAD
-		    || CurrCommand == DVD_COMMAND_READID
-		    || CurrCommand == DVD_COMMAND_INQUIRY) {
+
+		NumInternalRetry = 0;
+
+		if (CurrCommand == 15) {
+			ResetRequired = TRUE;
+		}
+
+		if (CheckCancel(7)) {
+			return;
+		}
+
+		executing->state = 7;
+		stateMotorStopped();
+		return;
+	}
+
+	if (IsDmaCommand(CurrCommand)) {
+		executing->transferredSize += executing->currTransferSize - __DIRegs[6];
+	}
+
+	if (intType & 8) {
+		Canceling = FALSE;
+		finished  = executing;
+		executing = &DummyCommandBlock;
+
+		finished->state = 10;
+		if (finished->callback)
+			(*finished->callback)(-3, finished);
+		if (CancelCallback)
+			(CancelCallback)(0, finished);
+		stateReady();
+
+		return;
+	}
+
+	if (intType & 1) {
+		NumInternalRetry = 0;
+
+		if (CheckCancel(0))
+			return;
+
+		if (IsDmaCommand(CurrCommand)) {
 			if (executing->transferredSize != executing->length) {
 				stateBusy(executing);
 				return;
 			}
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_END;
+
+			finished  = executing;
+			executing = &DummyCommandBlock;
+
+			finished->state = 0;
 			if (finished->callback) {
-				finished->callback(finished->transferredSize, finished);
+				(finished->callback)((s32)finished->transferredSize, finished);
 			}
 			stateReady();
-			return;
-		} else if (CurrCommand == DVD_COMMAND_REQUEST_AUDIO_ERROR
-		           || CurrCommand == DVD_COMMAND_REQUEST_PLAY_ADDR
-		           || CurrCommand == DVD_COMMAND_REQUEST_START_ADDR
-		           || CurrCommand == DVD_COMMAND_REQUEST_LENGTH) {
+		} else if (IsImmCommandWithResult(CurrCommand)) {
+			s32 result;
 
-			if (CurrCommand == DVD_COMMAND_REQUEST_START_ADDR
-			    || CurrCommand == DVD_COMMAND_REQUEST_PLAY_ADDR) {
-				result = __DIRegs[8] * 4;
+			if ((CurrCommand == 11) || (CurrCommand == 10)) {
+				result = (s32)(__DIRegs[8] << 2);
 			} else {
-				result = __DIRegs[8];
+				result = (s32)__DIRegs[8];
 			}
+			finished  = executing;
+			executing = &DummyCommandBlock;
 
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_END;
+			finished->state = 0;
 			if (finished->callback) {
-				finished->callback(result, finished);
+				(finished->callback)(result, finished);
 			}
 			stateReady();
-			return;
-		} else if (CurrCommand == DVD_COMMAND_INITSTREAM) {
+		} else if (CurrCommand == 6) {
 			if (executing->currTransferSize == 0) {
 				if (__DIRegs[8] & 1) {
-					finished        = executing;
-					executing       = &DummyCommandBlock;
-					finished->state = DVD_STATE_IGNORED;
+					finished  = executing;
+					executing = &DummyCommandBlock;
+
+					finished->state = 9;
 					if (finished->callback) {
-						finished->callback(-5, finished);
+						(finished->callback)(-2, finished);
 					}
 					stateReady();
-					return;
+				} else {
+					AutoFinishing               = FALSE;
+					executing->currTransferSize = 1;
+					DVDLowAudioStream(0, executing->length, executing->offset,
+					                  cbForStateBusy);
 				}
-				AutoFinishing               = 0;
-				executing->currTransferSize = 1;
-				DVDLowAudioStream(0, executing->length, executing->offset,
-				                  cbForStateBusy);
-				return;
+			} else {
+				finished  = executing;
+				executing = &DummyCommandBlock;
+
+				finished->state = 0;
+				if (finished->callback) {
+					(finished->callback)(0, finished);
+				}
+				stateReady();
 			}
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_END;
+		} else {
+			finished  = executing;
+			executing = &DummyCommandBlock;
+
+			finished->state = 0;
 			if (finished->callback) {
-				finished->callback(0, finished);
+				(finished->callback)(0, finished);
 			}
 			stateReady();
+		}
+	} else {
+		if (CurrCommand == 14) {
+			executing->state = -1;
+			stateError(0x01234567);
 			return;
-		} else {
-			finished        = executing;
-			executing       = &DummyCommandBlock;
-			finished->state = DVD_STATE_END;
+		}
+
+		if ((CurrCommand == 1 || CurrCommand == 4 || CurrCommand == 5
+		     || CurrCommand == 14)
+		    && (executing->transferredSize == executing->length)) {
+			if (CheckCancel(0)) {
+				return;
+			}
+			finished  = executing;
+			executing = &DummyCommandBlock;
+
+			finished->state = 0;
 			if (finished->callback) {
-				finished->callback(0, finished);
+				(finished->callback)((s32)finished->transferredSize, finished);
 			}
 			stateReady();
 			return;
 		}
-	} else {
-		ASSERTLINE(0x728, intType == DVD_INTTYPE_DE);
+
 		stateGettingError();
 	}
 }
 
-inline static int issueCommand(long prio, struct DVDCommandBlock* block)
+static BOOL issueCommand(s32 prio, DVDCommandBlock* block)
 {
-	int level;
-	int result;
+	BOOL level;
+	BOOL result;
 
-	if (autoInvalidation != 0
-	    && (block->command == DVD_COMMAND_READ
-	        || block->command == DVD_COMMAND_BSREAD
-	        || block->command == DVD_COMMAND_READID
-	        || block->command == DVD_COMMAND_INQUIRY)) {
+	if (autoInvalidation
+	    && (block->command == 1 || block->command == 4 || block->command == 5
+	        || block->command == 14)) {
 		DCInvalidateRange(block->addr, block->length);
 	}
+
 	level = OSDisableInterrupts();
-#if DEBUG
-	if (executing == block
-	    || block->state == DVD_STATE_WAITING
-	           && __DVDIsBlockInWaitingQueue(block)) {
-		ASSERTMSGLINE(0x758, FALSE,
-		              "DVD library: Specified command block (or file info) is "
-		              "already in use\n");
-	}
-#endif
-	block->state = DVD_STATE_WAITING;
+
+	block->state = 2;
 	result       = __DVDPushWaitingQueue(prio, block);
-	if (executing == NULL && PauseFlag == 0) {
+
+	if ((executing == (DVDCommandBlock*)NULL) && (PauseFlag == FALSE)) {
 		stateReady();
 	}
+
 	OSRestoreInterrupts(level);
+
 	return result;
 }
 
-int DVDReadAbsAsyncPrio(struct DVDCommandBlock* block, void* addr, long length,
-                        long offset,
-                        void (*callback)(long, struct DVDCommandBlock*),
-                        long prio)
+BOOL DVDReadAbsAsyncPrio(DVDCommandBlock* block, void* addr, s32 length,
+                         s32 offset, DVDCBCallback callback, s32 prio)
 {
-	int idle;
-
-	ASSERTMSGLINE(0x780, block,
-	              "DVDReadAbsAsync(): null pointer is specified to command "
-	              "block address.");
-	ASSERTMSGLINE(0x781, addr,
-	              "DVDReadAbsAsync(): null pointer is specified to addr.");
-	ASSERTMSGLINE(
-	    0x783, !OFFSET(addr, 32),
-	    "DVDReadAbsAsync(): address must be aligned with 32 byte boundary.");
-	ASSERTMSGLINE(0x785, !(length & (32 - 1)),
-	              "DVDReadAbsAsync(): length must be a multiple of 32.");
-	ASSERTMSGLINE(0x787, !(offset & (4 - 1)),
-	              "DVDReadAbsAsync(): offset must be a multiple of 4.");
-	ASSERTMSGLINE(
-	    0x789, length > 0,
-	    "DVD read: 0 or negative value was specified to length of the read\n");
-	block->command         = DVD_COMMAND_READ;
+	BOOL idle;
+	block->command         = 1;
 	block->addr            = addr;
 	block->length          = length;
 	block->offset          = offset;
 	block->transferredSize = 0;
 	block->callback        = callback;
-	idle                   = issueCommand(prio, block);
-	ASSERTMSGLINE(0x793, idle,
-	              "DVDReadAbsAsync(): command block is used for processing "
-	              "previous request.");
+
+	idle = issueCommand(prio, block);
 	return idle;
 }
 
-int DVDReadAbsAsyncForBS(struct DVDCommandBlock* block, void* addr, long length,
-                         long offset,
-                         void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDReadAbsAsyncForBS(DVDCommandBlock* block, void* addr, s32 length,
+                          s32 offset, DVDCBCallback callback)
 {
-	int idle;
-
-	ASSERTMSGLINE(0x7D1, block,
-	              "DVDReadAbsAsyncForBS(): null pointer is specified to "
-	              "command block address.");
-	ASSERTMSGLINE(0x7D2, addr,
-	              "DVDReadAbsAsyncForBS(): null pointer is specified to addr.");
-	ASSERTMSGLINE(0x7D4, !OFFSET(addr, 32),
-	              "DVDReadAbsAsyncForBS(): address must be aligned with 32 "
-	              "byte boundary.");
-	ASSERTMSGLINE(0x7D6, !(length & (32 - 1)),
-	              "DVDReadAbsAsyncForBS(): length must be a multiple of 32.");
-	ASSERTMSGLINE(0x7D8, !(offset & (4 - 1)),
-	              "DVDReadAbsAsyncForBS(): offset must be a multiple of 4.");
-	block->command         = DVD_COMMAND_BSREAD;
+	BOOL idle;
+	block->command         = 4;
 	block->addr            = addr;
 	block->length          = length;
 	block->offset          = offset;
 	block->transferredSize = 0;
 	block->callback        = callback;
-	idle                   = issueCommand(2, block);
-	ASSERTMSGLINE(0x7E2, idle,
-	              "DVDReadAbsAsyncForBS(): command block is used for "
-	              "processing previous request.");
+
+	idle = issueCommand(2, block);
 	return idle;
 }
 
-int DVDReadDiskID(struct DVDCommandBlock* block, struct DVDDiskID* diskID,
-                  void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDReadDiskID(DVDCommandBlock* block, DVDDiskID* diskID,
+                   DVDCBCallback callback)
 {
-	int idle;
-
-	ASSERTMSGLINE(
-	    0x7F9, block,
-	    "DVDReadDiskID(): null pointer is specified to command block address.");
-	ASSERTMSGLINE(0x7FA, diskID,
-	              "DVDReadDiskID(): null pointer is specified to id address.");
-	ASSERTMSGLINE(0x7FC, !OFFSET(diskID, 32),
-	              "DVDReadDiskID(): id must be aligned with 32 byte boundary.");
-
-	block->command         = DVD_COMMAND_READID;
-	block->addr            = diskID;
-	block->length          = 0x20;
+	BOOL idle;
+	block->command = 5;
+	block->addr    = diskID;
+	block->length  = sizeof(DVDDiskID);
+	;
 	block->offset          = 0;
 	block->transferredSize = 0;
 	block->callback        = callback;
-	idle                   = issueCommand(2, block);
-	ASSERTMSGLINE(0x806, idle,
-	              "DVDReadDiskID(): command block is used for processing "
-	              "previous request.");
+
+	idle = issueCommand(2, block);
 	return idle;
 }
 
-int DVDPrepareStreamAbsAsync(struct DVDCommandBlock* block,
-                             unsigned long length, unsigned long offset,
-                             void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDPrepareStreamAbsAsync(DVDCommandBlock* block, u32 length, u32 offset,
+                              DVDCBCallback callback)
 {
-	int idle;
-
-	block->command  = DVD_COMMAND_INITSTREAM;
+	BOOL idle;
+	block->command  = 6;
 	block->length   = length;
 	block->offset   = offset;
 	block->callback = callback;
-	idle            = issueCommand(1, block);
+
+	idle = issueCommand(1, block);
 	return idle;
 }
 
-int DVDCancelStreamAsync(struct DVDCommandBlock* block,
-                         void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDCancelStreamAsync(DVDCommandBlock* block, DVDCBCallback callback)
 {
-	int idle;
-
-	block->command  = DVD_COMMAND_CANCELSTREAM;
+	BOOL idle;
+	block->command  = 7;
 	block->callback = callback;
 	idle            = issueCommand(1, block);
 	return idle;
 }
 
-int DVDStopStreamAtEndAsync(struct DVDCommandBlock* block,
-                            void (*callback)(long, struct DVDCommandBlock*))
+s32 DVDCancelStream(DVDCommandBlock* block)
 {
-	int idle;
+	BOOL result;
+	s32 state;
+	BOOL enabled;
+	s32 retVal;
 
-	block->command  = DVD_COMMAND_STOP_STREAM_AT_END;
+	result = DVDCancelStreamAsync(block, cbForCancelStreamSync);
+
+	if (result == FALSE) {
+		return -1;
+	}
+
+	enabled = OSDisableInterrupts();
+
+	while (TRUE) {
+		state = ((volatile DVDCommandBlock*)block)->state;
+
+		if (state == 0 || state == -1 || state == 10) {
+			retVal = (s32)block->transferredSize;
+			break;
+		}
+
+		OSSleepThread(&__DVDThreadQueue);
+	}
+
+	OSRestoreInterrupts(enabled);
+	return retVal;
+}
+static void cbForCancelStreamSync(s32 result, DVDCommandBlock* block)
+{
+	block->transferredSize = (u32)result;
+	OSWakeupThread(&__DVDThreadQueue);
+}
+BOOL DVDStopStreamAtEndAsync(DVDCommandBlock* block, DVDCBCallback callback)
+{
+	BOOL idle;
+
+	block->command  = 8;
 	block->callback = callback;
-	idle            = issueCommand(1, block);
+
+	idle = issueCommand(1, block);
+
 	return idle;
 }
-
-int DVDGetStreamPlayAddrAsync(struct DVDCommandBlock* block,
-                              void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDGetStreamErrorStatusAsync(DVDCommandBlock* block,
+                                  DVDCBCallback callback)
 {
-	int idle;
+	BOOL idle;
 
-	block->command  = DVD_COMMAND_REQUEST_PLAY_ADDR;
+	block->command  = 9;
 	block->callback = callback;
-	idle            = issueCommand(1, block);
+
+	idle = issueCommand(1, block);
+
 	return idle;
 }
-
-int DVDInquiryAsync(struct DVDCommandBlock* block, struct DVDDriveInfo* info,
-                    void (*callback)(long, struct DVDCommandBlock*))
+BOOL DVDGetStreamPlayAddrAsync(DVDCommandBlock* block, DVDCBCallback callback)
 {
-	int idle;
+	BOOL idle;
 
-	ASSERTMSGLINE(0xA94, block,
-	              "DVDInquiry(): Null address was specified for block");
-	ASSERTMSGLINE(0xA95, info,
-	              "DVDInquiry(): Null address was specified for info");
-	ASSERTMSGLINE(0xA97, !OFFSET(info, 32),
-	              "DVDInquiry(): Address for info is not 32 bytes aligned");
+	block->command  = 10;
+	block->callback = callback;
 
-	block->command         = 0xE;
-	block->addr            = info;
-	block->length          = 0x20;
+	idle = issueCommand(1, block);
+
+	return idle;
+}
+BOOL DVDInquiryAsync(DVDCommandBlock* block, DVDDriveInfo* info,
+                     DVDCBCallback callback)
+{
+	BOOL idle;
+
+	block->command         = 14;
+	block->addr            = (void*)info;
+	block->length          = sizeof(DVDDriveInfo);
 	block->transferredSize = 0;
 	block->callback        = callback;
-	idle                   = issueCommand(2, block);
+
+	idle = issueCommand(2, block);
+
 	return idle;
 }
 
-void DVDReset()
+void DVDReset(void)
 {
 	DVDLowReset();
-	__DIRegs[0]    = 0x2A;
+	__DIRegs[0]    = 0x2a;
 	__DIRegs[1]    = __DIRegs[1];
-	ResetRequired  = 0;
+	ResetRequired  = FALSE;
 	ResumeFromHere = 0;
 }
 
-long DVDGetCommandBlockStatus(struct DVDCommandBlock* block)
+s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
 {
-	ASSERTMSGLINE(0xAF9, block,
-	              "DVDGetCommandBlockStatus(): null pointer is specified to "
-	              "command block address.");
-	if (block->state == DVD_STATE_END || block->state == DVD_STATE_FATAL_ERROR
-	    || block->state == DVD_STATE_CANCELED) {
-		return block->state;
+	BOOL enabled;
+	s32 retVal;
+
+	enabled = OSDisableInterrupts();
+
+	if (block->state == 3) {
+		retVal = 1;
+	} else {
+		retVal = block->state;
 	}
-	return block->state;
+
+	OSRestoreInterrupts(enabled);
+
+	return retVal;
 }
 
-long DVDGetDriveStatus()
+s32 DVDGetDriveStatus()
 {
-	struct DVDCommandBlock* block;
+	BOOL enabled;
+	s32 retVal;
 
-	if (PausingFlag != 0) {
-		return 8;
+	enabled = OSDisableInterrupts();
+
+	if (FatalErrorFlag) {
+		retVal = -1;
+	} else if (PausingFlag) {
+		retVal = 8;
+	} else {
+		if (executing == (DVDCommandBlock*)NULL) {
+			retVal = 0;
+		} else if (executing == &DummyCommandBlock) {
+			retVal = 0;
+		} else {
+			retVal = DVDGetCommandBlockStatus(executing);
+		}
 	}
-	block = executing;
-	if (block == NULL) {
-		return 0;
-	}
-	if (block == &DummyCommandBlock) {
-		return 0;
-	}
-	return block->state;
+
+	OSRestoreInterrupts(enabled);
+
+	return retVal;
 }
 
-int DVDSetAutoInvalidation(int autoInval)
+BOOL DVDSetAutoInvalidation(BOOL autoInval)
 {
-	int prev;
-
+	BOOL prev;
 	prev             = autoInvalidation;
 	autoInvalidation = autoInval;
 	return prev;
 }
 
-int DVDCancelAsync(struct DVDCommandBlock* block,
-                   void (*callback)(long, struct DVDCommandBlock*))
+void DVDPause(void)
 {
-	int enabled;
-	void (*old)(unsigned long);
+	BOOL level;
+	level     = OSDisableInterrupts();
+	PauseFlag = TRUE;
+	if (executing == (DVDCommandBlock*)NULL) {
+		PausingFlag = TRUE;
+	}
+	OSRestoreInterrupts(level);
+}
 
-	enabled        = OSDisableInterrupts();
-	Canceling      = 0;
-	CancelCallback = NULL;
+void DVDResume(void)
+{
+	BOOL level;
+	level     = OSDisableInterrupts();
+	PauseFlag = FALSE;
+	if (PausingFlag) {
+		PausingFlag = FALSE;
+		stateReady();
+	}
+	OSRestoreInterrupts(level);
+}
+
+BOOL DVDCancelAsync(DVDCommandBlock* block, DVDCBCallback callback)
+{
+	BOOL enabled;
+	DVDLowCallback old;
+	DVDCommandBlock* finished; // needed for stack? maybe it actually gets used
+	                           // but not bothered to figure that out
+
+	enabled = OSDisableInterrupts();
 
 	switch (block->state) {
-	case DVD_STATE_FATAL_ERROR:
-	case DVD_STATE_END:
-	case DVD_STATE_CANCELED:
-		if (callback) {
-			callback(0, block);
-		}
+	case -1:
+	case 0:
+	case 10:
+		if (callback)
+			(*callback)(0, block);
 		break;
-	case DVD_STATE_BUSY:
-		if (Canceling != 0) {
+
+	case 1:
+		if (Canceling) {
 			OSRestoreInterrupts(enabled);
-			return 0;
+			return FALSE;
 		}
-		Canceling             = 1;
-		CancelingCommandBlock = block;
-		CancelCallback        = callback;
-		if (block->command == DVD_COMMAND_BSREAD
-		    || block->command == DVD_COMMAND_READ) {
+
+		Canceling      = TRUE;
+		CancelCallback = callback;
+		if (block->command == 4 || block->command == 1) {
 			DVDLowBreak();
 		}
 		break;
-	case DVD_STATE_WAITING:
+
+	case 2:
 		__DVDDequeueWaitingQueue(block);
-		block->state = DVD_STATE_CANCELED;
-		if (block->callback) {
-			block->callback(-6, block);
-		}
-		if (callback) {
-			callback(0, block);
-		}
+		block->state = 10;
+		if (block->callback)
+			(block->callback)(-3, block);
+		if (callback)
+			(*callback)(0, block);
 		break;
-	case DVD_STATE_COVER_CLOSED:
+
+	case 3:
 		switch (block->command) {
-		case DVD_COMMAND_BSREAD:
-		case DVD_COMMAND_READID:
-		case DVD_COMMAND_AUDIO_BUFFER_CONFIG:
-		case DVD_COMMAND_BS_CHANGE_DISK:
-			if (callback) {
-				callback(0, block);
-			}
+		case 5:
+		case 4:
+		case 13:
+		case 15:
+			if (callback)
+				(*callback)(0, block);
 			break;
-		case DVD_COMMAND_READ:
-			if (Canceling != 0U) {
+
+		default:
+			if (Canceling) {
 				OSRestoreInterrupts(enabled);
-				return 0;
+				return FALSE;
 			}
-			Canceling             = 1U;
-			CancelingCommandBlock = block;
-			block->state          = DVD_STATE_CANCELED;
-			if (block->callback) {
-				block->callback(-6, block);
-			}
-			if (callback) {
-				callback(0, block);
-			}
+			Canceling      = TRUE;
+			CancelCallback = callback;
 			break;
 		}
 		break;
-	case DVD_STATE_NO_DISK:
-	case DVD_STATE_COVER_OPEN:
-	case DVD_STATE_WRONG_DISK:
-	case DVD_STATE_MOTOR_STOPPED:
-	case DVD_STATE_RETRY:
+
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 11:
 		old = DVDLowClearCallback();
-		ASSERTLINE(0xBDB, old == cbForStateMotorStopped);
 		if (old != cbForStateMotorStopped) {
-			return 0;
+			OSRestoreInterrupts(enabled);
+			return FALSE;
 		}
-		if (block->state == DVD_STATE_NO_DISK) {
+
+		if (block->state == 4)
 			ResumeFromHere = 3;
-		}
-		if (block->state == DVD_STATE_COVER_OPEN) {
+		if (block->state == 5)
 			ResumeFromHere = 4;
-		}
-		if (block->state == DVD_STATE_WRONG_DISK) {
+		if (block->state == 6)
 			ResumeFromHere = 1;
-		}
-		if (block->state == DVD_STATE_RETRY) {
+		if (block->state == 11)
 			ResumeFromHere = 2;
-		}
-		if (block->state == DVD_STATE_MOTOR_STOPPED) {
+		if (block->state == 7)
 			ResumeFromHere = 7;
-		}
-		block->state = DVD_STATE_CANCELED;
+
+		executing = &DummyCommandBlock;
+
+		block->state = 10;
 		if (block->callback) {
-			block->callback(-6, block);
+			(block->callback)(-3, block);
 		}
 		if (callback) {
-			callback(0, block);
+			(callback)(0, block);
 		}
 		stateReady();
 		break;
 	}
+
 	OSRestoreInterrupts(enabled);
-	return 1;
+	return TRUE;
 }
 
-long DVDCancel(volatile struct DVDCommandBlock* block)
+s32 DVDCancel(DVDCommandBlock* block)
 {
-	int result;
-	long state;
-	unsigned long command;
-	int enabled;
+	BOOL result;
+	s32 state;
+	u32 command;
+	BOOL enabled;
 
-	result = DVDCancelAsync((void*)block, cbForCancelSync);
-	if (result == 0) {
+	result = DVDCancelAsync(block, cbForCancelSync);
+
+	if (result == FALSE) {
 		return -1;
 	}
+
 	enabled = OSDisableInterrupts();
-	while (1) {
-		state = block->state;
-		if (state == DVD_STATE_END || state == DVD_STATE_FATAL_ERROR
-		    || state == DVD_STATE_CANCELED) {
+
+	for (;;) {
+		state = ((volatile DVDCommandBlock*)block)->state;
+
+		if ((state == 0) || (state == -1) || (state == 10)) {
 			break;
 		}
-		if (state == DVD_STATE_COVER_CLOSED) {
-			command = block->command;
-			if ((command == DVD_COMMAND_BSREAD)
-			    || (command == DVD_COMMAND_READID)
-			    || (command == DVD_COMMAND_AUDIO_BUFFER_CONFIG)
-			    || (command == DVD_COMMAND_BS_CHANGE_DISK)) {
+
+		if (state == 3) {
+			command = ((volatile DVDCommandBlock*)block)->command;
+
+			if ((command == 4) || (command == 5) || (command == 13)
+			    || (command == 15)) {
 				break;
 			}
 		}
+
 		OSSleepThread(&__DVDThreadQueue);
 	}
+
 	OSRestoreInterrupts(enabled);
 	return 0;
 }
 
-static void cbForCancelSync() { OSWakeupThread(&__DVDThreadQueue); }
+static void cbForCancelSync(s32 result, DVDCommandBlock* block)
+{
+	OSWakeupThread(&__DVDThreadQueue);
+}
 
-struct DVDDiskID* DVDGetCurrentDiskID() { return (void*)OSPhysicalToCached(0); }
+inline BOOL DVDCancelAllAsync(DVDCBCallback callback)
+{
+	BOOL enabled;
+	DVDCommandBlock* p;
+	BOOL retVal;
+
+	enabled = OSDisableInterrupts();
+	DVDPause();
+
+	while ((p = __DVDPopWaitingQueue()) != 0) {
+		DVDCancelAsync(p, NULL);
+	}
+
+	if (executing)
+		retVal = DVDCancelAsync(executing, callback);
+	else {
+		retVal = TRUE;
+		if (callback)
+			(*callback)(0, NULL);
+	}
+
+	DVDResume();
+	OSRestoreInterrupts(enabled);
+	return retVal;
+}
+
+s32 DVDCancelAll(void)
+{
+	BOOL result;
+	BOOL enabled;
+
+	enabled               = OSDisableInterrupts();
+	CancelAllSyncComplete = FALSE;
+
+	result = DVDCancelAllAsync(cbForCancelAllSync);
+
+	if (result == FALSE) {
+		OSRestoreInterrupts(enabled);
+		return -1;
+	}
+
+	for (;;) {
+		if (CancelAllSyncComplete)
+			break;
+
+		OSSleepThread(&__DVDThreadQueue);
+	}
+
+	OSRestoreInterrupts(enabled);
+	return 0;
+}
+
+static void cbForCancelAllSync(s32 result, DVDCommandBlock* block)
+{
+	CancelAllSyncComplete = TRUE;
+	OSWakeupThread(&__DVDThreadQueue);
+}
+
+DVDDiskID* DVDGetCurrentDiskID(void)
+{
+	return (DVDDiskID*)OSPhysicalToCached(0);
+}
+
+BOOL DVDCheckDisk(void)
+{
+	BOOL enabled;
+	s32 retVal;
+	s32 state;
+	u32 coverReg;
+
+	enabled = OSDisableInterrupts();
+
+	if (FatalErrorFlag) {
+		state = -1;
+	} else if (PausingFlag) {
+		state = 8;
+	} else {
+		if (executing == (DVDCommandBlock*)NULL) {
+			state = 0;
+		} else if (executing == &DummyCommandBlock) {
+			state = 0;
+		} else {
+			state = executing->state;
+		}
+	}
+
+	switch (state) {
+	case 1:
+	case 9:
+	case 10:
+	case 2:
+		retVal = TRUE;
+		break;
+
+	case -1:
+	case 11:
+	case 7:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+		retVal = FALSE;
+		break;
+
+	case 0:
+	case 8:
+		coverReg = __DIRegs[1];
+		if (((coverReg >> 2) & 1) || (coverReg & 1)) {
+			retVal = FALSE;
+		} else if (ResumeFromHere) {
+			retVal = FALSE;
+		} else {
+			retVal = TRUE;
+		}
+	}
+
+	OSRestoreInterrupts(enabled);
+
+	return retVal;
+}
+
+void __DVDPrepareResetAsync(DVDCBCallback callback)
+{
+	BOOL enabled;
+
+	enabled = OSDisableInterrupts();
+
+	__DVDClearWaitingQueue();
+
+	if (Canceling) {
+		CancelCallback = callback;
+	} else {
+		if (executing) {
+			executing->callback = NULL;
+		}
+
+		DVDCancelAllAsync(callback);
+	}
+
+	OSRestoreInterrupts(enabled);
+}
+
+BOOL __DVDTestAlarm(OSAlarm* alarm)
+{
+	BOOL ret;
+	if (alarm == &ResetAlarm) {
+		ret = TRUE;
+	} else {
+		ret = __DVDLowTestAlarm(alarm);
+	}
+	return ret;
+}
