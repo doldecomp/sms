@@ -1,6 +1,8 @@
 #include "PowerPC_EABI_Support/Runtime/NMWException.h"
 #include "PowerPC_EABI_Support/Runtime/MWCPlusLib.h"
 
+#pragma exceptions on
+
 #define ARRAY_HEADER_SIZE 8
 
 class __partial_array_destructor {
