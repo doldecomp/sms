@@ -77,6 +77,8 @@ void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 	u32 intr;
 	u32 mask;
 
+	OSCancelAlarm(&AlarmForTimeout);
+
 	if (LastCommandWasRead) {
 		LastReadFinished = __OSGetSystemTime();
 		FirstRead        = FALSE;
@@ -108,7 +110,6 @@ void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 
 	if (cause) {
 		ResetOccurred = FALSE;
-		OSCancelAlarm(&AlarmForTimeout);
 	}
 
 	__DIRegs[0] = intr | mask;
@@ -220,7 +221,7 @@ static void Read(void* addr, u32 length, u32 offset, DVDLowCallback callback)
 	}
 }
 
-BOOL HitCache(DVDBuffer* cur, DVDBuffer* prev)
+static BOOL HitCache(DVDBuffer* cur, DVDBuffer* prev)
 {
 	u32 uVar1 = (prev->offset + prev->length - 1) >> 15;
 	u32 uVar2 = (cur->offset >> 15);
@@ -443,10 +444,9 @@ BOOL DVDLowBreak()
 DVDLowCallback DVDLowClearCallback()
 {
 	DVDLowCallback old;
-	__DIRegs[1]       = 0;
-	old               = Callback;
-	WaitingCoverClose = FALSE;
-	Callback          = NULL;
+	__DIRegs[1] = 0;
+	old         = Callback;
+	Callback    = NULL;
 	return old;
 }
 
@@ -457,16 +457,4 @@ void __DVDLowSetWAType(u32 type, u32 location)
 	WorkAroundType         = type;
 	WorkAroundSeekLocation = location;
 	OSRestoreInterrupts(enabled);
-}
-
-BOOL __DVDLowTestAlarm(OSAlarm* alarm)
-{
-	if (alarm == &AlarmForBreak) {
-		return TRUE;
-	}
-	if (alarm == &AlarmForTimeout) {
-		return TRUE;
-	}
-
-	return FALSE;
 }
