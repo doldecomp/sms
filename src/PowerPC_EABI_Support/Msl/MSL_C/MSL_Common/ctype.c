@@ -1,13 +1,13 @@
-#include <ctype.h>
+#include "ctype.h"
 
-#define ctrl 0x01
-#define motn 0x02
-#define spac 0x04
-#define punc 0x08
-#define digi 0x10
-#define hexd 0x20
-#define lowc 0x40
-#define uppc 0x80
+#define ctrl __control_char
+#define motn __motion_char
+#define spac __space_char
+#define punc __punctuation
+#define digi __digit
+#define hexd __hex_digit
+#define lowc __lower_case
+#define uppc __upper_case
 #define dhex (hexd | digi)
 #define uhex (hexd | uppc)
 #define lhex (hexd | lowc)
@@ -21,7 +21,7 @@ const unsigned char __ctype_map[256] = {
 	punc, uhex, uhex, uhex, uhex, uhex, uhex, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc,
 	uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, punc, punc, punc, punc, punc,
 	punc, lhex, lhex, lhex, lhex, lhex, lhex, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc,
-	lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, punc, punc, punc, punc, ctrl
+	lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, punc, punc, punc, punc, ctrl,
 	// clang-format on
 };
 
@@ -67,18 +67,19 @@ const unsigned char __upper_map[256] = {
 	// clang-format on
 };
 
-int tolower(int c)
+int tolower(int __c)
 {
-	if (c == -1)
+	if (__c == -1)
 		return -1;
 
-	return __lower_map[c & 0xff];
+	return __lower_map[__c & 0xff];
 }
 
-int toupper(int c)
+int toupper(int __c)
 {
-	if (c == -1)
+
+	if (__c == -1)
 		return -1;
 
-	return __upper_map[c & 0xff];
+	return __upper_map[__c & 0xff];
 }

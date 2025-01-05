@@ -1,28 +1,36 @@
-#ifndef _STRING_H_
-#define _STRING_H_
+#ifndef _MSL_COMMON_STRING_H
+#define _MSL_COMMON_STRING_H
 
-#include <stddef.h>
+#include "stddef.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void* memcpy(void* dest, const void* src, size_t num);
-void* memmove(void* dest, const void* src, size_t num);
-void* memset(void* dest, int ch, size_t count);
-int memcmp(const void* ptr1, const void* ptr2, size_t num);
+__declspec(section ".init") void* memcpy(void* dest, const void* src, size_t n);
+__declspec(section ".init") void __fill_mem(void* dest, int val, size_t count);
+__declspec(section ".init") void* memset(void* dest, int val, size_t count);
 
-size_t strlen(const char* s);
-char* strcpy(char* dest, const char* src);
-char* strncpy(char* dest, const char* src, size_t num);
-int strcmp(const char* s1, const char* s2);
-int strncmp(const char* s1, const char* s2, size_t n);
-char* strncat(char* dest, const char* src, size_t n);
+int memcmp(const void* lhs, const void* rhs, size_t count);
+void* __memrchr(const void* ptr, int ch, size_t count);
+void* memchr(const void* ptr, int ch, size_t count);
+void* memmove(void* dst, const void* src, size_t n);
+char* strrchr(const char* str, int c);
 char* strchr(const char* str, int c);
-char* strrchr(char* str, int chr);
+int strncmp(const char* str1, const char* str2, size_t n);
+int strcmp(const char* str1, const char* str2);
+char* strcat(char* dst, const char* src);
+char* strncpy(char* dst, const char* src, size_t n);
+char* strcpy(char* dst, const char* src);
+size_t strlen(const char* str);
 
 #ifdef __cplusplus
-}
+};
+
+namespace std {
+using ::strlen;
+using ::strrchr;
+}; // namespace std
 #endif
 
-#endif
+#endif /* _MSL_COMMON_STRING_H */

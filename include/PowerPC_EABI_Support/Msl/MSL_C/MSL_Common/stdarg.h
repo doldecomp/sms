@@ -1,5 +1,5 @@
-#ifndef _STDARG_H_
-#define _STDARG_H_
+#ifndef _MSL_COMMON_STDARG_H
+#define _MSL_COMMON_STDARG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,4 +36,4 @@ typedef __builtin_va_list va_list;
 }
 #endif
 
-#endif
+#endif /* _MSL_COMMON_STDARG_H */

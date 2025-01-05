@@ -13,7 +13,7 @@ f32 JStage::TCamera::JSGGetProjectionNear() const { return 0.0f; }
 
 void JStage::TCamera::JSGSetProjectionNear(f32) { }
 
-f32 JStage::TCamera::JSGGetProjectionFar() const { return FLOAT_MAX; }
+f32 JStage::TCamera::JSGGetProjectionFar() const { return FLT_MAX; }
 
 void JStage::TCamera::JSGSetProjectionFar(f32) { }
 
