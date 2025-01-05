@@ -1,4 +1,4 @@
-#include <libc/ctype.h>
+#include <ctype.h>
 
 #define ctrl 0x01
 #define motn 0x02
