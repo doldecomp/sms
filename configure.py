@@ -544,7 +544,7 @@ config.libs = [
             Object(Matching, "PowerPC_EABI_Support/Runtime/__mem.c"),
             Object(Matching, "PowerPC_EABI_Support/Runtime/__va_arg.c"),
             Object(Matching, "PowerPC_EABI_Support/Runtime/global_destructor_chain.c"),
-            Object(NonMatching, "PowerPC_EABI_Support/Runtime/NMWException.cp"),
+            Object(Matching, "PowerPC_EABI_Support/Runtime/NMWException.cp"),
             Object(Matching, "PowerPC_EABI_Support/Runtime/ptmf.c"),
             Object(NonMatching, "PowerPC_EABI_Support/Runtime/ExceptionPPC.cp"),
             Object(Matching, "PowerPC_EABI_Support/Runtime/runtime.c"),
