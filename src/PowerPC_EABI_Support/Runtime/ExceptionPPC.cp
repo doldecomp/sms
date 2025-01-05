@@ -1,6 +1,12 @@
 #include "PowerPC_EABI_Support/Runtime/NMWException.h"
 #include "PowerPC_EABI_Support/Runtime/__ppc_eabi_linker.h"
 
+// NOTE: there is a bug in mwcc where any pure-asm function
+// disables this optimization but doesn't reset it to be on
+// original probably had an asm function in one of the headers
+// above, but no idea which for now
+#pragma peephole off
+
 typedef struct ProcessInfo {
 	__eti_init_info* exception_info;
 	char* TOC;
