@@ -157,7 +157,7 @@ config.asflags = [
     "-mgekko",
     "--strip-local-absolute",
     "-I include",
-    "-I include/libc",
+    "-I include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
 ]
@@ -199,7 +199,7 @@ cflags_base = [
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-cwd source",
     "-i include",
-    "-i include/libc",
+    "-i include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",

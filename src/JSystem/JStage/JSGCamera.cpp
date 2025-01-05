@@ -1,5 +1,5 @@
 #include <JSystem/JStage/JSGCamera.hpp>
-#include <libc/float.h>
+#include <float.h>
 
 JStage::TCamera::~TCamera() { }
 

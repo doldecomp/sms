@@ -2,9 +2,9 @@
 #define TYPES_H
 
 #include <dolphin/types.h>
-#include <libc/stdarg.h>
-#include <libc/stddef.h>
-#include <libc/string.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <string.h>
 
 #ifndef nullptr
 #define nullptr 0
