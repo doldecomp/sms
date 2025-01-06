@@ -16,7 +16,7 @@ float __four_over_pi_m1[4] = { 0 };
 extern const float __sincos_poly[];
 extern const float __sincos_on_quadrant[];
 
-void __sinit_trigf_c(void)
+static void __sinit_trigf_c(void)
 {
 	__four_over_pi_m1[0] = tmp_float[0];
 	__four_over_pi_m1[1] = tmp_float[1];
