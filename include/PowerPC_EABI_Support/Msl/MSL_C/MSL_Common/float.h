@@ -79,7 +79,7 @@ inline int __fpclassifyd(double __value)
 #define FLT_MAX_EXP    128
 #define FLT_MAX_10_EXP 38
 
-#define FLT_MAX   3.40282346638528860e+38f
+#define FLT_MAX     3.40282346638528860e+38f
 #define FLT_EPSILON 1.1920928955078125e-07f
 
 #define DBL_MANT_DIG   53
