@@ -1,17 +1,43 @@
-int __TRK_write_console(int, int, int*, int);
+#include "stddef.h"
 
-int __write_console(int param_0, int param_1, int* param_2, int param_3)
+unsigned long WriteUARTN(void* buf, unsigned long len);
+unsigned long ReadUARTN(void* bytes, unsigned long length);
+unsigned long InitializeUART(unsigned long baudRate);
+
+static inline int __init_uart_console(void);
+
+int __read_console(int param_0, unsigned char* data, size_t* size, int param_3)
+{
+	size_t len;
+	int err;
+
+	if (__init_uart_console() != 0) {
+		return 1;
+	}
+
+	len = *size;
+	err = 0;
+	for (*size = 0; *size <= len && err == 0; ++data) {
+		err = ReadUARTN(data, 1);
+		++*size;
+		if (*data == '\r')
+			break;
+	}
+
+	return (unsigned char)(err == 0 ? 0 : 1);
+}
+
+int __write_console(int param_0, unsigned char* data, size_t* size, int param_3)
 {
 	if (__init_uart_console() != 0) {
 		return 1;
 	}
 
-	if (WriteUARTN(param_1, *param_2) != 0) {
-		*param_2 = 0;
+	if ((long)WriteUARTN(data, *size) != 0) {
+		*size = 0;
 		return 1;
 	}
 
-	__TRK_write_console(param_0, param_1, param_2, param_3);
 	return 0;
 }
 

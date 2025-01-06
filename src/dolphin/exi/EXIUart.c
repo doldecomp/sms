@@ -26,7 +26,7 @@ u32 InitializeUART(u32 baudRate)
 	}
 }
 
-u32 ReadUARTN(void* bytes, unsigned long length) { return 4; }
+u32 ReadUARTN(void* bytes, u32 length) { return 4; }
 
 static int QueueLength(void)
 {

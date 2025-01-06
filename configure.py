@@ -561,7 +561,7 @@ config.libs = [
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/errno.c"),
             Object(NonMatching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/ansi_fp.c"),
-            Object(NonMatching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/uart_console_io.c"),
+            Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/uart_console_io.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/PPC_EABI/critical_regions.ppc_eabi.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ctype.c"),
