@@ -65,7 +65,8 @@ __declspec(section ".init") void* TRK_memcpy(void* dst, const void* src,
 	return dst;
 }
 
-__declspec(section ".init") void TRK_memset(void* dst, int val, size_t n)
+__declspec(section ".init") void* TRK_memset(void* dst, int val, size_t n)
 {
 	TRK_fill_mem(dst, val, n);
+	return dst;
 }
