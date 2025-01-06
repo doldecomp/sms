@@ -1,5 +1,7 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
 #include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
@@ -74,7 +76,7 @@ void TRKProcessInput(int bufferIdx)
 	TRKPostEvent(&event);
 }
 
-DSError TRKInitializeSerialHandler()
+DSError TRKInitializeSerialHandler(void)
 {
 	gTRKFramingState.msgBufID     = -1;
 	gTRKFramingState.receiveState = DSRECV_Wait;

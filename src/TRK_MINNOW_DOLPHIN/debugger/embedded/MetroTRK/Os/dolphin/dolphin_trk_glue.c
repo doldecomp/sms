@@ -2,6 +2,7 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/DDH_Stubs.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/GDEV_Stubs.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/UDP_Stubs.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 #include "dolphin/base/PPCArch.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 

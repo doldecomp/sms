@@ -1,5 +1,7 @@
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/notify.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 DSError TRKDoNotifyStopped(MessageCommandID cmd)

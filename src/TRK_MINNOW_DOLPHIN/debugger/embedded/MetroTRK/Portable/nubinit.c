@@ -1,8 +1,18 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubinit.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/dispatch.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/usr_put.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 
 BOOL gTRKBigEndian;
+
+BOOL TRKInitializeEndian(void);
 
 DSError TRKInitializeNub(void)
 {

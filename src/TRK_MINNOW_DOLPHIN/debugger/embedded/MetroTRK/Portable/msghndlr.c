@@ -1,8 +1,16 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/usr_put.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 #include "stddef.h"
+#include "string.h"
 
 static BOOL IsTRKConnected;
 
@@ -30,7 +38,7 @@ DSError TRKSendACK(TRKBuffer* buffer)
 {
 	DSError err;
 	MWTRACE(1, "SendACK : Calling MessageSend\n");
-	err = TRKMessageSend(buffer);
+	err = TRKMessageSend((TRK_Msg*)buffer);
 	MWTRACE(1, "MessageSend err : %ld\n", err);
 	return err;
 }
@@ -108,7 +116,7 @@ DSError TRKDoReadMemory(TRKBuffer* buffer)
 	tempLength = length;
 
 	if (options & DSMSGMEMORY_Space_data) {
-		result = TRKTargetAccessARAM(buf, start, &tempLength, TRUE);
+		result = TRKTargetAccessARAM((u32)&buf, start, &tempLength, TRUE);
 	} else {
 		result = TRKTargetAccessMemory(buf, start, &tempLength,
 		                               options & DSMSGMEMORY_Userview ? 0 : 1,
@@ -185,7 +193,7 @@ DSError TRKDoWriteMemory(TRKBuffer* b)
 	TRKSetBufferPosition(b, DSMSGMEMORY_Space_data);
 	if (options & DSMSGMEMORY_Space_data) {
 		TRKReadBuffer(b, buf + (start & 0x1f), tempLength);
-		result = TRKTargetAccessARAM(buf, start, &tempLength, FALSE);
+		result = TRKTargetAccessARAM((u32)buf, start, &tempLength, FALSE);
 	} else {
 		TRKReadBuffer(b, buf, tempLength);
 		result = TRKTargetAccessMemory(buf, start, &tempLength,

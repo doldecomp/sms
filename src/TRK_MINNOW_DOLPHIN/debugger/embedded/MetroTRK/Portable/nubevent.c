@@ -1,4 +1,7 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mutex_TRK.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 
 TRKEventQueue gTRKEventQueue;
 

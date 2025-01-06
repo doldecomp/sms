@@ -1,6 +1,12 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
 #include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/flush_cache.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/notify.h"
 #include "stddef.h"
+#include "string.h"
 
 typedef struct memRange {
 	u8* start;
@@ -79,13 +85,16 @@ static void TRKExceptionHandler(u16);
 void TRKInterruptHandlerEnableInterrupts(void);
 void WriteFPSCR(register f64*);
 void ReadFPSCR(register f64*);
-void __TRK_set_MSR(register u32 msr);
+void __TRK_set_MSR(u32 msr);
 u32 __TRK_get_MSR();
-void TRK_ppc_memcpy(register void* dest, register const void* src,
-                    register int n, register u32 param_4, register u32 param_5);
+static void TRK_ppc_memcpy(register void* dest, register const void* src,
+                           register int n, register u32 param_4,
+                           register u32 param_5);
 
 void TRKRestoreExtended1Block();
 void TRKUARTInterruptHandler();
+
+static BOOL TRKTargetCheckStep();
 
 DSError TRKValidMemory32(const void* addr, size_t length,
                          ValidMemoryOptions readWriteable)
@@ -196,9 +205,9 @@ DSError TRKTargetAccessMemory(void* data, u32 start, size_t* length,
 			TRK_ppc_memcpy(data, addr, *length, uVar5, param4);
 		} else {
 			TRK_ppc_memcpy(addr, data, *length, param4, uVar5);
-			TRK_flush_cache((u32)addr, *length);
+			TRK_flush_cache(addr, *length);
 			if ((void*)start != addr) {
-				TRK_flush_cache(start, *length);
+				TRK_flush_cache((void*)start, *length);
 			}
 		}
 	}
@@ -614,8 +623,9 @@ DSError TRKTargetSupportRequest()
 		return DS_NoError;
 	} else if (commandId == DSMSG_OpenFile) {
 		error = HandleOpenFileSupportRequest(
-		    gTRKCPUState.Default.GPR[4], gTRKCPUState.Default.GPR[5] & 0xff,
-		    gTRKCPUState.Default.GPR[6], &ioResult);
+		    (const char*)gTRKCPUState.Default.GPR[4],
+		    gTRKCPUState.Default.GPR[5] & 0xff,
+		    (u32*)gTRKCPUState.Default.GPR[6], &ioResult);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
 			ioResult = DS_IOError;
@@ -656,7 +666,7 @@ DSError TRKTargetSupportRequest()
 		gTRKCPUState.Default.GPR[3] = ioResult;
 
 		if (commandId == DSMSG_ReadFile) {
-			TRK_flush_cache(gTRKCPUState.Default.GPR[6], *length);
+			TRK_flush_cache((void*)gTRKCPUState.Default.GPR[6], *length);
 		}
 	}
 
@@ -772,12 +782,6 @@ DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read)
 
 DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 {
-#if defined(__MWERKS__)
-#pragma unused(read)
-#elif defined(__GNUC__)
-	UNUSED(read);
-#endif
-
 	typedef void (*asm_access_type)(void*, void*);
 
 	asm_access_type asm_access;
@@ -825,7 +829,7 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 #endif
 
 	// Flush cache
-	TRK_flush_cache((u32)access_func, (sizeof(access_func) * 10));
+	TRK_flush_cache(access_func, (sizeof(access_func) * 10));
 	(*asm_access)((u32*)value, (void*)&TRKvalue128_temp);
 
 	return DS_NoError;
@@ -866,11 +870,11 @@ asm u32 __TRK_get_MSR()
 #endif // clang-format on
 }
 
-asm void __TRK_set_MSR()
+asm void __TRK_set_MSR(register u32 msr)
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
-	mtmsr r3
+	mtmsr msr
 	blr
 #endif // clang-format on
 }
