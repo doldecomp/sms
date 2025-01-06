@@ -1178,58 +1178,58 @@ PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/exponen
 	.rodata     start:0x80371FA8 end:0x803721F0
 	.sdata2     start:0x8040BEA8 end:0x8040BEF0
 
-TRK_MINNOW_DOLPHIN/mainloop.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mainloop.c:
 	.text       start:0x80087B00 end:0x80087C68
 
-TRK_MINNOW_DOLPHIN/nubevent.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/nubevent.c:
 	.text       start:0x80087C68 end:0x80087EC4
 	.bss        start:0x803E90E0 end:0x803E9108
 
-TRK_MINNOW_DOLPHIN/nubinit.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/nubinit.c:
 	.text       start:0x80087EC4 end:0x80088058
 	.rodata     start:0x803721F0 end:0x80372210
 	.bss        start:0x803E9108 end:0x803E9110
 
-TRK_MINNOW_DOLPHIN/msg.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msg.c:
 	.text       start:0x80088058 end:0x80088080
 
-TRK_MINNOW_DOLPHIN/msgbuf.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msgbuf.c:
 	.text       start:0x80088080 end:0x800888C8
 	.bss        start:0x803E9110 end:0x803EAAC0
 
-TRK_MINNOW_DOLPHIN/serpoll.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/serpoll.c:
 	.text       start:0x800888C8 end:0x80088A90
 	.bss        start:0x803EAAC0 end:0x803EAAD8
 
-TRK_MINNOW_DOLPHIN/usr_put.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/usr_put.c:
 	.text       start:0x80088A90 end:0x80088A94
 
-TRK_MINNOW_DOLPHIN/dispatch.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/dispatch.c:
 	.text       start:0x80088A94 end:0x80088B2C
 	.data       start:0x803AEF58 end:0x803AEFE0
 	.bss        start:0x803EAAD8 end:0x803EAAE0
 
-TRK_MINNOW_DOLPHIN/msghndlr.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msghndlr.c:
 	.text       start:0x80088B2C end:0x80089DD0
 	.data       start:0x803AEFE0 end:0x803AF018
 
-TRK_MINNOW_DOLPHIN/support.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/support.c:
 	.text       start:0x80089DD0 end:0x8008A24C
 
-TRK_MINNOW_DOLPHIN/mutex_TRK.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mutex_TRK.c:
 	.text       start:0x8008A24C end:0x8008A264
 
-TRK_MINNOW_DOLPHIN/notify.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/notify.c:
 	.text       start:0x8008A264 end:0x8008A33C
 
-TRK_MINNOW_DOLPHIN/flush_cache.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/flush_cache.c:
 	.text       start:0x8008A33C end:0x8008A374
 
-TRK_MINNOW_DOLPHIN/mem_TRK.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mem_TRK.c:
 	.init       start:0x80003244 end:0x80003298
 	.text       start:0x8008A374 end:0x8008A438
 
-TRK_MINNOW_DOLPHIN/targimpl.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/targimpl.c:
 	.text       start:0x8008A438 end:0x8008BA14
 	.rodata     start:0x80372210 end:0x80372260
 	.data       start:0x803AF018 end:0x803AF048
@@ -1238,24 +1238,24 @@ TRK_MINNOW_DOLPHIN/targimpl.c:
 TRK_MINNOW_DOLPHIN/__exception.s: comment:0
 	.init       start:0x80003298 end:0x800051CC
 
-TRK_MINNOW_DOLPHIN/dolphin_trk.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c:
 	.init       start:0x800051CC end:0x800051EC
 	.text       start:0x8008BA14 end:0x8008BC54
 	.data       start:0x803AF048 end:0x803AF088
 	.bss        start:0x803EB060 end:0x803EB068
 
-TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/mpc_7xx_603e.c:
 	.text       start:0x8008BC54 end:0x8008BFCC
 
-TRK_MINNOW_DOLPHIN/main_TRK.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/main_TRK.c:
 	.text       start:0x8008BFCC end:0x8008C014
 	.bss        start:0x803EB068 end:0x803EB080
 
-TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk_glue.c:
 	.text       start:0x8008C014 end:0x8008C36C
 	.data       start:0x803AF088 end:0x803AF0A8
 
-TRK_MINNOW_DOLPHIN/targcont.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/targcont.c:
 	.text       start:0x8008C36C end:0x8008C3A0
 
 dolphin/base/PPCArch.c:
