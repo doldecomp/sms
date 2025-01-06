@@ -1,7 +1,7 @@
 #include "string.h"
 
-#define K1 0x80808080
-#define K2 0xFEFEFEFF
+static int K1 = 0x80808080;
+static int K2 = 0xFEFEFEFF;
 
 size_t strlen(const char* str)
 {
@@ -19,6 +19,8 @@ char* strcpy(char* dst, const char* src)
 {
 	register unsigned char *destb, *fromb;
 	register unsigned long w, t, align;
+	register unsigned int k1;
+	register unsigned int k2;
 
 	fromb = (unsigned char*)src;
 	destb = (unsigned char*)dst;
@@ -41,11 +43,14 @@ char* strcpy(char* dst, const char* src)
 		++fromb;
 	}
 
+	k1 = K1;
+	k2 = K2;
+
 	w = *((int*)(fromb));
 
-	t = w + K2;
+	t = w + k2;
 
-	t &= K1;
+	t &= k1;
 	if (t) {
 		goto bytecopy;
 	}
@@ -55,8 +60,8 @@ char* strcpy(char* dst, const char* src)
 		*(++((int*)(destb))) = w;
 		w                    = *(++((int*)(fromb)));
 
-		t = w + K2;
-		t &= K1;
+		t = w + k2;
+		t &= k1;
 		if (t) {
 			goto adjust;
 		}
@@ -190,24 +195,6 @@ bytecopy:
 	} while (1);
 }
 
-int strncmp(const char* str1, const char* str2, size_t n)
-{
-	const unsigned char* p1 = (unsigned char*)str1 - 1;
-	const unsigned char* p2 = (unsigned char*)str2 - 1;
-	unsigned long c1, c2;
-
-	n++;
-	while (--n) {
-		if ((c1 = *++p1) != (c2 = *++p2)) {
-			return c1 - c2;
-		} else if (c1 == 0) {
-			break;
-		}
-	}
-
-	return 0;
-}
-
 char* strchr(const char* str, int c)
 {
 	const unsigned char* p = (unsigned char*)str - 1;
@@ -241,4 +228,30 @@ char* strrchr(const char* str, int c)
 	}
 
 	return chr ? NULL : (char*)p;
+}
+
+char* strstr(const char* str, const char* pat)
+{
+	const unsigned char* s1 = (const unsigned char*)str - 1;
+	const unsigned char* p1 = (const unsigned char*)pat - 1;
+	unsigned long firstc, c1, c2;
+
+	if ((pat == 0) || (!(firstc = *++p1))) {
+		return (char*)str;
+	}
+
+	while (c1 = *++s1) {
+		if (c1 == firstc) {
+			const unsigned char* s2 = s1 - 1;
+			const unsigned char* p2 = p1 - 1;
+
+			while ((c1 = *++s2) == (c2 = *++p2) && c1)
+				;
+
+			if (!c2)
+				return (char*)s1;
+		}
+	}
+
+	return NULL;
 }
