@@ -14,7 +14,7 @@ int __StringRead(void* pPtr, int ch, int act)
 			return -1;
 		} else {
 			Iscp->NextChar++;
-			return (unsigned char)ret;
+			return ret;
 		}
 
 	case __UngetAChar:

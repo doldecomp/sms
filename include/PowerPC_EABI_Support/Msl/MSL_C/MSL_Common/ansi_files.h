@@ -27,6 +27,7 @@ enum __file_kinds {
 	__closed_file,
 	__disk_file,
 	__console_file,
+	__string_file,
 	__unavailable_file,
 };
 

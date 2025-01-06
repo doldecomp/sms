@@ -26,7 +26,6 @@ unsigned long __strtoul(int base, int max_width,
 {
 	int scan_state          = start;
 	int count               = 0;
-	int spaces              = 0;
 	unsigned long value     = 0;
 	unsigned long value_max = 0;
 	int c;
@@ -39,17 +38,14 @@ unsigned long __strtoul(int base, int max_width,
 		c = fetch();
 	}
 
-	if (base != 0) {
+	if (base != 0)
 		value_max = ULONG_MAX / base;
-	}
 
 	while (count <= max_width && c != -1 && !final_state(scan_state)) {
 		switch (scan_state) {
 		case start:
 			if (isspace(c)) {
 				c = fetch();
-				count--;
-				spaces++;
 				break;
 			}
 
@@ -83,18 +79,16 @@ unsigned long __strtoul(int base, int max_width,
 				break;
 			}
 
-			if (base == 0) {
+			if (base == 0)
 				base = 8;
-			}
 
 			scan_state = digit_loop;
 			break;
 
 		case need_digit:
 		case digit_loop:
-			if (base == 0) {
+			if (base == 0)
 				base = 10;
-			}
 
 			if (!value_max) {
 				value_max = ULONG_MAX / base;
@@ -102,36 +96,32 @@ unsigned long __strtoul(int base, int max_width,
 
 			if (isdigit(c)) {
 				if ((c -= '0') >= base) {
-					if (scan_state == digit_loop) {
+					if (scan_state == digit_loop)
 						scan_state = finished;
-					} else {
+					else
 						scan_state = failure;
-					}
 
 					c += '0';
 					break;
 				}
 			} else if (!isalpha(c) || (toupper(c) - 'A' + 10) >= base) {
-				if (scan_state == digit_loop) {
+				if (scan_state == digit_loop)
 					scan_state = finished;
-				} else {
+				else
 					scan_state = failure;
-				}
 
 				break;
 			} else {
 				c = toupper(c) - 'A' + 10;
 			}
 
-			if (value > value_max) {
+			if (value > value_max)
 				*overflow = 1;
-			}
 
 			value *= base;
 
-			if (c > (ULONG_MAX - value)) {
+			if (c > (ULONG_MAX - value))
 				*overflow = 1;
-			}
 
 			value += c;
 			scan_state = digit_loop;
@@ -141,15 +131,16 @@ unsigned long __strtoul(int base, int max_width,
 	}
 
 	if (!success(scan_state)) {
-		count          = 0;
-		value          = 0;
-		*chars_scanned = 0;
+		value = 0;
+		count = 0;
 	} else {
 		count--;
-		*chars_scanned = count + spaces;
 	}
 
+	*chars_scanned = count;
+
 	unfetch(c);
+
 	return value;
 }
 

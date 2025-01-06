@@ -1,4 +1,3 @@
-#include "FILE_POS.h"
 #include "direct_io.h"
 #include "buffer_io.h"
 #include "misc_io.h"
@@ -6,13 +5,6 @@
 #include "wchar_io.h"
 
 size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
-{
-	size_t retval;
-	retval = __fwrite(buffer, size, count, stream);
-	return (retval);
-}
-
-size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
 {
 	unsigned char* write_ptr;
 	size_t num_bytes, bytes_to_go, bytes_written;
@@ -27,19 +19,16 @@ size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
 	    || stream->file_mode.file_kind == __closed_file)
 		return 0;
 
-	if (stream->file_mode.file_kind == __console_file)
+	if ((int)stream->file_mode.file_kind == __console_file)
 		__stdio_atexit();
 
 	always_buffer = !stream->file_mode.binary_io
+	                || (int)stream->file_mode.file_kind == __string_file
 	                || stream->file_mode.buffer_mode == _IOFBF
 	                || stream->file_mode.buffer_mode == _IOLBF;
 
 	if (stream->file_state.io_state == __neutral) {
 		if (stream->file_mode.io_mode & __write) {
-			if (stream->file_mode.io_mode & __append) {
-				if (fseek(stream, 0, SEEK_END))
-					return 0;
-			}
 			stream->file_state.io_state = __writing;
 
 			__prep_buffer(stream);
@@ -66,11 +55,6 @@ size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
 
 			if (num_bytes > bytes_to_go)
 				num_bytes = bytes_to_go;
-			if (stream->file_mode.buffer_mode == _IOLBF && num_bytes)
-				if ((newline
-				     = (unsigned char*)__memrchr(write_ptr, '\n', num_bytes))
-				    != NULL)
-					num_bytes = newline + 1 - write_ptr;
 
 			if (num_bytes) {
 				memcpy(stream->buffer_ptr, write_ptr, num_bytes);
@@ -82,6 +66,13 @@ size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
 				stream->buffer_ptr += num_bytes;
 				stream->buffer_length -= num_bytes;
 			}
+
+			if (!stream->buffer_length
+			    && (int)stream->file_mode.file_kind == __string_file) {
+				bytes_written += bytes_to_go;
+				break;
+			}
+
 			if (!stream->buffer_length || newline != NULL
 			    || (stream->file_mode.buffer_mode == _IONBF)) {
 				ioresult = __flush_buffer(stream, NULL);
