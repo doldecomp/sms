@@ -2,6 +2,7 @@
 #define METROTRK_PORTABLE_DISPATCH_H
 
 #include "dolphin/types.h"
+#include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +25,7 @@ extern "C" {
 
 typedef struct TRKBuffer TRKBuffer;
 
+DSError TRKInitializeDispatcher();
 BOOL TRKDispatchMessage(TRKBuffer* buffer);
 
 #ifdef __cplusplus

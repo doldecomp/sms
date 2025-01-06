@@ -26,12 +26,19 @@ typedef struct DBCommTable {
 	DBCommFunc post_stop_func;
 } DBCommTable;
 
-void UnreserveEXI2Port();
-void ReserveEXI2Port();
-UARTError TRKWriteUARTN(const void*, u32);
+DSError InitializeProgramEndTrap(void);
+DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2,
+                                   void* param_3);
+
+void UnreserveEXI2Port(void);
+void ReserveEXI2Port(void);
+int TRKPollUART(void);
+UARTError TRKReadUARTN(void* bytes, u32 length);
+UARTError TRKWriteUARTN(const void* bytes, u32 length);
 void TRKLoadContext(OSContext* ctx, u32 r4);
 int InitMetroTRKCommTable(int hwId);
 void EnableEXI2Interrupts(void);
+void TRK_board_display(char* str);
 
 #ifdef __cplusplus
 }

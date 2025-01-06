@@ -1,15 +1,15 @@
-#include "dolphin/types.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/flush_cache.h"
 
-asm void TRK_flush_cache(u32, int)
+asm void TRK_flush_cache(register void* param_1, register int param_2)
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 
 	lis r5, 0xFFFF
 	ori r5, r5, 0xFFF1
-	and r5, r5, r3
-	subf r3, r5, r3
-	add r4, r4, r3
+	and r5, r5, param_1
+	subf r3, r5, param_1
+	add r4, param_2, r3
 
 loop:
 	dcbst 0, r5

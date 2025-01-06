@@ -1,6 +1,9 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
 #include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
 #include "stddef.h"
 #include "string.h"
 
@@ -82,7 +85,7 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				*io_result = (DSIOResult)replyIOResult;
 				TRKReleaseBuffer(replyBufferId);
 			} else {
-				error = TRKMessageSend(buffer);
+				error = TRKMessageSend((TRK_Msg*)buffer);
 			}
 		}
 
@@ -109,7 +112,7 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
 	for (count = p2 + 1; count != 0 && *bufferId == -1 && error == DS_NoError;
 	     count--) {
 		MWTRACE(1, "Calling MessageSend\n");
-		error = TRKMessageSend(msgBuf);
+		error = TRKMessageSend((TRK_Msg*)msgBuf);
 		if (error == DS_NoError) {
 			if (p3) {
 				counter = 0;

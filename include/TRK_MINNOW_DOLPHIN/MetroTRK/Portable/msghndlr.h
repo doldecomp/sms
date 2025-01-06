@@ -20,4 +20,6 @@ DSError TRKDoReset(TRKBuffer*);
 DSError TRKDoDisconnect(TRKBuffer*);
 DSError TRKDoConnect(TRKBuffer*);
 
+void OutputData(void* data, int length);
+
 #endif /* METROTRK_PORTABLE_MSGHNDLR_H */
