@@ -107,7 +107,8 @@ lbl_80371340:
 	mfspr r30, 0x3FB
 	mfspr r31, 0x3f9
 	stmw r19, 0x284(r2)
-	blr
+	b end
+
 	mfspr r25, 0x3d0
 	mfspr r26, 0x3d1
 	mfspr r27, 0x3d2
@@ -118,6 +119,7 @@ lbl_80371340:
 	stmw r25, 0x240(r2)
 	mfspr r31, 0x16
 	stw r31, 0x278(r2)
+end:
 	blr
 #endif // clang-format on
 }
@@ -242,3 +244,5 @@ lbl_8037149C:
 	blr
 #endif // clang-format on
 }
+
+u32 TRKTargetCPUMinorType(void) { return 0x54; }
