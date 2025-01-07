@@ -1,19 +1,19 @@
+#include <dolphin/odemuexi/DebuggerDriver.h>
 #include <dolphin/os.h>
 #include <macros.h>
-
-typedef void (*InterruptHandlerLike)(s32, OSContext*);
 
 u8 EXIInputFlag;
 u8* pEXIInputFlag;
 s32 RecvDataLeng;
 u32 SendMailData;
-InterruptHandlerLike DBGCallback;
-InterruptHandlerLike MTRCallback;
+// not __OSInterruptHandler because f u that's why
+static void (*DBGCallback)(u32, OSContext*);
+__OSInterruptHandler MTRCallback;
 
 u8 SendCount = 0x80;
 
 static void DBGHandler(__OSInterrupt interrupt, OSContext* context);
-static void MWCallback(s32 interrupt, OSContext* context);
+static void MWCallback(u32 interrupt, OSContext* context);
 static void DBGEXIInit(void);
 static BOOL DBGEXISelect(u32);
 static BOOL DBGEXIDeselect(void);
@@ -198,7 +198,7 @@ static BOOL DBGReadStatus(void* param_1)
 	return !error;
 }
 
-static void MWCallback(s32 interrupt, OSContext* context)
+static void MWCallback(u32 interrupt, OSContext* context)
 {
 	EXIInputFlag = 1;
 	if (MTRCallback) {
@@ -230,7 +230,7 @@ static void CheckMailBox(void)
 	}
 }
 
-void DBInitComm(u8** param_1, InterruptHandlerLike param_2)
+void DBInitComm(volatile u8** param_1, __OSInterruptHandler param_2)
 {
 	BOOL enabled;
 
@@ -264,7 +264,7 @@ u32 DBQueryData(void)
 	return RecvDataLeng;
 }
 
-u32 DBRead(u32* param1, s32 param2)
+int DBRead(void* param1, u32 param2)
 {
 	BOOL enabled;
 	u32 lVar3;
@@ -282,7 +282,7 @@ u32 DBRead(u32* param1, s32 param2)
 	return 0;
 }
 
-BOOL DBWrite(void* data, u32 size)
+int DBWrite(const void* data, u32 size)
 {
 	u32 value;
 	u32 busyFlag;

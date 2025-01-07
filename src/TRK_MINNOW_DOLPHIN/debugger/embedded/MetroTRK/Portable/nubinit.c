@@ -34,7 +34,7 @@ DSError TRKInitializeNub(void)
 	if (ret == DS_NoError) {
 		ret = TRKInitializeDispatcher();
 	}
-	InitializeProgramEndTrap();
+
 	if (ret == DS_NoError) {
 		ret = TRKInitializeSerialHandler();
 	}

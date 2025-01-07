@@ -57,7 +57,8 @@ int __OSCheckDeadLock(struct OSThread* thread);
 int __OSCheckMutexes(struct OSThread* thread);
 
 // OSResetSW.c
-void __OSResetSWInterruptHandler(short exception, struct OSContext* context);
+void __OSResetSWInterruptHandler(__OSInterrupt exception,
+                                 struct OSContext* context);
 
 // OSReset.c
 void __OSDoHotReset(s32);

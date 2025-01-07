@@ -2,6 +2,7 @@
 #define _DOLPHIN_DVD_INTERNAL_H_
 
 #include <dolphin/dvd.h>
+#include <dolphin/os/OSInterrupt.h>
 
 struct OSContext;
 struct OSAlarm;
@@ -23,7 +24,7 @@ extern unsigned long __DVDLongFileNameFlag;
 void __DVDFSInit();
 
 // dvdlow.c
-void __DVDInterruptHandler(short unused, struct OSContext* context);
+void __DVDInterruptHandler(__OSInterrupt unused, struct OSContext* context);
 void __DVDInitWA();
 BOOL __DVDLowTestAlarm(struct OSAlarm* alarm);
 void __DVDLowSetWAType(u32 type, u32 location);
