@@ -13,9 +13,9 @@ typedef enum { AMC_EXI_NO_ERROR = 0, AMC_EXI_UNSELECTED } AmcExiError;
 
 void EXI2_Init(volatile u8**, AmcEXICallback);
 void EXI2_EnableInterrupts(void);
-int EXI2_Poll(void);
-AmcExiError EXI2_ReadN(void*, u32);
-AmcExiError EXI2_WriteN(const void*, u32);
+u32 EXI2_Poll(void);
+int EXI2_ReadN(void*, u32);
+int EXI2_WriteN(const void*, u32);
 void EXI2_Reserve(void);
 void EXI2_Unreserve(void);
 BOOL AMC_IsStub(void);

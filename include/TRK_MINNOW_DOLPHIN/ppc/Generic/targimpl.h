@@ -36,6 +36,7 @@ u32 TRKTargetGetPC();
 DSError TRKTargetSingleStep(u32 count, BOOL stepOver);
 DSError TRKTargetStepOutOfRange(u32 rangeStart, u32 rangeEnd, BOOL stepOver);
 u32 TRKTargetStop();
+void TRKInterruptHandler();
 
 typedef struct Default_PPC {
 	u32 GPR[32];

@@ -19,6 +19,8 @@ DSError TRKDoOverride(TRKBuffer*);
 DSError TRKDoReset(TRKBuffer*);
 DSError TRKDoDisconnect(TRKBuffer*);
 DSError TRKDoConnect(TRKBuffer*);
+DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
+                       DSReplyError replyError);
 
 void OutputData(void* data, int length);
 

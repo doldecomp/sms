@@ -66,7 +66,7 @@ static void GXUnderflowHandler(s16 interrupt, OSContext* context)
 	__GXWriteFifoIntEnable(1U, 0U);
 }
 
-static void GXBreakPointHandler(s16 interrupt, OSContext* context)
+static void GXBreakPointHandler(__OSInterrupt interrupt, OSContext* context)
 {
 	OSContext exceptionContext;
 
@@ -81,7 +81,7 @@ static void GXBreakPointHandler(s16 interrupt, OSContext* context)
 	}
 }
 
-static void GXCPInterruptHandler(s16 interrupt, OSContext* context)
+static void GXCPInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 {
 	gx->cpStatus = __cpReg[0];
 	if (GET_REG_FIELD(gx->cpEnable, 1, 3)

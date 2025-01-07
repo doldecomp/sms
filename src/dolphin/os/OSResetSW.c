@@ -14,7 +14,8 @@ static BOOL LastState;
 static OSTime HoldUp;
 static OSTime HoldDown;
 
-void __OSResetSWInterruptHandler(short exception, struct OSContext* context)
+void __OSResetSWInterruptHandler(__OSInterrupt exception,
+                                 struct OSContext* context)
 {
 	OSResetCallback callback;
 
