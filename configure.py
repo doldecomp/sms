@@ -189,7 +189,6 @@ cflags_base = [
     "-Cpp_exceptions off",
     # "-W all",
     "-O4,p",
-    "-inline auto",
     '-pragma "cats off"',
     '-pragma "warn_notinlined off"',
     "-maxerrors 1",
@@ -215,20 +214,15 @@ else:
 # Metrowerks library flags
 cflags_runtime = [
     *cflags_base,
+    "-inline auto",
     "-fp_contract on",
     "-str reuse,pool,readonly",
     "-inline deferred,auto",
 ]
 
-# REL flags
-cflags_rel = [
-    *cflags_base,
-    "-sdata 0",
-    "-sdata2 0",
-]
-
 cflags_jsystem = [
     *cflags_base,
+    "-inline auto",
     "-str reuse,readonly",
     "-lang=c++",
     "-fp hard",
@@ -240,17 +234,20 @@ cflags_jsystem = [
 
 cflags_game = [
     *cflags_base,
+    "-inline auto",
     "-fp_contract on",
     "-str reuse,readonly",
 ]
 
 cflags_system = [
     *cflags_game,
+    "-inline auto",
     "-opt all,nostrength",
 ]
 
 cflags_dolphin = [
     *cflags_base,
+    "-inline auto",
     "-fp_contract off", # NOTE: this is definitely off according to mtx.c
     # TODO: should these be different?
 ]
@@ -593,7 +590,7 @@ config.libs = [
     {
         "lib": "TRK_MINNOW_DOLPHIN",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_dolphin, "-pool off"],
+        "cflags": [*cflags_base, "-pool off", "-str readonly", "-enum min", "-sdatathreshold 0"],
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mainloop.c"),

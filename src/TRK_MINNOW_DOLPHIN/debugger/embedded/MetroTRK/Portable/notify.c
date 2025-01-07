@@ -6,14 +6,21 @@
 
 DSError TRKDoNotifyStopped(MessageCommandID cmd)
 {
+	DSError err;
 	int reqIdx;
 	int bufIdx;
 	TRKBuffer* msg;
-	DSError err;
-	DSError bufError;
 
-	bufError = TRKGetFreeBuffer(&bufIdx, &msg);
-	if ((err = bufError) == FALSE) {
+	err = TRKGetFreeBuffer(&bufIdx, &msg);
+	if (err == DS_NoError) {
+		if (msg->position >= 0x880) {
+			err = DS_MessageBufferOverflow;
+		} else {
+			msg->data[msg->position++] = cmd;
+			++msg->length;
+			err = 0;
+		}
+
 		if (err == DS_NoError) {
 			if (cmd == DSMSG_NotifyStopped) {
 				TRKTargetAddStopInfo(msg);
@@ -21,12 +28,13 @@ DSError TRKDoNotifyStopped(MessageCommandID cmd)
 				TRKTargetAddExceptionInfo(msg);
 			}
 		}
-		bufError = TRKRequestSend(msg, &reqIdx, 2, 3, 1);
-		err      = bufError;
+
+		err = TRKRequestSend(msg, &reqIdx, 2, 3, 1);
 		if (err == DS_NoError) {
 			TRKReleaseBuffer(reqIdx);
 		}
 		TRKReleaseBuffer(bufIdx);
 	}
+
 	return err;
 }

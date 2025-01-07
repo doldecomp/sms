@@ -44,10 +44,6 @@ DSError TRKGetFreeBuffer(int* msgID, TRKBuffer** outMsg)
 		TRKReleaseMutex(buf);
 	}
 
-	if (error == DS_NoMessageBufferAvailable) {
-		usr_puts_serial("ERROR : No buffer available\n");
-	}
-
 	return error;
 }
 
@@ -78,7 +74,7 @@ void TRKResetBuffer(TRKBuffer* msg, BOOL keepData)
 	msg->position = 0;
 
 	if (!keepData) {
-		TRK_memset(msg->data, 0, 0x880);
+		TRK_memset(msg->data, 0, TRKMSGBUF_SIZE);
 	}
 }
 
@@ -159,15 +155,23 @@ DSError TRKReadBuffer(TRKBuffer* msg, void* data, size_t length)
 	return error;
 }
 
-DSError TRKAppendBuffer1_ui8(TRKBuffer* buffer, const u8 data)
+DSError TRKAppendBuffer1_ui16(TRKBuffer* buffer, const u16 data)
 {
-	if (buffer->position >= 0x880) {
-		return DS_MessageBufferOverflow;
+	u8* bigEndianData;
+	u8* byteData;
+	u8 swapBuffer[sizeof(data)];
+
+	if (gTRKBigEndian) {
+		bigEndianData = (u8*)&data;
+	} else {
+		byteData      = (u8*)&data;
+		bigEndianData = swapBuffer;
+
+		bigEndianData[0] = byteData[1];
+		bigEndianData[1] = byteData[0];
 	}
 
-	buffer->data[buffer->position++] = data;
-	buffer->length++;
-	return DS_NoError;
+	return TRKAppendBuffer(buffer, (const void*)bigEndianData, sizeof(data));
 }
 
 DSError TRKAppendBuffer1_ui32(TRKBuffer* buffer, const u32 data)
@@ -244,6 +248,32 @@ DSError TRKReadBuffer1_ui8(TRKBuffer* buffer, u8* data)
 	return TRKReadBuffer(buffer, (void*)data, 1);
 }
 
+DSError TRKReadBuffer1_ui16(TRKBuffer* buffer, u16* data)
+{
+	DSError err;
+
+	u8* bigEndianData;
+	u8* byteData;
+	u8 swapBuffer[sizeof(data)];
+
+	if (gTRKBigEndian) {
+		bigEndianData = (u8*)data;
+	} else {
+		bigEndianData = swapBuffer;
+	}
+
+	err = TRKReadBuffer(buffer, (void*)bigEndianData, sizeof(*data));
+
+	if (!gTRKBigEndian && err == DS_NoError) {
+		byteData = (u8*)data;
+
+		byteData[0] = bigEndianData[1];
+		byteData[1] = bigEndianData[0];
+	}
+
+	return err;
+}
+
 DSError TRKReadBuffer1_ui32(TRKBuffer* buffer, u32* data)
 {
 	DSError err;
@@ -270,7 +300,6 @@ DSError TRKReadBuffer1_ui32(TRKBuffer* buffer, u32* data)
 	}
 
 	return err;
-	// UNUSED FUNCTION
 }
 
 DSError TRKReadBuffer1_ui64(TRKBuffer* buffer, u64* data)

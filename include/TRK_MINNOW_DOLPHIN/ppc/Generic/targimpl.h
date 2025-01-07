@@ -15,6 +15,7 @@ void TRKTargetSetStopped(unsigned int);
 DSError TRKTargetInterrupt(TRKEvent*);
 DSError TRKTargetSupportRequest();
 void TRKDestructEvent(TRKEvent*);
+DSError TRKTargetFlushCache(u8, void* start, void* end);
 BOOL TRKTargetStopped(void);
 DSError TRKTargetAddStopInfo(TRKBuffer* b);
 void TRKTargetAddExceptionInfo(TRKBuffer* b);
@@ -37,6 +38,27 @@ DSError TRKTargetSingleStep(u32 count, BOOL stepOver);
 DSError TRKTargetStepOutOfRange(u32 rangeStart, u32 rangeEnd, BOOL stepOver);
 u32 TRKTargetStop();
 void TRKInterruptHandler();
+
+typedef struct DSVersions {
+	u8 kernelMajor;
+	u8 kernelMinor;
+	u8 protocolMajor;
+	u8 protocolMinor;
+} DSVersions;
+
+DSError TRKTargetVersions(DSVersions* versions);
+DSError TRKTargetSupportMask(u8 mask[32]);
+
+typedef struct DSCPUType {
+	u8 cpuMajor;
+	u8 cpuMinor;
+	u8 bigEndian;
+	u8 defaultTypeSize;
+	u8 fpTypeSize;
+	u8 extended1TypeSize;
+	u8 extended2TypeSize;
+} DSCPUType;
+DSError TRKTargetCPUType(DSCPUType* cpuType);
 
 typedef struct Default_PPC {
 	u32 GPR[32];
