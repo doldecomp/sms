@@ -1,0 +1,2018 @@
+.include "macros.inc"
+.file "__exception.s"
+
+# 0x80003298..0x800051CC | size: 0x1F34
+.section .init, "ax"
+.balign 4
+
+# .init:0x0 | 0x80003298 | size: 0x0
+.sym gTRKInterruptVectorTable, global
+  .4byte 0x4D657472 /* invalid */
+  xoris r23, r27, 0x6572
+  xori r19, r27, 0x2054
+  ori r18, r11, 0x6765
+  andis. r0, r1, 0x5265
+  andi. r9, r27, 0x6465
+  xoris r20, r19, 0x204b
+  oris r18, r11, 0x6e65
+  xoris r0, r1, 0x666f
+  andi. r0, r17, 0x506f
+  andis. r5, r27, 0x7250
+.L_800032C4:
+  .4byte 0x43000000 /* illegal: bc 24, lt, 0x0 */
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  b 0x1e34
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mfsrr0 r2
+  icbi r0, r2
+  mfdar r2
+  dcbi r0, r2
+  mfsprg r2, 1
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x200
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x300
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x400
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x500
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x600
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x700
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x800
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x900
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0xc00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0xd00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0xe00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  b .L_800041EC
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0xf20
+  rfi
+
+.L_800041EC:
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0xf00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mfcr r2
+  mtsprg 2, r2
+  mfmsr r2
+  andis. r2, r2, 0x2
+  beq .L_800042C8
+  mfmsr r2
+  xoris r2, r2, 0x2
+  sync
+  mtmsr r2
+  sync
+  mtsprg 1, r2
+.L_800042C8:
+  mfsprg r2, 2
+  mtcrf 255, r2
+  mfsprg r2, 1
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1000
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mfcr r2
+  mtsprg 2, r2
+  mfmsr r2
+  andis. r2, r2, 0x2
+  beq .L_800043C8
+  mfmsr r2
+  xoris r2, r2, 0x2
+  sync
+  mtmsr r2
+  sync
+  mtsprg 1, r2
+.L_800043C8:
+  mfsprg r2, 2
+  mtcrf 255, r2
+  mfsprg r2, 1
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1100
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mfcr r2
+  mtsprg 2, r2
+  mfmsr r2
+  andis. r2, r2, 0x2
+  beq .L_800044C8
+  mfmsr r2
+  xoris r2, r2, 0x2
+  sync
+  mtmsr r2
+  sync
+  mtsprg 1, r2
+
+.L_800044C8:
+  mfsprg r2, 2
+  mtcrf 255, r2
+  mfsprg r2, 1
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1200
+  rfi
+
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1300
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+
+# .init:0x1368 | 0x80004600 | size: 0x0
+.sym lbl_80004600, global
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1400
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1600
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1700
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1c00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1d00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1e00
+  rfi
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  .4byte 0x00000000
+  mtsprg 1, r2
+  mtsprg 2, r3
+  mtsprg 3, r4
+  mfsrr0 r2
+  mfsrr1 r4
+  mfmsr r3
+  ori r3, r3, 0x30
+  mtsrr1 r3
+  lis r3, 0x8008
+  ori r3, r3, 0xadd8
+  mtsrr0 r3
+  li r3, 0x1f00
+  rfi
+.sym gTRKInterruptVectorTableEnd, global
