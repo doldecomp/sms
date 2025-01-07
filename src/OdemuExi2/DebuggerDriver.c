@@ -2,15 +2,15 @@
 #include <dolphin/os.h>
 #include <macros.h>
 
-u8 EXIInputFlag;
-u8* pEXIInputFlag;
-s32 RecvDataLeng;
-u32 SendMailData;
+static __OSInterruptHandler MTRCallback;
 // not __OSInterruptHandler because f u that's why
 static void (*DBGCallback)(u32, OSContext*);
-__OSInterruptHandler MTRCallback;
+static u32 SendMailData;
+static s32 RecvDataLeng;
+static u8* pEXIInputFlag;
+static u8 EXIInputFlag;
 
-u8 SendCount = 0x80;
+static u8 SendCount = 0x80;
 
 static void DBGHandler(__OSInterrupt interrupt, OSContext* context);
 static void MWCallback(u32 interrupt, OSContext* context);

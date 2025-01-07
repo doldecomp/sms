@@ -9,8 +9,7 @@
 
 #define EXCEPTIONMASK_ADDR 0x80000044
 
-// Why is it in .bss instead of .sbss?!
-__declspec(section ".data") static u32 lc_base;
+static u32 lc_base;
 
 static u32 TRK_ISR_OFFSETS[15] = { PPC_SystemReset,
 	                               PPC_MachineCheck,
@@ -94,7 +93,6 @@ initCommTableSuccess:
 
 void EnableMetroTRKInterrupts(void) { EnableEXI2Interrupts(); }
 
-#pragma dont_inline on
 u32 TRKTargetTranslate(u32 param_0)
 {
 	if (param_0 >= lc_base) {
@@ -106,18 +104,15 @@ u32 TRKTargetTranslate(u32 param_0)
 
 	return param_0 & 0x3FFFFFFF | 0x80000000;
 }
-#pragma dont_inline reset
 
 extern u8 gTRKInterruptVectorTable[];
 
-#pragma dont_inline on
 void TRK_copy_vector(u32 offset)
 {
 	void* destPtr = (void*)TRKTargetTranslate(offset);
 	TRK_memcpy(destPtr, gTRKInterruptVectorTable + offset, 0x100);
 	TRK_flush_cache(destPtr, 0x100);
 }
-#pragma dont_inline reset
 
 void __TRK_copy_vectors(void)
 {

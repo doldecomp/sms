@@ -4,6 +4,21 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
+void TRKHandleRequestEvent(TRKEvent* event)
+{
+	TRKBuffer* buffer = TRKGetBuffer(event->msgBufID);
+	TRKDispatchMessage(buffer);
+}
+
+void TRKHandleSupportEvent(TRKEvent* event) { TRKTargetSupportRequest(); }
+
+void TRKIdle()
+{
+	if (TRKTargetStopped() == FALSE) {
+		TRKTargetContinue();
+	}
+}
+
 void TRKNubMainLoop(void)
 {
 	void* msg;
@@ -22,8 +37,7 @@ void TRKNubMainLoop(void)
 				break;
 
 			case NUBEVENT_Request:
-				msg = TRKGetBuffer(event.msgBufID);
-				TRKDispatchMessage(msg);
+				TRKHandleRequestEvent(&event);
 				break;
 
 			case NUBEVENT_Shutdown:
@@ -36,7 +50,7 @@ void TRKNubMainLoop(void)
 				break;
 
 			case NUBEVENT_Support:
-				TRKTargetSupportRequest();
+				TRKHandleSupportEvent(&event);
 				break;
 			}
 
@@ -50,9 +64,7 @@ void TRKNubMainLoop(void)
 			continue;
 		}
 
-		if (TRKTargetStopped() == FALSE) {
-			TRKTargetContinue();
-		}
+		TRKIdle();
 		isNewInput = FALSE;
 	}
 }

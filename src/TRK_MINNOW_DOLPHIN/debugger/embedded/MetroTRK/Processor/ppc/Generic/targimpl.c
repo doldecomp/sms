@@ -1,7 +1,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
-#include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/flush_cache.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/mpc_7xx_603e.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/support.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/notify.h"
@@ -415,6 +415,66 @@ DSError TRKTargetAccessExtended2(u32 firstRegister, u32 lastRegister,
 	return err;
 }
 
+DSError TRKTargetVersions(DSVersions* versions)
+{
+	versions->kernelMajor   = 0;
+	versions->kernelMinor   = 8;
+	versions->protocolMajor = 1;
+	versions->protocolMinor = 10;
+	return DS_NoError;
+}
+
+DSError TRKTargetSupportMask(u8 mask[32])
+{
+	mask[0]    = 0x7a;
+	mask[1]    = 0;
+	mask[2]    = 0x4f;
+	mask[3]    = 7;
+	mask[4]    = 0;
+	mask[5]    = 0;
+	mask[6]    = 0;
+	mask[7]    = 0;
+	mask[8]    = 0;
+	mask[9]    = 0;
+	mask[10]   = 0;
+	mask[0xb]  = 0;
+	mask[0xc]  = 0;
+	mask[0xd]  = 0;
+	mask[0xe]  = 0;
+	mask[0xf]  = 0;
+	mask[0x10] = 1;
+	mask[0x11] = 0;
+	mask[0x12] = 3;
+	mask[0x13] = 0;
+	mask[0x14] = 0;
+	mask[0x15] = 0;
+	mask[0x16] = 0;
+	mask[0x17] = 0;
+	mask[0x18] = 0;
+	mask[0x19] = 0;
+	mask[0x1a] = 3;
+	mask[0x1b] = 0;
+	mask[0x1c] = 0;
+	mask[0x1d] = 0;
+	mask[0x1e] = 0;
+	mask[0x1f] = 0x80;
+	return DS_NoError;
+}
+
+extern BOOL gTRKBigEndian;
+
+DSError TRKTargetCPUType(DSCPUType* cpuType)
+{
+	cpuType->cpuMajor          = 0;
+	cpuType->cpuMinor          = TRKTargetCPUMinorType();
+	cpuType->bigEndian         = gTRKBigEndian;
+	cpuType->defaultTypeSize   = 4;
+	cpuType->fpTypeSize        = 8;
+	cpuType->extended1TypeSize = 4;
+	cpuType->extended2TypeSize = 8;
+	return DS_NoError;
+}
+
 void TRKPostInterruptEvent(void)
 {
 	int eventType;
@@ -543,7 +603,6 @@ BOOL TRKTargetStepDone()
 inline DSError TRKTargetDoStep()
 {
 	gTRKStepStatus.active = TRUE;
-	MWTRACE(1, "TargetDoStep()\n");
 	TRKTargetEnableTrace(TRUE);
 
 	if (gTRKStepStatus.type == DSSTEP_IntoCount
@@ -672,6 +731,16 @@ DSError TRKTargetSupportRequest()
 
 	gTRKCPUState.Default.PC += 4;
 	return error;
+}
+
+DSError TRKTargetFlushCache(u8, void* start, void* end)
+{
+	if (start < end) {
+		TRK_flush_cache(start, (u8*)end - (u8*)start);
+		return DS_NoError;
+	}
+
+	return DS_InvalidMemory;
 }
 
 BOOL TRKTargetStopped() { return gTRKState.isStopped; }

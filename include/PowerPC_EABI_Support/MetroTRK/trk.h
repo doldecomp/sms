@@ -16,7 +16,7 @@ typedef enum {
 } HardwareType;
 
 // DS Error returns.
-typedef enum {
+enum {
 	DS_NoError        = 0x0,
 	DS_StepError      = 0x1,
 	DS_ParameterError = 0x2,
@@ -38,7 +38,9 @@ typedef enum {
 	DS_OSError          = 0x706,
 
 	DS_Error800 = 0x800,
-} DSError;
+};
+
+typedef int DSError;
 
 // Where to read/write.
 typedef enum {

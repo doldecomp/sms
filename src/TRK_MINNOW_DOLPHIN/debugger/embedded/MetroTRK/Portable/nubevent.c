@@ -16,17 +16,22 @@ DSError TRKInitializeEventQueue()
 	return DS_NoError;
 }
 
+void TRKCopyEvent(TRKEvent* dstEvent, const TRKEvent* srcEvent)
+{
+	TRK_memcpy(dstEvent, srcEvent, sizeof(TRKEvent));
+}
+
 BOOL TRKGetNextEvent(TRKEvent* event)
 {
 	BOOL status = 0;
 	TRKAcquireMutex(&gTRKEventQueue);
 	if (0 < gTRKEventQueue.count) {
-		TRK_memcpy(event, &gTRKEventQueue.events[gTRKEventQueue.next],
-		           sizeof(TRKEvent));
+		TRKCopyEvent(event, &gTRKEventQueue.events[gTRKEventQueue.next]);
 		gTRKEventQueue.count--;
-		if (++gTRKEventQueue.next == 2) {
+		gTRKEventQueue.next++;
+		if (gTRKEventQueue.next == 2)
 			gTRKEventQueue.next = 0;
-		}
+
 		status = 1;
 	}
 	TRKReleaseMutex(&gTRKEventQueue);
@@ -42,16 +47,13 @@ DSError TRKPostEvent(TRKEvent* event)
 
 	if (gTRKEventQueue.count == 2) {
 		ret = DS_EventQueueFull;
-
 	} else {
 		nextEventID = (gTRKEventQueue.next + gTRKEventQueue.count) % 2;
-		TRK_memcpy(&gTRKEventQueue.events[nextEventID], event,
-		           sizeof(TRKEvent));
+		TRKCopyEvent(&gTRKEventQueue.events[nextEventID], event);
 		gTRKEventQueue.events[nextEventID].eventID = gTRKEventQueue.eventID;
-
-		if (++gTRKEventQueue.eventID < 0x100) {
+		gTRKEventQueue.eventID++;
+		if (gTRKEventQueue.eventID < 0x100)
 			gTRKEventQueue.eventID = 0x100;
-		}
 
 		gTRKEventQueue.count++;
 	}

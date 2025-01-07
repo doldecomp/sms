@@ -3,7 +3,6 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
-#include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 static TRKFramingState gTRKFramingState;
@@ -43,14 +42,21 @@ MessageBufferID TRKTestForPacket()
 
 void TRKGetInput(void)
 {
-	MessageBufferID id = TRKTestForPacket();
-	if (id != -1) {
-		TRKEvent event;
-		TRKGetBuffer(id);
-		TRKConstructEvent(&event, NUBEVENT_Request);
-		event.msgBufID            = id;
-		gTRKFramingState.msgBufID = -1;
-		TRKPostEvent(&event);
+	MessageBufferID id;
+	TRKBuffer* msgBuffer;
+	u8 command;
+
+	id = TRKTestForPacket();
+	if (id == -1)
+		return;
+
+	msgBuffer = TRKGetBuffer(id);
+	TRKSetBufferPosition(msgBuffer, 0);
+	TRKReadBuffer1_ui8(msgBuffer, &command);
+	if (command < DSMSG_ReplyACK) {
+		TRKProcessInput(id);
+	} else {
+		TRKReleaseBuffer(id);
 	}
 }
 
@@ -59,8 +65,8 @@ void TRKProcessInput(int bufferIdx)
 	TRKEvent event;
 
 	TRKConstructEvent(&event, NUBEVENT_Request);
-	event.msgBufID            = bufferIdx;
 	gTRKFramingState.msgBufID = -1;
+	event.msgBufID            = bufferIdx;
 	TRKPostEvent(&event);
 }
 
@@ -69,13 +75,6 @@ DSError TRKInitializeSerialHandler(void)
 	gTRKFramingState.msgBufID     = -1;
 	gTRKFramingState.receiveState = DSRECV_Wait;
 	gTRKFramingState.isEscape     = FALSE;
-
-	MWTRACE(1, "TRK_Packet_Header \t    %ld bytes\n", 0x40);
-	MWTRACE(1, "TRK_CMD_ReadMemory     %ld bytes\n", 0x40);
-	MWTRACE(1, "TRK_CMD_WriteMemory    %ld bytes\n", 0x40);
-	MWTRACE(1, "TRK_CMD_Connect \t    %ld bytes\n", 0x40);
-	MWTRACE(1, "TRK_CMD_ReplyAck\t    %ld bytes\n", 0x40);
-	MWTRACE(1, "TRK_CMD_ReadRegisters\t%ld bytes\n", 0x40);
 
 	return DS_NoError;
 }

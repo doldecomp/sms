@@ -8,7 +8,6 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/usr_put.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
-#include "TRK_MINNOW_DOLPHIN/utils/common/MWTrace.h"
 
 BOOL gTRKBigEndian;
 
@@ -21,26 +20,15 @@ DSError TRKInitializeNub(void)
 
 	ret = TRKInitializeEndian();
 
-	MWTRACE(1, "Initialize NUB\n");
-	if (ret == DS_NoError) {
+	if (ret == DS_NoError)
 		usr_put_initialize();
-	}
-	if (ret == DS_NoError) {
+	if (ret == DS_NoError)
 		ret = TRKInitializeEventQueue();
-	}
-	if (ret == DS_NoError) {
+	if (ret == DS_NoError)
 		ret = TRKInitializeMessageBuffers();
-	}
-	if (ret == DS_NoError) {
+	if (ret == DS_NoError)
 		ret = TRKInitializeDispatcher();
-	}
 
-	if (ret == DS_NoError) {
-		ret = TRKInitializeSerialHandler();
-	}
-	if (ret == DS_NoError) {
-		ret = TRKInitializeTarget();
-	}
 	if (ret == DS_NoError) {
 		uartErr = TRKInitializeIntDrivenUART(0x0000e100, 1, 0,
 		                                     &gTRKInputPendingPtr);
@@ -49,6 +37,12 @@ DSError TRKInitializeNub(void)
 			ret = uartErr;
 		}
 	}
+
+	if (ret == DS_NoError)
+		ret = TRKInitializeSerialHandler();
+	if (ret == DS_NoError)
+		ret = TRKInitializeTarget();
+
 	return ret;
 }
 
