@@ -146,6 +146,7 @@
 
 /* GXAttr.c */
 
+void __GXCalculateVLim(void);
 void __GXSetVCD(void);
 void __GXSetVAT(void);
 
@@ -187,7 +188,7 @@ struct __GXData_struct {
 	// total size: 0x4F4
 	u16 vNum;                     // offset 0x0, size 0x2
 	u16 bpSent;                   // offset 0x2, size 0x2
-	u16 unk04;                    // offset 0x4, size 0x2
+	u16 unk04; /* vNum? */        // offset 0x4, size 0x2
 	u16 vLim;                     // offset 0x6, size 0x4
 	u32 cpEnable;                 // offset 0x8, size 0x4
 	u32 cpStatus;                 // offset 0xC, size 0x4
