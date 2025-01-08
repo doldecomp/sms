@@ -1,3 +1,6 @@
+#include "dolphin/gx/GXStruct.h"
+#include "dolphin/gx/GXVerify.h"
+
 #define GX_WRITE_U8(ub) GXWGFifo.u8 = (u8)(ub)
 
 #define GX_WRITE_U16(us) GXWGFifo.u16 = (u16)(us)
