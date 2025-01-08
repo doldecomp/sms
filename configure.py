@@ -713,7 +713,7 @@ config.libs = [
             Object(Matching, "dolphin/gx/GXStubs.c"),
             Object(Matching, "dolphin/gx/GXDisplayList.c"),
             Object(Matching, "dolphin/gx/GXTransform.c"),
-            Object(NonMatching, "dolphin/gx/GXPerf.c"),
+            Object(Matching, "dolphin/gx/GXPerf.c"),
         ]),
     DolphinLib("OdemuExi2", [
             Object(Matching, "OdemuExi2/DebuggerDriver.c", cflags=[*cflags_dolphin, "-inline auto,deferred"]),

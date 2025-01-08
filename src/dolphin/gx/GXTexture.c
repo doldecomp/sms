@@ -559,7 +559,7 @@ void __GXSetSUTexRegs(void)
 				coord = GET_REG_FIELD(*ptref, 3, 3);
 			}
 			if ((tmap != 0xFF) && !(gx->tcsManEnab & (1 << coord))
-			    && (gx->perf0 & (1 << i))) {
+			    && (gx->pad0 & (1 << i))) {
 				__SetSURegs(tmap, coord);
 			}
 		}
