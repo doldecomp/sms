@@ -136,8 +136,6 @@
 
 #define SET_REG_FIELD(line, reg, size, shift, val)                             \
 	do {                                                                       \
-		ASSERTMSGLINE(line, ((u32)(val) & ~((1 << (size)) - 1)) == 0,          \
-		              "GX Internal: Register field out of range");             \
 		(reg) = ((u32)(reg) & ~(((1 << (size)) - 1) << (shift)))               \
 		        | ((u32)(val) << (shift));                                     \
 	} while (0)
@@ -187,84 +185,85 @@ void __GXSetGenMode(void);
 
 struct __GXData_struct {
 	// total size: 0x4F4
-	unsigned short vNum;          // offset 0x0, size 0x2
-	unsigned short bpSent;        // offset 0x2, size 0x2
-	unsigned long vLim;           // offset 0x4, size 0x4
-	unsigned long cpEnable;       // offset 0x8, size 0x4
-	unsigned long cpStatus;       // offset 0xC, size 0x4
-	unsigned long cpClr;          // offset 0x10, size 0x4
-	unsigned long vcdLo;          // offset 0x14, size 0x4
-	unsigned long vcdHi;          // offset 0x18, size 0x4
-	unsigned long vatA[8];        // offset 0x1C, size 0x20
-	unsigned long vatB[8];        // offset 0x3C, size 0x20
-	unsigned long vatC[8];        // offset 0x5C, size 0x20
-	unsigned long lpSize;         // offset 0x7C, size 0x4
-	unsigned long matIdxA;        // offset 0x80, size 0x4
-	unsigned long matIdxB;        // offset 0x84, size 0x4
-	unsigned long indexBase[4];   // offset 0x88, size 0x10
-	unsigned long indexStride[4]; // offset 0x98, size 0x10
-	unsigned long ambColor[2];    // offset 0xA8, size 0x8
-	unsigned long matColor[2];    // offset 0xB0, size 0x8
-	unsigned long suTs0[8];       // offset 0xB8, size 0x20
-	unsigned long suTs1[8];       // offset 0xD8, size 0x20
-	unsigned long suScis0;        // offset 0xF8, size 0x4
-	unsigned long suScis1;        // offset 0xFC, size 0x4
-	unsigned long tref[8];        // offset 0x100, size 0x20
-	unsigned long iref;           // offset 0x120, size 0x4
-	unsigned long bpMask;         // offset 0x124, size 0x4
-	unsigned long IndTexScale0;   // offset 0x128, size 0x4
-	unsigned long IndTexScale1;   // offset 0x12C, size 0x4
-	unsigned long tevc[16];       // offset 0x130, size 0x40
-	unsigned long teva[16];       // offset 0x170, size 0x40
-	unsigned long tevKsel[8];     // offset 0x1B0, size 0x20
-	unsigned long cmode0;         // offset 0x1D0, size 0x4
-	unsigned long cmode1;         // offset 0x1D4, size 0x4
-	unsigned long zmode;          // offset 0x1D8, size 0x4
-	unsigned long peCtrl;         // offset 0x1DC, size 0x4
-	unsigned long cpDispSrc;      // offset 0x1E0, size 0x4
-	unsigned long cpDispSize;     // offset 0x1E4, size 0x4
-	unsigned long cpDispStride;   // offset 0x1E8, size 0x4
-	unsigned long cpDisp;         // offset 0x1EC, size 0x4
-	unsigned long cpTexSrc;       // offset 0x1F0, size 0x4
-	unsigned long cpTexSize;      // offset 0x1F4, size 0x4
-	unsigned long cpTexStride;    // offset 0x1F8, size 0x4
-	unsigned long cpTex;          // offset 0x1FC, size 0x4
-	unsigned char cpTexZ;         // offset 0x200, size 0x1
-	unsigned long genMode;        // offset 0x204, size 0x4
+	u16 vNum;                     // offset 0x0, size 0x2
+	u16 bpSent;                   // offset 0x2, size 0x2
+	u16 unk04;                    // offset 0x4, size 0x2
+	u16 vLim;                     // offset 0x6, size 0x4
+	u32 cpEnable;                 // offset 0x8, size 0x4
+	u32 cpStatus;                 // offset 0xC, size 0x4
+	u32 cpClr;                    // offset 0x10, size 0x4
+	u32 vcdLo;                    // offset 0x14, size 0x4
+	u32 vcdHi;                    // offset 0x18, size 0x4
+	u32 vatA[8];                  // offset 0x1C, size 0x20
+	u32 vatB[8];                  // offset 0x3C, size 0x20
+	u32 vatC[8];                  // offset 0x5C, size 0x20
+	u32 lpSize;                   // offset 0x7C, size 0x4
+	u32 matIdxA;                  // offset 0x80, size 0x4
+	u32 matIdxB;                  // offset 0x84, size 0x4
+	u32 indexBase[4];             // offset 0x88, size 0x10
+	u32 indexStride[4];           // offset 0x98, size 0x10
+	u32 ambColor[2];              // offset 0xA8, size 0x8
+	u32 matColor[2];              // offset 0xB0, size 0x8
+	u32 suTs0[8];                 // offset 0xB8, size 0x20
+	u32 suTs1[8];                 // offset 0xD8, size 0x20
+	u32 suScis0;                  // offset 0xF8, size 0x4
+	u32 suScis1;                  // offset 0xFC, size 0x4
+	u32 tref[8];                  // offset 0x100, size 0x20
+	u32 iref;                     // offset 0x120, size 0x4
+	u32 bpMask;                   // offset 0x124, size 0x4
+	u32 IndTexScale0;             // offset 0x128, size 0x4
+	u32 IndTexScale1;             // offset 0x12C, size 0x4
+	u32 tevc[16];                 // offset 0x130, size 0x40
+	u32 teva[16];                 // offset 0x170, size 0x40
+	u32 tevKsel[8];               // offset 0x1B0, size 0x20
+	u32 cmode0;                   // offset 0x1D0, size 0x4
+	u32 cmode1;                   // offset 0x1D4, size 0x4
+	u32 zmode;                    // offset 0x1D8, size 0x4
+	u32 peCtrl;                   // offset 0x1DC, size 0x4
+	u32 cpDispSrc;                // offset 0x1E0, size 0x4
+	u32 cpDispSize;               // offset 0x1E4, size 0x4
+	u32 cpDispStride;             // offset 0x1E8, size 0x4
+	u32 cpDisp;                   // offset 0x1EC, size 0x4
+	u32 cpTexSrc;                 // offset 0x1F0, size 0x4
+	u32 cpTexSize;                // offset 0x1F4, size 0x4
+	u32 cpTexStride;              // offset 0x1F8, size 0x4
+	u32 cpTex;                    // offset 0x1FC, size 0x4
+	u8 cpTexZ;                    // offset 0x200, size 0x1
+	u32 genMode;                  // offset 0x204, size 0x4
 	GXTexRegion TexRegions[8];    // offset 0x208, size 0x80
 	GXTexRegion TexRegionsCI[4];  // offset 0x288, size 0x40
-	unsigned long nextTexRgn;     // offset 0x2C8, size 0x4
-	unsigned long nextTexRgnCI;   // offset 0x2CC, size 0x4
+	u32 nextTexRgn;               // offset 0x2C8, size 0x4
+	u32 nextTexRgnCI;             // offset 0x2CC, size 0x4
 	GXTlutRegion TlutRegions[20]; // offset 0x2D0, size 0x140
 	GXTexRegion* (*texRegionCallback)(GXTexObj*,
 	                                  GXTexMapID); // offset 0x410, size 0x4
-	GXTlutRegion* (*tlutRegionCallback)(
-	    unsigned long);          // offset 0x414, size 0x4
-	GXAttrType nrmType;          // offset 0x418, size 0x4
-	unsigned char hasNrms;       // offset 0x41C, size 0x1
-	unsigned char hasBiNrms;     // offset 0x41D, size 0x1
-	unsigned long projType;      // offset 0x420, size 0x4
-	float projMtx[6];            // offset 0x424, size 0x18
-	float vpLeft;                // offset 0x43C, size 0x4
-	float vpTop;                 // offset 0x440, size 0x4
-	float vpWd;                  // offset 0x444, size 0x4
-	float vpHt;                  // offset 0x448, size 0x4
-	float vpNearz;               // offset 0x44C, size 0x4
-	float vpFarz;                // offset 0x450, size 0x4
-	unsigned char fgRange;       // offset 0x454, size 0x1
-	float fgSideX;               // offset 0x458, size 0x4
-	unsigned long tImage0[8];    // offset 0x45C, size 0x20
-	unsigned long tMode0[8];     // offset 0x47C, size 0x20
-	unsigned long texmapId[16];  // offset 0x49C, size 0x40
-	unsigned long tcsManEnab;    // offset 0x4DC, size 0x4
-	GXPerf0 perf0;               // offset 0x4E0, size 0x4
-	GXPerf1 perf1;               // offset 0x4E4, size 0x4
-	unsigned long perfSel;       // offset 0x4E8, size 0x4
-	unsigned char inDispList;    // offset 0x4EC, size 0x1
-	unsigned char dlSaveContext; // offset 0x4ED, size 0x1
-	unsigned char dirtyVAT;      // offset 0x4EE, size 0x1
-	unsigned long dirtyState;    // offset 0x4F0, size 0x4
-};                               // size = 0x4F4
+	GXTlutRegion* (*tlutRegionCallback)(u32);      // offset 0x414, size 0x4
+	GXAttrType nrmType;                            // offset 0x418, size 0x4
+	u8 hasNrms;                                    // offset 0x41C, size 0x1
+	u8 hasBiNrms;                                  // offset 0x41D, size 0x1
+	u32 projType;                                  // offset 0x420, size 0x4
+	float projMtx[6];                              // offset 0x424, size 0x18
+	float vpLeft;                                  // offset 0x43C, size 0x4
+	float vpTop;                                   // offset 0x440, size 0x4
+	float vpWd;                                    // offset 0x444, size 0x4
+	float vpHt;                                    // offset 0x448, size 0x4
+	float vpNearz;                                 // offset 0x44C, size 0x4
+	float vpFarz;                                  // offset 0x450, size 0x4
+	u8 fgRange;                                    // offset 0x454, size 0x1
+	float fgSideX;                                 // offset 0x458, size 0x4
+	u32 tImage0[8];                                // offset 0x45C, size 0x20
+	u32 tMode0[8];                                 // offset 0x47C, size 0x20
+	u32 texmapId[16];                              // offset 0x49C, size 0x40
+	u32 tcsManEnab;                                // offset 0x4DC, size 0x4
+	GXPerf0 perf0;                                 // offset 0x4E0, size 0x4
+	GXPerf1 perf1;                                 // offset 0x4E4, size 0x4
+	u32 perfSel;                                   // offset 0x4E8, size 0x4
+	u32 pad0;         // TODO: might go higher above
+	u8 inDispList;    // offset 0x4F0, size 0x1
+	u8 dlSaveContext; // offset 0x4F1, size 0x1
+	u8 dirtyVAT;      // offset 0x4F2, size 0x1
+	u32 dirtyState;   // offset 0x4F4, size 0x4
+};                    // size = 0x4F8
 
 extern struct __GXData_struct* gx;
 extern u16* __memReg;
