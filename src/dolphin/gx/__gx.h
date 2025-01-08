@@ -256,10 +256,10 @@ struct __GXData_struct {
 	u32 tMode0[8];                                 // offset 0x47C, size 0x20
 	u32 texmapId[16];                              // offset 0x49C, size 0x40
 	u32 tcsManEnab;                                // offset 0x4DC, size 0x4
-	GXPerf0 perf0;                                 // offset 0x4E0, size 0x4
-	GXPerf1 perf1;                                 // offset 0x4E4, size 0x4
-	u32 perfSel;                                   // offset 0x4E8, size 0x4
 	u32 pad0;         // TODO: might go higher above
+	GXPerf0 perf0;    // offset 0x4E0, size 0x4
+	GXPerf1 perf1;    // offset 0x4E4, size 0x4
+	u32 perfSel;      // offset 0x4E8, size 0x4
 	u8 inDispList;    // offset 0x4F0, size 0x1
 	u8 dlSaveContext; // offset 0x4F1, size 0x1
 	u8 dirtyVAT;      // offset 0x4F2, size 0x1
