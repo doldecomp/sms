@@ -84,11 +84,11 @@ void GXSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz, f32 farz,
 	SET_REG_FIELD(0xB0, fogclr, 8, 16, color.r);
 	SET_REG_FIELD(0xB1, fogclr, 8, 24, 0xF2);
 
-	GX_WRITE_RAS_REG(fog0);
-	GX_WRITE_RAS_REG(fog1);
-	GX_WRITE_RAS_REG(fog2);
-	GX_WRITE_RAS_REG(fog3);
-	GX_WRITE_RAS_REG(fogclr);
+	GX_WRITE_BP_REG(fog0);
+	GX_WRITE_BP_REG(fog1);
+	GX_WRITE_BP_REG(fog2);
+	GX_WRITE_BP_REG(fog3);
+	GX_WRITE_BP_REG(fogclr);
 	gx->bpSent = 0;
 }
 
@@ -106,14 +106,14 @@ void GXSetFogRangeAdj(GXBool enable, u16 center, GXFogAdjTable* table)
 			SET_REG_FIELD(0x10D, range_adj, 12, 0, table->r[i]);
 			SET_REG_FIELD(0x10E, range_adj, 12, 12, table->r[i + 1]);
 			SET_REG_FIELD(0x10F, range_adj, 8, 24, (i >> 1) + 0xE9);
-			GX_WRITE_RAS_REG(range_adj);
+			GX_WRITE_BP_REG(range_adj);
 		}
 	}
 	range_c = 0;
 	SET_REG_FIELD(0x115, range_c, 10, 0, center + 342);
 	SET_REG_FIELD(0x116, range_c, 1, 10, enable);
 	SET_REG_FIELD(0x117, range_c, 8, 24, 0xE8);
-	GX_WRITE_RAS_REG(range_c);
+	GX_WRITE_BP_REG(range_c);
 	gx->bpSent = 0;
 }
 
@@ -130,7 +130,7 @@ void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor,
 	SET_REG_FIELD(0x13A, gx->cmode0, 3, 8, src_factor);
 	SET_REG_FIELD(0x13B, gx->cmode0, 3, 5, dst_factor);
 	SET_REG_FIELD(0x13C, gx->cmode0, 8, 24, 0x41);
-	GX_WRITE_RAS_REG(gx->cmode0);
+	GX_WRITE_BP_REG(gx->cmode0);
 	gx->bpSent = 0;
 }
 
@@ -138,7 +138,7 @@ void GXSetColorUpdate(GXBool update_enable)
 {
 	CHECK_GXBEGIN(0x14F, "GXSetColorUpdate");
 	SET_REG_FIELD(0x150, gx->cmode0, 1, 3, update_enable);
-	GX_WRITE_RAS_REG(gx->cmode0);
+	GX_WRITE_BP_REG(gx->cmode0);
 	gx->bpSent = 0;
 }
 
@@ -146,7 +146,7 @@ void GXSetAlphaUpdate(GXBool update_enable)
 {
 	CHECK_GXBEGIN(0x158, "GXSetAlphaUpdate");
 	SET_REG_FIELD(0x159, gx->cmode0, 1, 4, update_enable);
-	GX_WRITE_RAS_REG(gx->cmode0);
+	GX_WRITE_BP_REG(gx->cmode0);
 	gx->bpSent = 0;
 }
 
@@ -156,7 +156,7 @@ void GXSetZMode(GXBool compare_enable, GXCompare func, GXBool update_enable)
 	SET_REG_FIELD(0x171, gx->zmode, 1, 0, compare_enable);
 	SET_REG_FIELD(0x172, gx->zmode, 3, 1, func);
 	SET_REG_FIELD(0x173, gx->zmode, 1, 4, update_enable);
-	GX_WRITE_RAS_REG(gx->zmode);
+	GX_WRITE_BP_REG(gx->zmode);
 	gx->bpSent = 0;
 }
 
@@ -164,7 +164,7 @@ void GXSetZCompLoc(GXBool before_tex)
 {
 	CHECK_GXBEGIN(0x17C, "GXSetZCompLoc");
 	SET_REG_FIELD(0x17D, gx->peCtrl, 1, 6, before_tex);
-	GX_WRITE_RAS_REG(gx->peCtrl);
+	GX_WRITE_BP_REG(gx->peCtrl);
 	gx->bpSent = 0;
 }
 
@@ -179,7 +179,7 @@ void GXSetPixelFmt(GXPixelFmt pix_fmt, GXZFmt16 z_fmt)
 	SET_REG_FIELD(0x1A7, gx->peCtrl, 3, 0, p2f[pix_fmt]);
 	SET_REG_FIELD(0x1A8, gx->peCtrl, 3, 3, z_fmt);
 	if (oldPeCtrl != gx->peCtrl) {
-		GX_WRITE_RAS_REG(gx->peCtrl);
+		GX_WRITE_BP_REG(gx->peCtrl);
 		if (pix_fmt == GX_PF_RGB565_Z16)
 			aa = 1;
 		else
@@ -190,7 +190,7 @@ void GXSetPixelFmt(GXPixelFmt pix_fmt, GXZFmt16 z_fmt)
 	if (p2f[pix_fmt] == 4) {
 		SET_REG_FIELD(0x1B8, gx->cmode1, 2, 9, (pix_fmt - 4) & 0x3);
 		SET_REG_FIELD(0x1B9, gx->cmode1, 8, 24, 0x42);
-		GX_WRITE_RAS_REG(gx->cmode1);
+		GX_WRITE_BP_REG(gx->cmode1);
 	}
 	gx->bpSent = 0;
 }
@@ -199,7 +199,7 @@ void GXSetDither(GXBool dither)
 {
 	CHECK_GXBEGIN(0x1CD, "GXSetDither");
 	SET_REG_FIELD(0x1CE, gx->cmode0, 1, 2, dither);
-	GX_WRITE_RAS_REG(gx->cmode0);
+	GX_WRITE_BP_REG(gx->cmode0);
 	gx->bpSent = 0;
 }
 
@@ -208,7 +208,7 @@ void GXSetDstAlpha(GXBool enable, u8 alpha)
 	CHECK_GXBEGIN(0x1E1, "GXSetDstAlpha");
 	SET_REG_FIELD(0x1E2, gx->cmode1, 8, 0, alpha);
 	SET_REG_FIELD(0x1E3, gx->cmode1, 1, 8, enable);
-	GX_WRITE_RAS_REG(gx->cmode1);
+	GX_WRITE_BP_REG(gx->cmode1);
 	gx->bpSent = 0;
 }
 
@@ -221,7 +221,7 @@ void GXSetFieldMask(GXBool odd_mask, GXBool even_mask)
 	SET_REG_FIELD(0x1FB, reg, 1, 0, even_mask);
 	SET_REG_FIELD(0x1FC, reg, 1, 1, odd_mask);
 	SET_REG_FIELD(0x1FD, reg, 8, 24, 0x44);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	gx->bpSent = 0;
 }
 
@@ -231,9 +231,9 @@ void GXSetFieldMode(GXBool field_mode, GXBool half_aspect_ratio)
 
 	CHECK_GXBEGIN(0x216, "GXSetFieldMode");
 	SET_REG_FIELD(0x21A, gx->lpSize, 1, 22, half_aspect_ratio);
-	GX_WRITE_RAS_REG(gx->lpSize);
+	GX_WRITE_BP_REG(gx->lpSize);
 	__GXFlushTextureState();
 	reg = field_mode | 0x68000000;
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	__GXFlushTextureState();
 }

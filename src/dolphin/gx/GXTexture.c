@@ -327,17 +327,17 @@ void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID id)
 	SET_REG_FIELD(0x407, r->image2, 8, 24, GXTexImage2Ids[id]);
 	SET_REG_FIELD(0x408, t->image3, 8, 24, GXTexImage3Ids[id]);
 
-	GX_WRITE_RAS_REG(t->mode0);
-	GX_WRITE_RAS_REG(t->mode1);
-	GX_WRITE_RAS_REG(t->image0);
-	GX_WRITE_RAS_REG(r->image1);
-	GX_WRITE_RAS_REG(r->image2);
-	GX_WRITE_RAS_REG(t->image3);
+	GX_WRITE_BP_REG(t->mode0);
+	GX_WRITE_BP_REG(t->mode1);
+	GX_WRITE_BP_REG(t->image0);
+	GX_WRITE_BP_REG(r->image1);
+	GX_WRITE_BP_REG(r->image2);
+	GX_WRITE_BP_REG(t->image3);
 
 	if (!(t->flags & 2)) {
 		tlr = (__GXTlutRegionInt*)gx->tlutRegionCallback(t->tlutName);
 		SET_REG_FIELD(0x417, tlr->tlutObj.tlut, 8, 24, GXTexTlutIds[id]);
-		GX_WRITE_RAS_REG(tlr->tlutObj.tlut);
+		GX_WRITE_BP_REG(tlr->tlutObj.tlut);
 	}
 	gx->tImage0[id] = t->image0;
 	gx->tMode0[id]  = t->mode0;
@@ -372,8 +372,8 @@ void GXLoadTlut(GXTlutObj* tlut_obj, u32 tlut_name)
 
 	r = (__GXTlutRegionInt*)gx->tlutRegionCallback(tlut_name);
 	__GXFlushTextureState();
-	GX_WRITE_RAS_REG(t->loadTlut0);
-	GX_WRITE_RAS_REG(r->loadTlut1);
+	GX_WRITE_BP_REG(t->loadTlut0);
+	GX_WRITE_BP_REG(r->loadTlut1);
 	__GXFlushTextureState();
 	tlut_offset = r->loadTlut1 & 0x3FF;
 	SET_REG_FIELD(0x4B9, t->tlut, 10, 0, tlut_offset);
@@ -448,8 +448,8 @@ void GXInvalidateTexAll(void)
 	reg0 = 0x66001000;
 	reg1 = 0x66001100;
 	__GXFlushTextureState();
-	GX_WRITE_RAS_REG(reg0);
-	GX_WRITE_RAS_REG(reg1);
+	GX_WRITE_BP_REG(reg0);
+	GX_WRITE_BP_REG(reg1);
 	__GXFlushTextureState();
 }
 
@@ -475,8 +475,8 @@ void GXSetTexCoordScaleManually(GXTexCoordID coord, u8 enable, u16 ss, u16 ts)
 	if (enable != 0) {
 		SET_REG_FIELD(0x6D9, gx->suTs0[coord], 16, 0, (u16)(ss - 1));
 		SET_REG_FIELD(0x6DA, gx->suTs1[coord], 16, 0, (u16)(ts - 1));
-		GX_WRITE_RAS_REG(gx->suTs0[coord]);
-		GX_WRITE_RAS_REG(gx->suTs1[coord]);
+		GX_WRITE_BP_REG(gx->suTs0[coord]);
+		GX_WRITE_BP_REG(gx->suTs1[coord]);
 		gx->bpSent = 0;
 	}
 }
@@ -486,8 +486,8 @@ void GXSetTexCoordCylWrap(GXTexCoordID coord, u8 s_enable, u8 t_enable)
 	SET_REG_FIELD(0x6F7, gx->suTs0[coord], 1, 17, s_enable);
 	SET_REG_FIELD(0x6F8, gx->suTs1[coord], 1, 17, t_enable);
 	if (gx->tcsManEnab & (1 << coord)) {
-		GX_WRITE_RAS_REG(gx->suTs0[coord]);
-		GX_WRITE_RAS_REG(gx->suTs1[coord]);
+		GX_WRITE_BP_REG(gx->suTs0[coord]);
+		GX_WRITE_BP_REG(gx->suTs1[coord]);
 		gx->bpSent = 0;
 	}
 }
@@ -507,8 +507,8 @@ static void __SetSURegs(u32 tmap, u32 tcoord)
 	t_bias = GET_REG_FIELD(gx->tMode0[tmap], 2, 2) == 1;
 	SET_REG_FIELD(0x73C, gx->suTs0[tcoord], 1, 16, s_bias);
 	SET_REG_FIELD(0x73D, gx->suTs1[tcoord], 1, 16, t_bias);
-	GX_WRITE_RAS_REG(gx->suTs0[tcoord]);
-	GX_WRITE_RAS_REG(gx->suTs1[tcoord]);
+	GX_WRITE_BP_REG(gx->suTs0[tcoord]);
+	GX_WRITE_BP_REG(gx->suTs1[tcoord]);
 	gx->bpSent = 0;
 }
 
@@ -570,41 +570,41 @@ void __GXSetTmemConfig(int param)
 {
 	switch (param) {
 	case 1:
-		GX_WRITE_RAS_REG(0x8c0d8000);
-		GX_WRITE_RAS_REG(0x900dc000);
-		GX_WRITE_RAS_REG(0x8d0d8800);
-		GX_WRITE_RAS_REG(0x910dc800);
-		GX_WRITE_RAS_REG(0x8e0d9000);
-		GX_WRITE_RAS_REG(0x920dd000);
-		GX_WRITE_RAS_REG(0x8f0d9800);
-		GX_WRITE_RAS_REG(0x930dd800);
-		GX_WRITE_RAS_REG(0xac0da000);
-		GX_WRITE_RAS_REG(0xb00de000);
-		GX_WRITE_RAS_REG(0xad0da800);
-		GX_WRITE_RAS_REG(0xb10de800);
-		GX_WRITE_RAS_REG(0xae0db000);
-		GX_WRITE_RAS_REG(0xb20df000);
-		GX_WRITE_RAS_REG(0xaf0db800);
-		GX_WRITE_RAS_REG(0xb30df800);
+		GX_WRITE_BP_REG(0x8c0d8000);
+		GX_WRITE_BP_REG(0x900dc000);
+		GX_WRITE_BP_REG(0x8d0d8800);
+		GX_WRITE_BP_REG(0x910dc800);
+		GX_WRITE_BP_REG(0x8e0d9000);
+		GX_WRITE_BP_REG(0x920dd000);
+		GX_WRITE_BP_REG(0x8f0d9800);
+		GX_WRITE_BP_REG(0x930dd800);
+		GX_WRITE_BP_REG(0xac0da000);
+		GX_WRITE_BP_REG(0xb00de000);
+		GX_WRITE_BP_REG(0xad0da800);
+		GX_WRITE_BP_REG(0xb10de800);
+		GX_WRITE_BP_REG(0xae0db000);
+		GX_WRITE_BP_REG(0xb20df000);
+		GX_WRITE_BP_REG(0xaf0db800);
+		GX_WRITE_BP_REG(0xb30df800);
 		break;
 	case 0:
 	default:
-		GX_WRITE_RAS_REG(0x8c0d8000);
-		GX_WRITE_RAS_REG(0x900dc000);
-		GX_WRITE_RAS_REG(0x8d0d8400);
-		GX_WRITE_RAS_REG(0x910dc400);
-		GX_WRITE_RAS_REG(0x8e0d8800);
-		GX_WRITE_RAS_REG(0x920dc800);
-		GX_WRITE_RAS_REG(0x8f0d8c00);
-		GX_WRITE_RAS_REG(0x930dcc00);
-		GX_WRITE_RAS_REG(0xac0d9000);
-		GX_WRITE_RAS_REG(0xb00dd000);
-		GX_WRITE_RAS_REG(0xad0d9400);
-		GX_WRITE_RAS_REG(0xb10dd400);
-		GX_WRITE_RAS_REG(0xae0d9800);
-		GX_WRITE_RAS_REG(0xb20dd800);
-		GX_WRITE_RAS_REG(0xaf0d9c00);
-		GX_WRITE_RAS_REG(0xb30ddc00);
+		GX_WRITE_BP_REG(0x8c0d8000);
+		GX_WRITE_BP_REG(0x900dc000);
+		GX_WRITE_BP_REG(0x8d0d8400);
+		GX_WRITE_BP_REG(0x910dc400);
+		GX_WRITE_BP_REG(0x8e0d8800);
+		GX_WRITE_BP_REG(0x920dc800);
+		GX_WRITE_BP_REG(0x8f0d8c00);
+		GX_WRITE_BP_REG(0x930dcc00);
+		GX_WRITE_BP_REG(0xac0d9000);
+		GX_WRITE_BP_REG(0xb00dd000);
+		GX_WRITE_BP_REG(0xad0d9400);
+		GX_WRITE_BP_REG(0xb10dd400);
+		GX_WRITE_BP_REG(0xae0d9800);
+		GX_WRITE_BP_REG(0xb20dd800);
+		GX_WRITE_BP_REG(0xaf0d9c00);
+		GX_WRITE_BP_REG(0xb30ddc00);
 		break;
 	}
 }

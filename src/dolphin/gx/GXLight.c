@@ -203,7 +203,7 @@ void GXLoadLightObjImm(GXLightObj* lt_obj, GXLightID light)
 	}
 
 	addr = idx * 0x10 + 0x600;
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(addr | 0xF0000);
 
 	WRITE_SOME_LIGHT_REG1(0, addr);

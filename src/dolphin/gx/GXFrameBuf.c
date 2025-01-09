@@ -300,7 +300,7 @@ u32 GXSetDispCopyYScale(f32 vscale)
 	// reg = 0;
 	// SET_REG_FIELD(0x4A6, reg, 9, 0, iScale);
 	// SET_REG_FIELD(0x4A7, reg, 8, 24, 0x4E);
-	// GX_WRITE_RAS_REG(reg);
+	// GX_WRITE_BP_REG(reg);
 	// gx->bpSent = 0;
 	// SET_REG_FIELD(0x4AB, gx->cpDisp, 1, 10, enable);
 	// ht = GET_REG_FIELD(gx->cpDispSize, 10, 10) + 1;
@@ -318,7 +318,7 @@ u32 GXSetDispCopyYScale(f32 vscale)
 	reg = 0;
 	SET_REG_FIELD(0x4A6, reg, 9, 0, iScale);
 	SET_REG_FIELD(0x4A7, reg, 8, 24, 0x4E);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	iVar2      = -iScale + 0x100;
 	gx->bpSent = 0;
@@ -352,18 +352,18 @@ void GXSetCopyClear(GXColor clear_clr, u32 clear_z)
 	SET_REG_FIELD(0x4C9, reg, 8, 0, clear_clr.r);
 	SET_REG_FIELD(0x4CA, reg, 8, 8, clear_clr.a);
 	SET_REG_FIELD(0x4CB, reg, 8, 24, 0x4F);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	reg = 0;
 	SET_REG_FIELD(0x4CF, reg, 8, 0, clear_clr.b);
 	SET_REG_FIELD(0x4D0, reg, 8, 8, clear_clr.g);
 	SET_REG_FIELD(0x4D1, reg, 8, 24, 0x50);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	reg = 0;
 	SET_REG_FIELD(0x4D5, reg, 24, 0, clear_z);
 	SET_REG_FIELD(0x4D6, reg, 8, 24, 0x51);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	gx->bpSent = 0;
 }
 
@@ -418,10 +418,10 @@ void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf,
 		msLoc[2] = 0x03666666;
 		msLoc[3] = 0x04666666;
 	}
-	GX_WRITE_RAS_REG(msLoc[0]);
-	GX_WRITE_RAS_REG(msLoc[1]);
-	GX_WRITE_RAS_REG(msLoc[2]);
-	GX_WRITE_RAS_REG(msLoc[3]);
+	GX_WRITE_BP_REG(msLoc[0]);
+	GX_WRITE_BP_REG(msLoc[1]);
+	GX_WRITE_BP_REG(msLoc[2]);
+	GX_WRITE_BP_REG(msLoc[3]);
 
 	coeff0 = 0;
 	SET_REG_FIELD(0, coeff0, 8, 24, 0x53);
@@ -444,8 +444,8 @@ void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf,
 		SET_REG_FIELD(0, coeff1, 6, 6, 0);
 		SET_REG_FIELD(0, coeff1, 6, 12, 0);
 	}
-	GX_WRITE_RAS_REG(coeff0);
-	GX_WRITE_RAS_REG(coeff1);
+	GX_WRITE_BP_REG(coeff0);
+	GX_WRITE_BP_REG(coeff1);
 	gx->bpSent = 0;
 }
 
@@ -468,12 +468,12 @@ void GXCopyDisp(void* dest, GXBool clear)
 		reg = gx->zmode;
 		SET_REG_FIELD(0, reg, 1, 0, 1);
 		SET_REG_FIELD(0, reg, 3, 1, 7);
-		GX_WRITE_RAS_REG(reg);
+		GX_WRITE_BP_REG(reg);
 
 		reg = gx->cmode0;
 		SET_REG_FIELD(0, reg, 1, 0, 0);
 		SET_REG_FIELD(0, reg, 1, 1, 0);
-		GX_WRITE_RAS_REG(reg);
+		GX_WRITE_BP_REG(reg);
 	}
 	changePeCtrl = FALSE;
 	if ((clear || (u32)GET_REG_FIELD(gx->peCtrl, 3, 0) == 3)
@@ -481,29 +481,29 @@ void GXCopyDisp(void* dest, GXBool clear)
 		changePeCtrl = TRUE;
 		tempPeCtrl   = gx->peCtrl;
 		SET_REG_FIELD(0, tempPeCtrl, 1, 6, 0);
-		GX_WRITE_RAS_REG(tempPeCtrl);
+		GX_WRITE_BP_REG(tempPeCtrl);
 	}
-	GX_WRITE_RAS_REG(gx->cpDispSrc);
-	GX_WRITE_RAS_REG(gx->cpDispSize);
-	GX_WRITE_RAS_REG(gx->cpDispStride);
+	GX_WRITE_BP_REG(gx->cpDispSrc);
+	GX_WRITE_BP_REG(gx->cpDispSize);
+	GX_WRITE_BP_REG(gx->cpDispStride);
 
 	phyAddr = (u32)dest & 0x3FFFFFFF;
 	reg     = 0;
 	SET_REG_FIELD(0x5D8, reg, 21, 0, phyAddr >> 5);
 	SET_REG_FIELD(0x5D9, reg, 8, 24, 0x4B);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	SET_REG_FIELD(0x5DC, gx->cpDisp, 1, 11, clear);
 	SET_REG_FIELD(0x5DD, gx->cpDisp, 1, 14, 1);
 	SET_REG_FIELD(0x5DE, gx->cpDisp, 8, 24, 0x52);
-	GX_WRITE_RAS_REG(gx->cpDisp);
+	GX_WRITE_BP_REG(gx->cpDisp);
 
 	if (clear) {
-		GX_WRITE_RAS_REG(gx->zmode);
-		GX_WRITE_RAS_REG(gx->cmode0);
+		GX_WRITE_BP_REG(gx->zmode);
+		GX_WRITE_BP_REG(gx->cmode0);
 	}
 	if (changePeCtrl) {
-		GX_WRITE_RAS_REG(gx->peCtrl);
+		GX_WRITE_BP_REG(gx->peCtrl);
 	}
 	gx->bpSent = 0;
 }
@@ -521,12 +521,12 @@ void GXCopyTex(void* dest, GXBool clear)
 		reg = gx->zmode;
 		SET_REG_FIELD(0, reg, 1, 0, 1);
 		SET_REG_FIELD(0, reg, 3, 1, 7);
-		GX_WRITE_RAS_REG(reg);
+		GX_WRITE_BP_REG(reg);
 
 		reg = gx->cmode0;
 		SET_REG_FIELD(0, reg, 1, 0, 0);
 		SET_REG_FIELD(0, reg, 1, 1, 0);
-		GX_WRITE_RAS_REG(reg);
+		GX_WRITE_BP_REG(reg);
 	}
 	changePeCtrl = 0;
 	tempPeCtrl   = gx->peCtrl;
@@ -540,29 +540,29 @@ void GXCopyTex(void* dest, GXBool clear)
 		tempPeCtrl &= 0xFFFFFFBF;
 	}
 	if (changePeCtrl) {
-		GX_WRITE_RAS_REG(tempPeCtrl);
+		GX_WRITE_BP_REG(tempPeCtrl);
 	}
-	GX_WRITE_RAS_REG(gx->cpTexSrc);
-	GX_WRITE_RAS_REG(gx->cpTexSize);
-	GX_WRITE_RAS_REG(gx->cpTexStride);
+	GX_WRITE_BP_REG(gx->cpTexSrc);
+	GX_WRITE_BP_REG(gx->cpTexSize);
+	GX_WRITE_BP_REG(gx->cpTexStride);
 
 	phyAddr = (u32)dest & 0x3FFFFFFF;
 	reg     = 0;
 	SET_REG_FIELD(0x635, reg, 21, 0, phyAddr >> 5);
 	SET_REG_FIELD(0x636, reg, 8, 24, 0x4B);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	SET_REG_FIELD(0x639, gx->cpTex, 1, 11, clear);
 	SET_REG_FIELD(0x63A, gx->cpTex, 1, 14, 0);
 	SET_REG_FIELD(0x63B, gx->cpTex, 8, 24, 0x52);
-	GX_WRITE_RAS_REG(gx->cpTex);
+	GX_WRITE_BP_REG(gx->cpTex);
 
 	if (clear != 0) {
-		GX_WRITE_RAS_REG(gx->zmode);
-		GX_WRITE_RAS_REG(gx->cmode0);
+		GX_WRITE_BP_REG(gx->zmode);
+		GX_WRITE_BP_REG(gx->cmode0);
 	}
 	if (changePeCtrl) {
-		GX_WRITE_RAS_REG(gx->peCtrl);
+		GX_WRITE_BP_REG(gx->peCtrl);
 	}
 	gx->bpSent = 0;
 }
@@ -573,8 +573,8 @@ void GXClearBoundingBox(void)
 
 	CHECK_GXBEGIN(0x65B, "GXClearBoundingBox");
 	reg = 0x550003FF;
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	reg = 0x560003FF;
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	gx->bpSent = 0;
 }

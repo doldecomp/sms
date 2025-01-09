@@ -63,7 +63,7 @@ void GXSetLineWidth(u8 width, GXTexOffset texOffsets)
 {
 	SET_REG_FIELD(0x1A9, gx->lpSize, 8, 0, width);
 	SET_REG_FIELD(0x1AA, gx->lpSize, 3, 16, texOffsets);
-	GX_WRITE_RAS_REG(gx->lpSize);
+	GX_WRITE_BP_REG(gx->lpSize);
 	gx->bpSent = 0;
 }
 
@@ -71,7 +71,7 @@ void GXSetPointSize(u8 pointSize, GXTexOffset texOffsets)
 {
 	SET_REG_FIELD(0x1D5, gx->lpSize, 8, 8, pointSize);
 	SET_REG_FIELD(0x1D6, gx->lpSize, 3, 19, texOffsets);
-	GX_WRITE_RAS_REG(gx->lpSize);
+	GX_WRITE_BP_REG(gx->lpSize);
 	gx->bpSent = 0;
 }
 
@@ -80,7 +80,7 @@ void GXEnableTexOffsets(GXTexCoordID coord, u8 line_enable, u8 point_enable)
 
 	SET_REG_FIELD(0x205, gx->suTs0[coord], 1, 18, line_enable);
 	SET_REG_FIELD(0x206, gx->suTs0[coord], 1, 19, point_enable);
-	GX_WRITE_RAS_REG(gx->suTs0[coord]);
+	GX_WRITE_BP_REG(gx->suTs0[coord]);
 	gx->bpSent = 0;
 }
 
@@ -109,12 +109,12 @@ void GXSetCoPlanar(GXBool enable)
 
 	SET_REG_FIELD(0x24C, gx->genMode, 1, 19, enable);
 	reg = 0xFE080000;
-	GX_WRITE_RAS_REG(reg);
-	GX_WRITE_RAS_REG(gx->genMode);
+	GX_WRITE_BP_REG(reg);
+	GX_WRITE_BP_REG(gx->genMode);
 }
 
 void __GXSetGenMode(void)
 {
-	GX_WRITE_RAS_REG(gx->genMode);
+	GX_WRITE_BP_REG(gx->genMode);
 	gx->bpSent = 0;
 }
