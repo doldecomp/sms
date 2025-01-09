@@ -1,105 +1,43 @@
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/gx/GXVerify.h"
 
-#define GX_WRITE_U8(ub) GXWGFifo.u8 = (u8)(ub)
-
+#define GX_WRITE_U8(ub)  GXWGFifo.u8 = (u8)(ub)
 #define GX_WRITE_U16(us) GXWGFifo.u16 = (u16)(us)
-
 #define GX_WRITE_U32(ui) GXWGFifo.u32 = (u32)(ui)
+#define GX_WRITE_F32(f)  GXWGFifo.f32 = (f32)(f);
 
-#define GX_WRITE_F32(f) GXWGFifo.f32 = (f32)(f);
-
-#if DEBUG
-#define VERIF_XF_REG(addr, value)                                              \
-	do {                                                                       \
-		s32 regAddr = (addr);                                                  \
-		if (regAddr >= 0 && regAddr < 0x50) {                                  \
-			__gxVerif->xfRegs[regAddr]      = (value);                         \
-			__gxVerif->xfRegsDirty[regAddr] = 1;                               \
-		}                                                                      \
-	} while (0)
-#define VERIF_XF_REG_alt(addr, value)                                          \
-	do {                                                                       \
-		s32 xfAddr = (addr);                                                   \
-		if (xfAddr >= 0 && xfAddr < 0x50) {                                    \
-			__gxVerif->xfRegs[xfAddr]      = (value);                          \
-			__gxVerif->xfRegsDirty[xfAddr] = 1;                                \
-		}                                                                      \
-	} while (0)
-#define VERIF_RAS_REG(value)                                                   \
-	(__gxVerif->rasRegs[((value) & 0xFF000000) >> 24] = value)
-#define VERIF_MTXLIGHT(addr, data)                                             \
-	do {                                                                       \
-		s32 xfAddr;                                                            \
-		if (addr < 0x400U) {                                                   \
-			__gxVerif->xfMtx[addr]      = data;                                \
-			__gxVerif->xfMtxDirty[addr] = 1;                                   \
-		} else if (addr < 0x500U) {                                            \
-			xfAddr                        = addr - 0x400;                      \
-			__gxVerif->xfNrm[xfAddr]      = data;                              \
-			__gxVerif->xfNrmDirty[xfAddr] = 1;                                 \
-		} else if (addr < 0x600U) {                                            \
-			xfAddr                         = addr - 0x500;                     \
-			__gxVerif->xfDMtx[xfAddr]      = data;                             \
-			__gxVerif->xfDMtxDirty[xfAddr] = 1;                                \
-		} else if (addr < 0x680U) {                                            \
-			xfAddr                          = addr - 0x600;                    \
-			__gxVerif->xfLight[xfAddr]      = data;                            \
-			__gxVerif->xfLightDirty[xfAddr] = 1;                               \
-		} else {                                                               \
-			xfAddr = addr - 0x1000;                                            \
-			if ((xfAddr >= 0) && (xfAddr < 0x50)) {                            \
-				__gxVerif->xfRegs[xfAddr]      = data;                         \
-				__gxVerif->xfRegsDirty[xfAddr] = 1;                            \
-			}                                                                  \
-		}                                                                      \
-	} while (0)
-#else
-#define VERIF_XF_REG(addr, value)     ((void)0)
-#define VERIF_XF_REG_alt(addr, value) ((void)0)
-#define VERIF_RAS_REG(value)          ((void)0)
-#endif
-
+// Write to GX Transform Unit (XF) register
+// TODO: Pikmin2 has nicer macros here, refactor
 #define GX_WRITE_XF_REG(addr, value)                                           \
 	do {                                                                       \
-		GX_WRITE_U8(0x10);                                                     \
+		GX_WRITE_U8(GX_LOAD_XF_REG);                                           \
 		GX_WRITE_U32(0x1000 + (addr));                                         \
 		GX_WRITE_U32(value);                                                   \
-		VERIF_XF_REG(addr, value);                                             \
 	} while (0)
 
-#if DEBUG
-#define GX_WRITE_XF_REG_2(addr, value)                                         \
-	do {                                                                       \
-		u32 xfData = (value);                                                  \
-		&xfData;                                                               \
-		GX_WRITE_U32(value);                                                   \
-		VERIF_XF_REG_alt(addr, xfData);                                        \
-	} while (0)
-#define GX_WRITE_XF_REG_F(addr, value)                                         \
-	do {                                                                       \
-		f32 xfData = (value);                                                  \
-		GX_WRITE_F32(value);                                                   \
-		VERIF_XF_REG_alt(addr, *(u32*)&xfData);                                \
-	} while (0)
-#else
 #define GX_WRITE_XF_REG_2(addr, value)                                         \
 	do {                                                                       \
 		GX_WRITE_U32(value);                                                   \
 	} while (0)
+
 #define GX_WRITE_XF_REG_F(addr, value)                                         \
 	do {                                                                       \
 		GX_WRITE_F32(value);                                                   \
 	} while (0)
-#endif
 
-#define GX_WRITE_RAS_REG(value)                                                \
+// Write to Blitting Processor (BP) register
+// NOTE: inlining breaks without the (void) 0
+// which is a verify macro for debug builds
+#define GX_WRITE_BP_REG(value)                                                 \
 	do {                                                                       \
-		GX_WRITE_U8(0x61);                                                     \
+		GX_WRITE_U8(GX_LOAD_BP_REG);                                           \
 		GX_WRITE_U32(value);                                                   \
-		VERIF_RAS_REG(value);                                                  \
+		(void)0;                                                               \
 	} while (0)
 
+// TODO: all of these are for GX_LOAD_CP_REG and
+// this is a bloody mess, should probably steal whatever
+// pikmin2 does
 #define GX_WRITE_SOME_REG2(a, b, c, addr)                                      \
 	do {                                                                       \
 		long regAddr;                                                          \

@@ -139,8 +139,8 @@ void GXSetVtxDescv(const GXVtxDescList* attrPtr)
 
 void __GXSetVCD(void)
 {
-	GX_WRITE_SOME_REG4(8, 0x50, gx->vcdLo, -12);
-	GX_WRITE_SOME_REG4(8, 0x60, gx->vcdHi, -12);
+	GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, 0x50, gx->vcdLo, -12);
+	GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, 0x60, gx->vcdHi, -12);
 	__GXXfVtxSpecs();
 }
 
@@ -394,9 +394,9 @@ void __GXSetVAT(void)
 
 	for (i = 0; i < 8; i++) {
 		if (gx->dirtyVAT & (1 << (u8)i)) {
-			GX_WRITE_SOME_REG4(8, i | 0x70, gx->vatA[i], i - 12);
-			GX_WRITE_SOME_REG4(8, i | 0x80, gx->vatB[i], i - 12);
-			GX_WRITE_SOME_REG4(8, i | 0x90, gx->vatC[i], i - 12);
+			GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, i | 0x70, gx->vatA[i], i - 12);
+			GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, i | 0x80, gx->vatB[i], i - 12);
+			GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, i | 0x90, gx->vatC[i], i - 12);
 		}
 	}
 	gx->dirtyVAT = 0;
@@ -509,8 +509,8 @@ void GXSetArray(GXAttr attr, const void* base_ptr, u8 stride)
 	}
 	cpAttr  = attr - GX_VA_POS;
 	phyAddr = (u32)base_ptr & 0x3FFFFFFF;
-	GX_WRITE_SOME_REG2(8, cpAttr | 0xA0, phyAddr, cpAttr - 12);
-	GX_WRITE_SOME_REG3(8, cpAttr | 0xB0, stride, cpAttr - 12);
+	GX_WRITE_SOME_REG2(GX_LOAD_CP_REG, cpAttr | 0xA0, phyAddr, cpAttr - 12);
+	GX_WRITE_SOME_REG3(GX_LOAD_CP_REG, cpAttr | 0xB0, stride, cpAttr - 12);
 }
 
 void GXInvalidateVtxCache(void) { GX_WRITE_U8(0x48); }

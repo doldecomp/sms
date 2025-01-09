@@ -122,11 +122,11 @@ GXFifoObj* GXInit(void* base, u32 size)
 	freqBase = __OSBusClock / 500;
 	__GXFlushTextureState();
 	reg = (freqBase >> 11) | 0x400 | 0x69000000;
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	__GXFlushTextureState();
 	reg = (freqBase / 0x1080) | 0x200 | 0x46000000;
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 
 	for (i = GX_VTXFMT0; i < GX_MAX_VTXFMT; i++) {
 		SET_REG_FIELD(0, gx->vatA[i], 1, 30, 1);
@@ -159,7 +159,7 @@ GXFifoObj* GXInit(void* base, u32 size)
 		SET_REG_FIELD(0, reg, 1, 2, 1);
 		SET_REG_FIELD(0, reg, 1, 3, 1);
 		SET_REG_FIELD(0, reg, 8, 24, 0x58);
-		GX_WRITE_RAS_REG(reg);
+		GX_WRITE_BP_REG(reg);
 	}
 	for (i = 0; i < 8; i++)
 		GXInitTexCacheRegion(&gx->TexRegions[i], 0, i * 0x8000, 0,
@@ -175,15 +175,15 @@ GXFifoObj* GXInit(void* base, u32 size)
 
 	{
 		SET_REG_FIELD(0, gx->perfSel, 4, 4, 0);
-		GX_WRITE_U8(0x8);
+		GX_WRITE_U8(GX_LOAD_CP_REG);
 		GX_WRITE_U8(0x20);
 		GX_WRITE_U32(gx->perfSel);
-		GX_WRITE_U8(0x10);
+		GX_WRITE_U8(GX_LOAD_XF_REG);
 		GX_WRITE_U32(0x1006);
 		GX_WRITE_U32(0);
-		GX_WRITE_RAS_REG(0x23000000);
-		GX_WRITE_RAS_REG(0x24000000);
-		GX_WRITE_RAS_REG(0x67000000);
+		GX_WRITE_BP_REG(0x23000000);
+		GX_WRITE_BP_REG(0x24000000);
+		GX_WRITE_BP_REG(0x67000000);
 	}
 
 	__GXSetTmemConfig(0);

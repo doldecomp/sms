@@ -60,7 +60,7 @@ void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
 	SET_REG_FIELD(0xEF, *pTevReg, 4, 4, c);
 	SET_REG_FIELD(0xF0, *pTevReg, 4, 0, d);
 
-	GX_WRITE_RAS_REG(*pTevReg);
+	GX_WRITE_BP_REG(*pTevReg);
 	gx->bpSent = 0;
 }
 
@@ -77,7 +77,7 @@ void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b,
 	SET_REG_FIELD(0x112, *pTevReg, 3, 7, c);
 	SET_REG_FIELD(0x113, *pTevReg, 3, 4, d);
 
-	GX_WRITE_RAS_REG(*pTevReg);
+	GX_WRITE_BP_REG(*pTevReg);
 	gx->bpSent = 0;
 }
 
@@ -100,7 +100,7 @@ void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias,
 	SET_REG_FIELD(0x140, *pTevReg, 1, 19, clamp & 0xFF);
 	SET_REG_FIELD(0x141, *pTevReg, 2, 22, out_reg);
 
-	GX_WRITE_RAS_REG(*pTevReg);
+	GX_WRITE_BP_REG(*pTevReg);
 	gx->bpSent = 0;
 }
 
@@ -123,7 +123,7 @@ void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias,
 	SET_REG_FIELD(0x16C, *pTevReg, 1, 19, clamp & 0xFF);
 	SET_REG_FIELD(0x16D, *pTevReg, 2, 22, out_reg);
 
-	GX_WRITE_RAS_REG(*pTevReg);
+	GX_WRITE_BP_REG(*pTevReg);
 	gx->bpSent = 0;
 }
 
@@ -144,10 +144,10 @@ void GXSetTevColor(GXTevRegID id, GXColor color)
 	SET_REG_FIELD(0x18B, regBG, 11, 12, color.g);
 	SET_REG_FIELD(0x18C, regBG, 8, 24, 225 + id * 2);
 
-	GX_WRITE_RAS_REG(regRA);
-	GX_WRITE_RAS_REG(regBG);
-	GX_WRITE_RAS_REG(regBG);
-	GX_WRITE_RAS_REG(regBG);
+	GX_WRITE_BP_REG(regRA);
+	GX_WRITE_BP_REG(regBG);
+	GX_WRITE_BP_REG(regBG);
+	GX_WRITE_BP_REG(regBG);
 	gx->bpSent = 0;
 }
 
@@ -168,10 +168,10 @@ void GXSetTevColorS10(GXTevRegID id, GXColorS10 color)
 	SET_REG_FIELD(0x1B5, regBG, 11, 12, color.g & 0x7FF);
 	SET_REG_FIELD(0x1B6, regBG, 8, 24, 225 + id * 2);
 
-	GX_WRITE_RAS_REG(regRA);
-	GX_WRITE_RAS_REG(regBG);
-	GX_WRITE_RAS_REG(regBG);
-	GX_WRITE_RAS_REG(regBG);
+	GX_WRITE_BP_REG(regRA);
+	GX_WRITE_BP_REG(regBG);
+	GX_WRITE_BP_REG(regBG);
+	GX_WRITE_BP_REG(regBG);
 	gx->bpSent = 0;
 }
 
@@ -194,8 +194,8 @@ void GXSetTevKColor(GXTevKColorID id, GXColor color)
 	SET_REG_FIELD(0x1E8, regBG, 4, 20, 8);
 	SET_REG_FIELD(0x1E9, regBG, 8, 24, 225 + id * 2);
 
-	GX_WRITE_RAS_REG(regRA);
-	GX_WRITE_RAS_REG(regBG);
+	GX_WRITE_BP_REG(regRA);
+	GX_WRITE_BP_REG(regBG);
 	gx->bpSent = 0;
 }
 
@@ -212,7 +212,7 @@ void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel)
 		SET_REG_FIELD(0x20C, *Kreg, 5, 4, sel);
 	}
 
-	GX_WRITE_RAS_REG(*Kreg);
+	GX_WRITE_BP_REG(*Kreg);
 	gx->bpSent = 0;
 }
 
@@ -229,7 +229,7 @@ void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel)
 		SET_REG_FIELD(0x22D, *Kreg, 5, 9, sel);
 	}
 
-	GX_WRITE_RAS_REG(*Kreg);
+	GX_WRITE_BP_REG(*Kreg);
 	gx->bpSent = 0;
 }
 
@@ -244,7 +244,7 @@ void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel,
 	SET_REG_FIELD(0x24E, *pTevReg, 2, 0, ras_sel);
 	SET_REG_FIELD(0x24F, *pTevReg, 2, 2, tex_sel);
 
-	GX_WRITE_RAS_REG(*pTevReg);
+	GX_WRITE_BP_REG(*pTevReg);
 	gx->bpSent = 0;
 }
 
@@ -264,13 +264,13 @@ void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red,
 	SET_REG_FIELD(0x272, *Kreg, 2, 0, red);
 	SET_REG_FIELD(0x273, *Kreg, 2, 2, green);
 
-	GX_WRITE_RAS_REG(*Kreg);
+	GX_WRITE_BP_REG(*Kreg);
 
 	Kreg = &gx->tevKsel[table * 2 + 1];
 	SET_REG_FIELD(0x277, *Kreg, 2, 0, blue);
 	SET_REG_FIELD(0x278, *Kreg, 2, 2, alpha);
 
-	GX_WRITE_RAS_REG(*Kreg);
+	GX_WRITE_BP_REG(*Kreg);
 	gx->bpSent = 0;
 }
 
@@ -288,7 +288,7 @@ void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1,
 	SET_REG_FIELD(0x2B8, reg, 2, 22, op);
 	SET_REG_FIELD(0x2B9, reg, 8, 24, 0xF3);
 
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	gx->bpSent = 0;
 }
 
@@ -323,8 +323,8 @@ void GXSetZTexture(GXZTexOp op, GXTexFmt fmt, u32 bias)
 	SET_REG_FIELD(0x2E1, zenv1, 2, 2, op);
 	SET_REG_FIELD(0x2E2, zenv1, 8, 24, 0xF5);
 
-	GX_WRITE_RAS_REG(zenv0);
-	GX_WRITE_RAS_REG(zenv1);
+	GX_WRITE_BP_REG(zenv0);
+	GX_WRITE_BP_REG(zenv1);
 	gx->bpSent = 0;
 }
 
@@ -369,7 +369,7 @@ void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map,
 		              (map != GX_TEXMAP_NULL && !(map & 0x100)));
 	}
 
-	GX_WRITE_RAS_REG(*ptref);
+	GX_WRITE_BP_REG(*ptref);
 	gx->bpSent = 0;
 	gx->dirtyState |= 1;
 }

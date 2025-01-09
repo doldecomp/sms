@@ -56,7 +56,7 @@ void GXSetProjection(f32 mtx[4][4], GXProjectionType type)
 	}
 
 	reg = 0x00061020;
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(reg);
 	GX_WRITE_XF_REG_F(32, gx->projMtx[0]);
 	GX_WRITE_XF_REG_F(33, gx->projMtx[1]);
@@ -151,7 +151,7 @@ void GXLoadPosMtxImm(f32 mtx[3][4], u32 id)
 	addr = id * 4;
 	reg  = addr | 0xB0000;
 
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(reg);
 
 	WriteMTXPS4x3(mtx, &GXWGFifo.f32);
@@ -189,7 +189,7 @@ void GXLoadNrmMtxImm(f32 mtx[3][4], u32 id)
 	addr = id * 3 + 0x400;
 	reg  = addr | 0x80000;
 
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(reg);
 	WriteMTXPS3x3from3x4(mtx, &GXWGFifo.f32);
 }
@@ -232,7 +232,7 @@ void GXLoadTexMtxImm(f32 mtx[][4], u32 id, GXTexMtxType type)
 	count = (type == GX_MTX2x4) ? 8 : 12;
 	reg   = addr | ((count - 1) << 16);
 
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(reg);
 	if (type == GX_MTX3x4) {
 		WriteMTXPS4x3(mtx, &GXWGFifo.f32);
@@ -277,7 +277,7 @@ void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz,
 		__GXSetRange(nearz, gx->fgSideX);
 	}
 	reg = 0x5101A;
-	GX_WRITE_U8(0x10);
+	GX_WRITE_U8(GX_LOAD_XF_REG);
 	GX_WRITE_U32(reg);
 	GX_WRITE_XF_REG_F(26, sx);
 	GX_WRITE_XF_REG_F(27, sy);
@@ -322,8 +322,8 @@ void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht)
 	SET_REG_FIELD(0x3C2, gx->suScis1, 11, 0, bm);
 	SET_REG_FIELD(0x3C3, gx->suScis1, 11, 12, rt);
 
-	GX_WRITE_RAS_REG(gx->suScis0);
-	GX_WRITE_RAS_REG(gx->suScis1);
+	GX_WRITE_BP_REG(gx->suScis0);
+	GX_WRITE_BP_REG(gx->suScis1);
 	gx->bpSent = 0;
 }
 
@@ -341,7 +341,7 @@ void GXSetScissorBoxOffset(s32 x_off, s32 y_off)
 	SET_REG_FIELD(0x405, reg, 10, 0, hx);
 	SET_REG_FIELD(0x406, reg, 10, 10, hy);
 	SET_REG_FIELD(0x407, reg, 8, 24, 0x59);
-	GX_WRITE_RAS_REG(reg);
+	GX_WRITE_BP_REG(reg);
 	gx->bpSent = 0;
 }
 
@@ -355,10 +355,10 @@ void GXSetClipMode(GXClipMode mode)
 void __GXSetMatrixIndex(GXAttr matIdxAttr)
 {
 	if (matIdxAttr < GX_VA_TEX4MTXIDX) {
-		GX_WRITE_SOME_REG4(8, 0x30, gx->matIdxA, -12);
+		GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, 0x30, gx->matIdxA, -12);
 		GX_WRITE_XF_REG(24, gx->matIdxA);
 	} else {
-		GX_WRITE_SOME_REG4(8, 0x40, gx->matIdxB, -12);
+		GX_WRITE_SOME_REG4(GX_LOAD_CP_REG, 0x40, gx->matIdxB, -12);
 		GX_WRITE_XF_REG(25, gx->matIdxB);
 	}
 	gx->bpSent = 1;
