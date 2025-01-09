@@ -1231,7 +1231,9 @@ inline s32 __THPHuffDecodeTab(register THPFileInfo* info,
         stw     cnt, info->cnt;
 	}
 
-	_done: return code;
+	_done: {
+		return code;
+	}
 
 	{
 		register u32 maxcodebase;
