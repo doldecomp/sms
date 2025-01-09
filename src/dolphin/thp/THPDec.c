@@ -1,5 +1,6 @@
 #include <dolphin/thp.h>
 #include <dolphin/os.h>
+#include <dolphin/base/PPCArch.h>
 
 static THPHuffmanTab* Ydchuff __attribute__((aligned(32)));
 static THPHuffmanTab* Udchuff __attribute__((aligned(32)));

@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_THP_H
-#define _DOLPHIN_THP_H
+#ifndef _DOLPHIN_THP_H_
+#define _DOLPHIN_THP_H_
 
 #include <dolphin/types.h>
 #include <dolphin/os/OSFastCast.h>
