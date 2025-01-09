@@ -150,15 +150,18 @@ void __GXCalculateVLim(void)
 	static u8 tbl2[] = { 0, 8, 1, 2 };
 	static u8 tbl3[] = { 0, 12, 1, 2 };
 	u32 vlm;
-	int b;
 	u32 vl;
 	u32 vh;
+	s32 compCnt;
 
 	if (gx->unk04 == 0)
 		return;
 
 	vl = gx->vcdLo;
 	vh = gx->vcdHi;
+
+	// NOTE: our GET_REG_FIELD macro doesn't work for this =(
+	compCnt = (gx->vatA[GX_VTXFMT0] & 0x200) >> 9;
 
 	vlm = GET_REG_FIELD(vl, 1, 0);
 
@@ -171,8 +174,7 @@ void __GXCalculateVLim(void)
 	vlm += (u8)GET_REG_FIELD(vl, 1, 7);
 	vlm += (u8)GET_REG_FIELD(vl, 1, 8);
 	vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 9)];
-	b = !GET_REG_FIELD(gx->vatA[0], 1, 9) ? 3 : 1;
-	vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 11)] * b;
+	vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 11)] * (compCnt == GX_NRM_NBT ? 3 : 1);
 	vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 13)];
 	vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 15)];
 	vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 0)];
