@@ -52,7 +52,7 @@ void GXCopyDisp(void* dest, GXBool clear);
 void GXCopyTex(void* dest, GXBool clear);
 void GXClearBoundingBox(void);
 void GXReadBoundingBox(u16* left, u16* top, u16* right, u16* bottom);
-u16 GXGetNumXfbLines(float, u16);
+u16 GXGetNumXfbLines(u16, float);
 float GXGetYScaleFactor(u16, u16);
 
 #ifdef __cplusplus

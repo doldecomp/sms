@@ -703,7 +703,7 @@ config.libs = [
             Object(Matching, "dolphin/gx/GXAttr.c"),
             Object(Matching, "dolphin/gx/GXMisc.c"),
             Object(Matching, "dolphin/gx/GXGeometry.c"),
-            Object(NonMatching, "dolphin/gx/GXFrameBuf.c"),
+            Object(Matching, "dolphin/gx/GXFrameBuf.c"),
             Object(Matching, "dolphin/gx/GXLight.c"),
             Object(Matching, "dolphin/gx/GXTexture.c"),
             Object(Matching, "dolphin/gx/GXBump.c"),

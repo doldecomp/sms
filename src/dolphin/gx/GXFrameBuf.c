@@ -193,153 +193,94 @@ void GXSetCopyClamp(GXFBClamp clamp)
 	SET_REG_FIELD(0x485, gx->cpTex, 1, 1, clmpB);
 }
 
-u16 GXGetNumXfbLines(float param1, u16 param2)
+static u32 __GXGetNumXfbLines(u32 height, u32 scale)
 {
-	u32 uVar1;
-	u32 uVar2;
-	u32 uVar3;
+	u32 numLines;
+	u32 actualHeight;
+	u32 newScale;
 
-	uVar1 = (u32)(256.0f / param1) & 0x1ff;
-	uVar2 = ((param2 - 1) * 0x100) / uVar1;
-	uVar3 = uVar2 + 1;
-	if (uVar1 > 0x80 && uVar1 < 0x100) {
-		while (!(uVar1 & 1))
-			uVar1 = uVar1 >> 1;
-		if (!(param2 - (param2 / uVar1) * uVar1)) {
-			uVar3 = uVar2 + 1;
+	numLines     = (height - 1) * 0x100;
+	actualHeight = (numLines / scale) + 1;
+
+	newScale = scale;
+
+	if (newScale > 0x80 && newScale < 0x100) {
+		while (newScale % 2 == 0) {
+			newScale /= 2;
+		}
+
+		if (height % newScale == 0) {
+			actualHeight++;
 		}
 	}
-	if (uVar3 > 0x400) {
-		uVar3 = 0x400;
+
+	if (actualHeight > 0x400) {
+		actualHeight = 0x400;
 	}
-	return uVar3 & 0xffff;
+
+	return actualHeight;
 }
 
-float GXGetYScaleFactor(u16 param1, u16 param2)
+u16 GXGetNumXfbLines(u16 efbHeight, float yScale)
 {
-	u32 uVar1;
-	u32 uVar2;
-	u32 uVar4;
-	u32 uVar5;
-	u32 uVar6;
-	u32 uVar7;
-	float dVar8;
-	float dVar9;
-	float dVar10;
+	u32 scale = (u32)(256.0f / yScale) & 0x1FF;
 
-	uVar7 = param2 & 0xffff;
-	uVar2 = param1 & 0xffff;
-	dVar8 = (float)uVar7 / (float)uVar2;
-	uVar4 = (u32)(256.f / dVar8);
-	uVar4 = uVar4 & 0x1ff;
-	uVar1 = (uVar2 - 1) * 0x100;
-	uVar5 = uVar1 / uVar4;
-	uVar6 = uVar5 + 1;
-
-	if ((uVar4 > 0x80) && (uVar4 < 0x100)) {
-		while (!(uVar4 & 1))
-			uVar4 = uVar4 >> 1;
-		if (!(uVar2 - (uVar2 / uVar4) * uVar4))
-			uVar6 = uVar5 + 2;
-	}
-
-	if (uVar6 > 0x400)
-		uVar6 = 0x400;
-
-	while ((param2 & 0xffff) < uVar6) {
-		uVar7 = uVar7 - 1;
-		dVar8 = (float)uVar7 / (float)(param1 & 0xffff);
-		uVar4 = (u32)(256.0f / dVar8);
-		uVar4 = uVar4 & 0x1ff;
-		uVar5 = uVar1 / uVar4;
-		uVar6 = uVar5 + 1;
-		if (uVar4 > 0x80 && uVar4 < 0x100) {
-			while (!(uVar4 & 1))
-				uVar4 = uVar4 >> 1;
-			if (uVar2 == (uVar2 / uVar4) * uVar4)
-				uVar6 = uVar5 + 2;
-		}
-		if (uVar6 > 0x400)
-			uVar6 = 0x400;
-	}
-	dVar10 = dVar8;
-	while (dVar9 = dVar8, uVar6 < (param2 & 0xffff)) {
-		uVar7 = uVar7 + 1;
-		dVar8 = (float)uVar7 / (float)(param1 & 0xffff);
-		uVar4 = (u32)(256.0f / dVar8);
-		uVar4 = uVar4 & 0x1ff;
-		uVar5 = uVar1 / uVar4;
-		uVar6 = uVar5 + 1;
-		if ((uVar4 > 0x80) && (uVar4 < 0x100)) {
-			while (!(uVar4 & 1))
-				uVar4 = uVar4 >> 1;
-			if (uVar2 == (uVar2 / uVar4) * uVar4)
-				uVar6 = uVar5 + 2;
-		}
-		dVar10 = dVar9;
-		if (uVar6 > 0x400)
-			uVar6 = 0x400;
-	}
-	return dVar10;
+	return __GXGetNumXfbLines(efbHeight, scale);
 }
 
-u32 GXSetDispCopyYScale(f32 vscale)
+f32 GXGetYScaleFactor(u16 efbHeight, u16 xfbHeight)
 {
-	// u8 enable;
-	// u32 iScale;
-	// f32 fScale;
-	// u32 ht;
-	// u32 reg;
+	u32 scale;
+	u32 height1;
+	u32 height2;
+	f32 scale2;
+	f32 scale1;
 
-	// CHECK_GXBEGIN(0x49B, "GXSetDispCopyYScale");
+	height1 = xfbHeight;
+	scale1  = (f32)xfbHeight / (f32)efbHeight;
+	scale   = (u32)(256.0f / scale1) & 0x1FF;
+	height2 = __GXGetNumXfbLines(efbHeight, scale);
 
-	// iScale = (u32)(256.0f / vscale) & 0x1FF;
-	// fScale = 256.0f / (f32)iScale;
-	// enable = (iScale != 256);
+	while (height2 > xfbHeight) {
+		height1--;
+		scale1  = (f32)height1 / (f32)efbHeight;
+		scale   = (u32)(256.0f / scale1) & 0x1FF;
+		height2 = __GXGetNumXfbLines(efbHeight, scale);
+	}
 
-	// reg = 0;
-	// SET_REG_FIELD(0x4A6, reg, 9, 0, iScale);
-	// SET_REG_FIELD(0x4A7, reg, 8, 24, 0x4E);
-	// GX_WRITE_BP_REG(reg);
-	// gx->bpSent = 0;
-	// SET_REG_FIELD(0x4AB, gx->cpDisp, 1, 10, enable);
-	// ht = GET_REG_FIELD(gx->cpDispSize, 10, 10) + 1;
-	// return ht * fScale;
+	scale2 = scale1;
+	while (height2 < xfbHeight) {
+		scale2 = scale1;
+		height1++;
+		scale1  = (f32)height1 / (f32)efbHeight;
+		scale   = (u32)(256.0f / scale1) & 0x1FF;
+		height2 = __GXGetNumXfbLines(efbHeight, scale);
+	}
 
-	u32 iScale;
+	return scale2;
+}
+
+u32 GXSetDispCopyYScale(f32 vertScale)
+{
+	u32 scale;
+	GXBool check;
+	u32 height;
 	u32 reg;
-	int iVar2;
-	u32 uVar3;
-	u32 uVar4;
-	u32 uVar5;
 
-	iScale = (u32)(256.0f / vscale) & 0x1ff;
+	scale = (u32)(256.0f / vertScale) & 0x1FF;
+	check = (scale != 0x100);
 
 	reg = 0;
-	SET_REG_FIELD(0x4A6, reg, 9, 0, iScale);
-	SET_REG_FIELD(0x4A7, reg, 8, 24, 0x4E);
+	SET_REG_FIELD(0, reg, 9, 0, scale);
+	SET_REG_FIELD(0, reg, 8, 24, 0x4E);
 	GX_WRITE_BP_REG(reg);
+	gx->bpSent = GX_FALSE;
 
-	iVar2      = -iScale + 0x100;
-	gx->bpSent = 0;
-	gx->cpDisp
-	    = gx->cpDisp & 0xfffffbff
-	      | (iVar2 - (-iScale + 0xff + (u32)(iVar2 == 0))) * 0x400 & 0x3fc00;
-	uVar3 = (gx->cpDispSize >> 2 & 0x3ff00) / iScale;
-	uVar5 = (gx->cpDispSize >> 10 & 0x3ff) + 1;
-	uVar4 = uVar3 + 1;
-	if ((iScale > 0x80) && (iScale < 0x100)) {
-		for (; (iScale & 1) == 0; iScale = iScale >> 1) { }
+	SET_REG_FIELD(0, gx->cpDisp, 1, 10, check);
 
-		if (!(uVar5 - (uVar5 / iScale) * iScale)) {
-			uVar4 = uVar3 + 2;
-		}
-	}
+	height = (gx->cpDispSize >> 10 & 0x3FF) + 1;
 
-	if (uVar4 > 0x400) {
-		uVar4 = 0x400;
-	}
-	return uVar4;
+	return __GXGetNumXfbLines(height, scale);
 }
 
 void GXSetCopyClear(GXColor clear_clr, u32 clear_z)
