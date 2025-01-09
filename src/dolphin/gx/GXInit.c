@@ -8,6 +8,7 @@
 
 #include "__gx.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXManage.h"
 #include "dolphin/vi/vitypes.h"
 
 static struct __GXData_struct gxData;
@@ -65,16 +66,18 @@ GXFifoObj* GXInit(void* base, u32 size)
 	u32 i;
 	u32 reg;
 	u32 freqBase;
+	char stack_padding[8];
 
 	gx->inDispList    = FALSE;
 	gx->dlSaveContext = TRUE;
 
 	gx->tcsManEnab = FALSE;
-	gx->vNum       = 0;
-	__piReg        = OSPhysicalToUncached(0xC003000);
-	__cpReg        = OSPhysicalToUncached(0xC000000);
-	__peReg        = OSPhysicalToUncached(0xC001000);
-	__memReg       = OSPhysicalToUncached(0xC004000);
+	gx->pad0       = 0;
+	GXSetMisc(GX_MT_XF_FLUSH, 0);
+	__piReg  = OSPhysicalToUncached(0xC003000);
+	__cpReg  = OSPhysicalToUncached(0xC000000);
+	__peReg  = OSPhysicalToUncached(0xC001000);
+	__memReg = OSPhysicalToUncached(0xC004000);
 	__GXFifoInit();
 	GXInitFifoBase(&FifoObj, base, size);
 	GXSetCPUFifo(&FifoObj);
@@ -128,13 +131,13 @@ GXFifoObj* GXInit(void* base, u32 size)
 	for (i = GX_VTXFMT0; i < GX_MAX_VTXFMT; i++) {
 		SET_REG_FIELD(0, gx->vatA[i], 1, 30, 1);
 		SET_REG_FIELD(0, gx->vatB[i], 1, 31, 1);
-		{
+		do {
 			s32 regAddr;
-			GX_WRITE_U8(8);
+			GX_WRITE_U8(GX_LOAD_CP_REG);
 			GX_WRITE_U8(i | 0x80);
 			GX_WRITE_U32(gx->vatB[i]);
 			regAddr = i - 12;
-		}
+		} while (0);
 	}
 	{
 		u32 reg1 = 0;
@@ -168,13 +171,13 @@ GXFifoObj* GXInit(void* base, u32 size)
 		GXInitTlutRegion(&gx->TlutRegions[i], 0xC0000 + i * 0x2000, 16);
 	for (i = 0; i < 4; i++)
 		GXInitTlutRegion(&gx->TlutRegions[i + 16], 0xE0000 + i * 0x8000, 64);
-	__cpReg[6] = 0;
+	__cpReg[3] = 0;
 
 	{
-		gx->pad0 &= 0xffffff0f;
+		SET_REG_FIELD(0, gx->perfSel, 4, 4, 0);
 		GX_WRITE_U8(0x8);
 		GX_WRITE_U8(0x20);
-		GX_WRITE_U32(gx->pad0);
+		GX_WRITE_U32(gx->perfSel);
 		GX_WRITE_U8(0x10);
 		GX_WRITE_U32(0x1006);
 		GX_WRITE_U32(0);
