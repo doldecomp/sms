@@ -256,10 +256,10 @@ struct __GXData_struct {
 	u32 tMode0[8];                                 // offset 0x47C, size 0x20
 	u32 texmapId[16];                              // offset 0x49C, size 0x40
 	u32 tcsManEnab;                                // offset 0x4DC, size 0x4
-	GXPerf0 perf0;                                 // offset 0x4E0, size 0x4
-	GXPerf1 perf1;                                 // offset 0x4E4, size 0x4
-	u32 perfSel;                                   // offset 0x4E8, size 0x4
 	u32 pad0;         // TODO: might go higher above
+	GXPerf0 perf0;    // offset 0x4E0, size 0x4
+	GXPerf1 perf1;    // offset 0x4E4, size 0x4
+	u32 perfSel;      // offset 0x4E8, size 0x4
 	u8 inDispList;    // offset 0x4F0, size 0x1
 	u8 dlSaveContext; // offset 0x4F1, size 0x1
 	u8 dirtyVAT;      // offset 0x4F2, size 0x1
@@ -271,9 +271,8 @@ extern u16* __memReg;
 extern u16* __peReg;
 extern u16* __cpReg;
 extern u32* __piReg;
-#if DEBUG
-extern GXBool __GXinBegin;
-#endif
+
+void __GXInitGX();
 
 /* GXMisc.c */
 
@@ -297,6 +296,7 @@ void __GetImageTileCount(GXTexFmt fmt, u16 wd, u16 ht, u32* rowTiles,
                          u32* colTiles, u32* cmpTiles);
 void __GXSetSUTexRegs(void);
 void __GXGetSUTexSize(GXTexCoordID coord, u16* width, u16* height);
+void __GXSetTmemConfig(int);
 
 /* GXTransform.c */
 

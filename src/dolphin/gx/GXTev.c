@@ -344,13 +344,13 @@ void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map,
 	tmap = map & ~0x100;
 	tmap = (tmap >= GX_MAX_TEXMAP) ? GX_TEXMAP0 : tmap;
 	if (coord >= GX_MAX_TEXCOORD) {
-		u32 perf  = gx->perf0;
-		gx->perf0 = perf & ~(1 << stage);
-		tcoord    = GX_TEXCOORD0;
+		u32 idk  = gx->pad0;
+		gx->pad0 = idk & ~(1 << stage);
+		tcoord   = GX_TEXCOORD0;
 	} else {
-		u32 perf  = gx->perf0;
-		gx->perf0 = perf | (1 << stage);
-		tcoord    = coord;
+		u32 idk  = gx->pad0;
+		gx->pad0 = idk | (1 << stage);
+		tcoord   = coord;
 	}
 
 	if (stage & 1) {
