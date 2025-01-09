@@ -271,9 +271,8 @@ extern u16* __memReg;
 extern u16* __peReg;
 extern u16* __cpReg;
 extern u32* __piReg;
-#if DEBUG
-extern GXBool __GXinBegin;
-#endif
+
+void __GXInitGX();
 
 /* GXMisc.c */
 
@@ -297,6 +296,7 @@ void __GetImageTileCount(GXTexFmt fmt, u16 wd, u16 ht, u32* rowTiles,
                          u32* colTiles, u32* cmpTiles);
 void __GXSetSUTexRegs(void);
 void __GXGetSUTexSize(GXTexCoordID coord, u16* width, u16* height);
+void __GXSetTmemConfig(int);
 
 /* GXTransform.c */
 

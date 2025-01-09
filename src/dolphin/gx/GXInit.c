@@ -7,6 +7,8 @@
 #include <macros.h>
 
 #include "__gx.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/vi/vitypes.h"
 
 static struct __GXData_struct gxData;
 struct __GXData_struct* gx = &gxData;
@@ -15,18 +17,9 @@ u16* __memReg;
 u16* __peReg;
 u16* __cpReg;
 u32* __piReg;
-#if DEBUG
-GXBool __GXinBegin;
-#endif
 
-asm BOOL IsWriteGatherBufferEmpty(void)
-{
-#ifdef __MWERKS__ // clang-format off
-	sync
-	mfspr r3, WPAR
-	andi. r3, r3, 1
-#endif // clang-format on
-}
+// asm function got removed here
+#pragma peephole off
 
 static void EnableWriteGatherPipe(void)
 {
@@ -65,31 +58,17 @@ static GXTlutRegion* __GXDefaultTlutRegionCallback(u32 idx)
 	return &gx->TlutRegions[idx];
 }
 
-#if DEBUG
-static void __GXDefaultVerifyCallback(GXWarningLevel level, u32 id, char* msg)
-{
-	OSReport("Level %1d, Warning %3d: %s\n", level, id, msg);
-}
-#endif
-
 GXFifoObj FifoObj;
 
 GXFifoObj* GXInit(void* base, u32 size)
 {
-	GXRenderModeObj* rmode;
-	f32 identity_mtx[3][4];
-	GXColor clear = { 64, 64, 64, 255 };
-	GXColor black = { 0, 0, 0, 0 };
-	GXColor white = { 255, 255, 255, 255 };
 	u32 i;
 	u32 reg;
 	u32 freqBase;
 
 	gx->inDispList    = FALSE;
 	gx->dlSaveContext = TRUE;
-#if DEBUG
-	__GXinBegin = FALSE;
-#endif
+
 	gx->tcsManEnab = FALSE;
 	gx->vNum       = 0;
 	__piReg        = OSPhysicalToUncached(0xC003000);
@@ -136,18 +115,8 @@ GXFifoObj* GXInit(void* base, u32 size)
 	SET_REG_FIELD(0, gx->cpTex, 2, 7, 0);
 	gx->dirtyState = 0;
 	gx->dirtyVAT   = FALSE;
-#if DEBUG
-	__gxVerif->verifyLevel = GX_WARN_ALL;
-	GXSetVerifyCallback(__GXDefaultVerifyCallback);
-	for (i = 0; i < 256; i++) {
-		SET_REG_FIELD(0, __gxVerif->rasRegs[i], 8, 24, 0xFF);
-	}
-	memset(__gxVerif->xfRegsDirty, 0, 0x50);
-	memset(__gxVerif->xfMtxDirty, 0, 0x100);
-	memset(__gxVerif->xfNrmDirty, 0, 0x60);
-	memset(__gxVerif->xfLightDirty, 0, 0x80);
-#endif
-	freqBase = __OSBusClock / 0x1F4;
+
+	freqBase = __OSBusClock / 500;
 	__GXFlushTextureState();
 	reg = (freqBase >> 11) | 0x400 | 0x69000000;
 	GX_WRITE_RAS_REG(reg);
@@ -179,9 +148,6 @@ GXFifoObj* GXInit(void* base, u32 size)
 		GX_WRITE_XF_REG(0, reg1);
 		SET_REG_FIELD(0, reg2, 1, 0, 1);
 		GX_WRITE_XF_REG(0x12, reg2);
-#if DEBUG
-		__gxVerif->xfRegsDirty[0] = 0;
-#endif
 	}
 	{
 		u32 reg = 0;
@@ -192,6 +158,45 @@ GXFifoObj* GXInit(void* base, u32 size)
 		SET_REG_FIELD(0, reg, 8, 24, 0x58);
 		GX_WRITE_RAS_REG(reg);
 	}
+	for (i = 0; i < 8; i++)
+		GXInitTexCacheRegion(&gx->TexRegions[i], 0, i * 0x8000, 0,
+		                     0x80000 + i * 0x8000, 0);
+	for (i = 0; i < 4; i++)
+		GXInitTexCacheRegion(&gx->TexRegionsCI[i], 0, (i * 2 + 8) * 0x8000, 0,
+		                     (i * 2 + 9) * 0x8000, 0);
+	for (i = 0; i < 16; i++)
+		GXInitTlutRegion(&gx->TlutRegions[i], 0xC0000 + i * 0x2000, 16);
+	for (i = 0; i < 4; i++)
+		GXInitTlutRegion(&gx->TlutRegions[i + 16], 0xE0000 + i * 0x8000, 64);
+	__cpReg[6] = 0;
+
+	{
+		gx->pad0 &= 0xffffff0f;
+		GX_WRITE_U8(0x8);
+		GX_WRITE_U8(0x20);
+		GX_WRITE_U32(gx->pad0);
+		GX_WRITE_U8(0x10);
+		GX_WRITE_U32(0x1006);
+		GX_WRITE_U32(0);
+		GX_WRITE_RAS_REG(0x23000000);
+		GX_WRITE_RAS_REG(0x24000000);
+		GX_WRITE_RAS_REG(0x67000000);
+	}
+
+	__GXSetTmemConfig(0);
+	__GXInitGX();
+	return &FifoObj;
+}
+
+void __GXInitGX()
+{
+	GXRenderModeObj* rmode;
+	f32 identity_mtx[3][4];
+	GXColor clear = { 64, 64, 64, 255 };
+	GXColor black = { 0, 0, 0, 0 };
+	GXColor white = { 255, 255, 255, 255 };
+	u32 i;
+
 	switch (VIGetTvFormat()) {
 	case VI_NTSC:
 		rmode = &GXNtsc480IntDf;
@@ -199,11 +204,13 @@ GXFifoObj* GXInit(void* base, u32 size)
 	case VI_PAL:
 		rmode = &GXPal528IntDf;
 		break;
+	case VI_EURGB60:
+		rmode = &GXEurgb60Hz480IntDf;
+		break;
 	case VI_MPAL:
 		rmode = &GXMpal480IntDf;
 		break;
 	default:
-		ASSERTMSGLINE(0x38B, 0, "GXInit: invalid TV format");
 		rmode = &GXNtsc480IntDf;
 		break;
 	}
@@ -219,6 +226,8 @@ GXFifoObj* GXInit(void* base, u32 size)
 	GXSetNumTexGens(1);
 	GXClearVtxDesc();
 	GXInvalidateVtxCache();
+	for (i = GX_VA_POS; i <= GX_LIGHT_ARRAY; ++i)
+		GXSetArray(i, gx, 0);
 	GXSetLineWidth(6, 0);
 	GXSetPointSize(6, 0);
 	GXEnableTexOffsets(0, 0, 0);
@@ -262,18 +271,9 @@ GXFifoObj* GXInit(void* base, u32 size)
 	GXSetChanAmbColor(GX_COLOR1A1, black);
 	GXSetChanMatColor(GX_COLOR1A1, white);
 	GXInvalidateTexAll();
-	gx->nextTexRgn = 0;
-	for (i = 0; i < 8; i++)
-		GXInitTexCacheRegion(&gx->TexRegions[i], 0, i * 0x8000, 0,
-		                     0x80000 + i * 0x8000, 0);
+	gx->nextTexRgn   = 0;
 	gx->nextTexRgnCI = 0;
-	for (i = 0; i < 4; i++)
-		GXInitTexCacheRegion(&gx->TexRegionsCI[i], 0, (i * 2 + 8) * 0x8000, 0,
-		                     (i * 2 + 9) * 0x8000, 0);
-	for (i = 0; i < 16; i++)
-		GXInitTlutRegion(&gx->TlutRegions[i], 0xC0000 + i * 0x2000, 16);
-	for (i = 0; i < 4; i++)
-		GXInitTlutRegion(&gx->TlutRegions[i + 16], 0xE0000 + i * 0x8000, 64);
+
 	GXSetTexRegionCallback(__GXDefaultTexRegionCallback);
 	GXSetTlutRegionCallback(__GXDefaultTlutRegionCallback);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
@@ -359,6 +359,6 @@ GXFifoObj* GXInit(void* base, u32 size)
 	GXPokeAlphaRead(GX_READ_FF);
 	GXPokeDstAlpha(GX_DISABLE, 0);
 	GXPokeZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
-
-	return &FifoObj;
+	GXSetGPMetric(0x23, 0x16);
+	GXClearGPMetric();
 }
