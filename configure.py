@@ -698,7 +698,7 @@ config.libs = [
             Object(Matching, "dolphin/card/CARDNet.c"),
         ]),
     DolphinLib("gx", [
-            Object(NonMatching, "dolphin/gx/GXInit.c"),
+            Object(Matching, "dolphin/gx/GXInit.c"),
             Object(Matching, "dolphin/gx/GXFifo.c"),
             Object(NonMatching, "dolphin/gx/GXAttr.c"),
             Object(Matching, "dolphin/gx/GXMisc.c"),
