@@ -24,7 +24,7 @@ static THPCoeff* __THPMCUBuffer[6];
 static THPFileInfo* __THPInfo;
 static BOOL __THPInitFlag = FALSE;
 
-#define ROUNDUP(a, b) ((((s32)(a)) + ((s32)(b)-1L)) / ((s32)(b)))
+#define ROUNDUP(a, b) ((((s32)(a)) + ((s32)(b) - 1L)) / ((s32)(b)))
 
 void __THPInverseDCTY8(register THPCoeff*, register u32);
 
@@ -1231,9 +1231,7 @@ inline s32 __THPHuffDecodeTab(register THPFileInfo* info,
         stw     cnt, info->cnt;
 	}
 
-	_done: {
-		return code;
-	}
+	_done: { return code; }
 
 	{
 		register u32 maxcodebase;
