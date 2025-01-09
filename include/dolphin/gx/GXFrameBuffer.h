@@ -31,6 +31,7 @@ extern GXRenderModeObj GXPal264DsAa;
 extern GXRenderModeObj GXPal264Int;
 extern GXRenderModeObj GXPal264IntAa;
 extern GXRenderModeObj GXPal528IntDf;
+extern GXRenderModeObj GXEurgb60Hz480IntDf;
 extern GXRenderModeObj GXPal528Int;
 extern GXRenderModeObj GXPal528IntAa;
 
