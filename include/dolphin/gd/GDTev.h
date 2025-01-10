@@ -20,6 +20,13 @@ void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
                               u8 clamp, GXTevRegID out_reg,
                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
 
+void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1,
+                       u8 ref1);
+
+void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
+                   GXChannelID color0, GXTexCoordID coord1, GXTexMapID map1,
+                   GXChannelID color1);
+
 #ifdef __cplusplus
 }
 #endif

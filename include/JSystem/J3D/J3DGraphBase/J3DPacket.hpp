@@ -2,6 +2,7 @@
 #define J3D_PACKET_HPP
 
 #include <types.h>
+#include <dolphin/gd.h>
 
 class J3DMatPacket;
 class J3DDrawBuffer;
@@ -76,10 +77,7 @@ public:
 
 	u32 unk10;
 	char padding0[0xc];
-	u32 unk20;
-	char padding1[0x4];
-	u32 unk28;
-	char padding2[0x4];
+	GDLObj unk20;
 
 	struct Unknown {
 		void* unk0;

@@ -157,7 +157,7 @@ u32 J3DDrawPacket::endDL()
 {
 	GDPadCurr32();
 	OSRestoreInterrupts(sInterruptFlag);
-	unk30->unk8 = unk28 - unk20;
+	unk30->unk8 = unk20.ptr - unk20.start;
 	GDFlushCurrToMem();
 	__GDCurrentDL = 0;
 	return unk30->unk8;
