@@ -725,7 +725,7 @@ config.libs = [
             Object(Matching, "dolphin/odenotstub/odenotstub.c"),
         ]),
     DolphinLib("gd", [
-            Object(NonMatching, "dolphin/gd/GDBase.c"),
+            Object(Matching, "dolphin/gd/GDBase.c"),
             Object(NonMatching, "dolphin/gd/GDGeometry.c"),
             Object(NonMatching, "dolphin/gd/GDLight.c"),
             Object(NonMatching, "dolphin/gd/GDPixel.c"),

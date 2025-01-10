@@ -26,21 +26,6 @@ void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
                    GXAttnFn attn_fn);
 
-inline static u16 __GDLightID2Index(GXLightID id)
-{
-	u16 idx;
-
-	idx = 0x1F - __cntlzw(id);
-	if (idx > 7) {
-		idx = 0;
-	}
-	return idx;
-}
-inline static u16 __GDLightID2Offset(GXLightID id)
-{
-	return __GDLightID2Index(id) << 4;
-}
-
 #ifdef __cplusplus
 }
 #endif

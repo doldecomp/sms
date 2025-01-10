@@ -7,14 +7,23 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-void GDInitGDLObj(void*, void*, u32);
-void GDFlushCurrToMem();
-void GDPadCurr32();
-void GDOverflowed();
-void GDSetOverflowCallback();
-void GDGetOverflowCallback();
+typedef void (*GDOverflowCb)();
 
-extern void* __GDCurrentDL;
+typedef struct _GDLObj {
+	u8* start;
+	u32 length;
+	u8* ptr;
+	u8* top;
+} GDLObj;
+
+extern GDLObj* __GDCurrentDL;
+
+void GDInitGDLObj(GDLObj* dl, void* start, u32 length);
+void GDFlushCurrToMem(void);
+void GDPadCurr32(void);
+void GDOverflowed(void);
+void GDSetOverflowCallback(GDOverflowCb callback);
+void GDGetOverflowCallback();
 
 #ifdef __cplusplus
 }
