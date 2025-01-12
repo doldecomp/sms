@@ -77,8 +77,8 @@ JSUList<JKRADCommand> JKRDvdAramRipper::sDvdAramAsyncList;
 
 JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command)
 {
-	s32 compression = 0;
-	s32 uncompressedSize;
+	s32 compression;
+	u32 uncompressedSize;
 	bool bVar1          = true;
 	JKRDvdFile* dvdFile = command->mDvdFile;
 	compression         = 0;
@@ -175,8 +175,7 @@ JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command)
 		}
 
 		if (!command->mCallback) {
-			(*((JSUList<JKRADCommand>*)&sDvdAramAsyncList))
-			    .append(&command->mLink);
+			sDvdAramAsyncList.append(&command->mLink);
 		} else {
 			command->mCallback((u32)command);
 		}
@@ -201,7 +200,7 @@ bool JKRDvdAramRipper::syncAram(JKRADCommand* command, int param_1)
 		}
 	}
 
-	(*((JSUList<JKRADCommand>*)&sDvdAramAsyncList)).remove(&command->mLink);
+	sDvdAramAsyncList.remove(&command->mLink);
 	if (command->mStreamCommand) {
 		delete command->mStreamCommand;
 	}
@@ -368,7 +367,7 @@ static u8* firstSrcData()
 	u32 bufSize = szpEnd - buffer;
 	u32 length  = transLeft < bufSize ? transLeft : bufSize;
 	while (true) {
-		int result = DVDReadPrio(&srcFile->mDvdFileInfo, buffer, length, 0, 2);
+		int result = DVDReadPrio(srcFile->getFileInfo(), buffer, length, 0, 2);
 		if (result >= 0) {
 			break;
 		}
@@ -397,7 +396,7 @@ static u8* nextSrcData(u8* src)
 		transSize = transLeft;
 	}
 	while (true) {
-		s32 result = DVDReadPrio(&srcFile->mDvdFileInfo, dest, transSize,
+		s32 result = DVDReadPrio(srcFile->getFileInfo(), dest, transSize,
 		                         srcOffset, 2);
 		if (result >= 0) {
 			break;

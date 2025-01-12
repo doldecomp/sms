@@ -127,11 +127,11 @@ void JKRDecomp::decode(u8* srcBuffer, u8* dstBuffer, u32 srcLength,
 void JKRDecomp::decodeSZP(u8* src, u8* dst, u32 srcLength, u32 dstLength)
 {
 	int srcChunkOffset;
+	int offset;
 	int count;
 	int dstOffset;
 	u32 length = srcLength;
 	int linkInfo;
-	int offset;
 	int i;
 
 	int decodedSize     = READU32_BE(src, 4);

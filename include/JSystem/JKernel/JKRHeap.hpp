@@ -74,9 +74,10 @@ public:
 
 		static bool bVerbose_;
 
+		// TODO: this is all wrong
 		u32 mBuf;            // _00
 		u32 mUsedSize;       // _04
-		u32 mCheckCode;      // _08, plausibly TLocation when combined with _08
+		u32 mCheckCode;      // _08
 		u32 _0C;             // _0C
 		TArgument mArgument; // _10
 		TLocation mLocation; // _1C

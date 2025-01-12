@@ -72,6 +72,7 @@ inline JKRCompression JKRCheckCompressed(u8* pBuf)
 	return JKRDecomp::checkCompressed(pBuf);
 }
 
+// TODO: return type MIGHT be wrong here
 inline u32 JKRDecompExpandSize(u8* pBuf)
 {
 	return (pBuf[4] << 24) | (pBuf[5] << 16) | (pBuf[6] << 8) | pBuf[7];
