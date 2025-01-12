@@ -3,6 +3,10 @@
 
 #include <dolphin/types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void DCInvalidateRange(void* addr, u32 nBytes);
 void DCFlushRange(void* addr, u32 nBytes);
 void DCStoreRange(void* addr, u32 nBytes);
@@ -26,5 +30,9 @@ u32 LCQueueLength(void);
 void LCQueueWait(u32 len);
 void LCFlushQueue(void);
 void __OSCacheInit(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

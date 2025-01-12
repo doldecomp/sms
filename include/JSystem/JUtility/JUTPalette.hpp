@@ -24,7 +24,7 @@ public:
 	void storeTLUT(_GXTlut, _GXTlutFmt, JUTTransparency, u16, void*);
 	bool load();
 
-	u8 getTlutName() const { return mTlutName; }
+	u32 getTlutName() const { return mTlutName; }
 	u8 getFormat() const { return mFormat; }
 	u8 getTransparency() const { return mTransparency; }
 	u16 getNumColors() const { return mNumColors; }
