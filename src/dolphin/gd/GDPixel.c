@@ -13,8 +13,7 @@ void GDSetBlendMode(GXBlendMode type, GXBlendFactor src_factor,
 		| src_factor << 8
 		| (type == GX_BM_SUBTRACT) << 11
 		| logic_op << 12
-		| 1u << 24
-		| 1u << 30
+		| 0x41 << 24
 	);
 	// clang-format on
 }
@@ -35,8 +34,7 @@ void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
 		| src_factor << 8
 		| (type == GX_BM_SUBTRACT) << 11
 		| logic_op << 12
-		| 1u << 24
-		| 1u << 30
+		| 0x41 << 24
 	);
 	// clang-format on
 }
