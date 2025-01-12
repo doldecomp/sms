@@ -119,7 +119,7 @@ void JKRAramPiece::doneDMA(u32 requestAddress)
 	}
 
 	if (command->mCallback) {
-		(*command->mCallback)(requestAddress);
+		(*command->mCallback)((u32)command);
 	} else if (command->field_0x5C) {
 		OSSendMessage(command->field_0x5C, command, OS_MESSAGE_NOBLOCK);
 	} else {
