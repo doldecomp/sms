@@ -337,7 +337,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JKernel/JKRDvdAramRipper.cpp"),
             Object(Matching, "JSystem/JKernel/JKRDecomp.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramBlock.cpp"),
-            Object(NonMatching, "JSystem/JKernel/JKRAramPiece.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAramPiece.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramStream.cpp"),
 
             # JUtility
