@@ -472,10 +472,11 @@ s32 JKRExpHeap::resize(void* ptr, u32 size)
 	}
 	if (size > block->mAllocatedSpace) {
 		CMemBlock* foundBlock = nullptr;
+		CMemBlock* nextBlock = block + 1;
 		for (CMemBlock* freeBlock = mHead; freeBlock;
 		     freeBlock            = freeBlock->mNext) {
 			if (freeBlock
-			    == (CMemBlock*)((u32)(block + 1) + block->mAllocatedSpace)) {
+			    == (CMemBlock*)((u8*)nextBlock + block->mAllocatedSpace)) {
 				foundBlock = freeBlock;
 				break;
 			}
@@ -784,7 +785,7 @@ void JKRExpHeap::joinTwoBlocks(CMemBlock* block)
 		JREPORTF(":::: endAddr = %x\n", endAddr);
 		JREPORTF(":::: nextAddr = %x\n", nextAddr);
 		JKRGetCurrentHeap()->dump();
-		JPANIC(1824, ":::: Bad Block\n");
+		JPANIC(1808, ":::: Bad Block\n");
 	}
 	if (endAddr == nextAddr) {
 		block->mAllocatedSpace = next->mAllocatedSpace + sizeof(CMemBlock)
@@ -987,7 +988,7 @@ void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 {
 	JUT_ASSERT(p != 0);
 	JUT_ASSERT(p->getHeap() == this);
-	getState_(p); // not needed, however TP debug has it
+	u32 prevState = getState_(p); // not needed, however TP debug has it
 	setState_u32ID_(p, param_1);
 	if (param_1 <= 0xff) {
 		setState_uUsedSize_(p, getUsedSize(param_1));

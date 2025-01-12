@@ -250,7 +250,7 @@ u32 JKRMemArchive::fetchResource_subroutine(u8* src, u32 srcLength, u8* dst,
 	}
 	case JKR_COMPRESSION_YAY0:
 	case JKR_COMPRESSION_YAZ0: {
-		u32 expandedSize = JKRDecompExpandSize(src);
+		int expandedSize = JKRDecompExpandSize(src);
 		srcLength        = expandedSize;
 		if (expandedSize > dstLength) {
 			srcLength = dstLength;
@@ -266,15 +266,3 @@ u32 JKRMemArchive::fetchResource_subroutine(u8* src, u32 srcLength, u8* dst,
 
 	return 0;
 }
-
-// u32 JKRMemArchive::getExpandedResSize(const void* resource) const {
-//     SDIFileEntry* fileEntry = findPtrResource(resource);
-//     if (fileEntry == nullptr)
-//         return -1;
-
-//     if (fileEntry->isCompressed() == false) {
-//         return getResSize(resource);
-//     } else {
-//         return JKRDecompExpandSize((u8*)resource);
-//     }
-// }
