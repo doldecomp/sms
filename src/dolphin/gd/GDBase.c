@@ -2,7 +2,7 @@
 #include <dolphin/os.h>
 #include "__gd.h"
 
-GDLObj* __GDCurrentDL = NULL;
+GDLObj* __GDCurrentDL          = NULL;
 static GDOverflowCb overflowcb = NULL;
 
 void GDInitGDLObj(GDLObj* dl, void* start, u32 length)

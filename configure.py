@@ -727,10 +727,10 @@ config.libs = [
     DolphinLib("gd", [
             Object(Matching, "dolphin/gd/GDBase.c"),
             Object(NonMatching, "dolphin/gd/GDGeometry.c"),
-            Object(NonMatching, "dolphin/gd/GDLight.c"),
+            Object(Matching, "dolphin/gd/GDLight.c"),
             Object(NonMatching, "dolphin/gd/GDPixel.c"),
-            Object(NonMatching, "dolphin/gd/GDTev.c"),
-            Object(NonMatching, "dolphin/gd/GDTransform.c"),
+            Object(Matching, "dolphin/gd/GDTev.c"),
+            Object(Matching, "dolphin/gd/GDTransform.c"),
         ]),
     DolphinLib("si", [
             Object(Matching, "dolphin/si/SIBios.c"),
