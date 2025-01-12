@@ -1,5 +1,5 @@
-#ifndef JUTNAMETAB_H
-#define JUTNAMETAB_H
+#ifndef JUT_NAMETAB_HPP
+#define JUT_NAMETAB_HPP
 
 #include <types.h>
 

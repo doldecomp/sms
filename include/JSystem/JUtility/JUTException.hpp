@@ -1,5 +1,5 @@
-#ifndef _JSYSTEM_JUT_JUTEXCEPTION_H
-#define _JSYSTEM_JUT_JUTEXCEPTION_H
+#ifndef JUT_JUTEXCEPTION_HPP
+#define JUT_JUTEXCEPTION_HPP
 
 #include <dolphin/os.h>
 #include <JSystem/JUtility/JUTGamePad.hpp>

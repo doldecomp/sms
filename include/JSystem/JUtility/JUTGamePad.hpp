@@ -1,5 +1,5 @@
-#ifndef JUTGAMEPAD_H
-#define JUTGAMEPAD_H
+#ifndef JUT_GAMEPAD_HPP
+#define JUT_GAMEPAD_HPP
 
 #include <types.h>
 #include <dolphin/os.h>
