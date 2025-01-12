@@ -10,10 +10,8 @@
 
 JKRArchive* JKRArchive::check_mount_already(s32 entryNum)
 {
-	JSUList<JKRFileLoader>& volumeList = getVolumeList();
-	JSUListIterator<JKRFileLoader> iterator;
-	for (iterator = volumeList.getFirst(); iterator != volumeList.getEnd();
-	     ++iterator) {
+	for (JSUListIterator<JKRFileLoader> iterator = getVolumeList().getFirst();
+	     iterator != getVolumeList().getEnd(); ++iterator) {
 		if (iterator->getVolumeType() == 'RARC') {
 			JKRArchive* archive = (JKRArchive*)iterator.getObject();
 			if (archive->mEntryNum == entryNum) {
@@ -34,44 +32,40 @@ JKRArchive* JKRArchive::mount(const char* path,
 	if (entryNum < 0)
 		return nullptr;
 
-	JKRArchive* archive = check_mount_already(entryNum);
-	if (archive != nullptr) {
-		return archive;
-	} else {
-		int alignment
-		    = mountDirection == JKRArchive::MOUNT_DIRECTION_HEAD ? 4 : -4;
-
-		JKRArchive* archive;
-		switch (mountMode) {
-		case JKRArchive::MOUNT_MEM:
-			if ((s32)path == -1)
-				archive = nullptr;
-			else
-				archive = new (heap, alignment)
-				    JKRMemArchive(entryNum, mountDirection);
-			break;
-		case JKRArchive::MOUNT_ARAM:
-			archive = new (heap, alignment)
-			    JKRAramArchive(entryNum, mountDirection);
-			break;
-		case JKRArchive::MOUNT_DVD:
-			archive
-			    = new (heap, alignment) JKRDvdArchive(entryNum, mountDirection);
-			break;
-		case JKRArchive::MOUNT_COMP:
-			archive = new (heap, alignment)
-			    JKRCompArchive(entryNum, mountDirection);
-			break;
-		}
-
-		if (archive
-		    && archive->getMountMode() == JKRArchive::UNKNOWN_MOUNT_MODE) {
-			delete archive;
-			archive = nullptr;
-		}
-
+	if (JKRArchive* archive = check_mount_already(entryNum)) {
 		return archive;
 	}
+
+	int alignment = mountDirection == JKRArchive::MOUNT_DIRECTION_HEAD ? 4 : -4;
+
+	JKRArchive* archive;
+	switch (mountMode) {
+	case JKRArchive::MOUNT_MEM:
+		if (entryNum == -1)
+			archive = nullptr;
+		else
+			archive
+			    = new (heap, alignment) JKRMemArchive(entryNum, mountDirection);
+		break;
+	case JKRArchive::MOUNT_ARAM:
+		archive
+		    = new (heap, alignment) JKRAramArchive(entryNum, mountDirection);
+		break;
+	case JKRArchive::MOUNT_DVD:
+		archive = new (heap, alignment) JKRDvdArchive(entryNum, mountDirection);
+		break;
+	case JKRArchive::MOUNT_COMP:
+		archive
+		    = new (heap, alignment) JKRCompArchive(entryNum, mountDirection);
+		break;
+	}
+
+	if (archive && archive->getMountMode() == JKRArchive::UNKNOWN_MOUNT_MODE) {
+		delete archive;
+		archive = nullptr;
+	}
+
+	return archive;
 }
 
 bool JKRArchive::becomeCurrent(const char* path)
@@ -113,17 +107,18 @@ void* JKRArchive::getGlbResource(u32 param_0, const char* path,
                                  JKRArchive* archive)
 {
 	void* resource = nullptr;
-	if (archive) {
-		return archive->getResource(param_0, path);
-	}
 
-	JSUList<JKRFileLoader>& volumeList = getVolumeList();
-	for (JSUListIterator<JKRFileLoader> iterator = volumeList.getFirst();
-	     iterator != volumeList.getEnd(); ++iterator) {
-		if (iterator->getVolumeType() == 'RARC') {
-			resource = iterator->getResource(param_0, path);
-			if (resource)
-				break;
+	if (archive) {
+		resource = archive->getResource(param_0, path);
+	} else {
+		JSUList<JKRFileLoader>& volumeList = getVolumeList();
+		for (JSUListIterator<JKRFileLoader> iterator = volumeList.getFirst();
+		     iterator != volumeList.getEnd(); ++iterator) {
+			if (iterator->getVolumeType() == 'RARC') {
+				resource = iterator->getResource(param_0, path);
+				if (resource)
+					break;
+			}
 		}
 	}
 

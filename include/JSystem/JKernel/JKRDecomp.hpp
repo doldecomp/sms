@@ -2,7 +2,7 @@
 #define JKR_DECOMP_HPP
 
 #include <JSystem/JKernel/JKRThread.hpp>
-#include <Jsystem/JKernel/JKREnum.hpp>
+#include <JSystem/JKernel/JKREnum.hpp>
 
 class JKRAMCommand;
 class JKRDecompCommand {
