@@ -5,11 +5,6 @@
 #include <dolphin/os/OSTime.h>
 #include <dolphin/os/OSInterrupt.h>
 
-#define PAD_CHAN0_BIT 0x80000000
-#define PAD_CHAN1_BIT 0x40000000
-#define PAD_CHAN2_BIT 0x20000000
-#define PAD_CHAN3_BIT 0x10000000
-
 #define SI_ERROR_UNDER_RUN   0x0001
 #define SI_ERROR_OVER_RUN    0x0002
 #define SI_ERROR_COLLISION   0x0004

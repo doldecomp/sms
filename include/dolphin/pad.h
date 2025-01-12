@@ -3,6 +3,11 @@
 
 #include <dolphin/types.h>
 
+#define PAD_CHAN0_BIT 0x80000000
+#define PAD_CHAN1_BIT 0x40000000
+#define PAD_CHAN2_BIT 0x20000000
+#define PAD_CHAN3_BIT 0x10000000
+
 #define PAD_SPEC_0 0
 #define PAD_SPEC_1 1
 #define PAD_SPEC_2 2
