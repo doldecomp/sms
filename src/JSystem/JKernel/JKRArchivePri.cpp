@@ -90,7 +90,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findTypeResource(u32 type,
 			SDIFileEntry* fileEntry = mFileEntries + dirEntry->mFirstIdx;
 			for (int i = 0; i < dirEntry->mNum; fileEntry++, i++) {
 				if (isSameName(arcName, fileEntry->getNameOffset(),
-				               fileEntry->getNameHash())) {
+				               fileEntry->mHash)) {
 					return fileEntry;
 				}
 			}

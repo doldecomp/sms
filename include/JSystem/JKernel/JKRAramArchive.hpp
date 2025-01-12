@@ -1,7 +1,7 @@
 #ifndef JKR_ARAM_ARCHIVE_HPP
 #define JKR_ARAM_ARCHIVE_HPP
 
-#include <Jsystem/JKernel/JKRArchive.hpp>
+#include <JSystem/JKernel/JKRArchive.hpp>
 
 class JKRAramArchive : public JKRArchive {
 public:

@@ -10,6 +10,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
+#include "JSystem/JKernel/JKRArchive.hpp"
 #include "dolphin/os.h"
 
 JKRCompArchive::JKRCompArchive(s32 entryNum,
@@ -64,7 +65,7 @@ static void dummy()
 bool JKRCompArchive::open(s32 entryNum)
 {
 	mArcInfoBlock   = nullptr;
-	_60             = 0;
+	mArcFileData    = nullptr;
 	mAramPart       = nullptr;
 	_68             = 0;
 	mSizeOfMemPart  = 0;
@@ -94,7 +95,7 @@ bool JKRCompArchive::open(s32 entryNum)
 		switch (mCompression) {
 		case JKR_COMPRESSION_NONE:
 		case JKR_COMPRESSION_YAZ0: {
-			int alignment = mMountDirection == 1 ? 32 : -32;
+			int alignment = mMountDirection == MOUNT_DIRECTION_HEAD ? 32 : -32;
 			mArcInfoBlock = (SArcDataInfo*)JKRAllocFromHeap(
 			    mHeap, arcHeader->file_data_offset + mSizeOfMemPart, alignment);
 			if (mArcInfoBlock == nullptr) {
@@ -104,7 +105,7 @@ bool JKRCompArchive::open(s32 entryNum)
 				    entryNum, (u8*)mArcInfoBlock, EXPAND_SWITCH_DECOMPRESS,
 				    (u32)arcHeader->file_data_offset + mSizeOfMemPart, nullptr,
 				    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0x20, nullptr);
-				_60 = (u32)mArcInfoBlock + arcHeader->file_data_offset;
+				mArcFileData = (u8*)mArcInfoBlock + arcHeader->file_data_offset;
 
 				if (mSizeOfAramPart != 0) {
 					mAramPart = (JKRAramBlock*)JKRAllocFromAram(
@@ -136,8 +137,14 @@ bool JKRCompArchive::open(s32 entryNum)
 
 		case JKR_COMPRESSION_YAY0: {
 			u32 alignedSize = ALIGN_NEXT(mDvdFile->getFileSize(), 32);
-			int alignment   = ((mMountDirection == 1) ? 32 : -32);
-			u8* buf         = (u8*)JKRAllocFromSysHeap(alignedSize, -alignment);
+			int alignment;
+			if (mMountDirection == MOUNT_DIRECTION_HEAD)
+				alignment = 32;
+			else
+				alignment = -32;
+
+			!!alignment; // wtf???
+			u8* buf = (u8*)JKRAllocFromSysHeap(alignedSize, -alignment);
 
 			if (buf == nullptr) {
 				mMountMode = 0;
@@ -166,7 +173,8 @@ bool JKRCompArchive::open(s32 entryNum)
 						JKRHeap::copyMemory(
 						    (u8*)mArcInfoBlock, arcHeader + 1,
 						    (arcHeader->file_data_offset + mSizeOfMemPart));
-						_60 = (u32)mArcInfoBlock + arcHeader->file_data_offset;
+						mArcFileData
+						    = (u8*)mArcInfoBlock + arcHeader->file_data_offset;
 						if (mSizeOfAramPart != 0) {
 							mAramPart = (JKRAramBlock*)JKRAllocFromAram(
 							    mSizeOfAramPart, JKRAramHeap::HEAD);
@@ -216,7 +224,7 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 	if (fileEntry->mData == nullptr) {
 		u32 flag = fileEntry->getFlags();
 		if (flag & 0x10) {
-			fileEntry->mData = (void*)(_60 + fileEntry->mDataOffset);
+			fileEntry->mData = mArcFileData + fileEntry->mDataOffset;
 			if (pSize)
 				*pSize = fileEntry->mSize;
 		} else if (flag & 0x20) {
@@ -225,7 +233,7 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 			    fileEntry->mDataOffset + mAramPart->getAddress()
 			        - mSizeOfMemPart,
 			    fileEntry->mSize, mHeap,
-			    JKRArchive::convertAttrToCompressionType((u8)flag), &data);
+			    JKRConvertAttrToCompressionType((u8)flag), &data);
 			if (pSize)
 				*pSize = sz;
 			fileEntry->mData = data;
@@ -233,8 +241,8 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 			u8* data;
 			u32 resSize = JKRDvdArchive::fetchResource_subroutine(
 			    mEntryNum, _68 + fileEntry->mDataOffset, fileEntry->mSize,
-			    mHeap, JKRArchive::convertAttrToCompressionType((u8)flag),
-			    mCompression, &data);
+			    mHeap, JKRConvertAttrToCompressionType((u8)flag), mCompression,
+			    &data);
 			if (pSize)
 				*pSize = resSize;
 			fileEntry->mData = data;
@@ -250,21 +258,20 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 void* JKRCompArchive::fetchResource(void* data, u32 compressedSize,
                                     SDIFileEntry* fileEntry, u32* pSize)
 {
-	u32 size        = 0;
-	u32 fileSize    = fileEntry->mSize;
-	u32 alignedSize = ALIGN_NEXT(fileSize, 32);
+	u32 alignedSize = ALIGN_NEXT(fileEntry->mSize, 32); // r29
+	u32 size        = 0;                                // r30
 
 	if (alignedSize == 0)
 		OSPanic(__FILE__, 0x287, ":::bad resource size. size = 0\n");
 
 	if (fileEntry->mData != nullptr) {
-		if (fileSize > ALIGN_PREV(compressedSize, 0x20)) {
-			fileSize = ALIGN_PREV(compressedSize, 0x20);
+		if (alignedSize > ALIGN_PREV(compressedSize, 0x20)) {
+			alignedSize = ALIGN_PREV(compressedSize, 0x20);
 		}
 
-		JKRHeap::copyMemory(data, fileEntry->mData, fileSize);
+		JKRHeap::copyMemory(data, fileEntry->mData, alignedSize);
 
-		size = fileSize;
+		size = alignedSize;
 	} else {
 		int compression
 		    = JKRArchive::convertAttrToCompressionType(fileEntry->getFlags());
@@ -274,19 +281,20 @@ void* JKRCompArchive::fetchResource(void* data, u32 compressedSize,
 			}
 
 			if (!fileEntry->getFlag04()) {
-				JKRHeap::copyMemory(data, (u8*)_60 + fileEntry->mDataOffset,
+				JKRHeap::copyMemory(data, mArcFileData + fileEntry->mDataOffset,
 				                    alignedSize);
 			} else {
-				u32 decompressedSize
-				    = JKRDecompExpandSize((u8*)_60 + fileEntry->mDataOffset);
-				if (decompressedSize > compressedSize)
-					decompressedSize = compressedSize;
-				JKRDecompress((u8*)fileEntry->mData, (u8*)data,
-				              decompressedSize, 0);
+				u8* fileData         = mArcFileData + fileEntry->mDataOffset;
+				u32 decompressedSize = JKRDecompExpandSize(fileData);
+
+				decompressedSize = decompressedSize > compressedSize
+				                       ? compressedSize
+				                       : decompressedSize;
+				JKRDecompress(fileData, (u8*)data, decompressedSize, 0);
 			}
 
 			size = JKRMemArchive::fetchResource_subroutine(
-			    (u8*)(_60 + fileEntry->mDataOffset), alignedSize, (u8*)data,
+			    mArcFileData + fileEntry->mDataOffset, alignedSize, (u8*)data,
 			    compressedSize, compression);
 		} else if (fileEntry->getFlag20()) {
 			size = JKRAramArchive::fetchResource_subroutine(
