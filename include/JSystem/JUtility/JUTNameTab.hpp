@@ -21,17 +21,17 @@ class JUTNameTab {
 public:
 	JUTNameTab();
 	JUTNameTab(const ResNTAB* pNameTable);
-	virtual ~JUTNameTab() { }
+	~JUTNameTab() { }
 
 	void setResource(const ResNTAB* pNameTable);
 	s32 getIndex(char const*) const;
 	const char* getName(u16 index) const;
 	u16 calcKeyCode(char const* pName) const;
-	const ResNTAB* getResNameTable() const { return mpNameTable; }
+	const ResNTAB* getResNameTable() const { return mNameTable; }
 
 private:
-	const ResNTAB* mpNameTable;
-	const char* mpStrData;
+	const ResNTAB* mNameTable;
+	const char* mStrData;
 	u16 mNameNum;
 };
 
