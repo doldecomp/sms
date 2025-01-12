@@ -349,7 +349,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JUtility/JUTNameTab.cpp"),
             Object(Matching, "JSystem/JUtility/JUTPalette.cpp"),
             Object(Matching, "JSystem/JUtility/JUTRect.cpp"),
-            Object(NonMatching, "JSystem/JUtility/JUTResource.cpp"),
+            Object(Matching, "JSystem/JUtility/JUTResource.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTTexture.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTAssert.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTVideo.cpp"),
