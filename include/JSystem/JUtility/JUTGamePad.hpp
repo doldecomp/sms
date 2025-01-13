@@ -8,14 +8,23 @@
 
 typedef void (*callbackFn)(int, void*);
 
-struct JUTGamePadRecordBase {
-	virtual ~JUTGamePadRecordBase() { }
-	virtual void getStatus(PADStatus* pad) = 0;
-	virtual void write(PADStatus* pad)     = 0;
+class JUTGamePadRecord {
+public:
+	u8* read();
+	void write(PADStatus*);
+	void streamDataToPadStatus(PADStatus*, u8*);
+	void padStatusToStreamData(PADStatus*, u8*);
 
-	bool isActive() const { return mActive; }
+	bool isActive() const { return mStreamStart; }
 
-	/* 0x4 */ bool mActive;
+	/* 0x0 */ u8* mStreamStart;
+	/* 0x4 */ u8* mStreamEnd;
+	/* 0x8 */ u32 unk8;
+	/* 0xC */ u32 unkC;
+	/* 0x10 */ u8* mStream;
+	/* 0x14 */ u8 unk14;
+	/* 0x15 */ u8 unk15;
+	/* 0x18 */ u32 unk18;
 };
 
 struct JUTGamePad : public JKRDisposer {
@@ -48,7 +57,6 @@ public:
 
 	void initList();
 	static BOOL init();
-	void clear();
 	static u32 read();
 	void assign();
 	void checkResetCallback(OSTime holdTime);
@@ -92,8 +100,8 @@ public:
 
 	s16 getPortNum() const { return mPortNum; }
 
-	JUTGamePadRecordBase* getPadReplay() const { return mPadReplay; }
-	JUTGamePadRecordBase* getPadRecord() const { return mPadRecord; }
+	JUTGamePadRecord* getPadReplay() const { return mPadReplay; }
+	JUTGamePadRecord* getPadRecord() const { return mPadRecord; }
 
 	u32 testTrigger(u32 button) const { return mButton.mTrigger & button; }
 
@@ -103,7 +111,7 @@ public:
 	}
 
 	void stopMotorWave() { mRumble.stopPatternedRumbleAtThePeriod(); }
-	void stopMotor() { mRumble.stopMotor(mPortNum, false); }
+	void stopMotor() { mRumble.stopMotor(mPortNum); }
 	void stopMotorHard() { mRumble.stopMotorHard(mPortNum); }
 
 	static s8 getPortStatus(u32 port) { return mPadStatus[port].err; }
@@ -147,15 +155,12 @@ public:
 	}; // Size: 0x4
 
 	struct CStick {
-		static f32 sPressPoint;
-		static f32 sReleasePoint;
-
 		CStick() { clear(); }
 		void clear();
 		void clear(JUTGamePad* pad);
 		u32 update(s8 x, s8 u, JUTGamePad::EStickMode mode,
-		           JUTGamePad::EWhichStick stick, u32 buttons);
-		u32 getButton(u32 buttons);
+		           JUTGamePad::EWhichStick stick);
+		u32 getButton();
 
 		/* 0x0 */ f32 mPosX;
 		/* 0x4 */ f32 mPosY;
@@ -172,7 +177,7 @@ public:
 
 		static u32 sChannelMask[4];
 		static bool mStatus[4];
-		static u32 mEnabled;
+		static u32 mEnable;
 
 		enum ERumble {
 			VAL_0 = 0,
@@ -183,17 +188,16 @@ public:
 		void clear();
 		void clear(JUTGamePad* pad);
 		static void startMotor(int port);
-		static void stopMotor(int port, bool hard_stop);
+		static void stopMotor(int port);
+		static void stopMotorHard(int port);
 		void update(s16 port);
 		void triggerPatternedRumble(u32 length);
 		void startPatternedRumble(void* data, ERumble rumble, u32 length);
 		void stopPatternedRumble(s16 port);
 		void stopPatternedRumbleAtThePeriod();
-		static void setEnabled(u32 mask);
+		static void setEnable(u32 mask);
 
-		void stopMotorHard(int port) { stopMotor(port, true); }
-
-		static bool isEnabled(u32 mask) { return mEnabled & mask; }
+		static bool isEnabled(u32 mask) { return mEnable & mask; }
 
 		static bool isEnabledPort(int port)
 		{
@@ -205,7 +209,7 @@ public:
 		/* 0x04 */ u32 mLength;
 		/* 0x08 */ u8* mPattern;
 		/* 0x0C */ u32 mFrameCount;
-		/* 0x10 */ u8* field_0x10;
+		/* 0x10 */ s16 unk10;
 	}; // Size: 0x14
 
 	void startMotorWave(void* data, CRumble::ERumble rumble, u32 length)
@@ -213,18 +217,19 @@ public:
 		mRumble.startPatternedRumble(data, rumble, length);
 	}
 
+	void setButtonRepeat(u32, u32, u32);
+
 	static JSUList<JUTGamePad> mPadList;
 	static bool mListInitialized;
 	static PADStatus mPadStatus[4];
 	static CButton mPadButton[4];
 	static CStick mPadMStick[4];
 	static CStick mPadSStick[4];
-	static EStickMode sStickMode;
-	static int sClampMode;
+	static EStickMode mStickMode;
 	static u8 mPadAssign[4];
-	static u32 sSuppressPadReset;
+	static u32 mSuppressPadReset;
 	static s32 sAnalogMode;
-	static u32 sRumbleSupported;
+	static u32 mRumbleSupported;
 
 	/* 0x18 */ CButton mButton;
 	/* 0x48 */ CStick mMainStick;
@@ -233,33 +238,11 @@ public:
 	/* 0x7C */ s16 mPortNum;
 	/* 0x7E */ s8 mErrorStatus;
 	/* 0x80 */ JSULink<JUTGamePad> mLink;
-	/* 0x90 */ JUTGamePadRecordBase* mPadRecord;
-	/* 0x94 */ JUTGamePadRecordBase* mPadReplay;
+	/* 0x90 */ JUTGamePadRecord* mPadRecord;
+	/* 0x94 */ JUTGamePadRecord* mPadReplay;
 	/* 0x98 */ C3ButtonReset mButtonReset;
 	/* 0x9C */ u8 field_0x9c[4];
 	/* 0xA0 */ OSTime mResetHoldStartTime;
-	/* 0xA8 */ u8 field_0xa8;
-};
-
-struct JUTGamePadLongPress {
-	static JSUList<JUTGamePadLongPress> sPatternList;
-	void checkCallback(int port, u32 hold_time);
-
-	u32 getMaskPattern() const { return mMaskPattern; }
-	u32 getPattern() const { return mPattern; }
-	bool isValid() const { return mValid; }
-
-	/* 0x00 */ u8 field_0x0[0x10];
-	/* 0x10 */ bool mValid;
-	/* 0x11 */ bool field_0x11;
-	/* 0x14 */ u32 mPattern;
-	/* 0x18 */ u32 mMaskPattern;
-	/* 0x1C */ u32 mThreshold;
-	/* 0x20 */ bool mLongPressStatus[4];
-	/* 0x28 */ OSTime mStartHoldTime[4];
-	/* 0x48 */ bool field_0x48[4];
-	/* 0x4C */ void (*mCallback)(s32, JUTGamePadLongPress*, s32);
-	/* 0x50 */ s32 field_0x50;
 };
 
 #endif
