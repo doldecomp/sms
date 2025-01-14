@@ -68,6 +68,8 @@ JUTGamePad::EStickMode JUTGamePad::mStickMode = EStickMode1;
 
 u32 JUTGamePad::read()
 {
+	PADRead(mPadStatus);
+	PADClamp(mPadStatus);
 	u32 reset_mask = 0;
 	u32 bittest;
 	for (int i = 0; i < 4; i++) {
@@ -100,38 +102,24 @@ u32 JUTGamePad::read()
 		}
 	}
 
-	u32 unkR30 = 12;
 	for (JSUListIterator<JUTGamePad> pad(mPadList.getFirst());
 	     pad != mPadList.getEnd(); pad++) {
 		if (pad->getPadReplay() != nullptr) {
-			if (!pad->getPadReplay()->isActive()) {
+			u8* data = pad->getPadReplay()->read();
+			if (!data) {
 				pad->mMainStick.update(0, 0, mStickMode, EMainStick);
 				pad->mSubStick.update(0, 0, mStickMode, ESubStick);
 				pad->mButton.update(nullptr, 0);
 			} else {
-				u32 dataSize = 0;
-				u8 data[0x120];
-				u8* dataPtr = data;
-				if (unkR30 < 8) {
-					++dataSize;
-					data[0] = 0;
-					data[1] = 0;
-					data[2] = 0;
-					data[3] = 0;
-					data[4] = 0;
-					data[5] = 0;
-					data[6] = 0;
-					data[7] = 0;
-					dataPtr += 8;
-				}
-
-				while (dataSize < 12)
-					*dataPtr++ = 0, ++dataSize;
-
 				PADStatus status;
 
-				((JUTGamePadRecord*)pad->mPadRecord)
-				    ->streamDataToPadStatus(&status, data);
+				{
+					u8* b = (u8*)&status;
+					for (int i = 0; i < 12; ++i)
+						*b++ = 0;
+				}
+
+				pad->mPadReplay->streamDataToPadStatus(&status, data);
 
 				u32 stick_status;
 				stick_status
@@ -352,8 +340,6 @@ u32 JUTGamePad::CStick::update(s8 x, s8 y, JUTGamePad::EStickMode mode,
 {
 	s32 clamp = stick == EMainStick ? 54 : 42;
 
-	mRawX  = x;
-	mRawY  = y;
 	mPosX  = (f32)x / (f32)clamp;
 	mPosY  = (f32)y / (f32)clamp;
 	mValue = std::sqrtf((mPosX * mPosX) + (mPosY * mPosY));
@@ -367,15 +353,7 @@ u32 JUTGamePad::CStick::update(s8 x, s8 y, JUTGamePad::EStickMode mode,
 	}
 
 	if (mValue > 0.0f) {
-		if (mPosY == 0.0f) {
-			if (mPosX > 0.0f) {
-				mAngle = 0x4000;
-			} else {
-				mAngle = -0x4000;
-			}
-		} else {
-			mAngle = (0x8000 / 3.1415926f) * std::atan2f(mPosX, -mPosY);
-		}
+		mAngle = 32768.0f * std::atan2f(mPosX, -mPosY) / 3.1415926;
 	}
 
 	u32 button_shift = stick == EMainStick ? 0x18 : 0x10;
@@ -384,23 +362,22 @@ u32 JUTGamePad::CStick::update(s8 x, s8 y, JUTGamePad::EStickMode mode,
 
 u32 JUTGamePad::CStick::getButton()
 {
-	u32 buttons; // was mPadButton[i].mButton?
-	u32 button = buttons & 0xF;
+	u32 button = 0;
 
 	if (-0.25f < mPosX && mPosX < 0.25f) {
 		button = button & ~0x3;
 	} else if (mPosX <= -0.5f) {
-		button = (button & ~0x2) | 1;
+		button = button | 1;
 	} else if (mPosX >= 0.5f) {
-		button = (button & ~0x1) | 2;
+		button = button | 2;
 	}
 
 	if (-0.25f < mPosY && mPosY < 0.25f) {
 		button = button & ~0xC;
 	} else if (mPosY <= -0.5f) {
-		button = (button & ~0x8) | 4;
+		button = button | 4;
 	} else if (mPosY >= 0.5f) {
-		button = (button & ~0x4) | 8;
+		button = button | 8;
 	}
 
 	return button;
@@ -412,7 +389,6 @@ void JUTGamePad::CRumble::clear()
 	mLength     = 0;
 	mPattern    = nullptr;
 	mFrameCount = 0;
-	unk10       = 0;
 	mEnable = (PAD_CHAN3_BIT | PAD_CHAN2_BIT | PAD_CHAN1_BIT | PAD_CHAN0_BIT);
 }
 
@@ -427,7 +403,7 @@ void JUTGamePad::CRumble::clear(JUTGamePad* pad)
 
 void JUTGamePad::CRumble::startMotor(int port)
 {
-	if (isEnabledPort(port)) {
+	if (isEnabled(channel_mask[port])) {
 		PADControlMotor(port, PAD_MOTOR_RUMBLE);
 		mStatus[port] = true;
 	}
@@ -435,7 +411,7 @@ void JUTGamePad::CRumble::startMotor(int port)
 
 void JUTGamePad::CRumble::stopMotor(int port)
 {
-	if (isEnabledPort(port)) {
+	if (isEnabled(channel_mask[port])) {
 		PADControlMotor(port, PAD_MOTOR_STOP);
 		mStatus[port] = false;
 	}
@@ -443,7 +419,7 @@ void JUTGamePad::CRumble::stopMotor(int port)
 
 void JUTGamePad::CRumble::stopMotorHard(int port)
 {
-	if (isEnabledPort(port)) {
+	if (isEnabled(channel_mask[port])) {
 		PADControlMotor(port, PAD_MOTOR_STOP_HARD);
 		mStatus[port] = false;
 	}
@@ -451,18 +427,16 @@ void JUTGamePad::CRumble::stopMotorHard(int port)
 
 static bool getNumBit(u8* pattern, int index)
 {
-	u8 bit = pattern[index >> 3] & (0x80 >> (index & 7));
-	return bit != 0;
+	return pattern[index >> 3] & (0x80 >> (index & 7));
 }
 
 void JUTGamePad::CRumble::update(s16 port)
 {
-	if (isEnabledPort(port) == false) {
+	if (!isEnabled(channel_mask[port])) {
 		mFrame      = 0;
 		mLength     = 0;
 		mPattern    = nullptr;
 		mFrameCount = 0;
-		unk10       = 0;
 	}
 
 	if (mLength == 0) {
@@ -479,21 +453,11 @@ void JUTGamePad::CRumble::update(s16 port)
 		return;
 	} else {
 		bool enabled = getNumBit(mPattern, mFrame % mFrameCount);
-		u8 status    = mStatus[port] != false;
 
-		if (enabled && !status) {
+		if (enabled && !mStatus[port]) {
 			startMotor(port);
-		} else if (!enabled) {
-			bool hard_stop = false;
-			// if (field_0x10) {
-			// 	hard_stop = getNumBit(field_0x10, mFrame % mFrameCount);
-			// }
-
-			if (status) {
-				stopMotor(port);
-			} else if (hard_stop) {
-				stopMotorHard(port);
-			}
+		} else if (!enabled && mStatus[port]) {
+			stopMotor(port);
 		}
 	}
 
@@ -513,24 +477,27 @@ JUTGamePad* JUTGamePad::getGamePad(int port)
 	return nullptr;
 }
 
+void JUTGamePad::CRumble::stopPatternedRumble(s16 port)
+{
+	mLength = 0;
+	stopMotorHard(port);
+}
+
 void JUTGamePad::CRumble::setEnable(u32 mask)
 {
-	for (int i = 0; i < 4; i++) {
-		if ((mEnable & channel_mask[i]) == 0) {
-			if (mStatus[i]) {
-				stopMotor(i);
-			}
+	for (int i = 0; i < 4; ++i) {
+		if (mEnable & channel_mask[i])
+			continue;
 
-			JUTGamePad* pad = getGamePad(i);
-			if (pad != nullptr) {
-				pad->mRumble.stopPatternedRumble(pad->mPortNum);
-			}
-		}
+		if (mStatus[i])
+			stopMotor(i);
+
+		if (JUTGamePad* pad = getGamePad(i))
+			pad->mRumble.stopPatternedRumble(pad->mPortNum);
 	}
 
-	mEnable
-	    = (mask
-	       & (PAD_CHAN3_BIT | PAD_CHAN2_BIT | PAD_CHAN1_BIT | PAD_CHAN0_BIT));
+	mEnable = mask
+	          & (PAD_CHAN3_BIT | PAD_CHAN2_BIT | PAD_CHAN1_BIT | PAD_CHAN0_BIT);
 }
 
 void JUTGamePad::CButton::setRepeat(u32 mask, u32 delay, u32 rate)
@@ -544,25 +511,30 @@ void JUTGamePad::CButton::setRepeat(u32 mask, u32 delay, u32 rate)
 
 void JUTGamePad::setButtonRepeat(u32 mask, u32 delay, u32 rate)
 {
-	mButton.mRepeatStart = 0;
-	mButton.mRepeatCount = 0;
-	mButton.mRepeatMask  = mask;
-	mButton.mRepeatDelay = delay;
-	mButton.mRepeatRate  = rate;
+	mButton.setRepeat(mask, delay, rate);
 
-	s16 unk10 = mRumble.unk10;
-	if (unk10 == -1)
+	if (mPortNum == -1)
 		return;
 
-	mPadButton[unk10].setRepeat(mask, delay, rate);
+	mPadButton[mPortNum].setRepeat(mask, delay, rate);
 }
 
 bool JUTGamePad::recalibrate(u32 mask)
 {
-	for (int i = 0; i < 4; i++) {
-		if (mSuppressPadReset & channel_mask[i]) {
-			mask &= channel_mask[i] ^ 0xFFFFFFFF;
-		}
+	const u32 const_channel_mask[4]
+	    = { PAD_CHAN0_BIT, PAD_CHAN1_BIT, PAD_CHAN2_BIT, PAD_CHAN3_BIT };
+
+	if (mSuppressPadReset & const_channel_mask[0]) {
+		mask &= const_channel_mask[0] ^ 0xFFFFFFFF;
+	}
+	if (mSuppressPadReset & const_channel_mask[1]) {
+		mask &= const_channel_mask[1] ^ 0xFFFFFFFF;
+	}
+	if (mSuppressPadReset & const_channel_mask[2]) {
+		mask &= const_channel_mask[2] ^ 0xFFFFFFFF;
+	}
+	if (mSuppressPadReset & const_channel_mask[3]) {
+		mask &= const_channel_mask[3] ^ 0xFFFFFFFF;
 	}
 
 	return PADRecalibrate(mask);
@@ -570,32 +542,28 @@ bool JUTGamePad::recalibrate(u32 mask)
 
 u8* JUTGamePadRecord::read()
 {
-	u8* uVar5;
-
-	uVar5 = mStream;
-	if (uVar5 < mStreamStart)
+	u8* currPtr = mStream;
+	if (currPtr < mStreamStart)
 		return 0;
 
-	if ((uVar5 >= mStreamEnd) || unkC <= (mStream - mStreamStart) / unk18) {
-		uVar5 = 0;
+	if ((currPtr >= mStreamEnd)
+	    || mRecordedStates <= (mStream - mStreamStart) / mStep)
+		currPtr = 0;
+
+	if (currPtr != 0) {
+		u8* next = mStream + mStep;
+		if (next < mStreamStart)
+			next = mStreamStart;
+		if (next > mStreamEnd)
+			next = mStreamEnd;
+		mStream = next;
 	}
 
-	if (uVar5 != 0) {
-		u8* uVar1 = mStream + unk18;
-		if (mStream + unk18 < mStreamStart) {
-			uVar1 = mStreamStart;
-		}
-		if (uVar1 > mStreamEnd) {
-			uVar1 = mStreamEnd;
-		}
-		mStream = uVar1;
-	}
-
-	if ((uVar5 >= mStreamEnd) || unkC <= (mStream - mStreamStart) / unk18) {
+	if ((currPtr >= mStreamEnd)
+	    || mRecordedStates <= (mStream - mStreamStart) / mStep)
 		unk14 = 1;
-	}
 
-	return uVar5;
+	return currPtr;
 }
 
 void JUTGamePadRecord::write(PADStatus* status)
@@ -605,73 +573,68 @@ void JUTGamePadRecord::write(PADStatus* status)
 
 	padStatusToStreamData(status, mStream);
 
-	u8* uVar1 = mStream + unk18;
-	if (uVar1 < mStreamStart)
-		uVar1 = mStreamStart;
-
-	if (mStreamEnd > uVar1)
-		uVar1 = mStreamEnd;
-
-	mStream = uVar1;
+	u8* next = mStream + mStep;
+	if (next < mStreamStart)
+		next = mStreamStart;
+	if (next > mStreamEnd)
+		next = mStreamEnd;
+	mStream = next;
 
 	if (mStream >= mStreamEnd)
 		unk14 = 1;
 
-	u32 uVar2 = (mStream - mStreamStart) / unk18;
-	if (unkC < uVar2) {
-		unkC = uVar2;
+	u32 currRecordedStates = (mStream - mStreamStart) / mStep;
+	if (mRecordedStates < currRecordedStates) {
+		mRecordedStates = currRecordedStates;
 	}
 }
 
 void JUTGamePadRecord::streamDataToPadStatus(PADStatus* status, u8* data)
 {
-	if (unk15 & 1) {
+	if (mStateFlags & 1) {
 		status->button = *(u16*)data;
 		data += 2;
 	}
-	if (unk15 & 2) {
-		status->stickX = data[0];
-		status->stickY = data[1];
-		data += 2;
+	if (mStateFlags & 2) {
+		status->stickX = *data++;
+		status->stickY = *data++;
 	}
-	if (unk15 & 4) {
-		status->substickX = data[0];
-		status->substickY = data[1];
-		data += 2;
+	if (mStateFlags & 4) {
+		status->substickX = *data++;
+		status->substickY = *data++;
 	}
-	if (unk15 & 8) {
-		status->triggerLeft  = data[0];
-		status->triggerRight = data[1];
-		data += 2;
+	if (mStateFlags & 8) {
+		status->triggerLeft  = *data++;
+		status->triggerRight = *data++;
 	}
-	if (unk15 & 0x10) {
-		status->analogA = data[0];
-		status->analogB = data[1];
+	if (mStateFlags & 0x10) {
+		status->analogA = *data++;
+		status->analogB = *data++;
 	}
 }
 
 void JUTGamePadRecord::padStatusToStreamData(PADStatus* status, u8* data)
 {
-	if (unk15 & 1) {
+	if (mStateFlags & 1) {
 		*(u16*)data = status->button;
 		data += 2;
 	}
-	if (unk15 & 2) {
+	if (mStateFlags & 2) {
 		data[0] = status->stickX;
 		data[1] = status->stickY;
 		data += 2;
 	}
-	if (unk15 & 4) {
+	if (mStateFlags & 4) {
 		data[0] = status->substickX;
 		data[1] = status->substickY;
 		data += 2;
 	}
-	if (unk15 & 8) {
+	if (mStateFlags & 8) {
 		data[0] = status->triggerLeft;
 		data[1] = status->triggerRight;
 		data += 2;
 	}
-	if (unk15 & 0x10) {
+	if (mStateFlags & 0x10) {
 		data[0] = status->analogA;
 		data[1] = status->analogB;
 	}
