@@ -20,11 +20,11 @@ public:
 	/* 0x0 */ u8* mStreamStart;
 	/* 0x4 */ u8* mStreamEnd;
 	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
+	/* 0xC */ u32 mRecordedStates;
 	/* 0x10 */ u8* mStream;
 	/* 0x14 */ u8 unk14;
-	/* 0x15 */ u8 unk15;
-	/* 0x18 */ u32 unk18;
+	/* 0x15 */ u8 mStateFlags;
+	/* 0x18 */ u32 mStep;
 };
 
 struct JUTGamePad : public JKRDisposer {
@@ -209,7 +209,6 @@ public:
 		/* 0x04 */ u32 mLength;
 		/* 0x08 */ u8* mPattern;
 		/* 0x0C */ u32 mFrameCount;
-		/* 0x10 */ s16 unk10;
 	}; // Size: 0x14
 
 	void startMotorWave(void* data, CRumble::ERumble rumble, u32 length)

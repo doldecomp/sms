@@ -24,6 +24,7 @@ float acosf(float);
 double asin(double);
 double atan(double);
 double atan2(double, double);
+float atan2f(float, float);
 double ceil(double);
 double copysign(double, double);
 double cos(double);
@@ -74,13 +75,13 @@ extern inline double sqrt(double x)
 };
 
 namespace std {
-inline float fabsf(float f) { return fabs(f); }
-inline float abs(float f) { return fabsf(f); }
-inline float fmodf(float x, float y) { return fmod(x, y); }
-inline float atan2f(float y, float x) { return (float)atan2(y, x); }
-inline float sinf(float x) { return sin(x); }
-inline float cosf(float x) { return cos(x); }
-inline float tanf(float x) { return tan(x); }
+inline float fabsf(float f) { return ::fabs(f); }
+inline float abs(float f) { return ::fabs(f); }
+inline float fmodf(float x, float y) { return ::fmod(x, y); }
+inline float atan2f(float y, float x) { return ::atan2f(y, x); }
+inline float sinf(float x) { return ::sin(x); }
+inline float cosf(float x) { return ::cos(x); }
+inline float tanf(float x) { return ::tan(x); }
 
 extern inline float sqrtf(float x)
 {
