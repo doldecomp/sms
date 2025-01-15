@@ -5,12 +5,6 @@
 
 JUTDirectPrint* JUTDirectPrint::sDirectPrint;
 
-JUTDirectPrint::JUTDirectPrint()
-{
-	changeFrameBuffer(NULL, 0, 0);
-	setCharColor(0xff, 0xff, 0xff);
-}
-
 JUTDirectPrint* JUTDirectPrint::start()
 {
 	if (!sDirectPrint) {
@@ -20,9 +14,11 @@ JUTDirectPrint* JUTDirectPrint::start()
 	return sDirectPrint;
 }
 
+JUTDirectPrint::JUTDirectPrint() { changeFrameBuffer(NULL, 0, 0); }
+
 void JUTDirectPrint::erase(int x, int y, int width, int height)
 {
-	if (!this->field_0x00) {
+	if (!field_0x00) {
 		return;
 	}
 
@@ -113,39 +109,20 @@ void JUTDirectPrint::drawChar(int position_x, int position_y, int ch)
 	u16* pixel
 	    = mFrameBuffer + mStride * position_y * scale_y + position_x * scale_x;
 	for (int y = 0; y < 7; y++) {
-		u32 data = *font_data << col_index;
-		font_data += 1;
+		u32 data = *font_data++ << col_index;
 
-		if (scale_x == 1) {
-			data = (data & 0xfc000000) >> 1;
-		} else {
-			u32 a = twiceBit[(data >> 26) & 3];
-			u32 b = twiceBit[(data >> 28) & 3] << 4;
-			u32 c = twiceBit[(data >> 30) & 3] << 8;
-			data  = (a | b | c) << 19;
-		}
+		for (int x = 0; x < 6; x++) {
+			u16 value = (data & 0x80000000) ? 0xeb80 : 0x80;
+			for (int y2 = 0; y2 < scale_y; y2++) {
+				int tmp = mStride * y2;
+				for (int x2 = 0; x2 < scale_x; x2++) {
+					u16* row = &pixel[tmp];
+					row[x2]  = value;
+				}
+			}
 
-		for (int x = 0; x < scale_x * 6; x += 2) {
-			u16 value;
-
-			value    = (((data & 0x40000000) ? mCharColor_Y : 0)
-                     | ((data & 0x80000000) ? mCharColor_Cb4 : 32)
-                           + ((data & 0x40000000) ? mCharColor_Cb2 : 64)
-                           + ((data & 0x20000000) ? mCharColor_Cb4 : 32));
-			pixel[0] = value;
-			if (scale_y > 1)
-				pixel[mStride] = value;
-
-			value    = (((data & 0x20000000) ? mCharColor_Y : 0)
-                     | ((data & 0x40000000) ? mCharColor_Cr4 : 32)
-                           + ((data & 0x20000000) ? mCharColor_Cr2 : 64)
-                           + ((data & 0x10000000) ? mCharColor_Cr4 : 32));
-			pixel[1] = value;
-			if (scale_y > 1)
-				pixel[1 + mStride] = value;
-
-			pixel += 2;
-			data <<= 2;
+			data <<= 1;
+			pixel += scale_x;
 		}
 
 		pixel += mStride * scale_y - 6 * scale_x;
@@ -158,7 +135,7 @@ void JUTDirectPrint::changeFrameBuffer(void* frameBuffer, u16 width, u16 height)
 	mFrameBuffer       = (u16*)frameBuffer;
 	mFrameBufferWidth  = width;
 	mFrameBufferHeight = height;
-	mStride            = ALIGN_NEXT(width & 0xFFFF, 16);
+	mStride            = ALIGN_NEXT(width, 16);
 	mFrameBufferSize   = (u32)mStride * (u32)mFrameBufferHeight * 2;
 }
 
@@ -167,9 +144,6 @@ inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
                                      bool clear)
 {
 	char buffer[256];
-	if (!mFrameBuffer) {
-		return;
-	}
 
 	int buffer_length = vsnprintf(buffer, ARRAY_COUNT(buffer), format, args);
 	u16 x             = position_x;
@@ -185,7 +159,7 @@ inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
 				position_x = x;
 				position_y += 7;
 			} else if (codepoint == 0xfd) {
-				s32 current_position = (int)position_x;
+				s32 current_position = position_x;
 				s32 tab              = (current_position - x + 0x2f) % 0x30;
 				position_x           = current_position + 0x30 - tab;
 			} else {
@@ -194,10 +168,14 @@ inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
 				}
 				position_x += 6;
 			}
+			if (position_x > 310) {
+				position_x = 16;
+				position_y += 8;
+			}
 		}
 	}
 
-	DCStoreRange(mFrameBuffer, mFrameBufferSize);
+	DCFlushRange(mFrameBuffer, mFrameBufferSize);
 }
 
 void JUTDirectPrint::drawString(u16 position_x, u16 position_y, char* text)

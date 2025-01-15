@@ -472,7 +472,7 @@ s32 JKRExpHeap::resize(void* ptr, u32 size)
 	}
 	if (size > block->mAllocatedSpace) {
 		CMemBlock* foundBlock = nullptr;
-		CMemBlock* nextBlock = block + 1;
+		CMemBlock* nextBlock  = block + 1;
 		for (CMemBlock* freeBlock = mHead; freeBlock;
 		     freeBlock            = freeBlock->mNext) {
 			if (freeBlock
