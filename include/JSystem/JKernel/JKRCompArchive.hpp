@@ -24,7 +24,7 @@ public:
 
 	// _00     = VTBL
 	// _00-_5C = JKRArchive
-	u8* mArcFileData;                 // _60
+	u8* mArcFileData;        // _60
 	JKRAramBlock* mAramPart; // _64
 	u32 _68;                 // _68
 	JKRFile* mDvdFile;       // _6C
