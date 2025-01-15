@@ -16,9 +16,7 @@ JUTGamePad::JUTGamePad(EPadPort port)
     , mLink(this)
 {
 	mPortNum = port;
-	if (mPortNum >= 0) {
-		mPadAssign[port]++;
-	}
+	mPadAssign[port]++;
 
 	initList();
 	mPadList.append(&mLink);
