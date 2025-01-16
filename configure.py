@@ -465,8 +465,8 @@ config.libs = [
             Object(NonMatching, "JSystem/J2D/J2DScreen.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DTextBox.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DWindow.cpp"),
-            Object(NonMatching, "JSystem/J2D/J2DGrafContext.cpp"),
-            Object(NonMatching, "JSystem/J2D/J2DOrthoGraph.cpp"),
+            Object(Matching, "JSystem/J2D/J2DGrafContext.cpp"),
+            Object(Matching, "JSystem/J2D/J2DOrthoGraph.cpp"),
 
             # J3D
             # J3DGraphBase

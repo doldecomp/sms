@@ -4,22 +4,18 @@
 J2DGrafContext::J2DGrafContext(const JUTRect& rect)
     : mBounds(rect)
     , mScissorBounds(rect)
-    , unk3C(0)
-    , unk40(0)
+    , mPrevPos(0, 0)
 {
-	JUtility::TColor col;
-	setColor(col, col, col, col);
+	setColor(JUtility::TColor());
 	setLineWidth(6);
 }
 
 J2DGrafContext::J2DGrafContext(int x, int y, int width, int height)
-    : mBounds(x, y, x + width, x + height)
-    , mScissorBounds(x, y, x + width, x + height)
-    , unk3C(0)
-    , unk40(0)
+    : mBounds(x, y, x + width, y + height)
+    , mScissorBounds(x, y, x + width, y + height)
+    , mPrevPos(0, 0)
 {
-	JUtility::TColor col;
-	setColor(col, col, col, col);
+	setColor(JUtility::TColor());
 	setLineWidth(6);
 }
 
@@ -100,9 +96,9 @@ void J2DGrafContext::setColor(JUtility::TColor colorTL,
 	mColorTR              = colorTR;
 	mColorBR              = colorBR;
 	mColorBL              = colorBL;
-	field_0xb0.mType      = GX_BM_BLEND;
-	field_0xb0.mSrcFactor = GX_BL_SRCALPHA;
-	field_0xb0.mDstFactor = GX_BL_INVSRCALPHA;
+	field_0xb4.mType      = GX_BM_BLEND;
+	field_0xb4.mSrcFactor = GX_BL_SRCALPHA;
+	field_0xb4.mDstFactor = GX_BL_INVSRCALPHA;
 	mLinePart.mType       = GX_BM_BLEND;
 	mLinePart.mSrcFactor  = GX_BL_SRCALPHA;
 	mLinePart.mDstFactor  = GX_BL_INVSRCALPHA;
@@ -112,9 +108,9 @@ void J2DGrafContext::setColor(JUtility::TColor colorTL,
 	if ((mColorTL & 0xFF) != 0xFF) {
 		return;
 	}
-	field_0xb0.mType      = GX_BM_NONE;
-	field_0xb0.mSrcFactor = GX_BL_ONE;
-	field_0xb0.mDstFactor = GX_BL_ZERO;
+	field_0xb4.mType      = GX_BM_NONE;
+	field_0xb4.mSrcFactor = GX_BL_ONE;
+	field_0xb4.mDstFactor = GX_BL_ZERO;
 	if ((mColorBR & 0xFF) != 0xFF) {
 		return;
 	}

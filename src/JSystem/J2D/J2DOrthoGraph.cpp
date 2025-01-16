@@ -11,8 +11,7 @@ J2DOrthoGraph::J2DOrthoGraph()
 J2DOrthoGraph::J2DOrthoGraph(const JUTRect& rect)
     : J2DGrafContext(rect)
 {
-	JUTRect ortho(0, 0, rect.getWidth(), rect.getHeight());
-	mOrtho = ortho;
+	mOrtho = JUTRect(0, 0, rect.getWidth(), rect.getHeight());
 	mNear  = -1.0f;
 	mFar   = 1.0f;
 	setLookat();
@@ -22,8 +21,7 @@ J2DOrthoGraph::J2DOrthoGraph(const JUTRect& rect)
 J2DOrthoGraph::J2DOrthoGraph(int x, int y, int width, int height)
     : J2DGrafContext(x, y, width, height)
 {
-	JUTRect ortho(0, 0, width, height);
-	mOrtho = ortho;
+	mOrtho = JUTRect(0, 0, width, height);
 	mNear  = -1.0f;
 	mFar   = 1.0f;
 	setLookat();
