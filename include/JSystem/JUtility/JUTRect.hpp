@@ -26,4 +26,4 @@ public:
 	int y2; // _0C
 };
 
-#endif // JUTRECT_HPP
+#endif

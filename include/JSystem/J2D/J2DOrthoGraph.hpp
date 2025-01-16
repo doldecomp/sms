@@ -8,12 +8,12 @@ public:
 	J2DOrthoGraph();
 	J2DOrthoGraph(const JUTRect&);
 	J2DOrthoGraph(int x, int y, int width, int height);
-	void setOrtho(JGeometry::TBox2<f32> const& bounds, f32 far, f32 near);
+	void setOrtho(const JUTRect&, float, float);
+	void setOrigin(int, int);
 	void scissorBounds(JUTRect*, JUTRect*);
 
 	virtual ~J2DOrthoGraph() { }
 	virtual void setPort();
-	virtual s32 getGrafType() const { return 1; }
 	virtual void setLookat();
 
 	f32 getWidthPower() const
@@ -27,8 +27,7 @@ public:
 
 	void setOrtho(f32 x, f32 y, f32 width, f32 height, f32 far, f32 near)
 	{
-		JGeometry::TBox2<f32> ortho(x, y, x + width, y + height);
-		setOrtho(ortho, far, near);
+		setOrtho(JUTRect(x, y, x + width, y + height), far, near);
 	}
 
 private:
