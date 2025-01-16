@@ -3,59 +3,62 @@
 
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
+#include <JSystem/JUtility/JUTRect.hpp>
 #include <dolphin/mtx.h>
 #include <dolphin/types.h>
 
 class J2DGrafContext {
 public:
 	struct Blend {
-		/* 0x0 */ u8 mType;
-		/* 0x1 */ u8 mSrcFactor;
-		/* 0x2 */ u8 mDstFactor;
+		GXBlendMode mType;
+		GXBlendFactor mSrcFactor;
+		GXBlendFactor mDstFactor;
 	};
 
-	J2DGrafContext(f32 x, f32 y, f32 width, f32 height);
-	void scissor(JGeometry::TBox2<f32> const& bounds);
-	void setColor(JUtility::TColor c) { this->setColor(c, c, c, c); }
+	J2DGrafContext(const JUTRect& rect);
+	J2DGrafContext(int x, int y, int width, int height);
+	void scissor(JUTRect const& bounds);
+	void setColor(JUtility::TColor c) { setColor(c, c, c, c); }
 	void setColor(JUtility::TColor colorTL, JUtility::TColor colorTR,
 	              JUtility::TColor colorBR, JUtility::TColor colorBL);
 	void setLineWidth(u8);
-	void fillBox(JGeometry::TBox2<f32> const& box);
+	void fillBox(JUTRect const& box);
 	void drawFrame(JGeometry::TBox2<f32> const& box);
 	void line(JGeometry::TVec2<f32> start, JGeometry::TVec2<f32> end);
 	void lineTo(JGeometry::TVec2<f32> pos);
 	void lineTo(f32 x, f32 y) { this->lineTo(JGeometry::TVec2<f32>(x, y)); }
 	void moveTo(f32 x, f32 y) { this->moveTo(JGeometry::TVec2<f32>(x, y)); }
 
-	void moveTo(JGeometry::TVec2<f32> pos) { mPrevPos = pos; }
+	void moveTo(JGeometry::TVec2<f32> pos);
 
 	virtual ~J2DGrafContext() { }
-	virtual void place(JGeometry::TBox2<f32> const& bounds);
-	virtual void place(f32 x, f32 y, f32 width, f32 height)
+	virtual void place(JUTRect const& bounds);
+	virtual void place(int x, int y, int width, int height)
 	{
-		JGeometry::TBox2<f32> box(x, y, x + width, y + height);
-		this->place(box);
+		JUTRect box(x, y, x + width, y + height);
+		place(box);
 	}
 	virtual void setPort();
 	virtual void setup2D();
 	virtual void setScissor();
-	virtual s32 getGrafType() const { return 0; }
 	virtual void setLookat() { }
 
 public:
-	/* 0x04 */ JGeometry::TBox2<f32> mBounds;
-	/* 0x14 */ JGeometry::TBox2<f32> mScissorBounds;
-	/* 0x24 */ JUtility::TColor mColorTL;
-	/* 0x28 */ JUtility::TColor mColorTR;
-	/* 0x2C */ JUtility::TColor mColorBR;
-	/* 0x30 */ JUtility::TColor mColorBL;
-	/* 0x34 */ u8 mLineWidth;
-	/* 0x38 */ JGeometry::TVec2<f32> mPrevPos;
-	/* 0x40 */ Mtx44 mMtx44;
-	/* 0x80 */ Mtx mPosMtx;
-	/* 0xB0 */ Blend field_0xb0;
-	/* 0xB3 */ Blend mLinePart;
-	/* 0xB6 */ Blend mBoxPart;
+	/* 0x04 */ u32 unk4;
+	/* 0x08 */ JUTRect mBounds;
+	/* 0x18 */ JUTRect mScissorBounds;
+	/* 0x28 */ JUtility::TColor mColorTL;
+	/* 0x2C */ JUtility::TColor mColorTR;
+	/* 0x30 */ JUtility::TColor mColorBR;
+	/* 0x34 */ JUtility::TColor mColorBL;
+	/* 0x38 */ u8 mLineWidth;
+	/* 0x3C */ u32 unk3C;
+	/* 0x40 */ u32 unk40;
+	/* 0x44 */ Mtx44 mMtx44;
+	/* 0x84 */ Mtx mPosMtx;
+	/* 0xB4 */ Blend field_0xb0;
+	/* 0xC0 */ Blend mLinePart;
+	/* 0xCC */ Blend mBoxPart;
 };
 
 #endif
