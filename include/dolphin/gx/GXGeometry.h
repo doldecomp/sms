@@ -41,6 +41,7 @@ static inline void GXEnd(void)
 void GXSetLineWidth(u8 width, GXTexOffset texOffsets);
 void GXSetPointSize(u8 pointSize, GXTexOffset texOffsets);
 void GXEnableTexOffsets(GXTexCoordID coord, u8 line_enable, u8 point_enable);
+void GXSetCullMode(GXCullMode mode);
 
 #ifdef __cplusplus
 }
