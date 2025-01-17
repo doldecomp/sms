@@ -459,7 +459,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
 
             # J2D
-            Object(NonMatching, "JSystem/J2D/J2DPane.cpp"),
+            Object(Matching, "JSystem/J2D/J2DPane.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DPicture.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DPrint.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DScreen.cpp"),

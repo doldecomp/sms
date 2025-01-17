@@ -51,6 +51,8 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXInverse        C_MTXInverse
 #define MTXTranspose      C_MTXTranspose
 #define MTXIdentity       C_MTXIdentity
+#define MTXRotRad         C_MTXRotRad
+#define MTXTrans          C_MTXTrans
 #else
 #define VECSquareMag      PSVECSquareMag
 #define VECNormalize      PSVECNormalize
@@ -67,6 +69,8 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXInverse        PSMTXInverse
 #define MTXTranspose      PSMTXTranspose
 #define MTXIdentity       PSMTXIdentity
+#define MTXRotRad         PSMTXRotRad
+#define MTXTrans          PSMTXTrans
 #endif
 
 // asm only
@@ -78,10 +82,10 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 
 // mtx.c
 // functions
-void MTXRotRad(Mtx m, char axis, f32 rad);
+void PSMTXRotRad(Mtx m, char axis, f32 rad);
 void MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
 void MTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
-void MTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
+void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
 void MTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
 void MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
 void MTXScaleApply(Mtx src, Mtx dst, f32 xS, f32 yS, f32 zS);

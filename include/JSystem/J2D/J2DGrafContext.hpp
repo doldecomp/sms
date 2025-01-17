@@ -44,7 +44,7 @@ public:
 	virtual void setLookat() { }
 
 public:
-	/* 0x04 */ u32 unk4;
+	/* 0x04 */ s32 unk4; // PROBABLY graf type (is a virtual call in newer vers)
 	/* 0x08 */ JUTRect mBounds;
 	/* 0x18 */ JUTRect mScissorBounds;
 	/* 0x28 */ JUtility::TColor mColorTL;
