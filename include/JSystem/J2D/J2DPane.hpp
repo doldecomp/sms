@@ -95,10 +95,6 @@ public:
 	void setUserInfo(u64 info) { mUserInfoTag = info; }
 	const Mtx* getMtx() const { return &mPositionMtx; }
 
-	static s16 J2DCast_F32_to_S16(f32 value, u8 arg2);
-
-	static JGeometry::TBox2<f32> static_mBounds;
-
 public:
 	/* 0x4 */ u16 mInfoTag;
 	/* 0x8 */ int mKind;
