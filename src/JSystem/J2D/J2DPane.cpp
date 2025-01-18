@@ -238,44 +238,6 @@ J2DPane* J2DPane::search(u32 tag)
 	return nullptr;
 }
 
-// J2DPane* J2DPane::searchUserInfo(u64 tag)
-// {
-// 	if (tag == mUserInfoTag) {
-// 		return this;
-// 	}
-
-// 	JSUTreeIterator<J2DPane> iter;
-// 	for (iter = mPaneTree.getFirstChild(); iter != mPaneTree.getEndChild();
-// 	     ++iter) {
-// 		if (J2DPane* result = iter.getObject()->searchUserInfo(tag)) {
-// 			return result;
-// 		}
-// 	}
-// 	return nullptr;
-// }
-
-// bool J2DPane::isUsed(const ResTIMG* p_timg)
-// {
-// 	JSUTreeIterator<J2DPane> iter;
-// 	for (iter = mPaneTree.getFirstChild(); iter != mPaneTree.getEndChild();
-// 	     ++iter) {
-// 		if (iter.getObject()->isUsed(p_timg))
-// 			return true;
-// 	}
-// 	return false;
-// }
-
-// bool J2DPane::isUsed(const ResFONT* p_font)
-// {
-// 	JSUTreeIterator<J2DPane> iter;
-// 	for (iter = mPaneTree.getFirstChild(); iter != mPaneTree.getEndChild();
-// 	     ++iter) {
-// 		if (iter.getObject()->isUsed(p_font))
-// 			return true;
-// 	}
-// 	return false;
-// }
-
 void J2DPane::makeMatrix(int x, int y)
 {
 	Mtx transBack, rotate, trans;

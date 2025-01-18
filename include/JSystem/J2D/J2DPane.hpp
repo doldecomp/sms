@@ -1,7 +1,6 @@
 #ifndef J2D_PANE_HPP
 #define J2D_PANE_HPP
 
-#include <JSystem/JGeometry.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JUtility/JUTRect.hpp>
 #include <dolphin/gx/GXEnum.h>
