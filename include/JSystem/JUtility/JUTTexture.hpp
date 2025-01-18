@@ -51,10 +51,10 @@ public:
 	void load(GXTexMapID);
 
 	const ResTIMG* getTexInfo() const { return mTexInfo; }
-	u8 getFormat() const { return mTexInfo->format; }
-	s32 getTransparency() { return mTexInfo->alphaEnabled; }
-	s32 getWidth() const { return mTexInfo->width; }
-	s32 getHeight() const { return mTexInfo->height; }
+	u8 getFormat() const { return mFormat; }
+	s32 getTransparency() { return mAlphaEnabled; }
+	s32 getWidth() const { return mWidth; }
+	s32 getHeight() const { return mHeight; }
 	void setCaptureFlag(bool flag) { mFlags &= 2 | flag; }
 	u8 getCaptureFlag() const { return mFlags & 1; }
 	u8 getEmbPaletteDelFlag() const { return mFlags & 2; }
@@ -73,7 +73,7 @@ public:
 	}
 	bool operator!=(const JUTTexture& other) { return !operator==(other); }
 
-private:
+protected:
 	/* 0x00 */ GXTexObj mTexObj;
 	/* 0x20 */ const ResTIMG* mTexInfo;
 	/* 0x24 */ void* mTexData;
