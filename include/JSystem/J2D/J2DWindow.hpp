@@ -26,6 +26,11 @@ public:
 	}; // Size: 0x10
 
 	struct Texture : JUTTexture {
+		Texture(const ResTIMG* timg)
+		    : JUTTexture(timg)
+		{
+		}
+
 		virtual ~Texture();
 		void draw(int, int, int, int, u16, u16, u16, u16, u8, JUtility::TColor,
 		          JUtility::TColor);

@@ -41,6 +41,13 @@ public:
 		mTexInfo    = nullptr;
 	}
 
+	JUTTexture(const ResTIMG* p_timg)
+	{
+		mEmbPalette = nullptr;
+		storeTIMG(p_timg);
+		unk50 = 0;
+	}
+
 	JUTTexture(int, int, GXTexFmt);
 
 	~JUTTexture();
