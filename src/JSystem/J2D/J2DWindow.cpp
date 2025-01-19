@@ -6,7 +6,98 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
 
-J2DWindow::J2DWindow(J2DPane*, JSURandomInputStream*, bool) { }
+// NOTE: for .sdata ordering
+static void dummy(float* f) { *f = 1.0f; }
+
+J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
+    : J2DPane(parent, stream, is_ex)
+    , unkFC(nullptr)
+    , unk100(nullptr)
+    , unk104(nullptr)
+    , unk108(nullptr)
+    , unk10C(nullptr)
+{
+	JUTResReference res;
+	mInfoTag = 0x11;
+	if (is_ex) {
+		u8 fields = stream->readU8();
+
+		unkEC.x1 = stream->readU16();
+		unkEC.y1 = stream->readU16();
+		unkEC.x2 = unkEC.x1 + stream->readU16();
+		unkEC.y2 = unkEC.y1 + stream->readU16();
+
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk100 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk104 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk108 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk10C = new Texture(timg);
+		if (ResTLUT* tlut = (ResTLUT*)res.getResource(stream, 'TLUT', nullptr))
+			unkFC = new JUTPalette(GX_TLUT0, tlut);
+
+		unk114 = stream->readU8();
+		unk118.set(stream->readU32());
+		unk120.set(stream->readU32());
+		unk11C.set(stream->readU32());
+		unk124.set(stream->readU32());
+		fields -= 14;
+
+		unk110 = nullptr;
+		if (fields) {
+			if (ResTIMG* timg
+			    = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+				unk110 = new Texture(timg);
+			fields--;
+		}
+		unk12C = 0;
+		unk128 = 0xffffffff;
+		if (fields) {
+			unk12C = stream->readU32();
+			fields--;
+		}
+		if (fields) {
+			unk128 = stream->readU32();
+		}
+		stream->align(4);
+	} else {
+		unkEC.x1 = stream->readU16();
+		unkEC.y1 = stream->readU16();
+		unkEC.x2 = unkEC.x1 + stream->readU16();
+		unkEC.y2 = unkEC.y1 + stream->readU16();
+
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk100 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk104 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk108 = new Texture(timg);
+		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
+			unk10C = new Texture(timg);
+		if (ResTLUT* tlut = (ResTLUT*)res.getResource(stream, 'TLUT', nullptr))
+			unkFC = new JUTPalette(GX_TLUT0, tlut);
+
+		unk114 = stream->readU8();
+		unk118.set(stream->readU32());
+		unk120.set(stream->readU32());
+		unk11C.set(stream->readU32());
+		unk124.set(stream->readU32());
+
+		stream->align(4);
+		unk110 = nullptr;
+		unk12C = 0x0;
+		unk128 = 0xffffffff;
+	}
+	if (unk100 && unk104 && unk108 && unk10C) {
+		unk130 = unk100->getWidth() + unk104->getWidth();
+		unk134 = unk100->getHeight() + unk108->getHeight();
+	} else {
+		unk130 = 1;
+		unk134 = 1;
+	}
+}
 
 J2DWindow::~J2DWindow()
 {
@@ -40,10 +131,10 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 		GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 		GXSetNumTexGens(1);
 		if (unk100 && unk104 && unk108 && unk10C) {
-			int iVar6 = param_1.getWidth() - unk10C->getWidth();
-			int iVar8 = param_1.getHeight() - unk10C->getHeight();
-			u32 uVar7 = unk100->getWidth();
-			u32 uVar5 = unk100->getHeight();
+			int iVar6        = param_1.getWidth() - unk10C->getWidth();
+			int iVar8        = param_1.getHeight() - unk10C->getHeight();
+			u32 unk100Width  = unk100->getWidth();
+			u32 unk100Height = unk100->getHeight();
 			unk100->draw(0, 0, !!(unk114 & 0x80), !!(unk114 & 0x40),
 			             mColorAlpha, unk12C, unk128);
 			unk104->draw(iVar6, 0, !!(unk114 & 0x20), !!(unk114 & 0x10),
@@ -54,34 +145,66 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 			             mColorAlpha, unk12C, unk128);
 
 			{
-				u16 uVar2 = (unk114 & 0x20) ? 0x8000 : 0;
-				u16 uVar3 = (unk114 & 0x10) ? 0 : 0x8000;
-				unk104->draw(uVar7, 0, iVar6 - uVar7, unk104->getHeight(),
-				             uVar2, uVar3, uVar2, uVar3 ^ 0x8000, mColorAlpha,
+				u16 a = (unk114 & 0x20) ? (u16)0x8000 : (u16)0;
+				u16 b = a;
+				u16 c = (unk114 & 0x10) ? (u16)0 : (u16)0x8000;
+				u16 d = c ^ 0x8000;
+				unk104->draw(unk100Width, 0, iVar6 - unk100Width,
+				             unk104->getHeight(), b, c, a, d, mColorAlpha,
 				             unk12C, unk128);
 			}
 
 			{
-				u16 uVar2 = (unk114 & 0x2) ? 0x8000 : 0;
-				u16 uVar3 = (unk114 & 0x1) ? 0 : 0x8000;
-				unk10C->draw(uVar7, iVar8, iVar6 - uVar7, unk10C->getHeight(),
-				             uVar2, uVar3, uVar2, uVar3 ^ 0x8000, mColorAlpha,
+				u16 a;
+				if (unk114 & 0x2)
+					a = 0x8000;
+				else
+					a = 0;
+				u16 b;
+				if (unk114 & 0x1)
+					b = 0;
+				else
+					b = 0x8000;
+				u16 c = b ^ 0x8000;
+				u16 d = a;
+				unk10C->draw(unk100Width, iVar8, iVar6 - unk100Width,
+				             unk10C->getHeight(), d, b, a, c, mColorAlpha,
 				             unk12C, unk128);
 			}
 
 			{
-				u16 uVar2 = (unk114 & 0x8) ? 0 : 0x8000;
-				u16 uVar3 = (unk114 & 0x4) ? 0x8000 : 0;
-				unk108->draw(0, uVar5, unk108->getWidth(), iVar8 - uVar5, uVar2,
-				             uVar3, uVar2 ^ 0x8000, uVar3, mColorAlpha, unk12C,
-				             unk128);
+				u16 a;
+				if (unk114 & 0x8)
+					a = 0;
+				else
+					a = 0x8000;
+				u16 b = a ^ 0x8000;
+				u16 c;
+				if (unk114 & 0x4)
+					c = 0x8000;
+				else
+					c = 0;
+				u16 d = c;
+				unk108->draw(0, unk100Height, unk108->getWidth(),
+				             iVar8 - unk100Height, a, d, b, c, mColorAlpha,
+				             unk12C, unk128);
 			}
 
 			{
-				u16 uVar2 = (unk114 & 0x2) ? 0 : 0x8000;
-				u16 uVar3 = (unk114 & 0x1) ? 0x8000 : 0;
-				unk10C->draw(iVar6, uVar5, unk10C->getWidth(), iVar8 - uVar5,
-				             uVar2, uVar3, uVar2 ^ 0x8000, uVar3, mColorAlpha,
+				u16 a;
+				if (unk114 & 0x2)
+					a = 0;
+				else
+					a = 0x8000;
+				u16 b = a ^ 0x8000;
+				u16 c;
+				if (unk114 & 0x1)
+					c = 0x8000;
+				else
+					c = 0;
+				u16 d = c;
+				unk10C->draw(iVar6, unk100Height, unk10C->getWidth(),
+				             iVar8 - unk100Height, a, d, b, c, mColorAlpha,
 				             unk12C, unk128);
 			}
 		}
