@@ -144,69 +144,35 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 			unk10C->draw(iVar6, iVar8, !!(unk114 & 2), !!(unk114 & 1),
 			             mColorAlpha, unk12C, unk128);
 
-			{
-				u16 a = (unk114 & 0x20) ? (u16)0x8000 : (u16)0;
-				u16 b = a;
-				u16 c = (unk114 & 0x10) ? (u16)0 : (u16)0x8000;
-				u16 d = c ^ 0x8000;
-				unk104->draw(unk100Width, 0, iVar6 - unk100Width,
-				             unk104->getHeight(), b, c, a, d, mColorAlpha,
-				             unk12C, unk128);
-			}
+			u16 a, b, c, d;
 
-			{
-				u16 a;
-				if (unk114 & 0x2)
-					a = 0x8000;
-				else
-					a = 0;
-				u16 b;
-				if (unk114 & 0x1)
-					b = 0;
-				else
-					b = 0x8000;
-				u16 c = b ^ 0x8000;
-				u16 d = a;
-				unk10C->draw(unk100Width, iVar8, iVar6 - unk100Width,
-				             unk10C->getHeight(), d, b, a, c, mColorAlpha,
-				             unk12C, unk128);
-			}
+			b = a = (unk114 & 0x20) ? (u16)0x8000 : (u16)0;
+			c     = (unk114 & 0x10) ? (u16)0 : (u16)0x8000;
+			d     = c ^ 0x8000;
+			unk104->draw(unk100Width, 0, iVar6 - unk100Width,
+			             unk104->getHeight(), b, c, a, d, mColorAlpha, unk12C,
+			             unk128);
 
-			{
-				u16 a;
-				if (unk114 & 0x8)
-					a = 0;
-				else
-					a = 0x8000;
-				u16 b = a ^ 0x8000;
-				u16 c;
-				if (unk114 & 0x4)
-					c = 0x8000;
-				else
-					c = 0;
-				u16 d = c;
-				unk108->draw(0, unk100Height, unk108->getWidth(),
-				             iVar8 - unk100Height, a, d, b, c, mColorAlpha,
-				             unk12C, unk128);
-			}
+			d = a = (unk114 & 0x2) ? (u16)0x8000 : (u16)0;
+			b     = (unk114 & 0x1) ? (u16)0 : (u16)0x8000;
+			c     = b ^ 0x8000;
+			unk10C->draw(unk100Width, iVar8, iVar6 - unk100Width,
+			             unk10C->getHeight(), d, b, a, c, mColorAlpha, unk12C,
+			             unk128);
 
-			{
-				u16 a;
-				if (unk114 & 0x2)
-					a = 0;
-				else
-					a = 0x8000;
-				u16 b = a ^ 0x8000;
-				u16 c;
-				if (unk114 & 0x1)
-					c = 0x8000;
-				else
-					c = 0;
-				u16 d = c;
-				unk10C->draw(iVar6, unk100Height, unk10C->getWidth(),
-				             iVar8 - unk100Height, a, d, b, c, mColorAlpha,
-				             unk12C, unk128);
-			}
+			a = (unk114 & 0x8) ? (u16)0 : (u16)0x8000;
+			b = a ^ 0x8000;
+			d = c = (unk114 & 0x4) ? (u16)0x8000 : (u16)0;
+			unk108->draw(0, unk100Height, unk108->getWidth(),
+			             iVar8 - unk100Height, a, d, b, c, mColorAlpha, unk12C,
+			             unk128);
+
+			a = (unk114 & 0x2) ? (u16)0 : (u16)0x8000;
+			b = a ^ 0x8000;
+			d = c = (unk114 & 0x1) ? (u16)0x8000 : (u16)0;
+			unk10C->draw(iVar6, unk100Height, unk10C->getWidth(),
+			             iVar8 - unk100Height, a, d, b, c, mColorAlpha, unk12C,
+			             unk128);
 		}
 		GXSetNumTexGens(0);
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
