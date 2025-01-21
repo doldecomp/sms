@@ -8,6 +8,13 @@ class JKRArchive;
 
 class J2DScreen : public J2DPane {
 public:
+	J2DScreen()
+	    : J2DPane(nullptr, 8, true, 'root', JUTRect(0, 0, 640, 480))
+	    , mColor()
+	{
+		mbClipToParent = false;
+	}
+
 	virtual ~J2DScreen();
 	virtual void drawSelf(int x, int y, Mtx* mtx);
 	virtual J2DPane* search(u32 tag);
@@ -22,7 +29,7 @@ public:
 	void draw(int x, int y, const J2DGrafContext* pCtx);
 	void gather(J2DPane**, u32, u32, int);
 
-private:
+protected:
 	/* 0xEC */ bool mbClipToParent;
 	/* 0xED */ char padding[3];
 	/* 0xF0 */ JUtility::TColor mColor;
