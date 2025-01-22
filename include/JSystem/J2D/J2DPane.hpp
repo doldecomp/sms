@@ -56,14 +56,14 @@ public:
 
 	virtual void move(int x, int y) { mBounds.move(x, y); }
 	virtual void add(int x, int y) { mBounds.add(x, y); }
-	virtual void resize(int x, int y) { mBounds.resize(x, y); }
+	virtual void resize(int w, int h) { mBounds.resize(w, h); }
 	virtual bool setConnectParent(bool connected)
 	{
 		mConnected = false;
 		return false;
 	}
-	virtual void drawSelf(int arg1, int arg2) { }
-	virtual void drawSelf(int arg1, int arg2, Mtx* mtx) { }
+	virtual void drawSelf(int x, int y) { }
+	virtual void drawSelf(int x, int y, Mtx* mtx) { }
 	virtual J2DPane* search(u32 tag);
 	virtual void makeMatrix(int, int);
 
