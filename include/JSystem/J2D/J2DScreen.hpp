@@ -24,7 +24,7 @@ public:
 	void set(const char*, JKRArchive*);
 	void set(JSURandomInputStream*);
 	void makeHiearachyPanes(J2DPane*, JSURandomInputStream*, bool, bool, bool,
-	                        long*);
+	                        s32*);
 	bool stop();
 	void draw(int x, int y, const J2DGrafContext* pCtx);
 	void gather(J2DPane**, u32, u32, int);

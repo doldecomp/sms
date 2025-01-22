@@ -1,6 +1,7 @@
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
-#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/os.h>
@@ -8,9 +9,11 @@
 J2DScreen::~J2DScreen() { }
 
 #pragma dont_inline on
-void J2DScreen::makeHiearachyPanes(J2DPane*, JSURandomInputStream*, bool, bool,
-                                   bool, long*)
+void J2DScreen::makeHiearachyPanes(J2DPane* param_1,
+                                   JSURandomInputStream* stream, bool param_3,
+                                   bool param_4, bool param_5, s32* param_6)
 {
+	// TODO: impl after rest of j2d is done
 }
 #pragma dont_inline reset
 
@@ -63,11 +66,10 @@ J2DPane* J2DScreen::search(u32 tag)
 J2DSetScreen::J2DSetScreen(const char* name, JKRArchive* arch)
     : J2DScreen()
 {
-	void* res = JKRFileLoader::getGlbResource(name, (JKRFileLoader*)arch);
+	u8* res = (u8*)JKRGetNameResource(name, arch);
 	if (res) {
 		u32 sz = JKRFileLoader::getResSize(res, nullptr);
-		JSUMemoryInputStream stream;
-		stream.setBuffer(res, sz);
+		JSUMemoryInputStream stream(res, sz);
 		makeHiearachyPanes(this, &stream, false, true, false, nullptr);
 	}
 	mbClipToParent = false;
@@ -89,3 +91,5 @@ void J2DScreen::drawSelf(int x, int y, Mtx* mtx)
 
 	GXEnd();
 }
+
+static void dummy(J2DSetScreen* s) { s->~J2DSetScreen(); }
