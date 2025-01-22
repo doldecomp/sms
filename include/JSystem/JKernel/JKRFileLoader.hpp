@@ -70,4 +70,19 @@ protected:
 	u32 mMountCount;                        // 0x34
 };
 
+inline bool JKRDetachResource(void* resource, JKRFileLoader* fileLoader)
+{
+	return JKRFileLoader::detachResource(resource, fileLoader);
+}
+
+inline void* JKRGetNameResource(const char* name, JKRFileLoader* loader)
+{
+	return JKRFileLoader::getGlbResource(name, loader);
+}
+
+inline void* JKRGetResource(const char* name)
+{
+	return JKRFileLoader::getGlbResource(name);
+}
+
 #endif

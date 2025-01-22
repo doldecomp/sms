@@ -5,6 +5,13 @@
 
 class JSUMemoryInputStream : public JSURandomInputStream {
 public:
+	JSUMemoryInputStream(const void* buffer, s32 size)
+	{
+		// Probably an assert
+		(void)!buffer;
+		setBuffer(buffer, size);
+	}
+
 	void setBuffer(const void* buffer, s32 size);
 	virtual int readData(void* buf, s32 count);
 	virtual int seekPos(s32 offset, JSUStreamSeekFrom from);
