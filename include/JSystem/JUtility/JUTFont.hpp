@@ -132,8 +132,8 @@ public:
 	bool isFixed() const { return mFixed; }
 	int getFixedWidth() const { return mFixedWidth; }
 
-	/* 0x04 */ bool mValid;
-	/* 0x05 */ bool mFixed;
+	/* 0x04 */ bool mFixed;
+	/* 0x05 */ bool mValid; // TODO: maybe non-existent
 	/* 0x08 */ int mFixedWidth;
 	/* 0x0C */ JUtility::TColor mColor1;
 	/* 0x10 */ JUtility::TColor mColor2;

@@ -7,7 +7,7 @@ JUTFont::JUTFont()
     , mColor4()
 {
 	setCharColor(JUtility::TColor());
-	mValid      = false;
+	mFixed      = false;
 	mFixedWidth = 0;
 }
 
