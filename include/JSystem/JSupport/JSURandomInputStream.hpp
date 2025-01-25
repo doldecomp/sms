@@ -4,7 +4,6 @@
 #include <types.h>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 
-#ifdef __cplusplus
 class JSURandomInputStream : public JSUInputStream {
 public:
 	virtual ~JSURandomInputStream() { }
@@ -17,9 +16,15 @@ public:
 	virtual int seekPos(s32 offset, JSUStreamSeekFrom from) = 0;
 
 	int align(s32 alignment);
-	int peek(void* buf, s32 len);
+	u32 peek(void* buf, s32 len);
 	int seek(s32 offset, JSUStreamSeekFrom from);
+
+	u32 peekU32()
+	{
+		u32 i;
+		peek(&i, sizeof(u32));
+		return i;
+	}
 };
-#endif
 
 #endif

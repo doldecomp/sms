@@ -18,14 +18,14 @@ public:
 	virtual ~J2DScreen();
 	virtual void drawSelf(int x, int y, Mtx* mtx);
 	virtual J2DPane* search(u32 tag);
-	virtual bool makeUserPane(u16, J2DPane*, JSURandomInputStream*);
-	virtual bool makeUserPane(u32, J2DPane*, JSURandomInputStream*);
+	virtual J2DPane* makeUserPane(u16, J2DPane*, JSURandomInputStream*);
+	virtual J2DPane* makeUserPane(u32, J2DPane*, JSURandomInputStream*);
 
 	void set(const char*, JKRArchive*);
 	void set(JSURandomInputStream*);
 	void makeHiearachyPanes(J2DPane*, JSURandomInputStream*, bool, bool, bool,
 	                        s32*);
-	bool stop();
+	J2DPane* stop();
 	void draw(int x, int y, const J2DGrafContext* pCtx);
 	void gather(J2DPane**, u32, u32, int);
 
@@ -40,8 +40,8 @@ public:
 	J2DSetScreen(const char*, JKRArchive*);
 
 	virtual ~J2DSetScreen() {};
-	virtual bool makeUserPane(u16, J2DPane*, JSURandomInputStream*);
-	virtual bool makeUserPane(u32, J2DPane*, JSURandomInputStream*);
+	virtual J2DPane* makeUserPane(u16, J2DPane*, JSURandomInputStream*);
+	virtual J2DPane* makeUserPane(u32, J2DPane*, JSURandomInputStream*);
 };
 
 #endif

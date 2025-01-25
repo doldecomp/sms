@@ -1,6 +1,8 @@
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
+#include <JSystem/J2D/J2DWindow.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <dolphin/gx.h>
@@ -8,30 +10,133 @@
 
 J2DScreen::~J2DScreen() { }
 
-#pragma dont_inline on
-void J2DScreen::makeHiearachyPanes(J2DPane* param_1,
-                                   JSURandomInputStream* stream, bool param_3,
-                                   bool param_4, bool param_5, s32* param_6)
+void J2DScreen::makeHiearachyPanes(J2DPane* parent,
+                                   JSURandomInputStream* stream,
+                                   bool allow_user_panes, bool we_are_root,
+                                   bool is_ex, s32* param_6)
 {
-	// TODO: impl after rest of j2d is done
-}
-#pragma dont_inline reset
+	s32 local_a8;
+	J2DPane* nextParent = parent;
+	if (we_are_root) {
+		u32 local_54;
+		stream->peek(&local_54, 4);
+		is_ex  = local_54 == 'SCRN' ? true : false;
+		mColor = 0;
+		if (is_ex) {
+			stream->skip(4);
+			if (stream->readU32() != 'blo1')
+				return;
+			stream->skip(0x18);
+			if (stream->readU32() != 'INF1')
+				return;
+			stream->skip(4);
+			short local_9c = stream->readS16();
+			short local_9a = stream->readS16();
+			mBounds        = JUTRect(0, 0, local_9c, local_9a);
+			mColor         = stream->readU32();
+			param_6        = &local_a8;
+		}
+	}
 
-bool J2DScreen::makeUserPane(u16, J2DPane*, JSURandomInputStream*)
+	while (true) {
+		if (is_ex) {
+			u32 magic;
+			if (stream->read(&magic, 4) != 4) {
+				OSPanic("J2DScreen.cpp", 0x91, "SCRN resource is broken.\n");
+			}
+			u32 size;
+			if (stream->peek(&size, 4) != 4) {
+				OSPanic("J2DScreen.cpp", 0x96, "SCRN resource is broken.\n");
+			}
+			stream->skip(-4);
+			*param_6 = size + stream->getPosition();
+
+			switch (magic) {
+			case 'EXT1':
+				return;
+			case 'BGN1':
+				stream->seek(*param_6, SEEK_SET);
+				makeHiearachyPanes(nextParent, stream, allow_user_panes, false,
+				                   is_ex, param_6);
+				break;
+			case 'END1':
+				stream->seek(*param_6, SEEK_SET);
+				return;
+			case 'PAN1':
+				nextParent = new J2DPane(parent, stream, is_ex);
+				break;
+			case 'WIN1':
+				nextParent = new J2DWindow(parent, stream, is_ex);
+				break;
+			case 'PIC1':
+				nextParent = new J2DPicture(parent, stream, is_ex);
+				break;
+			case 'TBX1':
+				nextParent = new J2DTextBox(parent, stream, is_ex);
+				break;
+			default:
+				if (allow_user_panes)
+					nextParent = makeUserPane((u32)mKind, parent, stream);
+				break;
+			}
+			stream->seek(*param_6, SEEK_SET);
+		} else {
+			u16 tag;
+			if (stream->peek(&tag, 2) != 2) {
+				OSPanic("J2DScreen.cpp", 199, "SCRN resource is broken.\n");
+			}
+			switch (tag) {
+			case 0:
+				return;
+			case 1:
+				stream->skip(4);
+				makeHiearachyPanes(nextParent, stream, allow_user_panes, false,
+				                   is_ex, nullptr);
+				break;
+			case 2:
+				stream->skip(4);
+				return;
+			case 0x10:
+				nextParent = new J2DPane(parent, stream, is_ex);
+
+				if (we_are_root)
+					mBounds = JUTRect(0, 0, nextParent->getWidth(),
+					                  nextParent->getHeight());
+				break;
+			case 0x11:
+				nextParent = new J2DWindow(parent, stream, is_ex);
+				break;
+			case 0x12:
+				nextParent = new J2DPicture(parent, stream, is_ex);
+				break;
+			case 0x13:
+				nextParent = new J2DTextBox(parent, stream, is_ex);
+				break;
+			default:
+				nextParent = allow_user_panes
+				                 ? makeUserPane(tag, parent, stream)
+				                 : stop();
+				break;
+			}
+		}
+	}
+}
+
+J2DPane* J2DScreen::makeUserPane(u16, J2DPane*, JSURandomInputStream*)
 {
-	OSPanic(__FILE__, 270, "SCRN resource is broken.\n");
-	return false;
+	OSPanic(__FILE__, 270, "There is a unknown pane in SCRN resource\n");
+	return nullptr;
 }
 
-bool J2DScreen::makeUserPane(u32, J2DPane*, JSURandomInputStream*)
+J2DPane* J2DScreen::makeUserPane(u32, J2DPane*, JSURandomInputStream*)
 {
-	return false;
+	return nullptr;
 }
 
-bool J2DScreen::stop()
+J2DPane* J2DScreen::stop()
 {
 	OSPanic(__FILE__, 311, "There is a unknown pane in SCRN resource\n");
-	return false;
+	return nullptr;
 }
 
 void J2DScreen::draw(int x, int y, const J2DGrafContext* pCtx)
