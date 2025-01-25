@@ -463,7 +463,7 @@ config.libs = [
             Object(NonMatching, "JSystem/J2D/J2DPicture.cpp"),
             Object(Matching, "JSystem/J2D/J2DPrint.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DScreen.cpp"),
-            Object(NonMatching, "JSystem/J2D/J2DTextBox.cpp"),
+            Object(Matching, "JSystem/J2D/J2DTextBox.cpp"),
             Object(NonMatching, "JSystem/J2D/J2DWindow.cpp"),
             Object(Matching, "JSystem/J2D/J2DGrafContext.cpp"),
             Object(Matching, "JSystem/J2D/J2DOrthoGraph.cpp"),

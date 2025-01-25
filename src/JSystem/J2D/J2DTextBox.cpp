@@ -1,19 +1,112 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPrint.hpp>
-#include <JSystem/JUtility/JUTFont.hpp>
+#include <JSystem/JUtility/JUTResFont.hpp>
+#include <JSystem/JUtility/JUTResource.hpp>
+#include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <dolphin/gx.h>
 
 J2DTextBox::J2DTextBox(const ResFONT* font, const char* str)
     : J2DPane()
     , mFont(nullptr)
     , mText(nullptr)
-    , unk11C(-1)
-    , unk120(-1)
 {
 	initiate(font, str, HBIND_LEFT, VBIND_TOP);
 }
 
-J2DTextBox::J2DTextBox(J2DPane*, JSURandomInputStream*, bool) { }
+J2DTextBox::J2DTextBox(J2DPane* parent, JSURandomInputStream* stream,
+                       bool is_ex)
+    : J2DPane(parent, stream, is_ex)
+    , mFont(nullptr)
+    , mText(nullptr)
+{
+	JUTResReference res;
+	mInfoTag = 0x13;
+	if (is_ex) {
+		u8 fields = stream->readU8();
+
+		if (ResFONT* font = (ResFONT*)res.getResource(stream, 'FONT', nullptr))
+			mFont = new JUTResFont(font, nullptr);
+
+		mCharColor.set(stream->readU32());
+		mGradColor.set(stream->readU32());
+		u8 bindings = stream->readU8();
+		mHBinding   = (J2DTextBoxHBinding)(bindings >> 2 & 3);
+		mVBinding   = (J2DTextBoxVBinding)(bindings & 3);
+		mCharSpace  = stream->readS16();
+		mLineSpace  = stream->readS16();
+		mFontSizeX  = stream->readU16();
+		mFontSizeY  = stream->readU16();
+
+		s16 len = stream->readU16();
+		mText   = new char[len + 1];
+		stream->read(mText, len);
+		mText[len] = 0;
+
+		fields -= 10;
+
+		if (fields != 0) {
+			if (stream->readU8()) {
+				setConnectParent(true);
+			}
+			--fields;
+		}
+
+		mBlack = 0;
+		mWhite = 0xffffffff;
+
+		if (fields != 0) {
+			mBlack.set(stream->readU32());
+			--fields;
+		}
+		if (fields != 0) {
+			mWhite.set(stream->readU32());
+		}
+		unk104 = 0;
+		unk108 = 0;
+		stream->align(4);
+	} else {
+		if (ResFONT* font = (ResFONT*)res.getResource(stream, 'FONT', nullptr))
+			mFont = new JUTResFont(font, nullptr);
+
+		mCharColor.set(stream->readU32());
+		mGradColor.set(stream->readU32());
+
+		u8 flags  = stream->readU8();
+		mHBinding = (J2DTextBoxHBinding)(flags & 0x7f);
+		mVBinding = (J2DTextBoxVBinding)(stream->readU8());
+		if (!mFont) {
+			mCharSpace = 0;
+			mLineSpace = 0;
+			mFontSizeX = 0;
+			mFontSizeY = 0;
+		} else {
+			if ((flags & 0x80) != 0) {
+				mCharSpace = stream->readS16();
+				mLineSpace = stream->readS16();
+				mFontSizeX = stream->readU16();
+				mFontSizeY = stream->readU16();
+			} else {
+				mCharSpace = 0;
+				mLineSpace = mFont->getLeading();
+				mFontSizeX = mFont->getWidth();
+				mFontSizeY = mFont->getHeight();
+			}
+		}
+
+		s16 len = stream->readS16();
+		mText   = new char[len + 1];
+		stream->read(mText, len);
+		mText[len] = 0;
+
+		mBlack = 0;
+		mWhite = 0xffffffff;
+		unk104 = 0;
+		unk108 = 0;
+
+		stream->align(4);
+	}
+	mTextFontOwned = true;
+}
 
 J2DTextBox::J2DTextBox(u32 tag, const JUTRect& bounds, const ResFONT* font,
                        const char* str, J2DTextBoxHBinding hbind,
@@ -21,22 +114,20 @@ J2DTextBox::J2DTextBox(u32 tag, const JUTRect& bounds, const ResFONT* font,
     : J2DPane(0x13, tag, bounds)
     , mFont(nullptr)
     , mText(nullptr)
-    , unk11C(-1)
-    , unk120(-1)
 {
-	(void)!font; // assert?
 	initiate(font, str, hbind, vbind);
 }
 
 void J2DTextBox::initiate(const ResFONT* font, const char* str,
                           J2DTextBoxHBinding hbind, J2DTextBoxVBinding vbind)
 {
-	// TODO: JUTResFont
-	// if (font != nullptr)
-	// 	mpFont = new JUTResFont(font, nullptr);
+	if (font != nullptr)
+		mFont = new JUTResFont(font, nullptr);
 
 	mCharColor.set(0xFFFFFFFF);
 	mGradColor.set(0xFFFFFFFF);
+	mBlack      = 0;
+	mWhite      = 0xFFFFFFFF;
 	mHBinding   = hbind;
 	mVBinding   = vbind;
 	size_t temp = strlen(str);
@@ -85,9 +176,10 @@ void J2DTextBox::draw(int x, int y)
 		return;
 	J2DPrint print(mFont, mCharSpace, mLineSpace, mCharColor, mGradColor);
 	print.setFontSize(mFontSizeX, mFontSizeY);
+	print.setSomeColors(mBlack, mWhite);
 	print.initiate();
 	makeMatrix(x, y);
-	GXLoadPosMtxImm(mGlobalMtx, 0);
+	GXLoadPosMtxImm(mPositionMtx, 0);
 	GXSetCurrentMtx(0);
 	print.print(0, 0, mColorAlpha, "%s", mText);
 	Mtx mtx;
@@ -136,10 +228,11 @@ void J2DTextBox::drawSelf(int x, int y, Mtx* mtx)
 {
 	J2DPrint print(mFont, mCharSpace, mLineSpace, mCharColor, mGradColor);
 	print.setFontSize(mFontSizeX, mFontSizeY);
+	print.setSomeColors(mBlack, mWhite);
 	print.initiate();
 	Mtx transform;
 	MTXConcat(*mtx, mGlobalMtx, transform);
-	GXLoadPosMtxImm(*mtx, 0);
+	GXLoadPosMtxImm(transform, 0);
 	print.locate(x, y);
 	print.printReturn(mText, mBounds.getWidth(), mBounds.getHeight(), mHBinding,
 	                  mVBinding, unk104, unk108, mColorAlpha);

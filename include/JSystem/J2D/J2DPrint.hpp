@@ -50,6 +50,12 @@ public:
 		mFontSizeY = sizeY > 0 ? sizeY : 0;
 	}
 
+	void setSomeColors(JUtility::TColor c1, JUtility::TColor c2)
+	{
+		unk3C = c1;
+		unk40 = c2;
+	}
+
 	static char* mStrBuff;
 	static bool mMutexInit;
 	static bool mHeapFlag;
