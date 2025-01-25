@@ -11,20 +11,20 @@ public:
 	virtual int skip(s32 amount);
 	virtual int readData(void* buf, s32 size) = 0;
 
-	int read(void* buf, s32 size);
+	u32 read(void* buf, s32 size);
 	char* read(char* buf);
 	char* readString();
 	char* readString(char* buf, u16 len);
 
-	int read(s8& p) { return read(&p, sizeof(s8)); } /* @fabricated */
-	int read(u8& p) { return read(&p, sizeof(u8)); }
-	int read(bool& p) { return read(&p, sizeof(bool)); }
-	int read(s16& p) { return read(&p, sizeof(s16)); } /* @fabricated */
-	int read(u16& p) { return read(&p, sizeof(u16)); } /* @fabricated */
-	int read(s32& p) { return read(&p, sizeof(s32)); } /* @fabricated */
-	int read(u32& p) { return read(&p, sizeof(u32)); }
-	int read(s64& p) { return read(&p, sizeof(s64)); } /* @fabricated */
-	int read(u64& p) { return read(&p, sizeof(u64)); } /* @fabricated */
+	u32 read(s8& p) { return read(&p, sizeof(s8)); } /* @fabricated */
+	u32 read(u8& p) { return read(&p, sizeof(u8)); }
+	u32 read(bool& p) { return read(&p, sizeof(bool)); }
+	u32 read(s16& p) { return read(&p, sizeof(s16)); } /* @fabricated */
+	u32 read(u16& p) { return read(&p, sizeof(u16)); } /* @fabricated */
+	u32 read(s32& p) { return read(&p, sizeof(s32)); } /* @fabricated */
+	u32 read(u32& p) { return read(&p, sizeof(u32)); }
+	u32 read(s64& p) { return read(&p, sizeof(s64)); } /* @fabricated */
+	u32 read(u64& p) { return read(&p, sizeof(u64)); } /* @fabricated */
 
 	u8 read8b()
 	{

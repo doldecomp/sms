@@ -85,6 +85,7 @@ protected:
 	/* 0x12C */ JUtility::TColor unk12C;
 	/* 0x130 */ int unk130;
 	/* 0x134 */ int unk134;
+	/* 0x138 */ int unk138;
 };
 
 #endif

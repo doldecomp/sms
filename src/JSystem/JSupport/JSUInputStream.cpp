@@ -4,7 +4,7 @@
 
 JSUInputStream::~JSUInputStream() { }
 
-int JSUInputStream::read(void* buf, s32 size)
+u32 JSUInputStream::read(void* buf, s32 size)
 {
 	int len = readData(buf, size);
 	if (len != size) {
@@ -105,7 +105,7 @@ int JSURandomInputStream::align(s32 alignment)
 	return change;
 }
 
-int JSURandomInputStream::peek(void* buf, s32 len)
+u32 JSURandomInputStream::peek(void* buf, s32 len)
 {
 	int r   = 0; // NOTE: does not match unless we declare this first
 	int pos = getPosition();
