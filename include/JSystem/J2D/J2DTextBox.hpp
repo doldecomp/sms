@@ -56,8 +56,8 @@ public:
 	/* 0x110 */ int mLineSpace;
 	/* 0x114 */ int mFontSizeX;
 	/* 0x118 */ int mFontSizeY;
-	/* 0x11C */ int unk11C;
-	/* 0x120 */ int unk120;
+	/* 0x11C */ JUtility::TColor mWhite;
+	/* 0x120 */ JUtility::TColor mBlack;
 	/* 0x124 */ bool mTextFontOwned;
 };
 
