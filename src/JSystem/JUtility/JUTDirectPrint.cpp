@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <macros.h>
 
+#pragma opt_strength_reduction off
+
 JUTDirectPrint* JUTDirectPrint::sDirectPrint;
 
 JUTDirectPrint* JUTDirectPrint::start()
@@ -35,8 +37,7 @@ void JUTDirectPrint::erase(int x, int y, int width, int height)
 	u16* pixel = mFrameBuffer + mStride * y + x;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			*pixel = 0x1080;
-			pixel  = pixel + 1;
+			*pixel++ = 0x1080;
 		}
 
 		pixel += mStride - width;
@@ -87,16 +88,13 @@ u32 JUTDirectPrint::sFontData2[77] = {
 	0xF8000000, 0x10000000, 0x20000000, 0x40000000, 0xF8000000,
 };
 
-static u32 twiceBit[4] = {
-	0,
-	3,
-	12,
-	15,
-};
-
 void JUTDirectPrint::drawChar(int position_x, int position_y, int ch)
 {
-	int codepoint = (100 <= ch) ? ch - 100 : ch;
+	int codepoint;
+	if (100 <= ch)
+		codepoint = ch - 100;
+	else
+		codepoint = ch;
 	int col_index = (codepoint % 5) * 6;
 	int row_index = (codepoint / 5) * 7;
 
@@ -139,19 +137,25 @@ void JUTDirectPrint::changeFrameBuffer(void* frameBuffer, u16 width, u16 height)
 	mFrameBufferSize   = (u32)mStride * (u32)mFrameBufferHeight * 2;
 }
 
-inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
-                                     char const* format, va_list args,
-                                     bool clear)
+void JUTDirectPrint::drawString(u16 position_x, u16 position_y, char* text)
 {
+	drawString_f(position_x, position_y, "%s", text);
+}
+
+void JUTDirectPrint::drawString_f(u16 position_x, u16 position_y,
+                                  char const* format, ...)
+{
+	if (!mFrameBuffer)
+		return;
+
+	va_list args;
+	va_start(args, format);
+
 	char buffer[256];
 
 	int buffer_length = vsnprintf(buffer, ARRAY_COUNT(buffer), format, args);
 	u16 x             = position_x;
 	if (buffer_length > 0) {
-		if (clear) {
-			erase(position_x - 6, position_y - 3, (buffer_length + 2) * 6, 0xd);
-		}
-
 		char* ptr = buffer;
 		for (; 0 < buffer_length; buffer_length--, ptr++) {
 			int codepoint = sAsciiTable[*ptr & 0x7f];
@@ -159,9 +163,8 @@ inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
 				position_x = x;
 				position_y += 7;
 			} else if (codepoint == 0xfd) {
-				s32 current_position = position_x;
-				s32 tab              = (current_position - x + 0x2f) % 0x30;
-				position_x           = current_position + 0x30 - tab;
+				position_x
+				    = position_x + 0x30 - ((position_x - x + 0x2f) % 0x30);
 			} else {
 				if (codepoint != 0xff) {
 					drawChar(position_x, position_y, codepoint);
@@ -176,20 +179,6 @@ inline void JUTDirectPrint::printSub(u16 position_x, u16 position_y,
 	}
 
 	DCFlushRange(mFrameBuffer, mFrameBufferSize);
-}
 
-void JUTDirectPrint::drawString(u16 position_x, u16 position_y, char* text)
-{
-	drawString_f(position_x, position_y, "%s", text);
-}
-
-void JUTDirectPrint::drawString_f(u16 position_x, u16 position_y,
-                                  char const* format, ...)
-{
-	if (mFrameBuffer) {
-		va_list args;
-		va_start(args, format);
-		printSub(position_x, position_y, format, args, false);
-		va_end(args);
-	}
+	va_end(args);
 }
