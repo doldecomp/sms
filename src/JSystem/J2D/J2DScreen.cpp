@@ -13,28 +13,30 @@ J2DScreen::~J2DScreen() { }
 void J2DScreen::makeHiearachyPanes(J2DPane* parent,
                                    JSURandomInputStream* stream,
                                    bool allow_user_panes, bool we_are_root,
-                                   bool is_ex, s32* param_6)
+                                   bool is_ex, s32* out_next_pane_offset)
 {
-	s32 local_a8;
+	s32 nextPaneOffset;
 	J2DPane* nextParent = parent;
 	if (we_are_root) {
-		u32 local_54;
-		stream->peek(&local_54, 4);
-		is_ex  = local_54 == 'SCRN' ? true : false;
+		u32 magic;
+		stream->peek(&magic, 4);
+		is_ex  = magic == 'SCRN' ? true : false;
 		mColor = 0;
 		if (is_ex) {
 			stream->skip(4);
-			if (stream->readU32() != 'blo1')
+			u32 magic2 = stream->readU32();
+			if (magic2 != 'blo1')
 				return;
 			stream->skip(0x18);
-			if (stream->readU32() != 'INF1')
+			u32 magic3 = stream->readU32();
+			if (magic3 != 'INF1')
 				return;
 			stream->skip(4);
-			short local_9c = stream->readS16();
-			short local_9a = stream->readS16();
-			mBounds        = JUTRect(0, 0, local_9c, local_9a);
-			mColor         = stream->readU32();
-			param_6        = &local_a8;
+			s16 w                = stream->readS16();
+			s16 h                = stream->readS16();
+			mBounds              = JUTRect(0, 0, w, h);
+			mColor               = stream->readU32();
+			out_next_pane_offset = &nextPaneOffset;
 		}
 	}
 
@@ -49,18 +51,18 @@ void J2DScreen::makeHiearachyPanes(J2DPane* parent,
 				OSPanic("J2DScreen.cpp", 0x96, "SCRN resource is broken.\n");
 			}
 			stream->skip(-4);
-			*param_6 = size + stream->getPosition();
+			*out_next_pane_offset = size + stream->getPosition();
 
 			switch (magic) {
 			case 'EXT1':
 				return;
 			case 'BGN1':
-				stream->seek(*param_6, SEEK_SET);
+				stream->seek(*out_next_pane_offset, SEEK_SET);
 				makeHiearachyPanes(nextParent, stream, allow_user_panes, false,
-				                   is_ex, param_6);
+				                   is_ex, out_next_pane_offset);
 				break;
 			case 'END1':
-				stream->seek(*param_6, SEEK_SET);
+				stream->seek(*out_next_pane_offset, SEEK_SET);
 				return;
 			case 'PAN1':
 				nextParent = new J2DPane(parent, stream, is_ex);
@@ -76,10 +78,10 @@ void J2DScreen::makeHiearachyPanes(J2DPane* parent,
 				break;
 			default:
 				if (allow_user_panes)
-					nextParent = makeUserPane((u32)mKind, parent, stream);
+					nextParent = makeUserPane(mKind, parent, stream);
 				break;
 			}
-			stream->seek(*param_6, SEEK_SET);
+			stream->seek(*out_next_pane_offset, SEEK_SET);
 		} else {
 			u16 tag;
 			if (stream->peek(&tag, 2) != 2) {
@@ -182,6 +184,8 @@ J2DSetScreen::J2DSetScreen(const char* name, JKRArchive* arch)
 
 void J2DScreen::drawSelf(int x, int y, Mtx* mtx)
 {
+	int trash[0x4]; // ???
+
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
@@ -193,7 +197,6 @@ void J2DScreen::drawSelf(int x, int y, Mtx* mtx)
 	GXColor1u32(mColor);
 	GXPosition3s16(0, (u32)getHeight(), 0);
 	GXColor1u32(mColor);
-
 	GXEnd();
 }
 

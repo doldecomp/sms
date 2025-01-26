@@ -447,7 +447,7 @@ void J2DPicture::setTevMode()
 		              GX_COLOR_NULL);
 	}
 
-	GXSetTevColor(GX_TEVREG2, JUtility::TColor(0xffffffff));
+	GXSetTevColor(GX_TEVREG2, JUtility::TColor());
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO,
 	                GX_CC_ZERO);
 
