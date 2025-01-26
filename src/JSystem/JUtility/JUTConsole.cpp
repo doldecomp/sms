@@ -9,29 +9,10 @@
 
 JUTConsoleManager* JUTConsoleManager::sManager;
 
-JUTConsole* JUTConsole::create(unsigned param_0, unsigned maxLines,
-                               JKRHeap* p_heap)
-{
-	JUTConsoleManager* pManager = JUTConsoleManager::getManager();
-	JUT_ASSERT(33, pManager != nullptr);
-
-	void* buffer = JKRAllocFromHeap(
-	    p_heap, getObjectSizeFromBufferSize(param_0, maxLines), 0);
-	u8* tmpBuf = (u8*)buffer;
-
-	JUTConsole* newConsole = new (tmpBuf) JUTConsole(param_0, maxLines, true);
-	newConsole->mBuf       = tmpBuf + sizeof(JUTConsole);
-	newConsole->clear();
-
-	pManager->appendConsole(newConsole);
-	return newConsole;
-}
-
 JUTConsole* JUTConsole::create(unsigned param_0, void* buffer, u32 bufferSize)
 {
 	JUTConsoleManager* pManager = JUTConsoleManager::getManager();
-	JUT_ASSERT(59, pManager != nullptr);
-	JUT_ASSERT(62, ((u32)buffer & 0x3) == 0);
+
 	u32 maxLines = getLineFromObjectSize(bufferSize, param_0);
 
 	JUTConsole* newConsole = new (buffer) JUTConsole(param_0, maxLines, false);
@@ -62,22 +43,13 @@ JUTConsole::JUTConsole(unsigned param_0, unsigned maxLines, bool param_2)
 	field_0x66 = false;
 	mOutput    = 1;
 
-	field_0x5c.set(0, 0, 0, 100);
-	field_0x60.set(0, 0, 0, 230);
+	field_0x5c = JUtility::TColor(0, 0, 0, 100);
+	field_0x60 = JUtility::TColor(0, 0, 0, 230);
 }
-
-static void dummy1() { OSReport("console != 0"); }
 
 JUTConsole::~JUTConsole()
 {
-	JUT_ASSERT(150, JUTConsoleManager::getManager());
 	JUTConsoleManager::getManager()->removeConsole(this);
-}
-
-size_t JUTConsole::getObjectSizeFromBufferSize(unsigned param_0,
-                                               unsigned maxLines)
-{
-	return (param_0 + 2) * maxLines + sizeof(JUTConsole);
 }
 
 size_t JUTConsole::getLineFromObjectSize(u32 bufferSize, unsigned param_1)
@@ -105,18 +77,19 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 
 	if (mVisible && (mFont != nullptr || consoleType == CONSOLE_TYPE_2)) {
 		if (mHeight != 0) {
-			bool temp_r30 = consoleType == ACTIVE;
+			bool temp_r30 = consoleType == ACTIVE ? true : false;
 			font_yOffset  = 2.0f + mFontSizeY;
 
 			if (consoleType != CONSOLE_TYPE_2) {
-				// if (JUTGetVideoManager() == nullptr) {
-				//     J2DOrthoGraph ortho(0.0f, 0.0f, 640.0f, 480.0f,
-				//     -1.0f, 1.0f); ortho.setPort();
-				// } else {
-				//     JUTVideo * pVideo = JUTGetVideoManager();
-				//     J2DOrthoGraph ortho(0.0f, 0.0f, pVideo->getFbWidth(),
-				//     pVideo->getEfbHeight(), -1.0f, 1.0f); ortho.setPort();
-				// }
+				if (JUTGetVideoManager() == nullptr) {
+					J2DOrthoGraph ortho(0, 0, 640, 480);
+					ortho.setPort();
+				} else {
+					JUTVideo* pVideo = JUTGetVideoManager();
+					J2DOrthoGraph ortho(0, 0, pVideo->getFbWidth(),
+					                    pVideo->getEfbHeight());
+					ortho.setPort();
+				}
 
 				const JUtility::TColor* color;
 				if (temp_r30) {
@@ -189,116 +162,60 @@ void JUTConsole::print_f(const char* fmt, ...)
 
 void JUTConsole::print(const char* param_0)
 {
-	if (mOutput & 2) {
-		OSReport("%s", param_0);
-	}
-	if (mOutput & 1) {
-		const u8* r29 = (const u8*)param_0;
-		u8* r28       = getLinePtr(field_0x38) + field_0x3c;
-		while (*r29) {
-			if (field_0x66 && field_0x34 == nextIndex(field_0x38)) {
-				break;
-			}
-			if (*r29 == '\n') {
-				r29++;
-				field_0x3c = field_0x20;
-			} else if (*r29 == '\t') {
-				r29++;
-				while (field_0x3c < field_0x20) {
-					*(r28++) = ' ';
-					field_0x3c++;
-					if (field_0x3c % 8 == 0) {
-						break;
-					}
-				}
-			} else if (mFont && mFont->isLeadByte(*r29)) {
-				if (field_0x3c + 1 < field_0x20) {
-					*(r28++) = *(r29++);
-					*(r28++) = *(r29++);
-					field_0x3c++;
-					field_0x3c++;
-				} else {
-					*(r28++) = 0;
-					field_0x3c++;
-				}
-			} else {
-				*(r28++) = *(r29++);
-				field_0x3c++;
-			}
+	if (!(mOutput & 1))
+		return;
 
-			if (field_0x3c < field_0x20) {
-				continue;
-			}
-			*r28       = 0;
-			field_0x38 = nextIndex(field_0x38);
-			field_0x3c = 0;
-			setLineAttr(field_0x38, 0xff);
-			r28          = getLinePtr(field_0x38);
-			*r28         = 0;
-			int local_28 = diffIndex(field_0x30, field_0x38);
-			if (local_28 == mHeight) {
-				field_0x30 = nextIndex(field_0x30);
-			}
-			if (field_0x38 == field_0x34) {
-				field_0x34 = nextIndex(field_0x34);
-			}
-			if (field_0x38 == field_0x30) {
-				field_0x30 = nextIndex(field_0x30);
-			}
+	const char* r29 = param_0;
+	u8* r28         = getLinePtr(field_0x38) + field_0x3c;
+	while (*r29) {
+		if (field_0x66 && field_0x34 == nextIndex(field_0x38)) {
+			break;
 		}
-		*r28 = 0;
+		if (*r29 == '\n') {
+			r29++;
+			field_0x3c = field_0x20;
+		} else if (*r29 == '\t') {
+			r29++;
+			while (field_0x3c < field_0x20) {
+				*(r28++) = ' ';
+				field_0x3c++;
+				if (field_0x3c % 8 == 0) {
+					break;
+				}
+			}
+		} else {
+			*(r28++) = *(r29++);
+			field_0x3c++;
+		}
+
+		if (field_0x3c < field_0x20) {
+			continue;
+		}
+		*r28       = 0;
+		field_0x38 = nextIndex(field_0x38);
+		field_0x3c = 0;
+		setLineAttr(field_0x38, 0xff);
+		r28          = getLinePtr(field_0x38);
+		*r28         = 0;
+		int local_28 = diffIndex(field_0x30, field_0x38);
+		if (local_28 == mHeight) {
+			field_0x30 = nextIndex(field_0x30);
+		}
+		if (field_0x38 == field_0x34) {
+			field_0x34 = nextIndex(field_0x34);
+		}
+		if (field_0x38 == field_0x30) {
+			field_0x30 = nextIndex(field_0x30);
+		}
 	}
+	*r28 = 0;
 }
 
 void JUTConsole_print_f_va_(JUTConsole* console, const char* fmt, va_list args)
 {
-	JUT_ASSERT(561, console != 0);
 	char buf[1024];
-	vsnprintf(buf, sizeof(buf), fmt, args);
+	int sz = vsnprintf(buf, sizeof(buf), fmt, args);
 	console->print(buf);
-}
-
-void JUTConsole::dumpToTerminal(unsigned param_0)
-{
-	if (param_0 == 0) {
-		return;
-	}
-
-	s32 r29 = field_0x34;
-	if (param_0 != -1) {
-		r29 = field_0x38;
-		for (int i = 0; i != param_0; i++) {
-			int r25 = prevIndex(r29);
-			if (getLineAttr(r25) == 0) {
-				break;
-			}
-			r29 = r25;
-			if (r25 == field_0x34) {
-				break;
-			}
-		}
-	}
-
-	s32 i = 0;
-	OSReport("\n:::dump of console[%x]--------------------------------\n",
-	         this);
-	while (true) {
-		u8* r28 = getLinePtr(r29);
-		u8 r24  = r28[-1];
-		if (r24 == 0) {
-			break;
-		}
-		if (field_0x65) {
-			OSReport("[%03d] %s\n", i, r28);
-		} else {
-			OSReport("%s\n", r28);
-		}
-		r29 = nextIndex(r29);
-		i++;
-		if (r29 == field_0x34)
-			break;
-	}
-	OSReport(":::dump of console[%x] END----------------------------\n", this);
 }
 
 void JUTConsole::scroll(int scrollAmnt)
@@ -348,16 +265,8 @@ JUTConsoleManager::JUTConsoleManager()
 	mDirectConsole = nullptr;
 }
 
-static void dummy2()
-{
-	OSReport("console != this && console != 0");
-	OSReport("\n:::dump of console[%x]----------------\n");
-	OSReport(":::dump of console[%x] END------------\n");
-}
-
 JUTConsoleManager* JUTConsoleManager::createManager(JKRHeap* pHeap)
 {
-	JUT_ASSERT(922, sManager == nullptr);
 	if (pHeap == nullptr) {
 		pHeap = JKRHeap::sCurrentHeap;
 	}
@@ -367,17 +276,8 @@ JUTConsoleManager* JUTConsoleManager::createManager(JKRHeap* pHeap)
 	return manager;
 }
 
-static void dummy3()
-{
-	OSReport("consoleManager != 0 && sManager == consoleManager");
-}
-
 void JUTConsoleManager::appendConsole(JUTConsole* console)
 {
-	JUT_ASSERT(0x3bf, sManager != nullptr && console != nullptr);
-
-	JUT_ASSERT(0x3c2, soLink_.Find(console) == soLink_.end());
-
 	soLink_.Push_back(console);
 
 	if (mActiveConsole == nullptr)
@@ -386,16 +286,13 @@ void JUTConsoleManager::appendConsole(JUTConsole* console)
 
 void JUTConsoleManager::removeConsole(JUTConsole* console)
 {
-	JUT_ASSERT(0x3d6, sManager != nullptr && console != nullptr);
-	JUT_ASSERT(0x3d9, soLink_.Find(console) != soLink_.end());
-
 	if (mActiveConsole == console) {
 		if (soLink_.size() <= 1) {
 			mActiveConsole = nullptr;
 		} else {
 			mActiveConsole
 			    = console != &soLink_.back()
-			          ? soLink_.Element_toValue(console->mLinkNode.getNext())
+			          ? soLink_.Element_getValue(console->mLinkNode.getNext())
 			          : &soLink_.front();
 		}
 	}
@@ -408,25 +305,10 @@ void JUTConsoleManager::removeConsole(JUTConsole* console)
 	soLink_.Remove(console);
 }
 
-void JUTConsoleManager::draw() const
-{
-	ConsoleList::const_iterator iter = soLink_.begin();
-	ConsoleList::const_iterator end  = soLink_.end();
-
-	for (; iter != end; ++iter) {
-		const JUTConsole* const pConsole = &(*iter);
-		if (pConsole != mActiveConsole)
-			pConsole->doDraw(JUTConsole::INACTIVE);
-	}
-
-	if (mActiveConsole != nullptr)
-		mActiveConsole->doDraw(JUTConsole::ACTIVE);
-}
-
 void JUTConsoleManager::drawDirect(bool waitRetrace) const
 {
 	if (mDirectConsole != nullptr) {
-		if (waitRetrace) {
+		if (waitRetrace == true) {
 			s32 interrupt_status = OSEnableInterrupts();
 			u32 retrace_count    = VIGetRetraceCount();
 			u32 new_count;
@@ -472,7 +354,6 @@ void JUTReportConsole_f_va(const char* fmt, va_list args)
 
 	if (JUTGetReportConsole() == nullptr) {
 		vsnprintf(buf, sizeof(buf), fmt, args);
-		OSReport("%s", buf);
 	} else if (JUTGetReportConsole()->getOutput()
 	           & (JUTConsole::OUTPUT_CONSOLE | JUTConsole::OUTPUT_OSREPORT)) {
 		vsnprintf(buf, sizeof(buf), fmt, args);
@@ -486,6 +367,7 @@ void JUTReportConsole_f(const char* fmt, ...)
 	va_start(args, fmt);
 	JUTReportConsole_f_va(fmt, args);
 	va_end(args);
+	char trash[0x4];
 }
 
 void JUTReportConsole(const char* message)
@@ -513,6 +395,7 @@ void JUTWarningConsole_f(const char* fmt, ...)
 	va_start(args, fmt);
 	JUTReportConsole_f_va(fmt, args);
 	va_end(args);
+	char trash[0x4];
 }
 
 void JUTWarningConsole(const char* message)
