@@ -51,7 +51,7 @@ public:
 	/* 0x5C */ u16 mWidthBlockNum;
 	/* 0x5E */ u16 mGlyphBlockNum;
 	/* 0x60 */ u16 mMapBlockNum;
-	/* 0x62 */ u16 field_0x66;
+	/* 0x62 */ u16 field_0x62;
 	/* 0x64 */ u16 mMaxCode;
 	/* 0x68 */ const IsLeadByte_func* mIsLeadByte;
 };
