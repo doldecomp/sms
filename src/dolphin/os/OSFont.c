@@ -481,7 +481,7 @@ char* OSGetFontTexture(char* string, void** image, long* x, long* y,
 	return string;
 }
 
-char* OSGetFontWidth(char* string, long* width)
+char* OSGetFontWidth(char* string, s32* width)
 {
 	unsigned short code;
 
