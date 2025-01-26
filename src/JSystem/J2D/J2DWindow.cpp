@@ -194,7 +194,7 @@ void J2DWindow::resize(int width, int height)
 
 	for (JSUTreeIterator<J2DPane> iter = mPaneTree.getFirstChild();
 	     iter != mPaneTree.getEndChild(); ++iter) {
-		if (iter->mInfoTag == 0x13 && iter->mConnected) {
+		if (iter->getTag() == 0x13 && iter->isConnectParent()) {
 			int nw = dw + iter->getWidth();
 			int nh = dh + iter->getHeight();
 			iter->mBounds.resize(nw, nh);
@@ -317,8 +317,8 @@ void J2DWindow::Texture::drawContentsTexture(int x, int y, int width,
 
 	f32 w  = (f32)getWidth();
 	f32 h  = (f32)getHeight();
-	f32 u1 = -((f32)width / w - 1.0f) * 0.5f;
-	f32 v1 = -((f32)height / h - 1.0f) * 0.5f;
+	f32 u1 = -((f32)width / w - 1.0f) / 2.0f;
+	f32 v1 = -((f32)height / h - 1.0f) / 2.0f;
 	f32 u2 = u1 + (f32)width / w;
 	f32 v2 = v1 + (f32)height / h;
 
@@ -343,15 +343,15 @@ void J2DWindow::Texture::drawContentsTexture(int x, int y, int width,
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_CLR_RGBA, GX_RGBX8, 15);
 }
 
-void J2DWindow::Texture::setTevMode(u8 param_1, JUtility::TColor param_2,
-                                    JUtility::TColor param_3)
+void J2DWindow::Texture::setTevMode(u8 opacity, JUtility::TColor black,
+                                    JUtility::TColor white)
 {
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, param_1 });
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, opacity });
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
-	if (param_1 == 0xff && param_2 == 0 && param_3 == 0xffffffff) {
+	if (opacity == 0xff && black == 0 && white == 0xffffffff) {
 		int alpha = getTransparency();
 		GXSetNumTevStages(1);
 		if (field_0x2c != nullptr) {
@@ -380,7 +380,7 @@ void J2DWindow::Texture::setTevMode(u8 param_1, JUtility::TColor param_2,
 		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO,
 		                GX_CC_ZERO);
 
-		if ((s32)mAlphaEnabled != 0)
+		if (getTransparency() != 0)
 			GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO,
 			                GX_CA_ZERO);
 		else
@@ -392,11 +392,11 @@ void J2DWindow::Texture::setTevMode(u8 param_1, JUtility::TColor param_2,
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
 		                GX_TEVPREV);
 
-		if (param_2 != 0 || param_3 != 0xffffffff) {
+		if (black != 0 || white != 0xffffffff) {
 			GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 			              GX_COLOR_NULL);
-			GXSetTevColor(GX_TEVREG0, param_2);
-			GXSetTevColor(GX_TEVREG1, param_3);
+			GXSetTevColor(GX_TEVREG0, black);
+			GXSetTevColor(GX_TEVREG1, white);
 			GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_C0, GX_CC_C1, GX_CC_CPREV,
 			                GX_CC_ZERO);
 			GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_A0, GX_CA_A1, GX_CA_APREV,
@@ -408,7 +408,7 @@ void J2DWindow::Texture::setTevMode(u8 param_1, JUtility::TColor param_2,
 			stage = GX_TEVSTAGE2;
 		}
 
-		if (param_1 != 0xff) {
+		if (opacity != 0xff) {
 			GXSetTevOrder((GXTevStageID)stage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 			              GX_COLOR0A0);
 			GXSetTevColorIn((GXTevStageID)stage, GX_CC_CPREV, GX_CC_ZERO,

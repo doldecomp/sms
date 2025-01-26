@@ -82,7 +82,8 @@ public:
 
 	void setMtx(Mtx m) { MTXCopy(m, mPositionMtx); }
 
-	int getKind() const { return mKind; }
+	u32 getKind() const { return mKind; }
+	u16 getTag() const { return mInfoTag; }
 
 	bool isVisible() const { return mVisible; }
 
@@ -96,7 +97,7 @@ public:
 
 public:
 	/* 0x4 */ u16 mInfoTag;
-	/* 0x8 */ int mKind;
+	/* 0x8 */ u32 mKind;
 	/* 0xC */ bool mVisible;
 	/* 0x10 */ u32 mUserInfoTag;
 	/* 0x14 */ JUTRect mBounds;

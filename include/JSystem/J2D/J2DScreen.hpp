@@ -39,9 +39,7 @@ class J2DSetScreen : J2DScreen {
 public:
 	J2DSetScreen(const char*, JKRArchive*);
 
-	virtual ~J2DSetScreen() {};
-	virtual J2DPane* makeUserPane(u16, J2DPane*, JSURandomInputStream*);
-	virtual J2DPane* makeUserPane(u32, J2DPane*, JSURandomInputStream*);
+	virtual ~J2DSetScreen() { }
 };
 
 #endif
