@@ -17,6 +17,16 @@ public:
 
 	bool isActive() const { return mStreamStart; }
 
+	inline void step() // fabricated
+	{
+		u8* next = mStream + mStep;
+		if (next < mStreamStart)
+			next = mStreamStart;
+		if (next > mStreamEnd)
+			next = mStreamEnd;
+		mStream = next;
+	}
+
 	/* 0x0 */ u8* mStreamStart;
 	/* 0x4 */ u8* mStreamEnd;
 	/* 0x8 */ u32 unk8;
@@ -239,8 +249,8 @@ public:
 	/* 0x80 */ JSULink<JUTGamePad> mLink;
 	/* 0x90 */ JUTGamePadRecord* mPadRecord;
 	/* 0x94 */ JUTGamePadRecord* mPadReplay;
+	/* 0x94 */ u8 field_0x9c[4];
 	/* 0x98 */ C3ButtonReset mButtonReset;
-	/* 0x9C */ u8 field_0x9c[4];
 	/* 0xA0 */ OSTime mResetHoldStartTime;
 };
 
