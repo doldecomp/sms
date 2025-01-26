@@ -1,5 +1,5 @@
 #include <JSystem/JUtility/JUTRomFont.hpp>
-#include <JSystem/JUtility/JUTConcole.hpp>
+#include <JSystem/JUtility/JUTConsole.hpp>
 #include <dolphin/gx.h>
 
 const JUTRomFont::AboutFont JUTRomFont::saoAboutEncoding_[2] = {

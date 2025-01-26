@@ -1,5 +1,5 @@
 #include <JSystem/JKernel/JKRExpHeap.hpp>
-#include <JSystem/JUtility/JUTConcole.hpp>
+#include <JSystem/JUtility/JUTConsole.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JMacro.hpp>
 #include <macros.h>

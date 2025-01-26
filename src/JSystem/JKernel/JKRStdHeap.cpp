@@ -1,5 +1,5 @@
 #include <JSystem/JKernel/JKRStdHeap.hpp>
-#include <JSystem/JUtility/JUTConcole.hpp>
+#include <JSystem/JUtility/JUTConsole.hpp>
 #include <macros.h>
 
 JKRStdHeap* JKRStdHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
