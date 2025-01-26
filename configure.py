@@ -343,7 +343,7 @@ config.libs = [
             # JUtility
             Object(NonMatching, "JSystem/JUtility/JUTException.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTDirectPrint.cpp"),
-            Object(NonMatching, "JSystem/JUtility/JUTDbPrint.cpp"),
+            Object(Matching, "JSystem/JUtility/JUTDbPrint.cpp"),
             Object(Matching, "JSystem/JUtility/JUTFont.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTGamePad.cpp"),
             Object(NonMatching, "JSystem/JUtility/JUTNameTab.cpp"),
