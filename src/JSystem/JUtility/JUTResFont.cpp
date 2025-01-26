@@ -1,5 +1,5 @@
 #include <JSystem/JUtility/JUTResFont.hpp>
-#include <JSystem/JUtility/JUTConcole.hpp>
+#include <JSystem/JUtility/JUTConsole.hpp>
 #include <dolphin/gx.h>
 #include <types.h>
 
