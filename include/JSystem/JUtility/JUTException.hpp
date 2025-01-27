@@ -25,20 +25,18 @@ private:
 	/* 0x11 */ u8 field_[3];
 };
 
-#define JUT_PRINT_GPR      1
-#define JUT_PRINT_GPR_MAP  2
-#define JUT_PRINT_SRR0_MAP 4
-#define JUT_PRINT_FLOAT    8
-#define JUT_PRINT_STACK    16
+#define JUT_PRINT_GPR     1
+#define JUT_PRINT_GPR_MAP 2
+#define JUT_PRINT_FLOAT   4
+#define JUT_PRINT_STACK   8
 
 class JUTException : public JKRThread {
 public:
 	enum EInfoPage {
-		EINFO_PAGE_GPR      = 1,
-		EINFO_PAGE_FLOAT    = 2,
-		EINFO_PAGE_STACK    = 3,
-		EINFO_PAGE_GPR_MAP  = 4,
-		EINFO_PAGE_SSR0_MAP = 5,
+		EINFO_PAGE_GPR     = 1,
+		EINFO_PAGE_FLOAT   = 2,
+		EINFO_PAGE_STACK   = 3,
+		EINFO_PAGE_GPR_MAP = 4,
 	};
 
 	class JUTExMapFile {
@@ -65,7 +63,6 @@ public:
 	void showGPR(OSContext*);
 	bool showMapInfo_subroutine(u32, bool);
 	void showGPRMap(OSContext*);
-	void showSRR0Map(OSContext*);
 	void printDebugInfo(JUTException::EInfoPage, OSError, OSContext*, u32, u32);
 	bool isEnablePad() const;
 	bool readPad(u32*, u32*);
@@ -76,13 +73,11 @@ public:
 
 	static JUTException* create(JUTDirectPrint*);
 	static void errorHandler(OSError, OSContext*, u32, u32);
-	static void panic_f_va(char const*, int, char const*, va_list);
-	static void panic_f(char const*, int, char const*, ...);
-	static void setFPException(u32);
+	static u32 getFpscr();
 	static bool searchPartialModule(u32, u32*, u32*, u32*, u32*);
 	static OSErrorHandler setPreUserCallback(OSErrorHandler);
 	static OSErrorHandler setPostUserCallback(OSErrorHandler);
-	static void appendMapFile(char const*);
+	static void appendMapFile(char*);
 	static bool queryMapAddress(char*, u32, s32, u32*, u32*, char*, u32, bool,
 	                            bool);
 	static bool queryMapAddress_single(char*, u32, s32, u32*, u32*, char*, u32,
@@ -102,11 +97,11 @@ public:
 		mGamePadPort = JUTGamePad::EPortInvalid;
 	}
 
-	static void setMapFile(const char* map) { appendMapFile(map); }
+	static void setMapFile(char* map) { appendMapFile(map); }
 
 private:
 	static OSMessageQueue sMessageQueue;
-	static const char* sCpuExpName[17];
+	static const char* sCpuExpName[16];
 	static JSUList<JUTException::JUTExMapFile> sMapFileList;
 	static OSMessage sMessageBuffer[1];
 	static JUTException* sErrorManager;

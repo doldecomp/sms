@@ -8,7 +8,9 @@ extern "C" {
 #endif
 
 typedef u16 OSError;
-typedef void (*OSErrorHandler)(OSError error, OSContext* context, ...);
+typedef void (*OSErrorHandler)(OSError error, OSContext* context, u32, u32);
+// Using this type for the C++ handlers makes stuff not match
+typedef void (*OSErrorHandlerEx)(OSError error, OSContext* context, ...);
 
 #define OS_ERROR_SYSTEM_RESET       0
 #define OS_ERROR_MACHINE_CHECK      1
@@ -25,7 +27,8 @@ typedef void (*OSErrorHandler)(OSError error, OSContext* context, ...);
 #define OS_ERROR_BREAKPOINT         12
 #define OS_ERROR_SYSTEM_INTERRUPT   13
 #define OS_ERROR_THERMAL_INTERRUPT  14
-#define OS_ERROR_MAX                (OS_ERROR_THERMAL_INTERRUPT + 1)
+#define OS_ERROR_MEMORY_PROTECTION  15 // might be wrong
+#define OS_ERROR_MAX                OS_ERROR_MEMORY_PROTECTION
 
 OSErrorHandler OSSetErrorHandler(OSError error, OSErrorHandler handler);
 

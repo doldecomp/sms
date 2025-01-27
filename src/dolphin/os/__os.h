@@ -40,7 +40,7 @@ extern void __RAS_OSDisableInterrupts_end(void);
 extern unsigned long long __OSSpuriousInterrupts; // D ONLY
 extern char* __OSInterruptNames[33];              // D ONLY
 extern char* __OSPIErrors[8];                     // D ONLY
-extern OSErrorHandler __OSErrorTable[16];
+extern OSErrorHandlerEx __OSErrorTable[16];
 
 __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt,
                                              __OSInterruptHandler handler);
