@@ -47,8 +47,8 @@ OSErrorHandler OSSetErrorHandler(OSError error, OSErrorHandler handler)
 	return oldHandler;
 }
 
-void __OSUnhandledException(unsigned char exception, struct OSContext* context,
-                            unsigned long dsisr, unsigned long dar)
+void __OSUnhandledException(u8 exception, struct OSContext* context, u32 dsisr,
+                            u32 dar)
 {
 	if (!(context->srr1 & MSR_RI)) {
 		OSReport("Non-recoverable Exception %d", exception);
