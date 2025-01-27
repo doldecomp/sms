@@ -29,6 +29,7 @@ extern "C" {
 #include <dolphin/os/OSStopwatch.h>
 #include <dolphin/os/OSThread.h>
 #include <dolphin/os/OSTime.h>
+#include <dolphin/os/OSMemory.h>
 
 // private macro, maybe shouldn't be defined here?
 #define OFFSET(addr, align) (((u32)(addr) & ((align)-1)))

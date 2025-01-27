@@ -1,4 +1,4 @@
-#include <dolphin/os.h>
+#include <dolphin/os/OSMemory.h>
 #include <dolphin/hw_regs.h>
 #include "__os.h"
 

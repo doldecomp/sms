@@ -7,7 +7,7 @@
 // internal include
 #include "__os.h"
 
-OSErrorHandler __OSErrorTable[16];
+OSErrorHandlerEx __OSErrorTable[16];
 
 void OSReport(char* msg, ...)
 {
@@ -42,8 +42,8 @@ OSErrorHandler OSSetErrorHandler(OSError error, OSErrorHandler handler)
 {
 	OSErrorHandler oldHandler;
 
-	oldHandler            = __OSErrorTable[error];
-	__OSErrorTable[error] = handler;
+	oldHandler            = (OSErrorHandler)__OSErrorTable[error];
+	__OSErrorTable[error] = (OSErrorHandlerEx)handler;
 	return oldHandler;
 }
 
