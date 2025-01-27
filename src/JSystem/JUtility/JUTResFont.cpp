@@ -303,7 +303,7 @@ void JUTResFont::loadFont(int code, GXTexMapID tex_map_id,
 	loadImage(fontCode, tex_map_id);
 }
 
-inline void JUTResFont::getWidthEntry(int code, JUTFont::TWidth* width) const
+void JUTResFont::getWidthEntry(int code, JUTFont::TWidth* width) const
 {
 	int fontCode     = getFontCode(code);
 	width->field_0x1 = mInfoBlock->width;
@@ -402,10 +402,11 @@ void JUTResFont::loadImage(int code, GXTexMapID id)
 	s32 pageNumCells = mpGlyphBlocks[i]->numRows * mpGlyphBlocks[i]->numColumns;
 	s32 pageIdx      = code / pageNumCells;
 	s32 cellIdxInPage = code % pageNumCells;
+	s32 cellRow       = (cellIdxInPage / mpGlyphBlocks[i]->numRows);
+	s32 cellCol       = (cellIdxInPage - cellRow * mpGlyphBlocks[i]->numRows);
 
-	u16 rows = mpGlyphBlocks[i]->numRows;
-	mWidth   = (cellIdxInPage % rows) * mpGlyphBlocks[i]->cellWidth;
-	mHeight  = (cellIdxInPage / rows) * mpGlyphBlocks[i]->cellHeight;
+	mWidth  = (cellCol)*mpGlyphBlocks[i]->cellWidth;
+	mHeight = (cellRow)*mpGlyphBlocks[i]->cellHeight;
 
 	if (pageIdx != mTexPageIdx || i != field_0x62) {
 		GXInitTexObj(
