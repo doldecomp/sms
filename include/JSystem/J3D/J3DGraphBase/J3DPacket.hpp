@@ -6,6 +6,21 @@
 
 class J3DMatPacket;
 class J3DDrawBuffer;
+class J3DShape;
+class J3DMaterial;
+class J3DShapePacket;
+
+class J3DDisplayListObj {
+public:
+	void newDisplayList(u32);
+	void swapBuffer();
+	void callDL();
+
+	void* unk0;
+	void* unk4;
+	u32 unk8;
+	u32 unkC;
+};
 
 class J3DPacket {
 public:
@@ -42,26 +57,6 @@ public:
 	CallbackT unk10;
 };
 
-class J3DShape;
-
-class J3DShapePacket : public J3DCallBackPacket {
-public:
-	J3DShapePacket();
-
-	virtual void draw();
-	virtual ~J3DShapePacket();
-
-	J3DShape* unk14;
-	u32 unk18;
-	u32 unk1C;
-	void* unk20;
-	u32 unk24;
-	u32 unk28;
-	u32 unk2C;
-	u8 unk30;
-	char unk31[0x3];
-};
-
 class J3DDrawPacket : public J3DPacket {
 public:
 	J3DDrawPacket();
@@ -79,18 +74,10 @@ public:
 	char padding0[0xc];
 	GDLObj unk20;
 
-	struct Unknown {
-		void* unk0;
-		void* unk4;
-		u32 unk8;
-		u32 unkC;
-	};
-	Unknown* unk30;
+	J3DDisplayListObj* unk30;
 
 	static int sInterruptFlag;
 };
-
-class J3DMaterial;
 
 class J3DMatPacket : public J3DDrawPacket {
 public:
@@ -115,17 +102,22 @@ public:
 	u32 unk44;
 };
 
-class J3DDisplayListObj {
+class J3DShapePacket : public J3DCallBackPacket {
 public:
-	typedef void IDK;
-	void newDisplayList(u32);
-	IDK swapBuffer();
-	void callDL();
+	J3DShapePacket();
 
-	void* unk0;
-	void* unk4;
-	u32 unk8;
-	u32 unkC;
+	virtual void draw();
+	virtual ~J3DShapePacket();
+
+	J3DShape* unk14;
+	u32 unk18;
+	u32 unk1C;
+	void* unk20;
+	u32 unk24;
+	u32 unk28;
+	u32 unk2C;
+	u8 unk30;
+	char unk31[0x3];
 };
 
 #endif
