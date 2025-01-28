@@ -2,6 +2,8 @@
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 
+#pragma opt_strength_reduction off
+
 J3DVertexData::J3DVertexData()
 {
 	unk0  = 0;
@@ -43,6 +45,8 @@ J3DVertexBuffer::J3DVertexBuffer(J3DVertexData* vertex_data)
 	unk34       = vertex_data->unk1C;
 }
 
+J3DVertexBuffer::~J3DVertexBuffer() { }
+
 void J3DVertexBuffer::copyTransformedVtxArray()
 {
 	char trash[0x10];
@@ -60,8 +64,6 @@ void J3DVertexBuffer::copyTransformedVtxArray()
 		}
 	}
 }
-
-J3DVertexBuffer::~J3DVertexBuffer() { }
 
 J3DDrawMtxData::J3DDrawMtxData()
 {
