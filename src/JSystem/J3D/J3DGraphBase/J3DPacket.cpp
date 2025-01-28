@@ -17,6 +17,13 @@ void J3DDisplayListObj::newDisplayList(u32 param_1)
 	unk8 = 0;
 }
 
+void J3DDisplayListObj::swapBuffer()
+{
+	void* tmp = unk0;
+	unk0      = unk4;
+	unk4      = tmp;
+}
+
 void J3DDisplayListObj::callDL() { GXCallDisplayList(unk0, unk8); }
 
 bool J3DPacket::isSame(J3DMatPacket*) const { return false; }
@@ -52,44 +59,27 @@ J3DDrawPacket::J3DDrawPacket()
 	unk30 = nullptr;
 }
 
-void J3DDrawPacket::draw() { GXCallDisplayList(unk30->unk0, unk30->unk8); }
-
 J3DDrawPacket::~J3DDrawPacket() { }
 
-J3DShapePacket::J3DShapePacket()
+void J3DDrawPacket::draw() { GXCallDisplayList(unk30->unk0, unk30->unk8); }
+
+void J3DDrawPacket::beginDL()
 {
-	unk14 = 0;
-	unk18 = 0;
-	unk1C = 0;
-	unk20 = &j3dDefaultViewNo;
-	unk24 = 0;
-	unk28 = 0;
-	unk2C = 0;
-	unk30 = 1;
+	unk30->swapBuffer();
+	sInterruptFlag = OSDisableInterrupts();
+	GDInitGDLObj(&unk20, unk30->unk0, unk30->unkC);
+	__GDCurrentDL = &unk20;
 }
 
-void J3DShapePacket::draw()
+u32 J3DDrawPacket::endDL()
 {
-	char
-	    trash[0x20]; // TODO: probably shares inlines w/ J3DCallBackPacket::draw
-	if ((unk14 != 0) && (unk30 != 0)) {
-		if (unk10 != nullptr) {
-			unk10(this, 0);
-		}
-		j3dSys._10C_4_ = unk24;
-		j3dSys._110_4_ = unk28;
-		j3dSys._114_4_ = unk2C;
-		unk14->unk50   = unk18;
-		unk14->unk54   = unk1C;
-		unk14->unk58   = unk20;
-		unk14->draw();
-		if (unk10 != nullptr) {
-			unk10(this, 1);
-		}
-	}
+	GDPadCurr32();
+	OSRestoreInterrupts(sInterruptFlag);
+	unk30->unk8 = unk20.ptr - unk20.start;
+	GDFlushCurrToMem();
+	__GDCurrentDL = 0;
+	return unk30->unk8;
 }
-
-J3DShapePacket::~J3DShapePacket() { }
 
 J3DMatPacket::J3DMatPacket()
 {
@@ -98,6 +88,8 @@ J3DMatPacket::J3DMatPacket()
 	unk40 = 0;
 	unk44 = 0;
 }
+
+J3DMatPacket::~J3DMatPacket() { }
 
 void J3DMatPacket::addShapePacket(J3DShapePacket* packet)
 {
@@ -136,29 +128,37 @@ void J3DMatPacket::draw()
 	}
 }
 
-J3DMatPacket::~J3DMatPacket() { }
-
-template <class T> inline void swap(T& a, T& b)
+J3DShapePacket::J3DShapePacket()
 {
-	T c = a;
-	a   = b;
-	b   = c;
+	unk14 = 0;
+	unk18 = 0;
+	unk1C = 0;
+	unk20 = &j3dDefaultViewNo;
+	unk24 = 0;
+	unk28 = 0;
+	unk2C = 0;
+	unk30 = 1;
 }
 
-void J3DDrawPacket::beginDL()
-{
-	swap(unk30->unk0, unk30->unk4);
-	sInterruptFlag = OSDisableInterrupts();
-	GDInitGDLObj(&unk20, unk30->unk0, unk30->unkC);
-	__GDCurrentDL = &unk20;
-}
+J3DShapePacket::~J3DShapePacket() { }
 
-u32 J3DDrawPacket::endDL()
+void J3DShapePacket::draw()
 {
-	GDPadCurr32();
-	OSRestoreInterrupts(sInterruptFlag);
-	unk30->unk8 = unk20.ptr - unk20.start;
-	GDFlushCurrToMem();
-	__GDCurrentDL = 0;
-	return unk30->unk8;
+	char
+	    trash[0x20]; // TODO: probably shares inlines w/ J3DCallBackPacket::draw
+	if ((unk14 != 0) && (unk30 != 0)) {
+		if (unk10 != nullptr) {
+			unk10(this, 0);
+		}
+		j3dSys._10C_4_ = unk24;
+		j3dSys._110_4_ = unk28;
+		j3dSys._114_4_ = unk2C;
+		unk14->unk50   = unk18;
+		unk14->unk54   = unk1C;
+		unk14->unk58   = unk20;
+		unk14->draw();
+		if (unk10 != nullptr) {
+			unk10(this, 1);
+		}
+	}
 }
