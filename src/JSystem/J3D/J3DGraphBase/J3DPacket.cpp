@@ -119,8 +119,8 @@ void J3DMatPacket::draw()
 {
 	char trash[0x20];
 	if (!checkThing(unk34)) {
-		j3dSys._054_4_ = unk40;
-		j3dSys._03C_4_ = this;
+		j3dSys.unk54 = unk40;
+		j3dSys.unk3C = this;
 		unk38->load();
 		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {
 			j->draw();
@@ -150,12 +150,12 @@ void J3DShapePacket::draw()
 		if (unk10 != nullptr) {
 			unk10(this, 0);
 		}
-		j3dSys._10C_4_ = unk24;
-		j3dSys._110_4_ = unk28;
-		j3dSys._114_4_ = unk2C;
-		unk14->unk50   = unk18;
-		unk14->unk54   = unk1C;
-		unk14->unk58   = unk20;
+		j3dSys.unk10C = unk24;
+		j3dSys.unk110 = unk28;
+		j3dSys.unk114 = unk2C;
+		unk14->unk50  = unk18;
+		unk14->unk54  = unk1C;
+		unk14->unk58  = unk20;
 		unk14->draw();
 		if (unk10 != nullptr) {
 			unk10(this, 1);
