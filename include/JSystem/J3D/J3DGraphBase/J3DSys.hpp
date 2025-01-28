@@ -1,9 +1,7 @@
 #ifndef J3DSYS_HPP
 #define J3DSYS_HPP
 
-#include "dolphin.h"
-
-#include "types.h"
+#include <dolphin/gx.h>
 
 class J3DSys {
 public:
