@@ -3,6 +3,7 @@
 
 #include <types.h>
 #include <dolphin/gd.h>
+#include <dolphin/mtx.h>
 
 class J3DMatPacket;
 class J3DDrawBuffer;
@@ -110,12 +111,12 @@ public:
 	virtual ~J3DShapePacket();
 
 	J3DShape* unk14;
-	u32 unk18;
-	u32 unk1C;
-	void* unk20;
-	u32 unk24;
-	u32 unk28;
-	u32 unk2C;
+	Mtx** unk18;
+	Mtx33** unk1C;
+	u32* unk20;
+	void* unk24;
+	void* unk28;
+	void* unk2C;
 	u8 unk30;
 	char unk31[0x3];
 };

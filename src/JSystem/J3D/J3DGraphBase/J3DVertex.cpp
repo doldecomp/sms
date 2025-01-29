@@ -1,28 +1,22 @@
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
-
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <macros.h>
 
 #pragma opt_strength_reduction off
 
 J3DVertexData::J3DVertexData()
 {
-	unk0  = 0;
-	unk4  = 0;
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
-	unk18 = 0;
-	unk1C = 0;
-	unk20 = 0;
-	unk24 = 0;
-	unk28 = 0;
-	unk2C = 0;
-	unk30 = 0;
-	unk34 = 0;
-	unk38 = 0;
-	unk3C = 0;
-	unk40 = 0;
+	unk0            = 0;
+	unk4            = 0;
+	unk8            = 0;
+	mVtxAttrFmtList = nullptr;
+	mVtxPosArray    = nullptr;
+	mVtxNormArray   = nullptr;
+	mVtxNBTArray    = 0;
+	for (int i = 0; i < ARRAY_COUNT(mVtxColorArray); ++i)
+		mVtxColorArray[i] = nullptr;
+	for (int i = 0; i < ARRAY_COUNT(mVtxTexCoordArray); ++i)
+		mVtxTexCoordArray[i] = nullptr;
 }
 
 J3DVertexData::~J3DVertexData() { }
@@ -30,19 +24,19 @@ J3DVertexData::~J3DVertexData() { }
 J3DVertexBuffer::J3DVertexBuffer(J3DVertexData* vertex_data)
 {
 	mVertexData = vertex_data;
-	unk4        = vertex_data->unk10;
-	unkC        = vertex_data->unk14;
-	unk14       = vertex_data->unk1C;
+	unk4        = vertex_data->mVtxPosArray;
+	unkC        = vertex_data->mVtxNormArray;
+	unk14       = vertex_data->mVtxColorArray[0];
 	unk8        = 0;
 	unk10       = 0;
 	unk18       = 0;
-	unk1C[0]    = vertex_data->unk10;
-	unk24[0]    = vertex_data->unk14;
+	unk1C[0]    = vertex_data->mVtxPosArray;
+	unk24[0]    = vertex_data->mVtxNormArray;
 	unk1C[1]    = 0;
 	unk24[1]    = 0;
-	unk2C       = vertex_data->unk10;
-	unk30       = vertex_data->unk14;
-	unk34       = vertex_data->unk1C;
+	unk2C       = vertex_data->mVtxPosArray;
+	unk30       = vertex_data->mVtxNormArray;
+	unk34       = vertex_data->mVtxColorArray[0];
 }
 
 J3DVertexBuffer::~J3DVertexBuffer() { }

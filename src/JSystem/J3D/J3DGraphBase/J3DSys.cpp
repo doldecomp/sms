@@ -26,21 +26,21 @@ J3DSys::J3DSys()
 	makeZModeTable();
 	mFlags = 0;
 	MTXIdentity(mViewMtx);
-	unk4C  = 1;
-	unk50  = 0;
-	unk38  = 0;
-	unk40  = 0;
-	unk44  = 0;
-	unk48  = 0;
-	unk54  = 0;
-	unk104 = 0;
-	unk108 = 0;
-	unk10C = 0;
-	unk110 = 0;
-	unk114 = 0;
-	unk118 = 0;
-	unk100 = 0;
-	unk11C = 0;
+	unk4C           = 1;
+	unk50           = 0;
+	unk38           = 0;
+	unk40           = 0;
+	unk44           = 0;
+	unk48           = 0;
+	unk54           = 0;
+	mCurrentDrawMtx = 0;
+	mCurrentNormMtx = 0;
+	unk10C          = 0;
+	unk110          = 0;
+	unk114          = 0;
+	unk118          = 0;
+	unk100          = 0;
+	unk11C          = 0;
 
 	for (u32 i = 0; i < 8; i++) {
 		sTexCoordScaleTable[i].field_0x00 = 1;

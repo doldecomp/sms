@@ -35,6 +35,19 @@ public:
 	void reinitPixelProc();
 	void ErrorReport(J3DErrType) const;
 
+	// From TP debug
+	void setModelDrawMtx(Mtx* mtx)
+	{
+		mCurrentDrawMtx = mtx;
+		GXSetArray(GX_POS_MTX_ARRAY, mCurrentDrawMtx, sizeof(Mtx));
+	}
+
+	void setModelNrmMtx(Mtx33* mtx)
+	{
+		mCurrentNormMtx = mtx;
+		GXSetArray(GX_NRM_MTX_ARRAY, mCurrentNormMtx, sizeof(Mtx33));
+	}
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ char pad_000[0x4];
@@ -52,11 +65,11 @@ public:
 	/* 0x60 */ GXTexRegion mTexCacheRegion[8];
 	/* 0xE0 */ char padd_005[0x20];
 	/* 0x100 */ u32 unk100;
-	/* 0x104 */ u32 unk104;
-	/* 0x108 */ u32 unk108;
-	/* 0x10C */ u32 unk10C;
-	/* 0x110 */ u32 unk110;
-	/* 0x114 */ u32 unk114;
+	/* 0x104 */ Mtx* mCurrentDrawMtx;
+	/* 0x108 */ Mtx33* mCurrentNormMtx;
+	/* 0x10C */ void* unk10C;
+	/* 0x110 */ void* unk110;
+	/* 0x114 */ void* unk114;
 	/* 0x118 */ u32 unk118;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ char pad_006[0x4];
