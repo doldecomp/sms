@@ -150,12 +150,12 @@ void J3DShapePacket::draw()
 		if (unk10 != nullptr) {
 			unk10(this, 0);
 		}
-		j3dSys.unk10C = unk24;
-		j3dSys.unk110 = unk28;
-		j3dSys.unk114 = unk2C;
-		unk14->unk50  = unk18;
-		unk14->unk54  = unk1C;
-		unk14->unk58  = unk20;
+		j3dSys.unk10C         = unk24;
+		j3dSys.unk110         = unk28;
+		j3dSys.unk114         = unk2C;
+		unk14->mDrawMatrices  = unk18;
+		unk14->mNormMatrices  = unk1C;
+		unk14->mCurrentViewNo = unk20;
 		unk14->draw();
 		if (unk10 != nullptr) {
 			unk10(this, 1);
