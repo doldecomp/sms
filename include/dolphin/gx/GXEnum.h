@@ -815,6 +815,17 @@ typedef enum _GXVCachePerf {
 	GX_VC_ALL  = 15,
 } GXVCachePerf;
 
+typedef enum _GXCommand {
+    GX_CMD_LOAD_INDX_A = 0x20,
+    GX_CMD_LOAD_INDX_B = 0x28,
+    GX_CMD_LOAD_INDX_C = 0x30,
+    GX_CMD_LOAD_INDX_D = 0x38,
+
+    GX_CMD_LOAD_CP_REG = 0x08,
+    GX_CMD_LOAD_XF_REG = 0x10,
+    GX_CMD_LOAD_BP_REG = 0x61,
+} GXCommand;
+
 typedef enum _GXClipMode {
 	GX_CLIP_ENABLE  = 0,
 	GX_CLIP_DISABLE = 1,

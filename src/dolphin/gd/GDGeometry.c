@@ -350,13 +350,13 @@ void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm)
 	GDWriteBPCmd(0xfe07fc3f);
 	// clang-format off
 	GDWriteBPCmd(
-		nTexGens |
-		nChans << 4 |
-		(nTevs - 1) << 10 |
-		cm2hw[cm] << 14 |
-		nInds << 16
+		((u32)(nTexGens)) |
+		((u32)(nChans)) << 4 |
+		((u32)(nTevs - 1)) << 10 |
+		((u32)(cm2hw[cm])) << 14 |
+		((u32)(nInds)) << 16
 	);
 	// clang-format on
-	GDWriteXFCmd(0x1009, (u8)(nChans & 0xff));
-	GDWriteXFCmd(0x103f, (u8)(nTexGens & 0xff));
+	GDWriteXFCmd(0x1009, nChans);
+	GDWriteXFCmd(0x103f, nTexGens);
 }
