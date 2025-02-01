@@ -726,9 +726,9 @@ config.libs = [
         ]),
     DolphinLib("gd", [
             Object(Matching, "dolphin/gd/GDBase.c"),
-            Object(NonMatching, "dolphin/gd/GDGeometry.c"),
+            Object(Matching, "dolphin/gd/GDGeometry.c"),
             Object(Matching, "dolphin/gd/GDLight.c"),
-            Object(NonMatching, "dolphin/gd/GDPixel.c"),
+            Object(Matching, "dolphin/gd/GDPixel.c"),
             Object(Matching, "dolphin/gd/GDTev.c"),
             Object(Matching, "dolphin/gd/GDTransform.c"),
         ]),
