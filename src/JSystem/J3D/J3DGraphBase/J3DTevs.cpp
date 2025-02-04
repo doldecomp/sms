@@ -87,9 +87,7 @@ void J3DLightObj::load(u32 id) const
 	GDSetLightPos(light, mPos.x, mPos.y, mPos.z);
 	GDSetLightAttn(light, mAttnA.x, mAttnA.y, mAttnA.z, mAttnK.x, mAttnK.y,
 	               mAttnK.z);
-	GXColor copy = mColor;
-	GXColor* ptr = &copy;
-	GDSetLightColor(light, ptr);
+	GDSetLightColor(light, mColor);
 	GDSetLightDir(light, mDir.x, mDir.y, mDir.z);
 }
 
