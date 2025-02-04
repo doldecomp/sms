@@ -79,8 +79,8 @@ extern "C" {
     )
 // clang-format on
 
-void GDSetFog(GXFogType type, float startz, float endz,
-		          float nearz, float farz, GXColor color);
+void GDSetFog(GXFogType type, float startz, float endz, float nearz, float farz,
+              GXColor color);
 void GDSetBlendMode(GXBlendMode type, GXBlendFactor src_factor,
                     GXBlendFactor dst_factor, GXLogicOp logic_op);
 void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
