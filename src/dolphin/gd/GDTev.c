@@ -1,5 +1,5 @@
 #include <dolphin/gd/GDTev.h>
-#include "__gd.h"
+#include <dolphin/gd/GDBase.h>
 
 void GDSetTevOp(GXTevStageID stage, GXTevMode mode)
 {
@@ -13,24 +13,44 @@ void GDSetTevOp(GXTevStageID stage, GXTevMode mode)
 
 	switch (mode) {
 	case GX_MODULATE:
-		GDSetTevColorCalc(stage, 0xf, 8, carg, 0xf, 0, 0, 0, 1, 0);
-		GDSetTevAlphaCalcAndSwap(stage, 7, 4, aarg, 7, 0, 0, 0, 1, 0, 0, 0);
+		GDSetTevColorCalc(stage, GX_CC_ZERO, GX_CC_TEXC, carg, GX_CC_ZERO,
+		                  GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+		GDSetTevAlphaCalcAndSwap(stage, GX_CA_ZERO, GX_CA_TEXA, aarg,
+		                         GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO,
+		                         GX_CS_SCALE_1, 1, GX_TEVPREV, GX_TEV_SWAP0,
+		                         GX_TEV_SWAP0);
 		break;
 	case GX_DECAL:
-		GDSetTevColorCalc(stage, carg, 8, 9, 0xf, 0, 0, 0, 1, 0);
-		GDSetTevAlphaCalcAndSwap(stage, 7, 7, 7, aarg, 0, 0, 0, 1, 0, 0, 0);
+		GDSetTevColorCalc(stage, carg, GX_CC_TEXC, GX_CC_TEXA, GX_CC_ZERO,
+		                  GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+		GDSetTevAlphaCalcAndSwap(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+		                         aarg, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+		                         GX_TEVPREV, GX_TEV_SWAP0, GX_TEV_SWAP0);
 		break;
 	case GX_BLEND:
-		GDSetTevColorCalc(stage, carg, 0xc, 8, 0xf, 0, 0, 0, 1, 0);
-		GDSetTevAlphaCalcAndSwap(stage, 7, 4, aarg, 7, 0, 0, 0, 1, 0, 0, 0);
+		GDSetTevColorCalc(stage, carg, GX_CC_ONE, GX_CC_TEXC, GX_CC_ZERO,
+		                  GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+		GDSetTevAlphaCalcAndSwap(stage, GX_CA_ZERO, GX_CA_TEXA, aarg,
+		                         GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO,
+		                         GX_CS_SCALE_1, 1, GX_TEVPREV, GX_TEV_SWAP0,
+		                         GX_TEV_SWAP0);
 		break;
 	case GX_REPLACE:
-		GDSetTevColorCalc(stage, 0xf, 0xf, 0xf, 8, 0, 0, 0, 1, 0);
-		GDSetTevAlphaCalcAndSwap(stage, 7, 7, 7, 4, 0, 0, 0, 1, 0, 0, 0);
+		GDSetTevColorCalc(stage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC,
+		                  GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+		GDSetTevAlphaCalcAndSwap(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+		                         GX_CA_TEXA, GX_TEV_ADD, GX_TB_ZERO,
+		                         GX_CS_SCALE_1, 1, GX_TEVPREV, GX_TEV_SWAP0,
+		                         GX_TEV_SWAP0);
 		break;
 	case GX_PASSCLR:
-		GDSetTevColorCalc(stage, 0xf, 0xf, 0xf, carg, 0, 0, 0, 1, 0);
-		GDSetTevAlphaCalcAndSwap(stage, 7, 7, 7, aarg, 0, 0, 0, 1, 0, 0, 0);
+		GDSetTevColorCalc(stage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, carg,
+		                  GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1, GX_TEVPREV);
+		GDSetTevAlphaCalcAndSwap(stage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+		                         aarg, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+		                         GX_TEVPREV, GX_TEV_SWAP0, GX_TEV_SWAP0);
+		break;
+	default:
 		break;
 	}
 }
@@ -40,36 +60,12 @@ void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
                        GXTevBias bias, GXTevScale scale, u8 clamp,
                        GXTevRegID out_reg)
 {
-	if (op <= 1) {
-		// clang-format off
-		GDWriteBPCmd(
-			d |
-			c << 4 |
-			b << 8 |
-			a << 12 |
-			bias << 16 |
-			(op & 1) << 18 |
-			clamp << 19 |
-			scale << 20 |
-			out_reg << 22 |
-			(((stage & 0x7fffffff) * 2 + 0xc0 & 0xffffffff) << 24)
-		);
-		// clang-format on
+	if (op <= GX_TEV_SUB) {
+		GDWriteBPCmd(BP_TEV_COLOR(d, c, b, a, bias, op & 1, clamp, scale,
+		                          out_reg, stage * 2 + 0xC0));
 	} else {
-		// clang-format off
-		GDWriteBPCmd(
-			d |
-			c << 4 |
-			b << 8 |
-			a << 12 |
-			0x30000 |
-			(op & 1) << 18 |
-			clamp << 19 |
-			(op & 6) << 19 |
-			out_reg << 22 |
-			(((stage & 0x7fffffff) * 2 + 0xc0 & 0xffffffff) << 24)
-		);
-		// clang-format on
+		GDWriteBPCmd(BP_TEV_COLOR(d, c, b, a, 3, op & 1, clamp, (op >> 1) & 3,
+		                          out_reg, stage * 2 + 0xC0));
 	}
 }
 
@@ -79,48 +75,20 @@ void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
                               u8 clamp, GXTevRegID out_reg,
                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel)
 {
-	if (op <= 1) {
-		// clang-format off
-		GDWriteBPCmd(
-			ras_sel |
-			tex_sel << 2 |
-			d << 4 |
-			c << 7 |
-			b << 10 |
-			a << 13 |
-			bias << 16 |
-			(op & 1) << 18 |
-			clamp << 19 |
-			scale << 20 |
-			out_reg << 22 |
-			(((stage & 0x7fffffff) * 2 + 0xc1 & 0xffffffff) << 24)
-		);
-		// clang-format on
+	if (op <= GX_TEV_SUB) {
+		GDWriteBPCmd(BP_TEV_ALPHA(ras_sel, tex_sel, d, c, b, a, bias, op & 1,
+		                          clamp, scale, out_reg, stage * 2 + 0xC1));
 	} else {
-		// clang-format off
-		GDWriteBPCmd(
-			ras_sel |
-			tex_sel << 2 |
-			d << 4 |
-			c << 7 |
-			b << 10 |
-			a << 13 |
-			0x30000 |
-			(op & 1) << 18 |
-			clamp << 19 |
-			(op & 6) << 19 |
-			out_reg << 22 |
-			(((stage & 0x7fffffff) * 2 + 0xc1 & 0xffffffff) << 24)
-		);
-		// clang-format on
+		GDWriteBPCmd(BP_TEV_ALPHA(ras_sel, tex_sel, d, c, b, a, 3, op & 1,
+		                          clamp, (op >> 1) & 3, out_reg,
+		                          stage * 2 + 0xC1));
 	}
 }
 
 void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1,
                        u8 ref1)
 {
-	GDWriteBPCmd(ref0 | ref1 << 0x8 | comp0 << 0x10 | comp1 << 0x13 | op << 0x16
-	             | 0xf3000000);
+	GDWriteBPCmd(BP_ALPHA_COMPARE(ref0, ref1, comp0, comp1, op, 0xF3));
 }
 
 void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
@@ -129,19 +97,10 @@ void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
 {
 	static u8 c2r[] = { 0, 1, 0, 1, 0, 1, 7, 5, 6, 0, 0, 0, 0, 0, 0, 7 };
 
-	// clang-format off
 	GDWriteBPCmd(
-		map0 & 0x7 |
-	  (coord0 & 0x7) << 3 |
-	  ((map0 != 0xff) && !(map0 & 0x100)) << 6 |
-	  c2r[color0 & 0xf] << 7 |
-
-	  (map1 & 0x7) << 12 |
-	  (coord1 & 7) << 15 |
-	  ((map1 != 0xff) && !(map1 & 0x100)) << 18 |
-	  c2r[color1 & 0xf] << 19 |
-
-	  (evenStage / 2 + 0x28) << 24
-	);
-	// clang-format on
+	    BP_TEV_ORDER(map0 & 7, coord0 & 7,
+	                 map0 != GX_TEXMAP_NULL && !(map0 & GX_TEX_DISABLE),
+	                 c2r[color0 & 0xF], map1 & 7, coord1 & 7,
+	                 map1 != GX_TEXMAP_NULL && !(map1 & GX_TEX_DISABLE),
+	                 c2r[color1 & 0xF], evenStage / 2 + 0x28));
 }
