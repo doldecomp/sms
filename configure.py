@@ -522,7 +522,7 @@ config.libs = [
             Object(Matching, "JSystem/JStage/JSGSystem.cpp"),
 
             Object(NonMatching, "JSystem/JMath.cpp"),
-            Object(NonMatching, "JSystem/JRenderer.cpp"),
+            Object(Matching, "JSystem/JRenderer.cpp"),
             Object(NonMatching, "JSystem/linklist.cpp"),
             Object(NonMatching, "JSystem/singlelinklist.cpp"),
             Object(NonMatching, "JSystem/random.cpp"),
