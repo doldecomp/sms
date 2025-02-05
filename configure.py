@@ -740,9 +740,9 @@ config.libs = [
             Object(Matching, "dolphin/exi/EXIBios.c"),
             Object(Matching, "dolphin/exi/EXIUart.c"),
         ]),
-    DolphinLib("thp", [
-            Object(NonMatching, "dolphin/thp/THPDec.c"),
-            Object(NonMatching, "dolphin/thp/THPAudio.c"),
+    DolphinLibUnpatched("thp", [
+            Object(Matching, "dolphin/thp/THPDec.c"),
+            Object(Matching, "dolphin/thp/THPAudio.c"),
         ]),
     # TODO: is this actually part of the SDK?
     {
