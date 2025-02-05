@@ -744,17 +744,18 @@ config.libs = [
             Object(Matching, "dolphin/thp/THPDec.c"),
             Object(Matching, "dolphin/thp/THPAudio.c"),
         ]),
-    # TODO: is this actually part of the SDK?
+    # Note that this is NOT in fact part of the SDK, as it integrates
+    # with jsystem and game code
     {
         "lib": "THPPlayer",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-lang=c++ -inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "THPPlayer/THPAudioDecode.c"),
-            Object(NonMatching, "THPPlayer/THPDraw.c"),
+            Object(Matching, "THPPlayer/THPDraw.c"),
             Object(NonMatching, "THPPlayer/THPPlayer.c"),
-            Object(NonMatching, "THPPlayer/THPRead.c"),
+            Object(Matching, "THPPlayer/THPRead.c"),
             Object(NonMatching, "THPPlayer/THPVideoDecode.c"),
         ],
     },
