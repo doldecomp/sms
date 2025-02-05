@@ -13,6 +13,10 @@
 extern "C" {
 #endif
 
+#define THP_AUDIO_BUFFER_COUNT 3
+#define THP_READ_BUFFER_COUNT 10
+#define THP_TEXTURE_SET_COUNT 3
+
 typedef struct THPPlayer {
 	DVDFileInfo fileInfo;
 	THPHeader header;
@@ -47,8 +51,8 @@ typedef struct THPPlayer {
 	THPTextureSet* dispTextureSet;
 	THPAudioBuffer* playAudioBuffer;
 	THPReadBuffer readBuffer[10];
-	THPTextureSet textureSet[3];
-	THPAudioBuffer audioBuffer[6];
+	THPTextureSet textureSet[THP_TEXTURE_SET_COUNT];
+	THPAudioBuffer audioBuffer[THP_AUDIO_BUFFER_COUNT];
 } THPPlayer; // Size: 0x1d0
 
 extern THPPlayer ActivePlayer;
@@ -67,7 +71,7 @@ BOOL THPPlayerSetBuffer(u8* data);
 u32 THPPlayerCalcNeedMemory();
 
 BOOL THPPlayerGetVideoInfo(THPVideoInfo* videoInfo);
-// BOOL THPPlayerGetAudioInfo(void *dst);
+BOOL THPPlayerGetAudioInfo(THPAudioInfo *audioInfo);
 // f32 THPPlayerGetFrameRate();
 BOOL THPPlayerSetVolume(s32 vol, s32 duration);
 
@@ -75,6 +79,7 @@ s32 THPPlayerDrawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y,
                               u32 polygonW, u32 polygonH);
 u32 THPPlayerGetTotalFrame();
 s32 THPPlayerGetState();
+void THPPlayerDrawDone();
 
 void THPPlayerPostDrawDone();
 
