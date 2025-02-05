@@ -9,16 +9,16 @@ inline void J3DGDWrite_u8(u8 param) { __GDWrite(param); }
 
 inline void J3DGDWrite_u16(u16 param)
 {
-	__GDWrite(param >> 8);
-	__GDWrite(param & 0xff);
+	__GDWrite((u8)(param >> 8));
+	__GDWrite((u8)(param & 0xff));
 }
 
 inline void J3DGDWrite_u32(u32 param)
 {
-	__GDWrite(param >> 24);
-	__GDWrite((param >> 16) & 0xff);
-	__GDWrite((param >> 8) & 0xff);
-	__GDWrite(param & 0xff);
+	__GDWrite((u8)((param >> 24) & 0xff));
+	__GDWrite((u8)((param >> 16) & 0xff));
+	__GDWrite((u8)((param >> 8) & 0xff));
+	__GDWrite((u8)((param >> 0) & 0xff));
 }
 
 inline void J3DGDWrite_f32(f32 param)
@@ -79,7 +79,7 @@ void JRNSetTevIndirect(GXTevStageID, GXIndTexStageID, GXIndTexFormat,
                        GXIndTexBiasSel, GXIndTexMtxID, GXIndTexWrap,
                        GXIndTexWrap, u8, u8, GXIndTexAlphaSel);
 void JRNSetTevDirect(GXTevStageID);
-void JRNSetIndTexMtx(GXIndTexMtxID, ROMtxPtr, s8);
+void JRNSetIndTexMtx(GXIndTexMtxID mtx_id, ROMtxPtr offset, s8 scale_exp);
 void JRNSetIndTexCoordScale(GXIndTexStageID, GXIndTexScale, GXIndTexScale,
                             GXIndTexScale, GXIndTexScale);
 void JRNSetIndTexOrder(u32, GXTexCoordID, GXTexMapID, GXTexCoordID, GXTexMapID,
@@ -88,7 +88,7 @@ void JRNFlushTextureState();
 void JRNLoadTexCached(GXTexMapID, u32, GXTexCacheSize, u32, GXTexCacheSize);
 void JRNISetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID,
                      GXTexCoordID, GXTexMapID, GXChannelID);
-void JRNISetTevColorS10(GXTevRegID, GXColorS10);
-void JRNISetFogRangeAdj(u8, u16, GXFogAdjTable*);
+void JRNISetTevColorS10(GXTevRegID reg, GXColorS10 color);
+void JRNISetFogRangeAdj(GXBool enable, u16 center, GXFogAdjTable* table);
 
 #endif
