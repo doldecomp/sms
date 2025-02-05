@@ -1,16 +1,15 @@
 #include <THPPlayer/THPRead.h>
 #include <THPPlayer/THPPlayer.h>
 
-#define STACK_SIZE   4096
-#define BUFFER_COUNT 10
+#define STACK_SIZE        4096
 
 static OSMessageQueue FreeReadBufferQueue;
 static OSMessageQueue ReadedBufferQueue;
 static OSMessageQueue ReadedBufferQueue2;
 
-static OSMessage FreeReadBufferMessage[BUFFER_COUNT];
-static OSMessage ReadedBufferMessage[BUFFER_COUNT];
-static OSMessage ReadedBufferMessage2[BUFFER_COUNT];
+static OSMessage FreeReadBufferMessage[THP_READ_BUFFER_COUNT];
+static OSMessage ReadedBufferMessage[THP_READ_BUFFER_COUNT];
+static OSMessage ReadedBufferMessage2[THP_READ_BUFFER_COUNT];
 
 static OSThread ReadThread;
 static u8 ReadThreadStack[STACK_SIZE];
@@ -27,9 +26,11 @@ BOOL CreateReadThread(OSPriority prio)
 		return FALSE;
 
 	OSInitMessageQueue(&FreeReadBufferQueue, FreeReadBufferMessage,
-	                   BUFFER_COUNT);
-	OSInitMessageQueue(&ReadedBufferQueue, ReadedBufferMessage, BUFFER_COUNT);
-	OSInitMessageQueue(&ReadedBufferQueue2, ReadedBufferMessage2, BUFFER_COUNT);
+	                   THP_READ_BUFFER_COUNT);
+	OSInitMessageQueue(&ReadedBufferQueue, ReadedBufferMessage,
+	                   THP_READ_BUFFER_COUNT);
+	OSInitMessageQueue(&ReadedBufferQueue2, ReadedBufferMessage2,
+	                   THP_READ_BUFFER_COUNT);
 	ReadThreadCreated = TRUE;
 
 	return TRUE;

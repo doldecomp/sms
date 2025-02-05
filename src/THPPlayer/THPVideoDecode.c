@@ -5,22 +5,23 @@
 #include <THPPlayer/THPRead.h>
 #include <THPPlayer/THPPlayer.h>
 
+#pragma opt_strength_reduction off
+
 #define STACK_SIZE   4096
-#define BUFFER_COUNT 3
 
 static OSThread VideoDecodeThread;
 static u8 VideoDecodeThreadStack[STACK_SIZE];
 static OSMessageQueue FreeTextureSetQueue;
 static OSMessageQueue DecodedTextureSetQueue;
-static OSMessage FreeTextureSetMessage[BUFFER_COUNT];
-static OSMessage DecodedTextureSetMessage[BUFFER_COUNT];
+static OSMessage FreeTextureSetMessage[THP_AUDIO_BUFFER_COUNT];
+static OSMessage DecodedTextureSetMessage[THP_AUDIO_BUFFER_COUNT];
 
 static BOOL VideoDecodeThreadCreated;
 static BOOL First;
 
 static void* VideoDecoderForOnMemory(void* arg);
 static void* VideoDecoder(void* arg);
-static u32 VideoDecode(THPReadBuffer* readBuffer);
+static void VideoDecode(THPReadBuffer* readBuffer);
 
 BOOL CreateVideoDecodeThread(OSPriority prio, void* arg)
 {
@@ -40,9 +41,9 @@ BOOL CreateVideoDecodeThread(OSPriority prio, void* arg)
 	}
 
 	OSInitMessageQueue(&FreeTextureSetQueue, FreeTextureSetMessage,
-	                   BUFFER_COUNT);
+	                   THP_AUDIO_BUFFER_COUNT);
 	OSInitMessageQueue(&DecodedTextureSetQueue, DecodedTextureSetMessage,
-	                   BUFFER_COUNT);
+	                   THP_AUDIO_BUFFER_COUNT);
 	VideoDecodeThreadCreated = TRUE;
 	First                    = TRUE;
 	return TRUE;
@@ -96,22 +97,23 @@ void* VideoDecoder(void* arg)
 
 void* VideoDecoderForOnMemory(void* arg)
 {
+	THPReadBuffer readBuffer;
 	s32 readSize;
 	s32 frame;
-	u32 i;
-	THPReadBuffer readBuffer;
+	s32 remaining;
 
-	frame    = 0;
-	i        = 0;
-	readSize = ActivePlayer.initReadSize;
-
+	readSize       = ActivePlayer.initReadSize;
+	frame          = 0;
 	readBuffer.ptr = (u8*)arg;
+
 	while (TRUE) {
 		if (ActivePlayer.audioExist) {
-			while (i--) {
+			while (ActivePlayer.videoDecodeCount < 0) {
+				BOOL enable = OSDisableInterrupts();
 				ActivePlayer.videoDecodeCount++;
-				s32 remaining = (frame + ActivePlayer.initReadFrame)
-				                % ActivePlayer.header.numFrames;
+				OSRestoreInterrupts(enable);
+				remaining = (frame + ActivePlayer.initReadFrame)
+				            % ActivePlayer.header.numFrames;
 				if (remaining == ActivePlayer.header.numFrames - 1) {
 					if ((ActivePlayer.playFlag & 1) == 0)
 						break;
@@ -129,10 +131,10 @@ void* VideoDecoderForOnMemory(void* arg)
 
 		readBuffer.frameNumber = frame;
 
-		i = VideoDecode(&readBuffer);
+		VideoDecode(&readBuffer);
 
-		s32 remaining = (frame + ActivePlayer.initReadFrame)
-		                % ActivePlayer.header.numFrames;
+		remaining = (frame + ActivePlayer.initReadFrame)
+		            % ActivePlayer.header.numFrames;
 		if (remaining == ActivePlayer.header.numFrames - 1) {
 			if ((ActivePlayer.playFlag & 1)) {
 				readSize       = *(s32*)readBuffer.ptr;
@@ -150,26 +152,23 @@ void* VideoDecoderForOnMemory(void* arg)
 	}
 }
 
-u32 VideoDecode(THPReadBuffer* readBuffer)
+void VideoDecode(THPReadBuffer* readBuffer)
 {
 	THPTextureSet* textureSet;
 	s32 i;
-	u32 decodedFrame;
 	u32* tileOffsets;
 	u8* tile;
 
-	decodedFrame = 0;
-	tileOffsets  = (u32*)(readBuffer->ptr + 8);
-	tile       = &readBuffer->ptr[ActivePlayer.compInfo.numComponents * 4] + 8;
-	textureSet = (THPTextureSet*)PopFreeTextureSet();
+	tileOffsets = (u32*)(readBuffer->ptr + 8);
+	tile        = &readBuffer->ptr[ActivePlayer.compInfo.numComponents * 4] + 8;
+	textureSet  = (THPTextureSet*)PopFreeTextureSet();
 
 	for (i = 0; i < ActivePlayer.compInfo.numComponents; i++) {
 		switch (ActivePlayer.compInfo.frameComp[i]) {
 		case 0: {
-			ActivePlayer.videoError = THPVideoDecode(
-			    tile, textureSet->ytexture, textureSet->utexture,
-			    textureSet->vtexture, ActivePlayer.thpWork);
-			if (ActivePlayer.videoError) {
+			if ((ActivePlayer.videoError = THPVideoDecode(
+			         tile, textureSet->ytexture, textureSet->utexture,
+			         textureSet->vtexture, ActivePlayer.thpWork))) {
 				if (First) {
 					PrepareReady(FALSE);
 					First = FALSE;
@@ -178,10 +177,9 @@ u32 VideoDecode(THPReadBuffer* readBuffer)
 			}
 			textureSet->frameNumber = readBuffer->frameNumber;
 			PushDecodedTextureSet(textureSet);
-			s32 decCnt   = ActivePlayer.videoDecodeCount;
-			s32 vidNum   = ActivePlayer.curVideoNumber + 1;
-			decodedFrame = (vidNum > decCnt ? vidNum - decCnt : 0);
+			BOOL enable = OSDisableInterrupts();
 			ActivePlayer.videoDecodeCount++;
+			OSRestoreInterrupts(enable);
 		}
 		}
 
@@ -193,8 +191,6 @@ u32 VideoDecode(THPReadBuffer* readBuffer)
 		PrepareReady(TRUE);
 		First = FALSE;
 	}
-
-	return decodedFrame;
 }
 
 void* PopFreeTextureSet(void)

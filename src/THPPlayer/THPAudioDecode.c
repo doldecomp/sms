@@ -1,19 +1,21 @@
 #include <THPPlayer/THPAudioDecode.h>
 
+#include <THPPlayer/THPPlayer.h>
 #include <THPPlayer/THPRead.h>
 #include <THPPlayer/THPPlayer.h>
 #include <dolphin/thp.h>
 #include <dolphin/os.h>
 
+#pragma opt_strength_reduction off
+
 #define STACK_SIZE   4096
-#define BUFFER_COUNT 3
 
 static OSThread AudioDecodeThread;
 static u8 AudioDecodeThreadStack[STACK_SIZE];
 static OSMessageQueue FreeAudioBufferQueue;
 static OSMessageQueue DecodedAudioBufferQueue;
-static OSMessage FreeAudioBufferMessage[BUFFER_COUNT];
-static OSMessage DecodedAudioBufferMessage[BUFFER_COUNT];
+static OSMessage FreeAudioBufferMessage[THP_AUDIO_BUFFER_COUNT];
+static OSMessage DecodedAudioBufferMessage[THP_AUDIO_BUFFER_COUNT];
 
 static BOOL AudioDecodeThreadCreated;
 
@@ -39,9 +41,9 @@ BOOL CreateAudioDecodeThread(OSPriority prio, void* arg)
 	}
 
 	OSInitMessageQueue(&FreeAudioBufferQueue, FreeAudioBufferMessage,
-	                   BUFFER_COUNT);
+	                   THP_AUDIO_BUFFER_COUNT);
 	OSInitMessageQueue(&DecodedAudioBufferQueue, DecodedAudioBufferMessage,
-	                   BUFFER_COUNT);
+	                   THP_AUDIO_BUFFER_COUNT);
 	AudioDecodeThreadCreated = TRUE;
 	return TRUE;
 }
@@ -72,8 +74,8 @@ static void* AudioDecoder(void* arg)
 
 static void* AudioDecoderForOnMemory(void* arg)
 {
-	s32 readSize;
 	s32 frame;
+	s32 readSize;
 	THPReadBuffer readBuffer;
 
 	frame          = 0;

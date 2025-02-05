@@ -12,6 +12,8 @@
 #include <string.h>
 #include <macros.h>
 
+#pragma opt_strength_reduction off
+
 THPPlayer ActivePlayer;
 
 static u32 WorkBuffer[16]
@@ -52,14 +54,14 @@ u16 VolumeTable[128] = {
 
 // static function definitions
 static s16* audioCallback(s32 p1);
-static void MixAudio(s16*, u32);
+static void MixAudio(s16*, s16*, u32);
 static void* PopUsedTextureSet();
 static BOOL ProperTimingForStart();
 static BOOL ProperTimingForGettingNextFrame();
 static void PushUsedTextureSet(OSMessage msg);
 static void PlayControl(u32);
 
-static s16* audioCallback(s32 p1)
+static s16* audioCallbackWithMSound(s32 p1)
 {
 	if (ActivePlayer.open == FALSE || ActivePlayer.internalState != 2
 	    || ActivePlayer.audioExist == 0) {
@@ -68,7 +70,7 @@ static s16* audioCallback(s32 p1)
 
 	BOOL enable = OSEnableInterrupts();
 	SoundBufferIndex ^= 1;
-	MixAudio(SoundBuffer[SoundBufferIndex], p1);
+	MixAudio(SoundBuffer[SoundBufferIndex], 0, p1);
 	OSRestoreInterrupts(enable);
 
 	return SoundBuffer[SoundBufferIndex];
@@ -119,7 +121,6 @@ BOOL THPPlayerOpen(const char* fileName, BOOL onMemory)
 {
 	s32 offset;
 	s32 i;
-	f32 curVol;
 
 	if (Initialized == FALSE) {
 		return FALSE;
@@ -174,9 +175,7 @@ BOOL THPPlayerOpen(const char* fileName, BOOL onMemory)
 			}
 
 			memcpy(&ActivePlayer.videoInfo, WorkBuffer, sizeof(THPVideoInfo));
-			if (ActivePlayer.videoInfo.videoType != 0) {
-				ActivePlayer.videoInfo.videoType = 2;
-			}
+
 			offset += sizeof(THPVideoInfo);
 			break;
 		}
@@ -203,9 +202,7 @@ BOOL THPPlayerOpen(const char* fileName, BOOL onMemory)
 	ActivePlayer.onMemory      = onMemory;
 	ActivePlayer.open          = TRUE;
 
-	// ActivePlayer.curVolume = GetGameAudioMain()->getTHPOptionVolume() *
-	// 127.0f;
-	curVol = ActivePlayer.curVolume;
+	ActivePlayer.curVolume = 127.0f;
 
 	ActivePlayer.targetVolume = ActivePlayer.curVolume;
 	ActivePlayer.rampCount    = 0;
@@ -245,7 +242,8 @@ u32 THPPlayerCalcNeedMemory()
 		        * 3;
 
 		if (ActivePlayer.audioExist) {
-			size += ALIGN_NEXT(ActivePlayer.header.audioMaxSamples * 4, 32) * 6;
+			size += ALIGN_NEXT(ActivePlayer.header.audioMaxSamples * 4, 32)
+			        * THP_AUDIO_BUFFER_COUNT;
 		}
 		return size + 0x1000;
 	}
@@ -260,7 +258,7 @@ BOOL THPPlayerSetBuffer(u8* buffer)
 	u32 uvsize;
 
 	if (ActivePlayer.open && ActivePlayer.state == 0) {
-		u8* ptr = buffer;
+		ptr = buffer;
 		if (ActivePlayer.onMemory) {
 			ActivePlayer.movieData = buffer;
 			ptr += ActivePlayer.header.movieDataSize;
@@ -312,17 +310,17 @@ static void InitAllMessageQueue()
 {
 	int i;
 	if (ActivePlayer.onMemory == FALSE) {
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < THP_READ_BUFFER_COUNT; i++) {
 			PushFreeReadBuffer(&ActivePlayer.readBuffer[i]);
 		}
 	}
 
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < THP_TEXTURE_SET_COUNT; i++) {
 		PushFreeTextureSet(&ActivePlayer.textureSet[i]);
 	}
 
 	if (ActivePlayer.audioExist) {
-		for (i = 0; i < 6; i++) {
+		for (i = 0; i < THP_AUDIO_BUFFER_COUNT; i++) {
 			PushFreeAudioBuffer(&ActivePlayer.audioBuffer[i]);
 		}
 	}
@@ -365,14 +363,12 @@ BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 
 				ActivePlayer.initOffset
 				    = ActivePlayer.header.movieDataOffsets + WorkBuffer[0];
-				ActivePlayer.initReadSize  = WorkBuffer[1] - WorkBuffer[0];
 				ActivePlayer.initReadFrame = frame;
+				ActivePlayer.initReadSize  = WorkBuffer[1] - WorkBuffer[0];
 			} else {
 				return FALSE;
 			}
-		}
-
-		else {
+		} else {
 			ActivePlayer.initOffset    = ActivePlayer.header.movieDataOffsets;
 			ActivePlayer.initReadSize  = ActivePlayer.header.firstFrameSize;
 			ActivePlayer.initReadFrame = frame;
@@ -398,19 +394,16 @@ BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 
 			threadData = ActivePlayer.movieData + ActivePlayer.initOffset
 			             - ActivePlayer.header.movieDataOffsets;
-			CreateVideoDecodeThread(22, threadData);
+			CreateVideoDecodeThread(20, threadData);
 
 			if (ActivePlayer.audioExist)
-				CreateAudioDecodeThread(21, threadData);
+				CreateAudioDecodeThread(12, threadData);
 		} else {
-			CreateVideoDecodeThread(22, 0);
+			CreateVideoDecodeThread(20, 0);
 			if (ActivePlayer.audioExist)
-				CreateAudioDecodeThread(21, NULL);
-			CreateReadThread(20);
+				CreateAudioDecodeThread(12, NULL);
+			CreateReadThread(8);
 		}
-
-		ActivePlayer.curVideoNumber = -1;
-		ActivePlayer.curAudioNumber = 0;
 
 		InitAllMessageQueue();
 		VideoDecodeThreadStart();
@@ -427,11 +420,8 @@ BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 		ActivePlayer.internalState   = 0;
 		ActivePlayer.dispTextureSet  = (THPTextureSet*)NULL;
 		ActivePlayer.playAudioBuffer = (THPAudioBuffer*)NULL;
-
-		if (ActivePlayer.videoInfo.videoType == 1)
-			ActivePlayer.curField = 0;
-		else if (ActivePlayer.videoInfo.videoType == 2)
-			ActivePlayer.curField = 1;
+		ActivePlayer.curVideoNumber  = 0;
+		ActivePlayer.curAudioNumber  = 0;
 
 		OldVIPostCallback = VISetPostRetraceCallback(PlayControl);
 
@@ -473,8 +463,8 @@ void THPPlayerStop()
 
 		while (PopUsedTextureSet() != 0) { }
 
-		ActivePlayer.rampCount  = 0;
 		ActivePlayer.curVolume  = ActivePlayer.targetVolume;
+		ActivePlayer.rampCount  = 0;
 		ActivePlayer.dvdError   = 0;
 		ActivePlayer.videoError = 0;
 	}
@@ -500,12 +490,14 @@ static void PlayControl(u32 retraceCnt)
 	decodedTexture = (THPTextureSet*)-1;
 	if (ActivePlayer.open && ActivePlayer.state == 2) {
 		if (ActivePlayer.dvdError || ActivePlayer.videoError) {
-			ActivePlayer.state         = 5;
 			ActivePlayer.internalState = 5;
+			ActivePlayer.state         = 5;
 			return;
 		}
 
-		if (++ActivePlayer.retaceCount == 0) {
+		++ActivePlayer.retaceCount;
+
+		if (ActivePlayer.retaceCount == 0) {
 			if (ProperTimingForStart()) {
 				if (ActivePlayer.audioExist) {
 					if (ActivePlayer.curVideoNumber
@@ -513,23 +505,13 @@ static void PlayControl(u32 retraceCnt)
 					    <= 1) {
 						decodedTexture
 						    = (THPTextureSet*)PopDecodedTextureSet(0);
+						ActivePlayer.videoDecodeCount--;
 						ActivePlayer.curVideoNumber++;
-
-						if (ActivePlayer.videoInfo.videoType != 0
-						    && (ActivePlayer.header.frameRate == 59.94f
-						        || ActivePlayer.header.frameRate == 50.0f)) {
-							ActivePlayer.curField ^= 1;
-						}
 					} else {
 						ActivePlayer.internalState = 2;
 					}
 				} else {
 					decodedTexture = (THPTextureSet*)PopDecodedTextureSet(0);
-					if (ActivePlayer.videoInfo.videoType != 0
-					    && (ActivePlayer.header.frameRate == 59.94f
-					        || ActivePlayer.header.frameRate == 50.0f)) {
-						ActivePlayer.curField ^= 1;
-					}
 				}
 			} else {
 				ActivePlayer.retaceCount = -1;
@@ -546,21 +528,11 @@ static void PlayControl(u32 retraceCnt)
 					    <= 1) {
 						decodedTexture
 						    = (THPTextureSet*)PopDecodedTextureSet(0);
+						ActivePlayer.videoDecodeCount--;
 						ActivePlayer.curVideoNumber++;
-
-						if (ActivePlayer.videoInfo.videoType != 0
-						    && (ActivePlayer.header.frameRate == 59.94f
-						        || ActivePlayer.header.frameRate == 50.0f)) {
-							ActivePlayer.curField ^= 1;
-						}
 					}
 				} else {
 					decodedTexture = (THPTextureSet*)PopDecodedTextureSet(0);
-					if (ActivePlayer.videoInfo.videoType != 0
-					    && (ActivePlayer.header.frameRate == 59.94f
-					        || ActivePlayer.header.frameRate == 50.0f)) {
-						ActivePlayer.curField ^= 1;
-					}
 				}
 			}
 		}
@@ -581,10 +553,12 @@ static void PlayControl(u32 retraceCnt)
 					ActivePlayer.state         = 3;
 				}
 			} else {
-				s32 curFrame = ActivePlayer.dispTextureSet != NULL
-				                   ? ActivePlayer.dispTextureSet->frameNumber
-				                         + ActivePlayer.initReadFrame
-				                   : ActivePlayer.initReadFrame - 1;
+				s32 curFrame;
+				if (ActivePlayer.dispTextureSet != NULL)
+					curFrame = ActivePlayer.dispTextureSet->frameNumber
+					           + ActivePlayer.initReadFrame;
+				else
+					curFrame = ActivePlayer.initReadFrame - 1;
 				if (curFrame == ActivePlayer.header.numFrames - 1
 				    && decodedTexture == NULL) {
 					ActivePlayer.internalState = 3;
@@ -597,15 +571,30 @@ static void PlayControl(u32 retraceCnt)
 
 static BOOL ProperTimingForStart()
 {
-	if (ActivePlayer.videoInfo.videoType == 0)
+	if (ActivePlayer.videoInfo.videoType & 1) {
+		if (VIGetNextField() == 0)
+			return TRUE;
+	} else if (ActivePlayer.videoInfo.videoType & 2) {
+		if (VIGetNextField() == 1)
+			return TRUE;
+	} else
 		return TRUE;
 
-	return (VIGetNextField() == ActivePlayer.curField) ? TRUE : FALSE;
+	return FALSE;
 }
 
 static BOOL ProperTimingForGettingNextFrame()
 {
-	if (ActivePlayer.videoInfo.videoType == 0) {
+	if ((ActivePlayer.videoInfo.videoType & 1)) {
+		// no ActivePlayer.curField?
+		if (VIGetNextField() == 0) {
+			return TRUE;
+		}
+	} else if ((ActivePlayer.videoInfo.videoType & 2)) {
+		if (VIGetNextField() == 1) {
+			return TRUE;
+		}
+	} else {
 		s32 frameRate = ActivePlayer.header.frameRate * 100.0f;
 		if (VIGetTvFormat() == VI_PAL) {
 			ActivePlayer.curCount = ActivePlayer.retaceCount * frameRate / 5000;
@@ -617,10 +606,6 @@ static BOOL ProperTimingForGettingNextFrame()
 			ActivePlayer.prevCount = ActivePlayer.curCount;
 			return TRUE;
 		}
-	} else {
-		if (ActivePlayer.curField == VIGetNextField()) {
-			return TRUE;
-		}
 	}
 
 	return FALSE;
@@ -629,7 +614,7 @@ static BOOL ProperTimingForGettingNextFrame()
 s32 THPPlayerDrawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y,
                               u32 polygonW, u32 polygonH)
 {
-	s32 frame = -1;
+	s32 frame;
 	if (ActivePlayer.open && ActivePlayer.state != 0
 	    && ActivePlayer.dispTextureSet != NULL) {
 		THPGXYuv2RgbSetup(rmode);
@@ -642,6 +627,8 @@ s32 THPPlayerDrawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y,
 		frame = (ActivePlayer.dispTextureSet->frameNumber
 		         + ActivePlayer.initReadFrame)
 		        % ActivePlayer.header.numFrames;
+	} else {
+		frame = -1;
 	}
 	return frame;
 }
@@ -650,6 +637,16 @@ BOOL THPPlayerGetVideoInfo(THPVideoInfo* videoInfo)
 {
 	if (ActivePlayer.open) {
 		memcpy(videoInfo, &ActivePlayer.videoInfo, sizeof(THPVideoInfo));
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+BOOL THPPlayerGetAudioInfo(THPAudioInfo* audioInfo)
+{
+	if (ActivePlayer.open) {
+		memcpy(audioInfo, &ActivePlayer.audioInfo, sizeof(THPAudioInfo));
 		return TRUE;
 	}
 
@@ -665,6 +662,19 @@ u32 THPPlayerGetTotalFrame()
 }
 
 s32 THPPlayerGetState() { return ActivePlayer.state; }
+
+void THPPlayerDrawDone()
+{
+	GXDrawDone();
+	if (Initialized) {
+		while (TRUE) {
+			void* tex = PopUsedTextureSet();
+			if (!tex)
+				break;
+			PushFreeTextureSet(tex);
+		}
+	}
+}
 
 static void PushUsedTextureSet(OSMessage msg)
 {
@@ -694,7 +704,7 @@ void THPPlayerPostDrawDone()
 	}
 }
 
-static void MixAudio(s16* destination, u32 sample)
+static void MixAudio(s16* destination, s16*, u32 sample)
 {
 	if (ActivePlayer.open && ActivePlayer.internalState == 2
 	    && ActivePlayer.audioExist) {
@@ -712,9 +722,8 @@ static void MixAudio(s16* destination, u32 sample)
 		do {
 			do {
 				if (ActivePlayer.playAudioBuffer == (THPAudioBuffer*)NULL) {
-					ActivePlayer.playAudioBuffer
-					    = (THPAudioBuffer*)PopDecodedAudioBuffer(0);
-					if (ActivePlayer.playAudioBuffer == (THPAudioBuffer*)NULL) {
+					if (!(ActivePlayer.playAudioBuffer
+					      = (THPAudioBuffer*)PopDecodedAudioBuffer(0))) {
 						memset(dst, 0, requestSample * 4);
 						return;
 					}
@@ -723,9 +732,7 @@ static void MixAudio(s16* destination, u32 sample)
 			} while ((sampleNum = ActivePlayer.playAudioBuffer->validSample)
 			         == 0);
 
-			if (sampleNum >= requestSample) {
-				sampleNum = requestSample;
-			}
+			sampleNum = sampleNum >= requestSample ? requestSample : sampleNum;
 
 			curPtr = ActivePlayer.playAudioBuffer->curPtr;
 
@@ -746,21 +753,17 @@ static void MixAudio(s16* destination, u32 sample)
 				if (l_mix > 32767)
 					l_mix = 32767;
 
+				dst[0] = l_mix;
+
 				r_mix = attenuation * curPtr[1] >> 15;
 				if (r_mix < -32768)
 					r_mix = -32768;
 				if (r_mix > 32767)
 					r_mix = 32767;
 
-				if (0 == 0) {
-					s16 mixedVol = (r_mix >> 1) + (l_mix >> 1);
+				dst[1] = r_mix;
 
-					r_mix = mixedVol;
-					l_mix = mixedVol;
-				}
-
-				*dst++ = l_mix;
-				*dst++ = r_mix;
+				dst += 2;
 				curPtr += 2;
 			}
 
