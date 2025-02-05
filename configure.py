@@ -187,8 +187,6 @@ cflags_base = [
     "-enum int",
     "-fp hardware",
     "-Cpp_exceptions off",
-    # "-W all",
-    "-O4,p",
     '-pragma "cats off"',
     '-pragma "warn_notinlined off"',
     "-maxerrors 1",
@@ -214,6 +212,7 @@ else:
 # Metrowerks library flags
 cflags_runtime = [
     *cflags_base,
+    "-O4,p",
     "-inline auto",
     "-fp_contract on",
     "-str reuse,pool,readonly",
@@ -222,6 +221,7 @@ cflags_runtime = [
 
 cflags_jsystem = [
     *cflags_base,
+    "-O4,p",
     "-inline auto",
     "-str reuse,readonly",
     "-lang=c++",
@@ -234,6 +234,7 @@ cflags_jsystem = [
 
 cflags_game = [
     *cflags_base,
+    "-O4,p",
     "-inline auto",
     "-fp_contract on",
     "-str reuse,readonly",
@@ -241,12 +242,14 @@ cflags_game = [
 
 cflags_system = [
     *cflags_game,
+    "-O4,p",
     "-inline auto",
     "-opt all,nostrength",
 ]
 
 cflags_dolphin = [
     *cflags_base,
+    "-O4,p",
     "-inline auto",
     "-fp_contract off", # NOTE: this is definitely off according to mtx.c
     # TODO: should these be different?
@@ -590,7 +593,7 @@ config.libs = [
     {
         "lib": "TRK_MINNOW_DOLPHIN",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_base, "-pool off", "-str readonly", "-enum min", "-sdatathreshold 0"],
+        "cflags": [*cflags_base, "-O4,p", "-pool off", "-str readonly", "-enum min", "-sdatathreshold 0"],
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mainloop.c"),
@@ -749,7 +752,7 @@ config.libs = [
     {
         "lib": "THPPlayer",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-lang=c++ -inline deferred"],
+        "cflags": [*cflags_base, "-O4,p", "-inline auto", "-fp_contract on", "-str reuse,readonly", "-lang=c++", "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "THPPlayer/THPAudioDecode.c"),
