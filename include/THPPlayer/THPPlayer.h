@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 #define THP_AUDIO_BUFFER_COUNT 3
-#define THP_READ_BUFFER_COUNT 10
-#define THP_TEXTURE_SET_COUNT 3
+#define THP_READ_BUFFER_COUNT  10
+#define THP_TEXTURE_SET_COUNT  3
 
 typedef struct THPPlayer {
 	DVDFileInfo fileInfo;
@@ -71,7 +71,7 @@ BOOL THPPlayerSetBuffer(u8* data);
 u32 THPPlayerCalcNeedMemory();
 
 BOOL THPPlayerGetVideoInfo(THPVideoInfo* videoInfo);
-BOOL THPPlayerGetAudioInfo(THPAudioInfo *audioInfo);
+BOOL THPPlayerGetAudioInfo(THPAudioInfo* audioInfo);
 // f32 THPPlayerGetFrameRate();
 BOOL THPPlayerSetVolume(s32 vol, s32 duration);
 

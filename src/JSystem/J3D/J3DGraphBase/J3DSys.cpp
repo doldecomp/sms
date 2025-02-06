@@ -32,7 +32,7 @@ J3DSys::J3DSys()
 	unk40           = 0;
 	unk44           = 0;
 	unk48           = 0;
-	mTexture           = 0;
+	mTexture        = 0;
 	mCurrentDrawMtx = 0;
 	mCurrentNormMtx = 0;
 	unk10C          = 0;

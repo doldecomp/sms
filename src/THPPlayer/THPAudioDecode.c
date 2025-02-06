@@ -8,7 +8,7 @@
 
 #pragma opt_strength_reduction off
 
-#define STACK_SIZE   4096
+#define STACK_SIZE 4096
 
 static OSThread AudioDecodeThread;
 static u8 AudioDecodeThreadStack[STACK_SIZE];

@@ -14,27 +14,27 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format)
 
 	ResTIMG* header = (ResTIMG*)field_0x4c;
 
-	header->format        = format;
-	header->alphaEnabled  = 0;
-	header->width         = width;
-	header->height        = height;
-	header->wrapS         = 0;
-	header->wrapT         = 0;
-	header->isIndexTexture  = 0;
-	header->colorFormat   = 0;
-	header->numColors     = 0;
-	header->paletteOffset = 0;
-	header->mipmapEnabled = 0;
-	header->doEdgeLod     = 0;
-	header->biasClamp     = 0;
-	header->maxAnisotropy = 0;
-	header->minFilter     = 1;
-	header->magFilter     = 1;
-	header->minLOD        = 0;
-	header->maxLOD        = 0;
-	header->mipmapCount   = 1;
-	header->LODBias       = 0;
-	header->imageOffset   = sizeof(ResTIMG);
+	header->format         = format;
+	header->alphaEnabled   = 0;
+	header->width          = width;
+	header->height         = height;
+	header->wrapS          = 0;
+	header->wrapT          = 0;
+	header->isIndexTexture = 0;
+	header->colorFormat    = 0;
+	header->numColors      = 0;
+	header->paletteOffset  = 0;
+	header->mipmapEnabled  = 0;
+	header->doEdgeLod      = 0;
+	header->biasClamp      = 0;
+	header->maxAnisotropy  = 0;
+	header->minFilter      = 1;
+	header->magFilter      = 1;
+	header->minLOD         = 0;
+	header->maxLOD         = 0;
+	header->mipmapCount    = 1;
+	header->LODBias        = 0;
+	header->imageOffset    = sizeof(ResTIMG);
 
 	mEmbPalette = nullptr;
 	storeTIMG(header);
