@@ -37,6 +37,14 @@ inline void J3DGDWriteBPCmd(u32 cmd)
 	J3DGDWrite_u32(cmd);
 }
 
+// Made up
+inline void J3DGDWriteBPCmdCheck(u32 cmd)
+{
+	GDOverflowCheck(5);
+	J3DGDWrite_u8(GX_CMD_LOAD_BP_REG);
+	J3DGDWrite_u32(cmd);
+}
+
 inline void J3DGDWriteCPCmd(u8 cmd, u32 param)
 {
 	J3DGDWrite_u8(GX_CMD_LOAD_CP_REG);
@@ -92,6 +100,12 @@ void JRNISetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID,
                      GXTexCoordID, GXTexMapID, GXChannelID);
 void JRNISetTevColorS10(GXTevRegID reg, GXColorS10 color);
 void JRNISetFogRangeAdj(GXBool enable, u16 center, GXFogAdjTable* table);
+
+inline void J3DGDSetZCompLoc(u32 compLocEnable)
+{
+	J3DGDWriteBPCmdCheck(0xFE000040);
+	J3DGDWriteBPCmdCheck(compLocEnable << 6 | 0x43 << 24);
+}
 
 inline void J3DGDSetTevKonstantSel_SwapModeTable(
     GXTevStageID stage, GXTevKColorSel colorSel1, GXTevKAlphaSel alphaSel1,

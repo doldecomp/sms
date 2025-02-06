@@ -1,7 +1,9 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTevBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DPEBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <dolphin/gd.h>
+#include <dolphin/os.h>
 #include <macros.h>
 
 #pragma opt_strength_reduction off
@@ -91,6 +93,11 @@ s32 J3DTevBlock1::countDLSize() { return 0x80; }
 s32 J3DTevBlock2::countDLSize() { return 0x180; }
 s32 J3DTevBlock4::countDLSize() { return 0x260; }
 s32 J3DTevBlock16::countDLSize() { return 0x580; }
+
+s32 J3DPEBlockOpa::countDLSize() { return 0x20; }
+s32 J3DPEBlockTexEdge::countDLSize() { return 0x20; }
+s32 J3DPEBlockXlu::countDLSize() { return 0x20; }
+s32 J3DPEBlockFull::countDLSize() { return 0x60; }
 
 // TODO: send to some header? Doesn't look like it should be public
 extern void loadTexNo(u32, const u16&);
@@ -289,6 +296,52 @@ void J3DTevBlock16::load()
 	}
 }
 
+void J3DPEBlockOpa::load()
+{
+	GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GDSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_COPY);
+	GDSetZMode(1, GX_LEQUAL, 1);
+	J3DGDSetZCompLoc(1);
+}
+
+void J3DPEBlockTexEdge::load()
+{
+	GDSetAlphaCompare(GX_GEQUAL, 0x80, GX_AOP_AND, GX_LEQUAL, 0xff);
+	GDSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_COPY);
+	GDSetZMode(1, GX_LEQUAL, 1);
+	J3DGDSetZCompLoc(0);
+}
+
+void J3DPEBlockXlu::load()
+{
+	GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GDSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_COPY);
+	GDSetZMode(1, GX_LEQUAL, 0);
+	J3DGDSetZCompLoc(1);
+}
+
+inline void loadZCompLoc(u8 compLoc)
+{
+	if (compLoc != 0xff)
+		J3DGDSetZCompLoc(compLoc);
+}
+
+// TODO: header
+extern void loadDither(u8);
+
+void J3DPEBlockFull::load()
+{
+	if (mFog) {
+		mFog->load();
+	}
+	mAlphaComp.load();
+	mBlend.load();
+	mZMode.load();
+	loadZCompLoc(mZCompLoc);
+	if (mDither != 0xFF)
+		loadDither(mDither);
+}
+
 void J3DTevBlock1::reset(J3DTevBlock* block)
 {
 	mTexNo[0]       = block->getTexNo(0);
@@ -376,4 +429,67 @@ void J3DTevBlock16::reset(J3DTevBlock* block)
 		mTevKAlphaSel[i] = block->getTevKAlphaSel(i);
 	for (u32 i = 0; i < 4; ++i)
 		mTevSwapModeTable[i] = *block->getTevSwapModeTable(i);
+}
+
+void J3DPEBlockFull::reset(J3DPEBlock* block)
+{
+	if (block->getFog() != NULL) {
+		if (!mFog)
+			mFog = new J3DFog;
+
+		memcpy(mFog, block->getFog(), sizeof(*mFog));
+		DCStoreRange(mFog, sizeof(*mFog));
+	}
+
+	// TODO: ton of stupid inlines missing here
+	switch (block->getType()) {
+	case 'PEOP':
+		mAlphaComp.mRef0       = 0;
+		mAlphaComp.mRef1       = 0;
+		mAlphaComp.mAlphaCmpID = 0xE7;
+
+		mBlend.mBlendMode = 0;
+		mBlend.mSrcFactor = 1;
+		mBlend.mDstFactor = 0;
+		mBlend.mLogicOp   = 3;
+
+		mZMode.mZModeID = 0x17;
+
+		mZCompLoc = 1;
+		break;
+	case 'PEED':
+		mAlphaComp.mRef0       = 0x80;
+		mAlphaComp.mRef1       = 0XFF;
+		mAlphaComp.mAlphaCmpID = 0XC3;
+
+		mBlend.mBlendMode = 0;
+		mBlend.mSrcFactor = 1;
+		mBlend.mDstFactor = 0;
+		mBlend.mLogicOp   = 3;
+
+		mZMode.mZModeID = 0x17;
+
+		mZCompLoc = 0;
+		break;
+	case 'PEXL':
+		mAlphaComp.mRef0       = 0;
+		mAlphaComp.mRef1       = 0;
+		mAlphaComp.mAlphaCmpID = 0XE7;
+
+		mBlend.mBlendMode = 1;
+		mBlend.mSrcFactor = 4;
+		mBlend.mDstFactor = 5;
+		mBlend.mLogicOp   = 3;
+
+		mZMode.mZModeID = 0x16;
+
+		mZCompLoc = 1;
+		break;
+	case 'PEFL':
+		mAlphaComp = *block->getAlphaComp();
+		mBlend     = *block->getBlend();
+		mZMode     = *block->getZMode();
+		mZCompLoc  = block->getZCompLoc();
+		break;
+	}
 }
