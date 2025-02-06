@@ -75,9 +75,11 @@ void J3DGDSetTexTlut(GXTexMapID, u32, GXTlutFmt);
 void J3DGDLoadTlut(void*, u32, GXTlutSize);
 void J3DGDSetTevKColor(GXTevKColorID, GXColor);
 void JRNLoadCurrentMtx(u32, u32, u32, u32, u32, u32, u32, u32, u32);
-void JRNSetTevIndirect(GXTevStageID, GXIndTexStageID, GXIndTexFormat,
-                       GXIndTexBiasSel, GXIndTexMtxID, GXIndTexWrap,
-                       GXIndTexWrap, u8, u8, GXIndTexAlphaSel);
+void JRNSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage,
+                       GXIndTexFormat format, GXIndTexBiasSel bias_sel,
+                       GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
+                       GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod,
+                       GXIndTexAlphaSel alpha_sel);
 void JRNSetTevDirect(GXTevStageID);
 void JRNSetIndTexMtx(GXIndTexMtxID mtx_id, ROMtxPtr offset, s8 scale_exp);
 void JRNSetIndTexCoordScale(GXIndTexStageID, GXIndTexScale, GXIndTexScale,
@@ -90,5 +92,26 @@ void JRNISetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID,
                      GXTexCoordID, GXTexMapID, GXChannelID);
 void JRNISetTevColorS10(GXTevRegID reg, GXColorS10 color);
 void JRNISetFogRangeAdj(GXBool enable, u16 center, GXFogAdjTable* table);
+
+inline void J3DGDSetTevKonstantSel_SwapModeTable(
+    GXTevStageID stage, GXTevKColorSel colorSel1, GXTevKAlphaSel alphaSel1,
+    GXTevKColorSel colorSel2, GXTevKAlphaSel alphaSel2, GXTevColorChan chan1,
+    GXTevColorChan chan2)
+{
+	GDOverflowCheck(5);
+	// Probably a fake match but it really doesn't matter
+	// real version of this is BP_TEV_KSEL
+	// clang-format off
+	J3DGDWriteBPCmd(
+		((u32)chan1 |
+		(u32)chan2 << 2 |
+		(u32)colorSel1 << 4 |
+		(u32)alphaSel1 << 9 |
+		(u32)colorSel2 << 14 |
+		(u32)alphaSel2 << 19) & 0x00FFFFFF
+		| (u32)(stage / 2 + 0xF6) << 24
+	);
+	// clang-format on
+}
 
 #endif

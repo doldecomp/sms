@@ -377,25 +377,25 @@ void JRNLoadCurrentMtx(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
 	GXCmd1u32(b);
 }
 
-void JRNSetTevIndirect(GXTevStageID param_1, GXIndTexStageID param_2,
-                       GXIndTexFormat param_3, GXIndTexBiasSel param_4,
-                       GXIndTexMtxID param_5, GXIndTexWrap param_6,
-                       GXIndTexWrap param_7, u8 param_8, u8 param_9,
-                       GXIndTexAlphaSel param_10)
+void JRNSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage,
+                       GXIndTexFormat format, GXIndTexBiasSel bias_sel,
+                       GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
+                       GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod,
+                       GXIndTexAlphaSel alpha_sel)
 {
 	GDOverflowCheck(5);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		param_2 |
-		param_3 << 2 |
-		param_4 << 4 |
-		param_10 << 7 |
-		param_5 << 9 |
-		param_6 << 13 |
-		param_7 << 16 |
-		param_9 << 19 |
-		param_8 << 20 |
-		(param_1 + 0x10) << 24
+		ind_stage |
+		format << 2 |
+		bias_sel << 4 |
+		alpha_sel << 7 |
+		matrix_sel << 9 |
+		wrap_s << 13 |
+		wrap_t << 16 |
+		utc_lod << 19 |
+		add_prev << 20 |
+		(tev_stage + 0x10) << 24
 	);
 	// clang-format on
 }

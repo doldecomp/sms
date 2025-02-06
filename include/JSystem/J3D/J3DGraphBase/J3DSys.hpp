@@ -54,6 +54,8 @@ public:
 
 	void setNBTScale(Vec* scale) { mNBTScale = scale; }
 
+	MtxPtr getViewMtx() { return mViewMtx; }
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ char pad_000[0x4];

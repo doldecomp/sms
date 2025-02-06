@@ -9,6 +9,7 @@ class J3DMatPacket;
 class J3DDrawBuffer;
 class J3DShape;
 class J3DMaterial;
+class J3DMaterialAnm;
 class J3DShapePacket;
 class J3DTexture;
 
@@ -42,6 +43,16 @@ public:
 
 	virtual ~J3DPacket() {};
 
+	void drawClear()
+	{
+		unk4 = nullptr;
+		unk8 = nullptr;
+	}
+
+	J3DPacket* getNextPacket() const { return unk4; }
+	void setNextPacket(J3DPacket* packet) { unk4 = packet; }
+
+public:
 	J3DPacket* unk4;
 	J3DPacket* unk8;
 	u32 unkC;
@@ -97,11 +108,15 @@ public:
 	void addShapePacket(J3DShapePacket* packet);
 	IDK isHideAllShapePacket_();
 
+	J3DShapePacket* getShapePacket() const { return unk34; }
+	J3DMaterial* getMaterial() const { return unk38; }
+
+public:
 	J3DShapePacket* unk34; // TODO: might be part of DrawPacket
 	J3DMaterial* unk38;
 	u32 unk3C; // TODO: unk3C is something weird, probably not u32
 	J3DTexture* unk40;
-	u32 unk44;
+	J3DMaterialAnm* unk44;
 };
 
 class J3DShapePacket : public J3DCallBackPacket {

@@ -480,7 +480,7 @@ config.libs = [
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DPacket.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DTevs.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DDrawBuffer.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphBase/J3DDrawBuffer.cpp"),
             # J3DGraphAnimator
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DCluster.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DJoint.cpp"),
