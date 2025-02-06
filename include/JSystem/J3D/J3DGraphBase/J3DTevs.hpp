@@ -41,14 +41,21 @@ void J3DLoadCPCmd(u8, u32);
 void J3DLoadArrayBasePtr(GXAttr, void*);
 void J3DSetVtxAttrFmtv(GXVtxFmt, GXVtxAttrFmtList*, bool);
 
-struct J3DLightObj {
+class J3DLightObj : public J3DLightInfo {
+public:
+	J3DLightObj() { setDefault(); }
+
+	// Completely made up to force J3DLightInfo::operator= to NOT inline
+	void setDefault() { setInfo(j3dDefaultLightInfo); }
+	void setInfo(const J3DLightInfo& info)
+	{
+		J3DLightInfo::operator=(j3dDefaultLightInfo);
+	}
+
 	void load(u32) const;
 
-	Vec mPos;
-	Vec mDir;
-	GXColor mColor;
-	Vec mAttnA;
-	Vec mAttnK;
+public:
+	char unk34[0x40];
 };
 
 struct J3DTexMtx {

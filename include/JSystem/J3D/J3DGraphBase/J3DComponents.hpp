@@ -260,4 +260,48 @@ public:
 	u16 mZModeID;
 };
 
+inline u32 setChanCtrlMacro(u8 enable, GXColorSrc ambSrc, GXColorSrc matSrc,
+                            u32 lightMask, GXDiffuseFn diffuseFn,
+                            GXAttnFn attnFn)
+{
+	u32 ret = matSrc << 0; // Putting this as a separate statement fixes
+	                       // codegen, but regalloc is still wrong
+	return ret | enable << 1 | (lightMask & 0x0F) << 2 | ambSrc << 6
+	       | ((attnFn == GX_AF_SPEC) ? GX_DF_NONE : diffuseFn) << 7
+	       | (attnFn != GX_AF_NONE) << 9 | (attnFn != GX_AF_SPEC) << 10
+	       | (lightMask >> 4 & 0x0F) << 11;
+}
+
+struct J3DColorChan {
+	J3DColorChan& operator=(const J3DColorChan& other)
+	{
+		mChanCtrl = other.mChanCtrl;
+		return *this;
+	}
+
+	GXAttnFn getAttnFn()
+	{
+		u8 attnFnTbl[] = { GX_AF_NONE, GX_AF_SPEC, GX_AF_NONE, GX_AF_SPOT };
+		return (GXAttnFn)attnFnTbl[mChanCtrl >> 9 & 0x03];
+	}
+	GXDiffuseFn getDiffuseFn() { return (GXDiffuseFn)(mChanCtrl >> 7 & 3); }
+	u8 getLightMask()
+	{
+		return (mChanCtrl >> 2 & 0x0F) | (mChanCtrl >> 11 & 0x0f) << 4;
+	}
+	GXColorSrc getMatSrc() { return (GXColorSrc)(mChanCtrl >> 0 & 1); }
+	GXColorSrc getAmbSrc() { return (GXColorSrc)(mChanCtrl >> 6 & 1); }
+	u8 getEnable() { return (mChanCtrl >> 1) & 1; }
+
+	void load(u32 chan)
+	{
+		const GXChannelID chanTbl[]
+		    = { GX_COLOR0, GX_ALPHA0, GX_COLOR1, GX_ALPHA1 };
+		J3DGDSetChanCtrl(chanTbl[chan], getEnable(), getAmbSrc(), getMatSrc(),
+		                 getLightMask(), getDiffuseFn(), getAttnFn());
+	}
+
+	/* 0x0 */ u16 mChanCtrl;
+};
+
 #endif
