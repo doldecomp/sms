@@ -187,7 +187,7 @@ struct J3DTevStageInfo {
 };
 
 struct J3DIndTevStageInfo {
-	/* 0x0 */ u8 mIndStage __attribute__((aligned(4)));
+	/* 0x0 */ u8 mIndStage;
 	/* 0x1 */ u8 mIndFormat;
 	/* 0x2 */ u8 mBiasSel;
 	/* 0x3 */ u8 mMtxSel;
@@ -196,6 +196,9 @@ struct J3DIndTevStageInfo {
 	/* 0x6 */ u8 mPrev;
 	/* 0x7 */ u8 mLod;
 	/* 0x8 */ u8 mAlphaSel;
+	/* 0x9 */ u8 unk9; // TODO: are these really here? tww used alignment...
+	/* 0xA */ u8 unkA;
+	/* 0xB */ u8 unkB;
 };
 
 struct J3DTexCoordInfo {
