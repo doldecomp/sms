@@ -1,4 +1,5 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
