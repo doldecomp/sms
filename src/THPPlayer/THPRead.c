@@ -1,7 +1,7 @@
 #include <THPPlayer/THPRead.h>
 #include <THPPlayer/THPPlayer.h>
 
-#define STACK_SIZE        4096
+#define STACK_SIZE 4096
 
 static OSMessageQueue FreeReadBufferQueue;
 static OSMessageQueue ReadedBufferQueue;

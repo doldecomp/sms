@@ -7,7 +7,7 @@
 
 #pragma opt_strength_reduction off
 
-#define STACK_SIZE   4096
+#define STACK_SIZE 4096
 
 static OSThread VideoDecodeThread;
 static u8 VideoDecodeThreadStack[STACK_SIZE];
