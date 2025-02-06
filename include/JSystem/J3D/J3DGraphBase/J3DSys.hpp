@@ -17,6 +17,8 @@ struct J3DTexCoordScaleInfo {
 	/* 0x6 */ u16 field_0x06;
 };
 
+class J3DTexture;
+
 class J3DSys {
 public:
 	J3DSys();
@@ -48,6 +50,10 @@ public:
 		GXSetArray(GX_NRM_MTX_ARRAY, mCurrentNormMtx, sizeof(Mtx33));
 	}
 
+	J3DTexture* getTexture() { return mTexture; }
+
+	void setNBTScale(Vec* scale) { mNBTScale = scale; }
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ char pad_000[0x4];
@@ -59,7 +65,7 @@ public:
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ u32 unk50;
-	/* 0x54 */ u32 unk54;
+	/* 0x54 */ J3DTexture* mTexture;
 	/* 0x58 */ char padd_003[0x4];
 	/* 0x5C */ u32 mTexCacheRegionNum;
 	/* 0x60 */ GXTexRegion mTexCacheRegion[8];
@@ -72,7 +78,7 @@ public:
 	/* 0x114 */ void* unk114;
 	/* 0x118 */ u32 unk118;
 	/* 0x11C */ u32 unk11C;
-	/* 0x120 */ char pad_006[0x4];
+	/* 0x120 */ Vec* mNBTScale;
 
 	static Mtx mCurrentMtx;
 	static Vec mCurrentS;

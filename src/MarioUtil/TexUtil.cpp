@@ -15,13 +15,13 @@ void SMS_ChangeTextureAll(J3DModelData* param_1, const char* param_2,
 			// TODO: these are most likely an inlined call, figure it out
 			{
 				ResTIMG* ptr = us->unk4 + i;
-				ptr->mImageDataOffset
-				    = ptr->mImageDataOffset + (u32)&param_3 - (u32)ptr;
+				ptr->imageDataOffset
+				    = ptr->imageDataOffset + (u32)&param_3 - (u32)ptr;
 			}
 			{
 				ResTIMG* ptr = us->unk4 + i;
-				ptr->mPaletteOffset
-				    = ptr->mPaletteOffset + (u32)&param_3 - (u32)ptr;
+				ptr->paletteOffset
+				    = ptr->paletteOffset + (u32)&param_3 - (u32)ptr;
 			}
 			DCFlushRange(param_1->unkAC->unk4 + i, 0x20);
 		}

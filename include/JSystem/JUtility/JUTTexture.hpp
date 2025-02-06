@@ -14,12 +14,12 @@ struct ResTIMG {
 	/* 0x04 */ u16 height;
 	/* 0x06 */ u8 wrapS;
 	/* 0x07 */ u8 wrapT;
-	/* 0x08 */ u8 indexTexture;
+	/* 0x08 */ u8 isIndexTexture;
 	/* 0x09 */ u8 colorFormat;
 	/* 0x0A */ u16 numColors;
 	/* 0x0C */ u32 paletteOffset;
 	/* 0x10 */ u8 mipmapEnabled;
-	/* 0x11 */ u8 doEdgeLOD;
+	/* 0x11 */ u8 doEdgeLod;
 	/* 0x12 */ u8 biasClamp;
 	/* 0x13 */ u8 maxAnisotropy;
 	/* 0x14 */ u8 minFilter;

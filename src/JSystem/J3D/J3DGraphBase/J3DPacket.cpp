@@ -119,7 +119,7 @@ void J3DMatPacket::draw()
 {
 	char trash[0x20];
 	if (!checkThing(unk34)) {
-		j3dSys.unk54 = unk40;
+		j3dSys.mTexture = unk40;
 		j3dSys.unk3C = this;
 		unk38->load();
 		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {

@@ -54,9 +54,11 @@ struct J3DTexMtx {
 	/* 0x94 */ Mtx mViewMtx;
 };
 
-void J3DGDSetTexLookupMode(GXTexMapID, GXTexWrapMode, GXTexWrapMode,
-                           GXTexFilter, GXTexFilter, float, float, float, u8,
-                           u8, _GXAnisotropy);
+void J3DGDSetTexLookupMode(GXTexMapID id, GXTexWrapMode wrapS,
+                           GXTexWrapMode wrapT, GXTexFilter minFilter,
+                           GXTexFilter magFilter, f32 minLOD, f32 maxLOD,
+                           f32 lodBias, u8 biasClamp, u8 edgeLOD,
+                           GXAnisotropy maxAniso);
 
 struct J3DNBTScale : public J3DNBTScaleInfo {
 	// J3DNBTScale() { *(J3DNBTScaleInfo*)this = j3dDefaultNBTScaleInfo; }

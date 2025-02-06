@@ -258,13 +258,13 @@ void J3DGDSetTexCoordScale2(GXTexCoordID param_1, u16 param_2, u8 param_3,
 	// clang-format on
 }
 
-void J3DGDSetTexImgAttr(GXTexMapID param_1, u16 param_2, u16 param_3,
+void J3DGDSetTexImgAttr(GXTexMapID param_1, u16 width, u16 height,
                         GXTexFmt param_4)
 {
 	// clang-format off
 	u32 reg =
-		(u32) (param_2 - 1) |
-		(u32) (param_3 - 1) << 10 |
+		(u32) (width - 1) |
+		(u32) (height - 1) << 10 |
 		(u32) param_4 << 20 |
 		(u32) GXTexImage0Ids[param_1] << 24;
 	// clang-format on

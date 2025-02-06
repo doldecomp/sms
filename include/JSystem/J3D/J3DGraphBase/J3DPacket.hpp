@@ -10,6 +10,7 @@ class J3DDrawBuffer;
 class J3DShape;
 class J3DMaterial;
 class J3DShapePacket;
+class J3DTexture;
 
 class J3DDisplayListObj {
 public:
@@ -99,7 +100,7 @@ public:
 	J3DShapePacket* unk34; // TODO: might be part of DrawPacket
 	J3DMaterial* unk38;
 	u32 unk3C; // TODO: unk3C is something weird, probably not u32
-	u32 unk40;
+	J3DTexture* unk40;
 	u32 unk44;
 };
 
