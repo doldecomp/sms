@@ -20,12 +20,12 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format)
 	header->height        = height;
 	header->wrapS         = 0;
 	header->wrapT         = 0;
-	header->indexTexture  = 0;
+	header->isIndexTexture  = 0;
 	header->colorFormat   = 0;
 	header->numColors     = 0;
 	header->paletteOffset = 0;
 	header->mipmapEnabled = 0;
-	header->doEdgeLOD     = 0;
+	header->doEdgeLod     = 0;
 	header->biasClamp     = 0;
 	header->maxAnisotropy = 0;
 	header->minFilter     = 1;
@@ -98,7 +98,7 @@ void JUTTexture::attachPalette(JUTPalette* param_0)
 	if (param_0 == nullptr && mEmbPalette != nullptr) {
 		field_0x2c = mEmbPalette;
 		initTexObj((GXTlut)field_0x2c->getTlutName());
-	} else if (mTexInfo && mTexInfo->indexTexture) {
+	} else if (mTexInfo && mTexInfo->isIndexTexture) {
 		field_0x2c = param_0;
 		initTexObj((GXTlut)field_0x2c->getTlutName());
 	}
@@ -114,7 +114,7 @@ void JUTTexture::initTexObj()
 	             (GXTexWrapMode)mWrapT, mipmapEnabled);
 	GXInitTexObjLOD(&mTexObj, (GXTexFilter)mMinFilter, (GXTexFilter)mMagFilter,
 	                mMinLOD / 8.0f, mMaxLOD / 8.0f, mLODBias / 100.0f,
-	                mTexInfo->biasClamp, mTexInfo->doEdgeLOD,
+	                mTexInfo->biasClamp, mTexInfo->doEdgeLod,
 	                (GXAnisotropy)mTexInfo->maxAnisotropy);
 }
 
@@ -129,7 +129,7 @@ void JUTTexture::initTexObj(GXTlut param_0)
 	               (GXTexWrapMode)mWrapT, mipmapEnabled, mTlutName);
 	GXInitTexObjLOD(&mTexObj, (GXTexFilter)mMinFilter, (GXTexFilter)mMagFilter,
 	                mMinLOD / 8.0f, mMaxLOD / 8.0f, mLODBias / 100.0f,
-	                mTexInfo->biasClamp, mTexInfo->doEdgeLOD,
+	                mTexInfo->biasClamp, mTexInfo->doEdgeLod,
 	                (GXAnisotropy)mTexInfo->maxAnisotropy);
 }
 
