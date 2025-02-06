@@ -285,11 +285,12 @@ void loadTexNo(u32 param_1, const u16& param_2)
 void J3DLightObj::load(u32 id) const
 {
 	GXLightID light = (GXLightID)(1 << id);
-	GDSetLightPos(light, mPos.x, mPos.y, mPos.z);
-	GDSetLightAttn(light, mAttnA.x, mAttnA.y, mAttnA.z, mAttnK.x, mAttnK.y,
-	               mAttnK.z);
+	GDSetLightPos(light, mLightPosition.x, mLightPosition.y, mLightPosition.z);
+	GDSetLightAttn(light, mCosAtten.x, mCosAtten.y, mCosAtten.z, mDistAtten.x,
+	               mDistAtten.y, mDistAtten.z);
 	GDSetLightColor(light, mColor);
-	GDSetLightDir(light, mDir.x, mDir.y, mDir.z);
+	GDSetLightDir(light, mLightDirection.x, mLightDirection.y,
+	              mLightDirection.z);
 }
 
 void J3DTexMtx::calc()

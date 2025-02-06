@@ -1,12 +1,35 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPEBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DColorBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <dolphin/gd.h>
 #include <dolphin/os.h>
 #include <macros.h>
 
 #pragma opt_strength_reduction off
+
+void J3DColorBlockLightOff::initialize()
+{
+	mColorChanNum = 0;
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); ++i)
+		mMatColor[i] = j3dDefaultColInfo;
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); ++i)
+		mColorChan[i].mChanCtrl = 0xFFFF;
+}
+
+void J3DColorBlockLightOn::initialize()
+{
+	mColorChanNum = 0;
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); i++)
+		mMatColor[i] = j3dDefaultColInfo;
+	for (u32 i = 0; i < ARRAY_COUNT(mAmbColor); i++)
+		mAmbColor[i] = j3dDefaultAmbInfo;
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); ++i)
+		mColorChan[i].mChanCtrl = 0xFFFF;
+	for (u32 i = 0; i < ARRAY_COUNT(mLight); ++i)
+		mLight[i] = nullptr;
+}
 
 void J3DTevBlock2::initialize()
 {
@@ -89,6 +112,9 @@ void J3DTevBlock16::initialize()
 	}
 }
 
+s32 J3DColorBlockLightOff::countDLSize() { return 0x60; }
+s32 J3DColorBlockLightOn::countDLSize() { return 0x140; }
+
 s32 J3DTevBlock1::countDLSize() { return 0x80; }
 s32 J3DTevBlock2::countDLSize() { return 0x180; }
 s32 J3DTevBlock4::countDLSize() { return 0x260; }
@@ -107,6 +133,45 @@ inline void loadTexCoordScale(GXTexCoordID coord,
 {
 	J3DGDSetTexCoordScale2(coord, info.field_0x00, info.field_0x04 == 1, 0,
 	                       info.field_0x02, info.field_0x06 == 1, 0);
+}
+
+// TODO: header
+extern void loadCullMode(u8);
+
+void J3DColorBlockLightOff::load()
+{
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); ++i)
+		J3DGDSetChanMatColor((GXChannelID)(GX_COLOR0A0 + i),
+		                     mMatColor[i].color);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); ++i)
+		mColorChan[i].load(i);
+
+	if (mCullMode != 0xFF)
+		loadCullMode(mCullMode);
+}
+
+void J3DColorBlockLightOn::load()
+{
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); ++i)
+		J3DGDSetChanMatColor((GXChannelID)(GX_COLOR0A0 + i),
+		                     mMatColor[i].color);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mAmbColor); ++i)
+		J3DGDSetChanAmbColor((GXChannelID)(GX_COLOR0A0 + i),
+		                     mAmbColor[i].color);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); ++i)
+		mColorChan[i].load(i);
+
+	for (u32 i = 0; i < 8; i++) {
+		if (mLight[i]) {
+			mLight[i]->load(i);
+		}
+	}
+
+	if (mCullMode != 0xFF)
+		loadCullMode(mCullMode);
 }
 
 void J3DTevBlock1::load()
@@ -340,6 +405,43 @@ void J3DPEBlockFull::load()
 	loadZCompLoc(mZCompLoc);
 	if (mDither != 0xFF)
 		loadDither(mDither);
+}
+
+void J3DColorBlockLightOff::reset(J3DColorBlock* block)
+{
+	mColorChanNum = block->getColorChanNum();
+
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); i++)
+		mMatColor[i] = *block->getMatColor(i);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); i++)
+		mColorChan[i] = *block->getColorChan(i);
+}
+
+void J3DColorBlockLightOn::reset(J3DColorBlock* block)
+{
+	mColorChanNum = block->getColorChanNum();
+
+	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); i++)
+		mMatColor[i] = *block->getMatColor(i);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mColorChan); i++)
+		mColorChan[i] = *block->getColorChan(i);
+
+	for (u32 i = 0; i < ARRAY_COUNT(mAmbColor); i++) {
+		if (block->getAmbColor(i))
+			mAmbColor[i] = *block->getAmbColor(i);
+	}
+
+	for (u32 i = 0; i < ARRAY_COUNT(mLight); i++) {
+		if (block->getLight(i) != NULL) {
+			if (!mLight[i])
+				mLight[i] = new J3DLightObj;
+
+			memcpy(mLight[i], block->getLight(i), sizeof(*mLight[i]));
+			DCStoreRange(mLight[i], sizeof(*mLight[i]));
+		}
+	}
 }
 
 void J3DTevBlock1::reset(J3DTevBlock* block)
