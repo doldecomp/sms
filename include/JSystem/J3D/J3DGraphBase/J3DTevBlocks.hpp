@@ -2,35 +2,7 @@
 #define J3D_TEV_BLOCKS_HPP
 
 #include <types.h>
-#include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
-
-struct J3DGXColorS10 {
-
-	J3DGXColorS10& operator=(const GXColorS10& other)
-	{
-		color.r = other.r;
-		color.g = other.g;
-		color.b = other.b;
-		color.a = other.a;
-		return *this;
-	}
-
-	GXColorS10 color;
-};
-
-struct J3DGXColor {
-
-	J3DGXColor& operator=(const GXColor& other)
-	{
-		color.r = other.r;
-		color.g = other.g;
-		color.b = other.b;
-		color.a = other.a;
-		return *this;
-	}
-
-	GXColor color;
-};
+#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
 
 class J3DTevBlock {
 public:
