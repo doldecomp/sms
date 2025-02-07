@@ -2,6 +2,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPEBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DColorBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DIndBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <dolphin/gd.h>
 #include <dolphin/os.h>
@@ -115,6 +116,8 @@ void J3DTevBlock16::initialize()
 s32 J3DColorBlockLightOff::countDLSize() { return 0x60; }
 s32 J3DColorBlockLightOn::countDLSize() { return 0x140; }
 
+s32 J3DIndBlockFull::countDLSize() { return 0x64; }
+
 s32 J3DTevBlock1::countDLSize() { return 0x80; }
 s32 J3DTevBlock2::countDLSize() { return 0x180; }
 s32 J3DTevBlock4::countDLSize() { return 0x260; }
@@ -172,6 +175,41 @@ void J3DColorBlockLightOn::load()
 
 	if (mCullMode != 0xFF)
 		loadCullMode(mCullMode);
+}
+
+void J3DIndBlockFull::load(J3DTevBlock*)
+{
+	u8 indTexStageNum = mIndTexStageNum;
+	for (u32 i = 0; i < indTexStageNum; i++) {
+		mIndTexMtx[i].load(i + 1);
+	}
+	for (u32 i = 0; i < indTexStageNum; i += 2) {
+		JRNSetIndTexCoordScale(
+		    (GXIndTexStageID)i, (GXIndTexScale)mIndTexCoordScale[i].getScaleS(),
+		    (GXIndTexScale)mIndTexCoordScale[i].getScaleT(),
+		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleS(),
+		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleT());
+	}
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[0].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[0].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[1].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[1].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[2].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[2].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[3].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[3].getMap() & 7]);
+	JRNSetIndTexOrder(indTexStageNum, (GXTexCoordID)mIndTexOrder[0].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[0].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[1].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[1].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[2].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[2].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[3].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[3].getMap());
 }
 
 void J3DTevBlock1::load()
@@ -531,6 +569,17 @@ void J3DTevBlock16::reset(J3DTevBlock* block)
 		mTevKAlphaSel[i] = block->getTevKAlphaSel(i);
 	for (u32 i = 0; i < 4; ++i)
 		mTevSwapModeTable[i] = *block->getTevSwapModeTable(i);
+}
+
+void J3DIndBlockFull::reset(J3DIndBlock* block)
+{
+	mIndTexStageNum = block->getIndTexStageNum();
+	for (u32 i = 0; i < 4; i++)
+		mIndTexOrder[i] = *block->getIndTexOrder(i);
+	for (u32 i = 0; i < 3; i++)
+		mIndTexMtx[i] = *block->getIndTexMtx(i);
+	for (u32 i = 0; i < 4; i++)
+		mIndTexCoordScale[i] = *block->getIndTexCoordScale(i);
 }
 
 void J3DPEBlockFull::reset(J3DPEBlock* block)
