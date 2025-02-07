@@ -152,12 +152,21 @@ public:
 	void load(u32) const;
 };
 
-struct J3DIndTexOrder {
+struct J3DIndTexOrder : public J3DIndTexOrderInfo {
+	u8 getCoord() const { return mCoord; }
+	u8 getMap() const { return mMap; }
+
 	void load(u32) const;
 };
 
-struct J3DIndTexCoordScale {
-	void load(unsigned long) const;
+struct J3DIndTexCoordScale : public J3DIndTexCoordScaleInfo {
+	J3DIndTexCoordScale();
+	~J3DIndTexCoordScale() { }
+
+	u8 getScaleS() { return mScaleS; }
+	u8 getScaleT() { return mScaleT; }
+
+	void load(u32) const { }
 };
 
 struct J3DFog : public J3DFogInfo {
@@ -302,6 +311,16 @@ struct J3DColorChan {
 	}
 
 	/* 0x0 */ u16 mChanCtrl;
+};
+
+struct J3DIndTexMtx : public J3DIndTexMtxInfo {
+	J3DIndTexMtx();
+	~J3DIndTexMtx() { }
+
+	void load(u32 idx)
+	{
+		JRNSetIndTexMtx((GXIndTexMtxID)idx, mOffsetMtx, mScaleExp);
+	}
 };
 
 #endif
