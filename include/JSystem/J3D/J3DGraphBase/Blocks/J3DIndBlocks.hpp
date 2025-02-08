@@ -1,8 +1,12 @@
 #ifndef J3D_IND_BLOCKS_HPP
 #define J3D_IND_BLOCKS_HPP
 
-#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DTevBlocks.hpp>
+#include <types.h>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexOrder.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexMtx.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexCoordScale.hpp>
+
+class J3DTevBlock;
 
 class J3DIndBlock {
 public:

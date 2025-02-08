@@ -2,7 +2,10 @@
 #define J3D_PE_BLOCKS_HPP
 
 #include <types.h>
-#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DFog.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DAlphaComp.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DBlend.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DZMode.hpp>
 
 class J3DPEBlock {
 public:
