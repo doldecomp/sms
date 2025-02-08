@@ -77,6 +77,18 @@ public:
 	void loadVtxArray() const;
 	void draw() const;
 
+	void setUnk3C(u8 a, u8 b, u8 c, u8 d, u8 e, u8 f, u8 g, u8 h)
+	{
+		unk3C[0] = a;
+		unk3C[1] = b;
+		unk3C[2] = c;
+		unk3C[3] = d;
+		unk3C[4] = e;
+		unk3C[5] = f;
+		unk3C[6] = g;
+		unk3C[7] = h;
+	}
+
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 mElementCount;

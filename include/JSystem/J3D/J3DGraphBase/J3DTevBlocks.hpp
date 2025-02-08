@@ -58,6 +58,8 @@ public:
 
 class J3DTevBlock1 : public J3DTevBlock {
 public:
+	J3DTevBlock1() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DTevBlock*);
@@ -130,6 +132,8 @@ private:
 
 class J3DTevBlock2 : public J3DTevBlock {
 public:
+	J3DTevBlock2() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DTevBlock*);
@@ -241,6 +245,8 @@ private:
 
 class J3DTevBlock4 : public J3DTevBlock {
 public:
+	J3DTevBlock4() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DTevBlock*);
@@ -352,6 +358,8 @@ private:
 
 class J3DTevBlock16 : public J3DTevBlock {
 public:
+	J3DTevBlock16() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DTevBlock*);

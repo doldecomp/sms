@@ -40,6 +40,8 @@ public:
 
 class J3DColorBlockLightOff : public J3DColorBlock {
 public:
+	J3DColorBlockLightOff() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DColorBlock*);
@@ -91,6 +93,8 @@ private:
 
 class J3DColorBlockLightOn : public J3DColorBlock {
 public:
+	J3DColorBlockLightOn() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DColorBlock*);

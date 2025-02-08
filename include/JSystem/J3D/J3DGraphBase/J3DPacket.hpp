@@ -15,10 +15,19 @@ class J3DTexture;
 
 class J3DDisplayListObj {
 public:
+	J3DDisplayListObj()
+	{
+		unk0 = nullptr;
+		unk4 = nullptr;
+		unk8 = 0;
+		unkC = 0;
+	}
+
 	void newDisplayList(u32);
 	void swapBuffer();
 	void callDL();
 
+public:
 	void* unk0;
 	void* unk4;
 	u32 unk8;
@@ -83,13 +92,18 @@ public:
 	IDK beginPatch();
 	IDK endPatch();
 
+	J3DDisplayListObj* getDisplayListObj() const { return unk30; }
+
+	bool checkFlag(u32 flag) const { return (unk10 & flag) != 0; }
+	bool isLocked() const { return checkFlag(1) ? TRUE : FALSE; }
+
+	static int sInterruptFlag;
+
+public:
 	u32 unk10;
 	char padding0[0xc];
 	GDLObj unk20;
-
 	J3DDisplayListObj* unk30;
-
-	static int sInterruptFlag;
 };
 
 class J3DMatPacket : public J3DDrawPacket {

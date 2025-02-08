@@ -8,11 +8,26 @@ class J3DLightInfo {
 public:
 	void operator=(J3DLightInfo const& other)
 	{
-		mLightPosition  = other.mLightPosition;
-		mLightDirection = other.mLightDirection;
-		mColor          = other.mColor;
-		mCosAtten       = other.mCosAtten;
-		mDistAtten      = other.mDistAtten;
+		mLightPosition.x = other.mLightPosition.x;
+		mLightPosition.y = other.mLightPosition.y;
+		mLightPosition.z = other.mLightPosition.z;
+
+		mLightDirection.x = other.mLightDirection.x;
+		mLightDirection.y = other.mLightDirection.y;
+		mLightDirection.z = other.mLightDirection.z;
+
+		mColor.r = other.mColor.r;
+		mColor.g = other.mColor.g;
+		mColor.b = other.mColor.b;
+		mColor.a = other.mColor.a;
+
+		mCosAtten.x = other.mCosAtten.x;
+		mCosAtten.y = other.mCosAtten.y;
+		mCosAtten.z = other.mCosAtten.z;
+
+		mDistAtten.x = other.mDistAtten.x;
+		mDistAtten.y = other.mDistAtten.y;
+		mDistAtten.z = other.mDistAtten.z;
 	}
 
 	/* 0x00 */ Vec mLightPosition;
@@ -23,6 +38,15 @@ public:
 }; // Size = 0x34
 
 struct J3DTextureSRTInfo {
+	void operator=(const J3DTextureSRTInfo& other)
+	{
+		mScaleX       = other.mScaleX;
+		mScaleY       = other.mScaleY;
+		mRotation     = other.mRotation;
+		mTranslationX = other.mTranslationX;
+		mTranslationY = other.mTranslationY;
+	}
+
 	/* 0x00 */ f32 mScaleX;
 	/* 0x04 */ f32 mScaleY;
 	/* 0x08 */ s16 mRotation;
@@ -53,7 +77,9 @@ struct J3DTexMtxInfo {
 				mEffectMtx[i][j] = other.mEffectMtx[i][j];
 			}
 		}
-		mCenter     = other.mCenter;
+		mCenter.x   = other.mCenter.x;
+		mCenter.y   = other.mCenter.y;
+		mCenter.z   = other.mCenter.z;
 		mProjection = other.mProjection;
 		mInfo       = other.mInfo;
 		mSRT        = other.mSRT;
@@ -101,7 +127,7 @@ struct J3DIndTexMtxInfo {
 }; // Size: 0x1C
 
 struct J3DFogInfo {
-	void operator=(const J3DFogInfo& other)
+	J3DFogInfo& operator=(const J3DFogInfo& other)
 	{
 		mType      = other.mType;
 		mAdjEnable = other.mAdjEnable;
@@ -110,10 +136,14 @@ struct J3DFogInfo {
 		mEndZ      = other.mEndZ;
 		mNearZ     = other.mNearZ;
 		mFarZ      = other.mFarZ;
-		mColor     = other.mColor;
+		mColor.r   = other.mColor.r;
+		mColor.g   = other.mColor.g;
+		mColor.b   = other.mColor.b;
+		mColor.a   = other.mColor.a;
 		for (int i = 0; i < 10; i++) {
 			mFogAdjTable[i] = other.mFogAdjTable[i];
 		}
+		return *this;
 	}
 
 	/* 0x00 */ u8 mType;
@@ -134,7 +164,9 @@ struct J3DNBTScaleInfo {
 	inline void operator=(const J3DNBTScaleInfo& other)
 	{
 		mbHasScale = other.mbHasScale;
-		mScale     = other.mScale;
+		mScale.x   = other.mScale.x;
+		mScale.y   = other.mScale.y;
+		mScale.z   = other.mScale.z;
 	}
 }; // Size: 0x10
 
@@ -187,6 +219,19 @@ struct J3DTevStageInfo {
 };
 
 struct J3DIndTevStageInfo {
+	void operator=(const J3DIndTevStageInfo& other)
+	{
+		mIndStage  = other.mIndStage;
+		mIndFormat = other.mIndFormat;
+		mBiasSel   = other.mBiasSel;
+		mMtxSel    = other.mMtxSel;
+		mWrapS     = other.mWrapS;
+		mWrapT     = other.mWrapT;
+		mPrev      = other.mPrev;
+		mLod       = other.mLod;
+		mAlphaSel  = other.mAlphaSel;
+	}
+
 	/* 0x0 */ u8 mIndStage;
 	/* 0x1 */ u8 mIndFormat;
 	/* 0x2 */ u8 mBiasSel;
@@ -202,6 +247,13 @@ struct J3DIndTevStageInfo {
 };
 
 struct J3DTexCoordInfo {
+	void operator=(const J3DTexCoordInfo& other)
+	{
+		mTexGenType = other.mTexGenType;
+		mTexGenSrc  = other.mTexGenSrc;
+		mTexGenMtx  = other.mTexGenMtx;
+	}
+
 	/* 0x0 */ u8 mTexGenType __attribute__((aligned(4)));
 	/* 0x1 */ u8 mTexGenSrc;
 	/* 0x2 */ u8 mTexGenMtx;
@@ -221,6 +273,14 @@ struct J3DIndTexCoordScaleInfo {
 };
 
 struct J3DBlendInfo {
+	void operator=(const J3DBlendInfo& other)
+	{
+		mBlendMode = other.mBlendMode;
+		mSrcFactor = other.mSrcFactor;
+		mDstFactor = other.mDstFactor;
+		mLogicOp   = other.mLogicOp;
+	}
+
 	/* 0x0 */ u8 mBlendMode;
 	/* 0x1 */ u8 mSrcFactor;
 	/* 0x2 */ u8 mDstFactor;
@@ -228,6 +288,13 @@ struct J3DBlendInfo {
 };
 
 struct J3DTevOrderInfo {
+	void operator=(const J3DTevOrderInfo& other)
+	{
+		mTexCoord  = other.mTexCoord;
+		mTexMap    = other.mTexMap;
+		mColorChan = other.mColorChan;
+	}
+
 	/* 0x0 */ u8 mTexCoord __attribute__((aligned(2)));
 	/* 0x1 */ u8 mTexMap;
 	/* 0x2 */ u8 mColorChan;

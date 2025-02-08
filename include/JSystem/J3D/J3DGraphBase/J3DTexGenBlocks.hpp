@@ -32,6 +32,12 @@ public:
 
 class J3DTexGenBlockBasic : public J3DTexGenBlock {
 public:
+	J3DTexGenBlockBasic()
+	    : mNBTScale(j3dDefaultNBTScaleInfo)
+	{
+		initialize();
+	}
+
 	void initialize();
 
 	virtual void reset(J3DTexGenBlock*);
