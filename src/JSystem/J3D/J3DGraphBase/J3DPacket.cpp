@@ -119,8 +119,8 @@ void J3DMatPacket::draw()
 {
 	char trash[0x20];
 	if (!checkThing(unk34)) {
-		j3dSys.mTexture = unk40;
-		j3dSys.mMatPacket    = this;
+		j3dSys.mTexture   = unk40;
+		j3dSys.mMatPacket = this;
 		unk38->load();
 		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {
 			j->draw();
