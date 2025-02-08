@@ -35,7 +35,7 @@ public:
 	virtual u8 getDither() const { return 0; }
 
 	virtual ~J3DPEBlock() { }
-	virtual void load();
+	virtual void load() = 0;
 };
 
 class J3DPEBlockOpa : public J3DPEBlock {
@@ -64,6 +64,8 @@ class J3DPEBlockXlu : public J3DPEBlock {
 
 class J3DPEBlockFull : public J3DPEBlock {
 public:
+	J3DPEBlockFull() { initialize(); }
+
 	void initialize();
 
 	virtual void reset(J3DPEBlock*);

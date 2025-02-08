@@ -6,6 +6,8 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexGenBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <dolphin/gd.h>
 #include <dolphin/os.h>
 #include <macros.h>
@@ -32,6 +34,30 @@ void J3DColorBlockLightOn::initialize()
 		mColorChan[i].mChanCtrl = 0xFFFF;
 	for (u32 i = 0; i < ARRAY_COUNT(mLight); ++i)
 		mLight[i] = nullptr;
+}
+
+void J3DTexGenBlockBasic::initialize()
+{
+	mTexGenNum = 0;
+	for (u32 i = 0; i < 8; i++)
+		mTexMtx[i] = nullptr;
+	mTexMtxOffset = 0;
+}
+
+void J3DPEBlockFull::initialize()
+{
+	mFog                   = nullptr;
+	mAlphaComp.mAlphaCmpID = 0xFFFF;
+	mZMode.mZModeID        = 0xFFFF;
+	mZCompLoc              = 0xFF;
+	mDither                = 0xFF;
+}
+
+void J3DTevBlock1::initialize()
+{
+	mTexNo[0]                 = 0xFFFF;
+	mTevStage[0].mTevColorReg = 0xC0;
+	mTevStage[0].mTevAlphaReg = 0xC1;
 }
 
 void J3DTevBlock2::initialize()
@@ -115,6 +141,79 @@ void J3DTevBlock16::initialize()
 	}
 }
 
+J3DColorBlock* J3DMaterial::createColorBlock(int param_1)
+{
+	if (param_1 == 1)
+		return new J3DColorBlockLightOff;
+	else
+		return new J3DColorBlockLightOn;
+}
+
+J3DTexGenBlock* J3DMaterial::createTexGenBlock(int)
+{
+	return new J3DTexGenBlockBasic;
+}
+
+J3DTevBlock* J3DMaterial::createTevBlock(int param_1)
+{
+	J3DTevBlock* result = nullptr;
+	if (param_1 <= 1)
+		result = new J3DTevBlock1;
+	else if (param_1 == 2)
+		result = new J3DTevBlock2;
+	else if (param_1 <= 4)
+		result = new J3DTevBlock4;
+	else if (param_1 <= 16)
+		result = new J3DTevBlock16;
+	return result;
+}
+
+J3DIndBlock* J3DMaterial::createIndBlock(int param_1)
+{
+	J3DIndBlock* result;
+	if (param_1 != 0)
+		result = new J3DIndBlockFull;
+	else
+		result = new J3DIndBlockNull;
+	return result;
+}
+
+J3DPEBlock* J3DMaterial::createPEBlock(int param_1, u32 param_2)
+{
+	if (param_1 == 1) {
+		if (param_2 & 1)
+			return new J3DPEBlockOpa;
+
+		if (param_2 & 2)
+			return new J3DPEBlockTexEdge;
+
+		if (param_2 & 4)
+			return new J3DPEBlockXlu;
+	}
+	return new J3DPEBlockFull;
+}
+
+void J3DMaterial::initialize()
+{
+	mShape            = nullptr;
+	unk0              = nullptr;
+	unk8              = 1;
+	unkC              = -1;
+	unk10             = nullptr;
+	unk18             = 0;
+	unk1C             = nullptr;
+	mColorBlock       = nullptr;
+	mTexGenBlock      = nullptr;
+	mTevBlock         = nullptr;
+	mIndBlock         = nullptr;
+	mPEBlock          = nullptr;
+	mOriginalMaterial = nullptr;
+	unk38             = nullptr;
+	unk3C             = nullptr;
+}
+
+void J3DMaterial::addShape(J3DShape* shape) { mShape = shape; }
+
 s32 J3DColorBlockLightOff::countDLSize() { return 0x60; }
 s32 J3DColorBlockLightOn::countDLSize() { return 0x140; }
 
@@ -131,6 +230,13 @@ s32 J3DPEBlockOpa::countDLSize() { return 0x20; }
 s32 J3DPEBlockTexEdge::countDLSize() { return 0x20; }
 s32 J3DPEBlockXlu::countDLSize() { return 0x20; }
 s32 J3DPEBlockFull::countDLSize() { return 0x60; }
+
+s32 J3DMaterial::countDLSize()
+{
+	return mColorBlock->countDLSize() + mTexGenBlock->countDLSize()
+	       + mTevBlock->countDLSize() + mIndBlock->countDLSize()
+	       + mPEBlock->countDLSize();
+}
 
 // TODO: send to some header? Doesn't look like it should be public
 extern void loadTexNo(u32, const u16&);
@@ -691,6 +797,39 @@ void J3DPEBlockFull::reset(J3DPEBlock* block)
 	}
 }
 
+void J3DMaterial::makeDisplayList()
+{
+	if (!j3dSys.getMatPacket()->isLocked()) {
+		j3dSys.getMatPacket()->unk3C = unk18;
+		j3dSys.getMatPacket()->beginDL();
+		mTevBlock->load();
+		mIndBlock->load(mTevBlock);
+		mPEBlock->load();
+		GDSetGenMode2(
+		    mTexGenBlock->getTexGenNum(), mColorBlock->getColorChanNum(),
+		    mTevBlock->getTevStageNum(), mIndBlock->getIndTexStageNum(),
+		    (GXCullMode)mColorBlock->getCullMode());
+		mColorBlock->load();
+		mTexGenBlock->load();
+		j3dSys.getMatPacket()->endDL();
+	}
+}
+
+// TODO: header
+extern void loadNBTScale(J3DNBTScale&);
+
+void J3DMaterial::load()
+{
+	j3dSys.unk50 = unk8;
+	if (!j3dSys.checkFlag2()) {
+		j3dSys.getMatPacket()->getDisplayListObj()->callDL();
+		loadNBTScale(*mTexGenBlock->getNBTScale());
+	}
+}
+
+// not too much safer than the regular one
+void J3DMaterial::safeMakeDisplayList() { makeDisplayList(); }
+
 // TODO: inlines are made up and stack size doesn't match up =(
 void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 {
@@ -754,4 +893,50 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 			mTexMtx[i]->calc();
 		}
 	}
+}
+
+void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
+
+void J3DMaterial::setCurrentMtx()
+{
+	mShape->setUnk3C(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
+	                 mTexGenBlock->getTexCoord(7)->getTexGenMtx());
+}
+
+void J3DMaterial::copy(J3DMaterial* other)
+{
+	unk18 = other->unk18;
+	unk18 = unk18 & 0x7FFFFFFF;
+	mColorBlock->reset(other->mColorBlock);
+	mTexGenBlock->reset(other->mTexGenBlock);
+	mTevBlock->reset(other->mTevBlock);
+	mIndBlock->reset(other->mIndBlock);
+	mPEBlock->reset(other->mPEBlock);
+}
+
+void J3DMaterial::change()
+{
+
+	if (unk18 & 0xc0000000) {
+		return;
+	}
+	unk18 = unk18 | 0x80000000;
+	unk8  = mOriginalMaterial->unk8;
+	unk10 = mOriginalMaterial->unk10;
+	unk38 = nullptr;
+}
+
+J3DDisplayListObj* J3DMaterial::newSharedDisplayList(u32 param_1)
+{
+	if (!unk3C) {
+		unk3C = new J3DDisplayListObj;
+		unk3C->newDisplayList(param_1);
+	}
+	return unk3C;
 }

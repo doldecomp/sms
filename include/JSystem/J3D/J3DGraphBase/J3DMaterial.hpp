@@ -5,32 +5,66 @@
 #include <JSystem/J3d/J3DGraphBase/J3DTevBlocks.hpp>
 
 class J3DMaterialAnm;
+class J3DShape;
+
+class J3DColorBlock;
+class J3DTexGenBlock;
+class J3DTevBlock;
+class J3DIndBlock;
+class J3DPEBlock;
+class J3DDisplayListObj;
 
 class J3DMaterial {
 public:
-	typedef void IDK;
-	IDK makeDisplayList();
-	IDK load();
-	IDK patch();
-	IDK safeMakeDisplayList();
-	IDK safeLoad();
-	IDK calc(float (*)[4]);
-	IDK setCurrentMtx();
-	IDK copy(J3DMaterial*);
-	IDK reset();
-	IDK change();
-	IDK newSharedDisplayList(u32);
+	J3DMaterial();
+	~J3DMaterial();
+
+	static J3DColorBlock* createColorBlock(int);
+	static J3DTexGenBlock* createTexGenBlock(int);
+	static J3DTevBlock* createTevBlock(int);
+	static J3DIndBlock* createIndBlock(int);
+	static J3DPEBlock* createPEBlock(int, u32);
+
+	void initialize();
+	void addShape(J3DShape*);
+
+	s32 countDLSize();
+
+	void makeDisplayList();
+	void load();
+	void patch(); // Unused
+	void safeMakeDisplayList();
+	void safeLoad(); // Unused
+
+	void calc(MtxPtr);
+	void setCurrentMtx();
+	void copy(J3DMaterial*);
+
+	void reset(); // Unused
+	void change();
+	J3DDisplayListObj* newSharedDisplayList(u32);
 
 	void setMaterialAnm(J3DMaterialAnm* v) { unk38 = v; }
 
-	~J3DMaterial();
-
 	u16 getTexNo(u32 idx) { return mTevBlock->getTexNo(idx); }
 
-	/* 0x0 */ char unk0[0x28];
+public:
+	/* 0x0 */ void* unk0;
+	/* 0x4 */ J3DShape* mShape;
+	/* 0x8 */ u32 unk8;
+	/* 0xC */ u16 unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ char unk14[4];
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ void* unk1C;
+	/* 0x20 */ J3DColorBlock* mColorBlock;
+	/* 0x24 */ J3DTexGenBlock* mTexGenBlock;
 	/* 0x28 */ J3DTevBlock* mTevBlock;
-	/* 0x2C */ char unk2C[0xC];
+	/* 0x2C */ J3DIndBlock* mIndBlock;
+	/* 0x30 */ J3DPEBlock* mPEBlock;
+	/* 0x34 */ J3DMaterial* mOriginalMaterial;
 	/* 0x38 */ J3DMaterialAnm* unk38;
+	/* 0x3C */ J3DDisplayListObj* unk3C;
 };
 
 #endif

@@ -8,7 +8,9 @@
 // These are all similar in that they roughly correspond to *Info structs and
 // constitute components of blocks
 
-struct J3DGXColorS10 {
+class J3DGXColorS10 {
+public:
+	J3DGXColorS10() { }
 
 	J3DGXColorS10& operator=(const GXColorS10& other)
 	{
@@ -23,6 +25,7 @@ struct J3DGXColorS10 {
 };
 
 struct J3DGXColor {
+	J3DGXColor() { }
 
 	J3DGXColor& operator=(const GXColor& other)
 	{
@@ -38,7 +41,11 @@ struct J3DGXColor {
 
 class J3DTevStage {
 public:
-	J3DTevStage();
+	J3DTevStage()
+	{
+		setTevStageInfo(j3dDefaultTevStageInfo);
+		setTevSwapModeInfo(j3dDefaultTevSwapMode);
+	}
 
 	J3DTevStage& operator=(const J3DTevStage& other)
 	{
@@ -51,8 +58,56 @@ public:
 		return *this;
 	}
 
-	void setTevAlphaOp(u8, u8, u8, u8, u8);
-	void setTevColorOp(u8, u8, u8, u8, u8);
+	void setTevColorOp(u8 param_1, u8 param_2, u8 param_3, u8 param_4,
+	                   u8 param_5)
+	{
+		mTevColorOp = mTevColorOp & ~(0x01 << 2) | param_1 << 2;
+		if (param_1 <= 1) {
+			mTevColorOp = mTevColorOp & ~(0x03 << 4) | param_3 << 4;
+			mTevColorOp = mTevColorOp & ~0x03 | param_2;
+		} else {
+			mTevColorOp = mTevColorOp & ~(0x03 << 4) | (param_1 >> 1 & 3) << 4;
+			mTevColorOp = mTevColorOp & ~0x03 | 3;
+		}
+		mTevColorOp = mTevColorOp & ~(0x01 << 3) | param_4 << 3;
+		mTevColorOp = mTevColorOp & ~(0x03 << 6) | param_5 << 6;
+	}
+	void setTevColorAB(u8 a, u8 b) { mTevColorAB = a << 4 | b; }
+	void setTevColorCD(u8 c, u8 d) { mTevColorCD = c << 4 | d; }
+
+	void setTevAlphaOp(u8 param_1, u8 param_2, u8 param_3, u8 param_4,
+	                   u8 param_5)
+	{
+		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 2) | param_1 << 2;
+		if (param_1 <= 1) {
+			mTevAlphaOp = mTevAlphaOp & ~0x03 | param_2;
+			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | param_3 << 4;
+		} else {
+			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | (param_1 >> 1 & 3) << 4;
+			mTevAlphaOp = mTevAlphaOp & ~0x03 | 3;
+		}
+		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 3) | param_4 << 3;
+		mTevAlphaOp = mTevAlphaOp & ~(0x03 << 6) | param_5 << 6;
+	}
+
+	void setAlphaA(u8 a) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 5) | a << 5; }
+	void setAlphaB(u8 b) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 2) | b << 2; }
+	void setAlphaC(u8 c)
+	{
+		mTevAlphaAB      = mTevAlphaAB & ~0x03 | c >> 1;
+		mTevSwapModeInfo = mTevSwapModeInfo & ~(0x01 << 7) | c << 7;
+	}
+	void setAlphaD(u8 d)
+	{
+		mTevSwapModeInfo = mTevSwapModeInfo & ~(0x07 << 4) | d << 4;
+	}
+	void setAlphaABCD(u8 a, u8 b, u8 c, u8 d)
+	{
+		setAlphaA(a);
+		setAlphaB(b);
+		setAlphaC(c);
+		setAlphaD(d);
+	}
 
 	void setTexSel(u8 param_0)
 	{
@@ -66,6 +121,18 @@ public:
 	{
 		setTexSel(info.mTexSel);
 		setRasSel(info.mRasSel);
+	}
+
+	void setTevStageInfo(const J3DTevStageInfo& info)
+	{
+		setTevColorOp(info.field_0x5, info.field_0x6, info.field_0x7,
+		              info.field_0x8, info.field_0x9);
+		setTevColorAB(info.field_0x1, info.field_0x2);
+		setTevColorCD(info.field_0x3, info.field_0x4);
+		setAlphaABCD(info.field_0xa, info.field_0xb, info.field_0xc,
+		             info.field_0xd);
+		setTevAlphaOp(info.field_0xe, info.field_0xf, info.field_0x10,
+		              info.field_0x11, info.field_0x12);
 	}
 
 	void load(u32) const
@@ -89,6 +156,11 @@ public:
 // TODO: does this really inherit?
 class J3DIndTevStage : public J3DIndTevStageInfo {
 public:
+	J3DIndTevStage()
+	{
+		J3DIndTevStageInfo::operator=(j3dDefaultIndTevStageInfo);
+	}
+
 	J3DIndTevStage& operator=(const J3DIndTevStage& other)
 	{
 		mIndStage  = other.mIndStage;
@@ -115,6 +187,8 @@ public:
 
 class J3DTevSwapModeTable {
 public:
+	J3DTevSwapModeTable() { mIdx = j3dDefaultTevSwapTableID; }
+
 	J3DTevSwapModeTable& operator=(const J3DTevSwapModeTable& other)
 	{
 		mIdx = other.mIdx;
@@ -150,6 +224,8 @@ struct J3DNBTScale : public J3DNBTScaleInfo {
 
 class J3DTevOrder : public J3DTevOrderInfo {
 public:
+	J3DTevOrder() { J3DTevOrderInfo::operator=(j3dDefaultTevOrderInfoNull); }
+
 	J3DTevOrder& operator=(const J3DTevOrder& other)
 	{
 		mTexCoord  = other.mTexCoord;
@@ -164,6 +240,8 @@ public:
 };
 
 struct J3DIndTexOrder : public J3DIndTexOrderInfo {
+	J3DIndTexOrder() { *(J3DIndTexOrderInfo*)this = j3dDefaultIndTexOrderNull; }
+
 	u8 getCoord() const { return mCoord; }
 	u8 getMap() const { return mMap; }
 
@@ -171,7 +249,10 @@ struct J3DIndTexOrder : public J3DIndTexOrderInfo {
 };
 
 struct J3DIndTexCoordScale : public J3DIndTexCoordScaleInfo {
-	J3DIndTexCoordScale();
+	J3DIndTexCoordScale()
+	{
+		*(J3DIndTexCoordScaleInfo*)this = j3dDefaultIndTexCoordScaleInfo;
+	}
 	~J3DIndTexCoordScale() { }
 
 	u8 getScaleS() { return mScaleS; }
@@ -292,11 +373,49 @@ inline u32 setChanCtrlMacro(u8 enable, GXColorSrc ambSrc, GXColorSrc matSrc,
 	       | (lightMask >> 4 & 0x0F) << 11;
 }
 
+inline u16 calcColorChanID(u16 enable, u8 matSrc, u8 lightMask, u8 diffuseFn,
+                           u8 attnFn, u8 ambSrc)
+{
+	u32 reg = 0;
+	reg     = reg & ~0x0002 | enable << 1;
+	reg     = reg & ~0x0001 | matSrc;
+	reg     = reg & ~0x0040 | ambSrc << 6;
+	reg     = reg & ~0x0004 | bool(lightMask & 0x01) << 2;
+	reg     = reg & ~0x0008 | bool(lightMask & 0x02) << 3;
+	reg     = reg & ~0x0010 | bool(lightMask & 0x04) << 4;
+	reg     = reg & ~0x0020 | bool(lightMask & 0x08) << 5;
+	reg     = reg & ~0x0800 | bool(lightMask & 0x10) << 11;
+	reg     = reg & ~0x1000 | bool(lightMask & 0x20) << 12;
+	reg     = reg & ~0x2000 | bool(lightMask & 0x40) << 13;
+	reg     = reg & ~0x4000 | bool(lightMask & 0x80) << 14;
+	reg     = reg & ~0x0180 | (attnFn == GX_AF_SPEC ? 0 : diffuseFn) << 7;
+	reg     = reg & ~0x0200 | (attnFn != GX_AF_NONE) << 9;
+	reg     = reg & ~0x0400 | (attnFn != GX_AF_SPEC) << 10;
+	return reg;
+}
+
 struct J3DColorChan {
+	J3DColorChan() { setColorChanInfo(j3dDefaultColorChanInfo); }
+
 	J3DColorChan& operator=(const J3DColorChan& other)
 	{
 		mChanCtrl = other.mChanCtrl;
 		return *this;
+	}
+
+	void setColorChanInfo(const J3DColorChanInfo& info)
+	{
+		// Comment from TWW/TP:
+		// Bug: It compares info.mAmbSrc (an 8 bit integer) with 0xFFFF instead
+		// of 0xFF. This inline is only called by the default constructor
+		// J3DColorChan(). The J3DColorChan(const J3DColorChanInfo&) constructor
+		// does not call this inline, and instead duplicates the same logic but
+		// without the bug. See J3DMaterialFactory::newColorChan - both the
+		// bugged and correct behavior are present there, as it calls both
+		// constructors.
+		mChanCtrl = calcColorChanID(
+		    info.mEnable, info.mMatSrc, info.mLightMask, info.mDiffuseFn,
+		    info.mAttnFn, info.mAmbSrc == 0xFFFF ? (u8)0 : info.mAmbSrc);
 	}
 
 	GXAttnFn getAttnFn()
@@ -325,7 +444,7 @@ struct J3DColorChan {
 };
 
 struct J3DIndTexMtx : public J3DIndTexMtxInfo {
-	J3DIndTexMtx();
+	J3DIndTexMtx() { *(J3DIndTexMtxInfo*)this = j3dDefaultIndTexMtxInfo; }
 	~J3DIndTexMtx() { }
 
 	void load(u32 idx)
@@ -336,7 +455,7 @@ struct J3DIndTexMtx : public J3DIndTexMtxInfo {
 
 class J3DTexCoord : public J3DTexCoordInfo {
 public:
-	J3DTexCoord();
+	J3DTexCoord() { J3DTexCoordInfo::operator=(j3dDefaultTexCoordInfo[0]); }
 
 	J3DTexCoord& operator=(const J3DTexCoord& other)
 	{
@@ -348,6 +467,7 @@ public:
 
 	GXTexGenType getTexGenType() { return (GXTexGenType)mTexGenType; }
 	GXTexGenSrc getTexGenSrc() { return (GXTexGenSrc)mTexGenSrc; }
+	u8 getTexGenMtx() { return mTexGenMtx; }
 };
 
 class J3DLightObj : public J3DLightInfo {
