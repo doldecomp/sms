@@ -256,32 +256,6 @@ void J3DGDSetTexLookupMode(GXTexMapID id, GXTexWrapMode wrapS,
 
 void loadCullMode(u8) { }
 
-void loadTexNo(u32 param_1, const u16& param_2)
-{
-	ResTIMG* img = &j3dSys.getTexture()->mResources[param_2];
-	J3DSys::sTexCoordScaleTable[param_1].field_0x00 = img->width;
-	J3DSys::sTexCoordScaleTable[param_1].field_0x02 = img->height;
-	J3DGDSetTexImgAttr((GXTexMapID)param_1, img->width, img->height,
-	                   (GXTexFmt)(img->format & 0xf));
-	J3DGDSetTexImgPtr((GXTexMapID)param_1, (u8*)img + img->imageDataOffset);
-
-	J3DGDSetTexLookupMode(
-	    (GXTexMapID)param_1, (GXTexWrapMode)img->wrapS,
-	    (GXTexWrapMode)img->wrapT, (GXTexFilter)img->minFilter,
-	    (GXTexFilter)img->magFilter, img->minLod * 0.125f, img->maxLod * 0.125f,
-	    img->lodBias * 0.01f, img->biasClamp, img->doEdgeLod,
-	    (GXAnisotropy)img->maxAnisotropy);
-
-	if (img->isIndexTexture == true) {
-		GXTlutSize tlutSize = img->numColors > 16 ? GX_TLUT_256 : GX_TLUT_16;
-
-		J3DGDLoadTlut((u8*)img + img->paletteOffset, (param_1 << 15) + 0xC0000,
-		              tlutSize);
-		J3DGDSetTexTlut((GXTexMapID)param_1, (param_1 << 15) + 0xC0000,
-		                (GXTlutFmt)img->colorFormat);
-	}
-}
-
 void J3DLightObj::load(u32 id) const
 {
 	GXLightID light = (GXLightID)(1 << id);
@@ -386,6 +360,32 @@ void J3DTexMtx::load(u32 id) const
 {
 	J3DGDLoadTexMtxImm((MtxPtr)&mTotalMtx, id * 3 + 0x1e,
 	                   (GXTexMtxType)mProjection);
+}
+
+void loadTexNo(u32 param_1, const u16& param_2)
+{
+	ResTIMG* img = &j3dSys.getTexture()->mResources[param_2];
+	J3DSys::sTexCoordScaleTable[param_1].field_0x00 = img->width;
+	J3DSys::sTexCoordScaleTable[param_1].field_0x02 = img->height;
+	J3DGDSetTexImgAttr((GXTexMapID)param_1, img->width, img->height,
+	                   (GXTexFmt)(img->format & 0xf));
+	J3DGDSetTexImgPtr((GXTexMapID)param_1, (u8*)img + img->imageDataOffset);
+
+	J3DGDSetTexLookupMode(
+	    (GXTexMapID)param_1, (GXTexWrapMode)img->wrapS,
+	    (GXTexWrapMode)img->wrapT, (GXTexFilter)img->minFilter,
+	    (GXTexFilter)img->magFilter, img->minLod * 0.125f, img->maxLod * 0.125f,
+	    img->lodBias * 0.01f, img->biasClamp, img->doEdgeLod,
+	    (GXAnisotropy)img->maxAnisotropy);
+
+	if (img->isIndexTexture == true) {
+		GXTlutSize tlutSize = img->numColors > 16 ? GX_TLUT_256 : GX_TLUT_16;
+
+		J3DGDLoadTlut((u8*)img + img->paletteOffset, (param_1 << 15) + 0xC0000,
+		              tlutSize);
+		J3DGDSetTexTlut((GXTexMapID)param_1, (param_1 << 15) + 0xC0000,
+		                (GXTlutFmt)img->colorFormat);
+	}
 }
 
 void loadDither(u8) { }

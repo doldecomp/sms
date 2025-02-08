@@ -747,45 +747,24 @@ void J3DPEBlockFull::reset(J3DPEBlock* block)
 	// TODO: ton of stupid inlines missing here
 	switch (block->getType()) {
 	case 'PEOP':
-		mAlphaComp.mRef0       = 0;
-		mAlphaComp.mRef1       = 0;
-		mAlphaComp.mAlphaCmpID = 0xE7;
-
-		mBlend.mBlendMode = 0;
-		mBlend.mSrcFactor = 1;
-		mBlend.mDstFactor = 0;
-		mBlend.mLogicOp   = 3;
-
-		mZMode.mZModeID = 0x17;
-
+		mAlphaComp.setAlphaCompInfo(
+		    (J3DAlphaCompInfo) { 7, 0, 0, 7, 0, 0, 0, 0 });
+		mBlend.setBlendInfo((J3DBlendInfo) { 0, 1, 0, 3 });
+		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 1, 0 });
 		mZCompLoc = 1;
 		break;
 	case 'PEED':
-		mAlphaComp.mRef0       = 0x80;
-		mAlphaComp.mRef1       = 0XFF;
-		mAlphaComp.mAlphaCmpID = 0XC3;
-
-		mBlend.mBlendMode = 0;
-		mBlend.mSrcFactor = 1;
-		mBlend.mDstFactor = 0;
-		mBlend.mLogicOp   = 3;
-
-		mZMode.mZModeID = 0x17;
-
+		mAlphaComp.setAlphaCompInfo(
+		    (J3DAlphaCompInfo) { 6, 0x80, 0, 3, 0xff, 0, 0, 0 });
+		mBlend.setBlendInfo((J3DBlendInfo) { 0, 1, 0, 3 });
+		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 1, 0 });
 		mZCompLoc = 0;
 		break;
 	case 'PEXL':
-		mAlphaComp.mRef0       = 0;
-		mAlphaComp.mRef1       = 0;
-		mAlphaComp.mAlphaCmpID = 0XE7;
-
-		mBlend.mBlendMode = 1;
-		mBlend.mSrcFactor = 4;
-		mBlend.mDstFactor = 5;
-		mBlend.mLogicOp   = 3;
-
-		mZMode.mZModeID = 0x16;
-
+		mAlphaComp.setAlphaCompInfo(
+		    (J3DAlphaCompInfo) { 7, 0, 0, 7, 0, 0, 0, 0 });
+		mBlend.setBlendInfo((J3DBlendInfo) { 1, 4, 5, 3 });
+		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 0, 0 });
 		mZCompLoc = 1;
 		break;
 	case 'PEFL':

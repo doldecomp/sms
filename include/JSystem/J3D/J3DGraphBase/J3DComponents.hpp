@@ -271,6 +271,11 @@ struct J3DFog : public J3DFogInfo {
 	}
 };
 
+inline u16 calcAlphaCmpID(u32 comp0, u32 op, u32 comp1)
+{
+	return (comp0 << 5) + ((op & 0xff) << 3) + (comp1 & 0xff);
+}
+
 struct J3DAlphaComp {
 	J3DAlphaComp()
 	{
@@ -292,6 +297,13 @@ struct J3DAlphaComp {
 		mRef0       = other.mRef0;
 		mRef1       = other.mRef1;
 		return *this;
+	}
+
+	void setAlphaCompInfo(const J3DAlphaCompInfo& info)
+	{
+		mAlphaCmpID = calcAlphaCmpID(info.mComp0, info.mOp, info.mComp1);
+		mRef0       = info.mRef0;
+		mRef1       = info.mRef1;
 	}
 
 	GXCompare getComp0() const
@@ -326,6 +338,11 @@ class J3DBlend : public J3DBlendInfo {
 public:
 	J3DBlend() { *(J3DBlendInfo*)this = j3dDefaultBlendInfo; }
 
+	void setBlendInfo(const J3DBlendInfo& info)
+	{
+		J3DBlendInfo::operator=(info);
+	}
+
 	J3DBlend& operator=(const J3DBlend& other)
 	{
 		mBlendMode = other.mBlendMode;
@@ -342,6 +359,11 @@ public:
 	}
 };
 
+inline u16 calcZModeID(u8 param_0, u8 param_1, u8 param_2)
+{
+	return (param_1 * 2) + (param_0 * 0x10) + param_2;
+}
+
 class J3DZMode {
 public:
 	J3DZMode() { mZModeID = j3dDefaultZModeID; }
@@ -349,6 +371,12 @@ public:
 	u8 getCompareEnable() const { return j3dZModeTable[mZModeID * 3 + 0]; }
 	u8 getFunc() const { return j3dZModeTable[mZModeID * 3 + 1]; }
 	u8 getUpdateEnable() const { return j3dZModeTable[mZModeID * 3 + 2]; }
+
+	void setZModeInfo(const J3DZModeInfo& info)
+	{
+		mZModeID
+		    = calcZModeID(info.mCompareEnable, info.mFunc, info.mUpdateEnable);
+	}
 
 	void load() const
 	{
