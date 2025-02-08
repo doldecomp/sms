@@ -26,6 +26,18 @@ void GDOverflowed(void);
 void GDSetOverflowCallback(GDOverflowCb callback);
 void GDGetOverflowCallback();
 
+inline u8* GDGetCurrPointer() { return __GDCurrentDL->ptr; }
+
+inline s32 GDGetCurrOffset()
+{
+	return __GDCurrentDL->ptr - __GDCurrentDL->start;
+}
+
+inline void GDSetCurrOffset(s32 offs)
+{
+	__GDCurrentDL->ptr = __GDCurrentDL->start + offs;
+}
+
 // NOTE: yes, these were 100% "public" because JSystem uses them directly
 
 inline static void GDOverflowCheck(u32 size)

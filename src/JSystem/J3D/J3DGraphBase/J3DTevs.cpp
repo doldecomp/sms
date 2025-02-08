@@ -311,74 +311,73 @@ void J3DTexMtx::calc()
   };
 	// clang-format on
 
-	u32 useMayaFormat = (mTexMtxInfo.mInfo >> 7) & 1;
-	u32 format        = mTexMtxInfo.mInfo & 0x7F;
+	u32 useMayaFormat = (mInfo >> 7) & 1;
+	u32 format        = mInfo & 0x7F;
 	if (format == J3DTexMtxMode_Projmap || format == J3DTexMtxMode_ViewProjmap
 	    || format == J3DTexMtxMode_EnvmapEffectMtx) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtx(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx1);
+			J3DGetTextureMtx(mSRT, mCenter, mtx1);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMaya(mTexMtxInfo.mSRT, mtx1);
+			J3DGetTextureMtxMaya(mSRT, mtx1);
 		}
 		MTXConcat(mtx1, fixupMtx1, mtx1);
-		J3DMtxProjConcat(mtx1, mTexMtxInfo.mEffectMtx, mtx2);
+		J3DMtxProjConcat(mtx1, mEffectMtx, mtx2);
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_Envmap) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtx(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx2);
+			J3DGetTextureMtx(mSRT, mCenter, mtx2);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMaya(mTexMtxInfo.mSRT, mtx2);
+			J3DGetTextureMtxMaya(mSRT, mtx2);
 		}
 
 		MTXConcat(mtx2, fixupMtx1, mtx2);
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_EnvmapOldEffectMtx) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx1);
+			J3DGetTextureMtxOld(mSRT, mCenter, mtx1);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mtx1);
+			J3DGetTextureMtxMayaOld(mSRT, mtx1);
 		}
 		MTXConcat(mtx1, fixupMtx2, mtx1);
-		J3DMtxProjConcat(mtx1, mTexMtxInfo.mEffectMtx, mtx2);
+		J3DMtxProjConcat(mtx1, mEffectMtx, mtx2);
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_EnvmapOld) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx2);
+			J3DGetTextureMtxOld(mSRT, mCenter, mtx2);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mtx2);
+			J3DGetTextureMtxMayaOld(mSRT, mtx2);
 		}
 		MTXConcat(mtx2, fixupMtx2, mtx2);
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_EnvmapBasic) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx2);
+			J3DGetTextureMtxOld(mSRT, mCenter, mtx2);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mtx2);
+			J3DGetTextureMtxMayaOld(mSRT, mtx2);
 		}
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_ProjmapBasic
 	           || format == J3DTexMtxMode_ViewProjmapBasic
 	           || format == J3DTexMtxMode_Unknown5) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx1);
+			J3DGetTextureMtxOld(mSRT, mCenter, mtx1);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mtx1);
+			J3DGetTextureMtxMayaOld(mSRT, mtx1);
 		}
-		J3DMtxProjConcat(mtx1, mTexMtxInfo.mEffectMtx, mtx2);
+		J3DMtxProjConcat(mtx1, mEffectMtx, mtx2);
 		MTXConcat(mtx2, mViewMtx, mTotalMtx);
 	} else if (format == J3DTexMtxMode_Unknown4) {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter, mtx1);
+			J3DGetTextureMtxOld(mSRT, mCenter, mtx1);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mtx1);
+			J3DGetTextureMtxMayaOld(mSRT, mtx1);
 		}
-		J3DMtxProjConcat(mtx1, mTexMtxInfo.mEffectMtx, mTotalMtx);
+		J3DMtxProjConcat(mtx1, mEffectMtx, mTotalMtx);
 	} else {
 		if (useMayaFormat == 0) {
-			J3DGetTextureMtxOld(mTexMtxInfo.mSRT, mTexMtxInfo.mCenter,
-			                    mTotalMtx);
+			J3DGetTextureMtxOld(mSRT, mCenter, mTotalMtx);
 		} else if (useMayaFormat == 1) {
-			J3DGetTextureMtxMayaOld(mTexMtxInfo.mSRT, mTotalMtx);
+			J3DGetTextureMtxMayaOld(mSRT, mTotalMtx);
 		}
 	}
 }
@@ -386,7 +385,7 @@ void J3DTexMtx::calc()
 void J3DTexMtx::load(u32 id) const
 {
 	J3DGDLoadTexMtxImm((MtxPtr)&mTotalMtx, id * 3 + 0x1e,
-	                   (GXTexMtxType)mTexMtxInfo.mProjection);
+	                   (GXTexMtxType)mProjection);
 }
 
 void loadDither(u8) { }

@@ -41,32 +41,6 @@ void J3DLoadCPCmd(u8, u32);
 void J3DLoadArrayBasePtr(GXAttr, void*);
 void J3DSetVtxAttrFmtv(GXVtxFmt, GXVtxAttrFmtList*, bool);
 
-class J3DLightObj : public J3DLightInfo {
-public:
-	J3DLightObj() { setDefault(); }
-
-	// Completely made up to force J3DLightInfo::operator= to NOT inline
-	void setDefault() { setInfo(j3dDefaultLightInfo); }
-	void setInfo(const J3DLightInfo& info)
-	{
-		J3DLightInfo::operator=(j3dDefaultLightInfo);
-	}
-
-	void load(u32) const;
-
-public:
-	char unk34[0x40];
-};
-
-struct J3DTexMtx {
-	void calc();
-	void load(u32) const;
-
-	J3DTexMtxInfo mTexMtxInfo;
-	/* 0x64 */ Mtx mTotalMtx;
-	/* 0x94 */ Mtx mViewMtx;
-};
-
 void J3DGDSetTexLookupMode(GXTexMapID id, GXTexWrapMode wrapS,
                            GXTexWrapMode wrapT, GXTexFilter minFilter,
                            GXTexFilter magFilter, f32 minLOD, f32 maxLOD,

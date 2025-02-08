@@ -56,6 +56,10 @@ public:
 
 	MtxPtr getViewMtx() { return mViewMtx; }
 
+	// Completely made up
+	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }
+	int checkFlag8() { return mFlags & 8 ? TRUE : FALSE; }
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ char pad_000[0x4];
