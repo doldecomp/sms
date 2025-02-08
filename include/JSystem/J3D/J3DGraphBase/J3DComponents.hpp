@@ -3,6 +3,7 @@
 
 #include <JSystem/J3D/J3DGraphBase/J3DStruct.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
+#include <dolphin/mtx.h>
 
 // These are all similar in that they roughly correspond to *Info structs and
 // constitute components of blocks
@@ -129,11 +130,21 @@ public:
 };
 
 struct J3DNBTScale : public J3DNBTScaleInfo {
-	// J3DNBTScale() { *(J3DNBTScaleInfo*)this = j3dDefaultNBTScaleInfo; }
+	J3DNBTScale() { *(J3DNBTScaleInfo*)this = j3dDefaultNBTScaleInfo; }
 	explicit J3DNBTScale(const J3DNBTScaleInfo& info)
 	{
 		*(J3DNBTScaleInfo*)this = info;
 	}
+
+	J3DNBTScale& operator=(const J3DNBTScale& other)
+	{
+		mbHasScale = other.mbHasScale;
+		mScale.x   = other.mScale.x;
+		mScale.y   = other.mScale.y;
+		mScale.z   = other.mScale.z;
+		return *this;
+	}
+
 	Vec* getScale() { return &mScale; }
 };
 
@@ -321,6 +332,55 @@ struct J3DIndTexMtx : public J3DIndTexMtxInfo {
 	{
 		JRNSetIndTexMtx((GXIndTexMtxID)idx, mOffsetMtx, mScaleExp);
 	}
+};
+
+class J3DTexCoord : public J3DTexCoordInfo {
+public:
+	J3DTexCoord();
+
+	J3DTexCoord& operator=(const J3DTexCoord& other)
+	{
+		mTexGenType = other.mTexGenType;
+		mTexGenSrc  = other.mTexGenSrc;
+		mTexGenMtx  = other.mTexGenMtx;
+		return *this;
+	}
+
+	GXTexGenType getTexGenType() { return (GXTexGenType)mTexGenType; }
+	GXTexGenSrc getTexGenSrc() { return (GXTexGenSrc)mTexGenSrc; }
+};
+
+class J3DLightObj : public J3DLightInfo {
+public:
+	J3DLightObj() { setDefault(); }
+
+	// Completely made up to force J3DLightInfo::operator= to NOT inline
+	void setDefault() { setInfo(j3dDefaultLightInfo); }
+	void setInfo(const J3DLightInfo& info)
+	{
+		J3DLightInfo::operator=(j3dDefaultLightInfo);
+	}
+
+	void load(u32) const;
+
+public:
+	char unk34[0x40];
+};
+
+struct J3DTexMtx : public J3DTexMtxInfo {
+	J3DTexMtx() { J3DTexMtxInfo::operator=(j3dDefaultTexMtxInfo); }
+
+	void calc();
+	void load(u32) const;
+
+	Mtx& getViewMtx() { return mViewMtx; }
+	void setViewMtx(const Mtx viewMtx) { MTXCopy((MtxPtr)viewMtx, mViewMtx); }
+
+	// Made up
+	u32 getMode() { return mInfo & 0x7F; }
+
+	/* 0x64 */ Mtx mTotalMtx;
+	/* 0x94 */ Mtx mViewMtx;
 };
 
 #endif
