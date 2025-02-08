@@ -2,7 +2,12 @@
 #define J3D_TEV_BLOCKS_HPP
 
 #include <types.h>
-#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DTevOrder.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DGXColorS10.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DGXColor.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DTevStage.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DTevSwapModeTable.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DIndTevStage.hpp>
 
 class J3DTevBlock {
 public:

@@ -1,13 +1,16 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DTevBlocks.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DPEBlocks.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DColorBlocks.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DIndBlocks.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DTexGenBlocks.hpp>
+
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DIndBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
+
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
 #include <dolphin/gd.h>
 #include <dolphin/os.h>
 #include <macros.h>

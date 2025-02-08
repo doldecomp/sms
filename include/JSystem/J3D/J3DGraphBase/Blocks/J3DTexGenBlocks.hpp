@@ -1,7 +1,9 @@
 #ifndef J3D_TEX_GEN_BLOCKS_HPP
 #define J3D_TEX_GEN_BLOCKS_HPP
 
-#include <JSystem/J3D/J3DGraphBase/J3DComponents.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DTexCoord.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DTexMtx.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DNBTScale.hpp>
 
 class J3DTexGenBlock {
 public:
