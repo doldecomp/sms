@@ -485,7 +485,7 @@ config.libs = [
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DCluster.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DJoint.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DModel.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DNode.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphAnimator/J3DNode.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DAnimation.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.cpp"),
