@@ -737,6 +737,7 @@ void J3DIndBlockFull::reset(J3DIndBlock* block)
 		mIndTexCoordScale[i] = *block->getIndTexCoordScale(i);
 }
 
+// TODO: figure out the stack sizes here
 void J3DPEBlockFull::reset(J3DPEBlock* block)
 {
 	if (block->getFog() != nullptr) {
@@ -747,30 +748,45 @@ void J3DPEBlockFull::reset(J3DPEBlock* block)
 		DCStoreRange(mFog, sizeof(*mFog));
 	}
 
-	// TODO: ton of stupid inlines missing here
 	switch (block->getType()) {
-	case 'PEOP':
-		mAlphaComp.setAlphaCompInfo(
-		    (J3DAlphaCompInfo) { 7, 0, 0, 7, 0, 0, 0, 0 });
-		mBlend.setBlendInfo((J3DBlendInfo) { 0, 1, 0, 3 });
-		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 1, 0 });
-		mZCompLoc = 1;
+	case 'PEOP': {
+		const J3DAlphaCompInfo alphaCompInfo = { 7, 0, 0, 7, 0, 0, 0, 0 };
+		const J3DBlendInfo blendInfo         = { 0, 1, 0, 3 };
+		const J3DZModeInfo zModeInfo         = { 1, 3, 1, 0 };
+		u32 zCompLoc                         = 1;
+
+		mAlphaComp.setAlphaCompInfo(alphaCompInfo);
+		mBlend.setBlendInfo(blendInfo);
+		mZMode.setZModeInfo(zModeInfo);
+		mZCompLoc = zCompLoc;
 		break;
-	case 'PEED':
-		mAlphaComp.setAlphaCompInfo(
-		    (J3DAlphaCompInfo) { 6, 0x80, 0, 3, 0xff, 0, 0, 0 });
-		mBlend.setBlendInfo((J3DBlendInfo) { 0, 1, 0, 3 });
-		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 1, 0 });
-		mZCompLoc = 0;
+	}
+	case 'PEED': {
+		const J3DAlphaCompInfo alphaCompInfo = { 6, 0x80, 0, 3, 0xff, 0, 0, 0 };
+		const J3DBlendInfo blendInfo         = { 0, 1, 0, 3 };
+		const J3DZModeInfo zModeInfo         = { 1, 3, 1, 0 };
+		u32 zCompLoc                         = 0;
+
+		mAlphaComp.setAlphaCompInfo(alphaCompInfo);
+		mBlend.setBlendInfo(blendInfo);
+		mZMode.setZModeInfo(zModeInfo);
+		mZCompLoc = zCompLoc;
 		break;
-	case 'PEXL':
-		mAlphaComp.setAlphaCompInfo(
-		    (J3DAlphaCompInfo) { 7, 0, 0, 7, 0, 0, 0, 0 });
-		mBlend.setBlendInfo((J3DBlendInfo) { 1, 4, 5, 3 });
-		mZMode.setZModeInfo((J3DZModeInfo) { 1, 3, 0, 0 });
-		mZCompLoc = 1;
+	}
+	case 'PEXL': {
+		const J3DAlphaCompInfo alphaCompInfo = { 7, 0, 0, 7, 0, 0, 0, 0 };
+		const J3DBlendInfo blendInfo         = { 1, 4, 5, 3 };
+		const J3DZModeInfo zModeInfo         = { 1, 3, 0, 0 };
+		u32 zCompLoc                         = 1;
+
+		mAlphaComp.setAlphaCompInfo(alphaCompInfo);
+		mBlend.setBlendInfo(blendInfo);
+		mZMode.setZModeInfo(zModeInfo);
+		mZCompLoc = zCompLoc;
 		break;
+	}
 	case 'PEFL':
+		char trash[0x10];
 		mAlphaComp = *block->getAlphaComp();
 		mBlend     = *block->getBlend();
 		mZMode     = *block->getZMode();

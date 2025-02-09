@@ -6,7 +6,7 @@
 
 class J3DLightInfo {
 public:
-	void operator=(J3DLightInfo const& other)
+	J3DLightInfo& operator=(const J3DLightInfo& other)
 	{
 		mLightPosition.x = other.mLightPosition.x;
 		mLightPosition.y = other.mLightPosition.y;
@@ -28,6 +28,8 @@ public:
 		mDistAtten.x = other.mDistAtten.x;
 		mDistAtten.y = other.mDistAtten.y;
 		mDistAtten.z = other.mDistAtten.z;
+
+		return *this;
 	}
 
 	/* 0x00 */ Vec mLightPosition;
@@ -38,13 +40,14 @@ public:
 }; // Size = 0x34
 
 struct J3DTextureSRTInfo {
-	void operator=(const J3DTextureSRTInfo& other)
+	J3DTextureSRTInfo& operator=(const J3DTextureSRTInfo& other)
 	{
 		mScaleX       = other.mScaleX;
 		mScaleY       = other.mScaleY;
 		mRotation     = other.mRotation;
 		mTranslationX = other.mTranslationX;
 		mTranslationY = other.mTranslationY;
+		return *this;
 	}
 
 	/* 0x00 */ f32 mScaleX;
@@ -70,7 +73,7 @@ enum J3DTexMtxMode {
 };
 
 struct J3DTexMtxInfo {
-	void operator=(J3DTexMtxInfo const& other)
+	J3DTexMtxInfo& operator=(const J3DTexMtxInfo& other)
 	{
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -83,6 +86,7 @@ struct J3DTexMtxInfo {
 		mProjection = other.mProjection;
 		mInfo       = other.mInfo;
 		mSRT        = other.mSRT;
+		return *this;
 	}
 	void setEffectMtx(Mtx m)
 	{
@@ -113,7 +117,7 @@ struct J3DTexMtxInfo {
 }; // Size: 0x64
 
 struct J3DIndTexMtxInfo {
-	void operator=(const J3DIndTexMtxInfo& other)
+	J3DIndTexMtxInfo& operator=(const J3DIndTexMtxInfo& other)
 	{
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -121,7 +125,9 @@ struct J3DIndTexMtxInfo {
 			}
 		}
 		mScaleExp = other.mScaleExp;
+		return *this;
 	}
+
 	/* 0x00 */ f32 mOffsetMtx[2][3];
 	/* 0x18 */ s8 mScaleExp;
 }; // Size: 0x1C
@@ -161,20 +167,22 @@ struct J3DNBTScaleInfo {
 	/* 0x0 */ u8 mbHasScale;
 	/* 0x4 */ Vec mScale;
 
-	inline void operator=(const J3DNBTScaleInfo& other)
+	J3DNBTScaleInfo& operator=(const J3DNBTScaleInfo& other)
 	{
 		mbHasScale = other.mbHasScale;
 		mScale.x   = other.mScale.x;
 		mScale.y   = other.mScale.y;
 		mScale.z   = other.mScale.z;
+		return *this;
 	}
 }; // Size: 0x10
 
 struct J3DIndTexOrderInfo {
-	void operator=(const J3DIndTexOrderInfo& other)
+	J3DIndTexOrderInfo& operator=(const J3DIndTexOrderInfo& other)
 	{
 		mCoord = other.mCoord;
 		mMap   = other.mMap;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mCoord;
@@ -219,7 +227,7 @@ struct J3DTevStageInfo {
 };
 
 struct J3DIndTevStageInfo {
-	void operator=(const J3DIndTevStageInfo& other)
+	J3DIndTevStageInfo& operator=(const J3DIndTevStageInfo& other)
 	{
 		mIndStage  = other.mIndStage;
 		mIndFormat = other.mIndFormat;
@@ -230,6 +238,7 @@ struct J3DIndTevStageInfo {
 		mPrev      = other.mPrev;
 		mLod       = other.mLod;
 		mAlphaSel  = other.mAlphaSel;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mIndStage;
@@ -247,11 +256,12 @@ struct J3DIndTevStageInfo {
 };
 
 struct J3DTexCoordInfo {
-	void operator=(const J3DTexCoordInfo& other)
+	J3DTexCoordInfo& operator=(const J3DTexCoordInfo& other)
 	{
 		mTexGenType = other.mTexGenType;
 		mTexGenSrc  = other.mTexGenSrc;
 		mTexGenMtx  = other.mTexGenMtx;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mTexGenType __attribute__((aligned(4)));
@@ -260,10 +270,11 @@ struct J3DTexCoordInfo {
 };
 
 struct J3DIndTexCoordScaleInfo {
-	void operator=(const J3DIndTexCoordScaleInfo& other)
+	J3DIndTexCoordScaleInfo& operator=(const J3DIndTexCoordScaleInfo& other)
 	{
 		mScaleS = other.mScaleS;
 		mScaleT = other.mScaleT;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mScaleS;
@@ -273,12 +284,13 @@ struct J3DIndTexCoordScaleInfo {
 };
 
 struct J3DBlendInfo {
-	void operator=(const J3DBlendInfo& other)
+	J3DBlendInfo& operator=(const J3DBlendInfo& other)
 	{
 		mBlendMode = other.mBlendMode;
 		mSrcFactor = other.mSrcFactor;
 		mDstFactor = other.mDstFactor;
 		mLogicOp   = other.mLogicOp;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mBlendMode;
@@ -288,11 +300,12 @@ struct J3DBlendInfo {
 };
 
 struct J3DTevOrderInfo {
-	void operator=(const J3DTevOrderInfo& other)
+	J3DTevOrderInfo& operator=(const J3DTevOrderInfo& other)
 	{
 		mTexCoord  = other.mTexCoord;
 		mTexMap    = other.mTexMap;
 		mColorChan = other.mColorChan;
+		return *this;
 	}
 
 	/* 0x0 */ u8 mTexCoord __attribute__((aligned(2)));
