@@ -87,7 +87,7 @@ void TMultiBtk::update()
 	char trash[0x8];
 	for (int i = 0; i < unk00; ++i) {
 		unk0c[i].update();
-		unk04[i]->unk4 = unk0c[i].getCurrentFrame();
+		unk04[i]->mFrame = unk0c[i].getCurrentFrame();
 	}
 }
 
@@ -105,7 +105,7 @@ void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
 	}
 
 	unk08->entryTexMtxAnimator(unk04[n]);
-	unk0c[n].setEndFrame(unk04[n]->getMaxFrame());
+	unk0c[n].setEndFrame(unk04[n]->getFrameMax());
 	unk0c[n].setSpeed(0.5f * SMSGetAnmFrameRate());
 }
 

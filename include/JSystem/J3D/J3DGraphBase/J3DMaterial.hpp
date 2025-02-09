@@ -3,6 +3,7 @@
 
 #include <types.h>
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
 
 class J3DMaterialAnm;
 class J3DShape;
@@ -47,6 +48,14 @@ public:
 	void setMaterialAnm(J3DMaterialAnm* v) { unk38 = v; }
 
 	u16 getTexNo(u32 idx) { return mTevBlock->getTexNo(idx); }
+
+	J3DColorBlock* getColorBlock() { return mColorBlock; }
+	J3DTexGenBlock* getTexGenBlock() { return mTexGenBlock; }
+	J3DTevBlock* getTevBlock() { return mTevBlock; }
+
+	J3DGXColor* getTevKColor(u32 idx) { return mTevBlock->getTevKColor(idx); }
+	J3DGXColorS10* getTevColor(u32 idx) { return mTevBlock->getTevColor(idx); }
+	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
 
 public:
 	/* 0x0 */ void* unk0;

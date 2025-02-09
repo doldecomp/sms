@@ -835,7 +835,7 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 			if (!mTexMtx[i])
 				continue;
 
-			u32 mode = mTexMtx[i]->getTexMtxInfo() & 0x7F;
+			u32 mode = mTexMtx[i]->getInfo() & 0x7F;
 			if (mode == J3DTexMtxMode_Envmap || mode == J3DTexMtxMode_EnvmapOld
 			    || mode == J3DTexMtxMode_EnvmapBasic) {
 				Mtx viewMat;
@@ -867,7 +867,7 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 			if (!mTexMtx[i])
 				continue;
 
-			u32 mode = mTexMtx[i]->getTexMtxInfo() & 0x7F;
+			u32 mode = mTexMtx[i]->getInfo() & 0x7F;
 			if (mode == J3DTexMtxMode_Envmap || mode == J3DTexMtxMode_EnvmapOld
 			    || mode == J3DTexMtxMode_EnvmapBasic) {
 				Mtx viewMat;

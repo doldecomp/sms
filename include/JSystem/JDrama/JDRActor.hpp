@@ -31,9 +31,9 @@ public:
 	virtual void JSGSetScaling(const Vec&);
 	virtual void JSGGetRotation(Vec*) const;
 	virtual void JSGSetRotation(const Vec&);
-	virtual u32 JSGGetShape() const;
+	virtual s32 JSGGetShape() const;
 	virtual void JSGSetShape(u32);
-	virtual u32 JSGGetAnimation() const;
+	virtual s32 JSGGetAnimation() const;
 	virtual void JSGSetAnimation(u32);
 	virtual float JSGGetAnimationFrame() const;
 	virtual void JSGSetAnimationFrame(float);

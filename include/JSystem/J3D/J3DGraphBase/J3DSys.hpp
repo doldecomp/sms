@@ -19,6 +19,8 @@ struct J3DTexCoordScaleInfo {
 
 class J3DTexture;
 class J3DMatPacket;
+class J3DMtxCalc;
+class J3DModel;
 
 class J3DSys {
 public:
@@ -59,6 +61,10 @@ public:
 
 	J3DMatPacket* getMatPacket() { return mMatPacket; }
 
+	void setCurrentMtxCalc(J3DMtxCalc* pCalc) { mCurrentMtxCalc = pCalc; }
+
+	J3DModel* getModel() { return mModel; }
+
 	// Completely made up
 	int checkFlag2() { return mFlags & 2 ? TRUE : FALSE; }
 	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }
@@ -66,9 +72,9 @@ public:
 
 public:
 	/* 0x0 */ Mtx mViewMtx;
-	/* 0x30 */ char pad_000[0x4];
+	/* 0x30 */ J3DMtxCalc* mCurrentMtxCalc;
 	/* 0x34 */ s32 mFlags;
-	/* 0x38 */ u32 unk38;
+	/* 0x038 */ J3DModel* mModel;
 	/* 0x3C */ J3DMatPacket* mMatPacket;
 	/* 0x40 */ u32 unk40;
 	/* 0x44 */ u32 unk44;
