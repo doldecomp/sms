@@ -7,9 +7,9 @@
 extern const u16 j3dDefaultAlphaCmpID;
 extern u8 j3dAlphaCmpTable[768];
 
-inline u16 calcAlphaCmpID(u32 comp0, u32 op, u32 comp1)
+inline u16 calcAlphaCmpID(u8 comp0, u8 op, u8 comp1)
 {
-	return (comp0 << 5) + ((op & 0xff) << 3) + (comp1 & 0xff);
+	return (comp0 << 5) + (op << 3) + comp1;
 }
 
 class J3DAlphaComp {
@@ -38,9 +38,9 @@ public:
 
 	void setAlphaCompInfo(const J3DAlphaCompInfo& info)
 	{
-		mAlphaCmpID = calcAlphaCmpID(info.mComp0, info.mOp, info.mComp1);
 		mRef0       = info.mRef0;
 		mRef1       = info.mRef1;
+		mAlphaCmpID = calcAlphaCmpID(info.mComp0, info.mOp, info.mComp1);
 	}
 
 	GXCompare getComp0() const

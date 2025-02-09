@@ -16,6 +16,12 @@ class J3DZMode {
 public:
 	J3DZMode() { mZModeID = j3dDefaultZModeID; }
 
+	J3DZMode& operator=(const J3DZMode& other)
+	{
+		mZModeID = other.mZModeID;
+		return *this;
+	}
+
 	u8 getCompareEnable() const { return j3dZModeTable[mZModeID * 3 + 0]; }
 	u8 getFunc() const { return j3dZModeTable[mZModeID * 3 + 1]; }
 	u8 getUpdateEnable() const { return j3dZModeTable[mZModeID * 3 + 2]; }
