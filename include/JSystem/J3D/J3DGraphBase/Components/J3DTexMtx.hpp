@@ -16,7 +16,7 @@ public:
 	void setViewMtx(const Mtx viewMtx) { MTXCopy((MtxPtr)viewMtx, mViewMtx); }
 
 	// Made up
-	u32 getMode() { return mInfo & 0x7F; }
+	u32 getTexMtxInfo() { return mInfo; }
 
 	/* 0x64 */ Mtx mTotalMtx;
 	/* 0x94 */ Mtx mViewMtx;
