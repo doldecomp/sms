@@ -28,7 +28,7 @@ J3DSys::J3DSys()
 	MTXIdentity(mViewMtx);
 	unk4C           = 1;
 	unk50           = 0;
-	unk38           = 0;
+	mModel          = 0;
 	unk40           = 0;
 	unk44           = 0;
 	unk48           = 0;
