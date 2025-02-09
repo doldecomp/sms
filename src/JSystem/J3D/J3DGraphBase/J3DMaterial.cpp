@@ -828,7 +828,6 @@ void J3DMaterial::load()
 // not too much safer than the regular one
 void J3DMaterial::safeMakeDisplayList() { makeDisplayList(); }
 
-// TODO: inlines are made up and stack size doesn't match up =(
 void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 {
 	if (!j3dSys.checkFlag4() || !j3dSys.checkFlag8()) {
@@ -836,7 +835,7 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 			if (!mTexMtx[i])
 				continue;
 
-			u32 mode = mTexMtx[i]->getMode();
+			u32 mode = mTexMtx[i]->getTexMtxInfo() & 0x7F;
 			if (mode == J3DTexMtxMode_Envmap || mode == J3DTexMtxMode_EnvmapOld
 			    || mode == J3DTexMtxMode_EnvmapBasic) {
 				Mtx viewMat;
@@ -868,7 +867,7 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 			if (!mTexMtx[i])
 				continue;
 
-			u32 mode = mTexMtx[i]->getMode();
+			u32 mode = mTexMtx[i]->getTexMtxInfo() & 0x7F;
 			if (mode == J3DTexMtxMode_Envmap || mode == J3DTexMtxMode_EnvmapOld
 			    || mode == J3DTexMtxMode_EnvmapBasic) {
 				Mtx viewMat;
@@ -895,8 +894,10 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 
 void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
 
+// TODO: stack size mismatches...
 void J3DMaterial::setCurrentMtx()
 {
+	char trash[0x20];
 	mShape->setUnk3C(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
 	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
 	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
