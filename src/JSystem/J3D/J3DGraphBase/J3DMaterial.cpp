@@ -222,12 +222,12 @@ s32 J3DColorBlockLightOn::countDLSize() { return 0x140; }
 
 s32 J3DTexGenBlockBasic::countDLSize() { return 0x260; }
 
-s32 J3DIndBlockFull::countDLSize() { return 0x64; }
-
 s32 J3DTevBlock1::countDLSize() { return 0x80; }
 s32 J3DTevBlock2::countDLSize() { return 0x180; }
 s32 J3DTevBlock4::countDLSize() { return 0x260; }
 s32 J3DTevBlock16::countDLSize() { return 0x580; }
+
+s32 J3DIndBlockFull::countDLSize() { return 0x64; }
 
 s32 J3DPEBlockOpa::countDLSize() { return 0x20; }
 s32 J3DPEBlockTexEdge::countDLSize() { return 0x20; }
@@ -310,41 +310,6 @@ void J3DTexGenBlockBasic::patch()
 			mTexMtx[i]->load(i);
 	u8* end = GDGetCurrPointer();
 	DCFlushRange(start, end - start);
-}
-
-void J3DIndBlockFull::load(J3DTevBlock*)
-{
-	u8 indTexStageNum = mIndTexStageNum;
-	for (u32 i = 0; i < indTexStageNum; i++) {
-		mIndTexMtx[i].load(i + 1);
-	}
-	for (u32 i = 0; i < indTexStageNum; i += 2) {
-		JRNSetIndTexCoordScale(
-		    (GXIndTexStageID)i, (GXIndTexScale)mIndTexCoordScale[i].getScaleS(),
-		    (GXIndTexScale)mIndTexCoordScale[i].getScaleT(),
-		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleS(),
-		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleT());
-	}
-	loadTexCoordScale(
-	    (GXTexCoordID)mIndTexOrder[0].getCoord(),
-	    J3DSys::sTexCoordScaleTable[mIndTexOrder[0].getMap() & 7]);
-	loadTexCoordScale(
-	    (GXTexCoordID)mIndTexOrder[1].getCoord(),
-	    J3DSys::sTexCoordScaleTable[mIndTexOrder[1].getMap() & 7]);
-	loadTexCoordScale(
-	    (GXTexCoordID)mIndTexOrder[2].getCoord(),
-	    J3DSys::sTexCoordScaleTable[mIndTexOrder[2].getMap() & 7]);
-	loadTexCoordScale(
-	    (GXTexCoordID)mIndTexOrder[3].getCoord(),
-	    J3DSys::sTexCoordScaleTable[mIndTexOrder[3].getMap() & 7]);
-	JRNSetIndTexOrder(indTexStageNum, (GXTexCoordID)mIndTexOrder[0].getCoord(),
-	                  (GXTexMapID)mIndTexOrder[0].getMap(),
-	                  (GXTexCoordID)mIndTexOrder[1].getCoord(),
-	                  (GXTexMapID)mIndTexOrder[1].getMap(),
-	                  (GXTexCoordID)mIndTexOrder[2].getCoord(),
-	                  (GXTexMapID)mIndTexOrder[2].getMap(),
-	                  (GXTexCoordID)mIndTexOrder[3].getCoord(),
-	                  (GXTexMapID)mIndTexOrder[3].getMap());
 }
 
 void J3DTevBlock1::load()
@@ -532,6 +497,41 @@ void J3DTevBlock16::load()
 		    (GXTevColorChan)mTevSwapModeTable[i / 4].getB(),
 		    (GXTevColorChan)mTevSwapModeTable[i / 4].getA());
 	}
+}
+
+void J3DIndBlockFull::load(J3DTevBlock*)
+{
+	u8 indTexStageNum = mIndTexStageNum;
+	for (u32 i = 0; i < indTexStageNum; i++) {
+		mIndTexMtx[i].load(i + 1);
+	}
+	for (u32 i = 0; i < indTexStageNum; i += 2) {
+		JRNSetIndTexCoordScale(
+		    (GXIndTexStageID)i, (GXIndTexScale)mIndTexCoordScale[i].getScaleS(),
+		    (GXIndTexScale)mIndTexCoordScale[i].getScaleT(),
+		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleS(),
+		    (GXIndTexScale)mIndTexCoordScale[i + 1].getScaleT());
+	}
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[0].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[0].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[1].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[1].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[2].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[2].getMap() & 7]);
+	loadTexCoordScale(
+	    (GXTexCoordID)mIndTexOrder[3].getCoord(),
+	    J3DSys::sTexCoordScaleTable[mIndTexOrder[3].getMap() & 7]);
+	JRNSetIndTexOrder(indTexStageNum, (GXTexCoordID)mIndTexOrder[0].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[0].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[1].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[1].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[2].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[2].getMap(),
+	                  (GXTexCoordID)mIndTexOrder[3].getCoord(),
+	                  (GXTexMapID)mIndTexOrder[3].getMap());
 }
 
 void J3DPEBlockOpa::load()

@@ -44,13 +44,13 @@ public:
 	virtual void setIndTexStageNum(u8 num) { mIndTexStageNum = num; }
 	virtual u8 getIndTexStageNum() const { return mIndTexStageNum; }
 
-	virtual void setIndTexOrder(u32 i, J3DIndTexOrder order)
-	{
-		mIndTexOrder[i] = order;
-	}
 	virtual void setIndTexOrder(u32 i, const J3DIndTexOrder* order)
 	{
 		mIndTexOrder[i] = *order;
+	}
+	virtual void setIndTexOrder(u32 i, J3DIndTexOrder order)
+	{
+		mIndTexOrder[i] = order;
 	}
 	virtual J3DIndTexOrder* getIndTexOrder(u32 i) { return &mIndTexOrder[i]; }
 
