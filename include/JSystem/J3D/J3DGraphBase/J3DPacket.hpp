@@ -123,7 +123,10 @@ public:
 	IDK isHideAllShapePacket_();
 
 	J3DShapePacket* getShapePacket() const { return unk34; }
+	void setShapePacket(J3DShapePacket* packet) { unk34 = packet; }
 	J3DMaterial* getMaterial() const { return unk38; }
+
+	void setMaterialAnmID(J3DMaterialAnm* materialAnm) { unk44 = materialAnm; }
 
 public:
 	J3DShapePacket* unk34; // TODO: might be part of DrawPacket

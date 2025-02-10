@@ -3,8 +3,10 @@
 
 #include <types.h>
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
 #include <JSystem/ResTIMG.hpp>
+#include <dolphin/mtx.h>
 
 struct J3DNode;
 struct J3DModelHierarchy;
@@ -108,20 +110,20 @@ public:
 	void prepareShapePackets();
 
 	J3DModelData* getModelData() { return mModelData; }
+	MtxPtr getAnmMtx(int idx) { return mNodeMatrices[idx]; }
+	J3DMatPacket* getMatPacket(u16 idx) { return &mMatPackets[idx]; }
+	J3DShapePacket* getShapePacket(u16 idx) { return &mShapePackets[idx]; }
 
 	virtual ~J3DModel();
 
-	struct UnknownStruct {
-		char padding[0x14];
-		float unk14;
-	};
-
+public:
 	/* 0x004 */ J3DModelData* mModelData;
 	char padding0[0x50];
-	UnknownStruct* unk58;
+	/* 0x58 */ Mtx* mNodeMatrices;
 	char padding1[0x24];
-	void* unk80; // array of things of size 0x48 judging by SMS_UnifyMaterial
-	char padding5c[0x1c];
+	/* 0x80 */ J3DMatPacket* mMatPackets;
+	/* 0x84 */ J3DShapePacket* mShapePackets;
+	char padding5c[0x18];
 };
 
 #endif

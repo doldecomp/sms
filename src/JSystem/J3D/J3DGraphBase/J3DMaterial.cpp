@@ -199,7 +199,7 @@ J3DPEBlock* J3DMaterial::createPEBlock(int param_1, u32 param_2)
 void J3DMaterial::initialize()
 {
 	mShape            = nullptr;
-	unk0              = nullptr;
+	mNext             = nullptr;
 	unk8              = 1;
 	unkC              = -1;
 	unk10             = nullptr;

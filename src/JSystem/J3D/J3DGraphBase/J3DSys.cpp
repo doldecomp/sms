@@ -1,6 +1,8 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JRenderer.hpp>
 #include <dolphin/os.h>
+#include <macros.h>
+#include <types.h>
 
 #pragma opt_strength_reduction off
 
@@ -26,12 +28,12 @@ J3DSys::J3DSys()
 	makeZModeTable();
 	mFlags = 0;
 	MTXIdentity(mViewMtx);
-	unk4C           = 1;
-	unk50           = 0;
-	mModel          = 0;
-	unk40           = 0;
-	unk44           = 0;
-	unk48           = 0;
+	unk4C  = 1;
+	unk50  = 0;
+	mModel = 0;
+	unk40  = 0;
+	for (int i = 0; i < ARRAY_COUNT(mDrawBuffer); ++i)
+		mDrawBuffer[i] = nullptr;
 	mTexture        = 0;
 	mCurrentDrawMtx = 0;
 	mCurrentNormMtx = 0;

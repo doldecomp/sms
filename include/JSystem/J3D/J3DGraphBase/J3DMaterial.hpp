@@ -57,8 +57,24 @@ public:
 	J3DGXColorS10* getTevColor(u32 idx) { return mTevBlock->getTevColor(idx); }
 	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
 
+	J3DMaterial* getNext() { return mNext; }
+	void setNext(J3DMaterial* material) { mNext = material; }
+	J3DShape* getShape() { return mShape; }
+	u16 getIndex() { return unkC; }
+
+	J3DMaterialAnm* getMaterialAnm()
+	{
+		if ((u32)unk38 < 0xC0000000) {
+			return unk38;
+		} else {
+			return nullptr;
+		}
+	}
+
+	GXBool isDrawModeOpaTexEdge() { return (unk8 & 3) ? GX_TRUE : GX_FALSE; }
+
 public:
-	/* 0x0 */ void* unk0;
+	/* 0x0 */ J3DMaterial* mNext;
 	/* 0x4 */ J3DShape* mShape;
 	/* 0x8 */ u32 unk8;
 	/* 0xC */ u16 unkC;
