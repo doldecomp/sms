@@ -136,16 +136,16 @@ public:
 	virtual ~J3DJoint() { }
 
 private:
-    /* 0x18 */ u16 mJntNo;
-    /* 0x1A */ u8 mKind;
-    /* 0x1B */ u8 mScaleCompensate;
-    /* 0x1C */ J3DTransformInfo mTransformInfo;
-    /* 0x3C */ f32 mRadius;
-    /* 0x40 */ Vec mMin;
-    /* 0x4C */ Vec mMax;
-    /* 0x58 */ J3DMtxCalc* mMtxCalc;
-    /* 0x5C */ J3DMtxCalc* mOldMtxCalc;
-    /* 0x60 */ J3DMaterial* mMesh;
+	/* 0x18 */ u16 mJntNo;
+	/* 0x1A */ u8 mKind;
+	/* 0x1B */ u8 mScaleCompensate;
+	/* 0x1C */ J3DTransformInfo mTransformInfo;
+	/* 0x3C */ f32 mRadius;
+	/* 0x40 */ Vec mMin;
+	/* 0x4C */ Vec mMax;
+	/* 0x58 */ J3DMtxCalc* mMtxCalc;
+	/* 0x5C */ J3DMtxCalc* mOldMtxCalc;
+	/* 0x60 */ J3DMaterial* mMesh;
 };
 
 #endif
