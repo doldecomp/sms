@@ -89,6 +89,10 @@ public:
 		unk3C[7] = h;
 	}
 
+	bool checkFlag(u32 flag) const { return (unk8 & flag) ? TRUE : FALSE; }
+	u32 getIndex() const { return unk4; }
+
+public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 mElementCount;

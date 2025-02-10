@@ -21,6 +21,7 @@ class J3DTexture;
 class J3DMatPacket;
 class J3DMtxCalc;
 class J3DModel;
+class J3DDrawBuffer;
 
 class J3DSys {
 public:
@@ -60,10 +61,17 @@ public:
 	MtxPtr getViewMtx() { return mViewMtx; }
 
 	J3DMatPacket* getMatPacket() { return mMatPacket; }
+	void setMatPacket(J3DMatPacket* packet) { mMatPacket = packet; }
 
 	void setCurrentMtxCalc(J3DMtxCalc* pCalc) { mCurrentMtxCalc = pCalc; }
 
 	J3DModel* getModel() { return mModel; }
+
+	J3DMtxCalc* getCurrentMtxCalc() const { return mCurrentMtxCalc; }
+
+	// Type 0: Opa Buffer
+	// Type 1: Xlu Buffer
+	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
 
 	// Completely made up
 	int checkFlag2() { return mFlags & 2 ? TRUE : FALSE; }
@@ -77,8 +85,7 @@ public:
 	/* 0x038 */ J3DModel* mModel;
 	/* 0x3C */ J3DMatPacket* mMatPacket;
 	/* 0x40 */ u32 unk40;
-	/* 0x44 */ u32 unk44;
-	/* 0x48 */ u32 unk48;
+	/* 0x44 */ J3DDrawBuffer* mDrawBuffer[2];
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ u32 unk50;
 	/* 0x54 */ J3DTexture* mTexture;

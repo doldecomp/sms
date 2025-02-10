@@ -8,7 +8,7 @@
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
 {
-	float retvar = actor->getModel()->unk58->unk14;
+	float retvar = actor->getModel()->mNodeMatrices[0][1][1];
 
 	if (retvar > 1.0f) {
 		retvar = 1.0f;

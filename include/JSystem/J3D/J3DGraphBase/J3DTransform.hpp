@@ -13,9 +13,15 @@ struct J3DTransformInfo {
 
 	inline J3DTransformInfo& operator=(const J3DTransformInfo& b)
 	{
-		mScale     = b.mScale;
-		mRotation  = b.mRotation;
-		mTranslate = b.mTranslate;
+		mScale.x     = b.mScale.x;
+		mScale.y     = b.mScale.y;
+		mScale.z     = b.mScale.z;
+		mRotation.x  = b.mRotation.x;
+		mRotation.y  = b.mRotation.y;
+		mRotation.z  = b.mRotation.z;
+		mTranslate.x = b.mTranslate.x;
+		mTranslate.y = b.mTranslate.y;
+		mTranslate.z = b.mTranslate.z;
 		return *this;
 	}
 }; // Size: 0x20

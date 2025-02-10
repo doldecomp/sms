@@ -38,6 +38,10 @@ public:
 	void drawTail() const;
 	void setCallBackPacket(J3DCallBackPacket* callback);
 
+	void setZMtx(MtxPtr mtx) { mZMtx = mtx; }
+
+	static int entryNum;
+
 private:
 	/* 0x00 */ J3DPacket** mBuffer;
 	/* 0x04 */ u32 mSize;
@@ -51,7 +55,6 @@ private:
 
 	static sortFunc sortFuncTable[6];
 	static drawFunc drawFuncTable[2];
-	static int entryNum;
 };
 
 #endif
