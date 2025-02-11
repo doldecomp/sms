@@ -3,6 +3,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
 #pragma opt_strength_reduction off
@@ -45,7 +46,7 @@ void J3DDrawBuffer::frameInit()
 	mCallBackPacket = nullptr;
 }
 
-int J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 {
 	packet->drawClear();
 	packet->getShapePacket()->drawClear();
@@ -62,29 +63,29 @@ int J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 	if (packet->unk3C & 0x80000000) {
 		packet->setNextPacket(mBuffer[0]);
 		mBuffer[0] = packet;
-		return 1;
+		return true;
 	} else {
 		u32 slot = hash & (mSize - 1);
 		if (mBuffer[slot] == NULL) {
 			mBuffer[slot] = packet;
-			return 1;
+			return true;
 		} else {
 			for (J3DMatPacket* pkt = (J3DMatPacket*)mBuffer[slot]; pkt != NULL;
 			     pkt               = (J3DMatPacket*)pkt->getNextPacket()) {
 				if (pkt->isSame(packet)) {
 					pkt->addShapePacket(packet->getShapePacket());
-					return 0;
+					return false;
 				}
 			}
 
 			packet->setNextPacket(mBuffer[slot]);
 			mBuffer[slot] = packet;
-			return 1;
+			return true;
 		}
 	}
 }
 
-int J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* packet)
 {
 	J3DMaterialAnm* pMaterialAnm = packet->unk44;
 	u32 slot                     = (u32)pMaterialAnm & (mSize - 1);
@@ -96,24 +97,24 @@ int J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* packet)
 		packet->getShapePacket()->drawClear();
 		if (mBuffer[slot] == NULL) {
 			mBuffer[slot] = packet;
-			return 1;
+			return true;
 		} else {
 			for (J3DMatPacket* pkt = (J3DMatPacket*)mBuffer[slot]; pkt != NULL;
 			     pkt               = (J3DMatPacket*)pkt->getNextPacket()) {
 				if (pkt->unk44 == pMaterialAnm) {
 					pkt->addShapePacket(packet->getShapePacket());
-					return 0;
+					return false;
 				}
 			}
 
 			packet->setNextPacket(mBuffer[slot]);
 			mBuffer[slot] = packet;
-			return 1;
+			return true;
 		}
 	}
 }
 
-int J3DDrawBuffer::entryZSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryZSort(J3DMatPacket* packet)
 {
 	packet->drawClear();
 	packet->getShapePacket()->drawClear();
@@ -140,36 +141,36 @@ int J3DDrawBuffer::entryZSort(J3DMatPacket* packet)
 	packet->setNextPacket(mBuffer[idx]);
 	mBuffer[idx] = packet;
 
-	return 1;
+	return true;
 }
 
-int J3DDrawBuffer::entryModelSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryModelSort(J3DMatPacket* packet)
 {
 	packet->drawClear();
 	packet->getShapePacket()->drawClear();
 
 	if (mCallBackPacket != nullptr) {
 		mCallBackPacket->addChildPacket(packet);
-		return 1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-int J3DDrawBuffer::entryInvalidSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryInvalidSort(J3DMatPacket* packet)
 {
 	packet->drawClear();
 	packet->getShapePacket()->drawClear();
 
 	if (mCallBackPacket != nullptr) {
 		mCallBackPacket->addChildPacket(packet->getShapePacket());
-		return 1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-int J3DDrawBuffer::entryNonSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryNonSort(J3DMatPacket* packet)
 {
 	packet->drawClear();
 	packet->getShapePacket()->drawClear();
@@ -177,15 +178,15 @@ int J3DDrawBuffer::entryNonSort(J3DMatPacket* packet)
 	packet->setNextPacket(mBuffer[0]);
 	mBuffer[0] = packet;
 
-	return 1;
+	return true;
 }
 
-int J3DDrawBuffer::entryImm(J3DPacket* packet, u16 index)
+bool J3DDrawBuffer::entryImm(J3DPacket* packet, u16 index)
 {
 	packet->setNextPacket(mBuffer[index]);
 	mBuffer[index] = packet;
 
-	return 1;
+	return true;
 }
 
 void J3DDrawBuffer::draw() const

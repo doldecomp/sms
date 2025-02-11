@@ -93,14 +93,14 @@ void TMultiBtk::update()
 
 void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
 {
+	// TODO: inlines in J3DModelData should copy J3DMaterialTable
 	unk04[n] = param_2;
 	unk04[n]->searchUpdateMaterialID(unk08);
 	if (n == 0) {
-		for (u16 i = 0; i < unk08->mMaterialTable.getMaterialNum(); ++i) {
+		for (u16 i = 0; i < unk08->unk24; ++i) {
 			J3DMaterialAnm* mat = new J3DMaterialAnm();
-			// TODO: why does it not match without a cast
-			unk08->mMaterialTable.getMaterial((u16)i)->change();
-			unk08->mMaterialTable.getMaterial((u16)i)->setMaterialAnm(mat);
+			unk08->mMaterials[(u16)i]->change();
+			unk08->mMaterials[(u16)i]->setMaterialAnm(mat);
 		}
 	}
 

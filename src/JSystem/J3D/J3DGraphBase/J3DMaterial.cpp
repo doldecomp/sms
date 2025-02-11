@@ -204,7 +204,7 @@ void J3DMaterial::initialize()
 	unkC              = -1;
 	unk10             = nullptr;
 	unk18             = 0;
-	unk1C             = nullptr;
+	unk1C             = 0;
 	mColorBlock       = nullptr;
 	mTexGenBlock      = nullptr;
 	mTevBlock         = nullptr;

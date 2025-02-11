@@ -27,7 +27,33 @@ void J3DMtxCalcAnm::calc(u16 param_0)
 
 J3DMtxCalcBasic::J3DMtxCalcBasic() { }
 
-void J3DMtxCalcBasic::recursiveUpdate(J3DNode*) { }
+void J3DMtxCalcBasic::recursiveUpdate(J3DNode* node)
+{
+	if (!node)
+		return;
+
+	J3DMtxCalcBasic mtxCalc;
+	char trash[0x8]; // TODO:
+
+	MTXCopy(J3DSys::mCurrentMtx, mtxCalc.getBackupMtx());
+	mtxCalc.setBackupS(J3DSys::mCurrentS);
+	mtxCalc.setBackupParentS(J3DSys::mParentS);
+	node->updateIn();
+
+	if (node->getCallBack())
+		node->getCallBack()(node, 0);
+
+	recursiveUpdate(node->getChild());
+	MTXCopy(mtxCalc.getBackupMtx(), J3DSys::mCurrentMtx);
+	J3DSys::mCurrentS = mtxCalc.getBackupS();
+	J3DSys::mParentS  = mtxCalc.getBackupParentS();
+	node->updateOut();
+
+	if (node->getCallBack())
+		node->getCallBack()(node, 1);
+
+	recursiveUpdate(node->getYounger());
+}
 
 void J3DMtxCalcBasic::recursiveCalc(J3DNode* node)
 {
@@ -57,7 +83,14 @@ void J3DMtxCalcBasic::recursiveCalc(J3DNode* node)
 	recursiveCalc(node->getYounger());
 }
 
-void J3DMtxCalcBasic::recursiveEntry(J3DNode*) { }
+void J3DMtxCalcBasic::recursiveEntry(J3DNode* node)
+{
+	if (node) {
+		node->entryIn();
+		recursiveEntry(node->getChild());
+		recursiveEntry(node->getYounger());
+	}
+}
 
 // TODO: what is this? This isn't part of mtx.h =/
 inline BOOL checkScaleOne(Vec v)
@@ -96,10 +129,8 @@ void J3DMtxCalcBasic::calcTransform(u16 param_0, const J3DTransformInfo& info)
 		mtx[2][2] *= info.mScale.z;
 	}
 	MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
-	// TODO: this looks to be a fakematch. Using the getAnmMtx inline does not
-	// work.
 	J3DModel* model = j3dSys.getModel();
-	MTXCopy(J3DSys::mCurrentMtx, model->mNodeMatrices[param_0]);
+	MTXCopy(J3DSys::mCurrentMtx, model->getAnmMtx(param_0));
 }
 
 void J3DMtxCalcBasic::calc(u16 param_0)
@@ -149,10 +180,10 @@ void J3DMtxCalcSoftimage::calcTransform(u16 param_0,
 		mtx[2][3] = J3DSys::mCurrentMtx[2][3];
 
 		J3DModel* model = j3dSys.getModel();
-		MTXCopy(mtx, model->mNodeMatrices[param_0]);
+		MTXCopy(mtx, model->getAnmMtx(param_0));
 	} else {
 		J3DModel* model = j3dSys.getModel();
-		MTXCopy(J3DSys::mCurrentMtx, model->mNodeMatrices[param_0]);
+		MTXCopy(J3DSys::mCurrentMtx, model->getAnmMtx(param_0));
 	}
 }
 
@@ -246,9 +277,58 @@ void J3DJoint::addMesh(J3DMaterial* material)
 	mMesh = material;
 }
 
-void J3DJoint::updateIn() { }
+void J3DJoint::updateIn()
+{
+	if (mMtxCalc) {
+		mOldMtxCalc = j3dSys.getCurrentMtxCalc();
+		mMtxCalc->calc(mJntNo);
+	} else if (j3dSys.getCurrentMtxCalc()) {
+		j3dSys.getCurrentMtxCalc()->calc(mJntNo);
+	}
 
-void J3DJoint::updateOut() { }
+	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
+	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
+
+	for (J3DMaterial* mesh = mMesh; mesh != nullptr;) {
+		if (mesh->getShape()->checkFlag(1)) {
+			mesh = mesh->getNext();
+		} else {
+			J3DMatPacket* matPacket
+			    = j3dSys.getModel()->getMatPacket(mesh->getIndex());
+			J3DShapePacket* shapePacket = j3dSys.getModel()->getShapePacket(
+			    mesh->getShape()->getIndex());
+
+			if (mesh->getMaterialAnm())
+				mesh->getMaterialAnm()->calc(mesh);
+
+			mesh->calc(j3dSys.getModel()->getAnmMtx(mJntNo));
+			mesh->setCurrentMtx();
+
+			matPacket->setMaterialAnmID(mesh->getMaterialAnm());
+			matPacket->setShapePacket(shapePacket);
+			J3DDrawBuffer* drawBuffer
+			    = j3dSys.getDrawBuffer(!mesh->isDrawModeOpaTexEdge());
+
+			if ((u8)matPacket->entry(drawBuffer)) {
+				j3dSys.setMatPacket(matPacket);
+				if (!mesh->getSomeFlag())
+					mesh->makeDisplayList();
+				else
+					mesh->safeMakeDisplayList();
+			}
+			mesh = mesh->getNext();
+		}
+	}
+}
+
+void J3DJoint::updateOut()
+{
+	if (!mOldMtxCalc)
+		return;
+
+	j3dSys.setCurrentMtxCalc(mOldMtxCalc);
+	mOldMtxCalc = nullptr;
+}
 
 void J3DJoint::calcIn()
 {

@@ -97,7 +97,7 @@ public:
 	}
 
 	virtual ~J3DMtxCalcBasicAnm() { }
-	virtual void calc(u16);
+	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 
 class J3DMtxCalcMaya : public J3DMtxCalcBasic {
@@ -159,7 +159,7 @@ public:
 	}
 
 	virtual ~J3DMtxCalcSoftimageAnm() { }
-	virtual void calc(u16) { }
+	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 
 J3DMtxCalc* J3DNewMtxCalcAnm(u32, J3DAnmTransform*);
@@ -179,6 +179,7 @@ public:
 	virtual u32 getType() const { return 'NJNT'; }
 	virtual ~J3DJoint() { }
 
+	u16 getJntNo() const { return mJntNo; }
 	J3DTransformInfo& getTransformInfo() { return mTransformInfo; }
 	u8 getScaleCompensate() const { return mScaleCompensate; }
 
