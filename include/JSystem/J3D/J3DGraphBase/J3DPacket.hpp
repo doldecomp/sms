@@ -4,6 +4,7 @@
 #include <types.h>
 #include <dolphin/gd.h>
 #include <dolphin/mtx.h>
+#include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
 
 class J3DMatPacket;
 class J3DDrawBuffer;
@@ -115,7 +116,12 @@ public:
 	{
 		return unk3C == other->unk3C && (unk3C >> 31) == 0;
 	}
-	virtual bool entry(J3DDrawBuffer*) { return true; }; // TODO: not matched
+	virtual bool entry(J3DDrawBuffer* buffer)
+	{
+		J3DDrawBuffer::sortFunc func
+		    = J3DDrawBuffer::sortFuncTable[buffer->mSortType];
+		return (buffer->*func)(this);
+	};
 	virtual void draw();
 	virtual ~J3DMatPacket();
 

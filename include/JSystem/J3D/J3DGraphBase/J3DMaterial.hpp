@@ -73,6 +73,8 @@ public:
 
 	GXBool isDrawModeOpaTexEdge() { return (unk8 & 3) ? GX_TRUE : GX_FALSE; }
 
+	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
+
 public:
 	/* 0x0 */ J3DMaterial* mNext;
 	/* 0x4 */ J3DShape* mShape;
@@ -81,7 +83,7 @@ public:
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ char unk14[4];
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ void* unk1C;
+	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ J3DColorBlock* mColorBlock;
 	/* 0x24 */ J3DTexGenBlock* mTexGenBlock;
 	/* 0x28 */ J3DTevBlock* mTevBlock;

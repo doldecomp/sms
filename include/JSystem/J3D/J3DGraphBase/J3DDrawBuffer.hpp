@@ -1,12 +1,15 @@
 #ifndef J3D_DRAW_BUFFER_HPP
 #define J3D_DRAW_BUFFER_HPP
 
-#include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <dolphin/mtx.h>
+
+class J3DPacket;
+class J3DMatPacket;
+class J3DCallBackPacket;
 
 class J3DDrawBuffer {
 public:
-	typedef int (J3DDrawBuffer::*sortFunc)(J3DMatPacket*);
+	typedef bool (J3DDrawBuffer::*sortFunc)(J3DMatPacket*);
 	typedef void (J3DDrawBuffer::*drawFunc)() const;
 
 	enum EDrawType {
@@ -26,13 +29,13 @@ public:
 	J3DDrawBuffer(u32 size);
 	~J3DDrawBuffer();
 	void frameInit();
-	int entryMatSort(J3DMatPacket* packet);
-	int entryMatAnmSort(J3DMatPacket* packet);
-	int entryZSort(J3DMatPacket* packet);
-	int entryModelSort(J3DMatPacket* packet);
-	int entryInvalidSort(J3DMatPacket* packet);
-	int entryNonSort(J3DMatPacket* packet);
-	int entryImm(J3DPacket* packet, u16 index);
+	bool entryMatSort(J3DMatPacket* packet);
+	bool entryMatAnmSort(J3DMatPacket* packet);
+	bool entryZSort(J3DMatPacket* packet);
+	bool entryModelSort(J3DMatPacket* packet);
+	bool entryInvalidSort(J3DMatPacket* packet);
+	bool entryNonSort(J3DMatPacket* packet);
+	bool entryImm(J3DPacket* packet, u16 index);
 	void draw() const;
 	void drawHead() const;
 	void drawTail() const;
@@ -42,7 +45,7 @@ public:
 
 	static int entryNum;
 
-private:
+public:
 	/* 0x00 */ J3DPacket** mBuffer;
 	/* 0x04 */ u32 mSize;
 	/* 0x08 */ EDrawType mDrawType;

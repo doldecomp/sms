@@ -5,7 +5,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DJointTree.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
 
@@ -21,6 +20,7 @@ struct J3DTexMtxAnm;
 struct J3DTevColorAnm;
 struct J3DTevKColorAnm;
 class J3DMaterial;
+class J3DJoint;
 
 // TODO: this could be an enum
 struct J3DMaterialCopyFlag {
@@ -55,27 +55,50 @@ public:
 	void setTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm*, J3DTevKColorAnm*);
 
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
-
-	J3DJoint* getJointNodePointer(u16 idx) const { return mJointTree.getJointNodePointer(idx); }
+	J3DJoint* getJointNodePointer(u16 idx) const
+	{
+		return mJointNodePointer[idx];
+	}
 
 public:
-	/* 0x04 */ J3DJointTree mJointTree;
+	/* 0x04 */ u32 unk4;
+	/* 0x08 */ u32 unk8;
+	/* 0x0C */ u32 unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ u16 unk18;
+	/* 0x1A */ u16 unk1A;
+	/* 0x1C */ u16 unk1C;
+
+	/* 0x20 */ J3DJoint** mJointNodePointer;
+
+	// J3DMaterialTable but not refactored out yet
+	/* 0x24 */ u16 unk24;
+	/* 0x26 */ u16 unk26;
+	/* 0x28 */ J3DMaterial** mMaterials;
+	/* 0x2C */ u16 unk2C;
+
+	/* 0x30 */ u32 unk30;
+	/* 0x34 */ u16 unk34;
+
+	/* 0x38 */ u32 unk38;
 	/* 0x3C */ J3DVertexData mVertexData;
-	J3DMaterialTable mMaterialTable;
+	/* 0x80 */ u32 unk80;
+	/* 0x84 */ u16 unk84;
+
+	/* 0x88 */ u32 unk88;
+	/* 0x8C */ u32 unk8C;
+	/* 0x90 */ u32 unk90;
+	/* 0x94 */ u32 unk94;
 	/* 0x98 */ J3DDrawMtxData mDrawMtxData;
-	char padding1[0x34];
-	/* 0xB4 */ JUTNameTab* mMaterialName;
-	char padding2[0x48];
+
+	/* 0xA4 */ u32 unkA4;
 	/* 0xA8 */ JUTNameTab* unkA8;
 
-	struct UnknownStruct {
-		u16 unk0;
-		char unk2[2];
-		ResTIMG* unk4;
-	};
-
-	UnknownStruct* unkAC;
-	char padding3[0x10];
+	/* 0xAC */ J3DTexture* unkAC;
+	/* 0xB0 */ u32 unkB0;
+	/* 0xB4 */ JUTNameTab* mMaterialName;
+	/* 0xB8 */ u32 unkB8;
 };
 
 struct J3DDeformData;
