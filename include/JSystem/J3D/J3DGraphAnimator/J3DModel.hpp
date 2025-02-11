@@ -5,6 +5,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJointTree.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
 
@@ -55,8 +56,10 @@ public:
 
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
 
+	J3DJoint* getJointNodePointer(u16 idx) const { return mJointTree.getJointNodePointer(idx); }
+
 public:
-	char padding0[0x14];
+	/* 0x04 */ J3DJointTree mJointTree;
 	/* 0x3C */ J3DVertexData mVertexData;
 	J3DMaterialTable mMaterialTable;
 	/* 0x98 */ J3DDrawMtxData mDrawMtxData;
@@ -114,13 +117,18 @@ public:
 	J3DMatPacket* getMatPacket(u16 idx) { return &mMatPackets[idx]; }
 	J3DShapePacket* getShapePacket(u16 idx) { return &mShapePackets[idx]; }
 
+	u8 getScaleFlag(int idx) const { return mScaleFlagArr[idx]; }
+	void setScaleFlag(int idx, u8 param_1) { mScaleFlagArr[idx] = param_1; }
+
 	virtual ~J3DModel();
 
 public:
 	/* 0x004 */ J3DModelData* mModelData;
-	char padding0[0x50];
+	char padding0[0x48];
+	/* 0x50 */ u8* mScaleFlagArr;
+	char padding1[0x4];
 	/* 0x58 */ Mtx* mNodeMatrices;
-	char padding1[0x24];
+	char padding2[0x24];
 	/* 0x80 */ J3DMatPacket* mMatPackets;
 	/* 0x84 */ J3DShapePacket* mShapePackets;
 	char padding5c[0x18];

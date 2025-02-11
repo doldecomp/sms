@@ -4,6 +4,7 @@
 #include <types.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <dolphin/mtx.h>
 
 // TODO: this is hell on earth
@@ -56,12 +57,35 @@ public:
 	J3DMtxCalcBasic();
 
 	virtual ~J3DMtxCalcBasic() { }
-	virtual void init(const Vec&, const Mtx&) { }
+	virtual void init(const Vec& vec, const Mtx& mtx)
+	{
+		J3DSys::mCurrentS         = vec;
+		J3DSys::mParentS          = (Vec) { 1.0f, 1.0f, 1.0f };
+		J3DSys::mCurrentMtx[0][0] = mtx[0][0] * vec.x;
+		J3DSys::mCurrentMtx[0][1] = mtx[0][1] * vec.y;
+		J3DSys::mCurrentMtx[0][2] = mtx[0][2] * vec.z;
+		J3DSys::mCurrentMtx[0][3] = mtx[0][3];
+		J3DSys::mCurrentMtx[1][0] = mtx[1][0] * vec.x;
+		J3DSys::mCurrentMtx[1][1] = mtx[1][1] * vec.y;
+		J3DSys::mCurrentMtx[1][2] = mtx[1][2] * vec.z;
+		J3DSys::mCurrentMtx[1][3] = mtx[1][3];
+		J3DSys::mCurrentMtx[2][0] = mtx[2][0] * vec.x;
+		J3DSys::mCurrentMtx[2][1] = mtx[2][1] * vec.y;
+		J3DSys::mCurrentMtx[2][2] = mtx[2][2] * vec.z;
+		J3DSys::mCurrentMtx[2][3] = mtx[2][3];
+	}
 	virtual void recursiveUpdate(J3DNode*);
 	virtual void recursiveCalc(J3DNode*);
 	virtual void recursiveEntry(J3DNode*);
 	virtual void calcTransform(u16, const J3DTransformInfo&);
 	virtual void calc(u16);
+
+	Mtx& getBackupMtx() { return mBackupMtx; }
+	Vec& getBackupS() { return mBackupS; }
+	Vec& getBackupParentS() { return mBackupParentS; }
+
+	void setBackupS(const Vec& vec) { mBackupS = vec; }
+	void setBackupParentS(const Vec& vec) { mBackupParentS = vec; }
 };
 
 class J3DMtxCalcBasicAnm : public J3DMtxCalcBasic, public J3DMtxCalcAnm {
@@ -80,7 +104,23 @@ class J3DMtxCalcMaya : public J3DMtxCalcBasic {
 public:
 	virtual ~J3DMtxCalcMaya() { }
 
-	virtual void init(const Vec&, const Mtx&) { }
+	virtual void init(const Vec& vec, const Mtx& mtx)
+	{
+		J3DSys::mParentS          = (Vec) { 1.0f, 1.0f, 1.0f };
+		J3DSys::mCurrentS         = vec;
+		J3DSys::mCurrentMtx[0][0] = mtx[0][0] * vec.x;
+		J3DSys::mCurrentMtx[0][1] = mtx[0][1] * vec.y;
+		J3DSys::mCurrentMtx[0][2] = mtx[0][2] * vec.z;
+		J3DSys::mCurrentMtx[0][3] = mtx[0][3];
+		J3DSys::mCurrentMtx[1][0] = mtx[1][0] * vec.x;
+		J3DSys::mCurrentMtx[1][1] = mtx[1][1] * vec.y;
+		J3DSys::mCurrentMtx[1][2] = mtx[1][2] * vec.z;
+		J3DSys::mCurrentMtx[1][3] = mtx[1][3];
+		J3DSys::mCurrentMtx[2][0] = mtx[2][0] * vec.x;
+		J3DSys::mCurrentMtx[2][1] = mtx[2][1] * vec.y;
+		J3DSys::mCurrentMtx[2][2] = mtx[2][2] * vec.z;
+		J3DSys::mCurrentMtx[2][3] = mtx[2][3];
+	}
 	virtual void calcTransform(u16, const J3DTransformInfo&);
 };
 
@@ -93,7 +133,7 @@ public:
 	}
 
 	virtual ~J3DMtxCalcMayaAnm() { }
-	virtual void calc(u16) { }
+	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 
 class J3DMtxCalcSoftimage : public J3DMtxCalcBasic {
@@ -101,7 +141,11 @@ public:
 	J3DMtxCalcSoftimage() { }
 
 	virtual ~J3DMtxCalcSoftimage() { }
-	virtual void init(const Vec&, const Mtx&) { }
+	virtual void init(const Vec& vec, const Mtx& mtx)
+	{
+		J3DSys::mCurrentS = vec;
+		MTXCopy((Mtx&)mtx, J3DSys::mCurrentMtx);
+	}
 	virtual void calcTransform(u16, const J3DTransformInfo&);
 };
 
@@ -134,6 +178,9 @@ public:
 	virtual void calcOut();
 	virtual u32 getType() const { return 'NJNT'; }
 	virtual ~J3DJoint() { }
+
+	J3DTransformInfo& getTransformInfo() { return mTransformInfo; }
+	u8 getScaleCompensate() const { return mScaleCompensate; }
 
 private:
 	/* 0x18 */ u16 mJntNo;

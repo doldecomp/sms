@@ -61,9 +61,9 @@ void J3DVertexBuffer::copyTransformedVtxArray()
 
 J3DDrawMtxData::J3DDrawMtxData()
 {
-	unk0 = 0;
-	unk4 = 0;
-	unk8 = 0;
+	mEntryNum = 0;
+	mDrawMtxFlag = 0;
+	mDrawMtxIndex = 0;
 }
 
 J3DDrawMtxData::~J3DDrawMtxData() { }
