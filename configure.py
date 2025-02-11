@@ -476,7 +476,7 @@ config.libs = [
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DTransform.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DMaterial.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DShape.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DSys.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphBase/J3DSys.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DVertex.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphBase/J3DPacket.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphBase/J3DTevs.cpp"),
