@@ -62,9 +62,10 @@ public:
 	J3DDrawMtxData();
 	~J3DDrawMtxData();
 
-	s16 unk0;
-	u32 unk4;
-	u32 unk8;
+	/* 0x0 */ u16 mEntryNum;
+	/* 0x2 */ u16 mDrawFullWgtMtxNum;
+	/* 0x4 */ u8* mDrawMtxFlag;
+	/* 0x8 */ u16* mDrawMtxIndex;
 };
 
 #endif

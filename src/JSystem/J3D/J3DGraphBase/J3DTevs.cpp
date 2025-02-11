@@ -427,13 +427,12 @@ void makeTexCoordTable()
 	}
 }
 
-// TODO: how do we make it unroll more? :(
 void makeAlphaCmpTable()
 {
 	u8* table = j3dAlphaCmpTable;
-	for (u32 i = 0; i < 8; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			for (u32 k = 0; k < 8; ++k) {
+	for (u32 i = 0; i != 8; ++i) {
+		for (int j = 0; j != 4; ++j) {
+			for (u32 k = 0; k != 8; ++k) {
 				u32 idx = i * 32 + j * 8 + k;
 
 				table[idx * 3 + 0] = i;
