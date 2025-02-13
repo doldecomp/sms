@@ -4,6 +4,8 @@
 #include <types.h>
 
 class J3DMaterial;
+class JUTNameTab;
+class J3DTexture;
 
 class J3DMaterialTable {
 public:
@@ -12,15 +14,24 @@ public:
 
 	void clear();
 
-	J3DMaterial* getMaterial(u16 idx) const { return mMaterials[idx]; }
+	J3DMaterial* getMaterialNodePointer(u16 idx) const
+	{
+		return mMaterials[idx];
+	}
 	u16 getMaterialNum() const { return mMaterialNum; }
 
+	J3DTexture* getTexture() const { return mTexture; }
+
+	JUTNameTab* getMaterialName() const { return mMaterialName; }
+	JUTNameTab* getTextureName() const { return mTextureName; }
+
+public:
 	/* 0x04 */ u16 mMaterialNum;
 	/* 0x06 */ u16 mMaterialInitNum;
 	/* 0x08 */ J3DMaterial** mMaterials;
-	/* 0x0C */ void* unkC;
-	/* 0x10 */ void* unk10;
-	/* 0x14 */ void* unk14;
+	/* 0x0C */ J3DTexture* mTexture;
+	/* 0x10 */ JUTNameTab* mMaterialName;
+	/* 0x14 */ JUTNameTab* mTextureName;
 };
 
 #endif

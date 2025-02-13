@@ -56,6 +56,7 @@ public:
 	J3DGXColor* getTevKColor(u32 idx) { return mTevBlock->getTevKColor(idx); }
 	J3DGXColorS10* getTevColor(u32 idx) { return mTevBlock->getTevColor(idx); }
 	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
+	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 
 	J3DMaterial* getNext() { return mNext; }
 	void setNext(J3DMaterial* material) { mNext = material; }

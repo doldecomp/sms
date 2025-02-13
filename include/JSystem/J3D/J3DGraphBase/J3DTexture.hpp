@@ -9,6 +9,7 @@ public:
 	/* 0x4 */ ResTIMG* mResources;
 
 	ResTIMG* getResTIMG(u16 entry) const { return &mResources[entry]; }
+	u16 getNum() const { return mResourceCount; }
 };
 
 #endif
