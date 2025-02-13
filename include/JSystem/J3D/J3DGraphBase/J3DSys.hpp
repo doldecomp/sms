@@ -73,6 +73,9 @@ public:
 	// Type 1: Xlu Buffer
 	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
 
+	void setModel(J3DModel* pModel) { mModel = pModel; }
+	void setTexture(J3DTexture* pTex) { mTexture = pTex; }
+
 	// Completely made up
 	int checkFlag2() { return mFlags & 2 ? TRUE : FALSE; }
 	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }
