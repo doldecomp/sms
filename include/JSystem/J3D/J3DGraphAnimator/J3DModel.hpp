@@ -22,13 +22,20 @@ struct J3DTevKColorAnm;
 class J3DMaterial;
 class J3DJoint;
 
-// TODO: this could be an enum
-struct J3DMaterialCopyFlag {
-	u32 unk0b : 1;
-	u32 unk1b : 1;
+enum J3DMaterialCopyFlag {
+	J3DMatCopyFlag_Material = 0x01,
+	J3DMatCopyFlag_Texture  = 0x02,
+	J3DMatCopyFlag_All      = 0x03,
 };
 
 class JUTNameTab;
+
+struct J3DModelHierarchy {
+	/* 0x0 */ u16 mType; // TODO enum
+	/* 0x2 */ u16 mValue;
+
+	inline u16 getValue() const { return mValue; }
+};
 
 // Should be 0xbc bytes
 class J3DModelData {
@@ -39,20 +46,23 @@ public:
 
 	void makeHierarchy(J3DNode*, const J3DModelHierarchy**);
 	void newSharedDisplayList();
-	void isDeformableVertexFormat() const;
+	bool isDeformableVertexFormat() const;
 	void setMaterialTable(J3DMaterialTable*, J3DMaterialCopyFlag);
-	void entryMatColorAnimator(J3DAnmColor*);
-	void entryTexNoAnimator(J3DAnmTexPattern*);
-	void entryTexMtxAnimator(J3DAnmTextureSRTKey*);
-	void entryTevRegAnimator(J3DAnmTevRegKey*);
-	void removeMatColorAnimator(J3DAnmColor*);
-	void removeTexNoAnimator(J3DAnmTexPattern*);
-	void removeTexMtxAnimator(J3DAnmTextureSRTKey*);
-	void removeTevRegAnimator(J3DAnmTevRegKey*);
-	void setMatColorAnimator(J3DAnmColor*, J3DMatColorAnm*);
-	void setTexNoAnimator(J3DAnmTexPattern*, J3DTexNoAnm*);
-	void setTexMtxAnimator(J3DAnmTextureSRTKey*, J3DTexMtxAnm*, J3DTexMtxAnm*);
-	void setTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm*, J3DTevKColorAnm*);
+	// TODO: these seem to return some kind of an error code?
+	int entryMatColorAnimator(J3DAnmColor*);
+	int entryTexNoAnimator(J3DAnmTexPattern*);
+	int entryTexMtxAnimator(J3DAnmTextureSRTKey*);
+	int entryTevRegAnimator(J3DAnmTevRegKey*);
+
+	int removeMatColorAnimator(J3DAnmColor*);
+	int removeTexNoAnimator(J3DAnmTexPattern*);
+	int removeTexMtxAnimator(J3DAnmTextureSRTKey*);
+	int removeTevRegAnimator(J3DAnmTevRegKey*);
+
+	int setMatColorAnimator(J3DAnmColor*, J3DMatColorAnm*);
+	int setTexNoAnimator(J3DAnmTexPattern*, J3DTexNoAnm*);
+	int setTexMtxAnimator(J3DAnmTextureSRTKey*, J3DTexMtxAnm*, J3DTexMtxAnm*);
+	int setTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm*, J3DTevKColorAnm*);
 
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
 	J3DJoint* getJointNodePointer(u16 idx) const
@@ -60,11 +70,18 @@ public:
 		return mJointNodePointer[idx];
 	}
 
+	J3DMaterial* getMaterialNodePointer(u16 idx) const
+	{
+		return mMaterials[idx];
+	}
+	void setTexture(J3DTexture* texture) { unkAC = texture; }
+	void setTextureName(JUTNameTab* texture_name) { unkA8 = texture_name; }
+
 public:
 	/* 0x04 */ u32 unk4;
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ u32 unkC;
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ J3DJoint* mRootNode;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u16 unk18;
 	/* 0x1A */ u16 unk1A;
@@ -78,7 +95,7 @@ public:
 	/* 0x28 */ J3DMaterial** mMaterials;
 	/* 0x2C */ u16 unk2C;
 
-	/* 0x30 */ u32 unk30;
+	/* 0x30 */ J3DShape** mShapes;
 	/* 0x34 */ u16 unk34;
 
 	/* 0x38 */ u32 unk38;
@@ -146,15 +163,31 @@ public:
 	virtual ~J3DModel();
 
 public:
-	/* 0x004 */ J3DModelData* mModelData;
-	char padding0[0x48];
+	/* 0x04 */ J3DModelData* mModelData;
+	/* 0x08 */ u32 unk8;
+	/* 0x0C */ void* unkC;
+	char pad1[0x4];
+	/* 0x14 */ float unk14;
+	/* 0x18 */ float unk18;
+	/* 0x1C */ float unk1C;
+	/* 0x20 */ Mtx unk20;
 	/* 0x50 */ u8* mScaleFlagArr;
-	char padding1[0x4];
+	/* 0x54 */ void* unk54;
 	/* 0x58 */ Mtx* mNodeMatrices;
-	char padding2[0x24];
+	/* 0x5C */ void* unk5C;
+	/* 0x60 */ void* unk60[2];
+	/* 0x68 */ void* unk68[2];
+	/* 0x70 */ void* unk70[2];
+	char pad2[0x4];
+	/* 0x7C */ void* unk7C;
 	/* 0x80 */ J3DMatPacket* mMatPackets;
 	/* 0x84 */ J3DShapePacket* mShapePackets;
-	char padding5c[0x18];
+	/* 0x88 */ u32 unk88;
+	/* 0x8C */ J3DSkinDeform* mSkinDeform;
+	/* 0x90 */ void* unk90;
+	/* 0x94 */ void* unk94;
+	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
+	/* 0x9C */ void* unk9C;
 };
 
 #endif

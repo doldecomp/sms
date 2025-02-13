@@ -20,6 +20,7 @@ public:
 	GXTexGenType getTexGenType() { return (GXTexGenType)mTexGenType; }
 	GXTexGenSrc getTexGenSrc() { return (GXTexGenSrc)mTexGenSrc; }
 	u8 getTexGenMtx() { return mTexGenMtx; }
+	void setTexGenMtx(u8 v) { mTexGenMtx = v; }
 };
 
 #endif

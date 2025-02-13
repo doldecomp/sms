@@ -206,6 +206,11 @@ public:
 		calcTransform(mFrame, idx, srt_info);
 	}
 
+	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	u16 getUpdateTexMtxID(u16 idx) const { return mUpdateTexMtxID[idx]; }
+	u32 getTexMtxCalcType() { return mTexMtxCalcType; }
+	Vec& getSRTCenter(u16 idx) { return mSRTCenter[idx]; }
+
 	virtual ~J3DAnmTextureSRTKey();
 
 public:
@@ -312,6 +317,8 @@ public:
 	virtual ~J3DAnmColor() { }
 
 	void searchUpdateMaterialID(J3DModelData*);
+	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }
+	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
 
 public:
 	/* 0x10 */ u16 field_0x10;
@@ -355,6 +362,11 @@ public:
 	void searchUpdateMaterialID(J3DModelData*);
 	virtual ~J3DAnmTexPattern();
 
+	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }
+
+	J3DAnmTexPatternFullTable* getAnmTable() const { return mAnmTable; }
+
 public:
 	/* 0x10 */ u16* mTextureIndex;
 	/* 0x14 */ J3DAnmTexPatternFullTable* mAnmTable;
@@ -370,6 +382,21 @@ public:
 	void getTevKonstReg(unsigned short, _GXColor*) const;
 	void searchUpdateMaterialID(J3DModelData*);
 	virtual ~J3DAnmTevRegKey();
+
+	u16 getCRegUpdateMaterialNum() const { return mCRegUpdateMaterialNum; }
+	u16 getKRegUpdateMaterialNum() const { return mKRegUpdateMaterialNum; }
+
+	u16 getCRegUpdateMaterialID(u16 idx) const
+	{
+		return mCRegUpdateMaterialID[idx];
+	}
+	u16 getKRegUpdateMaterialID(u16 idx) const
+	{
+		return mKRegUpdateMaterialID[idx];
+	}
+
+	J3DAnmCRegKeyTable* getAnmCRegKeyTable() const { return mAnmCRegKeyTable; }
+	J3DAnmKRegKeyTable* getAnmKRegKeyTable() const { return mAnmKRegKeyTable; }
 
 private:
 	/* 0x10 */ u16 mCRegUpdateMaterialNum;

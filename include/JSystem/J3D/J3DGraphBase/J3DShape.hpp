@@ -112,7 +112,7 @@ public:
 	/* 0x38 */ J3DShapeDraw** mDraws;   // mElementCount entries
 	/* 0x3C */ u8 unk3C[8];
 	/* 0x44 */ J3DVertexData* unk44;
-	/* 0x48 */ u32 unk48;
+	/* 0x48 */ J3DDrawMtxData* unk48;
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ Mtx** mDrawMatrices;
 	/* 0x54 */ Mtx33** mNormMatrices;

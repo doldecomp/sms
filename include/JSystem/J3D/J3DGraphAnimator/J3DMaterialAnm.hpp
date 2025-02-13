@@ -10,6 +10,11 @@ class J3DMatColorAnm {
 public:
 	J3DMatColorAnm();
 	~J3DMatColorAnm();
+	J3DMatColorAnm(J3DAnmColor* color, u16 idx)
+	{
+		mAnmColor = color;
+		mAnmIndex = idx;
+	}
 
 	void calc(GXColor*) const;
 
@@ -23,6 +28,11 @@ class J3DTexMtxAnm {
 public:
 	J3DTexMtxAnm();
 	~J3DTexMtxAnm();
+	J3DTexMtxAnm(J3DAnmTextureSRTKey* pAnm, u16 anmIdx)
+	{
+		mAnmIndex     = anmIdx;
+		mAnmTransform = pAnm;
+	}
 
 	void calc(J3DTextureSRTInfo*) const;
 
@@ -49,6 +59,11 @@ class J3DTevColorAnm {
 public:
 	J3DTevColorAnm();
 	~J3DTevColorAnm();
+	J3DTevColorAnm(J3DAnmTevRegKey* tev_reg, u16 idx)
+	{
+		mAnmTevReg = tev_reg;
+		mAnmIndex  = idx;
+	}
 
 	void calc(GXColorS10*) const;
 
@@ -62,6 +77,11 @@ class J3DTevKColorAnm {
 public:
 	J3DTevKColorAnm();
 	~J3DTevKColorAnm();
+	J3DTevKColorAnm(J3DAnmTevRegKey* tev_reg, u16 idx)
+	{
+		mAnmTevReg = tev_reg;
+		mAnmIndex  = idx;
+	}
 
 	void calc(GXColor*) const;
 
@@ -80,6 +100,15 @@ public:
 	virtual void calc(J3DMaterial*) const;
 
 	void initialize();
+
+	void setMatColorAnm(int i, J3DMatColorAnm* pAnm) { mMatColorAnm[i] = pAnm; }
+	void setTexMtxAnm(int i, J3DTexMtxAnm* pAnm) { mTexMtxAnm[i] = pAnm; }
+	void setTexNoAnm(int i, J3DTexNoAnm* pAnm) { mTexNoAnm[i] = pAnm; }
+	void setTevColorAnm(int i, J3DTevColorAnm* pAnm) { mTevColorAnm[i] = pAnm; }
+	void setTevKColorAnm(int i, J3DTevKColorAnm* pAnm)
+	{
+		mTevKColorAnm[i] = pAnm;
+	}
 
 private:
 	/* 0x04 */ J3DMatColorAnm* mMatColorAnm[2];

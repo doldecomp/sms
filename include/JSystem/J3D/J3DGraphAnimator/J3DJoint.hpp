@@ -182,6 +182,7 @@ public:
 	u16 getJntNo() const { return mJntNo; }
 	J3DTransformInfo& getTransformInfo() { return mTransformInfo; }
 	u8 getScaleCompensate() const { return mScaleCompensate; }
+	J3DMaterial* getMesh() { return mMesh; }
 
 private:
 	/* 0x18 */ u16 mJntNo;
