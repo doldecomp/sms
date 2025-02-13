@@ -61,8 +61,8 @@ void J3DVertexBuffer::copyTransformedVtxArray()
 
 J3DDrawMtxData::J3DDrawMtxData()
 {
-	mEntryNum = 0;
-	mDrawMtxFlag = 0;
+	mEntryNum     = 0;
+	mDrawMtxFlag  = 0;
 	mDrawMtxIndex = 0;
 }
 
