@@ -97,7 +97,7 @@ void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
 	unk04[n] = param_2;
 	unk04[n]->searchUpdateMaterialID(unk08);
 	if (n == 0) {
-		for (u16 i = 0; i < unk08->unk24; ++i) {
+		for (u16 i = 0; i < unk08->mMaterialNum; ++i) {
 			J3DMaterialAnm* mat = new J3DMaterialAnm();
 			unk08->mMaterials[(u16)i]->change();
 			unk08->mMaterials[(u16)i]->setMaterialAnm(mat);

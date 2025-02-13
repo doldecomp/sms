@@ -117,6 +117,7 @@ public:
 	/* 0x50 */ Mtx** mDrawMatrices;
 	/* 0x54 */ Mtx33** mNormMatrices;
 	/* 0x58 */ u32* mCurrentViewNo;
+	/* 0x5C */ u32 unk5C;
 };
 
 #endif

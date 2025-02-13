@@ -96,7 +96,11 @@ public:
 	J3DDisplayListObj* getDisplayListObj() const { return unk30; }
 
 	bool checkFlag(u32 flag) const { return (unk10 & flag) != 0; }
+	void onFlag(u32 flag) { unk10 |= flag; }
+	void offFlag(u32 flag) { unk10 &= ~flag; }
 	bool isLocked() const { return checkFlag(1) ? TRUE : FALSE; }
+	void lock() { onFlag(0x01); }
+	void unlock() { offFlag(0x01); }
 
 	static int sInterruptFlag;
 
@@ -138,7 +142,7 @@ public:
 	J3DShapePacket* unk34; // TODO: might be part of DrawPacket
 	J3DMaterial* unk38;
 	u32 unk3C; // TODO: unk3C is something weird, probably not u32
-	J3DTexture* unk40;
+	J3DTexture* mTexture;
 	J3DMaterialAnm* unk44;
 };
 

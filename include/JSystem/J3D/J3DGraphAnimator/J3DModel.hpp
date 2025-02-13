@@ -8,25 +8,30 @@
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
 
-struct J3DNode;
-struct J3DModelHierarchy;
-struct J3DAnmColor;
-struct J3DAnmTexPattern;
-struct J3DAnmTextureSRTKey;
-struct J3DAnmTevRegKey;
-struct J3DMatColorAnm;
-struct J3DTexNoAnm;
-struct J3DTexMtxAnm;
-struct J3DTevColorAnm;
-struct J3DTevKColorAnm;
-class J3DMaterial;
+class J3DAnmColor;
+class J3DAnmTexPattern;
+class J3DAnmTextureSRTKey;
+class J3DAnmTevRegKey;
+
+class J3DMatColorAnm;
+class J3DTexNoAnm;
+class J3DTexMtxAnm;
+class J3DTevColorAnm;
+class J3DTevKColorAnm;
+
+class J3DNode;
 class J3DJoint;
+class J3DModel;
+class J3DMaterial;
+class J3DMtxCalc;
 
 enum J3DMaterialCopyFlag {
 	J3DMatCopyFlag_Material = 0x01,
 	J3DMatCopyFlag_Texture  = 0x02,
 	J3DMatCopyFlag_All      = 0x03,
 };
+
+typedef void (*J3DCalcCallBack)(J3DModel*, u32 timing);
 
 class JUTNameTab;
 
@@ -69,39 +74,54 @@ public:
 	{
 		return mJointNodePointer[idx];
 	}
+	J3DShape* getShapeNodePointer(u16 idx) const
+	{
+		return mShapeNodePointer[idx];
+	}
+	u16 getDrawMtxNum() const { return mDrawMtxData.mEntryNum; }
+	u16 getWEvlpMtxNum() const { return mWEvlpMtxNum; }
+	u16 getJointNum() const { return mJointNum; }
+	u16 getShapeNum() const { return mShapeNum; }
+	u16 getMaterialNum() const { return mMaterialNum; }
 
 	J3DMaterial* getMaterialNodePointer(u16 idx) const
 	{
 		return mMaterials[idx];
 	}
 	void setTexture(J3DTexture* texture) { unkAC = texture; }
+	J3DTexture* getTexture() const { return unkAC; }
 	void setTextureName(JUTNameTab* texture_name) { unkA8 = texture_name; }
+	u8 getDrawMtxFlag(u16 idx) const { return mDrawMtxData.mDrawMtxFlag[idx]; }
+	u16 getDrawMtxIndex(u16 idx) const
+	{
+		return mDrawMtxData.mDrawMtxIndex[idx];
+	}
 
 public:
 	/* 0x04 */ u32 unk4;
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ u32 unkC;
 	/* 0x10 */ J3DJoint* mRootNode;
-	/* 0x14 */ u32 unk14;
+	/* 0x14 */ J3DMtxCalc* unk14;
 	/* 0x18 */ u16 unk18;
 	/* 0x1A */ u16 unk1A;
-	/* 0x1C */ u16 unk1C;
+	/* 0x1C */ u16 mJointNum;
 
 	/* 0x20 */ J3DJoint** mJointNodePointer;
 
 	// J3DMaterialTable but not refactored out yet
-	/* 0x24 */ u16 unk24;
+	/* 0x24 */ u16 mMaterialNum;
 	/* 0x26 */ u16 unk26;
 	/* 0x28 */ J3DMaterial** mMaterials;
-	/* 0x2C */ u16 unk2C;
+	/* 0x2C */ u16 mShapeNum;
 
-	/* 0x30 */ J3DShape** mShapes;
+	/* 0x30 */ J3DShape** mShapeNodePointer;
 	/* 0x34 */ u16 unk34;
 
 	/* 0x38 */ u32 unk38;
 	/* 0x3C */ J3DVertexData mVertexData;
 	/* 0x80 */ u32 unk80;
-	/* 0x84 */ u16 unk84;
+	/* 0x84 */ u16 mWEvlpMtxNum;
 
 	/* 0x88 */ u32 unk88;
 	/* 0x8C */ u32 unk8C;
@@ -159,30 +179,29 @@ public:
 
 	u8 getScaleFlag(int idx) const { return mScaleFlagArr[idx]; }
 	void setScaleFlag(int idx, u8 param_1) { mScaleFlagArr[idx] = param_1; }
+	u8 getEnvScaleFlag(int idx) const { return mEvlpScaleFlagArr[idx]; }
 
 	virtual ~J3DModel();
 
 public:
 	/* 0x04 */ J3DModelData* mModelData;
 	/* 0x08 */ u32 unk8;
-	/* 0x0C */ void* unkC;
+	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
-	/* 0x14 */ float unk14;
-	/* 0x18 */ float unk18;
-	/* 0x1C */ float unk1C;
+	/* 0x14 */ Vec unk14;
 	/* 0x20 */ Mtx unk20;
 	/* 0x50 */ u8* mScaleFlagArr;
-	/* 0x54 */ void* unk54;
+	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;
 	/* 0x5C */ void* unk5C;
-	/* 0x60 */ void* unk60[2];
-	/* 0x68 */ void* unk68[2];
-	/* 0x70 */ void* unk70[2];
+	/* 0x60 */ Mtx** mDrawMtxBuf[2];
+	/* 0x68 */ Mtx33** mNrmMtxBuf[2];
+	/* 0x70 */ Mtx33*** mBumpMtxArr[2];
 	char pad2[0x4];
-	/* 0x7C */ void* unk7C;
+	/* 0x7C */ u32 mCurrentViewNo;
 	/* 0x80 */ J3DMatPacket* mMatPackets;
 	/* 0x84 */ J3DShapePacket* mShapePackets;
-	/* 0x88 */ u32 unk88;
+	/* 0x88 */ J3DDeformData* mDeformData;
 	/* 0x8C */ J3DSkinDeform* mSkinDeform;
 	/* 0x90 */ void* unk90;
 	/* 0x94 */ void* unk94;

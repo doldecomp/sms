@@ -6,6 +6,9 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <dolphin/os/OSCache.h>
 
 #pragma opt_strength_reduction off
 
@@ -18,18 +21,18 @@ void J3DModelData::clear()
 	unk14             = 0;
 	unk18             = 0;
 	unk1A             = 0;
-	unk1C             = 0;
+	mJointNum         = 0;
 	mJointNodePointer = (J3DJoint**)0x0;
-	unk24             = 0;
+	mMaterialNum      = 0;
 	mMaterials        = (J3DMaterial**)0x0;
-	unk2C             = 0;
-	mShapes           = nullptr;
+	mShapeNum         = 0;
+	mShapeNodePointer = nullptr;
 	unk34             = 0;
 	unk38             = 0;
 	unkA8             = nullptr;
 	unkAC             = nullptr;
 	unkA4             = 0;
-	unk84             = 0;
+	mWEvlpMtxNum      = 0;
 	unk88             = 0;
 	unk8C             = 0;
 	unk90             = 0;
@@ -81,7 +84,7 @@ void J3DModelData::makeHierarchy(J3DNode* root_node,
 			newMaterial = mMaterials[(++*hierarchy)->mValue];
 		} break;
 		case kTypeShape:;
-			newShape = mShapes[(++*hierarchy)->mValue];
+			newShape = mShapeNodePointer[(++*hierarchy)->mValue];
 			break;
 		}
 
@@ -472,58 +475,381 @@ J3DModel::~J3DModel() { }
 void J3DModel::initialize()
 {
 
-	unkC        = (void*)0x0;
+	unkC        = nullptr;
 	unk8        = 0;
 	mModelData  = nullptr;
-	unk88       = 0;
+	mDeformData = 0;
 	mSkinDeform = nullptr;
-	unk14       = 1.0;
-	unk18       = 1.0;
-	unk1C       = 1.0;
+	unk14.x     = 1.0;
+	unk14.y     = 1.0;
+	unk14.z     = 1.0;
+
 	MTXIdentity(unk20);
-	mScaleFlagArr = (u8*)0x0;
-	unk54         = (void*)0x0;
-	mNodeMatrices = (Mtx*)0x0;
-	unk5C         = (void*)0x0;
-	unk60[0]      = (void*)0x0;
-	unk60[1]      = (void*)0x0;
-	unk68[0]      = (void*)0x0;
-	unk68[1]      = (void*)0x0;
-	unk70[0]      = (void*)0x0;
-	unk70[1]      = (void*)0x0;
-	unk7C         = (void*)0x0;
-	mVertexBuffer = (J3DVertexBuffer*)0x0;
-	mMatPackets   = (J3DMatPacket*)0x0;
-	mShapePackets = (J3DShapePacket*)0x0;
-	unk9C         = (void*)0x0;
-	unk90         = (void*)0x0;
-	unk94         = (void*)0x0;
+
+	mScaleFlagArr     = nullptr;
+	mEvlpScaleFlagArr = nullptr;
+	mNodeMatrices     = nullptr;
+	unk5C             = (void*)0x0;
+
+	mDrawMtxBuf[0] = nullptr;
+	mDrawMtxBuf[1] = nullptr;
+	mNrmMtxBuf[0]  = nullptr;
+	mNrmMtxBuf[1]  = nullptr;
+	mBumpMtxArr[0] = nullptr;
+	mBumpMtxArr[1] = nullptr;
+
+	mCurrentViewNo = 0;
+	mVertexBuffer  = nullptr;
+	mMatPackets    = nullptr;
+	mShapePackets  = nullptr;
+	unk9C          = (void*)0x0;
+	unk90          = (void*)0x0;
+	unk94          = (void*)0x0;
 }
 
-void J3DModel::entryModelData(J3DModelData*, u32, u32) { }
+void J3DModel::entryModelData(J3DModelData* param_1, u32 param_2, u32 param_3)
+{
+	mModelData = param_1;
+	if (param_1->getJointNum()) {
+		mScaleFlagArr = new u8[param_1->getJointNum()];
+		if (param_1->getWEvlpMtxNum())
+			mEvlpScaleFlagArr = new u8[param_1->getWEvlpMtxNum()];
+		mNodeMatrices = new Mtx[param_1->getJointNum()];
+	}
 
-void J3DModel::lock() { }
+	if (param_1->getWEvlpMtxNum())
+		unk5C = new Mtx[param_1->getWEvlpMtxNum()];
 
-void J3DModel::unlock() { }
+	if (param_3 != 0) {
+		for (int i = 0; i < 2; ++i) {
+			mDrawMtxBuf[i] = new Mtx*[param_3];
+			mNrmMtxBuf[i]  = new Mtx33*[param_3];
+			mBumpMtxArr[i] = nullptr;
+		}
+	}
 
-void J3DModel::makeDL() { }
+	for (int i = 0; i < 2; ++i) {
+		for (int j = 0; j < param_3; ++j) {
+			if (param_1->getDrawMtxNum()) {
+				mDrawMtxBuf[i][j] = new (0x20) Mtx[param_1->getDrawMtxNum()];
+				mNrmMtxBuf[i][j]  = new (0x20) Mtx33[param_1->getDrawMtxNum()];
+			}
+		}
+	}
 
-void J3DModel::setSkinDeform(J3DSkinDeform*, J3DDeformAttachFlag) { }
+	if (param_1->getShapeNum()) {
+		mShapePackets = new J3DShapePacket[param_1->getShapeNum()];
 
+		for (int i = 0; i < param_1->getShapeNum(); ++i)
+			mShapePackets[i].unk14 = param_1->getShapeNodePointer(i);
+	}
+
+	if (param_1->getMaterialNum()) {
+		mMatPackets = new J3DMatPacket[param_1->getMaterialNum()];
+
+		for (int i = 0; i < param_1->getMaterialNum(); ++i) {
+			mMatPackets[i].unk38 = param_1->getMaterialNodePointer(i);
+			mMatPackets[i].addShapePacket(
+			    &mShapePackets
+			        [param_1->getMaterialNodePointer(i)->getShape()->unk4]);
+			mMatPackets[i].mTexture = param_1->getTexture();
+
+			if (param_2 & 0x20000) {
+				J3DMaterial* mat     = param_1->getMaterialNodePointer(i);
+				u32 dlSize           = mat->countDLSize();
+				mMatPackets[i].unk30 = mat->newSharedDisplayList(dlSize);
+			} else {
+				u32 dlSize = param_1->getMaterialNodePointer(i)->countDLSize();
+				J3DMatPacket* packet = &mMatPackets[i];
+				packet->unk30        = new J3DDisplayListObj;
+				packet->unk30->newDisplayList(dlSize);
+			}
+		}
+	}
+
+	u16 totalBumpMatrices     = 0;
+	u16 totalMatsWithNbtScale = 0;
+	for (int i = 0; i < param_1->mMaterialNum; ++i) {
+		J3DMaterial* mat      = mModelData->getMaterialNodePointer(i);
+		J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
+		if (nbtScale->mbHasScale == 1) {
+			totalBumpMatrices += mat->getShape()->countBumpMtxNum();
+			++totalMatsWithNbtScale;
+		}
+	}
+
+	if (totalBumpMatrices != 0 && param_3 != 0) {
+		for (int i = 0; i < 2; ++i) {
+			mBumpMtxArr[i] = new Mtx33**[totalMatsWithNbtScale];
+		}
+	}
+
+	for (int i = 0; i < 2; ++i) {
+		u32 nextBumpMtx = 0;
+		for (int j = 0; j < param_1->mMaterialNum; ++j) {
+			J3DMaterial* mat      = mModelData->getMaterialNodePointer(j);
+			J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
+			if (nbtScale->mbHasScale == 1) {
+				mBumpMtxArr[i][nextBumpMtx] = new Mtx33*[param_3];
+
+				mat->getShape()->unk5C = nextBumpMtx;
+				++nextBumpMtx;
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; ++i) {
+		for (int j = 0; j < param_1->mMaterialNum; ++j) {
+			J3DMaterial* mat      = mModelData->getMaterialNodePointer(j);
+			J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
+			if (nbtScale->mbHasScale == 1) {
+
+				for (int k = 0; k < param_3; ++k)
+					mBumpMtxArr[i][j][k]
+					    = new (0x20) Mtx33[param_1->getDrawMtxNum()];
+			}
+		}
+	}
+
+	if (totalMatsWithNbtScale != 0) {
+		mModelData->unk18 = 1;
+	}
+
+	mVertexBuffer = new J3DVertexBuffer(&param_1->mVertexData);
+}
+
+void J3DModel::lock()
+{
+	u16 matNum = mModelData->getMaterialNum();
+
+	for (int i = 0; i < matNum; ++i)
+		mMatPackets[i].lock();
+}
+
+void J3DModel::unlock()
+{
+	u16 matNum = mModelData->getMaterialNum();
+
+	for (int i = 0; i < matNum; ++i)
+		mMatPackets[i].unlock();
+}
+
+void J3DModel::makeDL()
+{
+	j3dSys.setModel(this);
+	j3dSys.setTexture(mModelData->getTexture());
+	for (u16 i = 0; i < mModelData->getMaterialNum(); ++i) {
+		j3dSys.setMatPacket(&mMatPackets[i]);
+		mModelData->getMaterialNodePointer(i)->makeDisplayList();
+	}
+}
+
+void J3DModel::setSkinDeform(J3DSkinDeform* pSkinDeform,
+                             J3DDeformAttachFlag flags)
+{
+	mSkinDeform = pSkinDeform;
+
+	if (pSkinDeform == nullptr) {
+		unk8 &= ~0x4;
+		unk8 &= ~0x8;
+	} else {
+		unk8 |= 0x4;
+		unk8 |= 0x8;
+		mSkinDeform->initMtxIndexArray(mModelData);
+		mVertexBuffer->copyTransformedVtxArray();
+	}
+}
+
+#pragma dont_inline on
 void J3DModel::calcWeightEnvelopeMtx() { }
+#pragma dont_inline off
 
-void J3DModel::update() { }
+void J3DModel::update()
+{
+	j3dSys.setModel(this);
 
-void J3DModel::calc() { }
+	if (unk8 & 0x4 ? 1 : 0) {
+		j3dSys.mFlags |= 0x4;
+	} else {
+		j3dSys.mFlags &= ~0x4;
+	}
 
-void J3DModel::entry() { }
+	if (unk8 & 0x8 ? 1 : 0) {
+		j3dSys.mFlags |= 0x8;
+	} else {
+		j3dSys.mFlags &= ~0x8;
+	}
+
+	mVertexBuffer->frameInit();
+
+	// TODO: missing unknown virtual calls
+
+	if (mDeformData != NULL)
+		mDeformData->deform(this);
+
+	// TODO: missing unknown virtual calls
+
+	j3dSys.setCurrentMtxCalc(mModelData->unk14);
+	mModelData->unk14->init(unk14, unk20);
+	j3dSys.setTexture(mModelData->getTexture());
+	mModelData->unk14->recursiveCalc(mModelData->mRootNode);
+
+	calcWeightEnvelopeMtx();
+
+	if (mSkinDeform)
+		mSkinDeform->deform(this);
+
+	if (unkC)
+		unkC(this, 0);
+}
+
+void J3DModel::calc()
+{
+	j3dSys.setModel(this);
+
+	if (unk8 & 0x4 ? 1 : 0) {
+		j3dSys.mFlags |= 0x4;
+	} else {
+		j3dSys.mFlags &= ~0x4;
+	}
+
+	if (unk8 & 0x8 ? 1 : 0) {
+		j3dSys.mFlags |= 0x8;
+	} else {
+		j3dSys.mFlags &= ~0x8;
+	}
+
+	mVertexBuffer->frameInit();
+
+	// TODO: missing unknown virtual calls
+
+	if (mDeformData != NULL)
+		mDeformData->deform(this);
+
+	// TODO: missing unknown virtual calls
+
+	j3dSys.setCurrentMtxCalc(mModelData->unk14);
+	mModelData->unk14->init(unk14, unk20);
+	j3dSys.setTexture(mModelData->getTexture());
+	mModelData->unk14->recursiveCalc(mModelData->mRootNode);
+
+	calcWeightEnvelopeMtx();
+
+	if (mSkinDeform)
+		mSkinDeform->deform(this);
+
+	if (unkC)
+		unkC(this, 0);
+}
+
+void J3DModel::entry()
+{
+
+	j3dSys.setModel(this);
+
+	if (unk8 & 0x4 ? 1 : 0) {
+		j3dSys.mFlags |= 0x4;
+	} else {
+		j3dSys.mFlags &= ~0x4;
+	}
+
+	if (unk8 & 0x8 ? 1 : 0) {
+		j3dSys.mFlags |= 0x8;
+	} else {
+		j3dSys.mFlags &= ~0x8;
+	}
+
+	j3dSys.setTexture(mModelData->getTexture());
+
+	mModelData->unk14->recursiveEntry(mModelData->mRootNode);
+}
 
 void J3DModel::viewCalc() { }
 
-void J3DModel::calcNrmMtx() { }
+void J3DModel::calcNrmMtx()
+{
+	// TODO: probably a fakematch, the references make 0 sense
 
-void J3DModel::calcBumpMtx() { }
+	for (u16 i = 0; i < mModelData->getDrawMtxNum(); i++) {
+		if (mModelData->getDrawMtxFlag(i) == 0) {
+			if (getScaleFlag(mModelData->getDrawMtxIndex(i)) == 1) {
+				Mtx& drawMtx = mDrawMtxBuf[1][mCurrentViewNo][i];
+				J3DPSMtx33CopyFrom34(drawMtx, mNrmMtxBuf[1][mCurrentViewNo][i]);
+			} else {
+				Mtx33& nrmMtx = mNrmMtxBuf[1][mCurrentViewNo][i];
+				J3DPSCalcInverseTranspose(mDrawMtxBuf[1][mCurrentViewNo][i],
+				                          nrmMtx);
+			}
+		} else {
+			if (getEnvScaleFlag(mModelData->getDrawMtxIndex(i)) == 1) {
+				Mtx& drawMtx = mDrawMtxBuf[1][mCurrentViewNo][i];
+				J3DPSMtx33CopyFrom34(drawMtx, mNrmMtxBuf[1][mCurrentViewNo][i]);
+			} else {
+				Mtx33& nrmMtx = mNrmMtxBuf[1][mCurrentViewNo][i];
+				J3DPSCalcInverseTranspose(mDrawMtxBuf[1][mCurrentViewNo][i],
+				                          nrmMtx);
+			}
+		}
+	}
+}
+
+void J3DModel::calcBumpMtx()
+{
+	if (mModelData->unk18 == 1) {
+		s32 nextBumpMtx = 0;
+		for (s32 i = 0; i < getModelData()->getMaterialNum(); i++) {
+			J3DMaterial* pMaterial = getModelData()->getMaterialNodePointer(i);
+			if (pMaterial->getNBTScale()->mbHasScale == 1) {
+
+				// TODO: inlines?
+				pMaterial->getShape()->calcNBTScale(
+				    *pMaterial->getNBTScale()->getScale(),
+				    mNrmMtxBuf[1][mCurrentViewNo],
+				    mBumpMtxArr[1][nextBumpMtx][mCurrentViewNo]);
+
+				DCStoreRange(mBumpMtxArr[1][nextBumpMtx][mCurrentViewNo],
+				             getModelData()->getDrawMtxNum() * sizeof(Mtx33));
+				nextBumpMtx++;
+			}
+		}
+	}
+}
 
 void J3DModel::calcBBoard() { }
 
-void J3DModel::prepareShapePackets() { }
+void J3DModel::prepareShapePackets()
+{
+	u16 shapeNum = getModelData()->getShapeNum();
+
+	for (u16 i = 0; i < shapeNum; i++) {
+		J3DShapePacket* pkt = &mShapePackets[i];
+
+		J3DShape* shape = mModelData->getShapeNodePointer(i);
+
+		if ((unk8 & 4) ? 1 : 0)
+			shape->unk8 |= 0x4;
+		else
+			shape->unk8 &= ~0x4;
+
+		if (((unk8 & 8) ? 1 : 0) && !((shape->unk8 & 0x10) ? 1 : 0))
+			shape->unk8 |= 0x8;
+		else
+			shape->unk8 &= ~0x8;
+
+		pkt->unk24 = mVertexBuffer->unk2C;
+		pkt->unk28 = mVertexBuffer->unk30;
+		pkt->unk2C = mVertexBuffer->unk34;
+		pkt->unk18 = mDrawMtxBuf[1];
+		pkt->unk1C = mNrmMtxBuf[1];
+		pkt->unk20 = &mCurrentViewNo;
+	}
+
+	for (s32 i = 0; i < getModelData()->getMaterialNum(); i++) {
+		J3DMaterial* pMaterial = getModelData()->getMaterialNodePointer(i);
+		if (pMaterial->getTexGenBlock()->getNBTScale()->mbHasScale == 1) {
+			u16 shapeIdx                  = pMaterial->getShape()->getIndex();
+			u32 bumpMtxOffs               = pMaterial->getShape()->unk5C;
+			mShapePackets[shapeIdx].unk1C = mBumpMtxArr[1][bumpMtxOffs];
+		}
+	}
+}

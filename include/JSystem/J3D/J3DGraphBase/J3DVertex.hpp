@@ -35,19 +35,27 @@ class J3DVertexBuffer {
 public:
 	J3DVertexBuffer(J3DVertexData* vertex_data);
 
-	J3DVertexData* mVertexData;
-	void* unk4;
-	u32 unk8;
-	void* unkC;
-	u32 unk10;
-	void* unk14;
-	u32 unk18;
+	void frameInit()
+	{
+		unk2C = unk4;
+		unk30 = unkC;
+		unk34 = unk14;
+	}
+
+public:
+	/* 0x00 */ J3DVertexData* mVertexData;
+	/* 0x04 */ void* unk4;
+	/* 0x08 */ u32 unk8;
+	/* 0x0C */ void* unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ void* unk14;
+	/* 0x18 */ u32 unk18;
 	// TODO: figure out what actually lives here
-	void* unk1C[2];
-	void* unk24[2];
-	void* unk2C;
-	void* unk30;
-	void* unk34;
+	/* 0x1C */ void* unk1C[2];
+	/* 0x24 */ void* unk24[2];
+	/* 0x2C */ void* unk2C;
+	/* 0x30 */ void* unk30;
+	/* 0x34 */ void* unk34;
 
 	virtual ~J3DVertexBuffer(); // vt at 0x38
 
