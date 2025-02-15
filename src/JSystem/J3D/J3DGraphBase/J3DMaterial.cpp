@@ -15,7 +15,7 @@
 #include <dolphin/os.h>
 #include <macros.h>
 
-#pragma opt_strength_reduction off
+
 
 void J3DColorBlockLightOff::initialize()
 {

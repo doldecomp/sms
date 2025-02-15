@@ -6,7 +6,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
-#pragma opt_strength_reduction off
+
 
 J3DDrawBuffer::sortFunc J3DDrawBuffer::sortFuncTable[6] = {
 	&J3DDrawBuffer::entryMatSort,     &J3DDrawBuffer::entryMatAnmSort,

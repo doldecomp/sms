@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <macros.h>
 
-#pragma opt_strength_reduction off
+
 
 JUTDirectPrint* JUTDirectPrint::sDirectPrint;
 

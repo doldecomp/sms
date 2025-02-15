@@ -4,7 +4,7 @@
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
 #include <macros.h>
 
-#pragma opt_strength_reduction off
+
 
 void J3DMatColorAnm::calc(GXColor* color) const
 {

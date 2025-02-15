@@ -8,7 +8,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 
-#pragma opt_strength_reduction off
+
 
 void J3DMtxCalcAnm::calc(u16 param_0)
 {

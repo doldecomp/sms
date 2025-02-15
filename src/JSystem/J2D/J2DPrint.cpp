@@ -4,7 +4,7 @@
 #include <printf.h>
 #include <stdlib.h>
 
-#pragma opt_strength_reduction off
+
 
 OSMutex J2DPrint::mMutex;
 

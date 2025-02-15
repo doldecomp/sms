@@ -3,7 +3,7 @@
 #include <dolphin/gx.h>
 #include <types.h>
 
-#pragma opt_strength_reduction off
+
 
 IsLeadByte_func const JUTResFont::saoAboutEncoding_[3] = {
 	isLeadByte_1Byte,

@@ -4,7 +4,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JMath.hpp>
 
-#pragma opt_strength_reduction off
+
 
 void J3DFrameCtrl::init(s16 end)
 {

@@ -1,7 +1,7 @@
 #include <JSystem/JRenderer.hpp>
 #include <dolphin/os.h>
 
-#pragma opt_strength_reduction off
+
 
 void J3DGDLoadTexMtxImm(MtxPtr mtx, u32 i, GXTexMtxType type)
 {

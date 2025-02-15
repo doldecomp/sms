@@ -5,7 +5,7 @@
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <dolphin/gx.h>
 
-#pragma opt_strength_reduction off
+
 
 J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
                        bool is_ex)

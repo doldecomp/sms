@@ -6,7 +6,7 @@
 #include <dolphin/gx.h>
 #include <dolphin/gd.h>
 
-#pragma opt_strength_reduction off
+
 
 J3DShapeMtx::LoadPipeline J3DShapeMtx::mtxLoadPipeline[4] = {
 	&J3DShapeMtx::loadMtxIndx_PNGP,
