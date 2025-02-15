@@ -11,7 +11,7 @@
 #include <dolphin/base/PPCArch.h>
 #include <macros.h>
 
-#pragma opt_strength_reduction off
+
 
 struct CallbackObject {
 	/* 0x00 */ OSErrorHandler callback;

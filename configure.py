@@ -222,6 +222,7 @@ cflags_runtime = [
 cflags_jsystem = [
     *cflags_base,
     "-O4,p",
+    "-opt all,nostrength",
     "-inline auto",
     "-str reuse,readonly",
     "-lang=c++",

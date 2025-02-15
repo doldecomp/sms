@@ -2,7 +2,7 @@
 #include <JSystem/JUtility/JUTGamePad.hpp>
 #include <math.h>
 
-#pragma opt_strength_reduction off
+
 
 static u32 channel_mask[4]
     = { PAD_CHAN0_BIT, PAD_CHAN1_BIT, PAD_CHAN2_BIT, PAD_CHAN3_BIT };

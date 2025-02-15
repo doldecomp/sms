@@ -11,7 +11,7 @@
 #include <dolphin/os/OSCache.h>
 #include <math.h>
 
-#pragma opt_strength_reduction off
+
 
 void J3DModelData::clear()
 {

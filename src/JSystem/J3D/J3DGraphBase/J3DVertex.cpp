@@ -2,7 +2,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <macros.h>
 
-#pragma opt_strength_reduction off
+
 
 J3DVertexData::J3DVertexData()
 {

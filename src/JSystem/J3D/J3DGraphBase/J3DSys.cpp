@@ -4,7 +4,7 @@
 #include <macros.h>
 #include <types.h>
 
-#pragma opt_strength_reduction off
+
 
 J3DSys j3dSys;
 
