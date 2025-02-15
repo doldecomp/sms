@@ -764,7 +764,40 @@ void J3DModel::entry()
 	mModelData->unk14->recursiveEntry(mModelData->mRootNode);
 }
 
-void J3DModel::viewCalc() { }
+void J3DModel::viewCalc()
+{
+	swapDrawMtx();
+	swapNrmMtx();
+
+	if (checkFlag(1)) {
+		for (u16 i = 0; i < mModelData->getDrawFullWgtMtxNum(); i++) {
+			MTXCopy(getAnmMtx(mModelData->getDrawMtxIndex(i)), getDrawMtx(i));
+		}
+		for (u16 i = 0; i < mModelData->getWEvlpMtxNum(); i++) {
+			MTXCopy(unk5C[i],
+			        getDrawMtx(mModelData->getDrawFullWgtMtxNum() + i));
+		}
+	} else {
+		MtxPtr viewMtx = j3dSys.getViewMtx();
+		if (mModelData->getDrawFullWgtMtxNum() != 0) {
+			J3DMTXConcatArrayIndexedSrc(
+			    viewMtx, mNodeMatrices, mModelData->mDrawMtxData.mDrawMtxIndex,
+			    getDrawMtxPtr(), mModelData->getDrawFullWgtMtxNum());
+		}
+		if (mModelData->getDrawMtxNum() > mModelData->getDrawFullWgtMtxNum()) {
+			J3DPSMtxArrayConcat(viewMtx, getWeightAnmMtx(0),
+			                    getDrawMtx(mModelData->getDrawFullWgtMtxNum()),
+			                    mModelData->getWEvlpMtxNum());
+		}
+	}
+
+	calcNrmMtx();
+	calcBBoard();
+	calcBumpMtx();
+	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+	DCStoreRange(getNrmMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx33));
+	prepareShapePackets();
+}
 
 void J3DModel::calcNrmMtx()
 {
