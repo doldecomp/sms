@@ -153,6 +153,11 @@ public:
 	virtual void draw();
 	virtual ~J3DShapePacket();
 
+	void setDrawMtx(Mtx** mtx) { unk18 = mtx; }
+	void setNrmMtx(Mtx33** mtx) { unk1C = mtx; }
+	void setCurrentViewNoPtr(u32* pCurrentViewNo) { unk20 = pCurrentViewNo; }
+
+public:
 	J3DShape* unk14;
 	Mtx** unk18;
 	Mtx33** unk1C;

@@ -164,6 +164,13 @@ public:
 
 J3DMtxCalc* J3DNewMtxCalcAnm(u32, J3DAnmTransform*);
 
+enum J3DJointMtxType {
+	J3DJntMtxType_Normal,
+	J3DJntMtxType_BBoard,
+	J3DJntMtxType_YBBoard,
+	J3DJntMtxType_Multi,
+};
+
 class J3DJoint : public J3DNode {
 public:
 	J3DJoint(u16, const J3DTransformInfo&);
@@ -183,6 +190,7 @@ public:
 	J3DTransformInfo& getTransformInfo() { return mTransformInfo; }
 	u8 getScaleCompensate() const { return mScaleCompensate; }
 	J3DMaterial* getMesh() { return mMesh; }
+	u8 getMtxType() const { return (mKind >> 4) & 0xF; }
 
 private:
 	/* 0x18 */ u16 mJntNo;
