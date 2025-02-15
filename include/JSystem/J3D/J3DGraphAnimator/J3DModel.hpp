@@ -100,6 +100,10 @@ public:
 	u32 getVtxNum() const { return mVertexData.getVtxNum(); }
 	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
 
+	bool checkFlag(u32 flag) const { return (unk8 & flag) ? true : false; }
+
+	u16 getDrawFullWgtMtxNum() const { return mDrawMtxData.mDrawFullWgtMtxNum; }
+
 public:
 	/* 0x04 */ u32 unk4;
 	/* 0x08 */ u32 unk8;
@@ -188,6 +192,25 @@ public:
 	MtxPtr getWeightAnmMtx(int idx) { return unk5C[idx]; }
 
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
+
+	Mtx* getDrawMtxPtr() { return mDrawMtxBuf[1][mCurrentViewNo]; }
+	Mtx& getDrawMtx(int idx) { return getDrawMtxPtr()[idx]; }
+	Mtx33* getNrmMtxPtr() { return mNrmMtxBuf[1][mCurrentViewNo]; }
+	Mtx33& getNrmMtx(int idx) { return getNrmMtxPtr()[idx]; }
+
+	void swapDrawMtx()
+	{
+		Mtx* tmp                       = mDrawMtxBuf[0][mCurrentViewNo];
+		mDrawMtxBuf[0][mCurrentViewNo] = mDrawMtxBuf[1][mCurrentViewNo];
+		mDrawMtxBuf[1][mCurrentViewNo] = tmp;
+	}
+
+	void swapNrmMtx()
+	{
+		Mtx33* tmp                    = mNrmMtxBuf[0][mCurrentViewNo];
+		mNrmMtxBuf[0][mCurrentViewNo] = mNrmMtxBuf[1][mCurrentViewNo];
+		mNrmMtxBuf[1][mCurrentViewNo] = tmp;
+	}
 
 	virtual ~J3DModel();
 
