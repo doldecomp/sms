@@ -101,6 +101,7 @@ public:
 	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
 
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? true : false; }
+	bool checkBBoardFlag() const { return unk1A == 1; }
 
 	u16 getDrawFullWgtMtxNum() const { return mDrawMtxData.mDrawFullWgtMtxNum; }
 
@@ -197,6 +198,10 @@ public:
 	Mtx& getDrawMtx(int idx) { return getDrawMtxPtr()[idx]; }
 	Mtx33* getNrmMtxPtr() { return mNrmMtxBuf[1][mCurrentViewNo]; }
 	Mtx33& getNrmMtx(int idx) { return getNrmMtxPtr()[idx]; }
+	Mtx33* getBumpMtxPtr(int idx)
+	{
+		return mBumpMtxArr[1][idx][mCurrentViewNo];
+	}
 
 	void swapDrawMtx()
 	{
