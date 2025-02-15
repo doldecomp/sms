@@ -12,7 +12,7 @@ public:
 	virtual ~J3DShapeMtx() { }
 	virtual int getType() const { return 'SMTX'; }
 	virtual u32 getUseMtxNum() const { return 1; }
-	virtual int getUseMtxIndex(u16) const { return unk4; }
+	virtual u16 getUseMtxIndex(u16) const { return unk4; }
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 
@@ -45,7 +45,7 @@ public:
 	virtual ~J3DShapeMtxMulti() { }
 	virtual int getType() const { return 'SMML'; }
 	virtual u32 getUseMtxNum() const { return unk8; }
-	virtual int getUseMtxIndex(u16 i) const { return unkC[i]; }
+	virtual u16 getUseMtxIndex(u16 i) const { return unkC[i]; }
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 
@@ -62,6 +62,10 @@ public:
 
 	void draw() const;
 
+	u8* getDisplayList() const { return (u8*)mDisplayList; }
+	u32 getDisplayListSize() const { return mDisplayListSize; }
+
+public:
 	u32 mDisplayListSize;
 	const u8* mDisplayList;
 };
@@ -90,7 +94,14 @@ public:
 	}
 
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? TRUE : FALSE; }
+	void onFlag(u32 flag) { unk8 |= flag; }
+	void offFlag(u32 flag) { unk8 &= ~flag; }
+
 	u32 getIndex() const { return unk4; }
+	GXVtxDescList* getVtxDesc() const { return unk2C; }
+	u32 getMtxGroupNum() const { return mElementCount; }
+	J3DShapeMtx* getShapeMtx(u16 idx) const { return mMatrices[idx]; }
+	J3DShapeDraw* getShapeDraw(u16 idx) const { return mDraws[idx]; }
 
 public:
 	/* 0x0 */ u32 unk0;
