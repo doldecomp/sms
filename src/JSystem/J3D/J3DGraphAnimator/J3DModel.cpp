@@ -489,7 +489,7 @@ void J3DModel::initialize()
 	mScaleFlagArr     = nullptr;
 	mEvlpScaleFlagArr = nullptr;
 	mNodeMatrices     = nullptr;
-	unk5C             = (void*)0x0;
+	unk5C             = nullptr;
 
 	mDrawMtxBuf[0] = nullptr;
 	mDrawMtxBuf[1] = nullptr;

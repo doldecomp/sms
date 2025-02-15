@@ -17,6 +17,10 @@ public:
 	GXColor* getVtxColorArray(u8 idx) const { return mVtxColorArray[idx]; }
 	void* getVtxTexCoordArray(u8 idx) const { return mVtxTexCoordArray[idx]; }
 
+	u32 getVtxNum() const { return unk0; }
+	u32 getNrmNum() const { return unk4; }
+
+public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u32 unk8;
@@ -42,12 +46,51 @@ public:
 		unk34 = unk14;
 	}
 
+	void swapVtxPosArrayPointer()
+	{
+		void* tmp = unk4[0];
+		unk4[0]   = unk4[1];
+		unk4[1]   = tmp;
+	}
+
+	void swapVtxNrmArrayPointer()
+	{
+		void* tmp = unkC[0];
+		unkC[0]   = unkC[1];
+		unkC[1]   = tmp;
+	}
+
+	void swapTransformedVtxPos()
+	{
+		void* tmp = unk1C[0];
+		unk1C[0]  = unk1C[1];
+		unk1C[1]  = tmp;
+	}
+
+	void swapTransformedVtxNrm()
+	{
+		void* tmp = unk24[0];
+		unk24[0]  = unk24[1];
+		unk24[1]  = tmp;
+	}
+
+	void* getVtxPosArrayPointer(int idx) { return unk4[idx]; }
+	void* getVtxNrmArrayPointer(int idx) { return unkC[idx]; }
+
+	J3DVertexData* getVertexData() { return mVertexData; }
+
+	void setCurrentVtxPos(void* pVtxPos) { unk2C = pVtxPos; }
+	void setCurrentVtxNrm(void* pVtxNrm) { unk30 = pVtxNrm; }
+
+	void* getCurrentVtxPos() { return unk2C; }
+	void* getCurrentVtxNrm() { return unk30; }
+	void* getTransformedVtxPos(int idx) { return unk1C[idx]; }
+	void* getTransformedVtxNrm(int idx) { return unk24[idx]; }
+
 public:
 	/* 0x00 */ J3DVertexData* mVertexData;
-	/* 0x04 */ void* unk4;
-	/* 0x08 */ u32 unk8;
-	/* 0x0C */ void* unkC;
-	/* 0x10 */ u32 unk10;
+	/* 0x04 */ void* unk4[2];
+	/* 0x0C */ void* unkC[2];
 	/* 0x14 */ void* unk14;
 	/* 0x18 */ u32 unk18;
 	// TODO: figure out what actually lives here

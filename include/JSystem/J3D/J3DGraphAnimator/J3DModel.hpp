@@ -97,6 +97,9 @@ public:
 		return mDrawMtxData.mDrawMtxIndex[idx];
 	}
 
+	u32 getVtxNum() const { return mVertexData.getVtxNum(); }
+	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
+
 public:
 	/* 0x04 */ u32 unk4;
 	/* 0x08 */ u32 unk8;
@@ -181,6 +184,11 @@ public:
 	void setScaleFlag(int idx, u8 param_1) { mScaleFlagArr[idx] = param_1; }
 	u8 getEnvScaleFlag(int idx) const { return mEvlpScaleFlagArr[idx]; }
 
+	J3DVertexBuffer* getVertexBuffer() { return mVertexBuffer; }
+	MtxPtr getWeightAnmMtx(int idx) { return unk5C[idx]; }
+
+	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
+
 	virtual ~J3DModel();
 
 public:
@@ -193,7 +201,7 @@ public:
 	/* 0x50 */ u8* mScaleFlagArr;
 	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;
-	/* 0x5C */ void* unk5C;
+	/* 0x5C */ Mtx* unk5C;
 	/* 0x60 */ Mtx** mDrawMtxBuf[2];
 	/* 0x68 */ Mtx33** mNrmMtxBuf[2];
 	/* 0x70 */ Mtx33*** mBumpMtxArr[2];

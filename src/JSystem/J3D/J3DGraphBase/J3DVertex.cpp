@@ -24,11 +24,11 @@ J3DVertexData::~J3DVertexData() { }
 J3DVertexBuffer::J3DVertexBuffer(J3DVertexData* vertex_data)
 {
 	mVertexData = vertex_data;
-	unk4        = vertex_data->mVtxPosArray;
-	unkC        = vertex_data->mVtxNormArray;
+	unk4[0]     = vertex_data->mVtxPosArray;
+	unkC[0]     = vertex_data->mVtxNormArray;
 	unk14       = vertex_data->mVtxColorArray[0];
-	unk8        = 0;
-	unk10       = 0;
+	unk4[1]     = 0;
+	unkC[1]     = 0;
 	unk18       = 0;
 	unk1C[0]    = vertex_data->mVtxPosArray;
 	unk24[0]    = vertex_data->mVtxNormArray;
