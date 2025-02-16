@@ -119,8 +119,9 @@ cleanup:
 
 void* JKRAramArchive::fetchResource(SDIFileEntry* pEntry, u32* pOutSize)
 {
-	if (pEntry->mData != nullptr && pEntry != nullptr) {
-		*pOutSize = pEntry->mSize;
+	if (pEntry->mData) {
+		if (pOutSize)
+			*pOutSize = pEntry->mSize;
 	} else {
 		u8* outBuf;
 		u32 size = JKRAramArchive::fetchResource_subroutine(
