@@ -5,8 +5,6 @@
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <dolphin/gx.h>
 
-
-
 J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
                        bool is_ex)
     : J2DPane(parent, stream, is_ex)
