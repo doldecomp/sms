@@ -492,11 +492,11 @@ config.libs = [
             Object(Matching, "JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.cpp"),
             # J3DGraphLoader
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp"),
             Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp"),
 
             # JParticle

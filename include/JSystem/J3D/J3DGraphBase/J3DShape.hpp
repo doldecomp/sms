@@ -9,6 +9,11 @@ class J3DShapeMtx {
 public:
 	typedef void (J3DShapeMtx::*LoadPipeline)(int, u16) const;
 
+	J3DShapeMtx(u16 useMtxIndex)
+	    : unk4(useMtxIndex)
+	{
+	}
+
 	virtual ~J3DShapeMtx() { }
 	virtual int getType() const { return 'SMTX'; }
 	virtual u32 getUseMtxNum() const { return 1; }
@@ -40,8 +45,15 @@ public:
 	void* mDisplayList;
 };
 
-class J3DShapeMtxMulti : J3DShapeMtx {
+class J3DShapeMtxMulti : public J3DShapeMtx {
 public:
+	J3DShapeMtxMulti(u16 useMtxIndex, u16 useMtxNum, u16* useMtxIndexTable)
+	    : J3DShapeMtx(useMtxIndex)
+	    , unk8(useMtxNum)
+	    , unkC(useMtxIndexTable)
+	{
+	}
+
 	virtual ~J3DShapeMtxMulti() { }
 	virtual int getType() const { return 'SMML'; }
 	virtual u32 getUseMtxNum() const { return unk8; }
@@ -72,8 +84,24 @@ public:
 
 class J3DShape {
 public:
-	void initialize();
+	enum {
+		kVcdVatDLSize = 0xC0,
+	};
+
+	J3DShape()
+	{
+		unk3C[0] = 0x3C;
+		unk3C[1] = 0x3C;
+		unk3C[2] = 0x3C;
+		unk3C[3] = 0x3C;
+		unk3C[4] = 0x3C;
+		unk3C[5] = 0x3C;
+		unk3C[6] = 0x3C;
+		unk3C[7] = 0x3C;
+		initialize();
+	}
 	~J3DShape();
+	void initialize();
 	void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 	int countBumpMtxNum() const;
 	void makeVtxArrayCmd();
@@ -112,12 +140,8 @@ public:
 	/* 0x6 */ u16 mElementCount;
 	/* 0x8 */ u32 unk8;
 	/* 0xC */ float unkC;
-	/* 0x10 */ float unk10;
-	/* 0x14 */ float unk14;
-	/* 0x18 */ float unk18;
-	/* 0x1C */ float unk1C;
-	/* 0x20 */ float unk20;
-	/* 0x24 */ float unk24;
+	/* 0x10 */ Vec unk10;
+	/* 0x1C */ Vec unk1C;
 	/* 0x28 */ void* mGDCommands;
 	/* 0x2C */ GXVtxDescList* unk2C;
 	/* 0x30 */ bool unk30;

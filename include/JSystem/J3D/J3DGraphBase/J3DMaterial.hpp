@@ -17,8 +17,8 @@ class J3DDisplayListObj;
 
 class J3DMaterial {
 public:
-	J3DMaterial();
-	~J3DMaterial();
+	J3DMaterial() { initialize(); }
+	~J3DMaterial() { }
 
 	static J3DColorBlock* createColorBlock(int);
 	static J3DTexGenBlock* createTexGenBlock(int);

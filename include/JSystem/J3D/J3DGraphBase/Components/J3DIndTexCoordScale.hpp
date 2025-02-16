@@ -11,6 +11,10 @@ public:
 	{
 		*(J3DIndTexCoordScaleInfo*)this = j3dDefaultIndTexCoordScaleInfo;
 	}
+	J3DIndTexCoordScale(const J3DIndTexCoordScaleInfo& info)
+	{
+		*(J3DIndTexCoordScaleInfo*)this = info;
+	}
 	~J3DIndTexCoordScale() { }
 
 	u8 getScaleS() { return mScaleS; }

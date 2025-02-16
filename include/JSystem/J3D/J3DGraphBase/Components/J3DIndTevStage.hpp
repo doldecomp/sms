@@ -13,6 +13,11 @@ public:
 		J3DIndTevStageInfo::operator=(j3dDefaultIndTevStageInfo);
 	}
 
+	J3DIndTevStage(const J3DIndTevStageInfo& info)
+	{
+		J3DIndTevStageInfo::operator=(info);
+	}
+
 	J3DIndTevStage& operator=(const J3DIndTevStage& other)
 	{
 		mIndStage  = other.mIndStage;

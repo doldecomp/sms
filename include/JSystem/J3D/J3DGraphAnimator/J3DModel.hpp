@@ -100,14 +100,19 @@ public:
 	u32 getVtxNum() const { return mVertexData.getVtxNum(); }
 	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
 
-	bool checkFlag(u32 flag) const { return (unk8 & flag) ? true : false; }
 	bool checkBBoardFlag() const { return unk1A == 1; }
 
 	u16 getDrawFullWgtMtxNum() const { return mDrawMtxData.mDrawFullWgtMtxNum; }
 
+	const J3DModelHierarchy* getHierarchy() const { return unk8; }
+	void setHierarchy(J3DModelHierarchy* hierarchy) { unk8 = hierarchy; }
+
+	J3DDrawMtxData& getDrawMtxData() { return mDrawMtxData; }
+	J3DVertexData& getVertexData() { return mVertexData; }
+
 public:
-	/* 0x04 */ u32 unk4;
-	/* 0x08 */ u32 unk8;
+	/* 0x04 */ const void* unk4;
+	/* 0x08 */ J3DModelHierarchy* unk8;
 	/* 0x0C */ u32 unkC;
 	/* 0x10 */ J3DJoint* mRootNode;
 	/* 0x14 */ J3DMtxCalc* unk14;
@@ -126,24 +131,25 @@ public:
 	/* 0x30 */ J3DShape** mShapeNodePointer;
 	/* 0x34 */ u16 unk34;
 
-	/* 0x38 */ u32 unk38;
+	/* 0x38 */ J3DMaterial* unk38;
 	/* 0x3C */ J3DVertexData mVertexData;
 	/* 0x80 */ u32 unk80;
 	/* 0x84 */ u16 mWEvlpMtxNum;
 
-	/* 0x88 */ u32 unk88;
-	/* 0x8C */ u32 unk8C;
-	/* 0x90 */ u32 unk90;
-	/* 0x94 */ u32 unk94;
+	/* 0x88 */ u8* unk88;
+	/* 0x8C */ u16* unk8C;
+	/* 0x90 */ f32* unk90;
+	/* 0x94 */ Mtx* unk94;
 	/* 0x98 */ J3DDrawMtxData mDrawMtxData;
 
 	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ JUTNameTab* unkA8;
 
+	/* 0xA8 */ JUTNameTab* unkA8;
 	/* 0xAC */ J3DTexture* unkAC;
-	/* 0xB0 */ u32 unkB0;
+
+	/* 0xB0 */ JUTNameTab* unkB0;
 	/* 0xB4 */ JUTNameTab* mMaterialName;
-	/* 0xB8 */ u32 unkB8;
+	/* 0xB8 */ JUTNameTab* unkB8;
 };
 
 struct J3DDeformData;

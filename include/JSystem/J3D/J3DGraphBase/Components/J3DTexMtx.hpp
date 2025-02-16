@@ -8,6 +8,7 @@ extern const J3DTexMtxInfo j3dDefaultTexMtxInfo;
 class J3DTexMtx : public J3DTexMtxInfo {
 public:
 	J3DTexMtx() { J3DTexMtxInfo::operator=(j3dDefaultTexMtxInfo); }
+	J3DTexMtx(const J3DTexMtxInfo& info) { J3DTexMtxInfo::operator=(info); }
 
 	void calc();
 	void load(u32) const;

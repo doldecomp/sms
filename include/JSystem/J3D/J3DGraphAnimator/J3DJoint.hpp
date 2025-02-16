@@ -172,7 +172,10 @@ enum J3DJointMtxType {
 };
 
 class J3DJoint : public J3DNode {
+	friend class J3DJointFactory;
+
 public:
+	J3DJoint() { initialize(); }
 	J3DJoint(u16, const J3DTransformInfo&);
 
 	void initialize();
@@ -191,6 +194,7 @@ public:
 	u8 getScaleCompensate() const { return mScaleCompensate; }
 	J3DMaterial* getMesh() { return mMesh; }
 	u8 getMtxType() const { return (mKind >> 4) & 0xF; }
+	void setMtxType(u8 type) { mKind = (mKind & ~0xf0) | (type << 4); }
 
 private:
 	/* 0x18 */ u16 mJntNo;

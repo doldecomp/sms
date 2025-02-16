@@ -6,8 +6,6 @@
 #include <dolphin/gx.h>
 #include <dolphin/gd.h>
 
-
-
 J3DShapeMtx::LoadPipeline J3DShapeMtx::mtxLoadPipeline[4] = {
 	&J3DShapeMtx::loadMtxIndx_PNGP,
 	&J3DShapeMtx::loadMtxIndx_PCPU,
@@ -97,12 +95,12 @@ void J3DShape::initialize()
 	mElementCount  = 0;
 	unk8           = 0;
 	unkC           = 0;
-	unk10          = 0;
-	unk14          = 0;
-	unk18          = 0;
-	unk1C          = 0;
-	unk20          = 0;
-	unk24          = 0;
+	unk10.x        = 0.0f;
+	unk10.y        = 0.0f;
+	unk10.z        = 0.0f;
+	unk1C.x        = 0.0f;
+	unk1C.y        = 0.0f;
+	unk1C.z        = 0.0f;
 	unk2C          = nullptr;
 	mMatrices      = nullptr;
 	mDraws         = nullptr;

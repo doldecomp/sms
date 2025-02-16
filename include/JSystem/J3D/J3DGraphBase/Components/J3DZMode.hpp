@@ -15,6 +15,8 @@ inline u16 calcZModeID(u8 param_0, u8 param_1, u8 param_2)
 class J3DZMode {
 public:
 	J3DZMode() { mZModeID = j3dDefaultZModeID; }
+	J3DZMode(u16 id) { mZModeID = id; }
+	J3DZMode(const J3DZModeInfo& info) { setZModeInfo(info); }
 
 	J3DZMode& operator=(const J3DZMode& other)
 	{
