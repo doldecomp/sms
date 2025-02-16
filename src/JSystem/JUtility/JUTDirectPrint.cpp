@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <macros.h>
 
-
-
 JUTDirectPrint* JUTDirectPrint::sDirectPrint;
 
 JUTDirectPrint* JUTDirectPrint::start()

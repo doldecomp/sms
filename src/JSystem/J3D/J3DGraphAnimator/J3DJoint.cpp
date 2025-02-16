@@ -8,8 +8,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 
-
-
 void J3DMtxCalcAnm::calc(u16 param_0)
 {
 	j3dSys.setCurrentMtxCalc(this);
