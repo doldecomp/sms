@@ -6,8 +6,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
-
-
 J3DDrawBuffer::sortFunc J3DDrawBuffer::sortFuncTable[6] = {
 	&J3DDrawBuffer::entryMatSort,     &J3DDrawBuffer::entryMatAnmSort,
 	&J3DDrawBuffer::entryZSort,       &J3DDrawBuffer::entryModelSort,

@@ -4,8 +4,6 @@
 #include <macros.h>
 #include <types.h>
 
-
-
 J3DSys j3dSys;
 
 u32 j3dDefaultViewNo;

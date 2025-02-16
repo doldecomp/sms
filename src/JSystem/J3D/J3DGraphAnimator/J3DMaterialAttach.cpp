@@ -2,11 +2,11 @@
 
 void J3DMaterialTable::clear()
 {
-	mMaterialNum = 0;
-	mMaterials   = nullptr;
-	mTexture         = nullptr;
-	mMaterialName        = nullptr;
-	mTextureName        = nullptr;
+	mMaterialNum  = 0;
+	mMaterials    = nullptr;
+	mTexture      = nullptr;
+	mMaterialName = nullptr;
+	mTextureName  = nullptr;
 }
 
 J3DMaterialTable::J3DMaterialTable() { clear(); }

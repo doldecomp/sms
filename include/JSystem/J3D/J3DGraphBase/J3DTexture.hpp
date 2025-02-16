@@ -13,7 +13,7 @@ public:
 	    , mResources(res)
 	{
 	}
-	virtual ~J3DTexture() {}
+	virtual ~J3DTexture() { }
 
 	ResTIMG* getResTIMG(u16 entry) const { return &mResources[entry]; }
 	u16 getNum() const { return mResourceCount; }

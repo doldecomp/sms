@@ -1,8 +1,6 @@
 #include <JSystem/JRenderer.hpp>
 #include <dolphin/os.h>
 
-
-
 void J3DGDLoadTexMtxImm(MtxPtr mtx, u32 i, GXTexMtxType type)
 {
 	u16 cmd;

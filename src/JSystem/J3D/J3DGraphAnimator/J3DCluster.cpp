@@ -7,8 +7,6 @@
 #include <dolphin/os/OSCache.h>
 #include <math.h>
 
-
-
 void J3DDeformData::deform(J3DModel* model)
 {
 	model->getVertexBuffer()->swapVtxPosArrayPointer();

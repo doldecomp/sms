@@ -11,8 +11,6 @@
 #include <dolphin/base/PPCArch.h>
 #include <macros.h>
 
-
-
 struct CallbackObject {
 	/* 0x00 */ OSErrorHandler callback;
 	/* 0x04 */ u16 error;

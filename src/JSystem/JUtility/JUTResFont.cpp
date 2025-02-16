@@ -3,8 +3,6 @@
 #include <dolphin/gx.h>
 #include <types.h>
 
-
-
 IsLeadByte_func const JUTResFont::saoAboutEncoding_[3] = {
 	isLeadByte_1Byte,
 	isLeadByte_2Byte,

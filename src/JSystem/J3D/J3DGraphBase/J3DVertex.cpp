@@ -2,8 +2,6 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <macros.h>
 
-
-
 J3DVertexData::J3DVertexData()
 {
 	unk0            = 0;

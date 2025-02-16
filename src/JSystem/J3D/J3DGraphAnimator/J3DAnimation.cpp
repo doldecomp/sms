@@ -4,8 +4,6 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JMath.hpp>
 
-
-
 void J3DFrameCtrl::init(s16 end)
 {
 	mLoopMode     = 2;

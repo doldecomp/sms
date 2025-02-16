@@ -83,10 +83,10 @@ u32 J3DDrawPacket::endDL()
 
 J3DMatPacket::J3DMatPacket()
 {
-	unk38 = 0;
-	unk3C = -1;
+	unk38    = 0;
+	unk3C    = -1;
 	mTexture = 0;
-	unk44 = 0;
+	unk44    = 0;
 }
 
 J3DMatPacket::~J3DMatPacket() { }

@@ -4,8 +4,6 @@
 #include <printf.h>
 #include <stdlib.h>
 
-
-
 OSMutex J2DPrint::mMutex;
 
 char* J2DPrint::mStrBuff;

@@ -11,8 +11,6 @@
 #include <dolphin/os/OSCache.h>
 #include <math.h>
 
-
-
 void J3DModelData::clear()
 {
 	unk4              = 0;
