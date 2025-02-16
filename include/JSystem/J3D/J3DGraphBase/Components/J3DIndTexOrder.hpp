@@ -8,6 +8,10 @@ extern const J3DIndTexOrderInfo j3dDefaultIndTexOrderNull;
 class J3DIndTexOrder : public J3DIndTexOrderInfo {
 public:
 	J3DIndTexOrder() { *(J3DIndTexOrderInfo*)this = j3dDefaultIndTexOrderNull; }
+	J3DIndTexOrder(const J3DIndTexOrderInfo& info)
+	{
+		*(J3DIndTexOrderInfo*)this = info;
+	}
 
 	u8 getCoord() const { return mCoord; }
 	u8 getMap() const { return mMap; }

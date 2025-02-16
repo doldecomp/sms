@@ -8,6 +8,7 @@ extern const J3DTexCoordInfo j3dDefaultTexCoordInfo[8];
 class J3DTexCoord : public J3DTexCoordInfo {
 public:
 	J3DTexCoord() { J3DTexCoordInfo::operator=(j3dDefaultTexCoordInfo[0]); }
+	J3DTexCoord(const J3DTexCoordInfo& info) { *(J3DTexCoordInfo*)this = info; }
 
 	J3DTexCoord& operator=(const J3DTexCoord& other)
 	{

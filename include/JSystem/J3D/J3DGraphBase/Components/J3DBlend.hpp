@@ -9,6 +9,7 @@ extern const J3DBlendInfo j3dDefaultBlendInfo;
 class J3DBlend : public J3DBlendInfo {
 public:
 	J3DBlend() { *(J3DBlendInfo*)this = j3dDefaultBlendInfo; }
+	J3DBlend(const J3DBlendInfo& info) { *(J3DBlendInfo*)this = info; }
 
 	void setBlendInfo(const J3DBlendInfo& info)
 	{

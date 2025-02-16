@@ -14,6 +14,11 @@ public:
 		setTevStageInfo(j3dDefaultTevStageInfo);
 		setTevSwapModeInfo(j3dDefaultTevSwapMode);
 	}
+	J3DTevStage(const J3DTevStageInfo& info)
+	{
+		setTevStageInfo(info);
+		setTevSwapModeInfo(j3dDefaultTevSwapMode);
+	}
 
 	J3DTevStage& operator=(const J3DTevStage& other)
 	{

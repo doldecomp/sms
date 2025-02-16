@@ -28,6 +28,13 @@ public:
 	{
 	}
 
+	J3DAlphaComp(const J3DAlphaCompInfo& info)
+	{
+		mAlphaCmpID = calcAlphaCmpID(info.mComp0, info.mOp, info.mComp1);
+		mRef0       = info.mRef0;
+		mRef1       = info.mRef1;
+	}
+
 	J3DAlphaComp& operator=(const J3DAlphaComp& other)
 	{
 		mAlphaCmpID = other.mAlphaCmpID;

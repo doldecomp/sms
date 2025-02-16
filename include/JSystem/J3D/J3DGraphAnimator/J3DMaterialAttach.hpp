@@ -21,6 +21,7 @@ public:
 	u16 getMaterialNum() const { return mMaterialNum; }
 
 	J3DTexture* getTexture() const { return mTexture; }
+	void setTexture(J3DTexture* pTexture) { mTexture = pTexture; }
 
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
 	JUTNameTab* getTextureName() const { return mTextureName; }

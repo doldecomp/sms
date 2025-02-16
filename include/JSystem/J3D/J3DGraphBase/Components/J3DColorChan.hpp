@@ -42,7 +42,12 @@ inline u16 calcColorChanID(u16 enable, u8 matSrc, u8 lightMask, u8 diffuseFn,
 class J3DColorChan {
 public:
 	J3DColorChan() { setColorChanInfo(j3dDefaultColorChanInfo); }
-
+	J3DColorChan(const J3DColorChanInfo& info)
+	{
+		mChanCtrl = calcColorChanID(
+		    info.mEnable, info.mMatSrc, info.mLightMask, info.mDiffuseFn,
+		    info.mAttnFn, info.mAmbSrc == 0xFF ? (u8)0 : info.mAmbSrc);
+	}
 	J3DColorChan& operator=(const J3DColorChan& other)
 	{
 		mChanCtrl = other.mChanCtrl;
@@ -64,11 +69,8 @@ public:
 		    info.mAttnFn, info.mAmbSrc == 0xFFFF ? (u8)0 : info.mAmbSrc);
 	}
 
-	GXAttnFn getAttnFn()
-	{
-		u8 attnFnTbl[] = { GX_AF_NONE, GX_AF_SPEC, GX_AF_NONE, GX_AF_SPOT };
-		return (GXAttnFn)attnFnTbl[mChanCtrl >> 9 & 0x03];
-	}
+	GXAttnFn getAttnFn();
+	void load(u32 idx);
 	GXDiffuseFn getDiffuseFn() { return (GXDiffuseFn)(mChanCtrl >> 7 & 3); }
 	u8 getLightMask()
 	{
@@ -77,14 +79,6 @@ public:
 	GXColorSrc getMatSrc() { return (GXColorSrc)(mChanCtrl >> 0 & 1); }
 	GXColorSrc getAmbSrc() { return (GXColorSrc)(mChanCtrl >> 6 & 1); }
 	u8 getEnable() { return (mChanCtrl >> 1) & 1; }
-
-	void load(u32 chan)
-	{
-		const GXChannelID chanTbl[]
-		    = { GX_COLOR0, GX_ALPHA0, GX_COLOR1, GX_ALPHA1 };
-		J3DGDSetChanCtrl(chanTbl[chan], getEnable(), getAmbSrc(), getMatSrc(),
-		                 getLightMask(), getDiffuseFn(), getAttnFn());
-	}
 
 	/* 0x0 */ u16 mChanCtrl;
 };
