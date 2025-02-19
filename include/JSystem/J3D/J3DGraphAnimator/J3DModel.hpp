@@ -110,6 +110,9 @@ public:
 	J3DDrawMtxData& getDrawMtxData() { return mDrawMtxData; }
 	J3DVertexData& getVertexData() { return mVertexData; }
 
+	// This is the J3DMtxCalcAnm type this model needs supposedly
+	u32 getUnkC() const { return unkC & 0xf; }
+
 public:
 	/* 0x04 */ const void* unk4;
 	/* 0x08 */ J3DModelHierarchy* unk8;

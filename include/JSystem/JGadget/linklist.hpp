@@ -1,9 +1,10 @@
-#ifndef JGADGET_LIST_HPP
-#define JGADGET_LIST_HPP
+#ifndef JGADGET_LINKLIST_HPP
+#define JGADGET_LINKLIST_HPP
 
 #include <types.h>
 
 namespace JGadget {
+
 struct TLinkListNode {
 	TLinkListNode()
 	{
@@ -406,6 +407,6 @@ struct TContainerEnumerator_const
 	}
 };
 
-}; // namespace JGadget
+} // namespace JGadget
 
 #endif

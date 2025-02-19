@@ -6,23 +6,34 @@
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
 namespace JDrama {
+
 class TNameRef {
 public:
-	static void calcKeyCode(char const*);
-	static void getType(JSUMemoryInputStream&, JSUMemoryInputStream&);
-	static void genObject(JSUMemoryInputStream&, JSUMemoryInputStream&);
+	TNameRef(const char* name)
+	{
+		mName    = name;
+		mKeyCode = calcKeyCode(name);
+	}
+
+	static u16 calcKeyCode(char const*);
+	static const char* getType(JSUMemoryInputStream&, JSUMemoryInputStream&);
+	static TNameRef* genObject(JSUMemoryInputStream&, JSUMemoryInputStream&);
 
 	virtual ~TNameRef();
-	virtual void getType() const;
+	virtual int getType() const;
 	virtual void load(JSUMemoryInputStream&);
 	virtual void save(JSUMemoryOutputStream&);
 	virtual void loadAfter();
-	virtual void searchF(u16, char const*);
+	virtual TNameRef* searchF(u16 key, char const* name);
+
+	void search(const char*);
 
 private:
-	char* mName;
-	u16 mKeyCode;
+	/* 0x4 */ const char* mName;
+	/* 0x8 */ u16 mKeyCode;
+	/* 0xA */ char pad[2];
 };
+
 } // namespace JDrama
 
 #endif
