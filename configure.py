@@ -317,6 +317,8 @@ config.libs = [
             # JGadget
             Object(NonMatching, "JSystem/JGadget/std-list.cpp"),
             Object(NonMatching, "JSystem/JGadget/std-vector.cpp"),
+            Object(NonMatching, "JSystem/JGadget/linklist.cpp"),
+            Object(NonMatching, "JSystem/JGadget/singlelinklist.cpp"),
 
             # JKernel
             Object(NonMatching, "JSystem/JKernel/JKRArchivePri.cpp"),
@@ -365,7 +367,7 @@ config.libs = [
             # JDrama
             Object(NonMatching, "JSystem/JDrama/JDRActor.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRCamera.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRCharacter.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRCharacter.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRDirector.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRDisplay.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRDrawBufObj.cpp"),
@@ -376,9 +378,9 @@ config.libs = [
             Object(NonMatching, "JSystem/JDrama/JDRFrmGXSet.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRGraphics.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRLighting.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRNameRef.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRNameRef.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRNameRefGen.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRPlacement.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRPlacement.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRRenderMode.cpp"),
             Object(Matching, "JSystem/JDrama/JDRResolution.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRScreen.cpp"),
@@ -386,7 +388,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DScn.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRVideo.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRViewConnecter.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRViewObj.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRViewObj.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRViewport.cpp"),
 
             # JAudio
@@ -527,8 +529,6 @@ config.libs = [
 
             Object(NonMatching, "JSystem/JMath.cpp"),
             Object(Matching, "JSystem/JRenderer.cpp"),
-            Object(NonMatching, "JSystem/linklist.cpp"),
-            Object(NonMatching, "JSystem/singlelinklist.cpp"),
             Object(NonMatching, "JSystem/random.cpp"),
             Object(NonMatching, "JSystem/dspproc.c"),
             Object(NonMatching, "JSystem/dsptask.c"),

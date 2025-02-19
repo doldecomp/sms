@@ -84,19 +84,7 @@ public:
 		z = other.z;
 	}
 
-	TVec3(T x_, T y_, T z_)
-	{
-		x = x_;
-		y = y_;
-		z = z_;
-	}
-
-	template <typename TY> TVec3(TY x_, TY y_, TY z_)
-	{
-		x = x_;
-		y = y_;
-		z = z_;
-	}
+	TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
 
 	TVec3& operator=(const TVec3& other)
 	{
@@ -119,7 +107,12 @@ public:
 	void scaleAdd(f32 scale, const TVec3& operand, const TVec3& translate);
 	void set(const Vec&);
 
-	template <typename TY> void set(TY x, TY y, TY z);
+	template <typename TY> void set(TY x_, TY y_, TY z_)
+	{
+		x = x_;
+		y = y_;
+		z = z_;
+	}
 	template <typename TY> void set(const TVec3<TY>&);
 
 	Vec* toVec() const { return (Vec*)this; }
@@ -165,6 +158,12 @@ template <typename T> struct SMatrix34C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
+
+	SMatrix34C() { }
+
+	void set(float, float, float, float, float, float, float, float, float,
+	         float, float, float);
+
 	f32 mMtx[3][4] __attribute__((aligned(8)));
 };
 

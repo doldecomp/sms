@@ -153,7 +153,7 @@ u8 SMS_IsMarioTouchGround4cm()
 {
 	u8 ret;
 
-	if (gpMarioOriginal->position.y
+	if (gpMarioOriginal->mPosition.y
 	    <= 4.0f + gpMarioOriginal->floorPosition.y) {
 		ret = 1;
 	} else {
@@ -289,7 +289,7 @@ void SMS_SetMarioAccessParams()
 	f32* speed;
 
 	gpMarioAddress = gpMarioOriginal;
-	gpMarioPos     = &gpMarioOriginal->position;
+	gpMarioPos     = &gpMarioOriginal->mPosition;
 
 	angle         = &gpMarioOriginal->faceAngle.x;
 	gpMarioAngleX = angle;

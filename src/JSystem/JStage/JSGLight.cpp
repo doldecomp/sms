@@ -4,7 +4,7 @@ JStage::TLight::~TLight() { }
 
 s32 JStage::TLight::JSGFGetType() const { return 5; }
 
-bool JStage::TLight::JSGGetLightType() const { return true; }
+JStage::TELight JStage::TLight::JSGGetLightType() const { return TELIGHT_Unk1; }
 
 void JStage::TLight::JSGSetLightType(JStage::TELight) { }
 

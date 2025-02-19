@@ -9,21 +9,14 @@ namespace JDrama {
 
 class TActor : public TPlacement, public JStage::TActor {
 public:
-	// TActor
-	char _020[0x10];
-	f32 unk34;
-	char unk40[0x8];
-
-	f32 getUnk34() { return unk34; }
-
 	TActor(const char*);
+	~TActor();
 
-	typedef void IDK;
+	virtual int getType() const;
+	virtual void load(JSUMemoryInputStream&);
+	void issueGXLight(unsigned long, JDrama::TGraphics*);
 
-	virtual IDK getType();
-	virtual IDK load(JSUMemoryInputStream&);
-
-	virtual IDK perform(u32, TGraphics*);
+	virtual void perform(u32, TGraphics*);
 
 	virtual void JSGGetTranslation(Vec*) const;
 	virtual void JSGSetTranslation(const Vec&);
@@ -38,6 +31,12 @@ public:
 	virtual float JSGGetAnimationFrame() const;
 	virtual void JSGSetAnimationFrame(float);
 	virtual float JSGGetAnimationFrameMax() const;
+
+public:
+	/* 0x24 */ Vec mScaling;
+	/* 0x30 */ Vec mRotation;
+	/* 0x3C */ TNameRef* unk3C;
+	/* 0x40 */ TViewObj* unk40;
 };
 
 } // namespace JDrama

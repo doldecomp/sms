@@ -66,15 +66,14 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			} else {
 				PSMTXCopy(riding_info->unk0->uknownVirtFunc(), mtx.mMtx);
 			}
-			PSMTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
+			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
 			// TODO: there is 100% some kind of a getter/setter getting called
 			// here because the stack frame is bigger than necessary by 16 bytes
 			// and `mtx` is offset on the stack a little bit but I couldn't
 			// figure out some thing sensible for now, so an inline kek shall
 			// remain here for now
-			float trash        = kek(riding_info->unk0->unk34);
-			*arg2              = *arg2 + trash - riding_info->unk10;
-			riding_info->unk10 = riding_info->unk0->unk34;
+			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
+			riding_info->unk10 = riding_info->unk0->mRotation.y;
 		}
 	} else {
 		riding_info->unk0 = nullptr;

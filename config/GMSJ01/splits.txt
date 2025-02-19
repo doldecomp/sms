@@ -433,10 +433,10 @@ JSystem/JUtility/JUTConsole.cpp:
 JSystem/JUtility/JUTDirectFile.cpp:
 	.text       start:0x80040370 end:0x80040714
 
-JSystem/linklist.cpp:
+JSystem/JGadget/linklist.cpp:
 	.text       start:0x80040714 end:0x800408D4
 
-JSystem/singlelinklist.cpp:
+JSystem/JGadget/singlelinklist.cpp:
 	.text       start:0x800408D4 end:0x80040948
 
 JSystem/JDrama/JDRActor.cpp:

@@ -20,7 +20,7 @@ enum TELight {
 struct TLight : public TObject {
 	virtual ~TLight() = 0;
 	virtual s32 JSGFGetType() const;
-	virtual bool JSGGetLightType() const;
+	virtual JStage::TELight JSGGetLightType() const;
 	virtual void JSGSetLightType(JStage::TELight);
 	virtual void JSGGetPosition(Vec*) const;
 	virtual void JSGSetPosition(Vec const&);

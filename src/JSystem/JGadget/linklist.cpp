@@ -1,4 +1,4 @@
-#include <JSystem/JGadget/list.hpp>
+#include <JSystem/JGadget/linklist.hpp>
 
 namespace JGadget {
 namespace {

@@ -1,7 +1,7 @@
 #ifndef JUT_CONSOLE_H
 #define JUT_CONSOLE_H
 
-#include <JSystem/JGadget/list.hpp>
+#include <JSystem/JGadget/linklist.hpp>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 #include <JSystem/JUtility/JUTFont.hpp>
 #include "stdarg.h"

@@ -5,17 +5,22 @@
 #include <JSystem/JGeometry.hpp>
 
 namespace JDrama {
+
 class TPlacement : public TViewObj {
 public:
+	TPlacement(const char* name)
+	    : TViewObj(name)
+	    , mPosition(0, 0, 0)
+	{
+	}
 	virtual ~TPlacement() {};
 	virtual void load(JSUMemoryInputStream&);
 
-	virtual void _vt01C() = 0;
-	virtual void _vt020() = 0;
-
-	JGeometry::TVec3<f32> position;
-	u32 _01C;
+public:
+	/* 0x10 */ JGeometry::TVec3<f32> mPosition;
+	/* 0x1C */ u32 unk1C;
 };
+
 }; // namespace JDrama
 
 #endif

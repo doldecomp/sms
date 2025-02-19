@@ -22,16 +22,15 @@ public:
 
 	THitActor(const char*);
 
+	virtual ~THitActor() { }
+
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void receiveMessage(THitActor*, u32);
+
 	// TODO: Should be at offset 0xb8 in the vtable, currently is not
-	// also doesn't look like this should even be here, probably rather inside
-	// one of the parents or something and implemented in a derived class
 	virtual MtxPtr uknownVirtFunc() = 0;
 
-	typedef void IDK;
-	virtual IDK receiveMessage(THitActor*, u32);
-	virtual IDK perform(u32, JDrama::TGraphics*);
-
-	IDK initHitActor(u32, u16, int, f32, f32, f32, f32);
+	void initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();
 };
 
