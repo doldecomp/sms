@@ -387,7 +387,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DAct.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DScn.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRVideo.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRViewConnecter.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRViewConnecter.cpp"),
             Object(Matching, "JSystem/JDrama/JDRViewObj.cpp"),
             Object(Matching, "JSystem/JDrama/JDRViewport.cpp"),
 
