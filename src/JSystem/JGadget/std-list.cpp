@@ -9,10 +9,10 @@ TList_pointer_void::TList_pointer_void(
 {
 }
 
-TList_pointer_void::~TList_pointer_void() {
-}
+TList_pointer_void::~TList_pointer_void() { }
 
-TList_pointer_void::iterator TList_pointer_void::insert(iterator where, const T& value)
+TList_pointer_void::iterator TList_pointer_void::insert(iterator where,
+                                                        const T& value)
 {
-  return insert1234(where, value);
+	return insert1234(where, value);
 }
