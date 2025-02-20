@@ -21,11 +21,11 @@ void GXGetPointSize(u8* pointSize, GXTexOffset* texOffsets);
 void GXGetCullMode(GXCullMode* mode);
 
 // Light
-void GXGetLightAttnA(GXLightObj* lt_obj, f32* a0, f32* a1, f32* a2);
-void GXGetLightAttnK(GXLightObj* lt_obj, f32* k0, f32* k1, f32* k2);
-void GXGetLightPos(GXLightObj* lt_obj, f32* x, f32* y, f32* z);
-void GXGetLightDir(GXLightObj* lt_obj, f32* nx, f32* ny, f32* nz);
-void GXGetLightColor(GXLightObj* lt_obj, GXColor* color);
+void GXGetLightAttnA(const GXLightObj* lt_obj, f32* a0, f32* a1, f32* a2);
+void GXGetLightAttnK(const GXLightObj* lt_obj, f32* k0, f32* k1, f32* k2);
+void GXGetLightPos(const GXLightObj* lt_obj, f32* x, f32* y, f32* z);
+void GXGetLightDir(const GXLightObj* lt_obj, f32* nx, f32* ny, f32* nz);
+void GXGetLightColor(const GXLightObj* lt_obj, GXColor* color);
 
 // Texture
 GXBool GXGetTexObjMipMap(const GXTexObj* to);

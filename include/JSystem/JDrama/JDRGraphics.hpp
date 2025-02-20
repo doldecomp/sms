@@ -28,6 +28,7 @@ struct TGraphics {
 	/* 0x64 */ TRect unk64;
 	char unk74[0x40];
 	/* 0xB4 */ Mtx unkB4;
+	/* 0xE4 */ u32 unkE4;
 };
 
 } // namespace JDrama

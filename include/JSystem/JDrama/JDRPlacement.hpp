@@ -11,6 +11,7 @@ public:
 	TPlacement(const char* name)
 	    : TViewObj(name)
 	    , mPosition(0, 0, 0)
+	    , unk1C(0)
 	{
 	}
 	virtual ~TPlacement() {};
