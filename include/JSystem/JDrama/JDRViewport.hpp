@@ -10,9 +10,13 @@ class TViewport : public TViewObj {
 public:
 	TViewport(const TRect&, const char*);
 
-	virtual ~TViewport();
+	virtual ~TViewport() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(unsigned long, TGraphics*);
+
+public:
+	/* 0x10 */ TRect unk10;
+	/* 0x20 */ u16 unk20;
 };
 
 }; // namespace JDrama

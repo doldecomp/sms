@@ -389,7 +389,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JDrama/JDRVideo.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRViewConnecter.cpp"),
             Object(Matching, "JSystem/JDrama/JDRViewObj.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRViewport.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRViewport.cpp"),
 
             # JAudio
             # JADebug
