@@ -20,8 +20,8 @@ public:
 
 	void construct(T* p, const T& value)
 	{
-    // (void) is necessary here.
-		(void) ::new ((void*)p) T(value);
+		// (void) is necessary here.
+		(void)::new ((void*)p) T(value);
 	}
 
 	void destroy(T* p) { p->~T(); }
