@@ -133,7 +133,7 @@ void GXInitLightColor(GXLightObj* lt_obj, GXColor color)
 	obj->Color = (color.r << 24) | (color.g << 16) | (color.b << 8) | color.a;
 }
 
-void GXGetLightColor(GXLightObj* lt_obj, GXColor* color)
+void GXGetLightColor(const GXLightObj* lt_obj, GXColor* color)
 {
 	struct __GXLightObjInt_struct* obj;
 
