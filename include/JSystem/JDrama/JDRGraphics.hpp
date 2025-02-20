@@ -7,6 +7,10 @@
 namespace JDrama {
 
 struct TRect : JUTRect {
+	TRect()
+	    : JUTRect()
+	{
+	}
 	TRect(int x1, int y1, int x2, int y2)
 	    : JUTRect(x1, y1, x2, y2)
 	{
@@ -16,8 +20,14 @@ struct TRect : JUTRect {
 struct TGraphics {
 	void setViewport(const TRect&, float, float);
 
-	char unk0[0xB4];
-	Mtx unkB4;
+	TRect& getUnk44() { return unk44; }
+
+	char unk0[0x44];
+	/* 0x44 */ TRect unk44;
+	/* 0x54 */ TRect unk54;
+	/* 0x64 */ TRect unk64;
+	char unk74[0x40];
+	/* 0xB4 */ Mtx unkB4;
 };
 
 } // namespace JDrama
