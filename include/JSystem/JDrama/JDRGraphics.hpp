@@ -22,7 +22,10 @@ struct TGraphics {
 
 	TRect& getUnk44() { return unk44; }
 
-	char unk0[0x44];
+	char unk0[0x20];
+	/* 0x20 */ u8 unk20;
+	char pad[3];
+	char unk24[0x20];
 	/* 0x44 */ TRect unk44;
 	/* 0x54 */ TRect unk54;
 	/* 0x64 */ TRect unk64;
