@@ -19,7 +19,7 @@ public:
 
 public:
 	/* 0x10 */ JGeometry::TVec3<f32> mPosition;
-	/* 0x1C */ u32 unk1C;
+	/* 0x1C */ u16 unk1C;
 };
 
 }; // namespace JDrama
