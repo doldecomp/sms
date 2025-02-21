@@ -27,7 +27,7 @@ void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value)
 		// TODO: this does not match and I have no idea what the original
 		// author was thinking, the entire THitActor hierarchy needs to be
 		// figured out
-		if (bgData->unk44 && value != bgData->unk44->actorType) {
+		if (bgData->unk44 && value != bgData->unk44->mActorType) {
 			actor = nullptr;
 		}
 	}

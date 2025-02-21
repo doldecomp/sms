@@ -210,7 +210,7 @@ f32 SMS_GetMarioGravity() { return gpMarioOriginal->jumpParams.gravity.value; }
 
 f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->floorPosition.y; }
 
-f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->damageRadius; }
+f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
 
 s16 SMS_GetMarioHP() { return gpMarioOriginal->health; }
 

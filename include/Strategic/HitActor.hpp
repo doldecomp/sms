@@ -5,21 +5,6 @@
 
 class THitActor : public JDrama::TActor {
 public:
-	THitActor** collisions;
-	u16 colCount;
-	u16 colCapacity;
-	u32 actorType; // ActorType
-
-	f32 attackRadius; // 0x50
-	f32 attackHeight;
-
-	f32 damageRadius;
-	f32 damageHeight;
-
-	f32 entryRadius;
-
-	u32 _064;
-
 	THitActor(const char*);
 
 	virtual ~THitActor() { }
@@ -30,8 +15,20 @@ public:
 	// TODO: Should be at offset 0xb8 in the vtable, currently is not
 	virtual MtxPtr uknownVirtFunc() = 0;
 
-	void initHitActor(u32, u16, int, f32, f32, f32, f32);
+	float initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();
+
+public:
+	/* 0x44 */ THitActor** mCollisions;
+	/* 0x48 */ u16 mColCount;
+	/* 0x4A */ u16 mColCapacity;
+	/* 0x4C */ u32 mActorType;
+	/* 0x50 */ float mAttackRadius;
+	/* 0x54 */ float mAttackHeight;
+	/* 0x58 */ float mDamageRadius;
+	/* 0x5C */ float mDamageHeight;
+	/* 0x60 */ float mEntryRadius;
+	/* 0x64 */ u32 unk64;
 };
 
 #endif

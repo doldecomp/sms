@@ -9,7 +9,21 @@ namespace JDrama {
 
 class TActor : public TPlacement, public JStage::TActor {
 public:
-	TActor(const char*);
+	TActor(const char* name)
+	    : TPlacement(name)
+	{
+		mScaling.x = 1.0f;
+		mScaling.y = 1.0f;
+		mScaling.z = 1.0f;
+
+		mRotation.x = 0.0f;
+		mRotation.y = 0.0f;
+		mRotation.z = 0.0f;
+
+		unk3C = nullptr;
+		unk40 = nullptr;
+	}
+
 	~TActor();
 
 	virtual int getType() const;
