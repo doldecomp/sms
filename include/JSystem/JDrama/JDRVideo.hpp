@@ -11,7 +11,7 @@ public:
 	void setNextXFB(const void*);
 	void waitForRetrace(u16);
 
-private:
+public:
 	/* 0x00 */ GXRenderModeObj mCurRenderMode;
 	/* 0x3C */ GXRenderModeObj mNextRenderMode;
 	/* 0x78 */ const void* mCurFrameBuffer;
