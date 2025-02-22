@@ -36,7 +36,10 @@ public:
 
 class TEfbCtrlDisp : public TEfbCtrl {
 public:
-	TEfbCtrlDisp();
+	TEfbCtrlDisp(TFlagT<u16> flag)
+	    : TEfbCtrl("<EfbCtrlDisp>", flag)
+	{
+	}
 
 	virtual ~TEfbCtrlDisp() { }
 	virtual void perform(u32, TGraphics*);
