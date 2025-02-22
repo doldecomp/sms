@@ -6,9 +6,7 @@
 
 namespace JStage {
 
-enum TECameraProjection {
-	TECAMERAPROJECTION_Unk1 = 1
-};
+enum TECameraProjection { TECAMERAPROJECTION_Unk1 = 1 };
 
 struct TECameraView { };
 
