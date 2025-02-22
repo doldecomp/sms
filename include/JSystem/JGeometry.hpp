@@ -105,7 +105,12 @@ public:
 	void scale(f32 scale);
 	void scale(f32 scale, const TVec3& operand);
 	void scaleAdd(f32 scale, const TVec3& operand, const TVec3& translate);
-	void set(const Vec&);
+	void set(const Vec& v)
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
+	}
 
 	template <typename TY> void set(TY x_, TY y_, TY z_)
 	{
