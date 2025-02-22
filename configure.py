@@ -383,7 +383,7 @@ config.libs = [
             Object(Matching, "JSystem/JDrama/JDRPlacement.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRRenderMode.cpp"),
             Object(Matching, "JSystem/JDrama/JDRResolution.cpp"),
-            Object(NonMatching, "JSystem/JDrama/JDRScreen.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRScreen.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DAct.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DScn.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRVideo.cpp"),
