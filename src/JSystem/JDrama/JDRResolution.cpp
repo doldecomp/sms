@@ -1,7 +1,7 @@
-#include <JSystem/JDrama.hpp>
+#include <JSystem/JDrama/JDRResolution.hpp>
 #include <dolphin/vi.h>
 
-s32 JDrama::GetVIWidthMax()
+u16 JDrama::GetVIWidthMax()
 {
 	switch (VIGetTvFormat()) {
 	case VI_TVMODE_NTSC_DS: // 1
@@ -16,7 +16,7 @@ s32 JDrama::GetVIWidthMax()
 	}
 }
 
-s32 JDrama::GetVIHeightMax()
+u16 JDrama::GetVIHeightMax()
 {
 	switch (VIGetTvFormat()) {
 	case VI_TVMODE_NTSC_DS: // 1
