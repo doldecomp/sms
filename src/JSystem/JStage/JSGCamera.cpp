@@ -5,7 +5,7 @@ JStage::TCamera::~TCamera() { }
 
 s32 JStage::TCamera::JSGFGetType() const { return 3; }
 
-bool JStage::TCamera::JSGGetProjectionType() const { return true; }
+JStage::TECameraProjection JStage::TCamera::JSGGetProjectionType() const { return TECAMERAPROJECTION_Unk1; }
 
 void JStage::TCamera::JSGSetProjectionType(JStage::TECameraProjection) { }
 

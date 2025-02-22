@@ -90,6 +90,14 @@ public:
 		return i;
 	}
 
+	/* @fabricated */
+	f32 readF32()
+	{
+		f32 f;
+		read(&f, sizeof(f32));
+		return f;
+	}
+
 	JSUInputStream& operator>>(s8& p)
 	{
 		read(&p, sizeof(s8));

@@ -7,7 +7,7 @@
 namespace JStage {
 
 enum TECameraProjection {
-
+	TECAMERAPROJECTION_Unk1 = 1
 };
 
 struct TECameraView { };
@@ -15,7 +15,7 @@ struct TECameraView { };
 struct TCamera : public TObject {
 	virtual ~TCamera() = 0;
 	virtual s32 JSGFGetType() const;
-	virtual bool JSGGetProjectionType() const;
+	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
 	virtual f32 JSGGetProjectionNear() const;
 	virtual void JSGSetProjectionNear(f32);
