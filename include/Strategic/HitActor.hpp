@@ -1,5 +1,5 @@
-#ifndef HIT_ACTOR_HPP
-#define HIT_ACTOR_HPP
+#ifndef STRATEGIC_HIT_ACTOR_HPP
+#define STRATEGIC_HIT_ACTOR_HPP
 
 #include <JSystem/JDrama/JDRActor.hpp>
 
@@ -11,9 +11,6 @@ public:
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void receiveMessage(THitActor*, u32);
-
-	// TODO: Should be at offset 0xb8 in the vtable, currently is not
-	virtual MtxPtr uknownVirtFunc() = 0;
 
 	float initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();

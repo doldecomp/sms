@@ -2,28 +2,45 @@
 #define MARIOMAIN_HPP
 
 #include <JSystem/JGeometry.hpp>
-#include "Player/MarioInit.hpp"
-#include "Strategic/HitActor.hpp"
+#include <Player/MarioInit.hpp>
+#include <Player/DrawSyncCallback.hpp>
+#include <Strategic/TakeActor.hpp>
 
 struct TRidingInfo {
-	THitActor* unk0;
+	TTakeActor* unk0;
 	Vec localPos;
 	float unk10;
 	// maybe more
 };
 
-class TTakeActor : public THitActor {
-public:
-	TTakeActor(const char*);
-
-	TTakeActor* holder; // _068
-	TTakeActor* held;   // _06C
-};
+class TMarioGamePad;
 
 // TODO: Add fields
-class TMario : public TTakeActor {
+class TMario : public TTakeActor, public TDrawSyncCallback {
 public:
 	TMario();
+
+	virtual ~TMario() { }
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void receiveMessage(THitActor*, u32);
+	virtual MtxPtr getTakingMtx();
+	virtual void moveRequest(const JGeometry::TVec3<f32>&);
+
+	virtual void drawSyncCallback(u16);
+	virtual void initValues();
+	virtual void checkReturn();
+	virtual void checkController(JDrama::TGraphics*);
+	virtual void playerControl(JDrama::TGraphics*);
+	virtual void initModel();
+	virtual void drawSpecial(JDrama::TGraphics*);
+	virtual void checkCollision();
+	virtual void damageExec(THitActor*, int, int, int, float, int, float, s16);
+	virtual void getVoiceStatus();
+
+	void setGamePad(TMarioGamePad*);
+	void resetHistory();
 
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
@@ -32,6 +49,7 @@ public:
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	u32 askJumpIntoWaterEffectExist() const;
 
+public:
 	u32 _070;
 	u32 input;
 	u32 _078;

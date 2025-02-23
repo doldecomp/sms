@@ -1,11 +1,11 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-class THitActor;
+class TTakeActor;
 
 struct TBGCheckData {
 	char filler0[0x44];
-	THitActor* unk44;
+	TTakeActor* unk44;
 };
 
 struct TMap {
