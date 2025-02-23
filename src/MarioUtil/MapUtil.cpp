@@ -1,4 +1,4 @@
-#include "dolphin.h"
+#include <Strategic/TakeActor.hpp>
 #include "gpMarDirector.hpp"
 #include "unsorted_types.h"
 #include "unsorted_variables.h"
