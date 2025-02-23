@@ -21,7 +21,10 @@ public:
 
 class TSmplChara : public TCharacter {
 public:
-	TSmplChara() { }
+	TSmplChara()
+	    : mArchive(nullptr)
+	{
+	}
 	virtual ~TSmplChara();
 	virtual void load(JSUMemoryInputStream&);
 	virtual void* getRes(const char*) const;
@@ -29,7 +32,7 @@ public:
 	void mountArc(const char*);
 
 public:
-	JKRArchive* mArchive;
+	/* 0xC */ JKRArchive* mArchive;
 };
 
 } // namespace JDrama

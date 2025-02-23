@@ -15,6 +15,11 @@ class TSmJ3DAct : public TActor {
 public:
 	TSmJ3DAct()
 	    : TActor("<SmJ3DAct>")
+	    , unk44(nullptr)
+	    , unk48(nullptr)
+	    , unk4C(nullptr)
+	    , unk50(nullptr)
+	    , unk54(nullptr)
 	{
 	}
 

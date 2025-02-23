@@ -23,7 +23,7 @@ void TLight::perform(u32 param_1, TGraphics* param_2)
 void TLight::correct(TGraphics* param_1) const
 {
 	Vec pos;
-	MTXMultVec(param_1->unkB4, (Vec*)&mPosition, &pos);
+	MTXMultVec(param_1->unkB4.mMtx, (Vec*)&mPosition, &pos);
 	// Ewwwwwwwwwwwwwwwwwwwwwww
 	GXInitLightPos(const_cast<GXLightObj*>(&unk24), pos.x, pos.y, pos.z);
 }
@@ -105,7 +105,7 @@ void TLightAry::perform(u32 param_1, TGraphics* param_2)
 	for (int i = 0; i < mLightCount; ++i) {
 		TIdxLight& light = mLights[i];
 		Vec pos;
-		MTXMultVec(param_2->unkB4, light.mPosition.toVec(), &pos);
+		MTXMultVec(param_2->unkB4.mMtx, light.mPosition.toVec(), &pos);
 		GXInitLightPos(&light.unk24, pos.x, pos.y, pos.z);
 	}
 
@@ -176,8 +176,8 @@ void TLightMap::load(JSUMemoryInputStream& stream)
 		char buf[0x50];
 		stream.readString(buf, 0x50);
 		mLightInfos[i].unk4
-		    = (TViewObj*)TNameRefGen::getInstance()->getRootNameRef()->searchF(
-		        TNameRef::calcKeyCode(buf), buf);
+		    = (TViewObj*)TNameRefGen::getInstance()->getRootNameRef()->search(
+		        buf);
 	}
 }
 

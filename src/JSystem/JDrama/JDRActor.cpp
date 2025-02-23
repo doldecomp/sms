@@ -15,8 +15,7 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	char str[0x50];
 	stream.readString(str, 0x50);
 
-	unk3C = TNameRefGen::getInstance()->getRootNameRef()->searchF(
-	    TNameRef::calcKeyCode(str), str);
+	unk3C = TNameRefGen::getInstance()->getRootNameRef()->search(str);
 
 	unk40 = new TLightMap();
 	unk40->load(stream);

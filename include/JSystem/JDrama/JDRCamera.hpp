@@ -8,12 +8,16 @@ namespace JDrama {
 
 class TCamera : public TPlacement, public JStage::TCamera {
 public:
-	TCamera(float, float, const char*);
+	TCamera(float near, float far, const char* name)
+	    : TPlacement(name)
+	    , mFlag(0)
+	    , mNear(near)
+	    , mFar(far)
+	{
+	}
 
 	virtual ~TCamera();
 	virtual int getType() const { return 2; }
-
-	virtual s32 JSGFGetType() { return 3; }
 
 	virtual u32 JSGGetFlag() const;
 	virtual void JSGSetFlag(u32);
@@ -23,7 +27,7 @@ public:
 	virtual void JSGSetProjectionFar(float);
 
 public:
-	/* 0x24 */ u16 mFlag;
+	/* 0x24 */ TFlagT<u16> mFlag;
 	/* 0x28 */ float mNear;
 	/* 0x2C */ float mFar;
 };
@@ -32,6 +36,12 @@ class TPolarCamera : public TCamera {
 public:
 	TPolarCamera()
 	    : TCamera(50.0f, 10000.0f, "<TPolarCamera>")
+	    , mFovy(45.0f)
+	    , mAspect(1.3333334f)
+	    , unk38(0.0f)
+	    , unk3C(0.0f)
+	    , unk40(0.0f)
+	    , unk44(1200.0f)
 	{
 	}
 	virtual ~TPolarCamera() { }
@@ -52,6 +62,7 @@ public:
 	/* 0x38 */ float unk38;
 	/* 0x3C */ float unk3C;
 	/* 0x40 */ float unk40;
+	/* 0x44 */ float unk44;
 };
 
 class TLookAtCamera : public TCamera {

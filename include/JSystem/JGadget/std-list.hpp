@@ -130,7 +130,7 @@ public:
 			return !(fst == snd);
 		}
 
-	private:
+	protected:
 		TNode_* mNode;
 	};
 
@@ -142,37 +142,74 @@ private:
 
 class TList_pointer_void : public TList<void*> {
 	typedef TList<void*> Base;
-	typedef void* T;
+	typedef void* value_type;
 
 public:
-	TList_pointer_void(const TAllocator<T>& = TAllocator<T>());
-	TList_pointer_void(u32, const T&, const JGadget::TAllocator<T>&);
+	TList_pointer_void(
+	    const TAllocator<value_type>& = TAllocator<value_type>());
+	TList_pointer_void(u32, const value_type&,
+	                   const JGadget::TAllocator<value_type>&);
 	~TList_pointer_void();
 
-	iterator insert1234(iterator a, T const& b) { return Base::insert(a, b); }
+	iterator insert1234(iterator a, value_type const& b)
+	{
+		return Base::insert(a, b);
+	}
 
-	iterator insert(iterator, T const&);
-	iterator insert(iterator, u32, T const&);
+	iterator insert(iterator, value_type const&);
+	iterator insert(iterator, u32, value_type const&);
 	iterator erase(iterator);
 	iterator erase(iterator, iterator);
-	void remove(const T&);
-	void assign(u32, const T&);
-	void resize(u32, const T&);
+	void remove(const value_type&);
+	void assign(u32, const value_type&);
+	void resize(u32, const value_type&);
 	void unique();
 	void operator=(const JGadget::TList_pointer_void&);
 };
 
-template <class T> class TList_pointer : public TList_pointer_void {
+template <class T> class TList_pointer : TList_pointer_void {
 	typedef TList_pointer_void Base;
 
 public:
-	iterator begin() { return Base::begin(); }
-	iterator end() { return Base::end(); }
+	class iterator : Base::iterator {
+		friend class TList_pointer;
+		typedef Base::iterator Base;
 
-	iterator insert(iterator where, const void*& what)
+	public:
+		iterator() { }
+
+		iterator(Base it)
+		    : Base(it)
+		{
+		}
+
+		T& operator*() { return (T&)this->Base::operator*(); }
+		T* operator->() { return (T*)this->Base::operator->(); }
+
+		iterator operator++() { return iterator(this->Base::operator++()); }
+		iterator operator++(int) { return iterator(this->Base::operator++(0)); }
+
+		friend bool operator==(iterator fst, iterator snd)
+		{
+			return fst.mNode == snd.mNode;
+		}
+
+		friend bool operator!=(iterator fst, iterator snd)
+		{
+			return !(fst == snd);
+		}
+	};
+
+	iterator begin() { return iterator(Base::begin()); }
+	iterator end() { return iterator(Base::end()); }
+
+	iterator insert(iterator where, const T& what)
 	{
 		return Base::insert(where, what);
 	}
+
+	void push_front(const T& what) { insert(begin(), what); }
+	void push_back(const T& what) { insert(end(), what); }
 };
 
 }; // namespace JGadget
