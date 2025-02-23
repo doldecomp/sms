@@ -777,7 +777,7 @@ config.libs = [
             Object(NonMatching, "MarioUtil/ScreenUtil.cpp"),
             Object(NonMatching, "MarioUtil/ShadowUtil.cpp"),
             Object(NonMatching, "MarioUtil/gd-reinit-gx.cpp"),
-            Object(Matching, "MarioUtil/EffectUtil.cpp"),
+            Object(NonMatching, "MarioUtil/EffectUtil.cpp"),
             Object(NonMatching, "MarioUtil/ModelUtil.cpp"),
             Object(NonMatching, "MarioUtil/RumbleMgr.cpp"),
             Object(NonMatching, "MarioUtil/RumbleData.cpp"),
