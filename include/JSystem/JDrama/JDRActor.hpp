@@ -38,13 +38,6 @@ public:
 	virtual void JSGSetScaling(const Vec&);
 	virtual void JSGGetRotation(Vec*) const;
 	virtual void JSGSetRotation(const Vec&);
-	virtual s32 JSGGetShape() const;
-	virtual void JSGSetShape(u32);
-	virtual s32 JSGGetAnimation() const;
-	virtual void JSGSetAnimation(u32);
-	virtual float JSGGetAnimationFrame() const;
-	virtual void JSGSetAnimationFrame(float);
-	virtual float JSGGetAnimationFrameMax() const;
 
 public:
 	/* 0x24 */ Vec mScaling;

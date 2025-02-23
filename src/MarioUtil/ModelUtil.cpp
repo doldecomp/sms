@@ -36,10 +36,10 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
 		return;
 
 	TMtx34f mtx;
-	if (!riding_info->unk0->uknownVirtFunc()) {
+	if (!riding_info->unk0->getTakingMtx()) {
 		SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
 	} else {
-		PSMTXCopy(riding_info->unk0->uknownVirtFunc(), mtx.mMtx);
+		PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
 	}
 	PSMTXInverse(mtx.mMtx, mtx.mMtx);
 	PSMTXMultVec(mtx.mMtx, pos.toVec(), &riding_info->localPos);
@@ -61,10 +61,10 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
 		} else {
 			TMtx34f mtx;
-			if (!riding_info->unk0->uknownVirtFunc()) {
+			if (!riding_info->unk0->getTakingMtx()) {
 				SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
 			} else {
-				PSMTXCopy(riding_info->unk0->uknownVirtFunc(), mtx.mMtx);
+				PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
 			}
 			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
 			// TODO: there is 100% some kind of a getter/setter getting called
