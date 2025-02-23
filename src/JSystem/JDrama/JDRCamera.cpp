@@ -5,8 +5,8 @@
 using namespace JDrama;
 
 TCamera::~TCamera() { }
-u32 TCamera::JSGGetFlag() const { return mFlag; }
-void TCamera::JSGSetFlag(u32 flag) { mFlag = flag; }
+u32 TCamera::JSGGetFlag() const { return mFlag.mValue; }
+void TCamera::JSGSetFlag(u32 flag) { mFlag.set(flag); }
 float TCamera::JSGGetProjectionNear() const { return mNear; }
 void TCamera::JSGSetProjectionNear(float near) { mNear = near; }
 float TCamera::JSGGetProjectionFar() const { return mFar; }
@@ -31,7 +31,6 @@ void TPolarCamera::JSGSetProjectionAspect(float aspect) { mAspect = aspect; }
 
 void TLookAtCamera::perform(u32 param_1, TGraphics* param_2)
 {
-
 	if (!(param_1 & 0x14))
 		return;
 

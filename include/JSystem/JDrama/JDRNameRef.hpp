@@ -26,7 +26,10 @@ public:
 	virtual void loadAfter();
 	virtual TNameRef* searchF(u16 key, char const* name);
 
-	void search(const char*);
+	TNameRef* search(const char* name)
+	{
+		return searchF(calcKeyCode(name), name);
+	}
 
 private:
 	/* 0x4 */ const char* mName;

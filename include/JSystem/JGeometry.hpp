@@ -156,6 +156,10 @@ template <typename T> struct SMatrix34C {
 	T mMtx[3][4];
 };
 
+template <typename T> struct SMatrix44C {
+	T mMtx[4][4];
+};
+
 // NOTE: this HAS to be an explicit specialization for function prologue &
 // epilogue to match. Whether it has to have 8-byte alignment is not certain. It
 // helps some stack frame layouts to match, but it also might just be that
@@ -163,16 +167,23 @@ template <typename T> struct SMatrix34C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
-
 	SMatrix34C() { }
 
 	void set(float, float, float, float, float, float, float, float, float,
 	         float, float, float);
 
-	f32 mMtx[3][4] __attribute__((aligned(8)));
+	f32 mMtx[3][4];
+};
+
+// This one blows up in size if not explicitly specialized...
+template <> struct SMatrix44C<f32> {
+	f32 mMtx[4][4];
 };
 
 template <typename T> struct TMatrix34 : public T { };
+template <typename T> struct TMatrix44 : public T {
+	TMatrix44() { }
+};
 
 template <class T> struct TBox {
 	TBox()
@@ -249,7 +260,9 @@ template <typename T> struct TBox2 : TBox<TVec2<T> > {
 
 } // namespace JGeometry
 
-typedef JGeometry::SMatrix34C<f32> TSMtxf;
-typedef JGeometry::TMatrix34<TSMtxf> TMtx34f;
+typedef JGeometry::SMatrix34C<f32> TSMtx34f;
+typedef JGeometry::SMatrix44C<f32> TSMtx44f;
+typedef JGeometry::TMatrix34<TSMtx34f> TMtx34f;
+typedef JGeometry::TMatrix44<TSMtx44f> TMtx44f;
 
 #endif

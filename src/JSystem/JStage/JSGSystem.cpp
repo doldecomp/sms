@@ -4,7 +4,8 @@ JStage::TSystem::~TSystem() { }
 
 s32 JStage::TSystem::JSGFGetType() const { return 1; }
 
-void* JStage::TSystem::JSGFindObject(const char*, JStage::TEObject) const
+JStage::TObject* JStage::TSystem::JSGFindObject(const char*,
+                                                JStage::TEObject) const
 {
 	return nullptr;
 }

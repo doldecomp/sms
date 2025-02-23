@@ -22,16 +22,52 @@ public:
 	}
 
 	virtual ~TViewObjPtrListT() { }
-	virtual void load(JSUMemoryInputStream&) { }
-	virtual void loadAfter() { }
-	virtual TNameRef* searchF(u16, const char*) { }
+
+	virtual void load(JSUMemoryInputStream& stream)
+	{
+		this->loadSuper(stream);
+		int count = stream.readS32();
+
+		JGadget::TList_pointer<T*>& lst = *this;
+
+		for (int i = 0; i < count; ++i) {
+			JSUMemoryInputStream stream2(nullptr, 0);
+			TNameRef* nr = TNameRef::genObject(stream, stream2);
+			if (nr) {
+				lst.push_back((TViewObj*)nr);
+				nr->load(stream2);
+			}
+		}
+	}
+
+	virtual void loadAfter()
+	{
+		loadAfterSuper();
+		typename JGadget::TList_pointer<T*>::iterator it = this->begin();
+		for (; it != this->end(); ++it)
+			(*it)->loadAfter();
+	}
+
+	virtual TNameRef* searchF(u16 key, const char* name)
+	{
+		TNameRef* res = TNameRef::searchF(key, name);
+		if (res != nullptr)
+			return res;
+
+		typename JGadget::TList_pointer<T*>::iterator it = this->begin();
+		for (; it != this->end(); ++it) {
+			TNameRef* r = (*it)->searchF(key, name);
+			if (r != nullptr)
+				return r;
+		}
+		return nullptr;
+	}
 
 	virtual void perform(u32 param_1, TGraphics* param_2)
 	{
-		JGadget::TList_pointer_void::iterator it;
-		for (it = this->begin(); it != this->end(); ++it) {
-			(*((TViewObj**)it.operator->()))->testPerform(param_1, param_2);
-		}
+		typename JGadget::TList_pointer<T*>::iterator it = this->begin();
+		for (; it != this->end(); ++it)
+			(*it)->testPerform(param_1, param_2);
 	}
 	virtual void loadSuper(JSUMemoryInputStream& stream)
 	{
