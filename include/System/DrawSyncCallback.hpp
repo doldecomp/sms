@@ -3,7 +3,6 @@
 
 #include <dolphin/types.h>
 
-// TODO: This might not have been in Player/
 class TDrawSyncCallback {
 public:
 	virtual void drawSyncCallback(u16);
