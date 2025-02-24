@@ -3,7 +3,7 @@
 
 #include <JSystem/JGeometry.hpp>
 #include <Player/MarioInit.hpp>
-#include <Player/DrawSyncCallback.hpp>
+#include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
 
 struct TRidingInfo {
