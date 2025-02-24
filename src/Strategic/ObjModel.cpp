@@ -1,0 +1,1 @@
+#include <Strategic/ObjModel.hpp>
