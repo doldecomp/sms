@@ -5,6 +5,7 @@
 #include <Player/MarioInit.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
+#include <Player/Watergun.hpp>
 
 struct TRidingInfo {
 	TTakeActor* unk0;
@@ -107,7 +108,7 @@ public:
 
 	char _38A[0x5A];
 
-	void* waterGun; // TWaterGun 0x3E4
+	TWaterGun* waterGun; // 0x3E4
 
 	u32 _3E8;
 	u32 _3EC;
