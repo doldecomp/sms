@@ -3,6 +3,20 @@
 
 class J3DModelData;
 
+class MActorAnmDataBase {
+public:
+	MActorAnmDataBase(int);
+
+	void sortByFileNameRaw(void**);
+	void checkLower(const char*);
+};
+
+template <class T> class MActorAnmDataEach {
+public:
+	void loadAnmPtrArray(const char*, const char*) { }
+	void getAnmPtr(int) const { }
+};
+
 class MActorAnmData {
 public:
 	MActorAnmData();
