@@ -26,6 +26,8 @@ public:
 	typedef void IDK;
 
 	void setSpeed(f32 speed) { mSpeed = speed; }
+	void setAttribute(u8 attr) { mLoopMode = attr; }
+	void setRate(f32 rate) { mSpeed = rate; }
 	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
 	f32 getCurrentFrame() const { return mCurrentFrame; }
 
@@ -33,6 +35,7 @@ public:
 	bool checkPass(float);
 	void update();
 
+public:
 	// TODO: probably private and always accessed via getters/setters judging by
 	// stack frame padding
 	// TODO: Stolen from SMG, might be wrong
@@ -259,6 +262,7 @@ public:
 	}
 
 	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
 	u16 getUpdateTexMtxID(u16 idx) const { return mUpdateTexMtxID[idx]; }
 	u32 getTexMtxCalcType() { return mTexMtxCalcType; }
 	Vec& getSRTCenter(u16 idx) { return mSRTCenter[idx]; }
@@ -427,6 +431,7 @@ public:
 	void searchUpdateMaterialID(J3DModelData*);
 	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }
 	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
 
 public:
 	/* 0x10 */ u16 unk10;
@@ -528,6 +533,7 @@ public:
 
 	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
 	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }
+	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
 
 	J3DAnmTexPatternFullTable* getAnmTable() const { return mAnmTable; }
 
