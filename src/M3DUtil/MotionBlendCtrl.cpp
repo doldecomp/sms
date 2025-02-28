@@ -1,10 +1,10 @@
 #include <M3DUtil/MotionBlendCtrl.hpp>
 
-void TMotionBlendCtrl::getOldMotionBlendFrame() const { }
+float TMotionBlendCtrl::getOldMotionBlendFrame() const { }
 
 void TMotionBlendCtrl::setOldMotionBlendAnmPtr(J3DAnmTransform*) { }
 
-void TMotionBlendCtrl::getOldMotionBlendAnmPtr() const { }
+J3DAnmTransform* TMotionBlendCtrl::getOldMotionBlendAnmPtr() const { }
 
 void TMotionBlendCtrl::setNewAnm(J3DAnmTransform*) { }
 
@@ -12,7 +12,7 @@ void TMotionBlendCtrl::keepCurAnm(J3DAnmTransform*, float) { }
 
 void TMotionBlendCtrl::setMotionBlendRatio(float) { }
 
-void TMotionBlendCtrl::getMotionBlendRatio() const { }
+float TMotionBlendCtrl::getMotionBlendRatio() const { }
 
 void TMotionBlendCtrl::execSimpleMotionBlend() { }
 

@@ -83,11 +83,11 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, float param_4, bool param_5)
 {
 	Vec local_8c;
-	float fVar1 = 1.0 - param_4;
+	float fVar1 = 1.0f - param_4;
 	if (param_5) {
-		local_8c.z = 1.0;
-		local_8c.y = 1.0;
-		local_8c.x = 1.0;
+		local_8c.z = 1.0f;
+		local_8c.y = 1.0f;
+		local_8c.x = 1.0f;
 	} else {
 		local_8c.x = J3DSys::mCurrentS.x;
 		local_8c.y = J3DSys::mCurrentS.y;
@@ -103,8 +103,8 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
 	J3DSys::mCurrentS.z *= fVar2;
 
 	bool bVar5;
-	if (J3DSys::mCurrentS.x == 1.0 && J3DSys::mCurrentS.y == 1.0
-	    && J3DSys::mCurrentS.z == 1.0)
+	if (J3DSys::mCurrentS.x == 1.0f && J3DSys::mCurrentS.y == 1.0f
+	    && J3DSys::mCurrentS.z == 1.0f)
 		bVar5 = true;
 	else
 		bVar5 = false;

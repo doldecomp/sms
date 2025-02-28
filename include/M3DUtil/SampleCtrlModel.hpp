@@ -9,6 +9,9 @@ public:
 	SampleCtrlModelData(J3DModelData*);
 	void makeHierarchy(J3DJoint*);
 	virtual ~SampleCtrlModelData() { }
+
+public:
+	/* 0x0 */ char unk0[0x1C];
 };
 
 #endif

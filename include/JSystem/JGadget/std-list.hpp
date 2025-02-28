@@ -12,12 +12,12 @@ public:
 	struct TNode_ {
 		TNode_* mNext;
 		TNode_* mPrev;
-		char mValue[sizeof(T)];
 	};
 
 	TNode_* CreateNode_(TNode_* next, TNode_* prev, const T& value)
 	{
-		TNode_* ret = (TNode_*)mAllocator.AllocateRaw(sizeof(TNode_));
+		TNode_* ret
+		    = (TNode_*)mAllocator.AllocateRaw(sizeof(TNode_) + sizeof(T));
 
 		if (!ret)
 			return nullptr;
@@ -25,7 +25,7 @@ public:
 		ret->mNext = next;
 		ret->mPrev = prev;
 
-		T* casted = (T*)&ret->mValue;
+		T* casted = (T*)(ret + 1);
 		mAllocator.construct(casted, value);
 
 		return ret;
@@ -33,14 +33,14 @@ public:
 
 	void DestroyNode_(TNode_* node)
 	{
-		mAllocator.destroy((T*)&node->mValue);
+		mAllocator.destroy((T*)(node + 1));
 		mAllocator.DeallocateRaw(node);
 	}
 
 public:
 	class iterator;
 
-	TList(const TAllocator<T>& alloc)
+	TList(const TAllocator<T>& alloc = TAllocator<T>())
 	    : mAllocator(alloc)
 	    , mSize(0)
 	{
@@ -104,8 +104,8 @@ public:
 		{
 		}
 
-		T& operator*() { return *(T*)mNode->mValue; }
-		T* operator->() { return (T*)mNode->mValue; }
+		T& operator*() { return *(T*)(mNode + 1); }
+		T* operator->() { return (T*)(mNode + 1); }
 
 		iterator operator++()
 		{
