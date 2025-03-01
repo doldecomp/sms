@@ -37,7 +37,22 @@ enum J3DDeformAttachFlag {};
 
 class J3DVertexBuffer {
 public:
+	/* 0x00 */ J3DVertexData* mVertexData;
+	/* 0x04 */ void* unk4[2];
+	/* 0x0C */ void* unkC[2];
+	/* 0x14 */ void* unk14;
+	/* 0x18 */ u32 unk18;
+	// TODO: figure out what actually lives here
+	/* 0x1C */ void* unk1C[2];
+	/* 0x24 */ void* unk24[2];
+	/* 0x2C */ void* unk2C;
+	/* 0x30 */ void* unk30;
+	/* 0x34 */ void* unk34;
+
+public:
 	J3DVertexBuffer(J3DVertexData* vertex_data);
+
+	virtual ~J3DVertexBuffer(); // vt at 0x38
 
 	void frameInit()
 	{
@@ -87,25 +102,9 @@ public:
 	void* getTransformedVtxPos(int idx) { return unk1C[idx]; }
 	void* getTransformedVtxNrm(int idx) { return unk24[idx]; }
 
-public:
-	/* 0x00 */ J3DVertexData* mVertexData;
-	/* 0x04 */ void* unk4[2];
-	/* 0x0C */ void* unkC[2];
-	/* 0x14 */ void* unk14;
-	/* 0x18 */ u32 unk18;
-	// TODO: figure out what actually lives here
-	/* 0x1C */ void* unk1C[2];
-	/* 0x24 */ void* unk24[2];
-	/* 0x2C */ void* unk2C;
-	/* 0x30 */ void* unk30;
-	/* 0x34 */ void* unk34;
-
-	virtual ~J3DVertexBuffer(); // vt at 0x38
-
-	typedef void IDK;
-	IDK copyLocalVtxArray(J3DDeformAttachFlag);
-	IDK copyVtxColorArray(J3DDeformAttachFlag);
-	IDK copyTransformedVtxArray();
+	void copyLocalVtxArray(J3DDeformAttachFlag);
+	void copyVtxColorArray(J3DDeformAttachFlag);
+	void copyTransformedVtxArray();
 };
 
 class J3DDrawMtxData {
