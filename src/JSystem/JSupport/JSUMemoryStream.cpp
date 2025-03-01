@@ -27,15 +27,15 @@ int JSUMemoryInputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
 	s32 oldPosition = mPosition;
 
 	switch (from) {
-	case SEEK_SET:
+	case JSUStreamSeekFrom_SET:
 		mPosition = offset;
 		break;
 
-	case SEEK_END:
+	case JSUStreamSeekFrom_END:
 		mPosition = mLength - offset;
 		break;
 
-	case SEEK_CUR:
+	case JSUStreamSeekFrom_CUR:
 		mPosition += offset;
 		break;
 	}
@@ -75,15 +75,15 @@ int JSUMemoryOutputStream::seekPos(s32 offset, JSUStreamSeekFrom from)
 	s32 oldPosition = mPosition;
 
 	switch (from) {
-	case SEEK_SET:
+	case JSUStreamSeekFrom_SET:
 		mPosition = offset;
 		break;
 
-	case SEEK_END:
+	case JSUStreamSeekFrom_END:
 		mPosition = mLength - offset;
 		break;
 
-	case SEEK_CUR:
+	case JSUStreamSeekFrom_CUR:
 		mPosition += offset;
 		break;
 	}

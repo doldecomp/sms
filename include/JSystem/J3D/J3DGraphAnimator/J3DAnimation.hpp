@@ -23,8 +23,6 @@ public:
 	J3DFrameCtrl() { init(0); };
 	virtual ~J3DFrameCtrl() {};
 
-	typedef void IDK;
-
 	void setSpeed(f32 speed) { mSpeed = speed; }
 	void setAttribute(u8 attr) { mLoopMode = attr; }
 	void setRate(f32 rate) { mSpeed = rate; }
@@ -34,6 +32,8 @@ public:
 	void init(s16);
 	bool checkPass(float);
 	void update();
+
+	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }
 
 public:
 	// TODO: probably private and always accessed via getters/setters judging by

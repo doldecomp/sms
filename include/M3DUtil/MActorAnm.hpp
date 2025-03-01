@@ -1,9 +1,11 @@
 #ifndef M3DUTIL_M_ACTOR_ANM_HPP
 #define M3DUTIL_M_ACTOR_ANM_HPP
 
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/M3UJoint.hpp>
+#include <System/Application.hpp>
 #include <string.h>
 
 class J3DModel;
@@ -33,10 +35,71 @@ public:
 	/* 0x1C */ MActorAnmDataBase* unk1C;
 
 public:
-	MActorAnmBase();
+	MActorAnmBase()
+	    : unk0(-1)
+	    , unk18(nullptr)
+	    , unk1C(nullptr)
+	{
+	}
 	~MActorAnmBase() { }
 
-	virtual void setModel(J3DModel*) { }
+	// fabricated
+	J3DFrameCtrl* getFrameCtrl() { return &unk4; }
+	s32 getUnk0() { return unk0; }
+	void setUnk1C(MActorAnmDataBase* param_1) { unk1C = param_1; }
+
+	int findName(const char* name)
+	{
+		u16 key = MActorCalcKeyCode(name);
+
+		int totalKeyMatches = 0;
+		int match           = -1;
+		for (int i = 0; i < unk1C->getAnmNum(); ++i)
+			if (key == unk1C->getKeyCode(i)) {
+				++totalKeyMatches;
+				match = i;
+			}
+
+		if (totalKeyMatches == 1)
+			return match;
+
+		for (int i = 0; i < unk1C->getAnmNum(); ++i)
+			if (key == unk1C->getKeyCode(i)
+			    && strcmp(name, unk1C->getName(i)) == 0)
+				return i;
+
+		unk1C->checkLower(name);
+		verifySuffix(name);
+		return -1;
+	}
+
+	int findName2(const char* name)
+	{
+		u16 key = MActorCalcKeyCode(name);
+
+		int totalKeyMatches = 0;
+		int match           = -1;
+		for (int i = 0; i < unk1C->getAnmNum(); ++i)
+			if (key == unk1C->getKeyCode(i)) {
+				++totalKeyMatches;
+				match = i;
+			}
+
+		if (totalKeyMatches == 0)
+			return -1;
+
+		if (totalKeyMatches == 1)
+			return match;
+
+		for (int i = 0; i < unk1C->getAnmNum(); ++i)
+			if (key == unk1C->getKeyCode(i)
+			    && strcmp(name, unk1C->getName(i)) == 0)
+				return i;
+
+		return -1;
+	}
+
+	virtual void setModel(J3DModel* model) { unk18 = model; }
 	virtual void updateIn() { }
 	virtual void updateOut() { }
 	virtual void checkUseMaterialIDInit(u16*);
@@ -48,9 +111,13 @@ public:
 
 template <class T> class MActorAnmEach : public MActorAnmBase {
 public:
+	MActorAnmEach() { unk24 = nullptr; }
 	~MActorAnmEach() { }
 
-	virtual void setAnm(const char*, u16*);
+	virtual void setAnm(const char* param_1, u16* param_2)
+	{
+		this->setAnmFromIndex(findName(param_1), param_2);
+	}
 
 	void setFrameCtrl(int);
 
@@ -59,20 +126,40 @@ public:
 	{
 		return static_cast<MActorAnmDataEach<T>*>(unk1C);
 	}
+
+public:
+	/* 0x24 */ T* unk24;
 };
 
 template <class T> class MActorAnmMatEach : public MActorAnmEach<T> {
 public:
 	~MActorAnmMatEach();
 
-	virtual void setAnmFromIndex(int, u16*);
+	virtual void setAnmFromIndex(int param_1, u16* param_2)
+	{
+		this->unk0 = param_1;
+		bool thing;
+		if (param_1 < 0) {
+			thing = false;
+		} else {
+			this->unk24 = this->getData()->getAnmPtr(param_1);
+			this->unk4.init(this->unk24->getFrameMax());
+			this->unk4.setAttribute(this->unk24->getAttribute());
+			this->unk4.setRate(SMSGetAnmFrameRate());
+			thing = true;
+		}
 
-public:
-	/* 0x24 */ T* unk24; // TODO: might be in MActorAnmEach
+		if (thing) {
+			this->unk24->searchUpdateMaterialID(this->unk18->getModelData());
+			this->checkUseMaterialID(param_2);
+		}
+	}
 };
 
 class MActorAnmBlk : public MActorAnmEach<J3DAnmClusterKey> {
 public:
+	MActorAnmBlk() { unk28 = nullptr; }
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void setAnmFromIndex(int, u16*);
@@ -82,12 +169,13 @@ public:
 	}
 
 public:
-	/* 0x24 */ J3DAnmCluster* unk24;
 	/* 0x28 */ J3DDeformData* unk28;
 };
 
 class MActorAnmBrk : public MActorAnmMatEach<J3DAnmTevRegKey> {
 public:
+	MActorAnmBrk() { }
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void checkUseMaterialIDInit(u16*);
@@ -107,6 +195,8 @@ public:
 
 class MActorAnmBpk : public MActorAnmMatEach<J3DAnmColorKey> {
 public:
+	MActorAnmBpk() { unk28 = nullptr; }
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void checkUseMaterialIDInit(u16*);
@@ -124,6 +214,8 @@ public:
 
 class MActorAnmBtk : public MActorAnmMatEach<J3DAnmTextureSRTKey> {
 public:
+	MActorAnmBtk() { unk28 = nullptr; }
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void checkUseMaterialIDInit(u16*);
@@ -141,6 +233,8 @@ public:
 
 class MActorAnmBtp : public MActorAnmMatEach<J3DAnmTexPattern> {
 public:
+	MActorAnmBtp() { unk28 = nullptr; }
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void checkUseMaterialIDInit(u16*);
@@ -158,6 +252,16 @@ public:
 
 class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {
 public:
+	MActorAnmBck()
+	{
+		unk28 = nullptr;
+		unk2A = 1;
+		unk2C = nullptr;
+		unk30 = nullptr;
+		unk34 = nullptr;
+		unk38 = nullptr;
+	}
+
 	virtual void updateIn();
 	virtual void updateOut();
 	virtual void setAnmFromIndex(int, u16*);
@@ -177,7 +281,6 @@ public:
 	void changeMtxCalcType(u8);
 
 public:
-	/* 0x24 */ J3DAnmTransformKey* unk24;
 	/* 0x28 */ u16 unk28;
 	/* 0x2A */ u8 unk2A;
 	/* 0x2C */ J3DMtxCalcBasicAnm* unk2C;

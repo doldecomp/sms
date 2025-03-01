@@ -196,6 +196,7 @@ public:
 	u8 getMtxType() const { return (mKind >> 4) & 0xF; }
 	void setMtxType(u8 type) { mKind = (mKind & ~0xf0) | (type << 4); }
 	void setMtxCalc(J3DMtxCalc* mtx_calc) { mMtxCalc = mtx_calc; }
+	J3DMtxCalc* getMtxCalc() { return mMtxCalc; }
 
 private:
 	/* 0x18 */ u16 mJntNo;

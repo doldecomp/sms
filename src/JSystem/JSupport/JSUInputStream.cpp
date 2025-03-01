@@ -82,7 +82,7 @@ int JSUInputStream::skip(s32 amount)
 
 int JSURandomInputStream::skip(s32 amount)
 {
-	int s = seekPos(amount, SEEK_CUR);
+	int s = seekPos(amount, JSUStreamSeekFrom_CUR);
 	if (s != amount) {
 		setState(EOF);
 	}
@@ -96,7 +96,7 @@ int JSURandomInputStream::align(s32 alignment)
 	int change;
 	// NOTE: this is insane but it matches
 	if ((change = aligned - pos) != 0) {
-		int s = seekPos(aligned, SEEK_SET);
+		int s = seekPos(aligned, JSUStreamSeekFrom_SET);
 		if (s != change) {
 			setState(EOF);
 		}
@@ -116,7 +116,7 @@ u32 JSURandomInputStream::peek(void* buf, s32 len)
 		setState(EOF);
 	}
 	if (r != 0) {
-		seekPos(pos, SEEK_SET);
+		seekPos(pos, JSUStreamSeekFrom_SET);
 	}
 
 	return r;

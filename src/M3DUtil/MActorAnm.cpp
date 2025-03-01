@@ -5,7 +5,6 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
-#include <System/Application.hpp>
 
 void MActorAnmBlk::setAnmFromIndex(int param_1, u16* param_2)
 {
