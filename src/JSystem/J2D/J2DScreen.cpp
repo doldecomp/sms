@@ -57,12 +57,12 @@ void J2DScreen::makeHiearachyPanes(J2DPane* parent,
 			case 'EXT1':
 				return;
 			case 'BGN1':
-				stream->seek(*out_next_pane_offset, SEEK_SET);
+				stream->seek(*out_next_pane_offset, JSUStreamSeekFrom_SET);
 				makeHiearachyPanes(nextParent, stream, allow_user_panes, false,
 				                   is_ex, out_next_pane_offset);
 				break;
 			case 'END1':
-				stream->seek(*out_next_pane_offset, SEEK_SET);
+				stream->seek(*out_next_pane_offset, JSUStreamSeekFrom_SET);
 				return;
 			case 'PAN1':
 				nextParent = new J2DPane(parent, stream, is_ex);
@@ -81,7 +81,7 @@ void J2DScreen::makeHiearachyPanes(J2DPane* parent,
 					nextParent = makeUserPane(mKind, parent, stream);
 				break;
 			}
-			stream->seek(*out_next_pane_offset, SEEK_SET);
+			stream->seek(*out_next_pane_offset, JSUStreamSeekFrom_SET);
 		} else {
 			u16 tag;
 			if (stream->peek(&tag, 2) != 2) {

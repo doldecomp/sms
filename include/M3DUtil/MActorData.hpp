@@ -30,6 +30,8 @@ public:
 
 	// fabricated
 	int getAnmNum() const { return unk0; }
+	u16 getKeyCode(int i) { return unk4[i]; }
+	const char* getName(int i) { return unk8[i]; }
 
 public:
 	/* 0x0 */ int unk0;
@@ -80,7 +82,7 @@ public:
 };
 
 struct MActorSubAnmInfo {
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ u16 unk0;
 	/* 0x4 */ const char* unk4;
 };
 
@@ -97,8 +99,18 @@ public:
 	void addIncidentalAnm(const char*, int);
 	u32 partsNameToIdx(const char*);
 
+	// fabricated
+	s32 getUnk0() { return unk0; }
+	SampleCtrlModelData* getUnk48() { return unk48; }
+	MActorAnmDataEach<J3DAnmTransformKey>* getUnk2C() { return unk2C; }
+	MActorAnmDataEach<J3DAnmColorKey>* getUnk30() { return unk30; }
+	MActorAnmDataEach<J3DAnmTexPattern>* getUnk34() { return unk34; }
+	MActorAnmDataEach<J3DAnmTextureSRTKey>* getUnk38() { return unk38; }
+	MActorAnmDataEach<J3DAnmTevRegKey>* getUnk3C() { return unk3C; }
+	MActorAnmDataEach<J3DAnmClusterKey>* getUnk40() { return unk40; }
+
 public:
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ int unk0;
 	/* 0x4 */ int unk4;
 	/* 0x8 */ int unk8;
 	/* 0xC */ int unkC;
@@ -115,5 +127,7 @@ public:
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ SampleCtrlModelData* unk48;
 };
+
+u16 MActorCalcKeyCode(const char* name);
 
 #endif
