@@ -97,7 +97,7 @@ public:
 	/* 0x34 */ int unk34;
 	/* 0x38 */ bool unk38;
 	/* 0x39 */ u8 unk39;
-	/* 0x3C */ u32 unk3C;
+	/* 0x3C */ int unk3C;
 	/* 0x40 */ u8 unk40;
 	/* 0x44 */ u32 unk44;
 };
