@@ -1,5 +1,6 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
@@ -216,6 +217,7 @@ bool MActor::checkCurAnm(const char* param_1, int param_2)
 	return false;
 }
 
+#pragma dont_inline on
 void MActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2) {
@@ -237,23 +239,25 @@ void MActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk4->viewCalc();
 
 	if ((param_1 & 0x200) && unk39) {
-		bool thing = false;
+		bool shouldResetLightDrawBuf = false;
 		if (unk3C != 0xffff) {
 			if (unk3C < 0)
 				unk3C = 0;
 
-			// TODO: gpLightManager call or something
+			gpLightManager->unk14[unk44]->changeLightDrawBuffer(unk3C);
 
-			thing = true;
+			shouldResetLightDrawBuf = true;
 		}
 
 		entryIn();
 		unk4->entry();
 		entryOut();
-		if (thing)
-			; // TODO: gpLightManager call or something
+
+		if (shouldResetLightDrawBuf)
+			gpLightManager->unk14[unk44]->resetLightDrawBuffer();
 	}
 }
+#pragma dont_inline off
 
 void MActor::matAnmFrameUpdate()
 {
@@ -273,9 +277,35 @@ void MActor::frameUpdate()
 	}
 }
 
-void MActor::entry() { }
+void MActor::entry()
+{
+	if (!unk39)
+		return;
 
-void MActor::setLightType(int) { }
+	bool shouldResetLightDrawBuf = false;
+	if (unk3C != 0xffff) {
+		if (unk3C < 0)
+			unk3C = 0;
+
+		gpLightManager->unk14[unk44]->changeLightDrawBuffer(unk3C);
+
+		shouldResetLightDrawBuf = true;
+	}
+
+	entryIn();
+	unk4->entry();
+	entryOut();
+
+	if (shouldResetLightDrawBuf)
+		gpLightManager->unk14[unk44]->resetLightDrawBuffer();
+}
+
+void MActor::setLightType(int param_1)
+{
+	unk44 = param_1;
+
+	gpLightManager->unk14[param_1]->unk20 = 1;
+}
 
 void MActor::setLightData(const TBGCheckData*, const JGeometry::TVec3<f32>&) { }
 
