@@ -60,8 +60,6 @@ struct J3DTextureBlock : public JUTDataBlockHeader {
 
 class J3DModelLoaderDataBase {
 public:
-	// NOTE: I have no idea why, but it seems like they pass in the
-	// J3DModelLoaderDataBase through a void* pointer here?!
 	static J3DModelData* load(const void*, u32);
 	static J3DMaterialTable* loadMaterialTable(const void*);
 };
