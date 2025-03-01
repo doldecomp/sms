@@ -9,7 +9,7 @@ class J3DFrameCtrl;
 
 class M3UModelCommon {
 public:
-	virtual void getMtxCalc(const M3UMtxCalcSetInfo&);
+	virtual void getMtxCalc(const M3UMtxCalcSetInfo&) { }
 };
 
 class M3UModel {

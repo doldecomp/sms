@@ -1,7 +1,7 @@
 #include <M3DUtil/SampleCtrlNode.hpp>
 
-SampleCtrlShape::SampleCtrlShape(J3DShape*) { }
+SampleCtrlJoint::SampleCtrlJoint(J3DJoint*) { }
 
 SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial*) { }
 
-SampleCtrlJoint::SampleCtrlJoint(J3DJoint*) { }
+SampleCtrlShape::SampleCtrlShape(J3DShape*) { }

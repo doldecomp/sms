@@ -3,82 +3,6 @@
 #include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/JMath.hpp>
 
-void M3UMtxCalcBlendAux(u16, J3DTransformInfo*, J3DTransformInfo*, float, bool);
-
-void M3UMtxCalcSIAnmBlendQuat::calc(u16 param_1)
-{
-	J3DTransformInfo info;
-	J3DTransformInfo infoOld;
-	J3DTransformInfo infoNew;
-
-	j3dSys.setCurrentMtxCalc(this);
-
-	if ((unk54 == nullptr && unk58 == nullptr)
-	    || (unk54 == nullptr && unk50 == 0.0f)
-	    || (unk58 == nullptr && unk50 == 1.0f)) {
-		info = j3dSys.getModel()
-		           ->getModelData()
-		           ->getJointNodePointer(param_1)
-		           ->getTransformInfo();
-		calcTransform(param_1, info);
-	} else if (unk50 == 0.0f || unk58 == nullptr) {
-		unk54->getTransform(param_1, &info);
-		calcTransform(param_1, info);
-	} else if (unk50 == 1.0f || unk54 == nullptr) {
-		unk58->getTransform(param_1, &info);
-		calcTransform(param_1, info);
-	} else {
-		unk54->getTransform(param_1, &infoNew);
-		J3DTransformInfo* ptr = &infoOld;
-		unk58->getTransform(param_1, ptr);
-		M3UMtxCalcBlendAux(param_1, &infoNew, &infoOld, unk50, unk5C);
-	}
-}
-
-void M3UMtxCalcSIAnmBlendQuat::init(const Vec& vec, const Mtx& mtx)
-{
-	if (unk5C) {
-		J3DSys::mCurrentS = vec;
-		J3DSys::mParentS  = (Vec) { 1.0f, 1.0f, 1.0f };
-
-		J3DSys::mCurrentMtx[0][0] = mtx[0][0] * vec.x;
-		J3DSys::mCurrentMtx[0][1] = mtx[0][1] * vec.y;
-		J3DSys::mCurrentMtx[0][2] = mtx[0][2] * vec.z;
-		J3DSys::mCurrentMtx[0][3] = mtx[0][3];
-		J3DSys::mCurrentMtx[1][0] = mtx[1][0] * vec.x;
-		J3DSys::mCurrentMtx[1][1] = mtx[1][1] * vec.y;
-		J3DSys::mCurrentMtx[1][2] = mtx[1][2] * vec.z;
-		J3DSys::mCurrentMtx[1][3] = mtx[1][3];
-		J3DSys::mCurrentMtx[2][0] = mtx[2][0] * vec.x;
-		J3DSys::mCurrentMtx[2][1] = mtx[2][1] * vec.y;
-		J3DSys::mCurrentMtx[2][2] = mtx[2][2] * vec.z;
-		J3DSys::mCurrentMtx[2][3] = mtx[2][3];
-
-	} else {
-		J3DSys::mCurrentS = vec;
-		MTXCopy((Mtx&)mtx, J3DSys::mCurrentMtx);
-	}
-}
-
-void M3UMtxCalcSIAnmBlendQuat::calcTransform(u16 param_1,
-                                             const J3DTransformInfo& param_2)
-{
-	if (unk5C)
-		J3DMtxCalcBasic::calcTransform(param_1, param_2);
-	else
-		J3DMtxCalcSoftimage::calcTransform(param_1, param_2);
-}
-
-M3UMtxCalcSIAnmBlendQuat::M3UMtxCalcSIAnmBlendQuat(bool param_1)
-    : J3DMtxCalcSoftimage()
-{
-	unk50 = 0.0f;
-	unk60 = 0.0f;
-	unk58 = nullptr;
-	unk54 = nullptr;
-	unk5C = param_1;
-}
-
 void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, float param_4, bool param_5)
 {
@@ -165,5 +89,79 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
 			local_7c[2][3] = J3DSys::mCurrentMtx[2][3];
 			PSMTXCopy(local_7c, j3dSys.mModel->mNodeMatrices[param_1]);
 		}
+	}
+}
+
+M3UMtxCalcSIAnmBlendQuat::M3UMtxCalcSIAnmBlendQuat(bool param_1)
+    : J3DMtxCalcSoftimage()
+{
+	unk50 = 0.0f;
+	unk60 = 0.0f;
+	unk58 = nullptr;
+	unk54 = nullptr;
+	unk5C = param_1;
+}
+
+void M3UMtxCalcSIAnmBlendQuat::calcTransform(u16 param_1,
+                                             const J3DTransformInfo& param_2)
+{
+	if (unk5C)
+		J3DMtxCalcBasic::calcTransform(param_1, param_2);
+	else
+		J3DMtxCalcSoftimage::calcTransform(param_1, param_2);
+}
+
+void M3UMtxCalcSIAnmBlendQuat::init(const Vec& vec, const Mtx& mtx)
+{
+	if (unk5C) {
+		J3DSys::mCurrentS = vec;
+		J3DSys::mParentS  = (Vec) { 1.0f, 1.0f, 1.0f };
+
+		J3DSys::mCurrentMtx[0][0] = mtx[0][0] * vec.x;
+		J3DSys::mCurrentMtx[0][1] = mtx[0][1] * vec.y;
+		J3DSys::mCurrentMtx[0][2] = mtx[0][2] * vec.z;
+		J3DSys::mCurrentMtx[0][3] = mtx[0][3];
+		J3DSys::mCurrentMtx[1][0] = mtx[1][0] * vec.x;
+		J3DSys::mCurrentMtx[1][1] = mtx[1][1] * vec.y;
+		J3DSys::mCurrentMtx[1][2] = mtx[1][2] * vec.z;
+		J3DSys::mCurrentMtx[1][3] = mtx[1][3];
+		J3DSys::mCurrentMtx[2][0] = mtx[2][0] * vec.x;
+		J3DSys::mCurrentMtx[2][1] = mtx[2][1] * vec.y;
+		J3DSys::mCurrentMtx[2][2] = mtx[2][2] * vec.z;
+		J3DSys::mCurrentMtx[2][3] = mtx[2][3];
+
+	} else {
+		J3DSys::mCurrentS = vec;
+		MTXCopy((Mtx&)mtx, J3DSys::mCurrentMtx);
+	}
+}
+
+void M3UMtxCalcSIAnmBlendQuat::calc(u16 param_1)
+{
+	J3DTransformInfo info;
+	J3DTransformInfo infoOld;
+	J3DTransformInfo infoNew;
+
+	j3dSys.setCurrentMtxCalc(this);
+
+	if ((unk54 == nullptr && unk58 == nullptr)
+	    || (unk54 == nullptr && unk50 == 0.0f)
+	    || (unk58 == nullptr && unk50 == 1.0f)) {
+		info = j3dSys.getModel()
+		           ->getModelData()
+		           ->getJointNodePointer(param_1)
+		           ->getTransformInfo();
+		calcTransform(param_1, info);
+	} else if (unk50 == 0.0f || unk58 == nullptr) {
+		unk54->getTransform(param_1, &info);
+		calcTransform(param_1, info);
+	} else if (unk50 == 1.0f || unk54 == nullptr) {
+		unk58->getTransform(param_1, &info);
+		calcTransform(param_1, info);
+	} else {
+		unk54->getTransform(param_1, &infoNew);
+		J3DTransformInfo* ptr = &infoOld;
+		unk58->getTransform(param_1, ptr);
+		M3UMtxCalcBlendAux(param_1, &infoNew, &infoOld, unk50, unk5C);
 	}
 }
