@@ -3,13 +3,17 @@
 
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 
 class J3DModelData;
 class J3DMaterial;
 class J3DNode;
 class SDLModel;
 
-struct SDLDrawBufToken { };
+struct SDLDrawBufToken {
+	/* 0x0 */ J3DDrawBuffer* unk0[2];
+	/* 0x8 */ J3DModel* unk8;
+};
 
 // 0x1CU
 class SDLModelData {
@@ -24,7 +28,10 @@ public:
 	void entrySameMat(J3DMaterial*, SDLDrawBufToken*);
 
 public:
-	char padding[0x1CU];
+	/* 0x0 */ J3DModelData* unk0;
+	/* 0x4 */ SDLModel* unk4;
+	/* 0x8 */ JGadget::TList<SDLDrawBufToken*> unk8;
+	/* 0x18 */ u32 unk18;
 };
 
 class SDLMatPacket : public J3DMatPacket {
@@ -48,7 +55,9 @@ public:
 	void entryModelDataSDL(SDLModelData*, u32, u32);
 
 public:
-	char padding[0xACU];
+	/* 0xA0 */ SDLModelData* unkA0;
+	/* 0xA4 */ J3DDrawBuffer* unkA4;
+	/* 0xA8 */ u32 unkA8;
 };
 
 #endif

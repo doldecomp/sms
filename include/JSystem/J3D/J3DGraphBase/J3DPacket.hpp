@@ -44,12 +44,10 @@ public:
 		unkC = 0;
 	}
 
-	typedef void IDK;
-
 	virtual bool isSame(J3DMatPacket*) const;
 	virtual bool entry(J3DDrawBuffer*);
 	void addChildPacket(J3DPacket* packet);
-	virtual IDK draw() { }
+	virtual void draw() { }
 
 	virtual ~J3DPacket() {};
 
@@ -84,16 +82,16 @@ class J3DDrawPacket : public J3DPacket {
 public:
 	J3DDrawPacket();
 
-	typedef void IDK;
 	virtual void draw();
 	virtual ~J3DDrawPacket();
 
 	void beginDL();
 	u32 endDL();
-	IDK beginPatch();
-	IDK endPatch();
+	void beginPatch();
+	void endPatch();
 
 	J3DDisplayListObj* getDisplayListObj() const { return unk30; }
+	void setDisplayListObj(J3DDisplayListObj* pObj) { unk30 = pObj; }
 
 	bool checkFlag(u32 flag) const { return (unk10 & flag) != 0; }
 	void onFlag(u32 flag) { unk10 |= flag; }
@@ -115,7 +113,6 @@ class J3DMatPacket : public J3DDrawPacket {
 public:
 	J3DMatPacket();
 
-	typedef void IDK;
 	virtual bool isSame(J3DMatPacket* other) const
 	{
 		return unk3C == other->unk3C && (unk3C >> 31) == 0;
@@ -130,11 +127,12 @@ public:
 	virtual ~J3DMatPacket();
 
 	void addShapePacket(J3DShapePacket* packet);
-	IDK isHideAllShapePacket_();
+	void isHideAllShapePacket_();
 
 	J3DShapePacket* getShapePacket() const { return unk34; }
 	void setShapePacket(J3DShapePacket* packet) { unk34 = packet; }
 	J3DMaterial* getMaterial() const { return unk38; }
+	void setTexture(J3DTexture* pTexture) { mTexture = pTexture; }
 
 	void setMaterialAnmID(J3DMaterialAnm* materialAnm) { unk44 = materialAnm; }
 
@@ -153,6 +151,7 @@ public:
 	virtual void draw();
 	virtual ~J3DShapePacket();
 
+	void setShape(J3DShape* pShape) { unk14 = pShape; }
 	void setDrawMtx(Mtx** mtx) { unk18 = mtx; }
 	void setNrmMtx(Mtx33** mtx) { unk1C = mtx; }
 	void setCurrentViewNoPtr(u32* pCurrentViewNo) { unk20 = pCurrentViewNo; }
