@@ -11,7 +11,11 @@ class TLightWithDBSet;
 class TLightWithDBSetManager : public JDrama::TViewObj {
 public:
 	TLightWithDBSetManager(const char*);
-	~TLightWithDBSetManager() { }
+
+	virtual ~TLightWithDBSetManager() { }
+	virtual void loadAfter();
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void calcLightBorder();
 	void getEffectLightColor() const;
 	void setEffectLight(const JDrama::TGraphics*, GXLightObj*);
@@ -19,8 +23,9 @@ public:
 	void makeDrawBuffer();
 	void addChildGroupObj(
 	    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	void perform(u32, JDrama::TGraphics*);
-	void loadAfter();
+
+	// fabricated
+	TLightWithDBSet* getUnk14(int i) { return unk14[i]; }
 
 public:
 	/* 0x10 */ u32 unk10;

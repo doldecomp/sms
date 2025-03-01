@@ -28,6 +28,7 @@ public:
 	void setRate(f32 rate) { mSpeed = rate; }
 	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
 	f32 getCurrentFrame() const { return mCurrentFrame; }
+	void setFrame(f32 frame) { mCurrentFrame = frame; }
 
 	void init(s16);
 	bool checkPass(float);

@@ -792,7 +792,7 @@ config.libs = [
     {
         "lib": "M3DUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_system,
+        "cflags": [*cflags_system, "-inline deferred"],
         "objects": [
             Object(NonMatching, "M3DUtil/M3UJoint.cpp"),
             Object(NonMatching, "M3DUtil/M3UModel.cpp"),
