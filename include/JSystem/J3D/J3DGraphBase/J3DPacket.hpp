@@ -39,9 +39,9 @@ class J3DPacket {
 public:
 	J3DPacket()
 	{
-		unk4 = 0;
-		unk8 = 0;
-		unkC = 0;
+		unk4 = nullptr;
+		unk8 = nullptr;
+		unkC = nullptr;
 	}
 
 	virtual bool isSame(J3DMatPacket*) const;
@@ -60,21 +60,28 @@ public:
 	J3DPacket* getNextPacket() const { return unk4; }
 	void setNextPacket(J3DPacket* packet) { unk4 = packet; }
 
+	// Weird, but TP debug says this is the signature
+	void setUserArea(u32 area) { unkC = (void*)area; }
+	u32 getUserArea() const { return (u32)unkC; }
+
 public:
 	J3DPacket* unk4;
 	J3DPacket* unk8;
-	u32 unkC;
+	void* unkC;
 };
 
 class J3DCallBackPacket : public J3DPacket {
 public:
-	typedef void (*CallbackT)(J3DPacket*, u32);
+	typedef void (*CallbackT)(J3DCallBackPacket*, int);
 
-	J3DCallBackPacket() { unk10 = (CallbackT)nullptr; }
+	J3DCallBackPacket() { unk10 = nullptr; }
 
 	virtual void draw();
 	virtual ~J3DCallBackPacket() { }
 
+	void setCallback(CallbackT cb) { unk10 = cb; }
+
+public:
 	CallbackT unk10;
 };
 
@@ -155,6 +162,10 @@ public:
 	void setDrawMtx(Mtx** mtx) { unk18 = mtx; }
 	void setNrmMtx(Mtx33** mtx) { unk1C = mtx; }
 	void setCurrentViewNoPtr(u32* pCurrentViewNo) { unk20 = pCurrentViewNo; }
+
+	// fabriacted
+	void hide() { unk30 = 0; }
+	void show() { unk30 = 1; }
 
 public:
 	J3DShape* unk14;
