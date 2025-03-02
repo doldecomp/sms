@@ -14,7 +14,8 @@ struct TRidingInfo {
 };
 
 class TMarioGamePad;
-
+class TYoshi;
+class TWaterGun;
 // TODO: Add fields
 class TMario : public TTakeActor, public TDrawSyncCallback {
 public:
@@ -45,7 +46,7 @@ public:
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
-	u32 onYoshi() const;
+	s32 onYoshi() const;
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	u32 askJumpIntoWaterEffectExist() const;
 
@@ -101,18 +102,18 @@ public:
 	s16 health; // 0x0120
 
 	u16 _122;
-	char _124[0x264];
+	char _124[0x260];
 
 	u16 blooperColor; // TODO: Make enum (0 = red, 1 = yellow, 2 = green)
 
 	char _38A[0x5A];
 
-	void* waterGun; // TWaterGun 0x3E4
+	TWaterGun* waterGun; // 0x3E4
 
 	u32 _3E8;
 	u32 _3EC;
 
-	void* yoshi; // TYoshi 0x3F0
+	TYoshi* yoshi; // TYoshi 0x3F0
 
 	char _3F4[0x0FC];
 
