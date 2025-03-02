@@ -179,7 +179,7 @@ void PSVECAdd(Vec* a, Vec* b, Vec* c);
 void PSVECSubtract(Vec* a, Vec* b, Vec* c);
 void PSVECScale(Vec* src, Vec* dst, f32 scale);
 void PSVECNormalize(Vec* vec1, Vec* dst);
-void PSVECMag(Vec* v);
+float PSVECMag(Vec* v);
 f32 PSVECSquareMag(Vec* vec1);
 f32 PSVECDotProduct(Vec* vec1, Vec* vec2);
 void PSVECCrossProduct(Vec* vec1, Vec* vec2, Vec* dst);

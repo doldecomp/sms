@@ -766,7 +766,7 @@ config.libs = [
     {
         "lib": "MarioUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-inline deferred ", "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MarioUtil/DLUtil.cpp"),
@@ -784,8 +784,8 @@ config.libs = [
             Object(NonMatching, "MarioUtil/RumbleType.cpp"),
             Object(NonMatching, "MarioUtil/PacketUtil.cpp"),
             Object(NonMatching, "MarioUtil/GDUtil.cpp"),
-            Object(NonMatching, "MarioUtil/TexUtil.cpp"),
-            Object(NonMatching, "MarioUtil/MapUtil.cpp"),
+            Object(Matching, "MarioUtil/TexUtil.cpp"),
+            Object(Matching, "MarioUtil/MapUtil.cpp"),
             Object(NonMatching, "MarioUtil/ToolData.cpp"),
         ],
     },

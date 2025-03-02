@@ -145,7 +145,12 @@ public:
 	void setMax(const TVec3& other);
 	void setMin(const TVec3& other);
 	void sub(const TVec3& translate);
-	void sub(const TVec3& base, const TVec3& translate);
+	void sub(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x - snd.x;
+		y = fst.y - snd.y;
+		z = fst.z - snd.z;
+	}
 
 	T x;
 	T y;

@@ -6,34 +6,6 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <Strategic/HitActor.hpp>
 
-float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
-{
-	float retvar = actor->getModel()->mNodeMatrices[0][1][1];
-
-	if (retvar > 1.0f) {
-		retvar = 1.0f;
-	} else if (retvar < 0.0f) {
-		retvar = 0.0f;
-	}
-
-	return retvar;
-}
-
-void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value)
-{
-	void* actor = nullptr;
-	if (bgData) {
-		actor = bgData->unk44;
-		// TODO: this does not match and I have no idea what the original
-		// author was thinking, the entire THitActor hierarchy needs to be
-		// figured out
-		if (bgData->unk44 && value != bgData->unk44->mActorType) {
-			actor = nullptr;
-		}
-	}
-	return actor;
-}
-
 int SMS_GetMonteVillageAreaInMario()
 {
 	int retvar = 4;
@@ -53,5 +25,33 @@ int SMS_GetMonteVillageAreaInMario()
 			break;
 		}
 	}
+	return retvar;
+}
+
+void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value)
+{
+	void* actor = nullptr;
+	if (bgData) {
+		actor = bgData->unk44;
+		// TODO: this does not match and I have no idea what the original
+		// author was thinking, the entire THitActor hierarchy needs to be
+		// figured out
+		if (bgData->unk44 && value != bgData->unk44->mActorType) {
+			actor = nullptr;
+		}
+	}
+	return actor;
+}
+
+float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
+{
+	float retvar = actor->getModel()->mNodeMatrices[0][1][1];
+
+	if (retvar > 1.0f) {
+		retvar = 1.0f;
+	} else if (retvar < 0.0f) {
+		retvar = 0.0f;
+	}
+
 	return retvar;
 }

@@ -11,21 +11,67 @@
 #include <Map/Map.hpp>
 #include <System/Application.hpp>
 
-SDLModel* SMS_CreateMinimumSDLModel(const char* name)
+TMultiBtk::TMultiBtk(int param_1, J3DModelData* param_2)
 {
-	J3DModelData* temp_r31 = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource(name), 0x10000);
-	SDLModelData* temp_r3_2 = new SDLModelData(temp_r31);
-	SDLModel* temp_r3       = new SDLModel(temp_r3_2, 3U, 1U);
-	return temp_r3;
+	unk00 = param_1;
+	unk04 = new J3DAnmTextureSRTKey*[param_1];
+	unk08 = param_2;
+	unk0c = new J3DFrameCtrl[param_1];
 }
 
-J3DModel* SMS_CreatePartsModel(char* arg0, u32 arg1)
+void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
 {
-	J3DModelData* temp_r31 = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource(arg0), arg1);
-	J3DModel* temp_r3 = new J3DModel(temp_r31, arg1, 1U);
-	return temp_r3;
+	unk04[n] = param_2;
+	unk04[n]->searchUpdateMaterialID(unk08);
+	if (n == 0) {
+		for (u16 i = 0; i < unk08->getMaterialNum(); ++i) {
+			J3DMaterialAnm* mat = new J3DMaterialAnm;
+			unk08->getMaterialNodePointer((int)i)->change();
+			unk08->getMaterialNodePointer((int)i)->setMaterialAnm(mat);
+		}
+	}
+
+	unk08->entryTexMtxAnimator(unk04[n]);
+	unk0c[n].setEndFrame(unk04[n]->getFrameMax());
+	unk0c[n].setSpeed(0.5f * SMSGetAnmFrameRate());
+}
+
+#pragma opt_strength_reduction off
+
+void TMultiBtk::update()
+{
+	for (int i = 0; i < unk00; ++i) {
+		unk0c[i].update();
+		unk04[i]->setFrame(unk0c[i].getCurrentFrame());
+	}
+}
+
+void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
+                               JGeometry::TVec3<f32>* pos, f32* arg2)
+{
+	const TBGCheckData* checkData;
+	f32 temp_f1
+	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
+
+	if (checkData->unk44 != nullptr && ((pos->y - temp_f1) < 50.0f)) {
+		if (riding_info->unk0 == nullptr
+		    || riding_info->unk0 != checkData->unk44) {
+			riding_info->unk0 = checkData->unk44;
+			SMS_RideMoveCalcLocalPos(riding_info, *pos);
+		} else {
+			TMtx34f mtx;
+			if (!riding_info->unk0->getTakingMtx()) {
+				SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
+			} else {
+				PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
+			}
+			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
+			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
+			riding_info->unk10 = riding_info->unk0->mRotation.y;
+		}
+	} else {
+		riding_info->unk0 = nullptr;
+	}
 }
 
 void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
@@ -45,73 +91,19 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
 	PSMTXMultVec(mtx.mMtx, pos.toVec(), &riding_info->localPos);
 }
 
-static float kek(float a) { return a; }
-
-void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
-                               JGeometry::TVec3<float>* pos, f32* arg2)
+J3DModel* SMS_CreatePartsModel(char* arg0, u32 arg1)
 {
-
-	const TBGCheckData* checkData;
-	f32 temp_f1
-	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
-	if ((checkData->unk44 != nullptr) && ((pos->y - temp_f1) < 50.0f)) {
-		if ((riding_info->unk0 == nullptr)
-		    || (riding_info->unk0 != checkData->unk44)) {
-			riding_info->unk0 = checkData->unk44;
-			SMS_RideMoveCalcLocalPos(riding_info, *pos);
-		} else {
-			TMtx34f mtx;
-			if (!riding_info->unk0->getTakingMtx()) {
-				SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
-			} else {
-				PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
-			}
-			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
-			// TODO: there is 100% some kind of a getter/setter getting called
-			// here because the stack frame is bigger than necessary by 16 bytes
-			// and `mtx` is offset on the stack a little bit but I couldn't
-			// figure out some thing sensible for now, so an inline kek shall
-			// remain here for now
-			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
-			riding_info->unk10 = riding_info->unk0->mRotation.y;
-		}
-	} else {
-		riding_info->unk0 = nullptr;
-	}
+	J3DModelData* temp_r31 = J3DModelLoaderDataBase::load(
+	    JKRFileLoader::getGlbResource(arg0), arg1);
+	J3DModel* temp_r3 = new J3DModel(temp_r31, arg1, 1U);
+	return temp_r3;
 }
 
-void TMultiBtk::update()
+SDLModel* SMS_CreateMinimumSDLModel(const char* name)
 {
-	// TODO: can't match because of a skill issue, sorry
-	char trash[0x8];
-	for (int i = 0; i < unk00; ++i) {
-		unk0c[i].update();
-		unk04[i]->mFrame = unk0c[i].getCurrentFrame();
-	}
-}
-
-void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
-{
-	// TODO: inlines in J3DModelData should copy J3DMaterialTable
-	unk04[n] = param_2;
-	unk04[n]->searchUpdateMaterialID(unk08);
-	if (n == 0) {
-		for (u16 i = 0; i < unk08->mMaterialNum; ++i) {
-			J3DMaterialAnm* mat = new J3DMaterialAnm();
-			unk08->mMaterials[(u16)i]->change();
-			unk08->mMaterials[(u16)i]->setMaterialAnm(mat);
-		}
-	}
-
-	unk08->entryTexMtxAnimator(unk04[n]);
-	unk0c[n].setEndFrame(unk04[n]->getFrameMax());
-	unk0c[n].setSpeed(0.5f * SMSGetAnmFrameRate());
-}
-
-TMultiBtk::TMultiBtk(int param_1, J3DModelData* param_2)
-{
-	unk00 = param_1;
-	unk04 = new J3DAnmTextureSRTKey*[param_1];
-	unk08 = param_2;
-	unk0c = new J3DFrameCtrl[param_1];
+	J3DModelData* temp_r31 = J3DModelLoaderDataBase::load(
+	    JKRFileLoader::getGlbResource(name), 0x10000);
+	SDLModelData* temp_r3_2 = new SDLModelData(temp_r31);
+	SDLModel* temp_r3       = new SDLModel(temp_r3_2, 3U, 1U);
+	return temp_r3;
 }
