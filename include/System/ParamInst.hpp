@@ -6,6 +6,9 @@
 template <typename T> class TParamT : public TBaseParam {
 public:
 	void load(JSUMemoryInputStream& stream);
+	T get() const {
+		return this->value;
+	}
 
 	T value;
 };
