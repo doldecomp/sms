@@ -88,7 +88,7 @@ public:
 	inline MtxPtr getYoshiMtx()
 	{
 		TYoshi* yoshi = (TYoshi*)this->mMario->yoshi;
-		return yoshi->mActor->mModel->getAnmMtx(yoshi->mJoint);
+		return yoshi->mActor->unk4->getAnmMtx(yoshi->mJoint);
 	}
 
 	inline MtxPtr getWillBeEmitted(int jointIndex)
@@ -98,7 +98,7 @@ public:
 		u8 currentNozzle = this->mCurrentNozzle;
 		s8 flag          = nozzleBmdData.getFlags(currentNozzle, jointIndex);
 		if (flag < 3) {
-			return this->getCurrentNozzle()->mActor->mModel->getAnmMtx(
+			return this->getCurrentNozzle()->mActor->unk4->getAnmMtx(
 			    nozzleBmdData.getJointIndex(this->mCurrentNozzle, jointIndex));
 		} else if (flag == 3) {
 			return getYoshiMtx();
@@ -111,7 +111,7 @@ public:
 
 	u32 getWaterGunAnmId();
 
-	J3DModel* getModel() { return this->mFluddModel->mModel; }
+	J3DModel* getModel() { return this->mFluddModel->unk4; }
 
 	void setEmitPt();
 

@@ -121,7 +121,7 @@ void TWaterGun::perform(u32 flags, JDrama::TGraphics* graphics)
 		p2 = this->getCurrentNozzle()->mActor;
 		if (p2 != nullptr) {
 			PSMTXCopy(this->getModel()->getAnmMtx(this->mCurFluddTransformIdx),
-			          p2->mModel->mBaseMtx);
+			          p2->unk4->mBaseMtx);
 		}
 
 		setEmitPt();
@@ -177,7 +177,7 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
 
 MtxPtr TWaterGun::getNozzleMtx()
 {
-	return this->mFluddModel->mModel->getAnmMtx(this->mCurFluddTransformIdx);
+	return this->mFluddModel->unk4->getAnmMtx(this->mCurFluddTransformIdx);
 }
 
 f32 TWaterGun::getPressure() { return 0.0f; }
