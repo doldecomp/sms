@@ -52,6 +52,7 @@ public:
 	J3DColorBlock* getColorBlock() { return mColorBlock; }
 	J3DTexGenBlock* getTexGenBlock() { return mTexGenBlock; }
 	J3DTevBlock* getTevBlock() { return mTevBlock; }
+	J3DPEBlock* getPEBlock() { return mPEBlock; }
 
 	J3DGXColor* getTevKColor(u32 idx) { return mTevBlock->getTevKColor(idx); }
 	J3DGXColorS10* getTevColor(u32 idx) { return mTevBlock->getTevColor(idx); }
