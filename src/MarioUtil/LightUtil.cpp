@@ -3,49 +3,41 @@
 
 TLightWithDBSetManager* gpLightManager;
 
-void TLightWithDBSetManager::getLightPos() const { }
-
-void TLightWithDBSetManager::makeDrawBuffer()
-{
-	for (int i = 0; i < 4; ++i)
-		if (unk14[i]->unk20)
-			unk14[i]->makeDrawBuffer();
-}
-
-void TLightWithDBSetManager::addChildGroupObj(
-    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*)
-{
-}
-
-void TLightWithDBSetManager::perform(u32, JDrama::TGraphics*) { }
-
-void TLightWithDBSetManager::loadAfter() { }
-
-TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
+TLightCommon::TLightCommon(const char* name)
     : JDrama::TViewObj(name)
 {
 }
 
-void TIndirectLightWithDBSet::makeDrawBuffer() { }
+void TLightCommon::loadAfter() { }
 
-void TMapObjectLightWithDBSet::makeDrawBuffer() { }
+void TLightCommon::getLightColor(int) const { }
 
-void TObjectLightWithDBSet::makeDrawBuffer() { }
+void TLightCommon::getAmbColor(int) const { }
 
-void TPlayerLightWithDBSet::makeDrawBuffer() { }
+void TLightCommon::getLightPosition(int) { }
 
-void TLightWithDBSet::resetLightDrawBuffer()
+void TLightCommon::setLight(const JDrama::TGraphics*, int) { }
+
+void TLightCommon::perform(u32, JDrama::TGraphics*) { }
+
+void TLightShadow::perform(u32, JDrama::TGraphics*) { }
+
+void TLightMario::perform(u32, JDrama::TGraphics*) { }
+
+void TLightMario::setLight(const JDrama::TGraphics*, int) { }
+
+void TLightMario::getLightColor(int) const { }
+
+void TLightMario::getAmbColor(int) const { }
+
+TLightDrawBuffer::TLightDrawBuffer(int, u32, const char* name)
+    : JDrama::TViewObj(name)
 {
-	if (!unk14)
-		return;
-	if (!unk18)
-		return;
-
-	j3dSys.setDrawBuffer(unk14, 0);
-	j3dSys.setDrawBuffer(unk18, 1);
-	unk14 = nullptr;
-	unk18 = nullptr;
 }
+
+void TLightDrawBuffer::perform(u32, JDrama::TGraphics*) { }
+
+void TLightWithDBSet::perform(u32, JDrama::TGraphics*) { }
 
 void TLightWithDBSet::changeLightDrawBuffer(int param_1)
 {
@@ -61,38 +53,46 @@ void TLightWithDBSet::changeLightDrawBuffer(int param_1)
 	j3dSys.setDrawBuffer(unk10[param_1]->unk18->mDrawBuffer, 1);
 }
 
-void TLightWithDBSet::perform(u32, JDrama::TGraphics*) { }
+void TLightWithDBSet::resetLightDrawBuffer()
+{
+	if (!unk14)
+		return;
+	if (!unk18)
+		return;
 
-void TLightDrawBuffer::perform(u32, JDrama::TGraphics*) { }
+	j3dSys.setDrawBuffer(unk14, 0);
+	j3dSys.setDrawBuffer(unk18, 1);
+	unk14 = nullptr;
+	unk18 = nullptr;
+}
 
-TLightDrawBuffer::TLightDrawBuffer(int, u32, const char* name)
+void TPlayerLightWithDBSet::makeDrawBuffer() { }
+
+void TObjectLightWithDBSet::makeDrawBuffer() { }
+
+void TMapObjectLightWithDBSet::makeDrawBuffer() { }
+
+void TIndirectLightWithDBSet::makeDrawBuffer() { }
+
+TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
     : JDrama::TViewObj(name)
 {
 }
 
-void TLightMario::getAmbColor(int) const { }
+void TLightWithDBSetManager::loadAfter() { }
 
-void TLightMario::getLightColor(int) const { }
+void TLightWithDBSetManager::perform(u32, JDrama::TGraphics*) { }
 
-void TLightMario::setLight(const JDrama::TGraphics*, int) { }
-
-void TLightMario::perform(u32, JDrama::TGraphics*) { }
-
-void TLightShadow::perform(u32, JDrama::TGraphics*) { }
-
-void TLightCommon::perform(u32, JDrama::TGraphics*) { }
-
-void TLightCommon::setLight(const JDrama::TGraphics*, int) { }
-
-void TLightCommon::getLightPosition(int) { }
-
-void TLightCommon::getAmbColor(int) const { }
-
-void TLightCommon::getLightColor(int) const { }
-
-void TLightCommon::loadAfter() { }
-
-TLightCommon::TLightCommon(const char* name)
-    : JDrama::TViewObj(name)
+void TLightWithDBSetManager::addChildGroupObj(
+    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*)
 {
 }
+
+void TLightWithDBSetManager::makeDrawBuffer()
+{
+	for (int i = 0; i < 4; ++i)
+		if (unk14[i]->unk20)
+			unk14[i]->makeDrawBuffer();
+}
+
+void TLightWithDBSetManager::getLightPos() const { }

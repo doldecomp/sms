@@ -77,7 +77,7 @@ void PSVECNormalize(register Vec* vec1, register Vec* dst)
 #endif // clang-format on
 }
 
-asm void PSVECMag(register Vec* v)
+asm float PSVECMag(register Vec* v)
 {
 #ifdef __MWERKS__ // clang-format off
 	psq_l   f0, Vec.x(v), 0, qr0
