@@ -3,27 +3,22 @@
 
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
 class TWaveInfo;
+class TWaveHandle {
+public:
+	virtual ~TWaveHandle();
+	virtual const void* getWavePtr() const       = 0;
+	virtual const TWaveInfo* getWaveInfo() const = 0;
+};
 
 class TBasicWaveBank : public TWaveBank {
 public:
 	TBasicWaveBank();
 	virtual ~TBasicWaveBank();
-
-	virtual int getType() const;
-	virtual TWaveHandle* getWaveHandle(unsigned long) const;
-
-	void setGroupCount(unsigned long);
-	void setWaveTableSize(unsigned long);
-
-	class TWaveInfo {
-	public:
-		TWaveInfo();
-		~TWaveInfo();
-	};
 
 	class TWaveHandle : public JASystem::TWaveHandle {
 	public:
@@ -32,13 +27,25 @@ public:
 		virtual const TWaveInfo* getWaveInfo() const;
 	};
 
+	virtual int getType() const;
+	virtual TWaveHandle* getWaveHandle(u32) const;
+
+	void setGroupCount(u32);
+	void setWaveTableSize(u32);
+
+	class TWaveInfo {
+	public:
+		TWaveInfo();
+		~TWaveInfo();
+	};
+
 	class TWaveGroup {
 	public:
 		TWaveGroup();
 		virtual ~TWaveGroup();
 
-		void setWaveCount(unsigned long);
-		void setWaveInfo(int, unsigned long, const TWaveInfo&);
+		void setWaveCount(u32);
+		void setWaveInfo(int, u32, const JASystem::TWaveInfo&);
 		void setWaveArcFileName(const char*);
 
 		const char* getWaveArcFileName() const;
@@ -51,14 +58,7 @@ public:
 	void decWaveTable(const TWaveGroup*);
 
 private:
-	// Implementation details not shown
 };
-
-namespace WaveArcLoader {
-	class TObject {
-		// Implementation details not shown
-	};
-} // namespace WaveArcLoader
 
 } // namespace JASystem
 

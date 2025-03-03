@@ -1,6 +1,7 @@
 #ifndef JASBASICBANK_HPP
 #define JASBASICBANK_HPP
 
+#include <dolphin/types.h>
 #include <JSystem/JAudio/JASystem/JASBank.hpp>
 
 namespace JASystem {
@@ -15,11 +16,11 @@ public:
 	virtual int getType() const;
 	virtual TInst* getInst(int) const;
 
-	void setInstCount(unsigned long);
+	void setInstCount(u32);
 	void setInst(int, TInst*);
 
 private:
-	unsigned long mInstCount;
+	u32 mInstCount;
 	TInst** mInsts;
 };
 

@@ -1,9 +1,15 @@
 #ifndef JASCHANNEL_HPP
 #define JASCHANNEL_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
-class TOscillator;
+struct TOscillator {
+public:
+	struct Osc_;
+};
+
 class TDSPChannel;
 
 namespace Driver {
@@ -13,53 +19,58 @@ namespace Driver {
 class TChannel {
 public:
 	void init();
-	void setOscillator(unsigned long, TOscillator*);
-	void setOscInit(unsigned long, const TOscillator::Osc_*);
-	void forceStopOsc(unsigned long);
-	void releaseOsc(unsigned long);
-	void directReleaseOsc(unsigned long, unsigned short);
-	void bankOscToOfs(unsigned long);
-	void effectOsc(unsigned long, float);
-	unsigned long getOscState(unsigned long) const;
-	bool isOsc(unsigned long);
-	void copyOsc(unsigned long, TOscillator::Osc_*);
-	void overwriteOsc(unsigned long, TOscillator::Osc_*);
-	void overwriteOscMultiple(TOscillator::Osc_*, TOscillator::Osc_*,
-	                          TOscillator::Osc_*, TOscillator::Osc_*);
+	void setOscillator(u32 index, TOscillator* oscillator);
+	void setOscInit(u32 index, const TOscillator::Osc_* osc);
+	void forceStopOsc(u32 index);
+	void releaseOsc(u32 index);
+	void directReleaseOsc(u32 index, u16 release);
+	void bankOscToOfs(u32 index);
+	void effectOsc(u32 index, f32 effect);
+	u32 getOscState(u32 index) const;
+	bool isOsc(u32 index);
+	void copyOsc(u32 index, TOscillator::Osc_* dest);
+	void overwriteOsc(u32 index, TOscillator::Osc_* src);
+	void overwriteOscMultiple(TOscillator::Osc_* osc1, TOscillator::Osc_* osc2,
+	                          TOscillator::Osc_* osc3, TOscillator::Osc_* osc4);
 	void initOscForOscSound();
-	void setKeySweepTarget(unsigned char, unsigned long);
-	void setPauseFlag(unsigned char);
-	void setPauseFlagReq(unsigned char);
-	void setPanPower(float, float, float, float);
-	void setPanParam(const float*, const float*, const float*);
-	void setFxParam(const float*, const float*, const float*);
-	void setDolbyParam(const float*, const float*, const float*);
+	void setKeySweepTarget(u8 key, u32 target);
+	void setPauseFlag(u8 flag);
+	void setPauseFlagReq(u8 flag);
+	void setPanPower(f32 fl, f32 fr, f32 rl, f32 rr);
+	void setPanParam(const f32* pan, const f32* dolby, const f32* fx);
+	void setFxParam(const f32* pan, const f32* dolby, const f32* fx);
+	void setDolbyParam(const f32* pan, const f32* dolby, const f32* fx);
 	bool checkLogicalChannel();
 	void resetInitialVolume();
-	void play(unsigned long);
-	void stop(unsigned short);
+	void play(u32 param);
+	void stop(u16 release);
 	void updateJcToDSP();
 	void forceStopLogicalChannel();
 	void stopLogicalChannel();
 	void playLogicalChannel();
 	void updateEffectorParam();
+
+private:
+	u16 _00;       // 0x00
+	u8 mPauseFlag; // 0x02
+	bool mIsPause; // 0x03
 };
 
 namespace Driver {
-	void calcEffect(const PanMatrix_*, const PanMatrix_*, unsigned char);
-	void calcPan(const PanMatrix_*, const PanMatrix_*, unsigned char);
-	void __UpdateJcToDSP(TChannel*);
-	void __UpdateJcToDSPInit(TChannel*);
-	void extraUpdate(TChannel*, unsigned long);
-	void updatecallLogicalChannel(TChannel*, unsigned long);
-	void killBrokenLogicalChannels(TDSPChannel*);
-	void updateAutoMixer(TChannel*, float, float, float, float);
-	void updateMixer(TChannel*, float, float, float, float);
-	void updatecallDSPChannel(TDSPChannel*, unsigned long);
+	void calcEffect(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
+	                u8 param);
+	void calcPan(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
+	             u8 param);
+	void __UpdateJcToDSP(TChannel* channel);
+	void __UpdateJcToDSPInit(TChannel* channel);
+	void extraUpdate(TChannel* channel, u32 param);
+	void updatecallLogicalChannel(TChannel* channel, u32 param);
+	void killBrokenLogicalChannels(TDSPChannel* dspChannel);
+	void updateAutoMixer(TChannel* channel, f32 fl, f32 fr, f32 rl, f32 rr);
+	void updateMixer(TChannel* channel, f32 fl, f32 fr, f32 rl, f32 rr);
+	void updatecallDSPChannel(TDSPChannel* dspChannel, u32 param);
 
-	extern unsigned long OSC_REL;
-	extern unsigned long OSC_ENV;
-	extern unsigned long calc_sw_table;
+	extern u8 calc_sw_table[];
 } // namespace Driver
 
 } // namespace JASystem

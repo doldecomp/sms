@@ -3,6 +3,7 @@
 
 #include <JSystem/JAudio/JASystem/JASChannel.hpp>
 #include <JSystem/JAudio/JASystem/JASChannelMgr.hpp>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -11,13 +12,13 @@ public:
 	static void init();
 	static void release(TChannel* channel);
 	static void releaseAll(TChannelMgr* channelMgr);
-	static TChannel* alloc(TChannelMgr* channelMgr, unsigned long param);
-	static unsigned long getChannelHandle(unsigned long param);
-	static unsigned long getGlobalHandle();
+	static TChannel* alloc(TChannelMgr* channelMgr, u32 param);
+	static u32 getChannelHandle(u32 param);
+	static u32 getGlobalHandle();
 
-	static unsigned long GLOBAL_CHANNEL;
-	static unsigned long CHANNEL;
-	static unsigned long OSCILLATOR;
+	static u32 GLOBAL_CHANNEL;
+	static u32 CHANNEL;
+	static u32 OSCILLATOR;
 };
 
 } // namespace JASystem

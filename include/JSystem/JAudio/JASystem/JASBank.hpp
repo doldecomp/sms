@@ -7,6 +7,7 @@ namespace JASystem {
 
 class TBank {
 public:
+	virtual ~TBank();
 	static JKRHeap* getCurrentHeap();
 
 private:

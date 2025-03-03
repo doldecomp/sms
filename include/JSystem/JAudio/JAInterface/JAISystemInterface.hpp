@@ -36,7 +36,6 @@ public:
 	                             JASystem::TTrack*, u32, u32);
 	static void setSePortParameter(JASystem::Kernel::TPortArgs*);
 	static void setAudioFrameParameter(JASystem::Kernel::TPortArgs*);
-
 	// Port I/O methods
 	static void writePortApp(u32, u32, u16);
 	static void readPortApp(u32, u32, u16*);

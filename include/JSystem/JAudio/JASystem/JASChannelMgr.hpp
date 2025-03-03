@@ -2,6 +2,7 @@
 #define JASCHANNELMGR_HPP
 
 #include <JSystem/JAudio/JASystem/JASChannel.hpp>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -11,20 +12,20 @@ public:
 	static void stopAll();
 	static void stopAllRelease();
 	static void checkGlobalRelease();
-	static TChannel* getLogicalChannel(unsigned long);
-	static void initAllocChannel(unsigned long);
-	static TChannel* getListHead(unsigned long);
-	static unsigned long countList(unsigned long) const;
+	static TChannel* getLogicalChannel(u32);
+	static void initAllocChannel(u32);
+	static TChannel* getListHead(u32);
+	static u32 countList(u32);
 	static void cutList(TChannel*);
-	static void addListHead(TChannel*, unsigned long);
-	static void addListTail(TChannel*, unsigned long);
+	static void addListHead(TChannel*, u32);
+	static void addListTail(TChannel*, u32);
 	static void receiveAllChannels(TChannelMgr*);
-	static bool checkLimitStart(unsigned long);
-	static bool checkLimitStop(TChannel*, unsigned long);
+	static bool checkLimitStart(u32);
+	static bool checkLimitStop(TChannel*, u32);
 };
 
 namespace Driver {
-	extern unsigned long polys_table;
+	extern u8 polys_table[];
 } // namespace Driver
 
 } // namespace JASystem

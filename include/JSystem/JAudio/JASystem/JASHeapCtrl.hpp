@@ -7,6 +7,7 @@ namespace Kernel {
 	class THeap {
 	public:
 		THeap();
+		virtual ~THeap();
 		void init();
 		void* alloc(THeap*, unsigned long);
 		void* allocHeapCheck(THeap*, unsigned long);

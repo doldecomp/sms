@@ -2,6 +2,7 @@
 #define JASCHALLOCQUEUE_HPP
 
 #include <JSystem/JAudio/JASystem/JASChannel.hpp>
+#include <types.h>
 
 namespace JASystem {
 
@@ -9,18 +10,18 @@ namespace Driver {
 
 	class DSPQueue {
 	public:
-		static void init(unsigned long);
-		static void enQueue(JASystem::TChannel*);
-		static void deQueue(unsigned char);
-		static void deleteQueue(JASystem::TChannel*);
+		static void init(u32 maxWait);
+		static void enQueue(JASystem::TChannel* channel);
+		static void deQueue(u8 channelIndex);
+		static void deleteQueue(JASystem::TChannel* channel);
 		static void checkQueue();
 
-		static unsigned long waitMax;
-		static unsigned long waitp;
-		static unsigned long waittime;
-		static unsigned long cur_waits;
-		static unsigned long cur_top;
-		static unsigned long cur_tail;
+		static u32 waitMax;
+		static u32 waitp;
+		static u32 waittime;
+		static u32 cur_waits;
+		static u32 cur_top;
+		static u32 cur_tail;
 	};
 
 } // namespace Driver

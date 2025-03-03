@@ -2,6 +2,7 @@
 #define JASBNKPARSER_HPP
 
 #include <JSystem/JAudio/JASystem/JASBasicBank.hpp>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -19,16 +20,15 @@ namespace BNKParser {
 
 	TBasicBank* createBasicBank(void* data);
 	TOsc* findOscPtr(TBasicBank* bank, THeader* header, TOsc* osc);
-	short* getOscTableEndPtr(short* ptr);
-	unsigned long getUsedHeapSize();
+	s16* getOscTableEndPtr(s16* ptr);
+	u32 getUsedHeapSize();
 
-	extern unsigned long sUsedHeapSize;
+	extern u32 sUsedHeapSize;
 
 } // namespace BNKParser
 
 } // namespace JASystem
 
-template <typename T>
-T* JSUConvertOffsetToPtr(const void* base, unsigned long offset);
+template <typename T> T* JSUConvertOffsetToPtr(const void* base, u32 offset);
 
 #endif // JASBNKPARSER_HPP

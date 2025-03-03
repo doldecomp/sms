@@ -2,35 +2,35 @@
 #define JASCALC_HPP
 
 #include <math.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
 namespace Calc {
 
-	extern float JASC_SINTABLE[];
-	extern float JASC_DOL2TABLE[];
+	extern f32* JASC_SINTABLE;
+	extern f32* JASC_DOL2TABLE;
 
-	void bcopy(const void* src, void* dest, unsigned long size);
-	void bzero(void* dest, unsigned long size);
-	void bcopyfast(const unsigned long* src, unsigned long* dest,
-	               unsigned long size);
-	void bzerofast(unsigned long* dest, unsigned long size);
-	void bcopyW(const short* src, short* dest, long size);
+	void bcopy(const void* src, void* dest, u32 size);
+	void bzero(void* dest, u32 size);
+	void bcopyfast(const u32* src, u32* dest, u32 size);
+	void bzerofast(u32* dest, u32 size);
+	void bcopyW(const s16* src, s16* dest, s32 size);
 
 	void initSinfT();
-	float sinfT(float angle);
-	float sinfDolby2(float angle);
-	float sinfM(float angle);
-	float cosfM(float angle);
+	f32 sinfT(f32 angle);
+	f32 sinfDolby2(f32 angle);
+	f32 sinfM(f32 angle);
+	f32 cosfM(f32 angle);
 
-	long limit16(long value);
+	s32 limit16(s32 value);
 
-	void mixcopy(const short* src1, const short* src2, short* dest, long size);
-	void imixcopy(const short* src1, const short* src2, short* dest, long size);
+	void mixcopy(const s16* src1, const s16* src2, s16* dest, s32 size);
+	void imixcopy(const s16* src1, const s16* src2, s16* dest, s32 size);
 
-	void hannWindow(short* data, long size);
-	void hammWindow(short* data, long size);
-	void fft(float* real, float* imag, long size, long dir);
+	void hannWindow(s16* data, s32 size);
+	void hammWindow(s16* data, s32 size);
+	void fft(f32* real, f32* imag, s32 size, s32 dir);
 
 } // namespace Calc
 

@@ -1,7 +1,7 @@
 #ifndef JASBASICINST_HPP
 #define JASBASICINST_HPP
 
-#include <JSystem/JAudio/JASystem/JASInst.hpp>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -12,6 +12,15 @@ namespace TOscillator {
 	struct Osc_;
 }
 
+class TInst {
+public:
+	virtual ~TInst();
+
+	virtual int getType() const                        = 0;
+	virtual int getKeymapIndex(int) const              = 0;
+	virtual bool getParam(int, int, TInstParam*) const = 0;
+};
+
 class TBasicInst : public TInst {
 public:
 	TBasicInst();
@@ -21,15 +30,15 @@ public:
 	virtual int getKeymapIndex(int) const;
 	virtual bool getParam(int, int, TInstParam*) const;
 
-	void setOscCount(unsigned long);
+	void setOscCount(u32);
 	void setOsc(int, TOscillator::Osc_*);
 	TOscillator::Osc_* getOsc(int);
 
-	void setEffectCount(unsigned long);
+	void setEffectCount(u32);
 	void setEffect(int, TInstEffect*);
 	TInstEffect* getEffect(int);
 
-	void setKeyRegionCount(unsigned long);
+	void setKeyRegionCount(u32);
 	int searchKeymap(int) const;
 
 	class TKeymap {
@@ -37,7 +46,7 @@ public:
 		TKeymap();
 		~TKeymap();
 
-		void setVeloRegionCount(unsigned long);
+		void setVeloRegionCount(u32);
 		void* getVeloRegion(int);
 		const void* getVeloRegion(int) const;
 	};

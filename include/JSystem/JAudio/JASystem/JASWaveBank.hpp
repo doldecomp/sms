@@ -1,12 +1,15 @@
 #ifndef JASWAVEBANK_HPP
 #define JASWAVEBANK_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
 
 namespace JASystem {
 
 class TWaveBank {
 public:
+	virtual ~TWaveBank();
+
 	static void* getCurrentHeap();
 
 	static void* sCurrentHeap;

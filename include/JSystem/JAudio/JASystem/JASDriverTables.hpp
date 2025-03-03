@@ -1,17 +1,17 @@
 #ifndef JASDRIVERTABLES_HPP
 #define JASDRIVERTABLES_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
 namespace Driver {
-	extern unsigned long C5BASE_PITCHTABLE;
+	extern f32 C5BASE_PITCHTABLE[];
 } // namespace Driver
 
 namespace DSPInterface {
-	extern unsigned long DSPRES_FILTER;
-	extern unsigned long DSPADPCM_FILTER;
-	extern unsigned long DSPRES_FILTER_64;
-	extern unsigned long DSPRES_FILTER_128;
+	extern u32 DSPRES_FILTER;
+	extern u32 DSPADPCM_FILTER;
 } // namespace DSPInterface
 
 } // namespace JASystem
