@@ -1,20 +1,20 @@
 #ifndef JAICONST_HPP
 #define JAICONST_HPP
 
-#include <JSystem/JAudio/JAInterface/JAIActor.hpp>
+#include <dolphin/mtx.h>
 
-class Vec;
+class JAIActor;
 
 namespace JAIConst {
 
 extern void* nullInfoData2;
-extern unsigned long random;
+extern u32 random;
 extern JAIActor* nullActor;
-extern Vec* dummyZeroVec;
+extern VecPtr dummyZeroVec;
 extern void* sCInfos_0;
-extern float (*camMtx)[4];
-extern Vec* camTrans;
-extern Vec* camPreTrans;
+extern Mtx camMtx;
+extern Vec camTrans;
+extern Vec camPreTrans;
 
 } // namespace JAIConst
 

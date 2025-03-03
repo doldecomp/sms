@@ -6,7 +6,7 @@
 namespace JASystem {
 
 namespace Player {
-	enum SEQ_PLAYMODE;
+	enum SEQ_PLAYMODE { };
 	extern unsigned long oRandom;
 } // namespace Player
 

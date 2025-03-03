@@ -5,6 +5,8 @@ namespace JAInter {
 
 class TAsnData {
 public:
+	void readAsnFile();
+
 	static char* asnFileName;
 	static void* asnData;
 };

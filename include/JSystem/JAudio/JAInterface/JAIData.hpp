@@ -1,16 +1,15 @@
 #ifndef JAIDATA_HPP
 #define JAIDATA_HPP
 
-#include <JSystem/JAudio/JAInterface/JAILinkBuffer.hpp>
-#include <JSystem/JAudio/JAInterface/JAISeqParameter.hpp>
-#include <JSystem/JAudio/JAInterface/JAISeParameter.hpp>
-#include <JSystem/JAudio/JAInterface/JAIStreamParameter.hpp>
+#include <types.h>
 
 class JAISoundTable;
 class JAIHeapBlock;
 struct JAIMoveParaSet;
-
-namespace JAInter {
+class JAILinkBuffer;
+struct JAISeqParameter;
+struct JAISeParameter;
+struct JAIStreamParameter;
 
 class JAIData {
 public:
@@ -19,7 +18,7 @@ public:
 	void init();
 	void initData();
 	void initInfoDataWork(JAISoundTable* soundTable, char* param);
-	void initLinkBuffer(JAILinkBuffer* linkBuffer, unsigned long param);
+	void initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param);
 	void initSeqParaLinkBuffer();
 	void initSeParaLinkBuffer();
 	void initStreamParaLinkBuffer();
@@ -27,34 +26,30 @@ public:
 	void initSeqParameter(JAISeqParameter* param);
 	void initSePara(JAISeParameter* param);
 	void initStreamParameter(JAIStreamParameter* param);
-	void initSeqTrackInfoParameter(unsigned long param);
+	void initSeqTrackInfoParameter(u32 param);
 	void initStreamUpdateParameter();
 
 	void setSeMovePara(JAIMoveParaSet* moveParaSet);
 	void moveParameter(JAIMoveParaSet* moveParaSet);
 
-	bool checkOnMemory(unsigned long param1, unsigned char* param2);
-	unsigned char checkUsefulAutoHeapPosition();
-	unsigned char* getFreeAutoHeapPointer(unsigned char param1,
-	                                      unsigned long param2);
-	void releaseAutoHeapPointer(unsigned char param);
-	unsigned char* getFreeStayHeapPointer(unsigned long param1,
-	                                      unsigned long param2);
+	bool checkOnMemory(u32 param1, u8* param2);
+	u8 checkUsefulAutoHeapPosition();
+	u8* getFreeAutoHeapPointer(u8 param1, u32 param2);
+	void releaseAutoHeapPointer(u8 param);
+	u8* getFreeStayHeapPointer(u32 param1, u32 param2);
 
 	void clearAutoHeap(JAIHeapBlock* heapBlock);
-	void clearAutoHeap(unsigned long param);
-	void clearStayHeap(unsigned long param);
+	void clearAutoHeap(u32 param);
+	void clearStayHeap(u32 param);
 
-	void setAutoHeapLoadedFlag(unsigned char param1, unsigned char param2);
-	void changeAutoHeapPointerToPosition(unsigned char* ptr);
-	void stopPlayingSeq(unsigned long param);
-	unsigned char* getAutoHeapPointer(unsigned long param);
-	bool getInfoPointer(unsigned long param, void** ptr);
+	void setAutoHeapLoadedFlag(u8 param1, u8 param2);
+	void changeAutoHeapPointerToPosition(u8* ptr);
+	void stopPlayingSeq(u32 param);
+	u8* getAutoHeapPointer(u32 param);
+	bool getInfoPointer(u32 param, void** ptr);
 
 	void reloadInfoDataWork(JAISoundTable* soundTable);
-	void setInfoDataPointer(JAISoundTable* soundTable, unsigned char* ptr);
+	void setInfoDataPointer(JAISoundTable* soundTable, u8* ptr);
 };
-
-} // namespace JAInter
 
 #endif // JAIDATA_HPP

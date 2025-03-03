@@ -5,7 +5,7 @@
 
 namespace JADHioNode {
 
-static JKRHeap* smCurrentHeap;
+extern const JKRHeap* smCurrentHeap;
 
 } // namespace JADHioNode
 
