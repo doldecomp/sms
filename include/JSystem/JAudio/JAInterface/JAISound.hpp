@@ -11,7 +11,19 @@ class JAIStreamParameter;
 class JAISound {
 public:
 	JAISound();
-	virtual ~JAISound();
+	~JAISound();
+
+	virtual void setSeDistanceParameters();
+	virtual void setSeDistanceVolume(u8);
+	virtual void setSeDistancePan(u8);
+	virtual void setSeDistancePitch(u8);
+	virtual void setSeDistanceFxmix(u8);
+	virtual void setSeDistanceFir(u8);
+	virtual void setSeDistanceDolby(u8);
+	virtual void setSePositionDopplar();
+	virtual void setPositionDopplarCommon(u32);
+	virtual void setDistanceVolumeCommon(f32, u8);
+	virtual void setDistancePanCommon();
 
 	void initMoveParameter(JAIMoveParaSet*, f32, u32);
 	void initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32);
@@ -38,9 +50,6 @@ public:
 	void setPortData(u8, u16);
 	void setPrepareFlag(u8);
 	void checkReady();
-	void setDistanceVolumeCommon(f32, u8);
-	void setDistancePanCommon();
-	void setPositionDopplarCommon(u32);
 	void setSeqInterVolume(u8, f32, u32);
 	void setSeqInterPan(u8, f32, u32);
 	void setSeqInterPitch(u8, f32, u32);
@@ -75,14 +84,6 @@ public:
 	void setSeInterPitch(u8, f32, u32, f32);
 	void setSePortData(u8, u16);
 	void getSePortData(u8);
-	void setSeDistanceParameters();
-	void setSeDistanceVolume(u8);
-	void setSeDistancePan(u8);
-	void setSeDistancePitch(u8);
-	void setSePositionDopplar();
-	void setSeDistanceFxmix(u8);
-	void setSeDistanceFir(u8);
-	void setSeDistanceDolby(u8);
 	void setStreamMode(u32);
 	void setStreamInterVolume(u8, f32, u32);
 	void setStreamInterPitch(u8, f32, u32);

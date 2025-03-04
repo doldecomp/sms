@@ -120,8 +120,6 @@ void MSound::playTimer(u32 time) { }
 
 void MSound::requestShineAppearFanfare() { }
 
-u32 MSound::getMapInfoGround(u32 param) { return 0; }
-
 f32 MSound::getWallSound(u32 param1, f32 param2) { return 0.0f; }
 
 u32 MSound::getBstPitch(u32 param) { return 0; }

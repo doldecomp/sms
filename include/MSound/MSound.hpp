@@ -52,7 +52,13 @@ public:
 class MSound : public JAIBasic {
 public:
 	MSound(JKRHeap*, JKRHeap*, u32, u8*, u8*, u32);
-	virtual ~MSound() { }
+	~MSound() { }
+
+	virtual JAISound* makeSound(u32);
+	virtual u32 getMapInfoGround(u32) { }
+	virtual void setSeExtParameter(JAISound*);
+	virtual void setRegisterTrackCallback();
+	virtual void loadGroupWave(s32, s32);
 
 	static MSound* getMSound();
 
@@ -61,7 +67,6 @@ public:
 	void exitStage();
 	void enterStage(MS_SCENE_WAVE, u8, u8);
 	void loadWave(MS_SCENE_WAVE);
-	void loadGroupWave(s32, s32);
 	void cleanUpAramWave(u8);
 	bool checkWaveOnAram(MS_SCENE_WAVE);
 	bool checkSeqOnMemory(u32);
@@ -96,13 +101,9 @@ public:
 	u8 getMarioVoiceID(u8);
 	bool checkMarioVoicePlaying(u8);
 
-	void setRegisterTrackCallback();
-	void setSeExtParameter(JAISound*);
-	JAISound* makeSound(u32);
 	void playTimer(u32);
 	void requestShineAppearFanfare();
 
-	u32 getMapInfoGround(u32);
 	f32 getWallSound(u32, f32);
 	u32 getBstPitch(u32);
 	u32 getBstSwitch(u32);

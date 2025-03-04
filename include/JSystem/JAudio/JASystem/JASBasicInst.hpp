@@ -16,9 +16,8 @@ class TInst {
 public:
 	virtual ~TInst();
 
-	virtual int getType() const                        = 0;
-	virtual int getKeymapIndex(int) const              = 0;
 	virtual bool getParam(int, int, TInstParam*) const = 0;
+	virtual int getType() const                        = 0;
 };
 
 class TBasicInst : public TInst {
@@ -26,9 +25,9 @@ public:
 	TBasicInst();
 	virtual ~TBasicInst();
 
+	virtual bool getParam(int, int, TInstParam*) const;
 	virtual int getType() const;
 	virtual int getKeymapIndex(int) const;
-	virtual bool getParam(int, int, TInstParam*) const;
 
 	void setOscCount(u32);
 	void setOsc(int, TOscillator::Osc_*);

@@ -7,28 +7,20 @@
 
 namespace JASystem {
 
-class TWaveInfo;
-class TWaveHandle {
-public:
-	virtual ~TWaveHandle();
-	virtual const void* getWavePtr() const       = 0;
-	virtual const TWaveInfo* getWaveInfo() const = 0;
-};
-
 class TBasicWaveBank : public TWaveBank {
 public:
 	TBasicWaveBank();
-	virtual ~TBasicWaveBank();
 
 	class TWaveHandle : public JASystem::TWaveHandle {
 	public:
 		virtual ~TWaveHandle();
-		virtual const void* getWavePtr() const;
 		virtual const TWaveInfo* getWaveInfo() const;
+		virtual const void* getWavePtr() const;
 	};
 
-	virtual int getType() const;
+	virtual ~TBasicWaveBank();
 	virtual TWaveHandle* getWaveHandle(u32) const;
+	virtual int getType() const;
 
 	void setGroupCount(u32);
 	void setWaveTableSize(u32);
@@ -42,15 +34,15 @@ public:
 	class TWaveGroup {
 	public:
 		TWaveGroup();
-		virtual ~TWaveGroup();
+		~TWaveGroup();
+
+		virtual bool* getLoadFlagPtr();
+		virtual const char* getWaveArcFileName() const;
+		virtual JKRHeap* getHeap();
 
 		void setWaveCount(u32);
 		void setWaveInfo(int, u32, const JASystem::TWaveInfo&);
 		void setWaveArcFileName(const char*);
-
-		const char* getWaveArcFileName() const;
-		JKRHeap* getHeap();
-		bool* getLoadFlagPtr();
 	};
 
 	TWaveGroup* getWaveGroup(int);

@@ -2,6 +2,7 @@
 #define JASDRUMSET_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASBasicInst.hpp>
 #include <JSystem/JAudio/JASystem/JASInstEffect.hpp>
 
 namespace JASystem {
@@ -9,7 +10,7 @@ namespace JASystem {
 class TInstVeloRegion;
 class TInstParam;
 
-class TDrumSet {
+class TDrumSet : public TInst {
 public:
 	class TPerc {
 	public:
@@ -26,8 +27,8 @@ public:
 	};
 
 	TDrumSet();
-	virtual ~TDrumSet();
 
+	virtual ~TDrumSet();
 	virtual int getType() const;
 	virtual bool getParam(int, int, TInstParam*) const;
 

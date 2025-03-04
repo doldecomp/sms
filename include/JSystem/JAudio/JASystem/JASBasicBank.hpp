@@ -6,15 +6,13 @@
 
 namespace JASystem {
 
-class TInst;
-
 class TBasicBank : public TBank {
 public:
 	TBasicBank();
-	virtual ~TBasicBank();
 
-	virtual int getType() const;
+	virtual ~TBasicBank();
 	virtual TInst* getInst(int) const;
+	virtual int getType() const;
 
 	void setInstCount(u32);
 	void setInst(int, TInst*);

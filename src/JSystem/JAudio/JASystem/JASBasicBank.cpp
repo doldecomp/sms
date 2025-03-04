@@ -7,7 +7,7 @@ TBasicBank::TBasicBank()
     , mInsts(nullptr)
 {
 }
-TBank::~TBank() { }
+
 TBasicBank::~TBasicBank() { }
 
 int TBasicBank::getType() const { return 0; }

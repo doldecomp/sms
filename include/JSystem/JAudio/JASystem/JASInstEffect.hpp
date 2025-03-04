@@ -5,6 +5,8 @@ namespace JASystem {
 
 class TInstEffect {
 public:
+	virtual int getY(int, int) const = 0;
+
 	void setTarget(int);
 };
 

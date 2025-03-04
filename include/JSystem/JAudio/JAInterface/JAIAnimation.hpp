@@ -11,7 +11,12 @@ struct JAIAnimeFrameSoundData { };
 class JAIAnimeSound {
 public:
 	JAIAnimeSound();
-	virtual ~JAIAnimeSound();
+	~JAIAnimeSound();
+
+	virtual void startAnimSound(void* data, u32 id, JAISound** sound,
+	                            JAIActor* actor, u8 flag);
+	virtual void setSpeedModifySound(JAISound* sound,
+	                                 JAIAnimeFrameSoundData* data, f32 speed);
 
 	void setAnimSound(JAIBasic* basic, f32 param1, f32 param2, u8 param3);
 	void setAnimSoundVec(JAIBasic* basic, Vec* pos, f32 param1, f32 param2,
@@ -20,10 +25,6 @@ public:
 	                       f32 param2, u8 param3);
 	void playActorAnimSound(JAIBasic* basic, JAIActor* actor, f32 param,
 	                        u8 flag);
-	void startAnimSound(void* data, u32 id, JAISound** sound, JAIActor* actor,
-	                    u8 flag);
-	void setSpeedModifySound(JAISound* sound, JAIAnimeFrameSoundData* data,
-	                         f32 speed);
 	void initActorAnimSound(void* data, u32 param, f32 value);
 	void initActorAnimSound(void* data, JAIActor actor, u32 param, f32 value);
 	void stop();

@@ -198,7 +198,7 @@ void JAIBasic::changeSoundScene(u32 scene) { }
 
 void JAIBasic::getMapInfoFxline(u32 param) { }
 
-void JAIBasic::getMapInfoGround(u32 param) { }
+u32 JAIBasic::getMapInfoGround(u32 param) { }
 
 void JAIBasic::getMapInfoFxParameter(u32 param) { }
 
@@ -234,7 +234,7 @@ void JAIBasic::setSeExtParameter(JAISound* sound) { }
 
 void JAIBasic::routeToTrack(u32 param) { }
 
-void JAIBasic::makeSound(u32 param) { }
+JAISound* JAIBasic::makeSound(u32 param) { }
 
 void JAIBasic::allocStreamBuffer(void* buffer, s32 size) { }
 
