@@ -1,0 +1,28 @@
+#ifndef _MSL_COMMON_MEMORY_
+#define _MSL_COMMON_MEMORY_
+
+#include <iterator>
+#include <new>
+
+namespace std {
+
+template <class I, class S, class T>
+void uninitialized_fill_n(I first, S n, const T& x)
+{
+	while (n--) {
+		new (&*first) typename iterator_traits<I>::value_type(x);
+		++first;
+	}
+}
+
+template <class I, class O>
+inline O uninitialized_copy(I first, I last, O d_first)
+{
+	for (; first != last; ++d_first, ++first)
+		new (&*d_first) typename iterator_traits<I>::value_type(*first);
+	return d_first;
+}
+
+} // namespace std
+
+#endif

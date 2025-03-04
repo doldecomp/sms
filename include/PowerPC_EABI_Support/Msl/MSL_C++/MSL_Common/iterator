@@ -1,0 +1,32 @@
+#ifndef _MSL_COMMON_ITERATOR_
+#define _MSL_COMMON_ITERATOR_
+
+#include <cstddef>
+
+namespace std {
+
+struct input_iterator_tag { };
+struct output_iterator_tag { };
+struct forward_iterator_tag : input_iterator_tag { };
+struct bidirectional_iterator_tag : forward_iterator_tag { };
+struct random_access_iterator_tag : bidirectional_iterator_tag { };
+
+template <class I> struct iterator_traits {
+	typedef I::difference_type difference_type;
+	typedef I::value_type value_type;
+	typedef I::pointer pointer;
+	typedef I::reference reference;
+	typedef I::iterator_category iterator_category;
+};
+
+template <class T> struct iterator_traits<T*> {
+	typedef ptrdiff_t difference_type;
+	typedef T value_type;
+	typedef T* pointer;
+	typedef T& reference;
+	typedef random_access_iterator_tag iterator_category;
+};
+
+} // namespace std
+
+#endif

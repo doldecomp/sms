@@ -1,0 +1,9 @@
+#ifndef _MSL_COMMON_NEW_
+#define _MSL_COMMON_NEW_
+
+#include <cstddef>
+
+// placement new doesn't work unless such a definition exists
+inline void* operator new(std::size_t, void* ptr) { return ptr; }
+
+#endif
