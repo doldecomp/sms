@@ -1,9 +1,13 @@
 #ifndef JASDRUMSET_HPP
 #define JASDRUMSET_HPP
 
-#include <JSystem/JAudio/JASystem/JASInst.hpp>
+#include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASInstEffect.hpp>
 
 namespace JASystem {
+
+class TInstVeloRegion;
+class TInstParam;
 
 class TDrumSet {
 public:
@@ -12,10 +16,10 @@ public:
 		TPerc();
 		~TPerc();
 
-		void setRelease(unsigned long);
-		void setEffectCount(unsigned long);
+		void setRelease(u32);
+		void setEffectCount(u32);
 		void setEffect(int, TInstEffect*);
-		void setVeloRegionCount(unsigned long);
+		void setVeloRegionCount(u32);
 		TInstVeloRegion* getVeloRegion(int);
 		const TInstVeloRegion* getVeloRegion(int) const;
 		TInstEffect* getEffect(int);

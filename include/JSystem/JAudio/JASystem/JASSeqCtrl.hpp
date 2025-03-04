@@ -1,20 +1,20 @@
 #ifndef JASSEQCTRL_HPP
 #define JASSEQCTRL_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 class TSeqCtrl {
 public:
-	void init(void* data, unsigned long size);
+	void init(void* data, u32 size);
 	void callIntr(void* intr);
 	void waitCountDown();
-	unsigned short read16();
-	unsigned short get16(unsigned long offset) const;
-	unsigned int get24(unsigned long offset) const;
-	unsigned int get32(unsigned long offset) const;
-	unsigned int read24();
-	unsigned int read32();
+	u16 read16();
+	u16 get16(u32 offset) const;
+	u32 get24(u32 offset) const;
+	u32 get32(u32 offset) const;
+	u32 read24();
+	u32 read32();
 	void loopE();
 	void retIntr();
 

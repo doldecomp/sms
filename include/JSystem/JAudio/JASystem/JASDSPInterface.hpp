@@ -1,6 +1,8 @@
 #ifndef JASDSPINTERFACE_HPP
 #define JASDSPINTERFACE_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
 namespace Driver {
@@ -15,47 +17,46 @@ namespace DSPInterface {
 		void flushChannel();
 		void allocInit();
 		void initFilter();
-		void setAutoMixer(unsigned short, unsigned char, unsigned char,
-		                  unsigned char, unsigned char);
-		void setMixerVolumeOnly(unsigned char, short);
-		void setPitch(unsigned short);
-		void setPauseFlag(unsigned char);
-		void setMixerVolume(unsigned char, short, unsigned char);
-		void setIIRFilterParam(short*);
-		void setFIR8FilterParam(short*);
-		void setFilterMode(unsigned short);
-		void setDistFilter(short);
-		void setWaveInfo(Driver::Wave_*, unsigned long);
-		void setOscInfo(unsigned long);
-		void setBusConnect(unsigned char, unsigned char);
+		void setAutoMixer(u16, u8, u8, u8, u8);
+		void setMixerVolumeOnly(u8, s16);
+		void setPitch(u16);
+		void setPauseFlag(u8);
+		void setMixerVolume(u8, s16, u8);
+		void setIIRFilterParam(s16*);
+		void setFIR8FilterParam(s16*);
+		void setFilterMode(u16);
+		void setDistFilter(s16);
+		void setWaveInfo(Driver::Wave_*, u32);
+		void setOscInfo(u32);
+		void setBusConnect(u8, u8);
 		void initAutoMixer();
-		void setMixerInitDelayMax(unsigned char);
-		void setMixerInitVolume(unsigned char, short, unsigned char);
+		void setMixerInitDelayMax(u8);
+		void setMixerInitVolume(u8, s16, u8);
 		void playStart();
 		void playStop();
-		void updateAMVolume(unsigned short);
-		void updateAMPan(unsigned char, unsigned char);
-		void updateAMFX(unsigned char);
-		void setPitchIndirect(float, float);
+		void updateAMVolume(u16);
+		void updateAMPan(u8, u8);
+		void updateAMFX(u8);
+		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 	};
 
 	class FXBuffer {
 	public:
-		void setFXLine(short*, FxlineConfig_*);
-		void changeFXLineParam(unsigned char, unsigned long);
+		void setFXLine(s16*, FxlineConfig_*);
+		void changeFXLineParam(u8, u32);
 	};
 
-	extern unsigned long SEND_TABLE;
-	extern unsigned long JAS_DSP_PREFIX;
-	extern unsigned long CH_BUF;
-	extern unsigned long FX_BUF;
+	extern u32 SEND_TABLE;
+	extern u32 JAS_DSP_PREFIX;
+	extern u32 CH_BUF;
+	extern u32 FX_BUF;
 
-	DSPBuffer* getDSPHandle(unsigned char);
-	DSPBuffer* getDSPHandleNc(unsigned char);
-	FXBuffer* getFXHandle(unsigned char);
-	FXBuffer* getFXHandleNc(unsigned char);
-	void setFilterTable(short*, short*, unsigned long);
+	DSPBuffer* getDSPHandle(u8);
+	DSPBuffer* getDSPHandleNc(u8);
+	FXBuffer* getFXHandle(u8);
+	FXBuffer* getFXHandleNc(u8);
+	void setFilterTable(s16*, s16*, u32);
 	void flushBuffer();
 	void flushChannelAll();
 	void cacheChannelAll();

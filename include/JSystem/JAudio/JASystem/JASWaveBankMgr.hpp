@@ -1,7 +1,7 @@
 #ifndef JASWAVEBANKMGR_HPP
 #define JASWAVEBANKMGR_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -9,13 +9,13 @@ class TWaveBank;
 
 class WaveBankMgr {
 public:
-	static void init(int tableSize);
-	static TWaveBank* getWaveBank(int bankIndex);
-	static void registWaveBank(int bankIndex, TWaveBank* waveBank);
-	static void registWaveBankWS(int bankIndex, void* waveBankData);
-	static void loadWave(int bankIndex, int waveIndex);
-	static void eraseWave(int bankIndex, int waveIndex);
-	static unsigned long getUsedHeapSize();
+	void init(int tableSize);
+	TWaveBank* getWaveBank(int bankIndex);
+	void registWaveBank(int bankIndex, TWaveBank* waveBank);
+	void registWaveBankWS(int bankIndex, void* waveBankData);
+	void loadWave(int bankIndex, int waveIndex);
+	void eraseWave(int bankIndex, int waveIndex);
+	u32 getUsedHeapSize();
 
 	static int sTableSize;
 	static TWaveBank** sWaveBank;

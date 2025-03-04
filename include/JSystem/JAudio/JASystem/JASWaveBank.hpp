@@ -8,9 +8,7 @@ namespace JASystem {
 
 class TWaveBank {
 public:
-	virtual ~TWaveBank();
-
-	static void* getCurrentHeap();
+	void* getCurrentHeap();
 
 	static void* sCurrentHeap;
 };

@@ -5,7 +5,6 @@ namespace JASystem {
 
 class TInstRand {
 public:
-	virtual ~TInstRand() { }
 	virtual int getY(int, int) const;
 };
 

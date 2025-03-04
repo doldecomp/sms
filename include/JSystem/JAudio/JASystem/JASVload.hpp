@@ -1,34 +1,31 @@
 #ifndef JASVLOAD_HPP
 #define JASVLOAD_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 
 class Vload {
 public:
-	static void initVloadBuffers();
-	static void setMaxArcs(long);
-	static void initHeader(char*);
-	static void initHeaderM(char*, unsigned char*, unsigned char*);
-	static unsigned long getArchiveHandle(char*);
-	static unsigned long getLogicalHandle(char*);
-	static unsigned long getLogicalHandleS(char*, char*);
-	static unsigned long getHandle(unsigned long);
-	static unsigned long getRealHandle(unsigned long);
-	static unsigned long checkSize(unsigned long);
-	static unsigned long loadFile(unsigned long, unsigned char*, unsigned long,
-	                              unsigned long);
-	static void loadFileAsync(unsigned long, unsigned char*, unsigned long,
-	                          unsigned long, void (*)(unsigned long),
-	                          unsigned long);
-	static void* getMemoryFile(unsigned long);
+	void initVloadBuffers();
+	void setMaxArcs(long);
+	void initHeader(char*);
+	void initHeaderM(char*, u8*, u8*);
+	u32 getArchiveHandle(char*);
+	u32 getLogicalHandle(char*);
+	u32 getLogicalHandleS(char*, char*);
+	u32 getHandle(u32);
+	u32 getRealHandle(u32);
+	u32 checkSize(u32);
+	u32 loadFile(u32, u8*, u32, u32);
+	void loadFileAsync(u32, u8*, u32, u32, void (*)(u32), u32);
+	void* getMemoryFile(u32);
 
-	static long vlMaxArcs;
+	static u32 vlMaxArcs;
 	static char* vlDirName;
 	static char* vlArcName;
 	static void* vlArc;
-	static long vlCurrentArcs;
+	static u32 vlCurrentArcs;
 };
 
 } // namespace JASystem

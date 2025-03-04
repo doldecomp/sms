@@ -1,7 +1,7 @@
 #ifndef JASWAVEARCLOADER_HPP
 #define JASWAVEARCLOADER_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -9,13 +9,13 @@ class WaveArcLoader {
 public:
 	struct TObject;
 
-	static void init();
-	static void init(unsigned long);
-	static void setCurrentDir(const char*);
-	static const char* getCurrentDir();
-	static void loadWave(TObject*);
-	static void eraseWave(TObject*);
-	static void* getRootHeap();
+	void init();
+	void init(u32);
+	void setCurrentDir(const char*);
+	const char* getCurrentDir();
+	void loadWave(TObject*);
+	void eraseWave(TObject*);
+	void* getRootHeap();
 
 	static const char* sCurrentDir;
 	static void* sAramHeap;

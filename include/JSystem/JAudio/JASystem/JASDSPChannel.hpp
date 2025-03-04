@@ -1,25 +1,28 @@
 #ifndef JASDSPCHANNEL_HPP
 #define JASDSPCHANNEL_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
 class TDSPChannel {
+private:
 public:
 	TDSPChannel();
 	~TDSPChannel();
 
 	static void initAll();
 	static void updateAll();
-	static TDSPChannel* alloc(unsigned long, unsigned long);
-	static void free(TDSPChannel*, unsigned long);
-	static TDSPChannel* getHandle(unsigned long);
-	static unsigned long getNumUse();
-	static unsigned long getNumFree();
-	static void setLimitDSP(float);
-	static float* getHistory();
+	static TDSPChannel* alloc(u32 param1, u32 param2);
+	static void free(TDSPChannel* channel, u32 param);
+	static TDSPChannel* getHandle(u32 handle);
+	static u32 getNumUse();
+	static u32 getNumFree();
+	static void setLimitDSP(f32 limit);
+	static f32* getHistory();
 
-	void init(unsigned char);
-	void allocate(unsigned long);
+	void init(u8 param);
+	void allocate(u32 param);
 	void free();
 	void play();
 	void stop();
@@ -27,17 +30,16 @@ public:
 	void restart();
 	void forceStop();
 	void forceDelete();
-	unsigned char getLower();
-	unsigned char getLowerActive();
-	void breakLower(unsigned char);
-	void breakLowerActive(unsigned char);
+	u8 getLower();
+	u8 getLowerActive();
+	void breakLower(u8 param);
+	void breakLowerActive(u8 param);
 
 	static TDSPChannel* DSPCH;
-	static unsigned long smnUse;
-	static unsigned long smnFree;
-	static float DSP_LIMIT_RATIO;
-	static float* history;
-	static unsigned long old_time;
+	static u32 smnUse;
+	static u32 smnFree;
+	static f32 DSP_LIMIT_RATIO;
+	static f32* history;
 };
 
 } // namespace JASystem

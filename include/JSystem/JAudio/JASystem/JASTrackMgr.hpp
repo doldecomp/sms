@@ -19,26 +19,25 @@ public:
 	static TTrack* getNewTrack();
 	static TTrack* allocNewRoot(TTrack*);
 	static void deAllocRoot(TTrack*);
-	static void registTrack(unsigned long, TTrack*);
+	static void registTrack(u32, TTrack*);
 	static void unRegistTrack(TTrack*);
 	static void backTrack(TTrack*);
-	static unsigned long getTrackHandle(unsigned long);
-	static TTrack* handleToSeq(unsigned long);
+	static u32 getTrackHandle(u32);
+	static TTrack* handleToSeq(u32);
 	static void setPause(Kernel::TPortArgs*);
 	static void clearPause(Kernel::TPortArgs*);
 	static int getRemainFreeTracks();
-	static void registerTrackCallback(unsigned short (*)(TTrack*,
-	                                                     unsigned short));
+	static void registerTrackCallback(u16 (*)(TTrack*, u16));
 
 	static TTrack* sTrackList;
 	static TTrack* sTrackPool;
 	static void* sSeqOuter;
 	static TTrack* sRootTrack;
 	static void* sFreeSeqpQueue;
-	static unsigned long sRootSeqCount;
-	static unsigned long sTrackCount;
+	static u32 sRootSeqCount;
+	static u32 sTrackCount;
 	static void* sTLists;
-	static unsigned long seqRemain;
+	static u32 seqRemain;
 	static void* getP;
 	static void* backP;
 };

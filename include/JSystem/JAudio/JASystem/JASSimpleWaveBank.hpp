@@ -1,7 +1,7 @@
 #ifndef JASSIMPLEWAVEBANK_HPP
 #define JASSIMPLEWAVEBANK_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -26,9 +26,9 @@ public:
 	virtual bool* getLoadFlagPtr();
 	virtual int getType() const;
 
-	const TWaveHandle* getWaveHandle(unsigned long) const;
-	void setWaveTableSize(unsigned long);
-	void setWaveInfo(unsigned long, const TWaveInfo&);
+	const TWaveHandle* getWaveHandle(u32) const;
+	void setWaveTableSize(u32);
+	void setWaveInfo(u32, const TWaveInfo&);
 	void setWaveArcFileName(const char*);
 };
 

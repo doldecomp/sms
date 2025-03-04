@@ -1,6 +1,8 @@
 #ifndef JASOUTERPARAM_HPP
 #define JASOUTERPARAM_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
 namespace TTrack {
@@ -8,16 +10,16 @@ namespace TTrack {
 	public:
 		TOuterParam();
 		void initExtBuffer();
-		void setParam(unsigned char, float);
-		void onSwitch(unsigned short);
-		void checkOuterSwitch(unsigned short);
-		unsigned short getIntFirFilter(unsigned char);
-		unsigned short getOuterUpdate();
-		void setOuterUpdate(unsigned short);
-		void setOuterSwitch(unsigned short);
-		void setFirFilter(short*);
-		unsigned short getSwitch();
-		void setIntFirFilter(short, unsigned char);
+		void setParam(u8, f32);
+		void onSwitch(u16);
+		void checkOuterSwitch(u16);
+		u16 getIntFirFilter(u8);
+		u16 getOuterUpdate();
+		void setOuterUpdate(u16);
+		void setOuterSwitch(u16);
+		void setFirFilter(s16*);
+		u16 getSwitch();
+		void setIntFirFilter(s16, u8);
 	};
 } // namespace TTrack
 

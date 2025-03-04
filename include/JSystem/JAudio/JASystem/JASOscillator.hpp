@@ -1,6 +1,8 @@
 #ifndef JASOSCILLATOR_HPP
 #define JASOSCILLATOR_HPP
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 
 class TOscillator {
@@ -15,10 +17,10 @@ public:
 };
 
 namespace Driver {
-	extern void* FORCE_STOP_TABLE;
-	extern void* relTableSampleCell;
-	extern void* relTableSqRoot;
-	extern void* relTableSquare;
+	extern u32 FORCE_STOP_TABLE[];
+	extern f32 relTableSampleCell[];
+	extern f32 relTableSqRoot[];
+	extern f32 relTableSquare[];
 } // namespace Driver
 
 } // namespace JASystem

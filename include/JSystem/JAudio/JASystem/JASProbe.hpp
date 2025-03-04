@@ -2,16 +2,16 @@
 
 namespace JASystem {
 namespace Kernel {
-	void probeStart(long, char*) { return; }
-	void probeFinish(long) { return; }
-	void switchProbe(unsigned long, long);
+	void probeStart(s32, char*) { return; }
+	void probeFinish(s32) { return; }
+	void switchProbe(u32, s32);
 	void resetProbe();
-	void getProbeName(long);
-	void getProbeLast(long);
-	void getProbeAvg(long);
-	void getProbeTotalAvg(long);
-	void getProbeTotal(long);
-	void getProbeMax(long);
+	void getProbeName(s32);
+	void getProbeLast(s32);
+	void getProbeAvg(s32);
+	void getProbeTotalAvg(s32);
+	void getProbeTotal(s32);
+	void getProbeMax(s32);
 	void Console_printf(char*, ...);
 } // namespace Kernel
 } // namespace JASystem

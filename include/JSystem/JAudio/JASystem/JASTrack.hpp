@@ -7,7 +7,7 @@ namespace JASystem {
 
 namespace Player {
 	enum SEQ_PLAYMODE { };
-	extern unsigned long oRandom;
+	extern u32 oRandom;
 } // namespace Player
 
 class TSeqCtrl;
@@ -23,86 +23,81 @@ public:
 	~TTrack();
 
 	void reset();
-	void initTrack(void* data, unsigned long size, TTrack* parent);
+	void initTrack(void* data, u32 size, TTrack* parent);
 	void initTimed();
-	void openTrack(unsigned char param);
+	void openTrack(u8 param);
 	void closeTrack();
-	void startTrack(TTrack* parent, unsigned char param1, unsigned char param2,
-	                unsigned long param3);
+	void startTrack(TTrack* parent, u8 param1, u8 param2, u32 param3);
 	void startSeq();
 	void stopSeq();
 	void stopSeqMain();
 	void allNoteOff();
-	void setSeqData(unsigned char* data, long size, Player::SEQ_PLAYMODE mode);
-	void updateSeq(unsigned long param, bool flag);
-	void updateTrack(unsigned long param);
+	void setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode);
+	void updateSeq(u32 param, bool flag);
+	void updateTrack(u32 param);
 	void updateTrackAll();
 	void updateTempo();
 	void mainProc();
-	void noteOn(unsigned char note, long velocity, long length, long delay);
-	void noteOff(unsigned char note, unsigned short release);
-	void gateOn(unsigned char note, long velocity, long length, long delay);
-	void checkNoteStop(long param);
+	void noteOn(u8 note, s32 velocity, s32 length, s32 delay);
+	void noteOff(u8 note, u16 release);
+	void gateOn(u8 note, s32 velocity, s32 length, s32 delay);
+	void checkNoteStop(s32 param);
 	void releaseChannelAll();
 	void flushAll();
 	void flushRelease();
-	void muteTrack(unsigned char flag);
-	void muteChildTracks(unsigned short flags);
-	void pauseTrack(unsigned char flag);
+	void muteTrack(u8 flag);
+	void muteChildTracks(u16 flags);
+	void pauseTrack(u8 flag);
 	void pauseTrackAll();
-	void unPauseTrack(unsigned char flag);
+	void unPauseTrack(u8 flag);
 	void unPauseTrackAll();
-	void setInterrupt(unsigned short interrupt);
+	void setInterrupt(u16 interrupt);
 	void tryInterrupt();
-	void setInnerMemory(unsigned char param);
-	void setBankNumber(unsigned char bank);
+	void setInnerMemory(u8 param);
+	void setBankNumber(u8 bank);
 	void assignExtBuffer(TOuterParam* buffer);
-	void setPanSwitchExt(unsigned char param1, unsigned char param2);
-	void setPanSwitchParent(unsigned char param1, unsigned char param2);
-	void setTrackExtPanPower(float power);
-	void setExtFirFilterD(short* filter);
-	void routeTrack(unsigned long route);
-	void writePortApp(unsigned long port, unsigned short value);
-	void readPortApp(unsigned long port, unsigned short* value);
-	void writePortAppDirect(unsigned long port, unsigned short value);
-	void readPortAppDirect(unsigned long port, unsigned short* value);
-	void checkExportApp(unsigned long port);
-	void checkImportApp(unsigned long port);
-	void loadTbl(unsigned long param1, unsigned long param2,
-	             unsigned long param3);
-	void readReg32(unsigned char reg);
-	void exchangeRegisterValue(unsigned char reg);
-	void readRegDirect(unsigned char reg);
-	void writeRegDirect(unsigned char reg, unsigned short value);
-	void writeTimeParam(unsigned char param);
-	void writeRegParam(unsigned char param);
-	void seqTimeToDspTime(long time, unsigned char param);
-	void panCalc(float param1, float param2, float param3,
-	             unsigned char param4);
+	void setPanSwitchExt(u8 param1, u8 param2);
+	void setPanSwitchParent(u8 param1, u8 param2);
+	void setTrackExtPanPower(f32 power);
+	void setExtFirFilterD(s16* filter);
+	void routeTrack(u32 route);
+	void writePortApp(u32 port, u16 value);
+	void readPortApp(u32 port, u16* value);
+	void writePortAppDirect(u32 port, u16 value);
+	void readPortAppDirect(u32 port, u16* value);
+	void checkExportApp(u32 port);
+	void checkImportApp(u32 port);
+	void loadTbl(u32 param1, u32 param2, u32 param3);
+	void readReg32(u8 reg);
+	void exchangeRegisterValue(u8 reg);
+	void readRegDirect(u8 reg);
+	void writeRegDirect(u8 reg, u16 value);
+	void writeTimeParam(u8 param);
+	void writeRegParam(u8 param);
+	void seqTimeToDspTime(s32 time, u8 param);
+	void panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
 	void rootCallback(void* param);
-	void updateSyncSw(unsigned char param);
+	void updateSyncSw(u8 param);
 	void incSelfOsc();
-	void oscSetupSimple(unsigned char param);
-	void oscSetupSimpleEnv(unsigned char param, unsigned long env);
-	void oscSetupFull(unsigned char param1, unsigned long param2,
-	                  unsigned long param3);
-	void oscUpdateParam(unsigned char param, float value);
+	void oscSetupSimple(u8 param);
+	void oscSetupSimpleEnv(u8 param, u32 env);
+	void oscSetupFull(u8 param1, u32 param2, u32 param3);
+	void oscUpdateParam(u8 param, f32 value);
 
-	unsigned char getBank() const;
-	unsigned char getProgram() const;
-	float getVolume() const;
-	float getPitch() const;
-	float getPan() const;
-	float getFxmix() const;
-	float getDolby() const;
-	unsigned char getNoteStatus(unsigned char note);
+	u8 getBank() const;
+	u8 getProgram() const;
+	f32 getVolume() const;
+	f32 getPitch() const;
+	f32 getPan() const;
+	f32 getFxmix() const;
+	f32 getDolby() const;
+	u8 getNoteStatus(u8 note);
 
-	static void
-	registerTrackCallback(unsigned short (*callback)(TTrack*, unsigned short));
+	static void registerTrackCallback(u16 (*callback)(TTrack*, u16));
 	static TSeqParser* sParser;
-	static unsigned char sUpdateSyncMode;
-	static unsigned short (*sCallBackFunc)(TTrack*, unsigned short);
-	static unsigned long sOscTable;
+	static u8 sUpdateSyncMode;
+	static u16 (*sCallBackFunc)(TTrack*, u16);
+	static u32 sOscTable;
 };
 
 } // namespace JASystem

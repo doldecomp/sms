@@ -1,34 +1,33 @@
 #ifndef JASSYSTEMHEAP_HPP
 #define JASSYSTEMHEAP_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 class JKRSolidHeap;
 
 namespace JASystem {
 namespace Kernel {
 
-	extern unsigned long audioDramSize;
-	extern unsigned long audioAramSize;
-	extern unsigned long audioAramTop;
+	extern u32 audioDramSize;
+	extern u32 audioAramSize;
+	extern u32 audioAramTop;
 	extern void* audioAramHeap;
-	extern unsigned long CARD_SECURITY_BUFFER;
-	extern unsigned long JASAramDmaBufferTop;
+	extern u32 CARD_SECURITY_BUFFER;
+	extern u32 JASAramDmaBufferTop;
 
 	void sysDramSetup(JKRSolidHeap* heap);
-	void sysAramSetup(unsigned long size);
-	void* allocFromSysDram(unsigned long size);
-	void* allocFromSysAramFull(unsigned long* size);
-	unsigned long getSysDramRemain();
-	void setSysDramSize(unsigned long size);
-	unsigned long getSysDramSize();
+	void sysAramSetup(u32 size);
+	void* allocFromSysDram(u32 size);
+	void* allocFromSysAramFull(u32* size);
+	u32 getSysDramRemain();
+	void setSysDramSize(u32 size);
+	u32 getSysDramSize();
 	void* getSysDramTop();
-	void setSysAramSize(unsigned long size);
-	void* allocFromSysAram(unsigned long size);
-	void* allocFromSysAramFull(unsigned long* size);
+	void setSysAramSize(u32 size);
+	void* allocFromSysAram(u32 size);
 	void freeToSysAramLast();
-	unsigned long getSysAramRemain();
-	unsigned long getSysAramSize();
+	u32 getSysAramRemain();
+	u32 getSysAramSize();
 	void* getSysAramTop();
 
 } // namespace Kernel

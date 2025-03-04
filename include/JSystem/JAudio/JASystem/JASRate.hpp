@@ -3,14 +3,16 @@
 
 #include "types.h"
 
+#include <dolphin/types.h>
+
 namespace JASystem {
 namespace Kernel {
-	extern float gDacRate;
-	extern float gOutputRate;
-	extern int gSubFrames;
-	extern int gDacSize;
-	extern int gFrameSamples;
-	extern int gAiSetting;
+	extern f32 gDacRate;
+	extern f32 gOutputRate;
+	extern u32 gSubFrames;
+	extern u32 gDacSize;
+	extern u32 gFrameSamples;
+	extern u32 gAiSetting;
 } // namespace Kernel
 } // namespace JASystem
 
