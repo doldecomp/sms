@@ -2,14 +2,7 @@
 #define MARIOINIT_HPP
 
 #include "System/ParamInst.hpp"
-
-// TODO: move to a better file
-#include "System/BaseParam.hpp"
-class TParams {
-public:
-	char* filename;
-	TBaseParam* head;
-};
+#include "System/Params.hpp"
 
 // length 0x42C
 class TDeParams : public TParams {
