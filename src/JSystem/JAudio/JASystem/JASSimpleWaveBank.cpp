@@ -1,4 +1,5 @@
-#include "JSystem/JAudio/JASystem/JASSimpleWaveBank.hpp"
+#include <JSystem/JAudio/JASystem/JASSimpleWaveBank.hpp>
+#include <types.h>
 
 namespace JASystem {
 
@@ -8,9 +9,9 @@ TSimpleWaveBank::TWaveHandle::~TWaveHandle() { }
 
 const void* TSimpleWaveBank::TWaveHandle::getWavePtr() const { return 0; }
 
-const TWaveInfo& TSimpleWaveBank::TWaveHandle::getWaveInfo() const
+const TWaveInfo* TSimpleWaveBank::TWaveHandle::getWaveInfo() const
 {
-	return *(TWaveInfo*)0;
+	return nullptr;
 }
 
 TSimpleWaveBank::TSimpleWaveBank() { }
@@ -25,7 +26,7 @@ bool* TSimpleWaveBank::getLoadFlagPtr() { return 0; }
 
 int TSimpleWaveBank::getType() const { return 0; }
 
-const TSimpleWaveBank::TWaveHandle* TSimpleWaveBank::getWaveHandle(u32) const
+TSimpleWaveBank::TWaveHandle* TSimpleWaveBank::getWaveHandle(u32) const
 {
 	return 0;
 }

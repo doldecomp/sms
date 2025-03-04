@@ -7,7 +7,12 @@ namespace JASystem {
 
 class WaveArcLoader {
 public:
-	struct TObject;
+	class TObject {
+	public:
+		virtual bool* getLoadFlagPtr()                 = 0;
+		virtual const char* getWaveArcFileName() const = 0;
+		virtual void* getHeap()                        = 0;
+	};
 
 	void init();
 	void init(u32);

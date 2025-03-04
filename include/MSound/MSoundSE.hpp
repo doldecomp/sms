@@ -22,10 +22,12 @@ public:
 class MSRandPlay {
 public:
 	MSRandPlay(u32, s32, s32, f32, f32);
+
+	virtual void randPlay(u32);
+
 	void construct(u32, s32, s32, f32, f32);
 	void createRandPlayVec(u32, u16);
 	void createRandPlayVecDynamic(u16);
-	void randPlay(u32);
 	void registerTrans(u32, const Vec*);
 	void registerTransDynamic(const Vec*);
 	void startSeRandPlay(u32, u32);

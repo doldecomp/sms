@@ -5,9 +5,14 @@
 
 namespace JASystem {
 
+class TInst;
+
 class TBank {
 public:
-	virtual ~TBank();
+	virtual ~TBank() { }
+	virtual TInst* getInst(int) const = 0;
+	virtual int getType() const       = 0;
+
 	static JKRHeap* getCurrentHeap();
 
 private:

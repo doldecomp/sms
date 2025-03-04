@@ -6,8 +6,6 @@ TWaveHandle::~TWaveHandle() { }
 
 TBasicWaveBank::TBasicWaveBank() { }
 
-TWaveBank::~TWaveBank() { }
-
 TBasicWaveBank::~TBasicWaveBank() { }
 
 int TBasicWaveBank::getType() const { return 0; }

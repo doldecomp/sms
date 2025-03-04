@@ -1,6 +1,7 @@
 #ifndef MSHANDLE_HPP
 #define MSHANDLE_HPP
 
+#include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
 
@@ -11,7 +12,7 @@ struct SeCategory {
 	f32 _0C;
 };
 
-class MSHandle {
+class MSHandle : public JAISound {
 public:
 	static SeCategory smSeCategory[];
 	static f32 smACosPrm[];
@@ -24,14 +25,14 @@ public:
 	static f32 cDol_HalfRad;
 	static f32 cDol_FullRad;
 
-	virtual ~MSHandle() { }
+	~MSHandle() { }
 
-	void setDistanceVolumeCommon(f32 volume, u8 param);
-	void setSeDistancePitch(u8 param);
-	void setSeDistanceVolume(u8 param);
-	void setSeDistanceDolby(u8 param);
-	void setSeDistancePan(u8 param);
-	void setSeDistanceParameters();
+	virtual void setSeDistanceParameters();
+	virtual void setSeDistanceVolume(u8 param);
+	virtual void setSeDistancePan(u8 param);
+	virtual void setSeDistancePitch(u8 param);
+	virtual void setSeDistanceDolby(u8 param);
+	virtual void setDistanceVolumeCommon(f32 volume, u8 param);
 
 	f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4, u8 param5);
 	f32 calcPan(const Vec& vec, f32 param1, f32 param2);

@@ -14,7 +14,20 @@ class JAISoundTable;
 class JAIBasic {
 public:
 	JAIBasic();
-	virtual ~JAIBasic();
+	~JAIBasic();
+
+	virtual void initStream();
+	virtual JAISound* makeSound(u32 param);
+	virtual void getMapInfoFxline(u32 param);
+	virtual u32 getMapInfoGround(u32 param);
+	virtual void getMapInfoFxParameter(u32 param);
+	virtual void sendPlayingSeCommand();
+	virtual void sendSeAllParameter(JAISound* sound);
+	virtual void setSeExtParameter(JAISound* sound);
+	virtual void setRegisterTrackCallback();
+	virtual void checkStream();
+	virtual void checkNextFrameSe();
+	virtual void loadGroupWave(s32 param1, s32 param2);
 
 	void initDriver(JKRSolidHeap* heap, u32 param1, u8 param2);
 	void initInterface(u8 param);
@@ -36,8 +49,6 @@ public:
 	void initSeqsLoadArea();
 	void startSeSequence();
 	void setCameraInfo(VecPtr pos, VecPtr dir, MtxPtr mtx, u32 param);
-	void initStream();
-	void setRegisterTrackCallback();
 	void initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2);
 	void bootDSP();
 	void readInitSoundData();
@@ -47,14 +58,12 @@ public:
 	void finishSceneSet(u32 param);
 	void loadSceneWave(s32 param1, s32 param2);
 	void checkSceneWaveOnMemory(s32 param1, s32 param2);
-	void loadGroupWave(s32 param1, s32 param2);
 	void getWaveGroupNumber(s32 param);
 	void getWaveLoadStatus(s32 param);
 	void checkAllWaveLoadStatus();
 	void setInitFileLoadSwitch(u8 flag);
 	void startFrameInterfaceWork();
 	void processFrameWork();
-	void checkStream();
 	void checkDummyPositionBuffer();
 	void startSoundVec(u32 id, JAISound** sound, Vec* pos, u32 param1,
 	                   u32 param2, u8 param3);
@@ -105,9 +114,6 @@ public:
 	void setPauseFlagAll(u8 flag);
 	void checkPlayingSoundTrack(u32 param);
 	void changeSoundScene(u32 scene);
-	void getMapInfoFxline(u32 param);
-	void getMapInfoGround(u32 param);
-	void getMapInfoFxParameter(u32 param);
 	void allocDvdBuffer(unsigned char* buffer, u32 param1, u32 param2);
 	void deallocDvdBuffer(unsigned char* buffer);
 	void getSeInfoMode();
@@ -122,18 +128,13 @@ public:
 	void getSeqTrackNumber(void* param);
 	void getSoundPrioity(void* param);
 	void getSoundSwBit(void* param);
-	void setSeExtParameter(JAISound* sound);
 	void routeToTrack(u32 param);
-	void makeSound(u32 param);
 	void allocStreamBuffer(void* buffer, s32 size);
 	void deallocStreamBuffer();
 	void loadArcSeqData(u32 param, bool flag);
-	void checkNextFrameSe();
-	void sendPlayingSeCommand();
 	void setSeqMuteFromSeStart(JAISound* sound);
 	void clearSeqMuteFromSeStop(JAISound* sound);
 	void checkSeMovePara();
-	void sendSeAllParameter(JAISound* sound);
 	void releaseSeRegist(JAISound* sound);
 	void checkEntriedSeq();
 	void checkPlayingSeqTrack(unsigned long trackID);
