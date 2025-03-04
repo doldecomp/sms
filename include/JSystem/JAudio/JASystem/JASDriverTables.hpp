@@ -10,8 +10,8 @@ namespace Driver {
 } // namespace Driver
 
 namespace DSPInterface {
-	extern u32 DSPRES_FILTER;
-	extern u32 DSPADPCM_FILTER;
+	extern u32 DSPADPCM_FILTER[];
+	extern u32 DSPRES_FILTER[];
 } // namespace DSPInterface
 
 } // namespace JASystem
