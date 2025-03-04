@@ -13,7 +13,7 @@ public:
 	u32 getRandVol(u32);
 	u32 getRandomVolume(u32, u32);
 	static JSUList<MSRandVol> smList;
-	static float getRandomVolumeNormal(unsigned long);
+	static float getRandomVolumeNormal(u32);
 };
 
 } // namespace MSoundSESystem

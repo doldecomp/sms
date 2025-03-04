@@ -6,12 +6,12 @@
 
 class MSSceneSE {
 public:
-	MSSceneSE(unsigned long);
-	void frameLoop(unsigned long, Vec*, unsigned char);
-	void sortMaxTrans(Vec*, unsigned char, unsigned char);
-	void calcPosPanSR(Vec*, float);
-	void calcPosPanLR(Vec*, float);
-	void calcPosVolume(Vec*, float*, unsigned char);
+	MSSceneSE(u32);
+	void frameLoop(u32, Vec*, u8);
+	void sortMaxTrans(Vec*, u8, u8);
+	void calcPosPanSR(Vec*, f32);
+	void calcPosPanLR(Vec*, f32);
+	void calcPosVolume(Vec*, f32*, u8);
 };
 
 #endif
