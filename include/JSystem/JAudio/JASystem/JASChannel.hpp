@@ -51,9 +51,6 @@ public:
 	void updateEffectorParam();
 
 private:
-	u16 _00;       // 0x00
-	u8 mPauseFlag; // 0x02
-	bool mIsPause; // 0x03
 };
 
 namespace Driver {

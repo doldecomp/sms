@@ -46,13 +46,9 @@ void TChannel::initOscForOscSound() { }
 
 void TChannel::setKeySweepTarget(u8 key, u32 target) { }
 
-void TChannel::setPauseFlag(u8 flag) { this->mPauseFlag = flag; }
+void TChannel::setPauseFlag(u8 flag) { }
 
-void TChannel::setPauseFlagReq(u8 flag)
-{
-	this->mPauseFlag = flag;
-	this->mIsPause   = true;
-}
+void TChannel::setPauseFlagReq(u8 flag) { }
 
 void TChannel::setPanPower(f32 fl, f32 fr, f32 rl, f32 rr) { }
 
