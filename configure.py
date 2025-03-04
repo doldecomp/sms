@@ -158,6 +158,7 @@ config.asflags = [
     "--strip-local-absolute",
     "-I include",
     "-I include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
+    "-I include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
 ]
@@ -1200,7 +1201,7 @@ config.libs = [
     {
         "lib": "Camera",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Camera/CameraBGCheck.cpp"),
