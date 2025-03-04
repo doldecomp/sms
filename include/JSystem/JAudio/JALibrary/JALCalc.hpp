@@ -14,7 +14,6 @@ enum CurveSign {
 extern const f32 cEqualCSlope;
 extern const f32 cPlusPSlope;
 
-// Random number generation
 f32 getRandom_0_1();
 f32 getRandom(f32 min, f32 max, f32 step);
 // Unused / inlined

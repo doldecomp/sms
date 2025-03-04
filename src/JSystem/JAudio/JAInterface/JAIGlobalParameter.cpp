@@ -1,7 +1,6 @@
 
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 
-// Initialize static member variables
 u8 JAIGlobalParameter::distanceParameterMoveTime   = 0x03;
 u8 JAIGlobalParameter::audioSystemThreadPriority   = 0x02;
 u8 JAIGlobalParameter::audioDvdThreadPriority      = 0x03;
@@ -53,7 +52,6 @@ u32 JAIGlobalParameter::interfaceHeapSize          = 0;
 char* JAIGlobalParameter::audioResPath             = nullptr;
 f32 JAIGlobalParameter::minDistanceVolume          = 0.0f;
 
-// Setter methods
 void JAIGlobalParameter::setParamSoundOutputMode(u32) { }
 void JAIGlobalParameter::setParamAudioSystemThreadPriority(u8) { }
 void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8) { }
@@ -110,7 +108,6 @@ void JAIGlobalParameter::setParamDopplarParameter(f32) { }
 void JAIGlobalParameter::setParamSeDistanceWaitMax(u16) { }
 void JAIGlobalParameter::setParamSeDistancepitchMax(f32) { }
 
-// Getter methods
 u8 JAIGlobalParameter::getParamAudioSystemThreadPriority() { return 0; }
 u8 JAIGlobalParameter::getParamAudioDvdThreadPriority() { return 0; }
 u8 JAIGlobalParameter::getParamInitFileLoadSwitch() { return 0; }

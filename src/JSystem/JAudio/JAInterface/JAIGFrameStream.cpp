@@ -89,7 +89,6 @@ namespace StreamLib {
 
 	void callBack(void* param) { }
 
-	// Zero initialization for all externs
 	bool stopflag           = false;
 	bool stopflag2          = false;
 	u32 outputmode          = 0;

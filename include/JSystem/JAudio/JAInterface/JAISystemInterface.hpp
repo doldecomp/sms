@@ -34,7 +34,6 @@ public:
 	void* JAIouterP(void*);
 	void* JAIouterSW(void*);
 
-	// System port command
 	static JASystem::Kernel::TPortCmd systemPortCmd;
 };
 

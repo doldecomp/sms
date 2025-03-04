@@ -22,11 +22,6 @@ namespace BNKParser {
 } // namespace JASystem
 
 // TODO: Add proper types and implement rest
-// template <> TPmap* JSUConvertOffsetToPtr(const void* base, u32 offset)
-// {
-// 	return nullptr;
-// }
-
 template <> short* JSUConvertOffsetToPtr<short>(const void* base, u32 offset)
 {
 	if (offset == 0) {

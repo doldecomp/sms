@@ -17,9 +17,6 @@ public:
 	u32 read32();
 	void loopE();
 	void retIntr();
-
-private:
-	// Member variables would go here
 };
 } // namespace JASystem
 

@@ -5,7 +5,6 @@
 
 class JAIGlobalParameter {
 public:
-	// Setter methods
 	static void setParamSoundOutputMode(u32);
 	static void setParamAudioSystemThreadPriority(u8);
 	static void setParamAudioDvdThreadPriority(u8);
@@ -62,7 +61,6 @@ public:
 	static void setParamSeDistanceWaitMax(u16);
 	static void setParamSeDistancepitchMax(f32);
 
-	// Getter methods
 	static u8 getParamAudioSystemThreadPriority();
 	static u8 getParamAudioDvdThreadPriority();
 	static u8 getParamInitFileLoadSwitch();
@@ -114,7 +112,6 @@ public:
 	static s32 getParamSystemTrackMax();
 	static s32 getParamSystemRootTrackMax();
 
-	// Global parameter variables
 	static u8 distanceParameterMoveTime;
 	static u8 audioSystemThreadPriority;
 	static u8 audioDvdThreadPriority;

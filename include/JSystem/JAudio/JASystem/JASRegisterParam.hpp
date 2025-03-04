@@ -13,11 +13,6 @@ public:
 	void setBankNumber(u8 bankNum);
 	u8 getBankNumber() const;
 	u8 getProgramNumber() const;
-
-private:
-	// Add appropriate member variables based on the functions
-	u8 mBankNumber;
-	u8 mProgramNumber;
 };
 } // namespace JASystem
 

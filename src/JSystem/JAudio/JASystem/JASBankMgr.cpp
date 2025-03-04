@@ -3,8 +3,6 @@
 namespace JASystem {
 namespace BankMgr {
 
-	// Variables initialization
-
 	u32 OSC_RELEASE_TABLE[3] = { 0x1000a, 0xf, 0x0 };
 	// OSC_ENV is 100% f32...
 	// There should also be a 803aad88, which is a reference to
@@ -14,7 +12,6 @@ namespace BankMgr {
 	TBank* sBankArray  = nullptr;
 	u16* sVir2PhyTable = nullptr;
 
-	// Function implementations
 	void init(int bankCount) { }
 
 	void registBank(int bankIndex, TBank* bank) { }

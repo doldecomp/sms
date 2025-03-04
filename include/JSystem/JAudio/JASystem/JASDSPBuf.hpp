@@ -7,9 +7,7 @@ namespace JASystem {
 
 class DSPBuf {
 public:
-	enum DSPBUF_EVENTS {
-		// Enum values would be defined here
-	};
+	enum DSPBUF_EVENTS { };
 
 	void process(DSPBUF_EVENTS event);
 	static DSPBuf* dsp_buf;

@@ -10,7 +10,6 @@ class TChannel;
 class TChannelMgr;
 
 namespace BankMgr {
-	// Functions
 	void init(int bankCount);
 	void registBank(int bankIndex, TBank* bank);
 	void registBankBNK(int bankIndex, void* bankData);
@@ -26,7 +25,6 @@ namespace BankMgr {
 	void gateOn(TChannel* channel, u8 note, u8 velocity, u32 params);
 	u32 getUsedHeapSize();
 
-	// Variables
 	extern f32 OSC_ENV[];
 	extern u32 OSC_RELEASE_TABLE[];
 	extern u32 sTableSize;

@@ -3,7 +3,6 @@
 namespace JASystem {
 namespace Kernel {
 
-	// AI Control variables
 	void (*dacCallbackFunc)(s16*, s32) = nullptr;
 	s16* (*extMixCallback)(s32)        = nullptr;
 	u8 extMixMode                      = 0;
@@ -13,7 +12,6 @@ namespace Kernel {
 	u32 JASVframeCounter               = 0;
 	u32 JASUniversalDacCounter         = 0;
 
-	// AI Control functions
 	void registerDacCallback(void (*callback)(s16*, s32)) { }
 
 	s16* mixMonoTrack(s16* buffer, s32 sampleCount, s16* (*mixCallback)(s32))
@@ -48,7 +46,6 @@ namespace Kernel {
 
 	u32 getCurrentVCounter() { return 0; }
 
-	// System functions
 	void init() { }
 
 	void initSystem() { }

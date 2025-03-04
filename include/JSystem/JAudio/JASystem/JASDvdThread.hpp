@@ -27,8 +27,7 @@ namespace Dvd {
 	extern void** callStackArray;
 	void* loadToAramDvdTMain(void*);
 
-	struct TDvdCall; // Forward declaration for the struct used in doError and
-	                 // doFinish
+	struct TDvdCall;
 
 	void doError(TDvdCall*, u32);
 	void aramDmaFinish(u32);

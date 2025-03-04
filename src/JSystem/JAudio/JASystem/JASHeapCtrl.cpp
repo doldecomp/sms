@@ -12,7 +12,6 @@ namespace Kernel {
 
 	void dmaDramToDram(u32, u32, u32) { }
 
-	// THeap implementation
 	THeap::THeap() { }
 
 	void THeap::init() { }
@@ -47,7 +46,6 @@ namespace Kernel {
 
 	void THeap::moveChildren(s32) { }
 
-	// TSolidHeap implementation
 	TSolidHeap::TSolidHeap() { }
 
 	TSolidHeap::TSolidHeap(u8*, s32) { }

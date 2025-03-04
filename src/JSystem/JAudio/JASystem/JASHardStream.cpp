@@ -55,7 +55,6 @@ namespace HardStream {
 
 	s32 getAddrCallback(s32, DVDCommandBlock*) { return 0; }
 
-	// TControl implementation
 	void TControl::setMasterVol(f32) { }
 	u16 TControl::getIntroNum() { return 0; }
 	u16 TControl::getLoopNum() { return 0; }
@@ -74,17 +73,14 @@ namespace HardStream {
 	TControl::TControl() { }
 	TControl::~TControl() { }
 
-	// THardStreamFile implementation
 	THardStreamFile::THardStreamFile() { }
 	THardStreamFile::~THardStreamFile() { }
 	void THardStreamFile::setNameVol(const char*, f32) { }
 
-	// TPlayPair implementation
 	TPlayPair::TPlayPair() { }
 	TPlayPair::~TPlayPair() { }
 	bool TPlayPair::getRegisted() { return false; }
 
-	// TPlayList implementation
 	TPlayList::TPlayList() { }
 	TPlayList::~TPlayList() { }
 

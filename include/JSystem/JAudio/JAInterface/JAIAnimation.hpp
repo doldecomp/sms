@@ -6,9 +6,7 @@
 
 class JAIActor;
 
-struct JAIAnimeFrameSoundData {
-	// Placeholder structure for animation frame sound data
-};
+struct JAIAnimeFrameSoundData { };
 
 class JAIAnimeSound {
 public:

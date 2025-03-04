@@ -3,10 +3,6 @@
 
 namespace JAInter {
 
-// char* TAsnData::asnFileName = nullptr;
-// void* TAsnData::asnData     = nullptr;
-
-// Define the static members
 char* TAsnData::asnFileName = "JaiInfo.asn";
 void* TAsnData::asnData     = 0;
 

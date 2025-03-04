@@ -2,7 +2,6 @@
 
 namespace JASystem {
 namespace AudioThread {
-	// Variables
 	u8 jac_pri                = 0;
 	u8 priority_set           = 0;
 	u8 dvd_pri                = 0;
@@ -16,7 +15,6 @@ namespace AudioThread {
 	bool isDSPBoot         = false;
 	u32 intcount           = 0;
 
-	// Functions
 	void setPriority(u8 audioPriority, u8 dvdPriority) { }
 
 	void start(JKRSolidHeap* heap, u32 stackSize, u32 dvdStackSize) { }

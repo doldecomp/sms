@@ -9,9 +9,9 @@ u32 TDSPChannel::smnFree         = 0;
 f32 TDSPChannel::DSP_LIMIT_RATIO = 0.0f;
 f32* TDSPChannel::history        = 0;
 
-__declspec(weak) TDSPChannel::TDSPChannel() { }
+TDSPChannel::TDSPChannel() { }
 
-__declspec(weak) TDSPChannel::~TDSPChannel() { }
+TDSPChannel::~TDSPChannel() { }
 
 void TDSPChannel::initAll() { }
 
