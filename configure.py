@@ -197,6 +197,7 @@ cflags_base = [
     "-cwd source",
     "-i include",
     "-i include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
+    "-i include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",

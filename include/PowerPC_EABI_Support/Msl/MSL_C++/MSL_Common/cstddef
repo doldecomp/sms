@@ -1,0 +1,13 @@
+#ifndef _MSL_COMMON_CSTDDEF_
+#define _MSL_COMMON_CSTDDEF_
+
+#include <stddef.h>
+
+namespace std {
+
+typedef ::ptrdiff_t ptrdiff_t;
+typedef ::size_t size_t;
+
+} // namespace std
+
+#endif

@@ -1,0 +1,38 @@
+#ifndef _MSL_COMMON_ALGORITHM_
+#define _MSL_COMMON_ALGORITHM_
+
+#include <string.h>
+
+namespace std {
+
+template <class T, bool = true, bool = false> struct __copy {
+	static T* copy(T* first, T* last, T* result)
+	{
+		for (; first < last; ++first, ++result)
+			*result = *first;
+		return result;
+	}
+};
+
+template <class T> inline T* copy(T* first, T* last, T* result)
+{
+	return __copy<T>::copy(first, last, result);
+}
+
+template <class T, bool = true, bool = false> struct __copy_backward {
+	static T* copy_backward(T* first, T* last, T* result)
+	{
+		while (last > first)
+			*--result = *--last;
+		return result;
+	}
+};
+
+template <class T> inline T* copy_backward(T* first, T* last, T* result)
+{
+	return __copy_backward<T>::copy_backward(first, last, result);
+}
+
+} // namespace std
+
+#endif

@@ -4,6 +4,7 @@
 #include <types.h>
 #include <dolphin/os/OSMutex.h>
 #include <JSystem/JKernel/JKRDisposer.hpp>
+#include <new>
 
 typedef void JKRHeapErrorHandler(void*, u32, int);
 
@@ -267,10 +268,6 @@ void JKRDefaultMemoryErrorRoutine(void*, u32, int);
 void* operator new(size_t);
 void* operator new(size_t, int);
 void* operator new(size_t, JKRHeap*, int);
-inline void* operator new(size_t, void* buf)
-{
-	return buf;
-} // i believe this is actually part of MSL_C?
 
 void* operator new[](size_t);
 void* operator new[](size_t, int);
