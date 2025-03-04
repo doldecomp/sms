@@ -13,7 +13,6 @@ AlignConsecutiveMacros: true
 AlignEscapedNewlines: Right
 AlignOperands: true
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortEnumsOnASingleLine: false
 Cpp11BracedListStyle: false
 InsertNewlineAtEOF: true
 Language: Cpp
