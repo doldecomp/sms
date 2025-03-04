@@ -13,21 +13,21 @@ namespace Kernel {
 
 class TrackMgr {
 public:
-	static void init(int, int);
-	static void reset();
-	static void initRegistTrack();
-	static TTrack* getNewTrack();
-	static TTrack* allocNewRoot(TTrack*);
-	static void deAllocRoot(TTrack*);
-	static void registTrack(u32, TTrack*);
-	static void unRegistTrack(TTrack*);
-	static void backTrack(TTrack*);
-	static u32 getTrackHandle(u32);
-	static TTrack* handleToSeq(u32);
-	static void setPause(Kernel::TPortArgs*);
-	static void clearPause(Kernel::TPortArgs*);
-	static int getRemainFreeTracks();
-	static void registerTrackCallback(u16 (*)(TTrack*, u16));
+	void init(int, int);
+	void reset();
+	void initRegistTrack();
+	TTrack* getNewTrack();
+	TTrack* allocNewRoot(TTrack*);
+	void deAllocRoot(TTrack*);
+	void registTrack(u32, TTrack*);
+	void unRegistTrack(TTrack*);
+	void backTrack(TTrack*);
+	u32 getTrackHandle(u32);
+	TTrack* handleToSeq(u32);
+	void setPause(Kernel::TPortArgs*);
+	void clearPause(Kernel::TPortArgs*);
+	int getRemainFreeTracks();
+	void registerTrackCallback(u16 (*)(TTrack*, u16));
 
 	static TTrack* sTrackList;
 	static TTrack* sTrackPool;

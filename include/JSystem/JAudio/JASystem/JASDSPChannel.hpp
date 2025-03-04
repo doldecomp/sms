@@ -11,15 +11,15 @@ public:
 	TDSPChannel();
 	~TDSPChannel();
 
-	static void initAll();
-	static void updateAll();
-	static TDSPChannel* alloc(u32 param1, u32 param2);
-	static void free(TDSPChannel* channel, u32 param);
-	static TDSPChannel* getHandle(u32 handle);
-	static u32 getNumUse();
-	static u32 getNumFree();
-	static void setLimitDSP(f32 limit);
-	static f32* getHistory();
+	void initAll();
+	void updateAll();
+	TDSPChannel* alloc(u32 param1, u32 param2);
+	void free(TDSPChannel* channel, u32 param);
+	TDSPChannel* getHandle(u32 handle);
+	u32 getNumUse();
+	u32 getNumFree();
+	void setLimitDSP(f32 limit);
+	f32* getHistory();
 
 	void init(u8 param);
 	void allocate(u32 param);

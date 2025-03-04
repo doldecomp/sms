@@ -7,12 +7,12 @@ namespace JASystem {
 
 class TIntrMgr {
 public:
-	static void init();
-	static u32 request(u32);
-	static void setIntr(u32, void*);
-	static void resetInter(u32);
-	static void checkIntr();
-	static void timerProcess();
+	void init();
+	u32 request(u32);
+	void setIntr(u32, void*);
+	void resetInter(u32);
+	void checkIntr();
+	void timerProcess();
 };
 
 } // namespace JASystem

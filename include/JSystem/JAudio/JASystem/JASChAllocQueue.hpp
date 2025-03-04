@@ -10,11 +10,11 @@ namespace Driver {
 
 	class DSPQueue {
 	public:
-		static void init(u32 maxWait);
-		static void enQueue(JASystem::TChannel* channel);
-		static void deQueue(u8 channelIndex);
-		static void deleteQueue(JASystem::TChannel* channel);
-		static void checkQueue();
+		void init(u32 maxWait);
+		void enQueue(JASystem::TChannel* channel);
+		void deQueue(u8 channelIndex);
+		void deleteQueue(JASystem::TChannel* channel);
+		void checkQueue();
 
 		static u32 waitMax;
 		static u32 waitp;

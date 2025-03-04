@@ -8,20 +8,20 @@ namespace JASystem {
 
 class TChannelMgr {
 public:
-	static void init();
-	static void stopAll();
-	static void stopAllRelease();
-	static void checkGlobalRelease();
-	static TChannel* getLogicalChannel(u32);
-	static void initAllocChannel(u32);
-	static TChannel* getListHead(u32);
-	static u32 countList(u32);
-	static void cutList(TChannel*);
-	static void addListHead(TChannel*, u32);
-	static void addListTail(TChannel*, u32);
-	static void receiveAllChannels(TChannelMgr*);
-	static bool checkLimitStart(u32);
-	static bool checkLimitStop(TChannel*, u32);
+	void init();
+	void stopAll();
+	void stopAllRelease();
+	void checkGlobalRelease();
+	TChannel* getLogicalChannel(u32);
+	void initAllocChannel(u32);
+	TChannel* getListHead(u32);
+	u32 countList(u32);
+	void cutList(TChannel*);
+	void addListHead(TChannel*, u32);
+	void addListTail(TChannel*, u32);
+	void receiveAllChannels(TChannelMgr*);
+	bool checkLimitStart(u32);
+	bool checkLimitStop(TChannel*, u32);
 };
 
 namespace Driver {
