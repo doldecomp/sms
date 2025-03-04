@@ -27,21 +27,29 @@ public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;
-	/* 0x30 */ u16 unk30;
+	/* 0x30 */ s16 unk30;
 	/* 0x32 */ u16 unk32;
-	/* 0x34 */ u32 unk34;
+	/* 0x34 */ s32 unk34;
 };
 
 class TCubeStreamInfo : public TCubeGeneralInfo {
 public:
-	virtual ~TCubeStreamInfo();
+	virtual ~TCubeStreamInfo() { }
 	virtual void load(JSUMemoryInputStream&);
+
+public:
+	/* 0x38 */ u32 unk38;
+	/* 0x3C */ f32 unk3C;
+	/* 0x40 */ f32 unk40;
 };
 
 class TCubeCameraInfo : public TCubeGeneralInfo {
 public:
-	virtual ~TCubeCameraInfo();
+	virtual ~TCubeCameraInfo() { }
 	virtual void load(JSUMemoryInputStream&);
+
+public:
+	/* 0x38 */ JDrama::TNameRef* unk38;
 };
 
 #endif
