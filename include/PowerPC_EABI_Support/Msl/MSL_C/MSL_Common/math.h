@@ -30,6 +30,7 @@ double copysign(double, double);
 double cos(double);
 float cosf(float);
 double exp(double);
+float expf(float);
 
 extern double __fabs(double);
 extern float __fabsf(float);
@@ -45,6 +46,7 @@ double frexp(double, int*);
 double ldexp(double, int);
 double modf(double, double*);
 double pow(double, double);
+float powf(float, float);
 double sin(double);
 float sinf(float);
 double tan(double);
@@ -82,6 +84,7 @@ inline float atan2f(float y, float x) { return ::atan2f(y, x); }
 inline float sinf(float x) { return ::sin(x); }
 inline float cosf(float x) { return ::cos(x); }
 inline float tanf(float x) { return ::tan(x); }
+inline float powf(float e, float x) { return ::powf(e, x); }
 
 extern inline float sqrtf(float x)
 {

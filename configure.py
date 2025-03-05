@@ -395,7 +395,7 @@ config.libs = [
 
             # JAudio
             # JADebug
-            Object(NonMatching, "JSystem/JAudio/JADebug/JADHioNode.cpp"),
+            Object(Matching, "JSystem/JAudio/JADebug/JADHioNode.cpp"),
             # JALibrary
             Object(NonMatching, "JSystem/JAudio/JALibrary/JALCalc.cpp"),
             Object(NonMatching, "JSystem/JAudio/JALibrary/JALModSe.cpp"),
