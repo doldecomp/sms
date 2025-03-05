@@ -3,6 +3,27 @@
 
 #include <dolphin/mtx.h>
 
+namespace JMath {
+
+class TRandom_fast_ {
+public:
+	TRandom_fast_(u32);
+
+	inline u32 next()
+	{
+		value = value * 0x19660d + 0x3c6ef35f;
+		return value;
+	}
+
+	void get();
+	void get_ufloat_1();
+
+private:
+	u32 value;
+};
+
+} // namespace JMath
+
 void JMANewSinTable(u8);
 void JMADeleteSinTable();
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
