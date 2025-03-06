@@ -121,7 +121,10 @@ public:
 	void getTrackPortRoute(u8, u8);
 	void getSeInfoPointer();
 
-	void* interPointer;
+public:
+	/* 0x0 */ void* interPointer;
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ u32 unk8;
 };
 
 #endif // JAISOUND_HPP
