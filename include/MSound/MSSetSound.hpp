@@ -131,8 +131,8 @@ public:
 	{
 	}
 
-	static bool startSoundSetGrp(u32 param1, const Vec* param2, u32 param3, f32 param4,
-	                      u32 param5, u32 param6, u8 param7);
+	static bool startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
+	                             f32 param4, u32 param5, u32 param6, u8 param7);
 };
 
 class MSSetSound : public MSSetSoundTL<MSSetSound> {
