@@ -31,4 +31,14 @@ public:
 	/* 0x10 */ U unk10;
 };
 
+template <class T> class JALListFrameLoop : public JALListHioNode<T, u32> {
+public:
+	JALListFrameLoop(const char* param_1, u32 param_2, T* param_3)
+	    : JALListHioNode<T, u32>(param_1, param_2, param_3)
+	{
+	}
+
+	virtual void frameLoopDyna() { }
+};
+
 #endif

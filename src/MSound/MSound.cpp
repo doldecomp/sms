@@ -1,7 +1,7 @@
 #include <MSound/MSRandVol.hpp>
 #include <MSound/MSound.hpp>
 
-JAISound* MSGMSound = 0;
+MSound* MSGMSound = 0;
 JAIBasic* MSGBasic  = 0;
 
 namespace MSoundSESystem {
