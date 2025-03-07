@@ -5,10 +5,7 @@
 
 template <class T> class JADPrm {
 public:
-	JADPrm(T val, const char*)
-	    : value(val)
-	{
-	}
+	JADPrm(T val, const char*);
 
 	T value;
 };

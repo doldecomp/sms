@@ -9,6 +9,7 @@ namespace JALCalc {
 enum CurveSign {
 	CS_NEGATIVE_CURVE = 0,
 	CS_POSITIVE_CURVE = 1,
+	CS_UNKNOWN_2      = 2,
 };
 
 extern const f32 cEqualCSlope;

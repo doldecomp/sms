@@ -187,12 +187,9 @@ template <class T, class U, class V> class JALListGrp : public JALListD<V, U> {
 public:
 	static T* searchGroup(U param_1)
 	{
-		JALListGrp* res       = nullptr;
 		JSUListIterator<T> it = JALList<T>::smList.getFirst();
 		for (; it != JALList<T>::smList.getEnd(); ++it) {
-			T* res = nullptr;
-			JSUListIterator<JALSeModDataGrpMemb> it2
-			    = it.getObject()->getFirst();
+			JSUListIterator<V> it2 = it.getObject()->getFirst();
 			for (; it2 != it.getObject()->getEnd(); ++it2)
 				if (param_1 == it2.getObject()->unk0)
 					break;

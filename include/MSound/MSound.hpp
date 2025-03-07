@@ -113,7 +113,7 @@ public:
 	void resetAudioAll(u16);
 };
 
-extern JAISound* MSGMSound;
+extern MSound* MSGMSound;
 extern JAIBasic* MSGBasic;
 extern MSound* gpMSound;
 
