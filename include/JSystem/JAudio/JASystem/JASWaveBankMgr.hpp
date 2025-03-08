@@ -10,7 +10,7 @@ class TWaveBank;
 class WaveBankMgr {
 public:
 	void init(int tableSize);
-	TWaveBank* getWaveBank(int bankIndex);
+	static TWaveBank* getWaveBank(int bankIndex);
 	void registWaveBank(int bankIndex, TWaveBank* waveBank);
 	void registWaveBankWS(int bankIndex, void* waveBankData);
 	void loadWave(int bankIndex, int waveIndex);

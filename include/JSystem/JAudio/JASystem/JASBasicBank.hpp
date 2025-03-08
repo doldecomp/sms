@@ -12,14 +12,14 @@ public:
 
 	virtual ~TBasicBank();
 	virtual TInst* getInst(int) const;
-	virtual int getType() const;
+	virtual int getType() const { return 'BSIC'; }
 
 	void setInstCount(u32);
 	void setInst(int, TInst*);
 
 private:
-	u32 mInstCount;
-	TInst** mInsts;
+	/* 0x8 */ TInst** mInsts;
+	/* 0xC */ u32 mInstCount;
 };
 
 } // namespace JASystem

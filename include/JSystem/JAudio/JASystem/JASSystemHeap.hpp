@@ -4,6 +4,9 @@
 #include <dolphin/types.h>
 
 class JKRSolidHeap;
+class JKRHeap;
+
+extern JKRHeap* JASDram;
 
 namespace JASystem {
 namespace Kernel {
