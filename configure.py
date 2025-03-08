@@ -828,7 +828,7 @@ config.libs = [
         "mw_version": "GC/1.2.5",
         "cflags": cflags_system,
         "objects": [
-            Object(NonMatching, "System/BaseParam.cpp"),
+            Object(Matching, "System/BaseParam.cpp"),
             Object(NonMatching, "System/EmitterViewObj.cpp"),
             Object(NonMatching, "System/EventWatcher.cpp"),
             Object(
