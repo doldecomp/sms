@@ -3,15 +3,21 @@
 
 #include <dolphin/types.h>
 
+class JKRHeap;
+
 namespace JASystem {
+
+namespace Kernel {
+	class THeap;
+}
 
 class WaveArcLoader {
 public:
 	class TObject {
 	public:
-		virtual bool* getLoadFlagPtr()                 = 0;
+		virtual u32* getLoadFlagPtr()                  = 0;
 		virtual const char* getWaveArcFileName() const = 0;
-		virtual void* getHeap()                        = 0;
+		virtual Kernel::THeap* getHeap()               = 0;
 	};
 
 	void init();

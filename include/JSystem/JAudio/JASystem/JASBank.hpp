@@ -6,9 +6,15 @@
 namespace JASystem {
 
 class TInst;
+class TWaveBank;
 
 class TBank {
 public:
+	TBank()
+	    : unk4(nullptr)
+	{
+	}
+
 	virtual ~TBank() { }
 	virtual TInst* getInst(int) const = 0;
 	virtual int getType() const       = 0;
@@ -17,6 +23,9 @@ public:
 
 private:
 	static JKRHeap* sCurrentHeap;
+
+public:
+	/* 0x4 */ TWaveBank* unk4;
 };
 
 } // namespace JASystem

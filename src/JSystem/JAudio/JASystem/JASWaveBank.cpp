@@ -1,9 +1,15 @@
-#include "JSystem/JAudio/JASystem/JASWaveBank.hpp"
+#include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 
 namespace JASystem {
 
-void* TWaveBank::sCurrentHeap = 0;
+JKRHeap* TWaveBank::sCurrentHeap = 0;
 
-void* TWaveBank::getCurrentHeap() { return 0; }
+JKRHeap* TWaveBank::getCurrentHeap()
+{
+	if (sCurrentHeap)
+		return sCurrentHeap;
+	return JASDram;
+}
 
 } // namespace JASystem

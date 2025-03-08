@@ -1,5 +1,7 @@
 #include "JSystem/JAudio/JASystem/JASSystemHeap.hpp"
 
+JKRHeap* JASDram;
+
 namespace JASystem {
 namespace Kernel {
 

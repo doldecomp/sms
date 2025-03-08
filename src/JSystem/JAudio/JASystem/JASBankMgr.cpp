@@ -1,4 +1,8 @@
 #include <JSystem/JAudio/JASystem/JASBankMgr.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASCalc.hpp>
+#include <JSystem/JAudio/JASystem/JASBNKParser.hpp>
+#include <JSystem/JAudio/JASystem/JASWaveBankMgr.hpp>
 
 namespace JASystem {
 namespace BankMgr {
@@ -8,23 +12,72 @@ namespace BankMgr {
 	// There should also be a 803aad88, which is a reference to
 	// OSC_RELEASE_TABLE?
 	f32 OSC_ENV[6]     = { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
-	u32 sTableSize     = 0;
-	TBank* sBankArray  = nullptr;
+	s32 sTableSize     = 0;
+	TBank** sBankArray = nullptr;
 	u16* sVir2PhyTable = nullptr;
 
-	void init(int bankCount) { }
+	void init(int bankCount)
+	{
+		sBankArray    = new (JASDram, 0) TBank*[bankCount];
+		sVir2PhyTable = new (JASDram, 0) u16[bankCount];
+		Calc::bzero(sBankArray, bankCount * sizeof(TBank*));
 
-	void registBank(int bankIndex, TBank* bank) { }
+		for (int i = 0; i < bankCount; ++i)
+			sVir2PhyTable[i] = -1;
 
-	void registBankBNK(int bankIndex, void* bankData) { }
+		sTableSize = bankCount;
+	}
 
-	TBank* getBank(int bankIndex) { return nullptr; }
+	bool registBank(int bankIndex, TBank* bank)
+	{
+		sBankArray[bankIndex] = bank;
+		return true;
+	}
 
-	u16 getPhysicalNumber(u16 virtualNumber) { return 0; }
+	bool registBankBNK(int bankIndex, void* bankData)
+	{
+		setVir2PhyTable(*((u32*)(bankData) + 2), bankIndex);
+		TBasicBank* bank = BNKParser::createBasicBank(bankData);
+		if (bank == nullptr)
+			return false;
 
-	void setVir2PhyTable(u32 tableAddr, int size) { }
+		return registBank(bankIndex, bank);
+	}
 
-	void assignWaveBank(int bankIndex, int waveBankIndex) { }
+	TBank* getBank(int bankIndex)
+	{
+		if (bankIndex >= sTableSize)
+			return nullptr;
+
+		return sBankArray[bankIndex];
+	}
+
+	u16 getPhysicalNumber(u16 virtualNumber)
+	{
+		return sVir2PhyTable[virtualNumber];
+	}
+
+	void setVir2PhyTable(u32 tableAddr, int size)
+	{
+		if (tableAddr == 0xFFFF)
+			return;
+
+		sVir2PhyTable[tableAddr] = size;
+	}
+
+	bool assignWaveBank(int bankIndex, int waveBankIndex)
+	{
+		TBank* bank = getBank(bankIndex);
+		if (!bank)
+			return false;
+
+		TWaveBank* waveBank = WaveBankMgr::getWaveBank(waveBankIndex);
+		if (!waveBank)
+			return false;
+
+		bank->unk4 = waveBank;
+		return true;
+	}
 
 	f32 clamp01(f32 value) { return 0.0f; }
 
@@ -33,8 +86,8 @@ namespace BankMgr {
 	{
 	}
 
-	void noteOnOsc(TChannelMgr* channelMgr, int bankIndex, u8 note, u8 velocity,
-	               u32 params)
+	static void noteOnOsc(TChannelMgr* channelMgr, int bankIndex, u8 note,
+	                      u8 velocity, u32 params)
 	{
 	}
 
