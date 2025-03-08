@@ -5,20 +5,26 @@
 
 template <class T> class JADPrm {
 public:
+	JADPrm();
 	JADPrm(T val, const char*);
 
-	T value;
+	T unk0;
 };
 
-template <class T> class JADPrmS {
-public:
-	JADPrmS& operator=(const JADPrmS& other)
-	{
-		unk0 = other.unk0;
-		return *this;
-	}
+template <class T>
+JADPrm<T>::JADPrm(T val, const char*)
+    : unk0(val)
+{
+}
 
-	T unk0;
+template <class T> class JADPrmS : public JADPrm<T> {
+public:
+	JADPrmS();
+
+	JADPrmS(T val, const char* name)
+	    : JADPrm<T>(val, name)
+	{
+	}
 };
 
 #endif

@@ -5,7 +5,7 @@
 
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 
-JAIBasic::JAIBasic() { }
+JAIBasic::JAIBasic() { basic = this; }
 
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 param1, u8 param2) { }
 

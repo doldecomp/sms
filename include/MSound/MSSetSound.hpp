@@ -23,15 +23,15 @@ public:
 
 class MSSetSoundGrp;
 
-// TODO: this has one more parent with a vtable, but that vtable is empty?!
-template <typename T> class MSSetSoundTL : public JALListFrameLoop<T> {
+template <typename T>
+class MSSetSoundTL : public JALListHioNode<T, u32>, public JALListFrameLoop<T> {
 public:
 	MSSetSoundTL(u32 param_1, const char* param_2, T* param_3, u8 param_4,
 	             u8 param_5, u8 param_6, u8 param_7, f32 param_8, u8 param_9,
 	             f32 param_10, f32 param_11, f32 param_12, f32 param_13,
 	             f32 param_14, s32 param_15, f32 param_16, s32 param_17,
 	             f32 param_18, f32 param_19, f32 param_20, bool param_21)
-	    : JALListFrameLoop<T>(param_2, param_1, param_3)
+	    : JALListHioNode<T, u32>(param_2, param_1, param_3)
 	    , unk1C(param_4, "再生バッファ数")
 	    , unk1D(param_5, "最小時間間隔")
 	    , unk1E(param_6, "ランダムシフト")
