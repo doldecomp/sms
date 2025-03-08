@@ -121,8 +121,11 @@ public:
 	void getTrackPortRoute(u8, u8);
 	void getSeInfoPointer();
 
+	u32 getUnk8() { return unk8; }
+
+	static void* interPointer;
+
 public:
-	/* 0x0 */ void* interPointer;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u32 unk8;
 };

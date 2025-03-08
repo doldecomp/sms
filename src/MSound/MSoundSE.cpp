@@ -229,15 +229,15 @@ void MSoundSE::construct()
 		    0, "カモメ", 3, 2, 13, 2, 3.0f, 1, 44.0f, 3.0f, 1.0f, 1.0f, 0.0f,
 		    0xf, 200.0f, 0xb4, 1.0f, 1.0f, 0.0f, false);
 		// clang-format off
-		MSSetSoundMember* memb1 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb1->unk4); memb1->unk14 = grp;
-		MSSetSoundMember* memb2 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb2->unk4); memb2->unk14 = grp;
-		MSSetSoundMember* memb3 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb3->unk4); memb3->unk14 = grp;
-		MSSetSoundMember* memb4 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb4->unk4); memb4->unk14 = grp;
-		MSSetSoundMember* memb5 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb5->unk4); memb5->unk14 = grp;
-		MSSetSoundMember* memb6 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb6->unk4); memb6->unk14 = grp;
-		MSSetSoundMember* memb7 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb7->unk4); memb7->unk14 = grp;
-		MSSetSoundMember* memb8 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb8->unk4); memb8->unk14 = grp;
-		MSSetSoundMember* memb9 = new MSSetSoundMember(0x3813, nullptr, 60.0f); grp->append(&memb9->unk4); memb9->unk14 = grp;
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
 		// clang-format on
 	}
 }

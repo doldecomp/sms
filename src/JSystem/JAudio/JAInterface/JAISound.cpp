@@ -1,9 +1,6 @@
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 
-JAISound::JAISound()
-    : interPointer(nullptr)
-{
-}
+JAISound::JAISound() { }
 
 JAISound::~JAISound() { }
 

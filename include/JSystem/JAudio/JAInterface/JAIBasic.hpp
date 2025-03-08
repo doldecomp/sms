@@ -1,6 +1,7 @@
 #ifndef JAIBASIC_HPP
 #define JAIBASIC_HPP
 
+#include <JSystem/JAudio/JAInterface/JAIData.hpp>
 #include <dolphin/mtx.h>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
@@ -11,7 +12,7 @@ class JAILinkBuffer;
 class JAIDummyVec;
 class JAISoundTable;
 
-class JAIBasic {
+class JAIBasic : public JAIData {
 public:
 	JAIBasic();
 	~JAIBasic();
@@ -150,6 +151,12 @@ public:
 	void checkWaitStream();
 	void checkRequestStream();
 	void checkPlayingStream();
+
+	static JAIBasic* basic;
+
+
+public:
+	u32 fakeThing;
 };
 
 #endif // JAIBASIC_HPP

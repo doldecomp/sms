@@ -1,6 +1,7 @@
 #include <MSound/MSoundBGM.hpp>
+#include <JSystem/JAudio/JALibrary/JALModSe.hpp>
 
-JASystem::TTrack* MSBgm::smBgmInTrack[4];
+JASystem::TTrack* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
 void MSBgm::init() { }
@@ -13,7 +14,10 @@ void MSBgm::stopTrackBGM(u8 param1, u32 param2) { }
 
 void MSBgm::stopTrackBGMs(u8 param1, u32 param2) { }
 
-void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4) { }
+void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
+{
+	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
+}
 
 void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4) { }
 

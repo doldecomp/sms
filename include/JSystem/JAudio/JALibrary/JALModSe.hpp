@@ -7,37 +7,37 @@
 #include <JSystem/JAudio/JALibrary/JALList.hpp>
 
 struct JALPrmSet {
+	JALPrmSet(f32 param_1, f32 param_2)
+	    : unk0(param_1, nullptr)
+	    , unk4(param_2, nullptr)
+	{
+	}
+
 	JADPrmS<f32> unk0;
 	JADPrmS<f32> unk4;
 };
 
 template <class T, class U> class JALListS {
 public:
-	static T* search(U param_1)
-	{
-		JSUListIterator<T> it = JALList<T>::smList.getFirst();
-		for (; it != JALList<T>::smList.getEnd(); ++it) {
-			if (param_1 == (u32)it.getObject()->unk10)
-				break;
-		}
-		return it.getObject();
-	}
+	static T* search(U param_1);
 	~JALListS();
 };
+
+template <class T, class U> T* JALListS<T, U>::search(U param_1)
+{
+	JSUListIterator<T> it = JALList<T>::smList.getFirst();
+	for (; it != JALList<T>::smList.getEnd(); ++it) {
+		if (param_1 == (u32)it.getObject()->unk10)
+			return it.getObject();
+	}
+	return nullptr;
+}
 
 template <class T> class JALSeModData : public JALListHioNode<T, u32> {
 public:
 	JALSeModData(const char* param_1, T* param_2, u32 param_3,
 	             JALPrmSet* param_4, JALPrmSet* param_5, JADPrmS<f32>* param_6,
-	             JALCalc::CurveSign param_7, u8 param_8)
-	    : JALListHioNode<T, u32>(param_1, param_3, param_2)
-	{
-		unk18 = *param_4;
-		unk20 = *param_5;
-		unk28 = *param_6;
-		unk2C = (u8)param_7;
-		unk2D = param_8;
-	}
+	             JALCalc::CurveSign param_7, u8 param_8);
 	~JALSeModData() { }
 
 	virtual f32 calcDyna(f32 param_1)
@@ -63,21 +63,8 @@ public:
 		}
 	}
 
-	static bool calc(u32 param_1, f32 param_2, f32* param_3)
-	{
-		T* found = JALListS<T, u32>::search(param_1);
-		if (found != nullptr) {
-			*param_3 = found->calcDyna(param_2);
-			return true;
-		} else
-			return false;
-	}
-
-	static bool gateCheck(u32 param_1, f32 param_2)
-	{
-		T* grp = JALListS<T, u32>::search(param_1);
-		return grp ? grp->gateCheckDyna(param_2) : false;
-	}
+	static bool calc(u32 param_1, f32 param_2, f32* param_3);
+	static bool gateCheck(u32 param_1, f32 param_2);
 
 public:
 	/* 0x18 */ JALPrmSet unk18;
@@ -86,6 +73,37 @@ public:
 	/* 0x2C */ u8 unk2C;
 	/* 0x2D */ u8 unk2D;
 };
+
+template <class T>
+JALSeModData<T>::JALSeModData(const char* param_1, T* param_2, u32 param_3,
+                              JALPrmSet* param_4, JALPrmSet* param_5,
+                              JADPrmS<f32>* param_6, JALCalc::CurveSign param_7,
+                              u8 param_8)
+    : JALListHioNode<T, u32>(param_1, param_3, param_2)
+    , unk18(*param_4)
+    , unk20(*param_5)
+    , unk28(*param_6)
+    , unk2C((u8)param_7)
+    , unk2D(param_8)
+{
+}
+
+template <class T>
+bool JALSeModData<T>::calc(u32 param_1, f32 param_2, f32* param_3)
+{
+	T* found = JALListS<T, u32>::search(param_1);
+	if (found != nullptr) {
+		*param_3 = found->calcDyna(param_2);
+		return true;
+	} else
+		return false;
+}
+
+template <class T> bool JALSeModData<T>::gateCheck(u32 param_1, f32 param_2)
+{
+	T* grp = JALListS<T, u32>::search(param_1);
+	return grp ? grp->gateCheckDyna(param_2) : false;
+}
 
 class JALSeModPitDist : public JALSeModData<JALSeModPitDist> {
 public:
@@ -148,24 +166,24 @@ public:
 	}
 };
 
+template <class T, class U> class JALLinkD;
+
 template <class T, class U> class JALListD : public JSUList<T> {
 public:
+	void searchD(u32);
+
+	void append(JALLinkD<T, U>* link)
+	{
+		JSUList<T>::append(&link->unk4);
+		link->unk14 = this;
+	}
+
 	~JALListD();
 };
 
 template <class T, class U> class JALLinkD {
 public:
-	JALLinkD(T* param_1, U param_2, JALListD<T, U>* param_3)
-	    : unk0(param_2)
-	    , unk4(param_1)
-	    , unk14(param_3)
-	{
-		if (param_3) {
-			param_3->append(&unk4);
-			unk14 = param_3;
-		}
-	}
-
+	JALLinkD(T* param_1, U param_2, JALListD<T, U>* param_3);
 	~JALLinkD();
 
 public:
@@ -173,6 +191,16 @@ public:
 	/* 0x4 */ JSULink<T> unk4;
 	/* 0x14 */ JALListD<T, U>* unk14;
 };
+
+template <class T, class U>
+JALLinkD<T, U>::JALLinkD(T* param_1, U param_2, JALListD<T, U>* param_3)
+    : unk0(param_2)
+    , unk4(param_1)
+    , unk14(param_3)
+{
+	if (param_3)
+		param_3->append(this);
+}
 
 class JALSeModDataGrpMemb : public JALLinkD<JALSeModDataGrpMemb, u32> {
 public:
@@ -185,20 +213,24 @@ public:
 
 template <class T, class U, class V> class JALListGrp : public JALListD<V, U> {
 public:
-	static T* searchGroup(U param_1)
-	{
-		JSUListIterator<T> it = JALList<T>::smList.getFirst();
-		for (; it != JALList<T>::smList.getEnd(); ++it) {
-			JSUListIterator<V> it2 = it.getObject()->getFirst();
-			for (; it2 != it.getObject()->getEnd(); ++it2)
-				if (param_1 == it2.getObject()->unk0)
-					break;
-			if (it2 != it.getObject()->getEnd())
-				return it.getObject();
-		}
-	}
+	static T* searchGroup(U param_1);
 	~JALListGrp();
 };
+
+template <class T, class U, class V>
+T* JALListGrp<T, U, V>::searchGroup(U param_1)
+{
+	JSUListIterator<T> it = JALList<T>::smList.getFirst();
+	for (; it != JALList<T>::smList.getEnd(); ++it) {
+		JSUListIterator<V> it2 = it.getObject()->getFirst();
+		for (; it2 != it.getObject()->getEnd(); ++it2)
+			if (param_1 == it2.getObject()->unk0)
+				break;
+		if (it2 != it.getObject()->getEnd())
+			return it.getObject();
+	}
+	return nullptr;
+}
 
 template <class T>
 class JALSeModDataGrp : public JALSeModData<T>,
@@ -215,23 +247,27 @@ public:
 
 	~JALSeModDataGrp();
 
-	static bool calcGrp(u32 param_1, f32 param_2, f32* param_3)
-	{
-		T* found
-		    = JALListGrp<T, u32, JALSeModDataGrpMemb>::searchGroup(param_1);
-		if (found != nullptr) {
-			*param_3 = found->calcDyna(param_2);
-			return true;
-		} else
-			return false;
-	}
-	static bool gateCheckGrp(u32 param_1, f32 param_2)
-	{
-		T* found
-		    = JALListGrp<T, u32, JALSeModDataGrpMemb>::searchGroup(param_1);
-		return found ? found->gateCheckDyna(param_2) : false;
-	}
+	static bool calcGrp(u32 param_1, f32 param_2, f32* param_3);
+	static bool gateCheckGrp(u32 param_1, f32 param_2);
 };
+
+template <class T>
+bool JALSeModDataGrp<T>::calcGrp(u32 param_1, f32 param_2, f32* param_3)
+{
+	T* found = JALListGrp<T, u32, JALSeModDataGrpMemb>::searchGroup(param_1);
+	if (found != nullptr) {
+		*param_3 = found->calcDyna(param_2);
+		return true;
+	} else
+		return false;
+}
+
+template <class T>
+bool JALSeModDataGrp<T>::gateCheckGrp(u32 param_1, f32 param_2)
+{
+	T* found = JALListGrp<T, u32, JALSeModDataGrpMemb>::searchGroup(param_1);
+	return found ? found->gateCheckDyna(param_2) : false;
+}
 
 class JALSeModPitDGrp : public JALSeModDataGrp<JALSeModPitDGrp> {
 public:

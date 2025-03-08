@@ -42,8 +42,10 @@ public:
 	void getUseFlag(u32);
 	bool isRegistered(u32, u16);
 
+	static TFlagManager* get() { return spFManager; }
+
 public:
-	void* unk0[16];
+	u16* unk0[16];
 };
 
 }; // namespace JALSystem
