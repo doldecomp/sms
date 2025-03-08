@@ -1,14 +1,9 @@
 #ifndef JASCHANNEL_HPP
 #define JASCHANNEL_HPP
 
-#include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASOscillator.hpp>
 
 namespace JASystem {
-
-struct TOscillator {
-public:
-	struct Osc_;
-};
 
 class TDSPChannel;
 
