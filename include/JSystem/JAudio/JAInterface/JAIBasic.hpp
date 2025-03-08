@@ -154,7 +154,6 @@ public:
 
 	static JAIBasic* basic;
 
-
 public:
 	u32 fakeThing;
 };
