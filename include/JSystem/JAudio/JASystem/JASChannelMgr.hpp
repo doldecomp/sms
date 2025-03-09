@@ -16,7 +16,7 @@ public:
 	void initAllocChannel(u32);
 	TChannel* getListHead(u32);
 	u32 countList(u32);
-	void cutList(TChannel*);
+	int cutList(TChannel*);
 	void addListHead(TChannel*, u32);
 	void addListTail(TChannel*, u32);
 	void receiveAllChannels(TChannelMgr*);

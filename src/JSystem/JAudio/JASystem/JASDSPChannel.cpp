@@ -53,7 +53,7 @@ u8 TDSPChannel::getLower() { return 0; }
 
 u8 TDSPChannel::getLowerActive() { return 0; }
 
-void TDSPChannel::breakLower(u8 param) { }
+int TDSPChannel::breakLower(u8 param) { }
 
 void TDSPChannel::breakLowerActive(u8 param) { }
 
