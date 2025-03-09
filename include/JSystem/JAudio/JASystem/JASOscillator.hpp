@@ -16,13 +16,30 @@ public:
 		/* 0x14 */ f32 unk14;
 	};
 
-	void release();
+	bool release();
 	void initStart();
 	void init();
 	void getOffsetNoCount();
-	void forceStop();
-	void getOffset();
+	bool forceStop();
+	f32 getOffset();
 	void calc(short*);
+
+	const Osc_* getOsc() const { return mOsc; }
+	void setOsc(const Osc_* osc) { mOsc = osc; }
+	BOOL isOsc() { return mOsc != NULL ? TRUE : FALSE; }
+	void releaseDirect(u16 param_0) { mDirectRelease = param_0; }
+
+public:
+	/* 0x0 */ const Osc_* mOsc;
+	/* 0x04 */ u8 mState;
+	/* 0x05 */ u8 unk5;
+	/* 0x06 */ u16 unk6;
+	/* 0x08 */ f32 mReleaseRate;
+	/* 0x0C */ f32 mPhase;
+	/* 0x10 */ f32 mTargetPhase;
+	/* 0x14 */ f32 mPhaseChangeRate;
+	/* 0x18 */ u16 mDirectRelease;
+	/* 0x1C */ f32 mInitialReleaseRate;
 };
 
 namespace Driver {

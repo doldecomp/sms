@@ -9,7 +9,11 @@ class TDSPChannel;
 
 namespace Driver {
 	struct PanMatrix_;
-	struct Wave_;
+	struct Wave_ {
+		u8 unk0;
+		u8 unk1;
+		u8 unk2;
+	};
 } // namespace Driver
 
 class TChannelMgr;
@@ -19,13 +23,13 @@ public:
 	void init();
 	void setOscillator(u32 index, TOscillator* oscillator);
 	void setOscInit(u32 index, const TOscillator::Osc_* osc);
-	void forceStopOsc(u32 index);
-	void releaseOsc(u32 index);
+	bool forceStopOsc(u32 index);
+	bool releaseOsc(u32 index);
 	void directReleaseOsc(u32 index, u16 release);
-	void bankOscToOfs(u32 index);
+	f32 bankOscToOfs(u32 index);
 	void effectOsc(u32 index, f32 effect);
 	u32 getOscState(u32 index) const;
-	bool isOsc(u32 index);
+	BOOL isOsc(u32 index);
 	void copyOsc(u32 index, TOscillator::Osc_* dest);
 	void overwriteOsc(u32 index, TOscillator::Osc_* src);
 	void overwriteOscMultiple(TOscillator::Osc_* osc1, TOscillator::Osc_* osc2,
@@ -38,45 +42,63 @@ public:
 	void setPanParam(const f32* pan, const f32* dolby, const f32* fx);
 	void setFxParam(const f32* pan, const f32* dolby, const f32* fx);
 	void setDolbyParam(const f32* pan, const f32* dolby, const f32* fx);
-	bool checkLogicalChannel();
-	void resetInitialVolume();
-	void play(u32 param);
+	BOOL checkLogicalChannel();
+	bool resetInitialVolume();
+	bool play(u32 param);
 	void stop(u16 release);
 	void updateJcToDSP();
-	void forceStopLogicalChannel();
-	void stopLogicalChannel();
-	void playLogicalChannel();
+	BOOL forceStopLogicalChannel();
+	BOOL stopLogicalChannel();
+	BOOL playLogicalChannel();
 	void updateEffectorParam();
 
 public:
-	/* 0x0 */ char unk0[0x4];
+	/* 0x0 */ u8 unk0;
+	/* 0x1 */ u8 unk1;
+	/* 0x2 */ u8 unk2;
+	/* 0x3 */ u8 unk3;
 	/* 0x4 */ TChannelMgr* unk4;
-	/* 0x0 */ char unk8[0x18];
+	/* 0x8 */ char unk8[0x4];
+	/* 0xC */ u8 unkC;
+	/* 0x10 */ Driver::Wave_* unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ char unk18[0x8];
 	/* 0x20 */ TDSPChannel* unk20;
 	/* 0x24 */ char unk24[0x4];
-	/* 0x28 */ void (*unk28)(TChannel*, u32);
-	/* 0x2C */ char unk2C[0x4];
+	/* 0x28 */ BOOL (*unk28)(TChannel*, u32);
+	/* 0x2C */ void (*unk2C)(TChannel*, u32);
 	/* 0x30 */ s32 unk30;
-	/* 0x34 */ char unk34[0x8C];
+	/* 0x34 */ s32 unk34;
+	/* 0x38 */ TOscillator* unk38[4];
+	/* 0x48 */ f32 unk48;
+	/* 0x4C */ char unk4C[0x4];
+	/* 0x50 */ f32 unk50;
+	/* 0x4C */ char unk54[0x8];
+	/* 0x5C */ f32 unk5C;
+	/* 0x60 */ f32 unk60;
+	/* 0x64 */ f32 unk64;
+	/* 0x68 */ char unk68[0x4];
+	/* 0x6C */ f32 unk6C;
+	/* 0x70 */ char unk70[0x8];
+	/* 0x78 */ f32 unk78;
+	/* 0x7C */ char unk7C[0x8];
+	/* 0x84 */ f32 unk84;
+	/* 0x88 */ char unk88[0x4];
+	/* 0x8C */ f32 unk8C;
+	/* 0x90 */ f32 unk90;
+	/* 0x94 */ f32 unk94;
+	/* 0x98 */ u16 unk98;
+	/* 0x9A */ u16 unk9A;
+	/* 0x9C */ TChannelMgr* unk9C;
+	/* 0xA0 */ char unkA0[0x8];
+	/* 0xA8 */ u16 unkA8[6];
+	/* 0xB4 */ s16 unkB4[6];
 	/* 0xC0 */ u32 unkC0;
+	/* 0xC4 */ u16 unkC4;
+	/* 0xC8 */ u32 unkC8;
+	/* 0xCC */ char unkCC[0x4];
+	/* 0xD0 */ s32 unkD0;
 };
-
-namespace Driver {
-	void calcEffect(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
-	                u8 param);
-	void calcPan(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
-	             u8 param);
-	void __UpdateJcToDSP(TChannel* channel);
-	void __UpdateJcToDSPInit(TChannel* channel);
-	void extraUpdate(TChannel* channel, u32 param);
-	void updatecallLogicalChannel(TChannel* channel, u32 param);
-	void killBrokenLogicalChannels(TDSPChannel* dspChannel);
-	void updateAutoMixer(TChannel* channel, f32 fl, f32 fr, f32 rl, f32 rr);
-	void updateMixer(TChannel* channel, f32 fl, f32 fr, f32 rl, f32 rr);
-	void updatecallDSPChannel(TDSPChannel* dspChannel, u32 param);
-
-	extern u8 calc_sw_table[];
-} // namespace Driver
 
 } // namespace JASystem
 

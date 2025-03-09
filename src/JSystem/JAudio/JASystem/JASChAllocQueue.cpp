@@ -27,7 +27,7 @@ namespace Driver {
 		Calc::bzero(waittime, waitMax * sizeof(u32));
 	}
 
-	bool DSPQueue::enQueue(JASystem::TChannel* channel)
+	BOOL DSPQueue::enQueue(JASystem::TChannel* channel)
 	{
 		if (cur_waits == waitMax)
 			return false;

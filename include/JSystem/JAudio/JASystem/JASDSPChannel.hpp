@@ -5,6 +5,12 @@
 
 namespace JASystem {
 
+namespace DSPInterface {
+	class DSPBuffer;
+}
+
+class TChannel;
+
 class TDSPChannel {
 private:
 public:
@@ -40,6 +46,17 @@ public:
 	static u32 smnFree;
 	static f32 DSP_LIMIT_RATIO;
 	static f32* history;
+
+public:
+	/* 0x0 */ u8 unk0;
+	/* 0x0 */ u8 unk1;
+	/* 0x0 */ u8 unk2;
+	/* 0x0 */ u8 unk3;
+	/* 0x4 */ u16 unk4;
+	/* 0x6 */ u16 unk6;
+	/* 0x8 */ char unk8[0x4];
+	/* 0xC */ DSPInterface::DSPBuffer* unkC;
+	/* 0x10 */ void (*unk10)(TDSPChannel*, u32);
 };
 
 } // namespace JASystem

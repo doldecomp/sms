@@ -10,7 +10,7 @@ namespace JASystem {
 class ChGlobal {
 public:
 	void init();
-	void release(TChannel* channel);
+	static void release(TChannel* channel);
 	void releaseAll(TChannelMgr* channelMgr);
 	TChannel* alloc(TChannelMgr* channelMgr, u32 param);
 	u32 getChannelHandle(u32 param);
