@@ -8,9 +8,6 @@ namespace JASystem {
 
 namespace Calc {
 
-	extern f32* JASC_SINTABLE;
-	extern f32* JASC_DOL2TABLE;
-
 	void bcopy(const void* src, void* dest, u32 size);
 	void bzero(void* dest, u32 size);
 	void bcopyfast(const u32* src, u32* dest, u32 size);
