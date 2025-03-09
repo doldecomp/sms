@@ -15,7 +15,7 @@ struct TWaveInfo {
 	/* 0x02 */ u8 unk2;
 	/* 0x04 */ f32 unk4;
 	/* 0x08 */ int unk8;
-	/* 0x0C */ int unkc;
+	/* 0x0C */ int unkC;
 	/* 0x10 */ int unk10;
 	/* 0x14 */ int unk14;
 	/* 0x18 */ int unk18;
