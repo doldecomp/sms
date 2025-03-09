@@ -6,7 +6,11 @@ namespace JASystem {
 
 class TInstRand : public TInstEffect {
 public:
-	virtual int getY(int, int) const;
+	virtual f32 getY(int, int) const;
+
+public:
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
 };
 
 } // namespace JASystem
