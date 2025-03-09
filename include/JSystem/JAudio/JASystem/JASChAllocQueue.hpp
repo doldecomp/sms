@@ -12,7 +12,7 @@ namespace Driver {
 		void init(u32 maxWait);
 		BOOL enQueue(JASystem::TChannel* channel);
 		void deQueue(u8 channelIndex);
-		bool deleteQueue(JASystem::TChannel* channel);
+		BOOL deleteQueue(JASystem::TChannel* channel);
 		void checkQueue();
 	}; // namespace DSPQueue
 

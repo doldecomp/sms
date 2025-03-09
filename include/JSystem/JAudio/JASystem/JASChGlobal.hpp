@@ -11,8 +11,8 @@ class ChGlobal {
 public:
 	void init();
 	static void release(TChannel* channel);
-	void releaseAll(TChannelMgr* channelMgr);
-	TChannel* alloc(TChannelMgr* channelMgr, u32 param);
+	static void releaseAll(TChannelMgr* channelMgr);
+	static TChannel* alloc(TChannelMgr* channelMgr, u32 param);
 	u32 getChannelHandle(u32 param);
 	u32 getGlobalHandle();
 
