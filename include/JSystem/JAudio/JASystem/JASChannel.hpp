@@ -9,7 +9,10 @@ class TDSPChannel;
 
 namespace Driver {
 	struct PanMatrix_;
-}
+	struct Wave_;
+} // namespace Driver
+
+class TChannelMgr;
 
 class TChannel {
 public:
@@ -45,7 +48,17 @@ public:
 	void playLogicalChannel();
 	void updateEffectorParam();
 
-private:
+public:
+	/* 0x0 */ char unk0[0x4];
+	/* 0x4 */ TChannelMgr* unk4;
+	/* 0x0 */ char unk8[0x18];
+	/* 0x20 */ TDSPChannel* unk20;
+	/* 0x24 */ char unk24[0x4];
+	/* 0x28 */ void (*unk28)(TChannel*, u32);
+	/* 0x2C */ char unk2C[0x4];
+	/* 0x30 */ s32 unk30;
+	/* 0x34 */ char unk34[0x8C];
+	/* 0xC0 */ u32 unkC0;
 };
 
 namespace Driver {

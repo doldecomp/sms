@@ -18,7 +18,7 @@ TChannel* TChannelMgr::getListHead(u32 param) { return 0; }
 
 u32 TChannelMgr::countList(u32 param) { return 0; }
 
-void TChannelMgr::cutList(TChannel* channel) { }
+int TChannelMgr::cutList(TChannel* channel) { }
 
 void TChannelMgr::addListHead(TChannel* channel, u32 param) { }
 

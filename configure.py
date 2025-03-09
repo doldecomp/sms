@@ -433,7 +433,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveBankMgr.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASWSParser.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASAudioThread.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASChAllocQueue.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASChAllocQueue.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASChannel.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASDriverTables.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASChannelMgr.cpp"),

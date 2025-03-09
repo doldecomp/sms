@@ -13,8 +13,8 @@ public:
 
 	void initAll();
 	void updateAll();
-	TDSPChannel* alloc(u32 param1, u32 param2);
-	void free(TDSPChannel* channel, u32 param);
+	static TDSPChannel* alloc(u32 param1, u32 param2);
+	static void free(TDSPChannel* channel, u32 param);
 	TDSPChannel* getHandle(u32 handle);
 	u32 getNumUse();
 	u32 getNumFree();
@@ -32,7 +32,7 @@ public:
 	void forceDelete();
 	u8 getLower();
 	u8 getLowerActive();
-	void breakLower(u8 param);
+	static int breakLower(u8 param);
 	void breakLowerActive(u8 param);
 
 	static TDSPChannel* DSPCH;
