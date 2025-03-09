@@ -37,7 +37,7 @@ public:
 		/* 0x1C */ TVeloRegion* unk1C;
 	};
 
-	TDrumSet();
+	TDrumSet() { }
 
 	virtual ~TDrumSet() { }
 	virtual int getType() const { return 'PERC'; }

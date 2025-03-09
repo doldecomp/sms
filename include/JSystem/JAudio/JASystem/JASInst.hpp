@@ -2,6 +2,7 @@
 #define JASINST_HPP
 
 #include <JSystem/JAudio/JASystem/JASOscillator.hpp>
+#include <types.h>
 
 namespace JASystem {
 
@@ -13,6 +14,28 @@ struct TVeloRegion {
 };
 
 struct TInstParam {
+	TInstParam()
+	{
+		unk0      = 0;
+		unk4      = 0;
+		mOscData  = nullptr;
+		mOscCount = 0;
+		unk10     = 1.0f;
+		unk14     = 1.0f;
+		unk18     = 1.0f;
+		unk1C     = 1.0f;
+		unk20     = 0.5f;
+		unk24     = 0.0f;
+		unk28     = 0.0f;
+		unk2C     = 0.5f;
+		unk30     = 0.0f;
+		unk34     = 0.0f;
+		unk38     = 0;
+		unk3A     = 0;
+		unk3C     = 0;
+		unk40     = 0;
+	}
+
 	/* 0x00 */ u8 unk0;
 	/* 0x04 */ int unk4;
 	/* 0x08 */ TOscillator::Osc_** mOscData;
