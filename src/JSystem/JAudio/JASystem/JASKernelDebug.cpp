@@ -4,7 +4,11 @@ namespace JASystem {
 
 namespace Kernel {
 
-	void stackInit(u64* stack, u32 size) { }
+	void stackInit(u64* stack, u32 size)
+	{
+		for (u32 i = 1; i < size; ++i)
+			stack[i] = 0xfadebabe12345678;
+	}
 
 	void stackCheck(u64* stack) { }
 

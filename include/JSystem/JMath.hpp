@@ -15,8 +15,21 @@ public:
 		return value;
 	}
 
-	void get();
-	void get_ufloat_1();
+	u32 get()
+	{
+		value = (value * 0x19660d) + 0x3c6ef35f;
+		return value;
+	}
+
+	f32 get_ufloat_1()
+	{
+		union {
+			f32 f;
+			u32 s;
+		} out;
+		out.s = (get() >> 9) | 0x3f800000;
+		return out.f - 1.0f;
+	}
 
 private:
 	u32 value;

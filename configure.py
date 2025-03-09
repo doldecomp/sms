@@ -426,7 +426,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASDrumSet.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASInstEffect.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASInstRand.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASInstSense.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASInstSense.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASSimpleWaveBank.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASWaveArcLoader.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveBank.cpp"),
@@ -451,7 +451,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JASystem/JASHardStream.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASHeapCtrl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASRate.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASKernelDebug.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASKernelDebug.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASProbe.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASSystemHeap.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASVload.cpp"),
@@ -463,7 +463,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrack.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackPort.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASTrackPort.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
 
             # J2D
