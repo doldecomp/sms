@@ -7,6 +7,9 @@ namespace JASystem {
 
 class TOscillator {
 public:
+	TOscillator() { init(); }
+	~TOscillator() { }
+
 	struct Osc_ {
 		/* 0x00 */ u8 unk0;
 		/* 0x04 */ f32 unk4;

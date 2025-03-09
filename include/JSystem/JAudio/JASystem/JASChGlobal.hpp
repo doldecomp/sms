@@ -7,19 +7,16 @@
 
 namespace JASystem {
 
-class ChGlobal {
-public:
+namespace ChGlobal {
+
 	void init();
-	static void release(TChannel* channel);
-	static void releaseAll(TChannelMgr* channelMgr);
-	static TChannel* alloc(TChannelMgr* channelMgr, u32 param);
-	u32 getChannelHandle(u32 param);
+	int release(TChannel* channel);
+	int releaseAll(TChannelMgr* channelMgr);
+	int alloc(TChannelMgr* channelMgr, u32 param);
+	TChannel* getChannelHandle(u32 param);
 	u32 getGlobalHandle();
 
-	static u32 GLOBAL_CHANNEL;
-	static u32 CHANNEL;
-	static u32 OSCILLATOR;
-};
+} // namespace ChGlobal
 
 } // namespace JASystem
 
