@@ -7,6 +7,11 @@ namespace JASystem {
 
 class TInstEffect {
 public:
+	TInstEffect()
+	    : unk4(0)
+	{
+	}
+
 	virtual f32 getY(int, int) const = 0;
 
 	void setTarget(int);

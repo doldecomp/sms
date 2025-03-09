@@ -53,7 +53,7 @@ public:
 	TKeymap* getKeyRegion(int);
 	const TKeymap* getKeyRegion(int) const;
 
-private:
+public:
 	/* 0x4 */ float unk4;
 	/* 0x8 */ float unk8;
 	/* 0xC */ TInstEffect** unkC;

@@ -8,6 +8,14 @@ namespace JASystem {
 
 class TInstSense : public TInstEffect {
 public:
+	TInstSense()
+	    : unk8(0)
+	    , unk9(0x3C)
+	    , unkC(0.0f)
+	    , unk10(0.0f)
+	{
+	}
+
 	virtual f32 getY(int, int) const;
 	void setParams(int, int, f32, f32);
 
