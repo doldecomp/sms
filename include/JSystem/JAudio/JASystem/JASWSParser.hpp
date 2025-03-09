@@ -5,6 +5,8 @@
 
 namespace JASystem {
 
+class TWaveBank;
+
 class WSParser {
 public:
 	struct TCtrlGroup;
@@ -15,9 +17,9 @@ public:
 	struct TCtrlWave;
 	struct TWave;
 
-	int getGroupCount(void* data);
-	TCtrlGroup* createBasicWaveBank(void* data);
-	TCtrlGroup* createSimpleWaveBank(void* data);
+	static u32 getGroupCount(void* data);
+	static TWaveBank* createBasicWaveBank(void* data);
+	static TWaveBank* createSimpleWaveBank(void* data);
 	u32 getUsedHeapSize();
 
 	static u32 sUsedHeapSize;

@@ -4,11 +4,11 @@ namespace JASystem {
 
 u32 WSParser::sUsedHeapSize = 0;
 
-int WSParser::getGroupCount(void* data) { return 0; }
+u32 WSParser::getGroupCount(void* data) { return 0; }
 
-WSParser::TCtrlGroup* WSParser::createBasicWaveBank(void* data) { return 0; }
+TWaveBank* WSParser::createBasicWaveBank(void* data) { return 0; }
 
-WSParser::TCtrlGroup* WSParser::createSimpleWaveBank(void* data) { return 0; }
+TWaveBank* WSParser::createSimpleWaveBank(void* data) { return 0; }
 
 u32 WSParser::getUsedHeapSize() { return 0; }
 

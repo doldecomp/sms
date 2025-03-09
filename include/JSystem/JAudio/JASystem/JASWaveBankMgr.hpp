@@ -9,12 +9,12 @@ class TWaveBank;
 
 class WaveBankMgr {
 public:
-	void init(int tableSize);
+	static void init(int tableSize);
 	static TWaveBank* getWaveBank(int bankIndex);
-	void registWaveBank(int bankIndex, TWaveBank* waveBank);
-	void registWaveBankWS(int bankIndex, void* waveBankData);
-	void loadWave(int bankIndex, int waveIndex);
-	void eraseWave(int bankIndex, int waveIndex);
+	static bool registWaveBank(int bankIndex, TWaveBank* waveBank);
+	static bool registWaveBankWS(int bankIndex, void* waveBankData);
+	static bool loadWave(int bankIndex, int waveIndex);
+	static bool eraseWave(int bankIndex, int waveIndex);
 	u32 getUsedHeapSize();
 
 	static int sTableSize;
