@@ -28,6 +28,8 @@ namespace Kernel {
 		void show(u32);
 		void moveChildren(s32);
 
+		void* getUnk8() const { return unk8; }
+
 	public:
 		/* 0x0 */ u8 unk0;
 		/* 0x1 */ u8 unk1;

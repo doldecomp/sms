@@ -1,22 +1,89 @@
-#include "JSystem/JAudio/JASystem/JASWaveArcLoader.hpp"
+#include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
+#include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
+#include <types.h>
+#include <string.h>
 
 namespace JASystem {
 
-const char* WaveArcLoader::sCurrentDir = "/Banks/";
-void* WaveArcLoader::sAramHeap         = 0;
+char WaveArcLoader::sCurrentDir[64] = "/Banks/";
+Kernel::THeap WaveArcLoader::sAramHeap;
 
-void WaveArcLoader::init() { }
+bool WaveArcLoader::init()
+{
+	u32 local_8;
+	void* var1 = Kernel::allocFromSysAramFull(&local_8);
+	if (!var1) {
+		return false;
+	}
+	sAramHeap.initMotherHeap((u32)var1, local_8, 0);
+	return true;
+}
 
 void WaveArcLoader::init(u32 param) { }
 
-void WaveArcLoader::setCurrentDir(const char* dir) { }
+void WaveArcLoader::setCurrentDir(const char* dir)
+{
+	strcpy(sCurrentDir, dir);
+	int len = strlen(sCurrentDir);
+	if (sCurrentDir[len - 1] == '/')
+		return;
 
-const char* WaveArcLoader::getCurrentDir() { return 0; }
+	sCurrentDir[len]     = '/';
+	sCurrentDir[len + 1] = 0;
+}
 
-void WaveArcLoader::loadWave(TObject* obj) { }
+const char* WaveArcLoader::getCurrentDir() { return sCurrentDir; }
 
-void WaveArcLoader::eraseWave(TObject* obj) { }
+bool WaveArcLoader::loadWave(TObject* obj)
+{
+	Kernel::THeap* heap = obj->getHeap();
 
-void* WaveArcLoader::getRootHeap() { return 0; }
+	if (!heap)
+		return false;
+
+	if (heap->getUnk8() != nullptr)
+		return false;
+
+	char buffer[128];
+	strcpy(buffer, sCurrentDir);
+	strcat(buffer, obj->getWaveArcFileName());
+	u32 extent = Dvd::checkFileExtend(buffer);
+	if (!extent)
+		return false;
+
+	void* allocation = heap->alloc(&sAramHeap, extent);
+	if (!allocation)
+		return false;
+
+	u32* flagPtr = obj->getLoadFlagPtr();
+	*flagPtr     = 0;
+	s32 res      = Dvd::loadToAramDvdT(0, buffer, heap->getUnk8(), 0, extent,
+	                                   flagPtr, nullptr);
+	if (res == -1) {
+		heap->free();
+		return false;
+	}
+
+	return true;
+}
+
+bool WaveArcLoader::eraseWave(TObject* obj)
+{
+	Kernel::THeap* heap = obj->getHeap();
+	if (!heap)
+		return false;
+
+	if (!heap->getUnk8())
+		return false;
+
+	u32* flagPtr = obj->getLoadFlagPtr();
+	*flagPtr     = 0;
+	heap->free();
+	return true;
+}
+
+Kernel::THeap* WaveArcLoader::getRootHeap() { return &sAramHeap; }
 
 } // namespace JASystem
