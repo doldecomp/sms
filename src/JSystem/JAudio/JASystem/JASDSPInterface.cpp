@@ -5,7 +5,7 @@ namespace JASystem {
 namespace DSPInterface {
 
 	u32 SEND_TABLE     = 0;
-	u32 JAS_DSP_PREFIX = 0;
+	u16 JAS_DSP_PREFIX = 0;
 	u32 CH_BUF         = 0;
 	u32 FX_BUF         = 0;
 

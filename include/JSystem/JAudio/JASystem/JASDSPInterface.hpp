@@ -48,7 +48,7 @@ namespace DSPInterface {
 	};
 
 	extern u32 SEND_TABLE;
-	extern u32 JAS_DSP_PREFIX;
+	extern u16 JAS_DSP_PREFIX;
 	extern u32 CH_BUF;
 	extern u32 FX_BUF;
 
