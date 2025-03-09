@@ -1,40 +1,50 @@
 #include <JSystem/JAudio/JASystem/JASSimpleWaveBank.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <types.h>
 
 namespace JASystem {
 
-TSimpleWaveBank::TWaveHandle::TWaveHandle() { }
-
-TSimpleWaveBank::TWaveHandle::~TWaveHandle() { }
-
-const void* TSimpleWaveBank::TWaveHandle::getWavePtr() const { return 0; }
-
-const TWaveInfo* TSimpleWaveBank::TWaveHandle::getWaveInfo() const
+TSimpleWaveBank::TSimpleWaveBank()
+    : unk8(0)
+    , unkC(0)
+    , unk10(0)
+    , unk40(0)
 {
-	return nullptr;
 }
 
-TSimpleWaveBank::TSimpleWaveBank() { }
-
-TSimpleWaveBank::~TSimpleWaveBank() { }
-
-void* TSimpleWaveBank::getHeap() { return 0; }
-
-const char* TSimpleWaveBank::getWaveArcFileName() const { return 0; }
-
-bool* TSimpleWaveBank::getLoadFlagPtr() { return 0; }
-
-int TSimpleWaveBank::getType() const { return 0; }
-
-TSimpleWaveBank::TWaveHandle* TSimpleWaveBank::getWaveHandle(u32) const
+TSimpleWaveBank::~TSimpleWaveBank()
 {
-	return 0;
+	delete[] unk8;
+	delete[] unk10;
 }
 
-void TSimpleWaveBank::setWaveTableSize(u32) { }
+void TSimpleWaveBank::setWaveTableSize(u32 size)
+{
+	delete[] unk8;
+	unk8 = new (TWaveBank::getCurrentHeap(), 0) TWaveHandle[size];
+	unkC = size;
+}
 
-void TSimpleWaveBank::setWaveInfo(u32, const TWaveInfo&) { }
+TSimpleWaveBank::TWaveHandle* TSimpleWaveBank::getWaveHandle(u32 i) const
+{
+	if (i >= unkC)
+		return nullptr;
+	return &unk8[i];
+}
 
-void TSimpleWaveBank::setWaveArcFileName(const char*) { }
+void TSimpleWaveBank::setWaveInfo(u32 i, const TWaveInfo& info)
+{
+	unk8[i].mWaveInfo       = info;
+	unk8[i].mWaveInfo.unk24 = &unk40;
+	unk8[i].mHeap           = &unk14;
+}
+
+void TSimpleWaveBank::setWaveArcFileName(const char* name)
+{
+	delete[] unk10;
+	u32 len = strlen(name);
+	unk10   = new (TWaveBank::getCurrentHeap(), 0) char[len + 1];
+	strcpy(unk10, name);
+}
 
 } // namespace JASystem
