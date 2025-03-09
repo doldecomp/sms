@@ -20,6 +20,17 @@ class TChannelMgr;
 
 class TChannel {
 public:
+	TChannel()
+	    : unk4(0)
+	    , unk8(0)
+	    , unk20(0)
+	    , mNext(0)
+	{
+		for (int i = 0; i < 4; ++i)
+			unk38[i] = 0;
+	}
+	~TChannel() { }
+
 	void init();
 	void setOscillator(u32 index, TOscillator* oscillator);
 	void setOscInit(u32 index, const TOscillator::Osc_* osc);
@@ -99,6 +110,7 @@ public:
 	/* 0xC8 */ u32 unkC8;
 	/* 0xCC */ char unkCC[0x4];
 	/* 0xD0 */ s32 unkD0;
+	/* 0xD4 */ char unkD4[0xC];
 };
 
 } // namespace JASystem
