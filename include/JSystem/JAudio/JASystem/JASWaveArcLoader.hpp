@@ -20,16 +20,16 @@ public:
 		virtual Kernel::THeap* getHeap()               = 0;
 	};
 
-	void init();
+	static bool init();
 	void init(u32);
-	void setCurrentDir(const char*);
-	const char* getCurrentDir();
-	void loadWave(TObject*);
-	void eraseWave(TObject*);
-	void* getRootHeap();
+	static void setCurrentDir(const char*);
+	static const char* getCurrentDir();
+	static bool loadWave(TObject*);
+	static bool eraseWave(TObject*);
+	static Kernel::THeap* getRootHeap();
 
-	static const char* sCurrentDir;
-	static void* sAramHeap;
+	static char sCurrentDir[64];
+	static Kernel::THeap sAramHeap;
 };
 
 } // namespace JASystem

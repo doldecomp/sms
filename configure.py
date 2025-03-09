@@ -235,6 +235,19 @@ cflags_jsystem = [
     "-common on"
 ]
 
+cflags_jsystem_jaudio = [
+    *cflags_base,
+    "-O4,p",
+    "-opt all,nostrength",
+    "-inline auto",
+    "-str reuse,readonly",
+    "-lang=c++",
+    "-fp hard",
+    "-fp_contract on",
+    "-char signed",
+    "-rostr",
+]
+
 cflags_game = [
     *cflags_base,
     "-O4,p",
@@ -428,7 +441,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JASystem/JASInstRand.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASInstSense.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASSimpleWaveBank.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASWaveArcLoader.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASWaveArcLoader.cpp", cflags = cflags_jsystem_jaudio),
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveBank.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASWaveBankMgr.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASWSParser.cpp"),

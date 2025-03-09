@@ -11,7 +11,7 @@ namespace Dvd {
 	void unpauseDvdT();
 	extern bool dvdThreadPauseFlag;
 	extern bool dvdtSleep;
-	char* checkFileExtend(char*);
+	u32 checkFileExtend(char*);
 	extern const char* audioRootPath;
 	extern OSMessageQueue* mq;
 	bool openDvd(char*, DVDFileInfo*);
@@ -20,7 +20,7 @@ namespace Dvd {
 	extern s32 dvdEntryNum;
 	extern void* dvdFileDics;
 	extern s32 maxDics;
-	void loadToAramDvdT(u32, char*, void*, u32, u32, u32*, void (*)(u32));
+	u32 loadToAramDvdT(u32, char*, void*, u32, u32, u32*, void (*)(u32));
 	extern bool mqInit;
 	void* getCallStack();
 	extern s32 curQ;

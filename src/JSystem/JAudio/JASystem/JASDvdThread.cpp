@@ -30,11 +30,11 @@ namespace Dvd {
 	void (*errorCallback)(char*, u8*) = 0;
 
 	void unpauseDvdT() { }
-	char* checkFileExtend(char* path) { return 0; }
+	u32 checkFileExtend(char* path) { return 0; }
 	bool openDvd(char* path, DVDFileInfo* fileInfo) { return false; }
 	void registerFastOpen(char* path) { }
-	void loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
-	                    u32 param5, u32* param6, void (*callback)(u32))
+	u32 loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
+	                   u32 param5, u32* param6, void (*callback)(u32))
 	{
 	}
 	void* getCallStack() { return 0; }
