@@ -5,8 +5,10 @@
 
 namespace JASystem {
 
-f32* Calc::JASC_SINTABLE  = 0;
-f32* Calc::JASC_DOL2TABLE = 0;
+namespace Calc {
+	static f32* JASC_SINTABLE  = 0;
+	static f32* JASC_DOL2TABLE = 0;
+} // namespace Calc
 
 void Calc::initSinfT()
 {
