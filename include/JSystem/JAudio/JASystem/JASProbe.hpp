@@ -2,8 +2,8 @@
 
 namespace JASystem {
 namespace Kernel {
-	void probeStart(s32, char*) { return; }
-	void probeFinish(s32) { return; }
+	void probeStart(s32, char*);
+	void probeFinish(s32);
 	void switchProbe(u32, s32);
 	void resetProbe();
 	void getProbeName(s32);

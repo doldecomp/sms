@@ -2,12 +2,14 @@
 
 namespace JASystem {
 
-// I think DSPBuf is a namespace and not a class
-DSPBuf* DSPBuf::dsp_buf      = 0;
-void* DSPBuf::write_buffer   = 0;
-void* DSPBuf::read_buffer    = 0;
-u16 DSPBuf::dspstatus        = 0;
-int DSPBuf::dac_sync_counter = 0;
+namespace DSPBuf {
+	static u8 dsp_buf[0xC];
+
+	static u8 write_buffer      = 0;
+	static u8 read_buffer       = 0;
+	static u8 dspstatus         = 0;
+	static int dac_sync_counter = 0;
+} // namespace DSPBuf
 
 void DSPBuf::process(DSPBUF_EVENTS event) { }
 
