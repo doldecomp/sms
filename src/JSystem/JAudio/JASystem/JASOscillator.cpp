@@ -2,7 +2,7 @@
 
 namespace JASystem {
 
-void TOscillator::release() { }
+bool TOscillator::release() { }
 
 void TOscillator::initStart() { }
 
@@ -10,9 +10,9 @@ void TOscillator::init() { }
 
 void TOscillator::getOffsetNoCount() { }
 
-void TOscillator::forceStop() { }
+bool TOscillator::forceStop() { }
 
-void TOscillator::getOffset() { }
+f32 TOscillator::getOffset() { }
 
 void TOscillator::calc(short* param) { }
 

@@ -22,6 +22,20 @@ public:
 	void receiveAllChannels(TChannelMgr*);
 	bool checkLimitStart(u32);
 	bool checkLimitStop(TChannel*, u32);
+
+public:
+	u32 unk0;
+	u32 unk4;
+	char unk8[0x24];
+	s16 unk2C[8];
+	s16 unk3C[4];
+	char unk44[0x8];
+	s16 unk4C;
+	char unk4E[2];
+	char unk50[0xA];
+	u8 unk5A[6];
+	u8 unk60;
+	u8 unk61;
 };
 
 namespace Driver {
