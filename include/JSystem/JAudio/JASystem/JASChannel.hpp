@@ -58,13 +58,14 @@ public:
 	/* 0x2 */ u8 unk2;
 	/* 0x3 */ u8 unk3;
 	/* 0x4 */ TChannelMgr* unk4;
-	/* 0x8 */ char unk8[0x4];
+	/* 0x8 */ TChannel** unk8;
 	/* 0xC */ u8 unkC;
 	/* 0x10 */ Driver::Wave_* unk10;
 	/* 0x14 */ u32 unk14;
-	/* 0x18 */ char unk18[0x8];
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ char unk1C[0x4];
 	/* 0x20 */ TDSPChannel* unk20;
-	/* 0x24 */ char unk24[0x4];
+	/* 0x24 */ TChannel* mNext;
 	/* 0x28 */ BOOL (*unk28)(TChannel*, u32);
 	/* 0x2C */ void (*unk2C)(TChannel*, u32);
 	/* 0x30 */ s32 unk30;

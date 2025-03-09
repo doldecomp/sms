@@ -76,7 +76,7 @@ namespace Driver {
 		}
 	}
 
-	bool DSPQueue::deleteQueue(JASystem::TChannel* channel)
+	BOOL DSPQueue::deleteQueue(JASystem::TChannel* channel)
 	{
 		for (int i = 0; i < cur_waits; ++i) {
 			if (waitp[(cur_top + i) % waitMax] == channel) {
