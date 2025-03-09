@@ -11,8 +11,7 @@ namespace Kernel {
 	class THeap;
 }
 
-class WaveArcLoader {
-public:
+namespace WaveArcLoader {
 	class TObject {
 	public:
 		virtual u32* getLoadFlagPtr()                  = 0;
@@ -20,17 +19,14 @@ public:
 		virtual Kernel::THeap* getHeap()               = 0;
 	};
 
-	static bool init();
+	bool init();
 	void init(u32);
-	static void setCurrentDir(const char*);
-	static const char* getCurrentDir();
-	static bool loadWave(TObject*);
-	static bool eraseWave(TObject*);
-	static Kernel::THeap* getRootHeap();
-
-	static char sCurrentDir[64];
-	static Kernel::THeap sAramHeap;
-};
+	void setCurrentDir(const char*);
+	const char* getCurrentDir();
+	bool loadWave(TObject*);
+	bool eraseWave(TObject*);
+	Kernel::THeap* getRootHeap();
+}; // namespace WaveArcLoader
 
 } // namespace JASystem
 

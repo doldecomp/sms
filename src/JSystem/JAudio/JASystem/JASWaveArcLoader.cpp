@@ -7,8 +7,10 @@
 
 namespace JASystem {
 
-char WaveArcLoader::sCurrentDir[64] = "/Banks/";
-Kernel::THeap WaveArcLoader::sAramHeap;
+namespace WaveArcLoader {
+	static char sCurrentDir[64] = "/Banks/";
+	static Kernel::THeap sAramHeap;
+} // namespace WaveArcLoader
 
 bool WaveArcLoader::init()
 {
@@ -20,8 +22,6 @@ bool WaveArcLoader::init()
 	sAramHeap.initMotherHeap((u32)var1, local_8, 0);
 	return true;
 }
-
-void WaveArcLoader::init(u32 param) { }
 
 void WaveArcLoader::setCurrentDir(const char* dir)
 {
