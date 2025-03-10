@@ -35,6 +35,7 @@ float expf(float);
 extern double __fabs(double);
 extern float __fabsf(float);
 inline double fabs(double f) { return __fabs(f); }
+inline float fabsf(float f) { return __fabsf(f); }
 
 double __frsqrte(double);
 float __fres(float);
@@ -77,7 +78,7 @@ extern inline double sqrt(double x)
 };
 
 namespace std {
-inline float fabsf(float f) { return ::fabs(f); }
+inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
 inline float fmodf(float x, float y) { return ::fmod(x, y); }
 inline float atan2f(float y, float x) { return ::atan2f(y, x); }

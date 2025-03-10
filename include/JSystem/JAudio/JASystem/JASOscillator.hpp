@@ -22,10 +22,10 @@ public:
 	bool release();
 	void initStart();
 	void init();
-	void getOffsetNoCount();
+	f32 getOffsetNoCount();
 	bool forceStop();
 	f32 getOffset();
-	void calc(short*);
+	f32 calc(s16*);
 
 	const Osc_* getOsc() const { return mOsc; }
 	void setOsc(const Osc_* osc) { mOsc = osc; }
@@ -46,10 +46,7 @@ public:
 };
 
 namespace Driver {
-	extern u32 FORCE_STOP_TABLE[];
-	extern f32 relTableSampleCell[];
-	extern f32 relTableSqRoot[];
-	extern f32 relTableSquare[];
+	extern s16 FORCE_STOP_TABLE[];
 } // namespace Driver
 
 } // namespace JASystem
