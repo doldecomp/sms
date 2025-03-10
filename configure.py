@@ -442,7 +442,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JASystem/JASDSPBuf.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASDSPChannel.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASDSPInterface.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASOscillator.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASOscillator.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASAiCtrl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASCalc.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASCallback.cpp"),
