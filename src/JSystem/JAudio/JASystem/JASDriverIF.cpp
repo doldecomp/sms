@@ -1,28 +1,45 @@
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPBuf.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPInterface.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPChannel.hpp>
+#include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
+#include <JSystem/JAudio/JASystem/JASChAllocQueue.hpp>
+#include <JSystem/dspproc.h>
 
 namespace JASystem {
 
 namespace Driver {
-	f32 MAX_MIXERLEVEL         = 1.0186341E-10;
-	u32 JAS_SYSTEM_OUTPUT_MODE = 0x00000001;
-	s32 JAS_UPDATE_INTERVAL    = 0x01000000;
-	u32 DSP_VOICE_WAITS_MAX    = 0x00000020;
+	static u16 MAX_MIXERLEVEL         = 0x2ee0;
+	static u32 JAS_SYSTEM_OUTPUT_MODE = 1;
+	static u8 JAS_UPDATE_INTERVAL     = 1;
+	static u32 DSP_VOICE_WAITS_MAX    = 0x20;
 
-	void setUpdateInterval(u8 interval) { }
+	void init()
+	{
+		DSPBuf::process(DSPBuf::DSPBUF_EVENTS_UNK0);
+		DSPInterface::initBuffer();
+		TDSPChannel::initAll();
+		ChGlobal::init();
+		Driver::DSPQueue::init(Driver::DSP_VOICE_WAITS_MAX);
+	}
 
-	u8 getUpdateInterval() { return 0; }
+	void setMixerLevel(f32 channel_level, f32 dsp_level)
+	{
+		MAX_MIXERLEVEL = channel_level * 16384.0f;
+		DsetMixerLevel(dsp_level);
+	}
 
-	void setOutputMode(u32 mode) { }
+	u16 getMixerLevel() { return MAX_MIXERLEVEL; }
 
-	u32 getOutputMode() { return 0; }
+	void setOutputMode(u32 mode) { JAS_SYSTEM_OUTPUT_MODE = mode; }
 
-	void setMixerLevel(f32 level, f32 param) { }
+	u32 getOutputMode() { return JAS_SYSTEM_OUTPUT_MODE; }
 
-	f32 getMixerLevel() { return 0.0f; }
+	void setUpdateInterval(u8 interval) { JAS_UPDATE_INTERVAL = interval; }
 
-	void init() { }
+	u8 getUpdateInterval() { return JAS_UPDATE_INTERVAL; }
 
-	void setDSPQueueNum(u32 num) { }
+	void setDSPQueueNum(u32 num) { DSP_VOICE_WAITS_MAX = num; }
 } // namespace Driver
 
 } // namespace JASystem

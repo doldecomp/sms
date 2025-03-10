@@ -6,7 +6,7 @@
 namespace JASystem {
 
 namespace DSPBuf {
-	enum DSPBUF_EVENTS {};
+	enum DSPBUF_EVENTS { DSPBUF_EVENTS_UNK0 };
 
 	void process(DSPBUF_EVENTS event);
 	void mixDSP(s32 param);
