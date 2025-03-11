@@ -7,7 +7,7 @@ namespace JASystem {
 
 class Vload {
 public:
-	void initVloadBuffers();
+	static void initVloadBuffers();
 	void setMaxArcs(long);
 	void initHeader(char*);
 	void initHeaderM(char*, u8*, u8*);
