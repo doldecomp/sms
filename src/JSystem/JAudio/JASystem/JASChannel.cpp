@@ -138,7 +138,7 @@ namespace Driver {
 	{
 	}
 
-	void updatecallDSPChannel(TDSPChannel* dspChannel, u32 param) { }
+	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param) { }
 } // namespace Driver
 
 void TChannel::init() { }
