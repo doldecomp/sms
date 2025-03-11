@@ -10,7 +10,15 @@ namespace Driver {
 }
 
 namespace DSPInterface {
-	struct FxlineConfig_;
+	struct FxlineConfig_ {
+		/* 0x00 */ u8 unk0;
+		/* 0x02 */ u16 unk2;
+		/* 0x04 */ s16 unk4;
+		/* 0x06 */ u16 unk6;
+		/* 0x08 */ s16 unk8;
+		/* 0x0C */ int unkC;
+		/* 0x10 */ short unk10[8];
+	};
 
 	class DSPBuffer {
 	public:
@@ -40,7 +48,7 @@ namespace DSPInterface {
 		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 
-	public: // copypasta from TWW, probably wrong
+	public:
 		/* 0x00 */ u16 unk0;
 		/* 0x02 */ u16 unk2;
 		/* 0x04 */ u16 unk4;
@@ -53,7 +61,7 @@ namespace DSPInterface {
 		/* 0x18 */ u8 unk18[0x50 - 0x18];
 		/* 0x50 */ u16 unk50;
 		/* 0x52 */ u16 unk52;
-		/* 0x54 */ short unk54;
+		/* 0x54 */ u16 unk54;
 		/* 0x56 */ u16 unk56;
 		/* 0x58 */ u16 unk58;
 		/* 0x5A */ u8 unk5A[0x60 - 0x5a];
@@ -66,7 +74,7 @@ namespace DSPInterface {
 		/* 0x70 */ u8 unk70[0x74 - 0x70];
 		/* 0x74 */ u32 unk74;
 		/* 0x78 */ short unk78[4];
-		/* 0x80 */ short unk80[20];
+		/* 0x80 */ u16 unk80[20];
 		/* 0xA8 */ short unkA8[4];
 		/* 0xB8 */ u16 unkB0[16];
 		/* 0xD0 */ u8 unkD0[0x100 - 0xd0];
@@ -90,14 +98,21 @@ namespace DSPInterface {
 
 	class FXBuffer {
 	public:
-		void setFXLine(s16*, FxlineConfig_*);
+		BOOL setFXLine(s16*, FxlineConfig_*);
 		void changeFXLineParam(u8, u32);
+
+	public:
+		/* 0x00 */ u16 unk0;
+		/* 0x02 */ u16 unk2;
+		/* 0x04 */ s16* unk4;
+		/* 0x08 */ u16 unk8;
+		/* 0x0A */ s16 unkA;
+		/* 0x0C */ u16 unkC;
+		/* 0x0E */ s16 unkE;
+		/* 0x10 */ s16 unk10[8];
 	};
 
-	extern u32 SEND_TABLE;
 	extern u16 JAS_DSP_PREFIX;
-	extern u32 CH_BUF;
-	extern u32 FX_BUF;
 
 	DSPBuffer* getDSPHandle(u8);
 	DSPBuffer* getDSPHandleNc(u8);
