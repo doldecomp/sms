@@ -6,10 +6,14 @@
 namespace JASystem {
 
 namespace DSPBuf {
-	enum DSPBUF_EVENTS { DSPBUF_EVENTS_UNK0 };
+	enum DSPBUF_EVENTS {
+		DSPBUF_EVENTS_UNK0,
+		DSPBUF_EVENTS_UNK1,
+		DSPBUF_EVENTS_UNK2,
+	};
 
-	void process(DSPBUF_EVENTS event);
-	void mixDSP(s32 param);
+	s16* process(DSPBUF_EVENTS event);
+	s16* mixDSP(s32 param);
 	void finishDSPFrame();
 	void updateDSP();
 }; // namespace DSPBuf
