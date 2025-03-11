@@ -53,7 +53,7 @@ namespace Kernel {
 
 		void init(u8*, s32);
 		void* alloc(s32);
-		s32 getRemain();
+		u32 getRemain();
 		void freeLast();
 		void freeAll();
 	};

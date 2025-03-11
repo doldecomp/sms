@@ -1,5 +1,5 @@
-#ifndef JKR_STD_HEAP_HPP
-#define JKR_STD_HEAP_HPP
+#ifndef JKR_SOLID_HEAP_HPP
+#define JKR_SOLID_HEAP_HPP
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <dolphin/os.h>
@@ -48,7 +48,8 @@ private:
 	UnknownStruct* unk74;
 };
 
-inline JKRSolidHeap* JKRCreateStdHeap(u32 size, JKRHeap* parent, bool errorFlag)
+inline JKRSolidHeap* JKRCreateSolidHeap(u32 size, JKRHeap* parent,
+                                        bool errorFlag)
 {
 	return JKRSolidHeap::create(size, parent, errorFlag);
 }
