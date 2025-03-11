@@ -10,9 +10,16 @@ class TDSPChannel;
 namespace Driver {
 	struct PanMatrix_;
 	struct Wave_ {
-		u8 unk0;
-		u8 unk1;
-		u8 unk2;
+		/* 0x0 */ u8 unk0;
+		/* 0x1 */ u8 unk1;
+		/* 0x2 */ u8 unk2;
+		/* 0x4 */ char unk4[0xC];
+		/* 0x10 */ int unk10;
+		/* 0x14 */ int unk14;
+		/* 0x18 */ int unk18;
+		/* 0x1C */ int unk1C;
+		/* 0x20 */ short unk20;
+		/* 0x22 */ short unk22;
 	};
 } // namespace Driver
 
