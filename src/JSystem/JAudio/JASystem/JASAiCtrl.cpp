@@ -1,58 +1,265 @@
 #include <JSystem/JAudio/JASystem/JASAiCtrl.hpp>
+#include <JSystem/JAudio/JASystem/JASCallback.hpp>
+#include <JSystem/JAudio/JASystem/JASCmdStack.hpp>
+#include <JSystem/JAudio/JASystem/JASCalc.hpp>
+#include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
+#include <JSystem/JAudio/JASystem/JASRate.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASVload.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPBuf.hpp>
+#include <JSystem/JAudio/JASystem/JASHardStream.hpp>
+#include <JSystem/JAudio/JASystem/JASProbe.hpp>
+#include <dolphin/ai.h>
 
 namespace JASystem {
 namespace Kernel {
 
-	void (*dacCallbackFunc)(s16*, s32) = nullptr;
-	s16* (*extMixCallback)(s32)        = nullptr;
-	u8 extMixMode                      = 0;
-	u8 useRspMadep                     = 0;
-	u8 lastRspMadep                    = 0;
-	u8 vframeWorkRunning               = 0;
-	u32 JASVframeCounter               = 0;
-	u32 JASUniversalDacCounter         = 0;
+	u32 JASUniversalDacCounter                = 0;
+	static s16* lastRspMadep                  = 0;
+	static s16* useRspMadep                   = 0;
+	static int vframeWorkRunning              = 0;
+	static void (*dacCallbackFunc)(s16*, s32) = nullptr;
 
-	void registerDacCallback(void (*callback)(s16*, s32)) { }
+	static u32 JASVframeCounter       = 0;
+	static MixCallback extMixCallback = nullptr;
+	static u8 extMixMode              = 0;
 
-	s16* mixMonoTrack(s16* buffer, s32 sampleCount, s16* (*mixCallback)(s32))
+	void init()
 	{
-		return nullptr;
+		resetCallback();
+		initSystem();
+		portCmdInit();
+		Dvd::init();
+		Calc::initSinfT();
 	}
 
-	s16* mixMonoTrackWide(s16* buffer, s32 sampleCount,
-	                      s16* (*mixCallback)(s32))
+	static s16* dac[3];
+
+	void initSystem()
 	{
-		return nullptr;
+		for (int i = 0; i < 3; i++) {
+			dac[i] = (s16*)allocFromSysDram(getDacSize() * 2);
+			Calc::bzero(dac[i], getDacSize() * 2);
+			DCStoreRange(dac[i], getDacSize() * 2);
+		}
+		AIInit(nullptr);
+		AIInitDMA(u32(dac[2]), getDacSize() * 2);
+		Vload::initVloadBuffers();
 	}
 
-	s16* mixExtraTrack(s16* buffer, s32 sampleCount, s16* (*mixCallback)(s32))
-	{
-		return nullptr;
-	}
+	u32 getCurrentVCounter() { return 0; }
 
-	s16* mixInterleaveTrack(s16* buffer, s32 sampleCount,
-	                        s16* (*mixCallback)(s32))
-	{
-		return nullptr;
-	}
+	MixCallback getMixCallback(s32) { return extMixCallback; }
 
-	s16* (*getMixCallback(u8* mode))(s32) { return nullptr; }
-
-	void registerMixCallback(s16* (*callback)(s32), u8 mode)
+	void registerMixCallback(MixCallback callback, u8 mode)
 	{
 		extMixCallback = callback;
 		extMixMode     = mode;
 	}
 
-	u32 getCurrentVCounter() { return 0; }
+	static void mixMonoTrack(s16* buffer, s32 sampleCount,
+	                         MixCallback mixCallback);
+	static void mixMonoTrackWide(s16* buffer, s32 sampleCount,
+	                             MixCallback mixCallback);
+	static void mixExtraTrack(s16* buffer, s32 sampleCount,
+	                          MixCallback mixCallback);
+	static void mixInterleaveTrack(s16* buffer, s32 sampleCount,
+	                               MixCallback mixCallback);
 
-	void init() { }
+	void vframeWork()
+	{
+		static u32 dacp = 0;
+		JASVframeCounter++;
+		s16* buf = DSPBuf::mixDSP(getDacSize() / 2);
+		Calc::imixcopy(buf + getFrameSamples(), buf, dac[dacp],
+		               getDacSize() / 2);
+		if (extMixCallback) {
+			switch (extMixMode) {
+			case 0:
+				mixMonoTrack(dac[dacp], getDacSize() / 2, extMixCallback);
+				break;
+			case 1:
+				mixMonoTrackWide(dac[dacp], getDacSize() / 2, extMixCallback);
+				break;
+			case 2:
+				mixExtraTrack(dac[dacp], getDacSize() / 2, extMixCallback);
+				break;
+			case 3:
+				mixInterleaveTrack(dac[dacp], getDacSize() / 2, extMixCallback);
+				break;
+			}
+		}
+		BOOL enable = OSDisableInterrupts();
+		DCStoreRange(dac[dacp], getDacSize() * 2);
+		OSRestoreInterrupts(enable);
+		lastRspMadep = dac[dacp];
+		dacp++;
+		if (dacp == 3) {
+			dacp = 0;
+		}
+		vframeWorkRunning = 0;
+	}
 
-	void initSystem() { }
+	void updateDac()
+	{
+		if (!useRspMadep) {
+			useRspMadep  = lastRspMadep;
+			lastRspMadep = nullptr;
+		}
 
-	void vframeWork() { }
+		if (useRspMadep) {
+			AIInitDMA((u32)useRspMadep, getDacSize() * 2);
+			useRspMadep = nullptr;
+		} else {
+			JASUniversalDacCounter++;
+		}
 
-	void updateDac() { }
+		if (!lastRspMadep && vframeWorkRunning == 0)
+			vframeWork();
+
+		HardStream::main();
+		if (dacCallbackFunc)
+			dacCallbackFunc(lastRspMadep, getDacSize() / 2);
+	}
+
+	void registerDacCallback(void (*callback)(s16*, s32)) { }
+
+	static void mixMonoTrack(s16* buffer, s32 sampleCount,
+	                         MixCallback mixCallback)
+	{
+		probeStart(5, "MONO-MIX");
+		s16* src = mixCallback(sampleCount);
+		if (!src)
+			return;
+
+		probeFinish(5);
+		s16* destPtr = buffer;
+		s16* srcPtr  = src;
+		for (int i = 0; i < sampleCount; i++) {
+			s32 var1 = destPtr[0] + srcPtr[0];
+			s16 var2;
+
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[0] = var2;
+
+			var1 = destPtr[1] + srcPtr[0];
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+
+			destPtr[1] = var2;
+			destPtr += 2;
+			srcPtr++;
+		}
+	}
+
+	static void mixMonoTrackWide(s16* buffer, s32 sampleCount,
+	                             MixCallback mixCallback)
+	{
+		probeStart(5, "MONO(W)-MIX");
+		s16* src = mixCallback(sampleCount);
+		if (!src) {
+			return;
+		}
+		probeFinish(5);
+		s16* destPtr = buffer;
+		s16* srcPtr  = src;
+		for (int i = 0; i < sampleCount; i++) {
+			s32 var1 = destPtr[0] + srcPtr[0];
+			s16 var2;
+
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[0] = var2;
+
+			var1 = destPtr[1] - srcPtr[0];
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[1] = var2;
+
+			destPtr += 2;
+			srcPtr++;
+		}
+	}
+
+	static void mixExtraTrack(s16* buffer, s32 sampleCount,
+	                          MixCallback mixCallback)
+	{
+		probeStart(5, "DSPMIX");
+		s16* src = mixCallback(sampleCount);
+		if (!src)
+			return;
+
+		probeFinish(5);
+		probeStart(6, "MIXING");
+		s16* destPtr = buffer;
+		s16* srcPtr  = src;
+		s16* srcPtr2 = src + gFrameSamples;
+		for (int i = 0; i < sampleCount; i++) {
+			s32 var1 = destPtr[0] + srcPtr2[0];
+			s16 var2;
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[0] = var2;
+
+			var1 = destPtr[1] + srcPtr[0];
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[1] = var2;
+
+			destPtr += 2;
+			srcPtr2++;
+			srcPtr++;
+		}
+		probeFinish(6);
+	}
+
+	static void mixInterleaveTrack(s16* buffer, s32 sampleCount,
+	                               MixCallback mixCallback)
+	{
+		s16* src = mixCallback(sampleCount);
+		if (!src)
+			return;
+
+		s16* destPtr = buffer;
+		for (int i = 0; i < sampleCount * 2; i++) {
+			s32 var1 = destPtr[0] + src[0];
+			s16 var2;
+			if (var1 < -0x8000)
+				var2 = -0x7fff;
+			else if (var1 > 0x7fff)
+				var2 = 0x7fff;
+			else
+				var2 = var1;
+			destPtr[0] = var2;
+			destPtr++;
+			src++;
+		}
+	}
 
 } // namespace Kernel
 } // namespace JASystem
