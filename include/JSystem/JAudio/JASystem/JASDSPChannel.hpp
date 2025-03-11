@@ -18,7 +18,7 @@ public:
 	~TDSPChannel();
 
 	static void initAll();
-	void updateAll();
+	static void updateAll();
 	static TDSPChannel* alloc(u32 param1, u32 param2);
 	static void free(TDSPChannel* channel, u32 param);
 	TDSPChannel* getHandle(u32 handle);

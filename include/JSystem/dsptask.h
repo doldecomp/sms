@@ -9,5 +9,6 @@ void DSPSendCommands2(u32*, u32, void (*)(u16));
 void DspInitWork();
 void DspStartWork(u32, void (*)(u16));
 void DspFinishWork(u16);
+void DsyncFrame2(u32, u32, u32);
 
 #endif
