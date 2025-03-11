@@ -11,11 +11,6 @@ extern JKRHeap* JASDram;
 namespace JASystem {
 namespace Kernel {
 
-	extern u32 audioDramSize;
-	extern u32 audioAramSize;
-	extern u32 audioAramTop;
-	extern void* audioAramHeap;
-	extern u32 CARD_SECURITY_BUFFER;
 	extern u32 JASAramDmaBufferTop;
 
 	void sysDramSetup(JKRSolidHeap* heap);

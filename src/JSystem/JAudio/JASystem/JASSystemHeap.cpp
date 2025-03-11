@@ -1,24 +1,35 @@
-#include "JSystem/JAudio/JASystem/JASSystemHeap.hpp"
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
+#include <JSystem/JKernel/JKRSolidHeap.hpp>
+#include <JSystem/JKernel/JKRStdHeap.hpp>
+#include <dolphin/ar.h>
 
 JKRHeap* JASDram;
 
 namespace JASystem {
 namespace Kernel {
 
-	u32 audioDramSize        = 0x0c8000;
-	u32 audioAramSize        = 0x400000;
-	u32 audioAramTop         = 0;
-	void* audioAramHeap      = 0;
-	u32 CARD_SECURITY_BUFFER = 0;
-	u32 JASAramDmaBufferTop  = 0;
+	static u32 audioDramSize = 0x0c8000;
 
-	void sysDramSetup(JKRSolidHeap* heap) { }
+	void sysDramSetup(JKRSolidHeap* heap)
+	{
+		if (heap) {
+			JASDram = heap;
+			return;
+		}
+		JASDram = JKRCreateSolidHeap(
+		    audioDramSize,
+		    JKRStdHeap::create(audioDramSize + 0x100, nullptr, false), false);
+	}
 
-	void sysAramSetup(u32 size) { }
-
-	void* allocFromSysDram(u32 size) { return 0; }
-
-	void* allocFromSysAramFull(u32* size) { return 0; }
+	void* allocFromSysDram(u32 size)
+	{
+		void* ptr;
+		BOOL enable = OSDisableInterrupts();
+		ptr         = new (JASDram, 0x20) u8[size];
+		OSRestoreInterrupts(enable);
+		return ptr;
+	}
 
 	u32 getSysDramRemain() { return 0; }
 
@@ -28,9 +39,37 @@ namespace Kernel {
 
 	void* getSysDramTop() { return 0; }
 
+	static Kernel::TSolidHeap audioAramHeap;
+
+	static u32 audioAramSize = 0x400000;
+	static u32 audioAramTop;
+	static u32 CARD_SECURITY_BUFFER;
+
+	u32 JASAramDmaBufferTop;
+
+	void sysAramSetup(u32 size)
+	{
+		if (!size) {
+			size = audioAramSize;
+		}
+		audioAramTop         = ARGetBaseAddress();
+		CARD_SECURITY_BUFFER = 0x40;
+		JASAramDmaBufferTop  = audioAramTop;
+		audioAramHeap.init((u8*)audioAramTop + 0xC000,
+		                   size - (audioAramTop + 0xC000));
+	}
+
 	void setSysAramSize(u32 size) { }
 
 	void* allocFromSysAram(u32 size) { return 0; }
+
+	void* allocFromSysAramFull(u32* size)
+	{
+		u32 remain = audioAramHeap.getRemain();
+		void* buf  = audioAramHeap.alloc(remain - 0x20);
+		*size      = remain - 0x20;
+		return buf;
+	}
 
 	void freeToSysAramLast() { }
 

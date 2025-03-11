@@ -97,7 +97,7 @@ namespace Kernel {
 
 	void TSolidHeap::init(u8*, s32) { }
 
-	s32 TSolidHeap::getRemain() { return 0; }
+	u32 TSolidHeap::getRemain() { return 0; }
 
 } // namespace Kernel
 
