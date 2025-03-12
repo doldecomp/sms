@@ -114,6 +114,7 @@ public:
 	/* 0xB4 */ s16 unkB4[6];
 	/* 0xC0 */ u32 unkC0;
 	/* 0xC4 */ u16 unkC4;
+	/* 0xC6 */ u16 unkC6;
 	/* 0xC8 */ u32 unkC8;
 	/* 0xCC */ char unkCC[0x4];
 	/* 0xD0 */ s32 unkD0;
