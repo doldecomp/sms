@@ -46,16 +46,24 @@ namespace Kernel {
 		/* 0x28 */ u32 unk28;
 	};
 
-	class TSolidHeap : public THeap {
+	class TSolidHeap {
 	public:
 		TSolidHeap();
 		TSolidHeap(u8*, s32);
+		~TSolidHeap();
 
 		void init(u8*, s32);
 		void* alloc(s32);
 		u32 getRemain();
 		void freeLast();
 		void freeAll();
+
+	public:
+		/* 0x00 */ u8* mStart;
+		/* 0x04 */ u8* mEnd;
+		/* 0x08 */ int mSize;
+		/* 0x0C */ int unkC;
+		/* 0x10 */ u8* unk10;
 	};
 
 	extern u32 global_id;

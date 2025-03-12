@@ -41,11 +41,10 @@ namespace Kernel {
 
 	static Kernel::TSolidHeap audioAramHeap;
 
+	u32 JASAramDmaBufferTop;
 	static u32 audioAramSize = 0x400000;
 	static u32 audioAramTop;
 	static u32 CARD_SECURITY_BUFFER;
-
-	u32 JASAramDmaBufferTop;
 
 	void sysAramSetup(u32 size)
 	{

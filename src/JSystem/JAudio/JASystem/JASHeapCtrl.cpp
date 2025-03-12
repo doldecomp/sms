@@ -85,19 +85,54 @@ namespace Kernel {
 
 	void dmaDramToDram(u32, u32, u32) { }
 
-	TSolidHeap::TSolidHeap() { }
+	TSolidHeap::TSolidHeap()
+	    : mStart(0)
+	    , mEnd(0)
+	    , mSize(0)
+	    , unkC(0)
+	    , unk10(0)
+	{
+	}
 
-	TSolidHeap::TSolidHeap(u8*, s32) { }
+	TSolidHeap::TSolidHeap(u8* param_1, s32 param_2) { init(param_1, param_2); }
 
-	void* TSolidHeap::alloc(s32) { return 0; }
+	void* TSolidHeap::alloc(s32 size)
+	{
+		u32 alignedSize = ALIGN_NEXT(size, 0x20);
+		if (mStart == 0)
+			return 0;
+
+		u8* result = mEnd;
+		if (mEnd + alignedSize <= mStart + mSize)
+			mEnd += alignedSize;
+		else
+			return 0;
+
+		unkC++;
+		unk10 = result;
+		return result;
+	}
 
 	void TSolidHeap::freeLast() { }
 
 	void TSolidHeap::freeAll() { }
 
-	void TSolidHeap::init(u8*, s32) { }
+	void TSolidHeap::init(u8* mem_start, s32 mem_size)
+	{
+		unkC = 0;
+		if (!mem_start) {
+			mSize = 0;
+			mEnd  = 0;
+			unk10 = 0;
+		} else {
+			mStart = (u8*)ALIGN_NEXT((u32)mem_start, 0x20);
+			mEnd   = mStart;
+			mSize  = mem_size - ((u32)mem_start & 0x1F);
+			unk10  = 0;
+		}
+	}
 
-	u32 TSolidHeap::getRemain() { return 0; }
+	u32 TSolidHeap::getRemain() { return mSize - (mEnd - mStart); }
 
 } // namespace Kernel
 
