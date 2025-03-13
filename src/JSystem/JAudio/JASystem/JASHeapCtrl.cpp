@@ -19,7 +19,7 @@ namespace Kernel {
 		unk2  = 0;
 		unk14 = 0;
 		unk18 = 0;
-		unk1C = 0;
+		mNext = 0;
 		unk20 = 0;
 		unk24 = 0;
 		unk28 = 0;
@@ -33,7 +33,50 @@ namespace Kernel {
 
 	void THeap::selfInit(u32, u32, u32) { }
 
-	void* THeap::selfAlloc(THeap*, u32, u32) { return 0; }
+	BOOL THeap::selfAlloc(THeap* param_1, u32 param_2, u32 param_3)
+	{
+		if (unk8 != 0 && unk8 != (u8*)0xffffffff)
+			return 0;
+
+		unk8  = (u8*)param_3;
+		unk10 = param_2;
+		unkC  = 0;
+		unk0  = 0;
+		unk1  = param_1->unk1;
+		unk2  = 0;
+		unk14 = nullptr;
+		unk18 = param_1;
+
+		if (param_1->unk14 == nullptr) {
+			param_1->unk14 = this;
+			mNext          = nullptr;
+			param_1->unkC  = unk10 + (unk8 - param_1->unk8);
+		} else {
+			THeap* it = param_1->unk14;
+			if (unk8 < param_1->unk14->unk8) {
+				mNext          = param_1->unk14;
+				param_1->unk14 = this;
+			} else {
+				for (;; it = it->mNext) {
+					if (!it->mNext) {
+						mNext         = nullptr;
+						it->mNext     = this;
+						param_1->unkC = unk10 + (unk8 - param_1->unk8);
+						break;
+					}
+
+					if (unk8 < it->mNext->unk8) {
+						mNext     = it->mNext;
+						it->mNext = this;
+						break;
+					}
+				}
+			}
+		}
+
+		++param_1->unk2;
+		return 1;
+	}
 
 	void THeap::setGroupHeap(THeap*) { }
 
@@ -41,7 +84,7 @@ namespace Kernel {
 
 	void THeap::initMotherHeap(u32 param_1, u32 param_2, u8 param_3)
 	{
-		unk8  = (void*)ALIGN_NEXT(param_1, 0x20);
+		unk8  = (u8*)ALIGN_NEXT(param_1, 0x20);
 		unkC  = 0;
 		unk10 = param_2 - (param_1 & 0x1F);
 		unk4  = global_id++;
@@ -50,24 +93,178 @@ namespace Kernel {
 		unk2  = 0;
 		unk14 = 0;
 		unk18 = 0;
-		unk1C = 0;
+		mNext = 0;
 		unk20 = 0;
 		unk24 = 0;
 		unk28 = 0;
 	}
 
-	void* THeap::allocHeapCheck(THeap* param_1, u32 param_2) { return 0; }
+	BOOL THeap::allocHeapCheck(THeap* param_1, u32 param_2)
+	{
+		u32 targetSize = ALIGN_NEXT(param_2, 0x20);
+
+		if (param_1->unk8 == 0)
+			return false;
+
+		if (unk8 != 0 && unk8 != (void*)0xffffffff)
+			return false;
+
+		if (param_1->unk10 - param_1->unkC < targetSize) {
+			u32 bestCandidateLeftover = 0xfffffff;
+			THeap* bestCandidate      = nullptr;
+			u8* uVar3                 = param_1->unk8;
+			u8* in_r11;
+			for (THeap* it = param_1->unk14;; it = it->mNext) {
+				if (!it)
+					break;
+
+				u32 availSpace = it->unk8 - uVar3;
+				if (availSpace >= targetSize
+				    && availSpace - targetSize < bestCandidateLeftover) {
+					bestCandidate         = it;
+					in_r11                = uVar3;
+					bestCandidateLeftover = availSpace - targetSize;
+				}
+				uVar3 = it->unk8 + it->unk10;
+			}
+
+			if (bestCandidate == nullptr)
+				return false;
+
+			if (bestCandidate == param_1->unk14) {
+				mNext          = param_1->unk14;
+				param_1->unk14 = this;
+			} else {
+				for (THeap* it = param_1->unk14;; it = it->mNext) {
+					if (it->mNext != bestCandidate)
+						continue;
+
+					mNext     = it->mNext;
+					it->mNext = this;
+					break;
+				}
+			}
+
+			unk8  = in_r11;
+			unk10 = targetSize;
+			unkC  = 0;
+			unk0  = 0;
+			unk1  = param_1->unk1;
+			unk2  = 0;
+			unk14 = 0;
+			unk18 = param_1;
+			++param_1->unk2;
+			return true;
+		}
+
+		unk8  = param_1->unk8 + param_1->unkC;
+		unk10 = targetSize;
+		unkC  = 0;
+		unk0  = 0;
+		unk1  = param_1->unk1;
+		unk2  = 0;
+		unk14 = 0;
+		unk18 = param_1;
+
+		THeap* it = param_1->unk14;
+		if (param_1->unk14 == 0) {
+			param_1->unk14 = this;
+			mNext          = 0;
+		} else {
+			for (;; it = it->mNext) {
+				if (it->mNext != nullptr)
+					continue;
+
+				it->mNext = this;
+				break;
+			}
+		}
+
+		mNext = 0;
+		param_1->unkC += targetSize;
+		++param_1->unk2;
+		return true;
+	}
 
 	void* THeap::alloc(THeap* param_1, u32 param_2)
 	{
-		void* res = allocHeapCheck(param_1, param_2);
-		if (res == nullptr)
+		if (!allocHeapCheck(param_1, param_2))
 			return nullptr;
 
 		return unk8;
 	}
 
-	void THeap::free() { }
+	BOOL THeap::free()
+	{
+		if (unk8 == 0)
+			return false;
+
+		for (THeap* it = unk14; it != nullptr;) {
+			THeap* next = it->mNext;
+			it->free();
+			it = next;
+		}
+		unk14 = nullptr;
+
+		for (THeap* pTVar2 = unk24; pTVar2 != nullptr;) {
+			THeap* next = pTVar2->unk28;
+			pTVar2->free();
+			pTVar2 = next;
+		}
+		unk24 = nullptr;
+
+		if (unk18 != 0) {
+			THeap* it = unk18->unk14;
+
+			if (unk18->unk14 == this) {
+				unk18->unk14 = mNext;
+				if (mNext == nullptr)
+					unk18->unkC = 0;
+			} else {
+				for (;; it = it->mNext) {
+					if (it == nullptr) {
+						unk8 = 0;
+						return false;
+					}
+
+					if (it->mNext != this)
+						continue;
+
+					it->mNext = mNext;
+
+					if (mNext == nullptr)
+						unk18->unkC = (it->unk8 + it->unk10) - unk18->unk8;
+
+					break;
+				}
+			}
+			--unk18->unk2;
+		}
+
+		if (unk20 != 0) {
+			THeap* it = unk20->unk24;
+			if (unk20->unk24 == this) {
+				unk20->unk24 = unk28;
+			} else {
+				for (;; it = it->unk28) {
+					if (it == nullptr)
+						return false;
+
+					if (it->unk28 != this)
+						continue;
+
+					it->unk28 = unk28;
+
+					break;
+				}
+			}
+			unk20 = 0;
+			unk28 = 0;
+		}
+
+		unk8 = 0;
+		return true;
+	}
 
 	void THeap::garbageCollectionSt() { }
 

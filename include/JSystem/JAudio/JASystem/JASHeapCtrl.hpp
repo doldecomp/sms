@@ -13,9 +13,9 @@ namespace Kernel {
 
 		void init();
 		void* alloc(THeap*, u32);
-		void* allocHeapCheck(THeap*, u32);
-		void free();
-		void* selfAlloc(THeap*, u32, u32);
+		BOOL allocHeapCheck(THeap*, u32);
+		BOOL free();
+		BOOL selfAlloc(THeap*, u32, u32);
 		void initMotherHeap(u32, u32, u8);
 		void* getUnlockHeap();
 		void checkAlloc();
@@ -35,15 +35,15 @@ namespace Kernel {
 		/* 0x1 */ u8 unk1;
 		/* 0x2 */ u16 unk2;
 		/* 0x4 */ u32 unk4;
-		/* 0x8 */ void* unk8;
+		/* 0x8 */ u8* unk8;
 		/* 0xC */ u32 unkC;
 		/* 0x10 */ u32 unk10;
-		/* 0x14 */ u32 unk14;
-		/* 0x18 */ u32 unk18;
-		/* 0x1C */ u32 unk1C;
-		/* 0x20 */ u32 unk20;
-		/* 0x24 */ u32 unk24;
-		/* 0x28 */ u32 unk28;
+		/* 0x14 */ THeap* unk14;
+		/* 0x18 */ THeap* unk18;
+		/* 0x1C */ THeap* mNext;
+		/* 0x20 */ THeap* unk20;
+		/* 0x24 */ THeap* unk24;
+		/* 0x28 */ THeap* unk28;
 	};
 
 	class TSolidHeap {
