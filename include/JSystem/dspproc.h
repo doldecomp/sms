@@ -22,7 +22,6 @@ void DoscStore(u32);
 void Dmixer(u32, u32);
 void Dresampletest();
 void Dadpcmtest(u32);
-void setup_callback(u16);
 void DsetupTable(u32, u32, u32, u32, u32);
 void DsetMixerLevel(float);
 void DsyncFrame(u32, u32, u32);

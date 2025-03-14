@@ -181,9 +181,8 @@ config.scratch_preset_id = 61  # Super Mario Sunshine
 
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
-cflags_base = [
+cflags_base_base = [
     "-nodefaults",
-    "-proc gekko",
     "-align powerpc",
     "-enum int",
     "-fp hardware",
@@ -202,6 +201,11 @@ cflags_base = [
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
+]
+
+cflags_base = [
+    *cflags_base_base,
+    "-proc gekko",
 ]
 
 # Debug flags
@@ -233,6 +237,15 @@ cflags_jsystem = [
     "-char signed",
     "-rostr",
     "-common on"
+]
+
+cflags_jsystem_dsp = [
+    *cflags_base_base,
+    "-lang=c++",
+    "-proc 750",
+    "-O4",
+    "-str readonly",
+    "-func_align 32",
 ]
 
 cflags_game = [
@@ -532,10 +545,10 @@ config.libs = [
             Object(NonMatching, "JSystem/JMath.cpp"),
             Object(Matching, "JSystem/JRenderer.cpp"),
             Object(NonMatching, "JSystem/random.cpp"),
-            Object(NonMatching, "JSystem/dspproc.c"),
-            Object(NonMatching, "JSystem/dsptask.c"),
-            Object(NonMatching, "JSystem/osdsp.c"),
-            Object(NonMatching, "JSystem/osdsp_task.c"),
+            Object(Matching, "JSystem/dspproc.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
+            Object(Matching, "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
+            Object(Matching, "JSystem/osdsp.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
+            Object(Matching, "JSystem/osdsp_task.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
         ],
     },
     {
