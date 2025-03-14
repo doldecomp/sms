@@ -101,7 +101,14 @@ namespace Kernel {
 
 	BOOL THeap::allocHeapCheck(THeap* param_1, u32 param_2)
 	{
-		u32 targetSize = ALIGN_NEXT(param_2, 0x20);
+		u8* uVar3;
+		THeap* it;
+		THeap* bestCandidate;
+		u8* in_r11;
+		u32 bestCandidateLeftover;
+		u32 targetSize;
+
+		targetSize = ALIGN_NEXT(param_2, 0x20);
 
 		if (param_1->unk8 == 0)
 			return false;
@@ -110,11 +117,11 @@ namespace Kernel {
 			return false;
 
 		if (param_1->unk10 - param_1->unkC < targetSize) {
-			u32 bestCandidateLeftover = 0xfffffff;
-			THeap* bestCandidate      = nullptr;
-			u8* uVar3                 = param_1->unk8;
-			u8* in_r11;
-			for (THeap* it = param_1->unk14;; it = it->mNext) {
+			bestCandidateLeftover = 0xfffffff;
+			bestCandidate         = nullptr;
+			uVar3                 = param_1->unk8;
+
+			for (it = param_1->unk14;; it = it->mNext) {
 				if (!it)
 					break;
 
@@ -166,12 +173,11 @@ namespace Kernel {
 		unk14 = 0;
 		unk18 = param_1;
 
-		THeap* it = param_1->unk14;
 		if (param_1->unk14 == 0) {
 			param_1->unk14 = this;
 			mNext          = 0;
 		} else {
-			for (;; it = it->mNext) {
+			for (it = param_1->unk14;; it = it->mNext) {
 				if (it->mNext != nullptr)
 					continue;
 
@@ -196,32 +202,32 @@ namespace Kernel {
 
 	BOOL THeap::free()
 	{
+		THeap* it;
+
 		if (unk8 == 0)
 			return false;
 
-		for (THeap* it = unk14; it != nullptr;) {
+		for (it = unk14; it != nullptr;) {
 			THeap* next = it->mNext;
 			it->free();
 			it = next;
 		}
 		unk14 = nullptr;
 
-		for (THeap* pTVar2 = unk24; pTVar2 != nullptr;) {
-			THeap* next = pTVar2->unk28;
-			pTVar2->free();
-			pTVar2 = next;
+		for (it = unk24; it != nullptr;) {
+			THeap* next = it->unk28;
+			it->free();
+			it = next;
 		}
 		unk24 = nullptr;
 
 		if (unk18 != 0) {
-			THeap* it = unk18->unk14;
-
 			if (unk18->unk14 == this) {
 				unk18->unk14 = mNext;
 				if (mNext == nullptr)
 					unk18->unkC = 0;
 			} else {
-				for (;; it = it->mNext) {
+				for (it = unk18->unk14;; it = it->mNext) {
 					if (it == nullptr) {
 						unk8 = 0;
 						return false;
@@ -242,11 +248,10 @@ namespace Kernel {
 		}
 
 		if (unk20 != 0) {
-			THeap* it = unk20->unk24;
 			if (unk20->unk24 == this) {
 				unk20->unk24 = unk28;
 			} else {
-				for (;; it = it->unk28) {
+				for (it = unk20->unk24;; it = it->unk28) {
 					if (it == nullptr)
 						return false;
 
@@ -299,11 +304,13 @@ namespace Kernel {
 		if (mStart == 0)
 			return 0;
 
-		u8* result = mEnd;
-		if (mEnd + alignedSize <= mStart + mSize)
+		u8* result = nullptr;
+		if (mEnd + alignedSize <= mStart + mSize) {
+			result = mEnd;
 			mEnd += alignedSize;
-		else
-			return 0;
+		} else {
+			return result;
+		}
 
 		unkC++;
 		unk10 = result;
