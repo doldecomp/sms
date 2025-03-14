@@ -58,7 +58,7 @@ namespace Dvd {
 	void extendPath(char*, char*);
 	bool checkFile(char*);
 	bool loadFile(char*, void*);
-	bool loadFileDvdT(char*, void*);
+	u32 loadFileDvdT(char*, void*);
 	void setNumOfMsgs(s32);
 	void setDvdBufSize(u32);
 	void setRootPath(char*);
