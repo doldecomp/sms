@@ -11,8 +11,7 @@ namespace Kernel {
 	struct TPortArgs;
 }
 
-class TrackMgr {
-public:
+namespace TrackMgr {
 	void init(int, int);
 	void reset();
 	void initRegistTrack();
@@ -29,18 +28,18 @@ public:
 	int getRemainFreeTracks();
 	void registerTrackCallback(u16 (*)(TTrack*, u16));
 
-	static TTrack* sTrackList;
-	static TTrack* sTrackPool;
-	static void* sSeqOuter;
-	static TTrack* sRootTrack;
-	static void* sFreeSeqpQueue;
-	static u32 sRootSeqCount;
-	static u32 sTrackCount;
-	static void* sTLists;
-	static u32 seqRemain;
-	static void* getP;
-	static void* backP;
-};
+	extern TTrack* sTrackList;
+	extern TTrack* sTrackPool;
+	extern void* sSeqOuter;
+	extern TTrack* sRootTrack;
+	extern void* sFreeSeqpQueue;
+	extern u32 sRootSeqCount;
+	extern u32 sTrackCount;
+	extern void* sTLists;
+	extern u32 seqRemain;
+	extern void* getP;
+	extern void* backP;
+}; // namespace TrackMgr
 
 } // namespace JASystem
 

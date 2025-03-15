@@ -6,6 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASSeqCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackInterrupt.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackPort.hpp>
+#include <types.h>
 
 namespace JASystem {
 
@@ -24,6 +25,10 @@ public:
 		void init();
 		void endProcess();
 		TChannel* getChannel(int);
+
+		void releaseChannel(int i) { unk0[i] = nullptr; }
+
+		u16 getUnk20(u8 i) { return unk20[i]; }
 
 	public:
 		/* 0x00 */ TChannel* unk0[8];
@@ -135,11 +140,11 @@ public:
 	void reset();
 	void initTrack(void* data, u32 size, TTrack* parent);
 	void initTimed();
-	void openTrack(u8 param);
-	void closeTrack();
-	void startTrack(TTrack* parent, u8 param1, u8 param2, u32 param3);
-	void startSeq();
-	void stopSeq();
+	TTrack* openTrack(u8 param);
+	bool closeTrack();
+	int startTrack(TTrack* parent, u8 param1, u8 param2, u32 param3);
+	bool startSeq();
+	bool stopSeq();
 	void stopSeqMain();
 	void allNoteOff();
 	void setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode);
@@ -178,15 +183,15 @@ public:
 	void checkExportApp(u32 port);
 	void checkImportApp(u32 port);
 	int loadTbl(u32 param1, u32 param2, u32 param3);
-	void readReg32(u8 reg);
-	void exchangeRegisterValue(u8 reg);
-	void readRegDirect(u8 reg);
+	u32 readReg32(u8 reg);
+	u32 exchangeRegisterValue(u8 reg);
+	u16 readRegDirect(u8 reg);
 	void writeRegDirect(u8 reg, u16 value);
 	void writeTimeParam(u8 param);
 	void writeRegParam(u8 param);
-	void seqTimeToDspTime(s32 time, u8 param);
+	int seqTimeToDspTime(s32 time, u8 param);
 	void panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
-	void rootCallback(void* param);
+	static s32 rootCallback(void* param);
 	void updateSyncSw(u8 param);
 	void incSelfOsc();
 	void oscSetupSimple(u8 param);
@@ -218,7 +223,7 @@ public:
 	/* 0x160 */ TimedParam_ mTimedParam;
 	/* 0x280 */ TRegisterParam mRegisterParam;
 	/* 0x2B0 */ char unk2B0[0x2C0 - 0x2B0];
-	/* 0x2C0 */ u32 unk2C0;
+	/* 0x2C0 */ TTrack* unk2C0;
 	/* 0x2C4 */ TTrack* unk2C4[16];
 	/* 0x304 */ TOuterParam* mOuterParam;
 	/* 0x308 */ u32 unk308;
@@ -226,8 +231,7 @@ public:
 	/* 0x33C */ TOscillator unk33C[2];
 	/* 0x37C */ s16 unk37C[12];
 	/* 0x394 */ s16 unk394[6];
-	/* 0x3A0 */ u32 unk3A0;
-	/* 0x3A4 */ u32 unk3A4;
+	/* 0x3A0 */ s32 unk3A0[2];
 	/* 0x3A8 */ u32 unk3A8;
 	/* 0x3AC */ f32 unk3AC;
 	/* 0x3B0 */ f32 unk3B0;
