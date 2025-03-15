@@ -34,7 +34,32 @@ public:
 		/* 0x36 */ u8 mBeforeTieMode;
 	};
 
-	struct TOuterParam;
+	class TOuterParam {
+	public:
+		TOuterParam();
+		void initExtBuffer();
+		void setParam(u8, f32);
+		void onSwitch(u16);
+		bool checkOuterSwitch(u16);
+		s16 getIntFirFilter(u8);
+		u16 getOuterUpdate();
+		void setOuterUpdate(u16);
+		void setOuterSwitch(u16);
+		void setFirFilter(s16*);
+		u16 getSwitch();
+		void setIntFirFilter(s16, u8);
+
+	public:
+		/* 0x00 */ u16 unk0;
+		/* 0x02 */ u16 unk2;
+		/* 0x04 */ f32 unk4;
+		/* 0x08 */ f32 unk8;
+		/* 0x0C */ f32 unkC;
+		/* 0x10 */ f32 unk10;
+		/* 0x14 */ f32 unk14;
+		/* 0x18 */ f32 unk18;
+		/* 0x1C */ s16 unk1C[8];
+	};
 
 	struct MoveParam_ {
 #ifdef __MWERKS__
@@ -194,7 +219,7 @@ public:
 	/* 0x280 */ TRegisterParam mRegisterParam;
 	/* 0x2B0 */ char unk2B0[0x2C0 - 0x2B0];
 	/* 0x2C0 */ u32 unk2C0;
-	/* 0x2C4 */ u32 unk2C4[16];
+	/* 0x2C4 */ TTrack* unk2C4[16];
 	/* 0x304 */ TOuterParam* mOuterParam;
 	/* 0x308 */ u32 unk308;
 	/* 0x30C */ TOscillator::Osc_ unk30C[2];

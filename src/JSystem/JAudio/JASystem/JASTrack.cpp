@@ -38,7 +38,7 @@ TTrack::TTrack()
 	unk3CD = 0;
 
 	for (int i = 0; i < 16; ++i)
-		unk2C4[i] = 0;
+		unk2C4[i] = nullptr;
 
 	for (int i = 0; i < 3; ++i)
 		unk3C8[i] = unk3C5[i] = 0;
@@ -240,11 +240,35 @@ void TTrack::oscSetupSimple(u8 param_1)
 
 void TTrack::updateTrackAll() { }
 
+#pragma dont_inline on
 void TTrack::updateTrack(u32 param) { }
+#pragma dont_inline off
 
 void TTrack::updateTempo() { }
 
-void TTrack::updateSeq(u32 param, bool flag) { }
+void TTrack::updateSeq(u32 param_1, bool param_2)
+{
+	u32 uVar3 = param_1 | unk3B4;
+	if (mOuterParam) {
+		uVar3 |= mOuterParam->getOuterUpdate();
+		mOuterParam->setOuterUpdate(0);
+	}
+
+	unk3B4 = 0;
+	if (uVar3 != 0) {
+		updateTrack(uVar3);
+	}
+
+	for (int i = 0; i < 16; ++i) {
+		TTrack* track = unk2C4[i];
+		if (track && track->unk3C4) {
+			if (param_2)
+				track->updateSeq(uVar3, param_2);
+			else
+				track->unk3B4 |= uVar3;
+		}
+	}
+}
 
 void TTrack::incSelfOsc() { }
 
