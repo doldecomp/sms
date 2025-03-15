@@ -1,4 +1,6 @@
 #include <JSystem/JAudio/JASystem/JASPlayer_impl.hpp>
+#include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
+#include <types.h>
 
 namespace JASystem {
 
@@ -68,9 +70,10 @@ namespace Player {
 		{ 0x79c9, 0x0090, 0x03e1, 0x032c }, { 0x7aac, 0x007b, 0x0353, 0x02b8 },
 		{ 0x7b8f, 0x0067, 0x02c5, 0x0244 }, { 0x7c72, 0x0052, 0x0237, 0x01d0 },
 		{ 0x7d55, 0x003d, 0x01a9, 0x015c }, { 0x7e38, 0x0029, 0x011b, 0x00e8 },
-		{ 0x7f1b, 0x0014, 0x008d, 0x0074 }, { 0x7fff, 0x0000, 0x0000, 0x0000 }
+		{ 0x7f1b, 0x0014, 0x008d, 0x0074 }, { 0x7fff, 0x0000, 0x0000, 0x0000 },
 	};
-	f32 s_key_table[64] = {
+
+	static f32 s_key_table[64] = {
 		1.0,       1.00091,  1.001821, 1.002733, 1.0036449, 1.004559, 1.005473,
 		1.0063879, 1.007304, 1.00822,  1.009138, 1.010056,  1.010975, 1.011896,
 		1.012816,  1.013738, 1.014661, 1.015584, 1.016508,  1.017433, 1.0183589,
@@ -82,40 +85,64 @@ namespace Player {
 		1.05226,   1.053217, 1.054176, 1.055135, 1.056095,  1.057056, 1.058018,
 		1.0589809,
 	};
-	f32 sAdsrDef[6] = { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
-	// Can contain f32 and f32*? Ghidra contains 0x803abd80 for fourth arg...
-	// Which is a reference to sRelTable.
-	f32 sEnvelopeDef[6]
-	    = { 0.0f, 1.0f, 0.0f, (f32)(u32)&sRelTable, 1.0f, 0.0f };
-	u32 sVibratoDef[6] = { 0x01000000,
-		                   0x3f000000 /* 0.5f */,
-		                   (u32)&sVibTable,
-		                   (u32)&sVibTable,
-		                   0x0,
-		                   0x3f800000 /* 1.0f*/ };
-	u32 sTremoroDef[6] = { 0x0,
-		                   0x3f000000 /* 0.5f */,
-		                   (u32)&sTreTable,
-		                   (u32)&sTreTable,
-		                   0x0,
-		                   0x3f800000 /* 1.0f */ };
-	u16 sAdsTable[12]  = { 0x0000, 0x0000, 0x7fff, 0x0000, 0x0000, 0x7fff,
-		                   0x0000, 0x0000, 0x0000, 0x000e, 0x0000, 0x0000 };
-	u16 sRelTable[6]   = { 0x0, 0xa, 0x0, 0xf, 0x1, 0x0 };
-	u32 sVibTable[9]
-	    = { 0x00000000, 0x00000000, 0x000c7fff, 0x0000000c, 0x00000000,
-		    0x000cc000, 0x0000000c, 0x0000000d, 0x00000001 };
-	u32 sTreTable[9]
-	    = { 0x00000000, 0x7fff0000, 0x00140000, 0x00000014, 0x00000000,
-		    0x00140000, 0x00000014, 0x7fff000d, 0x00000001 };
-	u32 sV0 = 0x1000;
-	u32 sV1 = 0x5555;
 
-	f32 pitchToCent(f32 param1, f32 param2) { return 0.0f; }
+	// clang-format off
+	TOscillator::Osc_ sAdsrDef = { 0, 1.0f, nullptr, nullptr, 1.0f, 0.0f };
+	TOscillator::Osc_ sEnvelopeDef = { 0, 1.0f, nullptr, sRelTable, 1.0f, 0.0f };
+	TOscillator::Osc_ sVibratoDef = { 1, 0.5f, sVibTable, sVibTable, 0.0f, 1.0f };
+	TOscillator::Osc_ sTremoroDef = { 0, 0.5f, sTreTable, sTreTable, 0.0f, 1.0f };
+	// clang-format on
 
-	u16 extend8to16(u8 param) { return 0; }
+	s16 sAdsTable[12] = {
+		0x0000, 0x0000, 0x7fff, 0x0000, 0x0000, 0x7fff,
+		0x0000, 0x0000, 0x0000, 0x000e, 0x0000, 0x0000,
+	};
+	s16 sRelTable[6] = {
+		0x0, 0xa, 0x0, 0xf, 0x1, 0x0,
+	};
+	s16 sVibTable[18] = {
+		0x0000, 0x0000, 0x0000, 0x0000, 0x000C, 0x7FFF, 0x0000, 0x000C, 0x0000,
+		0x0000, 0x000C, 0xC000, 0x0000, 0x000C, 0x0000, 0x000D, 0x0000, 0x0001,
+	};
+	s16 sTreTable[18] = {
+		0x0000, 0x0000, 0x7fff, 0x0000, 0x0014, 0x0000, 0x0000, 0x0014, 0x8001,
+		0x0000, 0x0014, 0x0000, 0x0000, 0x0014, 0x7fff, 0x000d, 0x0000, 0x0001,
+	};
 
-	int getRandomS32() { return 0; }
+	u16 extend8to16(u8 param)
+	{
+		if (param & 0x80)
+			return param + 0xFF00;
+		return param;
+	}
+
+	f32 pitchToCent(f32 param1, f32 param2)
+	{
+		f32 var1 = param1 * 4.0f * param2;
+		s16 var3 = var1;
+		f32 var2 = var1 - var3;
+		if (var1 < 0.0f && var2 != 0.0f) {
+			var2 += 1.0f;
+			var3 -= 1;
+		}
+		if (var2 >= 1.0f) {
+			var2 -= 1.0f;
+			var3 += 1;
+		}
+		u16 casted = (u16)(var2 * 64.0f);
+		return s_key_table[casted] * Driver::C5BASE_PITCHTABLE[var3 + 0x3c];
+	}
+
+	static s32 sV0 = 0x1000;
+	static s32 sV1 = 0x5555;
+
+	int getRandomS32()
+	{
+		s32 result = sV1 * -0x6789abce + 1 + (sV0 * 0x13579bde >> 4);
+		sV0        = sV1;
+		sV1        = result;
+		return result;
+	}
 
 } // namespace Player
 
