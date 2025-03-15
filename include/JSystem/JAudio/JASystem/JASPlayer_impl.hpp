@@ -2,6 +2,7 @@
 #define JASPLAYER_IMPL_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASOscillator.hpp>
 
 namespace JASystem {
 
@@ -13,19 +14,17 @@ struct IIRCoefficients {
 };
 
 namespace Player {
-	// These are most likely all wrong to some degree.
-	extern f32 sEnvelopeDef[];
-	extern u16 sRelTable[];
-	extern u32 sVibratoDef[];
-	extern u32 sVibTable[];
-	extern f32 s_key_table[];
-	extern u32 sTremoroDef[];
-	extern u32 sTreTable[];
-	extern f32 sAdsrDef[];
-	extern u16 sAdsTable[];
+
+	extern TOscillator::Osc_ sEnvelopeDef;
+	extern s16 sRelTable[];
+	extern TOscillator::Osc_ sVibratoDef;
+	extern s16 sVibTable[];
+	extern TOscillator::Osc_ sTremoroDef;
+	extern s16 sTreTable[];
+	extern TOscillator::Osc_ sAdsrDef;
+	extern s16 sAdsTable[];
+
 	extern IIRCoefficients CUTOFF_TO_IIR_TABLE[];
-	extern u32 sV0;
-	extern u32 sV1;
 
 	f32 pitchToCent(f32, f32);
 	u16 extend8to16(u8);
