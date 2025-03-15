@@ -472,7 +472,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASOuterParam.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASRegisterParam.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqCtrl.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASSeqCtrl.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrack.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
