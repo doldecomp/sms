@@ -1,4 +1,5 @@
 #include <JSystem/JAudio/JAInterface/JAISystemInterface.hpp>
+#include <types.h>
 
 JASystem::Kernel::TPortCmd JAISystemInterface::systemPortCmd;
 
