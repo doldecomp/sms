@@ -18,8 +18,33 @@ public:
 	u32 read24();
 	u32 read32();
 
+	// Inlines taken from TWW, probably fabricated
+
 	u8 getByte(u32 offset) const { return mRawFilePtr[offset]; }
 	u8 readByte() { return *mCurrentFilePtr++; }
+
+	u8* getBase() { return mRawFilePtr; }
+
+	void call(u32 offset)
+	{
+		mLoopStartPositions[mLoopIndex++] = mCurrentFilePtr;
+		mCurrentFilePtr                   = mRawFilePtr + offset;
+	}
+	bool ret()
+	{
+		mCurrentFilePtr = mLoopStartPositions[--mLoopIndex];
+		return true;
+	}
+	void jump(u32 offset) { mCurrentFilePtr = mRawFilePtr + offset; }
+	void loopS(u32 timer)
+	{
+		mLoopStartPositions[mLoopIndex] = mCurrentFilePtr;
+		mLoopTimers[mLoopIndex++]       = timer;
+	}
+
+	void wait(s32 timer) { mWaitTimer = timer; }
+
+	void clrIntr() { mPreviousFilePtr = 0; }
 
 public:
 	/* 0x00 */ u8* mRawFilePtr;

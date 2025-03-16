@@ -15,6 +15,8 @@ public:
 	u8 getBankNumber() const;
 	u8 getProgramNumber() const;
 
+	void setPanPower(int i, u16 power) { mPanPower[i] = power; }
+
 public:
 	/* 0x00 */ u16 unk0[6];
 	/* 0x0C */ u16 unkC;
