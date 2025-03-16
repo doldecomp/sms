@@ -306,7 +306,9 @@ void TTrack::incSelfOsc()
 			unk2C4[i]->incSelfOsc();
 }
 
-void TTrack::mainProc() { }
+#pragma dont_inline on
+s8 TTrack::mainProc() { }
+#pragma dont_inline off
 
 int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
 {
@@ -583,38 +585,201 @@ void TTrack::writeRegDirect(u8 reg, u16 value) { }
 
 void TTrack::setTrackExtPanPower(f32 power) { }
 
-void TTrack::writePortAppDirect(u32 port, u16 value) { }
+bool TTrack::writePortAppDirect(u32 port, u16 value)
+{
+	mTrackPort.mImportFlag[port] = 1;
+	mTrackPort.mValue[port]      = value;
+	if (port <= 1)
+		mIntrMgr.request(port == 0 ? 3 : 4);
+	return true;
+}
 
-void TTrack::readPortAppDirect(u32 port, u16* value) { }
+bool TTrack::readPortAppDirect(u32 port, u16* value)
+{
+	mTrackPort.mExportFlag[port] = 0;
+	*value                       = mTrackPort.mValue[port];
+	return true;
+}
 
-void TTrack::setExtFirFilterD(s16* filter) { }
+void TTrack::setExtFirFilterD(s16* filter)
+{
+	if (mOuterParam)
+		mOuterParam->setFirFilter(filter);
+}
 
-void TTrack::routeTrack(u32 route) { }
+TTrack* TTrack::routeTrack(u32 route)
+{
+	TTrack* found  = this;
+	u32 iterations = route >> 28;
+	for (int i = 0; i < iterations; ++i, route >>= 4) {
+		found = found->unk2C4[route & 0xF];
 
-void TTrack::writePortApp(u32 port, u16 value) { }
+		if (found)
+			continue;
 
-void TTrack::readPortApp(u32 port, u16* value) { }
+		found = nullptr;
+		break;
+	}
+	return found;
+}
+
+bool TTrack::writePortApp(u32 port, u16 value)
+{
+	TTrack* found = routeTrack(port);
+
+	if (!found)
+		return false;
+
+	u32 realPort = (port >> 16) & 0xFF;
+
+	found->mTrackPort.mImportFlag[realPort] = 1;
+	found->mTrackPort.mValue[realPort]      = value;
+
+	if (realPort <= 1)
+		found->mIntrMgr.request(realPort == 0 ? 3 : 4);
+	return true;
+}
+
+bool TTrack::readPortApp(u32 port, u16* value)
+{
+	TTrack* found = routeTrack(port);
+
+	if (!found)
+		return false;
+
+	u32 realPort = (port >> 16) & 0xFF;
+
+	found->mTrackPort.mExportFlag[realPort] = 0;
+	*value = found->mTrackPort.mValue[realPort];
+
+	return true;
+}
 
 void TTrack::checkExportApp(u32 port) { }
 
 void TTrack::checkImportApp(u32 port) { }
 
-void TTrack::pauseTrack(u8 flag) { }
+void TTrack::pauseTrack(u8 flag)
+{
+	unk3CD = 1;
+	if (unk3C1 & 0x1)
+		unk3B4 |= 1;
 
-void TTrack::unPauseTrack(u8 flag) { }
+	if (unk3C1 & 0x4) {
+		for (u8 i = 0; i < 8; ++i) {
+			TChannel* chan = mNoteMgr.getChannel(i);
+			if (chan) {
+				chan->stop(10);
+				mNoteMgr.releaseChannel(i);
+			}
+		}
+	}
 
-void TTrack::pauseTrackAll() { }
+	if (unk3C1 & 8) {
+		for (u8 i = 0; i < 8; ++i) {
+			TChannel* chan = mNoteMgr.getChannel(i);
+			if (chan)
+				chan->setPauseFlag(1);
+		}
+	}
 
-void TTrack::unPauseTrackAll() { }
+	mIntrMgr.request(0);
 
-void TTrack::reset() { }
+	if (flag == 1) {
+		for (u32 i = 0; i < 16; ++i) {
+			if (unk2C4[i] && unk2C4[i]->unk3C4)
+				unk2C4[i]->pauseTrack(1);
+		}
+	}
+}
 
-void TTrack::panCalc(f32 param1, f32 param2, f32 param3, u8 param4) { }
+void TTrack::unPauseTrack(u8 flag)
+{
+	unk3CD = 0;
+	unk3B4 |= 1;
 
-s32 TTrack::rootCallback(void* param) { }
+	for (u8 i = 0; i < 8; ++i) {
+		TChannel* chan = mNoteMgr.getChannel(i);
+		if (chan)
+			chan->setPauseFlag(0);
+	}
+
+	mIntrMgr.request(1);
+
+	if (flag == 1) {
+		for (u8 i = 0; i < 16; ++i)
+			if (unk2C4[i] && unk2C4[i]->unk3C4)
+				unk2C4[i]->unPauseTrack(1);
+	}
+}
+
+void TTrack::pauseTrackAll() { pauseTrack(1); }
+
+void TTrack::unPauseTrackAll() { unPauseTrack(1); }
+
+void TTrack::reset()
+{
+	unk3C4 = 0;
+	unk3C2 = 0;
+}
+
+f32 TTrack::panCalc(f32 param1, f32 param2, f32 param3, u8 param4)
+{
+	f32 result;
+	switch (param4) {
+	case 0:
+		return param1;
+	case 1:
+		return param2;
+	case 2:
+		result = param1 * (1.0f - param3) + param2 * param3;
+	}
+	return result;
+}
+
+s32 TTrack::rootCallback(void* param)
+{
+	TTrack* self = static_cast<TTrack*>(param);
+	if (self && self->unk3C4 != 0) {
+		if (self->unk3C4 == 3) {
+			self->updateSeq(0, true);
+			self->closeTrack();
+			TrackMgr::deAllocRoot(self);
+			return -1;
+		} else {
+			self->unk3AC += self->unk3B0;
+
+			// TODO: this if is completely wrong, control flow is crazy here,
+			// probably an inline?
+			if (self->unk3AC > 1.0f) {
+				self->updateSeq(0, true);
+				while (self->unk3AC >= 1.0f) {
+					self->unk3AC -= 1.0f;
+					if ((int)self->mainProc() != -1)
+						continue;
+
+					self->updateSeq(0, true);
+					self->closeTrack();
+					TrackMgr::deAllocRoot(self);
+					return -1;
+				}
+			}
+
+			self->incSelfOsc();
+		}
+	} else {
+		return -1;
+	}
+
+	return 0;
+}
 
 void TTrack::updateSyncSw(u8 param) { }
 
-void TTrack::registerTrackCallback(u16 (*callback)(TTrack*, u16)) { }
+bool TTrack::registerTrackCallback(u16 (*callback)(TTrack*, u16))
+{
+	sCallBackFunc = callback;
+	return true;
+}
 
 } // namespace JASystem

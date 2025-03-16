@@ -152,7 +152,7 @@ public:
 	void updateTrack(u32 param);
 	void updateTrackAll();
 	void updateTempo();
-	void mainProc();
+	s8 mainProc();
 	int noteOn(u8 note, s32 velocity, s32 length, s32 delay);
 	void noteOff(u8 note, u16 release);
 	int gateOn(u8 note, s32 velocity, s32 length, s32 delay);
@@ -175,11 +175,11 @@ public:
 	void setPanSwitchParent(u8 param1, u8 param2);
 	void setTrackExtPanPower(f32 power);
 	void setExtFirFilterD(s16* filter);
-	void routeTrack(u32 route);
-	void writePortApp(u32 port, u16 value);
-	void readPortApp(u32 port, u16* value);
-	void writePortAppDirect(u32 port, u16 value);
-	void readPortAppDirect(u32 port, u16* value);
+	TTrack* routeTrack(u32 route);
+	bool writePortApp(u32 port, u16 value);
+	bool readPortApp(u32 port, u16* value);
+	bool writePortAppDirect(u32 port, u16 value);
+	bool readPortAppDirect(u32 port, u16* value);
 	void checkExportApp(u32 port);
 	void checkImportApp(u32 port);
 	int loadTbl(u32 param1, u32 param2, u32 param3);
@@ -190,7 +190,7 @@ public:
 	void writeTimeParam(u8 param);
 	void writeRegParam(u8 param);
 	int seqTimeToDspTime(s32 time, u8 param);
-	void panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
+	f32 panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
 	static s32 rootCallback(void* param);
 	void updateSyncSw(u8 param);
 	void incSelfOsc();
@@ -208,7 +208,7 @@ public:
 	f32 getDolby() const;
 	u8 getNoteStatus(u8 note);
 
-	static void registerTrackCallback(u16 (*callback)(TTrack*, u16));
+	static bool registerTrackCallback(u16 (*callback)(TTrack*, u16));
 	static TSeqParser* sParser;
 	static u8 sUpdateSyncMode;
 	static u16 (*sCallBackFunc)(TTrack*, u16);
