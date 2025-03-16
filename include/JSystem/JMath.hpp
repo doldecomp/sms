@@ -35,6 +35,17 @@ private:
 	u32 value;
 };
 
+class TRandom_enough_ {
+public:
+	TRandom_enough_(u32 seed) { setSeed(seed); }
+
+	void setSeed(u32);
+	u32 get();
+
+private:
+	char unk0[0x88];
+};
+
 } // namespace JMath
 
 void JMANewSinTable(u8);

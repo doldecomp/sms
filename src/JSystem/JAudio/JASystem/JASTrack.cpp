@@ -6,14 +6,22 @@
 #include <JSystem/JAudio/JASystem/JASCallback.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
+#include <JSystem/JAudio/JASystem/JASSeqParser.hpp>
+#include <JSystem/JMath.hpp>
 #include <dolphin/os.h>
 
 namespace JASystem {
 
-TSeqParser* TTrack::sParser                = nullptr;
+namespace Player {
+	static JMath::TRandom_enough_ oRandom(0);
+}
+
+TSeqParser TTrack::sParser;
+
 u8 TTrack::sUpdateSyncMode                 = 0;
 u16 (*TTrack::sCallBackFunc)(TTrack*, u16) = nullptr;
-u32 TTrack::sOscTable                      = 0;
+
+u8 TTrack::sOscTable[5] = { 1, 2, 8, 4, 16 };
 
 TTrack::TTrack()
     : unk2C0(0)
@@ -52,15 +60,15 @@ TTrack::TTrack()
 	for (int i = 0; i < 6; ++i)
 		unk394[i] = Player::sRelTable[i];
 
-	unk3A0[0] = 0xf;
-	unk3A0[1] = 0xf;
+	for (int i = 0; i < 2; ++i)
+		unk3A0[i] = 0xf;
 
 	mChannelUpdater.init();
 
 	Calc::bzero(&mTimedParam, sizeof(mTimedParam));
 
-	unk33C[0].setOsc(&unk30C[0]);
-	unk33C[1].setOsc(&unk30C[1]);
+	for (int i = 0; i < 2; ++i)
+		unk33C[i].setOsc(&unk30C[i]);
 }
 
 void TTrack::setInterrupt(u16 interrupt) { mIntrMgr.request(interrupt); }
@@ -650,11 +658,244 @@ int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
 	return res;
 }
 
-void TTrack::writeTimeParam(u8 param) { }
+void TTrack::writeTimeParam(u8 param)
+{
 
-void TTrack::writeRegParam(u8 param) { }
+	u8 bVar1 = mSeqCtrl.readByte();
 
-void TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode) { }
+	s16 r29;
+	switch (param & 0xC) {
+	case 0:
+		r29 = readRegDirect(mSeqCtrl.readByte());
+		break;
+	case 4:
+		r29 = mSeqCtrl.readByte();
+		break;
+	case 8: {
+		u16 byte = mSeqCtrl.readByte();
+		if (byte & 0x80)
+			r29 = byte << 8;
+		else
+			r29 = byte << 8 | byte << 1;
+		break;
+	}
+	case 0xC:
+		r29 = mSeqCtrl.read16();
+		break;
+	}
+
+	s32 iVar7 = 0;
+	switch (param & 3) {
+	case 0:
+		iVar7 = -1;
+		break;
+	case 1:
+		iVar7 = readRegDirect(mSeqCtrl.readByte());
+		break;
+	case 2:
+		iVar7 = mSeqCtrl.readByte();
+		break;
+	case 3:
+		iVar7 = mSeqCtrl.read16();
+		break;
+	}
+
+	MoveParam_* moveParam   = &mTimedParam.mMoveParams[bVar1];
+	moveParam->mTargetValue = r29 / 32768.0f;
+	if (iVar7 <= 0) {
+		moveParam->mCurrentValue = moveParam->mTargetValue;
+		moveParam->mMoveAmount   = 0.0f;
+		moveParam->mMoveTime     = 1.0f;
+	} else {
+		moveParam->mMoveAmount
+		    = (moveParam->mTargetValue - moveParam->mCurrentValue) / iVar7;
+		moveParam->mMoveTime = iVar7;
+	}
+}
+
+// TODO: This is pure pain
+void TTrack::writeRegParam(u8 param)
+{
+
+	u8 bVar9 = param & 0xC;
+	u8 bVar8 = param & 0x3;
+
+	u16 r26;
+
+	if ((param & 0xF) == 0xB) {
+		bVar9 = 0;
+		bVar8 = 0xB;
+	}
+
+	if ((param & 0xF) == 0xA) {
+		bVar8 = 10;
+		param = mSeqCtrl.readByte();
+		bVar9 = param & 0xC;
+		r26   = (param >> 4) + 4;
+	}
+
+	if ((param & 0xF) == 0x9) {
+		bVar8 = mSeqCtrl.readByte();
+		bVar9 = bVar8 & 0xC;
+		bVar8 &= 0xF0;
+		if (bVar9 == 8)
+			bVar9 = 0x10;
+	}
+
+	u8 bVar1 = mSeqCtrl.readByte();
+	u32 r25;
+
+	if (bVar8 == 10)
+		r25 = readReg32(mSeqCtrl.readByte());
+
+	s32 r24;
+
+	switch (bVar9) {
+	case 0:
+		r24 = readRegDirect(mSeqCtrl.readByte());
+		break;
+	case 4:
+		r24 = mSeqCtrl.readByte();
+		break;
+	case 8: {
+		u16 byte = mSeqCtrl.readByte();
+		if (byte & 0x80)
+			r24 = byte << 8;
+		else
+			r24 = byte << 8 | byte << 1;
+		break;
+	}
+	case 0xC:
+		r24 = mSeqCtrl.read16();
+		break;
+	case 0x10:
+		r24 = 0xffff;
+		break;
+	}
+
+	s32 uVar5 = readRegDirect(bVar1);
+
+	switch (bVar8) {
+	case 0x1:
+		if (bVar9 == 4)
+			r24 = Player::extend8to16(r24);
+		r24 = uVar5 + r24;
+		break;
+	case 0x2:
+		writeRegDirect(4, (uVar5 * r24) >> 0x10);
+		writeRegDirect(5, uVar5 * r24);
+		break;
+	case 0x3:
+		mRegisterParam.unk0[3] = uVar5 - r24;
+		break;
+	case 0xA:
+		r25 = loadTbl(r25, r24, r26);
+		r24 = r25;
+		break;
+	case 0x10:
+		if (bVar9 == 4)
+			r24 = Player::extend8to16(r24);
+		if (r24 < 0)
+			r24 = uVar5 >> -r24;
+		else
+			r24 = uVar5 << r24;
+		break;
+	case 0x20:
+		if (bVar9 == 4)
+			r24 = Player::extend8to16(r24);
+		if (r24 < 0)
+			r24 = uVar5 >> -r24;
+		else
+			r24 = uVar5 << r24;
+		break;
+	case 0x30:
+		r24 = uVar5 & r24;
+		break;
+	case 0x40:
+		r24 = uVar5 | r24;
+		break;
+	case 0x50:
+		r24 = uVar5 ^ r24;
+		break;
+	case 0x60:
+		r24 = -uVar5;
+		break;
+	case 0x90:
+		r25 = Player::getRandomS32();
+		r24 = r25 - (r25 / r24) * r24;
+		break;
+	}
+
+	u32 uVar10 = bVar1;
+	switch (uVar10) {
+	case 0x1F:
+		uVar5 = r24;
+		if (uVar10 < 3) {
+			uVar5 = Player::extend8to16(r24);
+			r24 &= 0xff;
+		}
+		break;
+	case 0x21:
+		r24    = (mRegisterParam.getBankNumber() & 0xff) << 8 | r24 & 0xff;
+		uVar10 = 6;
+		break;
+	case 0x20:
+		r24    = mRegisterParam.getProgramNumber() | (r24 << 8);
+		uVar10 = 6;
+		break;
+	case 0x2E:
+		uVar10 = 0xd;
+		r24    = mRegisterParam.unk1A & 0xff00 | r24 & 0xff;
+		break;
+	case 0x27:
+		uVar5 = r24;
+		if (uVar10 < 0x2C && uVar10 > 0x27)
+			mRegisterParam.mPanPower[uVar10 - 0x28] = r25;
+		break;
+	case 0x22:
+		writeRegDirect(0, r24 >> 8);
+		r24 &= 0xff;
+		uVar10 = 1;
+		uVar5  = r24;
+		break;
+	}
+
+	mRegisterParam.unk0[uVar10] = r24;
+	mRegisterParam.unk0[3]      = uVar5;
+
+	if (uVar10 == 6) {
+		if (unk3A0[0] != 0xE)
+			unk3A0[0] = 0xF;
+		if (unk3A0[1] != 0xE)
+			unk3A0[1] = 0xF;
+	}
+
+	if (uVar10 == 7)
+		unk3B4 |= 2;
+
+	if (uVar10 == 0xD) {
+		mChannelUpdater.unk68 = mRegisterParam.unk1A | 0x10000;
+		mChannelUpdater.unk6C = 0;
+	}
+}
+
+int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
+{
+	int result = TrackMgr::allocNewRoot(this);
+	if (result == -1)
+		return -1;
+
+	unk308 = result;
+	unk3BC = 3;
+	initTrack(data, 0, nullptr);
+	mChannelUpdater.initAllocChannel(0);
+	unk3AC = 0.0f;
+	unk3B0 = 1.0f;
+	updateTrackAll();
+	unk3C4 = 2;
+
+	return result;
+}
 
 bool TTrack::startSeq()
 {
@@ -695,19 +936,22 @@ bool TTrack::stopSeq()
 	return true;
 }
 
-void TTrack::allNoteOff() { }
-
-bool TTrack::closeTrack()
+void TTrack::allNoteOff()
 {
-	if (!unk3C4)
-		return false;
-
 	if (!unk2C0)
 		for (u8 i = 0; i < 8; ++i)
 			noteOff(i, 10);
 	else
 		for (u8 i = 0; i < 8; ++i)
 			noteOff(i, 0);
+}
+
+bool TTrack::closeTrack()
+{
+	if (!unk3C4)
+		return false;
+
+	allNoteOff();
 
 	mNoteMgr.init();
 	unk3C4 = 0;

@@ -16,7 +16,7 @@ namespace TrackMgr {
 	void reset();
 	void initRegistTrack();
 	TTrack* getNewTrack();
-	TTrack* allocNewRoot(TTrack*);
+	int allocNewRoot(TTrack*);
 	void deAllocRoot(TTrack*);
 	void registTrack(u32, TTrack*);
 	void unRegistTrack(TTrack*);

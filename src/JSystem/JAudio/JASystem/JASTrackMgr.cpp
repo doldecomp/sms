@@ -22,7 +22,7 @@ void TrackMgr::initRegistTrack() { }
 
 TTrack* TrackMgr::getNewTrack() { return 0; }
 
-TTrack* TrackMgr::allocNewRoot(TTrack* track) { return 0; }
+int TrackMgr::allocNewRoot(TTrack* track) { return 0; }
 
 void TrackMgr::deAllocRoot(TTrack* track) { }
 
