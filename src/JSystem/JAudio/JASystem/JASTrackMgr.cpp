@@ -98,8 +98,8 @@ TTrack* TrackMgr::getNewTrack()
 u32 TrackMgr::allocNewRoot(TTrack* track)
 {
 	for (u8 i = 0; i < sRootSeqCount; ++i) {
-		if (!sRootTrack[i]) {
-			sRootTrack[i] = track;
+		if (!sRootTrack[(u8)i]) {
+			sRootTrack[(u8)i] = track;
 			return i;
 		}
 	}
@@ -109,8 +109,8 @@ u32 TrackMgr::allocNewRoot(TTrack* track)
 u32 TrackMgr::deAllocRoot(TTrack* track)
 {
 	for (u8 i = 0; i < sRootSeqCount; ++i) {
-		if (sRootTrack[i] == track) {
-			sRootTrack[i] = nullptr;
+		if (sRootTrack[(u8)i] == track) {
+			sRootTrack[(u8)i] = nullptr;
 			return i;
 		}
 	}

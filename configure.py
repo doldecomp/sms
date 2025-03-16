@@ -476,7 +476,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASSeqCtrl.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrack.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackPort.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
 
