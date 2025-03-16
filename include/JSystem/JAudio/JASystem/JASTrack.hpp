@@ -134,7 +134,7 @@ public:
 	};
 
 	TTrack();
-	~TTrack();
+	~TTrack() { }
 
 	void reset();
 	void initTrack(void* data, u32 size, TTrack* parent);

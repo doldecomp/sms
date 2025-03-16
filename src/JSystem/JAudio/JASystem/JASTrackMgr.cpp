@@ -1,47 +1,177 @@
-#include "JSystem/JAudio/JASystem/JASTrackMgr.hpp"
+#include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASTrack.hpp>
+#include <JSystem/JAudio/JASystem/JASCalc.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace JASystem {
 
-TTrack* TrackMgr::sTrackList   = 0;
-TTrack* TrackMgr::sTrackPool   = 0;
-void* TrackMgr::sSeqOuter      = 0;
-TTrack* TrackMgr::sRootTrack   = 0;
-void* TrackMgr::sFreeSeqpQueue = 0;
-u32 TrackMgr::sRootSeqCount    = 0;
-u32 TrackMgr::sTrackCount      = 0;
-void* TrackMgr::sTLists        = 0;
-u32 TrackMgr::seqRemain        = 0;
-void* TrackMgr::getP           = 0;
-void* TrackMgr::backP          = 0;
+struct FabricatedTrackListEntryStruct {
+	TTrack* unk0;
+	u32 unk4;
+};
 
-void TrackMgr::init(int param1, int param2) { }
+namespace TrackMgr {
+	static FabricatedTrackListEntryStruct sTrackList[32];
+}
 
-void TrackMgr::reset() { }
+TTrack* TrackMgr::sTrackPool             = 0;
+TTrack::TOuterParam* TrackMgr::sSeqOuter = 0;
+TTrack** TrackMgr::sRootTrack            = 0;
+TTrack** TrackMgr::sFreeSeqpQueue        = 0;
+s32 TrackMgr::sRootSeqCount              = 0;
+u32 TrackMgr::sTrackCount                = 0;
+u32 TrackMgr::sTLists                    = 0;
+u32 TrackMgr::seqRemain                  = 0;
+u32 TrackMgr::getP                       = 0;
+u32 TrackMgr::backP                      = 0;
 
-void TrackMgr::initRegistTrack() { }
+void TrackMgr::init(int param1, int param2)
+{
+	sTrackPool = new (JASDram, 0) TTrack[param1];
+	sSeqOuter  = new (JASDram, 0) TTrack::TOuterParam[param1];
 
-TTrack* TrackMgr::getNewTrack() { return 0; }
+	sFreeSeqpQueue = new (JASDram, 0) TTrack*[param1];
+	Calc::bzero(sFreeSeqpQueue, param2 * sizeof(TTrack*));
 
-int TrackMgr::allocNewRoot(TTrack* track) { return 0; }
+	sRootTrack = new (JASDram, 0) TTrack*[param2];
+	Calc::bzero(sRootTrack, param2 * sizeof(TTrack*));
 
-void TrackMgr::deAllocRoot(TTrack* track) { }
+	sTrackCount   = param1;
+	sRootSeqCount = param2;
+}
 
-void TrackMgr::registTrack(u32 param, TTrack* track) { }
+void* TrackMgr::handleToSeq(u32 idx)
+{
+	if (idx >= sRootSeqCount)
+		return nullptr;
 
-void TrackMgr::unRegistTrack(TTrack* track) { }
-
-void TrackMgr::backTrack(TTrack* track) { }
+	return sRootTrack[idx];
+}
 
 u32 TrackMgr::getTrackHandle(u32 param) { return 0; }
-
-TTrack* TrackMgr::handleToSeq(u32 param) { return 0; }
 
 void TrackMgr::setPause(Kernel::TPortArgs* args) { }
 
 void TrackMgr::clearPause(Kernel::TPortArgs* args) { }
 
-int TrackMgr::getRemainFreeTracks() { return 0; }
+void TrackMgr::reset()
+{
+	for (int i = 0; i < sTrackCount; ++i) {
+		TTrack* track = &sTrackPool[i];
+		track->reset();
+		sSeqOuter[i].initExtBuffer();
+		track->assignExtBuffer(&sSeqOuter[i]);
+		sFreeSeqpQueue[i] = track;
+	}
+	seqRemain = sTrackCount;
+	backP     = 0;
+	getP      = 0;
+	initRegistTrack();
+}
 
-void TrackMgr::registerTrackCallback(u16 (*callback)(TTrack*, u16)) { }
+int TrackMgr::getRemainFreeTracks() { return seqRemain; }
+
+void TrackMgr::initRegistTrack()
+{
+	sTLists = 0;
+	for (int i = 0; i < 0x20; ++i)
+		sTrackList[i].unk0 = nullptr;
+}
+
+TTrack* TrackMgr::getNewTrack()
+{
+	if (seqRemain == 0)
+		return nullptr;
+
+	TTrack* result = sFreeSeqpQueue[getP];
+	--seqRemain;
+	++getP;
+	if (getP == sTrackCount)
+		getP = 0;
+
+	result->unk3C4 = 2;
+	result->setInnerMemory(1);
+	return result;
+}
+
+u32 TrackMgr::allocNewRoot(TTrack* track)
+{
+	for (u8 i = 0; i < sRootSeqCount; ++i) {
+		if (!sRootTrack[i]) {
+			sRootTrack[i] = track;
+			return i;
+		}
+	}
+	return -1;
+}
+
+u32 TrackMgr::deAllocRoot(TTrack* track)
+{
+	for (u8 i = 0; i < sRootSeqCount; ++i) {
+		if (sRootTrack[i] == track) {
+			sRootTrack[i] = nullptr;
+			return i;
+		}
+	}
+	return -1;
+}
+
+void TrackMgr::registTrack(u32 param, TTrack* track)
+{
+	for (int i = 0; i < sTLists; ++i) {
+		if (param == sTrackList[i].unk4)
+			return;
+	}
+
+	u32 i;
+	if (sTLists == 32) {
+		for (i = 0; i < 32; ++i) {
+			if (sTrackList[i].unk0 == 0)
+				break;
+		}
+		if (i == 32)
+			return;
+	} else {
+		i = sTLists;
+		++sTLists;
+	}
+
+	sTrackList[i].unk4 = param;
+	sTrackList[i].unk0 = track;
+}
+
+void TrackMgr::unRegistTrack(TTrack* track)
+{
+	for (int i = 0; i < sTLists; ++i) {
+		if (sTrackList[i].unk0 == track)
+			sTrackList[i].unk0 = nullptr;
+	}
+
+	while (sTLists != 0) {
+		if (sTrackList[sTLists - 1].unk0 != 0)
+			break;
+		--sTLists;
+	}
+}
+
+bool TrackMgr::backTrack(TTrack* track)
+{
+	if (seqRemain == sTrackCount)
+		return false;
+
+	sFreeSeqpQueue[backP] = track;
+	++seqRemain;
+	++backP;
+	if (backP == sTrackCount)
+		backP = 0;
+
+	return true;
+}
+
+void TrackMgr::registerTrackCallback(u16 (*callback)(TTrack*, u16))
+{
+	TTrack::registerTrackCallback(callback);
+}
 
 } // namespace JASystem
