@@ -154,7 +154,7 @@ public:
 	void updateTempo();
 	s8 mainProc();
 	int noteOn(u8 note, s32 velocity, s32 length, s32 delay);
-	void noteOff(u8 note, u16 release);
+	bool noteOff(u8 note, u16 release);
 	int gateOn(u8 note, s32 velocity, s32 length, s32 delay);
 	void checkNoteStop(s32 param);
 	void releaseChannelAll();

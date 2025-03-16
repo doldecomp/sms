@@ -6,6 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASCallback.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
+#include <dolphin/os.h>
 
 namespace JASystem {
 
@@ -141,12 +142,106 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	if (unk3C2 && (unk3C1 & 0x40))
 		return -1;
 
+	u32 index = param_1;
+	if (mNoteMgr.getChannel(index))
+		noteOff(param_1, 0);
+
+	TTrack* r24      = unk2C0;
+	TChannelMgr* r30 = &mChannelUpdater;
+	TTrack* r3       = r24;
+	while (!r30->unk0 || !r30->unk8) {
+		if (r3 == nullptr) {
+			r30 = &mChannelUpdater;
+			break;
+		}
+		r30 = &r24->mChannelUpdater;
+		r3  = r3->unk2C0;
+	}
+
+	if (unk3BC == 4) {
+		if (r24 == nullptr)
+			return -1;
+
+		if (r30 != &r24->mChannelUpdater) {
+			TChannel* chan = r30->getListHead(0);
+			if (chan) {
+				--r30->unk0;
+				mChannelUpdater.addListHead(chan, 0);
+				++r24->mChannelUpdater.unk0;
+				chan->unk4 = &r24->mChannelUpdater;
+			}
+			r30 = &r24->mChannelUpdater;
+		}
+	} else {
+		if (r30 != &mChannelUpdater) {
+			TChannel* chan = r30->getListHead(0);
+			if (chan) {
+				--r30->unk0;
+				mChannelUpdater.addListHead(chan, 0);
+				++mChannelUpdater.unk0;
+				chan->unk4 = &mChannelUpdater;
+			}
+			r30 = &mChannelUpdater;
+		}
+	}
+
+	u32 reg     = readRegDirect(6);
+	u32 physNum = BankMgr::getPhysicalNumber((reg >> 8) & 0xFF);
+
+	TChannel* chan
+	    = BankMgr::noteOn(r30, (u8)physNum, (u8)reg, param_2, param_3, param_4);
+
+	if (!chan)
+		return -1;
+
+	mNoteMgr.unk0[index]  = chan;
+	mNoteMgr.unk20[index] = chan->unkC6;
+
+	// TODO: some tricky inlines happening here
+	chan->setPanPower(mRegisterParam.mPanPower[0], mRegisterParam.mPanPower[1],
+	                  mRegisterParam.mPanPower[2], mRegisterParam.mPanPower[3]);
+
+	for (u8 i = 0; i < 2; ++i) {
+		u32 someThing = unk3A0[i];
+		if (someThing != 0xF && someThing != 0xE) {
+			if (someThing >= 8) {
+				someThing -= 8;
+				if (chan->isOsc(someThing))
+					chan->copyOsc(someThing, &unk30C[i]);
+			} else if (someThing >= 4) {
+				someThing -= 4;
+				s16* v = unk30C[i].unkC;
+				if (chan->isOsc(someThing)) {
+					chan->copyOsc(someThing, &unk30C[i]);
+					unk30C[i].unkC = v;
+				}
+			}
+			chan->overwriteOsc(someThing, &unk30C[i]);
+		}
+	}
+
+	if (sUpdateSyncMode == 0)
+		updateTrack(0xB);
+
+	chan->resetInitialVolume();
+
 	return 0;
 }
 
-#pragma dont_inline on
-void TTrack::noteOff(u8 note, u16 release) { }
-#pragma dont_inline off
+bool TTrack::noteOff(u8 note, u16 release)
+{
+	TChannel* chan = mNoteMgr.getChannel(note);
+	if (!chan)
+		return false;
+
+	if (release == 0)
+		chan->stop(0);
+	else
+		chan->stop(release);
+
+	mNoteMgr.releaseChannel(note);
+	return true;
+}
 
 int TTrack::gateOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 {
@@ -243,13 +338,243 @@ void TTrack::oscSetupSimple(u8 param_1)
 	}
 }
 
-#pragma dont_inline on
-void TTrack::updateTrackAll() { }
-#pragma dont_inline off
+void TTrack::updateTrackAll()
+{
+	f32 fVar6 = mRegisterParam.mPanPower[3] / 32767.0f;
+	f32 curVolume;
+	f32 curPitch;
+	f32 curFxmix;
+	f32 curDolby;
+	f32 curPan;
 
-#pragma dont_inline on
-void TTrack::updateTrack(u32 param) { }
-#pragma dont_inline off
+	if (unk3BC == 4)
+		return;
+
+	mChannelUpdater.unk68 = mRegisterParam.unk1A | 0x10000;
+	mChannelUpdater.unk6C = 0;
+
+	u8 cVar8  = 0;
+	f32 thing = mTimedParam.mInnerParam.unk110.mCurrentValue * 128.0f;
+	s8 local_4c;
+	OSf32tos8(&thing, &local_4c);
+	if (local_4c < 0) {
+		cVar8    = -local_4c;
+		local_4c = 0;
+	}
+
+	mChannelUpdater.unk60    = 0x10;
+	mChannelUpdater.unk5A[0] = cVar8;
+	mChannelUpdater.unk5A[1] = local_4c;
+
+	curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
+	if (unk3C3 == 0)
+		curVolume = curVolume * curVolume;
+
+	if (unk3C2 != 0)
+		curVolume = 0.0f;
+
+	curPitch = Player::pitchToCent(mTimedParam.mInnerParam.mPitch.mCurrentValue,
+	                               mRegisterParam.unkE);
+
+	curPan   = mTimedParam.mInnerParam.mPan.mCurrentValue;
+	curFxmix = mTimedParam.mInnerParam.mFxmix.mCurrentValue;
+	curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
+
+	if (mOuterParam) {
+		if (mOuterParam->checkOuterSwitch(1))
+			curVolume *= mOuterParam->unk4;
+
+		if (mOuterParam->checkOuterSwitch(2))
+			curPitch *= mOuterParam->unk8;
+
+		if (mOuterParam->checkOuterSwitch(4))
+			curFxmix = panCalc(curFxmix, mOuterParam->unkC, fVar6, unk3C5[1]);
+
+		if (mOuterParam->checkOuterSwitch(0x10))
+			curDolby = panCalc(curDolby, mOuterParam->unk10, fVar6, unk3C5[2]);
+
+		if (mOuterParam->checkOuterSwitch(8))
+			curPan = panCalc(curPan, mOuterParam->unk14, fVar6, unk3C8[0]);
+	}
+
+	if (!unk2C0 || (unk3BC & 1)) {
+		mChannelUpdater.unk18 = curVolume;
+		mChannelUpdater.unk1C = curPitch;
+		mChannelUpdater.unk20 = curPan;
+		mChannelUpdater.unk24 = curFxmix;
+		mChannelUpdater.unk28 = curDolby;
+	} else {
+		f32 fVar6             = mRegisterParam.mPanPower[4] / 32767.0f;
+		mChannelUpdater.unk18 = unk2C0->mChannelUpdater.unk18 * curVolume;
+		mChannelUpdater.unk1C = unk2C0->mChannelUpdater.unk1C * curPitch;
+		mChannelUpdater.unk20
+		    = panCalc(curPan, unk2C0->mChannelUpdater.unk20, fVar6, unk3C8[0]);
+		mChannelUpdater.unk24 = panCalc(curFxmix, unk2C0->mChannelUpdater.unk24,
+		                                fVar6, unk3C8[1]);
+		mChannelUpdater.unk28 = panCalc(curDolby, unk2C0->mChannelUpdater.unk28,
+		                                fVar6, unk3C8[2]);
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(0x80)) {
+			for (u8 i = 0; i < 8; ++i)
+				mChannelUpdater.unk2C[i] = mOuterParam->getIntFirFilter(i);
+			mChannelUpdater.unk61 = 8;
+		}
+
+		for (u8 i = 0; i < 4; ++i) {
+			mChannelUpdater.unk3C[i]
+			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
+		}
+
+		mChannelUpdater.unk61 |= 0x20;
+		mChannelUpdater.unk4C
+		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
+	}
+}
+
+void TTrack::updateTrack(u32 param)
+{
+	f32 curVolume;
+	f32 curPitch;
+	f32 curPan;
+	f32 curFxmix;
+	f32 curDolby;
+	f32 fVar3 = mRegisterParam.mPanPower[3] / 32767.0f;
+
+	if (unk3BC == 4)
+		return;
+
+	if (param & 0x20000) {
+		u8 cVar8  = 0;
+		f32 thing = mTimedParam.mInnerParam.unk110.mCurrentValue * 128.0f;
+		s8 local_4c;
+		OSf32tos8(&thing, &local_4c);
+		if (local_4c < 0) {
+			cVar8    = -local_4c;
+			local_4c = 0;
+		}
+
+		mChannelUpdater.unk5A[0] = cVar8;
+		mChannelUpdater.unk5A[1] = local_4c;
+	}
+
+	if ((param & 0x40) && !unk2C0)
+		updateTempo();
+
+	if (param & 1) {
+		curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
+		if (!unk3C3)
+			curVolume *= curVolume;
+
+		if (unk3C2)
+			curVolume = 0.0f;
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(1))
+			curVolume *= mOuterParam->unk4;
+
+		if (unk3CD && (unk3C1 & 1))
+			curVolume *= mTimedParam.mInnerParam.unk100.mCurrentValue;
+	}
+
+	if (param & 2) {
+		curPitch = Player::pitchToCent(
+		    mTimedParam.mInnerParam.mPitch.mCurrentValue, mRegisterParam.unkE);
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(2))
+			curPitch *= mOuterParam->unk8;
+	}
+
+	if (param & 8) {
+		curPan = mTimedParam.mInnerParam.mPan.mCurrentValue;
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(8))
+			curPan = panCalc(curPan, mOuterParam->unk14, fVar3, unk3C5[0]);
+	}
+
+	if (param & 4) {
+		curFxmix = mTimedParam.mInnerParam.mFxmix.mCurrentValue;
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(4))
+			curFxmix = panCalc(curFxmix, mOuterParam->unkC, fVar3, unk3C5[1]);
+	}
+
+	if (param & 0x10) {
+		curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
+
+		if (mOuterParam && mOuterParam->checkOuterSwitch(0x10))
+			curDolby = panCalc(curDolby, mOuterParam->unk10, fVar3, unk3C5[2]);
+	}
+
+	if (param & 0xf000) {
+		for (u8 i = 0; i < 4; ++i)
+			mChannelUpdater.unk3C[i]
+			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
+
+		mChannelUpdater.unk61 |= 0x20;
+	}
+
+	if (mOuterParam && (param & 0x80) && mOuterParam->checkOuterSwitch(0x80)) {
+		for (u8 i = 0; i < 8; ++i)
+			mChannelUpdater.unk2C[i] = mOuterParam->getIntFirFilter(i);
+
+		mChannelUpdater.unk61 = (mChannelUpdater.unk61 & 0x20) + 8;
+	}
+
+	if (param & 0x20) {
+		mChannelUpdater.unk4C
+		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
+	}
+
+	for (int i = 0; i < 2; ++i) {
+		if (unk3A0[i] == 0xE) {
+			f32 off = unk33C[i].getOffsetNoCount();
+			switch (unk33C[i].getOsc()->unk0) {
+			case 1:
+				curPitch *= off;
+				break;
+			case 0:
+				curVolume *= off;
+				break;
+			case 2:
+				curPan *= off;
+				break;
+			case 3:
+				curFxmix *= off;
+				break;
+			case 4:
+				curDolby *= off;
+				break;
+			}
+		}
+	}
+
+	if (!unk2C0 || (unk3BC & 1)) {
+		if (param & 1)
+			mChannelUpdater.unk18 = curVolume;
+		if (param & 2)
+			mChannelUpdater.unk1C = curPitch;
+		if (param & 8)
+			mChannelUpdater.unk20 = curPan;
+		if (param & 4)
+			mChannelUpdater.unk24 = curFxmix;
+		if (param & 0x10)
+			mChannelUpdater.unk28 = curDolby;
+	} else {
+		fVar3 = mRegisterParam.mPanPower[4] / 32767.0f;
+		if (param & 1)
+			mChannelUpdater.unk18 = unk2C0->mChannelUpdater.unk18 * curVolume;
+		if (param & 2)
+			mChannelUpdater.unk1C = unk2C0->mChannelUpdater.unk1C * curPitch;
+		if (param & 8)
+			mChannelUpdater.unk20 = panCalc(
+			    curPan, unk2C0->mChannelUpdater.unk20, fVar3, unk3C8[0]);
+		if (param & 4)
+			mChannelUpdater.unk24 = panCalc(
+			    curFxmix, unk2C0->mChannelUpdater.unk24, fVar3, unk3C8[1]);
+		if (param & 0x10)
+			mChannelUpdater.unk28 = panCalc(
+			    curDolby, unk2C0->mChannelUpdater.unk28, fVar3, unk3C8[2]);
+	}
+}
 
 void TTrack::updateTempo()
 {

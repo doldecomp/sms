@@ -206,6 +206,7 @@ cflags_base_base = [
 cflags_base = [
     *cflags_base_base,
     "-proc gekko",
+    "-DGEKKO",
 ]
 
 # Debug flags
