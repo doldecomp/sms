@@ -6,13 +6,6 @@
 
 namespace JASystem {
 
-struct IIRCoefficients {
-	s16 mCoeff1;
-	s16 mCoeff2;
-	s16 mCoeff3;
-	s16 mCoeff4;
-};
-
 namespace Player {
 
 	extern TOscillator::Osc_ sEnvelopeDef;
@@ -24,7 +17,7 @@ namespace Player {
 	extern TOscillator::Osc_ sAdsrDef;
 	extern s16 sAdsTable[];
 
-	extern IIRCoefficients CUTOFF_TO_IIR_TABLE[];
+	extern s16 CUTOFF_TO_IIR_TABLE[][4];
 
 	f32 pitchToCent(f32, f32);
 	u16 extend8to16(u8);

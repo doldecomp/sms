@@ -14,6 +14,16 @@ public:
 	void* checkIntr();
 	void timerProcess();
 
+	void disable() { unk0 = 0; }
+	void enable() { unk0 = 1; }
+
+	void setTimer(u32 param_1, u32 param_2)
+	{
+		unk3 = param_1;
+		unk4 = param_2;
+		unk8 = param_2;
+	}
+
 public:
 	/* 0x00 */ u8 unk0;
 	/* 0x01 */ u8 unk1;

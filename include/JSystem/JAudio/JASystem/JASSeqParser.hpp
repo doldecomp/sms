@@ -10,9 +10,9 @@ class TSeqCtrl;
 
 class TSeqParser {
 public:
-	void mainProc(TTrack* track, TSeqCtrl* ctrl);
-	void RegCmd_Process(TTrack* track, int param1, int param2);
-	void Cmd_Process(TTrack* track, u8 param1, u16 param2);
+	int mainProc(TTrack* track, TSeqCtrl* ctrl);
+	int RegCmd_Process(TTrack* track, int param1, int param2);
+	int Cmd_Process(TTrack* track, u8 param1, u16 param2);
 	bool conditionCheck(TTrack* track, u8 condition);
 
 	int cmdNoteOn(TTrack* track, u8 param);

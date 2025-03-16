@@ -29,6 +29,17 @@ public:
 
 		u16 getUnk20(u8 i) { return unk20[i]; }
 
+		void setLastNote(u8 note) { mLastNote = note; }
+		u8 getLastNote() const { return mLastNote; }
+
+		void setConnectCase(u8 val) { mConnectCase = val; }
+		u8 getConnectCase() const { return mConnectCase; }
+
+		void setBaseTime(u32 time) { mBaseTime = time; }
+		void setBeforeTieMode(bool mode) { mBeforeTieMode = mode; }
+
+		bool checkBeforeTieMode() const { return mBeforeTieMode; }
+
 	public:
 		/* 0x00 */ TChannel* unk0[8];
 		/* 0x20 */ u16 unk20[8];
@@ -240,8 +251,8 @@ public:
 	/* 0x3BC */ u8 unk3BC;
 	/* 0x3BD */ u8 unk3BD;
 	/* 0x3BE */ u8 unk3BE;
-	/* 0x3BF */ u8 unk3BF;
-	/* 0x3C0 */ u8 unk3C0;
+	/* 0x3BF */ s8 unk3BF;
+	/* 0x3C0 */ s8 unk3C0; // NOTE: TWW says this is a "transpose"
 	/* 0x3C1 */ u8 unk3C1;
 	/* 0x3C2 */ u8 unk3C2;
 	/* 0x3C3 */ u8 unk3C3;

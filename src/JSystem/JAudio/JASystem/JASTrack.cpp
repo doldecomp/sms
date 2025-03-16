@@ -1261,8 +1261,7 @@ bool TTrack::writePortAppDirect(u32 port, u16 value)
 
 bool TTrack::readPortAppDirect(u32 port, u16* value)
 {
-	mTrackPort.mExportFlag[port] = 0;
-	*value                       = mTrackPort.mValue[port];
+	*value = mTrackPort.readExport(port);
 	return true;
 }
 
