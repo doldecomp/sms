@@ -81,8 +81,8 @@ namespace BankMgr {
 
 	f32 clamp01(f32 value) { return 0.0f; }
 
-	void noteOn(TChannelMgr* channelMgr, int bankIndex, int programIndex,
-	            u8 note, u8 velocity, u32 params)
+	TChannel* noteOn(TChannelMgr* channelMgr, int bankIndex, int programIndex,
+	                 u8 note, u8 velocity, u32 params)
 	{
 	}
 

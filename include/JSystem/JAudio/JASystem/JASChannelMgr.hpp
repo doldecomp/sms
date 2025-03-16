@@ -45,7 +45,7 @@ public:
 	/* 0x61 */ u8 unk61;
 	/* 0x62 */ u8 unk62[3];
 	/* 0x68 */ u32 unk68;
-	/* 0x6C */ u32 unk6C;
+	/* 0x6C */ u16 unk6C;
 	/* 0x70 */ s32 unk70;
 };
 

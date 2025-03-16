@@ -204,6 +204,22 @@ static inline void OSInitFastCast(void)
 #endif // clang-format on
 }
 
+// NOTE: some code is compile as-if for the regular 750, so we occasionally
+// gotta ifdef out paired singles stuff in SDK headers
+#ifdef GEKKO
+
+inline void OSf32tos8(register f32* f, register s8* out)
+{
+#ifdef __MWERKS__ // clang-format off
+	asm {
+		lfs    f1, 0(f)
+		psq_st f1, 0(out), 0x1, 4
+	}
+#endif // clang-format on
+}
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif
