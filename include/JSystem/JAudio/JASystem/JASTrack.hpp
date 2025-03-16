@@ -12,7 +12,6 @@ namespace JASystem {
 
 namespace Player {
 	enum SEQ_PLAYMODE {};
-	extern u32 oRandom;
 } // namespace Player
 
 class TSeqCtrl;
@@ -147,7 +146,7 @@ public:
 	bool stopSeq();
 	void stopSeqMain();
 	void allNoteOff();
-	void setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode);
+	int setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode);
 	void updateSeq(u32 param, bool flag);
 	void updateTrack(u32 param);
 	void updateTrackAll();
@@ -209,10 +208,10 @@ public:
 	u8 getNoteStatus(u8 note);
 
 	static bool registerTrackCallback(u16 (*callback)(TTrack*, u16));
-	static TSeqParser* sParser;
+	static TSeqParser sParser;
 	static u8 sUpdateSyncMode;
 	static u16 (*sCallBackFunc)(TTrack*, u16);
-	static u32 sOscTable;
+	static u8 sOscTable[];
 
 public:
 	/* 0x0 */ TSeqCtrl mSeqCtrl;
