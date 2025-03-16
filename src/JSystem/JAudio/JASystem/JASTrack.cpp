@@ -904,9 +904,105 @@ u32 TTrack::exchangeRegisterValue(u8 reg)
 		return mNoteMgr.getUnk20(reg - 0x40);
 }
 
-u16 TTrack::readRegDirect(u8 reg) { }
+u16 TTrack::readRegDirect(u8 reg)
+{
+	u16 result;
+	int i;
 
-void TTrack::writeRegDirect(u8 reg, u16 value) { }
+	switch (reg) {
+	case 32:
+		result = mRegisterParam.getBankNumber();
+		break;
+
+	case 33:
+		result = mRegisterParam.getProgramNumber();
+		break;
+
+	case 34:
+		result = readRegDirect(0);
+		result <<= 8;
+		result |= readRegDirect(1);
+		break;
+
+	case 44:
+		result = 0;
+		for (i = 15; i >= 0; --i) {
+			TTrack* child = unk2C4[i];
+			result <<= 1;
+			if (child && child->unk3C4)
+				result |= 1;
+		}
+		break;
+
+	case 45:
+		result = 0;
+		for (i = 7; i >= 0; --i) {
+			result <<= 1;
+			TChannel* chan = mNoteMgr.getChannel(i);
+			u8 bit;
+			if (!chan)
+				bit = 1;
+			else if (chan->unk1 == 0xff)
+				bit = 1;
+			else
+				bit = 0;
+			result |= bit;
+		}
+		break;
+
+	case 48:
+		result = mSeqCtrl.mLoopIndex == 0
+		             ? (u16)0
+		             : mSeqCtrl.mLoopTimers[mSeqCtrl.mLoopIndex - 1];
+		break;
+
+	default:
+		result = mRegisterParam.unk0[reg];
+		break;
+	}
+
+	return result;
+}
+
+void TTrack::writeRegDirect(u8 reg, u16 value)
+{
+	u16 top;
+	u16 uVar1;
+	u8 r30 = reg;
+	u16 r4;
+
+	switch (reg) {
+	case 0:
+	case 1:
+	case 2:
+		value &= 0xff;
+		r4 = Player::extend8to16(value & 0xff);
+		break;
+
+	case 32:
+	case 33:
+		return;
+
+	case 34: {
+		top                    = value >> 8;
+		uVar1                  = Player::extend8to16(top);
+		mRegisterParam.unk0[0] = top;
+		mRegisterParam.unk0[3] = uVar1;
+
+		r4    = value;
+		value = value & 0xff;
+		r30   = 1;
+		break;
+	}
+
+	default:
+		r4 = value;
+		break;
+	}
+
+	mRegisterParam.unk0[r30] = value;
+	mRegisterParam.unk0[3]   = r4;
+}
 
 void TTrack::setTrackExtPanPower(f32 power) { }
 
