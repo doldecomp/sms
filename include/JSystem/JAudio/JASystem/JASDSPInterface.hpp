@@ -48,6 +48,19 @@ namespace DSPInterface {
 		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 
+		struct Channel {
+			/* 0x0 */ u16 id;
+			/* 0x4 */ u16 targetVolume;
+			/* 0x8 */ u16 currentVolume;
+			/* 0xC */ u16 unkC;
+		};
+
+		// TODO: verify whether this struct is this & label:
+		// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/HW/DSPHLE/UCodes/Zelda.cpp#L683
+		// As far as I understand, a bunch of games have the same DSP microcode
+		// as Zelda (including sms), and that DSP microcode reads this struct
+		// directly on the DSP side, so it's layout is the same in all such
+		// games, presumably.
 	public:
 		/* 0x00 */ u16 unk0;
 		/* 0x02 */ u16 unk2;
@@ -57,8 +70,8 @@ namespace DSPInterface {
 		/* 0x0A */ u8 unkA[0xc - 0xa];
 		/* 0x0C */ u16 unkC;
 		/* 0x0E */ u16 unkE;
-		/* 0x10 */ u16 unk10[1][4];
-		/* 0x18 */ u8 unk18[0x50 - 0x18];
+		/* 0x10 */ Channel unk10[6];
+		/* 0x18 */ u8 unk18[0x50 - 0x40];
 		/* 0x50 */ u16 unk50;
 		/* 0x52 */ u16 unk52;
 		/* 0x54 */ u16 unk54;

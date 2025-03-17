@@ -217,26 +217,26 @@ namespace DSPInterface {
 	void DSPBuffer::setMixerInitDelayMax(u8 param_1) { unkE = param_1; }
 	void DSPBuffer::setMixerInitVolume(u8 param_1, s16 param_2, u8 param_3)
 	{
-		u16* tmp = unk10[param_1];
-		tmp[2]   = param_2;
-		tmp[1]   = param_2;
-		tmp[3]   = param_3 << 8 | param_3;
+		Channel& chan      = unk10[param_1];
+		chan.currentVolume = param_2;
+		chan.targetVolume  = param_2;
+		chan.unkC          = param_3 << 8 | param_3;
 	}
 	void DSPBuffer::setMixerVolume(u8 param_1, s16 param_2, u8 param_3)
 	{
 		if (unk10A)
 			return;
 
-		u16* tmp = unk10[param_1];
-		tmp[1]   = param_2;
-		tmp[3]   = param_3 << 8 | tmp[3] & 0xff;
+		Channel& chan     = unk10[param_1];
+		chan.targetVolume = param_2;
+		chan.unkC         = param_3 << 8 | chan.unkC & 0xff;
 	}
 	void DSPBuffer::setMixerVolumeOnly(u8 param_1, s16 param_2)
 	{
 		if (unk10A)
 			return;
 
-		unk10[param_1][1] = param_2;
+		unk10[param_1].targetVolume = param_2;
 	}
 	void DSPBuffer::setPauseFlag(u8 flag) { unkC = flag; }
 	void DSPBuffer::flushChannel() { DCFlushRangeNoSync(this, sizeof(*this)); }
@@ -290,8 +290,8 @@ namespace DSPInterface {
 			0x0000, 0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80,
 			0x0EE0, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0,
 		};
-		u16* tmp = unk10[param_1];
-		tmp[0]   = connect_table[param_2];
+		Channel& chan = unk10[param_1];
+		chan.id       = connect_table[param_2];
 	}
 
 } // namespace DSPInterface
