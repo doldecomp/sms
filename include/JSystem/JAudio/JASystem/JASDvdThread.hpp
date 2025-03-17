@@ -9,54 +9,45 @@ namespace JASystem {
 
 namespace Dvd {
 	void unpauseDvdT();
-	extern bool dvdThreadPauseFlag;
-	extern bool dvdtSleep;
+
 	u32 checkFileExtend(char*);
-	extern const char* audioRootPath;
-	extern OSMessageQueue* mq;
-	bool openDvd(char*, DVDFileInfo*);
-	void registerFastOpen(char*);
-	extern DVDFileInfo* dvdFile;
-	extern s32 dvdEntryNum;
-	extern void* dvdFileDics;
-	extern s32 maxDics;
+	s32 openDvd(char*, DVDFileInfo*);
+	int registerFastOpen(char*);
 	u32 loadToAramDvdT(u32, char*, void*, u32, u32, u32*, void (*)(u32));
-	extern bool mqInit;
 	void* getCallStack();
-	extern s32 curQ;
-	extern void** callStackArray;
 	void* loadToAramDvdTMain(void*);
 
-	struct TDvdCall;
+	typedef void (*DvdCallback)(u32);
+	struct TDvdCall {
+		/* 0x0 */ u32 unk0;
+		/* 0x4 */ char unk4[0x20];
+		/* 0x24 */ void* unk24;
+		/* 0x28 */ u32 unk28;
+		/* 0x2C */ u32 unk2C;
+		/* 0x30 */ u32* unk30;
+		/* 0x34 */ DvdCallback unk34;
+	};
 
 	void doError(TDvdCall*, u32);
 	void aramDmaFinish(u32);
-	extern bool bufferFull;
-	extern bool bufferLoad;
-	extern void* audioDvdBuffer;
-	extern void* buffers;
-	extern u32 buffersize;
-	bool dvdReadMutex(DVDFileInfo*, void*, s32, s32, char*);
+
+	void dvdReadMutex(DVDFileInfo*, void*, s32, s32, char*);
 	void doFinish(TDvdCall*, u32);
-	void loadToDramDvdT(u32, char*, void*, u32, u32, u32*, void (*)(u32));
+	int loadToDramDvdT(u32, char*, void*, u32, u32, u32*, void (*)(u32));
 	void* loadToDramDvdTMain(void*);
 	void checkPassDvdT(u32, u32*, void (*)(u32));
-	void* dvdThreadCheckBack(void*);
+	bool dvdThreadCheckBack(void*);
 	void pauseDvdT();
 	void init();
-	extern s32 dvdMsgsSize;
-	extern void* msgBuf;
+
 	void dvdProcInit();
 	void* dvdProc(void*);
-	void* allocDvdBuffer();
-	extern u32 dvdBufSize;
+	void allocDvdBuffer();
+
 	void updateBuffer();
-	extern void* nextBuffers;
-	extern u32 nextBufferSize;
-	extern void* nextBufferTop;
 	void writeBufferSize(u8*, u32, u32);
 	void extendPath(char*, char*);
-	bool checkFile(char*);
+	DVDCallback checkFile(char*);
 	bool loadFile(char*, void*);
 	u32 loadFileDvdT(char*, void*);
 	void setNumOfMsgs(s32);
@@ -71,12 +62,12 @@ namespace Dvd {
 	void* dramToAramDvdTMain(void*);
 	void aramToDramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
 	void dramToAramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
-	void registerDvdErrorCallback(void (*)(char*, u8*));
+
+	typedef void (*ErrorCallback)(char*, u8*);
+	void registerDvdErrorCallback(ErrorCallback);
 	void setFastOpenMaxDic(s32);
 	void registerExtFastOpen(char*);
 	void aramDmaFinish2(u32);
-	extern bool bufferFull2;
-	extern void (*errorCallback)(char*, u8*);
 } // namespace Dvd
 
 } // namespace JASystem
