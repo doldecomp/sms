@@ -8,7 +8,12 @@ namespace JASystem {
 class TDSPChannel;
 
 namespace Driver {
-	struct PanMatrix_;
+	struct PanMatrix_ {
+		/* 0x0 */ f32 mSound;
+		/* 0x4 */ f32 mEffect;
+		/* 0x8 */ f32 mChannel;
+	};
+
 	struct Wave_ {
 		/* 0x0 */ u8 unk0;
 		/* 0x1 */ u8 unk1;
@@ -62,7 +67,7 @@ public:
 	void setDolbyParam(const f32* pan, const f32* dolby, const f32* fx);
 	BOOL checkLogicalChannel();
 	bool resetInitialVolume();
-	bool play(u32 param);
+	BOOL play(u32 param);
 	void stop(u16 release);
 	void updateJcToDSP();
 	BOOL forceStopLogicalChannel();
@@ -90,19 +95,16 @@ public:
 	/* 0x34 */ s32 unk34;
 	/* 0x38 */ TOscillator* unk38[4];
 	/* 0x48 */ f32 unk48;
-	/* 0x4C */ char unk4C[0x4];
+	/* 0x4C */ f32 unk4C;
 	/* 0x50 */ f32 unk50;
-	/* 0x4C */ char unk54[0x8];
+	/* 0x54 */ f32 unk54;
+	/* 0x58 */ char unk58[0x4];
 	/* 0x5C */ f32 unk5C;
 	/* 0x60 */ f32 unk60;
 	/* 0x64 */ f32 unk64;
-	/* 0x68 */ char unk68[0x4];
-	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ char unk70[0x8];
-	/* 0x78 */ f32 unk78;
-	/* 0x7C */ char unk7C[0x8];
-	/* 0x84 */ f32 unk84;
-	/* 0x88 */ char unk88[0x4];
+	/* 0x68 */ Driver::PanMatrix_ unk68;
+	/* 0x74 */ Driver::PanMatrix_ unk74;
+	/* 0x80 */ Driver::PanMatrix_ unk80;
 	/* 0x8C */ f32 unk8C;
 	/* 0x90 */ f32 unk90;
 	/* 0x94 */ f32 unk94;
