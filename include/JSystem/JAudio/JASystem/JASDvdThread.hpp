@@ -38,7 +38,7 @@ namespace Dvd {
 	void* dvdProc(void*);
 
 	void extendPath(char*, char*);
-	DVDCallback checkFile(char*);
+	int checkFile(char*);
 	int loadFile(char*, void*);
 	u32 loadFileDvdT(char*, void*);
 	void setNumOfMsgs(s32);
