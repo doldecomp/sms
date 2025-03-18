@@ -157,7 +157,7 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	TTrack* r24      = unk2C0;
 	TChannelMgr* r30 = &mChannelUpdater;
 	TTrack* r3       = r24;
-	while (!r30->unk0 || !r30->unk8) {
+	while (!r30->mManagedChannels || !r30->unk8) {
 		if (r3 == nullptr) {
 			r30 = &mChannelUpdater;
 			break;
@@ -173,9 +173,9 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		if (r30 != &r24->mChannelUpdater) {
 			TChannel* chan = r30->getListHead(0);
 			if (chan) {
-				--r30->unk0;
+				--r30->mManagedChannels;
 				mChannelUpdater.addListHead(chan, 0);
-				++r24->mChannelUpdater.unk0;
+				++r24->mChannelUpdater.mManagedChannels;
 				chan->unk4 = &r24->mChannelUpdater;
 			}
 			r30 = &r24->mChannelUpdater;
@@ -184,9 +184,9 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		if (r30 != &mChannelUpdater) {
 			TChannel* chan = r30->getListHead(0);
 			if (chan) {
-				--r30->unk0;
+				--r30->mManagedChannels;
 				mChannelUpdater.addListHead(chan, 0);
-				++mChannelUpdater.unk0;
+				++mChannelUpdater.mManagedChannels;
 				chan->unk4 = &mChannelUpdater;
 			}
 			r30 = &mChannelUpdater;
@@ -406,21 +406,21 @@ void TTrack::updateTrackAll()
 	}
 
 	if (!unk2C0 || (unk3BC & 1)) {
-		mChannelUpdater.unk18 = curVolume;
-		mChannelUpdater.unk1C = curPitch;
-		mChannelUpdater.unk20 = curPan;
-		mChannelUpdater.unk24 = curFxmix;
-		mChannelUpdater.unk28 = curDolby;
+		mChannelUpdater.mVolume = curVolume;
+		mChannelUpdater.mPitch  = curPitch;
+		mChannelUpdater.mPan    = curPan;
+		mChannelUpdater.mFxmix  = curFxmix;
+		mChannelUpdater.mDolby  = curDolby;
 	} else {
-		f32 fVar6             = mRegisterParam.mPanPower[4] / 32767.0f;
-		mChannelUpdater.unk18 = unk2C0->mChannelUpdater.unk18 * curVolume;
-		mChannelUpdater.unk1C = unk2C0->mChannelUpdater.unk1C * curPitch;
-		mChannelUpdater.unk20
-		    = panCalc(curPan, unk2C0->mChannelUpdater.unk20, fVar6, unk3C8[0]);
-		mChannelUpdater.unk24 = panCalc(curFxmix, unk2C0->mChannelUpdater.unk24,
-		                                fVar6, unk3C8[1]);
-		mChannelUpdater.unk28 = panCalc(curDolby, unk2C0->mChannelUpdater.unk28,
-		                                fVar6, unk3C8[2]);
+		f32 fVar6               = mRegisterParam.mPanPower[4] / 32767.0f;
+		mChannelUpdater.mVolume = unk2C0->mChannelUpdater.mVolume * curVolume;
+		mChannelUpdater.mPitch  = unk2C0->mChannelUpdater.mPitch * curPitch;
+		mChannelUpdater.mPan
+		    = panCalc(curPan, unk2C0->mChannelUpdater.mPan, fVar6, unk3C8[0]);
+		mChannelUpdater.mFxmix = panCalc(
+		    curFxmix, unk2C0->mChannelUpdater.mFxmix, fVar6, unk3C8[1]);
+		mChannelUpdater.mDolby = panCalc(
+		    curDolby, unk2C0->mChannelUpdater.mDolby, fVar6, unk3C8[2]);
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(0x80)) {
 			for (u8 i = 0; i < 8; ++i)
@@ -557,30 +557,31 @@ void TTrack::updateTrack(u32 param)
 
 	if (!unk2C0 || (unk3BC & 1)) {
 		if (param & 1)
-			mChannelUpdater.unk18 = curVolume;
+			mChannelUpdater.mVolume = curVolume;
 		if (param & 2)
-			mChannelUpdater.unk1C = curPitch;
+			mChannelUpdater.mPitch = curPitch;
 		if (param & 8)
-			mChannelUpdater.unk20 = curPan;
+			mChannelUpdater.mPan = curPan;
 		if (param & 4)
-			mChannelUpdater.unk24 = curFxmix;
+			mChannelUpdater.mFxmix = curFxmix;
 		if (param & 0x10)
-			mChannelUpdater.unk28 = curDolby;
+			mChannelUpdater.mDolby = curDolby;
 	} else {
 		fVar3 = mRegisterParam.mPanPower[4] / 32767.0f;
 		if (param & 1)
-			mChannelUpdater.unk18 = unk2C0->mChannelUpdater.unk18 * curVolume;
+			mChannelUpdater.mVolume
+			    = unk2C0->mChannelUpdater.mVolume * curVolume;
 		if (param & 2)
-			mChannelUpdater.unk1C = unk2C0->mChannelUpdater.unk1C * curPitch;
+			mChannelUpdater.mPitch = unk2C0->mChannelUpdater.mPitch * curPitch;
 		if (param & 8)
-			mChannelUpdater.unk20 = panCalc(
-			    curPan, unk2C0->mChannelUpdater.unk20, fVar3, unk3C8[0]);
+			mChannelUpdater.mPan = panCalc(curPan, unk2C0->mChannelUpdater.mPan,
+			                               fVar3, unk3C8[0]);
 		if (param & 4)
-			mChannelUpdater.unk24 = panCalc(
-			    curFxmix, unk2C0->mChannelUpdater.unk24, fVar3, unk3C8[1]);
+			mChannelUpdater.mFxmix = panCalc(
+			    curFxmix, unk2C0->mChannelUpdater.mFxmix, fVar3, unk3C8[1]);
 		if (param & 0x10)
-			mChannelUpdater.unk28 = panCalc(
-			    curDolby, unk2C0->mChannelUpdater.unk28, fVar3, unk3C8[2]);
+			mChannelUpdater.mDolby = panCalc(
+			    curDolby, unk2C0->mChannelUpdater.mDolby, fVar3, unk3C8[2]);
 	}
 }
 
