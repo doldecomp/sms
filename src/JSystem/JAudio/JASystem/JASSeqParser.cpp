@@ -188,7 +188,7 @@ int TSeqParser::cmdJmp(TTrack* track, u32* args)
 		u8 cData = track->mSeqCtrl.readByte();
 
 		if (flag & 0x40) {
-			u32 otherOffset = track->readRegDirect(cData) & 0xffff;
+			u32 otherOffset = track->readRegDirect(cData);
 			u32 offs;
 			if (flag & 0x20) {
 				cData = track->mSeqCtrl.readByte();
@@ -510,8 +510,9 @@ int TSeqParser::cmdPanPowSet(TTrack* track, u32* args)
 int TSeqParser::cmdIIRSet(TTrack* track, u32* args)
 {
 	for (u8 i = 0; i < 4; ++i) {
+		s16 target              = args[i];
 		TTrack::MoveParam_* iir = &track->mTimedParam.mInnerParam.mIIRs[i];
-		iir->mTargetValue       = (s16)args[i] / 32768.0f;
+		iir->mTargetValue       = target / 32768.0f;
 		iir->mCurrentValue      = iir->mTargetValue;
 		iir->mMoveAmount        = 0.0f;
 		iir->mMoveTime          = 1.0f;
@@ -527,7 +528,8 @@ int TSeqParser::cmdFIRSet(TTrack* track, u32* args)
 
 int TSeqParser::cmdEXTSet(TTrack* track, u32* args)
 {
-	u8* outerParamAddr              = track->mSeqCtrl.mRawFilePtr + args[0];
+	u32 offset                      = args[0];
+	u8* outerParamAddr              = track->mSeqCtrl.mRawFilePtr + offset;
 	TTrack::TOuterParam* outerParam = (TTrack::TOuterParam*)outerParamAddr;
 	outerParam->initExtBuffer();
 	track->assignExtBuffer(outerParam);
@@ -596,16 +598,15 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 	u32 count = 0;
 
 	u32 i;
-	for (i = 0; i < 128; i++) {
+	for (i = 0; i < 128; ++i) {
 		buffer[i] = track->mSeqCtrl.readByte();
-		if (!buffer[i]) {
+		if (!buffer[i])
 			break;
-		}
+
 		if (buffer[i] == '\\') {
 			buffer[i] = track->mSeqCtrl.readByte();
-			if (!buffer[i]) {
+			if (!buffer[i])
 				break;
-			}
 
 			switch (buffer[i]) {
 			case 'n':
@@ -616,15 +617,13 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 			}
 		}
 
-		if (buffer[i] != '%') {
+		if (buffer[i] != '%')
 			continue;
-		}
 
-		i++;
+		++i;
 		buffer[i] = track->mSeqCtrl.readByte();
-		if (!buffer[i]) {
+		if (!buffer[i])
 			break;
-		}
 
 		switch (buffer[i]) {
 		case 'd':
@@ -649,18 +648,17 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 			buffer[i]        = 'x';
 			break;
 		}
-		count++;
+		++count;
 	}
 
-	for (i = 0; i < count; i++) {
+	for (i = 0; i < count; ++i) {
 		registers[i] = track->mSeqCtrl.readByte();
-		if (byteArray[i] == 2) {
-			registers[i] = (int)(track->mSeqCtrl.mRawFilePtr + registers[i]);
-		} else if (byteArray[i] == 5) {
+		if (byteArray[i] == 2)
+			registers[i] = (int)&track->mSeqCtrl.mRawFilePtr[registers[i]];
+		else if (byteArray[i] == 5)
 			registers[i] = track->unk308;
-		} else if (byteArray[i] >= 3) {
+		else if (byteArray[i] >= 3)
 			registers[i] = track->exchangeRegisterValue(registers[i]);
-		}
 	}
 
 	// Thrown out in release build
@@ -739,125 +737,129 @@ int TSeqParser::cmdWait(TTrack* track, u8 flag)
 int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 {
 	if (flag == 0xF9) {
-		u32 r30    = track->mSeqCtrl.readByte();
-		u32 rdata2 = (track->exchangeRegisterValue(r30 & 0x7) & 0xFF);
+		u32 r31   = track->mSeqCtrl.readByte();
+		u8 rdata2 = track->exchangeRegisterValue(r31 & 0x7);
 
 		if (rdata2 > 7 || rdata2 == 0) {
-			if (r30 & 0x80)
+			if (r31 & 0x80)
 				++track->mSeqCtrl.mCurrentFilePtr;
 
 			return 0;
 		}
 
 		flag = rdata2 + 0x80;
-		if (r30 & 0x80)
+		if (r31 & 0x80)
 			flag |= 0x08;
 	}
 
-	u32 maskedFlag = flag & 0xF;
-	u8 note        = maskedFlag;
-	u32 r6         = 0;
-	if (flag & 0x08) {
+	u8 note = flag & 0xF;
+
+	s32 release = 0;
+	if (flag & 0x8) {
 		note -= 0x8;
-		r6 = track->mSeqCtrl.readByte();
-		if (r6 > 100)
-			r6 = (r6 - 98) * 20;
+		release = track->mSeqCtrl.readByte();
+		if (release > 100)
+			release = (release - 98) * 20;
 	}
-	track->noteOff(note, r6);
+	track->noteOff(note, release);
 	return 0;
 }
 
 int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 {
-	u8 r27 = track->mSeqCtrl.readByte();
-	if (r27 & 0x80)
-		note = track->exchangeRegisterValue(note);
+	u8 r31 = note + track->unk3C0;
 
-	note += track->unk3C0;
-
-	u8 r26 = (r27 >> 5) & 0x3;
-	u8 r25;
-	u32 r24;
-	u8 r31;
-	if ((r27 >> 5) & 0x2) {
-		r31  = note;
-		note = track->mNoteMgr.getLastNote();
+	// TODO: very fake, but IDK how to make mwcc push it off
+	// to the stack =/
+	volatile u8 r25_or_0x1C = track->mSeqCtrl.readByte();
+	if (r25_or_0x1C & 0x80) {
+		r31 = track->exchangeRegisterValue(note);
+		r31 += track->unk3C0;
 	}
 
-	r25 = track->mSeqCtrl.readByte();
-	if (r25 & 0x80)
-		r25 = track->exchangeRegisterValue(r25 & 0x7F);
+	u8 r30;
+	if ((r25_or_0x1C >> 5) & 0x2) {
+		r30 = r31;
+		r31 = track->mNoteMgr.getLastNote();
+	}
 
-	u8 r23;
-	u8 noteid = r27 & 0x7;
-	int r22   = 0;
-	if (!noteid) {
-		r23 = track->mSeqCtrl.readByte();
-		if (r23 & 0x80)
-			r23 = track->exchangeRegisterValue(r23 & 0x7F);
+	u8 r29 = track->mSeqCtrl.readByte();
+	if (r29 >= 0x80)
+		r29 = track->exchangeRegisterValue(r29 - 0x80);
 
-		r24       = 0;
-		int count = (r27 >> 3) & 0x3;
-		for (u8 i = 0; i < count; i++) {
-			r24 <<= 8;
-			r24 |= track->mSeqCtrl.readByte();
+	u32 r28;
+	u8 r26;
+	u8 r27;
+
+	if (!(r25_or_0x1C & 0x7)) {
+		r27 = 0;
+		r26 = track->mSeqCtrl.readByte();
+		if (r26 >= 0x80)
+			r26 = track->exchangeRegisterValue(r26 - 0x80);
+
+		r28 = 0;
+		for (u8 i = 0; i < ((r25_or_0x1C >> 3) & 0x3); ++i) {
+			r28 <<= 8;
+			r28 |= track->mSeqCtrl.readByte();
 		}
 
-		if ((u32)count == 1 && r24 & 0x80)
-			r24 = track->exchangeRegisterValue(r24 & 0x7F);
+		if ((u32)((r25_or_0x1C >> 3) & 0x3) == 1)
+			if (r28 >= 0x80)
+				r28 = track->exchangeRegisterValue(r28 - 0x80);
 
 	} else {
-		if ((r27 >> 3) & 0x3)
-			noteid = track->exchangeRegisterValue(noteid - 1);
+		r27 = r25_or_0x1C & 0x7;
 
-		r24 = -1;
-		r23 = 100;
+		if ((r25_or_0x1C >> 3) & 0x3)
+			r27 = track->exchangeRegisterValue(r27 - 1);
+
+		r28 = -1;
+		r26 = 100;
 	}
 
-	track->mNoteMgr.setConnectCase(r26);
-	r27      = r24;
-	s32 time = r24;
+	track->mNoteMgr.setConnectCase((r25_or_0x1C >> 5) & 0x3);
+
+	s32 r25 = r28;
 	if (track->mNoteMgr.checkBeforeTieMode()) {
 		if (track->mNoteMgr.getConnectCase() & 1)
-			time = -1;
+			r25 = -1;
 
-		if (time != -1)
-			time = track->seqTimeToDspTime(time, r23);
+		if (r25 != -1)
+			r25 = track->seqTimeToDspTime(r25, r26);
 
 		if (!track->unk3CD || !(track->unk3C1 & 0x10))
-			track->gateOn(noteid, note, r25, time);
+			track->gateOn(r27, r31, r29, r25);
 	} else {
-		if ((s32)r24 != -1)
-			time = track->seqTimeToDspTime(r24, r23);
+		if ((s32)r25 != -1)
+			r25 = track->seqTimeToDspTime(r25, r26);
 
 		if (track->mNoteMgr.getConnectCase() & 1)
-			time = -1;
+			r25 = -1;
 
 		if (!track->unk3CD || !(track->unk3C1 & 0x10))
-			track->noteOn(noteid, note, r25, time);
+			track->noteOn(r27, r31, r29, r25);
 	}
 
-	track->mNoteMgr.setBaseTime(r24);
+	track->mNoteMgr.setBaseTime(r28);
 	track->mNoteMgr.setBeforeTieMode(
 	    track->mNoteMgr.getConnectCase() & 1 ? true : false);
 
 	if (track->mNoteMgr.getConnectCase() & 0x2) {
-		s32 val = time;
-		if (time == -1)
-			val = track->seqTimeToDspTime(r27, r23);
+		if (r25 == -1)
+			r25 = track->seqTimeToDspTime(r28, r26);
 
 		JASystem::TChannel* channel = track->mNoteMgr.getChannel(0);
 		if (channel)
-			channel->setKeySweepTarget((u8)r31 + track->unk3C0, val);
+			channel->setKeySweepTarget(r30 + track->unk3C0, r25);
 
-		note = r31;
+		r31 = r30;
 	}
 
-	track->mNoteMgr.setLastNote(note);
-	if (r24 == 0xFFFFFFFF)
+	track->mNoteMgr.setLastNote(r31);
+	if (r28 == 0xFFFFFFFF)
 		return 0;
 
-	track->mSeqCtrl.wait(r24 ? (s32)r27 : -1);
+	track->mSeqCtrl.wait(r28 ? r28 : -1);
 
 	return 1;
 }
