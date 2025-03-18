@@ -40,13 +40,13 @@ void ChGlobal::init()
 		mgr->addListHead(&CHANNEL[i], 0);
 		CHANNEL[i].unk4 = mgr;
 	}
-	mgr->unk0 = 256;
+	mgr->mManagedChannels = 256;
 }
 
-int ChGlobal::alloc(TChannelMgr* mgr, u32 param)
+u32 ChGlobal::alloc(TChannelMgr* mgr, u32 count)
 {
 	int i;
-	for (i = 0; i < param; i++) {
+	for (i = 0; i < count; i++) {
 		TChannel* channel = GLOBAL_CHANNEL->getListHead(0);
 		if (!channel) {
 			break;
@@ -55,16 +55,16 @@ int ChGlobal::alloc(TChannelMgr* mgr, u32 param)
 		channel->unk4 = mgr;
 		channel->init();
 	}
-	mgr->unk0 += i;
-	GLOBAL_CHANNEL->unk0 -= i;
+	mgr->mManagedChannels += i;
+	GLOBAL_CHANNEL->mManagedChannels -= i;
 	return i;
 }
 
 int ChGlobal::release(TChannel* channel)
 {
 	GLOBAL_CHANNEL->addListHead(channel, 0);
-	channel->unk4->unk0--;
-	GLOBAL_CHANNEL->unk0++;
+	channel->unk4->mManagedChannels--;
+	GLOBAL_CHANNEL->mManagedChannels++;
 	channel->unk4 = GLOBAL_CHANNEL;
 	return 0;
 }
@@ -110,8 +110,8 @@ int ChGlobal::releaseAll(TChannelMgr* mgr)
 
 		channel->unk4 = GLOBAL_CHANNEL;
 	}
-	GLOBAL_CHANNEL->unk0 += mgr->unk0;
-	mgr->unk0 = 0;
+	GLOBAL_CHANNEL->mManagedChannels += mgr->mManagedChannels;
+	mgr->mManagedChannels = 0;
 	return 0;
 }
 

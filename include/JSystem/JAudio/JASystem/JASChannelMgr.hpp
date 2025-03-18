@@ -11,7 +11,7 @@ public:
 	void init();
 	void stopAll();
 	void stopAllRelease();
-	void checkGlobalRelease();
+	BOOL checkGlobalRelease();
 	TChannel* getLogicalChannel(u32);
 	void initAllocChannel(u32);
 	TChannel* getListHead(u32);
@@ -24,17 +24,17 @@ public:
 	void checkLimitStop(TChannel*, u32);
 
 public:
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ u32 mManagedChannels;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ TChannel* unk8;
 	/* 0xC */ TChannel* unkC;
 	/* 0x10 */ TChannel* unk10;
 	/* 0x14 */ TChannel* unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
+	/* 0x18 */ f32 mVolume;
+	/* 0x1C */ f32 mPitch;
+	/* 0x20 */ f32 mPan;
+	/* 0x24 */ f32 mFxmix;
+	/* 0x28 */ f32 mDolby;
 	/* 0x2C */ s16 unk2C[8];
 	/* 0x3C */ s16 unk3C[4];
 	char unk44[0x8];
@@ -46,7 +46,7 @@ public:
 	/* 0x62 */ u8 unk62[3];
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ u16 unk6C;
-	/* 0x70 */ s32 unk70;
+	/* 0x70 */ BOOL unk70;
 };
 
 } // namespace JASystem

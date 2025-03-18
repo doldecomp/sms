@@ -13,15 +13,15 @@ void TChannelMgr::init()
 	unk10 = 0;
 	unk14 = 0;
 
-	unk4  = 0;
-	unk0  = 0;
-	unk70 = 0;
+	unk4             = 0;
+	mManagedChannels = 0;
+	unk70            = TRUE;
 
-	unk18 = 1.0f;
-	unk1C = 1.0f;
-	unk20 = 0.5f;
-	unk24 = 0.0f;
-	unk28 = 0.0f;
+	mVolume = 1.0f;
+	mPitch  = 1.0f;
+	mPan    = 0.5f;
+	mFxmix  = 0.0f;
+	mDolby  = 0.0f;
 
 	for (int i = 0; i < 8; ++i)
 		unk2C[i] = 0;
@@ -71,7 +71,7 @@ void TChannelMgr::stopAllRelease()
 			channel->forceStopOsc(i);
 }
 
-void TChannelMgr::checkGlobalRelease() { }
+BOOL TChannelMgr::checkGlobalRelease() { return mManagedChannels != 0; }
 
 void TChannelMgr::addListHead(TChannel* channel, u32 param)
 {
@@ -202,13 +202,13 @@ int TChannelMgr::cutList(TChannel* channel)
 
 void TChannelMgr::initAllocChannel(u32 param)
 {
-	if (unk0 != 0)
+	if (checkGlobalRelease() != FALSE)
 		ChGlobal::releaseAll(this);
 
 	init();
 
 	ChGlobal::alloc(this, param);
-	unk70 = !param ? 0 : 1;
+	unk70 = !param ? FALSE : TRUE;
 }
 
 TChannel* TChannelMgr::getLogicalChannel(u32 param)
@@ -227,7 +227,7 @@ TChannel* TChannelMgr::getLogicalChannel(u32 param)
 
 		++unk4;
 		head = getListHead(0);
-		if (unk70 == 1) {
+		if (unk70 == TRUE) {
 			TChannel* chan = getListHead(2);
 			if (chan == nullptr)
 				chan = getListHead(1);
@@ -254,15 +254,16 @@ TChannel* TChannelMgr::getLogicalChannel(u32 param)
 
 int TChannelMgr::receiveAllChannels(TChannelMgr* other)
 {
+	TChannel* stolen;
 	for (;;) {
-		TChannel* stolen = other->getListHead(0);
+		stolen = other->getListHead(0);
 		if (!stolen)
 			break;
 		addListHead(stolen, 0);
 		stolen->unk4 = this;
 	}
 	for (;;) {
-		TChannel* stolen = other->getListHead(1);
+		stolen = other->getListHead(1);
 		if (!stolen)
 			break;
 		addListHead(stolen, 1);
@@ -270,7 +271,7 @@ int TChannelMgr::receiveAllChannels(TChannelMgr* other)
 		stolen->unkD0 = 1;
 	}
 	for (;;) {
-		TChannel* stolen = other->getListHead(2);
+		stolen = other->getListHead(2);
 		if (!stolen)
 			break;
 		addListHead(stolen, 2);
@@ -278,7 +279,7 @@ int TChannelMgr::receiveAllChannels(TChannelMgr* other)
 		stolen->unkD0 = 1;
 	}
 	for (;;) {
-		TChannel* stolen = other->getListHead(3);
+		stolen = other->getListHead(3);
 		if (!stolen)
 			break;
 		if (Driver::DSPQueue::deleteQueue(stolen))
@@ -287,8 +288,8 @@ int TChannelMgr::receiveAllChannels(TChannelMgr* other)
 			addListHead(stolen, 3);
 		stolen->unk4 = this;
 	}
-	unk0 += other->unk0;
-	other->unk0 = 0;
+	mManagedChannels += other->mManagedChannels;
+	other->mManagedChannels = 0;
 	unk4 += other->unk4;
 	other->unk4 = 0;
 
