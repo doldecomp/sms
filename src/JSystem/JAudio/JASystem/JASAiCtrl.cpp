@@ -47,7 +47,7 @@ namespace Kernel {
 		Vload::initVloadBuffers();
 	}
 
-	u32 getCurrentVCounter() { return 0; }
+	u32 getCurrentVCounter() { return JASUniversalDacCounter; }
 
 	MixCallback getMixCallback(s32) { return extMixCallback; }
 
@@ -70,9 +70,11 @@ namespace Kernel {
 	{
 		static u32 dacp = 0;
 		JASVframeCounter++;
-		s16* buf = DSPBuf::mixDSP(getDacSize() / 2);
-		Calc::imixcopy(buf + getFrameSamples(), buf, dac[dacp],
-		               getDacSize() / 2);
+
+		s16* buf1 = DSPBuf::mixDSP(getDacSize() / 2);
+		s16* buf2 = buf1 + getFrameSamples();
+		Calc::imixcopy(buf2, buf1, dac[dacp], getDacSize() / 2);
+
 		if (extMixCallback) {
 			switch (extMixMode) {
 			case 0:
@@ -124,6 +126,15 @@ namespace Kernel {
 
 	void registerDacCallback(void (*callback)(s16*, s32)) { }
 
+	inline s16 clamp_s32_to_s16(s32 v)
+	{
+		if (v < -0x8000)
+			return -0x7fff;
+		if (v > 0x7fff)
+			return 0x7fff;
+		return (s16)v;
+	}
+
 	static void mixMonoTrack(s16* buffer, s32 sampleCount,
 	                         MixCallback mixCallback)
 	{
@@ -135,29 +146,10 @@ namespace Kernel {
 		probeFinish(5);
 		s16* destPtr = buffer;
 		s16* srcPtr  = src;
-		for (int i = 0; i < sampleCount; i++) {
-			s32 var1 = destPtr[0] + srcPtr[0];
-			s16 var2;
-
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[0] = var2;
-
-			var1 = destPtr[1] + srcPtr[0];
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-
-			destPtr[1] = var2;
-			destPtr += 2;
-			srcPtr++;
+		for (int samplesLeft = sampleCount; samplesLeft > 0; --samplesLeft) {
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *srcPtr);
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *srcPtr);
+			++srcPtr;
 		}
 	}
 
@@ -172,29 +164,10 @@ namespace Kernel {
 		probeFinish(5);
 		s16* destPtr = buffer;
 		s16* srcPtr  = src;
-		for (int i = 0; i < sampleCount; i++) {
-			s32 var1 = destPtr[0] + srcPtr[0];
-			s16 var2;
-
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[0] = var2;
-
-			var1 = destPtr[1] - srcPtr[0];
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[1] = var2;
-
-			destPtr += 2;
-			srcPtr++;
+		for (int samplesLeft = sampleCount; samplesLeft > 0; --samplesLeft) {
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *srcPtr);
+			*destPtr++ = clamp_s32_to_s16(*destPtr - *srcPtr);
+			++srcPtr;
 		}
 	}
 
@@ -211,29 +184,11 @@ namespace Kernel {
 		s16* destPtr = buffer;
 		s16* srcPtr  = src;
 		s16* srcPtr2 = src + gFrameSamples;
-		for (int i = 0; i < sampleCount; i++) {
-			s32 var1 = destPtr[0] + srcPtr2[0];
-			s16 var2;
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[0] = var2;
-
-			var1 = destPtr[1] + srcPtr[0];
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[1] = var2;
-
-			destPtr += 2;
-			srcPtr2++;
-			srcPtr++;
+		for (int samplesLeft = sampleCount; samplesLeft > 0; --samplesLeft) {
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *srcPtr2);
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *srcPtr);
+			++srcPtr2;
+			++srcPtr;
 		}
 		probeFinish(6);
 	}
@@ -247,16 +202,7 @@ namespace Kernel {
 
 		s16* destPtr = buffer;
 		for (int i = 0; i < sampleCount * 2; i++) {
-			s32 var1 = destPtr[0] + src[0];
-			s16 var2;
-			if (var1 < -0x8000)
-				var2 = -0x7fff;
-			else if (var1 > 0x7fff)
-				var2 = 0x7fff;
-			else
-				var2 = var1;
-			destPtr[0] = var2;
-			destPtr++;
+			*destPtr++ = clamp_s32_to_s16(*destPtr + *src);
 			src++;
 		}
 	}
