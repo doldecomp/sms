@@ -208,7 +208,7 @@ int Dvd::loadToAramDvdTMain(void* param)
 		call->unk2C -= call->unk28;
 	}
 
-	OSGetTick();
+	OSTick time = OSGetTick();
 	while (call->unk2C) {
 		buf        = audioDvdBuffer[bufferLoad];
 		bufferLoad = (bufferLoad + 1) % buffers;
@@ -233,7 +233,7 @@ int Dvd::loadToAramDvdTMain(void* param)
 		arq_index %= 4;
 		call->unk24 = (u8*)call->unk24 + batchSize;
 	}
-	DVDClose(&finfo);
+	time -= DVDClose(&finfo);
 	while (bufferFull != 0)
 		;
 	OSGetTick();
@@ -311,6 +311,7 @@ u32 Dvd::checkFileExtend(char* path)
 
 u32 Dvd::loadFileDvdT(char* path, void* buffer)
 {
+	// TODO: how do we make this inline? It becomes OK when it inlines...
 	volatile u32 done = 0;
 	loadToDramDvdT(0, path, buffer, 0, 0, (u32*)&done, nullptr);
 
@@ -340,16 +341,15 @@ int Dvd::checkPassDvdT(u32 param1, u32* param2, void (*callback)(u32))
 	}
 	return 0;
 }
-DVDCallback Dvd::checkFile(char* path)
+int Dvd::checkFile(char* path)
 {
 	static DVDFileInfo finfo;
-	if (!openDvd(path, &finfo)) {
-		return nullptr;
-	} else {
-		DVDCallback result = finfo.callback;
-		DVDClose(&finfo);
-		return result;
-	}
+	if (!openDvd(path, &finfo))
+		return 0;
+
+	int result = finfo.length;
+	DVDClose(&finfo);
+	return result;
 }
 int Dvd::loadFile(char* path, void* buffer)
 {
@@ -504,10 +504,11 @@ static void Dvd::updateBuffer()
 	if (nextBuffers == 0)
 		return;
 
+	u8* nextBufTop = nextBufferTop;
+
 	buffers    = nextBuffers;
 	buffersize = nextBufferSize;
 
-	u8* nextBufTop = nextBufferTop;
 	for (u32 i = 0; i < nextBuffers; ++i) {
 		audioDvdBuffer[i] = nextBufTop;
 		nextBufTop += nextBufferSize;
