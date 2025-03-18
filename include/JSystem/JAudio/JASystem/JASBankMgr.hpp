@@ -23,11 +23,6 @@ namespace BankMgr {
 	void gateOn(TChannel* channel, u8 note, u8 velocity, u32 params);
 	u32 getUsedHeapSize();
 
-	extern f32 OSC_ENV[];
-	extern u32 OSC_RELEASE_TABLE[];
-	extern s32 sTableSize;
-	extern TBank** sBankArray;
-	extern u16* sVir2PhyTable;
 } // namespace BankMgr
 
 } // namespace JASystem

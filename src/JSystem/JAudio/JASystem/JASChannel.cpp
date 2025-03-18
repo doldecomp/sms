@@ -12,11 +12,12 @@ namespace JASystem {
 
 namespace Driver {
 	// TODO: This is definitely the wrong data type
-	u8 calc_sw_table[81]
-	    = { 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 2, 0, 1, 0,
-		    0, 2, 1, 0, 2, 2, 1, 0, 0, 1, 0, 1, 1, 0, 2, 1, 1, 0, 1, 1, 1,
-		    1, 1, 2, 1, 2, 0, 1, 2, 1, 1, 2, 2, 1, 0, 0, 2, 0, 1, 2, 0, 2,
-		    2, 1, 0, 2, 1, 1, 2, 1, 2, 2, 2, 0, 2, 2, 1, 2, 2, 2 };
+	u8 calc_sw_table[81] = {
+		0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 2, 0, 1, 0,
+		0, 2, 1, 0, 2, 2, 1, 0, 0, 1, 0, 1, 1, 0, 2, 1, 1, 0, 1, 1, 1,
+		1, 1, 2, 1, 2, 0, 1, 2, 1, 1, 2, 2, 1, 0, 0, 2, 0, 1, 2, 0, 2,
+		2, 1, 0, 2, 1, 1, 2, 1, 2, 2, 2, 0, 2, 2, 1, 2, 2, 2,
+	};
 
 	static void calcEffect(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
 	                       u8 param)
@@ -184,13 +185,13 @@ void TChannel::effectOsc(u32 index, f32 effect)
 		unk90 *= effect;
 		break;
 	case 2:
-		unk6C = effect;
+		unk68.mEffect = effect;
 		break;
 	case 3:
-		unk78 = effect;
+		unk74.mEffect = effect;
 		break;
 	case 4:
-		unk84 = effect;
+		unk80.mEffect = effect;
 		break;
 	}
 }
@@ -296,7 +297,7 @@ bool TChannel::resetInitialVolume()
 	return true;
 }
 
-bool TChannel::play(u32 param)
+BOOL TChannel::play(u32 param)
 {
 	if (param == 0) {
 		param = -1;
