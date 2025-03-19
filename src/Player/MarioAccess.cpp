@@ -206,7 +206,7 @@ void* SMS_GetMarioWaterGun()
 	return gpMarioOriginal->waterGun;
 }
 
-f32 SMS_GetMarioGravity() { return gpMarioOriginal->jumpParams.gravity.value; }
+f32 SMS_GetMarioGravity() { return gpMarioOriginal->jumpParams.mGravity.value; }
 
 f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->floorPosition.y; }
 
@@ -304,6 +304,6 @@ void SMS_SetMarioAccessParams()
 	gpMarioLightID = &gpMarioOriginal->lightID;
 	gpMarioFlag    = &gpMarioOriginal->_118;
 
-	gpMarioThrowPower  = &gpMarioOriginal->deParams.throwPower.value;
+	gpMarioThrowPower  = &gpMarioOriginal->deParams.mThrowPower.value;
 	gpMarioGroundPlane = &gpMarioOriginal->floor;
 }
