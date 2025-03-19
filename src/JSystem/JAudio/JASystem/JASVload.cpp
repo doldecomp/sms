@@ -133,7 +133,8 @@ u32 Vload::checkSize(u32 param)
 u32 Vload::loadFile(u32 param1, u8* param2, u32 param3, u32 param4)
 {
 	char buffer[0x80];
-	u32 result;
+	volatile u32 result;
+	u32 thing;
 	u32 hi;
 
 	hi     = param1 >> 0x10;
@@ -141,13 +142,15 @@ u32 Vload::loadFile(u32 param1, u8* param2, u32 param3, u32 param4)
 
 	VLArcEntry* hndl = getRealHandle(param1);
 
-	u32 thing = hndl->unk18 + param3;
+	thing = hndl->unk18 + param3;
 
 	strcpy(buffer, vlDirName[hi]);
 	strcat(buffer, "/");
 	strcat(buffer, vlArc[hi]->unk10);
 
-	Dvd::loadToDramDvdT(0, buffer, param2, thing, param4, &result, nullptr);
+	Dvd::loadToDramDvdT(0, buffer, param2, thing, param4, (u32*)&result,
+	                    nullptr);
+
 	while (result == 0)
 		;
 	return result;
@@ -157,12 +160,14 @@ u32 Vload::loadFileAsync(u32 param1, u8* param2, u32 param3, u32 param4,
                          void (*param5)(u32), u32 param6)
 {
 	char buffer[0x80];
+	u32 thing;
+	u32 hi;
 
-	u32 hi = param1 >> 0x10;
+	hi = param1 >> 0x10;
 
 	VLArcEntry* hndl = getRealHandle(param1);
 
-	u32 thing = hndl->unk18 + param3;
+	thing = hndl->unk18 + param3;
 
 	strcpy(buffer, vlDirName[hi]);
 	strcat(buffer, "/");
