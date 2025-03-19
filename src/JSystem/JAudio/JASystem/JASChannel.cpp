@@ -6,27 +6,139 @@
 #include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
+#include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <types.h>
 
 namespace JASystem {
 
 namespace Driver {
-	// TODO: This is definitely the wrong data type
-	u8 calc_sw_table[81] = {
-		0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 2, 0, 1, 0,
-		0, 2, 1, 0, 2, 2, 1, 0, 0, 1, 0, 1, 1, 0, 2, 1, 1, 0, 1, 1, 1,
-		1, 1, 2, 1, 2, 0, 1, 2, 1, 1, 2, 2, 1, 0, 0, 2, 0, 1, 2, 0, 2,
-		2, 1, 0, 2, 1, 1, 2, 1, 2, 2, 2, 0, 2, 2, 1, 2, 2, 2,
+
+	enum CalcSource {
+		CALC_Sound   = 0,
+		CALC_Effect  = 1,
+		CALC_Channel = 2,
 	};
 
-	static void calcEffect(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
-	                       u8 param)
+	enum CalcStyle {
+		CALC_NONE   = 0, // don't add that component
+		CALC_ADD    = 1, // simply add that component
+		CALC_WEIGHT = 2, // add component weighted by power
+	};
+
+	// clang-format off
+	static u8 calc_sw_table[27][3] = {
+		// sound, effect, channel
+		{ CALC_NONE, CALC_NONE, CALC_NONE },       // 0, null
+		{ CALC_NONE, CALC_NONE, CALC_ADD },        // 1, add only channel
+		{ CALC_NONE, CALC_NONE, CALC_ADD },        // 2, add only channel
+		{ CALC_NONE, CALC_ADD, CALC_NONE },        // 3, add only effect
+		{ CALC_NONE, CALC_ADD, CALC_ADD },         // 4, add effect and channel
+		{ CALC_NONE, CALC_ADD, CALC_WEIGHT },      // 5, add effect, weight channel
+		{ CALC_NONE, CALC_ADD, CALC_NONE },        // 6, add only effect
+		{ CALC_NONE, CALC_WEIGHT, CALC_ADD },      // 7, weight effect, add channel
+		{ CALC_NONE, CALC_WEIGHT, CALC_WEIGHT },   // 8, weight effect and channel
+		{ CALC_ADD, CALC_NONE, CALC_NONE },        // 9, add only sound
+		{ CALC_ADD, CALC_NONE, CALC_ADD },         // 10, add sound and channel
+		{ CALC_ADD, CALC_NONE, CALC_WEIGHT },      // 11, add sound, weight channel
+		{ CALC_ADD, CALC_ADD, CALC_NONE },         // 12, add sound and effect
+		{ CALC_ADD, CALC_ADD, CALC_ADD },          // 13, add all
+		{ CALC_ADD, CALC_ADD, CALC_WEIGHT },       // 14, add sound and effect, weight channel
+		{ CALC_ADD, CALC_WEIGHT, CALC_NONE },      // 15, add sound, weight effect
+		{ CALC_ADD, CALC_WEIGHT, CALC_ADD },       // 16, add sound and channel, weight effect
+		{ CALC_ADD, CALC_WEIGHT, CALC_WEIGHT },    // 17, add sound, weight effect and channel
+		{ CALC_ADD, CALC_NONE, CALC_NONE },        // 18, add only sound
+		{ CALC_WEIGHT, CALC_NONE, CALC_ADD },      // 19, weight sound, add channel
+		{ CALC_WEIGHT, CALC_NONE, CALC_WEIGHT },   // 20, weight sound and channel
+		{ CALC_WEIGHT, CALC_ADD, CALC_NONE },      // 21, weight sound, add effect
+		{ CALC_WEIGHT, CALC_ADD, CALC_ADD },       // 22, weight sound, add effect and channel
+		{ CALC_WEIGHT, CALC_ADD, CALC_WEIGHT },    // 23, weight sound and channel, weight effect
+		{ CALC_WEIGHT, CALC_WEIGHT, CALC_NONE },   // 24, weight sound and effect
+		{ CALC_WEIGHT, CALC_WEIGHT, CALC_ADD },    // 25, weight sound and effect, add channel
+		{ CALC_WEIGHT, CALC_WEIGHT, CALC_WEIGHT }, // 26, weight all
+	};
+	// clang-format on
+
+	static f32 calcEffect(const PanMatrix_* params, const PanMatrix_* power,
+	                      u8 calcType)
 	{
+		f32 value           = 0.0f;
+		const u8* calcTypes = Driver::calc_sw_table[calcType];
+		switch (calcTypes[CALC_Sound]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += params->mSound;
+			break;
+		case CALC_WEIGHT:
+			value += params->mSound * power->mSound;
+			break;
+		}
+
+		switch (calcTypes[CALC_Effect]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += params->mEffect;
+			break;
+		case CALC_WEIGHT:
+			value += params->mEffect * power->mEffect;
+			break;
+		}
+
+		switch (calcTypes[CALC_Channel]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += params->mChannel;
+			break;
+		case CALC_WEIGHT:
+			value += params->mChannel * power->mChannel;
+			break;
+		}
+
+		return value;
 	}
 
-	static void calcPan(const PanMatrix_* matrix1, const PanMatrix_* matrix2,
-	                    u8 param)
+	static f32 calcPan(const PanMatrix_* params, const PanMatrix_* power,
+	                   u8 calcType)
 	{
+		f32 value           = 0.0f;
+		const u8* calcTypes = Driver::calc_sw_table[calcType];
+		switch (calcTypes[CALC_Sound]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += (params->mSound - 0.5f);
+			break;
+		case CALC_WEIGHT:
+			value += (params->mSound - 0.5f) * power->mSound;
+			break;
+		}
+
+		switch (calcTypes[CALC_Effect]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += (params->mEffect - 0.5f);
+			break;
+		case CALC_WEIGHT:
+			value += (params->mEffect - 0.5f) * power->mEffect;
+			break;
+		}
+
+		switch (calcTypes[CALC_Channel]) {
+		case CALC_NONE:
+			break;
+		case CALC_ADD:
+			value += (params->mChannel - 0.5f);
+			break;
+		case CALC_WEIGHT:
+			value += (params->mChannel - 0.5f) * power->mChannel;
+			break;
+		}
+
+		value += 0.5f;
+		return value;
 	}
 
 	static void __UpdateJcToDSP(TChannel* channel)
@@ -59,7 +171,7 @@ namespace Driver {
 	{
 		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
 
-		if (channel->unkA8[0] == 0xffff) {
+		if (channel->unkA8[0].mWhole == 0xffff) {
 			buf->initAutoMixer();
 		} else {
 			buf->setMixerInitDelayMax(channel->unk4->unk60);
@@ -78,7 +190,29 @@ namespace Driver {
 		buf->setPauseFlag(channel->unk2);
 	}
 
-	static void extraUpdate(TChannel* channel, u32 param) { }
+	static u32 extraUpdate(TChannel* channel, u32 param)
+	{
+		if (channel->unk9A != 0) {
+			f32 f31           = channel->unk94 - channel->unk50;
+			u8 updateInterval = Driver::getUpdateInterval();
+			if (channel->unk9A <= updateInterval) {
+				channel->unk9A = 1;
+			}
+			f31 /= channel->unk9A;
+			channel->unk50 += f31 * updateInterval;
+			if ((channel->unk9A - updateInterval) <= 0) {
+				channel->unk9A = 0;
+			} else {
+				channel->unk9A -= updateInterval;
+			}
+			if (channel->unk9A == 0) {
+				channel->unk2C = nullptr;
+			}
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 
 	static BOOL updatecallLogicalChannel(TChannel* channel, u32 param)
 	{
@@ -128,21 +262,286 @@ namespace Driver {
 		return FALSE;
 	}
 
-	static void killBrokenLogicalChannels(TDSPChannel* dspChannel) { }
-
-	static void updateAutoMixer(TChannel* channel, f32 fl, f32 fr, f32 rl,
-	                            f32 rr)
+	static void killBrokenLogicalChannels(TDSPChannel* dspChannel)
 	{
+		for (u32 i = 0; i < 256; i++) {
+			TChannel* channel = ChGlobal::getChannelHandle(i);
+			if (channel == nullptr)
+				continue;
+			if (channel->unk20 != dspChannel)
+				continue;
+
+			if (channel->unk4 == nullptr)
+				continue;
+
+			TChannelMgr* mgr = channel->unk4;
+
+			channel->stopLogicalChannel();
+
+			if (mgr->cutList(channel) != -1)
+				mgr->addListHead(channel, 0);
+		}
 	}
 
-	static void updateMixer(TChannel* channel, f32 fl, f32 fr, f32 rl, f32 rr)
+	static void updateAutoMixer(TChannel* channel, f32 volume, f32 pan,
+	                            f32 fxmix, f32 dolby)
 	{
+		channel->unk20->unkC->setAutoMixer(volume * 32767.5f, pan * 127.5f,
+		                                   dolby * 127.5f, fxmix * 127.5f,
+		                                   channel->unkA8[1].mWhole);
 	}
 
-	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param) { }
+	static void updateMixer(TChannel* channel, f32 volume, f32 pan, f32 fxmix,
+	                        f32 dolby)
+	{
+		for (u32 i = 0; i < 6; i++) {
+			f32 vol = volume;
+
+			TChannel::MixConfig config = channel->unkA8[i];
+			if (config.mParts.u == 0) {
+				channel->unkB4[i] = 0;
+			} else {
+				f32 scale;
+
+				if (config.mParts.l0 != 0) {
+					switch (config.mParts.l0) {
+					case 1:
+						scale = pan;
+						break;
+					case 2:
+						scale = fxmix;
+						break;
+					case 3:
+						scale = dolby;
+						break;
+					case 5:
+						scale = 1.0f - pan;
+						break;
+					case 6:
+						scale = 1.0f - fxmix;
+						break;
+					case 7:
+						scale = 1.0f - dolby;
+						break;
+					}
+
+					vol *= Calc::sinfT(scale);
+				}
+
+				if (config.mParts.l1 != 0) {
+					switch (config.mParts.l1) {
+					case 1:
+						scale = pan;
+						break;
+					case 2:
+						scale = fxmix;
+						break;
+					case 3:
+						scale = dolby;
+						break;
+					case 5:
+						scale = 1.0f - pan;
+						break;
+					case 6:
+						scale = 1.0f - fxmix;
+						break;
+					case 7:
+						scale = 1.0f - dolby;
+						break;
+					}
+
+					switch (config.mParts.l1) {
+					case 3:
+					case 7:
+						vol *= Calc::sinfDolby2(scale);
+						break;
+					default:
+						vol *= Calc::sinfT(scale);
+						break;
+					}
+				}
+
+				if (vol <= 0.0f)
+					vol = 0.0f;
+				else if (vol >= 1.0f)
+					vol = 1.0f;
+				channel->unkB4[i] = vol * Driver::getMixerLevel();
+			}
+		}
+	}
+
+	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param)
+	{
+		TChannel* channel = dspChannel->getLogicalChannel();
+		TChannelMgr* mgr  = channel->unk4;
+
+		u32 i;
+		u32 r28 = 0;
+
+		if (channel == nullptr) {
+			dspChannel->unk10 = nullptr;
+			dspChannel->unk3  = 0;
+			killBrokenLogicalChannels(dspChannel);
+			return 0;
+		}
+
+		if (channel->unk20 != dspChannel) {
+			if (channel->unk20 != nullptr
+			    && channel == channel->unk20->getLogicalChannel()) {
+				killBrokenLogicalChannels(dspChannel);
+			} else {
+				channel->stopLogicalChannel();
+				if (mgr->cutList(channel) != -1) {
+					mgr->addListHead(channel, 0);
+				}
+			}
+			dspChannel->forceDelete();
+			return 0;
+		} else {
+			if (param == 2) {
+				if (channel->unk28 != nullptr) {
+					channel->unk28(channel, 1);
+				} else {
+					channel->stopLogicalChannel();
+					if (mgr->cutList(channel) != -1) {
+						mgr->addListHead(channel, 0);
+					}
+				}
+				return 0;
+			}
+
+			if (channel->unk10 != nullptr && channel->unk10->unk24[0] == 0) {
+				channel->unk20->forceStop();
+				return -1;
+			}
+
+			if (param == 4) {
+				u8 priority = channel->getLifeTimePriority();
+				if (channel->unk20 != nullptr) {
+					if (priority < channel->unk20->unk3) {
+						channel->unk20->unk3 = priority;
+					}
+				}
+				return 0;
+			}
+
+			if (param == 3) {
+				channel->forceStopOsc(0);
+				if (mgr->cutList(channel) == -1) {
+					return 1;
+				}
+				mgr->addListHead(channel, 3);
+				param = 0;
+			}
+
+			if (param == 0) {
+				channel->unk8C         = 1.0f;
+				channel->unk90         = 1.0f;
+				channel->unk68.mEffect = 0.5f;
+				channel->unk74.mEffect = 0.0f;
+				channel->unk80.mEffect = 0.0f;
+
+				for (i = 0; i < 4; i++) {
+					if (!channel->isOsc(i))
+						continue;
+					channel->effectOsc(i, channel->bankOscToOfs(i));
+					if (i == 0 && channel->getOscState(i) == 0) {
+						if (channel->unk28 == nullptr) {
+							if (!channel->stopLogicalChannel()) {
+								dspChannel->stop();
+							}
+							if (mgr->cutList(channel) != -1) {
+								mgr->addListHead(channel, 0);
+							}
+							return 0;
+						}
+						channel->unk28(channel, 2);
+						return 0;
+					}
+					r28++;
+				}
+
+				if (r28 != 0) {
+					channel->updateEffectorParam();
+					channel->unk3 = 1;
+				}
+
+				if (channel->unk2C != nullptr) {
+					if (channel->unk2C(channel, 0) == 1) {
+						channel->unk3++;
+					}
+				}
+
+				u8 updateInterval = Driver::getUpdateInterval();
+				if (channel->unk28 == nullptr) {
+					return updateInterval;
+				}
+				if (channel->unk34 > 0) {
+					if (channel->unk34 > updateInterval) {
+						channel->unk34 -= updateInterval;
+					} else {
+						channel->unk34 = 0;
+					}
+				}
+			}
+
+			if (channel->unk34 == 0) {
+				channel->unk28(channel, 0);
+				channel->unk34 = channel->unk30;
+			}
+			if (channel->unk3 != 0) {
+				channel->updateJcToDSP();
+				channel->unk3 = 0;
+			}
+
+			return Driver::getUpdateInterval();
+		}
+		dspChannel->forceDelete();
+	}
 } // namespace Driver
 
-void TChannel::init() { }
+void TChannel::init()
+{
+	unk28 = nullptr;
+	unk2C = nullptr;
+	unk30 = 0;
+	unk34 = 0;
+	unk10 = nullptr;
+	unkC  = 0;
+	unk14 = 0;
+	unk18 = 0;
+	unk1C = 0;
+	unkD0 = 0;
+	if (!unk4) {
+		unkA8[0].mWhole = 0x150;
+		unkA8[1].mWhole = 0x210;
+		unkA8[2].mWhole = 0x352;
+		unkA8[3].mWhole = 0x412;
+		unkA8[4].mWhole = 0;
+		unkA8[5].mWhole = 0;
+		unkC0           = 0x10101;
+		unkC4           = 600;
+		unk58[0]        = CALC_WeightAll;      // Pan
+		unk58[1]        = CALC_AddChannelOnly; // FxMix
+		unk58[2]        = CALC_AddChannelOnly;
+	} else {
+		for (int i = 0; i < 6; i++)
+			unkA8[i].mWhole = unk4->unk4E[i];
+
+		unkC0 = unk4->unk68;
+		unkC4 = unk4->unk6C;
+		for (int i = 0; i < 3; i++)
+			unk58[i] = unk4->unk62[i];
+	}
+	for (u32 i = 0; i < 4; i++) {
+		unk38[i]->setOsc(nullptr);
+		unk38[i]->init();
+	}
+	unk2 = 0;
+	unkC6++;
+	if ((s32)unkC6 == 0)
+		unkC6 = 1;
+}
 
 void TChannel::setOscillator(u32 index, TOscillator* oscillator)
 {
@@ -196,7 +595,7 @@ void TChannel::effectOsc(u32 index, f32 effect)
 	}
 }
 
-u32 TChannel::getOscState(u32 index) const { return unk38[index]->mState; }
+u8 TChannel::getOscState(u32 index) const { return unk38[index]->mState; }
 
 BOOL TChannel::isOsc(u32 index) { return unk38[index]->isOsc(); }
 
@@ -263,9 +662,9 @@ void TChannel::setPanPower(f32 fl, f32 fr, f32 rl, f32 rr)
 	if (px == 0.0f)
 		px = 1.0f;
 
-	unk5C = fl / px;
-	unk60 = fr / px;
-	unk64 = rl / px;
+	unk5C.mSound   = fl / px;
+	unk5C.mEffect  = fr / px;
+	unk5C.mChannel = rl / px;
 }
 
 void TChannel::setPanParam(const f32* pan, const f32* dolby, const f32* fx) { }
@@ -404,7 +803,7 @@ BOOL TChannel::playLogicalChannel()
 				u8 lo;
 			} asP;
 		} s;
-		s.asS16 = unkA8[i];
+		s.asS16 = unkA8[i].mWhole;
 		u32 om  = Driver::getOutputMode();
 
 		if (om == 0) {
@@ -439,6 +838,70 @@ BOOL TChannel::playLogicalChannel()
 	return TRUE;
 }
 
-void TChannel::updateEffectorParam() { }
+// fabricated
+static inline f32 clamp01(f32 value)
+{
+	if (value <= 0.0f)
+		return 0.0f;
+	else if (value >= 1.0f)
+		return 1.0f;
+	else
+		return value;
+}
+
+void TChannel::updateEffectorParam()
+{
+	f32 pan;
+	f32 fxmix;
+	f32 dolby = 0.0f;
+
+	if (unk9C == unk4) {
+		unkA0          = unk4->mPitch;
+		unkA4          = unk4->mVolume;
+		unk68.mChannel = unk4->mPan;
+		unk74.mChannel = unk4->mFxmix;
+		unk80.mChannel = unk4->mDolby;
+		for (int i = 0; i < 3; i++)
+			unk58[i] = unk4->unk62[i];
+	}
+
+	switch (Driver::getOutputMode()) {
+	case 0:
+		pan   = 0.5f;
+		dolby = 0.0f;
+		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+		break;
+	case 1:
+		if (unk58[0] == CALC_None)
+			pan = 0.5f;
+		else
+			pan = calcPan(&unk68, &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+		dolby = 0.0f;
+		break;
+	case 2:
+		if (unk58[0] == CALC_None)
+			pan = 0.5f;
+		else
+			pan = calcPan(&unk68, &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+		dolby = calcEffect(&unk80, &unk5C, unk58[2]);
+		break;
+	}
+
+	f32 volume = unkA4 * (unk50 * unk90);
+
+	pan   = clamp01(pan);
+	fxmix = clamp01(fxmix);
+	dolby = clamp01(dolby);
+
+	unk98 = 4096.0f * (unkA0 * (unk50 * unk8C));
+
+	if (unkA8[0].mWhole != 0xFFFF) {
+		Driver::updateMixer(this, volume, pan, fxmix, dolby);
+	} else {
+		Driver::updateAutoMixer(this, volume, pan, fxmix, dolby);
+	}
+}
 
 } // namespace JASystem
