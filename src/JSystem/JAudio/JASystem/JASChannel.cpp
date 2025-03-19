@@ -236,7 +236,8 @@ void TChannel::setKeySweepTarget(u8 key, u32 target)
 	else if (thing > 0x7F)
 		thing = 0x7F;
 
-	f32 val = Driver::C5BASE_PITCHTABLE[thing] * unk48;
+	f32 val = Driver::C5BASE_PITCHTABLE[thing];
+	val *= unk48;
 	if (target == 0) {
 		unk50 = val;
 		unk2C = 0;

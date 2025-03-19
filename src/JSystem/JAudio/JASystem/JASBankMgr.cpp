@@ -84,12 +84,11 @@ namespace BankMgr {
 
 	f32 clamp01(f32 value)
 	{
-		f32 result = value;
-		if (result < 0.0f)
-			result = 0.0f;
-		else if (result > 1.0f)
-			result = 1.0f;
-		return result;
+		if (value < 0.0f)
+			value = 0.0f;
+		else if (value > 1.0f)
+			value = 1.0f;
+		return value;
 	}
 
 	static TChannel* noteOnOsc(TChannelMgr* param_1, int param_2, u8 param_3,
@@ -98,7 +97,7 @@ namespace BankMgr {
 	TChannel* noteOn(TChannelMgr* param_1, int param_2, int param_3, u8 param_4,
 	                 u8 param_5, u32 param_6)
 	{
-		if (param_3 > 0xF0)
+		if (param_3 > 0xEF)
 			return noteOnOsc(param_1, param_3 - 0xF0, param_4, param_5,
 			                 param_6);
 
@@ -110,15 +109,15 @@ namespace BankMgr {
 		if (!inst)
 			return nullptr;
 
-		TInstParam params;
-		if (!inst->getParam(param_4, param_5, &params))
+		TInstParam instParam;
+		if (!inst->getParam(param_4, param_5, &instParam))
 			return nullptr;
 
 		TWaveBank* waveBank = bank->unk4;
 		if (!waveBank)
 			return nullptr;
 
-		TWaveHandle* waveHndl = waveBank->getWaveHandle(params.unk4);
+		TWaveHandle* waveHndl = waveBank->getWaveHandle(instParam.unk4);
 		if (!waveHndl)
 			return nullptr;
 
@@ -130,8 +129,8 @@ namespace BankMgr {
 		if (!wave)
 			return nullptr;
 
-		u32 chanKey = param_3 | params.unk40 << 0x18 | param_2 << 8;
-		switch (params.unk40 & 0xC0) {
+		u32 chanKey = (instParam.unk40 << 0x18) | (param_2 << 8) | param_3;
+		switch (instParam.unk40 & 0xC0) {
 		case 0xC0:
 			chanKey |= 0xffffff;
 			break;
@@ -139,7 +138,7 @@ namespace BankMgr {
 			chanKey |= 0xff;
 			break;
 		case 0x40:
-			chanKey |= params.unk38 << 0x10;
+			chanKey |= instParam.unk3C << 0x10;
 			break;
 		}
 
@@ -150,12 +149,12 @@ namespace BankMgr {
 		// TODO: WTF?
 		chan->unk10 = (Driver::Wave_*)waveInfo;
 		chan->unk14 = (u32)wave;
-		chan->unkC  = params.unk0;
+		chan->unkC  = instParam.unk0;
 		chan->unk0  = param_5;
 		chan->unk1  = param_4;
-		chan->unk48 = params.unk14 * (waveInfo->unk4 / Kernel::getDacRate());
-		chan->unk50 = chan->unk48 * params.unk18;
-		if (params.unk38 == 0) {
+		chan->unk48 = instParam.unk14 * (waveInfo->unk4 / Kernel::getDacRate());
+		chan->unk50 = chan->unk48 * instParam.unk18;
+		if (instParam.unk38 == 0) {
 			int var = (param_4 + 0x3C) - waveInfo->unk2;
 			if (var < 0)
 				var = 0;
@@ -163,28 +162,29 @@ namespace BankMgr {
 				var = 0x7f;
 			chan->unk50 *= Driver::C5BASE_PITCHTABLE[var];
 		}
-		chan->unk4C          = params.unk10;
-		chan->unk54          = chan->unk0 / 127.0f;
-		chan->unk54          = chan->unk4C * (chan->unk54 * chan->unk54);
-		chan->unk54          = chan->unk54 * params.unk18;
-		chan->unk68.mSound   = params.unk20;
-		chan->unk74.mSound   = params.unk24;
-		chan->unk80.mChannel = params.unk28;
+		chan->unk4C = instParam.unk10;
+		chan->unk54 = chan->unk0 / 127.0f;
+		chan->unk54 = chan->unk4C * (chan->unk54 * chan->unk54);
+		chan->unk54 *= instParam.unk18;
+
+		chan->unk68.mSound = instParam.unk20;
+		chan->unk74.mSound = instParam.unk24;
+		chan->unk80.mSound = instParam.unk28;
 
 		chan->unk68.mSound = clamp01(chan->unk68.mSound);
 		chan->unk74.mSound = clamp01(chan->unk74.mSound);
 
-		chan->unk68.mEffect = params.unk2C;
-		chan->unk74.mEffect = params.unk30;
-		chan->unk80.mEffect = params.unk34;
+		chan->unk68.mEffect = instParam.unk2C;
+		chan->unk74.mEffect = instParam.unk30;
+		chan->unk80.mEffect = instParam.unk34;
 
 		chan->unk8C = 1.0f;
 		chan->unk90 = 1.0f;
 
-		for (int i = 0; i < params.mOscCount; ++i)
-			chan->setOscInit(i, params.mOscData[i]);
+		for (u32 i = 0; i < instParam.mOscCount; ++i)
+			chan->setOscInit(i, instParam.mOscData[i]);
 
-		chan->directReleaseOsc(0, params.unk3A);
+		chan->directReleaseOsc(0, instParam.unk3A);
 		if (!chan->play(param_6))
 			return nullptr;
 

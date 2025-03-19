@@ -11,8 +11,8 @@ public:
 	TInstSense()
 	    : unk8(0)
 	    , unk9(0x3C)
-	    , unkC(0.0f)
-	    , unk10(0.0f)
+	    , unkC(1.0f)
+	    , unk10(1.0f)
 	{
 	}
 

@@ -7,8 +7,8 @@ namespace JASystem {
 class TInstRand : public TInstEffect {
 public:
 	TInstRand()
-	    : unk8(0.0f)
-	    , unkC(1.0f)
+	    : unk8(1.0f)
+	    , unkC(0.0f)
 	{
 	}
 
