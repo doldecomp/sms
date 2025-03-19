@@ -25,6 +25,7 @@ namespace Driver {
 		/* 0x1C */ int unk1C;
 		/* 0x20 */ short unk20;
 		/* 0x22 */ short unk22;
+		/* 0x24 */ u32* unk24;
 	};
 } // namespace Driver
 
@@ -32,6 +33,15 @@ class TChannelMgr;
 
 class TChannel {
 public:
+	enum CalcType {
+		// (TWW) NB: haven't seen others used, add from calc_sw_table in
+		// JASChannel.cpp if needed
+		CALC_None           = 0,
+		CALC_AddChannelOnly = 1,
+		CALC_AddAll         = 13,
+		CALC_WeightAll      = 26,
+	};
+
 	TChannel()
 	    : unk4(0)
 	    , unk8(0)
@@ -51,7 +61,7 @@ public:
 	void directReleaseOsc(u32 index, u16 release);
 	f32 bankOscToOfs(u32 index);
 	void effectOsc(u32 index, f32 effect);
-	u32 getOscState(u32 index) const;
+	u8 getOscState(u32 index) const;
 	BOOL isOsc(u32 index);
 	void copyOsc(u32 index, TOscillator::Osc_* dest);
 	void overwriteOsc(u32 index, TOscillator::Osc_* src);
@@ -75,6 +85,17 @@ public:
 	BOOL playLogicalChannel();
 	void updateEffectorParam();
 
+	u8 getLifeTimePriority() const { return unkC0 >> 0x10; }
+
+	union MixConfig {
+		u16 mWhole;
+		struct {
+			u8 u;
+			u8 l0 : 4;
+			u8 l1 : 4;
+		} mParts;
+	};
+
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
@@ -86,11 +107,11 @@ public:
 	/* 0x10 */ Driver::Wave_* unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ char unk1C[0x4];
+	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ TDSPChannel* unk20;
 	/* 0x24 */ TChannel* mNext;
 	/* 0x28 */ BOOL (*unk28)(TChannel*, u32);
-	/* 0x2C */ void (*unk2C)(TChannel*, u32);
+	/* 0x2C */ u32 (*unk2C)(TChannel*, u32);
 	/* 0x30 */ s32 unk30;
 	/* 0x34 */ s32 unk34;
 	/* 0x38 */ TOscillator* unk38[4];
@@ -98,10 +119,8 @@ public:
 	/* 0x4C */ f32 unk4C;
 	/* 0x50 */ f32 unk50;
 	/* 0x54 */ f32 unk54;
-	/* 0x58 */ char unk58[0x4];
-	/* 0x5C */ f32 unk5C;
-	/* 0x60 */ f32 unk60;
-	/* 0x64 */ f32 unk64;
+	/* 0x58 */ u8 unk58[3];
+	/* 0x5C */ Driver::PanMatrix_ unk5C;
 	/* 0x68 */ Driver::PanMatrix_ unk68;
 	/* 0x74 */ Driver::PanMatrix_ unk74;
 	/* 0x80 */ Driver::PanMatrix_ unk80;
@@ -111,8 +130,9 @@ public:
 	/* 0x98 */ u16 unk98;
 	/* 0x9A */ u16 unk9A;
 	/* 0x9C */ TChannelMgr* unk9C;
-	/* 0xA0 */ char unkA0[0x8];
-	/* 0xA8 */ u16 unkA8[6];
+	/* 0xA0 */ f32 unkA0;
+	/* 0xA0 */ f32 unkA4;
+	/* 0xA8 */ MixConfig unkA8[6];
 	/* 0xB4 */ s16 unkB4[6];
 	/* 0xC0 */ u32 unkC0;
 	/* 0xC4 */ u16 unkC4;

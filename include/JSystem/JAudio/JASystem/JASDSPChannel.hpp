@@ -52,6 +52,16 @@ public:
 	static u32 smnUse;
 	static u32 smnFree;
 
+	// fake, stolen from tww
+	TChannel* getLogicalChannel()
+	{
+		if (unk10 != nullptr) {
+			return (TChannel*)unk8; // (TWW) ?? is this userdata?
+		} else {
+			return nullptr;
+		}
+	}
+
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x0 */ u8 unk1;
