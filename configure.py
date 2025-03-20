@@ -418,7 +418,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIAnimation.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIBasic.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIConst.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIDebug.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIDebug.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIData.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIEntry.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIEntrySe.cpp"),
