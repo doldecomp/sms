@@ -847,7 +847,7 @@ config.libs = [
             Object(NonMatching, "System/marerr.cpp"),
             Object(NonMatching, "System/MarNameRefGen.cpp"),
             Object(NonMatching, "System/MenuDir.cpp"),
-            Object(NonMatching, "System/Params.cpp"),
+            Object(Matching, "System/Params.cpp"),
             Object(Matching, "System/ParamInst.cpp"),
             Object(NonMatching, "System/PerformList.cpp"),
             Object(NonMatching, "System/RenderModeObj.cpp"),
