@@ -19,5 +19,3 @@ TBaseParam::TBaseParam(TParams* params, unsigned short code,
 
 	params->mHead = this;
 }
-
-void TBaseParam::load(JSUMemoryInputStream& stream) { }

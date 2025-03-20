@@ -8,7 +8,7 @@ class TParams;
 class TBaseParam {
 public:
 	TBaseParam(TParams* params, unsigned short code, const char* paramName);
-	virtual inline void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream&) { }
 
 	u16 keyCode;
 	const char* name;

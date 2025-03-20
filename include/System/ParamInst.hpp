@@ -1,8 +1,8 @@
 #ifndef PARAM_INST_HPP
 #define PARAM_INST_HPP
 
-#include "JSystem/JDrama/JDRNameRef.hpp"
-#include "System/BaseParam.hpp"
+#include <JSystem/JDrama/JDRNameRef.hpp>
+#include <System/BaseParam.hpp>
 
 #define PARAM_INIT(member, value)                                              \
 	member(this, JDrama::TNameRef::calcKeyCode("#member"), "#member", value)
@@ -16,7 +16,9 @@ public:
 	{
 	}
 
-	void load(JSUMemoryInputStream& stream);
+	virtual void load(JSUMemoryInputStream& stream);
+
+	// fabricated
 	T get() const { return value; }
 
 	T value;

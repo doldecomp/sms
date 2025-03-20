@@ -1,6 +1,11 @@
 #include <System/Params.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 
+static const char SSceneParamsDir[] = "/map/params";
+
+JKRFileLoader* TParams::mArc      = nullptr;
+JKRFileLoader* TParams::mSceneArc = nullptr;
+
 bool TParams::load(const char* filename)
 {
 	bool found = false;
@@ -9,7 +14,7 @@ bool TParams::load(const char* filename)
 	}
 
 	void* resource = nullptr;
-	if (mSceneArc != nullptr && mSceneArc->becomeCurrent("/map/params")) {
+	if (mSceneArc != nullptr && mSceneArc->becomeCurrent(SSceneParamsDir)) {
 		resource = mSceneArc->getResource(filename);
 	}
 
@@ -32,6 +37,18 @@ bool TParams::load(const char* filename)
 	}
 
 	return found;
+}
+
+void TParams::finalize()
+{
+	mArc      = nullptr;
+	mSceneArc = nullptr;
+}
+
+void TParams::init()
+{
+	mArc      = JKRFileLoader::getVolume("params");
+	mSceneArc = JKRFileLoader::getVolume("scene");
 }
 
 void TParams::load(JSUMemoryInputStream& stream)
@@ -57,18 +74,3 @@ void TParams::load(JSUMemoryInputStream& stream)
 		}
 	}
 }
-
-void TParams::init()
-{
-	mArc      = JKRFileLoader::getVolume("params");
-	mSceneArc = JKRFileLoader::getVolume("scene");
-}
-
-void TParams::finalize()
-{
-	mArc      = nullptr;
-	mSceneArc = nullptr;
-}
-
-JKRFileLoader* TParams::mArc      = nullptr;
-JKRFileLoader* TParams::mSceneArc = nullptr;
