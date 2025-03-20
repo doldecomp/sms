@@ -228,6 +228,9 @@ func_end:
 #endif // clang-format on
 }
 
+// Modulo for 64-bit ints
+// uses funky 2-register passing ABI
+// r3,r4 = r3,r4 % r5,r6
 asm void __mod2u(void)
 {
 #ifdef __MWERKS__ // clang-format off

@@ -545,7 +545,7 @@ config.libs = [
 
             Object(NonMatching, "JSystem/JMath.cpp"),
             Object(Matching, "JSystem/JRenderer.cpp"),
-            Object(NonMatching, "JSystem/random.cpp"),
+            Object(Matching, "JSystem/random.cpp"),
             Object(Matching, "JSystem/dspproc.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/osdsp.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
