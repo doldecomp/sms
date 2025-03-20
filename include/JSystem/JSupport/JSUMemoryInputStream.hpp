@@ -7,8 +7,6 @@ class JSUMemoryInputStream : public JSURandomInputStream {
 public:
 	JSUMemoryInputStream(const void* buffer, s32 size)
 	{
-		// Probably an assert
-		(void)!buffer;
 		setBuffer(buffer, size);
 	}
 

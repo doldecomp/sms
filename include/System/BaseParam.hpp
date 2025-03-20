@@ -3,12 +3,15 @@
 
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 
+class TParams;
+
 class TBaseParam {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	TBaseParam(TParams* params, unsigned short code, const char* paramName);
+	virtual void load(JSUMemoryInputStream&) { }
 
 	u16 keyCode;
-	char* name;
+	const char* name;
 	TBaseParam* next;
 };
 
