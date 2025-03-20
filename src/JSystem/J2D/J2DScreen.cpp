@@ -176,6 +176,8 @@ J2DSetScreen::J2DSetScreen(const char* name, JKRArchive* arch)
 	u8* res = (u8*)JKRGetNameResource(name, arch);
 	if (res) {
 		u32 sz = JKRFileLoader::getResSize(res, nullptr);
+		// Probably an assert
+		(void)!res;
 		JSUMemoryInputStream stream(res, sz);
 		makeHiearachyPanes(this, &stream, false, true, false, nullptr);
 	}
