@@ -10,6 +10,29 @@ class JAIStreamParameter;
 
 class JAISound {
 public:
+	/* 0x0 */ u8 unk0;
+	/* 0x1 */ u8 unk1;
+	/* 0x2 */ u8 unk2;
+	/* 0x3 */ u8 unk3;
+	/* 0x4 */ u8 unk4;
+	/* 0x5 */ u8 unk5;
+	/* 0x6 */ u16 unk6;
+	/* 0x8 */ u32 unk8;
+	/* 0xC */ char unkC[0x4];
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ char unk1C[0x4];
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ u32 unk24;
+	/* 0x28 */ u32 unk28;
+	/* 0x2C */ char unk2C[0x8];
+	/* 0x34 */ JAISound** unk34;
+	/* 0x38 */ u32 unk38;
+	/* 0x3C */ void* unk3C;
+	/* 0x40 */ // vtable
+
+public:
 	JAISound();
 	~JAISound();
 
@@ -124,10 +147,6 @@ public:
 	u32 getUnk8() { return unk8; }
 
 	static void* interPointer;
-
-public:
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
 };
 
 #endif // JAISOUND_HPP

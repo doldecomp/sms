@@ -226,7 +226,7 @@ void JAIBasic::getSoundInfoFromID(u32 id) { }
 
 void JAIBasic::getSeqTrackNumber(void* param) { }
 
-void JAIBasic::getSoundPrioity(void* param) { }
+u8 JAIBasic::getSoundPrioity(void* param) { }
 
 void JAIBasic::getSoundSwBit(void* param) { }
 

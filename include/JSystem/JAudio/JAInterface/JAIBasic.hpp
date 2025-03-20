@@ -127,7 +127,7 @@ public:
 	void setParameterSeqSync(JASystem::TTrack* track, u16 param);
 	void getSoundInfoFromID(u32 id);
 	void getSeqTrackNumber(void* param);
-	void getSoundPrioity(void* param);
+	u8 getSoundPrioity(void* param);
 	void getSoundSwBit(void* param);
 	void routeToTrack(u32 param);
 	void allocStreamBuffer(void* buffer, s32 size);
