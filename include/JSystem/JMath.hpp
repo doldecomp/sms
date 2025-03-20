@@ -43,7 +43,9 @@ public:
 	u32 get();
 
 private:
-	char unk0[0x88];
+	/* 0x0 */ u32 unk0;
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ u32 unk8[32];
 };
 
 } // namespace JMath
