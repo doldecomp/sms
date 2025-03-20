@@ -1,7 +1,7 @@
 #include <System/Params.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 
-static const char SSceneParamsDir[] = "/map/params";
+static const char SceneParamsDir[] = "/map/params";
 
 JKRFileLoader* TParams::mArc      = nullptr;
 JKRFileLoader* TParams::mSceneArc = nullptr;
@@ -14,7 +14,7 @@ bool TParams::load(const char* filename)
 	}
 
 	void* resource = nullptr;
-	if (mSceneArc != nullptr && mSceneArc->becomeCurrent(SSceneParamsDir)) {
+	if (mSceneArc != nullptr && mSceneArc->becomeCurrent(SceneParamsDir)) {
 		resource = mSceneArc->getResource(filename);
 	}
 
