@@ -640,9 +640,126 @@ void TTrack::incSelfOsc()
 			unk2C4[i]->incSelfOsc();
 }
 
-#pragma dont_inline on
-s8 TTrack::mainProc() { }
-#pragma dont_inline off
+s8 TTrack::mainProc()
+{
+	if (unk2C0 && unk3BD == 1) {
+		f32 thing = (f32)unk3B8 / unk2C0->unk3B8;
+		if (thing > 1.0f)
+			thing = 1.0f;
+		unk3AC += thing;
+		if (unk3AC < 1.0f)
+			return 0;
+		unk3AC -= 1.0f;
+	}
+
+	if (unk2C0 && mChannelUpdater.mManagedChannels != 0) {
+		TChannel* head = mChannelUpdater.getListHead(0);
+		if (head) {
+			unk2C0->mChannelUpdater.addListHead(head, 0);
+			head->unk4 = &unk2C0->mChannelUpdater;
+			--mChannelUpdater.mManagedChannels;
+			++unk2C0->mChannelUpdater.mManagedChannels;
+		}
+	}
+
+	unk3C0 = unk3BF;
+	if (unk2C0)
+		unk3C0 += unk2C0->unk3C0;
+	mIntrMgr.request(7);
+	mIntrMgr.timerProcess();
+
+	s32 retcode;
+	do {
+		if (!(mSeqCtrl.mPreviousFilePtr != 0 ? true : false)) {
+			void* intr = mIntrMgr.checkIntr();
+			if (intr != nullptr)
+				mSeqCtrl.callIntr(intr);
+		}
+
+		if (unk3CD != 0 && (unk3C1 & 2))
+			goto bail; // TODO: is this goto real? looks quite real to me
+
+		if (mSeqCtrl.mWaitTimer == -1) {
+			TChannel* chan = mNoteMgr.getChannel(0);
+			bool b;
+			if (chan == nullptr)
+				b = true;
+			else if (chan->unk1 == 0xff)
+				b = true;
+			else
+				b = false;
+			if (!b)
+				break;
+			mSeqCtrl.mWaitTimer = 0;
+		}
+
+		if (mSeqCtrl.mWaitTimer > 0) {
+			if (!mSeqCtrl.waitCountDown())
+				break;
+			mNoteMgr.endProcess();
+		}
+
+		retcode = sParser.mainProc(this, &mSeqCtrl);
+
+		if (retcode == -1)
+			return -1;
+	} while (retcode == -2);
+
+	u32 r31 = 0;
+	for (int i = 0; i != TIMED_Count; ++i) {
+		MoveParam_* param = &mTimedParam.mMoveParams[i];
+		if (param->mMoveTime > 0.0f) {
+			param->mCurrentValue += param->mMoveAmount;
+			param->mMoveTime -= 1.0f;
+			if (i <= TIMED_Unk5 || i >= TIMED_Osc1_Vertex) {
+				r31 |= 1 << i;
+			} else {
+				f32 cur = param->mCurrentValue;
+				switch ((u8)i) {
+				case TIMED_Osc0_Width:
+					unk30C[0].unk10 = cur;
+					break;
+				case TIMED_Osc0_Rate:
+					unk30C[0].unk4 = cur;
+					break;
+				case TIMED_Osc0_Vertex:
+					unk30C[0].unk14 = cur;
+					break;
+				case TIMED_Osc1_Width:
+					unk30C[1].unk10 = cur;
+					break;
+				case TIMED_Osc1_Rate:
+					unk30C[1].unk4 = cur;
+					break;
+				case TIMED_Osc1_Vertex:
+					unk30C[1].unk14 = cur;
+					break;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; ++i)
+		if (unk3A0[i] == 0xE)
+			r31 |= sOscTable[unk30C[i].unk0];
+
+bail:
+	unk3B4 |= r31;
+
+	updateSeq(0, false);
+
+	for (int i = 0; i < 16; ++i) {
+		TTrack* child = unk2C4[i];
+		if (child && child->unk3C4) {
+			if (child->mainProc() == -1) {
+				child->closeTrack();
+				unk2C4[i] = nullptr;
+			}
+		}
+	}
+
+	return 0;
+}
 
 int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
 {
