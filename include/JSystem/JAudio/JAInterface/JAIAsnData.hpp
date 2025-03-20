@@ -5,9 +5,10 @@ namespace JAInter {
 
 class TAsnData {
 public:
+	TAsnData();
 	void readAsnFile();
 
-	static char* asnFileName;
+	static const char* asnFileName;
 	static void* asnData;
 };
 
