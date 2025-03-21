@@ -41,7 +41,7 @@ void TrackMgr::init(int param1, int param2)
 	sRootSeqCount = param2;
 }
 
-void* TrackMgr::handleToSeq(u32 idx)
+TTrack* TrackMgr::handleToSeq(u32 idx)
 {
 	if (idx >= sRootSeqCount)
 		return nullptr;

@@ -34,6 +34,8 @@ namespace Kernel {
 	class TPortCmd {
 	public:
 		TPortCmd();
+		~TPortCmd() { }
+
 		BOOL addPortCmdOnce();
 		BOOL addPortCmdStay();
 		BOOL setPortCmd(PortCallback func, TPortArgs* args);
