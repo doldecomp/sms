@@ -113,7 +113,6 @@ public:
 	/* 0x1FC */ JAISeqEntry unk1FC;
 	/* 0x200 */ JAISeEntry unk200;
 	/* 0x204 */ JAIStreamEntry unk204;
-	
 };
 
 #endif // JAIDATA_HPP
