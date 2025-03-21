@@ -28,7 +28,7 @@ public:
 	/* 0x28 */ u32 unk28;
 	/* 0x2C */ char unk2C[0x8];
 	/* 0x34 */ JAISound** unk34;
-	/* 0x38 */ u32 unk38;
+	/* 0x38 */ void* unk38;
 	/* 0x3C */ void* unk3C;
 	/* 0x40 */ // vtable
 
@@ -138,7 +138,7 @@ public:
 	void getStreamInterVolume(u8);
 	void getStreamInterPitch(u8);
 	void getActorGroundNumber();
-	void getSeqParameter();
+	void* getSeqParameter();
 	void getSeParameter();
 	void getStreamParameter();
 	void getTrackPortRoute(u8, u8);

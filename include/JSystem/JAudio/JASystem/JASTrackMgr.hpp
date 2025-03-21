@@ -21,7 +21,7 @@ namespace TrackMgr {
 	void unRegistTrack(TTrack*);
 	bool backTrack(TTrack*);
 	u32 getTrackHandle(u32);
-	void* handleToSeq(u32);
+	TTrack* handleToSeq(u32);
 	void setPause(Kernel::TPortArgs*);
 	void clearPause(Kernel::TPortArgs*);
 	int getRemainFreeTracks();

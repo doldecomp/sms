@@ -208,7 +208,7 @@ void JAISound::getStreamInterPitch(u8) { }
 
 void JAISound::getActorGroundNumber() { }
 
-void JAISound::getSeqParameter() { }
+void* JAISound::getSeqParameter() { return unk38; }
 
 void JAISound::getSeParameter() { }
 
