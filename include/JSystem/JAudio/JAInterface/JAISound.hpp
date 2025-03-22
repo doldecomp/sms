@@ -5,6 +5,8 @@
 
 struct JAIMoveParaSet;
 class JAISeqParameter;
+class JAISeParameter;
+class JAIStreamParameter;
 
 class JAISound {
 public:
@@ -27,7 +29,8 @@ public:
 	/* 0x2C */ JAISound* unk2C;
 	/* 0x30 */ JAISound* unk30;
 	/* 0x34 */ JAISound** unk34;
-	/* 0x38 */ JAISeqParameter* unk38;
+	// JAISeqParameter* or JAIStreamParameter* or JAISeParameter*
+	/* 0x38 */ void* unk38;
 	/* 0x3C */ void* unk3C;
 	/* 0x40 */ // vtable
 
@@ -138,8 +141,8 @@ public:
 	void getStreamInterPitch(u8);
 	void getActorGroundNumber();
 	JAISeqParameter* getSeqParameter();
-	void getSeParameter();
-	void getStreamParameter();
+	JAISeParameter* getSeParameter();
+	JAIStreamParameter* getStreamParameter();
 	void getTrackPortRoute(u8, u8);
 	void getSeInfoPointer();
 

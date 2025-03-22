@@ -172,7 +172,7 @@ void JAIBasic::releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound)
 {
 }
 
-void JAIBasic::getStreamParameter() { }
+JAIStreamParameter* JAIBasic::getStreamParameter() { }
 
 void JAIBasic::releaseStreamParameterPointer(JAIStreamParameter* param) { }
 
@@ -180,7 +180,7 @@ JAISeqParameter* JAIBasic::getSeqParametermeterPointer() { }
 
 void JAIBasic::releaseSeqParameterPointer(JAISeqParameter* param) { }
 
-JAISeqParameter* JAIBasic::getSeParametermeterPointer() { }
+JAISeParameter* JAIBasic::getSeParametermeterPointer() { }
 
 void JAIBasic::releaseSeParameterPointer(JAISeParameter* param) { }
 

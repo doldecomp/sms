@@ -208,11 +208,14 @@ void JAISound::getStreamInterPitch(u8) { }
 
 void JAISound::getActorGroundNumber() { }
 
-JAISeqParameter* JAISound::getSeqParameter() { return unk38; }
+JAISeqParameter* JAISound::getSeqParameter() { return (JAISeqParameter*)unk38; }
 
-void JAISound::getSeParameter() { }
+JAISeParameter* JAISound::getSeParameter() { return (JAISeParameter*)unk38; }
 
-void JAISound::getStreamParameter() { }
+JAIStreamParameter* JAISound::getStreamParameter()
+{
+	return (JAIStreamParameter*)unk38;
+}
 
 void JAISound::getTrackPortRoute(u8, u8) { }
 

@@ -106,11 +106,11 @@ public:
 	void releaseSoundHandle(JAISound* sound);
 	JAISound* getControllerHandle(JAILinkBuffer* buffer);
 	void releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound);
-	void getStreamParameter();
+	JAIStreamParameter* getStreamParameter();
 	void releaseStreamParameterPointer(JAIStreamParameter* param);
 	JAISeqParameter* getSeqParametermeterPointer();
 	void releaseSeqParameterPointer(JAISeqParameter* param);
-	JAISeqParameter* getSeParametermeterPointer();
+	JAISeParameter* getSeParametermeterPointer();
 	void releaseSeParameterPointer(JAISeParameter* param);
 	void getDummyVecPointer();
 	void releaseDummyVecPointer(JAIDummyVec* vec);
