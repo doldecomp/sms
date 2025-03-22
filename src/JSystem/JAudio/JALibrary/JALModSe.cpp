@@ -214,7 +214,7 @@ void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
 JALSystem::TFlagManager::TFlagManager()
 {
 	for (int i = 0; i < 16; ++i) {
-		u16 size = JAIBasic::basic->fakeThing; // TODO: grab the REAL thing
+		u16 size = JAIBasic::basic->unk88.unk0;
 		unk0[i]  = new u16[size];
 		for (u16 j = 0; j < size; ++j)
 			unk0[i][j] = 0;
