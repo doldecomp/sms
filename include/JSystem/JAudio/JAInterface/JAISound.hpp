@@ -3,10 +3,7 @@
 
 #include <types.h>
 
-class JAIMoveParaSet;
-class JAISeParameter;
-class JAISeqParameter;
-class JAIStreamParameter;
+struct JAIMoveParaSet;
 
 class JAISound {
 public:
@@ -22,11 +19,12 @@ public:
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ char unk1C[0x4];
+	/* 0x1C */ void* unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ u32 unk28;
-	/* 0x2C */ char unk2C[0x8];
+	/* 0x2C */ JAISound* unk2C;
+	/* 0x30 */ JAISound* unk30;
 	/* 0x34 */ JAISound** unk34;
 	/* 0x38 */ void* unk38;
 	/* 0x3C */ void* unk3C;

@@ -29,7 +29,7 @@ void JAIBasic::checkInitDataOnMemory() { }
 
 void JAIBasic::transInitDataFile(unsigned char* buffer, u32 size) { }
 
-void JAIBasic::allocHeap(u32 size) { }
+void* JAIBasic::allocHeap(u32 size) { }
 
 void JAIBasic::initBankWave() { }
 

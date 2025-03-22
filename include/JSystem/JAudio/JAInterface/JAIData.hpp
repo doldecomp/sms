@@ -8,9 +8,15 @@
 
 class JAIBasic;
 class JAISound;
+class JAISeqUpdateData;
+class JAIDummyVec;
+
 class JAISoundTable {
 public:
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ u8 unk0;
+	/* 0x0 */ u8 unk1;
+	/* 0x0 */ u8 unk2;
+	/* 0x0 */ u8 unk3;
 	/* 0x4 */ u8 unk4;
 	/* 0x5 */ u8 unk5;
 	/* 0x6 */ u8 unk6;
@@ -18,7 +24,16 @@ public:
 	/* 0x8 */ u8 unk8;
 	/* 0x9 */ u8 unk9;
 	/* 0xA */ char unkA[0x10 - 0xA];
-	/* 0x10 */ u8 unk10;
+	/* 0x10 */ struct {
+		u8 flag1 : 1;
+		u8 flag2 : 1;
+		u8 flag3 : 1;
+		u8 flag4 : 1;
+		u8 flag5 : 1;
+		u8 flag6 : 1;
+		u8 flag7 : 1;
+		u8 flag8 : 1;
+	} unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ f32* unk1C;
@@ -48,7 +63,12 @@ public:
 
 class JAIHeapBlock;
 struct JAIMoveParaSet;
-class JAILinkBuffer;
+class JAILinkBuffer {
+public:
+	/* 0x0 */ JAISound* unk0;
+	/* 0x4 */ JAISound* unk4;
+	/* 0x8 */ JAISound* unk8;
+};
 struct JAISeqParameter;
 struct JAISeParameter;
 struct JAIStreamParameter;
@@ -98,21 +118,34 @@ public:
 	/* 0xC */ JAISoundTable unkC;
 	/* 0x88 */ JAISoundTable unk88;
 	/* 0x104 */ JAISoundTable unk104;
-	/* 0x180 */ void* unk180;
+	/* 0x180 */ JAISeqUpdateData* unk180;
 	/* 0x184 */ void* unk184;
-	/* 0x188 */ char unk188[0x1B4 - 0x188];
+	/* 0x188 */ char unk188[0x1B0 - 0x188];
+	/* 0x1B0 */ u8 unk1B0;
 	/* 0x1B4 */ u32 unk1B4;
 	/* 0x1B8 */ u32 unk1B8;
-	/* 0x1BC */ char unk1BC[8];
+	/* 0x1BC */ JAISeqParameter* unk1BC;
+	/* 0x1C0 */ JAISeqParameter* unk1C0;
 	/* 0x1C4 */ JAISeqParameter* unk1C4;
-	/* 0x1C8 */ char unk1C8[8];
+	/* 0x1C8 */ JAISeParameter* unk1C8;
+	/* 0x1CC */ JAISeParameter* unk1CC;
 	/* 0x1D0 */ JAISeParameter* unk1D0;
-	/* 0x1D4 */ char unk1D4[0x1F4 - 0x1D4];
+	/* 0x1D4 */ JAIStreamParameter* unk1D4;
+	/* 0x1D8 */ JAIStreamParameter* unk1D8;
+	/* 0x1DC */ JAIStreamParameter* unk1DC;
+	/* 0x1E0 */ char unk1E0[0x8];
+	/* 0x1E8 */ JAILinkBuffer* unk1E8;
+	/* 0x1EC */ char unk1EC[0x8];
 	/* 0x1F4 */ JAIBasic* unk1F4;
 	/* 0x1F8 */ u32 unk1F8;
 	/* 0x1FC */ JAISeqEntry unk1FC;
 	/* 0x200 */ JAISeEntry unk200;
 	/* 0x204 */ JAIStreamEntry unk204;
+	/* 0x208 */ char unk208[0x220 - 0x208];
+	/* 0x220 */ JAISound* unk220;
+	/* 0x224 */ char unk224[0x4];
+	/* 0x228 */ JAIDummyVec* unk228;
+	/* 0x22C */ JAIDummyVec* unk22C;
 };
 
 #endif // JAIDATA_HPP

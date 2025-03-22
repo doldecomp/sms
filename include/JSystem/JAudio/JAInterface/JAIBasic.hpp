@@ -12,7 +12,10 @@ class JAILinkBuffer;
 class JAIDummyVec;
 class JAISoundTable;
 
-class JAIBasic : public JAIData {
+class JAIBasic {
+public:
+	/* 0x0 */ JAIData* unk0;
+	/* 0x4 */ // vt
 public:
 	JAIBasic();
 	~JAIBasic();
@@ -41,7 +44,7 @@ public:
 	void loadTmpDVDFile(char* filename, unsigned char** buffer);
 	void checkInitDataOnMemory();
 	void transInitDataFile(unsigned char* buffer, u32 size);
-	void allocHeap(u32 size);
+	void* allocHeap(u32 size);
 	void initBankWave();
 	void deleteTmpDVDFile(unsigned char** buffer);
 	void setWaveScene();
@@ -155,7 +158,12 @@ public:
 	static JAIBasic* basic;
 
 public:
-	u32 fakeThing;
+	/* 0x8 */ void* unk8;
+	/* 0xC */ JAISoundTable unkC;
+	/* 0x88 */ JAISoundTable unk88;
+	/* 0x104 */ char unk104[0x304 - 0x104];
+	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
+	/* 0x308 */ char unk308[0x4];
 };
 
 #endif // JAIBASIC_HPP
