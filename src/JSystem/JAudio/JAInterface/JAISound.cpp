@@ -2,8 +2,6 @@
 
 JAISound::JAISound() { }
 
-JAISound::~JAISound() { }
-
 void JAISound::initMoveParameter(JAIMoveParaSet*, f32, u32) { }
 
 void JAISound::initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32)

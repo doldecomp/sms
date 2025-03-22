@@ -8,7 +8,7 @@
 
 JASystem::Kernel::TPortCmd JAISystemInterface::systemPortCmd;
 
-bool JAISystemInterface::checkFileExsistence(char* path)
+BOOL JAISystemInterface::checkFileExsistence(char* path)
 {
 	char buf[64];
 	JASystem::Dvd::extendPath(buf, path);

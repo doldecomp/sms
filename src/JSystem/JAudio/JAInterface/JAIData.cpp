@@ -497,13 +497,16 @@ void JAIData::initData()
 		initInfoDataWork(&unkC, JAIGlobalParameter::seqInfoFileName);
 		initInfoDataWork(&unk104, JAIGlobalParameter::streamInfoFileName);
 	}
-	if (unk1F4->unkC.unk5C) {
+	if (unk1F4->unk68) {
 		JAIGlobalParameter::seTrackMax = 0;
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i) {
-			for (int j = 0, je = JAIGlobalParameter::getParamSeCategoryMax();
-			     j < je; ++j) {
-				// TODO:
+			u32 sum = 0;
+			for (int j = 0; j < JAIGlobalParameter::getParamSeCategoryMax();
+			     ++j) {
+				sum += unk1F4->unk68[i][2 * j];
 			}
+			if (JAIGlobalParameter::seTrackMax < sum)
+				JAIGlobalParameter::seTrackMax = sum;
 		}
 	}
 	unk230 = (JAIDummyVec*)unk1F4->allocHeap(
@@ -528,7 +531,7 @@ void JAIData::initData()
 	}
 	unk0 = unk1F4->allocHeap(JAIGlobalParameter::seTrackMax * 0x18);
 	for (int i = 0; i < JAIGlobalParameter::seTrackMax; ++i) {
-		// TODO:
+		// TODO: what struct?
 	}
 
 	unk208      = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);
@@ -610,16 +613,16 @@ void JAIData::initData()
 	unk184->unk10 = 0;
 	unk184->unk14 = nullptr;
 
-	if (unk1F4->unkC.unk5C) {
-		unk4 = unk1F4->unkC.unk5C;
+	if (unk1F4->unk68) {
+		unk4 = unk1F4->unk68;
 	} else {
 		unk4 = (u8**)unk1F4->allocHeap(JAIGlobalParameter::soundSceneMax * 4);
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i)
 			unk4[i] = JAIConst::sCInfos_0;
 	}
 
-	if (unk1F4->unkC.unk60) {
-		unk188 = *unk1F4->unkC.unk60;
+	if (unk1F4->unk6C) {
+		unk188 = *unk1F4->unk6C;
 
 		unk1AC = (JASystem::DSPInterface::FxlineConfig_**)unk1F4->allocHeap(
 		    unk188 * sizeof(JASystem::DSPInterface::FxlineConfig_*));

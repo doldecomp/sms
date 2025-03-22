@@ -36,7 +36,6 @@ public:
 
 public:
 	JAISound();
-	~JAISound();
 
 	virtual void setSeDistanceParameters();
 	virtual void setSeDistanceVolume(u8);
