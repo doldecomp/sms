@@ -1,5 +1,7 @@
-
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
+#include <JSystem/JAudio/JAInterface/JAIInter.hpp>
 
 u8 JAIGlobalParameter::distanceParameterMoveTime   = 0x03;
 u8 JAIGlobalParameter::audioSystemThreadPriority   = 0x02;
@@ -52,7 +54,28 @@ u32 JAIGlobalParameter::interfaceHeapSize          = 0;
 char* JAIGlobalParameter::audioResPath             = nullptr;
 f32 JAIGlobalParameter::minDistanceVolume          = 0.0f;
 
-void JAIGlobalParameter::setParamSoundOutputMode(u32) { }
+void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
+{
+	int r31 = 1;
+	int r30 = 0;
+	switch (value) {
+	case 0:
+		r31 = 0;
+		r30 = 0;
+		break;
+	case 1:
+		r31 = 1;
+		r30 = 1;
+		break;
+	case 2:
+		r31 = 2;
+		r30 = 1;
+		break;
+	}
+	JAIBasic::basic->unkC.unk8 = value;
+	JASystem::Driver::setOutputMode(r31);
+	JAInter::StreamLib::setOutputMode(r30);
+}
 void JAIGlobalParameter::setParamAudioSystemThreadPriority(u8 value)
 {
 	audioSystemThreadPriority = value;
@@ -62,7 +85,11 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 	audioDvdThreadPriority = value;
 }
 void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
-void JAIGlobalParameter::setParamInitDataPointer(void*) { }
+void JAIGlobalParameter::setParamInitDataPointer(void* value)
+{
+	JAIBasic::basic->unkC.unk40 = value;
+	JAIBasic::basic->unkC.unk7  = 4;
+}
 void JAIGlobalParameter::setParamInterfaceHeapSize(u32 value)
 {
 	interfaceHeapSize = value;
@@ -116,7 +143,10 @@ void JAIGlobalParameter::setParamSeDistanceFxParameter(u16 value)
 void JAIGlobalParameter::setParamInitDataLoadOffFlag(bool) { }
 void JAIGlobalParameter::setParamStreamUseOffFlag(bool) { }
 void JAIGlobalParameter::setParamStreamDecodedBufferBlocks(u32) { }
-void JAIGlobalParameter::setParamStreamInsideBufferCut(bool) { }
+void JAIGlobalParameter::setParamStreamInsideBufferCut(bool value)
+{
+	JAIBasic::basic->unkC.unk10.flag7 = value;
+}
 void JAIGlobalParameter::setParamAutoHeapRoomSize(u32 value)
 {
 	autoHeapRoomSize = value;
@@ -240,7 +270,12 @@ u32 JAIGlobalParameter::getParamInterfaceHeapSize()
 {
 	return interfaceHeapSize;
 }
-u32 JAIGlobalParameter::getParamSeCategoryMax() { return 0; }
+
+u32 JAIGlobalParameter::getParamSeCategoryMax()
+{
+	return JAIBasic::basic->unk0->unk88.unk1;
+}
+
 u32 JAIGlobalParameter::getParamSoundSceneMax() { return soundSceneMax; }
 u32 JAIGlobalParameter::getParamSeRegistMax() { return seRegistMax; }
 u32 JAIGlobalParameter::getParamSeTrackMax() { return seTrackMax; }

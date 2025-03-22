@@ -90,7 +90,40 @@ void JAISystemInterface::setPortParameter(JASystem::Kernel::TPortArgs*,
 {
 }
 
-void JAISystemInterface::setSePortParameter(JASystem::Kernel::TPortArgs*) { }
+void JAISystemInterface::setSePortParameter(
+    JASystem::Kernel::TPortArgs* param_1)
+{
+	JASystem::TTrack* track = param_1->mTrack;
+	if (track != nullptr) {
+		if ((param_1->mFlags & 1) != 0) {
+			track->mOuterParam->setParam(0x1, param_1->mTrackVolume);
+			param_1->mFlags ^= 1;
+		}
+		if ((param_1->mFlags & 2) != 0) {
+			track->mOuterParam->setParam(0x2, param_1->mTrackPitch);
+			param_1->mFlags ^= 2;
+		}
+		if ((param_1->mFlags & 4) != 0) {
+			track->mOuterParam->setParam(0x8, param_1->mTrackPan);
+			param_1->mFlags ^= 4;
+		}
+		if ((param_1->mFlags & 8) != 0) {
+			track->mOuterParam->setParam(0x4, param_1->mTrackFxmix);
+			param_1->mFlags ^= 8;
+		}
+		if ((param_1->mFlags & 0x80) != 0) {
+			track->mOuterParam->setParam(0x40, param_1->mTrackTempo);
+			param_1->mFlags ^= 0x80;
+		}
+		if ((param_1->mFlags & 0x10) != 0) {
+			track->mOuterParam->setParam(0x10, param_1->mTrackDolby);
+			param_1->mFlags ^= 0x10;
+		}
+		if ((param_1->mFlags & 0x40) != 0 && param_1->unk20 != 0) {
+			track->setInterrupt(5);
+		}
+	}
+}
 
 void* JAISystemInterface::JAIouterP(void*) { return nullptr; }
 
