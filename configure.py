@@ -423,7 +423,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIEntry.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIEntrySe.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIEntrySequence.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIEntryStream.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIEntryStream.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGFrameSe.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGFrameSequence.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGFrameStream.cpp"),
