@@ -166,7 +166,7 @@ void JAIBasic::deleteObject(void* obj) { }
 
 void JAIBasic::releaseSoundHandle(JAISound* sound) { }
 
-void JAIBasic::getControllerHandle(JAILinkBuffer* buffer) { }
+JAISound* JAIBasic::getControllerHandle(JAILinkBuffer* buffer) { }
 
 void JAIBasic::releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound)
 {
@@ -176,11 +176,11 @@ void JAIBasic::getStreamParameter() { }
 
 void JAIBasic::releaseStreamParameterPointer(JAIStreamParameter* param) { }
 
-void JAIBasic::getSeqParametermeterPointer() { }
+JAISeqParameter* JAIBasic::getSeqParametermeterPointer() { }
 
 void JAIBasic::releaseSeqParameterPointer(JAISeqParameter* param) { }
 
-void JAIBasic::getSeParametermeterPointer() { }
+JAISeqParameter* JAIBasic::getSeParametermeterPointer() { }
 
 void JAIBasic::releaseSeParameterPointer(JAISeParameter* param) { }
 
@@ -224,11 +224,11 @@ void JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param) { }
 
 void JAIBasic::getSoundInfoFromID(u32 id) { }
 
-void JAIBasic::getSeqTrackNumber(void* param) { }
+u8 JAIBasic::getSeqTrackNumber(void* param) { }
 
 u8 JAIBasic::getSoundPrioity(void* param) { }
 
-void JAIBasic::getSoundSwBit(void* param) { }
+u32 JAIBasic::getSoundSwBit(void* param) { }
 
 void JAIBasic::setSeExtParameter(JAISound* sound) { }
 

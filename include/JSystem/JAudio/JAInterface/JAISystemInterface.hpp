@@ -30,6 +30,8 @@ public:
 	/* 0x4C */ void* unk4C;
 };
 
+class JAISeqParameter;
+
 namespace JAISystemInterface {
 
 BOOL startSeq(u32);
@@ -37,7 +39,7 @@ BOOL stopSeq(s32);
 BOOL checkSeqActiveFlag(u32);
 int setSeqData(JASystem::TTrack*, u8*, s32, JASystem::Player::SEQ_PLAYMODE);
 
-void* rootInit(JAISeqUpdateData*);
+JAISeqParameter* rootInit(JAISeqUpdateData*);
 void trackInit(JAISeqUpdateData*);
 void outerInit(JAISeqUpdateData*, void*, u32, u16, u8);
 JASystem::TTrack* trackToSeqp(JAISound*, u8);

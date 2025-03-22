@@ -29,7 +29,9 @@ class JAISoundTable {
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
-	/* 0x2 */ char unk2[5];
+	/* 0x2 */ char unk2[2];
+	/* 0x4 */ u8 unk4;
+	/* 0x5 */ char unk5[2];
 	/* 0x7 */ u8 unk7;
 	/* 0x8 */ u8 unk8;
 	/* 0x9 */ char unk9[7];
