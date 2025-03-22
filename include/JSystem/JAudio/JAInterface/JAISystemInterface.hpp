@@ -54,7 +54,7 @@ void setAudioFrameParameter(JASystem::Kernel::TPortArgs*);
 BOOL writePortApp(u32, u32, u16);
 BOOL readPortApp(u32, u32, u16*);
 
-bool checkFileExsistence(char*);
+BOOL checkFileExsistence(char*);
 void* JAIouterP(void*);
 void* JAIouterSW(void*);
 

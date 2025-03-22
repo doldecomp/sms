@@ -25,26 +25,20 @@ struct JAISoundInfo {
 	/* 0x0 */ char unk0[0x10];
 };
 
+// TODO: I accidentally put a bunch of stuff in here
+// that doesn't actually belong, fix it!!!
 class JAISoundTable {
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
 	/* 0x2 */ char unk2[2];
 	/* 0x4 */ u8 unk4;
-	/* 0x5 */ char unk5[2];
+	/* 0x5 */ char unk5[1];
+	/* 0x6 */ u8 unk6;
 	/* 0x7 */ u8 unk7;
 	/* 0x8 */ u8 unk8;
 	/* 0x9 */ char unk9[7];
-	/* 0x10 */ struct {
-		u8 flag1 : 1;
-		u8 flag2 : 1;
-		u8 flag3 : 1;
-		u8 flag4 : 1;
-		u8 flag5 : 1;
-		u8 flag6 : 1;
-		u8 flag7 : 1;
-		u8 flag8 : 1;
-	} unk10;
+	/* 0x10 */ char unk10[4];
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ f32* unk1C;

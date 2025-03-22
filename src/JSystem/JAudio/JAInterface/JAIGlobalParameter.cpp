@@ -72,7 +72,7 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 		r30 = 1;
 		break;
 	}
-	JAIBasic::basic->unkC.unk8 = value;
+	JAIBasic::basic->unk14 = value;
 	JASystem::Driver::setOutputMode(r31);
 	JAInter::StreamLib::setOutputMode(r30);
 }
@@ -87,8 +87,8 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
 void JAIGlobalParameter::setParamInitDataPointer(void* value)
 {
-	JAIBasic::basic->unkC.unk40 = value;
-	JAIBasic::basic->unkC.unk7  = 4;
+	JAIBasic::basic->unk4C = (u8*)value;
+	JAIBasic::basic->unk13 = 4;
 }
 void JAIGlobalParameter::setParamInterfaceHeapSize(u32 value)
 {
@@ -145,7 +145,7 @@ void JAIGlobalParameter::setParamStreamUseOffFlag(bool) { }
 void JAIGlobalParameter::setParamStreamDecodedBufferBlocks(u32) { }
 void JAIGlobalParameter::setParamStreamInsideBufferCut(bool value)
 {
-	JAIBasic::basic->unkC.unk10.flag7 = value;
+	JAIBasic::basic->unk1C.flag7 = value;
 }
 void JAIGlobalParameter::setParamAutoHeapRoomSize(u32 value)
 {

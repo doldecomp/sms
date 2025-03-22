@@ -7,6 +7,15 @@
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 
+class JAICamera {
+public:
+	JAICamera();
+
+	/* 0x0 */ VecPtr unk0;
+	/* 0x4 */ VecPtr unk4;
+	/* 0x8 */ MtxPtr unk8;
+};
+
 class JAIActor;
 class JAILinkBuffer;
 class JAIDummyVec;
@@ -22,9 +31,9 @@ public:
 
 	virtual void initStream();
 	virtual JAISound* makeSound(u32 param);
-	virtual void getMapInfoFxline(u32 param);
+	virtual BOOL getMapInfoFxline(u32 param);
 	virtual u32 getMapInfoGround(u32 param);
-	virtual void getMapInfoFxParameter(u32 param);
+	virtual f32 getMapInfoFxParameter(u32 param);
 	virtual void sendPlayingSeCommand();
 	virtual void sendSeAllParameter(JAISound* sound);
 	virtual void setSeExtParameter(JAISound* sound);
@@ -38,9 +47,9 @@ public:
 	void initInterfaceMain();
 	void initHeap();
 	void initReadFile();
-	void checkInitListFile();
-	void loadDVDFile(char* filename);
-	void checkInitDataFile();
+	BOOL checkInitListFile();
+	void* loadDVDFile(char* filename);
+	BOOL checkInitDataFile();
 	void loadTmpDVDFile(char* filename, unsigned char** buffer);
 	void checkInitDataOnMemory();
 	void transInitDataFile(unsigned char* buffer, u32 size);
@@ -59,9 +68,9 @@ public:
 	void loadFirstStayWave();
 	void loadSecondStayWave();
 	void setSceneSetFinishCallback(s32 param1, s32 param2);
-	void finishSceneSet(u32 param);
+	static void finishSceneSet(u32 param);
 	void loadSceneWave(s32 param1, s32 param2);
-	void checkSceneWaveOnMemory(s32 param1, s32 param2);
+	BOOL checkSceneWaveOnMemory(s32 param1, s32 param2);
 	void getWaveGroupNumber(s32 param);
 	void getWaveLoadStatus(s32 param);
 	void checkAllWaveLoadStatus();
@@ -75,8 +84,8 @@ public:
 	                               u8 param3);
 	void startSoundActor(u32 id, JAISound** sound, JAIActor* actor, u32 param,
 	                     u8 flag);
-	void startSoundActorReturnHandle(u32 id, JAIActor* actor, u32 param,
-	                                 u8 flag);
+	JAISound* startSoundActorReturnHandle(u32 id, JAIActor* actor, u32 param,
+	                                      u8 flag);
 	void startSoundDirectID(u32 id, JAISound** sound, JAIActor* actor,
 	                        u32 param, u8 flag);
 	void startSoundIndirectID(u32 id, JAISound** sound, JAIActor* actor,
@@ -123,16 +132,16 @@ public:
 	void getSeInfoMode();
 	void getSeInfoStartPointer();
 	void getSeInfoCategoryMax();
-	void getInfoPointerFromID(u32 id);
-	void getInfoFormat(JAISoundTable* table, u32 id);
+	JAISoundTable* getInfoPointerFromID(u32 id);
+	u32 getInfoFormat(JAISoundTable* table, u32 id);
 	void setSeCancelSwitch(u8 param1, u8 param2);
 	void setSeCategoryVolume(u8 category, u8 volume);
-	void setParameterSeqSync(JASystem::TTrack* track, u16 param);
-	void getSoundInfoFromID(u32 id);
+	static u16 setParameterSeqSync(JASystem::TTrack* track, u16 param);
+	JAISoundInfo* getSoundInfoFromID(u32 id);
 	u8 getSeqTrackNumber(void* param);
 	u8 getSoundPrioity(void* param);
 	u32 getSoundSwBit(void* param);
-	void routeToTrack(u32 param);
+	u32 routeToTrack(u32 param);
 	void allocStreamBuffer(void* buffer, s32 size);
 	void deallocStreamBuffer();
 	void loadArcSeqData(u32 param, bool flag);
@@ -158,10 +167,52 @@ public:
 	static JAIBasic* basic;
 
 public:
-	/* 0x8 */ void* unk8;
-	/* 0xC */ JAISoundTable unkC;
-	/* 0x88 */ JAISoundTable unk88;
-	/* 0x104 */ char unk104[0x304 - 0x104];
+	/* 0x8 */ JAICamera* unk8;
+	/* 0xC */ JKRSolidHeap* unkC;
+	/* 0x10 */ u8 unk10;
+	/* 0x11 */ u8 unk11;
+	/* 0x12 */ u8 unk12;
+	/* 0x13 */ u8 unk13;
+	/* 0x14 */ u8 unk14;
+	/* 0x15 */ u8 unk15;
+	/* 0x16 */ char unk16[2];
+	/* 0x18 */ u8* unk18;
+	/* 0x1C */ struct {
+		u8 flag1 : 1;
+		u8 flag2 : 1;
+		u8 flag3 : 1;
+		u8 flag4 : 1;
+		u8 flag5 : 1;
+		u8 flag6 : 1;
+		u8 flag7 : 1;
+		u8 flag8 : 1;
+	} unk1C;
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ u32 unk24;
+	/* 0x28 */ f32* unk28;
+	/* 0x2C */ u32 unk2C;
+	/* 0x30 */ u32 unk30;
+	/* 0x34 */ u32 unk34;
+	/* 0x38 */ JAISound* unk38;
+	/* 0x3C */ void* unk3C;
+	/* 0x40 */ void* unk40;
+	/* 0x44 */ u32 unk44;
+	/* 0x48 */ u32 unk48;
+	/* 0x4C */ u8* unk4C;
+	/* 0x50 */ u32 unk50;
+	/* 0x54 */ void* unk54;
+	/* 0x58 */ u8** unk58; // TODO: wrong type
+	/* 0x5C */ u32 unk5C;
+	/* 0x60 */ s32* unk60;
+	/* 0x64 */ s32* unk64;
+	/* 0x68 */ u8** unk68; // TODO: might be pair of u8s actually
+	/* 0x6C */ u32* unk6C; // TODO: wrong type
+	/* 0x70 */ u32 unk70;
+	/* 0x74 */ char unk74[0x4];
+	/* 0x78 */ u32 unk78;
+	/* 0x7C */ char unk7C[0xC];
+	/* 0x88 */ u32 unk88;
+	/* 0x104 */ char unk104[0x304 - 0x88];
 	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
 	/* 0x308 */ char unk308[0x4];
 };
