@@ -1,6 +1,7 @@
 #include <JSystem/JAudio/JAInterface/JAISystemInterface.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 #include <types.h>
@@ -40,13 +41,13 @@ JASystem::TTrack* JAISystemInterface::trackToSeqp(JAISound* param_1, u8 param_2)
 {
 	JASystem::TTrack* result = nullptr;
 	if (param_1->unk8 & 0x800) {
-		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
-		    *(u32*)param_1->getSeqParameter());
+		JASystem::TTrack* track
+		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
 		if (track->unk2C4[param_2 >> 4])
 			result = track->unk2C4[param_2 >> 4]->unk2C4[param_2 & 0xF];
 	} else {
-		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
-		    *(u32*)param_1->getSeqParameter());
+		JASystem::TTrack* track
+		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
 		result = track->unk2C4[param_2 & 0xF];
 	}
 	return result;
@@ -59,11 +60,11 @@ void JAISystemInterface::setSeqPortargsPS16(JAISeqUpdateData*, u32, u8, s16*) {
 
 void JAISystemInterface::setSeqPortargsU32(JAISeqUpdateData*, u32, u8, u32) { }
 
-void* JAISystemInterface::rootInit(JAISeqUpdateData* param_1)
+JAISeqParameter* JAISystemInterface::rootInit(JAISeqUpdateData* param_1)
 {
-	JAISound* sound         = param_1->unk48;
-	u32* seqParam           = (u32*)sound->getSeqParameter();
-	JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(*seqParam);
+	JAISound* sound = param_1->unk48;
+	JASystem::TTrack* track
+	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->unk0);
 	outerInit(param_1, track, JAIGlobalParameter::getParamSeqTrackMax(), 0xffff,
 	          0);
 	return sound->getSeqParameter();

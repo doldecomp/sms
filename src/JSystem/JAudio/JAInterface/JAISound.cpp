@@ -14,11 +14,11 @@ void JAISound::getSeCategoryNumber() { }
 
 void JAISound::getDataInfoHeader() { }
 
-void JAISound::getSwBit() { }
+u32 JAISound::getSwBit() { }
 
 void JAISound::checkSwBit(u32) { }
 
-void JAISound::getInfoPriority() { }
+u8 JAISound::getInfoPriority() { }
 
 void JAISound::clearMainSoundPPointer() { }
 
@@ -208,7 +208,7 @@ void JAISound::getStreamInterPitch(u8) { }
 
 void JAISound::getActorGroundNumber() { }
 
-void* JAISound::getSeqParameter() { return unk38; }
+JAISeqParameter* JAISound::getSeqParameter() { return unk38; }
 
 void JAISound::getSeParameter() { }
 

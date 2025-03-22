@@ -43,9 +43,11 @@ public:
 	u8 flag8 : 1;
 };
 
+class JAISeqUpdateData;
+
 class JAISeqParameter {
 public:
-	/* 0x0 */ char unk0[0x4];
+	/* 0x0 */ u32 unk0;
 	/* 0x4 */ JAIMoveParaSet unk4;
 	/* 0x14 */ JAIMoveParaSet unk14[16];
 
@@ -85,7 +87,7 @@ public:
 	/* 0x1790 */ u32 unk1790[32];
 	/* 0x1810 */ u8 unk1810[32];
 	/* 0x1830 */ MuteBit unk1830[32];
-	/* 0x1850 */ char unk1850[0x4];
+	/* 0x1850 */ JAISeqUpdateData* unk1850;
 	/* 0x1854 */ JAISeqParameter* unk1854;
 	/* 0x1858 */ JAISeqParameter* unk1858;
 };

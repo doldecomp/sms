@@ -104,13 +104,13 @@ public:
 	void stopAllSound(u32 param, void* obj);
 	void deleteObject(void* obj);
 	void releaseSoundHandle(JAISound* sound);
-	void getControllerHandle(JAILinkBuffer* buffer);
+	JAISound* getControllerHandle(JAILinkBuffer* buffer);
 	void releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound);
 	void getStreamParameter();
 	void releaseStreamParameterPointer(JAIStreamParameter* param);
-	void getSeqParametermeterPointer();
+	JAISeqParameter* getSeqParametermeterPointer();
 	void releaseSeqParameterPointer(JAISeqParameter* param);
-	void getSeParametermeterPointer();
+	JAISeqParameter* getSeParametermeterPointer();
 	void releaseSeParameterPointer(JAISeParameter* param);
 	void getDummyVecPointer();
 	void releaseDummyVecPointer(JAIDummyVec* vec);
@@ -129,9 +129,9 @@ public:
 	void setSeCategoryVolume(u8 category, u8 volume);
 	void setParameterSeqSync(JASystem::TTrack* track, u16 param);
 	void getSoundInfoFromID(u32 id);
-	void getSeqTrackNumber(void* param);
+	u8 getSeqTrackNumber(void* param);
 	u8 getSoundPrioity(void* param);
-	void getSoundSwBit(void* param);
+	u32 getSoundSwBit(void* param);
 	void routeToTrack(u32 param);
 	void allocStreamBuffer(void* buffer, s32 size);
 	void deallocStreamBuffer();

@@ -3,9 +3,9 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 
-BOOL JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
+u32 JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
 {
-	BOOL result = FALSE;
+	u32 result = 0;
 
 	if (sound_ptr) {
 		if (*sound_ptr) {
@@ -16,7 +16,7 @@ BOOL JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
 				    <= unk0->getSoundPrioity(data))
 					(*sound_ptr)->stop(0);
 				else
-					result = TRUE;
+					result = 1;
 			}
 		}
 	}
