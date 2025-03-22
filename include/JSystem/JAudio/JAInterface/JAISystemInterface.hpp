@@ -27,7 +27,7 @@ public:
 	/* 0x38 */ char unk38[0xC];
 	/* 0x44 */ u32* unk44;
 	/* 0x48 */ JAISound* unk48;
-	/* 0x4C */ char unk4C[0x4];
+	/* 0x4C */ void* unk4C;
 };
 
 namespace JAISystemInterface {

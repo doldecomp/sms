@@ -105,4 +105,18 @@ public:
 	/* 0x3DC */ JAIStreamParameter* unk3DC;
 };
 
+class JAISound;
+
+// fabricated
+struct JAIStreamUpdateParameter {
+	/* 0x0 */ u8 unk0;
+	/* 0x1 */ u8 unk1;
+	/* 0x2 */ u8 unk2;
+	/* 0x4 */ f32 unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ JAISound* unk14;
+};
+
 #endif
