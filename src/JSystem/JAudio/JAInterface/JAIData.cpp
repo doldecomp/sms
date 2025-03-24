@@ -587,7 +587,9 @@ void JAIData::initData()
 	unk180 = (JAISeqUpdateData*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISeqUpdateData));
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		unk180[i].unk4C = unk1F4->allocHeap(0x7BC);
+		unk180[i].unk4C
+		    = (JAISeqUpdateData::FabricatedUnk4CStruct*)unk1F4->allocHeap(
+		        0x7BC);
 		unk1E0[i]       = 0;
 		unk180[i].unk0  = 0;
 		unk180[i].unk1  = 0;

@@ -1,5 +1,90 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
+#include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
+#include <JSystem/JAudio/JASystem/JASCallback.hpp>
+#include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+
+namespace JAInter {
+namespace StreamLib {
+
+	JASystem::Kernel::TSolidHeap streamHeap;
+
+	// TODO: from TWW, might be wrong
+	struct StreamHeader {
+		int field_0x0;
+		int field_0x4;
+		u16 field_0x8;
+		u16 field_0xa;
+		u16 field_0xc;
+		u16 field_0xe;
+		u32 field_0x10;
+		u32 field_0x14;
+		int field_0x18;
+		int field_0x1c;
+	};
+
+	static DVDFileInfo finfo;
+	static StreamHeader header;
+	static char Filename[100];
+
+	static s16 filter_table[32] = {
+		0x0000, 0x0000, 0x0800, 0x0000, 0x0000, 0x0800, 0x0400, 0x0400,
+		0x1000, -0x800, 0x0E00, -0x600, 0x0C00, -0x400, 0x1200, -0xA00,
+		0x1068, -0x8C8, 0x12C0, -0x8FC, 0x1400, -0xC00, 0x0800, -0x800,
+		0x0400, -0x400, -0x400, 0x0400, -0x400, 0x0000, -0x800, 0x0000,
+	};
+
+	s16 table4[] = {
+		0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+		-0x008, -0x007, -0x006, -0x005, -0x004, -0x003, -0x002, -0x001,
+	};
+
+	static u32 adpcm_remain        = 0;
+	static u32 adpcm_loadpoint     = 0;
+	static u32 loadsize            = 0;
+	static void* adpcm_buffer      = nullptr;
+	static void* loop_buffer       = nullptr;
+	static void* store_buffer      = nullptr;
+	static void* assign_ch         = nullptr;
+	static u32 playside            = 0;
+	static u32 playback_samples    = 0;
+	static u32 loadup_samples      = 0;
+	static u32 adpcmbuf_state      = 0;
+	static u32 movieframe          = 0;
+	static bool stopflag           = false;
+	static bool stopflag2          = false;
+	static bool playflag           = false;
+	static bool playflag2          = false;
+	static u8 prepareflag          = 0;
+	static bool dspch_deallockflag = false;
+	static f32 outvolume           = 0.0f;
+	static f32 outpitch            = 0.0f;
+	static f32 outpan              = 0.0f;
+	static f32 stackvolume         = 0.0f;
+	static f32 stackpitch          = 0.0f;
+	static f32 stackpan            = 0.0f;
+	static bool outflag_volume     = false;
+	static bool outflag_pan        = false;
+	static bool outflag_pitch      = false;
+	static bool loop_start_flag    = false;
+	static u32 outpause            = 0;
+	static u32 playmode            = 0;
+	static u32 shift_sample        = 0;
+	static u32 extra_sample        = 0;
+	static u32 DvdLoadFlag         = false;
+	static u32 startInitFlag       = false;
+	static u32 Mode                = 0;
+	static void* Head              = nullptr;
+
+	bool bufferMode = false;
+	bool allocFlag  = false;
+
+	static u32 LOOP_BLOCKS     = 0xC;
+	static u32 LOOP_SAMPLESIZE = 0xf000;
+	static u32 outputmode      = 1;
+
+} // namespace StreamLib
+} // namespace JAInter
 
 void JAIBasic::checkEntriedStream() { }
 
@@ -33,7 +118,14 @@ namespace StreamLib {
 		return nullptr;
 	}
 
-	void init(bool mode) { }
+	void init(bool mode)
+	{
+		bufferMode = mode;
+		if (!mode) {
+			u32 sz = getNeedBufferSize();
+			allocBuffer(JASDram->alloc(sz, 0), sz);
+		}
+	}
 
 	void allocBuffer(void* buffer, s32 size) { }
 
@@ -49,27 +141,49 @@ namespace StreamLib {
 
 	void Hvqm_SetAudioDmaBuffers(u32 buffers) { }
 
-	void __DecodePCM() { }
+	static void __DecodePCM() { }
 
-	void __DecodeADPCM() { }
+	static void __DecodeADPCM() { }
 
-	void __Decode() { }
+	static void __Decode() { }
 
-	void __LoadFin(s32 param, DVDFileInfo* info) { }
+	static void __LoadFin(s32 param, DVDFileInfo* info)
+	{
+		DvdLoadFlag = 0;
+		if (adpcmbuf_state == 3)
+			return;
+		adpcmbuf_state = 2;
+	}
 
-	void LoadADPCM() { }
+	static void LoadADPCM() { }
 
-	void setVolume(f32 volume) { }
+	void setVolume(f32 volume)
+	{
+		stackvolume    = volume;
+		outflag_volume = true;
+	}
 
-	void setPitch(f32 pitch) { }
+	void setPitch(f32 pitch)
+	{
+		stackpitch    = pitch;
+		outflag_pitch = true;
+	}
 
-	void setPan(f32 pan) { }
+	void setPan(f32 pan)
+	{
+		stackpan    = pan;
+		outflag_pan = true;
+	}
 
-	void stop() { }
+	void stop()
+	{
+		stopflag  = true;
+		stopflag2 = true;
+	}
 
-	void setPauseFlag(u8 flag) { }
+	void setPauseFlag(u8 flag) { outpause |= flag; }
 
-	void clearPauseFlag(u8 flag) { }
+	void clearPauseFlag(u8 flag) { outpause &= (flag ^ 0xff); }
 
 	void setPrepareFlag(u8 flag) { prepareflag = flag; }
 
@@ -83,59 +197,22 @@ namespace StreamLib {
 
 	void LoopInit() { }
 
-	void start(char* filename, u32 mode, void* param) { }
+	static s32 callBack(void* param);
+
+	void start(char* filename, u32 mode, void* param)
+	{
+		if (startInitFlag == 0) {
+			strcpy(Filename, filename);
+			Mode = mode;
+			Head = param;
+			++startInitFlag;
+			JASystem::Kernel::registerSubframeCallback(&callBack, nullptr);
+		}
+	}
 
 	void __start() { }
 
-	void callBack(void* param) { }
-
-	bool stopflag           = false;
-	bool stopflag2          = false;
-	u32 outputmode          = 0;
-	u8 outpause             = 0;
-	bool playflag2          = false;
-	f32 stackvolume         = 0.0f;
-	bool outflag_volume     = false;
-	f32 stackpitch          = 0.0f;
-	bool outflag_pitch      = false;
-	f32 stackpan            = 0.0f;
-	bool outflag_pan        = false;
-	u8 prepareflag          = 0;
-	bool startInitFlag      = false;
-	char* Filename          = nullptr;
-	DVDFileInfo* finfo      = nullptr;
-	void* header            = nullptr;
-	bool DvdLoadFlag        = false;
-	bool playflag           = false;
-	u32 Mode                = 0;
-	u32 playmode            = 0;
-	void* assign_ch         = nullptr;
-	void* Head              = nullptr;
-	void* adpcm_buffer      = nullptr;
-	u32 adpcm_loadpoint     = 0;
-	u32 adpcm_remain        = 0;
-	u32 playback_samples    = 0;
-	u32 LOOP_BLOCKS         = 0;
-	f32 outvolume           = 0.0f;
-	f32 outpitch            = 0.0f;
-	f32 outpan              = 0.0f;
-	u32 loadup_samples      = 0;
-	u32 movieframe          = 0;
-	bool loop_start_flag    = false;
-	u32 adpcmbuf_state      = 0;
-	u32 playside            = 0;
-	u32 shift_sample        = 0;
-	u32 LOOP_SAMPLESIZE     = 0;
-	u32 loadsize            = 0;
-	u32 extra_sample        = 0;
-	bool dspch_deallockflag = false;
-	void* loop_buffer       = nullptr;
-	void* filter_table      = nullptr;
-	void* table4            = nullptr;
-	void* store_buffer      = nullptr;
-	bool bufferMode         = false;
-	bool allocFlag          = false;
-	void* streamHeap        = nullptr;
+	s32 callBack(void* param) { }
 
 } // namespace StreamLib
 } // namespace JAInter

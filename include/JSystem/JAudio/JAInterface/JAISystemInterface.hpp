@@ -27,7 +27,13 @@ public:
 	/* 0x38 */ char unk38[0xC];
 	/* 0x44 */ u32* unk44;
 	/* 0x48 */ JAISound* unk48;
-	/* 0x4C */ void* unk4C;
+
+	struct FabricatedUnk4CStruct {
+		/* 0x0 */ u32 unk0;
+		/* 0x4 */ JASystem::Kernel::TPortArgs unk4;
+		/* 0x2C */ JASystem::Kernel::TPortCmd unk2C;
+	};
+	/* 0x4C */ FabricatedUnk4CStruct* unk4C;
 };
 
 class JAISeqParameter;

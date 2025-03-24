@@ -50,7 +50,7 @@ namespace Kernel {
 	public:
 		TSolidHeap();
 		TSolidHeap(u8*, s32);
-		~TSolidHeap();
+		~TSolidHeap() { }
 
 		void init(u8*, s32);
 		void* alloc(s32);
