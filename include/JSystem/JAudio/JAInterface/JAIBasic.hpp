@@ -52,7 +52,7 @@ public:
 	BOOL checkInitDataFile();
 	void loadTmpDVDFile(char* filename, unsigned char** buffer);
 	void checkInitDataOnMemory();
-	void transInitDataFile(unsigned char* buffer, u32 size);
+	void* transInitDataFile(unsigned char* buffer, u32 size);
 	void* allocHeap(u32 size);
 	void initBankWave();
 	void deleteTmpDVDFile(unsigned char** buffer);
@@ -194,13 +194,39 @@ public:
 	/* 0x30 */ u32 unk30;
 	/* 0x34 */ u32 unk34;
 	/* 0x38 */ JAISound* unk38;
-	/* 0x3C */ void* unk3C;
-	/* 0x40 */ void* unk40;
+
+	struct FabricatedUnk3CStruct {
+		char unk0[1]; // TODO: is this just a size 0x30 str or nah?
+		char unk1[0x2F];
+	};
+	/* 0x3C */ FabricatedUnk3CStruct* unk3C;
+
+	// TODO: same as unk3C?
+	struct FabricatedUnk40Struct {
+		char unk0[1];
+		char unk1[0x2F];
+	};
+	/* 0x40 */ FabricatedUnk40Struct* unk40;
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u8* unk4C;
-	/* 0x50 */ u32 unk50;
-	/* 0x54 */ void* unk54;
+
+	// TODO: same as Unk54 struct?
+	struct FabricatedUnk50Struct {
+		void* unk0;
+		char unk4[0x4];
+		int unk8;
+	};
+
+	/* 0x50 */ FabricatedUnk50Struct* unk50;
+
+	struct FabricatedUnk54Struct {
+		void* unk0;
+		u32 unk4;
+		u32 unk8;
+	};
+
+	/* 0x54 */ FabricatedUnk54Struct* unk54;
 	/* 0x58 */ u8** unk58; // TODO: wrong type
 	/* 0x5C */ u32 unk5C;
 	/* 0x60 */ s32* unk60;
