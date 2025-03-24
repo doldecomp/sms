@@ -7,6 +7,7 @@ struct JAIMoveParaSet;
 class JAISeqParameter;
 class JAISeParameter;
 class JAIStreamParameter;
+class JAIBasic;
 
 class JAISound {
 public:
@@ -49,12 +50,12 @@ public:
 	virtual void setDistanceVolumeCommon(f32, u8);
 	virtual void setDistancePanCommon();
 
-	void initMoveParameter(JAIMoveParaSet*, f32, u32);
+	int initMoveParameter(JAIMoveParaSet*, f32, u32);
 	void initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32);
-	void getSeCategoryNumber();
+	u32 getSeCategoryNumber();
 	void getDataInfoHeader();
 	u32 getSwBit();
-	void checkSwBit(u32);
+	u32 checkSwBit(u32);
 	u8 getInfoPriority();
 	void clearMainSoundPPointer();
 	void release();
@@ -142,12 +143,12 @@ public:
 	JAISeqParameter* getSeqParameter();
 	JAISeParameter* getSeParameter();
 	JAIStreamParameter* getStreamParameter();
-	void getTrackPortRoute(u8, u8);
+	u32 getTrackPortRoute(u8, u8);
 	void getSeInfoPointer();
 
 	u32 getUnk8() { return unk8; }
 
-	static void* interPointer;
+	static JAIBasic* interPointer;
 };
 
 #endif // JAISOUND_HPP
