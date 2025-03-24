@@ -21,6 +21,9 @@
 
 JAIBasic* JAIBasic::basic;
 
+JAICamera JAInullCamera(&JAIConst::camTrans, &JAIConst::camPreTrans,
+                        JAIConst::camMtx);
+
 JAIBasic::JAIBasic()
 {
 	basic                  = this;
@@ -230,7 +233,61 @@ BOOL JAIBasic::checkInitDataFile()
 	}
 }
 
-void JAIBasic::checkInitDataOnMemory() { }
+void JAIBasic::checkInitDataOnMemory()
+{
+	JAIData* data = unk0;
+
+	bool shouldContinue = true;
+	u32 i               = 0;
+	while (shouldContinue) {
+		u32 command = unk4C[i];
+		++i;
+		switch (command) {
+		case 0:
+			shouldContinue = false;
+			break;
+		case 1:
+			if (unk4C[i] == 0) {
+				u32 offset        = unk4C[i + 1];
+				data->unk88.unk28 = unk4C[i + 2];
+				data->unk88.unk78 = transInitDataFile(((u8*)unk4C) + offset,
+				                                      data->unk88.unk28);
+				data->unk1B0      = 0;
+				i += 4;
+			} else {
+				// TODO: should this all be done via header structs? probably
+				u32 offset        = unk4C[i + 1];
+				data->unk88.unk28 = unk4C[i + 2];
+				data->unk88.unk78 = transInitDataFile(((u8*)unk4C) + offset,
+				                                      data->unk88.unk28);
+
+				u8* buffer1      = ((u8*)unk4C) + unk4C[i + 3];
+				data->unkC.unk28 = unk4C[i + 4];
+				data->unkC.unk78
+				    = transInitDataFile(buffer1, data->unk88.unk28);
+
+				u8* buffer         = ((u8*)unk4C) + unk4C[i + 5];
+				data->unk104.unk28 = unk4C[i + 6];
+				data->unk104.unk78
+				    = transInitDataFile(buffer, data->unk104.unk28);
+				data->unk1B0 = 0;
+
+				i += 7;
+			}
+			break;
+		case 2: {
+			u32 uVar7 = 0;
+			while (unk4C[i + uVar7] != 0)
+				uVar7 += 3;
+
+			unk50 = (FabricatedUnk50Struct*)transInitDataFile(
+			    (u8*)&unk4C[i], (uVar7 / 3) * 0xC + 4);
+			// TODO: lots more stuff in here but I'm sick of it tbh
+			break;
+		}
+		}
+	}
+}
 
 void* JAIBasic::transInitDataFile(u8* buffer, u32 size)
 {
@@ -352,7 +409,26 @@ void JAIBasic::getWaveLoadStatus(s32 param) { }
 
 void JAIBasic::checkAllWaveLoadStatus() { }
 
-void JAIBasic::initNullData() { }
+void JAIBasic::initNullData()
+{
+	JAInullCamera.unk0->x = 0.0f;
+	JAInullCamera.unk0->y = 0.0f;
+	JAInullCamera.unk0->z = -50.0f;
+
+	JAInullCamera.unk4->x = 0.0f;
+	JAInullCamera.unk4->y = 0.0f;
+	JAInullCamera.unk4->z = -50.0f;
+
+	Vec up;
+	up.x       = 0.0f;
+	up.y       = 1.0f;
+	up.z       = 0.0f;
+	Vec target = JAIConst::dummyZeroVec;
+	C_MTXLookAt(JAIConst::camMtx, JAInullCamera.unk0, &up, &target);
+	for (int i = 0; i < JAIGlobalParameter::audioCameraMax; ++i)
+		setCameraInfo(JAInullCamera.unk0, JAInullCamera.unk4, JAIConst::camMtx,
+		              i);
+}
 
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 param_2, u8 param_3)
 {
@@ -839,7 +915,56 @@ void JAIBasic::setSeCategoryVolume(u8 category, u8 volume)
 	unk28[category] = volume / 127.0f;
 }
 
-u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param) { }
+u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
+{
+	u16 result = 0;
+
+	switch (param_2) {
+	case 0:
+		for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
+			if (basic->unk0->unk180[i].unk48 == nullptr)
+				continue;
+
+			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
+			    basic->unk0->unk180[i].unk48->getSeqParameter()->unk0);
+			if (track != param_1->unk2C0)
+				continue;
+
+			u32 route = basic->routeToTrack(param_1->unk308);
+			JAISoundInfo* info
+			    = basic->getSoundInfoFromID(basic->unk0->unk180[i].unk48->unk8);
+
+			JAISystemInterface::outerInit(&basic->unk0->unk180[i], param_1,
+			                              route, info->unk0 >> 8, param_2 & 1);
+			result = 0;
+			basic->unk0->unk180[i].unk4 |= 1 << route;
+			i = JAIGlobalParameter::seqPlayTrackMax;
+		}
+		break;
+	case 1: {
+		u32 uVar8                            = param_1->unk308;
+		JASystem::TTrack::TOuterParam* outer = param_1->mOuterParam;
+		JAIData::FabricatedUnk0Struct* params
+		    = &basic->unk0->unk0[uVar8 & 0xff];
+
+		outer->setParam(1, params->unk4);
+		outer->setParam(8, params->unk10);
+		outer->setParam(2, params->unk8);
+		outer->setParam(4, params->unkC);
+		f32 thing;
+		if (basic->unk14 != 2)
+			thing = 0.0f;
+		else
+			thing = params->unk14;
+		outer->setParam(16, thing);
+		break;
+	}
+	case 0x7F:
+		param_1->writePortApp(0, basic->unk10);
+		break;
+	}
+	return result;
+}
 
 JAISoundInfo* JAIBasic::getSoundInfoFromID(u32 id)
 {
@@ -938,4 +1063,44 @@ void JAIBasic::allocStreamBuffer(void* buffer, s32 size) { }
 
 void JAIBasic::deallocStreamBuffer() { }
 
-void JAIBasic::loadArcSeqData(u32 param, bool flag) { }
+int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
+{
+	u32 uVar1   = param_1 & 0x3ff;
+	u32 uVar2   = JASystem::Vload::checkSize(uVar1);
+	void* iVar3 = unk0->checkOnMemory(uVar1, nullptr);
+
+	u32 uVar6 = getSoundInfoFromID(param_1)->unk0;
+
+	u8* puVar4 = (u8*)iVar3;
+	if (puVar4 == 0) {
+		u8 unaff_r28;
+		if ((uVar6 & 0x10) != 0) {
+			puVar4    = unk0->getFreeStayHeapPointer(uVar2, uVar1);
+			unaff_r28 = 0xff;
+		}
+
+		if ((puVar4 == nullptr) || ((uVar6 & 0x20) != 0)) {
+			unaff_r28 = unk0->checkUsefulAutoHeapPosition();
+
+			if (unaff_r28 >= JAIGlobalParameter::autoHeapMax)
+				return 0xffffffff;
+
+			if (uVar2 >= JAIGlobalParameter::autoHeapRoomSize)
+				return 0xffffffff;
+
+			puVar4 = (u8*)unk0->getFreeAutoHeapPointer(unaff_r28, uVar1);
+		}
+
+		if ((uVar6 & 0x40) == 0) {
+			unk0->setAutoHeapLoadedFlag(unaff_r28, '\x01');
+			u32 id = param_2 | 0xFE | uVar1 << 16 | unaff_r28 << 8;
+			JASystem::Vload::loadFileAsync(unk2C + uVar1, puVar4, 0, uVar2,
+			                               &checkDvdLoadArc, id);
+			return 1;
+		} else {
+			JASystem::Vload::loadFile(unk2C + uVar1, puVar4, 0, uVar2);
+			return 2;
+		}
+	}
+	return 0;
+}

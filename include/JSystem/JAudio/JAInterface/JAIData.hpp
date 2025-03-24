@@ -22,7 +22,8 @@ struct JAIStreamUpdateParameter;
 
 // fabricated
 struct JAISoundInfo {
-	/* 0x0 */ char unk0[0x10];
+	/* 0x0 */ u32 unk0;
+	/* 0x4 */ char unk4[0x10];
 };
 
 // TODO: I accidentally put a bunch of stuff in here
@@ -127,7 +128,16 @@ public:
 	void setInfoDataPointer(JAISoundTable* soundTable, u8* ptr);
 
 public:
-	/* 0x0 */ void* unk0;
+	struct FabricatedUnk0Struct {
+		u8 unk0;
+		f32 unk4;
+		f32 unk8;
+		f32 unkC;
+		f32 unk10;
+		f32 unk14;
+	};
+
+	/* 0x0 */ FabricatedUnk0Struct* unk0;
 	/* 0x4 */ u8** unk4;
 	/* 0x8 */ void** unk8;
 	/* 0xC */ JAISoundTable unkC;

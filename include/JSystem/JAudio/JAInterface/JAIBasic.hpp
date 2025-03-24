@@ -10,6 +10,12 @@
 class JAICamera {
 public:
 	JAICamera();
+	JAICamera(VecPtr param_1, VecPtr param_2, MtxPtr param_3)
+	    : unk0(param_1)
+	    , unk4(param_2)
+	    , unk8(param_3)
+	{
+	}
 
 	/* 0x0 */ VecPtr unk0;
 	/* 0x4 */ VecPtr unk4;
@@ -144,7 +150,7 @@ public:
 	u32 routeToTrack(u32 param);
 	void allocStreamBuffer(void* buffer, s32 size);
 	void deallocStreamBuffer();
-	void loadArcSeqData(u32 param, bool flag);
+	int loadArcSeqData(u32 param, bool flag);
 	void setSeqMuteFromSeStart(JAISound* sound);
 	void clearSeqMuteFromSeStop(JAISound* sound);
 	void checkSeMovePara();
@@ -157,7 +163,7 @@ public:
 	void checkFadeoutSeq();
 	void checkReadSeq();
 	void checkSeqWave();
-	void checkDvdLoadArc(unsigned long arcID);
+	static void checkDvdLoadArc(unsigned long arcID);
 	void stopSeq(JAISound* sound);
 	void checkEntriedStream();
 	void checkWaitStream();
