@@ -12,6 +12,8 @@
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASVload.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBankMgr.hpp>
+#include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
+#include <JSystem/JAudio/JASystem/JASBankMgr.hpp>
 #include <dolphin/mtx.h>
 #include <stdio.h>
 
@@ -37,18 +39,18 @@ JAIBasic::JAIBasic()
 	unk11 = 0;
 	unk24 = 0;
 	unk8  = nullptr;
-	unk38 = 0;
+	unk38 = nullptr;
 	unk20 = 0;
 	unk30 = 0;
 	unk13 = 3;
 	unk4C = nullptr;
-	unk3C = 0;
-	unk40 = 0;
+	unk3C = nullptr;
+	unk40 = nullptr;
 	unk44 = 0;
 	unk48 = 0;
 	unk50 = 0;
-	unk54 = 0;
-	unk58 = 0;
+	unk54 = nullptr;
+	unk58 = nullptr;
 	unk5C = 0;
 	unk68 = nullptr;
 	unk6C = nullptr;
@@ -191,8 +193,8 @@ BOOL JAIBasic::checkInitListFile()
 		strcpy(JAIGlobalParameter::sequenceArchivesFileName,
 		       (char*)((u8*)file + header->unk0));
 
-		unk3C = (u8*)file + header->unk2;
-		unk40 = (u8*)file + header->unk4;
+		unk3C = (FabricatedUnk3CStruct*)((u8*)file + header->unk2);
+		unk40 = (FabricatedUnk40Struct*)((u8*)file + header->unk4);
 
 		strcpy(JAIGlobalParameter::seInfoFileName,
 		       (char*)((u8*)file + header->unk6));
@@ -230,11 +232,76 @@ BOOL JAIBasic::checkInitDataFile()
 
 void JAIBasic::checkInitDataOnMemory() { }
 
-void JAIBasic::transInitDataFile(u8* buffer, u32 size) { }
+void* JAIBasic::transInitDataFile(u8* buffer, u32 size)
+{
+	u8* data = (u8*)allocHeap(size);
+	if (data != nullptr)
+		for (u32 i = 0; i < size; ++i)
+			data[i] = buffer[i];
 
-void JAIBasic::initBankWave() { }
+	return data;
+}
 
-void JAIBasic::setWaveScene() { }
+void JAIBasic::initBankWave()
+{
+	JASystem::WaveArcLoader::setCurrentDir(JAIGlobalParameter::wavePath);
+	JASystem::WaveBankMgr::init(0x100);
+	JASystem::WaveArcLoader::init();
+
+	if (unk54) {
+		for (int i = 0; unk54[i].unk0; ++i) {
+			void* data = unk54[i].unk0;
+			if (data) {
+				JASystem::WaveBankMgr::registWaveBankWS(i, data);
+				unk60[i] = -1;
+				unk64[i] = 0;
+			}
+		}
+	}
+
+	if (unk40) {
+		for (int i = 0; unk40[i].unk0[0] != 0; ++i) {
+			void* data = loadDVDFile(unk40[i].unk0);
+			if (data)
+				JASystem::WaveBankMgr::registWaveBankWS(i, data);
+		}
+	}
+
+	JASystem::BankMgr::init(0x100);
+
+	if (unk50) {
+		int i;
+
+		for (i = 0; unk50[i].unk0; ++i) {
+			void* data = unk50[i].unk0;
+			if (data)
+				JASystem::BankMgr::registBankBNK(i, data);
+		}
+
+		for (i = 0; unk50[i].unk0; ++i)
+			JASystem::BankMgr::assignWaveBank(i, unk50[i].unk8);
+	}
+
+	if (unk3C) {
+		for (int i = 0; unk3C[i].unk0[0] != 0; ++i) {
+			void* file = loadDVDFile(unk3C[i].unk0);
+			if (file)
+				JASystem::BankMgr::registBankBNK(i, file);
+			loadGroupWave(i, 0);
+		}
+	}
+}
+
+void JAIBasic::setWaveScene()
+{
+	if (unk54 && !unk1C.flag3) {
+		for (int i = 0; unk54[i].unk0; ++i)
+			if (unk54[i].unk8 == 0)
+				loadGroupWave(i, 0);
+
+		unk1C.flag1 = true;
+	}
+}
 
 void JAIBasic::readInitSoundData() { }
 
@@ -258,8 +325,7 @@ void JAIBasic::finishSceneSet(u32 param)
 
 void JAIBasic::loadSceneWave(s32 param1, s32 param2)
 {
-	// TODO: what is unk54?
-	if (unk54 && unk60[param1] != param2) {
+	if (unk54 && unk54[param1].unk8 == 2 && unk60[param1] != param2) {
 		if (unk60[param1] != -1)
 			JASystem::WaveBankMgr::eraseWave(param1, unk60[param1]);
 		loadGroupWave(param1, param2);
@@ -336,7 +402,34 @@ void JAIBasic::setInitFileLoadSwitch(u8 flag) { unk13 = flag; }
 
 void JAIBasic::startFrameInterfaceWork() { processFrameWork(); }
 
-void JAIBasic::processFrameWork() { }
+void JAIBasic::processFrameWork()
+{
+	checkDummyPositionBuffer();
+
+	if (unk38->unk1 == 3 && !unk1C.flag2 && unk54) {
+		for (int i = 0; unk54[i].unk0; ++i)
+			if (unk54[i].unk8 == 1)
+				loadGroupWave(i, 0);
+
+		unk1C.flag2 = true;
+	}
+
+	if (unk38->unk1 >= 4)
+		checkNextFrameSe();
+
+	sendPlayingSeCommand();
+	checkEntriedSeq();
+	checkFadeoutSeq();
+	checkStoppedSeq();
+	checkSeMovePara();
+	checkPlayingSeq();
+	checkStartedSeq();
+	checkReadSeq();
+	checkSeqWave();
+	if (!unk1C.flag6)
+		checkStream();
+	++unk20;
+}
 
 void JAIBasic::checkStream()
 {
@@ -511,7 +604,27 @@ void JAIBasic::releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound)
 	buffer->unk0 = sound;
 }
 
-JAIStreamParameter* JAIBasic::getStreamParameter() { }
+JAIStreamParameter* JAIBasic::getStreamParameter()
+{
+	JAIStreamParameter* var1;
+	JAIStreamParameter** var2;
+
+	var2 = &unk0->unk1D8;
+	if (unk0->unk1D4->unk3DC != nullptr) {
+		var1         = unk0->unk1D4;
+		unk0->unk1D4 = var1->unk3DC;
+		if (*var2 != nullptr) {
+			var1->unk3DC    = *var2;
+			(*var2)->unk3D8 = var1;
+		} else {
+			var1->unk3DC = nullptr;
+		}
+		var1->unk3D8 = nullptr;
+		*var2        = var1;
+		return var1;
+	}
+	return nullptr;
+}
 
 void JAIBasic::releaseStreamParameterPointer(JAIStreamParameter* param)
 {
