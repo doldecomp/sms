@@ -176,7 +176,7 @@ void JAISound::getTempoProportion() { }
 
 void JAISound::getPortData(u8) { }
 
-void JAISound::getSeqInterVolume(u8) { }
+f32 JAISound::getSeqInterVolume(u8) { }
 
 void JAISound::getSeqInterPan(u8) { }
 

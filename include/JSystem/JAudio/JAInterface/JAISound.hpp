@@ -124,7 +124,7 @@ public:
 	void getDolby(u8);
 	void getTempoProportion();
 	void getPortData(u8);
-	void getSeqInterVolume(u8);
+	f32 getSeqInterVolume(u8);
 	void getSeqInterPan(u8);
 	void getSeqInterPitch(u8);
 	void getSeqInterFxmix(u8);
