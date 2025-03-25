@@ -2,6 +2,8 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 #include <JSystem/JAudio/JAInterface/JAISystemInterface.hpp>
+#include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#include <math.h>
 
 JAIBasic* JAISound::interPointer;
 
@@ -193,11 +195,126 @@ void JAISound::setPrepareFlag(u8) { }
 
 void JAISound::checkReady() { }
 
-void JAISound::setDistanceVolumeCommon(f32 param_1, u8 param_2) { }
+f32 JAISound::setDistanceVolumeCommon(f32 param_1, u8 param_2)
+{
+	f32 var1;
+	if (unk4 != 4) {
+		var1 = unk1C[unk4].unk18;
+	} else {
+		var1 = unk1C[0].unk18;
+		for (u8 i = 1; i < JAIGlobalParameter::audioCameraMax; i++)
+			if (unk1C[i].unk18 < var1)
+				var1 = unk1C[i].unk18;
+	}
 
-void JAISound::setDistancePanCommon() { }
+	if (var1 < JAIGlobalParameter::maxVolumeDistance)
+		return 1.0f;
 
-void JAISound::setPositionDopplarCommon(u32) { }
+	var1 -= JAIGlobalParameter::maxVolumeDistance;
+	f32 var2 = param_1 - JAIGlobalParameter::maxVolumeDistance;
+
+	if (param_2 > 3)
+		var2 /= 1 << ((param_2 & 3) + 1);
+	else if (param_2 != 0)
+		var2 *= 1 << (param_2 & 3);
+
+	if (var1 < var2) {
+		if (param_2 > 3)
+			return 1.0f - var1 / var2;
+		else
+			return JAIGlobalParameter::minDistanceVolume
+			       + (1.0f - JAIGlobalParameter::minDistanceVolume)
+			             * (1.0f - var1 / var2);
+
+	} else {
+		if (param_2 > 3)
+			return 0.0f;
+		else
+			return JAIGlobalParameter::minDistanceVolume;
+	}
+}
+
+f32 JAISound::setDistancePanCommon()
+{
+	if (JAIGlobalParameter::audioCameraMax == 1) {
+		FabricatedPositionInfo& info = unk1C[0];
+
+		f32 fVar3 = std::fabsf(info.unk0.x);
+		f32 fVar2 = std::fabsf(info.unk0.z);
+
+		if (fVar3 < 1.0f && fVar2 < 1.0f)
+			return 0.5f;
+
+		if (JAIGlobalParameter::panDistanceMax < fVar3)
+			fVar3 = JAIGlobalParameter::panDistanceMax;
+
+		if (JAIGlobalParameter::panDistanceMax < fVar2)
+			fVar2 = JAIGlobalParameter::panDistanceMax;
+
+		f32 result;
+
+		if (info.unk0.x == 0.0f && info.unk0.z == 0.0f) {
+			result = 0.5f;
+		} else if (info.unk0.x > 0.0f && fVar3 >= fVar2) {
+			result = 1.0f
+			         - (JAIGlobalParameter::panDistance2Max - fVar3)
+			               / (JAIGlobalParameter::panAngleParameter
+			                  * (JAIGlobalParameter::panDistance2Max - fVar2));
+		} else if (info.unk0.x <= 0.0f && fVar3 >= fVar2) {
+			result = (JAIGlobalParameter::panDistance2Max - fVar3)
+			         / (JAIGlobalParameter::panAngleParameter
+			            * (JAIGlobalParameter::panDistance2Max - fVar2));
+		} else {
+			result
+			    = info.unk0.x / (JAIGlobalParameter::panAngleParameter2 * fVar2)
+			      + 0.5f;
+		}
+
+		return result;
+	} else {
+		if (unk4 != 4) {
+			return unk4 & 1;
+		} else {
+			return 0.5f;
+		}
+	}
+}
+
+f32 JAISound::setPositionDopplarCommon(u32 param_1)
+{
+	VecPtr pVVar7 = interPointer->unk8->unk0;
+	VecPtr pVVar6 = interPointer->unk8->unk4;
+
+	f32 diff_x = pVVar7->x - unk1C->unk0.x;
+	f32 diff_y = pVVar7->y - unk1C->unk0.y;
+	f32 diff_z = pVVar7->z - unk1C->unk0.z;
+
+	f32 diff2_x = (pVVar7->x - pVVar6->x) - (unk1C->unk0.x - unk1C->unkC.x);
+	f32 diff2_y = (pVVar7->y - pVVar6->y) - (unk1C->unk0.y - unk1C->unkC.y);
+	f32 diff2_z = (pVVar7->z - pVVar6->z) - (unk1C->unk0.z - unk1C->unkC.z);
+
+	f32 lenSq = diff_x * diff_x + diff_y * diff_y + diff_z * diff_z;
+	f32 len   = std::sqrtf(lenSq);
+
+	f32 diff3_x = diff_x + diff2_x;
+	f32 diff3_y = diff_y + diff2_y;
+	f32 diff3_z = diff_z + diff2_z;
+
+	f32 lenSq2 = diff3_x * diff3_x + diff3_y * diff3_y + diff3_z * diff3_z;
+	f32 len2   = std::sqrtf(lenSq2);
+
+	f32 result = 1.0f
+	             / (1.0f
+	                - (len - len2)
+	                      / (JAIGlobalParameter::dopplarParameter
+	                         / ((param_1 >> 8) * (param_1 >> 8))));
+
+	if (result < 0.1f)
+		return 0.1f;
+	if (result > 2.0f)
+		return 2.0f;
+	return result;
+}
 
 void JAISound::setSeqInterVolume(u8 param_1, f32 param_2, u32 param_3)
 {

@@ -29,19 +29,22 @@ void JAIData::initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param)
 	linkBuffer->unk8[0].unk30 = &linkBuffer->unk8[1];
 	JAISound::interPointer    = unk1F4;
 	linkBuffer->unk8[0].unk1  = 0;
-	linkBuffer->unk8[0].unk1C = unk1F4->allocHeap(thing);
+	linkBuffer->unk8[0].unk1C
+	    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
 	for (i = 1; i < param - 1; ++i) {
 		linkBuffer->unk8[i].unk2C = &linkBuffer->unk8[i - 1];
 		linkBuffer->unk8[i].unk30 = &linkBuffer->unk8[i + 1];
 		JAISound::interPointer    = unk1F4;
 		linkBuffer->unk8[i].unk1  = 0;
-		linkBuffer->unk8[i].unk1C = unk1F4->allocHeap(thing);
+		linkBuffer->unk8[i].unk1C
+		    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
 	}
 	linkBuffer->unk8[i].unk2C = &linkBuffer->unk8[i - 1];
 	linkBuffer->unk8[i].unk30 = nullptr;
 	JAISound::interPointer    = unk1F4;
 	linkBuffer->unk8[i].unk1  = 0;
-	linkBuffer->unk8[i].unk1C = unk1F4->allocHeap(thing);
+	linkBuffer->unk8[i].unk1C
+	    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
 }
 
 void JAIData::initSeqParaLinkBuffer()

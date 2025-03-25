@@ -1,7 +1,8 @@
 #ifndef JAISOUND_HPP
 #define JAISOUND_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
+#include <dolphin/mtx.h>
 
 struct JAIMoveParaSet;
 class JAISeqParameter;
@@ -11,6 +12,12 @@ class JAIBasic;
 
 class JAISound {
 public:
+	struct FabricatedPositionInfo {
+		/* 0x00 */ Vec unk0;
+		/* 0x0C */ Vec unkC;
+		/* 0x18 */ f32 unk18;
+	};
+
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
 	/* 0x2 */ u8 unk2;
@@ -23,7 +30,7 @@ public:
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ void* unk1C;
+	/* 0x1C */ FabricatedPositionInfo* unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ u32 unk28;
@@ -46,9 +53,9 @@ public:
 	virtual void setSeDistanceFir(u8);
 	virtual void setSeDistanceDolby(u8);
 	virtual void setSePositionDopplar();
-	virtual void setPositionDopplarCommon(u32);
-	virtual void setDistanceVolumeCommon(f32, u8);
-	virtual void setDistancePanCommon();
+	virtual f32 setPositionDopplarCommon(u32);
+	virtual f32 setDistanceVolumeCommon(f32, u8);
+	virtual f32 setDistancePanCommon();
 
 	int initMoveParameter(JAIMoveParaSet*, f32, u32);
 	void initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32);
