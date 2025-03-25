@@ -6,9 +6,40 @@
 
 class JAIActor;
 
-struct JAIAnimeFrameSoundData { };
+struct JAIAnimeFrameSoundData {
+	/* 0x0 */ char unk0[0xC];
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ char unk10[0x4];
+	/* 0x14 */ u8 unk14;
+	/* 0x15 */ s8 unk15;
+	/* 0x16 */ char unk16[0x2];
+	/* 0x18 */ s8 unk18;
+};
 
 class JAIAnimeSound {
+public:
+	struct Slot {
+		/* 0x0 */ u8 mIsPlaying;
+		/* 0x4 */ JAISound* mSound;
+		/* 0x8 */ void* mData;
+	};
+
+	/* 0x00 */ Slot mSlots[8];
+	/* 0x60 */ u32 unk60;
+	/* 0x64 */ u32 unk64;
+	/* 0x68 */ u32 unk68;
+	/* 0x6C */ u32 unk6C;
+	/* 0x70 */ void* unk70[2];
+	/* 0x78 */ int mDataCounterInc;
+	/* 0x7C */ int mDataCounterLimit;
+	/* 0x80 */ u32 mDataCounter;
+	/* 0x84 */ int mLoopCount;
+	/* 0x88 */ f32 mCurrentTime;
+	/* 0x8C */ u8 unk8C[0x4];
+	// TODO: not JUST u16...
+	/* 0x90 */ u16* mData;
+	/* 0x94 */ // vtable
+
 public:
 	JAIAnimeSound();
 	~JAIAnimeSound();
