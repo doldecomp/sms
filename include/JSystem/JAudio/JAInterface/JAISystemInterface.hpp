@@ -29,7 +29,7 @@ public:
 	/* 0x48 */ JAISound* unk48;
 
 	struct FabricatedUnk4CStruct {
-		/* 0x0 */ u32 unk0;
+		/* 0x0 */ JASystem::TTrack* unk0;
 		/* 0x4 */ JASystem::Kernel::TPortArgs unk4;
 		/* 0x2C */ JASystem::Kernel::TPortCmd unk2C;
 	};

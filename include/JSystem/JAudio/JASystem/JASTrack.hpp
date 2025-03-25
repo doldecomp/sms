@@ -224,6 +224,10 @@ public:
 	static u16 (*sCallBackFunc)(TTrack*, u16);
 	static u8 sOscTable[];
 
+	// from tp (I think)
+	TTrack* getChild(int index) { return unk2C4[index]; }
+	TOuterParam* getOuterParam() { return mOuterParam; }
+
 public:
 	/* 0x0 */ TSeqCtrl mSeqCtrl;
 	/* 0x48 */ TTrackPort mTrackPort;
