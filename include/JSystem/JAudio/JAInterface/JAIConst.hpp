@@ -14,9 +14,17 @@ public:
 	{
 	}
 
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
+	JAIActor(VecPtr a, VecPtr b, VecPtr c, u32 d)
+	    : unk0(a)
+	    , unk4(b)
+	    , unk8(c)
+	    , unkC(d)
+	{
+	}
+
+	/* 0x0 */ VecPtr unk0;
+	/* 0x4 */ VecPtr unk4;
+	/* 0x8 */ VecPtr unk8;
 	/* 0xC */ u32 unkC;
 };
 
