@@ -20,7 +20,7 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 	if (!param_2)
 		actor = &JAIConst::nullActor;
 
-	u32 uVar14 = actor->unk0;
+	VecPtr uVar14 = actor->unk0;
 
 	u8 bVar10 = 0;
 	JAISound* local_88[16];

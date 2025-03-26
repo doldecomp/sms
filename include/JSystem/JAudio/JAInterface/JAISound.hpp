@@ -31,9 +31,9 @@ public:
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ FabricatedPositionInfo* unk1C;
-	/* 0x20 */ u32 unk20;
-	/* 0x24 */ u32 unk24;
-	/* 0x28 */ u32 unk28;
+	/* 0x20 */ VecPtr unk20;
+	/* 0x24 */ VecPtr unk24;
+	/* 0x28 */ VecPtr unk28;
 	/* 0x2C */ JAISound* unk2C;
 	/* 0x30 */ JAISound* unk30;
 	/* 0x34 */ JAISound** unk34;
