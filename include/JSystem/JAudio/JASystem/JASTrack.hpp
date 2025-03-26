@@ -11,7 +11,7 @@
 namespace JASystem {
 
 namespace Player {
-	enum SEQ_PLAYMODE {};
+	enum SEQ_PLAYMODE { SEQ_PLAYMODE_UNK_0 };
 } // namespace Player
 
 class TSeqCtrl;

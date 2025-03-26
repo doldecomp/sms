@@ -24,7 +24,8 @@ public:
 	/* 0x2C */ f32* unk2C;
 	/* 0x30 */ f32* unk30;
 	/* 0x34 */ f32* unk34;
-	/* 0x38 */ char unk38[0xC];
+	/* 0x38 */ char unk38[0x8];
+	/* 0x40 */ u8* unk40;
 	/* 0x44 */ u32* unk44;
 	/* 0x48 */ JAISound* unk48;
 

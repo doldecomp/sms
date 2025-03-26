@@ -4,6 +4,7 @@
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASCmdStack.hpp>
+#include <JSystem/JAudio/JASystem/JASVload.hpp>
 
 void JAIBasic::stopSeq(JAISound* param_1)
 {
@@ -113,9 +114,77 @@ void JAIBasic::checkFadeoutSeq()
 	}
 }
 
-void JAIBasic::checkReadSeq() { }
+void JAIBasic::checkReadSeq()
+{
+	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
+		JAISeqUpdateData* sud = &unk0->unk180[i];
+		JAISound** sound      = &sud->unk48;
+		if (!*sound)
+			continue;
+		if ((*sound)->unk1 != 2)
+			continue;
+		if ((*sound)->getSeqParameter()->unk1758 != -1)
+			continue;
+		if ((*sound)->getSeqParameter()->unk1850->unk2 != 0)
+			continue;
 
-void JAIBasic::checkSeqWave() { }
+		u32 lVar2
+		    = JASystem::Vload::checkSize(unk2C + ((*sound)->unk8 & 0x3FF));
+		int uVar3 = JAISystemInterface::setSeqData(
+		    nullptr, sud->unk40, lVar2, JASystem::Player::SEQ_PLAYMODE_UNK_0);
+
+		(*sound)->getSeqParameter()->unk0 = uVar3;
+		(*sound)->getSeqParameter();
+		if ((*sound)->getSeqParameter()->unk0 != -1) {
+			unk0->initSeqTrackInfoParameter((*sound)->unk0);
+			(*sound)->unk1 = 3;
+			if ((*sound)->unk10 > 1) {
+				(*sound)->setSeqInterVolume(6, 0.0f, 0);
+				(*sound)->setSeqInterVolume(6, 1.0f, (*sound)->unk10);
+			}
+			if (sud->unk0 != 0) {
+				(*sound)->setPauseMode(sud->unk0, sud->unk1);
+				sud->unkC = 1.1f;
+			}
+			setSeExtParameter(*sound);
+			checkPlayingSeqTrack(i);
+			if (*sound != nullptr) {
+				JAISystemInterface::rootInit(sud);
+				JAISystemInterface::startSeq((*sound)->getSeqParameter()->unk0);
+			}
+		} else {
+			JAISound* snd = *sound;
+			stopSeq(snd);
+		}
+	}
+}
+
+void JAIBasic::checkSeqWave()
+{
+	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
+		JAISeqUpdateData* sud = &unk0->unk180[i];
+		JAISound** sound      = &sud->unk48;
+		if (!*sound)
+			continue;
+		if (!(*sound)->getSeqParameter())
+			continue;
+		if ((*sound)->getSeqParameter()->unk1758 == 0xffffffff)
+			continue;
+		if (unk34 == 0xffffffff)
+			continue;
+
+		u32 uVar3 = (*sound)->getSeqParameter()->unk1758;
+
+		JAISound* snd = *sound;
+		if (unk34 == uVar3 || uVar3 == 0xff00ff00
+		    || (((unk34 & 0xffff0000) == (uVar3 & 0xffff0000)
+		         && uVar3 == 0xffff))
+		    || (((unk34 & 0xffff) == (uVar3 & 0xffff)
+		         && uVar3 == 0xffff0000))) {
+			snd->getSeqParameter()->unk1758 = 0xffffffff;
+		}
+	}
+}
 
 void JAIBasic::checkDvdLoadArc(u32 param_1)
 {
