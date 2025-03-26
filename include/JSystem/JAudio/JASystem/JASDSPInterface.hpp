@@ -98,9 +98,9 @@ namespace DSPInterface {
 		/* 0x108 */ short unk108;
 		/* 0x10A */ u16 unk10A;
 		/* 0x10C */ u32 unk10C;
-		/* 0x110 */ u32 unk110;
+		/* 0x110 */ s16* unk110;
 		/* 0x114 */ u32 unk114;
-		/* 0x118 */ u32 unk118;
+		/* 0x118 */ s16* unk118;
 		/* 0x11C */ int unk11C;
 		/* 0x120 */ short unk120[8];
 		/* 0x130 */ u8 unk130[0x148 - 0x130];
