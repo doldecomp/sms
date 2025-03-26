@@ -157,7 +157,7 @@ namespace DSPInterface {
 			0x09, 0x05, 0x08, 0x10, 0x01, 0x01, 0x01, 0x01,
 		};
 
-		unk118 = param_2;
+		unk118 = (s16*)param_2;
 		unk64  = COMP_BLOCKSAMPLES[param_1->unk1];
 		unk100 = COMP_BLOCKBYTES[param_1->unk1];
 
@@ -168,7 +168,7 @@ namespace DSPInterface {
 		unk102 = param_1->unk10;
 
 		if (unk102 != 0) {
-			unk110 = param_1->unk14;
+			unk110 = (s16*)param_1->unk14;
 			unk114 = param_1->unk18;
 			unk104 = param_1->unk20;
 			unk106 = param_1->unk22;
