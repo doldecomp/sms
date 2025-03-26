@@ -92,6 +92,8 @@ public:
 	/* 0x1858 */ JAISeqParameter* unk1858;
 };
 
+class JAIStreamUpdateParameter;
+
 class JAIStreamParameter {
 public:
 	/* 0x0 */ u8 unk0;
@@ -102,7 +104,7 @@ public:
 	/* 0x14 */ JAIMoveParaSet unk14[20];
 	/* 0x154 */ JAIMoveParaSet unk154[20];
 	/* 0x294 */ JAIMoveParaSet unk294[20];
-	/* 0x3D4 */ char unk3D4[0x4];
+	/* 0x3D4 */ JAIStreamUpdateParameter* unk3D4;
 	/* 0x3D8 */ JAIStreamParameter* unk3D8;
 	/* 0x3DC */ JAIStreamParameter* unk3DC;
 };

@@ -159,7 +159,15 @@ public:
 	/* 0x1EC */ JAIHeapBlock* unk1EC;
 	/* 0x1F0 */ JAIHeapBlock* unk1F0;
 	/* 0x1F4 */ JAIBasic* unk1F4;
-	/* 0x1F8 */ u32 unk1F8;
+
+	struct FabricatedUnk1F8Struct {
+		/* 0x0 */ char unk0[0x10];
+		/* 0x10 */ char unk10[16]; // file name?
+		/* 0x20 */ void* unk20;
+		/* 0x24 */ char unk24[0xC];
+	};
+
+	/* 0x1F8 */ FabricatedUnk1F8Struct* unk1F8;
 	/* 0x1FC */ JAISeqEntry unk1FC;
 	/* 0x200 */ JAISeEntry unk200;
 	/* 0x204 */ JAIStreamEntry unk204;

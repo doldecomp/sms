@@ -18,8 +18,8 @@ namespace StreamLib {
 	void setPan(f32 pan);
 	void setPrepareFlag(u8 flag);
 	void start(char* filename, u32 mode, void* param);
-	void* Play_DirectPCM(JASystem::TDSPChannel* channel, s16* buffer, u16 param,
-	                     u32 size);
+	void Play_DirectPCM(JASystem::TDSPChannel* channel, s16* buffer, u16 param,
+	                    u32 size);
 	void init(bool mode);
 	u32 getNeedBufferSize();
 	void allocBuffer(void* buffer, s32 size);
