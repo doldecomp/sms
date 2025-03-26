@@ -213,10 +213,13 @@ void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
 
 JALSystem::TFlagManager::TFlagManager()
 {
-	for (int i = 0; i < 16; ++i) {
-		u16 size = JAIBasic::basic->unk88;
-		unk0[i]  = new u16[size];
-		for (u16 j = 0; j < size; ++j)
+	u16 size;
+	u8 i;
+	u16 j;
+	for (i = 0; i < 16; ++i) {
+		size    = JAIBasic::basic->unk0->unk88.unk2[i];
+		unk0[i] = new u16[size];
+		for (j = 0; j < size; ++j)
 			unk0[i][j] = 0;
 	}
 }

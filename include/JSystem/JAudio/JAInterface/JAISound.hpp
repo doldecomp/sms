@@ -26,7 +26,7 @@ public:
 	/* 0x5 */ u8 unk5;
 	/* 0x6 */ u16 unk6;
 	/* 0x8 */ u32 unk8;
-	/* 0xC */ char unkC[0x4];
+	/* 0xC */ u32 unkC;
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;

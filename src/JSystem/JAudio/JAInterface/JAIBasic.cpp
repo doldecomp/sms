@@ -250,26 +250,26 @@ void JAIBasic::checkInitDataOnMemory()
 			if (unk4C[i] == 0) {
 				u32 offset        = unk4C[i + 1];
 				data->unk88.unk28 = unk4C[i + 2];
-				data->unk88.unk78 = transInitDataFile(((u8*)unk4C) + offset,
-				                                      data->unk88.unk28);
-				data->unk1B0      = 0;
+				data->unk88.unk78 = (u8*)transInitDataFile(
+				    ((u8*)unk4C) + offset, data->unk88.unk28);
+				data->unk1B0 = 0;
 				i += 4;
 			} else {
 				// TODO: should this all be done via header structs? probably
 				u32 offset        = unk4C[i + 1];
 				data->unk88.unk28 = unk4C[i + 2];
-				data->unk88.unk78 = transInitDataFile(((u8*)unk4C) + offset,
-				                                      data->unk88.unk28);
+				data->unk88.unk78 = (u8*)transInitDataFile(
+				    ((u8*)unk4C) + offset, data->unk88.unk28);
 
 				u8* buffer1      = ((u8*)unk4C) + unk4C[i + 3];
 				data->unkC.unk28 = unk4C[i + 4];
 				data->unkC.unk78
-				    = transInitDataFile(buffer1, data->unk88.unk28);
+				    = (u8*)transInitDataFile(buffer1, data->unk88.unk28);
 
 				u8* buffer         = ((u8*)unk4C) + unk4C[i + 5];
 				data->unk104.unk28 = unk4C[i + 6];
 				data->unk104.unk78
-				    = transInitDataFile(buffer, data->unk104.unk28);
+				    = (u8*)transInitDataFile(buffer, data->unk104.unk28);
 				data->unk1B0 = 0;
 
 				i += 7;

@@ -23,7 +23,19 @@ struct JAIStreamUpdateParameter;
 // fabricated
 struct JAISoundInfo {
 	/* 0x0 */ u32 unk0;
-	/* 0x4 */ char unk4[0x10];
+	/* 0x4 */ char unk4[0xC];
+};
+
+struct FabricatedSoundTableMemoryHeader {
+	/* 0x0 */ char unk0[3];
+	/* 0x3 */ u8 unk3;
+	/* 0x4 */ char unk4[2];
+	struct Pair {
+		s16 unk0;
+		s16 unk2;
+	};
+	/* 0x6 */ Pair unk6[18];
+	/* 0x50 */ JAISoundInfo unk50[];
 };
 
 // TODO: I accidentally put a bunch of stuff in here
@@ -32,39 +44,11 @@ class JAISoundTable {
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
-	/* 0x2 */ char unk2[2];
-	/* 0x4 */ u8 unk4;
-	/* 0x5 */ char unk5[1];
-	/* 0x6 */ u8 unk6;
-	/* 0x7 */ u8 unk7;
-	/* 0x8 */ u8 unk8;
-	/* 0x9 */ char unk9[7];
-	/* 0x10 */ char unk10[4];
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ f32* unk1C;
-	/* 0x20 */ u8* unk20;
-	/* 0x24 */ u32 unk24;
-	/* 0x24 */ u32 unk28;
+	/* 0x2 */ u16 unk2[18];
+	/* 0x28 */ u32 unk28;
 	/* 0x2C */ void* unk2C;
-	/* 0x30 */ u32 unk30;
-	/* 0x34 */ u32 unk34;
-	/* 0x38 */ u32 unk38;
-	/* 0x3C */ u32 unk3C;
-	/* 0x40 */ void* unk40;
-	/* 0x44 */ u32 unk44;
-	/* 0x44 */ u32 unk48;
-	/* 0x44 */ u32 unk4C;
-	/* 0x44 */ u32 unk50;
-	/* 0x54 */ s32* unk54;
-	/* 0x58 */ s32* unk58;
-	/* 0x5C */ u8** unk5C;
-	/* 0x60 */ u32* unk60;
-	/* 0x64 */ u32 unk64;
-	/* 0x68 */ char unk68[4];
-	/* 0x6C */ u32 unk6C;
-	/* 0x70 */ char unk70[8];
-	/* 0x78 */ void* unk78;
+	/* 0x30 */ JAISoundInfo* unk30[18];
+	/* 0x78 */ u8* unk78;
 };
 
 class JAIHeapBlock {
@@ -139,7 +123,14 @@ public:
 
 	/* 0x0 */ FabricatedUnk0Struct* unk0;
 	/* 0x4 */ u8** unk4;
-	/* 0x8 */ void** unk8;
+
+	struct FabricatedUnk8Struct {
+		u32 unk0;
+		u32 unk4;
+		JAISound* unk8;
+	};
+
+	/* 0x8 */ FabricatedUnk8Struct** unk8;
 	/* 0xC */ JAISoundTable unkC;
 	/* 0x88 */ JAISoundTable unk88;
 	/* 0x104 */ JAISoundTable unk104;
