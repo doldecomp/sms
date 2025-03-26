@@ -484,13 +484,11 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 		}
 	}
 
-	// TODO: impossible to guess what they subtracted from `thing`
-	// without more additional context/info =(
-	// u32 tmp = param_1 & 0x3FF;
-	// if (table->unk78 && table->unk12[thing - 0x10] < tmp)
-	// 	*param_2 = &table->unk40[thing - 0x10][tmp];
-	// else
-	// 	*param_2 = nullptr;
+	u32 tmp = param_1 & 0x3FF;
+	if (table->unk78 && table->unk2[thing] < tmp)
+		*param_2 = &table->unk30[thing][tmp];
+	else
+		*param_2 = nullptr;
 }
 
 void JAIData::initData()
@@ -518,8 +516,11 @@ void JAIData::initData()
 
 	unk1E8 = (JAILinkBuffer*)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAILinkBuffer));
-	unk8 = (void**)unk1F4->allocHeap(JAIGlobalParameter::getParamSeCategoryMax()
-	                                 * sizeof(void*));
+
+	unk8 = (FabricatedUnk8Struct**)unk1F4->allocHeap(
+	    JAIGlobalParameter::getParamSeCategoryMax()
+	    * sizeof(FabricatedUnk8Struct*));
+
 	unk1E4 = (JAISound**)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAISound*));
 
@@ -527,9 +528,10 @@ void JAIData::initData()
 		unk1E4[i]      = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
 		unk1E8[i].unk8 = unk1E4[i];
 		initLinkBuffer(&unk1E8[i], JAIGlobalParameter::seRegistMax);
-		unk8[i] = unk1F4->allocHeap(JAIGlobalParameter::seRegistMax * 0xC);
+		unk8[i] = (FabricatedUnk8Struct*)unk1F4->allocHeap(
+		    JAIGlobalParameter::seRegistMax * sizeof(FabricatedUnk8Struct));
 		for (int j = 0; j < JAIGlobalParameter::seRegistMax; ++j) {
-			unk8[j] = 0; // TODO:
+			unk8[i][j].unk8 = nullptr;
 		}
 	}
 	unk0 = (FabricatedUnk0Struct*)unk1F4->allocHeap(
@@ -664,16 +666,24 @@ void JAIData::initInfoDataWork(JAISoundTable* soundTable, char* path)
 		return;
 
 	if (!soundTable->unk78) {
-		soundTable->unk78 = unk1F4->allocHeap(size);
+		soundTable->unk78 = (u8*)unk1F4->allocHeap(size);
 		JASystem::Dvd::loadFile(path, soundTable->unk78);
 		soundTable->unk28 = size;
 	}
-	soundTable->unk0 = *((u8*)soundTable->unk78 + 3);
+	soundTable->unk0 = soundTable->unk78[3];
 	// TODO: WTF???
 	soundTable->unk2C = &path;
+
+	// TODO: definitely fake, but a header struct doesn't work either
 	for (u8 i = 0; i < 18; ++i) {
-		// TODO: initializing soundTable from the disc data,
-		// but it's really weird
+		soundTable->unk2[i]
+		    = reinterpret_cast<u16*>(soundTable->unk78 + 6)[i * 2];
+		u32 idx = reinterpret_cast<u16*>(soundTable->unk78 + 8)[i * 2];
+		soundTable->unk30[i]
+		    = &(reinterpret_cast<JAISoundInfo*>(soundTable->unk78 + 0x50)[idx]);
+		if (i < 0x10 && soundTable->unk2[i] != 0) {
+			soundTable->unk1 = i + 1;
+		}
 	}
 }
 
