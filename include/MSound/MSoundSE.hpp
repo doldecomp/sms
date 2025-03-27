@@ -49,9 +49,9 @@ public:
 	virtual void randPlay(u32);
 
 	static void construct(u32, s32, s32, f32, f32);
-	void createRandPlayVec(u32, u16);
+	static void createRandPlayVec(u32, u16);
 	void createRandPlayVecDynamic(u16);
-	void registerTrans(u32, const Vec*);
+	static void registerTrans(u32, const Vec*);
 	void registerTransDynamic(const Vec*);
 	void startSeRandPlay(u32, u32);
 	static JSUList<MSRandPlay> smList;

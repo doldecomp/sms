@@ -15,7 +15,7 @@ namespace Dvd {
 	u32 checkFileExtend(char*);
 	s32 openDvd(char*, DVDFileInfo*);
 	int registerFastOpen(char*);
-	u32 loadToAramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
+	int loadToAramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
 	int loadToAramDvdTMain(void*);
 
 	struct TDvdCall {

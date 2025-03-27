@@ -241,7 +241,7 @@ int Dvd::loadToAramDvdTMain(void* param)
 
 	return 0;
 }
-u32 Dvd::loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
+int Dvd::loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
                         u32 param5, u32* param6, DvdCallback callback)
 {
 	TDvdCall callData;

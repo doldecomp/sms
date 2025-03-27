@@ -9,7 +9,12 @@
 
 class JAICamera {
 public:
-	JAICamera();
+	JAICamera()
+	    : unk0(nullptr)
+	    , unk4(nullptr)
+	    , unk8(nullptr)
+	{
+	}
 	JAICamera(VecPtr param_1, VecPtr param_2, MtxPtr param_3)
 	    : unk0(param_1)
 	    , unk4(param_2)
@@ -21,6 +26,8 @@ public:
 	/* 0x4 */ VecPtr unk4;
 	/* 0x8 */ MtxPtr unk8;
 };
+
+extern JAICamera JAInullCamera;
 
 class JAIActor;
 class JAILinkBuffer;
@@ -242,9 +249,31 @@ public:
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
 	/* 0x78 */ u32 unk78;
-	/* 0x7C */ char unk7C[0xC];
-	/* 0x88 */ u32 unk88;
-	/* 0x104 */ char unk104[0x304 - 0x88];
+	/* 0x7C */ u32 unk7C;
+	/* 0x80 */ u32 unk80;
+	/* 0x84 */ u32 unk84;
+	/* 0x88 */ u8 unk88;
+	/* 0x8C */ u32* unk8C;
+	/* 0x90 */ u32 unk90;
+	/* 0x94 */ u16 unk94;
+	/* 0x98 */ void* unk98;
+	/* 0x9C */ void* unk9C;
+	/* 0xA0 */ u32 unkA0;
+	/* 0xA4 */ u32 unkA4;
+	/* 0xA8 */ u8 unkA8;
+	/* 0xAC */ JAICamera unkAC[2];
+	/* 0xC4 */ JAISound* unkC4;
+	/* 0xC8 */ u8 unkC8;
+	/* 0xC9 */ u8 unkC9;
+	/* 0xCA */ u8 unkCA;
+	/* 0xCB */ u8 unkCB;
+	/* 0xCC */ u8 unkCC;
+	/* 0xCD */ u8 unkCD;
+	/* 0xCE */ u8 unkCE;
+	/* 0xCF */ u8 unkCF;
+	/* 0xD0 */ u8 unkD0;
+	/* 0xD1 */ u8 unkD1;
+	/* 0xD2 */ char unkD2[0x304 - 0xD2];
 	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
 	/* 0x308 */ char unk308[0x4];
 };

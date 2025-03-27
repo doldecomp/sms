@@ -30,18 +30,18 @@ enum MS_SCENE_WAVE {
 
 class MSSeCallBack {
 public:
-	static void setParameterSeqSync(JASystem::TTrack*, u16);
+	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
 	static void setWaterFilter(u16);
 	static void setWaterCameraFir(bool);
 	static u8 smTrackCategory;
 	static u8 smPolifonic;
-	static u8 smWaterFilter;
+	static u16 smWaterFilter;
 };
 
 class MSLoadWave {
 public:
-	static void loadWaveBackword(int, int);
-	static void loadWaveBackword(JASystem::WaveArcLoader::TObject*);
+	static bool loadWaveBackword(int, int);
+	static bool loadWaveBackword(JASystem::WaveArcLoader::TObject*);
 };
 
 class MSMarioPosVolume {
@@ -55,7 +55,7 @@ public:
 	~MSound() { }
 
 	virtual JAISound* makeSound(u32);
-	virtual u32 getMapInfoGround(u32) { }
+	virtual u32 getMapInfoGround(u32) { return 0; }
 	virtual void setSeExtParameter(JAISound*);
 	virtual void setRegisterTrackCallback();
 	virtual void loadGroupWave(s32, s32);
@@ -68,7 +68,7 @@ public:
 	void enterStage(MS_SCENE_WAVE, u8, u8);
 	void loadWave(MS_SCENE_WAVE);
 	void cleanUpAramWave(u8);
-	bool checkWaveOnAram(MS_SCENE_WAVE);
+	BOOL checkWaveOnAram(MS_SCENE_WAVE);
 	bool checkSeqOnMemory(u32);
 
 	void stopAllSound();
@@ -104,10 +104,10 @@ public:
 	void playTimer(u32);
 	void requestShineAppearFanfare();
 
-	f32 getWallSound(u32, f32);
+	u32 getWallSound(u32, f32);
 	u32 getBstPitch(u32);
-	u32 getBstSwitch(u32);
-	u32 getSwitch(u32, u32, u32);
+	static u32 getBstSwitch(u32);
+	static u32 getSwitch(u32, u32, u32);
 	bool gateCheck(u32);
 
 	void resetAudioAll(u16);
