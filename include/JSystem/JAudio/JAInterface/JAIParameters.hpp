@@ -12,7 +12,7 @@ struct JAIMoveParaSet {
 
 class JAISeParameter {
 public:
-	/* 0x0 */ char unk0[0x20 - 0x0];
+	/* 0x0 */ u16 unk0[16];
 	/* 0x20 */ u16 unk20;
 	/* 0x22 */ char unk22[0x124 - 0x22];
 	/* 0x124 */ JAIMoveParaSet unk124[8];
@@ -100,7 +100,7 @@ public:
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u32 unk8;
 	/* 0xC */ u32 unkC;
-	/* 0x10 */ char unk10[0x4];
+	/* 0x10 */ u32 unk10;
 	/* 0x14 */ JAIMoveParaSet unk14[20];
 	/* 0x154 */ JAIMoveParaSet unk154[20];
 	/* 0x294 */ JAIMoveParaSet unk294[20];

@@ -144,7 +144,7 @@ public:
 	void getPointer(u8, s8);
 	void getTrackPortData(u8, u8);
 	void getSeParametermeterF32(u8, u8);
-	void getStreamInterVolume(u8);
+	f32 getStreamInterVolume(u8);
 	void getStreamInterPitch(u8);
 	void getActorGroundNumber();
 	JAISeqParameter* getSeqParameter();
