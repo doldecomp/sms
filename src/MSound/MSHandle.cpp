@@ -46,7 +46,7 @@ f32 MSHandle::cDol_0Rad             = 1.0316f;
 f32 MSHandle::cDol_HalfRad          = 1.5707999f;
 f32 MSHandle::cDol_FullRad          = 2.1099999f;
 
-void MSHandle::setDistanceVolumeCommon(f32 volume, u8 param) { }
+f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 param) { }
 
 void MSHandle::setSeDistancePitch(u8 param) { }
 
