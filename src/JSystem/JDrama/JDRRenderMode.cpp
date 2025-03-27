@@ -22,9 +22,12 @@ bool JDrama::IsEqualRenderModeVIParams(const GXRenderModeObj& param_1,
 
 bool JDrama::IsRenderModeAA2Times(const GXRenderModeObj& rmo)
 {
-	bool bVar2 = false;
+	bool bVar1;
+	bool bVar2;
+
+	bVar2 = false;
 	if (rmo.aa == 1) {
-		bool bVar1 = true;
+		bVar1 = true;
 		if (rmo.xFBmode != VI_XFBMODE_DF)
 			if (rmo.viTVmode != VI_TVMODE_NTSC_PROG)
 				bVar1 = false;
