@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	JAIActor(VecPtr a, VecPtr b, VecPtr c, u32 d)
+	JAIActor(const Vec* a, const Vec* b, const Vec* c, u32 d)
 	    : unk0(a)
 	    , unk4(b)
 	    , unk8(c)
@@ -22,9 +22,9 @@ public:
 	{
 	}
 
-	/* 0x0 */ VecPtr unk0;
-	/* 0x4 */ VecPtr unk4;
-	/* 0x8 */ VecPtr unk8;
+	/* 0x0 */ const Vec* unk0;
+	/* 0x4 */ const Vec* unk4;
+	/* 0x8 */ const Vec* unk8;
 	/* 0xC */ u32 unkC;
 };
 
