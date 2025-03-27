@@ -1,8 +1,22 @@
 #include <MSound/MSoundSE.hpp>
 #include <MSound/MSRandVol.hpp>
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
+#include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 
 namespace MSoundSESystem {
+
+JSUList<MSRandVol> MSRandVol::smList;
+
+JSUList<MSRandPlay> MSRandPlay::smList;
+
+void* SeInfo::smSeSetting = 0;
+
+MSoundSE* MSoundSE::mObj = 0;
+
+void MSRandVol::construct(u32 param)
+{
+	smList.append(&(new MSRandVol(param))->unk4);
+}
 
 MSRandVol::MSRandVol(u32 param)
     : unk4(this)
@@ -23,13 +37,36 @@ MSRandVol::MSRandVol(u32 param)
 {
 }
 
-void MSRandVol::construct(u32 param)
-{
-	smList.append(&(new MSRandVol(param))->unk4);
-}
-u32 MSRandVol::getRandVol(u32 param) { return 0; }
 u32 MSRandVol::getRandomVolume(u32 param1, u32 param2) { return 0; }
-JSUList<MSRandVol> MSRandVol::smList;
+
+u32 MSRandVol::getRandVol(u32 param) { return 0; }
+
+void MSRandPlay::construct(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
+                           f32 param_5)
+{
+	smList.append(
+	    &(new MSRandPlay(param_1, param_2, param_3, param_4, param_5))->unk0);
+}
+
+void MSRandPlay::registerTrans(u32 param, const Vec* vec) { }
+
+void MSRandPlay::registerTransDynamic(const Vec* vec) { }
+
+void MSRandPlay::createRandPlayVec(u32 param1, u16 param2) { }
+
+void MSRandPlay::createRandPlayVecDynamic(u16 param) { }
+
+void MSRandPlay::startSeRandPlay(u32 param1, u32 param2)
+{
+	JSUListIterator<MSRandPlay> it;
+	for (it = MSRandPlay::smList.getFirst(); it != MSRandPlay::smList.getEnd();
+	     ++it) {
+		if (param1 == it.getObject()->unk1C) {
+			it.getObject()->randPlay(param2);
+			break;
+		}
+	}
+}
 
 MSRandPlay::MSRandPlay(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
                        f32 param_5)
@@ -44,23 +81,8 @@ MSRandPlay::MSRandPlay(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
     , unk2C(param_5)
 {
 }
-void MSRandPlay::construct(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
-                           f32 param_5)
-{
-	smList.append(
-	    &(new MSRandPlay(param_1, param_2, param_3, param_4, param_5))->unk0);
-}
-void MSRandPlay::createRandPlayVec(u32 param1, u16 param2) { }
-void MSRandPlay::createRandPlayVecDynamic(u16 param) { }
+
 void MSRandPlay::randPlay(u32 param) { }
-void MSRandPlay::registerTrans(u32 param, const Vec* vec) { }
-void MSRandPlay::registerTransDynamic(const Vec* vec) { }
-void MSRandPlay::startSeRandPlay(u32 param1, u32 param2) { }
-JSUList<MSRandPlay> MSRandPlay::smList;
-
-void* SeInfo::smSeSetting = 0;
-
-MSoundSE::MSoundSE() { }
 
 void MSoundSE::construct()
 {
@@ -242,29 +264,41 @@ void MSoundSE::construct()
 	}
 }
 
-bool MSoundSE::checkMonoSound(u32 param, JAIActor* actor) { return false; }
-void MSoundSE::checkSoundArea(u32 param, const Vec& vec) { }
-u32 MSoundSE::getNewIDByGroundCode(u32 param, JAIActor* actor) { return 0; }
-u32 MSoundSE::getNewIDBySurfaceCode(u32 param, JAIActor* actor) { return 0; }
 u32 MSoundSE::getRandomID(u32 param) { return 0; }
+
 void MSoundSE::startSoundActor(u32 p1, const Vec* p2, u32 p3, JAISound** p4,
                                u32 p5, u8 p6)
 {
+	JAIActor actor(p2, p2, p2, p3);
+	startSoundActorInner(p1, p4, &actor, p5, p6);
 }
-void MSoundSE::startSoundActorInner(u32 p1, JAISound** p2, JAIActor* p3, u32 p4,
-                                    u8 p5)
-{
-}
+
+void MSoundSE::startSoundSystemSE(u32 p1, u32 p2, JAISound** p3, u32 p4) { }
+
 void MSoundSE::startSoundActorWithInfo(u32 p1, const Vec* p2, Vec* p3, f32 p4,
                                        u32 p5, u32 p6, JAISound** p7, u32 p8,
                                        u8 p9)
 {
 }
+
+void MSoundSE::checkSoundArea(u32 param, const Vec& vec) { }
+
+#pragma dont_inline on
+void MSoundSE::startSoundActorInner(u32 p1, JAISound** p2, JAIActor* p3, u32 p4,
+                                    u8 p5)
+{
+}
+#pragma dont_inline off
+
+u32 MSoundSE::getNewIDByGroundCode(u32 param, JAIActor* actor) { return 0; }
+
+u32 MSoundSE::getNewIDBySurfaceCode(u32 param, JAIActor* actor) { return 0; }
+
 void MSoundSE::startSoundNpcActor(u32 p1, const Vec* p2, u32 p3, JAISound** p4,
                                   u32 p5, u8 p6)
 {
 }
-void MSoundSE::startSoundSystemSE(u32 p1, u32 p2, JAISound** p3, u32 p4) { }
-MSoundSE* MSoundSE::mObj = 0;
+
+bool MSoundSE::checkMonoSound(u32 param, JAIActor* actor) { return false; }
 
 } // namespace MSoundSESystem
