@@ -110,7 +110,7 @@ public:
 	/* 0x64 */ u32 unk64;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ u32 unk6C;
-	/* 0x70 */ char unk70[0x40];
+	/* 0x70 */ char unk70[0xAC - 0x70];
 	/* 0xAC */ Vec unkAC;
 	/* 0xB8 */ u8 unkB8;
 	/* 0xB9 */ bool unkB9;
