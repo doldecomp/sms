@@ -1,8 +1,14 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 
-void JPAGetEmitterInfoPtr() { }
+static JPAEmitterInfo JPAEmitterInfoObj;
 
-JPABaseEmitter::JPABaseEmitter() { }
+JPAEmitterInfo* JPAGetEmitterInfoPtr() { return &JPAEmitterInfoObj; }
+
+JPABaseEmitter::JPABaseEmitter()
+    : unk0(this)
+    , unk21C(0)
+{
+}
 
 void JPABaseEmitter::getFovy() { }
 
@@ -39,9 +45,9 @@ void JPABaseEmitter::calcCurrentRateTimerStep() { }
 
 void JPABaseEmitter::calcCreateParticle() { }
 
-void JPABaseEmitter::checkStartFrame() { }
+bool JPABaseEmitter::checkStartFrame() { }
 
-void JPABaseEmitter::checkMaxFrame() { }
+bool JPABaseEmitter::checkMaxFrame() { }
 
 void JPABaseEmitter::doParticle() { }
 

@@ -6,11 +6,19 @@
 #include <JSystem/JParticle/JPACallback.hpp>
 #include <dolphin/mtx.h>
 
+class JPADrawInfo {
+public:
+	MtxPtr unk0;
+	f32 unk4;
+	f32 unk8;
+};
+
 class JPAResourceManager;
 class JPADrawInfo;
 class JPADataBlock;
 class JPABaseEmitter;
 class JPABaseParticle;
+class JPABaseField;
 class JKRHeap;
 class JKRSolidHeap;
 
@@ -32,7 +40,7 @@ public:
 	void draw(MtxPtr, u8);
 
 	void createVolumeEmitter(JPADataBlock*, u8);
-	void
+	JPABaseEmitter*
 	createEmitterBase(s32, u8, u8, JPACallBackBase<JPABaseEmitter*>*,
 	                  JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
 	void
@@ -52,19 +60,19 @@ public:
 	void forceDeleteAllEmitter();
 
 public:
-	/* 0x0 */ JSUPtrList unk0;
+	/* 0x0 */ JSUList<JPABaseParticle> unk0;
 	/* 0xC */ JKRSolidHeap* unkC;
 	/* 0x10 */ u32 unk10;
-	/* 0x14 */ JSUPtrList unk14;
+	/* 0x14 */ JSUList<JPABaseEmitter> unk14;
 	/* 0x20 */ JKRSolidHeap* unk20;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ JSUPtrList unk28;
+	/* 0x28 */ JSUList<JPABaseField> unk28;
 	/* 0x34 */ JKRSolidHeap* unk34;
 	/* 0x38 */ u32 unk38;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
-	/* 0x44 */ JSUPtrList unk44[8];
-	/* 0xA4 */ JPAResourceManager* unkA4;
+	/* 0x44 */ JSUList<JPABaseEmitter> unk44[8];
+	/* 0xA4 */ JPAResourceManager* unkA4[1]; // TODO: how many? 8?
 	/* 0xA8 */ u32 unkA8;
 	/* 0xAC */ u32 unkAC;
 	/* 0xB0 */ u32 unkB0;
@@ -73,7 +81,7 @@ public:
 	/* 0xBC */ u32 unkBC;
 	/* 0xC0 */ u32 unkC0;
 	/* 0xC4 */ u32 unkC4;
-	/* 0xC8 */ u32 unkC8[16][2];
+	/* 0xC8 */ u32 unkC8[2][16];
 };
 
 #endif
