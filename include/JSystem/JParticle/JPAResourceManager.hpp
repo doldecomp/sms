@@ -11,28 +11,32 @@ class JPATextureResource {
 public:
 	JPATextureResource(u32, JKRHeap*);
 
-	void registration(const u8*, JKRHeap*);
+	int registration(const u8*, JKRHeap*);
 
 public:
 	/* 0x0 */ JPADefaultTexture unk0;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ u32 unk28;
-	/* 0x2C */ void** unk2C;
+	/* 0x2C */ JPATexture** unk2C;
 };
 
-struct JPAEmitterData { };
+// TODO: name & usage might be wrong
+struct JPAEmitterData {
+	/* 0x0 */ char unk0[6];
+	/* 0x6 */ u16 unk6;
+};
 
 class JPAEmitterResource {
 public:
 	JPAEmitterResource(u32, JKRHeap*);
 
 	void registration(JPAEmitterData*, u16);
-	void getByUserIndex(u16);
+	JPAEmitterData* getByUserIndex(u16);
 
 public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u32 unk4;
-	/* 0x8 */ void** unk8;
+	/* 0x8 */ JPAEmitterData** unk8;
 };
 
 class JPAResourceManager {
@@ -41,6 +45,9 @@ public:
 
 	void load(const char*, u16);
 	void load(const void*, u16);
+
+	JPATextureResource* getTextureResource() { return unk8; }
+	JPAEmitterResource* getEmitterResource() { return unk4; }
 
 public:
 	/* 0x0 */ JKRHeap* unk0;
