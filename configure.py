@@ -526,13 +526,13 @@ config.libs = [
             Object(NonMatching, "JSystem/JParticle/JPADrawSetupTev.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPADraw.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPADrawVisitor.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPAExTexShape.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPADataBlock.cpp"),
+            Object(Matching, "JSystem/JParticle/JPAExTexShape.cpp"),
+            Object(Matching, "JSystem/JParticle/JPADataBlock.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAEmitterLoader.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPABaseShape.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAExtraShape.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAResourceManager.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPASweepShape.cpp"),
+            Object(Matching, "JSystem/JParticle/JPASweepShape.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPATexture.cpp"),
 
             # JStage
