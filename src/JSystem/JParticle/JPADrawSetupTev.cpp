@@ -5,11 +5,13 @@
 
 void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 {
+	JPABaseShape::TevArgs* args = &param_1->unk48;
+
 	unk1 = 1;
 	unk0 = 1;
 	unk2 = 0;
-	GXSetTevColorIn(GX_TEVSTAGE0, param_1->unk48, param_1->unk4C,
-	                param_1->unk50, param_1->unk54);
+	GXSetTevColorIn(GX_TEVSTAGE0, args->unk0, args->unk4, args->unk8,
+	                args->unkC);
 	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A0, GX_CA_ZERO);
 	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
 	                GX_TEVPREV);
@@ -24,10 +26,11 @@ void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 		case 1:
 			GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
 			GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
-			GXSetIndTexMtx(GX_ITM_0, param_2->unk8, param_2->unk24);
+			GXSetIndTexMtx(GX_ITM_0, *param_2->getIndTexMtx(),
+			               param_2->getExpScale());
 			GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8,
-			                 GX_ITB_STU, param_2->unk20, GX_ITW_OFF, GX_ITW_OFF,
-			                 0, 0, GX_ITBA_OFF);
+			                 GX_ITB_STU, param_2->getIndTexMtxID(), GX_ITW_OFF,
+			                 GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
 			coord = GX_TEXCOORD2;
 			map   = GX_TEXMAP2;
 			++unk2;
@@ -36,10 +39,11 @@ void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 		case 2:
 			GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
 			GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
-			GXSetIndTexMtx(GX_ITM_0, param_2->unk8, param_2->unk24);
+			GXSetIndTexMtx(GX_ITM_0, *param_2->getIndTexMtx(),
+			               param_2->getExpScale());
 			GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8,
-			                 GX_ITB_STU, param_2->unk20, GX_ITW_OFF, GX_ITW_OFF,
-			                 0, 0, GX_ITBA_OFF);
+			                 GX_ITB_STU, param_2->getIndTexMtxID(), GX_ITW_OFF,
+			                 GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
 			GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD2, GX_TEXMAP2,
 			              GX_COLOR_NULL);
 			GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV,
