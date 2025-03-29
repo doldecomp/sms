@@ -57,10 +57,9 @@ public:
 	createSimpleEmitter(const JGeometry::TVec3<f32>&, s32,
 	                    JPACallBackBase<JPABaseEmitter*>*,
 	                    JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
-	bool
-	createEmitter(const JGeometry::TVec3<f32>&, s32,
-	              JPACallBackBase<JPABaseEmitter*>*,
-	              JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
+	bool createEmitter(const JGeometry::TVec3<f32>&, s32,
+	                   JPACallBackBase<JPABaseEmitter*>*,
+	                   JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
 
 	void deleteEmitter(JPABaseEmitter*);
 	void forceDeleteEmitter(JPABaseEmitter*);
