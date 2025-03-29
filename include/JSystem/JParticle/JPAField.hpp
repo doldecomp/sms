@@ -59,6 +59,9 @@ public:
 	void calcFieldFadeScale(float);
 	void calcFieldVelocity(JPAParticle*);
 	void loadFieldBlock(JPADataBlock*);
+
+	// from tww
+	JSULink<JPABaseField>* getLinkBufferPtr() { return &unk0; }
 };
 
 class JPAGravityField : public JPABaseField {
@@ -146,7 +149,7 @@ public:
 	void deleteAllField();
 	void calcFieldParams();
 	void affectField(JPAParticle*);
-	void setField(unsigned char);
+	JPABaseField* setField(u8);
 	void setGravityField();
 	void setAirField();
 	void setMagnetField();

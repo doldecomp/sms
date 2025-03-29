@@ -31,7 +31,7 @@ public:
 		return out.f - 1.0f;
 	}
 
-private:
+public:
 	u32 value;
 };
 

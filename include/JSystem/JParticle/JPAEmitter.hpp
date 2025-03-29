@@ -9,6 +9,7 @@
 #include <JSystem/JSupport/JSUList.hpp>
 
 class JPAEmitterManager;
+class JPADataBlockLinkInfo;
 
 // name fabricated
 class JPAEmitterInfo {
@@ -57,8 +58,8 @@ class JPABaseEmitter {
 public:
 	JPABaseEmitter();
 
-	void getFovy();
-	void getAspect();
+	f32 getFovy();
+	f32 getAspect();
 	void newParticle();
 	void deleteBaseParticle(JPABaseParticle*, JSUList<JPABaseParticle>*);
 	void deleteParticle(JPABaseParticle*);
@@ -86,6 +87,13 @@ public:
 	void getPivotX();
 	void getPivotY();
 
+	// from tww
+	JSULink<JPABaseEmitter>* getLinkBufferPtr() { return &unk0; }
+	u8 getGroupID() { return unk173; }
+
+	// fabricated
+	JPAFieldManager* getFieldManager() { return &unk20; }
+
 public:
 	/* 0x0 */ JSULink<JPABaseEmitter> unk0;
 	/* 0x10 */ f32 unk10;
@@ -97,9 +105,9 @@ public:
 	/* 0xF4 */ JSUPtrList unkF4;
 	/* 0x100 */ JSUPtrList unk100;
 	/* 0x10C */ JPAEmitterManager* unk10C;
-	/* 0x110 */ f32 unk110;
-	/* 0x114 */ f32 unk114;
-	/* 0x118 */ f32 unk118;
+	/* 0x110 */ JPACallBackBase<JPABaseEmitter*>* unk110;
+	/* 0x114 */ JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* unk114;
+	/* 0x118 */ JPADataBlockLinkInfo* unk118;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ char unk120[4];
 	/* 0x124 */ Mtx unk124;
@@ -107,9 +115,7 @@ public:
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
 	/* 0x15C */ f32 unk15C;
-	/* 0x160 */ f32 unk160;
-	/* 0x164 */ f32 unk164;
-	/* 0x168 */ f32 unk168;
+	/* 0x160 */ Vec unk160;
 	/* 0x16C */ s16 unk16C;
 	/* 0x16E */ s16 unk16E;
 	/* 0x170 */ s16 unk170;
