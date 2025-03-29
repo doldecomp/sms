@@ -104,7 +104,7 @@ void JPAFieldManager::deleteField(JPABaseField*) { }
 void JPAFieldManager::deleteAllField() { }
 void JPAFieldManager::calcFieldParams() { }
 void JPAFieldManager::affectField(JPAParticle*) { }
-void JPAFieldManager::setField(unsigned char) { }
+JPABaseField* JPAFieldManager::setField(u8) { }
 void JPAFieldManager::setGravityField() { }
 void JPAFieldManager::setAirField() { }
 void JPAFieldManager::setMagnetField() { }

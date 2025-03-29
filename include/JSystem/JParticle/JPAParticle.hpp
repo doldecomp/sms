@@ -60,6 +60,9 @@ public:
 	void getCurrentPositionX();
 	void getCurrentPositionY();
 	void getCurrentPositionZ();
+
+	// from TWW
+	JSULink<JPABaseParticle>* getLinkBufferPtr() { return &unk0; }
 };
 
 class JPAParticle : public JPABaseParticle {

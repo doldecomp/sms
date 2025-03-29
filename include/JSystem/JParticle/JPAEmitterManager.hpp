@@ -8,6 +8,12 @@
 
 class JPADrawInfo {
 public:
+	MtxPtr getCameraMtxPtr() { return unk0; }
+	f32 getFovy() { return unk4; }
+	void setFovy(f32 fovy) { unk4 = fovy; }
+	f32 getAspect() { return unk8; }
+	void setAspect(f32 aspect) { unk8 = aspect; }
+
 	MtxPtr unk0;
 	f32 unk4;
 	f32 unk8;
@@ -25,9 +31,9 @@ class JKRSolidHeap;
 class JPAEmitterManager {
 public:
 	JPAEmitterManager(JPAResourceManager*, s32, s32, s32, JKRHeap*);
-	void getEmitterNumber();
-	void getParticleNumber();
-	void getFieldNumber();
+	u32 getEmitterNumber();
+	u32 getParticleNumber();
+	u32 getFieldNumber();
 
 	void calcBase(u8);
 	void calc();
@@ -39,21 +45,22 @@ public:
 	void draw(JPADrawInfo*, u8);
 	void draw(MtxPtr, u8);
 
-	void createVolumeEmitter(JPADataBlock*, u8);
+	JPABaseEmitter* createVolumeEmitter(JPADataBlock*, u8);
 	JPABaseEmitter*
 	createEmitterBase(s32, u8, u8, JPACallBackBase<JPABaseEmitter*>*,
 	                  JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
-	void
+	JPABaseEmitter*
 	createSimpleEmitterID(const JGeometry::TVec3<f32>&, s32, u8, u8,
 	                      JPACallBackBase<JPABaseEmitter*>*,
 	                      JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
-	void
+	JPABaseEmitter*
 	createSimpleEmitter(const JGeometry::TVec3<f32>&, s32,
 	                    JPACallBackBase<JPABaseEmitter*>*,
 	                    JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
-	void createEmitter(const JGeometry::TVec3<f32>&, s32,
-	                   JPACallBackBase<JPABaseEmitter*>*,
-	                   JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
+	bool
+	createEmitter(const JGeometry::TVec3<f32>&, s32,
+	              JPACallBackBase<JPABaseEmitter*>*,
+	              JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
 
 	void deleteEmitter(JPABaseEmitter*);
 	void forceDeleteEmitter(JPABaseEmitter*);
@@ -72,16 +79,9 @@ public:
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ JSUList<JPABaseEmitter> unk44[8];
-	/* 0xA4 */ JPAResourceManager* unkA4[1]; // TODO: how many? 8?
-	/* 0xA8 */ u32 unkA8;
-	/* 0xAC */ u32 unkAC;
-	/* 0xB0 */ u32 unkB0;
-	/* 0xB4 */ u32 unkB4;
-	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ u32 unkBC;
-	/* 0xC0 */ u32 unkC0;
+	/* 0xA4 */ JPAResourceManager* unkA4[8];
 	/* 0xC4 */ u32 unkC4;
-	/* 0xC8 */ u32 unkC8[2][16];
+	/* 0xC8 */ JPABaseEmitter* unkC8[2][16];
 };
 
 #endif
