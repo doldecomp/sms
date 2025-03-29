@@ -20,9 +20,51 @@ public:
 	/* 0x2C */ JPATexture** unk2C;
 };
 
+class JPABaseShape;
+class JPAExtraShape;
+class JPASweepShape;
+class JPAExTexShape;
+class JPAKeyFrameAnime;
+
+// TODO: fabricated. Name taken from TWW
+struct JPADataBlockLinkInfo {
+	JPADataBlockLinkInfo()
+	    : unk0(nullptr)
+	    , unk4(nullptr)
+	    , unk8(nullptr)
+	    , unkC(nullptr)
+	    , unk10(nullptr)
+	    , unk14(nullptr)
+	    , unk18(nullptr)
+	    , unk1C(nullptr)
+	    , unk20(0)
+	    , unk21(0)
+	    , unk22(0)
+	{
+	}
+
+	/* 0x0 */ JPADataBlock* unk0;
+	/* 0x4 */ JPABaseShape* unk4;
+	/* 0x8 */ JPAExtraShape* unk8;
+	/* 0xC */ JPASweepShape* unkC;
+	/* 0x10 */ JPAExTexShape* unk10;
+	/* 0x14 */ JPAKeyFrameAnime** unk14;
+	/* 0x18 */ JPADataBlock** unk18;
+	/* 0x1C */ u16* unk1C;
+	/* 0x20 */ u8 unk20;
+	/* 0x21 */ u8 unk21;
+	/* 0x22 */ u8 unk22;
+};
+
 // TODO: name & usage might be wrong
 struct JPAEmitterData {
-	/* 0x0 */ char unk0[6];
+	JPAEmitterData()
+	    : unk0(0)
+	{
+	}
+
+	/* 0x0 */ JPADataBlockLinkInfo** unk0;
+	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 unk6;
 };
 
