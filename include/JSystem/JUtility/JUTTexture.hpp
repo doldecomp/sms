@@ -24,6 +24,13 @@ public:
 		unk50 = 0;
 	}
 
+	JUTTexture(const ResTIMG* p_timg, u32 param_2)
+	    : unk50(param_2)
+	{
+		mEmbPalette = nullptr;
+		storeTIMG(p_timg);
+	}
+
 	JUTTexture(int, int, GXTexFmt);
 
 	~JUTTexture();

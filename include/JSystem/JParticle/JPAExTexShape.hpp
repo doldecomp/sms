@@ -5,12 +5,19 @@
 #include <JSystem/JParticle/JPADataBlock.hpp>
 
 class JPAExTexShape : public JPADataBlock {
+	typedef f32 Offsets[2][3];
+
 public:
 	JPAExTexShape(const u8*);
 	~JPAExTexShape() { }
 
+	// from tww
+	Offsets* getIndTexMtx() { return &unk8; }
+	s8 getExpScale() { return unk24; }
+	GXIndTexMtxID getIndTexMtxID() { return unk20; }
+
 public:
-	/* 0x8 */ f32 unk8[2][3];
+	/* 0x8 */ Offsets unk8;
 	/* 0x20 */ GXIndTexMtxID unk20;
 	/* 0x24 */ u8 unk24;
 	/* 0x25 */ u8 unk25;

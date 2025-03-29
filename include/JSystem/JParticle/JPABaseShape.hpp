@@ -26,10 +26,15 @@ public:
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ f32 unk44;
-	/* 0x48 */ GXTevColorArg unk48;
-	/* 0x4C */ GXTevColorArg unk4C;
-	/* 0x50 */ GXTevColorArg unk50;
-	/* 0x54 */ GXTevColorArg unk54;
+
+	// fabricated
+	/* 0x48 */ struct TevArgs {
+		/* 0x0 */ GXTevColorArg unk0;
+		/* 0x4 */ GXTevColorArg unk4;
+		/* 0x8 */ GXTevColorArg unk8;
+		/* 0xC */ GXTevColorArg unkC;
+	} unk48;
+
 	/* 0x58 */ s16 unk58;
 	/* 0x5A */ s16 unk5A;
 	/* 0x5C */ s16 unk5C;

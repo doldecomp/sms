@@ -63,6 +63,10 @@ struct JPAEmitterData {
 	{
 	}
 
+	// inlines from TWW
+	void setUserIndex(u16 v) { unk6 = v; }
+	u16 getUserIndex() { return unk6; }
+
 	/* 0x0 */ JPADataBlockLinkInfo** unk0;
 	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 unk6;
@@ -72,7 +76,7 @@ class JPAEmitterResource {
 public:
 	JPAEmitterResource(u32, JKRHeap*);
 
-	void registration(JPAEmitterData*, u16);
+	int registration(JPAEmitterData*, u16);
 	JPAEmitterData* getByUserIndex(u16);
 
 public:
@@ -85,8 +89,8 @@ class JPAResourceManager {
 public:
 	JPAResourceManager(u32, u32, JKRHeap*);
 
-	void load(const char*, u16);
-	void load(const void*, u16);
+	int load(const char*, u16);
+	int load(const void*, u16);
 
 	JPATextureResource* getTextureResource() { return unk8; }
 	JPAEmitterResource* getEmitterResource() { return unk4; }
