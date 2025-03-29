@@ -108,40 +108,40 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 
 	switch (data[0x30]) {
 	case 0:
-		unk48 = GX_CC_ZERO;
-		unk4C = GX_CC_TEXC;
-		unk50 = GX_CC_ONE;
-		unk54 = GX_CC_ZERO;
+		unk48.unk0 = GX_CC_ZERO;
+		unk48.unk4 = GX_CC_TEXC;
+		unk48.unk8 = GX_CC_ONE;
+		unk48.unkC = GX_CC_ZERO;
 		break;
 	case 1:
-		unk48 = GX_CC_ZERO;
-		unk4C = GX_CC_C0;
-		unk50 = GX_CC_TEXC;
-		unk54 = GX_CC_ZERO;
+		unk48.unk0 = GX_CC_ZERO;
+		unk48.unk4 = GX_CC_C0;
+		unk48.unk8 = GX_CC_TEXC;
+		unk48.unkC = GX_CC_ZERO;
 		break;
 	case 2:
-		unk48 = GX_CC_C0;
-		unk4C = GX_CC_ONE;
-		unk50 = GX_CC_TEXC;
-		unk54 = GX_CC_ZERO;
+		unk48.unk0 = GX_CC_C0;
+		unk48.unk4 = GX_CC_ONE;
+		unk48.unk8 = GX_CC_TEXC;
+		unk48.unkC = GX_CC_ZERO;
 		break;
 	case 3:
-		unk48 = GX_CC_C1;
-		unk4C = GX_CC_C0;
-		unk50 = GX_CC_TEXC;
-		unk54 = GX_CC_ZERO;
+		unk48.unk0 = GX_CC_C1;
+		unk48.unk4 = GX_CC_C0;
+		unk48.unk8 = GX_CC_TEXC;
+		unk48.unkC = GX_CC_ZERO;
 		break;
 	case 4:
-		unk48 = GX_CC_ZERO;
-		unk4C = GX_CC_TEXC;
-		unk50 = GX_CC_C0;
-		unk54 = GX_CC_C1;
+		unk48.unk0 = GX_CC_ZERO;
+		unk48.unk4 = GX_CC_TEXC;
+		unk48.unk8 = GX_CC_C0;
+		unk48.unkC = GX_CC_C1;
 		break;
 	case 5:
-		unk48 = GX_CC_ZERO;
-		unk4C = GX_CC_ZERO;
-		unk50 = GX_CC_ZERO;
-		unk54 = GX_CC_C0;
+		unk48.unk0 = GX_CC_ZERO;
+		unk48.unk4 = GX_CC_ZERO;
+		unk48.unk8 = GX_CC_ZERO;
+		unk48.unkC = GX_CC_C0;
 		break;
 	}
 
