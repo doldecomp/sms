@@ -25,7 +25,7 @@ public:
 	/* 0x8 */ JMath::TRandom_fast_ unk8;
 	/* 0xC */ Vec unkC;
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
-	/* 0x24 */ Vec unk24;
+	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ Vec unk30;
 	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
 	/* 0x48 */ Mtx33 unk48;

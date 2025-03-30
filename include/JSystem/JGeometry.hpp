@@ -117,6 +117,13 @@ public:
 		z += operand.z;
 	}
 
+	void mul(const TVec3<f32>& b)
+	{
+		x *= b.x;
+		y *= b.y;
+		z *= b.z;
+	}
+
 	void div(f32 divisor);
 
 	T dot(const TVec3<T>& other) const

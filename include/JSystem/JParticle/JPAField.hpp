@@ -30,7 +30,7 @@ public:
 	/* 0x51 */ char unk51[1];
 	/* 0x52 */ u8 unk52;
 	/* 0x53 */ char unk53[1];
-	/* 0x54 */ s16 unk54;
+	/* 0x54 */ u16 unk54;
 	/* 0x58 */ f32 unk58;
 	/* 0x5C */ f32 unk5C;
 	/* 0x60 */ f32 unk60;
@@ -40,9 +40,7 @@ public:
 	/* 0x70 */ f32 unk70;
 	/* 0x74 */ f32 unk74;
 	/* 0x78 */ f32 unk78;
-	/* 0x7C */ f32 unk7C;
-	/* 0x80 */ f32 unk80;
-	/* 0x84 */ f32 unk84;
+	/* 0x7C */ JGeometry::TVec3<f32> unk7C;
 	/* 0x88 */ f32 unk88;
 	/* 0x8C */ // vt
 
@@ -56,12 +54,15 @@ public:
 	                              JGeometry::TVec3<float>&);
 
 	void calcMaxDistance();
-	void calcFieldFadeScale(float);
+	f32 calcFieldFadeScale(float);
 	void calcFieldVelocity(JPAParticle*);
 	void loadFieldBlock(JPADataBlock*);
 
 	// from tww
 	JSULink<JPABaseField>* getLinkBufferPtr() { return &unk0; }
+
+	// fabricated
+	bool checkFlag(u32 flag) { return unk54 & flag ? true : false; }
 };
 
 class JPAGravityField : public JPABaseField {
