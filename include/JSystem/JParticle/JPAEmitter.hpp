@@ -136,7 +136,7 @@ public:
 	/* 0x18C */ u32 unk18C;
 
 	/* 0x190 */ Vec unk190;
-	/* 0x19C */ Vec unk19C;
+	/* 0x19C */ JGeometry::TVec3<f32> unk19C;
 	/* 0x1A8 */ s16 unk1A8;
 	/* 0x1AA */ s16 unk1AA;
 	/* 0x1AC */ s16 unk1AC;

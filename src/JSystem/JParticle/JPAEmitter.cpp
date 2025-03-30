@@ -215,8 +215,8 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 	PSMTXScale(afStack_78, unk190.x, unk190.y, unk190.z);
 	PSMTXConcat(JPAEmitterInfoObj.unkCC.mMtx, afStack_78,
 	            JPAEmitterInfoObj.unkFC.mMtx);
-	Vec local_3C            = unk19C;
-	JPAEmitterInfoObj.unk18 = unk154;
+	JGeometry::TVec3<f32> local_3C = unk19C;
+	JPAEmitterInfoObj.unk18        = unk154;
 	JPAEmitterInfoObj.unk30.x *= unk154.x;
 	JPAEmitterInfoObj.unk30.y *= unk154.y;
 	JPAEmitterInfoObj.unk30.z *= unk154.z;
