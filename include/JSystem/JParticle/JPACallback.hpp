@@ -4,9 +4,9 @@
 // T = JPABaseEmitter*
 template <class T> class JPACallBackBase {
 public:
-	void execute(T);
-	void executeAfter(T);
-	void draw(T);
+	virtual void execute(T) { }
+	virtual void executeAfter(T) { }
+	virtual void draw(T) { }
 };
 
 // T = JPABaseEmitter*

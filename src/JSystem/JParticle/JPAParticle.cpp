@@ -68,4 +68,4 @@ void JPABaseParticle::getCurrentPosition(JGeometry::TVec3<float>&) { }
 void JPABaseParticle::getCurrentPositionX() { }
 void JPABaseParticle::getCurrentPositionY() { }
 void JPABaseParticle::getCurrentPositionZ() { }
-void JPAParticle::checkCreateChildParticle() { }
+bool JPAParticle::checkCreateChildParticle() { }

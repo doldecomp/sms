@@ -11,15 +11,15 @@ class JPABaseParticle {
 public:
 	/* 0x0 */ JSULink<JPABaseParticle> unk0;
 	/* 0x10 */ u32 unk10;
-	/* 0x14 */ Vec unk14;
-	/* 0x20 */ Vec unk20;
+	/* 0x14 */ JGeometry::TVec3<f32> unk14;
+	/* 0x20 */ JGeometry::TVec3<f32> unk20;
 	/* 0x2C */ Vec unk2C;
 	/* 0x38 */ Vec unk38;
 	/* 0x44 */ f32 unk44;
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ f32 unk4C;
 	/* 0x50 */ JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* unk50;
-	/* 0x54 */ char unk54[4];
+	/* 0x54 */ u32 unk54;
 	/* 0x58 */ // vt
 
 public:
@@ -29,15 +29,15 @@ public:
 	virtual void init()                     = 0;
 	virtual void calcVelocity()             = 0;
 	virtual void setVelocity()              = 0;
-	virtual void checkCreateChildParticle() = 0;
+	virtual bool checkCreateChildParticle() = 0;
 
 	virtual void executeParticleCallBack(JPABaseEmitter*);
 	virtual void drawParticleCallBack(JPABaseEmitter*);
 
-	virtual Vec* accessFVelVec()                               = 0;
-	virtual Vec* accessFAccVec()                               = 0;
+	virtual JGeometry::TVec3<f32>& accessFVelVec()             = 0;
+	virtual JGeometry::TVec3<f32>& accessFAccVec()             = 0;
 	virtual void getBaseVelVec(JGeometry::TVec3<float>&) const = 0;
-	virtual Vec* accessBaseVelVec()                            = 0;
+	virtual JGeometry::TVec3<f32>& accessBaseVelVec()          = 0;
 	virtual void setBaseVelVec(const JGeometry::TVec3<float>&) = 0;
 	virtual void addBaseVelVec(const JGeometry::TVec3<float>&) = 0;
 
@@ -63,18 +63,22 @@ public:
 
 	// from TWW
 	JSULink<JPABaseParticle>* getLinkBufferPtr() { return &unk0; }
+
+	// fabricated
+	bool checkFlag(u32 flag) const { return (unk10 & flag) ? true : false; }
 };
 
 class JPAParticle : public JPABaseParticle {
-	/* 0x5C */ Vec unk5C;
-	/* 0x68 */ char unk68[0xC];
+public:
+	/* 0x5C */ JGeometry::TVec3<f32> unk5C;
+	/* 0x68 */ JGeometry::TVec3<f32> unk68;
 	/* 0x74 */ f32 unk74;
 	/* 0x78 */ f32 unk78;
 	/* 0x7C */ f32 unk7C;
 	/* 0x80 */ f32 unk80;
 	/* 0x84 */ f32 unk84;
-	/* 0x88 */ Vec unk88;
-	/* 0x94 */ Vec unk94;
+	/* 0x88 */ JGeometry::TVec3<f32> unk88;
+	/* 0x94 */ JGeometry::TVec3<f32> unk94;
 	/* 0xA0 */ char unkA0[0xB0 - 0xA0];
 	/* 0xB0 */ f32 unkB0;
 	/* 0xB4 */ f32 unkB4;
@@ -86,12 +90,12 @@ public:
 	virtual void init();
 	virtual void calcVelocity();
 	virtual void setVelocity();
-	virtual void checkCreateChildParticle();
+	virtual bool checkCreateChildParticle();
 
-	virtual Vec* accessFVelVec() { return &unk88; }
-	virtual Vec* accessFAccVec() { return &unk94; }
+	virtual JGeometry::TVec3<f32>& accessFVelVec() { return unk88; }
+	virtual JGeometry::TVec3<f32>& accessFAccVec() { return unk94; }
 	virtual void getBaseVelVec(JGeometry::TVec3<float>&) const;
-	virtual Vec* accessBaseVelVec() { return &unk5C; }
+	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return unk5C; }
 	virtual void setBaseVelVec(const JGeometry::TVec3<float>&);
 	virtual void addBaseVelVec(const JGeometry::TVec3<float>&);
 
