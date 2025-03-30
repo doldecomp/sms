@@ -2,15 +2,31 @@
 #define J_GEOMETRY_HPP
 
 #include <types.h>
+#include <math.h>
 #include <dolphin/mtx.h>
 
 namespace JGeometry {
 
 template <typename T> struct TUtil;
 
-template <> struct TUtil<float> {
-	static float inv_sqrt(float);
+template <> struct TUtil<f32> {
+	static f32 epsilon() { return 3.81469727e-06f; }
+	static inline f32 inv_sqrt(f32 mag);
 };
+
+// TODO: maybe this was in some .ipp file included at the end or something?
+// Investigate
+#pragma dont_inline on
+f32 TUtil<f32>::inv_sqrt(f32 mag)
+{
+	if (mag <= 0.0f) {
+		return mag;
+	} else {
+		f32 root = __frsqrte(mag);
+		return 0.5f * root * (3.0f - mag * (root * root));
+	}
+}
+#pragma dont_inline off
 
 template <typename T> struct TVec2 {
 	TVec2() { }
@@ -71,12 +87,9 @@ template <typename T> struct TVec2 {
 
 template <typename T> class TVec3 {
 public:
-	TVec3()
-	{
-		x = 0;
-		y = 0;
-		z = 0;
-	}
+	// NOTE: this MUST be uninitialized as far as I can tell
+	TVec3() { }
+
 	TVec3(const TVec3& other)
 	{
 		x = other.x;
@@ -95,16 +108,42 @@ public:
 	TVec3& operator*=(const TVec3& operand);
 	TVec3& operator-=(const TVec3& operand);
 
-	void add(const TVec3& operand);
+	void zero() { x = y = z = 0.0f; }
+
+	void add(const TVec3& operand)
+	{
+		x += operand.x;
+		y += operand.y;
+		z += operand.z;
+	}
+
 	void div(f32 divisor);
+
 	T dot(const TVec3<T>& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
+
+	f32 squared() const { return x * x + y * y + z * z; }
+
 	void negate();
-	void scale(f32 scale);
-	void scale(f32 scale, const TVec3& operand);
+
+	void scale(f32 scale)
+	{
+		x *= scale;
+		y *= scale;
+		z *= scale;
+	}
+
+	void scale(f32 scale, const TVec3<f32>& b)
+	{
+		x = b.x * scale;
+		y = b.y * scale;
+		z = b.z * scale;
+	}
+
 	void scaleAdd(f32 scale, const TVec3& operand, const TVec3& translate);
+
 	void set(const Vec& v)
 	{
 		x = v.x;
@@ -118,21 +157,22 @@ public:
 		y = y_;
 		z = z_;
 	}
+
 	template <typename TY> void set(const TVec3<TY>&);
 
 	Vec* toVec() const { return (Vec*)this; }
 
-	void setLength(const TVec3<T>& v, f32 length)
+	f32 setLength(const TVec3<T>& v, f32 length)
 	{
-		const f32 lsq = v.dot(v);
-		if (lsq <= 0.0000038146973f) {
-			x = y = z = 0;
-		} else {
-			float invLen = length * JGeometry::TUtil<f32>::inv_sqrt(lsq);
-			x            = v.x * invLen;
-			y            = v.y * invLen;
-			z            = v.z * invLen;
+		f32 lsq = v.squared();
+		if (lsq <= TUtil<f32>::epsilon()) {
+			zero();
+			return 0.0f;
 		}
+
+		f32 norm = JGeometry::TUtil<f32>::inv_sqrt(lsq);
+		scale(norm * length, v);
+		return norm * lsq;
 	}
 
 	void cross(const TVec3<T>& fst, const TVec3<T>& snd)
@@ -172,10 +212,9 @@ template <typename T> struct SMatrix44C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
-	SMatrix34C() { }
+	SMatrix34C();
 
-	void set(float, float, float, float, float, float, float, float, float,
-	         float, float, float);
+	void set(f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
 	f32 mMtx[3][4];
 };
