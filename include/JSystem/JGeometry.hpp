@@ -175,7 +175,12 @@ public:
 		z = b.z * scale;
 	}
 
-	void scaleAdd(f32 scale, const TVec3& operand, const TVec3& translate);
+	void scaleAdd(f32 scale, const TVec3<f32>& b, const TVec3<f32>& c)
+	{
+		x = b.x + c.x * scale;
+		y = b.y + c.y * scale;
+		z = b.z + c.z * scale;
+	}
 
 	void set(const Vec& v)
 	{
