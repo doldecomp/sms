@@ -18,12 +18,7 @@ JPAExtraShape::JPAExtraShape(const u8* data)
 	unk28 = JPAConvertFixToFloat(*(s16*)(data + 0x26));
 
 	unk2C = unk8 != 0.0f ? (unk14 - unk10) / unk8 : 1.0f;
-
-	f32 thing = 1.0f;
-	if (unkC != 1.0f) {
-		thing = (unk18 - unk14) / (1.0f - unkC);
-	}
-	unk30 = thing;
+	unk30 = unkC != 1.0f ? (unk18 - unk14) / (1.0f - unkC) : 1.0f;
 
 	unk34 = JPAConvertFixToFloat(*(s16*)(data + 0x34));
 	unk38 = JPAConvertFixToFloat(*(s16*)(data + 0x36));
