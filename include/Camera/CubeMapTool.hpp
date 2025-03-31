@@ -17,9 +17,9 @@ public:
 	{
 	}
 
-	Vec& getUnkC() const { return *unkC.toVec(); }
-	Vec& getUnk18() const { return *unk18.toVec(); }
-	Vec& getUnk24() const { return *unk24.toVec(); }
+	const Vec& getUnkC() const { return unkC; }
+	const Vec& getUnk18() const { return unk18; }
+	const Vec& getUnk24() const { return unk24; }
 
 	virtual void load(JSUMemoryInputStream&);
 

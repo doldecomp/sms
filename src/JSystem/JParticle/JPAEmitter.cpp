@@ -171,7 +171,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			JPAGetXYRotateMtx(unk21C.get(), unk21C.get(), rotMtx);
 			JGeometry::TVec3<f32> vec(0.0f, 0.0f,
 			                          unk21C.get_ufloat_1() * sweepShapeUnk8);
-			PSMTXMultVec(rotMtx, vec.toVec(), vec.toVec());
+			MTXMultVec(rotMtx, vec, vec);
 			baseParticle->unk20.add(vec);
 		}
 

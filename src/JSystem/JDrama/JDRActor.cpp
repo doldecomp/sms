@@ -29,10 +29,7 @@ void JDrama::TActor::perform(u32 param_1, TGraphics* param_2)
 
 JDrama::TActor::~TActor() { }
 
-void JDrama::TActor::JSGGetTranslation(Vec* v) const
-{
-	*v = *mPosition.toVec();
-}
+void JDrama::TActor::JSGGetTranslation(Vec* v) const { *v = mPosition; }
 
 void JDrama::TActor::JSGSetTranslation(const Vec& v)
 {
