@@ -14,7 +14,7 @@ public:
 	/* 0x14 */ JGeometry::TVec3<f32> unk14;
 	/* 0x20 */ JGeometry::TVec3<f32> unk20;
 	/* 0x2C */ JGeometry::TVec3<f32> unk2C;
-	/* 0x38 */ Vec unk38;
+	/* 0x38 */ JGeometry::TVec3<f32> unk38;
 	/* 0x44 */ f32 unk44;
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ f32 unk4C;
@@ -49,8 +49,8 @@ public:
 	virtual void* getDrawParamPPtr() = 0;
 	virtual void* getDrawParamCPtr() = 0;
 
-	virtual void getWidth()  = 0;
-	virtual void getHeight() = 0;
+	virtual f32 getWidth()  = 0;
+	virtual f32 getHeight() = 0;
 
 	void initBase();
 	void incTimer();
@@ -107,8 +107,8 @@ public:
 	virtual void* getDrawParamPPtr() { return &unkA0; }
 	virtual void* getDrawParamCPtr() { return &unkA0; }
 
-	virtual void getWidth() { }
-	virtual void getHeight() { }
+	virtual f32 getWidth() { return unkB0 * 2.0f; }
+	virtual f32 getHeight() { return unkB4 * 2.0f; }
 };
 
 #endif
