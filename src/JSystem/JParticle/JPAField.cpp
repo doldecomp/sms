@@ -12,15 +12,15 @@ JPABaseField::JPABaseField()
     : unk0(this)
 {
 	unk54 = 0;
-	unk20 = 0.0f;
-	unk1C = 0.0f;
-	unk18 = 0.0f;
+
+	unk18.x = unk18.y = unk18.z = 0.0f;
 
 	unk7C.x = unk7C.y = unk7C.z = 0.0f;
 
-	unk24 = 0.0f;
-	unk28 = -1.0f;
-	unk2C = 0.0f;
+	unk24.x = 0.0f;
+	unk24.y = -1.0f;
+	unk24.z = 0.0f;
+
 	unk10 = 1.0f;
 	unk14 = 0.0f;
 	unk40 = 0.0f;
@@ -105,7 +105,8 @@ void JPABaseField::affect(JPAParticle* particle)
 }
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
-	JSUMemoryInputStream stream(block->unk4, *(u32*)((u8*)block->unk4 + 4));
+	JSUMemoryInputStream streamImpl(block->unk4, *(u32*)((u8*)block->unk4 + 4));
+	JSUInputStream& stream = streamImpl; // TODO: fakematch?
 
 	stream.skip(0xC);
 	stream.read(&unk50, 1);
@@ -117,12 +118,12 @@ void JPABaseField::loadFieldBlock(JPADataBlock* block)
 	stream.read(&unk10, 4);
 	stream.read(&unk14, 4);
 	stream.read(&unk3C, 4);
-	stream.read(&unk18, 4);
-	stream.read(&unk1C, 4);
-	stream.read(&unk20, 4);
-	stream.read(&unk24, 4);
-	stream.read(&unk28, 4);
-	stream.read(&unk2C, 4);
+	stream.read(&unk18.x, 4);
+	stream.read(&unk18.y, 4);
+	stream.read(&unk18.z, 4);
+	stream.read(&unk24.x, 4);
+	stream.read(&unk24.y, 4);
+	stream.read(&unk24.z, 4);
 	stream.read(&unk30, 4);
 	stream.read(&unk34, 4);
 	stream.read(&unk38, 4);
@@ -137,37 +138,144 @@ JPAGravityField::JPAGravityField() { unk50 = 0; }
 JPAGravityField::~JPAGravityField() { }
 void JPAGravityField::set()
 {
-	JPAEmitterInfo* info           = JPAGetEmitterInfoPtr();
-	JGeometry::TVec3<f32> local_18 = info->unk24;
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	JGeometry::TVec3<f32> local_18;
+	local_18.set(unk24.x, unk24.y, unk24.z);
 	if (!checkFlag(0x2))
-		PSMTXMultVec(info->unk6C.mMtx, local_18.toVec(), local_18.toVec());
+		MTXMultVec(info->unk6C, &local_18, &local_18);
 	unk7C.scale(unk10, local_18);
 }
 
 JPAAirField::JPAAirField() { unk50 = 1; }
-void JPAAirField::set() { }
-void JPAAirField::affect(JPAParticle*) { }
+void JPAAirField::set()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	unk70                = unk24;
+	if (!checkFlag(0x2)) {
+		MTXMultVec(info->unk6C, &unk70, &unk70);
+	}
+	unk7C.scale(unk10, unk70);
+	if (checkFlag(0x1)) {
+		unk64.x = JMASCos(unk30 * 32768.0f);
+		if (!checkFlag(0x2)) {
+			MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
+		} else {
+			unk58 = unk18;
+		}
+	}
+}
+void JPAAirField::affect(JPAParticle* particle)
+{
+	if (checkFlag(0x1)) {
+		JGeometry::TVec3<f32> diff;
+		if (!checkFlag(0x2))
+			diff.sub(particle->unk20, unk58);
+		else
+			diff.sub(particle->unk2C, unk58);
+
+		diff.normalize();
+		if (unk64.x <= unk70.dot(diff))
+			calcFieldVelocity(particle);
+	} else {
+		calcFieldVelocity(particle);
+	}
+
+	if (checkFlag(0x4)) {
+		JGeometry::TVec3<f32> vec;
+		particle->getBaseVelVec(vec);
+		f32 len = vec.length();
+		if (len > unk14) {
+			vec.scale(unk14 / len);
+			particle->setBaseVelVec(vec);
+		}
+	}
+}
 
 JPAMagnetField::JPAMagnetField() { unk50 = 2; }
 JPAMagnetField::~JPAMagnetField() { }
-void JPAMagnetField::set() { }
-void JPAMagnetField::affect(JPAParticle*) { }
+void JPAMagnetField::set()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	if (!checkFlag(0x2)) {
+		MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
+	} else {
+		unk58 = unk18;
+	}
+}
+void JPAMagnetField::affect(JPAParticle* particle)
+{
+	if (!checkFlag(0x2))
+		unk7C.sub(unk58, particle->unk20);
+	else
+		unk7C.sub(unk58, particle->unk2C);
+
+	unk7C.setLength(unk10);
+	calcFieldVelocity(particle);
+}
 
 JPANewtonField::JPANewtonField() { unk50 = 3; }
 JPANewtonField::~JPANewtonField() { }
-void JPANewtonField::set() { }
-void JPANewtonField::affect(JPAParticle*) { }
+void JPANewtonField::set()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	if (!checkFlag(0x2)) {
+		MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
+	} else {
+		unk58 = unk18;
+	}
+	unk34 = unk30 * unk30;
+}
+void JPANewtonField::affect(JPAParticle* particle)
+{
+	if (!checkFlag(0x2))
+		unk7C.sub(unk58, particle->unk20);
+	else
+		unk7C.sub(unk58, particle->unk2C);
+
+	if (checkFlag(0x100)) {
+		unk7C.setLength(unk10);
+	} else {
+		f32 lsq   = unk7C.squared();
+		f32 fVar2 = lsq > unk34 ? (unk34 * 10.0f) / lsq : 10;
+		unk7C.setLength(unk10 * fVar2);
+	}
+	calcFieldVelocity(particle);
+}
 
 JPAVortexField::JPAVortexField()
 {
-	unk24 = 0.0f;
-	unk28 = 1.0f;
-	unk2C = 0.0f;
-	unk50 = 4;
+	unk24.x = 0.0f;
+	unk24.y = 1.0f;
+	unk24.z = 0.0f;
+	unk50   = 4;
 }
 JPAVortexField::~JPAVortexField() { }
-void JPAVortexField::set() { }
-void JPAVortexField::affect(JPAParticle*) { }
+void JPAVortexField::set()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	MTXMultVec(info->unkCC, &unk24, &unk58);
+	unk30 = unk18.z * unk18.z;
+	unk34 = 1.0f / unk30;
+}
+void JPAVortexField::affect(JPAParticle* particle)
+{
+	JGeometry::TVec3<f32> thing  = particle->unk20;
+	JGeometry::TVec3<f32> thing2 = unk58;
+
+	f32 dot = thing.dot(thing2);
+	thing2.scale(dot);
+	thing.sub(thing2);
+
+	f32 fVar1 = thing.squared();
+	if (thing.squared() > unk30)
+		fVar1 = unk30;
+	fVar1 *= unk34;
+	fVar1 = (1.0f - fVar1) * unk10 + fVar1 * unk14;
+	thing.setLength(1.0f);
+	unk7C.cross(unk58, thing);
+	unk7C.scale(fVar1);
+	calcFieldVelocity(particle);
+}
 bool JPAVortexField::checkMaxDistance(JGeometry::TVec3<float>&,
                                       JGeometry::TVec3<float>&)
 {
@@ -177,16 +285,70 @@ bool JPAVortexField::checkMaxDistance(JGeometry::TVec3<float>&,
 JPAConvectionField::JPAConvectionField()
 {
 	unk50 = 7;
-	unk24 = 0.0f;
-	unk28 = 1.0f;
-	unk2C = 0.0f;
-	unk18 = 1.0f;
-	unk1C = 0.0f;
-	unk20 = 0.0f;
+
+	unk24.x = 0.0f;
+	unk24.y = 1.0f;
+	unk24.z = 0.0f;
+
+	unk18.x = 1.0f;
+	unk18.y = 0.0f;
+	unk18.z = 0.0f;
 }
 JPAConvectionField::~JPAConvectionField() { }
-void JPAConvectionField::set() { }
-void JPAConvectionField::affect(JPAParticle*) { }
+void JPAConvectionField::set()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+	JGeometry::TVec3<f32> prod;
+	JGeometry::TVec3<f32> localUnk18 = unk18;
+	JGeometry::TVec3<f32> localUnk24 = unk24;
+	prod.cross(localUnk24, localUnk18);
+	unk18.cross(localUnk24, prod);
+	unk18.normalize();
+
+	MTXMultVec(info->unkCC, &unk18, &unk58);
+	MTXMultVec(info->unkCC, &unk24, &unk64);
+	MTXMultVec(info->unkCC, &prod, &unk70);
+
+	unk58.normalize();
+	unk64.normalize();
+	unk70.normalize();
+}
+void JPAConvectionField::affect(JPAParticle* particle)
+{
+	bool bVar13                 = false;
+	bool bVar12                 = false;
+	JGeometry::TVec3<f32> thing = particle->unk20;
+	if (unk64.x == 0.0f && unk64.y == 1.0f) {
+		bVar12 = true;
+	}
+	if (bVar12 && unk64.z == 0.0f) {
+		bVar13 = true;
+	}
+	JGeometry::TVec3<f32> thing2;
+	if (bVar13) {
+		thing2.set(0.0f, 0.0f, 0.0f);
+	} else {
+		JGeometry::TVec3<f32> a = unk58;
+		JGeometry::TVec3<f32> b = unk70;
+		f32 fVar11              = a.dot(thing);
+		f32 fVar10              = b.dot(thing);
+		a.scale(fVar11);
+		b.scale(fVar10);
+		thing2.add(a, b);
+	}
+	thing2.setLength(thing2, unk30);
+	thing.sub(thing2);
+	JGeometry::TVec3<f32> thing3;
+	thing3.cross(thing2, unk64);
+	unk7C.cross(thing3, thing);
+	unk7C.setLength(unk10);
+	if (unk34 != 0.0f) {
+		JGeometry::TVec3<f32> thing4;
+		thing4.setLength(thing, unk34);
+		unk7C.add(thing4);
+	}
+	calcFieldVelocity(particle);
+}
 bool JPAConvectionField::checkMaxDistance(JGeometry::TVec3<float>&,
                                           JGeometry::TVec3<float>&)
 {
@@ -195,24 +357,242 @@ bool JPAConvectionField::checkMaxDistance(JGeometry::TVec3<float>&,
 
 JPARandomField::JPARandomField() { unk50 = 5; }
 JPARandomField::~JPARandomField() { }
-void JPARandomField::affect(JPAParticle*) { }
+void JPARandomField::affect(JPAParticle* particle)
+{
+	bool bVar3 = false;
+	if ((int)particle->unk44 == 0) {
+		bVar3 = true;
+	} else {
+		if (unk53 != 0) {
+			if ((int)particle->unk44 % unk53 == 0) {
+				bVar3 = true;
+			}
+		}
+	}
+
+	if (bVar3) {
+		unk7C.set(FieldRand.get_ufloat_1(), FieldRand.get_ufloat_1(),
+		          FieldRand.get_ufloat_1());
+		unk7C.scale(unk10);
+		calcFieldVelocity(particle);
+	}
+}
 
 JPADragField::JPADragField() { unk50 = 6; }
 JPADragField::~JPADragField() { }
-void JPADragField::affect(JPAParticle*) { }
+void JPADragField::affect(JPAParticle* particle)
+{
+	if (!particle->checkFlag(0x4)) {
+		if ((int)unk44 == 0) {
+			f32 rnd = unk14 * (FieldRand.get_ufloat_1() - 0.5f) + unk10;
+			if (rnd > 1.0f)
+				rnd = 1.0f;
+			unk7C.y = rnd;
+		}
+		f32 scale = calcFieldFadeScale(particle->unk48);
+		unk7C.z *= -(scale * (1.0f - particle->getDragForce()) - 1.0f);
+	} else {
+		unk7C.z *= particle->getDragForce();
+	}
+}
 
 JPAFieldManager::JPAFieldManager() { }
 JPAFieldManager::~JPAFieldManager() { }
-void JPAFieldManager::deleteField(JPABaseField*) { }
-void JPAFieldManager::deleteAllField() { }
-void JPAFieldManager::calcFieldParams() { }
-void JPAFieldManager::affectField(JPAParticle*) { }
-JPABaseField* JPAFieldManager::setField(u8) { }
-void JPAFieldManager::setGravityField() { }
-void JPAFieldManager::setAirField() { }
-void JPAFieldManager::setMagnetField() { }
-void JPAFieldManager::setNewtonField() { }
-void JPAFieldManager::setVortexField() { }
-void JPAFieldManager::setConvectionField() { }
-void JPAFieldManager::setRandomField() { }
-void JPAFieldManager::setDragField() { }
+
+void JPAFieldManager::deleteField(JPABaseField* field)
+{
+	unk0.remove(field->getLinkBufferPtr());
+	unkC->prepend(field->getLinkBufferPtr());
+}
+
+void JPAFieldManager::deleteAllField()
+{
+	if (unk0.getNumLinks() == 0)
+		return;
+
+	JSULink<JPABaseField>* link = unk0.getFirst();
+	while (link) {
+		JSULink<JPABaseField>* next = link->getNext();
+		JPABaseField* field         = link->getObject();
+		deleteField(field);
+		link = next;
+	}
+}
+
+void JPAFieldManager::calcFieldParams()
+{
+	if (unk0.getNumLinks() == 0)
+		return;
+
+	JSULink<JPABaseField>* link = unk0.getFirst();
+	while (link) {
+		JSULink<JPABaseField>* next = link->getNext();
+		JPABaseField* field         = link->getObject();
+
+		if (field->checkFlag(0x80))
+			field->unk88 = field->unk3C * field->unk3C;
+		field->set();
+
+		link = next;
+	}
+}
+
+void JPAFieldManager::affectField(JPAParticle* particle)
+{
+	JGeometry::TVec3<f32>& particlePos = particle->unk2C;
+	JSUListIterator<JPABaseField> it;
+	JPABaseField* field;
+
+	for (it = unk0.getFirst(); it != unk0.getEnd(); ++it) {
+		field = it.getObject();
+		if (!field->checkFlag(0x80)) {
+			field->affect(particle);
+		} else if (!field->checkMaxDistance(particlePos, field->getUnk18())) {
+			field->affect(particle);
+		}
+	}
+}
+
+JPABaseField* JPAFieldManager::setField(u8 param_1)
+{
+	JPABaseField* result = nullptr;
+	switch (param_1) {
+	case 0:
+		result = setGravityField();
+		break;
+	case 1:
+		result = setAirField();
+		break;
+	case 2:
+		result = setMagnetField();
+		break;
+	case 3:
+		result = setNewtonField();
+		break;
+	case 4:
+		result = setVortexField();
+		break;
+	case 5:
+		result = setRandomField();
+		break;
+	case 6:
+		result = setDragField();
+		break;
+	case 7:
+		result = setConvectionField();
+		break;
+	}
+	return result;
+}
+
+JPAGravityField* JPAFieldManager::setGravityField()
+{
+	JPAGravityField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPAGravityField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPAGravityField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPAAirField* JPAFieldManager::setAirField()
+{
+	JPAAirField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPAAirField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPAAirField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPAMagnetField* JPAFieldManager::setMagnetField()
+{
+	JPAMagnetField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPAMagnetField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPAMagnetField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPANewtonField* JPAFieldManager::setNewtonField()
+{
+	JPANewtonField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPANewtonField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPANewtonField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPAVortexField* JPAFieldManager::setVortexField()
+{
+	JPAVortexField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPAVortexField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPAVortexField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPAConvectionField* JPAFieldManager::setConvectionField()
+{
+	JPAConvectionField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPAConvectionField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPAConvectionField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPARandomField* JPAFieldManager::setRandomField()
+{
+	JPARandomField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPARandomField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPARandomField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}
+
+JPADragField* JPAFieldManager::setDragField()
+{
+	JPADragField* result = nullptr;
+
+	if (unkC->getNumLinks()) {
+		result = (JPADragField*)unkC->getFirst()->getObject();
+		unkC->remove(result->getLinkBufferPtr());
+		new (result) JPADragField;
+		unk0.append(result->getLinkBufferPtr());
+	}
+
+	return result;
+}

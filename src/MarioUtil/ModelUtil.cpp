@@ -65,7 +65,7 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			} else {
 				PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
 			}
-			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos->toVec());
+			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos);
 			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
 			riding_info->unk10 = riding_info->unk0->mRotation.y;
 		}
@@ -88,7 +88,7 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
 		PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
 	}
 	PSMTXInverse(mtx.mMtx, mtx.mMtx);
-	PSMTXMultVec(mtx.mMtx, pos.toVec(), &riding_info->localPos);
+	MTXMultVec(mtx.mMtx, (Vec*)&pos, &riding_info->localPos);
 }
 
 J3DModel* SMS_CreatePartsModel(char* arg0, u32 arg1)

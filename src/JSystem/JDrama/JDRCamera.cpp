@@ -37,8 +37,7 @@ void TLookAtCamera::perform(u32 param_1, TGraphics* param_2)
 	C_MTXPerspective(param_2->unk74.mMtx, mFovy, mAspect, mNear, mFar);
 	param_2->unkE8 = mNear;
 	param_2->unkEC = mFar;
-	C_MTXLookAt(param_2->unkB4.mMtx, (Vec*)&mPosition, (Vec*)&mUp,
-	            (Vec*)&mTarget);
+	C_MTXLookAt(param_2->unkB4.mMtx, &mPosition, &mUp, &mTarget);
 
 	if (param_1 & 0x10)
 		GXSetProjection(param_2->unk74.mMtx, GX_PERSPECTIVE);
@@ -52,17 +51,11 @@ float TLookAtCamera::JSGGetProjectionFovy() const { return mFovy; }
 void TLookAtCamera::JSGSetProjectionFovy(float fovy) { mFovy = fovy; }
 float TLookAtCamera::JSGGetProjectionAspect() const { return mAspect; }
 void TLookAtCamera::JSGSetProjectionAspect(float aspect) { mAspect = aspect; }
-void TLookAtCamera::JSGGetViewPosition(Vec* pos) const
-{
-	*pos = *mPosition.toVec();
-}
+void TLookAtCamera::JSGGetViewPosition(Vec* pos) const { *pos = mPosition; }
 void TLookAtCamera::JSGSetViewPosition(const Vec& pos) { mPosition.set(pos); }
-void TLookAtCamera::JSGGetViewUpVector(Vec* up) const { *up = *mUp.toVec(); }
+void TLookAtCamera::JSGGetViewUpVector(Vec* up) const { *up = mUp; }
 void TLookAtCamera::JSGSetViewUpVector(const Vec& up) { mUp.set(up); }
-void TLookAtCamera::JSGGetViewTargetPosition(Vec* tgt) const
-{
-	*tgt = *mTarget.toVec();
-}
+void TLookAtCamera::JSGGetViewTargetPosition(Vec* tgt) const { *tgt = mTarget; }
 void TLookAtCamera::JSGSetViewTargetPosition(const Vec& tgt)
 {
 	mTarget.set(tgt);

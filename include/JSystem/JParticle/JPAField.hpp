@@ -12,12 +12,8 @@ public:
 	/* 0x0 */ JSULink<JPABaseField> unk0;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
+	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
 	/* 0x38 */ char unk38[4];
@@ -29,17 +25,11 @@ public:
 	/* 0x50 */ u8 unk50;
 	/* 0x51 */ char unk51[1];
 	/* 0x52 */ u8 unk52;
-	/* 0x53 */ char unk53[1];
+	/* 0x53 */ u8 unk53;
 	/* 0x54 */ u16 unk54;
-	/* 0x58 */ f32 unk58;
-	/* 0x5C */ f32 unk5C;
-	/* 0x60 */ f32 unk60;
-	/* 0x64 */ f32 unk64;
-	/* 0x68 */ f32 unk68;
-	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ f32 unk70;
-	/* 0x74 */ f32 unk74;
-	/* 0x78 */ f32 unk78;
+	/* 0x58 */ JGeometry::TVec3<f32> unk58;
+	/* 0x64 */ JGeometry::TVec3<f32> unk64;
+	/* 0x70 */ JGeometry::TVec3<f32> unk70;
 	/* 0x7C */ JGeometry::TVec3<f32> unk7C;
 	/* 0x88 */ f32 unk88;
 	/* 0x8C */ // vt
@@ -63,6 +53,7 @@ public:
 
 	// fabricated
 	bool checkFlag(u32 flag) { return unk54 & flag ? true : false; }
+	JGeometry::TVec3<f32>& getUnk18() { return unk18; }
 };
 
 class JPAGravityField : public JPABaseField {
@@ -146,19 +137,21 @@ public:
 public:
 	JPAFieldManager();
 	~JPAFieldManager();
+
 	void deleteField(JPABaseField*);
 	void deleteAllField();
 	void calcFieldParams();
 	void affectField(JPAParticle*);
+
 	JPABaseField* setField(u8);
-	void setGravityField();
-	void setAirField();
-	void setMagnetField();
-	void setNewtonField();
-	void setVortexField();
-	void setConvectionField();
-	void setRandomField();
-	void setDragField();
+	JPAGravityField* setGravityField();
+	JPAAirField* setAirField();
+	JPAMagnetField* setMagnetField();
+	JPANewtonField* setNewtonField();
+	JPAVortexField* setVortexField();
+	JPAConvectionField* setConvectionField();
+	JPARandomField* setRandomField();
+	JPADragField* setDragField();
 };
 
 #endif

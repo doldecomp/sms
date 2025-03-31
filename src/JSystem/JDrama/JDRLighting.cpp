@@ -38,7 +38,7 @@ void TLight::JSGSetLightType(JStage::TELight type)
 	mLightType = type;
 }
 
-void TLight::JSGGetPosition(Vec* v) const { *v = *mPosition.toVec(); }
+void TLight::JSGGetPosition(Vec* v) const { *v = mPosition; }
 
 void TLight::JSGSetPosition(const Vec& v)
 {
@@ -105,7 +105,7 @@ void TLightAry::perform(u32 param_1, TGraphics* param_2)
 	for (int i = 0; i < mLightCount; ++i) {
 		TIdxLight& light = mLights[i];
 		Vec pos;
-		MTXMultVec(param_2->unkB4.mMtx, light.mPosition.toVec(), &pos);
+		MTXMultVec(param_2->unkB4.mMtx, &light.mPosition, &pos);
 		GXInitLightPos(&light.unk24, pos.x, pos.y, pos.z);
 	}
 

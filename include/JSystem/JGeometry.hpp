@@ -11,13 +11,22 @@ template <typename T> struct TUtil;
 
 template <> struct TUtil<f32> {
 	static f32 epsilon() { return 3.81469727e-06f; }
-	static inline f32 inv_sqrt(f32 mag);
+
+	static f32 sqrt(f32 mag)
+	{
+		if (mag <= 0.0f) {
+			return mag;
+		} else {
+			f32 root = __frsqrte(mag);
+			return 0.5f * root * (3.0f - mag * (root * root)) * mag;
+		}
+	}
+
+	static f32 inv_sqrt(f32 mag);
 };
 
-// TODO: maybe this was in some .ipp file included at the end or something?
-// Investigate
 #pragma dont_inline on
-f32 TUtil<f32>::inv_sqrt(f32 mag)
+inline f32 TUtil<f32>::inv_sqrt(f32 mag)
 {
 	if (mag <= 0.0f) {
 		return mag;
@@ -85,7 +94,11 @@ template <typename T> struct TVec2 {
 	T y;
 };
 
-template <typename T> class TVec3 {
+template <typename T> class TVec3 { };
+
+template <> struct TVec3<s16> : public S16Vec { };
+
+template <> class TVec3<f32> : public Vec {
 public:
 	// NOTE: this MUST be uninitialized as far as I can tell
 	TVec3() { }
@@ -97,16 +110,20 @@ public:
 		z = other.z;
 	}
 
-	TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
+	TVec3(f32 x_, f32 y_, f32 z_) { set(x_, y_, z_); }
 
 	TVec3& operator=(const TVec3& other)
 	{
 		x = other.x;
 		y = other.y;
 		z = other.z;
+		return *this;
 	}
 	TVec3& operator*=(const TVec3& operand);
 	TVec3& operator-=(const TVec3& operand);
+
+	operator Vec*() { return (Vec*)&x; }
+	operator const Vec*() const { return (Vec*)&x; }
 
 	void zero() { x = y = z = 0.0f; }
 
@@ -115,6 +132,13 @@ public:
 		x += operand.x;
 		y += operand.y;
 		z += operand.z;
+	}
+
+	void add(const TVec3<f32>& a, const TVec3<f32>& b)
+	{
+		x = a.x + b.x;
+		y = a.x + b.y;
+		z = a.x + b.z;
 	}
 
 	void mul(const TVec3<f32>& b)
@@ -126,12 +150,14 @@ public:
 
 	void div(f32 divisor);
 
-	T dot(const TVec3<T>& other) const
+	f32 dot(const TVec3<f32>& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
 
 	f32 squared() const { return x * x + y * y + z * z; }
+
+	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
 	void negate();
 
@@ -165,43 +191,48 @@ public:
 		z = z_;
 	}
 
-	template <typename TY> void set(const TVec3<TY>&);
+	template <typename TY> void set(const TVec3<TY>& other)
+	{
+		x = other.x;
+		y = other.y;
+		z = other.z;
+	}
 
-	Vec* toVec() const { return (Vec*)this; }
+	// fabricated
+	void setLength(f32 length) { setLength(*this, length); }
+	void normalize() { setLength(*this, 1.0f); }
 
-	f32 setLength(const TVec3<T>& v, f32 length)
+	void setLength(const TVec3<f32>& v, f32 length)
 	{
 		f32 lsq = v.squared();
 		if (lsq <= TUtil<f32>::epsilon()) {
 			zero();
-			return 0.0f;
+			return;
 		}
 
-		f32 norm = JGeometry::TUtil<f32>::inv_sqrt(lsq);
-		scale(norm * length, v);
-		return norm * lsq;
+		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
 
-	void cross(const TVec3<T>& fst, const TVec3<T>& snd)
+	void cross(const TVec3<f32>& a, const TVec3<f32>& b)
 	{
-		x = fst.y * snd.z - fst.z * snd.y;
-		y = fst.z * snd.x - fst.x * snd.z;
-		z = fst.x * snd.y - fst.y * snd.x;
+		set(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
+		    a.x * b.y - a.y * b.x);
 	}
 
 	void setMax(const TVec3& other);
 	void setMin(const TVec3& other);
-	void sub(const TVec3& translate);
+	void sub(const TVec3& translate)
+	{
+		x -= translate.x;
+		y -= translate.y;
+		z -= translate.z;
+	}
 	void sub(const TVec3& fst, const TVec3& snd)
 	{
 		x = fst.x - snd.x;
 		y = fst.y - snd.y;
 		z = fst.z - snd.z;
 	}
-
-	T x;
-	T y;
-	T z;
 };
 
 template <typename T> struct SMatrix34C {
@@ -219,9 +250,13 @@ template <typename T> struct SMatrix44C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
-	SMatrix34C();
+	SMatrix34C() { }
 
 	void set(f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
+
+	typedef f32 ArrType[4];
+	operator ArrType*() { return mMtx; }
+	operator const ArrType*() const { return mMtx; }
 
 	f32 mMtx[3][4];
 };
