@@ -2,6 +2,38 @@
 #include <JSystem/JParticle/JPAMath.hpp>
 #include <dolphin/gx/GXStruct.h>
 
+GXBlendMode JPABaseShape::stBlendMode[] = {
+	GX_BM_NONE,
+	GX_BM_BLEND,
+	GX_BM_LOGIC,
+	GX_BM_NONE,
+};
+
+GXBlendFactor JPABaseShape::stBlendFactor[] = {
+	GX_BL_ZERO,     GX_BL_ONE,         GX_BL_SRCCLR,   GX_BL_INVSRCCLR,
+	GX_BL_SRCCLR,   GX_BL_INVSRCCLR,   GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
+	GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
+};
+
+GXLogicOp JPABaseShape::stLogicOp[] = {
+	GX_LO_CLEAR,  GX_LO_SET,    GX_LO_COPY,  GX_LO_INVCOPY,
+	GX_LO_NOOP,   GX_LO_INV,    GX_LO_AND,   GX_LO_NAND,
+	GX_LO_OR,     GX_LO_NOR,    GX_LO_XOR,   GX_LO_EQUIV,
+	GX_LO_REVAND, GX_LO_INVAND, GX_LO_REVOR, GX_LO_INVOR,
+};
+
+GXCompare JPABaseShape::stCompare[] = {
+	GX_NEVER,  GX_LESS,   GX_LEQUAL,  GX_EQUAL,
+	GX_NEQUAL, GX_GEQUAL, GX_GREATER, GX_ALWAYS,
+};
+
+GXAlphaOp JPABaseShape::stAlphaOp[] = {
+	GX_AOP_AND,
+	GX_AOP_OR,
+	GX_AOP_XOR,
+	GX_AOP_XNOR,
+};
+
 struct JPAColorRegAnmKey {
 	s16 unk0;
 	GXColor unk2;
@@ -173,8 +205,8 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	unk84 = data[0x61];
 	unk85 = data[0x62];
 	unk86 = data[99];
-	unk60 = *(u32*)(data + 100);
-	unk64 = *(u32*)(data + 0x68);
+	unk60 = *(GXColor*)(data + 100);
+	unk64 = *(GXColor*)(data + 0x68);
 	unk1C = JPAConvertFixToFloat(*(s16*)(data + 0x80)) * 10.0f;
 	unk20 = JPAConvertFixToFloat(*(s16*)(data + 0x82)) * 10.0f;
 	unk24 = JPAConvertFixToFloat(*(s16*)(data + 0x84)) * 10.0f;

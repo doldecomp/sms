@@ -93,6 +93,9 @@ public:
 	u8 getGroupID() { return unk173; }
 	JSUList<JPABaseParticle>* getParticleList() { return &unkF4; }
 	JSUList<JPABaseParticle>* getChildParticleList() { return &unk100; }
+	f32 getRandomF() { return unk21C.get_ufloat_1(); }
+	f32 getRandomRF() { return unk21C.get_ufloat_1() * 2.0f - 1.0f; }
+	f32 getRandomSF() { return unk21C.get_ufloat_1() - 0.5f; }
 
 	// fabricated
 	JPAFieldManager* getFieldManager() { return &unk20; }

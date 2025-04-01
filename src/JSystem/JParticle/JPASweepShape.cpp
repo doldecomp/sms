@@ -27,8 +27,8 @@ JPASweepShape::JPASweepShape(const u8* data)
 	unk4D = data[0x56];
 	unk4E = data[0x57];
 
-	unk38 = *(u32*)(data + 0x58);
-	unk3C = *(u32*)(data + 0x5C);
+	unk38 = *(GXColor*)(data + 0x58);
+	unk3C = *(GXColor*)(data + 0x5C);
 
 	unk18 = JPAConvertFixToFloat(*(s16*)(data + 0x18));
 	unk1C = JPAConvertFixToFloat(*(s16*)(data + 0x30));

@@ -4,14 +4,26 @@
 #include <JSystem/JParticle/JPACallback.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class JPABaseEmitter;
 
 // fabricated
 struct JPADrawParams {
-	/* 0x0 */ char unk0[0x10];
+	/* 0x0 */ Vec unk0;
+	/* 0x8 */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
+	/* 0x18 */ char unk18[8];
+	/* 0x20 */ f32 unk20;
+	/* 0x24 */ f32 unk24;
+	/* 0x28 */ u32 unk28;
+	/* 0x2C */ GXColor unk2C;
+	/* 0x30 */ GXColor unk30;
+	/* 0x34 */ u16 unk34;
+	/* 0x36 */ s16 unk36;
+	/* 0x38 */ char unk38[2];
+	/* 0x3A */ u16 unk3A;
 };
 
 class JPABaseParticle {

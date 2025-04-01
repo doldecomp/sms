@@ -3,11 +3,18 @@
 
 #include <dolphin/gx/GXEnum.h>
 #include <JSystem/JParticle/JPADataBlock.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class JPABaseShape : public JPADataBlock {
 public:
 	JPABaseShape(const u8*, JKRHeap*);
 	~JPABaseShape() { }
+
+	static GXBlendMode stBlendMode[];
+	static GXBlendFactor stBlendFactor[];
+	static GXLogicOp stLogicOp[];
+	static GXCompare stCompare[];
+	static GXAlphaOp stAlphaOp[];
 
 public:
 	/* 0x8 */ void* unk8;
@@ -39,8 +46,8 @@ public:
 	/* 0x5A */ s16 unk5A;
 	/* 0x5C */ s16 unk5C;
 	/* 0x5E */ s16 unk5E;
-	/* 0x60 */ u32 unk60;
-	/* 0x64 */ u32 unk64;
+	/* 0x60 */ GXColor unk60;
+	/* 0x64 */ GXColor unk64;
 	/* 0x68 */ u8 unk68;
 	/* 0x69 */ u8 unk69;
 	/* 0x6A */ u8 unk6A;

@@ -5,6 +5,8 @@
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/gx/GXEnum.h>
 #include <JSystem/JParticle/JPADrawVisitor.hpp>
+#include <JSystem/JParticle/JPADrawSetupTev.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class JPABaseEmitter;
 class JPATextureResource;
@@ -15,11 +17,12 @@ public:
 	~JPADrawClipBoard() { }
 
 public:
-	/* 0x0 */ char unk0[4];
+	/* 0x0 */ JPADrawSetupTev unk0;
 	/* 0x4 */ f32 unk4;
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;
-	/* 0x10 */ JGeometry::TVec2<f32> unk10[4];
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ JGeometry::TVec2<f32> unk14[4];
 	/* 0x34 */ Mtx44* unk34;
 	/* 0x38 */ Mtx unk38;
 	/* 0x68 */ Mtx unk68;
@@ -30,8 +33,10 @@ public:
 	/* 0x9C */ u8 unk9C;
 	/* 0x9D */ u8 unk9D;
 	/* 0x9E */ u8 unk9E;
-	/* 0xA0 */ void* unkA0;
-	/* 0xA4 */ void* unkA4;
+	/* 0x9F */ u8 unk9F;
+	/* 0xA0 */ void (*unkA0)(JPABaseParticle*, JPABaseEmitter*,
+	                         JGeometry::TVec3<f32>&);
+	/* 0xA4 */ void (*unkA4)(f32, f32, Mtx&);
 	/* 0xA8 */ f32 unkA8;
 	/* 0xAC */ u16 unkAC;
 };
@@ -128,9 +133,9 @@ public:
 	/* 0x8F */ u8 unk8F;
 	/* 0x90 */ JPADrawContext unk90;
 	/* 0xB4 */ f32 unkB4;
-	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ u32 unkBC;
-	/* 0xC0 */ char unkC0[2];
+	/* 0xB8 */ GXColor unkB8;
+	/* 0xBC */ GXColor unkBC;
+	/* 0xC0 */ u16 unkC0;
 	/* 0xC2 */ u8 unkC2;
 
 public:
@@ -146,14 +151,14 @@ public:
 	static JPADrawVisitorContainer vc;
 	static JPADrawClipBoard cb;
 
-	void initialize(JPABaseEmitter*, JPATextureResource*);
+	BOOL initialize(JPABaseEmitter*, JPATextureResource*);
 	void draw(MtxPtr);
 	void calc();
 	void calcParticle(JPABaseParticle*);
 	void calcChild(JPABaseParticle*);
 	void initParticle(JPABaseParticle*);
 	void initChild(JPABaseParticle*, JPABaseParticle*);
-	void swapImage(const ResTIMG*, short);
+	const ResTIMG* swapImage(const ResTIMG*, short);
 	void loadTexture(unsigned char, GXTexMapID);
 	void setDrawExecVisitorsBeforeCB(const JPADraw::JPADrawVisitorDefFlags&);
 	void setDrawExecVisitorsAfterCB(const JPADraw::JPADrawVisitorDefFlags&);
