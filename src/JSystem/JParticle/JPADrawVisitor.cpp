@@ -1,6 +1,8 @@
 #include <JSystem/JParticle/JPADrawVisitor.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 
+JPADrawClipBoard* JPADrawContext::pcb;
+
 void JPADrawExecLoadExTex::exec(const JPADrawContext*) { }
 void JPADrawExecGenPrjMtx::exec(const JPADrawContext*) { }
 void JPADrawExecGenPrjTexMtx::exec(const JPADrawContext*) { }
