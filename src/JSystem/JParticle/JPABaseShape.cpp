@@ -222,7 +222,7 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	unk87 = data[0x96];
 
 	if (unk80 != 0) {
-		unk8 = JKRHeap::alloc(unk7E, 4, heap);
+		unk8 = (u8*)JKRHeap::alloc(unk7E, 4, heap);
 		memcpy(unk8, data + *(s16*)(data + 0x12), unk7E);
 	} else {
 		unk8 = nullptr;
