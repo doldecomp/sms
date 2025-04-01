@@ -15,6 +15,18 @@ class JPABaseParticle;
 class JPABaseEmitter;
 class JPATextureResource;
 
+void dirTypeVel(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&);
+void dirTypePos(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&);
+void dirTypePosInv(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&);
+void dirTypeEmtrDir(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&);
+void dirTypePrevPtcl(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&);
+
+void rotTypeY(f32, f32, Mtx&);
+void rotTypeX(f32, f32, Mtx&);
+void rotTypeZ(f32, f32, Mtx&);
+void rotTypeXYZ(f32, f32, Mtx&);
+void rotTypeYJiggle(f32, f32, Mtx&);
+
 struct JPADrawContext {
 	static JPADrawClipBoard* pcb;
 

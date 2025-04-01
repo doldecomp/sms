@@ -37,6 +37,7 @@ void JPADrawExecBillBoard::exec(const JPADrawContext*, JPABaseParticle*) { }
 void JPADrawExecRotBillBoard::exec(const JPADrawContext*, JPABaseParticle*) { }
 void JPADrawExecYBillBoard::exec(const JPADrawContext*, JPABaseParticle*) { }
 void JPADrawExecRotYBillBoard::exec(const JPADrawContext*, JPABaseParticle*) { }
+
 void dirTypeVel(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&) { }
 void dirTypePos(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&) { }
 void dirTypePosInv(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&) {
@@ -47,11 +48,13 @@ void dirTypeEmtrDir(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&)
 void dirTypePrevPtcl(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<f32>&)
 {
 }
+
 void rotTypeY(f32, f32, Mtx&) { }
 void rotTypeX(f32, f32, Mtx&) { }
 void rotTypeZ(f32, f32, Mtx&) { }
 void rotTypeXYZ(f32, f32, Mtx&) { }
 void rotTypeYJiggle(f32, f32, Mtx&) { }
+
 void JPADrawExecDirectional::exec(const JPADrawContext*, JPABaseParticle*) { }
 void JPADrawExecRotDirectional::exec(const JPADrawContext*, JPABaseParticle*) {
 }

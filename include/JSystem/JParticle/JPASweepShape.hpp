@@ -3,6 +3,7 @@
 
 #include <dolphin/types.h>
 #include <JSystem/JParticle/JPADataBlock.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class JPASweepShape : public JPADataBlock {
 public:
@@ -22,8 +23,8 @@ public:
 	/* 0x2C */ f32 unk2C;
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
-	/* 0x38 */ u32 unk38;
-	/* 0x3C */ u32 unk3C;
+	/* 0x38 */ GXColor unk38;
+	/* 0x3C */ GXColor unk3C;
 	/* 0x40 */ s16 unk40;
 	/* 0x42 */ s16 unk42;
 	/* 0x44 */ u8 unk44;
