@@ -7,6 +7,13 @@
 
 class JPABaseEmitter;
 
+// fabricated
+struct JPADrawParams {
+	/* 0x0 */ char unk0[0x10];
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ f32 unk14;
+};
+
 class JPABaseParticle {
 public:
 	/* 0x0 */ JSULink<JPABaseParticle> unk0;
@@ -46,8 +53,8 @@ public:
 	virtual f32 getCurrentDragForce() const = 0;
 	virtual f32 getDragForce() const        = 0;
 
-	virtual void* getDrawParamPPtr() = 0;
-	virtual void* getDrawParamCPtr() = 0;
+	virtual JPADrawParams* getDrawParamPPtr() = 0;
+	virtual JPADrawParams* getDrawParamCPtr() = 0;
 
 	virtual f32 getWidth()  = 0;
 	virtual f32 getHeight() = 0;
@@ -79,9 +86,7 @@ public:
 	/* 0x84 */ f32 unk84;
 	/* 0x88 */ JGeometry::TVec3<f32> unk88;
 	/* 0x94 */ JGeometry::TVec3<f32> unk94;
-	/* 0xA0 */ char unkA0[0xB0 - 0xA0];
-	/* 0xB0 */ f32 unkB0;
-	/* 0xB4 */ f32 unkB4;
+	/* 0xA0 */ JPADrawParams unkA0;
 
 public:
 	JPAParticle();
@@ -104,11 +109,11 @@ public:
 	virtual f32 getCurrentDragForce() const { return unk84; }
 	virtual f32 getDragForce() const { return unk80; }
 
-	virtual void* getDrawParamPPtr() { return &unkA0; }
-	virtual void* getDrawParamCPtr() { return &unkA0; }
+	virtual JPADrawParams* getDrawParamPPtr() { return &unkA0; }
+	virtual JPADrawParams* getDrawParamCPtr() { return &unkA0; }
 
-	virtual f32 getWidth() { return unkB0 * 2.0f; }
-	virtual f32 getHeight() { return unkB4 * 2.0f; }
+	virtual f32 getWidth() { return unkA0.unk10 * 2.0f; }
+	virtual f32 getHeight() { return unkA0.unk14 * 2.0f; }
 };
 
 #endif

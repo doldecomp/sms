@@ -2,10 +2,32 @@
 #define JPA_DRAW_VISITOR_HPP
 
 #include <JSystem/JGeometry.hpp>
+#include <JSystem/JSupport/JSUList.hpp>
 
-class JPADrawContext;
+class JPADrawClipBoard;
+class JPABaseEmitter;
+class JPABaseShape;
+class JPAExtraShape;
+class JPASweepShape;
+class JPAExTexShape;
+class JPADraw;
 class JPABaseParticle;
 class JPABaseEmitter;
+class JPATextureResource;
+
+struct JPADrawContext {
+	static JPADrawClipBoard* pcb;
+
+	JPABaseEmitter* unk0;
+	JPABaseShape* unk4;
+	JPAExtraShape* unk8;
+	JPASweepShape* unkC;
+	JPAExTexShape* unk10;
+	JPADraw* unk14;
+	JSUList<JPABaseParticle>* unk18;
+	JPATextureResource* unk1C;
+	u16* unk20;
+};
 
 // ================ Exec callbacks ================
 
