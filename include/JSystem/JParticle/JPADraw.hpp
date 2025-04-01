@@ -26,14 +26,8 @@ public:
 	/* 0x34 */ Mtx44* unk34;
 	/* 0x38 */ Mtx unk38;
 	/* 0x68 */ Mtx unk68;
-	/* 0x98 */ u8 unk98;
-	/* 0x99 */ u8 unk99;
-	/* 0x9A */ u8 unk9A;
-	/* 0x9B */ u8 unk9B;
-	/* 0x9C */ u8 unk9C;
-	/* 0x9D */ u8 unk9D;
-	/* 0x9E */ u8 unk9E;
-	/* 0x9F */ u8 unk9F;
+	/* 0x98 */ GXColor unk98;
+	/* 0x9C */ GXColor unk9C;
 	/* 0xA0 */ void (*unkA0)(JPABaseParticle*, JPABaseEmitter*,
 	                         JGeometry::TVec3<f32>&);
 	/* 0xA4 */ void (*unkA4)(f32, f32, Mtx&);

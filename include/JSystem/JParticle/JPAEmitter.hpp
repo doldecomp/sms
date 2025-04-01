@@ -54,12 +54,32 @@ JPAEmitterInfo* JPAGetEmitterInfoPtr();
 class JPADataBlock;
 class JPABaseParticle;
 
+struct JPAFrameManager {
+public:
+	JPAFrameManager()
+	    : mFrame(0.0f)
+	{
+	}
+
+	f32 getFrame() const { return mFrame; }
+	void setFrame(f32 frame) { mFrame = frame; }
+	void incFrame()
+	{
+		mFrame++;
+		if (mFrame < 0.0f)
+			mFrame = 0.0f;
+	}
+
+private:
+	/* 0x00 */ f32 mFrame;
+};
+
 class JPABaseEmitter {
 public:
 	JPABaseEmitter();
 
-	static f32 getFovy();
-	static f32 getAspect();
+	f32 getFovy();
+	f32 getAspect();
 
 	void newParticle();
 	void deleteBaseParticle(JPABaseParticle*, JSUList<JPABaseParticle>*);
@@ -102,7 +122,7 @@ public:
 
 public:
 	/* 0x0 */ JSULink<JPABaseEmitter> unk0;
-	/* 0x10 */ f32 unk10;
+	/* 0x10 */ JPAFrameManager unk10;
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ f32 unk1C;
@@ -128,10 +148,7 @@ public:
 	/* 0x174 */ f32 unk174;
 	/* 0x178 */ f32 unk178;
 	/* 0x17C */ f32 unk17C;
-	/* 0x180 */ u8 unk180;
-	/* 0x181 */ u8 unk181;
-	/* 0x182 */ u8 unk182;
-	/* 0x183 */ u8 unk183;
+	/* 0x180 */ GXColor unk180;
 	/* 0x184 */ u8 unk184;
 	/* 0x185 */ u8 unk185;
 	/* 0x186 */ u8 unk186;

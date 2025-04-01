@@ -179,13 +179,13 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		if (emitter) {
 			emitter->unk173     = param_2;
 			emitter->unk10C     = this;
-			emitter->unk180     = 0xff;
-			emitter->unk181     = 0xff;
-			emitter->unk182     = 0xff;
+			emitter->unk180.r   = 0xff;
+			emitter->unk180.g   = 0xff;
+			emitter->unk180.b   = 0xff;
 			emitter->unk184     = 0xff;
 			emitter->unk185     = 0xff;
 			emitter->unk186     = 0xff;
-			emitter->unk183     = 0xff;
+			emitter->unk180.a   = 0xff;
 			emitter->unk20.unkC = &unk28;
 
 			int count             = linkInfo->unk20;
