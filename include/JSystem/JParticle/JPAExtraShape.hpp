@@ -8,6 +8,17 @@ public:
 	JPAExtraShape(const u8*);
 	~JPAExtraShape() { }
 
+	BOOL isEnableScale() { return unk7E & 1; }
+	BOOL isEnableAlpha() { return unk78 & 1; }
+	BOOL isEnableRotate() { return unk7F; }
+	f32 getRotateAngle() { return unk60; }
+	f32 getRotateRandomAngle() { return unk6C; }
+	f32 getRotateDirection() { return unk70; }
+	f32 getRotateSpeed() { return unk64; }
+	f32 getRotateRandomSpeed() { return unk68; }
+	f32 getRandomScale() { return unk34; }
+	f32 getAlphaWaveRandom() { return unk28; }
+
 public:
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;

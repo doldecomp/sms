@@ -142,7 +142,7 @@ void JPADefaultTexture::initialize(JKRHeap* heap)
 	unk0[0x7e] = 0;
 	unk0[0x7f] = 0xff;
 	DCStoreRange(unk0, 0x80);
-	GXInitTexObj(&obj, unk0, 8, 8, GX_TF_IA8, GX_REPEAT, GX_REPEAT, 0);
-	GXInitTexObjLOD(&obj, GX_LINEAR, GX_LINEAR, 0.0, 0.0, 0.0, 0, 0,
+	GXInitTexObj(&unk4, unk0, 8, 8, GX_TF_IA8, GX_REPEAT, GX_REPEAT, 0);
+	GXInitTexObjLOD(&unk4, GX_LINEAR, GX_LINEAR, 0.0, 0.0, 0.0, 0, 0,
 	                GX_ANISO_1);
 }

@@ -29,18 +29,20 @@ BOOL JPADraw::initialize(JPABaseEmitter* param_1, JPATextureResource* param_2)
 	unkC2 = 0;
 	unkB4 = 1.0f;
 
-	if (unk90.unk4->unk83 & 1) {
-		if (!(unk90.unk4->unk83 & 2))
-			unkB8 = unk90.unk4->unk60;
+	GXColor white = { 0xff, 0xff, 0xff, 0xff };
+
+	if (unk90.unk4->isEnablePrm()) {
+		if (!(unk90.unk4->isEnablePrmAnm()))
+			unkB8 = unk90.unk4->getPrmColor();
 	} else {
-		unkB8 = (GXColor) { 0xff, 0xff, 0xff, 0xff };
+		unkB8 = white;
 	}
 
-	if (unk90.unk4->unk84 & 1) {
-		if (!(unk90.unk4->unk84 & 2))
-			unkBC = unk90.unk4->unk64;
+	if (unk90.unk4->isEnableEnv()) {
+		if (!(unk90.unk4->isEnableEnvAnm()))
+			unkBC = unk90.unk4->getEnvColor();
 	} else {
-		unkBC = (GXColor) { 0xff, 0xff, 0xff, 0xff };
+		unkBC = white;
 	}
 
 	unk8F = 0;
@@ -76,14 +78,14 @@ BOOL JPADraw::initialize(JPABaseEmitter* param_1, JPATextureResource* param_2)
 	for (int i = 0; i < ARRAY_COUNT(unk80); ++i)
 		unk80[i] = nullptr;
 
-	JPADraw::JPADrawVisitorDefFlags local_28;
+	JPADrawVisitorDefFlags local_28;
 
-	local_28.unk0  = !unk90.unkC || (unk90.unkC->unk49 & 1);
-	local_28.unk4  = (unk90.unk4->unk83 & 1) && (unk90.unk4->unk83 & 2);
-	local_28.unk8  = (unk90.unk4->unk84 & 1) && (unk90.unk4->unk84 & 2);
-	local_28.unkC  = unk90.unk4->unk69 == 5 || unk90.unk4->unk69 == 6;
-	local_28.unk10 = unk90.unk4->unk69 == 0 || unk90.unk4->unk69 == 1;
-	local_28.unk14 = unk90.unk8 && (unk90.unk8->unk78 & 1);
+	local_28.unk0  = unk90.unkC == nullptr || unk90.unkC->isEnableDrawParent();
+	local_28.unk4  = unk90.unk4->isEnablePrm() && unk90.unk4->isEnablePrmAnm();
+	local_28.unk8  = unk90.unk4->isEnableEnv() && unk90.unk4->isEnableEnvAnm();
+	local_28.unkC  = unk90.unk4->getType() == 5 || unk90.unk4->getType() == 6;
+	local_28.unk10 = unk90.unk4->getType() == 0 || unk90.unk4->getType() == 1;
+	local_28.unk14 = unk90.unk8 != nullptr && unk90.unk8->isEnableAlpha();
 
 	setDrawExecVisitorsBeforeCB(local_28);
 	unk4[unk89++]  = &vc.unk90;
@@ -113,10 +115,10 @@ void JPADraw::draw(MtxPtr param_1)
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
-	GXSetBlendMode(JPABaseShape::stBlendMode[unk90.unk4->unk6D],
-	               JPABaseShape::stBlendFactor[unk90.unk4->unk6E],
-	               JPABaseShape::stBlendFactor[unk90.unk4->unk6F],
-	               JPABaseShape::stLogicOp[unk90.unk4->unk70]);
+
+	GXSetBlendMode(unk90.unk4->getBlendMode1(),
+	               unk90.unk4->getSrcBlendFactor1(),
+	               unk90.unk4->getDstBlendFactor1(), unk90.unk4->getBlendOp1());
 
 	JPABaseEmitter* be = unk90.unk0;
 
@@ -180,9 +182,10 @@ void JPADraw::calcChild(JPABaseParticle* particle)
 
 void JPADraw::initParticle(JPABaseParticle* particle)
 {
-	JPADrawParams* params = particle->getDrawParamCPtr();
+	JPADrawParams* params = particle->getDrawParamPPtr();
 	JPAEmitterInfo* info  = JPAGetEmitterInfoPtr();
 
+	// TODO: something wrong here
 	f32* v         = info->unk48[1];
 	params->unk0.x = v[0];
 	params->unk0.y = v[1];
@@ -192,24 +195,28 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 	params->unk30 = unkBC;
 	params->unk20 = 1.0f;
 
-	s16 thing     = unk90.unk4->unk58;
-	params->unk28 = (int)(unk90.unk0->getRandomF() * thing);
+	params->unk28
+	    = (int)(unk90.unk0->getRandomF() * unk90.unk4->getLoopOffset());
 
 	if (unk90.unk8 != nullptr) {
-		if ((int)unk90.unk8->unk7F != 0) {
-			params->unk34
-			    = unk90.unk8->unk60 * 32768.0f
-			      + unk90.unk0->getRandomSF() * unk90.unk8->unk6C * 65536.0f;
+		if (unk90.unk8->isEnableRotate() != 0) {
+			params->unk34 = unk90.unk8->getRotateAngle() * 32768.0f
+			                + unk90.unk0->getRandomSF()
+			                      * unk90.unk8->getRotateRandomAngle()
+			                      * 65536.0f;
 
 			s16 sVar4;
-			if (unk90.unk8->unk70 < unk90.unk0->getRandomRF()) {
-
-				sVar4 = unk90.unk8->unk64
-				        * (unk90.unk8->unk68 * unk90.unk0->getRandomRF() + 1.0f)
+			if (unk90.unk0->getRandomRF() < unk90.unk8->getRotateDirection()) {
+				sVar4 = unk90.unk8->getRotateSpeed()
+				        * (unk90.unk8->getRotateRandomSpeed()
+				               * unk90.unk0->getRandomRF()
+				           + 1.0f)
 				        * 32768.0f;
 			} else {
-				sVar4 = -unk90.unk8->unk64
-				        * (unk90.unk8->unk68 * unk90.unk0->getRandomRF() + 1.0f)
+				sVar4 = -unk90.unk8->getRotateSpeed()
+				        * (unk90.unk8->getRotateRandomSpeed()
+				               * unk90.unk0->getRandomRF()
+				           + 1.0f)
 				        * 32768.0f;
 			}
 			params->unk36 = sVar4;
@@ -218,13 +225,14 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 			params->unk36 = 0;
 		}
 
-		f32 rnd
-		    = unkB4 * ((unk90.unk0->getRandomRF()) * unk90.unk8->unk34 + 1.0f);
-		params->unk0.x = rnd;
-		params->unk14  = rnd;
-		params->unk10  = rnd;
+		params->unk10 = params->unk14 = params->unkC
+		    = unkB4
+		      * (unk90.unk0->getRandomRF() * unk90.unk8->getRandomScale()
+		         + 1.0f);
 
-		params->unk24 = (unk90.unk0->getRandomRF()) * unk90.unk8->unk28 + 1.0f;
+		params->unk24
+		    = unk90.unk0->getRandomRF() * unk90.unk8->getAlphaWaveRandom()
+		      + 1.0f;
 	} else {
 		params->unk34 = 0;
 		params->unk36 = 0;
@@ -243,8 +251,8 @@ void JPADraw::initChild(JPABaseParticle* param_1, JPABaseParticle* param_2)
 
 	params2->unk20 = 1.0f;
 
-	if (unk90.unkC->unk4E & 4) {
-		f32 f = unk90.unkC->unk34;
+	if (unk90.unkC->isInheritedRGB()) {
+		f32 f = unk90.unkC->getInheritRGB();
 
 		params2->unk2C.r = params1->unk2C.r * f;
 		params2->unk2C.g = params1->unk2C.g * f;
@@ -254,27 +262,25 @@ void JPADraw::initChild(JPABaseParticle* param_1, JPABaseParticle* param_2)
 		params2->unk30.g = params1->unk30.g * f;
 		params2->unk30.b = params1->unk30.b * f;
 	} else {
-		params2->unk2C = unk90.unkC->unk38;
-		params2->unk30 = unk90.unkC->unk3C;
+		params2->unk2C = unk90.unkC->getPrm();
+		params2->unk30 = unk90.unkC->getEnv();
 	}
 
-	if (unk90.unkC->unk4E & 2) {
-		f32 f = params1->unk20 * unk90.unkC->unk2C;
+	if (unk90.unkC->isInheritedAlpha()) {
+		f32 f = params1->unk20 * unk90.unkC->getInheritAlpha();
 
 		params2->unk2C.a = params1->unk2C.a * f;
 		params2->unk30.a = params1->unk30.a * f;
 	} else {
-		params2->unk2C.a = unk90.unkC->unk38.a;
-		params2->unk30.a = unk90.unkC->unk3C.a;
+		params2->unk2C.a = unk90.unkC->getPrmAlpha();
+		params2->unk30.a = unk90.unkC->getEnvAlpha();
 	}
 
-	if (unk90.unkC->unk4E & 1) {
-		f32 f1         = unk90.unkC->unk28 * params1->unk10;
-		params2->unkC  = f1;
-		params2->unk10 = f1;
-		f32 f2         = unk90.unkC->unk28 * params1->unk14;
-		params2->unk24 = f2;
-		params2->unk14 = f2;
+	if (unk90.unkC->isInheritedScale()) {
+		f32 f = unk90.unkC->getInheritScale();
+
+		params2->unk10 = params2->unkC = f * params1->unk10;
+		params2->unk14 = params2->unk24 = f * params1->unk14;
 	} else {
 		params2->unk24 = 1.0f;
 		params2->unk14 = 1.0f;
@@ -283,8 +289,8 @@ void JPADraw::initChild(JPABaseParticle* param_1, JPABaseParticle* param_2)
 	}
 
 	params2->unk34 = params1->unk34;
-	if ((int)unk90.unkC->unk4D != 0) {
-		params2->unk36 = unk90.unkC->unk30 * 32768.0f;
+	if (unk90.unkC->isEnableRotate() != 0) {
+		params2->unk36 = unk90.unkC->getRotateSpeed() * 32768.0f;
 	} else {
 		params2->unk36 = 0;
 	}
@@ -295,15 +301,10 @@ const ResTIMG* JPADraw::swapImage(const ResTIMG* param_1, s16 param_2)
 	if (param_2 < 0)
 		return nullptr;
 
-	JPATexture* tex = unk90.unk1C->unk2C[unk90.unk20[(u8)param_2]];
-
-	const ResTIMG* old = tex->unk8.getTexInfo();
-	tex->unk8.storeTIMG(param_1);
-
-	return old;
+	return unk90.unk1C->swapImage(param_1, unk90.getTexIdx(param_2));
 }
 
-void JPADraw::loadTexture(unsigned char, _GXTexMapID) { }
+void JPADraw::loadTexture(u8 idx, GXTexMapID map_id) { }
 
 void JPADraw::setDrawExecVisitorsBeforeCB(
     const JPADraw::JPADrawVisitorDefFlags& flags)
@@ -706,7 +707,7 @@ void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 
 void JPADraw::setParticleClipBoard()
 {
-	switch (unk90.unk4->unk69) {
+	switch (unk90.unk4->getType()) {
 	case 2:
 	case 9:
 		MTXIdentity(cb.unk68);
@@ -719,21 +720,23 @@ void JPADraw::setParticleClipBoard()
 		break;
 	}
 
-	GXLoadPosMtxImm(cb.unk68, 0); // TODO: TVec2 arithmetic?
+	GXLoadPosMtxImm(cb.unk68, 0);
+
+	// TODO: TVec2 arithmetic?
 	f32 a   = unk90.unk0->unk174;
 	f32 b   = unk90.unk0->unk178;
 	cb.unk4 = a * (unk90.unk4->unk14 * 25.0f);
 	cb.unk8 = b * (unk90.unk4->unk18 * 25.0f);
 
-	if (unk90.unk4->unk69 == 0) {
+	if (unk90.unk4->getType() == 0) {
 		cb.unk4 *= 1.02f;
 		cb.unk8 *= 1.02f;
-	} else if (unk90.unk4->unk69 == 1) {
+	} else if (unk90.unk4->getType() == 1) {
 		cb.unk4 *= 1.02f;
 		cb.unk8 *= 0.4f;
 	}
 
-	if (unk90.unk8 != nullptr && (unk90.unk8->unk7E & 1)) {
+	if (unk90.unk8 != nullptr && unk90.unk8->isEnableScale()) {
 		cb.unkC  = cb.unk4 * (unk90.unk8->unk7C - 1.0f);
 		cb.unk10 = cb.unk8 * (unk90.unk8->unk7A - 1.0f);
 	} else {
@@ -741,8 +744,8 @@ void JPADraw::setParticleClipBoard()
 		cb.unkC  = 0.0f;
 	}
 
-	f32 x = unk90.unk4->unk2C;
-	f32 y = unk90.unk4->unk30;
+	f32 x = unk90.unk4->getTilingX();
+	f32 y = unk90.unk4->getTilingY();
 
 	cb.unk14[0].x = 0.0f;
 	cb.unk14[0].y = 0.0f;
@@ -755,15 +758,16 @@ void JPADraw::setParticleClipBoard()
 	cb.unk14[3].x = 0.0f;
 	cb.unk14[3].y = y;
 
-	if (unk90.unk4->unk81 == 0 && unk90.unk4->unk80 == 0)
-		unkC0 = unk90.unk20[unk90.unk4->unk7F];
+	if (!unk90.unk4->textureIsEmpty() && !unk90.unk4->isEnableTextureAnm())
+		unkC0 = unk90.unk20[unk90.unk4->getTextureIndex()];
+
 	cb.unkA0 = nullptr;
 	cb.unkA4 = nullptr;
 
-	if (unk90.unk4->unk69 == 3 || unk90.unk4->unk69 == 9
-	    || unk90.unk4->unk69 == 4 || unk90.unk4->unk69 == 5
-	    || unk90.unk4->unk69 == 6) {
-		switch (unk90.unk4->unk6A) {
+	if (unk90.unk4->getType() == 3 || unk90.unk4->getType() == 9
+	    || unk90.unk4->getType() == 4 || unk90.unk4->getType() == 5
+	    || unk90.unk4->getType() == 6) {
+		switch (unk90.unk4->getDirType()) {
 		case 0:
 			cb.unkA0 = &dirTypeVel;
 			break;
@@ -782,9 +786,9 @@ void JPADraw::setParticleClipBoard()
 		}
 	}
 
-	if (unk90.unk4->unk69 == 3 || unk90.unk4->unk69 == 4
-	    || unk90.unk4->unk69 == 7 || unk90.unk4->unk69 == 8) {
-		switch (unk90.unk4->unk6B) {
+	if (unk90.unk4->getType() == 3 || unk90.unk4->getType() == 4
+	    || unk90.unk4->getType() == 7 || unk90.unk4->getType() == 8) {
+		switch (unk90.unk4->getRotType()) {
 		case 0:
 			cb.unkA4 = &rotTypeY;
 			break;
@@ -804,19 +808,329 @@ void JPADraw::setParticleClipBoard()
 	}
 }
 
-void JPADraw::setChildClipBoard() { }
+void JPADraw::setChildClipBoard()
+{
+	switch (unk90.unk4->getType()) {
+	case 2:
+	case 9:
+		MTXIdentity(cb.unk68);
+		break;
+	case 10:
+		loadYBBMtx(*cb.unk34);
+		break;
+	default:
+		MTXCopy(*cb.unk34, cb.unk68);
+		break;
+	}
 
-void JPADraw::drawParticle() { }
+	GXLoadPosMtxImm(cb.unk68, 0);
 
-void JPADraw::drawChild() { }
+	f32 fVar3 = unk90.unk0->unk174;
+	f32 fVar4 = unk90.unk0->unk178;
+	if (!unk90.unkC->isInheritedScale()) {
+		cb.unk4 = fVar3 * (25.0f * unk90.unkC->getScaleX());
+		cb.unk8 = fVar4 * (25.0f * unk90.unkC->getScaleY());
+	} else {
+		cb.unk4 = fVar3 * (25.0f * unk90.unk4->getBaseSizeX());
+		cb.unk8 = fVar4 * (25.0f * unk90.unk4->getBaseSizeY());
+	}
 
-void JPADraw::zDraw() { }
+	if (unk90.unkC->getType() == 0) {
+		cb.unk4 *= 1.02f;
+		cb.unk8 *= 1.02f;
+	} else if (unk90.unkC->getType() == 1) {
+		cb.unk4 *= 1.02f;
+		cb.unk8 *= 0.4f;
+	}
 
-void JPADraw::zDrawParticle() { }
+	cb.unkC = cb.unk10 = 0.0f;
 
-void JPADraw::zDrawChild() { }
+	cb.unk14[1].y = 0.0;
+	cb.unk14[0].y = 0.0;
+	cb.unk14[3].x = 0.0;
+	cb.unk14[0].x = 0.0;
+	cb.unk14[3].y = 1.0;
+	cb.unk14[2].y = 1.0;
+	cb.unk14[2].x = 1.0;
+	cb.unk14[1].x = 1.0;
 
-void JPADraw::getMainTextureID(unsigned char) { }
+	cb.unkA0 = nullptr;
+	cb.unkA4 = nullptr;
+
+	if (unk90.unkC->getType() == 3 || unk90.unkC->getType() == 9
+	    || unk90.unkC->getType() == 4 || unk90.unkC->getType() == 5
+	    || unk90.unkC->getType() == 6) {
+		switch (unk90.unkC->getDirType()) {
+		case 0:
+			cb.unkA0 = &dirTypeVel;
+			break;
+		case 1:
+			cb.unkA0 = &dirTypePos;
+			break;
+		case 2:
+			cb.unkA0 = &dirTypePosInv;
+			break;
+		case 3:
+			cb.unkA0 = &dirTypeEmtrDir;
+			break;
+		case 4:
+			cb.unkA0 = &dirTypePrevPtcl;
+			break;
+		}
+	}
+
+	if (unk90.unkC->getType() == 3 || unk90.unkC->getType() == 4
+	    || unk90.unkC->getType() == 7 || unk90.unkC->getType() == 8) {
+		switch (unk90.unkC->getRotType()) {
+		case 0:
+			cb.unkA4 = &rotTypeY;
+			break;
+		case 1:
+			cb.unkA4 = &rotTypeX;
+			break;
+		case 2:
+			cb.unkA4 = &rotTypeZ;
+			break;
+		case 3:
+			cb.unkA4 = &rotTypeXYZ;
+			break;
+		case 4:
+			cb.unkA4 = &rotTypeYJiggle;
+			break;
+		}
+	}
+}
+
+void JPADraw::drawParticle()
+{
+	unkC2 &= ~0x2;
+	setParticleClipBoard();
+	unk90.unk18 = &unk90.unk0->unkF4;
+
+	GXSetPointSize(cb.unk4, GX_TO_ONE);
+	GXSetLineWidth(cb.unk4, GX_TO_ONE);
+	GXSetZMode(unk90.unk4->isEnableZCmp(), unk90.unk4->getZCmpFunction(),
+	           unk90.unk4->isEnableZCmpUpdate());
+	GXSetZCompLoc(unk90.unk4->getZCompLoc());
+	GXSetAlphaCompare(
+	    unk90.unk4->getAlphaCmpComp0(), unk90.unk4->getAlphaCmpRef0(),
+	    unk90.unk4->getAlphaCmpOp(), unk90.unk4->getAlphaCmpComp1(),
+	    unk90.unk4->getAlphaCmpRef1());
+
+	GXSetAlphaUpdate(unk90.unk4->isEnableAlphaUpdate());
+	GXSetColorUpdate(GX_TRUE);
+	GXSetCullMode(GX_CULL_NONE);
+	if ((unk90.unk4->isClipOn())) {
+		GXSetClipMode(GX_CLIP_ENABLE);
+		GXSetMisc(GX_MT_XF_FLUSH, 8);
+	} else {
+		GXSetClipMode(GX_CLIP_DISABLE);
+	}
+
+	for (int i = 0; i < unk89; ++i)
+		unk4[i]->exec(&unk90);
+
+	JSUList<JPABaseParticle>* particles = unk90.unk0->getParticleList();
+	if (unk90.unk4->getListOrder()) {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getFirst(); link; link = link->getNext()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8C; ++i)
+				unk34[i]->exec(&unk90, particle);
+		}
+	} else {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getLast(); link; link = link->getPrev()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8C; ++i)
+				unk34[i]->exec(&unk90, particle);
+		}
+	}
+
+	GXSetMisc(GX_MT_XF_FLUSH, 0);
+}
+
+void JPADraw::drawChild()
+{
+	unkC2 |= 0x2;
+	setChildClipBoard();
+	unk90.unk18 = &unk90.unk0->unk100;
+	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
+	GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
+
+	// TODO: figure out how to use JPADraw::loadTexture
+	if (unk90.unk4->textureIsEmpty()) {
+		unk90.unk1C->loadDefaultTexture(GX_TEXMAP0);
+	} else {
+		unk90.unk1C->load(unk90.unk20[unk90.unkC->getTextureIndex()],
+		                  GX_TEXMAP0);
+	}
+
+	GXSetZMode(unk90.unk4->isEnableZCmp(), unk90.unk4->getZCmpFunction(),
+	           unk90.unk4->isEnableZCmpUpdate());
+	GXSetZCompLoc(unk90.unk4->getZCompLoc());
+	GXSetAlphaCompare(
+	    unk90.unk4->getAlphaCmpComp0(), unk90.unk4->getAlphaCmpRef0(),
+	    unk90.unk4->getAlphaCmpOp(), unk90.unk4->getAlphaCmpComp1(),
+	    unk90.unk4->getAlphaCmpRef1());
+	GXSetAlphaUpdate(unk90.unk4->isEnableAlphaUpdate());
+	GXSetColorUpdate(GX_TRUE);
+	GXSetCullMode(GX_CULL_NONE);
+
+	if (unk90.unkC->isClipOn()) {
+		GXSetClipMode(GX_CLIP_ENABLE);
+		GXSetMisc(GX_MT_XF_FLUSH, 8);
+	} else {
+		GXSetClipMode(GX_CLIP_DISABLE);
+	}
+
+	for (int i = 0; i < unk8A; ++i)
+		unk18[i]->exec(&unk90);
+
+	JSUList<JPABaseParticle>* particles = unk90.unk0->getChildParticleList();
+	if (unk90.unk4->getListOrder()) {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getFirst(); link; link = link->getNext()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8E; ++i)
+				unk70[i]->exec(&unk90, particle);
+		}
+	} else {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getLast(); link; link = link->getPrev()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8E; ++i)
+				unk70[i]->exec(&unk90, particle);
+		}
+	}
+
+	GXSetMisc(GX_MT_XF_FLUSH, 0);
+}
+
+void JPADraw::zDraw()
+{
+	unkC2 |= 1;
+	if (unk90.unk4->getChildOrder() == 1 && unk90.unkC != nullptr)
+		zDrawChild();
+
+	zDrawParticle();
+
+	if (unk90.unk4->getChildOrder() == 0 && unk90.unkC != nullptr)
+		zDrawChild();
+}
+
+void JPADraw::zDrawParticle()
+{
+	unkC2 &= ~0x2;
+	setParticleClipBoard();
+	unk90.unk18 = unk90.unk0->getParticleList();
+
+	GXSetPointSize(cb.unk4, GX_TO_ONE);
+	GXSetLineWidth(cb.unk4, GX_TO_ONE);
+	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+	GXSetZCompLoc(GX_FALSE);
+
+	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk183, GX_AOP_OR, GX_GEQUAL,
+	                  unk90.unk0->unk183);
+	GXSetAlphaUpdate(GX_FALSE);
+	GXSetColorUpdate(GX_FALSE);
+	GXSetCullMode(GX_CULL_NONE);
+	if (unk90.unk4->isClipOn()) {
+		GXSetClipMode(GX_CLIP_ENABLE);
+		GXSetMisc(GX_MT_XF_FLUSH, 8);
+	} else {
+		GXSetClipMode(GX_CLIP_DISABLE);
+	}
+
+	for (int i = 0; i < unk89; ++i)
+		unk4[i]->exec(&unk90);
+
+	JSUList<JPABaseParticle>* particles = unk90.unk0->getParticleList();
+	if (unk90.unk4->getListOrder()) {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getFirst(); link; link = link->getNext()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8C; ++i)
+				unk34[i]->exec(&unk90, particle);
+		}
+	} else {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getLast(); link; link = link->getPrev()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8C; ++i)
+				unk34[i]->exec(&unk90, particle);
+		}
+	}
+
+	GXSetMisc(GX_MT_XF_FLUSH, 0);
+}
+
+void JPADraw::zDrawChild()
+{
+	unkC2 |= 0x2;
+	setChildClipBoard();
+	unk90.unk18 = unk90.unk0->getChildParticleList();
+	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
+	GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
+
+	// TODO: figure out how to use JPADraw::loadTexture
+	if (unk90.unk4->textureIsEmpty()) {
+		unk90.unk1C->loadDefaultTexture(GX_TEXMAP0);
+	} else {
+		unk90.unk1C->load(unk90.unk20[unk90.unkC->getTextureIndex()],
+		                  GX_TEXMAP0);
+	}
+
+	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+	GXSetZCompLoc(GX_FALSE);
+	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk183, GX_AOP_OR, GX_GEQUAL,
+	                  unk90.unk0->unk183);
+	GXSetAlphaUpdate(GX_FALSE);
+	GXSetColorUpdate(GX_FALSE);
+	GXSetCullMode(GX_CULL_NONE);
+
+	if (unk90.unkC->isClipOn()) {
+		GXSetClipMode(GX_CLIP_ENABLE);
+		GXSetMisc(GX_MT_XF_FLUSH, 8);
+	} else {
+		GXSetClipMode(GX_CLIP_DISABLE);
+	}
+
+	for (int i = 0; i < unk8A; ++i)
+		unk18[i]->exec(&unk90);
+
+	JSUList<JPABaseParticle>* particles = unk90.unk0->getChildParticleList();
+	if (unk90.unk4->getListOrder()) {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getFirst(); link; link = link->getNext()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8E; ++i)
+				unk70[i]->exec(&unk90, particle);
+		}
+	} else {
+		JSULink<JPABaseParticle>* link;
+		for (link = particles->getLast(); link; link = link->getPrev()) {
+			JPABaseParticle* particle = link->getObject();
+			for (int i = 0; i < unk8E; ++i)
+				unk70[i]->exec(&unk90, particle);
+		}
+	}
+
+	GXSetMisc(GX_MT_XF_FLUSH, 0);
+}
+
+u32 JPADraw::getMainTextureID(u8 i)
+{
+	u32 result = -1;
+	if (unk90.unk4->unk80 != 0) {
+		if (i < unk90.unk4->unk7E)
+			result = unk90.unk4->unk8[i];
+	} else {
+		if (i == 0)
+			result = unk90.unk4->unk7F;
+	}
+	return result;
+}
 
 void JPADraw::getIndTextureID() { }
 
@@ -824,4 +1138,26 @@ void JPADraw::getIndSubTextureID() { }
 
 void JPADraw::getSecondTextureID() { }
 
-void JPADraw::loadYBBMtx(MtxPtr) { }
+void JPADraw::loadYBBMtx(MtxPtr mtx)
+{
+	JGeometry::TVec3<f32> v;
+	v.set(0.0f, mtx[1][1], mtx[2][1]);
+	v.normalize();
+
+	cb.unk38[0][0] = 1.0f;
+	cb.unk38[0][1] = 0.0f;
+	cb.unk38[0][2] = 0.0f;
+	cb.unk38[0][3] = mtx[0][3];
+
+	cb.unk38[1][0] = 0.0f;
+	cb.unk38[1][1] = v.y;
+	cb.unk38[1][2] = -v.z;
+	cb.unk38[1][3] = mtx[1][3];
+
+	cb.unk38[2][0] = 0.0f;
+	cb.unk38[2][1] = v.z;
+	cb.unk38[2][2] = v.y;
+	cb.unk38[2][3] = mtx[2][3];
+
+	MTXIdentity(cb.unk68);
+}

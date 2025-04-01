@@ -114,7 +114,6 @@ public:
 
 class JPADraw {
 public:
-	// TODO: sizes might be WILDLY wrong
 	/* 0x00 */ JPADrawExecEmitterVisitor* unk0[1];
 	/* 0x04 */ JPADrawExecEmitterVisitor* unk4[5];
 	/* 0x18 */ JPADrawExecEmitterVisitor* unk18[3];
@@ -140,10 +139,10 @@ public:
 
 public:
 	struct JPADrawVisitorDefFlags {
-		/* 0x0 */ BOOL unk0;
-		/* 0x4 */ BOOL unk4;
-		/* 0x8 */ BOOL unk8;
-		/* 0xC */ BOOL unkC;
+		/* 0x00 */ BOOL unk0;
+		/* 0x04 */ BOOL unk4;
+		/* 0x08 */ BOOL unk8;
+		/* 0x0C */ BOOL unkC;
 		/* 0x10 */ BOOL unk10;
 		/* 0x14 */ BOOL unk14;
 	};
@@ -159,7 +158,7 @@ public:
 	void initParticle(JPABaseParticle*);
 	void initChild(JPABaseParticle*, JPABaseParticle*);
 	const ResTIMG* swapImage(const ResTIMG*, short);
-	void loadTexture(unsigned char, GXTexMapID);
+	void loadTexture(u8, GXTexMapID);
 	void setDrawExecVisitorsBeforeCB(const JPADraw::JPADrawVisitorDefFlags&);
 	void setDrawExecVisitorsAfterCB(const JPADraw::JPADrawVisitorDefFlags&);
 	void setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags&);
@@ -170,7 +169,7 @@ public:
 	void zDraw();
 	void zDrawParticle();
 	void zDrawChild();
-	void getMainTextureID(unsigned char);
+	u32 getMainTextureID(u8);
 	void getIndTextureID();
 	void getIndSubTextureID();
 	void getSecondTextureID();

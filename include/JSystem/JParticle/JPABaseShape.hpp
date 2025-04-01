@@ -16,8 +16,59 @@ public:
 	static GXCompare stCompare[];
 	static GXAlphaOp stAlphaOp[];
 
+	// Names from tww
+	GXCompare getAlphaCmpComp0() { return JPABaseShape::stCompare[unk71]; }
+	GXCompare getAlphaCmpComp1() { return JPABaseShape::stCompare[unk74]; }
+	GXAlphaOp getAlphaCmpOp() { return JPABaseShape::stAlphaOp[unk73]; }
+	u8 getAlphaCmpRef0() { return unk72; }
+	u8 getAlphaCmpRef1() { return unk75; }
+
+	GXBool isEnableAlphaUpdate() { return unk6C >> 3 & 1; }
+
+	GXBlendMode getBlendMode1() { return JPABaseShape::stBlendMode[unk6D]; }
+	GXBlendFactor getSrcBlendFactor1()
+	{
+		return JPABaseShape::stBlendFactor[unk6E];
+	}
+	GXBlendFactor getDstBlendFactor1()
+	{
+		return JPABaseShape::stBlendFactor[unk6F];
+	}
+	GXLogicOp getBlendOp1() { return JPABaseShape::stLogicOp[unk70]; }
+
+	GXBool isEnableZCmp() { return unk77; }
+	GXCompare getZCmpFunction() { return JPABaseShape::stCompare[unk78]; }
+	GXBool isEnableZCmpUpdate() { return unk79; }
+	GXBool getZCompLoc() { return unk76; }
+
+	u32 isClipOn() { return unk7C >> 2 & 1; }
+	u32 getListOrder() { return !(unk7C & 1); }
+	u8 getChildOrder() { return unk7C >> 1 & 1; }
+
+	u8 getType() { return unk69; }
+	u8 getDirType() { return unk6A; }
+	u8 getRotType() { return unk6B; }
+
+	f32 getTilingX() { return unk2C; }
+	f32 getTilingY() { return unk30; }
+
+	GXBool textureIsEmpty() { return unk81; }
+	BOOL isEnableTextureAnm() { return unk80; }
+	u8 getTextureIndex() { return unk7F; }
+	f32 getBaseSizeX() { return unk14; }
+	f32 getBaseSizeY() { return unk18; }
+
+	BOOL isEnablePrm() { return unk83 & 1; }
+	BOOL isEnablePrmAnm() { return unk83 & 2; }
+	BOOL isEnableEnv() { return unk84 & 1; }
+	BOOL isEnableEnvAnm() { return unk84 & 2; }
+	GXColor getPrmColor() { return unk60; }
+	GXColor getEnvColor() { return unk64; }
+
+	s16 getLoopOffset() { return unk58; }
+
 public:
-	/* 0x8 */ void* unk8;
+	/* 0x8 */ u8* unk8;
 	/* 0xC */ void* unkC;
 	/* 0x10 */ void* unk10;
 	/* 0x14 */ f32 unk14;
