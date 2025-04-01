@@ -10,6 +10,33 @@ public:
 	JPASweepShape(const u8*);
 	virtual ~JPASweepShape() { }
 
+	u8 getType() { return unk44; }
+	u8 getDirType() { return unk45; }
+	u8 getRotType() { return unk46; }
+	f32 getScaleX() { return unk14; }
+	f32 getScaleY() { return unk10; }
+	u8 getTextureIndex() { return unk4C; }
+	f32 getRotateSpeed() { return unk30; }
+
+	BOOL isClipOn() { return unk49 & 2; }
+	BOOL isEnableDrawParent() { return unk49 & 1; }
+	BOOL isEnableRotate() { return unk4D; }
+
+	BOOL isInheritedScale() { return unk4E & 1; }
+	f32 getInheritScale() { return unk28; }
+
+	BOOL isInheritedRGB() { return unk4E & 4; }
+	f32 getInheritRGB() { return unk34; }
+
+	BOOL isInheritedAlpha() { return unk4E & 2; }
+	f32 getInheritAlpha() { return unk2C; }
+
+	GXColor getPrm() { return unk38; }
+	GXColor getEnv() { return unk3C; }
+
+	u8 getPrmAlpha() { return unk38.a; }
+	u8 getEnvAlpha() { return unk3C.a; }
+
 public:
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;

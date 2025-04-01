@@ -13,6 +13,18 @@ public:
 
 	int registration(const u8*, JKRHeap*);
 
+	// from TWW
+	void load(u16 id, GXTexMapID texMap) { unk2C[id]->load(texMap); }
+	void loadDefaultTexture(GXTexMapID texMap) { unk0.load(texMap); }
+
+	// fabricated
+	const ResTIMG* swapImage(const ResTIMG* timg, u32 idx)
+	{
+		const ResTIMG* old = unk2C[idx]->unk8.getTexInfo();
+		unk2C[idx]->unk8.storeTIMG(timg);
+		return old;
+	}
+
 public:
 	/* 0x0 */ JPADefaultTexture unk0;
 	/* 0x24 */ u32 unk24;

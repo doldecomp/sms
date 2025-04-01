@@ -9,7 +9,7 @@ class JPAExTexShape;
 class JPADrawSetupTev {
 public:
 	void setupTev(JPABaseShape*, JPAExTexShape*);
-	~JPADrawSetupTev();
+	~JPADrawSetupTev() { }
 
 public:
 	/* 0x0 */ u8 unk0;

@@ -30,6 +30,9 @@ void rotTypeYJiggle(f32, f32, Mtx&);
 struct JPADrawContext {
 	static JPADrawClipBoard* pcb;
 
+	// fabricated
+	u16 getTexIdx(u8 i) { return unk20[i]; }
+
 	JPABaseEmitter* unk0;
 	JPABaseShape* unk4;
 	JPAExtraShape* unk8;
