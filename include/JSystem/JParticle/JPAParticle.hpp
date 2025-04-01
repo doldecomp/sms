@@ -82,9 +82,13 @@ public:
 
 	// from TWW
 	JSULink<JPABaseParticle>* getLinkBufferPtr() { return &unk0; }
+	void getGlobalPosition(JGeometry::TVec3<f32>& out) const { out.set(unk2C); }
+	void getLocalPosition(JGeometry::TVec3<f32>& out) const { out.set(unk20); }
 
 	// fabricated
 	bool checkFlag(u32 flag) const { return (unk10 & flag) ? true : false; }
+	s32 getAge() const { return unk44; } // TODO: name might be wrong
+	bool isInvisibleParticle() { return checkFlag(8); }
 };
 
 class JPAParticle : public JPABaseParticle {

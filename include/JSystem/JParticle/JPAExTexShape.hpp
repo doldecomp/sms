@@ -13,8 +13,13 @@ public:
 
 	// from tww
 	Offsets* getIndTexMtx() { return &unk8; }
-	s8 getExpScale() { return unk24; }
 	GXIndTexMtxID getIndTexMtxID() { return unk20; }
+	s8 getExpScale() { return unk24; }
+	u32 getIndTexMode() { return unk25; }
+	u8 getIndTextureID() { return unk26; }
+	u8 getSubTextureID() { return unk27; }
+	BOOL isEnableSecondTex() { return unk28 & 1; }
+	u8 getSecondTexIndex() { return unk29; }
 
 public:
 	/* 0x8 */ Offsets unk8;

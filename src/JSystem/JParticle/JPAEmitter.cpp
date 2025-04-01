@@ -13,7 +13,6 @@ JPAEmitterInfo* JPAGetEmitterInfoPtr() { return &JPAEmitterInfoObj; }
 
 JPABaseEmitter::JPABaseEmitter()
     : unk0(this)
-    , unk10(0.0f)
     , unk14(1.0f)
     , unk18(0.0f)
     , unk1C(1.0f)
@@ -366,7 +365,7 @@ bool JPABaseEmitter::checkMaxFrame()
 		return true;
 	}
 
-	if ((s32)unk10 >= unk1E8) {
+	if ((s32)unk10.getFrame() >= unk1E8) {
 		unk11C |= 8;
 
 		if (unk11C & 0x40)
@@ -466,13 +465,14 @@ void JPABaseEmitter::calcKeyFrameAnime()
 			++bitIdx;
 		} while (!stop);
 
-		f32 dVar9     = unk10;
+		f32 dVar9     = unk10.getFrame();
 		u8* animeData = (u8*)animeFrames[i]->unk4;
 		f32* frames   = (f32*)(animeData + 0x20);
 		u8 frameNum   = animeData[0x10];
 		u8 thing      = animeData[0x12];
 		if (thing ? true : false)
-			dVar9 -= (int)unk10 / ((int)frames[(frameNum - 1) * 4] + 1)
+			dVar9 -= (int)unk10.getFrame()
+			         / ((int)frames[(frameNum - 1) * 4] + 1)
 			         * ((int)frames[(frameNum - 1) * 4] + 1);
 
 		switch (bitIdx - 1) {
@@ -543,9 +543,7 @@ void JPABaseEmitter::calc()
 	if (!(unk11C & 2 ? true : false)) {
 		doParticle();
 		doChildParticle();
-		unk10 += unk14;
-		if (unk10 < 0.0f)
-			unk10 = 0.0f;
+		unk10.incFrame();
 	}
 }
 

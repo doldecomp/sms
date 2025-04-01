@@ -120,19 +120,19 @@ void JPADraw::draw(MtxPtr param_1)
 	               unk90.unk4->getSrcBlendFactor1(),
 	               unk90.unk4->getDstBlendFactor1(), unk90.unk4->getBlendOp1());
 
+	// TODO: fakematch
 	JPABaseEmitter* be = unk90.unk0;
 
-	cb.unk98 = be->unk180;
-	cb.unk99 = be->unk181;
-	cb.unk9A = be->unk182;
-	cb.unk9B = be->unk183;
+	cb.unk98.r = be->unk180.r;
+	cb.unk98.g = be->unk180.g;
+	cb.unk98.b = be->unk180.b;
+	cb.unk98.a = be->unk180.a;
 
-	// TODO: fakematch? These are probably structs...
-	be       = unk90.unk0;
-	cb.unk9C = be->unk184;
-	cb.unk9D = be->unk185;
-	cb.unk9E = be->unk186;
-	cb.unk9F = 0xff;
+	be         = unk90.unk0;
+	cb.unk9C.r = be->unk184;
+	cb.unk9C.g = be->unk185;
+	cb.unk9C.b = be->unk186;
+	cb.unk9C.a = 0xff;
 
 	// TODO: wut?!
 	cb.unk34 = (Mtx44*)param_1;
@@ -1030,8 +1030,8 @@ void JPADraw::zDrawParticle()
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
 
-	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk183, GX_AOP_OR, GX_GEQUAL,
-	                  unk90.unk0->unk183);
+	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk180.a, GX_AOP_OR, GX_GEQUAL,
+	                  unk90.unk0->unk180.a);
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1083,8 +1083,8 @@ void JPADraw::zDrawChild()
 
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
-	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk183, GX_AOP_OR, GX_GEQUAL,
-	                  unk90.unk0->unk183);
+	GXSetAlphaCompare(GX_GEQUAL, unk90.unk0->unk180.a, GX_AOP_OR, GX_GEQUAL,
+	                  unk90.unk0->unk180.a);
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);

@@ -64,13 +64,26 @@ public:
 	BOOL isEnableEnvAnm() { return unk84 & 2; }
 	GXColor getPrmColor() { return unk60; }
 	GXColor getEnvColor() { return unk64; }
+	GXColor getPrmColor(s16 i) { return unkC[i]; }
+	GXColor getEnvColor(s16 i) { return unk10[i]; }
 
 	s16 getLoopOffset() { return unk58; }
 
+	f32 getTexStaticTransX() { return unk1C; }
+	f32 getTexStaticTransY() { return unk24; }
+	f32 getTexStaticScaleX() { return unk20; }
+	f32 getTexStaticScaleY() { return unk28; }
+	f32 getTexScrollTransX() { return unk34; }
+	f32 getTexScrollTransY() { return unk3C; }
+	f32 getTexScrollScaleX() { return unk38; }
+	f32 getTexScrollScaleY() { return unk40; }
+
+	f32 getTexScrollRotate() { return unk44; }
+
 public:
 	/* 0x8 */ u8* unk8;
-	/* 0xC */ void* unkC;
-	/* 0x10 */ void* unk10;
+	/* 0xC */ GXColor* unkC;
+	/* 0x10 */ GXColor* unk10;
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ f32 unk1C;

@@ -159,7 +159,12 @@ public:
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
-	void negate();
+	void negate()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+	}
 
 	void scale(f32 scale)
 	{
