@@ -12,13 +12,14 @@ class MAnmSound;
 class JKRFileLoader;
 class TBGCheckData;
 class TLodAnm;
+class J3DModel;
 
 class TLiveActor : public TTakeActor {
 public:
 	virtual void receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
-	virtual void belongToGround() const;
-	virtual void getRootJointMtx() const;
+	virtual bool belongToGround() const;
+	virtual Mtx* getRootJointMtx() const;
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
@@ -47,7 +48,7 @@ public:
 	void perform(u32, JDrama::TGraphics*);
 	void load(JSUMemoryInputStream&);
 	void initLodAnm(const TLodAnmIndex*, int, f32);
-	void getModel() const;
+	J3DModel* getModel() const;
 	void calcRideMomentum();
 	void calcRidePos();
 	~TLiveActor();
@@ -80,10 +81,8 @@ public:
 	/* 0xC8 */ float unkC8;
 	/* 0xCC */ float unkCC;
 	/* 0xD0 */ TLodAnm* unkD0;
-	/* 0xD4 */ THitActor* unkD4;
-	/* 0xD8 */ float unkD8;
-	/* 0xDC */ float unkDC;
-	/* 0xE0 */ float unkE0;
+	/* 0xD4 */ TLiveActor* unkD4;
+	/* 0xD8 */ Vec unkD8;
 	/* 0xE4 */ float unkE4;
 	/* 0xE8 */ u8 unkE8;
 	/* 0xEC */ void* unkEC;

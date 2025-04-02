@@ -7,11 +7,14 @@ struct TLodAnmIndex { };
 
 class TLodAnm {
 public:
+	TLodAnm(TLiveActor*, const TLodAnmIndex*, int, float);
 	void execChangeLod();
 	void setBckAndBtpAnm(int);
 	void setBtpAnm_(int);
 	void setBckAnm_(int);
-	TLodAnm(TLiveActor*, const TLodAnmIndex*, int, float);
+
+public:
+	/* 0x0 */ char unk0[0x20];
 };
 
 #endif
