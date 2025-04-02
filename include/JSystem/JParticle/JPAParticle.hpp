@@ -17,7 +17,7 @@ struct JPADrawParams {
 	/* 0x18 */ char unk18[8];
 	/* 0x20 */ f32 unk20;
 	/* 0x24 */ f32 unk24;
-	/* 0x28 */ u32 unk28;
+	/* 0x28 */ s32 unk28;
 	/* 0x2C */ GXColor unk2C;
 	/* 0x30 */ GXColor unk30;
 	/* 0x34 */ u16 unk34;

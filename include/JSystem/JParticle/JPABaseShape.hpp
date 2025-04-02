@@ -55,6 +55,7 @@ public:
 	GXBool textureIsEmpty() { return unk81; }
 	BOOL isEnableTextureAnm() { return unk80; }
 	u8 getTextureIndex() { return unk7F; }
+	u8 getTextureIndex(u8 idx) { return unk8[idx]; }
 	f32 getBaseSizeX() { return unk14; }
 	f32 getBaseSizeY() { return unk18; }
 
@@ -79,6 +80,10 @@ public:
 	f32 getTexScrollScaleY() { return unk40; }
 
 	f32 getTexScrollRotate() { return unk44; }
+	s16 getColorRegAnmMaxFrm() { return unk5E; }
+	u8 getTextureAnmKeyNum() { return unk7E; }
+	s16 getColLoopOffset() { return unk5A; }
+	s16 getTexLoopOffset() { return unk5C; }
 
 public:
 	/* 0x8 */ u8* unk8;

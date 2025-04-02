@@ -2,6 +2,7 @@
 #define JPA_EXTRA_SHAPE_HPP
 
 #include <JSystem/JParticle/JPADataBlock.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class JPAExtraShape : public JPADataBlock {
 public:
@@ -18,6 +19,29 @@ public:
 	f32 getRotateRandomSpeed() { return unk68; }
 	f32 getRandomScale() { return unk34; }
 	f32 getAlphaWaveRandom() { return unk28; }
+	f32 getScaleInTiming() { return unk38; }
+
+	f32 getIncreaseRateX() { return unk50; }
+	f32 getIncreaseRateY() { return unk58; }
+	f32 getScaleInValueX() { return unk48; }
+	f32 getScaleInValueY() { return unk40; }
+	f32 getDecreaseRateX() { return unk54; }
+	f32 getDecreaseRateY() { return unk5C; }
+	f32 getScaleOutTiming() { return unk3C; }
+
+	s16 getAnmCycleX() { return unk76; }
+	s16 getAnmCycleY() { return unk74; }
+
+	f32 getAlphaInTiming() { return unk8; }
+	f32 getAlphaIncreaseRate() { return unk2C; }
+	f32 getAlphaInValue() { return unk10; }
+	f32 getAlphaOutTiming() { return unkC; }
+	f32 getAlphaBaseValue() { return unk14; }
+	f32 getAlphaDecreaseRate() { return unk30; }
+
+	f32 getAlphaWaveParam1() { return unk1C; }
+	f32 getAlphaWaveParam2() { return unk20; }
+	f32 getAlphaWaveParam3() { return unk24; }
 
 public:
 	/* 0x8 */ f32 unk8;

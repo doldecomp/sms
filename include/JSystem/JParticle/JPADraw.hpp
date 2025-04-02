@@ -32,7 +32,7 @@ public:
 	                         JGeometry::TVec3<f32>&);
 	/* 0xA4 */ void (*unkA4)(f32, f32, Mtx&);
 	/* 0xA8 */ f32 unkA8;
-	/* 0xAC */ u16 unkAC;
+	/* 0xAC */ s16 unkAC;
 };
 
 class JPADrawVisitorContainer {
