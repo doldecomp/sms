@@ -208,6 +208,8 @@ public:
 		z = other.z;
 	}
 
+	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
+
 	// fabricated
 	void setLength(f32 length) { setLength(*this, length); }
 	void normalize() { setLength(*this, 1.0f); }

@@ -5,9 +5,11 @@
 #include <JSystem/JParticle/JPAMath.hpp>
 #include <JSystem/JParticle/JPAParticle.hpp>
 #include <JSystem/JParticle/JPASweepShape.hpp>
+#include <JSystem/JParticle/JPAExtraShape.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
+#include <macros.h>
 
 JPADrawClipBoard* JPADrawContext::pcb;
 
@@ -120,20 +122,20 @@ void JPADrawExecGenIdtMtx::exec(const JPADrawContext*)
 	GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
 }
 
-void JPADrawExecSetTexMtx::exec(const JPADrawContext* pDC)
+void JPADrawExecSetTexMtx::exec(const JPADrawContext* dc)
 {
-	s32 tick    = pDC->unk0->unk10.getFrame();
-	f32 tilingX = 0.5f * pDC->unk4->getTilingX();
-	f32 tilingY = 0.5f * pDC->unk4->getTilingY();
-	f32 transX  = tick * pDC->unk4->getTexScrollTransX()
-	             + pDC->unk4->getTexStaticTransX();
-	f32 transY = tick * pDC->unk4->getTexScrollTransY()
-	             + pDC->unk4->getTexStaticTransY();
-	f32 scaleX = tick * pDC->unk4->getTexScrollScaleX()
-	             + pDC->unk4->getTexStaticScaleX();
-	f32 scaleY = tick * pDC->unk4->getTexScrollScaleY()
-	             + pDC->unk4->getTexStaticScaleY();
-	s32 angle = DEG_TO_RAD(tick * pDC->unk4->getTexScrollRotate());
+	s32 tick    = dc->unk0->unk10.getFrame();
+	f32 tilingX = 0.5f * dc->unk4->getTilingX();
+	f32 tilingY = 0.5f * dc->unk4->getTilingY();
+	f32 transX  = tick * dc->unk4->getTexScrollTransX()
+	             + dc->unk4->getTexStaticTransX();
+	f32 transY = tick * dc->unk4->getTexScrollTransY()
+	             + dc->unk4->getTexStaticTransY();
+	f32 scaleX = tick * dc->unk4->getTexScrollScaleX()
+	             + dc->unk4->getTexStaticScaleX();
+	f32 scaleY = tick * dc->unk4->getTexScrollScaleY()
+	             + dc->unk4->getTexStaticScaleY();
+	s32 angle = DEG_TO_RAD(tick * dc->unk4->getTexScrollRotate());
 	f32 sin   = JMASSin(angle);
 	f32 cos   = JMASCos(angle);
 
@@ -542,10 +544,125 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext*,
 {
 }
 void JPADrawExecDirBillBoard::exec(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawExecRotation::exec(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawExecRotationCross::exec(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawExecPoint::exec(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawExecLine::exec(const JPADrawContext*, JPABaseParticle*) { }
+
+void JPADrawExecRotation::exec(const JPADrawContext* dc,
+                               JPABaseParticle* particle)
+{
+}
+
+void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
+                                    JPABaseParticle* particle)
+{
+	if (particle->isInvisibleParticle())
+		return;
+
+	JPADrawParams* params = particle->getDrawParamPPtr();
+
+	f32 sin = JMASSin(params->unk34);
+	f32 cos = JMASCos(params->unk34);
+
+	f32 x0 = -params->unk10
+	         * (JPADrawContext::pcb->unk4 + JPADrawContext::pcb->unkC);
+	f32 y0 = +params->unk14
+	         * (JPADrawContext::pcb->unk8 + JPADrawContext::pcb->unk10);
+	f32 x1 = +params->unk10
+	         * (JPADrawContext::pcb->unk4 - JPADrawContext::pcb->unkC);
+	f32 y1 = -params->unk14
+	         * (JPADrawContext::pcb->unk8 - JPADrawContext::pcb->unk10);
+
+	Mtx rotMtx;
+	JGeometry::TVec3<f32> pt[8];
+
+	pt[0].set(x0, y0, 0.0f);
+	pt[1].set(x1, y0, 0.0f);
+	pt[2].set(x1, y1, 0.0f);
+	pt[3].set(x0, y1, 0.0f);
+
+	pt[4].set((pt[1].x + pt[0].x) * 0.5f, y0, (pt[1].x - pt[0].x) * 0.5f);
+	pt[5].set((pt[1].x + pt[0].x) * 0.5f, y0, (pt[0].x - pt[1].x) * 0.5f);
+	pt[6].set((pt[1].x + pt[0].x) * 0.5f, y1, (pt[0].x - pt[1].x) * 0.5f);
+	pt[7].set((pt[1].x + pt[0].x) * 0.5f, y1, (pt[1].x - pt[0].x) * 0.5f);
+
+	// TODO: inlines? more temps?
+	char trash[0x10];
+
+	JPADrawContext::pcb->unkA4(sin, cos, rotMtx);
+
+	MTXMultVecArray(rotMtx, pt, pt, ARRAY_COUNT(pt));
+	f32 x = particle->unk2C.x;
+	f32 y = particle->unk2C.y;
+	f32 z = particle->unk2C.z;
+
+	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
+	GXPosition3f32(pt[0].x + x, pt[0].y + y, pt[0].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[0].x,
+	               JPADrawContext::pcb->unk14[0].y);
+	GXPosition3f32(pt[1].x + x, pt[1].y + y, pt[1].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[1].x,
+	               JPADrawContext::pcb->unk14[1].y);
+	GXPosition3f32(pt[2].x + x, pt[2].y + y, pt[2].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[2].x,
+	               JPADrawContext::pcb->unk14[2].y);
+	GXPosition3f32(pt[3].x + x, pt[3].y + y, pt[3].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[3].x,
+	               JPADrawContext::pcb->unk14[3].y);
+	GXPosition3f32(pt[4].x + x, pt[4].y + y, pt[4].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[0].x,
+	               JPADrawContext::pcb->unk14[0].y);
+	GXPosition3f32(pt[5].x + x, pt[5].y + y, pt[5].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[1].x,
+	               JPADrawContext::pcb->unk14[1].y);
+	GXPosition3f32(pt[6].x + x, pt[6].y + y, pt[6].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[2].x,
+	               JPADrawContext::pcb->unk14[2].y);
+	GXPosition3f32(pt[7].x + x, pt[7].y + y, pt[7].z + z);
+	GXTexCoord2f32(JPADrawContext::pcb->unk14[3].x,
+	               JPADrawContext::pcb->unk14[3].y);
+	GXEnd();
+}
+
+void JPADrawExecPoint::exec(const JPADrawContext* dc, JPABaseParticle* particle)
+{
+	if (particle->isInvisibleParticle())
+		return;
+
+	JGeometry::TVec3<f32> pos;
+	particle->getGlobalPosition(pos);
+	GXBegin(GX_POINTS, GX_VTXFMT0, 1);
+	GXPosition3f32(pos.x, pos.y, pos.z);
+	GXTexCoord2f32(0.0f, 0.0f);
+	GXEnd();
+}
+
+void JPADrawExecLine::exec(const JPADrawContext*, JPABaseParticle* particle)
+{
+	if (particle->isInvisibleParticle())
+		return;
+
+	JGeometry::TVec3<f32> pt0;
+	JGeometry::TVec3<f32> vel;
+
+	particle->getGlobalPosition(pt0);
+	vel.set(particle->unk38);
+	if (!vel.isZero()) {
+		vel.normalize();
+
+		f32 size
+		    = JPADrawContext::pcb->unk8 * particle->getDrawParamPPtr()->unk14;
+		vel.scale(size);
+
+		JGeometry::TVec3<f32> pt1;
+		pt1.sub(pt0, vel);
+
+		GXBegin(GX_LINES, GX_VTXFMT0, 2);
+		GXPosition3f32(pt0.x, pt0.y, pt0.z);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition3f32(pt1.x, pt1.y, pt1.z);
+		GXTexCoord2f32(0.0f, 1.0f);
+		GXEnd();
+	}
+}
+
 JSULink<JPABaseParticle>* stripeGetNext(JSULink<JPABaseParticle>* link)
 {
 	return link->getNext();
@@ -620,22 +737,180 @@ void JPADrawCalcColorEnv::calc(const JPADrawContext* dc)
 	dc->unk14->unkBC = dc->unk4->getEnvColor(JPADrawContext::pcb->unkAC);
 }
 
-void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext*) { }
-void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext*) { }
-void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext*) { }
-void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext*) { }
-void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext*) { }
-void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext*) { }
-void JPADrawCalcTextureAnmIndexRepeat::calc(const JPADrawContext*) { }
-void JPADrawCalcTextureAnmIndexReverse::calc(const JPADrawContext*) { }
-void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext*) { }
-void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext*) { }
-void JPADrawExecCallBack::exec(const JPADrawContext*) { }
-void JPADrawExecCallBack::exec(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcScaleX::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcScaleY::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext*, JPABaseParticle*) { }
+void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc)
+{
+	s32 tick  = dc->unk0->unk10.getFrame();
+	s16 max   = dc->unk4->getColorRegAnmMaxFrm();
+	s32 frame = tick < max ? tick : max;
+
+	JPADrawContext::pcb->unkAC = frame;
+}
+
+void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc)
+{
+	f32 tick = dc->unk0->unk10.getFrame();
+	JPADrawContext::pcb->unkAC
+	    = ((u32)tick) % (dc->unk4->getColorRegAnmMaxFrm() + 1);
+}
+
+void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc)
+{
+	s32 tick     = dc->unk0->unk10.getFrame();
+	s32 maxFrame = dc->unk4->getColorRegAnmMaxFrm();
+	s32 odd   = (tick / maxFrame) & 1; // whether we're on an even or odd loop
+	s32 frame = tick % maxFrame;
+	JPADrawContext::pcb->unkAC = frame + (odd * maxFrame) - 2 * (odd * frame);
+}
+
+void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext*)
+{
+	JPADrawContext::pcb->unkAC = 0;
+}
+
+void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext*)
+{
+	JPADrawContext::pcb->unkAC = 0;
+}
+
+void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext* dc)
+{
+	s32 tick         = dc->unk0->unk10.getFrame();
+	u8 anmKeyNum     = dc->unk4->getTextureAnmKeyNum();
+	s32 idx          = ((anmKeyNum - 1) < tick) ? anmKeyNum - 1 : tick;
+	dc->unk14->unkC0 = dc->unk20[dc->unk4->getTextureIndex(idx)];
+}
+
+void JPADrawCalcTextureAnmIndexRepeat::calc(const JPADrawContext* dc)
+{
+	s32 tick         = dc->unk0->unk10.getFrame();
+	dc->unk14->unkC0 = dc->unk20[dc->unk4->getTextureIndex(
+	    tick % dc->unk4->getTextureAnmKeyNum())];
+}
+
+void JPADrawCalcTextureAnmIndexReverse::calc(const JPADrawContext* dc)
+{
+	s32 tick     = dc->unk0->unk10.getFrame();
+	s32 maxFrame = dc->unk4->getTextureAnmKeyNum() - 1;
+	s32 odd   = (tick / maxFrame) & 1; // whether we're on an even or odd loop
+	s32 frame = tick % maxFrame;
+	dc->unk14->unkC0 = dc->unk20[dc->unk4->getTextureIndex(
+	    frame + (odd * maxFrame) - 2 * (odd * frame))];
+}
+
+void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext* dc)
+{
+	dc->unk14->unkC0 = dc->unk4->getTextureIndex();
+}
+
+void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext* dc)
+{
+	dc->unk14->unkC0 = dc->unk4->getTextureIndex();
+}
+
+void JPADrawExecCallBack::exec(const JPADrawContext* dc)
+{
+	dc->unk0->drawEmitterCallBack();
+}
+
+void JPADrawExecCallBack::exec(const JPADrawContext* dc,
+                               JPABaseParticle* particle)
+{
+	particle->drawParticleCallBack(dc->unk0);
+}
+
+void JPADrawCalcScaleX::calc(const JPADrawContext* dc,
+                             JPABaseParticle* particle)
+{
+	JPADrawParams* params = particle->getDrawParamPPtr();
+
+	if (JPADrawContext::pcb->unkA8 < dc->unk8->getScaleInTiming()) {
+		params->unk10
+		    = params->unkC
+		      * ((dc->unk8->getIncreaseRateX() * JPADrawContext::pcb->unkA8)
+		         + dc->unk8->getScaleInValueX());
+	} else if (JPADrawContext::pcb->unkA8 > dc->unk8->getScaleOutTiming()) {
+		params->unk10 = params->unkC
+		                * ((dc->unk8->getDecreaseRateX()
+		                    * (JPADrawContext::pcb->unkA8
+		                       - dc->unk8->getScaleOutTiming()))
+		                   + 1.0f);
+	} else {
+		params->unk10 = params->unkC;
+	}
+}
+
+void JPADrawCalcScaleY::calc(const JPADrawContext* dc,
+                             JPABaseParticle* particle)
+{
+	JPADrawParams* params = particle->getDrawParamPPtr();
+
+	if (JPADrawContext::pcb->unkA8 < dc->unk8->getScaleInTiming()) {
+		params->unk14
+		    = params->unkC
+		      * ((dc->unk8->getIncreaseRateY() * JPADrawContext::pcb->unkA8)
+		         + dc->unk8->getScaleInValueY());
+	} else if (JPADrawContext::pcb->unkA8 > dc->unk8->getScaleOutTiming()) {
+		params->unk14 = params->unkC
+		                * ((dc->unk8->getDecreaseRateY()
+		                    * (JPADrawContext::pcb->unkA8
+		                       - dc->unk8->getScaleOutTiming()))
+		                   + 1.0f);
+	} else {
+		params->unk14 = params->unkC;
+	}
+}
+
+void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
+                                    JPABaseParticle* particle)
+{
+	JPADrawParams* params = particle->getDrawParamPPtr();
+
+	// TODO: fakematch
+	JGeometry::TVec3<f32> vel;
+	(Vec&)vel = (Vec&)particle->unk38;
+
+	if (JPADrawContext::pcb->unkA8 < dc->unk8->getScaleInTiming()) {
+		params->unk10
+		    = params->unkC
+		      * ((dc->unk8->getIncreaseRateX() * JPADrawContext::pcb->unkA8)
+		         + dc->unk8->getScaleInValueX());
+	} else if (JPADrawContext::pcb->unkA8 > dc->unk8->getScaleOutTiming()) {
+		params->unk10 = params->unkC
+		                * ((dc->unk8->getDecreaseRateX()
+		                    * (JPADrawContext::pcb->unkA8
+		                       - dc->unk8->getScaleOutTiming()))
+		                   + 1.0f);
+	} else {
+		params->unk10 = params->unkC;
+	}
+	params->unk10 *= vel.length() * 0.01f;
+}
+
+void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
+                                    JPABaseParticle* particle)
+{
+	JPADrawParams* params = particle->getDrawParamPPtr();
+
+	// TODO: fakematch
+	JGeometry::TVec3<f32> vel;
+	(Vec&)vel = (Vec&)particle->unk38;
+
+	if (JPADrawContext::pcb->unkA8 < dc->unk8->getScaleInTiming()) {
+		params->unk14
+		    = params->unkC
+		      * ((dc->unk8->getIncreaseRateY() * JPADrawContext::pcb->unkA8)
+		         + dc->unk8->getScaleInValueY());
+	} else if (JPADrawContext::pcb->unkA8 > dc->unk8->getScaleOutTiming()) {
+		params->unk14 = params->unkC
+		                * ((dc->unk8->getDecreaseRateY()
+		                    * (JPADrawContext::pcb->unkA8
+		                       - dc->unk8->getScaleOutTiming()))
+		                   + 1.0f);
+	} else {
+		params->unk14 = params->unkC;
+	}
+	params->unk14 *= vel.length() * 0.01f;
+}
 
 void JPADrawCalcScaleCopyX2Y::calc(const JPADrawContext*,
                                    JPABaseParticle* particle)
@@ -651,77 +926,252 @@ void JPADrawCalcScaleAnmTimingNormal::calc(const JPADrawContext*,
 	JPADrawContext::pcb->unkA8 = particle->unk48;
 }
 
-void JPADrawCalcScaleAnmTimingRepeatX::calc(const JPADrawContext*,
-                                            JPABaseParticle*)
+void JPADrawCalcScaleAnmTimingRepeatX::calc(const JPADrawContext* dc,
+                                            JPABaseParticle* particle)
 {
+	JPADrawContext::pcb->unkA8 = (particle->getAge() % dc->unk8->getAnmCycleX())
+	                             / (f32)dc->unk8->getAnmCycleX();
 }
-void JPADrawCalcScaleAnmTimingRepeatY::calc(const JPADrawContext*,
-                                            JPABaseParticle*)
+
+void JPADrawCalcScaleAnmTimingRepeatY::calc(const JPADrawContext* dc,
+                                            JPABaseParticle* particle)
 {
+	JPADrawContext::pcb->unkA8 = (particle->getAge() % dc->unk8->getAnmCycleY())
+	                             / (f32)dc->unk8->getAnmCycleY();
 }
-void JPADrawCalcScaleAnmTimingReverseX::calc(const JPADrawContext*,
-                                             JPABaseParticle*)
+
+void JPADrawCalcScaleAnmTimingReverseX::calc(const JPADrawContext* dc,
+                                             JPABaseParticle* particle)
 {
+	// whether we're on an even or odd loop
+	f32 odd   = (particle->getAge() / dc->unk8->getAnmCycleX()) & 1;
+	f32 frame = (f32)(particle->getAge() % dc->unk8->getAnmCycleX())
+	            / dc->unk8->getAnmCycleX();
+	JPADrawContext::pcb->unkA8 = odd + (frame - odd * 2.0f * frame);
 }
-void JPADrawCalcScaleAnmTimingReverseY::calc(const JPADrawContext*,
-                                             JPABaseParticle*)
+
+void JPADrawCalcScaleAnmTimingReverseY::calc(const JPADrawContext* dc,
+                                             JPABaseParticle* particle)
 {
+	// whether we're on an even or odd loop
+	f32 odd   = (particle->getAge() / dc->unk8->getAnmCycleY()) & 1;
+	f32 frame = (f32)(particle->getAge() % dc->unk8->getAnmCycleY())
+	            / dc->unk8->getAnmCycleY();
+	JPADrawContext::pcb->unkA8 = odd + (frame - odd * 2.0f * frame);
 }
-void JPADrawCalcColorPrm::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcColorEnv::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcColorCopyFromEmitter::calc(const JPADrawContext*,
-                                           JPABaseParticle*)
+
+void JPADrawCalcColorPrm::calc(const JPADrawContext* dc,
+                               JPABaseParticle* particle)
 {
+	particle->getDrawParamPPtr()->unk2C
+	    = dc->unk4->getPrmColor(JPADrawContext::pcb->unkAC);
 }
-void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext*,
-                                          JPABaseParticle*)
+
+void JPADrawCalcColorEnv::calc(const JPADrawContext* dc,
+                               JPABaseParticle* particle)
 {
+	particle->getDrawParamPPtr()->unk30
+	    = dc->unk4->getEnvColor(JPADrawContext::pcb->unkAC);
 }
-void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext*,
-                                          JPABaseParticle*)
+
+void JPADrawCalcColorCopyFromEmitter::calc(const JPADrawContext* dc,
+                                           JPABaseParticle* particle)
 {
+	particle->getDrawParamPPtr()->unk2C = dc->unk14->unkB8;
+	particle->getDrawParamPPtr()->unk30 = dc->unk14->unkBC;
 }
-void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext*,
-                                           JPABaseParticle*)
+
+void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc,
+                                          JPABaseParticle* particle)
 {
+	s32 frame = (particle->getAge() < dc->unk4->getColorRegAnmMaxFrm())
+	                ? particle->getAge()
+	                : dc->unk4->getColorRegAnmMaxFrm();
+	JPADrawContext::pcb->unkAC = frame;
 }
-void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext*,
-                                         JPABaseParticle*)
+
+void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc,
+                                          JPABaseParticle* particle)
 {
+	s32 frame
+	    = ((particle->getDrawParamPPtr()->unk28 & dc->unk4->getColLoopOffset())
+	       + particle->getAge())
+	      % (dc->unk4->getColorRegAnmMaxFrm() + 1);
+	JPADrawContext::pcb->unkAC = frame;
 }
-void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext*,
-                                          JPABaseParticle*)
+
+void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc,
+                                           JPABaseParticle* particle)
 {
+	s32 loopOffset
+	    = particle->getDrawParamPPtr()->unk28 & dc->unk4->getColLoopOffset();
+	s32 maxFrame = dc->unk4->getColorRegAnmMaxFrm();
+	s32 t        = loopOffset + particle->getAge();
+	s32 odd      = (t / maxFrame) & 1;
+	s32 frame    = t % maxFrame;
+
+	JPADrawContext::pcb->unkAC = frame + (odd * maxFrame) - 2 * (odd * frame);
 }
-void JPADrawCalcAlpha::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcAlphaFlickNrmSin::calc(const JPADrawContext*, JPABaseParticle*)
+
+void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext* dc,
+                                         JPABaseParticle* particle)
 {
+	s32 start
+	    = particle->getDrawParamPPtr()->unk28 & dc->unk4->getColLoopOffset();
+	s32 maxFrame = dc->unk4->getColorRegAnmMaxFrm() + 1;
+	s32 frame    = (s32)(start + maxFrame * particle->unk48) % maxFrame;
+	JPADrawContext::pcb->unkAC = frame;
 }
-void JPADrawCalcAlphaFlickAddSin::calc(const JPADrawContext*, JPABaseParticle*)
+
+void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc,
+                                          JPABaseParticle* particle)
 {
+	s32 frame
+	    = (particle->getDrawParamPPtr()->unk28 & dc->unk4->getColLoopOffset())
+	      % (dc->unk4->getColorRegAnmMaxFrm() + 1);
+	JPADrawContext::pcb->unkAC = frame;
 }
-void JPADrawCalcAlphaFlickMultSin::calc(const JPADrawContext*, JPABaseParticle*)
+
+void JPADrawCalcAlpha::calc(const JPADrawContext* dc, JPABaseParticle* particle)
 {
+	f32 time = particle->unk48;
+	f32 alpha;
+	if (time < dc->unk8->getAlphaInTiming()) {
+		alpha = time * dc->unk8->getAlphaIncreaseRate()
+		        + dc->unk8->getAlphaInValue();
+	} else if (time > dc->unk8->getAlphaOutTiming()) {
+		alpha = dc->unk8->getAlphaBaseValue()
+		        + dc->unk8->getAlphaDecreaseRate()
+		              * (time - dc->unk8->getAlphaOutTiming());
+	} else {
+		alpha = dc->unk8->getAlphaBaseValue();
+	}
+	particle->getDrawParamPPtr()->unk20 = alpha;
 }
-void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext*,
-                                            JPABaseParticle*)
+
+void JPADrawCalcAlphaFlickNrmSin::calc(const JPADrawContext* dc,
+                                       JPABaseParticle* particles)
 {
+	JPADrawParams* params = particles->getDrawParamPPtr();
+
+	f32 sin = JMASSin((particles->getAge() * 16384) * params->unk24
+	                  * (1.0f - dc->unk8->getAlphaWaveParam1()));
+	params->unk20
+	    *= params->unk24
+	           * (((sin - 1.0f) * 0.5f) * dc->unk8->getAlphaWaveParam3())
+	       + 1.0f;
+	if (params->unk20 < 0.0f)
+		params->unk20 = 0.0f;
 }
-void JPADrawCalcTextureAnmIndexRepeat::calc(const JPADrawContext*,
-                                            JPABaseParticle*)
+
+void JPADrawCalcAlphaFlickAddSin::calc(const JPADrawContext* dc,
+                                       JPABaseParticle* particles)
 {
+	JPADrawParams* params = particles->getDrawParamPPtr();
+
+	f32 theta = (particles->getAge() * 16384) * params->unk24;
+
+	// TODO: try to introduce temps without making this non-matching
+	params->unk20
+	    *= (params->unk24
+	            * ((((JMASSin(theta * (1.0f - dc->unk8->getAlphaWaveParam1()))
+	                  + JMASSin(theta
+	                            * (1.0f - dc->unk8->getAlphaWaveParam2())))
+	                 - 2.0f)
+	                * 0.5f)
+	               * dc->unk8->getAlphaWaveParam3())
+	        + 2.0f)
+	       * 0.5f;
+	if (params->unk20 < 0.0f)
+		params->unk20 = 0.0f;
 }
-void JPADrawCalcTextureAnmIndexReverse::calc(const JPADrawContext*,
-                                             JPABaseParticle*)
+
+void JPADrawCalcAlphaFlickMultSin::calc(const JPADrawContext* dc,
+                                        JPABaseParticle* particles)
 {
+	JPADrawParams* params = particles->getDrawParamPPtr();
+
+	f32 theta = (particles->getAge() * 16384) * params->unk24;
+	f32 mul3  = (dc->unk8->getAlphaWaveParam3() * 0.5f) * params->unk24;
+
+	// TODO: try to introduce temps without making this non-matching
+	params->unk20
+	    *= ((mul3
+	         * (JMASSin(theta * (1.0f - dc->unk8->getAlphaWaveParam1()))
+	            - 1.0f))
+	        + 1.0f)
+	       * ((mul3
+	           * (JMASSin(theta * (1.0f - dc->unk8->getAlphaWaveParam2()))
+	              - 1.0f))
+	          + 1.0f);
+	if (params->unk20 < 0.0f)
+		params->unk20 = 0.0f;
 }
-void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext*,
-                                           JPABaseParticle*)
+
+void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext* dc,
+                                            JPABaseParticle* particles)
 {
+	s32 idx = ((dc->unk4->getTextureAnmKeyNum() - 1) < (s32)particles->getAge())
+	              ? (dc->unk4->getTextureAnmKeyNum() - 1)
+	              : particles->getAge();
+	particles->getDrawParamPPtr()->unk3A
+	    = dc->unk20[dc->unk4->getTextureIndex(idx)];
 }
-void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext*,
-                                            JPABaseParticle*)
+
+void JPADrawCalcTextureAnmIndexRepeat::calc(const JPADrawContext* dc,
+                                            JPABaseParticle* particles)
 {
+	particles->getDrawParamPPtr()->unk3A = dc->unk20[dc->unk4->getTextureIndex(
+	    ((particles->getDrawParamPPtr()->unk28 & dc->unk4->getTexLoopOffset())
+	     + particles->getAge())
+	    % dc->unk4->getTextureAnmKeyNum())];
 }
-void JPADrawCalcChildAlphaOut::calc(const JPADrawContext*, JPABaseParticle*) { }
-void JPADrawCalcChildScaleOut::calc(const JPADrawContext*, JPABaseParticle*) { }
+
+void JPADrawCalcTextureAnmIndexReverse::calc(const JPADrawContext* dc,
+                                             JPABaseParticle* particles)
+{
+	s32 loopOffset
+	    = particles->getDrawParamPPtr()->unk28 & dc->unk4->getTexLoopOffset();
+	s32 maxFrame = dc->unk4->getTextureAnmKeyNum() - 1;
+	s32 t        = loopOffset + particles->getAge();
+	s32 odd      = (t / maxFrame) & 1;
+	s32 frame    = t % maxFrame;
+
+	particles->getDrawParamPPtr()->unk3A = dc->unk20[dc->unk4->getTextureIndex(
+	    frame + (odd * maxFrame) - 2 * (odd * frame))];
+}
+
+void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext* dc,
+                                           JPABaseParticle* particles)
+{
+	s32 maxFrame = dc->unk4->getTextureAnmKeyNum();
+	s32 start
+	    = particles->getDrawParamPPtr()->unk28 & dc->unk4->getTexLoopOffset();
+	s32 frame = (s32)(start + maxFrame * particles->unk48) % maxFrame;
+	particles->getDrawParamPPtr()->unk3A
+	    = dc->unk20[dc->unk4->getTextureIndex(frame)];
+}
+
+void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext* dc,
+                                            JPABaseParticle* particles)
+{
+	s32 start
+	    = particles->getDrawParamPPtr()->unk28 & dc->unk4->getTexLoopOffset();
+	particles->getDrawParamPPtr()->unk3A = dc->unk20[dc->unk4->getTextureIndex(
+	    start % dc->unk4->getTextureAnmKeyNum())];
+}
+
+void JPADrawCalcChildAlphaOut::calc(const JPADrawContext*,
+                                    JPABaseParticle* particles)
+{
+	particles->getDrawParamCPtr()->unk20 = 1.0f - particles->unk48;
+}
+
+void JPADrawCalcChildScaleOut::calc(const JPADrawContext*,
+                                    JPABaseParticle* particles)
+{
+	JPADrawParams* params = particles->getDrawParamCPtr();
+
+	params->unk10 = params->unkC * (1.0f - particles->unk48);
+	params->unk14 = params->unk24 * (1.0f - particles->unk48);
+}
