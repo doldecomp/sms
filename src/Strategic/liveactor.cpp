@@ -1,73 +1,12 @@
 #include <Strategic/LiveActor.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/LodAnm.hpp>
+#include <Map/MapData.hpp>
+#include <Map/Map.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
-void TLiveActor::stopAnmSound() { }
-
-void TLiveActor::getBasNameTable() const { }
-
-void TLiveActor::setCurAnmSound() { }
-
-void TLiveActor::setAnmSound(const char*) { }
-
-void TLiveActor::updateAnmSound() { }
-
-void TLiveActor::initAnmSound() { }
-
-MtxPtr TLiveActor::getTakingMtx() { }
-
-void TLiveActor::getFocalPoint() const { }
-
-void TLiveActor::getJointTransByIndex(int, JGeometry::TVec3<f32>*) const { }
-
-void TLiveActor::hasMapCollision() const { }
-
-void TLiveActor::getGravityY() const { }
-
-void TLiveActor::calcVelocityToJumpToY(const JGeometry::TVec3<f32>&, f32,
-                                       f32) const
-{
-}
-
-void TLiveActor::performOnlyDraw(u32, JDrama::TGraphics*) { }
-
-void TLiveActor::perform(u32, JDrama::TGraphics*) { }
-
-void TLiveActor::drawObject(JDrama::TGraphics*) { }
-
-void TLiveActor::requestShadow() { }
-
-void TLiveActor::moveObject() { }
-
-void TLiveActor::setGroundCollision() { }
-
-void TLiveActor::getShadowType() { }
-
-void TLiveActor::receiveMessage(THitActor*, u32) { }
-
-void TLiveActor::kill() { }
-
-void TLiveActor::calcRootMatrix() { }
-
-void TLiveActor::control() { }
-
-void TLiveActor::bind() { }
-
-void TLiveActor::load(JSUMemoryInputStream&) { }
-
-void TLiveActor::init(TLiveManager*) { }
-
-void TLiveActor::initLodAnm(const TLodAnmIndex*, int, f32) { }
-
-void TLiveActor::getRootJointMtx() const { }
-
-void TLiveActor::getModel() const { }
-
-void TLiveActor::calcRideMomentum() { }
-
-void TLiveActor::belongToGround() const { }
-
-void TLiveActor::calcRidePos() { }
-
-TLiveActor::~TLiveActor() { }
+void TLiveActor::getMActor() const { }
 
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
@@ -102,9 +41,89 @@ TLiveActor::TLiveActor(const char* name)
 	unkE8 = 1;
 	unkEC = nullptr;
 	unkF0 = 0x100;
-	unkE0 = 0.0;
-	unkDC = 0.0;
-	unkD8 = 0.0;
+
+	unkD8.x = unkD8.y = unkD8.z = 0.0;
 }
 
-void TLiveActor::getMActor() const { }
+TLiveActor::~TLiveActor() { }
+
+void TLiveActor::calcRidePos()
+{
+	if (!unkD4)
+		return;
+
+	Mtx mtx;
+	if (!unkD4->getRootJointMtx())
+		SMS_GetActorMtx(*unkD4, mtx);
+	else
+		MTXCopy(*unkD4->getRootJointMtx(), mtx);
+	MTXInverse(mtx, mtx);
+	MTXMultVec(mtx, &mPosition, &unkD8);
+}
+
+bool TLiveActor::belongToGround() const
+{
+	if (unkC4 && ((unkC4->unk4 & 0x10 ? true : false) == true ? false : true)
+	    && unkC4->unk44 != nullptr && !(unkF0 & 0x80 ? TRUE : FALSE))
+		return true;
+
+	return false;
+}
+
+void TLiveActor::calcRideMomentum() { }
+
+J3DModel* TLiveActor::getModel() const { return unk74->unk4; }
+
+Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
+
+void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
+                            f32 param_3)
+{
+	if (!unkD0)
+		unkD0 = new TLodAnm(this, param_1, param_2, param_3);
+}
+
+void TLiveActor::init(TLiveManager*) { }
+
+void TLiveActor::load(JSUMemoryInputStream& stream)
+{
+	char str[256];
+
+	JDrama::TActor::load(stream);
+	stream.readString(str, 256);
+	JDrama::TNameRef* ref
+	    = JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(str);
+	unkC4 = TMap::getIllegalCheckData();
+
+	TLiveManager* casted = (TLiveManager*)ref;
+	init(casted);
+}
+
+void TLiveActor::bind() { }
+
+void TLiveActor::control() { }
+void TLiveActor::calcRootMatrix() { }
+void TLiveActor::kill() { }
+void TLiveActor::receiveMessage(THitActor*, u32) { }
+void TLiveActor::getShadowType() { }
+void TLiveActor::setGroundCollision() { }
+void TLiveActor::moveObject() { }
+void TLiveActor::requestShadow() { }
+void TLiveActor::drawObject(JDrama::TGraphics*) { }
+void TLiveActor::perform(u32, JDrama::TGraphics*) { }
+void TLiveActor::performOnlyDraw(u32, JDrama::TGraphics*) { }
+void TLiveActor::calcVelocityToJumpToY(const JGeometry::TVec3<f32>&, f32,
+                                       f32) const
+{
+}
+void TLiveActor::getGravityY() const { }
+void TLiveActor::hasMapCollision() const { }
+void TLiveActor::getJointTransByIndex(int, JGeometry::TVec3<f32>*) const { }
+void TLiveActor::getFocalPoint() const { }
+MtxPtr TLiveActor::getTakingMtx() { }
+void TLiveActor::initAnmSound() { }
+void TLiveActor::updateAnmSound() { }
+void TLiveActor::setAnmSound(const char*) { }
+void TLiveActor::setCurAnmSound() { }
+void TLiveActor::getBasNameTable() const { }
+void TLiveActor::stopAnmSound() { }
