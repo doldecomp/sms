@@ -109,11 +109,6 @@ struct UnkStructUnk58 {
 	float unk14;
 };
 
-class TLiveActor {
-public:
-	struct J3DModel* getModel() const;
-};
-
 struct UnkStruct44 {
 	char filler0[0x4C];
 	int unk4C;
