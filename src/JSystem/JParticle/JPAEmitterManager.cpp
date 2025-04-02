@@ -88,19 +88,20 @@ void JPAEmitterManager::calcBase(u8 param_1)
 	if (!unk44[param_1].getNumLinks())
 		return;
 
-	JSUListIterator<JPABaseEmitter> it = unk44[param_1].getFirst();
-	while (it != unk44[param_1].getEnd()) {
-		JSUListIterator<JPABaseEmitter> next = it.mLink->getNext();
-		JPABaseEmitter* emitter              = it.getObject();
+	JSULink<JPABaseEmitter>* link = unk44[param_1].getFirst();
+	while (link) {
+		JSULink<JPABaseEmitter>* next = link->getNext();
+		JPABaseEmitter* emitter       = link->getObject();
 		if (!emitter->checkStartFrame())
 			continue;
 		if (emitter->checkMaxFrame() != 0
-		    && emitter->unkF4.getNumLinks() + emitter->unk100.getNumLinks()
+		    && emitter->unkF4.getNumLinks()
+		               + emitter->getChildParticleList()->getNumLinks()
 		           == 0)
 			deleteEmitter(emitter);
 		else
 			emitter->calc();
-		it = next;
+		link = next;
 	}
 	unk3C += unk40;
 	if (unk3C < 0.0f)

@@ -116,9 +116,11 @@ public:
 	f32 getRandomF() { return unk21C.get_ufloat_1(); }
 	f32 getRandomRF() { return unk21C.get_ufloat_1() * 2.0f - 1.0f; }
 	f32 getRandomSF() { return unk21C.get_ufloat_1() - 0.5f; }
+	JPADataBlockLinkInfo* getEmitterDataBlockInfoPtr() const { return unk118; }
 
 	// fabricated
 	JPAFieldManager* getFieldManager() { return &unk20; }
+	u32 getUnk172() { return unk172; }
 
 public:
 	/* 0x0 */ JSULink<JPABaseEmitter> unk0;

@@ -55,6 +55,9 @@ struct JPADataBlockLinkInfo {
 	{
 	}
 
+	JPASweepShape* getSweepShape() { return unkC; }
+
+public:
 	/* 0x0 */ JPADataBlock* unk0;
 	/* 0x4 */ JPABaseShape* unk4;
 	/* 0x8 */ JPAExtraShape* unk8;
