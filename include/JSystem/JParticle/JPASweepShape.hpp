@@ -37,6 +37,9 @@ public:
 	u8 getPrmAlpha() { return unk38.a; }
 	u8 getEnvAlpha() { return unk3C.a; }
 
+	f32 getTiming() { return unk18; }
+	s32 getStep() { return unk47; }
+
 public:
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;

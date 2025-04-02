@@ -125,17 +125,20 @@ bool JPAParticle::checkCreateChildParticle()
 	bool result          = false;
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	if (info->unk0->unk172) {
-		f32 fVar3;
+	if (info->unk0->getUnk172()) {
+		f32 time;
 		if (unk4C > 1.0f)
-			fVar3 = unk44 / (unk4C - 1.0f);
+			time = unk44 / (unk4C - 1.0f);
 		else
-			fVar3 = 1.0f;
+			time = 1.0f;
 
-		JPASweepShape* sweepShape = info->unk0->unk118->unkC;
-		if (fVar3 >= sweepShape->unk18) {
-			if ((int)sweepShape->unk47 > 0) {
-				if ((int)unk44 % (sweepShape->unk47 + 1) == 0)
+		JPASweepShape* sweepShape
+		    = info->unk0->getEmitterDataBlockInfoPtr()->getSweepShape();
+		if (time >= sweepShape->getTiming()) {
+			if (sweepShape->getStep() > 0) {
+				f32 frame = unk44;
+				s32 step  = sweepShape->getStep() + 1;
+				if ((int)frame % step == 0)
 					result = true;
 			} else {
 				result = true;

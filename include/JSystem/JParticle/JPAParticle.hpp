@@ -2,6 +2,7 @@
 #define JPA_PARTICLE_HPP
 
 #include <JSystem/JParticle/JPACallback.hpp>
+#include <JSystem/JParticle/JPADraw.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <dolphin/gx/GXStruct.h>
@@ -117,8 +118,8 @@ public:
 	virtual JGeometry::TVec3<f32>& accessFAccVec() { return unk94; }
 	virtual void getBaseVelVec(JGeometry::TVec3<float>&) const;
 	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return unk5C; }
-	virtual void setBaseVelVec(const JGeometry::TVec3<float>&);
-	virtual void addBaseVelVec(const JGeometry::TVec3<float>&);
+	virtual void setBaseVelVec(const JGeometry::TVec3<float>&) { }
+	virtual void addBaseVelVec(const JGeometry::TVec3<float>&) { }
 
 	virtual f32 getDynamicsWeight() const { return unk74; }
 	virtual f32 getAirResistance() const { return unk7C; }
@@ -128,8 +129,8 @@ public:
 	virtual JPADrawParams* getDrawParamPPtr() { return &unkA0; }
 	virtual JPADrawParams* getDrawParamCPtr() { return &unkA0; }
 
-	virtual f32 getWidth() { return unkA0.unk10 * 2.0f; }
-	virtual f32 getHeight() { return unkA0.unk14 * 2.0f; }
+	virtual f32 getWidth() { return unkA0.unk10 * 2.0f * JPADraw::cb.unk4; }
+	virtual f32 getHeight() { return unkA0.unk14 * 2.0f * JPADraw::cb.unk8; }
 };
 
 #endif
