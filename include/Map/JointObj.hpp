@@ -1,7 +1,10 @@
 #ifndef JOINT_OBJ_HPP
 #define JOINT_OBJ_HPP
 
+#include <dolphin/types.h>
+
 class J3DJoint;
+class J3DShape;
 
 class TJointObj {
 public:
@@ -16,7 +19,21 @@ public:
 	virtual void kill();
 	virtual void sleep();
 	virtual void sit();
-	virtual void newJointObj() const;
+	virtual TJointObj* newJointObj() const { return new TJointObj; }
+
+	// fabricated
+	bool checkFlag(u32 flag) { return mFlags & flag ? true : false; }
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
+
+public:
+	/* 0x4 */ u32 mIndexInParent;
+	/* 0x4 */ u32 mFlags;
+	/* 0xC */ J3DJoint* mJoint;
+	/* 0x10 */ int mChildrenNum;
+	/* 0x14 */ TJointObj** mChildren;
+	/* 0x18 */ int mShapeNum;
+	/* 0x1C */ J3DShape** mShapes;
 };
 
 #endif

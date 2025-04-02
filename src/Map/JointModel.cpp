@@ -1,9 +1,5 @@
 #include <Map/JointModel.hpp>
 
-void TJointModel::getJ3DModelDataFlag() const { }
-
-void TJointObj::newJointObj() const { }
-
 TJointModel::TJointModel() { }
 
 void TJointModel::initJointModel(TJointModelManager*, const char*,
