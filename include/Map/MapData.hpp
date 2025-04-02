@@ -4,8 +4,25 @@
 #include <JSystem/JGeometry.hpp>
 
 class TTakeActor;
+class JSUMemoryInputStream;
 
-struct TBGCheckData {
+class TBGCheckData {
+public:
+	TBGCheckData();
+
+	void getNormal() const;
+	void isIllegalData() const;
+	void getActiveJumpPower() const;
+	void getPlaneType();
+	void setVertex(const JGeometry::TVec3<float>&,
+	               const JGeometry::TVec3<float>&,
+	               const JGeometry::TVec3<float>&);
+	void updateTrans(const JGeometry::TVec3<float>&);
+	void isWaterSlip() const;
+	void isMarioThrough() const;
+	void isWaterSurface() const;
+
+public:
 	/* 0x0 */ s16 unk0;
 	/* 0x2 */ s16 unk2;
 	/* 0x4 */ u16 unk4;
@@ -26,19 +43,6 @@ struct TBGCheckData {
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ TTakeActor* unk44;
 
-	TBGCheckData();
-
-	void getNormal() const;
-	void isIllegalData() const;
-	void getActiveJumpPower() const;
-	void getPlaneType();
-	void setVertex(const JGeometry::TVec3<float>&,
-	               const JGeometry::TVec3<float>&,
-	               const JGeometry::TVec3<float>&);
-	void updateTrans(const JGeometry::TVec3<float>&);
-	void isWaterSlip() const;
-	void isMarioThrough() const;
-	void isWaterSurface() const;
 };
 
 #endif

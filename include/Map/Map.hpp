@@ -1,14 +1,13 @@
 #ifndef MAP_MAP_HPP
 #define MAP_MAP_HPP
 
-#include <JSystem/JDrama/JDRGraphics.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 
 class TBGCheckData;
-class JSUMemoryInputStream;
 struct TBGWallCheckRecord;
 
-struct TMap {
-
+class TMap : public JDrama::TViewObj {
+public:
 	~TMap();
 	TMap(const char*);
 
@@ -16,7 +15,7 @@ struct TMap {
 	void loadAfter();
 	void perform(u32, JDrama::TGraphics*);
 	void changeModel(s16) const;
-	void checkGround(f32, f32, f32, const TBGCheckData**) const;
+	f32 checkGround(f32, f32, f32, const TBGCheckData**) const;
 	void checkGround(const JGeometry::TVec3<f32>&, const TBGCheckData**) const;
 	void checkGroundExactY(const JGeometry::TVec3<f32>&,
 	                       const TBGCheckData**) const;

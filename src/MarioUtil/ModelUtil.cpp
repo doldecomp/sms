@@ -9,6 +9,7 @@
 #include <dolphin/mtx.h>
 #include <MarioUtil/MtxUtil.hpp>
 #include <Map/Map.hpp>
+#include <Map/MapData.hpp>
 #include <System/Application.hpp>
 
 TMultiBtk::TMultiBtk(int param_1, J3DModelData* param_2)

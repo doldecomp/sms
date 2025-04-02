@@ -4,7 +4,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
 
-struct TBGCheckData;
+class TBGCheckData;
 class J3DNode;
 class J3DModel;
 class MActorAnmData;
