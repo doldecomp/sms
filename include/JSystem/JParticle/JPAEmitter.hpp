@@ -111,15 +111,21 @@ public:
 	// from tww
 	JSULink<JPABaseEmitter>* getLinkBufferPtr() { return &unk0; }
 	u8 getGroupID() { return unk173; }
-	JSUList<JPABaseParticle>* getParticleList() { return &unkF4; }
-	JSUList<JPABaseParticle>* getChildParticleList() { return &unk100; }
-	f32 getRandomF() { return unk21C.get_ufloat_1(); }
-	f32 getRandomRF() { return unk21C.get_ufloat_1() * 2.0f - 1.0f; }
-	f32 getRandomSF() { return unk21C.get_ufloat_1() - 0.5f; }
-	JPADataBlockLinkInfo* getEmitterDataBlockInfoPtr() const { return unk118; }
+	JSUList<JPABaseParticle>* getParticleList() { return &mParticleList; }
+	JSUList<JPABaseParticle>* getChildParticleList()
+	{
+		return &mChildParticleList;
+	}
+	f32 getRandomF() { return mRng.get_ufloat_1(); }
+	f32 getRandomRF() { return mRng.get_ufloat_1() * 2.0f - 1.0f; }
+	f32 getRandomSF() { return mRng.get_ufloat_1() - 0.5f; }
+	JPADataBlockLinkInfo* getEmitterDataBlockInfoPtr() const
+	{
+		return mEmitterDataBlockInfo;
+	}
 
 	// fabricated
-	JPAFieldManager* getFieldManager() { return &unk20; }
+	JPAFieldManager* getFieldManager() { return &mFieldManager; }
 	u32 getUnk172() { return unk172; }
 
 public:
@@ -128,14 +134,14 @@ public:
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ JPAFieldManager unk20;
-	/* 0x30 */ JPADraw unk30;
-	/* 0xF4 */ JSUList<JPABaseParticle> unkF4;
-	/* 0x100 */ JSUList<JPABaseParticle> unk100;
+	/* 0x20 */ JPAFieldManager mFieldManager;
+	/* 0x30 */ JPADraw mDraw;
+	/* 0xF4 */ JSUList<JPABaseParticle> mParticleList;
+	/* 0x100 */ JSUList<JPABaseParticle> mChildParticleList;
 	/* 0x10C */ JPAEmitterManager* unk10C;
 	/* 0x110 */ JPACallBackBase<JPABaseEmitter*>* unk110;
 	/* 0x114 */ JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* unk114;
-	/* 0x118 */ JPADataBlockLinkInfo* unk118;
+	/* 0x118 */ JPADataBlockLinkInfo* mEmitterDataBlockInfo;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ char unk120[4];
 	/* 0x124 */ Mtx unk124;
@@ -191,7 +197,7 @@ public:
 	/* 0x208 */ f32 unk208;
 	/* 0x20C */ f32 unk20C;
 	/* 0x210 */ JGeometry::TVec3<f32> unk210;
-	/* 0x21C */ JMath::TRandom_fast_ unk21C;
+	/* 0x21C */ JMath::TRandom_fast_ mRng;
 };
 
 #endif

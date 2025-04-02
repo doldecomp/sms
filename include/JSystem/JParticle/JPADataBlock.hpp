@@ -10,7 +10,7 @@ public:
 	virtual ~JPADataBlock() { }
 
 public:
-	/* 0x4 */ void* unk4;
+	/* 0x4 */ void* mRawData;
 };
 
 #endif

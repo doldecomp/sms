@@ -12,12 +12,12 @@ JPABaseParticle::~JPABaseParticle() { }
 
 void JPABaseParticle::initBase()
 {
-	unk10   = 0;
-	unk20.z = 0.0f;
-	unk20.y = 0.0f;
-	unk20.x = 0.0f;
-	unk44   = 0.0f;
-	unk50   = nullptr;
+	unk10            = 0;
+	mLocalPosition.z = 0.0f;
+	mLocalPosition.y = 0.0f;
+	mLocalPosition.x = 0.0f;
+	unk44            = 0.0f;
+	unk50            = nullptr;
 }
 
 void JPABaseParticle::incTimer()
@@ -55,39 +55,42 @@ void JPAParticle::init()
 {
 	initBase();
 
-	unk78   = 0.0f;
-	unk80   = 1.0f;
-	unk84   = 1.0f;
-	unk94.z = 0.0f;
-	unk94.y = 0.0f;
-	unk94.x = 0.0f;
+	unk78             = 0.0f;
+	mDragForce        = 1.0f;
+	mCurrentDragForce = 1.0f;
+	mAcceleration.z   = 0.0f;
+	mAcceleration.y   = 0.0f;
+	mAcceleration.x   = 0.0f;
 }
 
 void JPAParticle::setVelocity()
 {
 	JPAGetEmitterInfoPtr();
-	unk88.add(unk94);
-	unk38.x = unk84 * (unk5C.x + unk88.x) * unk74;
-	unk38.y = unk84 * (unk5C.y + unk88.y) * unk74;
-	unk38.z = unk84 * (unk5C.z + unk88.z) * unk74;
+	mVelocity.add(mAcceleration);
+	unk38.x
+	    = mCurrentDragForce * (mBaseVelocity.x + mVelocity.x) * mDynamicsWeight;
+	unk38.y
+	    = mCurrentDragForce * (mBaseVelocity.y + mVelocity.y) * mDynamicsWeight;
+	unk38.z
+	    = mCurrentDragForce * (mBaseVelocity.z + mVelocity.z) * mDynamicsWeight;
 }
 
 void JPAParticle::calcVelocity()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	unk88.x = unk88.y = unk88.z = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	if (checkFlag(0x20))
 		unk14 = info->unk24;
 
 	if (unk78 != 0.0f)
-		unk5C.scaleAdd(unk78, unk5C, unk68);
+		mBaseVelocity.scaleAdd(unk78, mBaseVelocity, unk68);
 
 	if (!checkFlag(0x40))
 		info->unk4->affectField(this);
 
-	if (unk7C < 1.0f)
-		unk5C.scale(unk7C);
+	if (mAirResistance < 1.0f)
+		mBaseVelocity.scale(mAirResistance);
 
 	setVelocity();
 }
@@ -96,14 +99,14 @@ void JPABaseParticle::initGlobalPosition()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	unk2C.x = unk20.x * info->unkC.x + unk14.x;
-	unk2C.y = unk20.y * info->unkC.y + unk14.y;
-	unk2C.z = unk20.z * info->unkC.z + unk14.z;
+	mGlobalPosition.x = mLocalPosition.x * info->unkC.x + unk14.x;
+	mGlobalPosition.y = mLocalPosition.y * info->unkC.y + unk14.y;
+	mGlobalPosition.z = mLocalPosition.z * info->unkC.z + unk14.z;
 }
 
 void JPABaseParticle::calcGlobalPosition()
 {
-	unk20.add(unk38);
+	mLocalPosition.add(unk38);
 	initGlobalPosition();
 }
 
@@ -111,9 +114,9 @@ void JPABaseParticle::getCurrentPosition(JGeometry::TVec3<f32>& result)
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	result.x = info->unkC.x * (unk20.x + unk38.x) + unk14.x;
-	result.y = info->unkC.y * (unk20.y + unk38.y) + unk14.y;
-	result.z = info->unkC.z * (unk20.z + unk38.z) + unk14.z;
+	result.x = info->unkC.x * (mLocalPosition.x + unk38.x) + unk14.x;
+	result.y = info->unkC.y * (mLocalPosition.y + unk38.y) + unk14.y;
+	result.z = info->unkC.z * (mLocalPosition.z + unk38.z) + unk14.z;
 }
 
 void JPABaseParticle::getCurrentPositionX() { }

@@ -4,7 +4,7 @@
 
 JPATexture::JPATexture(const u8* data, JKRHeap* heap)
     : JPADataBlock(data, heap)
-    , unk8((ResTIMG*)((u8*)unk4 + 0x20), 0)
+    , unk8((ResTIMG*)((u8*)mRawData + 0x20), 0)
 {
 }
 

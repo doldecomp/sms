@@ -31,17 +31,17 @@ struct JPADrawContext {
 	static JPADrawClipBoard* pcb;
 
 	// fabricated
-	u16 getTexIdx(u8 i) { return unk20[i]; }
+	u16 getTexIdx(u8 i) { return mTexIndices[i]; }
 
-	JPABaseEmitter* unk0;
-	JPABaseShape* unk4;
-	JPAExtraShape* unk8;
-	JPASweepShape* unkC;
-	JPAExTexShape* unk10;
+	JPABaseEmitter* mBaseEmitter;
+	JPABaseShape* mBaseShape;
+	JPAExtraShape* mExtraShape;
+	JPASweepShape* mSweepShape;
+	JPAExTexShape* mExTexShape;
 	JPADraw* unk14;
 	JSUList<JPABaseParticle>* unk18;
-	JPATextureResource* unk1C;
-	u16* unk20;
+	JPATextureResource* mTexResource;
+	u16* mTexIndices;
 };
 
 // ================ Exec callbacks ================

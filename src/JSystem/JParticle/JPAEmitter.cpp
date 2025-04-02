@@ -16,7 +16,7 @@ JPABaseEmitter::JPABaseEmitter()
     , unk14(1.0f)
     , unk18(0.0f)
     , unk1C(1.0f)
-    , unk21C(0)
+    , mRng(0)
 {
 	PSMTXIdentity(unk124);
 
@@ -40,14 +40,14 @@ JPABaseEmitter::JPABaseEmitter()
 	unk1BC = 0.0f;
 	unk1C0 = 1.0f;
 
-	unk110 = nullptr;
-	unk114 = nullptr;
-	unk118 = nullptr;
+	unk110                = nullptr;
+	unk114                = nullptr;
+	mEmitterDataBlockInfo = nullptr;
 
 	unk172 = 0;
 	unk11C = 0;
 	unk11C |= 0x30;
-	unk21C.value = JPAEmitterInfoObj.unk8.next();
+	mRng.value = JPAEmitterInfoObj.unk8.next();
 }
 
 f32 JPABaseEmitter::getFovy() { return JPAEmitterInfoObj.unk15C; }
@@ -71,7 +71,7 @@ void JPABaseEmitter::deleteAllParticle()
 	JSUList<JPABaseParticle>* list;
 	JSULink<JPABaseParticle>* it;
 
-	list = &unkF4;
+	list = &mParticleList;
 	it   = list->getFirst();
 	while (it) {
 		JSULink<JPABaseParticle>* next = it->getNext();
@@ -79,7 +79,7 @@ void JPABaseEmitter::deleteAllParticle()
 		it = next;
 	}
 
-	list = &unk100;
+	list = &mChildParticleList;
 	it   = list->getFirst();
 	while (it) {
 		JPABaseParticle* particle = it->getObject();
@@ -95,7 +95,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 
 	JGeometry::TVec3<f32> local_c0(0.0f, 0.0f, 0.0f);
 
-	JPASweepShape* sweepShape = unk118->unkC;
+	JPASweepShape* sweepShape = mEmitterDataBlockInfo->unkC;
 	int count                 = sweepShape->unk42;
 
 	bool bVar1 = false;
@@ -112,7 +112,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		JPAParticle* particle = (JPAParticle*)baseParticle;
 
 		baseParticle->unk10 |= 0x1;
-		unk100.prepend(baseParticle->getLinkBufferPtr());
+		mChildParticleList.prepend(baseParticle->getLinkBufferPtr());
 
 		baseParticle->unk10 |= 0x4;
 		baseParticle->unk48 = 0.0f;
@@ -122,11 +122,11 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		if (bVar1) {
 			baseParticle->unk10 |= 0x40;
 		} else {
-			particle->unk80 = parent->getDragForce();
-			particle->unk84 = parent->getCurrentDragForce();
+			particle->mDragForce        = parent->getDragForce();
+			particle->mCurrentDragForce = parent->getCurrentDragForce();
 		}
 
-		particle->unk88 = local_c0;
+		particle->mVelocity = local_c0;
 
 		f32 sweepShapeUnk1C = sweepShape->unk1C;
 		if (sweepShapeUnk1C != 0.0f) {
@@ -135,16 +135,16 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			JGeometry::TVec3<f32> fVel;
 			fVel.scale(sweepShapeUnk1C, parent->accessFVelVec());
 			baseParticle->setBaseVelVec(baseVel);
-			particle->unk94 = fVel;
+			particle->mAcceleration = fVel;
 		} else {
 			baseParticle->setBaseVelVec(local_c0);
-			particle->unk94 = local_c0;
+			particle->mAcceleration = local_c0;
 		}
 
 		if (sweepShape->unkC != 0.0f) {
-			JGeometry::TVec3<f32> vec(unk21C.get_ufloat_1() - 0.5f,
-			                          unk21C.get_ufloat_1() - 0.5f,
-			                          unk21C.get_ufloat_1() - 0.5f);
+			JGeometry::TVec3<f32> vec(mRng.get_ufloat_1() - 0.5f,
+			                          mRng.get_ufloat_1() - 0.5f,
+			                          mRng.get_ufloat_1() - 0.5f);
 			vec.setLength(vec, sweepShape->unk20);
 			baseParticle->addBaseVelVec(vec);
 		}
@@ -153,28 +153,28 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		particle->unk68.y = -1.0f;
 		particle->unk68.z = 0.0f;
 
-		particle->unk78 = sweepShape->unk24;
-		particle->unk7C = parent->getAirResistance();
-		particle->unk74 = parent->getDynamicsWeight();
+		particle->unk78           = sweepShape->unk24;
+		particle->mAirResistance  = parent->getAirResistance();
+		particle->mDynamicsWeight = parent->getDynamicsWeight();
 		baseParticle->setVelocity();
 
 		if (unk188 & 0x10 ? true : false)
 			baseParticle->unk10 |= 0x20;
 
-		baseParticle->unk14 = parentUnk14;
-		baseParticle->unk20 = parentUnk20;
+		baseParticle->unk14          = parentUnk14;
+		baseParticle->mLocalPosition = parentUnk20;
 
 		f32 sweepShapeUnk8 = sweepShape->unk8;
 		if (sweepShapeUnk8 != 0.0f) {
 			Mtx rotMtx;
-			JPAGetXYRotateMtx(unk21C.get(), unk21C.get(), rotMtx);
+			JPAGetXYRotateMtx(mRng.get(), mRng.get(), rotMtx);
 			JGeometry::TVec3<f32> vec(0.0f, 0.0f,
-			                          unk21C.get_ufloat_1() * sweepShapeUnk8);
+			                          mRng.get_ufloat_1() * sweepShapeUnk8);
 			MTXMultVec(rotMtx, vec, vec);
-			baseParticle->unk20.add(vec);
+			baseParticle->mLocalPosition.add(vec);
 		}
 
-		unk30.initChild(parent, baseParticle);
+		mDraw.initChild(parent, baseParticle);
 		baseParticle->unk54 = parent->unk54;
 	}
 }
@@ -198,8 +198,9 @@ void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
-	JPAEmitterInfoObj.unk4 = &unk20;
-	if (unk118->unkC == nullptr || unk118->unkC->unk48 == 0)
+	JPAEmitterInfoObj.unk4 = &mFieldManager;
+	if (mEmitterDataBlockInfo->unkC == nullptr
+	    || mEmitterDataBlockInfo->unkC->unk48 == 0)
 		JPAEmitterInfoObj.unk17F = 0;
 	else
 		JPAEmitterInfoObj.unk17F = 1;
@@ -277,7 +278,8 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 
 void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 {
-	JSUMemoryInputStream stream(block->unk4, *(u32*)((u8*)block->unk4 + 4));
+	JSUMemoryInputStream stream(block->mRawData,
+	                            *(u32*)((u8*)block->mRawData + 4));
 	stream.skip(0xC);
 	stream.read(&unk190, 0xC);
 	stream.read(&unk19C, 0xC);
@@ -379,7 +381,7 @@ void JPABaseEmitter::doParticle()
 {
 	JSUList<JPABaseParticle>* list = getParticleList();
 
-	JSULink<JPABaseParticle>* link = unkF4.getFirst();
+	JSULink<JPABaseParticle>* link = mParticleList.getFirst();
 	while (link) {
 		JPABaseParticle* particle      = link->getObject();
 		JSULink<JPABaseParticle>* next = link->getNext();
@@ -389,7 +391,7 @@ void JPABaseEmitter::doParticle()
 			particle->calcVelocity();
 			particle->executeParticleCallBack(this);
 			if (!particle->checkFlag(2)) {
-				unk30.calcParticle(particle);
+				mDraw.calcParticle(particle);
 				if (particle->checkCreateChildParticle())
 					createChildParticle(particle);
 				particle->calcGlobalPosition();
@@ -410,7 +412,7 @@ void JPABaseEmitter::doChildParticle()
 {
 	JSUList<JPABaseParticle>* list = getChildParticleList();
 
-	JSULink<JPABaseParticle>* link = unk100.getFirst();
+	JSULink<JPABaseParticle>* link = mChildParticleList.getFirst();
 	while (link) {
 		JPABaseParticle* particle      = link->getObject();
 		JSULink<JPABaseParticle>* next = link->getNext();
@@ -421,7 +423,7 @@ void JPABaseEmitter::doChildParticle()
 				particle->calcVelocity();
 			particle->executeParticleCallBack(this);
 			if (!particle->checkFlag(2)) {
-				unk30.calcChild(particle);
+				mDraw.calcChild(particle);
 				particle->calcGlobalPosition();
 			}
 		} else {
@@ -446,12 +448,12 @@ void JPABaseEmitter::calcKeyFrameAnime()
 	u32 bitIdx;
 	u32 uVar8;
 
-	uVar8 = unk118->unk22;
+	uVar8 = mEmitterDataBlockInfo->unk22;
 	if (!uVar8)
 		return;
 
 	flags       = unk18C;
-	animeFrames = unk118->unk14;
+	animeFrames = mEmitterDataBlockInfo->unk14;
 	bit         = 1;
 	bitIdx      = 0;
 
@@ -466,7 +468,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 		} while (!stop);
 
 		f32 dVar9     = unk10.getFrame();
-		u8* animeData = (u8*)animeFrames[i]->unk4;
+		u8* animeData = (u8*)animeFrames[i]->mRawData;
 		f32* frames   = (f32*)(animeData + 0x20);
 		u8 frameNum   = animeData[0x10];
 		u8 thing      = animeData[0x12];
@@ -531,8 +533,8 @@ void JPABaseEmitter::calc()
 
 	if (!(unk11C & 2 ? true : false)) {
 		calcEmitterGlobalParams();
-		unk30.calc();
-		unk20.calcFieldParams();
+		mDraw.calc();
+		mFieldManager.calcFieldParams();
 		if (!(unk11C & 8 ? true : false))
 			calcCreateParticle();
 	}

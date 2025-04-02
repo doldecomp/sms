@@ -32,8 +32,8 @@ public:
 	/* 0x0 */ JSULink<JPABaseParticle> unk0;
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ JGeometry::TVec3<f32> unk14;
-	/* 0x20 */ JGeometry::TVec3<f32> unk20;
-	/* 0x2C */ JGeometry::TVec3<f32> unk2C;
+	/* 0x20 */ JGeometry::TVec3<f32> mLocalPosition;
+	/* 0x2C */ JGeometry::TVec3<f32> mGlobalPosition;
 	/* 0x38 */ JGeometry::TVec3<f32> unk38;
 	/* 0x44 */ f32 unk44;
 	/* 0x48 */ f32 unk48;
@@ -83,8 +83,14 @@ public:
 
 	// from TWW
 	JSULink<JPABaseParticle>* getLinkBufferPtr() { return &unk0; }
-	void getGlobalPosition(JGeometry::TVec3<f32>& out) const { out.set(unk2C); }
-	void getLocalPosition(JGeometry::TVec3<f32>& out) const { out.set(unk20); }
+	void getGlobalPosition(JGeometry::TVec3<f32>& out) const
+	{
+		out.set(mGlobalPosition);
+	}
+	void getLocalPosition(JGeometry::TVec3<f32>& out) const
+	{
+		out.set(mLocalPosition);
+	}
 
 	// fabricated
 	bool checkFlag(u32 flag) const { return (unk10 & flag) ? true : false; }
@@ -94,16 +100,16 @@ public:
 
 class JPAParticle : public JPABaseParticle {
 public:
-	/* 0x5C */ JGeometry::TVec3<f32> unk5C;
+	/* 0x5C */ JGeometry::TVec3<f32> mBaseVelocity;
 	/* 0x68 */ JGeometry::TVec3<f32> unk68;
-	/* 0x74 */ f32 unk74;
+	/* 0x74 */ f32 mDynamicsWeight;
 	/* 0x78 */ f32 unk78;
-	/* 0x7C */ f32 unk7C;
-	/* 0x80 */ f32 unk80;
-	/* 0x84 */ f32 unk84;
-	/* 0x88 */ JGeometry::TVec3<f32> unk88;
-	/* 0x94 */ JGeometry::TVec3<f32> unk94;
-	/* 0xA0 */ JPADrawParams unkA0;
+	/* 0x7C */ f32 mAirResistance;
+	/* 0x80 */ f32 mDragForce;
+	/* 0x84 */ f32 mCurrentDragForce;
+	/* 0x88 */ JGeometry::TVec3<f32> mVelocity;
+	/* 0x94 */ JGeometry::TVec3<f32> mAcceleration;
+	/* 0xA0 */ JPADrawParams mDrawParams;
 
 public:
 	JPAParticle();
@@ -114,23 +120,35 @@ public:
 	virtual void setVelocity();
 	virtual bool checkCreateChildParticle();
 
-	virtual JGeometry::TVec3<f32>& accessFVelVec() { return unk88; }
-	virtual JGeometry::TVec3<f32>& accessFAccVec() { return unk94; }
+	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mVelocity; }
+	virtual JGeometry::TVec3<f32>& accessFAccVec() { return mAcceleration; }
 	virtual void getBaseVelVec(JGeometry::TVec3<float>&) const;
-	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return unk5C; }
-	virtual void setBaseVelVec(const JGeometry::TVec3<float>&) { }
-	virtual void addBaseVelVec(const JGeometry::TVec3<float>&) { }
+	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return mBaseVelocity; }
+	virtual void setBaseVelVec(const JGeometry::TVec3<float>& v)
+	{
+		mBaseVelocity.set(v);
+	}
+	virtual void addBaseVelVec(const JGeometry::TVec3<float>& v)
+	{
+		mBaseVelocity.add(v);
+	}
 
-	virtual f32 getDynamicsWeight() const { return unk74; }
-	virtual f32 getAirResistance() const { return unk7C; }
-	virtual f32 getCurrentDragForce() const { return unk84; }
-	virtual f32 getDragForce() const { return unk80; }
+	virtual f32 getDynamicsWeight() const { return mDynamicsWeight; }
+	virtual f32 getAirResistance() const { return mAirResistance; }
+	virtual f32 getCurrentDragForce() const { return mCurrentDragForce; }
+	virtual f32 getDragForce() const { return mDragForce; }
 
-	virtual JPADrawParams* getDrawParamPPtr() { return &unkA0; }
-	virtual JPADrawParams* getDrawParamCPtr() { return &unkA0; }
+	virtual JPADrawParams* getDrawParamPPtr() { return &mDrawParams; }
+	virtual JPADrawParams* getDrawParamCPtr() { return &mDrawParams; }
 
-	virtual f32 getWidth() { return unkA0.unk10 * 2.0f * JPADraw::cb.unk4; }
-	virtual f32 getHeight() { return unkA0.unk14 * 2.0f * JPADraw::cb.unk8; }
+	virtual f32 getWidth()
+	{
+		return mDrawParams.unk10 * 2.0f * JPADraw::cb.unk4;
+	}
+	virtual f32 getHeight()
+	{
+		return mDrawParams.unk14 * 2.0f * JPADraw::cb.unk8;
+	}
 };
 
 #endif

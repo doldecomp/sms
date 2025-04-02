@@ -95,7 +95,7 @@ void JPAEmitterManager::calcBase(u8 param_1)
 		if (!emitter->checkStartFrame())
 			continue;
 		if (emitter->checkMaxFrame() != 0
-		    && emitter->unkF4.getNumLinks()
+		    && emitter->mParticleList.getNumLinks()
 		               + emitter->getChildParticleList()->getNumLinks()
 		           == 0)
 			deleteEmitter(emitter);
@@ -126,7 +126,7 @@ void JPAEmitterManager::drawBase(JPADrawInfo* info, u8 i)
 	JSUListIterator<JPABaseEmitter> it = unk44[i].getFirst();
 	for (; it != unk44[i].getEnd(); ++it) {
 		if (!((it->unk11C & 4) ? true : false))
-			it->unk30.draw(info->getCameraMtxPtr());
+			it->mDraw.draw(info->getCameraMtxPtr());
 	}
 }
 
@@ -178,32 +178,32 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		}
 
 		if (emitter) {
-			emitter->unk173     = param_2;
-			emitter->unk10C     = this;
-			emitter->unk180.r   = 0xff;
-			emitter->unk180.g   = 0xff;
-			emitter->unk180.b   = 0xff;
-			emitter->unk184     = 0xff;
-			emitter->unk185     = 0xff;
-			emitter->unk186     = 0xff;
-			emitter->unk180.a   = 0xff;
-			emitter->unk20.unkC = &unk28;
+			emitter->unk173             = param_2;
+			emitter->unk10C             = this;
+			emitter->unk180.r           = 0xff;
+			emitter->unk180.g           = 0xff;
+			emitter->unk180.b           = 0xff;
+			emitter->unk184             = 0xff;
+			emitter->unk185             = 0xff;
+			emitter->unk186             = 0xff;
+			emitter->unk180.a           = 0xff;
+			emitter->mFieldManager.unkC = &unk28;
 
 			int count             = linkInfo->unk20;
 			JPADataBlock** blocks = linkInfo->unk18;
 			for (int i = 0; i < count; ++i) {
 				JPADataBlock* block2 = blocks[i];
-				JPABaseField* field
-				    = emitter->unk20.setField(((u8*)block2->unk4)[0xC]);
+				JPABaseField* field  = emitter->mFieldManager.setField(
+                    ((u8*)block2->mRawData)[0xC]);
 				if (field)
 					field->loadFieldBlock(block2);
 			}
-			emitter->unk118 = linkInfo;
+			emitter->mEmitterDataBlockInfo = linkInfo;
 			if (linkInfo->unkC)
 				emitter->unk172 = 1;
 
 			emitter->calcCurrentRateTimerStep();
-			emitter->unk30.initialize(emitter, unkA4[param_3]->unk8);
+			emitter->mDraw.initialize(emitter, unkA4[param_3]->unk8);
 			emitter->unk110 = param_4;
 			emitter->unk114 = param_5;
 			return emitter;
