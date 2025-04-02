@@ -262,7 +262,7 @@ template <typename T> struct SMatrix44C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
-	SMatrix34C() { }
+	SMatrix34C();
 
 	void set(f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 

@@ -88,13 +88,13 @@ void JPABaseField::calcFieldVelocity(JPAParticle* particle)
 
 	switch (unk52) {
 	case 0:
-		particle->unk94.add(local_14);
+		particle->mAcceleration.add(local_14);
 		break;
 	case 1:
 		particle->addBaseVelVec(local_14);
 		break;
 	case 2:
-		particle->unk88.add(local_14);
+		particle->mVelocity.add(local_14);
 		break;
 	}
 }
@@ -105,7 +105,8 @@ void JPABaseField::affect(JPAParticle* particle)
 }
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
-	JSUMemoryInputStream streamImpl(block->unk4, *(u32*)((u8*)block->unk4 + 4));
+	JSUMemoryInputStream streamImpl(block->mRawData,
+	                                *(u32*)((u8*)block->mRawData + 4));
 	JSUInputStream& stream = streamImpl; // TODO: fakematch?
 
 	stream.skip(0xC);
@@ -169,9 +170,9 @@ void JPAAirField::affect(JPAParticle* particle)
 	if (checkFlag(0x1)) {
 		JGeometry::TVec3<f32> diff;
 		if (!checkFlag(0x2))
-			diff.sub(particle->unk20, unk58);
+			diff.sub(particle->mLocalPosition, unk58);
 		else
-			diff.sub(particle->unk2C, unk58);
+			diff.sub(particle->mGlobalPosition, unk58);
 
 		diff.normalize();
 		if (unk64.x <= unk70.dot(diff))
@@ -205,9 +206,9 @@ void JPAMagnetField::set()
 void JPAMagnetField::affect(JPAParticle* particle)
 {
 	if (!checkFlag(0x2))
-		unk7C.sub(unk58, particle->unk20);
+		unk7C.sub(unk58, particle->mLocalPosition);
 	else
-		unk7C.sub(unk58, particle->unk2C);
+		unk7C.sub(unk58, particle->mGlobalPosition);
 
 	unk7C.setLength(unk10);
 	calcFieldVelocity(particle);
@@ -228,9 +229,9 @@ void JPANewtonField::set()
 void JPANewtonField::affect(JPAParticle* particle)
 {
 	if (!checkFlag(0x2))
-		unk7C.sub(unk58, particle->unk20);
+		unk7C.sub(unk58, particle->mLocalPosition);
 	else
-		unk7C.sub(unk58, particle->unk2C);
+		unk7C.sub(unk58, particle->mGlobalPosition);
 
 	if (checkFlag(0x100)) {
 		unk7C.setLength(unk10);
@@ -259,7 +260,7 @@ void JPAVortexField::set()
 }
 void JPAVortexField::affect(JPAParticle* particle)
 {
-	JGeometry::TVec3<f32> thing  = particle->unk20;
+	JGeometry::TVec3<f32> thing  = particle->mLocalPosition;
 	JGeometry::TVec3<f32> thing2 = unk58;
 
 	f32 dot = thing.dot(thing2);
@@ -317,7 +318,7 @@ void JPAConvectionField::affect(JPAParticle* particle)
 {
 	bool bVar13                 = false;
 	bool bVar12                 = false;
-	JGeometry::TVec3<f32> thing = particle->unk20;
+	JGeometry::TVec3<f32> thing = particle->mLocalPosition;
 	if (unk64.x == 0.0f && unk64.y == 1.0f) {
 		bVar12 = true;
 	}
@@ -439,7 +440,7 @@ void JPAFieldManager::calcFieldParams()
 
 void JPAFieldManager::affectField(JPAParticle* particle)
 {
-	JGeometry::TVec3<f32>& particlePos = particle->unk2C;
+	JGeometry::TVec3<f32>& particlePos = particle->mGlobalPosition;
 	JSUListIterator<JPABaseField> it;
 	JPABaseField* field;
 

@@ -97,26 +97,26 @@ static GXColor* makeColorTable(JPAColorRegAnmKey* param_1, int param_2,
 
 JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 {
-	unk18 = *(f32*)(data + 0x18);
-	unk14 = *(f32*)(data + 0x1c);
-	unk58 = *(s16*)(data + 0x20);
-	unk69 = data[0x24];
-	unk6A = data[0x25];
-	unk6B = data[0x26];
+	mBaseSizeY  = *(f32*)(data + 0x18);
+	mBaseSizeX  = *(f32*)(data + 0x1c);
+	mLoopOffset = *(s16*)(data + 0x20);
+	mType       = data[0x24];
+	mDirType    = data[0x25];
+	mRotType    = data[0x26];
 
-	u8 r5 = data[0x22];
-	u8 r6 = data[0x23];
-	unk5A = (r5 & 1) ? 0xffff : 0;
-	unk5C = (r6 & 1) ? 0xffff : 0;
+	u8 r5          = data[0x22];
+	u8 r6          = data[0x23];
+	mColLoopOffset = (r5 & 1) ? 0xffff : 0;
+	mTexLoopOffset = (r6 & 1) ? 0xffff : 0;
 
 	// TODO: something awful is happening here (no inlines involved?!)
 	u8 r5_3 = true;
 	u8 r5_2 = 1;
-	if (!(r5 & 2) && unk69 != 5) {
+	if (!(r5 & 2) && mType != 5) {
 		r5_3 = false;
 	}
 
-	if (!r5_3 && (unk69 != 6)) {
+	if (!r5_3 && (mType != 6)) {
 		r5_2 = 0;
 	}
 
@@ -126,11 +126,11 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	u8 r4;
 	r5_4 = true;
 	r4   = 1;
-	if (!(r6 & 2) && unk69 != 5) {
+	if (!(r6 & 2) && mType != 5) {
 		r5_4 = false;
 	}
 
-	if (!r5_4 && (unk69 != 6)) {
+	if (!r5_4 && (mType != 6)) {
 		r4 = 0;
 	}
 
@@ -177,69 +177,70 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 		break;
 	}
 
-	unk6C = data[0x31];
-	unk6D = data[0x35];
-	unk6E = data[0x36];
-	unk6F = data[0x37];
-	unk70 = data[0x38];
-	unk71 = data[0x39];
-	unk72 = data[0x3a];
-	unk73 = data[0x3b];
-	unk74 = data[0x3c];
-	unk75 = data[0x3d];
-	unk76 = !(data[0x3e] >> 1 & 1);
-	unk77 = data[0x3f];
-	unk78 = data[0x40];
-	unk79 = data[0x41];
-	unk7A = data[0x42];
-	unk7B = data[0x43];
-	unk7C = data[0x44];
-	unk7D = data[0x4d];
-	unk7E = data[0x4e];
-	unk7F = data[0x4f];
-	unk80 = (data[0x4c] & 1) && unk7E != 0 ? 1 : 0;
-	unk81 = (data[0x4c] & 2) ? 0 : 1;
-	unk5E = *(s16*)(data + 0x5c);
-	unk82 = data[0x5e];
-	unk83 = data[0x60];
-	unk84 = data[0x61];
-	unk85 = data[0x62];
-	unk86 = data[99];
-	unk60 = *(GXColor*)(data + 100);
-	unk64 = *(GXColor*)(data + 0x68);
-	unk1C = JPAConvertFixToFloat(*(s16*)(data + 0x80)) * 10.0f;
-	unk20 = JPAConvertFixToFloat(*(s16*)(data + 0x82)) * 10.0f;
-	unk24 = JPAConvertFixToFloat(*(s16*)(data + 0x84)) * 10.0f;
-	unk28 = JPAConvertFixToFloat(*(s16*)(data + 0x86)) * 10.0f;
-	unk2C = JPAConvertFixToFloat(*(s16*)(data + 0x88)) * 10.0f;
-	unk30 = JPAConvertFixToFloat(*(s16*)(data + 0x8a)) * 10.0f;
-	unk34 = JPAConvertFixToFloat(*(s16*)(data + 0x8c));
-	unk38 = JPAConvertFixToFloat(*(s16*)(data + 0x8e));
+	unk6C                 = data[0x31];
+	mBlendMode1Index      = data[0x35];
+	mSrcBlendFactor1Index = data[0x36];
+	mDstBlendFactor1Index = data[0x37];
+	mBlendOp1Index        = data[0x38];
+	mAlphaCmpComp0Index   = data[0x39];
+	mAlphaCmpRef0         = data[0x3a];
+	mAlphaCmpOpIndex      = data[0x3b];
+	mAlphaCmpComp1Index   = data[0x3c];
+	mAlphaCmpRef1         = data[0x3d];
+	mZCompLoc             = !(data[0x3e] >> 1 & 1);
+	unk77                 = data[0x3f];
+	mZCmpFunctionIndex    = data[0x40];
+	unk79                 = data[0x41];
+	unk7A                 = data[0x42];
+	unk7B                 = data[0x43];
+	mFlags                = data[0x44];
+	unk7D                 = data[0x4d];
+	mTextureAnmKeyNum     = data[0x4e];
+	mTextureIndex         = data[0x4f];
+	unk80                 = (data[0x4c] & 1) && mTextureAnmKeyNum != 0 ? 1 : 0;
+	unk81                 = (data[0x4c] & 2) ? 0 : 1;
+	mColorRegAnmMaxFrm    = *(s16*)(data + 0x5c);
+	unk82                 = data[0x5e];
+	unk83                 = data[0x60];
+	unk84                 = data[0x61];
+	unk85                 = data[0x62];
+	unk86                 = data[99];
+	mPrmColor             = *(GXColor*)(data + 100);
+	mEnvColor             = *(GXColor*)(data + 0x68);
+	mTexStaticTransX      = JPAConvertFixToFloat(*(s16*)(data + 0x80)) * 10.0f;
+	mTexStaticScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x82)) * 10.0f;
+	mTexStaticTransY      = JPAConvertFixToFloat(*(s16*)(data + 0x84)) * 10.0f;
+	mTexStaticScaleY      = JPAConvertFixToFloat(*(s16*)(data + 0x86)) * 10.0f;
+	mTilingX              = JPAConvertFixToFloat(*(s16*)(data + 0x88)) * 10.0f;
+	mTilingY              = JPAConvertFixToFloat(*(s16*)(data + 0x8a)) * 10.0f;
+	mTexScrollTransX      = JPAConvertFixToFloat(*(s16*)(data + 0x8c));
+	mTexScrollScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x8e));
 
-	unk3C = JPAConvertFixToFloat(*(s16*)(data + 0x90)) * 0.1f;
-	unk40 = JPAConvertFixToFloat(*(s16*)(data + 0x92)) * 0.1f;
-	unk44 = JPAConvertFixToFloat(*(s16*)(data + 0x94));
-	unk87 = data[0x96];
+	mTexScrollTransY = JPAConvertFixToFloat(*(s16*)(data + 0x90)) * 0.1f;
+	mTexScrollScaleY = JPAConvertFixToFloat(*(s16*)(data + 0x92)) * 0.1f;
+	mTexScrollRotate = JPAConvertFixToFloat(*(s16*)(data + 0x94));
+	unk87            = data[0x96];
 
 	if (unk80 != 0) {
-		unk8 = (u8*)JKRHeap::alloc(unk7E, 4, heap);
-		memcpy(unk8, data + *(s16*)(data + 0x12), unk7E);
+		mTextureIndices = (u8*)JKRHeap::alloc(mTextureAnmKeyNum, 4, heap);
+		memcpy(mTextureIndices, data + *(s16*)(data + 0x12), mTextureAnmKeyNum);
 	} else {
-		unk8 = nullptr;
+		mTextureIndices = nullptr;
 	}
 
 	if (unk83 & 2) {
-		unkC = makeColorTable((JPAColorRegAnmKey*)(data + *(s16*)(data + 0x14)),
-		                      unk85, unk5E, heap);
+		mPrmColors
+		    = makeColorTable((JPAColorRegAnmKey*)(data + *(s16*)(data + 0x14)),
+		                     unk85, mColorRegAnmMaxFrm, heap);
 	} else {
-		unkC = nullptr;
+		mPrmColors = nullptr;
 	}
 
 	if (unk84 & 2) {
-		unk10
+		mEnvColors
 		    = makeColorTable((JPAColorRegAnmKey*)(data + *(s16*)(data + 0x16)),
-		                     unk86, unk5E, heap);
+		                     unk86, mColorRegAnmMaxFrm, heap);
 	} else {
-		unk10 = nullptr;
+		mEnvColors = nullptr;
 	}
 }

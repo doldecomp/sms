@@ -22,7 +22,7 @@ void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 		GXTevStageID stage = GX_TEVSTAGE1;
 		GXTexCoordID coord = GX_TEXCOORD1;
 		GXTexMapID map     = GX_TEXMAP1;
-		switch (param_2->unk25) {
+		switch (param_2->mIndTexMode) {
 		case 1:
 			GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
 			GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);

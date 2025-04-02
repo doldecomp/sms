@@ -15,7 +15,7 @@ int JPATextureResource::registration(const u8* data, JKRHeap* heap)
 {
 	const char* incomingName = (const char*)(data + 0xC);
 	for (int i = 0; i < unk24; ++i) {
-		const char* name = (const char*)((u8*)unk2C[i]->unk4 + 0xC);
+		const char* name = (const char*)((u8*)unk2C[i]->mRawData + 0xC);
 		if (strcmp(name, incomingName) == 0)
 			return i;
 	}
