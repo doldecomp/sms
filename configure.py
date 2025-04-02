@@ -1042,7 +1042,7 @@ config.libs = [
     {
         "lib": "Map",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Map/JointModel.cpp"),
