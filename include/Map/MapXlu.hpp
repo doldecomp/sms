@@ -7,7 +7,7 @@ class TMapXlu {
 public:
 	TMapXlu();
 	void init(JSUMemoryInputStream&);
-	void changeXluJoint(int);
+	bool changeXluJoint(int);
 	void changeNormalJoint();
 };
 

@@ -7,7 +7,23 @@ class JSUMemoryInputStream;
 class TBGCheckData;
 class TBGCheckListRoot;
 class TBGCheckList;
-class TBGWallCheckRecord;
+
+struct TBGWallCheckRecord {
+	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 param_4, u32 param_5,
+	                   u32 param_6)
+	    : unk0(x, y, z)
+	    , unkC(param_4)
+	    , unk10(param_5)
+	    , unk18(param_6)
+	{
+	}
+
+	/* 0x0 */ JGeometry::TVec3<f32> unk0;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ u32 unk18;
+};
 
 class TMapCollisionData {
 public:
@@ -17,14 +33,14 @@ public:
 	void intersectLine(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&, bool,
 	                   JGeometry::TVec3<f32>*) const;
-	void checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
+	f32 checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
 	void checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
 	                     const TBGCheckData**);
-	void checkRoof(f32, f32, f32, u8, const TBGCheckData**) const;
+	f32 checkRoof(f32, f32, f32, u8, const TBGCheckData**) const;
 	void checkRoofList(f32, f32, f32, u8, const TBGCheckList*,
 	                   const TBGCheckData**);
-	void checkWalls(TBGWallCheckRecord*) const;
-	void checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
+	int checkWalls(TBGWallCheckRecord*) const;
+	int checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
 	void init(JSUMemoryInputStream&);
 	void initAllCheckDataAndList();
 	void initMoveCollision();
@@ -39,6 +55,12 @@ public:
 	void allocCheckList(int, int);
 	void getEntryID();
 	void allocCheckData(u32);
+
+	static TBGCheckData mIllegalCheckData;
+
+public:
+	/* 0x0 */ f32 unk0;
+	/* 0x4 */ f32 unk4;
 };
 
 #endif

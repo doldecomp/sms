@@ -6,7 +6,7 @@
 
 class TJointModel;
 
-class TJointModelManager : JDrama::TViewObj {
+class TJointModelManager : public JDrama::TViewObj {
 public:
 	TJointModelManager(const char*);
 
