@@ -6,6 +6,11 @@
 class TBGCheckData;
 struct TBGWallCheckRecord;
 
+class TMapCollisionData;
+class TMapModelManager;
+class TMapWarp;
+class TMapXlu;
+
 class TMap : public JDrama::TViewObj {
 public:
 	~TMap();
@@ -44,6 +49,13 @@ public:
 	void updateMonte();
 	void updateDelfino();
 	void draw(u32, JDrama::TGraphics*) const;
+
+public:
+	/* 0x10 */ TMapCollisionData* mCollisionData;
+	/* 0x14 */ TMapModelManager* mModelManager;
+	/* 0x18 */ TMapWarp* mWarp;
+	/* 0x1C */ TMapXlu* mXlu;
+	/* 0x20 */ u32 unk20;
 };
 
 extern TMap* gpMap;

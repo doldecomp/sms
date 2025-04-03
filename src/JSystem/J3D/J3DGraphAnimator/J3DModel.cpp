@@ -197,8 +197,8 @@ int J3DModelData::entryTexMtxAnimator(J3DAnmTextureSRTKey* anm)
 					pMaterial->getTexGenBlock()->setTexMtx(texMtxID, pMtx);
 				}
 
-				pMaterial->getTexCoord(texMtxID)->setTexGenMtx(GX_TEXMTX0
-				                                               + texMtxID * 3);
+				pMaterial->getTexCoord(texMtxID)->setTexGenMtx(
+				    (GXTexMtx)(GX_TEXMTX0 + texMtxID * 3));
 
 				J3DTexMtx* pTexMtx       = pMaterial->getTexMtx(texMtxID);
 				J3DTexMtxAnm* pTexMtxAnm = new J3DTexMtxAnm(anm, i);
