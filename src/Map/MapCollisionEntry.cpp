@@ -39,7 +39,7 @@ void TMapCollisionWarp::setUpTrans(const JGeometry::TVec3<f32>& param_1)
 
 	unk60 = gpMapCollisionData->getEntryID();
 	TMapCollisionBase::updateTrans(param_1);
-	// TODO: some collision data access
+	unk64 = gpMapCollisionData->unk40 - gpMapCollisionData->unk42[unk60];
 }
 
 void TMapCollisionWarp::setUp()
@@ -58,7 +58,7 @@ void TMapCollisionWarp::setUp()
 		TMapCollisionBase::update();
 	}
 
-	// TODO: some collision data access
+	unk64 = gpMapCollisionData->unk40 - gpMapCollisionData->unk42[unk60];
 }
 
 TMapCollisionMove::TMapCollisionMove() { }

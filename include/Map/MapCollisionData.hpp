@@ -5,8 +5,38 @@
 
 class JSUMemoryInputStream;
 class TBGCheckData;
-class TBGCheckListRoot;
-class TBGCheckList;
+class TMapCheckGroundPlane;
+
+class TBGCheckList {
+public:
+	TBGCheckList();
+
+	virtual void setPreNode(TBGCheckList*) { }
+
+public:
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ u32 unk8;
+};
+
+class TBGCheckListWarp : public TBGCheckList {
+public:
+	TBGCheckListWarp();
+
+	virtual void setPreNode(TBGCheckList*) { }
+
+public:
+	/* 0xC */ u32 unkC;
+	/* 0x10 */ u16 unk10;
+	/* 0x12 */ u16 unk12;
+};
+
+class TBGCheckListRoot {
+public:
+	TBGCheckListRoot() { }
+
+public:
+	/* 0x0 */ TBGCheckList unk0[3];
+};
 
 struct TBGWallCheckRecord {
 	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 param_4, u32 param_5,
@@ -61,6 +91,24 @@ public:
 public:
 	/* 0x0 */ f32 unk0;
 	/* 0x4 */ f32 unk4;
+	/* 0x8 */ int unk8;
+	/* 0xC */ int unkC;
+	/* 0x10 */ int unk10;
+	/* 0x14 */ TBGCheckListRoot* unk14;
+	/* 0x18 */ TBGCheckListRoot* unk18;
+	/* 0x1C */ u32 unk1C;
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ u32 unk24;
+	/* 0x28 */ TBGCheckData* unk28;
+	/* 0x2C */ TBGCheckList* unk2C;
+	/* 0x30 */ TBGCheckListWarp* unk30;
+	/* 0x34 */ u32 unk34;
+	/* 0x38 */ u32 unk38;
+	/* 0x3C */ u32 unk3C;
+	/* 0x40 */ u16 unk40;
+	/* 0x42 */ u16 unk42[256];
+	/* 0x242 */ u16 unk242;
+	/* 0x244 */ TMapCheckGroundPlane* unk244;
 };
 
 extern TMapCollisionData* gpMapCollisionData;
