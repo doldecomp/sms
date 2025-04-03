@@ -1,4 +1,4 @@
-#include "dolphin.h"
+#include <Player/MarioAccess.hpp>
 
 #include <Strategic/LiveActor.hpp>
 #include <Player/MarioMain.hpp>

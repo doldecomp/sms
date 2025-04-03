@@ -41,6 +41,24 @@ public:
 			           getUpdateEnable());
 	}
 
+	void setCompareEnable(u8 enable)
+	{
+		mZModeID = calcZModeID(enable, j3dZModeTable[mZModeID * 3 + 1],
+		                       j3dZModeTable[mZModeID * 3 + 2]);
+	}
+
+	void setCompareFunc(u8 func)
+	{
+		mZModeID = calcZModeID(j3dZModeTable[mZModeID * 3], func,
+		                       j3dZModeTable[mZModeID * 3 + 2]);
+	}
+
+	void setUpdateEnable(u8 enable)
+	{
+		mZModeID = calcZModeID(j3dZModeTable[mZModeID * 3],
+		                       j3dZModeTable[mZModeID * 3 + 1], enable);
+	}
+
 public:
 	u16 mZModeID;
 };
