@@ -53,8 +53,8 @@ public:
 	void addCheckDataToList(int, int, int, int, TBGCheckData*);
 	void getListRoot(int, int, int, int) const;
 	void allocCheckList(int, int);
-	void getEntryID();
-	void allocCheckData(u32);
+	u32 getEntryID();
+	TBGCheckData* allocCheckData(u32);
 
 	static TBGCheckData mIllegalCheckData;
 
@@ -62,5 +62,7 @@ public:
 	/* 0x0 */ f32 unk0;
 	/* 0x4 */ f32 unk4;
 };
+
+extern TMapCollisionData* gpMapCollisionData;
 
 #endif
