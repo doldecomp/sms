@@ -97,6 +97,8 @@ struct gpMarDirectorStruct {
 struct gpCameraStruct {
 	char filler0[0x50];
 	s32 unk50;
+	char filler1[0x2C8 - 0x54];
+	s16 unk2C8;
 };
 
 struct gpCubeFastCStruct {

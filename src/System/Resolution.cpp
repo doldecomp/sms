@@ -1,6 +1,5 @@
-#include "dolphin.h"
-
-#include "types.h"
+#include <System/Resolution.hpp>
+#include <dolphin/vi.h>
 
 s32 SMSGetGameVideoHeight();
 
