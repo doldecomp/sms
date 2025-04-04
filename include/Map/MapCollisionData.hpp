@@ -22,7 +22,11 @@ class TBGCheckListWarp : public TBGCheckList {
 public:
 	TBGCheckListWarp();
 
-	virtual void setPreNode(TBGCheckList*) { }
+	virtual void setPreNode(TBGCheckList* node)
+	{
+		// TODO: maybe unkC is TBGCheckList*?
+		unkC = (TBGCheckListWarp*)node;
+	}
 
 public:
 	/* 0xC */ TBGCheckListWarp* unkC;

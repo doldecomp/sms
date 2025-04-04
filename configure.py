@@ -1040,6 +1040,7 @@ config.libs = [
         ],
     },
     {
+        # NOTE: it seems that SOME files in this lib have inline deferred, but some DONT
         "lib": "Map",
         "mw_version": "GC/1.2.5",
         "cflags": [*cflags_game, "-opt all,nostrength"],
@@ -1051,10 +1052,10 @@ config.libs = [
             Object(NonMatching, "Map/Map.cpp"),
             Object(NonMatching, "Map/MapArea.cpp"),
             Object(NonMatching, "Map/MapCheck.cpp"),
-            Object(NonMatching, "Map/MapCollisionData.cpp"),
+            Object(NonMatching, "Map/MapCollisionData.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapCollisionEntry.cpp"),
             Object(Matching, "Map/MapCollisionManager.cpp"),
-            Object(NonMatching, "Map/MapDraw.cpp"),
+            Object(NonMatching, "Map/MapDraw.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapEvent.cpp"),
             Object(NonMatching, "Map/MapEventSink.cpp"),
             Object(NonMatching, "Map/MapMakeData.cpp"),
