@@ -39,9 +39,9 @@ s16 matan(f32, f32) { }
 #pragma dont_inline off
 
 void MsGetRotFromZaxis(const JGeometry::TVec3<f32>&) { }
-void MsMtxSetRotRPH(f32 (*)[4], f32, f32, f32) { }
-void MsMtxSetXYZRPH(f32 (*)[4], f32, f32, f32, short, short, short) { }
-void MsMtxSetTRS(f32 (*)[4], f32, f32, f32, f32, f32, f32, f32, f32, f32) { }
+void MsMtxSetRotRPH(MtxPtr, f32, f32, f32) { }
+void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, short, short, short) { }
+void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32) { }
 
 void MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32)
