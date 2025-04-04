@@ -1053,7 +1053,7 @@ config.libs = [
             Object(NonMatching, "Map/MapCheck.cpp"),
             Object(NonMatching, "Map/MapCollisionData.cpp"),
             Object(NonMatching, "Map/MapCollisionEntry.cpp"),
-            Object(NonMatching, "Map/MapCollisionManager.cpp"),
+            Object(Matching, "Map/MapCollisionManager.cpp"),
             Object(NonMatching, "Map/MapDraw.cpp"),
             Object(NonMatching, "Map/MapEvent.cpp"),
             Object(NonMatching, "Map/MapEventSink.cpp"),
