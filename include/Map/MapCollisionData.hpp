@@ -14,8 +14,8 @@ public:
 	virtual void setPreNode(TBGCheckList*) { }
 
 public:
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
+	/* 0x4 */ TBGCheckList* unk4;
+	/* 0x8 */ TBGCheckData* unk8;
 };
 
 class TBGCheckListWarp : public TBGCheckList {
@@ -25,9 +25,9 @@ public:
 	virtual void setPreNode(TBGCheckList*) { }
 
 public:
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u16 unk10;
-	/* 0x12 */ u16 unk12;
+	/* 0xC */ TBGCheckListWarp* unkC;
+	/* 0x10 */ s16 unk10;
+	/* 0x12 */ s16 unk12;
 };
 
 class TBGCheckListRoot {
@@ -55,14 +55,22 @@ struct TBGWallCheckRecord {
 	/* 0x18 */ u32 unk18;
 };
 
+class TMapCollisionData;
+
+extern TMapCollisionData* gpMapCollisionData;
+
 class TMapCollisionData {
 public:
+	// fabricated
+	static TMapCollisionData* getInstance() { return gpMapCollisionData; }
+
 	TMapCollisionData();
 
 	void polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*);
 	void intersectLine(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&, bool,
 	                   JGeometry::TVec3<f32>*) const;
+
 	f32 checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
 	void checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
 	                     const TBGCheckData**);
@@ -71,20 +79,24 @@ public:
 	                   const TBGCheckData**);
 	int checkWalls(TBGWallCheckRecord*) const;
 	int checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
+
 	void init(JSUMemoryInputStream&);
 	void initAllCheckDataAndList();
 	void initMoveCollision();
 	void initGrid(TBGCheckListRoot*);
+
 	void removeCheckListData(u16, s32);
 	void updateCheckListNode(s32, s32, s32);
 	void removeCheckListNode(s32, s32);
+
 	void addCheckDataToGrid(TBGCheckData*, int);
 	void getGridArea(const TBGCheckData*, int, int*, int*, int*, int*);
 	void addCheckDataToList(int, int, int, int, TBGCheckData*);
 	void getListRoot(int, int, int, int) const;
-	void allocCheckList(int, int);
+
+	TBGCheckList* allocCheckList(int type, int count);
 	u32 getEntryID();
-	TBGCheckData* allocCheckData(u32);
+	TBGCheckData* allocCheckData(u32 count);
 
 	static TBGCheckData mIllegalCheckData;
 
@@ -110,7 +122,5 @@ public:
 	/* 0x242 */ u16 unk242;
 	/* 0x244 */ TMapCheckGroundPlane* unk244;
 };
-
-extern TMapCollisionData* gpMapCollisionData;
 
 #endif

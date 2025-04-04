@@ -94,7 +94,7 @@ TBGCheckListWarp::TBGCheckListWarp()
 }
 
 TBGCheckList::TBGCheckList()
-    : unk4(0)
+    : unk4(nullptr)
     , unk8(0)
 {
 }
