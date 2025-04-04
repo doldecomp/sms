@@ -11,21 +11,6 @@
 // rouge include needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 
-void TMap::draw(unsigned long, JDrama::TGraphics*) const { }
-
-TMapDrawWall::TMapDrawWall(const char* name)
-    : JDrama::TViewObj(name)
-    , unk10(nullptr)
-    , unk14((GXColor) { 0x50, 0x50, 0xc8, 0x96 })
-    , unk18(0)
-{
-}
-
-void TMapDrawWall::load(JSUMemoryInputStream& stream)
-{
-	unk10 = (ResTIMG*)JKRGetResource("/common/timg/wall.bti");
-}
-
 void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (!(param_1 & 8))
@@ -95,3 +80,18 @@ void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 	GXTexCoord2u16(0, 1);
 	GXEnd();
 }
+
+void TMapDrawWall::load(JSUMemoryInputStream& stream)
+{
+	unk10 = (ResTIMG*)JKRGetResource("/common/timg/wall.bti");
+}
+
+TMapDrawWall::TMapDrawWall(const char* name)
+    : JDrama::TViewObj(name)
+    , unk10(nullptr)
+    , unk14((GXColor) { 0x50, 0x50, 0xc8, 0x96 })
+    , unk18(0)
+{
+}
+
+void TMap::draw(unsigned long, JDrama::TGraphics*) const { }

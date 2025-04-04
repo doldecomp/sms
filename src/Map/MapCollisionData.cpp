@@ -9,35 +9,29 @@
 TBGCheckData TMapCollisionData::mIllegalCheckData;
 TMapCollisionData* gpMapCollisionData;
 
-TMapCollisionData::TMapCollisionData()
-    : unk0(0.0f)
-    , unk4(0.0f)
+TBGCheckList::TBGCheckList()
+    : unk4(nullptr)
     , unk8(0)
-    , unkC(0)
-    , unk10(0)
-    , unk14(nullptr)
-    , unk18(nullptr)
-    , unk1C(0)
-    , unk20(0)
-    , unk24(0)
-    , unk28(nullptr)
-    , unk2C(nullptr)
-    , unk30(nullptr)
-    , unk34(0)
-    , unk38(0)
-    , unk3C(0)
-    , unk40(0)
-    , unk242(0)
-    , unk244(nullptr)
 {
-	JGeometry::TVec3<float> v1(-32767.0f, -32767.0f, -32767.0f);
-	JGeometry::TVec3<float> v2(-32767.0f, -32767.0f, 32767.0f);
-	JGeometry::TVec3<float> v3(32767.0f, -32767.0f, 32767.0f);
-	mIllegalCheckData.setVertex(v1, v2, v3);
-	mIllegalCheckData.unk0 = 0;
-	mIllegalCheckData.unk4 |= 0x10;
-	gpMapCollisionData = this;
 }
+
+// TODO: inline deferred or nah?
+TBGCheckListWarp::TBGCheckListWarp()
+    : unkC(0)
+    , unk10(0)
+    , unk12(0)
+{
+}
+
+void TMapCollisionData::initGrid(TBGCheckListRoot*) { }
+
+void TMapCollisionData::initMoveCollision()
+{
+	unk3C = unk20 - 1;
+	memset(unk18, 0, unk10 * sizeof(*unk18));
+}
+
+void TMapCollisionData::initAllCheckDataAndList() { }
 
 void TMapCollisionData::init(JSUMemoryInputStream& stream)
 {
@@ -75,26 +69,32 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 		unk42[i] = 9999;
 }
 
-void TMapCollisionData::initAllCheckDataAndList() { }
-
-void TMapCollisionData::initMoveCollision()
-{
-	unk3C = unk20 - 1;
-	memset(unk18, 0, unk10 * sizeof(*unk18));
-}
-
-void TMapCollisionData::initGrid(TBGCheckListRoot*) { }
-
-// TODO: inline deferred or nah?
-TBGCheckListWarp::TBGCheckListWarp()
-    : unkC(0)
-    , unk10(0)
-    , unk12(0)
-{
-}
-
-TBGCheckList::TBGCheckList()
-    : unk4(nullptr)
+TMapCollisionData::TMapCollisionData()
+    : unk0(0.0f)
+    , unk4(0.0f)
     , unk8(0)
+    , unkC(0)
+    , unk10(0)
+    , unk14(nullptr)
+    , unk18(nullptr)
+    , unk1C(0)
+    , unk20(0)
+    , unk24(0)
+    , unk28(nullptr)
+    , unk2C(nullptr)
+    , unk30(nullptr)
+    , unk34(0)
+    , unk38(0)
+    , unk3C(0)
+    , unk40(0)
+    , unk242(0)
+    , unk244(nullptr)
 {
+	JGeometry::TVec3<float> v1(-32767.0f, -32767.0f, -32767.0f);
+	JGeometry::TVec3<float> v2(-32767.0f, -32767.0f, 32767.0f);
+	JGeometry::TVec3<float> v3(32767.0f, -32767.0f, 32767.0f);
+	mIllegalCheckData.setVertex(v1, v2, v3);
+	mIllegalCheckData.unk0 = 0;
+	mIllegalCheckData.unk4 |= 0x10;
+	gpMapCollisionData = this;
 }
