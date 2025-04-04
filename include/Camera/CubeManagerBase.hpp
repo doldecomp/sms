@@ -20,6 +20,10 @@ public:
 	virtual JDrama::TNameRef* searchF(u16 key, char const* name) { }
 };
 
+class TCubeManagerBase;
+
+extern TCubeManagerBase* gpCubeStream;
+
 class TCubeManagerBase : public JDrama::TViewObj {
 public:
 	TCubeManagerBase(const char*, const char*);

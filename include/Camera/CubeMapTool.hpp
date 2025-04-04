@@ -38,7 +38,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 
 public:
-	/* 0x38 */ u32 unk38;
+	/* 0x38 */ s32 unk38;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 };
