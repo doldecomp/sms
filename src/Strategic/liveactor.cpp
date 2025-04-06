@@ -83,7 +83,7 @@ void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
 		unkD0 = new TLodAnm(this, param_1, param_2, param_3);
 }
 
-void TLiveActor::init(TLiveManager*) { }
+void TLiveActor::init(TLiveManager* manager) { }
 
 void TLiveActor::load(JSUMemoryInputStream& stream)
 {
