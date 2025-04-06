@@ -942,7 +942,7 @@ config.libs = [
     {
         "lib": "NPC",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "NPC/NpcAnm.cpp"),
