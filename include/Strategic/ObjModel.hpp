@@ -25,16 +25,17 @@ public:
 
 class TLiveManager;
 class SDLModelData;
+class MActor;
 
 class TMActorKeeper {
 public:
 	TMActorKeeper(TLiveManager*);
 	TMActorKeeper(TLiveManager*, u16);
-	void createMActorFromAllBmd(u32);
-	void createMActor(const char*, u32);
-	void createMActorFromNthData(int, u32);
-	void createMActorFromDefaultBmd(const char*, u32);
-	void getMActor(const char*) const;
+	MActor* createMActorFromAllBmd(u32);
+	MActor* createMActor(const char*, u32);
+	MActor* createMActorFromNthData(int, u32);
+	MActor* createMActorFromDefaultBmd(const char*, u32);
+	MActor* getMActor(const char*) const;
 	void createAndRegister(SDLModelData*, u32);
 	void getMActorAnmData() const { }
 };

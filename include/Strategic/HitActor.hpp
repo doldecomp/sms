@@ -10,10 +10,17 @@ public:
 	virtual ~THitActor() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void receiveMessage(THitActor*, u32);
+	virtual u32 receiveMessage(THitActor*, u32);
 
 	float initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();
+
+	// fabricated
+	u32 getActorType() const { return mActorType; }
+	bool checkActorType(u32 flag) const
+	{
+		return mActorType & flag ? true : false;
+	}
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

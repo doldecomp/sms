@@ -105,18 +105,18 @@ public:
 
 	TVec3(const TVec3& other)
 	{
-		x = other.x;
-		y = other.y;
-		z = other.z;
+		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
+		// Checked via MarioCollision.cpp where this is not inlined
+		*(Vec*)this = *(Vec*)&other;
 	}
 
 	TVec3(f32 x_, f32 y_, f32 z_) { set(x_, y_, z_); }
 
 	TVec3& operator=(const TVec3& other)
 	{
-		x = other.x;
-		y = other.y;
-		z = other.z;
+		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
+		// Checked via enemy.cpp where this is not inlined
+		*(Vec*)this = *(Vec*)&other;
 		return *this;
 	}
 	TVec3& operator*=(const TVec3& operand);

@@ -23,7 +23,7 @@ public:
 	void calcMinimumTurnRadius(f32, f32) const;
 	void calcTurnSpeedToReach(f32, f32) const;
 	void updateSquareToMario();
-	void receiveMessage(THitActor*, u32);
+	virtual u32 receiveMessage(THitActor*, u32);
 	void isInSight(const JGeometry::TVec3<f32>&, f32, f32, f32) const;
 	void setGoalPathFromGraph();
 	void goToInitialVisibleNode(f32, f32);

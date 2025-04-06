@@ -24,7 +24,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void receiveMessage(THitActor*, u32);
+	virtual u32 receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual void moveRequest(const JGeometry::TVec3<f32>&);
 

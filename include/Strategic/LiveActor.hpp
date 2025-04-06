@@ -3,6 +3,7 @@
 
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/LiveManager.hpp>
+#include <NPC/NpcNerve.hpp>
 
 // TODO: where should this live?
 struct TLodAnmIndex;
@@ -13,10 +14,11 @@ class JKRFileLoader;
 class TBGCheckData;
 class TLodAnm;
 class J3DModel;
+class TMapCollisionManager;
 
 class TLiveActor : public TTakeActor {
 public:
-	virtual void receiveMessage(THitActor*, u32);
+	virtual u32 receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual bool belongToGround() const;
 	virtual Mtx* getRootJointMtx() const;
@@ -29,21 +31,22 @@ public:
 	virtual void requestShadow();
 	virtual void drawObject(JDrama::TGraphics*);
 	virtual void performOnlyDraw(u32, JDrama::TGraphics*);
-	virtual void getShadowType();
+	virtual u32 getShadowType();
 	virtual void kill();
-	virtual void getGravityY() const;
-	virtual void hasMapCollision() const;
-	virtual void getFocalPoint() const;
+	virtual f32 getGravityY() const;
+	virtual BOOL hasMapCollision() const;
+	virtual Vec getFocalPoint() const;
 	virtual void updateAnmSound();
-	virtual void getBasNameTable() const;
+	virtual const char** getBasNameTable() const;
 
 	void stopAnmSound();
 	void setCurAnmSound();
 	void setAnmSound(const char*);
 	void initAnmSound();
-	void getJointTransByIndex(int, JGeometry::TVec3<f32>*) const;
+	int getJointTransByIndex(int, JGeometry::TVec3<f32>*) const;
 	void getJointTransByName(const char*, JGeometry::TVec3<f32>*) const;
-	void calcVelocityToJumpToY(const JGeometry::TVec3<f32>&, f32, f32) const;
+	JGeometry::TVec3<f32> calcVelocityToJumpToY(const JGeometry::TVec3<f32>&,
+	                                            f32, f32) const;
 	void calcVelocityToJumpToXZ(const JGeometry::TVec3<f32>&, f32, f32) const;
 	void perform(u32, JDrama::TGraphics*);
 	void load(JSUMemoryInputStream&);
@@ -55,22 +58,20 @@ public:
 	TLiveActor(const char*);
 	void getMActor() const;
 
+	static f32 mVelocityMinY;
+
 public:
 	/* 0x70 */ TLiveManager* unk70;
 	/* 0x74 */ MActor* unk74;
 	/* 0x78 */ TMActorKeeper* unk78;
 	/* 0x7C */ u16 unk7C;
 	/* 0x80 */ MAnmSound* unk80;
-	/* 0x84 */ JKRFileLoader* unk84;
+	/* 0x84 */ const char* unk84;
 	/* 0x88 */ void* unk88;
-	/* 0x8C */ void* unk8C;
+	/* 0x8C */ TSpineBase<TLiveActor>* unk8C;
 	/* 0x90 */ void* unk90;
-	/* 0x94 */ float unk94;
-	/* 0x98 */ float unk98;
-	/* 0x9C */ float unk9C;
-	/* 0xA0 */ float unkA0;
-	/* 0xA4 */ float unkA4;
-	/* 0xA8 */ float unkA8;
+	/* 0x94 */ JGeometry::TVec3<f32> unk94;
+	/* 0xA0 */ JGeometry::TVec3<f32> unkA0;
 	/* 0xAC */ float unkAC;
 	/* 0xB0 */ float unkB0;
 	/* 0xB4 */ float unkB4;
@@ -85,7 +86,7 @@ public:
 	/* 0xD8 */ Vec unkD8;
 	/* 0xE4 */ float unkE4;
 	/* 0xE8 */ u8 unkE8;
-	/* 0xEC */ void* unkEC;
+	/* 0xEC */ TMapCollisionManager* unkEC;
 	/* 0xF0 */ u32 unkF0;
 };
 

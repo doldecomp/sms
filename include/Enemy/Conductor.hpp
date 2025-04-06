@@ -11,6 +11,10 @@ class TAreaCylinderManager;
 class SDLModelData;
 class TStageEnemyInfoTable;
 
+class TConductor;
+
+extern TConductor* gpConductor;
+
 class TConductor : public JDrama::TViewObj {
 public:
 	TConductor();
