@@ -1,7 +1,12 @@
 #include <MarioUtil/RumbleType.hpp>
-#include <unsorted_types.h>
+#include <string.h>
 
 extern int channelNum;
+
+struct UnkStruct3B0378 {
+	unsigned int unk0;
+	char* str;
+};
 
 // Enum To Str?
 struct UnkStruct3B0378 _info[23] = {
