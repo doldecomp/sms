@@ -1,14 +1,151 @@
-#ifndef NPCBASE_HPP
-#define NPCBASE_HPP
+#ifndef NPC_BASE_NPC_HPP
+#define NPC_BASE_NPC_HPP
 
-#include "dolphin.h"
+#include <Enemy/Enemy.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
 
-class TBaseNPC {
+// TODO: should this be here?
+enum EnumNpcAnmKind {};
+enum EnumNpcStopMotionBlendOnOff {};
+enum EnumHitNpcObjectKind {};
+struct TNpcInitInfo { };
+
+class TBaseNPC : public TSpineEnemy {
+public:
+	void monteMESetAnmWhenNear();
+	void monteMESetAnmWhenFar();
+	void sunflowerReviving();
+	void sunflowerReviveIn();
+	void sunflowerDownIn_();
+	void peachTiredOut_();
+	void peachTiredIn_();
+	void peachParasolOut_();
+	void peachParasolIn_();
+	void npcMareStanding();
+	void npcMareStandIn();
+	void npcBlowning();
+	void npcBlownIn();
+	void npcMadding();
+	void npcMadIn();
+	void npcThrowing();
+	void npcThrowIn();
+	void npcSinking();
+	void npcWetOut();
+	void npcWetting();
+	void npcWetIn();
+	void npcHappyIn(unsigned char);
+	void npcDanceIn();
+	void npcTakenIn();
+	void npcTalkOut();
+	void npcTalking();
+	void npcTalkIn();
+	void npcStepIn();
+	void npcRecoverAfterIn();
+	void npcRecoverFromSinking();
+	void npcFallIn();
+	void npcWaitIn();
+	void getNpcWaitAnmBase_();
+	void walkAnmRateChange_();
+	void randomizeBckAndBtpFrame_();
+	void requestTalkAnm_();
+	void setKeepAnm_();
+	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
+	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
+	void onStopMotionBlend();
+	void offStopMotionBlend();
+	void isNowMotionBlend() const;
+	~TBaseNPC();
+	void getPtrInitPollutionColor() const;
+	void setBalloonMessage(unsigned long, long);
+	void setDummyConnectActor(const JDrama::TActor*);
+	void perform(unsigned long, JDrama::TGraphics*);
+	void getAnmOffDist_();
+	void updateForbidCount_();
+	void movementOnlyTalk_(const JDrama::TGraphics*);
+	void calcRootMatrix();
+	void execMotionBlend_();
+	void moveObject();
+	void receiveMessage(THitActor*, unsigned long);
+	void getFocalPoint() const;
+	void getCursorPos() const;
+	void isInMadSearchRange() const;
+	void isInBodyTurnSearchRange() const;
+	void isNeedNeckStraight() const;
+	void isPartsAnmNpc() const;
+	void isBehaveToHitNpc() const;
+	void isBehaveToWaterNpc() const;
+	void isMadNpc() const;
+	void isBeTrampledNpc() const;
+	void isPollutionNpc() const;
+	void isSmallNpc() const;
+	void isChild() const;
+	void isSunflower() const;
+	void isJellyFishMare() const;
+	void isSpecialMareW() const;
+	void isSpecialMareM() const;
+	void isNormalMareW() const;
+	void isNormalMareM() const;
+	void isSpecialMonteW() const;
+	void isSpecialMonteM() const;
+	void isNormalMonteW() const;
+	void isNormalMonteM() const;
+	void loadAfter();
+	void load(JSUMemoryInputStream&);
+	TBaseNPC(unsigned long, const char*);
+	void setIndividualDifference_(JSUMemoryInputStream&);
+	void init(TLiveManager*);
+	void initNpcLight_();
+	void getBasNameTable() const;
+	void kill();
+	void setPosAndInitAfterSinkBottom();
+	void changeNerveProc_();
+	void isNowCanTaken() const;
+	void isStateGoToMad_() const;
+	void behaveToSandBomb_(const TLiveActor*);
+	void behaveToHitObject_(THitActor*, EnumHitNpcObjectKind);
+	void behaveToBeTrampled_();
+	void behaveToBeTaken_(THitActor*);
+	void releaseTaken_();
+	void changeNerveToMad_();
+	void changeNerveToWet_();
+	void changeNerveFromTalk_();
+	void isNerveCanGoToBlown() const;
+	void isNerveCanGoToMad() const;
+	void isNerveCanGoToThrow() const;
+	void isNerveCanGoToTaken() const;
+	void isNerveCanGoToSink() const;
+	void isNerveCanGoToWet() const;
+	void isNerveCanGoToTalk() const;
+	void isNerveMaybeDontCalcAnim1() const;
+	void isNerveMaybeDontCalcAnim0() const;
+	void isNerveMaybeDontMovement() const;
+	void isNerveWalk() const;
+	void emitParticle_();
+	void isPolWaitCEffectEmitTime_() const;
+	void emitHappyEffect_();
+	void emitSinkEffect_();
+	void getEffectScale_() const;
+	void setSmokeEffectMtxPtr_(bool);
+	void setPollutionEffectMtxPtr_(const JUTNameTab*);
+	void setNoteEffectMtxPtr_(const JUTNameTab*);
+	void setHappyEffectMtxPtr_(const JUTNameTab*);
 	void setKinoActionFlag_();
 	void setMareActionFlag_();
 	void setMonteActionFlag_();
+	void isTurnToMarioWhenApproach() const;
+	void isTurnToMarioWhenTalk() const;
+	void isNeedTurnToFirstState() const;
+	void execTurnToFirstState();
+	void execUTurn();
+	void execWalk(bool);
+	void isCanWalk() const;
+	void bind();
+	void setVariableDamageRadius_();
+	void execNpcObjCollision_();
+	void initNpcObjCollision_(const TNpcInitInfo*);
 
-	char pad_000[0x16C];
+public:
+	char pad_000[0x1C];
 	s32 _16C;
 	u32 mActionFlag;
 };

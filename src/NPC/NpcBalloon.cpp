@@ -1,6 +1,12 @@
 #include <NPC/NpcBalloon.hpp>
 #include <System/MarDirector.hpp>
 
+void TNpcBalloon::setNextMessage(u32 a, s32 timer)
+{
+	_000                = a;
+	mBalloonAppearTimer = timer;
+}
+
 bool TNpcBalloon::updateBalloon()
 {
 	int pad[5];
@@ -14,10 +20,4 @@ bool TNpcBalloon::updateBalloon()
 	}
 
 	return ret;
-}
-
-void TNpcBalloon::setNextMessage(u32 a, s32 timer)
-{
-	_000                = a;
-	mBalloonAppearTimer = timer;
 }
