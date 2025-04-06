@@ -3,6 +3,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <Map/MapData.hpp>
 #include <Map/Map.hpp>
+#include <Camera/Camera.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 #include "gpMarDirector.hpp"
