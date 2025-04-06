@@ -13,11 +13,6 @@ struct gpMarDirectorStruct {
 	u8 unk7C;
 };
 
-struct gpCubeFastCStruct {
-	char filler0[0x1C];
-	u32 unk1C;
-};
-
 struct UnkStructUnk58 {
 	char filler0[0x14];
 	float unk14;

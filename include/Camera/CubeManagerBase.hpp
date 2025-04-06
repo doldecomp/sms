@@ -55,11 +55,20 @@ public:
 	bool isInAreaCube(const Vec&) const;
 };
 
+class TCubeManagerFast;
+
+extern TCubeManagerFast* gpCubeFastA;
+extern TCubeManagerFast* gpCubeFastB;
+extern TCubeManagerFast* gpCubeFastC;
+
 class TCubeManagerFast : public TCubeManagerBase {
 public:
 	TCubeManagerFast();
 
 	bool isInOtherCube(const Vec&) const;
+
+public:
+	/* 0x1C */ u32 unk1C;
 };
 
 bool SMS_IsInOtherFastCube(const Vec&);
