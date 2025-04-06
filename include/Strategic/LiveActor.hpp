@@ -3,7 +3,7 @@
 
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/LiveManager.hpp>
-#include <NPC/NpcNerve.hpp>
+#include <Strategic/Nerve.hpp>
 
 // TODO: where should this live?
 struct TLodAnmIndex;

@@ -2,7 +2,7 @@
 #define ENEMY_ENEMY_HPP
 
 #include <Strategic/LiveActor.hpp>
-#include <Enemy/SolidStack.hpp>
+#include <Strategic/SolidStack.hpp>
 #include <Enemy/PathNode.hpp>
 
 class TGraphTracer;
