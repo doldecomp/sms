@@ -1,6 +1,6 @@
 #include <System/EmitterViewObj.hpp>
+#include <System/MarDirector.hpp>
 #include <JSystem/JGeometry.hpp>
-#include <gpMarDirector.hpp>
 
 s32 SMS_EmitRippleTiny(JGeometry::TVec3<float>* arg0)
 {

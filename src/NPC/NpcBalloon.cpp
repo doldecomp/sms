@@ -1,5 +1,5 @@
-#include "gpMarDirector.hpp"
-#include "NPC/NpcBalloon.hpp"
+#include <NPC/NpcBalloon.hpp>
+#include <System/MarDirector.hpp>
 
 bool TNpcBalloon::updateBalloon()
 {
