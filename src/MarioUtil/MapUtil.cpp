@@ -5,10 +5,9 @@
 #include <Map/Map.hpp>
 #include <Camera/Camera.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <Camera/CubeManagerBase.hpp>
 
 #include "gpMarDirector.hpp"
-#include "unsorted_types.h"
-#include "unsorted_variables.h"
 
 int SMS_GetMonteVillageAreaInMario()
 {
