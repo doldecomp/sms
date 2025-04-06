@@ -278,7 +278,7 @@ public:
 class TSpcInterp {
 public:
 	/* 0x0 */ TSpcBinary* mBinary;
-	/* 0x4 */ u32 unk4;
+	/* 0x4 */ u32 mStepsToDo;
 	/* 0x8 */ u32 mProgramCounter;
 	/* 0xC */ s32 mStepsLeft;
 	/* 0x10 */ void* unk10;
@@ -287,7 +287,7 @@ public:
 	/* 0x28 */ TSpcStack<TSpcSlice> mStorageStack;
 	/* 0x38 */ TSpcStack<u32> mContextStack;
 	/* 0x48 */ u32 mDisplay[4];
-	/* 0x58 */ const char* unk58;
+	/* 0x58 */ const char* mCurrentlyExecutingBuiltinName;
 
 public:
 	// TODO: the fetches take up too much stack
@@ -336,6 +336,7 @@ public:
 		++mProgramCounter;
 		return result;
 	}
+
 	const char* fetchString()
 	{
 		const char* str
@@ -344,6 +345,9 @@ public:
 			str = "";
 		return str;
 	}
+
+	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
+	TSpcSlice pop() { return mProcessStack.pop(); }
 
 public:
 	/// Pushes an immediate int constant C to the process stack
@@ -526,7 +530,9 @@ public:
 
 	virtual void dispatchBuiltin(u32 sym_index, u32 arg_count);
 
-	TSpcInterp(TSpcBinary*, void*, int, int, int, int);
+	TSpcInterp(TSpcBinary* binary, void* owner, int steps,
+	           int process_stack_size, int storage_stack_size,
+	           int context_stack_size);
 	virtual ~TSpcInterp();
 
 	void dump();
@@ -547,6 +553,45 @@ public:
 			mProcessStack.pop();
 		mProcessStack.push(TSpcSlice());
 	}
+};
+
+template <class T> class TSpcTypedBinary : public TSpcBinary {
+public:
+	TSpcTypedBinary(void* data)
+	    : TSpcBinary(data)
+	{
+	}
+
+	virtual ~TSpcTypedBinary() { }
+	virtual void initUserBuiltin();
+};
+
+template <class T> class TSpcTypedInterp : public TSpcInterp {
+public:
+	TSpcTypedInterp(TSpcBinary* binary, void* owner, int steps,
+	                int process_stack_size, int storage_stack_size,
+	                int context_stack_size)
+	    : TSpcInterp(binary, owner, steps, process_stack_size,
+	                 storage_stack_size, context_stack_size)
+	{
+	}
+
+	virtual void dispatchBuiltin(u32 sym_index, u32 arg_count)
+	{
+		typedef void (*TypedNativeCall)(TSpcTypedInterp<T>*, u32);
+		TSpcSymbol* sym = mBinary->getSymbol(sym_index);
+
+		if (sym && sym->mNativeCall) {
+			TypedNativeCall call = (TypedNativeCall)sym->mNativeCall;
+
+			mCurrentlyExecutingBuiltinName = mBinary->getSymbolName(sym);
+			call(this, arg_count);
+		} else {
+			TSpcInterp::dispatchBuiltin(sym_index, arg_count);
+		}
+	}
+
+	virtual ~TSpcTypedInterp() { }
 };
 
 #endif

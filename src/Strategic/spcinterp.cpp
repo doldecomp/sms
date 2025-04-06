@@ -11,7 +11,7 @@ void spcYield(TSpcInterp* interp, u32 arg_count)
 
 void spcExit(TSpcInterp* interp, u32 arg_count)
 {
-	interp->unk4       = 0;
+	interp->mStepsToDo = 0;
 	interp->mStepsLeft = 0;
 	for (int i = 0; i < (int)arg_count; ++i)
 		interp->mProcessStack.pop();
@@ -411,7 +411,7 @@ void TSpcInterp::execint1() { mProcessStack.push(1); }
 
 void TSpcInterp::execend()
 {
-	unk4       = 0;
+	mStepsToDo = 0;
 	mStepsLeft = 0;
 	SpcTrace("TSpcInterp : script finished\n");
 }
@@ -440,7 +440,7 @@ void TSpcInterp::dispatchBuiltinDefault(u32 sym_index, u32 arg_count)
 		return;
 	}
 
-	unk58 = mBinary->getSymbolName(sym);
+	mCurrentlyExecutingBuiltinName = mBinary->getSymbolName(sym);
 	call(this, arg_count);
 }
 
@@ -449,16 +449,17 @@ void TSpcInterp::dispatchBuiltin(u32 sym_index, u32 arg_count)
 	dispatchBuiltinDefault(sym_index, arg_count);
 }
 
-TSpcInterp::TSpcInterp(TSpcBinary* param_1, void* param_2, int param_3,
-                       int param_4, int param_5, int param_6)
-    : mBinary(param_1)
-    , unk4(param_3)
+TSpcInterp::TSpcInterp(TSpcBinary* binary, void* owner, int steps,
+                       int process_stack_size, int storage_stack_size,
+                       int context_stack_size)
+    : mBinary(binary)
+    , mStepsToDo(steps)
     , mProgramCounter(0)
-    , mStepsLeft(param_3)
-    , unk10(param_2)
-    , mProcessStack(param_4)
-    , mStorageStack(param_5)
-    , mContextStack(param_6)
+    , mStepsLeft(steps)
+    , unk10(owner)
+    , mProcessStack(process_stack_size)
+    , mStorageStack(storage_stack_size)
+    , mContextStack(context_stack_size)
 {
 	if (mBinary == nullptr || mBinary->getHeader() == nullptr) {
 		SpcTrace("TSpcInterp : null binary\n");
@@ -518,8 +519,8 @@ void TSpcInterp::verifyArgNum(u32 param_1, u32* param_2)
 	if (param_1 == *param_2)
 		return;
 
-	SpcTrace("TSpcInterp : argument number mismatch (%s, %d -> %d)\n", unk58,
-	         *param_2, param_1);
+	SpcTrace("TSpcInterp : argument number mismatch (%s, %d -> %d)\n",
+	         mCurrentlyExecutingBuiltinName, *param_2, param_1);
 
 	while (param_1 < *param_2) {
 		mProcessStack.pop();
@@ -606,5 +607,5 @@ void TSpcInterp::update()
 		if (handler)
 			(*this.*handler)();
 	}
-	mStepsLeft = unk4;
+	mStepsLeft = mStepsToDo;
 }
