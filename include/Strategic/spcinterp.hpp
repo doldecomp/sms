@@ -160,6 +160,20 @@ public:
 		return *this;
 	}
 
+	void negate()
+	{
+		switch (mType) {
+		case TSpcSlice::TYPE_INT:
+			(int&)mData = -(int&)mData;
+			break;
+		case TSpcSlice::TYPE_FLOAT:
+			(float&)mData = -(float&)mData;
+			break;
+		default:
+			break;
+		}
+	}
+
 	BOOL operator==(const TSpcSlice& other) const
 	{
 		if (mType == TYPE_STRING && other.mType == TYPE_STRING) {
@@ -332,45 +346,179 @@ public:
 	}
 
 public:
+	/// Pushes an immediate int constant C to the process stack
+	/// Immediate arguments: C
+	/// Returns: C
 	void execint();
+	/// Pushes an immediate float constant C to the process stack
+	/// Immediate arguments: C
+	/// Returns: C
 	void execflt();
+	/// Pushes a string constant from the binary's data section with index C to
+	/// the process stack
+	/// Immediate arguments: C
+	/// Returns: C
 	void execstr();
+	/// Pushes an immediate address constant C to the process stack
+	/// Immediate arguments: C
+	/// Returns: C
 	void execadr();
+	/// Reads the variable V from layer L and pushes it to the process stack
+	/// Immediate arguments: L, V
+	/// Returns: the current value of the variable
 	void execvar();
+	/// No-op
 	void execnop();
+	/// Increments the variable V from layer L and pushes it's new value to the
+	/// process stack
+	/// Immediate arguments: L, V
+	/// Returns: new value of the variable
 	void execinc();
+	/// Decrements the variable V from layer L and pushes it's new value to the
+	/// process stack
+	/// Immediate arguments: L, V
+	/// Returns: new value of the variable
 	void execdec();
+	/// Pops two values A, B from the process stack, adds them and pushes the
+	/// result back to it
+	/// Arguments: A, B
+	/// Returns: A + B
 	void execadd();
+	/// Pops two values A, B from the process stack, subtracts them and pushes
+	/// the result back to it
+	/// Arguments: A, B
+	/// Returns: A - B
 	void execsub();
+	/// Pops two values A, B from the process stack, multiplies them and pushes
+	/// the result back to it
+	/// Arguments: A, B
+	/// Returns: A * B
 	void execmul();
+	/// Pops two values A, B from the process stack, divides them and pushes
+	/// the result back to it
+	/// Arguments: A, B
+	/// Returns: A / B
 	void execdiv();
+	/// Pops two values A, B from the process stack, modulos them and pushes
+	/// the result back to it
+	/// Arguments: A, B
+	/// Returns: A % B
 	void execmod();
+	/// Pops value A from the process stack and assigns it to variable V in
+	/// layer L
+	/// Immediate arguments: L, V
+	/// Arguments: A
 	void execass();
+	/// Pops two values A, B from the process stack, compares them for equality
+	/// and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A == B
 	void execeq();
+	/// Pops two values A, B from the process stack, compares them for
+	/// inequality and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A != B
 	void execne();
+	/// Pops two values A, B from the process stack, compares them for
+	/// being greater then and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A > B
 	void execgt();
+	/// Pops two values A, B from the process stack, compares them for
+	/// being less then and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A < B
 	void execlt();
+	/// Pops two values A, B from the process stack, compares them for
+	/// being greater then or equal and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A >= B
 	void execge();
+	/// Pops two values A, B from the process stack, compares them for
+	/// being less then or equal and pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A <= B
 	void execle();
+	/// Pops value A from the stack, negates it and pushes -A back
+	/// Arguments: A
+	/// Returns: -A
 	void execneg();
+	/// Pops value A from the stack, logically negates it and pushes the result
+	/// back to the stack
+	/// Arguments: A
+	/// Returns: 1 if A != 0, 0 otherwise
 	void execnot();
+	/// Pops values A, B from the stack, checks whether both are non-zero and
+	/// pushes the result back
+	/// Arguments: A, B
+	/// Returns: 1 if A != 0 && B != 0, 0 otherwise
 	void execand();
+	/// Pops values A, B from the stack, checks whether at least one is non-zero
+	/// and pushes the result
+	/// Arguments: A, B
+	/// Returns: 1 if A != 0 || B != 0, 0 otherwise
 	void execor();
+	/// Pops two values A, B from the process stack, bitwise ANDs them and
+	/// pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A & B
 	void execband();
+	/// Pops two values A, B from the process stack, bitwise ORs them and
+	/// pushes the result back to it
+	/// Arguments: A, B
+	/// Returns: A | B
 	void execbor();
+	/// Pops two values A, B from the process stack, bitwise shifts one of them
+	/// left by the other and pushes the result back
+	/// Arguments: A, B
+	/// Returns: A << B
 	void execshl();
+	/// Pops two values A, B from the process stack, bitwise shifts one of them
+	/// right by the other and pushes the result back
+	/// Arguments: A, B
+	/// Returns: A >> B
 	void execshr();
+	/// Calls an SPC function present in the binary at offset A with N topmost
+	/// values from the process stack as arguments
+	/// Immediate arguments: A, N
+	/// Arguments: depends
+	/// Result: depends
 	void execcall();
+	/// Calls a native function with id I bound to SPC with the topmost N values
+	/// from the process stack as arguments
+	/// Immediate arguments: I, N
+	/// Arguments: depends
+	/// Result: depends
 	void execfunc();
+	/// Allocates N new variables in the current function's stack frame with
+	/// integral value of 0
+	/// Immediate arguments: N
 	void execmkfr();
+	/// Makes a "stack frame" for a function in layer L. Expected to be called
+	/// at the start of any SPC function
+	/// Immediate arguments: L
 	void execmkds();
+	/// Returns from an SPC function. If call and mkds were not called before it
+	/// in that exact order, everything will blow up in flames
 	void execret();
+	/// Pushes 0 to the process stack and returns from an SPC function,
+	// equivalent to int 0, ret.
 	void execret0();
+	/// Pops value B from the process stack and if it is zero, jumps to the
+	/// immediate address A
+	/// Immediate arguments: A
+	/// Arguments: B
 	void execjne();
+	/// Jumps to the immediate address A
+	/// Immediate arguments: A
 	void execjmp();
+	/// Pops a value from the process stack
 	void execpop();
+	/// Pushes an int 0 to the process stack
 	void execint0();
+	/// Pushes an int 1 to the process stack
 	void execint1();
+	/// Concludes execution of an SPC script
 	void execend();
 
 	void chooseExecFunction(u8);
