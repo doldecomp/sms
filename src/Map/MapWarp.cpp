@@ -5,9 +5,8 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Camera/CubeManagerBase.hpp>
+#include <System/MarDirector.hpp>
 #include <dolphin/mtx.h>
-
-#include "gpMarDirector.hpp"
 
 // rouge include needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
