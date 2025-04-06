@@ -1,12 +1,10 @@
 #include <Map/MapDraw.hpp>
 #include <Map/Map.hpp>
+#include <Camera/Camera.hpp>
 #include <System/Resolution.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
-
-#include "unsorted_types.h"
-#include "unsorted_variables.h"
 
 // rouge include needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -16,7 +14,6 @@ void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!(param_1 & 8))
 		return;
 
-	// TODO: gpCamera access
 	if (gpCamera->unk2C8 == -1) {
 		if (unk18 > 0) {
 			unk18 -= 5;
