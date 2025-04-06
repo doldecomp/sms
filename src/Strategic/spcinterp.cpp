@@ -237,7 +237,15 @@ void TSpcInterp::execdiv() { }
 
 void TSpcInterp::execmod() { }
 
-void TSpcInterp::execass() { }
+void TSpcInterp::execass()
+{
+	TSpcSlice slice = mProcessStack.pop();
+	++mProgramCounter;
+	u32 arg1 = fetchU32();
+	u32 arg2 = fetchU32();
+
+	mStorageStack.getFromBottom(mDisplay[arg1] + arg2) = slice;
+}
 
 void TSpcInterp::execeq()
 {
@@ -266,7 +274,12 @@ void TSpcInterp::execge() { }
 
 void TSpcInterp::execle() { }
 
-void TSpcInterp::execneg() { }
+void TSpcInterp::execneg()
+{
+	TSpcSlice slice = mProcessStack.pop();
+	slice.negate();
+	mProcessStack.push(slice);
+}
 
 void TSpcInterp::execnot()
 {
@@ -295,7 +308,7 @@ void TSpcInterp::execband()
 {
 	TSpcSlice slice1 = mProcessStack.pop();
 	TSpcSlice slice2 = mProcessStack.pop();
-	mProcessStack.push(slice1.getDataInt() & slice2.getDataInt());
+	mProcessStack.push(slice2.getDataInt() & slice1.getDataInt());
 }
 
 void TSpcInterp::execbor()
@@ -321,24 +334,25 @@ void TSpcInterp::execshr()
 
 void TSpcInterp::execcall()
 {
-	u32 arg1    = fetchU32();
-	s32 arg2    = fetchS32();
+	u32 address = fetchU32();
+	s32 argNum  = fetchS32();
 	u32 counter = mProgramCounter;
+
 	mContextStack.push(counter);
 	mContextStack.push(mStorageStack.size());
 
-	for (int i = 0; i < arg2; ++i)
+	for (int i = 0; i < argNum; ++i)
 		mStorageStack.push(TSpcSlice());
-	for (int i = 0; i < arg2; ++i)
+	for (int i = 0; i < argNum; ++i)
 		mStorageStack.getFromTop(i) = mProcessStack.pop();
-	mProgramCounter = arg1;
+	mProgramCounter = address;
 }
 
 void TSpcInterp::execfunc()
 {
-	u32 arg1 = fetchU32();
-	u32 arg2 = fetchU32();
-	dispatchBuiltin(arg1, arg2);
+	u32 builtinIdx = fetchU32();
+	u32 argNum     = fetchU32();
+	dispatchBuiltin(builtinIdx, argNum);
 }
 
 void TSpcInterp::execmkfr()
@@ -351,22 +365,22 @@ void TSpcInterp::execmkfr()
 
 void TSpcInterp::execmkds()
 {
-	s32 arg1       = fetchS32();
-	u32 old        = mDisplay[arg1];
-	mDisplay[arg1] = mContextStack.getFromTop(0);
-	mContextStack.push(old);
-	mContextStack.push(arg1);
+	s32 displayIdx       = fetchS32();
+	u32 display          = mDisplay[displayIdx];
+	mDisplay[displayIdx] = mContextStack.getFromTop(0);
+	mContextStack.push(display);
+	mContextStack.push(displayIdx);
 }
 
 void TSpcInterp::execret()
 {
-	u32 uVar1 = mContextStack.pop();
-	u32 uVar2 = mContextStack.pop();
-	u32 uVar5 = mContextStack.pop();
+	u32 restoredDisplayIdx       = mContextStack.pop();
+	u32 restoredDisplay          = mContextStack.pop();
+	u32 restoredStorageStackSize = mContextStack.pop();
 
-	for (int i = mStorageStack.size(); i > uVar5; --i)
+	for (int i = mStorageStack.size(); i > restoredStorageStackSize; --i)
 		mStorageStack.pop();
-	mDisplay[uVar1] = uVar2;
+	mDisplay[restoredDisplayIdx] = restoredDisplay;
 
 	mProgramCounter = mContextStack.pop();
 }
