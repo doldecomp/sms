@@ -1,5 +1,6 @@
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/spcinterp.hpp>
+#include <Strategic/Spine.hpp>
 #include <Enemy/SmallEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/NameKuri.hpp>
@@ -11,6 +12,7 @@
 #include <Enemy/TypicalEnemy.hpp>
 #include <Animal/AnimalNerve.hpp>
 #include <NPC/NpcNerve.hpp>
+#include <M3DUtil/MActor.hpp>
 
 const TNerveBase<TLiveActor>* NerveGetByIndex(int param_1)
 {
@@ -341,27 +343,237 @@ const TNerveBase<TLiveActor>* NerveGetByIndex(int param_1)
 	}
 }
 
-void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
+
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		actor->setBck(arg.getDataString());
+
+	interp->push(TSpcSlice());
+}
 
 void linSetSubBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
 
-void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
 
-void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		actor->setBpk(arg.getDataString());
 
-void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	interp->push(TSpcSlice());
+}
 
-void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
 
-void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		actor->setBtp(arg.getDataString());
 
-void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	interp->push(TSpcSlice());
+}
 
-void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
 
-void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		actor->setBtk(arg.getDataString());
 
-void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+	interp->push(TSpcSlice());
+}
+
+void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
+
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		actor->setBlk(arg.getDataString());
+
+	interp->push(TSpcSlice());
+}
+
+void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TSpcSlice arg = interp->pop();
+
+	MActor* actor = interp->getOwner()->unk74;
+	if (actor)
+		arg.getDataString(); // NOTE: there's no BLS
+
+	interp->push(TSpcSlice());
+}
+
+void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(2, &arg_num);
+	TLiveActor* owner = interp->getOwner();
+	TSpcSlice arg1    = interp->pop();
+	TSpcSlice arg2    = interp->pop();
+
+	switch (arg2.getDataInt()) {
+	case 0:
+		owner->unk74->setFrameRate(arg1.getDataFloat(), 0);
+		break;
+	case 1:
+		owner->unk74->setFrameRate(arg1.getDataFloat(), 3);
+		break;
+	}
+
+	interp->push(TSpcSlice());
+}
+
+void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(2, &arg_num);
+	TLiveActor* owner = interp->getOwner();
+	TSpcSlice arg1    = interp->pop();
+	TSpcSlice arg2    = interp->pop();
+
+	switch (arg2.getDataInt()) {
+	case 0:
+		switch (arg1.getDataInt()) {
+		case 0:
+			interp->push(TSpcSlice(owner->mPosition.x));
+			break;
+		case 1:
+			interp->push(TSpcSlice(owner->mPosition.y));
+			break;
+		case 2:
+			interp->push(TSpcSlice(owner->mPosition.z));
+			break;
+		default:
+			interp->push(TSpcSlice());
+			break;
+		}
+		break;
+	case 1:
+		switch (arg1.getDataInt()) {
+		case 0:
+			interp->push(TSpcSlice(owner->mRotation.x));
+			break;
+		case 1:
+			interp->push(TSpcSlice(owner->mRotation.y));
+			break;
+		case 2:
+			interp->push(TSpcSlice(owner->mRotation.z));
+			break;
+		default:
+			interp->push(TSpcSlice());
+			break;
+		}
+		break;
+	case 2:
+		switch (arg1.getDataInt()) {
+		case 0:
+			interp->push(TSpcSlice(owner->mScaling.x));
+			break;
+		case 1:
+			interp->push(TSpcSlice(owner->mScaling.y));
+			break;
+		case 2:
+			interp->push(TSpcSlice(owner->mScaling.z));
+			break;
+		default:
+			interp->push(TSpcSlice());
+			break;
+		}
+		break;
+	default:
+		interp->push(TSpcSlice());
+		break;
+	}
+}
+
+void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(3, &arg_num);
+	TLiveActor* owner = interp->getOwner();
+	TSpcSlice arg1    = interp->pop();
+	TSpcSlice arg2    = interp->pop();
+	TSpcSlice arg3    = interp->pop();
+
+	f32 value = arg1.getDataFloat();
+
+	switch (arg3.getDataInt()) {
+	case 1:
+		while (value >= 360.0f)
+			value -= 360.0f;
+		while (value <= 0.0f)
+			value += 360.0f;
+		switch (arg2.getDataInt()) {
+		case 0:
+			owner->mRotation.x = value;
+			break;
+		case 1:
+			owner->mRotation.y = value;
+			break;
+		case 2:
+			owner->mRotation.z = value;
+			break;
+		}
+		break;
+
+	case 0:
+		switch (arg2.getDataInt()) {
+		case 0:
+			owner->mPosition.x = value;
+			break;
+		case 1:
+			owner->mPosition.y = value;
+			break;
+		case 2:
+			owner->mPosition.z = value;
+			break;
+		}
+		break;
+
+	case 2:
+		switch (arg2.getDataInt()) {
+		case 0:
+			owner->mScaling.x = value;
+			break;
+		case 1:
+			owner->mScaling.y = value;
+			break;
+		case 2:
+			owner->mScaling.z = value;
+			break;
+		}
+		break;
+	}
+
+	interp->push(TSpcSlice());
+}
+
+void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	TLiveActor* owner = interp->getOwner();
+	TSpcSlice arg     = interp->pop();
+
+	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(arg.getDataInt());
+
+	if (!nerve) {
+		interp->push(TSpcSlice());
+	} else {
+		owner->unk8C->pushNerve(nerve);
+		interp->push(TSpcSlice());
+	}
+}
 
 template <> void TSpcTypedBinary<TLiveActor>::initUserBuiltin()
 {

@@ -592,6 +592,9 @@ public:
 	}
 
 	virtual ~TSpcTypedInterp() { }
+
+	// fabricated
+	T* getOwner() { return (T*)unk10; }
 };
 
 #endif

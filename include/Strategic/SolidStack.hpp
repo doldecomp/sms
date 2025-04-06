@@ -9,7 +9,14 @@ template <class T> class TSolidStack {
 	/* 0x8 */ T* unk8;
 	/* 0xC */ // vt
 public:
-	T pop();
+	T pop() { }
+	void push(T value)
+	{
+		if (unk4 < unk0) {
+			unk8[unk4] = value;
+			++unk4;
+		}
+	}
 
 	virtual ~TSolidStack() { }
 };
