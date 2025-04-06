@@ -259,7 +259,6 @@ cflags_game = [
 
 cflags_system = [
     *cflags_game,
-    "-O4,p",
     "-inline auto",
     "-opt all,nostrength",
 ]

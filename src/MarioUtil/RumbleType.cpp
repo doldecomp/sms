@@ -1,6 +1,7 @@
-#include "dolphin.h"
-#include "unsorted_types.h"
-#include "unsorted_variables.h"
+#include <MarioUtil/RumbleType.hpp>
+#include <unsorted_types.h>
+
+extern int channelNum;
 
 // Enum To Str?
 struct UnkStruct3B0378 _info[23] = {
