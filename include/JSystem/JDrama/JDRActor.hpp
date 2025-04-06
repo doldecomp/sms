@@ -40,8 +40,8 @@ public:
 	virtual void JSGSetRotation(const Vec&);
 
 public:
-	/* 0x24 */ Vec mScaling;
-	/* 0x30 */ Vec mRotation;
+	/* 0x24 */ JGeometry::TVec3<f32> mScaling;
+	/* 0x30 */ JGeometry::TVec3<f32> mRotation;
 	/* 0x3C */ TNameRef* unk3C;
 	/* 0x40 */ TViewObj* unk40;
 };

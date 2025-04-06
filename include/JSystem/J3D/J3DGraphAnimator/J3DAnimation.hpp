@@ -25,6 +25,7 @@ public:
 
 	void setSpeed(f32 speed) { mSpeed = speed; }
 	void setAttribute(u8 attr) { mLoopMode = attr; }
+	f32 getRate() const { return mSpeed; }
 	void setRate(f32 rate) { mSpeed = rate; }
 	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
 	f32 getCurrentFrame() const { return mCurrentFrame; }

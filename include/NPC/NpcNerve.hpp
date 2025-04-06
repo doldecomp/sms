@@ -1,24 +1,38 @@
 #ifndef NPC_NPC_NERVE_HPP
 #define NPC_NPC_NERVE_HPP
 
-#include <Strategic/LiveActor.hpp>
+#include <Enemy/SolidStack.hpp>
 
+// TODO: these base classes should probably live somewhere else
+class TSpineEnemy;
 template <class T> class TNerveBase;
 
 template <class T> class TSpineBase {
 public:
-	void update();
-	void getLatestNerve() const;
-	~TSpineBase();
-	void pushNerve(const TNerveBase<TLiveActor>*);
+	/* 0x0 */ TSpineEnemy* unk0;
+	/* 0x4 */ TSolidStack<TNerveBase<T>*> unk4;
+	/* 0x14 */ TNerveBase<T>* unk14;
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ TNerveBase<T>* unk1C;
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ // vt
+
+public:
+	TNerveBase<T>* getLatestNerve() const;
+	void pushNerve(const TNerveBase<T>*);
+
+	virtual ~TSpineBase();
+	virtual void update();
 };
 
 template <class T> class TNerveBase {
 public:
 	TNerveBase() { }
 	virtual ~TNerveBase() { }
-	virtual void execute(TSpineBase<TLiveActor>*) const = 0;
+	virtual void execute(TSpineBase<T>*) const = 0;
 };
+
+class TLiveActor;
 
 class TNerveNPCGraphWander : public TNerveBase<TLiveActor> {
 public:

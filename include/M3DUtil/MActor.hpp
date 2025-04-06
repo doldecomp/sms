@@ -82,6 +82,7 @@ public:
 
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
+	J3DModel* getUnk4() { return unk4; }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

@@ -579,7 +579,7 @@ void TSpcInterp::update()
 		u8 cmd = fetchU8();
 
 		typedef void (TSpcInterp::*Handler)();
-		static Handler handlers[] = {
+		static Handler table[] = {
 			&TSpcInterp::execint,  &TSpcInterp::execflt,  &TSpcInterp::execstr,
 			&TSpcInterp::execadr,  &TSpcInterp::execvar,  &TSpcInterp::execnop,
 			&TSpcInterp::execinc,  &TSpcInterp::execdec,  &TSpcInterp::execadd,
@@ -597,11 +597,11 @@ void TSpcInterp::update()
 		};
 
 		Handler handler;
-		if (cmd >= ARRAY_COUNT(handlers)) {
+		if (cmd >= ARRAY_COUNT(table)) {
 			SpcTrace("TSpcInterp : unknown command 0x%x\n", cmd);
 			handler = nullptr;
 		} else {
-			handler = handlers[cmd];
+			handler = table[cmd];
 		}
 
 		if (handler)
