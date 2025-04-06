@@ -1,5 +1,4 @@
-#include <types.h>
-#include <unsorted_types.h>
+#include <System/Application.hpp>
 
 // BSS
 TApplication gpApplication;
