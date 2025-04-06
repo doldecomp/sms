@@ -886,7 +886,7 @@ config.libs = [
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Strategic/liveactor.cpp"),
-            Object(NonMatching, "Strategic/liveinterp.cpp", extra_cflags=["-sym on"]),
+            Object(NonMatching, "Strategic/liveinterp.cpp"),
             Object(NonMatching, "Strategic/livemanager.cpp"),
             Object(NonMatching, "Strategic/ObjHitCheck.cpp"),
             Object(NonMatching, "Strategic/objmanager.cpp"),
