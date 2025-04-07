@@ -72,23 +72,27 @@ void spcInt(TSpcInterp* interp, u32 arg_count)
 	if (arg_count != 1)
 		interp->verifyArgNum(1, &arg_count);
 
-	TSpcSlice slice = interp->mProcessStack.pop();
-	interp->mProcessStack.push(slice.getDataInt());
+	TSpcSlice slice;
+	slice = interp->pop();
+	interp->push(slice.getDataInt());
 }
 
 void spcFloat(TSpcInterp* interp, u32 arg_count)
 {
-	interp->verifyArgNum(1, &arg_count);
+	if (arg_count != 1)
+		interp->verifyArgNum(1, &arg_count);
 
-	TSpcSlice slice = interp->mProcessStack.pop();
-	interp->mProcessStack.push(slice.getDataFloat());
+	TSpcSlice slice;
+	slice = interp->pop();
+	interp->push(slice.getDataFloat());
 }
 
 void spcTypeof(TSpcInterp* interp, u32 arg_count)
 {
-	interp->verifyArgNum(1, &arg_count);
+	if (arg_count != 1)
+		interp->verifyArgNum(1, &arg_count);
 
-	TSpcSlice slice = interp->mProcessStack.pop();
+	TSpcSlice slice = interp->pop();
 	interp->mProcessStack.push((int)slice.typeof());
 }
 
@@ -174,8 +178,8 @@ void TSpcInterp::execint()
 void TSpcInterp::execflt()
 {
 	TSpcSlice slice;
-	(f32&)slice.mData = fetchF32();
-	slice.mType       = TSpcSlice::TYPE_FLOAT;
+	f32 data = fetchF32();
+	slice.setDataFloat(data);
 	mProcessStack.push(slice);
 }
 
@@ -216,8 +220,8 @@ void TSpcInterp::execdec() { }
 
 void TSpcInterp::execadd()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 
 	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
 	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
@@ -229,13 +233,58 @@ void TSpcInterp::execadd()
 	}
 }
 
-void TSpcInterp::execsub() { }
+void TSpcInterp::execsub()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 
-void TSpcInterp::execmul() { }
+	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
+	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
+		TSpcSlice result;
+		result.setFloat(arg1.getDataFloat() - arg2.getDataFloat());
+		mProcessStack.push(result);
+	} else {
+		mProcessStack.push(arg1.getDataInt() - arg2.getDataInt());
+	}
+}
 
-void TSpcInterp::execdiv() { }
+void TSpcInterp::execmul()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 
-void TSpcInterp::execmod() { }
+	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
+	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
+		TSpcSlice result;
+		result.setFloat(arg1.getDataFloat() * arg2.getDataFloat());
+		mProcessStack.push(result);
+	} else {
+		mProcessStack.push(arg1.getDataInt() * arg2.getDataInt());
+	}
+}
+
+void TSpcInterp::execdiv()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+
+	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
+	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
+		TSpcSlice result;
+		result.setFloat(arg1.getDataFloat() / arg2.getDataFloat());
+		mProcessStack.push(result);
+	} else {
+		mProcessStack.push(arg1.getDataInt() / arg2.getDataInt());
+	}
+}
+
+void TSpcInterp::execmod()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+
+	mProcessStack.push(arg1.getDataInt() % arg2.getDataInt());
+}
 
 void TSpcInterp::execass()
 {
@@ -249,28 +298,33 @@ void TSpcInterp::execass()
 
 void TSpcInterp::execeq()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 	mProcessStack.push((int)(arg1 == arg2));
 }
 
 void TSpcInterp::execne()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 	mProcessStack.push((int)(arg1 != arg2));
 }
 
 void TSpcInterp::execgt()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 	mProcessStack.push((int)(arg1 > arg2));
 }
 
 void TSpcInterp::execlt() { }
 
 void TSpcInterp::execge() { }
+
+static void dummy(TSpcSlice& x) { x.getDataFloat(); }
+static void dummy_1(TSpcSlice& x) { dummy(x); }
+static void dummy_2(TSpcSlice& x) { dummy_1(x); }
+static void dummy_3(TSpcSlice& x) { dummy_2(x); }
 
 void TSpcInterp::execle() { }
 
@@ -284,51 +338,50 @@ void TSpcInterp::execneg()
 void TSpcInterp::execnot()
 {
 	TSpcSlice slice = mProcessStack.pop();
-	int v           = slice.getDataInt() == 0 ? 1 : 0;
-	mProcessStack.push(v);
+	mProcessStack.push(slice.getDataInt() == 0 ? 1 : 0);
 }
 
 void TSpcInterp::execand()
 {
-	TSpcSlice slice1 = mProcessStack.pop();
-	TSpcSlice slice2 = mProcessStack.pop();
-	mProcessStack.push(
-	    slice1.getDataInt() != 0 && slice2.getDataInt() != 0 ? 1 : 0);
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	mProcessStack.push(arg1.getDataInt() != 0 && arg2.getDataInt() != 0 ? 1
+	                                                                    : 0);
 }
 
 void TSpcInterp::execor()
 {
-	TSpcSlice slice1 = mProcessStack.pop();
-	TSpcSlice slice2 = mProcessStack.pop();
-	mProcessStack.push(
-	    slice1.getDataInt() != 0 || slice2.getDataInt() != 0 ? 1 : 0);
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	mProcessStack.push(arg1.getDataInt() != 0 || arg2.getDataInt() != 0 ? 1
+	                                                                    : 0);
 }
 
 void TSpcInterp::execband()
 {
-	TSpcSlice slice1 = mProcessStack.pop();
-	TSpcSlice slice2 = mProcessStack.pop();
-	mProcessStack.push(slice2.getDataInt() & slice1.getDataInt());
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	mProcessStack.push(arg1.getDataInt() & arg2.getDataInt());
 }
 
 void TSpcInterp::execbor()
 {
-	TSpcSlice slice1 = mProcessStack.pop();
-	TSpcSlice slice2 = mProcessStack.pop();
-	mProcessStack.push(slice1.getDataInt() | slice2.getDataInt());
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	mProcessStack.push(arg1.getDataInt() | arg2.getDataInt());
 }
 
 void TSpcInterp::execshl()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 	mProcessStack.push(TSpcSlice(arg1.getDataInt() << arg2.getDataInt()));
 }
 
 void TSpcInterp::execshr()
 {
-	TSpcSlice arg1 = mProcessStack.pop();
 	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
 	mProcessStack.push(TSpcSlice(arg1.getDataInt() >> arg2.getDataInt()));
 }
 
@@ -396,8 +449,7 @@ void TSpcInterp::execjne()
 {
 	u32 arg1        = fetchU32();
 	TSpcSlice slice = mProcessStack.pop();
-	int val         = slice.getDataInt();
-	if (val == 0)
+	if (slice.getDataInt() == 0)
 		mProgramCounter = arg1;
 }
 
@@ -523,12 +575,12 @@ void TSpcInterp::verifyArgNum(u32 param_1, u32* param_2)
 	         mCurrentlyExecutingBuiltinName, *param_2, param_1);
 
 	while (param_1 < *param_2) {
-		mProcessStack.pop();
+		pop();
 		--*param_2;
 	}
 
 	while (param_1 > *param_2) {
-		mProcessStack.push(TSpcSlice());
+		push();
 		++*param_2;
 	}
 }
@@ -563,6 +615,11 @@ void TSpcInterp::referByName(const char*)
 	SpcTrace("TSpcInterp : cannot refer function, %s\n", "");
 	SpcTrace("TSpcInterp : cannot refer variable\n");
 }
+
+// NOTE: the stuff above is supposed to be referencing these float constants
+static void dummy_7(f32& x) { x = 1.0f; }
+static void dummy_6(f32& x, int y) { x = y; }
+static void dummy_5(f32& x) { x = 0.0f; }
 
 void TSpcInterp::update()
 {

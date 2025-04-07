@@ -94,9 +94,9 @@ public:
 	{
 		switch (mType) {
 		case TYPE_INT:
-			return (int&)mData;
+			return mData.asInt;
 		case TYPE_FLOAT:
-			return (f32&)mData;
+			return mData.asFloat;
 		default:
 			return 0;
 		}
@@ -106,12 +106,18 @@ public:
 	{
 		switch (mType) {
 		case TYPE_INT:
-			return (int&)mData;
+			return mData.asInt;
 		case TYPE_FLOAT:
-			return (f32&)mData;
+			return mData.asFloat;
 		default:
 			return 0.0f;
 		}
+	}
+
+	void setDataFloat(f32 f)
+	{
+		mData.asFloat = f;
+		mType         = TYPE_FLOAT;
 	}
 
 	const char* getDataString() const
@@ -347,6 +353,7 @@ public:
 	}
 
 	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
+	void push() { push(TSpcSlice()); }
 	TSpcSlice pop() { return mProcessStack.pop(); }
 
 public:
