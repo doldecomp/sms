@@ -96,14 +96,14 @@ public:
 	static JSUList<JKRThread> sThreadList;
 
 protected:
-	JSULink<JKRThread> mLink;
-	JKRHeap* mHeap;
-	OSThread* mThreadRecord;
-	OSMessageQueue mMesgQueue;
-	OSMessage* mMesgBuffer;
-	int mMesgCount;
-	void* mStackMemory;
-	u32 mStackSize;
+	/* 0x18 */ JSULink<JKRThread> mLink;
+	/* 0x28 */ JKRHeap* mHeap;
+	/* 0x2C */ OSThread* mThreadRecord;
+	/* 0x30 */ OSMessageQueue mMesgQueue;
+	/* 0x50 */ OSMessage* mMesgBuffer;
+	/* 0x54 */ int mMesgCount;
+	/* 0x58 */ void* mStackMemory;
+	/* 0x5C */ u32 mStackSize;
 };
 
 #endif

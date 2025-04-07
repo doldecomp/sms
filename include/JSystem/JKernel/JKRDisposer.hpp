@@ -11,8 +11,8 @@ public:
 	virtual ~JKRDisposer();
 
 public:
-	JKRHeap* mRootHeap;                 // _4
-	JSULink<JKRDisposer> mPointerLinks; // _8
+	/* 0x4 */ JKRHeap* mRootHeap;
+	/* 0x8 */ JSULink<JKRDisposer> mPointerLinks;
 };
 
 #endif
