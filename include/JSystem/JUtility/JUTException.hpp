@@ -99,6 +99,9 @@ public:
 
 	static void setMapFile(char* map) { appendMapFile(map); }
 
+	// fabricated
+	void setPrintFlags(u32 flags) { mPrintFlags = flags; }
+
 private:
 	static OSMessageQueue sMessageQueue;
 	static const char* sCpuExpName[16];
@@ -114,15 +117,15 @@ private:
 	static u32 fpscr;
 
 private:
-	/* 0x68 */ JUTExternalFB* mFrameMemory;
-	/* 0x6C */ JUTDirectPrint* mDirectPrint;
-	/* 0x70 */ JUTGamePad* mGamePad;
-	/* 0x74 */ JUTGamePad::EPadPort mGamePadPort;
-	/* 0x78 */ s32 mPrintWaitTime0;
-	/* 0x7C */ s32 mPrintWaitTime1;
-	/* 0x80 */ u32 mTraceSuppress;
-	/* 0x84 */ u32 field_0x98;
-	/* 0x88 */ u32 mPrintFlags;
+	/* 0x60 */ JUTExternalFB* mFrameMemory;
+	/* 0x64 */ JUTDirectPrint* mDirectPrint;
+	/* 0x68 */ JUTGamePad* mGamePad;
+	/* 0x6C */ JUTGamePad::EPadPort mGamePadPort;
+	/* 0x70 */ s32 mPrintWaitTime0;
+	/* 0x74 */ s32 mPrintWaitTime1;
+	/* 0x78 */ u32 mTraceSuppress;
+	/* 0x7C */ u32 field_0x98;
+	/* 0x80 */ u32 mPrintFlags;
 };
 
 struct JUTWarn {
