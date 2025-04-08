@@ -9,6 +9,14 @@ class MActorAnmData;
 class TModelDataKeeper;
 struct TModelDataLoadEntry;
 
+class TObjChara : JDrama::TCharacter {
+public:
+	virtual ~TObjChara();
+	virtual void load(JSUMemoryInputStream&);
+
+	virtual void* getRes(const char*) const;
+};
+
 class TObjManager : JDrama::TViewObj {
 public:
 	TObjManager(const char*);
@@ -31,20 +39,12 @@ public:
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ s32 unk14;
 	/* 0x18 */ THitActor** unk18;
-	/* 0x1C */ TNameRef* unk1C; // TODO: type should be derived
+	/* 0x1C */ TObjChara* unk1C;
 	/* 0x20 */ MActorAnmData* unk20;
 	/* 0x24 */ TModelDataKeeper* unk24;
 	/* 0x28 */ s32 unk28;
 	/* 0x2C */ u32 unk2C;
 	/* 0x30 */ u32 unk30;
-};
-
-class TObjChara : JDrama::TCharacter {
-public:
-	virtual ~TObjChara();
-	virtual void load(JSUMemoryInputStream&);
-
-	virtual void* getRes(const char*) const;
 };
 
 #endif

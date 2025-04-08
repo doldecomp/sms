@@ -48,6 +48,10 @@ public:
 	/* 0x18 */ const char* unk18;
 };
 
+class TCubeManagerArea;
+
+extern TCubeManagerArea* gpCubeArea;
+
 class TCubeManagerArea : public TCubeManagerBase {
 public:
 	TCubeManagerArea();

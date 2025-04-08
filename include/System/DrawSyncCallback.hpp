@@ -5,7 +5,7 @@
 
 class TDrawSyncCallback {
 public:
-	virtual void drawSyncCallback(u16);
+	virtual void drawSyncCallback(u16) = 0;
 };
 
 #endif
