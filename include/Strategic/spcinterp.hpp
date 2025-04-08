@@ -124,7 +124,7 @@ public:
 	{
 		switch (mType) {
 		case TYPE_STRING:
-			return (const char*&)mData;
+			return mData.asString;
 		default:
 			return "";
 		}
@@ -132,18 +132,18 @@ public:
 
 	void setFloat(f32 f)
 	{
-		mType       = TYPE_FLOAT;
-		(f32&)mData = f;
+		mType         = TYPE_FLOAT;
+		mData.asFloat = f;
 	}
 
 	TSpcSlice& operator++()
 	{
 		switch (mType) {
 		case TYPE_INT:
-			(int&)mData += 1;
+			mData.asInt += 1;
 			break;
 		case TYPE_FLOAT:
-			(float&)mData += 1.0f;
+			mData.asFloat += 1.0f;
 			break;
 		default:
 			break;
@@ -155,10 +155,10 @@ public:
 	{
 		switch (mType) {
 		case TYPE_INT:
-			(int&)mData -= 1;
+			mData.asInt -= 1;
 			break;
 		case TYPE_FLOAT:
-			(float&)mData -= 1.0f;
+			mData.asFloat -= 1.0f;
 			break;
 		default:
 			break;
@@ -170,10 +170,10 @@ public:
 	{
 		switch (mType) {
 		case TSpcSlice::TYPE_INT:
-			(int&)mData = -(int&)mData;
+			mData.asInt = -mData.asInt;
 			break;
 		case TSpcSlice::TYPE_FLOAT:
-			(float&)mData = -(float&)mData;
+			mData.asFloat = -mData.asFloat;
 			break;
 		default:
 			break;
@@ -183,7 +183,7 @@ public:
 	BOOL operator==(const TSpcSlice& other) const
 	{
 		if (mType == TYPE_STRING && other.mType == TYPE_STRING) {
-			if (strcmp((const char*&)mData, (const char*&)other.mData) == 0)
+			if (strcmp(mData.asString, other.mData.asString) == 0)
 				return true;
 			else
 				return false;
@@ -199,7 +199,25 @@ public:
 				return false;
 		}
 	}
-	BOOL operator!=(const TSpcSlice& other) const { return !(*this == other); }
+	BOOL operator!=(const TSpcSlice& other) const
+	{
+		if (mType == TYPE_STRING && other.mType == TYPE_STRING) {
+			if (strcmp(mData.asString, other.mData.asString) != 0)
+				return true;
+			else
+				return false;
+		} else if (mType == TYPE_FLOAT || other.mType == TYPE_FLOAT) {
+			if (getDataFloat() != other.getDataFloat())
+				return true;
+			else
+				return false;
+		} else {
+			if (getDataInt() != other.getDataInt())
+				return true;
+			else
+				return false;
+		}
+	}
 
 	BOOL operator>(const TSpcSlice& other) const
 	{
@@ -552,14 +570,6 @@ public:
 	void referByName(const char*);
 
 	virtual void update();
-
-	// fabricated
-	void skipCall(int arg_count)
-	{
-		for (int i = 0; i < arg_count; ++i)
-			mProcessStack.pop();
-		mProcessStack.push(TSpcSlice());
-	}
 };
 
 template <class T> class TSpcTypedBinary : public TSpcBinary {
@@ -601,7 +611,7 @@ public:
 	virtual ~TSpcTypedInterp() { }
 
 	// fabricated
-	T* getOwner() { return (T*)unk10; }
+	T* getOwner() const { return (T*)unk10; }
 };
 
 #endif

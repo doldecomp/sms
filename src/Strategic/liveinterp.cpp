@@ -348,11 +348,11 @@ void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		actor->setBck(arg.getDataString());
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetSubBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
@@ -362,11 +362,11 @@ void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		actor->setBpk(arg.getDataString());
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -374,11 +374,11 @@ void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		actor->setBtp(arg.getDataString());
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -386,11 +386,11 @@ void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		actor->setBtk(arg.getDataString());
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -398,11 +398,11 @@ void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		actor->setBlk(arg.getDataString());
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -410,11 +410,11 @@ void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
 
-	MActor* actor = interp->getOwner()->unk74;
+	MActor* actor = interp->getOwner()->getMActor();
 	if (actor)
 		arg.getDataString(); // NOTE: there's no BLS
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -426,14 +426,14 @@ void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 
 	switch (arg2.getDataInt()) {
 	case 0:
-		owner->unk74->setFrameRate(arg1.getDataFloat(), 0);
+		owner->getMActor()->setFrameRate(arg1.getDataFloat(), 0);
 		break;
 	case 1:
-		owner->unk74->setFrameRate(arg1.getDataFloat(), 3);
+		owner->getMActor()->setFrameRate(arg1.getDataFloat(), 3);
 		break;
 	}
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -456,7 +456,7 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 			interp->push(TSpcSlice(owner->mPosition.z));
 			break;
 		default:
-			interp->push(TSpcSlice());
+			interp->push();
 			break;
 		}
 		break;
@@ -472,7 +472,7 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 			interp->push(TSpcSlice(owner->mRotation.z));
 			break;
 		default:
-			interp->push(TSpcSlice());
+			interp->push();
 			break;
 		}
 		break;
@@ -488,12 +488,12 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 			interp->push(TSpcSlice(owner->mScaling.z));
 			break;
 		default:
-			interp->push(TSpcSlice());
+			interp->push();
 			break;
 		}
 		break;
 	default:
-		interp->push(TSpcSlice());
+		interp->push();
 		break;
 	}
 }
@@ -512,7 +512,7 @@ void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	case 1:
 		while (value >= 360.0f)
 			value -= 360.0f;
-		while (value <= 0.0f)
+		while (value < 0.0f)
 			value += 360.0f;
 		switch (arg2.getDataInt()) {
 		case 0:
@@ -556,7 +556,7 @@ void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		break;
 	}
 
-	interp->push(TSpcSlice());
+	interp->push();
 }
 
 void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
@@ -568,10 +568,10 @@ void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(arg.getDataInt());
 
 	if (!nerve) {
-		interp->push(TSpcSlice());
+		interp->push();
 	} else {
 		owner->unk8C->pushNerve(nerve);
-		interp->push(TSpcSlice());
+		interp->push();
 	}
 }
 
@@ -587,4 +587,14 @@ template <> void TSpcTypedBinary<TLiveActor>::initUserBuiltin()
 	bindSystemDataToSymbol("setSRT", (u32)&linSetSRT);
 	bindSystemDataToSymbol("getSRT", (u32)&linGetSRT);
 	bindSystemDataToSymbol("setAnmRate", (u32)&linSetAnmRate);
+}
+
+static void dummy()
+{
+	SpcTrace("\0\0\0\0\0\0\0\0\0\0\0");
+	SpcTrace("メモリが足りません\n");
+	SpcTrace("MActorMtxCalcType_Basic クラシックスケールＯＮ");
+	SpcTrace("MActorMtxCalcType_Softimage クラシックスケールＯＦＦ");
+	SpcTrace("MActorMtxCalcType_MotionBlend モーションブレンド");
+	SpcTrace("MActorMtxCalcType_User ユーザー定義");
 }

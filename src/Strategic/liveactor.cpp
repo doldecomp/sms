@@ -21,8 +21,6 @@
 
 f32 TLiveActor::mVelocityMinY = -40.0f;
 
-void TLiveActor::getMActor() const { }
-
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
