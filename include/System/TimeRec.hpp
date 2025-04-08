@@ -6,6 +6,11 @@
 
 class TTimeArray {
 public:
+	// fabricated
+	struct Entry {
+		u32 start, end;
+	};
+
 	enum { MAX_SIZE = 64 };
 
 	TTimeArray()
@@ -14,10 +19,11 @@ public:
 	}
 	bool append(u32, u32);
 
+	// fabricated
+	int size() { return mSize; }
+	Entry& operator[](int i) { return mEntries[i]; }
+
 public:
-	struct Entry {
-		u32 start, end;
-	};
 	/* 0x0 */ Entry mEntries[MAX_SIZE];
 	/* 0x200 */ int mSize;
 };
@@ -27,15 +33,17 @@ public:
 	static TTimeRec* start(u16);
 	void end();
 
-	virtual void drawSyncCallbackSt(u16);
+	void drawSyncCallbackSt(u16);
 
 	TTimeRec(u16);
 	void flip();
 	void snapGXTime(u32);
 	void suppleGXTime();
-	void drawSyncCallback(u16);
+	virtual void drawSyncCallback(u16);
 
 	static TTimeRec* _instance;
+
+	TTimeArray* crTimeAry() { return unk4[unk814]; }
 
 public:
 	/* 0x4 */ TTimeArray unk4[2][2];
