@@ -862,7 +862,7 @@ config.libs = [
             Object(Matching, "System/Resolution.cpp"),
             Object(NonMatching, "System/PositionHolder.cpp"),
             Object(Matching, "System/ProcessMeter.cpp"),
-            Object(NonMatching, "System/TimeRec.cpp"),
+            Object(NonMatching, "System/TimeRec.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/DrawSyncManager.cpp"),
             Object(NonMatching, "System/THPRender.cpp"),
             Object(NonMatching, "System/MarNameRefGen_BossEnemy.cpp"),
