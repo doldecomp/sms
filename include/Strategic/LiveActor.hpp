@@ -56,7 +56,8 @@ public:
 	void calcRidePos();
 	~TLiveActor();
 	TLiveActor(const char*);
-	void getMActor() const;
+
+	MActor* getMActor() const { return unk74; }
 
 	static f32 mVelocityMinY;
 

@@ -5,8 +5,8 @@ void spcYield(TSpcInterp* interp, u32 arg_count)
 {
 	interp->mStepsLeft = 0;
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcExit(TSpcInterp* interp, u32 arg_count)
@@ -14,24 +14,24 @@ void spcExit(TSpcInterp* interp, u32 arg_count)
 	interp->mStepsToDo = 0;
 	interp->mStepsLeft = 0;
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcLock(TSpcInterp* interp, u32 arg_count)
 {
 	interp->mLocked = TRUE;
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcUnlock(TSpcInterp* interp, u32 arg_count)
 {
 	interp->mLocked = FALSE;
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcPrint(TSpcInterp* interp, u32 arg_count)
@@ -54,8 +54,8 @@ void spcPrint(TSpcInterp* interp, u32 arg_count)
 	}
 
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcDump(TSpcInterp* interp, u32 arg_count)
@@ -63,8 +63,8 @@ void spcDump(TSpcInterp* interp, u32 arg_count)
 	interp->dump();
 
 	for (int i = 0; i < (int)arg_count; ++i)
-		interp->mProcessStack.pop();
-	interp->mProcessStack.push(TSpcSlice());
+		interp->pop();
+	interp->push();
 }
 
 void spcInt(TSpcInterp* interp, u32 arg_count)
@@ -93,7 +93,7 @@ void spcTypeof(TSpcInterp* interp, u32 arg_count)
 		interp->verifyArgNum(1, &arg_count);
 
 	TSpcSlice slice = interp->pop();
-	interp->mProcessStack.push((int)slice.typeof());
+	interp->push((int)slice.typeof());
 }
 
 TSpcBinary::TSpcBinary(void* data)
@@ -300,21 +300,21 @@ void TSpcInterp::execeq()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push((int)(arg1 == arg2));
+	mProcessStack.push(arg1 == arg2);
 }
 
 void TSpcInterp::execne()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push((int)(arg1 != arg2));
+	mProcessStack.push(arg1 != arg2);
 }
 
 void TSpcInterp::execgt()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push((int)(arg1 > arg2));
+	mProcessStack.push(arg1 > arg2);
 }
 
 void TSpcInterp::execlt() { }
