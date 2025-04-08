@@ -65,7 +65,7 @@ public:
 	/* 0x70 */ TLiveManager* unk70;
 	/* 0x74 */ MActor* unk74;
 	/* 0x78 */ TMActorKeeper* unk78;
-	/* 0x7C */ u16 unk7C;
+	/* 0x7C */ s16 unk7C;
 	/* 0x80 */ MAnmSound* unk80;
 	/* 0x84 */ const char* unk84;
 	/* 0x88 */ void* unk88;
