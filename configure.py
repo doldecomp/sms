@@ -858,7 +858,7 @@ config.libs = [
             Object(NonMatching, "System/ScenarioArchiveName.cpp"),
             Object(NonMatching, "System/MarioGamePad.cpp"),
             Object(NonMatching, "System/StageEventInfo.cpp"),
-            Object(NonMatching, "System/StageUtil.cpp"),
+            Object(Matching, "System/StageUtil.cpp"),
             Object(Matching, "System/Resolution.cpp"),
             Object(NonMatching, "System/PositionHolder.cpp"),
             Object(Matching, "System/ProcessMeter.cpp"),
