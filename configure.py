@@ -876,7 +876,7 @@ config.libs = [
             Object(NonMatching, "System/MarDirectorCreateObjects.cpp"),
             Object(NonMatching, "System/MarDirectorSetupObjects.cpp"),
             Object(NonMatching, "System/MSoundMainSide.cpp"),
-            Object(NonMatching, "System/TargetArrow.cpp"),
+            Object(Matching, "System/TargetArrow.cpp", extra_cflags=["-inline deferred"]),
         ],
     },
     {
