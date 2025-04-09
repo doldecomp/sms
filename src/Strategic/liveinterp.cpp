@@ -588,13 +588,3 @@ template <> void TSpcTypedBinary<TLiveActor>::initUserBuiltin()
 	bindSystemDataToSymbol("getSRT", (u32)&linGetSRT);
 	bindSystemDataToSymbol("setAnmRate", (u32)&linSetAnmRate);
 }
-
-static void dummy()
-{
-	SpcTrace("\0\0\0\0\0\0\0\0\0\0\0");
-	SpcTrace("メモリが足りません\n");
-	SpcTrace("MActorMtxCalcType_Basic クラシックスケールＯＮ");
-	SpcTrace("MActorMtxCalcType_Softimage クラシックスケールＯＦＦ");
-	SpcTrace("MActorMtxCalcType_MotionBlend モーションブレンド");
-	SpcTrace("MActorMtxCalcType_User ユーザー定義");
-}
