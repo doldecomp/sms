@@ -896,7 +896,7 @@ config.libs = [
             Object(NonMatching, "Strategic/question.cpp"),
             Object(NonMatching, "Strategic/smplcharacter.cpp"),
             Object(NonMatching, "Strategic/HitActor.cpp"),
-            Object(NonMatching, "Strategic/binder.cpp"),
+            Object(Matching, "Strategic/binder.cpp"),
             Object(NonMatching, "Strategic/SharedParts.cpp"),
             Object(NonMatching, "Strategic/MirrorActor.cpp"),
         ],
@@ -1123,7 +1123,7 @@ config.libs = [
     {
         "lib": "Enemy",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Enemy/conductor.cpp"),
