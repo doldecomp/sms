@@ -15,6 +15,12 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 
 	virtual void* getRes(const char*) const;
+
+	// fabricated
+	const char* getFolder() const { return mFolder; }
+
+public:
+	/* 0xC */ const char* mFolder;
 };
 
 class TObjManager : JDrama::TViewObj {
