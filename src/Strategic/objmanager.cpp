@@ -72,8 +72,9 @@ void TObjManager::load(JSUMemoryInputStream& stream)
 
 	char buffer[0x100];
 	stream.readString(buffer, 0x100);
-	unk1C
-	    = JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(buffer);
+	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
+	            ->getRootNameRef()
+	            ->search(buffer);
 	unk10 = stream.readU32();
 	unk18 = new THitActor*[unk10];
 }
