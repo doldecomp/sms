@@ -1,40 +1,85 @@
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/HitActor.hpp>
+#include <System/TimeRec.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <dolphin/os.h>
+#include <stdio.h>
 
-#pragma opt_strength_reduction off
-
-JDrama::TNameRef* TObjManager::searchF(u16 key, const char* name)
+void TObjChara::load(JSUMemoryInputStream& stream)
 {
-	JDrama::TNameRef* res = JDrama::TNameRef::searchF(key, name);
-	if (res)
-		return res;
-
-	for (int i = 0; i < unk14; ++i) {
-		JDrama::TNameRef* r = unk18[i]->searchF(key, name);
-		if (r)
-			return r;
-	}
-
-	return nullptr;
+	JDrama::TCharacter::load(stream);
+	mFolder = stream.readString();
 }
 
-TModelDataKeeper* TObjManager::getModelDataKeeper()
+TObjChara::~TObjChara() { }
+
+void* TObjChara::getRes(const char* name) const
 {
-	if (!unk24)
-		createModelData();
-	return unk24;
+	char buffer[256];
+	snprintf(buffer, 256, "%s%s", mFolder, name);
+	return JKRGetResource(buffer);
 }
 
-void TObjManager::createAnmData()
+TObjManager::TObjManager(const char* name)
+    : JDrama::TViewObj(name)
+    , unk10(0)
+    , unk14(0)
+    , unk18(nullptr)
+    , unk1C(nullptr)
+    , unk20(nullptr)
+    , unk24(nullptr)
+    , unk28(0)
+    , unk2C(0)
+    , unk30(0)
 {
-	unk20 = new MActorAnmData;
-	unk20->init(nullptr, nullptr);
 }
 
-void TObjManager::createModelData() { }
+void TObjManager::manageObj(THitActor* obj)
+{
+	unk18[unk14] = obj;
+	++unk14;
+}
+
+void TObjManager::load(JSUMemoryInputStream& stream)
+{
+	JDrama::TViewObj::load(stream);
+
+	char buffer[0x100];
+	stream.readString(buffer, 0x100);
+	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
+	            ->getRootNameRef()
+	            ->search(buffer);
+	unk10 = stream.readU32();
+	unk18 = new THitActor*[unk10];
+}
+
+MActorAnmData* TObjManager::getMActorAnmData()
+{
+	if (!unk20)
+		createAnmData();
+	return unk20;
+}
+
+void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (unk30 & 1)
+		TTimeRec::startTimer();
+
+	for (int i = 0; i < unk14; ++i)
+		unk18[i]->testPerform(param_1, param_2);
+
+	if (unk30 & 1)
+		TTimeRec::endTimer();
+}
+
+void TObjManager::createModelDataArray(const TModelDataLoadEntry* entries)
+{
+	createModelDataArrayBase(entries, unk1C->getFolder());
+}
 
 void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
                                            const char* param_2)
@@ -52,55 +97,37 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 		unk24->createAndKeepData(entries[i].unk0, entries[i].unk4);
 }
 
-void TObjManager::createModelDataArray(const TModelDataLoadEntry* entries)
+void TObjManager::createModelData()
 {
-	createModelDataArrayBase(entries, nullptr);
+	static const TModelDataLoadEntry entry[2]
+	    = { { "default.bmd", 0x10210000, 0 }, { nullptr, 0, 0 } };
+	createModelDataArray(entry);
 }
 
-void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2) { }
-
-MActorAnmData* TObjManager::getMActorAnmData()
+void TObjManager::createAnmData()
 {
-	if (!unk20)
-		createAnmData();
-	return unk20;
+	unk20 = new MActorAnmData;
+	unk20->init(unk1C->getFolder(), nullptr);
 }
 
-void TObjManager::load(JSUMemoryInputStream& stream)
+TModelDataKeeper* TObjManager::getModelDataKeeper()
 {
-	JDrama::TNameRef::load(stream);
-
-	char buffer[0x100];
-	stream.readString(buffer, 0x100);
-	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
-	            ->getRootNameRef()
-	            ->search(buffer);
-	unk10 = stream.readU32();
-	unk18 = new THitActor*[unk10];
+	if (!unk24)
+		createModelData();
+	return unk24;
 }
 
-void TObjManager::manageObj(THitActor* obj)
+JDrama::TNameRef* TObjManager::searchF(u16 key, const char* name)
 {
-	unk18[unk14] = obj;
-	++unk14;
+	JDrama::TNameRef* res = JDrama::TNameRef::searchF(key, name);
+	if (res)
+		return res;
+
+	for (int i = 0; i < unk14; ++i) {
+		JDrama::TNameRef* r = unk18[i]->searchF(key, name);
+		if (r)
+			return r;
+	}
+
+	return nullptr;
 }
-
-TObjManager::TObjManager(const char* name)
-    : JDrama::TViewObj(name)
-    , unk10(0)
-    , unk14(0)
-    , unk18(nullptr)
-    , unk1C(nullptr)
-    , unk20(nullptr)
-    , unk24(nullptr)
-    , unk28(0)
-    , unk2C(0)
-    , unk30(0)
-{
-}
-
-void* TObjChara::getRes(const char*) const { }
-
-TObjChara::~TObjChara() { }
-
-void TObjChara::load(JSUMemoryInputStream&) { }

@@ -2,6 +2,7 @@
 #define SYSTEM_TIME_REC_HPP
 
 #include <System/DrawSyncCallback.hpp>
+#include <dolphin/os.h>
 #include <dolphin/types.h>
 
 class TTimeArray {
@@ -44,6 +45,27 @@ public:
 	static TTimeRec* _instance;
 
 	TTimeArray* crTimeAry() { return unk4[unk814]; }
+
+	// fabricated
+	static void startTimer()
+	{
+		TTimeRec* inst = _instance;
+		if (!inst)
+			return;
+		OSTick tick = OSGetTick();
+		// TODO: uh oh, second arg isn't "end", it's some kind
+		// of a 4-byte array?!
+		inst->crTimeAry()[0].append(tick, 0xffffffff);
+	}
+
+	static void endTimer()
+	{
+		TTimeRec* inst = _instance;
+		if (!inst)
+			return;
+		OSTick tick = OSGetTick();
+		inst->crTimeAry()[0].append(tick, 0);
+	}
 
 public:
 	/* 0x4 */ TTimeArray unk4[2][2];
