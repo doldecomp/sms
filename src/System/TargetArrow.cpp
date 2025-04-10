@@ -4,6 +4,8 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 
+#include <M3DUtil/InfectiousStrings.hpp> // TODO: removeme
+
 TTargetArrow* gpTargetArrow;
 
 const char* cTargetArrowBmdFileName
