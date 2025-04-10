@@ -7,7 +7,12 @@
 class THitActor;
 class MActorAnmData;
 class TModelDataKeeper;
-struct TModelDataLoadEntry;
+
+struct TModelDataLoadEntry {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ u32 unk8;
+};
 
 class TObjChara : JDrama::TCharacter {
 public:

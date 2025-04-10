@@ -19,18 +19,6 @@ class MActorAnmBtk;
 class MActorAnmBrk;
 class MActorAnmBlk;
 
-// NOTE: seems like these strings are "infections" and are
-// included in every single TU that uses this header
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* dummyMactorStringValue2 = "メモリが足りません\n";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-
 class MActor {
 public:
 	MActor(MActorAnmData*);
