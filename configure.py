@@ -894,7 +894,7 @@ config.libs = [
             Object(NonMatching, "Strategic/spcinterp.cpp"),
             Object(NonMatching, "Strategic/Strategy.cpp"),
             Object(NonMatching, "Strategic/question.cpp"),
-            Object(NonMatching, "Strategic/smplcharacter.cpp"),
+            Object(Matching, "Strategic/smplcharacter.cpp"),
             Object(NonMatching, "Strategic/HitActor.cpp"),
             Object(Matching, "Strategic/binder.cpp"),
             Object(NonMatching, "Strategic/SharedParts.cpp"),
