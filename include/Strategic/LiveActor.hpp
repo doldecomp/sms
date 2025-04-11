@@ -61,6 +61,11 @@ public:
 
 	static f32 mVelocityMinY;
 
+	// fabricated
+	const TBGCheckData* getUnkC4() const { return unkC4; }
+	bool checkLiveFlag(u32 flag) const { return unkF0 & flag; }
+	const TMActorKeeper* getActorKeeper() const { return unk78; }
+
 public:
 	/* 0x70 */ TLiveManager* unk70;
 	/* 0x74 */ MActor* unk74;

@@ -17,6 +17,9 @@ public:
 	virtual ~TPlacement() {};
 	virtual void load(JSUMemoryInputStream&);
 
+	// fabricated
+	const JGeometry::TVec3<f32>& getPosition() const { return mPosition; }
+
 public:
 	/* 0x10 */ JGeometry::TVec3<f32> mPosition;
 	/* 0x1C */ u16 unk1C;
