@@ -897,7 +897,7 @@ config.libs = [
             Object(Matching, "Strategic/smplcharacter.cpp"),
             Object(NonMatching, "Strategic/HitActor.cpp"),
             Object(Matching, "Strategic/binder.cpp"),
-            Object(NonMatching, "Strategic/SharedParts.cpp"),
+            Object(Matching, "Strategic/SharedParts.cpp"),
             Object(NonMatching, "Strategic/MirrorActor.cpp"),
         ],
     },

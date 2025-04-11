@@ -13,14 +13,12 @@ public:
 	TSharedParts(const TLiveActor*, int, SDLModelData*, u32, const char*);
 	TSharedParts(const TLiveActor*, int, MActor*, const char*);
 
-	void getConnectedMtx() const;
-	void perform(u32, JDrama::TGraphics*);
-
-	~TSharedParts();
+	virtual void perform(u32, JDrama::TGraphics*);
+	MtxPtr getConnectedMtx() const;
 
 public:
 	/* 0x10 */ const TLiveActor* unk10;
-	/* 0x14 */ int unk14;
+	/* 0x14 */ int mConnectedAnmMtxIndex;
 	/* 0x18 */ MActor* unk18;
 };
 

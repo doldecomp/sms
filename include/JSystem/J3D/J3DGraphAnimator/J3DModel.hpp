@@ -226,6 +226,10 @@ public:
 		mNrmMtxBuf[1][mCurrentViewNo] = tmp;
 	}
 
+	// TODO: might be wrong
+	MtxPtr getBaseTRMtx() { return unk20; }
+	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }
+
 	virtual ~J3DModel();
 
 public:
