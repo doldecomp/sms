@@ -103,97 +103,100 @@ TModelDataKeeper::TModelDataKeeper(const char* folder)
 {
 }
 
-MActor* TMActorKeeper::createAndRegister(SDLModelData* param_1, u32 param_2)
+MActor* TMActorKeeper::createAndRegister(SDLModelData* model_data,
+                                         u32 model_flags)
 {
-	SDLModel* model = new SDLModel(param_1, param_2, 1);
-	MActor* actor   = new MActor(unkC);
-	actor->setModel(model, param_2);
-	unk8[unk6] = actor;
-	++unk6;
+	SDLModel* model = new SDLModel(model_data, model_flags, 1);
+	MActor* actor   = new MActor(mActorAnmData);
+	actor->setModel(model, model_flags);
+	mActors[mActorNum] = actor;
+	++mActorNum;
 	return actor;
 }
 
 MActor* TMActorKeeper::getMActor(const char* name) const
 {
-	if (!getKeeper())
-		return unk8[0];
+	if (!getModelDataKeeper())
+		return mActors[0];
 
-	int index = getKeeper()->getIndex(name);
-	for (int i = 0; i < unk6; ++i) {
-		if (index == unk10[i])
-			return unk8[i];
+	int index = getModelDataKeeper()->getIndex(name);
+	for (int i = 0; i < mActorNum; ++i) {
+		if (index == mActorModelDataIndices[i])
+			return mActors[i];
 	}
 
 	return nullptr;
 }
 
-MActor* TMActorKeeper::createMActorFromDefaultBmd(const char* param_1,
-                                                  u32 param_2)
+MActor* TMActorKeeper::createMActorFromDefaultBmd(const char* folder, u32 flags)
 {
-	SDLModelData* data = unk0->loadModelData("default.bmd", unk14, param_1);
-	unkC               = new MActorAnmData;
-	unkC->init(param_1, nullptr);
-	return createAndRegister(data, param_2);
+	SDLModelData* data = mModelDataKeeper->loadModelData(
+	    "default.bmd", mModelLoaderFlags, folder);
+	mActorAnmData = new MActorAnmData;
+	mActorAnmData->init(folder, nullptr);
+	return createAndRegister(data, flags);
 }
 
-MActor* TMActorKeeper::createMActorFromNthData(int param_1, u32 param_2)
+MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 {
-	TModelDataKeeper* keeper = unk0;
-	unk10[unk6]              = param_1;
-	SDLModelData* data       = keeper->getNthData(param_1);
-	return createAndRegister(data, param_2);
+	TModelDataKeeper* keeper          = mModelDataKeeper;
+	mActorModelDataIndices[mActorNum] = n;
+	SDLModelData* data                = keeper->getNthData(n);
+	return createAndRegister(data, flags);
 }
 
-MActor* TMActorKeeper::createMActor(const char* param_1, u32 param_2)
+MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
-	TModelDataKeeper* keeper = getKeeper();
+	TModelDataKeeper* keeper = getModelDataKeeper();
 
-	int index = keeper->getIndex(param_1);
+	int index = keeper->getIndex(model_data_name);
 
 	if (index < 0) {
-		keeper->createAndKeepData(param_1, unk14);
-		index = keeper->getIndex(param_1);
+		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
+		index = keeper->getIndex(model_data_name);
 	}
 
-	return createMActorFromNthData(index, param_2);
+	return createMActorFromNthData(index, flags);
 }
 
-MActor* TMActorKeeper::createMActorFromAllBmd(u32 param_1)
+MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = unk0->getModelDataNum();
+	int num = mModelDataKeeper->getModelDataNum();
 	for (int i = 0; i < num; ++i)
-		createMActorFromNthData(i, param_1);
+		createMActorFromNthData(i, flags);
 }
 
 TMActorKeeper::TMActorKeeper(TLiveManager* param_1, u16 param_2)
 {
-	unk4  = param_2;
-	unk6  = 0;
-	unk8  = new MActor*[param_2];
-	unkC  = nullptr;
-	unk10 = new u16[param_2];
-	unk14 = 0;
-	memset(unk8, 0, param_2 * sizeof(unk8[0]));
-	memset(unk10, 0, param_2 * sizeof(unk10[0]));
+	mModelDataNum          = param_2;
+	mActorNum              = 0;
+	mActors                = new MActor*[param_2];
+	mActorAnmData          = nullptr;
+	mActorModelDataIndices = new u16[param_2];
+	mModelLoaderFlags      = 0;
+	memset(mActors, 0, param_2 * sizeof(mActors[0]));
+	memset(mActorModelDataIndices, 0,
+	       param_2 * sizeof(mActorModelDataIndices[0]));
 
 	if (param_1) {
-		unk0 = param_1->getModelDataKeeper();
-		unkC = param_1->getMActorAnmData();
+		mModelDataKeeper = param_1->getModelDataKeeper();
+		mActorAnmData    = param_1->getMActorAnmData();
 	}
 }
 
 TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
 {
 	if (param_1) {
-		unk0 = param_1->getModelDataKeeper();
-		unkC = param_1->getMActorAnmData();
+		mModelDataKeeper = param_1->getModelDataKeeper();
+		mActorAnmData    = param_1->getMActorAnmData();
 	}
 
-	unk4  = unk0->getModelDataNum();
-	unk6  = 0;
-	unk8  = new MActor*[unk4];
-	unk10 = new u16[unk4];
-	unk14 = 0;
-	memset(unk8, 0, unk4 * sizeof(unk8[0]));
-	memset(unk10, 0, unk4 * sizeof(unk10[0]));
+	mModelDataNum          = mModelDataKeeper->getModelDataNum();
+	mActorNum              = 0;
+	mActors                = new MActor*[mModelDataNum];
+	mActorModelDataIndices = new u16[mModelDataNum];
+	mModelLoaderFlags      = 0;
+	memset(mActors, 0, mModelDataNum * sizeof(mActors[0]));
+	memset(mActorModelDataIndices, 0,
+	       mModelDataNum * sizeof(mActorModelDataIndices[0]));
 }

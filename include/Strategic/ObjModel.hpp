@@ -47,25 +47,28 @@ public:
 	TMActorKeeper(TLiveManager*);
 	TMActorKeeper(TLiveManager*, u16);
 
-	MActor* createMActorFromAllBmd(u32);
-	MActor* createMActor(const char*, u32);
-	MActor* createMActorFromNthData(int, u32);
-	MActor* createMActorFromDefaultBmd(const char*, u32);
-	MActor* getMActor(const char*) const;
-	MActor* createAndRegister(SDLModelData*, u32);
-	MActorAnmData* getMActorAnmData() const { return unkC; }
+	MActor* createMActorFromAllBmd(u32 flags);
+	MActor* createMActor(const char* model_data_name, u32 flags);
+	MActor* createMActorFromNthData(int n, u32 flags);
+	MActor* createMActorFromDefaultBmd(const char* folder, u32 flags);
+	MActor* getMActor(const char* name) const;
+	MActor* createAndRegister(SDLModelData* model_data, u32 model_flags);
+	MActorAnmData* getMActorAnmData() const { return mActorAnmData; }
 
-	const TModelDataKeeper* getKeeper() const { return unk0; }
-	TModelDataKeeper* getKeeper() { return unk0; }
+	const TModelDataKeeper* getModelDataKeeper() const
+	{
+		return mModelDataKeeper;
+	}
+	TModelDataKeeper* getModelDataKeeper() { return mModelDataKeeper; }
 
 public:
-	/* 0x0 */ TModelDataKeeper* unk0;
-	/* 0x4 */ u16 unk4;
-	/* 0x6 */ u16 unk6;
-	/* 0x8 */ MActor** unk8;
-	/* 0xC */ MActorAnmData* unkC;
-	/* 0x10 */ u16* unk10;
-	/* 0x14 */ u32 unk14;
+	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;
+	/* 0x4 */ u16 mModelDataNum;
+	/* 0x6 */ u16 mActorNum;
+	/* 0x8 */ MActor** mActors;
+	/* 0xC */ MActorAnmData* mActorAnmData;
+	/* 0x10 */ u16* mActorModelDataIndices;
+	/* 0x14 */ u32 mModelLoaderFlags;
 };
 
 #endif
