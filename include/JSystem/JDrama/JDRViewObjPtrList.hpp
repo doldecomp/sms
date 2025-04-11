@@ -34,7 +34,7 @@ public:
 			JSUMemoryInputStream stream2(nullptr, 0);
 			TNameRef* nr = TNameRef::genObject(stream, stream2);
 			if (nr) {
-				lst.push_back((TViewObj*)nr);
+				lst.push_back((T*)nr);
 				nr->load(stream2);
 			}
 		}
