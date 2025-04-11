@@ -14,6 +14,8 @@
 #include <NPC/NpcNerve.hpp>
 #include <M3DUtil/MActor.hpp>
 
+#include <M3DUtil/InfectiousStrings.hpp> // TODO: removeme
+
 const TNerveBase<TLiveActor>* NerveGetByIndex(int param_1)
 {
 	switch (param_1) {
