@@ -12,7 +12,7 @@ void* TSMSSmplChara::getRes(const char* name) const
 {
 	char fullPath[256];
 
-  // BUG: name is unused lol
+	// BUG: name is unused lol
 	snprintf(fullPath, 256, "%s%s", mPath, fullPath);
 	return JKRGetResource(fullPath);
 }
