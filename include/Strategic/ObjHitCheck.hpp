@@ -5,7 +5,19 @@
 
 class THitActor;
 class TIdxGroupObj;
-class TObjCheckList;
+
+class TObjCheckList {
+public:
+	TObjCheckList();
+
+public:
+	/* 0x0 */ TObjCheckList* unk0;
+	/* 0x4 */ THitActor* unk4;
+};
+
+class TObjHitCheck;
+
+extern TObjHitCheck* gpObjHitCheck;
 
 class TObjHitCheck {
 public:
@@ -25,6 +37,11 @@ public:
 	                                TObjCheckList*);
 	void checkActorsInList(THitActor*, TObjCheckList*);
 	void suffererIsInAttackArea(THitActor*, THitActor*);
+
+public:
+	/* 0x0 */ TObjCheckList unk0[256];
+	/* 0x800 */ TObjCheckList* unk800;
+	/* 0x804 */ u32 unk804;
 };
 
 #endif

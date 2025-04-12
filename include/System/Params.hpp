@@ -25,6 +25,7 @@ public:
 	void load(JSUMemoryInputStream& stream);
 	void init();
 
+public:
 	const char* mPrmPath;
 	TBaseParam* mHead;
 	static JKRFileLoader* mArc;

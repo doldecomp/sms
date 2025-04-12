@@ -183,8 +183,8 @@ public:
 		{
 		}
 
-		T& operator*() { return (T&)this->Base::operator*(); }
-		T* operator->() { return (T*)this->Base::operator->(); }
+		T operator*() { return (T)this->Base::operator*(); }
+		T operator->() { return (T)this->Base::operator->(); }
 
 		iterator operator++() { return iterator(this->Base::operator++()); }
 		iterator operator++(int) { return iterator(this->Base::operator++(0)); }
