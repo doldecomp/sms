@@ -1,5 +1,6 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapData.hpp>
+#include <types.h>
 
 void TMapCollisionData::removeCheckListData(u16 param_1, s32 count)
 {

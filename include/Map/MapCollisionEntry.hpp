@@ -4,6 +4,7 @@
 #include <dolphin/types.h>
 #include <JSystem/JGeometry.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <types.h>
 
 class TLiveActor;
 class TBGCheckData;
