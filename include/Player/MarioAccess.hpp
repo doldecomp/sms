@@ -16,6 +16,11 @@ extern u32* gpMarioFlag;
 extern f32* gpMarioThrowPower;
 extern void** gpMarioGroundPlane;
 
+inline bool SMS_CheckMarioFlag(u32 flag)
+{
+	return (*gpMarioFlag & flag) ? true : false;
+}
+
 bool SMS_IsMarioRoofing();
 bool SMS_IsMarioFencing();
 void SMS_GetMarioSpeedY(THitActor*);

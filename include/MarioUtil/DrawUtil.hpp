@@ -2,8 +2,7 @@
 #define DRAW_UTIL_HPP
 
 #include <types.h>
-#include <JSystem/JDrama/JDRGraphics.hpp>
-#include <JSystem/JDrama/JDRNameRef.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 
 class JUTTexture;
@@ -12,7 +11,7 @@ class TSilhouette;
 
 extern TSilhouette* gpSilhouetteManager;
 
-class TSilhouette : public JDrama::TNameRef {
+class TSilhouette : public JDrama::TViewObj {
 public:
 	TSilhouette();
 
@@ -30,7 +29,7 @@ public:
 	}
 
 public:
-	/* 0xC */ char unkC[6];
+	/* 0x10 */ u16 unk10;
 	/* 0x12 */ GXColor unk12;
 	/* 0x16 */ GXColor unk16;
 	/* 0x1C */ f32 unk1C;
