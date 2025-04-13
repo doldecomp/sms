@@ -198,6 +198,9 @@ public:
 	void setMtxCalc(J3DMtxCalc* mtx_calc) { mMtxCalc = mtx_calc; }
 	J3DMtxCalc* getMtxCalc() { return mMtxCalc; }
 
+	const Vec& getMin() { return mMin; }
+	const Vec& getMax() { return mMax; }
+
 private:
 	/* 0x18 */ u16 mJntNo;
 	/* 0x1A */ u8 mKind;
