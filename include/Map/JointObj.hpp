@@ -29,7 +29,7 @@ public:
 
 public:
 	/* 0x4 */ u32 mIndexInParent;
-	/* 0x4 */ u32 mFlags;
+	/* 0x8 */ u32 mFlags;
 	/* 0xC */ J3DJoint* mJoint;
 	/* 0x10 */ int mChildrenNum;
 	/* 0x14 */ TJointObj** mChildren;

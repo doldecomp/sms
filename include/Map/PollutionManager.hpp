@@ -10,6 +10,8 @@ class TPollutionManager;
 
 extern TPollutionManager* gpPollution;
 
+class TPollutionLayerInfo;
+
 class TPollutionManager : public TJointModelManager {
 public:
 	class TPollutionInfo { };
@@ -33,8 +35,10 @@ public:
 	void initPollutionInfo();
 	TPollutionManager(const char*);
 
+	static int mEdgeAlpha;
+
 public:
-	/* 0x6C */ u32 unk6C;
+	/* 0x6C */ TPollutionLayerInfo* unk6C;
 	/* 0x70 */ TPollutionCounterLayer unk70;
 	/* 0x1EC */ TPollutionCounterObj unk1EC;
 	/* 0x204 */ u32 unk204;
