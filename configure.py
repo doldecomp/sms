@@ -784,7 +784,7 @@ config.libs = [
         "cflags": [*cflags_game, "-inline deferred ", "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "MarioUtil/DLUtil.cpp"),
+            Object(Matching, "MarioUtil/DLUtil.cpp"),
             Object(NonMatching, "MarioUtil/DrawUtil.cpp"),
             Object(NonMatching, "MarioUtil/LightUtil.cpp"),
             Object(NonMatching, "MarioUtil/MathUtil.cpp"),
