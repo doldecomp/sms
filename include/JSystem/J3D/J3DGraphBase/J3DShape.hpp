@@ -134,6 +134,9 @@ public:
 
 	void setScaleFlagArray(u8* pScaleFlagArray) { unk4C = pScaleFlagArray; }
 
+	// fabricated
+	void* getDrawList() { return mGDCommands; }
+
 public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u16 unk4;

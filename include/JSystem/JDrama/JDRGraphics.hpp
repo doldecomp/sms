@@ -28,6 +28,8 @@ struct TGraphics {
 	bool checkFlag8() { return (unkFC & 0x8) != 0; }
 	bool checkFlag10() { return (unkFC & 0x10) != 0; }
 
+	MtxPtr getUnkB4() { return unkB4.mMtx; }
+
 	char unk0[0x4];
 	/* 0x04 */ void* unk4;
 	/* 0x08 */ GXRenderModeObj unk8;

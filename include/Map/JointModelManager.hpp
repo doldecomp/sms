@@ -18,6 +18,8 @@ public:
 
 	// fabricated
 	const char* getFolder() { return mModelsFolder; }
+	int getJointModelNum() const { return mJointModelNum; }
+	TJointModel* getJointModel(int i) { return mJointModels[i]; }
 
 public:
 	/* 0x10 */ int mJointModelNum;
