@@ -26,6 +26,10 @@ void GDOverflowed(void);
 void GDSetOverflowCallback(GDOverflowCb callback);
 void GDGetOverflowCallback();
 
+inline void GDSetCurrent(GDLObj* dl) { __GDCurrentDL = dl; }
+
+inline GDLObj* GDGetCurrent() { return __GDCurrentDL; }
+
 inline u8* GDGetCurrPointer() { return __GDCurrentDL->ptr; }
 
 inline s32 GDGetCurrOffset()
