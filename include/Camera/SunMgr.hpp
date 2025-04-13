@@ -17,7 +17,7 @@ public:
 	void drawSyncCallback(unsigned short);
 	~TSunMgr();
 
-  // fabricated
+	// fabricated
 	u8 getUnk1CAlpha() { return unk1C.a; }
 
 public:
