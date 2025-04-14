@@ -72,7 +72,7 @@ void SMS_DrawShape(J3DModelData*, u16);
 void SMS_SettingDrawShape(J3DModelData*, u16);
 void SMS_DrawCube(const JGeometry::TVec3<float>&,
                   const JGeometry::TVec3<float>&);
-void SMS_CountPolygonNumInShape(J3DShape*);
+int SMS_CountPolygonNumInShape(J3DShape*);
 void SMS_ResetDamageFogEffect(J3DModelData*);
 void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&,
                             JDrama::TGraphics*);

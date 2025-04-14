@@ -1067,7 +1067,7 @@ config.libs = [
             Object(NonMatching, "Map/MapWireManager.cpp"),
             Object(NonMatching, "Map/MapXlu.cpp"),
             Object(NonMatching, "Map/PollutionAction.cpp"),
-            Object(NonMatching, "Map/PollutionCount.cpp"),
+            Object(NonMatching, "Map/PollutionCount.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/PollutionManager.cpp"),
             Object(NonMatching, "Map/PollutionObj.cpp"),
             Object(NonMatching, "Map/PollutionPos.cpp"),

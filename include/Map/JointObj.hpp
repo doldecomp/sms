@@ -26,6 +26,8 @@ public:
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 	void setIndexInParent(u16 i) { mIndexInParent = i; }
+	int getShapeNum() { return mShapeNum; }
+	J3DShape* getShape(int i) { return mShapes[i]; }
 
 public:
 	/* 0x4 */ u32 mIndexInParent;
