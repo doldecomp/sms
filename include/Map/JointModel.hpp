@@ -21,6 +21,9 @@ public:
 
 	void initActor(const char*, MActorAnmData*);
 
+	// fabriacted
+	J3DModelData* getModelData() { return mModelData; }
+
 public:
 	/* 0x20 */ TJointModelManager* mManager;
 	/* 0x24 */ J3DModelData* mModelData;

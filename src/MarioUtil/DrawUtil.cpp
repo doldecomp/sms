@@ -193,7 +193,7 @@ void ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32) { }
 
 void ViewFrustumRectClipCheck(JDrama::TGraphics*, Vec*, f32, f32) { }
 
-void SMS_CountPolygonNumInShape(J3DShape*) { }
+int SMS_CountPolygonNumInShape(J3DShape*) { }
 
 void SMS_CountPolygonNumInModelData(J3DModelData*) { }
 

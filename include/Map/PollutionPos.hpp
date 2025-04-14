@@ -33,7 +33,7 @@ public:
 public:
 	/* 0x0 */ int mWidth;
 	/* 0x4 */ int mHeight;
-	/* 0x8 */ u32 unk8;
+	/* 0x8 */ int unk8;
 	/* 0xC */ u32 unkC;
 	/* 0x10 */ f32 mVerticalOffset;
 	/* 0x14 */ f32 mVerticalScale;
