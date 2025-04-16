@@ -1051,7 +1051,7 @@ config.libs = [
             Object(NonMatching, "Map/Map.cpp"),
             Object(NonMatching, "Map/MapArea.cpp"),
             Object(NonMatching, "Map/MapCheck.cpp"),
-            Object(NonMatching, "Map/MapCollisionData.cpp", extra_cflags=["-inline deferred"]),
+            Object(Matching, "Map/MapCollisionData.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapCollisionEntry.cpp"),
             Object(Matching, "Map/MapCollisionManager.cpp"),
             Object(Matching, "Map/MapDraw.cpp", extra_cflags=["-inline deferred"]),
