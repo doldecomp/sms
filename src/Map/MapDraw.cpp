@@ -6,8 +6,9 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
 
-// rouge include needed for matching sinit & bss
+// rouge includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
