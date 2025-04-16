@@ -126,6 +126,8 @@ public:
 	void execRoofCheck_(Vec);
 	void execGroundCheck_(Vec);
 
+	s16 getUnk2C8() const { return unk2C8; }
+
 public:
 	s32 unk50;
 	char filler1[0x2C8 - 0x54];

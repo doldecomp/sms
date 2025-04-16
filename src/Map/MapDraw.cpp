@@ -14,7 +14,7 @@ void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!(param_1 & 8))
 		return;
 
-	if (gpCamera->unk2C8 == -1) {
+	if (gpCamera->getUnk2C8() == -1) {
 		if (unk18 > 0) {
 			unk18 -= 5;
 			if (unk18 < 0)
