@@ -105,6 +105,46 @@ template <class T> bool JALSeModData<T>::gateCheck(u32 param_1, f32 param_2)
 	return grp ? grp->gateCheckDyna(param_2) : false;
 }
 
+class JALSeModVolFunk : public JALSeModData<JALSeModVolFunk> {
+public:
+	JALSeModVolFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModData<JALSeModVolFunk>(param_1, this, param_2, param_3,
+	                                    param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModPitFunk : public JALSeModData<JALSeModPitFunk> {
+public:
+	JALSeModPitFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModData<JALSeModPitFunk>(param_1, this, param_2, param_3,
+	                                    param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModEffFunk : public JALSeModData<JALSeModEffFunk> {
+public:
+	JALSeModEffFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModData<JALSeModEffFunk>(param_1, this, param_2, param_3,
+	                                    param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModVolDist : public JALSeModData<JALSeModVolDist> {
+public:
+	JALSeModVolDist(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModData<JALSeModVolDist>(param_1, this, param_2, param_3,
+	                                    param_4, param_5, param_6, param_7)
+	{
+	}
+};
 class JALSeModPitDist : public JALSeModData<JALSeModPitDist> {
 public:
 	JALSeModPitDist(const char* param_1, u32 param_2, JALPrmSet* param_3,
@@ -121,46 +161,6 @@ public:
 	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
 	                JALCalc::CurveSign param_6, u8 param_7)
 	    : JALSeModData<JALSeModEffDist>(param_1, this, param_2, param_3,
-	                                    param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModVolDist : public JALSeModData<JALSeModVolDist> {
-public:
-	JALSeModVolDist(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModData<JALSeModVolDist>(param_1, this, param_2, param_3,
-	                                    param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModEffFunk : public JALSeModData<JALSeModEffFunk> {
-public:
-	JALSeModEffFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModData<JALSeModEffFunk>(param_1, this, param_2, param_3,
-	                                    param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModPitFunk : public JALSeModData<JALSeModPitFunk> {
-public:
-	JALSeModPitFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModData<JALSeModPitFunk>(param_1, this, param_2, param_3,
-	                                    param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModVolFunk : public JALSeModData<JALSeModVolFunk> {
-public:
-	JALSeModVolFunk(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModData<JALSeModVolFunk>(param_1, this, param_2, param_3,
 	                                    param_4, param_5, param_6, param_7)
 	{
 	}
@@ -269,6 +269,46 @@ bool JALSeModDataGrp<T>::gateCheckGrp(u32 param_1, f32 param_2)
 	return found ? found->gateCheckDyna(param_2) : false;
 }
 
+class JALSeModVolFGrp : public JALSeModDataGrp<JALSeModVolFGrp> {
+public:
+	JALSeModVolFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModDataGrp<JALSeModVolFGrp>(param_1, this, param_2, param_3,
+	                                       param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModPitFGrp : public JALSeModDataGrp<JALSeModPitFGrp> {
+public:
+	JALSeModPitFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModDataGrp<JALSeModPitFGrp>(param_1, this, param_2, param_3,
+	                                       param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModEffFGrp : public JALSeModDataGrp<JALSeModEffFGrp> {
+public:
+	JALSeModEffFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModDataGrp<JALSeModEffFGrp>(param_1, this, param_2, param_3,
+	                                       param_4, param_5, param_6, param_7)
+	{
+	}
+};
+class JALSeModVolDGrp : public JALSeModDataGrp<JALSeModVolDGrp> {
+public:
+	JALSeModVolDGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
+	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
+	                JALCalc::CurveSign param_6, u8 param_7)
+	    : JALSeModDataGrp<JALSeModVolDGrp>(param_1, this, param_2, param_3,
+	                                       param_4, param_5, param_6, param_7)
+	{
+	}
+};
 class JALSeModPitDGrp : public JALSeModDataGrp<JALSeModPitDGrp> {
 public:
 	JALSeModPitDGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
@@ -285,46 +325,6 @@ public:
 	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
 	                JALCalc::CurveSign param_6, u8 param_7)
 	    : JALSeModDataGrp<JALSeModEffDGrp>(param_1, this, param_2, param_3,
-	                                       param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModVolDGrp : public JALSeModDataGrp<JALSeModVolDGrp> {
-public:
-	JALSeModVolDGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModDataGrp<JALSeModVolDGrp>(param_1, this, param_2, param_3,
-	                                       param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModEffFGrp : public JALSeModDataGrp<JALSeModEffFGrp> {
-public:
-	JALSeModEffFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModDataGrp<JALSeModEffFGrp>(param_1, this, param_2, param_3,
-	                                       param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModPitFGrp : public JALSeModDataGrp<JALSeModPitFGrp> {
-public:
-	JALSeModPitFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModDataGrp<JALSeModPitFGrp>(param_1, this, param_2, param_3,
-	                                       param_4, param_5, param_6, param_7)
-	{
-	}
-};
-class JALSeModVolFGrp : public JALSeModDataGrp<JALSeModVolFGrp> {
-public:
-	JALSeModVolFGrp(const char* param_1, u32 param_2, JALPrmSet* param_3,
-	                JALPrmSet* param_4, JADPrmS<f32>* param_5,
-	                JALCalc::CurveSign param_6, u8 param_7)
-	    : JALSeModDataGrp<JALSeModVolFGrp>(param_1, this, param_2, param_3,
 	                                       param_4, param_5, param_6, param_7)
 	{
 	}

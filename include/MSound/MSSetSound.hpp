@@ -116,25 +116,6 @@ public:
 	/* 0xB9 */ bool unkB9;
 };
 
-class MSSetSoundGrp : public MSSetSoundTL<MSSetSoundGrp>,
-                      public JALListGrp<MSSetSoundGrp, u32, MSSetSoundMember> {
-public:
-	MSSetSoundGrp(u32 param_1, const char* param_2, u8 param_3, u8 param_4,
-	              u8 param_5, u8 param_6, f32 param_7, u8 param_8, f32 param_9,
-	              f32 param_10, f32 param_11, f32 param_12, f32 param_13,
-	              s32 param_14, f32 param_15, s32 param_16, f32 param_17,
-	              f32 param_18, f32 param_19, bool param_20)
-	    : MSSetSoundTL<MSSetSoundGrp>(
-	        param_1, param_2, this, param_3, param_4, param_5, param_6, param_7,
-	        param_8, param_9, param_10, param_11, param_12, param_13, param_14,
-	        param_15, param_16, param_17, param_18, param_19, param_20)
-	{
-	}
-
-	static bool startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
-	                             f32 param4, u32 param5, u32 param6, u8 param7);
-};
-
 class MSSetSound : public MSSetSoundTL<MSSetSound> {
 public:
 	MSSetSound(u32 param_1, const char* param_2, u8 param_3, u8 param_4,
@@ -153,6 +134,25 @@ public:
 	static void init();
 	static bool startSoundSet(u32 param1, const Vec* param2, u32 param3,
 	                          f32 param4, u32 param5, u32 param6, u8 param7);
+};
+
+class MSSetSoundGrp : public MSSetSoundTL<MSSetSoundGrp>,
+                      public JALListGrp<MSSetSoundGrp, u32, MSSetSoundMember> {
+public:
+	MSSetSoundGrp(u32 param_1, const char* param_2, u8 param_3, u8 param_4,
+	              u8 param_5, u8 param_6, f32 param_7, u8 param_8, f32 param_9,
+	              f32 param_10, f32 param_11, f32 param_12, f32 param_13,
+	              s32 param_14, f32 param_15, s32 param_16, f32 param_17,
+	              f32 param_18, f32 param_19, bool param_20)
+	    : MSSetSoundTL<MSSetSoundGrp>(
+	        param_1, param_2, this, param_3, param_4, param_5, param_6, param_7,
+	        param_8, param_9, param_10, param_11, param_12, param_13, param_14,
+	        param_15, param_16, param_17, param_18, param_19, param_20)
+	{
+	}
+
+	static bool startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
+	                             f32 param4, u32 param5, u32 param6, u8 param7);
 };
 
 #endif // MSSETSOUNDTL_HPP
