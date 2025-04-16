@@ -65,14 +65,14 @@ public:
 	void cleaned(f32, f32, f32, f32);
 	void appearItem(f32, f32, f32);
 
-	static u32 mAreaMinRate;
-	static u32 mSpreadArea;
+	static f32 mAreaMinRate;
+	static f32 mSpreadArea;
 	static u32 mSpreadFrequency;
-	static u32 mFireArea;
+	static f32 mFireArea;
 	static u32 mFireEffectWaitTime;
-	static u32 mThunderArea;
+	static f32 mThunderArea;
 	static u32 mThunderScaleRate;
-	static u32 mGlassWallArea;
+	static f32 mGlassWallArea;
 	static u32 mGlassWallScaleRate;
 	static u32 mGlassWallEffectTime;
 	static u32 mEffectTime;
