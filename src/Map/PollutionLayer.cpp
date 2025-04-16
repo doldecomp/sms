@@ -139,7 +139,7 @@ void TPollutionLayer::subtractFromYMap(f32, f32, f32) const { }
 
 void TPollutionLayer::isPolluted(int, int, f32) const { }
 
-void TPollutionLayer::isPolluted(f32, f32, f32) const { }
+bool TPollutionLayer::isPolluted(f32, f32, f32) const { }
 
 void TPollutionLayer::isProhibit(f32, f32, f32) const { }
 

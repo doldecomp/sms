@@ -4,12 +4,13 @@
 #include <Map/JointModel.hpp>
 #include <Map/PollutionPos.hpp>
 #include <Map/PollutionObj.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 
-class TPollutionLayerInfo {
-public:
+struct TPollutionLayerInfo {
 	/* 0x0 */ u16 unk0;
 	/* 0x2 */ u16 unk2;
-	/* 0x4 */ char unk4[0x4];
+	/* 0x4 */ u16 unk4;
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;
 	/* 0x10 */ f32 unk10;
@@ -31,17 +32,20 @@ public:
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 getJ3DModelDataFlag() const;
-	virtual void getPlaneType() const;
+	virtual u32 getJ3DModelDataFlag() const { return 0x11220000; }
+	virtual int getPlaneType() const;
 	virtual int getTexPosS(f32) const;
 	virtual int getTexPosT(f32) const;
 	virtual void initLayerInfo(const TPollutionLayerInfo*);
-	virtual ResTIMG* getTexResource(const char*);
+	virtual ResTIMG* getTexResource(const char*)
+	{
+		return getModelData()->getTexture()->mResources;
+	}
 	virtual void stamp(u16, f32, f32, f32, f32);
 	virtual void stampModel(J3DModel*);
-	virtual void isPolluted(f32, f32, f32) const;
-	virtual void isInArea(f32, f32, f32) const;
-	virtual void isInAreaSize(f32, f32, f32, f32) const { }
+	virtual bool isPolluted(f32, f32, f32) const;
+	virtual bool isInArea(f32, f32, f32) const;
+	virtual bool isInAreaSize(f32, f32, f32, f32) const { }
 
 	void action();
 	void fire();
@@ -76,6 +80,8 @@ public:
 	// fabricated
 	const ResTIMG* getUnk58() const { return unk58; }
 	u32 getUnk48() const { return unk48; }
+	u16 getPollutionType() const { return unk30; }
+	u32 getPollutionDegree() const { return unk34; }
 
 public:
 	/* 0x30 */ u16 unk30;
@@ -106,16 +112,34 @@ public:
 };
 
 class TPollutionLayerWallBase : public TPollutionLayer {
+public:
 	TPollutionLayerWallBase();
-	virtual int getTexPosT(f32) const;
+	virtual int getTexPosT(f32 param_1) const
+	{
+		return unk5C.worldToTexSize(unkB0 - param_1);
+	}
+
+public:
+	/* 0xAC */ f32 unkAC;
+	/* 0xB0 */ f32 unkB0;
 };
 
 class TPollutionLayerWallPlusX : public TPollutionLayerWallBase {
 public:
-	virtual void getPlaneType() const { }
+	virtual int getPlaneType() const { }
 	virtual int getTexPosS(f32) const { }
-	virtual void isInArea(f32, f32, f32) const;
-	virtual void isInAreaSize(f32, f32, f32, f32) const;
+	virtual bool isInArea(f32 x, f32 y, f32 z) const
+	{
+		if (z < unk40 || unk44 < z || y < unkAC || unkB0 < y)
+			return 0;
+		return 1;
+	}
+	virtual bool isInAreaSize(f32 x, f32 y, f32 z, f32 s) const
+	{
+		if (z < unk40 - s || unk44 + s < z || y < unkAC - s || unkB0 + s < y)
+			return 0;
+		return 1;
+	}
 
 	void initLayerInfo(const TPollutionLayerInfo*);
 	void stamp(u16, f32, f32, f32, f32);
@@ -123,15 +147,28 @@ public:
 
 class TPollutionLayerWallMinusX : public TPollutionLayerWallPlusX {
 public:
-	virtual void getPlaneType() const;
-	virtual int getTexPosS(f32) const;
+	virtual int getPlaneType() const { return 3; }
+	virtual int getTexPosS(f32 param_1) const
+	{
+		return unk5C.worldToTexSize(param_1 - unk40);
+	}
 };
 
 class TPollutionLayerWallPlusZ : public TPollutionLayerWallBase {
 public:
-	virtual void getPlaneType() const { }
-	virtual void isInArea(f32, f32, f32) const;
-	virtual void isInAreaSize(f32, f32, f32, f32) const;
+	virtual int getPlaneType() const { }
+	virtual bool isInArea(f32 x, f32 y, f32 z) const
+	{
+		if (x < unk38 || unk3C < x || y < unkAC || unkB0 < y)
+			return 0;
+		return 1;
+	}
+	virtual bool isInAreaSize(f32 x, f32 y, f32 z, f32 s) const
+	{
+		if (x < unk38 - s || unk3C + s < x || y < unkAC - s || unkB0 + s < y)
+			return 0;
+		return 1;
+	}
 
 	void initLayerInfo(const TPollutionLayerInfo*);
 	void stamp(u16, f32, f32, f32, f32);
@@ -139,8 +176,11 @@ public:
 
 class TPollutionLayerWallMinusZ : public TPollutionLayerWallPlusZ {
 public:
-	virtual void getPlaneType() const;
-	virtual int getTexPosS(f32) const;
+	virtual int getPlaneType() const { return 5; }
+	virtual int getTexPosS(f32 param_1) const
+	{
+		return unk5C.worldToTexSize(unk3C - param_1);
+	}
 };
 
 class TPollutionLayerWave : public TPollutionLayer {
@@ -148,7 +188,7 @@ public:
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
 	virtual void perform(unsigned long, JDrama::TGraphics*);
-	virtual void getPlaneType() const { }
+	virtual int getPlaneType() const { }
 	virtual ResTIMG* getTexResource(const char*);
 
 	void draw() const;
