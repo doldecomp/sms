@@ -6,7 +6,7 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
 
-// rouge includes needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 

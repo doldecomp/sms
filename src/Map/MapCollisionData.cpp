@@ -3,8 +3,9 @@
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <macros.h>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TBGCheckData TMapCollisionData::mIllegalCheckData;
 TMapCollisionData* gpMapCollisionData;

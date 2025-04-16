@@ -16,8 +16,9 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 f32 TLiveActor::mVelocityMinY = -40.0f;
 

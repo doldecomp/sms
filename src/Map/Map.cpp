@@ -5,8 +5,9 @@
 #include <Map/MapXlu.hpp>
 #include <Map/MapCollisionEntry.hpp>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 static void initStage();
 

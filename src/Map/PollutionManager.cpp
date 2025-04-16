@@ -2,8 +2,9 @@
 #include <Map/PollutionLayer.hpp>
 #include <System/MarDirector.hpp>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 TPollutionManager* gpPollution;

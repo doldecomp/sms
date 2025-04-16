@@ -8,8 +8,9 @@
 #include <System/MarDirector.hpp>
 #include <dolphin/mtx.h>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TMapWarp::TMapWarp()
     : unk0(0)

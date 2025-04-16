@@ -1,8 +1,9 @@
 #include <Map/JointModelManager.hpp>
 #include <Map/JointModel.hpp>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TJointModel* TJointModelManager::newJointModel(int) const
 {
