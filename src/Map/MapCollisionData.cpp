@@ -24,7 +24,16 @@ TBGCheckListWarp::TBGCheckListWarp()
 {
 }
 
-void TMapCollisionData::initGrid(TBGCheckListRoot*) { }
+void TMapCollisionData::initGrid(TBGCheckListRoot* roots)
+{
+	int x = unk10;
+	while (x--) {
+		roots->unk0[0].unk4 = nullptr;
+		roots->unk0[1].unk4 = nullptr;
+		roots->unk0[2].unk4 = nullptr;
+		roots++;
+	}
+}
 
 void TMapCollisionData::initMoveCollision()
 {
@@ -36,11 +45,17 @@ void TMapCollisionData::initAllCheckDataAndList() { }
 
 void TMapCollisionData::init(JSUMemoryInputStream& stream)
 {
-	unk8  = stream.readU32();
-	unkC  = stream.readU32();
-	unk1C = stream.readU32();
-	unk20 = stream.readU32();
-	unk24 = stream.readU32();
+	int value;
+	stream.read(&value, 4);
+	unk8 = value;
+	stream.read(&value, 4);
+	unkC = value;
+	stream.read(&value, 4);
+	unk1C = value;
+	stream.read(&value, 4);
+	unk20 = value;
+	stream.read(&value, 4);
+	unk24 = value;
 
 	unk0 = (unk8 / 2) * 1024.0f;
 	unk4 = (unkC / 2) * 1024.0f;
@@ -53,18 +68,13 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 	unk2C = new TBGCheckList[unk20];
 	unk30 = new TBGCheckListWarp[unk24];
 
-	TBGCheckListRoot* roots = unk14;
-	for (int i = 0; i < unk10; ++i) {
-		roots[i].unk0[0].unk4 = 0;
-		roots[i].unk0[1].unk4 = 0;
-		roots[i].unk0[2].unk4 = 0;
-	}
+	initGrid(unk14);
 
 	unk34 = 0;
 	unk38 = 0;
 	unk40 = 0;
-	unk3C = unk20 - 1;
-	memset(unk18, 0, unk10 * sizeof(*unk18));
+
+	initMoveCollision();
 
 	for (int i = 0; i < 256; ++i)
 		unk42[i] = 9999;
