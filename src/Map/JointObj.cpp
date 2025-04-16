@@ -4,6 +4,10 @@
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <types.h>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 class J3DShape;
 
 TJointObj::TJointObj()

@@ -1,7 +1,8 @@
 #include <Map/PollutionLayer.hpp>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 f32 TPollutionLayer::mAreaMinRate         = 0.7f;
 f32 TPollutionLayer::mSpreadArea          = 2000.0f;

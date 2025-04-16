@@ -3,8 +3,9 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <types.h>
 
-// rouge include needed for matching sinit & bss
+// rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TPollutionObj::TPollutionObj()
     : unk20(0)
