@@ -16,4 +16,7 @@ typedef JGeometry::SMatrix44C<f32> TSMtx44f;
 typedef JGeometry::TMatrix34<TSMtx34f> TMtx34f;
 typedef JGeometry::TMatrix44<TSMtx44f> TMtx44f;
 
+typedef JGeometry::TRotation3<TMtx34f> TRotation3f;
+typedef JGeometry::TPosition3<TMtx34f> TPosition3f;
+
 #endif

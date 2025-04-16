@@ -3,9 +3,9 @@
 
 namespace JGeometry {
 
-template <class T> class TPosition3 {
+template <class T> class TPosition3 : public T {
 public:
-	TPosition3();
+	TPosition3() { }
 };
 
 } // namespace JGeometry

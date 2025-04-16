@@ -5,6 +5,32 @@
 
 namespace JGeometry {
 
+inline void gekko_ps_copy12(register void* dst, register void* src)
+{
+	register f32 src0;
+	register f32 src1;
+	register f32 src2;
+	register f32 src3;
+	register f32 src4;
+	register f32 src5;
+#ifdef __MWERKS__ // clang-format off
+	asm {
+		psq_l src0, 0(src), 0, 0
+		psq_l src1, 8(src), 0, 0
+		psq_l src2, 16(src), 0, 0
+		psq_l src3, 24(src), 0, 0
+		psq_l src4, 32(src), 0, 0
+		psq_l src5, 40(src), 0, 0
+		psq_st src0, 0(dst), 0, 0
+		psq_st src1, 8(dst), 0, 0
+		psq_st src2, 16(dst), 0, 0
+		psq_st src3, 24(dst), 0, 0
+		psq_st src4, 32(dst), 0, 0
+		psq_st src5, 40(dst), 0, 0
+	}
+#endif // clang-format on
+}
+
 template <typename T> struct SMatrix34C {
 	T mMtx[3][4];
 };
@@ -16,7 +42,7 @@ template <typename T> struct SMatrix34C {
 // alignment.
 // TODO: figure out whether we need 8-byte alignment here
 template <> struct SMatrix34C<f32> {
-	SMatrix34C();
+	SMatrix34C() { }
 
 	void set(f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
@@ -24,10 +50,18 @@ template <> struct SMatrix34C<f32> {
 	operator ArrType*() { return mMtx; }
 	operator const ArrType*() const { return mMtx; }
 
+	void set(const ArrType* src)
+	{
+		void* ptr = mMtx;
+		gekko_ps_copy12(ptr, (void*)src);
+	}
+
 	f32 mMtx[3][4];
 };
 
-template <typename T> struct TMatrix34 : public T { };
+template <typename T> struct TMatrix34 : public T {
+	TMatrix34() { }
+};
 
 } // namespace JGeometry
 

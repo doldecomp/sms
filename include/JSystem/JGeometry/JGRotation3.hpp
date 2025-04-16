@@ -4,10 +4,11 @@
 #include <dolphin/types.h>
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JGeometry/JGQuat4.hpp>
+#include <JSystem/JGeometry/JGMatrix34.hpp>
 
 namespace JGeometry {
 
-template <class T> class TRotation3 {
+template <class T> class TRotation3 : public T {
 public:
 	void identity33();
 	TRotation3();

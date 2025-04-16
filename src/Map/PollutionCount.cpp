@@ -11,6 +11,10 @@
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+
+// rouge include needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
 
 static void drawBlack(u16 param_1, u16 param_2)
 {
@@ -42,7 +46,13 @@ static void drawBlack(u16 param_1, u16 param_2)
 	GXEnd();
 }
 
-void TPollutionCounterBase::setCallback(int) const { }
+void TPollutionCounterBase::setCallback(int param_1) const
+{
+	TDrawSyncManager::smInstance->pushBreakPoint();
+	GXSetDrawSync(getCounterNo(param_1));
+	TDrawSyncManager::smInstance->pushBreakPoint();
+	GXSetDrawSync(0);
+}
 
 void TPollutionCounterBase::drawSyncCallback(u16 param_1)
 {
@@ -64,7 +74,16 @@ void TPollutionCounterBase::initCounters(int param_1)
 	}
 }
 
-void loadPollutionLayer(const u8*, u16, u16, GXTexMapID) { }
+void loadPollutionLayer(const u8* param_1, u16 param_2, u16 param_3,
+                        GXTexMapID param_4)
+{
+	GXTexObj GStack_40;
+	GXInitTexObj(&GStack_40, (u8*)param_1, param_2, param_3, GX_TF_I8, GX_CLAMP,
+	             GX_CLAMP, 0);
+	GXInitTexObjLOD(&GStack_40, GX_NEAR, GX_NEAR, 0.0f, 1.0f, 0.0f, GX_FALSE,
+	                GX_FALSE, GX_ANISO_1);
+	GXLoadTexObj(&GStack_40, param_4);
+}
 
 static void initDrawObjGX()
 {
@@ -108,20 +127,92 @@ static void initDrawObjGX()
 	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 }
 
-void initCountObjDegree(f32, f32) { }
+static void initCountObjDegree(f32, f32) { }
 
-void drawShape(J3DShape*) { }
+static void drawShape(J3DShape* shape)
+{
+	GXCallDisplayList(shape->getDrawList(), 0xC0);
+	shape->loadVtxArray();
+	for (u16 k = 0; k < shape->getMtxGroupNum(); ++k) {
+		shape->getShapeDraw(k)->draw();
+	}
+}
 
-void TPollutionCounterObj::draw(int) const { }
+void TPollutionCounterObj::draw(int param_1) const
+{
+	if (unk14 == nullptr)
+		return;
 
-void TPollutionCounterObj::countObjDegree() const { }
+	if (unk14[param_1] == nullptr)
+		return;
+
+	const ResTIMG* pRVar6 = unk14[param_1]->unk34->getUnk58();
+	loadPollutionLayer((u8*)pRVar6 + pRVar6->imageDataOffset, pRVar6->width,
+	                   pRVar6->height, GX_TEXMAP0);
+	j3dSys.setVtxPos(unk14[param_1]->unk34->getModelData()->getVtxPosArray());
+	GXClearPixMetric();
+	for (int j = 0; j < unk14[param_1]->getShapeNum(); ++j) {
+		drawShape(unk14[param_1]->getShape(j));
+	}
+}
+
+void TPollutionCounterObj::countObjDegree() const
+{
+	ReInitializeGX();
+	initDrawObjGX();
+	for (u16 i = 0; i < unk8; ++i) {
+		J3DJoint* pJVar5 = unk14[i]->getJoint();
+		f32 fVar1        = pJVar5->getMin().z;
+		f32 fVar2        = pJVar5->getMin().x;
+
+		// TODO: This should be initCountObjDegree I think but can't get it to
+		// inline properly (and it doesn't match...)
+		JGeometry::SMatrix34C<f32> SStack_bc;
+		TRotation3f TStack_8c;
+		SStack_bc.mMtx[2][3] = 0.0f;
+		SStack_bc.mMtx[1][3] = 0.0f;
+		SStack_bc.mMtx[0][3] = 0.0f;
+		SStack_bc.mMtx[1][2] = 0.0f;
+		SStack_bc.mMtx[0][2] = 0.0f;
+		SStack_bc.mMtx[2][1] = 0.0f;
+		SStack_bc.mMtx[0][1] = 0.0f;
+		SStack_bc.mMtx[2][0] = 0.0f;
+		SStack_bc.mMtx[1][0] = 0.0f;
+		SStack_bc.mMtx[2][2] = 1.0f;
+		TStack_8c.mMtx[3][2] = 0.0f;
+		SStack_bc.mMtx[1][1] = 1.0f;
+		TStack_8c.mMtx[2][1] = 0.0f;
+		SStack_bc.mMtx[0][0] = 1.0f;
+		TStack_8c.mMtx[1][0] = 0.0f;
+		TStack_8c.mMtx[0][0] = 0.03125f;
+		TStack_8c.mMtx[0][1] = 0.0f;
+		TStack_8c.mMtx[0][2] = 0.0f;
+		TStack_8c.mMtx[1][1] = 0.0f;
+		TStack_8c.mMtx[1][2] = 0.03125f;
+		TStack_8c.mMtx[2][0] = 0.0f;
+		TStack_8c.mMtx[2][2] = 0.0f;
+		TStack_8c.mMtx[3][0] = 0.0f;
+		TStack_8c.mMtx[3][1] = 0.0f;
+		PSMTXConcat(SStack_bc.mMtx, TStack_8c.mMtx, SStack_bc.mMtx);
+		TStack_8c.setEular((s16)-16384, 0, 0);
+		MTXConcat(SStack_bc.mMtx, TStack_8c.mMtx, SStack_bc.mMtx);
+		SStack_bc.mMtx[0][3] = -fVar2 * 0.03125f;
+		SStack_bc.mMtx[1][3] = -fVar1 * 0.03125f;
+		SStack_bc.mMtx[2][3] = 0.0;
+		GXLoadPosMtxImm(SStack_bc.mMtx, 0);
+
+		draw(i);
+		setCallback(i);
+	}
+}
 
 void TPollutionCounterObj::registerPollutionObj(TPollutionObj* param_1,
                                                 u32* param_2)
 {
 	unk14[unk8] = param_1;
 	for (int i = 0; i < param_1->getShapeNum(); ++i) {
-		unk10[unk8] += SMS_CountPolygonNumInShape(param_1->getShape(i));
+		J3DShape* shape = param_1->getShape(i);
+		unk10[unk8] += SMS_CountPolygonNumInShape(shape);
 	}
 	unkC[unk8] = param_2;
 	*param_2   = 0xffffffff;
@@ -177,7 +268,7 @@ static void initGXforPollutionLayer(int param_1, u16 param_2, u8 param_3,
 	GXSetTevColor(GX_TEVREG0, (GXColor) { param_4, param_4, param_4, param_4 });
 	GXSetTevColor(GX_TEVREG1, (GXColor) { param_3, param_3, param_3, param_3 });
 	if (param_1 == 7) {
-		GXSetNumTevStages(1);
+		GXSetNumTevStages(2);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_C1, GX_CC_C0,
 		                GX_CC_ZERO);
@@ -208,7 +299,7 @@ static void initGXforPollutionLayer(int param_1, u16 param_2, u8 param_3,
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, 1,
 		                GX_TEVPREV);
 	} else {
-		GXSetNumTevStages(1);
+		GXSetNumTevStages(2);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C1, GX_CC_TEXC, GX_CC_C0,
 		                GX_CC_ZERO);
@@ -235,12 +326,19 @@ static void initGXforPollutionLayer(int param_1, u16 param_2, u8 param_3,
 	GXSetAlphaUpdate(0);
 }
 
-void TPollutionCounterLayer::drawPollutionLayer(int) const { }
+void TPollutionCounterLayer::drawPollutionLayer(int param_1) const { }
 
-void makeWorldToPollutionMtx(
-    f32, f32, f32,
-    JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >*)
+static void makeWorldToPollutionMtx(f32 param_1, f32 param_2, f32 param_3,
+                                    TPosition3f* mtx)
 {
+	for (int j = 0; j < 4; ++j)
+		for (int i = 0; i < 3; ++i)
+			mtx->mMtx[i][j] = 0.0f;
+
+	mtx->mMtx[0][0] = param_1;
+	mtx->mMtx[0][3] = -param_3 * param_1;
+	mtx->mMtx[1][2] = param_1;
+	mtx->mMtx[1][3] = -param_2 * param_1;
 }
 
 void TPollutionCounterLayer::drawJointObjStamp(int param_1) const
@@ -278,29 +376,14 @@ void TPollutionCounterLayer::drawJointObjStamp(int param_1) const
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
 		                GX_TEVPREV);
 
-		Mtx local_6c;
-		local_6c[0][0] = pTVar2->unk5C.mInverseVerticalScale;
-		local_6c[2][3] = 0.0;
-		local_6c[0][3] = -pTVar2->unk38 * local_6c[0][0];
-		local_6c[1][3] = -pTVar2->unk40 * local_6c[0][0];
-		local_6c[2][2] = 0.0;
-		local_6c[0][2] = 0.0;
-		local_6c[2][1] = 0.0;
-		local_6c[1][1] = 0.0;
-		local_6c[0][1] = 0.0;
-		local_6c[2][0] = 0.0;
-		local_6c[1][0] = 0.0;
-		local_6c[1][2] = local_6c[0][0];
+		TPosition3f local_6c;
+		makeWorldToPollutionMtx(pTVar2->unk5C.mInverseVerticalScale,
+		                        pTVar2->unk38, pTVar2->unk40, &local_6c);
 		GXLoadPosMtxImm(local_6c, 0);
-		j3dSys.unk10C
-		    = pTVar2->getModelData()->getVertexData().getVtxPosArray();
+
+		j3dSys.setVtxPos(pTVar2->getModelData()->getVtxPosArray());
 		for (int j = 0; j < unkD8[i].unk4->getShapeNum(); ++j) {
-			J3DShape* shape = unkD8[i].unk4->getShape(j);
-			GXCallDisplayList(shape->getDrawList(), 0xC0);
-			shape->loadVtxArray();
-			for (u16 k = 0; k < shape->getMtxGroupNum(); ++k) {
-				shape->getShapeDraw(k)->draw();
-			}
+			drawShape(unkD8[i].unk4->getShape(j));
 		}
 	}
 }
@@ -333,15 +416,14 @@ static void doTask(u16 param_1, int param_2, TPollutionLayerTaskInfo* param_3,
 
 		GXSetTevColor(GX_TEVREG0, (GXColor) { iVar5, iVar5, iVar5, iVar5 });
 		GXSetTevColor(GX_TEVREG1, (GXColor) { iVar7, iVar7, iVar7, iVar7 });
-		int thing = param_3->unk6 / 2;
-		s16 x1    = param_3->unk2 - thing;
-		s16 y1    = param_3->unk4 - thing;
-		s16 x2    = param_3->unk2 + thing;
-		s16 y2    = param_3->unk4 + thing;
-		u16 s1    = x1 * sVar10;
-		u16 s2    = x2 * sVar10;
-		u16 t1    = y1 * sVar9;
-		u16 t2    = y2 * sVar9;
+		s16 x1 = param_3->unk2 - (param_3->unk6 / 2);
+		s16 y1 = param_3->unk4 - (param_3->unk6 / 2);
+		s16 x2 = param_3->unk2 + (param_3->unk6 / 2);
+		s16 y2 = param_3->unk4 + (param_3->unk6 / 2);
+		u16 s1 = x1 * sVar10;
+		u16 s2 = x2 * sVar10;
+		u16 t1 = y1 * sVar9;
+		u16 t2 = y2 * sVar9;
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition2s16(x1, y1);
 		GXTexCoord2u16(0, 0);
@@ -406,7 +488,26 @@ static void initGXforStamp(const u8* param_1, u16 param_2, u16 param_3,
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
 }
 
-void TPollutionCounterLayer::drawTexStamp(int) const { }
+// TODO: size doesn't match MAP, may be wrong? Does it really draw a tex stamp?
+void TPollutionCounterLayer::drawTexStamp(int param_1) const
+{
+	const TPollutionLayer* layer2 = unk14[param_1];
+
+	int uVar1 = layer2->unk5C.unk8 >= layer2->unk5C.unkC
+	                ? uVar1 = layer2->unk5C.unk8
+	                : layer2->unk5C.unkC;
+
+	initGXforStamp(layer2->unk5C.mMap, layer2->unk58->width,
+	               layer2->unk58->height, uVar1);
+
+	for (int i = 0; i < unk1A; ++i) {
+		TPollutionTexStamp& stamp = unk1C[i];
+		setTevColorInByStampType(unk1C[i].unk0);
+		doTask(param_1, stamp.unk8, stamp.unk10, stamp.unk4,
+		       unk14[param_1]->getUnk58()->width,
+		       unk14[param_1]->getUnk58()->height, unk14[param_1]->getUnk48());
+	}
+}
 
 void TPollutionCounterLayer::drawRevivalTexStamp(int param_1) const
 {
@@ -494,18 +595,18 @@ void TPollutionCounterLayer::cleanProhibitArea(int param_1) const
 	                GX_CS_SCALE_1, 1, GX_TEVPREV);
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ZERO, GX_LO_NOOP);
 	GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_GREATER, 0);
-	ResTIMG* pRVar3 = unk14[param_1]->unk58;
-	u32 uVar1       = pRVar3->width;
-	u32 uVar2       = pRVar3->height;
+
+	u32 w = unk14[param_1]->getUnk58()->width;
+	u32 h = unk14[param_1]->getUnk58()->height;
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition2u16(0, 0);
 	GXTexCoord2u16(0, 0);
-	GXPosition2u16(uVar1, 0);
+	GXPosition2u16(w, 0);
 	GXTexCoord2u16(1, 0);
-	GXPosition2u16(uVar1, uVar2);
+	GXPosition2u16(w, h);
 	GXTexCoord2u16(1, 1);
-	GXPosition2u16(0, uVar2);
+	GXPosition2u16(0, h);
 	GXTexCoord2u16(0, 1);
 	GXEnd();
 }
@@ -518,53 +619,28 @@ void TPollutionCounterLayer::countTexDegree(int param_1)
 		return;
 
 	ReInitializeGX();
+
+	// TODO: drawPollutionLayer or nah? size doesn't match
 	const TPollutionLayer* layer = unk14[param_1];
 	ResTIMG* img                 = layer->unk58;
 	drawBlack(img->width, img->height);
-	GXTexObj GStack_40;
-	GXInitTexObj(&GStack_40, (u8*)img + img->imageDataOffset, img->width,
-	             img->height, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-	GXInitTexObjLOD(&GStack_40, GX_NEAR, GX_NEAR, 0.0f, 1.0f, 0.0f, GX_FALSE,
-	                GX_FALSE, GX_ANISO_1);
-	GXLoadTexObj(&GStack_40, GX_TEXMAP0);
-
+	loadPollutionLayer((u8*)img + img->imageDataOffset, img->width, img->height,
+	                   GX_TEXMAP0);
 	initGXforPollutionLayer(layer->unk30, layer->unk32, layer->unk85,
 	                        layer->unk84);
+
 	GXClearPixMetric();
 	drawTex(unk14[param_1]->unk58->width, unk14[param_1]->unk58->height);
-	TDrawSyncManager::smInstance->pushBreakPoint();
-	GXSetDrawSync(getTokenNo(param_1));
-	TDrawSyncManager::smInstance->pushBreakPoint();
-	GXSetDrawSync(0);
+	setCallback(param_1);
 	if (unk28 != 0) {
 		j3dSys.unk4C = 7;
 		unk2C[param_1]->draw();
 		unk2C[param_1]->frameInit();
 	}
+
 	ReInitializeGX();
 	drawJointObjStamp(param_1);
-	const TPollutionLayer* layer2 = unk14[param_1];
-
-	int uVar1 = layer2->unk5C.unkC >= layer2->unk5C.unk8
-	                ? uVar1 = layer2->unk5C.unk8
-	                : layer2->unk5C.unkC;
-
-	initGXforStamp(layer2->unk5C.mMap, layer2->unk58->width,
-	               layer2->unk58->height, uVar1);
-
-	for (int i = 0; i < unk1A; ++i) {
-		TPollutionTexStamp& stamp = unk1C[i];
-		if (stamp.unk0 == 0) {
-			GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO,
-			                GX_CC_ZERO);
-		} else {
-			GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ONE, GX_CC_ZERO, GX_CC_ZERO,
-			                GX_CC_ZERO);
-		}
-		doTask(param_1, stamp.unk8, stamp.unk10, stamp.unk4,
-		       unk14[param_1]->unk58->width, unk14[param_1]->unk58->height,
-		       unk14[param_1]->unk48);
-	}
+	drawTexStamp(param_1);
 	drawRevivalTexStamp(param_1);
 	if (unk30[param_1] != 0)
 		cleanProhibitArea(param_1);
@@ -582,7 +658,16 @@ void TPollutionCounterLayer::resetTask()
 	unkD4 = 0;
 }
 
-void TPollutionCounterLayer::setTevColorInByStampType(u16) const { }
+void TPollutionCounterLayer::setTevColorInByStampType(u16 type) const
+{
+	if (type == 0) {
+		GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO,
+		                GX_CC_ZERO);
+	} else {
+		GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ONE, GX_CC_ZERO, GX_CC_ZERO,
+		                GX_CC_ZERO);
+	}
+}
 
 void TPollutionCounterLayer::pushJointObjStampTask(u8 param_1, u8 param_2,
                                                    TPollutionObj* param_3)
@@ -596,7 +681,34 @@ void TPollutionCounterLayer::pushJointObjStampTask(u8 param_1, u8 param_2,
 	++unkD4;
 }
 
-void TPollutionCounterLayer::calcViewMtx() { }
+void TPollutionCounterLayer::calcViewMtx()
+{
+	JGeometry::SMatrix34C<f32> afStack_68;
+	afStack_68.set(j3dSys.mViewMtx);
+	J3DDrawBuffer* buf1 = j3dSys.mDrawBuffer[1];
+	J3DDrawBuffer* buf0 = j3dSys.mDrawBuffer[0];
+	for (int i = 0; i < unk8; ++i) {
+		TPollutionLayer* iVar3
+		    = (TPollutionLayer*)gpPollution->getJointModel(i);
+
+		TPosition3f local_a4;
+		makeWorldToPollutionMtx(iVar3->unk5C.mInverseVerticalScale,
+		                        iVar3->unk38, iVar3->unk40, &local_a4);
+		MtxPtr ptr = local_a4;
+		MTXCopy(ptr, j3dSys.mViewMtx);
+		j3dSys.mDrawBuffer[0] = unk2C[i];
+		j3dSys.mDrawBuffer[1] = unk2C[i];
+		for (int j = 0; j < unk28; ++j) {
+			if (unk34[j].unk0 != i)
+				continue;
+			unk34[j].unk4->viewCalc();
+			unk34[j].unk4->entry();
+		}
+	}
+	MTXCopy(afStack_68, j3dSys.mViewMtx);
+	j3dSys.mDrawBuffer[0] = buf0;
+	j3dSys.mDrawBuffer[1] = buf1;
+}
 
 void TPollutionCounterLayer::pushModelStampTask(u8 param_1, J3DModel* param_2)
 {

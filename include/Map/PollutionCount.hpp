@@ -25,7 +25,7 @@ public:
 	void initCounters(int);
 
 	virtual int getTokenNo(int) const   = 0;
-	virtual u32 getCounterNo(u32) const = 0;
+	virtual u16 getCounterNo(u32) const = 0;
 
 public:
 	/* 0x4 */ int unk4;
@@ -39,7 +39,7 @@ public:
 	TPollutionCounterObj();
 
 	virtual int getTokenNo(int param_1) const { return param_1 + 0x92; }
-	virtual u32 getCounterNo(u32 param_1) const { return param_1 - 0x92; }
+	virtual u16 getCounterNo(u32 param_1) const { return param_1 - 0x92; }
 
 	void draw(int) const;
 	void countObjDegree() const;
@@ -134,7 +134,7 @@ public:
 	TPollutionCounterLayer();
 
 	virtual int getTokenNo(int param_1) const { return param_1 + 0x7E; }
-	virtual u32 getCounterNo(u32 param_1) const { return param_1 - 0x7E; }
+	virtual u16 getCounterNo(u32 param_1) const { return param_1 - 0x7E; }
 
 	void drawPollutionLayer(int) const;
 	void drawJointObjStamp(int) const;

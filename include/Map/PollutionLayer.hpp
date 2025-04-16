@@ -73,6 +73,10 @@ public:
 	static u32 mGlassWallEffectTime;
 	static u32 mEffectTime;
 
+	// fabricated
+	const ResTIMG* getUnk58() const { return unk58; }
+	u32 getUnk48() const { return unk48; }
+
 public:
 	/* 0x30 */ u16 unk30;
 	/* 0x32 */ u16 unk32;
