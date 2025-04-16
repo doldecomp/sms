@@ -88,6 +88,9 @@ public:
 	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }
 	int checkFlag8() { return mFlags & 8 ? TRUE : FALSE; }
 
+	void* getVtxPos() const { return unk10C; }
+	void setVtxPos(void* pVtxPos) { unk10C = pVtxPos; }
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ J3DMtxCalc* mCurrentMtxCalc;
