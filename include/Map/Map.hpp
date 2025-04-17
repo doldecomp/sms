@@ -56,6 +56,9 @@ public:
 	void updateDelfino();
 	void draw(u32, JDrama::TGraphics*) const;
 
+	// fabricated
+	TMapModelManager* getModelManager() { return mModelManager; }
+
 public:
 	/* 0x10 */ TMapCollisionData* mCollisionData;
 	/* 0x14 */ TMapModelManager* mModelManager;
