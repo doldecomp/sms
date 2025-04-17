@@ -4,7 +4,7 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <Strategic/spcinterp.hpp>
 
-class TEventWatcher : JDrama::TViewObj {
+class TEventWatcher : public JDrama::TViewObj {
 public:
 	TEventWatcher(const char*, const char*);
 	TEventWatcher(const char*);
