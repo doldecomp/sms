@@ -82,6 +82,7 @@ public:
 	u32 getUnk48() const { return unk48; }
 	u16 getPollutionType() const { return unk30; }
 	u32 getPollutionDegree() const { return unk34; }
+	TPollutionObj* getObj(int i) { return (TPollutionObj*)getChild(i); }
 
 public:
 	/* 0x30 */ u16 unk30;

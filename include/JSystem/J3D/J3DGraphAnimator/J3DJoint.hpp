@@ -198,8 +198,10 @@ public:
 	void setMtxCalc(J3DMtxCalc* mtx_calc) { mMtxCalc = mtx_calc; }
 	J3DMtxCalc* getMtxCalc() { return mMtxCalc; }
 
+	// fabricated
 	const Vec& getMin() { return mMin; }
 	const Vec& getMax() { return mMax; }
+	void setTransformInfo(const J3DTransformInfo& v) { mTransformInfo = v; }
 
 private:
 	/* 0x18 */ u16 mJntNo;

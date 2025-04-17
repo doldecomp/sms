@@ -41,7 +41,7 @@ void TPollutionObj::initAreaInfo(TPollutionLayer* layer)
 		((TPollutionObj*)mChildren[i])->initAreaInfo(layer);
 }
 
-void TPollutionObj::isCleaned() const { }
+bool TPollutionObj::isCleaned() const { }
 
 void TPollutionObj::updateDepthMap() { }
 

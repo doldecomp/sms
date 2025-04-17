@@ -9,7 +9,7 @@ class TPollutionObj : public TJointObj {
 public:
 	TPollutionObj();
 	void initAreaInfo(TPollutionLayer*);
-	void isCleaned() const;
+	bool isCleaned() const;
 	void updateDepthMap();
 	void getDepthFromMap(int, int);
 	virtual TJointObj* newJointObj() const { return new TPollutionObj; }
