@@ -1,5 +1,6 @@
 #include <Map/PollutionManager.hpp>
 #include <Map/PollutionLayer.hpp>
+#include <Map/MapEventSink.hpp>
 #include <System/MarDirector.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -83,12 +84,9 @@ static void dummy()
 	(Vec) { 1.0f, 1.0f, 1.0f };
 }
 
-// TODO: move to it's proper place
-static u32 mCleanedDegree;
-
 bool TPollutionManager::cleanedAll() const
 {
-	return getPollutionDegree() < mCleanedDegree ? true : false;
+	return getPollutionDegree() < TMapEventSink::mCleanedDegree ? true : false;
 }
 
 void TPollutionManager::draw() { }

@@ -16,6 +16,8 @@ public:
 	// NOTE: this MUST be uninitialized as far as I can tell
 	TVec3() { }
 
+	TVec3(const Vec& b) { set(b.x, b.y, b.z); }
+
 	TVec3(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.

@@ -67,9 +67,9 @@ public:
 	void setBossNotDamagedFlag(bool);
 	void getBossLivesFlag2();
 	void getBossLivesFlag();
-	void setBossLivesFlag2(bool);
+	static void setBossLivesFlag2(bool);
 	void setBossLivesFlagOnlyFlag(bool);
-	void setBossLivesFlag(bool);
+	static void setBossLivesFlag(bool);
 	void fromTalkingCameraDemo(bool);
 	void toTalkingCameraDemo();
 	void fromTHPDemo();

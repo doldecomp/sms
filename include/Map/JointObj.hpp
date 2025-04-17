@@ -28,6 +28,7 @@ public:
 	void setIndexInParent(u16 i) { mIndexInParent = i; }
 	int getShapeNum() { return mShapeNum; }
 	J3DShape* getShape(int i) { return mShapes[i]; }
+	TJointObj* getChild(int i) { return mChildren[i]; }
 	J3DJoint* getJoint() { return mJoint; }
 
 public:
