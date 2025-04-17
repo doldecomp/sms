@@ -1,5 +1,5 @@
-#ifndef MOVE_BG_MAP_STATIC_OBJECT_HPP
-#define MOVE_BG_MAP_STATIC_OBJECT_HPP
+#ifndef MAP_MAP_STATIC_OBJECT_HPP
+#define MAP_MAP_STATIC_OBJECT_HPP
 
 #include <Strategic/HitActor.hpp>
 

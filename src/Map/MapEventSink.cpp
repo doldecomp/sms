@@ -1,8 +1,8 @@
 #include <Map/MapEventSink.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
+#include <Map/MapStaticObject.hpp>
 #include <MoveBG/MapObjBase.hpp>
-#include <MoveBG/MapStaticObject.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/DrawUtil.hpp>
