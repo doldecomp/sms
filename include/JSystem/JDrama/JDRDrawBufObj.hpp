@@ -16,6 +16,9 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, TGraphics*);
 
+	// fabricated
+	J3DDrawBuffer* getDrawBuffer() { return mDrawBuffer; }
+
 public:
 	/* 0x10 */ J3DDrawBuffer* mDrawBuffer;
 	/* 0x14 */ u32 mDrawBufferSize;

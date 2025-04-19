@@ -69,15 +69,15 @@ public:
 
 	J3DMtxCalc* getCurrentMtxCalc() const { return mCurrentMtxCalc; }
 
-	// Type 0: Opa Buffer
-	// Type 1: Xlu Buffer
+	// Type 0: Opa (opaque) Buffer
+	// Type 1: Xlu (transparent) Buffer
 	void setDrawBuffer(J3DDrawBuffer* buffer, int type)
 	{
 		mDrawBuffer[type] = buffer;
 	}
 
-	// Type 0: Opa Buffer
-	// Type 1: Xlu Buffer
+	// Type 0: Opa (opaque) Buffer
+	// Type 1: Xlu (transparent) Buffer
 	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
 
 	void setModel(J3DModel* pModel) { mModel = pModel; }

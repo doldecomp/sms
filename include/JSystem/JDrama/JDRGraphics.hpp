@@ -24,11 +24,13 @@ struct TGraphics {
 	void setViewport(const TRect&, float, float);
 
 	TRect& getUnk44() { return unk44; }
+	TRect& getUnk54() { return unk54; }
 
 	bool checkFlag8() { return (unkFC & 0x8) != 0; }
 	bool checkFlag10() { return (unkFC & 0x10) != 0; }
 
 	MtxPtr getUnkB4() { return unkB4.mMtx; }
+	f32 getUnkE8() { return unkE8; }
 
 	char unk0[0x4];
 	/* 0x04 */ void* unk4;

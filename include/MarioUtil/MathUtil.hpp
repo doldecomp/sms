@@ -28,4 +28,23 @@ void SMSCalcJumpVelocityXZ(const JGeometry::TVec3<f32>&,
 void MsVECNormalize(Vec*, Vec*);
 void MsVECMag2(Vec*);
 
+inline JGeometry::TVec3<f32>
+MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
+                       const JGeometry::TVec3<f32>& param_2,
+                       const JGeometry::TVec3<f32>& param_3)
+{
+	// TODO: floats are the worst, doesn't match at all...
+	JGeometry::TVec3<f32> diff;
+	diff.sub(param_2, param_1);
+	f32 fVar1 = (param_3.dot(diff) - param_1.dot(diff)) / diff.squared();
+	if (fVar1 < 0.0f) {
+		fVar1 = 0.0f;
+	} else if (fVar1 > 1.0f)
+		fVar1 = 1.0f;
+	JGeometry::TVec3<f32> thing;
+	thing.scale(fVar1, diff);
+	thing.add(param_1);
+	return thing;
+}
+
 #endif

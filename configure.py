@@ -1062,7 +1062,7 @@ config.libs = [
             Object(NonMatching, "Map/MapMirror.cpp"),
             Object(NonMatching, "Map/MapModel.cpp"),
             Object(NonMatching, "Map/MapWarp.cpp"),
-            Object(NonMatching, "Map/MapStaticObject.cpp"),
+            Object(NonMatching, "Map/MapStaticObject.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapWire.cpp"),
             Object(NonMatching, "Map/MapWireManager.cpp"),
             Object(NonMatching, "Map/MapXlu.cpp"),

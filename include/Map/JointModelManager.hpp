@@ -21,6 +21,7 @@ public:
 	int getJointModelNum() const { return mJointModelNum; }
 	TJointModel* getJointModel(int i) { return mJointModels[i]; }
 	const TJointModel* getJointModel(int i) const { return mJointModels[i]; }
+	MActorAnmData* getMActorAnmData() { return &mActorAnimationData; }
 
 public:
 	/* 0x10 */ int mJointModelNum;
