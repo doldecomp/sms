@@ -5,9 +5,10 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <M3DUtil/SDLModel.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <Strategic/LiveActor.hpp>
 #include <Player/MarioMain.hpp>
 #include <dolphin/mtx.h>
-#include <MarioUtil/MtxUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <System/Application.hpp>
@@ -37,8 +38,6 @@ void TMultiBtk::setNthData(int n, J3DAnmTextureSRTKey* param_2)
 	unk0c[n].setSpeed(0.5f * SMSGetAnmFrameRate());
 }
 
-#pragma opt_strength_reduction off
-
 void TMultiBtk::update()
 {
 	for (int i = 0; i < unk00; ++i) {
@@ -61,10 +60,10 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
 		} else {
 			TMtx34f mtx;
-			if (!riding_info->unk0->getTakingMtx()) {
+			if (!riding_info->unk0->getRootJointMtx()) {
 				SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
 			} else {
-				PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
+				PSMTXCopy(*riding_info->unk0->getRootJointMtx(), mtx.mMtx);
 			}
 			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos);
 			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
@@ -83,10 +82,10 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
 		return;
 
 	TMtx34f mtx;
-	if (!riding_info->unk0->getTakingMtx()) {
+	if (!riding_info->unk0->getRootJointMtx()) {
 		SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
 	} else {
-		PSMTXCopy(riding_info->unk0->getTakingMtx(), mtx.mMtx);
+		PSMTXCopy(*riding_info->unk0->getRootJointMtx(), mtx.mMtx);
 	}
 	PSMTXInverse(mtx.mMtx, mtx.mMtx);
 	MTXMultVec(mtx.mMtx, (Vec*)&pos, &riding_info->localPos);
