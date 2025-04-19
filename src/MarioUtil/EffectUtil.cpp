@@ -2,51 +2,45 @@
 #include <System/MarDirector.hpp>
 #include <JSystem/JGeometry.hpp>
 
-s32 SMS_EmitRippleTiny(JGeometry::TVec3<float>* arg0)
+bool SMS_EmitRippleTiny(JGeometry::TVec3<float>* arg0)
 {
-	s32 ret = 1;
-	if (gpMarioParticleManager->emit(0x35, arg0, 0U, nullptr) == 0U) {
+	bool ret = 1;
+	if (!gpMarioParticleManager->emit(0x35, arg0, 0U, nullptr))
 		ret = 0;
-	}
-	if (gpMarioParticleManager->emit(0x36, arg0, 0U, nullptr) == 0U) {
+
+	if (!gpMarioParticleManager->emit(0x36, arg0, 0U, nullptr))
 		ret = 0;
-	}
+
 	return ret;
 }
 
-s32 SMS_EmitRipplePool(f32 (*arg0)[4], void* arg1)
+bool SMS_EmitRipplePool(f32 (*arg0)[4], void* arg1)
 {
-	s32 ret = 1;
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x1E9, arg0, 3U, arg1)
-	    == 0U) {
+	bool ret = 1;
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x1E9, arg0, 3U, arg1))
 		ret = 0;
-	}
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x10A, arg0, 1U, arg1)
-	    == 0U) {
+
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x10A, arg0, 1U, arg1))
 		ret = 0;
-	}
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x10B, arg0, 1U, arg1)
-	    == 0U) {
+
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x10B, arg0, 1U, arg1))
 		ret = 0;
-	}
+
 	return ret;
 }
 
-s32 SMS_EmitRippleSea(MtxPtr arg0, void* arg1)
+bool SMS_EmitRippleSea(MtxPtr arg0, void* arg1)
 {
-	s32 ret = 1;
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x1E8, arg0, 3U, arg1)
-	    == 0U) {
+	bool ret = 1;
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x1E8, arg0, 3U, arg1))
 		ret = 0;
-	}
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x107, arg0, 1U, arg1)
-	    == 0U) {
+
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x107, arg0, 1U, arg1))
 		ret = 0;
-	}
-	if (gpMarioParticleManager->emitAndBindToMtxPtr(0x108, arg0, 1U, arg1)
-	    == 0U) {
+
+	if (!gpMarioParticleManager->emitAndBindToMtxPtr(0x108, arg0, 1U, arg1))
 		ret = 0;
-	}
+
 	return ret;
 }
 
