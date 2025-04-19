@@ -5,9 +5,7 @@
 
 class TMapObjBase;
 class J3DMaterialTable;
-class TMapObjBaseManager;
-
-extern TMapObjBaseManager* gpMapObjManager;
+class J3DModel;
 
 class TMapObjBaseManager : public TLiveManager {
 public:
@@ -39,6 +37,25 @@ public:
 	/* 0x40 */ MActorAnmData* unk40;
 	/* 0x44 */ char unk44[0x68 - 0x44];
 	/* 0x68 */ J3DMaterialTable* unk68;
+};
+
+class TMapObjManager;
+
+extern TMapObjManager* gpMapObjManager;
+
+class TMapObjManager : public TMapObjBaseManager {
+public:
+	void initKeyCode();
+
+	TMapObjManager(const char*);
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void hasMapCollision() const;
+
+	void loadMatTable(const char*);
+	void initDrawBuffer();
+	void entryStaticDrawBufferSun(J3DModel*);
+	void entryStaticDrawBufferShadow(J3DModel*);
 };
 
 #endif

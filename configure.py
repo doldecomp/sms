@@ -1016,7 +1016,7 @@ config.libs = [
             Object(NonMatching, "MoveBG/MapObjFloat.cpp"),
             Object(NonMatching, "MoveBG/MapObjPlane.cpp"),
             Object(NonMatching, "MoveBG/MapObjCloud.cpp"),
-            Object(NonMatching, "MoveBG/MapObjBall.cpp"),
+            Object(NonMatching, "MoveBG/MapObjBall.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "MoveBG/MapObjAirport.cpp"),
             Object(NonMatching, "MoveBG/MapObjDolpic.cpp"),
             Object(NonMatching, "MoveBG/MapObjPollution.cpp"),
