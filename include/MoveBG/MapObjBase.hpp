@@ -8,6 +8,8 @@ class J3DMaterialTable;
 class TMapCollisionStatic;
 class TMapCollisionMove;
 class TMapCollisionWarp;
+class TJointObj;
+class JPABaseEmitter;
 
 class TMapObjBase : public TLiveActor {
 public:
@@ -81,19 +83,22 @@ public:
 	void initUnique();
 	void setMatTableTex(J3DMaterialTable*);
 	void setMatTable(J3DMaterialTable*);
-	void emitAndRotate(long, unsigned char,
-	                   const JGeometry::TVec3<float>*) const;
-	void emitAndScale(long, unsigned char, const JGeometry::TVec3<float>*,
-	                  const JGeometry::TVec3<float>&) const;
-	void emitAndBindScale(long, unsigned char, const JGeometry::TVec3<float>*,
-	                      const JGeometry::TVec3<float>&) const;
-	void emitAndScale(long, unsigned char,
-	                  const JGeometry::TVec3<float>*) const;
-	void emitAndRotateScale(long, unsigned char,
-	                        const JGeometry::TVec3<float>*) const;
-	void emitAndSRT(long, unsigned char, const JGeometry::TVec3<float>*,
-	                const JGeometry::TVec3<float>&,
-	                const JGeometry::TVec3<float>&);
+	JPABaseEmitter* emitAndRotate(long, unsigned char,
+	                              const JGeometry::TVec3<float>*) const;
+	JPABaseEmitter* emitAndScale(long, unsigned char,
+	                             const JGeometry::TVec3<float>*,
+	                             const JGeometry::TVec3<float>&) const;
+	JPABaseEmitter* emitAndBindScale(long, unsigned char,
+	                                 const JGeometry::TVec3<float>*,
+	                                 const JGeometry::TVec3<float>&) const;
+	JPABaseEmitter* emitAndScale(long, unsigned char,
+	                             const JGeometry::TVec3<float>*) const;
+	JPABaseEmitter* emitAndRotateScale(long, unsigned char,
+	                                   const JGeometry::TVec3<float>*) const;
+	JPABaseEmitter* emitAndSRT(long, unsigned char,
+	                           const JGeometry::TVec3<float>*,
+	                           const JGeometry::TVec3<float>&,
+	                           const JGeometry::TVec3<float>&);
 	void emitColumnWater();
 	void marioHipAttack() const;
 	void marioHeadAttack() const;
@@ -139,16 +144,16 @@ public:
 	void makeRootMtxRotZ(float (*)[4]);
 	void makeLowerStr(const char*, char*);
 	static void moveJoint(J3DJoint*, float, float, float);
-	void getJointTransX(J3DJoint*);
-	void getJointTransY(J3DJoint*);
-	void getJointTransZ(J3DJoint*);
+	static f32 getJointTransX(J3DJoint*);
+	static f32 getJointTransY(J3DJoint*);
+	static f32 getJointTransZ(J3DJoint*);
 	void setJointTrans(J3DJoint*, float, float, float);
 	void setJointTransX(J3DJoint*, float);
 	static void setJointTransY(J3DJoint*, float);
 	void setJointTransZ(J3DJoint*, float);
-	void getJointRotateX(J3DJoint*);
-	void getJointRotateY(J3DJoint*);
-	void getJointRotateZ(J3DJoint*);
+	static f32 getJointRotateX(J3DJoint*);
+	static f32 getJointRotateY(J3DJoint*);
+	static f32 getJointRotateZ(J3DJoint*);
 	void setJointRotate(J3DJoint*, short, short, short);
 	void setJointRotateX(J3DJoint*, short);
 	void setJointRotateY(J3DJoint*, short);
@@ -156,9 +161,9 @@ public:
 	void rotateJointX(J3DJoint*, float);
 	void rotateJointY(J3DJoint*, float);
 	void rotateJointZ(J3DJoint*, float);
-	void getJointScaleX(J3DJoint*);
-	void getJointScaleY(J3DJoint*);
-	void getJointScaleZ(J3DJoint*);
+	static f32 getJointScaleX(J3DJoint*);
+	static f32 getJointScaleY(J3DJoint*);
+	static f32 getJointScaleZ(J3DJoint*);
 	void setJointScale(J3DJoint*, float, float, float);
 	void setJointScaleX(J3DJoint*, float);
 	void setJointScaleY(J3DJoint*, float);
@@ -167,8 +172,8 @@ public:
 	void getMapModel();
 	void getMapModelData();
 	void getMapMActor();
-	void getBuildingJointObj(int);
-	void getBuildingJoint(int);
+	TJointObj* getBuildingJointObj(int);
+	J3DJoint* getBuildingJoint(int);
 
 	static TMapCollisionStatic* newAndInitBuildingCollisionStatic(int,
 	                                                              TLiveActor*);

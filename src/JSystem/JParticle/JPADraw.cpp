@@ -742,8 +742,8 @@ void JPADraw::setParticleClipBoard()
 	GXLoadPosMtxImm(cb.unk68, 0);
 
 	// TODO: TVec2 arithmetic?
-	f32 a   = mDrawCtx.mBaseEmitter->unk174;
-	f32 b   = mDrawCtx.mBaseEmitter->unk178;
+	f32 a   = mDrawCtx.mBaseEmitter->unk174.x;
+	f32 b   = mDrawCtx.mBaseEmitter->unk174.y;
 	cb.unk4 = a * (mDrawCtx.mBaseShape->mBaseSizeX * 25.0f);
 	cb.unk8 = b * (mDrawCtx.mBaseShape->mBaseSizeY * 25.0f);
 
@@ -850,8 +850,8 @@ void JPADraw::setChildClipBoard()
 
 	GXLoadPosMtxImm(cb.unk68, 0);
 
-	f32 fVar3 = mDrawCtx.mBaseEmitter->unk174;
-	f32 fVar4 = mDrawCtx.mBaseEmitter->unk178;
+	f32 fVar3 = mDrawCtx.mBaseEmitter->unk174.x;
+	f32 fVar4 = mDrawCtx.mBaseEmitter->unk174.y;
 	if (!mDrawCtx.mSweepShape->isInheritedScale()) {
 		cb.unk4 = fVar3 * (25.0f * mDrawCtx.mSweepShape->getScaleX());
 		cb.unk8 = fVar4 * (25.0f * mDrawCtx.mSweepShape->getScaleY());

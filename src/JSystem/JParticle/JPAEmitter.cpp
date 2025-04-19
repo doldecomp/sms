@@ -22,17 +22,11 @@ JPABaseEmitter::JPABaseEmitter()
 
 	// TODO: vectors?
 
-	unk154.x = 1.0f;
-	unk154.y = 1.0f;
-	unk154.z = 1.0f;
+	unk154.set(1.0f, 1.0f, 1.0f);
 
-	unk174 = 1.0f;
-	unk178 = 1.0f;
-	unk17C = 1.0f;
+	unk174.set(1.0f, 1.0f, 1.0f);
 
-	unk170 = 0;
-	unk16E = 0;
-	unk16C = 0;
+	unk16C.x = unk16C.y = unk16C.z = 0;
 
 	unk160.x = unk160.y = unk160.z = 0.0f;
 

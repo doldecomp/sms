@@ -1,13 +1,13 @@
-#include "dolphin.h"
+#include <stdlib.h>
 
 // rand.c from Runtime library
 
-u32 next = 1;
+size_t next = 1;
 
-u32 rand(void)
+int rand(void)
 {
 	next = 0x41C64E6D * next + 12345;
 	return (next >> 16) & 0x7FFF;
 }
 
-void srand(u32 seed) { next = seed; }
+void srand(size_t seed) { next = seed; }

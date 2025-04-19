@@ -29,9 +29,7 @@ void TItemManager::resetNozzleBoxesModel(int param_1)
 			    0xE4, &box->mPosition, 0, nullptr);
 			if (emitter) {
 				emitter->unk154.set(2.0f, 2.0f, 2.0f);
-				emitter->unk174 = 2.0f;
-				emitter->unk178 = 2.0f;
-				emitter->unk17C = 2.0f;
+				emitter->unk174.set(2.0f, 2.0f, 2.0f);
 			}
 
 			if (gpMSound->gateCheck(0x387D)) {
