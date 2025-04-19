@@ -16,6 +16,7 @@
 #include <System/MarDirector.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
+#include <Jsystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -263,16 +264,20 @@ void TMapEventSinkBianco::finishControl()
 		TMapObjBase::setJointTransY(unk64, 0.0f);
 		for (int i = 0; i < 6; ++i) {
 			snprintf(buffer, 0x40, "バナナツリー（スケール） %d", i);
-			JDrama::TNameRef* ref = JDrama::TNameRef::search(buffer);
-			// TODO: what are we casting to here?
-			// gpModelWaterManager->unk2514[0]
+			TLiveActor* bananaTree
+			    = (TLiveActor*)JDrama::TNameRefGen::getInstance()
+			          ->getRootNameRef()
+			          ->search(buffer);
+			bananaTree->receiveMessage(gpModelWaterManager->unk2514[0], 0xf);
 		}
 
 		for (int i = 0; i < 7; ++i) {
 			snprintf(buffer, 0x40, "落書き内%02d", i);
-			JDrama::TNameRef* ref = JDrama::TNameRef::search(buffer);
-			// TODO: what are we casting to here?
-			// gpModelWaterManager->unk2514[0]
+			TLiveActor* graffiti
+			    = (TLiveActor*)JDrama::TNameRefGen::getInstance()
+			          ->getRootNameRef()
+			          ->search(buffer);
+			graffiti->receiveMessage(gpModelWaterManager->unk2514[0], 0xf);
 		}
 	}
 

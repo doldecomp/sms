@@ -176,7 +176,7 @@ public:
 	static TMapCollisionWarp* newAndInitBuildingCollisionWarp(int, TLiveActor*);
 
 	void joinToGroup(const char*, THitActor*);
-	void startAllAnim(MActor*, const char*);
+	static void startAllAnim(MActor*, const char*);
 	void initPacketMatColor(J3DModel*, _GXTevRegID, const _GXColorS10*);
 	void isFruit(THitActor*);
 	void isCoin(THitActor*);

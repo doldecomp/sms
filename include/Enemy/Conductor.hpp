@@ -10,6 +10,7 @@ class TGenerator;
 class TAreaCylinderManager;
 class SDLModelData;
 class TStageEnemyInfoTable;
+class TGraphWeb;
 
 class TConductor;
 
@@ -30,7 +31,7 @@ public:
 	void registerSDLModelData(SDLModelData*);
 	void registerEnemyInfoTable(TStageEnemyInfoTable*);
 	void init();
-	void getGraphByName(const char*);
+	TGraphWeb* getGraphByName(const char*);
 	void getManagerByName(const char*);
 	void polluterExterminated();
 	void isBossDefeated();

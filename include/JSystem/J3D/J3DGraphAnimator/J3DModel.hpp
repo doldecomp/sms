@@ -91,6 +91,7 @@ public:
 	void setTexture(J3DTexture* texture) { unkAC = texture; }
 	J3DTexture* getTexture() const { return unkAC; }
 	void setTextureName(JUTNameTab* texture_name) { unkA8 = texture_name; }
+	JUTNameTab* getTextureName() const { return unkA8; }
 	u8 getDrawMtxFlag(u16 idx) const { return mDrawMtxData.mDrawMtxFlag[idx]; }
 	u16 getDrawMtxIndex(u16 idx) const
 	{
