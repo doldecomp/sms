@@ -853,7 +853,7 @@ config.libs = [
             Object(NonMatching, "System/SnapTimeObj.cpp"),
             Object(NonMatching, "System/TalkCursor.cpp"),
             Object(Matching, "System/TexCache.cpp"),
-            Object(NonMatching, "System/ZBufferCatch.cpp"),
+            Object(Matching, "System/ZBufferCatch.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/Application.cpp"),
             Object(NonMatching, "System/ScenarioArchiveName.cpp"),
             Object(NonMatching, "System/MarioGamePad.cpp"),
