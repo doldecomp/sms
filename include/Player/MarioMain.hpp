@@ -6,8 +6,10 @@
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
 
+class TLiveActor;
+
 struct TRidingInfo {
-	TTakeActor* unk0;
+	const TLiveActor* unk0;
 	Vec localPos;
 	float unk10;
 	// maybe more

@@ -3,7 +3,7 @@
 
 #include <JSystem/JGeometry.hpp>
 
-class TTakeActor;
+class TLiveActor;
 class JSUMemoryInputStream;
 
 class TBGCheckData {
@@ -41,7 +41,7 @@ public:
 	/* 0x38 */ f32 unk38;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
-	/* 0x44 */ const TTakeActor* unk44;
+	/* 0x44 */ const TLiveActor* unk44;
 };
 
 #endif
