@@ -21,6 +21,10 @@ public:
 	{
 		return mActorType & flag ? true : false;
 	}
+	bool isActorType(u32 flag) const
+	{
+		return mActorType == flag ? true : false;
+	}
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

@@ -19,10 +19,9 @@ void TMapObjBaseManager::newAndRegisterObjByEventID(unsigned long, const char*)
 {
 }
 
-void TMapObjBaseManager::newAndRegisterObj(const char*,
-                                           const JGeometry::TVec3<float>&,
-                                           const JGeometry::TVec3<float>&,
-                                           const JGeometry::TVec3<float>&)
+TMapObjBase* TMapObjBaseManager::newAndRegisterObj(
+    const char*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&,
+    const JGeometry::TVec3<float>&)
 {
 }
 

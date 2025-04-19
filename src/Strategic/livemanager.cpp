@@ -63,4 +63,4 @@ void TLiveManager::perform(u32 param_1, JDrama::TGraphics* param_2) { }
 
 void TLiveManager::getActorByFlag(u32) const { }
 
-void TLiveManager::hasMapCollision() const { }
+bool TLiveManager::hasMapCollision() const { }
