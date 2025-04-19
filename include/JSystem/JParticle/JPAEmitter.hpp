@@ -148,14 +148,10 @@ public:
 
 	/* 0x154 */ JGeometry::TVec3<f32> unk154;
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
-	/* 0x16C */ s16 unk16C;
-	/* 0x16E */ s16 unk16E;
-	/* 0x170 */ s16 unk170;
+	/* 0x16C */ S16Vec unk16C;
 	/* 0x172 */ u8 unk172;
 	/* 0x173 */ u8 unk173;
-	/* 0x174 */ f32 unk174;
-	/* 0x178 */ f32 unk178;
-	/* 0x17C */ f32 unk17C;
+	/* 0x174 */ JGeometry::TVec3<f32> unk174;
 	/* 0x180 */ GXColor unk180;
 	/* 0x184 */ u8 unk184;
 	/* 0x185 */ u8 unk185;
