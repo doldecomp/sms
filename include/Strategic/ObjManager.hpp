@@ -28,7 +28,7 @@ public:
 	/* 0xC */ const char* mFolder;
 };
 
-class TObjManager : JDrama::TViewObj {
+class TObjManager : public JDrama::TViewObj {
 public:
 	TObjManager(const char*);
 
@@ -45,6 +45,10 @@ public:
 	MActorAnmData* getMActorAnmData();
 	void manageObj(THitActor*);
 	void initObjArray(int);
+
+	// fabricated
+	int objNum() { return unk14; }
+	THitActor* getObj(int i) { return unk18[i]; }
 
 public:
 	/* 0x10 */ u32 unk10;

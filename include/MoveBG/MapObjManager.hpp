@@ -9,7 +9,6 @@ class J3DModel;
 
 class TMapObjBaseManager : public TLiveManager {
 public:
-	~TMapObjBaseManager();
 	TMapObjBaseManager(const char*);
 
 	virtual void load(JSUMemoryInputStream&);
@@ -19,24 +18,18 @@ public:
 	void getObjNumWithActorType(u32) const;
 	void getActorTypeByEventID(u32);
 	void newAndRegisterObjByEventID(u32, const char*);
-	void newAndRegisterObj(const char*, const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&);
+	static TMapObjBase* newAndRegisterObj(const char*,
+	                                      const JGeometry::TVec3<f32>&,
+	                                      const JGeometry::TVec3<f32>&,
+	                                      const JGeometry::TVec3<f32>&);
 	void makeObjAppeared(u32);
 	void makeObjAppear(u32);
 	void makeObjAppear(f32, f32, f32, u32, bool);
 	void canAppear(const TMapObjBase*, u32) const;
 
-	// fabricated
-	MActorAnmData* getUnk40() { return unk40; }
-	J3DMaterialTable* getUnk68() { return unk68; }
-
 public:
 	/* 0x38 */ f32 unk38;
 	/* 0x3C */ f32 unk3C;
-	/* 0x40 */ MActorAnmData* unk40;
-	/* 0x44 */ char unk44[0x68 - 0x44];
-	/* 0x68 */ J3DMaterialTable* unk68;
 };
 
 class TMapObjManager;
@@ -50,12 +43,29 @@ public:
 	TMapObjManager(const char*);
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void hasMapCollision() const;
+	virtual bool hasMapCollision() const { return true; }
 
 	void loadMatTable(const char*);
 	void initDrawBuffer();
 	void entryStaticDrawBufferSun(J3DModel*);
 	void entryStaticDrawBufferShadow(J3DModel*);
+
+	// fabricated
+	MActorAnmData* getUnk40() { return unk40; }
+	J3DMaterialTable* getUnk68() { return unk68; }
+
+public:
+	/* 0x40 */ MActorAnmData* unk40;
+	/* 0x44 */ f32 unk44;
+	/* 0x48 */ f32 unk48;
+	/* 0x4C */ f32 unk4C;
+	/* 0x50 */ f32 unk50;
+	/* 0x54 */ f32 unk54;
+	/* 0x58 */ f32 unk58;
+	/* 0x5C */ f32 unk5C;
+	/* 0x60 */ f32 unk60;
+	/* 0x64 */ f32 unk64;
+	/* 0x68 */ J3DMaterialTable* unk68;
 };
 
 #endif

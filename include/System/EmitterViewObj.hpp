@@ -1,18 +1,41 @@
 #ifndef EMITTER_VIE_OBJ_HPP
 #define EMITTER_VIE_OBJ_HPP
 
-#include <types.h>
+#include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JParticle/JPACallback.hpp>
 #include <dolphin/mtx.h>
-#include <JSystem/JGeometry.hpp>
 
-struct TMarioParticleManager {
-	u32 emitAndBindToMtxPtr(long, MtxPtr, unsigned char, const void*);
-	// NOTE: returns some kind of a ptr I think?
-	void* emitAndBindToMtx(long, MtxPtr, unsigned char, const void*);
+class JPABaseEmitter;
+class JPABaseParticle;
 
-	u32 emit(long, const JGeometry::TVec3<float>*, unsigned char, const void*);
-};
+class TMarioParticleManager;
 
 extern TMarioParticleManager* gpMarioParticleManager;
+
+class TMarioParticleManager : public JDrama::TViewObj {
+public:
+	struct TInfo { };
+
+	virtual void perform(u32, JDrama::TGraphics*);
+
+	TMarioParticleManager(const char*);
+	void createEffectInfoAry(int);
+
+	JPABaseEmitter* emit(s32, const JGeometry::TVec3<f32>*, u8, const void*);
+	JPABaseEmitter* emitWithRotate(s32, const JGeometry::TVec3<f32>*, s16, s16,
+	                               s16, u8, const void*);
+	JPABaseEmitter* emitAndBindToPosPtr(s32, const JGeometry::TVec3<f32>*, u8,
+	                                    const void*);
+	JPABaseEmitter* emitAndBindToMtxPtr(s32, MtxPtr, u8, const void*);
+	JPABaseEmitter* emitAndBindToSRTMtxPtr(s32, MtxPtr, u8, const void*);
+	JPABaseEmitter* emitAndBindToMtx(s32, MtxPtr, u8, const void*);
+
+	void
+	emitParticleCallBack(s32, const JGeometry::TVec3<f32>*, u8,
+	                     JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*,
+	                     const void*);
+	void emitTry(s32, TMarioParticleManager::TInfo*, u8);
+	void getAvailableIdx(s32, u8, const void*);
+};
 
 #endif

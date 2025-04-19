@@ -191,6 +191,27 @@ public:
 	void isDemo();
 	void isHideObj(THitActor*);
 	void getObjCollisionHeightOffset() const;
+
+public:
+	/* 0xF4 */ u32 unkF4;
+	/* 0xF8 */ u32 unkF8;
+	/* 0xFC */ u16 unkFC;
+	/* 0xFE */ u16 unkFE;
+	/* 0x100 */ u16 unk100;
+	/* 0x102 */ u16 unk102;
+	/* 0x104 */ u32 unk104;
+	/* 0x108 */ f32 unk108;
+	/* 0x10C */ f32 unk10C;
+	/* 0x110 */ f32 unk110;
+	/* 0x114 */ f32 unk114;
+	/* 0x118 */ f32 unk118;
+	/* 0x11C */ f32 unk11C;
+	/* 0x120 */ f32 unk120;
+	/* 0x124 */ f32 unk124;
+	/* 0x128 */ f32 unk128;
+	/* 0x12C */ f32 unk12C;
+	/* 0x130 */ u32 unk130;
+	/* 0x134 */ u32 unk134;
 };
 
 #endif
