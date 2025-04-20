@@ -84,7 +84,7 @@ public:
 	/* 0xB8 */ float unkB8;
 	/* 0xBC */ float unkBC;
 	/* 0xC0 */ float unkC0;
-	/* 0xC4 */ TBGCheckData* unkC4;
+	/* 0xC4 */ const TBGCheckData* unkC4;
 	/* 0xC8 */ float unkC8;
 	/* 0xCC */ float unkCC;
 	/* 0xD0 */ TLodAnm* unkD0;

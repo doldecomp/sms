@@ -64,7 +64,7 @@ void TMapObjTurn::control() { }
 
 void TMapObjTurn::turn() { }
 
-void TMapObjTurn::touchWater(THitActor*) { }
+u32 TMapObjTurn::touchWater(THitActor*) { }
 
 TMapObjMessenger::TMapObjMessenger(const char* name)
     : THitActor(name)

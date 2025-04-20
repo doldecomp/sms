@@ -12,7 +12,7 @@ public:
 	virtual void makeObjAppeared();
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
-	virtual void touchWater(THitActor*);
+	virtual u32 touchWater(THitActor*);
 	virtual void makeObjDefault();
 	virtual void getDepthAtFloating();
 	virtual void hold(TTakeActor*);
@@ -40,7 +40,7 @@ public:
 	virtual void makeObjAppeared();
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
-	virtual void touchWater(THitActor*);
+	virtual u32 touchWater(THitActor*);
 	virtual void getLivingTime() const;
 	virtual void appearing();
 	virtual void breaking();

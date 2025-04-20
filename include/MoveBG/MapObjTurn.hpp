@@ -11,7 +11,7 @@ public:
 	virtual u32 receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void initMapObj();
-	virtual void touchWater(THitActor*);
+	virtual u32 touchWater(THitActor*);
 	virtual void turn();
 
 public:
