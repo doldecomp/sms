@@ -23,7 +23,7 @@ public:
 	virtual void initMapObj();
 	virtual void checkIllegalAttr() const;
 	virtual void touchPlayer(THitActor*);
-	virtual void touchWater(THitActor*);
+	virtual u32 touchWater(THitActor*);
 	virtual void getLivingTime() const;
 	virtual void getFlushTime() const;
 	virtual void isPollutedGround(const JGeometry::TVec3<f32>&) const;
@@ -55,7 +55,8 @@ public:
 	virtual void checkRoofCollision(JGeometry::TVec3<f32>*);
 	virtual void touchRoof(JGeometry::TVec3<f32>*);
 
-	static u32 mDefaultSound;
+	static struct TMapObjSoundData mDefaultSound;
+
 	static u32 mNormalLivingTime;
 	static u32 mNormalFlushTime;
 	static u32 mNormalFlushInterval;

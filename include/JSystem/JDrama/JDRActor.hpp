@@ -39,6 +39,9 @@ public:
 	virtual void JSGGetRotation(Vec*) const;
 	virtual void JSGSetRotation(const Vec&);
 
+	// fabricated
+	const JGeometry::TVec3<f32>& getRotation() const { return mRotation; }
+
 public:
 	/* 0x24 */ JGeometry::TVec3<f32> mScaling;
 	/* 0x30 */ JGeometry::TVec3<f32> mRotation;
