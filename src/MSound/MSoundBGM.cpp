@@ -43,10 +43,11 @@ u32 MSBgm::getSceneNo(u32 param) { return 0; }
 
 JAISound* MSBgm::getHandle(u8 param) 
 { 
-	if ((&smBgmInTrack) [param] != 0) {
-		return (JAISound*)((&smBgmInTrack)[param] + 0x14);
+		JASystem::TTrack* track = smBgmInTrack[param];
+		if (track) {
+			return (JAISound*)(&track[0x14]);
+		}
+		return nullptr;
 	}
-	return nullptr;
- }
 
 JAISound* MSBgm::getJASTrack(JAISound* param1, u8 param2) { return nullptr; }
