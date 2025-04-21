@@ -129,12 +129,12 @@ u32 MSBgm::getSceneNo(u32 param) {
 	  return 0x210;
 	case 0x8001002c:
 	  return 0x206;
-	default:
-	  return 0xffffffff;
 	case 0x8001002e:
 	  return 0x215;
 	case 0x8001002f:
 	  return 0x210;
+	  default:
+	  return 0xffffffff;
 	 } 
 	}
 
