@@ -19,7 +19,15 @@ void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
 }
 
-void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4) { }
+void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4) {
+	JAISound* sound = nullptr;
+  
+	if (((&smBgmInTrack)[param1] != 0) &&
+	   (sound = *(JAISound **)((&smBgmInTrack)[param1] + 0x14), sound != (JAISound *)0x0)) {
+		JAISound::setVolume(param1,param2,param3,param4);
+	}
+	return;
+ }
 
 void MSBgm::setSeqTrackVolume(u8 param1, u8 param2, f32 param3, u32 param4) { }
 
