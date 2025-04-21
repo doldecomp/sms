@@ -41,6 +41,12 @@ bool MSBgm::checkPlaying(u32 param) { return false; }
 
 u32 MSBgm::getSceneNo(u32 param) { return 0; }
 
-JAISound* MSBgm::getHandle(u8 param) { return nullptr; }
+JAISound* MSBgm::getHandle(u8 param) 
+{ 
+	if ((&smBgmInTrack) [param] != 0) {
+		return (JAISound*)((&smBgmInTrack)[param] + 0x14);
+	}
+	return 0;
+ }
 
 JAISound* MSBgm::getJASTrack(JAISound* param1, u8 param2) { return nullptr; }
