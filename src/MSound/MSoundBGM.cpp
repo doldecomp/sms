@@ -46,7 +46,7 @@ JAISound* MSBgm::getHandle(u8 param)
 	if ((&smBgmInTrack) [param] != 0) {
 		return (JAISound*)((&smBgmInTrack)[param] + 0x14);
 	}
-	return 0;
+	return nullptr;
  }
 
 JAISound* MSBgm::getJASTrack(JAISound* param1, u8 param2) { return nullptr; }
