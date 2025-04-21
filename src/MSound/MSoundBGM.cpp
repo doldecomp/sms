@@ -25,7 +25,7 @@ void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4) {
     JASystem::TTrack* track = smBgmInTrack[param1];
 	if ((track) &&
 	   (sound = *(JAISound **)((&smBgmInTrack)[param1] + 0x14), sound != (JAISound *)0x0)) {
-        //Using JAISound::setVolume  instead causes an  Static Error.
+        //Using JAISound::setVolume  instead causes an  Static Error. Even though that is in the Decompiled Ghidra Code. 
 		setVolume(param1,param2,param3,param4);
 	}
 	return;
