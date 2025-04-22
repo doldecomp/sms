@@ -1,9 +1,8 @@
 #include <MSound/MSoundBGM.hpp>
 #include <JSystem/JAudio/JALibrary/JALModSe.hpp>
 
-JASystem::TTrack* MSBgm::smBgmInTrack[3];
-//f32 MSBgm::smMainVolume = 0.75f;
-MSBgm* MSBgm::smMainVolume;
+MSBgm* MSBgm::smBgmInTrack[3];
+f32 MSBgm::smMainVolume = 0.75f;
 
 void MSBgm::init() { }
 
@@ -23,7 +22,7 @@ void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4) {
 	JAISound* sound = nullptr;
     
-    JASystem::TTrack* track = smBgmInTrack[param1];
+    MSBgm* track = smBgmInTrack[param1];
 	if ((track) &&
 	   (sound = *(JAISound **)((&smBgmInTrack)[param1] + 0x14), sound != (JAISound *)0x0)) {
         //Using JAISound::setVolume  instead causes an  Static Error. Even though that is in the Decompiled Ghidra Code. 
@@ -151,7 +150,7 @@ u32 MSBgm::getSceneNo(u32 param) {
 
 JAISound* MSBgm::getHandle(u8 param) 
 { 
-		JASystem::TTrack* track = smBgmInTrack[param];
+		MSBgm* track = smBgmInTrack[param];
 		if (track) {
 			return (JAISound*)(&track[0x14]);
 		}
