@@ -71,6 +71,5 @@ void TMarioGamePad::updateMeaning()
 	}
 
 finalize:
-	this->mEnabledFrameMeaning  = this->mMeaning & ~prevMeaning;
-	this->mDisabledFrameMeaning = prevMeaning & ~this->mMeaning;
+	updateChangedMeaning(prevMeaning);
 }

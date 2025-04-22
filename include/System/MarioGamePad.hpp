@@ -16,17 +16,17 @@ struct TMarioControllerWork {
 		L = 0x4000,
 	};
 
-	s16 mStickHS16;
-	s16 mStickVS16;
-	Buttons mInput;
-	Buttons mFrameInput;
-	u8 mAnalogRU8;
-	u8 mAnalogLU8;
-	f32 mStickH;
-	f32 mStickV;
-	f32 mStickDist;
-	f32 mAnalogL;
-	f32 mAnalogR;
+	/* 0x00 */ s16 mStickHS16;
+	/* 0x02 */ s16 mStickVS16;
+	/* 0x04 */ Buttons mInput;
+	/* 0x08 */ Buttons mFrameInput;
+	/* 0x0C */ u8 mAnalogRU8;
+	/* 0x0D */ u8 mAnalogLU8;
+	/* 0x10 */ f32 mStickH;
+	/* 0x14 */ f32 mStickV;
+	/* 0x18 */ f32 mStickDist;
+	/* 0x1C */ f32 mAnalogL;
+	/* 0x20 */ f32 mAnalogR;
 };
 
 class TMarioGamePad : public JUTGamePad {
@@ -273,8 +273,15 @@ public:
 	{
 		this->updateMeaning(A, MEANING_0x20, prevMeaning);
 		this->updateMeaning(B, MEANING_0x40, prevMeaning);
-		this->mCompSPos[2].x = this->mMainStick.mPosX;
-		this->mCompSPos[2].y = this->mMainStick.mPosY;
+		this->mCompSPos[4].x = this->mMainStick.mPosX;
+		this->mCompSPos[4].y = this->mMainStick.mPosY;
+	}
+
+	// Fabricated
+	inline void updateChangedMeaning(u32 prevMeaning)
+	{
+		this->mEnabledFrameMeaning  = this->mMeaning & ~prevMeaning;
+		this->mDisabledFrameMeaning = prevMeaning & ~this->mMeaning;
 	}
 
 	// Fabricated
@@ -285,20 +292,20 @@ public:
 	void reset();
 	void updateMeaning();
 
-	StickPos mCompSPos[VARIANTS]; // _A8
-	u32 mMeaning;                 // _D0
-	u32 mEnabledFrameMeaning;     // _D4
-	u32 mDisabledFrameMeaning;    // _D8
-	u16 _DC;
-	u16 _DE;
-	u16 _E0;
+	/* 0xA8 */ StickPos mCompSPos[VARIANTS];
+	/* 0xD0 */ u32 mMeaning;
+	/* 0xD4 */ u32 mEnabledFrameMeaning;
+	/* 0xD8 */ u32 mDisabledFrameMeaning;
+	/* 0xDC */ u16 _DC;
+	/* 0xDE */ u16 _DE;
+	/* 0xE0 */ u16 _E0;
 
-	u16 mFlags;
+	/* 0xE2 */ u16 mFlags;
 
-	s16 _E4;
-	u16 _E6;             // padding?
-	s32 mDisabledFrames; // _E8
-	u32 _EC;             // padding?
+	/* 0xE4 */ s16 _E4;
+	/* 0xE6 */ u16 _E6; // padding?
+	/* 0xE8 */ s32 mDisabledFrames;
+	/* 0xEC */ u32 _EC; // padding?
 
 	static u16 mResetFlag;
 };

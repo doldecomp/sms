@@ -261,7 +261,6 @@ public:
 	static u8 mPadAssign[4];
 	static u32 mSuppressPadReset;
 	static s32 sAnalogMode;
-	static u32 sRumbleSupported;
 
 	/* 0x18 */ CButton mButton;
 	/* 0x48 */ CStick mMainStick;
