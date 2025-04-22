@@ -14,8 +14,8 @@ public:
 	MSBgm();
 
 	static JASystem::TTrack* smBgmInTrack[3];
-	static f32 smMainVolume;
-
+	static MSBgm* smMainVolume;
+	//static f32 smMainVolume;
 	static void init();
 	static void startBGM(u32);
 	static void stopBGM(u32, u32);

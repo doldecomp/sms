@@ -2,7 +2,8 @@
 #include <JSystem/JAudio/JALibrary/JALModSe.hpp>
 
 JASystem::TTrack* MSBgm::smBgmInTrack[3];
-f32 MSBgm::smMainVolume = 0.75f;
+//f32 MSBgm::smMainVolume = 0.75f;
+MSBgm* MSBgm::smMainVolume;
 
 void MSBgm::init() { }
 
