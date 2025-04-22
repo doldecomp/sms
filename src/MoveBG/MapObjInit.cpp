@@ -70,7 +70,7 @@ struct TMapObjSoundData {
 // fabricated
 struct TMapObjSoundInfo {
 	/* 0x0 */ u32 unk0;
-	/* 0x4 */ TMapObjSoundData* unk4;
+	/* 0x4 */ const TMapObjSoundData* unk4;
 };
 
 // fabricated
@@ -210,11 +210,12 @@ static const TMapObjAnimData billboard_dolphin_anim_data[3] = {
 static const TMapObjAnimDataInfo billboard_dolphin_anim_info
     = { 3, 1, billboard_dolphin_anim_data };
 
-static const TMapObjHitDataTable billboard_hit_data_table
-    = { 100.0f, 60.0f, 100.0f, 60.0f };
+static const TMapObjHitDataTable billboard_hit_data_table[1] = {
+	{ 100.0f, 60.0f, 100.0f, 60.0f },
+};
 
 static const TMapObjHitInfo billboard_obj_hit_info
-    = { 1, 0x80000000, -100.0f, &billboard_hit_data_table };
+    = { 1, 0x80000000, -100.0f, billboard_hit_data_table };
 
 static TMapObjData billboard_dolphin_data = {
 	"billboard_dolphin",
@@ -315,11 +316,12 @@ static TMapObjData billboard_fish_data = {
 	0,
 };
 
-static const TMapObjHitDataTable HideObj_hit_data_table
-    = { 100.0f, 60.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable HideObj_hit_data_table[1] = {
+	{ 100.0f, 60.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo HideObj_obj_hit_info
-    = { 1, 0x80000000, -10.0f, &HideObj_hit_data_table };
+    = { 1, 0x80000000, -10.0f, HideObj_hit_data_table };
 
 static TMapObjData HideObj_data = {
 	"HideObj",
@@ -339,11 +341,12 @@ static TMapObjData HideObj_data = {
 	0,
 };
 
-static const TMapObjHitDataTable WaterHitHideObj_hit_data_table
-    = { 0.0f, 0.0f, 60.0f, 20.0f };
+static const TMapObjHitDataTable WaterHitHideObj_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 60.0f, 20.0f },
+};
 
 static const TMapObjHitInfo WaterHitHideObj_obj_hit_info
-    = { 1, 0, 0.0f, &WaterHitHideObj_hit_data_table };
+    = { 1, 0, 0.0f, WaterHitHideObj_hit_data_table };
 
 static TMapObjData WaterHitHideObj_data = {
 	"WaterHitHideObj",
@@ -363,11 +366,12 @@ static TMapObjData WaterHitHideObj_data = {
 	0,
 };
 
-static const TMapObjHitDataTable FruitHitHideObj_hit_data_table
-    = { 100.0f, 60.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable FruitHitHideObj_hit_data_table[1] = {
+	{ 100.0f, 60.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo FruitHitHideObj_obj_hit_info
-    = { 1, 0x40000000, 0.0f, &FruitHitHideObj_hit_data_table };
+    = { 1, 0x40000000, 0.0f, FruitHitHideObj_hit_data_table };
 
 static TMapObjData FruitHitHideObj_data = {
 	"FruitHitHideObj",
@@ -387,11 +391,12 @@ static TMapObjData FruitHitHideObj_data = {
 	0,
 };
 
-static const TMapObjHitDataTable HipDropHideObj_hit_data_table
-    = { 100.0f, 60.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable HipDropHideObj_hit_data_table[1] = {
+	{ 100.0f, 60.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo HipDropHideObj_obj_hit_info
-    = { 1, 0x40000000, 0.0f, &HipDropHideObj_hit_data_table };
+    = { 1, 0x40000000, 0.0f, HipDropHideObj_hit_data_table };
 
 static TMapObjData HipDropHideObj_data = {
 	"HipDropHideObj",
@@ -444,11 +449,12 @@ static const TMapObjAnimData door_anim_data[5] = {
 	{ nullptr, "door_kick_r", 0, { 0 }, "/scene/mapObj/door_kick_r.bas" },
 };
 
-static const TMapObjHitDataTable door_hit_data_table
-    = { 150.0f, 250.0f, 150.0f, 250.0f };
+static const TMapObjHitDataTable door_hit_data_table[1] = {
+	{ 150.0f, 250.0f, 150.0f, 250.0f },
+};
 
 static const TMapObjHitInfo door_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &door_hit_data_table };
+    = { 1, 0x80000000, 0.0f, door_hit_data_table };
 
 static TMapObjData door_data = {
 	"door",
@@ -504,11 +510,12 @@ static const TMapObjAnimData manhole_anim_data[1] = {
 static const TMapObjAnimDataInfo manhole_anim_info
     = { 1, 1, manhole_anim_data };
 
-static const TMapObjHitDataTable manhole_hit_data_table
-    = { 100.0f, 50.0f, 130.0f, 50.0f };
+static const TMapObjHitDataTable manhole_hit_data_table[1] = {
+	{ 100.0f, 50.0f, 130.0f, 50.0f },
+};
 
 static const TMapObjHitInfo manhole_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &manhole_hit_data_table };
+    = { 1, 0x80000000, 0.0f, manhole_hit_data_table };
 
 static const TMapObjCollisionData manhole_map_collision_data[2] = {
 	{ "manhole", 2 },
@@ -544,11 +551,12 @@ static const TMapObjAnimData FruitBasket_anim_data[2] = {
 static const TMapObjAnimDataInfo FruitBasket_anim_info
     = { 2, 2, FruitBasket_anim_data };
 
-static const TMapObjHitDataTable FruitBasket_hit_data_table
-    = { 50.0f, 100.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable FruitBasket_hit_data_table[1] = {
+	{ 50.0f, 100.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo FruitBasket_obj_hit_info
-    = { 1, 0x40000000, -10.0f, &FruitBasket_hit_data_table };
+    = { 1, 0x40000000, -10.0f, FruitBasket_hit_data_table };
 
 static const TMapObjCollisionData FruitBasket_map_collision_data[1] = {
 	{ "Basket", 0 },
@@ -582,11 +590,12 @@ static const TMapObjAnimData BasketReverse_anim_data[1] = {
 static const TMapObjAnimDataInfo BasketReverse_anim_info
     = { 1, 1, BasketReverse_anim_data };
 
-static const TMapObjHitDataTable BasketReverse_hit_data_table
-    = { 0.0f, 0.0f, 100.0f, 200.0f };
+static const TMapObjHitDataTable BasketReverse_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 100.0f, 200.0f },
+};
 
 static const TMapObjHitInfo BasketReverse_obj_hit_info
-    = { 1, 0, -200.0f, &BasketReverse_hit_data_table };
+    = { 1, 0, -200.0f, BasketReverse_hit_data_table };
 
 static const TMapObjCollisionData BasketReverse_map_collision_data[1] = {
 	{ "Basket", 2 },
@@ -613,11 +622,12 @@ static TMapObjData BasketReverse_data = {
 	0,
 };
 
-static const TMapObjHitDataTable CoconutJuice_hit_data_table
-    = { 0.0f, 0.0f, 50.0f, 50.0f };
+static const TMapObjHitDataTable CoconutJuice_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 50.0f, 50.0f },
+};
 
 static const TMapObjHitInfo CoconutJuice_obj_hit_info
-    = { 1, 0, 0.0f, &CoconutJuice_hit_data_table };
+    = { 1, 0, 0.0f, CoconutJuice_hit_data_table };
 
 static TMapObjData CoconutJuice_data = {
 	"CoconutJuice",
@@ -637,11 +647,12 @@ static TMapObjData CoconutJuice_data = {
 	0,
 };
 
-static const TMapObjHitDataTable Pile_hit_data_table
-    = { 0.0f, 0.0f, 30.0f, 100.0f };
+static const TMapObjHitDataTable Pile_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 30.0f, 100.0f },
+};
 
 static const TMapObjHitInfo Pile_obj_hit_info
-    = { 1, 0, 0.0f, &Pile_hit_data_table };
+    = { 1, 0, 0.0f, Pile_hit_data_table };
 
 static const TMapObjCollisionData Pile_map_collision_data[1] = {
 	{ "Pile", 0 },
@@ -668,11 +679,12 @@ static TMapObjData Pile_data = {
 	0,
 };
 
-static const TMapObjHitDataTable ChangeStage_hit_data_table
-    = { 100.0f, 100.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable ChangeStage_hit_data_table[1] = {
+	{ 100.0f, 100.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo ChangeStage_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &ChangeStage_hit_data_table };
+    = { 1, 0x80000000, 0.0f, ChangeStage_hit_data_table };
 
 static TMapObjData ChangeStage_data = {
 	"ChangeStage",
@@ -710,11 +722,12 @@ static TMapObjData ChangeStageMerrygoround_data = {
 	0,
 };
 
-static const TMapObjHitDataTable StartDemo_hit_data_table
-    = { 100.0f, 100.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable StartDemo_hit_data_table[1] = {
+	{ 100.0f, 100.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo StartDemo_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &StartDemo_hit_data_table };
+    = { 1, 0x80000000, 0.0f, StartDemo_hit_data_table };
 
 static TMapObjData StartDemo_data = {
 	"StartDemo",
@@ -741,11 +754,12 @@ static const TMapObjAnimData ChipShine_anim_data[1] = {
 static const TMapObjAnimDataInfo ChipShine_anim_info
     = { 1, 1, ChipShine_anim_data };
 
-static const TMapObjHitDataTable ChipShine_hit_data_table
-    = { 0.0f, 0.0f, 150.0f, 300.0f };
+static const TMapObjHitDataTable ChipShine_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 150.0f, 300.0f },
+};
 
 static const TMapObjHitInfo ChipShine_obj_hit_info
-    = { 1, 0, -150.0f, &ChipShine_hit_data_table };
+    = { 1, 0, -150.0f, ChipShine_hit_data_table };
 
 static TMapObjData ChipShine_data = {
 	"ChipShine",
@@ -772,11 +786,12 @@ static const TMapObjAnimData KoopaJrSignM_anim_data[1] = {
 static const TMapObjAnimDataInfo KoopaJrSignM_anim_info
     = { 1, 1, KoopaJrSignM_anim_data };
 
-static const TMapObjHitDataTable KoopaJrSignM_hit_data_table
-    = { 0.0f, 0.0f, 150.0f, 300.0f };
+static const TMapObjHitDataTable KoopaJrSignM_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 150.0f, 300.0f },
+};
 
 static const TMapObjHitInfo KoopaJrSignM_obj_hit_info
-    = { 1, 0, -150.0f, &KoopaJrSignM_hit_data_table };
+    = { 1, 0, -150.0f, KoopaJrSignM_hit_data_table };
 
 static TMapObjData KoopaJrSignM_data = {
 	"KoopaJrSignM",
@@ -889,11 +904,12 @@ static TMapObjData SignTriangle_data = {
 	0x0,
 };
 
-static const TMapObjHitDataTable ArrowBoardLR_hit_data_table
-    = { 0.0f, 0.0f, 120.0f, 300.0f };
+static const TMapObjHitDataTable ArrowBoardLR_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 120.0f, 300.0f },
+};
 
 static const TMapObjHitInfo ArrowBoardLR_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &ArrowBoardLR_hit_data_table };
+    = { 1, 0x80000000, 0.0f, ArrowBoardLR_hit_data_table };
 
 static TMapObjData ArrowBoardLR_data = {
 	"ArrowBoardLR",
@@ -913,11 +929,12 @@ static TMapObjData ArrowBoardLR_data = {
 	0x0,
 };
 
-static const TMapObjHitDataTable ArrowBoardUp_hit_data_table
-    = { 0.0f, 0.0f, 80.0f, 440.0f };
+static const TMapObjHitDataTable ArrowBoardUp_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 80.0f, 440.0f },
+};
 
 static const TMapObjHitInfo ArrowBoardUp_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &ArrowBoardUp_hit_data_table };
+    = { 1, 0x80000000, 0.0f, ArrowBoardUp_hit_data_table };
 
 static TMapObjData ArrowBoardUp_data = {
 	"ArrowBoardUp",
@@ -937,11 +954,12 @@ static TMapObjData ArrowBoardUp_data = {
 	0,
 };
 
-static const TMapObjHitDataTable ArrowBoardDown_hit_data_table
-    = { 0.0f, 0.0f, 80.0f, 440.0f };
+static const TMapObjHitDataTable ArrowBoardDown_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 80.0f, 440.0f },
+};
 
 static const TMapObjHitInfo ArrowBoardDown_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &ArrowBoardDown_hit_data_table };
+    = { 1, 0x80000000, 0.0f, ArrowBoardDown_hit_data_table };
 
 static TMapObjData ArrowBoardDown_data = {
 	"ArrowBoardDown",
@@ -1065,11 +1083,12 @@ static TMapObjData bucket_data = {
 	0x0,
 };
 
-static const TMapObjHitDataTable GeneralHitObj_hit_data_table
-    = { 0.0f, 0.0f, 50.0f, 100.0f };
+static const TMapObjHitDataTable GeneralHitObj_hit_data_table[1] = {
+	{ 0.0f, 0.0f, 50.0f, 100.0f },
+};
 
 static const TMapObjHitInfo GeneralHitObj_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &GeneralHitObj_hit_data_table };
+    = { 1, 0x80000000, 0.0f, GeneralHitObj_hit_data_table };
 
 static TMapObjData GeneralHitObj_data = {
 	"pGeneralHitObj",
@@ -1089,11 +1108,12 @@ static TMapObjData GeneralHitObj_data = {
 	0x0,
 };
 
-static const TMapObjHitDataTable item_hit_data_table
-    = { 40.0f, 40.0f, 0.0f, 0.0f };
+static const TMapObjHitDataTable item_hit_data_table[1] = {
+	{ 40.0f, 40.0f, 0.0f, 0.0f },
+};
 
 static const TMapObjHitInfo item_obj_hit_info
-    = { 1, 0x80000000, 0.0f, &item_hit_data_table };
+    = { 1, 0x80000000, 0.0f, item_hit_data_table };
 
 static TMapObjData bottle_large_data = {
 	"bottle_large",
@@ -1131,104 +1151,470 @@ static TMapObjData bottle_short_data = {
 	0x00000000,
 };
 
-static TMapObjData WaterRecoverObj_data = {
+static const TMapObjHitDataTable WaterRecoverObj_hit_data_table[1] = {
+	{ 100.0f, 100.0f, 0.0f, 0.0f },
+};
 
+static const TMapObjHitInfo WaterRecoverObj_obj_hit_info
+    = { 1, 0x80000000, 0.0f, item_hit_data_table };
+
+static TMapObjData WaterRecoverObj_data = {
+	"WaterRecoverObj",
+	0x20000002,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&no_data_anim_info,
+	&WaterRecoverObj_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0,
+	0x100,
+	0,
 };
 
 static TMapObjData watergun_item_data = {
-
+	"watergun_item",
+	0x2000001F,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	nullptr,
+	&item_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0x4000800,
+	0,
 };
 
 static TMapObjPhysicalData nozzle_normal_physical_data = {
-
+	0.34999999, 0.5, 0.0, 5.0, 0.8, 0.94999999, 1.0,
+	0.0,        0.0, 0.0, 0.0, 0.0, 0.0,
 };
 
-static TMapObjPhysicalInfo nozzle_normal_physical_info = {
-
-};
+static TMapObjPhysicalInfo nozzle_normal_physical_info
+    = { 0xD, &nozzle_normal_physical_data, 0 };
 
 static TMapObjData nozzle_normal_item_data = {
-
+	"normal_nozzle_item",
+	0x20000026,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&item_obj_hit_info,
+	nullptr,
+	nullptr,
+	&nozzle_normal_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0xA040100,
+	0,
 };
 
 static TMapObjData yoshi_whistle_item_data = {
-
+	"yoshi_whistle_item",
+	0x20000025,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&item_obj_hit_info,
+	nullptr,
+	nullptr,
+	&nozzle_normal_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0xA040100,
+	0,
 };
 
-static TMapObjData nozzle_rocket_item_data = {
+static const TMapObjHitDataTable nozzle_item_hit_data_table[1] = {
+	{ 40.0f, 40.0f, 100.0f, 40.0f },
+};
 
+static const TMapObjHitInfo nozzle_item_obj_hit_info
+    = { 1, 0x80000000, 0.0f, nozzle_item_hit_data_table };
+
+static TMapObjData nozzle_rocket_item_data = {
+	"rocket_nozzle_item",
+	0x20000022,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&nozzle_item_obj_hit_info,
+	nullptr,
+	nullptr,
+	&nozzle_normal_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0xA040100,
+	0,
 };
 
 static TMapObjData nozzle_back_item_data = {
-
+	"back_nozzle_item",
+	0x2000002A,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&nozzle_item_obj_hit_info,
+	nullptr,
+	nullptr,
+	&nozzle_normal_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0xA040100,
+	0,
 };
+
+static const TMapObjHitDataTable coin_hit_data_table[1] = {
+	{ 70.0f, 100.0f, 70.0f, 100.0f },
+};
+
+static const TMapObjHitInfo coin_obj_hit_info
+    = { 1, 0x80000000, 0.0f, coin_hit_data_table };
+
+static const TMapObjSoundData coin_sound_data = {
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x4842,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};
+
+static const TMapObjSoundInfo coin_sound_info = { 0xA, &coin_sound_data };
 
 static TMapObjPhysicalData coin_physical_data = {
-
+	0.34999999, 0.5, 0.6, 1.0, 0.5, 0.94999999, 0.99,
+	0.0,        0.0, 0.0, 0.0, 0.0, 0.0,
 };
 
-static TMapObjPhysicalInfo coin_physical_info = {
-
-};
+static TMapObjPhysicalInfo coin_physical_info
+    = { 0xD, &coin_physical_data, 0x0 };
 
 static TMapObjData coin_data = {
-
+	"coin",
+	0x2000000E,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	nullptr,
+	&coin_obj_hit_info,
+	nullptr,
+	&coin_sound_info,
+	&coin_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42480000,
+	0x8144100,
+	0,
 };
 
 static TMapObjData invisible_coin_data = {
-
+	"invisible_coin",
+	0x2000000E,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&no_data_anim_info,
+	&coin_obj_hit_info,
+	nullptr,
+	&normal_sound_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0,
+	0xC100000,
+	0,
 };
 
 static TMapObjData coin_red_data = {
-
+	"coin_red",
+	0x2000000F,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&coin_obj_hit_info,
+	nullptr,
+	&coin_sound_info,
+	&coin_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42480000,
+	0x18104100,
+	0,
 };
 
 static TMapObjData coin_blue_data = {
-
+	"coin_blue",
+	0x20000010,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	nullptr,
+	&coin_obj_hit_info,
+	nullptr,
+	&coin_sound_info,
+	&coin_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42480000,
+	0x18104100,
+	0,
 };
 
 static TMapObjData shine_data = {
-
+	"shine",
+	0x20000013,
+	"シャインマネージャー",
+	"アイテムグループ",
+	&no_data_anim_info,
+	&coin_obj_hit_info,
+	nullptr,
+	&normal_sound_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42480000,
+	0x4000,
+	0,
 };
+
+static const TMapObjAnimData mario_cap_anim_data[1] = {
+	{ "mariocap.bmd" },
+};
+
+static const TMapObjAnimDataInfo mario_cap_anim_info
+    = { 1, 1, mario_cap_anim_data };
+
+static const TMapObjHitDataTable mario_cap_hit_data_table[1] = {
+	{ 100.0f, 50.0f, 0.0f, 0.0f },
+};
+
+static const TMapObjHitInfo mario_cap_obj_hit_info
+    = { 1, 0x80000000, 0.0f, mario_cap_hit_data_table };
 
 static TMapObjData mario_cap_data = {
-
+	"mario_cap",
+	0x2000003C,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&mario_cap_anim_info,
+	&mario_cap_obj_hit_info,
+	nullptr,
+	&normal_sound_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0,
+	0x14100001,
+	0,
 };
+
+static const TMapObjAnimData coin_anim_data[1] = {
+	{ "coin.bmd" },
+};
+
+static const TMapObjAnimDataInfo coin_anim_info = { 1, 1, coin_anim_data };
 
 static TMapObjData joint_coin_data = {
-
+	"joint_coin",
+	0x2000000E,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	&coin_anim_info,
+	&item_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42A00000,
+	0x8104100,
+	0,
 };
 
-static TMapObjData eggYoshi_data = {
+static const TMapObjAnimData eggYoshi_anim_data[4] = {
+	{ "eggYoshi_normal.bmd", "eggyoshi_wait" },
+	{ nullptr, "eggyoshi_true" },
+	{ nullptr, "eggyoshi_false" },
+	{ "eggYoshi_broken.bmd", "eggyoshi_broken" },
+};
 
+static const TMapObjAnimDataInfo eggYoshi_anim_info
+    = { 4, 2, eggYoshi_anim_data };
+
+static const TMapObjHitDataTable eggYoshi_hit_data_table[10] = {
+	{ 300.0f, 100.0f, 50.0f, 50.0f }, { 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },       { 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },       { 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },       { 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },       { 0.0f, 0.0f, 0.0f, 0.0f },
+};
+
+static const TMapObjHitInfo eggYoshi_obj_hit_info
+    = { 10, 0xC0000000, 0.0f, eggYoshi_hit_data_table };
+
+static TMapObjData eggYoshi_data = {
+	"eggYoshi",
+	0x20000009,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	&eggYoshi_anim_info,
+	&eggYoshi_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42A00000,
+	0,
+	0,
 };
 
 static TMapObjPhysicalData EggYoshi_physical_data = {
-
+	0.34999999, 0.1, 0.0, 5.0, 1.0, 0.94999999, 1.0,
+	0.0,        0.0, 0.0, 0.0, 0.0, 0.0,
 };
 
-static TMapObjPhysicalInfo EggYoshi_physical_info = {
-
-};
+static TMapObjPhysicalInfo EggYoshi_physical_info
+    = { 0xD, &EggYoshi_physical_data, 0 };
 
 static TMapObjData eggYoshiEvent_data = {
-
+	"eggYoshiEvent",
+	0x20000009,
+	"アイテムマネージャー",
+	"オブジェクトグループ",
+	&eggYoshi_anim_info,
+	&eggYoshi_obj_hit_info,
+	nullptr,
+	nullptr,
+	&EggYoshi_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42A00000,
+	1,
+	0,
 };
+
+static const TMapObjAnimData NozzleBox_anim_data[4] = {
+	{ "nozzleBox.bmd" },
+	{},
+	{ "nozzleBoxCrash.bmd", "nozzleboxcrash" },
+	{ "nozzleBoxAlpha.bmd" },
+};
+
+static const TMapObjAnimDataInfo NozzleBox_anim_info
+    = { 4, 3, NozzleBox_anim_data };
+
+static const TMapObjHitDataTable NozzleBox_hit_data_table[1] = {
+	{ 200.0f, 200.0f, 100.0f, 200.0f },
+};
+
+static const TMapObjHitInfo NozzleBox_obj_hit_info
+    = { 1, 0x80000000, 0.0f, NozzleBox_hit_data_table };
 
 static TMapObjData NozzleBox_data = {
-
+	"NozzleBox",
+	0x20000068,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&NozzleBox_anim_info,
+	&NozzleBox_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0,
+	0x14000000,
+	0,
 };
 
-static TMapObjData mushroom1up_data = {
+static const TMapObjAnimData mushroom1up_anim_data[1] = {
+	{ "mushroom1up.bmd" },
+};
 
+static const TMapObjAnimDataInfo mushroom1up_anim_info
+    = { 1, 1, mushroom1up_anim_data };
+
+static const TMapObjHitDataTable mushroom1up_hit_data_table[1] = {
+	{ 20.0f, 40.0f, 20.0f, 40.0f },
+};
+
+static const TMapObjHitInfo mushroom1up_obj_hit_info
+    = { 1, 0, 0.0f, mushroom1up_hit_data_table };
+
+static TMapObjData mushroom1up_data = {
+	"mushroom1up",
+	0x20000005,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&mushroom1up_anim_info,
+	&mushroom1up_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0,
+	0,
 };
 
 static TMapObjData mushroom1upR_data = {
-
+	"mushroom1upR",
+	0x20000006,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&mushroom1up_anim_info,
+	&mushroom1up_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0,
+	0,
 };
 
 static TMapObjData mushroom1upX_data = {
-
+	"mushroom1upX",
+	0x20000007,
+	"アイテムマネージャー",
+	"アイテムグループ",
+	&mushroom1up_anim_info,
+	&mushroom1up_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0x42200000,
+	0,
+	0,
 };
 
 static TMapObjData jumpbase_data = {
