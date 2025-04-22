@@ -33,4 +33,13 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>*, const f32 (*)[4], const f32 (*)[4],
                    const Vec&, u32*, bool);
 template <class T> void CLBLinearInbetween(T, T, f32);
 
+template <class T> f32 CLBCalcRatio(T a, T b, T c)
+{
+	f32 result = 0.0f;
+	if (a != b) {
+		result = (f32)(c - a) * (1.0f / (f32)(b - a));
+	}
+	return result;
+}
+
 #endif
