@@ -62,6 +62,29 @@ public:
 		EClampCircle,
 	};
 
+	enum EButtons {
+		DPAD_LEFT       = 0x1,
+		DPAD_RIGHT      = 0x2,
+		DPAD_DOWN       = 0x4,
+		DPAD_UP         = 0x8,
+		Z               = 0x10,
+		R               = 0x20,
+		L               = 0x40,
+		A               = 0x100,
+		B               = 0x200,
+		X               = 0x400,
+		Y               = 0x800,
+		START           = 0x1000,
+		CSTICK_LEFT     = 0x10000,
+		CSTICK_RIGHT    = 0x20000,
+		CSTICK_DOWN     = 0x40000,
+		CSTICK_UP       = 0x80000,
+		MAINSTICK_LEFT  = 0x1000000,
+		MAINSTICK_RIGHT = 0x2000000,
+		MAINSTICK_DOWN  = 0x4000000,
+		MAINSTICK_UP    = 0x8000000,
+	};
+
 	JUTGamePad(JUTGamePad::EPadPort port);
 	virtual ~JUTGamePad();
 
@@ -238,7 +261,6 @@ public:
 	static u8 mPadAssign[4];
 	static u32 mSuppressPadReset;
 	static s32 sAnalogMode;
-	static u32 mRumbleSupported;
 
 	/* 0x18 */ CButton mButton;
 	/* 0x48 */ CStick mMainStick;

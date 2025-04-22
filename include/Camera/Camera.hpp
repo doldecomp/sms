@@ -14,7 +14,7 @@ public:
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
-	void isLButtonCameraSpecifyMode(int) const;
+	bool isLButtonCameraSpecifyMode(int) const;
 	void isLButtonCameraInbetween() const;
 	void isJetCoaster1stCamera() const;
 	void isTalkCameraSpecifyMode(int) const;
@@ -129,7 +129,7 @@ public:
 	s16 getUnk2C8() const { return unk2C8; }
 
 public:
-	s32 unk50;
+	/* 0x50 */ int mMode;
 	char filler1[0x2C8 - 0x54];
 	s16 unk2C8;
 };
