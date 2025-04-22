@@ -116,176 +116,35 @@ public:
 	// Fabricated
 	inline u32 resetMeaning()
 	{
-		u16 dc    = this->_DC;
-		this->_DC = 0;
+		u16 dc = _DC;
+		_DC    = 0;
 
-		if (this->mButton.mButton
-		    & (DPAD_UP | DPAD_DOWN | DPAD_LEFT | DPAD_RIGHT)) {
-			this->_DC |= 1;
+		if (mButton.mButton & (DPAD_UP | DPAD_DOWN | DPAD_LEFT | DPAD_RIGHT)) {
+			_DC |= 1;
 		}
 
 		if ((dc & 1) != 0) {
-			if (this->mButton.mAnalogRf > 0.5f) {
-				this->_DC |= 1;
+			if (mButton.mAnalogRf > 0.5f) {
+				_DC |= 1;
 			}
-		} else if (this->mButton.mAnalogRf > 0.25f) {
-			this->_DC |= 1;
+		} else if (mButton.mAnalogRf > 0.25f) {
+			_DC |= 1;
 		}
 
-		this->_DE = this->_DC & ~dc;
-		this->_E0 = dc & ~this->_DC;
+		_DE = _DC & ~dc;
+		_E0 = dc & ~_DC;
 
 		for (int i = 0; i < VARIANTS; i++) {
-			resetStick(this->mCompSPos[i]);
+			resetStick(mCompSPos[i]);
 		}
 
-		u32 prevMeaning = this->mMeaning;
-		this->mMeaning  = 0;
+		u32 prevMeaning = mMeaning;
+		mMeaning        = 0;
 		return prevMeaning;
 	}
 
 	// Fabricated
-	inline void updateMeaningLCamera(u32 prevMeaning)
-	{
-		// This is for when in y camera
-		this->mCompSPos[1].x = (f32)this->mButton.mAnalogL;
-		this->mCompSPos[1].y = (f32)this->mButton.mAnalogR;
-
-		this->updateMeaning(R, MEANING_0x400, prevMeaning);
-		this->updateMeaning(Z, MEANING_0x1000, prevMeaning);
-		this->updateMeaning(L, MEANING_0x2000, prevMeaning);
-		this->mCompSPos[2].x = this->mMainStick.mPosX;
-		this->mCompSPos[2].y = this->mMainStick.mPosY;
-		this->updateMeaning(A, MEANING_0x10000, prevMeaning);
-		this->updateMeaning(B, MEANING_0x10000, prevMeaning);
-		this->updateMeaning(Y, MEANING_0x4000, prevMeaning);
-
-		if (((this->_DE & 0x1) != 0)
-		    || (((this->_DC & 1) != 0
-		         && ((prevMeaning & MEANING_0x200) != 0)))) {
-			this->mMeaning |= MEANING_0x200;
-		}
-
-		this->updateMeaning(X, MEANING_0x200000, prevMeaning);
-	}
-
-	// Fabricated
-	inline void updateMeaningRegular2(u32 prevMeaning)
-	{
-		f32 stickScaling = 176.0f;
-		bool _unk3       = false;
-		if (0 < this->_E4) {
-			this->_E4 -= 1;
-		}
-
-		if (0 < this->_E4) {
-			s16 _unk2 = 0x3d - this->_E4;
-			_unk3     = true;
-			if (_unk2 <= 0x28) {
-				stickScaling = 0.0f;
-			} else {
-				// TODO: CLBCalcRatio
-				// stickScaling =
-				stickScaling = CLBCalcRatio<s16>(0x28, 0x3c, _unk2);
-			}
-		}
-
-		if (_unk3) {
-			this->mCompSPos[0].x = stickScaling * this->mMainStick.mPosX;
-			this->mCompSPos[0].y = stickScaling * this->mMainStick.mPosY;
-		} else {
-			this->mCompSPos[0].x = this->mMainStick.mPosX;
-			this->mCompSPos[0].y = this->mMainStick.mPosY;
-		}
-
-		this->mCompSPos[1].x = (f32)this->mButton.mAnalogL;
-		this->mCompSPos[1].y = (f32)this->mButton.mAnalogR;
-
-		this->updateMeaning(A, MEANING_0x80, prevMeaning);
-
-		if ((this->mFlags & 0x4) != 0) {
-			this->updateMeaning(B, MEANING_0x800, prevMeaning);
-		} else {
-			if ((this->mFlags & 0x20) == 0) {
-				this->updateMeaning(B, MEANING_0x100, prevMeaning);
-			}
-		}
-
-		this->updateMeaning(R, MEANING_0x400, prevMeaning);
-		this->updateMeaning(Z, MEANING_0x1000, prevMeaning);
-		this->updateMeaning(L, MEANING_0x2000, prevMeaning);
-
-		this->mCompSPos[3].x = this->mSubStick.mPosX;
-		this->mCompSPos[3].y = this->mSubStick.mPosY;
-
-		this->updateMeaning(Y, MEANING_0x4000, prevMeaning);
-		this->updateMeaning(L, MEANING_0x8000, prevMeaning);
-
-		if (((this->_DE & 0x1) != 0)
-		    || (((this->_DC & 1) != 0
-		         && ((prevMeaning & MEANING_0x200) != 0)))) {
-			this->mMeaning |= MEANING_0x200;
-		}
-
-		this->updateMeaning(X, MEANING_0x200000, prevMeaning);
-	}
-
-	// Fabricated
-	inline void updateMeaning0x1(u32 prevMeaning)
-	{
-		// Some kind of 2d menu navigation?
-		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP)) {
-			mMeaning |= MEANING_0x2;
-		}
-		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN)) {
-			mMeaning |= MEANING_0x4;
-		}
-		if (mButton.mRepeat & (MAINSTICK_LEFT | DPAD_LEFT)) {
-			mMeaning |= MEANING_0x8;
-		}
-		if (mButton.mRepeat & (MAINSTICK_RIGHT | DPAD_RIGHT)) {
-			mMeaning |= MEANING_0x10;
-		}
-		this->updateMeaning(A, MEANING_0x20, prevMeaning);
-		this->updateMeaning(B, MEANING_0x40, prevMeaning);
-	}
-
-	// Fabricated
-	inline void updateMeaning0x8(u32 prevMeaning)
-	{
-		// This is definitely some kind of menu navigation
-		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP)) {
-			mMeaning |= MEANING_0x80000;
-		}
-		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN)) {
-			mMeaning |= MEANING_0x100000;
-		}
-		this->updateMeaning(A, MEANING_0x20000, prevMeaning);
-		this->updateMeaning(B, MEANING_0x40000, prevMeaning);
-		this->mCompSPos[1].x = (f32)(this->mButton.mAnalogL);
-		this->mCompSPos[1].y = (f32)(this->mButton.mAnalogR);
-		this->updateMeaning(R, MEANING_0x400, prevMeaning);
-		this->updateMeaning(Z, MEANING_0x1000, prevMeaning);
-		this->updateMeaning(L, MEANING_0x2000, prevMeaning);
-	}
-	// Fabricated
-	inline void updateMeaning0x80(u32 prevMeaning)
-	{
-		this->updateMeaning(A, MEANING_0x20, prevMeaning);
-		this->updateMeaning(B, MEANING_0x40, prevMeaning);
-		this->mCompSPos[4].x = this->mMainStick.mPosX;
-		this->mCompSPos[4].y = this->mMainStick.mPosY;
-	}
-
-	// Fabricated
-	inline void updateChangedMeaning(u32 prevMeaning)
-	{
-		this->mEnabledFrameMeaning  = this->mMeaning & ~prevMeaning;
-		this->mDisabledFrameMeaning = prevMeaning & ~this->mMeaning;
-	}
-
-	// Fabricated
-	inline bool checkFlag(u32 flag) { return (this->mFlags & flag) != 0; }
+	inline bool checkFlag(u32 flag) { return (mFlags & flag) != 0; }
 
 	u32 read();
 	void onNeutralMarioKey();
