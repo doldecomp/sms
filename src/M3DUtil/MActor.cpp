@@ -2,9 +2,11 @@
 #include <M3DUtil/MActorAnm.hpp>
 #include <MarioUtil/LightUtil.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 
 MActor::MActor(MActorAnmData* param_1)

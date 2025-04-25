@@ -1,6 +1,7 @@
 #include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/MotionBlendCtrl.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
