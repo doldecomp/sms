@@ -991,7 +991,7 @@ config.libs = [
     {
         "lib": "MoveBG",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MoveBG/WoodBarrel.cpp"),
@@ -1000,8 +1000,8 @@ config.libs = [
             Object(NonMatching, "MoveBG/MapObjGeneral.cpp"),
             Object(NonMatching, "MoveBG/MapObjManager.cpp"),
             Object(NonMatching, "MoveBG/MapObjLib.cpp"),
-            Object(NonMatching, "MoveBG/Item.cpp", extra_cflags=["-inline deferred"]),
-            Object(NonMatching, "MoveBG/ItemManager.cpp", extra_cflags=["-inline deferred"]),
+            Object(NonMatching, "MoveBG/Item.cpp"),
+            Object(NonMatching, "MoveBG/ItemManager.cpp"),
             Object(NonMatching, "MoveBG/MapObjTown.cpp"),
             Object(NonMatching, "MoveBG/MapObjBlock.cpp"),
             Object(NonMatching, "MoveBG/MapObjBianco.cpp"),
@@ -1016,7 +1016,7 @@ config.libs = [
             Object(NonMatching, "MoveBG/MapObjFloat.cpp"),
             Object(NonMatching, "MoveBG/MapObjPlane.cpp"),
             Object(NonMatching, "MoveBG/MapObjCloud.cpp"),
-            Object(NonMatching, "MoveBG/MapObjBall.cpp", extra_cflags=["-inline deferred"]),
+            Object(NonMatching, "MoveBG/MapObjBall.cpp"),
             Object(NonMatching, "MoveBG/MapObjAirport.cpp"),
             Object(NonMatching, "MoveBG/MapObjDolpic.cpp"),
             Object(NonMatching, "MoveBG/MapObjPollution.cpp"),

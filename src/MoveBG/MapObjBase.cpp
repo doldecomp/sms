@@ -17,15 +17,12 @@ TMapObjBase::TMapObjBase(const char* name)
     , unk130(nullptr)
     , unk134(0)
 {
-	unk114 = 0.0f;
-	unk110 = 0.0f;
-	unk10C = 0.0f;
-	unk120 = 0.0f;
-	unk11C = 0.0f;
-	unk118 = 0.0f;
-	unk124 = 1.0f;
-	unk128 = 1.0f;
-	unk12C = 1.0f;
+	unk10C.x = unk10C.y = unk10C.z = 0.0f;
+	unk118.x = unk118.y = unk118.z = 0.0f;
+
+	unk124.x = 1.0f;
+	unk124.y = 1.0f;
+	unk124.z = 1.0f;
 }
 
 void TMapObjBase::load(JSUMemoryInputStream& stream)

@@ -11,6 +11,131 @@ class TMapCollisionWarp;
 class TJointObj;
 class JPABaseEmitter;
 
+// fabricated
+struct TMapObjAnimData {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ const char* unk4;
+	/* 0x8 */ u8 unk8;
+	/* 0xC */ const char* unkC;
+	/* 0x10 */ const char* unk10;
+};
+
+// the only real name we have, everything else is fabricated
+struct TMapObjAnimDataInfo {
+	/* 0x0 */ u16 unk0;
+	/* 0x2 */ u16 unk2;
+	/* 0x4 */ const TMapObjAnimData* unk4;
+};
+
+struct TMapObjHitDataTable {
+	/* 0x0 */ f32 unk0;
+	/* 0x4 */ f32 unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
+};
+
+// fabricated
+struct TMapObjHitInfo {
+	/* 0x0 */ int unk0;
+	/* 0x4 */ int unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ const TMapObjHitDataTable* unkC;
+};
+
+// fabricated
+struct TMapObjCollisionData {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ u16 unk4;
+};
+
+// fabricated
+struct TMapObjCollisionInfo {
+	/* 0x0 */ u16 unk0;
+	/* 0x2 */ u16 unk2;
+	/* 0x4 */ const TMapObjCollisionData* unk4;
+};
+
+// fabricated
+struct TMapObjSoundData {
+	/* 0x0 */ u32 unk0[10];
+};
+
+// fabricated
+struct TMapObjSoundInfo {
+	/* 0x0 */ u32 unk0;
+	/* 0x4 */ const TMapObjSoundData* unk4;
+};
+
+// fabricated
+struct TMapObjPhysicalData {
+	/* 0x0 */ f32 unk0;
+	/* 0x4 */ f32 unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ f32 unk14;
+	/* 0x18 */ f32 unk18;
+	/* 0x1C */ f32 unk1C;
+	/* 0x20 */ f32 unk20;
+	/* 0x24 */ f32 unk24;
+	/* 0x28 */ f32 unk28;
+	/* 0x2C */ f32 unk2C;
+	/* 0x30 */ f32 unk30;
+};
+
+// fabricated
+struct TMapObjPhysicalInfo {
+	/* 0x0 */ u32 unk0;
+	/* 0x4 */ TMapObjPhysicalData* unk4;
+	/* 0x8 */ u32 unk8;
+};
+
+// fabricated
+struct TMapObjSinkData {
+	/* 0x0 */ f32 unk0;
+	/* 0x4 */ f32 unk4;
+};
+
+class J3DModelData;
+
+// fabricated
+struct TMapObjHoldData {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ const char* unk4;
+	/* 0x8 */ J3DModelData* unk8;
+	/* 0xC */ J3DModel* unkC;
+	/* 0x10 */ MtxPtr unk10;
+};
+
+class J3DAnmBase;
+class J3DFrameCtrl;
+
+// fabricated
+struct TMapObjMoveData {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ J3DAnmBase* unk4;
+	/* 0x8 */ J3DFrameCtrl* unk8;
+};
+
+// fabricated
+struct TMapObjData {
+	/* 0x0 */ const char* unk0;
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ const char* unk8;
+	/* 0xC */ const char* unkC;
+	/* 0x10 */ const TMapObjAnimDataInfo* mAnim;
+	/* 0x14 */ const TMapObjHitInfo* mHit;
+	/* 0x18 */ const TMapObjCollisionInfo* mCollision;
+	/* 0x1C */ const TMapObjSoundInfo* mSound;
+	/* 0x20 */ const TMapObjPhysicalInfo* mPhysical;
+	/* 0x24 */ const TMapObjSinkData* mSink;
+	/* 0x28 */ TMapObjHoldData* mHold;
+	/* 0x2C */ TMapObjMoveData* mMove;
+	/* 0x30 */ f32 unk30;
+	/* 0x34 */ u32 unk34; // TODO: these are flags
+	/* 0x38 */ u32 unk38;
+};
+
 class TMapObjBase : public TLiveActor {
 public:
 	TMapObjBase(const char*);
@@ -55,7 +180,7 @@ public:
 	virtual void touchEnemy(THitActor*);
 	virtual void touchBoss(THitActor*);
 	virtual void makeObjDefault();
-	virtual void getHitObjNumMax();
+	virtual u16 getHitObjNumMax();
 	virtual void getDepthAtFloating();
 
 	void initAndRegister(const char*);
@@ -75,7 +200,7 @@ public:
 	void awake();
 	void initActorData();
 	void initModelData();
-	void initMActor(const char*, const char*, u32);
+	MActor* initMActor(const char*, const char*, u32);
 	void initBckMoveData();
 	void initObjCollisionData();
 	void initHoldData();
@@ -204,16 +329,10 @@ public:
 	/* 0x102 */ u16 unk102;
 	/* 0x104 */ u32 unk104;
 	/* 0x108 */ f32 unk108;
-	/* 0x10C */ f32 unk10C;
-	/* 0x110 */ f32 unk110;
-	/* 0x114 */ f32 unk114;
-	/* 0x118 */ f32 unk118;
-	/* 0x11C */ f32 unk11C;
-	/* 0x120 */ f32 unk120;
-	/* 0x124 */ f32 unk124;
-	/* 0x128 */ f32 unk128;
-	/* 0x12C */ f32 unk12C;
-	/* 0x130 */ void* unk130;
+	/* 0x10C */ Vec unk10C;
+	/* 0x118 */ Vec unk118;
+	/* 0x124 */ Vec unk124;
+	/* 0x130 */ TMapObjData* unk130;
 	/* 0x134 */ u32 unk134;
 };
 

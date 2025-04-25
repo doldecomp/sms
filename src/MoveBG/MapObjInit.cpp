@@ -1,6 +1,21 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <Map/MapData.hpp>
+#include <Map/Map.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorAnm.hpp>
+#include <MarioUtil/ScreenUtil.hpp>
+#include <MarioUtil/DrawUtil.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <Strategic/MirrorActor.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -17,133 +32,6 @@ static void dummy4(Vec& v)
 	v = (Vec) { 0.0f, 0.0f, 0.0f };
 	v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
-
-// fabricated
-struct TMapObjAnimData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ const char* unk4;
-	/* 0x8 */ u8 unk8;
-	/* 0xC */ const char* unkC;
-	/* 0x10 */ const char* unk10;
-};
-
-// the only real name we have, everything else is fabricated
-struct TMapObjAnimDataInfo {
-	/* 0x0 */ u16 unk0;
-	/* 0x2 */ u16 unk2;
-	/* 0x4 */ const TMapObjAnimData* unk4;
-};
-
-struct TMapObjHitDataTable {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
-};
-
-// fabricated
-struct TMapObjHitInfo {
-	/* 0x0 */ int unk0;
-	/* 0x4 */ int unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ const TMapObjHitDataTable* unkC;
-};
-
-// fabricated
-struct TMapObjCollisionData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ u16 unk4;
-};
-
-// fabricated
-struct TMapObjCollisionInfo {
-	/* 0x0 */ u16 unk0;
-	/* 0x2 */ u16 unk2;
-	/* 0x4 */ const TMapObjCollisionData* unk4;
-};
-
-// fabricated
-struct TMapObjSoundData {
-	/* 0x0 */ u32 unk0[10];
-};
-
-// fabricated
-struct TMapObjSoundInfo {
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ const TMapObjSoundData* unk4;
-};
-
-// fabricated
-struct TMapObjPhysicalData {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ f32 unk10;
-	/* 0x14 */ f32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
-	/* 0x30 */ f32 unk30;
-};
-
-// fabricated
-struct TMapObjPhysicalInfo {
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ TMapObjPhysicalData* unk4;
-	/* 0x8 */ u32 unk8;
-};
-
-// fabricated
-struct TMapObjSinkData {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-};
-
-class J3DModelData;
-
-// fabricated
-struct TMapObjHoldData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ const char* unk4;
-	/* 0x8 */ J3DModelData* unk8;
-	/* 0xC */ J3DModel* unkC;
-	/* 0x10 */ Mtx* unk10;
-};
-
-class J3DAnmBase;
-class J3DFrameCtrl;
-
-// fabricated
-struct TMapObjMoveData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ J3DAnmBase* unk4;
-	/* 0x8 */ J3DFrameCtrl* unk8;
-};
-
-// fabricated
-struct TMapObjData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ const char* unk8;
-	/* 0xC */ const char* unkC;
-	/* 0x10 */ const TMapObjAnimDataInfo* mAnim;
-	/* 0x14 */ const TMapObjHitInfo* mHit;
-	/* 0x18 */ const TMapObjCollisionInfo* mCollision;
-	/* 0x1C */ const TMapObjSoundInfo* mSound;
-	/* 0x20 */ const TMapObjPhysicalInfo* mPhysical;
-	/* 0x24 */ const TMapObjSinkData* mSink;
-	/* 0x28 */ TMapObjHoldData* mHold;
-	/* 0x2C */ TMapObjMoveData* mMove;
-	/* 0x30 */ u32 unk30;
-	/* 0x34 */ u32 unk34;
-	/* 0x38 */ u32 unk38;
-};
-
-///////////////////////////////////////////// START SORTED AND NICE
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, 0x3802, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -178,9 +66,9 @@ static TMapObjData end_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0,
-	0,
-	0,
+	0.0f,
+	0x00000000,
+	0x00000000,
 };
 
 static TMapObjData no_data = {
@@ -196,9 +84,9 @@ static TMapObjData no_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0,
-	0,
-	0,
+	0.0f,
+	0x00000000,
+	0x00000000,
 };
 
 static const TMapObjAnimData billboard_dolphin_anim_data[] = {
@@ -230,7 +118,7 @@ static TMapObjData billboard_dolphin_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -257,7 +145,7 @@ static TMapObjData billboard_sun_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -284,7 +172,7 @@ static TMapObjData billboard_restaurant_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -311,7 +199,7 @@ static TMapObjData billboard_fish_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -336,7 +224,7 @@ static TMapObjData HideObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -361,7 +249,7 @@ static TMapObjData WaterHitHideObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -386,7 +274,7 @@ static TMapObjData FruitHitHideObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -411,7 +299,7 @@ static TMapObjData HipDropHideObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -436,7 +324,7 @@ static TMapObjData MonteChair_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000B00,
 	0x00000000,
 };
@@ -469,7 +357,7 @@ static TMapObjData door_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -498,7 +386,7 @@ static TMapObjData doorHotel_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000200,
 	0x00000000,
 };
@@ -538,7 +426,7 @@ static TMapObjData manhole_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -578,7 +466,7 @@ static TMapObjData FruitBasket_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -617,7 +505,7 @@ static TMapObjData BasketReverse_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000808,
 	0x00000000,
 };
@@ -642,7 +530,7 @@ static TMapObjData CoconutJuice_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -674,7 +562,7 @@ static TMapObjData Pile_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x0000290A,
 	0x00000000,
 };
@@ -699,7 +587,7 @@ static TMapObjData ChangeStage_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -717,7 +605,7 @@ static TMapObjData ChangeStageMerrygoround_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -742,7 +630,7 @@ static TMapObjData StartDemo_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -774,7 +662,7 @@ static TMapObjData ChipShine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -806,7 +694,7 @@ static TMapObjData KoopaJrSignM_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -824,7 +712,7 @@ static TMapObjData StarSign_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -849,7 +737,7 @@ static TMapObjData SignCircle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -874,7 +762,7 @@ static TMapObjData SignCross_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -899,7 +787,7 @@ static TMapObjData SignTriangle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -924,7 +812,7 @@ static TMapObjData ArrowBoardLR_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -949,7 +837,7 @@ static TMapObjData ArrowBoardUp_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -974,7 +862,7 @@ static TMapObjData ArrowBoardDown_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -992,7 +880,7 @@ static TMapObjData WaterSprayCylinder_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1010,7 +898,7 @@ static TMapObjData WaterSprayBox_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1035,7 +923,7 @@ static TMapObjData ObjSwitch_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000201,
 	0x00000000,
 };
@@ -1060,7 +948,7 @@ static TMapObjData RedCoinSwitch_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000201,
 	0x00000000,
 };
@@ -1078,7 +966,7 @@ static TMapObjData bucket_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -1103,7 +991,7 @@ static TMapObjData GeneralHitObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -1128,7 +1016,7 @@ static TMapObjData bottle_large_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1146,7 +1034,7 @@ static TMapObjData bottle_short_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1171,7 +1059,7 @@ static TMapObjData WaterRecoverObj_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -1189,7 +1077,7 @@ static TMapObjData watergun_item_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x04000800,
 	0x00000000,
 };
@@ -1214,7 +1102,7 @@ static TMapObjData nozzle_normal_item_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1232,7 +1120,7 @@ static TMapObjData yoshi_whistle_item_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1257,7 +1145,7 @@ static TMapObjData nozzle_rocket_item_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1275,7 +1163,7 @@ static TMapObjData nozzle_back_item_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x0A040100,
 	0x00000000,
 };
@@ -1313,7 +1201,7 @@ static TMapObjData coin_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42480000,
+	50.0f,
 	0x08144100,
 	0x00000000,
 };
@@ -1331,7 +1219,7 @@ static TMapObjData invisible_coin_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0C100000,
 	0x00000000,
 };
@@ -1349,7 +1237,7 @@ static TMapObjData coin_red_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42480000,
+	50.0f,
 	0x18104100,
 	0x00000000,
 };
@@ -1367,7 +1255,7 @@ static TMapObjData coin_blue_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42480000,
+	50.0f,
 	0x18104100,
 	0x00000000,
 };
@@ -1385,7 +1273,7 @@ static TMapObjData shine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42480000,
+	50.0f,
 	0x00004000,
 	0x00000000,
 };
@@ -1417,7 +1305,7 @@ static TMapObjData mario_cap_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x14100001,
 	0x00000000,
 };
@@ -1441,7 +1329,7 @@ static TMapObjData joint_coin_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x08104100,
 	0x00000000,
 };
@@ -1480,7 +1368,7 @@ static TMapObjData eggYoshi_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1505,7 +1393,7 @@ static TMapObjData eggYoshiEvent_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -1540,7 +1428,7 @@ static TMapObjData NozzleBox_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x14000000,
 	0x00000000,
 };
@@ -1572,7 +1460,7 @@ static TMapObjData mushroom1up_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1590,7 +1478,7 @@ static TMapObjData mushroom1upR_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1608,7 +1496,7 @@ static TMapObjData mushroom1upX_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1647,7 +1535,7 @@ static TMapObjData jumpbase_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -1684,7 +1572,7 @@ static TMapObjData coconut_data = {
 	"敵グループ",   nullptr,           &coconut_obj_hit_info,
 	nullptr,        &fruit_sound_info, &coconut_physical_info,
 	nullptr,        nullptr,           nullptr,
-	0x42200000,     0x02130100,        0x00000000,
+	40.0f,          0x02130100,        0x00000000,
 };
 
 static TMapObjPhysicalData papaya_physical_data
@@ -1706,7 +1594,7 @@ static TMapObjData papaya_data = {
 	"敵グループ",  nullptr,           &papaya_obj_hit_info,
 	nullptr,       &fruit_sound_info, &papaya_physical_info,
 	nullptr,       nullptr,           nullptr,
-	0x42200000,    0x02130100,        0x00000000,
+	40.0f,         0x02130100,        0x00000000,
 };
 
 static TMapObjPhysicalData pine_physical_data
@@ -1728,7 +1616,7 @@ static TMapObjData pine_data = {
 	"敵グループ", nullptr,           &pine_obj_hit_info,
 	nullptr,      &fruit_sound_info, &pine_physical_info,
 	nullptr,      nullptr,           nullptr,
-	0x42200000,   0x02130100,        0x00000000,
+	40.0f,        0x02130100,        0x00000000,
 };
 
 static const TMapObjAnimData CoverPine_anim_data[] = {
@@ -1764,7 +1652,7 @@ static TMapObjData CoverPine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00100100,
 	0x00000000,
 };
@@ -1802,7 +1690,7 @@ static TMapObjData durian_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00170100,
 	0x00000000,
 };
@@ -1826,7 +1714,7 @@ static TMapObjData banana_data = {
 	"敵グループ",  nullptr,           &banana_obj_hit_info,
 	nullptr,       &fruit_sound_info, &banana_physical_info,
 	nullptr,       nullptr,           nullptr,
-	0x42200000,    0x02130100,        0x00000000,
+	40.0f,         0x02130100,        0x00000000,
 };
 
 static TMapObjPhysicalData red_pepper_physical_data
@@ -1841,7 +1729,7 @@ static TMapObjData RedPepper_data = {
 	"敵グループ", nullptr,           &fruit_obj_hit_info,
 	nullptr,      &fruit_sound_info, &red_pepper_physical_info,
 	nullptr,      nullptr,           nullptr,
-	0x42200000,   0x02130000,        0x00000000,
+	40.0f,        0x02130000,        0x00000000,
 };
 
 static TMapObjData fence_normal_data = {
@@ -1849,7 +1737,7 @@ static TMapObjData fence_normal_data = {
 	nullptr,        nullptr,    &no_data_obj_hit_info,
 	nullptr,        nullptr,    nullptr,
 	nullptr,        nullptr,    nullptr,
-	0x00000000,     0x00000A00, 0x00000000,
+	0.0f,           0x00000A00, 0x00000000,
 };
 
 static const TMapObjAnimData fence3x3_anim_data[] = {
@@ -1872,7 +1760,7 @@ static TMapObjData fence3x3_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000A00,
 	0x00000000,
 };
@@ -1897,7 +1785,7 @@ static TMapObjData fence_revolve_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000A00,
 	0x00000000,
 };
@@ -1922,7 +1810,7 @@ static TMapObjData fence_revolve_inner_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090A,
 	0x00000000,
 };
@@ -1940,7 +1828,7 @@ static TMapObjData fenceInnerGreen_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090A,
 	0x00000000,
 };
@@ -1965,7 +1853,7 @@ static TMapObjData FenceWaterV_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000804,
 	0x00000000,
 };
@@ -1991,7 +1879,7 @@ static TMapObjData FenceWaterH_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000908,
 	0x00000000,
 };
@@ -2025,7 +1913,7 @@ static TMapObjData RailFence_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000904,
 	0x00000000,
 };
@@ -2043,7 +1931,7 @@ static TMapObjData bambooFenceRevolveInner_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090A,
 	0x00000000,
 };
@@ -2061,7 +1949,7 @@ static TMapObjData bambooFenceRevolveOuter_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000A00,
 	0x00000000,
 };
@@ -2087,7 +1975,7 @@ static TMapObjData bambooRailFence_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000904,
 	0x00000000,
 };
@@ -2155,7 +2043,7 @@ static TMapObjData wood_barrel_data = {
 	&wood_barrel_sink_data,
 	&wood_barrel_hold_data,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x01390000,
 	0x00000000,
 };
@@ -2173,7 +2061,7 @@ static TMapObjData wood_barrel_once_data = {
 	&wood_barrel_sink_data,
 	&wood_barrel_hold_data,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x01310000,
 	0x00000000,
 };
@@ -2205,7 +2093,7 @@ static TMapObjData barrel_float_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -2247,7 +2135,7 @@ static TMapObjData drum_can_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42700000,
+	60.0f,
 	0x00200800,
 	0x00000000,
 };
@@ -2287,7 +2175,7 @@ static TMapObjData barrel_oil_data = {
 	&wood_barrel_sink_data,
 	&wood_barrel_hold_data,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x01350800,
 	0x00000000,
 };
@@ -2337,7 +2225,7 @@ static TMapObjData breakable_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2361,7 +2249,7 @@ static TMapObjData supermario_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2386,7 +2274,7 @@ static TMapObjData move_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2404,7 +2292,7 @@ static TMapObjData fall_slow_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2429,7 +2317,7 @@ static TMapObjData expand_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2454,7 +2342,7 @@ static TMapObjData spread_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2489,7 +2377,7 @@ static TMapObjData water_roll_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000109,
 	0x00000000,
 };
@@ -2531,7 +2419,7 @@ static TMapObjData sand_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002007,
 	0x00000000,
 };
@@ -2552,7 +2440,7 @@ static TMapObjData water_power_lift_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2570,7 +2458,7 @@ static TMapObjData water_power_inertial_lift_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2588,7 +2476,7 @@ static TMapObjData water_power_ship_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000109,
 	0x00000000,
 };
@@ -2606,7 +2494,7 @@ static TMapObjData lean_direct_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000109,
 	0x00000000,
 };
@@ -2624,7 +2512,7 @@ static TMapObjData lean_indirect_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000109,
 	0x00000000,
 };
@@ -2642,7 +2530,7 @@ static TMapObjData lean_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000109,
 	0x00000000,
 };
@@ -2667,7 +2555,7 @@ static TMapObjData skate_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2692,7 +2580,7 @@ static TMapObjData MoveCoin_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -2717,7 +2605,7 @@ static TMapObjData cluster_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -2742,7 +2630,7 @@ static TMapObjData NormalBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2774,7 +2662,7 @@ static TMapObjData IceBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x0000A004,
 	0x00000000,
 };
@@ -2808,7 +2696,7 @@ static TMapObjData BrickBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2842,7 +2730,7 @@ static TMapObjData WaterMelonBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2867,7 +2755,7 @@ static TMapObjData TelesaBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2892,7 +2780,7 @@ static TMapObjData WoodBlockPole_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000041,
 	0x00000000,
 };
@@ -2917,7 +2805,7 @@ static TMapObjData JuiceBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2952,7 +2840,7 @@ static TMapObjData SuperHipDropBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00002005,
 	0x00000000,
 };
@@ -2995,7 +2883,7 @@ static TMapObjData palmNormal_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000D40,
 	0x00000000,
 };
@@ -3027,7 +2915,7 @@ static TMapObjData palmOugi_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000940,
 	0x00000000,
 };
@@ -3059,7 +2947,7 @@ static TMapObjData palmSago_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000940,
 	0x00000000,
 };
@@ -3091,7 +2979,7 @@ static TMapObjData palmNatume_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000940,
 	0x00000000,
 };
@@ -3130,7 +3018,7 @@ static TMapObjData palmLeaf_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -3169,7 +3057,7 @@ static TMapObjData BananaTree_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004D40,
 	0x00000000,
 };
@@ -3201,7 +3089,7 @@ static TMapObjData FruitTree_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000940,
 	0x00000000,
 };
@@ -3226,7 +3114,7 @@ static TMapObjData flower_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3252,7 +3140,7 @@ static TMapObjData flowerOrange_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3278,7 +3166,7 @@ static TMapObjData flowerPink_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3304,7 +3192,7 @@ static TMapObjData flowerPurple_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3330,7 +3218,7 @@ static TMapObjData flowerRed_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3356,7 +3244,7 @@ static TMapObjData flowerYellow_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3382,7 +3270,7 @@ static TMapObjData flowerSunflower_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3413,7 +3301,7 @@ static TMapObjData telegraph_pole_l_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x000000C0,
 	0x00000000,
 };
@@ -3438,7 +3326,7 @@ static TMapObjData telegraph_pole_s_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x000000C0,
 	0x00000000,
 };
@@ -3488,7 +3376,7 @@ static TMapObjData streetlamp_data = {
 	&streetlamp_sink_data,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x01000841,
 	0x00000000,
 };
@@ -3513,7 +3401,7 @@ static TMapObjData PoleNormal_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x000001C0,
 	0x00000000,
 };
@@ -3559,7 +3447,7 @@ static TMapObjData football_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x000B0100,
 	0x00000000,
 };
@@ -3599,7 +3487,7 @@ static TMapObjData football_goal_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -3624,7 +3512,7 @@ static TMapObjData baloonball_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x00010100,
 	0x00000000,
 };
@@ -3642,7 +3530,7 @@ static TMapObjData coconutball_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x000B0100,
 	0x00000000,
 };
@@ -3696,7 +3584,7 @@ static TMapObjData watermelon_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x008B0100,
 	0x00000000,
 };
@@ -3721,7 +3609,7 @@ static TMapObjData WatermelonStatic_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42640000,
+	57.0f,
 	0x00000100,
 	0x00000000,
 };
@@ -3759,7 +3647,7 @@ static TMapObjData cloud_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x43960000,
+	300.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -3798,7 +3686,7 @@ static TMapObjData normallift_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -3837,7 +3725,7 @@ static TMapObjData exrollcube_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -3876,7 +3764,7 @@ static TMapObjData exkickboard_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -3929,7 +3817,7 @@ static TMapObjData railblockr_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -3947,7 +3835,7 @@ static TMapObjData railblocky_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -3965,7 +3853,7 @@ static TMapObjData railblockb_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -3983,7 +3871,7 @@ static TMapObjData rollblockr_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4001,7 +3889,7 @@ static TMapObjData rollblocky_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4019,7 +3907,7 @@ static TMapObjData rollblockb_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4058,7 +3946,7 @@ static TMapObjData umaibou_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -4097,7 +3985,7 @@ static TMapObjData kamaboko_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4141,7 +4029,7 @@ static TMapObjData getag_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4159,7 +4047,7 @@ static TMapObjData getao_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4197,7 +4085,7 @@ static TMapObjData uirou_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4236,7 +4124,7 @@ static TMapObjData hikidashi_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4275,7 +4163,7 @@ static TMapObjData castella_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000004,
 	0x00000000,
 };
@@ -4314,7 +4202,7 @@ static TMapObjData yoshiblock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -4339,7 +4227,7 @@ static TMapObjData WoodBlockTriangle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4364,7 +4252,7 @@ static TMapObjData WoodBlockPyramid_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4389,7 +4277,7 @@ static TMapObjData WoodBlockLong_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4414,7 +4302,7 @@ static TMapObjData WoodBlockLarge_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4439,7 +4327,7 @@ static TMapObjData WoodBlockCone_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4464,7 +4352,7 @@ static TMapObjData WoodBlockL_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4489,7 +4377,7 @@ static TMapObjData WoodBlockBridge_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4514,7 +4402,7 @@ static TMapObjData WoodBlockCube_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4546,7 +4434,7 @@ static TMapObjData normalvariant0_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4578,7 +4466,7 @@ static TMapObjData normalvariant1_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4610,7 +4498,7 @@ static TMapObjData normalvariant2_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4642,7 +4530,7 @@ static TMapObjData normalvariant3_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4674,7 +4562,7 @@ static TMapObjData normalvariant4_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4706,7 +4594,7 @@ static TMapObjData railvariant0_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4738,7 +4626,7 @@ static TMapObjData railvariant1_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4770,7 +4658,7 @@ static TMapObjData railvariant2_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4802,7 +4690,7 @@ static TMapObjData railvariant3_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4834,7 +4722,7 @@ static TMapObjData railvariant4_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4866,7 +4754,7 @@ static TMapObjData rollvariant0_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4898,7 +4786,7 @@ static TMapObjData rollvariant1_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4930,7 +4818,7 @@ static TMapObjData rollvariant2_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4962,7 +4850,7 @@ static TMapObjData rollvariant3_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -4994,7 +4882,7 @@ static TMapObjData rollvariant4_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -5040,7 +4928,7 @@ static TMapObjData lamptrapspike_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -5058,7 +4946,7 @@ static TMapObjData lamptrapiron_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -5083,7 +4971,7 @@ static TMapObjData airplane_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -5121,7 +5009,7 @@ static TMapObjData WoodBox_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42FA0000,
+	125.0f,
 	0x00002101,
 	0x00000000,
 };
@@ -5146,7 +5034,7 @@ static TMapObjData AirportPole_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x000000C0,
 	0x00000000,
 };
@@ -5191,7 +5079,7 @@ static TMapObjData ice_car_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5216,7 +5104,7 @@ static TMapObjData move_ice_car_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5248,7 +5136,7 @@ static TMapObjData AirportBuoy_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x43960000,
+	300.0f,
 	0x0000090A,
 	0x00000000,
 };
@@ -5266,7 +5154,7 @@ static TMapObjData dptCannon_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -5292,7 +5180,7 @@ static TMapObjData dptKing_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -5317,7 +5205,7 @@ static TMapObjData KoopaJrSubmarine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -5349,7 +5237,7 @@ static TMapObjData monumentshine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5381,7 +5269,7 @@ static TMapObjData belldolpic_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5413,7 +5301,7 @@ static TMapObjData dptWeathercock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -5445,7 +5333,7 @@ static TMapObjData dptMonteFence_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -5470,7 +5358,7 @@ static TMapObjData dptCoronaFence_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -5495,7 +5383,7 @@ static TMapObjData MapSmoke_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5520,7 +5408,7 @@ static TMapObjData MareGate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -5538,7 +5426,7 @@ static TMapObjData DemoCannon_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -5578,7 +5466,7 @@ static TMapObjData NozzleDoor_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004000,
 	0x00000000,
 };
@@ -5603,7 +5491,7 @@ static TMapObjData DokanGate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00008000,
 	0x00000000,
 };
@@ -5635,7 +5523,7 @@ static TMapObjData crane_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000907,
 	0x00000000,
 };
@@ -5660,7 +5548,7 @@ static TMapObjData crane90Scene2_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000907,
 	0x00000000,
 };
@@ -5685,7 +5573,7 @@ static TMapObjData crane180Scene1_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000907,
 	0x00000000,
 };
@@ -5717,7 +5605,7 @@ static TMapObjData craneUpDown_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000807,
 	0x00000000,
 };
@@ -5749,7 +5637,7 @@ static TMapObjData craneCargoUpDown_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000807,
 	0x00000000,
 };
@@ -5774,7 +5662,7 @@ static TMapObjData tank_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -5799,7 +5687,7 @@ static TMapObjData container_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -5832,7 +5720,7 @@ static TMapObjData submarine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -5864,7 +5752,7 @@ static TMapObjData riccoShip_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000909,
 	0x00000000,
 };
@@ -5889,7 +5777,7 @@ static TMapObjData riccoPole_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x000001C0,
 	0x00000000,
 };
@@ -5921,7 +5809,7 @@ static TMapObjData riccoLog_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -5953,7 +5841,7 @@ static TMapObjData gesoSurfboard_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -5971,7 +5859,7 @@ static TMapObjData gesoSurfboardStatic_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00080801,
 	0x00000000,
 };
@@ -5996,7 +5884,7 @@ static TMapObjData riccoWatermill_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -6028,7 +5916,7 @@ static TMapObjData riccoShipLog_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -6060,7 +5948,7 @@ static TMapObjData riccoShipDol_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090A,
 	0x00000000,
 };
@@ -6092,7 +5980,7 @@ static TMapObjData riccoYachtL_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -6124,7 +6012,7 @@ static TMapObjData riccoYachtS_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -6156,7 +6044,7 @@ static TMapObjData riccoBoatL_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -6188,7 +6076,7 @@ static TMapObjData riccoBoatS_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -6213,7 +6101,7 @@ static TMapObjData riccoBasket_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6238,7 +6126,7 @@ static TMapObjData riccoGangway_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6263,7 +6151,7 @@ static TMapObjData riccoShipFish_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6288,7 +6176,7 @@ static TMapObjData riccoShipGeso_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6313,7 +6201,7 @@ static TMapObjData riccoSwitch_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6331,7 +6219,7 @@ static TMapObjData riccoSwitchShine_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -6356,7 +6244,7 @@ static TMapObjData riccoFenceMaze_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6381,7 +6269,7 @@ static TMapObjData riccoStand_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6406,7 +6294,7 @@ static TMapObjData riccoGrille_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6431,7 +6319,7 @@ static TMapObjData riccoArrow_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6456,7 +6344,7 @@ static TMapObjData riccoStreetStall_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6481,7 +6369,7 @@ static TMapObjData riccoHericopter_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -6510,7 +6398,7 @@ static TMapObjData surfgeso_red_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -6528,7 +6416,7 @@ static TMapObjData surfgeso_yellow_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -6546,7 +6434,7 @@ static TMapObjData surfgeso_green_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -6585,7 +6473,7 @@ static TMapObjData big_windmill_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000D26,
 	0x00000000,
 };
@@ -6603,7 +6491,7 @@ static TMapObjData windmill_far_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000C01,
 	0x00000000,
 };
@@ -6635,7 +6523,7 @@ static TMapObjData MiniWindmillL_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004900,
 	0x00000000,
 };
@@ -6660,7 +6548,7 @@ static TMapObjData MiniWindmillS_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004C00,
 	0x00000000,
 };
@@ -6685,7 +6573,7 @@ static TMapObjData WindmillRoof_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000D00,
 	0x00000000,
 };
@@ -6735,7 +6623,7 @@ static TMapObjData lamp_bianco_data = {
 	&lamp_bianco_sink_data,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x01000D40,
 	0x00000000,
 };
@@ -6760,7 +6648,7 @@ static TMapObjData root_pakkun_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000400,
 	0x00000000,
 };
@@ -6792,7 +6680,7 @@ static TMapObjData windmill_block_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x43480000,
+	200.0f,
 	0x00002D0A,
 	0x00000000,
 };
@@ -6817,7 +6705,7 @@ static TMapObjData PolluterPakkun_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -6853,7 +6741,7 @@ static TMapObjData BiaBell_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004800,
 	0x00000000,
 };
@@ -6885,7 +6773,7 @@ static TMapObjData BiaWatermill00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004904,
 	0x00000000,
 };
@@ -6917,7 +6805,7 @@ static TMapObjData BiaWatermill01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004806,
 	0x00000000,
 };
@@ -6949,7 +6837,7 @@ static TMapObjData BiaWatermillVertical_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000806,
 	0x00000000,
 };
@@ -6981,7 +6869,7 @@ static TMapObjData BiaTurnBridge_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000806,
 	0x00000000,
 };
@@ -7013,7 +6901,7 @@ static TMapObjData LeafBoat_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000806,
 	0x00000000,
 };
@@ -7031,7 +6919,7 @@ static TMapObjData LeafBoatRotten_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00040006,
 	0x00000000,
 };
@@ -7072,7 +6960,7 @@ static TMapObjData LampSeesaw_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000842,
 	0x00000000,
 };
@@ -7097,7 +6985,7 @@ static TMapObjData BiancoDoor_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -7122,7 +7010,7 @@ static TMapObjData BiaBridge_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000800,
 	0x00000000,
 };
@@ -7147,7 +7035,7 @@ static TMapObjData SandBird_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00001001,
 	0x00000000,
 };
@@ -7180,7 +7068,7 @@ static TMapObjData SandBirdBlock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000010B,
 	0x00000000,
 };
@@ -7212,7 +7100,7 @@ static TMapObjData SkyIsland_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7248,7 +7136,7 @@ static TMapObjData SandLeaf_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -7281,7 +7169,7 @@ static TMapObjData SandLeafBase00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -7314,7 +7202,7 @@ static TMapObjData SandLeafBase01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -7347,7 +7235,7 @@ static TMapObjData SandLeafBase02_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -7380,7 +7268,7 @@ static TMapObjData SandLeafBase03_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -7418,7 +7306,7 @@ static TMapObjData SandBomb_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -7451,7 +7339,7 @@ static TMapObjData MirrorL_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004909,
 	0x00000000,
 };
@@ -7484,7 +7372,7 @@ static TMapObjData MirrorM_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004909,
 	0x00000000,
 };
@@ -7517,7 +7405,7 @@ static TMapObjData MirrorS_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004909,
 	0x00000000,
 };
@@ -7553,7 +7441,7 @@ static TMapObjData SandCastle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -7579,7 +7467,7 @@ static TMapObjData MammaBlockRotate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000805,
 	0x00000000,
 };
@@ -7604,7 +7492,7 @@ static TMapObjData SandEgg_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000021,
 	0x00000000,
 };
@@ -7629,7 +7517,7 @@ static TMapObjData SandEggBroken_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000121,
 	0x00000000,
 };
@@ -7647,7 +7535,7 @@ static TMapObjData ShiningStone_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000921,
 	0x00000000,
 };
@@ -7672,7 +7560,7 @@ static TMapObjData MammaSurfboard00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -7690,7 +7578,7 @@ static TMapObjData MammaSurfboard01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7708,7 +7596,7 @@ static TMapObjData MammaSurfboard02_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -7726,7 +7614,7 @@ static TMapObjData MammaSurfboard03_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7751,7 +7639,7 @@ static TMapObjData MammaSurfboardStand_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7783,7 +7671,7 @@ static TMapObjData MammaYacht00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000807,
 	0x00000000,
 };
@@ -7808,7 +7696,7 @@ static TMapObjData MammaYacht01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7833,7 +7721,7 @@ static TMapObjData MammaYacht02_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -7867,7 +7755,7 @@ static TMapObjData SandBombBase00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -7901,7 +7789,7 @@ static TMapObjData SandBombBaseMushroom_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -7935,7 +7823,7 @@ static TMapObjData SandBombBasePyramid_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -7969,7 +7857,7 @@ static TMapObjData SandBombBaseShit_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8003,7 +7891,7 @@ static TMapObjData SandBombBaseStar_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8037,7 +7925,7 @@ static TMapObjData SandBombBaseTurtle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8071,7 +7959,7 @@ static TMapObjData SandBombBaseFoot_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8105,7 +7993,7 @@ static TMapObjData SandBombBaseHand_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8139,7 +8027,7 @@ static TMapObjData SandBombBaseStairs_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000809,
 	0x00000000,
 };
@@ -8157,7 +8045,7 @@ static TMapObjData coral00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000D01,
 	0x00000000,
 };
@@ -8175,7 +8063,7 @@ static TMapObjData coral01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000D01,
 	0x00000000,
 };
@@ -8200,7 +8088,7 @@ static TMapObjData GoalWatermelon_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8232,7 +8120,7 @@ static TMapObjData TeethOfJuicer_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8257,7 +8145,7 @@ static TMapObjData SandEggRepair_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000120,
 	0x00000000,
 };
@@ -8296,7 +8184,7 @@ static TMapObjData merrygoround_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -8328,7 +8216,7 @@ static TMapObjData merry_egg_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -8353,7 +8241,7 @@ static TMapObjData merry_pole_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000040,
 	0x00000000,
 };
@@ -8385,7 +8273,7 @@ static TMapObjData FerrisWheel_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000092B,
 	0x00000000,
 };
@@ -8417,7 +8305,7 @@ static TMapObjData gondola_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000092B,
 	0x00000000,
 };
@@ -8442,7 +8330,7 @@ static TMapObjData FerrisLOD_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -8474,7 +8362,7 @@ static TMapObjData viking_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000092B,
 	0x00000000,
 };
@@ -8499,7 +8387,7 @@ static TMapObjData PinnaEntrance_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -8524,7 +8412,7 @@ static TMapObjData PinnaEntranceOpen_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -8549,7 +8437,7 @@ static TMapObjData SirenaGate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -8583,7 +8471,7 @@ static TMapObjData BalloonKoopaJr_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8622,7 +8510,7 @@ static TMapObjData ShellCup_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -8654,7 +8542,7 @@ static TMapObjData Gateshell_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -8694,7 +8582,7 @@ static TMapObjData PinnaHangingBridgeBoard_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000490B,
 	0x00000000,
 };
@@ -8719,7 +8607,7 @@ static TMapObjData GateManta_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8737,7 +8625,7 @@ static TMapObjData PinnaSunFlower_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42A00000,
+	80.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8769,7 +8657,7 @@ static TMapObjData AmiKing_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x43960000,
+	300.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -8794,7 +8682,7 @@ static TMapObjData PinnaCoaster_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00000900,
 	0x00000000,
 };
@@ -8819,7 +8707,7 @@ static TMapObjData casinoroulette_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000009,
 	0x00000000,
 };
@@ -8851,7 +8739,7 @@ static TMapObjData roulette00_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000009,
 	0x00000000,
 };
@@ -8876,7 +8764,7 @@ static TMapObjData roulette01_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -8901,7 +8789,7 @@ static TMapObjData roulette02_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000005,
 	0x00000000,
 };
@@ -8926,13 +8814,13 @@ static TMapObjData slotdrum_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000805,
 	0x00000000,
 };
 
 // one more unused global?
-static void dummy10(const char*& v) { v = "srotRulet"; }
+static const char* dummy10 = "srotRulet";
 
 static const TMapObjHitDataTable telesaslot_hit_data_table[] = {
 	{ 0.0f, 0.0f, 400.0f, 300.0f },
@@ -8954,7 +8842,7 @@ static TMapObjData telesaslot_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000805,
 	0x00000000,
 };
@@ -8983,7 +8871,7 @@ static TMapObjData donchou_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9015,7 +8903,7 @@ static TMapObjData casino_panel_gate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9033,7 +8921,7 @@ static TMapObjData SakuCasino_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9058,7 +8946,7 @@ static TMapObjData SirenabossWall_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9083,7 +8971,7 @@ static TMapObjData SirenaCasinoRoof_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9128,7 +9016,7 @@ static TMapObjData GlassBreak_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00200001,
 	0x00000000,
 };
@@ -9159,7 +9047,7 @@ static TMapObjData Closet_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9193,7 +9081,7 @@ static TMapObjData ChestRevolve_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000009,
 	0x00000000,
 };
@@ -9222,7 +9110,7 @@ static TMapObjData PosterTeresa_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9258,7 +9146,7 @@ static TMapObjData PictureTeresa_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9303,7 +9191,7 @@ static TMapObjData PanelBreak_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00200001,
 	0x00000000,
 };
@@ -9336,7 +9224,7 @@ static TMapObjData PanelRevolve_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9354,7 +9242,7 @@ static TMapObjData SirenaBlockBreak_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9379,7 +9267,7 @@ static TMapObjData SirenaShop_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -9397,7 +9285,7 @@ static TMapObjData StainHotel_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -9436,7 +9324,7 @@ static TMapObjData cogwheel_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000909,
 	0x00000000,
 };
@@ -9468,7 +9356,7 @@ static TMapObjData CogwheelPlate_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000803,
 	0x00000000,
 };
@@ -9500,7 +9388,7 @@ static TMapObjData CogwheelPot_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000807,
 	0x00000000,
 };
@@ -9532,7 +9420,7 @@ static TMapObjData mare_float_house_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -9571,7 +9459,7 @@ static TMapObjData StopRock_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00100005,
 	0x00000000,
 };
@@ -9596,7 +9484,7 @@ static TMapObjData ElasticCode_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000841,
 	0x00000000,
 };
@@ -9636,7 +9524,7 @@ static TMapObjData GrowthTree_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000841,
 	0x00000000,
 };
@@ -9654,7 +9542,7 @@ static TMapObjData WireBellPurple_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -9695,7 +9583,7 @@ static TMapObjData MuddyBoat_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000010B,
 	0x00000000,
 };
@@ -9729,7 +9617,7 @@ static TMapObjData Puncher_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -9763,7 +9651,7 @@ static TMapObjData HatoPop_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -9795,7 +9683,7 @@ static TMapObjData MareWaterJump_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000B0A,
 	0x00000000,
 };
@@ -9820,7 +9708,7 @@ static TMapObjData BumpyWall_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -9845,7 +9733,7 @@ static TMapObjData ExBottle_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -9870,7 +9758,7 @@ static TMapObjData CoinFish_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000101,
 	0x00000000,
 };
@@ -9895,7 +9783,7 @@ static TMapObjData MareFall_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9920,7 +9808,7 @@ static TMapObjData MareCork_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -9952,7 +9840,7 @@ static TMapObjData MonteRoot_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000947,
 	0x00000000,
 };
@@ -9985,7 +9873,7 @@ static TMapObjData JumpMushroom_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -10017,7 +9905,7 @@ static TMapObjData MonteGoalFlag_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000041,
 	0x00000000,
 };
@@ -10056,7 +9944,7 @@ static TMapObjData HangingBridgeBoard_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x0000090B,
 	0x00000000,
 };
@@ -10074,7 +9962,7 @@ static TMapObjData HangingBridge_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -10106,7 +9994,7 @@ static TMapObjData SwingBoard_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00004909,
 	0x00000000,
 };
@@ -10137,7 +10025,7 @@ static TMapObjData Fluff_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42200000,
+	40.0f,
 	0x00000041,
 	0x00000000,
 };
@@ -10155,7 +10043,7 @@ static TMapObjData FluffManager_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000000,
 	0x00000000,
 };
@@ -10181,7 +10069,7 @@ static TMapObjData Bathtub_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -10199,7 +10087,7 @@ static TMapObjData BathtubStand_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -10232,7 +10120,7 @@ static TMapObjData BathtubStandBreaking_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000001,
 	0x00000000,
 };
@@ -10268,7 +10156,7 @@ static TMapObjData ex1_turn_lift_data = {
 	nullptr,
 	nullptr,
 	&ex1_turn_lift_move_data,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -10297,7 +10185,7 @@ static TMapObjData z_turn_disk_data = {
 	nullptr,
 	nullptr,
 	&z_turn_disk_move_data,
-	0x00000000,
+	0.0f,
 	0x00000805,
 	0x00000000,
 };
@@ -10333,7 +10221,7 @@ static TMapObjData y_turn_lift_data = {
 	nullptr,
 	nullptr,
 	&y_turn_lift_move_data,
-	0x00000000,
+	0.0f,
 	0x00000805,
 	0x00000000,
 };
@@ -10351,7 +10239,7 @@ static TMapObjData EXskyTumiki_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -10369,7 +10257,7 @@ static TMapObjData EXskyWindow_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -10387,7 +10275,7 @@ static TMapObjData EXskySenro_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000901,
 	0x00000000,
 };
@@ -10425,7 +10313,7 @@ static TMapObjData Nail_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -10457,7 +10345,7 @@ static TMapObjData PachinkoNail_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x00000000,
+	0.0f,
 	0x00000801,
 	0x00000000,
 };
@@ -10498,7 +10386,7 @@ static TMapObjData FileLoadBlockA_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42AA0000,
+	85.0f,
 	0x00006000,
 	0x00000000,
 };
@@ -10525,7 +10413,7 @@ static TMapObjData FileLoadBlockB_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42700000,
+	60.0f,
 	0x00006000,
 	0x00000000,
 };
@@ -10552,7 +10440,7 @@ static TMapObjData FileLoadBlockC_data = {
 	nullptr,
 	nullptr,
 	nullptr,
-	0x42C80000,
+	100.0f,
 	0x00006000,
 	0x00000000,
 };
@@ -10920,40 +10808,351 @@ static TMapObjData* sObjDataTable[] = {
 	&end_data,
 };
 
-////////////////////////////////////////////////////////// END .data
+void TMapObjBase::setMatTable(J3DMaterialTable* table)
+{
+	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_All);
+	unk74->initDL();
+	unk74->getUnk4()->lock();
+}
 
-void TMapObjManager::initKeyCode() { }
+void TMapObjBase::setMatTableTex(J3DMaterialTable* table)
+{
+	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_Texture);
+	unk74->initDL();
+	unk74->getUnk4()->lock();
+}
 
-void TMapObjGeneral::initMapObj() { }
-
-void TMapObjGeneral::initPhysicalData() { }
-
-void TMapObjBase::initMapObj() { }
-
-void TMapObjBase::initActorData() { }
-
-void TMapObjBase::initModelData() { }
-
-void TMapObjBase::makeMActors() { }
-
-void TMapObjBase::initMActor(const char*, const char*, u32) { }
-
-void isAlreadyRegistered(const TMapObjAnimDataInfo*, int) { }
-
-void TMapObjBase::initBckMoveData() { }
-
-void TMapObjBase::initObjCollisionData() { }
-
-void TMapObjBase::initMapCollisionData() { }
-
-void TMapObjBase::initHoldData() { }
-
-void TMapObjBase::initEventData() { }
+void TMapObjBase::initUnique()
+{
+	// TODO: I hate switches, someone fix this please...
+	switch (getActorType()) {
+	case 0x2000003C:
+		unk74->setLightType(0);
+		break;
+	case 0x2000000E:
+		if (unk74) {
+			u32 uVar4 = getModel()->getMatPacket(0)->unk3C;
+			getModel()->getMatPacket(0)->unk3C = uVar4 & 0x7fffffff;
+		}
+		break;
+	case 0x40000048:
+		setMatTable(gpMapObjManager->unk74);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x4000001C:
+		for (int i = 0; i < 2; ++i) {
+			unk74 = unk78->mActors[i];
+			setMatTable(gpMapObjManager->unk7C);
+			SMS_UnifyMaterial(getModel());
+		}
+		unk74 = unk78->mActors[0];
+		if (unkC4->unk0 & 0x4000 ? true : false)
+			unkEC->unk8->setAllBGType(0x4000);
+		break;
+	case 0x4000005A:
+		for (int i = 0; i < 2; ++i) {
+			unk74 = unk78->mActors[i];
+			setMatTable(gpMapObjManager->unk80);
+			SMS_UnifyMaterial(getModel());
+		}
+		unk74 = unk78->mActors[0];
+		break;
+	case 0x400000BA:
+		setMatTable(gpMapObjManager->unk94);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x40000263:
+		startAllAnim(unk74, unkF4);
+		break;
+	case 0x4000003C:
+		if (unk74->unkC)
+			unk74->unkC->initSimpleMotionBlend(0x14);
+		break;
+	case 0x400000A8:
+	case 0x40000096:
+	case 0x4000009A:
+	case 0x4000009D:
+	case 0x4000009E:
+	case 0x4000009F:
+	case 0x400000A1:
+	case 0x400000A2:
+	case 0x400000A3:
+		setMatTable(gpMapObjManager->unk8C);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x400000A0:
+		setMatTable(gpMapObjManager->unk8C);
+		break;
+	case 0x4000009C:
+		setMatTable(gpMapObjManager->unk90);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x400000A5:
+		setMatTable(gpMapObjManager->unk90);
+		break;
+	case 0x400000CB:
+		setMatTable(gpMapObjManager->unkC0);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x400000CC:
+		break;
+	case 0x400000D3:
+		setMatTableTex(gpMapObjManager->unkC0);
+		break;
+	case 0x400000CF:
+		setMatTable(gpMapObjManager->unkC4);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x20000026:
+	case 0x2000002A:
+	case 0x2000001F:
+	case 0x20000022:
+		setMatTable(gpMapObjManager->unk6C);
+		SMS_UnifyMaterial(getModel());
+		break;
+	case 0x20000068:
+		for (int i = 0; i < 3; ++i) {
+			unk74 = unk78->mActors[i];
+			setMatTableTex(gpMapObjManager->unk70);
+		}
+		unk74 = unk78->mActors[0];
+		break;
+	case 0x400002C2:
+		for (int i = 0; i < 2; ++i) {
+			unk74 = unk78->mActors[i];
+			setMatTable(gpMapObjManager->unk84);
+		}
+		unk74 = unk78->mActors[0];
+		break;
+	case 0x400002C3:
+		for (int i = 0; i < 2; ++i) {
+			unk74 = unk78->mActors[i];
+			setMatTable(gpMapObjManager->unk88);
+		}
+		unk74 = unk78->mActors[0];
+		break;
+	case 0x400000D0:
+		unk74->setLightType(1);
+		break;
+	case 0x400000DB:
+		mPosition.y += mScaling.y * 50.0f;
+		calcRootMatrix();
+		getModel()->calc();
+		mPosition.y -= mScaling.y * 50.0f;
+		break;
+	case 0x4000001B:
+		setMatTable(gpMapObjManager->unk78);
+		SMS_UnifyMaterial(getModel());
+		break;
+	}
+}
 
 void TMapObjBase::checkIllegalAttr() const { }
 
-void TMapObjBase::initUnique() { }
+void TMapObjBase::initEventData() { }
 
-void TMapObjBase::setMatTableTex(J3DMaterialTable*) { }
+void TMapObjBase::initHoldData()
+{
+	if (unk130->mHold != nullptr) {
+		TMapObjHoldData* hold = unk130->mHold;
+		hold->unk8  = J3DModelLoaderDataBase::load(JKRGetResource(hold->unk0),
+		                                           0x240000);
+		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
+		u16 idx     = hold->unk8->unkB0->getIndex(hold->unk4);
+		hold->unk10 = hold->unkC->getAnmMtx(idx);
+	}
+}
 
-void TMapObjBase::setMatTable(J3DMaterialTable*) { }
+void TMapObjBase::initMapCollisionData()
+{
+	if (unk130->mCollision != nullptr) {
+		const TMapObjCollisionInfo* col = unk130->mCollision;
+		unkEC = new TMapCollisionManager(col->unk2, "mapObj", this);
+		for (int i = 0; i < col->unk0; ++i)
+			if (col->unk4[i].unk0)
+				unkEC->init(col->unk4[i].unk0, col->unk4[i].unk4, nullptr);
+	}
+}
+
+void TMapObjBase::initObjCollisionData()
+{
+	if (unk130->mHit != nullptr) {
+		initHitActor(unk130->unk4, getHitObjNumMax(), unk130->mHit->unk4, 0.0f,
+		             0.0f, 0.0f, 0.0f);
+		setObjHitData(0);
+
+		const TMapObjHitDataTable* table = unk130->mHit->unkC;
+
+		f32 fVar2;
+		if (mScaling.x > mScaling.z)
+			fVar2 = mScaling.x;
+		else
+			fVar2 = mScaling.z;
+
+		if (table->unk8 > 0.0f) {
+			unkBC = table->unk8 * fVar2;
+			unkC0 = table->unkC * mScaling.y;
+		} else {
+			unkBC = table->unk0 * fVar2;
+			unkC0 = table->unk4 * mScaling.y;
+		}
+	} else {
+		initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+		unkBC = 0.0f;
+		unkC0 = 0.0f;
+	}
+
+	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
+		unk64 |= 2;
+
+	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
+		unk64 |= 4;
+}
+
+#pragma dont_inline on
+void TMapObjBase::initBckMoveData()
+{
+	if (unk130->mMove != nullptr) {
+		TMapObjMoveData* move = unk130->mMove;
+		move->unk4 = J3DAnmLoaderDataBase::load(JKRGetResource(move->unk0));
+
+		J3DModelData* data         = unk74->getUnk4()->getModelData();
+		data->mJointNodePointer[0] = data->getJointNodePointer(1);
+
+		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
+		// compound literal in .data problem that we share with TWW, so avoid it
+		// for now
+
+		// J3DTransformInfo& info
+		//     = data->getJointNodePointer(0)->getTransformInfo();
+		// info.mScale.x         = 1.0f;
+		// info.mScale.y         = 1.0f;
+		// info.mScale.z         = 1.0f;
+		// info.mRotation.x      = 0;
+		// info.mRotation.y      = 0;
+		// info.mRotation.z      = 0;
+		// info.mTranslate.x     = 0.0f;
+		// info.mTranslate.y     = 0.0f;
+		// info.mTranslate.z     = 0.0f;
+		move->unk8            = new J3DFrameCtrl(move->unk4->mMaxFrame);
+		move->unk8->mLoopMode = 2;
+		move->unk8->mSpeed    = SMSGetAnmFrameRate();
+	}
+}
+#pragma dont_inline off
+
+void isAlreadyRegistered(const TMapObjAnimDataInfo*, int) { }
+
+MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
+                                u32 param_3)
+{
+	MActor* oldActor = unk74;
+	MActor* newActor = unk78->createMActor(param_1, param_3);
+	unk74            = newActor;
+	if (unkF8 & 0x4000) {
+		unk74->setLightID(0);
+		unk74->unk40 = 0;
+	}
+	calcRootMatrix();
+	unk74->calc();
+	unk74->viewCalc();
+	unk74 = oldActor;
+	return newActor;
+}
+
+void TMapObjBase::makeMActors() { }
+
+void TMapObjBase::initModelData()
+{
+	makeMActors();
+	if ((unkF8 & 0x800) && unk74) {
+		unkC8 = gpMap->checkGround(mPosition, &unkC4);
+		if ((unkC4->unk0 & 0x4000 ? true : false) && !(unkF8 & 0x4000))
+			gpMapObjManager->entryStaticDrawBufferShadow(unk74->getUnk4());
+		else
+			gpMapObjManager->entryStaticDrawBufferSun(unk74->getUnk4());
+	}
+
+	if ((unkF8 & 0x10) || (unkF8 & 0x20)) {
+		TMirrorActor* ma = new TMirrorActor(mName);
+		if (unkF8 & 0x20)
+			ma->init(getModel(), 0x1A);
+		else
+			ma->init(getModel(), 0x18);
+	}
+}
+
+void TMapObjBase::initActorData()
+{
+	u16 code = JDrama::TNameRef::calcKeyCode(unkF4);
+	int i    = 0;
+	for (; sObjDataTable[i]->unk4; ++i) {
+		if (code == sObjDataTable[i]->unk38
+		    && strcmp(sObjDataTable[i]->unk0, unkF4) == 0)
+			break;
+	}
+
+	if (strcmp(mName, "地形オブジェ") == 0)
+		mName = unkF4;
+
+	unk130 = sObjDataTable[i];
+	unkF8  = unk130->unk34;
+
+	unk70 = JDrama::TNameRefGen::search<TLiveManager>(unk130->unk8);
+	unk70->manageActor(this);
+	if (unk130->mHit)
+		unk108 = mScaling.y * unk130->mHit->unk8;
+	mPosition.y += unk108;
+	unkB8 = unk130->unk30 * mScaling.x;
+	if (unkF8 & 1)
+		unkF0 &= 0x100;
+	if (unkF8 & 0x100000)
+		unkE8 = 2;
+}
+
+void TMapObjBase::initMapObj()
+{
+	unk10C = mPosition;
+	unk118 = mRotation;
+	unk124 = mScaling;
+
+	initActorData();
+	initModelData();
+	initObjCollisionData();
+	initMapCollisionData();
+	initBckMoveData();
+	initHoldData();
+	initUnique();
+	checkIllegalAttr();
+	if (unk74 && checkActorType(0x40000000))
+		unk74->setLightType(2);
+	if (unk130->unk30 == 0.0f)
+		unkF0 |= 0x8;
+	if ((unkF8 & 0x8000) && !isActorType(0x40000084)) {
+		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
+		    "スクリーンテクスチャ");
+		const ResTIMG* img = ref->getTexture()->getTexInfo();
+		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
+		unk74->setLightType(3);
+	}
+	makeObjDead();
+}
+
+void TMapObjGeneral::initPhysicalData()
+{
+	if (unk130->mPhysical)
+		unkCC = unk130->mPhysical->unk4->unk0;
+}
+
+void TMapObjGeneral::initMapObj()
+{
+	TMapObjBase::initMapObj();
+	initPhysicalData();
+}
+
+void TMapObjManager::initKeyCode()
+{
+	for (int i = 0; sObjDataTable[i]->unk4 != 0; ++i)
+		sObjDataTable[i]->unk38
+		    = JDrama::TNameRef::calcKeyCode(sObjDataTable[i]->unk0);
+}
