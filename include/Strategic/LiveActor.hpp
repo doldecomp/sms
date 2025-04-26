@@ -63,9 +63,11 @@ public:
 
 	// fabricated
 	const TBGCheckData* getUnkC4() const { return unkC4; }
-	bool checkLiveFlag(u32 flag) const { return unkF0 & flag; }
-	void offLiveFlag(u32 flag) { unkF0 &= ~flag; }
-	void onLiveFlag(u32 flag) { unkF0 |= flag; }
+	// TODO: which one is real?
+	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
+	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
+	void offLiveFlag(u32 flag) { mLiveFlag &= ~flag; }
+	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
 	const TMActorKeeper* getActorKeeper() const { return unk78; }
 	TMActorKeeper* getActorKeeper() { return unk78; }
 	MActor* getUnk74() { return unk74; }
@@ -83,9 +85,7 @@ public:
 	/* 0x90 */ void* unk90;
 	/* 0x94 */ JGeometry::TVec3<f32> unk94;
 	/* 0xA0 */ JGeometry::TVec3<f32> unkA0;
-	/* 0xAC */ float unkAC;
-	/* 0xB0 */ float unkB0;
-	/* 0xB4 */ float unkB4;
+	/* 0xAC */ JGeometry::TVec3<f32> unkAC;
 	/* 0xB8 */ float unkB8;
 	/* 0xBC */ float unkBC;
 	/* 0xC0 */ float unkC0;
@@ -98,7 +98,7 @@ public:
 	/* 0xE4 */ float unkE4;
 	/* 0xE8 */ u8 unkE8;
 	/* 0xEC */ TMapCollisionManager* unkEC;
-	/* 0xF0 */ u32 unkF0;
+	/* 0xF0 */ u32 mLiveFlag;
 };
 
 #endif

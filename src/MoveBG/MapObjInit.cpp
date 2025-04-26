@@ -11171,7 +11171,7 @@ void TMapObjBase::initMapObj()
 	if (unk74 && checkActorType(0x40000000))
 		unk74->setLightType(2);
 	if (getMapObjData()->unk30 == 0.0f)
-		unkF0 |= 0x8;
+		mLiveFlag |= 0x8;
 	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
