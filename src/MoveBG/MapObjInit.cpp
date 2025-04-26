@@ -11014,7 +11014,9 @@ void TMapObjBase::initBckMoveData()
 {
 	if (unk130->mMove != nullptr) {
 		TMapObjMoveData* move = unk130->mMove;
-		move->unk4 = J3DAnmLoaderDataBase::load(JKRGetResource(move->unk0));
+
+		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
+		    JKRGetResource(move->unk0));
 
 		J3DModelData* data         = unk74->getUnk4()->getModelData();
 		data->mJointNodePointer[0] = data->getJointNodePointer(1);

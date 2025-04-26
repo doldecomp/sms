@@ -26,7 +26,7 @@ public:
 	void setMActorAnmData(MActorAnmData*);
 	void setModel(J3DModel*, u32);
 	bool isCurAnmAlreadyEnd(int);
-	bool curAnmEndsNext(int, char*);
+	BOOL curAnmEndsNext(int, char*);
 	void curSubAnmEndsNext(int);
 	void setAnimation(const char*, int);
 	void initDL();

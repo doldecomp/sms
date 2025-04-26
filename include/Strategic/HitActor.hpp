@@ -3,6 +3,12 @@
 
 #include <JSystem/JDrama/JDRActor.hpp>
 
+enum TActorTypeBits {
+	ACTOR_TYPE_PLAYER = 0x80000000,
+	ACTOR_TYPE_ENEMY  = 0x10000000,
+	ACTOR_TYPE_BOSS   = 0x8000000,
+};
+
 class THitActor : public JDrama::TActor {
 public:
 	THitActor(const char*);
@@ -25,6 +31,7 @@ public:
 	{
 		return mActorType == flag ? true : false;
 	}
+	THitActor* getCollision(int i) { return mCollisions[i]; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

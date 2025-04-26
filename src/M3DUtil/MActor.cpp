@@ -166,7 +166,7 @@ bool MActor::isCurAnmAlreadyEnd(int param_1)
 	return ret;
 }
 
-bool MActor::curAnmEndsNext(int param_1, char* param_2)
+BOOL MActor::curAnmEndsNext(int param_1, char* param_2)
 {
 	if (!unk28[param_1])
 		return true;
