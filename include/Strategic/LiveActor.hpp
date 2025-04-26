@@ -64,7 +64,10 @@ public:
 	// fabricated
 	const TBGCheckData* getUnkC4() const { return unkC4; }
 	bool checkLiveFlag(u32 flag) const { return unkF0 & flag; }
+	void offLiveFlag(u32 flag) { unkF0 &= ~flag; }
 	const TMActorKeeper* getActorKeeper() const { return unk78; }
+	TMActorKeeper* getActorKeeper() { return unk78; }
+	MActor* getUnk74() { return unk74; }
 
 public:
 	/* 0x70 */ TLiveManager* unk70;

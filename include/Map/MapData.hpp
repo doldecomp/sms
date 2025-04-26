@@ -22,6 +22,9 @@ public:
 	void isMarioThrough() const;
 	void isWaterSurface() const;
 
+	// fabricated
+	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
+
 public:
 	/* 0x0 */ u16 unk0;
 	/* 0x2 */ s16 unk2;

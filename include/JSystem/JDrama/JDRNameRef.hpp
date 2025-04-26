@@ -31,6 +31,9 @@ public:
 		return searchF(calcKeyCode(name), name);
 	}
 
+	// fabricated
+	const char* getName() const { return mName; }
+
 protected:
 	/* 0x4 */ const char* mName;
 	/* 0x8 */ u16 mKeyCode;

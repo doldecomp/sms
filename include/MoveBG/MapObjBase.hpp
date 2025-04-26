@@ -169,7 +169,7 @@ public:
 	virtual void loadBeforeInit(JSUMemoryInputStream&);
 	virtual void initMapCollisionData();
 	virtual void makeMActors();
-	virtual void getSDLModelFlag() const;
+	virtual u32 getSDLModelFlag() const;
 	virtual void checkIllegalAttr() const;
 	virtual void calc();
 	virtual void draw() const;
@@ -319,6 +319,10 @@ public:
 	void isDemo();
 	void isHideObj(THitActor*);
 	void getObjCollisionHeightOffset() const;
+
+	// fabricate
+	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
+	TMapObjData* getMapObjData() { return unk130; }
 
 public:
 	/* 0xF4 */ const char* unkF4;

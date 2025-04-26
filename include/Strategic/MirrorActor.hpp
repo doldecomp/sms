@@ -13,6 +13,9 @@ public:
 	static void entryMirrorDrawBufferAlways(J3DModel*);
 	void init(J3DModel*, u16);
 	TMirrorActor(const char*);
+
+public:
+	/* 0x10 */ char unk10[0xC];
 };
 
 #endif
