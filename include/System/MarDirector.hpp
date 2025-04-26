@@ -83,6 +83,8 @@ public:
 	void setupObjects();
 	void decideMarioPosIdx();
 
+	u8 getCurrentMap() { return map; }
+
 public:
 	/* 0x24 */ char unk24[0x40];
 	/* 0x28 */ s32 frameIndex;

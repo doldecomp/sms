@@ -323,15 +323,16 @@ public:
 	// fabricate
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
 	TMapObjData* getMapObjData() { return unk130; }
+	bool isState(u32 v) { return mState == v ? true : false; }
 
 public:
 	/* 0xF4 */ const char* unkF4;
 	/* 0xF8 */ u32 unkF8;
-	/* 0xFC */ u16 unkFC;
+	/* 0xFC */ u16 mState;
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;
 	/* 0x102 */ u16 unk102;
-	/* 0x104 */ u32 unk104;
+	/* 0x104 */ int unk104;
 	/* 0x108 */ f32 unk108;
 	/* 0x10C */ JGeometry::TVec3<f32> unk10C;
 	/* 0x118 */ JGeometry::TVec3<f32> unk118;

@@ -230,9 +230,7 @@ void TMapObjBase::makeObjDefault()
 	mRotation = unk118;
 	mScaling  = unk124;
 
-	unkB4 = 0.0f;
-	unkB0 = 0.0f;
-	unkAC = 0.0f;
+	unkAC.x = unkAC.y = unkAC.z = 0.0f;
 	onLiveFlag(0x10);
 	if (unk74) {
 		calcRootMatrix();
@@ -243,10 +241,8 @@ void TMapObjBase::makeObjDefault()
 
 void TMapObjBase::makeObjDead()
 {
-	unkB4 = 0.0f;
-	unkB0 = 0.0f;
-	unkAC = 0.0f;
-	unkF0 |= 0x10;
+	unkAC.x = unkAC.y = unkAC.z = 0.0f;
+	mLiveFlag |= 0x10;
 
 	if (unkFE != 0xffff && unk130->mAnim && unk130->mAnim->unk0 > 0
 	    && unk130->mAnim->unk4[unkFE].unk4) {
@@ -272,7 +268,7 @@ void TMapObjBase::makeObjDead()
 	}
 
 	onLiveFlag(0xD9);
-	unkFC = 0;
+	mState = 0;
 	if (unk74)
 		SMS_HideAllShapePacket(getModel());
 }
@@ -313,7 +309,7 @@ void TMapObjBase::ensureTakeSituation()
 
 	if (unk68 && unk68->unk6C != this) {
 		if (mPosition.y != unkC8)
-			unkF0 &= ~0x10;
+			mLiveFlag &= ~0x10;
 
 		unk68 = nullptr;
 	}
@@ -430,7 +426,7 @@ TMapObjBase::TMapObjBase(const char* name)
     : TLiveActor(name)
     , unkF4(nullptr)
     , unkF8(0)
-    , unkFC(1)
+    , mState(1)
     , unkFE(0xffff)
     , unk100(0xffff)
     , unk102(0)

@@ -36,27 +36,27 @@ TLiveActor::TLiveActor(const char* name)
 	unk90 = nullptr;
 	unk94.zero();
 	unkA0.zero();
-	unkAC = 0.0f;
-	unkB0 = 0.0f;
-	unkB4 = 0.0f;
-	unkB8 = 10.0f;
-	unkBC = 25.0f;
-	unkC0 = 50.0f;
-	unkC4 = nullptr;
-	unkC8 = 0.0;
-	unkCC = 0.15;
-	unkD0 = nullptr;
-	unkD4 = nullptr;
-	unkE4 = 0.0;
-	unkE8 = 1;
-	unkEC = nullptr;
-	unkF0 = 0x100;
+	unkAC.x   = 0.0f;
+	unkAC.y   = 0.0f;
+	unkAC.z   = 0.0f;
+	unkB8     = 10.0f;
+	unkBC     = 25.0f;
+	unkC0     = 50.0f;
+	unkC4     = nullptr;
+	unkC8     = 0.0;
+	unkCC     = 0.15;
+	unkD0     = nullptr;
+	unkD4     = nullptr;
+	unkE4     = 0.0;
+	unkE8     = 1;
+	unkEC     = nullptr;
+	mLiveFlag = 0x100;
 
 	unkD8.x = unkD8.y = unkD8.z = 0.0;
 
 	unkC4 = TMap::getIllegalCheckData();
 	if (gpMarDirector->map != 8)
-		unkF0 |= 0x2000;
+		mLiveFlag |= 0x2000;
 }
 
 TLiveActor::~TLiveActor() { }
@@ -78,7 +78,7 @@ void TLiveActor::calcRidePos()
 bool TLiveActor::belongToGround() const
 {
 	if (unkC4 && ((unkC4->unk4 & 0x10 ? true : false) == true ? false : true)
-	    && unkC4->unk44 != nullptr && !(unkF0 & 0x80 ? TRUE : FALSE))
+	    && unkC4->unk44 != nullptr && !(mLiveFlag & 0x80 ? TRUE : FALSE))
 		return true;
 
 	return false;
@@ -118,7 +118,7 @@ void TLiveActor::init(TLiveManager* manager)
 	initHitActor(0, 1, 0, unkBC, unkC0, unkBC, unkC0);
 
 	unk64 |= 1;
-	unkF0 &= ~0x400;
+	mLiveFlag &= ~0x400;
 
 	if (unk80)
 		initAnmSound();
@@ -155,8 +155,8 @@ void TLiveActor::calcRootMatrix()
 
 void TLiveActor::kill()
 {
-	unkF0 |= 0x1;
-	unkF0 |= 0x40;
+	mLiveFlag |= 0x1;
+	mLiveFlag |= 0x40;
 }
 
 u32 TLiveActor::receiveMessage(THitActor*, u32) { return 0; }
@@ -199,15 +199,15 @@ void TLiveActor::moveObject()
 
 void TLiveActor::requestShadow()
 {
-	if (unkF0 & 0xB)
+	if (mLiveFlag & 0xB)
 		return;
 
-	if (!(unkF0 & 0x204) || (unkF0 & 0x400)) {
+	if (!(mLiveFlag & 0x204) || (mLiveFlag & 0x400)) {
 		TCircleShadowRequest local_2c;
 
 		local_2c.unk0 = mPosition;
 
-		if (!(unkF0 & 0x80 ? 0 : 1)) {
+		if (!(mLiveFlag & 0x80 ? 0 : 1)) {
 			local_2c.unk0.y = unkC8;
 			local_2c.unk1D  = 0;
 		}
@@ -217,21 +217,21 @@ void TLiveActor::requestShadow()
 		local_2c.unk1C = getShadowType();
 		local_2c.unk14 = mRotation.y;
 
-		if (unkF0 & 0x400) {
+		if (mLiveFlag & 0x400) {
 			gpBindShadowManager->forceRequest(local_2c, getActorType());
 		} else {
 			gpBindShadowManager->request(local_2c, getActorType());
 		}
 	}
 
-	if (!(unkF0 & 0x204) && !checkActorType(0x40000000)) {
+	if (!(mLiveFlag & 0x204) && !checkActorType(0x40000000)) {
 		gpQuestionManager->request(mPosition, unkB8);
 	}
 }
 
 void TLiveActor::drawObject(JDrama::TGraphics*)
 {
-	if (unkF0 & 3 || !unk74)
+	if (mLiveFlag & 3 || !unk74)
 		return;
 
 	unk74->setLightData(unkC4, mPosition);
@@ -240,7 +240,7 @@ void TLiveActor::drawObject(JDrama::TGraphics*)
 
 void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (unkF0 & 0x201)
+	if (mLiveFlag & 0x201)
 		return;
 
 	if (param_1 & 1)
@@ -256,7 +256,7 @@ void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (param_1 & 4)
 			requestShadow();
 
-		if (!(unkF0 & 6)) {
+		if (!(mLiveFlag & 6)) {
 			if (param_1 & 2) {
 				calcRootMatrix();
 				unk74->calc();
@@ -273,7 +273,7 @@ void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (unkF0 & 0x201)
+	if (mLiveFlag & 0x201)
 		return;
 	if (!unk74)
 		return;
@@ -281,7 +281,7 @@ void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 4)
 		requestShadow();
 
-	if (!(unkF0 & 6)) {
+	if (!(mLiveFlag & 6)) {
 		if (param_1 & 2) {
 			calcRootMatrix();
 			unk74->calc();
@@ -316,7 +316,7 @@ int TLiveActor::getJointTransByIndex(int param_1,
 		return -1;
 	}
 
-	if (unkF0 & 4) {
+	if (mLiveFlag & 4) {
 		*param_2 = mPosition;
 		return param_1;
 	}
