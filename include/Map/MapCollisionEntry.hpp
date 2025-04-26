@@ -44,7 +44,7 @@ public:
 		            vec2.z, vec3.x, vec3.y, vec3.z);
 		setUp();
 	}
-	virtual void remove() { }
+	virtual void remove() { unk5C |= 1; }
 
 	void setMtx(MtxPtr);
 	void setAllActor(const TLiveActor*);

@@ -14,6 +14,9 @@ public:
 	void getFileName(const char*, char*);
 	void changeCollision(u32);
 
+	// fabricated
+	TMapCollisionBase* getUnk8() { return unk8; }
+
 public:
 	/* 0x0 */ TMapCollisionBase** mEntries;
 	/* 0x4 */ u16 mMaxEntries;

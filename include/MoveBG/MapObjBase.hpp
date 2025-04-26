@@ -107,13 +107,13 @@ struct TMapObjHoldData {
 	/* 0x10 */ MtxPtr unk10;
 };
 
-class J3DAnmBase;
+class J3DAnmTransform;
 class J3DFrameCtrl;
 
 // fabricated
 struct TMapObjMoveData {
 	/* 0x0 */ const char* unk0;
-	/* 0x4 */ J3DAnmBase* unk4;
+	/* 0x4 */ J3DAnmTransform* unk4;
 	/* 0x8 */ J3DFrameCtrl* unk8;
 };
 
@@ -189,9 +189,9 @@ public:
 	void startBck(const char*);
 	void startControlAnim(u16);
 	void stopAnim();
-	void animIsFinished() const;
-	void hasAnim(u16) const;
-	void hasModelOrAnimData(u16) const;
+	bool animIsFinished() const;
+	bool hasAnim(u16) const;
+	bool hasModelOrAnimData(u16) const;
 	void startSound(u16);
 	void soundBas(u32, f32, f32);
 	void setUpMapCollision(u16);
@@ -333,9 +333,9 @@ public:
 	/* 0x102 */ u16 unk102;
 	/* 0x104 */ u32 unk104;
 	/* 0x108 */ f32 unk108;
-	/* 0x10C */ Vec unk10C;
-	/* 0x118 */ Vec unk118;
-	/* 0x124 */ Vec unk124;
+	/* 0x10C */ JGeometry::TVec3<f32> unk10C;
+	/* 0x118 */ JGeometry::TVec3<f32> unk118;
+	/* 0x124 */ JGeometry::TVec3<f32> unk124;
 	/* 0x130 */ TMapObjData* unk130;
 	/* 0x134 */ u32 unk134;
 };
