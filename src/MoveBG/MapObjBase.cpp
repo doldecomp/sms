@@ -160,7 +160,7 @@ void TMapObjBase::sleep() { }
 
 void TMapObjBase::awake() { }
 
-void TMapObjBase::getSDLModelFlag() const { }
+u32 TMapObjBase::getSDLModelFlag() const { }
 
 void TMapObjBase::changeObjSRT(const JGeometry::TVec3<f32>&,
                                const JGeometry::TVec3<f32>&,

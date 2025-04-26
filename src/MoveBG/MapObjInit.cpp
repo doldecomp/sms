@@ -10953,8 +10953,8 @@ void TMapObjBase::initEventData() { }
 
 void TMapObjBase::initHoldData()
 {
-	if (unk130->mHold != nullptr) {
-		TMapObjHoldData* hold = unk130->mHold;
+	if (getMapObjData()->mHold != nullptr) {
+		TMapObjHoldData* hold = getMapObjData()->mHold;
 		hold->unk8  = J3DModelLoaderDataBase::load(JKRGetResource(hold->unk0),
 		                                           0x240000);
 		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
@@ -10976,12 +10976,12 @@ void TMapObjBase::initMapCollisionData()
 
 void TMapObjBase::initObjCollisionData()
 {
-	if (unk130->mHit != nullptr) {
-		initHitActor(unk130->unk4, getHitObjNumMax(), unk130->mHit->unk4, 0.0f,
-		             0.0f, 0.0f, 0.0f);
+	if (getMapObjData()->mHit != nullptr) {
+		initHitActor(getMapObjData()->unk4, getHitObjNumMax(),
+		             getMapObjData()->mHit->unk4, 0.0f, 0.0f, 0.0f, 0.0f);
 		setObjHitData(0);
 
-		const TMapObjHitDataTable* table = unk130->mHit->unkC;
+		const TMapObjHitDataTable* table = getMapObjData()->mHit->unkC;
 
 		f32 fVar2;
 		if (mScaling.x > mScaling.z)
@@ -11041,17 +11041,26 @@ void TMapObjBase::initBckMoveData()
 }
 #pragma dont_inline off
 
-void isAlreadyRegistered(const TMapObjAnimDataInfo*, int) { }
+bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
+{
+	for (int j = 0; j < i; ++j)
+		if (anim->unk4[j].unk0
+		    && strcmp(anim->unk4[i].unk0, anim->unk4[j].unk0) == 0)
+			return true;
+	return false;
+}
+
+static void dummy6(const char*) {};
 
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {
 	MActor* oldActor = unk74;
-	MActor* newActor = unk78->createMActor(param_1, param_3);
+	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
 	unk74            = newActor;
-	if (unkF8 & 0x4000) {
+	if (checkMapObjFlag(0x4000)) {
 		unk74->setLightID(0);
-		unk74->unk40 = 0;
+		unk74->unmarkUnk40();
 	}
 	calcRootMatrix();
 	unk74->calc();
@@ -11060,22 +11069,55 @@ MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
 	return newActor;
 }
 
-void TMapObjBase::makeMActors() { }
+void TMapObjBase::makeMActors()
+{
+	u16 uVar6 = 1;
+	if (unk130->mAnim)
+		uVar6 = unk130->mAnim->unk2;
+
+	if (uVar6 == 0)
+		return;
+
+	unk78 = new TMActorKeeper(unk70, uVar6);
+	if (unkF8 & 0x8000)
+		unk78->mModelLoaderFlags = 0x11220000;
+	else
+		unk78->mModelLoaderFlags = 0x10220000;
+
+	if (unk130->mAnim) {
+		const TMapObjAnimDataInfo* anim = unk130->mAnim;
+		unk74 = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
+
+		for (u16 i = 1; i < anim->unk0; ++i) {
+			if (anim->unk4[i].unk10 && unk80 == nullptr)
+				initAnmSound();
+
+			if (anim->unk4[i].unk0 != nullptr
+			    && !isAlreadyRegistered(anim, i)) {
+				initMActor(anim->unk4[i].unk0, nullptr, getSDLModelFlag());
+			}
+		}
+	} else {
+		char buffer[64];
+		snprintf(buffer, 64, "%s.bmd", unk130->unk0);
+		unk74 = initMActor(buffer, nullptr, getSDLModelFlag());
+	}
+}
 
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if ((unkF8 & 0x800) && unk74) {
-		unkC8 = gpMap->checkGround(mPosition, &unkC4);
-		if ((unkC4->unk0 & 0x4000 ? true : false) && !(unkF8 & 0x4000))
-			gpMapObjManager->entryStaticDrawBufferShadow(unk74->getUnk4());
+	if (checkMapObjFlag(0x800) && getUnk74()) {
+		unkC8 = gpMap->checkGround(getPosition(), &unkC4);
+		if (getUnkC4()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
+			gpMapObjManager->entryStaticDrawBufferShadow(getUnk74()->getUnk4());
 		else
-			gpMapObjManager->entryStaticDrawBufferSun(unk74->getUnk4());
+			gpMapObjManager->entryStaticDrawBufferSun(getUnk74()->getUnk4());
 	}
 
-	if ((unkF8 & 0x10) || (unkF8 & 0x20)) {
-		TMirrorActor* ma = new TMirrorActor(mName);
-		if (unkF8 & 0x20)
+	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {
+		TMirrorActor* ma = new TMirrorActor(getName());
+		if (checkMapObjFlag(0x20))
 			ma->init(getModel(), 0x1A);
 		else
 			ma->init(getModel(), 0x18);
@@ -11084,8 +11126,8 @@ void TMapObjBase::initModelData()
 
 void TMapObjBase::initActorData()
 {
-	u16 code = JDrama::TNameRef::calcKeyCode(unkF4);
 	int i    = 0;
+	u16 code = JDrama::TNameRef::calcKeyCode(unkF4);
 	for (; sObjDataTable[i]->unk4; ++i) {
 		if (code == sObjDataTable[i]->unk38
 		    && strcmp(sObjDataTable[i]->unk0, unkF4) == 0)
@@ -11104,17 +11146,17 @@ void TMapObjBase::initActorData()
 		unk108 = mScaling.y * unk130->mHit->unk8;
 	mPosition.y += unk108;
 	unkB8 = unk130->unk30 * mScaling.x;
-	if (unkF8 & 1)
-		unkF0 &= 0x100;
-	if (unkF8 & 0x100000)
+	if (checkMapObjFlag(0x1))
+		offLiveFlag(0x100);
+	if (checkMapObjFlag(0x100000))
 		unkE8 = 2;
 }
 
 void TMapObjBase::initMapObj()
 {
-	unk10C = mPosition;
-	unk118 = mRotation;
-	unk124 = mScaling;
+	unk10C = getPosition();
+	unk118 = getRotation();
+	unk124 = getScaling();
 
 	initActorData();
 	initModelData();
@@ -11126,9 +11168,9 @@ void TMapObjBase::initMapObj()
 	checkIllegalAttr();
 	if (unk74 && checkActorType(0x40000000))
 		unk74->setLightType(2);
-	if (unk130->unk30 == 0.0f)
+	if (getMapObjData()->unk30 == 0.0f)
 		unkF0 |= 0x8;
-	if ((unkF8 & 0x8000) && !isActorType(0x40000084)) {
+	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
@@ -11140,8 +11182,8 @@ void TMapObjBase::initMapObj()
 
 void TMapObjGeneral::initPhysicalData()
 {
-	if (unk130->mPhysical)
-		unkCC = unk130->mPhysical->unk4->unk0;
+	if (getMapObjData()->mPhysical)
+		unkCC = getMapObjData()->mPhysical->unk4->unk0;
 }
 
 void TMapObjGeneral::initMapObj()
