@@ -306,8 +306,8 @@ public:
 	void joinToGroup(const char*, THitActor*);
 	static void startAllAnim(MActor*, const char*);
 	void initPacketMatColor(J3DModel*, _GXTevRegID, const _GXColorS10*);
-	void isFruit(THitActor*);
-	void isCoin(THitActor*);
+	bool isFruit(THitActor*);
+	bool isCoin(THitActor*);
 	void throwObjFromPointWithRot(TMapObjBase*, const JGeometry::TVec3<f32>&,
 	                              const JGeometry::TVec3<f32>&, f32, f32);
 	void throwObjToFrontFromPoint(TMapObjBase*, const JGeometry::TVec3<f32>&,
@@ -320,10 +320,12 @@ public:
 	void isHideObj(THitActor*);
 	void getObjCollisionHeightOffset() const;
 
-	// fabricate
+	// fabricated
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
 	TMapObjData* getMapObjData() { return unk130; }
 	bool isState(u32 v) { return mState == v ? true : false; }
+	bool isUnk104Positive() { return unk104 > 0 ? true : false; }
+	int getUnk104() { return unk104; }
 
 public:
 	/* 0xF4 */ const char* unkF4;
