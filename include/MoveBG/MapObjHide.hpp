@@ -23,4 +23,13 @@ public:
 	/* 0x14C */ u8 unk14C;
 };
 
+class TBreakHideObj : public THideObjBase {
+public:
+	TBreakHideObj();
+	virtual u32 receiveMessage(THitActor*, u32);
+	virtual void control();
+	virtual void kill();
+	virtual void initMapObj();
+};
+
 #endif

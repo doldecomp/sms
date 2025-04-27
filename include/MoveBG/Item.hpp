@@ -138,7 +138,7 @@ public:
 	virtual u32 receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void touchActor(THitActor*);
-	virtual void getHitObjNumMax();
+	virtual u16 getHitObjNumMax();
 
 	void startFruit();
 	void touchFruit(THitActor*);
