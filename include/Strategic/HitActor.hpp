@@ -32,6 +32,7 @@ public:
 		return mActorType == flag ? true : false;
 	}
 	THitActor* getCollision(int i) { return mCollisions[i]; }
+	int getColNum() { return mColCount; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

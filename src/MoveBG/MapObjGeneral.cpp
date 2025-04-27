@@ -7,6 +7,8 @@
 #include <Map/PollutionManager.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/Map.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -14,7 +16,7 @@
 
 u32 TMapObjGeneral::mNormalLivingTime       = 960;
 u32 TMapObjGeneral::mNormalFlushTime        = 360;
-u32 TMapObjGeneral::mNormalFlushInterval    = 10;
+int TMapObjGeneral::mNormalFlushInterval    = 10;
 u32 TMapObjGeneral::mNormalWaitToAppearTime = 360;
 f32 TMapObjGeneral::mNormalAppearingScaleUp = 0.01f;
 f32 TMapObjGeneral::mNormalThrowSpeedRate   = 0.5f;
@@ -102,9 +104,50 @@ void TMapObjGeneral::holding()
 	unkC8     = gpMap->checkGround(mPosition, &unkC4);
 }
 
-void TMapObjGeneral::recovering() { }
+void TMapObjGeneral::recovering()
+{
+	startSound(9);
+	if (hasModelOrAnimData(6)) {
+		J3DModel* model = getModel();
+		MtxPtr mat      = model->getAnmMtx(0);
+		f32 fVar1       = mat[3][1] - unk144;
+		mDamageHeight += fVar1;
+		calcEntryRadius();
+		if (unk6C)
+			unk6C->mPosition.y += fVar1;
+		unk144 = mat[3][1];
+		if (!animIsFinished())
+			return;
+	} else if (mPosition.y < unk144) {
+		mPosition.y += unk130->mSink->unk4;
+		if (unk6C)
+			unk6C->mPosition.y += unk130->mSink->unk4;
+		return;
+	}
 
-void TMapObjGeneral::sinking() { }
+	makeObjRecovered();
+}
+
+void TMapObjGeneral::sinking()
+{
+	mPosition.y -= unk130->mSink->unk0;
+
+	for (int i = 0; i < getColNum(); ++i) {
+		if (getCollision(i)->checkActorType(0x1000000)) {
+			recover();
+			return;
+		}
+	}
+
+	if (mPosition.y + unk130->mHit->unkC[2].unk4 < unk144) {
+		if (mPosition.x != unk10C.x || mPosition.z != unk10C.z) {
+			makeObjDefault();
+			makeObjAppeared();
+		} else {
+			makeObjBuried();
+		}
+	}
+}
 
 void TMapObjGeneral::breaking()
 {
@@ -305,7 +348,23 @@ void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
 	                       &unkAC);
 }
 
-void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>*) { }
+void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
+{
+	param_1->y += unk130->mPhysical->unk4->unk1C;
+
+	TBGWallCheckRecord check(*param_1, unkBC, 4, unk130->mPhysical->unk8);
+
+	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
+
+	param_1->y -= unk130->mPhysical->unk4->unk1C;
+
+	if (touched) {
+		unk138 = check.unk1C;
+		touchWall(param_1, &check);
+	} else {
+		unk138 = 0;
+	}
+}
 
 void TMapObjGeneral::touchRoof(JGeometry::TVec3<f32>* param_1)
 {
@@ -320,9 +379,46 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 		touchRoof(param_1);
 }
 
-void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>*) { }
+void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
+{
+	if (unk130->mPhysical ? true : false) {
+		unkAC.x *= unk130->mPhysical->unk4->unk10;
+		unkAC.z *= unk130->mPhysical->unk4->unk10;
+	}
 
-void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>*) { }
+	if ((unk130->mPhysical ? true : false)
+	    && std::abs(JGeometry::TVec3<f32>(unkAC).y)
+	           > unk130->mPhysical->unk4->unkC) {
+		param_1->y -= JGeometry::TVec3<f32>(unkAC).y;
+		unkAC.y *= -unk130->mPhysical->unk4->unk4;
+		if (isCoin(this)) {
+			// TODO: this is an inline 100%
+			f32 a = std::fabsf(JGeometry::TVec3<f32>(unkAC).y);
+			if (gpMSound->gateCheck(0x4842)) {
+				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+				    0x4842, mPosition, nullptr, a, 0, 0, nullptr, 0, 4);
+			}
+		} else {
+			startSound(4);
+		}
+	} else {
+		offLiveFlag(0x80);
+		unkAC.x = unkAC.y = unkAC.z = 0.0f;
+		onLiveFlag(0x10);
+		param_1->y = unkC8;
+	}
+}
+
+void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
+{
+	unkC8 = gpMap->checkGround(param_1->x, param_1->y + unkC0, param_1->z,
+	                           &unkC4);
+	unkC8 += 1.0f;
+	if (param_1->y <= unkC8) {
+		touchGround(param_1);
+	} else if (!unkD4)
+		onLiveFlag(0x80);
+}
 
 void TMapObjGeneral::calcVelocity() { }
 
@@ -338,11 +434,100 @@ void TMapObjGeneral::control()
 	work();
 }
 
-void TMapObjGeneral::calcRootMatrix() { }
+void TMapObjGeneral::calcRootMatrix()
+{
+	J3DModel* model = getModel();
 
-void TMapObjGeneral::perform(u32, JDrama::TGraphics*) { }
+	if (isState(6) && unk68) {
+		if (unk130->mHold) {
+			TMapObjHoldData* hold = unk130->mHold;
 
-u32 TMapObjGeneral::receiveMessage(THitActor*, u32) { }
+			MtxPtr src = getTakingMtx();
+			MTXCopy(src, hold->unkC->getBaseTRMtx());
+			hold->unkC->calc();
+
+			MtxPtr src2 = hold->unk10;
+			MTXCopy(src2, model->getBaseTRMtx());
+			mPosition.set(src2[3][0], src2[3][1], src2[3][2]);
+		} else {
+			MtxPtr src = getTakingMtx();
+			MTXCopy(src, checkMapObjFlag(0x100) ? model->getAnmMtx(0)
+			                                    : model->getBaseTRMtx());
+			mPosition.set(src[3][0], src[3][1], src[3][2]);
+		}
+	} else {
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - unk108,
+		                          mPosition.z);
+		JGeometry::TVec3<f32> rot;
+		rot.scale(65536.0f / 360.0f, mRotation);
+		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, rot.x, rot.y,
+		               rot.z);
+	}
+	model->unk14 = mScaling;
+}
+
+void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (param_1 & 1) {
+		if (isState(10)) {
+			waitingToAppear();
+		}
+	} else {
+		if (checkMapObjFlag(0x40000) && isUnk104Positive()
+		    && getUnk104() < getFlushTime()
+		    && ((getUnk104() / mNormalFlushInterval) & 1) != 0) {
+			return;
+		}
+	}
+
+	TMapObjBase::perform(param_1, param_2);
+}
+
+u32 TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
+{
+	int ret = TMapObjBase::receiveMessage(param_1, param_2);
+	if (ret)
+		return true;
+
+	// TODO: concerning. Is unkAC actually a Vec?
+	if (param_2 == 4 && checkMapObjFlag(0x100000)
+	    && JGeometry::TVec3<f32>(unkAC).squared() <= 3.814697e-06f
+	    && (isState(2) || isState(1) || isState(4) || isState(5))) {
+		hold((TTakeActor*)param_1);
+		return true;
+	}
+
+	if (param_2 == 4 && isActorType(0x10000025) && (isState(2) || isState(1))) {
+		hold((TTakeActor*)param_1);
+		return 1;
+	}
+
+	if (param_2 == 6 && isState(6)) {
+		put();
+		return true;
+	}
+
+	if (param_2 == 7 && isState(6) && unk130->mPhysical != nullptr) {
+		thrown();
+		return true;
+	}
+
+	if (param_2 == 1 && checkMapObjFlag(0x200000)) {
+		kill();
+		return true;
+	}
+
+	if (isActorType(0x80000001) && (param_2 == 0 || param_2 == 1)) {
+		receiveMessageFromPlayer();
+		return true;
+	}
+
+	if (param_2 == 11 && checkMapObjFlag(0x200000)) {
+		kill();
+	}
+
+	return false;
+}
 
 void TMapObjGeneral::loadAfter()
 {

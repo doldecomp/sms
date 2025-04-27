@@ -25,7 +25,7 @@ public:
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual u32 getLivingTime() const { }
-	virtual void getFlushTime() const { }
+	virtual int getFlushTime() const { }
 	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
 	virtual void appearing();
@@ -59,13 +59,13 @@ public:
 
 	static u32 mNormalLivingTime;
 	static u32 mNormalFlushTime;
-	static u32 mNormalFlushInterval;
+	static int mNormalFlushInterval;
 	static u32 mNormalWaitToAppearTime;
 	static f32 mNormalAppearingScaleUp;
 	static f32 mNormalThrowSpeedRate;
 
 public:
-	/* 0x138 */ u32 unk138;
+	/* 0x138 */ const TBGCheckData* unk138; // TODO: maybe not const
 	/* 0x13C */ const TBGCheckData* unk13C;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ f32 unk144;

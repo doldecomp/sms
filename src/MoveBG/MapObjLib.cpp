@@ -486,9 +486,9 @@ void TMapObjBase::initPacketMatColor(J3DModel*, _GXTevRegID, const _GXColorS10*)
 {
 }
 
-void TMapObjBase::isFruit(THitActor*) { }
+bool TMapObjBase::isFruit(THitActor*) { }
 
-void TMapObjBase::isCoin(THitActor*) { }
+bool TMapObjBase::isCoin(THitActor*) { }
 
 void TMapObjBase::throwObjFromPointWithRot(TMapObjBase*,
                                            const JGeometry::TVec3<f32>&,

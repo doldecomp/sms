@@ -43,12 +43,22 @@ public:
 };
 
 struct TBGWallCheckRecord {
+	// fabricated
 	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 param_4, u32 param_5,
 	                   u32 param_6)
 	    : unk0(x, y, z)
 	    , unkC(param_4)
 	    , unk10(param_5)
 	    , unk18(param_6)
+	{
+	}
+	// fabricated
+	TBGWallCheckRecord(const JGeometry::TVec3<f32>& param_1, f32 param_2,
+	                   u32 param_3, u32 param_4)
+	    : unk0(param_1)
+	    , unkC(param_2)
+	    , unk10(param_3)
+	    , unk18(param_4)
 	{
 	}
 
