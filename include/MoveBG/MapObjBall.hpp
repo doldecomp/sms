@@ -14,7 +14,7 @@ public:
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual void makeObjDefault();
-	virtual void getDepthAtFloating();
+	virtual void getDepthAtFloating() { }
 	virtual void hold(TTakeActor*);
 	virtual void put();
 	virtual void touchGround(JGeometry::TVec3<f32>*);
@@ -41,7 +41,7 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual void getLivingTime() const;
+	virtual u32 getLivingTime() const;
 	virtual void appearing();
 	virtual void breaking();
 	virtual void waitingToAppear();
@@ -77,6 +77,7 @@ public:
 
 class TCoverFruit : public TMapObjBase {
 public:
+	TCoverFruit();
 	virtual void loadAfter();
 	virtual u32 receiveMessage(THitActor*, u32);
 
@@ -89,7 +90,7 @@ public:
 
 	virtual void loadAfter();
 	virtual u32 receiveMessage(THitActor*, u32);
-	virtual void control();
+	virtual void control() { }
 	virtual void kill();
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
