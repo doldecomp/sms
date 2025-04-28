@@ -482,7 +482,7 @@ void TMapObjBase::joinToGroup(const char*, THitActor*) { }
 
 void TMapObjBase::startAllAnim(MActor*, const char*) { }
 
-void TMapObjBase::initPacketMatColor(J3DModel*, _GXTevRegID, const _GXColorS10*)
+void TMapObjBase::initPacketMatColor(J3DModel*, GXTevRegID, const GXColorS10*)
 {
 }
 
