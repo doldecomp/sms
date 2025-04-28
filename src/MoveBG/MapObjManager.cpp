@@ -13,6 +13,14 @@
 #include <MoveBG/MapObjPinna.hpp>
 #include <MoveBG/MapObjMare.hpp>
 #include <MoveBG/MapObjMonte.hpp>
+#include <M3DUtil/MActorData.hpp>
+#include <M3DUtil/MActorUtil.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <System/MarDirector.hpp>
+#include <JSystem/JDrama/JDRDrawBufObj.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <stdio.h>
 
 static TMapObjBase* newItemByName(const char*);
 static TMapObjBase* newUniqueObjByName(const char*);
@@ -27,48 +35,81 @@ void TMapObjManager::loadAfter()
 	unk38 = 100000.0f;
 	unk3C = 1000.0f;
 
-	TMapObjBase* pTVar1 = newItemByName("NormalBlock");
-	if (!pTVar1)
-		pTVar1 = newUniqueObjByName("NormalBlock");
-
-	if (pTVar1->isActorType(0x2000000E)) {
-		pTVar1->mPosition.x = 0.0f;
-		pTVar1->mPosition.y = 0.0f;
-		pTVar1->mPosition.z = 0.0f;
-		pTVar1->mRotation.x = 0.0f;
-		pTVar1->mRotation.y = 0.0f;
-		pTVar1->mRotation.z = 0.0f;
-		pTVar1->mScaling.x  = 1.0f;
-		pTVar1->mScaling.y  = 1.0f;
-		pTVar1->mScaling.z  = 1.0f;
-		pTVar1->initAndRegister("NormalBlock");
-	}
+	newAndRegisterObj("NormalBlock");
 
 	for (int i = 0; i < 10; ++i) {
-		TMapObjBase* pTVar1 = newItemByName("JuiceBlock");
-		if (!pTVar1)
-			pTVar1 = newUniqueObjByName("JuiceBlock");
-
-		if (pTVar1->isActorType(0x2000000E)) {
-			pTVar1->mPosition.x = 0.0f;
-			pTVar1->mPosition.y = 0.0f;
-			pTVar1->mPosition.z = 0.0f;
-			pTVar1->mRotation.x = 0.0f;
-			pTVar1->mRotation.y = 0.0f;
-			pTVar1->mRotation.z = 0.0f;
-			pTVar1->mScaling.x  = 1.0f;
-			pTVar1->mScaling.y  = 1.0f;
-			pTVar1->mScaling.z  = 1.0f;
-			pTVar1->initAndRegister("JuiceBlock");
-		}
+		newAndRegisterObj("JuiceBlock");
 	}
 }
 
 void TMapObjManager::initDrawBuffer() { }
 
-void TMapObjManager::loadMatTable(const char*) { }
+J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
+{
+	void* res = JKRGetResource(name);
+	if (res)
+		return J3DModelLoaderDataBase::loadMaterialTable(res);
+	else
+		return nullptr;
+}
 
-void TMapObjManager::load(JSUMemoryInputStream&) { }
+void TMapObjManager::load(JSUMemoryInputStream& stream)
+{
+	TMapObjBaseManager::load(stream);
+	unk40 = new MActorAnmData;
+
+	unk40->init("/common/map", nullptr);
+	unk50 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj SunOpa");
+	unk54 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj SunXlu");
+	unk58 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj ShadowOpa");
+	unk5C = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj ShadowXlu");
+	unk60 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf AfterIndirect Opa");
+	unk64 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf AfterIndirect Xlu");
+
+	unk68 = loadMatTable("/scene/map/map/sky.bmt");
+	unk6C = loadMatTable("/scene/mapObj/nozzleItem.bmt");
+	unk70 = loadMatTable("/scene/mapObj/nozzleBox.bmt");
+	unk74 = loadMatTable("/scene/mapObj/flower.bmt");
+	unk78 = loadMatTable("/scene/mapObj/ArrowBoard.bmt");
+	unk7C = loadMatTable("/scene/mapObj/kibako.bmt");
+	unk80 = loadMatTable("/scene/mapObj/barrel.bmt");
+	unk84 = loadMatTable("/scene/mapObj/BrickBlock.bmt");
+	unk88 = loadMatTable("/scene/mapObj/WaterMelonBlock.bmt");
+	if (gpMarDirector->getCurrentMap() == 2)
+		unk8C = loadMatTable("/scene/mapObj/bianco.bmt");
+	unk90 = loadMatTable("/scene/mapObj/LeafBoat.bmt");
+	unk94 = loadMatTable("/scene/mapObj/riccoShip.bmt");
+
+	if ((gpMarDirector->getCurrentMap() == 3
+	     && (gpMarDirector->_07D == 1 || gpMarDirector->_07D == 5))
+	    || gpMarDirector->getCurrentMap() == 0x1E) {
+		unk98 = SMS_MakeSDLModelData("/scene/mapObj/surfgeso.bmd", 0x10220000);
+		unk9C = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
+		unkA0 = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
+		unkA4 = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
+		TMapObjBase::initPacketMatColor(unk9C->unk4, GX_TEVREG1, &unkA8);
+		TMapObjBase::initPacketMatColor(unkA0->unk4, GX_TEVREG1, &unkB0);
+		TMapObjBase::initPacketMatColor(unkA4->unk4, GX_TEVREG1, &unkB8);
+	}
+
+	unkC0 = loadMatTable("/scene/mapObj/SandBombBase.bmt");
+	unkC4 = loadMatTable("/scene/mapObj/mirror.bmt");
+
+	if (gpMarDirector->getCurrentMap() == 4)
+		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+	if (gpMarDirector->getCurrentMap() == 13)
+		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+	if (gpMarDirector->getCurrentMap() == 9)
+		unkC8 = (ResTIMG*)JKRGetResource("/scene/mapObj/cogwheel_rope.bti");
+	if (gpMarDirector->getCurrentMap() == 8)
+		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+}
 
 TMapObjManager::TMapObjManager(const char* name)
     : TMapObjBaseManager(name)
@@ -186,16 +227,99 @@ static TMapObjBase* newUniqueObjByName(const char* name)
 		return nullptr;
 }
 
-TMapObjBase* TMapObjBaseManager::newAndRegisterObj(const char*,
-                                                   const JGeometry::TVec3<f32>&,
-                                                   const JGeometry::TVec3<f32>&,
-                                                   const JGeometry::TVec3<f32>&)
+TMapObjBase* TMapObjBaseManager::newAndRegisterObj(
+    const char* param_1, const JGeometry::TVec3<f32>& param_2,
+    const JGeometry::TVec3<f32>& param_3, const JGeometry::TVec3<f32>& param_4)
 {
+	TMapObjBase* ret = newItemByName(param_1);
+	if (!ret)
+		ret = newUniqueObjByName(param_1);
+
+	if (ret->isActorType(0x2000000E))
+		return ret;
+
+	ret->mPosition = param_2;
+	ret->mRotation = param_3;
+	ret->mScaling  = param_4;
+	ret->initAndRegister(param_1);
+
+	return ret;
 }
 
-void TMapObjBaseManager::newAndRegisterObjByEventID(u32, const char*) { }
+TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 param_1,
+                                                            const char* param_2)
+{
+	TMapObjBase* ret = TItemManager::newAndRegisterCoin(param_1);
+	if (ret)
+		return ret;
 
-void TMapObjBaseManager::getActorTypeByEventID(u32) { }
+	switch (param_1) {
+	case 777: {
+		char buffer[64];
+		snprintf(buffer, 64, "シャイン（%s）", param_2);
+		return JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+	} break;
+
+	case 1000:
+		ret = newAndRegisterObj("FruitBanana");
+		break;
+	case 1001:
+		ret = newAndRegisterObj("FruitDurian");
+		break;
+	case 1002:
+		ret = newAndRegisterObj("FruitPapaya");
+		break;
+	case 1003:
+		ret = newAndRegisterObj("FruitPine");
+		break;
+	case 1004:
+		ret = newAndRegisterObj("FruitCoconut");
+		break;
+
+	case 2000:
+		ret = newAndRegisterObj("mushroom1up");
+		break;
+	case 2001:
+		ret = newAndRegisterObj("mushroom1upR");
+		break;
+
+	default:
+		return nullptr;
+	}
+
+	return ret;
+}
+
+u32 TMapObjBaseManager::getActorTypeByEventID(u32 param_1)
+{
+	if (param_1 < 50)
+		return 0x2000000E;
+
+	switch (param_1) {
+	case 100:
+		return 0x2000000E;
+	case 200:
+		return 0x2000000F;
+	case 777:
+		return 0x20000013;
+	case 1000:
+		return 0x40000394;
+	case 1001:
+		return 0x40000393;
+	case 1002:
+		return 0x40000391;
+	case 1003:
+		return 0x40000392;
+	case 1004:
+		return 0x40000390;
+	case 2000:
+		return 0x20000005;
+	case 2001:
+		return 0x20000005;
+	default:
+		return 0;
+	}
+}
 
 void TMapObjBaseManager::clipActors(JDrama::TGraphics*) { }
 
@@ -203,7 +327,12 @@ void TMapObjBaseManager::createModelData() { }
 
 void TMapObjBaseManager::getObjNumWithActorType(u32) const { }
 
-void TMapObjBaseManager::load(JSUMemoryInputStream&) { }
+void TMapObjBaseManager::load(JSUMemoryInputStream& stream)
+{
+	TLiveManager::load(stream);
+	stream.read(&unk38, sizeof(unk38));
+	stream.read(&unk3C, sizeof(unk3C));
+}
 
 TMapObjBaseManager::TMapObjBaseManager(const char* name)
     : TLiveManager(name)

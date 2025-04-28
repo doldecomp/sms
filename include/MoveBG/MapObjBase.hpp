@@ -305,7 +305,7 @@ public:
 
 	void joinToGroup(const char*, THitActor*);
 	static void startAllAnim(MActor*, const char*);
-	void initPacketMatColor(J3DModel*, _GXTevRegID, const _GXColorS10*);
+	static void initPacketMatColor(J3DModel*, GXTevRegID, const GXColorS10*);
 	bool isFruit(THitActor*);
 	bool isCoin(THitActor*);
 	void throwObjFromPointWithRot(TMapObjBase*, const JGeometry::TVec3<f32>&,
