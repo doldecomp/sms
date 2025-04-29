@@ -13,6 +13,8 @@
 #include <MoveBG/MapObjPinna.hpp>
 #include <MoveBG/MapObjMare.hpp>
 #include <MoveBG/MapObjMonte.hpp>
+#include <Map/Map.hpp>
+#include <Map/MapData.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/MActorUtil.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -20,14 +22,35 @@
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <stdio.h>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+
+static void dummy(Vec* v) { *v = (Vec) { 0.0f, 0.0f, 0.0f }; }
+static void dummy2(Vec* v) { *v = (Vec) { 1.0f, 1.0f, 1.0f }; }
+
+TMapObjManager* gpMapObjManager;
 
 static TMapObjBase* newItemByName(const char*);
 static TMapObjBase* newUniqueObjByName(const char*);
 
-void TMapObjManager::entryStaticDrawBufferShadow(J3DModel*) { }
+void TMapObjManager::entryStaticDrawBufferShadow(J3DModel* model)
+{
+	j3dSys.setDrawBuffer(unk58->getDrawBuffer(), 0);
+	j3dSys.setDrawBuffer(unk5C->getDrawBuffer(), 1);
+	model->entry();
+}
 
-void TMapObjManager::entryStaticDrawBufferSun(J3DModel*) { }
+void TMapObjManager::entryStaticDrawBufferSun(J3DModel* model)
+{
+	j3dSys.setDrawBuffer(unk50->getDrawBuffer(), 0);
+	j3dSys.setDrawBuffer(unk54->getDrawBuffer(), 1);
+	model->entry();
+}
 
 void TMapObjManager::loadAfter()
 {
@@ -42,7 +65,21 @@ void TMapObjManager::loadAfter()
 	}
 }
 
-void TMapObjManager::initDrawBuffer() { }
+void TMapObjManager::initDrawBuffer()
+{
+	unk50 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj SunOpa");
+	unk54 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj SunXlu");
+	unk58 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj ShadowOpa");
+	unk5C = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf StaticMapObj ShadowXlu");
+	unk60 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf AfterIndirect Opa");
+	unk64 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf AfterIndirect Xlu");
+}
 
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
 {
@@ -59,18 +96,8 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	unk40 = new MActorAnmData;
 
 	unk40->init("/common/map", nullptr);
-	unk50 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj SunOpa");
-	unk54 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj SunXlu");
-	unk58 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj ShadowOpa");
-	unk5C = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj ShadowXlu");
-	unk60 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf AfterIndirect Opa");
-	unk64 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf AfterIndirect Xlu");
+
+	initDrawBuffer();
 
 	unk68 = loadMatTable("/scene/map/map/sky.bmt");
 	unk6C = loadMatTable("/scene/mapObj/nozzleItem.bmt");
@@ -113,16 +140,132 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 
 TMapObjManager::TMapObjManager(const char* name)
     : TMapObjBaseManager(name)
+    , unk40(nullptr)
+    , unk50(nullptr)
+    , unk54(nullptr)
+    , unk58(nullptr)
+    , unk5C(nullptr)
+    , unk60(nullptr)
+    , unk64(nullptr)
+    , unk68(nullptr)
+    , unk6C(nullptr)
+    , unk70(nullptr)
+    , unk74(nullptr)
+    , unk78(nullptr)
+    , unk7C(nullptr)
+    , unk80(nullptr)
+    , unk84(nullptr)
+    , unk88(nullptr)
+    , unk8C(nullptr)
+    , unk90(nullptr)
+    , unk94(nullptr)
+    , unk98(nullptr)
+    , unk9C(nullptr)
+    , unkA0(nullptr)
+    , unkA4(nullptr)
+    , unkC0(nullptr)
+    , unkC4(nullptr)
+    , unkC8(nullptr)
+    , unkCC(nullptr)
 {
+	gpMapObjManager = this;
+	unkD0.x = unkD0.y = unkD0.z = 0.0f;
+	initKeyCode();
+	unk44.x = unk44.y = unk44.z = 0.0f;
+
+	unkA8.r = 0xff;
+	unkA8.g = 0xb4;
+	unkA8.b = 0xff;
+	unkA8.a = 0xff;
+
+	unkB0.r = 0xff;
+	unkB0.g = 0xff;
+	unkB0.b = 0x7d;
+	unkB0.a = 0xff;
+
+	unkB8.r = 0xb4;
+	unkB8.g = 0xff;
+	unkB8.b = 0xb4;
+	unkB8.a = 0xff;
 }
 
 void TMapObjBaseManager::canAppear(const TMapObjBase*, u32) const { }
 
-void TMapObjBaseManager::makeObjAppear(f32, f32, f32, u32, bool) { }
+TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
+                                               bool param_5)
+{
 
-void TMapObjBaseManager::makeObjAppear(u32) { }
+	f32 y2;
+	if (param_5) {
+		const TBGCheckData* checkData;
+		y2 = gpMap->checkGround(x, y + 5.0f, z, &checkData);
+		if (checkData->checkFlag2(0x10))
+			return nullptr;
+	} else {
+		y2 = y;
+	}
 
-void TMapObjBaseManager::makeObjAppeared(u32) { }
+	for (int i = 0; i < objNum(); ++i) {
+		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		bool bVar1;
+		if (obj->isActorType(param_4) && !obj->checkMapObjFlag(0x80000)
+		    && obj->checkLiveFlag(0x1)
+		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
+			bVar1 = true;
+		else
+			bVar1 = false;
+
+		if (bVar1) {
+			obj->mPosition.set(x, y2, z);
+			obj->appear();
+			return obj;
+		}
+	}
+
+	return nullptr;
+}
+
+TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
+{
+	for (int i = 0; i < objNum(); ++i) {
+		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		bool bVar1;
+		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
+		    && obj->checkLiveFlag(0x1)
+		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
+			bVar1 = true;
+		else
+			bVar1 = false;
+
+		if (bVar1) {
+			obj->appear();
+			return obj;
+		}
+	}
+
+	return nullptr;
+}
+
+TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
+{
+	for (int i = 0; i < objNum(); ++i) {
+		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		bool bVar1;
+		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
+		    && obj->checkLiveFlag(0x1)
+		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
+			bVar1 = true;
+		else
+			bVar1 = false;
+
+		if (bVar1) {
+			obj->makeObjAppeared();
+			return obj;
+		}
+	}
+
+	return nullptr;
+}
 
 static TMapObjBase* newItemByName(const char* name)
 {
@@ -198,7 +341,7 @@ static TMapObjBase* newUniqueObjByName(const char* name)
 	else if (strcmp(name, "bigWindmillBlock") == 0)
 		return new TMapObjBase("風車の台");
 	else if (strcmp(name, "SandLeaf") == 0)
-		return new TMapObjBase("すなやまの芽");
+		return new TSandLeaf;
 	else if (strcmp(name, "SandBomb") == 0)
 		return new TSandBomb;
 	else if (strcmp(name, "FerrisGondola") == 0)
@@ -222,7 +365,7 @@ static TMapObjBase* newUniqueObjByName(const char* name)
 	else if (strcmp(name, "PinnaHangingBridgeBoard") == 0)
 		return new THangingBridgeBoard("つり橋の板");
 	else if (strcmp(name, "bambooFence_revolve_inner") == 0)
-		return new TRevolvingFenceInner;
+		return new TRevolvingFenceInner("竹フェンス内側");
 	else
 		return nullptr;
 }
@@ -321,11 +464,26 @@ u32 TMapObjBaseManager::getActorTypeByEventID(u32 param_1)
 	}
 }
 
-void TMapObjBaseManager::clipActors(JDrama::TGraphics*) { }
+void TMapObjBaseManager::clipActors(JDrama::TGraphics* param_1)
+{
+	if (!(unk30 & 2))
+		clipActorsAux(param_1, unk38, unk3C);
+}
 
-void TMapObjBaseManager::createModelData() { }
+void TMapObjBaseManager::createModelData()
+{
+	static const TModelDataLoadEntry entry = { nullptr, 0, 0 };
+	createModelDataArray(&entry);
+}
 
-void TMapObjBaseManager::getObjNumWithActorType(u32) const { }
+int TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
+{
+	int result = 0;
+	for (int i = 0; i < unk14; ++i)
+		if (unk18[i]->isActorType(param_1))
+			++result;
+	return result;
+}
 
 void TMapObjBaseManager::load(JSUMemoryInputStream& stream)
 {
@@ -336,5 +494,7 @@ void TMapObjBaseManager::load(JSUMemoryInputStream& stream)
 
 TMapObjBaseManager::TMapObjBaseManager(const char* name)
     : TLiveManager(name)
+    , unk38(0.0f)
+    , unk3C(0.0f)
 {
 }

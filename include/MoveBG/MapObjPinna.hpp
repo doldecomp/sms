@@ -69,6 +69,15 @@ class TChangeStageMerrygoround : public TMapObjChangeStage {
 public:
 	void touchPlayer(THitActor*);
 	void calc();
+
+	TChangeStageMerrygoround()
+	    : TMapObjChangeStage("ステージ切り替え（メリーゴーランド用）")
+	    , unk13C(0)
+	{
+	}
+
+public:
+	/* 0x13C */ u8 unk13C;
 };
 
 class TBalloonKoopaJr : public TMapObjGeneral {
@@ -112,8 +121,21 @@ public:
 
 class TMerryPole : public TMapObjBase {
 public:
-	Mtx* getRootJointMtx() const;
-	TMerryPole();
+	virtual Mtx* getRootJointMtx() const { return (Mtx*)unk138.mMtx; }
+
+	TMerryPole()
+	    : TMapObjBase("メリーゴーランド用ポール")
+	{
+		// not TRotation3f::identity33 and not written in it's style...
+		unk138.mMtx[1][0] = unk138.mMtx[2][0] = unk138.mMtx[0][1]
+		    = unk138.mMtx[2][1] = unk138.mMtx[0][2] = unk138.mMtx[1][2]
+		    = unk138.mMtx[0][3] = unk138.mMtx[1][3] = unk138.mMtx[2][3] = 0.0f;
+
+		unk138.mMtx[0][0] = unk138.mMtx[1][1] = unk138.mMtx[2][2] = 1.0f;
+	}
+
+public:
+	/* 0x138 */ TRotation3f unk138; // TODO: type likely wrong
 };
 
 #endif

@@ -26,7 +26,10 @@ class TCraneCargo : public TLeanBlock {
 public:
 	void control();
 	void calc();
-	TCraneCargo();
+	TCraneCargo()
+	    : TLeanBlock("クレーン積み荷")
+	{
+	}
 };
 
 class TRiccoWatermill : public TMapObjBase {

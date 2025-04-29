@@ -10,7 +10,14 @@ class TSandLeaf : public TMapObjBase {
 public:
 	u32 touchWater(THitActor*);
 	void control();
-	TSandLeaf();
+	TSandLeaf(const char* name = "すなやまの芽")
+	    : TMapObjBase(name)
+	    , unk138(0)
+	{
+	}
+
+public:
+	/* 0x138 */ u32 unk138;
 };
 
 class TSandBase : public TMapObjBase {
@@ -34,6 +41,17 @@ public:
 	u32 touchWater(THitActor*);
 	u32 getSDLModelFlag() const;
 	void initMapObj();
+
+	TSandBomb()
+	    : TSandLeaf("すなやま爆弾")
+	    , unk13C(0)
+	    , unk140(0)
+	{
+	}
+
+public:
+	/* 0x13C */ u32 unk13C;
+	/* 0x140 */ u8 unk140;
 };
 
 class TSandBombBase : public TSandBase {

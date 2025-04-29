@@ -148,7 +148,10 @@ public:
 
 class TItemNozzle : public TItem {
 public:
-	TItemNozzle();
+	TItemNozzle()
+	    : TItem("ノズル")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual u32 receiveMessage(THitActor*, u32);
