@@ -24,6 +24,7 @@ public:
 
 	// fabricated
 	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
+	bool checkFlag2(u32 flag) const { return unk4 & flag ? true : false; }
 
 public:
 	/* 0x0 */ u16 unk0;

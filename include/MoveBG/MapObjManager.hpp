@@ -21,7 +21,7 @@ public:
 	virtual void createModelData();
 	virtual void clipActors(JDrama::TGraphics*);
 
-	void getObjNumWithActorType(u32) const;
+	int getObjNumWithActorType(u32) const;
 	static u32 getActorTypeByEventID(u32);
 	static TMapObjBase* newAndRegisterObjByEventID(u32, const char*);
 	static TMapObjBase*
@@ -32,9 +32,9 @@ public:
 	                  = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
 	                  const JGeometry::TVec3<f32>& scale
 	                  = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	void makeObjAppeared(u32);
-	void makeObjAppear(u32);
-	void makeObjAppear(f32, f32, f32, u32, bool);
+	TMapObjBase* makeObjAppeared(u32);
+	TMapObjBase* makeObjAppear(u32);
+	TMapObjBase* makeObjAppear(f32, f32, f32, u32, bool);
 	void canAppear(const TMapObjBase*, u32) const;
 
 public:
@@ -66,9 +66,7 @@ public:
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
-	/* 0x44 */ f32 unk44;
-	/* 0x48 */ f32 unk48;
-	/* 0x4C */ f32 unk4C;
+	/* 0x44 */ Vec unk44;
 	/* 0x50 */ JDrama::TDrawBufObj* unk50;
 	/* 0x54 */ JDrama::TDrawBufObj* unk54;
 	/* 0x58 */ JDrama::TDrawBufObj* unk58;
@@ -98,9 +96,7 @@ public:
 	/* 0xC4 */ J3DMaterialTable* unkC4;
 	/* 0xC8 */ ResTIMG* unkC8;
 	/* 0xCC */ ResTIMG* unkCC;
-	/* 0xD0 */ f32 unkD0;
-	/* 0xD4 */ f32 unkD4;
-	/* 0xD8 */ f32 unkD8;
+	/* 0xD0 */ Vec unkD0;
 };
 
 #endif

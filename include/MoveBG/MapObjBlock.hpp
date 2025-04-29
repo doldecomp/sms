@@ -8,7 +8,10 @@
 
 class TBreakableBlock : public TMapObjGeneral {
 public:
-	TBreakableBlock();
+	TBreakableBlock()
+	    : TMapObjGeneral("壊れるブロック")
+	{
+	}
 	void touchPlayer(THitActor*);
 };
 
@@ -51,14 +54,30 @@ public:
 
 class TJuiceBlock : public TMapObjBase {
 public:
-	TJuiceBlock();
+	TJuiceBlock(const char* name = "ジュースブロック")
+	    : TMapObjBase(name)
+	{
+		unk14C = 0;
+		unk140.set(1.0f, 1.0f, 1.0f);
+	}
+
 	void kill();
 	void moveObject();
 	void initMapObj();
+
+public:
+	/* 0x138 */ char unk138[0x8];
+	/* 0x140 */ JGeometry::TVec3<f32> unk140;
+	/* 0x14C */ u32 unk14C;
 };
 
 class TTelesaBlock : public TJuiceBlock {
 public:
+	TTelesaBlock()
+	    : TJuiceBlock("テレサブロック")
+	{
+	}
+
 	void setGroundCollision();
 	void perform(u32, JDrama::TGraphics*);
 	void initMapObj();

@@ -10,13 +10,21 @@ public:
 	u32 receiveMessage(THitActor*, u32);
 	void initMapCollisionData();
 	void initMapObj();
-	TFence();
+	TFence(const char* name)
+	    : TMapObjBase(name)
+	    , unk138(0)
+	{
+	}
+
+public:
+	/* 0x138 */ u8 unk138;
 };
 
 class TRevolvingFenceOuter : public TFence {
 public:
 	u32 receiveMessage(THitActor*, u32);
 	void initMapCollisionData();
+	TRevolvingFenceOuter();
 };
 
 class TRevolvingFenceInner : public TFence {
@@ -29,7 +37,17 @@ public:
 	void control();
 	void initMapCollisionData();
 	void initMapObj();
-	TRevolvingFenceInner();
+
+	TRevolvingFenceInner(const char* name = "フェンス内側")
+	    : TFence(name)
+	    , unk13C(0.0f)
+	    , unk140(1)
+	{
+	}
+
+public:
+	/* 0x13C */ f32 unk13C;
+	/* 0x140 */ u8 unk140;
 };
 
 class TFenceWater : public TFence {
@@ -42,6 +60,7 @@ public:
 	void control();
 	void initMapCollisionData();
 	void initMapObj();
+	TFenceWater();
 };
 
 class TFenceWaterH : public TFenceWater {
