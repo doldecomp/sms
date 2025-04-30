@@ -7,6 +7,7 @@
 #include <Strategic/TakeActor.hpp>
 
 class TLiveActor;
+class TBGCheckData;
 
 struct TRidingInfo {
 	const TLiveActor* unk0;
@@ -77,10 +78,10 @@ public:
 	char _0BC[0x1C];
 
 	// TODO: TBGCheckData
-	void* wall;       // TBGCheckData 0xD8
-	void* ceil;       // TBGCheckData 0xDC
-	void* floor;      // TBGCheckData 0xE0
-	void* waterFloor; // TBGCheckData 0xE4
+	TBGCheckData* mWallPlane;       // TBGCheckData 0xD8
+	TBGCheckData* mRoofPlane;       // TBGCheckData 0xDC
+	TBGCheckData* mGroundPlane;      // TBGCheckData 0xE0
+	TBGCheckData* waterFloor; // TBGCheckData 0xE4
 
 	JGeometry::TVec3<f32> floorPosition; // 0xE8
 

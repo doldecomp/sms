@@ -5,6 +5,7 @@
 
 class TLiveActor;
 class THitActor;
+class TBGCheckData;
 
 extern JGeometry::TVec3<float>* gpMarioPos;
 
@@ -14,7 +15,7 @@ extern f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 extern u16* gpMarioLightID;
 extern u32* gpMarioFlag;
 extern f32* gpMarioThrowPower;
-extern void** gpMarioGroundPlane;
+extern TBGCheckData** gpMarioGroundPlane;
 
 inline bool SMS_CheckMarioFlag(u32 flag)
 {
@@ -26,9 +27,9 @@ bool SMS_IsMarioFencing();
 void SMS_GetMarioSpeedY(THitActor*);
 void SMS_IsMarioTouchGround4cm(THitActor*);
 u32 SMS_GetMarioStatus(THitActor*);
-void* SMS_GetMarioRfPlane();
-void* SMS_GetMarioWlPlane();
-void* SMS_GetMarioGrPlane();
+TBGCheckData* SMS_GetMarioRfPlane();
+TBGCheckData* SMS_GetMarioWlPlane();
+TBGCheckData* SMS_GetMarioGrPlane();
 u32 SMS_GetMarioStatus();
 void SMS_GetMarioWork(int);
 void SMS_WindMoveMario(const JGeometry::TVec3<f32>&);

@@ -11,7 +11,7 @@ f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 u16* gpMarioLightID;
 u32* gpMarioFlag;
 f32* gpMarioThrowPower;
-void** gpMarioGroundPlane; // TODO: TBGCheckData**
+TBGCheckData** gpMarioGroundPlane;
 
 bool SMS_IsMarioRoofing()
 {
@@ -45,11 +45,11 @@ bool SMS_IsMarioFencing()
 
 u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->action; }
 
-void* SMS_GetMarioRfPlane() { return gpMarioOriginal->ceil; }
+TBGCheckData* SMS_GetMarioRfPlane() { return gpMarioOriginal->mRoofPlane; }
 
-void* SMS_GetMarioWlPlane() { return gpMarioOriginal->wall; }
+TBGCheckData* SMS_GetMarioWlPlane() { return gpMarioOriginal->mWallPlane; }
 
-void* SMS_GetMarioGrPlane() { return gpMarioOriginal->floor; }
+TBGCheckData* SMS_GetMarioGrPlane() { return gpMarioOriginal->mGroundPlane; }
 
 u32 SMS_GetMarioStatus() { return gpMarioOriginal->action; }
 
@@ -230,5 +230,5 @@ void SMS_SetMarioAccessParams()
 	gpMarioFlag    = &gpMarioOriginal->_118;
 
 	gpMarioThrowPower  = &gpMarioOriginal->deParams.mThrowPower.value;
-	gpMarioGroundPlane = &gpMarioOriginal->floor;
+	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;
 }

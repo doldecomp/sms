@@ -96,6 +96,8 @@ public:
 	/* 0x7D */ u8 _07D;
 	/* 0x7E */ u8 _07E;
 	/* 0x7F */ u8 _07F;
+	/* 0x80 */ char unk80[0xA4];
+	/* 0x124 */ u8 unk124;
 };
 
 #endif
