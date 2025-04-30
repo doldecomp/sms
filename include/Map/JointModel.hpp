@@ -22,6 +22,7 @@ public:
 	void initActor(const char*, MActorAnmData*);
 
 	// fabriacted
+	J3DModel* getModel() { return mModel; }
 	J3DModelData* getModelData() { return mModelData; }
 
 public:

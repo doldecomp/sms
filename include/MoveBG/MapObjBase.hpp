@@ -227,20 +227,20 @@ public:
 	void emitColumnWater();
 	void marioHipAttack() const;
 	void marioHeadAttack() const;
-	void marioIsOn() const;
-	void marioIsOn(const TLiveActor*);
+	bool marioIsOn() const;
+	static bool marioIsOn(const TLiveActor*);
 	void actorIsOn(TLiveActor*) const;
 	void sendMsgToAll(u32);
 	void sendMsg(u32, u32);
 	void waterHitPlane(THitActor*);
 	void getWaterPos(THitActor*);
 	void getWaterSpeed(THitActor*);
-	void getWaterPlane(THitActor*);
+	static void getWaterPlane(THitActor*);
 	void getWaterID(THitActor*);
-	void getDistance(const JGeometry::TVec3<f32>&) const;
-	void getDistanceXZ(const JGeometry::TVec3<f32>&) const;
-	void getRotYFromAxisZ(const JGeometry::TVec3<f32>&) const;
-	void getRotYFromAxisX(const JGeometry::TVec3<f32>&) const;
+	f32 getDistance(const JGeometry::TVec3<f32>&) const;
+	f32 getDistanceXZ(const JGeometry::TVec3<f32>&) const;
+	f32 getRotYFromAxisZ(const JGeometry::TVec3<f32>&) const;
+	f32 getRotYFromAxisX(const JGeometry::TVec3<f32>&) const;
 	void makeVecToLocalX(f32, JGeometry::TVec3<f32>*) const;
 	void makeVecToLocalZ(f32, JGeometry::TVec3<f32>*) const;
 	void getNormalVecFromTarget(f32, f32, f32, JGeometry::TVec3<f32>*) const;
@@ -254,8 +254,8 @@ public:
 	                            JGeometry::TVec3<f32>*) const;
 	void makeObjMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr) const;
 	void makeMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr);
-	void concatOnlyRotFromRight(MtxPtr, MtxPtr, MtxPtr);
-	void concatOnlyRotFromLeft(MtxPtr, MtxPtr, MtxPtr);
+	static void concatOnlyRotFromRight(MtxPtr, MtxPtr, MtxPtr);
+	static void concatOnlyRotFromLeft(MtxPtr, MtxPtr, MtxPtr);
 	void setRootMtxTrans();
 	void makeRootMtxTrans(MtxPtr);
 	void updateRootMtxTrans();
@@ -265,15 +265,15 @@ public:
 	void makeRootMtxRotY(MtxPtr);
 	void setRootMtxRotZ();
 	void makeRootMtxRotZ(MtxPtr);
-	void makeLowerStr(const char*, char*);
+	static void makeLowerStr(const char*, char*);
 	static void moveJoint(J3DJoint*, f32, f32, f32);
 	static f32 getJointTransX(J3DJoint*);
 	static f32 getJointTransY(J3DJoint*);
 	static f32 getJointTransZ(J3DJoint*);
-	void setJointTrans(J3DJoint*, f32, f32, f32);
-	void setJointTransX(J3DJoint*, f32);
+	static void setJointTrans(J3DJoint*, f32, f32, f32);
+	static void setJointTransX(J3DJoint*, f32);
 	static void setJointTransY(J3DJoint*, f32);
-	void setJointTransZ(J3DJoint*, f32);
+	static void setJointTransZ(J3DJoint*, f32);
 	static f32 getJointRotateX(J3DJoint*);
 	static f32 getJointRotateY(J3DJoint*);
 	static f32 getJointRotateZ(J3DJoint*);
@@ -287,37 +287,40 @@ public:
 	static f32 getJointScaleX(J3DJoint*);
 	static f32 getJointScaleY(J3DJoint*);
 	static f32 getJointScaleZ(J3DJoint*);
-	void setJointScale(J3DJoint*, f32, f32, f32);
-	void setJointScaleX(J3DJoint*, f32);
-	void setJointScaleY(J3DJoint*, f32);
-	void setJointScaleZ(J3DJoint*, f32);
+	static void setJointScale(J3DJoint*, f32, f32, f32);
+	static void setJointScaleX(J3DJoint*, f32);
+	static void setJointScaleY(J3DJoint*, f32);
+	static void setJointScaleZ(J3DJoint*, f32);
 	void calcMap();
 	void getMapModel();
 	void getMapModelData();
 	void getMapMActor();
-	TJointObj* getBuildingJointObj(int);
-	J3DJoint* getBuildingJoint(int);
+	static TJointObj* getBuildingJointObj(int);
+	static J3DJoint* getBuildingJoint(int);
 
 	static TMapCollisionStatic* newAndInitBuildingCollisionStatic(int,
 	                                                              TLiveActor*);
 	static TMapCollisionMove* newAndInitBuildingCollisionMove(int, TLiveActor*);
 	static TMapCollisionWarp* newAndInitBuildingCollisionWarp(int, TLiveActor*);
 
-	void joinToGroup(const char*, THitActor*);
+	static void joinToGroup(const char*, THitActor*);
 	static void startAllAnim(MActor*, const char*);
 	static void initPacketMatColor(J3DModel*, GXTevRegID, const GXColorS10*);
-	bool isFruit(THitActor*);
-	bool isCoin(THitActor*);
-	void throwObjFromPointWithRot(TMapObjBase*, const JGeometry::TVec3<f32>&,
-	                              const JGeometry::TVec3<f32>&, f32, f32);
+	static bool isFruit(THitActor*);
+	static bool isCoin(THitActor*);
+	static void throwObjFromPointWithRot(TMapObjBase*,
+	                                     const JGeometry::TVec3<f32>&,
+	                                     const JGeometry::TVec3<f32>&, f32,
+	                                     f32);
 	void throwObjToFrontFromPoint(TMapObjBase*, const JGeometry::TVec3<f32>&,
 	                              f32, f32) const;
 	void throwObjToFront(TMapObjBase*, f32, f32, f32) const;
 	void throwObjToOverhead(TMapObjBase*, f32, f32) const;
 	void checkOnManhole();
-	void loadHideObjInfo(JSUMemoryInputStream&, long*, f32*, f32*, long*);
-	void isDemo();
-	void isHideObj(THitActor*);
+	static void loadHideObjInfo(JSUMemoryInputStream&, long*, f32*, f32*,
+	                            long*);
+	static bool isDemo();
+	static bool isHideObj(THitActor*);
 	void getObjCollisionHeightOffset() const { }
 
 	// fabricated

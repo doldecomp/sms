@@ -25,6 +25,7 @@ public:
 	// fabricated
 	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
 	bool checkFlag2(u32 flag) const { return unk4 & flag ? true : false; }
+	const TLiveActor* getUnk44() { return unk44; }
 
 public:
 	/* 0x0 */ u16 unk0;
@@ -41,9 +42,7 @@ public:
 	/* 0x28 */ f32 unk28;
 	/* 0x2C */ f32 unk2C;
 	/* 0x30 */ f32 unk30;
-	/* 0x34 */ f32 unk34;
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ f32 unk3C;
+	/* 0x34 */ JGeometry::TVec3<f32> unk34;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ const TLiveActor* unk44;
 };
