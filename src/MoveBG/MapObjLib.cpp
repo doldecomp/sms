@@ -626,7 +626,7 @@ bool TMapObjBase::marioIsOn() const
 	return false;
 }
 
-void TMapObjBase::marioHeadAttack() const { }
+bool TMapObjBase::marioHeadAttack() const { }
 
 void TMapObjBase::marioHipAttack() const { }
 

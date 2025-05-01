@@ -226,7 +226,7 @@ public:
 	                           const JGeometry::TVec3<f32>&);
 	void emitColumnWater();
 	void marioHipAttack() const;
-	void marioHeadAttack() const;
+	bool marioHeadAttack() const;
 	bool marioIsOn() const;
 	static bool marioIsOn(const TLiveActor*);
 	void actorIsOn(TLiveActor*) const;
@@ -333,6 +333,7 @@ public:
 	int getUnk104() { return unk104; }
 	u32 getUnk134() { return unk134; }
 	void setUnk134(u32 v) { unk134 = v; }
+	const char* getUnkF4() { return unkF4; }
 
 public:
 	/* 0xF4 */ const char* unkF4;
