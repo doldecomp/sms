@@ -11,6 +11,7 @@
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <Strategic/MirrorActor.hpp>
+#include <Strategic/question.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -18,6 +19,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TItem::mAppearedScaleSpeed = 0.01f;
 
@@ -50,7 +52,7 @@ void TItem::taken(THitActor* param_1)
 void TItem::touchPlayer(THitActor* param_1)
 {
 	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
-	    && !(unk64 & 1))
+	    && !checkHitFlag(1))
 		taken(param_1);
 }
 
@@ -125,31 +127,34 @@ void TItem::killByTimer(int param_1)
 {
 	unk14C = param_1;
 	unk104 = unk150;
-	unkF8 &= ~0x10000000;
-	unk64 |= 1;
-	unkF8 &= ~0x40000;
+
+	offMapObjFlag(0x10000000);
+	onHitFlag(1);
+	offMapObjFlag(0x40000);
 }
 
 void TItem::appear()
 {
 	TMapObjGeneral::appear();
-	unk64 |= 1;
+	onHitFlag(1);
 	unk104 = unk150;
-	unkF8 &= ~0x40000;
+	offMapObjFlag(0x40000);
 }
 
 void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (!checkLiveFlag(0x1)) {
-		if ((param_1 & 1) && (unk64 & 1) && !isUnk104Positive()) {
-			unk64 &= ~1;
-			if (!checkMapObjFlag(0x10000000)) {
-				unkF8 |= 0x40000;
-				unk104 = unk14C;
-			}
+	if (checkLiveFlag(0x1))
+		return;
+
+	if ((param_1 & 1) && checkHitFlag(1) && !isUnk104Positive()) {
+		offHitFlag(1);
+		if (!checkMapObjFlag(0x10000000)) {
+			onMapObjFlag(0x40000);
+			unk104 = unk14C;
 		}
-		TMapObjGeneral::perform(param_1, param_2);
 	}
+
+	TMapObjGeneral::perform(param_1, param_2);
 }
 
 void TItem::initMapObj()
@@ -162,7 +167,7 @@ void TItem::initMapObj()
 void TItem::load(JSUMemoryInputStream& stream)
 {
 	TMapObjGeneral::load(stream);
-	unkF8 |= 0x10000000;
+	onMapObjFlag(0x10000000);
 }
 
 TItem::TItem(const char* name)
@@ -211,7 +216,7 @@ void TCoin::appearWithoutSound()
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x58, getModel()->getAnmMtx(0),
 	                                            0, this);
 	if (isActorType(0x2000000e))
-		unkF8 &= ~0x10000000;
+		offMapObjFlag(0x10000000);
 }
 
 void TCoin::appear()
@@ -237,7 +242,55 @@ void TCoin::makeObjAppeared()
 		unk154->unk1A &= ~1;
 }
 
-void TCoin::perform(u32, JDrama::TGraphics*) { }
+void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (checkLiveFlag(1))
+		return;
+
+	if ((param_1 & 1) && checkLiveFlag(0x10)) {
+		// TODO: this is some kind of a tricky inline, used in a few places
+		bool bVar2 = true;
+		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
+			bVar2 = false;
+
+		if (bVar2) {
+			bVar2 = true;
+			if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+				bVar2 = false;
+			if (!bVar2)
+				return;
+		}
+
+		if (isUnk104Positive()) {
+			--unk104;
+		} else {
+			if (checkHitFlag(1)) {
+				offHitFlag(1);
+				if (!checkMapObjFlag(0x10000000)) {
+					onMapObjFlag(0x40000);
+					unk104 = unk14C;
+				}
+			} else {
+				if (!checkMapObjFlag(0x10000000)) {
+					if (unk148 != 0)
+						unk148->receiveMessage(this, 5);
+					makeObjDead();
+				}
+			}
+		}
+
+		if (getColNum())
+			for (int i = 0; i < getColNum(); ++i)
+				touchActor(mCollisions[i]);
+
+	} else {
+		if ((param_1 & 4) && getMActor() == nullptr) {
+			gpQuestionManager->request(mPosition, 60.0f);
+		}
+
+		TItem::perform(param_1, param_2);
+	}
+}
 
 void TCoin::loadAfter()
 {
@@ -285,7 +338,11 @@ TCoin::TCoin(const char* name)
 {
 }
 
-void TFlowerCoin::load(JSUMemoryInputStream&) { }
+void TFlowerCoin::load(JSUMemoryInputStream& stream)
+{
+	TCoin::load(stream);
+	stream.read(&unk158, 4);
+}
 
 void TCoinEmpty::warning() { }
 
@@ -300,25 +357,74 @@ TCoinEmpty::TCoinEmpty(const char* name)
 {
 }
 
-void TCoinRed::taken(THitActor*) { }
+void TCoinRed::taken(THitActor* param_1)
+{
+	TFlagManager::getInstance()->incFlag(0x60000, 1);
+
+	if (gpMSound->gateCheck(0x4846))
+		MSoundSESystem::MSoundSE::startSoundActor(0x4846, mPosition, 0, nullptr,
+		                                          0, 4);
+
+	if (unk148)
+		unk148->receiveMessage(this, 8);
+
+	TItem::taken(param_1);
+}
 
 TCoinRed::TCoinRed(const char* name)
     : TCoin(name)
 {
 }
 
-void TCoinBlue::makeObjAppeared() { }
+void TCoinBlue::makeObjAppeared()
+{
+	if (TFlagManager::getInstance()->getBlueCoinFlag(
+	        gpMarDirector->getCurrentMap(), getUnk134()))
+		return;
 
-void TCoinBlue::taken(THitActor*) { }
+	TCoin::makeObjAppeared();
+}
 
-void TCoinBlue::loadBeforeInit(JSUMemoryInputStream&) { }
+void TCoinBlue::taken(THitActor* param_1)
+{
+	gpMarDirector->fireGetBlueCoin(this);
 
-void TCoinBlue::load(JSUMemoryInputStream&) { }
+	if (unk148)
+		unk148->receiveMessage(this, 8);
+
+	TItem::taken(param_1);
+}
+
+void TCoinBlue::loadBeforeInit(JSUMemoryInputStream& stream)
+{
+	int thing;
+	stream.read(&thing, 4);
+	if (thing == -1)
+		thing = 0;
+	setUnk134(thing);
+}
+
+void TCoinBlue::load(JSUMemoryInputStream& stream)
+{
+	TCoin::load(stream);
+	if (TFlagManager::getInstance()->getBlueCoinFlag(
+	        gpMarDirector->getCurrentMap(), getUnk134()))
+		makeObjDead();
+}
 
 TCoinBlue::TCoinBlue(const char* name)
     : TCoin(name)
 {
 }
+
+u32 TShine::mPromiLife     = 1;
+u32 TShine::mSenkoRate     = 1;
+u32 TShine::mKiraRate      = 1;
+u32 TShine::mBowRate       = 1;
+u32 TShine::mCircleRateY   = 1;
+u32 TShine::mUpSpeed       = 1;
+u32 TShine::mSpeedDownRate = 1;
+u32 TShine::mSpeedDownTime = 1;
 
 void TShine::calc() { }
 
@@ -352,7 +458,7 @@ void TShine::initMapObj() { }
 
 void TShine::loadAfter() { }
 
-void TShine::loadBeforeInit(JSUMemoryInputStream&) { }
+void TShine::loadBeforeInit(JSUMemoryInputStream& stream) { }
 
 TShine::TShine(const char* name)
     : TItem(name)

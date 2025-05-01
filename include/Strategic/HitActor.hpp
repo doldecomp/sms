@@ -32,7 +32,10 @@ public:
 		return mActorType == flag ? true : false;
 	}
 	THitActor* getCollision(int i) { return mCollisions[i]; }
-	int getColNum() { return mColCount; }
+	u16 getColNum() { return mColCount; }
+	bool checkHitFlag(u32 flag) { return unk64 & flag; }
+	void onHitFlag(u32 flag) { unk64 |= flag; }
+	void offHitFlag(u32 flag) { unk64 &= ~flag; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;
