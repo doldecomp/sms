@@ -325,10 +325,14 @@ public:
 
 	// fabricated
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
+	void onMapObjFlag(u32 flag) { unkF8 |= flag; }
+	void offMapObjFlag(u32 flag) { unkF8 &= ~flag; }
 	TMapObjData* getMapObjData() { return unk130; }
 	bool isState(u32 v) { return mState == v ? true : false; }
 	bool isUnk104Positive() { return unk104 > 0 ? true : false; }
 	int getUnk104() { return unk104; }
+	u32 getUnk134() { return unk134; }
+	void setUnk134(u32 v) { unk134 = v; }
 
 public:
 	/* 0xF4 */ const char* unkF4;

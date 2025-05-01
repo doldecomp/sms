@@ -53,6 +53,9 @@ public:
 	TFlowerCoin();
 
 	virtual void load(JSUMemoryInputStream&);
+
+public:
+	/* 0x158 */ u32 unk158;
 };
 
 class TCoinEmpty : public TCoin {
@@ -104,6 +107,15 @@ public:
 	void movingDown();
 	void movingUp();
 	void movingCircle();
+
+	static u32 mPromiLife;
+	static u32 mSenkoRate;
+	static u32 mKiraRate;
+	static u32 mBowRate;
+	static u32 mCircleRateY;
+	static u32 mUpSpeed;
+	static u32 mSpeedDownRate;
+	static u32 mSpeedDownTime;
 
 public:
 	/* 0x154 */ u32 unk154;
