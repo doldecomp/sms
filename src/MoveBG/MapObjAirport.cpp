@@ -56,17 +56,21 @@ bool TAirportEventSink::control()
 	return TMapEventSinkInPollutionReset::control();
 }
 
+// TODO: this is all fake, need to analyze a bunch of similar functions together
+// and figure out the real inlines
 inline TMarDirector* getMarDirector() { return gpMarDirector; }
+inline TPollutionManager* getPollution() { return gpPollution; }
 
 bool TAirportEventSink::watch()
 {
 	if (!unk54[0] && unk6C->checkLiveFlag(0x1)) {
-		unk28 = 0;
-		JDrama::TFlagT<u16> flag(0);
-		getMarDirector()->fireStartDemoCamera("空港坂上げカメラ",
-		                                      &unk6C->mPosition, -1, 0.0f, true,
-		                                      nullptr, 0, nullptr, flag);
-		gpPollution->getLayer(0)->onUnk32(0x2);
+		unk28                  = 0;
+		TMarDirector* director = getMarDirector();
+
+		director->fireStartDemoCamera("空港坂上げカメラ", &unk6C->mPosition, -1,
+		                              0.0f, true, nullptr, 0, nullptr,
+		                              JDrama::TFlagT<u16>(0));
+		getPollution()->getLayer(0)->onUnk32(0x2);
 		return true;
 	}
 
