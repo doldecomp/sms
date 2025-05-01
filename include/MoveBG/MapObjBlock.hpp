@@ -26,11 +26,23 @@ public:
 class TLeanBlock : public TMapObjBase {
 public:
 	TLeanBlock(const char*);
-	void initMapObj();
-	void calcDefaultMtx();
+
+	virtual void control();
+	virtual void initMapObj();
+	virtual void touchPlayer(THitActor*);
+	virtual void calcDefaultMtx();
+
 	void calcLeanMtx(MtxPtr);
-	void control();
-	void touchPlayer(THitActor*);
+
+public:
+	/* 0x138 */ f32 unk138;
+	/* 0x13C */ f32 unk13C;
+	/* 0x140 */ f32 unk140;
+	/* 0x144 */ f32 unk144;
+	/* 0x148 */ f32 unk148;
+	/* 0x14C */ JGeometry::TVec3<f32> unk14C;
+	/* 0x158 */ JGeometry::TVec3<f32> unk158;
+	/* 0x164 */ Mtx unk164;
 };
 
 class TIceBlock : public TMapObjBase {
