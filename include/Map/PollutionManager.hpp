@@ -52,6 +52,7 @@ public:
 	}
 	const TPollutionLayerInfo* getLayerInfo(int i) const { return &unk6C[i]; }
 	TPollutionLayerInfo* getLayerInfo(int i) { return &unk6C[i]; }
+	void offLayer(int i) { unk70.offLayer(i); }
 
 	static int mEdgeAlpha;
 

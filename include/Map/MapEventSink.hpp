@@ -6,6 +6,7 @@
 class TMapCollisionWarp;
 class TMapCollisionMove;
 class TMapObjBase;
+class TPollutionObj;
 
 class TMapEventSink : public TMapEvent {
 public:
@@ -23,7 +24,7 @@ public:
 	virtual void makeBuildingRecovered(int);
 
 	bool isBuried(int) const;
-	TJointObj* getPollutionObj(int);
+	TPollutionObj* getPollutionObj(int);
 	TMapEventSink(const char*);
 
 	static u32 mCleanedDegree;
@@ -54,7 +55,10 @@ public:
 
 class TMapEventSinkInPollution : public TMapEventSink {
 public:
-	TMapEventSinkInPollution();
+	TMapEventSinkInPollution(const char* name)
+	    : TMapEventSink(name)
+	{
+	}
 
 	virtual void loadAfter();
 	virtual bool watch();
@@ -64,6 +68,11 @@ public:
 
 class TMapEventSinkInPollutionReset : public TMapEventSinkInPollution {
 public:
+	TMapEventSinkInPollutionReset(const char* name)
+	    : TMapEventSinkInPollution(name)
+	{
+	}
+
 	virtual void loadAfter();
 
 	void getResetPollutionObj(int);
@@ -72,6 +81,8 @@ public:
 
 class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
+	TMapEventSinkBianco();
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual bool watch();
