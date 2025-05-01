@@ -3,6 +3,8 @@
 
 #include <MoveBG/MapObjGeneral.hpp>
 
+class TMirrorActor;
+
 class TItem : public TMapObjGeneral {
 public:
 	TItem(const char*);
@@ -20,8 +22,10 @@ public:
 	virtual void killByTimer(int);
 	virtual void taken(THitActor*);
 
+	static f32 mAppearedScaleSpeed;
+
 public:
-	/* 0x148 */ u32 unk148;
+	/* 0x148 */ THitActor* unk148;
 	/* 0x14C */ u32 unk14C;
 	/* 0x150 */ u32 unk150;
 };
@@ -41,7 +45,7 @@ public:
 	void appearWithoutSound();
 
 public:
-	/* 0x154 */ u32 unk154;
+	/* 0x154 */ TMirrorActor* unk154;
 };
 
 class TFlowerCoin : public TCoin {
@@ -138,7 +142,7 @@ public:
 	virtual u32 receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void touchActor(THitActor*);
-	virtual u16 getHitObjNumMax();
+	virtual u16 getHitObjNumMax() { return 10; }
 
 	void startFruit();
 	void touchFruit(THitActor*);

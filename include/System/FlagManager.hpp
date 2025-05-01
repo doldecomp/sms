@@ -37,6 +37,8 @@ public:
 	void resetCard();
 	static TFlagManager* start(JKRHeap* heap);
 
+	static TFlagManager* getInstance() { return smInstance; }
+
 	static TFlagManager* smInstance;
 
 private:

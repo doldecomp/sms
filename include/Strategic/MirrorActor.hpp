@@ -15,7 +15,8 @@ public:
 	TMirrorActor(const char*);
 
 public:
-	/* 0x10 */ char unk10[0xC];
+	/* 0x10 */ char unk10[0xA];
+	/* 0x1A */ u16 unk1A;
 };
 
 #endif
