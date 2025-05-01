@@ -20,7 +20,7 @@ public:
 	void draw();
 	void getAlpha(float, float) const;
 	void noWave();
-	void getHeight(float, float, float) const;
+	f32 getHeight(float, float, float) const;
 	f32 getWaveHeight(float, float) const;
 	void getStaticTexPos0(float) const;
 	void getStaticTexPos1(float) const;

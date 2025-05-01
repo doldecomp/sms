@@ -41,7 +41,7 @@ public:
 	void startDemoCamera(const char*, const JGeometry::TVec3<f32>*, s32, f32,
 	                     bool);
 	void endDemoCamera();
-	void isSimpleDemoCamera() const;
+	bool isSimpleDemoCamera() const;
 	void getTotalDemoFrames() const;
 	void getRestDemoFrames() const;
 	void ctrlNormalDeadDemo_();
@@ -130,8 +130,10 @@ public:
 
 public:
 	/* 0x50 */ int mMode;
-	char filler1[0x2C8 - 0x54];
-	s16 unk2C8;
+	/* 0x54 */ char unk54[0x124 - 0x54];
+	/* 0x124 */ JGeometry::TVec3<f32> unk124;
+	/* 0x130 */ char unk130[0x2C8 - 0x130];
+	/* 0x2C8 */ s16 unk2C8;
 };
 
 extern CPolarSubCamera* gpCamera;
