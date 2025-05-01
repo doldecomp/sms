@@ -37,9 +37,10 @@ f32 TMapEventSink::getSinkOffsetY() const
 	return unk30->getMax().y - unk30->getMin().y;
 }
 
-TJointObj* TMapEventSink::getPollutionObj(int i)
+TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	return gpPollution->getJointModel(unk60[i].unk0)->mChildren[unk60[i].unk2];
+	return (TPollutionObj*)gpPollution->getJointModel(unk60[i].unk0)
+	    ->mChildren[unk60[i].unk2];
 }
 
 bool TMapEventSink::isFinishedAll() const

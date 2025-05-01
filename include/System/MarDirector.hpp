@@ -83,6 +83,7 @@ public:
 	void setupObjects();
 	void decideMarioPosIdx();
 
+	// fabricated
 	u8 getCurrentMap() { return map; }
 
 public:
