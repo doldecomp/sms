@@ -49,6 +49,7 @@ public:
 	// fabricated
 	int objNum() { return unk14; }
 	THitActor* getObj(int i) { return unk18[i]; }
+	const THitActor* getObj(int i) const { return unk18[i]; }
 
 public:
 	/* 0x10 */ u32 unk10;
