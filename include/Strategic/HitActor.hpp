@@ -11,7 +11,7 @@ enum TActorTypeBits {
 
 class THitActor : public JDrama::TActor {
 public:
-	THitActor(const char*);
+	THitActor(const char* = "HitActor");
 
 	virtual ~THitActor() { }
 
