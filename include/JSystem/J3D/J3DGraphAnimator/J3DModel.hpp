@@ -70,6 +70,7 @@ public:
 	int setTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm*, J3DTevKColorAnm*);
 
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
+	JUTNameTab* getJointName() const { return unkB0; }
 	J3DJoint* getJointNodePointer(u16 idx) const
 	{
 		return mJointNodePointer[idx];
@@ -194,6 +195,7 @@ public:
 
 	J3DModelData* getModelData() { return mModelData; }
 	MtxPtr getAnmMtx(int idx) { return mNodeMatrices[idx]; }
+	void setAnmMtx(int idx, Mtx mtx) { MTXCopy(mtx, mNodeMatrices[idx]); }
 	J3DMatPacket* getMatPacket(u16 idx) { return &mMatPackets[idx]; }
 	J3DShapePacket* getShapePacket(u16 idx) { return &mShapePackets[idx]; }
 

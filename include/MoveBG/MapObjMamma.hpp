@@ -129,10 +129,11 @@ public:
 
 class TSandBird : public TJointCoin {
 public:
-	void control();
-	void makeObjFromJointName(const char*, unsigned short);
-	void nameIsObj(const char*);
-	void initMapObj();
+	virtual void control();
+	virtual void initMapObj();
+	virtual TMapObjBase* makeObjFromJointName(const char*, unsigned short);
+	virtual bool nameIsObj(const char*);
+
 	TSandBird(const char*);
 };
 
