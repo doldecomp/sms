@@ -3,29 +3,42 @@
 
 #include <MoveBG/MapObjHide.hpp>
 
-// TODO: mark virtual methods as such
-
 class TMapObjNail : public THideObjBase {
 public:
-	u32 receiveMessage(THitActor*, unsigned long);
+	virtual u32 receiveMessage(THitActor*, u32);
+
 	TMapObjNail(const char*);
+
+	static f32 mDownHeight;
+
+public:
+	/* 0x150 */ s32 unk150;
 };
 
 class TJointCoin : public TMapObjBase {
 public:
-	void control();
-	void makeObj(const char*, unsigned short);
-	void makeObjFromJointName(const char*, unsigned short);
-	void loadAfter();
-	void nameIsObj(const char*);
-	void initMapObj();
+	virtual void loadAfter();
+	virtual void control();
+	virtual void initMapObj();
+
+	virtual bool nameIsObj(const char*);
+	virtual TMapObjBase* makeObjFromJointName(const char*, u16);
+	virtual TMapObjBase* makeObj(const char*, u16);
+
 	TJointCoin(const char*);
+
+public:
+	/* 0x138 */ MActor* unk138;
+	/* 0x13C */ s32 unk13C;
+	/* 0x140 */ TMapObjBase** unk140;
+	/* 0x144 */ u16* unk144;
 };
 
 class TMapObjSteam : public THideObjBase {
 public:
-	void control();
-	void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream&);
+	virtual void control();
+
 	TMapObjSteam();
 };
 
