@@ -1123,7 +1123,7 @@ config.libs = [
     {
         "lib": "Enemy",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred"],
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Enemy/conductor.cpp"),
@@ -1143,7 +1143,7 @@ config.libs = [
             Object(NonMatching, "Enemy/pakkun.cpp"),
             Object(NonMatching, "Enemy/smallEnemy.cpp"),
             Object(NonMatching, "Enemy/spider.cpp"),
-            Object(NonMatching, "Enemy/spline.cpp"),
+            Object(Matching, "Enemy/spline.cpp"),
             Object(NonMatching, "Enemy/typicalenemy.cpp"),
             Object(NonMatching, "Enemy/walker.cpp"),
             Object(NonMatching, "Enemy/walkerEnemy.cpp"),
