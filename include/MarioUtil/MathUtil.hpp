@@ -12,7 +12,20 @@ void MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
-template <class T> void MsWrap(f32, f32, f32);
+
+template <class T> f32 MsWrap(f32 t, f32 l, f32 r)
+{
+	if (l >= r)
+		return l;
+
+	while (t >= r)
+		t -= r - l;
+	while (t < l)
+		t += r - l;
+
+	return t;
+}
+
 void MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32);
 

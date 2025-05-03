@@ -28,6 +28,19 @@ public:
 		return ret;
 	}
 
+	// fabricated
+	void setPoint(int i, Vec v)
+	{
+		if (i < 0 || mPointNum <= i)
+			return;
+
+		mXs[i] = v.x;
+		mYs[i] = v.y;
+		mZs[i] = v.z;
+
+		mInitialized = false;
+	}
+
 public:
 	/* 0x0 */ int mPointNum;
 	/* 0x4 */ f32* mXs;

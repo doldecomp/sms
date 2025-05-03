@@ -5,6 +5,19 @@
 #include <JSystem/JDrama/JDRGraphics.hpp>
 
 class TGraphWeb;
+class TSplinePath;
+
+class TRailNode {
+public:
+	/* 0x0 */ JGeometry::TVec3<s16> unk0;
+	/* 0x6 */ s16 unk6;
+	/* 0x8 */ char unk8[0x4];
+	/* 0xC */ s16 unkC;
+	/* 0xE */ s16 unkE;
+	/* 0x10 */ char unk10[0x4];
+	/* 0x14 */ u16 unk14;
+	/* 0x16 */ u16 unk16;
+};
 
 class TGraphNode {
 public:
@@ -12,14 +25,10 @@ public:
 	void getPoint(Vec*) const;
 
 public:
-	/* 0x0 */ S16Vec* unk0;
+	/* 0x0 */ TRailNode* unk0;
 	/* 0x4 */ int unk4;
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ s16 unkC;
-};
-
-class TRailNode {
-public:
 };
 
 class TSplineRail {
@@ -29,13 +38,17 @@ public:
 	void getNthT(int);
 	void getPosition(f32);
 	void getPosAndRot(f32, JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*);
+
+public:
+	/* 0x0 */ TSplinePath* unk0;
+	/* 0x4 */ BOOL unk4;
 };
 
 class TGraphWeb {
 public:
 	/* 0x0 */ TGraphNode* unk0;
 	/* 0x4 */ TRailNode* unk4;
-	/* 0x8 */ u32 unk8;
+	/* 0x8 */ int unk8;
 	/* 0xC */ const char* unkC;
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ TSplineRail* unk14;
@@ -87,6 +100,12 @@ public:
 	void initGraphGroup();
 	void getGraphByName(const char*);
 	void perform(u32, JDrama::TGraphics*);
+
+public:
+	/* 0x0 */ char unk0[0x4];
+	/* 0x4 */ int unk4;
+	/* 0x8 */ TGraphWeb** unk8;
+	/* 0xC */ TGraphWeb* unkC;
 };
 
 class TGraphTracer {
@@ -94,11 +113,19 @@ public:
 	TGraphTracer();
 	void setParamFromGraph();
 	void setTo(int);
-	void moveTo(int);
-	void calcSplineSpeed(float);
-	void traceSpline(float);
+	int moveTo(int);
+	f32 calcSplineSpeed(float);
+	bool traceSpline(float);
 	void getCurGraphIndex() const;
 	void getGraph() const;
+
+public:
+	/* 0x0 */ TGraphWeb* unk0;
+	/* 0x4 */ int unk4;
+	/* 0x8 */ int unk8;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ f32 unk14;
 };
 
 #endif
