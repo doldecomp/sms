@@ -38,7 +38,7 @@ void GetAtanTable(f32, f32) { }
 s16 matan(f32, f32) { }
 #pragma dont_inline off
 
-void MsGetRotFromZaxis(const JGeometry::TVec3<f32>&) { }
+JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&) { }
 void MsMtxSetRotRPH(MtxPtr, f32, f32, f32) { }
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, short, short, short) { }
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32) { }

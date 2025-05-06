@@ -1,6 +1,7 @@
 #ifndef ENEMY_SPLINE_HPP
 #define ENEMY_SPLINE_HPP
 
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
 
@@ -11,21 +12,20 @@ public:
 	void makeTable(f32*, f32*, f32*);
 	void calcTable();
 	f32 calcSpline(f32, f32*, f32*, f32*);
-	Vec getPoint(f32 t)
+	JGeometry::TVec3<f32> getPoint(f32 t)
 	{
 		if (mInitialized == 0)
 			calcTable();
 
 		if (t < 0.0f)
 			t = 0.0f;
-		if (t > 1.0f)
+		if (1.0f < t)
 			t = 1.0f;
 
-		Vec ret;
-		ret.x = calcSpline(t, mParametrization, mXs, unk10);
-		ret.y = calcSpline(t, mParametrization, mYs, unk14);
-		ret.z = calcSpline(t, mParametrization, mZs, unk18);
-		return ret;
+		return JGeometry::TVec3<f32>(
+		    calcSpline(t, mParametrization, mXs, unk10),
+		    calcSpline(t, mParametrization, mYs, unk14),
+		    calcSpline(t, mParametrization, mZs, unk18));
 	}
 
 	// fabricated
