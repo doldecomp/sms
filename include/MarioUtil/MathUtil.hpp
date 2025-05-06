@@ -8,12 +8,12 @@ f32 FConverge(f32, f32, f32, f32);
 void GetAtanTable(f32, f32);
 s16 matan(f32, f32);
 
-void MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
+JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
-template <class T> f32 MsWrap(f32 t, f32 l, f32 r)
+template <class T> inline f32 MsWrap(f32 t, f32 l, f32 r)
 {
 	if (l >= r)
 		return l;
