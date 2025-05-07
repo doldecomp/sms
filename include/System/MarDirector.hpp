@@ -87,9 +87,25 @@ public:
 	u8 getCurrentMap() { return map; }
 
 public:
-	/* 0x24 */ char unk24[0x40];
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ u32 unk1C;
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ u32 unk24;
 	/* 0x28 */ s32 frameIndex;
-	/* 0x2C */ char unk2C[0x14];
+	/* 0x2C */ u32 unk2C;
+	/* 0x30 */ TPerformList* unk30;
+	/* 0x34 */ TPerformList* unk34;
+	/* 0x38 */ TPerformList* unk38;
+	/* 0x3C */ TPerformList* unk3C;
+	/* 0x40 */ TPerformList* unk40;
+	/* 0x44 */ u32 unk44;
+	/* 0x48 */ u32 unk48;
+	/* 0x4C */ u16 unk4C;
+	/* 0x4E */ u16 unk4E;
+	/* 0x50 */ u16 unk50;
+	/* 0x54 */ u32 unk54;
+	/* 0x58 */ int unk58;
+	/* 0x5C */ char unk5C[0x70 - 0x5C];
 	/* 0x70 */ int _070;
 	/* 0x74 */ TGCConsole2* console;
 	/* 0x78 */ int _078;

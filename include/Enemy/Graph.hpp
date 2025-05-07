@@ -13,9 +13,9 @@ struct TRailNode {
 	/* 0x0 */ S16Vec mPosition;
 	/* 0x6 */ s16 mConnectionNum;
 	/* 0x8 */ u32 mFlags;
-	/* 0xC */ s16 mPitch;
-	/* 0xE */ s16 mYaw;
-	/* 0x10 */ s16 mRoll;
+	/* 0xC */ u16 mPitch;
+	/* 0xE */ u16 mYaw;
+	/* 0x10 */ u16 mRoll;
 	/* 0x12 */ s16 mSpeed;
 	/* 0x14 */ u16 mConnections[8];
 	/* 0x24 */ f32 mPeriods[8];
@@ -106,6 +106,7 @@ public:
 	// fabricated
 	TGraphNode& getGraphNode(int i) { return unk0[i]; }
 	TGraphNode& getCurrentNode() { return unk0[unk10]; }
+	TSplineRail* getSplineRail() { return unk14; }
 };
 
 class TGraphGroup {
@@ -143,17 +144,35 @@ class TGraphTracer {
 public:
 	TGraphTracer();
 	void setParamFromGraph();
-	void setTo(int);
-	int moveTo(int);
+	void setTo(int node_idx);
+	int moveTo(int node_idx);
 	f32 calcSplineSpeed(float);
 	bool traceSpline(float);
 	void getCurGraphIndex() const;
 	void getGraph() const;
 
+	// fabricated
+	int getCurrentIndex() { return mCurrIdx; }
+	TGraphNode& getCurrent() { return unk0->getGraphNode(mCurrIdx); }
+	int getPrevIndex() { return mPrevIdx; }
+	JGeometry::TVec3<f32> getCurrentPos()
+	{
+		return unk0->indexToPoint(mCurrIdx);
+	}
+	void moveToShortestNext()
+	{
+		moveTo(unk0->getShortestNextIndex(getCurrentIndex(), getPrevIndex(),
+		                                  0xffffffff));
+	}
+	void setToNearest(const JGeometry::TVec3<f32>& pos)
+	{
+		setTo(unk0->findNearestNodeIndex(pos, 0xffffffff));
+	}
+
 public:
 	/* 0x0 */ TGraphWeb* unk0;
-	/* 0x4 */ int unk4;
-	/* 0x8 */ int unk8;
+	/* 0x4 */ int mCurrIdx;
+	/* 0x8 */ int mPrevIdx;
 	/* 0xC */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;

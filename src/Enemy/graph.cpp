@@ -599,8 +599,8 @@ void TGraphGroup::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 TGraphTracer::TGraphTracer()
     : unk0(nullptr)
-    , unk4(-1)
-    , unk8(-1)
+    , mCurrIdx(-1)
+    , mPrevIdx(-1)
     , unkC(100.0f)
     , unk10(1.0f)
     , unk14(0.0f)
@@ -609,32 +609,32 @@ TGraphTracer::TGraphTracer()
 
 void TGraphTracer::setParamFromGraph()
 {
-	if (unk4 >= 0) {
-		unk10 = (u16)unk0->unk0[unk4].unk0->mPitch * (1.0f / 65535.0f);
+	if (mCurrIdx >= 0) {
+		unk10 = (u16)unk0->unk0[mCurrIdx].unk0->mPitch * (1.0f / 65535.0f);
 	} else {
 		unk10 = 0.0f;
 	}
 
-	if (unk8 >= 0)
-		unkC = (u16)unk0->unk0[unk8].unk0->mYaw * 0.01f;
+	if (mPrevIdx >= 0)
+		unkC = (u16)unk0->unk0[mPrevIdx].unk0->mYaw * 0.01f;
 }
 
-void TGraphTracer::setTo(int param_1)
+void TGraphTracer::setTo(int node_idx)
 {
-	unk8 = -1;
-	unk4 = param_1;
+	mPrevIdx = -1;
+	mCurrIdx = node_idx;
 	setParamFromGraph();
 }
 
-int TGraphTracer::moveTo(int param_1)
+int TGraphTracer::moveTo(int node_idx)
 {
-	if (param_1 < 0)
-		return param_1;
+	if (node_idx < 0)
+		return node_idx;
 
-	unk8 = unk4;
-	unk4 = param_1;
+	mPrevIdx = mCurrIdx;
+	mCurrIdx = node_idx;
 	setParamFromGraph();
-	return param_1;
+	return node_idx;
 }
 
 f32 TGraphTracer::calcSplineSpeed(f32 param_1)
@@ -642,13 +642,13 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	if (unk0->unk14 == nullptr)
 		return 0.001f;
 
-	if (unk8 < 0)
+	if (mPrevIdx < 0)
 		return 0.001f;
 
 	Vec v1;
-	unk0->unk0[unk4].getPoint(&v1);
+	unk0->unk0[mCurrIdx].getPoint(&v1);
 	Vec v2;
-	unk0->unk0[unk8].getPoint(&v2);
+	unk0->unk0[mPrevIdx].getPoint(&v2);
 
 	JGeometry::TVec3<f32> diff;
 	diff.x     = v1.x - v2.x;
@@ -658,18 +658,19 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 
 	f32 fVar1;
 	f32 fVar2;
-	if (unk0->unk14->unk4 && unk8 == unk0->unk8 - 1 && unk4 == 0) {
+	if (unk0->unk14->unk4 && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
 		fVar1 = unk0->unk14->unk0->mParametrization[0];
 		fVar2 = unk0->unk14->unk0->mParametrization[1];
-	} else if (unk0->unk14->unk4 && unk8 == 0 && unk4 == unk0->unk8 - 1) {
-		fVar1 = unk0->unk14->unk0->mParametrization[unk8 + 1];
-		fVar2 = unk0->unk14->unk0->mParametrization[unk8];
+	} else if (unk0->unk14->unk4 && mPrevIdx == 0
+	           && mCurrIdx == unk0->unk8 - 1) {
+		fVar1 = unk0->unk14->unk0->mParametrization[mPrevIdx + 1];
+		fVar2 = unk0->unk14->unk0->mParametrization[mPrevIdx];
 	} else {
-		u32 uVar10 = unk8;
+		u32 uVar10 = mPrevIdx;
 		if (unk0->unk14->unk4)
 			uVar10 += 1;
 		fVar1     = unk0->unk14->unk0->mParametrization[uVar10];
-		u32 uVar7 = unk4;
+		u32 uVar7 = mCurrIdx;
 		if (unk0->unk14->unk4)
 			uVar7 += 1;
 		fVar2 = unk0->unk14->unk0->mParametrization[uVar7];
@@ -687,12 +688,13 @@ bool TGraphTracer::traceSpline(f32 param_1)
 	f32 dVar9 = dVar8 + param_1;
 
 	f32 dVar10;
-	if (unk0->unk14->unk4 && unk8 == unk0->unk8 - 1 && unk4 == 0) {
-		dVar10 = unk0->unk14->unk0->mParametrization[unk8 + 1];
-	} else if (unk0->unk14->unk4 && unk8 == 0 && unk4 == unk0->unk8 - 1) {
-		dVar10 = unk0->unk14->unk0->mParametrization[unk8];
+	if (unk0->unk14->unk4 && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
+		dVar10 = unk0->unk14->unk0->mParametrization[mPrevIdx + 1];
+	} else if (unk0->unk14->unk4 && mPrevIdx == 0
+	           && mCurrIdx == unk0->unk8 - 1) {
+		dVar10 = unk0->unk14->unk0->mParametrization[mPrevIdx];
 	} else {
-		u32 uVar7 = unk4;
+		u32 uVar7 = mCurrIdx;
 		if (unk0->unk14->unk4)
 			uVar7 += 1;
 		dVar10 = unk0->unk14->unk0->mParametrization[uVar7];
