@@ -333,7 +333,7 @@ config.libs = [
             Object(NonMatching, "JSystem/JGadget/std-list.cpp"),
             Object(NonMatching, "JSystem/JGadget/std-vector.cpp"),
             Object(NonMatching, "JSystem/JGadget/linklist.cpp"),
-            Object(NonMatching, "JSystem/JGadget/singlelinklist.cpp"),
+            Object(Matching, "JSystem/JGadget/singlelinklist.cpp"),
 
             # JKernel
             Object(NonMatching, "JSystem/JKernel/JKRArchivePri.cpp"),
@@ -848,7 +848,7 @@ config.libs = [
             Object(NonMatching, "System/MenuDir.cpp"),
             Object(Matching, "System/Params.cpp"),
             Object(Matching, "System/ParamInst.cpp"),
-            Object(NonMatching, "System/PerformList.cpp"),
+            Object(NonMatching, "System/PerformList.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/RenderModeObj.cpp"),
             Object(NonMatching, "System/SnapTimeObj.cpp"),
             Object(NonMatching, "System/TalkCursor.cpp"),
