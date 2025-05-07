@@ -25,6 +25,8 @@ class TSingleNodeLinkList {
 	}
 
 public:
+	TSingleNodeLinkList() { Initialize_(); }
+
 	class iterator {
 	public:
 		iterator(TSingleLinkListNode** param_1)

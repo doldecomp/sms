@@ -10,7 +10,12 @@ class TViewObj;
 
 class TDirector : public TNameRef, public JStage::TSystem {
 public:
-	TDirector();
+	TDirector()
+	    : TNameRef("<TDirector>")
+	    , unk10(nullptr)
+	    , unk14(nullptr)
+	{
+	}
 
 	virtual ~TDirector() { }
 	virtual TNameRef* searchF(u16, const char*);

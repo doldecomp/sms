@@ -837,7 +837,7 @@ config.libs = [
             ),
             Object(NonMatching, "System/GCLogoDir.cpp"),
             Object(NonMatching, "System/J3DSysFlag.cpp"),
-            Object(NonMatching, "System/MarDirector.cpp"),
+            Object(NonMatching, "System/MarDirector.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MarDirectorDirect.cpp"),
             Object(NonMatching, "System/MarDirectorEvent.cpp"),
             Object(NonMatching, "System/MarDirectorInitECT.cpp"),

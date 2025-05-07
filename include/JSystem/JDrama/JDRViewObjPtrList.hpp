@@ -69,11 +69,16 @@ public:
 		for (; it != this->end(); ++it)
 			(*it)->testPerform(param_1, param_2);
 	}
+
 	virtual void loadSuper(JSUMemoryInputStream& stream)
 	{
 		TNameRef::load(stream);
 	}
+
 	virtual void loadAfterSuper() { TNameRef::loadAfter(); }
+
+	// fabricated
+	void insert(T* obj) { this->push_back(obj); }
 };
 
 } // namespace JDrama

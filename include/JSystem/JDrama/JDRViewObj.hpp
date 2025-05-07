@@ -10,7 +10,7 @@ namespace JDrama {
 
 class TViewObj : public TNameRef {
 public:
-	TViewObj(const char* name)
+	TViewObj(const char* name = "<TViewObj>")
 	    : TNameRef(name)
 	    , unkC(0)
 	{

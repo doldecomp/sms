@@ -20,7 +20,7 @@ public:
 
 class TPerformList : public JDrama::TViewObj {
 public:
-	TPerformList();
+	TPerformList() { }
 
 	void push_back(JDrama::TViewObj*, u32);
 	void push_back(const char*, u32);
