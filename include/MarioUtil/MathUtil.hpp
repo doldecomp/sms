@@ -26,6 +26,15 @@ template <class T> inline f32 MsWrap(f32 t, f32 l, f32 r)
 	return t;
 }
 
+template <class T> inline f32 MsClamp(f32 t, f32 l, f32 r)
+{
+	if (t > r)
+		t = r;
+	else if (t < l)
+		t = l;
+	return t;
+}
+
 void MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32);
 
