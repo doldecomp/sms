@@ -1,5 +1,6 @@
 #include <NPC/NpcBalloon.hpp>
 #include <System/MarDirector.hpp>
+#include <GC2D/GCConsole2.hpp>
 
 void TNpcBalloon::setNextMessage(u32 a, s32 timer)
 {
