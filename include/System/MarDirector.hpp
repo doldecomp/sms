@@ -76,7 +76,7 @@ public:
 	initECDisp(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	void
+	JDrama::TViewObj*
 	initECTMir(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
 	void

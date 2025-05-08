@@ -7,7 +7,7 @@ using namespace JDrama;
 TDStageDisp::TDStageDisp(const char* name, TFlagT<u16> flag)
     : TViewConnecter(nullptr, nullptr, flag, name)
 {
-	unk10 = new TEfbCtrlDisp(flag);
+	unk10 = new TEfbCtrlDisp("<EfbCtrlDisp>", flag);
 	unk14 = new TViewObjPtrListT<TViewObj>;
 }
 

@@ -94,7 +94,14 @@ public:
 
 class TOrthoProj : public TCamera {
 public:
-	TOrthoProj();
+	TOrthoProj(f32 a, f32 b, f32 c, f32 d)
+	    : TCamera(-1.0f, 1.0f, "<TOrthoProj>")
+	{
+		mField[0] = a;
+		mField[1] = b;
+		mField[2] = c;
+		mField[3] = d;
+	}
 
 	virtual ~TOrthoProj() { }
 
