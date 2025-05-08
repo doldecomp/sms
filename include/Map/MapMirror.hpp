@@ -13,6 +13,17 @@ public:
 	void drawSetting(MtxPtr);
 	void calcEffectMtx(MtxPtr);
 	TMirrorCamera(const char*);
+
+public:
+	/* 0x30 */ Mtx unk30;
+	/* 0x60 */ GXTexObj unk60;
+	/* 0x80 */ f32 unk80;
+	/* 0x84 */ f32 unk84;
+	/* 0x88 */ f32 unk88;
+	/* 0x8C */ f32 unk8C;
+	/* 0x90 */ f32 unk90;
+	/* 0x94 */ void* unk94;
+	/* 0x98 */ JGeometry::TVec3<f32> unk98;
 };
 
 class TMirrorModel {

@@ -36,8 +36,8 @@ public:
 
 class TEfbCtrlDisp : public TEfbCtrl {
 public:
-	TEfbCtrlDisp(TFlagT<u16> flag)
-	    : TEfbCtrl("<EfbCtrlDisp>", flag)
+	TEfbCtrlDisp(const char* name = "<EfbCtrlDisp>", TFlagT<u16> flag = 0)
+	    : TEfbCtrl(name, flag)
 	{
 	}
 
@@ -49,7 +49,7 @@ public:
 
 class TEfbCtrlTex : public TEfbCtrl {
 public:
-	TEfbCtrlTex(const char*, TFlagT<u16>);
+	TEfbCtrlTex(const char*, TFlagT<u16> = 0);
 
 	virtual ~TEfbCtrlTex() { }
 	virtual void perform(u32, TGraphics*);

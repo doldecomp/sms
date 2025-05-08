@@ -840,7 +840,7 @@ config.libs = [
             Object(NonMatching, "System/MarDirector.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MarDirectorDirect.cpp"),
             Object(NonMatching, "System/MarDirectorEvent.cpp"),
-            Object(NonMatching, "System/MarDirectorInitECT.cpp"),
+            Object(NonMatching, "System/MarDirectorInitECT.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MarDirectorPreEntry.cpp"),
             Object(NonMatching, "System/MarDirectorSetup2.cpp"),
             Object(Matching, "System/marerr.cpp"),
