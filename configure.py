@@ -1077,7 +1077,7 @@ config.libs = [
             Object(NonMatching, "Map/PollutionLayer.cpp"),
             Object(NonMatching, "Map/PollutionEvent.cpp"),
             Object(NonMatching, "Map/MapCollisionPlane.cpp"),
-            Object(NonMatching, "Map/MarineSnow.cpp"),
+            Object(NonMatching, "Map/MarineSnow.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "Map/MapData.cpp"),
             Object(NonMatching, "Map/MapEventDolpic.cpp"),
             Object(NonMatching, "Map/MapEventMare.cpp"),
