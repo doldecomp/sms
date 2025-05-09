@@ -85,7 +85,7 @@ public:
 	initECTGft(TPerformList*, TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	void preEntry(TPerformList*);
+	static void preEntry(TPerformList*);
 
 	virtual ~TMarDirector();
 	virtual void direct();
