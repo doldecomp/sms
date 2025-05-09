@@ -2,6 +2,7 @@
 #define MAP_MAP_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <Map/MapModel.hpp>
 
 class TBGCheckData;
 struct TBGWallCheckRecord;
@@ -9,6 +10,9 @@ class TMapCollisionData;
 class TMapModelManager;
 class TMapWarp;
 class TMapXlu;
+class TMap;
+
+extern TMap* gpMap;
 
 class TMap : public JDrama::TViewObj {
 public:
@@ -58,6 +62,8 @@ public:
 
 	// fabricated
 	TMapModelManager* getModelManager() { return mModelManager; }
+	// idk whether it's actually the root tho
+	TJointModel* getRootJointModel() { return mModelManager->getJointModel(0); }
 
 public:
 	/* 0x10 */ TMapCollisionData* mCollisionData;
@@ -66,7 +72,5 @@ public:
 	/* 0x1C */ TMapXlu* mXlu;
 	/* 0x20 */ u8 unk20;
 };
-
-extern TMap* gpMap;
 
 #endif
