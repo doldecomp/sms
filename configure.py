@@ -1082,7 +1082,7 @@ config.libs = [
             Object(NonMatching, "Map/MapEventDolpic.cpp"),
             Object(NonMatching, "Map/MapEventMare.cpp"),
             Object(NonMatching, "Map/BathWaterManager.cpp"),
-            Object(NonMatching, "Map/StickyStainManager.cpp"),
+            Object(Matching, "Map/StickyStainManager.cpp", extra_cflags=["-inline deferred"]),
         ],
     },
     {
