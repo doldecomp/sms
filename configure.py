@@ -850,7 +850,7 @@ config.libs = [
             Object(Matching, "System/ParamInst.cpp"),
             Object(NonMatching, "System/PerformList.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/RenderModeObj.cpp"),
-            Object(NonMatching, "System/SnapTimeObj.cpp"),
+            Object(NonMatching, "System/SnapTimeObj.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/TalkCursor.cpp"),
             Object(Matching, "System/TexCache.cpp"),
             Object(Matching, "System/ZBufferCatch.cpp", extra_cflags=["-inline deferred"]),
