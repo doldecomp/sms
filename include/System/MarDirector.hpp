@@ -97,7 +97,7 @@ public:
 	void loadParticle();
 	void initLoadParticle();
 	void loadResource();
-	void createObjects();
+	bool createObjects();
 	void setupObjects();
 	void decideMarioPosIdx();
 

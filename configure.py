@@ -873,7 +873,7 @@ config.libs = [
             Object(NonMatching, "System/CardManager.cpp"),
             Object(NonMatching, "System/MarDirectorLoadResource.cpp"),
             Object(NonMatching, "System/MovieDirector.cpp"),
-            Object(NonMatching, "System/MarDirectorCreateObjects.cpp"),
+            Object(Matching, "System/MarDirectorCreateObjects.cpp"),
             Object(NonMatching, "System/MarDirectorSetupObjects.cpp"),
             Object(NonMatching, "System/MSoundMainSide.cpp"),
             Object(Matching, "System/TargetArrow.cpp", extra_cflags=["-inline deferred"]),
