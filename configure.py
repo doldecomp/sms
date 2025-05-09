@@ -1078,7 +1078,7 @@ config.libs = [
             Object(NonMatching, "Map/PollutionEvent.cpp"),
             Object(NonMatching, "Map/MapCollisionPlane.cpp"),
             Object(NonMatching, "Map/MarineSnow.cpp"),
-            Object(NonMatching, "Map/MapData.cpp"),
+            Object(Matching, "Map/MapData.cpp"),
             Object(NonMatching, "Map/MapEventDolpic.cpp"),
             Object(NonMatching, "Map/MapEventMare.cpp"),
             Object(NonMatching, "Map/BathWaterManager.cpp"),
