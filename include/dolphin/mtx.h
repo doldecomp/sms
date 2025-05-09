@@ -48,6 +48,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXMultVec        C_MTXMultVec
 #define MTXMultVecArray   C_MTXMultVecArray
 #define MTXMultVecSR      C_MTXMultVecSR
+#define MTXScale          C_MTXScale
 #define MTXCopy           C_MTXCopy
 #define MTXConcat         C_MTXConcat
 #define MTXInverse        C_MTXInverse
@@ -67,6 +68,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXMultVec        PSMTXMultVec
 #define MTXMultVecArray   PSMTXMultVecArray
 #define MTXMultVecSR      PSMTXMultVecSR
+#define MTXScale          PSMTXScale
 #define MTXCopy           PSMTXCopy
 #define MTXConcat         PSMTXConcat
 #define MTXInverse        PSMTXInverse
@@ -90,7 +92,7 @@ void MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
 void MTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
 void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
 void MTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
-void MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
+void C_MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
 void MTXScaleApply(Mtx src, Mtx dst, f32 xS, f32 yS, f32 zS);
 void MTXQuat(Mtx m, QuaternionPtr q);
 void MTXReflect(Mtx m, Vec* p, Vec* n);

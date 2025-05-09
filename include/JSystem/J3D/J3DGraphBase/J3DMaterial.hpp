@@ -76,7 +76,9 @@ public:
 
 	GXBool isDrawModeOpaTexEdge() { return (unk8 & 3) ? GX_TRUE : GX_FALSE; }
 
+	// TODO: presumably this is something called diff flag?
 	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
+	void setSomeFlag() { unk1C |= 1; }
 
 public:
 	/* 0x0 */ J3DMaterial* mNext;
