@@ -145,6 +145,8 @@ public:
 
 	// Fabricated
 	inline bool checkFlag(u32 flag) { return (mFlags & flag) != 0; }
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
 
 	u32 read();
 	void onNeutralMarioKey();
