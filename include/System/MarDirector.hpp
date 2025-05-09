@@ -22,6 +22,8 @@ class TBaseNPC;
 class TPerformList;
 class TTalkCursor;
 class TGCConsole2;
+class TSMSFader;
+class MSStage;
 
 class TMarDirector;
 
@@ -126,20 +128,23 @@ public:
 	/* 0x64 */ u8 unk64;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ int _070;
+	/* 0x70 */ JDrama::TViewObj* unk70;
 	/* 0x74 */ TGCConsole2* console;
-	/* 0x78 */ int _078;
+	/* 0x78 */ JDrama::TNameRef* unk78;
 	/* 0x7C */ u8 map;
 	/* 0x7D */ u8 _07D;
 	/* 0x7E */ u8 _07E;
 	/* 0x7F */ u8 _07F;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
-	/* 0x88 */ JGadget::TVector_pointer_void unk88;
+	/* 0x88 */ JGadget::TVector_pointer<void*> unk88;
 	/* 0xA0 */ u32 unkA0;
-	/* 0xA4 */ char unkA4[0xB8 - 0xA4];
+	/* 0xA4 */ char unkA4[0x8];
+	/* 0xAC */ JDrama::TViewObj* unkAC;
+	/* 0xB0 */ JDrama::TViewObj* unkB0;
+	/* 0xB4 */ char unkB4[0x4];
 	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ u32 unkBC;
+	/* 0xBC */ JDrama::TNameRef* unkBC; // TODO: type?
 	/* 0xC0 */ JDrama::TDisplay* unkC0;
 	/* 0xC4 */ char unkC4[0x4];
 	/* 0xC8 */ u32 unkC8;
@@ -148,8 +153,9 @@ public:
 	/* 0xD1 */ u8 unkD1;
 	/* 0xD4 */ u32 unkD4;
 	/* 0xD8 */ u32 unkD8;
-	/* 0xDC */ u32 unkDC;
-	/* 0xE0 */ char unkE0[0x8];
+	/* 0xDC */ TSMSFader* unkDC;
+	/* 0xE0 */ TSMSFader* unkE0; // TODO: type unconfirmed
+	/* 0xE4 */ char unkE4[0x4];
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ char unk120[0x4];
 	/* 0x124 */ u8 unk124;
@@ -160,7 +166,8 @@ public:
 	/* 0x24C */ u8 unk24C;
 	/* 0x24D */ u8 unk24D;
 	/* 0x250 */ u32 unk250;
-	/* 0x254 */ char unk254[0x8];
+	/* 0x254 */ JDrama::TNameRef* unk254;
+	/* 0x258 */ MSStage* unk258;
 	/* 0x25C */ u32 unk25C;
 	/* 0x260 */ u8 unk260;
 };

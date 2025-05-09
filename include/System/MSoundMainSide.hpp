@@ -7,7 +7,7 @@ class MSStage {
 public:
 	void setPosPtr(Vec*);
 	void stageLoop();
-	void init(u8, u8);
+	static MSStage* init(u8, u8);
 };
 
 class MSSTageSimpleEnvironmentMonte {
