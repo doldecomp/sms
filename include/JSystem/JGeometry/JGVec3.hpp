@@ -49,8 +49,17 @@ public:
 		*(Vec*)this = *(Vec*)&other;
 		return *this;
 	}
-	TVec3& operator*=(const TVec3& operand);
-	TVec3& operator-=(const TVec3& operand);
+	TVec3& operator*=(const TVec3& other);
+	TVec3& operator+=(const TVec3& other)
+	{
+		add(other);
+		return *this;
+	}
+	TVec3& operator-=(const TVec3& other)
+	{
+		sub(other);
+		return *this;
+	}
 
 	operator Vec*() { return (Vec*)&x; }
 	operator const Vec*() const { return (Vec*)&x; }

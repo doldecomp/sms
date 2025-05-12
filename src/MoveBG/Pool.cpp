@@ -89,7 +89,7 @@ TPool::TPool(const char* name)
 f32 TPoolManager::getWaterLevel(const TBGCheckData* param_1) const
 {
 	if (param_1 == nullptr || param_1->unk44 == nullptr)
-		return param_1->unk8 + 100.0f;
+		return param_1->mMinY + 100.0f;
 
 	int idx = param_1->unk44->unk7C;
 	if (idx == 0xff ? true : false)

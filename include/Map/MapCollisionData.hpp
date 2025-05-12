@@ -115,6 +115,9 @@ public:
 
 	static TBGCheckData mIllegalCheckData;
 
+	// fabricated
+	u32 getEntryRelatedThing(u16 n) const { return unk40 - unk42[n]; }
+
 public:
 	/* 0x0 */ f32 unk0;
 	/* 0x4 */ f32 unk4;
