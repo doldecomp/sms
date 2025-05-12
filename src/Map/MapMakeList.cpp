@@ -65,9 +65,9 @@ static TBGCheckList* addGroundNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->unk4) {
 		next = param_1->unk4;
-		if (param_2->unk8 > next->unk8->unk8
-		    || (param_2->unk8 == next->unk8->unk8
-		        && param_2->unkC > next->unk8->unkC))
+		if (param_2->mMinY > next->unk8->mMinY
+		    || (param_2->mMinY == next->unk8->mMinY
+		        && param_2->mMaxY > next->unk8->mMaxY))
 			return param_1;
 		param_1 = next;
 	}
@@ -79,9 +79,9 @@ static TBGCheckList* addRoofNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->unk4) {
 		next = param_1->unk4;
-		if (param_2->unkC < next->unk8->unkC
-		    || (param_2->unkC == next->unk8->unkC
-		        && param_2->unk8 < next->unk8->unk8))
+		if (param_2->mMaxY < next->unk8->mMaxY
+		    || (param_2->mMaxY == next->unk8->mMaxY
+		        && param_2->mMinY < next->unk8->mMinY))
 			return param_1;
 		param_1 = next;
 	}
@@ -93,9 +93,9 @@ static TBGCheckList* addWallNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->unk4) {
 		next = param_1->unk4;
-		if (param_2->unkC > next->unk8->unkC
-		    || (param_2->unkC == next->unk8->unkC
-		        && param_2->unk8 > next->unk8->unk8))
+		if (param_2->mMaxY > next->unk8->mMaxY
+		    || (param_2->mMaxY == next->unk8->mMaxY
+		        && param_2->mMinY > next->unk8->mMinY))
 			return param_1;
 		param_1 = next;
 	}

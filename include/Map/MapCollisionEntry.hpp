@@ -38,8 +38,10 @@ public:
 	virtual void setUp() { }
 	virtual void setUpTrans(const JGeometry::TVec3<f32>& param_1)
 	{
-		JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
-		JGeometry::TVec3<f32> vec3(1.875f, 1.875f, 1.875f);
+		JGeometry::TVec3<f32> vec3;
+		JGeometry::TVec3<f32> vec2;
+		vec3.set((Vec) { 0.0f, 0.0f, 0.0f });
+		vec2.set((Vec) { 1.0f, 1.0f, 1.0f });
 		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, vec2.x, vec2.y,
 		            vec2.z, vec3.x, vec3.y, vec3.z);
 		setUp();
@@ -62,7 +64,18 @@ public:
 	void setCheckData(const f32*, const s16*, TBGCheckData*, int);
 	void isSetUp() const;
 
+	// fabricated
 	bool checkFlag(u16 flag) const { return unk5C & flag ? true : false; }
+	void onFlag(u16 flag) { unk5C |= flag; }
+	void offFlag(u16 flag) { unk5C &= ~flag; }
+	u32 getUnk8() const { return unk8; }
+	u32 getUnkC() const { return unkC; }
+
+	JGeometry::TVec3<f32> calcOffset(JGeometry::TVec3<f32> new_trans) const
+	{
+		new_trans -= unk50;
+		return new_trans;
+	}
 
 public:
 	/* 0x4 */ TBGCheckData* unk4;
@@ -71,9 +84,20 @@ public:
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ Vec* unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ void* unk1C;
+
+	struct FabricatedUnk1CStruct {
+		/* 0x0 */ u16 unk0;
+		/* 0x2 */ s16 unk2;
+		/* 0x4 */ u16 unk4;
+		/* 0x8 */ s16* unk8;
+		/* 0xC */ u8* unkC;
+		/* 0x10 */ u8* unk10;
+		/* 0x14 */ s16* unk14;
+	};
+
+	/* 0x1C */ FabricatedUnk1CStruct* unk1C;
 	/* 0x20 */ Mtx unk20;
-	/* 0x50 */ Vec unk50;
+	/* 0x50 */ JGeometry::TVec3<f32> unk50;
 	/* 0x5C */ u16 unk5C;
 };
 

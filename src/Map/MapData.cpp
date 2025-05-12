@@ -9,15 +9,15 @@ TBGCheckData::TBGCheckData()
     : unk0(0)
     , unk2(0)
     , unk4(0)
-    , unk8(0.0f)
-    , unkC(0.0f)
+    , mMinY(0.0f)
+    , mMaxY(0.0f)
     , unk40(0.0f)
     , unk44(nullptr)
 {
-	unk10.x = unk10.y = unk10.z = 0.0f;
-	unk1C.x = unk1C.y = unk1C.z = 0.0f;
-	unk28.x = unk28.y = unk28.z = 0.0f;
-	unk34.x = unk34.y = unk34.z = 0.0f;
+	mPoint1.zero();
+	mPoint2.zero();
+	mPoint3.zero();
+	mNormal.zero();
 }
 
 u32 TBGCheckData::getPlaneType()
@@ -25,13 +25,13 @@ u32 TBGCheckData::getPlaneType()
 	if (unk0 == 0x801 ? true : false)
 		return 0;
 
-	if (unk34.y > 0.2f)
+	if (mNormal.y > 0.2f)
 		return 0;
 
-	if (unk34.y < -0.2f)
+	if (mNormal.y < -0.2f)
 		return 1;
 
-	if (unk34.x < -0.707f || 0.707f < unk34.x)
+	if (mNormal.x < -0.707f || 0.707f < mNormal.x)
 		unk4 |= 0x8;
 	else
 		unk4 &= ~0x8;
