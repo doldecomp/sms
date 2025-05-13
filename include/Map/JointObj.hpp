@@ -26,8 +26,9 @@ public:
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 	void setIndexInParent(u16 i) { mIndexInParent = i; }
-	int getShapeNum() { return mShapeNum; }
+	int getShapeNum() const { return mShapeNum; }
 	J3DShape* getShape(int i) { return mShapes[i]; }
+	int getChildrenNum() const { return mChildrenNum; }
 	TJointObj* getChild(int i) { return mChildren[i]; }
 	J3DJoint* getJoint() { return mJoint; }
 

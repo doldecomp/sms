@@ -13,7 +13,7 @@ void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
-template <class T> inline f32 MsWrap(f32 t, f32 l, f32 r)
+template <class T> inline T MsWrap(T t, T l, T r)
 {
 	if (l >= r)
 		return l;
@@ -23,6 +23,15 @@ template <class T> inline f32 MsWrap(f32 t, f32 l, f32 r)
 	while (t < l)
 		t += r - l;
 
+	return t;
+}
+
+template <class T> inline T MsClamp(T t, T l, T r)
+{
+	if (t > r)
+		t = r;
+	else if (t < l)
+		t = l;
 	return t;
 }
 

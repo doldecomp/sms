@@ -7,6 +7,7 @@
 
 class TBaseNPC;
 class TCameraMapTool;
+class TMarioGamePad;
 
 class CPolarSubCamera : JDrama::TLookAtCamera {
 public:
@@ -130,9 +131,14 @@ public:
 
 public:
 	/* 0x50 */ int mMode;
-	/* 0x54 */ char unk54[0x124 - 0x54];
+	/* 0x54 */ char unk54[0x120 - 0x54];
+	/* 0x120 */ TMarioGamePad* unk120;
 	/* 0x124 */ JGeometry::TVec3<f32> unk124;
-	/* 0x130 */ char unk130[0x2C8 - 0x130];
+	/* 0x130 */ char unk130[0xC];
+	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
+	/* 0x148 */ char unk148[0x1EC - 0x148];
+	/* 0x1EC */ Mtx unk1EC;
+	/* 0x21C */ char unk21C[0x2C8 - 0x21C];
 	/* 0x2C8 */ s16 unk2C8;
 };
 

@@ -500,10 +500,10 @@ void TMapObjBase::calcReflectingVelocity(const TBGCheckData* param_1,
                                          f32 param_2,
                                          JGeometry::TVec3<f32>* param_3) const
 {
-	f32 fVar2 = param_3->dot(param_1->unk34);
-	param_3->x -= (param_2 + 1.0f) * fVar2 * param_1->unk34.x;
-	param_3->y -= (param_2 + 1.0f) * fVar2 * param_1->unk34.y;
-	param_3->z -= (param_2 + 1.0f) * fVar2 * param_1->unk34.z;
+	f32 fVar2 = param_3->dot(param_1->mNormal);
+	param_3->x -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.x;
+	param_3->y -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.y;
+	param_3->z -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.z;
 }
 
 void TMapObjBase::getVerticalVecToTargetXZ(f32, f32,

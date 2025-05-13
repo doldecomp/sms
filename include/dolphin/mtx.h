@@ -39,6 +39,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #ifdef DEBUG
 #define VECSquareMag      C_VECSquareMag
 #define VECNormalize      C_VECNormalize
+#define VECDistance       C_VECDistance
 #define VECMag            C_VECMag
 #define VECAdd            C_VECAdd
 #define VECDotProduct     C_VECDotProduct
@@ -47,6 +48,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXMultVec        C_MTXMultVec
 #define MTXMultVecArray   C_MTXMultVecArray
 #define MTXMultVecSR      C_MTXMultVecSR
+#define MTXScale          C_MTXScale
 #define MTXCopy           C_MTXCopy
 #define MTXConcat         C_MTXConcat
 #define MTXInverse        C_MTXInverse
@@ -57,6 +59,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #else
 #define VECSquareMag      PSVECSquareMag
 #define VECNormalize      PSVECNormalize
+#define VECDistance       PSVECDistance
 #define VECMag            PSVECMag
 #define VECAdd            PSVECAdd
 #define VECDotProduct     PSVECDotProduct
@@ -65,6 +68,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXMultVec        PSMTXMultVec
 #define MTXMultVecArray   PSMTXMultVecArray
 #define MTXMultVecSR      PSMTXMultVecSR
+#define MTXScale          PSMTXScale
 #define MTXCopy           PSMTXCopy
 #define MTXConcat         PSMTXConcat
 #define MTXInverse        PSMTXInverse
@@ -88,7 +92,7 @@ void MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
 void MTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
 void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
 void MTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
-void MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
+void C_MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
 void MTXScaleApply(Mtx src, Mtx dst, f32 xS, f32 yS, f32 zS);
 void MTXQuat(Mtx m, QuaternionPtr q);
 void MTXReflect(Mtx m, Vec* p, Vec* n);
@@ -159,9 +163,13 @@ void PSMTXROMultS16VecArray(ROMtx* m, S16Vec* srcBase, Vec* dstBase, u32 count);
 void PSMTXMultS16VecArray(Mtx44* m, S16Vec* srcBase, Vec* dstBase, u32 count);
 
 // vec.c
-void VECHalfAngle(Vec* a, Vec* b, Vec* half);
-void VECReflect(Vec* src, Vec* normal, Vec* dst);
-f32 VECDistance(Vec* a, Vec* b);
+void C_VECHalfAngle(Vec* a, Vec* b, Vec* half);
+void C_VECReflect(Vec* src, Vec* normal, Vec* dst);
+f32 C_VECDistance(Vec* a, Vec* b);
+
+void PSVECHalfAngle(Vec* a, Vec* b, Vec* half);
+void PSVECReflect(Vec* src, Vec* normal, Vec* dst);
+f32 PSVECDistance(Vec* a, Vec* b);
 
 // C functions
 void C_VECAdd(Vec* a, Vec* b, Vec* c);
