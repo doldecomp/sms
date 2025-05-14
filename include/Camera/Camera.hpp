@@ -9,7 +9,7 @@ class TBaseNPC;
 class TCameraMapTool;
 class TMarioGamePad;
 
-class CPolarSubCamera : JDrama::TLookAtCamera {
+class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
 	enum EnumNoticeOnOffMode {};
 
