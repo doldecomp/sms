@@ -2,6 +2,7 @@
 #include <Map/MapCollisionEntry.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Camera/Camera.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
@@ -21,10 +22,7 @@ TMapModelManager::TMapModelManager(const char* name)
 void TMapModelManager::init()
 {
 	static const char* name_table[] = {
-		"map",
-		"map_obj",
-		"station",
-		"inside",
+		"map", "map_obj", "station", "inside", nullptr,
 	};
 
 	mJointModelNum = 1;
@@ -76,29 +74,45 @@ void TMapModel::initUnderpass()
 	zmode->setUpdateEnable(GX_FALSE);
 }
 
+static inline void fake(J3DMaterial* mat, MtxPtr mtx)
+{
+	mat->getTexGenBlock()->getTexMtx(0)->setEffectMtx(mtx);
+}
+
 void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (checkFlag(1))
 		return;
 
-	JGeometry::TVec3<f32>* pos = gpMarioPos;
 	if ((param_1 & 2) != 0 && mUnderpass != nullptr) {
 		// NOTE: this seems to be the logic for entering delphino plaza
 		// underpasses: if inside, draw them on top of everything and move the
 		// camera to top view
-		if ((*gpMarioFlag & 2) && SMS_GetMarioGrLevel() + 200.0f < pos->y) {
+		if ((*gpMarioFlag & 2 ? true : false)
+		    && SMS_GetMarioPos()->y < SMS_GetMarioGrLevel() + 200.0f) {
 			mUnderpass->awake();
-			// TODO: "move camera"
-			mUnderpassMaterial->getTexGenBlock()->getTexMtx(0)->setEffectMtx(
-			    nullptr);
+			Vec pos;
+			gpCamera->JSGGetViewPosition(&pos);
+			Vec up;
+			gpCamera->JSGGetViewUpVector(&up);
+			Mtx proj;
+			C_MTXLightOrtho(proj, unk38 * 1000.0f, unk38 * -1000.0f,
+			                unk38 * -1000.0f, unk38 * 1000.0f, 0.5f, 0.5f, 0.5f,
+			                0.5f);
+			Mtx view;
+			C_MTXLookAt(view, &pos, &up, gpMarioPos);
+			Mtx viewProj;
+			MTXConcat(proj, view, viewProj);
+			fake(mUnderpassMaterial, viewProj);
 		} else {
 			mUnderpass->sleep();
 		}
 	}
 
 	if ((param_1 & 2) != 0) {
+		MActor* actor = mActor;
 		param_1 &= ~2;
-		mActor->frameUpdate();
+		actor->frameUpdate();
 	}
 
 	mActor->perform(param_1, param_2);
