@@ -6,11 +6,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-template <class T> inline T max(const T& a, const T& b)
+template <class T> static inline T max(const T& a, const T& b)
 {
 	return a > b ? a : b;
 }
-template <class T> inline T min(const T& a, const T& b)
+template <class T> static inline T min(const T& a, const T& b)
 {
 	return b > a ? a : b;
 }

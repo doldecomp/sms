@@ -1,6 +1,6 @@
 #include <Map/MapCollisionData.hpp>
 
-void TMapCollisionData::polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*) { }
+bool TMapCollisionData::polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*) { }
 
 static void pointIsInGrid(f32, f32, f32, f32, f32, f32) { }
 

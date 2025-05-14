@@ -13,8 +13,12 @@ public:
 
 	virtual void setPreNode(TBGCheckList*) { }
 
+	// fabricated
+	TBGCheckList* getNext() { return mNext; }
+	void setNext(TBGCheckList* v) { mNext = v; }
+
 public:
-	/* 0x4 */ TBGCheckList* unk4;
+	/* 0x4 */ TBGCheckList* mNext;
 	/* 0x8 */ TBGCheckData* unk8;
 };
 
@@ -27,6 +31,9 @@ public:
 		// TODO: maybe unkC is TBGCheckList*?
 		unkC = (TBGCheckListWarp*)node;
 	}
+
+	// fabricated
+	TBGCheckListWarp* getPreNode() { return unkC; }
 
 public:
 	/* 0xC */ TBGCheckListWarp* unkC;
@@ -81,7 +88,7 @@ public:
 
 	TMapCollisionData();
 
-	void polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*);
+	bool polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*);
 	void intersectLine(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&, bool,
 	                   JGeometry::TVec3<f32>*) const;
@@ -105,9 +112,9 @@ public:
 	void removeCheckListNode(s32, s32);
 
 	void addCheckDataToGrid(TBGCheckData*, int);
-	void getGridArea(const TBGCheckData*, int, int*, int*, int*, int*);
+	bool getGridArea(const TBGCheckData*, int, int*, int*, int*, int*);
 	void addCheckDataToList(int, int, int, int, TBGCheckData*);
-	void getListRoot(int, int, int, int) const;
+	TBGCheckList* getListRoot(int, int, int, int) const;
 
 	TBGCheckList* allocCheckList(int type, int count);
 	u32 getEntryID();

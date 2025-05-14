@@ -1058,7 +1058,7 @@ config.libs = [
             Object(Matching, "Map/MapEvent.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapEventSink.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapMakeData.cpp", extra_cflags=["-inline deferred"]),
-            Object(NonMatching, "Map/MapMakeList.cpp"),
+            Object(NonMatching, "Map/MapMakeList.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/MapMirror.cpp"),
             Object(NonMatching, "Map/MapModel.cpp"),
             Object(NonMatching, "Map/MapWarp.cpp"),
