@@ -11,7 +11,7 @@ TBGCheckData TMapCollisionData::mIllegalCheckData;
 TMapCollisionData* gpMapCollisionData;
 
 TBGCheckList::TBGCheckList()
-    : unk4(nullptr)
+    : mNext(nullptr)
     , unk8(0)
 {
 }
@@ -28,9 +28,9 @@ void TMapCollisionData::initGrid(TBGCheckListRoot* roots)
 {
 	int x = unk10;
 	while (x--) {
-		roots->unk0[0].unk4 = nullptr;
-		roots->unk0[1].unk4 = nullptr;
-		roots->unk0[2].unk4 = nullptr;
+		roots->unk0[0].setNext(nullptr);
+		roots->unk0[1].setNext(nullptr);
+		roots->unk0[2].setNext(nullptr);
 		roots++;
 	}
 }

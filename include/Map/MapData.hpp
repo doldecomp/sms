@@ -27,6 +27,10 @@ public:
 	bool checkFlag2(u32 flag) const { return unk4 & flag ? true : false; }
 	const TLiveActor* getUnk44() const { return unk44; }
 
+	const JGeometry::TVec3<f32>& getPoint1() const { return mPoint1; }
+	const JGeometry::TVec3<f32>& getPoint2() const { return mPoint2; }
+	const JGeometry::TVec3<f32>& getPoint3() const { return mPoint3; }
+
 public:
 	/* 0x0 */ u16 unk0;
 	/* 0x2 */ s16 unk2;
