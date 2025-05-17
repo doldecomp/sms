@@ -10,7 +10,16 @@ public:
 	TMapCheckGroundPlane();
 	void init(int, int, f32);
 	f32 checkPlaneGround(f32 x, f32 y, f32 z, const TBGCheckData**);
-	void getCheckData(int, int, int) const;
+	TBGCheckData* getCheckData(int, int, int) const;
+
+public:
+	/* 0x0 */ int unk0;
+	/* 0x4 */ int unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ f32 unk14;
+	/* 0x18 */ TBGCheckData* unk18;
 };
 
 #endif
