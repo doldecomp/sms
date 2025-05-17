@@ -18,9 +18,9 @@ public:
 	               const JGeometry::TVec3<float>&,
 	               const JGeometry::TVec3<float>&);
 	void updateTrans(const JGeometry::TVec3<float>&);
-	void isWaterSlip() const;
-	void isMarioThrough() const;
-	void isWaterSurface() const;
+	bool isWaterSlip() const;
+	bool isMarioThrough() const;
+	bool isWaterSurface() const;
 
 	// fabricated
 	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
