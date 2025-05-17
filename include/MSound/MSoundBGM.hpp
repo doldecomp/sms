@@ -12,10 +12,8 @@ template <typename T, typename U> class JALListVirtualNode;
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
 	MSBgm();
-
-	static JASystem::TTrack* smBgmInTrack[3];
+	static MSBgm* smBgmInTrack[3];
 	static f32 smMainVolume;
-
 	static void init();
 	static void startBGM(u32);
 	static void stopBGM(u32, u32);
@@ -35,6 +33,8 @@ public:
 	static u32 getSceneNo(u32);
 	static JAISound* getHandle(u8);
 	static JAISound* getJASTrack(JAISound*, u8);
+public:
+	/* 0x14 */ JAISound* unk_14;
 };
 
 #endif
