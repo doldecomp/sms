@@ -15,6 +15,7 @@ public:
 
 	// fabricated
 	TBGCheckList* getNext() { return mNext; }
+	const TBGCheckList* getNext() const { return mNext; }
 	void setNext(TBGCheckList* v) { mNext = v; }
 
 public:
@@ -45,6 +46,10 @@ class TBGCheckListRoot {
 public:
 	TBGCheckListRoot() { }
 
+	// fabricated
+	const TBGCheckList* getWallList() const { return unk0[2].getNext(); }
+	const TBGCheckList* getRoofList() const { return unk0[1].getNext(); }
+
 public:
 	/* 0x0 */ TBGCheckList unk0[3];
 };
@@ -71,10 +76,10 @@ struct TBGWallCheckRecord {
 
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ f32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u32 unk14;
+	/* 0x10 */ int unk10;
+	/* 0x14 */ int unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ TBGCheckData* unk1C;
+	/* 0x1C */ TBGCheckData* unk1C[1];
 };
 
 class TMapCollisionData;
@@ -94,13 +99,13 @@ public:
 	                   JGeometry::TVec3<f32>*) const;
 
 	f32 checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
-	void checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
-	                     const TBGCheckData**);
+	static f32 checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
+	                           const TBGCheckData**);
 	f32 checkRoof(f32, f32, f32, u8, const TBGCheckData**) const;
-	void checkRoofList(f32, f32, f32, u8, const TBGCheckList*,
-	                   const TBGCheckData**);
+	static f32 checkRoofList(f32, f32, f32, u8, const TBGCheckList*,
+	                         const TBGCheckData**);
 	int checkWalls(TBGWallCheckRecord*) const;
-	int checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
+	static int checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
 
 	void init(JSUMemoryInputStream&);
 	void initAllCheckDataAndList();
@@ -124,6 +129,14 @@ public:
 
 	// fabricated
 	u32 getEntryRelatedThing(u16 n) const { return unk40 - unk42[n]; }
+	const TBGCheckListRoot& getGridRoot14(int x, int z) const
+	{
+		return unk14[x + z * unk8];
+	}
+	const TBGCheckListRoot& getGridRoot18(int x, int z) const
+	{
+		return unk18[x + z * unk8];
+	}
 
 public:
 	/* 0x0 */ f32 unk0;
