@@ -17,6 +17,9 @@ void MSBgm::stopTrackBGMs(u8 param1, u32 param2) { }
 void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 {
 	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
+	if (bgm && bgm->unk_14) {
+    bgm->unk_14->setVolume(param2,param3,param4);
+  }
 }
 
 void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4)
@@ -29,9 +32,20 @@ void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4)
 
 void MSBgm::setSeqTrackVolume(u8 param1, u8 param2, f32 param3, u32 param4) { }
 
-void MSBgm::setPan(u8 param1, f32 param2, u32 param3, u8 param4) { }
+void MSBgm::setPan(u8 param1, f32 param2, u32 param3, u8 param4)
+{
+	MSBgm* track = smBgmInTrack[param1];
+	if (track && track->unk_14) {
+		track->unk_14->setPan(param2, param3, param4);
+	}
+}
 
-void MSBgm::setDolby(u8 param1, f32 param2, u32 param3, u8 param4) { }
+void MSBgm::setDolby(u8 param1, f32 param2, u32 param3, u8 param4) { 
+	MSBgm* track = smBgmInTrack[param1];
+	if (track && track->unk_14) {
+		track->unk_14->setDolby(param2, param3, param4);
+	}
+}
 
 void MSBgm::setPause(u8 param1, bool param2) { }
 
@@ -149,7 +163,7 @@ JAISound* MSBgm::getHandle(u8 param)
 {
 	MSBgm* track = smBgmInTrack[param];
 	if (track) {
-		return (JAISound*)(&track[0x14]);
+		return track->unk_14;
 	}
 	return nullptr;
 }
