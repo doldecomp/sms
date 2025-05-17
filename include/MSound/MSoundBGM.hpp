@@ -12,7 +12,7 @@ template <typename T, typename U> class JALListVirtualNode;
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
 	MSBgm();
-
+	JAISound* unk_14; //0x14 Offset  
 	static MSBgm* smBgmInTrack[3];
 	static f32 smMainVolume;
 	static void init();

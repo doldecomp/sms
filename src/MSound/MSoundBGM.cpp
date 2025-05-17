@@ -21,19 +21,10 @@ void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 
 void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4)
 {
-	JAISound* sound = nullptr;
-
 	MSBgm* track = smBgmInTrack[param1];
-	if ((track)
-	    && (sound = *(JAISound**)(track + 0x14), sound != (JAISound*)0x0)) {
-		// Using JAISound::setVolume  instead causes an  Static Error. Even
-		// though that is in the Decompiled Ghidra Code. Function should be
-		// something like JAISound::setVolume(param2,param3,param4); But due to
-		// a "a nonstatic member reference must be relative to a specific
-		// object" error with JAISound I can't
-		setVolume(param2, param3, param4, param1);
+	if (track && track->unk_14) {
+		track->unk_14->setVolume(param2, param3, param4);
 	}
-	return;
 }
 
 void MSBgm::setSeqTrackVolume(u8 param1, u8 param2, f32 param3, u32 param4) { }
