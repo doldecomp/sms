@@ -1047,7 +1047,7 @@ config.libs = [
         "objects": [
             Object(NonMatching, "Map/JointModel.cpp"),
             Object(Matching, "Map/JointModelManager.cpp", extra_cflags=["-inline deferred"]),
-            Object(NonMatching, "Map/JointObj.cpp"),
+            Object(Matching, "Map/JointObj.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/Map.cpp"),
             Object(NonMatching, "Map/MapArea.cpp"),
             Object(NonMatching, "Map/MapCheck.cpp", extra_cflags=["-inline deferred"]),
