@@ -124,21 +124,22 @@ TMapCollisionStatic::TMapCollisionStatic()
 
 void TMapCollisionMove::move()
 {
-	if (checkFlag(1))
+	if (checkFlag(0x1))
 		return;
 
 	if (checkFlag(0x4000)) {
 		setList();
+		return;
+	}
+
+	if (checkFlag(0x8000)) {
+		JGeometry::TVec3<f32> local_18;
+		local_18.x = unk20[0][3];
+		local_18.y = unk20[1][3];
+		local_18.z = unk20[2][3];
+		TMapCollisionBase::updateTrans(local_18);
 	} else {
-		if (checkFlag(0x8000)) {
-			JGeometry::TVec3<f32> local_18;
-			local_18.x = unk20[0][3];
-			local_18.y = unk20[1][3];
-			local_18.z = unk20[2][3];
-			TMapCollisionBase::updateTrans(local_18);
-		} else {
-			TMapCollisionBase::update();
-		}
+		TMapCollisionBase::update();
 	}
 }
 
@@ -147,10 +148,12 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 	if (checkFlag(0x1))
 		return;
 
-	if (checkFlag(0x4000))
+	if (checkFlag(0x4000)) {
 		setList();
-	else
-		TMapCollisionBase::updateTrans(param_1);
+		return;
+	}
+
+	TMapCollisionBase::updateTrans(param_1);
 }
 
 void TMapCollisionMove::init(u32 param_1, u16 param_2, short param_3,
@@ -185,15 +188,15 @@ void TMapCollisionWarp::setUp()
 	offFlag(1);
 
 	unk60 = gpMapCollisionData->getEntryID();
+
 	if (checkFlag(0x8000)) {
-		JGeometry::TVec3<f32> local_18;
-		local_18.set(unk20[0][3], unk20[1][3], unk20[2][3]);
+		JGeometry::TVec3<f32> local_18(unk20[0][3], unk20[1][3], unk20[2][3]);
 		TMapCollisionBase::updateTrans(local_18);
 	} else {
 		TMapCollisionBase::update();
 	}
 
-	unk64 = gpMapCollisionData->unk40 - gpMapCollisionData->unk42[unk60];
+	unk64 = gpMapCollisionData->getEntryRelatedThing(unk60);
 }
 
 void TMapCollisionWarp::setUpTrans(const JGeometry::TVec3<f32>& param_1)
