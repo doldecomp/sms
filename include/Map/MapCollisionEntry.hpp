@@ -138,24 +138,7 @@ public:
 	{
 		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, param_2.x,
 		            param_2.y, param_2.z, param_3.x, param_3.y, param_3.z);
-
-		// this is TMapCollisionMove::move, but inlined? How?
-		if (checkFlag(1))
-			return;
-
-		if (checkFlag(0x4000)) {
-			setList();
-		} else {
-			if (checkFlag(0x8000)) {
-				JGeometry::TVec3<f32> local_18;
-				local_18.x = unk20[0][3];
-				local_18.y = unk20[1][3];
-				local_18.z = unk20[2][3];
-				TMapCollisionBase::updateTrans(local_18);
-			} else {
-				TMapCollisionBase::update();
-			}
-		}
+		move();
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&);
 	virtual void moveMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
