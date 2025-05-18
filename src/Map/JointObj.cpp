@@ -10,35 +10,93 @@
 
 class J3DShape;
 
-TJointObj::TJointObj()
+void TJointObj::stand()
 {
-	mIndexInParent = 0;
-	mFlags         = 0;
-	mJoint         = nullptr;
-	mChildrenNum   = 0;
-	mChildren      = nullptr;
-	mShapeNum      = 0;
-	mShapes        = nullptr;
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->stand();
+
+	if (checkFlag(4)) {
+		for (int i = 0; i < getShapeNum(); ++i)
+			mShapes[i]->offFlag(1);
+
+		offFlag(4);
+	}
 }
 
-void TJointObj::initJointObj(J3DJoint* joint)
+void TJointObj::sit()
 {
-	mJoint = joint;
-	initChildren();
-	u32 count = 0;
-	for (J3DMaterial* m = mJoint->getMesh(); m != nullptr; m = m->getNext())
-		++count;
-	mShapeNum = count;
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->sit();
 
-	if (mShapeNum <= 0)
-		return;
+	if (!checkFlag(4 | 2 | 1)) {
+		for (int i = 0; i < getShapeNum(); ++i)
+			mShapes[i]->onFlag(1);
 
-	mShapes = new J3DShape*[mShapeNum];
+		onFlag(4);
+	}
+}
 
+void TJointObj::awake()
+{
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->awake();
+
+	if (checkFlag(4 | 2)) {
+		for (int i = 0; i < getShapeNum(); ++i)
+			mShapes[i]->offFlag(1);
+
+		offFlag(4);
+		offFlag(2);
+	}
+}
+
+void TJointObj::sleep()
+{
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->sleep();
+
+	if (!checkFlag(1) && !checkFlag(2)) {
+		for (int i = 0; i < getShapeNum(); ++i)
+			mShapes[i]->onFlag(1);
+
+		offFlag(4);
+		onFlag(2);
+	}
+}
+
+void TJointObj::alive()
+{
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->alive();
+
+	for (int i = 0; i < getShapeNum(); ++i)
+		mShapes[i]->offFlag(1);
+
+	offFlag(1);
+	offFlag(2);
+	offFlag(4);
+}
+
+void TJointObj::kill()
+{
+	for (int i = 0; i < getChildrenNum(); ++i)
+		mChildren[i]->kill();
+
+	if (!checkFlag(1)) {
+		for (int i = 0; i < getShapeNum(); ++i)
+			mShapes[i]->onFlag(1);
+
+		onFlag(1);
+		offFlag(2);
+		offFlag(4);
+	}
+}
+
+// TODO: size is wrong, name sort of makes sense?
+static void getShapeInOneJoint(J3DJoint* joint, J3DShape** shapes)
+{
 	u32 i          = 0;
-	J3DMaterial* m = mJoint->getMesh();
-
-	J3DShape** shapes = mShapes;
+	J3DMaterial* m = joint->getMesh();
 	if (shapes) {
 		for (; m != nullptr; ++i, m = m->getNext())
 			shapes[i] = m->getShape();
@@ -74,86 +132,31 @@ void TJointObj::initChildren()
 	}
 }
 
-void getShapeInOneJoint(J3DJoint*, J3DShape**) { }
-
-void TJointObj::kill()
+void TJointObj::initJointObj(J3DJoint* joint)
 {
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->kill();
+	mJoint = joint;
+	initChildren();
 
-	if (!checkFlag(1)) {
-		for (int i = 0; i < mShapeNum; ++i)
-			mShapes[i]->onFlag(1);
+	u32 count = 0;
+	for (J3DMaterial* m = getJoint()->getMesh(); m != nullptr; m = m->getNext())
+		++count;
+	mShapeNum = count;
 
-		onFlag(1);
-		offFlag(2);
-		offFlag(4);
-	}
+	if (getShapeNum() <= 0)
+		return;
+
+	mShapes = new J3DShape*[getShapeNum()];
+
+	getShapeInOneJoint(getJoint(), mShapes);
 }
 
-void TJointObj::alive()
+TJointObj::TJointObj()
 {
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->alive();
-
-	for (int i = 0; i < mShapeNum; ++i)
-		mShapes[i]->offFlag(1);
-
-	offFlag(1);
-	offFlag(2);
-	offFlag(4);
-}
-
-void TJointObj::sleep()
-{
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->sleep();
-
-	if (!checkFlag(1) && !checkFlag(2)) {
-		for (int i = 0; i < mShapeNum; ++i)
-			mShapes[i]->onFlag(1);
-
-		offFlag(4);
-		onFlag(2);
-	}
-}
-
-void TJointObj::awake()
-{
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->awake();
-
-	if (checkFlag(4 | 2)) {
-		for (int i = 0; i < mShapeNum; ++i)
-			mShapes[i]->offFlag(1);
-
-		offFlag(4);
-		offFlag(2);
-	}
-}
-
-void TJointObj::sit()
-{
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->sit();
-
-	if (!checkFlag(4 | 2 | 1)) {
-		for (int i = 0; i < mShapeNum; ++i)
-			mShapes[i]->onFlag(1);
-
-		onFlag(4);
-	}
-}
-
-void TJointObj::stand()
-{
-	for (int i = 0; i < mChildrenNum; ++i)
-		mChildren[i]->stand();
-
-	if (checkFlag(4)) {
-		for (int i = 0; i < mShapeNum; ++i)
-			mShapes[i]->offFlag(1);
-
-		offFlag(4);
-	}
+	mIndexInParent = 0;
+	mFlags         = 0;
+	mJoint         = nullptr;
+	mChildrenNum   = 0;
+	mChildren      = nullptr;
+	mShapeNum      = 0;
+	mShapes        = nullptr;
 }
