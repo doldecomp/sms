@@ -20,6 +20,11 @@ public:
 	u32 getVtxNum() const { return unk0; }
 	u32 getNrmNum() const { return unk4; }
 
+	const GXVtxAttrFmtList* getVtxAttrFmtList() const
+	{
+		return mVtxAttrFmtList;
+	}
+
 public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u32 unk4;

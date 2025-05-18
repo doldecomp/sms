@@ -36,7 +36,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	u32 getDataNo(s32) const;
+	s32 getDataNo(s32) const;
 	u32 getInCubeNo(const Vec&) const;
 	bool isInCube(const Vec&, s32) const;
 	bool isInCube(const Vec&, const char*) const;
@@ -77,5 +77,7 @@ public:
 
 bool SMS_IsInOtherFastCube(const Vec&);
 bool SMS_IsInSameCameraCube(const Vec&);
+
+extern TCubeManagerBase* gpCubeMirror;
 
 #endif
