@@ -68,10 +68,10 @@ public:
 
 	iterator erase(iterator what)
 	{
-		TNode_* curr       = what.mNode;
-		TNode_* next       = curr->mNext;
-		curr->mPrev->mNext = next;
-		next->mPrev        = curr->mPrev;
+		TNode_* const curr       = what.mNode;
+		TNode_* const next       = what.mNode->mNext;
+		what.mNode->mPrev->mNext = next;
+		next->mPrev              = what.mNode->mPrev;
 		DestroyNode_(curr);
 		--mSize;
 		return iterator(next);

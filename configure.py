@@ -1046,7 +1046,7 @@ config.libs = [
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Map/JointModel.cpp"),
-            Object(NonMatching, "Map/JointModelManager.cpp"),
+            Object(Matching, "Map/JointModelManager.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/JointObj.cpp"),
             Object(NonMatching, "Map/Map.cpp"),
             Object(NonMatching, "Map/MapArea.cpp"),
