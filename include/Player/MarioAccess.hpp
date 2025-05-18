@@ -74,6 +74,6 @@ void* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
 
 // fabricated
-Vec* SMS_GetMarioPos() { return gpMarioPos; }
+inline Vec* SMS_GetMarioPos() { return gpMarioPos; }
 
 #endif

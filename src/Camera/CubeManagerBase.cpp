@@ -49,7 +49,7 @@ void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 
 void TCubeManagerBase::perform(u32, JDrama::TGraphics*) { }
 
-u32 TCubeManagerBase::getDataNo(s32 i) const
+s32 TCubeManagerBase::getDataNo(s32 i) const
 {
 	u32 result = -1;
 	if (i >= 0 && i < unk10)

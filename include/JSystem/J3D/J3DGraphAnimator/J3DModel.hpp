@@ -111,6 +111,7 @@ public:
 
 	J3DDrawMtxData& getDrawMtxData() { return mDrawMtxData; }
 	J3DVertexData& getVertexData() { return mVertexData; }
+	const J3DVertexData& getVertexData() const { return mVertexData; }
 
 	void* getVtxPosArray() const { return mVertexData.getVtxPosArray(); }
 
