@@ -1045,7 +1045,7 @@ config.libs = [
         "cflags": [*cflags_game, "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "Map/JointModel.cpp"),
+            Object(Matching, "Map/JointModel.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "Map/JointModelManager.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "Map/JointObj.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "Map/Map.cpp"),
