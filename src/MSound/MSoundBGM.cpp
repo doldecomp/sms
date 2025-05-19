@@ -6,13 +6,90 @@ f32 MSBgm::smMainVolume = 0.75f;
 
 void MSBgm::init() { }
 
-void MSBgm::startBGM(u32 param) { }
+JAISound* MSBgm::startBGM(u32 param) {
+	MSBgm * iVar1 = JALListS<MSBgm, u32>::search(param & 0x3FF);
+	if (iVar1) {
+		if ((param == 0x8001000a) ||  (param== 0x8001000c) || (param == 0x80010028)) {
+			for (u32 i = 0; i < 3; i++) {
+				stopTrackBGM(i,0);
+			}
+		}
+		
+	}
 
-void MSBgm::stopBGM(u32 param1, u32 param2) { }
+	if (iVar1 && iVar1->unk_14) {
+      iVar1->unk_14->setVolume(smMainVolume,0,8);
+      return iVar1->unk_14;
+    }
+	return 0;
+ }
 
-void MSBgm::stopTrackBGM(u8 param1, u32 param2) { }
+void MSBgm::stopBGM(u32 param1, u32 param2) {
+	MSBgm* track = smBgmInTrack[param1];
+    u32 stack; /* Unused */
+    MSBgm * iVar2;
+	JAISound* audio; /*Unused*/
+    if (param1 == -1) {
+        if (smBgmInTrack[0] && smBgmInTrack[0]->unk_14) {
+            smBgmInTrack[0]->unk_14->stop(param2);
+            smBgmInTrack[0] = nullptr;
+        }
+    } else {
+            iVar2 = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
+            if (iVar2 && iVar2->unk_14) {
+                u8 a = iVar2->unk_14->unk0;
+                if (a == 0xff) {
+                    stopBGM(0xffffffff,10); 
+                } else  if (a < 3){
+                    iVar2 = smBgmInTrack[a];
+                    if (iVar2 && iVar2->unk_14) {
+					iVar2->unk_14->stop(param2);
+                        smBgmInTrack[a] = 0;
+                    }
+                }
+            }
+    }
+ }
 
-void MSBgm::stopTrackBGMs(u8 param1, u32 param2) { }
+void MSBgm::stopTrackBGM(u8 param1, u32 param2)
+{
+	//Mostly Likely Missing an Inline function
+    if (param1 == 0xff) {
+        stopTrackBGM(0xffffffff, 10);
+        return;
+    }
+
+    if (param1 >= 3)
+        return;
+
+    MSBgm* track = smBgmInTrack[param1];
+    if (!track)
+        return;
+    
+    JAISound* sound = track->unk_14;
+    if (!sound)
+        return;
+
+    sound->stop(param2);
+    smBgmInTrack[param1] = nullptr;
+}
+
+void MSBgm::stopTrackBGMs(u8 param1, u32 param2)
+{
+	for (u8 i = 0; i < 3; i++) {
+		if ((param1 >> i) & 1) {
+			if (i == 0xff) {
+				stopBGM(0xffffffff, 10);
+			} else if (i < 3) {
+				 	MSBgm*  iVar2 = smBgmInTrack[i];
+				if (iVar2 && iVar2->unk_14) {
+					iVar2->unk_14->stop(param2);
+					smBgmInTrack[i] = 0;
+				}
+			}
+		}
+	}
+}
 
 void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 {
@@ -55,7 +132,25 @@ void MSBgm::setSeqTRACKsMute(u8 param1, bool param2, u16 param3) { }
 
 void MSBgm::setSeqTRACKsMuteH(JAISound* param1, bool param2, u16 param3) { }
 
-void MSBgm::setStageBgmYoshiPercussion(bool param) { }
+void MSBgm::setStageBgmYoshiPercussion(bool param) { 
+	//	Currently Doesn't compile into anything: https://decomp.me/scratch/Z8fDP
+	JAISound * sound;
+	u32 uVar1;
+	JAISeqParameter *pJVar2;
+	if (smBgmInTrack == 0) {
+		sound = nullptr;
+	} else {
+		sound = smBgmInTrack[0]->unk_14;
+	}
+
+
+
+	if (sound) {
+		pJVar2 = sound->getSeqParameter();
+	}
+
+
+}
 
 bool MSBgm::checkPlaying(u32 param) { return false; }
 
