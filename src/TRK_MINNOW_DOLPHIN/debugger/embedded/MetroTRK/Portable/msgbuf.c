@@ -23,9 +23,9 @@ DSError TRKInitializeMessageBuffers(void)
 
 DSError TRKGetFreeBuffer(int* msgID, TRKBuffer** outMsg)
 {
-	TRKBuffer* buf;
 	DSError error = DS_NoMessageBufferAvailable;
 	int i;
+	TRKBuffer* buf;
 
 	*outMsg = NULL;
 
@@ -73,7 +73,7 @@ void TRKResetBuffer(TRKBuffer* msg, BOOL keepData)
 	msg->length   = 0;
 	msg->position = 0;
 
-	if (!keepData) {
+	if (!(u8)keepData) {
 		TRK_memset(msg->data, 0, TRKMSGBUF_SIZE);
 	}
 }

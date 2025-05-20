@@ -33,8 +33,7 @@ DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
                        DSReplyError replyError)
 {
 	TRKMessageIntoReply(buffer, commandID, replyError);
-	TRKSendACK(buffer);
-	return DS_NoError;
+	return TRKSendACK(buffer);
 }
 
 DSError TRKDoUnsupported(TRKBuffer* buffer)
@@ -101,7 +100,7 @@ DSError TRKDoSupportMask(TRKBuffer* buffer)
 	DSError error;
 	u8 mask[32];
 
-	if (buffer->length == 1) {
+	if (buffer->length != 1) {
 		TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_PacketSizeError);
 	} else {
 		TRKMessageIntoReply(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
@@ -358,7 +357,7 @@ DSError TRKDoReadRegisters(TRKBuffer* buffer)
 	if (error == DS_NoError)
 		TRKMessageIntoReply(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
 
-	options = (DSMessageRegisterOptions)msg_options;
+	options = (DSMessageRegisterOptions)msg_options & 0x7;
 	switch (options) {
 	case DSREG_Default:
 		error = TRKTargetAccessDefault(msg_firstRegister, msg_lastRegister,
@@ -580,12 +579,12 @@ DSError TRKDoContinue(TRKBuffer* buffer)
 DSError TRKDoStep(TRKBuffer* buffer)
 {
 	DSError error;
-	u8 msg_command;
-	u8 msg_options;
-	u8 msg_count;
-	u32 msg_rangeStart;
 	u32 msg_rangeEnd;
+	u32 msg_rangeStart;
 	u32 pc;
+	u8 msg_count;
+	u8 msg_options;
+	u8 msg_command;
 
 	if (buffer->length < 3)
 		return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_PacketSizeError);
