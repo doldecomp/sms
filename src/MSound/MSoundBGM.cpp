@@ -1,28 +1,50 @@
 #include <MSound/MSoundBGM.hpp>
 #include <JSystem/JAudio/JALibrary/JALModSe.hpp>
+#include <MSound/MSound.hpp>
+#include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
+#include <JSystem/JKernel/JKRHeap.hpp>
 MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
 void MSBgm::init() { }
 
-JAISound* MSBgm::startBGM(u32 param) {
-	MSBgm * iVar1 = JALListS<MSBgm, u32>::search(param & 0x3FF);
+JAISound* MSBgm::startBGM(u32 param)
+{
+	MSBgm* iVar1 = JALListS<MSBgm, u32>::search(param & 0x3FF);
 	if (iVar1) {
-		if ((param == 0x8001000a) ||  (param== 0x8001000c) || (param == 0x80010028)) {
-			for (u32 i = 0; i < 3; i++) {
-				stopTrackBGM(i,0);
+		if ((param == 0x8001000a) || (param == 0x8001000c) || (param == 0x80010028)) {
+			for (u8 i = 0; i < 3; i++) {
+                if ((3 >> i & 1) != 0) {
+				stopTrackBGM(i,0);                    
+                }
+
 			}
+                MSGMSound->demoModeIn(0x16f, false);
 		}
-		
+	MSGBasic->startSoundActor(param, &iVar1->unk_14, nullptr, 0, 4);
+	if (iVar1->unk_14) {
+		iVar1->unk_14->setVolume(smMainVolume, 0, 8);
+
+
+		if (iVar1->unk_14->unk0 < 3) {
+			smBgmInTrack[iVar1->unk_14->unk0] = iVar1;
+		} 
+		int uVar2 = getSceneNo(param);
+		if ( uVar2 != -1 && uVar2 != 0x210) {
+            u8 temp = uVar2 >> 8;
+            u8 temp2 = uVar2;
+			iVar1->unk_14->setWaveReadMode(temp, temp2);
+		}
+		return iVar1->unk_14;
+	}
 	}
 
-	if (iVar1 && iVar1->unk_14) {
-      iVar1->unk_14->setVolume(smMainVolume,0,8);
-      return iVar1->unk_14;
-    }
+
 	return 0;
- }
+}
+
+
 
 void MSBgm::stopBGM(u32 param1, u32 param2) {
 	MSBgm* track = smBgmInTrack[param1];
@@ -51,28 +73,23 @@ void MSBgm::stopBGM(u32 param1, u32 param2) {
     }
  }
 
-void MSBgm::stopTrackBGM(u8 param1, u32 param2)
-{
-	//Mostly Likely Missing an Inline function
-    if (param1 == 0xff) {
-        stopTrackBGM(0xffffffff, 10);
-        return;
-    }
-
-    if (param1 >= 3)
-        return;
-
-    MSBgm* track = smBgmInTrack[param1];
-    if (!track)
-        return;
-    
-    JAISound* sound = track->unk_14;
-    if (!sound)
-        return;
-
-    sound->stop(param2);
-    smBgmInTrack[param1] = nullptr;
-}
+ void MSBgm::stopTrackBGM(u8 param1, u32 param2)
+ {
+	//Todo: Disable Inlining properly.
+     (void)0; (void)0; (void)0; (void)0; (void)0;
+	 if (param1 == 0xff) {
+		 stopTrackBGM(0, 10);
+	 } else if (param1 < 3) {
+	    MSBgm* track = smBgmInTrack[param1];
+		 if (track) {
+             JAISound* sound = track->unk_14;
+             if (sound) {
+    			 sound->stop(param2);
+    			 smBgmInTrack[param1] = 0;
+             }
+		 }
+	 }
+ }
 
 void MSBgm::stopTrackBGMs(u8 param1, u32 param2)
 {
@@ -133,22 +150,34 @@ void MSBgm::setSeqTRACKsMute(u8 param1, bool param2, u16 param3) { }
 void MSBgm::setSeqTRACKsMuteH(JAISound* param1, bool param2, u16 param3) { }
 
 void MSBgm::setStageBgmYoshiPercussion(bool param) { 
-	//	Currently Doesn't compile into anything: https://decomp.me/scratch/Z8fDP
-	JAISound * sound;
-	u32 uVar1;
-	JAISeqParameter *pJVar2;
-	if (smBgmInTrack == 0) {
-		sound = nullptr;
-	} else {
-		sound = smBgmInTrack[0]->unk_14;
-	}
+	JAISound* sound;
+	JAISeqParameter* pJVar2;
+    u32 uVar1;
+    u32 uVar2;
+	JASystem::TTrack* pTVar3;
+	//Inlined function in MSoundBGM.hpp TODO: Found original inline function placement.
+	sound = someInline();
+    if (sound == nullptr) return;
 
-
-
-	if (sound) {
+    uVar1 = MSGMSound->getBstSwitch(sound->unk8);
+    
+	if ( (uVar1 & 0x10000000)) {
 		pJVar2 = sound->getSeqParameter();
-	}
+		pTVar3 = JASystem::TrackMgr::handleToSeq(pJVar2->unk0);
+		if (pTVar3 == nullptr) {
+			pTVar3 = nullptr;
+		} else {
+			pTVar3 = pTVar3->unk2C4[0xf];
+		}
+		if (pTVar3 != nullptr) {
+               if (param == 1)  {uVar2 = 0;} else {
+                   uVar2 = 1;                   
+               }
+            pTVar3->unk3C2 = uVar2;
+                
 
+        } 
+	}
 
 }
 

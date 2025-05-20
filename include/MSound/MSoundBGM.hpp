@@ -8,7 +8,6 @@
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 
 template <typename T, typename U> class JALListVirtualNode;
-
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
 	MSBgm();
@@ -33,6 +32,14 @@ public:
 	static u32 getSceneNo(u32);
 	static JAISound* getHandle(u8);
 	static JAISound* getJASTrack(JAISound*, u8);
+	//TODO: Found out where this inline is from.
+	static JAISound* someInline() {
+        if (smBgmInTrack[0] != 0) {
+    		return smBgmInTrack[0]->unk_14;
+    	} else {
+            return nullptr;
+        }
+    }
 public:
 	/* 0x14 */ JAISound* unk_14;
 };
