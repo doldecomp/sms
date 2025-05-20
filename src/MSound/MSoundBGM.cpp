@@ -3,7 +3,6 @@
 #include <MSound/MSound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
-#include <JSystem/JKernel/JKRHeap.hpp>
 MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
