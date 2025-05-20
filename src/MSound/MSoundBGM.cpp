@@ -1,12 +1,22 @@
+#include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <JSystem/JAudio/JALibrary/JALModSe.hpp>
 #include <MSound/MSound.hpp>
+#include <JSystem/JAudio/JALibrary/JALModSe.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
 MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
-void MSBgm::init() { }
+void MSBgm::init()
+{
+	u16 count = MSGMSound->unk0->unk88.unk2[16];
+	for (u32 i = 1; i < count; ++i)
+		new MSBgm(i);
+
+	smBgmInTrack[0] = nullptr;
+	smBgmInTrack[1] = nullptr;
+	smBgmInTrack[2] = nullptr;
+}
 
 JAISound* MSBgm::startBGM(u32 param)
 {
