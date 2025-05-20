@@ -35,13 +35,13 @@ public:
 	//TODO: Found out where this inline is from.
 	static JAISound* someInline() {
         if (smBgmInTrack[0] != 0) {
-    		return smBgmInTrack[0]->unk_14;
+    		return smBgmInTrack[0]->unk14;
     	} else {
             return nullptr;
         }
     }
 public:
-	/* 0x14 */ JAISound* unk_14;
+	/* 0x14 */ JAISound* unk14;
 };
 
 #endif

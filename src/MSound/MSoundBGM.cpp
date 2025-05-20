@@ -21,20 +21,20 @@ JAISound* MSBgm::startBGM(u32 param)
 			}
 			MSGMSound->demoModeIn(0x16f, false);
 		}
-		MSGBasic->startSoundActor(param, &iVar1->unk_14, nullptr, 0, 4);
-		if (iVar1->unk_14) {
-			iVar1->unk_14->setVolume(smMainVolume, 0, 8);
+		MSGBasic->startSoundActor(param, &iVar1->unk14, nullptr, 0, 4);
+		if (iVar1->unk14) {
+			iVar1->unk14->setVolume(smMainVolume, 0, 8);
 
-			if (iVar1->unk_14->unk0 < 3) {
-				smBgmInTrack[iVar1->unk_14->unk0] = iVar1;
+			if (iVar1->unk14->unk0 < 3) {
+				smBgmInTrack[iVar1->unk14->unk0] = iVar1;
 			}
 			int uVar2 = getSceneNo(param);
 			if (uVar2 != -1 && uVar2 != 0x210) {
 				u8 temp  = uVar2 >> 8;
 				u8 temp2 = uVar2;
-				iVar1->unk_14->setWaveReadMode(temp, temp2);
+				iVar1->unk14->setWaveReadMode(temp, temp2);
 			}
-			return iVar1->unk_14;
+			return iVar1->unk14;
 		}
 	}
 
@@ -48,20 +48,20 @@ void MSBgm::stopBGM(u32 param1, u32 param2)
 	MSBgm* iVar2;
 	JAISound* audio; /*Unused*/
 	if (param1 == -1) {
-		if (smBgmInTrack[0] && smBgmInTrack[0]->unk_14) {
-			smBgmInTrack[0]->unk_14->stop(param2);
+		if (smBgmInTrack[0] && smBgmInTrack[0]->unk14) {
+			smBgmInTrack[0]->unk14->stop(param2);
 			smBgmInTrack[0] = nullptr;
 		}
 	} else {
 		iVar2 = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
-		if (iVar2 && iVar2->unk_14) {
-			u8 a = iVar2->unk_14->unk0;
+		if (iVar2 && iVar2->unk14) {
+			u8 a = iVar2->unk14->unk0;
 			if (a == 0xff) {
 				stopBGM(0xffffffff, 10);
 			} else if (a < 3) {
 				iVar2 = smBgmInTrack[a];
-				if (iVar2 && iVar2->unk_14) {
-					iVar2->unk_14->stop(param2);
+				if (iVar2 && iVar2->unk14) {
+					iVar2->unk14->stop(param2);
 					smBgmInTrack[a] = 0;
 				}
 			}
@@ -82,7 +82,7 @@ void MSBgm::stopTrackBGM(u8 param1, u32 param2)
 	} else if (param1 < 3) {
 		MSBgm* track = smBgmInTrack[param1];
 		if (track) {
-			JAISound* sound = track->unk_14;
+			JAISound* sound = track->unk14;
 			if (sound) {
 				sound->stop(param2);
 				smBgmInTrack[param1] = 0;
@@ -99,8 +99,8 @@ void MSBgm::stopTrackBGMs(u8 param1, u32 param2)
 				stopBGM(0xffffffff, 10);
 			} else if (i < 3) {
 				MSBgm* iVar2 = smBgmInTrack[i];
-				if (iVar2 && iVar2->unk_14) {
-					iVar2->unk_14->stop(param2);
+				if (iVar2 && iVar2->unk14) {
+					iVar2->unk14->stop(param2);
 					smBgmInTrack[i] = 0;
 				}
 			}
@@ -111,16 +111,16 @@ void MSBgm::stopTrackBGMs(u8 param1, u32 param2)
 void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 {
 	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
-	if (bgm && bgm->unk_14) {
-		bgm->unk_14->setVolume(param2, param3, param4);
+	if (bgm && bgm->unk14) {
+		bgm->unk14->setVolume(param2, param3, param4);
 	}
 }
 
 void MSBgm::setTrackVolume(u8 param1, f32 param2, u32 param3, u8 param4)
 {
 	MSBgm* track = smBgmInTrack[param1];
-	if (track && track->unk_14) {
-		track->unk_14->setVolume(param2, param3, param4);
+	if (track && track->unk14) {
+		track->unk14->setVolume(param2, param3, param4);
 	}
 }
 
@@ -129,16 +129,16 @@ void MSBgm::setSeqTrackVolume(u8 param1, u8 param2, f32 param3, u32 param4) { }
 void MSBgm::setPan(u8 param1, f32 param2, u32 param3, u8 param4)
 {
 	MSBgm* track = smBgmInTrack[param1];
-	if (track && track->unk_14) {
-		track->unk_14->setPan(param2, param3, param4);
+	if (track && track->unk14) {
+		track->unk14->setPan(param2, param3, param4);
 	}
 }
 
 void MSBgm::setDolby(u8 param1, f32 param2, u32 param3, u8 param4)
 {
 	MSBgm* track = smBgmInTrack[param1];
-	if (track && track->unk_14) {
-		track->unk_14->setDolby(param2, param3, param4);
+	if (track && track->unk14) {
+		track->unk14->setDolby(param2, param3, param4);
 	}
 }
 
@@ -290,7 +290,7 @@ JAISound* MSBgm::getHandle(u8 param)
 {
 	MSBgm* track = smBgmInTrack[param];
 	if (track) {
-		return track->unk_14;
+		return track->unk14;
 	}
 	return nullptr;
 }
