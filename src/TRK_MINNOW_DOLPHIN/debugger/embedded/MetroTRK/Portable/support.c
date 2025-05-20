@@ -108,8 +108,8 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
 	TRKBuffer* buffer;
 	u32 timer;
 	int tries;
-	u8 msg_command;
 	u8 msg_error;
+	u8 msg_command;
 	BOOL badReply = TRUE;
 
 	*bufferId = -1;

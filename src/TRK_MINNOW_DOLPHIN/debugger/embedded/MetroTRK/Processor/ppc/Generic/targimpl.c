@@ -698,8 +698,8 @@ LAB_00010bb0:
 void TRKPostInterruptEvent(void)
 {
 	NubEventType eventType;
-	u32 inst;
 	TRKEvent event;
+	u32 inst;
 
 	if (gTRKState.inputActivated) {
 		gTRKState.inputActivated = FALSE;
@@ -869,9 +869,9 @@ DSError TRKTargetAddExceptionInfo(TRKBuffer* buffer)
 static DSError TRKTargetEnableTrace(BOOL val)
 {
 	if (val) {
-		gTRKCPUState.Extended1.MSR = (gTRKCPUState.Extended1.MSR | 0x400);
+		gTRKCPUState.Extended1.MSR |= 0x400;
 	} else {
-		gTRKCPUState.Extended1.MSR = (gTRKCPUState.Extended1.MSR & ~0x400);
+		gTRKCPUState.Extended1.MSR &= ~0x400;
 	}
 	return DS_NoError;
 }
@@ -938,8 +938,8 @@ DSError TRKTargetSingleStep(u32 count, BOOL stepOver)
 	if (stepOver) {
 		error = DS_UnsupportedError;
 	} else {
-		gTRKStepStatus.count = count;
 		gTRKStepStatus.type  = DSSTEP_IntoCount;
+		gTRKStepStatus.count = count;
 		error                = TRKTargetDoStep();
 	}
 
@@ -970,9 +970,9 @@ DSError TRKTargetSupportRequest()
 {
 	DSError error;
 	size_t* length;
+	TRKEvent event;
 	DSIOResult ioResult;
 	MessageCommandID commandId;
-	TRKEvent event;
 
 	commandId = gTRKCPUState.Default.GPR[3];
 	if (commandId != DSMSG_ReadFile && commandId != DSMSG_WriteFile) {
