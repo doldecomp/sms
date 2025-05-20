@@ -11,26 +11,30 @@ public:
 };
 
 class TMapWire {
+public:
 	void drawLower() const;
 	void drawUpper() const;
-	void getPointPowerAtReleased(float) const;
-	void getPointPosAtReleased(float, JGeometry::TVec3<float>*) const;
+	void getPointPowerAtReleased(f32) const;
+	void getPointPosAtReleased(f32, JGeometry::TVec3<f32>*) const;
 	void updatePointAtReleased(int);
 	void updateMovePointAtReleased();
-	void initPointAtJustReleased(float, TMapWirePoint*);
+	void initPointAtJustReleased(f32, TMapWirePoint*);
 	void release();
-	void getPointPosAtHanged(float, JGeometry::TVec3<float>*) const;
-	void getPointInfoAtHanged(float, TMapWirePoint*);
-	void setFootPointsAtHanged(float (*)[4]);
+	void getPointPosAtHanged(f32, JGeometry::TVec3<f32>*) const;
+	void getPointInfoAtHanged(f32, TMapWirePoint*);
+	void setFootPointsAtHanged(MtxPtr);
 	void calcViewAndDBEntry();
 	void move();
-	void getPosInWire(const JGeometry::TVec3<float>&) const;
-	void getPointPosOnLine(float, JGeometry::TVec3<float>*) const;
-	void getPointPosOnWire(float, JGeometry::TVec3<float>*) const;
-	void getPointPosDefault(float, JGeometry::TVec3<float>*) const;
+	f32 getPosInWire(const JGeometry::TVec3<f32>&) const;
+	void getPointPosOnLine(f32, JGeometry::TVec3<f32>*) const;
+	void getPointPosOnWire(f32, JGeometry::TVec3<f32>*) const;
+	void getPointPosDefault(f32, JGeometry::TVec3<f32>*) const;
 	void initTipPoints(const TCubeGeneralInfo*);
 	void init(const TCubeGeneralInfo*);
 	TMapWire();
+
+	static f32 mDrawWidth;
+	static f32 mDrawHeight;
 };
 
 #endif

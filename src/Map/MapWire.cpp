@@ -28,7 +28,7 @@ void TMapWire::calcViewAndDBEntry() { }
 
 void TMapWire::move() { }
 
-void TMapWire::getPosInWire(const JGeometry::TVec3<f32>&) const { }
+f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>&) const { }
 
 void TMapWire::getPointPosOnLine(f32, JGeometry::TVec3<f32>*) const { }
 
