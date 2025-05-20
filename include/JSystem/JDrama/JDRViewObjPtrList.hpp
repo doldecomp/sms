@@ -77,6 +77,9 @@ public:
 
 	virtual void loadAfterSuper() { TNameRef::loadAfter(); }
 
+	// surprisingly, real. TODO: reconsider the rest of this class based on this
+	JGadget::TList_pointer<T*>& getChildren() { return *this; }
+
 	// fabricated
 	void insert(T* obj) { this->push_back(obj); }
 };

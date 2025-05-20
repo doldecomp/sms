@@ -79,5 +79,6 @@ bool SMS_IsInOtherFastCube(const Vec&);
 bool SMS_IsInSameCameraCube(const Vec&);
 
 extern TCubeManagerBase* gpCubeMirror;
+extern TCubeManagerBase* gpCubeWire;
 
 #endif
