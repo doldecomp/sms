@@ -54,6 +54,9 @@ public:
 	void entry();
 	void entryModelDataSDL(SDLModelData*, u32, u32);
 
+	// fabricated
+	SDLModelData* getSDLModelData() { return unkA0; }
+
 public:
 	/* 0xA0 */ SDLModelData* unkA0;
 	/* 0xA4 */ J3DDrawBuffer* unkA4;
