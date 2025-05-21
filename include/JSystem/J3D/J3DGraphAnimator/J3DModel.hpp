@@ -206,6 +206,7 @@ public:
 
 	J3DVertexBuffer* getVertexBuffer() { return mVertexBuffer; }
 	MtxPtr getWeightAnmMtx(int idx) { return unk5C[idx]; }
+	void setWeightAnmMtx(int idx, MtxPtr mtx) { MTXCopy(mtx, unk5C[idx]); }
 
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
 

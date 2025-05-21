@@ -86,6 +86,7 @@ public:
 
 	// fabricated
 	MActorAnmData* getUnk20() { return unk20; }
+	bool isUnk18Present() { return unk18 != -1 ? true : false; }
 
 public:
 	/* 0x10 */ u32 unk10;
