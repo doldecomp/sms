@@ -301,15 +301,7 @@ void TCoin::loadAfter()
 	if (gpMarDirector->getCurrentMap() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
-		bool bVar2;
-		if (check->unk0 == 0x100 || check->unk0 == 0x101 || check->unk0 == 0x102
-		    || check->unk0 == 0x103 || check->unk0 == 0x104
-		    || check->unk0 == 0x105 || check->unk0 == 0x4104)
-			bVar2 = true;
-		else
-			bVar2 = false;
-
-		if (!bVar2)
+		if (!check->checkSomething())
 			return;
 	}
 

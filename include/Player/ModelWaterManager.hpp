@@ -3,17 +3,41 @@
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <System/ParamInst.hpp>
+#include <System/Params.hpp>
 #include <Strategic/HitActor.hpp>
 
 class TBGCheckData;
 class TDLTexQuad;
 class JUTTexture;
 class J3DModelData;
-class TParams;
 
-class TWaterEmitInfo {
+class TWaterEmitInfo : public TParams {
 public:
 	TWaterEmitInfo(const char*);
+
+public:
+	/* 0x8 */ TParamRT<s32> mNum;
+	/* 0x1C */ TParamRT<s16> mAlive;
+	/* 0x30 */ TParamRT<s16> mAttack;
+	/* 0x44 */ TParamVec mDir;
+	/* 0x60 */ TParamVec mPos;
+	/* 0x7C */ TParamVec mV;
+	/* 0x98 */ TParamRT<f32> mDirTremble;
+	/* 0xAC */ TParamRT<f32> mPow;
+	/* 0xC0 */ TParamRT<f32> mPowTremble;
+	/* 0xD4 */ TParamRT<f32> mSize;
+	/* 0xE8 */ TParamRT<f32> mSizeTremble;
+	/* 0xFC */ TParamRT<f32> mHitRadius;
+	/* 0x110 */ TParamRT<f32> mHitHeight;
+	/* 0x124 */ TParamRT<s32> mFlag;
+	/* 0x138 */ TParamRT<s16> mType;
+	/* 0x14C */ TParamRT<s16> __padding;
+};
+
+class TWaterParticleType {
+public:
+	TWaterParticleType(const char*);
 };
 
 class TWaterHitActor : public THitActor {
