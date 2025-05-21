@@ -21,10 +21,10 @@ public:
 	virtual void kill();
 	virtual void appear();
 	virtual void initMapObj();
-	virtual void checkIllegalAttr() const;
+	virtual void checkIllegalAttr() const { }
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual u32 getLivingTime() const { }
+	virtual u32 getLivingTime() const { return mNormalLivingTime; }
 	virtual int getFlushTime() const { }
 	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
