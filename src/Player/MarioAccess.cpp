@@ -68,11 +68,14 @@ void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f)
 	gpMarioOriginal->warpRequest(vec, f);
 }
 
-void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec) { }
-
-u8 SMS_IsMarioDashing()
+void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
 {
-	u8 ret;
+	gpMarioOriginal->moveRequest(vec);
+}
+
+bool SMS_IsMarioDashing()
+{
+	bool ret;
 
 	if ((gpMarioOriginal->_118 & 0x4000) != 0) {
 		ret = true;
@@ -83,12 +86,7 @@ u8 SMS_IsMarioDashing()
 	return !!ret;
 }
 
-u32 SMS_IsMarioOnYoshi()
-{
-	u32 ret = gpMarioOriginal->onYoshi();
-
-	return !!ret;
-}
+bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
 
 bool SMS_IsMarioOpeningDoor()
 {
@@ -100,11 +98,21 @@ bool SMS_IsMarioOpeningDoor()
 	}
 }
 
-u8 SMS_IsMarioOnWire() { }
-
-u8 SMS_IsMarioTouchGround4cm()
+bool SMS_IsMarioOnWire()
 {
-	u8 ret;
+	bool ret;
+	if (gpMarioOriginal->unk68
+	    && gpMarioOriginal->unk68->mActorType == 0x40000098)
+		ret = true;
+	else
+		ret = false;
+
+	return !!ret;
+}
+
+bool SMS_IsMarioTouchGround4cm()
+{
+	bool ret;
 
 	if (gpMarioOriginal->mPosition.y
 	    <= 4.0f + gpMarioOriginal->floorPosition.y) {
@@ -124,7 +132,13 @@ void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
 	gpMarioOriginal->throwMario(vec, f);
 }
 
-void SMS_SendMessageToMario(THitActor* m, u32 mesg) { }
+bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
+{
+	if (gpMarioOriginal->receiveMessage(m, mesg))
+		return true;
+
+	return false;
+}
 
 void* SMS_GetMarioWaterGun()
 { // TODO: returns TWaterGun

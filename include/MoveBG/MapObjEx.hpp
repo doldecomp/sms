@@ -5,7 +5,7 @@
 
 class TMapObjNail : public THideObjBase {
 public:
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 	TMapObjNail(const char*);
 

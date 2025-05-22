@@ -117,7 +117,7 @@ void TWoodBarrel::touchActor(THitActor* param_1)
 	}
 }
 
-u32 TWoodBarrel::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TWoodBarrel::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == 0xD) {
 		kill();

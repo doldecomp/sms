@@ -483,7 +483,7 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 	TMapObjBase::perform(param_1, param_2);
 }
 
-u32 TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	int ret = TMapObjBase::receiveMessage(param_1, param_2);
 	if (ret)

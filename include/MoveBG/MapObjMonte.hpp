@@ -14,7 +14,7 @@ public:
 
 class TJumpMushroom : public TMapObjBase {
 public:
-	u32 receiveMessage(THitActor*, unsigned long);
+	BOOL receiveMessage(THitActor*, unsigned long);
 	void load(JSUMemoryInputStream&);
 	TJumpMushroom();
 };

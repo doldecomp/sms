@@ -6,7 +6,7 @@
 class TFileLoadBlock : public TMapObjBase {
 public:
 	virtual void loadAfter();
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void initMapObj();
 	virtual void touchPlayer(THitActor*);
 

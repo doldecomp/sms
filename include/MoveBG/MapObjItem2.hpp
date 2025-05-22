@@ -21,7 +21,7 @@ public:
 	TJumpBase(const char*);
 	void initMapObj();
 	void ensureTakeSituation();
-	u32 receiveMessage(THitActor*, unsigned long);
+	BOOL receiveMessage(THitActor*, unsigned long);
 	Mtx* getRootJointMtx() const;
 	void calcRootMatrix();
 	void control();

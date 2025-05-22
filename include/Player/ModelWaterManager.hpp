@@ -44,7 +44,7 @@ class TWaterHitActor : public THitActor {
 public:
 	TWaterHitActor();
 
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	void onWaterHitCounter() { unk68 = 0x3C; }
 
 public:

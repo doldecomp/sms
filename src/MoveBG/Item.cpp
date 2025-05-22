@@ -56,7 +56,7 @@ void TItem::touchPlayer(THitActor* param_1)
 		taken(param_1);
 }
 
-u32 TItem::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TItem::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == 0xF)
 		return false;
@@ -430,7 +430,7 @@ void TShine::control() { }
 
 void TShine::perform(u32, JDrama::TGraphics*) { }
 
-u32 TShine::receiveMessage(THitActor*, u32) { }
+BOOL TShine::receiveMessage(THitActor*, u32) { }
 
 void TShine::touchPlayer(THitActor*) { }
 
@@ -471,7 +471,7 @@ void TEggYoshi::perform(u32, JDrama::TGraphics*) { }
 
 void TEggYoshi::startFruit() { }
 
-u32 TEggYoshi::receiveMessage(THitActor*, u32) { }
+BOOL TEggYoshi::receiveMessage(THitActor*, u32) { }
 
 void TEggYoshi::load(JSUMemoryInputStream&) { }
 
@@ -484,7 +484,7 @@ void TItemNozzle::touchPlayer(THitActor*) { }
 
 void TItemNozzle::put() { }
 
-u32 TItemNozzle::receiveMessage(THitActor*, u32) { }
+BOOL TItemNozzle::receiveMessage(THitActor*, u32) { }
 
 void TItemNozzle::appearing() { }
 
@@ -500,7 +500,7 @@ void TNozzleBox::makeModelInvalid() { }
 
 void TNozzleBox::breaking() { }
 
-u32 TNozzleBox::receiveMessage(THitActor*, u32) { }
+BOOL TNozzleBox::receiveMessage(THitActor*, u32) { }
 
 void TNozzleBox::touchPlayer(THitActor*) { }
 

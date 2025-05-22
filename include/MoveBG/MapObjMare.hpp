@@ -10,7 +10,7 @@ struct TBGWallCheckRecord;
 class TCogwheelScale : public TMapObjBase {
 public:
 	u32 touchWater(THitActor*);
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void touchPlayer(THitActor*);
 	void control();
 	TCogwheelScale(const char*);
@@ -98,7 +98,7 @@ public:
 
 class TMareEventPoint : public THitActor {
 public:
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void load(JSUMemoryInputStream&);
 	TMareEventPoint();
 };

@@ -7,7 +7,7 @@
 
 class TFence : public TMapObjBase {
 public:
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void initMapCollisionData();
 	void initMapObj();
 	TFence(const char* name)
@@ -22,14 +22,14 @@ public:
 
 class TRevolvingFenceOuter : public TFence {
 public:
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void initMapCollisionData();
 	TRevolvingFenceOuter();
 };
 
 class TRevolvingFenceInner : public TFence {
 public:
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void calcCurrentMtx();
 	void controlWall();
 	void controlGroundRoof();
@@ -53,7 +53,7 @@ public:
 class TFenceWater : public TFence {
 public:
 	void draw() const;
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void changeStatusToGo();
 	void changeStatusToWait();
 	void controlRotation();
@@ -72,7 +72,7 @@ public:
 
 class TRailFence : public TFence {
 public:
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void falling();
 	void goOnRail();
 	void control();
