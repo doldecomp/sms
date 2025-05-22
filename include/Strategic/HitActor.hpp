@@ -16,7 +16,7 @@ public:
 	virtual ~THitActor() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 	float initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();

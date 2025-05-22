@@ -8,7 +8,7 @@ public:
 	TMapObjTurn(const char*);
 
 	virtual void loadAfter();
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void initMapObj();
 	virtual u32 touchWater(THitActor*);

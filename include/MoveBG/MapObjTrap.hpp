@@ -10,7 +10,7 @@ public:
 	TLampTrapSpikeHit(TLampTrapSpike*, const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 public:
 	/* 0x68 */ TLampTrapSpike* unk68;
@@ -22,7 +22,7 @@ public:
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void initMapObj();
 
@@ -39,7 +39,7 @@ public:
 	TLampTrapIronHit(TLampTrapIron*, const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 public:
 	/* 0x68 */ TLampTrapIron* unk68;
@@ -51,7 +51,7 @@ public:
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void initMapObj();
 

@@ -65,7 +65,7 @@ public:
 	void calcRootMatrix();
 	void execMotionBlend_();
 	void moveObject();
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	Vec getFocalPoint() const;
 	void getCursorPos() const;
 	void isInMadSearchRange() const;

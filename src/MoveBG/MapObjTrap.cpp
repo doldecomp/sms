@@ -30,7 +30,7 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
 	// TODO: same problem as TMapObjBase::initAndRegister
 }
 
-u32 TLampTrapSpikeHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapSpikeHit::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	return unk68->receiveMessage(param_1, param_2);
 }
@@ -66,7 +66,7 @@ void TLampTrapSpike::loadAfter()
 	unk140 = new TLampTrapSpikeHit(this, "トゲあたり");
 }
 
-u32 TLampTrapSpike::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapSpike::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	TMapObjBase::receiveMessage(param_1, param_2);
 }
@@ -201,7 +201,7 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
 	// TODO: same problem as TMapObjBase::initAndRegister
 }
 
-u32 TLampTrapIronHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapIronHit::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	return unk68->receiveMessage(param_1, param_2);
 }
@@ -244,7 +244,7 @@ void TLampTrapIron::loadAfter()
 	unk138 = new TLampTrapIronHit(this, "鉄板あたり");
 }
 
-u32 TLampTrapIron::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapIron::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_1->isActorType(0x1000001)) {
 		if (unk13C > 0) {

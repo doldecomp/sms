@@ -11,7 +11,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void calcRootMatrix();
 	virtual void appear();
 	virtual void initMapObj();
@@ -91,7 +91,7 @@ public:
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void kill();
 	virtual void initMapObj();
@@ -151,7 +151,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void touchActor(THitActor*);
 	virtual u16 getHitObjNumMax() { return 10; }
@@ -170,7 +170,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void initMapObj();
 	virtual void touchPlayer(THitActor*);
@@ -184,7 +184,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void touchPlayer(THitActor*);
 	virtual void breaking();

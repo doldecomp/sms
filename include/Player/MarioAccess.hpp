@@ -37,15 +37,15 @@ void SMS_FlowMoveMario(const JGeometry::TVec3<f32>&);
 void SMS_MarioWarpRequest(const JGeometry::TVec3<f32>&, f32);
 void SMS_MarioMoveRequest(const JGeometry::TVec3<f32>&);
 
-u8 SMS_IsMarioDashing();
-u32 SMS_IsMarioOnYoshi();
+bool SMS_IsMarioDashing();
+bool SMS_IsMarioOnYoshi();
 bool SMS_IsMarioOpeningDoor();
-u8 SMS_IsMarioOnWire();
+bool SMS_IsMarioOnWire();
 void SMS_IsMarioSpeedZero();
-u8 SMS_IsMarioTouchGround4cm();
+bool SMS_IsMarioTouchGround4cm();
 
 void SMS_ThrowMario(const JGeometry::TVec3<f32>&, f32);
-void SMS_SendMessageToMario(THitActor*, u32);
+bool SMS_SendMessageToMario(THitActor*, u32);
 void SMS_GetMarioJumpIntoWaterModelData();
 void* SMS_GetMarioWaterGun();
 

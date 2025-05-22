@@ -87,7 +87,7 @@ public:
 	void enemyIsOn() const;
 	void draw() const;
 	void updateSpeedVec(const JGeometry::TVec3<f32>&, f32);
-	u32 receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor*, u32);
 	void touchPlayer(THitActor*);
 	void touchEnemy(THitActor*);
 	void calcCurrentMtx(MtxPtr);

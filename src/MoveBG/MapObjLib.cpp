@@ -794,7 +794,7 @@ TMapObjLibWave::TMapObjLibWave(f32 param_1, f32 param_2, f32 param_3,
 	unk14 = param_4;
 }
 
-u32 TMapObjMessenger::receiveMessage(THitActor*, u32) { }
+BOOL TMapObjMessenger::receiveMessage(THitActor*, u32) { }
 
 TMapObjMessenger::TMapObjMessenger(const char* name)
     : THitActor(name)
@@ -808,7 +808,7 @@ void TMapObjTurn::turn() { }
 
 void TMapObjTurn::control() { }
 
-u32 TMapObjTurn::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjTurn::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	u32 result;
 	if (param_2 == 5

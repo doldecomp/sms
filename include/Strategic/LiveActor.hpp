@@ -18,7 +18,7 @@ class TMapCollisionManager;
 
 class TLiveActor : public TTakeActor {
 public:
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual bool belongToGround() const;
 	virtual Mtx* getRootJointMtx() const;

@@ -34,7 +34,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual void moveRequest(const JGeometry::TVec3<f32>&);
 
@@ -546,80 +546,78 @@ public:
 	void checkStatusType(long) const;
 
 public:
-	u32 _070;
-	u32 input;
-	u32 _078;
-	u32 action;
-	u32 prevAction;
-	s16 actionState;
-	s16 actionTimer;
-	u32 actionArg;
-	f32 intendedMag;
-	s16 intendedYaw;
-	u16 _092;
+	/* 0x74 */ u32 input;
+	/* 0x78 */ u32 _078;
+	/* 0x7C */ u32 action;
+	/* 0x80 */ u32 prevAction;
+	/* 0x84 */ s16 actionState;
+	/* 0x86 */ s16 actionTimer;
+	/* 0x88 */ u32 actionArg;
+	/* 0x8C */ f32 intendedMag;
+	/* 0x90 */ s16 intendedYaw;
+	/* 0x92 */ u16 _092;
 
-	JGeometry::TVec3<s16> faceAngle; // 0x94
+	/* 0x94 */ JGeometry::TVec3<s16> faceAngle;
 	u16 modelFaceAngle;
-	u32 _09C;
-	u32 _0A0;
-	JGeometry::TVec3<f32> vel; // 0xA4
+	/* 0x9C */ u32 _09C;
+	/* 0xA0 */ u32 _0A0;
+	/* 0xA4 */ JGeometry::TVec3<f32> vel;
 
-	f32 forwardVel;
-	f32 slideVelX;
-	f32 slideVelZ;
+	/* 0xB0 */ f32 forwardVel;
+	/* 0xB4 */ f32 slideVelX;
+	/* 0xB8 */ f32 slideVelZ;
 
-	char _0BC[0x1C];
+	/* 0xBC */ char _0BC[0x1C];
 
-	// TODO: TBGCheckData
-	TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
-	TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
-	TBGCheckData* mGroundPlane; // TBGCheckData 0xE0
-	TBGCheckData* waterFloor;   // TBGCheckData 0xE4
+	/* 0xD8 */ TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
+	/* 0xDC */ TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
+	/* 0xE0 */ TBGCheckData* mGroundPlane; // TBGCheckData 0xE0
+	/* 0xE4 */ TBGCheckData* waterFloor;   // TBGCheckData 0xE4
 
-	JGeometry::TVec3<f32> floorPosition; // 0xE8
+	/* 0xE8 */ JGeometry::TVec3<f32> floorPosition; // 0xE8
 
-	s16 slopeAngle;
-	u16 _0F6;
+	/* 0xF4 */ s16 slopeAngle;
+	/* 0xF6 */ u16 _0F6;
 
-	u16 lightID; // 0xF8
+	/* 0xF8 */ u16 lightID;
 	// u16 _0FA;
 
-	u32 _0FC[2];
+	/* 0xFC */ u32 _0FC[2];
 
 	void* controller; // TMarioControllerWork
 
-	u32 _108[4];
+	/* 0x108 */ u32 _108[4];
 
-	u32 _118; // gpMarioFlag points here;
+	/* 0x118 */ u32 _118; // gpMarioFlag points here;
 
-	u32 _11C;
+	/* 0x11C */ u32 _11C;
 
-	s16 health; // 0x0120
+	/* 0x120 */ s16 health; // 0x0120
 
-	u16 _122;
-	char _124[0x264];
+	/* 0x122 */ u16 _122;
+	/* 0x124 */ char _124[0x264];
 
 	u16 blooperColor; // TODO: Make enum (0 = red, 1 = yellow, 2 = green)
 
-	char _38A[0x5A];
+	/* 0x38A */ char _38A[0x5A];
 
-	void* waterGun; // TWaterGun 0x3E4
+	/* 0x3E4 */ void* waterGun; // TWaterGun
 
-	u32 _3E8;
-	u32 _3EC;
+	/* 0x3E8 */ u32 _3E8;
+	/* 0x3EC */ u32 _3EC;
 
-	void* yoshi; // TYoshi 0x3F0
+	/* 0x3F0 */ void* yoshi; // TYoshi 0x3F0
 
-	char _3F4[0x0FC];
+	/* 0x3F4 */ char _3F4[0x0FC];
 
-	JGeometry::TVec3<f32> _4F0;
+	/* 0x4F0 */ JGeometry::TVec3<f32> _4F0;
 
 	void* gamePad; // TMarioGamePad
 
-	char _500[0x74];
+	/* 0x500 */ char _500[0x74];
 
 	// start of TDeParams at 0x574
-	TDeParams deParams;
+	/* 0x574 */ TDeParams deParams;
 
 	// TODO: Should these be an array indexed by an enum?
 	TBodyAngleParams bodyAngleParamsFree;

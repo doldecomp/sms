@@ -371,7 +371,7 @@ void TMapObjBase::calcRootMatrix()
 	model->unk14 = mScaling;
 }
 
-u32 TMapObjBase::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjBase::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == 5 && checkMapObjFlag(0x40)) {
 		unk6C = (TTakeActor*)param_1;

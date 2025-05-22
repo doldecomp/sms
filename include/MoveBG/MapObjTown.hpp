@@ -92,7 +92,7 @@ public:
 class TMapObjSwitch : public TMapObjBase {
 public:
 	void control();
-	u32 receiveMessage(THitActor*, unsigned long);
+	BOOL receiveMessage(THitActor*, unsigned long);
 	void registerObjInfo(THideObjInfo*);
 	void load(JSUMemoryInputStream&);
 	TMapObjSwitch(const char*);
@@ -100,7 +100,7 @@ public:
 
 class TRedCoinSwitch : public TMapObjBase {
 public:
-	u32 receiveMessage(THitActor*, unsigned long);
+	BOOL receiveMessage(THitActor*, unsigned long);
 	void control();
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
