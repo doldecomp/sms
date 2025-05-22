@@ -6,8 +6,7 @@
 #include <System/BaseParam.hpp>
 
 #define PARAM_INIT(member, ...)                                                \
-	member(this, JDrama::TNameRef::calcKeyCode("#member"), "#member",          \
-	       __VA_ARGS__)
+	member(this, JDrama::TNameRef::calcKeyCode(#member), #member, __VA_ARGS__)
 
 template <typename T> class TParamT : public TBaseParam {
 public:
