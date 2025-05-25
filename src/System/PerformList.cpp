@@ -1,14 +1,6 @@
 #include <System/PerformList.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
-// JGadget::TSingleNodeLinkList::iterator::iterator(const
-// JGadget::TSingleNodeLinkList::iterator&)
-// JGadget::TSingleNodeLinkList::iterator::iterator(JGadget::TSingleLinkListNode**)
-// JGadget::TSingleLinkList<TPerformLink, 0>::Element_getNode(TPerformLink*)
-// JGadget::TSingleLinkList<TPerformLink,
-// 0>::iterator::iterator(JGadget::TSingleNodeLinkList::iterator)
-// JGadget::TSingleNodeLinkList::end()
-
 void TPerformList::forEachPerform(
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator b,
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator e,
@@ -22,7 +14,8 @@ void TPerformList::forEachPerform(
 
 void TPerformList::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	forEachPerform(unk10.begin(), unk10.end(), param_2, param_1);
+	forEachPerform(getChildren().begin(), getChildren().end(), param_2,
+	               param_1);
 }
 
 void TPerformList::load(JSUMemoryInputStream& stream)
@@ -50,10 +43,10 @@ void TPerformList::push_back(const char* param_1, u32 param_2)
 	JDrama::TViewObj* obj
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(param_1);
 
-	unk10.Push_back(new TPerformLink(obj, param_2));
+	getChildren().Push_back(new TPerformLink(obj, param_2));
 }
 
 void TPerformList::push_back(JDrama::TViewObj* param_1, u32 param_2)
 {
-	unk10.Push_back(new TPerformLink(param_1, param_2));
+	getChildren().Push_back(new TPerformLink(param_1, param_2));
 }

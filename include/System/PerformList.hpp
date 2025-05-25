@@ -18,7 +18,8 @@ public:
 	/* 0x8 */ u32 unk8;
 };
 
-class TPerformList : public JDrama::TViewObj {
+class TPerformList : public JDrama::TViewObj,
+                     public JGadget::TSingleLinkList<TPerformLink, 0> {
 public:
 	TPerformList() { }
 
@@ -30,8 +31,7 @@ public:
 	                    JGadget::TSingleLinkList<TPerformLink, 0>::iterator,
 	                    JDrama::TGraphics*, u32);
 
-public:
-	JGadget::TSingleLinkList<TPerformLink, 0> unk10;
+	JGadget::TSingleLinkList<TPerformLink, 0>& getChildren() { return *this; }
 };
 
 #endif

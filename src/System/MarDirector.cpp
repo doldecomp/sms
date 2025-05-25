@@ -6,6 +6,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static void dummy(Vec* v) { *v = (Vec) { 0.0f, 0.0f, 0.0f }; }
+
+void* gpSceneCmnDat;
+void* gpSceneCmnDatSize;
+
 TMarDirector::TMarDirector()
     : unk18(nullptr)
     , unk1C(0)

@@ -7,11 +7,12 @@ template <class T> class TFlagT {
 public:
 	TFlagT(T v = T()) { set(v); }
 
-	void set(T v) { mValue = v; }
 	TFlagT(const TFlagT<T>& other)
 	    : mValue(other.mValue)
 	{
 	}
+
+	void set(T v) { mValue = v; }
 
 public:
 	T mValue;

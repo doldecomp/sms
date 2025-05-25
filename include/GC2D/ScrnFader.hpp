@@ -6,7 +6,9 @@
 
 class TSMSFader : public JDrama::TViewObj {
 public:
-	enum EFadeStatus {};
+	enum EFadeStatus {
+		FADE_STATUS_UNK0,
+	};
 
 	struct WipeRequest { };
 
@@ -23,7 +25,7 @@ public:
 	void drawWipe(const JDrama::TRect&);
 	void drawFadeinout(const JDrama::TRect&);
 	void setupGraphicsFadeinout();
-	void requestWipe(TSMSFader::WipeRequest*);
+	void requestWipe(WipeRequest*);
 	void startWipe(u32, f32, f32);
 	void startFadein(int);
 	void startFadeinT(f32);
@@ -31,7 +33,7 @@ public:
 	void startFadeoutT(f32);
 	void setColor(JUtility::TColor);
 	void setDisplaySize(int, int);
-	void setFadeStatus(TSMSFader::EFadeStatus);
+	void setFadeStatus(EFadeStatus);
 	void getGameOverBtiResource();
 	void getMmarkBtiResource();
 	void getLogoBtiResource();
@@ -44,7 +46,7 @@ public:
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ JUtility::TColor unk18;
 	/* 0x1C */ char unk1C[0x4];
-	/* 0x20 */ u32 unk20;
+	/* 0x20 */ int unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ char unk28[0x8];
 	/* 0x30 */ u32 unk30;

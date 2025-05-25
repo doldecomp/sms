@@ -11,6 +11,7 @@
 #include <Camera/SunMgr.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <GC2D/ScrnFader.hpp>
+#include <GC2D/PauseMenu2.hpp>
 #include <THPPlayer/THPPlayer.h>
 #include <MSound/MSound.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
@@ -35,7 +36,7 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 TMarDirector::~TMarDirector()
 {
 	gpMSound->exitStage();
-	if (gpApplication.currArea._000 == 15) {
+	if (gpApplication.currArea.unk0 == 15) {
 		if (JKRMemArchive* arch
 		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
 			arch->unmountFixed();
@@ -55,7 +56,7 @@ TMarDirector::~TMarDirector()
 		arch->unmountFixed();
 
 	(*unk18)->offFlag(0x20);
-	if (map == 1 || map == 0 || _07D == 0) {
+	if (map == 1 || (map == 0 && _07D == 0)) {
 		THPPlayerStop();
 		THPPlayerClose();
 		THPPlayerQuit();
@@ -84,7 +85,7 @@ void TMarDirector::setup2()
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<JDrama::TNameRef>("ガイド画面");
-	unkAC = JDrama::TNameRefGen::search<JDrama::TViewObj>("ポーズメニュー");
+	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
 	unkB0 = JDrama::TNameRefGen::search<JDrama::TViewObj>("会話表示");
 	unk70 = JDrama::TNameRefGen::search<JDrama::TViewObj>("データロード");
 

@@ -6,7 +6,6 @@
 
 class JKRMemArchive;
 class JKRHeap;
-class TARAMBlock;
 class TDirector;
 class TDisplay;
 class TMarioGamePad;
@@ -14,12 +13,15 @@ class TSMSFader;
 class JKRExpHeap;
 class TProcessMeter;
 
-void SMSGetVSyncTimesPerSec();
+f32 SMSGetVSyncTimesPerSec();
 f32 SMSGetAnmFrameRate();
 void SMSLoadArchive(const char*, void*, u32, JKRHeap*);
+
+class TARAMBlock { };
 void SMSLoadArchiveARAM(TARAMBlock*, const char*);
 void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
 void SMSSwitch2DArchive(const char*, TARAMBlock&);
+extern TARAMBlock gArBkConsole;
 
 class TApplication {
 public:
@@ -58,5 +60,8 @@ public:
 };
 
 extern TApplication gpApplication;
+
+class TCardManager;
+extern TCardManager* gpCardManager;
 
 #endif

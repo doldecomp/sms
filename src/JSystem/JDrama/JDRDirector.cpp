@@ -26,11 +26,12 @@ TNameRef* TDirector::searchF(u16 key, const char* name)
 	return nullptr;
 }
 
-void TDirector::direct()
+int TDirector::direct()
 {
 	TGraphics graphics;
 	unk10->testPerform(3, &graphics);
 	unk10->testPerform(8, &graphics);
+	return 0;
 }
 
 JStage::TObject* TDirector::JSGFindObject(const char* name,

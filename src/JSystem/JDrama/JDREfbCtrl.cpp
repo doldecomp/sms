@@ -45,10 +45,10 @@ void TEfbCtrlDisp::perform(u32 param_1, TGraphics* param_2)
 		param_2->unk44 = unk10;
 	}
 
-	if (((param_1 & 8) != 0) && ((param_2->unkFC & 0x40) == 0)) {
+	if (((param_1 & 8) != 0) && ((param_2->unkFC.mValue & 0x40) == 0)) {
 		IssueGXCopyDisp(param_2->unk4, param_2->unk44, param_2->unk8,
 		                param_2->unkF4, param_2->unkF8, param_2->unkF0,
-		                param_2->unkFC);
+		                param_2->unkFC.mValue);
 	}
 }
 
