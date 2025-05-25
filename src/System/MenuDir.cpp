@@ -2,7 +2,7 @@
 
 void TMenuDirector::setFixedStageValue() { }
 
-void TMenuDirector::direct() { }
+int TMenuDirector::direct() { }
 
 void TMenuDirector::rsetup() { }
 

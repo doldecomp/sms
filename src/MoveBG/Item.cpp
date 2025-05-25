@@ -180,7 +180,7 @@ TItem::TItem(const char* name)
 
 void TCoin::taken(THitActor* param_1)
 {
-	u8 thing = gpApplication.currArea._000;
+	u8 thing = gpApplication.currArea.unk0;
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
 	if (gpMSound->gateCheck(0x4811))

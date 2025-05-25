@@ -44,7 +44,7 @@ public:
 	void endDemoCamera();
 	bool isSimpleDemoCamera() const;
 	void getTotalDemoFrames() const;
-	void getRestDemoFrames() const;
+	int getRestDemoFrames() const;
 	void ctrlNormalDeadDemo_();
 	void execDeadDemoProc_();
 	void isHellDeadDemo() const;

@@ -17,11 +17,10 @@ public:
 	{
 	}
 
-	virtual ~TDirector() { }
 	virtual TNameRef* searchF(u16, const char*);
 
-	void direct();
-	JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
+	virtual int direct();
+	virtual JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
 
 public:
 	/* 0x10 */ TViewObj* unk10;

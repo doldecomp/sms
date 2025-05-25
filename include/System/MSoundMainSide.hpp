@@ -5,8 +5,8 @@
 
 class MSStage {
 public:
-	void setPosPtr(Vec*);
-	void stageLoop();
+	virtual void setPosPtr(Vec*);
+	virtual void stageLoop();
 	static MSStage* init(u8, u8);
 };
 
@@ -60,7 +60,7 @@ public:
 class MSMainProc {
 public:
 	void startStageBGM(u8, u8);
-	void endStageEntranceDemo(u8, u8);
+	static void endStageEntranceDemo(u8, u8);
 	static void entranceDemoLoop(u32);
 	void startStageEntranceDemo(u8, u8);
 	void setMSoundEnterStage(u8, u8);

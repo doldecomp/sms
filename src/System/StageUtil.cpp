@@ -68,6 +68,6 @@ bool SMS_isMultiPlayerMap()
 
 bool SMS_isExMap()
 {
-	return (gpApplication.currArea._000 > 0x14
-	        && gpApplication.currArea._000 < 0x35);
+	return (gpApplication.currArea.unk0 > 0x14
+	        && gpApplication.currArea.unk0 < 0x35);
 }

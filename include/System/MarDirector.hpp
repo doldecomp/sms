@@ -24,6 +24,7 @@ class TTalkCursor;
 class TGCConsole2;
 class TSMSFader;
 class MSStage;
+class TPauseMenu2;
 
 class TMarDirector;
 
@@ -48,11 +49,11 @@ public:
 	static void* setupThreadFunc(void*);
 	TMarDirector();
 	void moveStage();
-	void updateGameMode();
+	u8 updateGameMode();
 	void nextStateInitialize(u8);
 	void setMario();
 	void currentStateFinalize(u8);
-	void changeState();
+	int changeState();
 	void fireStreamingMovie(u8);
 	void fireEndDemoCamera();
 	void fireStartDemoCamera(const char*, const JGeometry::TVec3<f32>*, s32,
@@ -88,7 +89,7 @@ public:
 	static void preEntry(TPerformList*);
 
 	virtual ~TMarDirector();
-	virtual void direct();
+	virtual int direct();
 	virtual JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
 
 	void setup2();
@@ -106,8 +107,8 @@ public:
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
-	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ u32 unk20;
+	/* 0x1C */ TPerformList* unk1C;
+	/* 0x20 */ TPerformList* unk20;
 	/* 0x24 */ TPerformList* unk24;
 	/* 0x28 */ TPerformList* unk28;
 	/* 0x2C */ TPerformList* unk2C;
@@ -116,15 +117,15 @@ public:
 	/* 0x38 */ TPerformList* unk38;
 	/* 0x3C */ TPerformList* unk3C;
 	/* 0x40 */ TPerformList* unk40;
-	/* 0x44 */ u32 unk44;
-	/* 0x48 */ u32 unk48;
+	/* 0x44 */ TPerformList* unk44;
+	/* 0x48 */ TPerformList* unk48;
 	/* 0x4C */ u16 unk4C;
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
-	/* 0x54 */ u32 unk54;
+	/* 0x54 */ int unk54;
 	/* 0x58 */ int unk58;
 	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ char unk60[0x4];
+	/* 0x60 */ u32 unk60;
 	/* 0x64 */ u8 unk64;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
@@ -140,9 +141,9 @@ public:
 	/* 0x88 */ JGadget::TVector_pointer<void*> unk88;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ char unkA4[0x8];
-	/* 0xAC */ JDrama::TViewObj* unkAC;
+	/* 0xAC */ TPauseMenu2* unkAC;
 	/* 0xB0 */ JDrama::TViewObj* unkB0;
-	/* 0xB4 */ char unkB4[0x4];
+	/* 0xB4 */ u8 unkB4;
 	/* 0xB8 */ u32 unkB8;
 	/* 0xBC */ JDrama::TNameRef* unkBC; // TODO: type?
 	/* 0xC0 */ JDrama::TDisplay* unkC0;
@@ -155,7 +156,7 @@ public:
 	/* 0xD8 */ u32 unkD8;
 	/* 0xDC */ TSMSFader* unkDC;
 	/* 0xE0 */ TSMSFader* unkE0; // TODO: type unconfirmed
-	/* 0xE4 */ char unkE4[0x4];
+	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ char unk120[0x4];
 	/* 0x124 */ u8 unk124;
@@ -170,6 +171,7 @@ public:
 	/* 0x258 */ MSStage* unk258;
 	/* 0x25C */ u32 unk25C;
 	/* 0x260 */ u8 unk260;
+	/* 0x261 */ u8 unk261;
 };
 
 #endif

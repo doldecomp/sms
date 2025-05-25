@@ -81,7 +81,7 @@ public:
 	JGadget::TList_pointer<T*>& getChildren() { return *this; }
 
 	// fabricated
-	void insert(T* obj) { this->push_back(obj); }
+	void insert(T* obj) { getChildren().push_back(obj); }
 };
 
 } // namespace JDrama

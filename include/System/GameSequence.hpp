@@ -6,12 +6,30 @@
 
 class TGameSequence {
 public:
-	void set(u8, u8, JDrama::TFlagT<u16>);
+	TGameSequence()
+	    : unk0(0)
+	    , unk1(0)
+	    , unk2(0)
+	{
+	}
+
+	TGameSequence& operator=(const TGameSequence& other)
+	{
+		set(other.unk0, other.unk1, other.unk2);
+		return *this;
+	}
+
+	void set(u8 param_1, u8 param_2, JDrama::TFlagT<u16> param_3)
+	{
+		unk0 = param_1;
+		unk1 = param_2;
+		unk2 = param_3;
+	}
 
 public:
-	u8 _000;
-	u8 _001;
-	u16 _002;
+	/* 0x0 */ u8 unk0;
+	/* 0x1 */ u8 unk1;
+	/* 0x2 */ JDrama::TFlagT<u16> unk2;
 };
 
 #endif

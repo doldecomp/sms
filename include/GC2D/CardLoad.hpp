@@ -2,14 +2,10 @@
 #define GC2D_CARD_LOAD_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
-#include <JSystem/J2D/J2DPicture.hpp>
-#include <JSystem/J2D/J2DTextBox.hpp>
+#include <GC2D/Progress.hpp>
 
-// TODO: probably shouldn't be here
-enum TEProgress {
-
-};
-
+class J2DPicture;
+class J2DTextBox;
 class TCardLoad;
 
 extern TCardLoad* gpCardLoad;

@@ -1,4 +1,5 @@
 #include <System/Application.hpp>
+#include <dolphin/vi.h>
 
 void TApplication::mountStageArchive() { }
 void TApplication::drawDVDErr() { }
@@ -20,4 +21,19 @@ void SMSLoadArchiveARAM(TARAMBlock*, const char*) { }
 void SMSLoadArchive(const char*, void*, u32, JKRHeap*) { }
 TApplication::TApplication() { }
 f32 SMSGetAnmFrameRate() { }
-void SMSGetVSyncTimesPerSec() { }
+
+f32 SMSGetVSyncTimesPerSec()
+{
+	f32 result = 60.0f;
+	switch (VIGetTvFormat()) {
+	case VI_MPAL:
+	case VI_NTSC:
+	case VI_EURGB60:
+		result = 60.0f;
+		break;
+	case VI_PAL:
+		result = 50.0f;
+		break;
+	}
+	return result / 2.0f;
+}
