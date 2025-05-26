@@ -25,6 +25,7 @@ class TGCConsole2;
 class TSMSFader;
 class MSStage;
 class TPauseMenu2;
+class TGuide;
 
 class TMarDirector;
 
@@ -131,7 +132,7 @@ public:
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ JDrama::TViewObj* unk70;
 	/* 0x74 */ TGCConsole2* console;
-	/* 0x78 */ JDrama::TNameRef* unk78;
+	/* 0x78 */ TGuide* unk78;
 	/* 0x7C */ u8 map;
 	/* 0x7D */ u8 _07D;
 	/* 0x7E */ u8 _07E;

@@ -16,7 +16,9 @@
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/PauseMenu2.hpp>
 #include <GC2D/CardSave.hpp>
+#include <GC2D/Guide.hpp>
 #include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRCamera.hpp>
@@ -301,7 +303,7 @@ int TMarDirector::changeState()
 			         || gpApplication.currArea.unk1 != 1)
 			        && (gpApplication.currArea.unk0 != 1
 			            || gpApplication.currArea.unk1 != 9)
-			        && ((*unk18)->mEnabledFrameMeaning & 0x61))) {
+			        && (unk18[0]->mEnabledFrameMeaning & 0x61))) {
 				unk4E |= 4;
 				console->unk94->startCloseWipe((unk50 & 8) != 0);
 				unk50 &= ~0x4;
@@ -426,7 +428,7 @@ int TMarDirector::changeState()
 		break;
 	}
 
-	if (((*unk18)->mPortNum & 0x3FU & TMarioGamePad::mResetFlag)
+	if ((unk18[0]->mPortNum & 0x3FU & TMarioGamePad::mResetFlag)
 	    && gpCardManager->getLastStatus() != -1 && (unk4C & 0x4000)
 	    && !(unk50 & 0x10)) {
 		uVar3 = 12;
@@ -460,7 +462,7 @@ void TMarDirector::currentStateFinalize(u8 param_1)
 		break;
 
 	case 1:
-		(*unk18)->mFlags &= ~0x1;
+		unk18[0]->mFlags &= ~0x1;
 		gpCamera->endDemoCamera();
 		console->unk94->startOpenWipe();
 		MSMainProc::endStageEntranceDemo(gpApplication.currArea.unk0,
@@ -470,18 +472,18 @@ void TMarDirector::currentStateFinalize(u8 param_1)
 	case 4:
 		if (unk124 == 0)
 			OSStopStopwatch(&unkE8);
-		(*unk18)->mFlags &= ~0x2;
+		unk18[0]->mFlags &= ~0x2;
 		break;
 
 	case 5:
-		(*unk18)->mFlags &= ~0x1;
+		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.currArea.unk0 == 1)
 			THPPlayerPlay();
 		break;
 
 	case 10:
-		(*unk18)->mFlags &= ~0x1;
+		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
@@ -495,7 +497,7 @@ void TMarDirector::currentStateFinalize(u8 param_1)
 		break;
 
 	case 11:
-		(*unk18)->mFlags &= ~0x1;
+		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.currArea.unk0 == 1)
 			THPPlayerPlay();
@@ -513,9 +515,178 @@ void TMarDirector::currentStateFinalize(u8 param_1)
 }
 
 #pragma dont_inline on
-void TMarDirector::setMario() { }
+void TMarDirector::setMario()
+{
+	bool cVar4 = TFlagManager::smInstance->getBool(0x30006);
+	if (cVar4)
+		TFlagManager::smInstance->setBool(false, 0x30006);
 
-void TMarDirector::nextStateInitialize(u8) { }
+	u32 uVar11 = unkD0;
+
+	JDrama::TNameRef* marioSetPosition
+	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("マリオセット位置");
+	if (!marioSetPosition /* && marioSetPosition->unkD0 */)
+		uVar11 = 0;
+
+	switch (unkD1) {
+		// TODO: requires knowing what marioSetPosition is and TWaterGun
+	}
+}
+
+void TMarDirector::nextStateInitialize(u8 param_1)
+{
+	TGameSequence& currSeq = gpApplication.currArea;
+
+	switch (param_1) {
+	case 1: {
+		const char* pcVar8 = "startcamera";
+		unk18[0]->onFlag(0x1);
+		unk68 = 0;
+		if (gpApplication.currArea.unk0 == 1 && (unk4E & 2)) {
+			if (gpApplication.currArea.unk1 == 8) {
+				switch (TFlagManager::smInstance->getFlag(0x60003)) {
+				case 0:
+					if (TFlagManager::smInstance->getFlag(0x40000) >= 0x14)
+						pcVar8 = "mareopen_startcamera";
+					break;
+				case 1:
+					pcVar8 = "yoshi_startcamera";
+					break;
+				case 2:
+					pcVar8 = "turbo_startcamera";
+					break;
+				case 3:
+					pcVar8 = "rocket_startcamera";
+					break;
+				}
+			} else {
+				if (TFlagManager::smInstance->getBool(0x50001)) {
+					pcVar8 = "sinkricco";
+				} else {
+					if (TFlagManager::smInstance->getBool(0x50002))
+						pcVar8 = "sinkmamma";
+				}
+			}
+		}
+		gpCamera->startDemoCamera(pcVar8, nullptr, -1, 0.0f, true);
+		if (unk50 & 4) {
+			console->unk94->startAppearScenario();
+			unk50 &= ~0x4;
+		}
+		MSMainProc::startStageEntranceDemo(currSeq.unk0, currSeq.unk1);
+		break;
+	}
+
+	case 3:
+		unk68 = 0;
+		if (!(unk50 & 1)) {
+			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			setMario();
+			unk50 |= 1;
+		}
+		break;
+
+	case 2:
+		if (!(unk50 & 1)) {
+			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			setMario();
+			unk50 |= 1;
+		}
+		if (map != 0xf)
+			console->unkC.mValue &= ~0xB;
+		break;
+
+	case 4:
+		if (unk64 <= 3 && map != 0xf)
+			console->unkC.mValue &= ~0xB;
+		if (unk50 & 2) {
+			console->unk94->startAppearGo();
+			unk50 &= ~0x2;
+		}
+		if (!(unk50 & 1)) {
+			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			setMario();
+			unk50 |= 1;
+		}
+		if (!unk124)
+			OSStartStopwatch(&unkE8);
+		unk18[0]->onFlag(0x2);
+		break;
+
+	case 12:
+		if (currSeq.unk0 == 1)
+			THPPlayerStop();
+	// !!!fallthrough!!!
+	case 9: {
+		gpApplication.unkFader->startWipe(unkE4, 0.4f, 0.0f);
+		if (unkE4 == 8)
+			if (gpMSound->gateCheck(0x4859))
+				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4859, 0, nullptr,
+				                                             0);
+		MSound* sound = gpMSound;
+		sound->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
+		SMSRumbleMgr->reset();
+		for (int i = 0; i < 4; ++i)
+			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
+		break;
+	}
+
+	case 5:
+		if (currSeq.unk0 == 1)
+			THPPlayerPause();
+		SMSRumbleMgr->startPause();
+		unkAC->setDrawStart();
+		for (int i = 0; i < 4; ++i)
+			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
+		unk18[0]->onFlag(0x1);
+		break;
+
+	case 10:
+		if (currSeq.unk0 == 1)
+			THPPlayerPause();
+		SMSRumbleMgr->startPause();
+		for (int i = 0; i < 4; ++i)
+			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
+		unk18[0]->onFlag(0x1);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
+		    |= 0xB;
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.mValue
+		    &= ~0xB;
+		if (gpMSound->gateCheck(0x4817))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4817, 0, nullptr, 0);
+		gpApplication.unkFader->startWipe(6, 1.0f, 0.0f);
+		unk78->setup(nullptr);
+		unk78->startMoveCursor();
+		break;
+
+	case 11:
+		if (currSeq.unk0 == 1)
+			THPPlayerPause();
+		SMSRumbleMgr->startPause();
+		unkAC->unk118->init(unk261);
+		for (int i = 0; i < 4; ++i)
+			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
+		unk18[0]->onFlag(0x1);
+		break;
+
+	case 7:
+		gpMarDirector->console->unk94->startAppearMiss();
+		TFlagManager::smInstance->decFlag(0x20001, 1);
+		unk60 = unk5C;
+		gpApplication.unkFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
+		if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
+			MSBgm::startBGM(0x8001000c);
+			if (unk4E & 8)
+				gpApplication.unkFader->startWipe(2, 0.0f, 2.0f);
+			else
+				gpApplication.unkFader->startWipe(10, 0.0f, 2.2f);
+		} else {
+			MSBgm::startBGM(0x80010028);
+			gpApplication.unkFader->startWipe(0xD, 0.0f, 2.0f);
+		}
+		break;
+	}
+}
 
 u8 TMarDirector::updateGameMode() { }
 
