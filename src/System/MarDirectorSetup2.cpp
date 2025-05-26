@@ -12,6 +12,7 @@
 #include <GC2D/GCConsole2.hpp>
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/PauseMenu2.hpp>
+#include <GC2D/Guide.hpp>
 #include <THPPlayer/THPPlayer.h>
 #include <MSound/MSound.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
@@ -84,7 +85,7 @@ void TMarDirector::setup2()
 	unkDC->unk14 = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
-	unk78 = JDrama::TNameRefGen::search<JDrama::TNameRef>("ガイド画面");
+	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
 	unkB0 = JDrama::TNameRefGen::search<JDrama::TViewObj>("会話表示");
 	unk70 = JDrama::TNameRefGen::search<JDrama::TViewObj>("データロード");
