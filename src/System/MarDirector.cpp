@@ -72,8 +72,8 @@ u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
 {
 	unkC0 = param_1;
 	unk18 = param_2;
-	map   = param_3;
-	_07D  = param_4;
+	mMap   = param_3;
+	unk7D  = param_4;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               (void*)(gpSetupThreadStack + 0x10000), 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);

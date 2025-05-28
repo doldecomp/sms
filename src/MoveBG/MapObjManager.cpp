@@ -114,7 +114,7 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	unk94 = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
 	if ((gpMarDirector->getCurrentMap() == 3
-	     && (gpMarDirector->_07D == 1 || gpMarDirector->_07D == 5))
+	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
 	    || gpMarDirector->getCurrentMap() == 0x1E) {
 		unk98 = SMS_MakeSDLModelData("/scene/mapObj/surfgeso.bmd", 0x10220000);
 		unk9C = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);

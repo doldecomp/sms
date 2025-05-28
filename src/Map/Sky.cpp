@@ -34,7 +34,7 @@ void TSky::perform(u32 param_1, JDrama::TGraphics* param_2)
 		                     - (-local_4c[2][0] * gpCamera->unk1EC[0][3]
 		                        - local_4c[2][1] * gpCamera->unk1EC[1][3]));
 
-		if (gpMarDirector->map == 15) {
+		if (gpMarDirector->mMap == 15) {
 			Mtx local_ac;
 			f32 fVar2 = sinf(unk48 * 0.017453294f);
 			f32 fVar3 = cosf(unk48 * 0.017453294f);
@@ -102,7 +102,7 @@ void TSky::load(JSUMemoryInputStream& stream)
 		unk44->initDL();
 	}
 
-	if (gpMarDirector->map != 15)
+	if (gpMarDirector->mMap != 15)
 		TMapObjBase::startAllAnim(unk44, "sky");
 }
 

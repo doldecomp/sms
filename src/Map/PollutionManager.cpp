@@ -29,7 +29,7 @@ void TPollutionManager::stamp(u16 param_1, f32 param_2, f32 param_3,
 void TPollutionManager::clean(f32 param_1, f32 param_2, f32 param_3,
                               f32 param_4)
 {
-	if (gpMarDirector->map == 1 && param_2 < -10.0f)
+	if (gpMarDirector->mMap == 1 && param_2 < -10.0f)
 		return;
 
 	stamp(0, param_1, param_2, param_3, param_4);
@@ -159,7 +159,7 @@ void TPollutionManager::initPollutionInfo()
 	mJointModelNum = info->unk0;
 	setDataAddress(info);
 
-	if (gpMarDirector->map == 0x9 && gpMarDirector->_07D != 0x7) {
+	if (gpMarDirector->mMap == 0x9 && gpMarDirector->unk7D != 0x7) {
 		static const char* mare_name_table[] = {
 			"pollution00", "pollution01", "pollution02", "pollution03",
 			"pollution04", "pollution05", "pollution06", "pollutionA",

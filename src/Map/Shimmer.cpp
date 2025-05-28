@@ -69,7 +69,7 @@ void TShimmer::loadAfter()
 
 void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (gpMarioOriginal->_118 & 0x4000 ? true : false)
+	if (gpMarioOriginal->unk118 & 0x4000 ? true : false)
 		return;
 
 	if (param_1 & 1) {
@@ -118,7 +118,7 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 0x200) {
-		if (gpMarDirector->map == 2 || !(gpCamera->unk124.y < 0.0f))
+		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
 			unk48->update();
 	}
 }

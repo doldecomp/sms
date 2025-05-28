@@ -56,7 +56,7 @@ TLiveActor::TLiveActor(const char* name)
 	unkD8.x = unkD8.y = unkD8.z = 0.0;
 
 	unkC4 = TMap::getIllegalCheckData();
-	if (gpMarDirector->map != 8)
+	if (gpMarDirector->mMap != 8)
 		mLiveFlag |= 0x2000;
 }
 
