@@ -402,18 +402,16 @@ int TMarDirector::changeState()
 					decideNextStage();
 				} else {
 					gpApplication.mNextArea.set(gpApplication.mCurrArea.unk0, 0,
-					                           0);
+					                            0);
 				}
 				unk4C &= ~0x100;
 				moveStage();
 				unkE4 = 0xf;
-				gpApplication.mFader->setColor(
-				    JUtility::TColor(0, 0, 0, 0xff));
+				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 				uVar3 = 12;
 			} else {
 				gpApplication.mFader->startWipe(0xE, 0.3f, 0.0f);
-				gpApplication.mFader->setColor(
-				    JUtility::TColor(0, 0, 0, 0xff));
+				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 				unk261 = 7;
 				mConsole->startDisappearStar();
 				mConsole->startDisappearCoin();
