@@ -78,7 +78,7 @@ void TMarDirector::setup2()
 	// TODO: some code related to unkBC, but what is it...
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(*unk18);
 	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = *unk18;
-	unk84   = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
+	unk84    = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
 	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
 	mConsole->unkC = 0xB;
 	unkDC = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");

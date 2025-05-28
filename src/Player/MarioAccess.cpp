@@ -145,7 +145,10 @@ void* SMS_GetMarioWaterGun()
 	return gpMarioOriginal->mWaterGun;
 }
 
-f32 SMS_GetMarioGravity() { return gpMarioOriginal->mJumpParams.mGravity.value; }
+f32 SMS_GetMarioGravity()
+{
+	return gpMarioOriginal->mJumpParams.mGravity.value;
+}
 
 f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
 
