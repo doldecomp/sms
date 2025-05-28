@@ -27,6 +27,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 extern OSThread gSetupThread;
 
@@ -532,6 +533,7 @@ void TMarDirector::setMario()
 		// TODO: requires knowing what marioSetPosition is and TWaterGun
 	}
 }
+#pragma dont_inline off
 
 void TMarDirector::nextStateInitialize(u8 param_1)
 {
@@ -688,10 +690,162 @@ void TMarDirector::nextStateInitialize(u8 param_1)
 	}
 }
 
+#pragma dont_inline on
 u8 TMarDirector::updateGameMode() { }
-
-void TMarDirector::moveStage() { }
 #pragma dont_inline off
+
+void TMarDirector::moveStage()
+{
+	unkB4 = 5;
+	unkE4 = 15;
+	gpApplication.unkFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
+
+	u8 sVar4 = SMS_getShineStage(gpApplication.nextArea.unk0);
+	u8 sVar5 = SMS_getShineStage(gpApplication.currArea.unk0);
+	if (sVar4 != sVar5)
+		TFlagManager::smInstance->setFlag(0x40002, 0);
+
+	TGameSequence& nextArea = gpApplication.nextArea;
+
+	if (nextArea.unk1 == 0xff)
+		switch (nextArea.unk0) {
+		case 1:
+			unkE4         = 2;
+			nextArea.unk1 = decideNextScenario(nextArea.unk0);
+			TFlagManager::smInstance->setFlag(0x40003, 0);
+			break;
+
+		case 13: {
+			unkE4     = 2;
+			u32 thing = 0;
+			switch (TFlagManager::smInstance->getFlag(0x40003)) {
+			case 0:
+				thing = 0;
+				break;
+			case 2:
+				thing = 1;
+				break;
+			case 4:
+				thing = 2;
+				break;
+			case 5:
+				thing = 3;
+				break;
+			case 6:
+				thing = 4;
+				break;
+			case 7:
+				thing = 5;
+				break;
+			}
+			nextArea.unk1 = thing;
+			break;
+		}
+
+		case 0x3A: {
+			unkE4     = 2;
+			u32 thing = 0;
+			switch (TFlagManager::smInstance->getFlag(0x40003)) {
+			case 0:
+				thing = 1;
+				break;
+			case 7:
+				thing = 0;
+				break;
+			}
+			nextArea.unk1 = thing;
+			break;
+		}
+
+		case 7: {
+			unkE4     = 2;
+			u32 thing = 0;
+			switch (TFlagManager::smInstance->getFlag(0x40003)) {
+			case 1:
+				thing = 0;
+				break;
+			case 2:
+				thing = 1;
+				break;
+			case 3:
+			case 4:
+				thing = 2;
+				break;
+			case 6:
+				thing = 3;
+				break;
+			case 7:
+				thing = 4;
+				break;
+			}
+			nextArea.unk1 = thing;
+			break;
+		}
+
+		case 14: {
+			unkE4     = 2;
+			u32 thing = 0;
+			switch (TFlagManager::smInstance->getFlag(0x40003)) {
+			case 3:
+				thing = 0;
+				break;
+			case 4:
+				thing = 1;
+				break;
+			}
+			nextArea.unk1 = thing;
+			break;
+		}
+
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 8:
+			unkE4 = 2;
+			unkB4 = 2;
+			break;
+
+		case 9:
+			gpApplication.unkFader->setColor(
+			    JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
+			unkB4 = 8;
+			break;
+
+		case 0x34:
+			unkE4         = 8;
+			nextArea.unk1 = 0;
+			TFlagManager::smInstance->setFlag(0x40003, 0);
+			break;
+
+		case 0:
+			nextArea.unk1 = 0;
+			TFlagManager::smInstance->setFlag(0x40003, 0);
+			break;
+
+		default:
+			unkE4         = 2;
+			nextArea.unk1 = 0;
+			break;
+		}
+
+	if (nextArea.unk1 != 0xff) {
+		if (unk4C & 0x100) {
+			unkE4 = 15;
+			gpApplication.unkFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
+			unkB4 = 6;
+		} else {
+			unkB4 = 5;
+		}
+	}
+
+	if (gpMarioOriginal->_118 & 0x8000) {
+		// TODO: water gun
+		// u32 uVar1 = gpMarioOriginal->waterGun->unk1C85;
+		TFlagManager::smInstance->setFlag(0x40004, 0);
+	}
+}
 
 JStage::TObject* TMarDirector::JSGFindObject(const char* param_1,
                                              JStage::TEObject param_2) const
