@@ -1,5 +1,7 @@
-Super Mario Sunshine  
+Super Mario Sunshine
 [![Build Status]][actions] [![Code Progress]][progress] [![Discord Badge]][discord]
+=============
+[<img src="https://decomp.dev/doldecomp/sms.svg?w=512&h=256" width="512" height="256">][Progress]
 =============
 
 [Build Status]: https://github.com/doldecomp/sms/actions/workflows/build.yml/badge.svg
