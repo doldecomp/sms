@@ -162,7 +162,7 @@ void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
 	case 0x40000024:
-		if (gpMarDirector->map == 4)
+		if (gpMarDirector->mMap == 4)
 			mEffectCoronaScale = 1.8f;
 		else
 			mEffectCoronaScale = 1.8f;

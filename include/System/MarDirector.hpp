@@ -104,7 +104,7 @@ public:
 	void decideMarioPosIdx();
 
 	// fabricated
-	u8 getCurrentMap() { return map; }
+	u8 getCurrentMap() { return mMap; }
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
@@ -131,12 +131,12 @@ public:
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ JDrama::TViewObj* unk70;
-	/* 0x74 */ TGCConsole2* console;
+	/* 0x74 */ TGCConsole2* mConsole;
 	/* 0x78 */ TGuide* unk78;
-	/* 0x7C */ u8 map;
-	/* 0x7D */ u8 _07D;
-	/* 0x7E */ u8 _07E;
-	/* 0x7F */ u8 _07F;
+	/* 0x7C */ u8 mMap;
+	/* 0x7D */ u8 unk7D;
+	/* 0x7E */ u8 unk7E;
+	/* 0x7F */ u8 unk7F;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
 	/* 0x88 */ JGadget::TVector_pointer<void*> unk88;

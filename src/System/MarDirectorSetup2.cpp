@@ -37,7 +37,7 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 TMarDirector::~TMarDirector()
 {
 	gpMSound->exitStage();
-	if (gpApplication.currArea.unk0 == 15) {
+	if (gpApplication.mCurrArea.unk0 == 15) {
 		if (JKRMemArchive* arch
 		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
 			arch->unmountFixed();
@@ -57,7 +57,7 @@ TMarDirector::~TMarDirector()
 		arch->unmountFixed();
 
 	(*unk18)->offFlag(0x20);
-	if (map == 1 || (map == 0 && _07D == 0)) {
+	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
 		THPPlayerStop();
 		THPPlayerClose();
 		THPPlayerQuit();
@@ -79,8 +79,8 @@ void TMarDirector::setup2()
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(*unk18);
 	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = *unk18;
 	unk84   = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
-	console = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
-	console->unkC = 0xB;
+	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
+	mConsole->unkC = 0xB;
 	unkDC = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
 	unkDC->unk14 = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
@@ -95,7 +95,7 @@ void TMarDirector::setup2()
 	// unk78->unkC0 = *unk18;
 
 	(*unk18)->mFlags = 0;
-	if (map == 15) {
+	if (mMap == 15) {
 		unkAC->unkC = 0xB;
 		unkB0->unkC = 0xB;
 		(*unk18)->onFlag(0x20);
@@ -115,7 +115,7 @@ void TMarDirector::setup2()
 	gpMSound->setCameraInfo(&gpCamera->unk124, gpCamera->unk13C,
 	                        gpCamera->unk1EC, 0);
 
-	unk258 = MSStage::init(map, _07D);
+	unk258 = MSStage::init(mMap, unk7D);
 
 	JDrama::TGraphics graphics;
 	unk40->perform(0xffffffff, &graphics);

@@ -109,7 +109,7 @@ void TPollutionLayer::initTexImage(const char* param_1)
 	unk80 = (u8*)JKRGetResource(fullPath);
 
 	bool cVar1 = false;
-	if (gpMarDirector->map == 9)
+	if (gpMarDirector->mMap == 9)
 		cVar1 = true;
 
 	for (int y = 0; y < unk5C.mHeight; ++y) {

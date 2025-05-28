@@ -40,23 +40,23 @@ public:
 	void mountStageArchive();
 
 public:
-	/* 0x00 */ TApplication* self;
-	/* 0x04 */ TDirector* director;
-	/* 0x08 */ char undefined1;
-	/* 0x0A */ TGameSequence prevArea;
-	/* 0x0E */ TGameSequence currArea;
-	/* 0x12 */ TGameSequence nextArea;
-	/* 0x18 */ int movie;
-	/* 0x1C */ TDisplay* display;
-	/* 0x20 */ TMarioGamePad* gamePads[4];
-	/* 0x30 */ char undefined4[4];
-	/* 0x34 */ TSMSFader* unkFader;
-	/* 0x38 */ char saveFile;
-	/* 0x3C */ char undefined4_2[4];
-	/* 0x40 */ JKRExpHeap* heap;
-	/* 0x44 */ char undefined2[2];
-	/* 0x46 */ char undefined2_2[2];
-	/* 0x48 */ TProcessMeter* meter;
+	/* 0x00 */ TApplication* mSelf;
+	/* 0x04 */ TDirector* mDirector;
+	/* 0x08 */ char unk8;
+	/* 0x0A */ TGameSequence mPrevArea;
+	/* 0x0E */ TGameSequence mCurrArea;
+	/* 0x12 */ TGameSequence mNextArea;
+	/* 0x18 */ int mMovie;
+	/* 0x1C */ TDisplay* mDisplay;
+	/* 0x20 */ TMarioGamePad* mGamePads[4];
+	/* 0x30 */ char unk30[4];
+	/* 0x34 */ TSMSFader* mFader;
+	/* 0x38 */ char mSaveFile;
+	/* 0x3C */ char unk3C[4];
+	/* 0x40 */ JKRExpHeap* mHeap;
+	/* 0x44 */ char unk44[2];
+	/* 0x46 */ char unk46[2];
+	/* 0x48 */ TProcessMeter* mMeter;
 };
 
 extern TApplication gpApplication;
