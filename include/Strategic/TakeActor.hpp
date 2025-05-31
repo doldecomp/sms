@@ -18,6 +18,7 @@ public:
 	virtual void getRadiusAtY(float) const;
 
 	bool isTaken() const { return unk68 != nullptr ? true : false; }
+	bool isUnk6C() const { return unk6C != nullptr ? true : false; }
 
 public:
 	/* 0x68 */ TTakeActor* unk68;

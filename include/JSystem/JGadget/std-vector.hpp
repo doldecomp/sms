@@ -218,12 +218,14 @@ template <class T> class TVector_pointer : public TVector_pointer_void {
 	typedef T* value_type;
 
 public:
-	typedef T* iterator;
+	typedef T** iterator;
 
 	TVector_pointer() { }
 
 	~TVector_pointer() { }
 
+	iterator begin() { return iterator(Base::begin()); }
+	iterator end() { return iterator(Base::end()); }
 	size_t size() const { return Base::size(); }
 
 	T& operator[](size_t i) { return *static_cast<T*>(Base::operator[](i)); }

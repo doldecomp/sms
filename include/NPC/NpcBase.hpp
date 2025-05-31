@@ -99,7 +99,7 @@ public:
 	void kill();
 	void setPosAndInitAfterSinkBottom();
 	void changeNerveProc_();
-	void isNowCanTaken() const;
+	bool isNowCanTaken() const;
 	void isStateGoToMad_() const;
 	void behaveToSandBomb_(const TLiveActor*);
 	void behaveToHitObject_(THitActor*, EnumHitNpcObjectKind);
@@ -145,9 +145,10 @@ public:
 	void initNpcObjCollision_(const TNpcInitInfo*);
 
 public:
-	char pad_000[0x1C];
-	s32 _16C;
-	u32 mActionFlag;
+	/* 0x150 */ char unk150[0x1C];
+	/* 0x16C */ s32 _16C;
+	/* 0x170 */ u32 mActionFlag;
+	/* 0x174 */ char unk174[0x234 - 0x174];
 };
 
 #endif

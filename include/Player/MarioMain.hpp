@@ -601,7 +601,7 @@ public:
 	void resetNozzle();
 	void trampleExec(THitActor*);
 	void canTake(THitActor*);
-	void isTakeSituation(THitActor*);
+	bool isTakeSituation(THitActor*);
 	void dropObject();
 	void getAttackAngle(const THitActor*);
 	void decHP(int);
