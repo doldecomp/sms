@@ -12,7 +12,11 @@ public:
 	{
 	}
 
+	// fabricated
+	TFlagT& operator=(const TFlagT<T>& other) { set(other.get()); }
+
 	void set(T v) { mValue = v; }
+	T get() const { return mValue; }
 
 public:
 	T mValue;

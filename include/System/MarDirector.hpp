@@ -35,7 +35,7 @@ class TMarDirector : public JDrama::TDirector {
 public:
 	struct TDemoInfo {
 		/* 0x0 */ const char* unk0;
-		/* 0x4 */ JGeometry::TVec3<f32>* unk4;
+		/* 0x4 */ const JGeometry::TVec3<f32>* unk4;
 		/* 0x8 */ u32 unk8;
 		/* 0xC */ f32 unkC;
 		/* 0x10 */ u8 unk10;
@@ -70,8 +70,8 @@ public:
 	void fireGetNozzle(TItemNozzle*);
 	void fireGetBlueCoin(TCoin*);
 	void movement_game();
-	void findNearestTakeNPC();
-	void findNearestTalkNPC();
+	TBaseNPC* findNearestTakeNPC();
+	TBaseNPC* findNearestTalkNPC();
 	void updateFlag(TBaseNPC*, u32, u32);
 	void getTalkMsgID(TBaseNPC*);
 	void entryNPC(TBaseNPC*);
@@ -105,6 +105,8 @@ public:
 
 	// fabricated
 	u8 getCurrentMap() { return mMap; }
+	bool checkUnk4CFlag(int flag) { return unk4C & flag; }
+	void onUnk4CFlag(int flag) { unk4C |= flag; }
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
@@ -120,7 +122,7 @@ public:
 	/* 0x40 */ TPerformList* unk40;
 	/* 0x44 */ TPerformList* unk44;
 	/* 0x48 */ TPerformList* unk48;
-	/* 0x4C */ u16 unk4C;
+	/* 0x4C */ volatile u16 unk4C;
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
 	/* 0x54 */ int unk54;
@@ -139,8 +141,8 @@ public:
 	/* 0x7F */ u8 unk7F;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
-	/* 0x88 */ JGadget::TVector_pointer<void*> unk88;
-	/* 0xA0 */ u32 unkA0;
+	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
+	/* 0xA0 */ TBaseNPC* unkA0;
 	/* 0xA4 */ char unkA4[0x8];
 	/* 0xAC */ TPauseMenu2* unkAC;
 	/* 0xB0 */ JDrama::TViewObj* unkB0;
@@ -170,7 +172,7 @@ public:
 	/* 0x250 */ u32 unk250;
 	/* 0x254 */ JDrama::TNameRef* unk254;
 	/* 0x258 */ MSStage* unk258;
-	/* 0x25C */ u32 unk25C;
+	/* 0x25C */ TShine* unk25C;
 	/* 0x260 */ u8 unk260;
 	/* 0x261 */ u8 unk261;
 };
