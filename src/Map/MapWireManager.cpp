@@ -1,6 +1,7 @@
 #include <Map/MapWireManager.hpp>
 #include <Player/MarioMain.hpp>
 #include <Camera/CubeManagerBase.hpp>
+#include <Strategic/Strategy.hpp>
 #include <Map/MapWire.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
@@ -77,9 +78,8 @@ TMapWireActorManager::TMapWireActorManager(TTakeActor* param_1)
 	                  TMapWireActor::mCommonAttackHeight, 0.0f, 0.0f);
 
 	// TODO: inlines are messed up =(
-	JDrama::TViewObjPtrListT<THitActor>* group
-	    = JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(
-	        "アイテムグループ");
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
 	group->getChildren().push_back(&unk4);
 }
 

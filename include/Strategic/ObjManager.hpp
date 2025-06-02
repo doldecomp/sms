@@ -52,7 +52,7 @@ public:
 	const THitActor* getObj(int i) const { return unk18[i]; }
 
 public:
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ s32 unk10;
 	/* 0x14 */ s32 unk14;
 	/* 0x18 */ THitActor** unk18;
 	/* 0x1C */ TObjChara* unk1C;
