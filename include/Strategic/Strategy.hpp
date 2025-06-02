@@ -8,6 +8,9 @@ class TIdxGroupObj : public JDrama::TViewObjPtrListT<THitActor> {
 public:
 	virtual void loadSuper(JSUMemoryInputStream&);
 
+	// fabricated
+	void add(THitActor* const& obj) { getChildren().push_back(obj); }
+
 public:
 	/* 0x20 */ u32 unk20;
 };

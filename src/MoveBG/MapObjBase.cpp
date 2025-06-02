@@ -4,6 +4,7 @@
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <Strategic/Strategy.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -388,10 +389,8 @@ void TMapObjBase::initAndRegister(const char* param_1)
 	unkF4 = param_1;
 	initMapObj();
 	if (unk130->unkC) {
-		JDrama::TNameRef* ref
-		    = JDrama::TNameRefGen::search<JDrama::TNameRef>(unk130->unkC);
-		// TODO: ref is some kind of a list actor that we want to get added to,
-		// but which one? I guess we'll need *RefGen TUs to figure that out.
+		JDrama::TNameRefGen::search<TIdxGroupObj>(unk130->unkC)
+		    ->push_back(this);
 	}
 }
 

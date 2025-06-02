@@ -127,16 +127,15 @@ void TLiveActor::init(TLiveManager* manager)
 
 void TLiveActor::load(JSUMemoryInputStream& stream)
 {
-	char str[256];
-
 	JDrama::TActor::load(stream);
-	stream.readString(str, 256);
-	JDrama::TNameRef* ref
-	    = JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(str);
+
+	char buffer[256];
+	stream.readString(buffer, 256);
+	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+
 	unkC4 = TMap::getIllegalCheckData();
 
-	TLiveManager* casted = (TLiveManager*)ref;
-	init(casted);
+	init(mgr);
 }
 
 void TLiveActor::bind() { }

@@ -6,6 +6,7 @@
 #include <Player/MarioAccess.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <Strategic/Strategy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -26,8 +27,10 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001E, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<JDrama::TNameRef>("アイテムグループ");
-	// TODO: same problem as TMapObjBase::initAndRegister
+	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
+	    ->getChildren()
+	    .push_back(this);
+	offHitFlag(0x1);
 }
 
 BOOL TLampTrapSpikeHit::receiveMessage(THitActor* param_1, u32 param_2)
@@ -197,8 +200,10 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001D, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<JDrama::TNameRef>("アイテムグループ");
-	// TODO: same problem as TMapObjBase::initAndRegister
+	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
+	    ->getChildren()
+	    .push_back(this);
+	offHitFlag(0x1);
 }
 
 BOOL TLampTrapIronHit::receiveMessage(THitActor* param_1, u32 param_2)

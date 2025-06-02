@@ -70,7 +70,8 @@ public:
 	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
 	const TMActorKeeper* getActorKeeper() const { return unk78; }
 	TMActorKeeper* getActorKeeper() { return unk78; }
-	MActor* getUnk74() { return unk74; }
+	MActor* getUnk74() const { return unk74; }
+	s16 getUnk7C() const { return unk7C; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
 
 public:
