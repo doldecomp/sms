@@ -76,5 +76,7 @@ int SMS_CountPolygonNumInShape(J3DShape*);
 void SMS_ResetDamageFogEffect(J3DModelData*);
 void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&,
                             JDrama::TGraphics*);
+void SetViewFrustumClipCheckPerspective(f32, f32, f32, f32);
+BOOL ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32);
 
 #endif

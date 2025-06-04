@@ -3,6 +3,11 @@
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Enemy.hpp>
+#include <Enemy/AreaCylinder.hpp>
+#include <Enemy/Generator.hpp>
+#include <Camera/Camera.hpp>
+#include <MarioUtil/DrawUtil.hpp>
+#include <M3DUtil/SDLModel.hpp>
 #include <System/MarDirector.hpp>
 
 // rogue include
@@ -156,19 +161,126 @@ void TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
 void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
                                    f32 param_2)
 {
-	JGadget::TList<TEnemyManager*>::iterator it;
-	for (it = unk20.begin(); it != unk20.end(); ++it) {
+	JGadget::TList<TEnemyManager*>::iterator it, e;
+	for (it = unk20.begin(), e = unk20.end(); it != e; ++it) {
 		if ((*it)->search("ボスワンワンマネージャー") == nullptr)
 			(*it)->killChildrenWithin(param_1, param_2);
 	}
 }
 
+#pragma dont_inline on
 void TConductor::genEnemyFromPollution() { }
+#pragma dont_inline off
 
 void TConductor::clipAloneActors(JDrama::TGraphics*) { }
 
 void TConductor::clipGenerators(JDrama::TGraphics*) { }
 
-JDrama::TNameRef* TConductor::searchF(u16, const char*) { }
+JDrama::TNameRef* TConductor::searchF(u16 key, const char* name)
+{
+	if (JDrama::TNameRef* ref = JDrama::TNameRef::searchF(key, name))
+		return ref;
 
-void TConductor::perform(u32, JDrama::TGraphics*) { }
+	for (JGadget::TList<TLiveManager*>::iterator it = unk10.begin(),
+	                                             e  = unk10.end();
+	     it != e; ++it)
+		if (JDrama::TNameRef* ref = (*it)->searchF(key, name))
+			return ref;
+
+	for (JGadget::TList<TLiveActor*>::iterator it = unk30.begin(),
+	                                           e  = unk30.end();
+	     it != e; ++it)
+		if (JDrama::TNameRef* ref = (*it)->searchF(key, name))
+			return ref;
+
+	for (JGadget::TList<TAreaCylinderManager*>::iterator it = unk50.begin(),
+	                                                     e  = unk50.end();
+	     it != e; ++it)
+		if (JDrama::TNameRef* ref = (*it)->searchF(key, name))
+			return ref;
+
+	for (JGadget::TList<JDrama::TViewObj*>::iterator it = unk40.begin(),
+	                                                 e  = unk40.end();
+	     it != e; ++it)
+		if (JDrama::TNameRef* ref = (*it)->searchF(key, name))
+			return ref;
+
+	return nullptr;
+}
+
+void TConductor::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if ((param_1 & 1) && gpMarDirector->unk124 == 0)
+		genEnemyFromPollution();
+
+	for (int i = 1; i >= 0; --i) {
+		if (i != 0) {
+			JGadget::TList<TLiveManager*>::iterator it, e;
+			for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
+				if ((*it)->hasMapCollision())
+					(*it)->testPerform(param_1, param_2);
+		} else {
+			JGadget::TList<TLiveManager*>::iterator it, e;
+			for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
+				if (!(*it)->hasMapCollision())
+					(*it)->testPerform(param_1, param_2);
+		}
+
+		if (param_1 & 2) {
+			SetViewFrustumClipCheckPerspective(
+			    gpCamera->mFovy, gpCamera->mAspect, param_2->unkE8,
+			    unk84.mEnemyFarClip.get());
+
+			JGadget::TList<TLiveActor*>::iterator it, e;
+			for (it = unk30.begin(), e = unk30.end(); it != e; ++it) {
+				TLiveActor* actor = *it;
+				if (!actor->checkLiveFlag(0x100)) {
+					actor->offLiveFlag(0x4);
+				} else if (ViewFrustumClipCheck(param_2, actor->mPosition,
+				                                300.0)) {
+					actor->offLiveFlag(0x4);
+				} else {
+					actor->onLiveFlag(0x4);
+				}
+			}
+		}
+
+		if (i != 0) {
+			JGadget::TList<TLiveActor*>::iterator it, e;
+			for (it = unk30.begin(), e = unk30.end(); it != e; ++it)
+				if ((*it)->hasMapCollision())
+					(*it)->testPerform(param_1, param_2);
+		} else {
+			JGadget::TList<TLiveActor*>::iterator it, e;
+			for (it = unk30.begin(), e = unk30.end(); it != e; ++it)
+				if (!(*it)->hasMapCollision())
+					(*it)->testPerform(param_1, param_2);
+		}
+	}
+
+	{
+		JGadget::TList<TGenerator*>::iterator it, e;
+		for (it = unk60.begin(), e = unk60.end(); it != e; ++it)
+			(*it)->testPerform(param_1, param_2);
+	}
+
+	{
+		JGadget::TList<JDrama::TViewObj*>::iterator it, e;
+		for (it = unk40.begin(), e = unk40.end(); it != e; ++it)
+			(*it)->testPerform(param_1, param_2);
+	}
+
+	{
+		JGadget::TList<TAreaCylinderManager*>::iterator it, e;
+		for (it = unk50.begin(), e = unk50.end(); it != e; ++it)
+			(*it)->testPerform(param_1, param_2);
+	}
+
+	if (param_1 & 0x200) {
+		JGadget::TList<SDLModelData*>::iterator it, e;
+		for (it = unk70.begin(), e = unk70.end(); it != e; ++it)
+			(*it)->entrySDLModels();
+	}
+
+	unk80->perform(param_1, param_2);
+}
