@@ -137,7 +137,7 @@ void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 fVar2;
 	if (unk38 == nullptr) {
 		fVar1 = 300.0f;
-		fVar2 = gpConductor->mEnemyFarClip.get();
+		fVar2 = gpConductor->unk84.mEnemyFarClip.get();
 	} else {
 		fVar2 = unk38->mSLFarClip.get();
 		fVar1 = unk38->mSLClipRadius.get();
@@ -168,7 +168,7 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>&, f32) { }
 
 void TEnemyManager::killOtherEnemies() { }
 
-void TEnemyManager::countLivingEnemy() const { }
+int TEnemyManager::countLivingEnemy() const { }
 
 void TEnemyManager::createCopyAnmMtx(int) { }
 

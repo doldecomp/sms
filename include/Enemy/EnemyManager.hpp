@@ -55,12 +55,12 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);
 	virtual void restoreDrawBuffer(u32) { }
-	virtual void createEnemy();
+	virtual void createEnemies(int);
 	virtual void changeDrawBuffer(u32) { }
 
+	void createEnemy();
 	void createSharedMActorSet(const char**);
 	TSharedMActorSet* getSharedMActorSet(int);
-	void createEnemies(int);
 	void setSharedFlags();
 	void updateAnmSoundShared();
 	void copyFromShared();
@@ -71,7 +71,7 @@ public:
 	void killChildren();
 	void killChildrenWithin(const JGeometry::TVec3<float>&, float);
 	void killOtherEnemies();
-	void countLivingEnemy() const;
+	int countLivingEnemy() const;
 	void createCopyAnmMtx(int);
 	bool copyAnmMtx(TSpineEnemy*);
 

@@ -47,6 +47,7 @@ public:
 	void initObjArray(int);
 
 	// fabricated
+	int getUnk10() { return unk10; }
 	int objNum() { return unk14; }
 	THitActor* getObj(int i) { return unk18[i]; }
 	const THitActor* getObj(int i) const { return unk18[i]; }
