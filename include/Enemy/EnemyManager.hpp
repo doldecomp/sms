@@ -67,7 +67,7 @@ public:
 	void performShared(u32, JDrama::TGraphics*);
 	void getNearestEnemy(const JGeometry::TVec3<float>&);
 	void getDeadEnemy();
-	void getFarOutEnemy();
+	TSpineEnemy* getFarOutEnemy();
 	void killChildren();
 	void killChildrenWithin(const JGeometry::TVec3<float>&, float);
 	void killOtherEnemies();
@@ -76,6 +76,7 @@ public:
 	bool copyAnmMtx(TSpineEnemy*);
 
 	TSpineEnemyParams* getSaveParam() const { return unk38; }
+	TSpineEnemy* getObj(int i) { return (TSpineEnemy*)TLiveManager::getObj(i); }
 
 	static bool mIsCopyAnmMtx;
 

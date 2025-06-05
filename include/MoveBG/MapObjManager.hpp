@@ -53,7 +53,7 @@ public:
 	TMapObjManager(const char*);
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual bool hasMapCollision() const { return true; }
+	virtual BOOL hasMapCollision() const { return true; }
 
 	J3DMaterialTable* loadMatTable(const char*);
 	void initDrawBuffer();

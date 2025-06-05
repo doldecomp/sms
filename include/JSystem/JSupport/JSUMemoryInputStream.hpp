@@ -10,6 +10,9 @@ public:
 		setBuffer(buffer, size);
 	}
 
+	// fabricated
+	JSUMemoryInputStream() { setBuffer(nullptr, 0); }
+
 	void setBuffer(const void* buffer, s32 size);
 	virtual int readData(void* buf, s32 count);
 	virtual int seekPos(s32 offset, JSUStreamSeekFrom from);

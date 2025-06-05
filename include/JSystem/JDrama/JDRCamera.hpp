@@ -85,6 +85,9 @@ public:
 	virtual void JSGGetViewTargetPosition(Vec*) const;
 	virtual void JSGSetViewTargetPosition(const Vec&);
 
+	f32 getFovy() const { return mFovy; }
+	f32 getAspect() const { return mAspect; }
+
 public:
 	/* 0x30 */ JGeometry::TVec3<f32> mUp;
 	/* 0x3C */ JGeometry::TVec3<f32> mTarget;

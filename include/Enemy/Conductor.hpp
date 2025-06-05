@@ -52,8 +52,9 @@ public:
 	bool isBossDefeated();
 	void conduct();
 	void maskNFlagOfChildren(int, u32);
-	void makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int, int);
-	void makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int);
+	int makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int, int);
+	TLiveActor* makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
+	                               int);
 	void killEnemiesWithin(const JGeometry::TVec3<f32>&, f32);
 	void genEnemyFromPollution();
 	void clipAloneActors(JDrama::TGraphics*);
@@ -63,7 +64,6 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 
 public:
-	// TODO: list types may be permuted
 	/* 0x10 */ JGadget::TList<TLiveManager*> unk10;
 	/* 0x20 */ JGadget::TList<TEnemyManager*> unk20;
 	/* 0x30 */ JGadget::TList<TLiveActor*> unk30;
@@ -75,8 +75,8 @@ public:
 	/* 0x84 */ TCondParams unk84;
 	/* 0xF0 */ TStageEnemyInfoTable* unkF0;
 	/* 0xF4 */ TNpcParams* unkF4;
-	/* 0xF8 */ TViewObj* unkF8; // TODO: some kind of a manager
-	/* 0xFC */ u32 unkFC;
+	/* 0xF8 */ TAreaCylinderManager* unkF8;
+	/* 0xFC */ int unkFC;
 };
 
 #endif
