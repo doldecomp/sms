@@ -17,7 +17,7 @@ public:
 	virtual void createSpcBinary();
 	virtual BOOL hasMapCollision() const;
 
-	void getActorByFlag(u32) const;
+	TLiveActor* getActorByFlag(u32) const;
 	void clipActorsAux(JDrama::TGraphics*, float, float);
 	void manageActor(TLiveActor*);
 

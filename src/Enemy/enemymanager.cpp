@@ -160,7 +160,7 @@ void TEnemyManager::getNearestEnemy(const JGeometry::TVec3<f32>&) { }
 
 void TEnemyManager::getDeadEnemy() { }
 
-void TEnemyManager::getFarOutEnemy() { }
+TSpineEnemy* TEnemyManager::getFarOutEnemy() { }
 
 void TEnemyManager::killChildren() { }
 

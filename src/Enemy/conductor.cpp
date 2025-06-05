@@ -5,10 +5,16 @@
 #include <Enemy/Enemy.hpp>
 #include <Enemy/AreaCylinder.hpp>
 #include <Enemy/Generator.hpp>
+#include <Enemy/EnemyTable.hpp>
+#include <Map/Map.hpp>
+#include <Map/PollutionManager.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Camera/Camera.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <System/MarDirector.hpp>
+#include <JSystem/JParticle/JPAMath.hpp>
+#include <stdlib.h>
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -92,7 +98,7 @@ void TConductor::init()
 		    && !(*it)->search("ボスゲッソーマネージャー"))
 			(*it)->createEnemies((*it)->getUnk10());
 
-	unkF8 = (JDrama::TViewObj*)search("ナメクリ出現エリアマネージャー");
+	unkF8 = (TAreaCylinderManager*)search("ナメクリ出現エリアマネージャー");
 }
 
 static void dummy(JDrama::TNameRef* v) { v->search("ナメクリマネージャー"); }
@@ -148,14 +154,84 @@ void TConductor::conduct() { }
 
 void TConductor::maskNFlagOfChildren(int, u32) { }
 
-void TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int,
-                                 int)
+int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
+                                const char* param_2, int param_3, int param_4)
 {
+	TLiveManager* mgr = getManagerByName(param_2);
+
+	if (!mgr)
+		return 0;
+
+	int result = 0;
+
+	for (int i = 0; i < mgr->objNum(); ++i) {
+		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
+		if (actor->checkLiveFlag(0x1)) {
+			((TSpineEnemy*)actor)->resetToPosition(param_1);
+			++result;
+			if (result >= param_3)
+				return result;
+		}
+	}
+
+	if (param_4 == 0)
+		return result;
+
+	for (int i = 0; i < mgr->objNum(); ++i) {
+		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
+		if (!actor->checkLiveFlag(0x1) && actor->checkLiveFlag(0x800)
+		    && actor->checkLiveFlag(0x4)) {
+			((TSpineEnemy*)actor)->resetToPosition(param_1);
+			++result;
+			if (result >= param_3)
+				return result;
+		}
+	}
+
+	if (param_4 == 1)
+		return result;
+
+	for (int i = 0; i < mgr->objNum(); ++i) {
+		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
+		if (!actor->checkLiveFlag(0x1) && !actor->checkLiveFlag(0x4)
+		    && actor->checkLiveFlag(0x800)) {
+			((TSpineEnemy*)actor)->resetToPosition(param_1);
+			++result;
+			if (result >= param_3)
+				return result;
+		}
+	}
+
+	return result;
 }
 
-void TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
-                                    int)
+TLiveActor* TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
+                                           const char* param_2, int param_3)
 {
+	TEnemyManager* mgr = (TEnemyManager*)getManagerByName(param_2);
+
+	if (!mgr)
+		return nullptr;
+
+	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x1)) {
+		actor->resetToPosition(param_1);
+		return actor;
+	}
+
+	if (param_3 == 0)
+		return nullptr;
+
+	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x804)) {
+		actor->resetToPosition(param_1);
+		return actor;
+	}
+
+	if (param_3 == 1)
+		return nullptr;
+
+	TSpineEnemy* enemy = mgr->getObj(0);
+	enemy->resetToPosition(param_1);
+	return enemy;
 }
 
 void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
@@ -168,13 +244,95 @@ void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
 	}
 }
 
-#pragma dont_inline on
-void TConductor::genEnemyFromPollution() { }
-#pragma dont_inline off
+inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
 
-void TConductor::clipAloneActors(JDrama::TGraphics*) { }
+inline f32 randf(f32 l, f32 r)
+{
+	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
+}
 
-void TConductor::clipGenerators(JDrama::TGraphics*) { }
+void TConductor::genEnemyFromPollution()
+{
+	if (unkFC == 0)
+		return;
+
+	if (!unkF0)
+		return;
+
+	if (gpMarDirector->unk58 % unk84.mGenerateTime.get() != 1)
+		return;
+
+	TStageEnemyInfo* info = unkF0->getMatchedInfo(0x1);
+
+	if (!info)
+		return;
+
+	TEnemyManager* mgr = (TEnemyManager*)getManagerByName(info->mManagerName);
+
+	if (!mgr)
+		return;
+
+	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
+	f32 r
+	    = randf(unk84.mGenerateRadiusMin.get(), unk84.mGenerateRadiusMax.get());
+
+	f32 theta = randf() * 360 * (65536.0f / 360.0f);
+	targetPos.x += r * JMASSin(theta);
+	targetPos.z += r * JMASCos(theta);
+
+	const TBGCheckData* data;
+	targetPos.y = gpMap->checkGround(targetPos, &data) + 1.0f;
+
+	if (!gpPollution->isPolluted(targetPos.x, targetPos.y, targetPos.z))
+		return;
+
+	if (unkF8 != nullptr) {
+		TAreaCylinder* cyl = unkF8->getCylinderContains(targetPos);
+		if (!cyl) {
+			f32 f = unk84.mGenerateProp.get();
+			if (randf() > f)
+				return;
+		} else {
+			if (randf() > cyl->unk24)
+				return;
+		}
+	} else {
+		f32 f = unk84.mGenerateProp.get();
+		if (randf() > f)
+			return;
+	}
+
+	TSpineEnemy* enemy = mgr->getFarOutEnemy();
+	if (!enemy)
+		return;
+
+	enemy->resetToPosition(targetPos);
+	enemy->moveObject();
+	if (enemy->getModel())
+		enemy->getModel()->entry();
+}
+
+// TODO: doesn't get inlined into perform unless marked with inline.
+inline void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
+{
+	SetViewFrustumClipCheckPerspective(
+	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->getUnkE8(),
+	    unk84.mEnemyFarClip.get());
+
+	JGadget::TList<TLiveActor*>::iterator it, e;
+	for (it = unk30.begin(), e = unk30.end(); it != e; ++it) {
+		TLiveActor* actor = *it;
+		if (!actor->checkLiveFlag(0x100)) {
+			actor->offLiveFlag(0x4);
+		} else if (ViewFrustumClipCheck(param_1, &actor->mPosition, 300.0f)) {
+			actor->offLiveFlag(0x4);
+		} else {
+			actor->onLiveFlag(0x4);
+		}
+	}
+}
+
+void TConductor::clipGenerators(JDrama::TGraphics* param_1) { }
 
 JDrama::TNameRef* TConductor::searchF(u16 key, const char* name)
 {
@@ -226,24 +384,8 @@ void TConductor::perform(u32 param_1, JDrama::TGraphics* param_2)
 					(*it)->testPerform(param_1, param_2);
 		}
 
-		if (param_1 & 2) {
-			SetViewFrustumClipCheckPerspective(
-			    gpCamera->mFovy, gpCamera->mAspect, param_2->unkE8,
-			    unk84.mEnemyFarClip.get());
-
-			JGadget::TList<TLiveActor*>::iterator it, e;
-			for (it = unk30.begin(), e = unk30.end(); it != e; ++it) {
-				TLiveActor* actor = *it;
-				if (!actor->checkLiveFlag(0x100)) {
-					actor->offLiveFlag(0x4);
-				} else if (ViewFrustumClipCheck(param_2, actor->mPosition,
-				                                300.0)) {
-					actor->offLiveFlag(0x4);
-				} else {
-					actor->onLiveFlag(0x4);
-				}
-			}
-		}
+		if (param_1 & 2)
+			clipAloneActors(param_2);
 
 		if (i != 0) {
 			JGadget::TList<TLiveActor*>::iterator it, e;

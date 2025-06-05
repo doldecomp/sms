@@ -2,23 +2,10 @@
 #define CAMERA_CUBE_MANAGER_BASE_HPP
 
 #include <Camera/CubeMapTool.hpp>
+#include <Strategic/NameRefPtrAry.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGadget/std-vector.hpp>
 #include <dolphin/mtx.h>
-
-// TODO: probably shouldn't be here
-template <class T, class U = JDrama::TNameRef>
-class TNameRefPtrAryT : public U, public JGadget::TVector_pointer<T> {
-public:
-	TNameRefPtrAryT()
-	    : U("<NameRefPtrAryT>")
-	{
-	}
-	~TNameRefPtrAryT();
-	virtual void load(JSUMemoryInputStream&) { }
-	virtual void loadAfter() { }
-	virtual JDrama::TNameRef* searchF(u16 key, char const* name) { }
-};
 
 class TCubeManagerBase;
 
