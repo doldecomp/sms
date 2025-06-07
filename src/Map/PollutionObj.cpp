@@ -7,15 +7,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TPollutionObj::TPollutionObj()
-    : unk20(0)
-    , unk24(0)
-    , unk28(0)
-    , unk2C(0)
-    , unk30(0)
-    , unk34(nullptr)
-{
-}
+void is_near(float, float) { }
+
+void is_near(float, float, float, float) { }
+
+void TPollutionObj::getDepthFromMap(int, int) { }
+
+void TPollutionObj::updateDepthMap() { }
+
+bool TPollutionObj::isCleaned() const { }
 
 void TPollutionObj::initAreaInfo(TPollutionLayer* layer)
 {
@@ -41,12 +41,12 @@ void TPollutionObj::initAreaInfo(TPollutionLayer* layer)
 		((TPollutionObj*)mChildren[i])->initAreaInfo(layer);
 }
 
-bool TPollutionObj::isCleaned() const { }
-
-void TPollutionObj::updateDepthMap() { }
-
-void TPollutionObj::getDepthFromMap(int, int) { }
-
-void is_near(float, float, float, float) { }
-
-void is_near(float, float) { }
+TPollutionObj::TPollutionObj()
+    : unk20(0)
+    , unk24(0)
+    , unk28(0)
+    , unk2C(0)
+    , unk30(0)
+    , unk34(nullptr)
+{
+}

@@ -2,17 +2,36 @@
 #include <Map/MapCollisionEntry.hpp>
 #include <stdio.h>
 
-TMapCollisionManager::TMapCollisionManager(u16 param_1, const char* param_2,
-                                           const TLiveActor* param_3)
+void TMapCollisionManager::changeCollision(u32 i)
 {
-	mEntries    = new TMapCollisionBase*[param_1];
-	mMaxEntries = param_1;
-	mEntryNum   = 0;
-	unk8        = nullptr;
-	mFolder     = param_2;
-	unk10       = param_3;
-	unk14       = 0;
+	if (i < mEntryNum) {
+		if (unk8 != mEntries[i]) {
+			if (unk8 != nullptr)
+				unk8->remove();
+			unk8 = mEntries[i];
+		}
+	}
 }
+
+void TMapCollisionManager::getFileName(const char*, char*) { }
+
+#pragma dont_inline on
+void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
+{
+	switch (param_2) {
+	case 0:
+		unk14 |= 0x8000;
+		mEntries[mEntryNum] = new TMapCollisionStatic;
+		break;
+	case 1:
+		mEntries[mEntryNum] = new TMapCollisionMove;
+		break;
+	case 2:
+		mEntries[mEntryNum] = new TMapCollisionWarp;
+		break;
+	}
+}
+#pragma dont_inline off
 
 // fabricated
 inline u8 col_type(u16 param_1) { return param_1 & 3; }
@@ -61,31 +80,14 @@ void TMapCollisionManager::init(const char* param_1, u16 param_2,
 	mEntryNum++;
 }
 
-void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
+TMapCollisionManager::TMapCollisionManager(u16 param_1, const char* param_2,
+                                           const TLiveActor* param_3)
 {
-	switch (param_2) {
-	case 0:
-		unk14 |= 0x8000;
-		mEntries[mEntryNum] = new TMapCollisionStatic;
-		break;
-	case 1:
-		mEntries[mEntryNum] = new TMapCollisionMove;
-		break;
-	case 2:
-		mEntries[mEntryNum] = new TMapCollisionWarp;
-		break;
-	}
-}
-
-void TMapCollisionManager::getFileName(const char*, char*) { }
-
-void TMapCollisionManager::changeCollision(u32 i)
-{
-	if (i < mEntryNum) {
-		if (unk8 != mEntries[i]) {
-			if (unk8 != nullptr)
-				unk8->remove();
-			unk8 = mEntries[i];
-		}
-	}
+	mEntries    = new TMapCollisionBase*[param_1];
+	mMaxEntries = param_1;
+	mEntryNum   = 0;
+	unk8        = nullptr;
+	mFolder     = param_2;
+	unk10       = param_3;
+	unk14       = 0;
 }
