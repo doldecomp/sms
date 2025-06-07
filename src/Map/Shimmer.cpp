@@ -21,51 +21,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TShimmer::TShimmer(const char* name)
-    : JDrama::TActor(name)
-    , unk44(nullptr)
-    , unk48(nullptr)
-    , unk54(nullptr)
-    , unk58(new J3DFrameCtrl)
-    , unk7C(0)
-{
-}
+void TShimmer::near() { }
 
-void TShimmer::load(JSUMemoryInputStream& stream)
-{
-	JDrama::TActor::load(stream);
-	char modelName[32];
-	stream.readString(modelName, 32);
-	char buffer[64];
-	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", modelName);
-	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(buffer), 0x11010000);
-	unk48 = new J3DModel(unk44, 0, 1);
-	snprintf(buffer, 64, "/scene/mapObj/%s.btk", modelName);
-	unk54 = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(
-	    JKRGetResource(buffer));
-
-	unk54->searchUpdateMaterialID(unk44);
-
-	for (u16 i = 0; i < unk44->getMaterialNum(); ++i) {
-		J3DMaterialAnm* anm = new J3DMaterialAnm;
-		unk44->getMaterialNodePointer(i)->change();
-		unk44->getMaterialNodePointer(i)->setMaterialAnm(anm);
-	}
-	unk44->entryTexMtxAnimator(unk54);
-	for (u16 i = 0; i < unk44->getMaterialNum(); ++i) {
-		unk44->getMaterialNodePointer(i)->setSomeFlag();
-	}
-	unk58->init(unk54->getFrameMax());
-	unk58->setAttribute(2);
-}
-
-void TShimmer::loadAfter()
-{
-	JDrama::TActor::loadAfter();
-	TScreenTexture* ref
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
-	unk44->getTexture()->setResTIMG(1, *ref->getTexture()->getTexInfo());
-}
+void TShimmer::far() { }
 
 void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
@@ -123,6 +81,48 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-void TShimmer::far() { }
+void TShimmer::loadAfter()
+{
+	JDrama::TActor::loadAfter();
+	TScreenTexture* ref
+	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	unk44->getTexture()->setResTIMG(1, *ref->getTexture()->getTexInfo());
+}
 
-void TShimmer::near() { }
+void TShimmer::load(JSUMemoryInputStream& stream)
+{
+	JDrama::TActor::load(stream);
+	char modelName[32];
+	stream.readString(modelName, 32);
+	char buffer[64];
+	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", modelName);
+	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(buffer), 0x11010000);
+	unk48 = new J3DModel(unk44, 0, 1);
+	snprintf(buffer, 64, "/scene/mapObj/%s.btk", modelName);
+	unk54 = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(
+	    JKRGetResource(buffer));
+
+	unk54->searchUpdateMaterialID(unk44);
+
+	for (u16 i = 0; i < unk44->getMaterialNum(); ++i) {
+		J3DMaterialAnm* anm = new J3DMaterialAnm;
+		unk44->getMaterialNodePointer(i)->change();
+		unk44->getMaterialNodePointer(i)->setMaterialAnm(anm);
+	}
+	unk44->entryTexMtxAnimator(unk54);
+	for (u16 i = 0; i < unk44->getMaterialNum(); ++i) {
+		unk44->getMaterialNodePointer(i)->setSomeFlag();
+	}
+	unk58->init(unk54->getFrameMax());
+	unk58->setAttribute(2);
+}
+
+TShimmer::TShimmer(const char* name)
+    : JDrama::TActor(name)
+    , unk44(nullptr)
+    , unk48(nullptr)
+    , unk54(nullptr)
+    , unk58(new J3DFrameCtrl)
+    , unk7C(0)
+{
+}

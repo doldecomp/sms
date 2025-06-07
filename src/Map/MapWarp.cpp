@@ -12,13 +12,83 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TMapWarp::TMapWarp()
-    : unk0(0)
-    , unk4(0)
-    , unk8(0)
-    , unkC(3.0f)
+void TMapWarp::changeModel(int i)
 {
+	if (unk8 == i)
+		return;
+
+	// TODO: inlines
+	gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
+	gpMap->mModelManager->mJointModels[0]->mChildren[i]->awake();
+	unk8 = i;
 }
+
+void TMapWarp::warp(int) { }
+
+void TMapWarp::watchToWarp()
+{
+	const TBGCheckData* checkData;
+	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
+	                                     gpMarioPos->z, &checkData);
+
+	if (checkData->unk0 == 0x200 || checkData->unk0 == 0x201 ? true : false) {
+		int warp = unk4[checkData->unk2].unk0;
+		if (warp != unk8) {
+			// TODO: inlines
+			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
+			gpMap->mModelManager->mJointModels[0]->mChildren[warp]->awake();
+			unk8 = warp;
+
+			// TODO: tons of inlines presumably?
+			JGeometry::TVec3<f32> marioPos(*gpMarioPos);
+			marioPos.add(unk4[checkData->unk2].unk8);
+			SMS_MarioWarpRequest(marioPos,
+			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
+		}
+	}
+
+	if (checkData->unk0 == 0x202 || checkData->unk0 == 0x203 ? true : false) {
+		if (checkData->unk2 != unk8) {
+			// TODO: inlines
+			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
+			gpMap->mModelManager->mJointModels[0]
+			    ->mChildren[checkData->unk2]
+			    ->awake();
+			unk8 = checkData->unk2;
+		}
+	}
+
+	int no = gpCubeStream->getInCubeNo(*gpMarioPos);
+	if (no != -1) {
+		TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
+		JGeometry::TVec3<s16> vec;
+		vec.x = 182.0444f * info.unk18.x;
+		vec.y = 182.0444f * info.unk18.y;
+		vec.z = 182.0444f * info.unk18.z;
+		Mtx mtx;
+		MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, vec.x, vec.y, vec.z);
+		JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+		MTXMultVec(mtx, &vec2, &vec2);
+		if ((info.unk38 == 0 ? true : false)
+		    || (info.unk38 == 1 ? true : false))
+			SMS_FlowMoveMario(vec2);
+		else
+			SMS_WindMoveMario(vec2);
+	}
+}
+
+void TMapWarp::initModel()
+{
+	// TODO: inlines
+	int num = gpMap->mModelManager->mJointModels[0]->mChildrenNum;
+	for (int i = 0; i < num; ++i)
+		if (i != unk8)
+			gpMap->mModelManager->mJointModels[0]->mChildren[(u16)i]->sleep();
+}
+
+void getWarpPointNo(const char*) { }
+
+void loadWarpPointPos(JSUMemoryInputStream&, int, Vec*) { }
 
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
@@ -93,79 +163,10 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 	}
 }
 
-void loadWarpPointPos(JSUMemoryInputStream&, int, Vec*) { }
-void getWarpPointNo(const char*) { }
-
-void TMapWarp::initModel()
+TMapWarp::TMapWarp()
+    : unk0(0)
+    , unk4(0)
+    , unk8(0)
+    , unkC(3.0f)
 {
-	// TODO: inlines
-	int num = gpMap->mModelManager->mJointModels[0]->mChildrenNum;
-	for (int i = 0; i < num; ++i)
-		if (i != unk8)
-			gpMap->mModelManager->mJointModels[0]->mChildren[(u16)i]->sleep();
-}
-
-void TMapWarp::watchToWarp()
-{
-	const TBGCheckData* checkData;
-	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
-	                                     gpMarioPos->z, &checkData);
-
-	if (checkData->unk0 == 0x200 || checkData->unk0 == 0x201 ? true : false) {
-		int warp = unk4[checkData->unk2].unk0;
-		if (warp != unk8) {
-			// TODO: inlines
-			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-			gpMap->mModelManager->mJointModels[0]->mChildren[warp]->awake();
-			unk8 = warp;
-
-			// TODO: tons of inlines presumably?
-			JGeometry::TVec3<f32> marioPos(*gpMarioPos);
-			marioPos.add(unk4[checkData->unk2].unk8);
-			SMS_MarioWarpRequest(marioPos,
-			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
-		}
-	}
-
-	if (checkData->unk0 == 0x202 || checkData->unk0 == 0x203 ? true : false) {
-		if (checkData->unk2 != unk8) {
-			// TODO: inlines
-			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-			gpMap->mModelManager->mJointModels[0]
-			    ->mChildren[checkData->unk2]
-			    ->awake();
-			unk8 = checkData->unk2;
-		}
-	}
-
-	int no = gpCubeStream->getInCubeNo(*gpMarioPos);
-	if (no != -1) {
-		TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
-		JGeometry::TVec3<s16> vec;
-		vec.x = 182.0444f * info.unk18.x;
-		vec.y = 182.0444f * info.unk18.y;
-		vec.z = 182.0444f * info.unk18.z;
-		Mtx mtx;
-		MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, vec.x, vec.y, vec.z);
-		JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
-		MTXMultVec(mtx, &vec2, &vec2);
-		if ((info.unk38 == 0 ? true : false)
-		    || (info.unk38 == 1 ? true : false))
-			SMS_FlowMoveMario(vec2);
-		else
-			SMS_WindMoveMario(vec2);
-	}
-}
-
-void TMapWarp::warp(int) { }
-
-void TMapWarp::changeModel(int i)
-{
-	if (unk8 == i)
-		return;
-
-	// TODO: inlines
-	gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-	gpMap->mModelManager->mJointModels[0]->mChildren[i]->awake();
-	unk8 = i;
 }

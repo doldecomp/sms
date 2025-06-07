@@ -5,19 +5,14 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TBGCheckData::TBGCheckData()
-    : unk0(0)
-    , unk2(0)
-    , unk4(0)
-    , mMinY(0.0f)
-    , mMaxY(0.0f)
-    , unk40(0.0f)
-    , unk44(nullptr)
+f32 TBGCheckData::getActiveJumpPower() const
 {
-	mPoint1.zero();
-	mPoint2.zero();
-	mPoint3.zero();
-	mNormal.zero();
+	// TODO: inlines...
+	char trash[0x4];
+	if (getUnk44() != nullptr && getUnk44()->isActorType(0x40000039))
+		return TMapObjTree::mBananaTreeJumpPower;
+
+	return unk2;
 }
 
 u32 TBGCheckData::getPlaneType()
@@ -39,12 +34,17 @@ u32 TBGCheckData::getPlaneType()
 	return 2;
 }
 
-f32 TBGCheckData::getActiveJumpPower() const
+TBGCheckData::TBGCheckData()
+    : unk0(0)
+    , unk2(0)
+    , unk4(0)
+    , mMinY(0.0f)
+    , mMaxY(0.0f)
+    , unk40(0.0f)
+    , unk44(nullptr)
 {
-	// TODO: inlines...
-	char trash[0x4];
-	if (getUnk44() != nullptr && getUnk44()->isActorType(0x40000039))
-		return TMapObjTree::mBananaTreeJumpPower;
-
-	return unk2;
+	mPoint1.zero();
+	mPoint2.zero();
+	mPoint3.zero();
+	mNormal.zero();
 }
