@@ -42,7 +42,7 @@ public:
 		/* 0x30 */ u32 unk30;
 		/* 0x34 */ const char* unk34;
 		/* 0x38 */ u32 unk38;
-		/* 0x3C */ u32 unk3C;
+		/* 0x3C */ u8 unk3C;
 		/* 0x40 */ u32 unk40;
 	};
 

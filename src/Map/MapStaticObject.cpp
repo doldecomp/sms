@@ -2,6 +2,7 @@
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapModel.hpp>
+#include <Map/MapMirror.hpp>
 #include <Map/Map.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjBase.hpp>
@@ -11,16 +12,19 @@
 #include <Strategic/MirrorActor.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
+#include <System/EmitterViewObj.hpp>
 #include <MSound/MSoundScene.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorUtil.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
@@ -152,9 +156,67 @@ void TMapStaticObj::calcUnique(JPABaseEmitter*) { }
 void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2) {
-		if (unk78 != 0xffffffff && gpMSound->gateCheck(unk78)) {
-			MSoundSESystem::MSoundSE::startSoundActor(unk78, mPosition, 0,
-			                                          nullptr, 0, 4);
+		u32 sfx = unk78;
+		if (sfx != 0xffffffff) {
+			if (gpMSound->gateCheck(sfx))
+				MSoundSESystem::MSoundSE::startSoundActor(sfx, mPosition, 0,
+				                                          nullptr, 0, 4);
+		}
+
+		JPABaseEmitter* emitter = nullptr;
+		if (unk68->unk3C == 1)
+			emitter = gpMarioParticleManager->emit(unk68->unk38, &mPosition,
+			                                       unk68->unk3C, this);
+		else if (unk68->unk3C == 3)
+			emitter = gpMarioParticleManager->emit(unk68->unk38, &mPosition,
+			                                       unk68->unk3C, this);
+
+		if (mActorType == 0x40000024 && emitter) {
+			f32 scale = mEffectCoronaScale;
+			emitter->unk154.set(scale, scale, scale);
+			emitter->unk174.set(scale, scale, scale);
+		}
+	}
+
+	if ((param_1 & 4) && (unk68->unk40 & 1)) {
+		Mtx afStack_7c;
+		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
+
+		unk70->getUnk4()
+		    ->getModelData()
+		    ->getMaterialNodePointer(0)
+		    ->getTexGenBlock()
+		    ->getTexMtx(1)
+		    ->setEffectMtx(afStack_7c);
+	}
+
+	if ((param_1 & 0x200) && ((unk68->unk40 & 0x8) || (unk68->unk40 & 0x20))) {
+		param_1 &= ~0x200;
+		unk70->updateMatAnm();
+	}
+
+	if ((!(param_1 & 0x200) || !(unk68->unk40 & 0x10)
+	     || (gpMirrorModelManager->unk18 != -1 ? true : false))
+	    && unk70) {
+		if (param_1 & 0x2) {
+			MsMtxSetXYZRPH(unk70->getUnk4()->getBaseTRMtx(), mPosition.x,
+			               mPosition.y, mPosition.z,
+			               mRotation.x * (65536.0f / 360.0f),
+			               mRotation.y * (65536.0f / 360.0f),
+			               mRotation.z * (65536.0f / 360.0f));
+			unk70->getUnk4()->unk14 = mScaling;
+		}
+
+		if ((param_1 & 0x200) && (unk68->unk40 & 0x80)) {
+			J3DDrawBuffer* oldOpaBuf = j3dSys.getDrawBuffer(0);
+			J3DDrawBuffer* oldXluBuf = j3dSys.getDrawBuffer(1);
+			j3dSys.setDrawBuffer(gpMapObjManager->unk60->mDrawBuffer, 0);
+			j3dSys.setDrawBuffer(gpMapObjManager->unk64->mDrawBuffer, 1);
+			unk70->perform(param_1, param_2);
+			j3dSys.setDrawBuffer(oldOpaBuf, 0);
+			j3dSys.setDrawBuffer(oldXluBuf, 1);
+		} else {
+			unk70->perform(param_1, param_2);
 		}
 	}
 }
