@@ -7,6 +7,7 @@
 #include <M3DUtil/MActorUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <System/Application.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
@@ -177,21 +178,10 @@ TJointCoin::TJointCoin(const char* name)
 
 void TMapObjSteam::control() { emitAndRotateScale(0x15C, 1, &mPosition); }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-inline static void loadParticle(const char* path, u32 id)
-{
-	if (gParticleFlagLoaded[id] == 0) {
-		gpResourceManager->load(path, id);
-		gParticleFlagLoaded[id] = 1;
-	}
-}
-
 void TMapObjSteam::load(JSUMemoryInputStream& stream)
 {
 	THideObjBase::load(stream);
-	loadParticle("/scene/mapObj/ms_funsui_yuge.jpa", 0x15C);
+	SMS_LoadParticle("/scene/mapObj/ms_funsui_yuge.jpa", 0x15C);
 }
 
 static void dummy(f32* f) { *f = 0.0f; }

@@ -2,6 +2,7 @@
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <GC2D/CardLoad.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
@@ -85,17 +86,6 @@ void TFileLoadBlock::loadAfter()
 	}
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-inline static void loadParticle(const char* path, u32 id)
-{
-	if (gParticleFlagLoaded[id] == 0) {
-		gpResourceManager->load(path, id);
-		gParticleFlagLoaded[id] = 1;
-	}
-}
-
 void TFileLoadBlock::initMapObj()
 {
 	TMapObjBase::initMapObj();
@@ -106,7 +96,7 @@ void TFileLoadBlock::initMapObj()
 	else if (strcmp("FileLoadBlockC", getUnkF4()) == 0)
 		unk138 = 2;
 
-	loadParticle("/scene/map/map/ms_m_fileblock.jpa", 0x6e);
+	SMS_LoadParticle("/scene/map/map/ms_m_fileblock.jpa", 0x6E);
 
 	unk144.set(mPosition.x, mPosition.y, mPosition.z);
 }

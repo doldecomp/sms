@@ -1,6 +1,7 @@
 #include <Map/PollutionLayer.hpp>
 #include <Map/PollutionManager.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/ResTIMG.hpp>
@@ -112,10 +113,6 @@ void TPollutionLayer::initLayerInfo(const TPollutionLayerInfo* param_1)
 
 void TPollutionLayer::initPollutionTex(const char*) { }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-
 void TPollutionLayer::initJointModel(TJointModelManager* param_1,
                                      const char* param_2,
                                      MActorAnmData* param_3)
@@ -133,10 +130,8 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
 
 	unk54 = (u8*)unk58 + unk58->imageDataOffset;
 	initTexImage(param_2);
-	if ((int)unk30 == 4 && gParticleFlagLoaded[0x6F] == 0) {
-		gpResourceManager->load("/scene/map/pollution/ms_thunder_s.jpa", 0x6F);
-		gParticleFlagLoaded[0x6F] = 1;
-	}
+	if ((int)unk30 == 4)
+		SMS_LoadParticle("/scene/map/pollution/ms_thunder_s.jpa", 0x6F);
 
 	if (mActor->checkAnmFileExist(param_2, 4))
 		mActor->setBtk(param_2);

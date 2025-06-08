@@ -14,6 +14,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <Jsystem/JDrama/JDRNameRefGen.hpp>
@@ -360,10 +361,6 @@ void TMapEventSinkBianco::loadAfter()
 	mGateKeeper = JDrama::TNameRef::search("ゲートキーパー");
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-
 void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 {
 	TMapEventSinkInPollutionReset::load(stream);
@@ -375,15 +372,8 @@ void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 	stream.read(&dummy, 4);
 	stream.read(&unk78, 4);
 
-	// TODO: these are inlines
-	if (gParticleFlagLoaded[0x59] == 0) {
-		gpResourceManager->load("/scene/map/map/ms_objup_slope_a.jpa", 0x59);
-		gParticleFlagLoaded[0x59] = 1;
-	}
-	if (gParticleFlagLoaded[0x1E1] == 0) {
-		gpResourceManager->load("/scene/map/map/ms_objup_slope_b.jpa", 0x1E1);
-		gParticleFlagLoaded[0x1E1] = 1;
-	}
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_a.jpa", 0x59);
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_b.jpa", 0x1E1);
 }
 
 void TMapEventSinkShadowMario::rising() { TMapEventSink::rising(); }
