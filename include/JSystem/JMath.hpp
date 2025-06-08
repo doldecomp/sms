@@ -50,6 +50,24 @@ private:
 
 } // namespace JMath
 
+extern u32 jmaSinShift;
+extern f32* jmaSinTable;
+extern f32* jmaCosTable;
+
+inline f32 JMASCos(s16 v)
+{
+	return jmaCosTable[static_cast<u16>(v) >> jmaSinShift];
+}
+
+inline f32 JMASSin(s16 v)
+{
+	return jmaSinTable[static_cast<u16>(v) >> jmaSinShift];
+}
+
+inline f32 JMACos(f32 v) { return JMASCos(v * (65536.0f / 360.0f)); }
+
+inline f32 JMASin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }
+
 void JMANewSinTable(u8);
 void JMADeleteSinTable();
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);

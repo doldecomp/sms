@@ -35,7 +35,7 @@ template <class T> inline T MsClamp(T t, T l, T r)
 	return t;
 }
 
-void MsIsInSight(const JGeometry::TVec3<f32>&, f32,
+bool MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32);
 
 void SMS_GoRotate(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,

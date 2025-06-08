@@ -3,11 +3,15 @@
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Map/Map.hpp>
+#include <Map/MapData.hpp>
+#include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <Strategic/Spine.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JMath.hpp>
 
 TSpineEnemy::TSpineEnemy(const char* name)
     : TLiveActor(name)
@@ -74,9 +78,76 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 	init(mgr);
 }
 
-#pragma dont_inline on
-void TSpineEnemy::calcEnemyRootMatrix() { }
-#pragma dont_inline off
+void TSpineEnemy::calcEnemyRootMatrix()
+{
+	J3DModel* pJVar13 = getModel();
+	MtxPtr mtx        = pJVar13->getBaseTRMtx();
+
+	pJVar13->unk14 = mScaling;
+
+	if (unk130 == 0) {
+		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+	} else {
+		if (unk130 >= 2 && !(checkLiveFlag(0x80) ? TRUE : FALSE) && unk138) {
+			JGeometry::TVec3<f32> v1(0.0f, 1.0f, 0.0f);
+
+			JGeometry::TVec3<f32> v2 = unk138->mNormal;
+
+			v1.cross(v2, v1);
+			v1.normalize();
+
+			JGeometry::TVec3<f32> v3;
+			v3.cross(v1, v2);
+			v3.normalize();
+
+			mtx[0][0] = v1.x;
+			mtx[1][0] = v1.y;
+			mtx[2][0] = v1.z;
+			mtx[0][1] = v2.x;
+			mtx[1][1] = v2.y;
+			mtx[2][1] = v2.z;
+			mtx[0][2] = v3.x;
+			mtx[1][2] = v3.y;
+			mtx[2][2] = v3.z;
+			mtx[0][3] = 0.0;
+			mtx[1][3] = 0.0;
+			mtx[2][3] = 0.0;
+		} else {
+			if (unk130 >= 1 && !unkC4->checkFlag(0x10)) {
+				JGeometry::TVec3<f32> v1(
+				    JMASSin(mRotation.y * (65536.0f / 360.0f)), 0.0f,
+				    JMASCos(mRotation.y * (65536.0f / 360.0f)));
+
+				JGeometry::TVec3<f32> v2 = unkC4->mNormal;
+				v1.cross(v2, v1);
+				v1.normalize();
+
+				JGeometry::TVec3<f32> v3;
+				v3.cross(v1, v2);
+				v3.normalize();
+
+				mtx[0][0] = v1.x;
+				mtx[1][0] = v1.y;
+				mtx[2][0] = v1.z;
+				mtx[0][1] = v2.x;
+				mtx[1][1] = v2.y;
+				mtx[2][1] = v2.z;
+				mtx[0][2] = v3.x;
+				mtx[1][2] = v3.y;
+				mtx[2][2] = v3.z;
+				mtx[0][3] = 0.0;
+				mtx[1][3] = 0.0;
+				mtx[2][3] = 0.0;
+			} else {
+				MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+			}
+		}
+	}
+
+	mtx[0][3] = mPosition.x;
+	mtx[1][3] = mPosition.y;
+	mtx[2][3] = mPosition.z;
+}
 
 void TSpineEnemy::calcRootMatrix()
 {
@@ -97,20 +168,62 @@ TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 	return ((TEnemyManager*)unk70)->unk38;
 }
 
-void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>&) { }
-
-void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>&,
-                            const JGeometry::TVec3<f32>&,
-                            const JGeometry::TVec3<f32>&,
-                            const JGeometry::TVec3<f32>&)
+void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 {
+	mPosition = position;
+	offLiveFlag(0x8);
+	offLiveFlag(0x1);
+	reset();
+	unk13C = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	offHitFlag(0x1);
+	unkAC = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
+	onLiveFlag(0x8000);
+	onLiveFlag(0x80);
+	control();
 }
 
-void TSpineEnemy::calcMinimumTurnRadius(f32, f32) const { }
+void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& param_1,
+                            const JGeometry::TVec3<f32>& param_2,
+                            const JGeometry::TVec3<f32>& param_3,
+                            const JGeometry::TVec3<f32>& param_4)
+{
+	mPosition = param_1;
+	offLiveFlag(0x8);
+	offLiveFlag(0x1);
+	reset();
+	mRotation = param_2;
+	mScaling  = param_3;
+	unk13C    = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	offHitFlag(0x1);
+	unkAC = param_4;
+	onLiveFlag(0x8000);
+	onLiveFlag(0x80);
+	control();
+}
 
-void TSpineEnemy::calcTurnSpeedToReach(f32, f32) const { }
+f32 TSpineEnemy::calcMinimumTurnRadius(f32 param_1, f32 param_2) const
+{
+	f32 result;
+	if (param_2 >= 90.0f) {
+		result = 0.0f;
+	} else {
+		f32 thing = JMASin(param_2);
+		if (thing == 0.0f)
+			result = 100000.0f;
+		else
+			result = param_1 * JMASin(-(param_2 * 0.5f - 90.0f)) / thing;
+	}
+	return result;
+}
 
-void TSpineEnemy::updateSquareToMario() { }
+void TSpineEnemy::calcTurnSpeedToReach(f32 param_1, f32 param_2) const { }
+
+void TSpineEnemy::updateSquareToMario()
+{
+	// assert?
+	(void)gpMarioPos;
+	unk134 = PSVECSquareDistance(&mPosition, gpMarioPos);
+}
 
 BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 {
@@ -127,11 +240,23 @@ BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-void TSpineEnemy::isInSight(const JGeometry::TVec3<f32>&, f32, f32, f32) const
+bool TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
+                            f32 param_3, f32 param_4) const
 {
+	return MsIsInSight(mPosition, mRotation.y, param_1, param_2, param_3,
+	                   param_4);
 }
 
-void TSpineEnemy::setGoalPathFromGraph() { }
+void TSpineEnemy::setGoalPathFromGraph()
+{
+	JGeometry::TVec3<f32> point = unk124->getCurrent().getPoint();
+
+	unkF4  = 0;
+	unkF8  = point;
+	unk104 = 0;
+	unk108 = point;
+	unk114.clear();
+}
 
 void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
 

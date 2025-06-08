@@ -3,20 +3,6 @@
 
 #include <JSystem/JGeometry.hpp>
 
-extern u32 jmaSinShift;
-extern f32* jmaSinTable;
-extern f32* jmaCosTable;
-
-inline f32 JMASCos(s16 v)
-{
-	return jmaCosTable[static_cast<u16>(v) >> jmaSinShift];
-}
-
-inline f32 JMASSin(s16 v)
-{
-	return jmaSinTable[static_cast<u16>(v) >> jmaSinShift];
-}
-
 f32 JPASqrtf(f32);
 void JPAGetXYZRotateMtx(s16, s16, s16, MtxPtr);
 void JPAGetXYRotateMtx(s16, s16, MtxPtr);

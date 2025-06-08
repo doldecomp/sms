@@ -25,6 +25,12 @@ class TGraphNode {
 public:
 	TGraphNode();
 	void getPoint(Vec*) const;
+	JGeometry::TVec3<f32> getPoint()
+	{
+		JGeometry::TVec3<f32> p;
+		getPoint(&p);
+		return p;
+	}
 
 	// fabricated
 	TRailNode* getRailNode() { return unk0; }
