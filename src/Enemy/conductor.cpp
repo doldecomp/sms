@@ -13,7 +13,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <System/MarDirector.hpp>
-#include <JSystem/JParticle/JPAMath.hpp>
+#include <JSystem/JMath.hpp>
 #include <stdlib.h>
 
 // rogue include
