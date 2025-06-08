@@ -10,6 +10,7 @@
 #include <Enemy/Graph.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <MSound/MSoundScene.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -237,10 +238,6 @@ void TMapStaticObj::initModel(const char* name)
 }
 #pragma dont_inline off
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-
 void TMapStaticObj::init(const char* name)
 {
 	unk6C = name;
@@ -266,16 +263,10 @@ void TMapStaticObj::init(const char* name)
 	if (unk68->unk34 != nullptr) {
 		switch (unk68->unk3C) {
 		case 1:
-			if (gParticleFlagLoaded[unk68->unk38] == 0) {
-				gpResourceManager->load(unk68->unk34, unk68->unk38);
-				gParticleFlagLoaded[unk68->unk38] = 1;
-			}
+			SMS_LoadParticle(unk68->unk34, unk68->unk38);
 			break;
 		case 3:
-			if (gParticleFlagLoaded[unk68->unk38] == 0) {
-				gpResourceManager->load(unk68->unk34, unk68->unk38);
-				gParticleFlagLoaded[unk68->unk38] = 1;
-			}
+			SMS_LoadParticle(unk68->unk34, unk68->unk38);
 			break;
 		}
 	}

@@ -1,5 +1,6 @@
 #include <MoveBG/MapObjFloat.hpp>
 #include <MoveBG/MapObjLibWave.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 
@@ -73,17 +74,6 @@ void TMapObjFloatOnSea::calc()
 	}
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-inline static void loadParticle(const char* path, u32 id)
-{
-	if (gParticleFlagLoaded[id] == 0) {
-		gpResourceManager->load(path, id);
-		gParticleFlagLoaded[id] = 1;
-	}
-}
-
 void TMapObjFloatOnSea::initMapObj()
 {
 	TLeanBlock::initMapObj();
@@ -100,8 +90,8 @@ void TMapObjFloatOnSea::initMapObj()
 	unk198 = 0xF;
 	unk1AC = param_table[idx].unk28;
 
-	loadParticle("/scene/mapObj/ms_obj_hamon_b.jpa", 0x1F6);
-	loadParticle("/scene/mapObj/ms_obj_hamon_a.jpa", 0x1C6);
+	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_b.jpa", 0x1F6);
+	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_a.jpa", 0x1C6);
 
 	unk194 = new TMapObjLibWave(param_table[idx].unk18, param_table[idx].unk1C,
 	                            param_table[idx].unk20, param_table[idx].unk24);

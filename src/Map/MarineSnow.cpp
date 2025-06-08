@@ -1,6 +1,7 @@
 #include <Map/MarineSnow.hpp>
 #include <Camera/Camera.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 
 TMarineSnow::TMarineSnow(const char* name)
@@ -8,20 +9,9 @@ TMarineSnow::TMarineSnow(const char* name)
 {
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-inline static void loadParticle(const char* path, u32 id)
-{
-	if (gParticleFlagLoaded[id] == 0) {
-		gpResourceManager->load(path, id);
-		gParticleFlagLoaded[id] = 1;
-	}
-}
-
 void TMarineSnow::loadAfter()
 {
-	loadParticle("/scene/others/marinesnow/ms_mare_marinsnow.jpa", 0x14B);
+	SMS_LoadParticle("/scene/others/marinesnow/ms_mare_marinsnow.jpa", 0x14B);
 }
 
 void TMarineSnow::perform(u32 param_1, JDrama::TGraphics* param_2)

@@ -10,6 +10,7 @@
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <Strategic/question.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -309,19 +310,10 @@ void TCoin::loadAfter()
 	unk154->init(getModel(), 0x18);
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-
 void TCoin::initMapObj()
 {
 	TItem::initMapObj();
-
-	// TODO: inline
-	if (gParticleFlagLoaded[0x58] == 0) {
-		gpResourceManager->load("/scene/mapObj/ms_watcoin_kira.jpa", 0x58);
-		gParticleFlagLoaded[0x58] = 1;
-	}
+	SMS_LoadParticle("/scene/mapObj/ms_watcoin_kira.jpa", 0x58);
 }
 
 TCoin::TCoin(const char* name)
