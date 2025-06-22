@@ -38,7 +38,7 @@ bool SMS_isOptionMap()
 {
 	bool ret = false;
 
-	if (gpMarDirector->map == 15) {
+	if (gpMarDirector->mMap == 15) {
 		ret = true;
 	}
 	return ret;
@@ -48,13 +48,13 @@ bool SMS_isDivingMap()
 {
 	bool ret = false;
 
-	if (gpMarDirector->map == 0x39) {
+	if (gpMarDirector->mMap == 0x39) {
 		ret = true;
 	}
-	if (gpMarDirector->map == 0x2C) {
+	if (gpMarDirector->mMap == 0x2C) {
 		ret = true;
 	}
-	if (gpMarDirector->map == 0x10) {
+	if (gpMarDirector->mMap == 0x10) {
 		ret = true;
 	}
 
@@ -63,11 +63,11 @@ bool SMS_isDivingMap()
 
 bool SMS_isMultiPlayerMap()
 {
-	return (gpMarDirector->map == 12 && gpMarDirector->_07D == 0);
+	return (gpMarDirector->mMap == 12 && gpMarDirector->unk7D == 0);
 }
 
 bool SMS_isExMap()
 {
-	return (gpApplication.currArea._000 > 0x14
-	        && gpApplication.currArea._000 < 0x35);
+	return (gpApplication.mCurrArea.unk0 > 0x14
+	        && gpApplication.mCurrArea.unk0 < 0x35);
 }

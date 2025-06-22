@@ -1,6 +1,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DStruct.hpp>
-#include <JSystem/JMath/JMATrigonometric.hpp>
+#include <JSystem/JMath.hpp>
 
 J3DTransformInfo const j3dDefaultTransformInfo
     = { { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 0.0f, 0.0f } };

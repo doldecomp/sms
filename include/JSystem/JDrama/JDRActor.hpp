@@ -41,6 +41,7 @@ public:
 
 	// fabricated
 	const JGeometry::TVec3<f32>& getRotation() const { return mRotation; }
+	const JGeometry::TVec3<f32>& getScaling() const { return mScaling; }
 
 public:
 	/* 0x24 */ JGeometry::TVec3<f32> mScaling;

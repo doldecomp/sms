@@ -7,6 +7,7 @@
 
 class JPABaseEmitter;
 class JPABaseParticle;
+class JPAEmitterManager;
 
 class TMarioParticleManager;
 
@@ -36,6 +37,15 @@ public:
 	                     const void*);
 	void emitTry(s32, TMarioParticleManager::TInfo*, u8);
 	void getAvailableIdx(s32, u8, const void*);
+};
+
+class TEmitterViewObj : public JDrama::TViewObj {
+public:
+	TEmitterViewObj(JPAEmitterManager*, const char* = "<EmitterViewObj>");
+	virtual void perform(u32, JDrama::TGraphics*);
+
+public:
+	/* 0x10 */ JPAEmitterManager* unk10;
 };
 
 #endif

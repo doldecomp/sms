@@ -8,12 +8,34 @@ f32 FConverge(f32, f32, f32, f32);
 void GetAtanTable(f32, f32);
 s16 matan(f32, f32);
 
-void MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
+JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
-template <class T> void MsWrap(f32, f32, f32);
-void MsIsInSight(const JGeometry::TVec3<f32>&, f32,
+
+template <class T> inline T MsWrap(T t, T l, T r)
+{
+	if (l >= r)
+		return l;
+
+	while (t >= r)
+		t -= r - l;
+	while (t < l)
+		t += r - l;
+
+	return t;
+}
+
+template <class T> inline T MsClamp(T t, T l, T r)
+{
+	if (t > r)
+		t = r;
+	else if (t < l)
+		t = l;
+	return t;
+}
+
+bool MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32);
 
 void SMS_GoRotate(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,

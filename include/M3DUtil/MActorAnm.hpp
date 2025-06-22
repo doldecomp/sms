@@ -4,7 +4,6 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <M3DUtil/MActorData.hpp>
-#include <M3DUtil/M3UJoint.hpp>
 #include <System/Application.hpp>
 #include <string.h>
 

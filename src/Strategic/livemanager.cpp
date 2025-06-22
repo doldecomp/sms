@@ -52,15 +52,15 @@ void TLiveManager::setFlagOutOfCube()
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 		if (gpCubeArea->isInAreaCube(pos)) {
-			actor->unkF0 &= ~0x200;
+			actor->mLiveFlag &= ~0x200;
 		} else {
-			actor->unkF0 |= 0x200;
+			actor->mLiveFlag |= 0x200;
 		}
 	}
 }
 
 void TLiveManager::perform(u32 param_1, JDrama::TGraphics* param_2) { }
 
-void TLiveManager::getActorByFlag(u32) const { }
+TLiveActor* TLiveManager::getActorByFlag(u32) const { }
 
-bool TLiveManager::hasMapCollision() const { }
+BOOL TLiveManager::hasMapCollision() const { }

@@ -17,7 +17,8 @@ public:
 	virtual void moveRequest(const JGeometry::TVec3<f32>&);
 	virtual void getRadiusAtY(float) const;
 
-	void isTaken() const;
+	bool isTaken() const { return unk68 != nullptr ? true : false; }
+	bool isUnk6C() const { return unk6C != nullptr ? true : false; }
 
 public:
 	/* 0x68 */ TTakeActor* unk68;

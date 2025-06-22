@@ -47,7 +47,14 @@ public:
 	TTimeArray* crTimeAry() { return unk4[unk814]; }
 
 	// fabricated
-	static void startTimer()
+	static void snapGxTimeStatic(u32 v)
+	{
+		if (!_instance)
+			return;
+		_instance->snapGXTime(v);
+	}
+
+	static void startTimer(u32 v)
 	{
 		TTimeRec* inst = _instance;
 		if (!inst)
@@ -55,7 +62,7 @@ public:
 		OSTick tick = OSGetTick();
 		// TODO: uh oh, second arg isn't "end", it's some kind
 		// of a 4-byte array?!
-		inst->crTimeAry()[0].append(tick, 0xffffffff);
+		inst->crTimeAry()[0].append(tick, v);
 	}
 
 	static void endTimer()

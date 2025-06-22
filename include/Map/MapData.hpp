@@ -12,34 +12,46 @@ public:
 
 	void getNormal() const;
 	void isIllegalData() const;
-	void getActiveJumpPower() const;
-	void getPlaneType();
+	f32 getActiveJumpPower() const;
+	u32 getPlaneType();
 	void setVertex(const JGeometry::TVec3<float>&,
 	               const JGeometry::TVec3<float>&,
 	               const JGeometry::TVec3<float>&);
 	void updateTrans(const JGeometry::TVec3<float>&);
-	void isWaterSlip() const;
-	void isMarioThrough() const;
-	void isWaterSurface() const;
+	bool isWaterSlip() const;
+	bool isMarioThrough() const;
+	bool isWaterSurface() const;
+
+	// fabricated
+	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
+	bool checkFlag2(u32 flag) const { return unk4 & flag ? true : false; }
+	const TLiveActor* getUnk44() const { return unk44; }
+
+	bool checkSomething() const
+	{
+		if (unk0 == 0x100 || unk0 == 0x101 || unk0 == 0x102 || unk0 == 0x103
+		    || unk0 == 0x104 || unk0 == 0x105 || unk0 == 0x4104)
+			return true;
+		else
+			return false;
+	}
+
+	const JGeometry::TVec3<f32>& getPoint1() const { return mPoint1; }
+	const JGeometry::TVec3<f32>& getPoint2() const { return mPoint2; }
+	const JGeometry::TVec3<f32>& getPoint3() const { return mPoint3; }
 
 public:
 	/* 0x0 */ u16 unk0;
 	/* 0x2 */ s16 unk2;
 	/* 0x4 */ u16 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ f32 unk10;
-	/* 0x14 */ f32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
-	/* 0x30 */ f32 unk30;
-	/* 0x34 */ f32 unk34;
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ f32 unk3C;
+	/* 0x6 */ u8 unk6;
+	/* 0x7 */ u8 unk7;
+	/* 0x8 */ f32 mMinY;
+	/* 0xC */ f32 mMaxY;
+	/* 0x10 */ JGeometry::TVec3<f32> mPoint1;
+	/* 0x10 */ JGeometry::TVec3<f32> mPoint2;
+	/* 0x10 */ JGeometry::TVec3<f32> mPoint3;
+	/* 0x34 */ JGeometry::TVec3<f32> mNormal;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ const TLiveActor* unk44;
 };

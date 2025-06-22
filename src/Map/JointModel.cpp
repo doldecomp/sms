@@ -9,12 +9,28 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TJointModel::TJointModel()
-    : mManager(0)
-    , mModelData(0)
-    , mModel(0)
-    , mActor(0)
+void TJointModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
+	if (!checkFlag(1))
+		mActor->perform(param_1, param_2);
+}
+
+void TJointModel::initActor(const char* name, MActorAnmData* anm_data)
+{
+	char path[64];
+	snprintf(path, 64, "/%s/%s.bmd", mManager->getFolder(), name);
+
+	void* res  = JKRFileLoader::getGlbResource(path);
+	mModelData = J3DModelLoaderDataBase::load(res, getJ3DModelDataFlag());
+	mModel     = new J3DModel(getModelData(), 0, 1);
+
+	for (u16 i = 0; i < mModelData->getMaterialNum(); ++i)
+		getModelData()->getMaterialNodePointer(i)->calc((MtxPtr)j3dDefaultMtx);
+
+	mModel->makeDL();
+	mModel->lock();
+	mActor = new MActor(anm_data);
+	mActor->setModel(mModel, 0);
 }
 
 void TJointModel::initJointModel(TJointModelManager* param_1,
@@ -25,27 +41,10 @@ void TJointModel::initJointModel(TJointModelManager* param_1,
 	TJointObj::initJointObj(mModelData->getJointNodePointer(0));
 }
 
-void TJointModel::initActor(const char* name, MActorAnmData* anm_data)
+TJointModel::TJointModel()
+    : mManager(0)
+    , mModelData(0)
+    , mModel(0)
+    , mActor(0)
 {
-	char path[64];
-	snprintf(path, 64, "/%s/%s.bmd", mManager->getFolder(), name);
-
-	void* res  = JKRGetResource(path);
-	u32 flag   = getJ3DModelDataFlag();
-	mModelData = J3DModelLoaderDataBase::load(res, flag);
-	mModel     = new J3DModel(mModelData, 0, 1);
-
-	for (u16 i = 0; i < mModelData->getMaterialNum(); ++i)
-		mModelData->getMaterialNodePointer(i)->calc((MtxPtr)j3dDefaultMtx);
-
-	mModel->makeDL();
-	mModel->lock();
-	mActor = new MActor(anm_data);
-	mActor->setModel(mModel, 0);
-}
-
-void TJointModel::perform(u32 param_1, JDrama::TGraphics* param_2)
-{
-	if (!checkFlag(1))
-		mActor->perform(param_1, param_2);
 }

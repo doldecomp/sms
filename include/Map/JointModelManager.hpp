@@ -1,6 +1,7 @@
 #ifndef MAP_JOINT_MODEL_MANAGER_HPP
 #define MAP_JOINT_MODEL_MANAGER_HPP
 
+#include <Map/JointModel.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
@@ -12,7 +13,7 @@ public:
 
 	virtual ~TJointModelManager() { }
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual TJointModel* newJointModel(int) const;
+	virtual TJointModel* newJointModel(int) const { return new TJointModel; }
 
 	void initJointModel(const char*, const char**);
 

@@ -13,7 +13,7 @@ public:
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void ensureTakeSituation();
 	virtual void calcRootMatrix();
 	virtual void control();
@@ -21,12 +21,12 @@ public:
 	virtual void kill();
 	virtual void appear();
 	virtual void initMapObj();
-	virtual void checkIllegalAttr() const;
+	virtual void checkIllegalAttr() const { }
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual void getLivingTime() const;
-	virtual void getFlushTime() const;
-	virtual void isPollutedGround(const JGeometry::TVec3<f32>&) const;
+	virtual u32 getLivingTime() const { return mNormalLivingTime; }
+	virtual int getFlushTime() const { }
+	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
 	virtual void appearing();
 	virtual void appeared();
@@ -59,14 +59,14 @@ public:
 
 	static u32 mNormalLivingTime;
 	static u32 mNormalFlushTime;
-	static u32 mNormalFlushInterval;
+	static int mNormalFlushInterval;
 	static u32 mNormalWaitToAppearTime;
-	static u32 mNormalAppearingScaleUp;
-	static u32 mNormalThrowSpeedRate;
+	static f32 mNormalAppearingScaleUp;
+	static f32 mNormalThrowSpeedRate;
 
 public:
-	/* 0x138 */ u32 unk138;
-	/* 0x13C */ u32 unk13C;
+	/* 0x138 */ const TBGCheckData* unk138; // TODO: maybe not const
+	/* 0x13C */ const TBGCheckData* unk13C;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ f32 unk144;
 };

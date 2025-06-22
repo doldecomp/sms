@@ -15,7 +15,7 @@ void J3DFrameCtrl::init(s16 end)
 	mCurrentFrame = 0.0;
 }
 
-bool J3DFrameCtrl::checkPass(float pass_frame)
+BOOL J3DFrameCtrl::checkPass(float pass_frame)
 {
 	f32 cur_frame  = mCurrentFrame;
 	f32 next_frame = cur_frame + mSpeed;

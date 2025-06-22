@@ -5,13 +5,18 @@ namespace JDrama {
 
 template <class T> class TFlagT {
 public:
-	TFlagT(T v) { set(v); }
+	TFlagT(T v = T()) { set(v); }
 
-	void set(T v) { mValue = v; }
 	TFlagT(const TFlagT<T>& other)
 	    : mValue(other.mValue)
 	{
 	}
+
+	// fabricated
+	TFlagT& operator=(const TFlagT<T>& other) { set(other.get()); }
+
+	void set(T v) { mValue = v; }
+	T get() const { return mValue; }
 
 public:
 	T mValue;

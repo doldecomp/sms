@@ -7,14 +7,15 @@
 
 class TBaseNPC;
 class TCameraMapTool;
+class TMarioGamePad;
 
-class CPolarSubCamera : JDrama::TLookAtCamera {
+class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
 	enum EnumNoticeOnOffMode {};
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
-	void isLButtonCameraSpecifyMode(int) const;
+	bool isLButtonCameraSpecifyMode(int) const;
 	void isLButtonCameraInbetween() const;
 	void isJetCoaster1stCamera() const;
 	void isTalkCameraSpecifyMode(int) const;
@@ -41,9 +42,9 @@ public:
 	void startDemoCamera(const char*, const JGeometry::TVec3<f32>*, s32, f32,
 	                     bool);
 	void endDemoCamera();
-	void isSimpleDemoCamera() const;
+	bool isSimpleDemoCamera() const;
 	void getTotalDemoFrames() const;
-	void getRestDemoFrames() const;
+	int getRestDemoFrames() const;
 	void ctrlNormalDeadDemo_();
 	void execDeadDemoProc_();
 	void isHellDeadDemo() const;
@@ -129,9 +130,16 @@ public:
 	s16 getUnk2C8() const { return unk2C8; }
 
 public:
-	s32 unk50;
-	char filler1[0x2C8 - 0x54];
-	s16 unk2C8;
+	/* 0x50 */ int mMode;
+	/* 0x54 */ char unk54[0x120 - 0x54];
+	/* 0x120 */ TMarioGamePad* unk120;
+	/* 0x124 */ JGeometry::TVec3<f32> unk124;
+	/* 0x130 */ char unk130[0xC];
+	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
+	/* 0x148 */ char unk148[0x1EC - 0x148];
+	/* 0x1EC */ Mtx unk1EC;
+	/* 0x21C */ char unk21C[0x2C8 - 0x21C];
+	/* 0x2C8 */ s16 unk2C8;
 };
 
 extern CPolarSubCamera* gpCamera;

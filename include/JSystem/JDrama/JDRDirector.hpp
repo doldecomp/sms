@@ -10,13 +10,17 @@ class TViewObj;
 
 class TDirector : public TNameRef, public JStage::TSystem {
 public:
-	TDirector();
+	TDirector()
+	    : TNameRef("<TDirector>")
+	    , unk10(nullptr)
+	    , unk14(nullptr)
+	{
+	}
 
-	virtual ~TDirector() { }
 	virtual TNameRef* searchF(u16, const char*);
 
-	void direct();
-	JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
+	virtual int direct();
+	virtual JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
 
 public:
 	/* 0x10 */ TViewObj* unk10;

@@ -5,9 +5,9 @@
 
 class MSStage {
 public:
-	void setPosPtr(Vec*);
-	void stageLoop();
-	void init(u8, u8);
+	virtual void setPosPtr(Vec*);
+	virtual void stageLoop();
+	static MSStage* init(u8, u8);
 };
 
 class MSSTageSimpleEnvironmentMonte {
@@ -59,10 +59,10 @@ public:
 
 class MSMainProc {
 public:
-	void startStageBGM(u8, u8);
-	void endStageEntranceDemo(u8, u8);
+	static void startStageBGM(u8, u8);
+	static void endStageEntranceDemo(u8, u8);
 	static void entranceDemoLoop(u32);
-	void startStageEntranceDemo(u8, u8);
+	static void startStageEntranceDemo(u8, u8);
 	void setMSoundEnterStage(u8, u8);
 	void setBossNotDamagedFlag(bool);
 	void getBossLivesFlag2();

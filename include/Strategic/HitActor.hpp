@@ -3,14 +3,20 @@
 
 #include <JSystem/JDrama/JDRActor.hpp>
 
+enum TActorTypeBits {
+	ACTOR_TYPE_PLAYER = 0x80000000,
+	ACTOR_TYPE_ENEMY  = 0x10000000,
+	ACTOR_TYPE_BOSS   = 0x8000000,
+};
+
 class THitActor : public JDrama::TActor {
 public:
-	THitActor(const char*);
+	THitActor(const char* = "HitActor");
 
 	virtual ~THitActor() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 	float initHitActor(u32, u16, int, f32, f32, f32, f32);
 	float calcEntryRadius();
@@ -25,6 +31,11 @@ public:
 	{
 		return mActorType == flag ? true : false;
 	}
+	THitActor* getCollision(int i) { return mCollisions[i]; }
+	u16 getColNum() { return mColCount; }
+	bool checkHitFlag(u32 flag) { return unk64 & flag; }
+	void onHitFlag(u32 flag) { unk64 |= flag; }
+	void offHitFlag(u32 flag) { unk64 &= ~flag; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

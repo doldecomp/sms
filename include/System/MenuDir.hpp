@@ -13,7 +13,7 @@ public:
 	void setupThreadFunc(void*);
 	void setup(JDrama::TDisplay*, TMarioGamePad*);
 	void rsetup();
-	void direct();
+	int direct();
 	void setFixedStageValue();
 };
 

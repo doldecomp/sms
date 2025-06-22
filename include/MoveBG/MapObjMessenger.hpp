@@ -7,7 +7,7 @@ class TMapObjMessenger : public THitActor {
 public:
 	TMapObjMessenger(const char*);
 
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 
 public:
 	/* 0x68 */ u32 unk68;

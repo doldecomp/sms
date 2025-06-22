@@ -42,9 +42,9 @@ MessageBufferID TRKTestForPacket()
 
 void TRKGetInput(void)
 {
-	MessageBufferID id;
-	TRKBuffer* msgBuffer;
 	u8 command;
+	TRKBuffer* msgBuffer;
+	MessageBufferID id;
 
 	id = TRKTestForPacket();
 	if (id == -1)
@@ -65,8 +65,8 @@ void TRKProcessInput(int bufferIdx)
 	TRKEvent event;
 
 	TRKConstructEvent(&event, NUBEVENT_Request);
-	gTRKFramingState.msgBufID = -1;
 	event.msgBufID            = bufferIdx;
+	gTRKFramingState.msgBufID = -1;
 	TRKPostEvent(&event);
 }
 

@@ -26,7 +26,7 @@ public:
 	void setMActorAnmData(MActorAnmData*);
 	void setModel(J3DModel*, u32);
 	bool isCurAnmAlreadyEnd(int);
-	bool curAnmEndsNext(int, char*);
+	BOOL curAnmEndsNext(int, char*);
 	void curSubAnmEndsNext(int);
 	void setAnimation(const char*, int);
 	void initDL();
@@ -83,6 +83,7 @@ public:
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
 	J3DModel* getUnk4() { return unk4; }
+	void unmarkUnk40() { unk40 = false; }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

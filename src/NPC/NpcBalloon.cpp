@@ -1,5 +1,6 @@
 #include <NPC/NpcBalloon.hpp>
 #include <System/MarDirector.hpp>
+#include <GC2D/GCConsole2.hpp>
 
 void TNpcBalloon::setNextMessage(u32 a, s32 timer)
 {
@@ -14,7 +15,7 @@ bool TNpcBalloon::updateBalloon()
 
 	if (mBalloonAppearTimer > 0
 	    && (--mBalloonAppearTimer, !mBalloonAppearTimer)) {
-		gpMarDirector->console->startAppearBalloon(_000, true);
+		gpMarDirector->mConsole->startAppearBalloon(_000, true);
 		mBalloonAppearTimer = -1;
 		ret                 = true;
 	}

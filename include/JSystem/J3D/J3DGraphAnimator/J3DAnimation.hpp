@@ -21,6 +21,7 @@ public:
 	};
 
 	J3DFrameCtrl() { init(0); };
+	J3DFrameCtrl(s16 s) { init(s); };
 	virtual ~J3DFrameCtrl() {};
 
 	void setSpeed(f32 speed) { mSpeed = speed; }
@@ -30,9 +31,10 @@ public:
 	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
 	f32 getCurrentFrame() const { return mCurrentFrame; }
 	void setFrame(f32 frame) { mCurrentFrame = frame; }
+	s16 getEndFrame() { return mEndFrame; }
 
 	void init(s16);
-	bool checkPass(float);
+	BOOL checkPass(float);
 	void update();
 
 	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }

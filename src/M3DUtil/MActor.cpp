@@ -2,9 +2,11 @@
 #include <M3DUtil/MActorAnm.hpp>
 #include <MarioUtil/LightUtil.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 
 MActor::MActor(MActorAnmData* param_1)
@@ -164,7 +166,7 @@ bool MActor::isCurAnmAlreadyEnd(int param_1)
 	return ret;
 }
 
-bool MActor::curAnmEndsNext(int param_1, char* param_2)
+BOOL MActor::curAnmEndsNext(int param_1, char* param_2)
 {
 	if (!unk28[param_1])
 		return true;

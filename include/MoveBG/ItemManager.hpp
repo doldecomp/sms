@@ -18,7 +18,7 @@ public:
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	bool hasMapCollision() const { return false; }
+	BOOL hasMapCollision() const { return false; }
 
 	TCoin* newAndRegisterCoinReal();
 	static TCoin* newAndRegisterCoin(u32);

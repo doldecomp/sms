@@ -17,7 +17,6 @@ public:
 	    , mHead(nullptr)
 	{
 	}
-	~TParams() { }
 
 	static void finalize();
 

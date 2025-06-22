@@ -1,16 +1,16 @@
 #ifndef PARAM_INST_HPP
 #define PARAM_INST_HPP
 
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <System/BaseParam.hpp>
 
-#define PARAM_INIT(member, value)                                              \
-	member(this, JDrama::TNameRef::calcKeyCode("#member"), "#member", value)
+#define PARAM_INIT(member, ...)                                                \
+	member(this, JDrama::TNameRef::calcKeyCode(#member), #member, __VA_ARGS__)
 
 template <typename T> class TParamT : public TBaseParam {
 public:
-	TParamT(TParams* params, unsigned short code, const char* paramName,
-	        T defaultValue)
+	TParamT(TParams* params, u16 code, const char* paramName, T defaultValue)
 	    : TBaseParam(params, code, paramName)
 	    , value(defaultValue)
 	{
@@ -32,6 +32,16 @@ public:
 	}
 
 	inline void set(T param) {};
+};
+
+class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
+public:
+	// fabricated AND wrong
+	TParamVec(TParams* parent, u16 keycode, const char* name,
+	          JGeometry::TVec3<f32> defaultValue)
+	    : TParamT<JGeometry::TVec3<f32> >(parent, keycode, name, defaultValue)
+	{
+	}
 };
 
 #endif

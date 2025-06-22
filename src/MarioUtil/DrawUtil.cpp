@@ -189,7 +189,7 @@ static void SetViewFrustumClipCheck(f32, f32, f32, f32, f32, f32) { }
 
 void SetViewFrustumClipCheckPerspective(f32, f32, f32, f32) { }
 
-void ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32) { }
+BOOL ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32) { }
 
 void ViewFrustumRectClipCheck(JDrama::TGraphics*, Vec*, f32, f32) { }
 

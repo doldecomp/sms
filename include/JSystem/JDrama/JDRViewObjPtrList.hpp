@@ -69,11 +69,19 @@ public:
 		for (; it != this->end(); ++it)
 			(*it)->testPerform(param_1, param_2);
 	}
+
 	virtual void loadSuper(JSUMemoryInputStream& stream)
 	{
 		TNameRef::load(stream);
 	}
+
 	virtual void loadAfterSuper() { TNameRef::loadAfter(); }
+
+	// surprisingly, real. TODO: reconsider the rest of this class based on this
+	JGadget::TList_pointer<T*>& getChildren() { return *this; }
+
+	// fabricated
+	void insert(T* const& obj) { getChildren().push_back(obj); }
 };
 
 } // namespace JDrama

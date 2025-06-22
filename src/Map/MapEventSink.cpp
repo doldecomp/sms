@@ -14,6 +14,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <Jsystem/JDrama/JDRNameRefGen.hpp>
@@ -37,9 +38,10 @@ f32 TMapEventSink::getSinkOffsetY() const
 	return unk30->getMax().y - unk30->getMin().y;
 }
 
-TJointObj* TMapEventSink::getPollutionObj(int i)
+TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	return gpPollution->getJointModel(unk60[i].unk0)->mChildren[unk60[i].unk2];
+	return (TPollutionObj*)gpPollution->getJointModel(unk60[i].unk0)
+	    ->mChildren[unk60[i].unk2];
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -93,7 +95,7 @@ bool TMapEventSink::control()
 	unk5C[unk28]->moveTrans(unk30->getTransformInfo().mTranslate);
 
 	if (unk4C > unk48
-	    && (gpMarDirector->map != 2 || unk54[1 - unk24] == 0 || unk28 != 1)) {
+	    && (gpMarDirector->mMap != 2 || unk54[1 - unk24] == 0 || unk28 != 1)) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
 		if (gpMSound->gateCheck(0x3008))
 			MSoundSESystem::MSoundSE::startSoundActor(0x3008, unk50[unk28], 0,
@@ -170,10 +172,10 @@ void TMapEventSink::load(JSUMemoryInputStream& stream)
 		initBuilding(i, stream);
 	}
 
-	if (gpMarDirector->map == 0) {
+	if (gpMarDirector->mMap == 0) {
 		mCleanedDegree = 30;
 		unk38          = 200.0f;
-	} else if (gpMarDirector->map == 2) {
+	} else if (gpMarDirector->mMap == 2) {
 		mCleanedDegree = 30;
 	}
 }
@@ -359,10 +361,6 @@ void TMapEventSinkBianco::loadAfter()
 	mGateKeeper = JDrama::TNameRef::search("ゲートキーパー");
 }
 
-// TODO: move this
-extern u8 gParticleFlagLoaded[];
-extern JPAResourceManager* gpResourceManager;
-
 void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 {
 	TMapEventSinkInPollutionReset::load(stream);
@@ -374,15 +372,8 @@ void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 	stream.read(&dummy, 4);
 	stream.read(&unk78, 4);
 
-	// TODO: these are inlines
-	if (gParticleFlagLoaded[0x59] == 0) {
-		gpResourceManager->load("/scene/map/map/ms_objup_slope_a.jpa", 0x59);
-		gParticleFlagLoaded[0x59] = 1;
-	}
-	if (gParticleFlagLoaded[0x1E1] == 0) {
-		gpResourceManager->load("/scene/map/map/ms_objup_slope_b.jpa", 0x1E1);
-		gParticleFlagLoaded[0x1E1] = 1;
-	}
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_a.jpa", 0x59);
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_b.jpa", 0x1E1);
 }
 
 void TMapEventSinkShadowMario::rising() { TMapEventSink::rising(); }

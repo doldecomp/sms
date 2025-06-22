@@ -41,7 +41,7 @@ public:
 	void isCollidMove(THitActor*);
 	void moveObject();
 	void updateAnmSound();
-	virtual u32 receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor*, u32);
 	void changeByJuice();
 	void getChangeBlockTime();
 	void changeMove();

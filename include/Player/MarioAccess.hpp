@@ -5,6 +5,7 @@
 
 class TLiveActor;
 class THitActor;
+class TBGCheckData;
 
 extern JGeometry::TVec3<float>* gpMarioPos;
 
@@ -14,7 +15,7 @@ extern f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 extern u16* gpMarioLightID;
 extern u32* gpMarioFlag;
 extern f32* gpMarioThrowPower;
-extern void** gpMarioGroundPlane;
+extern TBGCheckData** gpMarioGroundPlane;
 
 inline bool SMS_CheckMarioFlag(u32 flag)
 {
@@ -26,9 +27,9 @@ bool SMS_IsMarioFencing();
 void SMS_GetMarioSpeedY(THitActor*);
 void SMS_IsMarioTouchGround4cm(THitActor*);
 u32 SMS_GetMarioStatus(THitActor*);
-void* SMS_GetMarioRfPlane();
-void* SMS_GetMarioWlPlane();
-void* SMS_GetMarioGrPlane();
+TBGCheckData* SMS_GetMarioRfPlane();
+TBGCheckData* SMS_GetMarioWlPlane();
+TBGCheckData* SMS_GetMarioGrPlane();
 u32 SMS_GetMarioStatus();
 void SMS_GetMarioWork(int);
 void SMS_WindMoveMario(const JGeometry::TVec3<f32>&);
@@ -36,15 +37,15 @@ void SMS_FlowMoveMario(const JGeometry::TVec3<f32>&);
 void SMS_MarioWarpRequest(const JGeometry::TVec3<f32>&, f32);
 void SMS_MarioMoveRequest(const JGeometry::TVec3<f32>&);
 
-u8 SMS_IsMarioDashing();
-u32 SMS_IsMarioOnYoshi();
+bool SMS_IsMarioDashing();
+bool SMS_IsMarioOnYoshi();
 bool SMS_IsMarioOpeningDoor();
-u8 SMS_IsMarioOnWire();
+bool SMS_IsMarioOnWire();
 void SMS_IsMarioSpeedZero();
-u8 SMS_IsMarioTouchGround4cm();
+bool SMS_IsMarioTouchGround4cm();
 
 void SMS_ThrowMario(const JGeometry::TVec3<f32>&, f32);
-void SMS_SendMessageToMario(THitActor*, u32);
+bool SMS_SendMessageToMario(THitActor*, u32);
 void SMS_GetMarioJumpIntoWaterModelData();
 void* SMS_GetMarioWaterGun();
 
@@ -71,5 +72,8 @@ THitActor* SMS_GetMarioHitActor();
 u32 SMS_AskJumpIntoWaterEffectExist();
 void* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
+
+// fabricated
+inline Vec* SMS_GetMarioPos() { return gpMarioPos; }
 
 #endif

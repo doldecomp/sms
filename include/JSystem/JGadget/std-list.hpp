@@ -52,15 +52,14 @@ public:
 
 	iterator insert(iterator where, const T& what)
 	{
-		TNode_* curr    = where.mNode;
-		TNode_* prev    = curr->mPrev;
-		TNode_* newNode = CreateNode_(curr, prev, what);
+		TNode_* prev    = where.mNode->mPrev;
+		TNode_* newNode = CreateNode_(where.mNode, prev, what);
 
 		if (!newNode) {
 			return iterator(&mSentinel);
 		} else {
-			curr->mPrev = newNode;
-			prev->mNext = newNode;
+			where.mNode->mPrev = newNode;
+			prev->mNext        = newNode;
 			++mSize;
 			return iterator(newNode);
 		}
@@ -68,10 +67,10 @@ public:
 
 	iterator erase(iterator what)
 	{
-		TNode_* curr       = what.mNode;
-		TNode_* next       = curr->mNext;
-		curr->mPrev->mNext = next;
-		next->mPrev        = curr->mPrev;
+		TNode_* const next       = what.mNode->mNext;
+		TNode_* const curr       = what.mNode;
+		what.mNode->mPrev->mNext = next;
+		next->mPrev              = curr->mPrev;
 		DestroyNode_(curr);
 		--mSize;
 		return iterator(next);
@@ -89,6 +88,12 @@ public:
 
 	iterator begin() { return mSentinel.mNext; }
 	iterator end() { return &mSentinel; }
+
+	void push_front(const T& what) { insert(begin(), what); }
+	void push_back(const T& what) { insert(end(), what); }
+
+	// TODO: delete me when insert is correct
+	void push_back2(const T& what) { push_back(what); }
 
 	class iterator {
 		friend class TList;

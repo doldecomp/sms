@@ -9,7 +9,22 @@ namespace JGeometry {
 
 template <typename T> class TVec3 { };
 
-template <> struct TVec3<s16> : public S16Vec { };
+template <> struct TVec3<s16> : public S16Vec {
+public:
+	TVec3();
+
+	void sub(const JGeometry::TVec3<s16>&);
+	void add(const JGeometry::TVec3<s16>&);
+
+	// fabricated
+	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
+	template <typename TY> void set(TY x_, TY y_, TY z_)
+	{
+		x = x_;
+		y = y_;
+		z = z_;
+	}
+};
 
 template <> class TVec3<f32> : public Vec {
 public:
@@ -34,8 +49,17 @@ public:
 		*(Vec*)this = *(Vec*)&other;
 		return *this;
 	}
-	TVec3& operator*=(const TVec3& operand);
-	TVec3& operator-=(const TVec3& operand);
+	TVec3& operator*=(const TVec3& other);
+	TVec3& operator+=(const TVec3& other)
+	{
+		add(other);
+		return *this;
+	}
+	TVec3& operator-=(const TVec3& other)
+	{
+		sub(other);
+		return *this;
+	}
 
 	operator Vec*() { return (Vec*)&x; }
 	operator const Vec*() const { return (Vec*)&x; }

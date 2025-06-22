@@ -69,7 +69,7 @@ MActorAnmData* TObjManager::getMActorAnmData()
 void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (unk30 & 1)
-		TTimeRec::startTimer();
+		TTimeRec::startTimer(0xffffffff);
 
 	for (int i = 0; i < unk14; ++i)
 		unk18[i]->testPerform(param_1, param_2);
