@@ -2,8 +2,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSound.hpp>
 #include <JSystem/JAudio/JALibrary/JALModSe.hpp>
-#include <MSound/MSound.hpp>
-#include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
 MSBgm* MSBgm::smBgmInTrack[3];

@@ -10,7 +10,12 @@
 template <typename T, typename U> class JALListVirtualNode;
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
-	MSBgm();
+	MSBgm(int i)
+	    : JALListHioNode<MSBgm, u32>("", i, this)
+	    , unk14(nullptr)
+	{
+	}
+
 	static MSBgm* smBgmInTrack[3];
 	static f32 smMainVolume;
 	static void init();
@@ -32,6 +37,7 @@ public:
 	static u32 getSceneNo(u32);
 	static JAISound* getHandle(u8);
 	static JAISound* getJASTrack(JAISound*, u8);
+
 	// TODO: Found out where this inline is from.
 	static JAISound* someInline()
 	{
