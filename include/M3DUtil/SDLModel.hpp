@@ -27,6 +27,9 @@ public:
 	void entryNode(J3DNode*, SDLDrawBufToken*);
 	void entrySameMat(J3DMaterial*, SDLDrawBufToken*);
 
+	// fabricated
+	J3DModelData* getModelData() { return unk0; }
+
 public:
 	/* 0x0 */ J3DModelData* unk0;
 	/* 0x4 */ SDLModel* unk4;

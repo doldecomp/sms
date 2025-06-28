@@ -38,6 +38,7 @@ public:
 
 	// fabricated
 	MActor* getMActor(int idx) { return unk0[idx % unk4]; }
+	int getIdx() const { return unk8; }
 
 public:
 	/* 0x0 */ MActor** unk0;
@@ -65,8 +66,8 @@ public:
 	void updateAnmSoundShared();
 	void copyFromShared();
 	void performShared(u32, JDrama::TGraphics*);
-	void getNearestEnemy(const JGeometry::TVec3<float>&);
-	void getDeadEnemy();
+	TSpineEnemy* getNearestEnemy(const JGeometry::TVec3<float>&);
+	TSpineEnemy* getDeadEnemy();
 	TSpineEnemy* getFarOutEnemy();
 	void killChildren();
 	void killChildrenWithin(const JGeometry::TVec3<float>&, float);
@@ -75,9 +76,23 @@ public:
 	void createCopyAnmMtx(int);
 	bool copyAnmMtx(TSpineEnemy*);
 
+	// fabricated
 	TSpineEnemyParams* getSaveParam() const { return unk38; }
 	TSpineEnemy* getObj(int i) { return (TSpineEnemy*)TLiveManager::getObj(i); }
+	const TSpineEnemy* getObj(int i) const
+	{
+		return (const TSpineEnemy*)TLiveManager::getObj(i);
+	}
+	int getSharedSetNum() const { return unk44; }
 
+	int getActiveObjNum() const
+	{
+		if (!unk38)
+			return objNum();
+
+		int n = unk38->mSLActiveEnemyNum.get();
+		return n > objNum() ? objNum() : n;
+	}
 	static bool mIsCopyAnmMtx;
 
 public:
@@ -85,9 +100,9 @@ public:
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ TSharedMActorSet* unk40;
 	/* 0x44 */ int unk44;
-	/* 0x48 */ u32 unk48;
+	/* 0x48 */ MtxPtr* unk48;
 	/* 0x4C */ s32 unk4C;
-	/* 0x50 */ u32 unk50;
+	/* 0x50 */ int unk50;
 };
 
 #endif

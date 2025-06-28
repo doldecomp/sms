@@ -59,6 +59,7 @@ public:
 	void setNBTScale(Vec* scale) { mNBTScale = scale; }
 
 	MtxPtr getViewMtx() { return mViewMtx; }
+	void setViewMtx(MtxPtr m) { MTXCopy(m, mViewMtx); }
 
 	J3DMatPacket* getMatPacket() { return mMatPacket; }
 	void setMatPacket(J3DMatPacket* packet) { mMatPacket = packet; }

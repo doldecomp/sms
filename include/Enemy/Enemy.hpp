@@ -52,6 +52,8 @@ public:
 	f32 getCurAnmFrameNo(int) const;
 	BOOL checkCurAnmEnd(int) const;
 
+	f32 getUnk134() const { return unk134; }
+
 public:
 	/* 0xF4 */ u32 unkF4;
 	/* 0xF8 */ JGeometry::TVec3<f32> unkF8;
