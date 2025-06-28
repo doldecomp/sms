@@ -233,6 +233,13 @@ public:
 		mNrmMtxBuf[1][mCurrentViewNo] = tmp;
 	}
 
+	// fabricated
+	void swapAllMtx()
+	{
+		swapDrawMtx();
+		swapNrmMtx();
+	}
+
 	// TODO: might be wrong
 	MtxPtr getBaseTRMtx() { return unk20; }
 	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }

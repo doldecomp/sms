@@ -72,6 +72,7 @@ public:
 	TMActorKeeper* getActorKeeper() { return unk78; }
 	MActor* getUnk74() const { return unk74; }
 	s16 getUnk7C() const { return unk7C; }
+	MAnmSound* getUnk80() { return unk80; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
 
 public:
