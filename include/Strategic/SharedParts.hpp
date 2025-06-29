@@ -9,9 +9,12 @@ class MActor;
 
 class TSharedParts : public JDrama::TViewObj {
 public:
-	TSharedParts(const TLiveActor*, int, const char*, u32, u32, const char*);
-	TSharedParts(const TLiveActor*, int, SDLModelData*, u32, const char*);
-	TSharedParts(const TLiveActor*, int, MActor*, const char*);
+	TSharedParts(const TLiveActor*, int, const char*, u32, u32,
+	             const char* name = "<TSharedParts>");
+	TSharedParts(const TLiveActor*, int, SDLModelData*, u32,
+	             const char* name = "<TSharedParts>");
+	TSharedParts(const TLiveActor*, int, MActor*,
+	             const char* name = "<TSharedParts>");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	MtxPtr getConnectedMtx() const;
