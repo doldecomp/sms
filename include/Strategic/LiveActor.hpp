@@ -70,6 +70,7 @@ public:
 	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
 	const TMActorKeeper* getActorKeeper() const { return unk78; }
 	TMActorKeeper* getActorKeeper() { return unk78; }
+	TLiveManager* getUnk70() { return unk70; }
 	MActor* getUnk74() const { return unk74; }
 	s16 getUnk7C() const { return unk7C; }
 	MAnmSound* getUnk80() { return unk80; }
@@ -87,7 +88,7 @@ public:
 	/* 0x90 */ void* unk90;
 	/* 0x94 */ JGeometry::TVec3<f32> unk94;
 	/* 0xA0 */ JGeometry::TVec3<f32> unkA0;
-	/* 0xAC */ JGeometry::TVec3<f32> unkAC;
+	/* 0xAC */ JGeometry::TVec3<f32> unkAC; // velocity
 	/* 0xB8 */ float unkB8;
 	/* 0xBC */ float unkBC;
 	/* 0xC0 */ float unkC0;

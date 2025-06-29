@@ -63,6 +63,8 @@ public:
 	virtual JDrama::TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, JDrama::TGraphics*);
 
+	const TCondParams& getCondParams() const { return unk84; }
+
 public:
 	/* 0x10 */ JGadget::TList<TLiveManager*> unk10;
 	/* 0x20 */ JGadget::TList<TEnemyManager*> unk20;

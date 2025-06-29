@@ -36,6 +36,14 @@ public:
 			return false;
 	}
 
+	bool checkSomething2() const
+	{
+		if (unk0 == 0x104 || unk0 == 0x105 || unk0 == 0x4104)
+			return true;
+		else
+			return false;
+	}
+
 	const JGeometry::TVec3<f32>& getPoint1() const { return mPoint1; }
 	const JGeometry::TVec3<f32>& getPoint2() const { return mPoint2; }
 	const JGeometry::TVec3<f32>& getPoint3() const { return mPoint3; }
