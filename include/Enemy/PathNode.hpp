@@ -6,7 +6,13 @@
 class TPathNode {
 public:
 	~TPathNode();
-	TPathNode();
+	TPathNode()
+	{
+		unk0   = 0;
+		unk4.x = 0;
+		unk4.y = 0;
+		unk4.z = 0;
+	}
 	void getPoint() const;
 
 public:
