@@ -17,9 +17,16 @@ public:
 	virtual void createSpcBinary();
 	virtual BOOL hasMapCollision() const;
 
-	TLiveActor* getActorByFlag(u32) const;
+	const TLiveActor* getActorByFlag(u32) const;
 	void clipActorsAux(JDrama::TGraphics*, float, float);
 	void manageActor(TLiveActor*);
+
+	// fabricated
+	TLiveActor* getObj(int i) { return (TLiveActor*)TObjManager::getObj(i); }
+	const TLiveActor* getObj(int i) const
+	{
+		return (TLiveActor*)TObjManager::getObj(i);
+	}
 
 public:
 	/* 0x34 */ TSpcBinary* unk34;
