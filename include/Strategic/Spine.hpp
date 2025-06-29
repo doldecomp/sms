@@ -41,7 +41,7 @@ public:
 		unk14 = nerve;
 	}
 
-	virtual ~TSpineBase();
+	virtual ~TSpineBase() { }
 	virtual void update();
 
 	// fabricated

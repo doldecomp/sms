@@ -13,6 +13,10 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JMath.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 TSpineEnemy::TSpineEnemy(const char* name)
     : TLiveActor(name)
     , unkF4(0)
