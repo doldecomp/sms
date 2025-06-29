@@ -51,6 +51,7 @@ public:
 	int objNum() const { return unk14; }
 	THitActor* getObj(int i) { return unk18[i]; }
 	const THitActor* getObj(int i) const { return unk18[i]; }
+	TObjChara* getChara() { return unk1C; }
 
 public:
 	/* 0x10 */ s32 unk10;
