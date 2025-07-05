@@ -12,7 +12,6 @@
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapCollisionManager.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -36,11 +35,8 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0, 0, 0 };
-	*v = (Vec) { 1, 1, 1 };
-}
+// NOTE: has to be here for proper rodata order
+#include <Map/MapCollisionEntry.hpp>
 
 static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
@@ -639,7 +635,7 @@ int TSmallEnemy::getChangeBlockTime()
 	return TSmallEnemyManager::mChangeBlockTime;
 }
 
-BOOL TSmallEnemy::changeMove()
+bool TSmallEnemy::changeMove()
 {
 	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= unk8C->getUnk20()) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
@@ -1034,9 +1030,11 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 			return true;
 
 		self->jumpBehavior();
+
 		JGeometry::TVec3<f32> v = self->unkAC;
 		v.y *= self->getSaveParam()->mSLJumpForce.get();
 		self->unkAC = v;
+
 		self->onLiveFlag(0x8000);
 		self->onLiveFlag(0x80);
 	}
@@ -1047,8 +1045,68 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 		return false;
 }
 
-DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor) { }
+DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
+{
+	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor) { }
+	if (spine->getUnk20() == 0) {
+		if (self->checkLiveFlag2(0x8000) || self->checkLiveFlag(0x40000))
+			return true;
 
-DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor) { }
+		self->setWaitAnm();
+		self->jumpBehavior();
+
+		JGeometry::TVec3<f32> v = self->unkAC;
+		v.y                     = self->getSaveParam()->mSLJumpForce.get();
+		self->unkAC             = v;
+
+		self->onLiveFlag(0x8000);
+		self->onLiveFlag(0x80);
+
+		// TODO: random interval class?
+		self->mRotation.y += randf(30.0f, 100.0f);
+	}
+
+	self->mRotation.y += randf(4.0f, 10.0f);
+
+	if (!self->checkLiveFlag2(0x80) || spine->getUnk20() > 360) {
+		self->endHitWaterJump();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
+{
+	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+
+	if (spine->getUnk20() == 0)
+		self->setWaitAnm();
+
+	if (self->checkCurAnmEnd(0)
+	    && spine->getUnk20() > self->getSaveParam()->mSLWaitTime.get())
+		return true;
+	else
+		return false;
+}
+
+DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
+{
+	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+
+	int changeTime = self->getChangeBlockTime();
+
+	if (spine->getUnk20() == 0) {
+		self->getUnk74()->setFrameRate(0.0f, 0);
+		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
+		                                            nullptr);
+	}
+	self->scalingChangeActor();
+	if (self->changeMove() || spine->getUnk20() > changeTime) {
+		self->changeOut();
+		return true;
+	} else {
+		return false;
+	}
+}
