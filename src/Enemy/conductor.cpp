@@ -244,9 +244,9 @@ void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
 	}
 }
 
-inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
+static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
 
-inline f32 randf(f32 l, f32 r)
+static inline f32 randf(f32 l, f32 r)
 {
 	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
 }

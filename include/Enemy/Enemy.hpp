@@ -32,7 +32,7 @@ public:
 	f32 calcMinimumTurnRadius(f32, f32) const;
 	void calcTurnSpeedToReach(f32, f32) const;
 	void updateSquareToMario();
-	bool isInSight(const JGeometry::TVec3<f32>&, f32, f32, f32) const;
+	BOOL isInSight(const JGeometry::TVec3<f32>&, f32, f32, f32) const;
 	void setGoalPathFromGraph();
 	void goToInitialVisibleNode(f32, f32);
 	void goToInitialGraphNodeCheckY(f32);
