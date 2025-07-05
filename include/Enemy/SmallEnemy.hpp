@@ -100,7 +100,7 @@ public:
 	virtual void jumpBehavior();
 	virtual void behaveToWater(THitActor*);
 	virtual bool changeByJuice();
-	virtual BOOL changeMove();
+	virtual bool changeMove();
 	virtual int getChangeBlockTime();
 	virtual void scalingChangeActor();
 	virtual void changeOut();
@@ -111,7 +111,7 @@ public:
 	virtual void setDeadAnm() { }
 	virtual void setFreezeAnm();
 	virtual void setMeltAnm();
-	virtual void setWaitAnm();
+	virtual void setWaitAnm() { }
 	virtual void setRunAnm();
 	virtual void attackToMario();
 	virtual void forceKill();
