@@ -86,8 +86,8 @@ public:
 	/* 0x88 */ void* unk88;
 	/* 0x8C */ TSpineBase<TLiveActor>* unk8C;
 	/* 0x90 */ void* unk90;
-	/* 0x94 */ JGeometry::TVec3<f32> unk94;
-	/* 0xA0 */ JGeometry::TVec3<f32> unkA0;
+	/* 0x94 */ JGeometry::TVec3<f32> unk94; // velocity too?
+	/* 0xA0 */ JGeometry::TVec3<f32> unkA0; // angular speed?
 	/* 0xAC */ JGeometry::TVec3<f32> unkAC; // velocity
 	/* 0xB8 */ float unkB8;
 	/* 0xBC */ float unkBC;

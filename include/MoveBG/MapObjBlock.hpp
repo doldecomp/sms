@@ -5,6 +5,7 @@
 #include <MoveBG/MapObjGeneral.hpp>
 
 // TODO: mark virtual methods as such
+class TSmallEnemy;
 
 class TBreakableBlock : public TMapObjGeneral {
 public:
@@ -78,9 +79,9 @@ public:
 	void initMapObj();
 
 public:
-	/* 0x138 */ char unk138[0x8];
+	/* 0x138 */ S16Vec unk138;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;
-	/* 0x14C */ u32 unk14C;
+	/* 0x14C */ TSmallEnemy* unk14C;
 };
 
 class TTelesaBlock : public TJuiceBlock {

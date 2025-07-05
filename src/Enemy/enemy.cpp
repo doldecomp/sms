@@ -244,7 +244,7 @@ BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-bool TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
+BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
                             f32 param_3, f32 param_4) const
 {
 	return MsIsInSight(mPosition, mRotation.y, param_1, param_2, param_3,

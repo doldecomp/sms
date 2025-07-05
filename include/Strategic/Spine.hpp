@@ -14,7 +14,7 @@ public:
 	/* 0x14 */ const TNerveBase<T>* unk14;
 	/* 0x18 */ const TNerveBase<T>* unk18;
 	/* 0x1C */ const TNerveBase<T>* unk1C;
-	/* 0x20 */ u32 unk20;
+	/* 0x20 */ int unk20;
 	/* 0x24 */ // vt
 
 public:
@@ -27,7 +27,14 @@ public:
 	{
 	}
 
-	TNerveBase<T>* getLatestNerve() const;
+	TNerveBase<T>* getLatestNerve() const
+	{
+		if (unk14)
+			return unk14;
+		return unk1C;
+	}
+
+	// matching
 	void pushNerve(const TNerveBase<T>* nerve)
 	{
 		if (!nerve)
@@ -44,6 +51,25 @@ public:
 	virtual ~TSpineBase() { }
 	virtual void update();
 
+	/////////////////////////////////////////////////
+
+	// fabricated
+	void setNext(const TNerveBase<T>* nerve)
+	{
+		if (unk14 != nullptr)
+			unk1C = unk14;
+
+		unk20 = 0;
+		unk14 = nerve;
+	}
+
+	// fabricated
+	void pushRaw(const TNerveBase<T>* nerve)
+	{
+		if (nerve)
+			unk4.push(nerve);
+	}
+
 	// fabricated
 	void reset() { unk4.clear(); }
 
@@ -53,6 +79,13 @@ public:
 		if (const TNerveBase<T>* def = unk18)
 			unk4.push(def);
 	}
+
+	// fabricated
+	const TNerveBase<T>* getCurrentNerve() const { return unk14; }
+
+	// fabricated
+	int getUnk20() const { return unk20; }
+	TSpineEnemy* getBody() const { return unk0; }
 };
 
 #endif
