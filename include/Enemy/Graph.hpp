@@ -161,6 +161,8 @@ public:
 	int getCurrentIndex() { return mCurrIdx; }
 	TGraphNode& getCurrent() { return unk0->getGraphNode(mCurrIdx); }
 	int getPrevIndex() { return mPrevIdx; }
+	void init(TGraphWeb* web) { unk0 = web; }
+	void reset() { mPrevIdx = -1; }
 	JGeometry::TVec3<f32> getCurrentPos()
 	{
 		return unk0->indexToPoint(mCurrIdx);
