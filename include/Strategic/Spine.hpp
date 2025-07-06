@@ -52,6 +52,9 @@ public:
 	virtual void update();
 
 	/////////////////////////////////////////////////
+	// Everything fabricated based on enemy code, names made up,
+	// I still don't completely understand how this abstraction
+	// is supposed to actually work
 
 	// fabricated
 	void setNext(const TNerveBase<T>* nerve)
@@ -61,6 +64,16 @@ public:
 
 		unk20 = 0;
 		unk14 = nerve;
+	}
+
+	// fabricated
+	void initWith(const TNerveBase<T>* nerve)
+	{
+		unk4.clear();
+		unk20 = 0;
+		unk14 = nerve;
+		unk18 = nerve;
+		unk1C = nullptr;
 	}
 
 	// fabricated

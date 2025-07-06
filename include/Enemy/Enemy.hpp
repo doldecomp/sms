@@ -26,7 +26,7 @@ public:
 	                       const JGeometry::TVec3<f32>&);
 	virtual TSpineEnemyParams* getSaveParam() const;
 	virtual void getPhaseShift() const;
-	virtual bool isReachedToGoal() const { }
+	virtual BOOL isReachedToGoal() const { }
 
 	void calcEnemyRootMatrix();
 	f32 calcMinimumTurnRadius(f32, f32) const;
@@ -53,6 +53,8 @@ public:
 	BOOL checkCurAnmEnd(int) const;
 
 	f32 getUnk134() const { return unk134; }
+	f32 getUnk140() const { return unk140; }
+	f32 getUnk144() const { return unk144; }
 
 public:
 	/* 0xF4 */ u32 unkF4;
