@@ -43,13 +43,13 @@ public:
 	// TODO: probably private and always accessed via getters/setters judging by
 	// stack frame padding
 	// TODO: Stolen from SMG, might be wrong
-	u8 mLoopMode;      // 0x4
-	u8 mFlags;         // 0x5
-	s16 mStartFrame;   // 0x6
-	s16 mEndFrame;     // 0x8
-	s16 mLoopFrame;    // 0xA
-	f32 mSpeed;        // 0xC
-	f32 mCurrentFrame; // 0x10
+	/* 0x4 */ u8 mLoopMode;
+	/* 0x5 */ u8 mFlags;
+	/* 0x6 */ s16 mStartFrame;
+	/* 0x8 */ s16 mEndFrame;
+	/* 0xA */ s16 mLoopFrame;
+	/* 0xC */ f32 mSpeed;
+	/* 0x10 */ f32 mCurrentFrame;
 };
 
 struct J3DAnmKeyTableBase {

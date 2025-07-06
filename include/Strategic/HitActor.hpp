@@ -37,6 +37,10 @@ public:
 	bool checkHitFlag(u32 flag) { return unk64 & flag; }
 	void onHitFlag(u32 flag) { unk64 |= flag; }
 	void offHitFlag(u32 flag) { unk64 &= ~flag; }
+	f32 getAttackRadius() const { return mAttackRadius; }
+	f32 getAttackHeight() const { return mAttackHeight; }
+	f32 getDamageRadius() const { return mDamageRadius; }
+	f32 getDamageHeight() const { return mDamageHeight; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

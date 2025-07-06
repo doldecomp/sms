@@ -13,6 +13,22 @@ void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
 void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
+// fabricated
+inline f32 MsAtan2(f32 x, f32 y)
+{
+	if (x == 0.0f) {
+		if (y >= 0.0f)
+			return -90.0f;
+		else
+			return 90.0f;
+	} else if (x >= 0.0f) {
+		return (360.0f / 65536.0f) * matan(x, y);
+	} else {
+		f32 f = (360.0f / 65536.0f) * matan(-x, y);
+		return 180.0f - f;
+	}
+}
+
 template <class T> inline T MsWrap(T t, T l, T r)
 {
 	if (l >= r)
@@ -33,6 +49,12 @@ template <class T> inline T MsClamp(T t, T l, T r)
 	else if (t < l)
 		t = l;
 	return t;
+}
+
+// fabricated
+inline f32 MsAngleDiff(f32 alpha, f32 beta)
+{
+	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);
 }
 
 bool MsIsInSight(const JGeometry::TVec3<f32>&, f32,

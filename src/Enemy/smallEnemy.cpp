@@ -183,25 +183,25 @@ void TSmallEnemy::init(TLiveManager* param_1)
 
 	// TODO: are these f32 pairs some kind of rng interval class?
 	TSmallEnemyParams* params1 = getSaveParam();
-	unk144                     = randf(params1->unk2C4, params1->unk2C8);
+	mTurnSpeed                 = randf(params1->unk2C4, params1->unk2C8);
 
 	TSmallEnemyParams* params2 = getSaveParam();
-	unk148                     = randf(params2->unk2D0, params2->unk2CC);
+	mBodyScale                 = randf(params2->unk2D0, params2->unk2CC);
 
-	unk154 = unk148;
+	unk154 = mBodyScale;
 	unkBC  = getSaveParam()->mSLBodyRadius.get();
 	unk14C = getSaveParam()->mSLWallRadius.get();
 	unkC0  = getSaveParam()->mSLHeadHeight.get();
-	unkB8  = unk148 * unkBC * 15.0f;
+	unkB8  = mBodyScale * unkBC * 15.0f;
 
 	f32 attackRadius = getSaveParam()->mSLAttackRadius.get();
 	f32 attackHeight = getSaveParam()->mSLAttackHeight.get();
 	f32 damageRadius = getSaveParam()->mSLDamageRadius.get();
 	f32 damageHeight = getSaveParam()->mSLDamageHeight.get();
 
-	initHitActor(0, 5, -0x68000000, attackRadius * unk148,
-	             attackHeight * unk148, damageRadius * unk148,
-	             damageHeight * unk148);
+	initHitActor(0, 5, -0x68000000, attackRadius * mBodyScale,
+	             attackHeight * mBodyScale, damageRadius * mBodyScale,
+	             damageHeight * mBodyScale);
 
 	unkC4 = TMap::getIllegalCheckData();
 	if (!unk124->unk0 || unk124->unk0->isDummy())
@@ -228,9 +228,9 @@ void TSmallEnemy::loadAfter()
 
 void TSmallEnemy::behaveToWater(THitActor* param_1)
 {
-	if (unk8C->getCurrentNerve() != &TNerveSmallEnemyFreeze::theNerve()
-	    && unk8C->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
-		unk8C->pushNerve(&TNerveSmallEnemyFreeze::theNerve());
+	if (mSpine->getCurrentNerve() != &TNerveSmallEnemyFreeze::theNerve()
+	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
+		mSpine->pushNerve(&TNerveSmallEnemyFreeze::theNerve());
 	}
 }
 
@@ -249,7 +249,7 @@ void TSmallEnemy::attackToMario()
 	unkAC.set(local_20);
 
 	JGeometry::TVec3<f32> v;
-	v.scale(unk148 * unkBC, local_20);
+	v.scale(mBodyScale * unkBC, local_20);
 	v += local_14;
 	unk94 = v;
 }
@@ -259,18 +259,18 @@ void TSmallEnemy::reset()
 	TSpineEnemy::reset();
 
 	TSmallEnemyParams* params1 = getSaveParam();
-	unk144                     = randf(params1->unk2C4, params1->unk2C8);
+	mTurnSpeed                 = randf(params1->unk2C4, params1->unk2C8);
 
 	TSmallEnemyParams* params2 = getSaveParam();
-	unk148                     = randf(params2->unk2D0, params2->unk2CC);
+	mBodyScale                 = randf(params2->unk2D0, params2->unk2CC);
 
-	unk154 = unk148;
+	unk154 = mBodyScale;
 	unkBC  = getSaveParam()->mSLBodyRadius.get();
 	unk14C = getSaveParam()->mSLWallRadius.get();
 	unkC0  = getSaveParam()->mSLHeadHeight.get();
-	unkB8  = unk148 * unkBC * 15.0f;
+	unkB8  = mBodyScale * unkBC * 15.0f;
 
-	unk13C = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 
 	offLiveFlag(0x1);
 	offLiveFlag(0x20000);
@@ -285,9 +285,9 @@ void TSmallEnemy::reset()
 	unk124->mPrevIdx = -1;
 	goToShortestNextGraphNode();
 	offHitFlag(0x1);
-	unk8C->reset();
-	unk8C->pushDefault();
-	mScaling.set(unk148, unk148, unk148);
+	mSpine->reset();
+	mSpine->pushDefault();
+	mScaling.set(mBodyScale, mBodyScale, mBodyScale);
 
 	unk160 = 0;
 	unk165 = 0;
@@ -298,10 +298,10 @@ void TSmallEnemy::reset()
 	f32 damageRadius = getSaveParam()->mSLDamageRadius.get();
 	f32 damageHeight = getSaveParam()->mSLDamageHeight.get();
 
-	mAttackRadius = attackRadius * unk148;
-	mAttackHeight = attackHeight * unk148;
-	mDamageRadius = damageRadius * unk148;
-	mDamageHeight = damageHeight * unk148;
+	mAttackRadius = attackRadius * mBodyScale;
+	mAttackHeight = attackHeight * mBodyScale;
+	mDamageRadius = damageRadius * mBodyScale;
+	mDamageHeight = damageHeight * mBodyScale;
 
 	calcEntryRadius();
 
@@ -322,13 +322,13 @@ void TSmallEnemy::forceKill()
 	     || checkLiveFlag2(0x80) || checkLiveFlag(0x10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
-		if (unk8C->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
-			unk8C->reset();
-			unk8C->setNext(&TNerveSmallEnemyDie::theNerve());
-			unk8C->pushDefault();
+		if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
+			mSpine->reset();
+			mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
+			mSpine->pushDefault();
 
 			onLiveFlag(0x20000);
-			unk13C = 1;
+			mHitPoints = 1;
 		}
 	}
 }
@@ -459,10 +459,10 @@ void TSmallEnemy::moveObject()
 	if (checkLiveFlag(0x1))
 		return;
 
-	f32 attackRadius = getSaveParam()->mSLAttackRadius.get() * unk148;
-	f32 attackHeight = getSaveParam()->mSLAttackHeight.get() * unk148;
-	f32 damageRadius = getSaveParam()->mSLDamageRadius.get() * unk148;
-	f32 damageHeight = getSaveParam()->mSLDamageHeight.get() * unk148;
+	f32 attackRadius = getSaveParam()->mSLAttackRadius.get() * mBodyScale;
+	f32 attackHeight = getSaveParam()->mSLAttackHeight.get() * mBodyScale;
+	f32 damageRadius = getSaveParam()->mSLDamageRadius.get() * mBodyScale;
+	f32 damageHeight = getSaveParam()->mSLDamageHeight.get() * mBodyScale;
 
 	mAttackRadius = attackRadius;
 	mAttackHeight = attackHeight;
@@ -497,7 +497,7 @@ void TSmallEnemy::moveObject()
 			local_74.x += 1;
 
 		MsVECNormalize(&local_74, &local_74);
-		local_74.scale(unk140 * 3.0f * unk158);
+		local_74.scale(mMarchSpeed * 3.0f * unk158);
 
 		v.add(local_74);
 		unk94 = v;
@@ -551,7 +551,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 	}
 
 	if (param_2 == 13) {
-		unk13C = 0;
+		mHitPoints = 0;
 		onLiveFlag(0x1);
 		onHitFlag(0x1);
 	}
@@ -599,7 +599,7 @@ bool TSmallEnemy::changeByJuice()
 		onLiveFlag(0x2);
 		onLiveFlag(0x10);
 
-		unk8C->pushNerve(&TNerveSmallEnemyChange::theNerve());
+		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 
 		unk185 = gpModelWaterManager->unk5D5F;
 		if (TSmallEnemyManager::mTestJuiceType != 0)
@@ -637,18 +637,18 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= unk8C->getUnk20()) {
+	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getUnk20()) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
 		unk178->mPosition.y += unk188 * 2.0f
-		                       * JMASin(unk8C->getUnk20() * 130.0f / time)
+		                       * JMASin(mSpine->getUnk20() * 130.0f / time)
 		                       * TSmallEnemyManager::mBlockWaitMoveY;
 
-		unk178->mRotation.y += unk8C->getUnk20() * 1080.0f / time;
+		unk178->mRotation.y += mSpine->getUnk20() * 1080.0f / time;
 	} else {
-		if (unk8C->getUnk20() > TSmallEnemyManager::mBlockWaitTime) {
-			if (unk8C->getUnk20() > getChangeBlockTime() - 200) {
-				if (unk8C->getUnk20() % 20 < 10) {
+		if (mSpine->getUnk20() > TSmallEnemyManager::mBlockWaitTime) {
+			if (mSpine->getUnk20() > getChangeBlockTime() - 200) {
+				if (mSpine->getUnk20() % 20 < 10) {
 					unk178->onLiveFlag(0x2);
 				} else {
 					unk178->offLiveFlag(0x2);
@@ -708,7 +708,7 @@ bool TSmallEnemy::changeMove()
 			Mtx afStack_b0;
 			MsMtxSetRotRPH(afStack_b0, 0.0f, mRotation.y, 0.0f);
 			MTXMultVec(afStack_b0, &local_80, &local_80);
-			if (unk8C->unk20 % 30 > 15) {
+			if (mSpine->unk20 % 30 > 15) {
 				unk178->mPosition.y += 0.5f;
 				unk178->mPosition.x += local_80.x;
 				unk178->mPosition.z += local_80.z;
@@ -759,12 +759,12 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 	if (uVar2 < 1)
 		uVar2 = 1;
 
-	if (unk13C < uVar2) {
-		unk13C = 0;
+	if (mHitPoints < uVar2) {
+		mHitPoints = 0;
 		return;
 	}
 
-	unk13C -= uVar2;
+	mHitPoints -= uVar2;
 }
 
 void TSmallEnemy::kill()
@@ -772,11 +772,11 @@ void TSmallEnemy::kill()
 	if (!checkLiveFlag(0x1))
 		return;
 
-	unk13C = 1;
-	if (unk8C->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
-		unk8C->reset();
-		unk8C->setNext(&TNerveSmallEnemyDie::theNerve());
-		unk8C->pushRaw(&TNerveSmallEnemyDie::theNerve());
+	mHitPoints = 1;
+	if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
+		mSpine->pushRaw(&TNerveSmallEnemyDie::theNerve());
 
 		onLiveFlag(0x40);
 	}
@@ -886,7 +886,7 @@ bool TSmallEnemy::isHitWallInBound()
 {
 	unk14C = 25.0f;
 	TBGWallCheckRecord local_3C(mPosition.x, mPosition.y + unkC0, mPosition.z,
-	                            unk14C * unk148 * 1.1f, 1, 0);
+	                            unk14C * mBodyScale * 1.1f, 1, 0);
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_3C)) {
 		f32 sVar2
@@ -923,7 +923,7 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 		local_24.x += 1.0f;
 	MsVECNormalize(&local_24, &local_24);
 
-	unk94.scaleAdd(unk140 * 3.0f * unk158, local_18, local_24);
+	unk94.scaleAdd(mMarchSpeed * 3.0f * unk158, local_18, local_24);
 }
 
 void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -950,10 +950,10 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->unk0;
 	if (spine->unk20 == 0) {
-		if (self->unk13C != 0)
-			--self->unk13C;
+		if (self->mHitPoints != 0)
+			--self->mHitPoints;
 
-		if (self->unk13C == 0) {
+		if (self->mHitPoints == 0) {
 			self->onLiveFlag(0x1);
 			if (self->unkC4->checkSomething2() && !self->checkLiveFlag2(0x80))
 				self->kill();
@@ -969,7 +969,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				                   man->getSaveParam()->mSLStampRange.get()
 				                       * 32.0f * self->getUnk158());
 			}
-			if (!self->unk13C) {
+			if (!self->mHitPoints) {
 				self->onLiveFlag(0x8);
 				self->setDeadAnm();
 				self->setDeadEffect();

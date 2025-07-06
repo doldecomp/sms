@@ -3,6 +3,9 @@
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
+class THitActor;
+class J3DModel;
+
 class TCircleShadowRequest {
 public:
 	TCircleShadowRequest()
@@ -28,7 +31,16 @@ public:
 	/* 0x20 */ f32 unk20;
 };
 
-class TMBindShadowBody;
+class TMBindShadowBody {
+public:
+	TMBindShadowBody(THitActor*, J3DModel*, float);
+	bool isUseThisJoint(int);
+	bool isCircleJoint(int);
+	bool isBodyJoint(int);
+	void entryDrawShadow();
+	void calc();
+};
+
 class TAlphaShadowQuad;
 
 class TMBindShadowManager;

@@ -16,7 +16,7 @@ void TTypicalEnemy::init(TLiveManager* param_1)
 {
 	TSpineEnemy::init(param_1);
 	unk124->init(gpConductor->getGraphByName("main"));
-	unk8C->initWith(&TNerveTypicalGraphWander::theNerve());
+	mSpine->initWith(&TNerveTypicalGraphWander::theNerve());
 	unk124->reset();
 	goToShortestNextGraphNode();
 }
@@ -56,7 +56,8 @@ DEFINE_NERVE(TNerveTypicalGraphWander, TLiveActor)
 		spine->pushRaw(&TNerveTypicalGraphWander::theNerve());
 		return true;
 	} else {
-		self->walkToCurPathNode(self->getUnk140(), self->getUnk144(), 0.0f);
+		self->walkToCurPathNode(self->getMarchSpeed(), self->getTurnSpeed(),
+		                        0.0f);
 		self->doShortCut();
 		return false;
 	}

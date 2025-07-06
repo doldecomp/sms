@@ -37,7 +37,7 @@ public:
 	void goToInitialVisibleNode(f32, f32);
 	void goToInitialGraphNodeCheckY(f32);
 	void goToShortestNextGraphNode();
-	void jumpToNextGraphNode();
+	int jumpToNextGraphNode();
 	void goToRandomNextGraphNode();
 	void goToRandomEscapeGraphNode();
 	void goToExclusiveNextGraphNode();
@@ -52,14 +52,15 @@ public:
 	f32 getCurAnmFrameNo(int) const;
 	BOOL checkCurAnmEnd(int) const;
 
+	// fabricated
 	f32 getUnk134() const { return unk134; }
-	f32 getUnk140() const { return unk140; }
-	f32 getUnk144() const { return unk144; }
+	f32 getMarchSpeed() const { return mMarchSpeed; }
+	f32 getTurnSpeed() const { return mTurnSpeed; }
 
 public:
-	/* 0xF4 */ u32 unkF4;
+	/* 0xF4 */ THitActor* unkF4; // TODO: type is a wild guess
 	/* 0xF8 */ JGeometry::TVec3<f32> unkF8;
-	/* 0x104 */ u32 unk104;
+	/* 0x104 */ THitActor* unk104; // TODO: type is a wild guess
 	/* 0x108 */ JGeometry::TVec3<f32> unk108;
 	/* 0x114 */ TSolidStack<TPathNode> unk114;
 	/* 0x124 */ TGraphTracer* unk124;
@@ -68,10 +69,10 @@ public:
 	/* 0x130 */ s8 unk130;
 	/* 0x134 */ f32 unk134;
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: type is a wild guess
-	/* 0x13C */ u8 unk13C;
-	/* 0x140 */ f32 unk140;
-	/* 0x144 */ f32 unk144;
-	/* 0x148 */ f32 unk148;
+	/* 0x13C */ u8 mHitPoints;
+	/* 0x140 */ f32 mMarchSpeed;
+	/* 0x144 */ f32 mTurnSpeed;
+	/* 0x148 */ f32 mBodyScale;
 	/* 0x14C */ f32 unk14C;
 };
 

@@ -61,7 +61,7 @@ public:
 	void setBck(const char*);
 	void setBckFromIndex(int);
 	void setSubBckFromIndex(int, int);
-	bool checkCurBckFromIndex(int);
+	BOOL checkCurBckFromIndex(int);
 	void setSubBck(const char*, const char*);
 	void setBpk(const char*);
 	void setBpkFromIndex(int);
@@ -82,6 +82,7 @@ public:
 
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
+	MActorAnmBck* getAnmBck() { return unkC; }
 	J3DModel* getUnk4() { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 
