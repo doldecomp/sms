@@ -29,13 +29,13 @@ TSpineEnemy::TSpineEnemy(const char* name)
     , unk130(0)
     , unk134(0.0f)
     , unk138(0)
-    , unk13C(1)
-    , unk140(1.0f)
-    , unk144(5.0f)
-    , unk148(1.0f)
+    , mHitPoints(1)
+    , mMarchSpeed(1.0f)
+    , mTurnSpeed(5.0f)
+    , mBodyScale(1.0f)
     , unk14C(1.0f)
 {
-	unk8C  = new TSpineBase<TLiveActor>(this);
+	mSpine = new TSpineBase<TLiveActor>(this);
 	unk124 = new TGraphTracer;
 }
 
@@ -49,7 +49,7 @@ void TSpineEnemy::init(TLiveManager* param_1)
 		unkBC  = params->mSLBodyRadius.get();
 		unk14C = params->mSLWallRadius.get();
 		unkC0  = params->mSLHeadHeight.get();
-		unkB8  = unk148 * unkBC;
+		unkB8  = mBodyScale * unkBC;
 	}
 }
 
@@ -62,8 +62,8 @@ void TSpineEnemy::reset()
 	offLiveFlag(0x10);
 	offLiveFlag(0x4);
 	onLiveFlag(0x800);
-	unk8C->reset();
-	unk8C->pushDefault();
+	mSpine->reset();
+	mSpine->pushDefault();
 }
 
 void TSpineEnemy::load(JSUMemoryInputStream& stream)
@@ -178,7 +178,7 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	offLiveFlag(0x8);
 	offLiveFlag(0x1);
 	reset();
-	unk13C = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
 	unkAC = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
 	onLiveFlag(0x8000);
@@ -195,9 +195,9 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& param_1,
 	offLiveFlag(0x8);
 	offLiveFlag(0x1);
 	reset();
-	mRotation = param_2;
-	mScaling  = param_3;
-	unk13C    = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mRotation  = param_2;
+	mScaling   = param_3;
+	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
 	unkAC = param_4;
 	onLiveFlag(0x8000);
@@ -270,7 +270,7 @@ void TSpineEnemy::goToInitialGraphNodeCheckY(f32) { }
 void TSpineEnemy::goToShortestNextGraphNode() { }
 #pragma dont_inline off
 
-void TSpineEnemy::jumpToNextGraphNode() { }
+int TSpineEnemy::jumpToNextGraphNode() { }
 
 void TSpineEnemy::goToRandomNextGraphNode() { }
 

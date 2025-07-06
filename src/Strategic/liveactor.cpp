@@ -26,15 +26,15 @@ f32 TLiveActor::mVelocityMinY = -40.0f;
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
-	unk70 = nullptr;
-	unk74 = nullptr;
-	unk78 = nullptr;
-	unk7C = 0;
-	unk80 = nullptr;
-	unk84 = nullptr;
-	unk88 = nullptr;
-	unk8C = nullptr;
-	unk90 = nullptr;
+	unk70  = nullptr;
+	unk74  = nullptr;
+	unk78  = nullptr;
+	unk7C  = 0;
+	unk80  = nullptr;
+	unk84  = nullptr;
+	unk88  = nullptr;
+	mSpine = nullptr;
+	unk90  = nullptr;
 	unk94.zero();
 	unkA0.zero();
 	unkAC.x   = 0.0f;

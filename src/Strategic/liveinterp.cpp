@@ -572,7 +572,7 @@ void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	if (!nerve) {
 		interp->push();
 	} else {
-		owner->unk8C->pushNerve(nerve);
+		owner->mSpine->pushNerve(nerve);
 		interp->push();
 	}
 }

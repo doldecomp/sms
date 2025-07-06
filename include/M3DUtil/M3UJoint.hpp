@@ -22,4 +22,7 @@ public:
 	/* 0x60 */ float unk60;
 };
 
+void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
+                        J3DTransformInfo* param_3, float param_4, bool param_5);
+
 #endif

@@ -471,7 +471,7 @@ void MActor::setBckFromIndex(int index)
 	unkC->setAnmFromIndex(index, 0);
 }
 
-bool MActor::checkCurBckFromIndex(int index)
+BOOL MActor::checkCurBckFromIndex(int index)
 {
 	if (!unkC)
 		return false;
