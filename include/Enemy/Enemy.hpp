@@ -56,12 +56,16 @@ public:
 	f32 getUnk134() const { return unk134; }
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 	f32 getTurnSpeed() const { return mTurnSpeed; }
+	u8 getHitPoints() const { return mHitPoints; }
 
 public:
 	/* 0xF4 */ THitActor* unkF4; // TODO: type is a wild guess
 	/* 0xF8 */ JGeometry::TVec3<f32> unkF8;
+
+	// TODO: these two are a struct according to TNerveHino2JumpIn::execute
 	/* 0x104 */ THitActor* unk104; // TODO: type is a wild guess
 	/* 0x108 */ JGeometry::TVec3<f32> unk108;
+
 	/* 0x114 */ TSolidStack<TPathNode> unk114;
 	/* 0x124 */ TGraphTracer* unk124;
 	/* 0x128 */ u16 unk128;

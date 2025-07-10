@@ -27,7 +27,7 @@ TEnemyAttachment::TEnemyAttachment(const char* name)
 void TEnemyAttachment::loadInit(TSpineEnemy* param_1, const char* param_2)
 {
 	unk160 = param_1;
-	unk78  = new TMActorKeeper(unk160->getUnk70(), 1);
+	unk78  = new TMActorKeeper(unk160->getManager(), 1);
 	unk74  = unk78->createMActor(param_2, 3);
 }
 

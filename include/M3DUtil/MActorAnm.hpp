@@ -47,6 +47,15 @@ public:
 	s32 getUnk0() { return unk0; }
 	void setUnk1C(MActorAnmDataBase* param_1) { unk1C = param_1; }
 
+	BOOL endsNext()
+	{
+		if (unk4.getCurrentFrame() + unk4.getRate() + 0.1f
+		    >= unk4.getEndFrame())
+			return true;
+		else
+			return false;
+	}
+
 	int findName(const char* name)
 	{
 		u16 key = MActorCalcKeyCode(name);
@@ -118,7 +127,21 @@ public:
 		this->setAnmFromIndex(findName(param_1), param_2);
 	}
 
-	void setFrameCtrl(int);
+	// matches in bossgesso.cpp
+	bool setFrameCtrl(int param_1)
+	{
+		unk0 = param_1;
+
+		if (param_1 < 0)
+			return false;
+
+		unk24 = getData()->getAnmPtr(param_1);
+		unk4.init(unk24->getFrameMax());
+		unk4.setAttribute(unk24->getAttribute());
+		unk4.setSpeed(SMSGetAnmFrameRate());
+
+		return true;
+	}
 
 	// fabricated
 	MActorAnmDataEach<T>* getData()

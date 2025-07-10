@@ -85,6 +85,7 @@ public:
 	MActorAnmBck* getAnmBck() { return unkC; }
 	J3DModel* getUnk4() { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
+	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

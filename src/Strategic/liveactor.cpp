@@ -26,15 +26,15 @@ f32 TLiveActor::mVelocityMinY = -40.0f;
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
-	unk70  = nullptr;
-	unk74  = nullptr;
-	unk78  = nullptr;
-	unk7C  = 0;
-	unk80  = nullptr;
-	unk84  = nullptr;
-	unk88  = nullptr;
-	mSpine = nullptr;
-	unk90  = nullptr;
+	mManager = nullptr;
+	unk74    = nullptr;
+	unk78    = nullptr;
+	unk7C    = 0;
+	unk80    = nullptr;
+	unk84    = nullptr;
+	unk88    = nullptr;
+	mSpine   = nullptr;
+	unk90    = nullptr;
 	unk94.zero();
 	unkA0.zero();
 	unkAC.x   = 0.0f;
@@ -110,9 +110,9 @@ void TLiveActor::init(TLiveManager* manager)
 		}
 		gpConductor->registerAloneActor(this);
 	} else {
-		unk70 = manager;
-		unk78 = new TMActorKeeper(unk70, 1);
-		unk70->manageActor(this);
+		mManager = manager;
+		unk78    = new TMActorKeeper(mManager, 1);
+		mManager->manageActor(this);
 		unk74 = unk78->createMActorFromNthData(0, 0);
 	}
 

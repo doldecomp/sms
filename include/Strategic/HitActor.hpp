@@ -42,6 +42,27 @@ public:
 	f32 getDamageRadius() const { return mDamageRadius; }
 	f32 getDamageHeight() const { return mDamageHeight; }
 
+	void setAttackRadius(f32 v)
+	{
+		mAttackRadius = v;
+		calcEntryRadius();
+	}
+	void setAttackHeight(f32 v)
+	{
+		mAttackHeight = v;
+		calcEntryRadius();
+	}
+	void setDamageRadius(f32 v)
+	{
+		mDamageRadius = v;
+		calcEntryRadius();
+	}
+	void setDamageHeight(f32 v)
+	{
+		mDamageHeight = v;
+		calcEntryRadius();
+	}
+
 public:
 	/* 0x44 */ THitActor** mCollisions;
 	/* 0x48 */ u16 mColCount;

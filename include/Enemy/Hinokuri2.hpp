@@ -16,6 +16,7 @@ public:
 	// fabricated
 	int getSLFreezeTimerLv0() { return mSLFreezeTimerLv0.get(); }
 	int getSLDamageTimer() { return mSLDamageTimer.get(); }
+	f32 getSLDamageHeadScale() { return mSLDamageHeadScale.get(); }
 
 	/* 0xA8 */ TParamRT<f32> mSLMarchSpeedLv0;
 	/* 0xBC */ TParamRT<f32> mSLMarchSpeedLv1;
@@ -67,6 +68,17 @@ class THino2MtxCalc : public TMtxCalcFootInv {
 public:
 	THino2MtxCalc(u16, u16, u16, u16, u16, u16, f32);
 	virtual void calc(u16);
+
+	// fabricated
+	void setTransform(J3DAnmTransform* trans) { mOne[0] = trans; }
+	void addTransform(J3DAnmTransform* trans)
+	{
+		if (mOne[0] != trans) {
+			mOne[1] = mOne[0];
+			mOne[0] = trans;
+			unk78   = 1.0f;
+		}
+	}
 
 public:
 	/* 0x78 */ f32 unk78;
@@ -177,12 +189,18 @@ public:
 		return 1;
 	}
 
+	// fabricated
+	int getCurrentBck() const { return mCurrentBck; }
+	int getUnk160() const { return mWaitTimer; }
+	void setUnk160(int v) { mWaitTimer = v; }
+	s32 getLevel() const { return mLevel; }
+
 public:
 	/* 0x150 */ TMBindShadowBody* unk150;
 	/* 0x154 */ int mCurrentBck;
 	/* 0x158 */ int unk158;
 	/* 0x15C */ u32 unk15C;
-	/* 0x160 */ int unk160;
+	/* 0x160 */ int mWaitTimer;
 	/* 0x164 */ int unk164;
 	/* 0x168 */ int unk168;
 	/* 0x16C */ THino2Hit* mHead;
@@ -190,7 +208,7 @@ public:
 	/* 0x174 */ THino2Hit* unk174;
 	/* 0x178 */ THino2Hit* unk178;
 	/* 0x17C */ int mJointIdxMessageCameFrom;
-	/* 0x180 */ int unk180;
+	/* 0x180 */ BOOL unk180;
 	/* 0x184 */ u32 unk184;
 	/* 0x188 */ int unk188;
 	/* 0x18C */ int unk18C;
