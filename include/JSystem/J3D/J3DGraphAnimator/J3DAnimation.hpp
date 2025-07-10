@@ -31,7 +31,7 @@ public:
 	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
 	f32 getCurrentFrame() const { return mCurrentFrame; }
 	void setFrame(f32 frame) { mCurrentFrame = frame; }
-	s16 getEndFrame() { return mEndFrame; }
+	s16 getEndFrame() const { return mEndFrame; }
 
 	void init(s16);
 	BOOL checkPass(float);

@@ -11080,7 +11080,7 @@ void TMapObjBase::makeMActors()
 	if (uVar6 == 0)
 		return;
 
-	unk78 = new TMActorKeeper(unk70, uVar6);
+	unk78 = new TMActorKeeper(mManager, uVar6);
 	if (unkF8 & 0x8000)
 		unk78->mModelLoaderFlags = 0x11220000;
 	else
@@ -11142,8 +11142,8 @@ void TMapObjBase::initActorData()
 	unk130 = sObjDataTable[i];
 	unkF8  = unk130->unk34;
 
-	unk70 = JDrama::TNameRefGen::search<TLiveManager>(unk130->unk8);
-	unk70->manageActor(this);
+	mManager = JDrama::TNameRefGen::search<TLiveManager>(unk130->unk8);
+	mManager->manageActor(this);
 	if (unk130->mHit)
 		unk108 = mScaling.y * unk130->mHit->unk8;
 	mPosition.y += unk108;

@@ -166,37 +166,23 @@ bool MActor::isCurAnmAlreadyEnd(int param_1)
 	return ret;
 }
 
-BOOL MActor::curAnmEndsNext(int param_1, char* param_2)
+BOOL MActor::curAnmEndsNext(int anm_idx, char* part_name)
 {
-	if (!unk28[param_1])
+	if (!unk28[anm_idx])
 		return true;
 
-	if (param_1 == 0) {
-		if (!param_2) {
-			if (unk28[param_1]->unk4.mCurrentFrame + unk28[param_1]->unk4.mSpeed
-			        + 0.1f
-			    <= unk28[param_1]->unk4.mEndFrame)
-				return false;
-			else
-				return true;
-		} else if (unk10) {
+	if (anm_idx == 0) {
+		if (!part_name)
+			return unk28[anm_idx]->endsNext();
+
+		if (!unk10)
 			return true;
-		} else {
-			int idx = unk0->partsNameToIdx(param_2);
-			if (unk10[idx]->unk4.mCurrentFrame + unk10[idx]->unk4.mSpeed + 0.1f
-			    <= unk10[idx]->unk4.mEndFrame)
-				return false;
-			else
-				return true;
-		}
-	} else {
-		if (unk28[param_1]->unk4.mCurrentFrame + unk28[param_1]->unk4.mSpeed
-		        + 0.1f
-		    <= unk28[param_1]->unk4.mEndFrame)
-			return false;
-		else
-			return true;
+
+		int idx = unk0->partsNameToIdx(part_name);
+		return unk10[idx]->endsNext();
 	}
+
+	return unk28[anm_idx]->endsNext();
 }
 
 void MActor::setAnimation(const char* param_1, int param_2)

@@ -70,14 +70,14 @@ public:
 	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
 	const TMActorKeeper* getActorKeeper() const { return unk78; }
 	TMActorKeeper* getActorKeeper() { return unk78; }
-	TLiveManager* getUnk70() { return unk70; }
+	TLiveManager* getManager() { return mManager; }
 	MActor* getUnk74() const { return unk74; }
 	s16 getUnk7C() const { return unk7C; }
 	MAnmSound* getUnk80() { return unk80; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
 
 public:
-	/* 0x70 */ TLiveManager* unk70;
+	/* 0x70 */ TLiveManager* mManager;
 	/* 0x74 */ MActor* unk74;
 	/* 0x78 */ TMActorKeeper* unk78;
 	/* 0x7C */ s16 unk7C;

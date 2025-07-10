@@ -169,7 +169,7 @@ void TSpineEnemy::calcRootMatrix()
 
 TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 {
-	return ((TEnemyManager*)unk70)->unk38;
+	return ((TEnemyManager*)mManager)->unk38;
 }
 
 void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
@@ -296,7 +296,7 @@ void TSpineEnemy::searchNearestBrother() const { }
 
 f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
 {
-	TEnemyManager* mgr = (TEnemyManager*)unk70;
+	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
 	int iVar1             = getUnk74()->getCurAnmIdx(param_1);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
@@ -311,7 +311,7 @@ f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
 
 BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 {
-	TEnemyManager* mgr = (TEnemyManager*)unk70;
+	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
 	int iVar1             = getUnk74()->getCurAnmIdx(param_1);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
@@ -324,9 +324,9 @@ BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 
 void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TEnemyManager* mgr = (TEnemyManager*)unk70;
+	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
-	if (unk70 != nullptr) {
+	if (mManager != nullptr) {
 		if ((param_1 & 2) && !checkLiveFlag(0x6) && TEnemyManager::mIsCopyAnmMtx
 		    && mgr->unk4C >= 0) {
 			if (checkLiveFlag(0x201))

@@ -150,12 +150,12 @@ void TJointCoin::initMapObj()
 
 	if (isActorType(0x40000232)) {
 		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/CoinFishRail.bmd",
-		                                   unk70->getMActorAnmData(), 3,
+		                                   mManager->getMActorAnmData(), 3,
 		                                   0x10210000);
 		unk138->setBck("coinfishrail");
 	} else if (isActorType(0x400000c9)) {
 		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/SandBirdRail.bmd",
-		                                   unk70->getMActorAnmData(), 3,
+		                                   mManager->getMActorAnmData(), 3,
 		                                   0x10210000);
 		unk138->setBck("sandbirdrail");
 	}

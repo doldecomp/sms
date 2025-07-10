@@ -159,7 +159,7 @@ TSmallEnemy::TSmallEnemy(const char* name)
 
 void TSmallEnemy::setMActorAndKeeper()
 {
-	unk78 = new TMActorKeeper(getUnk70(), 1);
+	unk78 = new TMActorKeeper(getManager(), 1);
 	unk74 = getActorKeeper()->createMActorFromNthData(0, 0);
 }
 
@@ -170,7 +170,7 @@ static inline f32 randf(f32 l, f32 r)
 
 void TSmallEnemy::init(TLiveManager* param_1)
 {
-	unk70 = param_1;
+	mManager = param_1;
 	param_1->manageActor(this);
 
 	setMActorAndKeeper();
@@ -708,7 +708,7 @@ bool TSmallEnemy::changeMove()
 			Mtx afStack_b0;
 			MsMtxSetRotRPH(afStack_b0, 0.0f, mRotation.y, 0.0f);
 			MTXMultVec(afStack_b0, &local_80, &local_80);
-			if (mSpine->unk20 % 30 > 15) {
+			if (mSpine->mTimer % 30 > 15) {
 				unk178->mPosition.y += 0.5f;
 				unk178->mPosition.x += local_80.x;
 				unk178->mPosition.z += local_80.z;
@@ -949,7 +949,7 @@ void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->unk0;
-	if (spine->unk20 == 0) {
+	if (spine->mTimer == 0) {
 		if (self->mHitPoints != 0)
 			--self->mHitPoints;
 
@@ -963,7 +963,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 			self->setMeltAnm();
 		} else {
 			if (self->unk150 & 0x20) {
-				TSmallEnemyManager* man = (TSmallEnemyManager*)self->unk70;
+				TSmallEnemyManager* man = (TSmallEnemyManager*)self->mManager;
 				gpPollution->stamp(man->getUnk58(), self->mPosition.x,
 				                   self->mPosition.y, self->mPosition.z,
 				                   man->getSaveParam()->mSLStampRange.get()
@@ -979,7 +979,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		}
 	}
 
-	int uVar8 = ((TSmallEnemyManager*)self->unk70)->unk5C;
+	int uVar8 = ((TSmallEnemyManager*)self->mManager)->unk5C;
 	if (self->unkC4->checkSomething())
 		uVar8 = 0;
 
