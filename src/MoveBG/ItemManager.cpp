@@ -14,7 +14,7 @@ TItemManager* gpItemManager;
 
 void TItemManager::resetNozzleBoxesModel(int param_1)
 {
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		THitActor* maybeBox = getObj(i);
 		if (!maybeBox->isActorType(0x20000068))
 			continue;

@@ -9,7 +9,10 @@ class TTimeArray {
 public:
 	// fabricated
 	struct Entry {
-		u32 start, end;
+		u32 time;
+		// This being a color is a wild guess, but would make sense for a
+		// instrumented profiler which this seems to be
+		u32 color;
 	};
 
 	enum { MAX_SIZE = 64 };
@@ -18,10 +21,10 @@ public:
 	    : mSize(0)
 	{
 	}
-	bool append(u32, u32);
+	bool append(u32 time, u32 color);
 
 	// fabricated
-	int size() { return mSize; }
+	int size() const { return mSize; }
 	Entry& operator[](int i) { return mEntries[i]; }
 
 public:
@@ -54,15 +57,24 @@ public:
 		_instance->snapGXTime(v);
 	}
 
-	static void startTimer(u32 v)
+	static void startTimer(u8 r = 0xff, u8 g = 0xff, u8 b = 0xff, u8 a = 0xff)
 	{
 		TTimeRec* inst = _instance;
+
+		union {
+			u8 asAry[4];
+			u32 asUint;
+		} color;
+		color.asAry[0] = r;
+		color.asAry[1] = g;
+		color.asAry[2] = b;
+		color.asAry[3] = a;
+		u32 col        = color.asUint;
+
 		if (!inst)
 			return;
 		OSTick tick = OSGetTick();
-		// TODO: uh oh, second arg isn't "end", it's some kind
-		// of a 4-byte array?!
-		inst->crTimeAry()[0].append(tick, v);
+		inst->crTimeAry()[0].append(tick, col);
 	}
 
 	static void endTimer()

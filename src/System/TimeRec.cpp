@@ -6,13 +6,13 @@
 
 TTimeRec* TTimeRec::_instance;
 
-bool TTimeArray::append(u32 start, u32 end)
+bool TTimeArray::append(u32 time, u32 color)
 {
 	bool result = false;
 	if (mSize < MAX_SIZE) {
 		Entry& entry = mEntries[mSize++];
-		entry.start  = start;
-		entry.end    = end;
+		entry.time   = time;
+		entry.color  = color;
 		result       = true;
 	}
 	return result;
@@ -43,13 +43,13 @@ void TTimeRec::flip()
 	int size          = array.mSize;
 	if (size >= 3) {
 		int i    = size - 1;
-		u32 curr = array.mEntries[i].start;
+		u32 curr = array.mEntries[i].time;
 		while (i > 0) {
 			--i;
-			if (array.mEntries[i].start == 0) {
-				array.mEntries[i].start = curr;
+			if (array.mEntries[i].time == 0) {
+				array.mEntries[i].time = curr;
 			} else {
-				curr = array.mEntries[i].start;
+				curr = array.mEntries[i].time;
 			}
 		}
 	}
@@ -75,5 +75,5 @@ void TTimeRec::suppleGXTime() { }
 
 void TTimeRec::drawSyncCallback(u16 param_1)
 {
-	unk4[unk814][1][param_1 - unk81A].start = OSGetTick();
+	unk4[unk814][1][param_1 - unk81A].time = OSGetTick();
 }

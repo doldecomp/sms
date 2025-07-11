@@ -114,18 +114,20 @@ TSpineEnemy* TEnemyManager::createEnemyInstance() { return nullptr; }
 
 void TEnemyManager::createEnemy() { }
 
-void TEnemyManager::createEnemies(int param_1)
+void TEnemyManager::createEnemies(int count)
 {
-	if (param_1 + unk14 > unk10)
-		param_1 = unk10 - unk14;
+	if (count + getObjNum() > getCapacity())
+		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr && param_1 + unk14 > unk38->mSLInstanceNum.get())
-		param_1 = unk38->mSLInstanceNum.get() - unk14;
+	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
+		count = unk38->mSLInstanceNum.get() - getObjNum();
 
-	if (param_1 < 0)
+	if (count < 0)
 		return;
 
-	for (int i = 0; i < param_1; ++i) {
+	for (int i = 0; i < count; ++i) {
+		// TODO: createEnemy() but size won't match :(
+
 		TSpineEnemy* enemy = createEnemyInstance();
 
 		if (!enemy)
@@ -157,7 +159,7 @@ void TEnemyManager::setSharedFlags()
 	if (!unk40)
 		return;
 
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		enemy->offLiveFlag(0x4000);
 		if (!enemy->checkLiveFlag(0x6)) {
@@ -180,7 +182,7 @@ void TEnemyManager::updateAnmSoundShared()
 	if (!getObj(0)->getUnk80())
 		return;
 
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (!enemy->checkLiveFlag(0x6)) {
 			int idx = enemy->getUnk74()->getCurAnmIdx(0);
@@ -253,7 +255,7 @@ void TEnemyManager::copyFromShared()
 
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TTimeRec::startTimer(0xffffffff);
+	TTimeRec::startTimer();
 
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
@@ -281,12 +283,12 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (unk30 & 1) {
 		TTimeRec::endTimer();
-		TTimeRec::startTimer(0xff0000ff);
+		TTimeRec::startTimer(0xff, 0x00, 0x00);
 	}
 
 	int num = getActiveObjNum();
 	if (param_1 & 1) {
-		for (int i = num; i < unk14; ++i)
+		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onHitFlag(0x1);
 	}
 
@@ -340,7 +342,7 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (unk30 & 1)
-		TTimeRec::startTimer(0xffffffff);
+		TTimeRec::startTimer();
 
 	if (param_1 & 2) {
 		clipEnemies(param_2);
@@ -349,15 +351,15 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (unk30 & 1) {
 		TTimeRec::endTimer();
-		TTimeRec::startTimer(0xff0000ff);
+		TTimeRec::startTimer(0xff, 0x0, 0x0);
 	}
 
 	int num = getActiveObjNum();
 	if (param_1 & 1) {
-		for (int i = num; i < unk14; ++i)
+		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onLiveFlag(0x1);
 	} else {
-		for (int i = num; i < unk14; ++i)
+		for (s32 i = num; i < mObjNum; ++i)
 			; // TODO: debug print or something?
 	}
 
@@ -375,10 +377,11 @@ TSpineEnemy* TEnemyManager::getNearestEnemy(const JGeometry::TVec3<f32>& p)
 	TSpineEnemy* best = nullptr;
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		if (getObj(i)->checkLiveFlag(0x1))
+		TSpineEnemy* candidate = getObj(i);
+
+		if (candidate->checkLiveFlag(0x1))
 			continue;
 
-		TSpineEnemy* candidate = getObj(i);
 		f32 d = VECDistance((Vec*)&p, (Vec*)&candidate->mPosition);
 		if (!best || dist > d) {
 			best = candidate;
@@ -425,22 +428,22 @@ TSpineEnemy* TEnemyManager::getFarOutEnemy()
 
 void TEnemyManager::killChildren()
 {
-	for (int i = 0; i < objNum(); ++i)
+	for (int i = 0; i < mObjNum; ++i)
 		getObj(i)->onLiveFlag(0x41);
 }
 
 void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 {
-	if (!objNum())
+	if (!mObjNum)
 		return;
 
-	if (!getObj(0)->checkActorType(0x10000000)
-	    && !getObj(0)->checkActorType(0x8000000))
+	if (!getObj(0)->checkActorType(ACTOR_TYPE_ENEMY)
+	    && !getObj(0)->checkActorType(ACTOR_TYPE_BOSS))
 		return;
 
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < mObjNum; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->getPosition()) <= r * r)
+		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->mPosition) <= r * r)
 			enemy->onLiveFlag(0x41);
 	}
 }
@@ -466,27 +469,29 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	if (unk4C != enemy->getUnk74()->getCurAnmIdx(0))
 		return false;
 
-	f32 f = enemy->getCurAnmFrameNo(0);
+	int f = enemy->getCurAnmFrameNo(0);
 	enemy->calcRootMatrix();
 	enemy->updateAnmSound();
 	enemy->getUnk74()->frameUpdate();
-	J3DModel* model = enemy->getUnk74()->getUnk4();
-	MtxPtr mtx      = model->getBaseTRMtx();
 
-	mtx[0][0] *= enemy->mScaling.x;
-	mtx[0][1] *= enemy->mScaling.y;
-	mtx[0][2] *= enemy->mScaling.z;
-	mtx[1][0] *= enemy->mScaling.x;
-	mtx[1][1] *= enemy->mScaling.y;
-	mtx[1][2] *= enemy->mScaling.z;
-	mtx[2][0] *= enemy->mScaling.x;
-	mtx[2][1] *= enemy->mScaling.y;
-	mtx[2][2] *= enemy->mScaling.z;
+	Mtx afStack_5C;
+	MtxPtr wtf = afStack_5C;
+	MtxPtr mtx = enemy->getUnk74()->getUnk4()->getBaseTRMtx();
+
+	const JGeometry::TVec3<f32>& v = enemy->mScaling;
+	mtx[0][0] *= v.x;
+	mtx[0][1] *= v.y;
+	mtx[0][2] *= v.z;
+	mtx[1][0] *= v.x;
+	mtx[1][1] *= v.y;
+	mtx[1][2] *= v.z;
+	mtx[2][0] *= v.x;
+	mtx[2][1] *= v.y;
+	mtx[2][2] *= v.z;
 
 	for (int i = 0; i < unk50; ++i) {
-		Mtx afStack_5C;
-		MTXConcat(mtx, unk48[i], afStack_5C);
-		MTXCopy(afStack_5C, enemy->getUnk74()->getUnk4()->getAnmMtx(i));
+		MTXConcat(mtx, unk48[f][i], afStack_5C);
+		enemy->getUnk74()->getUnk4()->setAnmMtx(i, wtf);
 	}
 
 	if (enemy->getUnk74()->getUnk4()->getModelData()->getWEvlpMtxNum())

@@ -88,10 +88,10 @@ public:
 	int getActiveObjNum() const
 	{
 		if (!unk38)
-			return objNum();
+			return getObjNum();
 
 		int n = unk38->mSLActiveEnemyNum.get();
-		return n > objNum() ? objNum() : n;
+		return n > getObjNum() ? getObjNum() : n;
 	}
 	static bool mIsCopyAnmMtx;
 
@@ -100,7 +100,7 @@ public:
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ TSharedMActorSet* unk40;
 	/* 0x44 */ int unk44;
-	/* 0x48 */ MtxPtr* unk48;
+	/* 0x48 */ Mtx** unk48;
 	/* 0x4C */ s32 unk4C;
 	/* 0x50 */ int unk50;
 };

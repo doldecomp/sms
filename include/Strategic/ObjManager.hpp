@@ -47,15 +47,15 @@ public:
 	void initObjArray(int);
 
 	// fabricated
-	int getUnk10() { return unk10; }
-	int objNum() const { return unk14; }
+	int getCapacity() { return mCapacity; }
+	int getObjNum() const { return mObjNum; }
 	THitActor* getObj(int i) { return unk18[i]; }
 	const THitActor* getObj(int i) const { return unk18[i]; }
 	TObjChara* getChara() { return unk1C; }
 
 public:
-	/* 0x10 */ s32 unk10;
-	/* 0x14 */ s32 unk14;
+	/* 0x10 */ s32 mCapacity;
+	/* 0x14 */ s32 mObjNum;
 	/* 0x18 */ THitActor** unk18;
 	/* 0x1C */ TObjChara* unk1C;
 	/* 0x20 */ MActorAnmData* unk20;

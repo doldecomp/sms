@@ -35,7 +35,7 @@ void TLiveManager::load(JSUMemoryInputStream& stream)
 
 void TLiveManager::manageActor(TLiveActor* actor)
 {
-	actor->unk7C = unk14;
+	actor->unk7C = mObjNum;
 	TObjManager::manageObj(actor);
 }
 
@@ -46,7 +46,7 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* param_1, float param_2,
 	                                   gpCamera->getAspect(),
 	                                   param_1->getUnkE8(), param_2);
 
-	for (int i = 0; i < unk14; ++i) {
+	for (int i = 0; i < mObjNum; ++i) {
 		TLiveActor* actor = getObj(i);
 		if (!actor->checkLiveFlag(0x100)) {
 			actor->offLiveFlag(0x4);
@@ -72,7 +72,7 @@ void TLiveManager::clipActors(JDrama::TGraphics* param_1)
 
 void TLiveManager::setFlagOutOfCube()
 {
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TLiveActor* actor         = getObj(i);
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
@@ -88,7 +88,7 @@ void TLiveManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & 2) {
 		if (unk30 & 1)
-			TTimeRec::startTimer(0xffffffff);
+			TTimeRec::startTimer();
 		clipActors(param_2);
 		setFlagOutOfCube();
 		if (unk30 & 1)
@@ -100,7 +100,7 @@ void TLiveManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 const TLiveActor* TLiveManager::getActorByFlag(u32 flag) const
 {
-	for (int i = 0; i < unk14; ++i) {
+	for (int i = 0; i < mObjNum; ++i) {
 		const TLiveActor* actor = getObj(i);
 		if (actor->checkLiveFlag(flag))
 			return actor;
@@ -110,7 +110,7 @@ const TLiveActor* TLiveManager::getActorByFlag(u32 flag) const
 
 BOOL TLiveManager::hasMapCollision() const
 {
-	if (unk14 == 0)
+	if (mObjNum == 0)
 		return false;
 
 	return getObj(0)->hasMapCollision();

@@ -205,7 +205,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 		y2 = y;
 	}
 
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_4) && !obj->checkMapObjFlag(0x80000)
@@ -227,7 +227,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 
 TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 {
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
@@ -248,7 +248,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 
 TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
 {
-	for (int i = 0; i < objNum(); ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
@@ -479,7 +479,7 @@ void TMapObjBaseManager::createModelData()
 int TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
 {
 	int result = 0;
-	for (int i = 0; i < unk14; ++i)
+	for (int i = 0; i < mObjNum; ++i)
 		if (unk18[i]->isActorType(param_1))
 			++result;
 	return result;
