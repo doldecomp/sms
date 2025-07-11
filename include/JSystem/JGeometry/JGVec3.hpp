@@ -61,7 +61,7 @@ public:
 		return *this;
 	}
 
-	operator Vec*() { return (Vec*)&x; }
+	operator Vec*() const { return (Vec*)&x; }
 	operator const Vec*() const { return (Vec*)&x; }
 
 	void zero() { x = y = z = 0.0f; }

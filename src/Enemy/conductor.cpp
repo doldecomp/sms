@@ -96,7 +96,7 @@ void TConductor::init()
 	for (it = unk20.begin(), e = unk20.end(); it != e; ++it)
 		if (!(*it)->search("ヒノクリ２マネージャー")
 		    && !(*it)->search("ボスゲッソーマネージャー"))
-			(*it)->createEnemies((*it)->getUnk10());
+			(*it)->createEnemies((*it)->getCapacity());
 
 	unkF8 = (TAreaCylinderManager*)search("ナメクリ出現エリアマネージャー");
 }
@@ -132,7 +132,7 @@ bool TConductor::isBossDefeated()
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
 		if (!mgr)
 			return true;
-		for (int i = 0; i < mgr->objNum(); ++i)
+		for (int i = 0; i < mgr->getObjNum(); ++i)
 			if (!((TSpineEnemy*)mgr->getObj(i))->checkLiveFlag(0x40))
 				return false;
 
@@ -164,7 +164,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 
 	int result = 0;
 
-	for (int i = 0; i < mgr->objNum(); ++i) {
+	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (actor->checkLiveFlag(0x1)) {
 			((TSpineEnemy*)actor)->resetToPosition(param_1);
@@ -177,7 +177,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_4 == 0)
 		return result;
 
-	for (int i = 0; i < mgr->objNum(); ++i) {
+	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(0x1) && actor->checkLiveFlag(0x800)
 		    && actor->checkLiveFlag(0x4)) {
@@ -191,7 +191,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_4 == 1)
 		return result;
 
-	for (int i = 0; i < mgr->objNum(); ++i) {
+	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(0x1) && !actor->checkLiveFlag(0x4)
 		    && actor->checkLiveFlag(0x800)) {

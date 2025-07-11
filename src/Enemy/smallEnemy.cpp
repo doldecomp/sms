@@ -120,7 +120,7 @@ void TSmallEnemyManager::loadAfter()
 {
 	TEnemyManager::loadAfter();
 	ResTIMG* img = (ResTIMG*)JKRGetResource("/common/timg/down_osen.bti");
-	unk58 = gpPollution->getCounterLayer().registerTexStamp(1, unk10, img);
+	unk58 = gpPollution->getCounterLayer().registerTexStamp(1, mCapacity, img);
 }
 
 void TSmallEnemyManager::createEnemies(int param_1)

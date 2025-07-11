@@ -28,8 +28,8 @@ void* TObjChara::getRes(const char* name) const
 
 TObjManager::TObjManager(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(0)
-    , unk14(0)
+    , mCapacity(0)
+    , mObjNum(0)
     , unk18(nullptr)
     , unk1C(nullptr)
     , unk20(nullptr)
@@ -42,8 +42,8 @@ TObjManager::TObjManager(const char* name)
 
 void TObjManager::manageObj(THitActor* obj)
 {
-	unk18[unk14] = obj;
-	++unk14;
+	unk18[mObjNum] = obj;
+	++mObjNum;
 }
 
 void TObjManager::load(JSUMemoryInputStream& stream)
@@ -55,8 +55,8 @@ void TObjManager::load(JSUMemoryInputStream& stream)
 	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
 	            ->getRootNameRef()
 	            ->search(buffer);
-	unk10 = stream.readU32();
-	unk18 = new THitActor*[unk10];
+	mCapacity = stream.readU32();
+	unk18     = new THitActor*[mCapacity];
 }
 
 MActorAnmData* TObjManager::getMActorAnmData()
@@ -69,9 +69,9 @@ MActorAnmData* TObjManager::getMActorAnmData()
 void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (unk30 & 1)
-		TTimeRec::startTimer(0xffffffff);
+		TTimeRec::startTimer();
 
-	for (int i = 0; i < unk14; ++i)
+	for (int i = 0; i < mObjNum; ++i)
 		unk18[i]->testPerform(param_1, param_2);
 
 	if (unk30 & 1)
@@ -125,7 +125,7 @@ JDrama::TNameRef* TObjManager::searchF(u16 key, const char* name)
 	if (res)
 		return res;
 
-	for (int i = 0; i < unk14; ++i) {
+	for (int i = 0; i < mObjNum; ++i) {
 		JDrama::TNameRef* r = unk18[i]->searchF(key, name);
 		if (r)
 			return r;
