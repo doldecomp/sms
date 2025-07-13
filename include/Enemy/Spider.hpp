@@ -4,6 +4,8 @@
 #include <dolphin/types.h>
 #include <Strategic/Binder.hpp>
 
+class TBGCheckData;
+
 class TSpider : public TBinder {
 public:
 	TSpider();
@@ -11,9 +13,9 @@ public:
 	virtual void bind(TLiveActor*);
 
 public:
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
+	/* 0x4 */ int unk4;
+	/* 0x8 */ int unk8;
+	/* 0xC */ TBGCheckData* unkC;
 	/* 0x10 */ f32 unk10;
 };
 
