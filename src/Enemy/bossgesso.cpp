@@ -1,4 +1,5 @@
 #include <Enemy/BossGesso.hpp>
+#include <System/Particles.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -18,8 +19,40 @@ static void getAttackModeStr(int) { }
 static void isNozzleWater(THitActor*) { }
 
 TBossGessoParams::TBossGessoParams(const char* path)
-    : TParams(path)
+    : TSpineEnemyParams(path)
+    , PARAM_INIT(mSLUnisonInter, 2000)
+    , PARAM_INIT(mSLUnisonHoming, 200)
+    , PARAM_INIT(mSLSingleHoming, 200)
+    , PARAM_INIT(mSLBeakHoming, 200)
+    , PARAM_INIT(mSLRegenFoot, 4800)
+    , PARAM_INIT(mSLAmputeeTime, 1200)
+    , PARAM_INIT(mSLRestTime, 360)
+    , PARAM_INIT(mSLStunTime, 1200)
+    , PARAM_INIT(mSLBeakDamageHeight, 150.0f)
+    , PARAM_INIT(mSLBeakDamageRadius, 150.0f)
+    , PARAM_INIT(mSLBeakLengthLimit, 1200.0f)
+    , PARAM_INIT(mSLBeakLengthDamage, 600.0f)
+    , PARAM_INIT(mSLBeakLengthPollute, 500.0f)
+    , PARAM_INIT(mSLUnisonAttackSpeed, 2.0f)
+    , PARAM_INIT(mSLDoubleAttackSpeed, 1.2f)
+    , PARAM_INIT(mSLSkipRopeAttackSpeed, 1.0f)
+    , PARAM_INIT(mSLSingleAttackLen, 2200.0f)
+    , PARAM_INIT(mSLDoubleAttackLen, 1900.0f)
+    , PARAM_INIT(mSLUnisonAttackLen, 1900.0f)
+    , PARAM_INIT(mSLForceUnisonLen, 800.0f)
+    , PARAM_INIT(mSLGuardLen, 500.0f)
+    , PARAM_INIT(mSLTentacleStretch, 0.1f)
+    , PARAM_INIT(mSLBeakStretch, 0.07f)
+    , PARAM_INIT(mSLEyeDamageRadius, 100.0f)
+    , PARAM_INIT(mSLEyeDamageHeight, 150.0f)
+    , PARAM_INIT(mSLShootRadius, 8000.0f)
+    , PARAM_INIT(mSLBlurJoint, 10)
+    , PARAM_INIT(mSLBlurScale, 1.0f)
+    , PARAM_INIT(mSLColumnScale, 3.0f)
+    , PARAM_INIT(mSLSightAngle, 120.0f)
+    , PARAM_INIT(mSLAmputeeWait, 720)
 {
+	TParams::load(mPrmPath);
 }
 
 TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
@@ -29,7 +62,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
 
 MtxPtr TBGBeakHit::getTakingMtx() { }
 
-void TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>&) { }
+void TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& param_1) { }
 
 BOOL TBGBeakHit::receiveMessage(THitActor*, u32) { }
 
@@ -161,7 +194,34 @@ TBossGessoManager::TBossGessoManager(const char* name)
 
 void TBossGessoManager::createModelData() { }
 
-void TBossGessoManager::initJParticle() { }
+void TBossGessoManager::initJParticle()
+{
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_attack_a.jpa", 0x8c);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_attack_b.jpa", 0x8d);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_attack_c.jpa", 0x8e);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_attack_d.jpa", 0x8f);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_blur.jpa", 0x90);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_blur_f.jpa", 0x91);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_blur_j.jpa", 0x92);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_canon_a.jpa", 0x93);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_canon_b.jpa", 0x94);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_damage_a.jpa", 0x95);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_damage_b.jpa", 0x96);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_hit_a.jpa", 0x97);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_hit_b.jpa", 0x98);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_hit_c.jpa", 0x99);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_hitdown.jpa", 0x9a);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_jump.jpa", 0x9b);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_kizetsu.jpa", 0x9c);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_kizetsu_r.jpa", 0x9d);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_odanhit_a.jpa", 0x9e);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_odanhit_b.jpa", 0x9f);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_osen.jpa", 0xa0);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_ase.jpa", 0x138);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_namida.jpa", 0x139);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_kiseki.jpa", 0x13a);
+	SMS_LoadParticle("/scene/bgeso/jpa/ms_boge_wash.jpa", 0x13b);
+}
 
 void TBossGessoManager::load(JSUMemoryInputStream&) { }
 
