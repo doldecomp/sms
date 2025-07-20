@@ -68,7 +68,13 @@ const char* bgeso_bastable[] = {
 
 static void getAttackModeStr(int) { }
 
-static void isNozzleWater(THitActor*) { }
+static BOOL isNozzleWater(THitActor* param_1)
+{
+	if (!param_1->isActorType(0x1000001))
+		return FALSE;
+
+	return gpModelWaterManager->checkUnk414(*(int*)(param_1 + 1), 0x40);
+}
 
 TBossGessoParams::TBossGessoParams(const char* path)
     : TSpineEnemyParams(path)
@@ -150,12 +156,7 @@ void TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
 BOOL TBGBeakHit::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_1->isActorType(0x1000001)) {
-		// TODO: one more inline?
-		bool hasFlag = !param_1->isActorType(0x1000001)
-		                   ? false
-		                   : gpModelWaterManager->checkUnk414(
-		                       *(int*)(param_1 + 1), 0x40);
-		if (!hasFlag)
+		if (!isNozzleWater(param_1))
 			return true;
 
 		mOwner->gotEyeDamage();
@@ -287,7 +288,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int param_2, const char* name)
 
 BOOL TBGEyeHit::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (mOwner->unk168 == 3)
+	if (mOwner->getUnk168() == 3)
 		return false;
 
 	if (param_1->getActorType() == 0x1000001 && param_2 == 15) {
@@ -659,7 +660,23 @@ void TBossGesso::definiteRumble() { }
 
 void TBossGesso::continuousRumble() { }
 
-void TBossGesso::lenFromToeToMario() { }
+f32 TBossGesso::lenFromToeToMario()
+{
+	f32 min = 100000.0f;
+
+	for (int i = 0; i < 4; ++i) {
+		if (unk150[i]->isThing2())
+			continue;
+
+		JGeometry::TVec3<f32> tipPos = unk150[i]->getLastNode()->unk0;
+
+		f32 len = tipPos.length();
+		if (len < min)
+			min = len;
+	}
+
+	return min;
+}
 
 void TBossGesso::showMessage(u32 param_1)
 {
@@ -933,20 +950,135 @@ void TBossGesso::doAttackSingle()
 
 	// TODO: ughhhhhhhhhhhhhh
 }
-
-void TBossGesso::doAttackDouble() { }
-
-void TBossGesso::doAttackSkipRope() { }
-
-void TBossGesso::doAttackUnison() { }
-
-void TBossGesso::doAttackShoot() { }
 #pragma dont_inline off
 
-// TODO: inline seems sus here, probably needed cuz inSight is wrong
-inline void TBossGesso::doAttackGuard()
+void TBossGesso::doAttackDouble()
 {
-	if (mBeak->mHolder != nullptr) {
+	if (mBeak->getHolder() != nullptr || tentacleHeld()) {
+		changeAttackMode(4);
+		return;
+	}
+
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	delta -= mPosition;
+
+	f32 doubleAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
+	doubleAttackLen2 *= doubleAttackLen2;
+
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	    && delta.squared() < doubleAttackLen2) {
+
+		for (int i = 0; i < 2; ++i) {
+			static const int idxarray[] = { 0, 2 };
+			TBGTentacle* tentacle       = unk150[idxarray[i]];
+			if (tentacle->unk10 == 0) {
+				tentacle->changeStateAndFixNodes(1);
+			}
+		}
+	}
+
+	if (mBeak->getHolder() != nullptr)
+		return;
+
+	if (!unk150[3]->isThing2() || !unk150[1]->isThing2())
+		changeAttackMode(0);
+}
+
+void TBossGesso::doAttackSkipRope()
+{
+	if (mBeak->getHolder() != nullptr) {
+		changeAttackMode(4);
+		return;
+	}
+
+	if (mBeak->getHolder() == nullptr && !tentacleHeld()) {
+		changeAttackMode(0);
+		return;
+	}
+
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+		for (int i = 0; i < 2; ++i) {
+			static const int idxarray[] = { 0, 2 };
+			TBGTentacle* tentacle       = unk150[idxarray[i]];
+			if (tentacle->unk10 != 2 && tentacle->unk10 != 1
+			    && tentacle->unk10 != 4 && tentacle->unk10 != 5
+			    && tentacle->unk10 != 3 && tentacle->unk10 != 6) {
+				tentacle->changeStateAndFixNodes(1);
+			}
+		}
+	}
+}
+
+void TBossGesso::doAttackUnison()
+{
+	if (mBeak->getHolder() != nullptr) {
+		changeAttackMode(4);
+		return;
+	}
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	delta -= mPosition;
+
+	f32 unisonAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
+	unisonAttackLen2 *= unisonAttackLen2;
+
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	    && gpMarioOriginal->isTouchGround4cm()
+	    && delta.squared() < unisonAttackLen2) {
+
+		BOOL bVar3 = true;
+		for (int i = 0; i < TENTACLE_NUM; ++i) {
+			TBGTentacle* tentacle = unk150[i];
+			if (i == unk16C / 8 && tentacle->unk10 == 0) {
+				tentacle->changeStateAndFixNodes(1);
+				bVar3 = false;
+			}
+		}
+
+		if (bVar3 && unk16C > 300)
+			changeAttackMode(0);
+	} else {
+		for (int i = 0; i < TENTACLE_NUM; ++i) {
+			TBGTentacle* tentacle = unk150[i];
+			if (tentacle->unk10 == 1)
+				return;
+
+			if (!tentacle->isThing2() && tentacle->unk10 != 0
+			    && tentacle->unk10 != 2 && tentacle->unk10 != 5)
+				tentacle->changeStateAndFixNodes(2);
+		}
+
+		changeAttackMode(0);
+	}
+}
+
+void TBossGesso::doAttackShoot()
+{
+	if (mBeak->getHolder() != nullptr) {
+		changeAttackMode(0);
+		return;
+	}
+
+	if (unk16C > 120
+	    && mSpine->getLatestNerve() != &TNerveBGPolDrop::theNerve()) {
+		changeAttackMode(0);
+		return;
+	}
+
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+		delta -= mPosition;
+
+		f32 singleAttackLen = getSaveParam()->mSLSingleAttackLen.get();
+		if (delta.squared() < singleAttackLen * singleAttackLen) {
+			changeAttackMode(0);
+		}
+	}
+}
+
+// TODO: inline seems sus here, probably needed cuz inSight is wrong
+void TBossGesso::doAttackGuard()
+{
+	if (mBeak->getHolder() != nullptr) {
 		changeAttackMode(4);
 		return;
 	}
@@ -978,9 +1110,6 @@ void TBossGesso::doAttackRoll()
 	changeAllTentacleState(0);
 	changeAttackMode(0);
 }
-
-// void MsGetRotFromZaxisY(const JGeometry::TVec3<f32>&) { }
-// void MsWrap<f32>(f32, f32, f32) { }
 
 void TBossGesso::moveObject()
 {

@@ -1062,6 +1062,12 @@ public:
 	f32 getIntendedMag() const { return mIntendedMag; }
 	f32 getIntendedYaw() const { return mIntendedYaw * (360.0f / 65536.0f); }
 
+	// fabricated
+	bool isTouchGround4cm() const
+	{
+		return mFloorPosition.y + 4.0f <= mPosition.y ? true : false;
+	}
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
@@ -1101,7 +1107,7 @@ public:
 
 	/* 0xFC */ u32 unkFC[2];
 
-	void* mController; // TMarioControllerWork
+	/* 0x104 */ void* mController; // TMarioControllerWork
 
 	/* 0x108 */ u32 unk108[4];
 

@@ -136,7 +136,7 @@ public:
 	void rumblePad(int, const JGeometry::TVec3<f32>&);
 	void definiteRumble();
 	void continuousRumble();
-	void lenFromToeToMario();
+	f32 lenFromToeToMario();
 	void showMessage(u32);
 	void checkTakeMsg();
 	void changeBck(int);
@@ -182,12 +182,14 @@ public:
 	// fabricated
 	enum { TENTACLE_NUM = 4 };
 
+	int getUnk168() const { return unk168; }
+
 public:
 	/* 0x150 */ TBGTentacle* unk150[TENTACLE_NUM];
 	/* 0x160 */ TBGBeakHit* mBeak;
 	/* 0x164 */ TBossGessoMtxCalc* unk164;
 	/* 0x168 */ int unk168;
-	/* 0x16C */ u32 unk16C;
+	/* 0x16C */ int unk16C;
 	/* 0x170 */ TBGEyeHit* unk170;
 	/* 0x174 */ TBGEyeHit* unk174;
 	/* 0x178 */ MActor* unk178;
