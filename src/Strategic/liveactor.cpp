@@ -297,10 +297,10 @@ void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 
 JGeometry::TVec3<f32>
 TLiveActor::calcVelocityToJumpToY(const JGeometry::TVec3<f32>& param_1,
-                                  f32 param_2, f32 param_3) const
+                                  f32 param_2, f32 gravity) const
 {
 	JGeometry::TVec3<f32> vec;
-	SMSCalcJumpVelocityY(param_1, mPosition, param_2, param_3, -3.0625f, &vec);
+	SMSCalcJumpVelocityY(param_1, mPosition, param_2, gravity, -3.0625f, &vec);
 	return vec;
 }
 

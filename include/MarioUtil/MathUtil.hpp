@@ -5,7 +5,6 @@
 
 int IConverge(int, int, int, int);
 f32 FConverge(f32, f32, f32, f32);
-void GetAtanTable(f32, f32);
 s16 matan(f32, f32);
 
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
