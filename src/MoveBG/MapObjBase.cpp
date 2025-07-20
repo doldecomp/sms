@@ -25,7 +25,7 @@ void TMapObjBase::changeObjMtx(MtxPtr mtx)
 	mPosition.x = mtx[3][0];
 	mPosition.y = mtx[3][1] + unk108;
 	mPosition.z = mtx[3][2];
-	if (unk74) {
+	if (mMActor) {
 		if (checkMapObjFlag(0x100)) {
 			setModelMtx(mtx);
 		} else {
@@ -146,7 +146,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
-	f32 currFrame = unk74->getFrameCtrl(0)->getCurrentFrame();
+	f32 currFrame = mMActor->getFrameCtrl(0)->getCurrentFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
 		if (gpMSound->gateCheck(param_1))
 			MSoundSESystem::MSoundSE::startSoundActor(param_1, getPosition(), 0,
@@ -199,7 +199,7 @@ bool TMapObjBase::animIsFinished() const
 	    || !unk130->mAnim->unk4[unkFE].unk4)
 		return true;
 
-	if (unk74->curAnmEndsNext(0, nullptr))
+	if (mMActor->curAnmEndsNext(0, nullptr))
 		return true;
 	else
 		return false;
@@ -211,13 +211,13 @@ void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
 	if (unk130->mAnim && param_1 < unk130->mAnim->unk0)
-		unk74->getFrameCtrl(unk130->mAnim->unk4[param_1].unk8)->setSpeed(0);
+		mMActor->getFrameCtrl(unk130->mAnim->unk4[param_1].unk8)->setSpeed(0);
 }
 
 void TMapObjBase::startBck(const char* param_1)
 {
 	unkF8 &= ~0x100;
-	unk74->setBck(param_1);
+	mMActor->setBck(param_1);
 }
 
 void TMapObjBase::startAnim(u16 param_1) { }
@@ -233,7 +233,7 @@ void TMapObjBase::makeObjDefault()
 
 	unkAC.x = unkAC.y = unkAC.z = 0.0f;
 	onLiveFlag(0x10);
-	if (unk74) {
+	if (mMActor) {
 		calcRootMatrix();
 		getModel()->calc();
 	}
@@ -248,29 +248,29 @@ void TMapObjBase::makeObjDead()
 	if (unkFE != 0xffff && unk130->mAnim && unk130->mAnim->unk0 > 0
 	    && unk130->mAnim->unk4[unkFE].unk4) {
 		u32 uVar6 = unk130->mAnim->unk4[unkFE].unk8;
-		unk74->getFrameCtrl(uVar6)->setSpeed(0.0f);
-		unk74->getFrameCtrl(uVar6)->setFrame(0.0f);
-		unk74->getUnk28(uVar6)->unk0 = 0xffffffff;
-		unkFE                        = 0xffff;
+		mMActor->getFrameCtrl(uVar6)->setSpeed(0.0f);
+		mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
+		mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
+		unkFE                          = 0xffff;
 	}
 
 	unk100 = 0xffff;
 	unk64 |= 1;
 	removeMapCollision();
 	unk104 = 0;
-	if (unk6C) {
-		unk6C->receiveMessage(this, 0x8);
-		unk6C = nullptr;
+	if (mHeldObject) {
+		mHeldObject->receiveMessage(this, 0x8);
+		mHeldObject = nullptr;
 	}
 
-	if (unk68) {
-		unk68->receiveMessage(this, 0x8);
-		unk68 = nullptr;
+	if (mHolder) {
+		mHolder->receiveMessage(this, 0x8);
+		mHolder = nullptr;
 	}
 
 	onLiveFlag(0xD9);
 	mState = 0;
-	if (unk74)
+	if (mMActor)
 		SMS_HideAllShapePacket(getModel());
 }
 
@@ -305,14 +305,14 @@ void TMapObjBase::touchActor(THitActor* actor)
 
 void TMapObjBase::ensureTakeSituation()
 {
-	if (unk6C && unk6C->unk68 != this)
-		unk6C = nullptr;
+	if (mHeldObject && mHeldObject->mHolder != this)
+		mHeldObject = nullptr;
 
-	if (unk68 && unk68->unk6C != this) {
+	if (mHolder && mHolder->mHeldObject != this) {
 		if (mPosition.y != unkC8)
 			mLiveFlag &= ~0x10;
 
-		unk68 = nullptr;
+		mHolder = nullptr;
 	}
 }
 
@@ -357,7 +357,7 @@ u32 TMapObjBase::getShadowType()
 Mtx* TMapObjBase::getRootJointMtx() const
 {
 	if (checkMapObjFlag(0x8) || unk108 != 0.0f)
-		return (Mtx*)unk74->getUnk4()->getAnmMtx(0);
+		return (Mtx*)mMActor->getUnk4()->getAnmMtx(0);
 	return nullptr;
 }
 
@@ -375,7 +375,7 @@ void TMapObjBase::calcRootMatrix()
 BOOL TMapObjBase::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == 5 && checkMapObjFlag(0x40)) {
-		unk6C = (TTakeActor*)param_1;
+		mHeldObject = (TTakeActor*)param_1;
 		return 1;
 	} else if (param_2 == 0xF) {
 		return touchWater(param_1);

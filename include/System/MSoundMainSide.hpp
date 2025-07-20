@@ -64,11 +64,11 @@ public:
 	static void entranceDemoLoop(u32);
 	static void startStageEntranceDemo(u8, u8);
 	void setMSoundEnterStage(u8, u8);
-	void setBossNotDamagedFlag(bool);
+	static void setBossNotDamagedFlag(bool);
 	void getBossLivesFlag2();
 	void getBossLivesFlag();
 	static void setBossLivesFlag2(bool);
-	void setBossLivesFlagOnlyFlag(bool);
+	static void setBossLivesFlagOnlyFlag(bool);
 	static void setBossLivesFlag(bool);
 	void fromTalkingCameraDemo(bool);
 	void toTalkingCameraDemo();

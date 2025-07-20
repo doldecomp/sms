@@ -7,8 +7,8 @@ class TTakeActor : public THitActor {
 public:
 	TTakeActor(const char* name)
 	    : THitActor(name)
-	    , unk68(nullptr)
-	    , unk6C(nullptr)
+	    , mHolder(nullptr)
+	    , mHeldObject(nullptr)
 	{
 	}
 	virtual ~TTakeActor() { }
@@ -17,12 +17,12 @@ public:
 	virtual void moveRequest(const JGeometry::TVec3<f32>&);
 	virtual void getRadiusAtY(float) const;
 
-	bool isTaken() const { return unk68 != nullptr ? true : false; }
-	bool isUnk6C() const { return unk6C != nullptr ? true : false; }
+	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
+	bool isHolding() const { return mHeldObject != nullptr ? true : false; }
 
 public:
-	/* 0x68 */ TTakeActor* unk68;
-	/* 0x6C */ TTakeActor* unk6C;
+	/* 0x68 */ TTakeActor* mHolder;
+	/* 0x6C */ TTakeActor* mHeldObject;
 };
 
 #endif

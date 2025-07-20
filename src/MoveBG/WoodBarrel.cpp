@@ -55,9 +55,9 @@ void TWoodBarrel::kill()
 	vec.y += 100.0f;
 	unk148->mPos.value = vec;
 	gpModelWaterManager->emitRequest(*unk148);
-	if (unk68) {
-		unk68->receiveMessage(this, 0x8);
-		unk68 = nullptr;
+	if (mHolder) {
+		mHolder->receiveMessage(this, 0x8);
+		mHolder = nullptr;
 	}
 }
 

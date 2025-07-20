@@ -57,6 +57,7 @@ public:
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 	f32 getTurnSpeed() const { return mTurnSpeed; }
 	u8 getHitPoints() const { return mHitPoints; }
+	f32 getSomething() const { return mBodyScale * unkC0; }
 
 public:
 	/* 0xF4 */ THitActor* unkF4; // TODO: type is a wild guess

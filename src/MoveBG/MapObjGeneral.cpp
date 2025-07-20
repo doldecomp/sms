@@ -100,7 +100,7 @@ void TMapObjGeneral::touchingPlayer()
 
 void TMapObjGeneral::holding()
 {
-	mPosition = unk68->mPosition;
+	mPosition = mHolder->mPosition;
 	unkC8     = gpMap->checkGround(mPosition, &unkC4);
 }
 
@@ -113,15 +113,15 @@ void TMapObjGeneral::recovering()
 		f32 fVar1       = mat[3][1] - unk144;
 		mDamageHeight += fVar1;
 		calcEntryRadius();
-		if (unk6C)
-			unk6C->mPosition.y += fVar1;
+		if (mHeldObject)
+			mHeldObject->mPosition.y += fVar1;
 		unk144 = mat[3][1];
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
 		mPosition.y += unk130->mSink->unk4;
-		if (unk6C)
-			unk6C->mPosition.y += unk130->mSink->unk4;
+		if (mHeldObject)
+			mHeldObject->mPosition.y += unk130->mSink->unk4;
 		return;
 	}
 
@@ -204,8 +204,8 @@ void TMapObjGeneral::makeObjBuried()
 	mPosition.y -= unk130->mHit->unkC[2].unkC;
 	unk64 |= 1;
 	removeMapCollision();
-	unk74  = nullptr;
-	mState = 8;
+	mMActor = nullptr;
+	mState  = 8;
 }
 
 void TMapObjGeneral::receiveMessageFromPlayer() { startAnim(4); }
@@ -259,14 +259,14 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 	if (unkEC && unkEC->unk8)
 		unkEC->unk8->remove();
 	unk64 |= 1;
-	unk68  = actor;
-	mState = 6;
+	mHolder = actor;
+	mState  = 6;
 }
 
 void TMapObjGeneral::ensureTakeSituation()
 {
 	TMapObjBase::ensureTakeSituation();
-	if (isState(6) && unk68 == nullptr) {
+	if (isState(6) && mHolder == nullptr) {
 		mState = 1;
 		offLiveFlag(0x10);
 	}
@@ -438,7 +438,7 @@ void TMapObjGeneral::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 
-	if (isState(6) && unk68) {
+	if (isState(6) && mHolder) {
 		if (unk130->mHold) {
 			TMapObjHoldData* hold = unk130->mHold;
 

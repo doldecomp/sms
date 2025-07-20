@@ -5,7 +5,9 @@
 #include <Enemy/EnemyManager.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 #include <Strategic/Binder.hpp>
+#include <Strategic/Spine.hpp>
 #include <Strategic/Nerve.hpp>
+#include <JSystem/J3D/J3DGraphBase/Components/J3DGXColor.hpp>
 
 class TBGTentacle;
 class TBGPolDrop;
@@ -50,7 +52,7 @@ public:
 
 class TBGBeakHit : public TTakeActor {
 public:
-	TBGBeakHit(TBossGesso*, const char*);
+	TBGBeakHit(TBossGesso* owner, const char* name = "クチバシ（つかみ）");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -65,7 +67,7 @@ public:
 
 class TBGEyeHit : public THitActor {
 public:
-	TBGEyeHit(TBossGesso*, int, const char*);
+	TBGEyeHit(TBossGesso* owner, int, const char* name = "目");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -77,7 +79,7 @@ public:
 
 class TBGBodyHit : public THitActor {
 public:
-	TBGBodyHit(TBossGesso*, int, const char*);
+	TBGBodyHit(TBossGesso* owner, int, const char* name = "胴体");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -94,6 +96,9 @@ public:
 	void joinAnm(int);
 	void setAnm(int);
 	void calc(u16);
+
+public:
+	/* 0x64 */ TBossGesso* mOwner;
 };
 
 class TBGBinder : public TBinder {
@@ -104,7 +109,7 @@ public:
 
 class TBGCork {
 public:
-	TBGCork(TBossGesso*);
+	TBGCork(TBossGesso* owner);
 
 	void crush();
 	void perform(u32, JDrama::TGraphics*);
@@ -113,7 +118,7 @@ public:
 	/* 0x0 */ TBossGesso* mOwner;
 	/* 0x4 */ MActor* unk4;
 	/* 0x8 */ MActor* unk8;
-	/* 0xC */ u32 unkC;
+	/* 0xC */ int unkC;
 };
 
 class TBossGesso : public TSpineEnemy {
@@ -135,9 +140,9 @@ public:
 	void showMessage(u32);
 	void checkTakeMsg();
 	void changeBck(int);
-	void inSightAngle(f32);
-	void inSight();
-	void is2ndFightNow() const;
+	bool inSightAngle(f32);
+	f32 inSight();
+	bool is2ndFightNow() const;
 	void stopIfRoll();
 	void changeAttackMode(int);
 	void gotTentacleDamage();
@@ -149,9 +154,9 @@ public:
 	void stopPollute();
 	void launchPolDrop();
 	void setEyeDamageBtp(int);
-	void tentacleHeld() const;
+	BOOL tentacleHeld() const;
 	void tentacleAttack();
-	void beakHeld() const;
+	bool beakHeld() const;
 	void tentacleWait();
 	void doAttackSingle();
 	void doAttackDouble();
@@ -162,26 +167,45 @@ public:
 	void doAttackRoll();
 	void performInContainer(u32, JDrama::TGraphics*);
 
+	// fabricated
+	TBossGessoParams* getSaveParam() const
+	{
+		return (TBossGessoParams*)getSaveParam();
+	}
+
+	// fabricated
+	TNerveBase<TLiveActor>* getLatestNerve()
+	{
+		return mSpine->getLatestNerve();
+	}
+
+	// fabricated
+	enum { TENTACLE_NUM = 4 };
+
 public:
-	/* 0x150 */ TBGTentacle* unk150[4];
-	/* 0x160 */ TBGBeakHit* unk160;
+	/* 0x150 */ TBGTentacle* unk150[TENTACLE_NUM];
+	/* 0x160 */ TBGBeakHit* mBeak;
 	/* 0x164 */ TBossGessoMtxCalc* unk164;
 	/* 0x168 */ int unk168;
 	/* 0x16C */ u32 unk16C;
 	/* 0x170 */ TBGEyeHit* unk170;
 	/* 0x174 */ TBGEyeHit* unk174;
 	/* 0x178 */ MActor* unk178;
-	/* 0x17C */ char unk17C[4];
+	/* 0x17C */ u8 unk17C;
 	/* 0x180 */ TBGPolDrop* unk180;
 	/* 0x184 */ TBGBodyHit* unk184;
 	/* 0x188 */ f32 unk188;
 	/* 0x18C */ TBGCork* unk18C;
-	/* 0x190 */ char unk190[8];
+	/* 0x190 */ J3DGXColor unk190;
+	/* 0x194 */ u8 unk194;
+	/* 0x195 */ s8 unk195;
+	/* 0x196 */ s8 unk196;
 	/* 0x198 */ u32 unk198;
 	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ char unk1A0[4];
+	/* 0x1A0 */ u8 unk1A0;
+	/* 0x1A1 */ s8 unk1A1;
 	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ u32 unk1A8;
+	/* 0x1A8 */ int unk1A8;
 	/* 0x1AC */ s16 unk1AC;
 	/* 0x1AE */ s16 unk1AE;
 };

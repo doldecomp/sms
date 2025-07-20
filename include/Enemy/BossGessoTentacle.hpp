@@ -14,6 +14,7 @@ class TBGTentacle;
 
 class TBGTentacleMtxCalc : public J3DMtxCalcSoftimageAnm {
 public:
+	TBGTentacleMtxCalc();
 };
 
 class TBGTakeHit : public TTakeActor {
@@ -84,7 +85,7 @@ public:
 		/* 0x24 */ u32 unk24;
 	};
 
-	TBGTentacle(TBossGesso*, int, int);
+	TBGTentacle(TBossGesso* owner, int, int index);
 
 	virtual void perform(u32, JDrama::TGraphics*);
 
@@ -106,6 +107,25 @@ public:
 	void decideAtkColExists();
 	void calcAttackGuideAnm();
 	void resetAllNodes(const JGeometry::TVec3<f32>&);
+
+	// fabricated
+	BOOL isThing()
+	{
+		if (unk10 == 6 || unk10 == 3 || unk10 == 4)
+			return true;
+		return false;
+	}
+
+	// fabricated
+	BOOL isThing2()
+	{
+		if (unk10 == 4 || unk10 == 6)
+			return true;
+		return false;
+	}
+
+	// fabricated
+	void resetUnk24() { unk24->unk24 = 1; }
 
 public:
 	/* 0x10 */ int unk10;

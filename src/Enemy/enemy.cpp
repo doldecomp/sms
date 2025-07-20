@@ -155,7 +155,7 @@ void TSpineEnemy::calcEnemyRootMatrix()
 
 void TSpineEnemy::calcRootMatrix()
 {
-	if (unk68 && unk68->unk6C == this) {
+	if (mHolder && mHolder->mHeldObject == this) {
 		MtxPtr src = getTakingMtx();
 		if (src) {
 			getModel()->setBaseTRMtx(src);
@@ -231,8 +231,8 @@ void TSpineEnemy::updateSquareToMario()
 
 BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (param_2 == 4 && unk68 == nullptr) {
-		unk68 = (TTakeActor*)param_1;
+	if (param_2 == 4 && mHolder == nullptr) {
+		mHolder = (TTakeActor*)param_1;
 		return true;
 	}
 
@@ -298,10 +298,10 @@ f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
 {
 	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
-	int iVar1             = getUnk74()->getCurAnmIdx(param_1);
+	int iVar1             = getMActor()->getCurAnmIdx(param_1);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
 	if (set == nullptr) {
-		return getUnk74()->getFrameCtrl(param_1)->getCurrentFrame();
+		return getMActor()->getFrameCtrl(param_1)->getCurrentFrame();
 	} else {
 		return set->getMActor(getUnk7C())
 		    ->getFrameCtrl(param_1)
@@ -313,10 +313,10 @@ BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 {
 	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
-	int iVar1             = getUnk74()->getCurAnmIdx(param_1);
+	int iVar1             = getMActor()->getCurAnmIdx(param_1);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
 	if (set == nullptr) {
-		return getUnk74()->curAnmEndsNext(param_1, nullptr);
+		return getMActor()->curAnmEndsNext(param_1, nullptr);
 	} else {
 		return set->getMActor(getUnk7C())->curAnmEndsNext(param_1, nullptr);
 	}

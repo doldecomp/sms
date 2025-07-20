@@ -1058,6 +1058,10 @@ public:
 	void startVoiceYoshi(u32);
 	void checkStatusType(long) const;
 
+	// fabricated
+	f32 getIntendedMag() const { return mIntendedMag; }
+	f32 getIntendedYaw() const { return mIntendedYaw * (360.0f / 65536.0f); }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

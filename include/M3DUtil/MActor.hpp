@@ -3,6 +3,7 @@
 
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 class TBGCheckData;
 class J3DNode;
@@ -86,6 +87,17 @@ public:
 	J3DModel* getUnk4() { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
+
+	// fabricated
+	void setCalcForBck(J3DMtxCalc* calc)
+	{
+		if (!unkC)
+			return;
+
+		unkC->setCalc(calc);
+	}
+
+	void setFrameCtrlForBck(int param_1) { unkC->setFrameCtrl(param_1); }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

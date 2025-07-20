@@ -96,7 +96,7 @@ void TMapObjBase::throwObjToFront(TMapObjBase* param_1, f32 param_2,
 {
 	param_1->appear();
 	param_1->mPosition.set(mPosition.x, mPosition.y + param_2, mPosition.z);
-	if (unk74) {
+	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
 		                   mtx[2][2] * param_3);
@@ -116,7 +116,7 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* param_1,
 {
 	param_1->appear();
 	param_1->mPosition.set(param_2);
-	if (unk74) {
+	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
 		                   mtx[2][2] * param_3);

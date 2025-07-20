@@ -80,7 +80,7 @@ void TMarDirector::movement_game()
 		return;
 
 	(*unk18)->offFlag(0x2);
-	if (!gpMarioOriginal->isUnk6C()
+	if (!gpMarioOriginal->isHolding()
 	    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode))
 		return;
 

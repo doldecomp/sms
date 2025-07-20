@@ -26,15 +26,15 @@ f32 TLiveActor::mVelocityMinY = -40.0f;
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
-	mManager = nullptr;
-	unk74    = nullptr;
-	unk78    = nullptr;
-	unk7C    = 0;
-	unk80    = nullptr;
-	unk84    = nullptr;
-	unk88    = nullptr;
-	mSpine   = nullptr;
-	unk90    = nullptr;
+	mManager      = nullptr;
+	mMActor       = nullptr;
+	mMActorKeeper = nullptr;
+	unk7C         = 0;
+	unk80         = nullptr;
+	unk84         = nullptr;
+	unk88         = nullptr;
+	mSpine        = nullptr;
+	unk90         = nullptr;
 	unk94.zero();
 	unkA0.zero();
 	unkAC.x   = 0.0f;
@@ -89,7 +89,7 @@ bool TLiveActor::belongToGround() const
 void TLiveActor::calcRideMomentum() { }
 #pragma dont_inline off
 
-J3DModel* TLiveActor::getModel() const { return unk74->unk4; }
+J3DModel* TLiveActor::getModel() const { return mMActor->unk4; }
 
 Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
 
@@ -104,16 +104,16 @@ void TLiveActor::init(TLiveManager* manager)
 {
 	if (!manager) {
 		if (unk3C) {
-			unk78 = new TMActorKeeper(nullptr, 0);
-			unk74 = unk78->createMActorFromDefaultBmd(
-			    *(const char**)((u8*)unk3C + 0xC), 0);
+			mMActorKeeper = new TMActorKeeper(nullptr, 0);
+			mMActor       = mMActorKeeper->createMActorFromDefaultBmd(
+                *(const char**)((u8*)unk3C + 0xC), 0);
 		}
 		gpConductor->registerAloneActor(this);
 	} else {
-		mManager = manager;
-		unk78    = new TMActorKeeper(mManager, 1);
+		mManager      = manager;
+		mMActorKeeper = new TMActorKeeper(mManager, 1);
 		mManager->manageActor(this);
-		unk74 = unk78->createMActorFromNthData(0, 0);
+		mMActor = mMActorKeeper->createMActorFromNthData(0, 0);
 	}
 
 	initHitActor(0, 1, 0, unkBC, unkC0, unkBC, unkC0);
@@ -144,7 +144,7 @@ void TLiveActor::control() { }
 
 void TLiveActor::calcRootMatrix()
 {
-	J3DModel* model = unk74->getUnk4();
+	J3DModel* model = mMActor->getUnk4();
 	// TODO: DEG2SHORT?
 	MsMtxSetXYZRPH(model->unk20, mPosition.x, mPosition.y, mPosition.z,
 	               mRotation.x * (65536.0f / 360.0f),
@@ -231,11 +231,11 @@ void TLiveActor::requestShadow()
 
 void TLiveActor::drawObject(JDrama::TGraphics*)
 {
-	if (mLiveFlag & 3 || !unk74)
+	if (mLiveFlag & 3 || !mMActor)
 		return;
 
-	unk74->setLightData(unkC4, mPosition);
-	unk74->entry();
+	mMActor->setLightData(unkC4, mPosition);
+	mMActor->entry();
 }
 
 void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -249,9 +249,9 @@ void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 2)
 		updateAnmSound();
 
-	if (unk74) {
+	if (mMActor) {
 		if (param_1 & 2)
-			unk74->frameUpdate();
+			mMActor->frameUpdate();
 
 		if (param_1 & 4)
 			requestShadow();
@@ -259,11 +259,11 @@ void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (!(mLiveFlag & 6)) {
 			if (param_1 & 2) {
 				calcRootMatrix();
-				unk74->calc();
+				mMActor->calc();
 			}
 
 			if (param_1 & 4)
-				unk74->viewCalc();
+				mMActor->viewCalc();
 
 			if (param_1 & 0x200)
 				drawObject(param_2);
@@ -275,7 +275,7 @@ void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (mLiveFlag & 0x201)
 		return;
-	if (!unk74)
+	if (!mMActor)
 		return;
 
 	if (param_1 & 4)
@@ -284,11 +284,11 @@ void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 	if (!(mLiveFlag & 6)) {
 		if (param_1 & 2) {
 			calcRootMatrix();
-			unk74->calc();
+			mMActor->calc();
 		}
 
 		if (param_1 & 4)
-			unk74->viewCalc();
+			mMActor->viewCalc();
 
 		if (param_1 & 0x200)
 			drawObject(param_2);
@@ -311,7 +311,7 @@ BOOL TLiveActor::hasMapCollision() const { return unkEC ? 1 : 0; }
 int TLiveActor::getJointTransByIndex(int param_1,
                                      JGeometry::TVec3<f32>* param_2) const
 {
-	if (unk74 == nullptr) {
+	if (mMActor == nullptr) {
 		*param_2 = mPosition;
 		return -1;
 	}
@@ -321,7 +321,7 @@ int TLiveActor::getJointTransByIndex(int param_1,
 		return param_1;
 	}
 
-	MtxPtr mtx = unk74->unk4->getAnmMtx(param_1);
+	MtxPtr mtx = mMActor->unk4->getAnmMtx(param_1);
 	param_2->set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	return param_1;
 }
@@ -330,10 +330,10 @@ Vec TLiveActor::getFocalPoint() const { return mPosition; }
 
 MtxPtr TLiveActor::getTakingMtx()
 {
-	if (!unk74)
+	if (!mMActor)
 		return nullptr;
 
-	return unk74->unk4->unk20;
+	return mMActor->unk4->unk20;
 }
 
 void TLiveActor::initAnmSound()
@@ -356,7 +356,7 @@ void TLiveActor::updateAnmSound()
 	if (!unk84)
 		return;
 
-	J3DFrameCtrl* ctrl = unk74->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 	unk80->animeLoop(&mPosition, ctrl->getCurrentFrame(), ctrl->getRate(), 0,
 	                 4);
 }
@@ -380,8 +380,8 @@ void TLiveActor::setCurAnmSound()
 {
 	const char* name = nullptr;
 
-	if (unk74) {
-		int idx = unk74->getCurAnmIdx(0);
+	if (mMActor) {
+		int idx = mMActor->getCurAnmIdx(0);
 		if (idx >= 0) {
 			const char** table = getBasNameTable();
 

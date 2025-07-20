@@ -37,8 +37,9 @@ public:
 	/* 0x24 */ void* mVtxTexCoordArray[8];
 };
 
-// TODO: is this an enum?
-enum J3DDeformAttachFlag {};
+enum J3DDeformAttachFlag {
+	J3D_DEFORM_ATTACH_FLAG_UNK_1 = 1,
+};
 
 class J3DVertexBuffer {
 public:

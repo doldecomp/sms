@@ -2,10 +2,13 @@
 #define PLAYER_MARIO_ACCESS_HPP
 
 #include <JSystem/JGeometry.hpp>
+#include <stddef.h>
 
 class TLiveActor;
 class THitActor;
 class TBGCheckData;
+
+extern size_t gpMarioAddress;
 
 extern JGeometry::TVec3<float>* gpMarioPos;
 
@@ -74,6 +77,6 @@ void* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
 
 // Real, see bossgesso
-inline Vec* SMS_GetMarioPos() { return gpMarioPos; }
+inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
 #endif

@@ -171,7 +171,7 @@ void TRailMapObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	offHitFlag(0x1);
-	unk74->setLightType(2);
+	mMActor->setLightType(2);
 }
 
 void TRailMapObj::load(JSUMemoryInputStream& stream)

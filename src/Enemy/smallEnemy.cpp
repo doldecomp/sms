@@ -159,8 +159,8 @@ TSmallEnemy::TSmallEnemy(const char* name)
 
 void TSmallEnemy::setMActorAndKeeper()
 {
-	unk78 = new TMActorKeeper(getManager(), 1);
-	unk74 = getActorKeeper()->createMActorFromNthData(0, 0);
+	mMActorKeeper = new TMActorKeeper(getManager(), 1);
+	mMActor       = getActorKeeper()->createMActorFromNthData(0, 0);
 }
 
 static inline f32 randf(f32 l, f32 r)
@@ -311,7 +311,7 @@ void TSmallEnemy::reset()
 	               mPosition.z, mRotation.x * (65536.0f / 360.0f),
 	               mRotation.y * (65536.0f / 360.0f),
 	               mRotation.z * (65536.0f / 360.0f));
-	getUnk74()->calc();
+	getMActor()->calc();
 }
 
 void TSmallEnemy::forceKill()
@@ -527,15 +527,15 @@ void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 
 BOOL TSmallEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (isEatenByYosshi() && param_2 == 4 && !unk68) {
+	if (isEatenByYosshi() && param_2 == 4 && !mHolder) {
 		onHitFlag(0x1);
-		unk68 = (TTakeActor*)param_1;
+		mHolder = (TTakeActor*)param_1;
 		behaveToTaken(param_1);
 		return true;
 	}
 
-	if ((param_2 == 6 || param_2 == 7) && unk68 == param_1) {
-		unk68 = nullptr;
+	if ((param_2 == 6 || param_2 == 7) && mHolder == param_1) {
+		mHolder = nullptr;
 		behaveToRelease();
 		offHitFlag(0x1);
 		return true;
@@ -637,18 +637,18 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getUnk20()) {
+	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
 		unk178->mPosition.y += unk188 * 2.0f
-		                       * JMASin(mSpine->getUnk20() * 130.0f / time)
+		                       * JMASin(mSpine->getTime() * 130.0f / time)
 		                       * TSmallEnemyManager::mBlockWaitMoveY;
 
-		unk178->mRotation.y += mSpine->getUnk20() * 1080.0f / time;
+		unk178->mRotation.y += mSpine->getTime() * 1080.0f / time;
 	} else {
-		if (mSpine->getUnk20() > TSmallEnemyManager::mBlockWaitTime) {
-			if (mSpine->getUnk20() > getChangeBlockTime() - 200) {
-				if (mSpine->getUnk20() % 20 < 10) {
+		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
+			if (mSpine->getTime() > getChangeBlockTime() - 200) {
+				if (mSpine->getTime() % 20 < 10) {
 					unk178->onLiveFlag(0x2);
 				} else {
 					unk178->offLiveFlag(0x2);
@@ -708,7 +708,7 @@ bool TSmallEnemy::changeMove()
 			Mtx afStack_b0;
 			MsMtxSetRotRPH(afStack_b0, 0.0f, mRotation.y, 0.0f);
 			MTXMultVec(afStack_b0, &local_80, &local_80);
-			if (mSpine->mTimer % 30 > 15) {
+			if (mSpine->getTime() % 30 > 15) {
 				unk178->mPosition.y += 0.5f;
 				unk178->mPosition.x += local_80.x;
 				unk178->mPosition.z += local_80.z;
@@ -747,7 +747,7 @@ void TSmallEnemy::changeOut()
 	unk178->mPosition = mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getUnk74()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
 	unk178->kill();
 	unk178 = nullptr;
 }
@@ -849,7 +849,7 @@ void TSmallEnemy::generateEffectColumWater()
 void TSmallEnemy::setBckAnm(int param_1)
 {
 	unk15C = param_1;
-	getUnk74()->setBckFromIndex(param_1);
+	getMActor()->setBckFromIndex(param_1);
 	const char** table = getBasNameTable();
 	setAnmSound(!table ? nullptr : table[param_1]);
 }
@@ -872,7 +872,7 @@ void TSmallEnemy::expandCollision()
 bool TSmallEnemy::isEaten()
 {
 	MtxPtr mtx;
-	if (unk68 && unk68->unk6C == this && (mtx = getTakingMtx())) {
+	if (mHolder && mHolder->mHeldObject == this && (mtx = getTakingMtx())) {
 		getModel()->setBaseTRMtx(mtx);
 		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
@@ -948,8 +948,8 @@ void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
-	TSmallEnemy* self = (TSmallEnemy*)spine->unk0;
-	if (spine->mTimer == 0) {
+	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+	if (spine->getTime() == 0) {
 		if (self->mHitPoints != 0)
 			--self->mHitPoints;
 
@@ -985,16 +985,16 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 	// TODO: missing some stuff
 	if (self->checkCurAnmEnd(0)
-	        && spine->getUnk20()
-	               > uVar8 + self->getUnk74()->getFrameCtrl(0)->getEndFrame()
-	    || spine->getUnk20() > 360 || self->getUnk184() != 0) {
+	        && spine->getTime()
+	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEndFrame()
+	    || spine->getTime() > 360 || self->getUnk184() != 0) {
 		self->genRandomItem();
 		self->onHitFlag(0x1);
 		self->onLiveFlag(0x1);
 		self->onLiveFlag(0x8);
 		self->offLiveFlag(0x2);
 		self->offLiveFlag(0x10000);
-		self->unk68 = nullptr;
+		self->mHolder = nullptr;
 		self->stopAnmSound();
 
 		spine->reset();
@@ -1013,9 +1013,9 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 
 	int freezeTime = self->getSaveParam()->mSLFreezeWait.get();
 
-	if (spine->getUnk20() == 0)
+	if (spine->getTime() == 0)
 		self->setFreezeAnm();
-	if (self->checkCurAnmEnd(0) && spine->getUnk20() >= freezeTime)
+	if (self->checkCurAnmEnd(0) && spine->getTime() >= freezeTime)
 		return true;
 	else
 		return false;
@@ -1025,7 +1025,7 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	if (spine->getUnk20() == 0) {
+	if (spine->getTime() == 0) {
 		if (self->checkLiveFlag2(0x8000) || self->checkLiveFlag(0x40000))
 			return true;
 
@@ -1049,7 +1049,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	if (spine->getUnk20() == 0) {
+	if (spine->getTime() == 0) {
 		if (self->checkLiveFlag2(0x8000) || self->checkLiveFlag(0x40000))
 			return true;
 
@@ -1069,7 +1069,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 
 	self->mRotation.y += randf(4.0f, 10.0f);
 
-	if (!self->checkLiveFlag2(0x80) || spine->getUnk20() > 360) {
+	if (!self->checkLiveFlag2(0x80) || spine->getTime() > 360) {
 		self->endHitWaterJump();
 		return true;
 	} else {
@@ -1081,11 +1081,11 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	if (spine->getUnk20() == 0)
+	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
 	if (self->checkCurAnmEnd(0)
-	    && spine->getUnk20() > self->getSaveParam()->mSLWaitTime.get())
+	    && spine->getTime() > self->getSaveParam()->mSLWaitTime.get())
 		return true;
 	else
 		return false;
@@ -1097,13 +1097,13 @@ DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 
 	int changeTime = self->getChangeBlockTime();
 
-	if (spine->getUnk20() == 0) {
-		self->getUnk74()->setFrameRate(0.0f, 0);
+	if (spine->getTime() == 0) {
+		self->getMActor()->setFrameRate(0.0f, 0);
 		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
 		                                            nullptr);
 	}
 	self->scalingChangeActor();
-	if (self->changeMove() || spine->getUnk20() > changeTime) {
+	if (self->changeMove() || spine->getTime() > changeTime) {
 		self->changeOut();
 		return true;
 	} else {
