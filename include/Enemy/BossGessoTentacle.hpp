@@ -79,7 +79,7 @@ public:
 		void calcPosition(TBGTentacle*);
 
 	public:
-		/* 0x0 */ Vec unk0;
+		/* 0x0 */ JGeometry::TVec3<f32> unk0;
 		/* 0xC */ Vec unkC;
 		/* 0x18 */ Vec unk18;
 		/* 0x24 */ u32 unk24;
@@ -126,6 +126,8 @@ public:
 
 	// fabricated
 	void resetUnk24() { unk24->unk24 = 1; }
+
+	TNode* getLastNode() { return &unk24[unk20 - 1]; }
 
 public:
 	/* 0x10 */ int unk10;

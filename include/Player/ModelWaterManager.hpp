@@ -99,9 +99,9 @@ public:
 	static TWaterHitActor mStaticHitActor;
 
 	// fabricated
-	bool checkUnk414(int i, u16 flag)
+	BOOL checkUnk414(int i, u16 flag)
 	{
-		return unk414[i] & flag ? true : false;
+		return unk414[i] & flag ? TRUE : FALSE;
 	}
 
 public:
