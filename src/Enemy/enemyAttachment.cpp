@@ -26,9 +26,9 @@ TEnemyAttachment::TEnemyAttachment(const char* name)
 
 void TEnemyAttachment::loadInit(TSpineEnemy* param_1, const char* param_2)
 {
-	unk160 = param_1;
-	unk78  = new TMActorKeeper(unk160->getManager(), 1);
-	unk74  = unk78->createMActor(param_2, 3);
+	unk160        = param_1;
+	mMActorKeeper = new TMActorKeeper(unk160->getManager(), 1);
+	mMActor       = mMActorKeeper->createMActor(param_2, 3);
 }
 
 void TEnemyAttachment::behaveToHitGround()
@@ -152,11 +152,11 @@ void TEnemyAttachment::sendMessage()
 
 void TEnemyAttachment::calcRootMatrix()
 {
-	MsMtxSetXYZRPH(getUnk74()->getUnk4()->getBaseTRMtx(), mPosition.x,
+	MsMtxSetXYZRPH(getMActor()->getUnk4()->getBaseTRMtx(), mPosition.x,
 	               mPosition.y, mPosition.z, mRotation.x * (65536.0f / 360.0f),
 	               mRotation.y * (65536.0f / 360.0f),
 	               mRotation.z * (65536.0f / 360.0f));
-	getUnk74()->getUnk4()->unk14 = mScaling;
+	getMActor()->getUnk4()->unk14 = mScaling;
 }
 
 void TEnemyAttachment::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -187,14 +187,14 @@ void TEnemyAttachment::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & 0x2) {
 		calcRootMatrix();
-		getUnk74()->calcAnm();
+		getMActor()->calcAnm();
 	}
 
 	if (param_1 & 0x4)
-		getUnk74()->viewCalc();
+		getMActor()->viewCalc();
 
 	if (param_1 & 0x200)
-		getUnk74()->entry();
+		getMActor()->entry();
 }
 
 void TEnemyPolluteModelManager::init(TLiveActor* param_1)

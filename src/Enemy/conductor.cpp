@@ -205,8 +205,9 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	return result;
 }
 
-TLiveActor* TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
-                                           const char* param_2, int param_3)
+TSpineEnemy*
+TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
+                               const char* param_2, int param_3)
 {
 	TEnemyManager* mgr = (TEnemyManager*)getManagerByName(param_2);
 

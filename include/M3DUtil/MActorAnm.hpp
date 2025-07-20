@@ -302,6 +302,13 @@ public:
 	void initSimpleMotionBlend(int);
 	void changeMtxCalcType(u8);
 
+	// fabricated
+	void setCalc(J3DMtxCalc* calc)
+	{
+		unk38 = calc;
+		unk2A = 3;
+	}
+
 public:
 	/* 0x28 */ u16 unk28;
 	/* 0x2A */ u8 unk2A;

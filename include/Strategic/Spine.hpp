@@ -8,13 +8,13 @@ class TSpineEnemy;
 template <class T> class TNerveBase;
 
 template <class T> class TSpineBase {
-public:
+private:
 	/* 0x0 */ TSpineEnemy* unk0;
 	/* 0x4 */ TSolidStack<const TNerveBase<T>*> unk4;
 	/* 0x14 */ const TNerveBase<T>* unk14;
 	/* 0x18 */ const TNerveBase<T>* unk18;
 	/* 0x1C */ const TNerveBase<T>* unk1C;
-	/* 0x20 */ int mTimer;
+	/* 0x20 */ int mTime;
 	/* 0x24 */ // vt
 
 public:
@@ -23,7 +23,7 @@ public:
 	    , unk4(8)
 	    , unk14(nullptr)
 	    , unk18(0)
-	    , mTimer(0)
+	    , mTime(0)
 	{
 	}
 
@@ -44,8 +44,8 @@ public:
 			unk1C = unk14;
 			unk4.push(unk14);
 		}
-		mTimer = 0;
-		unk14  = nerve;
+		mTime = 0;
+		unk14 = nerve;
 	}
 
 	virtual ~TSpineBase() { }
@@ -62,18 +62,18 @@ public:
 		if (unk14 != nullptr)
 			unk1C = unk14;
 
-		mTimer = 0;
-		unk14  = nerve;
+		mTime = 0;
+		unk14 = nerve;
 	}
 
 	// fabricated
 	void initWith(const TNerveBase<T>* nerve)
 	{
 		unk4.clear();
-		mTimer = 0;
-		unk14  = nerve;
-		unk18  = nerve;
-		unk1C  = nullptr;
+		mTime = 0;
+		unk14 = nerve;
+		unk18 = nerve;
+		unk1C = nullptr;
 	}
 
 	// fabricated
@@ -97,7 +97,7 @@ public:
 	const TNerveBase<T>* getCurrentNerve() const { return unk14; }
 
 	// fabricated
-	int getUnk20() const { return mTimer; }
+	int getTime() const { return mTime; }
 	TSpineEnemy* getBody() const { return unk0; }
 };
 

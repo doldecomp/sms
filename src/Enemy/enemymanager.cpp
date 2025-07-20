@@ -163,7 +163,7 @@ void TEnemyManager::setSharedFlags()
 		TSpineEnemy* enemy = getObj(i);
 		enemy->offLiveFlag(0x4000);
 		if (!enemy->checkLiveFlag(0x6)) {
-			int idx = enemy->getUnk74()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					enemy->onLiveFlag(0x4000);
@@ -185,7 +185,7 @@ void TEnemyManager::updateAnmSoundShared()
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (!enemy->checkLiveFlag(0x6)) {
-			int idx = enemy->getUnk74()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					// unused (mistake)
@@ -220,7 +220,7 @@ void TEnemyManager::copyFromShared()
 		if (!enemy->checkLiveFlag(0x4000) || enemy->checkLiveFlag(6))
 			continue;
 
-		int iVar6 = enemy->getUnk74()->getCurAnmIdx(0);
+		int iVar6 = enemy->getMActor()->getCurAnmIdx(0);
 		for (int j = 0; j < unk44; ++j) {
 			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
@@ -304,13 +304,13 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
 			if (!enemy->checkLiveFlag(0x4000)) {
-				enemy->getUnk74()->frameUpdate();
+				enemy->getMActor()->frameUpdate();
 				if (!enemy->checkLiveFlag(0x6)) {
-					enemy->getUnk74()->calc();
+					enemy->getMActor()->calc();
 					enemy->updateAnmSound();
 				}
 			} else {
-				enemy->getUnk74()->matAnmFrameUpdate();
+				enemy->getMActor()->matAnmFrameUpdate();
 			}
 
 			if (param_1 & 4)
@@ -318,11 +318,11 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 			if (!enemy->checkLiveFlag(0x6)) {
 				if ((param_1 & 4) && !enemy->checkLiveFlag(0x4000))
-					enemy->getUnk74()->viewCalc();
+					enemy->getMActor()->viewCalc();
 				if (param_1 & 0x200) {
-					enemy->getUnk74()->setLightData(enemy->getUnkC4(),
-					                                enemy->mPosition);
-					enemy->getUnk74()->entry();
+					enemy->getMActor()->setLightData(enemy->getUnkC4(),
+					                                 enemy->mPosition);
+					enemy->getMActor()->entry();
 				}
 			}
 		}
@@ -466,17 +466,17 @@ void TEnemyManager::createCopyAnmMtx(int) { }
 
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
-	if (unk4C != enemy->getUnk74()->getCurAnmIdx(0))
+	if (unk4C != enemy->getMActor()->getCurAnmIdx(0))
 		return false;
 
 	int f = enemy->getCurAnmFrameNo(0);
 	enemy->calcRootMatrix();
 	enemy->updateAnmSound();
-	enemy->getUnk74()->frameUpdate();
+	enemy->getMActor()->frameUpdate();
 
 	Mtx afStack_5C;
 	MtxPtr wtf = afStack_5C;
-	MtxPtr mtx = enemy->getUnk74()->getUnk4()->getBaseTRMtx();
+	MtxPtr mtx = enemy->getMActor()->getUnk4()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;
 	mtx[0][0] *= v.x;
@@ -491,10 +491,10 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getUnk74()->getUnk4()->setAnmMtx(i, wtf);
+		enemy->getMActor()->getUnk4()->setAnmMtx(i, wtf);
 	}
 
-	if (enemy->getUnk74()->getUnk4()->getModelData()->getWEvlpMtxNum())
+	if (enemy->getMActor()->getUnk4()->getModelData()->getWEvlpMtxNum())
 		enemy->getModel()->calcWeightEnvelopeMtx();
 
 	return true;

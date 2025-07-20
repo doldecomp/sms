@@ -98,6 +98,12 @@ public:
 
 	static TWaterHitActor mStaticHitActor;
 
+	// fabricated
+	bool checkUnk414(int i, u16 flag)
+	{
+		return unk414[i] & flag ? true : false;
+	}
+
 public:
 	/* 0x10 */ u16 unk10;
 	/* 0x12 */ u16 unk12;

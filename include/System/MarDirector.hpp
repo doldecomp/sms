@@ -105,8 +105,24 @@ public:
 
 	// fabricated
 	u8 getCurrentMap() { return mMap; }
+	u8 getCurrentStage() { return unk7D; }
 	bool checkUnk4CFlag(int flag) { return unk4C & flag; }
 	void onUnk4CFlag(int flag) { unk4C |= flag; }
+	TGCConsole2* getConsole() { return mConsole; }
+
+	bool checkUnk124Thing1() const
+	{
+		if (unk124 == 1 || unk124 == 2)
+			return true;
+		return false;
+	}
+
+	bool checkUnk124Thing2() const
+	{
+		if (unk124 == 3 || unk124 == 4)
+			return true;
+		return false;
+	}
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;

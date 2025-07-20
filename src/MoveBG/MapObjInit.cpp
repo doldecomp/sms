@@ -10811,15 +10811,15 @@ static TMapObjData* sObjDataTable[] = {
 void TMapObjBase::setMatTable(J3DMaterialTable* table)
 {
 	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_All);
-	unk74->initDL();
-	unk74->getUnk4()->lock();
+	mMActor->initDL();
+	mMActor->getUnk4()->lock();
 }
 
 void TMapObjBase::setMatTableTex(J3DMaterialTable* table)
 {
 	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_Texture);
-	unk74->initDL();
-	unk74->getUnk4()->lock();
+	mMActor->initDL();
+	mMActor->getUnk4()->lock();
 }
 
 void TMapObjBase::initUnique()
@@ -10827,10 +10827,10 @@ void TMapObjBase::initUnique()
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case 0x2000003C:
-		unk74->setLightType(0);
+		mMActor->setLightType(0);
 		break;
 	case 0x2000000E:
-		if (unk74) {
+		if (mMActor) {
 			u32 uVar4 = getModel()->getMatPacket(0)->unk3C;
 			getModel()->getMatPacket(0)->unk3C = uVar4 & 0x7fffffff;
 		}
@@ -10841,32 +10841,32 @@ void TMapObjBase::initUnique()
 		break;
 	case 0x4000001C:
 		for (int i = 0; i < 2; ++i) {
-			unk74 = unk78->mActors[i];
+			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk7C);
 			SMS_UnifyMaterial(getModel());
 		}
-		unk74 = unk78->mActors[0];
+		mMActor = mMActorKeeper->mActors[0];
 		if (unkC4->unk0 & 0x4000 ? true : false)
 			unkEC->unk8->setAllBGType(0x4000);
 		break;
 	case 0x4000005A:
 		for (int i = 0; i < 2; ++i) {
-			unk74 = unk78->mActors[i];
+			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk80);
 			SMS_UnifyMaterial(getModel());
 		}
-		unk74 = unk78->mActors[0];
+		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000BA:
 		setMatTable(gpMapObjManager->unk94);
 		SMS_UnifyMaterial(getModel());
 		break;
 	case 0x40000263:
-		startAllAnim(unk74, unkF4);
+		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (unk74->unkC)
-			unk74->unkC->initSimpleMotionBlend(0x14);
+		if (mMActor->unkC)
+			mMActor->unkC->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:
@@ -10912,27 +10912,27 @@ void TMapObjBase::initUnique()
 		break;
 	case 0x20000068:
 		for (int i = 0; i < 3; ++i) {
-			unk74 = unk78->mActors[i];
+			mMActor = mMActorKeeper->mActors[i];
 			setMatTableTex(gpMapObjManager->unk70);
 		}
-		unk74 = unk78->mActors[0];
+		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400002C2:
 		for (int i = 0; i < 2; ++i) {
-			unk74 = unk78->mActors[i];
+			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk84);
 		}
-		unk74 = unk78->mActors[0];
+		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400002C3:
 		for (int i = 0; i < 2; ++i) {
-			unk74 = unk78->mActors[i];
+			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk88);
 		}
-		unk74 = unk78->mActors[0];
+		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000D0:
-		unk74->setLightType(1);
+		mMActor->setLightType(1);
 		break;
 	case 0x400000DB:
 		mPosition.y += mScaling.y * 50.0f;
@@ -11018,7 +11018,7 @@ void TMapObjBase::initBckMoveData()
 		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
 		    JKRGetResource(move->unk0));
 
-		J3DModelData* data         = unk74->getUnk4()->getModelData();
+		J3DModelData* data         = mMActor->getUnk4()->getModelData();
 		data->mJointNodePointer[0] = data->getJointNodePointer(1);
 
 		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
@@ -11057,17 +11057,17 @@ static void dummy6(const char*) {};
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {
-	MActor* oldActor = unk74;
+	MActor* oldActor = mMActor;
 	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
-	unk74            = newActor;
+	mMActor          = newActor;
 	if (checkMapObjFlag(0x4000)) {
-		unk74->setLightID(0);
-		unk74->unmarkUnk40();
+		mMActor->setLightID(0);
+		mMActor->unmarkUnk40();
 	}
 	calcRootMatrix();
-	unk74->calc();
-	unk74->viewCalc();
-	unk74 = oldActor;
+	mMActor->calc();
+	mMActor->viewCalc();
+	mMActor = oldActor;
 	return newActor;
 }
 
@@ -11080,15 +11080,15 @@ void TMapObjBase::makeMActors()
 	if (uVar6 == 0)
 		return;
 
-	unk78 = new TMActorKeeper(mManager, uVar6);
+	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
 	if (unkF8 & 0x8000)
-		unk78->mModelLoaderFlags = 0x11220000;
+		mMActorKeeper->mModelLoaderFlags = 0x11220000;
 	else
-		unk78->mModelLoaderFlags = 0x10220000;
+		mMActorKeeper->mModelLoaderFlags = 0x10220000;
 
 	if (unk130->mAnim) {
 		const TMapObjAnimDataInfo* anim = unk130->mAnim;
-		unk74 = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
+		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
 			if (anim->unk4[i].unk10 && unk80 == nullptr)
@@ -11102,19 +11102,20 @@ void TMapObjBase::makeMActors()
 	} else {
 		char buffer[64];
 		snprintf(buffer, 64, "%s.bmd", unk130->unk0);
-		unk74 = initMActor(buffer, nullptr, getSDLModelFlag());
+		mMActor = initMActor(buffer, nullptr, getSDLModelFlag());
 	}
 }
 
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if (checkMapObjFlag(0x800) && getUnk74()) {
+	if (checkMapObjFlag(0x800) && getMActor()) {
 		unkC8 = gpMap->checkGround(getPosition(), &unkC4);
 		if (getUnkC4()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
-			gpMapObjManager->entryStaticDrawBufferShadow(getUnk74()->getUnk4());
+			gpMapObjManager->entryStaticDrawBufferShadow(
+			    getMActor()->getUnk4());
 		else
-			gpMapObjManager->entryStaticDrawBufferSun(getUnk74()->getUnk4());
+			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getUnk4());
 	}
 
 	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {
@@ -11168,8 +11169,8 @@ void TMapObjBase::initMapObj()
 	initHoldData();
 	initUnique();
 	checkIllegalAttr();
-	if (unk74 && checkActorType(0x40000000))
-		unk74->setLightType(2);
+	if (mMActor && checkActorType(0x40000000))
+		mMActor->setLightType(2);
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= 0x8;
 	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
@@ -11177,7 +11178,7 @@ void TMapObjBase::initMapObj()
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		unk74->setLightType(3);
+		mMActor->setLightType(3);
 	}
 	makeObjDead();
 }

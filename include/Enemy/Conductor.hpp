@@ -7,6 +7,7 @@
 
 class TLiveManager;
 class TEnemyManager;
+class TSpineEnemy;
 class TLiveActor;
 class TGenerator;
 class TAreaCylinderManager;
@@ -53,8 +54,8 @@ public:
 	void conduct();
 	void maskNFlagOfChildren(int, u32);
 	int makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int, int);
-	TLiveActor* makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
-	                               int);
+	TSpineEnemy* makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
+	                                int);
 	void killEnemiesWithin(const JGeometry::TVec3<f32>&, f32);
 	void genEnemyFromPollution();
 	void clipAloneActors(JDrama::TGraphics*);

@@ -57,7 +57,7 @@ public:
 	~TLiveActor();
 	TLiveActor(const char*);
 
-	MActor* getMActor() const { return unk74; }
+	MActor* getMActor() const { return mMActor; }
 
 	static f32 mVelocityMinY;
 
@@ -68,18 +68,17 @@ public:
 	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
 	void offLiveFlag(u32 flag) { mLiveFlag &= ~flag; }
 	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
-	const TMActorKeeper* getActorKeeper() const { return unk78; }
-	TMActorKeeper* getActorKeeper() { return unk78; }
+	const TMActorKeeper* getActorKeeper() const { return mMActorKeeper; }
+	TMActorKeeper* getActorKeeper() { return mMActorKeeper; }
 	TLiveManager* getManager() { return mManager; }
-	MActor* getUnk74() const { return unk74; }
 	s16 getUnk7C() const { return unk7C; }
 	MAnmSound* getUnk80() { return unk80; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;
-	/* 0x74 */ MActor* unk74;
-	/* 0x78 */ TMActorKeeper* unk78;
+	/* 0x74 */ MActor* mMActor;
+	/* 0x78 */ TMActorKeeper* mMActorKeeper;
 	/* 0x7C */ s16 unk7C;
 	/* 0x80 */ MAnmSound* unk80;
 	/* 0x84 */ const char* unk84;
@@ -89,16 +88,16 @@ public:
 	/* 0x94 */ JGeometry::TVec3<f32> unk94; // velocity too?
 	/* 0xA0 */ JGeometry::TVec3<f32> unkA0; // angular speed?
 	/* 0xAC */ JGeometry::TVec3<f32> unkAC; // velocity
-	/* 0xB8 */ float unkB8;
-	/* 0xBC */ float unkBC;
-	/* 0xC0 */ float unkC0;
+	/* 0xB8 */ f32 unkB8;
+	/* 0xBC */ f32 unkBC;
+	/* 0xC0 */ f32 unkC0;
 	/* 0xC4 */ const TBGCheckData* unkC4;
-	/* 0xC8 */ float unkC8;
-	/* 0xCC */ float unkCC;
+	/* 0xC8 */ f32 unkC8;
+	/* 0xCC */ f32 unkCC;
 	/* 0xD0 */ TLodAnm* unkD0;
 	/* 0xD4 */ TLiveActor* unkD4;
 	/* 0xD8 */ Vec unkD8;
-	/* 0xE4 */ float unkE4;
+	/* 0xE4 */ f32 unkE4;
 	/* 0xE8 */ u8 unkE8;
 	/* 0xEC */ TMapCollisionManager* unkEC;
 	/* 0xF0 */ u32 mLiveFlag;

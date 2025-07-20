@@ -59,15 +59,15 @@ void TJointCoin::control()
 	MtxPtr mtx = unk138->getUnk4()->getAnmMtx(0);
 	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	getModel()->setBaseTRMtx(mtx);
-	unk74->frameUpdate();
-	unk74->calc();
+	mMActor->frameUpdate();
+	mMActor->calc();
 
 	for (int i = 0; i < unk13C; ++i) {
 		TMapObjBase* obj = unk140[i];
 		u16 idx          = unk144[i];
 
 		MtxPtr mtx = getModel()->getAnmMtx(idx);
-		if (obj->unk74)
+		if (obj->mMActor)
 			obj->getModel()->setAnmMtx(0, mtx);
 
 		obj->mPosition.set(mtx[0][3], mtx[1][3] + obj->unk108, mtx[2][3]);
@@ -127,7 +127,7 @@ void TJointCoin::loadAfter()
 		makeObjFromJointName(name, i);
 	}
 
-	unk74->getFrameCtrl(0)->setSpeed(SMSGetAnmFrameRate() * 0.25f);
+	mMActor->getFrameCtrl(0)->setSpeed(SMSGetAnmFrameRate() * 0.25f);
 	unk138->getFrameCtrl(0)->setSpeed(SMSGetAnmFrameRate() * 0.25f);
 }
 

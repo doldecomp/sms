@@ -240,6 +240,9 @@ public:
 		swapNrmMtx();
 	}
 
+	// fabricated
+	J3DSkinDeform* getSkinDeform() { return mSkinDeform; }
+
 	// TODO: might be wrong
 	MtxPtr getBaseTRMtx() { return unk20; }
 	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }

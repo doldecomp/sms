@@ -28,7 +28,7 @@ void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 		// underpasses: if inside, draw them on top of everything and move the
 		// camera to top view
 		if ((*gpMarioFlag & 2 ? true : false)
-		    && SMS_GetMarioPos()->y < SMS_GetMarioGrLevel() + 200.0f) {
+		    && SMS_GetMarioPos().y < SMS_GetMarioGrLevel() + 200.0f) {
 			mUnderpass->awake();
 			Vec pos;
 			gpCamera->JSGGetViewPosition(&pos);

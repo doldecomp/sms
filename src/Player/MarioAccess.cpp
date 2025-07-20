@@ -4,8 +4,8 @@
 #include <Player/MarioMain.hpp>
 #include <JSystem/JGeometry.hpp>
 
-TMario* gpMarioAddress;
-JGeometry::TVec3<float>* gpMarioPos;
+size_t gpMarioAddress;
+JGeometry::TVec3<f32>* gpMarioPos;
 s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 u16* gpMarioLightID;
@@ -101,8 +101,8 @@ bool SMS_IsMarioOpeningDoor()
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
-	if (gpMarioOriginal->unk68
-	    && gpMarioOriginal->unk68->mActorType == 0x40000098)
+	if (gpMarioOriginal->mHolder
+	    && gpMarioOriginal->mHolder->mActorType == 0x40000098)
 		ret = true;
 	else
 		ret = false;
@@ -230,7 +230,7 @@ void SMS_SetMarioAccessParams()
 	s16* angle;
 	f32* speed;
 
-	gpMarioAddress = gpMarioOriginal;
+	gpMarioAddress = (size_t)gpMarioOriginal;
 	gpMarioPos     = &gpMarioOriginal->mPosition;
 
 	angle         = &gpMarioOriginal->mFaceAngle.x;

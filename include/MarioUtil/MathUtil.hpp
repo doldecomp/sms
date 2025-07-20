@@ -8,26 +8,27 @@ f32 FConverge(f32, f32, f32, f32);
 void GetAtanTable(f32, f32);
 s16 matan(f32, f32);
 
-JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
-void MsMtxSetRotRPH(MtxPtr, f32, f32, f32);
-void MsMtxSetXYZRPH(MtxPtr, f32, f32, f32, s16, s16, s16);
-void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
-
-// fabricated
-inline f32 MsAtan2(f32 x, f32 y)
+inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {
-	if (x == 0.0f) {
-		if (y >= 0.0f)
-			return -90.0f;
-		else
+	if (axis.z == 0.0f) {
+		if (axis.x >= 0.0f)
 			return 90.0f;
-	} else if (x >= 0.0f) {
-		return (360.0f / 65536.0f) * matan(x, y);
+		else
+			return -90.0f;
+	}
+
+	if (axis.z >= 0.0f) {
+		return (360.0f / 65536.0f) * matan(axis.z, axis.x);
 	} else {
-		f32 f = (360.0f / 65536.0f) * matan(-x, y);
-		return 180.0f - f;
+		f32 theta = matan(-axis.z, axis.x) * (360.0f / 65536.0f);
+		return 180.0f - theta;
 	}
 }
+
+JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
+void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
+void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);
+void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
 template <class T> inline T MsWrap(T t, T l, T r)
 {

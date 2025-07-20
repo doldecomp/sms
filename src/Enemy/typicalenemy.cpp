@@ -48,7 +48,7 @@ DEFINE_NERVE(TNerveTypicalGraphWander, TLiveActor)
 {
 	TTypicalEnemy* self = (TTypicalEnemy*)spine->getBody();
 
-	if (spine->getUnk20() == 0) {
+	if (spine->getTime() == 0) {
 		self->goToRandomNextGraphNode();
 	}
 
