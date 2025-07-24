@@ -246,6 +246,7 @@ public:
 	// TODO: might be wrong
 	MtxPtr getBaseTRMtx() { return unk20; }
 	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }
+	void setBaseScale(const Vec& scale) { unk14 = scale; }
 
 	virtual ~J3DModel();
 

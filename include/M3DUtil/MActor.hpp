@@ -56,7 +56,7 @@ public:
 	bool checkCurAnmFromIndex(int, int);
 	bool checkAnmFileExist(const char*, int);
 	J3DFrameCtrl* getFrameCtrl(int);
-	bool checkBckPass(float);
+	BOOL checkBckPass(float);
 	int getCurAnmIdx(int) const;
 	void setFrameRate(float, int);
 	void setBck(const char*);

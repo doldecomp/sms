@@ -17,6 +17,12 @@ class TBossGessoParams : public TSpineEnemyParams {
 public:
 	TBossGessoParams(const char*);
 
+	// fabricated but starting to think that they might be real
+	s32 getSLRestTime() const { return mSLRestTime.get(); }
+	s32 getSLAmputeeTime() const { return mSLAmputeeTime.get(); }
+	s32 getSLStunTime() const { return mSLStunTime.get(); }
+	f32 getSLTentacleStretch() const { return mSLTentacleStretch.get(); }
+
 	/* 0xA8 */ TParamRT<s32> mSLUnisonInter;
 	/* 0xBC */ TParamRT<s32> mSLUnisonHoming;
 	/* 0xD0 */ TParamRT<s32> mSLSingleHoming;
@@ -57,7 +63,7 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
-	virtual void moveRequest(const JGeometry::TVec3<f32>&);
+	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 
 public:
 	/* 0x70 */ TBossGesso* mOwner;
@@ -142,9 +148,9 @@ public:
 	void changeBck(int);
 	bool inSightAngle(f32);
 	f32 inSight();
-	bool is2ndFightNow() const;
+	BOOL is2ndFightNow() const;
 	void stopIfRoll();
-	void changeAttackMode(int);
+	void changeAttackMode(int new_mode);
 	void gotTentacleDamage();
 	void gotEyeDamage();
 	void gotBeakDamage();
@@ -156,7 +162,7 @@ public:
 	void setEyeDamageBtp(int);
 	BOOL tentacleHeld() const;
 	void tentacleAttack();
-	bool beakHeld() const;
+	BOOL beakHeld() const;
 	void tentacleWait();
 	void doAttackSingle();
 	void doAttackDouble();
@@ -182,13 +188,28 @@ public:
 	// fabricated
 	enum { TENTACLE_NUM = 4 };
 
-	int getUnk168() const { return unk168; }
+	int getAttackMode() const { return mAttackMode; }
+
+	// fabricated
+	f32 getAttackSpeed() const
+	{
+		if (mAttackMode == 2)
+			return getSaveParam()->mSLUnisonAttackSpeed.get();
+
+		if (mAttackMode == 1)
+			return getSaveParam()->mSLDoubleAttackSpeed.get();
+
+		if (mAttackMode == 4)
+			return getSaveParam()->mSLSkipRopeAttackSpeed.get();
+
+		return 1.0f;
+	}
 
 public:
 	/* 0x150 */ TBGTentacle* unk150[TENTACLE_NUM];
 	/* 0x160 */ TBGBeakHit* mBeak;
 	/* 0x164 */ TBossGessoMtxCalc* unk164;
-	/* 0x168 */ int unk168;
+	/* 0x168 */ int mAttackMode;
 	/* 0x16C */ int unk16C;
 	/* 0x170 */ TBGEyeHit* unk170;
 	/* 0x174 */ TBGEyeHit* unk174;

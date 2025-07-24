@@ -415,7 +415,7 @@ J3DFrameCtrl* MActor::getFrameCtrl(int param_1)
 	return unk28[param_1]->getFrameCtrl();
 }
 
-bool MActor::checkBckPass(float param_1)
+BOOL MActor::checkBckPass(float param_1)
 {
 	if (!unk28[0])
 		return false;

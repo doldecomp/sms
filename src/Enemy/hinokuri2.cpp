@@ -897,14 +897,6 @@ BOOL THinokuri2::receiveMessage(THitActor* param_1, u32 param_2)
 	return 0;
 }
 
-template <class T> static inline T max(const T& a, const T& b)
-{
-	return a > b ? a : b;
-}
-template <class T> static inline T min(const T& a, const T& b)
-{
-	return b > a ? a : b;
-}
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
 	return v > 0 ? (v > r ? v : r) : (v > -r ? -r : v);
