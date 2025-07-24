@@ -552,7 +552,7 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
-	virtual void moveRequest(const JGeometry::TVec3<f32>&);
+	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 
 	virtual void drawSyncCallback(u16);
 	virtual void initValues();
@@ -1066,6 +1066,15 @@ public:
 	bool isTouchGround4cm() const
 	{
 		return mFloorPosition.y + 4.0f <= mPosition.y ? true : false;
+	}
+
+	// fabricated
+	bool isActionCoolOrSomethingIdk() const
+	{
+		if ((mAction & 0x1FF) >= 0x147 && (mAction & 0x1FF) <= 0x14A)
+			return true;
+
+		return false;
 	}
 
 public:

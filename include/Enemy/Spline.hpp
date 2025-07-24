@@ -28,8 +28,20 @@ public:
 		    calcSpline(t, mParametrization, mZs, unk18));
 	}
 
+	// TODO: setPoint2 is probably the real one
 	// fabricated
 	void setPoint(int i, Vec v)
+	{
+		if (i < 0 || mPointNum <= i)
+			return;
+
+		mXs[i] = v.x;
+		mYs[i] = v.y;
+		mZs[i] = v.z;
+
+		mInitialized = false;
+	}
+	void setPoint2(int i, const JGeometry::TVec3<f32>& v)
 	{
 		if (i < 0 || mPointNum <= i)
 			return;

@@ -3,7 +3,7 @@
 
 #include <dolphin/gx/GXStruct.h>
 
-enum JUTTransparency { UNK0, UNK1 };
+enum JUTTransparency { JUT_TRANSPARENCY_UNK0, JUT_TRANSPARENCY_UNK1 };
 
 struct ResTLUT {
 	u8 format;
