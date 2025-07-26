@@ -20,6 +20,7 @@ public:
 	int getWidth() const { return x2 - x1; }
 	int getHeight() const { return y2 - y1; }
 
+	// TODO: nw4r uses left/top/right/bottom, we should too.
 	int x1; // _00
 	int y1; // _04
 	int x2; // _08

@@ -319,7 +319,7 @@ void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
 	param_1[2][3] = z;
 }
 
-bool MsIsInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
+BOOL MsIsInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
                  const JGeometry::TVec3<f32>& param_3, f32 param_4, f32 param_5,
                  f32 param_6)
 {
@@ -414,7 +414,7 @@ void SMSCalcJumpVelocityXZ(const JGeometry::TVec3<f32>& param_1,
 	result->z = resZ;
 }
 
-asm void MsVECMag2(register Vec* v)
+asm f32 MsVECMag2(register Vec* v)
 {
 #ifdef __MWERKS__ // clang-format off
   psq_l   f3, Vec.x(v), 0, qr0

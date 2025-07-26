@@ -8,8 +8,6 @@ class TGraphWeb;
 class TSplinePath;
 
 struct TRailNode {
-	u32 getFlags() const { return mFlags; }
-
 	/* 0x0 */ S16Vec mPosition;
 	/* 0x6 */ s16 mConnectionNum;
 	/* 0x8 */ u32 mFlags;
@@ -25,10 +23,13 @@ class TGraphNode {
 public:
 	TGraphNode();
 	void getPoint(Vec*) const;
-	JGeometry::TVec3<f32> getPoint()
+	JGeometry::TVec3<f32> getPoint() const
 	{
+		S16Vec* v = &unk0->mPosition;
 		JGeometry::TVec3<f32> p;
-		getPoint(&p);
+		p.x = v->x;
+		p.y = v->y;
+		p.z = v->z;
 		return p;
 	}
 
@@ -39,6 +40,8 @@ public:
 	void setUnk8(f32 v) { unk8 = v; }
 	void incUnk4() { ++unk4; }
 	int getUnk4() { return unk4; }
+	int setUnk4(int v) { unk4 = v; }
+	bool checkFlag(u32 f) const { return unk0->mFlags & f; }
 
 public:
 	/* 0x0 */ TRailNode* unk0;
@@ -54,10 +57,11 @@ public:
 	f32 getNthT(int);
 	JGeometry::TVec3<f32> getPosition(f32);
 	void getPosAndRot(f32, JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*);
+	BOOL isUnk4() const { return unk4; }
 
 public:
-	/* 0x4 */ BOOL unk4;
 	/* 0x0 */ TSplinePath* unk0;
+	/* 0x4 */ BOOL unk4;
 };
 
 class TGraphWeb {
@@ -85,15 +89,15 @@ public:
 	                            u32) const;
 	int getAimToDirNextIndex(int, int, const JGeometry::TVec3<f32>&,
 	                         const JGeometry::TVec3<f32>&, u32) const;
-	void getRandomButDirLimited(int, int, const JGeometry::TVec3<f32>&,
+	int getRandomButDirLimited(int, int, const JGeometry::TVec3<f32>&,
 	                            const JGeometry::TVec3<f32>&, f32, u32) const;
-	void getEscapeDirLimited(int, int, const JGeometry::TVec3<f32>&,
+	int getEscapeDirLimited(int, int, const JGeometry::TVec3<f32>&,
 	                         const JGeometry::TVec3<f32>&, f32, u32) const;
 	int findNearestNodeIndex(const JGeometry::TVec3<f32>&, u32) const;
-	void findFarthestNodeIndex(const JGeometry::TVec3<f32>&, u32) const;
-	void findNearestVisibleIndex(const JGeometry::TVec3<f32>&, f32, f32, f32,
+	int findFarthestNodeIndex(const JGeometry::TVec3<f32>&, u32) const;
+	int findNearestVisibleIndex(const JGeometry::TVec3<f32>&, f32, f32, f32,
 	                             u32) const;
-	void findNearestNodeIndexCheckY(const JGeometry::TVec3<f32>&, f32,
+	int findNearestNodeIndexCheckY(const JGeometry::TVec3<f32>&, f32,
 	                                u32) const;
 	void getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32, u32) const;
 	void calcGraphDirection(int);
@@ -111,8 +115,12 @@ public:
 
 	// fabricated
 	TGraphNode& getGraphNode(int i) { return unk0[i]; }
+	const TGraphNode& getGraphNode(int i) const { return unk0[i]; }
 	TGraphNode& getCurrentNode() { return unk0[unk10]; }
 	TSplineRail* getSplineRail() { return unk14; }
+	const TGraphNode& getFirstGraphNode() const { return unk0[0]; }
+	const TGraphNode& getLastGraphNode() const { return unk0[unk8 - 1]; }
+	int getNodeNum() const { return unk8; }
 };
 
 class TGraphGroup {
