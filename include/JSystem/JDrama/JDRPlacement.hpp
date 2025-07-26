@@ -10,7 +10,7 @@ class TPlacement : public TViewObj {
 public:
 	TPlacement(const char* name)
 	    : TViewObj(name)
-	    , mPosition(0, 0, 0)
+	    , mPosition(0.0f, 0.0f, 0.0f)
 	    , unk1C(0)
 	{
 	}
