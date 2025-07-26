@@ -7,18 +7,20 @@
 
 namespace JGeometry {
 
-template <typename T> class TVec3 { };
+template <class T> class TVec3 { };
 
 template <> struct TVec3<s16> : public S16Vec {
 public:
 	TVec3();
+
+	TVec3(const S16Vec& b) { set(b.x, b.y, b.z); }
 
 	void sub(const JGeometry::TVec3<s16>&);
 	void add(const JGeometry::TVec3<s16>&);
 
 	// fabricated
 	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
-	template <typename TY> void set(TY x_, TY y_, TY z_)
+	template <class TY> void set(TY x_, TY y_, TY z_)
 	{
 		x = x_;
 		y = y_;
@@ -33,14 +35,14 @@ public:
 
 	TVec3(const Vec& b) { set(b.x, b.y, b.z); }
 
+	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
+
 	TVec3(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
 		// Checked via MarioCollision.cpp where this is not inlined
 		*(Vec*)this = *(Vec*)&other;
 	}
-
-	TVec3(f32 x_, f32 y_, f32 z_) { set(x_, y_, z_); }
 
 	TVec3& operator=(const TVec3& other)
 	{
@@ -49,22 +51,35 @@ public:
 		*(Vec*)this = *(Vec*)&other;
 		return *this;
 	}
-	TVec3& operator*=(const TVec3& other);
-	TVec3& operator+=(const TVec3& other)
-	{
-		add(other);
-		return *this;
-	}
-	TVec3& operator-=(const TVec3& other)
-	{
-		sub(other);
-		return *this;
-	}
 
+	// fabricated
 	operator Vec*() const { return (Vec*)&x; }
 	operator const Vec*() const { return (Vec*)&x; }
 
 	void zero() { x = y = z = 0.0f; }
+
+	void set(const Vec& v)
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
+	}
+
+	template <class TY> void set(TY x_, TY y_, TY z_)
+	{
+		x = x_;
+		y = y_;
+		z = z_;
+	}
+
+	template <class TY> void set(const TVec3<TY>& other)
+	{
+		x = other.x;
+		y = other.y;
+		z = other.z;
+	}
+
+	// === arithmetic stuff ===
 
 	void add(const TVec3& operand)
 	{
@@ -80,6 +95,20 @@ public:
 		z = a.x + b.z;
 	}
 
+	void sub(const TVec3& translate)
+	{
+		x -= translate.x;
+		y -= translate.y;
+		z -= translate.z;
+	}
+
+	void sub(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x - snd.x;
+		y = fst.y - snd.y;
+		z = fst.z - snd.z;
+	}
+
 	void mul(const TVec3<f32>& b)
 	{
 		x *= b.x;
@@ -87,16 +116,34 @@ public:
 		z *= b.z;
 	}
 
-	void div(f32 divisor);
+	void div(f32 divisor) { scale(1.0f / divisor); }
+
+	TVec3& operator+=(const TVec3& other)
+	{
+		add(other);
+		return *this;
+	}
+	TVec3& operator-=(const TVec3& other)
+	{
+		sub(other);
+		return *this;
+	}
+	TVec3& operator*=(const TVec3& other)
+	{
+		mul(other);
+		return *this;
+	}
 
 	f32 dot(const TVec3<f32>& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-	f32 squared() const { return x * x + y * y + z * z; }
-
-	f32 length() const { return TUtil<f32>::sqrt(squared()); }
+	void cross(const TVec3<f32>& a, const TVec3<f32>& b)
+	{
+		set(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
+		    a.x * b.y - a.y * b.x);
+	}
 
 	void negate()
 	{
@@ -126,26 +173,11 @@ public:
 		z = b.z + c.z * scale;
 	}
 
-	void set(const Vec& v)
-	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
-	}
+	// === length stuff ===
 
-	template <typename TY> void set(TY x_, TY y_, TY z_)
-	{
-		x = x_;
-		y = y_;
-		z = z_;
-	}
+	f32 squared() const { return x * x + y * y + z * z; }
 
-	template <typename TY> void set(const TVec3<TY>& other)
-	{
-		x = other.x;
-		y = other.y;
-		z = other.z;
-	}
+	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
 
@@ -164,26 +196,8 @@ public:
 		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
 
-	void cross(const TVec3<f32>& a, const TVec3<f32>& b)
-	{
-		set(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
-		    a.x * b.y - a.y * b.x);
-	}
-
 	void setMax(const TVec3& other);
 	void setMin(const TVec3& other);
-	void sub(const TVec3& translate)
-	{
-		x -= translate.x;
-		y -= translate.y;
-		z -= translate.z;
-	}
-	void sub(const TVec3& fst, const TVec3& snd)
-	{
-		x = fst.x - snd.x;
-		y = fst.y - snd.y;
-		z = fst.z - snd.z;
-	}
 };
 
 } // namespace JGeometry

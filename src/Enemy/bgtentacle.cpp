@@ -946,7 +946,7 @@ void TBGTentacle::moveNode()
 	}
 
 	for (int i = 0; i < mNodeNum; ++i)
-		unk28->setPoint2(i, mNodes[i].getPosition());
+		unk28->setPoint(i, mNodes[i].getPosition());
 }
 
 void TBGTentacle::moveConstraint()

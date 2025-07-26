@@ -57,7 +57,7 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);
 }
 
-bool MsIsInSight(const JGeometry::TVec3<f32>&, f32,
+BOOL MsIsInSight(const JGeometry::TVec3<f32>&, f32,
                  const JGeometry::TVec3<f32>&, f32, f32, f32);
 
 void SMS_GoRotate(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
@@ -70,7 +70,7 @@ void SMSCalcJumpVelocityXZ(const JGeometry::TVec3<f32>&,
                            JGeometry::TVec3<f32>*);
 
 void MsVECNormalize(Vec*, Vec*);
-void MsVECMag2(Vec*);
+f32 MsVECMag2(Vec*);
 
 inline JGeometry::TVec3<f32>
 MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
