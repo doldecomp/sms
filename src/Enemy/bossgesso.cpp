@@ -272,10 +272,10 @@ void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-TBGEyeHit::TBGEyeHit(TBossGesso* owner, int param_2, const char* name)
+TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
     : THitActor(name)
     , mOwner(owner)
-    , unk6C(param_2)
+    , mJointIndex(joint_index)
 {
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
@@ -305,12 +305,12 @@ void TBGEyeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	THitActor::perform(param_1, param_2);
 	if (param_1 & 2)
-		mOwner->getJointTransByIndex(unk6C, &mPosition);
+		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
 }
 
-TBGBodyHit::TBGBodyHit(TBossGesso* owner, int param_2, const char* name)
+TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
     : mOwner(owner)
-    , unk6C(param_2)
+    , mJointIndex(joint_index)
 {
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
@@ -333,7 +333,7 @@ BOOL TBGBodyHit::receiveMessage(THitActor* param_1, u32 param_2)
 void TBGBodyHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2)
-		mOwner->getJointTransByIndex(unk6C, &mPosition);
+		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
 	THitActor::perform(param_1, param_2);
 }
 
@@ -534,14 +534,14 @@ void TBGCork::perform(u32, JDrama::TGraphics*) { }
 TBossGesso::TBossGesso(const char* name)
     : TSpineEnemy(name)
     , mBeak(nullptr)
-    , unk164(nullptr)
+    , mMtxCalc(nullptr)
     , mAttackMode(0)
-    , unk16C(0)
+    , mTimeInCurrentAttackMode(0)
     , unk178(nullptr)
     , unk17C(0)
-    , unk180(nullptr)
+    , mPolDrop(nullptr)
     , unk188(0.0f)
-    , unk18C(nullptr)
+    , mCork(nullptr)
     , unk194(0)
     , unk195(0)
     , unk196(0)
@@ -565,31 +565,31 @@ void TBossGesso::init(TLiveManager* param_1)
 	mMActorKeeper = new TMActorKeeper(mManager, 0xf);
 	mMActor       = mMActorKeeper->createMActor("bgeso_body.bmd", 0);
 	for (int i = 0; i < 4; ++i)
-		unk150[i] = new TBGTentacle(this, 6, i);
-	mBeak  = new TBGBeakHit(this);
-	unk170 = new TBGEyeHit(this, 7);
-	unk174 = new TBGEyeHit(this, 4);
-	unk184 = new TBGBodyHit(this, 0);
+		mTentacles[i] = new TBGTentacle(this, 6, i);
+	mBeak     = new TBGBeakHit(this);
+	mLeftEye  = new TBGEyeHit(this, 7);
+	mRightEye = new TBGEyeHit(this, 4);
+	mBody     = new TBGBodyHit(this, 0);
 
 	initHitActor(0x8000005, 5, -0x7f000000, 300.0f, 300.0f, 300.0f, 300.0f);
 	onHitFlag(0x1);
 
 	mSpine->initWith(&TNerveBGWait::theNerve());
-	unk164 = new TBossGessoMtxCalc(this);
+	mMtxCalc = new TBossGessoMtxCalc(this);
 
-	getMActor()->setCalcForBck(unk164);
+	getMActor()->setCalcForBck(mMtxCalc);
 
 	getMActor()->calc();
 	getMActor()->setLightType(1);
 
-	unk178 = getActorKeeper()->createMActor("bgeso_dirty_white.bmd", 0);
-	unk180 = new TBGPolDrop;
+	unk178   = getActorKeeper()->createMActor("bgeso_dirty_white.bmd", 0);
+	mPolDrop = new TBGPolDrop;
 
-	unk180->setMActors(
+	mPolDrop->setMActors(
 	    getActorKeeper()->createMActor("bgeso_osenball_white.bmd", 0),
 	    getActorKeeper()->createMActor("bgeso_osenball.bmd", 0));
 
-	unk18C = new TBGCork(this);
+	mCork = new TBGCork(this);
 
 	J3DModel* model = getMActor()->getModel();
 	if (!model->getSkinDeform()) {
@@ -666,10 +666,11 @@ f32 TBossGesso::lenFromToeToMario()
 	f32 min = 100000.0f;
 
 	for (int i = 0; i < 4; ++i) {
-		if (unk150[i]->isThing2())
+		if (mTentacles[i]->isThing2())
 			continue;
 
-		JGeometry::TVec3<f32> tipPos = unk150[i]->getLastNode()->getPosition();
+		JGeometry::TVec3<f32> tipPos
+		    = mTentacles[i]->getLastNode()->getPosition();
 
 		f32 len = tipPos.length();
 		if (len < min)
@@ -694,7 +695,7 @@ void TBossGesso::checkTakeMsg() { }
 
 void TBossGesso::changeBck(int param_1)
 {
-	unk164->joinAnm(param_1);
+	mMtxCalc->joinAnm(param_1);
 	getMActor()->setFrameCtrlForBck(param_1);
 
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
@@ -728,7 +729,7 @@ void TBossGesso::stopIfRoll()
 	if (mAttackMode != 7)
 		return;
 
-	changeAttackMode(0);
+	changeAttackMode(ASTATE_SINGLE);
 
 	mSpine->reset();
 	mSpine->setNext(&TNerveBGWait::theNerve());
@@ -740,17 +741,19 @@ static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
 
 void TBossGesso::changeAttackMode(int new_mode)
 {
-	mAttackMode = new_mode;
-	unk16C      = 0;
+	mAttackMode              = new_mode;
+	mTimeInCurrentAttackMode = 0;
 	switch (mAttackMode) {
-	case 3:
+	case ASTATE_GUARD:
 		// TODO: wrong, this should only use 2 tentacles, not all
-		changeAllTentacleState(0xA);
+		changeAllTentacleState(10);
 		break;
-	case 2:
+
+	case ASTATE_UNISON:
 		changeAllTentacleState(0);
 		break;
-	case 7:
+
+	case ASTATE_ROLL:
 		if ((int)(randf() * 100.0f) < 0x28)
 			unk1A1 = true;
 		else
@@ -761,7 +764,7 @@ void TBossGesso::changeAttackMode(int new_mode)
 		mSpine->pushRaw(&TNerveBGWait::theNerve());
 		break;
 
-	case 5:
+	case ASTATE_SHOOT:
 		if (mSpine->getLatestNerve() != &TNerveBGPolDrop::theNerve()
 		    && mSpine->getLatestNerve() != &TNerveBGPollute::theNerve()
 		    && mSpine->getLatestNerve() != &TNerveBGTentacleDamage::theNerve()
@@ -774,8 +777,8 @@ void TBossGesso::changeAttackMode(int new_mode)
 		}
 		break;
 
-	case 6:
-		unk150[0]->changeStateAndFixNodes(0x9);
+	case ASTATE_UNK6:
+		mTentacles[0]->changeStateAndFixNodes(0x9);
 		break;
 	}
 }
@@ -821,14 +824,14 @@ void TBossGesso::gotBeakDamage()
 void TBossGesso::changeAllTentacleState(int param_1)
 {
 	for (int i = 0; i < TENTACLE_NUM; ++i)
-		if (unk150[i]->mState != 5 && !unk150[i]->isThing())
-			unk150[i]->changeStateAndFixNodes(param_1);
+		if (mTentacles[i]->mState != 5 && !mTentacles[i]->isThing())
+			mTentacles[i]->changeStateAndFixNodes(param_1);
 }
 
 void TBossGesso::forceAllTentacleState(int param_1)
 {
 	for (int i = 0; i < TENTACLE_NUM; ++i)
-		unk150[i]->changeStateAndFixNodes(param_1);
+		mTentacles[i]->changeStateAndFixNodes(param_1);
 }
 
 void TBossGesso::startPollute() { }
@@ -837,7 +840,7 @@ void TBossGesso::stopPollute() { }
 
 void TBossGesso::launchPolDrop()
 {
-	if (unk180->getUnk58())
+	if (mPolDrop->getUnk58())
 		return;
 
 	JGeometry::TVec3<f32> local_14;
@@ -850,7 +853,7 @@ void TBossGesso::launchPolDrop()
 
 	JGeometry::TVec3<f32> VStack_20;
 	SMSCalcJumpVelocityXZ(SMS_GetMarioPos(), local_14, 32.0f, 0.2f, &VStack_20);
-	unk180->launch(local_14, VStack_20);
+	mPolDrop->launch(local_14, VStack_20);
 
 	MtxPtr ptr = getModel()->getAnmMtx(27);
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x94, ptr, 0, nullptr);
@@ -864,7 +867,7 @@ void TBossGesso::setEyeDamageBtp(int) { }
 BOOL TBossGesso::tentacleHeld() const
 {
 	for (int i = 0; i < TENTACLE_NUM; ++i)
-		if (unk150[i]->mState == 3)
+		if (mTentacles[i]->mState == 3)
 			return true;
 
 	return false;
@@ -923,7 +926,7 @@ void TBossGesso::doAttackSingle()
 
 	for (int i = 0; i < 2; ++i) {
 		static const int idxarray[] = { 2, 3, 5, 6 };
-		TBGTentacle* tentacle       = unk150[idxarray[i]];
+		TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 
 		if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
 		    && tentacle->mState == 0) {
@@ -937,15 +940,15 @@ void TBossGesso::doAttackSingle()
 		}
 	}
 
-	if (unk150[3]->isThing2() && unk150[1]->isThing2()
-	    && unk150[2]->isThing2()) {
-		if (unk16C <= getSaveParam()->mSLUnisonInter.get())
+	if (mTentacles[3]->isThing2() && mTentacles[1]->isThing2()
+	    && mTentacles[2]->isThing2()) {
+		if (mTimeInCurrentAttackMode <= getSaveParam()->mSLUnisonInter.get())
 			return;
 
 		if (gpMarDirector->unk7D != 4)
 			return;
 
-		changeAttackMode(7);
+		changeAttackMode(ASTATE_ROLL);
 		return;
 	}
 
@@ -956,7 +959,7 @@ void TBossGesso::doAttackSingle()
 void TBossGesso::doAttackDouble()
 {
 	if (mBeak->getHolder() != nullptr || tentacleHeld()) {
-		changeAttackMode(4);
+		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
@@ -971,7 +974,7 @@ void TBossGesso::doAttackDouble()
 
 		for (int i = 0; i < 2; ++i) {
 			static const int idxarray[] = { 0, 2 };
-			TBGTentacle* tentacle       = unk150[idxarray[i]];
+			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 			if (tentacle->mState == 0) {
 				tentacle->changeStateAndFixNodes(1);
 			}
@@ -981,26 +984,26 @@ void TBossGesso::doAttackDouble()
 	if (mBeak->getHolder() != nullptr)
 		return;
 
-	if (!unk150[3]->isThing2() || !unk150[1]->isThing2())
-		changeAttackMode(0);
+	if (!mTentacles[3]->isThing2() || !mTentacles[1]->isThing2())
+		changeAttackMode(ASTATE_SINGLE);
 }
 
 void TBossGesso::doAttackSkipRope()
 {
 	if (mBeak->getHolder() != nullptr) {
-		changeAttackMode(4);
+		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
 	if (mBeak->getHolder() == nullptr && !tentacleHeld()) {
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
 
 	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
 		for (int i = 0; i < 2; ++i) {
 			static const int idxarray[] = { 0, 2 };
-			TBGTentacle* tentacle       = unk150[idxarray[i]];
+			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 			if (tentacle->mState != 2 && tentacle->mState != 1
 			    && tentacle->mState != 4 && tentacle->mState != 5
 			    && tentacle->mState != 3 && tentacle->mState != 6) {
@@ -1013,7 +1016,7 @@ void TBossGesso::doAttackSkipRope()
 void TBossGesso::doAttackUnison()
 {
 	if (mBeak->getHolder() != nullptr) {
-		changeAttackMode(4);
+		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
@@ -1028,18 +1031,18 @@ void TBossGesso::doAttackUnison()
 
 		BOOL bVar3 = true;
 		for (int i = 0; i < TENTACLE_NUM; ++i) {
-			TBGTentacle* tentacle = unk150[i];
-			if (i == unk16C / 8 && tentacle->mState == 0) {
+			TBGTentacle* tentacle = mTentacles[i];
+			if (i == mTimeInCurrentAttackMode / 8 && tentacle->mState == 0) {
 				tentacle->changeStateAndFixNodes(1);
 				bVar3 = false;
 			}
 		}
 
-		if (bVar3 && unk16C > 300)
-			changeAttackMode(0);
+		if (bVar3 && mTimeInCurrentAttackMode > 300)
+			changeAttackMode(ASTATE_SINGLE);
 	} else {
 		for (int i = 0; i < TENTACLE_NUM; ++i) {
-			TBGTentacle* tentacle = unk150[i];
+			TBGTentacle* tentacle = mTentacles[i];
 			if (tentacle->mState == 1)
 				return;
 
@@ -1048,20 +1051,20 @@ void TBossGesso::doAttackUnison()
 				tentacle->changeStateAndFixNodes(2);
 		}
 
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 	}
 }
 
 void TBossGesso::doAttackShoot()
 {
 	if (mBeak->getHolder() != nullptr) {
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
 
-	if (unk16C > 120
+	if (mTimeInCurrentAttackMode > 120
 	    && mSpine->getLatestNerve() != &TNerveBGPolDrop::theNerve()) {
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
 
@@ -1071,7 +1074,7 @@ void TBossGesso::doAttackShoot()
 
 		f32 singleAttackLen = getSaveParam()->mSLSingleAttackLen.get();
 		if (delta.squared() < singleAttackLen * singleAttackLen) {
-			changeAttackMode(0);
+			changeAttackMode(ASTATE_SINGLE);
 		}
 	}
 }
@@ -1080,7 +1083,7 @@ void TBossGesso::doAttackShoot()
 void TBossGesso::doAttackGuard()
 {
 	if (mBeak->getHolder() != nullptr) {
-		changeAttackMode(4);
+		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
@@ -1091,15 +1094,15 @@ void TBossGesso::doAttackGuard()
 
 		f32 guardLen = getSaveParam()->mSLGuardLen.get();
 		if (!(guardLen * guardLen < delta.squared())) {
-			if (!unk150[3]->isThing2())
+			if (!mTentacles[3]->isThing2())
 				return;
 
-			if (!unk150[1]->isThing2())
+			if (!mTentacles[1]->isThing2())
 				return;
 		}
 
 		changeAllTentacleState(0);
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 	}
 }
 
@@ -1109,7 +1112,7 @@ void TBossGesso::doAttackRoll()
 		return;
 
 	changeAllTentacleState(0);
-	changeAttackMode(0);
+	changeAttackMode(ASTATE_SINGLE);
 }
 
 void TBossGesso::moveObject()
@@ -1129,31 +1132,31 @@ void TBossGesso::moveObject()
 		return;
 
 	switch (mAttackMode) {
-	case 0:
+	case ASTATE_SINGLE:
 		doAttackSingle();
 		break;
 
-	case 1:
+	case ASTATE_DOUBLE:
 		doAttackDouble();
 		break;
 
-	case 4:
+	case ASTATE_SKIP_ROPE:
 		doAttackSkipRope();
 		break;
 
-	case 2:
+	case ASTATE_UNISON:
 		doAttackUnison();
 		break;
 
-	case 5:
+	case ASTATE_SHOOT:
 		doAttackShoot();
 		break;
 
-	case 3:
+	case ASTATE_GUARD:
 		doAttackGuard();
 		break;
 
-	case 7:
+	case ASTATE_ROLL:
 		doAttackRoll();
 		break;
 	}
@@ -1164,13 +1167,13 @@ void TBossGesso::moveObject()
 
 		// TODO: inline?
 		BOOL bVar4;
-		if (unk150[0]->mState == 3)
+		if (mTentacles[0]->mState == 3)
 			bVar4 = true;
-		else if (unk150[1]->mState == 3)
+		else if (mTentacles[1]->mState == 3)
 			bVar4 = true;
-		else if (unk150[2]->mState == 3)
+		else if (mTentacles[2]->mState == 3)
 			bVar4 = true;
-		else if (unk150[3]->mState == 3)
+		else if (mTentacles[3]->mState == 3)
 			bVar4 = true;
 		else
 			bVar4 = false;
@@ -1179,21 +1182,21 @@ void TBossGesso::moveObject()
 			mSpine->pushNerve(&TNerveBGTug::theNerve());
 	}
 
-	unk16C += 1;
+	mTimeInCurrentAttackMode += 1;
 }
 
 void TBossGesso::reset()
 {
 	for (int i = 0; i < TENTACLE_NUM; ++i) {
-		unk150[i]->resetAllNodes(mPosition);
-		unk150[i]->getFirstNode()->onUnk24();
+		mTentacles[i]->resetAllNodes(mPosition);
+		mTentacles[i]->getFirstNode()->onUnk24();
 	}
 
 	if (gpMarDirector->getCurrentMap() == 3
 	    && gpMarDirector->getCurrentStage() == 0)
-		changeAttackMode(6);
+		changeAttackMode(ASTATE_UNK6);
 	else
-		changeAttackMode(0);
+		changeAttackMode(ASTATE_SINGLE);
 
 	calcRootMatrix();
 	getMActor()->getModel()->calc();
@@ -1357,7 +1360,7 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 		self->changeBck(5);
 
 		if (self->mBeak->mHolder == nullptr && self->mAttackMode != 2) {
-			self->changeAttackMode(2);
+			self->changeAttackMode(TBossGesso::ASTATE_UNISON);
 			self->changeAllTentacleState(1);
 		}
 
@@ -1424,7 +1427,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 	}
 
 	if (spine->getTime() == 1)
-		self->unk18C->crush();
+		self->mCork->crush();
 
 	if (spine->getTime() == 12) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(

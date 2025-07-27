@@ -42,31 +42,33 @@ public:
 
 class TBGAttackHit : public THitActor {
 public:
-	TBGAttackHit(TBGTentacle*, f32, const char* name = "イカ足（当たり）");
+	TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
+	             const char* name = "イカ足（当たり）");
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	f32 getUnk6C() const { return unk6C; }
-	void setUnk6C(f32 v) { unk6C = v; }
+	f32 getPosOnSpline() const { return mPosOnSpline; }
+	void setPosOnSpline(f32 v) { mPosOnSpline = v; }
 
 public:
 	/* 0x68 */ TBGTentacle* mOwner;
-	/* 0x6C */ f32 unk6C;
+	/* 0x6C */ f32 mPosOnSpline;
 };
 
 class TBGTentacle : public JDrama::TViewObj {
 public:
-	// TODO: are the values correct? Why is mState == 10 used in code then?
+	// TODO: are these values correct? probably not
 	enum {
-		TSTATE_WAIT       = 0,
-		TSTATE_ATTACK     = 1,
-		TSTATE_REST       = 2,
-		TSTATE_HELD       = 3,
-		TSTATE_AMPUTEE    = 4,
-		TSTATE_STUN       = 5,
-		TSTATE_HIDE       = 6,
-		TSTATE_FOLLOWBODY = 7,
-		TSTATE_SYNCBODY   = 8,
-		TSTATE_GUARD      = 9,
+		TSTATE_UNK0       = 0,
+		TSTATE_WAIT       = 1,
+		TSTATE_ATTACK     = 2,
+		TSTATE_REST       = 3,
+		TSTATE_HELD       = 4,
+		TSTATE_AMPUTEE    = 5,
+		TSTATE_STUN       = 6,
+		TSTATE_HIDE       = 7,
+		TSTATE_FOLLOWBODY = 8,
+		TSTATE_SYNCBODY   = 9,
+		TSTATE_GUARD      = 10,
 	};
 
 	class TTentacleParams : public TParams {
@@ -176,23 +178,23 @@ public:
 	TNode* getFirstNode() { return &mNodes[0]; }
 	TNode* getLastNode() { return &mNodes[mNodeNum - 1]; }
 	int getState() const { return mState; }
-	TTentacleParams* getParams() { return unk38; }
+	TTentacleParams* getParams() { return mParams; }
 	MActor* getUnk2C() { return unk2C; }
 	TBossGesso* getOwner() { return mOwner; }
 
 public:
 	/* 0x10 */ int mState;
-	/* 0x14 */ int unk14;
+	/* 0x14 */ int mTimeInCurrentState;
 	/* 0x18 */ int mIndex;
 	/* 0x1C */ int mDamageCount;
 	/* 0x20 */ int mNodeNum;
 	/* 0x24 */ TNode* mNodes;
-	/* 0x28 */ TSplinePath* unk28;
+	/* 0x28 */ TSplinePath* mSpline;
 	/* 0x2C */ MActor* unk2C;
-	/* 0x30 */ TBGTentacleMtxCalc* unk30;
+	/* 0x30 */ TBGTentacleMtxCalc* mMtxCalc;
 	/* 0x34 */ TBossGesso* mOwner;
-	/* 0x38 */ TTentacleParams* unk38;
-	/* 0x3C */ TBGTakeHit* unk3C;
+	/* 0x38 */ TTentacleParams* mParams;
+	/* 0x3C */ TBGTakeHit* mTakeHit;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ f32 unk44;
 	/* 0x48 */ int unk48;
@@ -200,7 +202,7 @@ public:
 	/* 0x50 */ Mtx unk50;
 	/* 0x80 */ MActor* unk80;
 	/* 0x84 */ JGeometry::TVec3<f32> unk84;
-	/* 0x90 */ TBGAttackHit* unk90[5];
+	/* 0x90 */ TBGAttackHit* mAttackHit[5];
 };
 
 #endif

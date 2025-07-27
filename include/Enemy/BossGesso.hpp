@@ -65,7 +65,7 @@ public:
 	virtual MtxPtr getTakingMtx();
 	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 
-public:
+private:
 	/* 0x70 */ TBossGesso* mOwner;
 	/* 0x74 */ TMtx34f unk74;
 	/* 0xA4 */ JGeometry::TVec3<f32> unkA4;
@@ -73,26 +73,26 @@ public:
 
 class TBGEyeHit : public THitActor {
 public:
-	TBGEyeHit(TBossGesso* owner, int, const char* name = "目");
+	TBGEyeHit(TBossGesso* owner, int joint_index, const char* name = "目");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
 
-public:
+private:
 	/* 0x68 */ TBossGesso* mOwner;
-	/* 0x6C */ u32 unk6C;
+	/* 0x6C */ u32 mJointIndex;
 };
 
 class TBGBodyHit : public THitActor {
 public:
-	TBGBodyHit(TBossGesso* owner, int, const char* name = "胴体");
+	TBGBodyHit(TBossGesso* owner, int joint_index, const char* name = "胴体");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
 
-public:
+private:
 	/* 0x68 */ TBossGesso* mOwner;
-	/* 0x6C */ u32 unk6C;
+	/* 0x6C */ u32 mJointIndex;
 };
 
 class TBossGessoMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
@@ -103,7 +103,7 @@ public:
 	void setAnm(int);
 	void calc(u16);
 
-public:
+private:
 	/* 0x64 */ TBossGesso* mOwner;
 };
 
@@ -129,6 +129,17 @@ public:
 
 class TBossGesso : public TSpineEnemy {
 public:
+	enum {
+		ASTATE_SINGLE    = 0,
+		ASTATE_DOUBLE    = 1,
+		ASTATE_UNISON    = 2,
+		ASTATE_GUARD     = 3,
+		ASTATE_SKIP_ROPE = 4,
+		ASTATE_SHOOT     = 5,
+		ASTATE_UNK6      = 6,
+		ASTATE_ROLL      = 7,
+	};
+
 	TBossGesso(const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -206,19 +217,19 @@ public:
 	}
 
 public:
-	/* 0x150 */ TBGTentacle* unk150[TENTACLE_NUM];
+	/* 0x150 */ TBGTentacle* mTentacles[TENTACLE_NUM];
 	/* 0x160 */ TBGBeakHit* mBeak;
-	/* 0x164 */ TBossGessoMtxCalc* unk164;
+	/* 0x164 */ TBossGessoMtxCalc* mMtxCalc;
 	/* 0x168 */ int mAttackMode;
-	/* 0x16C */ int unk16C;
-	/* 0x170 */ TBGEyeHit* unk170;
-	/* 0x174 */ TBGEyeHit* unk174;
+	/* 0x16C */ int mTimeInCurrentAttackMode;
+	/* 0x170 */ TBGEyeHit* mLeftEye;
+	/* 0x174 */ TBGEyeHit* mRightEye;
 	/* 0x178 */ MActor* unk178;
 	/* 0x17C */ u8 unk17C;
-	/* 0x180 */ TBGPolDrop* unk180;
-	/* 0x184 */ TBGBodyHit* unk184;
+	/* 0x180 */ TBGPolDrop* mPolDrop;
+	/* 0x184 */ TBGBodyHit* mBody;
 	/* 0x188 */ f32 unk188;
-	/* 0x18C */ TBGCork* unk18C;
+	/* 0x18C */ TBGCork* mCork;
 	/* 0x190 */ J3DGXColor unk190;
 	/* 0x194 */ u8 unk194;
 	/* 0x195 */ s8 unk195;
