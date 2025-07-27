@@ -68,7 +68,7 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	MtxPtr asdf = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
 
 	JGeometry::TVec3<f32> local_278
-	    = mOwner->unk28->getPoint(param_1 / f32(iVar8));
+	    = mOwner->mSpline->getPoint(param_1 / f32(iVar8));
 
 	asdf[0][3] = local_278.x;
 	asdf[1][3] = local_278.y;
@@ -291,7 +291,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* param_1, u32 param_2)
 void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
-		mPosition = mOwner->unk28->getPoint(1.0f);
+		mPosition = mOwner->mSpline->getPoint(1.0f);
 		mPosition.y -= mDamageHeight * 0.5f;
 
 		ensureTakeSituation();
@@ -368,10 +368,11 @@ void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 param_2, const char* name)
+TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
+                           const char* name)
     : THitActor(name)
     , mOwner(owner)
-    , unk6C(param_2)
+    , mPosOnSpline(pos_on_spline)
 {
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
@@ -383,9 +384,9 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 param_2, const char* name)
 void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
-		mPosition = mOwner->unk28->getPoint(unk6C);
+		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->unk3C->checkHitFlag(2) && mOwner->isThing3()
+		if (mOwner->mTakeHit->checkHitFlag(2) && mOwner->isThing3()
 		    || mOwner->getState() == 1
 		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
@@ -514,18 +515,18 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 			fVar2 = 1.0f;
 		} else {
 			if (param_1->mState == 8) {
-				if (param_1->unk14 < 60)
-					fVar2 = (param_1->unk14 * 0.5f) / 60.0f;
+				if (param_1->mTimeInCurrentState < 60)
+					fVar2 = (param_1->mTimeInCurrentState * 0.5f) / 60.0f;
 				else
 					fVar2 = 0.5f;
 			} else if (param_1->mState == 1 || param_1->mState == 10) {
-				if (param_1->unk14 < 180)
-					fVar2 = (param_1->unk14 * 0.4f) / 180.0f;
+				if (param_1->mTimeInCurrentState < 180)
+					fVar2 = (param_1->mTimeInCurrentState * 0.4f) / 180.0f;
 				else
 					fVar2 = 0.4f;
 			} else if (param_1->mState == 2) {
-				if (param_1->unk14 < 120)
-					fVar2 = (param_1->unk14 * 0.05f) / 120.0f;
+				if (param_1->mTimeInCurrentState < 120)
+					fVar2 = (param_1->mTimeInCurrentState * 0.05f) / 120.0f;
 				else
 					fVar2 = 0.05f;
 			} else {
@@ -550,39 +551,39 @@ static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
 TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
     : JDrama::TViewObj("あし")
     , mState(0)
-    , unk14(0)
+    , mTimeInCurrentState(0)
     , mIndex(index)
     , mDamageCount(0)
     , mNodeNum(node_num)
     , mNodes(new TNode[node_num])
-    , unk28(nullptr)
+    , mSpline(nullptr)
     , unk2C(nullptr)
-    , unk30(nullptr)
+    , mMtxCalc(nullptr)
     , mOwner(owner)
-    , unk38(new TTentacleParams("/enemy/tentacle.prm"))
-    , unk3C(nullptr)
+    , mParams(new TTentacleParams("/enemy/tentacle.prm"))
+    , mTakeHit(nullptr)
     , unk40(0.0f)
     , unk44(0.0f)
     , unk48(0)
     , unk4C(0)
     , unk80(nullptr)
 {
-	unk28 = new TSplinePath(node_num);
-	unk40 = (int)(randf() * 360.0f);
-	unk44 = (int)(randf() * 360.0f);
+	mSpline = new TSplinePath(node_num);
+	unk40   = (int)(randf() * 360.0f);
+	unk44   = (int)(randf() * 360.0f);
 
 	TMActorKeeper* keeper = mOwner->getActorKeeper();
 
-	unk2C = keeper->createMActor("bgeso_hand.bmd", 0);
-	unk30 = new TBGTentacleMtxCalc(this);
-	unk2C->setCalcForBck(unk30);
+	unk2C    = keeper->createMActor("bgeso_hand.bmd", 0);
+	mMtxCalc = new TBGTentacleMtxCalc(this);
+	unk2C->setCalcForBck(mMtxCalc);
 	unk2C->calc();
 	unk2C->setLightType(1);
 	unk80 = keeper->createMActor("bgeso_shand.bmd", 0);
 	unk84.zero();
-	unk3C = new TBGTakeHit(this);
+	mTakeHit = new TBGTakeHit(this);
 	for (int i = 0; i < 5; ++i)
-		unk90[i] = new TBGAttackHit(this, i / 5.0f);
+		mAttackHit[i] = new TBGAttackHit(this, i / 5.0f);
 }
 
 void TBGTentacle::incDamage()
@@ -617,20 +618,20 @@ bool TBGTentacle::canTake() const { }
 
 f32 TBGTentacle::getNodeLen() const
 {
-	return mState == 4 ? unk38->mDamageNodeLength.get()
-	                   : unk38->mNodeLength.get();
+	return mState == 4 ? mParams->mDamageNodeLength.get()
+	                   : mParams->mNodeLength.get();
 }
 
 void TBGTentacle::continuousRumble()
 {
 	switch (mState) {
 	case 4:
-		if (unk3C->getHolder() != nullptr && unk14 % 4 == 0)
-			mOwner->rumblePad(1, unk3C->getPosition());
+		if (mTakeHit->getHolder() != nullptr && mTimeInCurrentState % 4 == 0)
+			mOwner->rumblePad(1, mTakeHit->getPosition());
 		break;
 	case 3:
-		if (unk3C->getHolder() != nullptr && unk14 % 16 == 0)
-			mOwner->rumblePad(0, unk3C->getPosition());
+		if (mTakeHit->getHolder() != nullptr && mTimeInCurrentState % 16 == 0)
+			mOwner->rumblePad(0, mTakeHit->getPosition());
 		break;
 	}
 }
@@ -641,9 +642,9 @@ void TBGTentacle::beatNode(int index, const JGeometry::TVec3<f32>& param_2)
 
 	f32 fVar1;
 	if (mState == 4)
-		fVar1 = unk38->mDamageReflectProp.get();
+		fVar1 = mParams->mDamageReflectProp.get();
 	else
-		fVar1 = unk38->mReflectProp.get();
+		fVar1 = mParams->mReflectProp.get();
 
 	for (int i = index + 1; i < mNodeNum; ++i) {
 		mNodes[i].calcVelocity(this, &mNodes[i - 1], fVar1);
@@ -737,8 +738,8 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	if (mState == new_state)
 		return;
 
-	mState = new_state;
-	unk14  = 0;
+	mState              = new_state;
+	mTimeInCurrentState = 0;
 
 	for (int i = 0; i < mNodeNum; ++i)
 		mNodes[i].offUnk24();
@@ -750,7 +751,7 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 		break;
 
 	case 4:
-		if (unk48 != 0) {
+		if (unk48) {
 			getLastNode()->onUnk24();
 			break;
 		}
@@ -811,26 +812,26 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	if (mState == 6)
-		unk3C->onHitFlag(0x1);
+		mTakeHit->onHitFlag(0x1);
 	else
-		unk3C->offHitFlag(0x1);
+		mTakeHit->offHitFlag(0x1);
 
 	if (mState == 9)
-		unk3C->onHitFlag(0x2);
+		mTakeHit->onHitFlag(0x2);
 
-	unk3C->offHitFlag(0x4);
+	mTakeHit->offHitFlag(0x4);
 }
 
 void TBGTentacle::returnToDefaultState() { }
 
 void TBGTentacle::moveNode()
 {
-	f32 fVar1 = unk38->mVibrationSpeed.get();
-	f32 fVar2 = unk38->mVibrationForce.get();
+	f32 fVar1 = mParams->mVibrationSpeed.get();
+	f32 fVar2 = mParams->mVibrationForce.get();
 
 	if (mState == 4) {
-		fVar2 *= unk38->mDamagePropF.get();
-		fVar1 *= unk38->mDamagePropS.get();
+		fVar2 *= mParams->mDamagePropF.get();
+		fVar1 *= mParams->mDamagePropS.get();
 		unk40 = MsWrap(unk40 + fVar1, 0.0f, 360.0f);
 		unk44 = MsWrap(unk44 + fVar1 * 1.3f, 0.0f, 360.0f);
 	} else {
@@ -946,7 +947,7 @@ void TBGTentacle::moveNode()
 	}
 
 	for (int i = 0; i < mNodeNum; ++i)
-		unk28->setPoint(i, mNodes[i].getPosition());
+		mSpline->setPoint(i, mNodes[i].getPosition());
 }
 
 void TBGTentacle::moveConstraint()
@@ -969,7 +970,7 @@ void TBGTentacle::moveConstraint()
 			}
 		}
 
-		if (unk14 < iVar10 && mOwner->getAttackMode() != 2) {
+		if (mTimeInCurrentState < iVar10 && mOwner->getAttackMode() != 2) {
 			unk84.x = SMS_GetMarioPos().x;
 			unk84.z = SMS_GetMarioPos().z;
 		}
@@ -1045,7 +1046,8 @@ void TBGTentacle::decideOwnState()
 			changeStateAndFixNodes(2);
 		}
 
-		if (mState == 5 && unk14 >= mOwner->getSaveParam()->getSLStunTime()) {
+		if (mState == 5
+		    && mTimeInCurrentState >= mOwner->getSaveParam()->getSLStunTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);
 			else
@@ -1055,7 +1057,8 @@ void TBGTentacle::decideOwnState()
 
 	case 0:
 	case 2:
-		if (mState == 2 && unk14 >= mOwner->getSaveParam()->getSLRestTime()) {
+		if (mState == 2
+		    && mTimeInCurrentState >= mOwner->getSaveParam()->getSLRestTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);
 			else
@@ -1065,14 +1068,15 @@ void TBGTentacle::decideOwnState()
 
 	case 4: {
 		int amputeeTime = mOwner->getSaveParam()->getSLAmputeeTime();
-		if (unk14 >= amputeeTime) {
+		if (mTimeInCurrentState >= amputeeTime) {
 			changeStateAndFixNodes(6);
 			break;
 		}
 
-		if (unk14 >= amputeeTime - 240 && unk3C->getHolder() != nullptr) {
-			TTakeActor* holder = unk3C->getHolder();
-			holder->receiveMessage(unk3C, 8);
+		if (mTimeInCurrentState >= amputeeTime - 240
+		    && mTakeHit->getHolder() != nullptr) {
+			TTakeActor* holder = mTakeHit->getHolder();
+			holder->receiveMessage(mTakeHit, 8);
 		}
 		break;
 	}
@@ -1084,7 +1088,7 @@ void TBGTentacle::decideOwnState()
 
 void TBGTentacle::checkDamage()
 {
-	if (mDamageCount >= unk38->mDamageCountMax.get()) {
+	if (mDamageCount >= mParams->mDamageCountMax.get()) {
 		if (mOwner->getAttackMode() == 6)
 			gpMarDirector->fireStreamingMovie(10);
 
@@ -1114,7 +1118,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 				gpMarioParticleManager->emit(0x8F, &local_28, 0, nullptr);
 				unk4C = 1;
 
-				const JGeometry::TVec3<f32>& p = unk3C->getPosition();
+				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 				if (gpMSound->gateCheck(0x286F))
 					MSoundSESystem::MSoundSE::startSoundActor(0x286F, p, 0,
 					                                          nullptr, 0, 4);
@@ -1157,11 +1161,11 @@ void TBGTentacle::calcAtkParticleAndSE()
 		}
 	}
 
-	f32 atkSoundTime = unk38->mAtkSoundTime.get();
+	f32 atkSoundTime = mParams->mAtkSoundTime.get();
 	s16 endFrame     = unk80->getFrameCtrl(0)->getEndFrame();
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
 		if (mState != 10) {
-			const JGeometry::TVec3<f32>& p = unk3C->getPosition();
+			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 			if (gpMSound->gateCheck(0x286E))
 				MSoundSESystem::MSoundSE::startSoundActor(0x286E, p, 0, nullptr,
 				                                          0, 4);
@@ -1169,7 +1173,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 			if (!mOwner->unk1AC) {
 				mOwner->unk1AC = 0xF0;
 
-				const JGeometry::TVec3<f32>& p = unk3C->getPosition();
+				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 				if (gpMSound->gateCheck(0x2902))
 					MSoundSESystem::MSoundSE::startSoundActor(0x2902, p, 0,
 					                                          nullptr, 0, 4);
@@ -1180,7 +1184,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 
 void TBGTentacle::decideAtkColExists()
 {
-	unk3C->onHitFlag(0x2);
+	mTakeHit->onHitFlag(0x2);
 
 	f32 frame = unk80->getFrameCtrl(0)->getCurrentFrame();
 
@@ -1213,9 +1217,9 @@ void TBGTentacle::decideAtkColExists()
 	}
 
 	if (shouldCollisionExist) {
-		unk3C->offHitFlag(0x2);
+		mTakeHit->offHitFlag(0x2);
 	} else {
-		unk3C->onHitFlag(0x2);
+		mTakeHit->onHitFlag(0x2);
 	}
 }
 
@@ -1347,19 +1351,21 @@ void TBGTentacle::resetAllNodes(const JGeometry::TVec3<f32>& param_1)
 
 void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	unk3C->perform(param_1, param_2);
+	mTakeHit->perform(param_1, param_2);
 
 	if (param_1 & 1) {
+		// Uuuuh... the hit boxes move along the tentacle's spline,
+		// looping back after reaching the end? Why?!
 		for (int i = 0; i < 5; ++i) {
-			f32 f = unk90[i]->getUnk6C() + 0.05f;
-			if (f > 0.8f)
-				f -= 0.8f;
-			unk90[i]->setUnk6C(f);
+			f32 pos = mAttackHit[i]->getPosOnSpline() + 0.05f;
+			if (pos > 0.8f)
+				pos -= 0.8f;
+			mAttackHit[i]->setPosOnSpline(pos);
 		}
 	}
 
 	for (int i = 0; i < 5; ++i)
-		unk90[i]->perform(param_1, param_2);
+		mAttackHit[i]->perform(param_1, param_2);
 
 	if (param_1 & 2)
 		calcAttackGuideAnm();
@@ -1372,27 +1378,29 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 		checkDamage();
 		continuousRumble();
 
-		++unk14;
+		++mTimeInCurrentState;
 	}
 
 	if (param_1 & 2)
 		unk2C->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
-		    unk30);
+		    mMtxCalc);
 
 	if (param_1 & 0x200) {
 		unk2C->setLightData(mOwner->getUnkC4(), mOwner->getPosition());
 
 		if (mState == 4) {
-			if (unk14 >= mOwner->getSaveParam()->getSLAmputeeTime() - 240
-			    && unk14 % 6 >= 3) {
+			if (mTimeInCurrentState
+			        >= mOwner->getSaveParam()->getSLAmputeeTime() - 240
+			    && mTimeInCurrentState % 6 >= 3) {
 				param_1 &= ~0x200;
 			}
 		}
 	}
 
 	if ((param_1 & 1) && mState == 4
-	    && unk14 < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
-		const JGeometry::TVec3<f32>& pos = unk3C->getPosition();
+	    && mTimeInCurrentState
+	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
+		const JGeometry::TVec3<f32>& pos = mTakeHit->getPosition();
 		if (gpMSound->gateCheck(0x206B))
 			MSoundSESystem::MSoundSE::startSoundActor(0x206B, &pos, 0, nullptr,
 			                                          0, 4);
