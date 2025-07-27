@@ -196,8 +196,24 @@ public:
 		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
 
-	void setMax(const TVec3& other);
-	void setMin(const TVec3& other);
+	void setMax(const TVec3& max)
+	{
+		if (x <= max.x)
+			x = max.x;
+		if (y <= max.y)
+			y = max.y;
+		if (z <= max.z)
+			z = max.z;
+	}
+	void setMin(const TVec3& min)
+	{
+		if (x >= min.x)
+			x = min.x;
+		if (y >= min.y)
+			y = min.y;
+		if (z >= min.z)
+			z = min.z;
+	}
 };
 
 } // namespace JGeometry

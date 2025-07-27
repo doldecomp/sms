@@ -94,7 +94,7 @@ void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)
 void TWoodBarrel::touchGround(JGeometry::TVec3<f32>*)
 {
 	kill();
-	if (unkC4->checkSomething())
+	if (unkC4->isWaterSurface())
 		emitColumnWater();
 }
 

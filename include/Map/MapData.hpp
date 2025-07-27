@@ -11,29 +11,39 @@ public:
 	TBGCheckData();
 
 	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; };
-	void isIllegalData() const;
+	bool isIllegalData() const { return unk4 & 0x10 ? true : false; }
 	f32 getActiveJumpPower() const;
 	u32 getPlaneType();
-	void setVertex(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
-	               const JGeometry::TVec3<f32>&);
-	void updateTrans(const JGeometry::TVec3<f32>&);
-	bool isWaterSlip() const;
-	bool isMarioThrough() const;
-	bool isWaterSurface() const;
+	void setVertex(const JGeometry::TVec3<f32>& point1,
+	               const JGeometry::TVec3<f32>& point2,
+	               const JGeometry::TVec3<f32>& point3);
+	void updateTrans(const JGeometry::TVec3<f32>& translate_by);
+	bool isWaterSlip() const
+	{
+		if (unk0 == 0x500 || unk0 == 0x4004 || unk0 == 0x8004 || unk0 == 0xC004)
+			return true;
+		return false;
+	}
+	bool isMarioThrough() const // matching
+	{
+		if (unk0 == 0x400 || unk0 == 0x8400 || unk0 == 0x100 || unk0 == 0x101
+		    || unk0 == 0x102 || unk0 == 0x103 || unk0 == 0x800 || unk0 == 0x801
+		    || unk0 == 0x201 || unk0 == 0x203)
+			return true;
+		return false;
+	}
+	bool isWaterSurface() const // matching
+	{
+		if (unk0 == 0x100 || unk0 == 0x101 || unk0 == 0x102 || unk0 == 0x103
+		    || unk0 == 0x104 || unk0 == 0x105 || unk0 == 0x4104)
+			return true;
+		return false;
+	}
 
 	// fabricated
 	bool checkFlag(u32 flag) const { return unk0 & flag ? true : false; }
 	bool checkFlag2(u32 flag) const { return unk4 & flag ? true : false; }
 	const TLiveActor* getUnk44() const { return unk44; }
-
-	bool checkSomething() const
-	{
-		if (unk0 == 0x100 || unk0 == 0x101 || unk0 == 0x102 || unk0 == 0x103
-		    || unk0 == 0x104 || unk0 == 0x105 || unk0 == 0x4104)
-			return true;
-		else
-			return false;
-	}
 
 	bool checkSomething2() const
 	{

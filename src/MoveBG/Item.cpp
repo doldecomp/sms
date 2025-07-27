@@ -302,7 +302,7 @@ void TCoin::loadAfter()
 	if (gpMarDirector->getCurrentMap() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
-		if (!check->checkSomething())
+		if (!check->isWaterSurface())
 			return;
 	}
 

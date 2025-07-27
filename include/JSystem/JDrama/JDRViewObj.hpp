@@ -18,7 +18,6 @@ public:
 
 	void testPerform(u32, TGraphics*);
 
-	virtual ~TViewObj() { }
 	virtual void perform(u32, TGraphics*) = 0;
 
 public:
