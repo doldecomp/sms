@@ -225,7 +225,7 @@ void TEnemyManager::copyFromShared()
 			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
 
-			J3DModel* model = unk40[j].getMActor(enemy->getUnk7C())->getUnk4();
+			J3DModel* model = unk40[j].getMActor(enemy->getUnk7C())->getModel();
 			MtxPtr src      = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
@@ -476,7 +476,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	Mtx afStack_5C;
 	MtxPtr wtf = afStack_5C;
-	MtxPtr mtx = enemy->getMActor()->getUnk4()->getBaseTRMtx();
+	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;
 	mtx[0][0] *= v.x;
@@ -491,10 +491,10 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getMActor()->getUnk4()->setAnmMtx(i, wtf);
+		enemy->getMActor()->getModel()->setAnmMtx(i, wtf);
 	}
 
-	if (enemy->getMActor()->getUnk4()->getModelData()->getWEvlpMtxNum())
+	if (enemy->getMActor()->getModel()->getModelData()->getWEvlpMtxNum())
 		enemy->getModel()->calcWeightEnvelopeMtx();
 
 	return true;

@@ -61,11 +61,11 @@ TBGTentacleMtxCalc::TBGTentacleMtxCalc(TBGTentacle* owner)
 
 void TBGTentacleMtxCalc::calc(u16 param_1)
 {
-	int uVar9 = mOwner->getUnk2C()->getUnk4()->getModelData()->getJointNum();
+	int uVar9 = mOwner->getUnk2C()->getModel()->getModelData()->getJointNum();
 	J3DMtxCalcAnm::calc(param_1);
 	int iVar8 = uVar9 - 1;
 
-	MtxPtr asdf = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1);
+	MtxPtr asdf = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
 
 	JGeometry::TVec3<f32> local_278
 	    = mOwner->unk28->getPoint(param_1 / f32(iVar8));
@@ -78,10 +78,10 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 
 	if (param_1 == iVar8) {
 		// TODO: an inline for extracting a column out of a matrix?
-		MtxPtr mtx1 = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1 - 2);
+		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 2);
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
-		MtxPtr mtx2 = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1 - 1);
+		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
 		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
 
 		vec1 -= vec2;
@@ -92,7 +92,7 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
 	} else {
-		MtxPtr mtx1 = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1 + 1);
+		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 + 1);
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
 		vec1 -= local_278;
@@ -109,7 +109,7 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	if (param_1 == 0) {
 		local_74.set(0.0f, 1.0f, 0.0f);
 	} else {
-		MtxPtr mtx1 = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1 - 1);
+		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
 		local_74.cross(local_68, vec1);
@@ -170,7 +170,7 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		local_80.scale(2.0f);
 	}
 
-	MtxPtr dst = mOwner->getUnk2C()->getUnk4()->getAnmMtx(param_1);
+	MtxPtr dst = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
 
 	dst[0][0] = local_68.x;
 	dst[1][0] = local_68.y;
@@ -297,7 +297,7 @@ void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		ensureTakeSituation();
 
 		if (mHolder != nullptr) {
-			J3DModel* model = mOwner->unk2C->getUnk4();
+			J3DModel* model = mOwner->unk2C->getModel();
 			MtxPtr mtx
 			    = model->getAnmMtx(model->getModelData()->getJointNum() - 1);
 
@@ -954,7 +954,7 @@ void TBGTentacle::moveConstraint()
 	switch (mState) {
 	case 1:
 		for (int i = 0; i < mNodeNum; ++i) {
-			MtxPtr mtx = unk80->getUnk4()->getAnmMtx(i);
+			MtxPtr mtx = unk80->getModel()->getAnmMtx(i);
 			mNodes[i].setPosition(
 			    JGeometry::TVec3<f32>(mtx[0][0], mtx[0][1], mtx[0][2]));
 		}
@@ -977,7 +977,7 @@ void TBGTentacle::moveConstraint()
 
 	case 10:
 		for (int i = 0; i < mNodeNum; ++i) {
-			MtxPtr mtx = unk80->getUnk4()->getAnmMtx(i);
+			MtxPtr mtx = unk80->getModel()->getAnmMtx(i);
 			mNodes[i].setPosition(
 			    JGeometry::TVec3<f32>(mtx[0][0], mtx[0][1], mtx[0][2]));
 		}
@@ -1129,10 +1129,10 @@ void TBGTentacle::calcAtkParticleAndSE()
 	                ? 7
 	                : mOwner->getSaveParam()->mSLBlurJoint.get();
 
-	unk80->getUnk4()->setAnmMtx(3, unk50);
+	unk80->getModel()->setAnmMtx(3, unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
 
-	MtxPtr mtx  = unk2C->getUnk4()->getAnmMtx(iVar5);
+	MtxPtr mtx  = unk2C->getModel()->getAnmMtx(iVar5);
 	unk50[0][3] = mtx[0][3];
 	unk50[1][3] = mtx[1][3];
 	unk50[2][3] = mtx[2][3];
@@ -1318,7 +1318,7 @@ void TBGTentacle::calcAttackGuideAnm()
 	}
 
 	MTXConcat(afStack_78, local_a8, afStack_78);
-	unk80->getUnk4()->setBaseTRMtx(afStack_78);
+	unk80->getModel()->setBaseTRMtx(afStack_78);
 	unk80->calcAnm();
 	calcAtkParticleAndSE();
 }
@@ -1337,10 +1337,10 @@ void TBGTentacle::resetAllNodes(const JGeometry::TVec3<f32>& param_1)
 		local_78.y += getNodeLen();
 	}
 
-	unk2C->getUnk4()->setBaseScale(JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+	unk2C->getModel()->setBaseScale(JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 	unk80->setBckFromIndex(0x14);
-	MtxPtr mtx = unk80->getUnk4()->getBaseTRMtx();
+	MtxPtr mtx = unk80->getModel()->getBaseTRMtx();
 	MTXTrans(mtx, param_1.x, param_1.y, param_1.z);
 	unk80->calc();
 }
@@ -1376,7 +1376,7 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 2)
-		unk2C->getUnk4()->getModelData()->getJointNodePointer(0)->setMtxCalc(
+		unk2C->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    unk30);
 
 	if (param_1 & 0x200) {

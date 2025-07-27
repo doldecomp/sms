@@ -10,14 +10,13 @@ class TBGCheckData {
 public:
 	TBGCheckData();
 
-	void getNormal() const;
+	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; };
 	void isIllegalData() const;
 	f32 getActiveJumpPower() const;
 	u32 getPlaneType();
-	void setVertex(const JGeometry::TVec3<float>&,
-	               const JGeometry::TVec3<float>&,
-	               const JGeometry::TVec3<float>&);
-	void updateTrans(const JGeometry::TVec3<float>&);
+	void setVertex(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
+	               const JGeometry::TVec3<f32>&);
+	void updateTrans(const JGeometry::TVec3<f32>&);
 	bool isWaterSlip() const;
 	bool isMarioThrough() const;
 	bool isWaterSurface() const;
@@ -39,6 +38,22 @@ public:
 	bool checkSomething2() const
 	{
 		if (unk0 == 0x104 || unk0 == 0x105 || unk0 == 0x4104)
+			return true;
+		else
+			return false;
+	}
+
+	bool checkSomething3() const
+	{
+		if (unk0 == 0x200 || unk0 == 0x201)
+			return true;
+		else
+			return false;
+	}
+
+	bool checkSomething4() const
+	{
+		if (unk0 == 0x202 || unk0 == 0x203)
 			return true;
 		else
 			return false;

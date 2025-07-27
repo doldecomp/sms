@@ -445,11 +445,8 @@ void TMapObjBase::setRootMtxTrans() { }
 
 void TMapObjBase::updateObjMtx()
 {
-	JGeometry::TVec3<f32> pos2(mPosition.x, mPosition.y - unk108, mPosition.z);
-	const JGeometry::TVec3<f32>& rot = getRotation();
-	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), pos2.x, pos2.y, pos2.z,
-	               rot.x * (65536.0f / 360.0f), rot.y * (65536.0f / 360.0f),
-	               rot.z * (65536.0f / 360.0f));
+	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x, mPosition.y - unk108,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 }
 
 void TMapObjBase::concatOnlyRotFromLeft(MtxPtr param_1, MtxPtr param_2,

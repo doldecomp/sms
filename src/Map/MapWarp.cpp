@@ -18,8 +18,8 @@ void TMapWarp::changeModel(int i)
 		return;
 
 	// TODO: inlines
-	gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-	gpMap->mModelManager->mJointModels[0]->mChildren[i]->awake();
+	gpMap->getModelManager()->getJointModel(0)->mChildren[unk8]->sleep();
+	gpMap->getModelManager()->getJointModel(0)->mChildren[i]->awake();
 	unk8 = i;
 }
 
@@ -31,59 +31,60 @@ void TMapWarp::watchToWarp()
 	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
 	                                     gpMarioPos->z, &checkData);
 
-	if (checkData->unk0 == 0x200 || checkData->unk0 == 0x201 ? true : false) {
+	if (checkData->checkSomething3()) {
 		int warp = unk4[checkData->unk2].unk0;
 		if (warp != unk8) {
-			// TODO: inlines
-			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-			gpMap->mModelManager->mJointModels[0]->mChildren[warp]->awake();
+			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
+			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
 			unk8 = warp;
 
-			// TODO: tons of inlines presumably?
-			JGeometry::TVec3<f32> marioPos(*gpMarioPos);
-			marioPos.add(unk4[checkData->unk2].unk8);
+			// TODO: inlines
+			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+			marioPos += unk4[checkData->unk2].unk8;
 			SMS_MarioWarpRequest(marioPos,
 			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
 		}
 	}
 
-	if (checkData->unk0 == 0x202 || checkData->unk0 == 0x203 ? true : false) {
+	if (checkData->checkSomething4()) {
 		if (checkData->unk2 != unk8) {
-			// TODO: inlines
-			gpMap->mModelManager->mJointModels[0]->mChildren[unk8]->sleep();
-			gpMap->mModelManager->mJointModels[0]
-			    ->mChildren[checkData->unk2]
+			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
+			gpMap->getModelManager()
+			    ->getJointModel(0)
+			    ->getChild(checkData->unk2)
 			    ->awake();
+
 			unk8 = checkData->unk2;
 		}
 	}
 
-	int no = gpCubeStream->getInCubeNo(*gpMarioPos);
-	if (no != -1) {
-		TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
-		JGeometry::TVec3<s16> vec;
-		vec.x = 182.0444f * info.unk18.x;
-		vec.y = 182.0444f * info.unk18.y;
-		vec.z = 182.0444f * info.unk18.z;
-		Mtx mtx;
-		MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, vec.x, vec.y, vec.z);
-		JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
-		MTXMultVec(mtx, &vec2, &vec2);
-		if ((info.unk38 == 0 ? true : false)
-		    || (info.unk38 == 1 ? true : false))
-			SMS_FlowMoveMario(vec2);
-		else
-			SMS_WindMoveMario(vec2);
-	}
+	int no = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
+	if (no == -1)
+		return;
+
+	TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
+	               info.unk18.z);
+
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	MTXMultVec(mtx, &vec2, &vec2);
+	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
+		SMS_FlowMoveMario(vec2);
+	else
+		SMS_WindMoveMario(vec2);
 }
 
 void TMapWarp::initModel()
 {
 	// TODO: inlines
-	int num = gpMap->mModelManager->mJointModels[0]->mChildrenNum;
+	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
 	for (int i = 0; i < num; ++i)
 		if (i != unk8)
-			gpMap->mModelManager->mJointModels[0]->mChildren[(u16)i]->sleep();
+			gpMap->getModelManager()
+			    ->getJointModel(0)
+			    ->mChildren[(u16)i]
+			    ->sleep();
 }
 
 void getWarpPointNo(const char*) { }
