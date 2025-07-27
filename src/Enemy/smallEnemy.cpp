@@ -316,7 +316,7 @@ void TSmallEnemy::forceKill()
 {
 	if ((unkC4->checkFlag2(0x10)
 	     || (!(unkC4->unk0 == 0x800 ? true : false) && !unkC4->checkSomething2()
-	         && !unkC4->checkSomething())
+	         && !unkC4->isWaterSurface())
 	     || checkLiveFlag2(0x80) || checkLiveFlag(0x10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
@@ -978,7 +978,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 	}
 
 	int uVar8 = ((TSmallEnemyManager*)self->mManager)->unk5C;
-	if (self->unkC4->checkSomething())
+	if (self->unkC4->isWaterSurface())
 		uVar8 = 0;
 
 	// TODO: missing some stuff

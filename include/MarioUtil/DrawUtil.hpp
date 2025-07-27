@@ -16,7 +16,7 @@ public:
 	TSilhouette();
 
 	void calcSilhouetteBorder();
-	void setting(float (*)[4]);
+	void setting(MtxPtr);
 
 	virtual ~TSilhouette() {};
 	virtual void load(JSUMemoryInputStream&);

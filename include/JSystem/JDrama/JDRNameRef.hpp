@@ -24,8 +24,8 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void save(JSUMemoryOutputStream&);
 	virtual void loadAfter();
+	
 	virtual TNameRef* searchF(u16 key, char const* name);
-
 	TNameRef* search(const char* name)
 	{
 		return searchF(calcKeyCode(name), name);

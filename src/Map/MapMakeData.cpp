@@ -15,13 +15,13 @@ template <class T> static inline T min(const T& a, const T& b)
 	return b > a ? a : b;
 }
 
-void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& param_1,
-                             const JGeometry::TVec3<f32>& param_2,
-                             const JGeometry::TVec3<f32>& param_3)
+void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& point1,
+                             const JGeometry::TVec3<f32>& point2,
+                             const JGeometry::TVec3<f32>& point3)
 {
-	mPoint1 = param_1;
-	mPoint2 = param_2;
-	mPoint3 = param_3;
+	mPoint1 = point1;
+	mPoint2 = point2;
+	mPoint3 = point3;
 
 	mNormal.x = (mPoint2.y - mPoint1.y) * (mPoint3.z - mPoint2.z)
 	            - (mPoint2.z - mPoint1.z) * (mPoint3.y - mPoint2.y);
@@ -66,14 +66,14 @@ void TMapCollisionBase::setCheckData(const f32* param_1, const s16* param_2,
 		gpMapCollisionData->addCheckDataToGrid(param_3, getUnk8());
 }
 
-void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& param_1)
+void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 {
-	mPoint1.add(param_1);
-	mPoint2.add(param_1);
-	mPoint3.add(param_1);
+	mPoint1.add(translate_by);
+	mPoint2.add(translate_by);
+	mPoint3.add(translate_by);
 
-	mMinY += param_1.y;
-	mMaxY += param_1.y;
+	mMinY += translate_by.y;
+	mMaxY += translate_by.y;
 
 	unk40 = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
 	          + mNormal.z * mPoint1.z);
