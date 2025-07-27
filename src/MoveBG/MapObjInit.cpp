@@ -10812,14 +10812,14 @@ void TMapObjBase::setMatTable(J3DMaterialTable* table)
 {
 	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_All);
 	mMActor->initDL();
-	mMActor->getUnk4()->lock();
+	mMActor->getModel()->lock();
 }
 
 void TMapObjBase::setMatTableTex(J3DMaterialTable* table)
 {
 	getModel()->getModelData()->setMaterialTable(table, J3DMatCopyFlag_Texture);
 	mMActor->initDL();
-	mMActor->getUnk4()->lock();
+	mMActor->getModel()->lock();
 }
 
 void TMapObjBase::initUnique()
@@ -11018,7 +11018,7 @@ void TMapObjBase::initBckMoveData()
 		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
 		    JKRGetResource(move->unk0));
 
-		J3DModelData* data         = mMActor->getUnk4()->getModelData();
+		J3DModelData* data         = mMActor->getModel()->getModelData();
 		data->mJointNodePointer[0] = data->getJointNodePointer(1);
 
 		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
@@ -11113,9 +11113,9 @@ void TMapObjBase::initModelData()
 		unkC8 = gpMap->checkGround(getPosition(), &unkC4);
 		if (getUnkC4()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
-			    getMActor()->getUnk4());
+			    getMActor()->getModel());
 		else
-			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getUnk4());
+			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getModel());
 	}
 
 	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {

@@ -27,6 +27,12 @@ inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
 void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);
+inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
+{
+	MsMtxSetXYZRPH(mtx, x, y, z, static_cast<s16>(r * (65536.0f / 360.0f)),
+	               static_cast<s16>(p * (65536.0f / 360.0f)),
+	               static_cast<s16>(h * (65536.0f / 360.0f)));
+}
 void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 
 template <class T> inline T MsWrap(T t, T l, T r)

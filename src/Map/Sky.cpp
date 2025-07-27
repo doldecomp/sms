@@ -55,7 +55,7 @@ void TSky::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk48 += unk4C;
 			unk48 = MsWrap<f32>(unk48, 0.0f, 360.0f);
 		}
-		unk44->getUnk4()->setBaseTRMtx(afStack_7c);
+		unk44->getModel()->setBaseTRMtx(afStack_7c);
 	}
 	unk44->perform(param_1, param_2);
 	if ((param_1 & 8) != 0) {
@@ -97,7 +97,7 @@ void TSky::load(JSUMemoryInputStream& stream)
 	    3, 0x10220000);
 
 	if (gpMapObjManager->unk68) {
-		unk44->getUnk4()->getModelData()->setMaterialTable(
+		unk44->getModel()->getModelData()->setMaterialTable(
 		    gpMapObjManager->getUnk68(), J3DMatCopyFlag_All);
 		unk44->initDL();
 	}

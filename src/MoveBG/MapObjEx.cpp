@@ -56,7 +56,7 @@ void TJointCoin::control()
 {
 	unk138->frameUpdate();
 	unk138->calc();
-	MtxPtr mtx = unk138->getUnk4()->getAnmMtx(0);
+	MtxPtr mtx = unk138->getModel()->getAnmMtx(0);
 	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	getModel()->setBaseTRMtx(mtx);
 	mMActor->frameUpdate();
@@ -160,11 +160,8 @@ void TJointCoin::initMapObj()
 		unk138->setBck("sandbirdrail");
 	}
 
-	// TODO: maybe this is an inline?
-	MsMtxSetXYZRPH(unk138->getUnk4()->getBaseTRMtx(), mPosition.x, mPosition.y,
-	               mPosition.z, mRotation.x * (65536.0f / 360.0f),
-	               mRotation.y * (65536.0f / 360.0f),
-	               mRotation.z * (65536.0f / 360.0f));
+	MsMtxSetXYZRPH(unk138->getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 }
 
 TJointCoin::TJointCoin(const char* name)

@@ -363,10 +363,10 @@ void TRailBlock::calcRootMatrix()
 	MtxPtr mtx      = model->getBaseTRMtx();
 	MsMtxSetRotRPH(mtx, unk168.x, unk168.y, unk168.z);
 	MTXConcat(mtx, unk174, mtx);
-	mtx[0][3]    = mPosition.x;
-	mtx[1][3]    = mPosition.y;
-	mtx[2][3]    = mPosition.z;
-	model->unk14 = mScaling;
+	mtx[0][3] = mPosition.x;
+	mtx[1][3] = mPosition.y;
+	mtx[2][3] = mPosition.z;
+	model->setBaseScale(mScaling);
 }
 
 void TRailBlock::control() { }

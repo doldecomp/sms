@@ -357,19 +357,16 @@ u32 TMapObjBase::getShadowType()
 Mtx* TMapObjBase::getRootJointMtx() const
 {
 	if (checkMapObjFlag(0x8) || unk108 != 0.0f)
-		return (Mtx*)mMActor->getUnk4()->getAnmMtx(0);
+		return (Mtx*)mMActor->getModel()->getAnmMtx(0);
 	return nullptr;
 }
 
 void TMapObjBase::calcRootMatrix()
 {
-	J3DModel* model                  = getModel();
-	const JGeometry::TVec3<f32>& pos = getPosition();
-	const JGeometry::TVec3<f32>& rot = getRotation();
-	MsMtxSetXYZRPH(model->unk20, pos.x, pos.y - unk108, pos.z,
-	               rot.x * (65536.0f / 360.0f), rot.y * (65536.0f / 360.0f),
-	               rot.z * (65536.0f / 360.0f));
-	model->unk14 = mScaling;
+	J3DModel* model = getModel();
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - unk108,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	model->setBaseScale(mScaling);
 }
 
 BOOL TMapObjBase::receiveMessage(THitActor* param_1, u32 param_2)

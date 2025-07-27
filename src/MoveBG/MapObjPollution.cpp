@@ -17,7 +17,7 @@ void TPolluterBase::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk138->calcAnm();
 
 	if (param_1 & 0x200)
-		gpPollution->stampModel(unk138->getUnk4());
+		gpPollution->stampModel(unk138->getModel());
 }
 
 void TPolluterBase::load(JSUMemoryInputStream& stream)
@@ -33,11 +33,9 @@ void TPolluterBase::load(JSUMemoryInputStream& stream)
 	unk138->setBtp(buffer);
 	unk138->setBtk(buffer);
 
-	MsMtxSetXYZRPH(unk138->getUnk4()->getBaseTRMtx(), mPosition.x, mPosition.y,
-	               mPosition.z, mRotation.x * (65536.0f / 360.0f),
-	               mRotation.y * (65536.0f / 360.0f),
-	               mRotation.z * (65536.0f / 360.0f));
-	unk138->getUnk4()->unk14 = mScaling;
+	MsMtxSetXYZRPH(unk138->getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	unk138->getModel()->setBaseScale(mScaling);
 }
 
 TPolluterBase::TPolluterBase(const char* name)

@@ -311,7 +311,7 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (unk4 == 1) {
 		if (param_1 & 2) {
-			unk10->getUnk4()->setBaseTRMtx(unk4C);
+			unk10->getModel()->setBaseTRMtx(unk4C);
 			J3DFrameCtrl* ctrl = unk10->getFrameCtrl(3);
 			ctrl->setFrame(unkC);
 			ctrl->setSpeed(0.0f);
@@ -347,7 +347,7 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 				MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
 				MTXConcat(getUnk4C(), afStack_88, afStack_88);
 				MTXConcat(afStack_58, afStack_88, afStack_58);
-				unk14->getUnk4()->setBaseTRMtx(afStack_58);
+				unk14->getModel()->setBaseTRMtx(afStack_58);
 			}
 
 			{
@@ -358,7 +358,7 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 				MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
 				MTXConcat(getUnk4C(), afStack_58, afStack_58);
 				MTXConcat(afStack_58, afStack_88, afStack_58);
-				unk18->getUnk4()->setBaseTRMtx(afStack_58);
+				unk18->getModel()->setBaseTRMtx(afStack_58);
 			}
 		}
 

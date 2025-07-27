@@ -525,7 +525,7 @@ void TBGCork::crush()
 		return;
 
 	unk8->setBckFromIndex(8);
-	unk4->getUnk4()->setBaseTRMtx(unk8->getUnk4()->getBaseTRMtx());
+	unk4->getModel()->setBaseTRMtx(unk8->getModel()->getBaseTRMtx());
 	unkC = 1;
 }
 
@@ -591,7 +591,7 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	unk18C = new TBGCork(this);
 
-	J3DModel* model = getMActor()->getUnk4();
+	J3DModel* model = getMActor()->getModel();
 	if (!model->getSkinDeform()) {
 		J3DSkinDeform* skinDeform = new J3DSkinDeform;
 		model->setSkinDeform(skinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
@@ -612,7 +612,7 @@ void TBossGesso::init(TLiveManager* param_1)
 	unk190.color.a = 0xE6;
 
 	getMActor()
-	    ->getUnk4()
+	    ->getModel()
 	    ->getModelData()
 	    ->getMaterialNodePointer(0)
 	    ->getTevBlock()
@@ -622,7 +622,7 @@ void TBossGesso::init(TLiveManager* param_1)
 	    = (const ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
 
 	if (image)
-		SMS_ChangeTextureAll(getMActor()->getUnk4()->getModelData(),
+		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 		                     "H_ma_rak_dummy", *image);
 }
 
@@ -1196,7 +1196,7 @@ void TBossGesso::reset()
 		changeAttackMode(0);
 
 	calcRootMatrix();
-	getMActor()->getUnk4()->calc();
+	getMActor()->getModel()->calc();
 }
 
 void TBossGesso::calcRootMatrix()
@@ -1206,10 +1206,8 @@ void TBossGesso::calcRootMatrix()
 		mRotation = MsGetRotFromZaxis(unkAC);
 		MtxPtr mA = getModel()->getBaseTRMtx();
 
-		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y, mPosition.z,
-		               mRotation.x * (65536.0f / 360.0f),
-		               mRotation.y * (65536.0f / 360.0f),
-		               mRotation.z * (65536.0f / 360.0f));
+		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
+		               mRotation.y, mRotation.z);
 
 		Mtx local_50;
 
@@ -1233,7 +1231,7 @@ void TBossGesso::calcRootMatrix()
 
 		MTXConcat(mA, local_50, mA);
 
-		getModel()->unk14 = mScaling;
+		getModel()->setBaseScale(mScaling);
 		return;
 	}
 

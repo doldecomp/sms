@@ -35,7 +35,7 @@ void TMapObjSeaIndirect::init()
 	TScreenTexture* ref
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 	const ResTIMG* img = ref->getTexture()->getTexInfo();
-	unk44->getUnk4()->getModelData()->getTexture()->setResTIMG(1, *img);
+	unk44->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 }
 
 TMapObjSeaIndirect::TMapObjSeaIndirect(const char* name)
@@ -84,7 +84,7 @@ void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
 		MTXInverse(param_2->unkB4, afStack_48);
 		MTXConcat(afStack_48, afStack_78, afStack_48);
 		MTXConcat(afStack_48, afStack_a8, afStack_48);
-		unk44->getUnk4()->setBaseTRMtx(afStack_48);
+		unk44->getModel()->setBaseTRMtx(afStack_48);
 	}
 	unk44->perform(param_1, param_2);
 }

@@ -152,11 +152,10 @@ void TEnemyAttachment::sendMessage()
 
 void TEnemyAttachment::calcRootMatrix()
 {
-	MsMtxSetXYZRPH(getMActor()->getUnk4()->getBaseTRMtx(), mPosition.x,
-	               mPosition.y, mPosition.z, mRotation.x * (65536.0f / 360.0f),
-	               mRotation.y * (65536.0f / 360.0f),
-	               mRotation.z * (65536.0f / 360.0f));
-	getMActor()->getUnk4()->unk14 = mScaling;
+	MsMtxSetXYZRPH(getMActor()->getModel()->getBaseTRMtx(), mPosition.x,
+	               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
+	               mRotation.z);
+	getMActor()->getModel()->setBaseScale(mScaling);
 }
 
 void TEnemyAttachment::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -259,13 +258,13 @@ void TEnemyPolluteModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 			return;
 		}
 
-		MTXCopy(unk14, unk10->unk18->getUnk4()->getBaseTRMtx());
-		unk10->unk18->getUnk4()->unk14 = unk50;
+		unk10->unk18->getModel()->setBaseTRMtx(unk14);
+		unk10->unk18->getModel()->setBaseScale(unk50);
 		unk10->unk18->calcAnm();
 	}
 
 	if (param_1 & 0x200)
-		gpPollution->stampModel(unk10->unk18->getUnk4());
+		gpPollution->stampModel(unk10->unk18->getModel());
 }
 
 // TODO: is this TPosition3 or am I trippin
@@ -289,7 +288,7 @@ void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
 	TStack_58.translate(param_1.x, param_1.y, param_1.z);
 
 	(*(Magic*)&unk14).translate(param_1.x, param_1.y, param_1.z);
-	unk10->unk18->getUnk4()->setBaseTRMtx(TStack_58);
+	unk10->unk18->getModel()->setBaseTRMtx(TStack_58);
 	unk5D = true;
 	unk5C = false;
 	setAnm();

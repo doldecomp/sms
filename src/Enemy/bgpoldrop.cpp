@@ -93,7 +93,7 @@ void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
 		move();
 
 	if (param_1 & 2) {
-		MtxPtr m = unk50->getUnk4()->getBaseTRMtx();
+		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
 			f32 s          = JMASin(-90.0f);
@@ -115,10 +115,8 @@ void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 			mRotation = MsGetRotFromZaxis(unk44);
 
-			s16 r = mRotation.x * (65536.0f / 360.0f);
-			s16 p = mRotation.y * (65536.0f / 360.0f);
-			s16 h = mRotation.z * (65536.0f / 360.0f);
-			MsMtxSetXYZRPH(m, mPosition.x, mPosition.y, mPosition.z, r, p, h);
+			MsMtxSetXYZRPH(m, mPosition.x, mPosition.y, mPosition.z,
+			               mRotation.x, mRotation.y, mRotation.z);
 
 			MTXConcat(m, local_60, m);
 			gpMarioParticleManager->emitAndBindToPosPtr(0x13A, &mPosition, 1,
@@ -130,10 +128,10 @@ void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
 			m[2][3] = mPosition.z;
 		}
 
-		unk50->getUnk4()->setBaseScale(mScaling);
+		unk50->getModel()->setBaseScale(mScaling);
 		if (unk58 == 2) {
-			unk54->getUnk4()->setBaseScale(mScaling);
-			unk54->getUnk4()->setBaseTRMtx(m);
+			unk54->getModel()->setBaseScale(mScaling);
+			unk54->getModel()->setBaseTRMtx(m);
 		}
 	}
 
@@ -142,6 +140,6 @@ void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (param_1 & 0x2)
 			unk54->calcAnm();
 		if (param_1 & 0x200)
-			gpPollution->stampModel(unk54->getUnk4());
+			gpPollution->stampModel(unk54->getModel());
 	}
 }

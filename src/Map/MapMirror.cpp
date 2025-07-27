@@ -101,10 +101,10 @@ void TMirrorModel::setPlane()
 
 void TMirrorModel::initPlaneInfo()
 {
-	u8 posComp = getVertexFormat(unk4->getUnk4()->getModelData(), GX_VA_POS);
+	u8 posComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_POS);
 
 	if (posComp == GX_S16) {
-		S16Vec* v = (S16Vec*)unk4->getUnk4()
+		S16Vec* v = (S16Vec*)unk4->getModel()
 		                ->getModelData()
 		                ->getVertexData()
 		                .getVtxPosArray();
@@ -112,7 +112,7 @@ void TMirrorModel::initPlaneInfo()
 		unkC.y = v->y;
 		unkC.z = v->z;
 	} else {
-		Vec* v = (Vec*)unk4->getUnk4()
+		Vec* v = (Vec*)unk4->getModel()
 		             ->getModelData()
 		             ->getVertexData()
 		             .getVtxPosArray();
@@ -121,10 +121,10 @@ void TMirrorModel::initPlaneInfo()
 		unkC.z = v->z;
 	}
 
-	u8 normComp = getVertexFormat(unk4->getUnk4()->getModelData(), GX_VA_NRM);
+	u8 normComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_NRM);
 
 	if (normComp == GX_S16) {
-		S16Vec* v = (S16Vec*)unk4->getUnk4()
+		S16Vec* v = (S16Vec*)unk4->getModel()
 		                ->getModelData()
 		                ->getVertexData()
 		                .getVtxNormArray();
@@ -133,7 +133,7 @@ void TMirrorModel::initPlaneInfo()
 		unk18.y = v->y / 16384;
 		unk18.z = v->z / 16384;
 	} else if (normComp == GX_F32) {
-		Vec* v = (Vec*)unk4->getUnk4()
+		Vec* v = (Vec*)unk4->getModel()
 		             ->getModelData()
 		             ->getVertexData()
 		             .getVtxNormArray();
@@ -177,9 +177,9 @@ void TMirrorModel::init(const char* name)
 	TPosition3f local_44;
 	// TODO: WTF is happening with inlines here?
 	identity34(local_44.mMtx);
-	MTXCopy(local_44, unk4->getUnk4()->getBaseTRMtx());
+	MTXCopy(local_44, unk4->getModel()->getBaseTRMtx());
 	unk4->calc();
-	unk4->getUnk4()->getModelData()->getMaterialNodePointer(0)->change();
+	unk4->getModel()->getModelData()->getMaterialNodePointer(0)->change();
 
 	gpMirrorModelManager->findMirrorCamera();
 	unk8 = gpMirrorModelManager->unk24;
@@ -198,8 +198,8 @@ TMirrorModel::TMirrorModel()
 
 void TMirrorModelObj::setPlane()
 {
-	MtxPtr mtx = unk4->getUnk4()->getAnmMtx(0);
-	Vec* v     = (Vec*)unk4->getUnk4()
+	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
+	Vec* v     = (Vec*)unk4->getModel()
 	             ->getModelData()
 	             ->getVertexData()
 	             .getVtxPosArray();

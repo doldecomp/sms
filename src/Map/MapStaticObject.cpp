@@ -146,7 +146,7 @@ f32 TMapStaticObj::mEffectCoronaScale;
 
 J3DModelData* TMapStaticObj::getModelData() const
 {
-	return unk70->getUnk4()->getModelData();
+	return unk70->getModel()->getModelData();
 }
 
 void TMapStaticObj::getModel() const { }
@@ -182,7 +182,7 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 		Mtx afStack_7c;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
 
-		unk70->getUnk4()
+		unk70->getModel()
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
 		    ->getTexGenBlock()
@@ -199,12 +199,10 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 	     || (gpMirrorModelManager->unk18 != -1 ? true : false))
 	    && unk70) {
 		if (param_1 & 0x2) {
-			MsMtxSetXYZRPH(unk70->getUnk4()->getBaseTRMtx(), mPosition.x,
-			               mPosition.y, mPosition.z,
-			               mRotation.x * (65536.0f / 360.0f),
-			               mRotation.y * (65536.0f / 360.0f),
-			               mRotation.z * (65536.0f / 360.0f));
-			unk70->getUnk4()->unk14 = mScaling;
+			MsMtxSetXYZRPH(unk70->getModel()->getBaseTRMtx(), mPosition.x,
+			               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
+			               mRotation.z);
+			unk70->getModel()->setBaseScale(mScaling);
 		}
 
 		if ((param_1 & 0x200) && (unk68->unk40 & 0x80)) {
@@ -235,7 +233,7 @@ void TMapStaticObj::initUnique()
 	if (strcmp(unk6C, "ReflectSky") == 0) {
 		JDrama::TNameRefGen::getInstance()->getRootNameRef()->search("空");
 
-		unk70->getUnk4()->getModelData()->setMaterialTable(
+		unk70->getModel()->getModelData()->setMaterialTable(
 		    gpMapObjManager->getUnk68(), J3DMatCopyFlag_All);
 		unk70->initDL();
 
@@ -252,9 +250,9 @@ void TMapStaticObj::initUnique()
 		        ->getDrawBuffer(),
 		    1);
 
-		unk70->getUnk4()->calc();
-		unk70->getUnk4()->viewCalc();
-		unk70->getUnk4()->entry();
+		unk70->getModel()->calc();
+		unk70->getModel()->viewCalc();
+		unk70->getModel()->entry();
 	}
 }
 
@@ -344,14 +342,14 @@ void TMapStaticObj::init(const char* name)
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
-		unk70->getUnk4()->getModelData()->getTexture()->setResTIMG(1, *img);
+		unk70->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 
-		SMS_ChangeTextureAll(unk70->getUnk4()->getModelData(), "indirectdummy",
+		SMS_ChangeTextureAll(unk70->getModel()->getModelData(), "indirectdummy",
 		                     *img);
 	}
 	initUnique();
 	if (unk68->unk40 & 0x20)
-		TMirrorActor::entryMirrorDrawBufferAlways(unk70->getUnk4());
+		TMirrorActor::entryMirrorDrawBufferAlways(unk70->getModel());
 }
 
 void TMapStaticObj::loadAfter()
@@ -382,12 +380,11 @@ void TMapModelActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!unk68)
 		return;
 
-	if (!(param_1 & 2)) {
-		MsMtxSetXYZRPH(unk68->getUnk4()->unk20, mPosition.x, mPosition.y,
-		               mPosition.z, mRotation.x * (65536.0f / 360.0f),
-		               mRotation.y * (65536.0f / 360.0f),
-		               mRotation.z * (65536.0f / 360.0f));
-		unk68->getUnk4()->unk14 = mScaling;
+	if (param_1 & 2) {
+		MsMtxSetXYZRPH(unk68->getModel()->getBaseTRMtx(), mPosition.x,
+		               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
+		               mRotation.z);
+		unk68->getModel()->setBaseScale(mScaling);
 	}
 	unk68->perform(param_1, param_2);
 }

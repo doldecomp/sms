@@ -308,9 +308,7 @@ void TSmallEnemy::reset()
 	unk164 = 0;
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
-	               mPosition.z, mRotation.x * (65536.0f / 360.0f),
-	               mRotation.y * (65536.0f / 360.0f),
-	               mRotation.z * (65536.0f / 360.0f));
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	getMActor()->calc();
 }
 

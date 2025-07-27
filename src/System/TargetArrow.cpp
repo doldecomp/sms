@@ -33,7 +33,7 @@ void TTargetArrow::setPos(const JGeometry::TVec3<f32>& pos)
 	if (!unk10)
 		return;
 
-	MtxPtr mat = unk10->getUnk4()->unk20;
+	MtxPtr mat = unk10->getModel()->unk20;
 	mat[0][3]  = pos.x;
 	mat[1][3]  = pos.y;
 	mat[2][3]  = pos.z;

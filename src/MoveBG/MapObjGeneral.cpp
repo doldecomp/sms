@@ -458,12 +458,10 @@ void TMapObjGeneral::calcRootMatrix()
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - unk108,
 		                          mPosition.z);
-		JGeometry::TVec3<f32> rot;
-		rot.scale(65536.0f / 360.0f, mRotation);
-		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, rot.x, rot.y,
-		               rot.z);
+		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, mRotation.x,
+		               mRotation.y, mRotation.z);
 	}
-	model->unk14 = mScaling;
+	model->setBaseScale(mScaling);
 }
 
 void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)

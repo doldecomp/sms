@@ -87,17 +87,17 @@ void TSpineEnemy::calcEnemyRootMatrix()
 	J3DModel* pJVar13 = getModel();
 	MtxPtr mtx        = pJVar13->getBaseTRMtx();
 
-	pJVar13->unk14 = mScaling;
+	pJVar13->setBaseScale(mScaling);
 
 	if (unk130 == 0) {
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
-		if (unk130 >= 2 && !(checkLiveFlag(0x80) ? TRUE : FALSE) && unk138) {
-			JGeometry::TVec3<f32> v1(0.0f, 1.0f, 0.0f);
+		if (unk130 >= 2 && !(checkLiveFlag(0x80) ? TRUE : FALSE)
+		    && unk138 != nullptr) {
+			JGeometry::TVec3<f32> v2 = unk138->getNormal();
 
-			JGeometry::TVec3<f32> v2 = unk138->mNormal;
-
-			v1.cross(v2, v1);
+			JGeometry::TVec3<f32> v1;
+			v1.cross(v2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 			v1.normalize();
 
 			JGeometry::TVec3<f32> v3;
@@ -118,11 +118,10 @@ void TSpineEnemy::calcEnemyRootMatrix()
 			mtx[2][3] = 0.0;
 		} else {
 			if (unk130 >= 1 && !unkC4->checkFlag(0x10)) {
-				JGeometry::TVec3<f32> v1(
-				    JMASSin(mRotation.y * (65536.0f / 360.0f)), 0.0f,
-				    JMASCos(mRotation.y * (65536.0f / 360.0f)));
+				JGeometry::TVec3<f32> v1(JMASin(mRotation.y), 0.0f,
+				                         JMACos(mRotation.y));
 
-				JGeometry::TVec3<f32> v2 = unkC4->mNormal;
+				JGeometry::TVec3<f32> v2 = unkC4->getNormal();
 				v1.cross(v2, v1);
 				v1.normalize();
 
