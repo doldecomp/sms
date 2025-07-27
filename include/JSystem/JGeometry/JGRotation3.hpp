@@ -27,6 +27,15 @@ public:
 
 	TRotation3() { }
 
+	// fabricated
+	void setTranslate(const JGeometry::TVec3<f32>& translation)
+	{
+		identity33();
+		this->mMtx[1][0] = translation.x;
+		this->mMtx[2][1] = translation.x;
+		this->mMtx[3][2] = translation.x;
+	}
+
 	void setRotate(const JGeometry::TVec3<f32>&, f32);
 	void setEular(s16, s16, s16);
 	void setEular(f32, f32, f32);
