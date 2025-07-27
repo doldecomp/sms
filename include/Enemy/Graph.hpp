@@ -90,15 +90,15 @@ public:
 	int getAimToDirNextIndex(int, int, const JGeometry::TVec3<f32>&,
 	                         const JGeometry::TVec3<f32>&, u32) const;
 	int getRandomButDirLimited(int, int, const JGeometry::TVec3<f32>&,
-	                            const JGeometry::TVec3<f32>&, f32, u32) const;
+	                           const JGeometry::TVec3<f32>&, f32, u32) const;
 	int getEscapeDirLimited(int, int, const JGeometry::TVec3<f32>&,
-	                         const JGeometry::TVec3<f32>&, f32, u32) const;
+	                        const JGeometry::TVec3<f32>&, f32, u32) const;
 	int findNearestNodeIndex(const JGeometry::TVec3<f32>&, u32) const;
 	int findFarthestNodeIndex(const JGeometry::TVec3<f32>&, u32) const;
 	int findNearestVisibleIndex(const JGeometry::TVec3<f32>&, f32, f32, f32,
-	                             u32) const;
+	                            u32) const;
 	int findNearestNodeIndexCheckY(const JGeometry::TVec3<f32>&, f32,
-	                                u32) const;
+	                               u32) const;
 	void getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32, u32) const;
 	void calcGraphDirection(int);
 	void initGoalIndex(const Vec&);
