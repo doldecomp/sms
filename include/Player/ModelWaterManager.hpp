@@ -35,7 +35,6 @@ public:
 	/* 0x14C */ TParamRT<s16> __padding;
 };
 
-// fabricated name, do we know the real one?
 class TWaterParticleType : public TParams {
 public:
 	TWaterParticleType(const char* path);
@@ -67,7 +66,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	void getWPGravity(int) const;
+	f32 getWPGravity(int) const;
 	void getWaterAlpha() const;
 	bool askHitWaterParticleOnGround(const JGeometry::TVec3<f32>&);
 	void makeEmit(const TWaterEmitInfo&);
@@ -77,9 +76,9 @@ public:
 	void touchingExec(int);
 	void splashWall(int);
 	void splashWallPosSize(const JGeometry::TVec3<f32>&, f32);
-	void getPlaneFriction(const TBGCheckData*);
-	void getPlaneFall(const TBGCheckData*);
-	void getPlaneVanishSpeed(const TBGCheckData*);
+	f32 getPlaneFriction(const TBGCheckData*);
+	f32 getPlaneFall(const TBGCheckData*);
+	f32 getPlaneVanishSpeed(const TBGCheckData*);
 	bool askDoWaterHitCheck();
 	void wind(const JGeometry::TVec3<f32>&);
 	void garbageCollect();
@@ -100,30 +99,43 @@ public:
 	void drawRefracAndSpec() const;
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	~TModelWaterManager();
-
 	static TWaterHitActor mStaticHitActor;
 
 	// fabricated
-	BOOL checkUnk414(int i, u16 flag)
+	BOOL checkParticleFlag(TWaterHitActor* hit, u16 flag)
 	{
-		return unk414[i] & flag ? TRUE : FALSE;
+		return mParticleFlagSOA[hit->unk68] & flag ? TRUE : FALSE;
+	}
+	s16 getParticleAttack(TWaterHitActor* hit)
+	{
+		return mParticleAttackSOA[hit->unk68];
+	}
+	int getFlagBottom4Bits(int i) const { return mParticleFlagSOA[i] & 0xf; }
+	void setFlagBottom4Bits(int i, int flag)
+	{
+		mParticleFlagSOA[i] = (mParticleFlagSOA[i] & ~0xf) | flag;
+	}
+	JGeometry::TVec3<f32> vecBetweenParticles(int i, int j) const
+	{
+		JGeometry::TVec3<f32> d = mParticlePositionSOA[i];
+		d -= mParticlePositionSOA[j];
+		return d;
 	}
 
 	enum { SLOT_NUM = 256 };
 
 public:
 	/* 0x10 */ s16 unk10;
-	/* 0x12 */ u16 unk12;
-	/* 0x14 */ f32 unk14[SLOT_NUM];
-	/* 0x414 */ u16 unk414[SLOT_NUM];
-	/* 0x614 */ s16 unk614[SLOT_NUM];
-	/* 0x814 */ JGeometry::TVec3<f32> unk814[SLOT_NUM];
-	/* 0x1414 */ JGeometry::TVec3<f32> unk1414[SLOT_NUM];
-	/* 0x2014 */ f32 unk2014[SLOT_NUM];
-	/* 0x2414 */ u8 mPerParticleType[SLOT_NUM];
+	/* 0x12 */ u16 mParticleCount;
+	/* 0x14 */ f32 mParticleLifetimeSOA[SLOT_NUM];
+	/* 0x414 */ u16 mParticleFlagSOA[SLOT_NUM];
+	/* 0x614 */ s16 mParticleAttackSOA[SLOT_NUM];
+	/* 0x814 */ JGeometry::TVec3<f32> mParticlePositionSOA[SLOT_NUM];
+	/* 0x1414 */ JGeometry::TVec3<f32> mParticleVelocitySOA[SLOT_NUM];
+	/* 0x2014 */ f32 mParticleSizeSOA[SLOT_NUM];
+	/* 0x2414 */ u8 mParticleTypeSOA[SLOT_NUM];
 	/* 0x2514 */ THitActor* unk2514[SLOT_NUM];
-	/* 0x2914 */ TBGCheckData* unk2914[SLOT_NUM];
+	/* 0x2914 */ const TBGCheckData* unk2914[SLOT_NUM];
 	/* 0x2D14 */ Mtx unk2D14[SLOT_NUM];
 	/* 0x5D14 */ f32 unk5D14;
 	/* 0x5D18 */ f32 unk5D18;
@@ -152,7 +164,8 @@ public:
 	/* 0x5D63 */ u8 unk5D63;
 	/* 0x5D64 */ u8 unk5D64;
 	/* 0x5D65 */ u8 unk5D65;
-	/* 0x5D68 */ f32 unk5D68[2];
+	/* 0x5D68 */ f32 unk5D68;
+	/* 0x5D6C */ f32 unk5D6C;
 	/* 0x5D70 */ JGeometry::TVec3<f32> unk5D70;
 	/* 0x5D7C */ JGeometry::TVec3<f32> unk5D7C;
 	/* 0x5D88 */ f32 unk5D88[13];

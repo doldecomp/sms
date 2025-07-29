@@ -21,6 +21,10 @@ template <typename T> struct TVec2 {
 		y = other.y;
 	}
 
+	void zero() { x = y = 0.0f; }
+
+	// === arithmetic stuff ===
+
 	void setMin(const TVec2<T>& min)
 	{
 		if (x >= min.x)
@@ -43,12 +47,20 @@ template <typename T> struct TVec2 {
 		y += other.y;
 	}
 
+	void scale(f32 scale)
+	{
+		x *= scale;
+		y *= scale;
+	}
+
 	bool isAbove(const TVec2<T>& other) const
 	{
 		return (x >= other.x) && (y >= other.y) ? true : false;
 	}
 
 	T dot(const TVec2<T>& other) { return x * other.x + y * other.y; }
+
+	// === length stuff ===
 
 	T squared() { return dot(*this); }
 

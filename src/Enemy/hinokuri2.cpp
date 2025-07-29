@@ -787,8 +787,8 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
-		// TODO: what are we casting to here?
-		int dmgAmount = gpModelWaterManager->unk614[*(int*)(param_1 + 1)];
+		int dmgAmount
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
 
 		if (dmgAmount <= 0)
 			return true;
@@ -828,8 +828,8 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 
-		// TODO: what are we casting to here?
-		int dmgAmount = gpModelWaterManager->unk614[*(int*)(param_1 + 1)];
+		int dmgAmount
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
 
 		if (dmgAmount <= 1)
 			return true;

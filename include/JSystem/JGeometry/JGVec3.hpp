@@ -181,8 +181,9 @@ public:
 
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
 
-	// fabricated
+	// present in tww so likely real
 	void setLength(f32 length) { setLength(*this, length); }
+
 	void normalize() { setLength(*this, 1.0f); }
 
 	void setLength(const TVec3<f32>& v, f32 length)

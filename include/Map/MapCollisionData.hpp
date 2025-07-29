@@ -54,7 +54,11 @@ public:
 	/* 0x0 */ TBGCheckList unk0[3];
 };
 
+// TODO: the constructors are 99% wrong, need to analyze a bunch of use-cases
 struct TBGWallCheckRecord {
+	// fabricated
+	TBGWallCheckRecord() { }
+
 	// fabricated
 	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 param_4, u32 param_5,
 	                   u32 param_6)
@@ -72,6 +76,14 @@ struct TBGWallCheckRecord {
 	    , unk10(param_3)
 	    , unk18(param_4)
 	{
+	}
+
+	void set(f32 x, f32 y, f32 z, f32 param_2, u32 param_3, u32 param_4)
+	{
+		unk0.set(x, y, z);
+		unkC  = param_2;
+		unk10 = param_3;
+		unk18 = param_4;
 	}
 
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;

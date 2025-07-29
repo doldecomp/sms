@@ -19,7 +19,7 @@ public:
 	virtual void load(JSUMemoryInputStream& stream);
 
 	// fabricated
-	T get() const { return value; }
+	const T& get() const { return value; }
 
 	T value;
 };

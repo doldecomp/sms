@@ -753,7 +753,8 @@ void TSmallEnemy::changeOut()
 void TSmallEnemy::decHpByWater(THitActor* param_1)
 {
 	// TODO: not actually a TWaterHItActor, IDK what it is
-	s16 uVar2 = gpModelWaterManager->unk614[((TWaterHitActor*)param_1)->unk68];
+	s16 uVar2 = gpModelWaterManager
+	                ->mParticleAttackSOA[((TWaterHitActor*)param_1)->unk68];
 	if (uVar2 < 1)
 		uVar2 = 1;
 

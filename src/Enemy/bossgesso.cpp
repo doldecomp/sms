@@ -73,7 +73,8 @@ static BOOL isNozzleWater(THitActor* param_1)
 	if (!param_1->isActorType(0x1000001))
 		return FALSE;
 
-	return gpModelWaterManager->checkUnk414(*(int*)(param_1 + 1), 0x40);
+	return gpModelWaterManager->checkParticleFlag((TWaterHitActor*)param_1,
+	                                              0x40);
 }
 
 TBossGessoParams::TBossGessoParams(const char* path)
