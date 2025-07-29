@@ -7,6 +7,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -546,8 +547,6 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 	mPosition += mVelocity;
 }
 
-static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
-
 TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
     : JDrama::TViewObj("あし")
     , mState(0)
@@ -569,8 +568,8 @@ TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
     , unk80(nullptr)
 {
 	mSpline = new TSplinePath(node_num);
-	unk40   = (int)(randf() * 360.0f);
-	unk44   = (int)(randf() * 360.0f);
+	unk40   = (int)(MsRandF() * 360.0f);
+	unk44   = (int)(MsRandF() * 360.0f);
 
 	TMActorKeeper* keeper = mOwner->getActorKeeper();
 

@@ -4,6 +4,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <Player/MarioAccess.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -248,16 +249,10 @@ void TEffectModel::init(TLiveManager* param_1)
 	mRotation.zero();
 }
 
-// TODO: wrong...
-static inline f32 randf(f32 l, f32 r)
-{
-	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
-}
-
 void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
-	mRotation.y = randf(0.0f, 360.0f);
+	mRotation.y = MsRandF(0.0f, 360.0f);
 	onLiveFlag(0x8);
 	onLiveFlag(0x10);
 	offLiveFlag(0x1);

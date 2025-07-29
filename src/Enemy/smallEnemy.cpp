@@ -14,6 +14,7 @@
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/Item.hpp>
@@ -163,11 +164,6 @@ void TSmallEnemy::setMActorAndKeeper()
 	mMActor       = getActorKeeper()->createMActorFromNthData(0, 0);
 }
 
-static inline f32 randf(f32 l, f32 r)
-{
-	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
-}
-
 void TSmallEnemy::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -183,10 +179,10 @@ void TSmallEnemy::init(TLiveManager* param_1)
 
 	// TODO: are these f32 pairs some kind of rng interval class?
 	TSmallEnemyParams* params1 = getSaveParam();
-	mTurnSpeed                 = randf(params1->unk2C4, params1->unk2C8);
+	mTurnSpeed                 = MsRandF(params1->unk2C4, params1->unk2C8);
 
 	TSmallEnemyParams* params2 = getSaveParam();
-	mBodyScale                 = randf(params2->unk2D0, params2->unk2CC);
+	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
 	unk154 = mBodyScale;
 	unkBC  = getSaveParam()->mSLBodyRadius.get();
@@ -259,10 +255,10 @@ void TSmallEnemy::reset()
 	TSpineEnemy::reset();
 
 	TSmallEnemyParams* params1 = getSaveParam();
-	mTurnSpeed                 = randf(params1->unk2C4, params1->unk2C8);
+	mTurnSpeed                 = MsRandF(params1->unk2C4, params1->unk2C8);
 
 	TSmallEnemyParams* params2 = getSaveParam();
-	mBodyScale                 = randf(params2->unk2D0, params2->unk2CC);
+	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
 	unk154 = mBodyScale;
 	unkBC  = getSaveParam()->mSLBodyRadius.get();
@@ -402,9 +398,8 @@ void TSmallEnemy::genEventCoin()
 			if (coin) {
 				coin->mPosition.y = mPosition.y;
 				MsVECNormalize(&local_d0, &local_d0);
-				// TODO: is this randf thing a method on some RandInterval
-				// class?
-				coin->unkAC.set(local_d0.x * 4, randf(16.0f, 8.0f),
+				// TODO: is this a method on some RandInterval class?
+				coin->unkAC.set(local_d0.x * 4, MsRandF(16.0f, 8.0f),
 				                local_d0.z * 4);
 				coin->offLiveFlag(0x10);
 			}
@@ -433,8 +428,8 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	if (randf(0.0f, 100.0f) < getSaveParam()->mSLGenEggRate.get()
-	                              + getSaveParam()->mSLGenItemRate.get()
+	if (MsRandF(0.0f, 100.0f) < getSaveParam()->mSLGenEggRate.get()
+	                                + getSaveParam()->mSLGenItemRate.get()
 
 	    && !unkC4->checkFlag2(0x10))
 		gpMapObjManager->makeObjAppear(mPosition.x, unkC8, mPosition.z,
@@ -753,8 +748,8 @@ void TSmallEnemy::changeOut()
 void TSmallEnemy::decHpByWater(THitActor* param_1)
 {
 	// TODO: not actually a TWaterHItActor, IDK what it is
-	s16 uVar2 = gpModelWaterManager
-	                ->mParticleAttackSOA[((TWaterHitActor*)param_1)->unk68];
+	s16 uVar2
+	    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
 	if (uVar2 < 1)
 		uVar2 = 1;
 
@@ -1063,10 +1058,10 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->onLiveFlag(0x80);
 
 		// TODO: random interval class?
-		self->mRotation.y += randf(30.0f, 100.0f);
+		self->mRotation.y += MsRandF(30.0f, 100.0f);
 	}
 
-	self->mRotation.y += randf(4.0f, 10.0f);
+	self->mRotation.y += MsRandF(4.0f, 10.0f);
 
 	if (!self->checkLiveFlag2(0x80) || spine->getTime() > 360) {
 		self->endHitWaterJump();

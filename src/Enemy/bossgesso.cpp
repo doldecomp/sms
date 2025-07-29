@@ -16,6 +16,7 @@
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -738,8 +739,6 @@ void TBossGesso::stopIfRoll()
 	changeAllTentacleState(0);
 }
 
-static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
-
 void TBossGesso::changeAttackMode(int new_mode)
 {
 	mAttackMode              = new_mode;
@@ -755,7 +754,7 @@ void TBossGesso::changeAttackMode(int new_mode)
 		break;
 
 	case ASTATE_ROLL:
-		if ((int)(randf() * 100.0f) < 0x28)
+		if ((int)(MsRandF() * 100.0f) < 0x28)
 			unk1A1 = true;
 		else
 			unk1A1 = false;
