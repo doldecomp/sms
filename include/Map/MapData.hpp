@@ -69,6 +69,11 @@ public:
 			return false;
 	}
 
+	bool checkSomething5() const
+	{
+		return !(checkFlag2(0x10) == 1 ? false : true);
+	}
+
 	const JGeometry::TVec3<f32>& getPoint1() const { return mPoint1; }
 	const JGeometry::TVec3<f32>& getPoint2() const { return mPoint2; }
 	const JGeometry::TVec3<f32>& getPoint3() const { return mPoint3; }
