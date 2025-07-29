@@ -11,10 +11,10 @@
 #include <Player/MarioAccess.hpp>
 #include <Camera/Camera.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <System/MarDirector.hpp>
 #include <JSystem/JMath.hpp>
-#include <stdlib.h>
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -245,13 +245,6 @@ void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
 	}
 }
 
-static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
-
-static inline f32 randf(f32 l, f32 r)
-{
-	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
-}
-
 void TConductor::genEnemyFromPollution()
 {
 	if (unkFC == 0)
@@ -274,10 +267,10 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
-	f32 r
-	    = randf(unk84.mGenerateRadiusMin.get(), unk84.mGenerateRadiusMax.get());
+	f32 r                           = MsRandF(unk84.mGenerateRadiusMin.get(),
+	                                          unk84.mGenerateRadiusMax.get());
 
-	f32 theta = randf() * 360 * (65536.0f / 360.0f);
+	f32 theta = MsRandF() * 360 * (65536.0f / 360.0f);
 	targetPos.x += r * JMASSin(theta);
 	targetPos.z += r * JMASCos(theta);
 
@@ -291,15 +284,15 @@ void TConductor::genEnemyFromPollution()
 		TAreaCylinder* cyl = unkF8->getCylinderContains(targetPos);
 		if (!cyl) {
 			f32 f = unk84.mGenerateProp.get();
-			if (randf() > f)
+			if (MsRandF() > f)
 				return;
 		} else {
-			if (randf() > cyl->unk24)
+			if (MsRandF() > cyl->unk24)
 				return;
 		}
 	} else {
 		f32 f = unk84.mGenerateProp.get();
-		if (randf() > f)
+		if (MsRandF() > f)
 			return;
 	}
 

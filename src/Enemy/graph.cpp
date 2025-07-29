@@ -269,7 +269,7 @@ int TGraphWeb::getShortestNextIndex(int param_1, int param_2, u32 param_3) const
 	return result;
 }
 
-static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
+static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
 
 int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 {
@@ -298,7 +298,7 @@ int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 			return railNode->mConnections[1];
 	}
 
-	int rnd = randf() * num;
+	int rnd = MsRandF() * num;
 
 	int result = rnd;
 
@@ -470,7 +470,7 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 			if (iVar13 == 0) {
 				result = railNode->mConnections[i];
 			} else {
-				if (randf() < 1.0f / (iVar13 + 1))
+				if (MsRandF() < 1.0f / (iVar13 + 1))
 					result = railNode->mConnections[i];
 			}
 			++iVar13;
@@ -792,7 +792,7 @@ int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
 	if (goodConnectionNum == 0)
 		return -1;
 
-	return goodConnections[(int)(randf() * goodConnectionNum)];
+	return goodConnections[(int)(MsRandF() * goodConnectionNum)];
 }
 
 void TGraphWeb::getDesignatedNodeIndex(u32, int, f32) const { }

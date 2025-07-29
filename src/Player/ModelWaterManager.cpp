@@ -236,7 +236,7 @@ bool TModelWaterManager::askHitWaterParticleOnGround(
 	return false;
 }
 
-static inline f32 randf() { return rand() * (1.f / (RAND_MAX + 1)); }
+static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
 static inline f32 rand11() { return ((rand() & 0xff) - 128) / 128.0f; }
 
 void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
@@ -414,7 +414,7 @@ void TModelWaterManager::move()
 
 			splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
 
-			if (randf() < unk5D88[8])
+			if (MsRandF() < unk5D88[8])
 				gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
 
 			mParticleLifetimeSOA[i] = 0.0f;
@@ -484,7 +484,7 @@ void TModelWaterManager::move()
 				continue;
 
 			if (local_248->isWaterSurface()) {
-				if (randf() < unk5D88[11])
+				if (MsRandF() < unk5D88[11])
 					SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
 
 				mParticleLifetimeSOA[i] = 0.0f;
@@ -496,7 +496,7 @@ void TModelWaterManager::move()
 
 			if (local_248->checkSomething2()) {
 				mParticleLifetimeSOA[i] = 0.0f;
-				if (randf() < unk5D88[11])
+				if (MsRandF() < unk5D88[11])
 					SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
 
 				splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
@@ -511,7 +511,7 @@ void TModelWaterManager::move()
 			}
 
 			if (getFlagBottom4Bits(i) == 1) {
-				if (randf() < unk5D88[9])
+				if (MsRandF() < unk5D88[9])
 					gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
 
 				splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
@@ -524,7 +524,7 @@ void TModelWaterManager::move()
 				else
 					fVar1 = unk5D88[1];
 
-				if (randf() < fVar1) {
+				if (MsRandF() < fVar1) {
 					setFlagBottom4Bits(i, 2);
 				} else {
 					mParticleLifetimeSOA[i] = 0.0f;
@@ -584,7 +584,7 @@ void TModelWaterManager::move()
 							JGeometry::TVec3<f32> local_1A4
 							    = mParticlePositionSOA[i];
 							local_1A4 += local_1d4;
-							if (randf() < unk5D88[10])
+							if (MsRandF() < unk5D88[10])
 								gpSplashManager->newSplash(local_1A4, 5.0f);
 
 							splashSound(mParticlePositionSOA[i],
@@ -593,7 +593,7 @@ void TModelWaterManager::move()
 							mParticleSizeSOA[i]
 							    *= mWaterParticleTypes[mParticleTypeSOA[i]]
 							           ->mMagnify.get();
-							if (randf() < unk5D88[2]) {
+							if (MsRandF() < unk5D88[2]) {
 								setFlagBottom4Bits(i, 3);
 							} else {
 								mParticleLifetimeSOA[i] = 0.0f;
