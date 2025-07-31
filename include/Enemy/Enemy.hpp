@@ -7,6 +7,7 @@
 
 class TGraphTracer;
 class TSpineEnemyParams;
+extern size_t gpMarioAddress;
 
 class TSpineEnemy : public TLiveActor {
 public:
@@ -32,7 +33,8 @@ public:
 	f32 calcMinimumTurnRadius(f32, f32) const;
 	void calcTurnSpeedToReach(f32, f32) const;
 	void updateSquareToMario();
-	BOOL isInSight(const JGeometry::TVec3<f32>&, f32, f32, f32) const;
+	BOOL isInSight(const JGeometry::TVec3<f32>& pos, f32 length, f32 angle,
+	               f32 aware) const;
 	void setGoalPathFromGraph();
 	void goToInitialVisibleNode(f32, f32);
 	void goToInitialGraphNodeCheckY(f32);
@@ -58,6 +60,35 @@ public:
 	f32 getTurnSpeed() const { return mTurnSpeed; }
 	u8 getHitPoints() const { return mHitPoints; }
 	f32 getSomething() const { return mBodyScale * unkC0; }
+
+	// fabricated
+	void setGoalPathMario()
+	{
+		// what
+		volatile size_t mario = gpMarioAddress;
+		JGeometry::TVec3<f32> marioPos(0.0f, 0.0f, 0.0f);
+
+		// the hell
+		if (gpMarioAddress) {
+			marioPos.set(*(f32*)(gpMarioAddress + 0x10),
+			             *(f32*)(gpMarioAddress + 0x14),
+			             *(f32*)(gpMarioAddress + 0x18));
+		}
+
+		// is happening here
+		unkF4  = (THitActor*)mario;
+		unkF8  = marioPos;
+		unk104 = (THitActor*)mario;
+		unk108 = marioPos;
+
+		unk114.clear();
+	}
+	f32 getBodyScale() const { return mBodyScale; }
+	void decHitPoints()
+	{
+		if (mHitPoints > 0)
+			mHitPoints -= 1;
+	}
 
 public:
 	/* 0xF4 */ THitActor* unkF4; // TODO: type is a wild guess

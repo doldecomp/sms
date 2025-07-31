@@ -1,6 +1,7 @@
 #include <Enemy/SmallEnemy.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/EffectObj.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <System/MarDirector.hpp>
@@ -203,8 +204,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	if (!unk124->unk0 || unk124->unk0->isDummy())
 		unk124->unk0 = gpConductor->getGraphByName("main");
 
-	// ffs gpMarioAddress??? REALLY?
-	unk114.clear();
+	setGoalPathMario();
 	initAnmSound();
 }
 
@@ -289,15 +289,17 @@ void TSmallEnemy::reset()
 	unk165 = 0;
 	unk184 = 0;
 
-	f32 attackRadius = getSaveParam()->mSLAttackRadius.get();
-	f32 attackHeight = getSaveParam()->mSLAttackHeight.get();
-	f32 damageRadius = getSaveParam()->mSLDamageRadius.get();
-	f32 damageHeight = getSaveParam()->mSLDamageHeight.get();
+	f32 attackRadius = getSaveParam()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam()->getSLDamageHeight();
 
-	mAttackRadius = attackRadius * mBodyScale;
-	mAttackHeight = attackHeight * mBodyScale;
-	mDamageRadius = damageRadius * mBodyScale;
-	mDamageHeight = damageHeight * mBodyScale;
+	f32 scale = mBodyScale;
+
+	mAttackRadius = attackRadius * scale;
+	mAttackHeight = attackHeight * scale;
+	mDamageRadius = damageRadius * scale;
+	mDamageHeight = damageHeight * scale;
 
 	calcEntryRadius();
 
@@ -311,7 +313,7 @@ void TSmallEnemy::reset()
 void TSmallEnemy::forceKill()
 {
 	if ((unkC4->checkFlag2(0x10)
-	     || (!(unkC4->unk0 == 0x800 ? true : false) && !unkC4->checkSomething2()
+	     || (!unkC4->checkSomething6() && !unkC4->checkSomething2()
 	         && !unkC4->isWaterSurface())
 	     || checkLiveFlag2(0x80) || checkLiveFlag(0x10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
@@ -452,15 +454,17 @@ void TSmallEnemy::moveObject()
 	if (checkLiveFlag(0x1))
 		return;
 
-	f32 attackRadius = getSaveParam()->mSLAttackRadius.get() * mBodyScale;
-	f32 attackHeight = getSaveParam()->mSLAttackHeight.get() * mBodyScale;
-	f32 damageRadius = getSaveParam()->mSLDamageRadius.get() * mBodyScale;
-	f32 damageHeight = getSaveParam()->mSLDamageHeight.get() * mBodyScale;
+	f32 attackRadius = getSaveParam()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam()->getSLDamageHeight();
 
-	mAttackRadius = attackRadius;
-	mAttackHeight = attackHeight;
-	mDamageRadius = damageRadius;
-	mDamageHeight = damageHeight;
+	f32 scale = mBodyScale;
+
+	mAttackRadius = attackRadius * scale;
+	mAttackHeight = attackHeight * scale;
+	mDamageRadius = damageRadius * scale;
+	mDamageHeight = damageHeight * scale;
 
 	calcEntryRadius();
 	ensureTakeSituation();
@@ -815,12 +819,19 @@ bool TSmallEnemy::isMarioInWater() const
 bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 {
 	TSmallEnemyParams* prms = getSaveParam();
-	if (fabsf(gpMarioPos->y - mPosition.y) < prms->mSLSearchHeight.get()) {
 
-		JGeometry::TVec3<f32> marioPos(*gpMarioPos);
-		if (isInSight(marioPos, prms->mSLSearchLength.get() * param_1,
-		              prms->mSLSearchAngle.get() * param_1,
-		              prms->mSLSearchAware.get() * param_1))
+	f32 searchHeight = prms->mSLSearchHeight.get();
+
+	if (abs(SMS_GetMarioPos().y - mPosition.y) < searchHeight) {
+
+		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+
+		f32 searchLength = prms->mSLSearchLength.get();
+		f32 searchAngle  = prms->mSLSearchAngle.get();
+		f32 searchAware  = prms->mSLSearchAware.get();
+
+		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
+		              searchAware * param_1))
 			return true;
 		else
 			return false;
@@ -832,12 +843,21 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 
 void TSmallEnemy::generateEffectColumWater()
 {
-	if (!checkLiveFlag(0x4))
+	if (checkLiveFlag(0x4))
 		return;
 
-	TLiveActor* enemy = gpConductor->makeOneEnemyAppear(
-	    mPosition, "エフェクト水柱マネージャー", 0);
-	// TODO: need TEffectColumWater
+	TEffectColumWater* enemy
+	    = (TEffectColumWater*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト水柱マネージャー", 0);
+
+	if (!enemy)
+		return;
+
+	enemy->generate(mPosition, mScaling);
+
+	if (gpMSound->gateCheck(0x286D))
+		MSoundSESystem::MSoundSE::startSoundActor(0x286D, &mPosition, 0,
+		                                          nullptr, 0, 4);
 }
 
 void TSmallEnemy::setBckAnm(int param_1)
@@ -850,15 +870,17 @@ void TSmallEnemy::setBckAnm(int param_1)
 
 void TSmallEnemy::expandCollision()
 {
-	f32 attackRadius = getSaveParam()->mSLAttackRadius.get();
-	f32 attackHeight = getSaveParam()->mSLAttackHeight.get();
-	f32 damageRadius = getSaveParam()->mSLDamageRadius.get();
-	f32 damageHeight = getSaveParam()->mSLDamageHeight.get();
+	f32 attackRadius = getSaveParam()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam()->getSLDamageHeight();
 
-	mAttackRadius = attackRadius * (unk190 / unk154);
-	mAttackHeight = attackHeight * (unk190 / unk154);
-	mDamageRadius = damageRadius * (unk190 / unk154);
-	mDamageHeight = damageHeight * (unk190 / unk154);
+	f32 expansionFactor = unk190 / unk154;
+
+	mAttackRadius = attackRadius * expansionFactor;
+	mAttackHeight = attackHeight * expansionFactor;
+	mDamageRadius = damageRadius * expansionFactor;
+	mDamageHeight = damageHeight * expansionFactor;
 
 	calcEntryRadius();
 }
@@ -866,7 +888,7 @@ void TSmallEnemy::expandCollision()
 bool TSmallEnemy::isEaten()
 {
 	MtxPtr mtx;
-	if (mHolder && mHolder->mHeldObject == this && (mtx = getTakingMtx())) {
+	if (mHolder && mHolder->getHeldObject() == this && (mtx = getTakingMtx())) {
 		getModel()->setBaseTRMtx(mtx);
 		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
@@ -906,18 +928,23 @@ bool TSmallEnemy::isHitWallInBound()
 
 void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 {
-	if (isCollidMove(param_1))
+	if (!isCollidMove(param_1))
 		return;
 
-	JGeometry::TVec3<f32> local_18(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_24;
-	local_24.sub(mPosition, param_1->mPosition);
-	if (local_24.x == 0.0f && local_24.y == 0.0f && local_24.z == 0.0f)
-		local_24.x += 1.0f;
-	MsVECNormalize(&local_24, &local_24);
+	JGeometry::TVec3<f32> local_14;
+	local_14.sub(mPosition, param_1->getPosition());
 
-	unk94.scaleAdd(mMarchSpeed * 3.0f * unk158, local_18, local_24);
+	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
+		local_14.x += 1.0f;
+
+	MsVECNormalize(&local_14, &local_14);
+
+	local_14.scale(mMarchSpeed * 3.0f * unk158);
+
+	result += local_14;
+	unk94 = result;
 }
 
 void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -944,26 +971,27 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 	if (spine->getTime() == 0) {
-		if (self->mHitPoints != 0)
-			--self->mHitPoints;
+		self->decHitPoints();
 
-		if (self->mHitPoints == 0) {
-			self->onLiveFlag(0x1);
-			if (self->unkC4->checkSomething2() && !self->checkLiveFlag2(0x80))
-				self->kill();
+		if (self->getHitPoints() == 0) {
+			self->onHitFlag(0x1);
+			if (self->getUnkC4()->isWaterSurface()
+			    && !self->checkLiveFlag2(0x80))
+				self->generateEffectColumWater();
 		}
 
 		if (self->checkLiveFlag(0x10000)) {
 			self->setMeltAnm();
 		} else {
-			if (self->unk150 & 0x20) {
-				TSmallEnemyManager* man = (TSmallEnemyManager*)self->mManager;
-				gpPollution->stamp(man->getUnk58(), self->mPosition.x,
-				                   self->mPosition.y, self->mPosition.z,
-				                   man->getSaveParam()->mSLStampRange.get()
+			if (self->checkUnk150(0x20)) {
+				TSmallEnemyManager* man
+				    = (TSmallEnemyManager*)self->getManager();
+				gpPollution->stamp(man->getUnk58(), self->getPosition().x,
+				                   self->getPosition().y, self->getPosition().z,
+				                   man->getSaveParam()->getSLStampRange()
 				                       * 32.0f * self->getUnk158());
 			}
-			if (!self->mHitPoints) {
+			if (self->getHitPoints() == 0) {
 				self->onLiveFlag(0x8);
 				self->setDeadAnm();
 				self->setDeadEffect();
@@ -973,11 +1001,10 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		}
 	}
 
-	int uVar8 = ((TSmallEnemyManager*)self->mManager)->unk5C;
-	if (self->unkC4->isWaterSurface())
+	int uVar8 = ((TSmallEnemyManager*)self->getManager())->unk5C;
+	if (self->getUnkC4()->isWaterSurface())
 		uVar8 = 0;
 
-	// TODO: missing some stuff
 	if (self->checkCurAnmEnd(0)
 	        && spine->getTime()
 	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEndFrame()
@@ -1005,7 +1032,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	int freezeTime = self->getSaveParam()->mSLFreezeWait.get();
+	int freezeTime = self->getSaveParam()->getSLFreezeWait();
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
@@ -1025,9 +1052,9 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->unkAC;
-		v.y *= self->getSaveParam()->mSLJumpForce.get();
-		self->unkAC = v;
+		JGeometry::TVec3<f32> v = self->getUnkAC();
+		v.y = self->getSaveParam()->getSLJumpForce() * self->getBodyScale();
+		self->setUnkAC(v);
 
 		self->onLiveFlag(0x8000);
 		self->onLiveFlag(0x80);
@@ -1038,6 +1065,25 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 	else
 		return false;
 }
+
+// TODO: kinda matches below but not for use-cases above...
+struct RandInterval {
+	volatile f32 min;
+	volatile f32 max;
+
+	RandInterval(f32 min, f32 max)
+	    : min(min)
+	    , max(max)
+	{
+	}
+
+	f32 get() const
+	{
+		f32 range = max - min;
+		f32 r     = rand() * (1.f / (RAND_MAX + 1)) * range;
+		return r + min;
+	}
+};
 
 DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 {
@@ -1058,10 +1104,12 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->onLiveFlag(0x80);
 
 		// TODO: random interval class?
-		self->mRotation.y += MsRandF(30.0f, 100.0f);
+		RandInterval ri(30.0f, 100.0f);
+		self->mRotation.y += ri.get();
 	}
 
-	self->mRotation.y += MsRandF(4.0f, 10.0f);
+	RandInterval ri(4.0f, 10.0f);
+	self->mRotation.y += ri.get();
 
 	if (!self->checkLiveFlag2(0x80) || spine->getTime() > 360) {
 		self->endHitWaterJump();
@@ -1079,7 +1127,7 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 		self->setWaitAnm();
 
 	if (self->checkCurAnmEnd(0)
-	    && spine->getTime() > self->getSaveParam()->mSLWaitTime.get())
+	    && spine->getTime() > self->getSaveParam()->getSLWaitTime())
 		return true;
 	else
 		return false;
@@ -1093,8 +1141,8 @@ DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->getMActor()->setFrameRate(0.0f, 0);
-		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
-		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->getPosition(),
+		                                            0, nullptr);
 	}
 	self->scalingChangeActor();
 	if (self->changeMove() || spine->getTime() > changeTime) {

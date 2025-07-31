@@ -118,7 +118,8 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void reset();
 
-	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+	void generate(JGeometry::TVec3<f32>& position,
+	              JGeometry::TVec3<f32>& scale);
 };
 
 class TEffectBombColumWaterManager : public TEffectModelManager {
@@ -136,7 +137,8 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void reset();
 
-	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+	void generate(JGeometry::TVec3<f32>& position,
+	              JGeometry::TVec3<f32>& scale);
 };
 
 class TEffectColumSandManager : public TEffectModelManager {
@@ -154,7 +156,8 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void reset();
 
-	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+	void generate(JGeometry::TVec3<f32>& position,
+	              JGeometry::TVec3<f32>& scale);
 };
 
 class TEffectExplosionManager : public TEffectModelManager {
@@ -172,7 +175,8 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void reset();
 
-	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+	void generate(JGeometry::TVec3<f32>& position,
+	              JGeometry::TVec3<f32>& scale);
 };
 
 #endif
