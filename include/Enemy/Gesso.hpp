@@ -64,7 +64,7 @@ public:
 	virtual void doKeepDistance();
 	virtual void behaveToFindMario();
 	virtual void walkBehavior(int, f32);
-	virtual void isResignationAttack();
+	virtual bool isResignationAttack();
 
 	void polluteBehavior();
 	void setPolluteGoal();

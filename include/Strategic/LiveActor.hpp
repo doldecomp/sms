@@ -14,6 +14,7 @@ class JKRFileLoader;
 class TBGCheckData;
 class TLodAnm;
 class J3DModel;
+class TBinder;
 class TMapCollisionManager;
 
 class TLiveActor : public TTakeActor {
@@ -84,7 +85,7 @@ public:
 	/* 0x7C */ s16 unk7C;
 	/* 0x80 */ MAnmSound* unk80;
 	/* 0x84 */ const char* unk84;
-	/* 0x88 */ void* unk88;
+	/* 0x88 */ TBinder* unk88;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
 	/* 0x90 */ void* unk90;
 	/* 0x94 */ JGeometry::TVec3<f32> unk94; // velocity too?

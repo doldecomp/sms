@@ -19,10 +19,6 @@
 
 TSpineEnemy::TSpineEnemy(const char* name)
     : TLiveActor(name)
-    , unkF4(0)
-    , unkF8(0.0f, 0.0f, 0.0f)
-    , unk104(0)
-    , unk108(0.0f, 0.0f, 0.0f)
     , unk114(4)
     , unk128(0)
     , unk12C(0.0f)
@@ -253,10 +249,10 @@ void TSpineEnemy::setGoalPathFromGraph()
 {
 	JGeometry::TVec3<f32> point = unk124->getCurrent().getPoint();
 
-	unkF4  = 0;
-	unkF8  = point;
-	unk104 = 0;
-	unk108 = point;
+	unkF4.unk0  = nullptr;
+	unkF4.unk4  = point;
+	unk104.unk0 = nullptr;
+	unk104.unk4 = point;
 	unk114.clear();
 }
 
@@ -284,9 +280,12 @@ void TSpineEnemy::updateStayCount(f32) { }
 
 void TSpineEnemy::turnToCurPathNode(f32) { }
 
-void TSpineEnemy::walkToCurPathNode(f32, f32, f32) { }
+void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed, f32) { }
 
-void TSpineEnemy::zigzagToCurPathNode(f32, f32, f32, f32) { }
+void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
+                                      f32 cycle, f32 angle)
+{
+}
 
 void TSpineEnemy::doShortCut() { }
 

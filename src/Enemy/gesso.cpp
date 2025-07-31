@@ -99,7 +99,7 @@ void TGesso::behaveToWater(THitActor*) { }
 
 void TGesso::walkBehavior(int, float) { }
 
-void TGesso::isResignationAttack() { }
+bool TGesso::isResignationAttack() { }
 
 void TGesso::doKeepDistance() { }
 
