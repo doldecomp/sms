@@ -9,17 +9,20 @@ public:
 };
 
 class TWalkerEnemy : public TSmallEnemy {
+public:
 	TWalkerEnemy(const char*);
-	void init(TLiveManager*);
-	void moveObject();
-	void attackToMario();
-	void reset();
-	void walkBehavior(int, float);
-	void behaveToFindMario();
-	void initAttacker(THitActor*);
-	void isResignationAttack();
+
+	virtual void init(TLiveManager*);
+	virtual void moveObject();
+	virtual void reset();
+	virtual void attackToMario();
+	virtual void initAttacker(THitActor*);
+	virtual void behaveToFindMario();
+	virtual void walkBehavior(int, float);
+	virtual void isResignationAttack();
+	virtual void initialGraphNode();
+
 	void isReachedToGoalXZ();
-	void initialGraphNode();
 };
 
 class TLiveActor;

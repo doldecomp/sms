@@ -123,36 +123,36 @@ public:
 	virtual void genRandomItem();
 	virtual void genEventCoin();
 	virtual void generateItem();
-	virtual bool isEatenByYosshi();
+	virtual bool isEatenByYosshi() { return true; }
 	virtual void setBehavior();
-	virtual void jumpBehavior();
+	virtual void jumpBehavior() { }
 	virtual void behaveToWater(THitActor*);
 	virtual bool changeByJuice();
 	virtual bool changeMove();
 	virtual int getChangeBlockTime();
 	virtual void scalingChangeActor();
 	virtual void changeOut();
-	virtual void behaveToTaken(THitActor*);
-	virtual void behaveToRelease();
-	virtual void setGenerateAnm();
+	virtual void behaveToTaken(THitActor*) { }
+	virtual void behaveToRelease() { }
+	virtual void setGenerateAnm() { }
 	virtual void setWalkAnm();
 	virtual void setDeadAnm() { }
-	virtual void setFreezeAnm();
-	virtual void setMeltAnm();
+	virtual void setFreezeAnm() { }
+	virtual void setMeltAnm() { }
 	virtual void setWaitAnm() { }
 	virtual void setRunAnm();
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
 	virtual void initAttacker(THitActor*);
-	virtual bool isHitValid(u32);
+	virtual bool isHitValid(u32) { return checkLiveFlag(0x2) ? false : true; }
 	virtual bool isCollidMove(THitActor*);
-	virtual BOOL isInhibitedForceMove();
-	virtual void endHitWaterJump();
+	virtual BOOL isInhibitedForceMove() { return FALSE; }
+	virtual void endHitWaterJump() { }
 	virtual void sendAttackMsgToMario();
 	virtual void decHpByWater(THitActor*);
 	virtual void setBckAnm(int);
-	virtual void setDeadEffect();
+	virtual void setDeadEffect() { }
 	virtual void setAfterDeadEffect();
 	virtual void doKeepDistance();
 	virtual void generateEffectColumWater();
