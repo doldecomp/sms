@@ -1302,41 +1302,20 @@ void TBossGessoManager::load(JSUMemoryInputStream& stream)
 	initJParticle();
 }
 
-// TODO: figure out how the inline really looked like
-static inline void get_mario_pos_stupid(Vec* result)
-{
-	result->x = 0;
-	result->y = 0;
-	result->z = 0;
-
-	if (!gpMarioAddress)
-		return;
-
-	result->z = *(f32*)(gpMarioAddress + 0x18);
-	result->y = *(f32*)(gpMarioAddress + 0x14);
-	result->x = *(f32*)(gpMarioAddress + 0x10);
-}
-
 DEFINE_NERVE(TNerveBGWait, TLiveActor)
 {
 	TBossGesso* self = (TBossGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->mHitPoints == 1) {
+		if (self->getHitPoints() == 1) {
 			self->changeBck(27);
-		} else if (self->mHitPoints == 2) {
+		} else if (self->getHitPoints() == 2) {
 			self->changeBck(26);
 		} else {
 			self->changeBck(25);
 		}
 
-		JGeometry::TVec3<f32> pos;
-		get_mario_pos_stupid(&pos);
-
-		self->unkF4  = (THitActor*)gpMarioAddress;
-		self->unkF8  = pos;
-		self->unk104 = (THitActor*)gpMarioAddress;
-		self->unk108 = pos;
+		self->setGoalPathMario();
 
 		self->getMActor()->setBtpFromIndex(2);
 		self->getMActor()->getFrameCtrl(3)->setFrame(0.0f);

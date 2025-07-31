@@ -243,11 +243,10 @@ BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
-                            f32 param_3, f32 param_4) const
+BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& pos, f32 length,
+                            f32 angle, f32 aware) const
 {
-	return MsIsInSight(mPosition, mRotation.y, param_1, param_2, param_3,
-	                   param_4);
+	return MsIsInSight(mPosition, mRotation.y, pos, length, angle, aware);
 }
 
 void TSpineEnemy::setGoalPathFromGraph()

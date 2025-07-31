@@ -69,6 +69,14 @@ public:
 			return false;
 	}
 
+	bool checkSomething6() const
+	{
+		if (unk0 == 0x800)
+			return true;
+		else
+			return false;
+	}
+
 	bool checkSomething5() const
 	{
 		return !(checkFlag2(0x10) == 1 ? false : true);

@@ -79,4 +79,20 @@ void SMS_SetMarioAccessParams();
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
+// fabricated and very unlikely to be real
+// TODO: removeme
+inline void SMS_GetMarioPosStupid(Vec* result)
+{
+	result->x = 0;
+	result->y = 0;
+	result->z = 0;
+
+	if (!gpMarioAddress)
+		return;
+
+	result->z = *(f32*)(gpMarioAddress + 0x18);
+	result->y = *(f32*)(gpMarioAddress + 0x14);
+	result->x = *(f32*)(gpMarioAddress + 0x10);
+}
+
 #endif

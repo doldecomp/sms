@@ -64,7 +64,8 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 }
 
 BOOL MsIsInSight(const JGeometry::TVec3<f32>&, f32,
-                 const JGeometry::TVec3<f32>&, f32, f32, f32);
+                 const JGeometry::TVec3<f32>&, f32 length, f32 angle,
+                 f32 aware);
 
 void SMS_GoRotate(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
                   f32, f32*);

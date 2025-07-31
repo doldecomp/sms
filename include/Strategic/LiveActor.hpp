@@ -74,6 +74,8 @@ public:
 	s16 getUnk7C() const { return unk7C; }
 	MAnmSound* getUnk80() { return unk80; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
+	const JGeometry::TVec3<f32>& getUnkAC() const { return unkAC; }
+	void setUnkAC(const JGeometry::TVec3<f32>& v) { unkAC = v; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;

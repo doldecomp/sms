@@ -13,6 +13,34 @@ class TSmallEnemyParams : public TSpineEnemyParams {
 public:
 	TSmallEnemyParams(const char*);
 
+	f32 getSLJumpForce() const { return mSLJumpForce.get(); }
+	f32 getSLSearchLength() const { return mSLSearchLength.get(); }
+	f32 getSLSearchHeight() const { return mSLSearchHeight.get(); }
+	f32 getSLSearchAware() const { return mSLSearchAware.get(); }
+	f32 getSLSearchAngle() const { return mSLSearchAngle.get(); }
+	f32 getSLGiveUpLength() const { return mSLGiveUpLength.get(); }
+	f32 getSLGiveUpHeight() const { return mSLGiveUpHeight.get(); }
+	s32 getSLAttackWait() const { return mSLAttackWait.get(); }
+	s32 getSLFreezeWait() const { return mSLFreezeWait.get(); }
+	s32 getSLDamageRadius() const { return mSLDamageRadius.get(); }
+	s32 getSLDamageHeight() const { return mSLDamageHeight.get(); }
+	s32 getSLAttackRadius() const { return mSLAttackRadius.get(); }
+	s32 getSLAttackHeight() const { return mSLAttackHeight.get(); }
+	f32 getSLTurnSpeedLow() const { return mSLTurnSpeedLow.get(); }
+	f32 getSLTurnSpeedHigh() const { return mSLTurnSpeedHigh.get(); }
+	f32 getSLBodyScaleLow() const { return mSLBodyScaleLow.get(); }
+	f32 getSLBodyScaleHigh() const { return mSLBodyScaleHigh.get(); }
+	f32 getSLGenItemRate() const { return mSLGenItemRate.get(); }
+	f32 getSLGenEggRate() const { return mSLGenEggRate.get(); }
+	u8 getSLPolluteRange() const { return mSLPolluteRange.get(); }
+	s32 getSLWaitTime() const { return mSLWaitTime.get(); }
+	s32 getSLPolluteRMin() const { return mSLPolluteRMin.get(); }
+	s32 getSLPolluteRMax() const { return mSLPolluteRMax.get(); }
+	s32 getSLPolluteCycle() const { return mSLPolluteCycle.get(); }
+	u8 getSLStampRange() const { return mSLStampRange.get(); }
+	s32 getSLPolluteInterval() const { return mSLPolluteInterval.get(); }
+	u8 getSLGenerateOnlyDead() const { return mSLGenerateOnlyDead.get(); }
+
 	/* 0xA8 */ TParamRT<f32> mSLJumpForce;
 	/* 0xBC */ TParamRT<f32> mSLSearchLength;
 	/* 0xD0 */ TParamRT<f32> mSLSearchHeight;
@@ -147,6 +175,8 @@ public:
 
 	static bool mIsPolluter;
 	static bool mIsAmpPolluter;
+
+	bool checkUnk150(u32 param_1) const { return unk150 & param_1; }
 
 public:
 	/* 0x150 */ u32 unk150;
