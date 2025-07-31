@@ -1627,11 +1627,11 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		local_24.y = -5000.0f;
 		local_24.z = self->mPosition.z + 7000.0f;
 
-		self->unkF4 = nullptr;
-		self->unkF8 = local_24;
+		self->unkF4.unk0 = nullptr;
+		self->unkF4.unk4 = local_24;
 
-		self->unk104 = nullptr;
-		self->unk108 = local_24;
+		self->unk104.unk0 = nullptr;
+		self->unk104.unk4 = local_24;
 
 		self->unk114.clear();
 

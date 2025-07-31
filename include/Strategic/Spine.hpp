@@ -90,6 +90,9 @@ public:
 	void reset() { mVertebrae.clear(); }
 
 	// fabricated
+	void setDefaultNext() { setNext(unk18); }
+
+	// fabricated
 	void pushDefault() { pushRaw(unk18); }
 
 	// fabricated

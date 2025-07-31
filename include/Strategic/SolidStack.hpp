@@ -5,29 +5,42 @@
 #include <types.h>
 
 template <class T> class TSolidStack {
-	/* 0x0 */ int unk0;
-	/* 0x4 */ int unk4;
-	/* 0x8 */ T* unk8;
+	/* 0x0 */ int mCapacity;
+	/* 0x4 */ int mSize;
+	/* 0x8 */ T* mData;
 	/* 0xC */ // vt
 public:
 	TSolidStack(int capacity)
-	    : unk0(capacity)
-	    , unk4(0)
-	    , unk8(nullptr)
+	    : mCapacity(capacity)
+	    , mSize(0)
+	    , mData(nullptr)
 	{
-		unk8 = new T[unk0];
+		mData = new T[mCapacity];
 	}
 
-	T pop() { }
+	// matching
+	T pop()
+	{
+		if (mSize <= 0)
+			return mData[mSize];
+
+		--mSize;
+		return mData[mSize];
+	}
+
+	// fabricated
 	void push(const T& value)
 	{
-		if (unk4 < unk0) {
-			unk8[unk4] = value;
-			++unk4;
+		if (mSize < mCapacity) {
+			mData[mSize] = value;
+			++mSize;
 		}
 	}
 
-	void clear() { unk4 = 0; }
+	// fabricated
+	void clear() { mSize = 0; }
+	// fabricated
+	bool empty() const { return mSize == 0; }
 
 	virtual ~TSolidStack() { }
 };

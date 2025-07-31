@@ -47,8 +47,9 @@ public:
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
 	void turnToCurPathNode(f32);
-	void walkToCurPathNode(f32, f32, f32);
-	void zigzagToCurPathNode(f32, f32, f32, f32);
+	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
+	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
+	                         f32 angle);
 	void doShortCut();
 	void searchNearestBrother() const;
 	f32 getCurAnmFrameNo(int) const;
@@ -76,13 +77,14 @@ public:
 		}
 
 		// is happening here
-		unkF4  = (THitActor*)mario;
-		unkF8  = marioPos;
-		unk104 = (THitActor*)mario;
-		unk108 = marioPos;
+		unkF4.unk0  = (THitActor*)mario;
+		unkF4.unk4  = marioPos;
+		unk104.unk0 = (THitActor*)mario;
+		unk104.unk4 = marioPos;
 
 		unk114.clear();
 	}
+
 	f32 getBodyScale() const { return mBodyScale; }
 	void decHitPoints()
 	{
@@ -91,13 +93,8 @@ public:
 	}
 
 public:
-	/* 0xF4 */ THitActor* unkF4; // TODO: type is a wild guess
-	/* 0xF8 */ JGeometry::TVec3<f32> unkF8;
-
-	// TODO: these two are a struct according to TNerveHino2JumpIn::execute
-	/* 0x104 */ THitActor* unk104; // TODO: type is a wild guess
-	/* 0x108 */ JGeometry::TVec3<f32> unk108;
-
+	/* 0xF4 */ TPathNode unkF4;
+	/* 0x104 */ TPathNode unk104;
 	/* 0x114 */ TSolidStack<TPathNode> unk114;
 	/* 0x124 */ TGraphTracer* unk124;
 	/* 0x128 */ u16 unk128;

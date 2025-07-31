@@ -1,3 +1,5 @@
+#include "Enemy/PathNode.hpp"
+#include "Strategic/SolidStack.hpp"
 #include <NPC/NpcNerve.hpp>
 
 DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor) { }

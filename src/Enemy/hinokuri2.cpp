@@ -1144,11 +1144,10 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const JGeometry::TVec3<f32>* p
-		    = self->unk104 ? &self->unk104->mPosition : &self->unk108;
-		f32 f       = self->unk124->unkC;
-		f32 grav    = self->getGravityY();
-		self->unkAC = self->calcVelocityToJumpToY(*p, f, grav);
+		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
+		f32 f                          = self->unk124->unkC;
+		f32 grav                       = self->getGravityY();
+		self->unkAC = self->calcVelocityToJumpToY(p, f, grav);
 		self->onLiveFlag(0x80);
 		spine->pushRaw(&TNerveHino2Fly::theNerve());
 		return true;
@@ -1182,8 +1181,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff
-	    = self->unkF4 ? self->unkF4->mPosition : self->unkF8;
+	JGeometry::TVec3<f32> posDiff = self->unk104.getPoint();
 
 	posDiff -= self->mPosition;
 
