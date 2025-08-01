@@ -1080,8 +1080,9 @@ struct RandInterval {
 	f32 get() const
 	{
 		f32 range = max - min;
-		f32 r     = rand() * (1.f / (RAND_MAX + 1)) * range;
-		return r + min;
+		f32 r     = rand() * (1.f / (RAND_MAX + 1));
+		f32 r2    = r * range;
+		return r2 + min;
 	}
 };
 

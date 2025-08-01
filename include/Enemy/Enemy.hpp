@@ -65,22 +65,17 @@ public:
 	// fabricated
 	void setGoalPathMario()
 	{
-		// what
-		volatile size_t mario = gpMarioAddress;
-		JGeometry::TVec3<f32> marioPos(0.0f, 0.0f, 0.0f);
+		TPathNode node((THitActor*)gpMarioAddress);
 
 		// the hell
 		if (gpMarioAddress) {
-			marioPos.set(*(f32*)(gpMarioAddress + 0x10),
-			             *(f32*)(gpMarioAddress + 0x14),
-			             *(f32*)(gpMarioAddress + 0x18));
+			node.unk4.set(*(f32*)(gpMarioAddress + 0x10),
+			              *(f32*)(gpMarioAddress + 0x14),
+			              *(f32*)(gpMarioAddress + 0x18));
 		}
 
-		// is happening here
-		unkF4.unk0  = (THitActor*)mario;
-		unkF4.unk4  = marioPos;
-		unk104.unk0 = (THitActor*)mario;
-		unk104.unk4 = marioPos;
+		unkF4  = node;
+		unk104 = node;
 
 		unk114.clear();
 	}

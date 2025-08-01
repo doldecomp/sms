@@ -99,6 +99,9 @@ public:
 	Nerve getCurrentNerve() const { return unk14; }
 
 	// fabricated
+	Nerve getDefault() const { return unk18; }
+
+	// fabricated
 	int getTime() const { return mTime; }
 	TSpineEnemy* getBody() const { return mBody; }
 };

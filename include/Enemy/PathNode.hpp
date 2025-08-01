@@ -15,6 +15,14 @@ public:
 		unk4.z = 0;
 	}
 
+	TPathNode(THitActor* actor)
+	{
+		unk0   = actor;
+		unk4.x = 0;
+		unk4.y = 0;
+		unk4.z = 0;
+	}
+
 	const JGeometry::TVec3<f32>& getPoint() const
 	{
 		if (unk0 != 0)

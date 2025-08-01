@@ -95,4 +95,7 @@ inline void SMS_GetMarioPosStupid(Vec* result)
 	result->x = *(f32*)(gpMarioAddress + 0x10);
 }
 
+// fabricated
+const TBGCheckData* SMS_GetMarioGroundPlane() { return *gpMarioGroundPlane; }
+
 #endif
