@@ -22,7 +22,8 @@ TWalkerEnemyParams::TWalkerEnemyParams(const char* path)
     , PARAM_INIT(mSLMarchSpeedHigh, 1.5f)
 {
 	TParams::load(mPrmPath);
-	unk324 = FakeRandInterval(mSLMarchSpeedLow.get(), mSLMarchSpeedHigh.get());
+	unk324.mMin = mSLMarchSpeedLow.get();
+	unk324.mMax = mSLMarchSpeedHigh.get();
 }
 
 TWalkerEnemy::TWalkerEnemy(const char* name)
@@ -34,11 +35,19 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
 	unk88 = new TWalker;
-	((TWalker*)unk88)->reset();
-	((TWalker*)unk88)->unk18 = 150.0f;
+	getWalker()->reset();
+	getWalker()->unk18 = 150.0f;
 
 	mMarchSpeed = getSaveParam()->unk324.get();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
+}
+
+// TODO: fake
+static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
+{
+	f32 c = radius * JMACos(theta);
+	f32 s = radius * JMASin(theta);
+	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
 void TWalkerEnemy::moveObject()
@@ -50,12 +59,14 @@ void TWalkerEnemy::moveObject()
 
 	TSmallEnemy::moveObject();
 
-	if (((TWalker*)unk88)->unk1C
+	if (getWalker()->getUnk1C()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyJump::theNerve()) {
-		f32 f = getSaveParam()->unk324.max();
 
-		JGeometry::TVec3<f32> local = JGeometry::TVec3<f32>(
-		    JMASin(mRotation.y * f), 0.0f, JMACos(mRotation.y * f));
+		// TODO: some order of inlines should be used instead of tmps
+		f32 yAngle = mRotation.y;
+		f32 f      = getSaveParam()->unk324.mMax;
+
+		JGeometry::TVec3<f32> local = polarXZ(yAngle, f);
 
 		getSaveParam();
 		unkAC.x = local.x;
@@ -87,7 +98,7 @@ void TWalkerEnemy::reset()
 
 	((TWalker*)unk88)->reset();
 	mSpine->reset();
-	mSpine->setDefaultNext();
+	mSpine->setNext(mSpine->getDefault());
 	setGoalPathMario();
 }
 
@@ -121,7 +132,7 @@ void TWalkerEnemy::walkBehavior(int param_1, float param_2)
 
 void TWalkerEnemy::behaveToFindMario()
 {
-	if (unk150 & 2) {
+	if (checkUnk150(2)) {
 		mSpine->pushRaw(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushRaw(&TNerveWalkerEscape::theNerve());
 		mSpine->pushRaw(&TNerveSmallEnemyJump::theNerve());
@@ -135,7 +146,7 @@ void TWalkerEnemy::behaveToFindMario()
 
 void TWalkerEnemy::initAttacker(THitActor* param_1)
 {
-	mRotation = param_1->mRotation;
+	mRotation = param_1->getRotation();
 	unk184    = 1;
 }
 
@@ -162,6 +173,7 @@ bool TWalkerEnemy::isReachedToGoalXZ()
 {
 	JGeometry::TVec3<f32> tmp = unk104.getPoint();
 	tmp -= mPosition;
+	tmp.y = 0.0f;
 
 	if (tmp.x == 0.0f && tmp.z == 0.0f)
 		return true;
@@ -222,17 +234,16 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setRunAnm();
 
-	if (self->unkF4.unk0 == (THitActor*)gpMarioAddress
-	    && !SMS_CheckMarioFlag(0x2) && !SMS_CheckMarioFlag(0x10000)
-	    && !gpMarioGroundPlane[0]->isWaterSurface()) {
-
-		if (SMS_CheckMarioFlag(0x20000))
+	// TODO: what is the inlines play here?
+	if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
+		if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
+		    || SMS_GetMarioGroundPlane()->isWaterSurface()
+		    || SMS_CheckMarioFlag(0x20000))
 			return true;
 
 		f32 giveUpHeight = self->getSaveParam()->mSLGiveUpHeight.get();
-		if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight) {
+		if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
 			return true;
-		}
 	}
 
 	self->walkBehavior(2, 3.0f);
@@ -297,9 +308,8 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	if (spine->getTime() == 10)
 		self->offLiveFlag(0x2);
 
-	// TODO: this flag check combo is probably a dedicated inline
 	if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
-	    || gpMarioGroundPlane[0]->isWaterSurface()
+	    || SMS_GetMarioGroundPlane()->isWaterSurface()
 	    || SMS_CheckMarioFlag(0x20000)) {
 
 		spine->pushRaw(&TNerveWalkerTraceMario::theNerve());

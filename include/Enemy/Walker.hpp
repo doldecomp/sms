@@ -14,6 +14,7 @@ public:
 	void reset();
 	virtual void bind(TLiveActor*);
 	void setMode(int);
+	int getUnk1C() const { return unk1C; }
 
 public:
 	/* 0x4 */ TSolidStack<const TBGCheckData*> unk4;

@@ -4,6 +4,8 @@
 #include <Enemy/SmallEnemy.hpp>
 #include <stdlib.h>
 
+class TWalker;
+
 // fabricated
 class FakeRandInterval {
 public:
@@ -13,22 +15,15 @@ public:
 	{
 	}
 
-	FakeRandInterval(f32 min, f32 max)
-	    : mMin(min)
-	    , mMax(max)
-	{
-	}
-
 	f32 get() const
 	{
-		f32 dist = mMax - mMin;
-		f32 r    = rand() * (1.f / (RAND_MAX + 1)) * dist;
-		return r + mMin;
+		f32 r1 = mMax - mMin;
+		f32 r2 = rand() * (1.f / (RAND_MAX + 1));
+		f32 r3 = r1 * r2;
+		return mMin + r3;
 	}
 
-	f32 max() const { return mMax; }
-
-private:
+public:
 	f32 mMin;
 	f32 mMax;
 };
@@ -36,6 +31,9 @@ private:
 class TWalkerEnemyParams : public TSmallEnemyParams {
 public:
 	TWalkerEnemyParams(const char*);
+
+	f32 getSLZigzagCycle() const { return mSLZigzagCycle.get(); }
+	f32 getSLZigzagAngle() const { return mSLZigzagAngle.get(); }
 
 	/* 0x2D4 */ TParamRT<f32> mSLZigzagCycle;
 	/* 0x2E8 */ TParamRT<f32> mSLZigzagAngle;
@@ -67,6 +65,9 @@ public:
 	{
 		return (TWalkerEnemyParams*)TSpineEnemy::getSaveParam();
 	}
+
+	// fabricated
+	TWalker* getWalker() const { return (TWalker*)unk88; }
 };
 
 class TLiveActor;
