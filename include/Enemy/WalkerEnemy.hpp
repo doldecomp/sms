@@ -14,6 +14,11 @@ public:
 	    , mMax(1.0f)
 	{
 	}
+	FakeRandInterval(f32 min, f32 max)
+	    : mMin(min)
+	    , mMax(max)
+	{
+	}
 
 	f32 get() const
 	{

@@ -36,7 +36,7 @@ public:
 public:
 	/* 0x150 */ int unk150;
 	/* 0x154 */ u32 unk154;
-	/* 0x158 */ u32 unk158;
+	/* 0x158 */ int unk158;
 	/* 0x15C */ char unk15C[4];
 	/* 0x160 */ TSpineEnemy* unk160;
 	/* 0x164 */ f32 unk164;
@@ -47,6 +47,14 @@ class TEnemyPolluteModel;
 
 class TEnemyPolluteModelManager : public JDrama::TViewObj {
 public:
+	TEnemyPolluteModelManager(const char* name)
+	    : JDrama::TViewObj(name)
+	    , unk10(0)
+	    , unk14(5)
+	    , unk18(nullptr)
+	{
+	}
+
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void init(TLiveActor*);
 

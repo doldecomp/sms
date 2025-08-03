@@ -6,23 +6,46 @@
 
 class TGessoSaveLoadParams : public TWalkerEnemyParams {
 public:
-	TGessoSaveLoadParams(const char*);
+	TGessoSaveLoadParams(const char* path);
+
+	/* 0x32C */ TParamRT<f32> mSLSearchLengthOnObj;
+	/* 0x340 */ TParamRT<f32> mSLSearchAngleOnObj;
+	/* 0x354 */ TParamRT<f32> mSLSearchAwareOnObj;
+	/* 0x368 */ TParamRT<f32> mSLPollutionLength;
+	/* 0x37C */ TParamRT<s32> mSLPollutionInterval;
+	/* 0x390 */ TParamRT<f32> mSLPolluteObjGravity;
+	/* 0x3A4 */ TParamRT<f32> mSLPolluteObjSpeed;
+	/* 0x3B8 */ TParamRT<f32> mSLPolluteObjLinerSp;
+	/* 0x3CC */ TParamRT<f32> mSLPolluteObjLinerG;
+	/* 0x3E0 */ TParamRT<f32> mSLDropGravityY;
+	/* 0x3F4 */ TParamRT<f32> mSLBodyAngMax;
+	/* 0x408 */ TParamRT<f32> mSLPolluteModelScale;
+	/* 0x41C */ TParamRT<f32> mSLTurnLength;
+	/* 0x430 */ TParamRT<f32> mSLHitWaterSpXZ;
+	/* 0x444 */ TParamRT<f32> mSLHitWaterSpY;
 };
 
 class TGessoPolluteModelManager : public TEnemyPolluteModelManager {
 public:
+	TGessoPolluteModelManager(const char* name = "ゲッソーモデル汚染")
+	    : TEnemyPolluteModelManager(name)
+	{
+	}
+
 	virtual void init(TLiveActor*);
 };
 
 class TGessoPolluteModel : public TEnemyPolluteModel {
 public:
-	TGessoPolluteModel();
+	TGessoPolluteModel(TLiveActor* actor, SDLModelData* model_data)
+	    : TEnemyPolluteModel(actor, 0, model_data, "汚染モデル")
+	{
+	}
 
 	virtual void setAnm();
 };
 
-class TGessoManager;
-extern TGessoManager* gpCurGesso;
+class TGesso;
 
 class TGessoManager : public TSmallEnemyManager {
 public:
@@ -37,7 +60,14 @@ public:
 	virtual void initSetEnemies();
 
 	void requestPolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+
+	TGesso* getObj(int i) { return (TGesso*)TSmallEnemyManager::getObj(i); }
+
+public:
+	/* 0x60 */ TGessoPolluteModelManager* unk60;
 };
+
+class TGessoPolluteObj;
 
 class TGesso : public TWalkerEnemy {
 public:
@@ -57,11 +87,11 @@ public:
 	virtual void setWalkAnm();
 	virtual void setDeadAnm();
 	virtual void setWaitAnm();
-	virtual void setRunAnm() { }
+	virtual void setRunAnm() { setWalkAnm(); }
 	virtual void attackToMario();
 	virtual void initAttacker(THitActor*);
 	virtual void setAfterDeadEffect();
-	virtual void doKeepDistance();
+	virtual bool doKeepDistance();
 	virtual void behaveToFindMario();
 	virtual void walkBehavior(int, f32);
 	virtual bool isResignationAttack();
@@ -85,6 +115,48 @@ public:
 	static f32 mPollRange;
 	static f32 mThroughHoseiDistY;
 	static f32 mAngTestY;
+
+	// fabricated
+	TGessoSaveLoadParams* getSaveParams() const { return unk1E8; }
+
+	f32 getIdk() const
+	{
+		if (unk19C == 1)
+			return 0.0f;
+
+		if (unk1A1 != 0) {
+			if (unk1C4 != 0) {
+				return 0.0f;
+			} else {
+				return 180.0f;
+			}
+		} else {
+			if (unk1C4 != 0)
+				return 90.0f;
+			else
+				return 270.0f;
+		}
+	}
+
+public:
+	/* 0x194 */ int unk194;
+	/* 0x198 */ int unk198;
+	/* 0x19C */ int unk19C;
+	/* 0x1A0 */ u8 unk1A0;
+	/* 0x1A1 */ u8 unk1A1;
+	/* 0x1A4 */ f32 unk1A4;
+	/* 0x1A8 */ TGessoPolluteObj* unk1A8;
+	/* 0x1AC */ u8 unk1AC;
+	/* 0x1AD */ char unk1AD[0x7];
+	/* 0x1B4 */ int unk1B4;
+	/* 0x1B8 */ JGeometry::TVec3<f32> unk1B8;
+	/* 0x1C4 */ u8 unk1C4;
+	/* 0x1C8 */ JGeometry::TVec3<f32> unk1C8;
+	/* 0x1D4 */ char unk1D4[0x4];
+	/* 0x1D8 */ u8 unk1D8;
+	/* 0x1D9 */ u8 unk1D9;
+	/* 0x1DA */ char unk1DA[0xE];
+	/* 0x1E8 */ TGessoSaveLoadParams* unk1E8;
 };
 
 class TSurfGesso : public TGesso {
@@ -105,7 +177,7 @@ public:
 
 class TGessoPolluteObj : public TEnemyAttachment {
 public:
-	TGessoPolluteObj(const char* name);
+	TGessoPolluteObj(const char* name = "ゲッソー汚染物");
 
 	virtual void calcRootMatrix();
 	virtual void loadInit(TSpineEnemy*, const char*);
@@ -114,6 +186,9 @@ public:
 	virtual void set();
 	virtual f32 getNowGravity();
 	virtual void pollute();
+
+public:
+	/* 0x16C */ TGesso* unk16C;
 };
 
 DECLARE_NERVE(TNerveGessoStay, TLiveActor);

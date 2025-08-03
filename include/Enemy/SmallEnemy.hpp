@@ -154,7 +154,7 @@ public:
 	virtual void setBckAnm(int);
 	virtual void setDeadEffect() { }
 	virtual void setAfterDeadEffect();
-	virtual void doKeepDistance();
+	virtual bool doKeepDistance() { return false; }
 	virtual void generateEffectColumWater();
 	virtual bool isFindMario(float);
 
@@ -182,7 +182,7 @@ public:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
-	/* 0x15C */ u32 unk15C;
+	/* 0x15C */ int unk15C;
 	/* 0x160 */ int unk160;
 	/* 0x164 */ u8 unk164;
 	/* 0x165 */ u8 unk165;

@@ -47,7 +47,7 @@ public:
 	int getJointTransByIndex(int, JGeometry::TVec3<f32>*) const;
 	void getJointTransByName(const char*, JGeometry::TVec3<f32>*) const;
 	JGeometry::TVec3<f32> calcVelocityToJumpToY(const JGeometry::TVec3<f32>&,
-	                                            f32, f32 gravity) const;
+	                                            f32 speed, f32 gravity) const;
 	void calcVelocityToJumpToXZ(const JGeometry::TVec3<f32>&, f32, f32) const;
 	void perform(u32, JDrama::TGraphics*);
 	void load(JSUMemoryInputStream&);
