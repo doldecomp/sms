@@ -18,6 +18,7 @@ public:
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	MtxPtr getConnectedMtx() const;
+	MActor* getMActor() { return unk18; }
 
 public:
 	/* 0x10 */ const TLiveActor* unk10;
