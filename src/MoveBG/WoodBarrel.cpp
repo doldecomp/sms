@@ -17,7 +17,8 @@ int TWoodBarrel::mOilBarrelFlushTime = 600;
 void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
-	if (mGroundPlane->unk44 != nullptr && mGroundPlane->unk44->isActorType(0x4000007b)) {
+	if (mGroundPlane->unk44 != nullptr
+	    && mGroundPlane->unk44->isActorType(0x4000007b)) {
 		kill();
 		return;
 	}
@@ -137,9 +138,9 @@ void TWoodBarrel::control()
 void TWoodBarrel::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	mGroundHeight       = gpMap->checkGround(mPosition, &mGroundPlane);
-	mPosition.y = mGroundHeight;
-	unk10C      = mPosition;
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mPosition.y   = mGroundHeight;
+	unk10C        = mPosition;
 	checkOnManhole();
 }
 
