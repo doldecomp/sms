@@ -147,7 +147,7 @@ void TMarDirector::fireGetStar(TShine* shine)
 {
 	unk25C = shine;
 	unk4C |= 1;
-	JGeometry::TVec3<f32>& v = shine->unk118;
+	JGeometry::TVec3<f32>& v = shine->mInitialRotation;
 	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetInside
 	                                   : cCameraBckNameShineGetOutside,
 	                    &gpMarioOriginal->mPosition, -1, v.y, false, nullptr, 0,

@@ -70,7 +70,7 @@ void TJointCoin::control()
 		if (obj->mMActor)
 			obj->getModel()->setAnmMtx(0, mtx);
 
-		obj->mPosition.set(mtx[0][3], mtx[1][3] + obj->unk108, mtx[2][3]);
+		obj->mPosition.set(mtx[0][3], mtx[1][3] + obj->mYOffset, mtx[2][3]);
 	}
 
 	TMapObjBase::control();

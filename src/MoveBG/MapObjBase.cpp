@@ -23,7 +23,7 @@
 void TMapObjBase::changeObjMtx(MtxPtr mtx)
 {
 	mPosition.x = mtx[3][0];
-	mPosition.y = mtx[3][1] + unk108;
+	mPosition.y = mtx[3][1] + mYOffset;
 	mPosition.z = mtx[3][2];
 	if (mMActor) {
 		if (checkMapObjFlag(0x100)) {
@@ -65,13 +65,13 @@ void TMapObjBase::sleep()
 
 void TMapObjBase::setObjHitData(u16 param_1)
 {
-	if (!unk130->mHit)
+	if (!mMapObjData->mHit)
 		return;
 
-	if (unk130->mHit->unk0 <= param_1)
+	if (mMapObjData->mHit->unk0 <= param_1)
 		return;
 
-	const TMapObjHitDataTable* table = &unk130->mHit->unkC[param_1];
+	const TMapObjHitDataTable* table = &mMapObjData->mHit->unkC[param_1];
 
 	if (table->unk0 >= 0.0f) {
 		f32 fVar2     = mScaling.x > mScaling.z ? mScaling.x : mScaling.z;
@@ -109,7 +109,7 @@ void TMapObjBase::setUpCurrentMapCollision()
 		col->setUp();
 	} else {
 		Mtx mtx;
-		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - unk108,
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
 		MsMtxSetTRS(mtx, pos.x, pos.y, pos.z, mRotation.x, mRotation.y,
 		            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
@@ -121,10 +121,11 @@ void TMapObjBase::setUpCurrentMapCollision()
 
 void TMapObjBase::setUpMapCollision(u16 param_1)
 {
-	if (!unk130->mCollision || !unk130->mCollision->unk4[param_1].unk0)
+	if (!mMapObjData->mCollision
+	    || !mMapObjData->mCollision->unk4[param_1].unk0)
 		return;
 
-	JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - unk108, mPosition.z);
+	JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset, mPosition.z);
 
 	unkEC->changeCollision(param_1);
 
@@ -159,13 +160,13 @@ void TMapObjBase::startSound(u16 param_1)
 	if (unk100 != param_1)
 		unk100 = param_1;
 
-	if (!unk130->mSound) {
+	if (!mMapObjData->mSound) {
 		u32 uVar3 = TMapObjGeneral::mDefaultSound.unk0[unk100];
 		if (uVar3 != 0xffffffff && gpMSound->gateCheck(uVar3))
 			MSoundSESystem::MSoundSE::startSoundActor(uVar3, mPosition, 0,
 			                                          nullptr, 0, 4);
 	} else {
-		u32 uVar3 = unk130->mSound->unk4->unk0[unk100];
+		u32 uVar3 = mMapObjData->mSound->unk4->unk0[unk100];
 		if (uVar3 != 0xffffffff && gpMSound->gateCheck(uVar3))
 			MSoundSESystem::MSoundSE::startSoundActor(uVar3, mPosition, 0,
 			                                          nullptr, 0, 4);
@@ -174,9 +175,9 @@ void TMapObjBase::startSound(u16 param_1)
 
 bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 {
-	if (!unk130->mAnim || unk130->mAnim->unk0 <= param_1
-	    || (!unk130->mAnim->unk4[param_1].unk4
-	        && !unk130->mAnim->unk4[param_1].unk0)) {
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
+	    || (!mMapObjData->mAnim->unk4[param_1].unk4
+	        && !mMapObjData->mAnim->unk4[param_1].unk0)) {
 		return false;
 	}
 
@@ -185,8 +186,8 @@ bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 
 bool TMapObjBase::hasAnim(u16 param_1) const
 {
-	if (!unk130->mAnim || unk130->mAnim->unk0 <= param_1
-	    || !unk130->mAnim->unk4[param_1].unk4) {
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
+	    || !mMapObjData->mAnim->unk4[param_1].unk4) {
 		return false;
 	}
 
@@ -195,8 +196,8 @@ bool TMapObjBase::hasAnim(u16 param_1) const
 
 bool TMapObjBase::animIsFinished() const
 {
-	if (!unk130->mAnim || unk130->mAnim->unk0 == 0
-	    || !unk130->mAnim->unk4[unkFE].unk4)
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 == 0
+	    || !mMapObjData->mAnim->unk4[unkFE].unk4)
 		return true;
 
 	if (mMActor->curAnmEndsNext(0, nullptr))
@@ -210,8 +211,9 @@ void TMapObjBase::stopAnim() { }
 void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
-	if (unk130->mAnim && param_1 < unk130->mAnim->unk0)
-		mMActor->getFrameCtrl(unk130->mAnim->unk4[param_1].unk8)->setSpeed(0);
+	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
+		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].unk8)
+		    ->setSpeed(0);
 }
 
 void TMapObjBase::startBck(const char* param_1)
@@ -224,12 +226,12 @@ void TMapObjBase::startAnim(u16 param_1) { }
 
 void TMapObjBase::makeObjDefault()
 {
-	mPosition.x = unk10C.x;
-	mPosition.y = unk10C.y + unk108;
-	mPosition.z = unk10C.z;
+	mPosition.x = mInitialPosition.x;
+	mPosition.y = mInitialPosition.y + mYOffset;
+	mPosition.z = mInitialPosition.z;
 
-	mRotation = unk118;
-	mScaling  = unk124;
+	mRotation = mInitialRotation;
+	mScaling  = mInitialScaling;
 
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(0x10);
@@ -245,9 +247,9 @@ void TMapObjBase::makeObjDead()
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	mLiveFlag |= 0x10;
 
-	if (unkFE != 0xffff && unk130->mAnim && unk130->mAnim->unk0 > 0
-	    && unk130->mAnim->unk4[unkFE].unk4) {
-		u32 uVar6 = unk130->mAnim->unk4[unkFE].unk8;
+	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
+	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
+		u32 uVar6 = mMapObjData->mAnim->unk4[unkFE].unk8;
 		mMActor->getFrameCtrl(uVar6)->setSpeed(0.0f);
 		mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
 		mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
@@ -321,19 +323,25 @@ void TMapObjBase::control()
 	for (int i = 0; i < mColCount; ++i)
 		touchActor(getCollision(i));
 
-	if (unk130->mMove) {
-		TMapObjMoveData* move = unk130->mMove;
+	if (mMapObjData->mMove) {
+		TMapObjMoveData* move = mMapObjData->mMove;
 
 		move->unk4->setFrame(move->unk8->getCurrentFrame());
 		move->unk8->update();
 		J3DTransformInfo info;
 		move->unk4->getTransform(1, &info);
-		mLinearVelocity.x = info.mTranslate.x + unk10C.x - mPosition.x;
-		mLinearVelocity.y = info.mTranslate.y + unk10C.y - mPosition.y;
-		mLinearVelocity.z = info.mTranslate.z + unk10C.z - mPosition.z;
-		mRotation.x       = info.mRotation.x * (360.0f / 65536.0f) + unk118.x;
-		mRotation.y       = info.mRotation.y * (360.0f / 65536.0f) + unk118.y;
-		mRotation.z       = info.mRotation.z * (360.0f / 65536.0f) + unk118.z;
+		mLinearVelocity.x
+		    = info.mTranslate.x + mInitialPosition.x - mPosition.x;
+		mLinearVelocity.y
+		    = info.mTranslate.y + mInitialPosition.y - mPosition.y;
+		mLinearVelocity.z
+		    = info.mTranslate.z + mInitialPosition.z - mPosition.z;
+		mRotation.x
+		    = info.mRotation.x * (360.0f / 65536.0f) + mInitialRotation.x;
+		mRotation.y
+		    = info.mRotation.y * (360.0f / 65536.0f) + mInitialRotation.y;
+		mRotation.z
+		    = info.mRotation.z * (360.0f / 65536.0f) + mInitialRotation.z;
 	}
 }
 
@@ -356,7 +364,7 @@ u32 TMapObjBase::getShadowType()
 
 Mtx* TMapObjBase::getRootJointMtx() const
 {
-	if (checkMapObjFlag(0x8) || unk108 != 0.0f)
+	if (checkMapObjFlag(0x8) || mYOffset != 0.0f)
 		return (Mtx*)mMActor->getModel()->getAnmMtx(0);
 	return nullptr;
 }
@@ -364,7 +372,7 @@ Mtx* TMapObjBase::getRootJointMtx() const
 void TMapObjBase::calcRootMatrix()
 {
 	J3DModel* model = getModel();
-	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - unk108,
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - mYOffset,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
 }
@@ -385,8 +393,8 @@ void TMapObjBase::initAndRegister(const char* param_1)
 {
 	unkF4 = param_1;
 	initMapObj();
-	if (unk130->unkC) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>(unk130->unkC)
+	if (mMapObjData->unkC) {
+		JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC)
 		    ->push_back(this);
 	}
 }
@@ -427,14 +435,11 @@ TMapObjBase::TMapObjBase(const char* name)
     , unk100(0xffff)
     , unk102(0)
     , unk104(0)
-    , unk108(0.0f)
-    , unk130(nullptr)
+    , mYOffset(0.0f)
+    , mMapObjData(nullptr)
     , unk134(0)
 {
-	unk10C.x = unk10C.y = unk10C.z = 0.0f;
-	unk118.x = unk118.y = unk118.z = 0.0f;
-
-	unk124.x = 1.0f;
-	unk124.y = 1.0f;
-	unk124.z = 1.0f;
+	mInitialPosition.zero();
+	mInitialRotation.zero();
+	mInitialScaling.set(1.0f, 1.0f, 1.0f);
 }

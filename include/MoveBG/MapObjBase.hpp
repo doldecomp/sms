@@ -327,7 +327,7 @@ public:
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
 	void onMapObjFlag(u32 flag) { unkF8 |= flag; }
 	void offMapObjFlag(u32 flag) { unkF8 &= ~flag; }
-	TMapObjData* getMapObjData() { return unk130; }
+	TMapObjData* getMapObjData() { return mMapObjData; }
 	bool isState(u32 v) { return mState == v ? true : false; }
 	bool isUnk104Positive() { return unk104 > 0 ? true : false; }
 	int getUnk104() { return unk104; }
@@ -343,11 +343,11 @@ public:
 	/* 0x100 */ u16 unk100;
 	/* 0x102 */ u16 unk102;
 	/* 0x104 */ int unk104;
-	/* 0x108 */ f32 unk108;
-	/* 0x10C */ JGeometry::TVec3<f32> unk10C;
-	/* 0x118 */ JGeometry::TVec3<f32> unk118;
-	/* 0x124 */ JGeometry::TVec3<f32> unk124;
-	/* 0x130 */ TMapObjData* unk130;
+	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?
+	/* 0x10C */ JGeometry::TVec3<f32> mInitialPosition;
+	/* 0x118 */ JGeometry::TVec3<f32> mInitialRotation;
+	/* 0x124 */ JGeometry::TVec3<f32> mInitialScaling;
+	/* 0x130 */ TMapObjData* mMapObjData;
 	/* 0x134 */ u32 unk134;
 };
 

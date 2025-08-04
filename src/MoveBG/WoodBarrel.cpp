@@ -66,10 +66,10 @@ void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		mDamageHeight = unk130->mHit->unkC->unkC + 90.0f;
+		mDamageHeight = mMapObjData->mHit->unkC->unkC + 90.0f;
 		calcEntryRadius();
 	} else {
-		mDamageHeight = unk130->mHit->unkC->unkC;
+		mDamageHeight = mMapObjData->mHit->unkC->unkC;
 		calcEntryRadius();
 	}
 
@@ -138,9 +138,9 @@ void TWoodBarrel::control()
 void TWoodBarrel::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
-	mPosition.y   = mGroundHeight;
-	unk10C        = mPosition;
+	mGroundHeight    = gpMap->checkGround(mPosition, &mGroundPlane);
+	mPosition.y      = mGroundHeight;
+	mInitialPosition = mPosition;
 	checkOnManhole();
 }
 

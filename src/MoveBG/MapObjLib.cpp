@@ -369,7 +369,7 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 	ptr[1][0] = fVar1;
 	ptr[1][1] = fVar2;
 	ptr[1][2] = 0.0f;
-	ptr[1][3] = mPosition.y - unk108;
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = 0.0f;
@@ -395,7 +395,7 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = 1.0f;
 	ptr[1][2] = 0.0f;
-	ptr[1][3] = mPosition.y - unk108;
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = -fVar1;
 	ptr[2][1] = 0.0f;
@@ -421,7 +421,7 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = fVar2;
 	ptr[1][2] = -fVar1;
-	ptr[1][3] = mPosition.y - unk108;
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = fVar1;
@@ -439,7 +439,7 @@ void TMapObjBase::updateRootMtxTrans()
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	// BUG: oops, all coord go into the same matrix cell!
 	mtx[0][3] = mPosition.x;
-	mtx[0][3] = mPosition.y - unk108;
+	mtx[0][3] = mPosition.y - mYOffset;
 	mtx[0][3] = mPosition.z;
 }
 
@@ -449,8 +449,9 @@ void TMapObjBase::setRootMtxTrans() { }
 
 void TMapObjBase::updateObjMtx()
 {
-	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x, mPosition.y - unk108,
-	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x,
+	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
+	               mRotation.y, mRotation.z);
 }
 
 void TMapObjBase::concatOnlyRotFromLeft(MtxPtr param_1, MtxPtr param_2,

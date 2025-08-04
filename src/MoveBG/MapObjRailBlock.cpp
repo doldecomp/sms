@@ -158,8 +158,8 @@ BOOL TRailMapObj::calcRecycle()
 
 void TRailMapObj::resetPosition()
 {
-	mPosition = unk10C;
-	mRotation = unk118;
+	mPosition = mInitialPosition;
+	mRotation = mInitialRotation;
 	unk148    = 0;
 	unk14A    = 180;
 	unk14C    = 1;
@@ -180,9 +180,9 @@ void TRailMapObj::load(JSUMemoryInputStream& stream)
 	unkF4 = stream.readString();
 	char buffer[256];
 	stream.readString(buffer, 256);
-	unk10C = mPosition;
-	unk118 = mRotation;
-	unk124 = mScaling;
+	mInitialPosition = mPosition;
+	mInitialRotation = mRotation;
+	mInitialScaling  = mScaling;
 	initGraphTracer(gpConductor->getGraphByName(buffer));
 	initMapObj();
 	makeObjAppeared();
