@@ -65,7 +65,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 		JGeometry::TVec3<f32> local_28;
 		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &local_1C, &local_28);
 		local_1C.sub(mPosition);
-		unk94.add(local_1C);
+		mLinearVelocity.add(local_1C);
 
 		mRotation = local_28;
 		if (result)
@@ -86,7 +86,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 	} else {
 		VECNormalize(&local_34, &local_34);
 		local_34.scale(param_1);
-		unk94.add(local_34);
+		mLinearVelocity.add(local_34);
 		if (unk13C > 0)
 			--unk13C;
 		return false;

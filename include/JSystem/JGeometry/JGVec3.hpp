@@ -134,6 +134,13 @@ public:
 		return *this;
 	}
 
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	{
+		fst -= snd;
+		return fst;
+	}
+
 	f32 dot(const TVec3<f32>& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;

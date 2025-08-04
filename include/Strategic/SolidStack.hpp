@@ -38,9 +38,23 @@ public:
 	}
 
 	// fabricated
+	bool contain(const T& value) const
+	{
+		for (int i = 0; i < mSize; ++i)
+			if (mData[mSize - 1 - i] == value)
+				return true;
+
+		return false;
+	}
+
+	// fabricated
 	void clear() { mSize = 0; }
+
 	// fabricated
 	bool empty() const { return mSize == 0; }
+
+	// fabricated
+	int size() const { return mSize; }
 
 	virtual ~TSolidStack() { }
 };

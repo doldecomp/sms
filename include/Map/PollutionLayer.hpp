@@ -41,7 +41,7 @@ public:
 	{
 		return getModelData()->getTexture()->mResources;
 	}
-	virtual void stamp(u16, f32, f32, f32, f32);
+	virtual void stamp(u16, f32 x, f32 y, f32 z, f32 range);
 	virtual void stampModel(J3DModel*);
 	virtual bool isPolluted(f32, f32, f32) const;
 	virtual bool isInArea(f32, f32, f32) const;

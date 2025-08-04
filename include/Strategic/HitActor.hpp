@@ -9,6 +9,10 @@ enum TActorTypeBits {
 	ACTOR_TYPE_BOSS   = 0x8000000,
 };
 
+enum THitMessageType {
+	HIT_MESSAGE_SPRAYED_BY_WATER = 15,
+};
+
 class THitActor : public JDrama::TActor {
 public:
 	THitActor(const char* = "HitActor");
@@ -16,7 +20,10 @@ public:
 	virtual ~THitActor() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message)
+	{
+		return false;
+	}
 
 	float initHitActor(u32, u16, int, f32 attack_radius, f32 attack_height,
 	                   f32 damage_radius, f32 damage_height);

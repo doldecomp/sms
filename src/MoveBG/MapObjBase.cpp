@@ -231,18 +231,18 @@ void TMapObjBase::makeObjDefault()
 	mRotation = unk118;
 	mScaling  = unk124;
 
-	unkAC.x = unkAC.y = unkAC.z = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(0x10);
 	if (mMActor) {
 		calcRootMatrix();
 		getModel()->calc();
 	}
-	unkC8 = gpMap->checkGround(mPosition, &unkC4);
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
 void TMapObjBase::makeObjDead()
 {
-	unkAC.x = unkAC.y = unkAC.z = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	mLiveFlag |= 0x10;
 
 	if (unkFE != 0xffff && unk130->mAnim && unk130->mAnim->unk0 > 0
@@ -309,7 +309,7 @@ void TMapObjBase::ensureTakeSituation()
 		mHeldObject = nullptr;
 
 	if (mHolder && mHolder->mHeldObject != this) {
-		if (mPosition.y != unkC8)
+		if (mPosition.y != mGroundHeight)
 			mLiveFlag &= ~0x10;
 
 		mHolder = nullptr;
@@ -328,12 +328,12 @@ void TMapObjBase::control()
 		move->unk8->update();
 		J3DTransformInfo info;
 		move->unk4->getTransform(1, &info);
-		unk94.x     = info.mTranslate.x + unk10C.x - mPosition.x;
-		unk94.y     = info.mTranslate.y + unk10C.y - mPosition.y;
-		unk94.z     = info.mTranslate.z + unk10C.z - mPosition.z;
-		mRotation.x = info.mRotation.x * (360.0f / 65536.0f) + unk118.x;
-		mRotation.y = info.mRotation.y * (360.0f / 65536.0f) + unk118.y;
-		mRotation.z = info.mRotation.z * (360.0f / 65536.0f) + unk118.z;
+		mLinearVelocity.x = info.mTranslate.x + unk10C.x - mPosition.x;
+		mLinearVelocity.y = info.mTranslate.y + unk10C.y - mPosition.y;
+		mLinearVelocity.z = info.mTranslate.z + unk10C.z - mPosition.z;
+		mRotation.x       = info.mRotation.x * (360.0f / 65536.0f) + unk118.x;
+		mRotation.y       = info.mRotation.y * (360.0f / 65536.0f) + unk118.y;
+		mRotation.z       = info.mRotation.z * (360.0f / 65536.0f) + unk118.z;
 	}
 }
 
@@ -394,7 +394,7 @@ void TMapObjBase::initAndRegister(const char* param_1)
 void TMapObjBase::loadAfter()
 {
 	TLiveActor::loadAfter();
-	unkC8 = gpMap->checkGround(mPosition, &unkC4);
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
 void TMapObjBase::load(JSUMemoryInputStream& stream)

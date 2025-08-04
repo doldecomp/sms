@@ -1,6 +1,8 @@
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/question.hpp>
+#include <Strategic/Spine.hpp>
+#include <Strategic/Binder.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -35,27 +37,28 @@ TLiveActor::TLiveActor(const char* name)
 	unk88         = nullptr;
 	mSpine        = nullptr;
 	unk90         = nullptr;
-	unk94.zero();
-	unkA0.zero();
-	unkAC.x   = 0.0f;
-	unkAC.y   = 0.0f;
-	unkAC.z   = 0.0f;
-	unkB8     = 10.0f;
-	unkBC     = 25.0f;
-	unkC0     = 50.0f;
-	unkC4     = nullptr;
-	unkC8     = 0.0;
-	unkCC     = 0.15;
-	unkD0     = nullptr;
-	unkD4     = nullptr;
-	unkE4     = 0.0;
-	unkE8     = 1;
-	unkEC     = nullptr;
-	mLiveFlag = 0x100;
 
-	unkD8.x = unkD8.y = unkD8.z = 0.0;
+	mLinearVelocity.zero();
+	mAngularVelocity.zero();
 
-	unkC4 = TMap::getIllegalCheckData();
+	mVelocity.set(0.0f, 0.0f, 0.0f);
+
+	mScaledBodyRadius = 10.0f;
+	mBodyRadius       = 25.0f;
+	mHeadHeight       = 50.0f;
+	mGroundPlane      = nullptr;
+	mGroundHeight     = 0.0f;
+	unkCC             = 0.15f;
+	unkD0             = nullptr;
+	mGroundActor      = nullptr;
+	mGroundActorYaw   = 0.0f;
+	unkE8             = 1;
+	unkEC             = nullptr;
+	mLiveFlag         = 0x100;
+
+	mRidePos.zero();
+
+	mGroundPlane = TMap::getIllegalCheckData();
 	if (gpMarDirector->mMap != 8)
 		mLiveFlag |= 0x2000;
 }
@@ -64,30 +67,67 @@ TLiveActor::~TLiveActor() { }
 
 void TLiveActor::calcRidePos()
 {
-	if (!unkD4)
+	if (!mGroundActor)
 		return;
 
 	Mtx mtx;
-	if (!unkD4->getRootJointMtx())
-		SMS_GetActorMtx(*unkD4, mtx);
+	if (!mGroundActor->getRootJointMtx())
+		SMS_GetActorMtx(*mGroundActor, mtx);
 	else
-		MTXCopy(*unkD4->getRootJointMtx(), mtx);
+		MTXCopy(*mGroundActor->getRootJointMtx(), mtx);
 	MTXInverse(mtx, mtx);
-	MTXMultVec(mtx, &mPosition, &unkD8);
+	MTXMultVec(mtx, &mPosition, &mRidePos);
 }
 
-bool TLiveActor::belongToGround() const
+BOOL TLiveActor::belongToGround() const
 {
-	if (unkC4 && ((unkC4->unk4 & 0x10 ? true : false) == true ? false : true)
-	    && unkC4->unk44 != nullptr && !(mLiveFlag & 0x80 ? TRUE : FALSE))
+	if (mGroundPlane
+	    && (mGroundPlane->checkFlag2(PLANE_TYPE_KILL) == true ? false : true)
+	    && mGroundPlane->unk44 != nullptr
+	    && !checkLiveFlag2(LIVE_FLAG_AIRBORNE))
 		return true;
 
 	return false;
 }
 
-#pragma dont_inline on
-void TLiveActor::calcRideMomentum() { }
-#pragma dont_inline off
+void TLiveActor::calcRideMomentum()
+{
+	if (unkE8 == 0)
+		return;
+
+	if (belongToGround()) {
+		if (mGroundActor == nullptr
+		    || mGroundActor != mGroundPlane->getUnk44()) {
+			mGroundActor = mGroundPlane->getUnk44();
+			calcRidePos();
+
+			if (unkE8 >= 2 && mGroundActor != nullptr)
+				mGroundActorYaw = mGroundActor->mRotation.y;
+		} else {
+			Mtx mtx;
+			if (!mGroundActor->getRootJointMtx())
+				SMS_GetActorMtx(*mGroundActor, mtx);
+			else
+				MTXCopy(*mGroundActor->getRootJointMtx(), mtx);
+
+			// Did they call this function calcRideMomentum because they
+			// didn't know the difference between momentum and velocity?
+			JGeometry::TVec3<f32> rideVelocity;
+			// mRidePos is from last frame here
+			MTXMultVec(mtx, &mRidePos, &rideVelocity);
+			rideVelocity -= mPosition;
+			mLinearVelocity += rideVelocity;
+
+			if (unkE8 >= 2) {
+				mAngularVelocity.y
+				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				mGroundActorYaw = mGroundActor->mRotation.y;
+			}
+		}
+	} else {
+		mGroundActor = nullptr;
+	}
+}
 
 J3DModel* TLiveActor::getModel() const { return mMActor->unk4; }
 
@@ -103,10 +143,11 @@ void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
 void TLiveActor::init(TLiveManager* manager)
 {
 	if (!manager) {
-		if (unk3C) {
-			mMActorKeeper = new TMActorKeeper(nullptr, 0);
-			mMActor       = mMActorKeeper->createMActorFromDefaultBmd(
-                *(const char**)((u8*)unk3C + 0xC), 0);
+		if (TObjChara* chara = (TObjChara*)unk3C) {
+			mMActorKeeper = new TMActorKeeper(nullptr, 1);
+			// TODO: could be TSMSSmplChara instead
+			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
+			    chara->getFolder(), 0);
 		}
 		gpConductor->registerAloneActor(this);
 	} else {
@@ -116,12 +157,12 @@ void TLiveActor::init(TLiveManager* manager)
 		mMActor = mMActorKeeper->createMActorFromNthData(0, 0);
 	}
 
-	initHitActor(0, 1, 0, unkBC, unkC0, unkBC, unkC0);
+	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 
-	unk64 |= 1;
-	mLiveFlag &= ~0x400;
+	onHitFlag(0x1);
+	offLiveFlag(0x400);
 
-	if (unk80)
+	if (!unk80)
 		initAnmSound();
 }
 
@@ -133,14 +174,79 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 	stream.readString(buffer, 256);
 	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
 
-	unkC4 = TMap::getIllegalCheckData();
+	mGroundPlane = TMap::getIllegalCheckData();
 
 	init(mgr);
 }
 
-void TLiveActor::bind() { }
+void TLiveActor::bind()
+{
+	if (checkLiveFlag(0x10))
+		return;
 
-void TLiveActor::control() { }
+	if (unk88 != nullptr) {
+		unk88->bind(this);
+		return;
+	}
+
+	JGeometry::TVec3<f32> nextPos = mPosition;
+	nextPos += mLinearVelocity;
+	nextPos += mVelocity;
+
+	// Apply gravity & air resistance
+	mVelocity.y -= getGravityY();
+	if (mVelocity.y < -40.0f)
+		mVelocity.y = -40.0f;
+
+	// Handle vertical collisions
+	{
+		if (checkLiveFlag(0x1000)) {
+			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
+			    nextPos.x, nextPos.y + mHeadHeight, nextPos.z, &mGroundPlane);
+		} else {
+			mGroundHeight = gpMap->checkGround(
+			    nextPos.x, nextPos.y + mHeadHeight, nextPos.z, &mGroundPlane);
+		}
+		mGroundHeight += 1.0f;
+
+		// Will we hit the ground next frame?
+		if (nextPos.y <= mGroundHeight + 0.05f) {
+			if (mGroundPlane->checkFlag2(PLANE_TYPE_KILL))
+				kill();
+			offLiveFlag(LIVE_FLAG_AIRBORNE);
+			mVelocity.set(0.0f, 0.0f, 0.0f);
+			nextPos.y = mGroundHeight;
+		} else {
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+		}
+	}
+
+	// Handle horizontal collisions
+	gpMap->isTouchedOneWallAndMoveXZ(&nextPos.x, nextPos.y + mHeadHeight,
+	                                 &nextPos.z, mBodyRadius);
+
+	// We're done, this is the displacement for this frame
+	mLinearVelocity = nextPos - mPosition;
+}
+
+void TLiveActor::control()
+{
+	// TODO: what is unk90???
+	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
+		if (mSpine)
+			mSpine->update();
+	} else {
+		if (!mSpine) {
+			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
+				// call on unk90
+			}
+		} else if (mSpine->isIdle()) {
+			// call on unk90
+		} else {
+			mSpine->update();
+		}
+	}
+}
 
 void TLiveActor::calcRootMatrix()
 {
@@ -173,25 +279,19 @@ void TLiveActor::setGroundCollision()
 void TLiveActor::moveObject()
 {
 	ensureTakeSituation();
-	unk94.zero();
-	unkA0.zero();
+
+	mLinearVelocity.zero();
+	mAngularVelocity.zero();
+
 	control();
 	calcRideMomentum();
 	bind();
-	mPosition.add(unk94);
-	mRotation.add(unkA0);
-	setGroundCollision();
 
-	if (unkD4) {
-		Mtx mtx;
-		if (getRootJointMtx() == nullptr) {
-			SMS_GetActorMtx(*unkD4, mtx);
-		} else {
-			MTXCopy(*unkD4->getRootJointMtx(), mtx);
-		}
-		MTXInverse(mtx, mtx);
-		MTXMultVec(mtx, &mPosition, &unkD8);
-	}
+	mPosition += mLinearVelocity;
+	mRotation += mAngularVelocity;
+
+	setGroundCollision();
+	calcRidePos();
 }
 
 void TLiveActor::requestShadow()
@@ -205,11 +305,11 @@ void TLiveActor::requestShadow()
 		local_2c.unk0 = mPosition;
 
 		if (!(mLiveFlag & 0x80 ? 0 : 1)) {
-			local_2c.unk0.y = unkC8;
+			local_2c.unk0.y = mGroundHeight;
 			local_2c.unk1D  = 0;
 		}
 
-		local_2c.unk10 = local_2c.unkC = unkB8;
+		local_2c.unk10 = local_2c.unkC = mScaledBodyRadius;
 
 		local_2c.unk1C = getShadowType();
 		local_2c.unk14 = mRotation.y;
@@ -222,7 +322,7 @@ void TLiveActor::requestShadow()
 	}
 
 	if (!(mLiveFlag & 0x204) && !checkActorType(0x40000000)) {
-		gpQuestionManager->request(mPosition, unkB8);
+		gpQuestionManager->request(mPosition, mScaledBodyRadius);
 	}
 }
 
@@ -231,7 +331,7 @@ void TLiveActor::drawObject(JDrama::TGraphics*)
 	if (mLiveFlag & 3 || !mMActor)
 		return;
 
-	mMActor->setLightData(unkC4, mPosition);
+	mMActor->setLightData(mGroundPlane, mPosition);
 	mMActor->entry();
 }
 
@@ -338,7 +438,7 @@ void TLiveActor::initAnmSound()
 	if (unk80)
 		return;
 
-	if (mActorType & 0x4000000 ? true : false)
+	if (checkActorType(0x4000000))
 		unk80 = new MAnmSoundNPC(gpMSound);
 	else
 		unk80 = new MAnmSound(gpMSound);

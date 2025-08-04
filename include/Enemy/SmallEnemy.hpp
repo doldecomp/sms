@@ -151,7 +151,7 @@ public:
 	virtual void endHitWaterJump() { }
 	virtual void sendAttackMsgToMario();
 	virtual void decHpByWater(THitActor*);
-	virtual void setBckAnm(int);
+	virtual void setBckAnm(int index);
 	virtual void setDeadEffect() { }
 	virtual void setAfterDeadEffect();
 	virtual bool doKeepDistance() { return false; }
@@ -177,13 +177,17 @@ public:
 	static bool mIsAmpPolluter;
 
 	bool checkUnk150(u32 param_1) const { return unk150 & param_1; }
+	bool isBckAnm(int index) const
+	{
+		return mCurrentBckAnm == index ? true : false;
+	}
 
 public:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
-	/* 0x15C */ int unk15C;
-	/* 0x160 */ int unk160;
+	/* 0x15C */ int mCurrentBckAnm;
+	/* 0x160 */ int mSprayedByWaterCooldown;
 	/* 0x164 */ u8 unk164;
 	/* 0x165 */ u8 unk165;
 	/* 0x166 */ char unk166[2];

@@ -17,11 +17,15 @@ class J3DModel;
 class TBinder;
 class TMapCollisionManager;
 
+enum LiveFlagBits {
+	LIVE_FLAG_AIRBORNE = 0x80,
+};
+
 class TLiveActor : public TTakeActor {
 public:
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
-	virtual bool belongToGround() const;
+	virtual BOOL belongToGround() const;
 	virtual Mtx* getRootJointMtx() const;
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -63,7 +67,7 @@ public:
 	static f32 mVelocityMinY;
 
 	// fabricated
-	const TBGCheckData* getUnkC4() const { return unkC4; }
+	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
 	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
@@ -75,8 +79,8 @@ public:
 	s16 getUnk7C() const { return unk7C; }
 	MAnmSound* getUnk80() { return unk80; }
 	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
-	const JGeometry::TVec3<f32>& getUnkAC() const { return unkAC; }
-	void setUnkAC(const JGeometry::TVec3<f32>& v) { unkAC = v; }
+	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
+	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;
@@ -88,22 +92,24 @@ public:
 	/* 0x88 */ TBinder* unk88;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
 	/* 0x90 */ void* unk90;
-	/* 0x94 */ JGeometry::TVec3<f32> unk94; // velocity too?
-	/* 0xA0 */ JGeometry::TVec3<f32> unkA0; // angular speed?
-	/* 0xAC */ JGeometry::TVec3<f32> unkAC; // velocity
-	/* 0xB8 */ f32 unkB8;
-	/* 0xBC */ f32 unkBC;
-	/* 0xC0 */ f32 unkC0;
-	/* 0xC4 */ const TBGCheckData* unkC4;
-	/* 0xC8 */ f32 unkC8;
+	// TODO: Analyze mLinearVelocity vs mVelocity some more
+	// and decide on better names
+	/* 0x94 */ JGeometry::TVec3<f32> mLinearVelocity;
+	/* 0xA0 */ JGeometry::TVec3<f32> mAngularVelocity;
+	/* 0xAC */ JGeometry::TVec3<f32> mVelocity;
+	/* 0xB8 */ f32 mScaledBodyRadius;
+	/* 0xBC */ f32 mBodyRadius;
+	/* 0xC0 */ f32 mHeadHeight;
+	/* 0xC4 */ const TBGCheckData* mGroundPlane;
+	/* 0xC8 */ f32 mGroundHeight;
 	/* 0xCC */ f32 unkCC;
 	/* 0xD0 */ TLodAnm* unkD0;
-	/* 0xD4 */ TLiveActor* unkD4;
-	/* 0xD8 */ Vec unkD8;
-	/* 0xE4 */ f32 unkE4;
-	/* 0xE8 */ u8 unkE8;
+	/* 0xD4 */ const TLiveActor* mGroundActor;
+	/* 0xD8 */ JGeometry::TVec3<f32> mRidePos;
+	/* 0xE4 */ f32 mGroundActorYaw;
+	/* 0xE8 */ s8 unkE8;
 	/* 0xEC */ TMapCollisionManager* unkEC;
-	/* 0xF0 */ u32 mLiveFlag;
+	/* 0xF0 */ u32 mLiveFlag; // LiveFlagBits
 };
 
 #endif

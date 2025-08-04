@@ -17,12 +17,12 @@ int TWoodBarrel::mOilBarrelFlushTime = 600;
 void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
-	if (unkC4->unk44 != nullptr && unkC4->unk44->isActorType(0x4000007b)) {
+	if (mGroundPlane->unk44 != nullptr && mGroundPlane->unk44->isActorType(0x4000007b)) {
 		kill();
 		return;
 	}
 
-	if (unkC8 < mPosition.y - 50.0f) {
+	if (mGroundHeight < mPosition.y - 50.0f) {
 		onLiveFlag(0x80);
 		offLiveFlag(0x10);
 	} else {
@@ -72,8 +72,8 @@ void TWoodBarrel::appeared()
 		calcEntryRadius();
 	}
 
-	unkC8 = gpMap->checkGround(mPosition, &unkC4);
-	if (mPosition.y - 50.0f > unkC8)
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	if (mPosition.y - 50.0f > mGroundHeight)
 		offLiveFlag(0x10);
 }
 
@@ -94,7 +94,7 @@ void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)
 void TWoodBarrel::touchGround(JGeometry::TVec3<f32>*)
 {
 	kill();
-	if (unkC4->isWaterSurface())
+	if (mGroundPlane->isWaterSurface())
 		emitColumnWater();
 }
 
@@ -137,8 +137,8 @@ void TWoodBarrel::control()
 void TWoodBarrel::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	unkC8       = gpMap->checkGround(mPosition, &unkC4);
-	mPosition.y = unkC8;
+	mGroundHeight       = gpMap->checkGround(mPosition, &mGroundPlane);
+	mPosition.y = mGroundHeight;
 	unk10C      = mPosition;
 	checkOnManhole();
 }

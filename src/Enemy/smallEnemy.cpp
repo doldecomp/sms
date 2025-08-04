@@ -144,8 +144,8 @@ TSmallEnemy::TSmallEnemy(const char* name)
     , unk150(0)
     , unk154(1.0f)
     , unk158(1.0f)
-    , unk15C(0xffffffff)
-    , unk160(0)
+    , mCurrentBckAnm(-1)
+    , mSprayedByWaterCooldown(0)
     , unk164(0)
     , unk165(0)
     , unk174(0)
@@ -185,11 +185,11 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	TSmallEnemyParams* params2 = getSaveParam();
 	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
-	unk154 = mBodyScale;
-	unkBC  = getSaveParam()->mSLBodyRadius.get();
-	unk14C = getSaveParam()->mSLWallRadius.get();
-	unkC0  = getSaveParam()->mSLHeadHeight.get();
-	unkB8  = mBodyScale * unkBC * 15.0f;
+	unk154            = mBodyScale;
+	mBodyRadius       = getSaveParam()->mSLBodyRadius.get();
+	mWallRadius       = getSaveParam()->mSLWallRadius.get();
+	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
+	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
 	f32 attackRadius = getSaveParam()->mSLAttackRadius.get();
 	f32 attackHeight = getSaveParam()->mSLAttackHeight.get();
@@ -200,7 +200,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	             attackHeight * mBodyScale, damageRadius * mBodyScale,
 	             damageHeight * mBodyScale);
 
-	unkC4 = TMap::getIllegalCheckData();
+	mGroundPlane = TMap::getIllegalCheckData();
 	if (!unk124->unk0 || unk124->unk0->isDummy())
 		unk124->unk0 = gpConductor->getGraphByName("main");
 
@@ -242,12 +242,12 @@ void TSmallEnemy::attackToMario()
 	JGeometry::TVec3<f32> local_20;
 	local_20.sub(mPosition, *gpMarioPos);
 	MsVECNormalize(&local_20, &local_20);
-	unkAC.set(local_20);
+	mVelocity.set(local_20);
 
 	JGeometry::TVec3<f32> v;
-	v.scale(mBodyScale * unkBC, local_20);
+	v.scale(mBodyScale * mBodyRadius, local_20);
 	v += local_14;
-	unk94 = v;
+	mLinearVelocity = v;
 }
 
 void TSmallEnemy::reset()
@@ -260,11 +260,11 @@ void TSmallEnemy::reset()
 	TSmallEnemyParams* params2 = getSaveParam();
 	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
-	unk154 = mBodyScale;
-	unkBC  = getSaveParam()->mSLBodyRadius.get();
-	unk14C = getSaveParam()->mSLWallRadius.get();
-	unkC0  = getSaveParam()->mSLHeadHeight.get();
-	unkB8  = mBodyScale * unkBC * 15.0f;
+	unk154            = mBodyScale;
+	mBodyRadius       = getSaveParam()->mSLBodyRadius.get();
+	mWallRadius       = getSaveParam()->mSLWallRadius.get();
+	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
+	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 
@@ -285,9 +285,9 @@ void TSmallEnemy::reset()
 	mSpine->pushDefault();
 	mScaling.set(mBodyScale, mBodyScale, mBodyScale);
 
-	unk160 = 0;
-	unk165 = 0;
-	unk184 = 0;
+	mSprayedByWaterCooldown = 0;
+	unk165                  = 0;
+	unk184                  = 0;
 
 	f32 attackRadius = getSaveParam()->getSLAttackRadius();
 	f32 attackHeight = getSaveParam()->getSLAttackHeight();
@@ -312,9 +312,10 @@ void TSmallEnemy::reset()
 
 void TSmallEnemy::forceKill()
 {
-	if ((unkC4->checkFlag2(0x10)
-	     || (!unkC4->checkSomething6() && !unkC4->checkSomething2()
-	         && !unkC4->isWaterSurface())
+	if ((mGroundPlane->checkFlag2(0x10)
+	     || (!mGroundPlane->checkSomething6()
+	         && !mGroundPlane->checkSomething2()
+	         && !mGroundPlane->isWaterSurface())
 	     || checkLiveFlag2(0x80) || checkLiveFlag(0x10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
@@ -356,7 +357,7 @@ void TSmallEnemy::genEventCoin()
 
 		if (coin) {
 			coin->mPosition = mPosition;
-			coin->unkAC.set(0, 20, 0);
+			coin->mVelocity.set(0, 20, 0);
 			coin->offLiveFlag(0x10);
 			--unk18C;
 		}
@@ -401,8 +402,8 @@ void TSmallEnemy::genEventCoin()
 				coin->mPosition.y = mPosition.y;
 				MsVECNormalize(&local_d0, &local_d0);
 				// TODO: is this a method on some RandInterval class?
-				coin->unkAC.set(local_d0.x * 4, MsRandF(16.0f, 8.0f),
-				                local_d0.z * 4);
+				coin->mVelocity.set(local_d0.x * 4, MsRandF(16.0f, 8.0f),
+				                    local_d0.z * 4);
 				coin->offLiveFlag(0x10);
 			}
 		}
@@ -433,8 +434,8 @@ void TSmallEnemy::generateItem()
 	if (MsRandF(0.0f, 100.0f) < getSaveParam()->mSLGenEggRate.get()
 	                                + getSaveParam()->mSLGenItemRate.get()
 
-	    && !unkC4->checkFlag2(0x10))
-		gpMapObjManager->makeObjAppear(mPosition.x, unkC8, mPosition.z,
+	    && !mGroundPlane->checkFlag2(0x10))
+		gpMapObjManager->makeObjAppear(mPosition.x, mGroundHeight, mPosition.z,
 		                               0x20000008, true);
 }
 
@@ -468,8 +469,8 @@ void TSmallEnemy::moveObject()
 
 	calcEntryRadius();
 	ensureTakeSituation();
-	unk94.zero();
-	unkA0.zero();
+	mLinearVelocity.zero();
+	mAngularVelocity.zero();
 	control();
 
 	if (!isInhibitedForceMove())
@@ -497,21 +498,21 @@ void TSmallEnemy::moveObject()
 		local_74.scale(mMarchSpeed * 3.0f * unk158);
 
 		v.add(local_74);
-		unk94 = v;
+		mLinearVelocity = v;
 	}
 
 	bind();
 	forceKill();
 	setBehavior();
 
-	mPosition += unk94;
-	mRotation += unkA0;
+	mPosition += mLinearVelocity;
+	mRotation += mAngularVelocity;
 
-	if (unk160 > 0)
-		++unk160;
+	if (mSprayedByWaterCooldown > 0)
+		++mSprayedByWaterCooldown;
 
-	if (unk160 > 0x1E)
-		unk160 = 0;
+	if (mSprayedByWaterCooldown > 30)
+		mSprayedByWaterCooldown = 0;
 
 	if (unkEC && unkEC->getUnk8())
 		unkEC->getUnk8()->moveSRT(mPosition, mRotation, mScaling);
@@ -522,45 +523,45 @@ void TSmallEnemy::moveObject()
 
 void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 
-BOOL TSmallEnemy::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 {
-	if (isEatenByYosshi() && param_2 == 4 && !mHolder) {
+	if (isEatenByYosshi() && message == 4 && !mHolder) {
 		onHitFlag(0x1);
-		mHolder = (TTakeActor*)param_1;
-		behaveToTaken(param_1);
+		mHolder = (TTakeActor*)sender;
+		behaveToTaken(sender);
 		return true;
 	}
 
-	if ((param_2 == 6 || param_2 == 7) && mHolder == param_1) {
+	if ((message == 6 || message == 7) && mHolder == sender) {
 		mHolder = nullptr;
 		behaveToRelease();
 		offHitFlag(0x1);
 		return true;
 	}
 
-	if (param_2 == 0 || param_2 == 1 || param_2 == 3 || param_2 == 11
-	    || (mActorType == 0x10000021 && param_2 == 0xC)) {
-		if (isHitValid(param_2)) {
+	if (message == 0 || message == 1 || message == 3 || message == 11
+	    || (mActorType == 0x10000021 && message == 0xC)) {
+		if (isHitValid(message)) {
 			unk184 = 0;
 			kill();
 		}
 		return true;
 	}
 
-	if (param_2 == 13) {
+	if (message == 13) {
 		mHitPoints = 0;
 		onLiveFlag(0x1);
 		onHitFlag(0x1);
 	}
 
-	if (param_2 == 15) {
-		gpMarioParticleManager->emit(0xE7, &param_1->mPosition, 0, nullptr);
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
-		if (unk160 == 0) {
-			unk160 = 1;
+		if (mSprayedByWaterCooldown == 0) {
+			mSprayedByWaterCooldown = 1;
 			if (!changeByJuice()) {
-				decHpByWater(param_1);
-				behaveToWater(param_1);
+				decHpByWater(sender);
+				behaveToWater(sender);
 			}
 		}
 
@@ -665,7 +666,7 @@ bool TSmallEnemy::changeMove()
 
 				if (gpMap->isTouchedOneWallAndMoveXZ(
 				        &unk178->mPosition.x, unk178->mPosition.y,
-				        &unk178->mPosition.z, unkBC * 20.0f))
+				        &unk178->mPosition.z, mBodyRadius * 20.0f))
 					return 1;
 
 				JGeometry::TVec3<f32> local_74 = unk178->mPosition;
@@ -673,7 +674,7 @@ bool TSmallEnemy::changeMove()
 				local_74.z += local_38.z * 300.0f;
 
 				const TBGCheckData* local_2C;
-				f32 d = gpMap->checkGround(local_74.x, local_74.y + unkC0,
+				f32 d = gpMap->checkGround(local_74.x, local_74.y + mHeadHeight,
 				                           local_74.z, &local_2C);
 				if (d > unk178->mPosition.y)
 					return 1;
@@ -684,9 +685,9 @@ bool TSmallEnemy::changeMove()
 				unk178->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
 				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkRoof(unk178->mPosition.x,
-				                         unk178->mPosition.y + unkC0,
+				                         unk178->mPosition.y + mHeadHeight,
 				                         unk178->mPosition.z, &local_2C);
-				if (local_2C && unk178->mPosition.y + unkC0 > d
+				if (local_2C && unk178->mPosition.y + mHeadHeight > d
 				    && local_2C->unk44 != unk178)
 					return 1;
 				break;
@@ -860,12 +861,12 @@ void TSmallEnemy::generateEffectColumWater()
 		                                          nullptr, 0, 4);
 }
 
-void TSmallEnemy::setBckAnm(int param_1)
+void TSmallEnemy::setBckAnm(int index)
 {
-	unk15C = param_1;
-	getMActor()->setBckFromIndex(param_1);
+	mCurrentBckAnm = index;
+	getMActor()->setBckFromIndex(index);
 	const char** table = getBasNameTable();
-	setAnmSound(!table ? nullptr : table[param_1]);
+	setAnmSound(!table ? nullptr : table[index]);
 }
 
 void TSmallEnemy::expandCollision()
@@ -900,16 +901,17 @@ bool TSmallEnemy::isEaten()
 
 bool TSmallEnemy::isHitWallInBound()
 {
-	unk14C = 25.0f;
-	TBGWallCheckRecord local_3C(mPosition.x, mPosition.y + unkC0, mPosition.z,
-	                            unk14C * mBodyScale * 1.1f, 1, 0);
+	mWallRadius = 25.0f;
+	TBGWallCheckRecord local_3C(mPosition.x, mPosition.y + mHeadHeight,
+	                            mPosition.z, mWallRadius * mBodyScale * 1.1f, 1,
+	                            0);
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_3C)) {
 		f32 sVar2
 		    = matan(local_3C.unk1C[0]->mNormal.z, local_3C.unk1C[0]->mNormal.x)
 		      * (360.0f / 65536.0f);
 
-		JGeometry::TVec3<f32> v(unkAC.x, 0.0f, unkAC.z);
+		JGeometry::TVec3<f32> v(mVelocity.x, 0.0f, mVelocity.z);
 		if (v.dot(local_3C.unk1C[0]->mNormal) > 0.0f)
 			return false;
 
@@ -944,7 +946,7 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	local_14.scale(mMarchSpeed * 3.0f * unk158);
 
 	result += local_14;
-	unk94 = result;
+	mLinearVelocity = result;
 }
 
 void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -975,7 +977,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 		if (self->getHitPoints() == 0) {
 			self->onHitFlag(0x1);
-			if (self->getUnkC4()->isWaterSurface()
+			if (self->getGroundPlane()->isWaterSurface()
 			    && !self->checkLiveFlag2(0x80))
 				self->generateEffectColumWater();
 		}
@@ -1002,7 +1004,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 	}
 
 	int uVar8 = ((TSmallEnemyManager*)self->getManager())->unk5C;
-	if (self->getUnkC4()->isWaterSurface())
+	if (self->getGroundPlane()->isWaterSurface())
 		uVar8 = 0;
 
 	if (self->checkCurAnmEnd(0)
@@ -1052,9 +1054,9 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->getUnkAC();
+		JGeometry::TVec3<f32> v = self->getVelocity();
 		v.y = self->getSaveParam()->getSLJumpForce() * self->getBodyScale();
-		self->setUnkAC(v);
+		self->setVelocity(v);
 
 		self->onLiveFlag(0x8000);
 		self->onLiveFlag(0x80);
@@ -1097,9 +1099,9 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->setWaitAnm();
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->unkAC;
+		JGeometry::TVec3<f32> v = self->mVelocity;
 		v.y                     = self->getSaveParam()->mSLJumpForce.get();
-		self->unkAC             = v;
+		self->mVelocity         = v;
 
 		self->onLiveFlag(0x8000);
 		self->onLiveFlag(0x80);

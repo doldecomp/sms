@@ -491,7 +491,8 @@ void THinokuri2::init(TLiveManager* param_1)
 	reset();
 	unkCC = getSaveParam()->mSLGravityY.get();
 	initAnmSound();
-	initHitActor(0x8000001, 5, 0, unkBC, unkC0, unkBC, unkC0);
+	initHitActor(0x8000001, 5, 0, mBodyRadius, mHeadHeight, mBodyRadius,
+	             mHeadHeight);
 	unk150 = new TMBindShadowBody(this, getModel(), 1.0f);
 
 	TIdxGroupObj* enemiesGrp
@@ -925,8 +926,8 @@ void THinokuri2::moveObject()
 		generateEnemy();
 
 	doShortCut();
-	unk94.zero();
-	unkA0.zero();
+	mLinearVelocity.zero();
+	mAngularVelocity.zero();
 	if (unkEC != nullptr) {
 		JGeometry::TVec3<f32> aTStack_30;
 		getJointTransByIndex(0x17, &aTStack_30);
@@ -958,8 +959,8 @@ void THinokuri2::moveObject()
 	control();
 	bind();
 
-	mPosition += unk94;
-	mRotation += unkA0;
+	mPosition += mLinearVelocity;
+	mRotation += mAngularVelocity;
 
 	unk198
 	    += -MsClamp(MsWrap(MsAngleDiff(mRotation.y, oldRot), -180.0f, 180.0f),
@@ -1033,7 +1034,7 @@ void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		if (param_1 & 04) {
 			unk150->entryDrawShadow();
-			gpQuestionManager->request(mPosition, unkB8);
+			gpQuestionManager->request(mPosition, mScaledBodyRadius);
 		}
 	}
 }
@@ -1147,7 +1148,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
 		f32 f                          = self->unk124->unkC;
 		f32 grav                       = self->getGravityY();
-		self->unkAC = self->calcVelocityToJumpToY(p, f, grav);
+		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
 		self->onLiveFlag(0x80);
 		spine->pushRaw(&TNerveHino2Fly::theNerve());
 		return true;

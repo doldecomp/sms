@@ -79,10 +79,10 @@ void TMapObjBase::loadHideObjInfo(JSUMemoryInputStream& stream, s32* param_2,
 
 void TMapObjBase::checkOnManhole()
 {
-	unkC8 = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f, mPosition.z,
-	                           &unkC4);
-	if (unkC4->unk44 && unkC4->unk44->isActorType(0x4000000b)) {
-		((TManhole*)unkC4->unk44)->makeManholeUnuseful(this);
+	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
+	                                   mPosition.z, &mGroundPlane);
+	if (mGroundPlane->unk44 && mGroundPlane->unk44->isActorType(0x4000000b)) {
+		((TManhole*)mGroundPlane->unk44)->makeManholeUnuseful(this);
 	}
 }
 
@@ -98,14 +98,16 @@ void TMapObjBase::throwObjToFront(TMapObjBase* param_1, f32 param_2,
 	param_1->mPosition.set(mPosition.x, mPosition.y + param_2, mPosition.z);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
-		                   mtx[2][2] * param_3);
+		param_1->mVelocity.set(mtx[0][2] * param_3,
+		                       mtx[1][2] * param_3 + param_4,
+		                       mtx[2][2] * param_3);
 		param_1->offLiveFlag(0x10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
-		                   mtx[2][2] * param_3);
+		param_1->mVelocity.set(mtx[0][2] * param_3,
+		                       mtx[1][2] * param_3 + param_4,
+		                       mtx[2][2] * param_3);
 		param_1->offLiveFlag(0x10);
 	}
 }
@@ -118,14 +120,16 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* param_1,
 	param_1->mPosition.set(param_2);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
-		                   mtx[2][2] * param_3);
+		param_1->mVelocity.set(mtx[0][2] * param_3,
+		                       mtx[1][2] * param_3 + param_4,
+		                       mtx[2][2] * param_3);
 		param_1->offLiveFlag(0x10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		param_1->unkAC.set(mtx[0][2] * param_3, mtx[1][2] * param_3 + param_4,
-		                   mtx[2][2] * param_3);
+		param_1->mVelocity.set(mtx[0][2] * param_3,
+		                       mtx[1][2] * param_3 + param_4,
+		                       mtx[2][2] * param_3);
 		param_1->offLiveFlag(0x10);
 	}
 }
@@ -140,8 +144,8 @@ void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* param_1,
 
 	Mtx mtx;
 	MsMtxSetRotRPH(mtx, param_3.x, param_3.y, param_3.z);
-	param_1->unkAC.set(mtx[0][2] * param_4, mtx[1][2] * param_4 + param_5,
-	                   mtx[2][2] * param_4);
+	param_1->mVelocity.set(mtx[0][2] * param_4, mtx[1][2] * param_4 + param_5,
+	                       mtx[2][2] * param_4);
 	param_1->offLiveFlag(0x10);
 }
 

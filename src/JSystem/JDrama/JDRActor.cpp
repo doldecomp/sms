@@ -1,6 +1,7 @@
-#include "JSystem/JDrama/JDRNameRefGen.hpp"
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRActor.hpp>
 #include <JSystem/JDrama/JDRLighting.hpp>
+#include <JSystem/JDrama/JDRCharacter.hpp>
 
 void JDrama::TActor::load(JSUMemoryInputStream& stream)
 {
@@ -15,9 +16,9 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	char str[0x50];
 	stream.readString(str, 0x50);
 
-	unk3C = TNameRefGen::getInstance()->getRootNameRef()->search(str);
+	unk3C = TNameRefGen::search<TCharacter>(str);
 
-	unk40 = new TLightMap();
+	unk40 = new TLightMap;
 	unk40->load(stream);
 }
 

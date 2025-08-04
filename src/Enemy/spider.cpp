@@ -16,30 +16,30 @@ TSpider::~TSpider() { }
 
 void TSpider::bind(TLiveActor* param_1)
 {
-	JGeometry::TVec3<f32> fVar712 = param_1->unk94;
+	JGeometry::TVec3<f32> fVar712 = param_1->mLinearVelocity;
 	JGeometry::TVec3<f32> local_50;
 	local_50.add(param_1->mPosition, fVar712);
 
 	if (param_1->checkLiveFlag2(0x80)) {
-		JGeometry::TVec3<f32> local_5C = param_1->unkAC;
+		JGeometry::TVec3<f32> local_5C = param_1->mVelocity;
 		local_50 += local_5C;
 		f32 dVar7 = param_1->getGravityY();
 		local_5C.y -= dVar7;
 		if (local_5C.y < TLiveActor::mVelocityMinY)
 			local_5C.y = TLiveActor::mVelocityMinY;
 
-		param_1->unkAC = local_5C;
+		param_1->mVelocity = local_5C;
 	}
 
 	const TBGCheckData* local_60;
-	f32 fVar10 = ((TSpineEnemy*)param_1)->mBodyScale * param_1->unkC0;
+	f32 fVar10 = ((TSpineEnemy*)param_1)->mBodyScale * param_1->mHeadHeight;
 	f32 fVar3  = 1.0f
 	            + gpMap->checkGround(local_50.x, local_50.y + fVar10,
 	                                 local_50.z, &local_60);
 
 	if (param_1->mPosition.y - local_50.y > 0.0f) {
 		const TBGCheckData* local_64;
-		f32 fVar11 = ((TSpineEnemy*)param_1)->mBodyScale * param_1->unkC0;
+		f32 fVar11 = ((TSpineEnemy*)param_1)->mBodyScale * param_1->mHeadHeight;
 		f32 dVar7  = 1.0f
 		            + gpMap->checkGround(local_50.x, local_50.y + fVar11,
 		                                 local_50.z, &local_64);
@@ -62,7 +62,7 @@ void TSpider::bind(TLiveActor* param_1)
 	}
 
 	if (local_50.y <= fVar3) {
-		param_1->unkAC = JGeometry::TVec3<f32>(0, 0, 0);
+		param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
 		param_1->offLiveFlag(0x80);
 		param_1->offLiveFlag(0x8000);
@@ -71,12 +71,12 @@ void TSpider::bind(TLiveActor* param_1)
 		param_1->onLiveFlag(0x80);
 	}
 
-	param_1->unkC8 = fVar3;
-	param_1->unkC4 = local_60;
+	param_1->mGroundHeight = fVar3;
+	param_1->mGroundPlane  = local_60;
 
 	TBGWallCheckRecord local_90(
 	    local_50.x, local_50.y, local_50.z,
-	    ((TSpineEnemy*)param_1)->mBodyScale * param_1->unkC0, 1, 0);
+	    ((TSpineEnemy*)param_1)->mBodyScale * param_1->mHeadHeight, 1, 0);
 
 	JGeometry::TVec3<f32> local_9c;
 
@@ -89,7 +89,7 @@ void TSpider::bind(TLiveActor* param_1)
 			fVar1 = ((TSpineEnemy*)param_1)->mMarchSpeed;
 			param_1->offLiveFlag(0x80);
 			param_1->offLiveFlag(0x8000);
-			param_1->unkAC = JGeometry::TVec3<f32>(0, 0, 0);
+			param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 		} else {
 			unkC = 0;
 
@@ -105,7 +105,7 @@ void TSpider::bind(TLiveActor* param_1)
 		if (local_90.unk1C[0]->mNormal.dot(fVar712)) {
 			param_1->offLiveFlag(0x80);
 			param_1->offLiveFlag(0x8000);
-			param_1->unkAC = JGeometry::TVec3<f32>(0, 0, 0);
+			param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
 			unkC = local_90.unk1C[0];
 
@@ -114,7 +114,7 @@ void TSpider::bind(TLiveActor* param_1)
 			unk8 = 0x3C;
 
 			f32 fVar1 = unk10 * ((TSpineEnemy*)param_1)->mBodyScale
-			            * ((TSpineEnemy*)param_1)->unk14C;
+			            * ((TSpineEnemy*)param_1)->mWallRadius;
 			JGeometry::TVec3<f32> tmp;
 			tmp.scale(fVar1, local_90.unk1C[0]->mNormal);
 			local_9c.sub(tmp, local_90.unk0);
@@ -126,10 +126,10 @@ void TSpider::bind(TLiveActor* param_1)
 	}
 
 	JGeometry::TVec3<f32> local_118 = local_9c;
-	local_118.y
-	    += unaff_f29 - ((TSpineEnemy*)param_1)->mBodyScale * param_1->unkC0;
+	local_118.y += unaff_f29
+	               - ((TSpineEnemy*)param_1)->mBodyScale * param_1->mHeadHeight;
 
 	local_118 -= param_1->mPosition;
 
-	param_1->unk94 = local_118;
+	param_1->mLinearVelocity = local_118;
 }

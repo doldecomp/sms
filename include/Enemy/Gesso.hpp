@@ -59,7 +59,8 @@ public:
 	virtual void clipEnemies(JDrama::TGraphics*);
 	virtual void initSetEnemies();
 
-	void requestPolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
+	void requestPolluteModel(JGeometry::TVec3<f32>& position,
+	                         JGeometry::TVec3<f32>& scale);
 
 	TGesso* getObj(int i) { return (TGesso*)TSmallEnemyManager::getObj(i); }
 
@@ -105,7 +106,7 @@ public:
 	void modifyRotate();
 	void fallEnd();
 	void turnIn();
-	void turning();
+	bool turning();
 	void turnOut();
 	void checkDropInWater();
 
@@ -119,9 +120,9 @@ public:
 	// fabricated
 	TGessoSaveLoadParams* getSaveParams() const { return unk1E8; }
 
-	f32 getIdk() const
+	inline f32 getSightDirection() const
 	{
-		if (unk19C == 1)
+		if (mState == STATE_WANDERING)
 			return 0.0f;
 
 		if (unk1A1 != 0) {
@@ -138,16 +139,40 @@ public:
 		}
 	}
 
+	f32 getUnk1B0() const { return mTurnAngle; }
+
+	TGessoManager* getManager() { return (TGessoManager*)mManager; }
+
+	bool isWandering() const
+	{
+		if (mState == STATE_WANDERING)
+			return true;
+		return false;
+	}
+
+	enum {
+		STATE_BEAM_CHILLING = 0,
+		STATE_WANDERING     = 1,
+		STATE_ROLLING       = 2,
+		STATE_FALLING       = 3,
+	};
+
+	enum {
+		TYPE_REGULAR = 0,
+		TYPE_LAND    = 1,
+		TYPE_SURF    = 2,
+	};
+
 public:
 	/* 0x194 */ int unk194;
-	/* 0x198 */ int unk198;
-	/* 0x19C */ int unk19C;
-	/* 0x1A0 */ u8 unk1A0;
+	/* 0x198 */ int mPollutionTimer;
+	/* 0x19C */ int mState;
+	/* 0x1A0 */ bool mIsRightSideUp;
 	/* 0x1A1 */ u8 unk1A1;
 	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ TGessoPolluteObj* unk1A8;
-	/* 0x1AC */ u8 unk1AC;
-	/* 0x1AD */ char unk1AD[0x7];
+	/* 0x1A8 */ TGessoPolluteObj* mPolluteObj;
+	/* 0x1AC */ u8 mGessoType;
+	/* 0x1B0 */ f32 mTurnAngle;
 	/* 0x1B4 */ int unk1B4;
 	/* 0x1B8 */ JGeometry::TVec3<f32> unk1B8;
 	/* 0x1C4 */ u8 unk1C4;
@@ -155,7 +180,8 @@ public:
 	/* 0x1D4 */ char unk1D4[0x4];
 	/* 0x1D8 */ u8 unk1D8;
 	/* 0x1D9 */ u8 unk1D9;
-	/* 0x1DA */ char unk1DA[0xE];
+	/* 0x1DA */ char unk1DA[0x2];
+	/* 0x1DC */ JGeometry::TVec3<f32> unk1DC;
 	/* 0x1E8 */ TGessoSaveLoadParams* unk1E8;
 };
 

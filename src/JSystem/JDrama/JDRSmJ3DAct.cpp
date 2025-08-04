@@ -13,12 +13,12 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 {
 	TActor::load(stream);
 
-	void* modelRes = ((TCharacter*)unk3C)->getRes("/default.bmd");
+	void* modelRes = unk3C->getRes("/default.bmd");
 
 	unk44 = J3DModelLoaderDataBase::load(modelRes, 0x240000);
 	unk48 = new J3DModel(unk44, 0, 1);
 
-	void* anmRes = ((TCharacter*)unk3C)->getRes("/default.bck");
+	void* anmRes = unk3C->getRes("/default.bck");
 	if (anmRes) {
 		unk4C = J3DAnmLoaderDataBase::load(anmRes);
 		unk54 = J3DNewMtxCalcAnm(unk44->getUnkC(), (J3DAnmTransform*)unk4C);

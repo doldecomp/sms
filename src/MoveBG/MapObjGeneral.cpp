@@ -74,7 +74,7 @@ void TMapObjGeneral::waitToAppear(s32 param_1)
 
 void TMapObjGeneral::sink()
 {
-	unkAC.x = unkAC.y = unkAC.z = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(0x10);
 	mState = 7;
 	unk144 = mPosition.y;
@@ -100,8 +100,8 @@ void TMapObjGeneral::touchingPlayer()
 
 void TMapObjGeneral::holding()
 {
-	mPosition = mHolder->mPosition;
-	unkC8     = gpMap->checkGround(mPosition, &unkC4);
+	mPosition     = mHolder->mPosition;
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
 void TMapObjGeneral::recovering()
@@ -345,14 +345,14 @@ void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
 	param_1->x = param_2->unk0.x;
 	param_1->z = param_2->unk0.z;
 	calcReflectingVelocity(param_2->unk1C[0], unk130->mPhysical->unk4->unk8,
-	                       &unkAC);
+	                       &mVelocity);
 }
 
 void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
 	param_1->y += unk130->mPhysical->unk4->unk1C;
 
-	TBGWallCheckRecord check(*param_1, unkBC, 4, unk130->mPhysical->unk8);
+	TBGWallCheckRecord check(*param_1, mBodyRadius, 4, unk130->mPhysical->unk8);
 
 	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
 
@@ -373,27 +373,27 @@ void TMapObjGeneral::touchRoof(JGeometry::TVec3<f32>* param_1)
 
 void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 {
-	unk140
-	    = gpMap->checkRoof(param_1->x, param_1->y + unkC0, param_1->z, &unk13C);
-	if (param_1->y + unkC0 >= unk140)
+	unk140 = gpMap->checkRoof(param_1->x, param_1->y + mHeadHeight, param_1->z,
+	                          &unk13C);
+	if (param_1->y + mHeadHeight >= unk140)
 		touchRoof(param_1);
 }
 
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
 	if (unk130->mPhysical ? true : false) {
-		unkAC.x *= unk130->mPhysical->unk4->unk10;
-		unkAC.z *= unk130->mPhysical->unk4->unk10;
+		mVelocity.x *= unk130->mPhysical->unk4->unk10;
+		mVelocity.z *= unk130->mPhysical->unk4->unk10;
 	}
 
 	if ((unk130->mPhysical ? true : false)
-	    && std::abs(JGeometry::TVec3<f32>(unkAC).y)
+	    && std::abs(JGeometry::TVec3<f32>(mVelocity).y)
 	           > unk130->mPhysical->unk4->unkC) {
-		param_1->y -= JGeometry::TVec3<f32>(unkAC).y;
-		unkAC.y *= -unk130->mPhysical->unk4->unk4;
+		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
+		mVelocity.y *= -unk130->mPhysical->unk4->unk4;
 		if (isCoin(this)) {
 			// TODO: this is an inline 100%
-			f32 a = std::fabsf(JGeometry::TVec3<f32>(unkAC).y);
+			f32 a = std::fabsf(JGeometry::TVec3<f32>(mVelocity).y);
 			if (gpMSound->gateCheck(0x4842)) {
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 				    0x4842, mPosition, nullptr, a, 0, 0, nullptr, 0, 4);
@@ -403,20 +403,20 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 		}
 	} else {
 		offLiveFlag(0x80);
-		unkAC.x = unkAC.y = unkAC.z = 0.0f;
+		mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 		onLiveFlag(0x10);
-		param_1->y = unkC8;
+		param_1->y = mGroundHeight;
 	}
 }
 
 void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 {
-	unkC8 = gpMap->checkGround(param_1->x, param_1->y + unkC0, param_1->z,
-	                           &unkC4);
-	unkC8 += 1.0f;
-	if (param_1->y <= unkC8) {
+	mGroundHeight = gpMap->checkGround(param_1->x, param_1->y + mHeadHeight,
+	                                   param_1->z, &mGroundPlane);
+	mGroundHeight += 1.0f;
+	if (param_1->y <= mGroundHeight) {
 		touchGround(param_1);
-	} else if (!unkD4)
+	} else if (!mGroundActor)
 		onLiveFlag(0x80);
 }
 
@@ -489,7 +489,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
 
 	// TODO: concerning. Is unkAC actually a Vec?
 	if (param_2 == 4 && checkMapObjFlag(0x100000)
-	    && JGeometry::TVec3<f32>(unkAC).squared() <= 3.814697e-06f
+	    && JGeometry::TVec3<f32>(mVelocity).squared() <= 3.814697e-06f
 	    && (isState(2) || isState(1) || isState(4) || isState(5))) {
 		hold((TTakeActor*)param_1);
 		return true;

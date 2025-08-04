@@ -29,7 +29,7 @@ TSpineEnemy::TSpineEnemy(const char* name)
     , mMarchSpeed(1.0f)
     , mTurnSpeed(5.0f)
     , mBodyScale(1.0f)
-    , unk14C(1.0f)
+    , mWallRadius(1.0f)
 {
 	mSpine = new TSpineBase<TLiveActor>(this);
 	unk124 = new TGraphTracer;
@@ -42,10 +42,10 @@ void TSpineEnemy::init(TLiveManager* param_1)
 	TLiveActor::init(param_1);
 	TSpineEnemyParams* params = getSaveParam();
 	if (params) {
-		unkBC  = params->mSLBodyRadius.get();
-		unk14C = params->mSLWallRadius.get();
-		unkC0  = params->mSLHeadHeight.get();
-		unkB8  = mBodyScale * unkBC;
+		mBodyRadius       = params->mSLBodyRadius.get();
+		mWallRadius       = params->mSLWallRadius.get();
+		mHeadHeight       = params->mSLHeadHeight.get();
+		mScaledBodyRadius = mBodyScale * mBodyRadius;
 	}
 }
 
@@ -73,7 +73,7 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 	stream.readString(buffer, 256);
 	unk124->unk0 = gpConductor->getGraphByName(buffer);
 
-	unkC4 = TMap::getIllegalCheckData();
+	mGroundPlane = TMap::getIllegalCheckData();
 
 	init(mgr);
 }
@@ -113,11 +113,11 @@ void TSpineEnemy::calcEnemyRootMatrix()
 			mtx[1][3] = 0.0;
 			mtx[2][3] = 0.0;
 		} else {
-			if (unk130 >= 1 && !unkC4->checkFlag(0x10)) {
+			if (unk130 >= 1 && !mGroundPlane->checkFlag(0x10)) {
 				JGeometry::TVec3<f32> v1(JMASin(mRotation.y), 0.0f,
 				                         JMACos(mRotation.y));
 
-				JGeometry::TVec3<f32> v2 = unkC4->getNormal();
+				JGeometry::TVec3<f32> v2 = mGroundPlane->getNormal();
 				v1.cross(v2, v1);
 				v1.normalize();
 
@@ -175,7 +175,7 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	reset();
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
-	unkAC = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
+	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
 	onLiveFlag(0x8000);
 	onLiveFlag(0x80);
 	control();
@@ -194,7 +194,7 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& param_1,
 	mScaling   = param_3;
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
-	unkAC = param_4;
+	mVelocity = param_4;
 	onLiveFlag(0x8000);
 	onLiveFlag(0x80);
 	control();

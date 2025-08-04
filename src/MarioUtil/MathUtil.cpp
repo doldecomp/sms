@@ -319,12 +319,12 @@ void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
 	param_1[2][3] = z;
 }
 
-BOOL MsIsInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
-                 const JGeometry::TVec3<f32>& param_3, f32 length, f32 angle,
+BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
+                 const JGeometry::TVec3<f32>& target, f32 length, f32 angle,
                  f32 aware)
 {
-	JGeometry::TVec3<f32> tmp = param_3;
-	tmp -= param_1;
+	JGeometry::TVec3<f32> tmp = target;
+	tmp -= eye;
 
 	char trash[0x4]; // TODO: skill issue
 
@@ -332,7 +332,7 @@ BOOL MsIsInSight(const JGeometry::TVec3<f32>& param_1, f32 param_2,
 		return true;
 
 	if (tmp.squared() < length * length
-	    && abs(MsAngleDiff(MsGetRotFromZaxisY(tmp), param_2)) < angle * 0.5f) {
+	    && abs(MsAngleDiff(MsGetRotFromZaxisY(tmp), sight)) < angle * 0.5f) {
 		return true;
 	}
 
