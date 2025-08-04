@@ -194,8 +194,8 @@ public:
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
 	/* 0x178 */ TJuiceBlock* unk178;
-	/* 0x17C */ int unk17C;
-	/* 0x180 */ TCoin* unk180;
+	/* 0x17C */ int mCoinId;
+	/* 0x180 */ TCoin* mCoin;
 	/* 0x184 */ u8 unk184;
 	/* 0x185 */ u8 unk185;
 	/* 0x188 */ f32 unk188;
