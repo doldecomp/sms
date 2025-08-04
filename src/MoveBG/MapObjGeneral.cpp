@@ -24,7 +24,7 @@ f32 TMapObjGeneral::mNormalThrowSpeedRate   = 0.5f;
 bool TMapObjGeneral::isPollutedGround(const JGeometry::TVec3<f32>& v) const
 {
 	// WTF? Did they forget to refactor this?!
-	const JGeometry::TVec3<f32>& p = unk10C;
+	const JGeometry::TVec3<f32>& p = mInitialPosition;
 	if (gpPollution->isPolluted(v.x, p.y, p.z)
 	    || gpPollution->isPolluted(v.x - 32.0f, v.y, v.z - 32.0f)
 	    || gpPollution->isPolluted(v.x + 32.0f, v.y, v.z - 32.0f)
@@ -49,17 +49,18 @@ void TMapObjGeneral::waitingToAppear()
 
 	if (isActorType(0x4000005a)) {
 		if (SMS_GetMarioDamageRadius() + mDamageRadius + 100.0f
-		    > distToMario(unk10C))
+		    > distToMario(mInitialPosition))
 			appear();
 	} else {
-		if (SMS_GetMarioDamageRadius() + mDamageRadius > distToMario(unk10C))
+		if (SMS_GetMarioDamageRadius() + mDamageRadius
+		    > distToMario(mInitialPosition))
 			appear();
 	}
 }
 
 void TMapObjGeneral::waitingToRecover()
 {
-	if (!isPollutedGround(unk10C))
+	if (!isPollutedGround(mInitialPosition))
 		recover();
 }
 
@@ -119,9 +120,9 @@ void TMapObjGeneral::recovering()
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
-		mPosition.y += unk130->mSink->unk4;
+		mPosition.y += mMapObjData->mSink->unk4;
 		if (mHeldObject)
-			mHeldObject->mPosition.y += unk130->mSink->unk4;
+			mHeldObject->mPosition.y += mMapObjData->mSink->unk4;
 		return;
 	}
 
@@ -130,7 +131,7 @@ void TMapObjGeneral::recovering()
 
 void TMapObjGeneral::sinking()
 {
-	mPosition.y -= unk130->mSink->unk0;
+	mPosition.y -= mMapObjData->mSink->unk0;
 
 	for (int i = 0; i < getColNum(); ++i) {
 		if (getCollision(i)->checkActorType(0x1000000)) {
@@ -139,8 +140,9 @@ void TMapObjGeneral::sinking()
 		}
 	}
 
-	if (mPosition.y + unk130->mHit->unkC[2].unk4 < unk144) {
-		if (mPosition.x != unk10C.x || mPosition.z != unk10C.z) {
+	if (mPosition.y + mMapObjData->mHit->unkC[2].unk4 < unk144) {
+		if (mPosition.x != mInitialPosition.x
+		    || mPosition.z != mInitialPosition.z) {
 			makeObjDefault();
 			makeObjAppeared();
 		} else {
@@ -173,10 +175,10 @@ void TMapObjGeneral::appearing()
 		mScaling.x += mNormalAppearingScaleUp;
 		mScaling.y += mNormalAppearingScaleUp;
 		mScaling.z += mNormalAppearingScaleUp;
-		if (mScaling.x < unk124.x)
+		if (mScaling.x < mInitialScaling.x)
 			return;
 
-		mScaling.set(unk124);
+		mScaling.set(mInitialScaling);
 	}
 
 uuuh:
@@ -201,7 +203,7 @@ void TMapObjGeneral::makeObjRecovered()
 void TMapObjGeneral::makeObjBuried()
 {
 	unk144 = mPosition.y;
-	mPosition.y -= unk130->mHit->unkC[2].unkC;
+	mPosition.y -= mMapObjData->mHit->unkC[2].unkC;
 	unk64 |= 1;
 	removeMapCollision();
 	mMActor = nullptr;
@@ -236,7 +238,7 @@ void TMapObjGeneral::touchPlayer(THitActor* player)
 void TMapObjGeneral::recover()
 {
 	gpPollution->clean(mPosition.x, unk144, mPosition.z,
-	                   (u16)(unk130->mHit->unkC[2].unk0 / 6.0f));
+	                   (u16)(mMapObjData->mHit->unkC[2].unk0 / 6.0f));
 
 	setUpMapCollision(1);
 	startAnim(6);
@@ -344,19 +346,20 @@ void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
 {
 	param_1->x = param_2->unk0.x;
 	param_1->z = param_2->unk0.z;
-	calcReflectingVelocity(param_2->unk1C[0], unk130->mPhysical->unk4->unk8,
-	                       &mVelocity);
+	calcReflectingVelocity(param_2->unk1C[0],
+	                       mMapObjData->mPhysical->unk4->unk8, &mVelocity);
 }
 
 void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
-	param_1->y += unk130->mPhysical->unk4->unk1C;
+	param_1->y += mMapObjData->mPhysical->unk4->unk1C;
 
-	TBGWallCheckRecord check(*param_1, mBodyRadius, 4, unk130->mPhysical->unk8);
+	TBGWallCheckRecord check(*param_1, mBodyRadius, 4,
+	                         mMapObjData->mPhysical->unk8);
 
 	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
 
-	param_1->y -= unk130->mPhysical->unk4->unk1C;
+	param_1->y -= mMapObjData->mPhysical->unk4->unk1C;
 
 	if (touched) {
 		unk138 = check.unk1C[0];
@@ -381,16 +384,16 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
-	if (unk130->mPhysical ? true : false) {
-		mVelocity.x *= unk130->mPhysical->unk4->unk10;
-		mVelocity.z *= unk130->mPhysical->unk4->unk10;
+	if (mMapObjData->mPhysical ? true : false) {
+		mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
+		mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
 	}
 
-	if ((unk130->mPhysical ? true : false)
+	if ((mMapObjData->mPhysical ? true : false)
 	    && std::abs(JGeometry::TVec3<f32>(mVelocity).y)
-	           > unk130->mPhysical->unk4->unkC) {
+	           > mMapObjData->mPhysical->unk4->unkC) {
 		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
-		mVelocity.y *= -unk130->mPhysical->unk4->unk4;
+		mVelocity.y *= -mMapObjData->mPhysical->unk4->unk4;
 		if (isCoin(this)) {
 			// TODO: this is an inline 100%
 			f32 a = std::fabsf(JGeometry::TVec3<f32>(mVelocity).y);
@@ -439,8 +442,8 @@ void TMapObjGeneral::calcRootMatrix()
 	J3DModel* model = getModel();
 
 	if (isState(6) && mHolder) {
-		if (unk130->mHold) {
-			TMapObjHoldData* hold = unk130->mHold;
+		if (mMapObjData->mHold) {
+			TMapObjHoldData* hold = mMapObjData->mHold;
 
 			MtxPtr src = getTakingMtx();
 			MTXCopy(src, hold->unkC->getBaseTRMtx());
@@ -456,7 +459,7 @@ void TMapObjGeneral::calcRootMatrix()
 			mPosition.set(src[3][0], src[3][1], src[3][2]);
 		}
 	} else {
-		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - unk108,
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
 		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, mRotation.x,
 		               mRotation.y, mRotation.z);
@@ -505,7 +508,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (param_2 == 7 && isState(6) && unk130->mPhysical != nullptr) {
+	if (param_2 == 7 && isState(6) && mMapObjData->mPhysical != nullptr) {
 		thrown();
 		return true;
 	}

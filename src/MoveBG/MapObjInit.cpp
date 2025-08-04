@@ -10965,8 +10965,8 @@ void TMapObjBase::initHoldData()
 
 void TMapObjBase::initMapCollisionData()
 {
-	if (unk130->mCollision != nullptr) {
-		const TMapObjCollisionInfo* col = unk130->mCollision;
+	if (mMapObjData->mCollision != nullptr) {
+		const TMapObjCollisionInfo* col = mMapObjData->mCollision;
 		unkEC = new TMapCollisionManager(col->unk2, "mapObj", this);
 		for (int i = 0; i < col->unk0; ++i)
 			if (col->unk4[i].unk0)
@@ -11012,8 +11012,8 @@ void TMapObjBase::initObjCollisionData()
 #pragma dont_inline on
 void TMapObjBase::initBckMoveData()
 {
-	if (unk130->mMove != nullptr) {
-		TMapObjMoveData* move = unk130->mMove;
+	if (mMapObjData->mMove != nullptr) {
+		TMapObjMoveData* move = mMapObjData->mMove;
 
 		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
 		    JKRGetResource(move->unk0));
@@ -11074,8 +11074,8 @@ MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
 void TMapObjBase::makeMActors()
 {
 	u16 uVar6 = 1;
-	if (unk130->mAnim)
-		uVar6 = unk130->mAnim->unk2;
+	if (mMapObjData->mAnim)
+		uVar6 = mMapObjData->mAnim->unk2;
 
 	if (uVar6 == 0)
 		return;
@@ -11086,8 +11086,8 @@ void TMapObjBase::makeMActors()
 	else
 		mMActorKeeper->mModelLoaderFlags = 0x10220000;
 
-	if (unk130->mAnim) {
-		const TMapObjAnimDataInfo* anim = unk130->mAnim;
+	if (mMapObjData->mAnim) {
+		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
 		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
@@ -11101,7 +11101,7 @@ void TMapObjBase::makeMActors()
 		}
 	} else {
 		char buffer[64];
-		snprintf(buffer, 64, "%s.bmd", unk130->unk0);
+		snprintf(buffer, 64, "%s.bmd", mMapObjData->unk0);
 		mMActor = initMActor(buffer, nullptr, getSDLModelFlag());
 	}
 }
@@ -11140,15 +11140,15 @@ void TMapObjBase::initActorData()
 	if (strcmp(mName, "地形オブジェ") == 0)
 		mName = unkF4;
 
-	unk130 = sObjDataTable[i];
-	unkF8  = unk130->unk34;
+	mMapObjData = sObjDataTable[i];
+	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(unk130->unk8);
+	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
 	mManager->manageActor(this);
-	if (unk130->mHit)
-		unk108 = mScaling.y * unk130->mHit->unk8;
-	mPosition.y += unk108;
-	mScaledBodyRadius = unk130->unk30 * mScaling.x;
+	if (mMapObjData->mHit)
+		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
+	mPosition.y += mYOffset;
+	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
 	if (checkMapObjFlag(0x1))
 		offLiveFlag(0x100);
 	if (checkMapObjFlag(0x100000))
@@ -11157,9 +11157,9 @@ void TMapObjBase::initActorData()
 
 void TMapObjBase::initMapObj()
 {
-	unk10C = getPosition();
-	unk118 = getRotation();
-	unk124 = getScaling();
+	mInitialPosition = mPosition;
+	mInitialRotation = mRotation;
+	mInitialScaling  = mScaling;
 
 	initActorData();
 	initModelData();
@@ -11169,10 +11169,13 @@ void TMapObjBase::initMapObj()
 	initHoldData();
 	initUnique();
 	checkIllegalAttr();
+
 	if (mMActor && checkActorType(0x40000000))
 		mMActor->setLightType(2);
+
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= 0x8;
+
 	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
@@ -11180,6 +11183,7 @@ void TMapObjBase::initMapObj()
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(3);
 	}
+
 	makeObjDead();
 }
 
