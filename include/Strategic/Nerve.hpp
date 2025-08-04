@@ -1,19 +1,21 @@
 #ifndef STRATEGIC_NERVE_HPP
 #define STRATEGIC_NERVE_HPP
 
+#include <dolphin/types.h>
+
 template <class T> class TSpineBase;
 
 template <class T> class TNerveBase {
 public:
 	TNerveBase() { }
 	virtual ~TNerveBase() { }
-	virtual bool execute(TSpineBase<T>*) const = 0;
+	virtual BOOL execute(TSpineBase<T>*) const = 0;
 };
 
 #define DECLARE_NERVE(Name, T)                                                 \
 	class Name : public TNerveBase<T> {                                        \
 	public:                                                                    \
-		virtual bool execute(TSpineBase<T>*) const;                            \
+		virtual BOOL execute(TSpineBase<T>*) const;                            \
 		static const Name& theNerve();                                         \
 	};
 
@@ -23,6 +25,6 @@ public:
 		static Name instance;                                                  \
 		return instance;                                                       \
 	}                                                                          \
-	bool Name::execute(TSpineBase<T>* spine) const
+	BOOL Name::execute(TSpineBase<T>* spine) const
 
 #endif

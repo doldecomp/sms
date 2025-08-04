@@ -66,8 +66,22 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);
 }
 
-BOOL MsIsInSight(const JGeometry::TVec3<f32>&, f32,
-                 const JGeometry::TVec3<f32>&, f32 length, f32 angle,
+/**
+ * @brief Checks whether the point \p target is within the line of sight of
+ * an \p eye looking in direction \p sight, given a sight cone \p angle and
+ * \p length, as well as a distance \p aware, which is the distance at which
+ * the target is considered to be in sight regardless of the angle.
+ *
+ * @param eye the point from which the sight is checked
+ * @param sight the direction of sight
+ * @param target the point to check
+ * @param length the distance of the sight
+ * @param angle the sweep angle of the sight cone
+ * @param aware distance closer than which angle is not considered
+ * @return BOOL true if the target is in sight, false otherwise
+ */
+BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
+                 const JGeometry::TVec3<f32>& target, f32 length, f32 angle,
                  f32 aware);
 
 void SMS_GoRotate(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,

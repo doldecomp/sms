@@ -7,6 +7,8 @@
 
 namespace JDrama {
 
+class TCharacter;
+
 class TActor : public TPlacement, public JStage::TActor {
 public:
 	TActor(const char* name)
@@ -46,7 +48,7 @@ public:
 public:
 	/* 0x24 */ JGeometry::TVec3<f32> mScaling;
 	/* 0x30 */ JGeometry::TVec3<f32> mRotation;
-	/* 0x3C */ TNameRef* unk3C;
+	/* 0x3C */ TCharacter* unk3C;
 	/* 0x40 */ TViewObj* unk40;
 };
 

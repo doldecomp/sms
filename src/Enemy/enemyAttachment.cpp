@@ -35,9 +35,9 @@ void TEnemyAttachment::behaveToHitGround()
 {
 	unk168 = 1;
 	offLiveFlag(0x80);
-	unkAC.x = 0.0f;
-	unkAC.y = -0.3f;
-	unkAC.z = 0.0f;
+	mVelocity.x = 0.0f;
+	mVelocity.y = -0.3f;
+	mVelocity.z = 0.0f;
 	rebirth();
 }
 
@@ -45,7 +45,8 @@ void TEnemyAttachment::behaveToHitWall(const TBGCheckData*) { rebirth(); }
 
 void TEnemyAttachment::forceKill()
 {
-	if (!unkC4->checkSomething2() && gpMap->isInArea(mPosition.x, mPosition.z))
+	if (!mGroundPlane->checkSomething2()
+	    && gpMap->isInArea(mPosition.x, mPosition.z))
 		return;
 
 	kill();
@@ -68,39 +69,39 @@ void TEnemyAttachment::recoverScale()
 void TEnemyAttachment::bind()
 {
 	JGeometry::TVec3<f32> local_1C = mPosition;
-	local_1C += unk94;
-	local_1C += unkAC;
+	local_1C += mLinearVelocity;
+	local_1C += mVelocity;
 	setBehavior();
-	unkAC.y -= getNowGravity();
-	if (unkAC.y < mVelocityMinY)
-		unkAC.y = mVelocityMinY;
+	mVelocity.y -= getNowGravity();
+	if (mVelocity.y < mVelocityMinY)
+		mVelocity.y = mVelocityMinY;
 	if (!unk168) {
 		const TBGCheckData* local_18;
-		unkC8 = gpMap->checkGround(local_1C.x, local_1C.y + unkC0, local_1C.z,
-		                           &local_18);
-		unkC8 += 1.0f;
+		mGroundHeight = gpMap->checkGround(local_1C.x, local_1C.y + mHeadHeight,
+		                                   local_1C.z, &local_18);
+		mGroundHeight += 1.0f;
 	}
 
-	if (local_1C.y + unkAC.y <= unkC8)
+	if (local_1C.y + mVelocity.y <= mGroundHeight)
 		behaveToHitGround();
 	else
 		onLiveFlag(0x80);
 
 	JGeometry::TVec3<f32> p = local_1C;
-	p.y += unkC0;
-	TBGWallCheckRecord local_48(p, unkBC * 2.0f, 1, 0);
+	p.y += mHeadHeight;
+	TBGWallCheckRecord local_48(p, mBodyRadius * 2.0f, 1, 0);
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
 		behaveToHitWall(local_48.unk1C[0]);
 
 	mPosition                      = local_1C;
 	JGeometry::TVec3<f32> local_68 = local_1C;
 	local_68 -= mPosition;
-	unk94 = local_68;
+	mLinearVelocity = local_68;
 
 	setBehavior();
 	forceKill();
 
-	mPosition += unk94;
+	mPosition += mLinearVelocity;
 }
 
 void TEnemyAttachment::rebirth()
@@ -108,7 +109,7 @@ void TEnemyAttachment::rebirth()
 	unk150 = 0;
 	unk158 = 0;
 	onHitFlag(0x1);
-	unkAC.y = 0.0f;
+	mVelocity.y = 0.0f;
 }
 
 void TEnemyAttachment::kill()

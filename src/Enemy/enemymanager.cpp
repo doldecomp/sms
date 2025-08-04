@@ -320,7 +320,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 				if ((param_1 & 4) && !enemy->checkLiveFlag(0x4000))
 					enemy->getMActor()->viewCalc();
 				if (param_1 & 0x200) {
-					enemy->getMActor()->setLightData(enemy->getUnkC4(),
+					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
 					                                 enemy->mPosition);
 					enemy->getMActor()->entry();
 				}

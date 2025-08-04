@@ -25,7 +25,7 @@ public:
 	virtual TJointModel* newJointModel(int) const;
 
 	void stampModel(J3DModel*);
-	void stamp(u16, f32, f32, f32, f32);
+	void stamp(u16, f32 x, f32 y, f32 z, f32 range);
 	void clean(f32, f32, f32, f32);
 	void stampGround(u16, f32, f32, f32, f32);
 	u16 getPollutionType(f32, f32, f32) const;

@@ -52,7 +52,7 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 
 void TWalkerEnemy::moveObject()
 {
-	if (!unkC4->checkFlag2(0x10)
+	if (!mGroundPlane->checkFlag2(0x10)
 	    && (unk7C & 0xF) == (gpMarDirector->unk58 & 0xF)) {
 		doShortCut();
 	}
@@ -69,8 +69,8 @@ void TWalkerEnemy::moveObject()
 		JGeometry::TVec3<f32> local = polarXZ(yAngle, f);
 
 		getSaveParam();
-		unkAC.x = local.x;
-		unkAC.z = local.z;
+		mVelocity.x = local.x;
+		mVelocity.z = local.z;
 		mSpine->pushNerve(&TNerveSmallEnemyJump::theNerve());
 		onLiveFlag(0x80);
 		mRotation.y += 5.0f;

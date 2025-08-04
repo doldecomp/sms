@@ -67,7 +67,7 @@ void TRideCloud::calcRootMatrix()
 void TRideCloud::initMapObj()
 {
 	TRailMapObj::initMapObj();
-	unk154 = unkB8;
+	unk154 = mScaledBodyRadius;
 }
 
 void TRideCloud::load(JSUMemoryInputStream& stream)
@@ -166,6 +166,6 @@ void TRideCloud::control()
 void TRideCloud::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 4)
-		unkB8 = unk154 * mScaling.x;
+		mScaledBodyRadius = unk154 * mScaling.x;
 	TRailMapObj::perform(param_1, param_2);
 }

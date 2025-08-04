@@ -60,7 +60,9 @@ public:
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 	f32 getTurnSpeed() const { return mTurnSpeed; }
 	u8 getHitPoints() const { return mHitPoints; }
-	f32 getSomething() const { return mBodyScale * unkC0; }
+	f32 getHeadHeight() const { return mBodyScale * mHeadHeight; }
+	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
+	f32 getBodyScale() const { return mBodyScale; }
 
 	// fabricated
 	void setGoalPathMario()
@@ -79,8 +81,16 @@ public:
 
 		unk114.clear();
 	}
+	void setGoalPathPoint(const JGeometry::TVec3<f32>& point)
+	{
+		unkF4.unk0  = nullptr;
+		unkF4.unk4  = point;
+		unk104.unk0 = nullptr;
+		unk104.unk4 = point;
 
-	f32 getBodyScale() const { return mBodyScale; }
+		unk114.clear();
+	}
+
 	void decHitPoints()
 	{
 		if (mHitPoints > 0)
@@ -101,7 +111,7 @@ public:
 	/* 0x140 */ f32 mMarchSpeed;
 	/* 0x144 */ f32 mTurnSpeed;
 	/* 0x148 */ f32 mBodyScale;
-	/* 0x14C */ f32 unk14C;
+	/* 0x14C */ f32 mWallRadius;
 };
 
 #endif

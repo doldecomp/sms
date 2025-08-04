@@ -17,12 +17,11 @@ void TPollutionManager::stampModel(J3DModel* model)
 			getLayer(i)->stampModel(model);
 }
 
-void TPollutionManager::stamp(u16 param_1, f32 param_2, f32 param_3,
-                              f32 param_4, f32 param_5)
+void TPollutionManager::stamp(u16 param_1, f32 x, f32 y, f32 z, f32 range)
 {
 	for (int i = 0; i < getJointModelNum(); ++i) {
 		TPollutionLayer* layer = getLayer(i);
-		layer->stamp(param_1, param_2, param_3, param_4, param_5);
+		layer->stamp(param_1, x, y, z, range);
 	}
 }
 

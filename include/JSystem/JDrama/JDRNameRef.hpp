@@ -10,9 +10,9 @@ namespace JDrama {
 class TNameRef {
 public:
 	TNameRef(const char* name)
+	    : mName(name)
+	    , mKeyCode(calcKeyCode(name))
 	{
-		mName    = name;
-		mKeyCode = calcKeyCode(name);
 	}
 
 	static u16 calcKeyCode(char const*);
@@ -37,7 +37,6 @@ public:
 protected:
 	/* 0x4 */ const char* mName;
 	/* 0x8 */ u16 mKeyCode;
-	/* 0xA */ char pad[2];
 };
 
 } // namespace JDrama

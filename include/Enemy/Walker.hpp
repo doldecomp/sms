@@ -25,7 +25,7 @@ public:
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ s16 unk28;
 	/* 0x2C */ TSpider* unk2C;
-	/* 0x30 */ u8 unk30;
+	/* 0x30 */ s8 unk30;
 };
 
 #endif

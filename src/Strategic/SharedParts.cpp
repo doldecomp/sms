@@ -59,7 +59,7 @@ void TSharedParts::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk18->unk4->setBaseTRMtx(getConnectedMtx());
 
 	if (param_1 & 0x200)
-		unk18->setLightData(unk10->getUnkC4(), unk10->getPosition());
+		unk18->setLightData(unk10->getGroundPlane(), unk10->getPosition());
 
 	unk18->perform(param_1, param_2);
 }

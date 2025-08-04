@@ -10846,7 +10846,7 @@ void TMapObjBase::initUnique()
 			SMS_UnifyMaterial(getModel());
 		}
 		mMActor = mMActorKeeper->mActors[0];
-		if (unkC4->unk0 & 0x4000 ? true : false)
+		if (mGroundPlane->unk0 & 0x4000 ? true : false)
 			unkEC->unk8->setAllBGType(0x4000);
 		break;
 	case 0x4000005A:
@@ -10990,16 +10990,16 @@ void TMapObjBase::initObjCollisionData()
 			fVar2 = mScaling.z;
 
 		if (table->unk8 > 0.0f) {
-			unkBC = table->unk8 * fVar2;
-			unkC0 = table->unkC * mScaling.y;
+			mBodyRadius = table->unk8 * fVar2;
+			mHeadHeight = table->unkC * mScaling.y;
 		} else {
-			unkBC = table->unk0 * fVar2;
-			unkC0 = table->unk4 * mScaling.y;
+			mBodyRadius = table->unk0 * fVar2;
+			mHeadHeight = table->unk4 * mScaling.y;
 		}
 	} else {
 		initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-		unkBC = 0.0f;
-		unkC0 = 0.0f;
+		mBodyRadius = 0.0f;
+		mHeadHeight = 0.0f;
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
@@ -11110,8 +11110,8 @@ void TMapObjBase::initModelData()
 {
 	makeMActors();
 	if (checkMapObjFlag(0x800) && getMActor()) {
-		unkC8 = gpMap->checkGround(getPosition(), &unkC4);
-		if (getUnkC4()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
+		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
+		if (getGroundPlane()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else
@@ -11148,7 +11148,7 @@ void TMapObjBase::initActorData()
 	if (unk130->mHit)
 		unk108 = mScaling.y * unk130->mHit->unk8;
 	mPosition.y += unk108;
-	unkB8 = unk130->unk30 * mScaling.x;
+	mScaledBodyRadius = unk130->unk30 * mScaling.x;
 	if (checkMapObjFlag(0x1))
 		offLiveFlag(0x100);
 	if (checkMapObjFlag(0x100000))

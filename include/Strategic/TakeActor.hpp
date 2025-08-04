@@ -13,7 +13,14 @@ public:
 	}
 	virtual ~TTakeActor() { }
 	virtual MtxPtr getTakingMtx() = 0;
-	virtual void ensureTakeSituation();
+	virtual void ensureTakeSituation()
+	{
+		if (mHeldObject != nullptr && mHeldObject->mHolder != this)
+			mHeldObject = nullptr;
+
+		if (mHolder != nullptr && mHolder->mHeldObject != this)
+			mHolder = nullptr;
+	}
 	virtual bool moveRequest(const JGeometry::TVec3<f32>& where_to)
 	{
 		mPosition = where_to;

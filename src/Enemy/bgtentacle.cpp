@@ -932,7 +932,7 @@ void TBGTentacle::moveNode()
 		if (local_c8.y < local_ac.y) {
 			local_c8 -= local_ac;
 
-			f32 thing = bossGesso->mBodyScale * bossGesso->unkBC;
+			f32 thing = bossGesso->mBodyScale * bossGesso->mBodyRadius;
 			// TODO: common subexpression eliminator doesn't want to merge
 			// the `squared`  calls here =(
 			if (local_c8.length() < thing) {
@@ -1385,7 +1385,7 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    mMtxCalc);
 
 	if (param_1 & 0x200) {
-		unk2C->setLightData(mOwner->getUnkC4(), mOwner->getPosition());
+		unk2C->setLightData(mOwner->getGroundPlane(), mOwner->getPosition());
 
 		if (mState == 4) {
 			if (mTimeInCurrentState
