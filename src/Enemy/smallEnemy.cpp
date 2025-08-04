@@ -150,8 +150,8 @@ TSmallEnemy::TSmallEnemy(const char* name)
     , unk165(0)
     , unk174(0)
     , unk178(0)
-    , unk17C(0xffffffff)
-    , unk180(0)
+    , mCoinId(-1)
+    , mCoin(nullptr)
     , unk184(0)
     , unk185(0)
     , unk188(1.0f)
@@ -211,15 +211,15 @@ void TSmallEnemy::init(TLiveManager* param_1)
 void TSmallEnemy::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
-	stream.read(&unk17C, 4);
-	if (unk17C != 0x65)
+	stream.read(&mCoinId, 4);
+	if (mCoinId != 0x65)
 		unk18C = 1;
 	reset();
 }
 
 void TSmallEnemy::loadAfter()
 {
-	unk180 = TItemManager::newAndRegisterCoin(unk17C);
+	mCoin = TItemManager::newAndRegisterCoin(mCoinId);
 }
 
 void TSmallEnemy::behaveToWater(THitActor* param_1)
@@ -346,12 +346,12 @@ void TSmallEnemy::genEventCoin()
 	if (checkLiveFlag(0x20000))
 		return;
 
-	if (unk180) {
+	if (mCoin) {
 		TCoin* coin;
 		if (isActorType(0x2000000E)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
 		} else {
-			coin = unk180;
+			coin = mCoin;
 			coin->appear();
 		}
 
