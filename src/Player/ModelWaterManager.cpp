@@ -572,7 +572,7 @@ void TModelWaterManager::move()
 
 						JGeometry::TVec3<f32> local_194 = r27->getNormal();
 						local_194.scale(
-						    r27->unk40
+						    r27->mPlaneDistance
 						    + mParticlePositionSOA[i].dot(r27->getNormal()));
 
 						mParticlePositionSOA[i] -= local_194;
@@ -1174,7 +1174,7 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	SMS_SettingDrawShape(unk5D54, 0);
 
 	const TBGCheckData* pTVar4 = *gpMarioGroundPlane;
-	f32 fVar1                  = pTVar4->unk40;
+	f32 fVar1                  = pTVar4->mPlaneDistance;
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2
 		    && ((*gpMarioGroundPlane)->checkFlag2(0x10) == TRUE ? false

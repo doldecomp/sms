@@ -46,7 +46,7 @@ public:
 
 	void stopAnmSound();
 	void setCurAnmSound();
-	void setAnmSound(const char*);
+	void setAnmSound(const char* path);
 	void initAnmSound();
 	int getJointTransByIndex(int, JGeometry::TVec3<f32>*) const;
 	void getJointTransByName(const char*, JGeometry::TVec3<f32>*) const;
@@ -76,9 +76,12 @@ public:
 	const TMActorKeeper* getActorKeeper() const { return mMActorKeeper; }
 	TMActorKeeper* getActorKeeper() { return mMActorKeeper; }
 	TLiveManager* getManager() { return mManager; }
-	s16 getUnk7C() const { return unk7C; }
-	MAnmSound* getUnk80() { return unk80; }
-	TMapCollisionManager* getMapCollisionManager() { return unkEC; }
+	s16 getInstanceIndex() const { return mInstanceIndex; }
+	MAnmSound* getAnmSound() { return mAnmSound; }
+	TMapCollisionManager* getMapCollisionManager()
+	{
+		return mMapCollisionManager;
+	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 
@@ -86,10 +89,10 @@ public:
 	/* 0x70 */ TLiveManager* mManager;
 	/* 0x74 */ MActor* mMActor;
 	/* 0x78 */ TMActorKeeper* mMActorKeeper;
-	/* 0x7C */ s16 unk7C;
-	/* 0x80 */ MAnmSound* unk80;
-	/* 0x84 */ const char* unk84;
-	/* 0x88 */ TBinder* unk88;
+	/* 0x7C */ s16 mInstanceIndex;
+	/* 0x80 */ MAnmSound* mAnmSound;
+	/* 0x84 */ const char* mAnmSoundPath;
+	/* 0x88 */ TBinder* mBinder;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
 	/* 0x90 */ void* unk90;
 	// TODO: Analyze mLinearVelocity vs mVelocity some more
@@ -102,13 +105,13 @@ public:
 	/* 0xC0 */ f32 mHeadHeight;
 	/* 0xC4 */ const TBGCheckData* mGroundPlane;
 	/* 0xC8 */ f32 mGroundHeight;
-	/* 0xCC */ f32 unkCC;
+	/* 0xCC */ f32 mGravity;
 	/* 0xD0 */ TLodAnm* unkD0;
 	/* 0xD4 */ const TLiveActor* mGroundActor;
 	/* 0xD8 */ JGeometry::TVec3<f32> mRidePos;
 	/* 0xE4 */ f32 mGroundActorYaw;
-	/* 0xE8 */ s8 unkE8;
-	/* 0xEC */ TMapCollisionManager* unkEC;
+	/* 0xE8 */ s8 unkE8; // riding mode?
+	/* 0xEC */ TMapCollisionManager* mMapCollisionManager;
 	/* 0xF0 */ u32 mLiveFlag; // LiveFlagBits
 };
 

@@ -9,7 +9,7 @@
 TTypicalEnemy::TTypicalEnemy(const char* name)
     : TSpineEnemy(name)
 {
-	unk88 = new TWalker;
+	mBinder = new TWalker;
 }
 
 void TTypicalEnemy::init(TLiveManager* param_1)

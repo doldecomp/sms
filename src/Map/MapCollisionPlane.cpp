@@ -32,7 +32,8 @@ f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
 	else
 		pTVar7 = getCheckData(xInt, zInt, 1);
 
-	f32 tmp    = x * pTVar7->mNormal.x + z * pTVar7->mNormal.z + pTVar7->unk40;
+	f32 tmp = x * pTVar7->mNormal.x + z * pTVar7->mNormal.z
+	          + pTVar7->mPlaneDistance;
 	f32 result = -tmp / pTVar7->mNormal.y;
 	*param_4   = pTVar7;
 	return result;

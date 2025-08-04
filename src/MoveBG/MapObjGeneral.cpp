@@ -258,8 +258,8 @@ void TMapObjGeneral::recover()
 
 void TMapObjGeneral::hold(TTakeActor* actor)
 {
-	if (unkEC && unkEC->unk8)
-		unkEC->unk8->remove();
+	if (mMapCollisionManager && mMapCollisionManager->unk8)
+		mMapCollisionManager->unk8->remove();
 	unk64 |= 1;
 	mHolder = actor;
 	mState  = 6;

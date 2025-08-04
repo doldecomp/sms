@@ -119,7 +119,8 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 		           > 1.0f)
 			continue;
 
-		f32 tmp = (x * data->mNormal.x) + (z * data->mNormal.z) + data->unk40;
+		f32 tmp = (x * data->mNormal.x) + (z * data->mNormal.z)
+		          + data->mPlaneDistance;
 		f32 dVar10 = -tmp / data->mNormal.y;
 
 		if (!(y - (dVar10 - -78.0f) > 0.0f)) {
@@ -192,7 +193,8 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 param_4,
 		           < -1.0f)
 			continue;
 
-		f32 tmp    = x * data->mNormal.x + z * data->mNormal.z + data->unk40;
+		f32 tmp
+		    = x * data->mNormal.x + z * data->mNormal.z + data->mPlaneDistance;
 		f32 dVar10 = -tmp / data->mNormal.y;
 
 		if (!(y - (dVar10 + -78.0f) < 0.0f)) {

@@ -10847,7 +10847,7 @@ void TMapObjBase::initUnique()
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		if (mGroundPlane->unk0 & 0x4000 ? true : false)
-			unkEC->unk8->setAllBGType(0x4000);
+			mMapCollisionManager->unk8->setAllBGType(0x4000);
 		break;
 	case 0x4000005A:
 		for (int i = 0; i < 2; ++i) {
@@ -10967,10 +10967,12 @@ void TMapObjBase::initMapCollisionData()
 {
 	if (mMapObjData->mCollision != nullptr) {
 		const TMapObjCollisionInfo* col = mMapObjData->mCollision;
-		unkEC = new TMapCollisionManager(col->unk2, "mapObj", this);
+		mMapCollisionManager
+		    = new TMapCollisionManager(col->unk2, "mapObj", this);
 		for (int i = 0; i < col->unk0; ++i)
 			if (col->unk4[i].unk0)
-				unkEC->init(col->unk4[i].unk0, col->unk4[i].unk4, nullptr);
+				mMapCollisionManager->init(col->unk4[i].unk0, col->unk4[i].unk4,
+				                           nullptr);
 	}
 }
 
@@ -11091,7 +11093,7 @@ void TMapObjBase::makeMActors()
 		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
-			if (anim->unk4[i].unk10 && unk80 == nullptr)
+			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
 				initAnmSound();
 
 			if (anim->unk4[i].unk0 != nullptr
@@ -11190,7 +11192,7 @@ void TMapObjBase::initMapObj()
 void TMapObjGeneral::initPhysicalData()
 {
 	if (getMapObjData()->mPhysical)
-		unkCC = getMapObjData()->mPhysical->unk4->unk0;
+		mGravity = getMapObjData()->mPhysical->unk4->unk0;
 }
 
 void TMapObjGeneral::initMapObj()

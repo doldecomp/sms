@@ -31,7 +31,7 @@ public:
 	virtual void forceKill();
 	virtual void setBehavior() { }
 	virtual void recoverScale();
-	virtual f32 getNowGravity() { return unkCC; }
+	virtual f32 getNowGravity() { return mGravity; }
 
 public:
 	/* 0x150 */ int unk150;

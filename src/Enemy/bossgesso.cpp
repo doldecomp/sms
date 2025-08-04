@@ -556,7 +556,7 @@ TBossGesso::TBossGesso(const char* name)
     , unk1AC(0)
     , unk1AE(0)
 {
-	unk88      = new TBGBinder;
+	mBinder    = new TBGBinder;
 	mTurnSpeed = 0.2f;
 }
 

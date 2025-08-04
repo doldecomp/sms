@@ -271,7 +271,7 @@ void TGesso::init(TLiveManager* param_1)
 	setBckAnm(21);
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
-	ctrl0->setFrame((1.0f / mManager->getCapacity()) * unk7C
+	ctrl0->setFrame((1.0f / mManager->getCapacity()) * mInstanceIndex
 	                * ctrl0->getEndFrame());
 }
 
@@ -297,7 +297,7 @@ void TGesso::reset()
 	setBckAnm(21);
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
-	ctrl0->setFrame((1.0f / mManager->getCapacity()) * unk7C
+	ctrl0->setFrame((1.0f / mManager->getCapacity()) * mInstanceIndex
 	                * ctrl0->getEndFrame());
 }
 
@@ -563,7 +563,7 @@ f32 TGesso::getGravityY() const
 
 		return dropGravityY / 2.0f;
 	}
-	return unkCC;
+	return mGravity;
 }
 
 void TGesso::setWalkAnm() { setBckAnm(12); }
@@ -754,7 +754,7 @@ void TGesso::rollCheck()
 
 	f32 turnLength = unk1E8->mSLTurnLength.get();
 	updateSquareToMario();
-	if (unk134 < turnLength * turnLength && !mIsRightSideUp) {
+	if (mDistToMarioSquared < turnLength * turnLength && !mIsRightSideUp) {
 		if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
 		                 unk1E8->mSLSearchLengthOnObj.get(),
 		                 unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {

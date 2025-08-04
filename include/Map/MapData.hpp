@@ -110,7 +110,7 @@ public:
 	/* 0x10 */ JGeometry::TVec3<f32> mPoint2;
 	/* 0x10 */ JGeometry::TVec3<f32> mPoint3;
 	/* 0x34 */ JGeometry::TVec3<f32> mNormal;
-	/* 0x40 */ f32 unk40;
+	/* 0x40 */ f32 mPlaneDistance; // distance from plane to origin
 	/* 0x44 */ const TLiveActor* unk44;
 };
 

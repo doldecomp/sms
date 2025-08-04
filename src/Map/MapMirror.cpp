@@ -257,7 +257,7 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!(unk18 != -1 ? true : false)
 	    && !(gpMarioGroundPlane[1]->unk0 & 0x10 ? true : false)) {
 		unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
-		unk24->unk90 = gpMarioGroundPlane[1]->unk40;
+		unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
 
 		JGeometry::TVec3<f32> local_7C;
 		local_7C.set(unk24->unk84);

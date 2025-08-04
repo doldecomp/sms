@@ -470,7 +470,7 @@ THinokuri2::THinokuri2(const char* name)
     , unk1A4(0)
     , mLevel(0)
 {
-	unk88 = new TWalker;
+	mBinder = new TWalker;
 	mHead = new THino2Hit(this, 25, "ヒノクリ２ヒットオブジェクト");
 	mBody = new THino2Hit(this, 19, "ヒノクリ２ヒットオブジェクト");
 	unk174 = new THino2Hit(this, 9, "ヒノクリ２ヒットオブジェクト");
@@ -489,7 +489,7 @@ void THinokuri2::init(TLiveManager* param_1)
 	unk124->init(gpConductor->getGraphByName("hinokuri"));
 	mSpine->initWith(&TNerveHino2Appear::theNerve());
 	reset();
-	unkCC = getSaveParam()->mSLGravityY.get();
+	mGravity = getSaveParam()->mSLGravityY.get();
 	initAnmSound();
 	initHitActor(0x8000001, 5, 0, mBodyRadius, mHeadHeight, mBodyRadius,
 	             mHeadHeight);
@@ -550,7 +550,7 @@ void THinokuri2::init(TLiveManager* param_1)
 			break;
 		}
 	} else {
-		setLevel(getUnk7C());
+		setLevel(getInstanceIndex());
 	}
 
 	mHitPoints = calcHitPoints();
@@ -928,11 +928,11 @@ void THinokuri2::moveObject()
 	doShortCut();
 	mLinearVelocity.zero();
 	mAngularVelocity.zero();
-	if (unkEC != nullptr) {
+	if (mMapCollisionManager != nullptr) {
 		JGeometry::TVec3<f32> aTStack_30;
 		getJointTransByIndex(0x17, &aTStack_30);
-		if (unkEC->unk8)
-			unkEC->unk8->moveTrans(aTStack_30);
+		if (mMapCollisionManager->unk8)
+			mMapCollisionManager->unk8->moveTrans(aTStack_30);
 	}
 
 	f32 headHitR = getSaveParam()->mSLHeadHitR.value;
@@ -1105,7 +1105,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 	if (self->getLevel() != 0 && !self->checkLiveFlag(0x4)
 	    && !self->checkLiveFlag2(0x80) && (frame == 0x24 || frame == 0x55)) {
 		f32 ws = self->getSaveParam()->mSLWalkShake.get();
-		if (!(ws * ws < self->unk134))
+		if (!(ws * ws < self->mDistToMarioSquared))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 0.8f);
 
 		JGeometry::TVec3<f32> TStack_3C;
@@ -1164,7 +1164,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(0xE);
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
-		if (!(js * js < self->unk134))
+		if (!(js * js < self->mDistToMarioSquared))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 	}
 
@@ -1370,7 +1370,7 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 	if (self->getMActor()->curAnmEndsNext()) {
 		if (self->mCurrentBck == 0x13) {
 			f32 js = self->getSaveParam()->mSLJumpShake.get();
-			if (!(js * js < self->unk134))
+			if (!(js * js < self->mDistToMarioSquared))
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 			self->changeBck(0x14);
 		}
@@ -1454,12 +1454,12 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 	int frame = self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
 	if (!self->checkLiveFlag2(0x80) && (frame == 0x1C || frame == 0x3E)) {
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
-		if (!(js * js < self->getUnk134()))
+		if (!(js * js < self->getDistToMarioSquared()))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 
 		f32 sql = self->getSaveParam()->mSLStampQuakeLen.get();
 		sql     = sql * sql;
-		if (self->getUnk134() < sql)
+		if (self->getDistToMarioSquared() < sql)
 			SMS_SendMessageToMario(self, 3);
 	}
 
