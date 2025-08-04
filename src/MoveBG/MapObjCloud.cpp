@@ -45,11 +45,11 @@ u32 TRideCloud::touchWater(THitActor*)
 
 void TRideCloud::setGroundCollision()
 {
-	if (unkEC) {
+	if (mMapCollisionManager) {
 		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (TMapCollisionBase* col = unkEC->unk8)
+		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 			col->moveMtx(mtx);
 	}
 }
@@ -104,7 +104,7 @@ u32 TRideCloud::getShadowType() { return 0; }
 void TRideCloud::control()
 {
 	TMapObjBase::control();
-	TMapCollisionBase* col = unkEC->unk8;
+	TMapCollisionBase* col = mMapCollisionManager->unk8;
 	if (*gpMarioSpeedY > 0.0f)
 		col->setAllBGType(0x400);
 	else

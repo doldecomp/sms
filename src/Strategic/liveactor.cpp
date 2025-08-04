@@ -28,33 +28,33 @@ f32 TLiveActor::mVelocityMinY = -40.0f;
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
-	mManager      = nullptr;
-	mMActor       = nullptr;
-	mMActorKeeper = nullptr;
-	unk7C         = 0;
-	unk80         = nullptr;
-	unk84         = nullptr;
-	unk88         = nullptr;
-	mSpine        = nullptr;
-	unk90         = nullptr;
+	mManager       = nullptr;
+	mMActor        = nullptr;
+	mMActorKeeper  = nullptr;
+	mInstanceIndex = 0;
+	mAnmSound      = nullptr;
+	mAnmSoundPath  = nullptr;
+	mBinder        = nullptr;
+	mSpine         = nullptr;
+	unk90          = nullptr;
 
 	mLinearVelocity.zero();
 	mAngularVelocity.zero();
 
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 
-	mScaledBodyRadius = 10.0f;
-	mBodyRadius       = 25.0f;
-	mHeadHeight       = 50.0f;
-	mGroundPlane      = nullptr;
-	mGroundHeight     = 0.0f;
-	unkCC             = 0.15f;
-	unkD0             = nullptr;
-	mGroundActor      = nullptr;
-	mGroundActorYaw   = 0.0f;
-	unkE8             = 1;
-	unkEC             = nullptr;
-	mLiveFlag         = 0x100;
+	mScaledBodyRadius    = 10.0f;
+	mBodyRadius          = 25.0f;
+	mHeadHeight          = 50.0f;
+	mGroundPlane         = nullptr;
+	mGroundHeight        = 0.0f;
+	mGravity             = 0.15f;
+	unkD0                = nullptr;
+	mGroundActor         = nullptr;
+	mGroundActorYaw      = 0.0f;
+	unkE8                = 1;
+	mMapCollisionManager = nullptr;
+	mLiveFlag            = 0x100;
 
 	mRidePos.zero();
 
@@ -162,7 +162,7 @@ void TLiveActor::init(TLiveManager* manager)
 	onHitFlag(0x1);
 	offLiveFlag(0x400);
 
-	if (!unk80)
+	if (!mAnmSound)
 		initAnmSound();
 }
 
@@ -184,8 +184,8 @@ void TLiveActor::bind()
 	if (checkLiveFlag(0x10))
 		return;
 
-	if (unk88 != nullptr) {
-		unk88->bind(this);
+	if (mBinder != nullptr) {
+		mBinder->bind(this);
 		return;
 	}
 
@@ -268,12 +268,12 @@ u32 TLiveActor::getShadowType() { return 0; }
 
 void TLiveActor::setGroundCollision()
 {
-	if (!unkEC)
+	if (!mMapCollisionManager)
 		return;
-	if (!unkEC->unk8)
+	if (!mMapCollisionManager->unk8)
 		return;
 
-	unkEC->unk8->moveSRT(mPosition, mRotation, mScaling);
+	mMapCollisionManager->unk8->moveSRT(mPosition, mRotation, mScaling);
 }
 
 void TLiveActor::moveObject()
@@ -401,9 +401,12 @@ TLiveActor::calcVelocityToJumpToY(const JGeometry::TVec3<f32>& param_1,
 	return vec;
 }
 
-f32 TLiveActor::getGravityY() const { return unkCC; }
+f32 TLiveActor::getGravityY() const { return mGravity; }
 
-BOOL TLiveActor::hasMapCollision() const { return unkEC ? 1 : 0; }
+BOOL TLiveActor::hasMapCollision() const
+{
+	return mMapCollisionManager ? 1 : 0;
+}
 
 int TLiveActor::getJointTransByIndex(int param_1,
                                      JGeometry::TVec3<f32>* param_2) const
@@ -435,41 +438,41 @@ MtxPtr TLiveActor::getTakingMtx()
 
 void TLiveActor::initAnmSound()
 {
-	if (unk80)
+	if (mAnmSound)
 		return;
 
 	if (checkActorType(0x4000000))
-		unk80 = new MAnmSoundNPC(gpMSound);
+		mAnmSound = new MAnmSoundNPC(gpMSound);
 	else
-		unk80 = new MAnmSound(gpMSound);
+		mAnmSound = new MAnmSound(gpMSound);
 
-	unk80->initAnmSound(nullptr, 1, 0.0f);
+	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
 
 void TLiveActor::updateAnmSound()
 {
-	if (!unk80)
+	if (!mAnmSound)
 		return;
-	if (!unk84)
+	if (!mAnmSoundPath)
 		return;
 
 	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-	unk80->animeLoop(&mPosition, ctrl->getCurrentFrame(), ctrl->getRate(), 0,
-	                 4);
+	mAnmSound->animeLoop(&mPosition, ctrl->getCurrentFrame(), ctrl->getRate(),
+	                     0, 4);
 }
 
-void TLiveActor::setAnmSound(const char* param_1)
+void TLiveActor::setAnmSound(const char* path)
 {
-	if (!unk80)
+	if (!mAnmSound)
 		OSPanic(__FILE__, 0x385, "TLiveActor[%s] : mAnmSound == NULL\n", mName);
 
-	unk84 = param_1;
+	mAnmSoundPath = path;
 
-	if (unk84 != nullptr) {
-		void* res = JKRFileLoader::getGlbResource(unk84);
-		unk80->initAnmSound(res, 1, 0.0f);
+	if (mAnmSoundPath != nullptr) {
+		void* res = JKRFileLoader::getGlbResource(mAnmSoundPath);
+		mAnmSound->initAnmSound(res, 1, 0.0f);
 	} else {
-		unk80->initAnmSound(nullptr, 1, 0.0f);
+		mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 	}
 }
 
@@ -493,6 +496,6 @@ const char** TLiveActor::getBasNameTable() const { return nullptr; }
 
 void TLiveActor::stopAnmSound()
 {
-	if (unk80 && unk84)
-		unk80->stop();
+	if (mAnmSound && mAnmSoundPath)
+		mAnmSound->stop();
 }

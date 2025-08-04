@@ -32,8 +32,8 @@ void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& point1,
 
 	if (mNormal.x != 0.0f || mNormal.y != 0.0f || mNormal.z != 0.0f) {
 		MsVECNormalize(&mNormal, &mNormal);
-		unk40 = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
-		          + mNormal.z * mPoint1.z);
+		mPlaneDistance = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
+		                   + mNormal.z * mPoint1.z);
 
 		mMinY = min(min(mPoint3.y, mPoint2.y), mPoint1.y);
 		mMaxY = max(mPoint1.y, max(mPoint2.y, mPoint3.y));
@@ -75,8 +75,8 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 	mMinY += translate_by.y;
 	mMaxY += translate_by.y;
 
-	unk40 = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
-	          + mNormal.z * mPoint1.z);
+	mPlaneDistance = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
+	                   + mNormal.z * mPoint1.z);
 }
 
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)

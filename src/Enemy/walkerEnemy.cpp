@@ -34,7 +34,7 @@ TWalkerEnemy::TWalkerEnemy(const char* name)
 void TWalkerEnemy::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
-	unk88 = new TWalker;
+	mBinder = new TWalker;
 	getWalker()->reset();
 	getWalker()->unk18 = 150.0f;
 
@@ -53,7 +53,7 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->checkFlag2(0x10)
-	    && (unk7C & 0xF) == (gpMarDirector->unk58 & 0xF)) {
+	    && (mInstanceIndex & 0xF) == (gpMarDirector->unk58 & 0xF)) {
 		doShortCut();
 	}
 
@@ -96,7 +96,7 @@ void TWalkerEnemy::reset()
 
 	mMarchSpeed = getSaveParam()->unk324.get();
 
-	((TWalker*)unk88)->reset();
+	((TWalker*)mBinder)->reset();
 	mSpine->reset();
 	mSpine->setNext(mSpine->getDefault());
 	setGoalPathMario();
@@ -290,7 +290,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 
 	self->updateSquareToMario();
 
-	if (self->unk134 > giveUpLength2)
+	if (self->mDistToMarioSquared > giveUpLength2)
 		return true;
 
 	self->walkBehavior(1, 2.0f);

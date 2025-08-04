@@ -40,7 +40,7 @@ TBGCheckData::TBGCheckData()
     , unk4(0)
     , mMinY(0.0f)
     , mMaxY(0.0f)
-    , unk40(0.0f)
+    , mPlaneDistance(0.0f)
     , unk44(nullptr)
 {
 	mPoint1.zero();

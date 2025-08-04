@@ -190,13 +190,13 @@ void TRailMapObj::load(JSUMemoryInputStream& stream)
 
 void TRailMapObj::setGroundCollision()
 {
-	if (!unkEC)
+	if (!mMapCollisionManager)
 		return;
 
 	if (unk14A != 0 && (!checkMapObjFlag(2) || getColNum() != 0)) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (TMapCollisionBase* col = unkEC->unk8)
+		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 			col->moveMtx(mtx);
 	}
 }
@@ -257,8 +257,8 @@ void TNormalLift::load(JSUMemoryInputStream& stream)
 	TRailMapObj::load(stream);
 
 	stream.read(&unk154, 4);
-	if (unk154 > 0.0f && unkEC) {
-		TMapCollisionBase* col = unkEC->getUnk8();
+	if (unk154 > 0.0f && mMapCollisionManager) {
+		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
 		col->setAllBGType(7);
 		col->setAllActor(this);
 		col->setAllData(unk154);
@@ -391,11 +391,11 @@ void TRollBlock::load(JSUMemoryInputStream& stream)
 
 void TRollBlock::setGroundCollision()
 {
-	if (unkEC == nullptr)
+	if (mMapCollisionManager == nullptr)
 		return;
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	if (TMapCollisionBase* col = unkEC->getUnk8())
+	if (TMapCollisionBase* col = mMapCollisionManager->getUnk8())
 		col->moveMtx(mtx);
 }
 

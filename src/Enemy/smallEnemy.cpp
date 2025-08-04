@@ -514,8 +514,9 @@ void TSmallEnemy::moveObject()
 	if (mSprayedByWaterCooldown > 30)
 		mSprayedByWaterCooldown = 0;
 
-	if (unkEC && unkEC->getUnk8())
-		unkEC->getUnk8()->moveSRT(mPosition, mRotation, mScaling);
+	if (mMapCollisionManager && mMapCollisionManager->getUnk8())
+		mMapCollisionManager->getUnk8()->moveSRT(mPosition, mRotation,
+		                                         mScaling);
 
 	if (!isInhibitedForceMove())
 		calcRidePos();

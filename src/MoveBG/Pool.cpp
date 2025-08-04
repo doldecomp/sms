@@ -91,7 +91,7 @@ f32 TPoolManager::getWaterLevel(const TBGCheckData* param_1) const
 	if (param_1 == nullptr || param_1->unk44 == nullptr)
 		return param_1->mMinY + 100.0f;
 
-	int idx = param_1->unk44->unk7C;
+	int idx = param_1->unk44->mInstanceIndex;
 	if (idx == 0xff ? true : false)
 		return 99999.0f;
 	return ((const TPool*)getObj(idx))->getWaterLevel();
@@ -102,7 +102,7 @@ bool TPoolManager::subWaterLevel(const TBGCheckData* param_1)
 	if (param_1 == nullptr || param_1->unk44 == nullptr)
 		return true;
 
-	int idx = param_1->unk44->unk7C;
+	int idx = param_1->unk44->mInstanceIndex;
 	if (idx == 0xff ? true : false)
 		return true;
 

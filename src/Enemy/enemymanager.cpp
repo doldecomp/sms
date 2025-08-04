@@ -179,7 +179,7 @@ void TEnemyManager::updateAnmSoundShared()
 	if (!unk40)
 		return;
 
-	if (!getObj(0)->getUnk80())
+	if (!getObj(0)->getAnmSound())
 		return;
 
 	for (int i = 0; i < getObjNum(); ++i) {
@@ -189,15 +189,17 @@ void TEnemyManager::updateAnmSoundShared()
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					// unused (mistake)
-					J3DFrameCtrl* ctrl2 = unk40[i]
-					                          .getMActor(enemy->getUnk7C())
-					                          ->getFrameCtrl(0);
-					if (enemy->unk84) {
-						J3DFrameCtrl* ctrl = unk40[i]
-						                         .getMActor(enemy->getUnk7C())
-						                         ->getFrameCtrl(0);
+					J3DFrameCtrl* ctrl2
+					    = unk40[i]
+					          .getMActor(enemy->getInstanceIndex())
+					          ->getFrameCtrl(0);
+					if (enemy->mAnmSoundPath) {
+						J3DFrameCtrl* ctrl
+						    = unk40[i]
+						          .getMActor(enemy->getInstanceIndex())
+						          ->getFrameCtrl(0);
 
-						enemy->getUnk80()->animeLoop(
+						enemy->getAnmSound()->animeLoop(
 						    (Vec*)&enemy->getPosition(),
 						    ctrl->getCurrentFrame(), ctrl->getRate(), 0, 4);
 					}
@@ -225,8 +227,9 @@ void TEnemyManager::copyFromShared()
 			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
 
-			J3DModel* model = unk40[j].getMActor(enemy->getUnk7C())->getModel();
-			MtxPtr src      = enemy->getModel()->getBaseTRMtx();
+			J3DModel* model
+			    = unk40[j].getMActor(enemy->getInstanceIndex())->getModel();
+			MtxPtr src = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
 			Mtx afStack_58;
@@ -417,9 +420,9 @@ TSpineEnemy* TEnemyManager::getFarOutEnemy()
 		if (!enemy->checkLiveFlag(0x4) || !enemy->checkLiveFlag(0x800))
 			continue;
 
-		if (!best || dist > enemy->getUnk134()) {
+		if (!best || dist > enemy->getDistToMarioSquared()) {
 			best = enemy;
-			dist = enemy->getUnk134();
+			dist = enemy->getDistToMarioSquared();
 		}
 	}
 

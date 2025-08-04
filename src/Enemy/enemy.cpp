@@ -23,8 +23,8 @@ TSpineEnemy::TSpineEnemy(const char* name)
     , unk128(0)
     , unk12C(0.0f)
     , unk130(0)
-    , unk134(0.0f)
-    , unk138(0)
+    , mDistToMarioSquared(0.0f)
+    , unk138(nullptr)
     , mHitPoints(1)
     , mMarchSpeed(1.0f)
     , mTurnSpeed(5.0f)
@@ -221,7 +221,7 @@ void TSpineEnemy::updateSquareToMario()
 {
 	// assert?
 	(void)gpMarioPos;
-	unk134 = PSVECSquareDistance(&mPosition, gpMarioPos);
+	mDistToMarioSquared = PSVECSquareDistance(&mPosition, gpMarioPos);
 }
 
 BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
@@ -300,7 +300,7 @@ f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
 	if (set == nullptr) {
 		return getMActor()->getFrameCtrl(param_1)->getCurrentFrame();
 	} else {
-		return set->getMActor(getUnk7C())
+		return set->getMActor(getInstanceIndex())
 		    ->getFrameCtrl(param_1)
 		    ->getCurrentFrame();
 	}
@@ -315,7 +315,8 @@ BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 	if (set == nullptr) {
 		return getMActor()->curAnmEndsNext(param_1, nullptr);
 	} else {
-		return set->getMActor(getUnk7C())->curAnmEndsNext(param_1, nullptr);
+		return set->getMActor(getInstanceIndex())
+		    ->curAnmEndsNext(param_1, nullptr);
 	}
 }
 

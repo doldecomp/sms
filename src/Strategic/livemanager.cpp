@@ -35,7 +35,7 @@ void TLiveManager::load(JSUMemoryInputStream& stream)
 
 void TLiveManager::manageActor(TLiveActor* actor)
 {
-	actor->unk7C = mObjNum;
+	actor->mInstanceIndex = mObjNum;
 	TObjManager::manageObj(actor);
 }
 

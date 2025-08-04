@@ -56,7 +56,7 @@ public:
 	BOOL checkCurAnmEnd(int) const;
 
 	// fabricated
-	f32 getUnk134() const { return unk134; }
+	f32 getDistToMarioSquared() const { return mDistToMarioSquared; }
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 	f32 getTurnSpeed() const { return mTurnSpeed; }
 	u8 getHitPoints() const { return mHitPoints; }
@@ -105,7 +105,7 @@ public:
 	/* 0x128 */ u16 unk128;
 	/* 0x12C */ f32 unk12C;
 	/* 0x130 */ s8 unk130;
-	/* 0x134 */ f32 unk134;
+	/* 0x134 */ f32 mDistToMarioSquared;
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: type is a wild guess
 	/* 0x13C */ u8 mHitPoints;
 	/* 0x140 */ f32 mMarchSpeed;

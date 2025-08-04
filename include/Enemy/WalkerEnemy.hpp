@@ -72,7 +72,7 @@ public:
 	}
 
 	// fabricated
-	TWalker* getWalker() const { return (TWalker*)unk88; }
+	TWalker* getWalker() const { return (TWalker*)mBinder; }
 };
 
 class TLiveActor;
