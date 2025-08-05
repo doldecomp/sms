@@ -143,11 +143,19 @@ public:
 
 	TGessoManager* getManager() { return (TGessoManager*)mManager; }
 
+	TGessoPolluteObj* getPolluteObj() const { return mPolluteObj; }
+
 	bool isWandering() const
 	{
 		if (mState == STATE_WANDERING)
 			return true;
 		return false;
+	}
+	bool isNotWandering() const
+	{
+		if (mState == STATE_WANDERING)
+			return false;
+		return true;
 	}
 
 	enum {
@@ -164,7 +172,7 @@ public:
 	};
 
 public:
-	/* 0x194 */ int unk194;
+	/* 0x194 */ int mAttackCooldown;
 	/* 0x198 */ int mPollutionTimer;
 	/* 0x19C */ int mState;
 	/* 0x1A0 */ bool mIsRightSideUp;
@@ -174,12 +182,14 @@ public:
 	/* 0x1AC */ u8 mGessoType;
 	/* 0x1B0 */ f32 mTurnAngle;
 	/* 0x1B4 */ int unk1B4;
-	/* 0x1B8 */ JGeometry::TVec3<f32> unk1B8;
+	/* 0x1B8 */ JGeometry::TVec3<f32> mPolluteVelocity;
 	/* 0x1C4 */ u8 unk1C4;
-	/* 0x1C8 */ JGeometry::TVec3<f32> unk1C8;
+	/* 0x1C8 */ f32 mStayYaw;
+	/* 0x1CC */ f32 mBodyTrackingAngle;
+	/* 0x1D0 */ f32 unk1D0;
 	/* 0x1D4 */ char unk1D4[0x4];
 	/* 0x1D8 */ u8 unk1D8;
-	/* 0x1D9 */ u8 unk1D9;
+	/* 0x1D9 */ u8 mNeedsLanding;
 	/* 0x1DA */ char unk1DA[0x2];
 	/* 0x1DC */ JGeometry::TVec3<f32> unk1DC;
 	/* 0x1E8 */ TGessoSaveLoadParams* unk1E8;

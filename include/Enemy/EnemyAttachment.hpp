@@ -33,6 +33,8 @@ public:
 	virtual void recoverScale();
 	virtual f32 getNowGravity() { return mGravity; }
 
+	bool isUnk150Zero() const { return unk150 == 0 ? true : false; }
+
 public:
 	/* 0x150 */ int unk150;
 	/* 0x154 */ u32 unk154;
