@@ -71,6 +71,10 @@ public:
 	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
 	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
+	bool isAirborne() const
+	{
+		return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? 1 : 0;
+	}
 	void offLiveFlag(u32 flag) { mLiveFlag &= ~flag; }
 	void onLiveFlag(u32 flag) { mLiveFlag |= flag; }
 	const TMActorKeeper* getActorKeeper() const { return mMActorKeeper; }

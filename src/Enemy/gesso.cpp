@@ -82,7 +82,8 @@ void TGessoPolluteModelManager::init(TLiveActor* param_1)
 {
 	TEnemyPolluteModelManager::init(param_1);
 
-	void* res = JKRGetResource("/scene/rikuGesso/stamp_gero_model1.bmd");
+	void* res = JKRFileLoader::getGlbResource(
+	    "/scene/rikuGesso/stamp_gero_model1.bmd");
 	SDLModelData* modelData
 	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10220000));
 
@@ -120,7 +121,7 @@ void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 	f32 fVar2;
 	if (unk38 == nullptr) {
 		fVar1 = 300.0f;
-		fVar2 = gpConductor->unk84.mEnemyFarClip.get();
+		fVar2 = gpConductor->getCondParams().mEnemyFarClip.get();
 	} else {
 		fVar2 = unk38->mSLFarClip.get();
 		fVar1 = unk38->mSLClipRadius.get();
@@ -131,18 +132,18 @@ void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TGesso* gesso = (TGesso*)unk18[i];
-		if (ViewFrustumClipCheck(param_1, &gesso->mPosition, fVar1)) {
-			gesso->offLiveFlag(0x4);
-		} else {
-			gesso->onLiveFlag(0x4);
-		}
 
-		if (!(gesso->mPolluteObj->unk150 == 0 ? true : false)) {
-			if (ViewFrustumClipCheck(param_1, &gesso->mPolluteObj->mPosition,
-			                         fVar1))
-				gesso->mPolluteObj->offLiveFlag(0x4);
+		if (ViewFrustumClipCheck(param_1, &gesso->mPosition, fVar1))
+			gesso->offLiveFlag(0x4);
+		else
+			gesso->onLiveFlag(0x4);
+
+		if (!gesso->getPolluteObj()->isUnk150Zero()) {
+			if (ViewFrustumClipCheck(param_1,
+			                         &gesso->getPolluteObj()->mPosition, fVar1))
+				gesso->getPolluteObj()->offLiveFlag(0x4);
 			else
-				gesso->mPolluteObj->onLiveFlag(0x4);
+				gesso->getPolluteObj()->onLiveFlag(0x4);
 		}
 	}
 }
@@ -180,56 +181,59 @@ void TGessoManager::requestPolluteModel(JGeometry::TVec3<float>& position,
 
 static int GessoBodyCallback(J3DNode* param_1, int param_2)
 {
-	if (param_2 != 0 || gpCurGesso == nullptr || !gpCurGesso->isWandering())
-		return true;
+	if (param_2 != 0) {
+		if (gpCurGesso == nullptr || !gpCurGesso->isNotWandering())
+			return true;
 
-	MtxPtr mA
-	    = gpCurGesso->getModel()->getAnmMtx(((J3DJoint*)param_1)->getJntNo());
+		J3DJoint* joint = (J3DJoint*)param_1;
+		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
-	f32 scale = gpCurGesso->getBodyScale();
-	Mtx local_44;
-	local_44[0][0] = scale;
-	local_44[0][1] = 0.0f;
-	local_44[0][2] = 0.0f;
-	local_44[0][3] = 0.0f;
+		f32 scale = gpCurGesso->getBodyScale();
+		Mtx local_44;
+		local_44[0][0] = scale;
+		local_44[0][1] = 0.0f;
+		local_44[0][2] = 0.0f;
+		local_44[0][3] = 0.0f;
 
-	local_44[1][0] = 0.0f;
-	local_44[1][1] = scale;
-	local_44[1][2] = 0.0f;
-	local_44[1][3] = 0.0f;
+		local_44[1][0] = 0.0f;
+		local_44[1][1] = scale;
+		local_44[1][2] = 0.0f;
+		local_44[1][3] = 0.0f;
 
-	local_44[2][0] = 0.0f;
-	local_44[2][1] = 0.0f;
-	local_44[2][2] = scale;
-	local_44[2][3] = 0.0f;
+		local_44[2][0] = 0.0f;
+		local_44[2][1] = 0.0f;
+		local_44[2][2] = scale;
+		local_44[2][3] = 0.0f;
 
-	f32 fVar2 = gpCurGesso->unk1E8->mSLBodyAngMax.get();
-	f32 fVar1 = MsClamp(gpCurGesso->unk1C8.y - 90.0f, -fVar2, fVar2);
+		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
+		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
+		                    maxAngle);
 
-	f32 s = JMASin(fVar1);
-	f32 c = JMACos(fVar1);
+		f32 s = JMASin(angle);
+		f32 c = JMACos(angle);
 
-	Mtx local_74;
-	local_74[0][0] = 1.0f;
-	local_74[0][1] = 0.0f;
-	local_74[0][2] = 0.0f;
-	local_74[0][3] = 0.0f;
+		Mtx local_74;
+		local_74[0][0] = 1.0f;
+		local_74[0][1] = 0.0f;
+		local_74[0][2] = 0.0f;
+		local_74[0][3] = 0.0f;
 
-	local_74[1][0] = 0.0f;
-	local_74[1][1] = c;
-	local_74[1][2] = -s;
-	local_74[1][3] = 0.0f;
+		local_74[1][0] = 0.0f;
+		local_74[1][1] = c;
+		local_74[1][2] = -s;
+		local_74[1][3] = 0.0f;
 
-	local_74[2][0] = 0.0f;
-	local_74[2][1] = s;
-	local_74[2][2] = c;
-	local_74[2][3] = 0.0f;
+		local_74[2][0] = 0.0f;
+		local_74[2][1] = s;
+		local_74[2][2] = c;
+		local_74[2][3] = 0.0f;
 
-	MTXConcat(mA, local_74, mA);
-	MTXConcat(mA, local_44, mA);
-	MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
-	MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
-	return 1;
+		MTXConcat(anmMtx, local_74, anmMtx);
+		MTXConcat(anmMtx, local_44, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
+	}
+	return true;
 }
 
 u8 TGesso::mBodyJntIndex       = 12;
@@ -241,7 +245,7 @@ f32 TGesso::mAngTestY          = 0.15f;
 
 TGesso::TGesso(const char* name)
     : TWalkerEnemy(name)
-    , unk194(0)
+    , mAttackCooldown(0)
     , mPollutionTimer(0)
     , mState(STATE_BEAM_CHILLING)
     , mIsRightSideUp(true)
@@ -251,9 +255,11 @@ TGesso::TGesso(const char* name)
     , mGessoType(TYPE_REGULAR)
     , unk1B4(0)
     , unk1C4(1)
-    , unk1C8(0.0f, 90.0f, 0.0f)
+    , mStayYaw(0.0f)
+    , mBodyTrackingAngle(90.0f)
+    , unk1D0(0.0f)
     , unk1D8(0)
-    , unk1D9(0)
+    , mNeedsLanding(false)
 {
 }
 
@@ -271,8 +277,12 @@ void TGesso::init(TLiveManager* param_1)
 	setBckAnm(21);
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
-	ctrl0->setFrame((1.0f / mManager->getCapacity()) * mInstanceIndex
-	                * ctrl0->getEndFrame());
+
+	f32 endFrame = ctrl0->getEndFrame();
+	f32 inv      = 1.0f / mManager->getCapacity();
+	f32 index    = getInstanceIndex();
+	f32 frame    = endFrame * index * inv;
+	ctrl0->setFrame(frame);
 }
 
 void TGesso::reset()
@@ -290,15 +300,19 @@ void TGesso::reset()
 	}
 
 	offLiveFlag(0x1000);
-	unk1D9         = 0;
+	mNeedsLanding  = false;
 	mIsRightSideUp = true;
 	unk1A4         = mPosition.y;
-	unk1C8.z       = 0.0f;
+	unk1D0         = 0.0f;
 	setBckAnm(21);
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
-	ctrl0->setFrame((1.0f / mManager->getCapacity()) * mInstanceIndex
-	                * ctrl0->getEndFrame());
+
+	f32 inv      = 1.0f / mManager->getObjNum();
+	f32 index    = getInstanceIndex();
+	f32 endFrame = ctrl0->getEndFrame();
+	f32 frame    = endFrame * index * inv;
+	ctrl0->setFrame(frame);
 }
 
 void TGesso::load(JSUMemoryInputStream& stream)
@@ -310,14 +324,14 @@ void TGesso::load(JSUMemoryInputStream& stream)
 
 	if (mRotation.y == 0.0f || mRotation.y == 180.0f) {
 		unk1A1   = 1;
-		unk1C8.x = 0.0f;
+		mStayYaw = 0.0f;
 		if (unk1C4 == 0)
-			unk1C8.x = 180.0f;
+			mStayYaw = 180.0f;
 	} else {
 		unk1A1   = 0;
-		unk1C8.x = 90.0f;
+		mStayYaw = 90.0f;
 		if (unk1C4 == 0)
-			unk1C8.x = 270.0f;
+			mStayYaw = 270.0f;
 	}
 
 	reset();
@@ -350,7 +364,7 @@ void TGesso::behaveToWater(THitActor* param_1)
 				local_1c.x *= hitWaterSpXZ;
 				if (abs(local_1c.x) < 5.0f) {
 					if (local_1c.x > 0.0f)
-						local_1c.z = 5.0f;
+						local_1c.x = 5.0f;
 					else
 						local_1c.x = -5.0f;
 				}
@@ -362,7 +376,7 @@ void TGesso::behaveToWater(THitActor* param_1)
 						local_1c.z = -5.0f;
 				}
 				local_1c.y *= hitWaterSpY;
-				mVelocity = local_1c; // TODO: so is unkAC (sp)eed after all?
+				mVelocity = local_1c;
 				mPosition.y += 2.0f;
 				onLiveFlag(0x80);
 			}
@@ -408,14 +422,14 @@ void TGesso::attackToMario()
 {
 	if (mState != STATE_WANDERING) {
 		SMS_SendMessageToMario(this, 0xE);
-		unk194 = 1;
+		mAttackCooldown = 1;
 		return;
 	}
 
 	if (mSpine->getCurrentNerve() != &TNerveGessoPunch::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveGessoFreeze::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
-		unk194 = 1;
+		mAttackCooldown = 1;
 		mSpine->pushNerve(&TNerveWalkerPostAttack::theNerve());
 		mSpine->pushNerve(&TNerveGessoPunch::theNerve());
 	}
@@ -433,25 +447,25 @@ void TGesso::attackToMario()
 
 void TGesso::setBehavior()
 {
-	if (unk194 > 0)
-		unk194 += 1;
+	if (mAttackCooldown > 0)
+		mAttackCooldown += 1;
 
-	if (unk194 > 200)
-		unk194 = 0;
+	if (mAttackCooldown > 200)
+		mAttackCooldown = 0;
 
-	if (checkLiveFlag2(0x80) && mPosition.y > mGroundHeight + 250.0f
+	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
-		unk1D9 = 1;
+		mNeedsLanding = true;
 	}
 
-	if (!checkLiveFlag2(0x80) && unk1D9 != 0
+	if (!isAirborne() && mNeedsLanding
 	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	        || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())) {
 		mSpine->pushNerve(&TNerveGessoLand::theNerve());
 	}
 
-	if (!checkLiveFlag2(0x80))
-		unk1D9 = 0;
+	if (!isAirborne())
+		mNeedsLanding = false;
 }
 
 void TGesso::polluteBehavior()
@@ -479,56 +493,55 @@ void TGesso::polluteBehavior()
 
 void TGesso::setPolluteGoal()
 {
-	f32 polluteObjSpeed   = unk1E8->mSLPolluteObjSpeed.get();
 	f32 polluteObjGravity = unk1E8->mSLPolluteObjGravity.get();
+	f32 polluteObjSpeed   = unk1E8->mSLPolluteObjSpeed.get();
 
 	if (!mIsRightSideUp)
 		polluteObjSpeed = 0.0f;
 
 	if (unk1D8 == 0) {
-		unk1B8.set(
+		mPolluteVelocity.set(
 		    SMS_GetMarioPos().x + FakeRandInterval(-100.0f, 100.0f).get(),
 		    SMS_GetMarioPos().y,
 		    SMS_GetMarioPos().z + FakeRandInterval(-100.0f, 100.0f).get());
 
 		JGeometry::TVec3<f32> local;
 		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);
-		unk1B8 = local;
+		mPolluteVelocity = local;
 	} else {
-		unk1B8 = SMS_GetMarioPos();
-		unk1B8.x -= mPosition.x;
-		unk1B8.y = 0.0f;
-		unk1B8.z -= mPosition.z;
-		MsVECNormalize(&unk1B8, &unk1B8);
+		mPolluteVelocity = SMS_GetMarioPos();
+		mPolluteVelocity.x -= mPosition.x;
+		mPolluteVelocity.y = 0.0f;
+		mPolluteVelocity.z -= mPosition.z;
+		MsVECNormalize(&mPolluteVelocity, &mPolluteVelocity);
 		f32 polluteObjLinerSp = unk1E8->mSLPolluteObjLinerSp.get();
-		unk1B8.x *= polluteObjLinerSp;
-		unk1B8.y = 0.0f;
-		unk1B8.z *= polluteObjLinerSp;
+		mPolluteVelocity.x *= polluteObjLinerSp;
+		mPolluteVelocity.y = 0.0f;
+		mPolluteVelocity.z *= polluteObjLinerSp;
 	}
 }
 
 void TGesso::pollute()
 {
 	if (mState != STATE_WANDERING && !mIsRightSideUp)
-		unk1B8.y = -3.0f;
+		mPolluteVelocity.y = -3.0f;
 
-	mPolluteObj->setVelocity(unk1B8);
+	mPolluteObj->setVelocity(mPolluteVelocity);
 	mPolluteObj->pollute();
 
 	JGeometry::TVec3<f32> tmp;
-	tmp.sub(unk1B8, mPosition);
-	tmp.y       = 0.0f;
-	mRotation.y = MsGetRotFromZaxisY(tmp);
+	tmp.sub(mPolluteVelocity, mPosition);
+	tmp.y                    = 0.0f;
+	mPolluteObj->mRotation.y = MsGetRotFromZaxisY(tmp);
 
-	MtxPtr mtx
-	    = mPolluteObj->getMActor()->getModel()->getAnmMtx(mMouthJntIndex);
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mMouthJntIndex);
 
 	JGeometry::TVec3<f32> local_2c(0.0f, 0.0f, 100.0f);
 	Mtx afStack_5c;
 	if (mState == STATE_WANDERING) {
 		MsMtxSetRotRPH(afStack_5c, 0.0f, mRotation.y, 0.0f);
 	} else {
-		MsMtxSetRotRPH(afStack_5c, 0.0f, mRotation.y + unk1C8.x, 0.0f);
+		MsMtxSetRotRPH(afStack_5c, 0.0f, mRotation.y + mStayYaw, 0.0f);
 	}
 	MTXMultVec(afStack_5c, &local_2c, &local_2c);
 	mPolluteObj->mPosition.x = mtx[0][3] + local_2c.x;
@@ -572,16 +585,17 @@ void TGesso::setWaitAnm()
 {
 	if (mState == STATE_WANDERING || mIsRightSideUp) {
 		setBckAnm(21);
-		unk1C8.z = 0.0f;
+		unk1D0 = 0.0f;
 	} else {
 		setBckAnm(20);
-		unk1C8.z = mDamageHeight;
+		unk1D0 = mDamageHeight;
 	}
 }
 
 void TGesso::bind()
 {
 	switch (mState) {
+	case STATE_WANDERING:
 	case 4:
 		TSmallEnemy::bind();
 		break;
@@ -598,12 +612,14 @@ void TGesso::bind()
 		break;
 
 	case STATE_ROLLING:
-		unk1C8.z    = 0.0f;
-		mPosition.y = unk1A4 - unk1C8.z;
+		unk1D0 = 0.0f;
+		// FALLTHROUGH
+	case STATE_BEAM_CHILLING:
+		mPosition.y = unk1A4 - unk1D0;
 		break;
 	}
 
-	if (isWandering()) {
+	if (isNotWandering()) {
 		f32 f8;
 		f32 f7;
 		f32 f1 = 1.0f;
@@ -638,15 +654,15 @@ void TGesso::bind()
 		f32 cos   = var1.dot(var2);
 		f32 sin   = MsVECMag2(&local_48);
 		f32 angle = MsAtan2(sin, cos);
-		if (unk1C8.y != angle) {
-			if (unk1C8.y < angle) {
-				unk1C8.y += mBodyRotSpeed;
-				if (unk1C8.y > angle)
-					unk1C8.y = angle;
+		if (mBodyTrackingAngle != angle) {
+			if (mBodyTrackingAngle < angle) {
+				mBodyTrackingAngle += mBodyRotSpeed;
+				if (mBodyTrackingAngle > angle)
+					mBodyTrackingAngle = angle;
 			} else {
-				unk1C8.y -= mBodyRotSpeed;
-				if (unk1C8.y < angle)
-					unk1C8.y = angle;
+				mBodyTrackingAngle -= mBodyRotSpeed;
+				if (mBodyTrackingAngle < angle)
+					mBodyTrackingAngle = angle;
 			}
 		}
 	}
@@ -673,11 +689,11 @@ void TGesso::calcRootMatrix()
 		J3DModel* model = mMActor->getModel();
 		MtxPtr mA       = model->getBaseTRMtx();
 
-		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1C8.z, mPosition.z,
+		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
 		               mRotation.x, mRotation.y, mRotation.z);
 
-		f32 s = JMASin(unk1C8.x);
-		f32 c = JMACos(unk1C8.x);
+		f32 s = JMASin(mStayYaw);
+		f32 c = JMACos(mStayYaw);
 		Mtx local_68;
 
 		local_68[0][0] = c;
@@ -703,7 +719,7 @@ void TGesso::calcRootMatrix()
 
 void TGesso::genRandomItem()
 {
-	if (isBckAnm(16)) {
+	if (isBckAnm(15)) {
 		// yeah
 		if (gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
 		                                 0x400000BC, true))
@@ -734,7 +750,7 @@ void TGesso::behaveToFindMario()
 
 void TGesso::rollCheck()
 {
-	if (unk194 != 0)
+	if (mAttackCooldown != 0)
 		return;
 
 	f32 aware = unk1E8->mSLSearchAwareOnObj.get();
@@ -748,18 +764,17 @@ void TGesso::rollCheck()
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());
 			if (mIsRightSideUp)
 				onLiveFlag(0x8);
-			unk194 = 0;
+			mAttackCooldown = 0;
 		}
 	}
 
 	f32 turnLength = unk1E8->mSLTurnLength.get();
 	updateSquareToMario();
-	if (mDistToMarioSquared < turnLength * turnLength && !mIsRightSideUp) {
-		if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
-		                 unk1E8->mSLSearchLengthOnObj.get(),
-		                 unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {
-			mSpine->pushNerve(&TNerveGessoTurn::theNerve());
-		}
+	if (mDistToMarioSquared < turnLength * turnLength && mIsRightSideUp
+	    && !MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
+	                    unk1E8->mSLSearchLengthOnObj.get(),
+	                    unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {
+		mSpine->pushNerve(&TNerveGessoTurn::theNerve());
 	}
 }
 
@@ -793,7 +808,7 @@ void TGesso::turnIn()
 bool TGesso::turning()
 {
 	if (mTurnAngle + 7.2f <= 180.0f) {
-		unk1C8.y = 90.0f;
+		mBodyTrackingAngle = 90.0f;
 		mRotation.y += 7.2f;
 		mTurnAngle += 7.2f;
 		return false;
@@ -1168,13 +1183,13 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 		}
 	} else {
 		if (self->isBckAnm(6) || self->isBckAnm(18)) {
-			self->unk1C8.z *= 0.8f;
+			self->unk1D0 *= 0.8f;
 			if (self->checkCurAnmEnd(0)) {
 				self->mState = 4;
 				self->setBckAnm(4);
 			}
 		} else if (self->isBckAnm(4)) {
-			self->unk1C8.z *= 0.8f;
+			self->unk1D0 *= 0.8f;
 			if (!self->checkLiveFlag2(0x80)) {
 				if (self->mGroundPlane->isWaterSurface()) {
 					self->generateEffectColumWater();
@@ -1187,7 +1202,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			}
 		} else if (self->isBckAnm(7)) {
 			self->offLiveFlag(0x8);
-			self->unk1C8.x *= 0.8f;
+			self->mStayYaw *= 0.8f;
 
 			self->mRotation.x *= 0.8f;
 			self->mRotation.y *= 0.8f;
@@ -1247,7 +1262,7 @@ DEFINE_NERVE(TNerveGessoLand, TLiveActor)
 		self->setBckAnm(14);
 
 	if (self->checkCurAnmEnd(0)) {
-		self->unk1D9 = 0;
+		self->mNeedsLanding = false;
 		return true;
 	}
 
