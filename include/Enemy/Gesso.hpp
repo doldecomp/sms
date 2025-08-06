@@ -108,7 +108,7 @@ public:
 	void turnIn();
 	bool turning();
 	void turnOut();
-	void checkDropInWater();
+	bool checkDropInWater();
 
 	static u8 mBodyJntIndex;
 	static u8 mMouthJntIndex;
@@ -126,11 +126,10 @@ public:
 			return 0.0f;
 
 		if (unk1A1 != 0) {
-			if (unk1C4 != 0) {
+			if (unk1C4 != 0)
 				return 0.0f;
-			} else {
+			else
 				return 180.0f;
-			}
 		} else {
 			if (unk1C4 != 0)
 				return 90.0f;

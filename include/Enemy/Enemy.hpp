@@ -81,12 +81,10 @@ public:
 
 		unk114.clear();
 	}
-	void setGoalPathPoint(const JGeometry::TVec3<f32>& point)
+	void setGoalPath(const TPathNode& point)
 	{
-		unkF4.unk0  = nullptr;
-		unkF4.unk4  = point;
-		unk104.unk0 = nullptr;
-		unk104.unk4 = point;
+		unkF4  = point;
+		unk104 = point;
 
 		unk114.clear();
 	}

@@ -23,6 +23,12 @@ public:
 		unk4.z = 0;
 	}
 
+	TPathNode(const JGeometry::TVec3<f32>& point)
+	{
+		unk0 = nullptr;
+		unk4 = point;
+	}
+
 	const JGeometry::TVec3<f32>& getPoint() const
 	{
 		if (unk0 != 0)
