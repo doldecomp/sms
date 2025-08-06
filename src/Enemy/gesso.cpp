@@ -181,7 +181,7 @@ void TGessoManager::requestPolluteModel(JGeometry::TVec3<float>& position,
 
 static int GessoBodyCallback(J3DNode* param_1, int param_2)
 {
-	if (param_2 != 0) {
+	if (param_2 == 0) {
 		if (gpCurGesso == nullptr || !gpCurGesso->isNotWandering())
 			return true;
 
@@ -378,7 +378,7 @@ void TGesso::behaveToWater(THitActor* param_1)
 				local_1c.y *= hitWaterSpY;
 				mVelocity = local_1c;
 				mPosition.y += 2.0f;
-				onLiveFlag(0x80);
+				onLiveFlag(LIVE_FLAG_AIRBORNE);
 			}
 
 			mSpine->pushNerve(&TNerveGessoFall::theNerve());
@@ -481,9 +481,9 @@ void TGesso::polluteBehavior()
 	if (mPollutionTimer < unk1E8->mSLPollutionInterval.get())
 		return;
 
-	if (MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
-	                unk1E8->mSLPollutionLength.get(),
-	                unk1E8->mSLSearchAngleOnObj.get(), 0.0f))
+	if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
+	                 unk1E8->mSLPollutionLength.get(),
+	                 unk1E8->mSLSearchAngleOnObj.get(), 0.0f))
 		return;
 
 	mPollutionTimer = 0;
@@ -774,7 +774,8 @@ void TGesso::rollCheck()
 	    && !MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
 	                    unk1E8->mSLSearchLengthOnObj.get(),
 	                    unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {
-		mSpine->pushNerve(&TNerveGessoTurn::theNerve());
+		const TNerveBase<TLiveActor>* nerve = &TNerveGessoTurn::theNerve();
+		mSpine->pushNerve(nerve);
 	}
 }
 
@@ -828,7 +829,28 @@ void TGesso::turnOut()
 	offHitFlag(0x1);
 }
 
-void TGesso::checkDropInWater() { }
+// TODO: the size & logic matches but it won't inline =(
+inline bool TGesso::checkDropInWater()
+{
+	// Don't skip your calculus class, kids.
+	JGeometry::TVec3<f32> position = mPosition;
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	for (int i = 0; i < 50; ++i) {
+		position += velocity;
+		velocity.y -= getGravityY();
+		if (position.y < mGroundHeight)
+			break;
+	}
+
+	const TBGCheckData* local_34;
+	gpMap->checkGround(position.x, mHeadHeight * 2.0f + position.y, position.z,
+	                   &local_34);
+
+	if (local_34->isWaterSurface())
+		return true;
+	else
+		return false;
+}
 
 void TGesso::initAttacker(THitActor* param_1)
 {
@@ -953,7 +975,7 @@ void TGessoPolluteObj::set()
 
 		JGeometry::TVec3<f32> local_54 = getVelocity();
 
-		// TODO: awful thinks happening with the stack frame here
+		// TODO: awful things happening with the stack frame here
 		JGeometry::TVec3<f32> local_C = getVelocity();
 		if (JGeometry::TVec3<f32>(local_C).x != 0.0f
 		    || JGeometry::TVec3<f32>(local_C).z != 0.0f)
@@ -1008,30 +1030,19 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 {
 	TGesso* self = (TGesso*)spine->getBody();
 	if (spine->getTime() == 0) {
-		JGeometry::TVec3<f32> local_64 = self->getPosition();
-		local_64 -= SMS_GetMarioPos();
-		MsVECNormalize(&local_64, &local_64);
-		local_64.x *= 4.0f;
-		local_64.y = 5.0f;
-		local_64.z *= 4.0f;
+		JGeometry::TVec3<f32> local_88
+		    = self->getPosition() - SMS_GetMarioPos();
+		MsVECNormalize(&local_88, &local_88);
+		local_88.y = 5.0f;
+		local_88.x *= 4.0f;
+		local_88.z *= 4.0f;
+		self->setVelocity(local_88);
 
 		self->mPosition.y += 2.0f;
-		self->onLiveFlag(0x80);
-		self->unk1DC = local_64;
+		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		self->unk1DC = local_88;
 
-		// Don't skip your calculus class, kids.
-		JGeometry::TVec3<f32> local_4c = self->getPosition();
-		JGeometry::TVec3<f32> velocity = self->getVelocity();
-		for (int i = 0; i < 50; ++i) {
-			local_4c += velocity;
-			velocity.y -= self->getGravityY();
-			if (local_4c.y < self->mGroundHeight)
-				break;
-		}
-
-		const TBGCheckData* local_34;
-		gpMap->checkGround(local_4c.x, local_4c.y, local_4c.z, &local_34);
-		if (local_34->isWaterSurface()) {
+		if (self->checkDropInWater()) {
 			spine->pushRaw(&TNerveGessoFall::theNerve());
 			return true;
 		}
@@ -1053,11 +1064,11 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 			}
 			self->getMActor()->getFrameCtrl(0)->setFrame(0.0f);
 		} else if (self->isBckAnm(8)) {
-			return 1;
+			return true;
 		}
 	}
 
-	if (!self->checkLiveFlag2(0x80)) {
+	if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
 		if (self->unk1DC.y < 1.5f) {
 			if (self->isBckAnm(9)) {
 				gpMarioParticleManager->emitAndBindToPosPtr(
@@ -1066,7 +1077,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		} else {
 			self->unk1DC.y *= 0.3f;
 			self->mPosition.y += 2.0f;
-			self->onLiveFlag(0x80);
+			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			self->setVelocity(self->unk1DC);
 		}
 	} else if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
@@ -1125,12 +1136,11 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	TGesso* self = (TGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-		self->setGoalPathPoint(marioPos);
+		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
 
-		if (self->mState == TGesso::STATE_WANDERING) {
-			JGeometry::TVec3<f32> local_80 = self->getPosition();
-			local_80 -= SMS_GetMarioPos();
+		if (self->isWandering()) {
+			JGeometry::TVec3<f32> local_80
+			    = self->getPosition() - SMS_GetMarioPos();
 			local_80.y = 0.0f;
 			if (local_80.x == 0.0f && local_80.z == 0.0f)
 				local_80.z = 1.0f;
@@ -1138,7 +1148,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			local_80.x *= 4.0f;
 			local_80.z *= 4.0f;
 			self->setVelocity(local_80);
-			self->onLiveFlag(0x80);
+			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			self->setBckAnm(6);
 		} else {
 			if (self->mIsRightSideUp) {
@@ -1154,8 +1164,8 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	} else if (self->isWandering()) {
 		if (self->checkCurAnmEnd(0)) {
 			if (self->isBckAnm(6)) {
-				JGeometry::TVec3<f32> local_8C = self->getPosition();
-				local_8C -= SMS_GetMarioPos();
+				JGeometry::TVec3<f32> local_8C
+				    = self->getPosition() - SMS_GetMarioPos();
 				local_8C.y = 0.0f;
 				if (local_8C.x == 0.0f && local_8C.z == 0.0f)
 					local_8C.z = 1.0f;
@@ -1164,21 +1174,20 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 				local_8C.y = 5.0f;
 				local_8C.z *= 6.0f;
 				self->setVelocity(local_8C);
-				self->onLiveFlag(0x80);
+				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 				self->setBckAnm(4);
-			} else if (!self->checkLiveFlag2(0x80)) {
-				if (self->mGroundPlane->isWaterSurface()) {
+			} else if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
 					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
-				}
-				return true;
-			}
 
-			if (self->isBckAnm(4)) {
-				self->setBckAnm(7);
-			} else if (self->isBckAnm(7)) {
-				spine->pushRaw(&TNerveWalkerGraphWander::theNerve());
-				return true;
+					return true;
+				} else if (self->isBckAnm(4)) {
+					self->setBckAnm(7);
+				} else if (self->isBckAnm(7)) {
+					spine->pushRaw(&TNerveWalkerGraphWander::theNerve());
+					return true;
+				}
 			}
 		}
 	} else {
@@ -1190,8 +1199,8 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			}
 		} else if (self->isBckAnm(4)) {
 			self->unk1D0 *= 0.8f;
-			if (!self->checkLiveFlag2(0x80)) {
-				if (self->mGroundPlane->isWaterSurface()) {
+			if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
 					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
 					return true;
