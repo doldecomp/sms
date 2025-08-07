@@ -95,6 +95,8 @@ public:
 			mHitPoints -= 1;
 	}
 
+	const TPathNode& getUnk104() const { return unk104; }
+
 public:
 	/* 0xF4 */ TPathNode unkF4;
 	/* 0x104 */ TPathNode unk104;
