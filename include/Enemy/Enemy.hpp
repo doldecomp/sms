@@ -27,12 +27,12 @@ public:
 	                       const JGeometry::TVec3<f32>&,
 	                       const JGeometry::TVec3<f32>&);
 	virtual TSpineEnemyParams* getSaveParam() const;
-	virtual void getPhaseShift() const;
+	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const { }
 
 	void calcEnemyRootMatrix();
 	f32 calcMinimumTurnRadius(f32, f32) const;
-	void calcTurnSpeedToReach(f32, f32) const;
+	f32 calcTurnSpeedToReach(f32, f32) const;
 	void updateSquareToMario();
 	BOOL isInSight(const JGeometry::TVec3<f32>& pos, f32 length, f32 angle,
 	               f32 aware) const;
@@ -47,7 +47,7 @@ public:
 	void goToDirectedNextGraphNode(const JGeometry::TVec3<f32>&);
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
-	void turnToCurPathNode(f32);
+	bool turnToCurPathNode(f32);
 	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
 	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
 	                         f32 angle);
@@ -63,6 +63,7 @@ public:
 	u8 getHitPoints() const { return mHitPoints; }
 	f32 getHeadHeight() const { return mBodyScale * mHeadHeight; }
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
+	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
 
 	// fabricated
@@ -96,6 +97,7 @@ public:
 			mHitPoints -= 1;
 	}
 
+	const TPathNode& getUnkF4() const { return unkF4; }
 	const TPathNode& getUnk104() const { return unk104; }
 
 public:
@@ -103,7 +105,7 @@ public:
 	/* 0x104 */ TPathNode unk104;
 	/* 0x114 */ TSolidStack<TPathNode> unk114;
 	/* 0x124 */ TGraphTracer* unk124;
-	/* 0x128 */ u16 unk128;
+	/* 0x128 */ s16 unk128;
 	/* 0x12C */ f32 unk12C;
 	/* 0x130 */ s8 unk130;
 	/* 0x134 */ f32 mDistToMarioSquared;
