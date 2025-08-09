@@ -15,6 +15,7 @@ public:
 		unk4.z = 0;
 	}
 
+	// fabricated
 	TPathNode(THitActor* actor)
 	{
 		unk0   = actor;
@@ -23,6 +24,7 @@ public:
 		unk4.z = 0;
 	}
 
+	// fabricated
 	TPathNode(const JGeometry::TVec3<f32>& point)
 	{
 		unk0 = nullptr;
