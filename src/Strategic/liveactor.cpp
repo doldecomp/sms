@@ -83,8 +83,7 @@ BOOL TLiveActor::belongToGround() const
 {
 	if (mGroundPlane
 	    && (mGroundPlane->checkFlag2(PLANE_TYPE_KILL) == true ? false : true)
-	    && mGroundPlane->unk44 != nullptr
-	    && !isAirborne())
+	    && mGroundPlane->unk44 != nullptr && !isAirborne())
 		return true;
 
 	return false;

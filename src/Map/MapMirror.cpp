@@ -24,7 +24,7 @@ void TMirrorCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
 		MTXCopy(unk30, param_2->unkB4);
 		param_2->mNearPlane = gpCamera->mNear;
-		param_2->mFarPlane      = gpCamera->mFar;
+		param_2->mFarPlane  = gpCamera->mFar;
 		if (param_1 & 0x10)
 			GXSetProjection(param_2->unk74.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
