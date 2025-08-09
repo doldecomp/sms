@@ -145,7 +145,7 @@ public:
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
 	virtual void initAttacker(THitActor*);
-	virtual bool isHitValid(u32) { return checkLiveFlag(0x2) ? false : true; }
+	virtual bool isHitValid(u32) { return checkLiveFlag(LIVE_FLAG_UNK2) ? false : true; }
 	virtual bool isCollidMove(THitActor*);
 	virtual BOOL isInhibitedForceMove() { return FALSE; }
 	virtual void endHitWaterJump() { }

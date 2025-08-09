@@ -34,7 +34,7 @@ void TEnemyAttachment::loadInit(TSpineEnemy* param_1, const char* param_2)
 void TEnemyAttachment::behaveToHitGround()
 {
 	unk168 = 1;
-	offLiveFlag(0x80);
+	offLiveFlag(LIVE_FLAG_AIRBORNE);
 	mVelocity.x = 0.0f;
 	mVelocity.y = -0.3f;
 	mVelocity.z = 0.0f;
@@ -51,9 +51,9 @@ void TEnemyAttachment::forceKill()
 
 	kill();
 
-	if (unk160->checkLiveFlag(0x2)) {
+	if (unk160->checkLiveFlag(LIVE_FLAG_UNK2)) {
 		unk160->kill();
-		unk160->onLiveFlag(0x20000);
+		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
 	}
 }
 
@@ -85,7 +85,7 @@ void TEnemyAttachment::bind()
 	if (local_1C.y + mVelocity.y <= mGroundHeight)
 		behaveToHitGround();
 	else
-		onLiveFlag(0x80);
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	JGeometry::TVec3<f32> p = local_1C;
 	p.y += mHeadHeight;
@@ -207,7 +207,7 @@ void TEnemyPolluteModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 2) {
 		f32 f31 = 100.0f;
 		SetViewFrustumClipCheckPerspective(
-		    gpCamera->getFovy(), gpCamera->getAspect(), param_2->getUnkE8(),
+		    gpCamera->getFovy(), gpCamera->getAspect(), param_2->getNearPlane(),
 		    gpConductor->getCondParams().mEnemyFarClip.get());
 
 		for (int i = 0; i < unk14; ++i) {

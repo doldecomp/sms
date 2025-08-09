@@ -45,6 +45,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define VECDotProduct     C_VECDotProduct
 #define VECSquareDistance C_VECSquareDistance
 #define VECCrossProduct   C_VECCrossProduct
+#define VECSubtract       C_VECSubtract
 #define VECScale          C_VECScale
 #define MTXMultVec        C_MTXMultVec
 #define MTXMultVecArray   C_MTXMultVecArray
@@ -67,6 +68,7 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define VECDotProduct     PSVECDotProduct
 #define VECSquareDistance PSVECSquareDistance
 #define VECCrossProduct   PSVECCrossProduct
+#define VECSubtract       PSVECSubtract
 #define VECScale          PSVECScale
 #define MTXMultVec        PSMTXMultVec
 #define MTXMultVecArray   PSMTXMultVecArray

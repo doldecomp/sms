@@ -414,7 +414,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_3c = gesso->mPosition;
 	local_3c += gesso->mLinearVelocity;
 
-	if (gesso->checkLiveFlag2(0x80)) {
+	if (gesso->isAirborne()) {
 		JGeometry::TVec3<f32> local_48 = gesso->mVelocity;
 		local_3c += local_48;
 		local_48.y -= gesso->getGravityY();
@@ -496,9 +496,9 @@ void TBGBinder::bind(TLiveActor* param_1)
 			local_3c.y       = fVar1;
 			gesso->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 
-			gesso->offLiveFlag(0x80);
+			gesso->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		} else {
-			gesso->onLiveFlag(0x80);
+			gesso->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
 
 		gesso->mGroundHeight = fVar1;
@@ -603,9 +603,9 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 
-	offLiveFlag(0x100);
+	offLiveFlag(LIVE_FLAG_UNK100);
 	getMActor()->offMakeDL();
-	onLiveFlag(0x8);
+	onLiveFlag(LIVE_FLAG_UNK8);
 	mScaledBodyRadius = 330.0f;
 	initAnmSound();
 	unk190.color.r = 0;
@@ -844,7 +844,7 @@ void TBossGesso::launchPolDrop()
 		return;
 
 	JGeometry::TVec3<f32> local_14;
-	if (checkLiveFlag(0x4)) {
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		local_14 = getPosition();
 		local_14.x += 1.0f;
 	} else {
@@ -1637,14 +1637,14 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		self->mVelocity
 		    = self->calcVelocityToJumpToY(local_24, 0.0f, self->getGravityY());
-		self->onLiveFlag(0x80);
+		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		return false;
 	}
 
 	if (self->isReachedToGoal()) {
 		self->mLinearVelocity = self->mVelocity
 		    = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-		self->onLiveFlag(0x10);
+		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
 	if (self->isReachedToGoal() && gpMarDirector->unk124 != 3) {

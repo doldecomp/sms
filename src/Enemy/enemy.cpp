@@ -53,11 +53,11 @@ void TSpineEnemy::reset()
 {
 	unk124->mPrevIdx = -1;
 	goToShortestNextGraphNode();
-	offLiveFlag(0x1);
-	offLiveFlag(0x8);
-	offLiveFlag(0x10);
-	offLiveFlag(0x4);
-	onLiveFlag(0x800);
+	offLiveFlag(LIVE_FLAG_DEAD);
+	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+	onLiveFlag(LIVE_FLAG_UNK800);
 	mSpine->reset();
 	mSpine->pushDefault();
 }
@@ -88,8 +88,7 @@ void TSpineEnemy::calcEnemyRootMatrix()
 	if (unk130 == 0) {
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
-		if (unk130 >= 2 && !(checkLiveFlag(0x80) ? TRUE : FALSE)
-		    && unk138 != nullptr) {
+		if (unk130 >= 2 && !isAirborne() && unk138 != nullptr) {
 			JGeometry::TVec3<f32> v2 = unk138->getNormal();
 
 			JGeometry::TVec3<f32> v1;
@@ -170,14 +169,14 @@ TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 {
 	mPosition = position;
-	offLiveFlag(0x8);
-	offLiveFlag(0x1);
+	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
 	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
-	onLiveFlag(0x8000);
-	onLiveFlag(0x80);
+	onLiveFlag(LIVE_FLAG_UNK8000);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	control();
 }
 
@@ -187,16 +186,16 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& param_1,
                             const JGeometry::TVec3<f32>& param_4)
 {
 	mPosition = param_1;
-	offLiveFlag(0x8);
-	offLiveFlag(0x1);
+	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
 	mRotation  = param_2;
 	mScaling   = param_3;
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(0x1);
 	mVelocity = param_4;
-	onLiveFlag(0x8000);
-	onLiveFlag(0x80);
+	onLiveFlag(LIVE_FLAG_UNK8000);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	control();
 }
 
@@ -247,12 +246,11 @@ BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& pos, f32 length,
 
 void TSpineEnemy::setGoalPathFromGraph()
 {
-	JGeometry::TVec3<f32> point = unk124->getCurrent().getPoint();
-
-	unkF4.unk0  = nullptr;
-	unkF4.unk4  = point;
-	unk104.unk0 = nullptr;
-	unk104.unk4 = point;
+	JGeometry::TVec3<f32> local_48;
+	unk124->getCurrent().getPoint(&local_48);
+	TPathNode local_3c(local_48);
+	unkF4  = local_3c;
+	unk104 = local_3c;
 	unk114.clear();
 }
 
@@ -261,18 +259,92 @@ void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
 void TSpineEnemy::goToInitialGraphNodeCheckY(f32) { }
 
 #pragma dont_inline on
-void TSpineEnemy::goToShortestNextGraphNode() { }
+int TSpineEnemy::goToShortestNextGraphNode()
+{
+	TGraphWeb* web = unk124->unk0;
+
+	if (unk124 == nullptr)
+		return -1;
+
+	if (unk124->mCurrIdx < 0)
+		unk124->setTo(web->findNearestNodeIndex(mPosition, -1));
+	else
+		unk124->moveTo(
+		    web->getShortestNextIndex(unk124->mCurrIdx, unk124->mPrevIdx, -1));
+
+	if (unk124->mCurrIdx < 0)
+		return -1;
+
+	setGoalPathFromGraph();
+	unk128 = 0;
+	unk12C = 0.0f;
+	return 0;
+}
 #pragma dont_inline off
 
-int TSpineEnemy::jumpToNextGraphNode() { }
+int TSpineEnemy::jumpToNextGraphNode()
+{
+	if (unk124->mCurrIdx < 0 || !unk124->getCurrent().checkFlag(0x1))
+		return -1;
 
-void TSpineEnemy::goToRandomNextGraphNode() { }
+	int idx = unk124->unk0->getNeighborNodeIndexByFlag(unk124->mCurrIdx,
+	                                                   unk124->mPrevIdx, 2);
+	if (idx >= 0) {
+		unk124->moveTo(idx);
+		setGoalPathFromGraph();
+		unk128 = 0;
+		unk12C = 0.0f;
+		return idx;
+	}
 
-void TSpineEnemy::goToRandomEscapeGraphNode() { }
+	return -1;
+}
+
+void TSpineEnemy::goToRandomNextGraphNode()
+{
+	if (unk124->mCurrIdx < 0)
+		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	else
+		unk124->moveTo(unk124->unk0->getRandomNextIndex(unk124->mCurrIdx,
+		                                                unk124->mPrevIdx, -1));
+
+	setGoalPathFromGraph();
+	unk128 = 0;
+	unk12C = 0.0f;
+}
+
+void TSpineEnemy::goToRandomEscapeGraphNode()
+{
+	if (unk124->mCurrIdx < 0)
+		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	else
+		unk124->moveTo(unk124->unk0->getEscapeFromMarioIndex(
+		    unk124->mCurrIdx, -1, mPosition, -1));
+
+	setGoalPathFromGraph();
+	unk128 = 0;
+	unk12C = 0.0f;
+}
 
 void TSpineEnemy::goToExclusiveNextGraphNode() { }
 
-void TSpineEnemy::goToDirectedNextGraphNode(const JGeometry::TVec3<f32>&) { }
+void TSpineEnemy::goToDirectedNextGraphNode(
+    const JGeometry::TVec3<f32>& param_1)
+{
+	int currIdx = unk124->mCurrIdx;
+	int prevIdx = unk124->mPrevIdx;
+	if (currIdx < 0) {
+		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	} else {
+		int idx = unk124->unk0->getAimToDirNextIndex(currIdx, prevIdx, param_1,
+		                                             mPosition, -1);
+		unk124->moveTo(idx);
+	}
+
+	setGoalPathFromGraph();
+	unk128 = 0;
+	unk12C = 0.0f;
+}
 
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32) { }
 
@@ -322,19 +394,22 @@ BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 
 void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TEnemyManager* mgr = (TEnemyManager*)mManager;
+	TEnemyManager* mgr = (TEnemyManager*)getManager();
 
-	if (mManager != nullptr) {
-		if ((param_1 & 2) && !checkLiveFlag(0x6) && TEnemyManager::mIsCopyAnmMtx
-		    && mgr->unk4C >= 0) {
-			if (checkLiveFlag(0x201))
+	if (mgr != nullptr) {
+		if ((param_1 & 2)
+		    && !checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)
+		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {
+			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
 				return;
 
 			if (mgr->copyAnmMtx(this))
 				return;
 		}
 	} else {
-		if ((param_1 & 2) && !checkLiveFlag(0x6) && checkLiveFlag(0x201)) {
+		if ((param_1 & 2)
+		    && !checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)
+		    && checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200)) {
 			return;
 		}
 	}

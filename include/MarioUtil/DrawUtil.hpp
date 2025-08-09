@@ -76,7 +76,28 @@ int SMS_CountPolygonNumInShape(J3DShape*);
 void SMS_ResetDamageFogEffect(J3DModelData*);
 void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&,
                             JDrama::TGraphics*);
-void SetViewFrustumClipCheckPerspective(f32, f32, f32, f32);
-BOOL ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32);
+
+/**
+ * @brief Sets up the perspective for clip checks to be done via
+ * calls to ViewFrustumClipCheck
+ *
+ * @param fovy vertical field of view
+ * @param aspect aspect ratio
+ * @param clip_near near plane
+ * @param clip_far far plane
+ */
+void SetViewFrustumClipCheckPerspective(f32 fovy, f32 aspect, f32 clip_near,
+                                        f32 clip_far);
+/**
+ * @brief Checks whether a sphere at a \p position with a \p radius could
+ * possibly intersect the current frustum.
+ *
+ * @param gfx specifies camera transform
+ * @param position center of a sphere
+ * @param radius radius of a sphere
+ * @return BOOL false whenever the sphere is definitely outside of the frustum,
+ * true otherwise.
+ */
+BOOL ViewFrustumClipCheck(JDrama::TGraphics* gfx, Vec* position, f32 radius);
 
 #endif

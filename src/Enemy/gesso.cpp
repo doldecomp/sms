@@ -117,33 +117,33 @@ TSmallEnemy* TGessoManager::createEnemyInstance() { return new TGesso; }
 
 void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 {
-	f32 fVar1;
-	f32 fVar2;
+	f32 radius;
+	f32 far;
 	if (unk38 == nullptr) {
-		fVar1 = 300.0f;
-		fVar2 = gpConductor->getCondParams().mEnemyFarClip.get();
+		far    = gpConductor->getCondParams().mEnemyFarClip.get();
+		radius = 300.0f;
 	} else {
-		fVar2 = unk38->mSLFarClip.get();
-		fVar1 = unk38->mSLClipRadius.get();
+		far    = unk38->mSLFarClip.get();
+		radius = unk38->mSLClipRadius.get();
 	}
 
 	SetViewFrustumClipCheckPerspective(
-	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->unkE8, fVar2);
+	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->mNearPlane, far);
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TGesso* gesso = (TGesso*)unk18[i];
 
-		if (ViewFrustumClipCheck(param_1, &gesso->mPosition, fVar1))
-			gesso->offLiveFlag(0x4);
+		if (ViewFrustumClipCheck(param_1, &gesso->mPosition, radius))
+			gesso->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		else
-			gesso->onLiveFlag(0x4);
+			gesso->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 
 		if (!gesso->getPolluteObj()->isUnk150Zero()) {
-			if (ViewFrustumClipCheck(param_1,
-			                         &gesso->getPolluteObj()->mPosition, fVar1))
-				gesso->getPolluteObj()->offLiveFlag(0x4);
+			if (ViewFrustumClipCheck(
+			        param_1, &gesso->getPolluteObj()->mPosition, radius))
+				gesso->getPolluteObj()->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			else
-				gesso->getPolluteObj()->onLiveFlag(0x4);
+				gesso->getPolluteObj()->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		}
 	}
 }
@@ -299,7 +299,7 @@ void TGesso::reset()
 		unk158 = 0.0f;
 	}
 
-	offLiveFlag(0x1000);
+	offLiveFlag(LIVE_FLAG_UNK1000);
 	mNeedsLanding  = false;
 	mIsRightSideUp = true;
 	unk1A4         = mPosition.y;
@@ -560,7 +560,7 @@ void TGesso::setAfterDeadEffect()
 void TGesso::setDeadAnm()
 {
 	if (mGroundPlane->isWaterSurface())
-		onLiveFlag(0x2);
+		onLiveFlag(LIVE_FLAG_UNK2);
 	else if (mGroundPlane->checkFlag2(0x10) || mGessoType != TYPE_SURF)
 		setBckAnm(3);
 	else
@@ -763,7 +763,7 @@ void TGesso::rollCheck()
 			mState = STATE_ROLLING;
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());
 			if (mIsRightSideUp)
-				onLiveFlag(0x8);
+				onLiveFlag(LIVE_FLAG_UNK8);
 			mAttackCooldown = 0;
 		}
 	}
@@ -785,7 +785,7 @@ void TGesso::rollEnd()
 	mState         = STATE_BEAM_CHILLING;
 	mIsRightSideUp = !mIsRightSideUp;
 	if (mIsRightSideUp)
-		offLiveFlag(0x8);
+		offLiveFlag(LIVE_FLAG_UNK8);
 }
 
 void TGesso::modifyRotate() { }
@@ -794,7 +794,7 @@ void TGesso::fallEnd()
 {
 	mState = STATE_WANDERING;
 	unk158 = 1.0f;
-	offLiveFlag(0x8);
+	offLiveFlag(LIVE_FLAG_UNK8);
 	mRotation.set(0.0f, 0.0f, 0.0f);
 	mIsRightSideUp = true;
 }
@@ -872,7 +872,7 @@ void TSurfGesso::load(JSUMemoryInputStream& stream)
 void TSurfGesso::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2)
-		offLiveFlag(0x4);
+		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	TGesso::perform(param_1, param_2);
 }
 
@@ -966,7 +966,7 @@ void TGessoPolluteObj::set()
 {
 	TEnemyAttachment::set();
 
-	if (unk160->checkLiveFlag(0x4)) {
+	if (unk160->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		mPosition.x = unk160->mPosition.x;
 		mPosition.y = unk160->mPosition.y + 200.0f;
 		mPosition.z = unk160->mPosition.z;
@@ -1068,7 +1068,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		}
 	}
 
-	if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+	if (!self->isAirborne()) {
 		if (self->unk1DC.y < 1.5f) {
 			if (self->isBckAnm(9)) {
 				gpMarioParticleManager->emitAndBindToPosPtr(
@@ -1160,7 +1160,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 
 			self->mState = TGesso::STATE_FALLING;
 		}
-		self->onLiveFlag(0x8);
+		self->onLiveFlag(LIVE_FLAG_UNK8);
 	} else if (self->isWandering()) {
 		if (self->checkCurAnmEnd(0)) {
 			if (self->isBckAnm(6)) {
@@ -1176,7 +1176,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 				self->setVelocity(local_8C);
 				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 				self->setBckAnm(4);
-			} else if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+			} else if (!self->isAirborne()) {
 				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
 					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
@@ -1199,7 +1199,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			}
 		} else if (self->isBckAnm(4)) {
 			self->unk1D0 *= 0.8f;
-			if (!self->checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+			if (!self->isAirborne()) {
 				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
 					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
@@ -1210,7 +1210,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 					self->setBckAnm(7);
 			}
 		} else if (self->isBckAnm(7)) {
-			self->offLiveFlag(0x8);
+			self->offLiveFlag(LIVE_FLAG_UNK8);
 			self->mStayYaw *= 0.8f;
 
 			self->mRotation.x *= 0.8f;

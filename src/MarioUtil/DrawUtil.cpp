@@ -1,4 +1,5 @@
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Camera/SunMgr.hpp>
 #include <Map/JointModel.hpp>
@@ -185,11 +186,190 @@ void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<f32>&,
 
 void SMS_ResetDamageFogEffect(J3DModelData*) { }
 
-static void SetViewFrustumClipCheck(f32, f32, f32, f32, f32, f32) { }
+// fabricated
+struct Plane {
+	f32 nx;
+	f32 ny;
+	f32 nz;
+	f32 offset; // from origin
 
-void SetViewFrustumClipCheckPerspective(f32, f32, f32, f32) { }
+	// fabricated
+	f32 sdf(Vec* local)
+	{
+		return local->x * nx + local->y * ny + local->z * nz + offset;
+	}
 
-BOOL ViewFrustumClipCheck(JDrama::TGraphics*, Vec*, f32) { }
+	// fabricated
+	void set(Vec* normal, Vec* point)
+	{
+		nx = normal->x;
+		ny = normal->y;
+		nz = normal->z;
+		// project any point on a plane onto it's normal and you get the
+		// distance from the origin
+		offset = -(normal->x * point->x + normal->y * point->y
+		           + normal->z * point->z);
+	}
+
+	// fabricated
+	void set(Vec* p1, Vec* p2, Vec* p3)
+	{
+		Vec v1;
+		Vec v2;
+		Vec normal;
+
+		VECSubtract(p1, p3, &v1);
+		VECSubtract(p2, p3, &v2);
+		VECCrossProduct(&v1, &v2, &normal);
+		MsVECNormalize(&normal, &normal);
+
+		nx = normal.x;
+		ny = normal.y;
+		nz = normal.z;
+		// project any point on a plane onto it's normal and you get the
+		// distance from the origin
+		offset = -(normal.x * p3->x + normal.y * p3->y + normal.z * p3->z);
+	}
+};
+
+Plane sViewPlane[6];
+
+static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
+                                    f32 near, f32 far)
+{
+	f32 farTop    = top * (far / near);
+	f32 farBottom = bottom * (far / near);
+	f32 farLeft   = left * (far / near);
+	f32 farRight  = right * (far / near);
+
+	Vec local_98;
+	Vec local_8c;
+	Vec local_80;
+	Vec local_74;
+	Vec local_68;
+	Vec local_5c;
+	Vec local_50;
+	Vec local_44;
+
+	local_44.x = left;
+	local_44.y = top;
+	local_44.z = -near;
+
+	local_50.x = farLeft;
+	local_50.y = farTop;
+	local_50.z = -far;
+
+	local_5c.x = right;
+	local_5c.y = top;
+	local_5c.z = -near;
+
+	local_68.x = farRight;
+	local_68.y = farTop;
+	local_68.z = -far;
+
+	local_74.x = left;
+	local_74.y = bottom;
+	local_74.z = -near;
+
+	local_80.x = farLeft;
+	local_80.y = farBottom;
+	local_80.z = -far;
+
+	local_8c.x = right;
+	local_8c.y = bottom;
+	local_8c.z = -near;
+
+	local_98.x = farRight;
+	local_98.y = farBottom;
+	local_98.z = -far;
+
+	Vec v1;
+	Vec v2;
+	Vec normal;
+
+	VECSubtract(&local_50, &local_44, &v1);
+	VECSubtract(&local_5c, &local_44, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[0].set(&normal, &local_44);
+
+	VECSubtract(&local_8c, &local_74, &v1);
+	VECSubtract(&local_80, &local_74, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[1].set(&normal, &local_74);
+
+	VECSubtract(&local_74, &local_44, &v1);
+	VECSubtract(&local_50, &local_44, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[2].set(&normal, &local_44);
+
+	VECSubtract(&local_68, &local_5c, &v1);
+	VECSubtract(&local_8c, &local_5c, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[3].set(&normal, &local_5c);
+
+	VECSubtract(&local_5c, &local_44, &v1);
+	VECSubtract(&local_74, &local_44, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[4].set(&normal, &local_44);
+
+	VECSubtract(&local_68, &local_98, &v1);
+	VECSubtract(&local_80, &local_98, &v2);
+	VECCrossProduct(&v1, &v2, &normal);
+	MsVECNormalize(&normal, &normal);
+	sViewPlane[5].set(&normal, &local_98);
+}
+
+static f32 sKeepViewClipFovy;
+static f32 sKeepViewClipAspect;
+static f32 sKeepViewClipNear;
+static f32 sKeepViewClipFar;
+
+void SetViewFrustumClipCheckPerspective(f32 fovy, f32 aspect, f32 clip_near,
+                                        f32 clip_far)
+{
+	if (fovy != sKeepViewClipFovy || aspect != sKeepViewClipAspect
+	    || clip_near != sKeepViewClipNear || clip_far != sKeepViewClipFar) {
+		sKeepViewClipFovy   = fovy;
+		sKeepViewClipAspect = aspect;
+		sKeepViewClipNear   = clip_near;
+		sKeepViewClipFar    = clip_far;
+
+		//       E
+		//      /|\
+		//     / | \
+		//    /  |  \
+		//   /   |   \
+		//  /____|____\
+		// L     C     R
+		//
+		// Vertical slice of camera frustsum, E is the eye, LR is the near
+		// plane. LER then is the fovy. LEC is half of it. Tan of LEC is
+		// by definition LC/EC, but EC is the near plane dist, so we get
+		// what we want -- LC, half the vertical span of the near plane.
+		f32 tan          = tanf(fovy * (3.141593f / 180.0f / 2.0f));
+		f32 vertHalfSize = clip_near * tan;
+		f32 horHalfSize  = vertHalfSize * aspect;
+		SetViewFrustumClipCheck(vertHalfSize, -vertHalfSize, -horHalfSize,
+		                        horHalfSize, clip_near, clip_far);
+	}
+}
+
+BOOL ViewFrustumClipCheck(JDrama::TGraphics* gfx, Vec* position, f32 radius)
+{
+	Vec local_18;
+	MTXMultVec(gfx->unkB4, position, &local_18);
+
+	for (int i = 0; i < 6; ++i)
+		if (-radius > sViewPlane[i].sdf(&local_18))
+			return false;
+
+	return true;
+}
 
 void ViewFrustumRectClipCheck(JDrama::TGraphics*, Vec*, f32, f32) { }
 

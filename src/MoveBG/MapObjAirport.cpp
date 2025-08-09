@@ -63,7 +63,7 @@ inline TPollutionManager* getPollution() { return gpPollution; }
 
 bool TAirportEventSink::watch()
 {
-	if (!unk54[0] && unk6C->checkLiveFlag(0x1)) {
+	if (!unk54[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		unk28                  = 0;
 		TMarDirector* director = getMarDirector();
 

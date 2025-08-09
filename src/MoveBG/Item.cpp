@@ -144,7 +144,7 @@ void TItem::appear()
 
 void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (checkLiveFlag(0x1))
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	if ((param_1 & 1) && checkHitFlag(1) && !isUnk104Positive()) {
@@ -245,10 +245,10 @@ void TCoin::makeObjAppeared()
 
 void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (checkLiveFlag(1))
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((param_1 & 1) && checkLiveFlag(0x10)) {
+	if ((param_1 & 1) && checkLiveFlag(LIVE_FLAG_UNK10)) {
 		// TODO: this is some kind of a tricky inline, used in a few places
 		bool bVar2 = true;
 		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)

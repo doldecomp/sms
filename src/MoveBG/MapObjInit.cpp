@@ -11152,7 +11152,7 @@ void TMapObjBase::initActorData()
 	mPosition.y += mYOffset;
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
 	if (checkMapObjFlag(0x1))
-		offLiveFlag(0x100);
+		offLiveFlag(LIVE_FLAG_UNK100);
 	if (checkMapObjFlag(0x100000))
 		unkE8 = 2;
 }

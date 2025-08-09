@@ -84,7 +84,7 @@ BOOL TLiveActor::belongToGround() const
 	if (mGroundPlane
 	    && (mGroundPlane->checkFlag2(PLANE_TYPE_KILL) == true ? false : true)
 	    && mGroundPlane->unk44 != nullptr
-	    && !checkLiveFlag2(LIVE_FLAG_AIRBORNE))
+	    && !isAirborne())
 		return true;
 
 	return false;
@@ -160,7 +160,7 @@ void TLiveActor::init(TLiveManager* manager)
 	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 
 	onHitFlag(0x1);
-	offLiveFlag(0x400);
+	offLiveFlag(LIVE_FLAG_UNK400);
 
 	if (!mAnmSound)
 		initAnmSound();
@@ -181,7 +181,7 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 
 void TLiveActor::bind()
 {
-	if (checkLiveFlag(0x10))
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
 	if (mBinder != nullptr) {
@@ -200,7 +200,7 @@ void TLiveActor::bind()
 
 	// Handle vertical collisions
 	{
-		if (checkLiveFlag(0x1000)) {
+		if (checkLiveFlag(LIVE_FLAG_UNK1000)) {
 			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 			    nextPos.x, nextPos.y + mHeadHeight, nextPos.z, &mGroundPlane);
 		} else {

@@ -7,6 +7,7 @@
 
 class TGraphTracer;
 class TSpineEnemyParams;
+class TEnemyManager;
 extern size_t gpMarioAddress;
 
 class TSpineEnemy : public TLiveActor {
@@ -38,7 +39,7 @@ public:
 	void setGoalPathFromGraph();
 	void goToInitialVisibleNode(f32, f32);
 	void goToInitialGraphNodeCheckY(f32);
-	void goToShortestNextGraphNode();
+	int goToShortestNextGraphNode();
 	int jumpToNextGraphNode();
 	void goToRandomNextGraphNode();
 	void goToRandomEscapeGraphNode();

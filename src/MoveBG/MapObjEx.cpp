@@ -95,7 +95,7 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 	unk140[unk13C]->makeObjAppeared();
 	unk140[unk13C]->onMapObjFlag(0x100);
 	unk140[unk13C]->offMapObjFlag(0x40000);
-	unk140[unk13C]->offLiveFlag(0x100);
+	unk140[unk13C]->offLiveFlag(LIVE_FLAG_UNK100);
 	unk140[unk13C]->offHitFlag(0x1);
 	unk144[unk13C] = i;
 	++unk13C;

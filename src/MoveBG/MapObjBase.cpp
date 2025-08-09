@@ -51,14 +51,14 @@ u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 
 void TMapObjBase::awake()
 {
-	offLiveFlag(0x4000);
+	offLiveFlag(LIVE_FLAG_UNK4000);
 	unk64 &= ~1;
 	setUpCurrentMapCollision();
 }
 
 void TMapObjBase::sleep()
 {
-	onLiveFlag(0x4000);
+	onLiveFlag(LIVE_FLAG_UNK4000);
 	unk64 |= 1;
 	removeMapCollision();
 }
@@ -234,7 +234,7 @@ void TMapObjBase::makeObjDefault()
 	mScaling  = mInitialScaling;
 
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	onLiveFlag(0x10);
+	onLiveFlag(LIVE_FLAG_UNK10);
 	if (mMActor) {
 		calcRootMatrix();
 		getModel()->calc();

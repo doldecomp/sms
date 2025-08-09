@@ -162,7 +162,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	f32 fVar3  = (fVar4 + fVar5) * 0.5f;
 	f32 fVar10 = (fVar6 + fVar7) * 0.5f;
 
-	u16 uVar14 = -param_2->getUnkE8();
+	u16 uVar14 = -param_2->getNearPlane();
 
 	GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 8);
 

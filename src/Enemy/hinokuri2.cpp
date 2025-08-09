@@ -217,7 +217,7 @@ void THino2Hit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!(param_1 & 1))
 		return;
 
-	if (mOwner->checkLiveFlag(0x4)) {
+	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		mPosition = mOwner->mPosition;
 		return;
 	}
@@ -566,7 +566,7 @@ void THinokuri2::init(TLiveManager* param_1)
 void THinokuri2::reset()
 {
 	TSpineEnemy::reset();
-	onLiveFlag(0x8);
+	onLiveFlag(LIVE_FLAG_UNK8);
 	resetPolInterval();
 	mHitPoints = calcHitPoints();
 	validateCollisionAll();
@@ -688,7 +688,7 @@ void THinokuri2::setLevel(int level)
 void THinokuri2::generateEnemy()
 {
 	JGeometry::TVec3<f32> local_50;
-	if (checkLiveFlag(0x4)) {
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		local_50 = mPosition;
 		local_50.y += 100.0f;
 	} else {
@@ -905,7 +905,7 @@ template <class T> static inline T symmetric_clamp(T v, T r)
 
 void THinokuri2::moveObject()
 {
-	if (checkLiveFlag(0x1))
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	if (unk164 > 0)
@@ -1015,7 +1015,7 @@ void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 0x2) {
 		calcRootMatrix();
 		getMActor()->frameUpdate();
-		if (!checkLiveFlag(0x4 | 0x1)) {
+		if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 			getMActor()->updateIn();
 			getModel()->calc();
 			getMActor()->updateOut();
@@ -1024,7 +1024,7 @@ void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		TSpineEnemy::perform(param_1, param_2);
 	}
 
-	if (!checkLiveFlag(0x4 | 0x1)) {
+	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mLevel == 2 || unk1A4->unk4 == 2) {
 			if (param_1 & 2) {
 				unk1A4->setMatrix(getModel()->getAnmMtx(0x17));
@@ -1084,7 +1084,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		self->unk15C = 0;
 
 		JGeometry::TVec3<f32> local_60;
-		if (self->checkLiveFlag(0x4)) {
+		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 			local_60 = self->mPosition;
 			local_60.y += 500.0f;
 		} else {
@@ -1102,8 +1102,8 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 	}
 
 	int frame = self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
-	if (self->getLevel() != 0 && !self->checkLiveFlag(0x4)
-	    && !self->checkLiveFlag2(0x80) && (frame == 0x24 || frame == 0x55)) {
+	if (self->getLevel() != 0 && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
+	    && !self->isAirborne() && (frame == 0x24 || frame == 0x55)) {
 		f32 ws = self->getSaveParam()->mSLWalkShake.get();
 		if (!(ws * ws < self->mDistToMarioSquared))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 0.8f);
@@ -1129,7 +1129,7 @@ DEFINE_NERVE(TNerveHino2Fly, TLiveActor)
 		self->changeBck(0x8);
 
 	if (self->isReachedToGoal()
-	    || (spine->getTime() > 0 && !self->checkLiveFlag2(0x80))) {
+	    || (spine->getTime() > 0 && !self->isAirborne())) {
 		spine->pushRaw(&TNerveHino2Landing::theNerve());
 		return true;
 	}
@@ -1149,7 +1149,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		f32 f                          = self->unk124->unkC;
 		f32 grav                       = self->getGravityY();
 		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
-		self->onLiveFlag(0x80);
+		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		spine->pushRaw(&TNerveHino2Fly::theNerve());
 		return true;
 	}
@@ -1170,7 +1170,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 
 	// TODO: asserts or something? Hard to match
 	self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
-	self->checkLiveFlag(0x2);
+	self->checkLiveFlag(LIVE_FLAG_UNK2);
 
 	if (self->getMActor()->curAnmEndsNext())
 		return true;
@@ -1275,7 +1275,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 			self->unk15C = 0;
 
 			JGeometry::TVec3<f32> local_40;
-			if (self->checkLiveFlag(0x4)) {
+			if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 				local_40 = self->mPosition;
 				local_40.y += 500.0f;
 			} else {
@@ -1452,7 +1452,7 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 	}
 
 	int frame = self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
-	if (!self->checkLiveFlag2(0x80) && (frame == 0x1C || frame == 0x3E)) {
+	if (!self->isAirborne() && (frame == 0x1C || frame == 0x3E)) {
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
 		if (!(js * js < self->getDistToMarioSquared()))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);

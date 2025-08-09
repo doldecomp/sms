@@ -50,7 +50,7 @@ void TWalker::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_30 = enemy->mPosition;
 	local_30 += enemy->mLinearVelocity;
 	unk1C = 0;
-	if (enemy->checkLiveFlag(0x80)) {
+	if (enemy->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
 		JGeometry::TVec3<f32> local_3c = enemy->mVelocity;
 		local_30 += local_3c;
 		local_3c.y -= enemy->getGravityY();
@@ -65,7 +65,7 @@ void TWalker::bind(TLiveActor* param_1)
 
 	f32 fVar1;
 	const TBGCheckData* local_40;
-	if (enemy->checkLiveFlag(0x1000)) {
+	if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
 		fVar1 = gpMap->checkGroundIgnoreWaterSurface(
 		    local_30.x, local_30.y + enemy->getHeadHeight(), local_30.z,
 		    &local_40);
@@ -81,7 +81,7 @@ void TWalker::bind(TLiveActor* param_1)
 		if (!local_40->checkSomething7()) {
 			f32 dVar16;
 			const TBGCheckData* local_44;
-			if (enemy->checkLiveFlag(0x1000)) {
+			if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
 				dVar16 = gpMap->checkGroundIgnoreWaterSurface(
 				    local_30.x, local_30.y + enemy->getHeadHeight(), local_30.z,
 				    &local_44);
@@ -112,13 +112,13 @@ void TWalker::bind(TLiveActor* param_1)
 	}
 
 	if (fVar1 * 0.05f < local_30.y || local_40->checkFlag2(0x10)) {
-		enemy->onLiveFlag(0x80);
+		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	} else {
 		if (local_40->checkSomething7()) { }
 
 		enemy->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-		enemy->offLiveFlag(0x80);
-		enemy->offLiveFlag(0x8000);
+		enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
+		enemy->offLiveFlag(LIVE_FLAG_UNK8000);
 		local_30.y = fVar1;
 	}
 
@@ -142,7 +142,7 @@ void TWalker::bind(TLiveActor* param_1)
 			unk24 += 1;
 		} else {
 			enemy->unk138 = pTVar14;
-			if (enemy->checkLiveFlag(0x80)
+			if (enemy->checkLiveFlag(LIVE_FLAG_AIRBORNE)
 			    && pTVar14->mMaxY - local_30.y <= unk18
 			    && pTVar14->checkSomething2()) {
 				unk1C = 1;

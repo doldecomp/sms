@@ -76,7 +76,7 @@ void TMapObjGeneral::waitToAppear(s32 param_1)
 void TMapObjGeneral::sink()
 {
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	onLiveFlag(0x10);
+	onLiveFlag(LIVE_FLAG_UNK10);
 	mState = 7;
 	unk144 = mPosition.y;
 	setUpMapCollision(1);
@@ -182,7 +182,7 @@ void TMapObjGeneral::appearing()
 	}
 
 uuuh:
-	if (!checkLiveFlag(0x10))
+	if (!checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
 	makeObjAppeared();
@@ -270,7 +270,7 @@ void TMapObjGeneral::ensureTakeSituation()
 	TMapObjBase::ensureTakeSituation();
 	if (isState(6) && mHolder == nullptr) {
 		mState = 1;
-		offLiveFlag(0x10);
+		offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
 
@@ -278,7 +278,7 @@ void TMapObjGeneral::kill()
 {
 	unk64 |= 1;
 	removeMapCollision();
-	onLiveFlag(0x18);
+	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 	unk104 = 0xffffffff;
 	startAnim(2);
 	mState = 3;
@@ -405,9 +405,9 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 			startSound(4);
 		}
 	} else {
-		offLiveFlag(0x80);
+		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-		onLiveFlag(0x10);
+		onLiveFlag(LIVE_FLAG_UNK10);
 		param_1->y = mGroundHeight;
 	}
 }
@@ -420,7 +420,7 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 	if (param_1->y <= mGroundHeight) {
 		touchGround(param_1);
 	} else if (!mGroundActor)
-		onLiveFlag(0x80);
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
 void TMapObjGeneral::calcVelocity() { }
@@ -430,7 +430,7 @@ void TMapObjGeneral::bind() { }
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	if (checkMapObjFlag(0x1000000) && isState(1) && !checkLiveFlag2(0x80)
+	if (checkMapObjFlag(0x1000000) && isState(1) && !isAirborne()
 	    && isPollutedGround(mPosition))
 		sink();
 

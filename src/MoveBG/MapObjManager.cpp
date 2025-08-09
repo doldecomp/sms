@@ -209,7 +209,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_4) && !obj->checkMapObjFlag(0x80000)
-		    && obj->checkLiveFlag(0x1)
+		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
 		else
@@ -231,7 +231,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
-		    && obj->checkLiveFlag(0x1)
+		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
 		else
@@ -252,7 +252,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
 		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
-		    && obj->checkLiveFlag(0x1)
+		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
 		else

@@ -31,7 +31,7 @@ struct TGraphics {
 	bool checkFlag10() { return (unkFC.mValue & 0x10) != 0; }
 
 	MtxPtr getUnkB4() { return unkB4.mMtx; }
-	f32 getUnkE8() { return unkE8; }
+	f32 getNearPlane() { return mNearPlane; }
 
 	/* 0x00 */ u16 unk0;
 	/* 0x02 */ u16 unk2;
@@ -44,8 +44,8 @@ struct TGraphics {
 	/* 0x74 */ TMtx44f unk74;
 	/* 0xB4 */ TSMtx34f unkB4;
 	/* 0xE4 */ u32 unkE4;
-	/* 0xE8 */ float unkE8;
-	/* 0xEC */ float unkEC;
+	/* 0xE8 */ float mNearPlane;
+	/* 0xEC */ float mFarPlane;
 	/* 0xF0 */ GXFBClamp unkF0;
 	/* 0xF4 */ JUtility::TColor unkF4;
 	/* 0xF8 */ u32 unkF8;

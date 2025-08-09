@@ -72,7 +72,7 @@ void TWalkerEnemy::moveObject()
 		mVelocity.x = local.x;
 		mVelocity.z = local.z;
 		mSpine->pushNerve(&TNerveSmallEnemyJump::theNerve());
-		onLiveFlag(0x80);
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mRotation.y += 5.0f;
 	}
 }
@@ -306,7 +306,7 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	}
 
 	if (spine->getTime() == 10)
-		self->offLiveFlag(0x2);
+		self->offLiveFlag(LIVE_FLAG_UNK2);
 
 	if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
 	    || SMS_GetMarioGroundPlane()->isWaterSurface()

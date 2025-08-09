@@ -242,7 +242,7 @@ void TEffectModel::init(TLiveManager* param_1)
 {
 	TSpineEnemy::init(param_1);
 
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	onHitFlag(0x1);
 	mActorType = 0x10000020;
@@ -253,18 +253,18 @@ void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
 	mRotation.y = MsRandF(0.0f, 360.0f);
-	onLiveFlag(0x8);
-	onLiveFlag(0x10);
-	offLiveFlag(0x1);
-	offLiveFlag(0x4);
+	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_DEAD);
+	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	onHitFlag(0x1);
 }
 
 void TEffectModel::moveObject()
 {
-	if (!checkLiveFlag(0x1) && mMActor->curAnmEndsNext()) {
-		onLiveFlag(0x1);
-		onLiveFlag(0x4);
+	if (!checkLiveFlag(LIVE_FLAG_DEAD) && mMActor->curAnmEndsNext()) {
+		onLiveFlag(LIVE_FLAG_DEAD);
+		onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	}
 }
 
@@ -317,7 +317,7 @@ TEffectColumWater::TEffectColumWater(const char* name)
 void TEffectColumWater::init(TLiveManager* param_1)
 {
 	TEffectModel::init(param_1);
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = 0x10000020;
 	mMActor->setBck("06_enem_tobikomi");
@@ -402,7 +402,7 @@ TEffectBombColumWater::TEffectBombColumWater(const char* name)
 void TEffectBombColumWater::init(TLiveManager* param_1)
 {
 	TEffectModel::init(param_1);
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = 0x10000020;
 	mMActor->setBck("04_tobikomi");
@@ -492,7 +492,7 @@ TEffectColumSand::TEffectColumSand(const char* name)
 void TEffectColumSand::init(TLiveManager* param_1)
 {
 	TEffectModel::init(param_1);
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = 0x10000020;
 	mMActor->setBck("08_sunabashira");
@@ -568,7 +568,7 @@ TEffectExplosion::TEffectExplosion(const char* name)
 void TEffectExplosion::init(TLiveManager* param_1)
 {
 	TEffectModel::init(param_1);
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = 0x10000020;
 	mMActor->setBck("10_bomb");
