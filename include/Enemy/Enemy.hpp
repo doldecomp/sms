@@ -95,6 +95,7 @@ public:
 			mHitPoints -= 1;
 	}
 
+    const TPathNode& getUnkF4() const { return unkF4; }
 	const TPathNode& getUnk104() const { return unk104; }
 
 public:
