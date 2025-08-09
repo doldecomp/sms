@@ -8,9 +8,9 @@
 
 class TRiccoHook;
 
-class TRiccoHookParams : public TSpineEnemyParams {
+class THookParams : public TSpineEnemyParams {
 public:
-	TRiccoHookParams(const char* path);
+	THookParams(const char* path);
 
 	/* 0xA8 */ TParamRT<f32> mSLHitHeight;
 	/* 0xBC */ TParamRT<f32> mSLHitRadius;
@@ -41,30 +41,19 @@ public:
     virtual BOOL receiveMessage(THitActor*, u32);
     virtual void perform(u32, JDrama::TGraphics*);
 
-    TRiccoHookParams* getSaveLoadParam() const
+    THookParams* getSaveLoadParam() const
 	{
-		return (TRiccoHookParams*)getSaveParam();
+		return (THookParams*)getSaveParam();
 	}
 
 public:
-    THookTake* mHookTake;
+    TTakeActor* mHookTake;
     int mTimer;
 };
 
 class THookTake : public TTakeActor {
 public:
-    THookTake(TRiccoHook* owner, const char* name = "フックつかみ")
-        : TTakeActor(name)
-        , mOwner(owner)
-    {
-        initHitActor(0x400000BB, 1, -0x80000000,
-            mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-            mOwner->getSaveLoadParam()->mSLHitHeight.get(),
-            mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-            mOwner->getSaveLoadParam()->mSLHitHeight.get());
-
-        JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")->getChildren().push_back(this);
-    }
+    THookTake(TRiccoHook* owner, const char* name = "フックつかみ");
 
     virtual ~THookTake() { }
 
@@ -72,6 +61,12 @@ public:
     virtual BOOL receiveMessage(THitActor*, u32);
     virtual MtxPtr getTakingMtx();
     virtual f32 getRadiusAtY(f32 y) const;
+
+    void moveHeldObject() {
+        JGeometry::TVec3<f32> pos = mHeldObject->getPosition();
+        pos.add(mOwner->mLinearVelocity);
+        mHeldObject->moveRequest(pos);
+    }
 
 public:
     TRiccoHook* mOwner;

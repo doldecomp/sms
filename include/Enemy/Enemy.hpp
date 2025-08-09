@@ -9,6 +9,16 @@ class TGraphTracer;
 class TSpineEnemyParams;
 extern size_t gpMarioAddress;
 
+// TODO: this definitely has a better place to live
+// I took it from walkerEnemy.cpp
+static inline f32 vecdist(const JGeometry::TVec3<f32>& a,
+                       const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> tmp = a;
+	tmp.sub(b);
+	return tmp.length();
+}
+
 class TSpineEnemy : public TLiveActor {
 public:
 	TSpineEnemy(const char*);

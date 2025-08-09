@@ -2,6 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
 #include <JSystem/JMath.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 MtxPtr THookTake::getTakingMtx() {
     return nullptr;
@@ -27,7 +28,6 @@ BOOL THookTake::receiveMessage(THitActor* param_1, u32 param_2) {
     return FALSE;
 }
 
-// @non-matching - minor stack issue
 void THookTake::perform(u32 param_1, JDrama::TGraphics* param_2) {
     if ((param_1 & 1) != 0) {
         mPosition = mOwner->getPosition();
@@ -37,10 +37,22 @@ void THookTake::perform(u32 param_1, JDrama::TGraphics* param_2) {
     THitActor::perform(param_1, param_2);
     
     if ((param_1 & 1) != 0 && mHeldObject != nullptr) {
-        JGeometry::TVec3<f32> pos = mHeldObject->getPosition();
-        pos += mOwner->mLinearVelocity;
-        mHeldObject->moveRequest(pos);
+        moveHeldObject();
     }
+}
+
+// @non-matching -- the issue seems to stem from the JDrama TNameRefGen search/push_back calls.
+THookTake::THookTake(TRiccoHook* owner, const char* name)
+    : TTakeActor(name)
+    , mOwner(owner)
+{
+    initHitActor(0x400000BB, 1, -0x80000000,
+        mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+        mOwner->getSaveLoadParam()->mSLHitHeight.get(),
+        mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+        mOwner->getSaveLoadParam()->mSLHitHeight.get());
+
+    JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")->getChildren().push_back(this);
 }
 
 TRiccoHook::TRiccoHook(const char* name)
@@ -50,17 +62,17 @@ TRiccoHook::TRiccoHook(const char* name)
 {
 }
 
-// @non-matching - stack issues
+// @non-matching - stack issues, maybe caused by THookTake ctor?
 void TRiccoHook::init(TLiveManager* manager) {    
     TSpineEnemy::init(manager);
     mSpine->initWith(&TNerveRHGraphWander::theNerve());
-    unk64 |= 1;
+    onHitFlag(0x01);
     mHookTake = new THookTake(this, "フックつかみ");
     unk124->reset();
     goToShortestNextGraphNode();
     mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();
     mTurnSpeed = 10.0f;
-    mLiveFlag |= 0x10;
+    onLiveFlag(0x10);
 }
 
 void TRiccoHook::kill() {
@@ -78,7 +90,7 @@ void TRiccoHook::perform(u32 param_1, JDrama::TGraphics* param_2) {
     }
 }
 
-TRiccoHookParams::TRiccoHookParams(const char* path)
+THookParams::THookParams(const char* path)
     : TSpineEnemyParams(path)
     , PARAM_INIT(mSLHitHeight, 900.0f)
     , PARAM_INIT(mSLHitRadius, 120.0f)
@@ -93,22 +105,13 @@ TRiccoHookManager::TRiccoHookManager(const char* name)
 {
 }
 
-const u8 arr1[12] = { 0 };
-const char* msg1 = "メモリが足りません\n"; // 'Not enough memory\n'
-const char* msg2 = "MActorMtxCalcType_Basic クラシックスケールＯＮ"; // 'Actor Matrix Calculation Type: Basic (Classic Scale ON)'
-const char* msg3 = "MActorMtxCalcType_Softimage クラシックスケールＯＦＦ"; // 'Actor Matrix Calculation Type: Softimage (Classic Scale OFF)'
-const char* msg4 = "MActorMtxCalcType_MotionBlend モーションブレンド"; // 'Actor Matrix Calculation Type: Motion Blend'
-const char* msg5 = "MActorMtxCalcType_User ユーザー定義"; // 'Actor Matrix Calculation Type: User-Defined'
-
 void TRiccoHookManager::createModelData() {
-    static const TModelDataLoadEntry entry = { "riccohook.bmd", 0x10000000, 0 };
-    createModelDataArray(&entry);
+    static const TModelDataLoadEntry entry[2] = { { "riccohook.bmd", 0x10000000, 0 }, { 0 } };
+    createModelDataArray(entry);
 }
 
-const u8 arr2[12] = { 0 };
-
 void TRiccoHookManager::load(JSUMemoryInputStream& stream) {
-    unk38 = new TRiccoHookParams("/enemy/riccohook.prm");
+    unk38 = new THookParams("/enemy/riccohook.prm");
     TEnemyManager::load(stream);
 }
 
@@ -125,15 +128,17 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
-// @non-matching - stack issues
 DEFINE_NERVE(TNerveRHGraphWander, TLiveActor) {
     TRiccoHook* self = (TRiccoHook*)spine->getBody();
 
     if (spine->getTime() == 0) {
-        self->goToDirectedNextGraphNode(polarXZ(self->getRotation().y, 1.0f));
+        f32 y = self->getRotation().y;
+        JGeometry::TVec3<f32>& polar = polarXZ(y, 1.0f);
+
+        self->goToDirectedNextGraphNode(polar);
     }
 
-    if ((self->unk104.getPoint() - self->getPosition()).length() < 10.0f) {
+    if (vecdist(self->unk104.getPoint(), self->getPosition()) < 10.0f) {
         TGraphNode& node = self->unk124->getCurrent();
 
         if (node.checkFlag(0x800)) {
@@ -154,7 +159,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor) {
         JGeometry::TVec3<f32> dPos = self->getUnkF4().getPoint();
         dPos.sub(self->getPosition());
         PSVECNormalize(&dPos, &dPos);
-        dPos.scale(self->mMarchSpeed);
+        dPos.scale(self->getMarchSpeed());
         self->mPosition.add(dPos);
         return false;
     }
