@@ -134,7 +134,7 @@ void TSmallEnemyManager::createEnemies(int param_1)
 TSmallEnemy* TSmallEnemyManager::getHolder(int param_1)
 {
 	for (int i = 0; i < getActiveObjNum(); ++i)
-		if (i != param_1 && getObj(i)->checkLiveFlag(0x4))
+		if (i != param_1 && getObj(i)->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 			return (TSmallEnemy*)getObj(i);
 	return nullptr;
 }
@@ -172,9 +172,9 @@ void TSmallEnemy::init(TLiveManager* param_1)
 
 	setMActorAndKeeper();
 
-	onLiveFlag(0x1);
+	onLiveFlag(LIVE_FLAG_DEAD);
 	if (gpMarDirector->mMap == 2 && gpMarDirector->unk7D == 0)
-		onLiveFlag(0x2000);
+		onLiveFlag(LIVE_FLAG_UNK2000);
 	onHitFlag(0x1);
 	unk158 = 1.0f;
 
@@ -268,15 +268,15 @@ void TSmallEnemy::reset()
 
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 
-	offLiveFlag(0x1);
-	offLiveFlag(0x20000);
-	offLiveFlag(0x10000);
-	offLiveFlag(0x2);
+	offLiveFlag(LIVE_FLAG_DEAD);
+	offLiveFlag(LIVE_FLAG_UNK20000);
+	offLiveFlag(LIVE_FLAG_UNK10000);
+	offLiveFlag(LIVE_FLAG_UNK2);
 
 	if (getSaveParam()->mSLGenerateOnlyDead.get())
-		offLiveFlag(0x800);
+		offLiveFlag(LIVE_FLAG_UNK800);
 	else
-		onLiveFlag(0x800);
+		onLiveFlag(LIVE_FLAG_UNK800);
 
 	unk124->mPrevIdx = -1;
 	goToShortestNextGraphNode();
@@ -316,7 +316,7 @@ void TSmallEnemy::forceKill()
 	     || (!mGroundPlane->checkSomething6()
 	         && !mGroundPlane->checkSomething2()
 	         && !mGroundPlane->isWaterSurface())
-	     || checkLiveFlag2(0x80) || checkLiveFlag(0x10))
+	     || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
 		if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
@@ -324,7 +324,7 @@ void TSmallEnemy::forceKill()
 			mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 			mSpine->pushDefault();
 
-			onLiveFlag(0x20000);
+			onLiveFlag(LIVE_FLAG_UNK20000);
 			mHitPoints = 1;
 		}
 	}
@@ -337,13 +337,13 @@ void TSmallEnemy::genRandomItem()
 
 	setAfterDeadEffect();
 	genEventCoin();
-	if (!checkLiveFlag(0x20001))
+	if (!checkLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_DEAD))
 		generateItem();
 }
 
 void TSmallEnemy::genEventCoin()
 {
-	if (checkLiveFlag(0x20000))
+	if (checkLiveFlag(LIVE_FLAG_UNK20000))
 		return;
 
 	if (mCoin) {
@@ -358,7 +358,7 @@ void TSmallEnemy::genEventCoin()
 		if (coin) {
 			coin->mPosition = mPosition;
 			coin->mVelocity.set(0, 20, 0);
-			coin->offLiveFlag(0x10);
+			coin->offLiveFlag(LIVE_FLAG_UNK10);
 			--unk18C;
 		}
 	}
@@ -404,7 +404,7 @@ void TSmallEnemy::genEventCoin()
 				// TODO: is this a method on some RandInterval class?
 				coin->mVelocity.set(local_d0.x * 4, MsRandF(16.0f, 8.0f),
 				                    local_d0.z * 4);
-				coin->offLiveFlag(0x10);
+				coin->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
 	}
@@ -444,7 +444,7 @@ bool TSmallEnemy::isCollidMove(THitActor* param_1)
 	if ((param_1->mActorType & 0xffff0000) == 0x40000000)
 		return false;
 
-	if (!((TLiveActor*)param_1)->checkLiveFlag2(0x80) && !checkLiveFlag2(0x80))
+	if (!((TLiveActor*)param_1)->isAirborne() && !isAirborne())
 		return true;
 
 	return false;
@@ -452,7 +452,7 @@ bool TSmallEnemy::isCollidMove(THitActor* param_1)
 
 void TSmallEnemy::moveObject()
 {
-	if (checkLiveFlag(0x1))
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	f32 attackRadius = getSaveParam()->getSLAttackRadius();
@@ -551,7 +551,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == 13) {
 		mHitPoints = 0;
-		onLiveFlag(0x1);
+		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(0x1);
 	}
 
@@ -593,10 +593,10 @@ bool TSmallEnemy::changeByJuice()
 		unk178->mRotation.set(0.0f, mRotation.y, 0.0f);
 
 		unk178->unk14C = this;
-		unk178->offLiveFlag(0x2);
+		unk178->offLiveFlag(LIVE_FLAG_UNK2);
 		onHitFlag(0x1);
-		onLiveFlag(0x2);
-		onLiveFlag(0x10);
+		onLiveFlag(LIVE_FLAG_UNK2);
+		onLiveFlag(LIVE_FLAG_UNK10);
 
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 
@@ -622,7 +622,7 @@ bool TSmallEnemy::changeByJuice()
 			break;
 		}
 
-		offLiveFlag(0x800);
+		offLiveFlag(LIVE_FLAG_UNK800);
 		return true;
 	}
 
@@ -648,9 +648,9 @@ bool TSmallEnemy::changeMove()
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
 				if (mSpine->getTime() % 20 < 10) {
-					unk178->onLiveFlag(0x2);
+					unk178->onLiveFlag(LIVE_FLAG_UNK2);
 				} else {
-					unk178->offLiveFlag(0x2);
+					unk178->offLiveFlag(LIVE_FLAG_UNK2);
 				}
 			}
 
@@ -769,7 +769,7 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 
 void TSmallEnemy::kill()
 {
-	if (!checkLiveFlag(0x1))
+	if (!checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	mHitPoints = 1;
@@ -778,7 +778,7 @@ void TSmallEnemy::kill()
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushRaw(&TNerveSmallEnemyDie::theNerve());
 
-		onLiveFlag(0x40);
+		onLiveFlag(LIVE_FLAG_UNK40);
 	}
 }
 
@@ -790,7 +790,7 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (b)
 		return false;
 
-	if (checkLiveFlag2(0x80))
+	if (isAirborne())
 		return false;
 
 	bool result = false;
@@ -845,7 +845,7 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 
 void TSmallEnemy::generateEffectColumWater()
 {
-	if (checkLiveFlag(0x4))
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 		return;
 
 	TEffectColumWater* enemy
@@ -920,7 +920,7 @@ bool TSmallEnemy::isHitWallInBound()
 		mPosition.z = local_3C.unk0.z;
 		mRotation.y = sVar2;
 
-		onLiveFlag(0x10);
+		onLiveFlag(LIVE_FLAG_UNK10);
 		onHitFlag(0x1);
 
 		return true;
@@ -978,12 +978,11 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 		if (self->getHitPoints() == 0) {
 			self->onHitFlag(0x1);
-			if (self->getGroundPlane()->isWaterSurface()
-			    && !self->checkLiveFlag2(0x80))
+			if (self->getGroundPlane()->isWaterSurface() && !self->isAirborne())
 				self->generateEffectColumWater();
 		}
 
-		if (self->checkLiveFlag(0x10000)) {
+		if (self->checkLiveFlag(LIVE_FLAG_UNK10000)) {
 			self->setMeltAnm();
 		} else {
 			if (self->checkUnk150(0x20)) {
@@ -995,7 +994,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				                       * 32.0f * self->getUnk158());
 			}
 			if (self->getHitPoints() == 0) {
-				self->onLiveFlag(0x8);
+				self->onLiveFlag(LIVE_FLAG_UNK8);
 				self->setDeadAnm();
 				self->setDeadEffect();
 			} else {
@@ -1014,10 +1013,10 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 	    || spine->getTime() > 360 || self->getUnk184() != 0) {
 		self->genRandomItem();
 		self->onHitFlag(0x1);
-		self->onLiveFlag(0x1);
-		self->onLiveFlag(0x8);
-		self->offLiveFlag(0x2);
-		self->offLiveFlag(0x10000);
+		self->onLiveFlag(LIVE_FLAG_DEAD);
+		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->offLiveFlag(LIVE_FLAG_UNK2);
+		self->offLiveFlag(LIVE_FLAG_UNK10000);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
 
@@ -1050,7 +1049,8 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(0x8000) || self->checkLiveFlag(0x40000))
+		if (self->checkLiveFlag2(0x8000)
+		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 
 		self->jumpBehavior();
@@ -1059,11 +1059,11 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 		v.y = self->getSaveParam()->getSLJumpForce() * self->getBodyScale();
 		self->setVelocity(v);
 
-		self->onLiveFlag(0x8000);
-		self->onLiveFlag(0x80);
+		self->onLiveFlag(LIVE_FLAG_UNK8000);
+		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	if (!self->checkLiveFlag2(0x80))
+	if (!self->isAirborne())
 		return true;
 	else
 		return false;
@@ -1094,7 +1094,8 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(0x8000) || self->checkLiveFlag(0x40000))
+		if (self->checkLiveFlag2(0x8000)
+		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 
 		self->setWaitAnm();
@@ -1104,8 +1105,8 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		v.y                     = self->getSaveParam()->mSLJumpForce.get();
 		self->mVelocity         = v;
 
-		self->onLiveFlag(0x8000);
-		self->onLiveFlag(0x80);
+		self->onLiveFlag(LIVE_FLAG_UNK8000);
+		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 		// TODO: random interval class?
 		RandInterval ri(30.0f, 100.0f);
@@ -1115,7 +1116,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	RandInterval ri(4.0f, 10.0f);
 	self->mRotation.y += ri.get();
 
-	if (!self->checkLiveFlag2(0x80) || spine->getTime() > 360) {
+	if (!self->isAirborne() || spine->getTime() > 360) {
 		self->endHitWaterJump();
 		return true;
 	} else {

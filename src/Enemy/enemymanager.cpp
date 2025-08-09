@@ -161,12 +161,12 @@ void TEnemyManager::setSharedFlags()
 
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		enemy->offLiveFlag(0x4000);
-		if (!enemy->checkLiveFlag(0x6)) {
+		enemy->offLiveFlag(LIVE_FLAG_UNK4000);
+		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
 			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
-					enemy->onLiveFlag(0x4000);
+					enemy->onLiveFlag(LIVE_FLAG_UNK4000);
 					break;
 				}
 			}
@@ -184,7 +184,7 @@ void TEnemyManager::updateAnmSoundShared()
 
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (!enemy->checkLiveFlag(0x6)) {
+		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
 			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
@@ -219,7 +219,8 @@ void TEnemyManager::copyFromShared()
 
 	for (int i = 0; i < r29; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (!enemy->checkLiveFlag(0x4000) || enemy->checkLiveFlag(6))
+		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)
+		    || enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
 		int iVar6 = enemy->getMActor()->getCurAnmIdx(0);
@@ -263,7 +264,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
 	for (int i = 0; i < num2; ++i)
-		if (!getObj(i)->checkLiveFlag(0x1))
+		if (!getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 			++aliveNum;
 
 	if (aliveNum <= 0) {
@@ -297,7 +298,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	for (int i = 0; i < num; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (enemy->checkLiveFlag(0x1))
+		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD))
 			continue;
 
 		if (param_1 & 1)
@@ -306,9 +307,10 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		if (param_1 & 2) {
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
-			if (!enemy->checkLiveFlag(0x4000)) {
+			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
 				enemy->getMActor()->frameUpdate();
-				if (!enemy->checkLiveFlag(0x6)) {
+				if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2
+				                          | LIVE_FLAG_CLIPPED_OUT)) {
 					enemy->getMActor()->calc();
 					enemy->updateAnmSound();
 				}
@@ -319,8 +321,8 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			if (param_1 & 4)
 				enemy->requestShadow();
 
-			if (!enemy->checkLiveFlag(0x6)) {
-				if ((param_1 & 4) && !enemy->checkLiveFlag(0x4000))
+			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
+				if ((param_1 & 4) && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
 					enemy->getMActor()->viewCalc();
 				if (param_1 & 0x200) {
 					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
@@ -360,7 +362,7 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	int num = getActiveObjNum();
 	if (param_1 & 1) {
 		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onLiveFlag(0x1);
+			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
 		for (s32 i = num; i < mObjNum; ++i)
 			; // TODO: debug print or something?
@@ -382,7 +384,7 @@ TSpineEnemy* TEnemyManager::getNearestEnemy(const JGeometry::TVec3<f32>& p)
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		TSpineEnemy* candidate = getObj(i);
 
-		if (candidate->checkLiveFlag(0x1))
+		if (candidate->checkLiveFlag(LIVE_FLAG_DEAD))
 			continue;
 
 		f32 d = VECDistance((Vec*)&p, (Vec*)&candidate->mPosition);
@@ -399,7 +401,7 @@ TSpineEnemy* TEnemyManager::getDeadEnemy()
 {
 	s32 num = getActiveObjNum();
 	for (int i = 0; i < num; ++i)
-		if (getObj(i)->checkLiveFlag(0x1))
+		if (getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 			return getObj(i);
 
 	return nullptr;
@@ -412,12 +414,13 @@ TSpineEnemy* TEnemyManager::getFarOutEnemy()
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (enemy->checkLiveFlag(0x1)) {
+		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			best = enemy;
 			break;
 		}
 
-		if (!enemy->checkLiveFlag(0x4) || !enemy->checkLiveFlag(0x800))
+		if (!enemy->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
+		    || !enemy->checkLiveFlag(LIVE_FLAG_UNK800))
 			continue;
 
 		if (!best || dist > enemy->getDistToMarioSquared()) {
@@ -432,7 +435,7 @@ TSpineEnemy* TEnemyManager::getFarOutEnemy()
 void TEnemyManager::killChildren()
 {
 	for (int i = 0; i < mObjNum; ++i)
-		getObj(i)->onLiveFlag(0x41);
+		getObj(i)->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 }
 
 void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
@@ -447,7 +450,7 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 	for (int i = 0; i < mObjNum; ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->mPosition) <= r * r)
-			enemy->onLiveFlag(0x41);
+			enemy->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 	}
 }
 
@@ -459,7 +462,7 @@ int TEnemyManager::countLivingEnemy() const
 
 	int result = 0;
 	for (int i = 0; i < num; ++i)
-		if (!getObj(i)->checkLiveFlag(0x1))
+		if (!getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 			++result;
 
 	return result;

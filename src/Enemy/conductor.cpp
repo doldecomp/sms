@@ -133,7 +133,7 @@ bool TConductor::isBossDefeated()
 		if (!mgr)
 			return true;
 		for (int i = 0; i < mgr->getObjNum(); ++i)
-			if (!((TSpineEnemy*)mgr->getObj(i))->checkLiveFlag(0x40))
+			if (!((TSpineEnemy*)mgr->getObj(i))->checkLiveFlag(LIVE_FLAG_UNK40))
 				return false;
 
 		return true;
@@ -166,7 +166,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 
 	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
-		if (actor->checkLiveFlag(0x1)) {
+		if (actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			((TSpineEnemy*)actor)->resetToPosition(param_1);
 			++result;
 			if (result >= param_3)
@@ -179,8 +179,9 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 
 	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
-		if (!actor->checkLiveFlag(0x1) && actor->checkLiveFlag(0x800)
-		    && actor->checkLiveFlag(0x4)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->checkLiveFlag(LIVE_FLAG_UNK800)
+		    && actor->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 			((TSpineEnemy*)actor)->resetToPosition(param_1);
 			++result;
 			if (result >= param_3)
@@ -193,8 +194,9 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 
 	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
-		if (!actor->checkLiveFlag(0x1) && !actor->checkLiveFlag(0x4)
-		    && actor->checkLiveFlag(0x800)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && !actor->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
+		    && actor->checkLiveFlag(LIVE_FLAG_UNK800)) {
 			((TSpineEnemy*)actor)->resetToPosition(param_1);
 			++result;
 			if (result >= param_3)
@@ -310,18 +312,18 @@ void TConductor::genEnemyFromPollution()
 inline void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
 {
 	SetViewFrustumClipCheckPerspective(
-	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->getUnkE8(),
+	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->getNearPlane(),
 	    unk84.mEnemyFarClip.get());
 
 	JGadget::TList<TLiveActor*>::iterator it, e;
 	for (it = unk30.begin(), e = unk30.end(); it != e; ++it) {
 		TLiveActor* actor = *it;
-		if (!actor->checkLiveFlag(0x100)) {
-			actor->offLiveFlag(0x4);
+		if (!actor->checkLiveFlag(LIVE_FLAG_UNK100)) {
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else if (ViewFrustumClipCheck(param_1, &actor->mPosition, 300.0f)) {
-			actor->offLiveFlag(0x4);
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
-			actor->onLiveFlag(0x4);
+			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		}
 	}
 }

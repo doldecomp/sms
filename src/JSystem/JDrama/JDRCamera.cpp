@@ -35,8 +35,8 @@ void TLookAtCamera::perform(u32 param_1, TGraphics* param_2)
 		return;
 
 	C_MTXPerspective(param_2->unk74.mMtx, mFovy, mAspect, mNear, mFar);
-	param_2->unkE8 = mNear;
-	param_2->unkEC = mFar;
+	param_2->mNearPlane = mNear;
+	param_2->mFarPlane      = mFar;
 	C_MTXLookAt(param_2->unkB4.mMtx, &mPosition, &mUp, &mTarget);
 
 	if (param_1 & 0x10)
@@ -76,8 +76,8 @@ void TOrthoProj::perform(u32 param_1, TGraphics* param_2)
 
 	C_MTXOrtho(param_2->unk74.mMtx, mField[1], mField[3], mField[0], mField[2],
 	           mNear, mFar);
-	param_2->unkE8 = mNear;
-	param_2->unkEC = mFar;
+	param_2->mNearPlane = mNear;
+	param_2->mFarPlane      = mFar;
 	MTXTrans(param_2->unkB4.mMtx, mPosition.x, mPosition.y, mPosition.z);
 
 	if (param_1 & 0x10)

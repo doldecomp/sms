@@ -20,7 +20,7 @@ void TSpider::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_50;
 	local_50.add(param_1->mPosition, fVar712);
 
-	if (param_1->checkLiveFlag2(0x80)) {
+	if (param_1->isAirborne()) {
 		JGeometry::TVec3<f32> local_5C = param_1->mVelocity;
 		local_50 += local_5C;
 		f32 dVar7 = param_1->getGravityY();
@@ -64,11 +64,11 @@ void TSpider::bind(TLiveActor* param_1)
 	if (local_50.y <= fVar3) {
 		param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
-		param_1->offLiveFlag(0x80);
-		param_1->offLiveFlag(0x8000);
+		param_1->offLiveFlag(LIVE_FLAG_AIRBORNE);
+		param_1->offLiveFlag(LIVE_FLAG_UNK8000);
 		local_50.y = fVar3;
 	} else {
-		param_1->onLiveFlag(0x80);
+		param_1->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
 	param_1->mGroundHeight = fVar3;
@@ -87,8 +87,8 @@ void TSpider::bind(TLiveActor* param_1)
 		if (unk8 > 0) {
 			unk8 -= 1;
 			fVar1 = ((TSpineEnemy*)param_1)->mMarchSpeed;
-			param_1->offLiveFlag(0x80);
-			param_1->offLiveFlag(0x8000);
+			param_1->offLiveFlag(LIVE_FLAG_AIRBORNE);
+			param_1->offLiveFlag(LIVE_FLAG_UNK8000);
 			param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 		} else {
 			unkC = 0;
@@ -103,8 +103,8 @@ void TSpider::bind(TLiveActor* param_1)
 			unk10 = 0.0f;
 	} else {
 		if (local_90.unk1C[0]->mNormal.dot(fVar712)) {
-			param_1->offLiveFlag(0x80);
-			param_1->offLiveFlag(0x8000);
+			param_1->offLiveFlag(LIVE_FLAG_AIRBORNE);
+			param_1->offLiveFlag(LIVE_FLAG_UNK8000);
 			param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
 			unkC = local_90.unk1C[0];

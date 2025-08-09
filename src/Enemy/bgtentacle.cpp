@@ -990,7 +990,7 @@ void TBGTentacle::moveConstraint()
 	case 0:
 	case 2:
 	case 8:
-		if (mOwner->checkLiveFlag(0x4)) {
+		if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 			JGeometry::TVec3<f32> local_38 = mOwner->getPosition();
 			for (int i = 0; i < mNodeNum; ++i) {
 				mNodes[i].setUnk18(local_38);

@@ -347,7 +347,7 @@ TRailBlock::TRailBlock(const char* name)
 void TRailBlock::initMapObj()
 {
 	TRailMapObj::initMapObj();
-	onLiveFlag(0x400);
+	onLiveFlag(LIVE_FLAG_UNK400);
 	unk15C = mRotation;
 	unk168 = mRotation;
 }

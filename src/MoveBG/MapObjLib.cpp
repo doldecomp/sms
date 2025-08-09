@@ -101,14 +101,14 @@ void TMapObjBase::throwObjToFront(TMapObjBase* param_1, f32 param_2,
 		param_1->mVelocity.set(mtx[0][2] * param_3,
 		                       mtx[1][2] * param_3 + param_4,
 		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(0x10);
+		param_1->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 		param_1->mVelocity.set(mtx[0][2] * param_3,
 		                       mtx[1][2] * param_3 + param_4,
 		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(0x10);
+		param_1->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
 
@@ -123,14 +123,14 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* param_1,
 		param_1->mVelocity.set(mtx[0][2] * param_3,
 		                       mtx[1][2] * param_3 + param_4,
 		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(0x10);
+		param_1->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 		param_1->mVelocity.set(mtx[0][2] * param_3,
 		                       mtx[1][2] * param_3 + param_4,
 		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(0x10);
+		param_1->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
 
@@ -146,7 +146,7 @@ void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* param_1,
 	MsMtxSetRotRPH(mtx, param_3.x, param_3.y, param_3.z);
 	param_1->mVelocity.set(mtx[0][2] * param_4, mtx[1][2] * param_4 + param_5,
 	                       mtx[2][2] * param_4);
-	param_1->offLiveFlag(0x10);
+	param_1->offLiveFlag(LIVE_FLAG_UNK10);
 }
 
 bool TMapObjBase::isCoin(THitActor* param_1)

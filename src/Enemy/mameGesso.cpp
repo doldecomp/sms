@@ -87,7 +87,7 @@ void TMameGessoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (!(param_1 & 1))
 			continue;
 		TMameGesso* gesso = getObj(i);
-		if (gesso->checkLiveFlag(0x1) && gesso->unk1D2) {
+		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
 			gesso->unk1CC += 1;
 			if (gesso->unk1CC > gesso->unk194->mSLGenerateInterval.get()) {
 				gesso->reset();
@@ -406,8 +406,8 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 		if (self->isReachedToGoal())
 			self->unk1EC = 1;
 
-		if (self->checkLiveFlag(0x4)) {
-			self->onLiveFlag(0x20000);
+		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+			self->onLiveFlag(LIVE_FLAG_UNK20000);
 			spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		}
 

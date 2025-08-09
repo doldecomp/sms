@@ -44,22 +44,23 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* param_1, float param_2,
 {
 	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
 	                                   gpCamera->getAspect(),
-	                                   param_1->getUnkE8(), param_2);
+	                                   param_1->getNearPlane(), param_2);
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TLiveActor* actor = getObj(i);
-		if (!actor->checkLiveFlag(0x100)) {
-			actor->offLiveFlag(0x4);
+		if (!actor->checkLiveFlag(LIVE_FLAG_UNK100)) {
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
 			JGeometry::TVec3<f32> pos = actor->getPosition();
 			pos.y += 75.0f;
-			if (actor->checkLiveFlag(0x2000) && SMS_IsInOtherFastCube(pos)) {
-				actor->onLiveFlag(0x4);
+			if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
+			    && SMS_IsInOtherFastCube(pos)) {
+				actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			} else {
 				if (ViewFrustumClipCheck(param_1, &actor->mPosition, param_3))
-					actor->offLiveFlag(0x4);
+					actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 				else
-					actor->onLiveFlag(0x4);
+					actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			}
 		}
 	}
@@ -77,9 +78,9 @@ void TLiveManager::setFlagOutOfCube()
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 		if (gpCubeArea->isInAreaCube(pos))
-			actor->offLiveFlag(0x200);
+			actor->offLiveFlag(LIVE_FLAG_UNK200);
 		else
-			actor->onLiveFlag(0x200);
+			actor->onLiveFlag(LIVE_FLAG_UNK200);
 	}
 }
 
