@@ -10,7 +10,7 @@ class TMapObjLeaf {
 class TMapObjTree : public TMapObjGeneral {
 public:
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void getRadiusAtY(float) const;
+	virtual f32 getRadiusAtY(f32) const;
 	virtual void initMapObj();
 	virtual void touchPlayer(THitActor*);
 

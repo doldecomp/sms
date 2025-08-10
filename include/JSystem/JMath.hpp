@@ -3,6 +3,8 @@
 
 #include <dolphin/mtx.h>
 
+#define DEG2SHORTANGLE(deg) ((deg) * (65536.0f / 360.0f))
+
 namespace JMath {
 
 class TRandom_fast_ {
@@ -64,9 +66,9 @@ inline f32 JMASSin(s16 v)
 	return jmaSinTable[static_cast<u16>(v) >> jmaSinShift];
 }
 
-inline f32 JMACos(f32 v) { return JMASCos(v * (65536.0f / 360.0f)); }
+inline f32 JMACos(f32 v) { return JMASCos(DEG2SHORTANGLE(v)); }
 
-inline f32 JMASin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }
+inline f32 JMASin(f32 v) { return JMASSin(DEG2SHORTANGLE(v)); }
 
 void JMANewSinTable(u8);
 void JMADeleteSinTable();
