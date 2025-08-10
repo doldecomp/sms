@@ -65,7 +65,7 @@ public:
 
 class TGoalFlag : public TMapObjBase {
 public:
-	void getRadiusAtY(f32) const;
+	f32 getRadiusAtY(f32) const;
 	void touchActor(THitActor*);
 	void initMapObj();
 	TGoalFlag();
@@ -73,7 +73,7 @@ public:
 
 class TFluff : public TMapObjBase {
 public:
-	void getRadiusAtY(f32) const;
+	f32 getRadiusAtY(f32) const;
 	u32 touchWater(THitActor*);
 	void move();
 	void kill();

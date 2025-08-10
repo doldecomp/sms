@@ -67,7 +67,7 @@ void TRiccoHook::init(TLiveManager* manager) {
     TSpineEnemy::init(manager);
     mSpine->initWith(&TNerveRHGraphWander::theNerve());
     onHitFlag(0x01);
-    mHookTake = new THookTake(this, "フックつかみ");
+    mHookTake = new THookTake(this);
     unk124->reset();
     goToShortestNextGraphNode();
     mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();

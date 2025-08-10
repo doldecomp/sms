@@ -147,7 +147,7 @@ public:
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual void ensureTakeSituation();
-	virtual void getRadiusAtY(f32) const;
+	virtual f32 getRadiusAtY(f32) const;
 	virtual Mtx* getRootJointMtx() const;
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
