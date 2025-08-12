@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JGadget/define.h>
 
 namespace JGadget {
 
@@ -19,17 +20,19 @@ public:
 
 	void DeallocateRaw(void* p) { ::operator delete(p); }
 
-	void construct(T* p, const T& value)
+	void construct(void* p, const T& value)
 	{
-		// Debug assert leftover, confirmed from TP
-		(void)0;
-		// (void) cast is necessary here. Don't ask.
-		(void)::new ((void*)p) T(value);
+		// clang-format off
+        JGADGET_ASSERT(p!=0);
+		// clang-format on
+		(T*)::new (p) T(value);
 	}
 
 	void destroy(T* p)
 	{
-		(void)0; // debug assert
+		// clang-format off
+        JGADGET_ASSERT(p!=0);
+		// clang-format on
 		p->~T();
 	}
 };
