@@ -40,10 +40,12 @@ public:
 
 	void DestroyNode_(TNode_* p)
 	{
-		JUT_ASSERT(p != 0)
-		JUT_ASSERT(p != &oEnd_);
-		JUT_ASSERT(p->pNext_->pPrev_ != p);
-		JUT_ASSERT(p->pPrev_->pNext_ != p);
+		// clang-format off
+		JGADGET_ASSERT(p!=0);
+		JGADGET_ASSERT(p!=&oEnd_);
+		JGADGET_ASSERT(p->pNext_->pPrev_!=p);
+		JGADGET_ASSERT(p->pPrev_->pNext_!=p);
+		// clang-format on
 		mAllocator.destroy((T*)(p + 1));
 		mAllocator.DeallocateRaw(p);
 	}
