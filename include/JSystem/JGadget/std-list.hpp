@@ -105,8 +105,8 @@ public:
         JGADGET_ASSERT(p!=0);
 		// clang-format on
 
-        // TODO: I think these should all use `p` instead of `what.p_`.
-        // Changing them breaks Map's JointModelManager though.
+		// TODO: I think these should all use `p` instead of `what.p_`.
+		// Changing them breaks Map's JointModelManager though.
 		TNode_* const next      = what.p_->pNext_;
 		what.p_->pPrev_->pNext_ = next;
 		next->pPrev_            = p->pPrev_;
