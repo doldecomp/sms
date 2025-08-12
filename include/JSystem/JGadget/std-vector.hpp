@@ -14,13 +14,18 @@ namespace JGadget {
 // long, void* const&)
 
 template <typename T, typename Allocator = TAllocator<T> > class TVector {
-	void DestroyElement_(T* b, T* e)
+	void DestroyElement_(T* pFirst, T* pLast)
 	{
-		for (T* it = b; it != e; ++it)
+		// clang-format off
+		JGADGET_ASSERT((pBegin_<=pFirst)&&(pFirst<pEnd_));
+		JGADGET_ASSERT((pBegin_<=pLast)&&(pLast<=pEnd_));
+		// clang-format on
+
+		for (T* it = pFirst; it != pLast; ++it)
 			mAllocator.destroy(it);
 	}
 
-	void DestroyElement_all_() { DestroyElement_(mBegin, mEnd); }
+	void DestroyElement_all_() { DestroyElement_(pBegin_, pEnd_); }
 
 	size_t GetSize_extend_(size_t count) const
 	{
@@ -51,8 +56,8 @@ public:
 	TVector(const TAllocator<T>& alloc = TAllocator<T>())
 	    : mAllocator(alloc)
 	{
-		mBegin     = nullptr;
-		mEnd       = mBegin;
+		pBegin_    = nullptr;
+		pEnd_      = pBegin_;
 		mCapacity  = 0;
 		mGrowthMul = 2.0f;
 		mGrowthAdd = 0;
@@ -61,16 +66,16 @@ public:
 	~TVector()
 	{
 		clear2();
-		mAllocator.deallocate(mBegin, mCapacity);
+		mAllocator.deallocate(pBegin_, mCapacity);
 	}
 
-	size_t size() const { return mBegin == nullptr ? 0 : mEnd - mBegin; }
+	size_t size() const { return pBegin_ == nullptr ? 0 : pEnd_ - pBegin_; }
 	size_t capacity() const { return mCapacity; }
-	iterator begin() { return mBegin; }
-	iterator end() { return mEnd; }
+	iterator begin() { return pBegin_; }
+	iterator end() { return pEnd_; }
 
-	T& operator[](size_t i) { return mBegin[i]; }
-	const T& operator[](size_t i) const { return mBegin[i]; }
+	T& operator[](size_t i) { return pBegin_[i]; }
+	const T& operator[](size_t i) const { return pBegin_[i]; }
 
 	iterator insert(iterator where, const T& what)
 	{
@@ -78,20 +83,20 @@ public:
 	}
 	iterator insert(iterator where, size_t how_many, const T& what)
 	{
-		ptrdiff_t offset = where - mBegin;
+		ptrdiff_t offset = where - pBegin_;
 		iterator it      = InsertRaw(where, how_many);
-		if (it != mEnd)
+		if (it != pEnd_)
 			std::uninitialized_fill_n(it, how_many, what);
-		return mBegin + offset;
+		return pBegin_ + offset;
 	}
 
 	iterator erase(iterator what) { }
 	iterator erase(iterator b, iterator e)
 	{
 		T* newEnd2 = b;
-		T* newEnd  = std::copy(e, mEnd, newEnd2);
-		DestroyElement_(newEnd, mEnd);
-		mEnd = newEnd;
+		T* newEnd  = std::copy(e, pEnd_, newEnd2);
+		DestroyElement_(newEnd, pEnd_);
+		pEnd_ = newEnd;
 		return newEnd2;
 	}
 
@@ -111,18 +116,20 @@ public:
 
 		T* newBegin = mAllocator.allocate(new_capacity);
 
-		if (!newBegin)
+		if (!newBegin) {
+			JGADGET_WARN("can't allocate memory");
 			return;
+		}
 
 		TDestroyed_deallocate_ dealloc(mAllocator, newBegin);
 
-		std::uninitialized_copy(mBegin, mEnd, newBegin);
+		std::uninitialized_copy(pBegin_, pEnd_, newBegin);
 		DestroyElement_all_();
 
-		dealloc.set(mBegin);
+		dealloc.set(pBegin_);
 
-		mEnd      = newBegin + (mEnd - mBegin);
-		mBegin    = newBegin;
+		pEnd_     = newBegin + (pEnd_ - pBegin_);
+		pBegin_   = newBegin;
 		mCapacity = new_capacity;
 	}
 
@@ -135,17 +142,17 @@ public:
 
 		if (mCapacity <= count + size()) {
 			T* newEnd = where2 + count;
-			if (newEnd < mEnd) {
-				T* split = mEnd - count;
-				std::uninitialized_copy(split, mEnd, mEnd);
-				std::copy_backward(where2, split, mEnd);
+			if (newEnd < pEnd_) {
+				T* split = pEnd_ - count;
+				std::uninitialized_copy(split, pEnd_, pEnd_);
+				std::copy_backward(where2, split, pEnd_);
 				DestroyElement_(where2, newEnd);
-				mEnd += count;
+				pEnd_ += count;
 				return where;
 			} else {
-				std::uninitialized_copy(where2, mEnd, newEnd);
-				DestroyElement_(where2, mEnd);
-				mEnd += count;
+				std::uninitialized_copy(where2, pEnd_, newEnd);
+				DestroyElement_(where2, pEnd_);
+				pEnd_ += count;
 				return where;
 			}
 		} else {
@@ -157,14 +164,14 @@ public:
 
 			TDestroyed_deallocate_ dealloc(mAllocator, newBegin);
 
-			T* holeStart = std::uninitialized_copy(mBegin, where2, newBegin);
-			std::uninitialized_copy(where2, mEnd, holeStart + count);
+			T* holeStart = std::uninitialized_copy(pBegin_, where2, newBegin);
+			std::uninitialized_copy(where2, pEnd_, holeStart + count);
 			DestroyElement_all_();
 
-			dealloc.set(mBegin);
+			dealloc.set(pBegin_);
 
-			mEnd      = newBegin + (mEnd - mBegin + count);
-			mBegin    = newBegin;
+			pEnd_     = newBegin + (pEnd_ - pBegin_ + count);
+			pBegin_   = newBegin;
 			mCapacity = newCap;
 
 			return holeStart;
@@ -174,8 +181,8 @@ public:
 
 private:
 	Allocator mAllocator;
-	T* mBegin;
-	T* mEnd;
+	T* pBegin_;
+	T* pEnd_;
 	size_t mCapacity;
 	float mGrowthMul;
 	size_t mGrowthAdd;
