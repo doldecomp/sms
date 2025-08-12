@@ -14,5 +14,5 @@ TList_pointer_void::~TList_pointer_void() { }
 TList_pointer_void::iterator TList_pointer_void::insert(iterator where,
                                                         const value_type& value)
 {
-	return insert1234(where, value);
+	return Base::insert(where, value);
 }

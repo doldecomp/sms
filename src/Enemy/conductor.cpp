@@ -52,37 +52,37 @@ void TConductor::initGraphGroup() { unk80->initGraphGroup(); }
 
 void TConductor::registerManager(TLiveManager* param_1)
 {
-	unk10.push_back2(param_1);
+	unk10.push_back(param_1);
 }
 
 void TConductor::registerEnemyManager(TEnemyManager* param_1)
 {
-	unk20.push_back2(param_1);
+	unk20.push_back(param_1);
 }
 
 void TConductor::registerAloneActor(TLiveActor* param_1)
 {
-	unk30.push_back2(param_1);
+	unk30.push_back(param_1);
 }
 
 void TConductor::registerOtherObj(JDrama::TViewObj* param_1)
 {
-	unk40.push_back2(param_1);
+	unk40.push_back(param_1);
 }
 
 void TConductor::registerGenerator(TGenerator* param_1)
 {
-	unk60.push_back2(param_1);
+	unk60.push_back(param_1);
 }
 
 void TConductor::registerAreaCylinderManager(TAreaCylinderManager* param_1)
 {
-	unk50.push_back2(param_1);
+	unk50.push_back(param_1);
 }
 
 void TConductor::registerSDLModelData(SDLModelData* param_1)
 {
-	unk70.push_back2(param_1);
+	unk70.push_back(param_1);
 }
 
 void TConductor::registerEnemyInfoTable(TStageEnemyInfoTable* param_1)
