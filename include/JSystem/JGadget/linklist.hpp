@@ -131,7 +131,8 @@ struct TNodeLinkList {
 	{
 		return const_iterator((TLinkListNode*)(&ocObject_));
 	}
-	u32 size() { return count; }
+	u32 size() const { return count; }
+	bool empty() const { return size() == 0; }
 
 	iterator erase(JGadget::TNodeLinkList::iterator,
 	               JGadget::TNodeLinkList::iterator);

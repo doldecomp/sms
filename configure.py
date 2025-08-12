@@ -332,7 +332,7 @@ config.libs = [
             # JGadget
             Object(Matching, "JSystem/JGadget/std-list.cpp"),
             Object(NonMatching, "JSystem/JGadget/std-vector.cpp"),
-            Object(NonMatching, "JSystem/JGadget/linklist.cpp"),
+            Object(Matching, "JSystem/JGadget/linklist.cpp"),
             Object(Matching, "JSystem/JGadget/singlelinklist.cpp"),
 
             # JKernel
