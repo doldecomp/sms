@@ -23,7 +23,7 @@ public:
 	void construct(T* p, const T& value)
 	{
 		// clang-format off
-        JGADGET_ASSERT(p!=0);
+		JGADGET_ASSERT(p!=0);
 		// clang-format on
 		(void)::new (p) T(value);
 	}
@@ -31,7 +31,7 @@ public:
 	void destroy(T* p)
 	{
 		// clang-format off
-        JGADGET_ASSERT(p!=0);
+		JGADGET_ASSERT(p!=0);
 		// clang-format on
 		p->~T();
 	}

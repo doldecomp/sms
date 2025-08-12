@@ -17,15 +17,15 @@ public:
 	TNode_* CreateNode_(TNode_* pNext, TNode_* pPrev, const T& value)
 	{
 		// clang-format off
-        JGADGET_ASSERT(pNext!=0);
-        JGADGET_ASSERT(pPrev!=0);
+		JGADGET_ASSERT(pNext!=0);
+		JGADGET_ASSERT(pPrev!=0);
 		// clang-format on
 
 		void* raw = mAllocator.AllocateRaw(sizeof(TNode_) + sizeof(T));
 
 		if (raw == nullptr) {
 			// clang-format off
-            JGADGET_WARN("can't allocate memory");
+			JGADGET_WARN("can't allocate memory");
 			// clang-format on
 			return nullptr;
 		}
@@ -77,7 +77,7 @@ public:
 	{
 		TNode_* p = where.p_;
 		// clang-format off
-        JGADGET_ASSERT(p!=0);
+		JGADGET_ASSERT(p!=0);
 		// clang-format on
 
 		TNode_* prev          = p->pPrev_;
@@ -96,13 +96,13 @@ public:
 	iterator erase(iterator what)
 	{
 		// clang-format off
-        JGADGET_ASSERT(!empty());
+		JGADGET_ASSERT(!empty());
 		// clang-format on
 
 		TNode_* const p = what.p_;
 
 		// clang-format off
-        JGADGET_ASSERT(p!=0);
+		JGADGET_ASSERT(p!=0);
 		// clang-format on
 
 		// TODO: I think these should all use `p` instead of `what.p_`.
@@ -121,11 +121,6 @@ public:
 			start = erase(start);
 		}
 		return start;
-	}
-
-	bool Confirm()
-	{
-		// TODO
 	}
 
 	void clear() { erase(begin(), end()); }
@@ -200,6 +195,11 @@ public:
 	};
 
 private:
+	bool Confirm()
+	{
+		// TODO
+	}
+
 	/* 0x0 */ TAllocator<T> mAllocator;
 	/* 0x4 */ u32 mSize;
 	/* 0x8 */ TNode_ oEnd_;

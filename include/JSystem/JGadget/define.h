@@ -3,10 +3,6 @@
 
 #include <JSystem/JUtility/JUTAssert.hpp>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 class JGadget_outMessage {
 public:
 	typedef void (*MessageFunc)(const char*, int, const char*);
@@ -63,10 +59,6 @@ private:
 // this is required, removing this will result in functions not matching
 #define JGADGET_ASSERT(cond) ((void)0)
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif /* JGADGET_DEFINE_H */

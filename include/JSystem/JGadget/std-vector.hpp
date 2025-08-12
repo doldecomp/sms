@@ -17,8 +17,8 @@ template <typename T, typename Allocator = TAllocator<T> > class TVector {
 	void DestroyElement_(T* pFirst, T* pLast)
 	{
 		// clang-format off
-        JGADGET_ASSERT((pBegin_<=pFirst)&&(pFirst<pEnd_));
-        JGADGET_ASSERT((pBegin_<=pLast)&&(pLast<=pEnd_));
+		JGADGET_ASSERT((pBegin_<=pFirst)&&(pFirst<pEnd_));
+		JGADGET_ASSERT((pBegin_<=pLast)&&(pLast<=pEnd_));
 		// clang-format on
 
 		for (T* it = pFirst; it != pLast; ++it)
