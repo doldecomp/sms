@@ -20,12 +20,12 @@ public:
 
 	void DeallocateRaw(void* p) { ::operator delete(p); }
 
-	void construct(void* p, const T& value)
+	void construct(T* p, const T& value)
 	{
 		// clang-format off
         JGADGET_ASSERT(p!=0);
 		// clang-format on
-		(T*)::new (p) T(value);
+		(void)::new (p) T(value);
 	}
 
 	void destroy(T* p)
