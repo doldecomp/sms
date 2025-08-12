@@ -1,4 +1,5 @@
 #include <JSystem/JGadget/linklist.hpp>
+#include <JSystem/JGadget/define.h>
 
 namespace JGadget {
 namespace {
@@ -55,8 +56,15 @@ void JGadget::TNodeLinkList::splice(iterator it, TNodeLinkList& rSrc,
 JGadget::TNodeLinkList::iterator
 JGadget::TNodeLinkList::Insert(iterator it, TLinkListNode* p)
 {
-	TLinkListNode* pIt     = it.node;
+	JGADGET_ASSERT(p != 0);
+
+	TLinkListNode* pIt = it.node;
+	JGADGET_ASSERT(pIt != 0);
+
 	TLinkListNode* pItPrev = pIt->mPrev;
+	JGADGET_ASSERT(pItPrev != 0);
+	JGADGET_ASSERT(p->pNext_ == NULL);
+	JGADGET_ASSERT(p->pPrev_ == NULL);
 
 	p->mNext       = pIt;
 	p->mPrev       = pItPrev;
@@ -68,10 +76,18 @@ JGadget::TNodeLinkList::Insert(iterator it, TLinkListNode* p)
 
 JGadget::TNodeLinkList::iterator JGadget::TNodeLinkList::Erase(TLinkListNode* p)
 {
+	JGADGET_ASSERT(!empty());
+	JGADGET_ASSERT(p != 0);
+	JGADGET_ASSERT(p != &oNode_);
+
 	TLinkListNode* pNext = p->mNext;
+	JGADGET_ASSERT(pNext != 0);
+
 	TLinkListNode* pPrev = p->mPrev;
-	pNext->mPrev         = pPrev;
-	pPrev->mNext         = pNext;
+	JGADGET_ASSERT(pPrev != 0);
+
+	pNext->mPrev = pPrev;
+	pPrev->mNext = pNext;
 	count--;
 	return iterator(pNext);
 }
