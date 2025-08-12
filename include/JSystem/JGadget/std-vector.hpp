@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <memory>
 #include <types.h>
-#include <JSystem/JGadget/allocator.hpp>
+#include <JSystem/JGadget/std-memory.hpp>
 
 namespace JGadget {
 

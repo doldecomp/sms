@@ -1,7 +1,8 @@
-#ifndef JGADGET_ALLOCATOR_HPP
-#define JGADGET_ALLOCATOR_HPP
+#ifndef JGADGET_MEMORY_HPP
+#define JGADGET_MEMORY_HPP
 
 #include <stddef.h>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace JGadget {
 
@@ -20,11 +21,17 @@ public:
 
 	void construct(T* p, const T& value)
 	{
-		// (void) is necessary here.
+		// Debug assert leftover, confirmed from TP
+		(void)0;
+		// (void) cast is necessary here. Don't ask.
 		(void)::new ((void*)p) T(value);
 	}
 
-	void destroy(T* p) { p->~T(); }
+	void destroy(T* p)
+	{
+		(void)0; // debug assert
+		p->~T();
+	}
 };
 
 }; // namespace JGadget

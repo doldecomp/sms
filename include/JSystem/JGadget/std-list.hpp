@@ -1,8 +1,7 @@
 #ifndef JGADGET_LIST_HPP
 #define JGADGET_LIST_HPP
 
-#include <JSystem/JGadget/allocator.hpp>
-#include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JGadget/std-memory.hpp>
 #include <types.h>
 
 namespace JGadget {
@@ -16,25 +15,43 @@ public:
 
 	TNode_* CreateNode_(TNode_* next, TNode_* prev, const T& value)
 	{
-		TNode_* ret
-		    = (TNode_*)mAllocator.AllocateRaw(sizeof(TNode_) + sizeof(T));
+		// Debug assert leftovers confirmed through TP. Don't touch.
+		(void)0;
+		(void)0;
 
-		if (!ret)
+		void* raw = mAllocator.AllocateRaw(sizeof(TNode_) + sizeof(T));
+
+		if (raw == nullptr) {
+			(void)0; // debug assert
 			return nullptr;
+		}
+
+		// const meme, don't touch
+		TNode_* const ret = (TNode_*)raw;
 
 		ret->mNext = next;
 		ret->mPrev = prev;
 
-		T* casted = (T*)(ret + 1);
-		mAllocator.construct(casted, value);
+		mAllocator.construct((T*)(ret + 1), value);
 
 		return ret;
 	}
 
 	void DestroyNode_(TNode_* node)
 	{
+		// a whole bunch of debug assertin
+		(void)0;
+		(void)0;
+		(void)0;
+		(void)0;
 		mAllocator.destroy((T*)(node + 1));
 		mAllocator.DeallocateRaw(node);
+	}
+
+	void Initialize_()
+	{
+		mSentinel.mNext = &mSentinel;
+		mSentinel.mPrev = &mSentinel;
 	}
 
 public:
@@ -44,25 +61,31 @@ public:
 	    : mAllocator(alloc)
 	    , mSize(0)
 	{
-		mSentinel.mNext = &mSentinel;
-		mSentinel.mPrev = &mSentinel;
+		Initialize_();
 	}
 
-	~TList() { clear(); }
+	~TList()
+	{
+		clear();
+		(void)0; // debug assert
+	}
 
 	iterator insert(iterator where, const T& what)
 	{
-		TNode_* prev    = where.mNode->mPrev;
-		TNode_* newNode = CreateNode_(where.mNode, prev, what);
+		TNode_* curr = where.mNode;
+		(void)0; // debug assert
+		TNode_* prev = curr->mPrev;
 
-		if (!newNode) {
-			return iterator(&mSentinel);
-		} else {
-			where.mNode->mPrev = newNode;
-			prev->mNext        = newNode;
-			++mSize;
-			return iterator(newNode);
-		}
+		// const meme, don't touch
+		TNode_* const newNode = CreateNode_(curr, prev, what);
+
+		if (newNode == nullptr)
+			return end();
+
+		curr->mPrev = newNode;
+		prev->mNext = newNode;
+		++mSize;
+		return iterator(newNode);
 	}
 
 	iterator erase(iterator what)
@@ -86,17 +109,26 @@ public:
 
 	void clear() { erase(begin(), end()); }
 
-	iterator begin() { return mSentinel.mNext; }
-	iterator end() { return &mSentinel; }
+	iterator begin() { return iterator(mSentinel.mNext); }
+	iterator end() { return iterator(&mSentinel); }
+
+	// TODO: TP debug has const_iterators, do we have them too?
+	void begin() const;
+	void end() const;
 
 	void push_front(const T& what) { insert(begin(), what); }
 	void push_back(const T& what) { insert(end(), what); }
 
-	// TODO: delete me when insert is correct
-	void push_back2(const T& what) { push_back(what); }
+	size_t size() const { return mSize; }
+	bool empty() const { return size() == 0; }
 
 	class iterator {
 		friend class TList;
+
+		iterator(TNode_* node)
+		    : mNode(node)
+		{
+		}
 
 	public:
 		iterator()
@@ -104,12 +136,14 @@ public:
 		{
 		}
 
-		iterator(TNode_* node)
-		    : mNode(node)
+		T& operator*()
 		{
+			(void)0; // debug assert
+			return *(T*)(mNode + 1);
 		}
-
-		T& operator*() { return *(T*)(mNode + 1); }
+		// not in tp debug for some reason? You'd expect this to be there
+		// and be emitted as one of the most comonly used functions
+		// but it isn't
 		T* operator->() { return (T*)(mNode + 1); }
 
 		iterator operator++()
@@ -121,9 +155,12 @@ public:
 		iterator operator++(int)
 		{
 			iterator copy = *this;
-			mNode         = mNode->mNext;
+			this->operator++();
 			return copy;
 		}
+
+		// TODO: TP debug has operator-- and even does funky inheritance from
+		// std::iterator, do we need it too?
 
 		friend bool operator==(iterator fst, iterator snd)
 		{
@@ -155,11 +192,6 @@ public:
 	TList_pointer_void(u32, const value_type&,
 	                   const JGadget::TAllocator<value_type>&);
 	~TList_pointer_void();
-
-	iterator insert1234(iterator a, value_type const& b)
-	{
-		return Base::insert(a, b);
-	}
 
 	iterator insert(iterator, value_type const&);
 	iterator insert(iterator, u32, value_type const&);
