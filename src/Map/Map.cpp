@@ -54,7 +54,7 @@ bool TMap::isInArea(f32 param_1, f32 param_2) const
 	return false;
 }
 
-void TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
+const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
                          const JGeometry::TVec3<f32>& param_2, bool param_3,
                          JGeometry::TVec3<f32>* param_4) const
 {
