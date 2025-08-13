@@ -5,13 +5,14 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
 
+// these names are just guesses
 bool coneInPlane(
-    const JGeometry::TVec3<float>& apex,    // tip of the cone
-    float radiusOrAngle,                    // cone radius or half-angle
-    const JGeometry::TVec3<float>& dir, // main axis direction of the cone
-    const JGeometry::TVec3<float>& upDir,   // secondary direction / "up" vector
-    const JGeometry::TPartition3<float>& plane,                              // bounding partition (3 planes)
-    JGeometry::TVec3<float>* outIntersection // optional output point
+    const JGeometry::TVec3<float>& apex,
+    float radiusOrAngle,
+    const JGeometry::TVec3<float>& dir,
+    const JGeometry::TVec3<float>& upDir,
+    const JGeometry::TPartition3<float>& plane,
+    JGeometry::TVec3<float>* outIntersection
 )
 {
     float t = -(plane.mDist
@@ -209,7 +210,7 @@ void TBeamManager::setupMaterial()
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGB, GX_RGBA8, 0);
 	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_CLAMP,
 	              GX_AF_NONE);
