@@ -244,7 +244,7 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 param_4,
 	}
 }
 
-void bgIntersectLine(const TBGCheckData*, const JGeometry::TVec3<f32>&,
+bool bgIntersectLine(const TBGCheckData*, const JGeometry::TVec3<f32>&,
                      const JGeometry::TVec3<f32>&, bool, JGeometry::TVec3<f32>*)
 {
 }
@@ -260,8 +260,9 @@ void LineInLineXZ(const JGeometry::TVec2<f32>&, const JGeometry::TVec2<f32>&,
 {
 }
 
-void TMapCollisionData::intersectLine(const JGeometry::TVec3<f32>&,
-                                      const JGeometry::TVec3<f32>&, bool,
-                                      JGeometry::TVec3<f32>*) const
+const TBGCheckData*
+TMapCollisionData::intersectLine(const JGeometry::TVec3<f32>&,
+                                 const JGeometry::TVec3<f32>&, bool,
+                                 JGeometry::TVec3<f32>*) const
 {
 }
