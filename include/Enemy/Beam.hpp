@@ -27,12 +27,12 @@ class TBeamManager : public JDrama::TViewObj {
 public:
 	TBeamManager(const char* name = "ビームマネージャ");
 	virtual ~TBeamManager() {};
-	
+
 	void setupMaterial();
 	void drawAllBeam();
-	void requestCone(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&, f32, bool, bool, bool);
+	void requestCone(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
+	                 f32, bool, bool, bool);
 	virtual void perform(u32, JDrama::TGraphics*);
-	
 
 	TConeBeam mBeams[5];
 	GXColor mColor;
