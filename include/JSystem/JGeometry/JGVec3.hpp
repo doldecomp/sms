@@ -133,6 +133,7 @@ public:
 		mul(other);
 		return *this;
 	}
+	// @fabricated
 	TVec3& operator*=(f32 other)
 	{
 		scale(other);
@@ -146,6 +147,7 @@ public:
 		return fst;
 	}
 
+	// @fabricated
 	friend TVec3 operator*(TVec3 fst, float snd)
 	{
 		fst *= snd;
