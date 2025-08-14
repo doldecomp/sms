@@ -260,8 +260,9 @@ void LineInLineXZ(const JGeometry::TVec2<f32>&, const JGeometry::TVec2<f32>&,
 {
 }
 
-const TBGCheckData* TMapCollisionData::intersectLine(const JGeometry::TVec3<f32>&,
-                                      const JGeometry::TVec3<f32>&, bool,
-                                      JGeometry::TVec3<f32>*) const
+const TBGCheckData*
+TMapCollisionData::intersectLine(const JGeometry::TVec3<f32>&,
+                                 const JGeometry::TVec3<f32>&, bool,
+                                 JGeometry::TVec3<f32>*) const
 {
 }
