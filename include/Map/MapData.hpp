@@ -16,6 +16,8 @@ public:
 	TBGCheckData();
 
 	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; };
+	f32 getPlaneDistance() const { return mPlaneDistance; };
+
 	bool isIllegalData() const { return unk4 & 0x10 ? true : false; }
 	f32 getActiveJumpPower() const;
 	u32 getPlaneType();

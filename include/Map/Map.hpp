@@ -48,9 +48,9 @@ public:
 	bool isTouchedOneWall(f32 x, f32 y, f32 z, f32) const;
 	bool isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32) const;
 
-	void intersectLine(const JGeometry::TVec3<f32>&,
-	                   const JGeometry::TVec3<f32>&, bool,
-	                   JGeometry::TVec3<f32>*) const;
+	const TBGCheckData* intersectLine(const JGeometry::TVec3<f32>&,
+	                                  const JGeometry::TVec3<f32>&, bool,
+	                                  JGeometry::TVec3<f32>*) const;
 	bool isInArea(f32, f32) const;
 
 	static TBGCheckData* getIllegalCheckData();

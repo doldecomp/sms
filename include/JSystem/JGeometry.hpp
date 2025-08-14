@@ -5,6 +5,7 @@
 #include <JSystem/JGeometry/JGMatrix34.hpp>
 #include <JSystem/JGeometry/JGMatrix44.hpp>
 #include <JSystem/JGeometry/JGPosition3.hpp>
+#include <JSystem/JGeometry/JGPartition3.hpp>
 #include <JSystem/JGeometry/JGQuat4.hpp>
 #include <JSystem/JGeometry/JGRotation3.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
@@ -18,5 +19,7 @@ typedef JGeometry::TMatrix44<TSMtx44f> TMtx44f;
 
 typedef JGeometry::TRotation3<TMtx34f> TRotation3f;
 typedef JGeometry::TPosition3<TMtx34f> TPosition3f;
+
+typedef JGeometry::TPartition3<f32> TPartition3f;
 
 #endif

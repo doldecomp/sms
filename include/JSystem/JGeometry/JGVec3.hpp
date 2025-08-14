@@ -133,11 +133,24 @@ public:
 		mul(other);
 		return *this;
 	}
+	// @fabricated
+	TVec3& operator*=(f32 other)
+	{
+		scale(other);
+		return *this;
+	}
 
 	// fabricated and fake and UB but it makes things match??
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
+		return fst;
+	}
+
+	// @fabricated
+	friend TVec3 operator*(TVec3 fst, float snd)
+	{
+		fst *= snd;
 		return fst;
 	}
 
