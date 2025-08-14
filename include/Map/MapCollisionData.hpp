@@ -107,8 +107,8 @@ public:
 
 	bool polygonIsInGrid(f32, f32, f32, f32, TBGCheckData*);
 	const TBGCheckData* intersectLine(const JGeometry::TVec3<f32>&,
-	                   const JGeometry::TVec3<f32>&, bool,
-	                   JGeometry::TVec3<f32>*) const;
+	                                  const JGeometry::TVec3<f32>&, bool,
+	                                  JGeometry::TVec3<f32>*) const;
 
 	f32 checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
 	static f32 checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
