@@ -97,7 +97,7 @@ bool TRailMapObj::checkMarioRiding()
 {
 	TBGCheckData* data = SMS_GetMarioGrPlane();
 	if (!checkRailFlag(1)) {
-		if (data && data->getUnk44() == this && SMS_IsMarioTouchGround4cm()) {
+		if (data && data->getActor() == this && SMS_IsMarioTouchGround4cm()) {
 			u32 status = SMS_GetMarioStatus(SMS_GetMarioHitActor());
 			if ((status & 0x200) && !(status & 0x200000)) {
 				onRailFlag(1);
@@ -105,7 +105,7 @@ bool TRailMapObj::checkMarioRiding()
 			}
 		}
 	} else {
-		if (!data || data->getUnk44() != this || !SMS_IsMarioTouchGround4cm()) {
+		if (!data || data->getActor() != this || !SMS_IsMarioTouchGround4cm()) {
 			offRailFlag(1);
 		}
 	}

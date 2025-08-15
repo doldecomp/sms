@@ -31,8 +31,8 @@ void TMapWarp::watchToWarp()
 	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
 	                                     gpMarioPos->z, &checkData);
 
-	if (checkData->checkSomething3()) {
-		int warp = unk4[checkData->unk2].unk0;
+	if (checkData->isWarp()) {
+		int warp = unk4[checkData->getData()].unk0;
 		if (warp != unk8) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
@@ -40,21 +40,21 @@ void TMapWarp::watchToWarp()
 
 			// TODO: inlines
 			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->unk2].unk8;
+			marioPos += unk4[checkData->getData()].unk8;
 			SMS_MarioWarpRequest(marioPos,
 			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
 		}
 	}
 
-	if (checkData->checkSomething4()) {
-		if (checkData->unk2 != unk8) {
+	if (checkData->isMapChange()) {
+		if (checkData->getData() != unk8) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()
 			    ->getJointModel(0)
-			    ->getChild(checkData->unk2)
+			    ->getChild(checkData->getData())
 			    ->awake();
 
-			unk8 = checkData->unk2;
+			unk8 = checkData->getData();
 		}
 	}
 

@@ -81,9 +81,8 @@ void TLiveActor::calcRidePos()
 
 BOOL TLiveActor::belongToGround() const
 {
-	if (mGroundPlane
-	    && (mGroundPlane->checkFlag2(PLANE_TYPE_KILL) == true ? false : true)
-	    && mGroundPlane->unk44 != nullptr && !isAirborne())
+	if (mGroundPlane && mGroundPlane->isLegal()
+	    && mGroundPlane->getActor() != nullptr && !isAirborne())
 		return true;
 
 	return false;
@@ -96,8 +95,8 @@ void TLiveActor::calcRideMomentum()
 
 	if (belongToGround()) {
 		if (mGroundActor == nullptr
-		    || mGroundActor != mGroundPlane->getUnk44()) {
-			mGroundActor = mGroundPlane->getUnk44();
+		    || mGroundActor != mGroundPlane->getActor()) {
+			mGroundActor = mGroundPlane->getActor();
 			calcRidePos();
 
 			if (unkE8 >= 2 && mGroundActor != nullptr)
@@ -210,7 +209,7 @@ void TLiveActor::bind()
 
 		// Will we hit the ground next frame?
 		if (nextPos.y <= mGroundHeight + 0.05f) {
-			if (mGroundPlane->checkFlag2(PLANE_TYPE_KILL))
+			if (mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 				kill();
 			offLiveFlag(LIVE_FLAG_AIRBORNE);
 			mVelocity.set(0.0f, 0.0f, 0.0f);

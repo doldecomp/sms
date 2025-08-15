@@ -53,10 +53,10 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 	f32 temp_f1
 	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
 
-	if (checkData->unk44 != nullptr && ((pos->y - temp_f1) < 50.0f)) {
+	if (checkData->mActor != nullptr && ((pos->y - temp_f1) < 50.0f)) {
 		if (riding_info->unk0 == nullptr
-		    || riding_info->unk0 != checkData->unk44) {
-			riding_info->unk0 = checkData->unk44;
+		    || riding_info->unk0 != checkData->mActor) {
+			riding_info->unk0 = checkData->mActor;
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
 		} else {
 			TMtx34f mtx;

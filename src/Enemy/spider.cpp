@@ -49,7 +49,7 @@ void TSpider::bind(TLiveActor* param_1)
 		}
 	}
 
-	if (local_60->checkFlag2(0x10)) {
+	if (local_60->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 		if (unk4 <= 0) {
 			param_1->kill();
 		} else {
@@ -102,12 +102,12 @@ void TSpider::bind(TLiveActor* param_1)
 		if (unk10 < 0.0f)
 			unk10 = 0.0f;
 	} else {
-		if (local_90.unk1C[0]->mNormal.dot(fVar712)) {
+		if (local_90.mResultWalls[0]->mNormal.dot(fVar712)) {
 			param_1->offLiveFlag(LIVE_FLAG_AIRBORNE);
 			param_1->offLiveFlag(LIVE_FLAG_UNK8000);
 			param_1->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
-			unkC = local_90.unk1C[0];
+			unkC = local_90.mResultWalls[0];
 
 			((TSpineEnemy*)param_1)->unk138 = unkC;
 
@@ -116,8 +116,8 @@ void TSpider::bind(TLiveActor* param_1)
 			f32 fVar1 = unk10 * ((TSpineEnemy*)param_1)->mBodyScale
 			            * ((TSpineEnemy*)param_1)->mWallRadius;
 			JGeometry::TVec3<f32> tmp;
-			tmp.scale(fVar1, local_90.unk1C[0]->mNormal);
-			local_9c.sub(tmp, local_90.unk0);
+			tmp.scale(fVar1, local_90.mResultWalls[0]->mNormal);
+			local_9c.sub(tmp, local_90.mCenter);
 
 			unk10 += 0.016666667f;
 			if (unk10 > 1.0f)

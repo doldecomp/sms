@@ -113,7 +113,8 @@ void TSpineEnemy::calcEnemyRootMatrix()
 			mtx[1][3] = 0.0f;
 			mtx[2][3] = 0.0f;
 		} else {
-			if (unk130 >= 1 && !mGroundPlane->checkFlag(0x10)) {
+			if (unk130 >= 1
+			    && !mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 				JGeometry::TVec3<f32> v1(JMASin(mRotation.y), 0.0f,
 				                         JMACos(mRotation.y));
 

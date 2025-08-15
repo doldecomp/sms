@@ -166,7 +166,7 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	f32 maxZ
 	    = max(param_1->mPoint1.z, max(param_1->mPoint2.z, param_1->mPoint3.z));
 
-	if (maxX < -unk0 || maxZ < -unk4 || minX > unk0 || minZ > unk4)
+	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX || minZ > mGridExtentY)
 		return false;
 
 	if (param_2 == 2) {
@@ -176,19 +176,19 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 		maxZ += 80.0f;
 	}
 
-	*param_3 = (minX + unk0) * 0.0009765625f;
+	*param_3 = (minX + mGridExtentX) * 0.0009765625f;
 	if (*param_3 < 0)
 		*param_3 = 0;
 
-	*param_5 = (maxX + unk0) * 0.0009765625f;
+	*param_5 = (maxX + mGridExtentX) * 0.0009765625f;
 	if (*param_5 >= unk8)
 		*param_5 = unk8 - 1;
 
-	*param_4 = (minZ + unk0) * 0.0009765625f;
+	*param_4 = (minZ + mGridExtentX) * 0.0009765625f;
 	if (*param_4 < 0)
 		*param_4 = 0;
 
-	*param_6 = (maxZ + unk0) * 0.0009765625f;
+	*param_6 = (maxZ + mGridExtentX) * 0.0009765625f;
 	if (*param_6 >= unkC)
 		*param_6 = unkC - 1;
 
@@ -225,10 +225,10 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 					list3->unk8         = param_1;
 					addAfterPreNode(j, i, list2, list3, param_2);
 				} else if (iVar7 != 2) {
-					int iVar1 = (i + 1) * 1024.0f - unk4;
-					int iVar2 = (i * 1024.0f) - unk4;
-					int iVar3 = (j + 1) * 1024.0f - unk0;
-					int iVar4 = j * 1024.0f - unk0;
+					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
+					int iVar2 = (i * 1024.0f) - mGridExtentY;
+					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
+					int iVar4 = j * 1024.0f - mGridExtentX;
 					if (polygonIsInGrid(iVar4, iVar2, iVar3, iVar1, param_1)) {
 						TBGCheckList* list = getListRoot(i, j, param_2, iVar7);
 						TBGCheckList* list2;
@@ -248,10 +248,10 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 						addAfterPreNode(j, i, list2, list3, param_2);
 					}
 				} else {
-					int iVar1 = (i + 1) * 1024.0f - unk4;
-					int iVar2 = (i * 1024.0f) - unk4;
-					int iVar3 = (j + 1) * 1024.0f - unk0;
-					int iVar4 = j * 1024.0f - unk0;
+					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
+					int iVar2 = (i * 1024.0f) - mGridExtentY;
+					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
+					int iVar4 = j * 1024.0f - mGridExtentX;
 					if (polygonIsInGrid(iVar4 - 80.0f, iVar2 - 80.0f,
 					                    iVar3 + 80.0f, iVar1 + 80.0f,
 					                    param_1)) {

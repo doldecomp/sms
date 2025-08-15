@@ -37,7 +37,7 @@ void TBGPolDrop::move()
 		                               &checkData);
 		dVar3 += 1.0f;
 
-		if (checkData->checkFlag2(0x10)) {
+		if (checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 			unk58 = 0;
 			return;
 		}

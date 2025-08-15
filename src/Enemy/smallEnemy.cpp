@@ -260,7 +260,8 @@ void TSmallEnemy::reset()
 	TSmallEnemyParams* params2 = getSaveParam();
 	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
-	unk154            = mBodyScale;
+	unk190 = unk154 = mBodyScale;
+
 	mBodyRadius       = getSaveParam()->mSLBodyRadius.get();
 	mWallRadius       = getSaveParam()->mSLWallRadius.get();
 	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
@@ -282,7 +283,7 @@ void TSmallEnemy::reset()
 	goToShortestNextGraphNode();
 	offHitFlag(0x1);
 	mSpine->reset();
-	mSpine->pushDefault();
+	mSpine->pushRaw(mSpine->getDefault());
 	mScaling.set(mBodyScale, mBodyScale, mBodyScale);
 
 	mSprayedByWaterCooldown = 0;
@@ -312,9 +313,8 @@ void TSmallEnemy::reset()
 
 void TSmallEnemy::forceKill()
 {
-	if ((mGroundPlane->checkFlag2(0x10)
-	     || (!mGroundPlane->checkSomething6()
-	         && !mGroundPlane->checkSomething2()
+	if ((mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	     || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
 	         && !mGroundPlane->isWaterSurface())
 	     || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))
 	    && !gpMap->isInArea(mPosition.x, mPosition.z)) {
@@ -322,7 +322,7 @@ void TSmallEnemy::forceKill()
 		if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
-			mSpine->pushDefault();
+			mSpine->pushRaw(mSpine->getDefault());
 
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			mHitPoints = 1;
@@ -434,7 +434,7 @@ void TSmallEnemy::generateItem()
 	if (MsRandF(0.0f, 100.0f) < getSaveParam()->mSLGenEggRate.get()
 	                                + getSaveParam()->mSLGenItemRate.get()
 
-	    && !mGroundPlane->checkFlag2(0x10))
+	    && !mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 		gpMapObjManager->makeObjAppear(mPosition.x, mGroundHeight, mPosition.z,
 		                               0x20000008, true);
 }
@@ -689,7 +689,7 @@ bool TSmallEnemy::changeMove()
 				                         unk178->mPosition.y + mHeadHeight,
 				                         unk178->mPosition.z, &local_2C);
 				if (local_2C && unk178->mPosition.y + mHeadHeight > d
-				    && local_2C->unk44 != unk178)
+				    && local_2C->mActor != unk178)
 					return 1;
 				break;
 			}
@@ -908,16 +908,16 @@ bool TSmallEnemy::isHitWallInBound()
 	                            0);
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_3C)) {
-		f32 sVar2
-		    = matan(local_3C.unk1C[0]->mNormal.z, local_3C.unk1C[0]->mNormal.x)
-		      * (360.0f / 65536.0f);
+		f32 sVar2 = matan(local_3C.mResultWalls[0]->mNormal.z,
+		                  local_3C.mResultWalls[0]->mNormal.x)
+		            * (360.0f / 65536.0f);
 
 		JGeometry::TVec3<f32> v(mVelocity.x, 0.0f, mVelocity.z);
-		if (v.dot(local_3C.unk1C[0]->mNormal) > 0.0f)
+		if (v.dot(local_3C.mResultWalls[0]->mNormal) > 0.0f)
 			return false;
 
-		mPosition.x = local_3C.unk0.x;
-		mPosition.z = local_3C.unk0.z;
+		mPosition.x = local_3C.mCenter.x;
+		mPosition.z = local_3C.mCenter.z;
 		mRotation.y = sVar2;
 
 		onLiveFlag(LIVE_FLAG_UNK10);
@@ -1022,7 +1022,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 		spine->reset();
 		spine->setNext(&TNerveSmallEnemyDie::theNerve());
-		spine->pushDefault();
+		spine->pushRaw(spine->getDefault());
 
 		return true;
 	} else {

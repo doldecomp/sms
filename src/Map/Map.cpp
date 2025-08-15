@@ -47,8 +47,10 @@ TBGCheckData* TMap::getIllegalCheckData()
 
 bool TMap::isInArea(f32 param_1, f32 param_2) const
 {
-	if (-mCollisionData->unk0 < param_1 && param_1 < mCollisionData->unk0
-	    && -mCollisionData->unk4 < param_2 && param_2 < mCollisionData->unk4)
+	if (-mCollisionData->mGridExtentX < param_1
+	    && param_1 < mCollisionData->mGridExtentX
+	    && -mCollisionData->mGridExtentY < param_2
+	    && param_2 < mCollisionData->mGridExtentY)
 		return true;
 
 	return false;
@@ -64,39 +66,40 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
 
 bool TMap::isTouchedOneWall(const JGeometry::TVec3<f32>&, f32) const { }
 
-bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 param_4) const
+bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const
 {
-	return isTouchedOneWallAndMoveXZ(&x, y, &z, param_4);
+	return isTouchedOneWallAndMoveXZ(&x, y, &z, radius);
 }
 
-bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 param_4) const
+bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const
 {
-	TBGWallCheckRecord record(*x, y, *z, param_4, 1, 0);
+	TBGWallCheckRecord record(*x, y, *z, radius, 1, 0);
 
 	int r = mCollisionData->checkWalls(&record);
 	if (r != 0 ? true : false) {
-		*x = record.unk0.x;
-		*z = record.unk0.z;
+		*x = record.mCenter.x;
+		*z = record.mCenter.z;
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool TMap::isTouchedWallsAndMoveXZ(TBGWallCheckRecord* param_1) const
+bool TMap::isTouchedWallsAndMoveXZ(TBGWallCheckRecord* record) const
 {
-	return mCollisionData->checkWalls(param_1) != 0 ? true : false;
+	return mCollisionData->checkWalls(record) != 0 ? true : false;
 }
 
 f32 TMap::checkRoofIgnoreWaterThrough(f32 x, f32 y, f32 z,
-                                      const TBGCheckData** param_4) const
+                                      const TBGCheckData** result) const
 {
-	return mCollisionData->checkRoof(x, y, z, 4, param_4);
+	return mCollisionData->checkRoof(
+	    x, y, z, TMapCollisionData::IGNORE_WATER_THROUGH, result);
 }
 
-f32 TMap::checkRoof(f32 x, f32 y, f32 z, const TBGCheckData** param_4) const
+f32 TMap::checkRoof(f32 x, f32 y, f32 z, const TBGCheckData** result) const
 {
-	return mCollisionData->checkRoof(x, y, z, 0, param_4);
+	return mCollisionData->checkRoof(x, y, z, 0, result);
 }
 
 f32 TMap::checkRoof(const JGeometry::TVec3<f32>& pos,
@@ -106,45 +109,47 @@ f32 TMap::checkRoof(const JGeometry::TVec3<f32>& pos,
 }
 
 f32 TMap::checkGroundIgnoreWaterThrough(f32 x, f32 y, f32 z,
-                                        const TBGCheckData** param_4) const
+                                        const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(x, y, z, 4, param_4);
+	return mCollisionData->checkGround(
+	    x, y, z, TMapCollisionData::IGNORE_WATER_THROUGH, result);
 }
 
 f32 TMap::checkGroundIgnoreWaterSurface(f32 x, f32 y, f32 z,
-                                        const TBGCheckData** param_4) const
+                                        const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(x, y, z, 1, param_4);
+	return mCollisionData->checkGround(
+	    x, y, z, TMapCollisionData::IGNORE_WATER_SURFACE, result);
 }
 
 f32 TMap::checkGroundIgnoreWaterSurface(const JGeometry::TVec3<f32>& pos,
-                                        const TBGCheckData** param_2) const
+                                        const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(pos.x, pos.y, pos.z, 1, param_2);
+	return mCollisionData->checkGround(
+	    pos.x, pos.y, pos.z, TMapCollisionData::IGNORE_WATER_SURFACE, result);
 }
 
 f32 TMap::checkGroundExactY(f32 x, f32 y, f32 z,
-                            const TBGCheckData** param_4) const
+                            const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(x, y - -78.0f, z, 0, param_4);
+	return mCollisionData->checkGround(x, y - -78.0f, z, 0, result);
 }
 
 f32 TMap::checkGroundExactY(const JGeometry::TVec3<f32>& pos,
-                            const TBGCheckData** param_2) const
+                            const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(pos.x, pos.y - -78.0f, pos.z, 0,
-	                                   param_2);
+	return mCollisionData->checkGround(pos.x, pos.y - -78.0f, pos.z, 0, result);
 }
 
 f32 TMap::checkGround(const JGeometry::TVec3<f32>& pos,
-                      const TBGCheckData** param_2) const
+                      const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(pos.x, pos.y, pos.z, 0, param_2);
+	return mCollisionData->checkGround(pos.x, pos.y, pos.z, 0, result);
 }
 
-f32 TMap::checkGround(f32 x, f32 y, f32 z, const TBGCheckData** param_4) const
+f32 TMap::checkGround(f32 x, f32 y, f32 z, const TBGCheckData** result) const
 {
-	return mCollisionData->checkGround(x, y, z, 0, param_4);
+	return mCollisionData->checkGround(x, y, z, 0, result);
 }
 
 void TMap::changeModel(s16 param_1) const { mWarp->changeModel(param_1); }

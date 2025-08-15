@@ -36,10 +36,10 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 4) {
-
-		// TODO: more funky flag checks
 		if (!gpMarioOriginal->isWearingCap()
-		    && !gpMarioOriginal->mGroundPlane->checkFlag(0x4000)) {
+		    && !gpMarioOriginal->getGroundPlane()->isShadow()
+		    && !gpMarioOriginal->getGroundPlane()->isIndoors()
+		    && !gpMarioOriginal->getGroundPlane()->isPool()) {
 			mPosition.set(0.0f, 0.0f, 9600.0f);
 		} else {
 			mPosition.set(0.0f, 0.0f, 0.0f);
