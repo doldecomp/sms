@@ -255,7 +255,7 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
 	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
 	if (!(unk18 != -1 ? true : false)
-	    && !(gpMarioGroundPlane[1]->unk0 & 0x10 ? true : false)) {
+	    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 		unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
 		unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
 

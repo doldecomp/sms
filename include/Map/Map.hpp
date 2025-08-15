@@ -24,29 +24,33 @@ public:
 	void perform(u32, JDrama::TGraphics*);
 	void changeModel(s16) const;
 
-	f32 checkGround(f32 x, f32 y, f32 z, const TBGCheckData**) const;
+	f32 checkGround(f32 x, f32 y, f32 z, const TBGCheckData** result) const;
 	f32 checkGround(const JGeometry::TVec3<f32>& pos,
-	                const TBGCheckData**) const;
+	                const TBGCheckData** result) const;
+
 	f32 checkGroundExactY(const JGeometry::TVec3<f32>& pos,
-	                      const TBGCheckData**) const;
-	f32 checkGroundExactY(f32 x, f32 y, f32 z, const TBGCheckData**) const;
+	                      const TBGCheckData** result) const;
+	f32 checkGroundExactY(f32 x, f32 y, f32 z,
+	                      const TBGCheckData** result) const;
+
 	f32 checkGroundIgnoreWaterSurface(const JGeometry::TVec3<f32>& pos,
-	                                  const TBGCheckData**) const;
+	                                  const TBGCheckData** result) const;
 	f32 checkGroundIgnoreWaterSurface(f32 x, f32 y, f32 z,
-	                                  const TBGCheckData**) const;
+	                                  const TBGCheckData** result) const;
 	f32 checkGroundIgnoreWaterThrough(f32 x, f32 y, f32 z,
-	                                  const TBGCheckData**) const;
+	                                  const TBGCheckData** result) const;
 
-	f32 checkRoof(const JGeometry::TVec3<f32>& pos, const TBGCheckData**) const;
-	f32 checkRoof(f32 x, f32 y, f32 z, const TBGCheckData**) const;
+	f32 checkRoof(const JGeometry::TVec3<f32>& pos,
+	              const TBGCheckData** result) const;
+	f32 checkRoof(f32 x, f32 y, f32 z, const TBGCheckData** result) const;
 	f32 checkRoofIgnoreWaterThrough(f32 x, f32 y, f32 z,
-	                                const TBGCheckData**) const;
+	                                const TBGCheckData** result) const;
 
-	bool isTouchedWallsAndMoveXZ(TBGWallCheckRecord*) const;
-	bool isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32) const;
+	bool isTouchedWallsAndMoveXZ(TBGWallCheckRecord* record) const;
+	bool isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const;
 
-	bool isTouchedOneWall(f32 x, f32 y, f32 z, f32) const;
-	bool isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32) const;
+	bool isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const;
+	bool isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32 radius) const;
 
 	const TBGCheckData* intersectLine(const JGeometry::TVec3<f32>&,
 	                                  const JGeometry::TVec3<f32>&, bool,

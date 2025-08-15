@@ -16,9 +16,9 @@ public:
 	/* 0x0 */ int unk0;
 	/* 0x4 */ int unk4;
 	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
+	/* 0xC */ f32 mScale;
 	/* 0x10 */ f32 unk10;
-	/* 0x14 */ f32 unk14;
+	/* 0x14 */ f32 mExtent;
 	/* 0x18 */ TBGCheckData* unk18;
 };
 

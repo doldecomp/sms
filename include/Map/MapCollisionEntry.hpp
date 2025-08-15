@@ -143,7 +143,7 @@ public:
 	virtual void moveTrans(const JGeometry::TVec3<f32>&);
 	virtual void moveMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
 
-	void init(u32, u16, s16, const TLiveActor*);
+	void init(u32, u16 bg_type, s16 data, const TLiveActor* actor);
 	void move();
 	void setList();
 };

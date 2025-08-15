@@ -57,8 +57,8 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 	stream.read(&value, 4);
 	unk24 = value;
 
-	unk0 = (unk8 / 2) * 1024.0f;
-	unk4 = (unkC / 2) * 1024.0f;
+	mGridExtentX = (unk8 / 2) * 1024.0f;
+	mGridExtentY = (unkC / 2) * 1024.0f;
 
 	unk10 = unk8 * unkC;
 
@@ -81,8 +81,8 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 }
 
 TMapCollisionData::TMapCollisionData()
-    : unk0(0.0f)
-    , unk4(0.0f)
+    : mGridExtentX(0.0f)
+    , mGridExtentY(0.0f)
     , unk8(0)
     , unkC(0)
     , unk10(0)
@@ -105,7 +105,7 @@ TMapCollisionData::TMapCollisionData()
 	JGeometry::TVec3<float> v2(-32767.0f, -32767.0f, 32767.0f);
 	JGeometry::TVec3<float> v3(32767.0f, -32767.0f, 32767.0f);
 	mIllegalCheckData.setVertex(v1, v2, v3);
-	mIllegalCheckData.unk0 = 0;
-	mIllegalCheckData.unk4 |= 0x10;
+	mIllegalCheckData.mBGType = 0;
+	mIllegalCheckData.mFlags |= BG_CHECK_FLAG_ILLEGAL;
 	gpMapCollisionData = this;
 }

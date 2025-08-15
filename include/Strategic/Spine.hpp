@@ -130,9 +130,6 @@ public:
 	void setDefaultNext() { setNext(unk18); }
 
 	// fabricated
-	void pushDefault() { pushRaw(unk18); }
-
-	// fabricated
 	Nerve getCurrentNerve() const { return mCurrent; }
 
 	// fabricated

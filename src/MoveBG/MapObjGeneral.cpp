@@ -344,9 +344,9 @@ void TMapObjGeneral::work()
 void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
                                TBGWallCheckRecord* param_2)
 {
-	param_1->x = param_2->unk0.x;
-	param_1->z = param_2->unk0.z;
-	calcReflectingVelocity(param_2->unk1C[0],
+	param_1->x = param_2->mCenter.x;
+	param_1->z = param_2->mCenter.z;
+	calcReflectingVelocity(param_2->mResultWalls[0],
 	                       mMapObjData->mPhysical->unk4->unk8, &mVelocity);
 }
 
@@ -355,14 +355,14 @@ void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 	param_1->y += mMapObjData->mPhysical->unk4->unk1C;
 
 	TBGWallCheckRecord check(*param_1, mBodyRadius, 4,
-	                         mMapObjData->mPhysical->unk8);
+	                         mMapObjData->mPhysical->mWallCheckFlags);
 
 	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
 
 	param_1->y -= mMapObjData->mPhysical->unk4->unk1C;
 
 	if (touched) {
-		unk138 = check.unk1C[0];
+		unk138 = check.mResultWalls[0];
 		touchWall(param_1, &check);
 	} else {
 		unk138 = 0;

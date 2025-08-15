@@ -45,8 +45,7 @@ void TEnemyAttachment::behaveToHitWall(const TBGCheckData*) { rebirth(); }
 
 void TEnemyAttachment::forceKill()
 {
-	if (!mGroundPlane->checkSomething2()
-	    && gpMap->isInArea(mPosition.x, mPosition.z))
+	if (!mGroundPlane->isPool() && gpMap->isInArea(mPosition.x, mPosition.z))
 		return;
 
 	kill();
@@ -91,7 +90,7 @@ void TEnemyAttachment::bind()
 	p.y += mHeadHeight;
 	TBGWallCheckRecord local_48(p, mBodyRadius * 2.0f, 1, 0);
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.unk1C[0]);
+		behaveToHitWall(local_48.mResultWalls[0]);
 
 	mPosition                      = local_1C;
 	JGeometry::TVec3<f32> local_68 = local_1C;
@@ -231,7 +230,7 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 
 	const TBGCheckData* check;
 	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag2(0x10) && !check->isWaterSurface())
+	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL) && !check->isWaterSurface())
 		model->generate(param_1, param_2);
 
 	++unk10;

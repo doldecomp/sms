@@ -87,7 +87,7 @@ struct TMapObjPhysicalData {
 struct TMapObjPhysicalInfo {
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ TMapObjPhysicalData* unk4;
-	/* 0x8 */ u32 unk8;
+	/* 0x8 */ u32 mWallCheckFlags;
 };
 
 // fabricated
@@ -250,8 +250,8 @@ public:
 	void rotateVecByAxisY(JGeometry::TVec3<f32>*, f32);
 	void getVerticalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
 	void getVerticalVecToTargetXZ(f32, f32, JGeometry::TVec3<f32>*) const;
-	void calcReflectingVelocity(const TBGCheckData*, f32,
-	                            JGeometry::TVec3<f32>*) const;
+	void calcReflectingVelocity(const TBGCheckData* wall, f32,
+	                            JGeometry::TVec3<f32>* velocity) const;
 	void makeObjMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr) const;
 	void makeMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr);
 	static void concatOnlyRotFromRight(MtxPtr, MtxPtr, MtxPtr);

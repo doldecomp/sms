@@ -54,44 +54,64 @@ public:
 	/* 0x0 */ TBGCheckList unk0[3];
 };
 
-// TODO: the constructors are 99% wrong, need to analyze a bunch of use-cases
+/**
+ * @brief Temporary struct used for querying for collisions with walls.
+ * Given a sphere of radius mRadius located at mCenter, finds up to 4
+ * walls (triangles) that intersect with it while respecting ignore flags
+ * and returns the intersecting walls via mResultWalls and mResultWallsNum.
+ * By default, also modifies X and Z of  mCenter to "move" the sphere outside of
+ * each returned wall. This is done in-order and only guarantees that the LAST
+ * of the walls returned will not intersect with the sphere if placed at the
+ * updated position. Walls other than the last one MIGHT intersect it.
+ */
 struct TBGWallCheckRecord {
+	enum {
+		IGNORE_WATER_SURFACE = 0x1,
+		DONT_MOVE_XZ         = 0x2,
+		IGNORE_WATER_THROUGH = 0x4,
+	};
+
+	// TODO: the constructors are 99% wrong, need to analyze a bunch of
+	// use-cases. Maybe this was a plain old struct with no methods?
+
 	// fabricated
 	TBGWallCheckRecord() { }
 
 	// fabricated
-	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 param_4, u32 param_5,
-	                   u32 param_6)
-	    : unk0(x, y, z)
-	    , unkC(param_4)
-	    , unk10(param_5)
-	    , unk18(param_6)
+	TBGWallCheckRecord(f32 x, f32 y, f32 z, f32 radius, u32 max_results,
+	                   u32 flags)
+	    : mCenter(x, y, z)
+	    , mRadius(radius)
+	    , mMaxResults(max_results)
+	    , mFlags(flags)
 	{
 	}
+
 	// fabricated
-	TBGWallCheckRecord(const JGeometry::TVec3<f32>& param_1, f32 param_2,
-	                   u32 param_3, u32 param_4)
-	    : unk0(param_1)
-	    , unkC(param_2)
-	    , unk10(param_3)
-	    , unk18(param_4)
+	TBGWallCheckRecord(const JGeometry::TVec3<f32>& center, f32 radius,
+	                   u32 max_results, u32 flags)
+	    : mCenter(center)
+	    , mRadius(radius)
+	    , mMaxResults(max_results)
+	    , mFlags(flags)
 	{
 	}
 
-	void set(f32 x, f32 y, f32 z, f32 param_2, u32 param_3, u32 param_4)
+	// fabricated
+	void set(f32 x, f32 y, f32 z, f32 radius, u32 max_results, u32 flags)
 	{
-		unk0.set(x, y, z);
-		unkC  = param_2;
-		unk10 = param_3;
-		unk18 = param_4;
+		mCenter.set(x, y, z);
+		mRadius     = radius;
+		mMaxResults = max_results;
+		mFlags      = flags;
 	}
 
-	/* 0x0 */ JGeometry::TVec3<f32> unk0;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ int unk10;
-	/* 0x14 */ int unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ TBGCheckData* unk1C[1];
+	/* 0x0 */ JGeometry::TVec3<f32> mCenter;
+	/* 0xC */ f32 mRadius;
+	/* 0x10 */ int mMaxResults;
+	/* 0x14 */ int mResultWallsNum;
+	/* 0x18 */ u32 mFlags;
+	/* 0x1C */ TBGCheckData* mResultWalls[4];
 };
 
 class TMapCollisionData;
@@ -100,6 +120,11 @@ extern TMapCollisionData* gpMapCollisionData;
 
 class TMapCollisionData {
 public:
+	enum {
+		IGNORE_WATER_SURFACE = 0x1,
+		IGNORE_WATER_THROUGH = 0x4,
+	};
+
 	// fabricated
 	static TMapCollisionData* getInstance() { return gpMapCollisionData; }
 
@@ -110,12 +135,17 @@ public:
 	                                  const JGeometry::TVec3<f32>&, bool,
 	                                  JGeometry::TVec3<f32>*) const;
 
-	f32 checkGround(f32, f32, f32, u8, const TBGCheckData**) const;
-	static f32 checkGroundList(f32, f32, f32, u8, const TBGCheckList*,
-	                           const TBGCheckData**);
-	f32 checkRoof(f32, f32, f32, u8, const TBGCheckData**) const;
-	static f32 checkRoofList(f32, f32, f32, u8, const TBGCheckList*,
-	                         const TBGCheckData**);
+	f32 checkGround(f32 x, f32 y, f32 z, u8 flags,
+	                const TBGCheckData** result) const;
+	static f32 checkGroundList(f32 x, f32 y, f32 z, u8 flags,
+	                           const TBGCheckList*,
+	                           const TBGCheckData** result);
+
+	f32 checkRoof(f32 x, f32 y, f32 z, u8 flags,
+	              const TBGCheckData** result) const;
+	static f32 checkRoofList(f32 x, f32 y, f32 z, u8 flags, const TBGCheckList*,
+	                         const TBGCheckData** result);
+
 	int checkWalls(TBGWallCheckRecord*) const;
 	static int checkWallList(const TBGCheckList*, TBGWallCheckRecord*);
 
@@ -151,8 +181,8 @@ public:
 	}
 
 public:
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
+	/* 0x0 */ f32 mGridExtentX;
+	/* 0x4 */ f32 mGridExtentY;
 	/* 0x8 */ int unk8;
 	/* 0xC */ int unkC;
 	/* 0x10 */ int unk10;

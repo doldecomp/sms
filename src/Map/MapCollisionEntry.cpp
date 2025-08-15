@@ -41,19 +41,19 @@ static void* loadCollisionData(const char* param_1)
 void TMapCollisionBase::setAllBGType(u16 param_1)
 {
 	for (int i = 0; i < unkC; ++i)
-		unk4[i].unk0 = param_1;
+		unk4[i].mBGType = param_1;
 }
 
 void TMapCollisionBase::setAllData(s16 param_1)
 {
 	for (int i = 0; i < unkC; ++i)
-		unk4[i].unk2 = param_1;
+		unk4[i].mData = param_1;
 }
 
 void TMapCollisionBase::setAllActor(const TLiveActor* param_1)
 {
 	for (int i = 0; i < unkC; ++i)
-		unk4[i].unk44 = param_1;
+		unk4[i].mActor = param_1;
 }
 
 // fabricated
@@ -156,16 +156,16 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 	TMapCollisionBase::updateTrans(param_1);
 }
 
-void TMapCollisionMove::init(u32 param_1, u16 param_2, short param_3,
-                             const TLiveActor* param_4)
+void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
+                             const TLiveActor* actor)
 {
 	unk8 = 1;
 	unkC = param_1;
 	unk4 = gpMapCollisionData->allocCheckData(getUnkC());
 	for (int i = 0; i < getUnkC(); ++i) {
-		unk4[i].unk0  = param_2;
-		unk4[i].unk2  = param_3;
-		unk4[i].unk44 = param_4;
+		unk4[i].mBGType = bg_type;
+		unk4[i].mData   = data;
+		unk4[i].mActor  = actor;
 	}
 }
 

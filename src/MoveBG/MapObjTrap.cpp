@@ -184,7 +184,7 @@ void TLampTrapSpike::control()
 
 	TMapObjBase::control();
 	TBGCheckData* plane = SMS_GetMarioGrPlane();
-	if (bVar1 && plane && plane->getUnk44() == this
+	if (bVar1 && plane && plane->getActor() == this
 	    && SMS_IsMarioTouchGround4cm())
 		SMS_SendMessageToMario(this, 0xA);
 }
@@ -271,7 +271,7 @@ void TLampTrapIron::control()
 	TMapObjBase::control();
 	if (unk140 <= 0) {
 		TBGCheckData* plane = SMS_GetMarioGrPlane();
-		if (plane && plane->getUnk44() == this && SMS_IsMarioTouchGround4cm())
+		if (plane && plane->getActor() == this && SMS_IsMarioTouchGround4cm())
 			SMS_SendMessageToMario(this, 10);
 	} else {
 		--unk140;

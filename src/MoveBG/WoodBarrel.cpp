@@ -17,8 +17,8 @@ int TWoodBarrel::mOilBarrelFlushTime = 600;
 void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
-	if (mGroundPlane->unk44 != nullptr
-	    && mGroundPlane->unk44->isActorType(0x4000007b)) {
+	if (mGroundPlane->mActor != nullptr
+	    && mGroundPlane->mActor->isActorType(0x4000007b)) {
 		kill();
 		return;
 	}

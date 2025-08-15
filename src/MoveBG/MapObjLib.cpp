@@ -81,8 +81,8 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->unk44 && mGroundPlane->unk44->isActorType(0x4000000b)) {
-		((TManhole*)mGroundPlane->unk44)->makeManholeUnuseful(this);
+	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
+		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
 	}
 }
 
@@ -498,14 +498,16 @@ void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>&, f32,
 {
 }
 
-void TMapObjBase::calcReflectingVelocity(const TBGCheckData* param_1,
-                                         f32 param_2,
-                                         JGeometry::TVec3<f32>* param_3) const
+void TMapObjBase::calcReflectingVelocity(const TBGCheckData* wall, f32 param_2,
+                                         JGeometry::TVec3<f32>* velocity) const
 {
-	f32 fVar2 = param_3->dot(param_1->mNormal);
-	param_3->x -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.x;
-	param_3->y -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.y;
-	param_3->z -= (param_2 + 1.0f) * fVar2 * param_1->mNormal.z;
+	const JGeometry::TVec3<f32>& normal = wall->getNormal();
+
+	f32 fVar2 = velocity->dot(normal);
+
+	velocity->x -= (param_2 + 1.0f) * fVar2 * normal.x;
+	velocity->y -= (param_2 + 1.0f) * fVar2 * normal.y;
+	velocity->z -= (param_2 + 1.0f) * fVar2 * normal.z;
 }
 
 void TMapObjBase::getVerticalVecToTargetXZ(f32, f32,
@@ -612,7 +614,7 @@ void TMapObjBase::actorIsOn(TLiveActor*) const { }
 
 bool TMapObjBase::marioIsOn(const TLiveActor* param_1)
 {
-	if (SMS_GetMarioGrPlane()->getUnk44() == param_1
+	if (SMS_GetMarioGrPlane()->getActor() == param_1
 	    && SMS_IsMarioTouchGround4cm())
 		return true;
 
@@ -621,7 +623,7 @@ bool TMapObjBase::marioIsOn(const TLiveActor* param_1)
 
 bool TMapObjBase::marioIsOn() const
 {
-	if (SMS_GetMarioGrPlane()->getUnk44() == this
+	if (SMS_GetMarioGrPlane()->getActor() == this
 	    && SMS_IsMarioTouchGround4cm())
 		return true;
 

@@ -77,7 +77,7 @@ void TWalker::bind(TLiveActor* param_1)
 	fVar1 += 1.0f;
 
 	if (unk30 == 2 && enemy->mPosition.y - local_30.y > 0.0f
-	    && !local_40->checkFlag2(0x10)) {
+	    && !local_40->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 		if (!local_40->checkSomething7()) {
 			f32 dVar16;
 			const TBGCheckData* local_44;
@@ -98,7 +98,7 @@ void TWalker::bind(TLiveActor* param_1)
 		}
 	}
 
-	if (local_40->checkFlag2(0x10)) {
+	if (local_40->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 		unk20 = 30;
 	} else {
 		if (unk20 < 1) {
@@ -111,7 +111,8 @@ void TWalker::bind(TLiveActor* param_1)
 		fVar1 = local_30.y;
 	}
 
-	if (fVar1 * 0.05f < local_30.y || local_40->checkFlag2(0x10)) {
+	if (fVar1 * 0.05f < local_30.y
+	    || local_40->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	} else {
 		if (local_40->checkSomething7()) { }
@@ -133,9 +134,9 @@ void TWalker::bind(TLiveActor* param_1)
 		enemy->unk138 = nullptr;
 	} else {
 		const TBGCheckData* pTVar14;
-		for (int i = 0; i < local_70.unk14; ++i)
-			if (!unk4.contain(local_70.unk1C[i])) {
-				pTVar14 = local_70.unk1C[i];
+		for (int i = 0; i < local_70.mResultWallsNum; ++i)
+			if (!unk4.contain(local_70.mResultWalls[i])) {
+				pTVar14 = local_70.mResultWalls[i];
 				break;
 			}
 		if (pTVar14 == nullptr) {
@@ -143,8 +144,7 @@ void TWalker::bind(TLiveActor* param_1)
 		} else {
 			enemy->unk138 = pTVar14;
 			if (enemy->checkLiveFlag(LIVE_FLAG_AIRBORNE)
-			    && pTVar14->mMaxY - local_30.y <= unk18
-			    && pTVar14->checkSomething2()) {
+			    && pTVar14->mMaxY - local_30.y <= unk18 && pTVar14->isPool()) {
 				unk1C = 1;
 			}
 
@@ -232,7 +232,7 @@ void TWalker::bind(TLiveActor* param_1)
 		}
 	}
 
-	JGeometry::TVec3<f32> local_218 = local_70.unk0;
+	JGeometry::TVec3<f32> local_218 = local_70.mCenter;
 	local_218.y                     = local_30.y;
 	local_218 -= enemy->mPosition;
 	enemy->mLinearVelocity = local_218;

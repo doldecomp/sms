@@ -114,7 +114,7 @@ void TMapCollisionBase::update()
 }
 
 void TMapCollisionBase::initAllCheckData(s16 param_1, const f32* param_2,
-                                         u16 param_3, const TLiveActor* param_4)
+                                         u16 param_3, const TLiveActor* actor)
 {
 	unk4 = gpMapCollisionData->unk28 + gpMapCollisionData->unk34;
 	unkC = 0;
@@ -122,9 +122,9 @@ void TMapCollisionBase::initAllCheckData(s16 param_1, const f32* param_2,
 	for (s16 i = 0; i < unk18; ++i) {
 		FabricatedUnk1CStruct* thing = &unk1C[i];
 
-		int sVar2 = thing->unk2;
-		int sVar4 = thing->unk0;
-		int uVar3 = thing->unk4 & 1;
+		int sVar2  = thing->unk2;
+		int bgType = thing->unk0;
+		int uVar3  = thing->unk4 & 1;
 
 		u8* unkCit    = thing->unkC;
 		u8* unk10it   = thing->unk10;
@@ -133,8 +133,8 @@ void TMapCollisionBase::initAllCheckData(s16 param_1, const f32* param_2,
 
 		TBGCheckData* checkData = gpMapCollisionData->allocCheckData(sVar2);
 		for (int j = 0; j < sVar2; ++j) {
-			checkData->unk0  = sVar4;
-			checkData->unk44 = param_4;
+			checkData->mBGType = bgType;
+			checkData->mActor  = actor;
 
 			if (param_3 & 2)
 				setCheckData(param_2, unk8it, checkData, 3);
@@ -142,9 +142,9 @@ void TMapCollisionBase::initAllCheckData(s16 param_1, const f32* param_2,
 				setCheckData(param_2, unk8it, checkData, 0);
 
 			if (uVar3)
-				checkData->unk2 = unk14ptr[j];
+				checkData->mData = unk14ptr[j];
 			else
-				checkData->unk2 = param_1;
+				checkData->mData = param_1;
 
 			checkData->unk6 = unkCit[j];
 			checkData->unk7 = unk10it[j];

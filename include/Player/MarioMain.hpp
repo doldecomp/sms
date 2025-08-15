@@ -1077,6 +1077,8 @@ public:
 		return false;
 	}
 
+	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

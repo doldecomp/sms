@@ -10846,7 +10846,7 @@ void TMapObjBase::initUnique()
 			SMS_UnifyMaterial(getModel());
 		}
 		mMActor = mMActorKeeper->mActors[0];
-		if (mGroundPlane->unk0 & 0x4000 ? true : false)
+		if (mGroundPlane->isShadow())
 			mMapCollisionManager->unk8->setAllBGType(0x4000);
 		break;
 	case 0x4000005A:
@@ -11113,7 +11113,7 @@ void TMapObjBase::initModelData()
 	makeMActors();
 	if (checkMapObjFlag(0x800) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
-		if (getGroundPlane()->checkFlag(0x4000) && !checkMapObjFlag(0x4000))
+		if (getGroundPlane()->isShadow() && !checkMapObjFlag(0x4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else

@@ -479,8 +479,7 @@ void TModelWaterManager::move()
 			    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y - fVar1,
 			    mParticlePositionSOA[i].z, &local_248);
 
-			if (local_248->checkSomething5()
-			    || 1.0f + f31 < mParticlePositionSOA[i].y)
+			if (!local_248->isLegal() || 1.0f + f31 < mParticlePositionSOA[i].y)
 				continue;
 
 			if (local_248->isWaterSurface()) {
@@ -494,7 +493,7 @@ void TModelWaterManager::move()
 				continue;
 			}
 
-			if (local_248->checkSomething2()) {
+			if (local_248->isPool()) {
 				mParticleLifetimeSOA[i] = 0.0f;
 				if (MsRandF() < unk5D88[11])
 					SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
@@ -534,10 +533,10 @@ void TModelWaterManager::move()
 			}
 
 			unk2914[i] = local_248;
-			if (local_248->unk44 != nullptr) {
+			if (local_248->mActor != nullptr) {
 				mStaticHitActor.mPosition = mParticlePositionSOA[i];
 				mStaticHitActor.unk68     = i;
-				THitActor* hit            = (THitActor*)local_248->unk44;
+				THitActor* hit            = (THitActor*)local_248->mActor;
 				if (hit->receiveMessage(&mStaticHitActor, 0xF))
 					mParticleLifetimeSOA[i] = 0.0f;
 			}
@@ -546,15 +545,16 @@ void TModelWaterManager::move()
 
 			wcheck.set(mParticlePositionSOA[i].x,
 			           mParticlePositionSOA[i].y + mParticleSizeSOA[i] * 0.5f,
-			           mParticlePositionSOA[i].z, mParticleSizeSOA[i], 1, 4);
+			           mParticlePositionSOA[i].z, mParticleSizeSOA[i], 1,
+			           TBGWallCheckRecord::IGNORE_WATER_THROUGH);
 
 			if (gpMap->isTouchedWallsAndMoveXZ(&wcheck)) {
-				const TBGCheckData* r27 = wcheck.unk1C[0];
+				const TBGCheckData* r27 = wcheck.mResultWalls[0];
 
 				if (getFlagBottom4Bits(i) == 2) {
 					mParticleLifetimeSOA[i] = 0.0f;
 				} else {
-					if (local_248 != nullptr && !local_248->checkSomething5()
+					if (local_248 != nullptr && local_248->isLegal()
 					    && mParticlePositionSOA[i].y
 					           < mParticleSizeSOA[i]
 					                     * mWaterParticleTypes
@@ -563,10 +563,10 @@ void TModelWaterManager::move()
 					                 + f31) {
 						mParticleLifetimeSOA[i] = 0.0f;
 					} else {
-						if (r27->unk44 != nullptr) {
+						if (r27->mActor != nullptr) {
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
 							mStaticHitActor.unk68     = i;
-							THitActor* hit            = (THitActor*)r27->unk44;
+							THitActor* hit            = (THitActor*)r27->mActor;
 							hit->receiveMessage(&mStaticHitActor, 0xF);
 						}
 
@@ -611,10 +611,10 @@ void TModelWaterManager::move()
 					    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
 					    mParticlePositionSOA[i].z, &local_b4);
 					if (local_b4) {
-						if (local_b4->unk44 != nullptr) {
+						if (local_b4->mActor != nullptr) {
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
 							mStaticHitActor.unk68     = i;
-							THitActor* hit = (THitActor*)local_b4->unk44;
+							THitActor* hit = (THitActor*)local_b4->mActor;
 							hit->receiveMessage(&mStaticHitActor, 0xF);
 						}
 
@@ -1173,19 +1173,18 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 	SMS_SettingDrawShape(unk5D54, 0);
 
-	const TBGCheckData* pTVar4 = *gpMarioGroundPlane;
-	f32 fVar1                  = pTVar4->mPlaneDistance;
+	const TBGCheckData* pTVar4 = SMS_GetMarioGroundPlane();
+	f32 fVar1                  = pTVar4->getPlaneDistance();
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2
-		    && ((*gpMarioGroundPlane)->checkFlag2(0x10) == TRUE ? false
-		                                                        : true)) {
+		    && SMS_GetMarioGroundPlane()->isLegal()) {
 			GXLoadPosMtxImm(unk2D14[i], 0);
 			SMS_DrawShape(unk5D54, 0);
 		}
 	}
 	JGeometry::TVec3<f32> local_bc[4][2];
 
-	f32 fVar3 = 1.0 / (pTVar4->mNormal).y;
+	f32 fVar3 = 1.0 / pTVar4->getNormal().y;
 
 	for (int i = 0; i < 4; ++i) {
 		local_bc[i][0].x = SMS_GetMarioPos().x + JMASSin(i * 0x4000) * 1000.0f;
