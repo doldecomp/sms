@@ -179,6 +179,7 @@ public:
 	{
 		return unk18[x + z * unk8];
 	}
+	void setGroundPlane(TMapCheckGroundPlane* plane) { mGroundPlane = plane; }
 
 public:
 	/* 0x0 */ f32 mGridExtentX;
@@ -200,7 +201,7 @@ public:
 	/* 0x40 */ u16 unk40;
 	/* 0x42 */ u16 unk42[256];
 	/* 0x242 */ u16 unk242;
-	/* 0x244 */ TMapCheckGroundPlane* unk244;
+	/* 0x244 */ TMapCheckGroundPlane* mGroundPlane;
 };
 
 #endif

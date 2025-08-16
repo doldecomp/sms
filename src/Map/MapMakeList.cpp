@@ -166,7 +166,8 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	f32 maxZ
 	    = max(param_1->mPoint1.z, max(param_1->mPoint2.z, param_1->mPoint3.z));
 
-	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX || minZ > mGridExtentY)
+	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
+	    || minZ > mGridExtentY)
 		return false;
 
 	if (param_2 == 2) {
