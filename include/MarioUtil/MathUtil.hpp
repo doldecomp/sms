@@ -8,7 +8,10 @@ f32 FConverge(f32, f32, f32, f32);
 s16 matan(f32, f32);
 
 // fabricated
-f32 MsAtan2(f32 y, f32 x) { return abs(matan(y, x) * (360.0f / 65536.0f)); }
+inline f32 MsAtan2(f32 y, f32 x)
+{
+	return abs(matan(y, x) * (360.0f / 65536.0f));
+}
 
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {

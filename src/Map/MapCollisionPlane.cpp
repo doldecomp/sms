@@ -6,10 +6,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TBGCheckData* TMapCheckGroundPlane::getCheckData(int param_1, int param_2,
-                                                 int param_3) const
+TBGCheckData* TMapCheckGroundPlane::getCheckData(int x, int z, int which) const
 {
-	return &unk18[(param_2 * unk4 + param_1) * 2 + param_3];
+	return &mGrid[(z * mGridHeight + x) * 2 + which];
 }
 
 f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
@@ -20,44 +19,49 @@ f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
 		return -32767.0f;
 	}
 
-	int xInt = (int)(mScale * (x + mExtent));
-	int zInt = (int)(mScale * (z + mExtent));
+	int tileX = worldToGrid(x);
+	int tileZ = worldToGrid(z);
 
-	f32 xThing = x - (xInt * unk8 - mExtent);
-	f32 zThing = z - (zInt * unk8 - mExtent);
+	f32 inTileX = x - gridToWorld(tileX);
+	f32 inTileZ = z - gridToWorld(tileZ);
 
+	// Grid consists of tiles, each tile is 2 triangles that make a square.
+	// Pick the one that the point is in.
 	TBGCheckData* res;
-	if (unk8 - xThing > zThing)
-		res = getCheckData(xInt, zInt, 0);
+	if (mScale - inTileX > inTileZ)
+		res = getCheckData(tileX, tileZ, 0);
 	else
-		res = getCheckData(xInt, zInt, 1);
+		res = getCheckData(tileX, tileZ, 1);
 
-	f32 tmp  = x * res->mNormal.x + z * res->mNormal.z + res->mPlaneDistance;
-	f32 dist = -tmp / res->mNormal.y;
-	*result  = res;
-	return dist;
+	// solve plane equation for unknown Y
+	f32 tmp = x * res->getNormal().x + z * res->getNormal().z
+	          + res->getPlaneDistance();
+	f32 resultY = -tmp / res->getNormal().y;
+
+	*result = res;
+	return resultY;
 }
 
-void TMapCheckGroundPlane::init(int param_1, int param_2, f32 param_3)
+void TMapCheckGroundPlane::init(int width, int height, f32 scale)
 {
-	unk0    = param_1;
-	unk4    = param_2;
-	unk8    = param_3;
-	mScale  = 1.0f / unk8;
-	unk10   = unk8 * unk0;
-	mExtent = unk10 * 0.5f;
-	unk18   = new TBGCheckData[unk4 * unk0 * 2];
+	mGridWidth      = width;
+	mGridHeight     = height;
+	mScale          = scale;
+	mOneOverScale   = 1.0f / mScale;
+	mGridWorldWidth = mScale * mGridWidth;
+	mExtent         = mGridWorldWidth / 2;
+	mGrid           = new TBGCheckData[mGridHeight * mGridWidth * 2];
 
-	gpMapCollisionData->unk244 = this;
+	gpMapCollisionData->setGroundPlane(this);
 }
 
 TMapCheckGroundPlane::TMapCheckGroundPlane()
-    : unk0(0)
-    , unk4(0)
-    , unk8(0.0f)
+    : mGridWidth(0)
+    , mGridHeight(0)
     , mScale(0.0f)
-    , unk10(0.0f)
+    , mOneOverScale(0.0f)
+    , mGridWorldWidth(0.0f)
     , mExtent(0.0f)
-    , unk18(0)
+    , mGrid(0)
 {
 }

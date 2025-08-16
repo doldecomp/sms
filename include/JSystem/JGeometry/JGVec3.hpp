@@ -147,6 +147,13 @@ public:
 		return fst;
 	}
 
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	{
+		fst += snd;
+		return fst;
+	}
+
 	// @fabricated
 	friend TVec3 operator*(TVec3 fst, float snd)
 	{

@@ -306,9 +306,9 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	f32 dVar6 = checkGroundList(
 	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
 
-	if (unk244 != nullptr) {
+	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;
-		f32 dVar7 = unk244->checkPlaneGround(x, y, z, &local_68);
+		f32 dVar7 = mGroundPlane->checkPlaneGround(x, y, z, &local_68);
 		if (dVar7 > dVar6) {
 			local_64 = local_68;
 			dVar6    = dVar7;

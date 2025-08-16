@@ -99,7 +99,7 @@ TMapCollisionData::TMapCollisionData()
     , unk3C(0)
     , unk40(0)
     , unk242(0)
-    , unk244(nullptr)
+    , mGroundPlane(nullptr)
 {
 	JGeometry::TVec3<float> v1(-32767.0f, -32767.0f, -32767.0f);
 	JGeometry::TVec3<float> v2(-32767.0f, -32767.0f, 32767.0f);
