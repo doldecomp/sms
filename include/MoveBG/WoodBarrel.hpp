@@ -8,7 +8,7 @@ class TWoodBarrel : public TMapObjGeneral {
 public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();
 	virtual void appear();

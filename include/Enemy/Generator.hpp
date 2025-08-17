@@ -15,7 +15,7 @@ public:
 	TOneShotGenerator(const char*);
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 };
 
 #endif

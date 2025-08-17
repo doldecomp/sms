@@ -550,7 +550,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 

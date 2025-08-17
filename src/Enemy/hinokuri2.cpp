@@ -246,31 +246,31 @@ void THino2Hit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-BOOL THino2Hit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL THino2Hit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (mJointIdx == 0x19) {
-		if (param_1->getActorType() == 0x80000001) {
+		if (sender->getActorType() == 0x80000001) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
-			return mOwner->receiveMessage(param_1, param_2);
+			return mOwner->receiveMessage(sender, message);
 		}
-		if (param_1->getActorType() == 0x1000001 && param_2 == 0xF) {
+		if (sender->getActorType() == 0x1000001 && message == 0xF) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
-			return mOwner->receiveMessage(param_1, param_2);
+			return mOwner->receiveMessage(sender, message);
 		}
-		if (param_1->getActorType() == 0x4000005a) {
+		if (sender->getActorType() == 0x4000005a) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
-			return mOwner->receiveMessage(param_1, param_2);
+			return mOwner->receiveMessage(sender, message);
 		}
 	}
 
 	if (mJointIdx == 0x13) {
-		if (param_1->getActorType() == 0x1000001 && param_2 == 0xF) {
+		if (sender->getActorType() == 0x1000001 && message == 0xF) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
-			return mOwner->receiveMessage(param_1, param_2);
+			return mOwner->receiveMessage(sender, message);
 		}
-		if (param_1->getActorType() == 0x4000005a) {
+		if (sender->getActorType() == 0x4000005a) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
-			return mOwner->receiveMessage(param_1, param_2);
+			return mOwner->receiveMessage(sender, message);
 		}
 	}
 
@@ -878,20 +878,20 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL THinokuri2::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 {
 	if (unk168)
 		return 0;
 
 	switch (mLevel) {
 	case 0:
-		return receiveMessageLv0(param_1, param_2);
+		return receiveMessageLv0(sender, message);
 		break;
 	case 1:
-		return receiveMessageLv1(param_1, param_2);
+		return receiveMessageLv1(sender, message);
 		break;
 	case 2:
-		return receiveMessageLv2(param_1, param_2);
+		return receiveMessageLv2(sender, message);
 		break;
 	}
 

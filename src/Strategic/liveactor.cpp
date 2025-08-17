@@ -260,7 +260,7 @@ void TLiveActor::kill()
 	mLiveFlag |= 0x40;
 }
 
-BOOL TLiveActor::receiveMessage(THitActor*, u32) { return 0; }
+BOOL TLiveActor::receiveMessage(THitActor*, u32) { return FALSE; }
 
 u32 TLiveActor::getShadowType() { return 0; }
 

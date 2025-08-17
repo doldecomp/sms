@@ -61,7 +61,7 @@ public:
 	TBGBeakHit(TBossGesso* owner, const char* name = "クチバシ（つかみ）");
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 
@@ -76,7 +76,7 @@ public:
 	TBGEyeHit(TBossGesso* owner, int joint_index, const char* name = "目");
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
 	/* 0x68 */ TBossGesso* mOwner;
@@ -88,7 +88,7 @@ public:
 	TBGBodyHit(TBossGesso* owner, int joint_index, const char* name = "胴体");
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
 	/* 0x68 */ TBossGesso* mOwner;
@@ -143,7 +143,7 @@ public:
 	TBossGesso(const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void moveObject();

@@ -377,13 +377,13 @@ void TMapObjBase::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-BOOL TMapObjBase::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 5 && checkMapObjFlag(0x40)) {
-		mHeldObject = (TTakeActor*)param_1;
+	if (message == 5 && checkMapObjFlag(0x40)) {
+		mHeldObject = (TTakeActor*)sender;
 		return 1;
-	} else if (param_2 == 0xF) {
-		return touchWater(param_1);
+	} else if (message == 0xF) {
+		return touchWater(sender);
 	} else {
 		return false;
 	}

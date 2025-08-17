@@ -116,10 +116,10 @@ void TEffectObjBase::perform(u32 param_1, JDrama::TGraphics*)
 	}
 }
 
-BOOL TEffectObjBase::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TEffectObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 0xf) {
-		behaveToWater(param_1);
+	if (message == 0xf) {
+		behaveToWater(sender);
 		return true;
 	}
 

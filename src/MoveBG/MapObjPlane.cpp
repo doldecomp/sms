@@ -203,15 +203,15 @@ void TMapObjPlane::depress(f32 x, f32 z, f32 rate)
 
 void TMapObjPlane::weather() { }
 
-BOOL TMapObjPlane::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjPlane::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 1) {
-		depress(param_1->mPosition.x, param_1->mPosition.z, mHipDropDownRate);
+	if (message == HIT_MESSAGE_HIP_DROP) {
+		depress(sender->mPosition.x, sender->mPosition.z, mHipDropDownRate);
 		return true;
 	}
 
-	if (param_2 == 15) {
-		depress(param_1->mPosition.x, param_1->mPosition.z, mWaterDownRate);
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		depress(sender->mPosition.x, sender->mPosition.z, mWaterDownRate);
 		return true;
 	}
 

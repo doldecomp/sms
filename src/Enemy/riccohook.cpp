@@ -11,15 +11,15 @@ f32 THookTake::getRadiusAtY(f32 y) const
 	return mOwner->getSaveLoadParam()->mSLHangRadius.get();
 }
 
-BOOL THookTake::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->mActorType == 0x80000001) {
-		if (param_2 == 5) {
-			mHeldObject = (TTakeActor*)param_1;
+	if (sender->mActorType == 0x80000001) {
+		if (message == 5) {
+			mHeldObject = (TTakeActor*)sender;
 			return TRUE;
 		}
 
-		if (param_2 == 7 || param_2 == 8) {
+		if (message == 7 || message == 8) {
 			mHeldObject = nullptr;
 			return TRUE;
 		}
@@ -82,7 +82,7 @@ void TRiccoHook::init(TLiveManager* manager)
 
 void TRiccoHook::kill() { }
 
-BOOL TRiccoHook::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TRiccoHook::receiveMessage(THitActor* sender, u32 message)
 {
 	return FALSE;
 }

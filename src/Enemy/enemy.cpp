@@ -246,14 +246,14 @@ void TSpineEnemy::updateSquareToMario()
 	mDistToMarioSquared = PSVECSquareDistance(&mPosition, gpMarioPos);
 }
 
-BOOL TSpineEnemy::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 4 && mHolder == nullptr) {
-		mHolder = (TTakeActor*)param_1;
+	if (message == 4 && mHolder == nullptr) {
+		mHolder = (TTakeActor*)sender;
 		return true;
 	}
 
-	if (param_2 <= 2) {
+	if (message <= 2) {
 		kill();
 		return true;
 	}

@@ -409,7 +409,8 @@ void TModelWaterManager::move()
 			mStaticHitActor.mPosition = mParticlePositionSOA[i];
 			mStaticHitActor.unk68     = i;
 
-			if (!unk2514[i]->receiveMessage(&mStaticHitActor, 0xF))
+			if (!unk2514[i]->receiveMessage(&mStaticHitActor,
+			                                HIT_MESSAGE_SPRAYED_BY_WATER))
 				continue;
 
 			splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
@@ -537,7 +538,8 @@ void TModelWaterManager::move()
 				mStaticHitActor.mPosition = mParticlePositionSOA[i];
 				mStaticHitActor.unk68     = i;
 				THitActor* hit            = (THitActor*)local_248->mActor;
-				if (hit->receiveMessage(&mStaticHitActor, 0xF))
+				if (hit->receiveMessage(&mStaticHitActor,
+				                        HIT_MESSAGE_SPRAYED_BY_WATER))
 					mParticleLifetimeSOA[i] = 0.0f;
 			}
 		} else {
@@ -567,7 +569,8 @@ void TModelWaterManager::move()
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
 							mStaticHitActor.unk68     = i;
 							THitActor* hit            = (THitActor*)r27->mActor;
-							hit->receiveMessage(&mStaticHitActor, 0xF);
+							hit->receiveMessage(&mStaticHitActor,
+							                    HIT_MESSAGE_SPRAYED_BY_WATER);
 						}
 
 						JGeometry::TVec3<f32> local_194 = r27->getNormal();
@@ -615,7 +618,8 @@ void TModelWaterManager::move()
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
 							mStaticHitActor.unk68     = i;
 							THitActor* hit = (THitActor*)local_b4->mActor;
-							hit->receiveMessage(&mStaticHitActor, 0xF);
+							hit->receiveMessage(&mStaticHitActor,
+							                    HIT_MESSAGE_SPRAYED_BY_WATER);
 						}
 
 						if (mParticlePositionSOA[i].y + mParticleSizeSOA[i]
