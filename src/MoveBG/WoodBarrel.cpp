@@ -118,14 +118,14 @@ void TWoodBarrel::touchActor(THitActor* param_1)
 	}
 }
 
-BOOL TWoodBarrel::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 0xD) {
+	if (message == 0xD) {
 		kill();
 		return true;
 	}
 
-	return TMapObjGeneral::receiveMessage(param_1, param_2);
+	return TMapObjGeneral::receiveMessage(sender, message);
 }
 
 void TWoodBarrel::control()

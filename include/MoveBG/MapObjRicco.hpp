@@ -51,7 +51,7 @@ class TFruitSwitch : public TMapObjBase {
 public:
 	void pullUp();
 	void pushDown();
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	TFruitSwitch();
 };
 

@@ -33,9 +33,9 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
 	offHitFlag(0x1);
 }
 
-BOOL TLampTrapSpikeHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
 void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -69,9 +69,9 @@ void TLampTrapSpike::loadAfter()
 	unk140 = new TLampTrapSpikeHit(this, "トゲあたり");
 }
 
-BOOL TLampTrapSpike::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapSpike::receiveMessage(THitActor* sender, u32 message)
 {
-	TMapObjBase::receiveMessage(param_1, param_2);
+	TMapObjBase::receiveMessage(sender, message);
 }
 
 void TLampTrapSpike::control()
@@ -206,9 +206,9 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
 	offHitFlag(0x1);
 }
 
-BOOL TLampTrapIronHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
 void TLampTrapIronHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -249,9 +249,9 @@ void TLampTrapIron::loadAfter()
 	unk138 = new TLampTrapIronHit(this, "鉄板あたり");
 }
 
-BOOL TLampTrapIron::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->isActorType(0x1000001)) {
+	if (sender->isActorType(0x1000001)) {
 		if (unk13C > 0) {
 			--unk13C;
 			if (unk13C == 0) {
@@ -263,7 +263,7 @@ BOOL TLampTrapIron::receiveMessage(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	return TMapObjBase::receiveMessage(param_1, param_2);
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 void TLampTrapIron::control()

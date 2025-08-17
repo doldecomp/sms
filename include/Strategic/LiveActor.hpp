@@ -41,7 +41,7 @@ enum LiveFlagBits {
 
 class TLiveActor : public TTakeActor {
 public:
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL belongToGround() const;
 	virtual Mtx* getRootJointMtx() const;

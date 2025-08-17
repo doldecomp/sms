@@ -17,7 +17,7 @@ public:
 	void checkTakingActor();
 	void getPosInWire() const;
 	void getTipPoints(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*) const;
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	void init(TMapWireActorManager*);
 	TMapWireActor(const char*);
 

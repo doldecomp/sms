@@ -12,7 +12,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual BOOL hasMapCollision() const { return TRUE; }
 
 	void initDraw();

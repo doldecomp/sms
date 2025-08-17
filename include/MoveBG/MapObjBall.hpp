@@ -7,7 +7,7 @@ class TMapObjBall : public TMapObjGeneral {
 public:
 	TMapObjBall(const char*);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void makeObjAppeared();
 	virtual void initMapObj();
@@ -35,7 +35,7 @@ public:
 	TResetFruit(const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void makeObjAppeared();
 	virtual void initMapObj();
@@ -79,7 +79,7 @@ class TCoverFruit : public TMapObjBase {
 public:
 	TCoverFruit();
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void calcRootMatrix();
 };
@@ -89,7 +89,7 @@ public:
 	TBigWatermelon(const char*);
 
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control() { }
 	virtual void kill();
 	virtual void initMapObj();

@@ -20,9 +20,9 @@
 
 f32 TMapObjNail::mDownHeight = 50.0f;
 
-BOOL TMapObjNail::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 1 && !isUnk104Positive() && unk150 < 3) {
+	if (message == 1 && !isUnk104Positive() && unk150 < 3) {
 		mPosition.y -= mDownHeight;
 		removeMapCollision();
 		setUpCurrentMapCollision();

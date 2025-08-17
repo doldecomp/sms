@@ -40,7 +40,7 @@ public:
 class TPinnaShell : public THitActor {
 public:
 	void opened();
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	void control();
 	TPinnaShell(const char*);
 	TPinnaShell();

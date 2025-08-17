@@ -61,7 +61,7 @@ class TBrickBlock : public THideObjBase {
 public:
 	TBrickBlock();
 	void initMapObj();
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	void kill();
 };
 
@@ -99,7 +99,7 @@ public:
 class TSuperHipDropBlock : public TBreakHideObj {
 public:
 	void loadAfter();
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 };
 
 #endif

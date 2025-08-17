@@ -90,7 +90,7 @@ class THino2Hit : public THitActor {
 public:
 	THino2Hit(THinokuri2* owner, int joint_idx, const char* name);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x68 */ THinokuri2* mOwner;
@@ -138,7 +138,7 @@ public:
 	THinokuri2(const char*);
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void moveObject();
 	virtual void kill();

@@ -10,6 +10,7 @@ enum TActorTypeBits {
 };
 
 enum THitMessageType {
+	HIT_MESSAGE_HIP_DROP         = 1,
 	HIT_MESSAGE_SPRAYED_BY_WATER = 15,
 };
 

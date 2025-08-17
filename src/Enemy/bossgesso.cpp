@@ -156,10 +156,10 @@ bool TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	mPosition = where_to;
 }
 
-BOOL TBGBeakHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->isActorType(0x1000001)) {
-		if (!isNozzleWater(param_1))
+	if (sender->isActorType(0x1000001)) {
+		if (!isNozzleWater(sender))
 			return true;
 
 		mOwner->gotEyeDamage();
@@ -176,9 +176,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* param_1, u32 param_2)
 	    || mOwner->getLatestNerve() == &TNerveBGBeakDamage::theNerve())
 		return false;
 
-	if (param_1->getActorType() == 0x80000001) {
-		if (param_2 == 4) {
-			TTakeActor* actor = (TTakeActor*)param_1;
+	if (sender->getActorType() == 0x80000001) {
+		if (message == 4) {
+			TTakeActor* actor = (TTakeActor*)sender;
 			if (actor->mHeldObject != nullptr && actor->mHeldObject != this)
 				return false;
 
@@ -190,7 +190,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* param_1, u32 param_2)
 			return true;
 		}
 
-		if (param_2 == 7 || param_2 == 8) {
+		if (message == 7 || message == 8) {
 			// TODO: inlined from TBossGesso?
 			JGeometry::TVec3<f32> delta = mPosition;
 			TBossGesso* gesso           = mOwner;
@@ -289,18 +289,18 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
 	offHitFlag(0x1);
 }
 
-BOOL TBGEyeHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (mOwner->getAttackMode() == 3)
 		return false;
 
-	if (param_1->getActorType() == 0x1000001 && param_2 == 15) {
+	if (sender->getActorType() == 0x1000001 && message == 15) {
 		mOwner->gotEyeDamage();
-		gpMarioParticleManager->emit(0xE7, &param_1->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
 	}
 
-	return mOwner->receiveMessage(param_1, param_2);
+	return mOwner->receiveMessage(sender, message);
 }
 
 void TBGEyeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -322,14 +322,14 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
 	offHitFlag(0x1);
 }
 
-BOOL TBGBodyHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x1000001 && param_2 == 0xf) {
-		gpMarioParticleManager->emit(0xE7, &param_1->mPosition, 0, nullptr);
+	if (sender->getActorType() == 0x1000001 && message == 0xf) {
+		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
 	}
 
-	return mOwner->receiveMessage(param_1, param_2);
+	return mOwner->receiveMessage(sender, message);
 }
 
 void TBGBodyHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -881,10 +881,10 @@ void TBossGesso::tentacleWait() { }
 
 const char** TBossGesso::getBasNameTable() const { return bgeso_bastable; }
 
-BOOL TBossGesso::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBossGesso::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x1000001 && param_2 == 0xf) {
-		gpMarioParticleManager->emit(0xE7, &param_1->mPosition, 0, nullptr);
+	if (sender->getActorType() == 0x1000001 && message == 0xf) {
+		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
 	}
 

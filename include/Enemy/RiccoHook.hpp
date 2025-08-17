@@ -38,7 +38,7 @@ public:
 
 	virtual void init(TLiveManager*);
 	virtual void kill();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void perform(u32, JDrama::TGraphics*);
 
 	THookParams* getSaveLoadParam() const
@@ -58,7 +58,7 @@ public:
 	virtual ~THookTake() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual f32 getRadiusAtY(f32 y) const;
 

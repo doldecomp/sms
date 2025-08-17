@@ -57,17 +57,17 @@ void TItem::touchPlayer(THitActor* param_1)
 		taken(param_1);
 }
 
-BOOL TItem::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TItem::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == 0xF)
+	if (message == 0xF)
 		return false;
 
-	if (param_2 == 0xb) {
-		taken(param_1);
+	if (message == 0xb) {
+		taken(sender);
 		return true;
 	}
 
-	return TMapObjGeneral::receiveMessage(param_1, param_2);
+	return TMapObjGeneral::receiveMessage(sender, message);
 }
 
 void TItem::calcRootMatrix()

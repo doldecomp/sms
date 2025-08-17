@@ -484,46 +484,46 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 	TMapObjBase::perform(param_1, param_2);
 }
 
-BOOL TMapObjGeneral::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 {
-	int ret = TMapObjBase::receiveMessage(param_1, param_2);
+	int ret = TMapObjBase::receiveMessage(sender, message);
 	if (ret)
 		return true;
 
 	// TODO: concerning. Is unkAC actually a Vec?
-	if (param_2 == 4 && checkMapObjFlag(0x100000)
+	if (message == 4 && checkMapObjFlag(0x100000)
 	    && JGeometry::TVec3<f32>(mVelocity).squared() <= 3.814697e-06f
 	    && (isState(2) || isState(1) || isState(4) || isState(5))) {
-		hold((TTakeActor*)param_1);
+		hold((TTakeActor*)sender);
 		return true;
 	}
 
-	if (param_2 == 4 && isActorType(0x10000025) && (isState(2) || isState(1))) {
-		hold((TTakeActor*)param_1);
+	if (message == 4 && isActorType(0x10000025) && (isState(2) || isState(1))) {
+		hold((TTakeActor*)sender);
 		return 1;
 	}
 
-	if (param_2 == 6 && isState(6)) {
+	if (message == 6 && isState(6)) {
 		put();
 		return true;
 	}
 
-	if (param_2 == 7 && isState(6) && mMapObjData->mPhysical != nullptr) {
+	if (message == 7 && isState(6) && mMapObjData->mPhysical != nullptr) {
 		thrown();
 		return true;
 	}
 
-	if (param_2 == 1 && checkMapObjFlag(0x200000)) {
+	if (message == 1 && checkMapObjFlag(0x200000)) {
 		kill();
 		return true;
 	}
 
-	if (isActorType(0x80000001) && (param_2 == 0 || param_2 == 1)) {
+	if (isActorType(0x80000001) && (message == 0 || message == 1)) {
 		receiveMessageFromPlayer();
 		return true;
 	}
 
-	if (param_2 == 11 && checkMapObjFlag(0x200000)) {
+	if (message == 11 && checkMapObjFlag(0x200000)) {
 		kill();
 	}
 

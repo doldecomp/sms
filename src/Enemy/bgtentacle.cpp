@@ -248,11 +248,11 @@ bool TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	}
 }
 
-BOOL TBGTakeHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x80000001) {
-		if (param_2 == 4) {
-			TTakeActor* casted = (TTakeActor*)param_1;
+	if (sender->getActorType() == 0x80000001) {
+		if (message == 4) {
+			TTakeActor* casted = (TTakeActor*)sender;
 			if (casted->getHeldObject() != nullptr
 			    && casted->getHeldObject() != this)
 				return false;
@@ -264,7 +264,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* param_1, u32 param_2)
 			}
 		}
 
-		if (param_2 == 7 || param_2 == 8) {
+		if (message == 7 || message == 8) {
 			mHolder               = nullptr;
 			TBGTentacle* tentacle = mOwner;
 			if (tentacle->mState != 4) {
@@ -276,7 +276,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* param_1, u32 param_2)
 			return true;
 		}
 
-		if (param_2 == 0 || param_2 == 1) {
+		if (message == 0 || message == 1) {
 			if (mOwner->mState != 4 && mOwner->mState != 5
 			    && mOwner->mState != 3 && mOwner->mState != 6
 			    && mOwner->mState != 10) {

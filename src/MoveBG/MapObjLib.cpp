@@ -812,17 +812,17 @@ void TMapObjTurn::turn() { }
 
 void TMapObjTurn::control() { }
 
-BOOL TMapObjTurn::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
 {
 	u32 result;
-	if (param_2 == 5
-	    && (param_1->isActorType(0x2000000E) || param_1->isActorType(0x2000000F)
-	        || param_1->isActorType(0x20000010))) {
+	if (message == 5
+	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
+	        || sender->isActorType(0x20000010))) {
 		unk168 = 1;
 		result = 1;
 	} else {
 		// BUG: should've been THideObjBase?
-		result = TMapObjBase::receiveMessage(param_1, param_2);
+		result = TMapObjBase::receiveMessage(sender, message);
 	}
 	return result;
 }
