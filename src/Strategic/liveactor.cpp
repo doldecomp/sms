@@ -157,7 +157,7 @@ void TLiveActor::init(TLiveManager* manager)
 
 	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 
-	onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
 	offLiveFlag(LIVE_FLAG_UNK400);
 
 	if (!mAnmSound)

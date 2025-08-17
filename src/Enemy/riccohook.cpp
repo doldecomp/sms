@@ -71,13 +71,13 @@ void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mSpine->initWith(&TNerveRHGraphWander::theNerve());
-	onHitFlag(0x01);
+	onHitFlag(HIT_FLAG_UNK1);
 	mHookTake = new THookTake(this);
 	unk124->reset();
 	goToShortestNextGraphNode();
 	mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();
 	mTurnSpeed  = 10.0f;
-	onLiveFlag(0x10);
+	onLiveFlag(LIVE_FLAG_UNK10);
 }
 
 void TRiccoHook::kill() { }

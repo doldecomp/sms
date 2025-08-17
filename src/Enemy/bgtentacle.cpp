@@ -198,7 +198,7 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
 	initHitActor(0x8000006, 1, -0x80000000, pTVar3->mAttackRadius.get(),
 	             pTVar3->mAttackHeight.get(), pTVar3->mDamageRadius.get(),
 	             pTVar3->mDamageHeight.get());
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 	unk74.zero();
 }
 
@@ -379,7 +379,7 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x8000007, 1, -0x80000000, 50.0f, 50.0f, 50.0f, 50.0f);
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 }
 
 void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -387,7 +387,7 @@ void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 1) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->mTakeHit->checkHitFlag(2) && mOwner->isThing3()
+		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_UNK2) && mOwner->isThing3()
 		    || mOwner->getState() == 1
 		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
@@ -811,14 +811,14 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	if (mState == 6)
-		mTakeHit->onHitFlag(0x1);
+		mTakeHit->onHitFlag(HIT_FLAG_UNK1);
 	else
-		mTakeHit->offHitFlag(0x1);
+		mTakeHit->offHitFlag(HIT_FLAG_UNK1);
 
 	if (mState == 9)
-		mTakeHit->onHitFlag(0x2);
+		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
 
-	mTakeHit->offHitFlag(0x4);
+	mTakeHit->offHitFlag(HIT_FLAG_UNK4);
 }
 
 void TBGTentacle::returnToDefaultState() { }
@@ -1183,7 +1183,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 
 void TBGTentacle::decideAtkColExists()
 {
-	mTakeHit->onHitFlag(0x2);
+	mTakeHit->onHitFlag(HIT_FLAG_UNK2);
 
 	f32 frame = unk80->getFrameCtrl(0)->getCurrentFrame();
 
@@ -1216,9 +1216,9 @@ void TBGTentacle::decideAtkColExists()
 	}
 
 	if (shouldCollisionExist) {
-		mTakeHit->offHitFlag(0x2);
+		mTakeHit->offHitFlag(HIT_FLAG_UNK2);
 	} else {
-		mTakeHit->onHitFlag(0x2);
+		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
 	}
 }
 

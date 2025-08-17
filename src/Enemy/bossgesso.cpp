@@ -126,7 +126,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
 	initHitActor(0x8000008, 1, -0x80000000, 0.0f, 0.0f,
 	             mOwner->getSaveParam()->mSLBeakDamageRadius.get(),
 	             mOwner->getSaveParam()->mSLBeakDamageHeight.get());
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 	unkA4.zero();
 }
 
@@ -286,7 +286,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
 	initHitActor(0x8000009, 1, 0x1000000, 0.0f, 0.0f,
 	             mOwner->getSaveParam()->mSLEyeDamageRadius.get(),
 	             mOwner->getSaveParam()->mSLEyeDamageHeight.get());
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 }
 
 BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
@@ -319,7 +319,7 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
 	    .push_back(this);
 
 	initHitActor(0x8000005, 1, -0x7f000000, 300.0f, 300.0f, 300.0f, 300.0f);
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 }
 
 BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
@@ -574,7 +574,7 @@ void TBossGesso::init(TLiveManager* param_1)
 	mBody     = new TBGBodyHit(this, 0);
 
 	initHitActor(0x8000005, 5, -0x7f000000, 300.0f, 300.0f, 300.0f, 300.0f);
-	onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
 
 	mSpine->initWith(&TNerveBGWait::theNerve());
 	mMtxCalc = new TBossGessoMtxCalc(this);

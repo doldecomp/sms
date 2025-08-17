@@ -107,7 +107,7 @@ void TEnemyAttachment::rebirth()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
 	mVelocity.y = 0.0f;
 }
 
@@ -115,7 +115,7 @@ void TEnemyAttachment::kill()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
 }
 
 void TEnemyAttachment::set()
