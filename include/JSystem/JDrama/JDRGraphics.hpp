@@ -26,6 +26,7 @@ struct TGraphics {
 
 	TRect& getUnk44() { return unk44; }
 	TRect& getUnk54() { return unk54; }
+	const TRect& getUnk64() { return unk64; }
 
 	bool checkFlag8() { return (unkFC.mValue & 0x8) != 0; }
 	bool checkFlag10() { return (unkFC.mValue & 0x10) != 0; }

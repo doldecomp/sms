@@ -82,7 +82,7 @@ void TMarDirector::setup2()
 	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
 	mConsole->unkC = 0xB;
 	unkDC = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
-	unkDC->unk14 = 120.0f;
+	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");

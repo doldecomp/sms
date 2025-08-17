@@ -1087,10 +1087,10 @@ config.libs = [
     {
         "lib": "GC2D",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "GC2D/ChangeValue.cpp"),
+            Object(Matching, "GC2D/ChangeValue.cpp"),
             Object(NonMatching, "GC2D/Coord2D.cpp"),
             Object(NonMatching, "GC2D/ExPane.cpp"),
             Object(NonMatching, "GC2D/Menu.cpp"),

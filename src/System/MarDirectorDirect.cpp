@@ -351,7 +351,7 @@ int TMarDirector::changeState()
 		break;
 
 	case 10:
-		if (unk78 && gpApplication.mFader->unk20 == 1)
+		if (unk78 && gpApplication.mFader->mFadeStatus == 1)
 			uVar3 = 4;
 		break;
 
@@ -393,7 +393,7 @@ int TMarDirector::changeState()
 	}
 
 	case 7:
-		if (gpApplication.mFader->unk20 == 0
+		if (gpApplication.mFader->mFadeStatus == 0
 		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 > 0x4AF)) {
 			if (TFlagManager::smInstance->getFlag(0x2001) < 0) {
 				TFlagManager::smInstance->setBool(true, 0x30002);
@@ -421,7 +421,7 @@ int TMarDirector::changeState()
 
 	case 9:
 	case 12:
-		if (gpApplication.mFader->unk20 == 0
+		if (gpApplication.mFader->mFadeStatus == 0
 		    && gpMSound->checkWaveOnAram(MS_WAVE_DEFAULT))
 			uVar5 = unkB4;
 		break;
