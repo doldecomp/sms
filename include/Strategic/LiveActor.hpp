@@ -17,7 +17,7 @@ class J3DModel;
 class TBinder;
 class TMapCollisionManager;
 
-enum LiveFlagBits {
+enum TLiveFlagBits {
 	LIVE_FLAG_DEAD        = 0x1,
 	LIVE_FLAG_UNK2        = 0x2,
 	LIVE_FLAG_CLIPPED_OUT = 0x4,

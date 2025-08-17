@@ -293,7 +293,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	int num = getActiveObjNum();
 	if (param_1 & 1) {
 		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onHitFlag(0x1);
+			getObj(i)->onHitFlag(HIT_FLAG_UNK1);
 	}
 
 	for (int i = 0; i < num; ++i) {

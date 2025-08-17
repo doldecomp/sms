@@ -14,6 +14,12 @@ enum THitMessageType {
 	HIT_MESSAGE_SPRAYED_BY_WATER = 15,
 };
 
+enum THitFlagBits {
+	HIT_FLAG_UNK1 = 0x1,
+	HIT_FLAG_UNK2 = 0x2,
+	HIT_FLAG_UNK4 = 0x4,
+};
+
 class THitActor : public JDrama::TActor {
 public:
 	THitActor(const char* = "HitActor");

@@ -30,7 +30,7 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
 	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 }
 
 BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
@@ -60,7 +60,7 @@ TLampTrapSpike::TLampTrapSpike(const char* name)
 void TLampTrapSpike::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(1);
+	onHitFlag(HIT_FLAG_UNK1);
 }
 
 void TLampTrapSpike::loadAfter()
@@ -203,7 +203,7 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
 	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(0x1);
+	offHitFlag(HIT_FLAG_UNK1);
 }
 
 BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
@@ -238,7 +238,7 @@ TLampTrapIron::TLampTrapIron(const char* name)
 void TLampTrapIron::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
 	unk140 = 0;
 	unk13C = mHitPointMax;
 }

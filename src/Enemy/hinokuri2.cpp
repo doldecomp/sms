@@ -607,20 +607,20 @@ void THinokuri2::resetPolInterval()
 
 void THinokuri2::invalidateCollisionAll()
 {
-	onHitFlag(0x1);
-	mHead->onHitFlag(0x1);
-	mBody->onHitFlag(0x1);
-	unk174->onHitFlag(0x1);
-	unk178->onHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
+	mHead->onHitFlag(HIT_FLAG_UNK1);
+	mBody->onHitFlag(HIT_FLAG_UNK1);
+	unk174->onHitFlag(HIT_FLAG_UNK1);
+	unk178->onHitFlag(HIT_FLAG_UNK1);
 }
 
 void THinokuri2::validateCollisionAll()
 {
-	onHitFlag(0x1);
-	mHead->offHitFlag(0x1);
-	mBody->offHitFlag(0x1);
-	unk174->offHitFlag(0x1);
-	unk178->offHitFlag(0x1);
+	onHitFlag(HIT_FLAG_UNK1);
+	mHead->offHitFlag(HIT_FLAG_UNK1);
+	mBody->offHitFlag(HIT_FLAG_UNK1);
+	unk174->offHitFlag(HIT_FLAG_UNK1);
+	unk178->offHitFlag(HIT_FLAG_UNK1);
 }
 
 void THinokuri2::emitWaterParticle()
