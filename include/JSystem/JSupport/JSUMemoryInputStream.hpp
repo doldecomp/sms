@@ -20,9 +20,12 @@ public:
 	virtual int getLength() const { return mLength; }
 	virtual int getPosition() const { return mPosition; }
 
-	const void* mBuffer;
-	s32 mLength;
-	s32 mPosition;
+	// fabricated
+	bool isNotDrained() const { return getLength() - getPosition() != 0; }
+
+	/* 0x8 */ const void* mBuffer;
+	/* 0xC */ s32 mLength;
+	/* 0x10 */ s32 mPosition;
 };
 
 #endif

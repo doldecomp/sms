@@ -48,8 +48,8 @@ public:
 	void startAppearRedCoin();
 	void pauseIn();
 	void pauseOut();
-	void startDisappearBalloon(u32, bool);
-	void startAppearBalloon(u32, bool);
+	bool startDisappearBalloon(u32, bool);
+	bool startAppearBalloon(u32, bool);
 	void startDisappearStar();
 	void startAppearStar();
 	void drawWaterBack();
