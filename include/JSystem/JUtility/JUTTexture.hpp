@@ -63,7 +63,7 @@ public:
 	}
 	bool operator!=(const JUTTexture& other) { return !operator==(other); }
 
-protected:
+public:
 	/* 0x00 */ GXTexObj mTexObj;
 	/* 0x20 */ const ResTIMG* mTexInfo;
 	/* 0x24 */ void* mTexData;

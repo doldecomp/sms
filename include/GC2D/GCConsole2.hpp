@@ -22,7 +22,7 @@ class TConsoleStr;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
-	TGCConsole2(const char*);
+	TGCConsole2(const char* name);
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
 	void entryHelpActor(THelpActor*);
@@ -61,35 +61,36 @@ public:
 	void setTimer(long);
 	void startMoveTimer(int);
 	void stopMoveTimer();
-	void getFinishedTime();
-	void processAppearLife(int);
-	void processInsertLife(int);
-	void processAppearStar(int);
-	void processDownCoin(int);
-	void processAppearTank(int);
-	void processAppearCoin(int);
-	void processAppearMario(int);
-	void processDrawTelop(u32);
-	void checkChangeTelopArray();
-	void processAppearJet(int);
-	void processAppearRed(int);
-	void processAppearTimer(int);
-	void processAppearBalloon();
-	void processDisappearBalloon();
-	void drawJuice(J2DOrthoGraph&, u32);
-	void drawWater(J2DOrthoGraph&);
+	int getFinishedTime();
+
 	void perform(u32, JDrama::TGraphics*);
 
-	// TODO: wrong types, should be JUTPoint
-	static int cDownTopPoint;
-	static int cDownMidPoint;
-	static int cDownBotPoint;
-	static int cUpTopPoint;
-	static int cUpMidPoint;
-	static int cUpBotPoint;
-	static int cCoinTopPoint;
-	static int cCoinMidPoint;
-	static int cCoinBotPoint;
+	void processAppearLife(int) { }
+	void processInsertLife(int) { }
+	void processAppearStar(int) { }
+	void processDownCoin(int) { }
+	void processAppearTank(int) { }
+	void processAppearCoin(int) { }
+	void processAppearMario(int) { }
+	void processDrawTelop(u32) { }
+	void checkChangeTelopArray() { }
+	void processAppearJet(int) { }
+	void processAppearRed(int) { }
+	void processAppearTimer(int) { }
+	void processAppearBalloon() { }
+	void processDisappearBalloon() { }
+	void drawJuice(J2DOrthoGraph&, u32) { }
+	void drawWater(J2DOrthoGraph&) { }
+
+	static JUTPoint cDownTopPoint;
+	static JUTPoint cDownMidPoint;
+	static JUTPoint cDownBotPoint;
+	static JUTPoint cUpTopPoint;
+	static JUTPoint cUpMidPoint;
+	static JUTPoint cUpBotPoint;
+	static JUTPoint cCoinTopPoint;
+	static JUTPoint cCoinMidPoint;
+	static JUTPoint cCoinBotPoint;
 
 public:
 	/* 0x10 */ u32 unk10;
@@ -172,17 +173,19 @@ public:
 	/* 0x270 */ TBoundPane* unk270;
 	/* 0x274 */ TBoundPane* unk274;
 	/* 0x278 */ TBoundPane* unk278[4];
-	/* 0x288 */ char unk288[0x29C - 0x288];
+	/* 0x288 */ J2DPane* unk288;
+	/* 0x28C */ J2DPane* unk28C[4];
 	/* 0x29C */ TBoundPane* unk29C;
 	/* 0x2A0 */ J2DPicture* unk2A0[3];
-	/* 0x2AC */ char unk2AC[0x2BC - 0x2AC];
+	/* 0x2AC */ J2DPicture* unk2AC[3];
+	/* 0x2B8 */ char unk2B8[0x4];
 	/* 0x2BC */ JUTRect unk2BC[3];
 	/* 0x2EC */ JUtility::TColor unk2EC[3];
 	/* 0x2F8 */ TExPane* unk2F8;
 	/* 0x2FC */ JUTRect unk2FC;
 	/* 0x30C */ u8 unk30C;
 	/* 0x310 */ u32 unk310;
-	/* 0x314 */ char unk314[0x10];
+	/* 0x314 */ J2DPane* unk314[4];
 	/* 0x324 */ J2DPane* unk324;
 	/* 0x328 */ J2DPane* unk328;
 	/* 0x32C */ J2DPane* unk32C;
@@ -205,7 +208,7 @@ public:
 	/* 0x3D8 */ JSUOutputStream* unk3D8;
 	/* 0x3DC */ JSUOutputStream* unk3DC;
 	/* 0x3E0 */ u32 unk3E0;
-	/* 0x3E4 */ u32 unk3E4;
+	/* 0x3E4 */ int unk3E4;
 	/* 0x3E8 */ u16 unk3E8;
 	/* 0x3EC */ f32 unk3EC;
 	/* 0x3F0 */ u16 unk3F0;
@@ -218,7 +221,8 @@ public:
 	/* 0x40C */ TBoundPane* unk40C;
 	/* 0x410 */ TBoundPane* unk410;
 	/* 0x414 */ TBoundPane* unk414[4];
-	/* 0x424 */ char unk424[0x4];
+	/* 0x424 */ char unk424[0x2];
+	/* 0x426 */ u8 unk426;
 	/* 0x428 */ TExPane* unk428;
 	/* 0x42C */ TBoundPane* unk42C;
 	/* 0x430 */ TBoundPane* unk430;
@@ -239,7 +243,11 @@ public:
 	/* 0x4EC */ JUTPoint unk4EC[2];
 	/* 0x4FC */ int unk4FC;
 	/* 0x500 */ J2DPane* unk500[2];
-	/* 0x508 */ char unk508[0x520 - 0x508];
+	/* 0x508 */ int unk508;
+	/* 0x50C */ int unk50C;
+	/* 0x510 */ char unk510[0x8];
+	/* 0x518 */ int unk518;
+	/* 0x51C */ u8 unk51C;
 	/* 0x520 */ TExPane* unk520;
 	/* 0x524 */ TExPane* unk524;
 	/* 0x528 */ J2DTextBox* unk528;
