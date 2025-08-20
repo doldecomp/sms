@@ -80,7 +80,25 @@ public:
 	}
 	void setCornerColor(JUtility::TColor c0) { setCornerColor(c0, c0, c0, c0); }
 
-protected:
+	// fabricated
+	void setBlendKonstColor(f32 r, f32 g, f32 b, f32 a)
+	{
+		unk104[0] = r;
+		unk104[1] = g;
+		unk104[2] = b;
+		unk104[3] = a;
+		setBlendKonstColor();
+	}
+	void setBlendKonstAlpha(f32 r, f32 g, f32 b, f32 a)
+	{
+		unk114[0] = r;
+		unk114[1] = g;
+		unk114[2] = b;
+		unk114[3] = a;
+		setBlendKonstAlpha();
+	}
+
+public:
 	/* 0xEC */ JUTTexture* mTextures[4];
 	/* 0xFC */ u8 mTextureNum;
 	/* 0xFD */ u8 unkFD[4];
