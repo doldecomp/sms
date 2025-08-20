@@ -46,7 +46,7 @@ public:
 	void draw(int, int, const J2DGrafContext*, bool);
 	void clip(const JUTRect&);
 	void gather(J2DPane**, u32, u32, int, int&);
-	void setCullBack(_GXCullMode);
+	void setCullBack(GXCullMode);
 	void setBasePosition(J2DBasePosition);
 	J2DPane* getFirstChildPane();
 	J2DPane* getNextChildPane();
@@ -73,6 +73,7 @@ public:
 	JSUTree<J2DPane>* getEndChild() { return mPaneTree.getEndChild(); }
 	const JSUTree<J2DPane>* getPaneTree() { return &mPaneTree; }
 	u8 getAlpha() const { return mAlpha; }
+	void setAlpha(u8 alpha) { mAlpha = alpha; }
 
 	f32 getRotOffsetX() const { return mRotateOffsetX; }
 
@@ -94,6 +95,9 @@ public:
 
 	void setUserInfo(u64 info) { mUserInfoTag = info; }
 	const Mtx* getMtx() const { return &mPositionMtx; }
+
+	// fabricated
+	const JUTRect& getBounds() const { return mBounds; }
 
 public:
 	/* 0x4 */ u16 mInfoTag;

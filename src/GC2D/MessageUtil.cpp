@@ -11,7 +11,7 @@ void SMSMakeTextBuffer(J2DTextBox* param_1, int param_2)
 	param_1->setString(buffer);
 }
 
-u8* SMSGetMessageData(void* param_1, u32 param_2)
+const char* SMSGetMessageData(void* param_1, u32 param_2)
 {
 	if (!param_1)
 		return nullptr;
@@ -33,7 +33,7 @@ u8* SMSGetMessageData(void* param_1, u32 param_2)
 
 	JSUMemoryInputStream local_74((u8*)param_1 + 0x20, local_88 * 0x20 - 0x20);
 
-	u8* r31 = nullptr;
+	const char* r31 = nullptr;
 
 	while ((r30 == 0 || local_68 == 0) && local_74.isNotDrained()) {
 		int iVar3 = local_74.readS32();
@@ -70,7 +70,7 @@ u8* SMSGetMessageData(void* param_1, u32 param_2)
 	char trash[0x4];
 
 	if (r30 != 0 && local_68 != 0)
-		r31 = (u8*)param_1 + r30 + local_68 + 0x20;
+		r31 = (const char*)param_1 + r30 + local_68 + 0x20;
 
 	return r31;
 }

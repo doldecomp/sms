@@ -35,7 +35,7 @@ protected:
 	/* 0xF0 */ JUtility::TColor mColor;
 };
 
-class J2DSetScreen : J2DScreen {
+class J2DSetScreen : public J2DScreen {
 public:
 	J2DSetScreen(const char*, JKRArchive*);
 

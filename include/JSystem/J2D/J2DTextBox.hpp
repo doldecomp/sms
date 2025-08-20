@@ -40,7 +40,7 @@ public:
 	void draw(int, int);
 	void draw(int, int, int);
 	void getString(char*);
-	const char* getStringPtr() const;
+	char* getStringPtr() const;
 	size_t setString(const char*, ...);
 
 public:

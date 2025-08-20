@@ -187,7 +187,7 @@ void J2DTextBox::draw(int x, int y)
 	GXLoadPosMtxImm(mtx, 0);
 }
 
-const char* J2DTextBox::getStringPtr() const { return mText; }
+char* J2DTextBox::getStringPtr() const { return mText; }
 
 size_t J2DTextBox::setString(const char* str, ...)
 {

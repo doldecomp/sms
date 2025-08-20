@@ -9,6 +9,7 @@ class THelpActor;
 class TBlendPane;
 class J2DOrthoGraph;
 class J2DSetScreen;
+class J2DScreen;
 class TBoundPane;
 class JUTTexture;
 class TExPane;
