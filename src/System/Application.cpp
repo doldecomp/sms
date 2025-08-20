@@ -15,7 +15,7 @@ void TApplication::setupThreadFuncLogo() { }
 void TApplication::initialize() { }
 void SetupThreadFuncBoot(void*) { }
 void TApplication::setupThreadFuncBoot() { }
-void SMSSwitch2DArchive(const char*, TARAMBlock&) { }
+JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&) { }
 void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&) { }
 void SMSLoadArchiveARAM(TARAMBlock*, const char*) { }
 void SMSLoadArchive(const char*, void*, u32, JKRHeap*) { }

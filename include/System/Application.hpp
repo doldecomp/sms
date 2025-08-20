@@ -12,6 +12,8 @@ class TMarioGamePad;
 class TSMSFader;
 class JKRExpHeap;
 class TProcessMeter;
+class JKRArchive;
+class JUTFont;
 
 f32 SMSGetVSyncTimesPerSec();
 f32 SMSGetAnmFrameRate();
@@ -20,8 +22,9 @@ void SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 class TARAMBlock { };
 void SMSLoadArchiveARAM(TARAMBlock*, const char*);
 void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
-void SMSSwitch2DArchive(const char*, TARAMBlock&);
+JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&);
 extern TARAMBlock gArBkConsole;
+extern JUTFont* gpSystemFont;
 
 class TApplication {
 public:

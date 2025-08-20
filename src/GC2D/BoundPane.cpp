@@ -56,8 +56,9 @@ bool TBoundPane::update()
 		fVar4 += fVar4 > 0.0f ? 0.5f : -0.5f;
 		fVar1 += fVar1 > 0.0f ? 0.5f : -0.5f;
 
-		unk14.set(fVar4, fVar1);
-		unk0->move(unk4.x1 + unk14.x, unk4.y1 + unk14.y);
+		unk14.x1 = fVar4;
+		unk14.y1 = fVar1;
+		unk0->move(unk4.x1 + unk14.x1, unk4.y1 + unk14.y1);
 
 		unk28 += unk2C;
 	}
@@ -78,8 +79,9 @@ bool TBoundPane::update()
 		fVar4 += fVar4 > 0.0f ? 0.5f : -0.5f;
 		fVar1 += fVar1 > 0.0f ? 0.5f : -0.5f;
 
-		unk1C.set(fVar4, fVar1);
-		unk0->resize(unk1C.x + unk4.getWidth(), unk1C.y + unk4.getHeight());
+		unk14.x2 = fVar4;
+		unk14.y2 = fVar1;
+		unk0->resize(unk14.x2 + unk4.getWidth(), unk14.y2 + unk4.getHeight());
 
 		unk30 += unk34;
 	}
