@@ -22,7 +22,9 @@ public:
 
 	// fabricated
 	bool isNotDrained() const { return getLength() - getPosition() != 0; }
+	void* getCurrent() const { return (void*)((u8*)mBuffer + mPosition); }
 
+public:
 	/* 0x8 */ const void* mBuffer;
 	/* 0xC */ s32 mLength;
 	/* 0x10 */ s32 mPosition;
